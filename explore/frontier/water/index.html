@@ -3,15 +3,19 @@
   lang="en"
   data-route="/explore/frontier/water/"
   data-page="frontier-water"
-  data-contract="FRONTIER_WATER_ROTATIONAL_GEM_ORBIT_NAV_TNT_v4"
-  data-previous-contract="FRONTIER_WATER_INDEPENDENT_LATTICE_MEMORY_NAV_ENGINE_TNT_v3"
+  data-contract="FRONTIER_WATER_SOLID_OPAQUE_ROUTE_GEM_ORBIT_NAV_TNT_v5"
+  data-previous-contract="FRONTIER_WATER_ROTATIONAL_GEM_ORBIT_NAV_TNT_v4"
   data-active-focus="closed-water-system-technology"
   data-delivery-style="TED-Talk-educational-compression"
-  data-engine-style="rotational-gem-orbit-navigation-with-disclosure-layers"
-  data-navigation-engine="rotational-gem-orbit,anchor-nav,section-jumps,dropdown-disclosures,compact-cards"
-  data-orbit-nav="rotational-gem-field"
+  data-engine-style="solid-opaque-route-gem-gravity-orbit-navigation-with-disclosure-layers"
+  data-navigation-engine="solid-opaque-route-gem-orbit,anchor-nav,section-jumps,dropdown-disclosures,compact-cards"
+  data-animation-standard="SOLID_OPAQUE_WATER_ROUTE_GEM_GRAVITY_ORBIT_STANDARD_v5"
+  data-orbit-nav="solid-opaque-route-gem-gravity-field"
   data-water-orbit="active"
+  data-route-crystal-nav="active"
   data-return-to-orbit="active"
+  data-solid-opaque-route-gems-preserved="true"
+  data-center-gravity-water-gem-preserved="true"
   data-public-layer="short-talk-sequence"
   data-engineering-layer="collapsed-appendix"
   data-frontier-water-lattice="independent"
@@ -33,7 +37,7 @@
   <title>Water · Closed System · Frontier · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Frontier Water teaches closed-loop water science through a rotational gem orbit navigation field, independent water lattice, memory logic, 256-state cycle structure, and Audralia narrative inheritance."
+    content="Frontier Water teaches closed-loop water science through a solid opaque route-gem orbit navigation field, independent water lattice, memory logic, 256-state cycle structure, and Audralia narrative inheritance."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/explore/frontier/water/">
   <meta name="theme-color" content="#02040b">
@@ -59,6 +63,7 @@
       --line:rgba(184,205,255,.18);
       --shadow:0 32px 110px rgba(0,0,0,.46);
       --max:1180px;
+      --orbit-duration:54s;
       --drop:polygon(50% 0%,72% 28%,88% 55%,82% 78%,64% 94%,50% 100%,36% 94%,18% 78%,12% 55%,28% 28%);
       --gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
     }
@@ -139,6 +144,14 @@
     summary:focus-visible{
       outline:2px solid var(--blue);
       outline-offset:4px;
+    }
+
+    .svg-defs{
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+      pointer-events:none;
     }
 
     .skip{
@@ -496,10 +509,10 @@
       z-index:0;
       pointer-events:none;
       background:
-        radial-gradient(circle at 50% 50%,rgba(141,216,255,.16),transparent 18rem),
-        conic-gradient(from 0deg at 50% 50%,rgba(116,240,255,.10),transparent 70deg,rgba(143,240,195,.10),transparent 150deg,rgba(243,200,111,.08),transparent 235deg,rgba(143,101,255,.10),transparent 360deg);
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.18),transparent 18rem),
+        conic-gradient(from 0deg at 50% 50%,rgba(116,240,255,.12),transparent 70deg,rgba(143,240,195,.10),transparent 150deg,rgba(243,200,111,.08),transparent 235deg,rgba(143,101,255,.10),transparent 360deg);
       filter:blur(16px);
-      opacity:.7;
+      opacity:.76;
     }
 
     .orbit-header{
@@ -510,204 +523,231 @@
       margin-bottom:1rem;
     }
 
-    .orbit-field{
+    .water-stage{
       position:relative;
       z-index:2;
-      width:min(100%,54rem);
-      min-height:clamp(23rem,50vw,36rem);
-      margin:0 auto;
+      min-height:clamp(35rem,70vw,52rem);
       display:grid;
       place-items:center;
-    }
-
-    .orbit-ring{
-      position:absolute;
-      inset:clamp(1.1rem,4vw,3rem);
-      border:1px solid rgba(141,216,255,.22);
-      border-radius:50%;
+      overflow:hidden;
+      isolation:isolate;
+      border:1px solid rgba(184,205,255,.13);
+      border-radius:clamp(1.25rem,5vw,2rem);
       background:
-        radial-gradient(circle at 50% 50%,rgba(141,216,255,.045),transparent 42%),
-        radial-gradient(circle at 50% 50%,transparent 57%,rgba(141,216,255,.07) 58%,transparent 61%),
-        radial-gradient(circle at 50% 50%,transparent 75%,rgba(143,240,195,.055) 76%,transparent 79%);
-      box-shadow:
-        inset 0 0 2.2rem rgba(141,216,255,.06),
-        0 0 2.8rem rgba(141,216,255,.06);
-      animation:orbitRingBreathe 8s ease-in-out infinite;
+        radial-gradient(circle at 50% 42%,rgba(116,240,255,.17),transparent 20rem),
+        radial-gradient(circle at 50% 66%,rgba(143,240,195,.09),transparent 26rem),
+        linear-gradient(180deg,rgba(1,8,20,.66),rgba(2,6,16,.92));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .orbit-ring::before,
-    .orbit-ring::after{
+    .water-stage::before,
+    .water-stage::after{
       content:"";
-      position:absolute;
-      inset:12%;
-      border:1px dashed rgba(255,255,255,.10);
-      border-radius:50%;
-    }
-
-    .orbit-ring::after{
-      inset:28%;
-      border-color:rgba(143,240,195,.10);
-    }
-
-    @keyframes orbitRingBreathe{
-      0%,100%{transform:scale(.985);opacity:.72}
-      50%{transform:scale(1.015);opacity:.94}
-    }
-
-    .center-gem{
-      position:relative;
-      z-index:5;
-      width:clamp(8.3rem,20vw,13.2rem);
-      min-height:clamp(8.3rem,20vw,13.2rem);
-      display:grid;
-      place-items:center;
-      text-align:center;
-      gap:.28rem;
-      clip-path:var(--gem);
-      border:1px solid rgba(141,216,255,.58);
-      background:
-        radial-gradient(circle at 50% 18%,rgba(255,255,255,.34),transparent 25%),
-        radial-gradient(circle at 42% 55%,rgba(116,240,255,.26),transparent 56%),
-        conic-gradient(from 45deg,rgba(141,216,255,.44),rgba(36,120,255,.34),rgba(143,240,195,.24),rgba(141,216,255,.44)),
-        linear-gradient(145deg,rgba(7,32,54,.98),rgba(3,8,20,.98));
-      box-shadow:
-        0 0 2.4rem rgba(141,216,255,.24),
-        0 1.5rem 3.5rem rgba(0,0,0,.45),
-        inset 0 1px 0 rgba(255,255,255,.20);
-    }
-
-    .center-gem strong{
-      display:block;
-      color:rgba(255,244,216,.98);
-      font-size:clamp(1.35rem,3.2vw,2.15rem);
-      line-height:1;
-      letter-spacing:-.06em;
-    }
-
-    .center-gem span{
-      max-width:9rem;
-      color:rgba(230,248,255,.76);
-      font-size:.62rem;
-      font-weight:950;
-      letter-spacing:.10em;
-      line-height:1.24;
-      text-transform:uppercase;
-    }
-
-    .orbit-gems{
-      position:absolute;
-      inset:0;
-      z-index:6;
-      list-style:none;
-      padding:0;
-      margin:0;
-      animation:orbitRotate 44s linear infinite;
-    }
-
-    @keyframes orbitRotate{
-      from{transform:rotate(0deg)}
-      to{transform:rotate(360deg)}
-    }
-
-    .orbit-gems li{
       position:absolute;
       left:50%;
       top:50%;
-      width:clamp(5.7rem,13vw,8.1rem);
-      min-height:clamp(4.85rem,11vw,6.85rem);
-      margin:calc(clamp(4.85rem,11vw,6.85rem) / -2) 0 0 calc(clamp(5.7rem,13vw,8.1rem) / -2);
-      color:inherit;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      pointer-events:none;
     }
 
-    .orbit-gems li:nth-child(1){transform:rotate(0deg) translateY(clamp(-15.5rem,-25vw,-10rem))}
-    .orbit-gems li:nth-child(2){transform:rotate(36deg) translateY(clamp(-15.5rem,-25vw,-10rem))}
-    .orbit-gems li:nth-child(3){transform:rotate(72deg) translateY(clamp(-15.5rem,-25vw,-10rem))}
-    .orbit-gems li:nth-child(4){transform:rotate(108deg) translateY(clamp(-15.5rem,-25vw,-10rem))}
-    .orbit-gems li:nth-child(5){transform:rotate(144deg) translateY(clamp(-15.5rem,-25vw,-10rem))}
-    .orbit-gems li:nth-child(6){transform:rotate(180deg) translateY(clamp(-15.5rem,-25vw,-10rem))}
-    .orbit-gems li:nth-child(7){transform:rotate(216deg) translateY(clamp(-15.5rem,-25vw,-10rem))}
-    .orbit-gems li:nth-child(8){transform:rotate(252deg) translateY(clamp(-15.5rem,-25vw,-10rem))}
-    .orbit-gems li:nth-child(9){transform:rotate(288deg) translateY(clamp(-15.5rem,-25vw,-10rem))}
-    .orbit-gems li:nth-child(10){transform:rotate(324deg) translateY(clamp(-15.5rem,-25vw,-10rem))}
+    .water-stage::before{
+      width:min(82%,34rem);
+      height:min(82%,34rem);
+      border:1px solid rgba(141,216,255,.11);
+      box-shadow:0 0 3rem rgba(116,240,255,.12);
+    }
 
-    .orbit-gem{
-      width:100%;
-      min-height:100%;
+    .water-stage::after{
+      width:min(52%,22rem);
+      height:min(52%,22rem);
+      border:1px solid rgba(143,240,195,.13);
+    }
+
+    .water-anchor{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:2;
       display:grid;
       place-items:center;
-      text-align:center;
-      gap:.18rem;
-      padding:.62rem;
-      clip-path:var(--gem);
-      border:1px solid rgba(141,216,255,.34);
-      background:
-        radial-gradient(circle at 50% 16%,rgba(255,255,255,.30),transparent 24%),
-        radial-gradient(circle at 50% 58%,rgba(116,240,255,.16),transparent 55%),
-        linear-gradient(145deg,rgba(10,45,70,.96),rgba(3,8,20,.96));
-      box-shadow:
-        0 .85rem 1.85rem rgba(0,0,0,.35),
-        inset 0 1px 0 rgba(255,255,255,.16);
-      transform:rotate(var(--counter-rotate,0deg));
-      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
+      width:clamp(9.6rem,24vw,14.5rem);
+      height:clamp(7rem,18vw,10.8rem);
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+      isolation:isolate;
     }
 
-    .orbit-gems li:nth-child(1) .orbit-gem{--counter-rotate:0deg}
-    .orbit-gems li:nth-child(2) .orbit-gem{--counter-rotate:-36deg}
-    .orbit-gems li:nth-child(3) .orbit-gem{--counter-rotate:-72deg}
-    .orbit-gems li:nth-child(4) .orbit-gem{--counter-rotate:-108deg}
-    .orbit-gems li:nth-child(5) .orbit-gem{--counter-rotate:-144deg}
-    .orbit-gems li:nth-child(6) .orbit-gem{--counter-rotate:-180deg}
-    .orbit-gems li:nth-child(7) .orbit-gem{--counter-rotate:-216deg}
-    .orbit-gems li:nth-child(8) .orbit-gem{--counter-rotate:-252deg}
-    .orbit-gems li:nth-child(9) .orbit-gem{--counter-rotate:-288deg}
-    .orbit-gems li:nth-child(10) .orbit-gem{--counter-rotate:-324deg}
+    .water-anchor-label{
+      position:relative;
+      z-index:4;
+      display:grid;
+      gap:.12rem;
+      place-items:center;
+      width:72%;
+      color:rgba(255,244,216,.95);
+      text-align:center;
+      text-shadow:
+        0 2px 14px rgba(0,0,0,.92),
+        0 0 12px rgba(15,86,120,.84);
+    }
 
-    .orbit-gem b{
-      color:var(--blue2);
-      font-size:.58rem;
-      line-height:1;
-      letter-spacing:.11em;
+    .water-anchor-label b{
+      font-size:clamp(.76rem,1.9vw,1.05rem);
+      font-weight:950;
+      letter-spacing:.18em;
+      line-height:1.05;
       text-transform:uppercase;
     }
 
-    .orbit-gem span{
-      color:rgba(255,244,216,.94);
-      font-size:clamp(.68rem,1.5vw,.82rem);
+    .water-anchor-label span{
+      color:rgba(230,248,255,.74);
+      font-size:clamp(.42rem,1vw,.58rem);
       font-weight:950;
-      line-height:1.05;
-      letter-spacing:-.025em;
+      letter-spacing:.12em;
+      line-height:1.2;
+      text-transform:uppercase;
     }
 
-    .orbit-gem:hover,
-    .orbit-gem:focus-visible{
-      border-color:rgba(143,240,195,.66);
-      filter:brightness(1.12);
+    .water-orbit{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:29.5rem;
+      height:29.5rem;
+      z-index:4;
+      border-radius:999px;
+      pointer-events:none;
+      transform:translate(-50%,-50%);
+      animation:waterOrbitSpin var(--orbit-duration) linear infinite;
+      transform-style:preserve-3d;
+    }
+
+    @keyframes waterOrbitSpin{
+      to{transform:translate(-50%,-50%) rotate(360deg)}
+    }
+
+    .water-node{
+      --radius:-14.25rem;
+      position:absolute;
+      left:50%;
+      top:50%;
+      display:grid;
+      place-items:center;
+      overflow:visible;
+      width:7.45rem;
+      height:5.6rem;
+      margin:-2.8rem 0 0 -3.725rem;
+      transform:
+        rotate(var(--angle))
+        translateY(var(--radius))
+        rotate(calc(-1 * var(--angle)));
+      pointer-events:auto;
+      backface-visibility:hidden;
+      transform-style:preserve-3d;
+      isolation:isolate;
+      transition:filter .18s ease,scale .18s ease;
+    }
+
+    .water-node:hover,
+    .water-node:focus-visible{
       outline:none;
-      transform:rotate(var(--counter-rotate,0deg)) translateY(-4px) scale(1.035);
+      filter:brightness(1.14) saturate(1.10);
+      scale:1.045;
     }
 
-    .orbit-gem.gold{
-      border-color:rgba(243,200,111,.34);
-      background:
-        radial-gradient(circle at 50% 16%,rgba(255,255,255,.34),transparent 24%),
-        radial-gradient(circle at 50% 58%,rgba(243,200,111,.17),transparent 55%),
-        linear-gradient(145deg,rgba(70,48,10,.96),rgba(3,8,20,.96));
+    .water-gem-svg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      overflow:visible;
+      pointer-events:none;
+      opacity:.98;
+      filter:
+        drop-shadow(0 1.1rem 1.35rem rgba(0,0,0,.42))
+        drop-shadow(0 0 1.35rem rgba(116,240,255,.22))
+        drop-shadow(0 0 .75rem rgba(255,255,255,.10));
     }
 
-    .orbit-gem.green{
-      border-color:rgba(143,240,195,.34);
-      background:
-        radial-gradient(circle at 50% 16%,rgba(255,255,255,.30),transparent 24%),
-        radial-gradient(circle at 50% 58%,rgba(143,240,195,.17),transparent 55%),
-        linear-gradient(145deg,rgba(10,62,45,.96),rgba(3,8,20,.96));
+    .water-node:hover .water-gem-svg,
+    .water-node:focus-visible .water-gem-svg{
+      filter:
+        drop-shadow(0 1.25rem 1.55rem rgba(0,0,0,.44))
+        drop-shadow(0 0 1.65rem rgba(116,240,255,.30))
+        drop-shadow(0 0 1rem rgba(243,200,111,.14));
     }
 
-    .orbit-gem.violet{
-      border-color:rgba(143,101,255,.34);
-      background:
-        radial-gradient(circle at 50% 16%,rgba(255,255,255,.30),transparent 24%),
-        radial-gradient(circle at 50% 58%,rgba(143,101,255,.20),transparent 55%),
-        linear-gradient(145deg,rgba(34,20,78,.96),rgba(3,8,20,.96));
+    .water-anchor .water-gem-svg{
+      opacity:1;
+      filter:
+        drop-shadow(0 1.4rem 1.8rem rgba(0,0,0,.46))
+        drop-shadow(0 0 2.2rem rgba(116,240,255,.26))
+        drop-shadow(0 0 1.1rem rgba(143,240,195,.12));
+    }
+
+    .water-glint{
+      animation:waterGlint 8.4s ease-in-out infinite;
+      transform-origin:110px 80px;
+    }
+
+    @keyframes waterGlint{
+      0%,100%{opacity:.10;transform:translateX(-34px)}
+      48%,55%{opacity:.48;transform:translateX(32px)}
+    }
+
+    .water-star{
+      animation:waterFacetTurn 26s linear infinite;
+      transform-origin:110px 80px;
+    }
+
+    @keyframes waterFacetTurn{
+      to{transform:rotate(360deg)}
+    }
+
+    .water-label-shell{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      width:100%;
+      height:100%;
+      padding:.35rem;
+      text-align:center;
+      position:relative;
+      z-index:4;
+      pointer-events:none;
+    }
+
+    .water-label-text{
+      display:block;
+      max-width:5.15rem;
+      color:rgba(255,244,216,.98);
+      text-align:center;
+      font-size:.56rem;
+      font-weight:950;
+      letter-spacing:.065em;
+      line-height:1.08;
+      text-transform:uppercase;
+      text-shadow:
+        0 2px 12px rgba(0,0,0,.95),
+        0 0 10px rgba(10,58,98,.88),
+        0 0 2px rgba(255,255,255,.46);
+      animation:waterTextUpright var(--orbit-duration) linear infinite;
+    }
+
+    .water-label-sub{
+      display:block;
+      margin-top:.12rem;
+      color:rgba(230,248,255,.78);
+      font-size:.39rem;
+      font-weight:850;
+      letter-spacing:.05em;
+      line-height:1;
+      text-transform:uppercase;
+    }
+
+    @keyframes waterTextUpright{
+      to{transform:rotate(-360deg)}
     }
 
     .orbit-help{
@@ -1111,12 +1151,6 @@
       line-height:1.34;
     }
 
-    .split{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:.85rem;
-    }
-
     .note{
       padding:.9rem 1rem;
       border:1px solid rgba(255,255,255,.12);
@@ -1204,55 +1238,64 @@
       .grid.two,
       .loop-grid,
       .science-grid,
-      .module-grid,
-      .split{grid-template-columns:1fr}
+      .module-grid{grid-template-columns:1fr}
       .page-nav{position:relative;top:auto}
       html{scroll-padding-top:1rem}
       .section{scroll-margin-top:1rem}
 
-      .orbit-field{
+      .water-stage{
         min-height:auto;
         display:grid;
         gap:1rem;
+        padding:1rem;
       }
 
-      .orbit-ring{
+      .water-stage::before,
+      .water-stage::after{
         display:none;
       }
 
-      .center-gem{
+      .water-anchor{
+        position:relative;
+        left:auto;
+        top:auto;
+        transform:none;
         margin:0 auto;
       }
 
-      .orbit-gems{
+      .water-orbit{
         position:relative;
-        inset:auto;
+        left:auto;
+        top:auto;
+        width:100%;
+        height:auto;
         display:grid;
         grid-template-columns:repeat(2,minmax(0,1fr));
         gap:.7rem;
+        transform:none;
         animation:none;
+        pointer-events:auto;
       }
 
-      .orbit-gems li{
+      .water-node{
         position:relative;
         left:auto;
         top:auto;
         width:auto;
-        min-height:5.4rem;
+        height:5.65rem;
         margin:0;
         transform:none!important;
       }
 
-      .orbit-gem,
-      .orbit-gems li:nth-child(n) .orbit-gem{
-        clip-path:none;
-        border-radius:1rem;
-        transform:none;
+      .water-label-text{
+        animation:none;
+        max-width:6.5rem;
+        font-size:.62rem;
       }
 
-      .orbit-gem:hover,
-      .orbit-gem:focus-visible{
-        transform:translateY(-2px);
+      .water-node:hover,
+      .water-node:focus-visible{
+        scale:1;
       }
     }
 
@@ -1265,8 +1308,32 @@
       .idea-strip,
       .micro-grid,
       .doctrine-short,
-      .orbit-gems{grid-template-columns:1fr}
+      .water-orbit{grid-template-columns:1fr}
       summary{align-items:flex-start}
+    }
+
+    @media (max-width:460px){
+      .water-anchor{
+        width:8.2rem;
+        height:6.2rem;
+      }
+
+      .water-anchor-label b{
+        font-size:.60rem;
+      }
+
+      .water-anchor-label span{
+        font-size:.42rem;
+      }
+
+      .water-label-text{
+        max-width:5.9rem;
+        font-size:.55rem;
+      }
+
+      .water-label-sub{
+        font-size:.35rem;
+      }
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -1279,7 +1346,11 @@
         transition-duration:.01ms!important;
       }
 
-      .orbit-gems{
+      .water-orbit{
+        animation:none!important;
+      }
+
+      .water-label-text{
         animation:none!important;
       }
     }
@@ -1287,6 +1358,128 @@
 </head>
 
 <body>
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="waterCrystalBody" x1="14" y1="10" x2="206" y2="150" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".94"/>
+        <stop offset=".12" stop-color="#dff9ff" stop-opacity=".90"/>
+        <stop offset=".30" stop-color="#8dd8ff" stop-opacity=".84"/>
+        <stop offset=".52" stop-color="#74f0ff" stop-opacity=".70"/>
+        <stop offset=".76" stop-color="#0f5f8d" stop-opacity=".74"/>
+        <stop offset="1" stop-color="#020716" stop-opacity=".96"/>
+      </linearGradient>
+
+      <radialGradient id="waterCrystalTable" cx="50%" cy="37%" r="66%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".72"/>
+        <stop offset=".26" stop-color="#dff9ff" stop-opacity=".46"/>
+        <stop offset=".58" stop-color="#74f0ff" stop-opacity=".25"/>
+        <stop offset="1" stop-color="#050716" stop-opacity="0"/>
+      </radialGradient>
+
+      <linearGradient id="waterCrystalDepth" x1="110" y1="40" x2="110" y2="156" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".24"/>
+        <stop offset=".34" stop-color="#bcecff" stop-opacity=".28"/>
+        <stop offset=".62" stop-color="#8ff0c3" stop-opacity=".20"/>
+        <stop offset="1" stop-color="#020716" stop-opacity=".78"/>
+      </linearGradient>
+
+      <linearGradient id="waterCrystalGlint" x1="30" y1="130" x2="188" y2="24" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset=".45" stop-color="#ffffff" stop-opacity=".82"/>
+        <stop offset=".54" stop-color="#ffe8a3" stop-opacity=".23"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+
+      <filter id="waterCrystalGlow" x="-42%" y="-52%" width="184%" height="204%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2.4" result="blur"/>
+        <feColorMatrix
+          in="blur"
+          type="matrix"
+          values="
+            0.32 0 0 0 0.10
+            0 0.76 0 0 0.20
+            0 0 1.00 0 0.34
+            0 0 0 0.50 0"
+          result="glow"
+        />
+        <feMerge>
+          <feMergeNode in="glow"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      <symbol id="waterRouteCrystal" viewBox="0 0 220 160">
+        <g filter="url(#waterCrystalGlow)">
+          <path
+            d="M110 6 L145 15 L184 43 L206 76 L186 112 L148 140 L110 154 L72 140 L34 112 L14 76 L36 43 L75 15 Z"
+            fill="url(#waterCrystalBody)"
+            stroke="rgba(223,249,255,.72)"
+            stroke-width="1.45"
+          />
+          <path d="M110 6 L145 15 L131 43 L110 33 L89 43 L75 15 Z" fill="rgba(255,255,255,.36)"/>
+          <path d="M75 15 L89 43 L62 65 L36 43 Z" fill="rgba(255,255,255,.22)"/>
+          <path d="M145 15 L131 43 L158 65 L184 43 Z" fill="rgba(141,216,255,.30)"/>
+          <path d="M36 43 L62 65 L54 84 L14 76 Z" fill="rgba(255,255,255,.13)"/>
+          <path d="M184 43 L158 65 L166 84 L206 76 Z" fill="rgba(243,200,111,.12)"/>
+          <path
+            d="M89 43 L110 33 L131 43 L158 65 L145 91 L110 107 L75 91 L62 65 Z"
+            fill="url(#waterCrystalTable)"
+            stroke="rgba(255,255,255,.34)"
+            stroke-width=".95"
+          />
+          <path d="M14 76 L54 84 L72 140 L34 112 Z" fill="rgba(3,18,44,.48)"/>
+          <path d="M206 76 L166 84 L148 140 L186 112 Z" fill="rgba(255,255,255,.15)"/>
+          <path d="M54 84 L75 91 L110 154 L72 140 Z" fill="rgba(3,18,44,.58)"/>
+          <path d="M166 84 L145 91 L110 154 L148 140 Z" fill="rgba(116,240,255,.22)"/>
+          <path d="M75 91 L110 107 L110 154 Z" fill="url(#waterCrystalDepth)" opacity=".86"/>
+          <path d="M145 91 L110 107 L110 154 Z" fill="rgba(2,7,22,.50)"/>
+          <path d="M110 6 L110 154" stroke="rgba(255,255,255,.40)" stroke-width="1.12"/>
+          <path d="M14 76 L206 76" stroke="rgba(255,255,255,.30)" stroke-width="1"/>
+          <path d="M36 43 L186 112" stroke="rgba(255,255,255,.16)" stroke-width=".88"/>
+          <path d="M184 43 L34 112" stroke="rgba(255,255,255,.16)" stroke-width=".88"/>
+          <path d="M75 15 L110 107 L145 15" stroke="rgba(255,255,255,.22)" stroke-width=".88" fill="none"/>
+          <path d="M36 43 L110 107 L184 43" stroke="rgba(255,255,255,.17)" stroke-width=".88" fill="none"/>
+          <path d="M34 112 L110 107 L186 112" stroke="rgba(243,200,111,.14)" stroke-width=".88" fill="none"/>
+          <g class="water-star" opacity=".86">
+            <path d="M110 31 L116 76 L110 112 L104 76 Z" fill="rgba(255,255,255,.30)"/>
+            <path d="M62 65 L106 78 L158 65 L114 86 Z" fill="rgba(255,255,255,.18)"/>
+            <path d="M75 91 L106 83 L145 91 L114 101 Z" fill="rgba(255,240,163,.12)"/>
+          </g>
+          <path class="water-glint" d="M38 121 L176 24 L188 42 L52 133 Z" fill="url(#waterCrystalGlint)"/>
+        </g>
+      </symbol>
+
+      <symbol id="waterCenterSeal" viewBox="0 0 220 160">
+        <g filter="url(#waterCrystalGlow)">
+          <path
+            d="M110 5 L140 16 L170 18 L199 48 L191 76 L204 80 L191 84 L199 112 L170 142 L140 144 L110 155 L80 144 L50 142 L21 112 L29 84 L16 80 L29 76 L21 48 L50 18 L80 16 Z"
+            fill="url(#waterCrystalBody)"
+            stroke="rgba(223,249,255,.76)"
+            stroke-width="1.55"
+          />
+          <path d="M110 5 L140 16 L125 44 L110 34 L95 44 L80 16 Z" fill="rgba(255,255,255,.38)"/>
+          <path d="M50 18 L95 44 L68 67 L21 48 Z" fill="rgba(255,255,255,.20)"/>
+          <path d="M170 18 L125 44 L152 67 L199 48 Z" fill="rgba(141,216,255,.25)"/>
+          <path d="M68 67 L95 44 L110 34 L125 44 L152 67 L143 96 L110 116 L77 96 Z" fill="url(#waterCrystalTable)" stroke="rgba(255,255,255,.34)" stroke-width=".95"/>
+          <path d="M16 80 L68 67 L77 96 L21 112 Z" fill="rgba(3,18,44,.52)"/>
+          <path d="M204 80 L152 67 L143 96 L199 112 Z" fill="rgba(255,255,255,.14)"/>
+          <path d="M21 112 L77 96 L110 155 L50 142 Z" fill="rgba(2,7,22,.56)"/>
+          <path d="M199 112 L143 96 L110 155 L170 142 Z" fill="rgba(116,240,255,.24)"/>
+          <path d="M110 5 L110 155" stroke="rgba(255,255,255,.40)" stroke-width="1.1"/>
+          <path d="M16 80 L204 80" stroke="rgba(255,255,255,.30)" stroke-width="1"/>
+          <path d="M21 48 L199 112" stroke="rgba(255,255,255,.16)" stroke-width=".88"/>
+          <path d="M199 48 L21 112" stroke="rgba(255,255,255,.16)" stroke-width=".88"/>
+          <g class="water-star" opacity=".86">
+            <path d="M110 31 L116 78 L110 118 L104 78 Z" fill="rgba(255,255,255,.32)"/>
+            <path d="M68 67 L106 80 L152 67 L114 88 Z" fill="rgba(255,255,255,.18)"/>
+            <path d="M77 96 L106 84 L143 96 L114 108 Z" fill="rgba(255,240,163,.12)"/>
+          </g>
+          <path class="water-glint" d="M38 121 L176 24 L188 42 L52 133 Z" fill="url(#waterCrystalGlint)"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
   <a class="skip" href="#start">Skip to Water</a>
 
   <div class="shell">
@@ -1337,87 +1530,99 @@
 
       <section class="panel orbit-panel" id="water-orbit" aria-labelledby="water-orbit-title">
         <div class="orbit-header">
-          <div class="kicker">Rotational Gem Orbit</div>
+          <div class="kicker">Solid Opaque Route-Gem Orbit</div>
           <h2 id="water-orbit-title">Choose a water path.</h2>
           <p>
-            Use the orbit to jump into a section. Each section gives you a Return to Orbit control so the page can be explored without linear scrolling.
+            Use the solid route crystals to jump into a section. Each section gives you a Return to Orbit control so the page can be explored without linear scrolling.
           </p>
         </div>
 
-        <div class="orbit-field" aria-label="Frontier Water rotational gem navigation">
-          <div class="orbit-ring" aria-hidden="true"></div>
-
-          <div class="center-gem" aria-hidden="true">
-            <strong>Water</strong>
-            <span>Closed loop · memory · survival</span>
+        <div class="water-stage" aria-label="Frontier Water solid opaque route-gem gravity orbit">
+          <div class="water-anchor" aria-hidden="true">
+            <svg class="water-gem-svg" viewBox="0 0 220 160" focusable="false">
+              <use href="#waterCenterSeal"></use>
+            </svg>
+            <span class="water-anchor-label">
+              <b>Water</b>
+              <span>Closed Loop · Memory · Survival</span>
+            </span>
           </div>
 
-          <ul class="orbit-gems">
-            <li>
-              <a class="orbit-gem blue" href="#loop">
-                <b>Loop</b>
-                <span>Closed Loop</span>
-              </a>
-            </li>
-            <li>
-              <a class="orbit-gem green" href="#lattice">
-                <b>Lattice</b>
-                <span>Water Lattice</span>
-              </a>
-            </li>
-            <li>
-              <a class="orbit-gem violet" href="#memory">
-                <b>Memory</b>
-                <span>Water Memory</span>
-              </a>
-            </li>
-            <li>
-              <a class="orbit-gem" href="#science">
-                <b>Science</b>
-                <span>Science Stack</span>
-              </a>
-            </li>
-            <li>
-              <a class="orbit-gem gold" href="#audralia">
-                <b>World</b>
-                <span>Audralia Inheritance</span>
-              </a>
-            </li>
-            <li>
-              <a class="orbit-gem" href="#pressures">
-                <b>Pressure</b>
-                <span>System Pressures</span>
-              </a>
-            </li>
-            <li>
-              <a class="orbit-gem green" href="#modules">
-                <b>Modules</b>
-                <span>Technology Modules</span>
-              </a>
-            </li>
-            <li>
-              <a class="orbit-gem" href="#doctrine">
-                <b>Doctrine</b>
-                <span>Crew Doctrine</span>
-              </a>
-            </li>
-            <li>
-              <a class="orbit-gem gold" href="#engineering">
-                <b>Notes</b>
-                <span>Engineering Notes</span>
-              </a>
-            </li>
-            <li>
-              <a class="orbit-gem violet" href="#kill">
-                <b>Stop</b>
-                <span>Kill Conditions</span>
-              </a>
-            </li>
-          </ul>
+          <div class="water-orbit">
+            <a class="water-node" style="--angle:0deg" href="#loop" aria-label="Closed Loop">
+              <svg class="water-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#waterRouteCrystal"></use></svg>
+              <span class="water-label-shell">
+                <b class="water-label-text">Closed Loop<span class="water-label-sub">Return</span></b>
+              </span>
+            </a>
+
+            <a class="water-node" style="--angle:36deg" href="#lattice" aria-label="Water Lattice">
+              <svg class="water-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#waterRouteCrystal"></use></svg>
+              <span class="water-label-shell">
+                <b class="water-label-text">Water Lattice<span class="water-label-sub">256 State</span></b>
+              </span>
+            </a>
+
+            <a class="water-node" style="--angle:72deg" href="#memory" aria-label="Water Memory">
+              <svg class="water-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#waterRouteCrystal"></use></svg>
+              <span class="water-label-shell">
+                <b class="water-label-text">Water Memory<span class="water-label-sub">Trace</span></b>
+              </span>
+            </a>
+
+            <a class="water-node" style="--angle:108deg" href="#science" aria-label="Science Stack">
+              <svg class="water-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#waterRouteCrystal"></use></svg>
+              <span class="water-label-shell">
+                <b class="water-label-text">Science Stack<span class="water-label-sub">Proof</span></b>
+              </span>
+            </a>
+
+            <a class="water-node" style="--angle:144deg" href="#audralia" aria-label="Audralia Inheritance">
+              <svg class="water-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#waterRouteCrystal"></use></svg>
+              <span class="water-label-shell">
+                <b class="water-label-text">Audralia<span class="water-label-sub">Inheritance</span></b>
+              </span>
+            </a>
+
+            <a class="water-node" style="--angle:180deg" href="#pressures" aria-label="System Pressures">
+              <svg class="water-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#waterRouteCrystal"></use></svg>
+              <span class="water-label-shell">
+                <b class="water-label-text">System<span class="water-label-sub">Pressures</span></b>
+              </span>
+            </a>
+
+            <a class="water-node" style="--angle:216deg" href="#modules" aria-label="Technology Modules">
+              <svg class="water-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#waterRouteCrystal"></use></svg>
+              <span class="water-label-shell">
+                <b class="water-label-text">Modules<span class="water-label-sub">Tech</span></b>
+              </span>
+            </a>
+
+            <a class="water-node" style="--angle:252deg" href="#doctrine" aria-label="Crew Doctrine">
+              <svg class="water-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#waterRouteCrystal"></use></svg>
+              <span class="water-label-shell">
+                <b class="water-label-text">Crew<span class="water-label-sub">Doctrine</span></b>
+              </span>
+            </a>
+
+            <a class="water-node" style="--angle:288deg" href="#engineering" aria-label="Engineering Notes">
+              <svg class="water-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#waterRouteCrystal"></use></svg>
+              <span class="water-label-shell">
+                <b class="water-label-text">Engineering<span class="water-label-sub">Notes</span></b>
+              </span>
+            </a>
+
+            <a class="water-node" style="--angle:324deg" href="#kill" aria-label="Kill Conditions">
+              <svg class="water-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#waterRouteCrystal"></use></svg>
+              <span class="water-label-shell">
+                <b class="water-label-text">Kill<span class="water-label-sub">Conditions</span></b>
+              </span>
+            </a>
+          </div>
         </div>
 
         <p class="orbit-help">
-          Center: Water. Outer gems: the readable sections. Pick a gem, read the section, then return to orbit.
+          Center: Water. Outer route crystals: readable section paths. Choose a crystal, read the section, then return to orbit.
         </p>
       </section>
 
@@ -2113,21 +2318,29 @@
         </div>
 
         <div class="note">
-          Household water protection remains supporting context only. This route’s active focus is closed water system technology for frontier science, Audralia inheritance, independent water-lattice logic, rotational gem orbit navigation, and interplanetary research.
+          Household water protection remains supporting context only. This route’s active focus is closed water system technology for frontier science, Audralia inheritance, independent water-lattice logic, solid opaque route-gem orbit navigation, and interplanetary research.
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_WATER_ROTATIONAL_GEM_ORBIT_NAV_TNT_v4
+FRONTIER_WATER_SOLID_OPAQUE_ROUTE_GEM_ORBIT_NAV_TNT_v5
 route=/explore/frontier/water/
 page=frontier_water
-previous=FRONTIER_WATER_INDEPENDENT_LATTICE_MEMORY_NAV_ENGINE_TNT_v3
+previous=FRONTIER_WATER_ROTATIONAL_GEM_ORBIT_NAV_TNT_v4
+reference_standard=/door/_solid_opaque_route_gem_gravity_orbit
 active_focus=closed_water_system_technology
 delivery_style=TED_Talk_educational_compression
-navigation_engine=rotational_gem_orbit,anchor_nav,section_jumps,dropdown_disclosures,compact_cards
+navigation_engine=solid_opaque_route_gem_orbit,anchor_nav,section_jumps,dropdown_disclosures,compact_cards
+animation_standard=SOLID_OPAQUE_WATER_ROUTE_GEM_GRAVITY_ORBIT_STANDARD_v5
+solid_opaque_water_route_gems=true
+center_gravity_water_gem=true
+route_crystal_nav=active
 rotational_gem_orbit_nav=active
 water_orbit_id=water-orbit
 return_to_orbit_controls=active
+labels_remain_front_facing=true
+mobile_safe_fallback=true
+reduced_motion_supported=true
 orbit_sections=loop,lattice,memory,science,audralia,pressures,modules,doctrine,engineering,kill
 center_gem=Water
 outer_gems=Closed Loop,Water Lattice,Water Memory,Science Stack,Audralia Inheritance,System Pressures,Modules,Crew Doctrine,Engineering Notes,Kill Conditions
@@ -2145,18 +2358,19 @@ water_nodes=source,capture,screen,purify,balance,store,use,recover,reclaim,retur
 science_stack=hydrology,chemistry,filtration,membranes,biology,mineral_balance,atmospheric_cycling,wastewater_recovery,thermal_control,storage_engineering,sensors,emergency_reserves
 modules=intake,sediment,biological_control,chemical_reduction,membrane,ion_mineral_balance,wastewater_recovery,condensation_recovery,atmospheric_return,storage,sensor_audit,emergency_reserve
 audralia_inheritance=crew_doctrine,settlement_infrastructure,planetary_hydrology,emergency_reserves,narrative_pressure
-compression_model=public_talk_layer,rotational_orbit_layer,navigation_engine_layer,disclosure_layer,engineering_appendix_layer,hidden_receipt_layer
+compression_model=public_talk_layer,solid_opaque_route_gem_orbit_layer,navigation_engine_layer,disclosure_layer,engineering_appendix_layer,hidden_receipt_layer
 heavy_runtime=false
 canvas=false
 webgl=false
 generated_image=false
 graphic_box=false
+streaming=false
 visual_pass_claimed=false
       </template>
     </main>
 
     <footer>
-      FRONTIER_WATER_ROTATIONAL_GEM_ORBIT_NAV_TNT_v4 · Water · Rotational Gem Orbit · Closed-System Frontier Science.
+      FRONTIER_WATER_SOLID_OPAQUE_ROUTE_GEM_ORBIT_NAV_TNT_v5 · Water · Solid Opaque Route-Gem Orbit · Closed-System Frontier Science.
     </footer>
   </div>
 </body>

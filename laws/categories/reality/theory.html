@@ -4,8 +4,9 @@
   lang="en"
   data-route="/laws/categories/reality/"
   data-page="reality-single-file-consolidated-law-category"
-  data-version="G3-V1"
-  data-contract="REALITY_SINGLE_FILE_CONSOLIDATED_LAW_CATEGORY_TNT_v1"
+  data-version="G3-V2"
+  data-contract="REALITY_SINGLE_FILE_CONSOLIDATED_LAW_CATEGORY_TNT_v2"
+  data-previous-contract="REALITY_SINGLE_FILE_CONSOLIDATED_LAW_CATEGORY_TNT_v1"
   data-source-binding="REALITY_SINGLE_FILE_CONSOLIDATED_LAW_CATEGORY_PREGAME_TO_POSTGAME_BINDING_v1"
   data-branch="laws"
   data-category="reality"
@@ -19,16 +20,17 @@
   data-generated-image="false"
   data-graphic-box="false"
   data-frontier-orbit-model="false"
+  data-deploy-verification-string="REALITY_SINGLE_FILE_CONSOLIDATED_DEPLOY_MARKER_v2"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Reality · Law Category · Diamond Gate Bridge</title>
+  <title>Reality · Tested Constraint · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Reality is the law category for tested constraint. Theory, Evidence, Measure, and Limits are consolidated downstream inside one Reality page."
+    content="Reality is the law category for tested constraint. Theory, Evidence, Measure, and Limits are consolidated downstream inside one canonical Reality page."
   >
 
   <style>
@@ -705,7 +707,7 @@
         <div class="section-header">
           <h2 id="chain-title">Reality now contains its downstream sections in one canonical file.</h2>
           <p>
-            Theory, Evidence, Measure, and Limits are no longer governing separate-route pages for this category. They are internal downstream functions inside the Reality law-category construct.
+            Theory, Evidence, Measure, and Limits are absorbed into this one Reality law-category construct. The route no longer depends on separate child files to explain the category.
           </p>
         </div>
 
@@ -742,7 +744,7 @@
         </div>
 
         <div class="absorbed-note">
-          Absorbed legacy paths: /laws/categories/reality/theory.html, /laws/categories/reality/evidence.html, /laws/categories/reality/measure.html, and /laws/categories/reality/limits.html are now represented as internal sections of this canonical Reality page.
+          Deploy marker: REALITY_SINGLE_FILE_CONSOLIDATED_DEPLOY_MARKER_v2. The old Theory, Evidence, Measure, and Limits surfaces are now represented as internal sections of this canonical Reality page.
         </div>
       </section>
 
@@ -1048,10 +1050,12 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-REALITY_SINGLE_FILE_CONSOLIDATED_LAW_CATEGORY_TNT_v1
+REALITY_SINGLE_FILE_CONSOLIDATED_LAW_CATEGORY_TNT_v2
+previous=REALITY_SINGLE_FILE_CONSOLIDATED_LAW_CATEGORY_TNT_v1
 binding=REALITY_SINGLE_FILE_CONSOLIDATED_LAW_CATEGORY_PREGAME_TO_POSTGAME_BINDING_v1
 route=/laws/categories/reality/
 target=/laws/categories/reality/index.html
+deploy_marker=REALITY_SINGLE_FILE_CONSOLIDATED_DEPLOY_MARKER_v2
 single_file=true
 absorbed_paths=theory_html,evidence_html,measure_html,limits_html
 internal_sections=reality,theory,evidence,measure,limits,audit
@@ -1080,12 +1084,12 @@ final_boundary=What_holds_may_proceed_What_fails_must_be_revised_What_remains_un
 room=Website_Building_and_Implementation_Room
 district=Rich_Manor_and_Estate_Laws
 individual=Implementation_Authority
-next_step=deploy_index_html_only_then_retire_or_redirect_old_child_paths_if_desired
+next_step=replace_exact_served_file_then_verify_live_source_for_deploy_marker
       </template>
     </main>
 
     <footer>
-      REALITY_SINGLE_FILE_CONSOLIDATED_LAW_CATEGORY_TNT_v1 · Laws / Categories / Reality · Single canonical file.
+      REALITY_SINGLE_FILE_CONSOLIDATED_LAW_CATEGORY_TNT_v2 · Laws / Categories / Reality · Single canonical file.
     </footer>
   </div>
 </body>

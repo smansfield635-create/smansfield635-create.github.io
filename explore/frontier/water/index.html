@@ -3,17 +3,15 @@
   lang="en"
   data-route="/explore/frontier/water/"
   data-page="frontier-water"
-  data-contract="AUDRALIA_CLOSED_WATER_SYSTEM_FRONTIER_SCIENCE_TNT_v1"
-  data-previous-contract="FRONTIER_WATER_TEXAS_HOMEWATER_EDUCATION_RENEWAL_TNT_v1"
+  data-contract="AUDRALIA_CLOSED_WATER_TED_NAV_ENGINE_TNT_v2"
+  data-previous-contract="AUDRALIA_CLOSED_WATER_SYSTEM_FRONTIER_SCIENCE_TNT_v1"
   data-active-focus="closed-water-system-technology"
-  data-supporting-lane="Texas-HomeWater-household-education"
-  data-supporting-packet="PSALM_PACKET_TEXAS_WATER_HAZARD_HOMEWATER_FULL_v1.0"
-  data-role="frontier-water-closed-system-science"
-  data-public-function="teach-frontier-science"
-  data-narrative-function="Audralia-inheritance"
-  data-core-loop="Capture,Screen,Purify,Balance,Store,Use,Recover,Reclaim,Return"
-  data-science-stack="hydrology,chemistry,filtration,membranes,biology,mineral-balance,atmospheric-cycling,wastewater-recovery,thermal-control,storage-engineering,sensors,emergency-reserves"
-  data-forbidden-collapse="HomeWater-marketing-only,Texas-tap-water-only,household-filter-only,magic-water-cycle,unmeasured-clear-water-claim"
+  data-delivery-style="TED-Talk-educational-compression"
+  data-engine-style="on-page-navigation-engine-with-disclosure-layers"
+  data-navigation-engine="anchor-nav,section-jumps,dropdown-disclosures,compact-cards"
+  data-public-layer="short-talk-sequence"
+  data-engineering-layer="collapsed-appendix"
+  data-audralia-layer="narrative-inheritance-visible"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
   data-graphic-box="false"
@@ -27,7 +25,7 @@
   <title>Water · Closed System · Frontier · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Frontier Water teaches closed-loop water science for Audralia and interplanetary research: capture, purification, balance, storage, reuse, recovery, atmospheric return, habitat support, and survival architecture."
+    content="Frontier Water teaches closed-loop water science through a compressed navigational page: capture, purification, balance, storage, reuse, recovery, return, engineering notes, and Audralia narrative inheritance."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/explore/frontier/water/">
   <meta name="theme-color" content="#02040b">
@@ -51,7 +49,6 @@
       --red:#ff9d91;
       --panel:rgba(9,15,31,.86);
       --line:rgba(184,205,255,.18);
-      --line2:rgba(141,216,255,.30);
       --shadow:0 32px 110px rgba(0,0,0,.46);
       --max:1180px;
       --drop:polygon(50% 0%,72% 28%,88% 55%,82% 78%,64% 94%,50% 100%,36% 94%,18% 78%,12% 55%,28% 28%);
@@ -66,6 +63,7 @@
       background:var(--bg);
       scroll-behavior:smooth;
       overflow-x:hidden;
+      scroll-padding-top:7.5rem;
     }
 
     body{
@@ -129,7 +127,8 @@
     a{color:inherit;text-decoration:none}
 
     a:focus-visible,
-    button:focus-visible{
+    button:focus-visible,
+    summary:focus-visible{
       outline:2px solid var(--blue);
       outline-offset:4px;
     }
@@ -270,7 +269,7 @@
 
     .hero{
       position:relative;
-      min-height:clamp(29rem,52vw,40rem);
+      min-height:clamp(28rem,50vw,38rem);
       display:grid;
       align-content:center;
       gap:1rem;
@@ -474,6 +473,52 @@
       background:rgba(143,101,255,.075);
     }
 
+    .page-nav{
+      position:sticky;
+      top:.5rem;
+      z-index:20;
+      margin:1rem 0 1.15rem;
+      border:1px solid rgba(141,216,255,.18);
+      border-radius:1.25rem;
+      background:
+        radial-gradient(circle at 10% 0%,rgba(141,216,255,.10),transparent 20rem),
+        rgba(4,8,19,.86);
+      box-shadow:0 1rem 2.4rem rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.06);
+      backdrop-filter:blur(16px);
+      overflow:hidden;
+    }
+
+    .page-nav-inner{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.42rem;
+      padding:.7rem;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .page-nav a{
+      min-height:2rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;
+      padding:.42rem .66rem;
+      color:rgba(241,246,255,.86);
+      background:rgba(255,255,255,.035);
+      font-size:.62rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+    }
+
+    .page-nav a.primary{
+      border-color:rgba(141,216,255,.70);
+      color:#06101c;
+      background:linear-gradient(135deg,#dff7ff,#8dd8ff);
+    }
+
     .section{
       margin-top:1.15rem;
       padding:clamp(1rem,3vw,1.45rem);
@@ -562,13 +607,6 @@
         rgba(255,255,255,.035);
     }
 
-    .card.warn{
-      border-color:rgba(255,157,145,.22);
-      background:
-        radial-gradient(circle at 20% 0%,rgba(255,157,145,.08),transparent 60%),
-        rgba(255,255,255,.035);
-    }
-
     .card.gold{
       border-color:rgba(243,200,111,.22);
       background:
@@ -583,205 +621,159 @@
         rgba(255,255,255,.035);
     }
 
-    .loop-stage{
-      position:relative;
+    .idea-strip{
       display:grid;
-      gap:.85rem;
-      padding:clamp(.85rem,2.4vw,1.25rem);
+      grid-template-columns:repeat(7,minmax(0,1fr));
+      gap:.55rem;
+    }
+
+    .idea-chip{
+      min-height:5.6rem;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      gap:.25rem;
+      padding:.65rem;
       border:1px solid rgba(141,216,255,.16);
-      border-radius:clamp(1.25rem,4vw,2rem);
+      border-radius:1rem;
+      background:rgba(141,216,255,.045);
+    }
+
+    .idea-chip b{
+      color:var(--blue2);
+      font-size:.7rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .idea-chip span{
+      color:var(--muted);
+      font-size:.82rem;
+      line-height:1.22;
+    }
+
+    details{
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:1.1rem;
       background:
-        radial-gradient(circle at 50% 30%,rgba(116,240,255,.10),transparent 24rem),
-        radial-gradient(circle at 50% 70%,rgba(36,120,255,.10),transparent 28rem),
-        rgba(255,255,255,.026);
+        linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.024));
       overflow:hidden;
     }
 
-    .loop-stage::before{
-      content:"";
-      position:absolute;
-      inset:1rem;
-      border:1px solid rgba(141,216,255,.12);
-      border-radius:50%;
-      opacity:.42;
-      pointer-events:none;
+    details[open]{
+      border-color:rgba(141,216,255,.28);
+      background:
+        radial-gradient(circle at 16% 0%,rgba(141,216,255,.08),transparent 25rem),
+        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.026));
+    }
+
+    summary{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:1rem;
+      list-style:none;
+      cursor:pointer;
+      padding:.92rem 1rem;
+      color:rgba(255,244,216,.96);
+      font-weight:950;
+    }
+
+    summary::-webkit-details-marker{display:none}
+
+    summary::after{
+      content:"+";
+      flex:0 0 auto;
+      width:1.9rem;
+      height:1.9rem;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(141,216,255,.24);
+      border-radius:.58rem;
+      color:var(--blue2);
+      background:rgba(141,216,255,.055);
+      font-size:1.05rem;
+      line-height:1;
+    }
+
+    details[open] summary::after{
+      content:"–";
+      border-color:rgba(143,240,195,.26);
+      color:var(--green);
+    }
+
+    .summary-text{
+      display:grid;
+      gap:.14rem;
+    }
+
+    .summary-text b{
+      color:var(--blue2);
+      font-size:.66rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .summary-text span{
+      color:rgba(255,244,216,.96);
+      font-size:clamp(.98rem,2.5vw,1.14rem);
+      line-height:1.14;
+      letter-spacing:-.025em;
+    }
+
+    .detail-body{
+      display:grid;
+      gap:.75rem;
+      padding:0 1rem 1rem;
+    }
+
+    .detail-body p{
+      font-size:.95rem;
     }
 
     .loop-grid{
-      position:relative;
-      z-index:2;
-      display:grid;
-      grid-template-columns:repeat(9,minmax(0,1fr));
-      gap:.5rem;
-      align-items:stretch;
-    }
-
-    .loop-step{
-      min-height:8rem;
-      display:grid;
-      gap:.42rem;
-      align-content:center;
-      justify-items:center;
-      padding:.82rem .62rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.05rem;
-      background:rgba(5,10,24,.55);
-      text-align:center;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-    }
-
-    .loop-step b{
-      color:var(--blue2);
-      font-size:.62rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .loop-step span{
-      color:var(--muted);
-      font-size:.84rem;
-      line-height:1.25;
-    }
-
-    .loop-step .dot{
-      width:1.2rem;
-      height:1.2rem;
-      clip-path:var(--drop);
-      background:linear-gradient(180deg,var(--blue2),rgba(36,120,255,.80));
-      box-shadow:0 0 .8rem rgba(116,240,255,.24);
-    }
-
-    .lane-split{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:.85rem;
-    }
-
-    .split-card{
-      display:grid;
-      gap:.75rem;
-      padding:1rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.25rem;
-      background:rgba(255,255,255,.035);
-    }
-
-    .split-card h3{
-      color:var(--blue2);
-    }
-
-    .stack-list{
-      display:grid;
-      gap:.7rem;
-    }
-
-    .stack-row{
-      display:grid;
-      grid-template-columns:minmax(9rem,.32fr) minmax(0,1fr);
-      gap:.8rem;
-      align-items:start;
-      padding:.85rem;
-      border:1px solid rgba(255,255,255,.11);
-      border-radius:1rem;
-      background:rgba(255,255,255,.03);
-    }
-
-    .stack-row b{
-      color:var(--gold);
-      font-size:.7rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .stack-row span{
-      color:var(--muted);
-      font-size:.94rem;
-      line-height:1.42;
-    }
-
-    .pressure-list,
-    .doctrine-list,
-    .kill-list{
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:.55rem;
-      margin:0;
-      padding:0;
-      list-style:none;
-    }
-
-    .pressure-list li,
-    .doctrine-list li,
-    .kill-list li{
-      margin:0;
-      padding:.82rem;
-      border:1px solid rgba(141,216,255,.14);
-      border-radius:1rem;
-      background:rgba(141,216,255,.045);
-      color:rgba(235,251,255,.88);
-      font-weight:850;
-      line-height:1.35;
-    }
-
-    .kill-list li{
-      border-color:rgba(255,157,145,.16);
-      background:rgba(255,157,145,.045);
-      color:rgba(255,230,226,.86);
-    }
-
-    .module-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
       gap:.75rem;
     }
 
-    .module-card{
+    .science-grid,
+    .module-grid{
       display:grid;
-      gap:.45rem;
-      min-height:10rem;
-      padding:.9rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.1rem;
-      background:rgba(255,255,255,.035);
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.75rem;
     }
 
-    .module-card b{
-      color:var(--blue2);
-      font-size:.64rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .module-card span{
-      color:var(--muted);
-      font-size:.9rem;
-      line-height:1.36;
-    }
-
-    .question-band{
+    .micro-grid{
       display:grid;
-      gap:.55rem;
-      padding:1rem;
-      border:1px solid rgba(243,200,111,.20);
-      border-radius:1.2rem;
-      background:
-        radial-gradient(circle at 12% 0%,rgba(243,200,111,.10),transparent 28rem),
-        rgba(255,255,255,.032);
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.6rem;
     }
 
-    .question-band b{
+    .micro{
+      display:grid;
+      gap:.22rem;
+      padding:.72rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:.9rem;
+      background:rgba(255,255,255,.026);
+    }
+
+    .micro b{
       color:var(--gold);
-      font-size:.72rem;
-      letter-spacing:.12em;
+      font-size:.6rem;
+      letter-spacing:.11em;
       text-transform:uppercase;
     }
 
-    .question-band .tagline{
-      margin-top:.1rem;
+    .micro span{
+      color:var(--muted);
+      font-size:.86rem;
+      line-height:1.3;
     }
 
-    .tagline{
+    .chip-wall{
       display:flex;
       flex-wrap:wrap;
       gap:.5rem;
@@ -803,17 +795,64 @@
       text-transform:uppercase;
     }
 
-    ul{
-      margin:0;
-      padding-left:1.1rem;
-      color:var(--muted);
+    .tag.blue{
+      border-color:rgba(141,216,255,.30);
+      background:rgba(141,216,255,.06);
     }
 
-    li{
-      margin:.38rem 0;
+    .tag.green{
+      border-color:rgba(143,240,195,.26);
+      background:rgba(143,240,195,.055);
+    }
+
+    .tag.gold{
+      border-color:rgba(243,200,111,.26);
+      background:rgba(243,200,111,.055);
+    }
+
+    .doctrine-short{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:.65rem;
+    }
+
+    .doctrine-card{
+      display:grid;
+      gap:.45rem;
+      min-height:8rem;
+      padding:.9rem;
+      border:1px solid rgba(143,240,195,.16);
+      border-radius:1rem;
+      background:rgba(143,240,195,.045);
+    }
+
+    .doctrine-card b{
+      color:var(--green);
+      font-size:.64rem;
+      letter-spacing:.11em;
+      text-transform:uppercase;
+    }
+
+    .doctrine-card span{
       color:var(--muted);
-      font-size:.94rem;
-      line-height:1.38;
+      font-size:.9rem;
+      line-height:1.34;
+    }
+
+    .split{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.85rem;
+    }
+
+    .note{
+      padding:.9rem 1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.15rem;
+      background:rgba(255,255,255,.035);
+      color:var(--soft);
+      font-size:.9rem;
+      line-height:1.45;
     }
 
     .final-band{
@@ -837,14 +876,17 @@
       letter-spacing:-.04em;
     }
 
-    .disclaimer{
-      padding:.9rem 1rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.15rem;
-      background:rgba(255,255,255,.035);
-      color:var(--soft);
-      font-size:.88rem;
-      line-height:1.45;
+    ul{
+      margin:0;
+      padding-left:1.1rem;
+      color:var(--muted);
+    }
+
+    li{
+      margin:.38rem 0;
+      color:var(--muted);
+      font-size:.94rem;
+      line-height:1.38;
     }
 
     .route-receipt,
@@ -878,21 +920,22 @@
     }
 
     @media (max-width:1120px){
-      .loop-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-      .grid.four,
-      .module-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .pressure-list,
-      .doctrine-list,
-      .kill-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .idea-strip{grid-template-columns:repeat(4,minmax(0,1fr))}
+      .doctrine-short{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
     @media (max-width:980px){
       .topbar{grid-template-columns:1fr;align-items:start}
       .nav{justify-content:flex-start}
+      .grid.four,
       .grid.three,
       .grid.two,
-      .lane-split{grid-template-columns:1fr}
-      .stack-row{grid-template-columns:1fr}
+      .loop-grid,
+      .science-grid,
+      .module-grid,
+      .split{grid-template-columns:1fr}
+      .page-nav{position:relative;top:auto}
+      html{scroll-padding-top:1rem}
     }
 
     @media (max-width:720px){
@@ -901,12 +944,10 @@
       .hero{min-height:31rem;padding:1rem}
       .actions{display:grid}
       .button{width:100%}
-      .loop-grid,
-      .grid.four,
-      .module-grid,
-      .pressure-list,
-      .doctrine-list,
-      .kill-list{grid-template-columns:1fr}
+      .idea-strip,
+      .micro-grid,
+      .doctrine-short{grid-template-columns:1fr}
+      summary{align-items:flex-start}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -923,7 +964,7 @@
 </head>
 
 <body>
-  <a class="skip" href="#water-main">Skip to Water</a>
+  <a class="skip" href="#start">Skip to Water</a>
 
   <div class="shell">
     <header class="topbar" aria-label="Closed Water System header">
@@ -947,546 +988,699 @@
       </nav>
     </header>
 
-    <main id="water-main">
+    <main id="start">
       <section class="panel hero" aria-labelledby="page-title">
         <div class="kicker">Water · Closed-System Frontier Science</div>
 
         <h1 id="page-title">Water must return.</h1>
 
-        <h2>Closed water systems capture, purify, retain, reuse, balance, store, and return water.</h2>
+        <h2>A closed water system keeps water alive inside the loop.</h2>
 
         <p class="lead">
-          The Water lane teaches frontier science through closed-loop water architecture. Household filtration is only one supporting layer. The larger frontier problem is how water survives inside a closed civilization, a remote habitat, or a developing planet.
+          On Earth, water can look disposable because the system is large enough to hide the cost. On a frontier world, nothing is disposable. Every leak, contaminant, waste stream, vapor trail, and storage failure returns as a survival problem.
         </p>
 
         <div class="principle">
-          A closed water system does not treat water as disposable. It captures, cleans, balances, stores, reuses, and returns water so a habitat, settlement, or planet can survive under pressure.
+          Water is not only filtered. Water is captured, cleaned, balanced, stored, reused, recovered, and returned.
         </div>
 
         <div class="actions">
-          <a class="button blue" href="#loop">Open the Closed Loop</a>
-          <a class="button" href="#science">See the Science Stack</a>
-          <a class="button green" href="#audralia">Audralia Inheritance</a>
-          <a class="button gold" href="/frontier/">Return to Frontier</a>
+          <a class="button blue" href="#loop">Open the Loop</a>
+          <a class="button green" href="#audralia">See Audralia</a>
+          <a class="button" href="#modules">Explore Modules</a>
+          <a class="button gold" href="#engineering">Engineering Notes</a>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="lane-title">
-        <div class="kicker">Lane correction</div>
-        <h2 id="lane-title">This is not only household filtration.</h2>
-
-        <div class="lane-split">
-          <article class="split-card">
-            <h3>Supporting layer: household water protection</h3>
-            <p>
-              The Texas/HomeWater education lane remains a supporting public household-water layer. It teaches contaminant families, treatment matching, filtration, softening, reduction discipline, and household protection.
-            </p>
-
-            <div class="tagline">
-              <span class="tag">Texas water</span>
-              <span class="tag">HomeWater</span>
-              <span class="tag">Filtration</span>
-              <span class="tag">Softening</span>
-              <span class="tag">Reduction</span>
-            </div>
-          </article>
-
-          <article class="split-card">
-            <h3>Active layer: closed water system technology</h3>
-            <p>
-              The active Water lane is now closed-loop water architecture for Audralia, interplanetary research, frontier science, habitat support, emergency survival, and narrative inheritance.
-            </p>
-
-            <div class="tagline">
-              <span class="tag">Capture</span>
-              <span class="tag">Recovery</span>
-              <span class="tag">Reuse</span>
-              <span class="tag">Storage</span>
-              <span class="tag">Return</span>
-            </div>
-          </article>
+      <nav class="page-nav" aria-label="Water page navigation engine">
+        <div class="page-nav-inner">
+          <a class="primary" href="#start">Start</a>
+          <a href="#loop">Closed Loop</a>
+          <a href="#science">Science Stack</a>
+          <a href="#audralia">Audralia</a>
+          <a href="#pressures">Pressures</a>
+          <a href="#modules">Modules</a>
+          <a href="#doctrine">Crew Doctrine</a>
+          <a href="#engineering">Engineering Notes</a>
+          <a href="#kill">Kill Conditions</a>
         </div>
+      </nav>
 
-        <div class="disclaimer">
-          Household filtering can clean water before use. Closed water systems must keep water alive through the entire cycle.
+      <section class="panel section" aria-labelledby="idea-title">
+        <div class="kicker">The big idea</div>
+        <h2 id="idea-title">Filtration is one piece. The loop is the system.</h2>
+
+        <p>
+          A household filter can clean water before use. A closed water system must keep water usable through the entire journey.
+        </p>
+
+        <div class="idea-strip" aria-label="Closed water system compressed sequence">
+          <div class="idea-chip">
+            <b>Capture</b>
+            <span>Find source water.</span>
+          </div>
+
+          <div class="idea-chip">
+            <b>Clean</b>
+            <span>Reduce the threat.</span>
+          </div>
+
+          <div class="idea-chip">
+            <b>Balance</b>
+            <span>Restore chemistry.</span>
+          </div>
+
+          <div class="idea-chip">
+            <b>Store</b>
+            <span>Protect reserves.</span>
+          </div>
+
+          <div class="idea-chip">
+            <b>Use</b>
+            <span>Support life.</span>
+          </div>
+
+          <div class="idea-chip">
+            <b>Recover</b>
+            <span>Collect after use.</span>
+          </div>
+
+          <div class="idea-chip">
+            <b>Return</b>
+            <span>Close the loop.</span>
+          </div>
         </div>
       </section>
 
       <section class="panel section" id="loop" aria-labelledby="loop-title">
-        <div class="kicker">Closed water loop</div>
+        <div class="kicker">Closed loop navigator</div>
         <h2 id="loop-title">The loop is the technology.</h2>
 
-        <div class="loop-stage" aria-label="Closed water loop sequence">
-          <div class="loop-grid">
-            <div class="loop-step">
-              <span class="dot" aria-hidden="true"></span>
-              <b>Capture</b>
-              <span>Collect water from available sources.</span>
+        <div class="loop-grid">
+          <details open>
+            <summary>
+              <span class="summary-text">
+                <b>Step 1</b>
+                <span>Capture</span>
+              </span>
+            </summary>
+            <div class="detail-body">
+              <p>Where does the water come from? Capture collects water from available sources: surface flow, runoff, stored reserves, condensation, atmospheric recovery, or controlled intake.</p>
             </div>
+          </details>
 
-            <div class="loop-step">
-              <span class="dot" aria-hidden="true"></span>
-              <b>Screen</b>
-              <span>Remove debris, sediment, and incoming physical load.</span>
+          <details>
+            <summary>
+              <span class="summary-text">
+                <b>Step 2</b>
+                <span>Screen</span>
+              </span>
+            </summary>
+            <div class="detail-body">
+              <p>What physical load enters? Screening removes debris, sediment, grit, large particulates, and incoming material that would overload later treatment stages.</p>
             </div>
+          </details>
 
-            <div class="loop-step">
-              <span class="dot" aria-hidden="true"></span>
-              <b>Purify</b>
-              <span>Reduce biological, chemical, mineral, and particulate threats.</span>
+          <details>
+            <summary>
+              <span class="summary-text">
+                <b>Step 3</b>
+                <span>Purify</span>
+              </span>
+            </summary>
+            <div class="detail-body">
+              <p>What threats must be reduced? Purification addresses biological, chemical, mineral, and particulate risks according to the mission requirement.</p>
             </div>
+          </details>
 
-            <div class="loop-step">
-              <span class="dot" aria-hidden="true"></span>
-              <b>Balance</b>
-              <span>Restore useful pH, mineral, salinity, and chemistry conditions.</span>
+          <details>
+            <summary>
+              <span class="summary-text">
+                <b>Step 4</b>
+                <span>Balance</span>
+              </span>
+            </summary>
+            <div class="detail-body">
+              <p>What chemistry must be restored? Balanced water may need pH, mineral, salinity, temperature, or other chemistry corrections before use or return.</p>
             </div>
+          </details>
 
-            <div class="loop-step">
-              <span class="dot" aria-hidden="true"></span>
-              <b>Store</b>
-              <span>Protect reserves against loss, contamination, freezing, and failure.</span>
+          <details>
+            <summary>
+              <span class="summary-text">
+                <b>Step 5</b>
+                <span>Store</span>
+              </span>
+            </summary>
+            <div class="detail-body">
+              <p>How is the reserve protected? Storage guards water against loss, leakage, freezing, contamination, stagnation, pressure change, and emergency depletion.</p>
             </div>
+          </details>
 
-            <div class="loop-step">
-              <span class="dot" aria-hidden="true"></span>
-              <b>Use</b>
-              <span>Support drinking, food, hygiene, cooling, industry, and habitats.</span>
+          <details>
+            <summary>
+              <span class="summary-text">
+                <b>Step 6</b>
+                <span>Use</span>
+              </span>
+            </summary>
+            <div class="detail-body">
+              <p>What systems consume water? Use includes drinking, food systems, hygiene, cooling, agriculture, habitat systems, and industrial support.</p>
             </div>
+          </details>
 
-            <div class="loop-step">
-              <span class="dot" aria-hidden="true"></span>
-              <b>Recover</b>
-              <span>Collect greywater, wastewater, condensation, runoff, and discharge.</span>
+          <details>
+            <summary>
+              <span class="summary-text">
+                <b>Step 7</b>
+                <span>Recover</span>
+              </span>
+            </summary>
+            <div class="detail-body">
+              <p>What water can be collected after use? Recovery captures greywater, wastewater, condensate, runoff, vapor, and controlled discharge.</p>
             </div>
+          </details>
 
-            <div class="loop-step">
-              <span class="dot" aria-hidden="true"></span>
-              <b>Reclaim</b>
-              <span>Separate usable water from waste, salts, organics, and residues.</span>
+          <details>
+            <summary>
+              <span class="summary-text">
+                <b>Step 8</b>
+                <span>Reclaim</span>
+              </span>
+            </summary>
+            <div class="detail-body">
+              <p>What can be separated from waste? Reclamation separates usable water from salts, organics, solids, contaminants, brine, and process residues.</p>
             </div>
+          </details>
 
-            <div class="loop-step">
-              <span class="dot" aria-hidden="true"></span>
-              <b>Return</b>
-              <span>Send water back into storage, habitat, agriculture, atmosphere, or cycle.</span>
+          <details>
+            <summary>
+              <span class="summary-text">
+                <b>Step 9</b>
+                <span>Return</span>
+              </span>
+            </summary>
+            <div class="detail-body">
+              <p>Where does the water go next? Returned water moves back into storage, habitat systems, agriculture, atmospheric exchange, or planetary cycle.</p>
             </div>
-          </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="panel section" id="audralia" aria-labelledby="audralia-title">
+        <div class="kicker">Audralia inheritance</div>
+        <h2 id="audralia-title">Audralia does not treat water as scenery.</h2>
+
+        <p>
+          Audralia inherits closed water science as crew doctrine, settlement infrastructure, planetary hydrology, emergency survival, and narrative pressure.
+        </p>
+
+        <div class="grid three">
+          <details open>
+            <summary>
+              <span class="summary-text">
+                <b>Inheritance</b>
+                <span>Crew Doctrine</span>
+              </span>
+            </summary>
+            <div class="detail-body">
+              <p>The crew measures before use, separates streams, recovers what can be recovered, and protects the loop before expanding the settlement.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <span class="summary-text">
+                <b>Inheritance</b>
+                <span>Settlement Infrastructure</span>
+              </span>
+            </summary>
+            <div class="detail-body">
+              <p>Capture fields, purification chambers, reclamation vaults, storage cisterns, and habitat loops become part of the visible civilization.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <span class="summary-text">
+                <b>Inheritance</b>
+                <span>Planetary Hydrology</span>
+              </span>
+            </summary>
+            <div class="detail-body">
+              <p>Rain, runoff, subsurface movement, evaporation, condensation, and reserves become measured planetary infrastructure.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <span class="summary-text">
+                <b>Inheritance</b>
+                <span>Emergency Reserves</span>
+              </span>
+            </summary>
+            <div class="detail-body">
+              <p>Reserve water buys time when drought, contamination, damage, overload, or failure pushes the settlement under pressure.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <span class="summary-text">
+                <b>Inheritance</b>
+                <span>Narrative Pressure</span>
+              </span>
+            </summary>
+            <div class="detail-body">
+              <p>Leaks, contamination, salt buildup, sensor failure, mineral imbalance, and wastewater overload become story problems the crew must solve.</p>
+            </div>
+          </details>
+
+          <article class="card violet">
+            <b>Audralia sentence</b>
+            <strong>Water is living infrastructure.</strong>
+            <span>Measured, protected, recovered, cycled, and returned before the world can endure.</span>
+          </article>
         </div>
       </section>
 
       <section class="panel section" id="science" aria-labelledby="science-title">
         <div class="kicker">Frontier science stack</div>
-        <h2 id="science-title">A closed water system is not one filter.</h2>
+        <h2 id="science-title">A closed water system is not one device.</h2>
 
-        <div class="grid four">
-          <article class="card">
-            <b>Hydrology</b>
-            <strong>Map the movement.</strong>
-            <span>Water must be tracked as a cycle, not as a one-time input.</span>
-          </article>
+        <div class="science-grid">
+          <details>
+            <summary><span class="summary-text"><b>Science</b><span>Hydrology</span></span></summary>
+            <div class="detail-body">
+              <div class="micro-grid">
+                <div class="micro"><b>Public</b><span>Water must be tracked as movement.</span></div>
+                <div class="micro"><b>Engineering</b><span>Inputs, losses, reserves, flow paths, runoff, and return cycles must be modeled.</span></div>
+                <div class="micro"><b>Audralia</b><span>Hydrology stations track whether the planet can support settlement growth.</span></div>
+              </div>
+            </div>
+          </details>
 
-          <article class="card">
-            <b>Chemistry</b>
-            <strong>Know what changed.</strong>
-            <span>pH, minerals, salinity, organics, and dissolved compounds determine whether water can safely return.</span>
-          </article>
+          <details>
+            <summary><span class="summary-text"><b>Science</b><span>Chemistry</span></span></summary>
+            <div class="detail-body">
+              <div class="micro-grid">
+                <div class="micro"><b>Public</b><span>Clear water is not automatically usable.</span></div>
+                <div class="micro"><b>Engineering</b><span>pH, minerals, salinity, organics, and dissolved load determine return eligibility.</span></div>
+                <div class="micro"><b>Audralia</b><span>Mineral-balance labs decide which streams can re-enter habitat systems.</span></div>
+              </div>
+            </div>
+          </details>
 
-          <article class="card">
-            <b>Filtration</b>
-            <strong>Reduce the load.</strong>
-            <span>Particles, organics, and system-specific contaminants need staged reduction.</span>
-          </article>
+          <details>
+            <summary><span class="summary-text"><b>Science</b><span>Filtration</span></span></summary>
+            <div class="detail-body">
+              <div class="micro-grid">
+                <div class="micro"><b>Public</b><span>Filtration reduces the load.</span></div>
+                <div class="micro"><b>Engineering</b><span>Particle, organic, and contaminant reduction must be staged by water chemistry.</span></div>
+                <div class="micro"><b>Audralia</b><span>Purification chambers do not guess; they route by stream class.</span></div>
+              </div>
+            </div>
+          </details>
 
-          <article class="card">
-            <b>Membranes</b>
-            <strong>Separate fine threats.</strong>
-            <span>Membrane systems can help separate dissolved load, microbial risk, and reclaimable water depending on mission design.</span>
-          </article>
+          <details>
+            <summary><span class="summary-text"><b>Science</b><span>Membranes</span></span></summary>
+            <div class="detail-body">
+              <div class="micro-grid">
+                <div class="micro"><b>Public</b><span>Some threats require finer separation.</span></div>
+                <div class="micro"><b>Engineering</b><span>Membrane systems can separate dissolved load, microbes, salts, and reclaimable water.</span></div>
+                <div class="micro"><b>Audralia</b><span>Membrane modules decide whether wastewater can become reserve water.</span></div>
+              </div>
+            </div>
+          </details>
 
-          <article class="card">
-            <b>Biology</b>
-            <strong>Control living systems.</strong>
-            <span>Microbial balance matters in habitats, wastewater recovery, and ecological loops.</span>
-          </article>
+          <details>
+            <summary><span class="summary-text"><b>Science</b><span>Biology</span></span></summary>
+            <div class="detail-body">
+              <div class="micro-grid">
+                <div class="micro"><b>Public</b><span>Living systems can help or harm the loop.</span></div>
+                <div class="micro"><b>Engineering</b><span>Microbial control protects habitats, wastewater recovery, and ecological cycling.</span></div>
+                <div class="micro"><b>Audralia</b><span>The crew monitors microbial imbalance before it spreads through the settlement.</span></div>
+              </div>
+            </div>
+          </details>
 
-          <article class="card">
-            <b>Mineral balance</b>
-            <strong>Return useful chemistry.</strong>
-            <span>Water that is technically clean may still need chemistry correction before reuse.</span>
-          </article>
+          <details>
+            <summary><span class="summary-text"><b>Science</b><span>Mineral Balance</span></span></summary>
+            <div class="detail-body">
+              <div class="micro-grid">
+                <div class="micro"><b>Public</b><span>Clean is not the same as balanced.</span></div>
+                <div class="micro"><b>Engineering</b><span>Minerals, salts, pH, and chemistry must match the next use case.</span></div>
+                <div class="micro"><b>Audralia</b><span>Balanced water returns to habitat, agriculture, or reserve only after verification.</span></div>
+              </div>
+            </div>
+          </details>
 
-          <article class="card">
-            <b>Atmospheric cycling</b>
-            <strong>Recover vapor and humidity.</strong>
-            <span>Closed habitats must treat condensation, vapor, and air-water exchange as part of the water budget.</span>
-          </article>
+          <details>
+            <summary><span class="summary-text"><b>Science</b><span>Atmospheric Cycling</span></span></summary>
+            <div class="detail-body">
+              <div class="micro-grid">
+                <div class="micro"><b>Public</b><span>Air is part of the water budget.</span></div>
+                <div class="micro"><b>Engineering</b><span>Humidity, vapor, condensation, evaporation, and atmospheric loss must be measured.</span></div>
+                <div class="micro"><b>Audralia</b><span>Atmospheric return towers link water recovery to climate and habitat control.</span></div>
+              </div>
+            </div>
+          </details>
 
-          <article class="card">
-            <b>Wastewater recovery</b>
-            <strong>Do not lose usable water.</strong>
-            <span>Greywater, blackwater, brine, and discharge streams become engineering problems, not invisible waste.</span>
-          </article>
-
-          <article class="card">
-            <b>Thermal control</b>
-            <strong>Protect phase and pressure.</strong>
-            <span>Heat, cold, freezing, evaporation, pressure, and condensation affect storage and recovery.</span>
-          </article>
-
-          <article class="card">
-            <b>Storage engineering</b>
-            <strong>Guard the reserve.</strong>
-            <span>Stored water must be protected from contamination, leakage, freezing, stagnation, and emergency depletion.</span>
-          </article>
-
-          <article class="card">
-            <b>Sensors</b>
-            <strong>Clear water is not proof.</strong>
-            <span>Measurement decides whether water is safe enough to return to the loop.</span>
-          </article>
-
-          <article class="card">
-            <b>Emergency reserves</b>
-            <strong>Survival needs margin.</strong>
-            <span>Closed systems require reserve planning before drought, damage, contamination, or overload occurs.</span>
-          </article>
-        </div>
-
-        <div class="principle">
-          The science is not one device. The science is a governed cycle.
-        </div>
-      </section>
-
-      <section class="panel section" id="audralia" aria-labelledby="audralia-title">
-        <div class="kicker">Audralia material plan</div>
-        <h2 id="audralia-title">Audralia inherits water as infrastructure.</h2>
-
-        <p>
-          On Audralia, water is not a background resource. It is living infrastructure: measured, protected, recovered, cycled, and returned by the crew before the world can endure.
-        </p>
-
-        <div class="grid four">
-          <article class="card violet">
-            <b>Capture fields</b>
-            <strong>Collect what the world provides.</strong>
-            <span>Surface water, condensation, runoff, and stored reserves become mapped sources.</span>
-          </article>
-
-          <article class="card violet">
-            <b>Purification chambers</b>
-            <strong>Staged treatment before return.</strong>
-            <span>Water passes through mission-specific screening, reduction, purification, and verification.</span>
-          </article>
-
-          <article class="card violet">
-            <b>Reclamation vaults</b>
-            <strong>Waste streams become recovery problems.</strong>
-            <span>Greywater, wastewater, brine, and discharge are processed instead of discarded.</span>
-          </article>
-
-          <article class="card violet">
-            <b>Mineral-balance labs</b>
-            <strong>Clean is not the same as usable.</strong>
-            <span>Returned water may require mineral, pH, salinity, or chemistry correction.</span>
-          </article>
-
-          <article class="card violet">
-            <b>Atmospheric return towers</b>
-            <strong>Air and water stay connected.</strong>
-            <span>Humidity, vapor, condensation, and atmospheric loss become part of the water budget.</span>
-          </article>
-
-          <article class="card violet">
-            <b>Habitat loops</b>
-            <strong>Settlements need internal cycling.</strong>
-            <span>Drinking, hygiene, agriculture, cooling, and habitat systems must remain connected without uncontrolled mixing.</span>
-          </article>
-
-          <article class="card violet">
-            <b>Emergency cisterns</b>
-            <strong>Reserve water buys time.</strong>
-            <span>Failure margin protects the crew before repair, resupply, or recovery can stabilize the loop.</span>
-          </article>
-
-          <article class="card violet">
-            <b>Hydrology stations</b>
-            <strong>The planet must be measured.</strong>
-            <span>Planetary water movement becomes a science layer, not scenery.</span>
-          </article>
+          <details>
+            <summary><span class="summary-text"><b>Science</b><span>Emergency Reserves</span></span></summary>
+            <div class="detail-body">
+              <div class="micro-grid">
+                <div class="micro"><b>Public</b><span>Survival needs margin.</span></div>
+                <div class="micro"><b>Engineering</b><span>Reserve thresholds must account for drought, contamination, damage, overload, and repair time.</span></div>
+                <div class="micro"><b>Audralia</b><span>Emergency cisterns protect the crew when the primary loop fails.</span></div>
+              </div>
+            </div>
+          </details>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="pressure-title">
+      <section class="panel section" id="pressures" aria-labelledby="pressure-title">
         <div class="kicker">System pressures</div>
         <h2 id="pressure-title">Closed systems fail when water escapes the loop.</h2>
 
         <p>
-          In an open system, waste can be flushed away and new water can be pulled in. In a closed system, every mistake returns. That is why measurement, recovery, and balance matter.
+          In an open system, mistakes can be diluted or flushed away. In a closed system, mistakes come back.
         </p>
 
-        <ul class="pressure-list">
-          <li>Loss</li>
-          <li>Contamination</li>
-          <li>Salt buildup</li>
-          <li>Mineral depletion</li>
-          <li>Microbial imbalance</li>
-          <li>Chemical accumulation</li>
-          <li>Energy cost</li>
-          <li>Storage failure</li>
-          <li>Sensor failure</li>
-          <li>Atmospheric loss</li>
-          <li>Wastewater overload</li>
-          <li>Emergency demand</li>
-        </ul>
-      </section>
-
-      <section class="panel section" aria-labelledby="inheritance-title">
-        <div class="kicker">Contaminant-family inheritance</div>
-        <h2 id="inheritance-title">The household lane still teaches useful logic.</h2>
-
-        <div class="lane-split">
-          <article class="split-card">
-            <h3>What the household lane contributes</h3>
-            <ul>
-              <li>Contaminant-family separation.</li>
-              <li>Acute versus chronic exposure logic.</li>
-              <li>Treatment matching by chemistry.</li>
-              <li>Reduction, not magical elimination.</li>
-              <li>Filtration versus softening distinction.</li>
-              <li>Testing before treatment.</li>
-            </ul>
-          </article>
-
-          <article class="split-card">
-            <h3>What the closed system upgrades</h3>
-            <p>
-              In a closed system, contaminants are not only removed. They must be tracked, concentrated, isolated, neutralized, reused, or safely stored.
-            </p>
-
-            <div class="tagline">
-              <span class="tag">Track</span>
-              <span class="tag">Separate</span>
-              <span class="tag">Neutralize</span>
-              <span class="tag">Reuse</span>
-              <span class="tag">Store</span>
-            </div>
-          </article>
+        <div class="chip-wall">
+          <span class="tag blue">Loss</span>
+          <span class="tag blue">Contamination</span>
+          <span class="tag blue">Salt Buildup</span>
+          <span class="tag blue">Mineral Depletion</span>
+          <span class="tag blue">Microbial Imbalance</span>
+          <span class="tag blue">Chemical Accumulation</span>
+          <span class="tag gold">Energy Cost</span>
+          <span class="tag gold">Storage Failure</span>
+          <span class="tag gold">Sensor Failure</span>
+          <span class="tag green">Atmospheric Loss</span>
+          <span class="tag green">Wastewater Overload</span>
+          <span class="tag green">Emergency Demand</span>
         </div>
+
+        <details>
+          <summary>
+            <span class="summary-text">
+              <b>Why this matters</b>
+              <span>Closed systems return every mistake.</span>
+            </span>
+          </summary>
+          <div class="detail-body">
+            <p>Every unresolved contaminant, leak, overload, storage failure, or unmeasured stream eventually returns to the habitat. That is why the loop must be measured, protected, and governed before expansion.</p>
+          </div>
+        </details>
       </section>
 
-      <section class="panel section" aria-labelledby="modules-title">
+      <section class="panel section" id="modules" aria-labelledby="modules-title">
         <div class="kicker">Technology modules</div>
-        <h2 id="modules-title">The closed water system is modular.</h2>
+        <h2 id="modules-title">The system is modular.</h2>
 
         <div class="module-grid">
-          <article class="module-card">
-            <b>Intake module</b>
-            <span>Receives source water and defines what enters the system.</span>
-          </article>
+          <details>
+            <summary><span class="summary-text"><b>Module</b><span>Intake</span></span></summary>
+            <div class="detail-body">
+              <p>Receives source water and defines what enters the system.</p>
+              <div class="chip-wall"><span class="tag">Source</span><span class="tag">Flow</span><span class="tag">Entry Risk</span></div>
+            </div>
+          </details>
 
-          <article class="module-card">
-            <b>Sediment module</b>
-            <span>Removes physical load before finer treatment stages.</span>
-          </article>
+          <details>
+            <summary><span class="summary-text"><b>Module</b><span>Sediment</span></span></summary>
+            <div class="detail-body">
+              <p>Removes physical load before finer treatment stages.</p>
+              <div class="chip-wall"><span class="tag">Debris</span><span class="tag">Grit</span><span class="tag">Particulates</span></div>
+            </div>
+          </details>
 
-          <article class="module-card">
-            <b>Biological control</b>
-            <span>Manages microbial risk and biological balance.</span>
-          </article>
+          <details>
+            <summary><span class="summary-text"><b>Module</b><span>Biological Control</span></span></summary>
+            <div class="detail-body">
+              <p>Manages microbial risk and biological balance.</p>
+              <div class="chip-wall"><span class="tag">Microbes</span><span class="tag">Biofilm</span><span class="tag">Habitat Safety</span></div>
+            </div>
+          </details>
 
-          <article class="module-card">
-            <b>Chemical reduction</b>
-            <span>Targets mission-specific chemical load.</span>
-          </article>
+          <details>
+            <summary><span class="summary-text"><b>Module</b><span>Chemical Reduction</span></span></summary>
+            <div class="detail-body">
+              <p>Targets mission-specific chemical load.</p>
+              <div class="chip-wall"><span class="tag">Organics</span><span class="tag">Metals</span><span class="tag">Dissolved Load</span></div>
+            </div>
+          </details>
 
-          <article class="module-card">
-            <b>Membrane module</b>
-            <span>Separates fine contaminants and recoverable water streams.</span>
-          </article>
+          <details>
+            <summary><span class="summary-text"><b>Module</b><span>Membrane</span></span></summary>
+            <div class="detail-body">
+              <p>Separates fine contaminants and recoverable water streams.</p>
+              <div class="chip-wall"><span class="tag">Separation</span><span class="tag">Recovery</span><span class="tag">Brine</span></div>
+            </div>
+          </details>
 
-          <article class="module-card">
-            <b>Ion / mineral balance</b>
-            <span>Controls mineral, salt, pH, and chemistry return conditions.</span>
-          </article>
+          <details>
+            <summary><span class="summary-text"><b>Module</b><span>Ion / Mineral Balance</span></span></summary>
+            <div class="detail-body">
+              <p>Controls mineral, salt, pH, and chemistry return conditions.</p>
+              <div class="chip-wall"><span class="tag">pH</span><span class="tag">Minerals</span><span class="tag">Salinity</span></div>
+            </div>
+          </details>
 
-          <article class="module-card">
-            <b>Wastewater recovery</b>
-            <span>Reclaims usable water from greywater, blackwater, and discharge.</span>
-          </article>
+          <details>
+            <summary><span class="summary-text"><b>Module</b><span>Wastewater Recovery</span></span></summary>
+            <div class="detail-body">
+              <p>Reclaims usable water from greywater, blackwater, and discharge.</p>
+              <div class="chip-wall"><span class="tag">Greywater</span><span class="tag">Blackwater</span><span class="tag">Discharge</span></div>
+            </div>
+          </details>
 
-          <article class="module-card">
-            <b>Condensation recovery</b>
-            <span>Captures humidity, vapor, and thermal-cycle water.</span>
-          </article>
+          <details>
+            <summary><span class="summary-text"><b>Module</b><span>Condensation Recovery</span></span></summary>
+            <div class="detail-body">
+              <p>Captures humidity, vapor, and thermal-cycle water.</p>
+              <div class="chip-wall"><span class="tag">Humidity</span><span class="tag">Vapor</span><span class="tag">Condensate</span></div>
+            </div>
+          </details>
 
-          <article class="module-card">
-            <b>Atmospheric return</b>
-            <span>Returns water into habitat air, agricultural cycles, or planetary exchange.</span>
-          </article>
+          <details>
+            <summary><span class="summary-text"><b>Module</b><span>Atmospheric Return</span></span></summary>
+            <div class="detail-body">
+              <p>Returns water into habitat air, agricultural cycles, or planetary exchange.</p>
+              <div class="chip-wall"><span class="tag">Air</span><span class="tag">Climate</span><span class="tag">Cycle</span></div>
+            </div>
+          </details>
 
-          <article class="module-card">
-            <b>Storage module</b>
-            <span>Protects reserves from leakage, contamination, freezing, and depletion.</span>
-          </article>
+          <details>
+            <summary><span class="summary-text"><b>Module</b><span>Storage</span></span></summary>
+            <div class="detail-body">
+              <p>Protects reserves from leakage, contamination, freezing, and depletion.</p>
+              <div class="chip-wall"><span class="tag">Reserve</span><span class="tag">Protection</span><span class="tag">Margin</span></div>
+            </div>
+          </details>
 
-          <article class="module-card">
-            <b>Sensor / audit module</b>
-            <span>Measures whether water can lawfully move to the next stage.</span>
-          </article>
+          <details>
+            <summary><span class="summary-text"><b>Module</b><span>Sensor / Audit</span></span></summary>
+            <div class="detail-body">
+              <p>Measures whether water can lawfully move to the next stage.</p>
+              <div class="chip-wall"><span class="tag">Measure</span><span class="tag">Verify</span><span class="tag">Gate</span></div>
+            </div>
+          </details>
 
-          <article class="module-card">
-            <b>Emergency reserve</b>
-            <span>Holds survival margin for system damage, drought, overload, or contamination.</span>
-          </article>
+          <details>
+            <summary><span class="summary-text"><b>Module</b><span>Emergency Reserve</span></span></summary>
+            <div class="detail-body">
+              <p>Holds survival margin for system damage, drought, overload, or contamination.</p>
+              <div class="chip-wall"><span class="tag">Survival</span><span class="tag">Repair Time</span><span class="tag">Fallback</span></div>
+            </div>
+          </details>
         </div>
 
-        <div class="question-band">
-          <b>Each module must answer</b>
-          <div class="tagline">
-            <span class="tag">What enters?</span>
-            <span class="tag">What changes?</span>
-            <span class="tag">What leaves?</span>
-            <span class="tag">What is stored?</span>
-            <span class="tag">What is rejected?</span>
-            <span class="tag">What is measured?</span>
-            <span class="tag">What failure stops the loop?</span>
+        <details>
+          <summary>
+            <span class="summary-text">
+              <b>Module audit</b>
+              <span>Seven questions every module must answer.</span>
+            </span>
+          </summary>
+          <div class="detail-body">
+            <div class="chip-wall">
+              <span class="tag gold">What enters?</span>
+              <span class="tag gold">What changes?</span>
+              <span class="tag gold">What leaves?</span>
+              <span class="tag gold">What is stored?</span>
+              <span class="tag gold">What is rejected?</span>
+              <span class="tag gold">What is measured?</span>
+              <span class="tag gold">What failure stops the loop?</span>
+            </div>
           </div>
-        </div>
+        </details>
       </section>
 
-      <section class="panel section" aria-labelledby="crew-title">
+      <section class="panel section" id="doctrine" aria-labelledby="doctrine-title">
         <div class="kicker">Crew doctrine</div>
-        <h2 id="crew-title">The crew does not waste water.</h2>
+        <h2 id="doctrine-title">The crew does not waste water.</h2>
 
-        <ul class="doctrine-list">
-          <li>Measure before use.</li>
-          <li>Separate clean, grey, black, brine, condensate, and atmospheric water.</li>
-          <li>Recover what can be recovered.</li>
-          <li>Do not mix streams without purpose.</li>
-          <li>Do not return unbalanced water to habitat systems.</li>
-          <li>Do not let storage become invisible.</li>
-          <li>Do not trust clear water without measurement.</li>
-          <li>Do not let wastewater become a hidden liability.</li>
-          <li>Treat water as infrastructure, not scenery.</li>
-          <li>Protect the loop before expanding the settlement.</li>
-        </ul>
-      </section>
-
-      <section class="panel section" aria-labelledby="research-title">
-        <div class="kicker">Interplanetary research role</div>
-        <h2 id="research-title">Water decides whether a world can stay inhabited.</h2>
-
-        <div class="grid four">
-          <article class="card">
-            <b>Closed habitats</b>
-            <strong>Remote life needs internal cycling.</strong>
-            <span>Water cannot rely on constant external supply.</span>
-          </article>
-
-          <article class="card">
-            <b>Remote settlements</b>
-            <strong>Survival depends on retention.</strong>
-            <span>Every leak, waste stream, and reserve failure becomes a settlement-level problem.</span>
-          </article>
-
-          <article class="card">
-            <b>Planetary hydrology</b>
-            <strong>The world must be modeled.</strong>
-            <span>Rain, runoff, storage, evaporation, and subsurface movement become infrastructure variables.</span>
-          </article>
-
-          <article class="card">
-            <b>Atmospheric recovery</b>
-            <strong>Air is part of the water budget.</strong>
-            <span>Humidity, vapor, condensation, and atmospheric loss must be tracked.</span>
-          </article>
-
-          <article class="card">
-            <b>Agricultural recirculation</b>
-            <strong>Food systems consume water.</strong>
-            <span>Agriculture must recycle, balance, and protect usable water streams.</span>
-          </article>
-
-          <article class="card">
-            <b>Emergency drought</b>
-            <strong>Reserve planning matters.</strong>
-            <span>Closed worlds require drought response before visible crisis.</span>
-          </article>
-
-          <article class="card">
-            <b>Contamination isolation</b>
-            <strong>Bad water cannot disappear.</strong>
-            <span>Contaminants must be isolated, neutralized, stored, or removed from the active loop.</span>
-          </article>
-
-          <article class="card">
-            <b>Long-duration crews</b>
-            <strong>People stress the loop.</strong>
-            <span>Daily use, waste, hygiene, food, and maintenance all pressure the water system.</span>
-          </article>
-        </div>
-
-        <div class="principle">
-          Interplanetary water research is not only about finding water. It is about keeping water usable after it is found.
-        </div>
-      </section>
-
-      <section class="panel section" aria-labelledby="split-title">
-        <div class="kicker">Public / narrative split</div>
-        <h2 id="split-title">The public lane teaches. Audralia demonstrates.</h2>
-
-        <div class="stack-list">
-          <div class="stack-row">
-            <b>Public lane</b>
-            <span>Explains closed-loop water science clearly without pretending a finished interplanetary product is already deployed.</span>
+        <div class="doctrine-short">
+          <div class="doctrine-card">
+            <b>Measure</b>
+            <span>Measure before use.</span>
           </div>
 
-          <div class="stack-row">
-            <b>Narrative lane</b>
-            <span>Shows the same science under pressure through crew missions, settlement design, survival stakes, and planetary restoration.</span>
+          <div class="doctrine-card">
+            <b>Separate</b>
+            <span>Separate clean, grey, black, brine, condensate, and atmospheric water.</span>
           </div>
 
-          <div class="stack-row">
-            <b>Shared law</b>
-            <span>The public lane teaches closed-loop water architecture. The narrative lane turns that architecture into consequences, problems, repairs, and future possibility.</span>
+          <div class="doctrine-card">
+            <b>Recover</b>
+            <span>Recover what can be recovered.</span>
+          </div>
+
+          <div class="doctrine-card">
+            <b>Verify</b>
+            <span>Do not trust clear water without measurement.</span>
+          </div>
+
+          <div class="doctrine-card">
+            <b>Protect</b>
+            <span>Protect the loop before expanding the settlement.</span>
           </div>
         </div>
+
+        <details>
+          <summary>
+            <span class="summary-text">
+              <b>Full doctrine</b>
+              <span>Open the complete crew rules.</span>
+            </span>
+          </summary>
+          <div class="detail-body">
+            <ul>
+              <li>Measure before use.</li>
+              <li>Separate clean, grey, black, brine, condensate, and atmospheric water.</li>
+              <li>Recover what can be recovered.</li>
+              <li>Do not mix streams without purpose.</li>
+              <li>Do not return unbalanced water to habitat systems.</li>
+              <li>Do not let storage become invisible.</li>
+              <li>Do not trust clear water without measurement.</li>
+              <li>Do not let wastewater become a hidden liability.</li>
+              <li>Treat water as infrastructure, not scenery.</li>
+              <li>Protect the loop before expanding the settlement.</li>
+            </ul>
+          </div>
+        </details>
       </section>
 
-      <section class="panel section" aria-labelledby="kill-title">
+      <section class="panel section" id="engineering" aria-labelledby="engineering-title">
+        <div class="kicker">Engineering notes</div>
+        <h2 id="engineering-title">Technical language for deeper readers.</h2>
+
+        <details>
+          <summary>
+            <span class="summary-text">
+              <b>Engineering appendix</b>
+              <span>Open technical depth.</span>
+            </span>
+          </summary>
+          <div class="detail-body">
+            <div class="grid two">
+              <article class="card">
+                <b>Stream classification</b>
+                <strong>Every stream needs a name.</strong>
+                <span>Clean, grey, black, brine, condensate, runoff, atmospheric, process, and reserve streams must not be mixed without purpose.</span>
+              </article>
+
+              <article class="card">
+                <b>Contaminant tracking</b>
+                <strong>Removal is not disappearance.</strong>
+                <span>Contaminants must be tracked, concentrated, isolated, neutralized, reused, or safely stored.</span>
+              </article>
+
+              <article class="card">
+                <b>Storage protection</b>
+                <strong>Reserve water can fail quietly.</strong>
+                <span>Storage must guard against stagnation, leakage, freezing, pressure change, contamination, and hidden depletion.</span>
+              </article>
+
+              <article class="card">
+                <b>Mineral balancing</b>
+                <strong>Chemistry must match use.</strong>
+                <span>Water that is clean enough for machinery may not be balanced for habitat, agriculture, or drinking pathways.</span>
+              </article>
+
+              <article class="card">
+                <b>Recovery efficiency</b>
+                <strong>The loop needs math.</strong>
+                <span>Recovered volume, quality, energy cost, rejection mass, and reset cost determine whether the loop can endure.</span>
+              </article>
+
+              <article class="card">
+                <b>Sensor gates</b>
+                <strong>Measurement authorizes movement.</strong>
+                <span>Water should not advance to use, storage, habitat return, or atmospheric return without measurement gates.</span>
+              </article>
+
+              <article class="card">
+                <b>Atmospheric return capacity</b>
+                <strong>Air has limits.</strong>
+                <span>Humidity, vapor, condensation, and atmospheric water cycling must not exceed capture, control, or habitat tolerance.</span>
+              </article>
+
+              <article class="card">
+                <b>Loop trust criteria</b>
+                <strong>The system must prove itself.</strong>
+                <span>The loop is trusted only when source, treatment, storage, use, recovery, rejection, and return remain measurable.</span>
+              </article>
+            </div>
+          </div>
+        </details>
+      </section>
+
+      <section class="panel section" id="kill" aria-labelledby="kill-title">
         <div class="kicker">Kill conditions</div>
         <h2 id="kill-title">The system stops if the loop cannot be trusted.</h2>
 
-        <ul class="kill-list">
-          <li>Stop if water cannot be measured.</li>
-          <li>Stop if water cannot be tracked.</li>
-          <li>Stop if contaminants cannot be separated.</li>
-          <li>Stop if wastewater cannot be recovered.</li>
-          <li>Stop if storage cannot be protected.</li>
-          <li>Stop if mineral balance cannot be controlled.</li>
-          <li>Stop if the system loses more water than it returns.</li>
-          <li>Stop if the habitat depends on an untested water stream.</li>
-          <li>Stop if atmospheric return exceeds capture capacity.</li>
-          <li>Stop if emergency reserves are undefined.</li>
-          <li>Stop if clear water is treated as automatically safe.</li>
-          <li>Stop if the narrative turns closed-loop science into magic.</li>
-        </ul>
+        <details>
+          <summary>
+            <span class="summary-text">
+              <b>Safety stop</b>
+              <span>Open the failure conditions.</span>
+            </span>
+          </summary>
+          <div class="detail-body">
+            <ul>
+              <li>Stop if water cannot be measured.</li>
+              <li>Stop if water cannot be tracked.</li>
+              <li>Stop if contaminants cannot be separated.</li>
+              <li>Stop if wastewater cannot be recovered.</li>
+              <li>Stop if storage cannot be protected.</li>
+              <li>Stop if mineral balance cannot be controlled.</li>
+              <li>Stop if more water is lost than returned.</li>
+              <li>Stop if the habitat depends on an untested water stream.</li>
+              <li>Stop if atmospheric return exceeds capture capacity.</li>
+              <li>Stop if emergency reserves are undefined.</li>
+              <li>Stop if clear water is treated as automatically safe.</li>
+              <li>Stop if the narrative turns closed-loop science into magic.</li>
+            </ul>
+          </div>
+        </details>
       </section>
 
       <section class="final-band" aria-label="Closed water final statement">
-        <strong>Water is infrastructure, memory, survival, and law.</strong>
+        <strong>The public lane teaches. Audralia demonstrates. The loop governs both.</strong>
         <p>
-          The Frontier Water lane teaches the science of capturing, purifying, retaining, reusing, balancing, storing, recovering, and returning water. Audralia inherits that science directly as crew doctrine, habitat technology, planetary hydrology, and interplanetary survival architecture.
+          Water is not only a resource. In a closed world, water is infrastructure, memory, survival, and law. The visitor can learn the big idea quickly, then open the science, the modules, the doctrine, and the engineering layer as needed.
         </p>
 
-        <div class="tagline">
-          <span class="tag">Capture</span>
-          <span class="tag">Purify</span>
-          <span class="tag">Balance</span>
-          <span class="tag">Store</span>
-          <span class="tag">Recover</span>
-          <span class="tag">Return</span>
+        <div class="chip-wall">
+          <span class="tag blue">Capture</span>
+          <span class="tag blue">Purify</span>
+          <span class="tag blue">Balance</span>
+          <span class="tag green">Store</span>
+          <span class="tag green">Recover</span>
+          <span class="tag green">Return</span>
         </div>
 
         <div class="actions">
@@ -1496,32 +1690,29 @@
           <a class="button" href="/gauges/">Check Gauges</a>
         </div>
 
-        <div class="disclaimer">
-          This route teaches closed-loop water architecture and narrative inheritance. The Texas/HomeWater household education lane remains supporting context only and does not govern Audralia’s closed water system.
+        <div class="note">
+          Household water protection remains supporting context only. This route’s active focus is closed water system technology for frontier science, Audralia inheritance, and interplanetary research.
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-AUDRALIA_CLOSED_WATER_SYSTEM_FRONTIER_SCIENCE_TNT_v1
+AUDRALIA_CLOSED_WATER_TED_NAV_ENGINE_TNT_v2
 route=/explore/frontier/water/
 page=frontier_water
+previous=AUDRALIA_CLOSED_WATER_SYSTEM_FRONTIER_SCIENCE_TNT_v1
 active_focus=closed_water_system_technology
-supporting_lane=Texas_HomeWater_household_education
-supporting_packet=PSALM_PACKET_TEXAS_WATER_HAZARD_HOMEWATER_FULL_v1.0
-previous_contract=FRONTIER_WATER_TEXAS_HOMEWATER_EDUCATION_RENEWAL_TNT_v1
-public_function=teach_frontier_science
-narrative_function=Audralia_inheritance
+delivery_style=TED_Talk_educational_compression
+navigation_engine=anchor_nav,section_jumps,dropdown_disclosures,compact_cards
+public_layer=short_talk_sequence
+engineering_layer=collapsed_appendix
+audralia_layer=narrative_inheritance_visible
 core_loop=Capture,Screen,Purify,Balance,Store,Use,Recover,Reclaim,Return
 science_stack=hydrology,chemistry,filtration,membranes,biology,mineral_balance,atmospheric_cycling,wastewater_recovery,thermal_control,storage_engineering,sensors,emergency_reserves
-technology_modules=intake,sediment,biological_control,chemical_reduction,membrane,ion_mineral_balance,wastewater_recovery,condensation_recovery,atmospheric_return,storage,sensor_audit,emergency_reserve
-audralia_material=water_capture_fields,purification_chambers,reclamation_vaults,mineral_balance_labs,atmospheric_return_towers,habitat_water_loops,emergency_reserve_cisterns,agricultural_recycling_systems,wastewater_recovery_corridors,planetary_hydrology_stations,closed_loop_settlement_districts,interplanetary_research_protocols
-crew_doctrine=measure_before_use,separate_streams,recover_usable_water,do_not_mix_without_purpose,do_not_return_unbalanced_water,protect_storage,do_not_trust_clear_water_without_measurement,protect_loop_before_expansion
-system_pressures=loss,contamination,salt_buildup,mineral_depletion,microbial_imbalance,chemical_accumulation,energy_cost,storage_failure,sensor_failure,atmospheric_loss,wastewater_overload,emergency_demand
-household_lane_contributes=contaminant_family_logic,acute_chronic_exposure_logic,testing_before_treatment,treatment_matching_by_chemistry,reduction_not_magical_elimination,filtration_softening_distinction
-closed_system_upgrade=track_concentrate_isolate_neutralize_reuse_or_safely_store_contaminants
-public_narrative_split=public_lane_teaches,Audralia_demonstrates
-forbidden_collapse=HomeWater_marketing_only,Texas_tap_water_only,household_filter_only,generic_clean_water_message,total_removal_claim,medical_safety_claim,finished_interplanetary_deployment_claim,magic_water_cycle,unmeasured_clear_water_claim,decorative_water_world_without_system_architecture
-kill_conditions=water_unmeasured,water_untracked,contaminants_unseparated,wastewater_unrecovered,storage_unprotected,mineral_balance_uncontrolled,more_water_lost_than_returned,untested_habitat_stream,atmospheric_return_exceeds_capture,undefined_emergency_reserves,clear_water_treated_as_safe,narrative_turns_science_into_magic
+modules=intake,sediment,biological_control,chemical_reduction,membrane,ion_mineral_balance,wastewater_recovery,condensation_recovery,atmospheric_return,storage,sensor_audit,emergency_reserve
+audralia_inheritance=crew_doctrine,settlement_infrastructure,planetary_hydrology,emergency_reserves,narrative_pressure
+ted_sequence=hook,problem,frontier_pressure,big_idea,demonstration,meaning,choice
+compression_model=public_talk_layer,navigation_engine_layer,disclosure_layer,engineering_appendix_layer,hidden_receipt_layer
+heavy_runtime=false
 generated_image=false
 graphic_box=false
 visual_pass_claimed=false
@@ -1529,7 +1720,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      AUDRALIA_CLOSED_WATER_SYSTEM_FRONTIER_SCIENCE_TNT_v1 · Water · Closed System · Audralia Inheritance.
+      AUDRALIA_CLOSED_WATER_TED_NAV_ENGINE_TNT_v2 · Water · TED Navigation Engine · Closed-System Frontier Science.
     </footer>
   </div>
 </body>

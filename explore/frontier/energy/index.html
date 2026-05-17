@@ -3,11 +3,12 @@
   lang="en"
   data-route="/explore/frontier/energy/"
   data-page="frontier-energy"
-  data-contract="FRONTIER_ENERGY_GEM_CATALOG_DROPDOWN_SINGLE_FILE_TNT_v7"
-  data-previous-contract="FRONTIER_ENERGY_NARRATIVE_FIRST_FOUR_COMPARTMENT_ANIMATED_SINGLE_FILE_TNT_v6"
-  data-layout-model="catalog-first-gem-interface"
+  data-contract="FRONTIER_ENERGY_ROTATIONAL_GEM_ANCHOR_CATALOG_SINGLE_FILE_TNT_v8"
+  data-previous-contract="FRONTIER_ENERGY_GEM_CATALOG_DROPDOWN_SINGLE_FILE_TNT_v7"
+  data-layout-model="rotational-gem-anchor-catalog"
   data-ordering-law="narrative-construct-first-backdoor-science-second"
   data-audralia-role="frontier-science-simulation-world"
+  data-click-model="orbit-gems-anchor-to-section"
   data-animation-method="CSS-only"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
@@ -18,10 +19,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Energy · Gem Catalog · Frontier Readiness · Diamond Gate Bridge</title>
+  <title>Energy · Rotational Gem Catalog · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Frontier Energy Readiness as a compact gem catalog: Audralia simulation first, then Products, Community, Science, readiness objects, storage fields, and claim boundaries through dropdown layers."
+    content="Frontier Energy Readiness as a rotational gem anchor catalog. Audralia simulation first, then Products, Community, Science, readiness objects, storage fields, and claim boundaries."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/explore/frontier/energy/">
   <meta name="theme-color" content="#02040b">
@@ -46,7 +47,6 @@
       --shadow:0 30px 100px rgba(0,0,0,.44);
       --max:1220px;
       --gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
-      --bolt:polygon(56% 0%,100% 0%,65% 42%,88% 42%,34% 100%,48% 56%,16% 56%);
     }
 
     *{box-sizing:border-box}
@@ -110,7 +110,7 @@
           transparent 360deg);
       filter:blur(48px);
       opacity:.54;
-      animation:fieldDrift 36s linear infinite;
+      animation:fieldDrift 38s linear infinite;
     }
 
     @keyframes fieldDrift{
@@ -118,26 +118,21 @@
       to{transform:rotate(360deg) scale(1)}
     }
 
-    @keyframes heroPulse{
-      0%,100%{opacity:.36;filter:brightness(.92);transform:translateY(-50%) scale(.98)}
-      50%{opacity:.65;filter:brightness(1.14);transform:translateY(-50%) scale(1.035)}
-    }
-
-    @keyframes signalSweep{
-      0%{transform:translateX(-120%);opacity:0}
-      18%{opacity:.72}
-      52%{opacity:.42}
-      100%{transform:translateX(120%);opacity:0}
-    }
-
     @keyframes gemBreathe{
       0%,100%{filter:brightness(.98);transform:translateY(0)}
-      50%{filter:brightness(1.08);transform:translateY(-2px)}
+      50%{filter:brightness(1.10);transform:translateY(-2px)}
     }
 
     @keyframes orbitGlow{
-      0%{transform:rotate(0deg)}
-      100%{transform:rotate(360deg)}
+      from{transform:translate(-50%,-50%) rotate(0deg)}
+      to{transform:translate(-50%,-50%) rotate(360deg)}
+    }
+
+    @keyframes signalSweep{
+      0%{transform:translateX(-130%);opacity:0}
+      18%{opacity:.68}
+      52%{opacity:.38}
+      100%{transform:translateX(130%);opacity:0}
     }
 
     a{color:inherit;text-decoration:none}
@@ -234,7 +229,7 @@
     }
 
     .nav a,
-    .catalog-nav a,
+    .mini-nav a,
     .button{
       min-height:2.16rem;
       display:inline-flex;
@@ -254,14 +249,14 @@
     }
 
     .nav a:hover,
-    .catalog-nav a:hover,
+    .mini-nav a:hover,
     .button:hover{
       transform:translateY(-2px);
       border-color:rgba(243,200,111,.52);
     }
 
     .nav a[aria-current="page"],
-    .catalog-nav a.primary,
+    .mini-nav a.primary,
     .button.gold{
       border-color:rgba(243,200,111,.88);
       color:#06101c;
@@ -286,7 +281,7 @@
 
     .hero{
       position:relative;
-      min-height:clamp(19rem,33vw,27rem);
+      min-height:clamp(17rem,29vw,23rem);
       display:grid;
       align-content:center;
       gap:.82rem;
@@ -294,53 +289,6 @@
       margin-top:.45rem;
       isolation:isolate;
     }
-
-    .hero::before{
-      content:"";
-      position:absolute;
-      right:clamp(.6rem,5vw,4.5rem);
-      top:50%;
-      z-index:0;
-      width:clamp(8.5rem,23vw,17rem);
-      height:clamp(8.5rem,23vw,17rem);
-      border:1px solid rgba(243,200,111,.18);
-      border-radius:50%;
-      transform:translateY(-50%);
-      background:
-        radial-gradient(circle at 50% 32%,rgba(255,232,163,.15),transparent 34%),
-        radial-gradient(circle at 50% 68%,rgba(36,120,255,.15),transparent 58%),
-        conic-gradient(from 90deg,rgba(143,240,195,.08),rgba(243,200,111,.13),rgba(143,101,255,.10),rgba(143,240,195,.08));
-      animation:heroPulse 9s ease-in-out infinite;
-      pointer-events:none;
-      opacity:.55;
-    }
-
-    .hero-orbit{
-      position:absolute;
-      right:clamp(1.2rem,7vw,5.9rem);
-      top:50%;
-      width:clamp(6.3rem,18vw,12rem);
-      height:clamp(6.3rem,18vw,12rem);
-      border-radius:50%;
-      border:1px dashed rgba(255,232,163,.20);
-      z-index:0;
-      animation:orbitGlow 22s linear infinite;
-      pointer-events:none;
-    }
-
-    .hero-orbit::before,
-    .hero-orbit::after{
-      content:"";
-      position:absolute;
-      width:.6rem;
-      height:.6rem;
-      border-radius:50%;
-      background:var(--gold);
-      box-shadow:0 0 1.1rem rgba(243,200,111,.75);
-    }
-
-    .hero-orbit::before{left:50%;top:-.3rem}
-    .hero-orbit::after{right:-.3rem;top:50%;background:var(--violet)}
 
     .kicker{
       width:fit-content;
@@ -372,8 +320,8 @@
 
     h1{
       margin:0;
-      max-width:1000px;
-      font-size:clamp(2.5rem,7.6vw,5.75rem);
+      max-width:1020px;
+      font-size:clamp(2.55rem,7.7vw,5.85rem);
       line-height:.86;
       letter-spacing:-.105em;
       text-wrap:balance;
@@ -397,10 +345,10 @@
       line-height:1.48;
     }
 
-    .lead{max-width:900px;position:relative;z-index:2}
+    .lead{max-width:920px;position:relative;z-index:2}
 
     .principle{
-      max-width:950px;
+      max-width:960px;
       padding:.82rem .95rem;
       border:1px solid rgba(243,200,111,.24);
       border-radius:1.05rem;
@@ -420,7 +368,7 @@
       z-index:2;
     }
 
-    .catalog-nav{
+    .mini-nav{
       position:sticky;
       top:.45rem;
       z-index:20;
@@ -435,7 +383,7 @@
       overflow:hidden;
     }
 
-    .catalog-nav-inner{
+    .mini-nav-inner{
       display:flex;
       flex-wrap:wrap;
       gap:.36rem;
@@ -444,202 +392,194 @@
       justify-content:center;
     }
 
-    .catalog-board{
+    .orbit-board{
       position:relative;
-      padding:clamp(.9rem,2.5vw,1.25rem);
-      display:grid;
-      gap:.85rem;
+      min-height:clamp(32rem,62vw,44rem);
+      display:block;
+      margin:.9rem 0;
+      padding:clamp(.8rem,2vw,1.2rem);
       isolation:isolate;
     }
 
-    .catalog-board::before{
+    .orbit-stage{
+      position:relative;
+      width:100%;
+      height:clamp(31rem,60vw,42rem);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:clamp(1.3rem,4vw,2.2rem);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.09),transparent 11rem),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.12),transparent 20rem),
+        radial-gradient(circle at 50% 54%,rgba(143,101,255,.10),transparent 26rem),
+        linear-gradient(180deg,rgba(3,8,21,.88),rgba(2,5,15,.96));
+      overflow:hidden;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 1.4rem 4rem rgba(0,0,0,.26);
+    }
+
+    .orbit-stage::before,
+    .orbit-stage::after{
       content:"";
       position:absolute;
-      inset:clamp(.7rem,2vw,1.4rem);
-      border:1px solid rgba(243,200,111,.10);
-      border-radius:2rem;
-      background:
-        radial-gradient(ellipse at 50% 50%,rgba(143,101,255,.08),transparent 55%),
-        radial-gradient(ellipse at 50% 50%,rgba(243,200,111,.06),transparent 70%);
+      left:50%;
+      top:50%;
+      border-radius:50%;
       pointer-events:none;
-      z-index:0;
+      transform:translate(-50%,-50%);
     }
 
-    .catalog-head{
-      display:grid;
-      grid-template-columns:1fr auto;
-      gap:1rem;
-      align-items:end;
-      position:relative;
-      z-index:2;
+    .orbit-stage::before{
+      width:min(78%,48rem);
+      height:min(64%,31rem);
+      border:1px solid rgba(243,200,111,.14);
+      box-shadow:0 0 4rem rgba(243,200,111,.04);
     }
 
-    .catalog-head h2{
-      max-width:860px;
+    .orbit-stage::after{
+      width:min(54%,33rem);
+      height:min(42%,22rem);
+      border:1px solid rgba(141,216,255,.11);
+      animation:orbitGlow 46s linear infinite;
     }
 
-    .catalog-count{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      gap:.4rem;
-    }
-
-    .gem-grid{
-      position:relative;
-      z-index:2;
-      display:grid;
-      grid-template-columns:repeat(6,minmax(0,1fr));
-      gap:.62rem;
-    }
-
-    .gem{
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.1rem;
-      background:
-        radial-gradient(circle at 50% 0%,rgba(255,255,255,.10),transparent 48%),
-        rgba(255,255,255,.035);
+    .orbit-signal{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
       overflow:hidden;
-      min-height:100%;
-      transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;
     }
 
-    .gem:hover{
-      transform:translateY(-4px);
-      border-color:rgba(243,200,111,.38);
-      box-shadow:0 1rem 2rem rgba(0,0,0,.18);
+    .orbit-signal::before{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      top:50%;
+      height:1px;
+      background:linear-gradient(90deg,transparent,rgba(243,200,111,.56),rgba(143,101,255,.40),transparent);
+      animation:signalSweep 8.5s ease-in-out infinite;
     }
 
-    .gem[open]{
-      grid-column:span 2;
-      border-color:rgba(243,200,111,.42);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(243,200,111,.11),transparent 48%),
-        rgba(255,255,255,.045);
-    }
-
-    .gem summary{
-      list-style:none;
-      cursor:pointer;
-      min-height:9.8rem;
+    .center-gem,
+    .orbit-gem{
+      position:absolute;
       display:grid;
       place-items:center;
       text-align:center;
-      gap:.48rem;
-      padding:.74rem;
-      position:relative;
-      overflow:hidden;
+      border:0;
+      padding:0;
+      color:inherit;
+      isolation:isolate;
+      transition:transform .2s ease,filter .2s ease;
     }
 
-    .gem summary::-webkit-details-marker{display:none}
+    .center-gem{
+      left:50%;
+      top:50%;
+      width:clamp(8.8rem,18vw,14.5rem);
+      height:clamp(6rem,12vw,9.3rem);
+      transform:translate(-50%,-50%);
+      z-index:4;
+    }
 
-    .gem summary::before{
-      content:"";
-      width:3.8rem;
-      height:3.8rem;
+    .orbit-gem{
+      width:clamp(5.35rem,9vw,8.1rem);
+      height:clamp(4.2rem,7.4vw,6.35rem);
+      transform:translate(-50%,-50%);
+      z-index:3;
+    }
+
+    .center-gem:hover,
+    .orbit-gem:hover{
+      filter:brightness(1.16);
+    }
+
+    .orbit-gem:hover{transform:translate(-50%,-50%) scale(1.06)}
+    .center-gem:hover{transform:translate(-50%,-50%) scale(1.04)}
+
+    .gem-shape{
+      position:absolute;
+      inset:0;
       clip-path:var(--gem);
-      border:1px solid rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.18);
       background:
-        linear-gradient(135deg,rgba(255,255,255,.24),transparent 22%),
-        conic-gradient(from 45deg,rgba(255,255,255,.18),rgba(243,200,111,.20),rgba(36,120,255,.14),rgba(143,101,255,.16),rgba(255,255,255,.18));
-      box-shadow:0 0 1.3rem rgba(243,200,111,.14),inset 0 1px 0 rgba(255,255,255,.12);
+        linear-gradient(135deg,rgba(255,255,255,.30),transparent 20%),
+        linear-gradient(45deg,transparent 0 42%,rgba(255,255,255,.16) 43% 44%,transparent 45%),
+        conic-gradient(from 45deg,rgba(255,255,255,.16),rgba(243,200,111,.28),rgba(36,120,255,.16),rgba(143,101,255,.20),rgba(255,255,255,.16)),
+        linear-gradient(145deg,rgba(9,15,31,.95),rgba(2,5,15,.98));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.18),
+        0 0 1.6rem rgba(243,200,111,.11),
+        0 1rem 1.8rem rgba(0,0,0,.28);
       animation:gemBreathe 7s ease-in-out infinite;
     }
 
-    .gem summary::after{
-      content:"Open";
-      min-height:1.6rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:999px;
-      padding:.24rem .5rem;
-      color:rgba(241,246,255,.74);
-      background:rgba(255,255,255,.035);
-      font-size:.55rem;
-      font-weight:950;
-      letter-spacing:.08em;
-      text-transform:uppercase;
+    .center-gem .gem-shape{
+      background:
+        linear-gradient(135deg,rgba(255,255,255,.34),transparent 20%),
+        conic-gradient(from 45deg,rgba(255,255,255,.18),rgba(243,200,111,.34),rgba(141,216,255,.22),rgba(143,101,255,.24),rgba(255,255,255,.18)),
+        radial-gradient(circle at 45% 36%,rgba(255,232,163,.22),transparent 48%),
+        linear-gradient(145deg,rgba(9,15,31,.95),rgba(2,5,15,.98));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.20),
+        0 0 2.3rem rgba(243,200,111,.18),
+        0 1.2rem 2.4rem rgba(0,0,0,.34);
     }
 
-    .gem[open] summary::after{
-      content:"Open Layer";
-      border-color:rgba(143,240,195,.28);
-      color:var(--green);
+    .gem-copy{
+      position:relative;
+      z-index:2;
+      display:grid;
+      gap:.12rem;
+      padding:.55rem;
+      text-shadow:0 2px 10px rgba(0,0,0,.86);
+      transform:translateZ(0);
     }
 
-    .gem-title{
+    .gem-copy strong{
       color:rgba(255,244,216,.98);
-      font-weight:950;
-      line-height:1.05;
-      letter-spacing:-.035em;
-      font-size:.98rem;
-      position:relative;
-      z-index:2;
-    }
-
-    .gem-note{
-      color:var(--muted);
-      font-size:.74rem;
-      line-height:1.25;
-      max-width:11rem;
-      position:relative;
-      z-index:2;
-    }
-
-    .gem-layer{
-      display:grid;
-      gap:.68rem;
-      padding:0 .82rem .86rem;
-    }
-
-    .gem-layer p{
-      font-size:.88rem;
-      line-height:1.42;
-    }
-
-    .mini-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:.45rem;
-    }
-
-    .mini{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:.78rem;
-      padding:.58rem;
-      background:rgba(255,255,255,.026);
-      color:var(--muted);
-      font-size:.76rem;
-      line-height:1.25;
-    }
-
-    .mini b{
-      display:block;
-      color:var(--gold2);
-      font-size:.55rem;
-      letter-spacing:.1em;
+      font-size:clamp(.58rem,1.2vw,.86rem);
+      line-height:1;
+      letter-spacing:.12em;
       text-transform:uppercase;
-      margin-bottom:.18rem;
     }
 
-    .boundary{
-      padding:.62rem .7rem;
-      border:1px solid rgba(255,157,145,.18);
-      border-radius:.86rem;
-      color:rgba(255,229,225,.86);
-      background:rgba(255,157,145,.055);
-      font-size:.8rem;
-      line-height:1.35;
-      font-weight:800;
+    .gem-copy span{
+      color:rgba(230,238,255,.82);
+      font-size:clamp(.45rem,.9vw,.62rem);
+      line-height:1;
+      font-weight:950;
+      letter-spacing:.10em;
+      text-transform:uppercase;
     }
 
-    .gem.narrative summary::before{background:conic-gradient(from 45deg,rgba(255,255,255,.18),rgba(143,101,255,.28),rgba(243,200,111,.16),rgba(141,216,255,.12),rgba(143,101,255,.24))}
-    .gem.products summary::before{background:conic-gradient(from 45deg,rgba(255,255,255,.18),rgba(243,200,111,.30),rgba(255,232,163,.16),rgba(36,120,255,.12),rgba(243,200,111,.24))}
-    .gem.community summary::before{background:conic-gradient(from 45deg,rgba(255,255,255,.18),rgba(143,240,195,.28),rgba(243,200,111,.12),rgba(36,120,255,.13),rgba(143,240,195,.22))}
-    .gem.science summary::before{background:conic-gradient(from 45deg,rgba(255,255,255,.18),rgba(141,216,255,.28),rgba(243,200,111,.12),rgba(143,101,255,.13),rgba(141,216,255,.22))}
-    .gem.kill summary::before{background:conic-gradient(from 45deg,rgba(255,255,255,.18),rgba(255,157,145,.30),rgba(243,200,111,.12),rgba(36,120,255,.10),rgba(255,157,145,.22))}
+    .center-gem .gem-copy strong{
+      color:var(--gold2);
+      font-size:clamp(.88rem,2vw,1.45rem);
+      letter-spacing:.16em;
+    }
+
+    .center-gem .gem-copy span{
+      font-size:clamp(.55rem,1.1vw,.76rem);
+    }
+
+    .p1{left:50%;top:13%}
+    .p2{left:72%;top:18%}
+    .p3{left:87%;top:34%}
+    .p4{left:89%;top:57%}
+    .p5{left:74%;top:76%}
+    .p6{left:55%;top:84%}
+    .p7{left:35%;top:82%}
+    .p8{left:15%;top:68%}
+    .p9{left:11%;top:45%}
+    .p10{left:18%;top:25%}
+    .p11{left:35%;top:17%}
+    .p12{left:50%;top:72%}
+
+    .violet .gem-shape{background:linear-gradient(135deg,rgba(255,255,255,.30),transparent 20%),conic-gradient(from 45deg,rgba(255,255,255,.16),rgba(143,101,255,.34),rgba(243,200,111,.14),rgba(141,216,255,.13),rgba(143,101,255,.26)),linear-gradient(145deg,rgba(12,10,36,.95),rgba(2,5,15,.98))}
+    .gold .gem-shape{background:linear-gradient(135deg,rgba(255,255,255,.30),transparent 20%),conic-gradient(from 45deg,rgba(255,255,255,.16),rgba(243,200,111,.35),rgba(255,232,163,.16),rgba(36,120,255,.12),rgba(243,200,111,.24)),linear-gradient(145deg,rgba(38,24,9,.95),rgba(2,5,15,.98))}
+    .green .gem-shape{background:linear-gradient(135deg,rgba(255,255,255,.30),transparent 20%),conic-gradient(from 45deg,rgba(255,255,255,.16),rgba(143,240,195,.31),rgba(243,200,111,.12),rgba(36,120,255,.13),rgba(143,240,195,.24)),linear-gradient(145deg,rgba(7,31,25,.95),rgba(2,5,15,.98))}
+    .blue .gem-shape{background:linear-gradient(135deg,rgba(255,255,255,.30),transparent 20%),conic-gradient(from 45deg,rgba(255,255,255,.16),rgba(141,216,255,.31),rgba(243,200,111,.12),rgba(143,101,255,.13),rgba(141,216,255,.24)),linear-gradient(145deg,rgba(7,19,38,.95),rgba(2,5,15,.98))}
+    .red .gem-shape{background:linear-gradient(135deg,rgba(255,255,255,.30),transparent 20%),conic-gradient(from 45deg,rgba(255,255,255,.16),rgba(255,157,145,.32),rgba(243,200,111,.13),rgba(36,120,255,.10),rgba(255,157,145,.24)),linear-gradient(145deg,rgba(39,12,12,.95),rgba(2,5,15,.98))}
 
     .section{
       margin-top:.9rem;
@@ -648,10 +588,22 @@
       gap:.9rem;
     }
 
-    .grid{display:grid;gap:.75rem}
-    .grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .section-head{
+      display:grid;
+      gap:.45rem;
+    }
 
-    .object{
+    .section-head p{
+      max-width:960px;
+    }
+
+    .layer-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.75rem;
+    }
+
+    .layer-card{
       position:relative;
       display:grid;
       gap:.55rem;
@@ -660,32 +612,91 @@
       border-radius:1rem;
       background:rgba(255,255,255,.035);
       overflow:hidden;
-      transition:transform .18s ease,border-color .18s ease;
     }
 
-    .object:hover{
-      transform:translateY(-3px);
-      border-color:rgba(243,200,111,.34);
-    }
-
-    .object b{
+    .layer-card b{
       color:var(--gold2);
       font-size:.62rem;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .object strong{
+    .layer-card strong{
       color:rgba(255,244,216,.98);
       font-size:1rem;
       line-height:1.12;
     }
 
-    .object span,
-    .object p{
+    .layer-card span,
+    .layer-card p{
       color:var(--muted);
       font-size:.88rem;
       line-height:1.38;
+    }
+
+    details.layer{
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:1rem;
+      background:rgba(255,255,255,.032);
+      overflow:hidden;
+    }
+
+    details.layer[open]{
+      border-color:rgba(243,200,111,.30);
+      background:
+        radial-gradient(circle at 10% 0%,rgba(243,200,111,.08),transparent 26rem),
+        rgba(255,255,255,.035);
+    }
+
+    details.layer summary{
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:1rem;
+      padding:.86rem .95rem;
+      list-style:none;
+      color:rgba(255,244,216,.96);
+      font-weight:950;
+      letter-spacing:-.025em;
+    }
+
+    details.layer summary::-webkit-details-marker{display:none}
+
+    details.layer summary::after{
+      content:"+";
+      width:1.8rem;
+      height:1.8rem;
+      flex:0 0 auto;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(243,200,111,.25);
+      border-radius:.55rem;
+      color:var(--gold2);
+      background:rgba(243,200,111,.055);
+    }
+
+    details.layer[open] summary::after{
+      content:"–";
+      border-color:rgba(143,240,195,.28);
+      color:var(--green);
+    }
+
+    .detail-body{
+      display:grid;
+      gap:.7rem;
+      padding:0 .95rem .95rem;
+    }
+
+    .boundary{
+      padding:.72rem .82rem;
+      border:1px solid rgba(255,157,145,.18);
+      border-radius:.9rem;
+      color:rgba(255,229,225,.86);
+      background:rgba(255,157,145,.055);
+      font-size:.86rem;
+      line-height:1.38;
+      font-weight:800;
     }
 
     .chip-wall{
@@ -715,6 +726,9 @@
     .tag.green{border-color:rgba(143,240,195,.26);background:rgba(143,240,195,.055)}
     .tag.violet{border-color:rgba(143,101,255,.30);background:rgba(143,101,255,.075)}
     .tag.red{border-color:rgba(255,157,145,.26);background:rgba(255,157,145,.055)}
+
+    ul{margin:0;padding-left:1.1rem;color:var(--muted)}
+    li{margin:.34rem 0;color:var(--muted);font-size:.9rem;line-height:1.36}
 
     .final-band{
       margin-top:.9rem;
@@ -774,32 +788,51 @@
       font-size:.72rem;
     }
 
-    @media (max-width:1180px){
-      .gem-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
-      .gem[open]{grid-column:span 2}
+    @media (max-width:1100px){
+      .orbit-gem{
+        width:clamp(4.8rem,9vw,7.2rem);
+        height:clamp(3.85rem,7.2vw,5.85rem);
+      }
+
+      .layer-grid{grid-template-columns:1fr}
     }
 
     @media (max-width:980px){
       .topbar{grid-template-columns:1fr;align-items:start}
       .nav{justify-content:flex-start}
-      .catalog-head{grid-template-columns:1fr}
-      .catalog-count{justify-content:flex-start}
-      .gem-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-      .grid.three{grid-template-columns:1fr}
-      .catalog-nav{position:relative;top:auto}
+      .mini-nav{position:relative;top:auto}
       html{scroll-padding-top:1rem}
+      .orbit-board{min-height:clamp(31rem,82vw,38rem)}
+      .orbit-stage{height:clamp(30rem,80vw,37rem)}
     }
 
     @media (max-width:720px){
       .shell{width:min(100% - 22px,var(--max))}
       h1{font-size:clamp(2.55rem,14vw,4.6rem)}
-      .hero{min-height:28rem;padding:1rem}
+      .hero{min-height:26rem;padding:1rem}
       .actions{display:grid}
       .button{width:100%}
-      .gem-grid{grid-template-columns:1fr}
-      .gem[open]{grid-column:span 1}
-      .gem summary{min-height:8.4rem}
-      .mini-grid{grid-template-columns:1fr}
+      .orbit-board{padding:.7rem;min-height:34rem}
+      .orbit-stage{height:33rem;border-radius:1.45rem}
+      .center-gem{width:7.4rem;height:5.2rem}
+      .orbit-gem{width:4.85rem;height:3.9rem}
+      .gem-copy{padding:.26rem}
+      .gem-copy strong{font-size:.48rem;letter-spacing:.07em}
+      .gem-copy span{font-size:.36rem;letter-spacing:.06em}
+      .center-gem .gem-copy strong{font-size:.72rem}
+      .center-gem .gem-copy span{font-size:.45rem}
+      .p1{left:50%;top:11%}
+      .p2{left:73%;top:16%}
+      .p3{left:87%;top:31%}
+      .p4{left:88%;top:55%}
+      .p5{left:73%;top:74%}
+      .p6{left:55%;top:84%}
+      .p7{left:33%;top:82%}
+      .p8{left:14%;top:67%}
+      .p9{left:11%;top:45%}
+      .p10{left:17%;top:25%}
+      .p11{left:34%;top:15%}
+      .p12{left:50%;top:72%}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -813,10 +846,10 @@
       }
 
       body::after,
-      .hero::before,
-      .hero-orbit,
       .brand-mark,
-      .gem summary::before{
+      .gem-shape,
+      .orbit-stage::after,
+      .orbit-signal::before{
         animation:none!important;
       }
     }
@@ -824,7 +857,7 @@
 </head>
 
 <body>
-  <a class="skip" href="#catalog">Skip to Energy Catalog</a>
+  <a class="skip" href="#energy-orbit">Skip to Energy Orbit</a>
 
   <div class="shell">
     <header class="topbar" aria-label="Energy header">
@@ -832,7 +865,7 @@
         <span class="brand-mark" aria-hidden="true"><span>EN</span></span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge · Frontier</span>
-          <strong>Energy · Gem Catalog</strong>
+          <strong>Energy · Rotational Gems</strong>
         </span>
       </a>
 
@@ -850,257 +883,322 @@
 
     <main id="start">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="hero-orbit" aria-hidden="true"></div>
+        <div class="kicker">Rotational Gem Anchor Catalog</div>
 
-        <div class="kicker">Catalog First · Narrative First</div>
+        <h1 id="page-title">Click a gem. Drop to the layer.</h1>
 
-        <h1 id="page-title">Choose a gem. Open the layer.</h1>
-
-        <h2>Audralia is the simulation world. The catalog shows the whole Energy system at once.</h2>
+        <h2>Audralia stays first. The orbit lets every Energy path stay visible at once.</h2>
 
         <p class="lead">
-          Frontier Energy Readiness begins with the narrative world first, then lets each reader open Products, Community, Science, Readiness Objects, and claim boundaries without forcing a long scroll.
+          Frontier Energy Readiness is now arranged like the other gem pages: a central Energy anchor, rotational orbit gems, and compact dropdown layers below.
         </p>
 
         <div class="principle">
-          The simulation may dream. The public claims stay bounded.
+          Do not sell fusion. Sell readiness for the energy world that fusion may eventually create.
         </div>
 
         <div class="actions">
-          <a class="button violet" href="#catalog">Open Catalog</a>
-          <a class="button gold" href="#objects">Readiness Objects</a>
-          <a class="button blue" href="#final-lock">Final Lock</a>
+          <a class="button gold" href="#energy-orbit">Open Orbit</a>
+          <a class="button violet" href="#audralia-simulation">Audralia Simulation</a>
+          <a class="button blue" href="#science">Science Boundary</a>
         </div>
       </section>
 
-      <nav class="catalog-nav" aria-label="Energy catalog navigation">
-        <div class="catalog-nav-inner">
-          <a class="primary" href="#catalog">Catalog</a>
-          <a href="#objects">Objects</a>
-          <a href="#final-lock">Final Lock</a>
-          <a href="/showroom/globe/audralia/">Audralia</a>
-          <a href="/frontier/">Frontier</a>
+      <nav class="mini-nav" aria-label="Energy quick navigation">
+        <div class="mini-nav-inner">
+          <a class="primary" href="#energy-orbit">Orbit</a>
+          <a href="#audralia-simulation">Audralia</a>
+          <a href="#products">Products</a>
+          <a href="#community">Community</a>
+          <a href="#science">Science</a>
+          <a href="#kill-conditions">Kill</a>
         </div>
       </nav>
 
-      <section class="panel catalog-board" id="catalog" aria-labelledby="catalog-title">
-        <div class="catalog-head">
-          <div>
-            <div class="kicker">Frontier Energy Catalog Board</div>
-            <h2 id="catalog-title">Almost everything visible. Depth lives in dropdowns.</h2>
-          </div>
+      <section class="panel orbit-board" id="energy-orbit" aria-labelledby="orbit-title">
+        <div class="kicker">Energy Orbit</div>
+        <h2 id="orbit-title">Twelve frontier gems orbit one Energy anchor.</h2>
 
-          <div class="catalog-count" aria-label="Catalog summary">
-            <span class="tag violet">Narrative First</span>
-            <span class="tag gold">12 Gems</span>
-            <span class="tag green">CSS Only</span>
-          </div>
-        </div>
+        <div class="orbit-stage" aria-label="Rotational Energy gem catalog">
+          <div class="orbit-signal" aria-hidden="true"></div>
 
-        <div class="gem-grid">
-          <details class="gem narrative" open>
-            <summary>
-              <span class="gem-title">Audralia Simulation</span>
-              <span class="gem-note">The world comes first.</span>
-            </summary>
-            <div class="gem-layer">
-              <p>Audralia gives Frontier Energy a living simulation context: energy deserts, storage fields, reserve ground, settlement pressure, future markets, and civilization choices.</p>
-              <div class="mini-grid">
-                <div class="mini"><b>Model</b>Bounded possibility.</div>
-                <div class="mini"><b>Dramatize</b>Future consequences.</div>
-                <div class="mini"><b>Teach</b>Public understanding.</div>
-              </div>
-              <div class="boundary">Boundary: Audralia is a simulation world, not proof of real-world deployment.</div>
-            </div>
-          </details>
+          <a class="center-gem" href="#final-lock" aria-label="Energy Frontier Readiness final lock">
+            <span class="gem-shape" aria-hidden="true"></span>
+            <span class="gem-copy">
+              <strong>Energy</strong>
+              <span>Frontier Readiness</span>
+            </span>
+          </a>
 
-          <details class="gem products">
-            <summary>
-              <span class="gem-title">Products</span>
-              <span class="gem-note">What can be acted on now.</span>
-            </summary>
-            <div class="gem-layer">
-              <p>Products organizes the business lane: Commercial Now, Bridge Infrastructure, Frontier Energy Readiness, and the development objects.</p>
-              <div class="mini-grid">
-                <div class="mini"><b>Now</b>Risk control.</div>
-                <div class="mini"><b>Bridge</b>Storage readiness.</div>
-                <div class="mini"><b>Frontier</b>Advanced-energy prep.</div>
-              </div>
-              <div class="boundary">Boundary: products sell readiness, not commercial fusion power.</div>
-            </div>
-          </details>
+          <a class="orbit-gem violet p1" href="#audralia-simulation">
+            <span class="gem-shape" aria-hidden="true"></span>
+            <span class="gem-copy">
+              <strong>Audralia</strong>
+              <span>Simulation</span>
+            </span>
+          </a>
 
-          <details class="gem community">
-            <summary>
-              <span class="gem-title">Community</span>
-              <span class="gem-note">People, land, safety, trust.</span>
-            </summary>
-            <div class="gem-layer">
-              <p>Community handles farmland storage, rural resilience, safeguards, public trust, emergency readiness, and placement discipline.</p>
-              <div class="mini-grid">
-                <div class="mini"><b>Land</b>Storage fields.</div>
-                <div class="mini"><b>Trust</b>Safeguards.</div>
-                <div class="mini"><b>Resilience</b>Backup support.</div>
-              </div>
-              <div class="boundary">Boundary: no fusion farms, plasma farms, reactor farms, or risk-free storage claims.</div>
-            </div>
-          </details>
+          <a class="orbit-gem gold p2" href="#products">
+            <span class="gem-shape" aria-hidden="true"></span>
+            <span class="gem-copy">
+              <strong>Products</strong>
+              <span>Act Now</span>
+            </span>
+          </a>
 
-          <details class="gem science">
-            <summary>
-              <span class="gem-title">Science</span>
-              <span class="gem-note">What is true and bounded.</span>
-            </summary>
-            <div class="gem-layer">
-              <p>Fusion is real. Controlled fusion requires plasma. Commercial plant-level electricity is not procurement-ready.</p>
-              <div class="mini-grid">
-                <div class="mini"><b>Fusion</b>Scientifically real.</div>
-                <div class="mini"><b>Plasma</b>Operating medium.</div>
-                <div class="mini"><b>Commercial</b>Not ready.</div>
-              </div>
-              <div class="boundary">Boundary: no commercial fusion now, no unlimited power, no fusion procurement today.</div>
-            </div>
-          </details>
+          <a class="orbit-gem green p3" href="#community">
+            <span class="gem-shape" aria-hidden="true"></span>
+            <span class="gem-copy">
+              <strong>Community</strong>
+              <span>Trust</span>
+            </span>
+          </a>
 
-          <details class="gem science">
-            <summary>
-              <span class="gem-title">Math Boundary</span>
-              <span class="gem-note">Q_target ≠ Q_plasma ≠ Q_plant.</span>
-            </summary>
-            <div class="gem-layer">
-              <p>Plant-level net electricity decides commercial viability. Target gain alone does not prove market-ready power.</p>
-              <div class="mini-grid">
-                <div class="mini"><b>Q_target</b>Target gain.</div>
-                <div class="mini"><b>Q_plasma</b>Plasma gain.</div>
-                <div class="mini"><b>Q_plant</b>Net facility output.</div>
-              </div>
-              <div class="boundary">Boundary: commercial viability requires sustainable Q_plant &gt; 1 after total facility losses.</div>
-            </div>
-          </details>
+          <a class="orbit-gem blue p4" href="#science">
+            <span class="gem-shape" aria-hidden="true"></span>
+            <span class="gem-copy">
+              <strong>Science</strong>
+              <span>Boundary</span>
+            </span>
+          </a>
 
-          <details class="gem products">
-            <summary>
-              <span class="gem-title">Commercial Now</span>
-              <span class="gem-note">Revenue through energy risk control.</span>
-            </summary>
-            <div class="gem-layer">
-              <p>Usage aggregation, bill auditing, future-dated agreements, price protection, battery storage, and solar as hedge where ownership allows.</p>
-              <div class="mini-grid">
-                <div class="mini"><b>Buyer</b>CFO / COO.</div>
-                <div class="mini"><b>Value</b>Risk control.</div>
-                <div class="mini"><b>Status</b>Sellable now.</div>
-              </div>
-              <div class="boundary">Boundary: this is energy governance today, not fusion sales.</div>
-            </div>
-          </details>
+          <a class="orbit-gem gold p5" href="#commercial-now">
+            <span class="gem-shape" aria-hidden="true"></span>
+            <span class="gem-copy">
+              <strong>Commercial</strong>
+              <span>Now</span>
+            </span>
+          </a>
 
-          <details class="gem products">
-            <summary>
-              <span class="gem-title">Bridge Infrastructure</span>
-              <span class="gem-note">Storage, backup, interconnection.</span>
-            </summary>
-            <div class="gem-layer">
-              <p>Battery storage feasibility, peak shaving, backup power, site ownership review, interconnection review, load-shape analysis, and solar hedge review.</p>
-              <div class="mini-grid">
-                <div class="mini"><b>Storage</b>Feasibility.</div>
-                <div class="mini"><b>Grid</b>Interconnection.</div>
-                <div class="mini"><b>Advisory</b>Readiness.</div>
-              </div>
-              <div class="boundary">Boundary: bridge infrastructure prepares adoption; it does not claim fusion availability.</div>
-            </div>
-          </details>
+          <a class="orbit-gem gold p6" href="#bridge-infrastructure">
+            <span class="gem-shape" aria-hidden="true"></span>
+            <span class="gem-copy">
+              <strong>Bridge</strong>
+              <span>Infrastructure</span>
+            </span>
+          </a>
 
-          <details class="gem products">
-            <summary>
-              <span class="gem-title">Frontier Readiness</span>
-              <span class="gem-note">Advanced-energy lane.</span>
-            </summary>
-            <div class="gem-layer">
-              <p>Fusion-readiness assessment, advanced power offtake readiness, pulsed-power buffer planning, long-duration storage review, and frontier technology watch brief.</p>
-              <div class="mini-grid">
-                <div class="mini"><b>Fusion</b>Readiness only.</div>
-                <div class="mini"><b>Offtake</b>Future optionality.</div>
-                <div class="mini"><b>Status</b>Paid readiness.</div>
-              </div>
-              <div class="boundary">Boundary: fusion is a readiness category, not a sales product today.</div>
-            </div>
-          </details>
+          <a class="orbit-gem violet p7" href="#frontier-readiness">
+            <span class="gem-shape" aria-hidden="true"></span>
+            <span class="gem-copy">
+              <strong>Frontier</strong>
+              <span>Readiness</span>
+            </span>
+          </a>
 
-          <details class="gem community">
-            <summary>
-              <span class="gem-title">Storage Fields</span>
-              <span class="gem-note">Agricultural Energy Storage Fields.</span>
-            </summary>
-            <div class="gem-layer">
-              <p>Midstream battery storage and grid-support infrastructure on suitable rural or agricultural sites with siting, permitting, containment, drainage, monitoring, and emergency response.</p>
-              <div class="mini-grid">
-                <div class="mini"><b>Role</b>Midstream storage.</div>
-                <div class="mini"><b>Land</b>Rural reserve.</div>
-                <div class="mini"><b>Safety</b>Engineered safeguards.</div>
-              </div>
-              <div class="boundary">Boundary: storage fields are not reactor farms, fusion farms, or plasma farms.</div>
-            </div>
-          </details>
+          <a class="orbit-gem green p8" href="#storage-fields">
+            <span class="gem-shape" aria-hidden="true"></span>
+            <span class="gem-copy">
+              <strong>Storage</strong>
+              <span>Fields</span>
+            </span>
+          </a>
 
-          <details class="gem community">
-            <summary>
-              <span class="gem-title">Advanced Buffer</span>
-              <span class="gem-note">Storage and pulsed-load planning.</span>
-            </summary>
-            <div class="gem-layer">
-              <p>The Advanced Energy Buffer Model evaluates critical load, peak pulse exposure, required backup duration, outage tolerance, demand charge exposure, and interconnection limits.</p>
-              <div class="mini-grid">
-                <div class="mini"><b>Output</b>Battery-only.</div>
-                <div class="mini"><b>Output</b>Solar hedge.</div>
-                <div class="mini"><b>Output</b>Pulsed-power candidate.</div>
-              </div>
-              <div class="boundary">Boundary: use “advanced energy buffer,” not unvalidated “plasma battery solution.”</div>
-            </div>
-          </details>
+          <a class="orbit-gem gold p9" href="#readiness-index">
+            <span class="gem-shape" aria-hidden="true"></span>
+            <span class="gem-copy">
+              <strong>Readiness</strong>
+              <span>Index</span>
+            </span>
+          </a>
 
-          <details class="gem science">
-            <summary>
-              <span class="gem-title">Future Offtake</span>
-              <span class="gem-note">Clean-power contracting readiness.</span>
-            </summary>
-            <div class="gem-layer">
-              <p>The Future Offtake Readiness Map evaluates load consistency, creditworthiness, contract horizon, market jurisdiction, site stability, risk appetite, and energy governance maturity.</p>
-              <div class="mini-grid">
-                <div class="mini"><b>Output</b>Short-term procurement.</div>
-                <div class="mini"><b>Output</b>Forward agreement.</div>
-                <div class="mini"><b>Output</b>Frontier offtake.</div>
-              </div>
-              <div class="boundary">Boundary: future offtake readiness is not fusion procurement today.</div>
-            </div>
-          </details>
+          <a class="orbit-gem green p10" href="#advanced-buffer">
+            <span class="gem-shape" aria-hidden="true"></span>
+            <span class="gem-copy">
+              <strong>Advanced</strong>
+              <span>Buffer</span>
+            </span>
+          </a>
 
-          <details class="gem kill">
-            <summary>
-              <span class="gem-title">Kill Conditions</span>
-              <span class="gem-note">Claim boundary.</span>
-            </summary>
-            <div class="gem-layer">
-              <p>The contract stops when language outruns evidence, safety, or deployment status.</p>
-              <div class="mini-grid">
-                <div class="mini"><b>No</b>Solar becomes fusion.</div>
-                <div class="mini"><b>No</b>Commercial fusion now.</div>
-                <div class="mini"><b>No</b>Audralia as proof.</div>
-              </div>
-              <div class="boundary">Final lock: do not sell fusion. Sell readiness for the energy world that fusion may eventually create.</div>
-            </div>
-          </details>
+          <a class="orbit-gem blue p11" href="#future-offtake">
+            <span class="gem-shape" aria-hidden="true"></span>
+            <span class="gem-copy">
+              <strong>Future</strong>
+              <span>Offtake</span>
+            </span>
+          </a>
+
+          <a class="orbit-gem red p12" href="#kill-conditions">
+            <span class="gem-shape" aria-hidden="true"></span>
+            <span class="gem-copy">
+              <strong>Kill</strong>
+              <span>Conditions</span>
+            </span>
+          </a>
         </div>
       </section>
 
-      <section class="panel section" id="objects" aria-labelledby="objects-title">
-        <div class="kicker">Readiness Objects</div>
-        <h2 id="objects-title">Three practical products support the whole catalog.</h2>
+      <section class="panel section" id="audralia-simulation" aria-labelledby="audralia-title">
+        <div class="section-head">
+          <div class="kicker">Narrative First</div>
+          <h2 id="audralia-title">Audralia is the simulation world.</h2>
+          <p>Audralia gives Frontier Energy a living context where energy storage, risk, infrastructure, rural reserve fields, future power horizons, and civilization pressure can be explored before they are claimed.</p>
+        </div>
 
-        <div class="grid three">
-          <article class="object">
+        <div class="layer-grid">
+          <article class="layer-card">
+            <b>Model</b>
+            <strong>Bounded possibility.</strong>
+            <span>Audralia may model advanced buffers, settlement pressure, storage fields, and infrastructure choices.</span>
+          </article>
+
+          <article class="layer-card">
+            <b>Dream</b>
+            <strong>Future-world imagination.</strong>
+            <span>Energy deserts become storage fields. Rural land becomes clean-energy reserve ground.</span>
+          </article>
+
+          <article class="layer-card">
+            <b>Boundary</b>
+            <strong>Simulation is not proof.</strong>
+            <span>Audralia cannot be treated as deployment proof or commercial validation.</span>
+          </article>
+        </div>
+
+        <details class="layer">
+          <summary>Open Audralia simulation boundary</summary>
+          <div class="detail-body">
+            <p>Audralia may dramatize future-world consequences and public understanding. It may not convert conjecture into validated science, commercial fusion, direct solar-to-fusion, or risk-free energy.</p>
+            <div class="boundary">Formula: scientifically bounded in public claims; imaginatively expansive in Mirrorland and Audralia inheritance.</div>
+          </div>
+        </details>
+      </section>
+
+      <section class="panel section" id="products" aria-labelledby="products-title">
+        <div class="section-head">
+          <div class="kicker">Products</div>
+          <h2 id="products-title">What can be acted on now?</h2>
+          <p>Products organize what can be packaged, assessed, advised, or sold now without pretending fusion power is commercially available today.</p>
+        </div>
+
+        <div class="layer-grid">
+          <article class="layer-card" id="commercial-now">
+            <b>Commercial Now</b>
+            <strong>Energy risk control.</strong>
+            <span>Usage aggregation, bill auditing, future-dated agreements, price protection, battery storage, and solar as hedge.</span>
+          </article>
+
+          <article class="layer-card" id="bridge-infrastructure">
+            <b>Bridge Infrastructure</b>
+            <strong>Advisory and readiness.</strong>
+            <span>Battery feasibility, peak shaving, backup power, site ownership review, interconnection review, and load-shape analysis.</span>
+          </article>
+
+          <article class="layer-card" id="frontier-readiness">
+            <b>Frontier Readiness</b>
+            <strong>Advanced-energy preparation.</strong>
+            <span>Fusion-readiness assessment, advanced offtake readiness, pulsed-power buffer planning, and technology watch brief.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel section" id="community" aria-labelledby="community-title">
+        <div class="section-head">
+          <div class="kicker">Community</div>
+          <h2 id="community-title">How does this help without reckless risk?</h2>
+          <p>Community handles farmland storage, rural resilience, safeguards, public trust, emergency readiness, and placement discipline.</p>
+        </div>
+
+        <div class="layer-grid">
+          <article class="layer-card" id="storage-fields">
+            <b>Storage Fields</b>
+            <strong>Agricultural Energy Storage Fields.</strong>
+            <span>Midstream battery storage and grid-support infrastructure on suitable rural or agricultural sites.</span>
+          </article>
+
+          <article class="layer-card">
+            <b>Resilience</b>
+            <strong>Reserve ground.</strong>
+            <span>Storage can support backup power, peak-demand relief, emergency readiness, and local continuity.</span>
+          </article>
+
+          <article class="layer-card">
+            <b>Safeguards</b>
+            <strong>Safe must be calculated.</strong>
+            <span>Battery chemistry, spacing, containment, thermal monitoring, fire protection, drainage, security, and emergency response.</span>
+          </article>
+        </div>
+
+        <details class="layer">
+          <summary>Open community claim boundary</summary>
+          <div class="detail-body">
+            <ul>
+              <li>No fusion farms.</li>
+              <li>No plasma farms.</li>
+              <li>No reactor farms.</li>
+              <li>No risk-free storage claim.</li>
+              <li>No residential high-energy endpoint.</li>
+            </ul>
+          </div>
+        </details>
+      </section>
+
+      <section class="panel section" id="science" aria-labelledby="science-title">
+        <div class="section-head">
+          <div class="kicker">Science</div>
+          <h2 id="science-title">What is true, not ready, or forbidden?</h2>
+          <p>Science preserves the proof boundary beneath the narrative world and product catalog.</p>
+        </div>
+
+        <div class="layer-grid">
+          <article class="layer-card">
+            <b>Fusion</b>
+            <strong>Scientifically real.</strong>
+            <span>Controlled fusion requires plasma. Plasma must be heated, confined, stabilized, and sustained.</span>
+          </article>
+
+          <article class="layer-card">
+            <b>Commercial Status</b>
+            <strong>Not procurement-ready.</strong>
+            <span>Commercial plant-level net electricity has not yet been achieved.</span>
+          </article>
+
+          <article class="layer-card">
+            <b>Readiness</b>
+            <strong>Preparation is valid now.</strong>
+            <span>Solar is a hedge. Storage is a bridge. Fusion is frontier readiness.</span>
+          </article>
+        </div>
+
+        <details class="layer">
+          <summary>Open math boundary</summary>
+          <div class="detail-body">
+            <div class="layer-grid">
+              <article class="layer-card">
+                <b>Q_target</b>
+                <strong>Target gain.</strong>
+                <span>Fusion energy from target divided by energy delivered to target.</span>
+              </article>
+
+              <article class="layer-card">
+                <b>Q_plasma</b>
+                <strong>Plasma gain.</strong>
+                <span>Fusion thermal power divided by external plasma heating power.</span>
+              </article>
+
+              <article class="layer-card">
+                <b>Q_plant</b>
+                <strong>Plant gain.</strong>
+                <span>Net electric output divided by total facility energy input.</span>
+              </article>
+            </div>
+            <div class="boundary">Commercial viability requires sustainable Q_plant greater than 1 after total facility inputs, losses, reset costs, maintenance, conversion, and reliability burdens.</div>
+          </div>
+        </details>
+      </section>
+
+      <section class="panel section" id="readiness-index" aria-labelledby="objects-title">
+        <div class="section-head">
+          <div class="kicker">Readiness Objects</div>
+          <h2 id="objects-title">Three practical products support the orbit.</h2>
+          <p>These are the bridge between Narrative, Products, Community, and Science.</p>
+        </div>
+
+        <div class="layer-grid">
+          <article class="layer-card">
             <b>Object 1</b>
-            <strong>Frontier Energy Readiness Index</strong>
-            <p>For high-load businesses that need to know whether they are structurally prepared for future advanced-energy adoption.</p>
+            <strong>Frontier Energy Readiness Index.</strong>
+            <span>Measures whether a high-load business is structurally prepared for future advanced-energy adoption.</span>
             <div class="chip-wall">
               <span class="tag">Not Ready</span>
               <span class="tag">Partially Ready</span>
@@ -1109,24 +1207,24 @@
             </div>
           </article>
 
-          <article class="object">
+          <article class="layer-card" id="advanced-buffer">
             <b>Object 2</b>
-            <strong>Advanced Energy Buffer Model</strong>
-            <p>For sites that need storage and buffering analysis for critical load, outage tolerance, demand charges, interconnection limits, or pulsed-load readiness.</p>
+            <strong>Advanced Energy Buffer Model.</strong>
+            <span>Evaluates critical load, outage tolerance, demand charges, interconnection limits, and pulsed-load readiness.</span>
             <div class="chip-wall">
               <span class="tag">Battery-Only</span>
-              <span class="tag">Battery + Solar Hedge</span>
+              <span class="tag">Solar Hedge</span>
               <span class="tag">Generator Bridge</span>
-              <span class="tag violet">Pulsed-Power Candidate</span>
+              <span class="tag violet">Pulsed-Power</span>
             </div>
           </article>
 
-          <article class="object">
+          <article class="layer-card" id="future-offtake">
             <b>Object 3</b>
-            <strong>Future Offtake Readiness Map</strong>
-            <p>For companies that may eventually contract for advanced clean baseload power, future clean-power offtake, or frontier energy infrastructure.</p>
+            <strong>Future Offtake Readiness Map.</strong>
+            <span>Evaluates whether a company may eventually contract for advanced clean baseload power or frontier energy infrastructure.</span>
             <div class="chip-wall">
-              <span class="tag">Short-Term Procurement</span>
+              <span class="tag">Short-Term</span>
               <span class="tag">Forward Agreement</span>
               <span class="tag green">Clean Baseload</span>
               <span class="tag violet">Frontier Offtake</span>
@@ -1135,17 +1233,43 @@
         </div>
       </section>
 
+      <section class="panel section" id="kill-conditions" aria-labelledby="kill-title">
+        <div class="section-head">
+          <div class="kicker">Kill Conditions</div>
+          <h2 id="kill-title">The contract stops if the claim outruns the evidence.</h2>
+        </div>
+
+        <details class="layer" open>
+          <summary>Open forbidden collapses</summary>
+          <div class="detail-body">
+            <ul>
+              <li>Stop if narrative overrides science.</li>
+              <li>Stop if Audralia is treated as deployment proof.</li>
+              <li>Stop if the page claims solar becomes fusion.</li>
+              <li>Stop if the page claims commercial fusion ready now.</li>
+              <li>Stop if the page claims plasma battery solution.</li>
+              <li>Stop if the page claims unlimited power.</li>
+              <li>Stop if the page claims fusion procurement today.</li>
+              <li>Stop if the page treats plasma as storage.</li>
+              <li>Stop if the page creates farmland fusion farms.</li>
+              <li>Stop if the page claims risk-free battery fields.</li>
+              <li>Stop if the page guarantees timelines.</li>
+            </ul>
+          </div>
+        </details>
+      </section>
+
       <section class="final-band" id="final-lock" aria-label="Energy final lock">
-        <strong>Frontier Energy Readiness is the catalog. Audralia is the simulation world. Science remains the boundary.</strong>
+        <strong>Energy is the central anchor. Audralia gives the simulation world. The orbit keeps every path visible.</strong>
 
         <p>
-          The page now works as a compact command catalog. The visitor can see the whole system, then open only the layer they need.
+          Frontier Energy Readiness remains the deliverable. Fusion is not a sales product today. Readiness is the category that can be built, assessed, explained, sold, and inherited by Audralia without breaking the science.
         </p>
 
         <div class="actions">
-          <a class="button violet" href="#catalog">Return to Catalog</a>
-          <a class="button gold" href="#objects">Readiness Objects</a>
-          <a class="button blue" href="/showroom/globe/audralia/">Open Audralia</a>
+          <a class="button gold" href="#energy-orbit">Return to Orbit</a>
+          <a class="button violet" href="#audralia-simulation">Audralia</a>
+          <a class="button blue" href="/showroom/globe/audralia/">Open Audralia Globe</a>
           <a class="button" href="/frontier/">Return to Frontier</a>
         </div>
 
@@ -1155,24 +1279,25 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_ENERGY_GEM_CATALOG_DROPDOWN_SINGLE_FILE_TNT_v7
+FRONTIER_ENERGY_ROTATIONAL_GEM_ANCHOR_CATALOG_SINGLE_FILE_TNT_v8
 route=/explore/frontier/energy/
 page=frontier_energy
-previous=FRONTIER_ENERGY_NARRATIVE_FIRST_FOUR_COMPARTMENT_ANIMATED_SINGLE_FILE_TNT_v6
-layout_model=catalog_first_gem_interface
+previous=FRONTIER_ENERGY_GEM_CATALOG_DROPDOWN_SINGLE_FILE_TNT_v7
+layout_model=rotational_gem_anchor_catalog
 ordering_law=narrative_construct_first_backdoor_science_second
-audralia_role=frontier_science_simulation_world
-catalog_gems=Audralia_Simulation,Products,Community,Science,Math_Boundary,Commercial_Now,Bridge_Infrastructure,Frontier_Readiness,Storage_Fields,Advanced_Buffer,Future_Offtake,Kill_Conditions
+click_model=orbit_gems_anchor_to_section
+central_gem=Energy_Frontier_Readiness
+orbit_gems=Audralia_Simulation,Products,Community,Science,Commercial_Now,Bridge_Infrastructure,Frontier_Readiness,Storage_Fields,Readiness_Index,Advanced_Buffer,Future_Offtake,Kill_Conditions
 dropdown_layers=true
 animation_scope=CSS_only_creative_subtle
-animation_features=gentle_gem_shimmer,soft_orbit_ring,hover_lift,glow_sweep,simulation_signal
+animation_features=faceted_gems,central_anchor,elliptical_orbit,hover_lift,soft_signal_sweep,stable_readable_labels
 science_lock=fusion_real_commercial_power_not_procurement_ready
 math_lock=Q_target_Q_plasma_Q_plant_separated
 possibility_lock=solar_is_hedge_storage_is_bridge_fusion_is_frontier_readiness
 simulation_boundary=Audralia_models_possibility_not_deployment_proof
 farmland_storage=Bridge_Infrastructure_midstream_storage_only
 final_lock=do_not_sell_fusion_sell_readiness
-forbidden_claims=solar_becomes_fusion,we_create_fusion_power,commercial_fusion_ready_now,plasma_battery_solution,unlimited_power,fusion_procurement_today,plasma_as_storage,fusion_in_vehicles_or_homes,farmland_fusion_farms,risk_free_battery_fields,guaranteed_timelines,Audralia_as_commercial_deployment_proof,narrative_overrides_science
+forbidden_claims=narrative_overrides_science,Audralia_as_deployment_proof,solar_becomes_fusion,we_create_fusion_power,commercial_fusion_ready_now,plasma_battery_solution,unlimited_power,fusion_procurement_today,plasma_as_storage,fusion_in_vehicles_or_homes,farmland_fusion_farms,risk_free_battery_fields,guaranteed_timelines
 heavy_runtime=false
 generated_image=false
 graphic_box=false
@@ -1181,7 +1306,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      FRONTIER_ENERGY_GEM_CATALOG_DROPDOWN_SINGLE_FILE_TNT_v7 · Catalog First · Narrative First · Gems · Dropdown Layers · Do Not Sell Fusion · Sell Readiness.
+      FRONTIER_ENERGY_ROTATIONAL_GEM_ANCHOR_CATALOG_SINGLE_FILE_TNT_v8 · Rotational Gems · Anchor Catalog · Narrative First · Do Not Sell Fusion · Sell Readiness.
     </footer>
   </div>
 </body>

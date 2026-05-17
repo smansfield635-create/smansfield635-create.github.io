@@ -3,10 +3,10 @@
   lang="en"
   data-route="/explore/frontier/energy/"
   data-page="frontier-energy"
-  data-contract="FRONTIER_ENERGY_UNIFORM_SITE_GEM_STANDARD_RESTORE_TNT_v15"
-  data-previous-contract="FRONTIER_ENERGY_SITE_STANDARD_GEM_ORBIT_RESTORE_TNT_v14"
+  data-contract="FRONTIER_ENERGY_ORGANIC_SITE_GEM_FORM_OVERRIDE_TNT_v16"
+  data-previous-contract="FRONTIER_ENERGY_UNIFORM_SITE_GEM_STANDARD_RESTORE_TNT_v15"
   data-public-subject="frontier-science-fusion-power-readiness"
-  data-visual-system="uniform-site-standard-bright-faceted-route-gems"
+  data-visual-system="organic-site-standard-bright-faceted-route-gems"
   data-language-rule="visual-objects-are-interface-not-public-subject"
   data-ordering-law="story-first-learning-second-play-third-technology-underneath"
   data-frontier-rule="narrative-construct-first-backdoor-science-second"
@@ -50,11 +50,11 @@
       --shadow:0 30px 100px rgba(0,0,0,.44);
       --max:1220px;
 
-      --siteGem:polygon(50% 0%,68% 7%,86% 20%,100% 48%,88% 80%,50% 100%,12% 80%,0% 48%,14% 20%,32% 7%);
-      --siteGemTop:polygon(50% 0%,68% 7%,86% 20%,68% 36%,50% 43%,32% 36%,14% 20%,32% 7%);
-      --siteGemLeft:polygon(14% 20%,32% 36%,50% 43%,50% 100%,12% 80%,0% 48%);
-      --siteGemRight:polygon(86% 20%,68% 36%,50% 43%,50% 100%,88% 80%,100% 48%);
-      --siteGemBottom:polygon(0% 48%,12% 80%,50% 100%,88% 80%,100% 48%,68% 36%,50% 43%,32% 36%);
+      --organicGem:polygon(49% 0%,67% 6%,84% 18%,99% 45%,91% 74%,69% 91%,50% 100%,29% 92%,10% 76%,0% 47%,13% 19%,31% 7%);
+      --organicGemTop:polygon(49% 0%,67% 6%,84% 18%,68% 35%,50% 43%,31% 35%,13% 19%,31% 7%);
+      --organicGemLeft:polygon(13% 19%,31% 35%,50% 43%,50% 100%,29% 92%,10% 76%,0% 47%);
+      --organicGemRight:polygon(84% 18%,68% 35%,50% 43%,50% 100%,69% 91%,91% 74%,99% 45%);
+      --organicGemBottom:polygon(0% 47%,10% 76%,29% 92%,50% 100%,69% 91%,91% 74%,99% 45%,68% 35%,50% 43%,31% 35%);
     }
 
     *{box-sizing:border-box}
@@ -126,9 +126,9 @@
       to{transform:rotate(360deg) scale(1)}
     }
 
-    @keyframes siteGemBreathe{
-      0%,100%{filter:brightness(1.08) contrast(1.14) saturate(1.08)}
-      50%{filter:brightness(1.24) contrast(1.2) saturate(1.18)}
+    @keyframes organicGemPulse{
+      0%,100%{filter:brightness(1.09) contrast(1.10) saturate(1.08)}
+      50%{filter:brightness(1.22) contrast(1.16) saturate(1.15)}
     }
 
     @keyframes orbitSpinContained{
@@ -206,14 +206,14 @@
       place-items:center;
       border:1px solid rgba(243,200,111,.48);
       transform:rotate(45deg);
-      clip-path:var(--siteGem);
+      clip-path:var(--organicGem);
       background:
         linear-gradient(135deg,rgba(255,255,255,.72),transparent 18%),
         conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.45),rgba(243,200,111,.30),rgba(141,216,255,.52),rgba(173,220,255,.40),rgba(255,255,255,.45)),
         radial-gradient(circle at 34% 18%,rgba(255,255,255,.70),transparent 28%),
         linear-gradient(145deg,rgba(30,48,72,.95),rgba(5,8,20,.98));
       box-shadow:0 0 2.4rem rgba(141,216,255,.30),0 0 1.5rem rgba(243,200,111,.18),0 1.1rem 2.6rem rgba(0,0,0,.44),inset 0 1px 0 rgba(255,255,255,.42);
-      animation:siteGemBreathe 6s ease-in-out infinite;
+      animation:organicGemPulse 6s ease-in-out infinite;
     }
 
     .brand-mark span{
@@ -491,7 +491,7 @@
       height:min(58%,27rem);
       transform:translate(-50%,-50%);
       transform-origin:50% 50%;
-      animation:orbitSpinContained 80s linear infinite;
+      animation:orbitSpinContained 84s linear infinite;
       will-change:transform;
       z-index:4;
     }
@@ -511,16 +511,16 @@
     .center-node{
       left:50%;
       top:50%;
-      width:clamp(9.6rem,18vw,15rem);
-      height:clamp(6.5rem,12vw,9.7rem);
+      width:clamp(9.9rem,18.8vw,15.6rem);
+      height:clamp(6.8rem,12.6vw,10.1rem);
       transform:translate(-50%,-50%);
       z-index:6;
       transition:filter .2s ease;
     }
 
     .orbit-node{
-      width:clamp(4.9rem,7.8vw,7.15rem);
-      height:clamp(3.9rem,6.35vw,5.65rem);
+      width:clamp(5.05rem,8vw,7.45rem);
+      height:clamp(4.02rem,6.48vw,5.88rem);
       transform:translate(-50%,-50%);
       z-index:5;
     }
@@ -533,7 +533,7 @@
       height:100%;
       transform:translate(-50%,-50%);
       transition:filter .2s ease,scale .2s ease;
-      animation:counterSpin 80s linear infinite;
+      animation:counterSpin 84s linear infinite;
       will-change:transform;
     }
 
@@ -551,37 +551,38 @@
     .node-shape{
       position:absolute;
       inset:0;
-      clip-path:var(--siteGem);
-      border:1px solid rgba(255,255,255,.42);
+      clip-path:var(--organicGem);
+      border:1px solid rgba(255,255,255,.40);
       background:
-        linear-gradient(135deg,rgba(255,255,255,.82),transparent 18%),
-        linear-gradient(60deg,transparent 0 30%,rgba(255,255,255,.30) 31% 32%,transparent 33% 100%),
-        linear-gradient(120deg,transparent 0 43%,rgba(255,255,255,.24) 44% 45%,transparent 46% 100%),
-        conic-gradient(from 42deg,
-          rgba(255,255,255,.52),
-          rgba(243,200,111,.34),
-          rgba(141,216,255,.72),
-          rgba(216,240,255,.60),
-          rgba(243,200,111,.28),
-          rgba(255,255,255,.52)),
+        radial-gradient(circle at 47% 12%,rgba(255,255,255,.86),rgba(255,255,255,.28) 12%,transparent 34%),
+        linear-gradient(160deg,rgba(255,255,255,.72),transparent 24%),
+        linear-gradient(60deg,transparent 0 30%,rgba(255,255,255,.24) 31% 32%,transparent 33% 100%),
+        linear-gradient(120deg,transparent 0 43%,rgba(255,255,255,.20) 44% 45%,transparent 46% 100%),
+        conic-gradient(from 38deg,
+          rgba(255,255,255,.48),
+          rgba(243,200,111,.30),
+          rgba(141,216,255,.70),
+          rgba(218,241,255,.62),
+          rgba(243,200,111,.26),
+          rgba(255,255,255,.48)),
         linear-gradient(145deg,rgba(41,67,92,.96),rgba(4,8,19,.98));
       box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.62),
-        inset 0 -1px 0 rgba(0,0,0,.30),
-        0 0 2.35rem rgba(141,216,255,.34),
-        0 0 1.35rem rgba(243,200,111,.18),
+        inset 0 1px 0 rgba(255,255,255,.56),
+        inset 0 -1px 0 rgba(0,0,0,.28),
+        0 0 2.45rem rgba(141,216,255,.32),
+        0 0 1.4rem rgba(243,200,111,.18),
         0 1rem 1.8rem rgba(0,0,0,.30);
-      animation:siteGemBreathe 7s ease-in-out infinite;
+      animation:organicGemPulse 7s ease-in-out infinite;
     }
 
     .node-shape::before{
       content:"";
       position:absolute;
       inset:0;
-      clip-path:var(--siteGemTop);
+      clip-path:var(--organicGemTop);
       background:
-        radial-gradient(circle at 42% 12%,rgba(255,255,255,.78),transparent 27%),
-        linear-gradient(135deg,rgba(255,255,255,.62),transparent 48%);
+        radial-gradient(circle at 44% 10%,rgba(255,255,255,.92),transparent 25%),
+        linear-gradient(135deg,rgba(255,255,255,.55),transparent 48%);
       opacity:.92;
       pointer-events:none;
     }
@@ -590,11 +591,11 @@
       content:"";
       position:absolute;
       inset:0;
-      clip-path:var(--siteGemBottom);
+      clip-path:var(--organicGemBottom);
       background:
-        radial-gradient(circle at 32% 35%,rgba(255,255,255,.28),transparent 28%),
-        linear-gradient(145deg,rgba(141,216,255,.30),transparent 43%,rgba(0,0,0,.20) 100%);
-      opacity:.92;
+        radial-gradient(circle at 32% 35%,rgba(255,255,255,.26),transparent 28%),
+        linear-gradient(145deg,rgba(141,216,255,.31),transparent 43%,rgba(0,0,0,.20) 100%);
+      opacity:.90;
       pointer-events:none;
     }
 
@@ -603,18 +604,18 @@
       position:absolute;
       inset:0;
       pointer-events:none;
-      opacity:.72;
+      opacity:.68;
       z-index:2;
     }
 
     .node-left-facet{
-      clip-path:var(--siteGemLeft);
-      background:linear-gradient(135deg,rgba(255,255,255,.20),rgba(141,216,255,.34),transparent 70%);
+      clip-path:var(--organicGemLeft);
+      background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(141,216,255,.33),transparent 72%);
     }
 
     .node-right-facet{
-      clip-path:var(--siteGemRight);
-      background:linear-gradient(225deg,rgba(255,255,255,.22),rgba(243,200,111,.22),transparent 70%);
+      clip-path:var(--organicGemRight);
+      background:linear-gradient(225deg,rgba(255,255,255,.20),rgba(243,200,111,.22),transparent 72%);
     }
 
     .node-core{
@@ -622,34 +623,12 @@
       inset:19% 16%;
       clip-path:polygon(50% 0%,83% 28%,70% 100%,30% 100%,17% 28%);
       background:
-        linear-gradient(135deg,rgba(255,255,255,.30),transparent 42%),
-        linear-gradient(48deg,transparent 0 49%,rgba(255,255,255,.24) 50% 51%,transparent 52%),
-        radial-gradient(circle at 50% 26%,rgba(255,255,255,.28),transparent 45%);
-      opacity:.96;
+        linear-gradient(135deg,rgba(255,255,255,.26),transparent 42%),
+        linear-gradient(48deg,transparent 0 49%,rgba(255,255,255,.20) 50% 51%,transparent 52%),
+        radial-gradient(circle at 50% 26%,rgba(255,255,255,.24),transparent 45%);
+      opacity:.92;
       pointer-events:none;
       z-index:2;
-    }
-
-    .center-node .node-shape{
-      border-color:rgba(243,200,111,.60);
-      background:
-        linear-gradient(135deg,rgba(255,255,255,.86),transparent 18%),
-        linear-gradient(60deg,transparent 0 30%,rgba(255,255,255,.34) 31% 32%,transparent 33% 100%),
-        conic-gradient(from 42deg,
-          rgba(255,255,255,.54),
-          rgba(243,200,111,.48),
-          rgba(141,216,255,.72),
-          rgba(216,240,255,.62),
-          rgba(243,200,111,.36),
-          rgba(255,255,255,.54)),
-        radial-gradient(circle at 45% 36%,rgba(255,232,163,.32),transparent 48%),
-        linear-gradient(145deg,rgba(41,67,92,.96),rgba(2,5,15,.98));
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.68),
-        inset 0 -1px 0 rgba(0,0,0,.30),
-        0 0 3rem rgba(141,216,255,.36),
-        0 0 2rem rgba(243,200,111,.26),
-        0 1.2rem 2.4rem rgba(0,0,0,.36);
     }
 
     .node-copy{
@@ -662,10 +641,10 @@
       min-width:68%;
       padding:.30rem .36rem;
       transform:translate(-50%,-50%);
-      border:1px solid rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.15);
       border-radius:.72rem;
-      background:linear-gradient(180deg,rgba(7,11,24,.62),rgba(2,4,12,.58));
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 .5rem 1.2rem rgba(0,0,0,.20);
+      background:linear-gradient(180deg,rgba(7,11,24,.60),rgba(2,4,12,.54));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 .5rem 1.2rem rgba(0,0,0,.18);
       text-shadow:0 2px 10px rgba(0,0,0,.96);
     }
 
@@ -686,11 +665,33 @@
       text-transform:uppercase;
     }
 
+    .center-node .node-shape{
+      border-color:rgba(243,200,111,.60);
+      background:
+        radial-gradient(circle at 47% 12%,rgba(255,255,255,.90),rgba(255,255,255,.30) 12%,transparent 34%),
+        linear-gradient(160deg,rgba(255,255,255,.78),transparent 24%),
+        conic-gradient(from 38deg,
+          rgba(255,255,255,.50),
+          rgba(243,200,111,.44),
+          rgba(141,216,255,.72),
+          rgba(218,241,255,.62),
+          rgba(243,200,111,.34),
+          rgba(255,255,255,.50)),
+        radial-gradient(circle at 45% 36%,rgba(255,232,163,.30),transparent 48%),
+        linear-gradient(145deg,rgba(41,67,92,.96),rgba(2,5,15,.98));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.64),
+        inset 0 -1px 0 rgba(0,0,0,.28),
+        0 0 3rem rgba(141,216,255,.34),
+        0 0 2rem rgba(243,200,111,.24),
+        0 1.2rem 2.4rem rgba(0,0,0,.36);
+    }
+
     .center-node .node-copy{
       min-width:75%;
       padding:.46rem .58rem;
       border-color:rgba(243,200,111,.28);
-      background:linear-gradient(180deg,rgba(7,11,24,.66),rgba(2,4,12,.60));
+      background:linear-gradient(180deg,rgba(7,11,24,.64),rgba(2,4,12,.58));
     }
 
     .center-node .node-copy strong{
@@ -703,18 +704,18 @@
       font-size:clamp(.52rem,1.02vw,.72rem);
     }
 
-    .p1{left:50%;top:0%}
-    .p2{left:75%;top:7%}
-    .p3{left:93%;top:25%}
-    .p4{left:100%;top:50%}
-    .p5{left:93%;top:75%}
-    .p6{left:75%;top:93%}
-    .p7{left:50%;top:100%}
-    .p8{left:25%;top:93%}
-    .p9{left:7%;top:75%}
-    .p10{left:0%;top:50%}
-    .p11{left:7%;top:25%}
-    .p12{left:25%;top:7%}
+    .p1{left:50%;top:0%;--organicGem:polygon(48% 0%,69% 8%,86% 21%,99% 45%,89% 77%,66% 92%,49% 100%,28% 91%,10% 74%,0% 46%,15% 19%,32% 7%)}
+    .p2{left:75%;top:7%;--organicGem:polygon(51% 0%,70% 8%,84% 19%,100% 47%,90% 78%,70% 92%,52% 100%,30% 93%,9% 76%,0% 49%,13% 21%,30% 6%)}
+    .p3{left:93%;top:25%;--organicGem:polygon(50% 0%,67% 6%,85% 18%,98% 46%,88% 81%,50% 100%,13% 79%,0% 47%,14% 18%,32% 7%)}
+    .p4{left:100%;top:50%;--organicGem:polygon(48% 0%,66% 7%,86% 20%,100% 48%,88% 77%,68% 91%,49% 100%,29% 92%,11% 79%,0% 49%,13% 22%,32% 6%)}
+    .p5{left:93%;top:75%;--organicGem:polygon(49% 0%,68% 8%,85% 20%,99% 47%,89% 78%,69% 92%,50% 100%,28% 91%,10% 75%,0% 47%,15% 19%,33% 7%)}
+    .p6{left:75%;top:93%;--organicGem:polygon(51% 0%,70% 7%,86% 22%,100% 49%,88% 79%,68% 92%,50% 100%,31% 93%,11% 77%,0% 48%,14% 20%,31% 6%)}
+    .p7{left:50%;top:100%;--organicGem:polygon(49% 0%,67% 6%,84% 19%,100% 46%,90% 77%,70% 92%,51% 100%,29% 91%,10% 76%,0% 49%,15% 20%,32% 7%)}
+    .p8{left:25%;top:93%;--organicGem:polygon(50% 0%,69% 7%,86% 20%,99% 48%,87% 80%,67% 91%,49% 100%,27% 92%,9% 78%,0% 46%,13% 19%,31% 6%)}
+    .p9{left:7%;top:75%;--organicGem:polygon(49% 0%,66% 8%,84% 21%,100% 47%,89% 78%,68% 93%,50% 100%,30% 91%,11% 76%,0% 48%,14% 20%,33% 7%)}
+    .p10{left:0%;top:50%;--organicGem:polygon(51% 0%,68% 6%,85% 19%,99% 46%,90% 79%,69% 92%,50% 100%,28% 93%,10% 78%,0% 49%,15% 21%,32% 6%)}
+    .p11{left:7%;top:25%;--organicGem:polygon(48% 0%,67% 7%,86% 20%,100% 48%,88% 78%,66% 92%,49% 100%,29% 92%,9% 76%,0% 47%,13% 19%,31% 7%)}
+    .p12{left:25%;top:7%;--organicGem:polygon(50% 0%,70% 8%,85% 21%,99% 49%,88% 79%,68% 91%,50% 100%,30% 93%,11% 78%,0% 48%,15% 20%,33% 6%)}
 
     .section{
       margin-top:.9rem;
@@ -931,8 +932,8 @@
 
     @media (max-width:1100px){
       .orbit-node{
-        width:clamp(4.55rem,7.6vw,6.8rem);
-        height:clamp(3.65rem,6.15vw,5.4rem);
+        width:clamp(4.8rem,7.9vw,7rem);
+        height:clamp(3.85rem,6.3vw,5.5rem);
       }
 
       .layer-grid{grid-template-columns:1fr}
@@ -954,9 +955,9 @@
       .button{width:100%}
       .orbit-board{padding:.7rem}
       .orbit-stage{height:34rem;border-radius:1.45rem}
-      .orbit-track{width:68%;height:56%}
-      .center-node{width:7.85rem;height:5.45rem}
-      .orbit-node{width:4.18rem;height:3.32rem}
+      .orbit-track{width:69%;height:57%}
+      .center-node{width:8.05rem;height:5.55rem}
+      .orbit-node{width:4.34rem;height:3.45rem}
       .node-copy{padding:.20rem .22rem;min-width:72%;border-radius:.54rem}
       .node-copy strong{font-size:.37rem;letter-spacing:.052em}
       .node-copy span{font-size:.27rem;letter-spacing:.04em}
@@ -1623,19 +1624,20 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_ENERGY_UNIFORM_SITE_GEM_STANDARD_RESTORE_TNT_v15
+FRONTIER_ENERGY_ORGANIC_SITE_GEM_FORM_OVERRIDE_TNT_v16
 route=/explore/frontier/energy/
 page=frontier_energy
-previous=FRONTIER_ENERGY_SITE_STANDARD_GEM_ORBIT_RESTORE_TNT_v14
+previous=FRONTIER_ENERGY_UNIFORM_SITE_GEM_STANDARD_RESTORE_TNT_v15
 public_subject=frontier_science_fusion_power_readiness
-visual_system=uniform_site_standard_bright_faceted_route_gems
+visual_system=organic_site_standard_bright_faceted_route_gems
 language_rule=visual_objects_are_interface_not_public_subject
 story_rule=story_first_learning_second_play_third_technology_underneath
 frontier_rule=narrative_construct_first_backdoor_science_second
 click_model=energy_pathways_anchor_to_section_return_to_energy_orbit
 central_anchor=Energy_Readiness_Anchor
 orbit_pathways=Audralia_Simulation,Fusion_Readiness,Storage_Bridge,Solar_Hedge,Plasma_Boundary,Q_Boundary,Commercial_Now,Bridge_Infrastructure,Storage_Fields,Advanced_Buffer,Future_Offtake,Kill_Conditions
-visual_repair=uniform_compass_standard_bright_icy_blue_gold_faceted_route_gems_no_dull_legacy_colored_stones
+visual_repair=correct_design_overrides_new_contract_organic_site_standard_gem_form_not_forced_legacy_geometry
+organic_form=individual_node_polygon_variation_bright_icy_blue_gold_surface_soft_facets_white_highlight
 orbit_fit=contained_track_prevents_edge_clipping_at_mobile_widths
 return_path=return_to_energy_orbit_under_every_reading_section
 audralia_role=frontier_energy_simulation_world
@@ -1648,7 +1650,7 @@ solar_lock=solar_supports_pathway_does_not_become_fusion
 farmland_storage=bridge_infrastructure_midstream_storage_only
 final_lock=do_not_sell_fusion_sell_readiness
 animation_scope=CSS_only_creative_subtle
-animation_features=uniform_site_standard_bright_faceted_route_gems,central_anchor,contained_elliptical_orbit_rotation,counter_rotating_readable_labels,hover_lift,soft_signal_sweep
+animation_features=organic_bright_faceted_route_gems,central_anchor,contained_elliptical_orbit_rotation,counter_rotating_readable_labels,hover_lift,soft_signal_sweep
 forbidden_public_language=click_a_gem,read_the_gem_layer,gem_catalog,gem_interface,gem_route,gem_layer,crystal_gem_orbit,twelve_crystal_gems,the_gems_now_rotate
 forbidden_claims=narrative_overrides_science,Audralia_as_deployment_proof,solar_becomes_fusion,we_create_fusion_power,commercial_fusion_ready_now,plasma_battery_solution,unlimited_power,fusion_procurement_today,plasma_as_storage,fusion_in_vehicles_or_homes,farmland_fusion_farms,risk_free_battery_fields,guaranteed_timelines
 heavy_runtime=false
@@ -1659,7 +1661,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      FRONTIER_ENERGY_UNIFORM_SITE_GEM_STANDARD_RESTORE_TNT_v15 · Fusion Readiness · Frontier Science · Energy Pathways · Return to Energy Orbit.
+      FRONTIER_ENERGY_ORGANIC_SITE_GEM_FORM_OVERRIDE_TNT_v16 · Fusion Readiness · Frontier Science · Energy Pathways · Return to Energy Orbit.
     </footer>
   </div>
 </body>

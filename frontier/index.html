@@ -3,12 +3,16 @@
   lang="en"
   data-route="/frontier/"
   data-page="frontier"
-  data-contract="FRONTIER_FIGURE_EIGHT_ORBITAL_STARFIELD_HTML_JS_TNT_v5"
-  data-previous-contract="FRONTIER_EXPANSION_EDGE_STARFIELD_CONSTELLATION_RENEWAL_TNT_v4"
+  data-contract="FRONTIER_TOP_ANCHOR_HORIZONTAL_FIGURE_EIGHT_HTML_JS_TNT_v6"
+  data-previous-contract="FRONTIER_FIGURE_EIGHT_ORBITAL_STARFIELD_HTML_JS_TNT_v5"
   data-role="expansion-edge"
   data-frontier-role="expansion-edge"
+  data-renewal="true"
+  data-not-rewrite="true"
+  data-frontier-anchor-position="top"
   data-figure-eight-orbit="true"
-  data-center-anchor="Frontier_Future_Edge"
+  data-figure-eight-orientation="horizontal"
+  data-center-crossing-open="true"
   data-labels-front-facing="true"
   data-shared-directional-flow="true"
   data-star-wobble-allowed="true"
@@ -31,7 +35,7 @@
   <title>Frontier · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Frontier is the expansion edge of Diamond Gate Bridge: eleven future lanes held by a coherent figure-eight starfield, with Laws as proof and Gauges as route summary."
+    content="Frontier is the expansion edge of Diamond Gate Bridge: eleven future lanes held by a horizontal figure-eight starfield, with Laws as proof and Gauges as route summary."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/frontier/">
   <meta name="theme-color" content="#02040b">
@@ -409,38 +413,61 @@
     }
 
     .frontier-orbit-stage{
-      --x-left:clamp(-18.5rem,-31vw,-9.2rem);
-      --x-right:clamp(9.2rem,31vw,18.5rem);
-      --x-mid-left:clamp(-11.2rem,-19vw,-5.7rem);
-      --x-mid-right:clamp(5.7rem,19vw,11.2rem);
-      --y-up:clamp(-9.4rem,-18vw,-5.7rem);
-      --y-down:clamp(5.7rem,18vw,9.4rem);
-      --y-bridge-up:clamp(-7.6rem,-15vw,-4.95rem);
-      --y-bridge-down:clamp(4.95rem,15vw,7.6rem);
       position:relative;
-      min-height:clamp(34rem,92vw,50rem);
+      min-height:clamp(34rem,88vw,49rem);
       display:grid;
-      place-items:center;
+      grid-template-rows:minmax(9.5rem,15rem) 1fr;
       overflow:hidden;
       isolation:isolate;
       border:1px solid rgba(184,205,255,.13);
       border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
-        radial-gradient(circle at 50% 43%,rgba(141,216,255,.13),transparent 18rem),
-        radial-gradient(circle at 50% 62%,rgba(36,120,255,.13),transparent 24rem),
-        radial-gradient(circle at 50% 78%,rgba(243,200,111,.075),transparent 28rem),
+        radial-gradient(circle at 50% 16%,rgba(243,200,111,.09),transparent 12rem),
+        radial-gradient(circle at 50% 56%,rgba(141,216,255,.14),transparent 18rem),
+        radial-gradient(circle at 50% 70%,rgba(36,120,255,.13),transparent 24rem),
+        radial-gradient(circle at 50% 86%,rgba(143,101,255,.10),transparent 28rem),
         linear-gradient(180deg,rgba(1,5,16,.70),rgba(2,6,16,.94));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .frontier-orbit-stage::before,
-    .frontier-orbit-stage::after{
+    .frontier-anchor-zone{
+      position:relative;
+      z-index:8;
+      display:grid;
+      place-items:center;
+      padding:1rem 1rem 0;
+      pointer-events:none;
+    }
+
+    .frontier-figure-eight-zone{
+      --x-left:clamp(-17rem,-30vw,-10.2rem);
+      --x-right:clamp(10.2rem,30vw,17rem);
+      --x-mid-left:clamp(-9.2rem,-16vw,-5.6rem);
+      --x-mid-right:clamp(5.6rem,16vw,9.2rem);
+      --y-up:clamp(-4.6rem,-8vw,-2.9rem);
+      --y-down:clamp(2.9rem,8vw,4.6rem);
+      --y-cross-up:clamp(-2.1rem,-4vw,-1.35rem);
+      --y-cross-down:clamp(1.35rem,4vw,2.1rem);
+      position:relative;
+      z-index:4;
+      min-height:clamp(20rem,50vw,31rem);
+      margin:0 clamp(.6rem,2vw,1.15rem) clamp(1rem,3vw,1.35rem);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.075);
+      border-radius:clamp(1.2rem,4vw,2rem);
+      background:
+        radial-gradient(ellipse at 50% 50%,rgba(141,216,255,.12),transparent 54%),
+        linear-gradient(180deg,rgba(255,255,255,.026),rgba(255,255,255,.012));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+    }
+
+    .frontier-figure-eight-zone::before,
+    .frontier-figure-eight-zone::after{
       content:"";
       position:absolute;
-      left:50%;
       top:50%;
-      width:min(45%,22rem);
-      height:min(52%,25rem);
+      width:min(42%,18rem);
+      height:min(62%,15rem);
       border:1px solid rgba(243,200,111,.11);
       border-radius:50%;
       pointer-events:none;
@@ -449,37 +476,36 @@
         inset 0 0 30px rgba(141,216,255,.04);
     }
 
-    .frontier-orbit-stage::before{
-      transform:translate(-88%,-50%) rotate(-8deg);
+    .frontier-figure-eight-zone::before{
+      left:50%;
+      transform:translate(-97%,-50%) rotate(-8deg);
     }
 
-    .frontier-orbit-stage::after{
-      transform:translate(-12%,-50%) rotate(8deg);
+    .frontier-figure-eight-zone::after{
+      right:50%;
+      transform:translate(97%,-50%) rotate(8deg);
     }
 
     .frontier-guide-line{
       position:absolute;
-      inset:8%;
+      inset:6%;
       z-index:1;
       pointer-events:none;
-      opacity:.52;
+      opacity:.48;
       background:
-        linear-gradient(135deg,transparent 48%,rgba(141,216,255,.12) 49%,transparent 51%),
-        linear-gradient(45deg,transparent 48%,rgba(243,200,111,.10) 49%,transparent 51%);
-      mask-image:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,.82),transparent 67%);
+        linear-gradient(22deg,transparent 48%,rgba(141,216,255,.12) 49%,transparent 51%),
+        linear-gradient(-22deg,transparent 48%,rgba(243,200,111,.10) 49%,transparent 51%);
+      mask-image:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,.82),transparent 68%);
     }
 
     .frontier-anchor{
-      position:absolute;
-      left:50%;
-      top:50%;
-      z-index:8;
-      width:clamp(8.8rem,24vw,13.5rem);
-      height:clamp(8.8rem,24vw,13.5rem);
+      position:relative;
+      z-index:9;
+      width:clamp(8rem,20vw,12rem);
+      height:clamp(8rem,20vw,12rem);
       display:grid;
       place-items:center;
-      transform:translate(-50%,-50%);
-      pointer-events:none;
+      pointer-events:auto;
       isolation:isolate;
     }
 
@@ -494,13 +520,13 @@
       position:absolute;
       left:50%;
       top:50%;
-      width:clamp(5.3rem,14vw,7.6rem);
-      height:clamp(5.3rem,14vw,7.6rem);
+      width:clamp(5.15rem,12.5vw,7.25rem);
+      height:clamp(5.15rem,12.5vw,7.25rem);
       display:grid;
       place-items:center;
       pointer-events:auto;
       transform:translate(var(--x-left),0);
-      animation:frontierFigureEightOrbit var(--orbit-time) linear infinite;
+      animation:frontierHorizontalFigureEight var(--orbit-time) linear infinite;
       animation-delay:var(--orbit-delay,0s);
       isolation:isolate;
       will-change:transform;
@@ -521,37 +547,37 @@
     .frontier-node:nth-child(7){--orbit-delay:-36s}
     .frontier-node:nth-child(8){--orbit-delay:-42s}
 
-    @keyframes frontierFigureEightOrbit{
+    @keyframes frontierHorizontalFigureEight{
       0%,100%{
-        transform:translate(var(--x-left),0) scale(.94);
+        transform:translate(var(--x-left),0) scale(.96);
       }
 
       12.5%{
-        transform:translate(var(--x-mid-left),var(--y-up)) scale(.84);
+        transform:translate(var(--x-mid-left),var(--y-up)) scale(.90);
       }
 
       25%{
-        transform:translate(0,var(--y-bridge-up)) scale(.90);
+        transform:translate(0,var(--y-cross-up)) scale(.94);
       }
 
       37.5%{
-        transform:translate(var(--x-mid-right),var(--y-up)) scale(.84);
+        transform:translate(var(--x-mid-right),var(--y-up)) scale(.90);
       }
 
       50%{
-        transform:translate(var(--x-right),0) scale(.94);
+        transform:translate(var(--x-right),0) scale(.96);
       }
 
       62.5%{
-        transform:translate(var(--x-mid-right),var(--y-down)) scale(1.04);
+        transform:translate(var(--x-mid-right),var(--y-down)) scale(1.03);
       }
 
       75%{
-        transform:translate(0,var(--y-bridge-down)) scale(.98);
+        transform:translate(0,var(--y-cross-down)) scale(.98);
       }
 
       87.5%{
-        transform:translate(var(--x-mid-left),var(--y-down)) scale(1.04);
+        transform:translate(var(--x-mid-left),var(--y-down)) scale(1.03);
       }
     }
 
@@ -670,7 +696,7 @@
       text-align:center;
       background:
         radial-gradient(circle at 50% 0%,rgba(255,255,255,.18),transparent 62%),
-        rgba(4,6,18,.48);
+        rgba(4,6,18,.50);
       box-shadow:
         0 .55rem 1rem rgba(0,0,0,.30),
         inset 0 1px 0 rgba(255,255,255,.10);
@@ -705,6 +731,9 @@
     .frontier-anchor .frontier-label{
       width:76%;
       min-height:3.2rem;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,255,255,.22),transparent 62%),
+        rgba(4,6,18,.55);
     }
 
     .frontier-anchor .frontier-label b{
@@ -861,12 +890,6 @@
       font-size:.76rem;
     }
 
-    @supports not (animation-timeline:auto){
-      .frontier-node{
-        animation:frontierFigureEightOrbit var(--orbit-time) linear infinite;
-      }
-    }
-
     @media (max-width:1080px){
       .lane-grid,
       .return-grid{
@@ -901,7 +924,20 @@
       }
 
       .frontier-orbit-stage{
-        min-height:35rem;
+        min-height:34rem;
+        grid-template-rows:minmax(8.5rem,11.5rem) 1fr;
+      }
+
+      .frontier-figure-eight-zone{
+        --x-left:clamp(-8.4rem,-28vw,-6rem);
+        --x-right:clamp(6rem,28vw,8.4rem);
+        --x-mid-left:clamp(-4.7rem,-15vw,-3rem);
+        --x-mid-right:clamp(3rem,15vw,4.7rem);
+        --y-up:clamp(-3.1rem,-8vw,-2rem);
+        --y-down:clamp(2rem,8vw,3.1rem);
+        --y-cross-up:clamp(-1.25rem,-4vw,-.8rem);
+        --y-cross-down:clamp(.8rem,4vw,1.25rem);
+        min-height:21rem;
       }
 
       .frontier-label{
@@ -934,16 +970,33 @@
 
     @media (max-width:430px){
       .frontier-orbit-stage{
-        min-height:33rem;
+        min-height:32rem;
+      }
+
+      .frontier-anchor{
+        width:7.35rem;
+        height:7.35rem;
+      }
+
+      .frontier-figure-eight-zone{
+        --x-left:-6.35rem;
+        --x-right:6.35rem;
+        --x-mid-left:-3.45rem;
+        --x-mid-right:3.45rem;
+        --y-up:-2.45rem;
+        --y-down:2.45rem;
+        --y-cross-up:-.95rem;
+        --y-cross-down:.95rem;
+        min-height:20rem;
       }
 
       .frontier-node{
-        width:4.95rem;
-        height:4.95rem;
+        width:4.35rem;
+        height:4.35rem;
       }
 
       .frontier-label{
-        min-height:2.15rem;
+        min-height:2.05rem;
       }
 
       .frontier-label span{
@@ -963,6 +1016,11 @@
 
       .frontier-node{
         animation:none!important;
+      }
+
+      .frontier-figure-eight-zone{
+        display:grid;
+        place-items:center;
       }
 
       .frontier-orbit{
@@ -1042,60 +1100,64 @@
       </section>
 
       <section class="panel section" aria-labelledby="orbit-title">
-        <div class="kicker">Figure-eight starfield</div>
-        <h2 id="orbit-title">The expansion edge moves through a figure-eight starfield.</h2>
+        <div class="kicker">Horizontal figure-eight starfield</div>
+        <h2 id="orbit-title">The expansion edge moves through a horizontal figure-eight starfield.</h2>
 
-        <div class="frontier-orbit-stage" aria-label="Frontier figure-eight orbital starfield">
-          <div class="frontier-guide-line" aria-hidden="true"></div>
-
-          <a class="frontier-anchor" href="/frontier/" aria-label="Frontier future edge">
-            <span class="frontier-anchor-body" aria-hidden="true"></span>
-            <span class="frontier-label">
-              <b>Frontier</b>
-              <span>Future Edge</span>
-            </span>
-          </a>
-
-          <div class="frontier-orbit" aria-label="Primary Frontier figure-eight route orbit">
-            <a class="frontier-node" href="/" aria-label="Compass root">
-              <span class="frontier-star-body" aria-hidden="true"></span>
-              <span class="frontier-label"><b>Compass</b><span>Root</span></span>
+        <div class="frontier-orbit-stage" aria-label="Frontier top anchor with horizontal figure-eight orbital starfield">
+          <div class="frontier-anchor-zone">
+            <a class="frontier-anchor" href="/frontier/" aria-label="Frontier future edge">
+              <span class="frontier-anchor-body" aria-hidden="true"></span>
+              <span class="frontier-label">
+                <b>Frontier</b>
+                <span>Future Edge</span>
+              </span>
             </a>
+          </div>
 
-            <a class="frontier-node" href="/explore/" aria-label="Explore map">
-              <span class="frontier-star-body" aria-hidden="true"></span>
-              <span class="frontier-label"><b>Explore</b><span>Map</span></span>
-            </a>
+          <div class="frontier-figure-eight-zone">
+            <div class="frontier-guide-line" aria-hidden="true"></div>
 
-            <a class="frontier-node" href="/laws/" aria-label="Laws proof">
-              <span class="frontier-star-body" aria-hidden="true"></span>
-              <span class="frontier-label"><b>Laws</b><span>Proof</span></span>
-            </a>
+            <div class="frontier-orbit" aria-label="Primary Frontier horizontal figure-eight route orbit">
+              <a class="frontier-node" href="/" aria-label="Compass root">
+                <span class="frontier-star-body" aria-hidden="true"></span>
+                <span class="frontier-label"><b>Compass</b><span>Root</span></span>
+              </a>
 
-            <a class="frontier-node" href="/showroom/globe/" aria-label="Interactive Narrative">
-              <span class="frontier-star-body" aria-hidden="true"></span>
-              <span class="frontier-label"><b>Interactive</b><span>Narrative</span></span>
-            </a>
+              <a class="frontier-node" href="/explore/" aria-label="Explore map">
+                <span class="frontier-star-body" aria-hidden="true"></span>
+                <span class="frontier-label"><b>Explore</b><span>Map</span></span>
+              </a>
 
-            <a class="frontier-node" href="/nine-summits/universe/" aria-label="Universe world">
-              <span class="frontier-star-body" aria-hidden="true"></span>
-              <span class="frontier-label"><b>Universe</b><span>World</span></span>
-            </a>
+              <a class="frontier-node" href="/laws/" aria-label="Laws proof">
+                <span class="frontier-star-body" aria-hidden="true"></span>
+                <span class="frontier-label"><b>Laws</b><span>Proof</span></span>
+              </a>
 
-            <a class="frontier-node" href="/showroom/" aria-label="Showroom object display">
-              <span class="frontier-star-body" aria-hidden="true"></span>
-              <span class="frontier-label"><b>Showroom</b><span>Object</span></span>
-            </a>
+              <a class="frontier-node" href="/showroom/globe/" aria-label="Interactive Narrative">
+                <span class="frontier-star-body" aria-hidden="true"></span>
+                <span class="frontier-label"><b>Interactive</b><span>Narrative</span></span>
+              </a>
 
-            <a class="frontier-node" href="/products/" aria-label="Products use">
-              <span class="frontier-star-body" aria-hidden="true"></span>
-              <span class="frontier-label"><b>Products</b><span>Use</span></span>
-            </a>
+              <a class="frontier-node" href="/nine-summits/universe/" aria-label="Universe world">
+                <span class="frontier-star-body" aria-hidden="true"></span>
+                <span class="frontier-label"><b>Universe</b><span>World</span></span>
+              </a>
 
-            <a class="frontier-node" href="/gauges/" aria-label="Gauges summary">
-              <span class="frontier-star-body" aria-hidden="true"></span>
-              <span class="frontier-label"><b>Gauges</b><span>Summary</span></span>
-            </a>
+              <a class="frontier-node" href="/showroom/" aria-label="Showroom object display">
+                <span class="frontier-star-body" aria-hidden="true"></span>
+                <span class="frontier-label"><b>Showroom</b><span>Object</span></span>
+              </a>
+
+              <a class="frontier-node" href="/products/" aria-label="Products use">
+                <span class="frontier-star-body" aria-hidden="true"></span>
+                <span class="frontier-label"><b>Products</b><span>Use</span></span>
+              </a>
+
+              <a class="frontier-node" href="/gauges/" aria-label="Gauges summary">
+                <span class="frontier-star-body" aria-hidden="true"></span>
+                <span class="frontier-label"><b>Gauges</b><span>Summary</span></span>
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -1276,13 +1338,17 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_FIGURE_EIGHT_ORBITAL_STARFIELD_HTML_JS_TNT_v5
-previous=FRONTIER_EXPANSION_EDGE_STARFIELD_CONSTELLATION_RENEWAL_TNT_v4
+FRONTIER_TOP_ANCHOR_HORIZONTAL_FIGURE_EIGHT_HTML_JS_TNT_v6
+previous=FRONTIER_FIGURE_EIGHT_ORBITAL_STARFIELD_HTML_JS_TNT_v5
 route=/frontier/
 page=frontier
+renewal=true
+not_rewrite=true
 frontier_role=expansion_edge
+frontier_anchor_position=top
 figure_eight_orbit=true
-center_anchor=Frontier_Future_Edge
+figure_eight_orientation=horizontal
+center_crossing_open=true
 primary_orbit_routes=Compass,Explore,Laws,Interactive_Narrative,Universe,Showroom,Products,Gauges
 future_lanes=Closed_Loop,Energy,Infrastructure,Lattice,Manual,Shimmer,Trajectory,Urban,Vision,Waste,Water
 labels_front_facing=true
@@ -1297,11 +1363,11 @@ interactive_narrative_route=/showroom/globe/
 universe_route=/nine-summits/universe/
 showroom_role=visible_software_object_display
 products_role=community_practical_path
-visual_correction=static_stacked_starfield_renewed_as_figure_eight_orbital_starfield
-mobile_law=primary_orbit_contained_future_lanes_preserved_below
-removed_language=Gauges_as_Proof,Read_Proof_to_Gauges,static_vertical_primary_star_stack,missing_Universe,missing_Interactive_Narrative
-preserved=Frontier_identity,expansion_edge,eleven_future_lanes,return_route_clarity,star_visual_language,no_generated_image,no_GraphicBox
-route_owns=frontier_public_copy,figure_eight_starfield_css,primary_orbit_routes,future_lane_cards,return_route_cards,hidden_receipt
+visual_correction=top_frontier_anchor_horizontal_figure_eight_orbit_below_anchor
+mobile_law=horizontal_orbit_contained_no_left_right_clipping_future_lanes_preserved_below
+removed_language=Frontier_center_anchor_blocking_crossing,tall_vertical_infinity_shape,Gauges_as_Proof,Read_Proof_to_Gauges
+preserved=Frontier_identity,expansion_edge,figure_eight_concept,eleven_future_lanes,return_route_clarity,star_visual_language,no_generated_image,no_GraphicBox
+route_owns=frontier_public_copy,top_anchor_star,horizontal_figure_eight_starfield_css,primary_orbit_routes,future_lane_cards,return_route_cards,hidden_receipt
 route_does_not_own=laws_page,gauges_logic,products_page,universe_page,interactive_narrative_route,showroom_page,generated_assets,graphic_tools
 heavy_runtime_loaded=false
 generated_image=false
@@ -1312,7 +1378,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      FRONTIER_FIGURE_EIGHT_ORBITAL_STARFIELD_HTML_JS_TNT_v5 · Frontier · Figure-Eight Starfield · Laws proof · Gauges summary.
+      FRONTIER_TOP_ANCHOR_HORIZONTAL_FIGURE_EIGHT_HTML_JS_TNT_v6 · Frontier · Top Anchor · Horizontal Figure-Eight Starfield.
     </footer>
   </div>
 </body>

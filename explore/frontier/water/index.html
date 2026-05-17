@@ -3,20 +3,17 @@
   lang="en"
   data-route="/explore/frontier/water/"
   data-page="frontier-water"
-  data-contract="FRONTIER_WATER_TEXAS_HOMEWATER_EDUCATION_RENEWAL_TNT_v1"
-  data-source-psalm="PSALM_PACKET_TEXAS_WATER_HAZARD_HOMEWATER_FULL_v1.0"
-  data-ack-status="TRANSITORY_ACK_PACK_SUPERSEDED"
-  data-role="frontier-water-education-homewater"
-  data-primary-source-role="EWG-Tap-Water-Database-Texas"
-  data-secondary-source-role="HomeWater-product-and-whole-home-filtration-claims"
-  data-public-lane="education-measurement-reduction-household-protection"
-  data-homewater-lane="whole-home-filtration-softening-scale-reduction-appliance-support-plumbing-support"
-  data-source-separation="true"
-  data-reduce-not-eliminate="true"
-  data-acute-chronic-split="true"
-  data-six-families="disinfection-byproducts,heavy-metals-metalloids,agricultural-contaminants,industrial-chemicals-VOCs,PFAS-forever-chemicals,radiological-contaminants"
-  data-filter-matching="carbon,catalytic-carbon,KDF,sediment-filtration,softening,salt-free-conditioning,reverse-osmosis,ion-exchange,specialized-treatment"
-  data-forbidden-claims="total-removal,medical-prevention,cancer-prevention,all-Texas-homes-safe,every-home-has-every-chemical,unsourced-99-cents-per-day,universal-treatment-certainty"
+  data-contract="AUDRALIA_CLOSED_WATER_SYSTEM_FRONTIER_SCIENCE_TNT_v1"
+  data-previous-contract="FRONTIER_WATER_TEXAS_HOMEWATER_EDUCATION_RENEWAL_TNT_v1"
+  data-active-focus="closed-water-system-technology"
+  data-supporting-lane="Texas-HomeWater-household-education"
+  data-supporting-packet="PSALM_PACKET_TEXAS_WATER_HAZARD_HOMEWATER_FULL_v1.0"
+  data-role="frontier-water-closed-system-science"
+  data-public-function="teach-frontier-science"
+  data-narrative-function="Audralia-inheritance"
+  data-core-loop="Capture,Screen,Purify,Balance,Store,Use,Recover,Reclaim,Return"
+  data-science-stack="hydrology,chemistry,filtration,membranes,biology,mineral-balance,atmospheric-cycling,wastewater-recovery,thermal-control,storage-engineering,sensors,emergency-reserves"
+  data-forbidden-collapse="HomeWater-marketing-only,Texas-tap-water-only,household-filter-only,magic-water-cycle,unmeasured-clear-water-claim"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
   data-graphic-box="false"
@@ -27,10 +24,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Water · Frontier · Diamond Gate Bridge</title>
+  <title>Water · Closed System · Frontier · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Water inside Diamond Gate Bridge: Texas water-quality education, EWG contaminant-family framing, HomeWater whole-home filtration and softening positioning, treatment matching, and household protection without scientific overclaim."
+    content="Frontier Water teaches closed-loop water science for Audralia and interplanetary research: capture, purification, balance, storage, reuse, recovery, atmospheric return, habitat support, and survival architecture."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/explore/frontier/water/">
   <meta name="theme-color" content="#02040b">
@@ -47,9 +44,10 @@
       --gold2:#ffe8a3;
       --blue:#8dd8ff;
       --blue2:#bcecff;
-      --green:#8ff0c3;
       --aqua:#74f0ff;
+      --green:#8ff0c3;
       --violet:#8f65ff;
+      --violet2:#cbb8ff;
       --red:#ff9d91;
       --panel:rgba(9,15,31,.86);
       --line:rgba(184,205,255,.18);
@@ -103,11 +101,36 @@
       mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
     }
 
+    body::after{
+      content:"";
+      position:fixed;
+      inset:-18%;
+      z-index:0;
+      pointer-events:none;
+      background:
+        conic-gradient(from 90deg at 50% 50%,
+          transparent 0deg,
+          rgba(116,240,255,.08) 52deg,
+          transparent 108deg,
+          rgba(143,240,195,.06) 172deg,
+          transparent 224deg,
+          rgba(36,120,255,.07) 292deg,
+          transparent 360deg);
+      filter:blur(46px);
+      opacity:.54;
+      animation:waterDrift 30s linear infinite;
+    }
+
+    @keyframes waterDrift{
+      from{transform:rotate(0deg) scale(1)}
+      to{transform:rotate(360deg) scale(1)}
+    }
+
     a{color:inherit;text-decoration:none}
 
     a:focus-visible,
     button:focus-visible{
-      outline:2px solid var(--gold);
+      outline:2px solid var(--blue);
       outline-offset:4px;
     }
 
@@ -119,7 +142,7 @@
       padding:.75rem 1rem;
       border-radius:999px;
       color:#05070d;
-      background:var(--gold);
+      background:var(--blue);
       font-weight:950;
     }
 
@@ -247,7 +270,7 @@
 
     .hero{
       position:relative;
-      min-height:clamp(28rem,50vw,38rem);
+      min-height:clamp(29rem,52vw,40rem);
       display:grid;
       align-content:center;
       gap:1rem;
@@ -276,9 +299,37 @@
       opacity:.58;
     }
 
+    .hero::after{
+      content:"";
+      position:absolute;
+      right:clamp(2rem,9vw,8rem);
+      top:50%;
+      z-index:0;
+      width:clamp(5.5rem,16vw,11rem);
+      height:clamp(8rem,22vw,15rem);
+      clip-path:var(--drop);
+      transform:translateY(-45%);
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.56),transparent 18%),
+        radial-gradient(circle at 50% 52%,rgba(116,240,255,.34),transparent 50%),
+        linear-gradient(180deg,rgba(141,216,255,.34),rgba(10,26,60,.72));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.18),
+        0 1.2rem 3.5rem rgba(0,0,0,.34),
+        0 0 2.2rem rgba(116,240,255,.12);
+      opacity:.42;
+      pointer-events:none;
+      animation:dropFloat 8s ease-in-out infinite;
+    }
+
     @keyframes waterPulse{
       0%,100%{opacity:.40;filter:brightness(.95);transform:translateY(-50%) scale(.98)}
       50%{opacity:.64;filter:brightness(1.13);transform:translateY(-50%) scale(1.035)}
+    }
+
+    @keyframes dropFloat{
+      0%,100%{transform:translateY(-45%) scale(.98);opacity:.36}
+      50%{transform:translateY(-49%) scale(1.03);opacity:.50}
     }
 
     .kicker{
@@ -417,6 +468,12 @@
       background:rgba(243,200,111,.075);
     }
 
+    .button.violet{
+      border-color:rgba(143,101,255,.44);
+      color:var(--violet2);
+      background:rgba(143,101,255,.075);
+    }
+
     .section{
       margin-top:1.15rem;
       padding:clamp(1rem,3vw,1.45rem);
@@ -457,7 +514,7 @@
       width:3.4rem;
       height:3.4rem;
       clip-path:var(--drop);
-      opacity:.22;
+      opacity:.20;
       background:
         radial-gradient(circle at 50% 18%,rgba(255,255,255,.65),transparent 20%),
         linear-gradient(180deg,rgba(141,216,255,.62),rgba(14,35,74,.88));
@@ -519,6 +576,211 @@
         rgba(255,255,255,.035);
     }
 
+    .card.violet{
+      border-color:rgba(143,101,255,.22);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(143,101,255,.10),transparent 60%),
+        rgba(255,255,255,.035);
+    }
+
+    .loop-stage{
+      position:relative;
+      display:grid;
+      gap:.85rem;
+      padding:clamp(.85rem,2.4vw,1.25rem);
+      border:1px solid rgba(141,216,255,.16);
+      border-radius:clamp(1.25rem,4vw,2rem);
+      background:
+        radial-gradient(circle at 50% 30%,rgba(116,240,255,.10),transparent 24rem),
+        radial-gradient(circle at 50% 70%,rgba(36,120,255,.10),transparent 28rem),
+        rgba(255,255,255,.026);
+      overflow:hidden;
+    }
+
+    .loop-stage::before{
+      content:"";
+      position:absolute;
+      inset:1rem;
+      border:1px solid rgba(141,216,255,.12);
+      border-radius:50%;
+      opacity:.42;
+      pointer-events:none;
+    }
+
+    .loop-grid{
+      position:relative;
+      z-index:2;
+      display:grid;
+      grid-template-columns:repeat(9,minmax(0,1fr));
+      gap:.5rem;
+      align-items:stretch;
+    }
+
+    .loop-step{
+      min-height:8rem;
+      display:grid;
+      gap:.42rem;
+      align-content:center;
+      justify-items:center;
+      padding:.82rem .62rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.05rem;
+      background:rgba(5,10,24,.55);
+      text-align:center;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .loop-step b{
+      color:var(--blue2);
+      font-size:.62rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .loop-step span{
+      color:var(--muted);
+      font-size:.84rem;
+      line-height:1.25;
+    }
+
+    .loop-step .dot{
+      width:1.2rem;
+      height:1.2rem;
+      clip-path:var(--drop);
+      background:linear-gradient(180deg,var(--blue2),rgba(36,120,255,.80));
+      box-shadow:0 0 .8rem rgba(116,240,255,.24);
+    }
+
+    .lane-split{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.85rem;
+    }
+
+    .split-card{
+      display:grid;
+      gap:.75rem;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.25rem;
+      background:rgba(255,255,255,.035);
+    }
+
+    .split-card h3{
+      color:var(--blue2);
+    }
+
+    .stack-list{
+      display:grid;
+      gap:.7rem;
+    }
+
+    .stack-row{
+      display:grid;
+      grid-template-columns:minmax(9rem,.32fr) minmax(0,1fr);
+      gap:.8rem;
+      align-items:start;
+      padding:.85rem;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:1rem;
+      background:rgba(255,255,255,.03);
+    }
+
+    .stack-row b{
+      color:var(--gold);
+      font-size:.7rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .stack-row span{
+      color:var(--muted);
+      font-size:.94rem;
+      line-height:1.42;
+    }
+
+    .pressure-list,
+    .doctrine-list,
+    .kill-list{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.55rem;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+
+    .pressure-list li,
+    .doctrine-list li,
+    .kill-list li{
+      margin:0;
+      padding:.82rem;
+      border:1px solid rgba(141,216,255,.14);
+      border-radius:1rem;
+      background:rgba(141,216,255,.045);
+      color:rgba(235,251,255,.88);
+      font-weight:850;
+      line-height:1.35;
+    }
+
+    .kill-list li{
+      border-color:rgba(255,157,145,.16);
+      background:rgba(255,157,145,.045);
+      color:rgba(255,230,226,.86);
+    }
+
+    .module-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.75rem;
+    }
+
+    .module-card{
+      display:grid;
+      gap:.45rem;
+      min-height:10rem;
+      padding:.9rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.1rem;
+      background:rgba(255,255,255,.035);
+    }
+
+    .module-card b{
+      color:var(--blue2);
+      font-size:.64rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .module-card span{
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.36;
+    }
+
+    .question-band{
+      display:grid;
+      gap:.55rem;
+      padding:1rem;
+      border:1px solid rgba(243,200,111,.20);
+      border-radius:1.2rem;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(243,200,111,.10),transparent 28rem),
+        rgba(255,255,255,.032);
+    }
+
+    .question-band b{
+      color:var(--gold);
+      font-size:.72rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .question-band .tagline{
+      margin-top:.1rem;
+    }
+
     .tagline{
       display:flex;
       flex-wrap:wrap;
@@ -541,26 +803,6 @@
       text-transform:uppercase;
     }
 
-    .split-list{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:.85rem;
-    }
-
-    .list-card{
-      display:grid;
-      gap:.65rem;
-      padding:1rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.25rem;
-      background:rgba(255,255,255,.035);
-    }
-
-    .list-card h3{
-      color:var(--blue2);
-      font-size:1.05rem;
-    }
-
     ul{
       margin:0;
       padding-left:1.1rem;
@@ -572,206 +814,6 @@
       color:var(--muted);
       font-size:.94rem;
       line-height:1.38;
-    }
-
-    .family-card{
-      display:grid;
-      gap:.75rem;
-      padding:1rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.25rem;
-      background:
-        radial-gradient(circle at 14% 0%,rgba(141,216,255,.10),transparent 55%),
-        rgba(255,255,255,.035);
-    }
-
-    .family-card header{
-      display:grid;
-      gap:.18rem;
-    }
-
-    .family-card header b{
-      color:var(--gold);
-      font-size:.68rem;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-    }
-
-    .family-card header strong{
-      color:rgba(255,244,216,.98);
-      font-size:clamp(1.08rem,3vw,1.35rem);
-      line-height:1.05;
-      letter-spacing:-.035em;
-    }
-
-    .family-detail{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:.65rem;
-    }
-
-    .detail{
-      display:grid;
-      gap:.3rem;
-      padding:.78rem;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:1rem;
-      background:rgba(255,255,255,.026);
-    }
-
-    .detail b{
-      color:var(--blue2);
-      font-size:.62rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .detail span{
-      color:var(--muted);
-      font-size:.9rem;
-      line-height:1.38;
-    }
-
-    .impact-map{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:.85rem;
-    }
-
-    .impact-card{
-      display:grid;
-      gap:.6rem;
-      padding:1rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.25rem;
-      background:rgba(255,255,255,.035);
-    }
-
-    .impact-card.acute{
-      border-color:rgba(255,157,145,.22);
-      background:
-        radial-gradient(circle at 20% 0%,rgba(255,157,145,.08),transparent 60%),
-        rgba(255,255,255,.035);
-    }
-
-    .impact-card.chronic{
-      border-color:rgba(141,216,255,.22);
-      background:
-        radial-gradient(circle at 20% 0%,rgba(141,216,255,.10),transparent 60%),
-        rgba(255,255,255,.035);
-    }
-
-    .impact-card h3{
-      color:var(--gold);
-    }
-
-    .tech-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:.75rem;
-    }
-
-    .tech-card{
-      display:grid;
-      gap:.45rem;
-      min-height:10rem;
-      padding:.9rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.1rem;
-      background:rgba(255,255,255,.035);
-    }
-
-    .tech-card b{
-      color:var(--blue2);
-      font-size:.64rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .tech-card span{
-      color:var(--muted);
-      font-size:.9rem;
-      line-height:1.36;
-    }
-
-    .episode-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:.65rem;
-      counter-reset:episode;
-    }
-
-    .episode{
-      counter-increment:episode;
-      display:grid;
-      gap:.28rem;
-      padding:.85rem;
-      border:1px solid rgba(255,255,255,.11);
-      border-radius:1rem;
-      background:rgba(255,255,255,.032);
-    }
-
-    .episode b{
-      color:var(--gold);
-      font-size:.62rem;
-      letter-spacing:.11em;
-      text-transform:uppercase;
-    }
-
-    .episode b::after{
-      content:" " counter(episode);
-    }
-
-    .episode span{
-      color:var(--muted);
-      font-size:.92rem;
-      line-height:1.34;
-    }
-
-    .decision-list{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:.55rem;
-      margin:0;
-      padding:0;
-      list-style:none;
-      counter-reset:decision;
-    }
-
-    .decision-list li{
-      counter-increment:decision;
-      margin:0;
-      padding:.86rem;
-      border:1px solid rgba(141,216,255,.16);
-      border-radius:1rem;
-      background:rgba(141,216,255,.045);
-      color:rgba(235,251,255,.88);
-      font-weight:850;
-    }
-
-    .decision-list li::before{
-      content:counter(decision) ". ";
-      color:var(--blue2);
-      font-weight:950;
-    }
-
-    .forbidden-list{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:.55rem;
-      margin:0;
-      padding:0;
-      list-style:none;
-    }
-
-    .forbidden-list li{
-      margin:0;
-      padding:.82rem;
-      border:1px solid rgba(255,157,145,.16);
-      border-radius:1rem;
-      background:rgba(255,157,145,.045);
-      color:rgba(255,230,226,.86);
-      font-weight:850;
     }
 
     .final-band{
@@ -835,12 +877,13 @@
       font-size:.76rem;
     }
 
-    @media (max-width:1080px){
+    @media (max-width:1120px){
+      .loop-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
       .grid.four,
-      .tech-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .episode-grid,
-      .decision-list{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .family-detail{grid-template-columns:1fr}
+      .module-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .pressure-list,
+      .doctrine-list,
+      .kill-list{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
     @media (max-width:980px){
@@ -848,9 +891,8 @@
       .nav{justify-content:flex-start}
       .grid.three,
       .grid.two,
-      .split-list,
-      .impact-map,
-      .forbidden-list{grid-template-columns:1fr}
+      .lane-split{grid-template-columns:1fr}
+      .stack-row{grid-template-columns:1fr}
     }
 
     @media (max-width:720px){
@@ -859,10 +901,12 @@
       .hero{min-height:31rem;padding:1rem}
       .actions{display:grid}
       .button{width:100%}
+      .loop-grid,
       .grid.four,
-      .tech-grid,
-      .episode-grid,
-      .decision-list{grid-template-columns:1fr}
+      .module-grid,
+      .pressure-list,
+      .doctrine-list,
+      .kill-list{grid-template-columns:1fr}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -882,12 +926,12 @@
   <a class="skip" href="#water-main">Skip to Water</a>
 
   <div class="shell">
-    <header class="topbar" aria-label="Water header">
+    <header class="topbar" aria-label="Closed Water System header">
       <a class="brand" href="/frontier/">
         <span class="brand-mark" aria-hidden="true"><span>WA</span></span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge · Frontier</span>
-          <strong>Water · Texas / HomeWater</strong>
+          <strong>Water · Closed System</strong>
         </span>
       </a>
 
@@ -898,570 +942,586 @@
         <a href="/explore/frontier/water/" aria-current="page">Water</a>
         <a href="/explore/frontier/energy/">Energy</a>
         <a href="/laws/">Laws</a>
-        <a href="/products/">Products</a>
+        <a href="/showroom/globe/audralia/">Audralia</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
     <main id="water-main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Water · Education and Whole-Home Protection</div>
+        <div class="kicker">Water · Closed-System Frontier Science</div>
 
-        <h1 id="page-title">Texas water may be legal — but is it optimized for your home?</h1>
+        <h1 id="page-title">Water must return.</h1>
 
-        <h2>Measurement first. Education second. Treatment by chemistry.</h2>
+        <h2>Closed water systems capture, purify, retain, reuse, balance, store, and return water.</h2>
 
         <p class="lead">
-          EWG-based water education identifies contaminant families that may exceed stricter health-based guidelines. HomeWater-aligned whole-home filtration and softening language belongs in the reduction and household-protection lane, not the medical-guarantee lane.
+          The Water lane teaches frontier science through closed-loop water architecture. Household filtration is only one supporting layer. The larger frontier problem is how water survives inside a closed civilization, a remote habitat, or a developing planet.
         </p>
 
         <div class="principle">
-          Texas water may pass the law and still carry long-term exposure concerns. The answer is measurement, education, reduction, and household protection.
+          A closed water system does not treat water as disposable. It captures, cleans, balances, stores, reuses, and returns water so a habitat, settlement, or planet can survive under pressure.
         </div>
 
         <div class="actions">
-          <a class="button blue" href="#families">Read the Six Families</a>
-          <a class="button" href="#matching">Match the Filter</a>
-          <a class="button green" href="#homewater">Understand HomeWater</a>
+          <a class="button blue" href="#loop">Open the Closed Loop</a>
+          <a class="button" href="#science">See the Science Stack</a>
+          <a class="button green" href="#audralia">Audralia Inheritance</a>
           <a class="button gold" href="/frontier/">Return to Frontier</a>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="source-title">
-        <div class="kicker">Source law</div>
-        <h2 id="source-title">Two sources. Two jobs.</h2>
+      <section class="panel section" aria-labelledby="lane-title">
+        <div class="kicker">Lane correction</div>
+        <h2 id="lane-title">This is not only household filtration.</h2>
 
-        <div class="grid two">
-          <article class="card">
-            <b>EWG role</b>
-            <strong>Contaminant education and health-guideline framing.</strong>
-            <span>EWG anchors the Texas contaminant-family discussion, utility-report awareness, and the distinction between legal compliance and stricter health-guideline framing.</span>
+        <div class="lane-split">
+          <article class="split-card">
+            <h3>Supporting layer: household water protection</h3>
+            <p>
+              The Texas/HomeWater education lane remains a supporting public household-water layer. It teaches contaminant families, treatment matching, filtration, softening, reduction discipline, and household protection.
+            </p>
+
+            <div class="tagline">
+              <span class="tag">Texas water</span>
+              <span class="tag">HomeWater</span>
+              <span class="tag">Filtration</span>
+              <span class="tag">Softening</span>
+              <span class="tag">Reduction</span>
+            </div>
           </article>
 
-          <article class="card good">
-            <b>HomeWater role</b>
-            <strong>Product-positioning and household-support claims.</strong>
-            <span>HomeWater anchors only HomeWater-aligned claims about whole-home filtration, reduction language, softening, scale, taste, odor, appliance support, and plumbing support.</span>
+          <article class="split-card">
+            <h3>Active layer: closed water system technology</h3>
+            <p>
+              The active Water lane is now closed-loop water architecture for Audralia, interplanetary research, frontier science, habitat support, emergency survival, and narrative inheritance.
+            </p>
+
+            <div class="tagline">
+              <span class="tag">Capture</span>
+              <span class="tag">Recovery</span>
+              <span class="tag">Reuse</span>
+              <span class="tag">Storage</span>
+              <span class="tag">Return</span>
+            </div>
           </article>
         </div>
 
         <div class="disclaimer">
-          Source separation rule: do not use HomeWater to prove EWG contaminant risk, and do not use EWG to prove a specific HomeWater system result. The page preserves education, reduction, and treatment matching without claiming total removal or medical prevention.
+          Household filtering can clean water before use. Closed water systems must keep water alive through the entire cycle.
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="legal-title">
-        <div class="kicker">Legal versus health-guideline water</div>
-        <h2 id="legal-title">Legal does not always mean optimized.</h2>
+      <section class="panel section" id="loop" aria-labelledby="loop-title">
+        <div class="kicker">Closed water loop</div>
+        <h2 id="loop-title">The loop is the technology.</h2>
+
+        <div class="loop-stage" aria-label="Closed water loop sequence">
+          <div class="loop-grid">
+            <div class="loop-step">
+              <span class="dot" aria-hidden="true"></span>
+              <b>Capture</b>
+              <span>Collect water from available sources.</span>
+            </div>
+
+            <div class="loop-step">
+              <span class="dot" aria-hidden="true"></span>
+              <b>Screen</b>
+              <span>Remove debris, sediment, and incoming physical load.</span>
+            </div>
+
+            <div class="loop-step">
+              <span class="dot" aria-hidden="true"></span>
+              <b>Purify</b>
+              <span>Reduce biological, chemical, mineral, and particulate threats.</span>
+            </div>
+
+            <div class="loop-step">
+              <span class="dot" aria-hidden="true"></span>
+              <b>Balance</b>
+              <span>Restore useful pH, mineral, salinity, and chemistry conditions.</span>
+            </div>
+
+            <div class="loop-step">
+              <span class="dot" aria-hidden="true"></span>
+              <b>Store</b>
+              <span>Protect reserves against loss, contamination, freezing, and failure.</span>
+            </div>
+
+            <div class="loop-step">
+              <span class="dot" aria-hidden="true"></span>
+              <b>Use</b>
+              <span>Support drinking, food, hygiene, cooling, industry, and habitats.</span>
+            </div>
+
+            <div class="loop-step">
+              <span class="dot" aria-hidden="true"></span>
+              <b>Recover</b>
+              <span>Collect greywater, wastewater, condensation, runoff, and discharge.</span>
+            </div>
+
+            <div class="loop-step">
+              <span class="dot" aria-hidden="true"></span>
+              <b>Reclaim</b>
+              <span>Separate usable water from waste, salts, organics, and residues.</span>
+            </div>
+
+            <div class="loop-step">
+              <span class="dot" aria-hidden="true"></span>
+              <b>Return</b>
+              <span>Send water back into storage, habitat, agriculture, atmosphere, or cycle.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel section" id="science" aria-labelledby="science-title">
+        <div class="kicker">Frontier science stack</div>
+        <h2 id="science-title">A closed water system is not one filter.</h2>
 
         <div class="grid four">
           <article class="card">
-            <b>Legal water</b>
-            <strong>Compliance can still be true.</strong>
-            <span>A utility may meet applicable federal legal standards while still showing contaminant levels that are higher than stricter health-guideline benchmarks.</span>
+            <b>Hydrology</b>
+            <strong>Map the movement.</strong>
+            <span>Water must be tracked as a cycle, not as a one-time input.</span>
           </article>
 
           <article class="card">
-            <b>Health-guideline water</b>
-            <strong>Stricter benchmarks can reveal concern.</strong>
-            <span>Health-guideline framing asks whether repeated exposure is optimized for long-term household health, not only whether the legal line is met.</span>
+            <b>Chemistry</b>
+            <strong>Know what changed.</strong>
+            <span>pH, minerals, salinity, organics, and dissolved compounds determine whether water can safely return.</span>
           </article>
 
           <article class="card">
-            <b>Household-use water</b>
-            <strong>Exposure is not only drinking.</strong>
-            <span>Water reaches cooking, showers, laundry, fixtures, pipes, appliances, and skin contact.</span>
+            <b>Filtration</b>
+            <strong>Reduce the load.</strong>
+            <span>Particles, organics, and system-specific contaminants need staged reduction.</span>
           </article>
 
           <article class="card">
-            <b>Long-term exposure</b>
-            <strong>Repeated exposure can matter.</strong>
-            <span>Detection does not mean instant danger for every person. Many water concerns are cumulative, dose-dependent, and tied to repeated exposure.</span>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel section" id="families" aria-labelledby="families-title">
-        <div class="kicker">Six contaminant families</div>
-        <h2 id="families-title">Do not call it generic dirty water.</h2>
-
-        <div class="grid three">
-          <article class="card">
-            <b>Family 1</b>
-            <strong>Disinfection byproducts</strong>
-            <span>Byproducts formed when disinfectants react with organic matter in source water.</span>
+            <b>Membranes</b>
+            <strong>Separate fine threats.</strong>
+            <span>Membrane systems can help separate dissolved load, microbial risk, and reclaimable water depending on mission design.</span>
           </article>
 
           <article class="card">
-            <b>Family 2</b>
-            <strong>Heavy metals and metalloids</strong>
-            <span>Metals from geology, corrosion, old plumbing, industrial history, or distribution systems.</span>
+            <b>Biology</b>
+            <strong>Control living systems.</strong>
+            <span>Microbial balance matters in habitats, wastewater recovery, and ecological loops.</span>
           </article>
 
           <article class="card">
-            <b>Family 3</b>
-            <strong>Agricultural contaminants</strong>
-            <span>Nitrate, nitrite, herbicides, pesticides, fertilizer-related compounds, and runoff-linked contaminants.</span>
+            <b>Mineral balance</b>
+            <strong>Return useful chemistry.</strong>
+            <span>Water that is technically clean may still need chemistry correction before reuse.</span>
           </article>
 
           <article class="card">
-            <b>Family 4</b>
-            <strong>Industrial chemicals and VOCs</strong>
-            <span>Solvents, petroleum-linked contaminants, manufacturing residues, and volatile organic chemicals.</span>
+            <b>Atmospheric cycling</b>
+            <strong>Recover vapor and humidity.</strong>
+            <span>Closed habitats must treat condensation, vapor, and air-water exchange as part of the water budget.</span>
           </article>
 
           <article class="card">
-            <b>Family 5</b>
-            <strong>PFAS / forever chemicals</strong>
-            <span>Persistent compounds linked to industrial, firefighting, coating, landfill, and wastewater pathways.</span>
+            <b>Wastewater recovery</b>
+            <strong>Do not lose usable water.</strong>
+            <span>Greywater, blackwater, brine, and discharge streams become engineering problems, not invisible waste.</span>
           </article>
 
           <article class="card">
-            <b>Family 6</b>
-            <strong>Radiological contaminants</strong>
-            <span>Radium, uranium, gross alpha, beta particles, and related naturally occurring or context-specific contaminants.</span>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel section" aria-labelledby="breakdown-title">
-        <div class="kicker">Family breakdown</div>
-        <h2 id="breakdown-title">Each family needs its own origin, concern, exposure logic, and treatment lane.</h2>
-
-        <article class="family-card">
-          <header>
-            <b>Family 1</b>
-            <strong>Disinfection byproducts</strong>
-          </header>
-
-          <div class="family-detail">
-            <div class="detail">
-              <b>Includes</b>
-              <span>Trihalomethanes, TTHMs, chloroform, brominated byproducts, haloacetic acids, HAA5, HAA9, and bromate.</span>
-            </div>
-
-            <div class="detail">
-              <b>Human concern</b>
-              <span>Mostly long-term exposure, cancer-risk discussions, and possible reproductive or pregnancy-related concerns depending on compound, dose, and duration.</span>
-            </div>
-
-            <div class="detail">
-              <b>Treatment lane</b>
-              <span>Carbon and catalytic carbon are the relevant reduction lane for chlorine, chloramines, VOCs, and many organic byproducts depending on system design and maintenance.</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="family-card">
-          <header>
-            <b>Family 2</b>
-            <strong>Heavy metals and metalloids</strong>
-          </header>
-
-          <div class="family-detail">
-            <div class="detail">
-              <b>Includes</b>
-              <span>Lead, arsenic, chromium-6, mercury, barium, aluminum, manganese, copper, and related metals depending on the water system.</span>
-            </div>
-
-            <div class="detail">
-              <b>Human concern</b>
-              <span>Lead is neurological and developmental. Arsenic and chromium-6 are cancer-risk contaminants. Mercury is a nervous-system concern. Many effects are chronic rather than instant at ordinary tap-water exposure levels.</span>
-            </div>
-
-            <div class="detail">
-              <b>Treatment lane</b>
-              <span>Heavy-metal reduction must stay contaminant-specific. Arsenic, uranium, nitrate, radium, chromium-6, and dissolved ions may require reverse osmosis, ion exchange, or specialized treatment depending on testing.</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="family-card">
-          <header>
-            <b>Family 3</b>
-            <strong>Agricultural contaminants</strong>
-          </header>
-
-          <div class="family-detail">
-            <div class="detail">
-              <b>Includes</b>
-              <span>Nitrate, nitrite, atrazine, glyphosate, herbicides, pesticides, and fertilizer-related compounds.</span>
-            </div>
-
-            <div class="detail">
-              <b>Human concern</b>
-              <span>Nitrate is the high-alert infant case because it can interfere with oxygen transport. Atrazine and some agricultural chemicals raise endocrine and reproductive concern discussions.</span>
-            </div>
-
-            <div class="detail">
-              <b>Treatment lane</b>
-              <span>Carbon may reduce some pesticides and herbicides. Nitrate is different and often requires reverse osmosis or ion exchange.</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="family-card">
-          <header>
-            <b>Family 4</b>
-            <strong>Industrial chemicals and VOCs</strong>
-          </header>
-
-          <div class="family-detail">
-            <div class="detail">
-              <b>Includes</b>
-              <span>Benzene, toluene, industrial solvents, 1,2,3-trichloropropane, 1,4-dioxane, chlorinated solvents, and related VOCs.</span>
-            </div>
-
-            <div class="detail">
-              <b>Human concern</b>
-              <span>Some VOCs can produce acute symptoms at high exposure. Benzene is a long-term cancer-risk chemical. VOC exposure can include inhalation through shower vapor.</span>
-            </div>
-
-            <div class="detail">
-              <b>Treatment lane</b>
-              <span>Activated carbon and whole-home filtration may be positioned for VOC reduction where supported by system design, water chemistry, and maintenance.</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="family-card">
-          <header>
-            <b>Family 5</b>
-            <strong>PFAS / forever chemicals</strong>
-          </header>
-
-          <div class="family-detail">
-            <div class="detail">
-              <b>Includes</b>
-              <span>PFOS, PFOA, PFHxS, PFNA, GenX-related compounds, and broader PFAS family members where detected.</span>
-            </div>
-
-            <div class="detail">
-              <b>Human concern</b>
-              <span>PFAS are persistent and may accumulate. Long-term concerns can include immune effects, developmental concerns, cholesterol changes, liver effects, and cancer-risk discussions depending on compound.</span>
-            </div>
-
-            <div class="detail">
-              <b>Treatment lane</b>
-              <span>Use reduce-language only. Do not claim elimination unless exact system certification and contaminant-specific test support are supplied.</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="family-card">
-          <header>
-            <b>Family 6</b>
-            <strong>Radiological contaminants</strong>
-          </header>
-
-          <div class="family-detail">
-            <div class="detail">
-              <b>Includes</b>
-              <span>Radium-226, radium-228, uranium, gross alpha, beta particles, and related radiological contaminants where present.</span>
-            </div>
-
-            <div class="detail">
-              <b>Human concern</b>
-              <span>Chronic exposure is the main concern. Radium and uranium may contribute to cancer-risk discussions; uranium also has chemical kidney-toxicity concern.</span>
-            </div>
-
-            <div class="detail">
-              <b>Treatment lane</b>
-              <span>Do not claim standard whole-home carbon solves radiological contaminants. Testing determines whether reverse osmosis, ion exchange, or specialized treatment is required.</span>
-            </div>
-          </div>
-        </article>
-      </section>
-
-      <section class="panel section" aria-labelledby="impact-title">
-        <div class="kicker">Human body impact map</div>
-        <h2 id="impact-title">Instant harm and long-term harm are different.</h2>
-
-        <div class="impact-map">
-          <article class="impact-card acute">
-            <h3>Acute impact class</h3>
-            <ul>
-              <li>Nitrate in infants: oxygen-transport interference.</li>
-              <li>High-level VOC exposure: headache, dizziness, nausea, or irritation.</li>
-              <li>Severe chemical contamination events: do-not-use scenarios.</li>
-              <li>High metal exposure: gastrointestinal or neurological symptoms depending on chemical and dose.</li>
-            </ul>
+            <b>Thermal control</b>
+            <strong>Protect phase and pressure.</strong>
+            <span>Heat, cold, freezing, evaporation, pressure, and condensation affect storage and recovery.</span>
           </article>
 
-          <article class="impact-card chronic">
-            <h3>Chronic impact class</h3>
-            <ul>
-              <li>Cancer-risk contaminants: arsenic, chromium-6, benzene, DBPs, radium, uranium.</li>
-              <li>Neurological contaminants: lead, mercury, manganese at concerning levels.</li>
-              <li>Endocrine-disrupting contaminants: atrazine and some agricultural or industrial chemicals.</li>
-              <li>Immune-effect contaminants: PFAS family.</li>
-              <li>Kidney/liver stress contaminants: uranium, some VOCs, and some metals.</li>
-              <li>Reproductive/developmental concern contaminants: nitrate, DBPs, atrazine, PFAS, and lead.</li>
-            </ul>
+          <article class="card">
+            <b>Storage engineering</b>
+            <strong>Guard the reserve.</strong>
+            <span>Stored water must be protected from contamination, leakage, freezing, stagnation, and emergency depletion.</span>
+          </article>
+
+          <article class="card">
+            <b>Sensors</b>
+            <strong>Clear water is not proof.</strong>
+            <span>Measurement decides whether water is safe enough to return to the loop.</span>
+          </article>
+
+          <article class="card">
+            <b>Emergency reserves</b>
+            <strong>Survival needs margin.</strong>
+            <span>Closed systems require reserve planning before drought, damage, contamination, or overload occurs.</span>
           </article>
         </div>
 
         <div class="principle">
-          Instant harm is usually dose-event driven. Long-term harm is usually repeated-exposure driven.
+          The science is not one device. The science is a governed cycle.
         </div>
       </section>
 
-      <section class="panel section" id="homewater" aria-labelledby="homewater-title">
-        <div class="kicker">HomeWater positioning</div>
-        <h2 id="homewater-title">Reduction, not magical elimination.</h2>
+      <section class="panel section" id="audralia" aria-labelledby="audralia-title">
+        <div class="kicker">Audralia material plan</div>
+        <h2 id="audralia-title">Audralia inherits water as infrastructure.</h2>
 
         <p>
-          HomeWater-aligned language may position whole-home filtration systems as designed to reduce common whole-home contaminants such as chlorine, chloramines, heavy metals, VOCs, PFOS/PFAS, sediment, particulates, taste, and odor, while softener or conditioning products may be positioned around softness, scale effects, detergent performance, plumbing support, and appliance support where source-supported.
+          On Audralia, water is not a background resource. It is living infrastructure: measured, protected, recovered, cycled, and returned by the crew before the world can endure.
         </p>
 
-        <div class="grid three">
-          <article class="card good">
-            <b>Approved lane</b>
-            <strong>Designed to reduce.</strong>
-            <span>Use bounded wording: reduce, designed to reduce, help reduce, positioned to support, or may help depending on system type and water chemistry.</span>
+        <div class="grid four">
+          <article class="card violet">
+            <b>Capture fields</b>
+            <strong>Collect what the world provides.</strong>
+            <span>Surface water, condensation, runoff, and stored reserves become mapped sources.</span>
           </article>
 
-          <article class="card">
-            <b>Required limit</b>
-            <strong>Performance depends on the system.</strong>
-            <span>Results depend on system selection, installation, maintenance, filter life, local water chemistry, and contaminant type.</span>
+          <article class="card violet">
+            <b>Purification chambers</b>
+            <strong>Staged treatment before return.</strong>
+            <span>Water passes through mission-specific screening, reduction, purification, and verification.</span>
           </article>
 
-          <article class="card warn">
-            <b>Forbidden lane</b>
-            <strong>No medical or total-removal claims.</strong>
-            <span>Do not claim total elimination, disease prevention, cancer prevention, universal safety, or one-filter-solves-all treatment.</span>
+          <article class="card violet">
+            <b>Reclamation vaults</b>
+            <strong>Waste streams become recovery problems.</strong>
+            <span>Greywater, wastewater, brine, and discharge are processed instead of discarded.</span>
+          </article>
+
+          <article class="card violet">
+            <b>Mineral-balance labs</b>
+            <strong>Clean is not the same as usable.</strong>
+            <span>Returned water may require mineral, pH, salinity, or chemistry correction.</span>
+          </article>
+
+          <article class="card violet">
+            <b>Atmospheric return towers</b>
+            <strong>Air and water stay connected.</strong>
+            <span>Humidity, vapor, condensation, and atmospheric loss become part of the water budget.</span>
+          </article>
+
+          <article class="card violet">
+            <b>Habitat loops</b>
+            <strong>Settlements need internal cycling.</strong>
+            <span>Drinking, hygiene, agriculture, cooling, and habitat systems must remain connected without uncontrolled mixing.</span>
+          </article>
+
+          <article class="card violet">
+            <b>Emergency cisterns</b>
+            <strong>Reserve water buys time.</strong>
+            <span>Failure margin protects the crew before repair, resupply, or recovery can stabilize the loop.</span>
+          </article>
+
+          <article class="card violet">
+            <b>Hydrology stations</b>
+            <strong>The planet must be measured.</strong>
+            <span>Planetary water movement becomes a science layer, not scenery.</span>
           </article>
         </div>
       </section>
 
-      <section class="panel section" id="matching" aria-labelledby="matching-title">
-        <div class="kicker">Filter technology matching</div>
-        <h2 id="matching-title">Choose treatment by chemistry, not fear.</h2>
-
-        <div class="tech-grid">
-          <article class="tech-card">
-            <b>Activated / catalytic carbon</b>
-            <span>Best messaging fit for chlorine, chloramines, taste, odor, VOCs, many organic chemicals, some DBPs, and some PFAS reduction depending on system design and maintenance.</span>
-          </article>
-
-          <article class="tech-card">
-            <b>KDF / catalytic blends</b>
-            <span>May be discussed in product-specific contexts for particulates, heavy metals, chlorine, VOCs, PFOS/PFAS, and related reduction claims where supported.</span>
-          </article>
-
-          <article class="tech-card">
-            <b>Sediment filtration</b>
-            <span>Targets dirt, rust, particulates, turbidity, and pre-filter protection.</span>
-          </article>
-
-          <article class="tech-card">
-            <b>Water softener</b>
-            <span>Targets hardness minerals and soft-water benefits. It is not a universal contaminant-removal claim.</span>
-          </article>
-
-          <article class="tech-card">
-            <b>Salt-free conditioning</b>
-            <span>Use scale-reduction or conditioning language. Do not claim true softening unless the product specifically reduces hardness minerals.</span>
-          </article>
-
-          <article class="tech-card">
-            <b>Reverse osmosis</b>
-            <span>May be needed for dissolved contaminants such as nitrate, arsenic, uranium, chromium-6, and some PFAS depending on testing and system selection.</span>
-          </article>
-
-          <article class="tech-card">
-            <b>Ion exchange</b>
-            <span>May be needed for nitrate, radium, uranium, arsenic, chromium-6, and other dissolved contaminants depending on water chemistry.</span>
-          </article>
-
-          <article class="tech-card">
-            <b>Specialized treatment</b>
-            <span>Some contaminant families require targeted media, professional testing, and contaminant-specific design.</span>
-          </article>
-        </div>
-
-        <div class="disclaimer">
-          Core distinction: filtered water and softer water are not the same claim. Softening targets hardness and scale. Filtration targets contaminants depending on media and chemistry.
-        </div>
-      </section>
-
-      <section class="panel section" aria-labelledby="video-title">
-        <div class="kicker">Educational video series</div>
-        <h2 id="video-title">Texas Tap Water: Legal, Clean, or Just Treated?</h2>
-
-        <div class="episode-grid">
-          <article class="episode">
-            <b>Episode</b>
-            <span>Legal does not necessarily equal optimized.</span>
-          </article>
-
-          <article class="episode">
-            <b>Episode</b>
-            <span>EWG health guidelines versus EPA legal limits.</span>
-          </article>
-
-          <article class="episode">
-            <b>Episode</b>
-            <span>Disinfection byproducts: chemicals created while killing germs.</span>
-          </article>
-
-          <article class="episode">
-            <b>Episode</b>
-            <span>Heavy metals: invisible contaminants with long memory.</span>
-          </article>
-
-          <article class="episode">
-            <b>Episode</b>
-            <span>Nitrates and infant health.</span>
-          </article>
-
-          <article class="episode">
-            <b>Episode</b>
-            <span>PFAS: forever chemicals in the water cycle.</span>
-          </article>
-
-          <article class="episode">
-            <b>Episode</b>
-            <span>VOCs and industrial contamination.</span>
-          </article>
-
-          <article class="episode">
-            <b>Episode</b>
-            <span>Radiological contaminants in groundwater.</span>
-          </article>
-
-          <article class="episode">
-            <b>Episode</b>
-            <span>Why taste and smell are not enough.</span>
-          </article>
-
-          <article class="episode">
-            <b>Episode</b>
-            <span>How whole-home filtration works.</span>
-          </article>
-
-          <article class="episode">
-            <b>Episode</b>
-            <span>Filtration versus softening.</span>
-          </article>
-
-          <article class="episode">
-            <b>Episode</b>
-            <span>How to read your EWG water report.</span>
-          </article>
-        </div>
-
-        <div class="principle">
-          Series close: test your water, check your utility report, compare legal limits to health guidelines, and choose treatment based on the contaminant family — not fear.
-        </div>
-      </section>
-
-      <section class="panel section" aria-labelledby="home-title">
-        <div class="kicker">Home environment</div>
-        <h2 id="home-title">Water moves through the whole home.</h2>
+      <section class="panel section" aria-labelledby="pressure-title">
+        <div class="kicker">System pressures</div>
+        <h2 id="pressure-title">Closed systems fail when water escapes the loop.</h2>
 
         <p>
-          A home does not only drink water. It showers in water, cooks with water, washes clothes with water, runs appliances with water, and pushes water through every pipe. That is why whole-home treatment is framed as household-environment protection, not just drinking-water improvement.
+          In an open system, waste can be flushed away and new water can be pulled in. In a closed system, every mistake returns. That is why measurement, recovery, and balance matter.
         </p>
 
-        <div class="grid three">
-          <article class="card">
-            <b>Taste and odor</b>
-            <strong>Everyday usability.</strong>
-            <span>Reduction of chlorine, chloramines, sediment, and some organics may improve taste and odor depending on water chemistry and system design.</span>
-          </article>
-
-          <article class="card">
-            <b>Shower and vapor</b>
-            <strong>Exposure is not only drinking.</strong>
-            <span>Some contaminants can matter through shower vapor or skin-contact pathways, depending on contaminant type and concentration.</span>
-          </article>
-
-          <article class="card">
-            <b>Pipes and appliances</b>
-            <strong>Scale and sediment affect the home.</strong>
-            <span>Softening, conditioning, and filtration may support appliance performance, plumbing condition, detergent effectiveness, and sediment control where source-supported.</span>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel section" aria-labelledby="cta-title">
-        <div class="kicker">Water decision CTA</div>
-        <h2 id="cta-title">Check the report before choosing the solution.</h2>
-
-        <ol class="decision-list">
-          <li>Check your Texas water report.</li>
-          <li>Identify your contaminant family.</li>
-          <li>Separate hardness from contamination.</li>
-          <li>Match treatment to chemistry.</li>
-          <li>Maintain the system.</li>
-          <li>Retest when needed.</li>
-        </ol>
-      </section>
-
-      <section class="panel section" aria-labelledby="forbidden-title">
-        <div class="kicker">Forbidden claim lock</div>
-        <h2 id="forbidden-title">The page stops if the claim outruns the evidence.</h2>
-
-        <ul class="forbidden-list">
-          <li>Do not claim HomeWater removes all hazardous chemicals.</li>
-          <li>Do not claim HomeWater prevents disease or cancer.</li>
-          <li>Do not claim HomeWater guarantees safe water for every Texas home.</li>
-          <li>Do not claim every Texas home has every listed chemical.</li>
-          <li>Do not claim standard whole-home carbon solves every contaminant.</li>
-          <li>Do not claim softened water and filtered water are identical.</li>
-          <li>Do not use a verified $0.99/day claim unless an exact current offer source is supplied.</li>
-          <li>Do not claim PFAS elimination without exact system and contaminant-specific certification support.</li>
+        <ul class="pressure-list">
+          <li>Loss</li>
+          <li>Contamination</li>
+          <li>Salt buildup</li>
+          <li>Mineral depletion</li>
+          <li>Microbial imbalance</li>
+          <li>Chemical accumulation</li>
+          <li>Energy cost</li>
+          <li>Storage failure</li>
+          <li>Sensor failure</li>
+          <li>Atmospheric loss</li>
+          <li>Wastewater overload</li>
+          <li>Emergency demand</li>
         </ul>
       </section>
 
-      <section class="final-band" aria-label="Water final statement">
-        <strong>Water quality is a measurement message, not a fear message.</strong>
+      <section class="panel section" aria-labelledby="inheritance-title">
+        <div class="kicker">Contaminant-family inheritance</div>
+        <h2 id="inheritance-title">The household lane still teaches useful logic.</h2>
+
+        <div class="lane-split">
+          <article class="split-card">
+            <h3>What the household lane contributes</h3>
+            <ul>
+              <li>Contaminant-family separation.</li>
+              <li>Acute versus chronic exposure logic.</li>
+              <li>Treatment matching by chemistry.</li>
+              <li>Reduction, not magical elimination.</li>
+              <li>Filtration versus softening distinction.</li>
+              <li>Testing before treatment.</li>
+            </ul>
+          </article>
+
+          <article class="split-card">
+            <h3>What the closed system upgrades</h3>
+            <p>
+              In a closed system, contaminants are not only removed. They must be tracked, concentrated, isolated, neutralized, reused, or safely stored.
+            </p>
+
+            <div class="tagline">
+              <span class="tag">Track</span>
+              <span class="tag">Separate</span>
+              <span class="tag">Neutralize</span>
+              <span class="tag">Reuse</span>
+              <span class="tag">Store</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="modules-title">
+        <div class="kicker">Technology modules</div>
+        <h2 id="modules-title">The closed water system is modular.</h2>
+
+        <div class="module-grid">
+          <article class="module-card">
+            <b>Intake module</b>
+            <span>Receives source water and defines what enters the system.</span>
+          </article>
+
+          <article class="module-card">
+            <b>Sediment module</b>
+            <span>Removes physical load before finer treatment stages.</span>
+          </article>
+
+          <article class="module-card">
+            <b>Biological control</b>
+            <span>Manages microbial risk and biological balance.</span>
+          </article>
+
+          <article class="module-card">
+            <b>Chemical reduction</b>
+            <span>Targets mission-specific chemical load.</span>
+          </article>
+
+          <article class="module-card">
+            <b>Membrane module</b>
+            <span>Separates fine contaminants and recoverable water streams.</span>
+          </article>
+
+          <article class="module-card">
+            <b>Ion / mineral balance</b>
+            <span>Controls mineral, salt, pH, and chemistry return conditions.</span>
+          </article>
+
+          <article class="module-card">
+            <b>Wastewater recovery</b>
+            <span>Reclaims usable water from greywater, blackwater, and discharge.</span>
+          </article>
+
+          <article class="module-card">
+            <b>Condensation recovery</b>
+            <span>Captures humidity, vapor, and thermal-cycle water.</span>
+          </article>
+
+          <article class="module-card">
+            <b>Atmospheric return</b>
+            <span>Returns water into habitat air, agricultural cycles, or planetary exchange.</span>
+          </article>
+
+          <article class="module-card">
+            <b>Storage module</b>
+            <span>Protects reserves from leakage, contamination, freezing, and depletion.</span>
+          </article>
+
+          <article class="module-card">
+            <b>Sensor / audit module</b>
+            <span>Measures whether water can lawfully move to the next stage.</span>
+          </article>
+
+          <article class="module-card">
+            <b>Emergency reserve</b>
+            <span>Holds survival margin for system damage, drought, overload, or contamination.</span>
+          </article>
+        </div>
+
+        <div class="question-band">
+          <b>Each module must answer</b>
+          <div class="tagline">
+            <span class="tag">What enters?</span>
+            <span class="tag">What changes?</span>
+            <span class="tag">What leaves?</span>
+            <span class="tag">What is stored?</span>
+            <span class="tag">What is rejected?</span>
+            <span class="tag">What is measured?</span>
+            <span class="tag">What failure stops the loop?</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="crew-title">
+        <div class="kicker">Crew doctrine</div>
+        <h2 id="crew-title">The crew does not waste water.</h2>
+
+        <ul class="doctrine-list">
+          <li>Measure before use.</li>
+          <li>Separate clean, grey, black, brine, condensate, and atmospheric water.</li>
+          <li>Recover what can be recovered.</li>
+          <li>Do not mix streams without purpose.</li>
+          <li>Do not return unbalanced water to habitat systems.</li>
+          <li>Do not let storage become invisible.</li>
+          <li>Do not trust clear water without measurement.</li>
+          <li>Do not let wastewater become a hidden liability.</li>
+          <li>Treat water as infrastructure, not scenery.</li>
+          <li>Protect the loop before expanding the settlement.</li>
+        </ul>
+      </section>
+
+      <section class="panel section" aria-labelledby="research-title">
+        <div class="kicker">Interplanetary research role</div>
+        <h2 id="research-title">Water decides whether a world can stay inhabited.</h2>
+
+        <div class="grid four">
+          <article class="card">
+            <b>Closed habitats</b>
+            <strong>Remote life needs internal cycling.</strong>
+            <span>Water cannot rely on constant external supply.</span>
+          </article>
+
+          <article class="card">
+            <b>Remote settlements</b>
+            <strong>Survival depends on retention.</strong>
+            <span>Every leak, waste stream, and reserve failure becomes a settlement-level problem.</span>
+          </article>
+
+          <article class="card">
+            <b>Planetary hydrology</b>
+            <strong>The world must be modeled.</strong>
+            <span>Rain, runoff, storage, evaporation, and subsurface movement become infrastructure variables.</span>
+          </article>
+
+          <article class="card">
+            <b>Atmospheric recovery</b>
+            <strong>Air is part of the water budget.</strong>
+            <span>Humidity, vapor, condensation, and atmospheric loss must be tracked.</span>
+          </article>
+
+          <article class="card">
+            <b>Agricultural recirculation</b>
+            <strong>Food systems consume water.</strong>
+            <span>Agriculture must recycle, balance, and protect usable water streams.</span>
+          </article>
+
+          <article class="card">
+            <b>Emergency drought</b>
+            <strong>Reserve planning matters.</strong>
+            <span>Closed worlds require drought response before visible crisis.</span>
+          </article>
+
+          <article class="card">
+            <b>Contamination isolation</b>
+            <strong>Bad water cannot disappear.</strong>
+            <span>Contaminants must be isolated, neutralized, stored, or removed from the active loop.</span>
+          </article>
+
+          <article class="card">
+            <b>Long-duration crews</b>
+            <strong>People stress the loop.</strong>
+            <span>Daily use, waste, hygiene, food, and maintenance all pressure the water system.</span>
+          </article>
+        </div>
+
+        <div class="principle">
+          Interplanetary water research is not only about finding water. It is about keeping water usable after it is found.
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="split-title">
+        <div class="kicker">Public / narrative split</div>
+        <h2 id="split-title">The public lane teaches. Audralia demonstrates.</h2>
+
+        <div class="stack-list">
+          <div class="stack-row">
+            <b>Public lane</b>
+            <span>Explains closed-loop water science clearly without pretending a finished interplanetary product is already deployed.</span>
+          </div>
+
+          <div class="stack-row">
+            <b>Narrative lane</b>
+            <span>Shows the same science under pressure through crew missions, settlement design, survival stakes, and planetary restoration.</span>
+          </div>
+
+          <div class="stack-row">
+            <b>Shared law</b>
+            <span>The public lane teaches closed-loop water architecture. The narrative lane turns that architecture into consequences, problems, repairs, and future possibility.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="kill-title">
+        <div class="kicker">Kill conditions</div>
+        <h2 id="kill-title">The system stops if the loop cannot be trusted.</h2>
+
+        <ul class="kill-list">
+          <li>Stop if water cannot be measured.</li>
+          <li>Stop if water cannot be tracked.</li>
+          <li>Stop if contaminants cannot be separated.</li>
+          <li>Stop if wastewater cannot be recovered.</li>
+          <li>Stop if storage cannot be protected.</li>
+          <li>Stop if mineral balance cannot be controlled.</li>
+          <li>Stop if the system loses more water than it returns.</li>
+          <li>Stop if the habitat depends on an untested water stream.</li>
+          <li>Stop if atmospheric return exceeds capture capacity.</li>
+          <li>Stop if emergency reserves are undefined.</li>
+          <li>Stop if clear water is treated as automatically safe.</li>
+          <li>Stop if the narrative turns closed-loop science into magic.</li>
+        </ul>
+      </section>
+
+      <section class="final-band" aria-label="Closed water final statement">
+        <strong>Water is infrastructure, memory, survival, and law.</strong>
         <p>
-          Texas water may pass the law and still carry long-term exposure concerns. EWG identifies the contaminant families. HomeWater offers a whole-home filtration and softening pathway for many common contaminant, taste, odor, sediment, scale, plumbing, and appliance concerns. The lawful public message is education, reduction, and household protection.
+          The Frontier Water lane teaches the science of capturing, purifying, retaining, reusing, balancing, storing, recovering, and returning water. Audralia inherits that science directly as crew doctrine, habitat technology, planetary hydrology, and interplanetary survival architecture.
         </p>
 
         <div class="tagline">
-          <span class="tag">Measure first</span>
-          <span class="tag">Identify family</span>
-          <span class="tag">Reduce, not eliminate</span>
-          <span class="tag">Filter by chemistry</span>
-          <span class="tag">Protect the home</span>
+          <span class="tag">Capture</span>
+          <span class="tag">Purify</span>
+          <span class="tag">Balance</span>
+          <span class="tag">Store</span>
+          <span class="tag">Recover</span>
+          <span class="tag">Return</span>
         </div>
 
         <div class="actions">
-          <a class="button blue" href="#families">Read Families</a>
-          <a class="button green" href="#homewater">Understand HomeWater</a>
+          <a class="button blue" href="#loop">Open Loop</a>
+          <a class="button green" href="/showroom/globe/audralia/">Open Audralia</a>
           <a class="button gold" href="/frontier/">Return to Frontier</a>
           <a class="button" href="/gauges/">Check Gauges</a>
         </div>
 
         <div class="disclaimer">
-          Educational information only, not medical advice. Filtration performance depends on system selection, installation, maintenance, filter life, contaminant type, and local water chemistry. Use water testing and utility reports to match treatment to actual conditions.
+          This route teaches closed-loop water architecture and narrative inheritance. The Texas/HomeWater household education lane remains supporting context only and does not govern Audralia’s closed water system.
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_WATER_TEXAS_HOMEWATER_EDUCATION_RENEWAL_TNT_v1
+AUDRALIA_CLOSED_WATER_SYSTEM_FRONTIER_SCIENCE_TNT_v1
 route=/explore/frontier/water/
 page=frontier_water
-source_psalm=PSALM_PACKET_TEXAS_WATER_HAZARD_HOMEWATER_FULL_v1.0
-ack_status=TRANSITORY_ACK_PACK_SUPERSEDED
-primary_source_role=EWG_Tap_Water_Database_Texas
-secondary_source_role=HomeWater_product_and_whole_home_filtration_claims
-public_lane=education,measurement,reduction,household_protection
-six_families=disinfection_byproducts,heavy_metals_metalloids,agricultural_contaminants,industrial_chemicals_VOCs,PFAS_forever_chemicals,radiological_contaminants
-acute_chronic_split=true
-homewater_lane=whole_home_filtration,softening,scale_reduction,appliance_support,plumbing_support
-filter_matching=carbon,catalytic_carbon,KDF,sediment_filtration,softening,salt_free_conditioning,reverse_osmosis,ion_exchange,specialized_treatment
-source_separation=true
-reduce_not_eliminate=true
-filtration_softening_distinction=true
-treatment_depends_on=testing,system_selection,installation,maintenance,filter_life,local_water_chemistry,contaminant_type
-nitrate_arsenic_uranium_radium_chromium6_dissolved_ions_not_collapsed_into_standard_carbon=true
-decision_cta=check_report,identify_contaminant_family,separate_hardness_from_contamination,match_treatment_to_chemistry,maintain_system,retest_when_needed
-forbidden_claims=total_removal,medical_prevention,cancer_prevention,all_Texas_homes_safe,every_home_has_every_chemical,unsourced_99_cents_per_day,universal_treatment_certainty,standard_carbon_solves_everything,softening_equals_filtration
+active_focus=closed_water_system_technology
+supporting_lane=Texas_HomeWater_household_education
+supporting_packet=PSALM_PACKET_TEXAS_WATER_HAZARD_HOMEWATER_FULL_v1.0
+previous_contract=FRONTIER_WATER_TEXAS_HOMEWATER_EDUCATION_RENEWAL_TNT_v1
+public_function=teach_frontier_science
+narrative_function=Audralia_inheritance
+core_loop=Capture,Screen,Purify,Balance,Store,Use,Recover,Reclaim,Return
+science_stack=hydrology,chemistry,filtration,membranes,biology,mineral_balance,atmospheric_cycling,wastewater_recovery,thermal_control,storage_engineering,sensors,emergency_reserves
+technology_modules=intake,sediment,biological_control,chemical_reduction,membrane,ion_mineral_balance,wastewater_recovery,condensation_recovery,atmospheric_return,storage,sensor_audit,emergency_reserve
+audralia_material=water_capture_fields,purification_chambers,reclamation_vaults,mineral_balance_labs,atmospheric_return_towers,habitat_water_loops,emergency_reserve_cisterns,agricultural_recycling_systems,wastewater_recovery_corridors,planetary_hydrology_stations,closed_loop_settlement_districts,interplanetary_research_protocols
+crew_doctrine=measure_before_use,separate_streams,recover_usable_water,do_not_mix_without_purpose,do_not_return_unbalanced_water,protect_storage,do_not_trust_clear_water_without_measurement,protect_loop_before_expansion
+system_pressures=loss,contamination,salt_buildup,mineral_depletion,microbial_imbalance,chemical_accumulation,energy_cost,storage_failure,sensor_failure,atmospheric_loss,wastewater_overload,emergency_demand
+household_lane_contributes=contaminant_family_logic,acute_chronic_exposure_logic,testing_before_treatment,treatment_matching_by_chemistry,reduction_not_magical_elimination,filtration_softening_distinction
+closed_system_upgrade=track_concentrate_isolate_neutralize_reuse_or_safely_store_contaminants
+public_narrative_split=public_lane_teaches,Audralia_demonstrates
+forbidden_collapse=HomeWater_marketing_only,Texas_tap_water_only,household_filter_only,generic_clean_water_message,total_removal_claim,medical_safety_claim,finished_interplanetary_deployment_claim,magic_water_cycle,unmeasured_clear_water_claim,decorative_water_world_without_system_architecture
+kill_conditions=water_unmeasured,water_untracked,contaminants_unseparated,wastewater_unrecovered,storage_unprotected,mineral_balance_uncontrolled,more_water_lost_than_returned,untested_habitat_stream,atmospheric_return_exceeds_capture,undefined_emergency_reserves,clear_water_treated_as_safe,narrative_turns_science_into_magic
 generated_image=false
 graphic_box=false
 visual_pass_claimed=false
@@ -1469,7 +1529,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      FRONTIER_WATER_TEXAS_HOMEWATER_EDUCATION_RENEWAL_TNT_v1 · Water · Texas Education · HomeWater Reduction Lane.
+      AUDRALIA_CLOSED_WATER_SYSTEM_FRONTIER_SCIENCE_TNT_v1 · Water · Closed System · Audralia Inheritance.
     </footer>
   </div>
 </body>

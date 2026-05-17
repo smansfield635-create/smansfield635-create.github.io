@@ -3,8 +3,8 @@
   lang="en"
   data-route="/frontier/"
   data-page="frontier"
-  data-contract="FRONTIER_DUAL_GRAVITY_HORIZONTAL_FIGURE_EIGHT_HTML_JS_TNT_v7"
-  data-previous-contract="FRONTIER_TOP_ANCHOR_HORIZONTAL_FIGURE_EIGHT_HTML_JS_TNT_v6"
+  data-contract="FRONTIER_ALL_STARS_VISIBLE_DUAL_GRAVITY_FIGURE_EIGHT_TNT_v8"
+  data-previous-contract="FRONTIER_DUAL_GRAVITY_HORIZONTAL_FIGURE_EIGHT_HTML_JS_TNT_v7"
   data-role="expansion-edge"
   data-frontier-role="expansion-edge"
   data-renewal="true"
@@ -13,12 +13,12 @@
   data-figure-eight-orbit="true"
   data-figure-eight-orientation="horizontal"
   data-dual-gravity-centers="true"
-  data-left-gravity-center="true"
-  data-right-gravity-center="true"
+  data-all-route-stars-visible="true"
+  data-route-stars-position-locked="true"
+  data-route-position-animation="false"
   data-center-crossing-open="true"
   data-labels-front-facing="true"
-  data-shared-directional-flow="true"
-  data-star-wobble-allowed="true"
+  data-star-local-motion-only="true"
   data-laws-role="proof-truth-scientific-backing-boundary"
   data-gauges-role="measurement-audit-route-status-summary"
   data-interactive-narrative-route="/showroom/globe/"
@@ -38,7 +38,7 @@
   <title>Frontier · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Frontier is the expansion edge of Diamond Gate Bridge: eleven future lanes held by a dual-gravity horizontal figure-eight starfield, with Laws as proof and Gauges as route summary."
+    content="Frontier is the expansion edge of Diamond Gate Bridge: eleven future lanes held by an all-stars-visible dual-gravity figure-eight field, with Laws as proof and Gauges as route summary."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/frontier/">
   <meta name="theme-color" content="#02040b">
@@ -62,7 +62,6 @@
       --max:1180px;
       --star:polygon(50% 0%,61% 35%,98% 35%,68% 56%,79% 91%,50% 70%,21% 91%,32% 56%,2% 35%,39% 35%);
       --gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
-      --orbit-time:48s;
     }
 
     *{box-sizing:border-box}
@@ -417,19 +416,17 @@
 
     .frontier-orbit-stage{
       position:relative;
-      min-height:clamp(34rem,88vw,49rem);
+      min-height:clamp(30rem,86vw,44rem);
       display:grid;
-      grid-template-rows:minmax(9.5rem,15rem) 1fr;
+      grid-template-rows:minmax(7.5rem,10rem) 1fr;
       overflow:hidden;
       isolation:isolate;
       border:1px solid rgba(184,205,255,.13);
       border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
         radial-gradient(circle at 50% 16%,rgba(243,200,111,.09),transparent 12rem),
-        radial-gradient(circle at 31% 63%,rgba(141,216,255,.12),transparent 14rem),
-        radial-gradient(circle at 69% 63%,rgba(143,101,255,.12),transparent 14rem),
-        radial-gradient(circle at 50% 70%,rgba(36,120,255,.13),transparent 24rem),
-        radial-gradient(circle at 50% 86%,rgba(143,101,255,.10),transparent 28rem),
+        radial-gradient(circle at 28% 60%,rgba(141,216,255,.14),transparent 13rem),
+        radial-gradient(circle at 72% 60%,rgba(143,101,255,.14),transparent 13rem),
         linear-gradient(180deg,rgba(1,5,16,.70),rgba(2,6,16,.94));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
@@ -439,42 +436,40 @@
       z-index:8;
       display:grid;
       place-items:center;
-      padding:1rem 1rem 0;
-      pointer-events:none;
+      padding:.8rem 1rem 0;
+    }
+
+    .frontier-anchor{
+      position:relative;
+      width:clamp(6.9rem,18vw,10.5rem);
+      height:clamp(6.9rem,18vw,10.5rem);
+      display:grid;
+      place-items:center;
+      isolation:isolate;
     }
 
     .frontier-figure-eight-zone{
-      --x-left:clamp(-17rem,-30vw,-10.2rem);
-      --x-right:clamp(10.2rem,30vw,17rem);
-      --x-mid-left:clamp(-9.2rem,-16vw,-5.6rem);
-      --x-mid-right:clamp(5.6rem,16vw,9.2rem);
-      --y-up:clamp(-4.6rem,-8vw,-2.9rem);
-      --y-down:clamp(2.9rem,8vw,4.6rem);
-      --y-cross-up:clamp(-2.1rem,-4vw,-1.35rem);
-      --y-cross-down:clamp(1.35rem,4vw,2.1rem);
       position:relative;
       z-index:4;
-      min-height:clamp(20rem,50vw,31rem);
-      margin:0 clamp(.6rem,2vw,1.15rem) clamp(1rem,3vw,1.35rem);
+      min-height:clamp(20rem,52vw,30rem);
+      margin:0 clamp(.55rem,2vw,1.15rem) clamp(1rem,3vw,1.35rem);
       overflow:hidden;
       border:1px solid rgba(255,255,255,.075);
       border-radius:clamp(1.2rem,4vw,2rem);
       background:
-        radial-gradient(circle at 31% 50%,rgba(141,216,255,.13),transparent 24%),
-        radial-gradient(circle at 69% 50%,rgba(143,101,255,.13),transparent 24%),
-        radial-gradient(ellipse at 50% 50%,rgba(141,216,255,.10),transparent 58%),
+        radial-gradient(circle at 28% 50%,rgba(141,216,255,.13),transparent 25%),
+        radial-gradient(circle at 72% 50%,rgba(143,101,255,.13),transparent 25%),
+        radial-gradient(ellipse at 50% 50%,rgba(141,216,255,.10),transparent 62%),
         linear-gradient(180deg,rgba(255,255,255,.026),rgba(255,255,255,.012));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
     }
 
-    .frontier-figure-eight-zone::before,
-    .frontier-figure-eight-zone::after{
-      content:"";
+    .frontier-loop{
       position:absolute;
       top:50%;
-      width:min(42%,18rem);
-      height:min(62%,15rem);
-      border:1px solid rgba(243,200,111,.13);
+      width:43%;
+      height:68%;
+      border:1px solid rgba(243,200,111,.14);
       border-radius:50%;
       pointer-events:none;
       box-shadow:
@@ -482,44 +477,31 @@
         inset 0 0 30px rgba(141,216,255,.045);
     }
 
-    .frontier-figure-eight-zone::before{
-      left:31%;
-      transform:translate(-50%,-50%) rotate(-8deg);
+    .frontier-loop.left{
+      left:28%;
+      transform:translate(-50%,-50%) rotate(-7deg);
     }
 
-    .frontier-figure-eight-zone::after{
-      left:69%;
-      transform:translate(-50%,-50%) rotate(8deg);
-    }
-
-    .frontier-guide-line{
-      position:absolute;
-      inset:6%;
-      z-index:1;
-      pointer-events:none;
-      opacity:.50;
-      background:
-        linear-gradient(22deg,transparent 48%,rgba(141,216,255,.12) 49%,transparent 51%),
-        linear-gradient(-22deg,transparent 48%,rgba(243,200,111,.10) 49%,transparent 51%);
-      mask-image:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,.82),transparent 68%);
+    .frontier-loop.right{
+      left:72%;
+      transform:translate(-50%,-50%) rotate(7deg);
     }
 
     .frontier-gravity{
       position:absolute;
       top:50%;
       z-index:2;
-      width:clamp(3.2rem,8vw,5.1rem);
-      height:clamp(3.2rem,8vw,5.1rem);
+      width:clamp(2.5rem,6.5vw,4.2rem);
+      height:clamp(2.5rem,6.5vw,4.2rem);
       transform:translate(-50%,-50%);
       pointer-events:none;
       display:grid;
       place-items:center;
-      opacity:.74;
-      isolation:isolate;
+      opacity:.70;
     }
 
-    .frontier-gravity.left{left:31%}
-    .frontier-gravity.right{left:69%}
+    .frontier-gravity.left{left:28%}
+    .frontier-gravity.right{left:72%}
 
     .frontier-gravity::before{
       content:"";
@@ -530,69 +512,27 @@
       background:
         radial-gradient(circle at 50% 50%,rgba(255,232,163,.18),transparent 34%),
         radial-gradient(circle at 50% 50%,rgba(141,216,255,.12),transparent 62%);
-      box-shadow:
-        0 0 1.6rem rgba(141,216,255,.13),
-        inset 0 0 1.1rem rgba(255,255,255,.045);
-      animation:gravityPulse 6s ease-in-out infinite;
+      box-shadow:0 0 1.35rem rgba(141,216,255,.13);
     }
 
     .frontier-gravity::after{
       content:"";
-      width:37%;
-      height:37%;
+      width:36%;
+      height:36%;
       transform:rotate(45deg);
       border:1px solid rgba(255,244,216,.28);
-      background:
-        radial-gradient(circle at 50% 18%,rgba(255,255,255,.36),transparent 44%),
-        linear-gradient(145deg,rgba(141,216,255,.22),rgba(7,12,32,.78));
-      box-shadow:
-        0 0 1rem rgba(141,216,255,.18),
-        inset 0 1px 0 rgba(255,255,255,.18);
-    }
-
-    .frontier-gravity.right::after{
-      background:
-        radial-gradient(circle at 50% 18%,rgba(255,255,255,.36),transparent 44%),
-        linear-gradient(145deg,rgba(143,101,255,.24),rgba(7,12,32,.80));
-    }
-
-    @keyframes gravityPulse{
-      0%,100%{opacity:.52;transform:scale(.96)}
-      50%{opacity:.86;transform:scale(1.04)}
-    }
-
-    .frontier-anchor{
-      position:relative;
-      z-index:9;
-      width:clamp(8rem,20vw,12rem);
-      height:clamp(8rem,20vw,12rem);
-      display:grid;
-      place-items:center;
-      pointer-events:auto;
-      isolation:isolate;
-    }
-
-    .frontier-orbit{
-      position:absolute;
-      inset:0;
-      z-index:5;
-      pointer-events:none;
+      background:linear-gradient(145deg,rgba(141,216,255,.22),rgba(7,12,32,.78));
     }
 
     .frontier-node{
       position:absolute;
-      left:50%;
-      top:50%;
-      width:clamp(5.15rem,12.5vw,7.25rem);
-      height:clamp(5.15rem,12.5vw,7.25rem);
+      z-index:5;
+      width:clamp(4.75rem,12vw,7rem);
+      height:clamp(4.75rem,12vw,7rem);
       display:grid;
       place-items:center;
-      pointer-events:auto;
-      transform:translate(var(--x-left),0);
-      animation:frontierDualGravityFigureEight var(--orbit-time) linear infinite;
-      animation-delay:var(--orbit-delay,0s);
+      transform:translate(-50%,-50%);
       isolation:isolate;
-      will-change:transform;
     }
 
     .frontier-node:hover,
@@ -601,55 +541,21 @@
       filter:brightness(1.14) saturate(1.08);
     }
 
-    .frontier-node:nth-child(1){--orbit-delay:0s}
-    .frontier-node:nth-child(2){--orbit-delay:-6s}
-    .frontier-node:nth-child(3){--orbit-delay:-12s}
-    .frontier-node:nth-child(4){--orbit-delay:-18s}
-    .frontier-node:nth-child(5){--orbit-delay:-24s}
-    .frontier-node:nth-child(6){--orbit-delay:-30s}
-    .frontier-node:nth-child(7){--orbit-delay:-36s}
-    .frontier-node:nth-child(8){--orbit-delay:-42s}
-
-    @keyframes frontierDualGravityFigureEight{
-      0%,100%{
-        transform:translate(var(--x-left),0) scale(.96);
-      }
-
-      12.5%{
-        transform:translate(var(--x-mid-left),var(--y-up)) scale(.90);
-      }
-
-      25%{
-        transform:translate(0,var(--y-cross-up)) scale(.94);
-      }
-
-      37.5%{
-        transform:translate(var(--x-mid-right),var(--y-up)) scale(.90);
-      }
-
-      50%{
-        transform:translate(var(--x-right),0) scale(.96);
-      }
-
-      62.5%{
-        transform:translate(var(--x-mid-right),var(--y-down)) scale(1.03);
-      }
-
-      75%{
-        transform:translate(0,var(--y-cross-down)) scale(.98);
-      }
-
-      87.5%{
-        transform:translate(var(--x-mid-left),var(--y-down)) scale(1.03);
-      }
-    }
+    .frontier-node.compass{left:28%;top:18%}
+    .frontier-node.explore{left:72%;top:18%}
+    .frontier-node.laws{left:88%;top:50%}
+    .frontier-node.interactive{left:72%;top:82%}
+    .frontier-node.universe{left:50%;top:62%}
+    .frontier-node.showroom{left:28%;top:82%}
+    .frontier-node.products{left:12%;top:50%}
+    .frontier-node.gauges{left:50%;top:38%}
 
     .frontier-star-body,
     .frontier-anchor-body{
       position:absolute;
       inset:0;
       clip-path:var(--star);
-      opacity:.98;
+      opacity:.99;
       background:
         radial-gradient(circle at 50% 14%,rgba(255,255,255,.92),transparent 18%),
         radial-gradient(circle at 50% 44%,rgba(141,216,255,.38),transparent 42%),
@@ -670,60 +576,73 @@
         drop-shadow(0 1rem 1.25rem rgba(0,0,0,.48))
         drop-shadow(0 0 1rem rgba(141,216,255,.18));
       animation:
-        frontierStarSpin 16s linear infinite,
+        frontierStarSpin 18s linear infinite,
         frontierStarBreathe 5.8s ease-in-out infinite;
       transform-origin:50% 50%;
     }
 
     .frontier-anchor-body{
       opacity:1;
-      background:
-        radial-gradient(circle at 50% 13%,rgba(255,255,255,.95),transparent 18%),
-        radial-gradient(circle at 50% 46%,rgba(243,200,111,.28),transparent 42%),
-        conic-gradient(from 36deg at 50% 50%,
-          rgba(255,255,255,.90),
-          rgba(141,216,255,.76),
-          rgba(16,28,78,.98),
-          rgba(143,101,255,.82),
-          rgba(243,200,111,.36),
-          rgba(255,255,255,.82)),
-        linear-gradient(180deg,rgba(226,238,255,.96),rgba(20,22,72,.98));
       animation:
         frontierStarSpin 26s linear infinite,
         frontierAnchorPulse 7.8s ease-in-out infinite;
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.42),
-        inset 0 -1.3rem 1.6rem rgba(0,0,0,.34),
-        0 1.4rem 2rem rgba(0,0,0,.52),
-        0 0 2rem rgba(141,216,255,.22),
-        0 0 2.6rem rgba(243,200,111,.10);
     }
 
-    .frontier-star-body::before,
-    .frontier-anchor-body::before{
-      content:"";
-      position:absolute;
-      inset:18% 10% 34%;
-      clip-path:polygon(50% 0%,100% 38%,74% 100%,26% 100%,0% 38%);
+    .frontier-label{
+      position:relative;
+      z-index:6;
+      width:88%;
+      min-height:2.45rem;
+      display:grid;
+      place-items:center;
+      gap:.1rem;
+      padding:.32rem .38rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:.78rem;
+      text-align:center;
       background:
-        linear-gradient(135deg,rgba(255,255,255,.40),rgba(141,216,255,.12) 45%,rgba(5,9,25,.10));
-      opacity:.78;
+        radial-gradient(circle at 50% 0%,rgba(255,255,255,.18),transparent 62%),
+        rgba(4,6,18,.58);
+      box-shadow:
+        0 .55rem 1rem rgba(0,0,0,.30),
+        inset 0 1px 0 rgba(255,255,255,.10);
       pointer-events:none;
+      backdrop-filter:blur(5px);
     }
 
-    .frontier-star-body::after,
-    .frontier-anchor-body::after{
-      content:"";
-      position:absolute;
-      left:16%;
-      top:47%;
-      width:70%;
-      height:12%;
-      transform:rotate(-22deg);
-      background:linear-gradient(90deg,transparent,rgba(255,255,255,.68),rgba(255,232,163,.20),transparent);
-      opacity:.42;
-      pointer-events:none;
-      animation:frontierStarGlint 8s ease-in-out infinite;
+    .frontier-label b{
+      display:block;
+      color:rgba(255,244,216,.98);
+      font-size:clamp(.42rem,1.05vw,.58rem);
+      font-weight:950;
+      letter-spacing:.075em;
+      line-height:1.02;
+      text-transform:uppercase;
+      text-shadow:0 2px 12px rgba(0,0,0,.95);
+    }
+
+    .frontier-label span{
+      color:rgba(230,238,255,.78);
+      font-size:clamp(.30rem,.75vw,.40rem);
+      font-weight:900;
+      letter-spacing:.08em;
+      line-height:1;
+      text-transform:uppercase;
+    }
+
+    .frontier-anchor .frontier-label{
+      width:76%;
+      min-height:3rem;
+    }
+
+    .frontier-anchor .frontier-label b{
+      color:var(--gold);
+      font-size:clamp(.66rem,1.6vw,.94rem);
+      letter-spacing:.14em;
+    }
+
+    .frontier-anchor .frontier-label span{
+      font-size:clamp(.42rem,.95vw,.58rem);
     }
 
     @keyframes frontierStarSpin{
@@ -738,75 +657,6 @@
     @keyframes frontierAnchorPulse{
       0%,100%{filter:brightness(1) saturate(1)}
       50%{filter:brightness(1.13) saturate(1.10)}
-    }
-
-    @keyframes frontierStarGlint{
-      0%,100%{opacity:.18;transform:translateX(-12%) rotate(-22deg)}
-      50%{opacity:.55;transform:translateX(12%) rotate(-22deg)}
-    }
-
-    .frontier-label{
-      position:relative;
-      z-index:6;
-      width:86%;
-      min-height:2.65rem;
-      display:grid;
-      place-items:center;
-      gap:.1rem;
-      padding:.36rem .44rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:.78rem;
-      text-align:center;
-      background:
-        radial-gradient(circle at 50% 0%,rgba(255,255,255,.18),transparent 62%),
-        rgba(4,6,18,.50);
-      box-shadow:
-        0 .55rem 1rem rgba(0,0,0,.30),
-        inset 0 1px 0 rgba(255,255,255,.10);
-      pointer-events:none;
-      transform:translateZ(1px);
-      backdrop-filter:blur(5px);
-    }
-
-    .frontier-label b{
-      display:block;
-      color:rgba(255,244,216,.98);
-      font-size:clamp(.46rem,1.15vw,.62rem);
-      font-weight:950;
-      letter-spacing:.08em;
-      line-height:1.02;
-      text-transform:uppercase;
-      text-shadow:
-        0 2px 12px rgba(0,0,0,.95),
-        0 0 10px rgba(0,28,90,.80),
-        0 0 2px rgba(255,255,255,.42);
-    }
-
-    .frontier-label span{
-      color:rgba(230,238,255,.78);
-      font-size:clamp(.32rem,.82vw,.42rem);
-      font-weight:900;
-      letter-spacing:.08em;
-      line-height:1;
-      text-transform:uppercase;
-    }
-
-    .frontier-anchor .frontier-label{
-      width:76%;
-      min-height:3.2rem;
-      background:
-        radial-gradient(circle at 50% 0%,rgba(255,255,255,.22),transparent 62%),
-        rgba(4,6,18,.55);
-    }
-
-    .frontier-anchor .frontier-label b{
-      color:var(--gold);
-      font-size:clamp(.72rem,1.7vw,1rem);
-      letter-spacing:.14em;
-    }
-
-    .frontier-anchor .frontier-label span{
-      font-size:clamp(.46rem,1vw,.62rem);
     }
 
     .lane-grid,
@@ -987,48 +837,35 @@
       }
 
       .frontier-orbit-stage{
-        min-height:34rem;
-        grid-template-rows:minmax(8.5rem,11.5rem) 1fr;
+        min-height:32rem;
+        grid-template-rows:minmax(7.75rem,10rem) 1fr;
       }
 
       .frontier-figure-eight-zone{
-        --x-left:clamp(-8.4rem,-28vw,-6rem);
-        --x-right:clamp(6rem,28vw,8.4rem);
-        --x-mid-left:clamp(-4.7rem,-15vw,-3rem);
-        --x-mid-right:clamp(3rem,15vw,4.7rem);
-        --y-up:clamp(-3.1rem,-8vw,-2rem);
-        --y-down:clamp(2rem,8vw,3.1rem);
-        --y-cross-up:clamp(-1.25rem,-4vw,-.8rem);
-        --y-cross-down:clamp(.8rem,4vw,1.25rem);
-        min-height:21rem;
+        min-height:20.5rem;
       }
 
-      .frontier-gravity{
-        width:3.4rem;
-        height:3.4rem;
+      .frontier-node{
+        width:4.35rem;
+        height:4.35rem;
       }
+
+      .frontier-node.compass{left:28%;top:18%}
+      .frontier-node.explore{left:72%;top:18%}
+      .frontier-node.laws{left:86%;top:50%}
+      .frontier-node.interactive{left:72%;top:82%}
+      .frontier-node.universe{left:50%;top:66%}
+      .frontier-node.showroom{left:28%;top:82%}
+      .frontier-node.products{left:14%;top:50%}
+      .frontier-node.gauges{left:50%;top:34%}
 
       .frontier-label{
-        width:90%;
-        min-height:2.35rem;
-        padding:.28rem .32rem;
+        min-height:2.05rem;
+        padding:.24rem .28rem;
       }
 
-      .frontier-label b{
-        font-size:.38rem;
-      }
-
-      .frontier-label span{
-        font-size:.28rem;
-      }
-
-      .frontier-anchor .frontier-label b{
-        font-size:.64rem;
-      }
-
-      .frontier-anchor .frontier-label span{
-        font-size:.42rem;
-      }
+      .frontier-label b{font-size:.35rem}
+      .frontier-label span{display:none}
 
       .lane-grid,
       .return-grid{
@@ -1037,43 +874,22 @@
     }
 
     @media (max-width:430px){
-      .frontier-orbit-stage{
-        min-height:32rem;
+      .frontier-node{
+        width:4rem;
+        height:4rem;
       }
+
+      .frontier-node.laws{left:85%;top:50%}
+      .frontier-node.products{left:15%;top:50%}
 
       .frontier-anchor{
-        width:7.35rem;
-        height:7.35rem;
-      }
-
-      .frontier-figure-eight-zone{
-        --x-left:-6.35rem;
-        --x-right:6.35rem;
-        --x-mid-left:-3.45rem;
-        --x-mid-right:3.45rem;
-        --y-up:-2.45rem;
-        --y-down:2.45rem;
-        --y-cross-up:-.95rem;
-        --y-cross-down:.95rem;
-        min-height:20rem;
+        width:6.7rem;
+        height:6.7rem;
       }
 
       .frontier-gravity{
-        width:2.85rem;
-        height:2.85rem;
-      }
-
-      .frontier-node{
-        width:4.35rem;
-        height:4.35rem;
-      }
-
-      .frontier-label{
-        min-height:2.05rem;
-      }
-
-      .frontier-label span{
-        display:none;
+        width:2.4rem;
+        height:2.4rem;
       }
     }
 
@@ -1087,37 +903,9 @@
         transition-duration:.01ms!important;
       }
 
-      .frontier-node{
+      .frontier-star-body,
+      .frontier-anchor-body{
         animation:none!important;
-      }
-
-      .frontier-figure-eight-zone{
-        display:grid;
-        place-items:center;
-      }
-
-      .frontier-orbit{
-        position:relative;
-        inset:auto;
-        display:grid;
-        grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:.8rem;
-        width:100%;
-        max-width:36rem;
-        padding:1rem;
-        pointer-events:auto;
-      }
-
-      .frontier-node{
-        position:relative;
-        left:auto;
-        top:auto;
-        transform:none!important;
-        margin:auto;
-      }
-
-      .frontier-gravity{
-        display:none;
       }
     }
   </style>
@@ -1178,9 +966,9 @@
 
       <section class="panel section" aria-labelledby="orbit-title">
         <div class="kicker">Dual-gravity figure-eight starfield</div>
-        <h2 id="orbit-title">The expansion edge moves through a dual-gravity figure-eight starfield.</h2>
+        <h2 id="orbit-title">The expansion edge holds every route star inside one visible figure-eight field.</h2>
 
-        <div class="frontier-orbit-stage" aria-label="Frontier top anchor with dual-gravity horizontal figure-eight orbital starfield">
+        <div class="frontier-orbit-stage" aria-label="Frontier top anchor with all route stars visible on a dual-gravity figure-eight field">
           <div class="frontier-anchor-zone">
             <a class="frontier-anchor" href="/frontier/" aria-label="Frontier future edge">
               <span class="frontier-anchor-body" aria-hidden="true"></span>
@@ -1192,51 +980,50 @@
           </div>
 
           <div class="frontier-figure-eight-zone">
-            <div class="frontier-guide-line" aria-hidden="true"></div>
+            <span class="frontier-loop left" aria-hidden="true"></span>
+            <span class="frontier-loop right" aria-hidden="true"></span>
             <span class="frontier-gravity left" aria-hidden="true"></span>
             <span class="frontier-gravity right" aria-hidden="true"></span>
 
-            <div class="frontier-orbit" aria-label="Primary Frontier dual-gravity horizontal figure-eight route orbit">
-              <a class="frontier-node" href="/" aria-label="Compass root">
-                <span class="frontier-star-body" aria-hidden="true"></span>
-                <span class="frontier-label"><b>Compass</b><span>Root</span></span>
-              </a>
+            <a class="frontier-node compass" href="/" aria-label="Compass root">
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Compass</b><span>Root</span></span>
+            </a>
 
-              <a class="frontier-node" href="/explore/" aria-label="Explore map">
-                <span class="frontier-star-body" aria-hidden="true"></span>
-                <span class="frontier-label"><b>Explore</b><span>Map</span></span>
-              </a>
+            <a class="frontier-node explore" href="/explore/" aria-label="Explore map">
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Explore</b><span>Map</span></span>
+            </a>
 
-              <a class="frontier-node" href="/laws/" aria-label="Laws proof">
-                <span class="frontier-star-body" aria-hidden="true"></span>
-                <span class="frontier-label"><b>Laws</b><span>Proof</span></span>
-              </a>
+            <a class="frontier-node laws" href="/laws/" aria-label="Laws proof">
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Laws</b><span>Proof</span></span>
+            </a>
 
-              <a class="frontier-node" href="/showroom/globe/" aria-label="Interactive Narrative">
-                <span class="frontier-star-body" aria-hidden="true"></span>
-                <span class="frontier-label"><b>Interactive</b><span>Narrative</span></span>
-              </a>
+            <a class="frontier-node interactive" href="/showroom/globe/" aria-label="Interactive Narrative">
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Interactive</b><span>Narrative</span></span>
+            </a>
 
-              <a class="frontier-node" href="/nine-summits/universe/" aria-label="Universe world">
-                <span class="frontier-star-body" aria-hidden="true"></span>
-                <span class="frontier-label"><b>Universe</b><span>World</span></span>
-              </a>
+            <a class="frontier-node universe" href="/nine-summits/universe/" aria-label="Universe world">
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Universe</b><span>World</span></span>
+            </a>
 
-              <a class="frontier-node" href="/showroom/" aria-label="Showroom object display">
-                <span class="frontier-star-body" aria-hidden="true"></span>
-                <span class="frontier-label"><b>Showroom</b><span>Object</span></span>
-              </a>
+            <a class="frontier-node showroom" href="/showroom/" aria-label="Showroom object display">
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Showroom</b><span>Object</span></span>
+            </a>
 
-              <a class="frontier-node" href="/products/" aria-label="Products use">
-                <span class="frontier-star-body" aria-hidden="true"></span>
-                <span class="frontier-label"><b>Products</b><span>Use</span></span>
-              </a>
+            <a class="frontier-node products" href="/products/" aria-label="Products use">
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Products</b><span>Use</span></span>
+            </a>
 
-              <a class="frontier-node" href="/gauges/" aria-label="Gauges summary">
-                <span class="frontier-star-body" aria-hidden="true"></span>
-                <span class="frontier-label"><b>Gauges</b><span>Summary</span></span>
-              </a>
-            </div>
+            <a class="frontier-node gauges" href="/gauges/" aria-label="Gauges summary">
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Gauges</b><span>Summary</span></span>
+            </a>
           </div>
         </div>
       </section>
@@ -1417,8 +1204,8 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_DUAL_GRAVITY_HORIZONTAL_FIGURE_EIGHT_HTML_JS_TNT_v7
-previous=FRONTIER_TOP_ANCHOR_HORIZONTAL_FIGURE_EIGHT_HTML_JS_TNT_v6
+FRONTIER_ALL_STARS_VISIBLE_DUAL_GRAVITY_FIGURE_EIGHT_TNT_v8
+previous=FRONTIER_DUAL_GRAVITY_HORIZONTAL_FIGURE_EIGHT_HTML_JS_TNT_v7
 route=/frontier/
 page=frontier
 renewal=true
@@ -1428,14 +1215,14 @@ frontier_anchor_position=top
 figure_eight_orbit=true
 figure_eight_orientation=horizontal
 dual_gravity_centers=true
-left_gravity_center=true
-right_gravity_center=true
+all_route_stars_visible=true
+route_stars_position_locked=true
+route_position_animation=false
+star_local_motion_only=true
 center_crossing_open=true
 primary_orbit_routes=Compass,Explore,Laws,Interactive_Narrative,Universe,Showroom,Products,Gauges
 future_lanes=Closed_Loop,Energy,Infrastructure,Lattice,Manual,Shimmer,Trajectory,Urban,Vision,Waste,Water
 labels_front_facing=true
-shared_directional_flow=true
-star_wobble_allowed=true
 solid_opaque_star_body=true
 laws_role=proof_truth_scientific_backing_boundary
 gauges_role=measurement_audit_route_status_summary
@@ -1445,11 +1232,11 @@ interactive_narrative_route=/showroom/globe/
 universe_route=/nine-summits/universe/
 showroom_role=visible_software_object_display
 products_role=community_practical_path
-visual_correction=dual_gravity_centers_added_to_horizontal_figure_eight_orbit
-mobile_law=dual_gravity_orbit_contained_no_left_right_clipping_future_lanes_preserved_below
-removed_language=single_center_orbit,tall_vertical_infinity_shape,Frontier_center_anchor_blocking_crossing,Gauges_as_Proof,Read_Proof_to_Gauges
-preserved=Frontier_identity,expansion_edge,top_anchor,figure_eight_concept,eleven_future_lanes,return_route_clarity,star_visual_language,no_generated_image,no_GraphicBox
-route_owns=frontier_public_copy,top_anchor_star,dual_gravity_centers,horizontal_figure_eight_starfield_css,primary_orbit_routes,future_lane_cards,return_route_cards,hidden_receipt
+visual_correction=all_route_stars_pinned_inside_visible_dual_gravity_figure_eight_field
+mobile_law=no_star_leaves_screen_no_star_clips_no_route_position_animation
+removed_language=single_center_orbit,tall_vertical_infinity_shape,moving_route_positions,stars_leaving_screen,stars_not_on_figure_eight,Gauges_as_Proof,Read_Proof_to_Gauges
+preserved=Frontier_identity,expansion_edge,top_anchor,dual_gravity_concept,eleven_future_lanes,return_route_clarity,star_visual_language,no_generated_image,no_GraphicBox
+route_owns=frontier_public_copy,top_anchor_star,dual_gravity_centers,all_visible_route_stars,static_figure_eight_route_positions,future_lane_cards,return_route_cards,hidden_receipt
 route_does_not_own=laws_page,gauges_logic,products_page,universe_page,interactive_narrative_route,showroom_page,generated_assets,graphic_tools
 heavy_runtime_loaded=false
 generated_image=false
@@ -1460,7 +1247,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      FRONTIER_DUAL_GRAVITY_HORIZONTAL_FIGURE_EIGHT_HTML_JS_TNT_v7 · Frontier · Dual Gravity · Horizontal Figure-Eight Starfield.
+      FRONTIER_ALL_STARS_VISIBLE_DUAL_GRAVITY_FIGURE_EIGHT_TNT_v8 · Frontier · All Route Stars Visible · Dual-Gravity Figure-Eight.
     </footer>
   </div>
 </body>

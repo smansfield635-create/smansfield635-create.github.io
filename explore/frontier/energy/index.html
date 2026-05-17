@@ -3,12 +3,13 @@
   lang="en"
   data-route="/explore/frontier/energy/"
   data-page="frontier-energy"
-  data-contract="FRONTIER_ENERGY_FUSION_POWER_ORBIT_PUBLIC_LANGUAGE_RENEWAL_TNT_v11"
-  data-previous-contract="FRONTIER_ENERGY_CRYSTAL_GEM_ORBIT_ROTATION_RETURN_PATH_SINGLE_FILE_TNT_v10"
+  data-contract="FRONTIER_ENERGY_STORY_FIRST_FUSION_READINESS_ORBIT_RENEWAL_TNT_v12"
+  data-previous-contract="FRONTIER_ENERGY_FUSION_POWER_ORBIT_PUBLIC_LANGUAGE_RENEWAL_TNT_v11"
   data-public-subject="frontier-science-fusion-power-readiness"
-  data-visual-system="crystal-orbit-visible-only"
-  data-language-rule="gems-are-visual-not-public-subject"
-  data-ordering-law="narrative-construct-first-backdoor-science-second"
+  data-visual-system="rotational-energy-pathway-orbit-visible-only"
+  data-language-rule="visual-objects-are-interface-not-public-subject"
+  data-ordering-law="story-first-learning-second-play-third-technology-underneath"
+  data-frontier-rule="narrative-construct-first-backdoor-science-second"
   data-audralia-role="frontier-energy-simulation-world"
   data-click-model="energy-pathways-anchor-to-section-return-to-orbit"
   data-animation-method="CSS-only-orbital-rotation"
@@ -24,7 +25,7 @@
   <title>Energy · Fusion Readiness Orbit · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Frontier Energy Readiness organizes fusion power, storage, safeguards, future offtake, and Audralia simulation into one navigable energy map."
+    content="Energy explores fusion readiness through Audralia’s simulation world: storage, solar hedge, plasma boundaries, advanced buffers, future offtake, safeguards, and claim discipline."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/explore/frontier/energy/">
   <meta name="theme-color" content="#02040b">
@@ -122,7 +123,7 @@
       to{transform:rotate(360deg) scale(1)}
     }
 
-    @keyframes gemBreathe{
+    @keyframes energyBreathe{
       0%,100%{filter:brightness(1.05) contrast(1.12) saturate(1.08)}
       50%{filter:brightness(1.24) contrast(1.18) saturate(1.2)}
     }
@@ -208,7 +209,7 @@
         radial-gradient(circle at 38% 18%,rgba(255,255,255,.45),transparent 28%),
         linear-gradient(145deg,rgba(92,54,13,.95),rgba(5,8,20,.98));
       box-shadow:0 0 2rem rgba(243,200,111,.25),0 1.1rem 2.6rem rgba(0,0,0,.44),inset 0 1px 0 rgba(255,255,255,.22);
-      animation:gemBreathe 6s ease-in-out infinite;
+      animation:energyBreathe 6s ease-in-out infinite;
     }
 
     .brand-mark span{
@@ -487,8 +488,8 @@
       z-index:4;
     }
 
-    .center-gem,
-    .orbit-gem{
+    .center-node,
+    .orbit-node{
       position:absolute;
       display:grid;
       place-items:center;
@@ -499,7 +500,7 @@
       isolation:isolate;
     }
 
-    .center-gem{
+    .center-node{
       left:50%;
       top:50%;
       width:clamp(9.2rem,18vw,14.8rem);
@@ -509,14 +510,14 @@
       transition:filter .2s ease;
     }
 
-    .orbit-gem{
+    .orbit-node{
       width:clamp(5.7rem,9.2vw,8.25rem);
       height:clamp(4.45rem,7.4vw,6.45rem);
       transform:translate(-50%,-50%);
       z-index:5;
     }
 
-    .gem-face{
+    .node-face{
       position:absolute;
       left:50%;
       top:50%;
@@ -528,18 +529,18 @@
       will-change:transform;
     }
 
-    .center-gem .gem-face{
+    .center-node .node-face{
       animation:none;
       transform:translate(-50%,-50%);
     }
 
-    .center-gem:hover .gem-face,
-    .orbit-gem:hover .gem-face{
+    .center-node:hover .node-face,
+    .orbit-node:hover .node-face{
       filter:brightness(1.2) saturate(1.18);
       scale:1.07;
     }
 
-    .gem-shape{
+    .node-shape{
       position:absolute;
       inset:0;
       clip-path:var(--gem);
@@ -556,10 +557,10 @@
         inset 0 -1px 0 rgba(0,0,0,.42),
         0 0 2.1rem rgba(243,200,111,.16),
         0 1rem 1.8rem rgba(0,0,0,.30);
-      animation:gemBreathe 7s ease-in-out infinite;
+      animation:energyBreathe 7s ease-in-out infinite;
     }
 
-    .gem-shape::before{
+    .node-shape::before{
       content:"";
       position:absolute;
       inset:0;
@@ -571,7 +572,7 @@
       pointer-events:none;
     }
 
-    .gem-shape::after{
+    .node-shape::after{
       content:"";
       position:absolute;
       inset:0;
@@ -583,7 +584,7 @@
       pointer-events:none;
     }
 
-    .gem-core{
+    .node-core{
       position:absolute;
       inset:19% 16%;
       clip-path:polygon(50% 0%,83% 28%,70% 100%,30% 100%,17% 28%);
@@ -595,7 +596,7 @@
       pointer-events:none;
     }
 
-    .center-gem .gem-shape{
+    .center-node .node-shape{
       border-color:rgba(243,200,111,.42);
       background:
         linear-gradient(135deg,rgba(255,255,255,.52),transparent 18%),
@@ -611,7 +612,7 @@
         0 1.2rem 2.4rem rgba(0,0,0,.36);
     }
 
-    .gem-copy{
+    .node-copy{
       position:absolute;
       left:50%;
       top:50%;
@@ -628,7 +629,7 @@
       text-shadow:0 2px 10px rgba(0,0,0,.94);
     }
 
-    .gem-copy strong{
+    .node-copy strong{
       color:rgba(255,244,216,.98);
       font-size:clamp(.60rem,1.18vw,.88rem);
       line-height:1;
@@ -636,7 +637,7 @@
       text-transform:uppercase;
     }
 
-    .gem-copy span{
+    .node-copy span{
       color:rgba(230,238,255,.84);
       font-size:clamp(.45rem,.9vw,.62rem);
       line-height:1;
@@ -645,20 +646,20 @@
       text-transform:uppercase;
     }
 
-    .center-gem .gem-copy{
+    .center-node .node-copy{
       min-width:75%;
       padding:.46rem .58rem;
       border-color:rgba(243,200,111,.24);
       background:rgba(1,4,12,.44);
     }
 
-    .center-gem .gem-copy strong{
+    .center-node .node-copy strong{
       color:var(--gold2);
       font-size:clamp(.9rem,2vw,1.48rem);
       letter-spacing:.16em;
     }
 
-    .center-gem .gem-copy span{
+    .center-node .node-copy span{
       font-size:clamp(.55rem,1.1vw,.76rem);
     }
 
@@ -675,11 +676,11 @@
     .p11{left:15.4%;top:28%}
     .p12{left:30%;top:15%}
 
-    .violet .gem-shape{background:linear-gradient(135deg,rgba(255,255,255,.48),transparent 18%),linear-gradient(50deg,transparent 0 23%,rgba(255,255,255,.28) 24% 25%,transparent 26% 100%),linear-gradient(132deg,transparent 0 39%,rgba(255,255,255,.18) 40% 41%,transparent 42% 100%),conic-gradient(from 45deg,rgba(255,255,255,.22),rgba(143,101,255,.42),rgba(243,200,111,.18),rgba(141,216,255,.18),rgba(143,101,255,.32)),linear-gradient(145deg,rgba(12,10,36,.95),rgba(2,5,15,.98))}
-    .gold .gem-shape{background:linear-gradient(135deg,rgba(255,255,255,.48),transparent 18%),linear-gradient(50deg,transparent 0 23%,rgba(255,255,255,.28) 24% 25%,transparent 26% 100%),linear-gradient(132deg,transparent 0 39%,rgba(255,255,255,.18) 40% 41%,transparent 42% 100%),conic-gradient(from 45deg,rgba(255,255,255,.22),rgba(243,200,111,.45),rgba(255,232,163,.22),rgba(36,120,255,.16),rgba(243,200,111,.30)),linear-gradient(145deg,rgba(38,24,9,.95),rgba(2,5,15,.98))}
-    .green .gem-shape{background:linear-gradient(135deg,rgba(255,255,255,.48),transparent 18%),linear-gradient(50deg,transparent 0 23%,rgba(255,255,255,.28) 24% 25%,transparent 26% 100%),linear-gradient(132deg,transparent 0 39%,rgba(255,255,255,.18) 40% 41%,transparent 42% 100%),conic-gradient(from 45deg,rgba(255,255,255,.22),rgba(143,240,195,.42),rgba(243,200,111,.17),rgba(36,120,255,.18),rgba(143,240,195,.30)),linear-gradient(145deg,rgba(7,31,25,.95),rgba(2,5,15,.98))}
-    .blue .gem-shape{background:linear-gradient(135deg,rgba(255,255,255,.48),transparent 18%),linear-gradient(50deg,transparent 0 23%,rgba(255,255,255,.28) 24% 25%,transparent 26% 100%),linear-gradient(132deg,transparent 0 39%,rgba(255,255,255,.18) 40% 41%,transparent 42% 100%),conic-gradient(from 45deg,rgba(255,255,255,.22),rgba(141,216,255,.42),rgba(243,200,111,.17),rgba(143,101,255,.18),rgba(141,216,255,.30)),linear-gradient(145deg,rgba(7,19,38,.95),rgba(2,5,15,.98))}
-    .red .gem-shape{background:linear-gradient(135deg,rgba(255,255,255,.48),transparent 18%),linear-gradient(50deg,transparent 0 23%,rgba(255,255,255,.28) 24% 25%,transparent 26% 100%),linear-gradient(132deg,transparent 0 39%,rgba(255,255,255,.18) 40% 41%,transparent 42% 100%),conic-gradient(from 45deg,rgba(255,255,255,.22),rgba(255,157,145,.42),rgba(243,200,111,.17),rgba(36,120,255,.13),rgba(255,157,145,.30)),linear-gradient(145deg,rgba(39,12,12,.95),rgba(2,5,15,.98))}
+    .violet .node-shape{background:linear-gradient(135deg,rgba(255,255,255,.48),transparent 18%),linear-gradient(50deg,transparent 0 23%,rgba(255,255,255,.28) 24% 25%,transparent 26% 100%),linear-gradient(132deg,transparent 0 39%,rgba(255,255,255,.18) 40% 41%,transparent 42% 100%),conic-gradient(from 45deg,rgba(255,255,255,.22),rgba(143,101,255,.42),rgba(243,200,111,.18),rgba(141,216,255,.18),rgba(143,101,255,.32)),linear-gradient(145deg,rgba(12,10,36,.95),rgba(2,5,15,.98))}
+    .gold .node-shape{background:linear-gradient(135deg,rgba(255,255,255,.48),transparent 18%),linear-gradient(50deg,transparent 0 23%,rgba(255,255,255,.28) 24% 25%,transparent 26% 100%),linear-gradient(132deg,transparent 0 39%,rgba(255,255,255,.18) 40% 41%,transparent 42% 100%),conic-gradient(from 45deg,rgba(255,255,255,.22),rgba(243,200,111,.45),rgba(255,232,163,.22),rgba(36,120,255,.16),rgba(243,200,111,.30)),linear-gradient(145deg,rgba(38,24,9,.95),rgba(2,5,15,.98))}
+    .green .node-shape{background:linear-gradient(135deg,rgba(255,255,255,.48),transparent 18%),linear-gradient(50deg,transparent 0 23%,rgba(255,255,255,.28) 24% 25%,transparent 26% 100%),linear-gradient(132deg,transparent 0 39%,rgba(255,255,255,.18) 40% 41%,transparent 42% 100%),conic-gradient(from 45deg,rgba(255,255,255,.22),rgba(143,240,195,.42),rgba(243,200,111,.17),rgba(36,120,255,.18),rgba(143,240,195,.30)),linear-gradient(145deg,rgba(7,31,25,.95),rgba(2,5,15,.98))}
+    .blue .node-shape{background:linear-gradient(135deg,rgba(255,255,255,.48),transparent 18%),linear-gradient(50deg,transparent 0 23%,rgba(255,255,255,.28) 24% 25%,transparent 26% 100%),linear-gradient(132deg,transparent 0 39%,rgba(255,255,255,.18) 40% 41%,transparent 42% 100%),conic-gradient(from 45deg,rgba(255,255,255,.22),rgba(141,216,255,.42),rgba(243,200,111,.17),rgba(143,101,255,.18),rgba(141,216,255,.30)),linear-gradient(145deg,rgba(7,19,38,.95),rgba(2,5,15,.98))}
+    .red .node-shape{background:linear-gradient(135deg,rgba(255,255,255,.48),transparent 18%),linear-gradient(50deg,transparent 0 23%,rgba(255,255,255,.28) 24% 25%,transparent 26% 100%),linear-gradient(132deg,transparent 0 39%,rgba(255,255,255,.18) 40% 41%,transparent 42% 100%),conic-gradient(from 45deg,rgba(255,255,255,.22),rgba(255,157,145,.42),rgba(243,200,111,.17),rgba(36,120,255,.13),rgba(255,157,145,.30)),linear-gradient(145deg,rgba(39,12,12,.95),rgba(2,5,15,.98))}
 
     .section{
       margin-top:.9rem;
@@ -895,7 +896,7 @@
     }
 
     @media (max-width:1100px){
-      .orbit-gem{
+      .orbit-node{
         width:clamp(5rem,9vw,7.4rem);
         height:clamp(4rem,7.2vw,5.95rem);
       }
@@ -920,13 +921,13 @@
       .button{width:100%}
       .orbit-board{padding:.7rem;min-height:34.5rem}
       .orbit-stage{height:33.5rem;border-radius:1.45rem}
-      .center-gem{width:7.5rem;height:5.25rem}
-      .orbit-gem{width:5rem;height:4rem}
-      .gem-copy{padding:.26rem}
-      .gem-copy strong{font-size:.49rem;letter-spacing:.07em}
-      .gem-copy span{font-size:.36rem;letter-spacing:.06em}
-      .center-gem .gem-copy strong{font-size:.72rem}
-      .center-gem .gem-copy span{font-size:.45rem}
+      .center-node{width:7.5rem;height:5.25rem}
+      .orbit-node{width:5rem;height:4rem}
+      .node-copy{padding:.26rem}
+      .node-copy strong{font-size:.49rem;letter-spacing:.07em}
+      .node-copy span{font-size:.36rem;letter-spacing:.06em}
+      .center-node .node-copy strong{font-size:.72rem}
+      .center-node .node-copy span{font-size:.45rem}
 
       .p1{left:50%;top:10%}
       .p2{left:70%;top:15%}
@@ -957,11 +958,11 @@
 
       body::after,
       .brand-mark,
-      .gem-shape,
+      .node-shape,
       .orbit-stage::after,
       .orbit-signal::before,
       .orbit-track,
-      .gem-face{
+      .node-face{
         animation:none!important;
       }
     }
@@ -999,20 +1000,20 @@
 
         <h1 id="page-title">Explore the future of fusion readiness.</h1>
 
-        <h2>Twelve frontier energy pathways orbit one readiness anchor.</h2>
+        <h2>Story first. Science second. Readiness before deployment.</h2>
 
         <p class="lead">
-          Frontier Energy Readiness organizes fusion power, storage, safeguards, future offtake, and Audralia simulation into one navigable energy map.
+          Energy begins inside Audralia’s simulation world, then opens into fusion readiness, storage infrastructure, solar hedge planning, plasma boundaries, community safeguards, and future clean-power pathways.
         </p>
 
         <div class="principle">
-          Do not sell fusion. Sell readiness for the energy world that fusion may eventually create.
+          Fusion is the horizon. Readiness is the deliverable. Audralia is the simulation world.
         </div>
 
         <div class="actions">
           <a class="button gold" href="#energy-orbit">Open Energy Orbit</a>
           <a class="button violet" href="#audralia-simulation">Open Audralia Simulation</a>
-          <a class="button blue" href="#science">Open Science Boundary</a>
+          <a class="button blue" href="#science-boundary">Open Science Boundary</a>
         </div>
       </section>
 
@@ -1020,9 +1021,9 @@
         <div class="mini-nav-inner">
           <a class="primary" href="#energy-orbit">Energy Orbit</a>
           <a href="#audralia-simulation">Audralia</a>
-          <a href="#products">Products</a>
-          <a href="#community">Community</a>
-          <a href="#science">Science</a>
+          <a href="#fusion-readiness">Fusion</a>
+          <a href="#storage-bridge">Storage</a>
+          <a href="#science-boundary">Science</a>
           <a href="#kill-conditions">Kill Conditions</a>
         </div>
       </nav>
@@ -1031,17 +1032,17 @@
         <div class="kicker">Energy Pathway Map</div>
         <h2 id="orbit-title">Twelve frontier energy pathways orbit one readiness anchor.</h2>
         <p class="lead">
-          Each pathway opens a focused reader lane: Audralia Simulation, Products, Community, Science, Commercial Now, Bridge Infrastructure, Frontier Readiness, Storage Fields, Readiness Index, Advanced Buffer, Future Offtake, and Kill Conditions.
+          Each pathway opens a focused reader lane: Audralia Simulation, Fusion Readiness, Storage Bridge, Solar Hedge, Plasma Boundary, Q Boundary, Commercial Now, Bridge Infrastructure, Storage Fields, Advanced Buffer, Future Offtake, and Kill Conditions.
         </p>
 
         <div class="orbit-stage" aria-label="Rotating frontier energy pathway map">
           <div class="orbit-signal" aria-hidden="true"></div>
 
-          <a class="center-gem" href="#final-lock" aria-label="Energy Frontier Readiness final lock">
-            <span class="gem-face">
-              <span class="gem-shape" aria-hidden="true"></span>
-              <span class="gem-core" aria-hidden="true"></span>
-              <span class="gem-copy">
+          <a class="center-node" href="#final-lock" aria-label="Energy readiness final lock">
+            <span class="node-face">
+              <span class="node-shape" aria-hidden="true"></span>
+              <span class="node-core" aria-hidden="true"></span>
+              <span class="node-copy">
                 <strong>Energy</strong>
                 <span>Readiness Anchor</span>
               </span>
@@ -1049,132 +1050,132 @@
           </a>
 
           <div class="orbit-track">
-            <a class="orbit-gem violet p1" href="#audralia-simulation">
-              <span class="gem-face">
-                <span class="gem-shape" aria-hidden="true"></span>
-                <span class="gem-core" aria-hidden="true"></span>
-                <span class="gem-copy">
+            <a class="orbit-node violet p1" href="#audralia-simulation">
+              <span class="node-face">
+                <span class="node-shape" aria-hidden="true"></span>
+                <span class="node-core" aria-hidden="true"></span>
+                <span class="node-copy">
                   <strong>Audralia</strong>
                   <span>Simulation</span>
                 </span>
               </span>
             </a>
 
-            <a class="orbit-gem gold p2" href="#products">
-              <span class="gem-face">
-                <span class="gem-shape" aria-hidden="true"></span>
-                <span class="gem-core" aria-hidden="true"></span>
-                <span class="gem-copy">
-                  <strong>Products</strong>
-                  <span>Act Now</span>
+            <a class="orbit-node blue p2" href="#fusion-readiness">
+              <span class="node-face">
+                <span class="node-shape" aria-hidden="true"></span>
+                <span class="node-core" aria-hidden="true"></span>
+                <span class="node-copy">
+                  <strong>Fusion</strong>
+                  <span>Readiness</span>
                 </span>
               </span>
             </a>
 
-            <a class="orbit-gem green p3" href="#community">
-              <span class="gem-face">
-                <span class="gem-shape" aria-hidden="true"></span>
-                <span class="gem-core" aria-hidden="true"></span>
-                <span class="gem-copy">
-                  <strong>Community</strong>
-                  <span>Safeguards</span>
+            <a class="orbit-node green p3" href="#storage-bridge">
+              <span class="node-face">
+                <span class="node-shape" aria-hidden="true"></span>
+                <span class="node-core" aria-hidden="true"></span>
+                <span class="node-copy">
+                  <strong>Storage</strong>
+                  <span>Bridge</span>
                 </span>
               </span>
             </a>
 
-            <a class="orbit-gem blue p4" href="#science">
-              <span class="gem-face">
-                <span class="gem-shape" aria-hidden="true"></span>
-                <span class="gem-core" aria-hidden="true"></span>
-                <span class="gem-copy">
-                  <strong>Science</strong>
+            <a class="orbit-node gold p4" href="#solar-hedge">
+              <span class="node-face">
+                <span class="node-shape" aria-hidden="true"></span>
+                <span class="node-core" aria-hidden="true"></span>
+                <span class="node-copy">
+                  <strong>Solar</strong>
+                  <span>Hedge</span>
+                </span>
+              </span>
+            </a>
+
+            <a class="orbit-node blue p5" href="#plasma-boundary">
+              <span class="node-face">
+                <span class="node-shape" aria-hidden="true"></span>
+                <span class="node-core" aria-hidden="true"></span>
+                <span class="node-copy">
+                  <strong>Plasma</strong>
                   <span>Boundary</span>
                 </span>
               </span>
             </a>
 
-            <a class="orbit-gem gold p5" href="#commercial-now">
-              <span class="gem-face">
-                <span class="gem-shape" aria-hidden="true"></span>
-                <span class="gem-core" aria-hidden="true"></span>
-                <span class="gem-copy">
+            <a class="orbit-node blue p6" href="#q-boundary">
+              <span class="node-face">
+                <span class="node-shape" aria-hidden="true"></span>
+                <span class="node-core" aria-hidden="true"></span>
+                <span class="node-copy">
+                  <strong>Q</strong>
+                  <span>Boundary</span>
+                </span>
+              </span>
+            </a>
+
+            <a class="orbit-node gold p7" href="#commercial-now">
+              <span class="node-face">
+                <span class="node-shape" aria-hidden="true"></span>
+                <span class="node-core" aria-hidden="true"></span>
+                <span class="node-copy">
                   <strong>Commercial</strong>
                   <span>Now</span>
                 </span>
               </span>
             </a>
 
-            <a class="orbit-gem gold p6" href="#bridge-infrastructure">
-              <span class="gem-face">
-                <span class="gem-shape" aria-hidden="true"></span>
-                <span class="gem-core" aria-hidden="true"></span>
-                <span class="gem-copy">
+            <a class="orbit-node gold p8" href="#bridge-infrastructure">
+              <span class="node-face">
+                <span class="node-shape" aria-hidden="true"></span>
+                <span class="node-core" aria-hidden="true"></span>
+                <span class="node-copy">
                   <strong>Bridge</strong>
                   <span>Infrastructure</span>
                 </span>
               </span>
             </a>
 
-            <a class="orbit-gem violet p7" href="#frontier-readiness">
-              <span class="gem-face">
-                <span class="gem-shape" aria-hidden="true"></span>
-                <span class="gem-core" aria-hidden="true"></span>
-                <span class="gem-copy">
-                  <strong>Frontier</strong>
-                  <span>Readiness</span>
-                </span>
-              </span>
-            </a>
-
-            <a class="orbit-gem green p8" href="#storage-fields">
-              <span class="gem-face">
-                <span class="gem-shape" aria-hidden="true"></span>
-                <span class="gem-core" aria-hidden="true"></span>
-                <span class="gem-copy">
+            <a class="orbit-node green p9" href="#storage-fields">
+              <span class="node-face">
+                <span class="node-shape" aria-hidden="true"></span>
+                <span class="node-core" aria-hidden="true"></span>
+                <span class="node-copy">
                   <strong>Storage</strong>
                   <span>Fields</span>
                 </span>
               </span>
             </a>
 
-            <a class="orbit-gem gold p9" href="#readiness-index">
-              <span class="gem-face">
-                <span class="gem-shape" aria-hidden="true"></span>
-                <span class="gem-core" aria-hidden="true"></span>
-                <span class="gem-copy">
-                  <strong>Readiness</strong>
-                  <span>Index</span>
-                </span>
-              </span>
-            </a>
-
-            <a class="orbit-gem green p10" href="#advanced-buffer">
-              <span class="gem-face">
-                <span class="gem-shape" aria-hidden="true"></span>
-                <span class="gem-core" aria-hidden="true"></span>
-                <span class="gem-copy">
+            <a class="orbit-node green p10" href="#advanced-buffer">
+              <span class="node-face">
+                <span class="node-shape" aria-hidden="true"></span>
+                <span class="node-core" aria-hidden="true"></span>
+                <span class="node-copy">
                   <strong>Advanced</strong>
                   <span>Buffer</span>
                 </span>
               </span>
             </a>
 
-            <a class="orbit-gem blue p11" href="#future-offtake">
-              <span class="gem-face">
-                <span class="gem-shape" aria-hidden="true"></span>
-                <span class="gem-core" aria-hidden="true"></span>
-                <span class="gem-copy">
+            <a class="orbit-node violet p11" href="#future-offtake">
+              <span class="node-face">
+                <span class="node-shape" aria-hidden="true"></span>
+                <span class="node-core" aria-hidden="true"></span>
+                <span class="node-copy">
                   <strong>Future</strong>
                   <span>Offtake</span>
                 </span>
               </span>
             </a>
 
-            <a class="orbit-gem red p12" href="#kill-conditions">
-              <span class="gem-face">
-                <span class="gem-shape" aria-hidden="true"></span>
-                <span class="gem-core" aria-hidden="true"></span>
-                <span class="gem-copy">
+            <a class="orbit-node red p12" href="#kill-conditions">
+              <span class="node-face">
+                <span class="node-shape" aria-hidden="true"></span>
+                <span class="node-core" aria-hidden="true"></span>
+                <span class="node-copy">
                   <strong>Kill</strong>
                   <span>Conditions</span>
                 </span>
@@ -1193,21 +1194,21 @@
 
         <div class="layer-grid">
           <article class="layer-card">
-            <b>Model</b>
-            <strong>Bounded possibility.</strong>
-            <span>Audralia may model advanced buffers, settlement pressure, storage fields, and infrastructure choices.</span>
+            <b>Story Function</b>
+            <strong>Audralia lets the energy future become visible.</strong>
+            <span>The world can show what energy scarcity, reserve storage, infrastructure choices, and future power horizons feel like inside a living system.</span>
           </article>
 
           <article class="layer-card">
-            <b>Educate</b>
-            <strong>Future-world understanding.</strong>
-            <span>Energy deserts become storage fields. Rural land becomes clean-energy reserve ground.</span>
+            <b>Learning Function</b>
+            <strong>The simulation teaches before it claims.</strong>
+            <span>Visitors can learn why fusion readiness requires storage, safety, site control, load discipline, and future offtake planning.</span>
           </article>
 
           <article class="layer-card">
-            <b>Boundary</b>
+            <b>Boundary Function</b>
             <strong>Simulation is not proof.</strong>
-            <span>Audralia cannot be treated as deployment proof, commercial validation, or a substitute for measured evidence.</span>
+            <span>Audralia may dramatize, model, and teach. It may not validate commercial fusion or replace measured evidence.</span>
           </article>
         </div>
 
@@ -1224,44 +1225,43 @@
         </div>
       </section>
 
-      <section class="panel section" id="products" aria-labelledby="products-title">
+      <section class="panel section" id="fusion-readiness" aria-labelledby="fusion-title">
         <div class="section-head">
-          <div class="kicker">Products</div>
-          <h2 id="products-title">What can be acted on now?</h2>
-          <p>Products organize what can be packaged, assessed, advised, or sold now without pretending fusion power is commercially available today.</p>
+          <div class="kicker">Fusion Readiness</div>
+          <h2 id="fusion-title">Fusion is the horizon. Readiness is the deliverable.</h2>
+          <p>Fusion power is a long-horizon frontier. The work now is preparing the load, storage, contracts, site control, infrastructure, and public language so future adoption can be approached without false claims.</p>
         </div>
 
         <div class="layer-grid">
-          <article class="layer-card" id="commercial-now">
-            <b>Commercial Now</b>
-            <strong>Energy risk control.</strong>
-            <span>Energy procurement, usage aggregation, bill auditing, future-dated agreements, price protection, storage review, and solar as hedge.</span>
+          <article class="layer-card">
+            <b>Science</b>
+            <strong>Fusion is real.</strong>
+            <span>Fusion releases energy when light atomic nuclei combine into heavier nuclei, but commercial plant-level electricity is not procurement-ready.</span>
           </article>
 
-          <article class="layer-card" id="bridge-infrastructure">
-            <b>Bridge Infrastructure</b>
-            <strong>Storage and readiness.</strong>
-            <span>Battery storage, peak shaving, backup power, interconnection, site control, agricultural storage fields, and infrastructure readiness.</span>
+          <article class="layer-card">
+            <b>Readiness</b>
+            <strong>Preparation can begin now.</strong>
+            <span>High-load businesses can prepare through load-profile review, storage strategy, infrastructure planning, and future clean-power optionality.</span>
           </article>
 
-          <article class="layer-card" id="frontier-readiness">
-            <b>Frontier Readiness</b>
-            <strong>Fusion-readiness preparation.</strong>
-            <span>Fusion-readiness assessment, advanced power offtake readiness, long-duration storage review, pulsed-power buffer planning, and technology watch brief.</span>
+          <article class="layer-card">
+            <b>Boundary</b>
+            <strong>Do not sell fusion.</strong>
+            <span>Fusion is not a sales product today. The sellable category is readiness for the energy world fusion may eventually create.</span>
           </article>
         </div>
 
         <details class="layer">
-          <summary>Open Products detail</summary>
+          <summary>Open Fusion Readiness detail</summary>
           <div class="detail-body">
-            <p>Products answer the business question: what can be packaged, assessed, advised, or sold now without claiming commercial fusion power exists today.</p>
+            <p>Fusion-readiness assessment may include load profile coherence, grid interconnection strength, storage buffer capacity, contract timing control, site ownership control, and future offtake optionality.</p>
             <div class="chip-wall">
-              <span class="tag gold">Commercial Now</span>
-              <span class="tag gold">Bridge Infrastructure</span>
-              <span class="tag violet">Frontier Readiness</span>
-              <span class="tag green">Sell Readiness</span>
+              <span class="tag blue">Fusion Horizon</span>
+              <span class="tag green">Readiness Category</span>
+              <span class="tag gold">High-Load Businesses</span>
+              <span class="tag violet">Future Offtake</span>
             </div>
-            <div class="boundary">Products sell readiness, not fusion power.</div>
           </div>
         </details>
 
@@ -1270,35 +1270,243 @@
         </div>
       </section>
 
-      <section class="panel section" id="community" aria-labelledby="community-title">
+      <section class="panel section" id="storage-bridge" aria-labelledby="storage-title">
         <div class="section-head">
-          <div class="kicker">Community</div>
-          <h2 id="community-title">Can this be safe, clean, and locally trustworthy?</h2>
-          <p>Community handles farmland battery storage, rural resilience, storage safeguards, fire planning, containment, drainage, spacing, maintenance, emergency response, and public trust.</p>
+          <div class="kicker">Storage Bridge</div>
+          <h2 id="storage-title">Storage is the bridge between today’s grid and tomorrow’s advanced power.</h2>
+          <p>Vehicles, buildings, sites, and communities do not need high-energy generation at the endpoint. They need stored potential, controlled release, and infrastructure that keeps extreme operating regimes upstream.</p>
         </div>
 
         <div class="layer-grid">
-          <article class="layer-card" id="storage-fields">
-            <b>Storage Fields</b>
-            <strong>Agricultural Energy Storage Fields.</strong>
-            <span>Midstream battery storage and grid-support infrastructure on suitable rural or agricultural sites.</span>
+          <article class="layer-card">
+            <b>Stored Potential</b>
+            <strong>Practical endpoints need storage.</strong>
+            <span>Batteries, fuels, thermal stores, mechanical stores, and grid-connected storage systems become the usable mobility layer.</span>
           </article>
 
           <article class="layer-card">
-            <b>Resilience</b>
-            <strong>Reserve ground.</strong>
-            <span>Storage can support backup power, peak-demand relief, emergency readiness, and local continuity.</span>
+            <b>Separation</b>
+            <strong>High-energy systems stay upstream.</strong>
+            <span>Fusion, plasma discharge hubs, and extreme thermal regimes belong in hardened infrastructure, not in consumer endpoints.</span>
           </article>
 
           <article class="layer-card">
-            <b>Safeguards</b>
-            <strong>Safe must be calculated.</strong>
-            <span>Battery chemistry, spacing, containment, thermal monitoring, fire protection, drainage, security, and emergency response.</span>
+            <b>Bridge Term</b>
+            <strong>Storage prepares the future.</strong>
+            <span>Storage can reduce volatility, buffer critical loads, support resilience, and prepare sites for advanced clean-power markets.</span>
           </article>
         </div>
 
         <details class="layer">
-          <summary>Open community claim boundary</summary>
+          <summary>Open storage bridge detail</summary>
+          <div class="detail-body">
+            <p>The correct stack is upstream generation → grid and infrastructure → charging, fueling, or storage → controlled endpoint release.</p>
+            <div class="boundary">No stored potential, no practical endpoint use.</div>
+          </div>
+        </details>
+
+        <div class="section-return">
+          <a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a>
+        </div>
+      </section>
+
+      <section class="panel section" id="solar-hedge" aria-labelledby="solar-title">
+        <div class="section-head">
+          <div class="kicker">Solar Hedge</div>
+          <h2 id="solar-title">Solar supports the pathway. It does not become fusion.</h2>
+          <p>Solar can support auxiliary power, charging input, low-emission R&D environments, and bridge infrastructure. It does not solve fusion confinement, fuel-cycle closure, thermal extraction, or plant-level net electricity.</p>
+        </div>
+
+        <div class="layer-grid">
+          <article class="layer-card">
+            <b>Near Term</b>
+            <strong>Solar can hedge exposure.</strong>
+            <span>Where ownership and site conditions allow, solar can help reduce energy volatility and support storage strategy.</span>
+          </article>
+
+          <article class="layer-card">
+            <b>Bridge Term</b>
+            <strong>Solar can support infrastructure.</strong>
+            <span>Solar can feed batteries, support low-emission operations, and reduce certain load pressures.</span>
+          </article>
+
+          <article class="layer-card">
+            <b>Boundary</b>
+            <strong>Solar is not the fusion solution.</strong>
+            <span>Solar does not directly convert into commercial fusion power. It supports the stack; it does not close the fusion loop.</span>
+          </article>
+        </div>
+
+        <div class="section-return">
+          <a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a>
+        </div>
+      </section>
+
+      <section class="panel section" id="plasma-boundary" aria-labelledby="plasma-title">
+        <div class="section-head">
+          <div class="kicker">Plasma Boundary</div>
+          <h2 id="plasma-title">Plasma is an operating state, not stored fuel.</h2>
+          <p>Plasma is a high-energy operating regime used in controlled fusion research and industrial processes. It is not a passive storage medium, consumer endpoint, or direct replacement for batteries.</p>
+        </div>
+
+        <div class="layer-grid">
+          <article class="layer-card">
+            <b>Correct Role</b>
+            <strong>Plasma is an operating medium.</strong>
+            <span>Plasma can function as a controlled discharge interface, process tool, heat regime, or fusion research medium.</span>
+          </article>
+
+          <article class="layer-card">
+            <b>Invalid Role</b>
+            <strong>Plasma is not storage.</strong>
+            <span>Public language must not imply plasma is stored fuel or a validated commercial battery replacement.</span>
+          </article>
+
+          <article class="layer-card">
+            <b>Valid Path</b>
+            <strong>Stored energy → controlled operation.</strong>
+            <span>The valid pathway is stored energy, controlled discharge, plasma operating state, useful output, recovery, and reset.</span>
+          </article>
+        </div>
+
+        <div class="section-return">
+          <a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a>
+        </div>
+      </section>
+
+      <section class="panel section" id="q-boundary" aria-labelledby="q-title">
+        <div class="section-head">
+          <div class="kicker">Q Boundary</div>
+          <h2 id="q-title">Target gain, plasma gain, and plant gain are not the same claim.</h2>
+          <p>Commercial viability requires plant-level net electricity after total facility inputs, losses, reset costs, maintenance, conversion, and reliability burdens.</p>
+        </div>
+
+        <div class="layer-grid">
+          <article class="layer-card">
+            <b>Q_target</b>
+            <strong>Target gain.</strong>
+            <span>Fusion energy from the target divided by energy delivered to the target.</span>
+          </article>
+
+          <article class="layer-card">
+            <b>Q_plasma</b>
+            <strong>Plasma gain.</strong>
+            <span>Fusion thermal power divided by external plasma heating power.</span>
+          </article>
+
+          <article class="layer-card">
+            <b>Q_plant</b>
+            <strong>Plant gain.</strong>
+            <span>Net electric output divided by total facility energy input.</span>
+          </article>
+        </div>
+
+        <details class="layer">
+          <summary>Open Q Boundary detail</summary>
+          <div class="detail-body">
+            <p>Commercial fusion requires sustainable plant-level output, not just a successful target or plasma gain event. The full system must close the loop repeatedly under load.</p>
+            <div class="boundary">Loop condition: useful output must exceed total input, losses, reset costs, maintenance, conversion costs, and reliability burdens.</div>
+          </div>
+        </details>
+
+        <div class="section-return">
+          <a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a>
+        </div>
+      </section>
+
+      <section class="panel section" id="commercial-now" aria-labelledby="commercial-title">
+        <div class="section-head">
+          <div class="kicker">Commercial Now</div>
+          <h2 id="commercial-title">Commercial work starts with energy governance, not fusion sales.</h2>
+          <p>Revenue can begin through real energy risk control: procurement, aggregation, bill auditing, future-dated agreements, price protection, storage review, and solar hedge planning.</p>
+        </div>
+
+        <div class="layer-grid">
+          <article class="layer-card">
+            <b>Buyer</b>
+            <strong>CFO, COO, Treasury, Energy Procurement.</strong>
+            <span>The practical buyer needs cost control, risk reduction, timing discipline, and continuity planning.</span>
+          </article>
+
+          <article class="layer-card">
+            <b>Deliverable</b>
+            <strong>Energy risk control.</strong>
+            <span>Audit usage, review contracts, aggregate demand, evaluate storage, and protect against volatility.</span>
+          </article>
+
+          <article class="layer-card">
+            <b>Status</b>
+            <strong>Sellable now.</strong>
+            <span>This lane is present-tense advisory and procurement support, not future fusion procurement.</span>
+          </article>
+        </div>
+
+        <div class="section-return">
+          <a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a>
+        </div>
+      </section>
+
+      <section class="panel section" id="bridge-infrastructure" aria-labelledby="bridge-title">
+        <div class="section-head">
+          <div class="kicker">Bridge Infrastructure</div>
+          <h2 id="bridge-title">Bridge infrastructure prepares the site before the market arrives.</h2>
+          <p>Battery storage, backup power, peak shaving, interconnection review, site control, load-shape analysis, and agricultural storage fields prepare high-load sites for future clean-power markets.</p>
+        </div>
+
+        <div class="layer-grid">
+          <article class="layer-card">
+            <b>Site Control</b>
+            <strong>Ownership and placement matter.</strong>
+            <span>Future readiness depends on where infrastructure can safely and legally be placed.</span>
+          </article>
+
+          <article class="layer-card">
+            <b>Interconnection</b>
+            <strong>The grid connection becomes strategic.</strong>
+            <span>Advanced energy planning depends on load shape, demand charges, interconnection strength, and local constraints.</span>
+          </article>
+
+          <article class="layer-card">
+            <b>Storage Review</b>
+            <strong>Buffers prepare adoption.</strong>
+            <span>Storage can support peak shaving, backup power, continuity, and future high-intensity load readiness.</span>
+          </article>
+        </div>
+
+        <div class="section-return">
+          <a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a>
+        </div>
+      </section>
+
+      <section class="panel section" id="storage-fields" aria-labelledby="fields-title">
+        <div class="section-head">
+          <div class="kicker">Storage Fields</div>
+          <h2 id="fields-title">Agricultural Energy Storage Fields belong in the bridge layer.</h2>
+          <p>Farmland and rural sites may support battery storage and grid-support infrastructure when safeguards, permitting, spacing, containment, drainage, monitoring, and emergency response are properly calculated.</p>
+        </div>
+
+        <div class="layer-grid">
+          <article class="layer-card">
+            <b>Community Use</b>
+            <strong>Reserve ground for resilience.</strong>
+            <span>Storage fields can support backup power, local continuity, demand relief, and rural energy resilience.</span>
+          </article>
+
+          <article class="layer-card">
+            <b>Safety Use</b>
+            <strong>Clean and safe must be engineered.</strong>
+            <span>Battery chemistry, spacing, fire planning, thermal monitoring, drainage, security, and maintenance are part of the claim.</span>
+          </article>
+
+          <article class="layer-card">
+            <b>Boundary</b>
+            <strong>No reactor farms.</strong>
+            <span>Storage fields are not fusion farms, plasma farms, reactor farms, or risk-free energy sites.</span>
+          </article>
+        </div>
+
+        <details class="layer">
+          <summary>Open Storage Fields claim boundary</summary>
           <div class="detail-body">
             <ul>
               <li>No fusion farms.</li>
@@ -1316,58 +1524,96 @@
         </div>
       </section>
 
-      <section class="panel section" id="science" aria-labelledby="science-title">
+      <section class="panel section" id="advanced-buffer" aria-labelledby="buffer-title">
         <div class="section-head">
-          <div class="kicker">Science</div>
-          <h2 id="science-title">What is true, what is not ready, and what must not be claimed?</h2>
-          <p>Science preserves the proof boundary beneath the narrative world and product catalog.</p>
+          <div class="kicker">Advanced Buffer</div>
+          <h2 id="buffer-title">Advanced energy buffering turns volatility into a planning object.</h2>
+          <p>The Advanced Energy Buffer Model evaluates critical load, outage tolerance, demand charges, interconnection limits, backup duration, and future pulsed-load readiness.</p>
         </div>
 
         <div class="layer-grid">
           <article class="layer-card">
-            <b>Fusion</b>
+            <b>Inputs</b>
+            <strong>Critical load and peak exposure.</strong>
+            <span>Model critical load, peak demand, outage tolerance, demand charges, interconnection limits, and backup requirements.</span>
+          </article>
+
+          <article class="layer-card">
+            <b>Outputs</b>
+            <strong>Storage pathway classification.</strong>
+            <span>Battery-only, battery plus solar hedge, generator bridge, long-duration storage candidate, or future pulsed-power candidate.</span>
+          </article>
+
+          <article class="layer-card">
+            <b>Language</b>
+            <strong>Use verified terms.</strong>
+            <span>Use advanced energy buffer or pulsed-power readiness. Do not claim a validated plasma battery product.</span>
+          </article>
+        </div>
+
+        <div class="section-return">
+          <a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a>
+        </div>
+      </section>
+
+      <section class="panel section" id="future-offtake" aria-labelledby="offtake-title">
+        <div class="section-head">
+          <div class="kicker">Future Offtake</div>
+          <h2 id="offtake-title">Future clean-power markets will favor prepared sites.</h2>
+          <p>The Future Offtake Readiness Map evaluates whether a company may eventually contract for advanced clean baseload power or frontier energy infrastructure.</p>
+        </div>
+
+        <div class="layer-grid">
+          <article class="layer-card">
+            <b>Inputs</b>
+            <strong>Load, credit, market, and site stability.</strong>
+            <span>Evaluate load consistency, creditworthiness, contract horizon, jurisdiction, site stability, risk appetite, and governance maturity.</span>
+          </article>
+
+          <article class="layer-card">
+            <b>Outputs</b>
+            <strong>Offtake readiness categories.</strong>
+            <span>Short-term procurement only, forward agreement candidate, clean baseload candidate, or frontier offtake candidate.</span>
+          </article>
+
+          <article class="layer-card">
+            <b>Boundary</b>
+            <strong>Future readiness is not procurement today.</strong>
+            <span>This pathway prepares optionality. It does not claim fusion-generated electricity is currently available to buy.</span>
+          </article>
+        </div>
+
+        <div class="section-return">
+          <a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a>
+        </div>
+      </section>
+
+      <section class="panel section" id="science-boundary" aria-labelledby="science-title">
+        <div class="section-head">
+          <div class="kicker">Science Boundary</div>
+          <h2 id="science-title">What is true, what is not ready, and what must not be claimed?</h2>
+          <p>Science preserves the proof boundary beneath the narrative world and energy map.</p>
+        </div>
+
+        <div class="layer-grid">
+          <article class="layer-card">
+            <b>True</b>
             <strong>Fusion is real.</strong>
             <span>Controlled fusion requires plasma. Plasma must be heated, confined, stabilized, and sustained.</span>
           </article>
 
           <article class="layer-card">
-            <b>Commercial Status</b>
-            <strong>Not procurement-ready.</strong>
-            <span>Commercial fusion electricity is not procurement-ready. Plant-level net electricity has not yet been achieved.</span>
+            <b>Not Ready</b>
+            <strong>Commercial plant-level electricity is not procurement-ready.</strong>
+            <span>Laboratory progress does not equal commercial plant gain or sellable baseload power.</span>
           </article>
 
           <article class="layer-card">
-            <b>Readiness</b>
-            <strong>Preparation is valid now.</strong>
+            <b>Valid Now</b>
+            <strong>Readiness is the lawful category.</strong>
             <span>Solar is a hedge. Storage is a bridge. Fusion is frontier readiness.</span>
           </article>
         </div>
-
-        <details class="layer">
-          <summary>Open math boundary</summary>
-          <div class="detail-body">
-            <div class="layer-grid">
-              <article class="layer-card">
-                <b>Q_target</b>
-                <strong>Target gain.</strong>
-                <span>Fusion energy from target divided by energy delivered to target.</span>
-              </article>
-
-              <article class="layer-card">
-                <b>Q_plasma</b>
-                <strong>Plasma gain.</strong>
-                <span>Fusion thermal power divided by external plasma heating power.</span>
-              </article>
-
-              <article class="layer-card">
-                <b>Q_plant</b>
-                <strong>Plant gain.</strong>
-                <span>Net electric output divided by total facility energy input.</span>
-              </article>
-            </div>
-            <div class="boundary">Q_target, Q_plasma, and Q_plant are separate. Commercial viability requires sustainable Q_plant greater than 1 after total facility inputs, losses, reset costs, maintenance, conversion, and reliability burdens.</div>
-          </div>
-        </details>
 
         <details class="layer">
           <summary>Open forbidden science claims</summary>
@@ -1380,64 +1626,6 @@
               <li>No unlimited power claim.</li>
               <li>No Audralia-as-proof claim.</li>
             </ul>
-          </div>
-        </details>
-
-        <div class="section-return">
-          <a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a>
-        </div>
-      </section>
-
-      <section class="panel section" id="readiness-index" aria-labelledby="objects-title">
-        <div class="section-head">
-          <div class="kicker">Readiness Objects</div>
-          <h2 id="objects-title">Three practical products support the energy map.</h2>
-          <p>These are the bridge between Audralia Simulation, Products, Community, and Science.</p>
-        </div>
-
-        <div class="layer-grid">
-          <article class="layer-card">
-            <b>Object 1</b>
-            <strong>Frontier Energy Readiness Index.</strong>
-            <span>Measures whether a high-load business is structurally prepared for future advanced-energy adoption.</span>
-            <div class="chip-wall">
-              <span class="tag">Not Ready</span>
-              <span class="tag">Partially Ready</span>
-              <span class="tag green">Infrastructure-Ready</span>
-              <span class="tag violet">Frontier-Ready</span>
-            </div>
-          </article>
-
-          <article class="layer-card" id="advanced-buffer">
-            <b>Object 2</b>
-            <strong>Advanced Energy Buffer Model.</strong>
-            <span>Evaluates critical load, outage tolerance, demand charges, interconnection limits, and pulsed-load readiness.</span>
-            <div class="chip-wall">
-              <span class="tag">Battery-Only</span>
-              <span class="tag">Solar Hedge</span>
-              <span class="tag">Generator Bridge</span>
-              <span class="tag violet">Pulsed-Power</span>
-            </div>
-          </article>
-
-          <article class="layer-card" id="future-offtake">
-            <b>Object 3</b>
-            <strong>Future Offtake Readiness Map.</strong>
-            <span>Evaluates whether a company may eventually contract for advanced clean baseload power or frontier energy infrastructure.</span>
-            <div class="chip-wall">
-              <span class="tag">Short-Term</span>
-              <span class="tag">Forward Agreement</span>
-              <span class="tag green">Clean Baseload</span>
-              <span class="tag violet">Frontier Offtake</span>
-            </div>
-          </article>
-        </div>
-
-        <details class="layer">
-          <summary>Open Readiness Objects detail</summary>
-          <div class="detail-body">
-            <p>The Readiness Index, Advanced Buffer Model, and Future Offtake Readiness Map turn the frontier concept into assessable, advisory, and productizable structure.</p>
-            <div class="boundary">Boundary: readiness objects prepare businesses for future markets; they do not sell fusion power today.</div>
           </div>
         </details>
 
@@ -1480,7 +1668,7 @@
         <strong>Fusion is the horizon. Readiness is the deliverable. Audralia is the simulation world.</strong>
 
         <p>
-          Frontier Energy Readiness remains the actionable category. Fusion is not a sales product today. Readiness is the category that can be built, assessed, explained, sold, and inherited by Audralia without breaking the science.
+          Energy is a frontier science pathway inside the story-world. It teaches fusion readiness through storage, solar hedge, plasma boundaries, advanced buffers, future offtake, and community safeguards without claiming commercial fusion is ready today.
         </p>
 
         <div class="actions">
@@ -1496,23 +1684,27 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_ENERGY_FUSION_POWER_ORBIT_PUBLIC_LANGUAGE_RENEWAL_TNT_v11
+FRONTIER_ENERGY_STORY_FIRST_FUSION_READINESS_ORBIT_RENEWAL_TNT_v12
 route=/explore/frontier/energy/
 page=frontier_energy
-previous=FRONTIER_ENERGY_CRYSTAL_GEM_ORBIT_ROTATION_RETURN_PATH_SINGLE_FILE_TNT_v10
+previous=FRONTIER_ENERGY_FUSION_POWER_ORBIT_PUBLIC_LANGUAGE_RENEWAL_TNT_v11
 public_subject=frontier_science_fusion_power_readiness
-visual_system=crystal_orbit_visible_only
-language_rule=gems_are_visual_not_public_subject
-hero_language=fusion_readiness_not_gem_interaction
-navigation_language=energy_pathways_not_gems
+visual_system=rotational_energy_pathway_orbit_visible_only
+language_rule=visual_objects_are_interface_not_public_subject
+story_rule=story_first_learning_second_play_third_technology_underneath
+frontier_rule=narrative_construct_first_backdoor_science_second
 click_model=energy_pathways_anchor_to_section_return_to_energy_orbit
 central_anchor=Energy_Readiness_Anchor
-orbit_pathways=Audralia_Simulation,Products,Community,Science,Commercial_Now,Bridge_Infrastructure,Frontier_Readiness,Storage_Fields,Readiness_Index,Advanced_Buffer,Future_Offtake,Kill_Conditions
+orbit_pathways=Audralia_Simulation,Fusion_Readiness,Storage_Bridge,Solar_Hedge,Plasma_Boundary,Q_Boundary,Commercial_Now,Bridge_Infrastructure,Storage_Fields,Advanced_Buffer,Future_Offtake,Kill_Conditions
 return_path=return_to_energy_orbit_under_every_reading_section
 audralia_role=frontier_energy_simulation_world
 science_lock=fusion_real_commercial_power_not_procurement_ready
 math_lock=Q_target_Q_plasma_Q_plant_separated
 possibility_lock=solar_is_hedge_storage_is_bridge_fusion_is_frontier_readiness
+storage_lock=stored_potential_downstream_high_energy_regime_upstream
+plasma_lock=plasma_is_operating_state_not_storage
+solar_lock=solar_supports_pathway_does_not_become_fusion
+farmland_storage=bridge_infrastructure_midstream_storage_only
 final_lock=do_not_sell_fusion_sell_readiness
 animation_scope=CSS_only_creative_subtle
 animation_features=faceted_visual_objects,central_anchor,elliptical_orbit_rotation,counter_rotating_readable_labels,hover_lift,soft_signal_sweep
@@ -1526,7 +1718,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      FRONTIER_ENERGY_FUSION_POWER_ORBIT_PUBLIC_LANGUAGE_RENEWAL_TNT_v11 · Fusion Readiness · Frontier Science · Energy Pathways · Return to Energy Orbit.
+      FRONTIER_ENERGY_STORY_FIRST_FUSION_READINESS_ORBIT_RENEWAL_TNT_v12 · Fusion Readiness · Frontier Science · Energy Pathways · Return to Energy Orbit.
     </footer>
   </div>
 </body>

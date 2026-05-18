@@ -4,33 +4,29 @@
   lang="en"
   data-route="/laws/"
   data-page="laws"
-  data-version="G9-V1"
-  data-contract="LAWS_PAGE_TOP_ORBIT_READABILITY_RETURN_PATH_TNT_v1"
-  data-source-binding="LAWS_PAGE_TOP_ORBIT_READABILITY_RETURN_PATH_PREGAME_TO_POSTGAME_BINDING_v1"
+  data-version="G10-V1"
+  data-contract="LAWS_PAGE_ORBIT_BOX_SCALE_CENTER_GRAVITY_ROTATION_TNT_v1"
+  data-source-binding="LAWS_PAGE_ORBIT_BOX_SCALE_CENTER_GRAVITY_ROTATION_PREGAME_TO_POSTGAME_BINDING_v1"
   data-branch="laws"
   data-role="law-chamber"
   data-visible-header-context="Manor_and_Estate_Law_Chamber"
-  data-rich-manor-visible-copy-removed="true"
-  data-platform-engineering-toggle="true"
-  data-toggle-changes-language-only="true"
-  data-default-lens="platform"
   data-top-orbit="true"
-  data-orbit-before-large-law-diamonds="true"
+  data-orbit-chamber-enlarged="true"
   data-orbit-diamonds-enlarged="true"
   data-orbit-label-readability-improved="true"
-  data-orbit-clearance="true"
-  data-orbit-not-clipped="true"
-  data-orbit-mobile-preserved="true"
+  data-center-gravity-rotation="true"
+  data-center-anchor-fixed="true"
+  data-orbit-track-rotates="true"
+  data-gem-labels-counter-rotate="true"
+  data-reduced-motion-safe="true"
+  data-platform-engineering-toggle="true"
+  data-toggle-changes-language-only="true"
   data-same-page-law-content="large-white-crystal-diamonds"
   data-law-affiliated-page-change="small-orbital-white-crystal-diamonds"
   data-non-law-page-change="small-orbital-route-color-diamonds"
   data-return-to-orbit-controls="true"
-  data-grouped-law-cards-return-to-orbit="true"
-  data-large-law-field-back-to-orbit="true"
   data-outbound-route-grid-removed="true"
   data-large-and-orbit-css-separated="true"
-  data-sixteen-laws-preserved="true"
-  data-sixteen-laws-grouped="true"
   data-modern-static-html-css="true"
   data-javascript-dependency="false"
   data-heavy-runtime-loaded="false"
@@ -45,7 +41,7 @@
   <title>Laws · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Laws chamber: proof outranks confidence. Page-changing diamonds live in the top orbit. Same-page law content lives in large white crystals below."
+    content="Diamond Gate Bridge Laws chamber: proof outranks confidence. Page-changing diamonds rotate around the top Laws orbit. Same-page law content lives in large white crystals below."
   >
 
   <style>
@@ -63,7 +59,7 @@
       --shadow:0 30px 100px rgba(0,0,0,.48);
       --max:1180px;
       --gem-breathe-duration:8.8s;
-      --orbit-duration:84s;
+      --orbit-duration:76s;
     }
 
     *{box-sizing:border-box}
@@ -511,26 +507,37 @@
     .orbit-wrap{
       display:grid;
       place-items:center;
-      padding:clamp(3.15rem,6vw,5.4rem);
+      padding:clamp(3.75rem,7vw,6.25rem);
       overflow:visible;
     }
 
     .orbit-stage{
-      --orbit-size:min(100%,50rem);
+      --orbit-size:min(100%,56rem);
       position:relative;
       width:var(--orbit-size);
       aspect-ratio:1/1;
-      max-width:50rem;
-      min-width:19rem;
+      max-width:56rem;
+      min-width:20rem;
       overflow:visible;
       border:1px solid rgba(243,200,111,.18);
-      border-radius:2rem;
+      border-radius:2.2rem;
       background:
-        radial-gradient(circle at 50% 48%,rgba(243,200,111,.10),transparent 16rem),
-        radial-gradient(circle at 50% 48%,rgba(141,216,255,.10),transparent 24rem),
+        radial-gradient(circle at 50% 48%,rgba(243,200,111,.13),transparent 18rem),
+        radial-gradient(circle at 50% 48%,rgba(141,216,255,.12),transparent 28rem),
         linear-gradient(180deg,rgba(1,5,16,.60),rgba(2,6,16,.94));
       isolation:isolate;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 1.2rem 3.5rem rgba(0,0,0,.22);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.06),
+        0 1.2rem 3.5rem rgba(0,0,0,.22);
+    }
+
+    .orbit-stage::before{
+      content:"";
+      position:absolute;
+      inset:clamp(1rem,2.5vw,2.35rem);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:1.7rem;
+      pointer-events:none;
     }
 
     .orbit-ring,
@@ -538,8 +545,8 @@
       position:absolute;
       left:50%;
       top:50%;
-      width:68%;
-      height:68%;
+      width:70%;
+      height:70%;
       border-radius:50%;
       transform:translate(-50%,-50%);
       transform-origin:50% 50%;
@@ -547,25 +554,26 @@
     }
 
     .orbit-ring{
-      border:1px solid rgba(243,200,111,.20);
+      border:1px solid rgba(243,200,111,.22);
       box-shadow:
-        inset 0 0 3rem rgba(243,200,111,.04),
+        inset 0 0 3rem rgba(243,200,111,.05),
         0 0 3rem rgba(0,0,0,.18);
     }
 
     .orbit-ring.inner{
       width:46%;
       height:46%;
-      border-color:rgba(141,216,255,.15);
+      border-color:rgba(141,216,255,.16);
     }
 
     .orbit-track{
-      --orbit-r:min(17.2rem,31vw);
+      --orbit-r:min(19.15rem,32vw);
       animation:orbitSpin var(--orbit-duration) linear infinite;
       z-index:3;
     }
 
     @keyframes orbitSpin{
+      from{transform:translate(-50%,-50%) rotate(0deg)}
       to{transform:translate(-50%,-50%) rotate(360deg)}
     }
 
@@ -574,24 +582,24 @@
       left:50%;
       top:50%;
       z-index:4;
-      width:clamp(8.2rem,18vw,12.4rem);
-      min-height:clamp(6.1rem,12vw,9rem);
+      width:clamp(8.8rem,18vw,13.25rem);
+      min-height:clamp(6.5rem,12vw,9.7rem);
       display:grid;
       place-items:center;
-      padding:.9rem;
-      border:1px solid rgba(243,200,111,.28);
-      border-radius:1.2rem;
+      padding:1rem;
+      border:1px solid rgba(243,200,111,.30);
+      border-radius:1.25rem;
       transform:translate(-50%,-50%);
       background:
-        radial-gradient(circle at 50% 20%,rgba(255,232,163,.13),transparent 62%),
-        rgba(255,255,255,.045);
+        radial-gradient(circle at 50% 20%,rgba(255,232,163,.14),transparent 62%),
+        rgba(255,255,255,.05);
       text-align:center;
       box-shadow:0 1rem 2.4rem rgba(0,0,0,.28);
     }
 
     .orbit-center b{
       color:var(--gold);
-      font-size:.84rem;
+      font-size:.9rem;
       font-weight:950;
       letter-spacing:.13em;
       text-transform:uppercase;
@@ -599,7 +607,7 @@
 
     .orbit-center span{
       color:var(--muted);
-      font-size:.82rem;
+      font-size:.86rem;
       line-height:1.28;
     }
 
@@ -609,8 +617,8 @@
       left:50%;
       top:50%;
       z-index:5;
-      width:clamp(5.45rem,10.6vw,7.85rem);
-      height:clamp(4.12rem,8vw,5.96rem);
+      width:clamp(6.35rem,11.2vw,8.75rem);
+      height:clamp(4.8rem,8.45vw,6.65rem);
       display:grid;
       place-items:center;
       transform:
@@ -630,16 +638,18 @@
       place-items:center;
       animation:counterOrbit var(--orbit-duration) linear infinite;
       transform-origin:50% 50%;
-      transition:filter .18s ease;
+      transition:filter .18s ease,scale .18s ease;
     }
 
     .orbit-diamond:hover .orbit-face,
     .orbit-diamond:focus-visible .orbit-face{
       filter:brightness(1.18) saturate(1.05);
+      scale:1.05;
       outline:none;
     }
 
     @keyframes counterOrbit{
+      from{transform:rotate(0deg)}
       to{transform:rotate(-360deg)}
     }
 
@@ -762,31 +772,35 @@
     }
 
     .orbit-diamond .gem-label{
-      width:86%;
+      width:88%;
       gap:.1rem;
+      text-shadow:
+        0 4px 16px rgba(0,0,0,1),
+        0 0 16px rgba(0,28,90,.95),
+        0 0 4px rgba(255,255,255,.74);
     }
 
     .orbit-diamond .gem-label b{
       display:block;
-      font-size:clamp(.47rem,1.02vw,.75rem);
+      font-size:clamp(.57rem,1.12vw,.84rem);
       font-weight:950;
-      letter-spacing:.048em;
+      letter-spacing:.045em;
       line-height:1.02;
       text-transform:uppercase;
     }
 
     .orbit-diamond .gem-label span{
-      font-size:clamp(.34rem,.78vw,.54rem);
+      font-size:clamp(.42rem,.86vw,.60rem);
       font-weight:950;
-      letter-spacing:.04em;
+      letter-spacing:.035em;
       line-height:1.02;
       text-transform:uppercase;
     }
 
     .law-orbit .gem-label b{color:rgba(255,244,216,.99)}
-    .law-orbit .gem-label span{color:rgba(230,238,255,.92)}
+    .law-orbit .gem-label span{color:rgba(230,238,255,.94)}
     .route-orbit .gem-label b{color:rgba(255,232,163,.99)}
-    .route-orbit .gem-label span{color:rgba(242,247,255,.90)}
+    .route-orbit .gem-label span{color:rgba(242,247,255,.92)}
 
     .return-row{
       display:flex;
@@ -887,31 +901,38 @@
       .law-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
-    @media (max-width:760px){
+    @media (max-width:860px){
       .topbar{grid-template-columns:1fr}
       .nav{justify-content:flex-start}
+
       .orbit-wrap{
-        padding:3.15rem .8rem;
+        padding:4rem .9rem;
       }
+
       .orbit-stage{
-        width:min(100%,31rem);
-        min-width:19rem;
+        width:min(100%,35rem);
+        min-width:20rem;
       }
+
       .orbit-track{
-        --orbit-r:min(10.35rem,33vw);
+        --orbit-r:min(11.5rem,34vw);
       }
+
       .orbit-diamond{
-        width:clamp(4.45rem,16vw,5.4rem);
-        height:clamp(3.38rem,12.2vw,4.1rem);
+        width:clamp(5.2rem,17.2vw,6.25rem);
+        height:clamp(3.94rem,13vw,4.72rem);
       }
-      .orbit-diamond .gem-label b{font-size:clamp(.38rem,1.35vw,.56rem)}
-      .orbit-diamond .gem-label span{font-size:clamp(.29rem,1.05vw,.42rem)}
+
+      .orbit-diamond .gem-label b{font-size:clamp(.48rem,1.65vw,.66rem)}
+      .orbit-diamond .gem-label span{font-size:clamp(.36rem,1.25vw,.48rem)}
+
       .orbit-center{
-        width:7.7rem;
-        min-height:5.8rem;
+        width:8rem;
+        min-height:6rem;
       }
-      .orbit-center b{font-size:.65rem}
-      .orbit-center span{font-size:.64rem}
+
+      .orbit-center b{font-size:.68rem}
+      .orbit-center span{font-size:.65rem}
     }
 
     @media (max-width:640px){
@@ -933,30 +954,55 @@
       .return-row .return-chip{width:100%}
     }
 
-    @media (max-width:420px){
+    @media (max-width:430px){
       .orbit-wrap{
-        padding:2.8rem .45rem;
+        padding:3.65rem .35rem;
       }
+
       .orbit-stage{
-        width:min(100%,22.5rem);
-        min-width:18rem;
+        width:min(100%,24.75rem);
+        min-width:20rem;
       }
+
       .orbit-track{
-        --orbit-r:7.8rem;
+        --orbit-r:8.55rem;
       }
+
       .orbit-diamond{
-        width:3.92rem;
-        height:2.98rem;
+        width:4.55rem;
+        height:3.45rem;
       }
-      .orbit-diamond .gem-label b{font-size:.31rem}
-      .orbit-diamond .gem-label span{font-size:.23rem}
+
+      .orbit-diamond .gem-label b{font-size:.38rem}
+      .orbit-diamond .gem-label span{font-size:.285rem}
+
       .orbit-center{
-        width:6.35rem;
-        min-height:4.95rem;
+        width:6.7rem;
+        min-height:5.15rem;
         padding:.65rem;
       }
-      .orbit-center b{font-size:.54rem}
-      .orbit-center span{font-size:.55rem}
+
+      .orbit-center b{font-size:.56rem}
+      .orbit-center span{font-size:.56rem}
+    }
+
+    @media (max-width:360px){
+      .orbit-stage{
+        width:22.9rem;
+        transform:translateX(-.25rem);
+      }
+
+      .orbit-track{
+        --orbit-r:7.95rem;
+      }
+
+      .orbit-diamond{
+        width:4.25rem;
+        height:3.22rem;
+      }
+
+      .orbit-diamond .gem-label b{font-size:.35rem}
+      .orbit-diamond .gem-label span{font-size:.26rem}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -1427,48 +1473,41 @@
         </section>
 
         <template id="route-receipt" data-route-receipt>
-LAWS_PAGE_TOP_ORBIT_READABILITY_RETURN_PATH_TNT_v1
-binding=LAWS_PAGE_TOP_ORBIT_READABILITY_RETURN_PATH_PREGAME_TO_POSTGAME_BINDING_v1
+LAWS_PAGE_ORBIT_BOX_SCALE_CENTER_GRAVITY_ROTATION_TNT_v1
+binding=LAWS_PAGE_ORBIT_BOX_SCALE_CENTER_GRAVITY_ROTATION_PREGAME_TO_POSTGAME_BINDING_v1
 route=/laws/
 target=/laws/index.html
 visible_header_context=Manor_and_Estate_Law_Chamber
-rich_manor_visible_copy_removed=true
-platform_engineering_toggle=true
-toggle_changes_language_only=true
-default_lens=platform
 top_orbit=true
-orbit_before_large_law_diamonds=true
+orbit_chamber_enlarged=true
 orbit_diamonds_enlarged=true
 orbit_label_readability_improved=true
-orbit_clearance=true
-orbit_not_clipped=true
-orbit_mobile_preserved=true
+center_gravity_rotation=true
+center_anchor_fixed=true
+orbit_track_rotates=true
+gem_labels_counter_rotate=true
+reduced_motion_safe=true
+platform_engineering_toggle=true
+toggle_changes_language_only=true
 same_page_law_content=large_white_crystal_diamonds
 law_affiliated_page_change=small_orbital_white_crystal_diamonds
 non_law_page_change=small_orbital_route_color_diamonds
 return_to_orbit_controls=true
-grouped_law_cards_return_to_orbit=true
-large_law_field_back_to_orbit=true
 outbound_route_grid_removed=true
 large_and_orbit_css_separated=true
-sixteen_laws_preserved=true
-sixteen_laws_grouped=true
-law_affiliated_orbit_routes=Scientific_Law,Reality_Category
-non_law_orbit_routes=Compass,Door,Home,Manor_Explore,Products,Showroom,Frontier,Gauges
 generated_image=false
 graphic_block=false
 heavy_runtime=false
 javascript_dependency=false
 external_legacy_css_dependency=false
-reduced_motion_fallback=true
 visual_pass_claimed=false
-deploy_marker=LAWS_PAGE_TOP_ORBIT_READABILITY_RETURN_PATH_DEPLOY_MARKER_v1
+deploy_marker=LAWS_PAGE_ORBIT_BOX_SCALE_CENTER_GRAVITY_ROTATION_DEPLOY_MARKER_v1
         </template>
       </div>
     </main>
 
     <footer>
-      LAWS_PAGE_TOP_ORBIT_READABILITY_RETURN_PATH_TNT_v1 · Laws · Enlarged top orbit · Return-to-orbit controls.
+      LAWS_PAGE_ORBIT_BOX_SCALE_CENTER_GRAVITY_ROTATION_TNT_v1 · Laws · Enlarged orbit chamber · Center-gravity rotation.
     </footer>
   </div>
 </body>

@@ -4,10 +4,10 @@
   lang="en"
   data-route="/explore/frontier/"
   data-page="explore-frontier"
-  data-version="RESTORE-G1"
-  data-contract="EXPLORE_FRONTIER_PARENT_HUB_RESTORE_TNT_v1"
-  data-source-binding="EXPLORE_FRONTIER_PARENT_HUB_RESTORE_PREGAME_TO_POSTGAME_BINDING_v1"
-  data-binding-amendment="EXPLORE_FRONTIER_PARENT_HUB_RESTORE_FLICKER_STABILITY_BINDING_AMENDMENT_v1"
+  data-version="RESTORE-G2"
+  data-contract="EXPLORE_FRONTIER_PARENT_HUB_RESTORE_GLOW_SCALE_RENEWAL_TNT_v2"
+  data-previous-contract="EXPLORE_FRONTIER_PARENT_HUB_RESTORE_TNT_v1"
+  data-source-binding="EXPLORE_FRONTIER_PARENT_HUB_RESTORE_GLOW_SCALE_PREGAME_TO_POSTGAME_BINDING_v2"
   data-source-visual-authority="FRONTIER_V11_TWINKLING_HIDDEN_STAR_GLOW_INTENSIFICATION_TNT_v1"
   data-parent-route="/explore/"
   data-frontier-root="/frontier/"
@@ -17,8 +17,9 @@
   data-return-to-frontier="true"
   data-hidden-star-glow="true"
   data-natural-spill-glow="true"
-  data-stable-halo-glow="true"
+  data-large-frontier-circles="true"
   data-star-core-twinkle-only="true"
+  data-halo-flicker="false"
   data-hard-circular-glow="false"
   data-generated-image="false"
   data-graphic-box="false"
@@ -417,23 +418,23 @@
 
     .frontier-orbit-stage{
       position:relative;
-      min-height:clamp(37rem,100vw,54rem);
+      min-height:clamp(42rem,104vw,58rem);
       display:grid;
-      grid-template-rows:auto minmax(23rem,1fr);
-      gap:.7rem;
+      grid-template-rows:auto minmax(28rem,1fr);
+      gap:.8rem;
       overflow:hidden;
       isolation:isolate;
       border:1px solid rgba(184,205,255,.13);
       border-radius:clamp(1.35rem,5vw,2.35rem);
       padding:clamp(.75rem,2vw,1rem);
       background:
-        radial-gradient(circle at 14% 18%,rgba(255,255,255,.12) 0 .08rem,transparent .11rem),
-        radial-gradient(circle at 72% 16%,rgba(243,200,111,.12) 0 .08rem,transparent .12rem),
-        radial-gradient(circle at 84% 70%,rgba(141,216,255,.12) 0 .08rem,transparent .12rem),
-        radial-gradient(circle at 35% 84%,rgba(190,170,255,.11) 0 .08rem,transparent .12rem),
-        radial-gradient(circle at 50% 12%,rgba(243,200,111,.09),transparent 12rem),
-        radial-gradient(circle at 28% 63%,rgba(141,216,255,.14),transparent 13rem),
-        radial-gradient(circle at 72% 63%,rgba(143,101,255,.14),transparent 13rem),
+        radial-gradient(circle at 14% 18%,rgba(255,255,255,.13) 0 .08rem,transparent .11rem),
+        radial-gradient(circle at 72% 16%,rgba(243,200,111,.13) 0 .08rem,transparent .12rem),
+        radial-gradient(circle at 84% 70%,rgba(141,216,255,.13) 0 .08rem,transparent .12rem),
+        radial-gradient(circle at 35% 84%,rgba(190,170,255,.12) 0 .08rem,transparent .12rem),
+        radial-gradient(circle at 50% 12%,rgba(243,200,111,.11),transparent 14rem),
+        radial-gradient(circle at 28% 63%,rgba(141,216,255,.16),transparent 15rem),
+        radial-gradient(circle at 72% 63%,rgba(143,101,255,.16),transparent 15rem),
         linear-gradient(180deg,rgba(1,5,16,.70),rgba(2,6,16,.94));
       background-size:
         260px 220px,
@@ -451,14 +452,14 @@
       position:relative;
       z-index:8;
       display:grid;
-      gap:.65rem;
+      gap:.7rem;
       justify-items:center;
     }
 
     .frontier-anchor{
       position:relative;
-      width:clamp(7.2rem,18vw,10.25rem);
-      height:clamp(7.2rem,18vw,10.25rem);
+      width:clamp(8rem,19vw,11.2rem);
+      height:clamp(8rem,19vw,11.2rem);
       display:grid;
       place-items:center;
       isolation:isolate;
@@ -469,21 +470,21 @@
       display:flex;
       flex-wrap:wrap;
       justify-content:center;
-      gap:.38rem;
+      gap:.42rem;
       padding:0 .15rem;
     }
 
     .support-routes a{
-      min-height:1.74rem;
+      min-height:1.86rem;
       display:inline-flex;
       align-items:center;
       justify-content:center;
       border:1px solid rgba(255,255,255,.13);
       border-radius:999px;
-      padding:.32rem .50rem;
+      padding:.36rem .58rem;
       color:rgba(241,246,255,.82);
       background:rgba(255,255,255,.04);
-      font-size:clamp(.46rem,1.15vw,.58rem);
+      font-size:clamp(.48rem,1.2vw,.60rem);
       font-weight:950;
       letter-spacing:.055em;
       text-transform:uppercase;
@@ -499,24 +500,26 @@
     .frontier-figure-eight-zone{
       position:relative;
       z-index:4;
-      min-height:clamp(24rem,66vw,37rem);
+      min-height:clamp(28rem,70vw,41rem);
       overflow:hidden;
-      border:1px solid rgba(255,255,255,.075);
+      border:1px solid rgba(255,255,255,.085);
       border-radius:clamp(1.2rem,4vw,2rem);
       background:
-        radial-gradient(circle at 28% 50%,rgba(141,216,255,.13),transparent 25%),
-        radial-gradient(circle at 72% 50%,rgba(143,101,255,.13),transparent 25%),
-        radial-gradient(ellipse at 50% 50%,rgba(141,216,255,.10),transparent 62%),
-        linear-gradient(180deg,rgba(255,255,255,.026),rgba(255,255,255,.012));
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+        radial-gradient(circle at 28% 50%,rgba(141,216,255,.15),transparent 27%),
+        radial-gradient(circle at 72% 50%,rgba(143,101,255,.15),transparent 27%),
+        radial-gradient(ellipse at 50% 50%,rgba(141,216,255,.11),transparent 64%),
+        linear-gradient(180deg,rgba(255,255,255,.028),rgba(255,255,255,.012));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.05),
+        inset 0 0 4rem rgba(141,216,255,.035);
     }
 
     .frontier-loop{
       position:absolute;
       top:50%;
       width:43%;
-      height:72%;
-      border:1px solid rgba(243,200,111,.14);
+      height:74%;
+      border:1px solid rgba(243,200,111,.15);
       border-radius:50%;
       pointer-events:none;
       box-shadow:
@@ -574,31 +577,48 @@
     .frontier-node{
       position:absolute;
       z-index:5;
-      width:clamp(6rem,14.5vw,8.4rem);
-      height:clamp(6rem,14.5vw,8.4rem);
+      width:clamp(7.1rem,15.8vw,9.4rem);
+      height:clamp(7.1rem,15.8vw,9.4rem);
       display:grid;
       place-items:center;
       transform:translate(-50%,-50%);
       isolation:isolate;
     }
 
+    .frontier-node.primary-row{
+      width:clamp(7.45rem,16.6vw,9.95rem);
+      height:clamp(7.45rem,16.6vw,9.95rem);
+    }
+
     .frontier-anchor::after,
     .frontier-node::after{
       content:"";
       position:absolute;
-      inset:-22%;
+      inset:-30%;
       z-index:1;
       pointer-events:none;
       border-radius:48% 52% 54% 46% / 50% 46% 54% 50%;
       background:
-        radial-gradient(circle at 50% 50%,rgba(255,255,255,.28),transparent 14%),
-        radial-gradient(circle at 50% 50%,rgba(255,232,163,.24),transparent 28%),
-        radial-gradient(circle at 50% 50%,rgba(141,216,255,.20),transparent 52%),
-        radial-gradient(circle at 50% 50%,rgba(143,101,255,.12),transparent 76%);
-      filter:blur(15px);
-      opacity:.84;
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,.34),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(255,232,163,.30),transparent 27%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.25),transparent 53%),
+        radial-gradient(circle at 50% 50%,rgba(143,101,255,.16),transparent 79%);
+      filter:blur(17px);
+      opacity:.92;
       transform:scale(1);
       animation:none!important;
+    }
+
+    .frontier-anchor::after{
+      inset:-24%;
+      opacity:.94;
+      filter:blur(18px);
+    }
+
+    .frontier-node.primary-row::after{
+      inset:-32%;
+      opacity:.96;
+      filter:blur(18px);
     }
 
     .frontier-anchor::before,
@@ -608,34 +628,28 @@
       left:50%;
       top:50%;
       z-index:2;
-      width:38%;
-      height:38%;
+      width:42%;
+      height:42%;
       pointer-events:none;
       border-radius:50%;
       transform:translate(-50%,-50%);
       background:
-        radial-gradient(circle at 50% 50%,rgba(255,255,255,1) 0 8%,transparent 10%),
-        radial-gradient(circle at 50% 50%,rgba(255,244,216,.82),transparent 28%),
-        radial-gradient(circle at 50% 50%,rgba(243,200,111,.42),transparent 54%),
-        radial-gradient(circle at 50% 50%,rgba(141,216,255,.26),transparent 72%);
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,1) 0 7%,transparent 9%),
+        radial-gradient(circle at 50% 50%,rgba(255,244,216,.86),transparent 27%),
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.45),transparent 55%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.28),transparent 73%);
       box-shadow:
-        0 0 .55rem rgba(255,255,255,.28),
-        0 0 1.05rem rgba(243,200,111,.26),
-        0 0 1.55rem rgba(141,216,255,.18);
+        0 0 .65rem rgba(255,255,255,.30),
+        0 0 1.15rem rgba(243,200,111,.30),
+        0 0 1.75rem rgba(141,216,255,.22);
       opacity:.92;
       animation:hiddenStarCoreOnlyTwinkle 7.4s ease-in-out infinite;
       animation-delay:var(--delay,0s);
     }
 
-    .frontier-anchor::after{
-      inset:-18%;
-      opacity:.86;
-      filter:blur(16px);
-    }
-
     .frontier-anchor::before{
-      width:40%;
-      height:40%;
+      width:44%;
+      height:44%;
     }
 
     @keyframes hiddenStarCoreOnlyTwinkle{
@@ -664,18 +678,10 @@
       }
     }
 
-    .frontier-node.primary-row{
-      width:clamp(6.5rem,15.5vw,9rem);
-      height:clamp(6.5rem,15.5vw,9rem);
-    }
-
-    .frontier-node.primary-row::after{
-      inset:-24%;
-      opacity:.86;
-    }
-
     .frontier-node:hover,
-    .frontier-node:focus-visible{
+    .frontier-node:focus-visible,
+    .frontier-anchor:hover,
+    .frontier-anchor:focus-visible{
       outline:none;
       filter:brightness(1.14) saturate(1.08);
     }
@@ -695,43 +701,43 @@
     .frontier-star-body,
     .frontier-anchor-body{
       position:absolute;
-      inset:13%;
+      inset:12%;
       z-index:3;
       border-radius:50%;
       opacity:.985;
       background:
-        radial-gradient(circle at 50% 17%,rgba(255,255,255,.10),transparent 18%),
-        radial-gradient(circle at 50% 52%,rgba(141,216,255,.08),transparent 46%),
+        radial-gradient(circle at 50% 17%,rgba(255,255,255,.12),transparent 18%),
+        radial-gradient(circle at 50% 52%,rgba(141,216,255,.10),transparent 46%),
         linear-gradient(180deg,rgba(9,15,34,.94),rgba(2,5,15,.985));
       border:1px solid rgba(255,255,255,.075);
       box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.10),
-        inset 0 -1.1rem 1.35rem rgba(0,0,0,.34),
-        0 1.1rem 1.35rem rgba(0,0,0,.46),
-        0 0 .8rem rgba(141,216,255,.10);
+        inset 0 1px 0 rgba(255,255,255,.11),
+        inset 0 -1.1rem 1.35rem rgba(0,0,0,.36),
+        0 1.1rem 1.35rem rgba(0,0,0,.48),
+        0 0 .88rem rgba(141,216,255,.12);
       filter:
         drop-shadow(0 1rem 1.25rem rgba(0,0,0,.46))
-        drop-shadow(0 0 .7rem rgba(141,216,255,.10));
+        drop-shadow(0 0 .72rem rgba(141,216,255,.10));
       animation:frontierControlBreathe 6.2s ease-in-out infinite;
       transform-origin:50% 50%;
       pointer-events:none;
     }
 
     .frontier-node.primary-row .frontier-star-body{
-      inset:12%;
+      inset:11%;
       box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.11),
-        inset 0 -1.15rem 1.4rem rgba(0,0,0,.36),
-        0 1.15rem 1.4rem rgba(0,0,0,.48),
-        0 0 .82rem rgba(141,216,255,.11);
+        inset 0 1px 0 rgba(255,255,255,.12),
+        inset 0 -1.15rem 1.4rem rgba(0,0,0,.38),
+        0 1.15rem 1.4rem rgba(0,0,0,.50),
+        0 0 .92rem rgba(141,216,255,.12);
     }
 
     .frontier-anchor-body{
-      inset:12%;
+      inset:11%;
       background:
-        radial-gradient(circle at 50% 18%,rgba(255,255,255,.12),transparent 18%),
-        radial-gradient(circle at 50% 52%,rgba(243,200,111,.10),transparent 42%),
-        radial-gradient(circle at 50% 58%,rgba(141,216,255,.10),transparent 62%),
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.13),transparent 18%),
+        radial-gradient(circle at 50% 52%,rgba(243,200,111,.11),transparent 42%),
+        radial-gradient(circle at 50% 58%,rgba(141,216,255,.11),transparent 62%),
         linear-gradient(180deg,rgba(9,15,34,.94),rgba(2,5,15,.985));
       box-shadow:
         inset 0 1px 0 rgba(255,255,255,.12),
@@ -755,14 +761,14 @@
     .frontier-label{
       position:relative;
       z-index:6;
-      width:92%;
-      min-height:2.95rem;
+      width:88%;
+      min-height:3.04rem;
       display:grid;
       place-items:center;
       gap:.10rem;
       padding:.35rem .4rem;
       border:1px solid rgba(255,255,255,.14);
-      border-radius:.9rem;
+      border-radius:.95rem;
       text-align:center;
       background:
         radial-gradient(circle at 50% 0%,rgba(255,255,255,.20),transparent 62%),
@@ -777,7 +783,7 @@
     .frontier-label b{
       display:block;
       color:rgba(255,244,216,.99);
-      font-size:clamp(.5rem,1.2vw,.72rem);
+      font-size:clamp(.56rem,1.24vw,.78rem);
       font-weight:950;
       letter-spacing:.065em;
       line-height:1.02;
@@ -789,7 +795,7 @@
 
     .frontier-label span{
       color:rgba(230,238,255,.82);
-      font-size:clamp(.34rem,.82vw,.48rem);
+      font-size:clamp(.36rem,.86vw,.50rem);
       font-weight:900;
       letter-spacing:.07em;
       line-height:1;
@@ -797,26 +803,26 @@
     }
 
     .frontier-node.primary-row .frontier-label{
-      min-height:3.12rem;
-      width:93%;
+      min-height:3.18rem;
+      width:90%;
     }
 
     .frontier-node.primary-row .frontier-label b{
-      font-size:clamp(.54rem,1.28vw,.78rem);
+      font-size:clamp(.58rem,1.32vw,.82rem);
     }
 
     .frontier-node.primary-row .frontier-label span{
-      font-size:clamp(.36rem,.86vw,.5rem);
+      font-size:clamp(.38rem,.90vw,.52rem);
     }
 
     .frontier-anchor .frontier-label{
       width:78%;
-      min-height:3.12rem;
+      min-height:3.2rem;
     }
 
     .frontier-anchor .frontier-label b{
       color:var(--gold);
-      font-size:clamp(.60rem,1.48vw,.92rem);
+      font-size:clamp(.64rem,1.52vw,.96rem);
       letter-spacing:.10em;
     }
 
@@ -1015,39 +1021,40 @@
       .button{width:100%}
 
       .frontier-orbit-stage{
-        min-height:37rem;
+        min-height:43rem;
         padding:.65rem;
+        grid-template-rows:auto minmax(30rem,1fr);
       }
 
       .support-routes a{
-        min-height:1.52rem;
-        padding:.26rem .38rem;
-        font-size:.42rem;
+        min-height:1.56rem;
+        padding:.28rem .42rem;
+        font-size:.43rem;
       }
 
       .frontier-figure-eight-zone{
-        min-height:24rem;
+        min-height:30rem;
       }
 
       .frontier-node{
-        width:4.85rem;
-        height:4.85rem;
+        width:5.85rem;
+        height:5.85rem;
       }
 
       .frontier-node.primary-row{
-        width:5.2rem;
-        height:5.2rem;
+        width:6.05rem;
+        height:6.05rem;
       }
 
       .frontier-star-body,
       .frontier-anchor-body{
-        inset:14%;
+        inset:12%;
       }
 
       .frontier-node.closed-loop{left:27.5%;top:13%}
       .frontier-node.energy{left:72.5%;top:13%}
-      .frontier-node.infrastructure{left:15.5%;top:37%}
-      .frontier-node.lattice{left:84.5%;top:37%}
+      .frontier-node.infrastructure{left:16%;top:37%}
+      .frontier-node.lattice{left:84%;top:37%}
       .frontier-node.manual{left:23.5%;top:58.5%}
       .frontier-node.trajectory{left:76.5%;top:58.5%}
       .frontier-node.shimmer{left:50%;top:47.5%}
@@ -1057,13 +1064,13 @@
       .frontier-node.urban{left:82%;top:83.5%}
 
       .frontier-label{
-        width:94%;
-        min-height:2.24rem;
+        width:91%;
+        min-height:2.38rem;
         padding:.24rem .24rem;
       }
 
       .frontier-label b{
-        font-size:.39rem;
+        font-size:.43rem;
         letter-spacing:.045em;
       }
 
@@ -1072,20 +1079,20 @@
       }
 
       .frontier-node.primary-row .frontier-label{
-        min-height:2.34rem;
+        min-height:2.48rem;
       }
 
       .frontier-node.primary-row .frontier-label b{
-        font-size:.41rem;
+        font-size:.45rem;
       }
 
       .frontier-anchor{
-        width:6.6rem;
-        height:6.6rem;
+        width:7.25rem;
+        height:7.25rem;
       }
 
       .frontier-anchor .frontier-label b{
-        font-size:.52rem;
+        font-size:.56rem;
       }
 
       .frontier-gravity{
@@ -1100,42 +1107,46 @@
     }
 
     @media (max-width:430px){
+      .frontier-orbit-stage{
+        min-height:42rem;
+      }
+
       .frontier-figure-eight-zone{
-        min-height:23.2rem;
+        min-height:29rem;
       }
 
       .frontier-node{
-        width:4.55rem;
-        height:4.55rem;
+        width:5.45rem;
+        height:5.45rem;
       }
 
       .frontier-node.primary-row{
-        width:4.9rem;
-        height:4.9rem;
+        width:5.65rem;
+        height:5.65rem;
       }
 
       .frontier-node.infrastructure{left:16%;top:37%}
       .frontier-node.lattice{left:84%;top:37%}
 
       .frontier-label{
-        min-height:2.08rem;
+        min-height:2.18rem;
       }
 
       .frontier-label b{
-        font-size:.34rem;
+        font-size:.38rem;
       }
 
       .frontier-node.primary-row .frontier-label b{
-        font-size:.36rem;
+        font-size:.39rem;
       }
 
       .frontier-anchor{
-        width:6.15rem;
-        height:6.15rem;
+        width:6.6rem;
+        height:6.6rem;
       }
 
       .frontier-anchor .frontier-label b{
-        font-size:.46rem;
+        font-size:.50rem;
       }
     }
 
@@ -1451,9 +1462,9 @@
       </section>
 
       <section class="final-band" aria-label="Explore Frontier final statement">
-        <strong>Explore Frontier restores the hub without losing the root.</strong>
+        <strong>Explore Frontier restores the glow, restores the scale, and keeps Return to Frontier intact.</strong>
         <p>
-          Eleven Frontier lanes occupy the readable figure-eight field. The hidden star behind each object may subtly twinkle, but the glow itself remains steady, natural, and unconstrained.
+          Eleven Frontier lanes occupy the readable figure-eight field. The hidden star behind each object may subtly twinkle, but the halo glow remains steady, natural, strong, and unconstrained by a hard circular boundary.
         </p>
 
         <div class="actions">
@@ -1466,9 +1477,9 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-EXPLORE_FRONTIER_PARENT_HUB_RESTORE_TNT_v1
-binding=EXPLORE_FRONTIER_PARENT_HUB_RESTORE_PREGAME_TO_POSTGAME_BINDING_v1
-binding_amendment=EXPLORE_FRONTIER_PARENT_HUB_RESTORE_FLICKER_STABILITY_BINDING_AMENDMENT_v1
+EXPLORE_FRONTIER_PARENT_HUB_RESTORE_GLOW_SCALE_RENEWAL_TNT_v2
+previous=EXPLORE_FRONTIER_PARENT_HUB_RESTORE_TNT_v1
+binding=EXPLORE_FRONTIER_PARENT_HUB_RESTORE_GLOW_SCALE_PREGAME_TO_POSTGAME_BINDING_v2
 source_visual_authority=FRONTIER_V11_TWINKLING_HIDDEN_STAR_GLOW_INTENSIFICATION_TNT_v1
 route=/explore/frontier/
 target=/explore/frontier/index.html
@@ -1480,7 +1491,6 @@ route_distinction=explore_side_frontier_hub_not_root_frontier_not_child_lane
 return_to_frontier=true
 return_to_frontier_route=/frontier/
 hub_not_child_lane=true
-closed_loop_child_content_restored_to_false=true
 primary_navigation=Compass,Door,Home,Laws,Frontier,Interactive_Narrative,Universe,Showroom,Products,Gauges
 support_routes=Laws,Compass,Frontier,Interactive_Narrative,Universe,Showroom,Products,Gauges
 child_lanes=Closed_Loop,Energy,Infrastructure,Lattice,Manual,Shimmer,Trajectory,Waste,Water,Vision,Urban
@@ -1495,6 +1505,8 @@ waste=/explore/frontier/waste/
 water=/explore/frontier/water/
 vision=/explore/frontier/vision/
 urban=/explore/frontier/urban/
+large_frontier_circles=true
+mobile_node_scale_restored=true
 hidden_star_glow=true
 natural_spill_glow=true
 stable_halo_glow=true
@@ -1520,12 +1532,12 @@ heavy_runtime_loaded=false
 javascript_particle_engine=false
 visual_pass_claimed=false
 non_regression=true
-deploy_marker=EXPLORE_FRONTIER_PARENT_HUB_RESTORE_DEPLOY_MARKER_v1
+deploy_marker=EXPLORE_FRONTIER_PARENT_HUB_RESTORE_GLOW_SCALE_DEPLOY_MARKER_v2
       </template>
     </main>
 
     <footer>
-      EXPLORE_FRONTIER_PARENT_HUB_RESTORE_TNT_v1 · /explore/frontier/ · Stable Hidden-Star Glow · Return to Frontier preserved.
+      EXPLORE_FRONTIER_PARENT_HUB_RESTORE_GLOW_SCALE_RENEWAL_TNT_v2 · /explore/frontier/ · Restored Scale · Stable Hidden-Star Glow · Return to Frontier preserved.
     </footer>
   </div>
 </body>

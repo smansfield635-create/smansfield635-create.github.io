@@ -4,14 +4,14 @@
   lang="en"
   data-route="/explore/frontier/water/"
   data-page="frontier-water"
-  data-version="G2-V3"
-  data-contract="FRONTIER_WATER_FUTURE_SIMULATION_CONTEXT_COPY_RENEWAL_TNT_v3"
-  data-previous-contract="FRONTIER_WATER_SPRING_SHOWER_DIAMOND_RAIN_PHYSICS_RENEWAL_TNT_v2"
-  data-source-binding="FRONTIER_WATER_FUTURE_SIMULATION_CONTEXT_COPY_RENEWAL_FINAL_DRAFT_AND_CODE_BINDING_v3"
+  data-version="G2-V4"
+  data-contract="FRONTIER_WATER_TRUE_FORM_PHYSICS_EXPRESSION_AND_DUAL_RETURN_RENEWAL_TNT_v4"
+  data-previous-contract="FRONTIER_WATER_FUTURE_SIMULATION_CONTEXT_COPY_RENEWAL_TNT_v3"
+  data-source-binding="FRONTIER_WATER_TRUE_FORM_PHYSICS_EXPRESSION_AND_DUAL_RETURN_FINAL_DRAFT_CODE_BINDING_v4"
   data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
-  data-design-reference="FRONTIER_WATER_SPRING_SHOWER_DIAMOND_RAIN_PHYSICS_RENEWAL_TNT_v2"
+  data-design-reference="FRONTIER_WATER_FUTURE_SIMULATION_CONTEXT_COPY_RENEWAL_TNT_v3"
   data-source-symbol-authority="compassOrganicGem"
-  data-role="frontier-water-live-simulation-in-development"
+  data-role="frontier-water-true-form-physics-simulation"
   data-audralia-water-first="true"
   data-per-pathway-dual-lens="true"
   data-platform-lens="true"
@@ -24,16 +24,19 @@
   data-rain-visual-accepted="true"
   data-watchlist-band="true"
   data-runtime-unchanged="true"
+  data-runtime-optimized="true"
   data-coming-soon-layer="true"
   data-spring-shower-simulation="true"
   data-rain-field="true"
-  data-diamond-rain-contact="true"
-  data-splash-on-contact="true"
-  data-facet-runoff="true"
-  data-edge-drip="true"
-  data-water-specific-visual-law="true"
-  data-visual-physics-approximation="true"
-  data-true-collision-physics="false"
+  data-water-true-form-expression="true"
+  data-physics-informed-water-behavior="true"
+  data-surface-tension-model="true"
+  data-impact-spread-model="true"
+  data-facet-rivulet-model="true"
+  data-lower-collection-model="true"
+  data-drip-formation-model="true"
+  data-drip-release-model="true"
+  data-dual-return-under-every-pathway="true"
   data-return-to-frontier-present="true"
   data-return-to-frontier-route="/explore/frontier/"
   data-segregated-frontier-glow="true"
@@ -46,6 +49,7 @@
   data-graphic-box="false"
   data-canvas="false"
   data-webgl="false"
+  data-particle-engine="false"
   data-streaming="false"
   data-visual-pass-claimed="false"
 >
@@ -53,10 +57,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Water · Future Simulation in Development · Diamond Gate Bridge</title>
+  <title>Water · True-Form Physics Simulation · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Water is becoming a live Frontier simulation for future water systems, with an active rain layer and future operating layers for capture, filtration, storage, reuse, contamination pressure, and failure points."
+    content="Diamond Gate Bridge Water is becoming a live Frontier simulation for future water systems, with physics-informed water behavior: contact, spread, beading, runoff, collection, and drip release."
   >
 
   <style>
@@ -595,6 +599,11 @@
       transition:transform .18s ease,filter .18s ease;
       animation:gemFloat 7.2s ease-in-out infinite;
       animation-delay:var(--delay,0s);
+      --water-cycle:7.2s;
+      --water-delay:var(--delay,0s);
+      --rivulet-a-angle:-13deg;
+      --rivulet-b-angle:16deg;
+      --drip-offset:0rem;
     }
 
     .compass-center{
@@ -605,10 +614,11 @@
       transform:translate(-50%,-50%);
       z-index:6;
       pointer-events:none;
-      --splash-duration:4.8s;
-      --runoff-duration:6.8s;
-      --rain-delay:-.2s;
-      --drip-delay:-1.1s;
+      --water-cycle:7.6s;
+      --water-delay:-.4s;
+      --rivulet-a-angle:-12deg;
+      --rivulet-b-angle:15deg;
+      --drip-offset:.02rem;
     }
 
     .compass-node{
@@ -617,10 +627,6 @@
       left:var(--x);
       top:var(--y);
       transform:translate(-50%,-50%);
-      --splash-duration:4.9s;
-      --runoff-duration:6.3s;
-      --rain-delay:var(--delay,0s);
-      --drip-delay:calc(var(--delay,0s) - 1.1s);
     }
 
     .compass-node:hover,
@@ -652,143 +658,298 @@
       50%{transform:translateY(-.22rem) rotate(var(--tilt-b,2deg)) scale(1.025);filter:brightness(1.12)}
     }
 
-    .rain-impact,
-    .facet-runoff,
-    .edge-drip{
+    .water-contact,
+    .surface-beads,
+    .facet-film,
+    .facet-rivulet,
+    .drip-system{
       position:absolute;
-      z-index:3;
       pointer-events:none;
       mix-blend-mode:screen;
     }
 
-    .rain-impact{
+    .water-contact{
       left:50%;
-      top:4%;
-      width:78%;
-      height:40%;
+      top:13%;
+      z-index:3;
+      width:70%;
+      height:30%;
+      transform:translate(-50%,-50%) scale(.58);
+      opacity:0;
       border-radius:50%;
-      transform:translate(-50%,-50%) scale(.62);
       background:
-        radial-gradient(ellipse at 50% 50%,rgba(255,255,255,.72) 0 4%,rgba(223,248,255,.42) 5% 12%,transparent 13%),
-        radial-gradient(ellipse at 34% 58%,rgba(159,231,255,.42) 0 3%,transparent 10%),
-        radial-gradient(ellipse at 64% 58%,rgba(159,231,255,.34) 0 3%,transparent 11%),
-        linear-gradient(90deg,transparent 0 28%,rgba(223,248,255,.52) 30% 31%,transparent 33% 67%,rgba(223,248,255,.40) 69% 70%,transparent 72%);
-      opacity:0;
-      animation:diamondSplash var(--splash-duration,4.9s) ease-in-out infinite;
-      animation-delay:var(--rain-delay,0s);
+        radial-gradient(ellipse at 50% 52%,rgba(255,255,255,.62) 0 4%,rgba(223,248,255,.38) 5% 13%,transparent 14%),
+        radial-gradient(ellipse at 32% 55%,rgba(223,248,255,.44) 0 3%,transparent 10%),
+        radial-gradient(ellipse at 68% 55%,rgba(223,248,255,.38) 0 3%,transparent 10%),
+        radial-gradient(ellipse at 50% 68%,rgba(159,231,255,.30),transparent 42%);
+      animation:waterContact var(--water-cycle) ease-in-out infinite;
+      animation-delay:var(--water-delay);
     }
 
-    .facet-runoff{
-      left:47%;
-      top:17%;
-      width:.16rem;
-      height:66%;
+    .water-contact::before,
+    .water-contact::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:54%;
+      width:48%;
+      height:.22rem;
       border-radius:999px;
-      transform:rotate(-13deg);
-      background:
-        linear-gradient(180deg,transparent,rgba(223,248,255,.74),rgba(159,231,255,.42),transparent);
-      box-shadow:
-        0 0 .42rem rgba(159,231,255,.36),
-        0 0 .72rem rgba(255,255,255,.12);
+      background:linear-gradient(90deg,transparent,rgba(223,248,255,.58),rgba(255,255,255,.48),rgba(223,248,255,.42),transparent);
+      transform:translate(-50%,-50%) scaleX(.35);
       opacity:0;
-      animation:facetRunoff var(--runoff-duration,6.3s) ease-in-out infinite;
-      animation-delay:calc(var(--rain-delay,0s) - .4s);
+      animation:waterCrown var(--water-cycle) ease-in-out infinite;
+      animation-delay:var(--water-delay);
     }
 
-    .facet-runoff.secondary{
-      left:59%;
+    .water-contact::after{
+      top:66%;
+      width:34%;
+      opacity:0;
+      animation-delay:calc(var(--water-delay) + .08s);
+    }
+
+    .surface-beads{
+      left:50%;
       top:23%;
-      height:54%;
-      width:.13rem;
-      transform:rotate(15deg);
+      z-index:4;
+      width:76%;
+      height:40%;
+      transform:translate(-50%,-50%);
       opacity:0;
-      animation-duration:calc(var(--runoff-duration,6.3s) + 1.7s);
-      animation-delay:calc(var(--rain-delay,0s) - 2.1s);
       background:
-        linear-gradient(180deg,transparent,rgba(223,248,255,.52),rgba(143,240,195,.26),transparent);
+        radial-gradient(circle at 22% 54%,rgba(255,255,255,.76) 0 .10rem,rgba(159,231,255,.38) .11rem .20rem,transparent .22rem),
+        radial-gradient(circle at 38% 40%,rgba(255,255,255,.72) 0 .08rem,rgba(159,231,255,.34) .09rem .18rem,transparent .20rem),
+        radial-gradient(circle at 52% 62%,rgba(255,255,255,.70) 0 .09rem,rgba(159,231,255,.30) .10rem .20rem,transparent .22rem),
+        radial-gradient(circle at 68% 48%,rgba(255,255,255,.62) 0 .07rem,rgba(159,231,255,.28) .08rem .17rem,transparent .19rem);
+      filter:drop-shadow(0 0 .28rem rgba(159,231,255,.20));
+      animation:surfaceBeads var(--water-cycle) ease-in-out infinite;
+      animation-delay:var(--water-delay);
     }
 
-    .edge-drip{
+    .facet-film{
+      left:50%;
+      top:48%;
+      z-index:3;
+      width:88%;
+      height:82%;
+      clip-path:var(--brand-gem);
+      transform:translate(-50%,-50%) scale(.96);
+      opacity:0;
+      background:
+        linear-gradient(120deg,transparent 0 24%,rgba(223,248,255,.12) 25% 27%,transparent 29%),
+        linear-gradient(75deg,transparent 0 48%,rgba(159,231,255,.11) 49% 51%,transparent 53%),
+        radial-gradient(ellipse at 46% 40%,rgba(223,248,255,.12),transparent 62%);
+      animation:facetFilm var(--water-cycle) ease-in-out infinite;
+      animation-delay:var(--water-delay);
+    }
+
+    .facet-rivulet{
+      left:46%;
+      top:22%;
+      z-index:4;
+      width:.16rem;
+      height:64%;
+      border-radius:999px;
+      transform:rotate(var(--rivulet-a-angle));
+      opacity:0;
+      background:
+        linear-gradient(180deg,transparent,rgba(255,255,255,.58),rgba(223,248,255,.54),rgba(159,231,255,.30),transparent);
+      box-shadow:
+        0 0 .28rem rgba(159,231,255,.24),
+        0 0 .48rem rgba(255,255,255,.08);
+      animation:facetRivulet var(--water-cycle) ease-in-out infinite;
+      animation-delay:var(--water-delay);
+    }
+
+    .facet-rivulet.secondary{
+      left:59%;
+      top:27%;
+      width:.13rem;
+      height:52%;
+      transform:rotate(var(--rivulet-b-angle));
+      background:
+        linear-gradient(180deg,transparent,rgba(223,248,255,.45),rgba(159,231,255,.26),transparent);
+      animation-delay:calc(var(--water-delay) + .35s);
+    }
+
+    .drip-system{
       left:50%;
       top:82%;
-      width:.42rem;
-      height:.42rem;
-      border-radius:52% 48% 62% 38%;
-      transform:translate(-50%,-50%) rotate(45deg) scale(.55);
+      z-index:4;
+      width:1.4rem;
+      height:2.8rem;
+      transform:translateX(calc(-50% + var(--drip-offset)));
+      opacity:1;
+    }
+
+    .drip-system::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:0;
+      width:.48rem;
+      height:.28rem;
+      border-radius:999px;
+      transform:translate(-50%,-50%) scale(.45);
+      opacity:0;
       background:
-        radial-gradient(circle at 32% 24%,rgba(255,255,255,.88),transparent 24%),
-        linear-gradient(135deg,rgba(223,248,255,.88),rgba(141,216,255,.38));
+        radial-gradient(ellipse at 42% 24%,rgba(255,255,255,.78),transparent 24%),
+        linear-gradient(135deg,rgba(223,248,255,.66),rgba(159,231,255,.30));
+      box-shadow:0 0 .38rem rgba(159,231,255,.24);
+      animation:lowerCollection var(--water-cycle) ease-in-out infinite;
+      animation-delay:var(--water-delay);
+    }
+
+    .drip-system::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:.22rem;
+      width:.38rem;
+      height:.48rem;
+      border-radius:52% 48% 62% 38%;
+      transform:translate(-50%,0) rotate(45deg) scale(.42);
+      opacity:0;
+      background:
+        radial-gradient(circle at 32% 24%,rgba(255,255,255,.86),transparent 24%),
+        linear-gradient(135deg,rgba(223,248,255,.86),rgba(141,216,255,.36));
       box-shadow:
-        0 0 .34rem rgba(159,231,255,.32),
-        0 .4rem .5rem rgba(0,0,0,.24);
-      opacity:0;
-      animation:edgeDrip 5.9s ease-in-out infinite;
-      animation-delay:var(--drip-delay,-1s);
+        0 0 .32rem rgba(159,231,255,.30),
+        0 .36rem .46rem rgba(0,0,0,.22);
+      animation:dripRelease var(--water-cycle) ease-in-out infinite;
+      animation-delay:var(--water-delay);
     }
 
-    .edge-drip.secondary{
-      left:58%;
-      top:78%;
-      width:.30rem;
-      height:.30rem;
-      opacity:0;
-      animation-duration:7.4s;
-      animation-delay:calc(var(--drip-delay,-1s) - 2.2s);
-    }
-
-    @keyframes diamondSplash{
-      0%,54%,100%{
+    @keyframes waterContact{
+      0%,34%,100%{
         opacity:0;
-        transform:translate(-50%,-50%) scale(.54);
+        transform:translate(-50%,-50%) scale(.52);
       }
-      58%{
-        opacity:.72;
-        transform:translate(-50%,-50%) scale(.96);
+      38%{
+        opacity:.62;
+        transform:translate(-50%,-50%) scale(.74);
       }
-      64%{
-        opacity:.34;
-        transform:translate(-50%,-50%) scale(1.16);
+      43%{
+        opacity:.52;
+        transform:translate(-50%,-50%) scale(.98);
       }
-      72%{
+      51%{
         opacity:0;
-        transform:translate(-50%,-50%) scale(1.28);
+        transform:translate(-50%,-50%) scale(1.14);
       }
     }
 
-    @keyframes facetRunoff{
-      0%,20%,100%{
+    @keyframes waterCrown{
+      0%,36%,100%{
         opacity:0;
-        transform:translateY(-.35rem) rotate(var(--runoff-tilt,-13deg));
+        transform:translate(-50%,-50%) scaleX(.28);
       }
-      34%{
+      42%{
+        opacity:.58;
+        transform:translate(-50%,-50%) scaleX(.96);
+      }
+      50%{
+        opacity:.16;
+        transform:translate(-50%,-50%) scaleX(1.24);
+      }
+      57%{
+        opacity:0;
+        transform:translate(-50%,-50%) scaleX(1.34);
+      }
+    }
+
+    @keyframes surfaceBeads{
+      0%,44%,100%{
+        opacity:0;
+        transform:translate(-50%,-50%) translateY(-.08rem) scale(.92);
+      }
+      52%{
         opacity:.70;
+        transform:translate(-50%,-50%) translateY(0) scale(1);
       }
       62%{
-        opacity:.50;
-        transform:translateY(.55rem) rotate(var(--runoff-tilt,-13deg));
+        opacity:.42;
+        transform:translate(-50%,-50%) translateY(.12rem) scale(.98);
       }
-      84%{
+      70%{
         opacity:0;
-        transform:translateY(1.15rem) rotate(var(--runoff-tilt,-13deg));
+        transform:translate(-50%,-50%) translateY(.26rem) scale(.92);
       }
     }
 
-    @keyframes edgeDrip{
-      0%,58%,100%{
+    @keyframes facetFilm{
+      0%,42%,100%{
         opacity:0;
-        transform:translate(-50%,-50%) translateY(0) rotate(45deg) scale(.48);
+        transform:translate(-50%,-50%) scale(.94);
       }
-      65%{
-        opacity:.88;
-        transform:translate(-50%,-50%) translateY(.10rem) rotate(45deg) scale(.88);
+      55%{
+        opacity:.34;
+        transform:translate(-50%,-50%) scale(.98);
       }
       78%{
+        opacity:.22;
+        transform:translate(-50%,-50%) scale(1);
+      }
+      90%{
+        opacity:0;
+        transform:translate(-50%,-50%) scale(1.01);
+      }
+    }
+
+    @keyframes facetRivulet{
+      0%,50%,100%{
+        opacity:0;
+        transform:translateY(-.48rem) rotate(var(--rivulet-a-angle));
+      }
+      62%{
         opacity:.74;
-        transform:translate(-50%,-50%) translateY(.72rem) rotate(45deg) scale(1);
+      }
+      77%{
+        opacity:.54;
+        transform:translateY(.58rem) rotate(var(--rivulet-a-angle));
+      }
+      88%{
+        opacity:0;
+        transform:translateY(1.24rem) rotate(var(--rivulet-a-angle));
+      }
+    }
+
+    @keyframes lowerCollection{
+      0%,70%,100%{
+        opacity:0;
+        transform:translate(-50%,-50%) scale(.45);
+      }
+      80%{
+        opacity:.74;
+        transform:translate(-50%,-50%) scale(.85);
+      }
+      89%{
+        opacity:.88;
+        transform:translate(-50%,-50%) scale(1.08);
+      }
+      96%{
+        opacity:0;
+        transform:translate(-50%,-50%) scale(.62);
+      }
+    }
+
+    @keyframes dripRelease{
+      0%,78%,100%{
+        opacity:0;
+        transform:translate(-50%,0) translateY(0) rotate(45deg) scale(.40);
+      }
+      86%{
+        opacity:.82;
+        transform:translate(-50%,0) translateY(.12rem) rotate(45deg) scale(.88);
       }
       93%{
+        opacity:.72;
+        transform:translate(-50%,0) translateY(.90rem) rotate(45deg) scale(1);
+      }
+      99%{
         opacity:0;
-        transform:translate(-50%,-50%) translateY(1.85rem) rotate(45deg) scale(.72);
+        transform:translate(-50%,0) translateY(1.95rem) rotate(45deg) scale(.64);
       }
     }
 
@@ -1078,30 +1239,55 @@
     .section-return{
       display:flex;
       justify-content:flex-end;
+      gap:.55rem;
       margin-top:.1rem;
     }
 
-    .return-orbit{
+    .section-return.dual-return{
+      flex-wrap:wrap;
+    }
+
+    .return-orbit,
+    .return-frontier{
       min-height:2.5rem;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      border:1px solid rgba(159,231,255,.86);
       border-radius:999px;
       padding:.6rem .95rem;
-      color:#041018;
-      background:linear-gradient(135deg,#e8fbff,#8dd8ff);
       font-size:.72rem;
       font-weight:950;
       letter-spacing:.07em;
       text-transform:uppercase;
-      transition:transform .18s ease;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .return-orbit{
+      border:1px solid rgba(159,231,255,.86);
+      color:#041018;
+      background:linear-gradient(135deg,#e8fbff,#8dd8ff);
+    }
+
+    .return-frontier{
+      border:1px solid rgba(255,255,255,.16);
+      color:rgba(241,246,255,.88);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(159,231,255,.12),transparent 70%),
+        rgba(255,255,255,.045);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
     }
 
     .return-orbit:hover,
-    .return-orbit:focus-visible{
+    .return-orbit:focus-visible,
+    .return-frontier:hover,
+    .return-frontier:focus-visible{
       transform:translateY(-2px);
       outline:none;
+    }
+
+    .return-frontier:hover,
+    .return-frontier:focus-visible{
+      border-color:rgba(159,231,255,.54);
     }
 
     .final-band{
@@ -1192,21 +1378,10 @@
         place-items:center;
       }
 
-      .rain-field{
-        opacity:.54;
-      }
-
-      .rain-sheet{
-        opacity:.22;
-      }
-
-      .rain-sheet.secondary{
-        opacity:.15;
-      }
-
-      .mist-layer{
-        opacity:.36;
-      }
+      .rain-field{opacity:.54}
+      .rain-sheet{opacity:.22}
+      .rain-sheet.secondary{opacity:.15}
+      .mist-layer{opacity:.36}
 
       .compass-stage::before,
       .compass-stage::after{
@@ -1238,17 +1413,11 @@
         height:5.45rem;
       }
 
-      .rain-impact{
-        opacity:.44;
-      }
-
-      .facet-runoff{
-        height:58%;
-      }
-
-      .edge-drip{
-        top:78%;
-      }
+      .water-contact{opacity:.42}
+      .surface-beads{opacity:.40}
+      .facet-film{opacity:.22}
+      .facet-rivulet{height:56%}
+      .drip-system{top:78%}
 
       .gem-label{
         width:88%;
@@ -1278,11 +1447,15 @@
         grid-template-columns:1fr 1fr;
       }
 
-      .section-return{
+      .section-return,
+      .section-return.dual-return{
+        display:grid;
+        grid-template-columns:1fr;
         justify-content:stretch;
       }
 
-      .return-orbit{
+      .return-orbit,
+      .return-frontier{
         width:100%;
       }
 
@@ -1352,17 +1525,25 @@
       .compass-node,
       .rain-sheet,
       .mist-layer,
-      .rain-impact,
-      .facet-runoff,
-      .edge-drip{
+      .water-contact,
+      .water-contact::before,
+      .water-contact::after,
+      .surface-beads,
+      .facet-film,
+      .facet-rivulet,
+      .drip-system::before,
+      .drip-system::after{
         animation:none!important;
       }
 
       .rain-sheet,
       .rain-sheet.secondary,
-      .rain-impact,
-      .facet-runoff,
-      .edge-drip{
+      .water-contact,
+      .surface-beads,
+      .facet-film,
+      .facet-rivulet,
+      .drip-system::before,
+      .drip-system::after{
         opacity:.18!important;
       }
     }
@@ -1496,11 +1677,11 @@
         <h1 id="page-title">Water is the first survival system.</h1>
 
         <p class="lead">
-          This Water page is becoming a live Frontier simulation for the future of water systems. The first visual layer is active now: rain enters the field, strikes the diamond controls, splashes, runs down the facets, and drips from the lower edges. The next layer must make the system operational by showing capture, filtration, storage, reuse, contamination pressure, household protection, and failure points.
+          This Water page is becoming a live Frontier simulation for the future of water systems. The rain layer is active now, and the next expression shows what water does after contact: it spreads, beads, runs along the diamond facets, gathers at lower points, and releases as droplets. Future layers will connect that movement to capture, filtration, storage, reuse, contamination pressure, household protection, and failure points.
         </p>
 
         <div class="quote">
-          Look for what happens after contact: where the rain is caught, how the water is routed, what makes it unsafe, which treatment path fits the problem, where usable water is stored, and where the system fails before survival is protected.
+          Watch what happens after impact. Water is not useful because it moves; it becomes useful when the system can catch it, clean it, store it, route it, reuse it, and identify where it fails.
         </div>
 
         <div class="actions">
@@ -1512,15 +1693,15 @@
       </section>
 
       <section class="panel section" aria-labelledby="field-title" id="water-orbit">
-        <div class="kicker">Water field · Future simulation layer active</div>
-        <h2 id="field-title">The rain layer is online. Next, the Water system must show what happens after contact: capture, cleaning, storage, reuse, and failure.</h2>
+        <div class="kicker">Water field · Physics-informed simulation layer active</div>
+        <h2 id="field-title">The rain layer is online. The next system expression is true-form water behavior: contact, spread, bead, runoff, collection, and drip release.</h2>
 
         <div
           class="compass-stage"
-          aria-label="Water pathway field with spring shower simulation in formation"
+          aria-label="Water pathway field with physics-informed water behavior"
           data-water-pathway-field="true"
           data-spring-shower-field="true"
-          data-rain-contact-layer="true"
+          data-true-form-water-field="true"
           data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
           data-source-symbol-authority="compassOrganicGem"
           data-per-pathway-dual-lens="true"
@@ -1531,12 +1712,13 @@
             <span class="mist-layer"></span>
           </div>
 
-          <div class="compass-center" aria-hidden="true" style="--delay:-.1s;--tilt-a:-1.4deg;--tilt-b:1.8deg;--rain-delay:-.3s;--drip-delay:-1.7s;--splash-duration:4.8s;--runoff-duration:6.4s;">
-            <span class="rain-impact"></span>
-            <span class="facet-runoff" style="--runoff-tilt:-12deg;"></span>
-            <span class="facet-runoff secondary" style="--runoff-tilt:15deg;"></span>
-            <span class="edge-drip"></span>
-            <span class="edge-drip secondary"></span>
+          <div class="compass-center" aria-hidden="true" style="--delay:-.1s;--tilt-a:-1.4deg;--tilt-b:1.8deg;--water-delay:-.3s;--water-cycle:7.7s;--rivulet-a-angle:-12deg;--rivulet-b-angle:15deg;--drip-offset:.03rem;">
+            <span class="water-contact"></span>
+            <span class="surface-beads"></span>
+            <span class="facet-film"></span>
+            <span class="facet-rivulet"></span>
+            <span class="facet-rivulet secondary"></span>
+            <span class="drip-system"></span>
             <span class="gem-core">
               <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
                 <use href="#compassOrganicGem"></use>
@@ -1545,74 +1727,74 @@
             <span class="gem-label"><b>Water</b><span>Live System</span></span>
           </div>
 
-          <a class="compass-node" style="--x:50%;--y:11%;--delay:-.2s;--tilt-a:-2.2deg;--tilt-b:1.4deg;--rain-delay:-.6s;--drip-delay:-2.1s;--splash-duration:4.7s;--runoff-duration:6.1s;" href="#audralia-water" aria-label="Open Audralia Water">
-            <span class="rain-impact"></span><span class="facet-runoff" style="--runoff-tilt:-13deg;"></span><span class="facet-runoff secondary" style="--runoff-tilt:16deg;"></span><span class="edge-drip"></span><span class="edge-drip secondary"></span>
+          <a class="compass-node" style="--x:50%;--y:11%;--delay:-.2s;--tilt-a:-2.2deg;--tilt-b:1.4deg;--water-delay:-.6s;--water-cycle:7.1s;--rivulet-a-angle:-13deg;--rivulet-b-angle:16deg;--drip-offset:-.02rem;" href="#audralia-water" aria-label="Open Audralia Water">
+            <span class="water-contact"></span><span class="surface-beads"></span><span class="facet-film"></span><span class="facet-rivulet"></span><span class="facet-rivulet secondary"></span><span class="drip-system"></span>
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Audralia</b><span>Water</span></span>
           </a>
 
-          <a class="compass-node" style="--x:73%;--y:17%;--delay:-.8s;--tilt-a:1.5deg;--tilt-b:-2.3deg;--rain-delay:-2.4s;--drip-delay:-3.8s;--splash-duration:5.2s;--runoff-duration:6.8s;" href="#closed-loop" aria-label="Open Closed Loop">
-            <span class="rain-impact"></span><span class="facet-runoff" style="--runoff-tilt:-11deg;"></span><span class="facet-runoff secondary" style="--runoff-tilt:14deg;"></span><span class="edge-drip"></span><span class="edge-drip secondary"></span>
+          <a class="compass-node" style="--x:73%;--y:17%;--delay:-.8s;--tilt-a:1.5deg;--tilt-b:-2.3deg;--water-delay:-2.4s;--water-cycle:7.8s;--rivulet-a-angle:-11deg;--rivulet-b-angle:14deg;--drip-offset:.04rem;" href="#closed-loop" aria-label="Open Closed Loop">
+            <span class="water-contact"></span><span class="surface-beads"></span><span class="facet-film"></span><span class="facet-rivulet"></span><span class="facet-rivulet secondary"></span><span class="drip-system"></span>
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Closed</b><span>Loop</span></span>
           </a>
 
-          <a class="compass-node" style="--x:87%;--y:34%;--delay:-1.4s;--tilt-a:-1.6deg;--tilt-b:2.6deg;--rain-delay:-1.3s;--drip-delay:-4.7s;--splash-duration:4.4s;--runoff-duration:7.2s;" href="#source-water" aria-label="Open Source Water">
-            <span class="rain-impact"></span><span class="facet-runoff" style="--runoff-tilt:-15deg;"></span><span class="facet-runoff secondary" style="--runoff-tilt:12deg;"></span><span class="edge-drip"></span><span class="edge-drip secondary"></span>
+          <a class="compass-node" style="--x:87%;--y:34%;--delay:-1.4s;--tilt-a:-1.6deg;--tilt-b:2.6deg;--water-delay:-1.3s;--water-cycle:7.4s;--rivulet-a-angle:-15deg;--rivulet-b-angle:12deg;--drip-offset:.01rem;" href="#source-water" aria-label="Open Source Water">
+            <span class="water-contact"></span><span class="surface-beads"></span><span class="facet-film"></span><span class="facet-rivulet"></span><span class="facet-rivulet secondary"></span><span class="drip-system"></span>
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Source</b><span>Water</span></span>
           </a>
 
-          <a class="compass-node" style="--x:87%;--y:62%;--delay:-2.0s;--tilt-a:1.9deg;--tilt-b:-1.6deg;--rain-delay:-3.4s;--drip-delay:-1.9s;--splash-duration:5.6s;--runoff-duration:6.5s;" href="#contaminants" aria-label="Open Contaminants">
-            <span class="rain-impact"></span><span class="facet-runoff" style="--runoff-tilt:-12deg;"></span><span class="facet-runoff secondary" style="--runoff-tilt:17deg;"></span><span class="edge-drip"></span><span class="edge-drip secondary"></span>
+          <a class="compass-node" style="--x:87%;--y:62%;--delay:-2.0s;--tilt-a:1.9deg;--tilt-b:-1.6deg;--water-delay:-3.4s;--water-cycle:8.0s;--rivulet-a-angle:-12deg;--rivulet-b-angle:17deg;--drip-offset:-.04rem;" href="#contaminants" aria-label="Open Contaminants">
+            <span class="water-contact"></span><span class="surface-beads"></span><span class="facet-film"></span><span class="facet-rivulet"></span><span class="facet-rivulet secondary"></span><span class="drip-system"></span>
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Contaminants</b><span>Families</span></span>
           </a>
 
-          <a class="compass-node" style="--x:73%;--y:80%;--delay:-2.6s;--tilt-a:-2deg;--tilt-b:2deg;--rain-delay:-4.1s;--drip-delay:-5.2s;--splash-duration:4.9s;--runoff-duration:7.6s;" href="#filtration" aria-label="Open Filtration">
-            <span class="rain-impact"></span><span class="facet-runoff" style="--runoff-tilt:-16deg;"></span><span class="facet-runoff secondary" style="--runoff-tilt:13deg;"></span><span class="edge-drip"></span><span class="edge-drip secondary"></span>
+          <a class="compass-node" style="--x:73%;--y:80%;--delay:-2.6s;--tilt-a:-2deg;--tilt-b:2deg;--water-delay:-4.1s;--water-cycle:7.3s;--rivulet-a-angle:-16deg;--rivulet-b-angle:13deg;--drip-offset:.05rem;" href="#filtration" aria-label="Open Filtration">
+            <span class="water-contact"></span><span class="surface-beads"></span><span class="facet-film"></span><span class="facet-rivulet"></span><span class="facet-rivulet secondary"></span><span class="drip-system"></span>
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Filtration</b><span>Match</span></span>
           </a>
 
-          <a class="compass-node" style="--x:50%;--y:88%;--delay:-3.0s;--tilt-a:1.4deg;--tilt-b:-2.4deg;--rain-delay:-2.8s;--drip-delay:-6.4s;--splash-duration:5.4s;--runoff-duration:6.9s;" href="#softening" aria-label="Open Softening">
-            <span class="rain-impact"></span><span class="facet-runoff" style="--runoff-tilt:-10deg;"></span><span class="facet-runoff secondary" style="--runoff-tilt:15deg;"></span><span class="edge-drip"></span><span class="edge-drip secondary"></span>
+          <a class="compass-node" style="--x:50%;--y:88%;--delay:-3.0s;--tilt-a:1.4deg;--tilt-b:-2.4deg;--water-delay:-2.8s;--water-cycle:8.1s;--rivulet-a-angle:-10deg;--rivulet-b-angle:15deg;--drip-offset:-.01rem;" href="#softening" aria-label="Open Softening">
+            <span class="water-contact"></span><span class="surface-beads"></span><span class="facet-film"></span><span class="facet-rivulet"></span><span class="facet-rivulet secondary"></span><span class="drip-system"></span>
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Softening</b><span>Scale</span></span>
           </a>
 
-          <a class="compass-node" style="--x:27%;--y:80%;--delay:-3.4s;--tilt-a:-1.9deg;--tilt-b:1.8deg;--rain-delay:-5.2s;--drip-delay:-3.6s;--splash-duration:4.6s;--runoff-duration:7.4s;" href="#storage" aria-label="Open Storage">
-            <span class="rain-impact"></span><span class="facet-runoff" style="--runoff-tilt:-14deg;"></span><span class="facet-runoff secondary" style="--runoff-tilt:11deg;"></span><span class="edge-drip"></span><span class="edge-drip secondary"></span>
+          <a class="compass-node" style="--x:27%;--y:80%;--delay:-3.4s;--tilt-a:-1.9deg;--tilt-b:1.8deg;--water-delay:-5.2s;--water-cycle:7.6s;--rivulet-a-angle:-14deg;--rivulet-b-angle:11deg;--drip-offset:.03rem;" href="#storage" aria-label="Open Storage">
+            <span class="water-contact"></span><span class="surface-beads"></span><span class="facet-film"></span><span class="facet-rivulet"></span><span class="facet-rivulet secondary"></span><span class="drip-system"></span>
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Storage</b><span>Reserve</span></span>
           </a>
 
-          <a class="compass-node" style="--x:13%;--y:62%;--delay:-3.8s;--tilt-a:1.7deg;--tilt-b:-1.5deg;--rain-delay:-1.9s;--drip-delay:-4.9s;--splash-duration:5.8s;--runoff-duration:6.6s;" href="#reuse" aria-label="Open Reuse">
-            <span class="rain-impact"></span><span class="facet-runoff" style="--runoff-tilt:-12deg;"></span><span class="facet-runoff secondary" style="--runoff-tilt:17deg;"></span><span class="edge-drip"></span><span class="edge-drip secondary"></span>
+          <a class="compass-node" style="--x:13%;--y:62%;--delay:-3.8s;--tilt-a:1.7deg;--tilt-b:-1.5deg;--water-delay:-1.9s;--water-cycle:8.3s;--rivulet-a-angle:-12deg;--rivulet-b-angle:17deg;--drip-offset:-.03rem;" href="#reuse" aria-label="Open Reuse">
+            <span class="water-contact"></span><span class="surface-beads"></span><span class="facet-film"></span><span class="facet-rivulet"></span><span class="facet-rivulet secondary"></span><span class="drip-system"></span>
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Reuse</b><span>Purpose</span></span>
           </a>
 
-          <a class="compass-node" style="--x:13%;--y:34%;--delay:-4.2s;--tilt-a:-2.1deg;--tilt-b:1.5deg;--rain-delay:-4.6s;--drip-delay:-2.7s;--splash-duration:4.3s;--runoff-duration:7.1s;" href="#household" aria-label="Open Household">
-            <span class="rain-impact"></span><span class="facet-runoff" style="--runoff-tilt:-15deg;"></span><span class="facet-runoff secondary" style="--runoff-tilt:14deg;"></span><span class="edge-drip"></span><span class="edge-drip secondary"></span>
+          <a class="compass-node" style="--x:13%;--y:34%;--delay:-4.2s;--tilt-a:-2.1deg;--tilt-b:1.5deg;--water-delay:-4.6s;--water-cycle:7.0s;--rivulet-a-angle:-15deg;--rivulet-b-angle:14deg;--drip-offset:.02rem;" href="#household" aria-label="Open Household">
+            <span class="water-contact"></span><span class="surface-beads"></span><span class="facet-film"></span><span class="facet-rivulet"></span><span class="facet-rivulet secondary"></span><span class="drip-system"></span>
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Household</b><span>Protection</span></span>
           </a>
 
-          <a class="compass-node" style="--x:27%;--y:17%;--delay:-4.6s;--tilt-a:1.6deg;--tilt-b:-2.2deg;--rain-delay:-3.1s;--drip-delay:-5.8s;--splash-duration:5.1s;--runoff-duration:6.7s;" href="#community" aria-label="Open Community">
-            <span class="rain-impact"></span><span class="facet-runoff" style="--runoff-tilt:-11deg;"></span><span class="facet-runoff secondary" style="--runoff-tilt:16deg;"></span><span class="edge-drip"></span><span class="edge-drip secondary"></span>
+          <a class="compass-node" style="--x:27%;--y:17%;--delay:-4.6s;--tilt-a:1.6deg;--tilt-b:-2.2deg;--water-delay:-3.1s;--water-cycle:7.9s;--rivulet-a-angle:-11deg;--rivulet-b-angle:16deg;--drip-offset:-.02rem;" href="#community" aria-label="Open Community">
+            <span class="water-contact"></span><span class="surface-beads"></span><span class="facet-film"></span><span class="facet-rivulet"></span><span class="facet-rivulet secondary"></span><span class="drip-system"></span>
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Community</b><span>Trust</span></span>
           </a>
 
-          <a class="compass-node" style="--x:34%;--y:6%;--delay:-5.0s;--tilt-a:-1.6deg;--tilt-b:2.1deg;--rain-delay:-5.8s;--drip-delay:-3.2s;--splash-duration:4.8s;--runoff-duration:7.5s;" href="#science-boundary" aria-label="Open Science Boundary">
-            <span class="rain-impact"></span><span class="facet-runoff" style="--runoff-tilt:-13deg;"></span><span class="facet-runoff secondary" style="--runoff-tilt:12deg;"></span><span class="edge-drip"></span><span class="edge-drip secondary"></span>
+          <a class="compass-node" style="--x:34%;--y:6%;--delay:-5.0s;--tilt-a:-1.6deg;--tilt-b:2.1deg;--water-delay:-5.8s;--water-cycle:7.5s;--rivulet-a-angle:-13deg;--rivulet-b-angle:12deg;--drip-offset:.04rem;" href="#science-boundary" aria-label="Open Science Boundary">
+            <span class="water-contact"></span><span class="surface-beads"></span><span class="facet-film"></span><span class="facet-rivulet"></span><span class="facet-rivulet secondary"></span><span class="drip-system"></span>
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Science</b><span>Boundary</span></span>
           </a>
 
-          <a class="compass-node" style="--x:66%;--y:6%;--delay:-5.4s;--tilt-a:2.0deg;--tilt-b:-1.8deg;--rain-delay:-2.2s;--drip-delay:-6.1s;--splash-duration:5.5s;--runoff-duration:6.2s;" href="#kill-conditions" aria-label="Open Kill Conditions">
-            <span class="rain-impact"></span><span class="facet-runoff" style="--runoff-tilt:-16deg;"></span><span class="facet-runoff secondary" style="--runoff-tilt:15deg;"></span><span class="edge-drip"></span><span class="edge-drip secondary"></span>
+          <a class="compass-node" style="--x:66%;--y:6%;--delay:-5.4s;--tilt-a:2.0deg;--tilt-b:-1.8deg;--water-delay:-2.2s;--water-cycle:8.2s;--rivulet-a-angle:-16deg;--rivulet-b-angle:15deg;--drip-offset:-.05rem;" href="#kill-conditions" aria-label="Open Kill Conditions">
+            <span class="water-contact"></span><span class="surface-beads"></span><span class="facet-film"></span><span class="facet-rivulet"></span><span class="facet-rivulet secondary"></span><span class="drip-system"></span>
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Kill</b><span>Conditions</span></span>
           </a>
@@ -1623,7 +1805,7 @@
         <div class="kicker">Simulation development watchlist</div>
         <h2 id="watchlist-title">What to watch as the simulation develops</h2>
         <p class="watchlist-intro">
-          The rain layer proves that water can move through the field. The next layers must show whether that movement becomes usable water, wasted water, unsafe water, stored water, or water that keeps a future system alive.
+          The current layer shows water moving through the field. The next layers must show whether that movement becomes usable water, wasted water, unsafe water, stored water, or water that keeps a future system alive.
         </p>
 
         <ul class="watchlist-grid" aria-label="Water simulation development watchlist">
@@ -1695,7 +1877,10 @@
           </div>
 
           <div class="boundary">Boundary: Audralia may simulate water systems; it may not prove deployment.</div>
-          <div class="section-return"><a class="return-orbit" href="#water-orbit">Return to Water Orbit</a></div>
+          <div class="section-return dual-return">
+            <a class="return-orbit" href="#water-orbit">Return to Water Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
@@ -1740,7 +1925,10 @@
           </div>
 
           <div class="boundary">Boundary: closed loop does not mean perfect loop. Loss, contamination, maintenance, and replacement remain real.</div>
-          <div class="section-return"><a class="return-orbit" href="#water-orbit">Return to Water Orbit</a></div>
+          <div class="section-return dual-return">
+            <a class="return-orbit" href="#water-orbit">Return to Water Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
@@ -1785,7 +1973,10 @@
           </div>
 
           <div class="boundary">Boundary: clear water does not equal contaminant-free water.</div>
-          <div class="section-return"><a class="return-orbit" href="#water-orbit">Return to Water Orbit</a></div>
+          <div class="section-return dual-return">
+            <a class="return-orbit" href="#water-orbit">Return to Water Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
@@ -1830,7 +2021,10 @@
           </div>
 
           <div class="boundary">Boundary: detected does not mean immediate danger; risk depends on dose, duration, person, pathway, and contaminant.</div>
-          <div class="section-return"><a class="return-orbit" href="#water-orbit">Return to Water Orbit</a></div>
+          <div class="section-return dual-return">
+            <a class="return-orbit" href="#water-orbit">Return to Water Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
@@ -1875,7 +2069,10 @@
           </div>
 
           <div class="boundary">Boundary: carbon helps many organic contaminants, chlorine, taste, odor, some DBPs, and some PFAS depending on design; it is not a universal solution.</div>
-          <div class="section-return"><a class="return-orbit" href="#water-orbit">Return to Water Orbit</a></div>
+          <div class="section-return dual-return">
+            <a class="return-orbit" href="#water-orbit">Return to Water Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
@@ -1920,7 +2117,10 @@
           </div>
 
           <div class="boundary">Boundary: softening manages hardness and scale. It does not equal universal contaminant removal.</div>
-          <div class="section-return"><a class="return-orbit" href="#water-orbit">Return to Water Orbit</a></div>
+          <div class="section-return dual-return">
+            <a class="return-orbit" href="#water-orbit">Return to Water Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
@@ -1965,7 +2165,10 @@
           </div>
 
           <div class="boundary">Boundary: stored water can degrade. Storage must include turnover, cleaning, material safety, and monitoring.</div>
-          <div class="section-return"><a class="return-orbit" href="#water-orbit">Return to Water Orbit</a></div>
+          <div class="section-return dual-return">
+            <a class="return-orbit" href="#water-orbit">Return to Water Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
@@ -2010,7 +2213,10 @@
           </div>
 
           <div class="boundary">Boundary: reuse is purpose-specific. Non-potable reuse is not drinking-water approval.</div>
-          <div class="section-return"><a class="return-orbit" href="#water-orbit">Return to Water Orbit</a></div>
+          <div class="section-return dual-return">
+            <a class="return-orbit" href="#water-orbit">Return to Water Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
@@ -2055,7 +2261,10 @@
           </div>
 
           <div class="boundary">Boundary: whole-home treatment may reduce many common contaminants; performance depends on system type, installation, maintenance, and local water chemistry.</div>
-          <div class="section-return"><a class="return-orbit" href="#water-orbit">Return to Water Orbit</a></div>
+          <div class="section-return dual-return">
+            <a class="return-orbit" href="#water-orbit">Return to Water Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
@@ -2100,7 +2309,10 @@
           </div>
 
           <div class="boundary">Boundary: education is not medical advice. Marketing must not become disease-prevention language.</div>
-          <div class="section-return"><a class="return-orbit" href="#water-orbit">Return to Water Orbit</a></div>
+          <div class="section-return dual-return">
+            <a class="return-orbit" href="#water-orbit">Return to Water Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
@@ -2145,7 +2357,10 @@
           </div>
 
           <div class="boundary">Boundary: EWG identifies concern; HomeWater claims product reduction. Do not merge sources into claims neither source supports.</div>
-          <div class="section-return"><a class="return-orbit" href="#water-orbit">Return to Water Orbit</a></div>
+          <div class="section-return dual-return">
+            <a class="return-orbit" href="#water-orbit">Return to Water Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
@@ -2194,14 +2409,17 @@
           </div>
 
           <div class="boundary">Boundary: stop if the page claims total removal, guaranteed safety, disease prevention, universal Texas contamination, perfect loop, or verified pricing without a source.</div>
-          <div class="section-return"><a class="return-orbit" href="#water-orbit">Return to Water Orbit</a></div>
+          <div class="section-return dual-return">
+            <a class="return-orbit" href="#water-orbit">Return to Water Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
       <section class="final-band" id="final-lock" aria-label="Water final lock">
-        <strong>Water is no longer only a category page. It is becoming a live simulation for future survival systems.</strong>
+        <strong>Water is becoming a live simulation for future survival systems.</strong>
         <p>
-          The Water pathway is active now as a closed-loop science map. The current rain layer proves the page can show water moving through the field. The next development step is to make that movement operational: where water is caught, how it is filtered, where it is stored, when it can be reused, when it becomes unsafe, and what failure looks like before a home, settlement, or world runs out of clean water.
+          The Water pathway is active now as a closed-loop science map. The current visual layer shows water contacting and moving across the diamond field. The next development step is to make that movement operational: where water is caught, how it is filtered, where it is stored, when it can be reused, when it becomes unsafe, and what failure looks like before a home, settlement, or world runs out of clean water.
         </p>
         <div class="actions">
           <a class="button gold" href="#water-orbit">Return to Water Orbit</a>
@@ -2212,64 +2430,59 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_WATER_FUTURE_SIMULATION_CONTEXT_COPY_RENEWAL_TNT_v3
-previous=FRONTIER_WATER_SPRING_SHOWER_DIAMOND_RAIN_PHYSICS_RENEWAL_TNT_v2
-binding=FRONTIER_WATER_FUTURE_SIMULATION_CONTEXT_COPY_RENEWAL_FINAL_DRAFT_AND_CODE_BINDING_v3
+FRONTIER_WATER_TRUE_FORM_PHYSICS_EXPRESSION_AND_DUAL_RETURN_RENEWAL_TNT_v4
+previous=FRONTIER_WATER_FUTURE_SIMULATION_CONTEXT_COPY_RENEWAL_TNT_v3
+binding=FRONTIER_WATER_TRUE_FORM_PHYSICS_EXPRESSION_AND_DUAL_RETURN_FINAL_DRAFT_CODE_BINDING_v4
 route=/explore/frontier/water/
 page=frontier_water
 html=/explore/frontier/water/index.html
 source_visual_authority=COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2
-design_reference=FRONTIER_WATER_SPRING_SHOWER_DIAMOND_RAIN_PHYSICS_RENEWAL_TNT_v2
+design_reference=FRONTIER_WATER_FUTURE_SIMULATION_CONTEXT_COPY_RENEWAL_TNT_v3
 source_symbol_authority=compassOrganicGem
-visual_authority_preserved=true
 visual_baseline_preserved=true
-rain_visual_accepted=true
-spring_shower_simulation_preserved=true
-diamond_rain_contact_preserved=true
-splash_on_contact_preserved=true
-facet_runoff_preserved=true
-edge_drip_preserved=true
-future_simulation_context=true
-copy_context_renewed=true
-guided_meditation_tone_removed=true
-operational_future_language=true
-watchlist_band_added=true
-water_live_system_label=true
-water_specific_visual_law=true
-spring_shower_simulation=true
-live_simulation_in_formation=true
-coming_soon_layer=true
-rain_field=true
-rain_sheet=true
-mist_layer=true
-diamond_rain_contact=true
-splash_on_contact=true
-facet_runoff=true
-edge_drip=true
-true_collision_physics=false
-visual_physics_approximation=true
+future_simulation_context_preserved=true
+water_true_form_expression=true
+physics_informed_water_behavior=true
+impact_spread_expression=true
+splash_crown_expression=true
+surface_tension_expression=true
+surface_beads=true
+facet_film=true
+facet_rivulets=true
+lower_collection=true
+drip_formation=true
+drip_release=true
+vertical_impact_line_premise_superseded=true
+decorative_rain_only=false
+water_glow_inheritance=false
+energy_lightning_inheritance=false
+frontier_fusion_glow_inheritance=false
+closed_loop_backstar_inheritance=false
+dual_return_under_every_pathway=true
+return_to_water_orbit_under_every_pathway=true
+return_to_frontier_under_every_pathway=true
+return_to_frontier_route=/explore/frontier/
 css_only=true
 javascript_added=false
 canvas=false
 webgl=false
 graphic_box=false
 generated_image=false
+particle_engine=false
 heavy_runtime=false
+runtime_optimized=true
+true_collision_physics=false
+visual_physics_approximation=true
 reduced_motion_safe=true
 audralia_water_first=true
 center_anchor=Water_Live_System
 pathways=Audralia_Water,Closed_Loop,Source_Water,Contaminants,Filtration,Softening,Storage,Reuse,Household,Community,Science_Boundary,Kill_Conditions
-public_subject=future_water_systems_capture_filtration_storage_reuse_contamination_pressure_household_protection_failure_points
+public_subject=future_water_systems_physics_informed_contact_spread_bead_runoff_collection_drip_capture_filtration_storage_reuse_contamination_pressure_household_protection_failure_points
 per_pathway_dual_lens=true
 platform_lens_per_pathway=true
 engineering_lens_per_pathway=true
 top_only_lens_toggle=false
 side_by_side_platform_engineering=false
-return_to_water_orbit_under_every_pathway=true
-return_to_frontier_present=true
-return_to_frontier_route=/explore/frontier/
-hero_return_to_frontier=true
-final_return_to_frontier=true
 source_separation=EWG_contaminant_education_HomeWater_product_claims_Audralia_simulation
 homewater_claim_boundary=whole_home_filtration_and_softening_positioning_only_no_total_removal_no_medical_claim
 ewg_claim_boundary=contaminant_education_legal_limit_health_guideline_utility_context
@@ -2278,19 +2491,16 @@ filtration_boundary=no_total_removal_claim
 softening_boundary=not_universal_filtration
 reuse_boundary=non_potable_reuse_not_drinking_water_approval
 pricing_boundary=no_verified_pricing_without_current_source
-segregated_frontier_glow=true
-segregated_closed_loop_backstar=true
-segregated_energy_lightning=true
-final_lock=water_future_simulation_for_survival_systems
+final_lock=water_true_form_physics_expression_for_future_survival_systems
 static_page_usable_without_js=true
 streaming=false
 visual_pass_claimed=false
-deploy_marker=FRONTIER_WATER_FUTURE_SIMULATION_CONTEXT_COPY_RENEWAL_DEPLOY_MARKER_v3
+deploy_marker=FRONTIER_WATER_TRUE_FORM_PHYSICS_EXPRESSION_AND_DUAL_RETURN_DEPLOY_MARKER_v4
       </template>
     </main>
 
     <footer>
-      FRONTIER_WATER_FUTURE_SIMULATION_CONTEXT_COPY_RENEWAL_TNT_v3 · Water · Future simulation context · Accepted rain visual preserved.
+      FRONTIER_WATER_TRUE_FORM_PHYSICS_EXPRESSION_AND_DUAL_RETURN_RENEWAL_TNT_v4 · Water · True-form physics expression · Dual return under every pathway.
     </footer>
   </div>
 </body>

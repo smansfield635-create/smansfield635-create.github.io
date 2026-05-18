@@ -1,12 +1,13 @@
+<!-- TARGET FILE: /explore/frontier/energy/index.html -->
 <!doctype html>
 <html
   lang="en"
   data-route="/explore/frontier/energy/"
   data-page="frontier-energy"
-  data-version="G2-V22"
-  data-contract="FRONTIER_ENERGY_CLOSE_SOURCE_ELECTRIC_SPARK_GLOW_TNT_v22"
-  data-previous-contract="FRONTIER_ENERGY_ELECTRIC_PLASMA_GLOW_CLEAN_SLATE_RETURN_CONTROLS_TNT_v21"
-  data-source-binding="FRONTIER_ENERGY_CLOSE_SOURCE_ELECTRIC_SPARK_GLOW_FULL_AUDIT_v1"
+  data-version="G2-V23"
+  data-contract="FRONTIER_ENERGY_LIGHTNING_BOLT_COLLISION_FIELD_TNT_v23"
+  data-previous-contract="FRONTIER_ENERGY_CLOSE_SOURCE_ELECTRIC_SPARK_GLOW_TNT_v22"
+  data-source-binding="FRONTIER_ENERGY_LIGHTNING_BOLT_COLLISION_FIELD_PREGAME_TO_POSTGAME_BINDING_v1"
   data-source-visual-reference="/explore/frontier/"
   data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
   data-source-symbol-authority="compassOrganicGem"
@@ -18,6 +19,9 @@
   data-energy-electric-plasma-glow-standard="true"
   data-close-source-electric-glow="true"
   data-electric-sparks="true"
+  data-lightning-bolt-field="true"
+  data-natural-electrical-discharge="true"
+  data-gem-collision-charge-response="true"
   data-near-contact-electric-source="true"
   data-stable-ambient-spill="true"
   data-rim-corona="true"
@@ -29,6 +33,9 @@
   data-whole-halo-animation="false"
   data-large-circular-glow-fields="false"
   data-circular-halo-model="false"
+  data-cartoon-bolts="false"
+  data-yellow-comic-bolts="false"
+  data-full-screen-flash="false"
   data-closed-loop-glow-inheritance="false"
   data-fusion-backstar-model="false"
   data-globe-glow-model="false"
@@ -489,6 +496,212 @@
       box-shadow:0 0 2.1rem rgba(141,216,255,.06);
     }
 
+    .energy-bolt-field{
+      position:absolute;
+      inset:0;
+      z-index:2;
+      pointer-events:none;
+      overflow:hidden;
+      border-radius:inherit;
+      opacity:.92;
+    }
+
+    .energy-bolt{
+      position:absolute;
+      width:18rem;
+      height:10rem;
+      opacity:0;
+      transform-origin:50% 50%;
+      animation:boltDischarge 9.4s steps(1,end) infinite;
+      animation-delay:var(--bolt-delay,0s);
+      pointer-events:none;
+    }
+
+    .energy-bolt span{
+      position:absolute;
+      height:1px;
+      border-radius:999px;
+      transform-origin:0 50%;
+      background:
+        linear-gradient(90deg,
+          transparent 0%,
+          rgba(246,253,255,.34) 9%,
+          rgba(246,253,255,.96) 38%,
+          rgba(121,235,255,.92) 52%,
+          rgba(37,128,255,.58) 72%,
+          transparent 100%
+        );
+      box-shadow:
+        0 0 .28rem rgba(246,253,255,.50),
+        0 0 .62rem rgba(121,235,255,.46),
+        0 0 1rem rgba(37,128,255,.26);
+    }
+
+    .energy-bolt span:nth-child(1){
+      width:7.5rem;
+      left:1.1rem;
+      top:4.6rem;
+      transform:rotate(-16deg);
+    }
+
+    .energy-bolt span:nth-child(2){
+      width:4.4rem;
+      left:7.9rem;
+      top:2.55rem;
+      transform:rotate(23deg);
+    }
+
+    .energy-bolt span:nth-child(3){
+      width:3.1rem;
+      left:9.1rem;
+      top:3.55rem;
+      transform:rotate(-42deg);
+      opacity:.78;
+    }
+
+    .energy-bolt span:nth-child(4){
+      width:2.8rem;
+      left:12.0rem;
+      top:4.4rem;
+      transform:rotate(11deg);
+      opacity:.72;
+    }
+
+    .energy-bolt::before,
+    .energy-bolt::after{
+      content:"";
+      position:absolute;
+      width:.22rem;
+      height:.22rem;
+      border-radius:50%;
+      background:rgba(246,253,255,.94);
+      box-shadow:
+        0 0 .45rem rgba(246,253,255,.70),
+        0 0 .9rem rgba(121,235,255,.55),
+        0 0 1.45rem rgba(37,128,255,.32);
+    }
+
+    .energy-bolt::before{
+      left:.86rem;
+      top:4.55rem;
+    }
+
+    .energy-bolt::after{
+      right:2.9rem;
+      top:4.38rem;
+    }
+
+    .bolt-a{
+      left:25%;
+      top:13%;
+      transform:rotate(-5deg) scale(.96);
+      --bolt-delay:-.7s;
+      animation-duration:8.8s;
+    }
+
+    .bolt-b{
+      left:49%;
+      top:28%;
+      transform:rotate(11deg) scale(.92);
+      --bolt-delay:-4.1s;
+      animation-duration:10.6s;
+    }
+
+    .bolt-c{
+      left:18%;
+      top:56%;
+      transform:rotate(8deg) scale(.88);
+      --bolt-delay:-7.2s;
+      animation-duration:11.4s;
+    }
+
+    .bolt-d{
+      left:54%;
+      top:70%;
+      transform:rotate(-13deg) scale(.90);
+      --bolt-delay:-2.9s;
+      animation-duration:9.8s;
+    }
+
+    .bolt-b span:nth-child(1){
+      width:6.8rem;
+      transform:rotate(18deg);
+    }
+
+    .bolt-b span:nth-child(2){
+      width:4rem;
+      left:7.1rem;
+      top:5.6rem;
+      transform:rotate(-28deg);
+    }
+
+    .bolt-b span:nth-child(3){
+      left:8.5rem;
+      top:4.65rem;
+      transform:rotate(40deg);
+    }
+
+    .bolt-c span:nth-child(1){
+      width:7.9rem;
+      transform:rotate(-6deg);
+    }
+
+    .bolt-c span:nth-child(2){
+      left:7.6rem;
+      top:3.35rem;
+      transform:rotate(-34deg);
+    }
+
+    .bolt-c span:nth-child(4){
+      left:11.1rem;
+      top:2.65rem;
+      transform:rotate(27deg);
+    }
+
+    .bolt-d span:nth-child(1){
+      width:6.9rem;
+      transform:rotate(27deg);
+    }
+
+    .bolt-d span:nth-child(2){
+      left:7rem;
+      top:6rem;
+      transform:rotate(-19deg);
+    }
+
+    .bolt-d span:nth-child(3){
+      left:8.4rem;
+      top:5.18rem;
+      transform:rotate(-58deg);
+    }
+
+    @keyframes boltDischarge{
+      0%,100%{
+        opacity:0;
+      }
+      9%{
+        opacity:0;
+      }
+      10%{
+        opacity:.94;
+      }
+      11%{
+        opacity:.20;
+      }
+      12%{
+        opacity:.78;
+      }
+      13%{
+        opacity:0;
+      }
+      14%{
+        opacity:.32;
+      }
+      15%,99%{
+        opacity:0;
+      }
+    }
+
     .compass-center,
     .compass-node{
       position:absolute;
@@ -692,6 +905,51 @@
       opacity:.34;
       animation:electricSparkLife 3.9s steps(1,end) infinite;
       animation-delay:calc(var(--delay,0s) - .45s);
+    }
+
+    .charge-flash{
+      position:absolute;
+      inset:-10%;
+      z-index:5;
+      pointer-events:none;
+      border-radius:44% 56% 52% 48% / 46% 42% 58% 54%;
+      opacity:0;
+      background:
+        radial-gradient(ellipse at 50% 50%,rgba(246,253,255,.64) 0 10%,rgba(121,235,255,.36) 24%,rgba(37,128,255,.20) 44%,transparent 68%),
+        linear-gradient(92deg,transparent 0 36%,rgba(246,253,255,.70) 46%,rgba(121,235,255,.54) 51%,transparent 64%),
+        linear-gradient(8deg,transparent 0 35%,rgba(121,235,255,.44) 45%,rgba(153,92,255,.28) 52%,transparent 65%);
+      box-shadow:
+        0 0 .65rem rgba(246,253,255,.45),
+        0 0 1.3rem rgba(121,235,255,.36),
+        0 0 2.2rem rgba(37,128,255,.20);
+      animation:gemCollisionCharge 9.4s steps(1,end) infinite;
+      animation-delay:var(--charge-delay,0s);
+    }
+
+    .strike-a{--charge-delay:-.7s}
+    .strike-b{--charge-delay:-4.1s}
+    .strike-c{--charge-delay:-7.2s}
+    .strike-d{--charge-delay:-2.9s}
+
+    @keyframes gemCollisionCharge{
+      0%,100%{
+        opacity:0;
+      }
+      10%{
+        opacity:.88;
+      }
+      11%{
+        opacity:.24;
+      }
+      12%{
+        opacity:.66;
+      }
+      14%{
+        opacity:0;
+      }
+      99%{
+        opacity:0;
+      }
     }
 
     @keyframes electricSparkLife{
@@ -1072,6 +1330,42 @@
         display:none;
       }
 
+      .energy-bolt-field{
+        opacity:.55;
+      }
+
+      .energy-bolt{
+        width:11rem;
+        height:7rem;
+      }
+
+      .energy-bolt span:nth-child(1){width:4.7rem}
+      .energy-bolt span:nth-child(2){width:2.9rem;left:5.1rem}
+      .energy-bolt span:nth-child(3){width:2rem;left:5.8rem}
+      .energy-bolt span:nth-child(4){width:1.8rem;left:7.8rem}
+
+      .bolt-a{
+        left:16%;
+        top:12%;
+        transform:rotate(-5deg) scale(.88);
+      }
+
+      .bolt-b{
+        left:50%;
+        top:35%;
+        transform:rotate(12deg) scale(.82);
+      }
+
+      .bolt-c{
+        left:12%;
+        top:62%;
+        transform:rotate(6deg) scale(.76);
+      }
+
+      .bolt-d{
+        display:none;
+      }
+
       .compass-center,
       .compass-node{
         position:relative;
@@ -1107,6 +1401,10 @@
           100% 100%,
           100% 100%,
           100% 100%;
+      }
+
+      .charge-flash{
+        inset:-8%;
       }
 
       .compass-node:hover,
@@ -1196,10 +1494,6 @@
       .compass-center .gem-label b{
         font-size:.78rem;
       }
-
-      .compass-center .gem-label span{
-        font-size:.52rem;
-      }
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -1212,11 +1506,18 @@
         transition-duration:.01ms!important;
       }
 
+      .energy-bolt,
       .compass-center::after,
       .compass-node::after,
       .gem-core::before,
-      .electric-sparks{
+      .electric-sparks,
+      .charge-flash{
         animation:none!important;
+      }
+
+      .energy-bolt,
+      .charge-flash{
+        opacity:0!important;
       }
 
       .electric-sparks{
@@ -1379,8 +1680,17 @@
           data-source-symbol-authority="compassOrganicGem"
           data-per-pathway-dual-lens="true"
           data-close-source-electric-spark-glow="true"
+          data-lightning-bolt-collision-field="true"
         >
-          <div class="compass-center" aria-hidden="true" style="--delay:-.1s;--tilt-a:-1.4deg;--tilt-b:1.8deg;">
+          <div class="energy-bolt-field" aria-hidden="true">
+            <span class="energy-bolt bolt-a"><span></span><span></span><span></span><span></span></span>
+            <span class="energy-bolt bolt-b"><span></span><span></span><span></span><span></span></span>
+            <span class="energy-bolt bolt-c"><span></span><span></span><span></span><span></span></span>
+            <span class="energy-bolt bolt-d"><span></span><span></span><span></span><span></span></span>
+          </div>
+
+          <div class="compass-center strike-b" aria-hidden="true" style="--delay:-.1s;--tilt-a:-1.4deg;--tilt-b:1.8deg;">
+            <span class="charge-flash" aria-hidden="true"></span>
             <span class="electric-sparks" aria-hidden="true"></span>
             <span class="gem-core">
               <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
@@ -1390,73 +1700,85 @@
             <span class="gem-label"><b>Energy</b><span>Readiness</span></span>
           </div>
 
-          <a class="compass-node" style="--x:50%;--y:11%;--delay:-.2s;--tilt-a:-2.2deg;--tilt-b:1.4deg;" href="#audralia-simulation" aria-label="Open Audralia Simulation">
+          <a class="compass-node strike-a" style="--x:50%;--y:11%;--delay:-.2s;--tilt-a:-2.2deg;--tilt-b:1.4deg;" href="#audralia-simulation" aria-label="Open Audralia Simulation">
+            <span class="charge-flash" aria-hidden="true"></span>
             <span class="electric-sparks" aria-hidden="true"></span>
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Audralia</b><span>Simulation</span></span>
           </a>
 
-          <a class="compass-node" style="--x:73%;--y:17%;--delay:-.8s;--tilt-a:1.5deg;--tilt-b:-2.3deg;" href="#fusion-readiness" aria-label="Open Fusion Readiness">
+          <a class="compass-node strike-a" style="--x:73%;--y:17%;--delay:-.8s;--tilt-a:1.5deg;--tilt-b:-2.3deg;" href="#fusion-readiness" aria-label="Open Fusion Readiness">
+            <span class="charge-flash" aria-hidden="true"></span>
             <span class="electric-sparks" aria-hidden="true"></span>
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Fusion</b><span>Readiness</span></span>
           </a>
 
-          <a class="compass-node" style="--x:87%;--y:34%;--delay:-1.4s;--tilt-a:-1.6deg;--tilt-b:2.6deg;" href="#storage-bridge" aria-label="Open Storage Bridge">
+          <a class="compass-node strike-c" style="--x:87%;--y:34%;--delay:-1.4s;--tilt-a:-1.6deg;--tilt-b:2.6deg;" href="#storage-bridge" aria-label="Open Storage Bridge">
+            <span class="charge-flash" aria-hidden="true"></span>
             <span class="electric-sparks" aria-hidden="true"></span>
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Storage</b><span>Bridge</span></span>
           </a>
 
-          <a class="compass-node" style="--x:87%;--y:62%;--delay:-2.0s;--tilt-a:1.9deg;--tilt-b:-1.6deg;" href="#solar-hedge" aria-label="Open Solar Hedge">
+          <a class="compass-node strike-b" style="--x:87%;--y:62%;--delay:-2.0s;--tilt-a:1.9deg;--tilt-b:-1.6deg;" href="#solar-hedge" aria-label="Open Solar Hedge">
+            <span class="charge-flash" aria-hidden="true"></span>
             <span class="electric-sparks" aria-hidden="true"></span>
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Solar</b><span>Hedge</span></span>
           </a>
 
-          <a class="compass-node" style="--x:73%;--y:80%;--delay:-2.6s;--tilt-a:-2deg;--tilt-b:2deg;" href="#plasma-boundary" aria-label="Open Plasma Boundary">
+          <a class="compass-node strike-d" style="--x:73%;--y:80%;--delay:-2.6s;--tilt-a:-2deg;--tilt-b:2deg;" href="#plasma-boundary" aria-label="Open Plasma Boundary">
+            <span class="charge-flash" aria-hidden="true"></span>
             <span class="electric-sparks" aria-hidden="true"></span>
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Plasma</b><span>Boundary</span></span>
           </a>
 
-          <a class="compass-node" style="--x:50%;--y:88%;--delay:-3.0s;--tilt-a:1.4deg;--tilt-b:-2.4deg;" href="#q-boundary" aria-label="Open Q Boundary">
+          <a class="compass-node strike-d" style="--x:50%;--y:88%;--delay:-3.0s;--tilt-a:1.4deg;--tilt-b:-2.4deg;" href="#q-boundary" aria-label="Open Q Boundary">
+            <span class="charge-flash" aria-hidden="true"></span>
             <span class="electric-sparks" aria-hidden="true"></span>
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Q</b><span>Boundary</span></span>
           </a>
 
-          <a class="compass-node" style="--x:27%;--y:80%;--delay:-3.4s;--tilt-a:-1.9deg;--tilt-b:1.8deg;" href="#commercial-now" aria-label="Open Commercial Now">
+          <a class="compass-node strike-c" style="--x:27%;--y:80%;--delay:-3.4s;--tilt-a:-1.9deg;--tilt-b:1.8deg;" href="#commercial-now" aria-label="Open Commercial Now">
+            <span class="charge-flash" aria-hidden="true"></span>
             <span class="electric-sparks" aria-hidden="true"></span>
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Commercial</b><span>Now</span></span>
           </a>
 
-          <a class="compass-node" style="--x:13%;--y:62%;--delay:-3.8s;--tilt-a:1.7deg;--tilt-b:-1.5deg;" href="#bridge-infrastructure" aria-label="Open Bridge Infrastructure">
+          <a class="compass-node strike-b" style="--x:13%;--y:62%;--delay:-3.8s;--tilt-a:1.7deg;--tilt-b:-1.5deg;" href="#bridge-infrastructure" aria-label="Open Bridge Infrastructure">
+            <span class="charge-flash" aria-hidden="true"></span>
             <span class="electric-sparks" aria-hidden="true"></span>
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Bridge</b><span>Infrastructure</span></span>
           </a>
 
-          <a class="compass-node" style="--x:13%;--y:34%;--delay:-4.2s;--tilt-a:-2.1deg;--tilt-b:1.5deg;" href="#storage-fields" aria-label="Open Storage Fields">
+          <a class="compass-node strike-a" style="--x:13%;--y:34%;--delay:-4.2s;--tilt-a:-2.1deg;--tilt-b:1.5deg;" href="#storage-fields" aria-label="Open Storage Fields">
+            <span class="charge-flash" aria-hidden="true"></span>
             <span class="electric-sparks" aria-hidden="true"></span>
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Storage</b><span>Fields</span></span>
           </a>
 
-          <a class="compass-node" style="--x:27%;--y:17%;--delay:-4.6s;--tilt-a:1.6deg;--tilt-b:-2.2deg;" href="#advanced-buffer" aria-label="Open Advanced Buffer">
+          <a class="compass-node strike-d" style="--x:27%;--y:17%;--delay:-4.6s;--tilt-a:1.6deg;--tilt-b:-2.2deg;" href="#advanced-buffer" aria-label="Open Advanced Buffer">
+            <span class="charge-flash" aria-hidden="true"></span>
             <span class="electric-sparks" aria-hidden="true"></span>
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Advanced</b><span>Buffer</span></span>
           </a>
 
-          <a class="compass-node" style="--x:34%;--y:6%;--delay:-5.0s;--tilt-a:-1.6deg;--tilt-b:2.1deg;" href="#future-offtake" aria-label="Open Future Offtake">
+          <a class="compass-node strike-c" style="--x:34%;--y:6%;--delay:-5.0s;--tilt-a:-1.6deg;--tilt-b:2.1deg;" href="#future-offtake" aria-label="Open Future Offtake">
+            <span class="charge-flash" aria-hidden="true"></span>
             <span class="electric-sparks" aria-hidden="true"></span>
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Future</b><span>Offtake</span></span>
           </a>
 
-          <a class="compass-node" style="--x:66%;--y:6%;--delay:-5.4s;--tilt-a:2.0deg;--tilt-b:-1.8deg;" href="#kill-conditions" aria-label="Open Kill Conditions">
+          <a class="compass-node strike-b" style="--x:66%;--y:6%;--delay:-5.4s;--tilt-a:2.0deg;--tilt-b:-1.8deg;" href="#kill-conditions" aria-label="Open Kill Conditions">
+            <span class="charge-flash" aria-hidden="true"></span>
             <span class="electric-sparks" aria-hidden="true"></span>
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Kill</b><span>Conditions</span></span>
@@ -2106,9 +2428,9 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_ENERGY_CLOSE_SOURCE_ELECTRIC_SPARK_GLOW_TNT_v22
-previous=FRONTIER_ENERGY_ELECTRIC_PLASMA_GLOW_CLEAN_SLATE_RETURN_CONTROLS_TNT_v21
-binding=FRONTIER_ENERGY_CLOSE_SOURCE_ELECTRIC_SPARK_GLOW_FULL_AUDIT_v1
+FRONTIER_ENERGY_LIGHTNING_BOLT_COLLISION_FIELD_TNT_v23
+previous=FRONTIER_ENERGY_CLOSE_SOURCE_ELECTRIC_SPARK_GLOW_TNT_v22
+binding=FRONTIER_ENERGY_LIGHTNING_BOLT_COLLISION_FIELD_PREGAME_TO_POSTGAME_BINDING_v1
 route=/explore/frontier/energy/
 page=frontier_energy
 html=/explore/frontier/energy/index.html
@@ -2125,6 +2447,37 @@ near_contact_electric_source=true
 stable_ambient_spill=true
 rim_corona=true
 electric_sparks=true
+lightning_bolt_field=true
+natural_electrical_discharge=true
+gem_collision_charge_response=true
+background_electrical_field=true
+thin_branching_plasma_lines=true
+bolt_color_standard=cyan_white_blue_violet
+cartoon_bolts=false
+yellow_comic_bolts=false
+emoji_bolts=false
+full_screen_flash=false
+rapid_strobe=false
+bolt_animation_targets=opacity_scale_branch_visibility_only
+gem_charge_response_targets=rim_current_spark_brightness_only
+gem_body_animated=false
+label_animated=false
+whole_page_flicker=false
+whole_halo_animation=false
+halo_opacity_flicker=false
+animated_blur=false
+animated_filter=false
+background_position_drift=false
+particle_engine=false
+javascript_added=false
+canvas=false
+webgl=false
+heavy_runtime=false
+static_page_usable_without_js=true
+generated_image=false
+graphic_box=false
+streaming=false
+visual_pass_claimed=false
 internal_current=true
 gem_as_conductor=true
 rim_as_charged_boundary=true
@@ -2142,26 +2495,7 @@ globe_glow_model=false
 soft_static_aura_model=false
 electric_blue_cyan_white_violet_dominant=true
 gold_continuity_controlled=true
-whole_halo_animation=false
-halo_opacity_flicker=false
-animated_blur=false
-animated_filter=false
-spark_animation=true
-source_core_low_amplitude_pulse=true
-current_vein_animation=true
-gem_body_animated=false
-label_animated=false
-animation_targets=sparks_current_source_core_only
-javascript_added=false
-canvas=false
-webgl=false
-particle_engine=false
-heavy_runtime=false
-static_page_usable_without_js=true
-generated_image=false
-graphic_box=false
-streaming=false
-visual_pass_claimed=false
+animation_targets=bolts_sparks_current_source_core_charge_response_only
 audralia_first=true
 public_subject=fusion_readiness_storage_solar_hedge_plasma_boundary_q_boundary_commercial_now_bridge_infrastructure_storage_fields_advanced_buffer_future_offtake_kill_conditions
 per_pathway_dual_lens=true
@@ -2173,8 +2507,8 @@ return_to_energy_orbit_under_every_pathway=true
 return_to_frontier_under_every_pathway=true
 return_to_frontier_route=/explore/frontier/
 final_band_return_corrected=Return_to_Frontier
-hero_return_to_frontier_added=true
-top_nav_frontier_added=true
+hero_return_to_frontier_preserved=true
+top_nav_frontier_preserved=true
 solar_lock=solar_supports_pathway_does_not_become_fusion
 plasma_lock=plasma_is_operating_state_not_storage
 storage_fields_lock=bridge_infrastructure_only_not_fusion_farms
@@ -2184,7 +2518,7 @@ final_lock=do_not_sell_fusion_sell_readiness
     </main>
 
     <footer>
-      FRONTIER_ENERGY_CLOSE_SOURCE_ELECTRIC_SPARK_GLOW_TNT_v22 · Energy · Close-source electric spark glow · Return to Frontier controls.
+      FRONTIER_ENERGY_LIGHTNING_BOLT_COLLISION_FIELD_TNT_v23 · Energy · Lightning bolt collision field · Close-source electric glow · Return to Frontier controls.
     </footer>
   </div>
 </body>

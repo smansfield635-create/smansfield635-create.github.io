@@ -3,10 +3,10 @@
   lang="en"
   data-route="/explore/frontier/energy/"
   data-page="frontier-energy"
-  data-version="G2-V20"
-  data-contract="FRONTIER_ENERGY_PLASMA_CHARGE_GEM_GLOW_RUNTIME_SAFE_RENEWAL_TNT_v20"
-  data-previous-contract="FRONTIER_ENERGY_COMPASS_GEM_PRINT_LEGIBILITY_RENEWAL_TNT_v19"
-  data-source-binding="FRONTIER_ENERGY_PLASMA_CHARGE_GEM_GLOW_CANONICAL_BINDING_v1"
+  data-version="G2-V21"
+  data-contract="FRONTIER_ENERGY_ELECTRIC_PLASMA_GLOW_CLEAN_SLATE_RETURN_CONTROLS_TNT_v21"
+  data-previous-contract="FRONTIER_ENERGY_PLASMA_CHARGE_GEM_GLOW_RUNTIME_SAFE_RENEWAL_TNT_v20"
+  data-source-binding="FRONTIER_ENERGY_ELECTRIC_PLASMA_GLOW_CLEAN_SLATE_CANONICAL_STANDARD_v1"
   data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
   data-source-symbol-authority="compassOrganicGem"
   data-role="frontier-energy"
@@ -15,16 +15,26 @@
   data-platform-lens="true"
   data-engineering-lens="true"
   data-gem-print-legibility-preserved="true"
-  data-energy-plasma-charge-gem-glow="true"
+  data-energy-electric-plasma-glow-standard="true"
+  data-electric-glow-clean-slate="true"
   data-plasma-corona="true"
   data-electrical-edge-charge="true"
   data-ionized-rim-glow="true"
   data-charged-facet-veins="true"
+  data-gem-as-conductor="true"
+  data-rim-as-charged-boundary="true"
+  data-facets-as-current-channels="true"
+  data-surrounding-air-ionized="true"
   data-fusion-backstar-model="false"
+  data-closed-loop-glow-inheritance="false"
   data-circular-halo-model="false"
   data-globe-glow-model="false"
-  data-runtime-safe-plasma-glow="true"
-  data-return-to-explore-frontier-route="/explore/frontier/"
+  data-runtime-safe-plasma-animation="true"
+  data-charge-layers-animated="true"
+  data-gem-body-animated="false"
+  data-label-animated="false"
+  data-return-to-frontier-under-every-pathway="true"
+  data-return-to-frontier-route="/explore/frontier/"
   data-incorrect-model="discarded"
   data-static-page-usable-without-js="true"
   data-heavy-runtime-loaded="false"
@@ -56,10 +66,11 @@
       --blue:#8dd8ff;
       --green:#8ff0c3;
       --violet:#8f65ff;
-      --plasma-cyan:rgba(141,216,255,.72);
-      --plasma-blue:rgba(36,120,255,.54);
-      --plasma-violet:rgba(143,101,255,.46);
-      --plasma-white:rgba(245,253,255,.88);
+      --electric-cyan:rgba(121,235,255,.76);
+      --electric-blue:rgba(37,128,255,.62);
+      --electric-white:rgba(246,253,255,.92);
+      --electric-violet:rgba(153,92,255,.52);
+      --electric-deep:rgba(23,65,255,.32);
       --panel:rgba(9,15,31,.88);
       --line:rgba(184,205,255,.18);
       --shadow:0 32px 110px rgba(0,0,0,.48);
@@ -516,26 +527,30 @@
       left:50%;
       top:50%;
       z-index:0;
-      width:190%;
-      height:220%;
-      transform:translate(-50%,-50%) rotate(-9deg) scale(1);
+      width:198%;
+      height:230%;
+      transform:translate(-50%,-50%) rotate(-9deg) scale(.96);
       pointer-events:none;
       border:0;
-      border-radius:44% 56% 52% 48% / 46% 42% 58% 54%;
+      border-radius:38% 62% 58% 42% / 42% 38% 62% 58%;
       background:
-        linear-gradient(112deg,transparent 0 33%,rgba(141,216,255,.26) 44%,rgba(245,253,255,.20) 48%,rgba(143,101,255,.22) 53%,transparent 66%),
-        linear-gradient(28deg,transparent 0 38%,rgba(36,120,255,.18) 47%,rgba(141,216,255,.18) 52%,transparent 64%),
-        radial-gradient(ellipse at 50% 50%,rgba(245,253,255,.24) 0 6%,rgba(141,216,255,.23) 13%,rgba(36,120,255,.16) 28%,rgba(143,101,255,.13) 46%,transparent 72%),
-        radial-gradient(ellipse at 39% 45%,rgba(141,216,255,.18) 0 11%,transparent 36%),
-        radial-gradient(ellipse at 62% 58%,rgba(143,101,255,.16) 0 10%,transparent 40%),
+        linear-gradient(112deg,transparent 0 28%,rgba(121,235,255,.30) 40%,rgba(246,253,255,.25) 46%,rgba(153,92,255,.25) 52%,transparent 66%),
+        linear-gradient(28deg,transparent 0 34%,rgba(37,128,255,.23) 46%,rgba(121,235,255,.20) 52%,transparent 64%),
+        linear-gradient(156deg,transparent 0 37%,rgba(153,92,255,.18) 48%,rgba(246,253,255,.14) 52%,transparent 65%),
+        radial-gradient(ellipse at 50% 50%,rgba(246,253,255,.22) 0 6%,rgba(121,235,255,.24) 13%,rgba(37,128,255,.18) 30%,rgba(153,92,255,.15) 48%,transparent 74%),
+        radial-gradient(ellipse at 38% 45%,rgba(121,235,255,.20) 0 11%,transparent 37%),
+        radial-gradient(ellipse at 64% 58%,rgba(153,92,255,.18) 0 10%,transparent 42%),
         radial-gradient(ellipse at 52% 67%,rgba(243,200,111,.08) 0 7%,transparent 32%);
+      background-size:160% 160%,140% 140%,170% 170%,100% 100%,100% 100%,100% 100%,100% 100%;
+      background-position:0% 50%,100% 50%,50% 0%,50% 50%,50% 50%,50% 50%,50% 50%;
       box-shadow:
-        0 0 .9rem rgba(141,216,255,.22),
-        0 0 1.8rem rgba(36,120,255,.18),
-        0 0 2.9rem rgba(143,101,255,.13);
-      opacity:.76;
+        0 0 .95rem rgba(121,235,255,.26),
+        0 0 1.9rem rgba(37,128,255,.22),
+        0 0 3.1rem rgba(153,92,255,.16);
+      opacity:.72;
       filter:none;
-      animation:none!important;
+      animation:electricFieldPulse 5.8s ease-in-out infinite;
+      animation-delay:var(--delay,0s);
     }
 
     .compass-center::after,
@@ -545,38 +560,77 @@
       left:50%;
       top:50%;
       z-index:1;
-      width:122%;
-      height:145%;
-      transform:translate(-50%,-50%) rotate(5deg) scale(1);
+      width:126%;
+      height:150%;
+      transform:translate(-50%,-50%) rotate(5deg) scale(.985);
       pointer-events:none;
       border:0;
-      border-radius:46% 54% 55% 45% / 49% 44% 56% 51%;
+      border-radius:43% 57% 54% 46% / 48% 43% 57% 52%;
       background:
-        linear-gradient(92deg,transparent 0 32%,rgba(245,253,255,.76) 48%,rgba(141,216,255,.46) 51%,transparent 67%),
-        linear-gradient(6deg,transparent 0 34%,rgba(141,216,255,.42) 49%,rgba(143,101,255,.34) 52%,transparent 66%),
-        linear-gradient(140deg,transparent 0 42%,rgba(245,253,255,.44) 49%,rgba(36,120,255,.24) 52%,transparent 59%),
-        linear-gradient(38deg,transparent 0 41%,rgba(143,101,255,.34) 49%,rgba(141,216,255,.28) 52%,transparent 60%),
-        radial-gradient(ellipse at 50% 50%,rgba(245,253,255,.86) 0 5%,rgba(141,216,255,.54) 12%,rgba(36,120,255,.28) 31%,rgba(143,101,255,.18) 52%,transparent 76%);
+        linear-gradient(92deg,transparent 0 28%,rgba(246,253,255,.82) 47%,rgba(121,235,255,.52) 51%,transparent 68%),
+        linear-gradient(6deg,transparent 0 30%,rgba(121,235,255,.48) 48%,rgba(153,92,255,.38) 53%,transparent 68%),
+        linear-gradient(140deg,transparent 0 40%,rgba(246,253,255,.46) 49%,rgba(37,128,255,.28) 53%,transparent 60%),
+        linear-gradient(38deg,transparent 0 39%,rgba(153,92,255,.38) 49%,rgba(121,235,255,.31) 53%,transparent 61%),
+        radial-gradient(ellipse at 50% 50%,rgba(246,253,255,.86) 0 4%,rgba(121,235,255,.58) 12%,rgba(37,128,255,.31) 31%,rgba(153,92,255,.20) 53%,transparent 77%);
+      background-size:140% 140%,145% 145%,130% 130%,155% 155%,100% 100%;
+      background-position:10% 50%,90% 50%,50% 10%,50% 90%,50% 50%;
       box-shadow:
-        0 0 .45rem rgba(245,253,255,.32),
-        0 0 .95rem rgba(141,216,255,.34),
-        0 0 1.55rem rgba(36,120,255,.25),
-        0 0 2.35rem rgba(143,101,255,.16);
-      opacity:.92;
+        0 0 .45rem rgba(246,253,255,.34),
+        0 0 1rem rgba(121,235,255,.38),
+        0 0 1.65rem rgba(37,128,255,.29),
+        0 0 2.45rem rgba(153,92,255,.18);
+      opacity:.90;
       filter:none;
-      animation:none;
+      animation:electricRimCurrent 4.6s ease-in-out infinite;
+      animation-delay:calc(var(--delay,0s) - .35s);
     }
 
     .compass-center::before{
-      width:218%;
-      height:250%;
-      opacity:.84;
+      width:228%;
+      height:262%;
+      opacity:.80;
     }
 
     .compass-center::after{
-      width:136%;
-      height:160%;
-      opacity:.98;
+      width:142%;
+      height:168%;
+      opacity:.96;
+    }
+
+    @keyframes electricFieldPulse{
+      0%,100%{
+        opacity:.62;
+        transform:translate(-50%,-50%) rotate(-9deg) scale(.94);
+        background-position:0% 50%,100% 50%,50% 0%,50% 50%,50% 50%,50% 50%,50% 50%;
+      }
+      42%{
+        opacity:.86;
+        transform:translate(-50%,-50%) rotate(-5deg) scale(1.025);
+        background-position:74% 50%,18% 52%,58% 44%,50% 50%,50% 50%,50% 50%,50% 50%;
+      }
+      68%{
+        opacity:.74;
+        transform:translate(-50%,-50%) rotate(-12deg) scale(.99);
+        background-position:42% 48%,68% 54%,38% 58%,50% 50%,50% 50%,50% 50%,50% 50%;
+      }
+    }
+
+    @keyframes electricRimCurrent{
+      0%,100%{
+        opacity:.76;
+        transform:translate(-50%,-50%) rotate(4deg) scale(.97);
+        background-position:10% 50%,90% 50%,50% 10%,50% 90%,50% 50%;
+      }
+      36%{
+        opacity:.98;
+        transform:translate(-50%,-50%) rotate(7deg) scale(1.018);
+        background-position:72% 48%,24% 52%,56% 38%,44% 66%,50% 50%;
+      }
+      63%{
+        opacity:.88;
+        transform:translate(-50%,-50%) rotate(2deg) scale(.995);
+        background-position:44% 52%,66% 48%,38% 64%,58% 36%,50% 50%;
+      }
     }
 
     .compass-node:hover,
@@ -607,13 +661,13 @@
       pointer-events:none;
       filter:
         drop-shadow(0 1rem 1.15rem rgba(0,0,0,.34))
-        drop-shadow(0 0 .9rem rgba(141,216,255,.20));
+        drop-shadow(0 0 .9rem rgba(121,235,255,.24));
     }
 
     .compass-center .gem-svg{
       filter:
         drop-shadow(0 1.35rem 1.55rem rgba(0,0,0,.38))
-        drop-shadow(0 0 1.15rem rgba(141,216,255,.24));
+        drop-shadow(0 0 1.15rem rgba(121,235,255,.28));
     }
 
     .gem-glint{
@@ -802,31 +856,58 @@
 
     .section-return{
       display:flex;
+      flex-wrap:wrap;
       justify-content:flex-end;
+      gap:.55rem;
       margin-top:.1rem;
     }
 
-    .return-orbit{
+    .return-orbit,
+    .return-frontier{
       min-height:2.5rem;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      border:1px solid rgba(243,200,111,.86);
       border-radius:999px;
       padding:.6rem .95rem;
-      color:#060811;
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
       font-size:.72rem;
       font-weight:950;
       letter-spacing:.07em;
       text-transform:uppercase;
-      transition:transform .18s ease;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .return-orbit{
+      border:1px solid rgba(243,200,111,.86);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .return-frontier{
+      border:1px solid rgba(121,235,255,.34);
+      color:rgba(241,246,255,.90);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(121,235,255,.12),transparent 70%),
+        rgba(255,255,255,.045);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.07),
+        0 0 1rem rgba(37,128,255,.08);
     }
 
     .return-orbit:hover,
-    .return-orbit:focus-visible{
+    .return-orbit:focus-visible,
+    .return-frontier:hover,
+    .return-frontier:focus-visible{
       transform:translateY(-2px);
       outline:none;
+    }
+
+    .return-frontier:hover,
+    .return-frontier:focus-visible{
+      border-color:rgba(121,235,255,.62);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(121,235,255,.18),transparent 70%),
+        rgba(255,255,255,.060);
     }
 
     .final-band{
@@ -932,15 +1013,15 @@
       .compass-center::before,
       .compass-node::before{
         width:176%;
-        height:202%;
-        opacity:.68;
+        height:204%;
+        opacity:.66;
       }
 
       .compass-center::after,
       .compass-node::after{
-        width:118%;
-        height:138%;
-        opacity:.88;
+        width:120%;
+        height:142%;
+        opacity:.86;
       }
 
       .compass-node:hover,
@@ -992,7 +1073,8 @@
         justify-content:stretch;
       }
 
-      .return-orbit{
+      .return-orbit,
+      .return-frontier{
         width:100%;
       }
     }
@@ -1212,7 +1294,7 @@
           data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
           data-source-symbol-authority="compassOrganicGem"
           data-per-pathway-dual-lens="true"
-          data-energy-plasma-charge-gem-glow="true"
+          data-energy-electric-plasma-glow-standard="true"
         >
           <div class="compass-center" aria-hidden="true" style="--delay:-.1s;--tilt-a:-1.4deg;--tilt-b:1.8deg;">
             <span class="gem-core">
@@ -1326,7 +1408,10 @@
           </div>
 
           <div class="boundary">Boundary: Audralia may simulate, teach, and dramatize; Audralia may not prove deployment.</div>
-          <div class="section-return"><a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a></div>
+          <div class="section-return">
+            <a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
@@ -1371,7 +1456,10 @@
           </div>
 
           <div class="boundary">Boundary: fusion is real; commercial fusion electricity is not sold here as ready.</div>
-          <div class="section-return"><a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a></div>
+          <div class="section-return">
+            <a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
@@ -1416,7 +1504,10 @@
           </div>
 
           <div class="boundary">Boundary: storage is bridge infrastructure, not proof that fusion is commercially ready.</div>
-          <div class="section-return"><a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a></div>
+          <div class="section-return">
+            <a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
@@ -1461,7 +1552,10 @@
           </div>
 
           <div class="boundary">Boundary: solar supports the energy stack; it does not close the fusion loop.</div>
-          <div class="section-return"><a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a></div>
+          <div class="section-return">
+            <a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
@@ -1506,7 +1600,10 @@
           </div>
 
           <div class="boundary">Boundary: use advanced energy buffer or pulsed-power readiness unless a validated device is specified.</div>
-          <div class="section-return"><a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a></div>
+          <div class="section-return">
+            <a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
@@ -1551,7 +1648,10 @@
           </div>
 
           <div class="boundary">Boundary: gain types may be taught; they may not be collapsed into a commercial fusion claim.</div>
-          <div class="section-return"><a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a></div>
+          <div class="section-return">
+            <a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
@@ -1596,7 +1696,10 @@
           </div>
 
           <div class="boundary">Boundary: sell energy risk control and readiness now; do not sell fusion power now.</div>
-          <div class="section-return"><a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a></div>
+          <div class="section-return">
+            <a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
@@ -1641,7 +1744,10 @@
           </div>
 
           <div class="boundary">Boundary: bridge infrastructure prepares adoption; it does not prove future energy deployment.</div>
-          <div class="section-return"><a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a></div>
+          <div class="section-return">
+            <a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
@@ -1686,7 +1792,10 @@
           </div>
 
           <div class="boundary">Boundary: storage fields are bridge infrastructure only; no reactor-farm language.</div>
-          <div class="section-return"><a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a></div>
+          <div class="section-return">
+            <a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
@@ -1731,7 +1840,10 @@
           </div>
 
           <div class="boundary">Boundary: say advanced energy buffer or pulsed-power readiness unless a validated device is specified.</div>
-          <div class="section-return"><a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a></div>
+          <div class="section-return">
+            <a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
@@ -1776,7 +1888,10 @@
           </div>
 
           <div class="boundary">Boundary: future offtake prepares optionality; it does not sell fusion-generated electricity today.</div>
-          <div class="section-return"><a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a></div>
+          <div class="section-return">
+            <a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
@@ -1821,7 +1936,10 @@
           </div>
 
           <div class="boundary">Boundary: story may teach bounded possibility; story may not replace measured evidence.</div>
-          <div class="section-return"><a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a></div>
+          <div class="section-return">
+            <a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
@@ -1870,7 +1988,10 @@
           </div>
 
           <div class="boundary">Boundary: if claim discipline fails, the public claim stops.</div>
-          <div class="section-return"><a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a></div>
+          <div class="section-return">
+            <a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
         </article>
       </section>
 
@@ -1883,14 +2004,14 @@
           <a class="button gold" href="#energy-orbit">Return to Energy Orbit</a>
           <a class="button" href="/showroom/globe/audralia/">Open Audralia</a>
           <a class="button green" href="/explore/frontier/water/">Open Water</a>
-          <a class="button" href="/explore/frontier/">Return to Explore Frontier</a>
+          <a class="button" href="/explore/frontier/">Return to Frontier</a>
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_ENERGY_PLASMA_CHARGE_GEM_GLOW_RUNTIME_SAFE_RENEWAL_TNT_v20
-previous=FRONTIER_ENERGY_COMPASS_GEM_PRINT_LEGIBILITY_RENEWAL_TNT_v19
-binding=FRONTIER_ENERGY_PLASMA_CHARGE_GEM_GLOW_CANONICAL_BINDING_v1
+FRONTIER_ENERGY_ELECTRIC_PLASMA_GLOW_CLEAN_SLATE_RETURN_CONTROLS_TNT_v21
+previous=FRONTIER_ENERGY_PLASMA_CHARGE_GEM_GLOW_RUNTIME_SAFE_RENEWAL_TNT_v20
+binding=FRONTIER_ENERGY_ELECTRIC_PLASMA_GLOW_CLEAN_SLATE_CANONICAL_STANDARD_v1
 route=/explore/frontier/energy/
 page=frontier_energy
 html=/explore/frontier/energy/index.html
@@ -1902,22 +2023,39 @@ gem_print_legibility_preserved=true
 gem_label_width_preserved=true
 gem_label_font_size_preserved=true
 mobile_gem_print_size_preserved=true
-energy_plasma_charge_gem_glow=true
-plasma_corona=true
-electrical_edge_charge=true
-ionized_rim_glow=true
-charged_facet_veins=true
-plasma_charge_glow_clings_to_gem=true
-cyan_blue_violet_dominant=true
-gold_continuity_preserved=true
+energy_electric_plasma_glow_standard=true
+clean_slate_glow=true
+closed_loop_glow_inheritance=false
 fusion_backstar_model=false
-closed_loop_backstar_model_imported=false
+hidden_star_model=false
+star_behind_gem_model=false
 circular_halo_model=false
 globe_glow_model=false
-particle_engine=false
+soft_static_aura_model=false
+electric_charge=true
+plasma_sheath=true
+voltage_field=true
+ionized_edge=true
+charged_rim=true
+internal_current_veins=true
+gem_as_conductor=true
+rim_as_charged_boundary=true
+facets_as_current_channels=true
+surrounding_air_ionized=true
+electric_blue_cyan_white_violet_dominant=true
+gold_continuity_controlled=true
+charge_layers_animated=true
+gem_body_animated=false
+label_animated=false
+animation_targets=pseudo_elements_only
+animation_methods=opacity_transform_scale_background_position
 animated_blur=false
 animated_filter=false
-runtime_safe_plasma_glow=true
+particle_engine=false
+javascript_added=false
+canvas=false
+webgl=false
+heavy_runtime=false
 hero_pulse_removed=true
 stage_orbit_animation_removed=true
 gem_float_removed=true
@@ -1926,18 +2064,10 @@ gem_glint_animation_removed=true
 gem_facet_turn_animation_removed=true
 svg_filter_blur_reduced=true
 static_page_usable_without_js=true
-javascript_added=false
-canvas=false
-webgl=false
-heavy_runtime=false
 generated_image=false
 graphic_box=false
 streaming=false
 visual_pass_claimed=false
-incorrect_fabricated_energy_visual_model=discarded
-legacy_hybrid_model=discarded
-forced_polygon_model=discarded
-black_badge_model=discarded
 audralia_first=true
 public_subject=fusion_readiness_storage_solar_hedge_plasma_boundary_q_boundary_commercial_now_bridge_infrastructure_storage_fields_advanced_buffer_future_offtake_kill_conditions
 per_pathway_dual_lens=true
@@ -1946,8 +2076,9 @@ engineering_lens_per_pathway=true
 top_only_lens_toggle=false
 side_by_side_platform_engineering=false
 return_to_energy_orbit_under_every_pathway=true
-return_to_explore_frontier_route=/explore/frontier/
-final_band_return_corrected=Return_to_Explore_Frontier
+return_to_frontier_under_every_pathway=true
+return_to_frontier_route=/explore/frontier/
+final_band_return_corrected=Return_to_Frontier
 solar_lock=solar_supports_pathway_does_not_become_fusion
 plasma_lock=plasma_is_operating_state_not_storage
 storage_fields_lock=bridge_infrastructure_only_not_fusion_farms
@@ -1957,7 +2088,7 @@ final_lock=do_not_sell_fusion_sell_readiness
     </main>
 
     <footer>
-      FRONTIER_ENERGY_PLASMA_CHARGE_GEM_GLOW_RUNTIME_SAFE_RENEWAL_TNT_v20 · Energy · Plasma charge gem glow · Runtime-safe · Return to Explore Frontier.
+      FRONTIER_ENERGY_ELECTRIC_PLASMA_GLOW_CLEAN_SLATE_RETURN_CONTROLS_TNT_v21 · Energy · Electric Plasma Glow · Return to Frontier controls.
     </footer>
   </div>
 </body>

@@ -3,16 +3,18 @@
 <html
   lang="en"
   data-route="/laws/categories/reality/"
-  data-page="reality-single-file-consolidated-law-category"
-  data-version="G3-V2"
-  data-contract="REALITY_SINGLE_FILE_CONSOLIDATED_LAW_CATEGORY_TNT_v2"
-  data-previous-contract="REALITY_SINGLE_FILE_CONSOLIDATED_LAW_CATEGORY_TNT_v1"
-  data-source-binding="REALITY_SINGLE_FILE_CONSOLIDATED_LAW_CATEGORY_PREGAME_TO_POSTGAME_BINDING_v1"
+  data-page="reality-single-file-gem-standard"
+  data-version="G4-V1"
+  data-contract="REALITY_SINGLE_FILE_GEM_STANDARD_TNT_v1"
+  data-previous-contract="REALITY_SINGLE_FILE_CONSOLIDATED_LAW_CATEGORY_TNT_v2"
+  data-source-prewrite="REALITY_SINGLE_FILE_GEM_STANDARD_UPDATE_PREWRITE_v1"
   data-branch="laws"
   data-category="reality"
   data-single-file="true"
   data-absorbed-paths="theory.html,evidence.html,measure.html,limits.html"
   data-internal-sections="reality,theory,evidence,measure,limits,audit"
+  data-gem-standard="true"
+  data-gem-field="reality,theory,evidence,measure,limits,audit"
   data-modern-static-html-css="true"
   data-javascript-dependency="false"
   data-external-legacy-css-dependency="false"
@@ -20,7 +22,7 @@
   data-generated-image="false"
   data-graphic-box="false"
   data-frontier-orbit-model="false"
-  data-deploy-verification-string="REALITY_SINGLE_FILE_CONSOLIDATED_DEPLOY_MARKER_v2"
+  data-deploy-verification-string="REALITY_SINGLE_FILE_GEM_STANDARD_DEPLOY_MARKER_v1"
   data-visual-pass-claimed="false"
 >
 <head>
@@ -30,7 +32,7 @@
   <title>Reality · Tested Constraint · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Reality is the law category for tested constraint. Theory, Evidence, Measure, and Limits are consolidated downstream inside one canonical Reality page."
+    content="Reality is the law category for tested constraint. Theory, Evidence, Measure, Limits, and Audit are consolidated downstream inside one canonical Reality page with gem-standard navigation."
   >
 
   <style>
@@ -38,7 +40,6 @@
       color-scheme:dark;
       --bg:#02050d;
       --panel:rgba(8,15,31,.84);
-      --panel2:rgba(10,20,42,.70);
       --ink:#fff4d8;
       --muted:rgba(232,240,255,.78);
       --soft:rgba(232,240,255,.58);
@@ -46,11 +47,11 @@
       --gold2:#ffe8a3;
       --blue:#8dd8ff;
       --green:#8ff0c3;
-      --red:#ff9d91;
       --line:rgba(214,229,255,.16);
       --lineGold:rgba(243,200,111,.30);
       --shadow:0 30px 100px rgba(0,0,0,.48);
       --max:1160px;
+      --gem-breathe-duration:8.8s;
     }
 
     *{box-sizing:border-box}
@@ -100,6 +101,14 @@
     a:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
+    }
+
+    .svg-defs{
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+      pointer-events:none;
     }
 
     .skip{
@@ -391,52 +400,180 @@
       padding:clamp(1.1rem,3.2vw,1.6rem);
     }
 
-    .chain{
+    .section-header{
       display:grid;
-      grid-template-columns:repeat(5,minmax(0,1fr));
-      gap:.75rem;
-      margin-top:.25rem;
+      gap:.7rem;
+      max-width:940px;
     }
 
-    .chain a{
+    .gem-stage{
+      position:relative;
       display:grid;
-      gap:.45rem;
-      min-height:8.8rem;
-      padding:1rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.15rem;
+      gap:1rem;
+      padding:clamp(1rem,3vw,1.5rem);
+      border:1px solid rgba(184,205,255,.14);
+      border-radius:clamp(1.35rem,4vw,2rem);
       background:
-        radial-gradient(circle at 18% 0%,rgba(141,216,255,.08),transparent 22rem),
-        linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.024));
+        radial-gradient(circle at 50% 42%,rgba(141,216,255,.12),transparent 22rem),
+        radial-gradient(circle at 50% 84%,rgba(243,200,111,.08),transparent 30rem),
+        linear-gradient(180deg,rgba(1,5,16,.62),rgba(2,6,16,.92));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-      transition:transform .18s ease,border-color .18s ease;
+      overflow:hidden;
+      isolation:isolate;
     }
 
-    .chain a:hover,
-    .chain a:focus-visible{
-      transform:translateY(-3px);
-      border-color:rgba(243,200,111,.54);
+    .gem-stage::before,
+    .gem-stage::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:-1;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+    }
+
+    .gem-stage::before{
+      width:min(88%,46rem);
+      height:min(62%,26rem);
+      border:1px solid rgba(243,200,111,.13);
+      box-shadow:0 0 3rem rgba(36,120,255,.12),inset 0 0 30px rgba(141,216,255,.045);
+      animation:orbitTurn 42s linear infinite;
+    }
+
+    .gem-stage::after{
+      width:min(64%,31rem);
+      height:min(45%,19rem);
+      border:1px solid rgba(141,216,255,.13);
+      box-shadow:0 0 3rem rgba(141,216,255,.08);
+      animation:orbitTurnReverse 38s linear infinite;
+    }
+
+    @keyframes orbitTurn{
+      from{transform:translate(-50%,-50%) rotate(-12deg)}
+      to{transform:translate(-50%,-50%) rotate(348deg)}
+    }
+
+    @keyframes orbitTurnReverse{
+      from{transform:translate(-50%,-50%) rotate(24deg)}
+      to{transform:translate(-50%,-50%) rotate(-336deg)}
+    }
+
+    .gem-field{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:clamp(.9rem,2vw,1.15rem);
+      align-items:stretch;
+    }
+
+    .gem-link{
+      position:relative;
+      min-height:clamp(10.4rem,19vw,13.5rem);
+      display:grid;
+      place-items:center;
+      text-align:center;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:1.35rem;
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.07),transparent 52%),
+        rgba(255,255,255,.025);
+      overflow:hidden;
+      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
+    }
+
+    .gem-link:hover,
+    .gem-link:focus-visible{
+      transform:translateY(-4px);
+      border-color:rgba(243,200,111,.52);
+      filter:brightness(1.12) saturate(1.06);
       outline:none;
     }
 
-    .chain b{
-      color:var(--gold);
-      font-size:.68rem;
+    .gem-core{
+      position:absolute;
+      inset:8% 6%;
+      display:grid;
+      place-items:center;
+      animation:gemBreathe var(--gem-breathe-duration) ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+      transform-origin:50% 50%;
+      pointer-events:none;
+    }
+
+    @keyframes gemBreathe{
+      0%,100%{transform:translateY(0) rotate(var(--tilt-a,-1.6deg)) scale(1);filter:brightness(1)}
+      50%{transform:translateY(-.26rem) rotate(var(--tilt-b,2deg)) scale(1.025);filter:brightness(1.13)}
+    }
+
+    .gem-svg{
+      width:100%;
+      height:100%;
+      overflow:visible;
+      pointer-events:none;
+      filter:
+        drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
+        drop-shadow(0 0 1.15rem rgba(36,120,255,.18))
+        drop-shadow(0 0 .55rem rgba(243,200,111,.10));
+    }
+
+    .gem-glint{
+      animation:gemGlint 8.5s ease-in-out infinite;
+      transform-origin:110px 80px;
+    }
+
+    .gem-star{
+      animation:gemFacetTurn 30s linear infinite;
+      transform-origin:110px 80px;
+    }
+
+    @keyframes gemGlint{
+      0%,100%{opacity:.07;transform:translateX(-36px)}
+      48%,55%{opacity:.56;transform:translateX(34px)}
+    }
+
+    @keyframes gemFacetTurn{
+      to{transform:rotate(360deg)}
+    }
+
+    .gem-label{
+      position:relative;
+      z-index:3;
+      width:82%;
+      display:grid;
+      place-items:center;
+      gap:.22rem;
+      text-align:center;
+      pointer-events:none;
+      text-shadow:
+        0 3px 14px rgba(0,0,0,.98),
+        0 0 12px rgba(0,28,90,.88),
+        0 0 3px rgba(255,255,255,.58);
+    }
+
+    .gem-label b{
+      display:block;
+      color:rgba(255,244,216,.99);
+      font-size:clamp(.88rem,2.1vw,1.22rem);
       font-weight:950;
-      letter-spacing:.12em;
+      letter-spacing:.065em;
+      line-height:1.02;
       text-transform:uppercase;
     }
 
-    .chain span{
-      color:rgba(255,244,216,.98);
+    .gem-label span{
+      color:rgba(230,238,255,.88);
+      font-size:clamp(.56rem,1.22vw,.75rem);
       font-weight:950;
-      line-height:1.08;
+      letter-spacing:.065em;
+      line-height:1.05;
+      text-transform:uppercase;
     }
 
-    .chain small{
-      color:var(--muted);
-      line-height:1.35;
-      font-size:.82rem;
+    .paired{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.9rem;
     }
 
     .grid{
@@ -483,6 +620,14 @@
       padding-left:1.1rem;
     }
 
+    .read-card{
+      border-color:rgba(243,200,111,.20);
+    }
+
+    .read-card b{
+      color:var(--gold2);
+    }
+
     .law-card{
       position:relative;
       overflow:hidden;
@@ -501,34 +646,33 @@
       background:rgba(243,200,111,.06);
     }
 
-    .section-header{
-      display:grid;
-      gap:.7rem;
-      max-width:940px;
+    .return-row{
+      display:flex;
+      justify-content:flex-end;
+      margin-top:.1rem;
     }
 
-    .paired{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:.9rem;
+    .return-gem{
+      min-height:2.6rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:.65rem 1rem;
+      border:1px solid rgba(243,200,111,.84);
+      border-radius:999px;
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.07em;
+      text-transform:uppercase;
+      transition:transform .18s ease;
     }
 
-    .read-card{
-      border-color:rgba(243,200,111,.20);
-    }
-
-    .read-card b{
-      color:var(--gold2);
-    }
-
-    .absorbed-note{
-      padding:.85rem .95rem;
-      border:1px solid rgba(141,216,255,.20);
-      border-radius:1rem;
-      color:rgba(232,240,255,.82);
-      background:rgba(141,216,255,.055);
-      font-size:.92rem;
-      line-height:1.45;
+    .return-gem:hover,
+    .return-gem:focus-visible{
+      transform:translateY(-2px);
+      outline:none;
     }
 
     .application-list{
@@ -595,7 +739,7 @@
     @media (max-width:980px){
       .topbar{grid-template-columns:1fr}
       .nav{justify-content:flex-start}
-      .chain{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .gem-field{grid-template-columns:repeat(2,minmax(0,1fr))}
       .grid,
       .grid.three,
       .paired{grid-template-columns:1fr}
@@ -610,7 +754,11 @@
       .actions{display:grid}
       .button{width:100%}
       .section{padding:1rem}
-      .chain{grid-template-columns:1fr}
+      .gem-stage{padding:1rem}
+      .gem-field{grid-template-columns:1fr}
+      .gem-link{min-height:10rem}
+      .return-row{justify-content:stretch}
+      .return-gem{width:100%}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -622,11 +770,111 @@
         animation-duration:.01ms!important;
         animation-iteration-count:1!important;
       }
+
+      .gem-core,
+      .gem-glint,
+      .gem-star,
+      .gem-stage::before,
+      .gem-stage::after{
+        animation:none!important;
+      }
     }
   </style>
 </head>
 
 <body>
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="realityGemBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#fff8dc" stop-opacity=".92"/>
+        <stop offset=".13" stop-color="#dff5ff" stop-opacity=".70"/>
+        <stop offset=".30" stop-color="#8dd8ff" stop-opacity=".56"/>
+        <stop offset=".48" stop-color="#2478ff" stop-opacity=".40"/>
+        <stop offset=".66" stop-color="#f3c86f" stop-opacity=".24"/>
+        <stop offset="1" stop-color="#020816" stop-opacity=".94"/>
+      </linearGradient>
+
+      <linearGradient id="realityGemAir" x1="48" y1="10" x2="168" y2="80" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".90"/>
+        <stop offset=".34" stop-color="#eaf7ff" stop-opacity=".46"/>
+        <stop offset=".68" stop-color="#fff0a3" stop-opacity=".18"/>
+        <stop offset="1" stop-color="#8dd8ff" stop-opacity=".10"/>
+      </linearGradient>
+
+      <linearGradient id="realityGemDepth" x1="110" y1="36" x2="110" y2="156" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".18"/>
+        <stop offset=".30" stop-color="#8dd8ff" stop-opacity=".20"/>
+        <stop offset=".62" stop-color="#f3c86f" stop-opacity=".13"/>
+        <stop offset="1" stop-color="#020716" stop-opacity=".66"/>
+      </linearGradient>
+
+      <radialGradient id="realityGemTableGlow" cx="50%" cy="38%" r="64%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".56"/>
+        <stop offset=".28" stop-color="#8dd8ff" stop-opacity=".28"/>
+        <stop offset=".58" stop-color="#ffe8a3" stop-opacity=".12"/>
+        <stop offset="1" stop-color="#020611" stop-opacity="0"/>
+      </radialGradient>
+
+      <linearGradient id="realityGemGlint" x1="28" y1="130" x2="184" y2="24" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset=".45" stop-color="#ffffff" stop-opacity=".84"/>
+        <stop offset=".52" stop-color="#fff0a3" stop-opacity=".30"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+
+      <filter id="realityGemGlow" x="-42%" y="-50%" width="184%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="blur"/>
+        <feColorMatrix
+          in="blur"
+          type="matrix"
+          values="
+            0.42 0 0 0 0.08
+            0 .58 0 0 0.14
+            0 0 1.00 0 0.28
+            0 0 0 0.52 0"
+          result="glow"
+        />
+        <feMerge>
+          <feMergeNode in="glow"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      <symbol id="realityOrganicGem" viewBox="0 0 220 160">
+        <g filter="url(#realityGemGlow)">
+          <path d="M108 4 L146 12 L184 39 L209 76 L188 108 L147 139 L111 155 L69 136 L27 105 L12 73 L39 37 L77 14 Z" fill="url(#realityGemBody)" stroke="rgba(235,248,255,.58)" stroke-width="1.35"/>
+          <path d="M108 4 L146 12 L130 38 L109 30 L87 39 L77 14 Z" fill="url(#realityGemAir)" opacity=".84"/>
+          <path d="M77 14 L87 39 L61 58 L39 37 Z" fill="rgba(255,255,255,.23)"/>
+          <path d="M146 12 L130 38 L159 60 L184 39 Z" fill="rgba(255,255,255,.15)"/>
+          <path d="M39 37 L61 58 L53 83 L12 73 Z" fill="rgba(141,216,255,.12)"/>
+          <path d="M184 39 L159 60 L166 81 L209 76 Z" fill="rgba(243,200,111,.12)"/>
+          <path d="M87 39 L109 30 L130 38 L159 60 L148 83 L110 101 L72 83 L61 58 Z" fill="url(#realityGemTableGlow)" stroke="rgba(255,255,255,.30)" stroke-width=".9"/>
+          <path d="M12 73 L53 83 L69 136 L27 105 Z" fill="rgba(141,216,255,.14)"/>
+          <path d="M209 76 L166 81 L147 139 L188 108 Z" fill="rgba(243,200,111,.11)"/>
+          <path d="M53 83 L72 83 L111 155 L69 136 Z" fill="rgba(2,8,24,.40)"/>
+          <path d="M166 81 L148 83 L111 155 L147 139 Z" fill="rgba(243,200,111,.10)"/>
+          <path d="M72 83 L110 101 L111 155 Z" fill="url(#realityGemDepth)" opacity=".76"/>
+          <path d="M148 83 L110 101 L111 155 Z" fill="rgba(4,10,22,.36)"/>
+          <path d="M108 4 L111 155" stroke="rgba(255,255,255,.34)" stroke-width="1.15"/>
+          <path d="M12 73 L209 76" stroke="rgba(255,255,255,.28)" stroke-width="1.05"/>
+          <path d="M39 37 L188 108" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M184 39 L27 105" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M77 14 L110 101 L146 12" stroke="rgba(255,255,255,.18)" stroke-width=".9" fill="none"/>
+          <path d="M39 37 L110 101 L184 39" stroke="rgba(255,255,255,.16)" stroke-width=".9" fill="none"/>
+          <path d="M27 105 L110 101 L188 108" stroke="rgba(243,200,111,.14)" stroke-width=".9" fill="none"/>
+          <g class="gem-star" opacity=".82">
+            <path d="M109 27 L116 70 L110 106 L103 70 Z" fill="rgba(255,255,255,.27)"/>
+            <path d="M61 58 L105 72 L159 60 L116 79 Z" fill="rgba(255,255,255,.16)"/>
+            <path d="M72 83 L105 75 L148 83 L114 92 Z" fill="rgba(141,216,255,.13)"/>
+            <path d="M110 101 L126 81 L148 83 L129 96 Z" fill="rgba(255,255,255,.13)"/>
+            <path d="M110 101 L94 81 L72 83 L91 96 Z" fill="rgba(243,200,111,.08)"/>
+          </g>
+          <path class="gem-glint" d="M33 118 L176 22 L188 38 L48 130 Z" fill="url(#realityGemGlint)"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
   <a class="skip" href="#main">Skip to Reality</a>
 
   <div class="shell">
@@ -640,7 +888,8 @@
       </a>
 
       <nav class="nav" aria-label="Reality page navigation">
-        <a class="home-link" href="#reality">Reality</a>
+        <a class="home-link" href="#gem-field">Gem Field</a>
+        <a href="#reality">Reality</a>
         <a href="#theory">Theory</a>
         <a href="#evidence">Evidence</a>
         <a href="#measure">Measure</a>
@@ -666,11 +915,55 @@
         </div>
 
         <div class="actions">
-          <a class="button gold" href="#chain">Follow the Chain</a>
+          <a class="button gold" href="#gem-field">Open Gem Field</a>
           <a class="button" href="#theory">Theory</a>
           <a class="button" href="#evidence">Evidence</a>
           <a class="button" href="#measure">Measure</a>
           <a class="button" href="#limits">Limits</a>
+        </div>
+      </section>
+
+      <section class="panel section" id="gem-field" aria-labelledby="gem-title">
+        <div class="kicker">Reality Gem Field</div>
+        <div class="section-header">
+          <h2 id="gem-title">Choose a Reality category gem, then return here from the section.</h2>
+          <p>
+            The gems are the interface. The subject remains Reality: Theory, Evidence, Measure, Limits, and Audit are downstream sections inside one canonical law-category page.
+          </p>
+        </div>
+
+        <div class="gem-stage" aria-label="Reality category gem navigation">
+          <div class="gem-field">
+            <a class="gem-link" href="#reality" style="--delay:-.1s;--tilt-a:-1.6deg;--tilt-b:1.8deg;" aria-label="Open Reality section">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#realityOrganicGem"></use></svg></span>
+              <span class="gem-label"><b>Reality</b><span>Tested Constraint</span></span>
+            </a>
+
+            <a class="gem-link" href="#theory" style="--delay:-.7s;--tilt-a:1.4deg;--tilt-b:-2.2deg;" aria-label="Open Theory section">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#realityOrganicGem"></use></svg></span>
+              <span class="gem-label"><b>Theory</b><span>Model / Terrain</span></span>
+            </a>
+
+            <a class="gem-link" href="#evidence" style="--delay:-1.3s;--tilt-a:-2.1deg;--tilt-b:1.4deg;" aria-label="Open Evidence section">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#realityOrganicGem"></use></svg></span>
+              <span class="gem-label"><b>Evidence</b><span>Checkable Proof</span></span>
+            </a>
+
+            <a class="gem-link" href="#measure" style="--delay:-1.9s;--tilt-a:1.7deg;--tilt-b:-1.8deg;" aria-label="Open Measure section">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#realityOrganicGem"></use></svg></span>
+              <span class="gem-label"><b>Measure</b><span>Coordinates</span></span>
+            </a>
+
+            <a class="gem-link" href="#limits" style="--delay:-2.5s;--tilt-a:-1.8deg;--tilt-b:2.4deg;" aria-label="Open Limits section">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#realityOrganicGem"></use></svg></span>
+              <span class="gem-label"><b>Limits</b><span>Bounded Certainty</span></span>
+            </a>
+
+            <a class="gem-link" href="#audit" style="--delay:-3.1s;--tilt-a:2deg;--tilt-b:-1.6deg;" aria-label="Open Audit section">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#realityOrganicGem"></use></svg></span>
+              <span class="gem-label"><b>Audit</b><span>Proceed / Revise</span></span>
+            </a>
+          </div>
         </div>
       </section>
 
@@ -700,52 +993,8 @@
             </p>
           </article>
         </div>
-      </section>
 
-      <section class="panel section" id="chain" aria-labelledby="chain-title">
-        <div class="kicker">Consolidated downstream chain</div>
-        <div class="section-header">
-          <h2 id="chain-title">Reality now contains its downstream sections in one canonical file.</h2>
-          <p>
-            Theory, Evidence, Measure, and Limits are absorbed into this one Reality law-category construct. The route no longer depends on separate child files to explain the category.
-          </p>
-        </div>
-
-        <div class="chain" aria-label="Reality downstream chain">
-          <a href="#reality">
-            <b>Parent</b>
-            <span>Reality</span>
-            <small>What still holds after the claim is tested.</small>
-          </a>
-
-          <a href="#theory">
-            <b>Downstream 1</b>
-            <span>Theory</span>
-            <small>The model trying to describe Reality.</small>
-          </a>
-
-          <a href="#evidence">
-            <b>Downstream 2</b>
-            <span>Evidence</span>
-            <small>What checks whether the model touches Reality.</small>
-          </a>
-
-          <a href="#measure">
-            <b>Downstream 3</b>
-            <span>Measure</span>
-            <small>What turns evidence into coordinates.</small>
-          </a>
-
-          <a href="#limits">
-            <b>Downstream 4</b>
-            <span>Limits</span>
-            <small>What names where certainty stops.</small>
-          </a>
-        </div>
-
-        <div class="absorbed-note">
-          Deploy marker: REALITY_SINGLE_FILE_CONSOLIDATED_DEPLOY_MARKER_v2. The old Theory, Evidence, Measure, and Limits surfaces are now represented as internal sections of this canonical Reality page.
-        </div>
+        <div class="return-row"><a class="return-gem" href="#gem-field">Return to Gem Field</a></div>
       </section>
 
       <section class="panel section" id="theory" aria-labelledby="theory-title">
@@ -798,6 +1047,8 @@
             <p>If a theory never exposes itself to failure, it is not functioning as a reality-facing model.</p>
           </article>
         </div>
+
+        <div class="return-row"><a class="return-gem" href="#gem-field">Return to Gem Field</a></div>
       </section>
 
       <section class="panel section" id="evidence" aria-labelledby="evidence-title">
@@ -850,6 +1101,8 @@
             <p>Without provenance, evidence cannot support a durable inference.</p>
           </article>
         </div>
+
+        <div class="return-row"><a class="return-gem" href="#gem-field">Return to Gem Field</a></div>
       </section>
 
       <section class="panel section" id="measure" aria-labelledby="measure-title">
@@ -902,6 +1155,8 @@
             <p>The same evidence under the same measurement contract should yield the same classification across qualified observers.</p>
           </article>
         </div>
+
+        <div class="return-row"><a class="return-gem" href="#gem-field">Return to Gem Field</a></div>
       </section>
 
       <section class="panel section" id="limits" aria-labelledby="limits-title">
@@ -954,6 +1209,8 @@
             <p>When the state is unknown, the lawful move is to name it, not bury it under confidence language.</p>
           </article>
         </div>
+
+        <div class="return-row"><a class="return-gem" href="#gem-field">Return to Gem Field</a></div>
       </section>
 
       <section class="panel section" id="law-cards" aria-labelledby="law-cards-title">
@@ -1002,6 +1259,8 @@
             <p>If a claim only survives when no one is allowed to inspect it, the claim is not stable.</p>
           </article>
         </div>
+
+        <div class="return-row"><a class="return-gem" href="#gem-field">Return to Gem Field</a></div>
       </section>
 
       <section class="panel section" id="application" aria-labelledby="application-title">
@@ -1021,6 +1280,8 @@
           <li>Does the claim admit uncertainty and limits?</li>
           <li>Does the claim have a lawful audit path?</li>
         </ul>
+
+        <div class="return-row"><a class="return-gem" href="#gem-field">Return to Gem Field</a></div>
       </section>
 
       <section class="panel section" id="audit" aria-labelledby="audit-title">
@@ -1040,7 +1301,8 @@
         </div>
 
         <div class="actions">
-          <a class="button gold" href="#reality">Return to Reality</a>
+          <a class="button gold" href="#gem-field">Return to Gem Field</a>
+          <a class="button" href="#reality">Reality</a>
           <a class="button" href="#theory">Theory</a>
           <a class="button" href="#evidence">Evidence</a>
           <a class="button" href="#measure">Measure</a>
@@ -1050,15 +1312,20 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-REALITY_SINGLE_FILE_CONSOLIDATED_LAW_CATEGORY_TNT_v2
-previous=REALITY_SINGLE_FILE_CONSOLIDATED_LAW_CATEGORY_TNT_v1
-binding=REALITY_SINGLE_FILE_CONSOLIDATED_LAW_CATEGORY_PREGAME_TO_POSTGAME_BINDING_v1
+REALITY_SINGLE_FILE_GEM_STANDARD_TNT_v1
+previous=REALITY_SINGLE_FILE_CONSOLIDATED_LAW_CATEGORY_TNT_v2
+source_prewrite=REALITY_SINGLE_FILE_GEM_STANDARD_UPDATE_PREWRITE_v1
 route=/laws/categories/reality/
 target=/laws/categories/reality/index.html
-deploy_marker=REALITY_SINGLE_FILE_CONSOLIDATED_DEPLOY_MARKER_v2
+deploy_marker=REALITY_SINGLE_FILE_GEM_STANDARD_DEPLOY_MARKER_v1
 single_file=true
 absorbed_paths=theory_html,evidence_html,measure_html,limits_html
 internal_sections=reality,theory,evidence,measure,limits,audit
+gem_standard=true
+gem_field=Reality,Theory,Evidence,Measure,Limits,Audit
+gem_behavior=anchor_to_section_and_return_to_gem_field
+gems_are_interface_only=true
+public_subject=Reality_tested_constraint
 branch=Laws
 category=Reality
 legacy_five_file_bundle_discarded=true
@@ -1076,20 +1343,16 @@ old_tab_scaffold=false
 human_scientific_reads=static_visible_paired_sections
 public_thesis=Reality_is_what_still_holds_after_the_claim_is_tested
 downstream_chain=Reality_to_Theory_to_Evidence_to_Measure_to_Limits_to_Audit
-theory_role=model_vs_terrain
-evidence_role=checkable_proof_and_provenance
-measure_role=coordinate_contract_and_calibration
-limits_role=bounded_certainty_and_unknown_state
 final_boundary=What_holds_may_proceed_What_fails_must_be_revised_What_remains_unknown_must_be_named
 room=Website_Building_and_Implementation_Room
 district=Rich_Manor_and_Estate_Laws
 individual=Implementation_Authority
-next_step=replace_exact_served_file_then_verify_live_source_for_deploy_marker
+next_step=replace_exact_served_file_then_verify_live_source_for_REALITY_SINGLE_FILE_GEM_STANDARD_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer>
-      REALITY_SINGLE_FILE_CONSOLIDATED_LAW_CATEGORY_TNT_v2 · Laws / Categories / Reality · Single canonical file.
+      REALITY_SINGLE_FILE_GEM_STANDARD_TNT_v1 · Laws / Categories / Reality · Gem-standard single canonical file.
     </footer>
   </div>
 </body>

@@ -3,10 +3,10 @@
   lang="en"
   data-route="/explore/frontier/closed-loop/"
   data-page="frontier-closed-loop"
-  data-version="G2-V2"
-  data-contract="FRONTIER_CLOSED_LOOP_PRIMARY_NAV_NATURAL_STAR_BACKLIGHT_TNT_v2"
-  data-previous-contract="FRONTIER_CLOSED_LOOP_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1"
-  data-source-binding="CLOSED_LOOP_PRIMARY_NAV_AND_NATURAL_STAR_BACKLIGHT_PREGAME_TO_POSTGAME_BINDING_v1"
+  data-version="G2-V3"
+  data-contract="FRONTIER_CLOSED_LOOP_BACKSTAR_GLOW_RETURN_FRONTIER_NAV_RENEWAL_TNT_v3"
+  data-previous-contract="FRONTIER_CLOSED_LOOP_PRIMARY_NAV_NATURAL_STAR_BACKLIGHT_TNT_v2"
+  data-source-binding="FRONTIER_BACKSTAR_GLOW_RETURN_FRONTIER_NONREGRESSION_PREGAME_TO_POSTGAME_BINDING_v1"
   data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
   data-design-reference="FRONTIER_ENERGY_COMPASS_GEM_PRINT_LEGIBILITY_RENEWAL_TNT_v19"
   data-engineering-authority="CCL_ICE_ICPI_CRI_CRP_CLOSED_LOOP_FRONTIER_STANDARD"
@@ -17,9 +17,10 @@
   data-platform-lens="true"
   data-engineering-lens="true"
   data-primary-top-nav-reduced="true"
-  data-return-to-frontier="true"
-  data-natural-star-backlight="true"
-  data-circular-glow-removed="true"
+  data-return-to-frontier-preserved="true"
+  data-return-to-frontier-is-not-top-nav-bubble="true"
+  data-natural-backstar-glow="true"
+  data-circular-halo-removed="true"
   data-closed-loop-law="valid-loop-requires-boundary-inputs-outputs-capture-storage-reuse-transformation-inventory-residual-uncertainty-receipt-audit-path"
   data-static-page-usable-without-js="true"
   data-heavy-runtime-loaded="false"
@@ -487,6 +488,7 @@
       text-align:center;
       color:var(--ink);
       z-index:4;
+      overflow:visible;
       isolation:isolate;
       transition:transform .18s ease,filter .18s ease;
       animation:gemFloat 7.2s ease-in-out infinite;
@@ -518,22 +520,22 @@
       left:50%;
       top:50%;
       z-index:0;
-      width:52%;
-      height:70%;
-      transform:translate(-50%,-50%) scale(.96);
+      width:250%;
+      height:285%;
+      transform:translate(-50%,-50%) rotate(-7deg) scale(.96);
       pointer-events:none;
       border:0;
-      border-radius:48% 52% 46% 54%;
       background:
-        radial-gradient(circle at 50% 50%,rgba(255,255,255,.98) 0 5%,rgba(255,242,168,.94) 6% 10%,rgba(243,200,111,.62) 13% 19%,rgba(141,216,255,.36) 26%,rgba(36,120,255,.17) 40%,transparent 68%);
-      box-shadow:
-        0 0 .45rem rgba(255,255,255,.82),
-        0 0 1.15rem rgba(255,232,163,.58),
-        0 0 2.2rem rgba(141,216,255,.34),
-        0 0 3.5rem rgba(36,120,255,.18);
-      opacity:.86;
-      animation:naturalStarCoreTwinkle 6.6s ease-in-out infinite;
-      animation-delay:var(--delay,0s);
+        linear-gradient(102deg,transparent 0 39%,rgba(255,244,216,.24) 46%,rgba(141,216,255,.14) 50%,transparent 61%),
+        linear-gradient(18deg,transparent 0 43%,rgba(255,255,255,.20) 48%,rgba(243,200,111,.12) 51%,transparent 58%),
+        linear-gradient(151deg,transparent 0 44%,rgba(141,216,255,.16) 50%,transparent 59%),
+        radial-gradient(ellipse at 48% 49%,rgba(255,255,255,.52) 0 2.5%,rgba(255,232,163,.36) 5%,rgba(243,200,111,.21) 9%,rgba(141,216,255,.12) 15%,transparent 31%),
+        radial-gradient(ellipse at 38% 44%,rgba(255,244,216,.18) 0 9%,transparent 31%),
+        radial-gradient(ellipse at 64% 56%,rgba(141,216,255,.17) 0 8%,transparent 34%),
+        radial-gradient(ellipse at 53% 65%,rgba(243,200,111,.12) 0 7%,transparent 29%);
+      opacity:.82;
+      animation:backstarBloomDrift 9.8s ease-in-out infinite;
+      animation-delay:calc(var(--delay,0s) - .65s);
     }
 
     .compass-center::after,
@@ -542,76 +544,62 @@
       position:absolute;
       left:50%;
       top:50%;
-      z-index:0;
-      width:156%;
-      height:170%;
-      transform:translate(-50%,-50%) rotate(-8deg) scale(.98);
+      z-index:1;
+      width:154%;
+      height:172%;
+      transform:translate(-50%,-50%) rotate(4deg) scale(.94);
       pointer-events:none;
       border:0;
-      border-radius:43% 57% 49% 51%;
       background:
-        radial-gradient(ellipse at 50% 50%,rgba(255,255,255,.26) 0 4%,rgba(255,232,163,.22) 8%,rgba(243,200,111,.15) 17%,rgba(141,216,255,.105) 29%,rgba(36,120,255,.055) 45%,transparent 70%),
-        radial-gradient(ellipse at 39% 45%,rgba(255,244,216,.14) 0 10%,transparent 38%),
-        radial-gradient(ellipse at 64% 58%,rgba(141,216,255,.12) 0 12%,transparent 42%),
-        conic-gradient(from 18deg at 50% 50%,
-          transparent 0deg,
-          rgba(255,255,255,.18) 10deg,
-          transparent 20deg,
-          transparent 82deg,
-          rgba(141,216,255,.15) 91deg,
-          transparent 101deg,
-          transparent 172deg,
-          rgba(255,232,163,.16) 181deg,
-          transparent 190deg,
-          transparent 260deg,
-          rgba(141,216,255,.13) 270deg,
-          transparent 282deg,
-          transparent 360deg);
-      opacity:.74;
-      mix-blend-mode:screen;
-      animation:naturalStarBloomTwinkle 8.8s ease-in-out infinite;
-      animation-delay:calc(var(--delay,0s) - .9s);
+        linear-gradient(90deg,transparent 0 34%,rgba(255,255,255,.82) 49%,rgba(255,232,163,.58) 50%,transparent 66%),
+        linear-gradient(0deg,transparent 0 35%,rgba(255,244,216,.70) 49%,rgba(141,216,255,.42) 50%,transparent 65%),
+        linear-gradient(45deg,transparent 0 43%,rgba(255,255,255,.38) 49%,transparent 57%),
+        linear-gradient(135deg,transparent 0 43%,rgba(141,216,255,.30) 49%,transparent 57%),
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,1) 0 2.8%,rgba(255,239,166,.95) 4.5%,rgba(243,200,111,.56) 8%,rgba(141,216,255,.30) 14%,rgba(36,120,255,.13) 23%,transparent 37%);
+      opacity:.92;
+      animation:backstarCoreTwinkle 6.8s ease-in-out infinite;
+      animation-delay:var(--delay,0s);
     }
 
     .compass-center::before{
-      width:48%;
-      height:66%;
+      width:278%;
+      height:310%;
       opacity:.90;
     }
 
     .compass-center::after{
-      width:166%;
-      height:182%;
-      opacity:.78;
+      width:168%;
+      height:188%;
+      opacity:.98;
     }
 
-    @keyframes naturalStarCoreTwinkle{
+    @keyframes backstarBloomDrift{
+      0%,100%{
+        opacity:.60;
+        transform:translate(-50%,-50%) rotate(-10deg) scale(.92);
+      }
+      44%{
+        opacity:.96;
+        transform:translate(-50%,-50%) rotate(2deg) scale(1.08);
+      }
+      70%{
+        opacity:.74;
+        transform:translate(-50%,-50%) rotate(-3deg) scale(1.0);
+      }
+    }
+
+    @keyframes backstarCoreTwinkle{
       0%,100%{
         opacity:.72;
-        transform:translate(-50%,-50%) scale(.92);
+        transform:translate(-50%,-50%) rotate(3deg) scale(.90);
       }
-      42%{
+      43%{
         opacity:1;
-        transform:translate(-50%,-50%) scale(1.06);
+        transform:translate(-50%,-50%) rotate(-2deg) scale(1.07);
       }
-      64%{
+      63%{
         opacity:.84;
-        transform:translate(-50%,-50%) scale(.98);
-      }
-    }
-
-    @keyframes naturalStarBloomTwinkle{
-      0%,100%{
-        opacity:.48;
-        transform:translate(-50%,-50%) rotate(-10deg) scale(.94);
-      }
-      48%{
-        opacity:.86;
-        transform:translate(-50%,-50%) rotate(2deg) scale(1.06);
-      }
-      72%{
-        opacity:.62;
-        transform:translate(-50%,-50%) rotate(-4deg) scale(.99);
+        transform:translate(-50%,-50%) rotate(1deg) scale(.98);
       }
     }
 
@@ -976,15 +964,16 @@
 
       .compass-center::before,
       .compass-node::before{
-        width:48%;
-        height:64%;
+        width:206%;
+        height:230%;
+        opacity:.68;
       }
 
       .compass-center::after,
       .compass-node::after{
         width:138%;
-        height:148%;
-        opacity:.58;
+        height:154%;
+        opacity:.80;
       }
 
       .compass-node:hover,
@@ -1799,9 +1788,9 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_CLOSED_LOOP_PRIMARY_NAV_NATURAL_STAR_BACKLIGHT_TNT_v2
-previous=FRONTIER_CLOSED_LOOP_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1
-binding=CLOSED_LOOP_PRIMARY_NAV_AND_NATURAL_STAR_BACKLIGHT_PREGAME_TO_POSTGAME_BINDING_v1
+FRONTIER_CLOSED_LOOP_BACKSTAR_GLOW_RETURN_FRONTIER_NAV_RENEWAL_TNT_v3
+previous=FRONTIER_CLOSED_LOOP_PRIMARY_NAV_NATURAL_STAR_BACKLIGHT_TNT_v2
+binding=FRONTIER_BACKSTAR_GLOW_RETURN_FRONTIER_NONREGRESSION_PREGAME_TO_POSTGAME_BINDING_v1
 route=/explore/frontier/closed-loop/
 page=frontier_closed_loop
 html=/explore/frontier/closed-loop/index.html
@@ -1810,16 +1799,28 @@ design_reference=FRONTIER_ENERGY_COMPASS_GEM_PRINT_LEGIBILITY_RENEWAL_TNT_v19
 engineering_authority=CCL_ICE_ICPI_CRI_CRP_CLOSED_LOOP_FRONTIER_STANDARD
 source_symbol_authority=compassOrganicGem
 visual_authority_preserved=true
-primary_top_nav_reduced=true
-top_nav=Compass,Door,Home,Laws,Narrative,Frontier
-return_to_frontier_added_or_preserved=true
-return_to_closed_loop_orbit_preserved=true
-natural_star_backlight=true
-natural_star_backlight_selectors=compass_center_before_after,compass_node_before_after
-circular_glow_removed=true
-star_backlight_layering=star_behind_gem_gem_svg_front_label_front
-star_backlight_behavior=small_bright_star_core_diffuse_asymmetric_bloom_faint_rays_no_border_no_rim_no_bubble
+non_regression_law_preserved=true
+top_navigation_reduced=true
+top_navigation_primary_set=Compass,Door,Home,Laws,Narrative,Frontier
+top_navigation_reduced_without_removing_parent_return=true
+return_to_frontier_preserved=true
+return_to_frontier_route=/explore/frontier/
+return_to_frontier_is_not_top_nav_bubble=true
+return_to_orbit_preserved=true
+return_to_closed_loop_orbit_under_every_pathway=true
+platform_engineering_lenses_preserved=true
+natural_backstar_glow=true
+circular_halo_removed=true
+gem_foreground_preserved=true
+star_source_behind_gem=true
+rim_escape_light=true
+through_facet_light=true
+star_backlight_behavior=bright_source_behind_gem_irregular_bloom_rim_leak_through_facet_light_no_circle_no_ring_no_bubble
 css_only=true
+javascript_added=false
+graphic_box=false
+generated_image=false
+heavy_runtime_loaded=false
 reduced_motion_safe=true
 audralia_closed_loop_first=true
 center_anchor=Closed_Loop_Accountable_Flow
@@ -1830,7 +1831,6 @@ platform_lens_per_pathway=true
 engineering_lens_per_pathway=true
 top_only_lens_toggle=false
 side_by_side_platform_engineering=false
-return_to_closed_loop_orbit_under_every_pathway=true
 closed_loop_law=valid_loop_requires_boundary_inputs_outputs_capture_storage_reuse_transformation_inventory_residual_uncertainty_receipt_audit_path
 hazardous_mass_standard=M_in_equals_M_out_plus_M_dest_plus_delta_M_inv_plus_or_minus_epsilon
 closure_residual=U_equals_M_in_minus_M_out_plus_M_dest_plus_delta_M_inv
@@ -1841,16 +1841,13 @@ category_relation=closed_loop_coordinates_water_waste_energy_food_agriculture_ur
 audit_boundary=audit_failure_blocks_closure
 final_lock=declare_boundary_measure_input_name_output_track_storage_define_reuse_reconcile_residual_require_receipts_survive_audit
 static_page_usable_without_js=true
-heavy_runtime=false
-generated_image=false
-graphic_box=false
 streaming=false
 visual_pass_claimed=false
       </template>
     </main>
 
     <footer>
-      FRONTIER_CLOSED_LOOP_PRIMARY_NAV_NATURAL_STAR_BACKLIGHT_TNT_v2 · Closed Loop · Primary Nav · Natural Star Backlight.
+      FRONTIER_CLOSED_LOOP_BACKSTAR_GLOW_RETURN_FRONTIER_NAV_RENEWAL_TNT_v3 · Closed Loop · Backstar Glow · Return to Frontier.
     </footer>
   </div>
 </body>

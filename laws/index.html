@@ -4,19 +4,25 @@
   lang="en"
   data-route="/laws/"
   data-page="laws"
-  data-version="G6-V1"
-  data-contract="LAWS_PAGE_TWO_DIAMOND_ARCHITECTURE_TNT_v1"
-  data-source-binding="LAWS_PAGE_TWO_DIAMOND_ARCHITECTURE_PREGAME_TO_POSTGAME_BINDING_v1"
+  data-version="G7-V1"
+  data-contract="LAWS_PAGE_CORRECTED_DIAMOND_ARCHITECTURE_TNT_v1"
+  data-source-binding="LAWS_PAGE_CORRECTED_DIAMOND_ARCHITECTURE_PREGAME_TO_POSTGAME_BINDING_v1"
   data-branch="laws"
   data-role="law-chamber"
-  data-large-law-diamonds="white-crystal-grouped-law-content"
-  data-small-orbital-route-diamonds="route-color-outbound-navigation"
+  data-same-page-law-content="large-white-crystal-diamonds"
+  data-law-affiliated-page-change="small-orbital-white-crystal-diamonds"
+  data-non-law-page-change="small-orbital-route-color-diamonds"
+  data-layout-rule="page-change-controls-orbit"
+  data-color-rule="law-affiliation-controls-color"
+  data-size-rule="same-page-primary-content-controls-large-size"
   data-outbound-route-grid-removed="true"
-  data-one-orbital-path="true"
-  data-page-length-reduced="true"
+  data-orbit-mobile-preserved="true"
+  data-large-and-orbit-css-separated="true"
   data-sixteen-laws-preserved="true"
   data-sixteen-laws-grouped="true"
-  data-scientific-law-branch-preserved="true"
+  data-scientific-law-affiliated="true"
+  data-scientific-law-orbital-white-crystal="true"
+  data-non-law-routes-orbital-route-color="true"
   data-modern-static-html-css="true"
   data-javascript-dependency="false"
   data-heavy-runtime-loaded="false"
@@ -31,7 +37,7 @@
   <title>Laws · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Laws chamber: proof outranks confidence. Large white crystal law diamonds hold grouped law content; smaller route-colored orbit diamonds leave the Laws page."
+    content="Diamond Gate Bridge Laws chamber: proof outranks confidence. Large white law diamonds hold same-page law content. Page-changing diamonds move through one orbital path."
   >
 
   <style>
@@ -243,7 +249,7 @@
 
     .hero{
       position:relative;
-      min-height:clamp(26rem,44vw,36rem);
+      min-height:clamp(24rem,42vw,35rem);
       display:grid;
       align-content:center;
       gap:1rem;
@@ -567,19 +573,28 @@
       line-height:1.42;
     }
 
-    .orbit-stage{
-      position:relative;
-      min-height:clamp(27rem,54vw,39rem);
+    .orbit-wrap{
       display:grid;
       place-items:center;
+      padding:clamp(.75rem,2vw,1rem);
+    }
+
+    .orbit-stage{
+      --orbit-size:min(100%,43rem);
+      position:relative;
+      width:var(--orbit-size);
+      aspect-ratio:1/1;
+      max-width:43rem;
+      min-width:17.8rem;
       border:1px solid rgba(243,200,111,.16);
-      border-radius:clamp(1.35rem,4vw,2rem);
+      border-radius:50%;
       background:
         radial-gradient(circle at 50% 48%,rgba(243,200,111,.10),transparent 16rem),
         radial-gradient(circle at 50% 48%,rgba(141,216,255,.10),transparent 24rem),
         linear-gradient(180deg,rgba(1,5,16,.60),rgba(2,6,16,.94));
       overflow:hidden;
       isolation:isolate;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 1.2rem 3.5rem rgba(0,0,0,.22);
     }
 
     .orbit-stage::before,
@@ -594,16 +609,16 @@
     }
 
     .orbit-stage::before{
-      width:min(84%,36rem);
-      height:min(84%,36rem);
-      border:1px solid rgba(243,200,111,.15);
+      width:78%;
+      height:78%;
+      border:1px solid rgba(243,200,111,.18);
       box-shadow:inset 0 0 3rem rgba(243,200,111,.04),0 0 3rem rgba(0,0,0,.18);
       animation:orbitTurn 52s linear infinite;
     }
 
     .orbit-stage::after{
-      width:min(62%,25rem);
-      height:min(62%,25rem);
+      width:52%;
+      height:52%;
       border:1px solid rgba(141,216,255,.14);
       animation:orbitTurnReverse 46s linear infinite;
     }
@@ -619,15 +634,18 @@
     }
 
     .orbit-center{
-      position:relative;
+      position:absolute;
+      left:50%;
+      top:50%;
       z-index:2;
-      width:clamp(8.8rem,20vw,12.5rem);
-      min-height:clamp(6.4rem,14vw,9rem);
+      width:clamp(7.4rem,18vw,11.2rem);
+      min-height:clamp(5.6rem,12vw,8.2rem);
       display:grid;
       place-items:center;
-      padding:1rem;
+      padding:.9rem;
       border:1px solid rgba(243,200,111,.28);
       border-radius:1.2rem;
+      transform:translate(-50%,-50%);
       background:
         radial-gradient(circle at 50% 20%,rgba(255,232,163,.13),transparent 62%),
         rgba(255,255,255,.045);
@@ -637,7 +655,7 @@
 
     .orbit-center b{
       color:var(--gold);
-      font-size:.82rem;
+      font-size:.78rem;
       font-weight:950;
       letter-spacing:.13em;
       text-transform:uppercase;
@@ -645,19 +663,19 @@
 
     .orbit-center span{
       color:var(--muted);
-      font-size:.82rem;
-      line-height:1.3;
+      font-size:.76rem;
+      line-height:1.28;
     }
 
-    .orbit-gem{
+    .orbit-diamond{
       --x:50%;
       --y:50%;
       position:absolute;
       left:var(--x);
       top:var(--y);
       z-index:3;
-      width:clamp(6.2rem,13vw,8.5rem);
-      height:clamp(4.7rem,9.8vw,6.4rem);
+      width:clamp(3.85rem,8.4vw,6.35rem);
+      height:clamp(2.92rem,6.35vw,4.84rem);
       display:grid;
       place-items:center;
       transform:translate(-50%,-50%);
@@ -666,39 +684,58 @@
       transition:filter .18s ease,transform .18s ease;
     }
 
-    .orbit-gem:hover,
-    .orbit-gem:focus-visible{
-      transform:translate(-50%,-50%) scale(1.06);
+    .orbit-diamond:hover,
+    .orbit-diamond:focus-visible{
+      transform:translate(-50%,-50%) scale(1.08);
       filter:brightness(1.13);
       outline:none;
     }
 
     @keyframes orbitGemFloat{
       0%,100%{margin-top:0}
-      50%{margin-top:-.42rem}
+      50%{margin-top:-.34rem}
     }
 
-    .orbit-gem .gem-core{
+    .orbit-diamond .gem-core{
       inset:0;
     }
 
-    .orbit-gem .gem-label b{
+    .orbit-diamond .gem-label{
+      width:86%;
+      gap:.08rem;
+    }
+
+    .orbit-diamond .gem-label b{
       display:block;
-      color:rgba(255,232,163,.99);
-      font-size:clamp(.46rem,1vw,.62rem);
+      font-size:clamp(.29rem,.72vw,.54rem);
       font-weight:950;
-      letter-spacing:.055em;
-      line-height:1.02;
+      letter-spacing:.045em;
+      line-height:1;
       text-transform:uppercase;
     }
 
-    .orbit-gem .gem-label span{
-      color:rgba(242,247,255,.88);
-      font-size:clamp(.32rem,.74vw,.44rem);
+    .orbit-diamond .gem-label span{
+      font-size:clamp(.22rem,.52vw,.38rem);
       font-weight:950;
-      letter-spacing:.055em;
-      line-height:1.05;
+      letter-spacing:.035em;
+      line-height:1;
       text-transform:uppercase;
+    }
+
+    .law-orbit .gem-label b{
+      color:rgba(255,244,216,.99);
+    }
+
+    .law-orbit .gem-label span{
+      color:rgba(230,238,255,.90);
+    }
+
+    .route-orbit .gem-label b{
+      color:rgba(255,232,163,.99);
+    }
+
+    .route-orbit .gem-label span{
+      color:rgba(242,247,255,.88);
     }
 
     .branch{
@@ -749,41 +786,29 @@
       .law-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
-    @media (max-width:900px){
+    @media (max-width:760px){
       .topbar{grid-template-columns:1fr}
       .nav{justify-content:flex-start}
       .orbit-stage{
-        min-height:auto;
-        display:grid;
-        grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:.85rem;
-        padding:1rem;
+        width:min(100%,25rem);
+        min-width:17.8rem;
       }
-      .orbit-stage::before,
-      .orbit-stage::after{display:none}
+      .orbit-diamond{
+        width:clamp(3.35rem,13vw,4.65rem);
+        height:clamp(2.55rem,9.8vw,3.55rem);
+      }
       .orbit-center{
-        grid-column:1 / -1;
-        width:auto;
-        min-height:auto;
+        width:7.1rem;
+        min-height:5.4rem;
       }
-      .orbit-gem{
-        position:relative;
-        left:auto!important;
-        top:auto!important;
-        width:100%;
-        height:7rem;
-        transform:none;
-      }
-      .orbit-gem:hover,
-      .orbit-gem:focus-visible{
-        transform:scale(1.04);
-      }
+      .orbit-center b{font-size:.62rem}
+      .orbit-center span{font-size:.62rem}
     }
 
     @media (max-width:640px){
       .shell{width:min(var(--max),calc(100% - 20px))}
       .topbar{padding:.72rem;border-radius:1.05rem}
-      .hero{min-height:31rem;padding:1rem}
+      .hero{min-height:30rem;padding:1rem}
       .hero::after{opacity:.36;right:-4rem}
       h1{font-size:clamp(3rem,16vw,5.15rem)}
       .actions{display:grid}
@@ -793,8 +818,26 @@
       .large-law-field,
       .law-summary-grid{grid-template-columns:1fr}
       .large-law-diamond{min-height:10rem}
-      .orbit-stage{grid-template-columns:1fr}
-      .orbit-gem{height:6.6rem}
+    }
+
+    @media (max-width:420px){
+      .orbit-stage{
+        width:min(100%,20rem);
+        min-width:17.4rem;
+      }
+      .orbit-diamond{
+        width:3.25rem;
+        height:2.48rem;
+      }
+      .orbit-diamond .gem-label b{font-size:.25rem}
+      .orbit-diamond .gem-label span{font-size:.19rem}
+      .orbit-center{
+        width:6.3rem;
+        min-height:4.9rem;
+        padding:.65rem;
+      }
+      .orbit-center b{font-size:.54rem}
+      .orbit-center span{font-size:.55rem}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -812,7 +855,7 @@
       .gem-star,
       .orbit-stage::before,
       .orbit-stage::after,
-      .orbit-gem{
+      .orbit-diamond{
         animation:none!important;
       }
     }
@@ -972,7 +1015,7 @@
         <h1 id="page-title">Proof outranks confidence.</h1>
 
         <p class="lead">
-          The law chamber keeps authority, route, proof, runtime, generation, boundary, receipt, access, scope, and return logic available without turning every control into the same size.
+          The law chamber separates primary same-page law content from page-changing route movement. Large white crystals stay on Laws. Page-changing diamonds move through one orbit.
         </p>
 
         <div class="truth-card">
@@ -982,17 +1025,16 @@
         <div class="actions">
           <a class="button gold" href="#law-diamonds">Large Law Diamonds</a>
           <a class="button" href="#law-summary">Read Laws</a>
-          <a class="button" href="#route-orbit">Small Route Orbit</a>
-          <a class="button" href="/laws/scientific-law/">Scientific Law</a>
+          <a class="button" href="#route-orbit">Route Orbit</a>
         </div>
       </section>
 
       <section class="panel section" id="law-diamonds" aria-labelledby="law-diamonds-title">
-        <div class="kicker">Large white crystal law diamonds</div>
+        <div class="kicker">Large same-page law diamonds</div>
         <div class="section-header">
-          <h2 id="law-diamonds-title">Large diamonds carry grouped law content.</h2>
+          <h2 id="law-diamonds-title">Large white crystals are only for Laws content on this page.</h2>
           <p>
-            This is the primary law interface. Eight large white crystals replace sixteen competing oversized diamonds.
+            These eight diamonds group the sixteen Laws standards. They use one white crystal treatment because they are all law content and stay inside this page.
           </p>
         </div>
 
@@ -1042,11 +1084,11 @@
       </section>
 
       <section class="panel section" id="law-summary" aria-labelledby="law-summary-title">
-        <div class="kicker">Grouped law summary</div>
+        <div class="kicker">Compact grouped law summary</div>
         <div class="section-header">
-          <h2 id="law-summary-title">Sixteen laws remain present without stretching the page.</h2>
+          <h2 id="law-summary-title">Sixteen laws remain present without sixteen oversized controls.</h2>
           <p>
-            Each large diamond maps to one compact law group. The individual laws remain visible, but the page no longer repeats sixteen full-size controls.
+            The full law set is preserved through grouped summaries. The page becomes shorter by grouping, not by deleting law.
           </p>
         </div>
 
@@ -1102,98 +1144,107 @@
       </section>
 
       <section class="panel section" id="route-orbit" aria-labelledby="route-orbit-title">
-        <div class="kicker">Small orbital route diamonds</div>
+        <div class="kicker">Orbital page-change diamonds</div>
         <div class="section-header">
-          <h2 id="route-orbit-title">Small route-color diamonds leave the Laws page.</h2>
+          <h2 id="route-orbit-title">Every page-changing diamond lives on the orbit.</h2>
           <p>
-            This compact orbit replaces the outbound route grid. These controls are smaller because they are secondary navigation, not the primary law content.
+            White orbit diamonds are law-affiliated page changes. Gold / blue orbit diamonds leave the Laws category.
           </p>
         </div>
 
-        <div class="orbit-stage" aria-label="Outbound route orbit diamonds">
-          <div class="orbit-center" aria-hidden="true">
-            <b>Route Orbit</b>
-            <span>Small diamonds open separate routes.</span>
+        <div class="orbit-wrap">
+          <div class="orbit-stage" aria-label="Orbital page-changing diamond navigation">
+            <div class="orbit-center" aria-hidden="true">
+              <b>Laws Route Orbit</b>
+              <span>White = law route. Gold = outside Laws.</span>
+            </div>
+
+            <a class="orbit-diamond law-orbit" href="/laws/scientific-law/" style="--x:50%;--y:6%;--delay:-.2s;" aria-label="Open Scientific Law">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+              <span class="gem-label"><b>Scientific</b><span>Law</span></span>
+            </a>
+
+            <a class="orbit-diamond route-orbit" href="/" style="--x:78%;--y:12%;--delay:-.6s;" aria-label="Open Compass">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+              <span class="gem-label"><b>Compass</b><span>Root</span></span>
+            </a>
+
+            <a class="orbit-diamond route-orbit" href="/door/" style="--x:94%;--y:35%;--delay:-1s;" aria-label="Open Door">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+              <span class="gem-label"><b>Door</b><span>Entry</span></span>
+            </a>
+
+            <a class="orbit-diamond route-orbit" href="/home/" style="--x:94%;--y:65%;--delay:-1.4s;" aria-label="Open Home">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+              <span class="gem-label"><b>Home</b><span>Return</span></span>
+            </a>
+
+            <a class="orbit-diamond route-orbit" href="/explore/" style="--x:78%;--y:88%;--delay:-1.8s;" aria-label="Open Manor">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+              <span class="gem-label"><b>Manor</b><span>Map</span></span>
+            </a>
+
+            <a class="orbit-diamond law-orbit" href="/laws/categories/reality/" style="--x:50%;--y:94%;--delay:-2.2s;" aria-label="Open Reality law category">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+              <span class="gem-label"><b>Reality</b><span>Category</span></span>
+            </a>
+
+            <a class="orbit-diamond route-orbit" href="/products/" style="--x:22%;--y:88%;--delay:-2.6s;" aria-label="Open Products">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+              <span class="gem-label"><b>Products</b><span>Offer</span></span>
+            </a>
+
+            <a class="orbit-diamond route-orbit" href="/showroom/" style="--x:6%;--y:65%;--delay:-3s;" aria-label="Open Showroom">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+              <span class="gem-label"><b>Showroom</b><span>Objects</span></span>
+            </a>
+
+            <a class="orbit-diamond route-orbit" href="/frontier/" style="--x:6%;--y:35%;--delay:-3.4s;" aria-label="Open Frontier">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+              <span class="gem-label"><b>Frontier</b><span>Future</span></span>
+            </a>
+
+            <a class="orbit-diamond route-orbit" href="/gauges/" style="--x:22%;--y:12%;--delay:-3.8s;" aria-label="Open Gauges">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+              <span class="gem-label"><b>Gauges</b><span>Measure</span></span>
+            </a>
           </div>
-
-          <a class="orbit-gem" href="/" style="--x:50%;--y:9%;--delay:-.2s;">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
-            <span class="gem-label"><b>Compass</b><span>Root</span></span>
-          </a>
-
-          <a class="orbit-gem" href="/door/" style="--x:78%;--y:19%;--delay:-.7s;">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
-            <span class="gem-label"><b>Door</b><span>Entry</span></span>
-          </a>
-
-          <a class="orbit-gem" href="/home/" style="--x:91%;--y:50%;--delay:-1.2s;">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
-            <span class="gem-label"><b>Home</b><span>Return</span></span>
-          </a>
-
-          <a class="orbit-gem" href="/explore/" style="--x:78%;--y:81%;--delay:-1.7s;">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
-            <span class="gem-label"><b>Manor</b><span>Map</span></span>
-          </a>
-
-          <a class="orbit-gem" href="/laws/scientific-law/" style="--x:50%;--y:91%;--delay:-2.2s;">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
-            <span class="gem-label"><b>Scientific</b><span>Reality Test</span></span>
-          </a>
-
-          <a class="orbit-gem" href="/products/" style="--x:22%;--y:81%;--delay:-2.7s;">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
-            <span class="gem-label"><b>Products</b><span>Offerings</span></span>
-          </a>
-
-          <a class="orbit-gem" href="/showroom/" style="--x:9%;--y:50%;--delay:-3.2s;">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
-            <span class="gem-label"><b>Showroom</b><span>Objects</span></span>
-          </a>
-
-          <a class="orbit-gem" href="/frontier/" style="--x:22%;--y:19%;--delay:-3.7s;">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
-            <span class="gem-label"><b>Frontier</b><span>Future</span></span>
-          </a>
-
-          <a class="orbit-gem" href="/gauges/" style="--x:50%;--y:50%;--delay:-4.2s;">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
-            <span class="gem-label"><b>Gauges</b><span>Measure</span></span>
-          </a>
         </div>
       </section>
 
-      <section class="panel section" id="scientific-law-branch" aria-labelledby="scientific-law-title">
-        <div class="kicker">Scientific Law branch</div>
+      <section class="panel section" id="route-logic" aria-labelledby="route-logic-title">
+        <div class="kicker">Route logic</div>
         <div class="branch">
-          <strong id="scientific-law-title">Scientific Law branches from Laws and tests reality claims.</strong>
+          <strong id="route-logic-title">Scientific Law and Reality are white because they are law-affiliated, even though they change pages.</strong>
           <p>
-            Scientific Law is governed by Laws, but it opens a separate route. Therefore it uses the small route-color orbit treatment, not the large white law-diamond treatment.
+            Page-changing controls belong on the orbit. Law affiliation controls color. Same-page primary law content controls large size.
           </p>
-          <div class="actions" style="margin-top:1rem">
-            <a class="button gold" href="/laws/scientific-law/">Open Scientific Law</a>
-            <a class="button" href="#law-diamonds">Large Law Diamonds</a>
-            <a class="button" href="#route-orbit">Route Orbit</a>
-          </div>
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-LAWS_PAGE_TWO_DIAMOND_ARCHITECTURE_TNT_v1
-binding=LAWS_PAGE_TWO_DIAMOND_ARCHITECTURE_PREGAME_TO_POSTGAME_BINDING_v1
+LAWS_PAGE_CORRECTED_DIAMOND_ARCHITECTURE_TNT_v1
+binding=LAWS_PAGE_CORRECTED_DIAMOND_ARCHITECTURE_PREGAME_TO_POSTGAME_BINDING_v1
 route=/laws/
 target=/laws/index.html
-branch=Laws
-large_law_diamonds=white_crystal_grouped_law_content
-small_orbital_route_diamonds=route_color_outbound_navigation
+same_page_law_content=large_white_crystal_diamonds
+law_affiliated_page_change=small_orbital_white_crystal_diamonds
+non_law_page_change=small_orbital_route_color_diamonds
+layout_rule=page_change_controls_orbit
+color_rule=law_affiliation_controls_color
+size_rule=same_page_primary_content_controls_large_size
 outbound_route_grid_removed=true
-one_orbital_path=true
-page_length_reduced=true
+orbit_mobile_preserved=true
+large_and_orbit_css_separated=true
 sixteen_laws_preserved=true
 sixteen_laws_grouped=true
-law_groups=Authority_Route,Proof_Receipt,Runtime_Animation,Generation_Visual,Human_Interaction,Access_Return,Product_Foreground,Scope_Stale
-scientific_law_branch_preserved=true
-scientific_law_uses_route_orbit=true
+law_affiliated_orbit_routes=Scientific_Law,Reality_Category
+non_law_orbit_routes=Compass,Door,Home,Manor,Products,Showroom,Frontier,Gauges
+scientific_law_affiliated=true
+scientific_law_orbital_white_crystal=true
+reality_category_affiliated=true
+reality_category_orbital_white_crystal=true
+non_law_routes_orbital_route_color=true
 generated_image=false
 graphic_block=false
 heavy_runtime=false
@@ -1201,12 +1252,12 @@ javascript_dependency=false
 external_legacy_css_dependency=false
 reduced_motion_fallback=true
 visual_pass_claimed=false
-deploy_marker=LAWS_PAGE_TWO_DIAMOND_ARCHITECTURE_DEPLOY_MARKER_v1
+deploy_marker=LAWS_PAGE_CORRECTED_DIAMOND_ARCHITECTURE_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer>
-      LAWS_PAGE_TWO_DIAMOND_ARCHITECTURE_TNT_v1 · Laws · Large white law diamonds · Small route-color orbital diamonds.
+      LAWS_PAGE_CORRECTED_DIAMOND_ARCHITECTURE_TNT_v1 · Laws · Large same-page law crystals · Orbital page-change diamonds.
     </footer>
   </div>
 </body>

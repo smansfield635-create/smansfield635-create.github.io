@@ -4,10 +4,10 @@
   lang="en"
   data-route="/laws/categories/"
   data-page="laws-categories"
-  data-version="G2-V2"
-  data-contract="LAWS_CATEGORIES_OPTION_A_404_ALIGNMENT_TNT_v1"
-  data-previous-contract="LAWS_CATEGORIES_SHARED_CATALOG_ORBIT_TNT_v1"
-  data-source-binding="OPTION_A_404_ALIGNMENT_SCOPE_v1"
+  data-version="G3-V2"
+  data-contract="LAWS_CATEGORIES_RESTORE_FULL_BASELINE_WITH_LOCAL_CATEGORY_TOGGLES_TNT_v1"
+  data-previous-contract="LAWS_CATEGORIES_OPTION_A_404_ALIGNMENT_TNT_v1"
+  data-source-binding="LAWS_CATEGORIES_RESTORE_FULL_BASELINE_WITH_LOCAL_CATEGORY_TOGGLES_PREGAME_TO_POSTGAME_BINDING_v1"
   data-branch="laws/categories"
   data-role="shared-catalog-bridge"
   data-shared-catalog-bridge="true"
@@ -17,6 +17,11 @@
   data-top-catalog-orbit="true"
   data-large-same-page-category-diamonds="true"
   data-platform-engineering-language-standard="true"
+  data-local-category-language-toggles="true"
+  data-global-toggle-scope="page-framing-only"
+  data-governing-laws-category-toggles="true"
+  data-scientific-law-category-toggles="true"
+  data-reality-bridge-local-toggle="true"
   data-svg-crystal-renderer-required="true"
   data-lawCrystalGem-used-for-law-affiliated-items="true"
   data-routeColorGem-used-for-outbound-items="true"
@@ -42,7 +47,7 @@
   <title>Law Categories · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Law Categories is the shared catalog bridge between Governing Laws, Scientific Law, Reality Source, and proof routes."
+    content="Law Categories is the shared catalog bridge between Governing Laws, Scientific Law, Reality Source, and proof routes, with local Platform and Engineering controls for every meaningful category."
   >
 
   <style>
@@ -63,7 +68,9 @@
       --orbit-duration:78s;
     }
 
-    *{box-sizing:border-box}
+    *{
+      box-sizing:border-box;
+    }
 
     html{
       min-width:320px;
@@ -105,7 +112,10 @@
       mask-image:linear-gradient(180deg,rgba(0,0,0,.95),rgba(0,0,0,.45) 72%,rgba(0,0,0,.20));
     }
 
-    a{color:inherit;text-decoration:none}
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
 
     a:focus-visible,
     label:focus-visible{
@@ -133,7 +143,9 @@
       font-weight:950;
     }
 
-    .skip:focus{left:10px}
+    .skip:focus{
+      left:10px;
+    }
 
     .shell{
       position:relative;
@@ -188,7 +200,10 @@
       text-shadow:0 2px 10px rgba(0,0,0,.70);
     }
 
-    .brand-copy{display:grid;gap:.16rem}
+    .brand-copy{
+      display:grid;
+      gap:.16rem;
+    }
 
     .brand-copy span{
       color:var(--soft);
@@ -404,17 +419,25 @@
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
     }
 
-    .lens-radio{
+    .lens-radio,
+    .local-radio{
       position:absolute;
       opacity:0;
       pointer-events:none;
     }
 
     .page-platform,
-    .page-engineering{display:none}
+    .page-engineering{
+      display:none;
+    }
 
-    #lens-platform:checked ~ .lens-scope .page-platform{display:block}
-    #lens-engineering:checked ~ .lens-scope .page-engineering{display:block}
+    #lens-platform:checked ~ .lens-scope .page-platform{
+      display:block;
+    }
+
+    #lens-engineering:checked ~ .lens-scope .page-engineering{
+      display:block;
+    }
 
     .lens-toggle{
       display:grid;
@@ -423,7 +446,8 @@
       padding:1rem;
     }
 
-    .toggle-row{
+    .toggle-row,
+    .local-switch{
       width:fit-content;
       display:flex;
       flex-wrap:wrap;
@@ -435,7 +459,8 @@
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .toggle-label{
+    .toggle-label,
+    .local-label{
       min-height:2.42rem;
       display:inline-flex;
       align-items:center;
@@ -453,16 +478,55 @@
       transition:transform .18s ease,border-color .18s ease,background .18s ease,color .18s ease;
     }
 
-    .toggle-label:hover{
+    .local-label{
+      min-height:2.15rem;
+      padding:.48rem .72rem;
+      font-size:.64rem;
+    }
+
+    .toggle-label:hover,
+    .local-label:hover{
       transform:translateY(-1px);
       border-color:rgba(243,200,111,.36);
     }
 
     #lens-platform:checked ~ .lens-scope .toggle-label[for="lens-platform"],
-    #lens-engineering:checked ~ .lens-scope .toggle-label[for="lens-engineering"]{
+    #lens-engineering:checked ~ .lens-scope .toggle-label[for="lens-engineering"],
+    .local-platform:checked ~ .local-switch .platform-label,
+    .local-engineering:checked ~ .local-switch .engineering-label{
       color:#060811;
       border-color:rgba(243,200,111,.88);
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .local-copy{
+      display:grid;
+      gap:.72rem;
+      padding:.84rem .9rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:.92rem;
+      background:
+        radial-gradient(circle at 10% 0%,rgba(141,216,255,.07),transparent 15rem),
+        rgba(2,6,16,.30);
+    }
+
+    .local-copy p{
+      color:rgba(232,240,255,.82);
+      font-size:.94rem;
+      line-height:1.56;
+    }
+
+    .platform-copy,
+    .engineering-copy{
+      display:none;
+    }
+
+    .local-platform:checked ~ .local-copy .platform-copy{
+      display:block;
+    }
+
+    .local-engineering:checked ~ .local-copy .engineering-copy{
+      display:block;
     }
 
     .section{
@@ -494,7 +558,9 @@
       isolation:isolate;
     }
 
-    .orbit-section{overflow:visible}
+    .orbit-section{
+      overflow:visible;
+    }
 
     .orbit-wrap{
       display:grid;
@@ -565,8 +631,13 @@
     }
 
     @keyframes orbitSpin{
-      from{transform:translate(-50%,-50%) rotate(0deg)}
-      to{transform:translate(-50%,-50%) rotate(360deg)}
+      from{
+        transform:translate(-50%,-50%) rotate(0deg);
+      }
+
+      to{
+        transform:translate(-50%,-50%) rotate(360deg);
+      }
     }
 
     .orbit-center{
@@ -641,8 +712,13 @@
     }
 
     @keyframes counterOrbit{
-      from{transform:rotate(0deg)}
-      to{transform:rotate(-360deg)}
+      from{
+        transform:rotate(0deg);
+      }
+
+      to{
+        transform:rotate(-360deg);
+      }
     }
 
     .category-diamond-field{
@@ -686,12 +762,25 @@
       pointer-events:none;
     }
 
-    .category-diamond .gem-core{inset:3% 1%}
-    .orbit-diamond .gem-core{inset:0}
+    .category-diamond .gem-core{
+      inset:3% 1%;
+    }
+
+    .orbit-diamond .gem-core{
+      inset:0;
+    }
 
     @keyframes gemBreathe{
-      0%,100%{transform:translateY(0) rotate(var(--tilt-a,-1.6deg)) scale(1);filter:brightness(1)}
-      50%{transform:translateY(-.26rem) rotate(var(--tilt-b,2deg)) scale(1.025);filter:brightness(1.13)}
+      0%,
+      100%{
+        transform:translateY(0) rotate(var(--tilt-a,-1.6deg)) scale(1);
+        filter:brightness(1);
+      }
+
+      50%{
+        transform:translateY(-.26rem) rotate(var(--tilt-b,2deg)) scale(1.025);
+        filter:brightness(1.13);
+      }
     }
 
     .gem-svg{
@@ -716,12 +805,23 @@
     }
 
     @keyframes gemGlint{
-      0%,100%{opacity:.07;transform:translateX(-36px)}
-      48%,55%{opacity:.56;transform:translateX(34px)}
+      0%,
+      100%{
+        opacity:.07;
+        transform:translateX(-36px);
+      }
+
+      48%,
+      55%{
+        opacity:.56;
+        transform:translateX(34px);
+      }
     }
 
     @keyframes gemFacetTurn{
-      to{transform:rotate(360deg)}
+      to{
+        transform:rotate(360deg);
+      }
     }
 
     .gem-label{
@@ -815,7 +915,8 @@
 
     .catalog-column,
     .bridge-card,
-    .route-card{
+    .route-card,
+    .category-card{
       display:grid;
       gap:.9rem;
       padding:1.05rem;
@@ -836,7 +937,8 @@
 
     .catalog-column > b,
     .bridge-card > b,
-    .route-card > b{
+    .route-card > b,
+    .category-card > b{
       width:fit-content;
       padding:.36rem .55rem;
       border:1px solid rgba(243,200,111,.24);
@@ -851,37 +953,17 @@
 
     .catalog-column strong,
     .bridge-card strong,
-    .route-card strong{
+    .route-card strong,
+    .category-card strong{
       color:rgba(255,244,216,.98);
       font-size:clamp(1.05rem,2.3vw,1.26rem);
       line-height:1.08;
     }
 
-    .catalog-list{
+    .category-grid{
       display:grid;
-      gap:.55rem;
-      margin:0;
-      padding:0;
-      list-style:none;
-    }
-
-    .catalog-list li{
-      display:grid;
-      gap:.18rem;
-      padding:.72rem .78rem;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:.9rem;
-      background:rgba(255,255,255,.035);
-      color:rgba(232,240,255,.80);
-      font-size:.92rem;
-      line-height:1.42;
-    }
-
-    .catalog-list b{
-      color:rgba(255,244,216,.98);
-      font-size:.78rem;
-      letter-spacing:.08em;
-      text-transform:uppercase;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.75rem;
     }
 
     .bridge-grid{
@@ -967,65 +1049,222 @@
     }
 
     @media (max-width:1080px){
-      .category-diamond-field{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .bridge-grid,.route-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .category-diamond-field{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .bridge-grid,
+      .route-grid,
+      .category-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
     }
 
     @media (max-width:860px){
-      .topbar{grid-template-columns:1fr}
-      .nav{justify-content:flex-start}
-      .orbit-wrap{padding:4rem .9rem}
-      .orbit-stage{width:min(100%,35rem);min-width:20rem}
-      .orbit-track{--orbit-r:min(11.5rem,34vw)}
-      .orbit-diamond{width:clamp(5.2rem,17.2vw,6.25rem);height:clamp(3.94rem,13vw,4.72rem)}
-      .orbit-diamond .gem-label{max-width:5.4rem;min-height:1.9rem;padding:.30rem .35rem}
-      .orbit-diamond .gem-label b{font-size:clamp(.58rem,1.95vw,.72rem);letter-spacing:.01em}
-      .orbit-diamond .gem-label span{font-size:clamp(.40rem,1.32vw,.48rem)}
-      .orbit-center{width:8rem;min-height:6rem}
-      .orbit-center b{font-size:.68rem}
-      .orbit-center span{font-size:.65rem}
-      .catalog-split{grid-template-columns:1fr}
+      .topbar{
+        grid-template-columns:1fr;
+      }
+
+      .nav{
+        justify-content:flex-start;
+      }
+
+      .orbit-wrap{
+        padding:4rem .9rem;
+      }
+
+      .orbit-stage{
+        width:min(100%,35rem);
+        min-width:20rem;
+      }
+
+      .orbit-track{
+        --orbit-r:min(11.5rem,34vw);
+      }
+
+      .orbit-diamond{
+        width:clamp(5.2rem,17.2vw,6.25rem);
+        height:clamp(3.94rem,13vw,4.72rem);
+      }
+
+      .orbit-diamond .gem-label{
+        max-width:5.4rem;
+        min-height:1.9rem;
+        padding:.30rem .35rem;
+      }
+
+      .orbit-diamond .gem-label b{
+        font-size:clamp(.58rem,1.95vw,.72rem);
+        letter-spacing:.01em;
+      }
+
+      .orbit-diamond .gem-label span{
+        font-size:clamp(.40rem,1.32vw,.48rem);
+      }
+
+      .orbit-center{
+        width:8rem;
+        min-height:6rem;
+      }
+
+      .orbit-center b{
+        font-size:.68rem;
+      }
+
+      .orbit-center span{
+        font-size:.65rem;
+      }
+
+      .catalog-split{
+        grid-template-columns:1fr;
+      }
     }
 
     @media (max-width:640px){
-      .shell{width:min(var(--max),calc(100% - 20px))}
-      .topbar{padding:.72rem;border-radius:1.05rem}
-      .hero{min-height:29rem;padding:1rem}
-      .hero::after{opacity:.36;right:-4rem}
-      h1{font-size:clamp(3rem,16vw,5.15rem)}
-      .actions{display:grid}
-      .button{width:100%}
-      .toggle-row{width:100%;display:grid;grid-template-columns:1fr 1fr;border-radius:1rem}
-      .toggle-label{border-radius:.8rem}
-      .section{padding:1rem}
-      .gem-stage{padding:1rem}
+      .shell{
+        width:min(var(--max),calc(100% - 20px));
+      }
+
+      .topbar{
+        padding:.72rem;
+        border-radius:1.05rem;
+      }
+
+      .hero{
+        min-height:29rem;
+        padding:1rem;
+      }
+
+      .hero::after{
+        opacity:.36;
+        right:-4rem;
+      }
+
+      h1{
+        font-size:clamp(3rem,16vw,5.15rem);
+      }
+
+      .actions{
+        display:grid;
+      }
+
+      .button{
+        width:100%;
+      }
+
+      .toggle-row,
+      .local-switch{
+        width:100%;
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        border-radius:1rem;
+      }
+
+      .toggle-label,
+      .local-label{
+        border-radius:.8rem;
+      }
+
+      .section{
+        padding:1rem;
+      }
+
+      .gem-stage{
+        padding:1rem;
+      }
+
       .category-diamond-field,
       .bridge-grid,
-      .route-grid{grid-template-columns:1fr}
-      .category-diamond{min-height:11rem}
-      .return-row{justify-content:stretch}
-      .return-row .return-chip{width:100%}
+      .route-grid,
+      .category-grid{
+        grid-template-columns:1fr;
+      }
+
+      .category-diamond{
+        min-height:11rem;
+      }
+
+      .return-row{
+        justify-content:stretch;
+      }
+
+      .return-row .return-chip{
+        width:100%;
+      }
     }
 
     @media (max-width:430px){
-      .orbit-wrap{padding:3.65rem .35rem}
-      .orbit-stage{width:min(100%,24.75rem);min-width:20rem}
-      .orbit-track{--orbit-r:8.55rem}
-      .orbit-diamond{width:4.55rem;height:3.45rem}
-      .orbit-diamond .gem-label{width:96%;max-width:4.35rem;min-height:1.66rem;padding:.24rem .25rem}
-      .orbit-diamond .gem-label b{font-size:.49rem;letter-spacing:0}
-      .orbit-diamond .gem-label span{display:none}
-      .orbit-center{width:6.7rem;min-height:5.15rem;padding:.65rem}
-      .orbit-center b{font-size:.56rem}
-      .orbit-center span{font-size:.56rem}
+      .orbit-wrap{
+        padding:3.65rem .35rem;
+      }
+
+      .orbit-stage{
+        width:min(100%,24.75rem);
+        min-width:20rem;
+      }
+
+      .orbit-track{
+        --orbit-r:8.55rem;
+      }
+
+      .orbit-diamond{
+        width:4.55rem;
+        height:3.45rem;
+      }
+
+      .orbit-diamond .gem-label{
+        width:96%;
+        max-width:4.35rem;
+        min-height:1.66rem;
+        padding:.24rem .25rem;
+      }
+
+      .orbit-diamond .gem-label b{
+        font-size:.49rem;
+        letter-spacing:0;
+      }
+
+      .orbit-diamond .gem-label span{
+        display:none;
+      }
+
+      .orbit-center{
+        width:6.7rem;
+        min-height:5.15rem;
+        padding:.65rem;
+      }
+
+      .orbit-center b{
+        font-size:.56rem;
+      }
+
+      .orbit-center span{
+        font-size:.56rem;
+      }
     }
 
     @media (max-width:360px){
-      .orbit-stage{width:22.9rem;transform:translateX(-.25rem)}
-      .orbit-track{--orbit-r:7.95rem}
-      .orbit-diamond{width:4.25rem;height:3.22rem}
-      .orbit-diamond .gem-label{max-width:4.05rem}
-      .orbit-diamond .gem-label b{font-size:.45rem}
+      .orbit-stage{
+        width:22.9rem;
+        transform:translateX(-.25rem);
+      }
+
+      .orbit-track{
+        --orbit-r:7.95rem;
+      }
+
+      .orbit-diamond{
+        width:4.25rem;
+        height:3.22rem;
+      }
+
+      .orbit-diamond .gem-label{
+        max-width:4.05rem;
+      }
+
+      .orbit-diamond .gem-label b{
+        font-size:.45rem;
+      }
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -1214,7 +1453,7 @@
           </p>
 
           <div class="truth-card">
-            Laws governs. Scientific Law tests reality claims. Reality Source anchors category truth. Categories maps the catalog. Gauges checks proof and route behavior.
+            Laws governs. Scientific Law tests reality claims. Reality Source anchors category truth. Categories maps the catalog. Gauges checks proof and route behavior. Local language switches now live with the actual categories instead of forcing the reader back to the top.
           </div>
 
           <div class="actions">
@@ -1227,13 +1466,15 @@
 
         <section class="panel lens-toggle" aria-labelledby="lens-title">
           <div class="section-header">
-            <div class="kicker">Page Language Lens</div>
-            <h2 id="lens-title">Platform or Engineering.</h2>
+            <div class="kicker">Page-level language lens</div>
+            <h2 id="lens-title">Platform or Engineering for page framing only.</h2>
+
             <p class="page-platform">
-              Platform language explains the catalog in plain terms so a reader can understand where to go and why each branch exists.
+              Platform language explains the page in plain terms. Each category below has its own Platform / Engineering control, so the reader can change language at the point of reading.
             </p>
+
             <p class="page-engineering">
-              Engineering language defines the catalog as route classification, branch indexing, source mapping, and proof-path preservation.
+              The global Platform / Engineering control is scoped to hero framing, page orientation, orbit explanation, and section introductions. Category objects use independent local CSS-only radio controls.
             </p>
           </div>
 
@@ -1245,13 +1486,16 @@
 
         <section class="panel section orbit-section" id="catalog-orbit" aria-labelledby="catalog-orbit-title">
           <div class="kicker">Top orbital catalog navigation</div>
+
           <div class="section-header">
             <h2 id="catalog-orbit-title">One orbit connects the full law catalog.</h2>
+
             <p class="page-platform">
-              Use the orbit to bounce between Laws, Scientific Law, Reality Source, primary reality-source anchors, proof checking, and root orientation without losing the catalog.
+              Use the orbit to move between Laws, Scientific Law, Reality Source, the primary reality-source anchors, proof checking, and root orientation without losing the catalog.
             </p>
+
             <p class="page-engineering">
-              Page-changing and source-anchor routes are consolidated into the top catalog orbit. Law-affiliated routes use white crystals. Outbound proof/root routes use route-color crystals.
+              Page-changing and source-anchor routes are consolidated into the top catalog orbit. Law-affiliated routes use white crystals. Outbound proof and root routes use route-color crystals.
             </p>
           </div>
 
@@ -1264,76 +1508,116 @@
                 <b class="page-platform">Category Orbit</b>
                 <b class="page-engineering">Shared Catalog Orbit</b>
                 <span class="page-platform">Move between Laws, Scientific Law, and Reality.</span>
-                <span class="page-engineering">Routes split by branch class and unified by catalog interface.</span>
+                <span class="page-engineering">Routes split by branch class and unify through catalog interface.</span>
               </div>
 
               <div class="orbit-track">
                 <a class="orbit-diamond law-orbit" href="/laws/" style="--a:0deg;" aria-label="Open Laws">
                   <span class="orbit-face">
-                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                    <span class="gem-core">
+                      <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true">
+                        <use href="#lawCrystalGem"></use>
+                      </svg>
+                    </span>
                     <span class="gem-label"><b>Laws</b><span>Parent</span></span>
                   </span>
                 </a>
 
                 <a class="orbit-diamond law-orbit" href="/laws/categories/" style="--a:36deg;" aria-label="Open Categories">
                   <span class="orbit-face">
-                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                    <span class="gem-core">
+                      <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true">
+                        <use href="#lawCrystalGem"></use>
+                      </svg>
+                    </span>
                     <span class="gem-label"><b>Categories</b><span>Catalog</span></span>
                   </span>
                 </a>
 
                 <a class="orbit-diamond law-orbit" href="/laws/scientific-law/" style="--a:72deg;" aria-label="Open Scientific Law">
                   <span class="orbit-face">
-                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                    <span class="gem-core">
+                      <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true">
+                        <use href="#lawCrystalGem"></use>
+                      </svg>
+                    </span>
                     <span class="gem-label"><b>Scientific</b><span>Law</span></span>
                   </span>
                 </a>
 
                 <a class="orbit-diamond law-orbit" href="/laws/categories/reality/" style="--a:108deg;" aria-label="Open Reality Source">
                   <span class="orbit-face">
-                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                    <span class="gem-core">
+                      <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true">
+                        <use href="#lawCrystalGem"></use>
+                      </svg>
+                    </span>
                     <span class="gem-label"><b>Reality</b><span>Source</span></span>
                   </span>
                 </a>
 
                 <a class="orbit-diamond law-orbit" href="/laws/categories/reality/#theory" style="--a:144deg;" aria-label="Open Theory in Reality Source">
                   <span class="orbit-face">
-                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                    <span class="gem-core">
+                      <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true">
+                        <use href="#lawCrystalGem"></use>
+                      </svg>
+                    </span>
                     <span class="gem-label"><b>Theory</b><span>Reality</span></span>
                   </span>
                 </a>
 
                 <a class="orbit-diamond law-orbit" href="/laws/categories/reality/#evidence" style="--a:180deg;" aria-label="Open Evidence in Reality Source">
                   <span class="orbit-face">
-                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                    <span class="gem-core">
+                      <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true">
+                        <use href="#lawCrystalGem"></use>
+                      </svg>
+                    </span>
                     <span class="gem-label"><b>Evidence</b><span>Reality</span></span>
                   </span>
                 </a>
 
                 <a class="orbit-diamond law-orbit" href="/laws/categories/reality/#measure" style="--a:216deg;" aria-label="Open Measure in Reality Source">
                   <span class="orbit-face">
-                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                    <span class="gem-core">
+                      <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true">
+                        <use href="#lawCrystalGem"></use>
+                      </svg>
+                    </span>
                     <span class="gem-label"><b>Measure</b><span>Reality</span></span>
                   </span>
                 </a>
 
                 <a class="orbit-diamond law-orbit" href="/laws/categories/reality/#limits" style="--a:252deg;" aria-label="Open Limits in Reality Source">
                   <span class="orbit-face">
-                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                    <span class="gem-core">
+                      <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true">
+                        <use href="#lawCrystalGem"></use>
+                      </svg>
+                    </span>
                     <span class="gem-label"><b>Limits</b><span>Reality</span></span>
                   </span>
                 </a>
 
                 <a class="orbit-diamond route-orbit" href="/" style="--a:288deg;" aria-label="Open Compass">
                   <span class="orbit-face">
-                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+                    <span class="gem-core">
+                      <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true">
+                        <use href="#routeColorGem"></use>
+                      </svg>
+                    </span>
                     <span class="gem-label"><b>Compass</b><span>Root</span></span>
                   </span>
                 </a>
 
                 <a class="orbit-diamond route-orbit" href="/gauges/" style="--a:324deg;" aria-label="Open Gauges">
                   <span class="orbit-face">
-                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+                    <span class="gem-core">
+                      <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true">
+                        <use href="#routeColorGem"></use>
+                      </svg>
+                    </span>
                     <span class="gem-label"><b>Gauges</b><span>Proof</span></span>
                   </span>
                 </a>
@@ -1344,35 +1628,54 @@
 
         <section class="panel section" id="catalog-groups" aria-labelledby="catalog-groups-title">
           <div class="kicker">Large same-page catalog diamonds</div>
+
           <div class="section-header">
             <h2 id="catalog-groups-title">The catalog splits into four same-page groups.</h2>
+
             <p class="page-platform">
               These large white crystals do not leave the page. They organize the shared catalog into Laws, Scientific Law, Reality Source, and Branch Routes.
             </p>
+
             <p class="page-engineering">
-              Large diamonds are same-page anchors. They use lawCrystalGem because they organize law-affiliated catalog groups.
+              Large diamonds are same-page anchors. They use lawCrystalGem because they organize law-affiliated catalog groups rather than outbound non-law destinations.
             </p>
           </div>
 
           <div class="gem-stage" aria-label="Large same-page catalog diamonds">
             <div class="category-diamond-field">
               <a class="category-diamond" href="#governing-laws-catalog" style="--delay:-.1s;--tilt-a:-1.6deg;--tilt-b:1.8deg;">
-                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                <span class="gem-core">
+                  <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true">
+                    <use href="#lawCrystalGem"></use>
+                  </svg>
+                </span>
                 <span class="gem-label"><b>Governing Laws</b><span>The sixteen-law chamber as rule system.</span></span>
               </a>
 
               <a class="category-diamond" href="#scientific-law-catalog" style="--delay:-.6s;--tilt-a:1.5deg;--tilt-b:-2deg;">
-                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                <span class="gem-core">
+                  <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true">
+                    <use href="#lawCrystalGem"></use>
+                  </svg>
+                </span>
                 <span class="gem-label"><b>Scientific Law</b><span>The reality-test branch catalog.</span></span>
               </a>
 
               <a class="category-diamond" href="#reality-bridge" style="--delay:-1.1s;--tilt-a:-2deg;--tilt-b:1.4deg;">
-                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                <span class="gem-core">
+                  <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true">
+                    <use href="#lawCrystalGem"></use>
+                  </svg>
+                </span>
                 <span class="gem-label"><b>Reality Source</b><span>The shared category bridge.</span></span>
               </a>
 
               <a class="category-diamond" href="#branch-routes" style="--delay:-1.6s;--tilt-a:1.8deg;--tilt-b:-1.6deg;">
-                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                <span class="gem-core">
+                  <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true">
+                    <use href="#lawCrystalGem"></use>
+                  </svg>
+                </span>
                 <span class="gem-label"><b>Branch Routes</b><span>The outward catalog doors.</span></span>
               </a>
             </div>
@@ -1381,13 +1684,16 @@
 
         <section class="panel section" id="shared-catalog" aria-labelledby="shared-catalog-title">
           <div class="kicker">Shared catalog split</div>
+
           <div class="section-header">
             <h2 id="shared-catalog-title">Governing Laws and Scientific Law sit in one catalog.</h2>
+
             <p class="page-platform">
-              The left side maps the rule chamber. The right side maps the reality-test branch. Reality Source binds them together.
+              The left side maps the rule chamber. The right side maps the reality-test branch. Each category can now be read directly in Platform or Engineering language.
             </p>
+
             <p class="page-engineering">
-              This split preserves two branch classes without separating them into disconnected systems: governing-law categories and scientific-law categories.
+              This split preserves two branch classes without disconnecting them: governing-law category objects and scientific-law category objects. Each object owns an independent local language switch.
             </p>
           </div>
 
@@ -1395,23 +1701,216 @@
             <article class="catalog-column" id="governing-laws-catalog">
               <b>Left side</b>
               <strong>Governing Laws Catalog</strong>
+
               <p class="page-platform">
                 This side points back into the Laws chamber and explains the sixteen laws as the governing rule system.
               </p>
+
               <p class="page-engineering">
                 This side maps law-category groups controlled by /laws/ and preserves the governing parent relationship.
               </p>
 
-              <ul class="catalog-list">
-                <li><b>Authority / Route</b><span>Owner function and route location must be explicit before larger claims are made.</span></li>
-                <li><b>Proof / Receipt</b><span>Evidence, gauges, and trace records outrank unsupported confidence.</span></li>
-                <li><b>Runtime / Animation</b><span>Motion remains contained and cannot replace hierarchy or readability.</span></li>
-                <li><b>Generation / Visual Claim</b><span>Baselines, readiness, source truth, and visual polish remain separate.</span></li>
-                <li><b>Human Boundary / Interaction</b><span>Support must not become reckless authority; controls must be legible.</span></li>
-                <li><b>Access / Return</b><span>Law must remain reachable, and every outward move needs a return path.</span></li>
-                <li><b>Product + Planet Separation / Foreground</b><span>Route classes stay distinct while governing controls stay visible.</span></li>
-                <li><b>Scope / Stale Language</b><span>Changes stay inside authorized scope, and retired labels cannot control current pages.</span></li>
-              </ul>
+              <div class="category-grid">
+                <article class="category-card" id="authority-route-category">
+                  <b>Authority / Route</b>
+                  <strong>Owner and location must exist before the claim expands.</strong>
+
+                  <div class="local-toggle">
+                    <input class="local-radio local-platform" type="radio" name="authority-route-lens" id="authority-route-platform" checked>
+                    <input class="local-radio local-engineering" type="radio" name="authority-route-lens" id="authority-route-engineering">
+
+                    <div class="local-switch" role="radiogroup" aria-label="Authority and Route language lens">
+                      <label class="local-label platform-label" for="authority-route-platform" tabindex="0">Platform</label>
+                      <label class="local-label engineering-label" for="authority-route-engineering" tabindex="0">Engineering</label>
+                    </div>
+
+                    <div class="local-copy">
+                      <p class="platform-copy">
+                        A law category has to know who owns it, where it lives, and where it sends the reader before it can make a larger claim. Without that, a page can look official while floating without real authority.
+                      </p>
+
+                      <p class="engineering-copy">
+                        Authority / Route requires explicit parent route, route identity, owner function, construct class, inbound path, outbound path, return path, and verification path before a public claim can be treated as governed.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="category-card" id="proof-receipt-category">
+                  <b>Proof / Receipt</b>
+                  <strong>Checkable evidence and records outrank confidence.</strong>
+
+                  <div class="local-toggle">
+                    <input class="local-radio local-platform" type="radio" name="proof-receipt-lens" id="proof-receipt-platform" checked>
+                    <input class="local-radio local-engineering" type="radio" name="proof-receipt-lens" id="proof-receipt-engineering">
+
+                    <div class="local-switch" role="radiogroup" aria-label="Proof and Receipt language lens">
+                      <label class="local-label platform-label" for="proof-receipt-platform" tabindex="0">Platform</label>
+                      <label class="local-label engineering-label" for="proof-receipt-engineering" tabindex="0">Engineering</label>
+                    </div>
+
+                    <div class="local-copy">
+                      <p class="platform-copy">
+                        Proof keeps the system honest. A claim needs something inspectable, and a major renewal needs a receipt so the next audit can see what changed, what stayed in place, and what still has not been proven.
+                      </p>
+
+                      <p class="engineering-copy">
+                        Proof / Receipt binds evidence hierarchy, diagnostic posture, route verification, deployment trace, changed scope, preserved scope, dependency posture, and visual-pass status into an auditable record.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="category-card" id="runtime-animation-category">
+                  <b>Runtime / Animation</b>
+                  <strong>Motion serves structure; it does not replace it.</strong>
+
+                  <div class="local-toggle">
+                    <input class="local-radio local-platform" type="radio" name="runtime-animation-lens" id="runtime-animation-platform" checked>
+                    <input class="local-radio local-engineering" type="radio" name="runtime-animation-lens" id="runtime-animation-engineering">
+
+                    <div class="local-switch" role="radiogroup" aria-label="Runtime and Animation language lens">
+                      <label class="local-label platform-label" for="runtime-animation-platform" tabindex="0">Platform</label>
+                      <label class="local-label engineering-label" for="runtime-animation-engineering" tabindex="0">Engineering</label>
+                    </div>
+
+                    <div class="local-copy">
+                      <p class="platform-copy">
+                        Animation can guide attention and make hierarchy easier to feel, but it cannot replace meaning. A visitor should still understand the page if motion is reduced, paused, or removed.
+                      </p>
+
+                      <p class="engineering-copy">
+                        Runtime / Animation constrains motion to authorized route classes, preserves reduced-motion behavior, prevents heavy runtime leakage into static law pages, and blocks animation from becoming proof or source truth.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="category-card" id="generation-visual-category">
+                  <b>Generation / Visual Claim</b>
+                  <strong>A better-looking page is not automatically a proven page.</strong>
+
+                  <div class="local-toggle">
+                    <input class="local-radio local-platform" type="radio" name="generation-visual-lens" id="generation-visual-platform" checked>
+                    <input class="local-radio local-engineering" type="radio" name="generation-visual-lens" id="generation-visual-engineering">
+
+                    <div class="local-switch" role="radiogroup" aria-label="Generation and Visual Claim language lens">
+                      <label class="local-label platform-label" for="generation-visual-platform" tabindex="0">Platform</label>
+                      <label class="local-label engineering-label" for="generation-visual-engineering" tabindex="0">Engineering</label>
+                    </div>
+
+                    <div class="local-copy">
+                      <p class="platform-copy">
+                        A page can look stronger without being finished. Visual improvement, source readiness, generation status, proof, and public completion must remain separate so beauty does not impersonate truth.
+                      </p>
+
+                      <p class="engineering-copy">
+                        Generation / Visual Claim separates baseline state, readiness label, source truth, visual approval, runtime stability, proof state, and final completion into non-collapsing status fields.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="category-card" id="human-interaction-category">
+                  <b>Human Boundary / Interaction</b>
+                  <strong>Support must not become reckless authority.</strong>
+
+                  <div class="local-toggle">
+                    <input class="local-radio local-platform" type="radio" name="human-interaction-lens" id="human-interaction-platform" checked>
+                    <input class="local-radio local-engineering" type="radio" name="human-interaction-lens" id="human-interaction-engineering">
+
+                    <div class="local-switch" role="radiogroup" aria-label="Human Boundary and Interaction language lens">
+                      <label class="local-label platform-label" for="human-interaction-platform" tabindex="0">Platform</label>
+                      <label class="local-label engineering-label" for="human-interaction-engineering" tabindex="0">Engineering</label>
+                    </div>
+
+                    <div class="local-copy">
+                      <p class="platform-copy">
+                        The system can explain, organize, prepare, and support, but it must not pretend to replace qualified authority where qualified authority is required. Interactive controls must also clearly show what can be touched and what cannot.
+                      </p>
+
+                      <p class="engineering-copy">
+                        Human Boundary / Interaction preserves high-stakes claim boundaries, qualified-verification requirements, control legibility, affordance clarity, non-impersonation rules, and separation between assistance and formal authority.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="category-card" id="access-return-category">
+                  <b>Access / Return</b>
+                  <strong>Every outward movement needs a way back.</strong>
+
+                  <div class="local-toggle">
+                    <input class="local-radio local-platform" type="radio" name="access-return-lens" id="access-return-platform" checked>
+                    <input class="local-radio local-engineering" type="radio" name="access-return-lens" id="access-return-engineering">
+
+                    <div class="local-switch" role="radiogroup" aria-label="Access and Return language lens">
+                      <label class="local-label platform-label" for="access-return-platform" tabindex="0">Platform</label>
+                      <label class="local-label engineering-label" for="access-return-engineering" tabindex="0">Engineering</label>
+                    </div>
+
+                    <div class="local-copy">
+                      <p class="platform-copy">
+                        The catalog has to remain reachable. When a reader moves outward to another route or downward to a deeper section, the page should keep an obvious way to re-anchor.
+                      </p>
+
+                      <p class="engineering-copy">
+                        Access / Return requires public discoverability, parent-route persistence, outbound-route clarity, same-page anchor return, branch-route visibility, and non-orphaned navigation loops.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="category-card" id="product-planet-foreground-category">
+                  <b>Product + Planet Separation / Foreground</b>
+                  <strong>Different route classes can share style without becoming the same object.</strong>
+
+                  <div class="local-toggle">
+                    <input class="local-radio local-platform" type="radio" name="product-planet-lens" id="product-planet-platform" checked>
+                    <input class="local-radio local-engineering" type="radio" name="product-planet-lens" id="product-planet-engineering">
+
+                    <div class="local-switch" role="radiogroup" aria-label="Product Planet and Foreground language lens">
+                      <label class="local-label platform-label" for="product-planet-platform" tabindex="0">Platform</label>
+                      <label class="local-label engineering-label" for="product-planet-engineering" tabindex="0">Engineering</label>
+                    </div>
+
+                    <div class="local-copy">
+                      <p class="platform-copy">
+                        Products, planets, laws, proof pages, and story pages can all belong to the same estate while still remaining different kinds of things. The law page protects that separation.
+                      </p>
+
+                      <p class="engineering-copy">
+                        Product + Planet Separation / Foreground maintains route-class separation while preserving foreground controls for Laws, Entry, Proof, Return, Scientific Law, Categories, and source-route navigation.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="category-card" id="scope-stale-category">
+                  <b>Scope / Stale Language</b>
+                  <strong>Retired labels cannot keep controlling current pages.</strong>
+
+                  <div class="local-toggle">
+                    <input class="local-radio local-platform" type="radio" name="scope-stale-lens" id="scope-stale-platform" checked>
+                    <input class="local-radio local-engineering" type="radio" name="scope-stale-lens" id="scope-stale-engineering">
+
+                    <div class="local-switch" role="radiogroup" aria-label="Scope and Stale Language lens">
+                      <label class="local-label platform-label" for="scope-stale-platform" tabindex="0">Platform</label>
+                      <label class="local-label engineering-label" for="scope-stale-engineering" tabindex="0">Engineering</label>
+                    </div>
+
+                    <div class="local-copy">
+                      <p class="platform-copy">
+                        A change must stay inside its authorized boundary, and old labels should not keep steering the reader after the page has moved on. Stale language can create false routes even when the page visually looks correct.
+                      </p>
+
+                      <p class="engineering-copy">
+                        Scope / Stale Language confines TNT changes to authorized files and blocks deprecated route labels, mode names, prior contracts, stale child paths, and superseded terminology from reasserting active control.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+              </div>
 
               <div class="return-row">
                 <a class="return-chip gold" href="/laws/">Open Governing Laws</a>
@@ -1422,24 +1921,241 @@
             <article class="catalog-column" id="scientific-law-catalog">
               <b>Right side</b>
               <strong>Scientific Law Catalog</strong>
+
               <p class="page-platform">
                 This side points into Scientific Law and explains the branch as the reality-test system.
               </p>
+
               <p class="page-engineering">
                 This side maps scientific-law objects, reality-test controls, and claim-maturity states under the Laws branch.
               </p>
 
-              <ul class="catalog-list">
-                <li><b>Theory</b><span>A testable explanation that risks being wrong and remains open to correction.</span></li>
-                <li><b>Evidence</b><span>A checkable record with provenance, inspection value, and claim-boundary alignment.</span></li>
-                <li><b>Measure</b><span>A coordinate, unit, method, calibration, sampling, and uncertainty system.</span></li>
-                <li><b>Limits</b><span>The boundary that defines what the claim can and cannot honestly say.</span></li>
-                <li><b>Scientific Route</b><span>Observe, define, measure, compare, revise, and limit.</span></li>
-                <li><b>Repeatability / Falsifiability</b><span>The result must survive another pass, and the theory must be able to lose.</span></li>
-                <li><b>Calibration / Uncertainty</b><span>The tool must be accountable, and error range must remain visible.</span></li>
-                <li><b>Causality / Model Scope</b><span>Cause requires controls, and every model carries a boundary.</span></li>
-                <li><b>Claim Testing Ladder</b><span>Impression matures into bounded, testable, correction-open scientific claim.</span></li>
-              </ul>
+              <div class="category-grid">
+                <article class="category-card" id="theory-category">
+                  <b>Theory</b>
+                  <strong>A testable explanation that risks correction.</strong>
+
+                  <div class="local-toggle">
+                    <input class="local-radio local-platform" type="radio" name="theory-category-lens" id="theory-category-platform" checked>
+                    <input class="local-radio local-engineering" type="radio" name="theory-category-lens" id="theory-category-engineering">
+
+                    <div class="local-switch" role="radiogroup" aria-label="Theory category language lens">
+                      <label class="local-label platform-label" for="theory-category-platform" tabindex="0">Platform</label>
+                      <label class="local-label engineering-label" for="theory-category-engineering" tabindex="0">Engineering</label>
+                    </div>
+
+                    <div class="local-copy">
+                      <p class="platform-copy">
+                        Theory gives the claim a possible explanation, but the explanation must remain answerable to reality. It becomes useful only when it produces expectations that can be checked and corrected.
+                      </p>
+
+                      <p class="engineering-copy">
+                        Theory is a model framework with declared assumptions, objects, variables, expected behavior, falsifiability exposure, explanatory boundary, and revision conditions.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="category-card" id="evidence-category">
+                  <b>Evidence</b>
+                  <strong>A checkable record with provenance.</strong>
+
+                  <div class="local-toggle">
+                    <input class="local-radio local-platform" type="radio" name="evidence-category-lens" id="evidence-category-platform" checked>
+                    <input class="local-radio local-engineering" type="radio" name="evidence-category-lens" id="evidence-category-engineering">
+
+                    <div class="local-switch" role="radiogroup" aria-label="Evidence category language lens">
+                      <label class="local-label platform-label" for="evidence-category-platform" tabindex="0">Platform</label>
+                      <label class="local-label engineering-label" for="evidence-category-engineering" tabindex="0">Engineering</label>
+                    </div>
+
+                    <div class="local-copy">
+                      <p class="platform-copy">
+                        Evidence is the part of the claim that can be inspected after confidence, preference, memory, and persuasion are removed. It does not have to prove everything, but it must honestly show what it can support.
+                      </p>
+
+                      <p class="engineering-copy">
+                        Evidence is recorded observation with provenance, inspection value, relevance to the claim boundary, repeatability value, independence posture, and separation from interpretation.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="category-card" id="measure-category">
+                  <b>Measure</b>
+                  <strong>A defined coordinate system for comparison.</strong>
+
+                  <div class="local-toggle">
+                    <input class="local-radio local-platform" type="radio" name="measure-category-lens" id="measure-category-platform" checked>
+                    <input class="local-radio local-engineering" type="radio" name="measure-category-lens" id="measure-category-engineering">
+
+                    <div class="local-switch" role="radiogroup" aria-label="Measure category language lens">
+                      <label class="local-label platform-label" for="measure-category-platform" tabindex="0">Platform</label>
+                      <label class="local-label engineering-label" for="measure-category-engineering" tabindex="0">Engineering</label>
+                    </div>
+
+                    <div class="local-copy">
+                      <p class="platform-copy">
+                        Measurement makes the claim less vague. It says what is being measured, how it is being measured, what unit is being used, and how much uncertainty may travel with the result.
+                      </p>
+
+                      <p class="engineering-copy">
+                        Measurement defines the object, variable, unit, method, calibration state, sampling frame, detection limit, comparison standard, uncertainty range, and acceptable error boundary.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="category-card" id="limits-category">
+                  <b>Limits</b>
+                  <strong>The boundary that protects truth from overclaiming.</strong>
+
+                  <div class="local-toggle">
+                    <input class="local-radio local-platform" type="radio" name="limits-category-lens" id="limits-category-platform" checked>
+                    <input class="local-radio local-engineering" type="radio" name="limits-category-lens" id="limits-category-engineering">
+
+                    <div class="local-switch" role="radiogroup" aria-label="Limits category language lens">
+                      <label class="local-label platform-label" for="limits-category-platform" tabindex="0">Platform</label>
+                      <label class="local-label engineering-label" for="limits-category-engineering" tabindex="0">Engineering</label>
+                    </div>
+
+                    <div class="local-copy">
+                      <p class="platform-copy">
+                        Limits keep a claim honest. They say what the evidence supports, what it does not support, what remains uncertain, and where the claim should stop.
+                      </p>
+
+                      <p class="engineering-copy">
+                        Limits declare confidence range, uncertainty range, domain constraint, sampling constraint, instrument constraint, model applicability, unresolved variables, and revision conditions.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="category-card" id="scientific-route-category">
+                  <b>Scientific Route</b>
+                  <strong>The reality-check path from impression to bounded claim.</strong>
+
+                  <div class="local-toggle">
+                    <input class="local-radio local-platform" type="radio" name="scientific-route-category-lens" id="scientific-route-category-platform" checked>
+                    <input class="local-radio local-engineering" type="radio" name="scientific-route-category-lens" id="scientific-route-category-engineering">
+
+                    <div class="local-switch" role="radiogroup" aria-label="Scientific Route category language lens">
+                      <label class="local-label platform-label" for="scientific-route-category-platform" tabindex="0">Platform</label>
+                      <label class="local-label engineering-label" for="scientific-route-category-engineering" tabindex="0">Engineering</label>
+                    </div>
+
+                    <div class="local-copy">
+                      <p class="platform-copy">
+                        A claim should not jump from first impression to final certainty. It moves through observation, definition, measurement, comparison, revision, and limitation so reality can correct it.
+                      </p>
+
+                      <p class="engineering-copy">
+                        Scientific Route defines sequential claim maturation through observation record, boundary definition, measurement method, comparative test, model revision, and explicit limitation.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="category-card" id="repeatability-falsifiability-category">
+                  <b>Repeatability / Falsifiability</b>
+                  <strong>Another pass and the possibility of being wrong.</strong>
+
+                  <div class="local-toggle">
+                    <input class="local-radio local-platform" type="radio" name="repeatability-falsifiability-lens" id="repeatability-falsifiability-platform" checked>
+                    <input class="local-radio local-engineering" type="radio" name="repeatability-falsifiability-lens" id="repeatability-falsifiability-engineering">
+
+                    <div class="local-switch" role="radiogroup" aria-label="Repeatability and Falsifiability category language lens">
+                      <label class="local-label platform-label" for="repeatability-falsifiability-platform" tabindex="0">Platform</label>
+                      <label class="local-label engineering-label" for="repeatability-falsifiability-engineering" tabindex="0">Engineering</label>
+                    </div>
+
+                    <div class="local-copy">
+                      <p class="platform-copy">
+                        A result needs to survive another pass, and a serious theory must be able to lose. If no result could ever count against the claim, the claim is not being tested by reality.
+                      </p>
+
+                      <p class="engineering-copy">
+                        Repeatability requires comparable results across attempts, observers, instruments, or conditions within a declared tolerance. Falsifiability requires a condition that could contradict, narrow, revise, or reject the claim.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="category-card" id="calibration-uncertainty-category">
+                  <b>Calibration / Uncertainty</b>
+                  <strong>The tool must be accountable and error must remain visible.</strong>
+
+                  <div class="local-toggle">
+                    <input class="local-radio local-platform" type="radio" name="calibration-uncertainty-lens" id="calibration-uncertainty-platform" checked>
+                    <input class="local-radio local-engineering" type="radio" name="calibration-uncertainty-lens" id="calibration-uncertainty-engineering">
+
+                    <div class="local-switch" role="radiogroup" aria-label="Calibration and Uncertainty category language lens">
+                      <label class="local-label platform-label" for="calibration-uncertainty-platform" tabindex="0">Platform</label>
+                      <label class="local-label engineering-label" for="calibration-uncertainty-engineering" tabindex="0">Engineering</label>
+                    </div>
+
+                    <div class="local-copy">
+                      <p class="platform-copy">
+                        The method or instrument must be trusted before the result is trusted. Uncertainty does not destroy knowledge; it protects knowledge from pretending to be more exact than it is.
+                      </p>
+
+                      <p class="engineering-copy">
+                        Calibration evaluates method, instrument, observer, unit, reference standard, and comparison stability. Uncertainty declares measurement error, sampling limits, model mismatch, environmental variation, and unresolved variables.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="category-card" id="causality-model-scope-category">
+                  <b>Causality / Model Scope</b>
+                  <strong>Cause requires controls, and every model has a range.</strong>
+
+                  <div class="local-toggle">
+                    <input class="local-radio local-platform" type="radio" name="causality-model-scope-lens" id="causality-model-scope-platform" checked>
+                    <input class="local-radio local-engineering" type="radio" name="causality-model-scope-lens" id="causality-model-scope-engineering">
+
+                    <div class="local-switch" role="radiogroup" aria-label="Causality and Model Scope category language lens">
+                      <label class="local-label platform-label" for="causality-model-scope-platform" tabindex="0">Platform</label>
+                      <label class="local-label engineering-label" for="causality-model-scope-engineering" tabindex="0">Engineering</label>
+                    </div>
+
+                    <div class="local-copy">
+                      <p class="platform-copy">
+                        Cause requires more than “this happened after that.” A model can also be useful inside one range and misleading somewhere else, so the boundary has to travel with it.
+                      </p>
+
+                      <p class="engineering-copy">
+                        Causality requires control logic, mechanism review, comparison, and alternative-explanation testing. Model Scope defines domain, inputs, assumptions, exclusions, constraints, and operating range.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="category-card" id="claim-testing-ladder-category">
+                  <b>Claim Testing Ladder</b>
+                  <strong>The maturity path from impression to scientific claim.</strong>
+
+                  <div class="local-toggle">
+                    <input class="local-radio local-platform" type="radio" name="claim-testing-ladder-lens" id="claim-testing-ladder-platform" checked>
+                    <input class="local-radio local-engineering" type="radio" name="claim-testing-ladder-lens" id="claim-testing-ladder-engineering">
+
+                    <div class="local-switch" role="radiogroup" aria-label="Claim Testing Ladder category language lens">
+                      <label class="local-label platform-label" for="claim-testing-ladder-platform" tabindex="0">Platform</label>
+                      <label class="local-label engineering-label" for="claim-testing-ladder-engineering" tabindex="0">Engineering</label>
+                    </div>
+
+                    <div class="local-copy">
+                      <p class="platform-copy">
+                        The ladder prevents a claim from skipping the hard parts. Impression becomes observation, observation becomes evidence, evidence becomes measurement, and only then can a bounded scientific claim emerge.
+                      </p>
+
+                      <p class="engineering-copy">
+                        Claim Testing Ladder maps maturity states from impression to observation, evidence, measurement, repeatability, model, limitation, and scientific claim with scope, uncertainty, and correction preserved.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+              </div>
 
               <div class="return-row">
                 <a class="return-chip gold" href="/laws/scientific-law/">Open Scientific Law</a>
@@ -1456,13 +2172,25 @@
             <b>Central bridge</b>
             <strong id="reality-bridge-title">Reality Source sits between both catalog sides.</strong>
 
-            <p class="page-platform">
-              Reality is the shared source category. It connects Laws because reality claims must be governed, Scientific Law because reality claims must be tested, Categories because reality is a catalog class, and Gauges because proof behavior must be checked.
-            </p>
+            <div class="local-toggle">
+              <input class="local-radio local-platform" type="radio" name="reality-bridge-lens" id="reality-bridge-platform" checked>
+              <input class="local-radio local-engineering" type="radio" name="reality-bridge-lens" id="reality-bridge-engineering">
 
-            <p class="page-engineering">
-              Reality Source is the central source-category object. It binds governing-law constraints, scientific-law test protocol, catalog classification, and proof-route verification into one shared route relationship.
-            </p>
+              <div class="local-switch" role="radiogroup" aria-label="Reality Source bridge language lens">
+                <label class="local-label platform-label" for="reality-bridge-platform" tabindex="0">Platform</label>
+                <label class="local-label engineering-label" for="reality-bridge-engineering" tabindex="0">Engineering</label>
+              </div>
+
+              <div class="local-copy">
+                <p class="platform-copy">
+                  Reality is the shared source category. It connects Laws because reality claims must be governed, Scientific Law because reality claims must be tested, Categories because reality is a catalog class, and Gauges because route and proof behavior must be checked.
+                </p>
+
+                <p class="engineering-copy">
+                  Reality Source is the central source-category object. It binds governing-law constraints, scientific-law test protocol, catalog classification, Reality Source anchor absorption, and proof-route verification into one shared route relationship.
+                </p>
+              </div>
+            </div>
 
             <div class="bridge-grid">
               <div class="bridge-point">
@@ -1495,13 +2223,16 @@
 
         <section class="panel section" id="branch-routes" aria-labelledby="branch-routes-title">
           <div class="kicker">Branch routes</div>
+
           <div class="section-header">
             <h2 id="branch-routes-title">The catalog keeps every major branch reachable.</h2>
+
             <p class="page-platform">
               These routes let the reader move through the catalog without treating Laws, Scientific Law, Reality, and proof checking as separate silos.
             </p>
+
             <p class="page-engineering">
-              These route cards preserve parent, branch, source anchors, proof, and root orientation while the top orbit remains the primary page-changing construct.
+              These route cards preserve parent, branch, source, primary reality-source anchors, proof, and root orientation while the top orbit remains the primary page-changing construct.
             </p>
           </div>
 
@@ -1574,10 +2305,18 @@
         </section>
 
         <template id="route-receipt" data-route-receipt>
-LAWS_CATEGORIES_OPTION_A_404_ALIGNMENT_TNT_v1
-previous=LAWS_CATEGORIES_SHARED_CATALOG_ORBIT_TNT_v1
+LAWS_CATEGORIES_RESTORE_FULL_BASELINE_WITH_LOCAL_CATEGORY_TOGGLES_TNT_v1
+previous=LAWS_CATEGORIES_OPTION_A_404_ALIGNMENT_TNT_v1
 route=/laws/categories/
 target=/laws/categories/index.html
+full_baseline_restored=true
+compressed_toggle_draft_rejected_as_final=true
+local_category_language_toggles=true
+global_toggle_scope=page_framing_only
+governing_laws_category_toggles=true
+scientific_law_category_toggles=true
+reality_bridge_local_toggle=true
+branch_routes_preserved=true
 option_a_404_alignment=true
 theory_route=/laws/categories/reality/#theory
 evidence_route=/laws/categories/reality/#evidence
@@ -1603,13 +2342,13 @@ heavy_runtime=false
 generated_image=false
 graphic_block=false
 visual_pass_claimed=false
-deploy_marker=LAWS_CATEGORIES_OPTION_A_404_ALIGNMENT_DEPLOY_MARKER_v1
+deploy_marker=LAWS_CATEGORIES_RESTORE_FULL_BASELINE_WITH_LOCAL_CATEGORY_TOGGLES_DEPLOY_MARKER_v1
         </template>
       </div>
     </main>
 
     <footer>
-      LAWS_CATEGORIES_OPTION_A_404_ALIGNMENT_TNT_v1 · Categories · Option A 404 alignment.
+      LAWS_CATEGORIES_RESTORE_FULL_BASELINE_WITH_LOCAL_CATEGORY_TOGGLES_TNT_v1 · Categories · Full baseline restored with local category toggles.
     </footer>
   </div>
 </body>

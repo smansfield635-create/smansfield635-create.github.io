@@ -1,20 +1,14 @@
-<!-- TARGET FILE: /explore/frontier/closed-loop/index.html -->
 <!doctype html>
 <html
   lang="en"
   data-route="/explore/frontier/closed-loop/"
   data-page="frontier-closed-loop"
   data-version="G2-V2"
-  data-contract="FRONTIER_CLOSED_LOOP_RETURN_FRONTIER_NATURAL_STAR_BACKLIGHT_TNT_v1"
+  data-contract="FRONTIER_CLOSED_LOOP_PRIMARY_NAV_NATURAL_STAR_BACKLIGHT_TNT_v2"
   data-previous-contract="FRONTIER_CLOSED_LOOP_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1"
-  data-source-binding="NATURAL_STAR_BACKLIGHT_BEHIND_GEM_STANDARD_PREGAME_TO_POSTGAME_BINDING_v1"
-  data-previous-binding="FRONTIER_CLOSED_LOOP_COMPASS_GEM_DUAL_LENS_PREGAME_TO_POSTGAME_BINDING_v1"
+  data-source-binding="CLOSED_LOOP_PRIMARY_NAV_AND_NATURAL_STAR_BACKLIGHT_PREGAME_TO_POSTGAME_BINDING_v1"
   data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
   data-design-reference="FRONTIER_ENERGY_COMPASS_GEM_PRINT_LEGIBILITY_RENEWAL_TNT_v19"
-  data-mirror-reference-1="FRONTIER_WATER_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1"
-  data-mirror-reference-2="FRONTIER_WASTE_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1"
-  data-mirror-reference-3="FRONTIER_LATTICE_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1"
-  data-mirror-reference-4="FRONTIER_URBAN_CONSTRUCT_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1"
   data-engineering-authority="CCL_ICE_ICPI_CRI_CRP_CLOSED_LOOP_FRONTIER_STANDARD"
   data-source-symbol-authority="compassOrganicGem"
   data-role="frontier-closed-loop"
@@ -22,13 +16,11 @@
   data-per-pathway-dual-lens="true"
   data-platform-lens="true"
   data-engineering-lens="true"
-  data-closed-loop-law="valid-loop-requires-boundary-inputs-outputs-capture-storage-reuse-transformation-inventory-residual-uncertainty-receipt-audit-path"
+  data-primary-top-nav-reduced="true"
+  data-return-to-frontier="true"
   data-natural-star-backlight="true"
-  data-star-source-position="behind-gem"
-  data-glow-extends-beyond-rim="true"
-  data-sparkle-through-facets="true"
-  data-return-to-frontier="active"
-  data-return-to-orbit="preserved"
+  data-circular-glow-removed="true"
+  data-closed-loop-law="valid-loop-requires-boundary-inputs-outputs-capture-storage-reuse-transformation-inventory-residual-uncertainty-receipt-audit-path"
   data-static-page-usable-without-js="true"
   data-heavy-runtime-loaded="false"
   data-runtime-public-message="false"
@@ -66,8 +58,6 @@
       --brand-gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
       --orbit-duration:52s;
       --gem-breathe-duration:8.8s;
-      --star-bloom-duration:6.8s;
-      --star-twinkle-duration:4.9s;
     }
 
     *{box-sizing:border-box}
@@ -249,12 +239,6 @@
       transform:translateY(-2px);
       border-color:rgba(243,200,111,.46);
       outline:none;
-    }
-
-    .nav a[aria-current="page"]{
-      border-color:rgba(243,200,111,.88);
-      color:#060811;
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
     }
 
     .panel{
@@ -534,23 +518,21 @@
       left:50%;
       top:50%;
       z-index:0;
-      width:154%;
-      height:178%;
-      border-radius:50%;
-      transform:translate(-50%,-50%) scale(.98);
+      width:52%;
+      height:70%;
+      transform:translate(-50%,-50%) scale(.96);
       pointer-events:none;
+      border:0;
+      border-radius:48% 52% 46% 54%;
       background:
-        radial-gradient(circle at 50% 50%,
-          rgba(255,255,255,.98) 0 3.5%,
-          rgba(255,245,198,.86) 4.5% 10%,
-          rgba(243,200,111,.56) 13%,
-          rgba(141,216,255,.42) 25%,
-          rgba(36,120,255,.22) 43%,
-          rgba(143,240,195,.10) 58%,
-          transparent 76%);
-      filter:blur(10px);
-      opacity:.82;
-      animation:naturalStarBloom var(--star-bloom-duration) ease-in-out infinite;
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,.98) 0 5%,rgba(255,242,168,.94) 6% 10%,rgba(243,200,111,.62) 13% 19%,rgba(141,216,255,.36) 26%,rgba(36,120,255,.17) 40%,transparent 68%);
+      box-shadow:
+        0 0 .45rem rgba(255,255,255,.82),
+        0 0 1.15rem rgba(255,232,163,.58),
+        0 0 2.2rem rgba(141,216,255,.34),
+        0 0 3.5rem rgba(36,120,255,.18);
+      opacity:.86;
+      animation:naturalStarCoreTwinkle 6.6s ease-in-out infinite;
       animation-delay:var(--delay,0s);
     }
 
@@ -560,89 +542,76 @@
       position:absolute;
       left:50%;
       top:50%;
-      z-index:1;
-      width:112%;
-      height:132%;
-      border-radius:50%;
-      transform:translate(-50%,-50%) scale(.94);
+      z-index:0;
+      width:156%;
+      height:170%;
+      transform:translate(-50%,-50%) rotate(-8deg) scale(.98);
       pointer-events:none;
+      border:0;
+      border-radius:43% 57% 49% 51%;
       background:
-        radial-gradient(circle at 50% 50%,
-          rgba(255,255,255,1) 0 2.5%,
-          rgba(255,246,210,.92) 3.8% 8%,
-          rgba(141,216,255,.42) 10%,
-          transparent 24%),
-        linear-gradient(90deg,
-          transparent 0 28%,
-          rgba(255,255,255,.30) 47% 53%,
-          transparent 72% 100%),
-        linear-gradient(0deg,
-          transparent 0 31%,
-          rgba(255,232,163,.22) 48% 52%,
-          transparent 69% 100%),
-        linear-gradient(135deg,
-          transparent 0 36%,
-          rgba(141,216,255,.18) 48% 52%,
-          transparent 64% 100%);
-      opacity:.70;
-      filter:blur(.35px);
+        radial-gradient(ellipse at 50% 50%,rgba(255,255,255,.26) 0 4%,rgba(255,232,163,.22) 8%,rgba(243,200,111,.15) 17%,rgba(141,216,255,.105) 29%,rgba(36,120,255,.055) 45%,transparent 70%),
+        radial-gradient(ellipse at 39% 45%,rgba(255,244,216,.14) 0 10%,transparent 38%),
+        radial-gradient(ellipse at 64% 58%,rgba(141,216,255,.12) 0 12%,transparent 42%),
+        conic-gradient(from 18deg at 50% 50%,
+          transparent 0deg,
+          rgba(255,255,255,.18) 10deg,
+          transparent 20deg,
+          transparent 82deg,
+          rgba(141,216,255,.15) 91deg,
+          transparent 101deg,
+          transparent 172deg,
+          rgba(255,232,163,.16) 181deg,
+          transparent 190deg,
+          transparent 260deg,
+          rgba(141,216,255,.13) 270deg,
+          transparent 282deg,
+          transparent 360deg);
+      opacity:.74;
       mix-blend-mode:screen;
-      animation:naturalStarTwinkle var(--star-twinkle-duration) ease-in-out infinite;
-      animation-delay:calc(var(--delay, 0s) - .45s);
+      animation:naturalStarBloomTwinkle 8.8s ease-in-out infinite;
+      animation-delay:calc(var(--delay,0s) - .9s);
     }
 
     .compass-center::before{
-      width:168%;
-      height:188%;
-      opacity:.88;
-      filter:blur(12px);
+      width:48%;
+      height:66%;
+      opacity:.90;
     }
 
     .compass-center::after{
-      width:126%;
-      height:140%;
-      opacity:.76;
+      width:166%;
+      height:182%;
+      opacity:.78;
     }
 
-    @keyframes naturalStarBloom{
+    @keyframes naturalStarCoreTwinkle{
       0%,100%{
-        opacity:.66;
-        transform:translate(-50%,-50%) scale(.94);
-        filter:blur(10px) brightness(1);
+        opacity:.72;
+        transform:translate(-50%,-50%) scale(.92);
       }
       42%{
-        opacity:.82;
-        transform:translate(-50%,-50%) scale(1.02);
-        filter:blur(11px) brightness(1.12);
+        opacity:1;
+        transform:translate(-50%,-50%) scale(1.06);
       }
-      50%{
-        opacity:.96;
-        transform:translate(-50%,-50%) scale(1.07);
-        filter:blur(12px) brightness(1.22);
-      }
-      62%{
-        opacity:.78;
-        transform:translate(-50%,-50%) scale(1.01);
-        filter:blur(10px) brightness(1.08);
+      64%{
+        opacity:.84;
+        transform:translate(-50%,-50%) scale(.98);
       }
     }
 
-    @keyframes naturalStarTwinkle{
+    @keyframes naturalStarBloomTwinkle{
       0%,100%{
         opacity:.48;
-        transform:translate(-50%,-50%) scale(.88) rotate(0deg);
+        transform:translate(-50%,-50%) rotate(-10deg) scale(.94);
       }
-      38%{
+      48%{
+        opacity:.86;
+        transform:translate(-50%,-50%) rotate(2deg) scale(1.06);
+      }
+      72%{
         opacity:.62;
-        transform:translate(-50%,-50%) scale(.96) rotate(4deg);
-      }
-      50%{
-        opacity:.92;
-        transform:translate(-50%,-50%) scale(1.04) rotate(8deg);
-      }
-      64%{
-        opacity:.58;
-        transform:translate(-50%,-50%) scale(.94) rotate(10deg);
+        transform:translate(-50%,-50%) rotate(-4deg) scale(.99);
       }
     }
 
@@ -684,15 +653,15 @@
       pointer-events:none;
       filter:
         drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
-        drop-shadow(0 0 1.35rem rgba(141,216,255,.26))
-        drop-shadow(0 0 .8rem rgba(243,200,111,.18));
+        drop-shadow(0 0 1.15rem rgba(36,120,255,.18))
+        drop-shadow(0 0 .55rem rgba(243,200,111,.10));
     }
 
     .compass-center .gem-svg{
       filter:
         drop-shadow(0 1.55rem 1.85rem rgba(0,0,0,.42))
-        drop-shadow(0 0 1.85rem rgba(141,216,255,.30))
-        drop-shadow(0 0 1.05rem rgba(243,200,111,.22));
+        drop-shadow(0 0 1.65rem rgba(36,120,255,.23))
+        drop-shadow(0 0 .85rem rgba(243,200,111,.16));
     }
 
     .gem-glint{
@@ -716,7 +685,7 @@
 
     .gem-label{
       position:relative;
-      z-index:3;
+      z-index:4;
       width:86%;
       display:grid;
       place-items:center;
@@ -886,54 +855,31 @@
 
     .section-return{
       display:flex;
-      flex-wrap:wrap;
       justify-content:flex-end;
-      gap:.55rem;
       margin-top:.1rem;
     }
 
-    .return-orbit,
-    .return-frontier{
+    .return-orbit{
       min-height:2.5rem;
       display:inline-flex;
       align-items:center;
       justify-content:center;
+      border:1px solid rgba(243,200,111,.86);
       border-radius:999px;
       padding:.6rem .95rem;
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
       font-size:.72rem;
       font-weight:950;
       letter-spacing:.07em;
       text-transform:uppercase;
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
-    }
-
-    .return-orbit{
-      border:1px solid rgba(243,200,111,.86);
-      color:#060811;
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
-    }
-
-    .return-frontier{
-      border:1px solid rgba(141,216,255,.42);
-      color:rgba(230,244,255,.94);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(141,216,255,.12),transparent 68%),
-        rgba(255,255,255,.045);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      transition:transform .18s ease;
     }
 
     .return-orbit:hover,
-    .return-orbit:focus-visible,
-    .return-frontier:hover,
-    .return-frontier:focus-visible{
+    .return-orbit:focus-visible{
       transform:translateY(-2px);
       outline:none;
-    }
-
-    .return-frontier:hover,
-    .return-frontier:focus-visible{
-      border-color:rgba(243,200,111,.58);
-      background:rgba(255,255,255,.065);
     }
 
     .final-band{
@@ -1030,15 +976,15 @@
 
       .compass-center::before,
       .compass-node::before{
-        width:146%;
-        height:164%;
-        filter:blur(9px);
+        width:48%;
+        height:64%;
       }
 
       .compass-center::after,
       .compass-node::after{
-        width:110%;
-        height:126%;
+        width:138%;
+        height:148%;
+        opacity:.58;
       }
 
       .compass-node:hover,
@@ -1063,8 +1009,7 @@
       .compass-center .gem-label span{font-size:.60rem}
       .lens-tabs{display:grid;grid-template-columns:1fr 1fr}
       .section-return{justify-content:stretch}
-      .return-orbit,
-      .return-frontier{width:100%}
+      .return-orbit{width:100%}
     }
 
     @media (max-width:420px){
@@ -1088,22 +1033,19 @@
         transition-duration:.01ms!important;
       }
 
-      .compass-center::before,
-      .compass-center::after,
-      .compass-node::before,
-      .compass-node::after{
-        animation:none!important;
-        opacity:.76;
-        transform:translate(-50%,-50%) scale(1)!important;
-      }
-
       .gem-core,
       .gem-glint,
       .gem-star,
       .compass-stage::before,
       .compass-stage::after,
       .compass-center,
-      .compass-node{animation:none!important}
+      .compass-node,
+      .compass-center::before,
+      .compass-center::after,
+      .compass-node::before,
+      .compass-node::after{
+        animation:none!important;
+      }
     }
   </style>
 </head>
@@ -1217,18 +1159,9 @@
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
-        <a href="/frontier/">Frontier</a>
-        <a href="/products/">Products</a>
         <a href="/laws/">Laws</a>
-        <a href="/showroom/globe/">Interactive Narrative</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/explore/frontier/energy/">Energy</a>
-        <a href="/explore/frontier/water/">Water</a>
-        <a href="/explore/frontier/waste/">Waste</a>
-        <a href="/explore/frontier/lattice/">Lattice</a>
-        <a href="/explore/frontier/urban/">Urban</a>
-        <a href="/explore/frontier/closed-loop/" aria-current="page">Closed Loop</a>
-        <a href="/gauges/">Gauges</a>
+        <a href="/showroom/globe/">Narrative</a>
+        <a href="/explore/frontier/">Frontier</a>
       </nav>
     </header>
 
@@ -1248,9 +1181,9 @@
 
         <div class="actions">
           <a class="button gold" href="#closed-loop-orbit">Choose a Pathway</a>
+          <a class="button" href="/explore/frontier/">Return to Frontier</a>
           <a class="button" href="#audralia-loop">Start with Audralia</a>
           <a class="button green" href="#kill-conditions">Open Kill Conditions</a>
-          <a class="button" href="/frontier/">Return to Frontier</a>
         </div>
       </section>
 
@@ -1265,7 +1198,6 @@
           data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
           data-source-symbol-authority="compassOrganicGem"
           data-per-pathway-dual-lens="true"
-          data-natural-star-backlight="true"
         >
           <div class="compass-center" aria-hidden="true" style="--delay:-.1s;--tilt-a:-1.4deg;--tilt-b:1.8deg;">
             <span class="gem-core">
@@ -1376,10 +1308,7 @@
           </div>
 
           <div class="boundary">Boundary: Audralia may simulate closed-loop behavior; Audralia may not prove real-world deployment.</div>
-          <div class="section-return">
-            <a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
-            <a class="return-frontier" href="/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return"><a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a></div>
         </article>
       </section>
 
@@ -1421,10 +1350,7 @@
           </div>
 
           <div class="boundary">Boundary: no boundary, no closed-loop claim.</div>
-          <div class="section-return">
-            <a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
-            <a class="return-frontier" href="/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return"><a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a></div>
         </article>
       </section>
 
@@ -1466,10 +1392,7 @@
           </div>
 
           <div class="boundary">Boundary: unmeasured input creates false closure.</div>
-          <div class="section-return">
-            <a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
-            <a class="return-frontier" href="/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return"><a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a></div>
         </article>
       </section>
 
@@ -1511,10 +1434,7 @@
           </div>
 
           <div class="boundary">Boundary: unmeasured output becomes hidden residual.</div>
-          <div class="section-return">
-            <a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
-            <a class="return-frontier" href="/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return"><a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a></div>
         </article>
       </section>
 
@@ -1556,10 +1476,7 @@
           </div>
 
           <div class="boundary">Boundary: capture is not closure.</div>
-          <div class="section-return">
-            <a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
-            <a class="return-frontier" href="/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return"><a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a></div>
         </article>
       </section>
 
@@ -1601,10 +1518,7 @@
           </div>
 
           <div class="boundary">Boundary: storage is not safety without tracking, maintenance, and turnover.</div>
-          <div class="section-return">
-            <a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
-            <a class="return-frontier" href="/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return"><a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a></div>
         </article>
       </section>
 
@@ -1646,10 +1560,7 @@
           </div>
 
           <div class="boundary">Boundary: reuse is purpose-specific. Reuse is not universal approval.</div>
-          <div class="section-return">
-            <a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
-            <a class="return-frontier" href="/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return"><a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a></div>
         </article>
       </section>
 
@@ -1691,10 +1602,7 @@
           </div>
 
           <div class="boundary">Boundary: transformation is not proof unless the before, after, and byproducts reconcile.</div>
-          <div class="section-return">
-            <a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
-            <a class="return-frontier" href="/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return"><a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a></div>
         </article>
       </section>
 
@@ -1736,10 +1644,7 @@
           </div>
 
           <div class="boundary">Boundary: hidden inventory becomes unresolved residual.</div>
-          <div class="section-return">
-            <a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
-            <a class="return-frontier" href="/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return"><a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a></div>
         </article>
       </section>
 
@@ -1781,10 +1686,7 @@
           </div>
 
           <div class="boundary">Boundary: a residual cannot be ignored because it is inconvenient.</div>
-          <div class="section-return">
-            <a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
-            <a class="return-frontier" href="/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return"><a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a></div>
         </article>
       </section>
 
@@ -1826,10 +1728,7 @@
           </div>
 
           <div class="boundary">Boundary: no receipt, no durable loop state.</div>
-          <div class="section-return">
-            <a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
-            <a class="return-frontier" href="/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return"><a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a></div>
         </article>
       </section>
 
@@ -1879,10 +1778,7 @@
           </div>
 
           <div class="boundary">Boundary: stop if the boundary is missing, inputs are unmeasured, outputs are hidden, residuals are ignored, failure is shifted, receipts are missing, or simulation replaces validation.</div>
-          <div class="section-return">
-            <a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
-            <a class="return-frontier" href="/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return"><a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a></div>
         </article>
       </section>
 
@@ -1893,7 +1789,7 @@
         </p>
         <div class="actions">
           <a class="button gold" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
-          <a class="button" href="/frontier/">Return to Frontier</a>
+          <a class="button" href="/explore/frontier/">Return to Frontier</a>
           <a class="button" href="/showroom/globe/audralia/">Open Audralia</a>
           <a class="button green" href="/explore/frontier/water/">Open Water</a>
           <a class="button" href="/explore/frontier/waste/">Open Waste</a>
@@ -1903,24 +1799,28 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_CLOSED_LOOP_RETURN_FRONTIER_NATURAL_STAR_BACKLIGHT_TNT_v1
+FRONTIER_CLOSED_LOOP_PRIMARY_NAV_NATURAL_STAR_BACKLIGHT_TNT_v2
 previous=FRONTIER_CLOSED_LOOP_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1
-binding=NATURAL_STAR_BACKLIGHT_BEHIND_GEM_STANDARD_PREGAME_TO_POSTGAME_BINDING_v1
-previous_binding=FRONTIER_CLOSED_LOOP_COMPASS_GEM_DUAL_LENS_PREGAME_TO_POSTGAME_BINDING_v1
+binding=CLOSED_LOOP_PRIMARY_NAV_AND_NATURAL_STAR_BACKLIGHT_PREGAME_TO_POSTGAME_BINDING_v1
 route=/explore/frontier/closed-loop/
 page=frontier_closed_loop
 html=/explore/frontier/closed-loop/index.html
 source_visual_authority=COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2
 design_reference=FRONTIER_ENERGY_COMPASS_GEM_PRINT_LEGIBILITY_RENEWAL_TNT_v19
-mirror_reference_1=FRONTIER_WATER_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1
-mirror_reference_2=FRONTIER_WASTE_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1
-mirror_reference_3=FRONTIER_LATTICE_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1
-mirror_reference_4=FRONTIER_URBAN_CONSTRUCT_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1
 engineering_authority=CCL_ICE_ICPI_CRI_CRP_CLOSED_LOOP_FRONTIER_STANDARD
 source_symbol_authority=compassOrganicGem
 visual_authority_preserved=true
-design_mirrors_energy_v19_water_v1_waste_v1_lattice_v1_urban_v1=true
-large_readable_print_preserved=true
+primary_top_nav_reduced=true
+top_nav=Compass,Door,Home,Laws,Narrative,Frontier
+return_to_frontier_added_or_preserved=true
+return_to_closed_loop_orbit_preserved=true
+natural_star_backlight=true
+natural_star_backlight_selectors=compass_center_before_after,compass_node_before_after
+circular_glow_removed=true
+star_backlight_layering=star_behind_gem_gem_svg_front_label_front
+star_backlight_behavior=small_bright_star_core_diffuse_asymmetric_bloom_faint_rays_no_border_no_rim_no_bubble
+css_only=true
+reduced_motion_safe=true
 audralia_closed_loop_first=true
 center_anchor=Closed_Loop_Accountable_Flow
 pathways=Audralia_Loop,Boundary,Inputs,Outputs,Capture,Storage,Reuse,Transform,Inventory,Residuals,Receipts,Kill_Conditions
@@ -1931,20 +1831,6 @@ engineering_lens_per_pathway=true
 top_only_lens_toggle=false
 side_by_side_platform_engineering=false
 return_to_closed_loop_orbit_under_every_pathway=true
-return_to_frontier_under_every_pathway=true
-return_to_frontier_added=true
-return_to_frontier_route=/frontier/
-return_to_orbit_preserved=true
-return_to_orbit_target=#closed-loop-orbit
-natural_star_backlight=true
-star_source_position=behind_gem
-gem_front_object_preserved=true
-glow_extends_beyond_rim=true
-sparkle_through_facets=true
-hard_outer_circle_required=false
-cookie_cutter_star=false
-css_only=true
-js_dependency=false
 closed_loop_law=valid_loop_requires_boundary_inputs_outputs_capture_storage_reuse_transformation_inventory_residual_uncertainty_receipt_audit_path
 hazardous_mass_standard=M_in_equals_M_out_plus_M_dest_plus_delta_M_inv_plus_or_minus_epsilon
 closure_residual=U_equals_M_in_minus_M_out_plus_M_dest_plus_delta_M_inv
@@ -1958,15 +1844,13 @@ static_page_usable_without_js=true
 heavy_runtime=false
 generated_image=false
 graphic_box=false
-canvas=false
-webgl=false
 streaming=false
 visual_pass_claimed=false
       </template>
     </main>
 
     <footer>
-      FRONTIER_CLOSED_LOOP_RETURN_FRONTIER_NATURAL_STAR_BACKLIGHT_TNT_v1 · Closed Loop · Return to Frontier · Natural Star Backlight.
+      FRONTIER_CLOSED_LOOP_PRIMARY_NAV_NATURAL_STAR_BACKLIGHT_TNT_v2 · Closed Loop · Primary Nav · Natural Star Backlight.
     </footer>
   </div>
 </body>

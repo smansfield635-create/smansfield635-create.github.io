@@ -1,38 +1,45 @@
-<!-- TARGET FILE: /laws/categories/reality/index.html -->
 <!doctype html>
 <html
   lang="en"
   data-route="/laws/categories/reality/"
-  data-page="reality-single-file-gem-standard"
-  data-version="G4-V1"
-  data-contract="REALITY_SINGLE_FILE_GEM_STANDARD_TNT_v1"
-  data-previous-contract="REALITY_SINGLE_FILE_CONSOLIDATED_LAW_CATEGORY_TNT_v2"
-  data-source-prewrite="REALITY_SINGLE_FILE_GEM_STANDARD_UPDATE_PREWRITE_v1"
+  data-page="reality-platform-engineering-language-lens"
+  data-version="G5-V1"
+  data-contract="REALITY_CATEGORY_PLATFORM_ENGINEERING_LANGUAGE_LENS_TNT_v1"
+  data-previous-contract="REALITY_SINGLE_FILE_GEM_STANDARD_TNT_v1"
+  data-source-binding="REALITY_CATEGORY_PLATFORM_ENGINEERING_LANGUAGE_LENS_PREGAME_TO_POSTGAME_BINDING_v1"
   data-branch="laws"
   data-category="reality"
   data-single-file="true"
+  data-language-lens="platform-engineering"
+  data-platform-language="TED-talk-expression"
+  data-engineering-language="black-white-science-implementation"
+  data-human-read-renewed-as="platform"
+  data-scientific-read-renewed-as="engineering"
   data-absorbed-paths="theory.html,evidence.html,measure.html,limits.html"
   data-internal-sections="reality,theory,evidence,measure,limits,audit"
   data-gem-standard="true"
   data-gem-field="reality,theory,evidence,measure,limits,audit"
+  data-return-target="gem-field"
   data-modern-static-html-css="true"
   data-javascript-dependency="false"
   data-external-legacy-css-dependency="false"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
   data-graphic-box="false"
+  data-canvas="false"
+  data-webgl="false"
   data-frontier-orbit-model="false"
-  data-deploy-verification-string="REALITY_SINGLE_FILE_GEM_STANDARD_DEPLOY_MARKER_v1"
+  data-deploy-verification-string="REALITY_CATEGORY_PLATFORM_ENGINEERING_LANGUAGE_LENS_DEPLOY_MARKER_v1"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Reality · Tested Constraint · Diamond Gate Bridge</title>
+  <title>Reality · Platform / Engineering · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Reality is the law category for tested constraint. Theory, Evidence, Measure, Limits, and Audit are consolidated downstream inside one canonical Reality page with gem-standard navigation."
+    content="Reality is the law category for tested constraint. Platform language explains why Reality matters. Engineering language defines what must be tested, bounded, measured, and audited."
   >
 
   <style>
@@ -98,7 +105,8 @@
 
     a{color:inherit;text-decoration:none}
 
-    a:focus-visible{
+    a:focus-visible,
+    label:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
     }
@@ -393,6 +401,111 @@
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
     }
 
+    .lens-radio,
+    .section-radio{
+      position:absolute;
+      opacity:0;
+      pointer-events:none;
+    }
+
+    .page-platform,
+    .page-engineering,
+    .platform-copy,
+    .engineering-copy{
+      display:none;
+    }
+
+    #lens-platform:checked ~ .lens-scope .page-platform{display:block}
+    #lens-engineering:checked ~ .lens-scope .page-engineering{display:block}
+
+    .lens-toggle{
+      display:grid;
+      gap:.8rem;
+      margin-top:1rem;
+      padding:1rem;
+    }
+
+    .toggle-row,
+    .local-toggle-row{
+      width:fit-content;
+      display:flex;
+      flex-wrap:wrap;
+      gap:.45rem;
+      padding:.38rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      background:rgba(255,255,255,.04);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .toggle-label,
+    .local-toggle-label{
+      min-height:2.42rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:.58rem .9rem;
+      border:1px solid transparent;
+      border-radius:999px;
+      color:rgba(232,240,255,.78);
+      cursor:pointer;
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      user-select:none;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease,color .18s ease;
+    }
+
+    .local-toggle-label{
+      min-height:2.2rem;
+      padding:.5rem .78rem;
+      font-size:.66rem;
+    }
+
+    .toggle-label:hover,
+    .local-toggle-label:hover{
+      transform:translateY(-1px);
+      border-color:rgba(243,200,111,.36);
+    }
+
+    #lens-platform:checked ~ .lens-scope .toggle-label[for="lens-platform"],
+    #lens-engineering:checked ~ .lens-scope .toggle-label[for="lens-engineering"],
+    #definition-platform:checked ~ .section-lens-scope .local-toggle-label[for="definition-platform"],
+    #definition-engineering:checked ~ .section-lens-scope .local-toggle-label[for="definition-engineering"],
+    #theory-platform:checked ~ .section-lens-scope .local-toggle-label[for="theory-platform"],
+    #theory-engineering:checked ~ .section-lens-scope .local-toggle-label[for="theory-engineering"],
+    #evidence-platform:checked ~ .section-lens-scope .local-toggle-label[for="evidence-platform"],
+    #evidence-engineering:checked ~ .section-lens-scope .local-toggle-label[for="evidence-engineering"],
+    #measure-platform:checked ~ .section-lens-scope .local-toggle-label[for="measure-platform"],
+    #measure-engineering:checked ~ .section-lens-scope .local-toggle-label[for="measure-engineering"],
+    #limits-platform:checked ~ .section-lens-scope .local-toggle-label[for="limits-platform"],
+    #limits-engineering:checked ~ .section-lens-scope .local-toggle-label[for="limits-engineering"],
+    #audit-platform:checked ~ .section-lens-scope .local-toggle-label[for="audit-platform"],
+    #audit-engineering:checked ~ .section-lens-scope .local-toggle-label[for="audit-engineering"]{
+      color:#060811;
+      border-color:rgba(243,200,111,.88);
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    #definition-platform:checked ~ .section-lens-scope .platform-copy,
+    #theory-platform:checked ~ .section-lens-scope .platform-copy,
+    #evidence-platform:checked ~ .section-lens-scope .platform-copy,
+    #measure-platform:checked ~ .section-lens-scope .platform-copy,
+    #limits-platform:checked ~ .section-lens-scope .platform-copy,
+    #audit-platform:checked ~ .section-lens-scope .platform-copy{
+      display:grid;
+    }
+
+    #definition-engineering:checked ~ .section-lens-scope .engineering-copy,
+    #theory-engineering:checked ~ .section-lens-scope .engineering-copy,
+    #evidence-engineering:checked ~ .section-lens-scope .engineering-copy,
+    #measure-engineering:checked ~ .section-lens-scope .engineering-copy,
+    #limits-engineering:checked ~ .section-lens-scope .engineering-copy,
+    #audit-engineering:checked ~ .section-lens-scope .engineering-copy{
+      display:grid;
+    }
+
     .section{
       display:grid;
       gap:1rem;
@@ -404,6 +517,11 @@
       display:grid;
       gap:.7rem;
       max-width:940px;
+    }
+
+    .section-lens-scope{
+      display:grid;
+      gap:.9rem;
     }
 
     .gem-stage{
@@ -576,6 +694,10 @@
       gap:.9rem;
     }
 
+    .lens-pair{
+      grid-template-columns:1fr;
+    }
+
     .grid{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
@@ -588,7 +710,6 @@
     }
 
     .card{
-      display:grid;
       gap:.7rem;
       min-height:100%;
       padding:1rem;
@@ -598,6 +719,10 @@
         radial-gradient(circle at 18% 0%,rgba(141,216,255,.08),transparent 22rem),
         linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.024));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .card:not(.platform-copy):not(.engineering-copy){
+      display:grid;
     }
 
     .card b{
@@ -626,6 +751,17 @@
 
     .read-card b{
       color:var(--gold2);
+    }
+
+    .engineering-copy{
+      border-color:rgba(141,216,255,.24);
+      background:
+        radial-gradient(circle at 18% 0%,rgba(141,216,255,.10),transparent 22rem),
+        linear-gradient(180deg,rgba(255,255,255,.046),rgba(255,255,255,.020));
+    }
+
+    .engineering-copy b{
+      color:var(--blue);
     }
 
     .law-card{
@@ -753,6 +889,10 @@
       h1{font-size:clamp(3rem,16vw,5.15rem)}
       .actions{display:grid}
       .button{width:100%}
+      .toggle-row,
+      .local-toggle-row{width:100%;display:grid;grid-template-columns:1fr 1fr;border-radius:1rem}
+      .toggle-label,
+      .local-toggle-label{border-radius:.8rem}
       .section{padding:1rem}
       .gem-stage{padding:1rem}
       .gem-field{grid-template-columns:1fr}
@@ -895,430 +1035,581 @@
         <a href="#measure">Measure</a>
         <a href="#limits">Limits</a>
         <a href="#audit">Audit</a>
+        <a href="/laws/categories/">Categories</a>
         <a href="/laws/">Laws</a>
         <a href="/">Compass</a>
       </nav>
     </header>
 
     <main id="main">
-      <section class="panel hero" id="reality" aria-labelledby="page-title">
-        <div class="kicker">Laws / Categories / Reality</div>
+      <input class="lens-radio" type="radio" name="reality-page-lens" id="lens-platform" checked>
+      <input class="lens-radio" type="radio" name="reality-page-lens" id="lens-engineering">
 
-        <h1 id="page-title">Reality is what still holds after the claim is tested.</h1>
+      <div class="lens-scope">
+        <section class="panel hero" id="reality" aria-labelledby="page-title">
+          <div class="kicker">Laws / Categories / Reality</div>
 
-        <p class="lead">
-          Reality is the law category for tested constraint: what survives evidence, contradiction, consequence, pressure, coherence, falsifiability, measurement, limits, and audit.
-        </p>
+          <h1 id="page-title">Reality is what still holds after the claim is tested.</h1>
 
-        <div class="truth-card">
-          Reality is not preference, performance, slogan, majority agreement, emotional intensity, visual appearance, certainty without evidence, or claim without audit. Reality is what can still stand when the claim is made answerable.
-        </div>
-
-        <div class="actions">
-          <a class="button gold" href="#gem-field">Open Gem Field</a>
-          <a class="button" href="#theory">Theory</a>
-          <a class="button" href="#evidence">Evidence</a>
-          <a class="button" href="#measure">Measure</a>
-          <a class="button" href="#limits">Limits</a>
-        </div>
-      </section>
-
-      <section class="panel section" id="gem-field" aria-labelledby="gem-title">
-        <div class="kicker">Reality Gem Field</div>
-        <div class="section-header">
-          <h2 id="gem-title">Choose a Reality category gem, then return here from the section.</h2>
-          <p>
-            The gems are the interface. The subject remains Reality: Theory, Evidence, Measure, Limits, and Audit are downstream sections inside one canonical law-category page.
+          <p class="lead page-platform">
+            Reality is not the first impression, the confident statement, the preferred outcome, or the most polished presentation. Reality is what remains after the claim is made answerable.
           </p>
-        </div>
 
-        <div class="gem-stage" aria-label="Reality category gem navigation">
-          <div class="gem-field">
-            <a class="gem-link" href="#reality" style="--delay:-.1s;--tilt-a:-1.6deg;--tilt-b:1.8deg;" aria-label="Open Reality section">
-              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#realityOrganicGem"></use></svg></span>
-              <span class="gem-label"><b>Reality</b><span>Tested Constraint</span></span>
-            </a>
+          <p class="lead page-engineering">
+            Reality is the post-test classification of a claim after constraint evaluation. A claim may proceed only when its theory, evidence, measurement coordinates, uncertainty boundaries, falsifiability conditions, provenance, and audit path remain coherent under review.
+          </p>
 
-            <a class="gem-link" href="#theory" style="--delay:-.7s;--tilt-a:1.4deg;--tilt-b:-2.2deg;" aria-label="Open Theory section">
-              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#realityOrganicGem"></use></svg></span>
-              <span class="gem-label"><b>Theory</b><span>Model / Terrain</span></span>
-            </a>
-
-            <a class="gem-link" href="#evidence" style="--delay:-1.3s;--tilt-a:-2.1deg;--tilt-b:1.4deg;" aria-label="Open Evidence section">
-              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#realityOrganicGem"></use></svg></span>
-              <span class="gem-label"><b>Evidence</b><span>Checkable Proof</span></span>
-            </a>
-
-            <a class="gem-link" href="#measure" style="--delay:-1.9s;--tilt-a:1.7deg;--tilt-b:-1.8deg;" aria-label="Open Measure section">
-              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#realityOrganicGem"></use></svg></span>
-              <span class="gem-label"><b>Measure</b><span>Coordinates</span></span>
-            </a>
-
-            <a class="gem-link" href="#limits" style="--delay:-2.5s;--tilt-a:-1.8deg;--tilt-b:2.4deg;" aria-label="Open Limits section">
-              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#realityOrganicGem"></use></svg></span>
-              <span class="gem-label"><b>Limits</b><span>Bounded Certainty</span></span>
-            </a>
-
-            <a class="gem-link" href="#audit" style="--delay:-3.1s;--tilt-a:2deg;--tilt-b:-1.6deg;" aria-label="Open Audit section">
-              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#realityOrganicGem"></use></svg></span>
-              <span class="gem-label"><b>Audit</b><span>Proceed / Revise</span></span>
-            </a>
+          <div class="truth-card">
+            Reality is not preference, performance, slogan, majority agreement, emotional intensity, visual appearance, certainty without evidence, or claim without audit.
           </div>
-        </div>
-      </section>
 
-      <section class="panel section" id="definition" aria-labelledby="definition-title">
-        <div class="kicker">Definition</div>
-        <div class="section-header">
-          <h2 id="definition-title">Reality is the constraint surface.</h2>
-          <p>
-            Reality separates appearance from what can actually hold. It does not begin with preference. It begins with the test: does the claim remain coherent when evidence, consequence, measurement, limits, pressure, and contradiction are applied?
-          </p>
-        </div>
+          <div class="actions">
+            <a class="button gold" href="#gem-field">Open Gem Field</a>
+            <a class="button" href="#theory">Theory</a>
+            <a class="button" href="#evidence">Evidence</a>
+            <a class="button" href="#measure">Measure</a>
+            <a class="button" href="#limits">Limits</a>
+          </div>
+        </section>
 
-        <div class="paired">
-          <article class="card read-card">
-            <b>Human Read</b>
-            <h3>Reality is what does not disappear when challenged.</h3>
-            <p>
-              A claim can feel true, sound urgent, or appear popular. Reality asks what remains after the claim is checked, measured, contradicted, and placed under consequence.
+        <section class="panel lens-toggle" aria-labelledby="lens-title">
+          <div class="section-header">
+            <div class="kicker">Platform / Engineering Lens</div>
+            <h2 id="lens-title">Choose the language layer.</h2>
+            <p class="page-platform">
+              Platform language explains why Reality matters. It uses public, TED-style expression so a visitor can understand the category without needing to read the engineering contract underneath it.
             </p>
-          </article>
-
-          <article class="card read-card">
-            <b>Scientific Read</b>
-            <h3>Reality is the stable classification after constraint testing.</h3>
-            <p>
-              A reality claim requires observable evidence, measurement coordinates, uncertainty boundaries, falsifiability, repeatability where applicable, and audit-ready provenance.
+            <p class="page-engineering">
+              Engineering language defines what must be tested, bounded, measured, and audited. It is black-and-white implementation language for classification, failure states, evidence, limits, and receipt-ready conclusion.
             </p>
-          </article>
-        </div>
+          </div>
 
-        <div class="return-row"><a class="return-gem" href="#gem-field">Return to Gem Field</a></div>
-      </section>
+          <div class="toggle-row" role="radiogroup" aria-label="Reality page language lens">
+            <label class="toggle-label" for="lens-platform" tabindex="0">Platform</label>
+            <label class="toggle-label" for="lens-engineering" tabindex="0">Engineering</label>
+          </div>
+        </section>
 
-      <section class="panel section" id="theory" aria-labelledby="theory-title">
-        <div class="kicker">Theory / Model vs Terrain</div>
-        <div class="section-header">
-          <h2 id="theory-title">Theory is a map. Reality is the terrain.</h2>
-          <p>
-            Theory is the model that tries to match what is. It earns authority only when it survives evidence, measurement, limits, falsifiability, contradiction, and audit.
-          </p>
-        </div>
-
-        <div class="paired">
-          <article class="card read-card">
-            <b>Human Read</b>
-            <h3>The map must not pretend to be the land.</h3>
-            <p>
-              A theory helps move through complexity. It becomes dangerous when the map is defended after the terrain proves it wrong.
+        <section class="panel section" id="gem-field" aria-labelledby="gem-title">
+          <div class="kicker">Reality Gem Field</div>
+          <div class="section-header">
+            <h2 id="gem-title">Choose a Reality category gem, then return here from the section.</h2>
+            <p class="page-platform">
+              The gems are the interface. Reality is the subject. Theory, Evidence, Measure, Limits, and Audit are the path that shows whether a claim can survive being tested.
             </p>
-            <ul>
-              <li>Theory earns trust when it predicts what happens next.</li>
-              <li>Theory loses trust when it needs excuses to stay right.</li>
-              <li>The best theory is the simplest one that survives contact with evidence.</li>
-            </ul>
-          </article>
-
-          <article class="card read-card">
-            <b>Scientific Read</b>
-            <h3>A theory is a constrained explanatory model.</h3>
-            <p>
-              A valid theory must expose assumptions, define variables, predict observable states, permit falsification, and revise when evidence contradicts it.
+            <p class="page-engineering">
+              The gem field is an internal anchor map for a single canonical Reality page. The downstream chain remains Reality → Theory → Evidence → Measure → Limits → Audit.
             </p>
-            <ul>
-              <li>Model assumptions must be declared.</li>
-              <li>Predictions must be testable.</li>
-              <li>Contradiction must trigger revision or rejection.</li>
-            </ul>
-          </article>
-        </div>
+          </div>
 
-        <div class="grid">
-          <article class="card law-card">
-            <b>Map / Terrain Law</b>
-            <h3>The model does not outrank the world.</h3>
-            <p>Theory may guide inspection, but Reality decides whether the model survives.</p>
-          </article>
+          <div class="gem-stage" aria-label="Reality category gem navigation">
+            <div class="gem-field">
+              <a class="gem-link" href="#definition" style="--delay:-.1s;--tilt-a:-1.6deg;--tilt-b:1.8deg;" aria-label="Open Reality section">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#realityOrganicGem"></use></svg></span>
+                <span class="gem-label"><b>Reality</b><span>Tested Constraint</span></span>
+              </a>
 
-          <article class="card law-card">
-            <b>Prediction Burden Law</b>
-            <h3>A theory must risk being wrong.</h3>
-            <p>If a theory never exposes itself to failure, it is not functioning as a reality-facing model.</p>
-          </article>
-        </div>
+              <a class="gem-link" href="#theory" style="--delay:-.7s;--tilt-a:1.4deg;--tilt-b:-2.2deg;" aria-label="Open Theory section">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#realityOrganicGem"></use></svg></span>
+                <span class="gem-label"><b>Theory</b><span>Model / Terrain</span></span>
+              </a>
 
-        <div class="return-row"><a class="return-gem" href="#gem-field">Return to Gem Field</a></div>
-      </section>
+              <a class="gem-link" href="#evidence" style="--delay:-1.3s;--tilt-a:-2.1deg;--tilt-b:1.4deg;" aria-label="Open Evidence section">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#realityOrganicGem"></use></svg></span>
+                <span class="gem-label"><b>Evidence</b><span>Checkable Proof</span></span>
+              </a>
 
-      <section class="panel section" id="evidence" aria-labelledby="evidence-title">
-        <div class="kicker">Evidence / Checkable Proof</div>
-        <div class="section-header">
-          <h2 id="evidence-title">Evidence is what can be checked.</h2>
-          <p>
-            Evidence is the reality-facing path from claim to inspection. It must be observable, recorded, traceable, repeatable where applicable, and open to audit.
-          </p>
-        </div>
+              <a class="gem-link" href="#measure" style="--delay:-1.9s;--tilt-a:1.7deg;--tilt-b:-1.8deg;" aria-label="Open Measure section">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#realityOrganicGem"></use></svg></span>
+                <span class="gem-label"><b>Measure</b><span>Coordinates</span></span>
+              </a>
 
-        <div class="paired">
-          <article class="card read-card">
-            <b>Human Read</b>
-            <h3>If it cannot be checked, it cannot be relied on.</h3>
-            <p>
-              Evidence moves an argument out of personal insistence and into something other people can inspect.
+              <a class="gem-link" href="#limits" style="--delay:-2.5s;--tilt-a:-1.8deg;--tilt-b:2.4deg;" aria-label="Open Limits section">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#realityOrganicGem"></use></svg></span>
+                <span class="gem-label"><b>Limits</b><span>Bounded Certainty</span></span>
+              </a>
+
+              <a class="gem-link" href="#audit" style="--delay:-3.1s;--tilt-a:2deg;--tilt-b:-1.6deg;" aria-label="Open Audit section">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#realityOrganicGem"></use></svg></span>
+                <span class="gem-label"><b>Audit</b><span>Proceed / Revise</span></span>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel section" id="definition" aria-labelledby="definition-title">
+          <input class="section-radio" type="radio" name="definition-lens" id="definition-platform" checked>
+          <input class="section-radio" type="radio" name="definition-lens" id="definition-engineering">
+
+          <div class="section-lens-scope">
+            <div class="kicker">Reality / Tested Constraint</div>
+            <div class="section-header">
+              <h2 id="definition-title">Reality is the constraint surface.</h2>
+              <p class="page-platform">
+                This section separates the public meaning of Reality from the engineering test that decides whether a claim can proceed.
+              </p>
+              <p class="page-engineering">
+                This section defines Reality as a classification result after constraint testing, not as a preference state, visual state, or confidence state.
+              </p>
+            </div>
+
+            <div class="local-toggle-row" role="radiogroup" aria-label="Reality definition language lens">
+              <label class="local-toggle-label" for="definition-platform" tabindex="0">Platform</label>
+              <label class="local-toggle-label" for="definition-engineering" tabindex="0">Engineering</label>
+            </div>
+
+            <div class="paired lens-pair">
+              <article class="card read-card platform-copy">
+                <b>Platform</b>
+                <h3>Reality is what remains when the claim has nowhere left to hide.</h3>
+                <p>
+                  A claim can look polished, sound confident, and feel urgent. Reality asks what still holds after evidence, contradiction, measurement, consequence, and audit are applied.
+                </p>
+                <p>
+                  That is why Reality matters. It stops the system from rewarding performance before the claim has been made answerable.
+                </p>
+              </article>
+
+              <article class="card read-card engineering-copy">
+                <b>Engineering</b>
+                <h3>Reality is the classification state assigned after constraint testing.</h3>
+                <p>
+                  A claim does not reach Reality status unless it survives evidence review, measurement definition, falsifiability exposure, limit declaration, contradiction handling, and audit traceability.
+                </p>
+                <p>
+                  Required disposition states: proceed, revise, reject, hold, retest, recalibrate, or escalate.
+                </p>
+              </article>
+            </div>
+
+            <div class="return-row"><a class="return-gem" href="#gem-field">Return to Gem Field</a></div>
+          </div>
+        </section>
+
+        <section class="panel section" id="theory" aria-labelledby="theory-title">
+          <input class="section-radio" type="radio" name="theory-lens" id="theory-platform" checked>
+          <input class="section-radio" type="radio" name="theory-lens" id="theory-engineering">
+
+          <div class="section-lens-scope">
+            <div class="kicker">Theory / Model vs Terrain</div>
+            <div class="section-header">
+              <h2 id="theory-title">Theory is a map. Reality is the terrain.</h2>
+              <p class="page-platform">
+                A theory helps people move through complexity, but it becomes dangerous when the map is defended after the terrain proves it wrong.
+              </p>
+              <p class="page-engineering">
+                Theory is a constrained explanatory model. It must declare assumptions, define variables, generate testable predictions, expose falsification conditions, and revise or fail when evidence contradicts the model.
+              </p>
+            </div>
+
+            <div class="local-toggle-row" role="radiogroup" aria-label="Theory language lens">
+              <label class="local-toggle-label" for="theory-platform" tabindex="0">Platform</label>
+              <label class="local-toggle-label" for="theory-engineering" tabindex="0">Engineering</label>
+            </div>
+
+            <div class="paired lens-pair">
+              <article class="card read-card platform-copy">
+                <b>Platform</b>
+                <h3>The map must not pretend to be the land.</h3>
+                <p>
+                  A theory is useful because it gives the mind a way to move through complexity. But the moment the terrain proves the map wrong, the lawful move is not to defend the map. The lawful move is to update it.
+                </p>
+                <ul>
+                  <li>Theory earns trust when it predicts what happens next.</li>
+                  <li>Theory loses trust when it needs excuses to stay right.</li>
+                  <li>The best theory is the simplest one that survives contact with evidence.</li>
+                </ul>
+              </article>
+
+              <article class="card read-card engineering-copy">
+                <b>Engineering</b>
+                <h3>Theory must expose itself to failure.</h3>
+                <p>
+                  A valid theory must declare assumptions, define variables, predict observable states, permit falsification, and revise when evidence contradicts it.
+                </p>
+                <ul>
+                  <li>Model assumptions must be explicit.</li>
+                  <li>Predictions must be testable.</li>
+                  <li>Contradiction must trigger revision, rejection, or hold-state classification.</li>
+                </ul>
+              </article>
+            </div>
+
+            <div class="grid">
+              <article class="card law-card">
+                <b>Map / Terrain Law</b>
+                <h3>The model does not outrank the world.</h3>
+                <p>Theory may guide inspection, but Reality decides whether the model survives.</p>
+              </article>
+
+              <article class="card law-card">
+                <b>Prediction Burden Law</b>
+                <h3>A theory must risk being wrong.</h3>
+                <p>If a theory never exposes itself to failure, it is not functioning as a reality-facing model.</p>
+              </article>
+            </div>
+
+            <div class="return-row"><a class="return-gem" href="#gem-field">Return to Gem Field</a></div>
+          </div>
+        </section>
+
+        <section class="panel section" id="evidence" aria-labelledby="evidence-title">
+          <input class="section-radio" type="radio" name="evidence-lens" id="evidence-platform" checked>
+          <input class="section-radio" type="radio" name="evidence-lens" id="evidence-engineering">
+
+          <div class="section-lens-scope">
+            <div class="kicker">Evidence / Checkable Proof</div>
+            <div class="section-header">
+              <h2 id="evidence-title">Evidence is what can be checked.</h2>
+              <p class="page-platform">
+                Evidence moves a claim out of personal insistence. It gives other people something they can inspect instead of asking them to trust the loudest voice in the room.
+              </p>
+              <p class="page-engineering">
+                Evidence requires observable data, provenance, collection method, sampling context, source reliability, bias exposure, and independent checkability.
+              </p>
+            </div>
+
+            <div class="local-toggle-row" role="radiogroup" aria-label="Evidence language lens">
+              <label class="local-toggle-label" for="evidence-platform" tabindex="0">Platform</label>
+              <label class="local-toggle-label" for="evidence-engineering" tabindex="0">Engineering</label>
+            </div>
+
+            <div class="paired lens-pair">
+              <article class="card read-card platform-copy">
+                <b>Platform</b>
+                <h3>If it cannot be checked, it cannot be relied on.</h3>
+                <p>
+                  Evidence changes the room. It turns a claim from “believe me” into “look here.” That is the difference between private insistence and public accountability.
+                </p>
+                <ul>
+                  <li>Good evidence is observable.</li>
+                  <li>Good evidence is recorded.</li>
+                  <li>Good evidence does not depend only on who says it.</li>
+                </ul>
+              </article>
+
+              <article class="card read-card engineering-copy">
+                <b>Engineering</b>
+                <h3>Evidence requires provenance and independent checkability.</h3>
+                <p>
+                  Evidence must carry how it was obtained. Instrumentation, sampling method, bias control, replication posture, and metadata determine whether evidence can support inference.
+                </p>
+                <ul>
+                  <li>Sampling method must be named.</li>
+                  <li>Measurement method must be named.</li>
+                  <li>Evidence must be inspectable beyond the original claimant.</li>
+                </ul>
+              </article>
+            </div>
+
+            <div class="grid">
+              <article class="card law-card">
+                <b>Evidence Precedence Law</b>
+                <h3>Evidence outranks explanation.</h3>
+                <p>Explanation may organize evidence, but it cannot replace it.</p>
+              </article>
+
+              <article class="card law-card">
+                <b>Provenance Law</b>
+                <h3>Evidence must carry its origin path.</h3>
+                <p>Without provenance, evidence cannot support a durable inference.</p>
+              </article>
+            </div>
+
+            <div class="return-row"><a class="return-gem" href="#gem-field">Return to Gem Field</a></div>
+          </div>
+        </section>
+
+        <section class="panel section" id="measure" aria-labelledby="measure-title">
+          <input class="section-radio" type="radio" name="measure-lens" id="measure-platform" checked>
+          <input class="section-radio" type="radio" name="measure-lens" id="measure-engineering">
+
+          <div class="section-lens-scope">
+            <div class="kicker">Measure / Coordinate Contract</div>
+            <div class="section-header">
+              <h2 id="measure-title">Measurement turns observation into coordinates.</h2>
+              <p class="page-platform">
+                Measurement gives people shared coordinates. Without measurement, arguments stay trapped in opinion. With measurement, people can compare what happened, how it happened, and whether enough has been shown.
+              </p>
+              <p class="page-engineering">
+                Measurement requires defined units, calibration, sampling frame, error bounds, uncertainty range, coordinate system, and classification rule.
+              </p>
+            </div>
+
+            <div class="local-toggle-row" role="radiogroup" aria-label="Measure language lens">
+              <label class="local-toggle-label" for="measure-platform" tabindex="0">Platform</label>
+              <label class="local-toggle-label" for="measure-engineering" tabindex="0">Engineering</label>
+            </div>
+
+            <div class="paired lens-pair">
+              <article class="card read-card platform-copy">
+                <b>Platform</b>
+                <h3>Good measurement moves arguments into evidence.</h3>
+                <p>
+                  Bad measurement makes good people fight. Good measurement gives people a shared coordinate system for reality-facing decisions.
+                </p>
+                <ul>
+                  <li>What are we measuring?</li>
+                  <li>How are we measuring it?</li>
+                  <li>What counts as enough?</li>
+                </ul>
+              </article>
+
+              <article class="card read-card engineering-copy">
+                <b>Engineering</b>
+                <h3>Measurement requires coordinate definitions and error bounds.</h3>
+                <p>
+                  A valid measurement contract defines units, calibration, sampling frame, uncertainty, instrument limits, and observer-invariant classification.
+                </p>
+                <ul>
+                  <li>Units define the scale.</li>
+                  <li>Calibration defines instrument trust.</li>
+                  <li>Uncertainty defines the boundary.</li>
+                </ul>
+              </article>
+            </div>
+
+            <div class="grid">
+              <article class="card law-card">
+                <b>Measurement Contract Law</b>
+                <h3>Measurement is a shared contract.</h3>
+                <p>Measurement is not personal interpretation; it is a coordinated method for classifying observation.</p>
+              </article>
+
+              <article class="card law-card">
+                <b>Observer Invariance Law</b>
+                <h3>Classification must not depend on who looks.</h3>
+                <p>The same evidence under the same measurement contract should yield the same classification across qualified observers.</p>
+              </article>
+            </div>
+
+            <div class="return-row"><a class="return-gem" href="#gem-field">Return to Gem Field</a></div>
+          </div>
+        </section>
+
+        <section class="panel section" id="limits" aria-labelledby="limits-title">
+          <input class="section-radio" type="radio" name="limits-lens" id="limits-platform" checked>
+          <input class="section-radio" type="radio" name="limits-lens" id="limits-engineering">
+
+          <div class="section-lens-scope">
+            <div class="kicker">Limits / Bounded Certainty</div>
+            <div class="section-header">
+              <h2 id="limits-title">Limits are where certainty stops.</h2>
+              <p class="page-platform">
+                Limits are where honest certainty stops. Naming limits does not weaken a claim; it protects the claim from pretending to know more than it knows.
+              </p>
+              <p class="page-engineering">
+                Limits define uncertainty, applicability boundaries, model mismatch, sampling weakness, unknown variables, unresolved contradiction, and hold-state conditions.
+              </p>
+            </div>
+
+            <div class="local-toggle-row" role="radiogroup" aria-label="Limits language lens">
+              <label class="local-toggle-label" for="limits-platform" tabindex="0">Platform</label>
+              <label class="local-toggle-label" for="limits-engineering" tabindex="0">Engineering</label>
+            </div>
+
+            <div class="paired lens-pair">
+              <article class="card read-card platform-copy">
+                <b>Platform</b>
+                <h3>Knowing what you do not know prevents collapse.</h3>
+                <p>
+                  Limits create humility and better decisions. Ignoring limits turns partial truth into overconfident failure.
+                </p>
+                <ul>
+                  <li>Limits prevent false certainty.</li>
+                  <li>Limits protect decision quality.</li>
+                  <li>Limits keep unknowns named instead of hidden.</li>
+                </ul>
+              </article>
+
+              <article class="card read-card engineering-copy">
+                <b>Engineering</b>
+                <h3>Limits appear as uncertainty and undecidability regions.</h3>
+                <p>
+                  Valid conclusions carry boundaries: measurement error, model mismatch, sampling bias, unobservable variables, applicability limits, and unresolved contradiction states.
+                </p>
+                <ul>
+                  <li>Error bounds define claim strength.</li>
+                  <li>Model mismatch defines transfer risk.</li>
+                  <li>Unknown variables define hold states.</li>
+                </ul>
+              </article>
+            </div>
+
+            <div class="grid">
+              <article class="card law-card">
+                <b>Bounded Certainty Law</b>
+                <h3>Every claim carries uncertainty bounds.</h3>
+                <p>Certainty without boundaries is narrative, not stable Reality classification.</p>
+              </article>
+
+              <article class="card law-card">
+                <b>Unknown-State Protection Law</b>
+                <h3>Unknown must remain visible.</h3>
+                <p>When the state is unknown, the lawful move is to name it, not bury it under confidence language.</p>
+              </article>
+            </div>
+
+            <div class="return-row"><a class="return-gem" href="#gem-field">Return to Gem Field</a></div>
+          </div>
+        </section>
+
+        <section class="panel section" id="law-cards" aria-labelledby="law-cards-title">
+          <div class="kicker">Integrated Reality law cards</div>
+          <div class="section-header">
+            <h2 id="law-cards-title">A Reality claim must survive more than assertion.</h2>
+            <p class="page-platform">
+              The Reality category protects the bridge from certainty theater. It asks whether the claim has evidence, constraint, consequence, coherence, falsifiability, measurement, limits, and audit.
             </p>
-            <ul>
-              <li>Good evidence is observable.</li>
-              <li>Good evidence is recorded.</li>
-              <li>Good evidence does not depend only on who says it.</li>
-            </ul>
-          </article>
-
-          <article class="card read-card">
-            <b>Scientific Read</b>
-            <h3>Evidence requires provenance.</h3>
-            <p>
-              Evidence must carry how it was obtained. Instrumentation, sampling, bias control, replication, and metadata determine whether evidence can support inference.
+            <p class="page-engineering">
+              Integrated Reality cards define the minimum classification surfaces required before a claim may proceed as tested constraint.
             </p>
-            <ul>
-              <li>Sampling method matters.</li>
-              <li>Measurement method matters.</li>
-              <li>Independent checkability matters.</li>
-            </ul>
-          </article>
-        </div>
+          </div>
 
-        <div class="grid">
-          <article class="card law-card">
-            <b>Evidence Precedence Law</b>
-            <h3>Evidence outranks explanation.</h3>
-            <p>Explanation may organize evidence, but it cannot replace it.</p>
-          </article>
+          <div class="grid three">
+            <article class="card law-card">
+              <b>Evidence</b>
+              <h3>A claim needs a path to evidence.</h3>
+              <p>Without evidence, the claim remains assertion, not established reality.</p>
+            </article>
 
-          <article class="card law-card">
-            <b>Provenance Law</b>
-            <h3>Evidence must carry its origin path.</h3>
-            <p>Without provenance, evidence cannot support a durable inference.</p>
-          </article>
-        </div>
+            <article class="card law-card">
+              <b>Constraint</b>
+              <h3>Reality includes limits.</h3>
+              <p>If a claim ignores physical, logical, moral, relational, economic, or operational constraint, it is not ready to stand.</p>
+            </article>
 
-        <div class="return-row"><a class="return-gem" href="#gem-field">Return to Gem Field</a></div>
-      </section>
+            <article class="card law-card">
+              <b>Consequence</b>
+              <h3>Reality produces consequence.</h3>
+              <p>If an idea only works when consequence is hidden, delayed, or denied, the claim must be held under review.</p>
+            </article>
 
-      <section class="panel section" id="measure" aria-labelledby="measure-title">
-        <div class="kicker">Measure / Coordinate Contract</div>
-        <div class="section-header">
-          <h2 id="measure-title">Measurement turns observation into coordinates.</h2>
-          <p>
-            Measurement is the shared contract that lets observers compare claims without collapsing into private interpretation.
-          </p>
-        </div>
+            <article class="card law-card">
+              <b>Coherence</b>
+              <h3>Reality must remain coherent across layers.</h3>
+              <p>A claim that works in one sentence but collapses when applied across the system is unstable.</p>
+            </article>
 
-        <div class="paired">
-          <article class="card read-card">
-            <b>Human Read</b>
-            <h3>Good measurement moves arguments into evidence.</h3>
-            <p>
-              Bad measurement makes good people fight. Good measurement gives people a shared coordinate system for reality-facing decisions.
+            <article class="card law-card">
+              <b>Falsifiability</b>
+              <h3>A claim must be able to fail a test.</h3>
+              <p>A claim that cannot fail any test cannot honestly be called proven. Reality requires a possible failure condition.</p>
+            </article>
+
+            <article class="card law-card">
+              <b>Audit</b>
+              <h3>Reality must survive challenge.</h3>
+              <p>If a claim only survives when no one is allowed to inspect it, the claim is not stable.</p>
+            </article>
+          </div>
+
+          <div class="return-row"><a class="return-gem" href="#gem-field">Return to Gem Field</a></div>
+        </section>
+
+        <section class="panel section" id="application" aria-labelledby="application-title">
+          <div class="kicker">Application</div>
+          <div class="section-header">
+            <h2 id="application-title">How this category is used.</h2>
+            <p class="page-platform">
+              Reality is used whenever a claim needs to be separated from appearance. It applies to science, law, relationships, systems, infrastructure, frontier claims, public promises, private assumptions, and personal accountability.
             </p>
-            <ul>
-              <li>What are we measuring?</li>
-              <li>How are we measuring it?</li>
-              <li>What counts as enough?</li>
-            </ul>
-          </article>
-
-          <article class="card read-card">
-            <b>Scientific Read</b>
-            <h3>Measurement requires coordinate definitions and error bounds.</h3>
-            <p>
-              A valid measurement contract defines units, calibration, sampling frame, uncertainty, instrument limits, and observer-invariant classification.
+            <p class="page-engineering">
+              Reality classification applies when claim state must be separated into established, unstable, false, unknown, unmeasured, unbounded, or audit-ready.
             </p>
-            <ul>
-              <li>Units define the scale.</li>
-              <li>Calibration defines instrument trust.</li>
-              <li>Uncertainty defines the boundary.</li>
-            </ul>
-          </article>
-        </div>
+          </div>
 
-        <div class="grid">
-          <article class="card law-card">
-            <b>Measurement Contract Law</b>
-            <h3>Measurement is a shared contract.</h3>
-            <p>Measurement is not personal interpretation; it is a coordinated method for classifying observation.</p>
-          </article>
+          <ul class="application-list" aria-label="Reality application questions">
+            <li>Does the claim match the evidence?</li>
+            <li>Does the theory survive contradiction?</li>
+            <li>Does the measurement contract hold?</li>
+            <li>Does the claim remain coherent across the system?</li>
+            <li>Does the claim admit uncertainty and limits?</li>
+            <li>Does the claim have a lawful audit path?</li>
+          </ul>
 
-          <article class="card law-card">
-            <b>Observer Invariance Law</b>
-            <h3>Classification must not depend on who looks.</h3>
-            <p>The same evidence under the same measurement contract should yield the same classification across qualified observers.</p>
-          </article>
-        </div>
+          <div class="return-row"><a class="return-gem" href="#gem-field">Return to Gem Field</a></div>
+        </section>
 
-        <div class="return-row"><a class="return-gem" href="#gem-field">Return to Gem Field</a></div>
-      </section>
+        <section class="panel section" id="audit" aria-labelledby="audit-title">
+          <input class="section-radio" type="radio" name="audit-lens" id="audit-platform" checked>
+          <input class="section-radio" type="radio" name="audit-lens" id="audit-engineering">
 
-      <section class="panel section" id="limits" aria-labelledby="limits-title">
-        <div class="kicker">Limits / Bounded Certainty</div>
-        <div class="section-header">
-          <h2 id="limits-title">Limits are where certainty stops.</h2>
-          <p>
-            Limits protect Reality from overclaim. They name uncertainty, error, model mismatch, sampling bias, unknown variables, and the boundary between known and unknown.
-          </p>
-        </div>
+          <div class="section-lens-scope">
+            <div class="kicker">Audit / Claim Disposition</div>
+            <div class="section-header">
+              <h2 id="audit-title">Reality is not certainty theater.</h2>
+              <p class="page-platform">
+                Audit is the final pressure test. What holds may proceed. What fails must be revised. What remains unknown must be named.
+              </p>
+              <p class="page-engineering">
+                Audit determines claim disposition: proceed, revise, reject, hold, retest, recalibrate, or escalate.
+              </p>
+            </div>
 
-        <div class="paired">
-          <article class="card read-card">
-            <b>Human Read</b>
-            <h3>Knowing what you do not know prevents collapse.</h3>
-            <p>
-              Limits create humility and better decisions. Ignoring limits turns partial truth into overconfident failure.
-            </p>
-            <ul>
-              <li>Limits prevent false certainty.</li>
-              <li>Limits protect decision quality.</li>
-              <li>Limits keep unknowns named instead of hidden.</li>
-            </ul>
-          </article>
+            <div class="local-toggle-row" role="radiogroup" aria-label="Audit language lens">
+              <label class="local-toggle-label" for="audit-platform" tabindex="0">Platform</label>
+              <label class="local-toggle-label" for="audit-engineering" tabindex="0">Engineering</label>
+            </div>
 
-          <article class="card read-card">
-            <b>Scientific Read</b>
-            <h3>Limits appear as uncertainty and undecidability regions.</h3>
-            <p>
-              Valid conclusions carry boundaries: measurement error, model mismatch, sampling bias, unobservable variables, and applicability limits.
-            </p>
-            <ul>
-              <li>Error bounds define claim strength.</li>
-              <li>Model mismatch defines transfer risk.</li>
-              <li>Unknown variables define hold states.</li>
-            </ul>
-          </article>
-        </div>
+            <div class="paired lens-pair">
+              <article class="card read-card platform-copy">
+                <b>Platform</b>
+                <h3>What holds may proceed. What fails must be revised. What remains unknown must be named.</h3>
+                <p>
+                  A strong Reality page does not pretend every answer is already known. It separates established reality from open question, unknown condition, false claim, unstable claim, and audit-ready claim.
+                </p>
+              </article>
 
-        <div class="grid">
-          <article class="card law-card">
-            <b>Bounded Certainty Law</b>
-            <h3>Every claim carries uncertainty bounds.</h3>
-            <p>Certainty without boundaries is narrative, not stable Reality classification.</p>
-          </article>
+              <article class="card read-card engineering-copy">
+                <b>Engineering</b>
+                <h3>Audit requires traceable conclusion state.</h3>
+                <p>
+                  Audit requires traceable evidence, declared limits, measurement validity, contradiction handling, provenance, source posture, and receipt-ready conclusion state.
+                </p>
+                <ul>
+                  <li>If theory fails, revise the model.</li>
+                  <li>If evidence fails, hold or reject the claim.</li>
+                  <li>If measurement fails, recalibrate before proceeding.</li>
+                  <li>If limits are missing, name the uncertainty before proceeding.</li>
+                </ul>
+              </article>
+            </div>
 
-          <article class="card law-card">
-            <b>Unknown-State Protection Law</b>
-            <h3>Unknown must remain visible.</h3>
-            <p>When the state is unknown, the lawful move is to name it, not bury it under confidence language.</p>
-          </article>
-        </div>
+            <div class="boundary">
+              <strong>Final boundary</strong>
+              <p>
+                What holds may proceed. What fails must be revised. What remains unknown must be named.
+              </p>
+            </div>
 
-        <div class="return-row"><a class="return-gem" href="#gem-field">Return to Gem Field</a></div>
-      </section>
+            <div class="actions">
+              <a class="button gold" href="#gem-field">Return to Gem Field</a>
+              <a class="button" href="#definition">Reality</a>
+              <a class="button" href="#theory">Theory</a>
+              <a class="button" href="#evidence">Evidence</a>
+              <a class="button" href="#measure">Measure</a>
+              <a class="button" href="#limits">Limits</a>
+              <a class="button" href="/laws/categories/">Back to Categories</a>
+              <a class="button" href="/laws/">Back to Laws</a>
+            </div>
+          </div>
+        </section>
 
-      <section class="panel section" id="law-cards" aria-labelledby="law-cards-title">
-        <div class="kicker">Integrated Reality law cards</div>
-        <div class="section-header">
-          <h2 id="law-cards-title">A Reality claim must survive more than assertion.</h2>
-          <p>
-            The consolidated Reality page holds the full category standard: evidence, constraint, consequence, coherence, falsifiability, measurement, limits, and audit.
-          </p>
-        </div>
-
-        <div class="grid three">
-          <article class="card law-card">
-            <b>Evidence</b>
-            <h3>A claim needs a path to evidence.</h3>
-            <p>Without evidence, the claim remains assertion, not established reality.</p>
-          </article>
-
-          <article class="card law-card">
-            <b>Constraint</b>
-            <h3>Reality includes limits.</h3>
-            <p>If a claim ignores physical, logical, moral, relational, economic, or operational constraint, it is not ready to stand.</p>
-          </article>
-
-          <article class="card law-card">
-            <b>Consequence</b>
-            <h3>Reality produces consequence.</h3>
-            <p>If an idea only works when consequence is hidden, delayed, or denied, the claim must be held under review.</p>
-          </article>
-
-          <article class="card law-card">
-            <b>Coherence</b>
-            <h3>Reality must remain coherent across layers.</h3>
-            <p>A claim that works in one sentence but collapses when applied across the system is unstable.</p>
-          </article>
-
-          <article class="card law-card">
-            <b>Falsifiability</b>
-            <h3>A claim must be able to fail a test.</h3>
-            <p>A claim that cannot fail any test cannot honestly be called proven. Reality requires a possible failure condition.</p>
-          </article>
-
-          <article class="card law-card">
-            <b>Audit</b>
-            <h3>Reality must survive challenge.</h3>
-            <p>If a claim only survives when no one is allowed to inspect it, the claim is not stable.</p>
-          </article>
-        </div>
-
-        <div class="return-row"><a class="return-gem" href="#gem-field">Return to Gem Field</a></div>
-      </section>
-
-      <section class="panel section" id="application" aria-labelledby="application-title">
-        <div class="kicker">Application</div>
-        <div class="section-header">
-          <h2 id="application-title">How this category is used.</h2>
-          <p>
-            The Reality category is used whenever a claim needs to be separated from appearance. It applies to science, law, relationships, systems, infrastructure, frontier claims, public promises, private assumptions, and personal accountability.
-          </p>
-        </div>
-
-        <ul class="application-list" aria-label="Reality application questions">
-          <li>Does the claim match the evidence?</li>
-          <li>Does the theory survive contradiction?</li>
-          <li>Does the measurement contract hold?</li>
-          <li>Does the claim remain coherent across the system?</li>
-          <li>Does the claim admit uncertainty and limits?</li>
-          <li>Does the claim have a lawful audit path?</li>
-        </ul>
-
-        <div class="return-row"><a class="return-gem" href="#gem-field">Return to Gem Field</a></div>
-      </section>
-
-      <section class="panel section" id="audit" aria-labelledby="audit-title">
-        <div class="kicker">Boundary / Audit</div>
-        <div class="section-header">
-          <h2 id="audit-title">Reality is not certainty theater.</h2>
-          <p>
-            A strong Reality page does not pretend every answer is already known. It separates established reality from open question, unknown condition, false claim, unstable claim, and audit-ready claim.
-          </p>
-        </div>
-
-        <div class="boundary">
-          <strong>What holds may proceed. What fails must be revised. What remains unknown must be named.</strong>
-          <p>
-            Audit decides whether the claim can proceed. If theory fails, revise the model. If evidence fails, hold the claim. If measurement fails, recalibrate. If limits are missing, name the uncertainty before proceeding.
-          </p>
-        </div>
-
-        <div class="actions">
-          <a class="button gold" href="#gem-field">Return to Gem Field</a>
-          <a class="button" href="#reality">Reality</a>
-          <a class="button" href="#theory">Theory</a>
-          <a class="button" href="#evidence">Evidence</a>
-          <a class="button" href="#measure">Measure</a>
-          <a class="button" href="#limits">Limits</a>
-          <a class="button" href="/laws/">Back to Laws</a>
-        </div>
-      </section>
-
-      <template id="route-receipt" data-route-receipt>
-REALITY_SINGLE_FILE_GEM_STANDARD_TNT_v1
-previous=REALITY_SINGLE_FILE_CONSOLIDATED_LAW_CATEGORY_TNT_v2
-source_prewrite=REALITY_SINGLE_FILE_GEM_STANDARD_UPDATE_PREWRITE_v1
+        <template id="route-receipt" data-route-receipt>
+REALITY_CATEGORY_PLATFORM_ENGINEERING_LANGUAGE_LENS_TNT_v1
+previous=REALITY_SINGLE_FILE_GEM_STANDARD_TNT_v1
+source_binding=REALITY_CATEGORY_PLATFORM_ENGINEERING_LANGUAGE_LENS_PREGAME_TO_POSTGAME_BINDING_v1
 route=/laws/categories/reality/
 target=/laws/categories/reality/index.html
-deploy_marker=REALITY_SINGLE_FILE_GEM_STANDARD_DEPLOY_MARKER_v1
+deploy_marker=REALITY_CATEGORY_PLATFORM_ENGINEERING_LANGUAGE_LENS_DEPLOY_MARKER_v1
+renewal_class=LANGUAGE_LENS_CONTRACT_RENEWAL
 single_file=true
+not_visual_rebuild=true
+organic_gem_renderer_preserved=true
+gem_field_preserved=true
+return_target=#gem-field
+return_label=Return_to_Gem_Field
 absorbed_paths=theory_html,evidence_html,measure_html,limits_html
 internal_sections=reality,theory,evidence,measure,limits,audit
 gem_standard=true
@@ -1328,31 +1619,39 @@ gems_are_interface_only=true
 public_subject=Reality_tested_constraint
 branch=Laws
 category=Reality
-legacy_five_file_bundle_discarded=true
-legacy_tech_allowed=false
+reality_category_distinct_from_reality_source=true
+platform_language=TED_talk_expression
+engineering_language=black_white_science_implementation_language
+human_read_renewed_as=Platform
+scientific_read_renewed_as=Engineering
+blended_language_forbidden=true
+page_level_lens=Platform_Engineering
+local_section_lenses=Reality,Theory,Evidence,Measure,Limits,Audit
+platform_acceptance=visitor_understands_why_Reality_matters
+engineering_acceptance=builder_knows_what_must_be_tested_bounded_measured_audited
+public_thesis=Reality_is_what_still_holds_after_the_claim_is_tested
+engineering_thesis=Reality_is_post_test_classification_after_constraint_evaluation
+downstream_chain=Reality_to_Theory_to_Evidence_to_Measure_to_Limits_to_Audit
+final_boundary=What_holds_may_proceed_What_fails_must_be_revised_What_remains_unknown_must_be_named
 modern_static_html_css=true
 javascript_dependency=false
 external_legacy_css_dependency=false
 heavy_runtime=false
 generated_image=false
 graphic_box=false
+canvas=false
+webgl=false
 frontier_orbit_model=false
-old_diamond_platform_model=false
-old_geodiametrics_footer=false
-old_tab_scaffold=false
-human_scientific_reads=static_visible_paired_sections
-public_thesis=Reality_is_what_still_holds_after_the_claim_is_tested
-downstream_chain=Reality_to_Theory_to_Evidence_to_Measure_to_Limits_to_Audit
-final_boundary=What_holds_may_proceed_What_fails_must_be_revised_What_remains_unknown_must_be_named
+visual_pass_claimed=false
 room=Website_Building_and_Implementation_Room
 district=Rich_Manor_and_Estate_Laws
 individual=Implementation_Authority
-next_step=replace_exact_served_file_then_verify_live_source_for_REALITY_SINGLE_FILE_GEM_STANDARD_DEPLOY_MARKER_v1
-      </template>
+        </template>
+      </div>
     </main>
 
     <footer>
-      REALITY_SINGLE_FILE_GEM_STANDARD_TNT_v1 · Laws / Categories / Reality · Gem-standard single canonical file.
+      REALITY_CATEGORY_PLATFORM_ENGINEERING_LANGUAGE_LENS_TNT_v1 · Laws / Categories / Reality · Platform / Engineering language renewal.
     </footer>
   </div>
 </body>

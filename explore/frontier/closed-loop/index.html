@@ -3,10 +3,10 @@
   lang="en"
   data-route="/explore/frontier/closed-loop/"
   data-page="frontier-closed-loop"
-  data-version="G2-V3"
-  data-contract="FRONTIER_CLOSED_LOOP_BACKSTAR_GLOW_RETURN_FRONTIER_NAV_RENEWAL_TNT_v3"
-  data-previous-contract="FRONTIER_CLOSED_LOOP_PRIMARY_NAV_NATURAL_STAR_BACKLIGHT_TNT_v2"
-  data-source-binding="FRONTIER_BACKSTAR_GLOW_RETURN_FRONTIER_NONREGRESSION_PREGAME_TO_POSTGAME_BINDING_v1"
+  data-version="G2-V4"
+  data-contract="FRONTIER_CLOSED_LOOP_GEM_CLOSE_SOURCE_FUSION_GLOW_TNT_v1"
+  data-previous-contract="FRONTIER_CLOSED_LOOP_BACKSTAR_GLOW_RETURN_FRONTIER_NAV_RENEWAL_TNT_v3"
+  data-source-binding="FRONTIER_CLOSED_LOOP_GEM_CLOSE_SOURCE_FUSION_GLOW_PREGAME_TO_POSTGAME_BINDING_v1"
   data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
   data-design-reference="FRONTIER_ENERGY_COMPASS_GEM_PRINT_LEGIBILITY_RENEWAL_TNT_v19"
   data-engineering-authority="CCL_ICE_ICPI_CRI_CRP_CLOSED_LOOP_FRONTIER_STANDARD"
@@ -20,6 +20,16 @@
   data-return-to-frontier-preserved="true"
   data-return-to-frontier-is-not-top-nav-bubble="true"
   data-natural-backstar-glow="true"
+  data-gem-close-source-fusion-glow="true"
+  data-star-distance="near-contact"
+  data-gem-eclipses-star="true"
+  data-facet-light-pass="true"
+  data-rim-corona="true"
+  data-ambient-spill-secondary="true"
+  data-halo-animation="false"
+  data-animated-filter="false"
+  data-animated-blur="false"
+  data-circular-node-logic-imported="false"
   data-circular-halo-removed="true"
   data-closed-loop-law="valid-loop-requires-boundary-inputs-outputs-capture-storage-reuse-transformation-inventory-residual-uncertainty-receipt-audit-path"
   data-static-page-usable-without-js="true"
@@ -520,22 +530,21 @@
       left:50%;
       top:50%;
       z-index:0;
-      width:250%;
-      height:285%;
-      transform:translate(-50%,-50%) rotate(-7deg) scale(.96);
+      width:230%;
+      height:260%;
+      transform:translate(-50%,-50%) rotate(-7deg) scale(1);
       pointer-events:none;
       border:0;
+      border-radius:44% 56% 58% 42% / 48% 42% 58% 52%;
       background:
-        linear-gradient(102deg,transparent 0 39%,rgba(255,244,216,.24) 46%,rgba(141,216,255,.14) 50%,transparent 61%),
-        linear-gradient(18deg,transparent 0 43%,rgba(255,255,255,.20) 48%,rgba(243,200,111,.12) 51%,transparent 58%),
-        linear-gradient(151deg,transparent 0 44%,rgba(141,216,255,.16) 50%,transparent 59%),
-        radial-gradient(ellipse at 48% 49%,rgba(255,255,255,.52) 0 2.5%,rgba(255,232,163,.36) 5%,rgba(243,200,111,.21) 9%,rgba(141,216,255,.12) 15%,transparent 31%),
-        radial-gradient(ellipse at 38% 44%,rgba(255,244,216,.18) 0 9%,transparent 31%),
-        radial-gradient(ellipse at 64% 56%,rgba(141,216,255,.17) 0 8%,transparent 34%),
-        radial-gradient(ellipse at 53% 65%,rgba(243,200,111,.12) 0 7%,transparent 29%);
-      opacity:.82;
-      animation:backstarBloomDrift 9.8s ease-in-out infinite;
-      animation-delay:calc(var(--delay,0s) - .65s);
+        radial-gradient(ellipse at 50% 50%,rgba(255,244,216,.30) 0 8%,transparent 32%),
+        radial-gradient(ellipse at 42% 45%,rgba(243,200,111,.22) 0 11%,transparent 38%),
+        radial-gradient(ellipse at 62% 57%,rgba(141,216,255,.20) 0 10%,transparent 42%),
+        radial-gradient(ellipse at 55% 66%,rgba(143,240,195,.13) 0 8%,transparent 35%),
+        linear-gradient(102deg,transparent 0 39%,rgba(255,244,216,.16) 46%,rgba(141,216,255,.10) 50%,transparent 61%);
+      opacity:.92;
+      filter:blur(18px);
+      animation:none!important;
     }
 
     .compass-center::after,
@@ -545,61 +554,52 @@
       left:50%;
       top:50%;
       z-index:1;
-      width:154%;
-      height:172%;
-      transform:translate(-50%,-50%) rotate(4deg) scale(.94);
+      width:112%;
+      height:132%;
+      transform:translate(-50%,-50%) rotate(3deg) scale(.98);
       pointer-events:none;
       border:0;
+      border-radius:46% 54% 52% 48% / 50% 45% 55% 50%;
       background:
-        linear-gradient(90deg,transparent 0 34%,rgba(255,255,255,.82) 49%,rgba(255,232,163,.58) 50%,transparent 66%),
-        linear-gradient(0deg,transparent 0 35%,rgba(255,244,216,.70) 49%,rgba(141,216,255,.42) 50%,transparent 65%),
-        linear-gradient(45deg,transparent 0 43%,rgba(255,255,255,.38) 49%,transparent 57%),
-        linear-gradient(135deg,transparent 0 43%,rgba(141,216,255,.30) 49%,transparent 57%),
-        radial-gradient(circle at 50% 50%,rgba(255,255,255,1) 0 2.8%,rgba(255,239,166,.95) 4.5%,rgba(243,200,111,.56) 8%,rgba(141,216,255,.30) 14%,rgba(36,120,255,.13) 23%,transparent 37%);
-      opacity:.92;
-      animation:backstarCoreTwinkle 6.8s ease-in-out infinite;
+        linear-gradient(90deg,transparent 0 35%,rgba(255,255,255,.58) 48%,rgba(255,232,163,.42) 51%,transparent 66%),
+        linear-gradient(0deg,transparent 0 36%,rgba(255,244,216,.48) 49%,rgba(141,216,255,.30) 51%,transparent 66%),
+        radial-gradient(ellipse at 50% 50%,rgba(255,255,255,1) 0 5%,rgba(255,247,218,.96) 10%,rgba(243,200,111,.68) 22%,rgba(141,216,255,.38) 42%,rgba(36,120,255,.14) 62%,transparent 78%);
+      box-shadow:
+        0 0 .7rem rgba(255,255,255,.42),
+        0 0 1.35rem rgba(243,200,111,.42),
+        0 0 2.35rem rgba(141,216,255,.30),
+        0 0 3.35rem rgba(143,240,195,.16);
+      opacity:.94;
+      animation:gemCloseFusionStarPulse 7.2s ease-in-out infinite;
       animation-delay:var(--delay,0s);
     }
 
     .compass-center::before{
-      width:278%;
-      height:310%;
-      opacity:.90;
+      width:255%;
+      height:285%;
+      opacity:.96;
     }
 
     .compass-center::after{
-      width:168%;
-      height:188%;
+      width:122%;
+      height:144%;
       opacity:.98;
     }
 
-    @keyframes backstarBloomDrift{
+    @keyframes gemCloseFusionStarPulse{
       0%,100%{
-        opacity:.60;
-        transform:translate(-50%,-50%) rotate(-10deg) scale(.92);
+        opacity:.90;
+        transform:translate(-50%,-50%) rotate(3deg) scale(.96);
       }
-      44%{
-        opacity:.96;
-        transform:translate(-50%,-50%) rotate(2deg) scale(1.08);
-      }
-      70%{
-        opacity:.74;
-        transform:translate(-50%,-50%) rotate(-3deg) scale(1.0);
-      }
-    }
 
-    @keyframes backstarCoreTwinkle{
-      0%,100%{
-        opacity:.72;
-        transform:translate(-50%,-50%) rotate(3deg) scale(.90);
-      }
-      43%{
+      46%{
         opacity:1;
-        transform:translate(-50%,-50%) rotate(-2deg) scale(1.07);
+        transform:translate(-50%,-50%) rotate(1deg) scale(1.025);
       }
-      63%{
-        opacity:.84;
-        transform:translate(-50%,-50%) rotate(1deg) scale(.98);
+
+      72%{
+        opacity:.96;
+        transform:translate(-50%,-50%) rotate(2deg) scale(1.01);
       }
     }
 
@@ -641,15 +641,17 @@
       pointer-events:none;
       filter:
         drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
-        drop-shadow(0 0 1.15rem rgba(36,120,255,.18))
-        drop-shadow(0 0 .55rem rgba(243,200,111,.10));
+        drop-shadow(0 0 1.35rem rgba(36,120,255,.24))
+        drop-shadow(0 0 .85rem rgba(243,200,111,.20))
+        drop-shadow(0 0 .45rem rgba(255,255,255,.14));
     }
 
     .compass-center .gem-svg{
       filter:
         drop-shadow(0 1.55rem 1.85rem rgba(0,0,0,.42))
-        drop-shadow(0 0 1.65rem rgba(36,120,255,.23))
-        drop-shadow(0 0 .85rem rgba(243,200,111,.16));
+        drop-shadow(0 0 1.9rem rgba(36,120,255,.30))
+        drop-shadow(0 0 1.05rem rgba(243,200,111,.24))
+        drop-shadow(0 0 .55rem rgba(255,255,255,.16));
     }
 
     .gem-glint{
@@ -964,16 +966,17 @@
 
       .compass-center::before,
       .compass-node::before{
-        width:206%;
-        height:230%;
-        opacity:.68;
+        width:198%;
+        height:222%;
+        opacity:.82;
+        filter:blur(15px);
       }
 
       .compass-center::after,
       .compass-node::after{
-        width:138%;
-        height:154%;
-        opacity:.80;
+        width:120%;
+        height:142%;
+        opacity:.90;
       }
 
       .compass-node:hover,
@@ -1788,9 +1791,9 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_CLOSED_LOOP_BACKSTAR_GLOW_RETURN_FRONTIER_NAV_RENEWAL_TNT_v3
-previous=FRONTIER_CLOSED_LOOP_PRIMARY_NAV_NATURAL_STAR_BACKLIGHT_TNT_v2
-binding=FRONTIER_BACKSTAR_GLOW_RETURN_FRONTIER_NONREGRESSION_PREGAME_TO_POSTGAME_BINDING_v1
+FRONTIER_CLOSED_LOOP_GEM_CLOSE_SOURCE_FUSION_GLOW_TNT_v1
+previous=FRONTIER_CLOSED_LOOP_BACKSTAR_GLOW_RETURN_FRONTIER_NAV_RENEWAL_TNT_v3
+binding=FRONTIER_CLOSED_LOOP_GEM_CLOSE_SOURCE_FUSION_GLOW_PREGAME_TO_POSTGAME_BINDING_v1
 route=/explore/frontier/closed-loop/
 page=frontier_closed_loop
 html=/explore/frontier/closed-loop/index.html
@@ -1798,6 +1801,10 @@ source_visual_authority=COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2
 design_reference=FRONTIER_ENERGY_COMPASS_GEM_PRINT_LEGIBILITY_RENEWAL_TNT_v19
 engineering_authority=CCL_ICE_ICPI_CRI_CRP_CLOSED_LOOP_FRONTIER_STANDARD
 source_symbol_authority=compassOrganicGem
+gem_system_preserved=true
+compassOrganicGem_preserved=true
+circular_node_logic_imported=false
+frontier_explore_circle_logic_imported=false
 visual_authority_preserved=true
 non_regression_law_preserved=true
 top_navigation_reduced=true
@@ -1807,19 +1814,31 @@ return_to_frontier_preserved=true
 return_to_frontier_route=/explore/frontier/
 return_to_frontier_is_not_top_nav_bubble=true
 return_to_orbit_preserved=true
+return_to_closed_loop_orbit_preserved=true
 return_to_closed_loop_orbit_under_every_pathway=true
 platform_engineering_lenses_preserved=true
-natural_backstar_glow=true
-circular_halo_removed=true
-gem_foreground_preserved=true
+close_fusion_star_source=true
+star_distance=near_contact
+gem_eclipses_star=true
+facet_light_pass=true
+rim_corona=true
+ambient_spill_secondary=true
+natural_spill_glow=true
+hard_circular_glow=false
+halo_animation=false
+animated_filter=false
+animated_blur=false
+label_flicker=false
 star_source_behind_gem=true
 rim_escape_light=true
 through_facet_light=true
-star_backlight_behavior=bright_source_behind_gem_irregular_bloom_rim_leak_through_facet_light_no_circle_no_ring_no_bubble
+star_backlight_behavior=near_contact_fusion_source_behind_gem_irregular_static_ambient_spill_rim_leak_through_facet_light_no_circle_no_ring_no_bubble
 css_only=true
 javascript_added=false
 graphic_box=false
 generated_image=false
+canvas=false
+webgl=false
 heavy_runtime_loaded=false
 reduced_motion_safe=true
 audralia_closed_loop_first=true
@@ -1847,7 +1866,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      FRONTIER_CLOSED_LOOP_BACKSTAR_GLOW_RETURN_FRONTIER_NAV_RENEWAL_TNT_v3 · Closed Loop · Backstar Glow · Return to Frontier.
+      FRONTIER_CLOSED_LOOP_GEM_CLOSE_SOURCE_FUSION_GLOW_TNT_v1 · Closed Loop · Gem Close-Source Fusion Glow · Return to Frontier.
     </footer>
   </div>
 </body>

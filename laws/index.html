@@ -4,23 +4,22 @@
   lang="en"
   data-route="/laws/"
   data-page="laws"
-  data-version="G12-V1"
-  data-contract="LAWS_PAGE_EXPANDED_LAW_DEFINITIONS_PLATFORM_ENGINEERING_TNT_v1"
-  data-source-binding="LAWS_PAGE_EXPANDED_LAW_DEFINITIONS_PLATFORM_ENGINEERING_PREGAME_TO_POSTGAME_BINDING_v1"
+  data-version="G13-V1"
+  data-contract="LAWS_PAGE_LOCAL_LAW_CARD_LANGUAGE_TOGGLE_TNT_v1"
+  data-source-binding="LAWS_PAGE_LOCAL_LAW_CARD_LANGUAGE_TOGGLE_PREGAME_TO_POSTGAME_BINDING_v1"
   data-branch="laws"
   data-role="law-chamber"
   data-visible-header-context="Manor_and_Estate_Law_Chamber"
-  data-expanded-law-definitions="true"
-  data-all-sixteen-laws-defined="true"
-  data-platform-engineering-toggle-preserved="true"
-  data-toggle-changes-language-only="true"
-  data-platform-copy-expanded="true"
-  data-engineering-copy-expanded="true"
-  data-governs-prevents-audit-question-added="true"
+  data-top-global-toggle-preserved="true"
+  data-local-law-card-toggles="true"
+  data-local-toggles-default-platform="true"
+  data-local-toggles-control-own-card-only="true"
+  data-engineering-available-inside-each-law-card="true"
+  data-platform-available-inside-each-law-card="true"
+  data-all-sixteen-laws-remain-defined="true"
+  data-return-to-orbit-target="law-diamonds"
   data-top-route-orbit-preserved="true"
   data-large-law-category-diamonds-preserved="true"
-  data-return-to-orbit-target="law-diamonds"
-  data-route-grid-removed="true"
   data-modern-static-html-css="true"
   data-javascript-dependency="false"
   data-heavy-runtime-loaded="false"
@@ -35,7 +34,7 @@
   <title>Laws · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Laws chamber: proof outranks confidence. Sixteen laws are defined through Platform and Engineering language layers."
+    content="Diamond Gate Bridge Laws chamber: proof outranks confidence. Each expanded law section includes local Platform and Engineering language controls."
   >
 
   <style>
@@ -104,14 +103,6 @@
     label:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
-    }
-
-    .svg-defs{
-      position:absolute;
-      width:0;
-      height:0;
-      overflow:hidden;
-      pointer-events:none;
     }
 
     .skip{
@@ -321,14 +312,6 @@
       text-wrap:balance;
     }
 
-    h3{
-      margin:0;
-      color:rgba(255,244,216,.98);
-      font-size:clamp(1.1rem,2.4vw,1.45rem);
-      line-height:1.08;
-      letter-spacing:-.03em;
-    }
-
     p{
       margin:0;
       max-width:920px;
@@ -397,22 +380,23 @@
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
     }
 
-    .lens-radio{
+    .lens-radio,
+    .card-radio{
       position:absolute;
       opacity:0;
       pointer-events:none;
     }
 
-    .platform-copy,
-    .engineering-copy{
+    .page-platform,
+    .page-engineering{
       display:none;
     }
 
-    #lens-platform:checked ~ .lens-scope .platform-copy{
+    #lens-platform:checked ~ .lens-scope .page-platform{
       display:block;
     }
 
-    #lens-engineering:checked ~ .lens-scope .engineering-copy{
+    #lens-engineering:checked ~ .lens-scope .page-engineering{
       display:block;
     }
 
@@ -423,7 +407,8 @@
       padding:1rem;
     }
 
-    .toggle-row{
+    .toggle-row,
+    .local-toggle-row{
       width:fit-content;
       display:flex;
       flex-wrap:wrap;
@@ -435,7 +420,8 @@
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .toggle-label{
+    .toggle-label,
+    .local-toggle-label{
       min-height:2.42rem;
       display:inline-flex;
       align-items:center;
@@ -453,16 +439,66 @@
       transition:transform .18s ease,border-color .18s ease,background .18s ease,color .18s ease;
     }
 
-    .toggle-label:hover{
+    .local-toggle-label{
+      min-height:2.2rem;
+      padding:.5rem .78rem;
+      font-size:.66rem;
+    }
+
+    .toggle-label:hover,
+    .local-toggle-label:hover{
       transform:translateY(-1px);
       border-color:rgba(243,200,111,.36);
     }
 
     #lens-platform:checked ~ .lens-scope .toggle-label[for="lens-platform"],
-    #lens-engineering:checked ~ .lens-scope .toggle-label[for="lens-engineering"]{
+    #lens-engineering:checked ~ .lens-scope .toggle-label[for="lens-engineering"],
+    #authority-route-platform:checked ~ .card-lens-scope .local-toggle-label[for="authority-route-platform"],
+    #authority-route-engineering:checked ~ .card-lens-scope .local-toggle-label[for="authority-route-engineering"],
+    #proof-receipt-platform:checked ~ .card-lens-scope .local-toggle-label[for="proof-receipt-platform"],
+    #proof-receipt-engineering:checked ~ .card-lens-scope .local-toggle-label[for="proof-receipt-engineering"],
+    #runtime-animation-platform:checked ~ .card-lens-scope .local-toggle-label[for="runtime-animation-platform"],
+    #runtime-animation-engineering:checked ~ .card-lens-scope .local-toggle-label[for="runtime-animation-engineering"],
+    #generation-visual-platform:checked ~ .card-lens-scope .local-toggle-label[for="generation-visual-platform"],
+    #generation-visual-engineering:checked ~ .card-lens-scope .local-toggle-label[for="generation-visual-engineering"],
+    #human-interaction-platform:checked ~ .card-lens-scope .local-toggle-label[for="human-interaction-platform"],
+    #human-interaction-engineering:checked ~ .card-lens-scope .local-toggle-label[for="human-interaction-engineering"],
+    #access-return-platform:checked ~ .card-lens-scope .local-toggle-label[for="access-return-platform"],
+    #access-return-engineering:checked ~ .card-lens-scope .local-toggle-label[for="access-return-engineering"],
+    #product-foreground-platform:checked ~ .card-lens-scope .local-toggle-label[for="product-foreground-platform"],
+    #product-foreground-engineering:checked ~ .card-lens-scope .local-toggle-label[for="product-foreground-engineering"],
+    #scope-stale-platform:checked ~ .card-lens-scope .local-toggle-label[for="scope-stale-platform"],
+    #scope-stale-engineering:checked ~ .card-lens-scope .local-toggle-label[for="scope-stale-engineering"]{
       color:#060811;
       border-color:rgba(243,200,111,.88);
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .card-platform,
+    .card-engineering{
+      display:none;
+    }
+
+    #authority-route-platform:checked ~ .card-lens-scope .card-platform,
+    #proof-receipt-platform:checked ~ .card-lens-scope .card-platform,
+    #runtime-animation-platform:checked ~ .card-lens-scope .card-platform,
+    #generation-visual-platform:checked ~ .card-lens-scope .card-platform,
+    #human-interaction-platform:checked ~ .card-lens-scope .card-platform,
+    #access-return-platform:checked ~ .card-lens-scope .card-platform,
+    #product-foreground-platform:checked ~ .card-lens-scope .card-platform,
+    #scope-stale-platform:checked ~ .card-lens-scope .card-platform{
+      display:grid;
+    }
+
+    #authority-route-engineering:checked ~ .card-lens-scope .card-engineering,
+    #proof-receipt-engineering:checked ~ .card-lens-scope .card-engineering,
+    #runtime-animation-engineering:checked ~ .card-lens-scope .card-engineering,
+    #generation-visual-engineering:checked ~ .card-lens-scope .card-engineering,
+    #human-interaction-engineering:checked ~ .card-lens-scope .card-engineering,
+    #access-return-engineering:checked ~ .card-lens-scope .card-engineering,
+    #product-foreground-engineering:checked ~ .card-lens-scope .card-engineering,
+    #scope-stale-engineering:checked ~ .card-lens-scope .card-engineering{
+      display:grid;
     }
 
     .section{
@@ -694,34 +730,24 @@
       50%{transform:translateY(-.26rem) rotate(var(--tilt-b,2deg)) scale(1.025);filter:brightness(1.13)}
     }
 
-    .gem-svg{
+    .gem-shape{
       width:100%;
       height:100%;
-      overflow:visible;
-      pointer-events:none;
-      filter:
-        drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
-        drop-shadow(0 0 1.15rem rgba(36,120,255,.18))
-        drop-shadow(0 0 .55rem rgba(243,200,111,.10));
+      clip-path:polygon(50% 0%,82% 8%,100% 45%,86% 74%,52% 100%,18% 76%,0% 46%,18% 12%);
+      border:1px solid rgba(255,255,255,.22);
+      background:
+        linear-gradient(135deg,rgba(255,255,255,.96),rgba(141,216,255,.34) 44%,rgba(4,10,22,.92)),
+        radial-gradient(circle at 40% 20%,rgba(255,255,255,.45),transparent 44%);
+      box-shadow:
+        0 1.15rem 1.35rem rgba(0,0,0,.36),
+        0 0 1.15rem rgba(36,120,255,.18),
+        inset 0 0 2rem rgba(255,255,255,.08);
     }
 
-    .gem-glint{
-      animation:gemGlint 8.5s ease-in-out infinite;
-      transform-origin:110px 80px;
-    }
-
-    .gem-star{
-      animation:gemFacetTurn 30s linear infinite;
-      transform-origin:110px 80px;
-    }
-
-    @keyframes gemGlint{
-      0%,100%{opacity:.07;transform:translateX(-36px)}
-      48%,55%{opacity:.56;transform:translateX(34px)}
-    }
-
-    @keyframes gemFacetTurn{
-      to{transform:rotate(360deg)}
+    .route-orbit .gem-shape{
+      background:
+        linear-gradient(135deg,rgba(255,248,220,.98),rgba(243,200,111,.54) 35%,rgba(141,216,255,.28) 62%,rgba(2,8,22,.94)),
+        radial-gradient(circle at 40% 20%,rgba(255,255,255,.42),transparent 44%);
     }
 
     .gem-label{
@@ -818,6 +844,7 @@
     }
 
     .law-summary-card{
+      position:relative;
       display:grid;
       gap:.8rem;
       padding:1.05rem;
@@ -848,8 +875,12 @@
       line-height:1.08;
     }
 
-    .definition{
+    .card-lens-scope{
       display:grid;
+      gap:.8rem;
+    }
+
+    .definition{
       gap:.8rem;
       padding:.9rem;
       border:1px solid rgba(255,255,255,.11);
@@ -975,27 +1006,13 @@
     @media (max-width:860px){
       .topbar{grid-template-columns:1fr}
       .nav{justify-content:flex-start}
-
       .orbit-wrap{padding:4rem .9rem}
       .orbit-stage{width:min(100%,35rem);min-width:20rem}
       .orbit-track{--orbit-r:min(11.5rem,34vw)}
       .orbit-diamond{width:clamp(5.2rem,17.2vw,6.25rem);height:clamp(3.94rem,13vw,4.72rem)}
-
-      .orbit-diamond .gem-label{
-        max-width:5.4rem;
-        min-height:1.9rem;
-        padding:.30rem .35rem;
-      }
-
-      .orbit-diamond .gem-label b{
-        font-size:clamp(.58rem,1.95vw,.72rem);
-        letter-spacing:.01em;
-      }
-
-      .orbit-diamond .gem-label span{
-        font-size:clamp(.40rem,1.32vw,.48rem);
-      }
-
+      .orbit-diamond .gem-label{max-width:5.4rem;min-height:1.9rem;padding:.30rem .35rem}
+      .orbit-diamond .gem-label b{font-size:clamp(.58rem,1.95vw,.72rem);letter-spacing:.01em}
+      .orbit-diamond .gem-label span{font-size:clamp(.40rem,1.32vw,.48rem)}
       .orbit-center{width:8rem;min-height:6rem}
       .orbit-center b{font-size:.68rem}
       .orbit-center span{font-size:.65rem}
@@ -1009,8 +1026,8 @@
       h1{font-size:clamp(3rem,16vw,5.15rem)}
       .actions{display:grid}
       .button{width:100%}
-      .toggle-row{width:100%;display:grid;grid-template-columns:1fr 1fr;border-radius:1rem}
-      .toggle-label{border-radius:.8rem}
+      .toggle-row,.local-toggle-row{width:100%;display:grid;grid-template-columns:1fr 1fr;border-radius:1rem}
+      .toggle-label,.local-toggle-label{border-radius:.8rem}
       .section{padding:1rem}
       .gem-stage{padding:1rem}
       .large-law-field{grid-template-columns:1fr}
@@ -1025,37 +1042,16 @@
       .orbit-stage{width:min(100%,24.75rem);min-width:20rem}
       .orbit-track{--orbit-r:8.55rem}
       .orbit-diamond{width:4.55rem;height:3.45rem}
-
-      .orbit-diamond .gem-label{
-        width:96%;
-        max-width:4.35rem;
-        min-height:1.66rem;
-        padding:.24rem .25rem;
-      }
-
-      .orbit-diamond .gem-label b{
-        font-size:.49rem;
-        letter-spacing:0;
-      }
-
+      .orbit-diamond .gem-label{width:96%;max-width:4.35rem;min-height:1.66rem;padding:.24rem .25rem}
+      .orbit-diamond .gem-label b{font-size:.49rem;letter-spacing:0}
       .orbit-diamond .gem-label span{display:none}
-
-      .orbit-center{
-        width:6.7rem;
-        min-height:5.15rem;
-        padding:.65rem;
-      }
-
+      .orbit-center{width:6.7rem;min-height:5.15rem;padding:.65rem}
       .orbit-center b{font-size:.56rem}
       .orbit-center span{font-size:.56rem}
     }
 
     @media (max-width:360px){
-      .orbit-stage{
-        width:22.9rem;
-        transform:translateX(-.25rem);
-      }
-
+      .orbit-stage{width:22.9rem;transform:translateX(-.25rem)}
       .orbit-track{--orbit-r:7.95rem}
       .orbit-diamond{width:4.25rem;height:3.22rem}
       .orbit-diamond .gem-label{max-width:4.05rem}
@@ -1074,9 +1070,7 @@
 
       .orbit-track,
       .orbit-face,
-      .gem-core,
-      .gem-glint,
-      .gem-star{
+      .gem-core{
         animation:none!important;
       }
     }
@@ -1084,129 +1078,6 @@
 </head>
 
 <body>
-  <svg class="svg-defs" aria-hidden="true" focusable="false">
-    <defs>
-      <linearGradient id="lawGemBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#ffffff" stop-opacity=".98"/>
-        <stop offset=".17" stop-color="#eaf8ff" stop-opacity=".82"/>
-        <stop offset=".34" stop-color="#bfeaff" stop-opacity=".58"/>
-        <stop offset=".55" stop-color="#8dd8ff" stop-opacity=".36"/>
-        <stop offset=".74" stop-color="#f8fbff" stop-opacity=".22"/>
-        <stop offset="1" stop-color="#08111d" stop-opacity=".92"/>
-      </linearGradient>
-
-      <linearGradient id="lawGemAir" x1="48" y1="10" x2="168" y2="80" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#ffffff" stop-opacity=".98"/>
-        <stop offset=".36" stop-color="#eefaff" stop-opacity=".62"/>
-        <stop offset=".70" stop-color="#d6f3ff" stop-opacity=".22"/>
-        <stop offset="1" stop-color="#8dd8ff" stop-opacity=".12"/>
-      </linearGradient>
-
-      <radialGradient id="lawGemGlow" cx="50%" cy="38%" r="64%">
-        <stop offset="0" stop-color="#ffffff" stop-opacity=".68"/>
-        <stop offset=".28" stop-color="#dff8ff" stop-opacity=".34"/>
-        <stop offset=".58" stop-color="#ffffff" stop-opacity=".14"/>
-        <stop offset="1" stop-color="#020611" stop-opacity="0"/>
-      </radialGradient>
-
-      <linearGradient id="routeGemBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#fff8dc" stop-opacity=".96"/>
-        <stop offset=".16" stop-color="#ffe8a3" stop-opacity=".72"/>
-        <stop offset=".36" stop-color="#f3c86f" stop-opacity=".56"/>
-        <stop offset=".56" stop-color="#8dd8ff" stop-opacity=".32"/>
-        <stop offset=".76" stop-color="#2d5f9a" stop-opacity=".36"/>
-        <stop offset="1" stop-color="#020816" stop-opacity=".94"/>
-      </linearGradient>
-
-      <linearGradient id="routeGemAir" x1="48" y1="10" x2="168" y2="80" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#ffffff" stop-opacity=".94"/>
-        <stop offset=".34" stop-color="#fff0a3" stop-opacity=".48"/>
-        <stop offset=".68" stop-color="#8dd8ff" stop-opacity=".20"/>
-        <stop offset="1" stop-color="#f3c86f" stop-opacity=".12"/>
-      </linearGradient>
-
-      <linearGradient id="gemDepth" x1="110" y1="36" x2="110" y2="156" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#ffffff" stop-opacity=".18"/>
-        <stop offset=".30" stop-color="#8dd8ff" stop-opacity=".20"/>
-        <stop offset=".62" stop-color="#f3c86f" stop-opacity=".13"/>
-        <stop offset="1" stop-color="#020716" stop-opacity=".66"/>
-      </linearGradient>
-
-      <linearGradient id="gemGlintLine" x1="28" y1="130" x2="184" y2="24" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
-        <stop offset=".45" stop-color="#ffffff" stop-opacity=".84"/>
-        <stop offset=".52" stop-color="#fff0a3" stop-opacity=".30"/>
-        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
-      </linearGradient>
-
-      <filter id="gemGlowFilter" x="-42%" y="-50%" width="184%" height="200%">
-        <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="blur"/>
-        <feColorMatrix
-          in="blur"
-          type="matrix"
-          values="
-            0.42 0 0 0 0.08
-            0 .58 0 0 0.14
-            0 0 1.00 0 0.28
-            0 0 0 0.52 0"
-          result="glow"
-        />
-        <feMerge>
-          <feMergeNode in="glow"/>
-          <feMergeNode in="SourceGraphic"/>
-        </feMerge>
-      </filter>
-
-      <symbol id="lawCrystalGem" viewBox="0 0 220 160">
-        <g filter="url(#gemGlowFilter)">
-          <path d="M108 4 L146 12 L184 39 L209 76 L188 108 L147 139 L111 155 L69 136 L27 105 L12 73 L39 37 L77 14 Z" fill="url(#lawGemBody)" stroke="rgba(235,248,255,.66)" stroke-width="1.35"/>
-          <path d="M108 4 L146 12 L130 38 L109 30 L87 39 L77 14 Z" fill="url(#lawGemAir)" opacity=".92"/>
-          <path d="M87 39 L109 30 L130 38 L159 60 L148 83 L110 101 L72 83 L61 58 Z" fill="url(#lawGemGlow)" stroke="rgba(255,255,255,.34)" stroke-width=".9"/>
-          <path d="M77 14 L87 39 L61 58 L39 37 Z" fill="rgba(255,255,255,.26)"/>
-          <path d="M146 12 L130 38 L159 60 L184 39 Z" fill="rgba(255,255,255,.18)"/>
-          <path d="M12 73 L53 83 L69 136 L27 105 Z" fill="rgba(141,216,255,.14)"/>
-          <path d="M209 76 L166 81 L147 139 L188 108 Z" fill="rgba(255,255,255,.10)"/>
-          <path d="M72 83 L110 101 L111 155 Z" fill="url(#gemDepth)" opacity=".62"/>
-          <path d="M148 83 L110 101 L111 155 Z" fill="rgba(4,10,22,.30)"/>
-          <path d="M108 4 L111 155" stroke="rgba(255,255,255,.38)" stroke-width="1.15"/>
-          <path d="M12 73 L209 76" stroke="rgba(255,255,255,.32)" stroke-width="1.05"/>
-          <path d="M39 37 L188 108" stroke="rgba(255,255,255,.18)" stroke-width=".9"/>
-          <path d="M184 39 L27 105" stroke="rgba(255,255,255,.18)" stroke-width=".9"/>
-          <g class="gem-star" opacity=".84">
-            <path d="M109 27 L116 70 L110 106 L103 70 Z" fill="rgba(255,255,255,.30)"/>
-            <path d="M61 58 L105 72 L159 60 L116 79 Z" fill="rgba(255,255,255,.18)"/>
-            <path d="M72 83 L105 75 L148 83 L114 92 Z" fill="rgba(141,216,255,.14)"/>
-          </g>
-          <path class="gem-glint" d="M33 118 L176 22 L188 38 L48 130 Z" fill="url(#gemGlintLine)"/>
-        </g>
-      </symbol>
-
-      <symbol id="routeColorGem" viewBox="0 0 220 160">
-        <g filter="url(#gemGlowFilter)">
-          <path d="M108 4 L146 12 L184 39 L209 76 L188 108 L147 139 L111 155 L69 136 L27 105 L12 73 L39 37 L77 14 Z" fill="url(#routeGemBody)" stroke="rgba(255,232,163,.58)" stroke-width="1.35"/>
-          <path d="M108 4 L146 12 L130 38 L109 30 L87 39 L77 14 Z" fill="url(#routeGemAir)" opacity=".88"/>
-          <path d="M87 39 L109 30 L130 38 L159 60 L148 83 L110 101 L72 83 L61 58 Z" fill="rgba(255,232,163,.15)" stroke="rgba(255,255,255,.26)" stroke-width=".9"/>
-          <path d="M77 14 L87 39 L61 58 L39 37 Z" fill="rgba(255,255,255,.18)"/>
-          <path d="M146 12 L130 38 L159 60 L184 39 Z" fill="rgba(243,200,111,.20)"/>
-          <path d="M12 73 L53 83 L69 136 L27 105 Z" fill="rgba(141,216,255,.12)"/>
-          <path d="M209 76 L166 81 L147 139 L188 108 Z" fill="rgba(243,200,111,.16)"/>
-          <path d="M72 83 L110 101 L111 155 Z" fill="url(#gemDepth)" opacity=".70"/>
-          <path d="M148 83 L110 101 L111 155 Z" fill="rgba(4,10,22,.34)"/>
-          <path d="M108 4 L111 155" stroke="rgba(255,255,255,.34)" stroke-width="1.15"/>
-          <path d="M12 73 L209 76" stroke="rgba(255,255,255,.28)" stroke-width="1.05"/>
-          <path d="M39 37 L188 108" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
-          <path d="M184 39 L27 105" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
-          <g class="gem-star" opacity=".82">
-            <path d="M109 27 L116 70 L110 106 L103 70 Z" fill="rgba(255,255,255,.27)"/>
-            <path d="M61 58 L105 72 L159 60 L116 79 Z" fill="rgba(255,255,255,.16)"/>
-            <path d="M72 83 L105 75 L148 83 L114 92 Z" fill="rgba(243,200,111,.12)"/>
-          </g>
-          <path class="gem-glint" d="M33 118 L176 22 L188 38 L48 130 Z" fill="url(#gemGlintLine)"/>
-        </g>
-      </symbol>
-    </defs>
-  </svg>
-
   <a class="skip" href="#laws-main">Skip to Laws</a>
 
   <div class="shell">
@@ -1239,11 +1110,11 @@
 
           <h1 id="page-title">Proof outranks confidence.</h1>
 
-          <p class="lead platform-copy">
+          <p class="lead page-platform">
             Proof outranks confidence because a system must answer to what can be checked. The Laws chamber keeps the bridge from becoming decoration by giving every route a standard, every claim a boundary, and every visitor a way back.
           </p>
 
-          <p class="lead engineering-copy">
+          <p class="lead page-engineering">
             The Laws chamber governs route ownership, proof hierarchy, runtime containment, visual-claim limits, scope discipline, return-path coherence, and audit readability across the public route system.
           </p>
 
@@ -1260,17 +1131,17 @@
 
         <section class="panel lens-toggle" aria-labelledby="lens-title">
           <div class="section-header">
-            <div class="kicker">Language Lens</div>
-            <h2 id="lens-title">Choose the language layer.</h2>
-            <p class="platform-copy">
-              Platform language explains what each law means in clear public terms. Engineering language defines the same law structure in route, runtime, proof, scope, receipt, and audit terms.
+            <div class="kicker">Page Language Lens</div>
+            <h2 id="lens-title">Choose the page-level language layer.</h2>
+            <p class="page-platform">
+              This top toggle controls the hero, orbit explanation, and page-level framing. Each law card below also has its own local Platform / Engineering toggle.
             </p>
-            <p class="engineering-copy">
-              The lens toggle changes copy only. It does not mutate routes, anchors, diamonds, orbit geometry, color law, hierarchy, return targets, or receipts.
+            <p class="page-engineering">
+              The global lens changes page-level copy only. Each expanded law card uses an independent local radio group and controls only that card’s definition language.
             </p>
           </div>
 
-          <div class="toggle-row" role="radiogroup" aria-label="Language lens">
+          <div class="toggle-row" role="radiogroup" aria-label="Page-level language lens">
             <label class="toggle-label" for="lens-platform" tabindex="0">Platform</label>
             <label class="toggle-label" for="lens-engineering" tabindex="0">Engineering</label>
           </div>
@@ -1280,10 +1151,10 @@
           <div class="kicker">Top orbital page-change diamonds</div>
           <div class="section-header">
             <h2 id="route-orbit-title">Every page-changing diamond lives on the orbit.</h2>
-            <p class="platform-copy">
+            <p class="page-platform">
               Use the orbit to leave this page without losing the law map. White diamonds stay in the Laws family. Gold diamonds take you to other parts of the bridge.
             </p>
-            <p class="engineering-copy">
+            <p class="page-engineering">
               All page-changing controls are consolidated into the top orbit. Law-affiliated route changes remain white crystal. Non-law route changes use route-color treatment.
             </p>
           </div>
@@ -1295,79 +1166,40 @@
 
               <div class="orbit-center" aria-hidden="true">
                 <b>Laws Route Orbit</b>
-                <span class="platform-copy">White = law route. Gold = outside Laws.</span>
-                <span class="engineering-copy">Layout = page-change. Color = law affiliation.</span>
+                <span class="page-platform">White = law route. Gold = outside Laws.</span>
+                <span class="page-engineering">Layout = page-change. Color = law affiliation.</span>
               </div>
 
               <div class="orbit-track">
                 <a class="orbit-diamond law-orbit" href="/laws/scientific-law/" style="--a:0deg;" aria-label="Open Scientific Law">
-                  <span class="orbit-face">
-                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
-                    <span class="gem-label"><b>Scientific</b><span>Law</span></span>
-                  </span>
+                  <span class="orbit-face"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Scientific</b><span>Law</span></span></span>
                 </a>
-
                 <a class="orbit-diamond route-orbit" href="/" style="--a:36deg;" aria-label="Open Compass">
-                  <span class="orbit-face">
-                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
-                    <span class="gem-label"><b>Compass</b><span>Root</span></span>
-                  </span>
+                  <span class="orbit-face"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Compass</b><span>Root</span></span></span>
                 </a>
-
                 <a class="orbit-diamond route-orbit" href="/door/" style="--a:72deg;" aria-label="Open Door">
-                  <span class="orbit-face">
-                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
-                    <span class="gem-label"><b>Door</b><span>Entry</span></span>
-                  </span>
+                  <span class="orbit-face"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Door</b><span>Entry</span></span></span>
                 </a>
-
                 <a class="orbit-diamond route-orbit" href="/home/" style="--a:108deg;" aria-label="Open Home">
-                  <span class="orbit-face">
-                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
-                    <span class="gem-label"><b>Home</b><span>Return</span></span>
-                  </span>
+                  <span class="orbit-face"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Home</b><span>Return</span></span></span>
                 </a>
-
                 <a class="orbit-diamond route-orbit" href="/explore/" style="--a:144deg;" aria-label="Open Manor">
-                  <span class="orbit-face">
-                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
-                    <span class="gem-label"><b>Manor</b><span>Map</span></span>
-                  </span>
+                  <span class="orbit-face"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Manor</b><span>Map</span></span></span>
                 </a>
-
                 <a class="orbit-diamond law-orbit" href="/laws/categories/reality/" style="--a:180deg;" aria-label="Open Reality law category">
-                  <span class="orbit-face">
-                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
-                    <span class="gem-label"><b>Reality</b><span>Category</span></span>
-                  </span>
+                  <span class="orbit-face"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Reality</b><span>Category</span></span></span>
                 </a>
-
                 <a class="orbit-diamond route-orbit" href="/products/" style="--a:216deg;" aria-label="Open Products">
-                  <span class="orbit-face">
-                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
-                    <span class="gem-label"><b>Products</b><span>Offer</span></span>
-                  </span>
+                  <span class="orbit-face"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Products</b><span>Offer</span></span></span>
                 </a>
-
                 <a class="orbit-diamond route-orbit" href="/showroom/" style="--a:252deg;" aria-label="Open Showroom">
-                  <span class="orbit-face">
-                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
-                    <span class="gem-label"><b>Showroom</b><span>Objects</span></span>
-                  </span>
+                  <span class="orbit-face"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Showroom</b><span>Objects</span></span></span>
                 </a>
-
                 <a class="orbit-diamond route-orbit" href="/frontier/" style="--a:288deg;" aria-label="Open Frontier">
-                  <span class="orbit-face">
-                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
-                    <span class="gem-label"><b>Frontier</b><span>Future</span></span>
-                  </span>
+                  <span class="orbit-face"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Frontier</b><span>Future</span></span></span>
                 </a>
-
                 <a class="orbit-diamond route-orbit" href="/gauges/" style="--a:324deg;" aria-label="Open Gauges">
-                  <span class="orbit-face">
-                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
-                    <span class="gem-label"><b>Gauges</b><span>Measure</span></span>
-                  </span>
+                  <span class="orbit-face"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Gauges</b><span>Measure</span></span></span>
                 </a>
               </div>
             </div>
@@ -1378,55 +1210,24 @@
           <div class="kicker">Large same-page law diamonds</div>
           <div class="section-header">
             <h2 id="law-diamonds-title">Large white crystals are only for Laws content on this page.</h2>
-            <p class="platform-copy">
+            <p class="page-platform">
               These large white crystals are the Laws categories. Open one law group, read its definition, then return to these categories when ready.
             </p>
-            <p class="engineering-copy">
+            <p class="page-engineering">
               Large diamonds are reserved for same-page Laws anchors. They do not resolve to external routes and do not load runtime.
             </p>
           </div>
 
           <div class="gem-stage" aria-label="Large grouped law diamond field">
             <div class="large-law-field">
-              <a class="large-law-diamond" href="#authority-route" style="--delay:-.1s;--tilt-a:-1.6deg;--tilt-b:1.8deg;">
-                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
-                <span class="gem-label"><b>Authority / Route</b><span>Owner + Where</span></span>
-              </a>
-
-              <a class="large-law-diamond" href="#proof-receipt" style="--delay:-.6s;--tilt-a:1.5deg;--tilt-b:-2deg;">
-                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
-                <span class="gem-label"><b>Proof / Receipt</b><span>Evidence + Record</span></span>
-              </a>
-
-              <a class="large-law-diamond" href="#runtime-animation" style="--delay:-1.1s;--tilt-a:-2deg;--tilt-b:1.4deg;">
-                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
-                <span class="gem-label"><b>Runtime / Animation</b><span>Motion + Hierarchy</span></span>
-              </a>
-
-              <a class="large-law-diamond" href="#generation-visual" style="--delay:-1.6s;--tilt-a:1.8deg;--tilt-b:-1.6deg;">
-                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
-                <span class="gem-label"><b>Generation / Visual</b><span>Baseline + Claim</span></span>
-              </a>
-
-              <a class="large-law-diamond" href="#human-interaction" style="--delay:-2.1s;--tilt-a:-1.7deg;--tilt-b:2.1deg;">
-                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
-                <span class="gem-label"><b>Human / Interaction</b><span>Boundary + Touch</span></span>
-              </a>
-
-              <a class="large-law-diamond" href="#access-return" style="--delay:-2.6s;--tilt-a:2deg;--tilt-b:-1.4deg;">
-                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
-                <span class="gem-label"><b>Access / Return</b><span>Reachable + Back Path</span></span>
-              </a>
-
-              <a class="large-law-diamond" href="#product-foreground" style="--delay:-3.1s;--tilt-a:-1.6deg;--tilt-b:1.9deg;">
-                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
-                <span class="gem-label"><b>Product / Foreground</b><span>Separate + Core</span></span>
-              </a>
-
-              <a class="large-law-diamond" href="#scope-stale" style="--delay:-3.6s;--tilt-a:1.7deg;--tilt-b:-1.8deg;">
-                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
-                <span class="gem-label"><b>Scope / Stale</b><span>Boundary + Language</span></span>
-              </a>
+              <a class="large-law-diamond" href="#authority-route" style="--delay:-.1s;--tilt-a:-1.6deg;--tilt-b:1.8deg;"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Authority / Route</b><span>Owner + Where</span></span></a>
+              <a class="large-law-diamond" href="#proof-receipt" style="--delay:-.6s;--tilt-a:1.5deg;--tilt-b:-2deg;"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Proof / Receipt</b><span>Evidence + Record</span></span></a>
+              <a class="large-law-diamond" href="#runtime-animation" style="--delay:-1.1s;--tilt-a:-2deg;--tilt-b:1.4deg;"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Runtime / Animation</b><span>Motion + Hierarchy</span></span></a>
+              <a class="large-law-diamond" href="#generation-visual" style="--delay:-1.6s;--tilt-a:1.8deg;--tilt-b:-1.6deg;"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Generation / Visual</b><span>Baseline + Claim</span></span></a>
+              <a class="large-law-diamond" href="#human-interaction" style="--delay:-2.1s;--tilt-a:-1.7deg;--tilt-b:2.1deg;"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Human / Interaction</b><span>Boundary + Touch</span></span></a>
+              <a class="large-law-diamond" href="#access-return" style="--delay:-2.6s;--tilt-a:2deg;--tilt-b:-1.4deg;"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Access / Return</b><span>Reachable + Back Path</span></span></a>
+              <a class="large-law-diamond" href="#product-foreground" style="--delay:-3.1s;--tilt-a:-1.6deg;--tilt-b:1.9deg;"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Product / Foreground</b><span>Separate + Core</span></span></a>
+              <a class="large-law-diamond" href="#scope-stale" style="--delay:-3.6s;--tilt-a:1.7deg;--tilt-b:-1.8deg;"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Scope / Stale</b><span>Boundary + Language</span></span></a>
             </div>
           </div>
 
@@ -1439,436 +1240,204 @@
           <div class="kicker">Expanded grouped law definitions</div>
           <div class="section-header">
             <h2 id="law-summary-title">Sixteen laws. Eight grouped definitions.</h2>
-            <p class="platform-copy">
-              The laws do more than name the room. They define what each route owns, what each claim must prove, what every movement must preserve, and how the visitor returns to coherence.
+            <p class="page-platform">
+              Each card begins with its own language toggle so the reader can switch between public explanation and engineering precision without returning to the top.
             </p>
-            <p class="engineering-copy">
-              The sixteen laws are expanded into eight grouped cards. Each card contains a Platform definition, Engineering definition, governed scope, prevented failure, audit question, and return anchor.
+            <p class="page-engineering">
+              Each law card owns an independent CSS-only radio group. Local toggles affect only the local definition block and do not mutate route, orbit, return, or receipt state.
             </p>
           </div>
 
           <div class="law-summary-grid">
             <article class="law-summary-card" id="authority-route">
+              <input class="card-radio" type="radio" name="law-lens-authority-route" id="authority-route-platform" checked>
+              <input class="card-radio" type="radio" name="law-lens-authority-route" id="authority-route-engineering">
               <b>Authority / Route</b>
               <strong>Authority Law + Route Law</strong>
-
-              <div class="definition platform-copy">
-                <p>
-                  Authority Law means every page, chamber, product, planet, law, route, or claim must know what is allowed to speak for it before it tries to impress anyone. A beautiful page without authority is only decoration. Authority makes the difference between “this looks good” and “this belongs here.”
-                </p>
-                <p>
-                  Route Law means every chamber must know where it lives, how a visitor enters it, where it can send the visitor, and how the visitor returns. A route without a home becomes a hallway with no building around it.
-                </p>
-              </div>
-
-              <div class="definition engineering-copy">
-                <p>
-                  Authority Law requires every route object to declare its parent, owner function, construct class, admissible scope, and proof authority before it can make design, runtime, product, scientific, or governance claims.
-                </p>
-                <p>
-                  Route Law requires every public page to maintain explicit inbound, outbound, and return-path logic. A route must not operate as an isolated endpoint unless it is intentionally defined as a terminal chamber.
-                </p>
-              </div>
-
-              <div class="mini-grid">
-                <div class="mini-box">
-                  <h4>Governs</h4>
-                  <ul>
-                    <li>Page identity</li>
-                    <li>Parent route</li>
-                    <li>Owner function</li>
-                    <li>Entry and return routes</li>
-                    <li>Allowed page claims</li>
-                  </ul>
+              <div class="card-lens-scope">
+                <div class="local-toggle-row" role="radiogroup" aria-label="Authority and Route language lens">
+                  <label class="local-toggle-label" for="authority-route-platform" tabindex="0">Platform</label>
+                  <label class="local-toggle-label" for="authority-route-engineering" tabindex="0">Engineering</label>
                 </div>
-                <div class="mini-box">
-                  <h4>Prevents</h4>
-                  <ul>
-                    <li>Floating pages</li>
-                    <li>Unowned claims</li>
-                    <li>Route drift</li>
-                    <li>Confusing navigation</li>
-                    <li>False authority</li>
-                  </ul>
+                <div class="definition card-platform">
+                  <p>Authority Law means every page, chamber, product, planet, law, route, or claim must know what is allowed to speak for it before it tries to impress anyone. A beautiful page without authority is only decoration.</p>
+                  <p>Route Law means every chamber must know where it lives, how a visitor enters it, where it can send the visitor, and how the visitor returns. A route without a home becomes a hallway with no building around it.</p>
+                </div>
+                <div class="definition card-engineering">
+                  <p>Authority Law requires every route object to declare its parent, owner function, construct class, admissible scope, and proof authority before it can make design, runtime, product, scientific, or governance claims.</p>
+                  <p>Route Law requires every public page to maintain explicit inbound, outbound, and return-path logic. A route must not operate as an isolated endpoint unless it is intentionally defined as a terminal chamber.</p>
                 </div>
               </div>
-
-              <div class="audit-question">
-                <span>Audit question</span>
-                Can this page state where it lives, what owns it, what it governs, what it does not govern, where it sends the visitor, and how the visitor returns?
-              </div>
-
+              <div class="mini-grid"><div class="mini-box"><h4>Governs</h4><ul><li>Page identity</li><li>Parent route</li><li>Owner function</li><li>Entry and return routes</li><li>Allowed page claims</li></ul></div><div class="mini-box"><h4>Prevents</h4><ul><li>Floating pages</li><li>Unowned claims</li><li>Route drift</li><li>Confusing navigation</li><li>False authority</li></ul></div></div>
+              <div class="audit-question"><span>Audit question</span>Can this page state where it lives, what owns it, what it governs, what it does not govern, where it sends the visitor, and how the visitor returns?</div>
               <a class="return-chip" href="#law-diamonds">Return to Orbit</a>
             </article>
 
             <article class="law-summary-card" id="proof-receipt">
+              <input class="card-radio" type="radio" name="law-lens-proof-receipt" id="proof-receipt-platform" checked>
+              <input class="card-radio" type="radio" name="law-lens-proof-receipt" id="proof-receipt-engineering">
               <b>Proof / Receipt</b>
               <strong>Proof Law + Receipt Law</strong>
-
-              <div class="definition platform-copy">
-                <p>
-                  Proof Law means the bridge does not accept confidence as evidence. A claim must be checkable before it becomes reliable. If something cannot be seen, measured, tested, repeated, or traced, it may still be an idea, but it is not yet proof.
-                </p>
-                <p>
-                  Receipt Law means every major change must leave a record. A receipt tells the next person what changed, what stayed untouched, what route owns the change, and what still needs verification.
-                </p>
-              </div>
-
-              <div class="definition engineering-copy">
-                <p>
-                  Proof Law places observable evidence, route behavior, gauge results, source receipts, and diagnostic outputs above unsupported interpretation. No visual improvement, status claim, or narrative framing outranks verifiable behavior.
-                </p>
-                <p>
-                  Receipt Law requires each major TNT or route renewal to preserve trace metadata including contract name, route target, changed scope, preserved scope, dependency posture, runtime posture, visual-pass status, and verification state.
-                </p>
-              </div>
-
-              <div class="mini-grid">
-                <div class="mini-box">
-                  <h4>Governs</h4>
-                  <ul>
-                    <li>Claims and evidence</li>
-                    <li>Gauges and diagnostics</li>
-                    <li>Version receipts</li>
-                    <li>Deployment records</li>
-                    <li>Verification trails</li>
-                  </ul>
+              <div class="card-lens-scope">
+                <div class="local-toggle-row" role="radiogroup" aria-label="Proof and Receipt language lens">
+                  <label class="local-toggle-label" for="proof-receipt-platform" tabindex="0">Platform</label>
+                  <label class="local-toggle-label" for="proof-receipt-engineering" tabindex="0">Engineering</label>
                 </div>
-                <div class="mini-box">
-                  <h4>Prevents</h4>
-                  <ul>
-                    <li>False completion</li>
-                    <li>Unsupported confidence</li>
-                    <li>Lost change history</li>
-                    <li>Visual-pass overclaiming</li>
-                    <li>Post-deployment confusion</li>
-                  </ul>
+                <div class="definition card-platform">
+                  <p>Proof Law means the bridge does not accept confidence as evidence. A claim must be checkable before it becomes reliable. If something cannot be seen, measured, tested, repeated, or traced, it may still be an idea, but it is not yet proof.</p>
+                  <p>Receipt Law means every major change must leave a record. A receipt tells the next person what changed, what stayed untouched, what route owns the change, and what still needs verification.</p>
+                </div>
+                <div class="definition card-engineering">
+                  <p>Proof Law places observable evidence, route behavior, gauge results, source receipts, and diagnostic outputs above unsupported interpretation. No visual improvement, status claim, or narrative framing outranks verifiable behavior.</p>
+                  <p>Receipt Law requires each major TNT or route renewal to preserve trace metadata including contract name, route target, changed scope, preserved scope, dependency posture, runtime posture, visual-pass status, and verification state.</p>
                 </div>
               </div>
-
-              <div class="audit-question">
-                <span>Audit question</span>
-                Can the claim be checked, and does the file leave enough receipt data for another audit to understand what changed?
-              </div>
-
+              <div class="mini-grid"><div class="mini-box"><h4>Governs</h4><ul><li>Claims and evidence</li><li>Gauges and diagnostics</li><li>Version receipts</li><li>Deployment records</li><li>Verification trails</li></ul></div><div class="mini-box"><h4>Prevents</h4><ul><li>False completion</li><li>Unsupported confidence</li><li>Lost change history</li><li>Visual-pass overclaiming</li><li>Post-deployment confusion</li></ul></div></div>
+              <div class="audit-question"><span>Audit question</span>Can the claim be checked, and does the file leave enough receipt data for another audit to understand what changed?</div>
               <a class="return-chip" href="#law-diamonds">Return to Orbit</a>
             </article>
 
             <article class="law-summary-card" id="runtime-animation">
+              <input class="card-radio" type="radio" name="law-lens-runtime-animation" id="runtime-animation-platform" checked>
+              <input class="card-radio" type="radio" name="law-lens-runtime-animation" id="runtime-animation-engineering">
               <b>Runtime / Animation</b>
               <strong>Runtime Law + Animation Law</strong>
-
-              <div class="definition platform-copy">
-                <p>
-                  Runtime Law means motion must serve the page instead of taking over the page. Not every chamber needs heavy movement. Some pages should guide, some should prove, some should display, and some should simply let the visitor move clearly.
-                </p>
-                <p>
-                  Animation Law means motion can show relationship, hierarchy, and energy, but it cannot replace structure. If the page only makes sense while moving, the animation has become a crutch.
-                </p>
-              </div>
-
-              <div class="definition engineering-copy">
-                <p>
-                  Runtime Law constrains motion authority to the route class that actually requires it. Static law pages must not import heavy render chains, canvas engines, or unrelated runtime systems unless the route contract explicitly authorizes them.
-                </p>
-                <p>
-                  Animation Law allows visual motion only when it preserves semantic hierarchy, route usability, accessibility, and reduced-motion fallback. Animation may express relationships but may not become the source of route truth.
-                </p>
-              </div>
-
-              <div class="mini-grid">
-                <div class="mini-box">
-                  <h4>Governs</h4>
-                  <ul>
-                    <li>Motion behavior</li>
-                    <li>Animation scope</li>
-                    <li>Runtime containment</li>
-                    <li>Reduced-motion safety</li>
-                    <li>Static readability</li>
-                  </ul>
+              <div class="card-lens-scope">
+                <div class="local-toggle-row" role="radiogroup" aria-label="Runtime and Animation language lens">
+                  <label class="local-toggle-label" for="runtime-animation-platform" tabindex="0">Platform</label>
+                  <label class="local-toggle-label" for="runtime-animation-engineering" tabindex="0">Engineering</label>
                 </div>
-                <div class="mini-box">
-                  <h4>Prevents</h4>
-                  <ul>
-                    <li>Heavy runtime on static pages</li>
-                    <li>Motion hiding weak hierarchy</li>
-                    <li>Decorative effects replacing function</li>
-                    <li>Mobile usability damage</li>
-                    <li>Reduced-motion failure</li>
-                  </ul>
+                <div class="definition card-platform">
+                  <p>Runtime Law means motion must serve the page instead of taking over the page. Not every chamber needs heavy movement. Some pages should guide, some should prove, some should display, and some should simply let the visitor move clearly.</p>
+                  <p>Animation Law means motion can show relationship, hierarchy, and energy, but it cannot replace structure. If the page only makes sense while moving, the animation has become a crutch.</p>
+                </div>
+                <div class="definition card-engineering">
+                  <p>Runtime Law constrains motion authority to the route class that actually requires it. Static law pages must not import heavy render chains, canvas engines, or unrelated runtime systems unless the route contract explicitly authorizes them.</p>
+                  <p>Animation Law allows visual motion only when it preserves semantic hierarchy, route usability, accessibility, and reduced-motion fallback. Animation may express relationships but may not become the source of route truth.</p>
                 </div>
               </div>
-
-              <div class="audit-question">
-                <span>Audit question</span>
-                Does the page remain usable, understandable, and structurally accurate if animation is disabled?
-              </div>
-
+              <div class="mini-grid"><div class="mini-box"><h4>Governs</h4><ul><li>Motion behavior</li><li>Animation scope</li><li>Runtime containment</li><li>Reduced-motion safety</li><li>Static readability</li></ul></div><div class="mini-box"><h4>Prevents</h4><ul><li>Heavy runtime on static pages</li><li>Motion hiding weak hierarchy</li><li>Decorative effects replacing function</li><li>Mobile usability damage</li><li>Reduced-motion failure</li></ul></div></div>
+              <div class="audit-question"><span>Audit question</span>Does the page remain usable, understandable, and structurally accurate if animation is disabled?</div>
               <a class="return-chip" href="#law-diamonds">Return to Orbit</a>
             </article>
 
             <article class="law-summary-card" id="generation-visual">
+              <input class="card-radio" type="radio" name="law-lens-generation-visual" id="generation-visual-platform" checked>
+              <input class="card-radio" type="radio" name="law-lens-generation-visual" id="generation-visual-engineering">
               <b>Generation / Visual Claim</b>
               <strong>Generation Law + Visual Claim Law</strong>
-
-              <div class="definition platform-copy">
-                <p>
-                  Generation Law means a page must not pretend a future stage is already complete. A baseline is a starting standard, not the finish line. Each generation should say what it proves and what still remains open.
-                </p>
-                <p>
-                  Visual Claim Law means beautiful does not automatically mean true. A diamond, planet, orbit, animation, or polished layout can help people understand the page, but visual polish is not the same as source truth, scientific proof, readiness, or final approval.
-                </p>
-              </div>
-
-              <div class="definition engineering-copy">
-                <p>
-                  Generation Law requires generation labels to remain bounded to the actual state achieved. Baseline, readiness, visual quality, source completeness, runtime stability, and proof status must remain distinct fields.
-                </p>
-                <p>
-                  Visual Claim Law prohibits treating rendered appearance, generated graphics, screenshots, animation, or aesthetic polish as proof of source truth. Visual-pass status must remain false unless explicitly accepted through the proper review path.
-                </p>
-              </div>
-
-              <div class="mini-grid">
-                <div class="mini-box">
-                  <h4>Governs</h4>
-                  <ul>
-                    <li>Baselines</li>
-                    <li>Generation labels</li>
-                    <li>Visual readiness</li>
-                    <li>Source truth</li>
-                    <li>Status claims</li>
-                  </ul>
+              <div class="card-lens-scope">
+                <div class="local-toggle-row" role="radiogroup" aria-label="Generation and Visual Claim language lens">
+                  <label class="local-toggle-label" for="generation-visual-platform" tabindex="0">Platform</label>
+                  <label class="local-toggle-label" for="generation-visual-engineering" tabindex="0">Engineering</label>
                 </div>
-                <div class="mini-box">
-                  <h4>Prevents</h4>
-                  <ul>
-                    <li>Calling a baseline complete</li>
-                    <li>Treating polish as proof</li>
-                    <li>Overclaiming screenshots</li>
-                    <li>False readiness claims</li>
-                    <li>Confusing beauty with verification</li>
-                  </ul>
+                <div class="definition card-platform">
+                  <p>Generation Law means a page must not pretend a future stage is already complete. A baseline is a starting standard, not the finish line. Each generation should say what it proves and what still remains open.</p>
+                  <p>Visual Claim Law means beautiful does not automatically mean true. A diamond, planet, orbit, animation, or polished layout can help people understand the page, but visual polish is not the same as source truth, scientific proof, readiness, or final approval.</p>
+                </div>
+                <div class="definition card-engineering">
+                  <p>Generation Law requires generation labels to remain bounded to the actual state achieved. Baseline, readiness, visual quality, source completeness, runtime stability, and proof status must remain distinct fields.</p>
+                  <p>Visual Claim Law prohibits treating rendered appearance, generated graphics, screenshots, animation, or aesthetic polish as proof of source truth. Visual-pass status must remain false unless explicitly accepted through the proper review path.</p>
                 </div>
               </div>
-
-              <div class="audit-question">
-                <span>Audit question</span>
-                Is the page claiming only what the current source, route behavior, receipt, and visual review actually support?
-              </div>
-
+              <div class="mini-grid"><div class="mini-box"><h4>Governs</h4><ul><li>Baselines</li><li>Generation labels</li><li>Visual readiness</li><li>Source truth</li><li>Status claims</li></ul></div><div class="mini-box"><h4>Prevents</h4><ul><li>Calling a baseline complete</li><li>Treating polish as proof</li><li>Overclaiming screenshots</li><li>False readiness claims</li><li>Confusing beauty with verification</li></ul></div></div>
+              <div class="audit-question"><span>Audit question</span>Is the page claiming only what the current source, route behavior, receipt, and visual review actually support?</div>
               <a class="return-chip" href="#law-diamonds">Return to Orbit</a>
             </article>
 
             <article class="law-summary-card" id="human-interaction">
+              <input class="card-radio" type="radio" name="law-lens-human-interaction" id="human-interaction-platform" checked>
+              <input class="card-radio" type="radio" name="law-lens-human-interaction" id="human-interaction-engineering">
               <b>Human / Interaction</b>
               <strong>Human Boundary Law + Interaction Law</strong>
-
-              <div class="definition platform-copy">
-                <p>
-                  Human Boundary Law means the system can help organize, explain, prepare, and clarify, but it must not pretend to replace qualified authority where qualified authority is required. The bridge can support decisions without overstepping its role.
-                </p>
-                <p>
-                  Interaction Law means people should be able to tell what can be clicked, touched, opened, dragged, read, or ignored. A visitor should not have to guess which objects are controls and which objects are decoration.
-                </p>
-              </div>
-
-              <div class="definition engineering-copy">
-                <p>
-                  Human Boundary Law requires high-stakes areas including medical, legal, financial, safety, scientific, official, and professional claims to preserve appropriate verification boundaries and not impersonate credentialed authority.
-                </p>
-                <p>
-                  Interaction Law requires interactive elements to be visually and structurally distinguishable from decorative elements. Links, buttons, route diamonds, toggles, controls, and anchors must communicate function before activation.
-                </p>
-              </div>
-
-              <div class="mini-grid">
-                <div class="mini-box">
-                  <h4>Governs</h4>
-                  <ul>
-                    <li>Safety boundaries</li>
-                    <li>Public claims</li>
-                    <li>Clickable objects</li>
-                    <li>Decorative objects</li>
-                    <li>High-stakes support</li>
-                  </ul>
+              <div class="card-lens-scope">
+                <div class="local-toggle-row" role="radiogroup" aria-label="Human and Interaction language lens">
+                  <label class="local-toggle-label" for="human-interaction-platform" tabindex="0">Platform</label>
+                  <label class="local-toggle-label" for="human-interaction-engineering" tabindex="0">Engineering</label>
                 </div>
-                <div class="mini-box">
-                  <h4>Prevents</h4>
-                  <ul>
-                    <li>Reckless authority</li>
-                    <li>Confusing support with final advice</li>
-                    <li>Fake controls</li>
-                    <li>Hidden interaction paths</li>
-                    <li>Unclear interface behavior</li>
-                  </ul>
+                <div class="definition card-platform">
+                  <p>Human Boundary Law means the system can help organize, explain, prepare, and clarify, but it must not pretend to replace qualified authority where qualified authority is required. The bridge can support decisions without overstepping its role.</p>
+                  <p>Interaction Law means people should be able to tell what can be clicked, touched, opened, dragged, read, or ignored. A visitor should not have to guess which objects are controls and which objects are decoration.</p>
+                </div>
+                <div class="definition card-engineering">
+                  <p>Human Boundary Law requires high-stakes areas including medical, legal, financial, safety, scientific, official, and professional claims to preserve appropriate verification boundaries and not impersonate credentialed authority.</p>
+                  <p>Interaction Law requires interactive elements to be visually and structurally distinguishable from decorative elements. Links, buttons, route diamonds, toggles, controls, and anchors must communicate function before activation.</p>
                 </div>
               </div>
-
-              <div class="audit-question">
-                <span>Audit question</span>
-                Can a user tell what this page is allowed to help with, what still needs verification, and what objects they can interact with?
-              </div>
-
+              <div class="mini-grid"><div class="mini-box"><h4>Governs</h4><ul><li>Safety boundaries</li><li>Public claims</li><li>Clickable objects</li><li>Decorative objects</li><li>High-stakes support</li></ul></div><div class="mini-box"><h4>Prevents</h4><ul><li>Reckless authority</li><li>Confusing support with final advice</li><li>Fake controls</li><li>Hidden interaction paths</li><li>Unclear interface behavior</li></ul></div></div>
+              <div class="audit-question"><span>Audit question</span>Can a user tell what this page is allowed to help with, what still needs verification, and what objects they can interact with?</div>
               <a class="return-chip" href="#law-diamonds">Return to Orbit</a>
             </article>
 
             <article class="law-summary-card" id="access-return">
+              <input class="card-radio" type="radio" name="law-lens-access-return" id="access-return-platform" checked>
+              <input class="card-radio" type="radio" name="law-lens-access-return" id="access-return-engineering">
               <b>Access / Return</b>
               <strong>Access Law + Return Law</strong>
-
-              <div class="definition platform-copy">
-                <p>
-                  Access Law means the law layer must remain reachable. A governing chamber that cannot be found cannot govern the experience. The visitor should be able to reach Laws from the public route system without hunting.
-                </p>
-                <p>
-                  Return Law means every outward movement needs a way back. Exploration should not become abandonment. The bridge can expand only if the visitor can re-anchor after each move.
-                </p>
-              </div>
-
-              <div class="definition engineering-copy">
-                <p>
-                  Access Law requires core public routes, governing pages, proof pages, branch pages, and major chambers to remain discoverable from the route system. Laws must not become an orphan route.
-                </p>
-                <p>
-                  Return Law requires every outward route, section jump, branch entry, or deep content movement to preserve an explicit re-anchoring path. On this page, grouped law summaries return to the large law-category diamonds at #law-diamonds.
-                </p>
-              </div>
-
-              <div class="mini-grid">
-                <div class="mini-box">
-                  <h4>Governs</h4>
-                  <ul>
-                    <li>Public reachability</li>
-                    <li>Route loops</li>
-                    <li>Return anchors</li>
-                    <li>Page-changing routes</li>
-                    <li>Visitor reorientation</li>
-                  </ul>
+              <div class="card-lens-scope">
+                <div class="local-toggle-row" role="radiogroup" aria-label="Access and Return language lens">
+                  <label class="local-toggle-label" for="access-return-platform" tabindex="0">Platform</label>
+                  <label class="local-toggle-label" for="access-return-engineering" tabindex="0">Engineering</label>
                 </div>
-                <div class="mini-box">
-                  <h4>Prevents</h4>
-                  <ul>
-                    <li>Isolated law pages</li>
-                    <li>One-way navigation</li>
-                    <li>Lost context</li>
-                    <li>Outbound routes without return</li>
-                    <li>Long-page disorientation</li>
-                  </ul>
+                <div class="definition card-platform">
+                  <p>Access Law means the law layer must remain reachable. A governing chamber that cannot be found cannot govern the experience. The visitor should be able to reach Laws from the public route system without hunting.</p>
+                  <p>Return Law means every outward movement needs a way back. Exploration should not become abandonment. The bridge can expand only if the visitor can re-anchor after each move.</p>
+                </div>
+                <div class="definition card-engineering">
+                  <p>Access Law requires core public routes, governing pages, proof pages, branch pages, and major chambers to remain discoverable from the route system. Laws must not become an orphan route.</p>
+                  <p>Return Law requires every outward route, section jump, branch entry, or deep content movement to preserve an explicit re-anchoring path. On this page, grouped law summaries return to the large law-category diamonds at #law-diamonds.</p>
                 </div>
               </div>
-
-              <div class="audit-question">
-                <span>Audit question</span>
-                Can a visitor reach the law chamber, move through it, and return to the correct category or route anchor without confusion?
-              </div>
-
+              <div class="mini-grid"><div class="mini-box"><h4>Governs</h4><ul><li>Public reachability</li><li>Route loops</li><li>Return anchors</li><li>Page-changing routes</li><li>Visitor reorientation</li></ul></div><div class="mini-box"><h4>Prevents</h4><ul><li>Isolated law pages</li><li>One-way navigation</li><li>Lost context</li><li>Outbound routes without return</li><li>Long-page disorientation</li></ul></div></div>
+              <div class="audit-question"><span>Audit question</span>Can a visitor reach the law chamber, move through it, and return to the correct category or route anchor without confusion?</div>
               <a class="return-chip" href="#law-diamonds">Return to Orbit</a>
             </article>
 
             <article class="law-summary-card" id="product-foreground">
+              <input class="card-radio" type="radio" name="law-lens-product-foreground" id="product-foreground-platform" checked>
+              <input class="card-radio" type="radio" name="law-lens-product-foreground" id="product-foreground-engineering">
               <b>Product / Foreground</b>
               <strong>Product and Planet Separation Law + Foreground Law</strong>
-
-              <div class="definition platform-copy">
-                <p>
-                  Product and Planet Separation Law means different kinds of things must not be blended just because they share a visual style. Products, planets, laws, estate routes, proof routes, and story chambers each have different responsibilities.
-                </p>
-                <p>
-                  Foreground Law means the most important controls must stay visible: law, entry, proof, and return. A beautiful page still fails if the visitor loses the governing controls.
-                </p>
-              </div>
-
-              <div class="definition engineering-copy">
-                <p>
-                  Product and Planet Separation Law preserves route-class boundaries between product chambers, estate/navigation chambers, law chambers, scientific/proof branches, planetary constructs, and display/showroom objects.
-                </p>
-                <p>
-                  Foreground Law requires governing controls such as Laws, Entry, Proof, Return, branch routes, and core navigation anchors to remain visible enough to preserve page function and audit usability.
-                </p>
-              </div>
-
-              <div class="mini-grid">
-                <div class="mini-box">
-                  <h4>Governs</h4>
-                  <ul>
-                    <li>Route class separation</li>
-                    <li>Product identity</li>
-                    <li>Planet identity</li>
-                    <li>Law identity</li>
-                    <li>Foreground controls</li>
-                  </ul>
+              <div class="card-lens-scope">
+                <div class="local-toggle-row" role="radiogroup" aria-label="Product and Foreground language lens">
+                  <label class="local-toggle-label" for="product-foreground-platform" tabindex="0">Platform</label>
+                  <label class="local-toggle-label" for="product-foreground-engineering" tabindex="0">Engineering</label>
                 </div>
-                <div class="mini-box">
-                  <h4>Prevents</h4>
-                  <ul>
-                    <li>Products pretending to be planets</li>
-                    <li>Planets pretending to be products</li>
-                    <li>Law routes becoming product pages</li>
-                    <li>Proof routes buried under decoration</li>
-                    <li>Important controls disappearing</li>
-                  </ul>
+                <div class="definition card-platform">
+                  <p>Product and Planet Separation Law means different kinds of things must not be blended just because they share a visual style. Products, planets, laws, estate routes, proof routes, and story chambers each have different responsibilities.</p>
+                  <p>Foreground Law means the most important controls must stay visible: law, entry, proof, and return. A beautiful page still fails if the visitor loses the governing controls.</p>
+                </div>
+                <div class="definition card-engineering">
+                  <p>Product and Planet Separation Law preserves route-class boundaries between product chambers, estate/navigation chambers, law chambers, scientific/proof branches, planetary constructs, and display/showroom objects.</p>
+                  <p>Foreground Law requires governing controls such as Laws, Entry, Proof, Return, branch routes, and core navigation anchors to remain visible enough to preserve page function and audit usability.</p>
                 </div>
               </div>
-
-              <div class="audit-question">
-                <span>Audit question</span>
-                Is each object still in the correct route class, and are the governing controls still foregrounded?
-              </div>
-
+              <div class="mini-grid"><div class="mini-box"><h4>Governs</h4><ul><li>Route class separation</li><li>Product identity</li><li>Planet identity</li><li>Law identity</li><li>Foreground controls</li></ul></div><div class="mini-box"><h4>Prevents</h4><ul><li>Products pretending to be planets</li><li>Planets pretending to be products</li><li>Law routes becoming product pages</li><li>Proof routes buried under decoration</li><li>Important controls disappearing</li></ul></div></div>
+              <div class="audit-question"><span>Audit question</span>Is each object still in the correct route class, and are the governing controls still foregrounded?</div>
               <a class="return-chip" href="#law-diamonds">Return to Orbit</a>
             </article>
 
             <article class="law-summary-card" id="scope-stale">
+              <input class="card-radio" type="radio" name="law-lens-scope-stale" id="scope-stale-platform" checked>
+              <input class="card-radio" type="radio" name="law-lens-scope-stale" id="scope-stale-engineering">
               <b>Scope / Stale Language</b>
               <strong>Scope Law + Stale Language Law</strong>
-
-              <div class="definition platform-copy">
-                <p>
-                  Scope Law means a change must stay inside the boundary that was authorized. If one file is being changed, the change should not silently become a full system rewrite. Scope keeps momentum from becoming damage.
-                </p>
-                <p>
-                  Stale Language Law means old labels must not keep controlling current pages after the page has moved on. Old names, retired modes, and previous route logic can stay only when they are intentionally preserved.
-                </p>
-              </div>
-
-              <div class="definition engineering-copy">
-                <p>
-                  Scope Law requires touched files to be delivered as full-file TNT replacements and confines the renewal to the authorized file, route, and contract. No partial snippets or unauthorized neighboring file mutations control project state.
-                </p>
-                <p>
-                  Stale Language Law prohibits retired labels, old route identities, deprecated mode names, or prior generation language from remaining active unless the current route contract explicitly preserves them.
-                </p>
-              </div>
-
-              <div class="mini-grid">
-                <div class="mini-box">
-                  <h4>Governs</h4>
-                  <ul>
-                    <li>TNT scope</li>
-                    <li>File boundaries</li>
-                    <li>Route language</li>
-                    <li>Retired labels</li>
-                    <li>Current page identity</li>
-                  </ul>
+              <div class="card-lens-scope">
+                <div class="local-toggle-row" role="radiogroup" aria-label="Scope and Stale Language lens">
+                  <label class="local-toggle-label" for="scope-stale-platform" tabindex="0">Platform</label>
+                  <label class="local-toggle-label" for="scope-stale-engineering" tabindex="0">Engineering</label>
                 </div>
-                <div class="mini-box">
-                  <h4>Prevents</h4>
-                  <ul>
-                    <li>Partial patches controlling state</li>
-                    <li>Accidental rewrites</li>
-                    <li>Old labels returning as active logic</li>
-                    <li>Deprecated modes confusing visitors</li>
-                    <li>Prior contracts overriding current bindings</li>
-                  </ul>
+                <div class="definition card-platform">
+                  <p>Scope Law means a change must stay inside the boundary that was authorized. If one file is being changed, the change should not silently become a full system rewrite. Scope keeps momentum from becoming damage.</p>
+                  <p>Stale Language Law means old labels must not keep controlling current pages after the page has moved on. Old names, retired modes, and previous route logic can stay only when they are intentionally preserved.</p>
+                </div>
+                <div class="definition card-engineering">
+                  <p>Scope Law requires touched files to be delivered as full-file TNT replacements and confines the renewal to the authorized file, route, and contract. No partial snippets or unauthorized neighboring file mutations control project state.</p>
+                  <p>Stale Language Law prohibits retired labels, old route identities, deprecated mode names, or prior generation language from remaining active unless the current route contract explicitly preserves them.</p>
                 </div>
               </div>
-
-              <div class="audit-question">
-                <span>Audit question</span>
-                Is the change confined to the authorized file and free of old language that no longer controls the page?
-              </div>
-
+              <div class="mini-grid"><div class="mini-box"><h4>Governs</h4><ul><li>TNT scope</li><li>File boundaries</li><li>Route language</li><li>Retired labels</li><li>Current page identity</li></ul></div><div class="mini-box"><h4>Prevents</h4><ul><li>Partial patches controlling state</li><li>Accidental rewrites</li><li>Old labels returning as active logic</li><li>Deprecated modes confusing visitors</li><li>Prior contracts overriding current bindings</li></ul></div></div>
+              <div class="audit-question"><span>Audit question</span>Is the change confined to the authorized file and free of old language that no longer controls the page?</div>
               <a class="return-chip" href="#law-diamonds">Return to Orbit</a>
             </article>
           </div>
@@ -1877,47 +1446,45 @@
         <section class="panel section" id="route-logic" aria-labelledby="route-logic-title">
           <div class="kicker">Route logic</div>
           <div class="branch">
-            <strong id="route-logic-title" class="platform-copy">A diamond can leave the page and still belong to Laws.</strong>
-            <strong class="engineering-copy">Layout is page-change based. Color is law-affiliation based. Size is same-page primary-content based.</strong>
+            <strong id="route-logic-title" class="page-platform">A diamond can leave the page and still belong to Laws.</strong>
+            <strong class="page-engineering">Layout is page-change based. Color is law-affiliation based. Size is same-page primary-content based.</strong>
 
-            <p class="platform-copy">
+            <p class="page-platform">
               Scientific Law and Reality stay white because they are law-affiliated. Compass, Door, Home, Manor, Products, Showroom, Frontier, and Gauges turn gold because they leave the Laws category. “Return to Orbit” inside the law content returns to the large law-category diamonds.
             </p>
-            <p class="engineering-copy">
+            <p class="page-engineering">
               Page-changing controls live in the top route orbit. Law-affiliated route changes remain white crystal. Non-law route changes use route-color treatment. Same-page law anchors remain large white diamonds below the orbit, and grouped law cards return to #law-diamonds.
             </p>
           </div>
         </section>
 
         <template id="route-receipt" data-route-receipt>
-LAWS_PAGE_EXPANDED_LAW_DEFINITIONS_PLATFORM_ENGINEERING_TNT_v1
-binding=LAWS_PAGE_EXPANDED_LAW_DEFINITIONS_PLATFORM_ENGINEERING_PREGAME_TO_POSTGAME_BINDING_v1
+LAWS_PAGE_LOCAL_LAW_CARD_LANGUAGE_TOGGLE_TNT_v1
+binding=LAWS_PAGE_LOCAL_LAW_CARD_LANGUAGE_TOGGLE_PREGAME_TO_POSTGAME_BINDING_v1
 route=/laws/
 target=/laws/index.html
-expanded_law_definitions=true
-all_sixteen_laws_defined=true
-platform_engineering_toggle_preserved=true
-toggle_changes_language_only=true
-platform_copy_expanded=true
-engineering_copy_expanded=true
-governs_prevents_audit_question_added=true
+top_global_toggle_preserved=true
+local_law_card_toggles=true
+local_toggles_default_platform=true
+local_toggles_control_own_card_only=true
+engineering_available_inside_each_law_card=true
+platform_available_inside_each_law_card=true
+all_sixteen_laws_remain_defined=true
+return_to_orbit_target=law_diamonds
 top_route_orbit_preserved=true
 large_law_category_diamonds_preserved=true
-return_to_orbit_target=law_diamonds
-route_grid_removed=true
+javascript_dependency=false
+heavy_runtime=false
 generated_image=false
 graphic_block=false
-heavy_runtime=false
-javascript_dependency=false
-external_legacy_css_dependency=false
 visual_pass_claimed=false
-deploy_marker=LAWS_PAGE_EXPANDED_LAW_DEFINITIONS_PLATFORM_ENGINEERING_DEPLOY_MARKER_v1
+deploy_marker=LAWS_PAGE_LOCAL_LAW_CARD_LANGUAGE_TOGGLE_DEPLOY_MARKER_v1
         </template>
       </div>
     </main>
 
     <footer>
-      LAWS_PAGE_EXPANDED_LAW_DEFINITIONS_PLATFORM_ENGINEERING_TNT_v1 · Laws · Expanded definitions · Platform / Engineering language layers.
+      LAWS_PAGE_LOCAL_LAW_CARD_LANGUAGE_TOGGLE_TNT_v1 · Laws · Local Platform / Engineering toggles.
     </footer>
   </div>
 </body>

@@ -4,14 +4,16 @@
   lang="en"
   data-route="/laws/"
   data-page="laws"
-  data-version="G5-V1"
-  data-contract="LAWS_PAGE_GEM_SIZE_HIERARCHY_AND_ORBIT_GEM_TNT_v1"
-  data-source-binding="LAWS_PAGE_GEM_SIZE_HIERARCHY_AND_ORBIT_GEM_PREGAME_TO_POSTGAME_BINDING_v1"
+  data-version="G6-V1"
+  data-contract="LAWS_PAGE_TWO_DIAMOND_ARCHITECTURE_TNT_v1"
+  data-source-binding="LAWS_PAGE_TWO_DIAMOND_ARCHITECTURE_PREGAME_TO_POSTGAME_BINDING_v1"
   data-branch="laws"
   data-role="law-chamber"
-  data-large-law-diamonds="white-crystal"
-  data-small-orbit-route-gems="route-color-differentiated"
-  data-both-diamond-styles-active="true"
+  data-large-law-diamonds="white-crystal-grouped-law-content"
+  data-small-orbital-route-diamonds="route-color-outbound-navigation"
+  data-outbound-route-grid-removed="true"
+  data-one-orbital-path="true"
+  data-page-length-reduced="true"
   data-sixteen-laws-preserved="true"
   data-sixteen-laws-grouped="true"
   data-scientific-law-branch-preserved="true"
@@ -19,7 +21,7 @@
   data-javascript-dependency="false"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
-  data-graphic-box="false"
+  data-graphic-block="false"
   data-visual-pass-claimed="false"
 >
 <head>
@@ -29,7 +31,7 @@
   <title>Laws · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Laws chamber: proof outranks confidence. Large white crystal law diamonds hold law content; smaller route-colored orbit gems leave the Laws page."
+    content="Diamond Gate Bridge Laws chamber: proof outranks confidence. Large white crystal law diamonds hold grouped law content; smaller route-colored orbit diamonds leave the Laws page."
   >
 
   <style>
@@ -241,7 +243,7 @@
 
     .hero{
       position:relative;
-      min-height:clamp(30rem,55vw,42rem);
+      min-height:clamp(26rem,44vw,36rem);
       display:grid;
       align-content:center;
       gap:1rem;
@@ -414,44 +416,6 @@
       isolation:isolate;
     }
 
-    .gem-stage::before,
-    .gem-stage::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:50%;
-      z-index:-1;
-      border-radius:50%;
-      transform:translate(-50%,-50%);
-      pointer-events:none;
-    }
-
-    .gem-stage::before{
-      width:min(88%,46rem);
-      height:min(62%,26rem);
-      border:1px solid rgba(243,200,111,.13);
-      box-shadow:0 0 3rem rgba(36,120,255,.12),inset 0 0 30px rgba(141,216,255,.045);
-      animation:orbitTurn 42s linear infinite;
-    }
-
-    .gem-stage::after{
-      width:min(64%,31rem);
-      height:min(45%,19rem);
-      border:1px solid rgba(141,216,255,.13);
-      box-shadow:0 0 3rem rgba(141,216,255,.08);
-      animation:orbitTurnReverse 38s linear infinite;
-    }
-
-    @keyframes orbitTurn{
-      from{transform:translate(-50%,-50%) rotate(-12deg)}
-      to{transform:translate(-50%,-50%) rotate(348deg)}
-    }
-
-    @keyframes orbitTurnReverse{
-      from{transform:translate(-50%,-50%) rotate(24deg)}
-      to{transform:translate(-50%,-50%) rotate(-336deg)}
-    }
-
     .large-law-field{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
@@ -566,6 +530,43 @@
       text-transform:uppercase;
     }
 
+    .law-summary-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.75rem;
+    }
+
+    .law-summary-card{
+      display:grid;
+      gap:.52rem;
+      padding:.9rem;
+      border:1px solid rgba(232,248,255,.14);
+      border-radius:1rem;
+      background:
+        radial-gradient(circle at 18% 0%,rgba(232,248,255,.08),transparent 22rem),
+        rgba(255,255,255,.032);
+      scroll-margin-top:1rem;
+    }
+
+    .law-summary-card b{
+      color:var(--gold);
+      font-size:.65rem;
+      font-weight:950;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .law-summary-card strong{
+      color:rgba(255,244,216,.98);
+      font-size:1rem;
+      line-height:1.08;
+    }
+
+    .law-summary-card p{
+      font-size:.88rem;
+      line-height:1.42;
+    }
+
     .orbit-stage{
       position:relative;
       min-height:clamp(27rem,54vw,39rem);
@@ -605,6 +606,16 @@
       height:min(62%,25rem);
       border:1px solid rgba(141,216,255,.14);
       animation:orbitTurnReverse 46s linear infinite;
+    }
+
+    @keyframes orbitTurn{
+      from{transform:translate(-50%,-50%) rotate(-12deg)}
+      to{transform:translate(-50%,-50%) rotate(348deg)}
+    }
+
+    @keyframes orbitTurnReverse{
+      from{transform:translate(-50%,-50%) rotate(24deg)}
+      to{transform:translate(-50%,-50%) rotate(-336deg)}
     }
 
     .orbit-center{
@@ -690,116 +701,6 @@
       text-transform:uppercase;
     }
 
-    .legend{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:.75rem;
-    }
-
-    .legend-card{
-      padding:.85rem .95rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1rem;
-      background:rgba(255,255,255,.035);
-    }
-
-    .legend-card b{
-      display:block;
-      margin-bottom:.25rem;
-      color:var(--gold);
-      font-size:.72rem;
-      font-weight:950;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-    }
-
-    .legend-card p{
-      font-size:.92rem;
-      line-height:1.45;
-    }
-
-    .law-groups{
-      display:grid;
-      gap:1rem;
-    }
-
-    .law-group{
-      display:grid;
-      gap:.9rem;
-      padding:1rem;
-      border:1px solid rgba(232,248,255,.14);
-      border-radius:1.35rem;
-      background:
-        radial-gradient(circle at 12% 0%,rgba(232,248,255,.08),transparent 28rem),
-        rgba(255,255,255,.025);
-      scroll-margin-top:1rem;
-    }
-
-    .law-group-head{
-      display:grid;
-      gap:.4rem;
-    }
-
-    .law-group-head b{
-      color:var(--gold);
-      font-size:.72rem;
-      font-weight:950;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:.9rem;
-    }
-
-    .card{
-      display:grid;
-      gap:.7rem;
-      min-height:100%;
-      padding:1rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.2rem;
-      background:
-        radial-gradient(circle at 18% 0%,rgba(141,216,255,.08),transparent 22rem),
-        linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.024));
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-    }
-
-    .card b{
-      color:var(--gold);
-      font-size:.70rem;
-      font-weight:950;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-    }
-
-    .card p,
-    .card li{
-      font-size:.96rem;
-      line-height:1.52;
-      color:var(--muted);
-    }
-
-    .law-card{
-      position:relative;
-      overflow:hidden;
-    }
-
-    .law-card::before{
-      content:"";
-      position:absolute;
-      right:.9rem;
-      top:.9rem;
-      width:2rem;
-      height:2rem;
-      border:1px solid rgba(232,248,255,.26);
-      border-radius:.55rem;
-      transform:rotate(45deg);
-      background:rgba(232,248,255,.06);
-    }
-
     .branch{
       padding:1rem;
       border:1px solid rgba(243,200,111,.28);
@@ -844,14 +745,13 @@
     }
 
     @media (max-width:1080px){
-      .large-law-field{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .large-law-field,
+      .law-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
     @media (max-width:900px){
       .topbar{grid-template-columns:1fr}
       .nav{justify-content:flex-start}
-      .grid,
-      .legend{grid-template-columns:1fr}
       .orbit-stage{
         min-height:auto;
         display:grid;
@@ -883,14 +783,15 @@
     @media (max-width:640px){
       .shell{width:min(var(--max),calc(100% - 20px))}
       .topbar{padding:.72rem;border-radius:1.05rem}
-      .hero{min-height:34rem;padding:1rem}
+      .hero{min-height:31rem;padding:1rem}
       .hero::after{opacity:.36;right:-4rem}
       h1{font-size:clamp(3rem,16vw,5.15rem)}
       .actions{display:grid}
       .button{width:100%}
       .section{padding:1rem}
       .gem-stage{padding:1rem}
-      .large-law-field{grid-template-columns:1fr}
+      .large-law-field,
+      .law-summary-grid{grid-template-columns:1fr}
       .large-law-diamond{min-height:10rem}
       .orbit-stage{grid-template-columns:1fr}
       .orbit-gem{height:6.6rem}
@@ -909,8 +810,6 @@
       .gem-core,
       .gem-glint,
       .gem-star,
-      .gem-stage::before,
-      .gem-stage::after,
       .orbit-stage::before,
       .orbit-stage::after,
       .orbit-gem{
@@ -1073,7 +972,7 @@
         <h1 id="page-title">Proof outranks confidence.</h1>
 
         <p class="lead">
-          The law chamber keeps authority, routes, proof, runtime, generation, products, planets, human boundaries, scientific law, receipts, and return paths available.
+          The law chamber keeps authority, route, proof, runtime, generation, boundary, receipt, access, scope, and return logic available without turning every control into the same size.
         </p>
 
         <div class="truth-card">
@@ -1082,70 +981,59 @@
 
         <div class="actions">
           <a class="button gold" href="#law-diamonds">Large Law Diamonds</a>
+          <a class="button" href="#law-summary">Read Laws</a>
           <a class="button" href="#route-orbit">Small Route Orbit</a>
           <a class="button" href="/laws/scientific-law/">Scientific Law</a>
-          <a class="button" href="/gauges/">Read Proof</a>
         </div>
       </section>
 
       <section class="panel section" id="law-diamonds" aria-labelledby="law-diamonds-title">
         <div class="kicker">Large white crystal law diamonds</div>
         <div class="section-header">
-          <h2 id="law-diamonds-title">Large diamonds carry the law content.</h2>
+          <h2 id="law-diamonds-title">Large diamonds carry grouped law content.</h2>
           <p>
-            These are the primary current-page law diamonds. Every law-dedicated diamond uses the same white crystal color so visitors know they are still inside the Laws chamber.
+            This is the primary law interface. Eight large white crystals replace sixteen competing oversized diamonds.
           </p>
-        </div>
-
-        <div class="legend">
-          <div class="legend-card">
-            <b>Large White Crystal Diamonds</b>
-            <p>Primary law content. These stay inside /laws/ and open grouped law sections below.</p>
-          </div>
-          <div class="legend-card">
-            <b>Small Route-Color Orbit Gems</b>
-            <p>Secondary navigation. These leave the Laws page and use a different amber / blue-gold route-glass color.</p>
-          </div>
         </div>
 
         <div class="gem-stage" aria-label="Large grouped law diamond field">
           <div class="large-law-field">
-            <a class="large-law-diamond" href="#group-authority-route" style="--delay:-.1s;--tilt-a:-1.6deg;--tilt-b:1.8deg;">
+            <a class="large-law-diamond" href="#authority-route" style="--delay:-.1s;--tilt-a:-1.6deg;--tilt-b:1.8deg;">
               <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
               <span class="gem-label"><b>Authority / Route</b><span>Owner + Where</span></span>
             </a>
 
-            <a class="large-law-diamond" href="#group-proof-receipt" style="--delay:-.6s;--tilt-a:1.5deg;--tilt-b:-2deg;">
+            <a class="large-law-diamond" href="#proof-receipt" style="--delay:-.6s;--tilt-a:1.5deg;--tilt-b:-2deg;">
               <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
               <span class="gem-label"><b>Proof / Receipt</b><span>Gauges + Record</span></span>
             </a>
 
-            <a class="large-law-diamond" href="#group-runtime-animation" style="--delay:-1.1s;--tilt-a:-2deg;--tilt-b:1.4deg;">
+            <a class="large-law-diamond" href="#runtime-animation" style="--delay:-1.1s;--tilt-a:-2deg;--tilt-b:1.4deg;">
               <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
               <span class="gem-label"><b>Runtime / Animation</b><span>Motion + Hierarchy</span></span>
             </a>
 
-            <a class="large-law-diamond" href="#group-generation-visual" style="--delay:-1.6s;--tilt-a:1.8deg;--tilt-b:-1.6deg;">
+            <a class="large-law-diamond" href="#generation-visual" style="--delay:-1.6s;--tilt-a:1.8deg;--tilt-b:-1.6deg;">
               <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
               <span class="gem-label"><b>Generation / Visual</b><span>Baseline + No False</span></span>
             </a>
 
-            <a class="large-law-diamond" href="#group-human-interaction" style="--delay:-2.1s;--tilt-a:-1.7deg;--tilt-b:2.1deg;">
+            <a class="large-law-diamond" href="#human-interaction" style="--delay:-2.1s;--tilt-a:-1.7deg;--tilt-b:2.1deg;">
               <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
               <span class="gem-label"><b>Human / Interaction</b><span>Boundary + Touch</span></span>
             </a>
 
-            <a class="large-law-diamond" href="#group-access-return" style="--delay:-2.6s;--tilt-a:2deg;--tilt-b:-1.4deg;">
+            <a class="large-law-diamond" href="#access-return" style="--delay:-2.6s;--tilt-a:2deg;--tilt-b:-1.4deg;">
               <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
               <span class="gem-label"><b>Access / Return</b><span>Reachable + Back Path</span></span>
             </a>
 
-            <a class="large-law-diamond" href="#group-product-foreground" style="--delay:-3.1s;--tilt-a:-1.6deg;--tilt-b:1.9deg;">
+            <a class="large-law-diamond" href="#product-foreground" style="--delay:-3.1s;--tilt-a:-1.6deg;--tilt-b:1.9deg;">
               <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
               <span class="gem-label"><b>Product / Foreground</b><span>Separate + Core</span></span>
             </a>
 
-            <a class="large-law-diamond" href="#group-scope-stale" style="--delay:-3.6s;--tilt-a:1.7deg;--tilt-b:-1.8deg;">
+            <a class="large-law-diamond" href="#scope-stale" style="--delay:-3.6s;--tilt-a:1.7deg;--tilt-b:-1.8deg;">
               <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
               <span class="gem-label"><b>Scope / Stale</b><span>Full File + Remove</span></span>
             </a>
@@ -1153,183 +1041,79 @@
         </div>
       </section>
 
-      <section class="panel section" id="law-groups" aria-labelledby="law-groups-title">
-        <div class="kicker">Grouped laws</div>
+      <section class="panel section" id="law-summary" aria-labelledby="law-summary-title">
+        <div class="kicker">Grouped law summary</div>
         <div class="section-header">
-          <h2 id="law-groups-title">Sixteen laws remain present, grouped into readable sections.</h2>
+          <h2 id="law-summary-title">Sixteen laws remain present without stretching the page.</h2>
           <p>
-            The large law diamonds reduce visual overload. The individual laws remain intact inside their grouped law blocks.
+            Each large diamond maps to one compact law group. The individual laws remain visible, but the page no longer repeats sixteen full-size controls.
           </p>
         </div>
 
-        <div class="law-groups">
-          <section class="law-group" id="group-authority-route" aria-labelledby="group-authority-route-title">
-            <div class="law-group-head">
-              <b>Group 1</b>
-              <h3 id="group-authority-route-title">Authority / Route</h3>
-            </div>
-            <div class="grid">
-              <article class="card law-card">
-                <b>Authority Law</b>
-                <h3>Root ownership stays explicit.</h3>
-                <p>Every chamber needs a route, parent, construct class, and owner function before it can make a larger claim.</p>
-              </article>
-              <article class="card law-card">
-                <b>Route Law</b>
-                <h3>Every chamber must know where it lives.</h3>
-                <p>No public chamber should float without a parent route, a return route, and a verification path.</p>
-              </article>
-            </div>
-          </section>
+        <div class="law-summary-grid">
+          <article class="law-summary-card" id="authority-route">
+            <b>Authority / Route</b>
+            <strong>Authority Law + Route Law</strong>
+            <p>Root ownership stays explicit. Every chamber must know where it lives, what owns it, and where it returns.</p>
+          </article>
 
-          <section class="law-group" id="group-proof-receipt" aria-labelledby="group-proof-receipt-title">
-            <div class="law-group-head">
-              <b>Group 2</b>
-              <h3 id="group-proof-receipt-title">Proof / Receipt</h3>
-            </div>
-            <div class="grid">
-              <article class="card law-card">
-                <b>Proof Law</b>
-                <h3>Proof outranks unsupported claims.</h3>
-                <p>Gauges, receipts, diagnostics, and visible routes outrank unsupported confidence.</p>
-              </article>
-              <article class="card law-card">
-                <b>Receipt Law</b>
-                <h3>Every major renewal leaves a receipt.</h3>
-                <p>The receipt names what changed, what stayed untouched, who owns the route, and whether visual pass is claimed.</p>
-              </article>
-            </div>
-          </section>
+          <article class="law-summary-card" id="proof-receipt">
+            <b>Proof / Receipt</b>
+            <strong>Proof Law + Receipt Law</strong>
+            <p>Gauges, receipts, diagnostics, and visible routes outrank confidence. Every renewal leaves a route receipt.</p>
+          </article>
 
-          <section class="law-group" id="group-runtime-animation" aria-labelledby="group-runtime-animation-title">
-            <div class="law-group-head">
-              <b>Group 3</b>
-              <h3 id="group-runtime-animation-title">Runtime / Animation</h3>
-            </div>
-            <div class="grid">
-              <article class="card law-card">
-                <b>Runtime Law</b>
-                <h3>Motion must stay contained.</h3>
-                <p>Static route chambers must not load heavy render chains. Runtime belongs only where runtime is needed.</p>
-              </article>
-              <article class="card law-card">
-                <b>Animation Law</b>
-                <h3>Motion expresses hierarchy; it does not replace hierarchy.</h3>
-                <p>Motion may show relationship, but the page must remain readable without motion and honor reduced-motion preferences.</p>
-              </article>
-            </div>
-          </section>
+          <article class="law-summary-card" id="runtime-animation">
+            <b>Runtime / Animation</b>
+            <strong>Runtime Law + Animation Law</strong>
+            <p>Motion must stay contained. Animation expresses hierarchy; it does not replace readable structure.</p>
+          </article>
 
-          <section class="law-group" id="group-generation-visual" aria-labelledby="group-generation-visual-title">
-            <div class="law-group-head">
-              <b>Group 4</b>
-              <h3 id="group-generation-visual-title">Generation / Visual Claim</h3>
-            </div>
-            <div class="grid">
-              <article class="card law-card">
-                <b>Generation Law</b>
-                <h3>Baseline is not false completion.</h3>
-                <p>Baseline, readiness, marker health, visual quality, and generation state must remain distinct.</p>
-              </article>
-              <article class="card law-card">
-                <b>Visual Claim Law</b>
-                <h3>Do not overclaim what a page only appears to show.</h3>
-                <p>Generated images, graphic boxes, screenshots, animation, and polish do not equal source truth.</p>
-              </article>
-            </div>
-          </section>
+          <article class="law-summary-card" id="generation-visual">
+            <b>Generation / Visual Claim</b>
+            <strong>Generation Law + Visual Claim Law</strong>
+            <p>Baseline, readiness, visual polish, and generation state remain distinct. Appearance is not source truth.</p>
+          </article>
 
-          <section class="law-group" id="group-human-interaction" aria-labelledby="group-human-interaction-title">
-            <div class="law-group-head">
-              <b>Group 5</b>
-              <h3 id="group-human-interaction-title">Human Boundary / Interaction</h3>
-            </div>
-            <div class="grid">
-              <article class="card law-card">
-                <b>Human Boundary Law</b>
-                <h3>Support must not become reckless authority.</h3>
-                <p>Medical, legal, financial, safety, scientific, and official claims must mark what still needs qualified verification.</p>
-              </article>
-              <article class="card law-card">
-                <b>Interaction Law</b>
-                <h3>Users must know what can be touched.</h3>
-                <p>Interactive diamonds, buttons, and links must be visually distinct from decorative centers and noninteractive marks.</p>
-              </article>
-            </div>
-          </section>
+          <article class="law-summary-card" id="human-interaction">
+            <b>Human / Interaction</b>
+            <strong>Human Boundary Law + Interaction Law</strong>
+            <p>Support does not impersonate authority. Users must know what can be touched and what is decorative.</p>
+          </article>
 
-          <section class="law-group" id="group-access-return" aria-labelledby="group-access-return-title">
-            <div class="law-group-head">
-              <b>Group 6</b>
-              <h3 id="group-access-return-title">Access / Return</h3>
-            </div>
-            <div class="grid">
-              <article class="card law-card">
-                <b>Access Law</b>
-                <h3>Law must remain reachable.</h3>
-                <p>Compass, Door, Home, Manor, Laws, Scientific Law, Showroom, Products, Frontier, Universe, and Gauges must remain reachable.</p>
-              </article>
-              <article class="card law-card">
-                <b>Return Law</b>
-                <h3>Every outward route needs a way back.</h3>
-                <p>Expansion remains coherent only when return routes stay visible and law stays connected to the public route system.</p>
-              </article>
-            </div>
-          </section>
+          <article class="law-summary-card" id="access-return">
+            <b>Access / Return</b>
+            <strong>Access Law + Return Law</strong>
+            <p>Laws must stay reachable from the public route system. Every outward route needs a way back.</p>
+          </article>
 
-          <section class="law-group" id="group-product-foreground" aria-labelledby="group-product-foreground-title">
-            <div class="law-group-head">
-              <b>Group 7</b>
-              <h3 id="group-product-foreground-title">Product + Planet Separation / Foreground</h3>
-            </div>
-            <div class="grid">
-              <article class="card law-card">
-                <b>Product and Planet Separation Law</b>
-                <h3>Products stay products. Planets stay planets.</h3>
-                <p>Product chambers, law chambers, estate constructs, and planetary constructs must not collapse into one route identity.</p>
-              </article>
-              <article class="card law-card">
-                <b>Foreground Law</b>
-                <h3>Laws, Entry, Proof, and Return are foreground controls.</h3>
-                <p>The foreground core holds the safety loop: Laws governs, Entry admits, Proof measures, and Return re-anchors.</p>
-              </article>
-            </div>
-          </section>
+          <article class="law-summary-card" id="product-foreground">
+            <b>Product / Foreground</b>
+            <strong>Product and Planet Separation Law + Foreground Law</strong>
+            <p>Products stay products; planets stay planets. Laws, Entry, Proof, and Return remain foreground controls.</p>
+          </article>
 
-          <section class="law-group" id="group-scope-stale" aria-labelledby="group-scope-stale-title">
-            <div class="law-group-head">
-              <b>Group 8</b>
-              <h3 id="group-scope-stale-title">Scope / Stale Language</h3>
-            </div>
-            <div class="grid">
-              <article class="card law-card">
-                <b>Scope Law</b>
-                <h3>Full-file TNT only for touched files.</h3>
-                <p>A file change must be delivered as a full replacement for the touched file. Fragments do not control project state.</p>
-              </article>
-              <article class="card law-card">
-                <b>Stale Language Law</b>
-                <h3>Retired labels must not control current pages.</h3>
-                <p>Old or retired route identities must not remain as active control language unless a route intentionally preserves them.</p>
-              </article>
-            </div>
-          </section>
+          <article class="law-summary-card" id="scope-stale">
+            <b>Scope / Stale Language</b>
+            <strong>Scope Law + Stale Language Law</strong>
+            <p>Full-file TNT only for touched files. Retired labels must not control current pages.</p>
+          </article>
         </div>
       </section>
 
       <section class="panel section" id="route-orbit" aria-labelledby="route-orbit-title">
-        <div class="kicker">Small orbiting route gems</div>
+        <div class="kicker">Small orbital route diamonds</div>
         <div class="section-header">
-          <h2 id="route-orbit-title">Smaller route-color gems leave the Laws page.</h2>
+          <h2 id="route-orbit-title">Small route-color diamonds leave the Laws page.</h2>
           <p>
-            These are secondary navigation controls. They are smaller, orbiting, and amber / blue-gold so they do not visually compete with the large white law diamonds.
+            This compact orbit replaces the outbound route grid. These controls are smaller because they are secondary navigation, not the primary law content.
           </p>
         </div>
 
-        <div class="orbit-stage" aria-label="Outbound route orbit gems">
+        <div class="orbit-stage" aria-label="Outbound route orbit diamonds">
           <div class="orbit-center" aria-hidden="true">
             <b>Route Orbit</b>
-            <span>Small gems leave the Laws chamber.</span>
+            <span>Small diamonds open separate routes.</span>
           </div>
 
           <a class="orbit-gem" href="/" style="--x:50%;--y:9%;--delay:-.2s;">
@@ -1384,45 +1168,45 @@
         <div class="branch">
           <strong id="scientific-law-title">Scientific Law branches from Laws and tests reality claims.</strong>
           <p>
-            Scientific Law remains a separate branch route under the Laws chamber. It uses the smaller route-color treatment because it leaves this page, while the large white diamonds remain reserved for internal law content.
+            Scientific Law is governed by Laws, but it opens a separate route. Therefore it uses the small route-color orbit treatment, not the large white law-diamond treatment.
           </p>
           <div class="actions" style="margin-top:1rem">
             <a class="button gold" href="/laws/scientific-law/">Open Scientific Law</a>
-            <a class="button" href="#law-diamonds">Return to Large Law Diamonds</a>
-            <a class="button" href="#route-orbit">Return to Route Orbit</a>
+            <a class="button" href="#law-diamonds">Large Law Diamonds</a>
+            <a class="button" href="#route-orbit">Route Orbit</a>
           </div>
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-LAWS_PAGE_GEM_SIZE_HIERARCHY_AND_ORBIT_GEM_TNT_v1
-binding=LAWS_PAGE_GEM_SIZE_HIERARCHY_AND_ORBIT_GEM_PREGAME_TO_POSTGAME_BINDING_v1
+LAWS_PAGE_TWO_DIAMOND_ARCHITECTURE_TNT_v1
+binding=LAWS_PAGE_TWO_DIAMOND_ARCHITECTURE_PREGAME_TO_POSTGAME_BINDING_v1
 route=/laws/
 target=/laws/index.html
 branch=Laws
-both_diamond_styles_active=true
-large_law_diamonds=white_crystal
-small_orbit_route_gems=route_color_differentiated
-law_internal_gems=white_crystal_only
-outbound_route_gems=amber_blue_gold_route_glass
+large_law_diamonds=white_crystal_grouped_law_content
+small_orbital_route_diamonds=route_color_outbound_navigation
+outbound_route_grid_removed=true
+one_orbital_path=true
+page_length_reduced=true
 sixteen_laws_preserved=true
 sixteen_laws_grouped=true
 law_groups=Authority_Route,Proof_Receipt,Runtime_Animation,Generation_Visual,Human_Interaction,Access_Return,Product_Foreground,Scope_Stale
 scientific_law_branch_preserved=true
-scientific_law_uses_route_color=true
+scientific_law_uses_route_orbit=true
 generated_image=false
-graphic_box=false
+graphic_block=false
 heavy_runtime=false
 javascript_dependency=false
 external_legacy_css_dependency=false
 reduced_motion_fallback=true
 visual_pass_claimed=false
-deploy_marker=LAWS_PAGE_GEM_SIZE_HIERARCHY_AND_ORBIT_GEM_DEPLOY_MARKER_v1
+deploy_marker=LAWS_PAGE_TWO_DIAMOND_ARCHITECTURE_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer>
-      LAWS_PAGE_GEM_SIZE_HIERARCHY_AND_ORBIT_GEM_TNT_v1 · Laws · Large white law diamonds · Small route-color orbit gems.
+      LAWS_PAGE_TWO_DIAMOND_ARCHITECTURE_TNT_v1 · Laws · Large white law diamonds · Small route-color orbital diamonds.
     </footer>
   </div>
 </body>

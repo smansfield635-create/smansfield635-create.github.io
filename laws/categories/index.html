@@ -1,34 +1,26 @@
-<!-- TARGET FILE: /laws/scientific-law/index.html -->
+<!-- TARGET FILE: /laws/categories/index.html -->
 <!doctype html>
 <html
   lang="en"
-  data-route="/laws/scientific-law/"
-  data-page="scientific-law"
+  data-route="/laws/categories/"
+  data-page="laws-categories"
   data-version="G2-V1"
-  data-contract="SCIENTIFIC_LAW_GEM_ORBIT_DEEP_DEFINITION_REALITY_TEST_CHAMBER_TNT_v1"
-  data-source-binding="SCIENTIFIC_LAW_GEM_ORBIT_DEEP_DEFINITION_REALITY_TEST_CHAMBER_PREGAME_TO_POSTGAME_BINDING_v1"
-  data-current-baseline="SCIENTIFIC_LAW_TWO_LENS_FOUNDATION_TNT_v1"
-  data-branch="laws/scientific-law"
-  data-role="reality-test-chamber"
-  data-scientific-law-branch-preserved="true"
-  data-laws-parent-preserved="true"
-  data-reality-source-preserved="true"
+  data-contract="LAWS_CATEGORIES_SHARED_CATALOG_ORBIT_TNT_v1"
+  data-source-binding="LAWS_CATEGORIES_SHARED_CATALOG_ORBIT_PREGAME_TO_POSTGAME_BINDING_v1"
+  data-branch="laws/categories"
+  data-role="shared-catalog-bridge"
+  data-shared-catalog-bridge="true"
+  data-laws-catalog-visible="true"
+  data-scientific-law-catalog-visible="true"
+  data-reality-source-bridge="true"
+  data-top-catalog-orbit="true"
+  data-large-same-page-category-diamonds="true"
   data-platform-engineering-language-standard="true"
-  data-public-technical-labels-retired="true"
-  data-global-platform-engineering-toggle="true"
-  data-local-section-language-toggles="true"
-  data-top-branch-orbit-added="true"
-  data-large-primary-scientific-law-diamonds="true"
-  data-four-primary-doors-preserved="true"
-  data-four-primary-doors-deeply-expanded="true"
-  data-scientific-route-deeply-expanded="true"
-  data-deeper-terms-deeply-expanded="true"
-  data-claim-testing-ladder-added="true"
-  data-branch-routes-preserved="true"
   data-svg-crystal-renderer-required="true"
   data-lawCrystalGem-used-for-law-affiliated-items="true"
   data-routeColorGem-used-for-outbound-items="true"
   data-css-polygon-regression-forbidden="true"
+  data-generic-sitemap-forbidden="true"
   data-javascript-dependency="false"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
@@ -39,10 +31,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Scientific Law · Diamond Gate Bridge</title>
+  <title>Law Categories · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Scientific Law is the Reality Test chamber under Laws. It defines Theory, Evidence, Measure, Limits, the scientific route, deeper terms, and the claim testing ladder through Platform and Engineering language layers."
+    content="Law Categories is the shared catalog bridge between Governing Laws, Scientific Law, Reality Source, and proof routes."
   >
 
   <style>
@@ -60,7 +52,7 @@
       --shadow:0 30px 100px rgba(0,0,0,.48);
       --max:1180px;
       --gem-breathe-duration:8.8s;
-      --orbit-duration:72s;
+      --orbit-duration:78s;
     }
 
     *{box-sizing:border-box}
@@ -256,7 +248,7 @@
 
     .hero{
       position:relative;
-      min-height:clamp(24rem,40vw,34rem);
+      min-height:clamp(23rem,39vw,33rem);
       display:grid;
       align-content:center;
       gap:1rem;
@@ -404,25 +396,17 @@
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
     }
 
-    .lens-radio,
-    .local-radio{
+    .lens-radio{
       position:absolute;
       opacity:0;
       pointer-events:none;
     }
 
     .page-platform,
-    .page-engineering,
-    .local-platform-content,
-    .local-engineering-content{
-      display:none;
-    }
+    .page-engineering{display:none}
 
     #lens-platform:checked ~ .lens-scope .page-platform{display:block}
     #lens-engineering:checked ~ .lens-scope .page-engineering{display:block}
-
-    .local-platform:checked ~ .local-scope .local-platform-content{display:grid}
-    .local-engineering:checked ~ .local-scope .local-engineering-content{display:grid}
 
     .lens-toggle{
       display:grid;
@@ -431,8 +415,7 @@
       padding:1rem;
     }
 
-    .toggle-row,
-    .local-toggle-row{
+    .toggle-row{
       width:fit-content;
       display:flex;
       flex-wrap:wrap;
@@ -444,8 +427,7 @@
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .toggle-label,
-    .local-toggle-label{
+    .toggle-label{
       min-height:2.42rem;
       display:inline-flex;
       align-items:center;
@@ -463,22 +445,13 @@
       transition:transform .18s ease,border-color .18s ease,background .18s ease,color .18s ease;
     }
 
-    .local-toggle-label{
-      min-height:2.2rem;
-      padding:.5rem .78rem;
-      font-size:.66rem;
-    }
-
-    .toggle-label:hover,
-    .local-toggle-label:hover{
+    .toggle-label:hover{
       transform:translateY(-1px);
       border-color:rgba(243,200,111,.36);
     }
 
     #lens-platform:checked ~ .lens-scope .toggle-label[for="lens-platform"],
-    #lens-engineering:checked ~ .lens-scope .toggle-label[for="lens-engineering"],
-    .local-platform:checked ~ .local-scope .local-toggle-label.is-platform,
-    .local-engineering:checked ~ .local-scope .local-toggle-label.is-engineering{
+    #lens-engineering:checked ~ .lens-scope .toggle-label[for="lens-engineering"]{
       color:#060811;
       border-color:rgba(243,200,111,.88);
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
@@ -523,11 +496,11 @@
     }
 
     .orbit-stage{
-      --orbit-size:min(100%,52rem);
+      --orbit-size:min(100%,56rem);
       position:relative;
       width:var(--orbit-size);
       aspect-ratio:1/1;
-      max-width:52rem;
+      max-width:56rem;
       min-width:20rem;
       overflow:visible;
       border:1px solid rgba(243,200,111,.18);
@@ -578,7 +551,7 @@
     }
 
     .orbit-track{
-      --orbit-r:min(17.3rem,30vw);
+      --orbit-r:min(19.15rem,32vw);
       animation:orbitSpin var(--orbit-duration) linear infinite;
       z-index:3;
     }
@@ -664,14 +637,14 @@
       to{transform:rotate(-360deg)}
     }
 
-    .primary-door-field{
+    .category-diamond-field{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
       gap:clamp(.9rem,2vw,1.15rem);
       align-items:stretch;
     }
 
-    .primary-diamond{
+    .category-diamond{
       position:relative;
       min-height:clamp(11rem,20vw,15rem);
       display:grid;
@@ -686,8 +659,8 @@
       transition:transform .18s ease,border-color .18s ease,filter .18s ease;
     }
 
-    .primary-diamond:hover,
-    .primary-diamond:focus-visible{
+    .category-diamond:hover,
+    .category-diamond:focus-visible{
       transform:translateY(-4px);
       border-color:rgba(232,248,255,.46);
       filter:brightness(1.12) saturate(1.06);
@@ -705,7 +678,7 @@
       pointer-events:none;
     }
 
-    .primary-diamond .gem-core{inset:3% 1%}
+    .category-diamond .gem-core{inset:3% 1%}
     .orbit-diamond .gem-core{inset:0}
 
     @keyframes gemBreathe{
@@ -758,21 +731,21 @@
         0 0 3px rgba(255,255,255,.58);
     }
 
-    .primary-diamond .gem-label b{
+    .category-diamond .gem-label b{
       display:block;
       color:rgba(255,244,216,.99);
-      font-size:clamp(1rem,2.3vw,1.42rem);
+      font-size:clamp(.92rem,2.1vw,1.35rem);
       font-weight:950;
       letter-spacing:.075em;
       line-height:1;
       text-transform:uppercase;
     }
 
-    .primary-diamond .gem-label span{
+    .category-diamond .gem-label span{
       display:block;
-      max-width:11rem;
+      max-width:12rem;
       color:rgba(230,238,255,.92);
-      font-size:clamp(.60rem,1.14vw,.76rem);
+      font-size:clamp(.58rem,1.1vw,.74rem);
       font-weight:950;
       letter-spacing:.055em;
       line-height:1.15;
@@ -807,7 +780,7 @@
     .orbit-diamond .gem-label b{
       display:block;
       color:#fff8e7;
-      font-size:clamp(.72rem,1.08vw,.92rem);
+      font-size:clamp(.70rem,1.02vw,.90rem);
       font-weight:1000;
       letter-spacing:.018em;
       line-height:.96;
@@ -818,7 +791,7 @@
     .orbit-diamond .gem-label span{
       display:block;
       color:rgba(235,246,255,.96);
-      font-size:clamp(.50rem,.82vw,.64rem);
+      font-size:clamp(.48rem,.80vw,.62rem);
       font-weight:950;
       letter-spacing:.018em;
       line-height:1;
@@ -826,20 +799,17 @@
       white-space:nowrap;
     }
 
-    .definition-grid{
+    .catalog-split{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
       gap:.95rem;
     }
 
-    .definition-card,
-    .route-card,
-    .term-card,
-    .ladder-card,
-    .branch-card{
-      position:relative;
+    .catalog-column,
+    .bridge-card,
+    .route-card{
       display:grid;
-      gap:.85rem;
+      gap:.9rem;
       padding:1.05rem;
       border:1px solid rgba(232,248,255,.14);
       border-radius:1.15rem;
@@ -849,11 +819,16 @@
       scroll-margin-top:1rem;
     }
 
-    .definition-card > b,
-    .route-card > b,
-    .term-card > b,
-    .ladder-card > b,
-    .branch-card > b{
+    .bridge-card{
+      border-color:rgba(243,200,111,.26);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(243,200,111,.15),transparent 22rem),
+        rgba(243,200,111,.045);
+    }
+
+    .catalog-column > b,
+    .bridge-card > b,
+    .route-card > b{
       width:fit-content;
       padding:.36rem .55rem;
       border:1px solid rgba(243,200,111,.24);
@@ -866,88 +841,87 @@
       text-transform:uppercase;
     }
 
-    .definition-card strong,
-    .route-card strong,
-    .term-card strong,
-    .ladder-card strong,
-    .branch-card strong{
+    .catalog-column strong,
+    .bridge-card strong,
+    .route-card strong{
       color:rgba(255,244,216,.98);
       font-size:clamp(1.05rem,2.3vw,1.26rem);
       line-height:1.08;
     }
 
-    .local-scope{
+    .catalog-list{
       display:grid;
-      gap:.8rem;
-    }
-
-    .copy-box{
-      gap:.8rem;
-      padding:.9rem;
-      border:1px solid rgba(255,255,255,.11);
-      border-radius:1rem;
-      background:rgba(2,6,16,.30);
-    }
-
-    .copy-box p{
-      font-size:.95rem;
-      line-height:1.55;
-    }
-
-    .mini-grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:.7rem;
-    }
-
-    .mini-box{
-      display:grid;
-      gap:.35rem;
-      padding:.75rem;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:.85rem;
-      background:rgba(255,255,255,.035);
-    }
-
-    .mini-box h4{
+      gap:.55rem;
       margin:0;
+      padding:0;
+      list-style:none;
+    }
+
+    .catalog-list li{
+      display:grid;
+      gap:.18rem;
+      padding:.72rem .78rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:.9rem;
+      background:rgba(255,255,255,.035);
+      color:rgba(232,240,255,.80);
+      font-size:.92rem;
+      line-height:1.42;
+    }
+
+    .catalog-list b{
+      color:rgba(255,244,216,.98);
+      font-size:.78rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .bridge-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.75rem;
+    }
+
+    .bridge-point{
+      display:grid;
+      gap:.25rem;
+      padding:.8rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:.95rem;
+      background:rgba(2,6,16,.32);
+    }
+
+    .bridge-point b{
       color:var(--gold);
       font-size:.68rem;
       font-weight:950;
-      letter-spacing:.12em;
+      letter-spacing:.11em;
       text-transform:uppercase;
     }
 
-    .mini-box ul,
-    .branch-card ul{
-      margin:0;
-      padding-left:1rem;
-      color:rgba(232,240,255,.78);
-      font-size:.86rem;
-      line-height:1.45;
+    .bridge-point span{
+      color:rgba(232,240,255,.80);
+      font-size:.88rem;
+      line-height:1.38;
     }
 
-    .mini-box li,
-    .branch-card li{margin:.22rem 0}
-
-    .audit-question{
-      padding:.75rem .85rem;
-      border:1px solid rgba(141,216,255,.18);
-      border-radius:.9rem;
-      color:rgba(235,246,255,.92);
-      background:rgba(141,216,255,.055);
-      font-size:.9rem;
-      line-height:1.45;
+    .route-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.8rem;
     }
 
-    .audit-question span{
-      display:block;
-      margin-bottom:.2rem;
-      color:var(--gold);
-      font-size:.66rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
+    .route-card{
+      min-height:9.5rem;
+      align-content:start;
+      transition:transform .18s ease,border-color .18s ease;
+    }
+
+    .route-card:hover,
+    .route-card:focus-visible{
+      transform:translateY(-3px);
+      border-color:rgba(243,200,111,.48);
+      outline:none;
     }
 
     .return-row{
@@ -956,31 +930,6 @@
       gap:.55rem;
       justify-content:flex-end;
       margin-top:.15rem;
-    }
-
-    .route-steps,
-    .term-grid,
-    .ladder-grid,
-    .branch-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:.8rem;
-    }
-
-    .ladder-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
-    .branch-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
-
-    .branch-card{
-      min-height:10rem;
-      align-content:start;
-      transition:transform .18s ease,border-color .18s ease;
-    }
-
-    .branch-card:hover,
-    .branch-card:focus-visible{
-      transform:translateY(-3px);
-      border-color:rgba(243,200,111,.48);
-      outline:none;
     }
 
     .receipt,
@@ -1010,9 +959,8 @@
     }
 
     @media (max-width:1080px){
-      .primary-door-field{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .definition-grid,.route-steps,.term-grid,.branch-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .ladder-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .category-diamond-field{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .bridge-grid,.route-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
     @media (max-width:860px){
@@ -1028,6 +976,7 @@
       .orbit-center{width:8rem;min-height:6rem}
       .orbit-center b{font-size:.68rem}
       .orbit-center span{font-size:.65rem}
+      .catalog-split{grid-template-columns:1fr}
     }
 
     @media (max-width:640px){
@@ -1038,18 +987,14 @@
       h1{font-size:clamp(3rem,16vw,5.15rem)}
       .actions{display:grid}
       .button{width:100%}
-      .toggle-row,.local-toggle-row{width:100%;display:grid;grid-template-columns:1fr 1fr;border-radius:1rem}
-      .toggle-label,.local-toggle-label{border-radius:.8rem}
+      .toggle-row{width:100%;display:grid;grid-template-columns:1fr 1fr;border-radius:1rem}
+      .toggle-label{border-radius:.8rem}
       .section{padding:1rem}
       .gem-stage{padding:1rem}
-      .primary-door-field,
-      .definition-grid,
-      .route-steps,
-      .term-grid,
-      .ladder-grid,
-      .branch-grid,
-      .mini-grid{grid-template-columns:1fr}
-      .primary-diamond{min-height:11rem}
+      .category-diamond-field,
+      .bridge-grid,
+      .route-grid{grid-template-columns:1fr}
+      .category-diamond{min-height:11rem}
       .return-row{justify-content:stretch}
       .return-row .return-chip{width:100%}
     }
@@ -1220,23 +1165,23 @@
     </defs>
   </svg>
 
-  <a class="skip" href="#main">Skip to Scientific Law</a>
+  <a class="skip" href="#main">Skip to Categories</a>
 
   <div class="shell">
-    <header class="topbar" aria-label="Scientific Law header">
-      <a class="brand" href="/laws/">
-        <span class="brand-mark" aria-hidden="true"><span>SCI</span></span>
+    <header class="topbar" aria-label="Law Categories header">
+      <a class="brand" href="/laws/categories/">
+        <span class="brand-mark" aria-hidden="true"><span>CAT</span></span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge · Laws</span>
-          <strong>Scientific Law · Reality Test Chamber</strong>
+          <strong>Law Categories · Shared Catalog Orbit</strong>
         </span>
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/laws/">Laws</a>
-        <a href="/laws/scientific-law/" aria-current="page">Scientific Law</a>
-        <a href="/laws/categories/">Categories</a>
+        <a href="/laws/scientific-law/">Scientific Law</a>
+        <a href="/laws/categories/" aria-current="page">Categories</a>
         <a href="/laws/categories/reality/">Reality</a>
         <a href="/gauges/">Gauges</a>
       </nav>
@@ -1248,27 +1193,27 @@
 
       <div class="lens-scope">
         <section class="panel hero" aria-labelledby="page-title">
-          <div class="kicker">Reality branch · expanded test chamber</div>
+          <div class="kicker">Law Categories · Shared Catalog Bridge</div>
 
-          <h1 id="page-title">Reality has to survive the test.</h1>
+          <h1 id="page-title">Categories make the law system navigable.</h1>
 
           <p class="lead page-platform">
-            Scientific Law separates what sounds convincing from what keeps working after observation, evidence, measurement, comparison, correction, uncertainty, and limits. It gives a claim a fair chance to become stronger without letting confidence outrank reality.
+            The Categories page is the shared catalog. It lets a reader move between governing law, scientific law, and the reality source without treating them as separate systems.
           </p>
 
           <p class="lead page-engineering">
-            Scientific Law is the branch-level test protocol for converting claims into bounded, measurable, falsifiable, repeatable, revisable, and scope-declared reality statements under the governing Laws chamber.
+            The Categories page is the branch-index layer. It maps law-category objects, scientific-law objects, source-category objects, and outbound proof routes into one route-readable catalog.
           </p>
 
           <div class="truth-card">
-            A claim does not become scientific because it sounds technical. It becomes scientific when it can be defined, tested, corrected, limited, and checked again.
+            Laws governs. Scientific Law tests reality claims. Reality Source anchors category truth. Categories maps the catalog. Gauges checks proof and route behavior.
           </div>
 
           <div class="actions">
-            <a class="button gold" href="#branch-orbit">Branch Orbit</a>
-            <a class="button" href="#primary-doors">Primary Doors</a>
-            <a class="button" href="#scientific-route">Scientific Route</a>
-            <a class="button" href="#claim-ladder">Claim Ladder</a>
+            <a class="button gold" href="#catalog-orbit">Catalog Orbit</a>
+            <a class="button" href="#catalog-groups">Catalog Groups</a>
+            <a class="button" href="#shared-catalog">Shared Catalog</a>
+            <a class="button" href="#reality-bridge">Reality Bridge</a>
           </div>
         </section>
 
@@ -1277,10 +1222,10 @@
             <div class="kicker">Page Language Lens</div>
             <h2 id="lens-title">Platform or Engineering.</h2>
             <p class="page-platform">
-              Platform language explains the chamber in plain terms for readers, visitors, learners, and public orientation.
+              Platform language explains the catalog in plain terms so a reader can understand where to go and why each branch exists.
             </p>
             <p class="page-engineering">
-              Engineering language defines the same chamber using route logic, claim boundaries, audit posture, measurement constraints, and verification terms.
+              Engineering language defines the catalog as route classification, branch indexing, source mapping, and proof-path preservation.
             </p>
           </div>
 
@@ -1290,28 +1235,28 @@
           </div>
         </section>
 
-        <section class="panel section orbit-section" id="branch-orbit" aria-labelledby="branch-orbit-title">
-          <div class="kicker">Top branch orbit</div>
+        <section class="panel section orbit-section" id="catalog-orbit" aria-labelledby="catalog-orbit-title">
+          <div class="kicker">Top orbital catalog navigation</div>
           <div class="section-header">
-            <h2 id="branch-orbit-title">Scientific Law remains attached to Laws.</h2>
+            <h2 id="catalog-orbit-title">One orbit connects the full law catalog.</h2>
             <p class="page-platform">
-              White crystals stay in the Laws family. Gold crystals move outside the branch for orientation or proof checking.
+              Use the orbit to bounce between Laws, Scientific Law, Reality Source, primary scientific branches, proof checking, and root orientation without losing the catalog.
             </p>
             <p class="page-engineering">
-              The branch orbit consolidates page-changing controls. Law-affiliated routes use lawCrystalGem. Outbound route controls use routeColorGem.
+              Page-changing routes are consolidated into the top catalog orbit. Law-affiliated routes use white crystals. Outbound proof/root routes use route-color crystals.
             </p>
           </div>
 
           <div class="orbit-wrap">
-            <div class="orbit-stage" aria-label="Scientific Law branch orbit">
+            <div class="orbit-stage" aria-label="Shared Law Categories catalog orbit">
               <div class="orbit-ring" aria-hidden="true"></div>
               <div class="orbit-ring inner" aria-hidden="true"></div>
 
               <div class="orbit-center" aria-hidden="true">
-                <b class="page-platform">Scientific Route Orbit</b>
-                <b class="page-engineering">Branch Orbit</b>
-                <span class="page-platform">White = Laws family. Gold = outside branch.</span>
-                <span class="page-engineering">Layout = page-change. Color = route class.</span>
+                <b class="page-platform">Category Orbit</b>
+                <b class="page-engineering">Shared Catalog Orbit</b>
+                <span class="page-platform">Move between Laws, Scientific Law, and Reality.</span>
+                <span class="page-engineering">Routes split by branch class and unified by catalog interface.</span>
               </div>
 
               <div class="orbit-track">
@@ -1322,663 +1267,333 @@
                   </span>
                 </a>
 
-                <a class="orbit-diamond law-orbit" href="/laws/scientific-law/" style="--a:60deg;" aria-label="Open Scientific Law">
+                <a class="orbit-diamond law-orbit" href="/laws/categories/" style="--a:36deg;" aria-label="Open Categories">
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                    <span class="gem-label"><b>Categories</b><span>Catalog</span></span>
+                  </span>
+                </a>
+
+                <a class="orbit-diamond law-orbit" href="/laws/scientific-law/" style="--a:72deg;" aria-label="Open Scientific Law">
                   <span class="orbit-face">
                     <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
                     <span class="gem-label"><b>Scientific</b><span>Law</span></span>
                   </span>
                 </a>
 
-                <a class="orbit-diamond law-orbit" href="/laws/categories/reality/" style="--a:120deg;" aria-label="Open Reality Source">
+                <a class="orbit-diamond law-orbit" href="/laws/categories/reality/" style="--a:108deg;" aria-label="Open Reality Source">
                   <span class="orbit-face">
                     <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
                     <span class="gem-label"><b>Reality</b><span>Source</span></span>
                   </span>
                 </a>
 
-                <a class="orbit-diamond law-orbit" href="/laws/categories/" style="--a:180deg;" aria-label="Open Categories">
+                <a class="orbit-diamond law-orbit" href="/laws/scientific-law/theory/" style="--a:144deg;" aria-label="Open Theory">
                   <span class="orbit-face">
                     <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
-                    <span class="gem-label"><b>Categories</b><span>Taxonomy</span></span>
+                    <span class="gem-label"><b>Theory</b><span>Branch</span></span>
                   </span>
                 </a>
 
-                <a class="orbit-diamond route-orbit" href="/gauges/" style="--a:240deg;" aria-label="Open Gauges">
+                <a class="orbit-diamond law-orbit" href="/laws/scientific-law/evidence/" style="--a:180deg;" aria-label="Open Evidence">
                   <span class="orbit-face">
-                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
-                    <span class="gem-label"><b>Gauges</b><span>Proof</span></span>
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                    <span class="gem-label"><b>Evidence</b><span>Branch</span></span>
                   </span>
                 </a>
 
-                <a class="orbit-diamond route-orbit" href="/" style="--a:300deg;" aria-label="Open Compass">
+                <a class="orbit-diamond law-orbit" href="/laws/scientific-law/measure/" style="--a:216deg;" aria-label="Open Measure">
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                    <span class="gem-label"><b>Measure</b><span>Branch</span></span>
+                  </span>
+                </a>
+
+                <a class="orbit-diamond law-orbit" href="/laws/scientific-law/limits/" style="--a:252deg;" aria-label="Open Limits">
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                    <span class="gem-label"><b>Limits</b><span>Branch</span></span>
+                  </span>
+                </a>
+
+                <a class="orbit-diamond route-orbit" href="/" style="--a:288deg;" aria-label="Open Compass">
                   <span class="orbit-face">
                     <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
                     <span class="gem-label"><b>Compass</b><span>Root</span></span>
                   </span>
                 </a>
+
+                <a class="orbit-diamond route-orbit" href="/gauges/" style="--a:324deg;" aria-label="Open Gauges">
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+                    <span class="gem-label"><b>Gauges</b><span>Proof</span></span>
+                  </span>
+                </a>
               </div>
             </div>
           </div>
         </section>
 
-        <section class="panel section" id="primary-doors" aria-labelledby="primary-doors-title">
-          <div class="kicker">Four primary doors</div>
+        <section class="panel section" id="catalog-groups" aria-labelledby="catalog-groups-title">
+          <div class="kicker">Large same-page catalog diamonds</div>
           <div class="section-header">
-            <h2 id="primary-doors-title">Four large white crystals hold the reality test.</h2>
+            <h2 id="catalog-groups-title">The catalog splits into four same-page groups.</h2>
             <p class="page-platform">
-              Theory, Evidence, Measure, and Limits are the four primary doors. Each one keeps a claim from becoming only confidence.
+              These large white crystals do not leave the page. They organize the shared catalog into Laws, Scientific Law, Reality Source, and Branch Routes.
             </p>
             <p class="page-engineering">
-              The four primary diamonds are same-page Scientific Law anchors. They use lawCrystalGem and route to expanded sections, not external pages.
+              Large diamonds are same-page anchors. They use lawCrystalGem because they organize law-affiliated catalog groups.
             </p>
           </div>
 
-          <div class="gem-stage" aria-label="Primary Scientific Law diamonds">
-            <div class="primary-door-field">
-              <a class="primary-diamond" href="#theory" style="--delay:-.1s;--tilt-a:-1.6deg;--tilt-b:1.8deg;">
+          <div class="gem-stage" aria-label="Large same-page catalog diamonds">
+            <div class="category-diamond-field">
+              <a class="category-diamond" href="#governing-laws-catalog" style="--delay:-.1s;--tilt-a:-1.6deg;--tilt-b:1.8deg;">
                 <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
-                <span class="gem-label"><b>Theory</b><span>A testable explanation that risks correction.</span></span>
+                <span class="gem-label"><b>Governing Laws</b><span>The sixteen-law chamber as rule system.</span></span>
               </a>
 
-              <a class="primary-diamond" href="#evidence" style="--delay:-.6s;--tilt-a:1.5deg;--tilt-b:-2deg;">
+              <a class="category-diamond" href="#scientific-law-catalog" style="--delay:-.6s;--tilt-a:1.5deg;--tilt-b:-2deg;">
                 <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
-                <span class="gem-label"><b>Evidence</b><span>A checkable record with provenance.</span></span>
+                <span class="gem-label"><b>Scientific Law</b><span>The reality-test branch catalog.</span></span>
               </a>
 
-              <a class="primary-diamond" href="#measure" style="--delay:-1.1s;--tilt-a:-2deg;--tilt-b:1.4deg;">
+              <a class="category-diamond" href="#reality-bridge" style="--delay:-1.1s;--tilt-a:-2deg;--tilt-b:1.4deg;">
                 <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
-                <span class="gem-label"><b>Measure</b><span>A coordinate system for comparison.</span></span>
+                <span class="gem-label"><b>Reality Source</b><span>The shared category bridge.</span></span>
               </a>
 
-              <a class="primary-diamond" href="#limits" style="--delay:-1.6s;--tilt-a:1.8deg;--tilt-b:-1.6deg;">
+              <a class="category-diamond" href="#branch-routes" style="--delay:-1.6s;--tilt-a:1.8deg;--tilt-b:-1.6deg;">
                 <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
-                <span class="gem-label"><b>Limits</b><span>The boundary that keeps truth honest.</span></span>
+                <span class="gem-label"><b>Branch Routes</b><span>The outward catalog doors.</span></span>
               </a>
             </div>
           </div>
         </section>
 
-        <section class="panel section" id="primary-definitions" aria-labelledby="primary-definitions-title">
-          <div class="kicker">Primary definitions</div>
+        <section class="panel section" id="shared-catalog" aria-labelledby="shared-catalog-title">
+          <div class="kicker">Shared catalog split</div>
           <div class="section-header">
-            <h2 id="primary-definitions-title">The four doors define how a claim enters reality testing.</h2>
+            <h2 id="shared-catalog-title">Governing Laws and Scientific Law sit in one catalog.</h2>
             <p class="page-platform">
-              Each definition is deeper than a label. Each door names what it does, what it cannot do alone, what failure it prevents, and how it is audited.
+              The left side maps the rule chamber. The right side maps the reality-test branch. Reality Source binds them together.
             </p>
             <p class="page-engineering">
-              Each primary section includes local Platform / Engineering toggles and preserves branch links to the full Theory, Evidence, Measure, and Limits routes.
+              This split preserves two branch classes without separating them into disconnected systems: governing-law categories and scientific-law categories.
             </p>
           </div>
 
-          <div class="definition-grid">
-            <article class="definition-card" id="theory">
-              <input class="local-radio local-platform" type="radio" name="lens-theory" id="theory-platform" checked>
-              <input class="local-radio local-engineering" type="radio" name="lens-theory" id="theory-engineering">
+          <div class="catalog-split">
+            <article class="catalog-column" id="governing-laws-catalog">
+              <b>Left side</b>
+              <strong>Governing Laws Catalog</strong>
+              <p class="page-platform">
+                This side points back into the Laws chamber and explains the sixteen laws as the governing rule system.
+              </p>
+              <p class="page-engineering">
+                This side maps law-category groups controlled by /laws/ and preserves the governing parent relationship.
+              </p>
 
-              <b>Theory</b>
-              <strong>The explanation that risks being wrong.</strong>
-
-              <div class="local-scope">
-                <div class="local-toggle-row" role="radiogroup" aria-label="Theory language lens">
-                  <label class="local-toggle-label is-platform" for="theory-platform" tabindex="0">Platform</label>
-                  <label class="local-toggle-label is-engineering" for="theory-engineering" tabindex="0">Engineering</label>
-                </div>
-
-                <div class="copy-box local-platform-content">
-                  <p>Theory is the explanation that risks being wrong. It gives the mind a map of what might be happening, but the map must keep answering to the terrain. A theory is useful when it helps a person expect what should happen next, compare that expectation against reality, and correct the explanation when reality does not agree.</p>
-                  <p>Theory is not proof by itself. A theory can be elegant, persuasive, familiar, or emotionally satisfying and still be wrong. Its strength does not come from sounding complete. Its strength comes from surviving contact with observation, evidence, measurement, repetition, and correction.</p>
-                  <p>A safe theory stays humble. It names what it assumes, what it predicts, what would weaken it, what would strengthen it, and what it cannot explain yet. If a theory refuses to risk correction, it stops functioning as scientific law and becomes belief, branding, or narrative.</p>
-                </div>
-
-                <div class="copy-box local-engineering-content">
-                  <p>Theory is a model framework that converts observed conditions into expected outcomes. A valid theory defines its objects, assumptions, variables, predicted behavior, explanatory boundary, and revision conditions.</p>
-                  <p>A theory must generate some form of testable expectation. That expectation may be quantitative, qualitative, comparative, probabilistic, or boundary-based, but it must expose the theory to possible correction.</p>
-                  <p>Theory remains subordinate to evidence and measurement. When a model explains less than the evidence requires, the model must be revised, narrowed, or rejected. When evidence is incomplete, the theory remains provisional.</p>
-                </div>
-              </div>
-
-              <div class="mini-grid">
-                <div class="mini-box">
-                  <h4>Does</h4>
-                  <ul>
-                    <li>Organizes observations into a possible explanation.</li>
-                    <li>Creates expectations or predictions.</li>
-                    <li>Exposes assumptions and revision points.</li>
-                    <li>Helps compare competing explanations.</li>
-                  </ul>
-                </div>
-                <div class="mini-box">
-                  <h4>Cannot Do Alone</h4>
-                  <ul>
-                    <li>Prove itself.</li>
-                    <li>Outrank evidence.</li>
-                    <li>Erase uncertainty.</li>
-                    <li>Claim universal scope without boundary testing.</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div class="audit-question">
-                <span>Audit question</span>
-                What would this theory predict, and what evidence would force it to be revised, narrowed, or rejected?
-              </div>
+              <ul class="catalog-list">
+                <li><b>Authority / Route</b><span>Owner function and route location must be explicit before larger claims are made.</span></li>
+                <li><b>Proof / Receipt</b><span>Evidence, gauges, and trace records outrank unsupported confidence.</span></li>
+                <li><b>Runtime / Animation</b><span>Motion remains contained and cannot replace hierarchy or readability.</span></li>
+                <li><b>Generation / Visual Claim</b><span>Baselines, readiness, source truth, and visual polish remain separate.</span></li>
+                <li><b>Human Boundary / Interaction</b><span>Support must not become reckless authority; controls must be legible.</span></li>
+                <li><b>Access / Return</b><span>Law must remain reachable, and every outward move needs a return path.</span></li>
+                <li><b>Product + Planet Separation / Foreground</b><span>Route classes stay distinct while governing controls stay visible.</span></li>
+                <li><b>Scope / Stale Language</b><span>Changes stay inside authorized scope, and retired labels cannot control current pages.</span></li>
+              </ul>
 
               <div class="return-row">
-                <a class="return-chip" href="/laws/scientific-law/theory/">Open full Theory page</a>
-                <a class="return-chip gold" href="#primary-doors">Return to Primary Doors</a>
+                <a class="return-chip gold" href="/laws/">Open Governing Laws</a>
+                <a class="return-chip" href="#catalog-groups">Return to Catalog Groups</a>
               </div>
             </article>
 
-            <article class="definition-card" id="evidence">
-              <input class="local-radio local-platform" type="radio" name="lens-evidence" id="evidence-platform" checked>
-              <input class="local-radio local-engineering" type="radio" name="lens-evidence" id="evidence-engineering">
+            <article class="catalog-column" id="scientific-law-catalog">
+              <b>Right side</b>
+              <strong>Scientific Law Catalog</strong>
+              <p class="page-platform">
+                This side points into Scientific Law and explains the branch as the reality-test system.
+              </p>
+              <p class="page-engineering">
+                This side maps scientific-law objects, reality-test controls, and claim-maturity states under the Laws branch.
+              </p>
 
-              <b>Evidence</b>
-              <strong>The checkable record that survives preference.</strong>
-
-              <div class="local-scope">
-                <div class="local-toggle-row" role="radiogroup" aria-label="Evidence language lens">
-                  <label class="local-toggle-label is-platform" for="evidence-platform" tabindex="0">Platform</label>
-                  <label class="local-toggle-label is-engineering" for="evidence-engineering" tabindex="0">Engineering</label>
-                </div>
-
-                <div class="copy-box local-platform-content">
-                  <p>Evidence is what remains available after confidence, opinion, memory, and preference are removed. It is the record that can be inspected, compared, challenged, or repeated. Evidence does not need to be perfect to matter, but it must be honest about what it is and what it can support.</p>
-                  <p>Evidence is stronger when someone else can examine it without needing to trust the original speaker. A claim becomes more reliable when the record has a source, a time, a method, a boundary, and a way to be checked.</p>
-                  <p>Evidence outranks explanation because explanation can be invented after the fact. Evidence forces the explanation to answer to something outside itself.</p>
-                </div>
-
-                <div class="copy-box local-engineering-content">
-                  <p>Evidence is recorded observation with provenance, inspection value, relevance to the claim, repeatability value, and boundary alignment. Evidence must carry enough context to show what was observed, when it was observed, how it was obtained, and what claim it supports.</p>
-                  <p>Evidence is not automatically conclusive. Evidence may be incomplete, noisy, biased, indirect, or domain-limited. Its value depends on provenance, relevance, independence, repeatability, resolution, and fit to the claim boundary.</p>
-                  <p>Evidence must be separated from interpretation. The record is one layer. The explanation of the record is another layer. Scientific Law requires those layers to remain distinguishable.</p>
-                </div>
-              </div>
-
-              <div class="mini-grid">
-                <div class="mini-box">
-                  <h4>Counts As</h4>
-                  <ul>
-                    <li>Recorded observation.</li>
-                    <li>Measured data.</li>
-                    <li>Documented source.</li>
-                    <li>Controlled comparison.</li>
-                  </ul>
-                </div>
-                <div class="mini-box">
-                  <h4>Does Not Count Yet</h4>
-                  <ul>
-                    <li>Confidence without record.</li>
-                    <li>Memory without source.</li>
-                    <li>Authority claim without inspection.</li>
-                    <li>Explanation without observable support.</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div class="audit-question">
-                <span>Audit question</span>
-                Can this evidence be inspected, traced, compared, and matched to the exact claim it is being used to support?
-              </div>
+              <ul class="catalog-list">
+                <li><b>Theory</b><span>A testable explanation that risks being wrong and remains open to correction.</span></li>
+                <li><b>Evidence</b><span>A checkable record with provenance, inspection value, and claim-boundary alignment.</span></li>
+                <li><b>Measure</b><span>A coordinate, unit, method, calibration, sampling, and uncertainty system.</span></li>
+                <li><b>Limits</b><span>The boundary that defines what the claim can and cannot honestly say.</span></li>
+                <li><b>Scientific Route</b><span>Observe, define, measure, compare, revise, and limit.</span></li>
+                <li><b>Repeatability / Falsifiability</b><span>The result must survive another pass, and the theory must be able to lose.</span></li>
+                <li><b>Calibration / Uncertainty</b><span>The tool must be accountable, and error range must remain visible.</span></li>
+                <li><b>Causality / Model Scope</b><span>Cause requires controls, and every model carries a boundary.</span></li>
+                <li><b>Claim Testing Ladder</b><span>Impression matures into bounded, testable, correction-open scientific claim.</span></li>
+              </ul>
 
               <div class="return-row">
-                <a class="return-chip" href="/laws/scientific-law/evidence/">Open full Evidence page</a>
-                <a class="return-chip gold" href="#primary-doors">Return to Primary Doors</a>
-              </div>
-            </article>
-
-            <article class="definition-card" id="measure">
-              <input class="local-radio local-platform" type="radio" name="lens-measure" id="measure-platform" checked>
-              <input class="local-radio local-engineering" type="radio" name="lens-measure" id="measure-engineering">
-
-              <b>Measure</b>
-              <strong>The coordinate system attached to a claim.</strong>
-
-              <div class="local-scope">
-                <div class="local-toggle-row" role="radiogroup" aria-label="Measure language lens">
-                  <label class="local-toggle-label is-platform" for="measure-platform" tabindex="0">Platform</label>
-                  <label class="local-toggle-label is-engineering" for="measure-engineering" tabindex="0">Engineering</label>
-                </div>
-
-                <div class="copy-box local-platform-content">
-                  <p>Measurement is how a claim becomes accountable. It takes something vague and gives it coordinates so people can compare the same thing instead of arguing from different maps.</p>
-                  <p>To measure well, a person must know what is being measured, what unit is being used, what method is being followed, what tool is being trusted, when the measurement happens, and how much error may be present.</p>
-                  <p>Measurement does not remove all uncertainty, but it makes uncertainty visible. A claim becomes weaker when its measurement changes depending on who wants the result.</p>
-                </div>
-
-                <div class="copy-box local-engineering-content">
-                  <p>Measurement is the coordinate system attached to a claim. It defines the object, unit, method, calibration state, sampling frame, detection limit, comparison standard, uncertainty range, and acceptable error boundary.</p>
-                  <p>Measurement converts observation into structured comparison. It allows multiple observers, instruments, or passes to evaluate whether they are addressing the same variable under compatible conditions.</p>
-                  <p>A number without method, unit, calibration, sampling, and error bounds is not a stable measurement. It is an unsupported quantity.</p>
-                </div>
-              </div>
-
-              <div class="mini-grid">
-                <div class="mini-box">
-                  <h4>Requires</h4>
-                  <ul>
-                    <li>Object and variable.</li>
-                    <li>Unit and method.</li>
-                    <li>Instrument or observer.</li>
-                    <li>Calibration and uncertainty.</li>
-                  </ul>
-                </div>
-                <div class="mini-box">
-                  <h4>Prevents</h4>
-                  <ul>
-                    <li>Vague claim inflation.</li>
-                    <li>Numbers without units.</li>
-                    <li>False precision.</li>
-                    <li>Comparing unlike conditions.</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div class="audit-question">
-                <span>Audit question</span>
-                Is the measurement method clear enough that another qualified observer could understand what was measured, how it was measured, and what error range travels with the result?
-              </div>
-
-              <div class="return-row">
-                <a class="return-chip" href="/laws/scientific-law/measure/">Open full Measure page</a>
-                <a class="return-chip gold" href="#primary-doors">Return to Primary Doors</a>
-              </div>
-            </article>
-
-            <article class="definition-card" id="limits">
-              <input class="local-radio local-platform" type="radio" name="lens-limits" id="limits-platform" checked>
-              <input class="local-radio local-engineering" type="radio" name="lens-limits" id="limits-engineering">
-
-              <b>Limits</b>
-              <strong>The boundary that protects truth from overclaiming.</strong>
-
-              <div class="local-scope">
-                <div class="local-toggle-row" role="radiogroup" aria-label="Limits language lens">
-                  <label class="local-toggle-label is-platform" for="limits-platform" tabindex="0">Platform</label>
-                  <label class="local-toggle-label is-engineering" for="limits-engineering" tabindex="0">Engineering</label>
-                </div>
-
-                <div class="copy-box local-platform-content">
-                  <p>Limits are not weakness. Limits are what keep a claim honest. A claim becomes more trustworthy when it clearly says what it can support, what it cannot support, what is still unknown, and what could change the conclusion.</p>
-                  <p>A claim without limits tries to sound stronger than it is. That may feel persuasive, but it makes the claim less safe. Limits protect reality from being stretched beyond the evidence.</p>
-                  <p>Scientific Law requires limits because evidence always arrives with boundaries: time, method, sample, instrument, context, domain, uncertainty, and interpretation.</p>
-                </div>
-
-                <div class="copy-box local-engineering-content">
-                  <p>Limits define the valid boundary of a claim. They include confidence range, uncertainty range, domain constraint, sampling constraint, instrument constraint, model applicability, unresolved variables, and revision conditions.</p>
-                  <p>A limit is not a failure state. It is a control field. It prevents the claim from expanding beyond what the evidence, measurement, theory, and comparison can support.</p>
-                  <p>Limits must travel with the claim. A result that is valid under one condition may become invalid under another. A model that performs inside one domain may mislead outside its operating range.</p>
-                </div>
-              </div>
-
-              <div class="mini-grid">
-                <div class="mini-box">
-                  <h4>Declares</h4>
-                  <ul>
-                    <li>What the claim can say.</li>
-                    <li>What the claim cannot say.</li>
-                    <li>Where evidence applies.</li>
-                    <li>What would change the conclusion.</li>
-                  </ul>
-                </div>
-                <div class="mini-box">
-                  <h4>Prevents</h4>
-                  <ul>
-                    <li>Overclaiming.</li>
-                    <li>False certainty.</li>
-                    <li>Universalizing local evidence.</li>
-                    <li>Using models outside their domain.</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div class="audit-question">
-                <span>Audit question</span>
-                Does the claim carry its boundary clearly enough that a reader can tell where the claim stops being reliable?
-              </div>
-
-              <div class="return-row">
-                <a class="return-chip" href="/laws/scientific-law/limits/">Open full Limits page</a>
-                <a class="return-chip gold" href="#primary-doors">Return to Primary Doors</a>
+                <a class="return-chip gold" href="/laws/scientific-law/">Open Scientific Law</a>
+                <a class="return-chip" href="#catalog-groups">Return to Catalog Groups</a>
               </div>
             </article>
           </div>
         </section>
 
-        <section class="panel section" id="scientific-route" aria-labelledby="scientific-route-title">
-          <input class="local-radio local-platform" type="radio" name="lens-route" id="route-platform" checked>
-          <input class="local-radio local-engineering" type="radio" name="lens-route" id="route-engineering">
+        <section class="panel section" id="reality-bridge" aria-labelledby="reality-bridge-title">
+          <div class="kicker">Reality Source bridge</div>
 
-          <div class="kicker">Scientific route</div>
-          <div class="section-header">
-            <h2 id="scientific-route-title">A claim becomes stronger through a disciplined reality check.</h2>
-            <p class="page-platform">The route keeps a claim from skipping straight from impression to conclusion.</p>
-            <p class="page-engineering">The route formalizes claim maturation through observation, definition, measurement, comparison, revision, and limitation.</p>
-          </div>
+          <article class="bridge-card">
+            <b>Central bridge</b>
+            <strong id="reality-bridge-title">Reality Source sits between both catalog sides.</strong>
 
-          <div class="local-scope">
-            <div class="local-toggle-row" role="radiogroup" aria-label="Scientific route language lens">
-              <label class="local-toggle-label is-platform" for="route-platform" tabindex="0">Platform</label>
-              <label class="local-toggle-label is-engineering" for="route-engineering" tabindex="0">Engineering</label>
+            <p class="page-platform">
+              Reality is the shared source category. It connects Laws because reality claims must be governed, Scientific Law because reality claims must be tested, Categories because reality is a catalog class, and Gauges because proof behavior must be checked.
+            </p>
+
+            <p class="page-engineering">
+              Reality Source is the central source-category object. It binds governing-law constraints, scientific-law test protocol, catalog classification, and proof-route verification into one shared route relationship.
+            </p>
+
+            <div class="bridge-grid">
+              <div class="bridge-point">
+                <b>Laws</b>
+                <span>Reality claims must be governed before they become system claims.</span>
+              </div>
+
+              <div class="bridge-point">
+                <b>Scientific Law</b>
+                <span>Reality claims must be tested before they become scientific claims.</span>
+              </div>
+
+              <div class="bridge-point">
+                <b>Categories</b>
+                <span>Reality is a catalog class, not a disconnected route.</span>
+              </div>
+
+              <div class="bridge-point">
+                <b>Gauges</b>
+                <span>Route and proof behavior must remain checkable.</span>
+              </div>
             </div>
 
-            <div class="route-steps">
-              <article class="route-card">
-                <b>01 · Observe</b>
-                <strong>Start with contact.</strong>
-                <div class="copy-box local-platform-content"><p>Observation begins with what is actually noticed, detected, recorded, or encountered. It does not begin with the explanation. Observation asks the system to start with contact before conclusion.</p></div>
-                <div class="copy-box local-engineering-content"><p>Observation is the initial record of a phenomenon, signal, event, condition, pattern, anomaly, or result. It must remain distinguishable from interpretation.</p></div>
-                <div class="audit-question"><span>Audit question</span>What was actually observed before explanation was added?</div>
-              </article>
-
-              <article class="route-card">
-                <b>02 · Define</b>
-                <strong>Name the boundary.</strong>
-                <div class="copy-box local-platform-content"><p>Definition names the claim and draws the boundary. It tells the reader what is being talked about, what is not being talked about, and what would count as the same thing.</p></div>
-                <div class="copy-box local-engineering-content"><p>Definition identifies the object, variable, context, scope, boundary condition, classification, and claim type. Without definition, measurement and comparison become unstable.</p></div>
-                <div class="audit-question"><span>Audit question</span>Is the claim defined tightly enough to be tested?</div>
-              </article>
-
-              <article class="route-card">
-                <b>03 · Measure</b>
-                <strong>Make it comparable.</strong>
-                <div class="copy-box local-platform-content"><p>Measurement makes the claim accountable. It turns a claim into something that can be compared rather than merely argued.</p></div>
-                <div class="copy-box local-engineering-content"><p>Measurement applies a method, unit, instrument, sampling frame, calibration state, and uncertainty range to the defined claim.</p></div>
-                <div class="audit-question"><span>Audit question</span>Can another observer understand the method and repeat the measurement logic?</div>
-              </article>
-
-              <article class="route-card">
-                <b>04 · Compare</b>
-                <strong>Test against another pass.</strong>
-                <div class="copy-box local-platform-content"><p>Comparison asks whether the result survives another pass. A claim grows stronger when it can be checked against another source, attempt, condition, or expectation.</p></div>
-                <div class="copy-box local-engineering-content"><p>Comparison evaluates the result against replication, controls, baseline conditions, competing models, historical values, independent datasets, or expected outputs.</p></div>
-                <div class="audit-question"><span>Audit question</span>What is this result being compared against?</div>
-              </article>
-
-              <article class="route-card">
-                <b>05 · Revise</b>
-                <strong>Let correction work.</strong>
-                <div class="copy-box local-platform-content"><p>Revision is where the system stays honest. If reality changes the answer, the explanation must change with it.</p></div>
-                <div class="copy-box local-engineering-content"><p>Revision updates the model, boundary, confidence level, assumptions, or classification when evidence contradicts, narrows, or refines the prior claim.</p></div>
-                <div class="audit-question"><span>Audit question</span>What would change if the evidence disagreed?</div>
-              </article>
-
-              <article class="route-card">
-                <b>06 · Limit</b>
-                <strong>State where it stops.</strong>
-                <div class="copy-box local-platform-content"><p>Limiting the claim tells the reader what the result can honestly say. This keeps the claim strong because it keeps the claim honest.</p></div>
-                <div class="copy-box local-engineering-content"><p>Limitation attaches uncertainty, domain scope, unresolved variables, confidence boundary, and applicability constraints to the final claim.</p></div>
-                <div class="audit-question"><span>Audit question</span>Where does this claim stop?</div>
-              </article>
+            <div class="return-row">
+              <a class="return-chip gold" href="/laws/categories/reality/">Open Reality Source</a>
+              <a class="return-chip" href="#catalog-groups">Return to Catalog Groups</a>
             </div>
-          </div>
-
-          <div class="return-row">
-            <a class="return-chip gold" href="#scientific-route">Return to Scientific Route</a>
-            <a class="return-chip" href="#primary-doors">Return to Primary Doors</a>
-          </div>
-        </section>
-
-        <section class="panel section" id="deeper-terms" aria-labelledby="deeper-terms-title">
-          <input class="local-radio local-platform" type="radio" name="lens-terms" id="terms-platform" checked>
-          <input class="local-radio local-engineering" type="radio" name="lens-terms" id="terms-engineering">
-
-          <div class="kicker">Deeper terms</div>
-          <div class="section-header">
-            <h2 id="deeper-terms-title">Open only what the claim requires.</h2>
-            <p class="page-platform">These terms keep the reality test honest without overwhelming the first read.</p>
-            <p class="page-engineering">These terms define the minimum scientific controls required for repeatable, falsifiable, calibrated, uncertainty-aware, causality-bounded, scope-aware claims.</p>
-          </div>
-
-          <div class="local-scope">
-            <div class="local-toggle-row" role="radiogroup" aria-label="Deeper terms language lens">
-              <label class="local-toggle-label is-platform" for="terms-platform" tabindex="0">Platform</label>
-              <label class="local-toggle-label is-engineering" for="terms-engineering" tabindex="0">Engineering</label>
-            </div>
-
-            <div class="term-grid">
-              <article class="term-card">
-                <b>Repeatability</b>
-                <strong>The result has to survive another pass.</strong>
-                <div class="copy-box local-platform-content"><p>Repeatability means the result has to be more than a one-time impression. It does not require every result to be identical, but it does require the method and result to remain stable enough to compare.</p></div>
-                <div class="copy-box local-engineering-content"><p>Repeatability means a method can produce comparable results across attempts, observers, instruments, or conditions within a defined tolerance. The tolerance must be declared or inferable from the claim.</p></div>
-                <div class="audit-question"><span>Audit question</span>Can the result survive another pass under comparable conditions?</div>
-              </article>
-
-              <article class="term-card">
-                <b>Falsifiability</b>
-                <strong>A serious theory must be able to lose.</strong>
-                <div class="copy-box local-platform-content"><p>Falsifiability means a serious theory must be able to lose. If nothing could ever count against the claim, the claim is not being tested by reality.</p></div>
-                <div class="copy-box local-engineering-content"><p>Falsifiability means the claim exposes a condition under which it could be contradicted, narrowed, revised, or rejected. A non-falsifiable claim may be meaningful, but it is not functioning as scientific law.</p></div>
-                <div class="audit-question"><span>Audit question</span>What result would count against this claim?</div>
-              </article>
-
-              <article class="term-card">
-                <b>Calibration</b>
-                <strong>The tool has to be accountable.</strong>
-                <div class="copy-box local-platform-content"><p>Calibration means the tool has to be accountable before the result can be trusted. If the tool is off, the result may be off even when the process looks careful.</p></div>
-                <div class="copy-box local-engineering-content"><p>Calibration evaluates whether the instrument, observer, unit, method, reference standard, and comparison system are stable enough to support the measurement.</p></div>
-                <div class="audit-question"><span>Audit question</span>How do we know the tool or method was aligned before it produced the result?</div>
-              </article>
-
-              <article class="term-card">
-                <b>Uncertainty</b>
-                <strong>Honesty includes possible error.</strong>
-                <div class="copy-box local-platform-content"><p>Uncertainty does not destroy knowledge. It protects knowledge from pretending to be more exact than it is.</p></div>
-                <div class="copy-box local-engineering-content"><p>Uncertainty quantifies or declares the possible error range created by measurement limits, sampling limits, model mismatch, instrument limits, environmental variation, or unresolved variables.</p></div>
-                <div class="audit-question"><span>Audit question</span>What range of error or unresolved condition travels with this claim?</div>
-              </article>
-
-              <article class="term-card">
-                <b>Causality</b>
-                <strong>Cause requires more than sequence.</strong>
-                <div class="copy-box local-platform-content"><p>Causality means more than “this happened after that.” Cause requires the relationship to survive comparison, controls, and alternative explanations.</p></div>
-                <div class="copy-box local-engineering-content"><p>Causality requires evidence that a relationship is not merely sequential, coincidental, confounded, or selection-biased. It requires mechanism review, control logic, comparison, and alternative-explanation testing.</p></div>
-                <div class="audit-question"><span>Audit question</span>What alternative explanation has been ruled out, and by what method?</div>
-              </article>
-
-              <article class="term-card">
-                <b>Model Scope</b>
-                <strong>A model carries its boundary.</strong>
-                <div class="copy-box local-platform-content"><p>Model scope means a model can be useful in one range and misleading somewhere else. A good model carries its boundary with it.</p></div>
-                <div class="copy-box local-engineering-content"><p>Model scope defines the domain, assumptions, inputs, operating range, constraints, exclusions, and boundary conditions under which the model remains valid.</p></div>
-                <div class="audit-question"><span>Audit question</span>Where does this model apply, and where should it stop being trusted?</div>
-              </article>
-            </div>
-          </div>
-
-          <div class="return-row">
-            <a class="return-chip gold" href="#deeper-terms">Return to Deeper Terms</a>
-            <a class="return-chip" href="#primary-doors">Return to Primary Doors</a>
-          </div>
-        </section>
-
-        <section class="panel section" id="claim-ladder" aria-labelledby="claim-ladder-title">
-          <input class="local-radio local-platform" type="radio" name="lens-ladder" id="ladder-platform" checked>
-          <input class="local-radio local-engineering" type="radio" name="lens-ladder" id="ladder-engineering">
-
-          <div class="kicker">Claim testing ladder</div>
-          <div class="section-header">
-            <h2 id="claim-ladder-title">How a claim matures.</h2>
-            <p class="page-platform">The ladder shows why a claim should not jump from first impression to final truth.</p>
-            <p class="page-engineering">The ladder defines claim maturity states from subjective signal to bounded scientific claim.</p>
-          </div>
-
-          <div class="local-scope">
-            <div class="local-toggle-row" role="radiogroup" aria-label="Claim ladder language lens">
-              <label class="local-toggle-label is-platform" for="ladder-platform" tabindex="0">Platform</label>
-              <label class="local-toggle-label is-engineering" for="ladder-engineering" tabindex="0">Engineering</label>
-            </div>
-
-            <div class="ladder-grid">
-              <article class="ladder-card">
-                <b>01</b>
-                <strong>Impression</strong>
-                <div class="copy-box local-platform-content"><p>Something appears true.</p></div>
-                <div class="copy-box local-engineering-content"><p>A subjective or preliminary signal exists, but no stable record, measurement, or boundary has been attached.</p></div>
-              </article>
-
-              <article class="ladder-card">
-                <b>02</b>
-                <strong>Observation</strong>
-                <div class="copy-box local-platform-content"><p>Something is noticed or recorded.</p></div>
-                <div class="copy-box local-engineering-content"><p>The claim has contact with an observed event, condition, signal, or pattern.</p></div>
-              </article>
-
-              <article class="ladder-card">
-                <b>03</b>
-                <strong>Evidence</strong>
-                <div class="copy-box local-platform-content"><p>The record can be inspected.</p></div>
-                <div class="copy-box local-engineering-content"><p>The observation gains provenance, relevance, and a checkable record.</p></div>
-              </article>
-
-              <article class="ladder-card">
-                <b>04</b>
-                <strong>Measurement</strong>
-                <div class="copy-box local-platform-content"><p>The record gains coordinates.</p></div>
-                <div class="copy-box local-engineering-content"><p>The evidence is attached to a unit, method, calibration state, sampling frame, and uncertainty boundary.</p></div>
-              </article>
-
-              <article class="ladder-card">
-                <b>05</b>
-                <strong>Repeatability</strong>
-                <div class="copy-box local-platform-content"><p>The result survives another pass.</p></div>
-                <div class="copy-box local-engineering-content"><p>Comparable results appear across attempts, observers, instruments, or conditions.</p></div>
-              </article>
-
-              <article class="ladder-card">
-                <b>06</b>
-                <strong>Model</strong>
-                <div class="copy-box local-platform-content"><p>A theory explains the pattern.</p></div>
-                <div class="copy-box local-engineering-content"><p>A model organizes the result into expected behavior while exposing assumptions and revision conditions.</p></div>
-              </article>
-
-              <article class="ladder-card">
-                <b>07</b>
-                <strong>Limitation</strong>
-                <div class="copy-box local-platform-content"><p>The boundary is declared.</p></div>
-                <div class="copy-box local-engineering-content"><p>The claim carries uncertainty, scope, domain limits, unresolved variables, and confidence boundaries.</p></div>
-              </article>
-
-              <article class="ladder-card">
-                <b>08</b>
-                <strong>Scientific Claim</strong>
-                <div class="copy-box local-platform-content"><p>The claim is now bounded, testable, and open to correction.</p></div>
-                <div class="copy-box local-engineering-content"><p>The claim has observation, evidence, measurement, repeatability value, model structure, falsifiability exposure, calibration awareness, uncertainty boundary, and stated scope.</p></div>
-              </article>
-            </div>
-          </div>
-
-          <div class="return-row">
-            <a class="return-chip gold" href="#claim-ladder">Return to Claim Ladder</a>
-            <a class="return-chip" href="#branch-orbit">Return to Branch Orbit</a>
-          </div>
+          </article>
         </section>
 
         <section class="panel section" id="branch-routes" aria-labelledby="branch-routes-title">
           <div class="kicker">Branch routes</div>
           <div class="section-header">
-            <h2 id="branch-routes-title">Scientific Law remains attached to the governing Laws chamber.</h2>
+            <h2 id="branch-routes-title">The catalog keeps every major branch reachable.</h2>
             <p class="page-platform">
-              These routes keep the chamber connected to parent law, source category, proof checking, and the four full branch pages.
+              These routes let the reader move through the catalog without treating Laws, Scientific Law, Reality, and proof checking as separate silos.
             </p>
             <p class="page-engineering">
-              Branch routes preserve parent, source, taxonomy, proof, and primary-door page access without turning the current route into a grid replacement.
+              These route cards preserve parent, branch, source, primary scientific pages, proof, and root orientation while the top orbit remains the primary page-changing construct.
             </p>
           </div>
 
-          <div class="branch-grid">
-            <a class="branch-card" href="/laws/">
+          <div class="route-grid">
+            <a class="route-card" href="/laws/">
               <b>Parent</b>
               <strong>Governing Laws</strong>
               <p>Return to the rule chamber.</p>
             </a>
 
-            <a class="branch-card" href="/laws/categories/reality/">
+            <a class="route-card" href="/laws/scientific-law/">
+              <b>Branch</b>
+              <strong>Scientific Law</strong>
+              <p>Open the reality-test chamber.</p>
+            </a>
+
+            <a class="route-card" href="/laws/categories/reality/">
               <b>Source</b>
               <strong>Reality Source</strong>
-              <p>Open the source category for reality claims.</p>
+              <p>Open the source doctrine for reality claims.</p>
             </a>
 
-            <a class="branch-card" href="/laws/categories/">
-              <b>Taxonomy</b>
+            <a class="route-card" href="/laws/categories/">
+              <b>Catalog</b>
               <strong>Categories</strong>
-              <p>Open the taxonomy and branch map.</p>
+              <p>Return to the shared catalog orbit.</p>
             </a>
 
-            <a class="branch-card" href="/gauges/">
-              <b>Proof</b>
-              <strong>Gauges</strong>
-              <p>Open proof and route checking.</p>
-            </a>
-
-            <a class="branch-card" href="/laws/scientific-law/theory/">
+            <a class="route-card" href="/laws/scientific-law/theory/">
               <b>Primary</b>
               <strong>Theory</strong>
               <p>Open the full Theory branch.</p>
             </a>
 
-            <a class="branch-card" href="/laws/scientific-law/evidence/">
+            <a class="route-card" href="/laws/scientific-law/evidence/">
               <b>Primary</b>
               <strong>Evidence</strong>
               <p>Open the full Evidence branch.</p>
             </a>
 
-            <a class="branch-card" href="/laws/scientific-law/measure/">
+            <a class="route-card" href="/laws/scientific-law/measure/">
               <b>Primary</b>
               <strong>Measure</strong>
               <p>Open the full Measure branch.</p>
             </a>
 
-            <a class="branch-card" href="/laws/scientific-law/limits/">
+            <a class="route-card" href="/laws/scientific-law/limits/">
               <b>Primary</b>
               <strong>Limits</strong>
               <p>Open the full Limits branch.</p>
             </a>
+
+            <a class="route-card" href="/gauges/">
+              <b>Proof</b>
+              <strong>Gauges</strong>
+              <p>Open proof and route checking.</p>
+            </a>
+
+            <a class="route-card" href="/">
+              <b>Root</b>
+              <strong>Compass</strong>
+              <p>Return to root orientation.</p>
+            </a>
           </div>
 
           <div class="return-row">
-            <a class="return-chip gold" href="#branch-orbit">Return to Branch Orbit</a>
+            <a class="return-chip gold" href="#catalog-orbit">Return to Catalog Orbit</a>
             <a class="return-chip" href="/laws/">Return to Laws</a>
           </div>
         </section>
 
         <template id="route-receipt" data-route-receipt>
-SCIENTIFIC_LAW_GEM_ORBIT_DEEP_DEFINITION_REALITY_TEST_CHAMBER_TNT_v1
-binding=SCIENTIFIC_LAW_GEM_ORBIT_DEEP_DEFINITION_REALITY_TEST_CHAMBER_PREGAME_TO_POSTGAME_BINDING_v1
-route=/laws/scientific-law/
-target=/laws/scientific-law/index.html
-scientific_law_branch_preserved=true
-laws_parent_preserved=true
-reality_source_preserved=true
+LAWS_CATEGORIES_SHARED_CATALOG_ORBIT_TNT_v1
+binding=LAWS_CATEGORIES_SHARED_CATALOG_ORBIT_PREGAME_TO_POSTGAME_BINDING_v1
+route=/laws/categories/
+target=/laws/categories/index.html
+shared_catalog_bridge=true
+laws_catalog_visible=true
+scientific_law_catalog_visible=true
+reality_source_bridge=true
+top_catalog_orbit=true
+large_same_page_category_diamonds=true
 platform_engineering_language_standard=true
-public_technical_labels_retired=true
-global_platform_engineering_toggle=true
-local_section_language_toggles=true
-top_branch_orbit_added=true
-large_primary_scientific_law_diamonds=true
-four_primary_doors_preserved=true
-four_primary_doors_deeply_expanded=true
-scientific_route_deeply_expanded=true
-deeper_terms_deeply_expanded=true
-claim_testing_ladder_added=true
-branch_routes_preserved=true
 svg_crystal_renderer_required=true
 lawCrystalGem_used_for_law_affiliated_items=true
 routeColorGem_used_for_outbound_items=true
 css_polygon_regression_forbidden=true
+generic_sitemap_forbidden=true
 javascript_dependency=false
 heavy_runtime=false
 generated_image=false
 graphic_block=false
 visual_pass_claimed=false
-deploy_marker=SCIENTIFIC_LAW_GEM_ORBIT_DEEP_DEFINITION_REALITY_TEST_CHAMBER_DEPLOY_MARKER_v1
+deploy_marker=LAWS_CATEGORIES_SHARED_CATALOG_ORBIT_DEPLOY_MARKER_v1
         </template>
       </div>
     </main>
 
     <footer>
-      SCIENTIFIC_LAW_GEM_ORBIT_DEEP_DEFINITION_REALITY_TEST_CHAMBER_TNT_v1 · Scientific Law · Reality Test Chamber.
+      LAWS_CATEGORIES_SHARED_CATALOG_ORBIT_TNT_v1 · Categories · Shared catalog bridge.
     </footer>
   </div>
 </body>

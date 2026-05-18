@@ -3,9 +3,15 @@
   lang="en"
   data-route="/explore/frontier/lattice/"
   data-page="frontier-lattice"
-  data-version="G2-V1"
-  data-contract="FRONTIER_LATTICE_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1"
-  data-source-binding="FRONTIER_LATTICE_COMPASS_GEM_DUAL_LENS_PREGAME_TO_POSTGAME_BINDING_v1"
+  data-version="G3-V1"
+  data-contract="FRONTIER_LATTICE_MINIMUM_NAV_RETURN_TWINKLING_GEM_GLOW_CONSOLIDATION_TNT_v1"
+  data-previous-contract="FRONTIER_LATTICE_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1"
+  data-source-binding="FRONTIER_LATTICE_MINIMUM_NAV_RETURN_TWINKLING_GEM_GLOW_CONSOLIDATION_PREGAME_TO_POSTGAME_BINDING_v1"
+  data-legacy-context-donor="FRONTIER_LATTICE_COLLECTIVE_BACKLINK_RENEWAL_TNT_v1"
+  data-legacy-route="/frontier/lattice/"
+  data-legacy-route-not-restored="true"
+  data-active-route="/explore/frontier/lattice/"
+  data-parent-return="/frontier/"
   data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
   data-design-reference="FRONTIER_ENERGY_COMPASS_GEM_PRINT_LEGIBILITY_RENEWAL_TNT_v19"
   data-mirror-reference-1="FRONTIER_WATER_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1"
@@ -18,11 +24,18 @@
   data-platform-lens="true"
   data-engineering-lens="true"
   data-lattice-law="node-requires-position-purpose-category-state-boundary-transition-rule-receipt-audit-path"
+  data-top-nav-minimum-state="true"
+  data-top-nav-items="Compass,Home,Door,Laws,Frontier"
+  data-hero-return-to-frontier-added="true"
+  data-compass-gem-hidden-star-glow="true"
+  data-compass-gem-twinkling-star-animation="true"
   data-static-page-usable-without-js="true"
   data-heavy-runtime-loaded="false"
   data-runtime-public-message="false"
   data-generated-image="false"
   data-graphic-box="false"
+  data-canvas="false"
+  data-webgl="false"
   data-streaming="false"
   data-visual-pass-claimed="false"
 >
@@ -94,9 +107,11 @@
       pointer-events:none;
       background-image:
         radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
+        radial-gradient(circle,rgba(243,200,111,.14) 0 1px,transparent 1.5px),
+        radial-gradient(circle,rgba(141,216,255,.12) 0 1px,transparent 1.5px),
         linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
         linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px);
-      background-size:220px 260px,54px 54px,54px 54px;
+      background-size:220px 260px,310px 280px,270px 330px,54px 54px,54px 54px;
       opacity:.22;
       mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
     }
@@ -235,7 +250,7 @@
       outline:none;
     }
 
-    .nav a[aria-current="page"]{
+    .nav a.frontier-link{
       border-color:rgba(243,200,111,.88);
       color:#060811;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
@@ -311,10 +326,15 @@
       content:"";
       width:.72rem;
       height:.72rem;
-      border-radius:.18rem;
-      transform:rotate(45deg);
-      background:linear-gradient(135deg,var(--gold2),var(--gold));
-      box-shadow:0 0 1.1rem rgba(243,200,111,.46);
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,.98) 0 .12rem,transparent .15rem),
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.70),transparent 58%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.42),transparent 78%);
+      box-shadow:
+        0 0 .6rem rgba(255,255,255,.30),
+        0 0 1.1rem rgba(141,216,255,.38),
+        0 0 1.45rem rgba(243,200,111,.24);
     }
 
     h1{
@@ -494,6 +514,7 @@
       transition:transform .18s ease,filter .18s ease;
       animation:gemFloat 7.2s ease-in-out infinite;
       animation-delay:var(--delay,0s);
+      isolation:isolate;
     }
 
     .compass-center{
@@ -514,6 +535,67 @@
       transform:translate(-50%,-50%);
     }
 
+    .compass-center::before,
+    .compass-node::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:0;
+      width:92%;
+      height:112%;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,1) 0 .22rem,transparent .31rem),
+        radial-gradient(circle at 50% 50%,rgba(255,244,216,.92),transparent 18%),
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.66),transparent 36%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.45),transparent 63%),
+        radial-gradient(circle at 50% 50%,rgba(143,101,255,.24),transparent 84%);
+      box-shadow:
+        0 0 .78rem rgba(255,255,255,.38),
+        0 0 1.42rem rgba(243,200,111,.46),
+        0 0 2.55rem rgba(141,216,255,.35),
+        0 0 3.75rem rgba(143,101,255,.22);
+      opacity:.94;
+      pointer-events:none;
+      animation:behindGemStarTwinkle 6.2s ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+    }
+
+    .compass-center::before{
+      width:96%;
+      height:118%;
+      box-shadow:
+        0 0 .95rem rgba(255,255,255,.42),
+        0 0 1.75rem rgba(243,200,111,.50),
+        0 0 3rem rgba(141,216,255,.38),
+        0 0 4.4rem rgba(143,101,255,.26);
+    }
+
+    .compass-center::after,
+    .compass-node::after{
+      content:"";
+      position:absolute;
+      inset:-9%;
+      z-index:1;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,244,216,.22),transparent 31%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.18),transparent 58%),
+        radial-gradient(circle at 50% 50%,rgba(143,101,255,.11),transparent 78%);
+      filter:blur(11px);
+      opacity:.74;
+      pointer-events:none;
+      animation:effervescentGemStarSpill 8.4s ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+    }
+
+    .compass-center::after{
+      inset:-12%;
+      opacity:.80;
+    }
+
     .compass-node:hover,
     .compass-node:focus-visible{
       transform:translate(-50%,-50%) scale(1.055);
@@ -526,9 +608,61 @@
       50%{margin-top:-.42rem}
     }
 
+    @keyframes behindGemStarTwinkle{
+      0%,100%{
+        opacity:.88;
+        filter:brightness(1.03) saturate(1);
+        transform:translate(-50%,-50%) scale(1);
+      }
+      18%{
+        opacity:1;
+        filter:brightness(1.36) saturate(1.14);
+        transform:translate(-50%,-50%) scale(1.035);
+      }
+      26%{
+        opacity:.92;
+        filter:brightness(1.10) saturate(1.05);
+        transform:translate(-50%,-50%) scale(1.006);
+      }
+      54%{
+        opacity:.98;
+        filter:brightness(1.22) saturate(1.10);
+        transform:translate(-50%,-50%) scale(1.02);
+      }
+      68%{
+        opacity:1;
+        filter:brightness(1.48) saturate(1.18);
+        transform:translate(-50%,-50%) scale(1.046);
+      }
+      74%{
+        opacity:.93;
+        filter:brightness(1.12) saturate(1.06);
+        transform:translate(-50%,-50%) scale(1.01);
+      }
+    }
+
+    @keyframes effervescentGemStarSpill{
+      0%,100%{
+        opacity:.60;
+        filter:blur(10px) brightness(1);
+        transform:scale(1);
+      }
+      36%{
+        opacity:.78;
+        filter:blur(12px) brightness(1.12);
+        transform:scale(1.025);
+      }
+      68%{
+        opacity:.84;
+        filter:blur(13px) brightness(1.18);
+        transform:scale(1.04);
+      }
+    }
+
     .gem-core{
       position:absolute;
       inset:0;
+      z-index:2;
       display:grid;
       place-items:center;
       pointer-events:none;
@@ -899,6 +1033,17 @@
         height:5.45rem;
       }
 
+      .compass-center::before,
+      .compass-node::before{
+        width:96%;
+        height:116%;
+      }
+
+      .compass-center::after,
+      .compass-node::after{
+        inset:-7%;
+      }
+
       .gem-label{
         width:88%;
         gap:.14rem;
@@ -990,7 +1135,11 @@
       .compass-stage::before,
       .compass-stage::after,
       .compass-center,
-      .compass-node{
+      .compass-node,
+      .compass-center::before,
+      .compass-center::after,
+      .compass-node::before,
+      .compass-node::after{
         animation:none!important;
       }
     }
@@ -1104,17 +1253,10 @@
 
       <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
-        <a href="/door/">Door</a>
         <a href="/home/">Home</a>
-        <a href="/products/">Products</a>
+        <a href="/door/">Door</a>
         <a href="/laws/">Laws</a>
-        <a href="/showroom/globe/">Interactive Narrative</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/explore/frontier/energy/">Energy</a>
-        <a href="/explore/frontier/water/">Water</a>
-        <a href="/explore/frontier/waste/">Waste</a>
-        <a href="/explore/frontier/lattice/" aria-current="page">Lattice</a>
-        <a href="/gauges/">Gauges</a>
+        <a class="frontier-link" href="/frontier/">Frontier</a>
       </nav>
     </header>
 
@@ -1136,6 +1278,7 @@
           <a class="button gold" href="#lattice-orbit">Choose a Pathway</a>
           <a class="button" href="#audralia-lattice">Start with Audralia</a>
           <a class="button green" href="#kill-conditions">Open Kill Conditions</a>
+          <a class="button" href="/frontier/">Return to Frontier</a>
         </div>
       </section>
 
@@ -1775,6 +1918,7 @@
         </p>
         <div class="actions">
           <a class="button gold" href="#lattice-orbit">Return to Lattice Orbit</a>
+          <a class="button" href="/frontier/">Return to Frontier</a>
           <a class="button" href="/showroom/globe/audralia/">Open Audralia</a>
           <a class="button green" href="/explore/frontier/energy/">Open Energy</a>
           <a class="button" href="/explore/frontier/water/">Open Water</a>
@@ -1783,11 +1927,18 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_LATTICE_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1
-binding=FRONTIER_LATTICE_COMPASS_GEM_DUAL_LENS_PREGAME_TO_POSTGAME_BINDING_v1
+FRONTIER_LATTICE_MINIMUM_NAV_RETURN_TWINKLING_GEM_GLOW_CONSOLIDATION_TNT_v1
+previous=FRONTIER_LATTICE_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1
+binding=FRONTIER_LATTICE_MINIMUM_NAV_RETURN_TWINKLING_GEM_GLOW_CONSOLIDATION_PREGAME_TO_POSTGAME_BINDING_v1
+legacy_context_donor=FRONTIER_LATTICE_COLLECTIVE_BACKLINK_RENEWAL_TNT_v1
+legacy_context_consolidated=true
+legacy_route=/frontier/lattice/
+legacy_route_not_restored=true
+active_route=/explore/frontier/lattice/
 route=/explore/frontier/lattice/
 page=frontier_lattice
 html=/explore/frontier/lattice/index.html
+parent_return=/frontier/
 source_visual_authority=COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2
 design_reference=FRONTIER_ENERGY_COMPASS_GEM_PRINT_LEGIBILITY_RENEWAL_TNT_v19
 mirror_reference_1=FRONTIER_WATER_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1
@@ -1807,23 +1958,38 @@ engineering_lens_per_pathway=true
 top_only_lens_toggle=false
 side_by_side_platform_engineering=false
 return_to_lattice_orbit_under_every_pathway=true
+top_nav_minimum_state=true
+top_nav_items=Compass,Home,Door,Laws,Frontier
+hero_return_to_frontier_added=true
+compass_gem_hidden_star_glow=true
+compass_gem_twinkling_star_animation=true
+compass_center_hidden_star_glow=true
+compass_node_hidden_star_glow=true
+existing_svg_gems_remain_front_objects=true
+labels_remain_readable=true
+css_only_animation=true
+reduced_motion_safe=true
 lattice_law=node_requires_position_purpose_category_state_boundary_transition_rule_receipt_audit_path
 node_validity=position_purpose_category_state_boundary_transition_rule_receipt_audit_path
 forbidden_collapse=visual_placement_as_proof_simulation_as_validation_node_as_complete_system_route_as_maturity_category_as_evidence_state_label_as_receipt_map_as_audit_survival
 category_relation=lattice_supports_energy_water_waste_future_frontier_categories_without_replacing_category_specific_science
 audit_boundary=audit_failure_blocks_closure
 final_lock=place_node_name_purpose_assign_category_declare_state_respect_boundary_require_receipt_survive_audit
+route_targets_preserved=true
 static_page_usable_without_js=true
 heavy_runtime=false
 generated_image=false
 graphic_box=false
+canvas=false
+webgl=false
 streaming=false
 visual_pass_claimed=false
+deploy_marker=FRONTIER_LATTICE_MINIMUM_NAV_RETURN_TWINKLING_GEM_GLOW_CONSOLIDATION_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer>
-      FRONTIER_LATTICE_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1 · Lattice · Audralia first · Per-pathway Platform and Engineering lenses.
+      FRONTIER_LATTICE_MINIMUM_NAV_RETURN_TWINKLING_GEM_GLOW_CONSOLIDATION_TNT_v1 · Lattice · Minimum Nav · Return to Frontier · Twinkling Gem Glow.
     </footer>
   </div>
 </body>

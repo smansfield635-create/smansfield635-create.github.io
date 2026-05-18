@@ -4,11 +4,11 @@
   lang="en"
   data-route="/explore/frontier/"
   data-page="explore-frontier"
-  data-version="FUSION-G4"
-  data-contract="FRONTIER_LIVE_SIMULATION_FIELD_BUTTON_PULSE_CONTEXT_RENEWAL_TNT_v4"
-  data-previous-contract="EXPLORE_FRONTIER_LIVING_RADIANT_FIELD_RENEWAL_TNT_v3"
-  data-source-binding="FRONTIER_LIVE_SIMULATION_FIELD_BUTTON_PULSE_CONTEXT_RENEWAL_PREWRITE_v4"
-  data-renewal-standard="CONTRACT_RENEWAL_ADVANCES_VISIBLE_CONTEXT_GRAPHIC_PREMISE_AND_PUBLIC_THESIS"
+  data-version="FUSION-G5"
+  data-contract="FRONTIER_VISIBLE_PULSE_FIELD_CORRECTION_TNT_v5"
+  data-previous-contract="FRONTIER_LIVE_SIMULATION_FIELD_BUTTON_PULSE_CONTEXT_RENEWAL_TNT_v4"
+  data-source-binding="FRONTIER_VISIBLE_PULSE_FIELD_CORRECTION_v5"
+  data-renewal-standard="VISIBLE_PULSE_REQUIRES_DEDICATED_EMISSION_LAYERS_NOT_SUBTLE_SHADOW_VALUES"
   data-parent-route="/explore/"
   data-frontier-root="/frontier/"
   data-child-lane-base="/explore/frontier/"
@@ -19,12 +19,14 @@
   data-live-simulation-field="true"
   data-frontier-science-simulation="true"
   data-static-lane-selector="superseded"
-  data-radiant-context-renewed="true"
-  data-visible-copy-renewed="true"
-  data-graphic-premise-renewed="true"
+  data-radiant-context-preserved="true"
+  data-visible-copy-preserved-from-v4="true"
+  data-graphic-premise-preserved="true"
   data-motion-system-renewed="true"
+  data-visible-pulse-emitters="true"
   data-button-pulse-renewed="true"
   data-card-pulse-renewed="true"
+  data-node-emitter-pulse-renewed="true"
   data-return-to-frontier="true"
   data-close-fusion-star-source="true"
   data-star-distance="near-contact"
@@ -221,39 +223,89 @@
 
     .nav a,
     .support-routes a,
-    .button,
-    .lane-card,
-    .return-card{
+    .button{
       --button-pulse-duration:9.8s;
       --button-pulse-delay:-1s;
-      --button-glow-strength:.14;
-      animation:frontierButtonGlowPulse var(--button-pulse-duration) ease-in-out infinite;
+      --button-pulse-peak:.42;
+      --button-pulse-mid:.22;
+      position:relative;
+      isolation:isolate;
+      overflow:visible;
+      animation:frontierButtonSurfacePulse var(--button-pulse-duration) ease-in-out infinite;
       animation-delay:var(--button-pulse-delay);
     }
 
-    @keyframes frontierButtonGlowPulse{
+    .nav a::before,
+    .support-routes a::before,
+    .button::before{
+      content:"";
+      position:absolute;
+      inset:-.56rem;
+      z-index:-1;
+      pointer-events:none;
+      border-radius:inherit;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,.28),transparent 18%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.38),transparent 48%),
+        radial-gradient(circle at 50% 50%,rgba(143,101,255,.24),transparent 78%);
+      opacity:.08;
+      transform:scale(.88);
+      animation:frontierButtonEmitterPulse var(--button-pulse-duration) ease-in-out infinite;
+      animation-delay:var(--button-pulse-delay);
+      will-change:opacity,transform;
+    }
+
+    @keyframes frontierButtonEmitterPulse{
+      0%,100%{
+        opacity:.06;
+        transform:scale(.86);
+      }
+
+      24%{
+        opacity:var(--button-pulse-peak,.42);
+        transform:scale(1.04);
+      }
+
+      49%{
+        opacity:.10;
+        transform:scale(.94);
+      }
+
+      76%{
+        opacity:var(--button-pulse-mid,.22);
+        transform:scale(1.12);
+      }
+    }
+
+    @keyframes frontierButtonSurfacePulse{
       0%,100%{
         border-color:rgba(255,255,255,.13);
         box-shadow:
           inset 0 1px 0 rgba(255,255,255,.06),
-          0 0 0 rgba(141,216,255,0),
-          0 0 0 rgba(243,200,111,0);
+          0 0 0 rgba(141,216,255,0);
       }
 
-      42%{
-        border-color:rgba(141,216,255,.34);
+      24%{
+        border-color:rgba(141,216,255,.48);
         box-shadow:
-          inset 0 1px 0 rgba(255,255,255,.10),
-          0 0 .72rem rgba(141,216,255,var(--button-glow-strength,.14)),
-          0 0 1.2rem rgba(143,101,255,calc(var(--button-glow-strength,.14) * .62));
+          inset 0 1px 0 rgba(255,255,255,.12),
+          0 0 .62rem rgba(141,216,255,.22),
+          0 0 1.12rem rgba(143,101,255,.13);
       }
 
-      68%{
-        border-color:rgba(243,200,111,.30);
+      49%{
+        border-color:rgba(255,255,255,.16);
         box-shadow:
-          inset 0 1px 0 rgba(255,255,255,.09),
-          0 0 .55rem rgba(243,200,111,calc(var(--button-glow-strength,.14) * .72)),
-          0 0 1.05rem rgba(141,216,255,calc(var(--button-glow-strength,.14) * .48));
+          inset 0 1px 0 rgba(255,255,255,.08),
+          0 0 .24rem rgba(141,216,255,.08);
+      }
+
+      76%{
+        border-color:rgba(243,200,111,.40);
+        box-shadow:
+          inset 0 1px 0 rgba(255,255,255,.11),
+          0 0 .54rem rgba(243,200,111,.17),
+          0 0 .98rem rgba(141,216,255,.10);
       }
     }
 
@@ -274,16 +326,16 @@
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
-    .nav a:nth-child(1){--button-pulse-duration:12.4s;--button-pulse-delay:-2.1s;--button-glow-strength:.10}
-    .nav a:nth-child(2){--button-pulse-duration:10.7s;--button-pulse-delay:-6.4s;--button-glow-strength:.12}
-    .nav a:nth-child(3){--button-pulse-duration:13.2s;--button-pulse-delay:-4.8s;--button-glow-strength:.10}
-    .nav a:nth-child(4){--button-pulse-duration:9.8s;--button-pulse-delay:-1.6s;--button-glow-strength:.16}
-    .nav a:nth-child(5){--button-pulse-duration:8.6s;--button-pulse-delay:-5.2s;--button-glow-strength:.18}
-    .nav a:nth-child(6){--button-pulse-duration:11.7s;--button-pulse-delay:-7.4s;--button-glow-strength:.13}
-    .nav a:nth-child(7){--button-pulse-duration:14.1s;--button-pulse-delay:-3.3s;--button-glow-strength:.11}
-    .nav a:nth-child(8){--button-pulse-duration:10.2s;--button-pulse-delay:-8.5s;--button-glow-strength:.12}
-    .nav a:nth-child(9){--button-pulse-duration:12.9s;--button-pulse-delay:-.8s;--button-glow-strength:.10}
-    .nav a:nth-child(10){--button-pulse-duration:9.3s;--button-pulse-delay:-4.1s;--button-glow-strength:.15}
+    .nav a:nth-child(1){--button-pulse-duration:12.4s;--button-pulse-delay:-2.1s;--button-pulse-peak:.32;--button-pulse-mid:.18}
+    .nav a:nth-child(2){--button-pulse-duration:10.7s;--button-pulse-delay:-6.4s;--button-pulse-peak:.36;--button-pulse-mid:.20}
+    .nav a:nth-child(3){--button-pulse-duration:13.2s;--button-pulse-delay:-4.8s;--button-pulse-peak:.30;--button-pulse-mid:.16}
+    .nav a:nth-child(4){--button-pulse-duration:9.8s;--button-pulse-delay:-1.6s;--button-pulse-peak:.46;--button-pulse-mid:.24}
+    .nav a:nth-child(5){--button-pulse-duration:8.6s;--button-pulse-delay:-5.2s;--button-pulse-peak:.50;--button-pulse-mid:.26}
+    .nav a:nth-child(6){--button-pulse-duration:11.7s;--button-pulse-delay:-7.4s;--button-pulse-peak:.38;--button-pulse-mid:.20}
+    .nav a:nth-child(7){--button-pulse-duration:14.1s;--button-pulse-delay:-3.3s;--button-pulse-peak:.32;--button-pulse-mid:.17}
+    .nav a:nth-child(8){--button-pulse-duration:10.2s;--button-pulse-delay:-8.5s;--button-pulse-peak:.36;--button-pulse-mid:.19}
+    .nav a:nth-child(9){--button-pulse-duration:12.9s;--button-pulse-delay:-.8s;--button-pulse-peak:.31;--button-pulse-mid:.17}
+    .nav a:nth-child(10){--button-pulse-duration:9.3s;--button-pulse-delay:-4.1s;--button-pulse-peak:.44;--button-pulse-mid:.24}
 
     .nav a:hover,
     .nav a:focus-visible{
@@ -448,11 +500,11 @@
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
-    .actions .button:nth-child(1){--button-pulse-duration:7.4s;--button-pulse-delay:-1.1s;--button-glow-strength:.26}
-    .actions .button:nth-child(2){--button-pulse-duration:10.6s;--button-pulse-delay:-4.8s;--button-glow-strength:.18}
-    .actions .button:nth-child(3){--button-pulse-duration:8.9s;--button-pulse-delay:-6.3s;--button-glow-strength:.22}
-    .actions .button:nth-child(4){--button-pulse-duration:12.2s;--button-pulse-delay:-2.7s;--button-glow-strength:.16}
-    .actions .button:nth-child(5){--button-pulse-duration:9.7s;--button-pulse-delay:-7.9s;--button-glow-strength:.20}
+    .actions .button:nth-child(1){--button-pulse-duration:7.4s;--button-pulse-delay:-1.1s;--button-pulse-peak:.66;--button-pulse-mid:.32}
+    .actions .button:nth-child(2){--button-pulse-duration:10.6s;--button-pulse-delay:-4.8s;--button-pulse-peak:.46;--button-pulse-mid:.24}
+    .actions .button:nth-child(3){--button-pulse-duration:8.9s;--button-pulse-delay:-6.3s;--button-pulse-peak:.56;--button-pulse-mid:.29}
+    .actions .button:nth-child(4){--button-pulse-duration:12.2s;--button-pulse-delay:-2.7s;--button-pulse-peak:.40;--button-pulse-mid:.20}
+    .actions .button:nth-child(5){--button-pulse-duration:9.7s;--button-pulse-delay:-7.9s;--button-pulse-peak:.50;--button-pulse-mid:.26}
 
     .button:hover,
     .button:focus-visible{
@@ -596,8 +648,9 @@
       isolation:isolate;
       --pulse-duration:12.4s;
       --pulse-delay:-1.7s;
-      --pulse-scale:.13;
-      --pulse-opacity:.22;
+      --pulse-scale:.17;
+      --pulse-peak:.72;
+      --pulse-mid:.34;
     }
 
     .support-routes{
@@ -625,14 +678,14 @@
       text-transform:uppercase;
     }
 
-    .support-routes a:nth-child(1){--button-pulse-duration:7.8s;--button-pulse-delay:-3.2s;--button-glow-strength:.20}
-    .support-routes a:nth-child(2){--button-pulse-duration:11.3s;--button-pulse-delay:-5.1s;--button-glow-strength:.13}
-    .support-routes a:nth-child(3){--button-pulse-duration:8.9s;--button-pulse-delay:-1.4s;--button-glow-strength:.22}
-    .support-routes a:nth-child(4){--button-pulse-duration:12.8s;--button-pulse-delay:-7.6s;--button-glow-strength:.14}
-    .support-routes a:nth-child(5){--button-pulse-duration:10.5s;--button-pulse-delay:-4.9s;--button-glow-strength:.16}
-    .support-routes a:nth-child(6){--button-pulse-duration:13.4s;--button-pulse-delay:-2.3s;--button-glow-strength:.12}
-    .support-routes a:nth-child(7){--button-pulse-duration:9.6s;--button-pulse-delay:-8.1s;--button-glow-strength:.15}
-    .support-routes a:nth-child(8){--button-pulse-duration:11.9s;--button-pulse-delay:-6.7s;--button-glow-strength:.17}
+    .support-routes a:nth-child(1){--button-pulse-duration:7.8s;--button-pulse-delay:-3.2s;--button-pulse-peak:.52;--button-pulse-mid:.25}
+    .support-routes a:nth-child(2){--button-pulse-duration:11.3s;--button-pulse-delay:-5.1s;--button-pulse-peak:.34;--button-pulse-mid:.18}
+    .support-routes a:nth-child(3){--button-pulse-duration:8.9s;--button-pulse-delay:-1.4s;--button-pulse-peak:.58;--button-pulse-mid:.28}
+    .support-routes a:nth-child(4){--button-pulse-duration:12.8s;--button-pulse-delay:-7.6s;--button-pulse-peak:.36;--button-pulse-mid:.18}
+    .support-routes a:nth-child(5){--button-pulse-duration:10.5s;--button-pulse-delay:-4.9s;--button-pulse-peak:.42;--button-pulse-mid:.21}
+    .support-routes a:nth-child(6){--button-pulse-duration:13.4s;--button-pulse-delay:-2.3s;--button-pulse-peak:.32;--button-pulse-mid:.17}
+    .support-routes a:nth-child(7){--button-pulse-duration:9.6s;--button-pulse-delay:-8.1s;--button-pulse-peak:.40;--button-pulse-mid:.20}
+    .support-routes a:nth-child(8){--button-pulse-duration:11.9s;--button-pulse-delay:-6.7s;--button-pulse-peak:.46;--button-pulse-mid:.23}
 
     .support-routes a.primary{
       border-color:rgba(243,200,111,.58);
@@ -728,8 +781,9 @@
       isolation:isolate;
       --pulse-duration:8.8s;
       --pulse-delay:var(--delay,0s);
-      --pulse-scale:.11;
-      --pulse-opacity:.22;
+      --pulse-scale:.15;
+      --pulse-peak:.68;
+      --pulse-mid:.30;
     }
 
     .frontier-node.primary-row{
@@ -741,49 +795,52 @@
     .frontier-node::after{
       content:"";
       position:absolute;
-      inset:-55%;
+      inset:-62%;
       z-index:1;
       pointer-events:none;
       border-radius:42% 58% 55% 45% / 50% 44% 56% 50%;
       background:
-        radial-gradient(circle at 50% 50%,rgba(255,255,255,.25),transparent 13%),
-        radial-gradient(circle at 50% 50%,rgba(255,232,163,.30),transparent 32%),
-        radial-gradient(circle at 50% 50%,rgba(141,216,255,.28),transparent 60%),
-        radial-gradient(circle at 50% 50%,rgba(143,101,255,.18),transparent 88%);
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,.30),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(255,232,163,.34),transparent 32%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.34),transparent 60%),
+        radial-gradient(circle at 50% 50%,rgba(143,101,255,.22),transparent 90%);
       filter:blur(22px);
-      opacity:.90;
-      transform:scale(.92);
+      opacity:.42;
+      transform:scale(.84);
       animation:radiatingHaloPulse var(--pulse-duration,8.8s) ease-in-out infinite;
       animation-delay:var(--pulse-delay,var(--delay,0s));
       will-change:transform,opacity;
     }
 
     .frontier-anchor::after{
-      inset:-50%;
-      opacity:.92;
+      inset:-58%;
+      opacity:.44;
     }
 
     .frontier-node.primary-row::after{
-      inset:-58%;
-      opacity:.92;
+      inset:-64%;
+      opacity:.45;
     }
 
     @keyframes radiatingHaloPulse{
       0%,100%{
-        opacity:.76;
-        transform:scale(.90);
+        opacity:.26;
+        transform:scale(.78);
       }
-      28%{
-        opacity:calc(.74 + var(--pulse-opacity,.22));
-        transform:scale(calc(1 + var(--pulse-scale,.11)));
+
+      24%{
+        opacity:var(--pulse-peak,.68);
+        transform:scale(calc(1 + var(--pulse-scale,.15)));
       }
-      51%{
-        opacity:.88;
-        transform:scale(1.025);
+
+      50%{
+        opacity:.34;
+        transform:scale(.94);
       }
-      74%{
-        opacity:.98;
-        transform:scale(calc(1.035 + (var(--pulse-scale,.11) * .58)));
+
+      75%{
+        opacity:var(--pulse-mid,.30);
+        transform:scale(1.22);
       }
     }
 
@@ -823,38 +880,25 @@
 
     @keyframes hiddenCloseFusionStarPulse{
       0%,100%{
-        opacity:.92;
+        opacity:.78;
+        transform:translate(-50%,-50%) scale(.965);
+      }
+
+      38%{
+        opacity:1;
+        transform:translate(-50%,-50%) scale(1.055);
+      }
+
+      66%{
+        opacity:.88;
         transform:translate(-50%,-50%) scale(.985);
       }
-      42%{
-        opacity:1;
-        transform:translate(-50%,-50%) scale(1.018);
-      }
-      72%{
+
+      82%{
         opacity:.98;
-        transform:translate(-50%,-50%) scale(1.035);
+        transform:translate(-50%,-50%) scale(1.025);
       }
     }
-
-    .frontier-node:hover,
-    .frontier-node:focus-visible,
-    .frontier-anchor:hover,
-    .frontier-anchor:focus-visible{
-      outline:none;
-      filter:brightness(1.10) saturate(1.05);
-    }
-
-    .frontier-node.closed-loop{left:27.5%;top:13%;--pulse-duration:10.8s;--pulse-delay:-1.2s;--pulse-scale:.10;--pulse-opacity:.18}
-    .frontier-node.energy{left:72.5%;top:13%;--pulse-duration:7.6s;--pulse-delay:-4.7s;--pulse-scale:.14;--pulse-opacity:.26}
-    .frontier-node.infrastructure{left:15%;top:37%;--pulse-duration:9.9s;--pulse-delay:-6.1s;--pulse-scale:.11;--pulse-opacity:.20}
-    .frontier-node.lattice{left:85%;top:37%;--pulse-duration:11.2s;--pulse-delay:-2.8s;--pulse-scale:.09;--pulse-opacity:.18}
-    .frontier-node.manual{left:23%;top:58.5%;--pulse-duration:8.4s;--pulse-delay:-5.5s;--pulse-scale:.12;--pulse-opacity:.22}
-    .frontier-node.trajectory{left:77%;top:58.5%;--pulse-duration:10.2s;--pulse-delay:-.9s;--pulse-scale:.10;--pulse-opacity:.20}
-    .frontier-node.shimmer{left:50%;top:47.5%;--pulse-duration:7.1s;--pulse-delay:-3.3s;--pulse-scale:.15;--pulse-opacity:.28}
-    .frontier-node.waste{left:18%;top:83.5%;--pulse-duration:11.6s;--pulse-delay:-8.1s;--pulse-scale:.09;--pulse-opacity:.17}
-    .frontier-node.water{left:39.33%;top:83.5%;--pulse-duration:8.2s;--pulse-delay:-2.2s;--pulse-scale:.13;--pulse-opacity:.23}
-    .frontier-node.vision{left:60.66%;top:83.5%;--pulse-duration:12.1s;--pulse-delay:-4.4s;--pulse-scale:.10;--pulse-opacity:.18}
-    .frontier-node.urban{left:82%;top:83.5%;--pulse-duration:9.1s;--pulse-delay:-6.9s;--pulse-scale:.12;--pulse-opacity:.21}
 
     .frontier-star-body,
     .frontier-anchor-body{
@@ -863,6 +907,7 @@
       z-index:3;
       border-radius:50%;
       opacity:.985;
+      isolation:isolate;
       background:
         radial-gradient(circle at 50% 17%,rgba(255,255,255,.13),transparent 18%),
         radial-gradient(circle at 50% 52%,rgba(141,216,255,.11),transparent 46%),
@@ -877,6 +922,48 @@
         0 0 2rem rgba(141,216,255,.30),
         0 0 3.2rem rgba(143,101,255,.18);
       pointer-events:none;
+    }
+
+    .frontier-star-body::before,
+    .frontier-anchor-body::before{
+      content:"";
+      position:absolute;
+      inset:-68%;
+      z-index:-1;
+      border-radius:50%;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,.30),transparent 16%),
+        radial-gradient(circle at 50% 50%,rgba(255,232,163,.34),transparent 36%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.40),transparent 64%),
+        radial-gradient(circle at 50% 50%,rgba(143,101,255,.24),transparent 88%);
+      opacity:.18;
+      transform:scale(.72);
+      animation:frontierVisibleNodeEmitter var(--pulse-duration,8.8s) ease-in-out infinite;
+      animation-delay:var(--pulse-delay,var(--delay,0s));
+      will-change:opacity,transform;
+    }
+
+    @keyframes frontierVisibleNodeEmitter{
+      0%,100%{
+        opacity:.12;
+        transform:scale(.68);
+      }
+
+      22%{
+        opacity:var(--pulse-peak,.68);
+        transform:scale(1.18);
+      }
+
+      47%{
+        opacity:.18;
+        transform:scale(.86);
+      }
+
+      71%{
+        opacity:var(--pulse-mid,.30);
+        transform:scale(1.34);
+      }
     }
 
     .frontier-node.primary-row .frontier-star-body{
@@ -907,6 +994,26 @@
         0 0 2.25rem rgba(141,216,255,.34),
         0 0 3.65rem rgba(143,101,255,.22);
     }
+
+    .frontier-node:hover,
+    .frontier-node:focus-visible,
+    .frontier-anchor:hover,
+    .frontier-anchor:focus-visible{
+      outline:none;
+      filter:brightness(1.10) saturate(1.05);
+    }
+
+    .frontier-node.closed-loop{left:27.5%;top:13%;--pulse-duration:10.8s;--pulse-delay:-1.2s;--pulse-scale:.13;--pulse-peak:.56;--pulse-mid:.26}
+    .frontier-node.energy{left:72.5%;top:13%;--pulse-duration:7.6s;--pulse-delay:-4.7s;--pulse-scale:.20;--pulse-peak:.80;--pulse-mid:.38}
+    .frontier-node.infrastructure{left:15%;top:37%;--pulse-duration:9.9s;--pulse-delay:-6.1s;--pulse-scale:.16;--pulse-peak:.64;--pulse-mid:.30}
+    .frontier-node.lattice{left:85%;top:37%;--pulse-duration:11.2s;--pulse-delay:-2.8s;--pulse-scale:.12;--pulse-peak:.52;--pulse-mid:.24}
+    .frontier-node.manual{left:23%;top:58.5%;--pulse-duration:8.4s;--pulse-delay:-5.5s;--pulse-scale:.17;--pulse-peak:.70;--pulse-mid:.32}
+    .frontier-node.trajectory{left:77%;top:58.5%;--pulse-duration:10.2s;--pulse-delay:-.9s;--pulse-scale:.14;--pulse-peak:.60;--pulse-mid:.28}
+    .frontier-node.shimmer{left:50%;top:47.5%;--pulse-duration:7.1s;--pulse-delay:-3.3s;--pulse-scale:.22;--pulse-peak:.86;--pulse-mid:.40}
+    .frontier-node.waste{left:18%;top:83.5%;--pulse-duration:11.6s;--pulse-delay:-8.1s;--pulse-scale:.12;--pulse-peak:.50;--pulse-mid:.23}
+    .frontier-node.water{left:39.33%;top:83.5%;--pulse-duration:8.2s;--pulse-delay:-2.2s;--pulse-scale:.19;--pulse-peak:.76;--pulse-mid:.36}
+    .frontier-node.vision{left:60.66%;top:83.5%;--pulse-duration:12.1s;--pulse-delay:-4.4s;--pulse-scale:.13;--pulse-peak:.56;--pulse-mid:.26}
+    .frontier-node.urban{left:82%;top:83.5%;--pulse-duration:9.1s;--pulse-delay:-6.9s;--pulse-scale:.17;--pulse-peak:.68;--pulse-mid:.32}
 
     .frontier-label{
       position:relative;
@@ -989,7 +1096,12 @@
 
     .lane-card,
     .return-card{
+      --button-pulse-duration:10.8s;
+      --button-pulse-delay:-2.6s;
+      --card-pulse-peak:.34;
+      --card-pulse-mid:.17;
       position:relative;
+      isolation:isolate;
       min-height:12rem;
       display:grid;
       gap:.6rem;
@@ -1002,50 +1114,28 @@
         rgba(255,255,255,.035);
       overflow:hidden;
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
+      animation:frontierCardSurfacePulse var(--button-pulse-duration) ease-in-out infinite;
+      animation-delay:var(--button-pulse-delay);
     }
-
-    .lane-card:nth-child(1){--button-pulse-duration:10.8s;--button-pulse-delay:-2.6s;--button-glow-strength:.13}
-    .lane-card:nth-child(2){--button-pulse-duration:7.9s;--button-pulse-delay:-5.4s;--button-glow-strength:.20}
-    .lane-card:nth-child(3){--button-pulse-duration:12.2s;--button-pulse-delay:-1.2s;--button-glow-strength:.12}
-    .lane-card:nth-child(4){--button-pulse-duration:9.4s;--button-pulse-delay:-7.1s;--button-glow-strength:.16}
-    .lane-card:nth-child(5){--button-pulse-duration:13.1s;--button-pulse-delay:-4.5s;--button-glow-strength:.11}
-    .lane-card:nth-child(6){--button-pulse-duration:8.6s;--button-pulse-delay:-3.3s;--button-glow-strength:.18}
-    .lane-card:nth-child(7){--button-pulse-duration:11.5s;--button-pulse-delay:-8.9s;--button-glow-strength:.13}
-    .lane-card:nth-child(8){--button-pulse-duration:9.9s;--button-pulse-delay:-6.1s;--button-glow-strength:.15}
-    .lane-card:nth-child(9){--button-pulse-duration:12.8s;--button-pulse-delay:-2.9s;--button-glow-strength:.12}
-    .lane-card:nth-child(10){--button-pulse-duration:8.1s;--button-pulse-delay:-.7s;--button-glow-strength:.19}
-    .lane-card:nth-child(11){--button-pulse-duration:10.6s;--button-pulse-delay:-5.8s;--button-glow-strength:.17}
-
-    .return-card{min-height:10rem}
-
-    .return-card:nth-child(1){--button-pulse-duration:12.7s;--button-pulse-delay:-3.1s;--button-glow-strength:.10}
-    .return-card:nth-child(2){--button-pulse-duration:8.8s;--button-pulse-delay:-6.4s;--button-glow-strength:.18}
-    .return-card:nth-child(3){--button-pulse-duration:10.1s;--button-pulse-delay:-1.9s;--button-glow-strength:.16}
-    .return-card:nth-child(4){--button-pulse-duration:13.5s;--button-pulse-delay:-7.2s;--button-glow-strength:.12}
-    .return-card:nth-child(5){--button-pulse-duration:9.5s;--button-pulse-delay:-4.6s;--button-glow-strength:.14}
-    .return-card:nth-child(6){--button-pulse-duration:11.9s;--button-pulse-delay:-8.4s;--button-glow-strength:.11}
-    .return-card:nth-child(7){--button-pulse-duration:8.2s;--button-pulse-delay:-2.5s;--button-glow-strength:.15}
-    .return-card:nth-child(8){--button-pulse-duration:10.8s;--button-pulse-delay:-5.7s;--button-glow-strength:.17}
 
     .lane-card::before,
     .return-card::before{
       content:"";
       position:absolute;
-      right:.72rem;
-      top:.75rem;
-      width:4.15rem;
-      height:4.15rem;
-      border-radius:48% 52% 54% 46% / 50% 46% 54% 50%;
-      opacity:.26;
-      background:
-        radial-gradient(circle at 50% 50%,rgba(255,255,255,.86) 0 .18rem,transparent .21rem),
-        radial-gradient(circle at 50% 50%,rgba(141,216,255,.28),transparent 44%),
-        radial-gradient(circle at 50% 50%,rgba(143,101,255,.16),transparent 66%);
-      box-shadow:
-        0 0 .8rem rgba(255,255,255,.10),
-        0 0 1.3rem rgba(141,216,255,.18),
-        0 0 2.2rem rgba(243,200,111,.08);
+      inset:-1.1rem;
+      z-index:0;
+      border-radius:inherit;
       pointer-events:none;
+      background:
+        radial-gradient(circle at 82% 18%,rgba(255,255,255,.28),transparent 10%),
+        radial-gradient(circle at 76% 24%,rgba(141,216,255,.36),transparent 34%),
+        radial-gradient(circle at 22% 88%,rgba(143,101,255,.22),transparent 54%),
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.18),transparent 72%);
+      opacity:.10;
+      transform:scale(.92);
+      animation:frontierCardEmitterPulse var(--button-pulse-duration) ease-in-out infinite;
+      animation-delay:var(--button-pulse-delay);
+      will-change:opacity,transform;
     }
 
     .lane-card::after,
@@ -1054,15 +1144,84 @@
       position:absolute;
       right:.42rem;
       top:2.65rem;
+      z-index:1;
       width:4.75rem;
       height:2px;
       border-radius:999px;
-      opacity:.22;
+      opacity:.25;
       transform:rotate(15deg);
-      background:linear-gradient(90deg,transparent,rgba(255,244,216,.62),transparent);
+      background:linear-gradient(90deg,transparent,rgba(255,244,216,.70),transparent);
       filter:blur(.2px);
       pointer-events:none;
     }
+
+    @keyframes frontierCardEmitterPulse{
+      0%,100%{
+        opacity:.08;
+        transform:scale(.92);
+      }
+
+      25%{
+        opacity:var(--card-pulse-peak,.34);
+        transform:scale(1.03);
+      }
+
+      52%{
+        opacity:.10;
+        transform:scale(.96);
+      }
+
+      76%{
+        opacity:var(--card-pulse-mid,.17);
+        transform:scale(1.08);
+      }
+    }
+
+    @keyframes frontierCardSurfacePulse{
+      0%,100%{
+        border-color:rgba(255,255,255,.12);
+        box-shadow:0 0 0 rgba(141,216,255,0);
+      }
+
+      25%{
+        border-color:rgba(141,216,255,.30);
+        box-shadow:
+          0 0 .9rem rgba(141,216,255,.10),
+          inset 0 1px 0 rgba(255,255,255,.07);
+      }
+
+      76%{
+        border-color:rgba(243,200,111,.24);
+        box-shadow:
+          0 0 .7rem rgba(243,200,111,.08),
+          inset 0 1px 0 rgba(255,255,255,.06);
+      }
+    }
+
+    .lane-card:nth-child(1){--button-pulse-duration:10.8s;--button-pulse-delay:-2.6s;--card-pulse-peak:.28;--card-pulse-mid:.15}
+    .lane-card:nth-child(2){--button-pulse-duration:7.9s;--button-pulse-delay:-5.4s;--card-pulse-peak:.44;--card-pulse-mid:.24}
+    .lane-card:nth-child(3){--button-pulse-duration:12.2s;--button-pulse-delay:-1.2s;--card-pulse-peak:.27;--card-pulse-mid:.14}
+    .lane-card:nth-child(4){--button-pulse-duration:9.4s;--button-pulse-delay:-7.1s;--card-pulse-peak:.36;--card-pulse-mid:.19}
+    .lane-card:nth-child(5){--button-pulse-duration:13.1s;--button-pulse-delay:-4.5s;--card-pulse-peak:.25;--card-pulse-mid:.13}
+    .lane-card:nth-child(6){--button-pulse-duration:8.6s;--button-pulse-delay:-3.3s;--card-pulse-peak:.40;--card-pulse-mid:.21}
+    .lane-card:nth-child(7){--button-pulse-duration:11.5s;--button-pulse-delay:-8.9s;--card-pulse-peak:.30;--card-pulse-mid:.16}
+    .lane-card:nth-child(8){--button-pulse-duration:9.9s;--button-pulse-delay:-6.1s;--card-pulse-peak:.34;--card-pulse-mid:.18}
+    .lane-card:nth-child(9){--button-pulse-duration:12.8s;--button-pulse-delay:-2.9s;--card-pulse-peak:.28;--card-pulse-mid:.15}
+    .lane-card:nth-child(10){--button-pulse-duration:8.1s;--button-pulse-delay:-.7s;--card-pulse-peak:.42;--card-pulse-mid:.22}
+    .lane-card:nth-child(11){--button-pulse-duration:10.6s;--button-pulse-delay:-5.8s;--card-pulse-peak:.38;--card-pulse-mid:.20}
+
+    .return-card{
+      min-height:10rem;
+    }
+
+    .return-card:nth-child(1){--button-pulse-duration:12.7s;--button-pulse-delay:-3.1s;--card-pulse-peak:.24;--card-pulse-mid:.12}
+    .return-card:nth-child(2){--button-pulse-duration:8.8s;--button-pulse-delay:-6.4s;--card-pulse-peak:.40;--card-pulse-mid:.21}
+    .return-card:nth-child(3){--button-pulse-duration:10.1s;--button-pulse-delay:-1.9s;--card-pulse-peak:.36;--card-pulse-mid:.18}
+    .return-card:nth-child(4){--button-pulse-duration:13.5s;--button-pulse-delay:-7.2s;--card-pulse-peak:.26;--card-pulse-mid:.14}
+    .return-card:nth-child(5){--button-pulse-duration:9.5s;--button-pulse-delay:-4.6s;--card-pulse-peak:.32;--card-pulse-mid:.16}
+    .return-card:nth-child(6){--button-pulse-duration:11.9s;--button-pulse-delay:-8.4s;--card-pulse-peak:.25;--card-pulse-mid:.13}
+    .return-card:nth-child(7){--button-pulse-duration:8.2s;--button-pulse-delay:-2.5s;--card-pulse-peak:.34;--card-pulse-mid:.18}
+    .return-card:nth-child(8){--button-pulse-duration:10.8s;--button-pulse-delay:-5.7s;--card-pulse-peak:.38;--card-pulse-mid:.20}
 
     .lane-card:hover,
     .lane-card:focus-visible,
@@ -1208,8 +1367,9 @@
       .frontier-node{
         width:6.35rem;
         height:6.35rem;
-        --pulse-scale:.070;
-        --pulse-opacity:.15;
+        --pulse-scale:.095;
+        --pulse-peak:.50;
+        --pulse-mid:.24;
       }
 
       .frontier-node.primary-row{
@@ -1219,14 +1379,19 @@
 
       .frontier-anchor::after,
       .frontier-node::after{
-        inset:-42%;
+        inset:-48%;
         filter:blur(18px);
-        opacity:.88;
+        opacity:.40;
       }
 
       .frontier-node.primary-row::after{
-        inset:-44%;
+        inset:-50%;
         filter:blur(18px);
+      }
+
+      .frontier-star-body::before,
+      .frontier-anchor-body::before{
+        inset:-52%;
       }
 
       .frontier-anchor::before,
@@ -1275,8 +1440,9 @@
       .frontier-anchor{
         width:7.6rem;
         height:7.6rem;
-        --pulse-scale:.070;
-        --pulse-opacity:.15;
+        --pulse-scale:.10;
+        --pulse-peak:.54;
+        --pulse-mid:.26;
       }
 
       .frontier-anchor .frontier-label b{font-size:.56rem}
@@ -1293,10 +1459,15 @@
 
       .nav a,
       .support-routes a,
-      .button,
+      .button{
+        --button-pulse-peak:.34;
+        --button-pulse-mid:.18;
+      }
+
       .lane-card,
       .return-card{
-        --button-glow-strength:.10;
+        --card-pulse-peak:.24;
+        --card-pulse-mid:.13;
       }
     }
 
@@ -1337,15 +1508,22 @@
       }
 
       .nav a,
+      .nav a::before,
       .support-routes a,
+      .support-routes a::before,
       .button,
+      .button::before,
       .lane-card,
+      .lane-card::before,
       .return-card,
+      .return-card::before,
       .radiant-field span,
       .frontier-anchor::before,
       .frontier-node::before,
       .frontier-anchor::after,
       .frontier-node::after,
+      .frontier-star-body::before,
+      .frontier-anchor-body::before,
       .frontier-star-body,
       .frontier-anchor-body{
         animation:none!important;
@@ -1666,10 +1844,10 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_LIVE_SIMULATION_FIELD_BUTTON_PULSE_CONTEXT_RENEWAL_TNT_v4
-previous=EXPLORE_FRONTIER_LIVING_RADIANT_FIELD_RENEWAL_TNT_v3
-binding=FRONTIER_LIVE_SIMULATION_FIELD_BUTTON_PULSE_CONTEXT_RENEWAL_PREWRITE_v4
-renewal_standard=contract_renewal_advances_visible_context_graphic_premise_public_thesis_operating_level
+FRONTIER_VISIBLE_PULSE_FIELD_CORRECTION_TNT_v5
+previous=FRONTIER_LIVE_SIMULATION_FIELD_BUTTON_PULSE_CONTEXT_RENEWAL_TNT_v4
+binding=FRONTIER_VISIBLE_PULSE_FIELD_CORRECTION_v5
+renewal_standard=visible_pulse_requires_dedicated_emission_layers_not_subtle_shadow_values
 route=/explore/frontier/
 target=/explore/frontier/index.html
 page=frontier_live_simulation_field
@@ -1685,13 +1863,13 @@ return_to_frontier_route=/frontier/
 return_to_frontier_preserved=true
 child_lane_links_preserved=true
 large_node_scale_preserved=true
-visible_copy_renewed=true
-public_thesis_renewed=true
-hero_thesis_renewed=true
-orbit_context_renewed=true
-lane_card_context_renewed=true
-support_route_context_renewed=true
-final_band_context_renewed=true
+visible_copy_preserved_from_v4=true
+public_thesis_preserved=true
+hero_thesis_preserved=true
+orbit_context_preserved=true
+lane_card_context_preserved=true
+support_route_context_preserved=true
+final_band_context_preserved=true
 static_lane_selector_superseded=true
 live_simulation_field=true
 frontier_science_simulation=true
@@ -1707,6 +1885,10 @@ ambient_spill_secondary=true
 hidden_star_glow=true
 natural_spill_glow=true
 stable_halo_glow=true
+visible_pulse_emitters=true
+node_emitter_pulse=true
+button_emitter_pulse=true
+card_emitter_pulse=true
 radiating_glow_pulse=true
 button_glow_pulse=true
 card_glow_pulse=true
@@ -1715,9 +1897,10 @@ synchronized_pulse=false
 halo_animation=true
 field_wave_animation=true
 button_animation=true
-button_animation_targets=box_shadow_border_color_background_only
+button_animation_targets=button_before_emitter_box_shadow_border_color_only
 card_animation=true
-card_animation_targets=box_shadow_border_color_background_only
+card_animation_targets=card_before_emitter_box_shadow_border_color_only
+node_emitter_targets=frontier_star_body_before_frontier_anchor_body_before_frontier_node_after_frontier_anchor_after
 node_body_animation=false
 label_animation=false
 layout_animation=false
@@ -1736,12 +1919,12 @@ non_regression=true
 segregated_energy_lightning_logic=true
 segregated_closed_loop_gem_logic=true
 segregated_legacy_frontier_root_logic=true
-deploy_marker=FRONTIER_LIVE_SIMULATION_FIELD_BUTTON_PULSE_CONTEXT_RENEWAL_DEPLOY_MARKER_v4
+deploy_marker=FRONTIER_VISIBLE_PULSE_FIELD_CORRECTION_DEPLOY_MARKER_v5
       </template>
     </main>
 
     <footer>
-      FRONTIER_LIVE_SIMULATION_FIELD_BUTTON_PULSE_CONTEXT_RENEWAL_TNT_v4 · /explore/frontier/ · Frontier live simulation field · Button pulse, card pulse, and public context renewed.
+      FRONTIER_VISIBLE_PULSE_FIELD_CORRECTION_TNT_v5 · /explore/frontier/ · Dedicated visible pulse emitters · Frontier live simulation field.
     </footer>
   </div>
 </body>

@@ -4,17 +4,13 @@
   lang="en"
   data-route="/explore/frontier/shimmer/"
   data-page="frontier-shimmer"
-  data-version="G2-V1"
-  data-contract="FRONTIER_SHIMMER_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1"
-  data-source-binding="FRONTIER_SHIMMER_COMPASS_GEM_DUAL_LENS_PREGAME_TO_POSTGAME_BINDING_v1"
+  data-version="G2-V2"
+  data-contract="FRONTIER_SHIMMER_MINIMUM_NAV_RETURN_TWINKLING_GEM_GLOW_CONSOLIDATION_TNT_v1"
+  data-previous-contract="FRONTIER_SHIMMER_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1"
+  data-legacy-context="SHIMMER_G1_V10A_RUSSIAN_DOLL_CONTEXT_TNT_v1"
+  data-source-binding="FRONTIER_SHIMMER_MINIMUM_NAV_RETURN_TWINKLING_GEM_GLOW_PREGAME_TO_POSTGAME_BINDING_v1"
   data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
   data-design-reference="FRONTIER_ENERGY_COMPASS_GEM_PRINT_LEGIBILITY_RENEWAL_TNT_v19"
-  data-mirror-reference-1="FRONTIER_WATER_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1"
-  data-mirror-reference-2="FRONTIER_WASTE_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1"
-  data-mirror-reference-3="FRONTIER_LATTICE_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1"
-  data-mirror-reference-4="FRONTIER_URBAN_CONSTRUCT_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1"
-  data-mirror-reference-5="FRONTIER_CLOSED_LOOP_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1"
-  data-mirror-reference-6="FRONTIER_MANUAL_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1"
   data-engineering-authority="FRONTIER_SHIMMER_PERCEPTION_SIGNAL_INTERFACE_AND_CLAIM_BOUNDARY_STANDARD"
   data-source-symbol-authority="compassOrganicGem"
   data-role="frontier-shimmer"
@@ -23,12 +19,17 @@
   data-per-pathway-dual-lens="true"
   data-platform-lens="true"
   data-engineering-lens="true"
-  data-shimmer-law="valid-shimmer-requires-story-world-entry-perception-goal-signal-source-light-behavior-reflection-behavior-surface-response-motion-boundary-atmosphere-boundary-interface-invitation-meaning-alignment-receipt-standard-audit-posture-kill-conditions"
+  data-minimum-top-nav="Compass,Home,Door,Laws,Frontier"
+  data-return-to-frontier-action="true"
+  data-twinkling-star-glow-behind-gems="true"
+  data-existing-compass-organic-gem-preserved="true"
   data-static-page-usable-without-js="true"
   data-heavy-runtime-loaded="false"
   data-runtime-public-message="false"
   data-generated-image="false"
   data-graphic-box="false"
+  data-canvas="false"
+  data-webgl="false"
   data-streaming="false"
   data-visual-pass-claimed="false"
 >
@@ -61,6 +62,7 @@
       --brand-gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
       --orbit-duration:52s;
       --gem-breathe-duration:8.8s;
+      --star-twinkle-duration:5.8s;
     }
 
     *{box-sizing:border-box}
@@ -508,6 +510,8 @@
       text-align:center;
       color:var(--ink);
       z-index:4;
+      isolation:isolate;
+      overflow:visible;
       transition:transform .18s ease,filter .18s ease;
       animation:gemFloat 7.2s ease-in-out infinite;
       animation-delay:var(--delay,0s);
@@ -531,6 +535,102 @@
       transform:translate(-50%,-50%);
     }
 
+    .compass-center::before,
+    .compass-node::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:0;
+      width:138%;
+      height:158%;
+      transform:translate(-50%,-50%) scale(.96);
+      border-radius:50%;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,.98) 0 3%,rgba(255,248,210,.94) 4% 7%,rgba(141,216,255,.62) 8% 17%,rgba(36,120,255,.30) 18% 34%,rgba(243,200,111,.18) 35% 52%,transparent 70%);
+      filter:blur(.12rem);
+      opacity:.78;
+      mix-blend-mode:screen;
+      animation:starTwinkle var(--star-twinkle-duration) ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+    }
+
+    .compass-center::after,
+    .compass-node::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:0;
+      width:185%;
+      height:205%;
+      transform:translate(-50%,-50%) scale(1);
+      border-radius:50%;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,.38) 0 4%,rgba(141,216,255,.24) 5% 22%,rgba(243,200,111,.14) 23% 44%,rgba(143,240,195,.07) 45% 62%,transparent 74%),
+        radial-gradient(ellipse at 50% 50%,rgba(255,255,255,.18),transparent 58%);
+      filter:blur(.55rem);
+      opacity:.52;
+      mix-blend-mode:screen;
+      animation:starHaloBreathe calc(var(--star-twinkle-duration) * 1.45) ease-in-out infinite;
+      animation-delay:calc(var(--delay, 0s) - .7s);
+    }
+
+    .compass-center::before{
+      width:130%;
+      height:150%;
+      opacity:.84;
+    }
+
+    .compass-center::after{
+      width:178%;
+      height:200%;
+      opacity:.56;
+    }
+
+    @keyframes starTwinkle{
+      0%,100%{
+        opacity:.58;
+        transform:translate(-50%,-50%) scale(.90);
+        filter:blur(.14rem) brightness(1);
+      }
+      28%{
+        opacity:.88;
+        transform:translate(-50%,-50%) scale(1.02);
+        filter:blur(.08rem) brightness(1.18);
+      }
+      50%{
+        opacity:1;
+        transform:translate(-50%,-50%) scale(1.08);
+        filter:blur(.05rem) brightness(1.45);
+      }
+      72%{
+        opacity:.76;
+        transform:translate(-50%,-50%) scale(.98);
+        filter:blur(.12rem) brightness(1.08);
+      }
+    }
+
+    @keyframes starHaloBreathe{
+      0%,100%{
+        opacity:.36;
+        transform:translate(-50%,-50%) scale(.95);
+        filter:blur(.62rem) brightness(.95);
+      }
+      45%{
+        opacity:.66;
+        transform:translate(-50%,-50%) scale(1.06);
+        filter:blur(.48rem) brightness(1.18);
+      }
+      60%{
+        opacity:.78;
+        transform:translate(-50%,-50%) scale(1.12);
+        filter:blur(.42rem) brightness(1.28);
+      }
+    }
+
     .compass-node:hover,
     .compass-node:focus-visible{
       transform:translate(-50%,-50%) scale(1.055);
@@ -546,6 +646,7 @@
     .gem-core{
       position:absolute;
       inset:0;
+      z-index:2;
       display:grid;
       place-items:center;
       pointer-events:none;
@@ -600,7 +701,7 @@
 
     .gem-label{
       position:relative;
-      z-index:3;
+      z-index:4;
       width:86%;
       display:grid;
       place-items:center;
@@ -926,6 +1027,14 @@
         transition-duration:.01ms!important;
       }
 
+      .compass-center::before,
+      .compass-center::after,
+      .compass-node::before,
+      .compass-node::after{
+        animation:none!important;
+        opacity:.58!important;
+      }
+
       .gem-core,
       .gem-glint,
       .gem-star,
@@ -1044,21 +1153,10 @@
 
       <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
-        <a href="/door/">Door</a>
         <a href="/home/">Home</a>
-        <a href="/products/">Products</a>
+        <a href="/door/">Door</a>
         <a href="/laws/">Laws</a>
-        <a href="/showroom/globe/">Interactive Narrative</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/explore/frontier/energy/">Energy</a>
-        <a href="/explore/frontier/water/">Water</a>
-        <a href="/explore/frontier/waste/">Waste</a>
-        <a href="/explore/frontier/lattice/">Lattice</a>
-        <a href="/explore/frontier/urban/">Urban</a>
-        <a href="/explore/frontier/closed-loop/">Closed Loop</a>
-        <a href="/explore/frontier/manual/">Manual</a>
-        <a href="/explore/frontier/shimmer/" aria-current="page">Shimmer</a>
-        <a href="/gauges/">Gauges</a>
+        <a href="/frontier/" aria-current="page">Frontier</a>
       </nav>
     </header>
 
@@ -1080,6 +1178,7 @@
           <a class="button gold" href="#shimmer-orbit">Choose a Pathway</a>
           <a class="button" href="#audralia-shimmer">Start with Audralia</a>
           <a class="button green" href="#kill-conditions">Open Kill Conditions</a>
+          <a class="button" href="/frontier/">Return to Frontier</a>
         </div>
       </section>
 
@@ -1094,6 +1193,7 @@
           data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
           data-source-symbol-authority="compassOrganicGem"
           data-per-pathway-dual-lens="true"
+          data-twinkling-star-glow-behind-gems="true"
         >
           <div class="compass-center" aria-hidden="true" style="--delay:-.1s;--tilt-a:-1.4deg;--tilt-b:1.8deg;">
             <span class="gem-core">
@@ -1682,6 +1782,7 @@
         </p>
         <div class="actions">
           <a class="button gold" href="#shimmer-orbit">Return to Shimmer Orbit</a>
+          <a class="button" href="/frontier/">Return to Frontier</a>
           <a class="button" href="/showroom/globe/audralia/">Open Audralia</a>
           <a class="button green" href="/explore/frontier/manual/">Open Manual</a>
           <a class="button" href="/explore/frontier/energy/">Open Energy</a>
@@ -1691,51 +1792,51 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_SHIMMER_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1
-binding=FRONTIER_SHIMMER_COMPASS_GEM_DUAL_LENS_PREGAME_TO_POSTGAME_BINDING_v1
+FRONTIER_SHIMMER_MINIMUM_NAV_RETURN_TWINKLING_GEM_GLOW_CONSOLIDATION_TNT_v1
+binding=FRONTIER_SHIMMER_MINIMUM_NAV_RETURN_TWINKLING_GEM_GLOW_PREGAME_TO_POSTGAME_BINDING_v1
+previous=FRONTIER_SHIMMER_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1
+legacy_context=SHIMMER_G1_V10A_RUSSIAN_DOLL_CONTEXT_TNT_v1
 route=/explore/frontier/shimmer/
+target=/explore/frontier/shimmer/index.html
 page=frontier_shimmer
-html=/explore/frontier/shimmer/index.html
 source_visual_authority=COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2
-design_reference=FRONTIER_ENERGY_COMPASS_GEM_PRINT_LEGIBILITY_RENEWAL_TNT_v19
-mirror_reference_1=FRONTIER_WATER_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1
-mirror_reference_2=FRONTIER_WASTE_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1
-mirror_reference_3=FRONTIER_LATTICE_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1
-mirror_reference_4=FRONTIER_URBAN_CONSTRUCT_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1
-mirror_reference_5=FRONTIER_CLOSED_LOOP_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1
-mirror_reference_6=FRONTIER_MANUAL_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1
-engineering_authority=FRONTIER_SHIMMER_PERCEPTION_SIGNAL_INTERFACE_AND_CLAIM_BOUNDARY_STANDARD
 source_symbol_authority=compassOrganicGem
-visual_authority_preserved=true
-design_mirrors_energy_v19_water_v1_waste_v1_lattice_v1_urban_v1_closed_loop_v1_manual_v1=true
-large_readable_print_preserved=true
-audralia_story_world_shimmer_field_first=true
-center_anchor=Shimmer_Living_Signal
+minimum_top_nav=Compass,Home,Door,Laws,Frontier
+minimum_top_nav_active_parent=Frontier
+return_to_frontier_action=true
+return_to_frontier_action_target=/frontier/
+twinkling_star_glow_behind_gems=true
+twinkling_star_glow_targets=compass_center,compass_node
+star_glow_role=behind_gem_atmospheric_light_source
+star_glow_not_foreground=true
+star_glow_no_hard_cookie_cutter_shape=true
+star_glow_no_random_bubble_replacement=true
+existing_compass_organic_gem_preserved=true
+existing_center_gem_preserved=true
+existing_pathway_gems_preserved=true
 pathways=Audralia_Shimmer,Perception,Signal,Light,Reflection,Surface,Motion,Atmosphere,Interface,Meaning,Receipts,Kill_Conditions
-public_subject=shimmer_perception_signal_attention_light_reflection_surface_response_motion_atmosphere_interface_invitation_story_world_entry_meaning_claim_boundary_receipts_audit_kill_conditions
-per_pathway_dual_lens=true
+per_pathway_dual_lens_preserved=true
 platform_lens_per_pathway=true
 engineering_lens_per_pathway=true
-top_only_lens_toggle=false
-side_by_side_platform_engineering=false
-return_to_shimmer_orbit_under_every_pathway=true
-shimmer_law=valid_shimmer_requires_story_world_entry_perception_goal_signal_source_light_behavior_reflection_behavior_surface_response_motion_boundary_atmosphere_boundary_interface_invitation_meaning_alignment_receipt_standard_audit_posture_kill_conditions
+return_to_shimmer_orbit_preserved=true
+audralia_story_world_shimmer_field_first=true
+legacy_meaning_preserved=signal_quality,distortion_reduction,attention_filtering,visible_deltas,repeatable_observation,does_not_replace_proof
 forbidden_collapse=beauty_as_proof_animation_as_readiness_atmosphere_as_evidence_glow_as_usability_attention_as_trust_visual_polish_as_maturity_signal_as_validation_shimmer_as_science_story_world_feeling_as_deployment_proof_page_existence_as_system_readiness
-category_relation=shimmer_coordinates_perception_and_entry_across_energy_water_waste_lattice_urban_closed_loop_manual_future_frontier_without_replacing_category_specific_science
-audit_boundary=audit_failure_blocks_closure
 accessibility_boundary=reduced_motion_and_readability_preserved
-final_lock=notice_signal_enter_world_follow_pathway_read_meaning_open_constraints_respect_boundary_check_receipt_return_to_orbit_do_not_confuse_shimmer_with_proof
-static_page_usable_without_js=true
+static_html_css=true
+javascript_dependency=false
 heavy_runtime=false
 generated_image=false
 graphic_box=false
+canvas=false
+webgl=false
 streaming=false
 visual_pass_claimed=false
       </template>
     </main>
 
     <footer>
-      FRONTIER_SHIMMER_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1 · Shimmer · Audralia first · Per-pathway Platform and Engineering lenses.
+      FRONTIER_SHIMMER_MINIMUM_NAV_RETURN_TWINKLING_GEM_GLOW_CONSOLIDATION_TNT_v1 · Shimmer · Minimum Nav · Return to Frontier · Twinkling Star Glow Behind Gems.
     </footer>
   </div>
 </body>

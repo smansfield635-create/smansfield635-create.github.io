@@ -4,32 +4,33 @@
   lang="en"
   data-route="/laws/"
   data-page="laws"
-  data-version="G8-V1"
-  data-contract="LAWS_PAGE_TOP_ORBIT_PLATFORM_ENGINEERING_TNT_v1"
-  data-source-binding="LAWS_PAGE_TOP_ORBIT_PLATFORM_ENGINEERING_PREGAME_TO_POSTGAME_BINDING_v1"
+  data-version="G9-V1"
+  data-contract="LAWS_PAGE_TOP_ORBIT_READABILITY_RETURN_PATH_TNT_v1"
+  data-source-binding="LAWS_PAGE_TOP_ORBIT_READABILITY_RETURN_PATH_PREGAME_TO_POSTGAME_BINDING_v1"
   data-branch="laws"
   data-role="law-chamber"
+  data-visible-header-context="Manor_and_Estate_Law_Chamber"
+  data-rich-manor-visible-copy-removed="true"
   data-platform-engineering-toggle="true"
   data-toggle-changes-language-only="true"
   data-default-lens="platform"
   data-top-orbit="true"
   data-orbit-before-large-law-diamonds="true"
+  data-orbit-diamonds-enlarged="true"
+  data-orbit-label-readability-improved="true"
   data-orbit-clearance="true"
   data-orbit-not-clipped="true"
   data-orbit-mobile-preserved="true"
   data-same-page-law-content="large-white-crystal-diamonds"
   data-law-affiliated-page-change="small-orbital-white-crystal-diamonds"
   data-non-law-page-change="small-orbital-route-color-diamonds"
-  data-layout-rule="page-change-controls-orbit"
-  data-color-rule="law-affiliation-controls-color"
-  data-size-rule="same-page-primary-content-controls-large-size"
+  data-return-to-orbit-controls="true"
+  data-grouped-law-cards-return-to-orbit="true"
+  data-large-law-field-back-to-orbit="true"
   data-outbound-route-grid-removed="true"
   data-large-and-orbit-css-separated="true"
   data-sixteen-laws-preserved="true"
   data-sixteen-laws-grouped="true"
-  data-scientific-law-orbital-white-crystal="true"
-  data-reality-category-orbital-white-crystal="true"
-  data-non-law-routes-orbital-route-color="true"
   data-modern-static-html-css="true"
   data-javascript-dependency="false"
   data-heavy-runtime-loaded="false"
@@ -62,7 +63,7 @@
       --shadow:0 30px 100px rgba(0,0,0,.48);
       --max:1180px;
       --gem-breathe-duration:8.8s;
-      --orbit-duration:82s;
+      --orbit-duration:84s;
     }
 
     *{box-sizing:border-box}
@@ -372,7 +373,8 @@
       margin-top:.2rem;
     }
 
-    .button{
+    .button,
+    .return-chip{
       min-height:2.65rem;
       display:inline-flex;
       align-items:center;
@@ -390,13 +392,16 @@
     }
 
     .button:hover,
-    .button:focus-visible{
+    .button:focus-visible,
+    .return-chip:hover,
+    .return-chip:focus-visible{
       transform:translateY(-2px);
       border-color:rgba(243,200,111,.60);
       outline:none;
     }
 
-    .button.gold{
+    .button.gold,
+    .return-chip.gold{
       border-color:rgba(243,200,111,.88);
       color:#060811;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
@@ -414,11 +419,11 @@
     }
 
     #lens-platform:checked ~ .lens-scope .platform-copy{
-      display:contents;
+      display:block;
     }
 
     #lens-engineering:checked ~ .lens-scope .engineering-copy{
-      display:contents;
+      display:block;
     }
 
     .lens-toggle{
@@ -506,17 +511,17 @@
     .orbit-wrap{
       display:grid;
       place-items:center;
-      padding:clamp(2.1rem,5vw,4rem);
+      padding:clamp(3.15rem,6vw,5.4rem);
       overflow:visible;
     }
 
     .orbit-stage{
-      --orbit-size:min(100%,44rem);
+      --orbit-size:min(100%,50rem);
       position:relative;
       width:var(--orbit-size);
       aspect-ratio:1/1;
-      max-width:44rem;
-      min-width:18rem;
+      max-width:50rem;
+      min-width:19rem;
       overflow:visible;
       border:1px solid rgba(243,200,111,.18);
       border-radius:2rem;
@@ -555,7 +560,7 @@
     }
 
     .orbit-track{
-      --orbit-r:min(15rem,32vw);
+      --orbit-r:min(17.2rem,31vw);
       animation:orbitSpin var(--orbit-duration) linear infinite;
       z-index:3;
     }
@@ -569,8 +574,8 @@
       left:50%;
       top:50%;
       z-index:4;
-      width:clamp(7.5rem,18vw,11.2rem);
-      min-height:clamp(5.7rem,12vw,8.2rem);
+      width:clamp(8.2rem,18vw,12.4rem);
+      min-height:clamp(6.1rem,12vw,9rem);
       display:grid;
       place-items:center;
       padding:.9rem;
@@ -586,7 +591,7 @@
 
     .orbit-center b{
       color:var(--gold);
-      font-size:.78rem;
+      font-size:.84rem;
       font-weight:950;
       letter-spacing:.13em;
       text-transform:uppercase;
@@ -594,7 +599,7 @@
 
     .orbit-center span{
       color:var(--muted);
-      font-size:.76rem;
+      font-size:.82rem;
       line-height:1.28;
     }
 
@@ -604,8 +609,8 @@
       left:50%;
       top:50%;
       z-index:5;
-      width:clamp(3.9rem,8.2vw,6.15rem);
-      height:clamp(2.95rem,6.25vw,4.65rem);
+      width:clamp(5.45rem,10.6vw,7.85rem);
+      height:clamp(4.12rem,8vw,5.96rem);
       display:grid;
       place-items:center;
       transform:
@@ -625,13 +630,12 @@
       place-items:center;
       animation:counterOrbit var(--orbit-duration) linear infinite;
       transform-origin:50% 50%;
-      transition:transform .18s ease,filter .18s ease;
+      transition:filter .18s ease;
     }
 
     .orbit-diamond:hover .orbit-face,
     .orbit-diamond:focus-visible .orbit-face{
-      transform:scale(1.1);
-      filter:brightness(1.13);
+      filter:brightness(1.18) saturate(1.05);
       outline:none;
     }
 
@@ -759,30 +763,36 @@
 
     .orbit-diamond .gem-label{
       width:86%;
-      gap:.08rem;
+      gap:.1rem;
     }
 
     .orbit-diamond .gem-label b{
       display:block;
-      font-size:clamp(.30rem,.74vw,.52rem);
+      font-size:clamp(.47rem,1.02vw,.75rem);
       font-weight:950;
-      letter-spacing:.045em;
-      line-height:1;
+      letter-spacing:.048em;
+      line-height:1.02;
       text-transform:uppercase;
     }
 
     .orbit-diamond .gem-label span{
-      font-size:clamp(.22rem,.54vw,.38rem);
+      font-size:clamp(.34rem,.78vw,.54rem);
       font-weight:950;
-      letter-spacing:.035em;
-      line-height:1;
+      letter-spacing:.04em;
+      line-height:1.02;
       text-transform:uppercase;
     }
 
     .law-orbit .gem-label b{color:rgba(255,244,216,.99)}
-    .law-orbit .gem-label span{color:rgba(230,238,255,.90)}
+    .law-orbit .gem-label span{color:rgba(230,238,255,.92)}
     .route-orbit .gem-label b{color:rgba(255,232,163,.99)}
-    .route-orbit .gem-label span{color:rgba(242,247,255,.88)}
+    .route-orbit .gem-label span{color:rgba(242,247,255,.90)}
+
+    .return-row{
+      display:flex;
+      justify-content:flex-end;
+      margin-top:.15rem;
+    }
 
     .law-summary-grid{
       display:grid;
@@ -792,8 +802,8 @@
 
     .law-summary-card{
       display:grid;
-      gap:.52rem;
-      padding:.9rem;
+      gap:.55rem;
+      padding:.95rem;
       border:1px solid rgba(232,248,255,.14);
       border-radius:1rem;
       background:
@@ -819,6 +829,14 @@
     .law-summary-card p{
       font-size:.88rem;
       line-height:1.42;
+    }
+
+    .law-summary-card .return-chip{
+      width:fit-content;
+      min-height:2.25rem;
+      padding:.5rem .72rem;
+      font-size:.62rem;
+      margin-top:.15rem;
     }
 
     .branch{
@@ -873,25 +891,27 @@
       .topbar{grid-template-columns:1fr}
       .nav{justify-content:flex-start}
       .orbit-wrap{
-        padding:2.35rem .55rem;
+        padding:3.15rem .8rem;
       }
       .orbit-stage{
-        width:min(100%,27rem);
-        min-width:18rem;
+        width:min(100%,31rem);
+        min-width:19rem;
       }
       .orbit-track{
-        --orbit-r:min(9.45rem,35vw);
+        --orbit-r:min(10.35rem,33vw);
       }
       .orbit-diamond{
-        width:clamp(3.25rem,13vw,4.45rem);
-        height:clamp(2.48rem,9.9vw,3.4rem);
+        width:clamp(4.45rem,16vw,5.4rem);
+        height:clamp(3.38rem,12.2vw,4.1rem);
       }
+      .orbit-diamond .gem-label b{font-size:clamp(.38rem,1.35vw,.56rem)}
+      .orbit-diamond .gem-label span{font-size:clamp(.29rem,1.05vw,.42rem)}
       .orbit-center{
-        width:7.2rem;
-        min-height:5.4rem;
+        width:7.7rem;
+        min-height:5.8rem;
       }
-      .orbit-center b{font-size:.62rem}
-      .orbit-center span{font-size:.62rem}
+      .orbit-center b{font-size:.65rem}
+      .orbit-center span{font-size:.64rem}
     }
 
     @media (max-width:640px){
@@ -909,22 +929,27 @@
       .large-law-field,
       .law-summary-grid{grid-template-columns:1fr}
       .large-law-diamond{min-height:10rem}
+      .return-row{justify-content:stretch}
+      .return-row .return-chip{width:100%}
     }
 
     @media (max-width:420px){
+      .orbit-wrap{
+        padding:2.8rem .45rem;
+      }
       .orbit-stage{
-        width:min(100%,21rem);
-        min-width:17.75rem;
+        width:min(100%,22.5rem);
+        min-width:18rem;
       }
       .orbit-track{
-        --orbit-r:7.58rem;
+        --orbit-r:7.8rem;
       }
       .orbit-diamond{
-        width:3.08rem;
-        height:2.34rem;
+        width:3.92rem;
+        height:2.98rem;
       }
-      .orbit-diamond .gem-label b{font-size:.235rem}
-      .orbit-diamond .gem-label span{font-size:.18rem}
+      .orbit-diamond .gem-label b{font-size:.31rem}
+      .orbit-diamond .gem-label span{font-size:.23rem}
       .orbit-center{
         width:6.35rem;
         min-height:4.95rem;
@@ -944,14 +969,8 @@
         animation-iteration-count:1!important;
       }
 
-      .orbit-track{
-        animation:none!important;
-      }
-
-      .orbit-face{
-        animation:none!important;
-      }
-
+      .orbit-track,
+      .orbit-face,
       .gem-core,
       .gem-glint,
       .gem-star{
@@ -1093,7 +1112,7 @@
         <span class="brand-mark" aria-hidden="true"><span>LAW</span></span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge</span>
-          <strong>Rich Manor and Estate · Rule Chamber</strong>
+          <strong>Manor and Estate · Law Chamber</strong>
         </span>
       </a>
 
@@ -1307,6 +1326,10 @@
               </a>
             </div>
           </div>
+
+          <div class="return-row">
+            <a class="return-chip gold" href="#route-orbit">Back to Top Orbit</a>
+          </div>
         </section>
 
         <section class="panel section" id="law-summary" aria-labelledby="law-summary-title">
@@ -1327,6 +1350,7 @@
               <strong>Authority Law + Route Law</strong>
               <p class="platform-copy">Root ownership stays explicit. Every chamber must know where it lives, what owns it, and where it returns.</p>
               <p class="engineering-copy">Defines route parentage, ownership, admissible location, and return-path requirements before any larger claim can be made.</p>
+              <a class="return-chip" href="#route-orbit">Return to Orbit</a>
             </article>
 
             <article class="law-summary-card" id="proof-receipt">
@@ -1334,6 +1358,7 @@
               <strong>Proof Law + Receipt Law</strong>
               <p class="platform-copy">Gauges, receipts, diagnostics, and visible routes outrank confidence. Every renewal leaves a route receipt.</p>
               <p class="engineering-copy">Proof, diagnostics, and receipt metadata outrank unsupported claims. Each major TNT must preserve audit traceability.</p>
+              <a class="return-chip" href="#route-orbit">Return to Orbit</a>
             </article>
 
             <article class="law-summary-card" id="runtime-animation">
@@ -1341,6 +1366,7 @@
               <strong>Runtime Law + Animation Law</strong>
               <p class="platform-copy">Motion must stay contained. Animation expresses hierarchy; it does not replace readable structure.</p>
               <p class="engineering-copy">Static law pages must not load heavy render chains. Motion may express hierarchy, but route authority remains structural.</p>
+              <a class="return-chip" href="#route-orbit">Return to Orbit</a>
             </article>
 
             <article class="law-summary-card" id="generation-visual">
@@ -1348,6 +1374,7 @@
               <strong>Generation Law + Visual Claim Law</strong>
               <p class="platform-copy">Baseline, readiness, visual polish, and generation state remain distinct. Appearance is not source truth.</p>
               <p class="engineering-copy">Generation labels, visual state, source truth, readiness claims, and pass status remain separately audited fields.</p>
+              <a class="return-chip" href="#route-orbit">Return to Orbit</a>
             </article>
 
             <article class="law-summary-card" id="human-interaction">
@@ -1355,6 +1382,7 @@
               <strong>Human Boundary Law + Interaction Law</strong>
               <p class="platform-copy">Support does not impersonate authority. Users must know what can be touched and what is decorative.</p>
               <p class="engineering-copy">High-stakes boundaries remain explicit. Interactive controls must be distinguishable from decorative visual anchors.</p>
+              <a class="return-chip" href="#route-orbit">Return to Orbit</a>
             </article>
 
             <article class="law-summary-card" id="access-return">
@@ -1362,6 +1390,7 @@
               <strong>Access Law + Return Law</strong>
               <p class="platform-copy">Laws must stay reachable from the public route system. Every outward route needs a way back.</p>
               <p class="engineering-copy">Public route reachability and return paths must be preserved across Compass, Door, Home, Laws, branches, and Gauges.</p>
+              <a class="return-chip" href="#route-orbit">Return to Orbit</a>
             </article>
 
             <article class="law-summary-card" id="product-foreground">
@@ -1369,6 +1398,7 @@
               <strong>Product and Planet Separation Law + Foreground Law</strong>
               <p class="platform-copy">Products stay products; planets stay planets. Laws, Entry, Proof, and Return remain foreground controls.</p>
               <p class="engineering-copy">Product, estate, law, and planetary route classes must not collapse. Foreground controls preserve entry, proof, and return logic.</p>
+              <a class="return-chip" href="#route-orbit">Return to Orbit</a>
             </article>
 
             <article class="law-summary-card" id="scope-stale">
@@ -1376,6 +1406,7 @@
               <strong>Scope Law + Stale Language Law</strong>
               <p class="platform-copy">Full-file TNT only for touched files. Retired labels must not control current pages.</p>
               <p class="engineering-copy">Touched files require full replacement. Deprecated control language must not remain active unless intentionally preserved by route law.</p>
+              <a class="return-chip" href="#route-orbit">Return to Orbit</a>
             </article>
           </div>
         </section>
@@ -1396,33 +1427,34 @@
         </section>
 
         <template id="route-receipt" data-route-receipt>
-LAWS_PAGE_TOP_ORBIT_PLATFORM_ENGINEERING_TNT_v1
-binding=LAWS_PAGE_TOP_ORBIT_PLATFORM_ENGINEERING_PREGAME_TO_POSTGAME_BINDING_v1
+LAWS_PAGE_TOP_ORBIT_READABILITY_RETURN_PATH_TNT_v1
+binding=LAWS_PAGE_TOP_ORBIT_READABILITY_RETURN_PATH_PREGAME_TO_POSTGAME_BINDING_v1
 route=/laws/
 target=/laws/index.html
+visible_header_context=Manor_and_Estate_Law_Chamber
+rich_manor_visible_copy_removed=true
 platform_engineering_toggle=true
 toggle_changes_language_only=true
 default_lens=platform
 top_orbit=true
 orbit_before_large_law_diamonds=true
+orbit_diamonds_enlarged=true
+orbit_label_readability_improved=true
 orbit_clearance=true
 orbit_not_clipped=true
 orbit_mobile_preserved=true
 same_page_law_content=large_white_crystal_diamonds
 law_affiliated_page_change=small_orbital_white_crystal_diamonds
 non_law_page_change=small_orbital_route_color_diamonds
-layout_rule=page_change_controls_orbit
-color_rule=law_affiliation_controls_color
-size_rule=same_page_primary_content_controls_large_size
+return_to_orbit_controls=true
+grouped_law_cards_return_to_orbit=true
+large_law_field_back_to_orbit=true
 outbound_route_grid_removed=true
 large_and_orbit_css_separated=true
 sixteen_laws_preserved=true
 sixteen_laws_grouped=true
 law_affiliated_orbit_routes=Scientific_Law,Reality_Category
 non_law_orbit_routes=Compass,Door,Home,Manor_Explore,Products,Showroom,Frontier,Gauges
-scientific_law_orbital_white_crystal=true
-reality_category_orbital_white_crystal=true
-non_law_routes_orbital_route_color=true
 generated_image=false
 graphic_block=false
 heavy_runtime=false
@@ -1430,13 +1462,13 @@ javascript_dependency=false
 external_legacy_css_dependency=false
 reduced_motion_fallback=true
 visual_pass_claimed=false
-deploy_marker=LAWS_PAGE_TOP_ORBIT_PLATFORM_ENGINEERING_DEPLOY_MARKER_v1
+deploy_marker=LAWS_PAGE_TOP_ORBIT_READABILITY_RETURN_PATH_DEPLOY_MARKER_v1
         </template>
       </div>
     </main>
 
     <footer>
-      LAWS_PAGE_TOP_ORBIT_PLATFORM_ENGINEERING_TNT_v1 · Laws · Top orbit · Platform / Engineering language lens.
+      LAWS_PAGE_TOP_ORBIT_READABILITY_RETURN_PATH_TNT_v1 · Laws · Enlarged top orbit · Return-to-orbit controls.
     </footer>
   </div>
 </body>

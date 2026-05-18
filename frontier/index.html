@@ -3,14 +3,15 @@
   lang="en"
   data-route="/frontier/"
   data-page="frontier"
-  data-contract="FRONTIER_V11_COSMIC_STAR_VISUAL_LANGUAGE_RENEWAL_TNT_v1"
-  data-previous-contract="FRONTIER_PRIMARY_BASE_ROW_LEGIBILITY_RENEWAL_TNT_v11"
-  data-source-binding="FRONTIER_COSMIC_STAR_VISUAL_LANGUAGE_PREGAME_TO_POSTGAME_BINDING_v1"
+  data-contract="FRONTIER_V11_BEHIND_NODE_COSMIC_STAR_GLOW_TNT_v1"
+  data-previous-contract="FRONTIER_V11_COSMIC_STAR_VISUAL_LANGUAGE_RENEWAL_TNT_v1"
+  data-accepted-baseline="FRONTIER_PRIMARY_BASE_ROW_LEGIBILITY_RENEWAL_TNT_v11"
+  data-source-binding="FRONTIER_V11_BEHIND_NODE_COSMIC_STAR_GLOW_PREGAME_TO_POSTGAME_BINDING_v1"
   data-role="expansion-edge"
   data-frontier-role="expansion-edge"
   data-renewal="true"
   data-not-rewrite="true"
-  data-renewal-class="visual-language-contract-renewal-only"
+  data-renewal-class="visual-layer-correction-only"
   data-frontier-anchor-position="top"
   data-support-routes-position="top"
   data-figure-eight-field="frontier-lane-items-only"
@@ -20,10 +21,9 @@
   data-bottom-row-primary="true"
   data-dual-gravity-centers="true"
   data-center-crossing="Shimmer"
-  data-cookie-cutter-stars-replaced="true"
-  data-cosmic-light-field-stars="true"
-  data-route-gems-remain-controls="true"
-  data-cosmic-stars-remain-environmental-depth="true"
+  data-route-control-remains-readable-bubble="true"
+  data-cosmic-star-behind-control="true"
+  data-effervescent-glow="true"
   data-generated-image="false"
   data-graphic-box="false"
   data-canvas="false"
@@ -60,11 +60,12 @@
       --shadow:0 32px 110px rgba(0,0,0,.46);
       --max:1180px;
       --gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
-      --stellar-core:rgba(255,255,255,.96);
-      --stellar-gold:rgba(243,200,111,.36);
-      --stellar-blue:rgba(141,216,255,.40);
-      --stellar-violet:rgba(143,101,255,.28);
-      --stellar-shadow:rgba(0,0,0,.48);
+      --node-dark:rgba(3,7,19,.86);
+      --node-dark-2:rgba(8,13,30,.96);
+      --stellar-core:rgba(255,255,255,.98);
+      --stellar-gold:rgba(243,200,111,.42);
+      --stellar-blue:rgba(141,216,255,.46);
+      --stellar-violet:rgba(143,101,255,.30);
     }
 
     *{box-sizing:border-box}
@@ -472,6 +473,45 @@
       isolation:isolate;
     }
 
+    .frontier-anchor::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:44%;
+      z-index:1;
+      width:clamp(1.45rem,3.8vw,2.35rem);
+      height:clamp(1.45rem,3.8vw,2.35rem);
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,1) 0 .18rem,transparent .21rem),
+        radial-gradient(circle at 50% 50%,rgba(255,232,163,.72),transparent 28%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.42),transparent 62%);
+      box-shadow:
+        0 0 .75rem rgba(255,255,255,.32),
+        0 0 1.35rem rgba(243,200,111,.32),
+        0 0 2.25rem rgba(141,216,255,.26),
+        0 0 3.35rem rgba(143,101,255,.16);
+      animation:behindStarPulse 5.8s ease-in-out infinite;
+      pointer-events:none;
+    }
+
+    .frontier-anchor::after{
+      content:"";
+      position:absolute;
+      inset:7%;
+      z-index:2;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 48% 42%,rgba(255,255,255,.12),transparent 18%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.15),transparent 52%),
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.08),transparent 72%);
+      filter:blur(7px);
+      opacity:.72;
+      pointer-events:none;
+      animation:effervescentHaze 7.8s ease-in-out infinite;
+    }
+
     .support-routes{
       width:100%;
       display:flex;
@@ -590,9 +630,62 @@
       isolation:isolate;
     }
 
+    .frontier-node::before{
+      content:"";
+      position:absolute;
+      left:var(--star-x,50%);
+      top:var(--star-y,42%);
+      z-index:1;
+      width:clamp(1rem,2.8vw,1.75rem);
+      height:clamp(1rem,2.8vw,1.75rem);
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,1) 0 .14rem,transparent .165rem),
+        radial-gradient(circle at 50% 50%,rgba(255,232,163,.72),transparent 30%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.42),transparent 62%),
+        radial-gradient(circle at 50% 50%,rgba(143,101,255,.18),transparent 78%);
+      box-shadow:
+        0 0 .52rem rgba(255,255,255,.30),
+        0 0 .92rem rgba(243,200,111,.30),
+        0 0 1.55rem rgba(141,216,255,.28),
+        0 0 2.35rem rgba(143,101,255,.16);
+      opacity:.96;
+      pointer-events:none;
+      animation:behindStarPulse 5.8s ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+    }
+
+    .frontier-node::after{
+      content:"";
+      position:absolute;
+      inset:3%;
+      z-index:2;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at var(--star-x,50%) var(--star-y,42%),rgba(255,255,255,.10),transparent 18%),
+        radial-gradient(circle at var(--star-x,50%) var(--star-y,42%),rgba(141,216,255,.17),transparent 54%),
+        radial-gradient(circle at 50% 50%,rgba(143,101,255,.08),transparent 70%);
+      filter:blur(7px);
+      opacity:.58;
+      pointer-events:none;
+      animation:effervescentHaze 8.2s ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+    }
+
     .frontier-node.primary-row{
       width:clamp(6.5rem,15.5vw,9rem);
       height:clamp(6.5rem,15.5vw,9rem);
+    }
+
+    .frontier-node.primary-row::before{
+      width:clamp(1.12rem,3vw,1.9rem);
+      height:clamp(1.12rem,3vw,1.9rem);
+      box-shadow:
+        0 0 .56rem rgba(255,255,255,.34),
+        0 0 1rem rgba(243,200,111,.32),
+        0 0 1.7rem rgba(141,216,255,.30),
+        0 0 2.55rem rgba(143,101,255,.18);
     }
 
     .frontier-node:hover,
@@ -617,126 +710,71 @@
     .frontier-star-body,
     .frontier-anchor-body{
       position:absolute;
-      inset:0;
+      inset:9%;
+      z-index:3;
       border-radius:50%;
-      opacity:.99;
+      opacity:.98;
       background:
-        radial-gradient(circle at 50% 50%,var(--stellar-core) 0 .22rem,transparent .25rem),
-        radial-gradient(circle at 50% 50%,rgba(255,244,216,.38),transparent 18%),
-        radial-gradient(circle at 50% 50%,var(--stellar-blue),transparent 43%),
-        radial-gradient(circle at 50% 50%,var(--stellar-violet),transparent 62%),
-        radial-gradient(circle at 50% 50%,rgba(2,6,18,.10),rgba(2,6,18,.78) 74%);
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.10),transparent 18%),
+        radial-gradient(circle at 50% 52%,rgba(141,216,255,.08),transparent 46%),
+        linear-gradient(180deg,rgba(9,15,34,.94),rgba(2,5,15,.98));
+      border:1px solid rgba(255,255,255,.075);
       box-shadow:
-        inset 0 0 1.35rem rgba(141,216,255,.12),
-        0 0 .85rem rgba(255,255,255,.16),
-        0 0 1.55rem rgba(141,216,255,.28),
-        0 0 2.25rem rgba(143,101,255,.18),
-        0 0 3.1rem rgba(243,200,111,.12),
-        0 1.1rem 1.35rem var(--stellar-shadow);
+        inset 0 1px 0 rgba(255,255,255,.10),
+        inset 0 -1.1rem 1.35rem rgba(0,0,0,.34),
+        0 1.1rem 1.35rem rgba(0,0,0,.46),
+        0 0 .8rem rgba(141,216,255,.10);
       filter:
-        drop-shadow(0 1rem 1.25rem rgba(0,0,0,.48))
-        drop-shadow(0 0 1rem rgba(141,216,255,.18));
-      animation:frontierCosmicPulse 6.2s ease-in-out infinite;
+        drop-shadow(0 1rem 1.25rem rgba(0,0,0,.46))
+        drop-shadow(0 0 .7rem rgba(141,216,255,.10));
+      animation:frontierControlBreathe 6.2s ease-in-out infinite;
       transform-origin:50% 50%;
-      overflow:visible;
-    }
-
-    .frontier-star-body::before,
-    .frontier-anchor-body::before{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:154%;
-      height:2px;
-      border-radius:999px;
-      transform:translate(-50%,-50%) rotate(var(--flare-a,14deg));
-      background:
-        linear-gradient(90deg,
-          transparent 0%,
-          rgba(141,216,255,.11) 18%,
-          rgba(255,244,216,.62) 50%,
-          rgba(243,200,111,.12) 82%,
-          transparent 100%);
-      filter:blur(.2px);
-      opacity:.66;
-      pointer-events:none;
-    }
-
-    .frontier-star-body::after,
-    .frontier-anchor-body::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:2px;
-      height:136%;
-      border-radius:999px;
-      transform:translate(-50%,-50%) rotate(var(--flare-b,-18deg));
-      background:
-        linear-gradient(180deg,
-          transparent 0%,
-          rgba(190,170,255,.10) 18%,
-          rgba(255,255,255,.44) 50%,
-          rgba(141,216,255,.12) 82%,
-          transparent 100%);
-      filter:blur(.25px);
-      opacity:.45;
       pointer-events:none;
     }
 
     .frontier-node.primary-row .frontier-star-body{
-      background:
-        radial-gradient(circle at 50% 50%,rgba(255,255,255,.98) 0 .25rem,transparent .28rem),
-        radial-gradient(circle at 50% 50%,rgba(255,244,216,.42),transparent 20%),
-        radial-gradient(circle at 50% 50%,rgba(141,216,255,.42),transparent 44%),
-        radial-gradient(circle at 50% 50%,rgba(143,101,255,.30),transparent 64%),
-        radial-gradient(circle at 50% 50%,rgba(2,6,18,.11),rgba(2,6,18,.82) 75%);
+      inset:8%;
       box-shadow:
-        inset 0 0 1.45rem rgba(141,216,255,.13),
-        0 0 .95rem rgba(255,255,255,.18),
-        0 0 1.65rem rgba(141,216,255,.30),
-        0 0 2.35rem rgba(143,101,255,.20),
-        0 0 3.35rem rgba(243,200,111,.13),
-        0 1.2rem 1.45rem rgba(0,0,0,.50);
-      animation:frontierCosmicPulse 5.8s ease-in-out infinite;
+        inset 0 1px 0 rgba(255,255,255,.11),
+        inset 0 -1.15rem 1.4rem rgba(0,0,0,.36),
+        0 1.15rem 1.4rem rgba(0,0,0,.48),
+        0 0 .82rem rgba(141,216,255,.11);
     }
 
     .frontier-anchor-body{
+      inset:8%;
       background:
-        radial-gradient(circle at 50% 50%,rgba(255,255,255,1) 0 .30rem,transparent .34rem),
-        radial-gradient(circle at 50% 50%,rgba(255,232,163,.52),transparent 21%),
-        radial-gradient(circle at 50% 50%,rgba(36,120,255,.36),transparent 47%),
-        radial-gradient(circle at 50% 50%,rgba(143,101,255,.22),transparent 68%),
-        radial-gradient(circle at 50% 50%,rgba(2,6,18,.12),rgba(2,6,18,.86) 77%);
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.12),transparent 18%),
+        radial-gradient(circle at 50% 52%,rgba(243,200,111,.10),transparent 42%),
+        radial-gradient(circle at 50% 58%,rgba(141,216,255,.10),transparent 62%),
+        linear-gradient(180deg,rgba(9,15,34,.94),rgba(2,5,15,.98));
       box-shadow:
-        inset 0 0 1.8rem rgba(255,232,163,.11),
-        0 0 1.1rem rgba(255,255,255,.20),
-        0 0 2.2rem rgba(243,200,111,.24),
-        0 0 3.1rem rgba(36,120,255,.24),
-        0 0 4.3rem rgba(143,101,255,.16),
-        0 1.4rem 2.9rem rgba(0,0,0,.44);
-      animation:frontierAnchorCosmicPulse 7.2s ease-in-out infinite;
+        inset 0 1px 0 rgba(255,255,255,.12),
+        inset 0 -1.15rem 1.45rem rgba(0,0,0,.36),
+        0 1.25rem 1.55rem rgba(0,0,0,.48),
+        0 0 1rem rgba(243,200,111,.12),
+        0 0 1.4rem rgba(141,216,255,.10);
+      animation:frontierAnchorControlBreathe 7.2s ease-in-out infinite;
     }
 
-    .frontier-anchor-body::before{
-      width:172%;
-      opacity:.74;
+    @keyframes behindStarPulse{
+      0%,100%{filter:brightness(1) saturate(1);transform:translate(-50%,-50%) scale(1)}
+      50%{filter:brightness(1.26) saturate(1.12);transform:translate(-50%,-50%) scale(1.08)}
     }
 
-    .frontier-anchor-body::after{
-      height:156%;
-      opacity:.52;
+    @keyframes effervescentHaze{
+      0%,100%{opacity:.46;filter:blur(7px)}
+      50%{opacity:.68;filter:blur(8.5px)}
     }
 
-    @keyframes frontierCosmicPulse{
-      0%,100%{filter:brightness(1) saturate(1);transform:scale(1)}
-      50%{filter:brightness(1.15) saturate(1.08);transform:scale(1.018)}
+    @keyframes frontierControlBreathe{
+      0%,100%{filter:brightness(1) saturate(1)}
+      50%{filter:brightness(1.06) saturate(1.04)}
     }
 
-    @keyframes frontierAnchorCosmicPulse{
-      0%,100%{filter:brightness(1) saturate(1);transform:scale(1)}
-      50%{filter:brightness(1.16) saturate(1.10);transform:scale(1.026)}
+    @keyframes frontierAnchorControlBreathe{
+      0%,100%{filter:brightness(1) saturate(1)}
+      50%{filter:brightness(1.08) saturate(1.05)}
     }
 
     .frontier-label{
@@ -753,7 +791,7 @@
       text-align:center;
       background:
         radial-gradient(circle at 50% 0%,rgba(255,255,255,.20),transparent 62%),
-        rgba(4,6,18,.66);
+        rgba(4,6,18,.70);
       box-shadow:
         0 .62rem 1.05rem rgba(0,0,0,.34),
         inset 0 1px 0 rgba(255,255,255,.12);
@@ -846,7 +884,7 @@
       width:4.15rem;
       height:4.15rem;
       border-radius:50%;
-      opacity:.30;
+      opacity:.26;
       background:
         radial-gradient(circle at 50% 50%,rgba(255,255,255,.86) 0 .18rem,transparent .21rem),
         radial-gradient(circle at 50% 50%,rgba(141,216,255,.28),transparent 44%),
@@ -867,7 +905,7 @@
       width:4.75rem;
       height:2px;
       border-radius:999px;
-      opacity:.24;
+      opacity:.22;
       transform:rotate(15deg);
       background:linear-gradient(90deg,transparent,rgba(255,244,216,.62),transparent);
       filter:blur(.2px);
@@ -1026,6 +1064,16 @@
         height:5.2rem;
       }
 
+      .frontier-node::before{
+        width:.9rem;
+        height:.9rem;
+      }
+
+      .frontier-node.primary-row::before{
+        width:1rem;
+        height:1rem;
+      }
+
       .frontier-node.closed-loop{left:27.5%;top:13%}
       .frontier-node.energy{left:72.5%;top:13%}
       .frontier-node.infrastructure{left:15.5%;top:37%}
@@ -1065,6 +1113,11 @@
       .frontier-anchor{
         width:6.6rem;
         height:6.6rem;
+      }
+
+      .frontier-anchor::before{
+        width:1.22rem;
+        height:1.22rem;
       }
 
       .frontier-anchor .frontier-label b{
@@ -1226,58 +1279,58 @@
             <span class="frontier-gravity left" aria-hidden="true"></span>
             <span class="frontier-gravity right" aria-hidden="true"></span>
 
-            <a class="frontier-node closed-loop" href="/explore/frontier/closed-loop/" aria-label="Closed Loop feedback">
-              <span class="frontier-star-body" aria-hidden="true" style="--flare-a:10deg;--flare-b:-22deg;"></span>
+            <a class="frontier-node closed-loop" style="--star-x:40%;--star-y:25%;--delay:-.2s" href="/explore/frontier/closed-loop/" aria-label="Closed Loop feedback">
+              <span class="frontier-star-body" aria-hidden="true"></span>
               <span class="frontier-label"><b>Closed Loop</b><span>Feedback</span></span>
             </a>
 
-            <a class="frontier-node energy" href="/explore/frontier/energy/" aria-label="Energy power">
-              <span class="frontier-star-body" aria-hidden="true" style="--flare-a:-15deg;--flare-b:20deg;"></span>
+            <a class="frontier-node energy" style="--star-x:58%;--star-y:25%;--delay:-.7s" href="/explore/frontier/energy/" aria-label="Energy power">
+              <span class="frontier-star-body" aria-hidden="true"></span>
               <span class="frontier-label"><b>Energy</b><span>Power</span></span>
             </a>
 
-            <a class="frontier-node infrastructure" href="/explore/frontier/infrastructure/" aria-label="Infrastructure support">
-              <span class="frontier-star-body" aria-hidden="true" style="--flare-a:20deg;--flare-b:-12deg;"></span>
+            <a class="frontier-node infrastructure" style="--star-x:37%;--star-y:33%;--delay:-1.2s" href="/explore/frontier/infrastructure/" aria-label="Infrastructure support">
+              <span class="frontier-star-body" aria-hidden="true"></span>
               <span class="frontier-label"><b>Infrastructure</b><span>Support</span></span>
             </a>
 
-            <a class="frontier-node lattice" href="/explore/frontier/lattice/" aria-label="Lattice grid">
-              <span class="frontier-star-body" aria-hidden="true" style="--flare-a:-8deg;--flare-b:26deg;"></span>
+            <a class="frontier-node lattice" style="--star-x:62%;--star-y:33%;--delay:-1.7s" href="/explore/frontier/lattice/" aria-label="Lattice grid">
+              <span class="frontier-star-body" aria-hidden="true"></span>
               <span class="frontier-label"><b>Lattice</b><span>Grid</span></span>
             </a>
 
-            <a class="frontier-node manual" href="/explore/frontier/manual/" aria-label="Manual guide">
-              <span class="frontier-star-body" aria-hidden="true" style="--flare-a:18deg;--flare-b:-14deg;"></span>
+            <a class="frontier-node manual" style="--star-x:39%;--star-y:29%;--delay:-2.2s" href="/explore/frontier/manual/" aria-label="Manual guide">
+              <span class="frontier-star-body" aria-hidden="true"></span>
               <span class="frontier-label"><b>Manual</b><span>Guide</span></span>
             </a>
 
-            <a class="frontier-node trajectory" href="/explore/frontier/trajectory/" aria-label="Trajectory motion">
-              <span class="frontier-star-body" aria-hidden="true" style="--flare-a:-24deg;--flare-b:12deg;"></span>
+            <a class="frontier-node trajectory" style="--star-x:61%;--star-y:29%;--delay:-2.7s" href="/explore/frontier/trajectory/" aria-label="Trajectory motion">
+              <span class="frontier-star-body" aria-hidden="true"></span>
               <span class="frontier-label"><b>Trajectory</b><span>Motion</span></span>
             </a>
 
-            <a class="frontier-node shimmer" href="/explore/frontier/shimmer/" aria-label="Shimmer signal">
-              <span class="frontier-star-body" aria-hidden="true" style="--flare-a:6deg;--flare-b:-28deg;"></span>
+            <a class="frontier-node shimmer" style="--star-x:50%;--star-y:24%;--delay:-3.2s" href="/explore/frontier/shimmer/" aria-label="Shimmer signal">
+              <span class="frontier-star-body" aria-hidden="true"></span>
               <span class="frontier-label"><b>Shimmer</b><span>Signal</span></span>
             </a>
 
-            <a class="frontier-node primary-row waste" href="/explore/frontier/waste/" aria-label="Waste reuse">
-              <span class="frontier-star-body" aria-hidden="true" style="--flare-a:-18deg;--flare-b:15deg;"></span>
+            <a class="frontier-node primary-row waste" style="--star-x:39%;--star-y:28%;--delay:-3.7s" href="/explore/frontier/waste/" aria-label="Waste reuse">
+              <span class="frontier-star-body" aria-hidden="true"></span>
               <span class="frontier-label"><b>Waste</b><span>Reuse</span></span>
             </a>
 
-            <a class="frontier-node primary-row water" href="/explore/frontier/water/" aria-label="Water flow">
-              <span class="frontier-star-body" aria-hidden="true" style="--flare-a:13deg;--flare-b:-18deg;"></span>
+            <a class="frontier-node primary-row water" style="--star-x:50%;--star-y:24%;--delay:-4.2s" href="/explore/frontier/water/" aria-label="Water flow">
+              <span class="frontier-star-body" aria-hidden="true"></span>
               <span class="frontier-label"><b>Water</b><span>Flow</span></span>
             </a>
 
-            <a class="frontier-node primary-row vision" href="/explore/frontier/vision/" aria-label="Vision future">
-              <span class="frontier-star-body" aria-hidden="true" style="--flare-a:24deg;--flare-b:-8deg;"></span>
+            <a class="frontier-node primary-row vision" style="--star-x:50%;--star-y:24%;--delay:-4.7s" href="/explore/frontier/vision/" aria-label="Vision future">
+              <span class="frontier-star-body" aria-hidden="true"></span>
               <span class="frontier-label"><b>Vision</b><span>Future</span></span>
             </a>
 
-            <a class="frontier-node primary-row urban" href="/explore/frontier/urban/" aria-label="Urban city">
-              <span class="frontier-star-body" aria-hidden="true" style="--flare-a:-12deg;--flare-b:20deg;"></span>
+            <a class="frontier-node primary-row urban" style="--star-x:61%;--star-y:28%;--delay:-5.2s" href="/explore/frontier/urban/" aria-label="Urban city">
+              <span class="frontier-star-body" aria-hidden="true"></span>
               <span class="frontier-label"><b>Urban</b><span>City</span></span>
             </a>
           </div>
@@ -1446,15 +1499,16 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_V11_COSMIC_STAR_VISUAL_LANGUAGE_RENEWAL_TNT_v1
-previous=FRONTIER_PRIMARY_BASE_ROW_LEGIBILITY_RENEWAL_TNT_v11
-source_binding=FRONTIER_COSMIC_STAR_VISUAL_LANGUAGE_PREGAME_TO_POSTGAME_BINDING_v1
+FRONTIER_V11_BEHIND_NODE_COSMIC_STAR_GLOW_TNT_v1
+previous=FRONTIER_V11_COSMIC_STAR_VISUAL_LANGUAGE_RENEWAL_TNT_v1
+accepted_baseline=FRONTIER_PRIMARY_BASE_ROW_LEGIBILITY_RENEWAL_TNT_v11
+source_binding=FRONTIER_V11_BEHIND_NODE_COSMIC_STAR_GLOW_PREGAME_TO_POSTGAME_BINDING_v1
 route=/frontier/
 target=/frontier/index.html
 page=frontier
 renewal=true
 not_rewrite=true
-renewal_class=visual_language_contract_renewal_only
+renewal_class=visual_layer_correction_only
 frontier_anchor_position=top
 support_routes_position=top
 figure_eight_field=frontier_lane_items_only
@@ -1467,16 +1521,24 @@ dual_gravity_centers=true
 center_crossing=Shimmer
 frontier_lane_items=Closed_Loop,Energy,Infrastructure,Lattice,Manual,Shimmer,Trajectory,Urban,Vision,Waste,Water
 support_routes=Compass,Explore,Laws,Interactive_Narrative,Universe,Showroom,Products,Gauges
-visual_correction=cosmic_light_field_stars_replace_cookie_cutter_star_polygons
-cookie_cutter_stars_replaced=true
-hard_polygon_star_cut_removed_from_frontier_lane_stars=true
-cosmic_star_language=stellar_glow,cosmic_dust,soft_flare,nebula_pressure,deep_space_depth,subtle_gravitational_field
-route_controls_preserved=true
+visual_correction=small_cosmic_star_behind_existing_dark_route_control
+route_control_remains_readable_bubble=true
+cosmic_star_behind_control=true
+small_stellar_core=true
+edge_glow=true
+effervescent_haze=true
+faint_cosmic_dust=true
+frontier_node_before_owns_small_star=true
+frontier_node_after_owns_effervescent_haze=true
+frontier_star_body_remains_dark_control_body=true
+frontier_label_remains_readability_layer=true
+figure_eight_geometry_preserved=true
+support_route_row_preserved=true
+shimmer_crossing_preserved=true
+primary_base_row_preserved=true
 route_targets_preserved=true
 lane_names_preserved=true
 support_routes_preserved=true
-figure_eight_geometry_preserved=true
-primary_base_row_preserved=true
 frontier_child_lanes_touched=false
 frontier_water_touched=false
 generated_image=false
@@ -1486,12 +1548,12 @@ webgl=false
 heavy_runtime_loaded=false
 javascript_particle_engine=false
 visual_pass_claimed=false
-deploy_marker=FRONTIER_V11_COSMIC_STAR_VISUAL_LANGUAGE_RENEWAL_DEPLOY_MARKER_v1
+deploy_marker=FRONTIER_V11_BEHIND_NODE_COSMIC_STAR_GLOW_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer>
-      FRONTIER_V11_COSMIC_STAR_VISUAL_LANGUAGE_RENEWAL_TNT_v1 · Frontier · Cosmic Stars · Even Primary Base Row.
+      FRONTIER_V11_BEHIND_NODE_COSMIC_STAR_GLOW_TNT_v1 · Frontier · Behind-Node Cosmic Star Glow · Even Primary Base Row.
     </footer>
   </div>
 </body>

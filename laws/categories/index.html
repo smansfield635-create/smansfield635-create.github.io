@@ -1,52 +1,66 @@
-<!-- TARGET FILE: /laws/categories/reality/index.html -->
+<!-- TARGET FILE: /laws/scientific-law/index.html -->
 <!doctype html>
 <html
   lang="en"
-  data-route="/laws/categories/reality/"
-  data-page="law-category-reality"
-  data-version="G1-V1"
-  data-contract="REALITY_LAW_CATEGORY_ROUTE_RENEWAL_TNT_v1"
-  data-source-binding="REALITY_LAW_CATEGORY_ROUTE_RENEWAL_PREGAME_TO_POSTGAME_BINDING_v1"
-  data-branch="laws"
-  data-category="reality"
-  data-role="tested-constraint-law-category"
-  data-legacy-placeholder-discarded="true"
-  data-legacy-tech-allowed="false"
-  data-modern-static-html-css="true"
+  data-route="/laws/scientific-law/"
+  data-page="scientific-law"
+  data-version="G2-V1"
+  data-contract="SCIENTIFIC_LAW_GEM_ORBIT_DEEP_DEFINITION_REALITY_TEST_CHAMBER_TNT_v1"
+  data-source-binding="SCIENTIFIC_LAW_GEM_ORBIT_DEEP_DEFINITION_REALITY_TEST_CHAMBER_PREGAME_TO_POSTGAME_BINDING_v1"
+  data-current-baseline="SCIENTIFIC_LAW_TWO_LENS_FOUNDATION_TNT_v1"
+  data-branch="laws/scientific-law"
+  data-role="reality-test-chamber"
+  data-scientific-law-branch-preserved="true"
+  data-laws-parent-preserved="true"
+  data-reality-source-preserved="true"
+  data-platform-engineering-language-standard="true"
+  data-public-technical-labels-retired="true"
+  data-global-platform-engineering-toggle="true"
+  data-local-section-language-toggles="true"
+  data-top-branch-orbit-added="true"
+  data-large-primary-scientific-law-diamonds="true"
+  data-four-primary-doors-preserved="true"
+  data-four-primary-doors-deeply-expanded="true"
+  data-scientific-route-deeply-expanded="true"
+  data-deeper-terms-deeply-expanded="true"
+  data-claim-testing-ladder-added="true"
+  data-branch-routes-preserved="true"
+  data-svg-crystal-renderer-required="true"
+  data-lawCrystalGem-used-for-law-affiliated-items="true"
+  data-routeColorGem-used-for-outbound-items="true"
+  data-css-polygon-regression-forbidden="true"
   data-javascript-dependency="false"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
-  data-graphic-box="false"
-  data-frontier-orbit-model="false"
+  data-graphic-block="false"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Reality · Law Category · Diamond Gate Bridge</title>
+  <title>Scientific Law · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Reality is the law category for tested constraint: what still holds after evidence, contradiction, consequence, coherence, falsifiability, and audit are applied."
+    content="Scientific Law is the Reality Test chamber under Laws. It defines Theory, Evidence, Measure, Limits, the scientific route, deeper terms, and the claim testing ladder through Platform and Engineering language layers."
   >
 
   <style>
     :root{
       color-scheme:dark;
       --bg:#02050d;
-      --bg2:#061125;
-      --panel:rgba(8,15,31,.82);
-      --panel2:rgba(10,20,42,.72);
+      --panel:rgba(8,15,31,.84);
       --ink:#fff4d8;
-      --muted:rgba(232,240,255,.78);
-      --soft:rgba(232,240,255,.58);
+      --muted:rgba(232,240,255,.80);
+      --soft:rgba(232,240,255,.60);
       --gold:#f3c86f;
       --gold2:#ffe8a3;
       --blue:#8dd8ff;
       --line:rgba(214,229,255,.16);
-      --line2:rgba(243,200,111,.30);
       --shadow:0 30px 100px rgba(0,0,0,.48);
-      --max:1160px;
+      --max:1180px;
+      --gem-breathe-duration:8.8s;
+      --orbit-duration:72s;
     }
 
     *{box-sizing:border-box}
@@ -55,6 +69,7 @@
       min-width:320px;
       min-height:100%;
       scroll-behavior:smooth;
+      scroll-padding-top:1rem;
       overflow-x:hidden;
       background:var(--bg);
     }
@@ -68,9 +83,9 @@
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       line-height:1.5;
       background:
-        radial-gradient(circle at 50% -10%,rgba(243,200,111,.20),transparent 30rem),
-        radial-gradient(circle at 12% 20%,rgba(141,216,255,.14),transparent 27rem),
-        radial-gradient(circle at 88% 24%,rgba(36,120,255,.16),transparent 30rem),
+        radial-gradient(circle at 50% -10%,rgba(243,200,111,.18),transparent 30rem),
+        radial-gradient(circle at 12% 20%,rgba(141,216,255,.13),transparent 27rem),
+        radial-gradient(circle at 88% 24%,rgba(36,120,255,.14),transparent 30rem),
         linear-gradient(180deg,#071226 0%,#030816 54%,#01030a 100%);
       -webkit-font-smoothing:antialiased;
       text-rendering:geometricPrecision;
@@ -84,7 +99,7 @@
       background-image:
         linear-gradient(rgba(141,216,255,.035) 1px,transparent 1px),
         linear-gradient(90deg,rgba(141,216,255,.035) 1px,transparent 1px),
-        radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px);
+        radial-gradient(circle,rgba(255,255,255,.17) 0 1px,transparent 1.5px);
       background-size:58px 58px,58px 58px,240px 280px;
       opacity:.22;
       mask-image:linear-gradient(180deg,rgba(0,0,0,.95),rgba(0,0,0,.45) 72%,rgba(0,0,0,.20));
@@ -92,9 +107,18 @@
 
     a{color:inherit;text-decoration:none}
 
-    a:focus-visible{
+    a:focus-visible,
+    label:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
+    }
+
+    .svg-defs{
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+      pointer-events:none;
     }
 
     .skip{
@@ -164,10 +188,7 @@
       text-shadow:0 2px 10px rgba(0,0,0,.70);
     }
 
-    .brand-copy{
-      display:grid;
-      gap:.16rem;
-    }
+    .brand-copy{display:grid;gap:.16rem}
 
     .brand-copy span{
       color:var(--soft);
@@ -235,7 +256,7 @@
 
     .hero{
       position:relative;
-      min-height:clamp(28rem,52vw,39rem);
+      min-height:clamp(24rem,40vw,34rem);
       display:grid;
       align-content:center;
       gap:1rem;
@@ -249,8 +270,8 @@
       right:clamp(1.2rem,7vw,5.5rem);
       top:50%;
       z-index:-1;
-      width:clamp(12rem,28vw,21rem);
-      height:clamp(12rem,28vw,21rem);
+      width:clamp(12rem,28vw,23rem);
+      height:clamp(12rem,28vw,23rem);
       border:1px solid rgba(243,200,111,.18);
       border-radius:50%;
       transform:translateY(-50%);
@@ -258,7 +279,7 @@
         radial-gradient(circle at 50% 50%,rgba(255,232,163,.13),transparent 38%),
         conic-gradient(from 0deg,rgba(243,200,111,.10),rgba(141,216,255,.10),rgba(255,255,255,.04),rgba(243,200,111,.10));
       box-shadow:inset 0 0 3rem rgba(141,216,255,.06),0 0 4rem rgba(0,0,0,.18);
-      opacity:.65;
+      opacity:.68;
     }
 
     .kicker{
@@ -289,9 +310,9 @@
 
     h1{
       margin:0;
-      max-width:960px;
+      max-width:980px;
       font-family:Georgia,"Times New Roman",serif;
-      font-size:clamp(3.3rem,9vw,7.1rem);
+      font-size:clamp(3.35rem,9vw,7.15rem);
       line-height:.86;
       letter-spacing:-.07em;
       text-wrap:balance;
@@ -301,7 +322,7 @@
       margin:0;
       color:var(--gold);
       font-family:Georgia,"Times New Roman",serif;
-      font-size:clamp(1.6rem,4vw,2.65rem);
+      font-size:clamp(1.6rem,4vw,2.75rem);
       line-height:1;
       letter-spacing:-.055em;
       text-wrap:balance;
@@ -310,27 +331,27 @@
     h3{
       margin:0;
       color:rgba(255,244,216,.98);
-      font-size:clamp(1.05rem,2.6vw,1.35rem);
+      font-size:clamp(1.12rem,2.4vw,1.45rem);
       line-height:1.08;
       letter-spacing:-.03em;
     }
 
     p{
       margin:0;
-      max-width:880px;
+      max-width:920px;
       color:var(--muted);
       font-size:clamp(.98rem,2.6vw,1.12rem);
       line-height:1.62;
     }
 
     .lead{
-      max-width:920px;
+      max-width:940px;
       color:rgba(232,240,255,.84);
       font-size:clamp(1.04rem,2.8vw,1.25rem);
     }
 
     .truth-card{
-      max-width:940px;
+      max-width:960px;
       padding:1rem 1.1rem;
       border:1px solid rgba(243,200,111,.24);
       border-radius:1.15rem;
@@ -349,7 +370,8 @@
       margin-top:.2rem;
     }
 
-    .button{
+    .button,
+    .return-chip{
       min-height:2.65rem;
       display:inline-flex;
       align-items:center;
@@ -367,15 +389,98 @@
     }
 
     .button:hover,
-    .button:focus-visible{
+    .button:focus-visible,
+    .return-chip:hover,
+    .return-chip:focus-visible{
       transform:translateY(-2px);
       border-color:rgba(243,200,111,.60);
       outline:none;
     }
 
-    .button.gold{
+    .button.gold,
+    .return-chip.gold{
       border-color:rgba(243,200,111,.88);
       color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .lens-radio,
+    .local-radio{
+      position:absolute;
+      opacity:0;
+      pointer-events:none;
+    }
+
+    .page-platform,
+    .page-engineering,
+    .local-platform-content,
+    .local-engineering-content{
+      display:none;
+    }
+
+    #lens-platform:checked ~ .lens-scope .page-platform{display:block}
+    #lens-engineering:checked ~ .lens-scope .page-engineering{display:block}
+
+    .local-platform:checked ~ .local-scope .local-platform-content{display:grid}
+    .local-engineering:checked ~ .local-scope .local-engineering-content{display:grid}
+
+    .lens-toggle{
+      display:grid;
+      gap:.8rem;
+      margin-top:1rem;
+      padding:1rem;
+    }
+
+    .toggle-row,
+    .local-toggle-row{
+      width:fit-content;
+      display:flex;
+      flex-wrap:wrap;
+      gap:.45rem;
+      padding:.38rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      background:rgba(255,255,255,.04);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .toggle-label,
+    .local-toggle-label{
+      min-height:2.42rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:.58rem .9rem;
+      border:1px solid transparent;
+      border-radius:999px;
+      color:rgba(232,240,255,.78);
+      cursor:pointer;
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      user-select:none;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease,color .18s ease;
+    }
+
+    .local-toggle-label{
+      min-height:2.2rem;
+      padding:.5rem .78rem;
+      font-size:.66rem;
+    }
+
+    .toggle-label:hover,
+    .local-toggle-label:hover{
+      transform:translateY(-1px);
+      border-color:rgba(243,200,111,.36);
+    }
+
+    #lens-platform:checked ~ .lens-scope .toggle-label[for="lens-platform"],
+    #lens-engineering:checked ~ .lens-scope .toggle-label[for="lens-engineering"],
+    .local-platform:checked ~ .local-scope .local-toggle-label.is-platform,
+    .local-engineering:checked ~ .local-scope .local-toggle-label.is-engineering{
+      color:#060811;
+      border-color:rgba(243,200,111,.88);
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
     }
 
@@ -386,100 +491,496 @@
       padding:clamp(1.1rem,3.2vw,1.6rem);
     }
 
-    .definition{
-      display:grid;
-      gap:.85rem;
-      max-width:940px;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:.9rem;
-      margin-top:.2rem;
-    }
-
-    .grid.two{
-      grid-template-columns:repeat(2,minmax(0,1fr));
-    }
-
-    .card{
+    .section-header{
       display:grid;
       gap:.7rem;
-      min-height:100%;
-      padding:1rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.2rem;
-      background:
-        radial-gradient(circle at 18% 0%,rgba(141,216,255,.08),transparent 22rem),
-        linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.024));
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      max-width:980px;
     }
 
-    .card b{
+    .gem-stage{
+      position:relative;
+      display:grid;
+      gap:1rem;
+      padding:clamp(1rem,3vw,1.5rem);
+      border:1px solid rgba(184,205,255,.14);
+      border-radius:clamp(1.35rem,4vw,2rem);
+      background:
+        radial-gradient(circle at 50% 42%,rgba(141,216,255,.12),transparent 22rem),
+        radial-gradient(circle at 50% 84%,rgba(243,200,111,.08),transparent 30rem),
+        linear-gradient(180deg,rgba(1,5,16,.62),rgba(2,6,16,.92));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      overflow:hidden;
+      isolation:isolate;
+    }
+
+    .orbit-section{overflow:visible}
+
+    .orbit-wrap{
+      display:grid;
+      place-items:center;
+      padding:clamp(3.75rem,7vw,6.25rem);
+      overflow:visible;
+    }
+
+    .orbit-stage{
+      --orbit-size:min(100%,52rem);
+      position:relative;
+      width:var(--orbit-size);
+      aspect-ratio:1/1;
+      max-width:52rem;
+      min-width:20rem;
+      overflow:visible;
+      border:1px solid rgba(243,200,111,.18);
+      border-radius:2.2rem;
+      background:
+        radial-gradient(circle at 50% 48%,rgba(243,200,111,.13),transparent 18rem),
+        radial-gradient(circle at 50% 48%,rgba(141,216,255,.12),transparent 28rem),
+        linear-gradient(180deg,rgba(1,5,16,.60),rgba(2,6,16,.94));
+      isolation:isolate;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.06),
+        0 1.2rem 3.5rem rgba(0,0,0,.22);
+    }
+
+    .orbit-stage::before{
+      content:"";
+      position:absolute;
+      inset:clamp(1rem,2.5vw,2.35rem);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:1.7rem;
+      pointer-events:none;
+    }
+
+    .orbit-ring,
+    .orbit-track{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:70%;
+      height:70%;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      transform-origin:50% 50%;
+      pointer-events:none;
+    }
+
+    .orbit-ring{
+      border:1px solid rgba(243,200,111,.22);
+      box-shadow:
+        inset 0 0 3rem rgba(243,200,111,.05),
+        0 0 3rem rgba(0,0,0,.18);
+    }
+
+    .orbit-ring.inner{
+      width:46%;
+      height:46%;
+      border-color:rgba(141,216,255,.16);
+    }
+
+    .orbit-track{
+      --orbit-r:min(17.3rem,30vw);
+      animation:orbitSpin var(--orbit-duration) linear infinite;
+      z-index:3;
+    }
+
+    @keyframes orbitSpin{
+      from{transform:translate(-50%,-50%) rotate(0deg)}
+      to{transform:translate(-50%,-50%) rotate(360deg)}
+    }
+
+    .orbit-center{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:4;
+      width:clamp(8.8rem,18vw,13.25rem);
+      min-height:clamp(6.5rem,12vw,9.7rem);
+      display:grid;
+      place-items:center;
+      padding:1rem;
+      border:1px solid rgba(243,200,111,.30);
+      border-radius:1.25rem;
+      transform:translate(-50%,-50%);
+      background:
+        radial-gradient(circle at 50% 20%,rgba(255,232,163,.14),transparent 62%),
+        rgba(255,255,255,.05);
+      text-align:center;
+      box-shadow:0 1rem 2.4rem rgba(0,0,0,.28);
+    }
+
+    .orbit-center b{
       color:var(--gold);
-      font-size:.70rem;
+      font-size:.9rem;
       font-weight:950;
       letter-spacing:.13em;
       text-transform:uppercase;
     }
 
-    .card p{
-      font-size:.95rem;
-      line-height:1.52;
-    }
-
-    .law-card{
-      position:relative;
-      overflow:hidden;
-    }
-
-    .law-card::before{
-      content:"";
-      position:absolute;
-      right:.9rem;
-      top:.9rem;
-      width:2rem;
-      height:2rem;
-      border:1px solid rgba(243,200,111,.25);
-      border-radius:.55rem;
-      transform:rotate(45deg);
-      background:rgba(243,200,111,.06);
-    }
-
-    .application-list{
-      display:grid;
-      gap:.65rem;
-      margin:0;
-      padding:0;
-      list-style:none;
-    }
-
-    .application-list li{
-      padding:.75rem .85rem;
-      border:1px solid rgba(255,255,255,.11);
-      border-radius:.95rem;
+    .orbit-center span{
       color:var(--muted);
+      font-size:.86rem;
+      line-height:1.28;
+    }
+
+    .orbit-diamond{
+      --a:0deg;
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:5;
+      width:clamp(6.35rem,11.2vw,8.75rem);
+      height:clamp(4.8rem,8.45vw,6.65rem);
+      display:grid;
+      place-items:center;
+      transform:
+        translate(-50%,-50%)
+        rotate(var(--a))
+        translateY(calc(-1 * var(--orbit-r)))
+        rotate(calc(-1 * var(--a)));
+      pointer-events:auto;
+      transition:filter .18s ease;
+    }
+
+    .orbit-face{
+      position:relative;
+      width:100%;
+      height:100%;
+      display:grid;
+      place-items:center;
+      animation:counterOrbit var(--orbit-duration) linear infinite;
+      transform-origin:50% 50%;
+      transition:filter .18s ease,scale .18s ease;
+    }
+
+    .orbit-diamond:hover .orbit-face,
+    .orbit-diamond:focus-visible .orbit-face{
+      filter:brightness(1.18) saturate(1.05);
+      scale:1.05;
+      outline:none;
+    }
+
+    @keyframes counterOrbit{
+      from{transform:rotate(0deg)}
+      to{transform:rotate(-360deg)}
+    }
+
+    .primary-door-field{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:clamp(.9rem,2vw,1.15rem);
+      align-items:stretch;
+    }
+
+    .primary-diamond{
+      position:relative;
+      min-height:clamp(11rem,20vw,15rem);
+      display:grid;
+      place-items:center;
+      text-align:center;
+      border:1px solid rgba(232,248,255,.16);
+      border-radius:1.35rem;
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.07),transparent 52%),
+        rgba(255,255,255,.025);
+      overflow:hidden;
+      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
+    }
+
+    .primary-diamond:hover,
+    .primary-diamond:focus-visible{
+      transform:translateY(-4px);
+      border-color:rgba(232,248,255,.46);
+      filter:brightness(1.12) saturate(1.06);
+      outline:none;
+    }
+
+    .gem-core{
+      position:absolute;
+      inset:8% 5%;
+      display:grid;
+      place-items:center;
+      animation:gemBreathe var(--gem-breathe-duration) ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+      transform-origin:50% 50%;
+      pointer-events:none;
+    }
+
+    .primary-diamond .gem-core{inset:3% 1%}
+    .orbit-diamond .gem-core{inset:0}
+
+    @keyframes gemBreathe{
+      0%,100%{transform:translateY(0) rotate(var(--tilt-a,-1.6deg)) scale(1);filter:brightness(1)}
+      50%{transform:translateY(-.26rem) rotate(var(--tilt-b,2deg)) scale(1.025);filter:brightness(1.13)}
+    }
+
+    .gem-svg{
+      width:100%;
+      height:100%;
+      overflow:visible;
+      pointer-events:none;
+      filter:
+        drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
+        drop-shadow(0 0 1.15rem rgba(36,120,255,.18))
+        drop-shadow(0 0 .55rem rgba(243,200,111,.10));
+    }
+
+    .gem-glint{
+      animation:gemGlint 8.5s ease-in-out infinite;
+      transform-origin:110px 80px;
+    }
+
+    .gem-star{
+      animation:gemFacetTurn 30s linear infinite;
+      transform-origin:110px 80px;
+    }
+
+    @keyframes gemGlint{
+      0%,100%{opacity:.07;transform:translateX(-36px)}
+      48%,55%{opacity:.56;transform:translateX(34px)}
+    }
+
+    @keyframes gemFacetTurn{
+      to{transform:rotate(360deg)}
+    }
+
+    .gem-label{
+      position:relative;
+      z-index:3;
+      width:84%;
+      display:grid;
+      place-items:center;
+      gap:.2rem;
+      text-align:center;
+      pointer-events:none;
+      text-shadow:
+        0 3px 14px rgba(0,0,0,.98),
+        0 0 12px rgba(0,28,90,.88),
+        0 0 3px rgba(255,255,255,.58);
+    }
+
+    .primary-diamond .gem-label b{
+      display:block;
+      color:rgba(255,244,216,.99);
+      font-size:clamp(1rem,2.3vw,1.42rem);
+      font-weight:950;
+      letter-spacing:.075em;
+      line-height:1;
+      text-transform:uppercase;
+    }
+
+    .primary-diamond .gem-label span{
+      display:block;
+      max-width:11rem;
+      color:rgba(230,238,255,.92);
+      font-size:clamp(.60rem,1.14vw,.76rem);
+      font-weight:950;
+      letter-spacing:.055em;
+      line-height:1.15;
+      text-transform:uppercase;
+    }
+
+    .orbit-diamond .gem-label{
+      width:92%;
+      max-width:7.2rem;
+      min-height:2.18rem;
+      display:grid;
+      place-items:center;
+      gap:.04rem;
+      padding:.34rem .42rem;
+      border:1px solid rgba(255,255,255,.20);
+      border-radius:999px;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,255,255,.12),transparent 70%),
+        rgba(2,6,16,.74);
+      box-shadow:
+        0 .45rem 1rem rgba(0,0,0,.50),
+        inset 0 1px 0 rgba(255,255,255,.12),
+        inset 0 0 1.2rem rgba(141,216,255,.08);
+      color:#fff8e7;
+      text-shadow:
+        0 3px 10px rgba(0,0,0,1),
+        0 0 9px rgba(0,0,0,.98),
+        0 0 3px rgba(255,255,255,.42);
+      backdrop-filter:blur(2px);
+    }
+
+    .orbit-diamond .gem-label b{
+      display:block;
+      color:#fff8e7;
+      font-size:clamp(.72rem,1.08vw,.92rem);
+      font-weight:1000;
+      letter-spacing:.018em;
+      line-height:.96;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+
+    .orbit-diamond .gem-label span{
+      display:block;
+      color:rgba(235,246,255,.96);
+      font-size:clamp(.50rem,.82vw,.64rem);
+      font-weight:950;
+      letter-spacing:.018em;
+      line-height:1;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+
+    .definition-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.95rem;
+    }
+
+    .definition-card,
+    .route-card,
+    .term-card,
+    .ladder-card,
+    .branch-card{
+      position:relative;
+      display:grid;
+      gap:.85rem;
+      padding:1.05rem;
+      border:1px solid rgba(232,248,255,.14);
+      border-radius:1.15rem;
+      background:
+        radial-gradient(circle at 18% 0%,rgba(232,248,255,.08),transparent 22rem),
+        rgba(255,255,255,.032);
+      scroll-margin-top:1rem;
+    }
+
+    .definition-card > b,
+    .route-card > b,
+    .term-card > b,
+    .ladder-card > b,
+    .branch-card > b{
+      width:fit-content;
+      padding:.36rem .55rem;
+      border:1px solid rgba(243,200,111,.24);
+      border-radius:999px;
+      color:var(--gold);
+      background:rgba(243,200,111,.05);
+      font-size:.65rem;
+      font-weight:950;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .definition-card strong,
+    .route-card strong,
+    .term-card strong,
+    .ladder-card strong,
+    .branch-card strong{
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.05rem,2.3vw,1.26rem);
+      line-height:1.08;
+    }
+
+    .local-scope{
+      display:grid;
+      gap:.8rem;
+    }
+
+    .copy-box{
+      gap:.8rem;
+      padding:.9rem;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:1rem;
+      background:rgba(2,6,16,.30);
+    }
+
+    .copy-box p{
+      font-size:.95rem;
+      line-height:1.55;
+    }
+
+    .mini-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.7rem;
+    }
+
+    .mini-box{
+      display:grid;
+      gap:.35rem;
+      padding:.75rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:.85rem;
       background:rgba(255,255,255,.035);
-      font-size:.96rem;
+    }
+
+    .mini-box h4{
+      margin:0;
+      color:var(--gold);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .mini-box ul,
+    .branch-card ul{
+      margin:0;
+      padding-left:1rem;
+      color:rgba(232,240,255,.78);
+      font-size:.86rem;
       line-height:1.45;
     }
 
-    .boundary{
-      padding:1rem;
-      border:1px solid rgba(243,200,111,.26);
-      border-radius:1.2rem;
-      background:
-        radial-gradient(circle at 10% 0%,rgba(243,200,111,.11),transparent 22rem),
-        rgba(243,200,111,.045);
+    .mini-box li,
+    .branch-card li{margin:.22rem 0}
+
+    .audit-question{
+      padding:.75rem .85rem;
+      border:1px solid rgba(141,216,255,.18);
+      border-radius:.9rem;
+      color:rgba(235,246,255,.92);
+      background:rgba(141,216,255,.055);
+      font-size:.9rem;
+      line-height:1.45;
     }
 
-    .boundary strong{
+    .audit-question span{
       display:block;
-      margin-bottom:.5rem;
-      color:rgba(255,244,216,.98);
-      font-size:clamp(1.05rem,2.8vw,1.35rem);
-      line-height:1.1;
+      margin-bottom:.2rem;
+      color:var(--gold);
+      font-size:.66rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .return-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.55rem;
+      justify-content:flex-end;
+      margin-top:.15rem;
+    }
+
+    .route-steps,
+    .term-grid,
+    .ladder-grid,
+    .branch-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.8rem;
+    }
+
+    .ladder-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .branch-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+    .branch-card{
+      min-height:10rem;
+      align-content:start;
+      transition:transform .18s ease,border-color .18s ease;
+    }
+
+    .branch-card:hover,
+    .branch-card:focus-visible{
+      transform:translateY(-3px);
+      border-color:rgba(243,200,111,.48);
+      outline:none;
     }
 
     .receipt,
@@ -508,22 +1009,70 @@
       font-size:.76rem;
     }
 
-    @media (max-width:900px){
+    @media (max-width:1080px){
+      .primary-door-field{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .definition-grid,.route-steps,.term-grid,.branch-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .ladder-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+
+    @media (max-width:860px){
       .topbar{grid-template-columns:1fr}
       .nav{justify-content:flex-start}
-      .grid,
-      .grid.two{grid-template-columns:1fr}
+      .orbit-wrap{padding:4rem .9rem}
+      .orbit-stage{width:min(100%,35rem);min-width:20rem}
+      .orbit-track{--orbit-r:min(11.5rem,34vw)}
+      .orbit-diamond{width:clamp(5.2rem,17.2vw,6.25rem);height:clamp(3.94rem,13vw,4.72rem)}
+      .orbit-diamond .gem-label{max-width:5.4rem;min-height:1.9rem;padding:.30rem .35rem}
+      .orbit-diamond .gem-label b{font-size:clamp(.58rem,1.95vw,.72rem);letter-spacing:.01em}
+      .orbit-diamond .gem-label span{font-size:clamp(.40rem,1.32vw,.48rem)}
+      .orbit-center{width:8rem;min-height:6rem}
+      .orbit-center b{font-size:.68rem}
+      .orbit-center span{font-size:.65rem}
     }
 
     @media (max-width:640px){
       .shell{width:min(var(--max),calc(100% - 20px))}
       .topbar{padding:.72rem;border-radius:1.05rem}
-      .hero{min-height:32rem;padding:1rem}
-      .hero::after{opacity:.38;right:-4rem}
+      .hero{min-height:29rem;padding:1rem}
+      .hero::after{opacity:.36;right:-4rem}
       h1{font-size:clamp(3rem,16vw,5.15rem)}
       .actions{display:grid}
       .button{width:100%}
+      .toggle-row,.local-toggle-row{width:100%;display:grid;grid-template-columns:1fr 1fr;border-radius:1rem}
+      .toggle-label,.local-toggle-label{border-radius:.8rem}
       .section{padding:1rem}
+      .gem-stage{padding:1rem}
+      .primary-door-field,
+      .definition-grid,
+      .route-steps,
+      .term-grid,
+      .ladder-grid,
+      .branch-grid,
+      .mini-grid{grid-template-columns:1fr}
+      .primary-diamond{min-height:11rem}
+      .return-row{justify-content:stretch}
+      .return-row .return-chip{width:100%}
+    }
+
+    @media (max-width:430px){
+      .orbit-wrap{padding:3.65rem .35rem}
+      .orbit-stage{width:min(100%,24.75rem);min-width:20rem}
+      .orbit-track{--orbit-r:8.55rem}
+      .orbit-diamond{width:4.55rem;height:3.45rem}
+      .orbit-diamond .gem-label{width:96%;max-width:4.35rem;min-height:1.66rem;padding:.24rem .25rem}
+      .orbit-diamond .gem-label b{font-size:.49rem;letter-spacing:0}
+      .orbit-diamond .gem-label span{display:none}
+      .orbit-center{width:6.7rem;min-height:5.15rem;padding:.65rem}
+      .orbit-center b{font-size:.56rem}
+      .orbit-center span{font-size:.56rem}
+    }
+
+    @media (max-width:360px){
+      .orbit-stage{width:22.9rem;transform:translateX(-.25rem)}
+      .orbit-track{--orbit-r:7.95rem}
+      .orbit-diamond{width:4.25rem;height:3.22rem}
+      .orbit-diamond .gem-label{max-width:4.05rem}
+      .orbit-diamond .gem-label b{font-size:.45rem}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -535,214 +1084,901 @@
         animation-duration:.01ms!important;
         animation-iteration-count:1!important;
       }
+
+      .orbit-track,
+      .orbit-face,
+      .gem-core,
+      .gem-glint,
+      .gem-star{
+        animation:none!important;
+      }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="#main">Skip to Reality</a>
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="lawGemBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".98"/>
+        <stop offset=".17" stop-color="#eaf8ff" stop-opacity=".82"/>
+        <stop offset=".34" stop-color="#bfeaff" stop-opacity=".58"/>
+        <stop offset=".55" stop-color="#8dd8ff" stop-opacity=".36"/>
+        <stop offset=".74" stop-color="#f8fbff" stop-opacity=".22"/>
+        <stop offset="1" stop-color="#08111d" stop-opacity=".92"/>
+      </linearGradient>
+
+      <linearGradient id="lawGemAir" x1="48" y1="10" x2="168" y2="80" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".98"/>
+        <stop offset=".36" stop-color="#eefaff" stop-opacity=".62"/>
+        <stop offset=".70" stop-color="#d6f3ff" stop-opacity=".22"/>
+        <stop offset="1" stop-color="#8dd8ff" stop-opacity=".12"/>
+      </linearGradient>
+
+      <radialGradient id="lawGemGlow" cx="50%" cy="38%" r="64%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".68"/>
+        <stop offset=".28" stop-color="#dff8ff" stop-opacity=".34"/>
+        <stop offset=".58" stop-color="#ffffff" stop-opacity=".14"/>
+        <stop offset="1" stop-color="#020611" stop-opacity="0"/>
+      </radialGradient>
+
+      <linearGradient id="routeGemBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#fff8dc" stop-opacity=".96"/>
+        <stop offset=".16" stop-color="#ffe8a3" stop-opacity=".72"/>
+        <stop offset=".36" stop-color="#f3c86f" stop-opacity=".56"/>
+        <stop offset=".56" stop-color="#8dd8ff" stop-opacity=".32"/>
+        <stop offset=".76" stop-color="#2d5f9a" stop-opacity=".36"/>
+        <stop offset="1" stop-color="#020816" stop-opacity=".94"/>
+      </linearGradient>
+
+      <linearGradient id="routeGemAir" x1="48" y1="10" x2="168" y2="80" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".94"/>
+        <stop offset=".34" stop-color="#fff0a3" stop-opacity=".48"/>
+        <stop offset=".68" stop-color="#8dd8ff" stop-opacity=".20"/>
+        <stop offset="1" stop-color="#f3c86f" stop-opacity=".12"/>
+      </linearGradient>
+
+      <linearGradient id="gemDepth" x1="110" y1="36" x2="110" y2="156" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".18"/>
+        <stop offset=".30" stop-color="#8dd8ff" stop-opacity=".20"/>
+        <stop offset=".62" stop-color="#f3c86f" stop-opacity=".13"/>
+        <stop offset="1" stop-color="#020716" stop-opacity=".66"/>
+      </linearGradient>
+
+      <linearGradient id="gemGlintLine" x1="28" y1="130" x2="184" y2="24" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset=".45" stop-color="#ffffff" stop-opacity=".84"/>
+        <stop offset=".52" stop-color="#fff0a3" stop-opacity=".30"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+
+      <filter id="gemGlowFilter" x="-42%" y="-50%" width="184%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="blur"/>
+        <feColorMatrix
+          in="blur"
+          type="matrix"
+          values="
+            0.42 0 0 0 0.08
+            0 .58 0 0 0.14
+            0 0 1.00 0 0.28
+            0 0 0 0.52 0"
+          result="glow"
+        />
+        <feMerge>
+          <feMergeNode in="glow"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      <symbol id="lawCrystalGem" viewBox="0 0 220 160">
+        <g filter="url(#gemGlowFilter)">
+          <path d="M108 4 L146 12 L184 39 L209 76 L188 108 L147 139 L111 155 L69 136 L27 105 L12 73 L39 37 L77 14 Z" fill="url(#lawGemBody)" stroke="rgba(235,248,255,.66)" stroke-width="1.35"/>
+          <path d="M108 4 L146 12 L130 38 L109 30 L87 39 L77 14 Z" fill="url(#lawGemAir)" opacity=".92"/>
+          <path d="M87 39 L109 30 L130 38 L159 60 L148 83 L110 101 L72 83 L61 58 Z" fill="url(#lawGemGlow)" stroke="rgba(255,255,255,.34)" stroke-width=".9"/>
+          <path d="M77 14 L87 39 L61 58 L39 37 Z" fill="rgba(255,255,255,.26)"/>
+          <path d="M146 12 L130 38 L159 60 L184 39 Z" fill="rgba(255,255,255,.18)"/>
+          <path d="M12 73 L53 83 L69 136 L27 105 Z" fill="rgba(141,216,255,.14)"/>
+          <path d="M209 76 L166 81 L147 139 L188 108 Z" fill="rgba(255,255,255,.10)"/>
+          <path d="M72 83 L110 101 L111 155 Z" fill="url(#gemDepth)" opacity=".62"/>
+          <path d="M148 83 L110 101 L111 155 Z" fill="rgba(4,10,22,.30)"/>
+          <path d="M108 4 L111 155" stroke="rgba(255,255,255,.38)" stroke-width="1.15"/>
+          <path d="M12 73 L209 76" stroke="rgba(255,255,255,.32)" stroke-width="1.05"/>
+          <path d="M39 37 L188 108" stroke="rgba(255,255,255,.18)" stroke-width=".9"/>
+          <path d="M184 39 L27 105" stroke="rgba(255,255,255,.18)" stroke-width=".9"/>
+          <g class="gem-star" opacity=".84">
+            <path d="M109 27 L116 70 L110 106 L103 70 Z" fill="rgba(255,255,255,.30)"/>
+            <path d="M61 58 L105 72 L159 60 L116 79 Z" fill="rgba(255,255,255,.18)"/>
+            <path d="M72 83 L105 75 L148 83 L114 92 Z" fill="rgba(141,216,255,.14)"/>
+          </g>
+          <path class="gem-glint" d="M33 118 L176 22 L188 38 L48 130 Z" fill="url(#gemGlintLine)"/>
+        </g>
+      </symbol>
+
+      <symbol id="routeColorGem" viewBox="0 0 220 160">
+        <g filter="url(#gemGlowFilter)">
+          <path d="M108 4 L146 12 L184 39 L209 76 L188 108 L147 139 L111 155 L69 136 L27 105 L12 73 L39 37 L77 14 Z" fill="url(#routeGemBody)" stroke="rgba(255,232,163,.58)" stroke-width="1.35"/>
+          <path d="M108 4 L146 12 L130 38 L109 30 L87 39 L77 14 Z" fill="url(#routeGemAir)" opacity=".88"/>
+          <path d="M87 39 L109 30 L130 38 L159 60 L148 83 L110 101 L72 83 L61 58 Z" fill="rgba(255,232,163,.15)" stroke="rgba(255,255,255,.26)" stroke-width=".9"/>
+          <path d="M77 14 L87 39 L61 58 L39 37 Z" fill="rgba(255,255,255,.18)"/>
+          <path d="M146 12 L130 38 L159 60 L184 39 Z" fill="rgba(243,200,111,.20)"/>
+          <path d="M12 73 L53 83 L69 136 L27 105 Z" fill="rgba(141,216,255,.12)"/>
+          <path d="M209 76 L166 81 L147 139 L188 108 Z" fill="rgba(243,200,111,.16)"/>
+          <path d="M72 83 L110 101 L111 155 Z" fill="url(#gemDepth)" opacity=".70"/>
+          <path d="M148 83 L110 101 L111 155 Z" fill="rgba(4,10,22,.34)"/>
+          <path d="M108 4 L111 155" stroke="rgba(255,255,255,.34)" stroke-width="1.15"/>
+          <path d="M12 73 L209 76" stroke="rgba(255,255,255,.28)" stroke-width="1.05"/>
+          <path d="M39 37 L188 108" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M184 39 L27 105" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <g class="gem-star" opacity=".82">
+            <path d="M109 27 L116 70 L110 106 L103 70 Z" fill="rgba(255,255,255,.27)"/>
+            <path d="M61 58 L105 72 L159 60 L116 79 Z" fill="rgba(255,255,255,.16)"/>
+            <path d="M72 83 L105 75 L148 83 L114 92 Z" fill="rgba(243,200,111,.12)"/>
+          </g>
+          <path class="gem-glint" d="M33 118 L176 22 L188 38 L48 130 Z" fill="url(#gemGlintLine)"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
+  <a class="skip" href="#main">Skip to Scientific Law</a>
 
   <div class="shell">
-    <header class="topbar" aria-label="Reality law category header">
-      <a class="brand" href="/laws/categories/reality/">
-        <span class="brand-mark" aria-hidden="true"><span>R</span></span>
+    <header class="topbar" aria-label="Scientific Law header">
+      <a class="brand" href="/laws/">
+        <span class="brand-mark" aria-hidden="true"><span>SCI</span></span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge · Laws</span>
-          <strong>Reality Category</strong>
+          <strong>Scientific Law · Reality Test Chamber</strong>
         </span>
       </a>
 
-      <nav class="nav" aria-label="Page navigation">
-        <a href="/laws/">Back to Laws</a>
-        <a href="/laws/categories/" aria-current="page">Law Categories</a>
+      <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
+        <a href="/laws/">Laws</a>
+        <a href="/laws/scientific-law/" aria-current="page">Scientific Law</a>
+        <a href="/laws/categories/">Categories</a>
+        <a href="/laws/categories/reality/">Reality</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
     <main id="main">
-      <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Laws / Categories / Reality</div>
+      <input class="lens-radio" type="radio" name="page-lens" id="lens-platform" checked>
+      <input class="lens-radio" type="radio" name="page-lens" id="lens-engineering">
 
-        <h1 id="page-title">Reality is what still holds after the claim is tested.</h1>
+      <div class="lens-scope">
+        <section class="panel hero" aria-labelledby="page-title">
+          <div class="kicker">Reality branch · expanded test chamber</div>
 
-        <p class="lead">
-          This category exists for claims that must survive evidence, constraint, consequence, contradiction, coherence, falsifiability, and audit.
-        </p>
+          <h1 id="page-title">Reality has to survive the test.</h1>
 
-        <div class="truth-card">
-          Reality is not a mood, slogan, label, or performance. Reality is what survives contact with evidence, consequence, and coherence.
-        </div>
-
-        <div class="actions">
-          <a class="button gold" href="#definition">Define Reality</a>
-          <a class="button" href="#tests">How Reality Is Tested</a>
-          <a class="button" href="#audit">Boundary / Audit</a>
-        </div>
-      </section>
-
-      <section class="panel section" id="definition" aria-labelledby="definition-title">
-        <div class="kicker">Definition</div>
-        <div class="definition">
-          <h2 id="definition-title">Reality is the constraint surface.</h2>
-          <p>
-            Reality is the category where Diamond Gate Bridge separates appearance from what can actually hold. It does not begin with preference. It begins with the test: does the claim remain coherent when evidence, consequence, pressure, and contradiction are applied?
+          <p class="lead page-platform">
+            Scientific Law separates what sounds convincing from what keeps working after observation, evidence, measurement, comparison, correction, uncertainty, and limits. It gives a claim a fair chance to become stronger without letting confidence outrank reality.
           </p>
-          <p>
-            This page does not claim that every reality question is already solved. It defines the test surface: what holds, what fails, what remains unknown, and what must be audited.
+
+          <p class="lead page-engineering">
+            Scientific Law is the branch-level test protocol for converting claims into bounded, measurable, falsifiable, repeatable, revisable, and scope-declared reality statements under the governing Laws chamber.
           </p>
-        </div>
-      </section>
 
-      <section class="panel section" id="tests" aria-labelledby="tests-title">
-        <div class="kicker">Three public reads</div>
-        <h2 id="tests-title">What Reality is, what it is not, and how it is tested.</h2>
+          <div class="truth-card">
+            A claim does not become scientific because it sounds technical. It becomes scientific when it can be defined, tested, corrected, limited, and checked again.
+          </div>
 
-        <div class="grid">
-          <article class="card">
-            <b>What Reality Is</b>
-            <h3>Surviving structure.</h3>
-            <p>
-              Reality is the surviving structure after a claim meets evidence, limits, consequence, and time.
+          <div class="actions">
+            <a class="button gold" href="#branch-orbit">Branch Orbit</a>
+            <a class="button" href="#primary-doors">Primary Doors</a>
+            <a class="button" href="#scientific-route">Scientific Route</a>
+            <a class="button" href="#claim-ladder">Claim Ladder</a>
+          </div>
+        </section>
+
+        <section class="panel lens-toggle" aria-labelledby="lens-title">
+          <div class="section-header">
+            <div class="kicker">Page Language Lens</div>
+            <h2 id="lens-title">Platform or Engineering.</h2>
+            <p class="page-platform">
+              Platform language explains the chamber in plain terms for readers, visitors, learners, and public orientation.
             </p>
-          </article>
-
-          <article class="card">
-            <b>What Reality Is Not</b>
-            <h3>Not performance.</h3>
-            <p>
-              Reality is not a label, trend, emotional demand, group performance, wish, fear, or repeated statement.
+            <p class="page-engineering">
+              Engineering language defines the same chamber using route logic, claim boundaries, audit posture, measurement constraints, and verification terms.
             </p>
-          </article>
+          </div>
 
-          <article class="card">
-            <b>How Reality Is Tested</b>
-            <h3>Pressure plus audit.</h3>
-            <p>
-              Reality is tested by contradiction, evidence, repeatability, consequence, falsifiability, coherence, and audit.
+          <div class="toggle-row" role="radiogroup" aria-label="Page-level language lens">
+            <label class="toggle-label" for="lens-platform" tabindex="0">Platform</label>
+            <label class="toggle-label" for="lens-engineering" tabindex="0">Engineering</label>
+          </div>
+        </section>
+
+        <section class="panel section orbit-section" id="branch-orbit" aria-labelledby="branch-orbit-title">
+          <div class="kicker">Top branch orbit</div>
+          <div class="section-header">
+            <h2 id="branch-orbit-title">Scientific Law remains attached to Laws.</h2>
+            <p class="page-platform">
+              White crystals stay in the Laws family. Gold crystals move outside the branch for orientation or proof checking.
             </p>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel section" id="law-cards" aria-labelledby="law-cards-title">
-        <div class="kicker">Reality law cards</div>
-        <h2 id="law-cards-title">A Reality claim must survive more than assertion.</h2>
-
-        <div class="grid two">
-          <article class="card law-card">
-            <b>Evidence</b>
-            <h3>A claim needs a path to evidence.</h3>
-            <p>
-              A reality claim must have some path to evidence. Without evidence, the claim remains assertion, not established reality.
+            <p class="page-engineering">
+              The branch orbit consolidates page-changing controls. Law-affiliated routes use lawCrystalGem. Outbound route controls use routeColorGem.
             </p>
-          </article>
+          </div>
 
-          <article class="card law-card">
-            <b>Constraint</b>
-            <h3>Reality includes limits.</h3>
-            <p>
-              If a claim ignores physical, logical, moral, relational, economic, or operational constraint, it is not ready to stand.
+          <div class="orbit-wrap">
+            <div class="orbit-stage" aria-label="Scientific Law branch orbit">
+              <div class="orbit-ring" aria-hidden="true"></div>
+              <div class="orbit-ring inner" aria-hidden="true"></div>
+
+              <div class="orbit-center" aria-hidden="true">
+                <b class="page-platform">Scientific Route Orbit</b>
+                <b class="page-engineering">Branch Orbit</b>
+                <span class="page-platform">White = Laws family. Gold = outside branch.</span>
+                <span class="page-engineering">Layout = page-change. Color = route class.</span>
+              </div>
+
+              <div class="orbit-track">
+                <a class="orbit-diamond law-orbit" href="/laws/" style="--a:0deg;" aria-label="Open Laws">
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                    <span class="gem-label"><b>Laws</b><span>Parent</span></span>
+                  </span>
+                </a>
+
+                <a class="orbit-diamond law-orbit" href="/laws/scientific-law/" style="--a:60deg;" aria-label="Open Scientific Law">
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                    <span class="gem-label"><b>Scientific</b><span>Law</span></span>
+                  </span>
+                </a>
+
+                <a class="orbit-diamond law-orbit" href="/laws/categories/reality/" style="--a:120deg;" aria-label="Open Reality Source">
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                    <span class="gem-label"><b>Reality</b><span>Source</span></span>
+                  </span>
+                </a>
+
+                <a class="orbit-diamond law-orbit" href="/laws/categories/" style="--a:180deg;" aria-label="Open Categories">
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                    <span class="gem-label"><b>Categories</b><span>Taxonomy</span></span>
+                  </span>
+                </a>
+
+                <a class="orbit-diamond route-orbit" href="/gauges/" style="--a:240deg;" aria-label="Open Gauges">
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+                    <span class="gem-label"><b>Gauges</b><span>Proof</span></span>
+                  </span>
+                </a>
+
+                <a class="orbit-diamond route-orbit" href="/" style="--a:300deg;" aria-label="Open Compass">
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+                    <span class="gem-label"><b>Compass</b><span>Root</span></span>
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel section" id="primary-doors" aria-labelledby="primary-doors-title">
+          <div class="kicker">Four primary doors</div>
+          <div class="section-header">
+            <h2 id="primary-doors-title">Four large white crystals hold the reality test.</h2>
+            <p class="page-platform">
+              Theory, Evidence, Measure, and Limits are the four primary doors. Each one keeps a claim from becoming only confidence.
             </p>
-          </article>
-
-          <article class="card law-card">
-            <b>Consequence</b>
-            <h3>Reality produces consequence.</h3>
-            <p>
-              If an idea only works when consequence is hidden, delayed, or denied, the claim must be held under review.
+            <p class="page-engineering">
+              The four primary diamonds are same-page Scientific Law anchors. They use lawCrystalGem and route to expanded sections, not external pages.
             </p>
-          </article>
+          </div>
 
-          <article class="card law-card">
-            <b>Coherence</b>
-            <h3>Reality must remain coherent across layers.</h3>
-            <p>
-              A claim that works in one sentence but collapses when applied across the system is unstable.
+          <div class="gem-stage" aria-label="Primary Scientific Law diamonds">
+            <div class="primary-door-field">
+              <a class="primary-diamond" href="#theory" style="--delay:-.1s;--tilt-a:-1.6deg;--tilt-b:1.8deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                <span class="gem-label"><b>Theory</b><span>A testable explanation that risks correction.</span></span>
+              </a>
+
+              <a class="primary-diamond" href="#evidence" style="--delay:-.6s;--tilt-a:1.5deg;--tilt-b:-2deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                <span class="gem-label"><b>Evidence</b><span>A checkable record with provenance.</span></span>
+              </a>
+
+              <a class="primary-diamond" href="#measure" style="--delay:-1.1s;--tilt-a:-2deg;--tilt-b:1.4deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                <span class="gem-label"><b>Measure</b><span>A coordinate system for comparison.</span></span>
+              </a>
+
+              <a class="primary-diamond" href="#limits" style="--delay:-1.6s;--tilt-a:1.8deg;--tilt-b:-1.6deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                <span class="gem-label"><b>Limits</b><span>The boundary that keeps truth honest.</span></span>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel section" id="primary-definitions" aria-labelledby="primary-definitions-title">
+          <div class="kicker">Primary definitions</div>
+          <div class="section-header">
+            <h2 id="primary-definitions-title">The four doors define how a claim enters reality testing.</h2>
+            <p class="page-platform">
+              Each definition is deeper than a label. Each door names what it does, what it cannot do alone, what failure it prevents, and how it is audited.
             </p>
-          </article>
-
-          <article class="card law-card">
-            <b>Falsifiability</b>
-            <h3>A claim must be able to fail a test.</h3>
-            <p>
-              A claim that cannot fail any test cannot honestly be called proven. Reality requires a possible failure condition.
+            <p class="page-engineering">
+              Each primary section includes local Platform / Engineering toggles and preserves branch links to the full Theory, Evidence, Measure, and Limits routes.
             </p>
-          </article>
+          </div>
 
-          <article class="card law-card">
-            <b>Audit</b>
-            <h3>Reality must survive challenge.</h3>
-            <p>
-              If a claim only survives when no one is allowed to inspect it, the claim is not stable.
+          <div class="definition-grid">
+            <article class="definition-card" id="theory">
+              <input class="local-radio local-platform" type="radio" name="lens-theory" id="theory-platform" checked>
+              <input class="local-radio local-engineering" type="radio" name="lens-theory" id="theory-engineering">
+
+              <b>Theory</b>
+              <strong>The explanation that risks being wrong.</strong>
+
+              <div class="local-scope">
+                <div class="local-toggle-row" role="radiogroup" aria-label="Theory language lens">
+                  <label class="local-toggle-label is-platform" for="theory-platform" tabindex="0">Platform</label>
+                  <label class="local-toggle-label is-engineering" for="theory-engineering" tabindex="0">Engineering</label>
+                </div>
+
+                <div class="copy-box local-platform-content">
+                  <p>Theory is the explanation that risks being wrong. It gives the mind a map of what might be happening, but the map must keep answering to the terrain. A theory is useful when it helps a person expect what should happen next, compare that expectation against reality, and correct the explanation when reality does not agree.</p>
+                  <p>Theory is not proof by itself. A theory can be elegant, persuasive, familiar, or emotionally satisfying and still be wrong. Its strength does not come from sounding complete. Its strength comes from surviving contact with observation, evidence, measurement, repetition, and correction.</p>
+                  <p>A safe theory stays humble. It names what it assumes, what it predicts, what would weaken it, what would strengthen it, and what it cannot explain yet. If a theory refuses to risk correction, it stops functioning as scientific law and becomes belief, branding, or narrative.</p>
+                </div>
+
+                <div class="copy-box local-engineering-content">
+                  <p>Theory is a model framework that converts observed conditions into expected outcomes. A valid theory defines its objects, assumptions, variables, predicted behavior, explanatory boundary, and revision conditions.</p>
+                  <p>A theory must generate some form of testable expectation. That expectation may be quantitative, qualitative, comparative, probabilistic, or boundary-based, but it must expose the theory to possible correction.</p>
+                  <p>Theory remains subordinate to evidence and measurement. When a model explains less than the evidence requires, the model must be revised, narrowed, or rejected. When evidence is incomplete, the theory remains provisional.</p>
+                </div>
+              </div>
+
+              <div class="mini-grid">
+                <div class="mini-box">
+                  <h4>Does</h4>
+                  <ul>
+                    <li>Organizes observations into a possible explanation.</li>
+                    <li>Creates expectations or predictions.</li>
+                    <li>Exposes assumptions and revision points.</li>
+                    <li>Helps compare competing explanations.</li>
+                  </ul>
+                </div>
+                <div class="mini-box">
+                  <h4>Cannot Do Alone</h4>
+                  <ul>
+                    <li>Prove itself.</li>
+                    <li>Outrank evidence.</li>
+                    <li>Erase uncertainty.</li>
+                    <li>Claim universal scope without boundary testing.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="audit-question">
+                <span>Audit question</span>
+                What would this theory predict, and what evidence would force it to be revised, narrowed, or rejected?
+              </div>
+
+              <div class="return-row">
+                <a class="return-chip" href="/laws/scientific-law/theory/">Open full Theory page</a>
+                <a class="return-chip gold" href="#primary-doors">Return to Primary Doors</a>
+              </div>
+            </article>
+
+            <article class="definition-card" id="evidence">
+              <input class="local-radio local-platform" type="radio" name="lens-evidence" id="evidence-platform" checked>
+              <input class="local-radio local-engineering" type="radio" name="lens-evidence" id="evidence-engineering">
+
+              <b>Evidence</b>
+              <strong>The checkable record that survives preference.</strong>
+
+              <div class="local-scope">
+                <div class="local-toggle-row" role="radiogroup" aria-label="Evidence language lens">
+                  <label class="local-toggle-label is-platform" for="evidence-platform" tabindex="0">Platform</label>
+                  <label class="local-toggle-label is-engineering" for="evidence-engineering" tabindex="0">Engineering</label>
+                </div>
+
+                <div class="copy-box local-platform-content">
+                  <p>Evidence is what remains available after confidence, opinion, memory, and preference are removed. It is the record that can be inspected, compared, challenged, or repeated. Evidence does not need to be perfect to matter, but it must be honest about what it is and what it can support.</p>
+                  <p>Evidence is stronger when someone else can examine it without needing to trust the original speaker. A claim becomes more reliable when the record has a source, a time, a method, a boundary, and a way to be checked.</p>
+                  <p>Evidence outranks explanation because explanation can be invented after the fact. Evidence forces the explanation to answer to something outside itself.</p>
+                </div>
+
+                <div class="copy-box local-engineering-content">
+                  <p>Evidence is recorded observation with provenance, inspection value, relevance to the claim, repeatability value, and boundary alignment. Evidence must carry enough context to show what was observed, when it was observed, how it was obtained, and what claim it supports.</p>
+                  <p>Evidence is not automatically conclusive. Evidence may be incomplete, noisy, biased, indirect, or domain-limited. Its value depends on provenance, relevance, independence, repeatability, resolution, and fit to the claim boundary.</p>
+                  <p>Evidence must be separated from interpretation. The record is one layer. The explanation of the record is another layer. Scientific Law requires those layers to remain distinguishable.</p>
+                </div>
+              </div>
+
+              <div class="mini-grid">
+                <div class="mini-box">
+                  <h4>Counts As</h4>
+                  <ul>
+                    <li>Recorded observation.</li>
+                    <li>Measured data.</li>
+                    <li>Documented source.</li>
+                    <li>Controlled comparison.</li>
+                  </ul>
+                </div>
+                <div class="mini-box">
+                  <h4>Does Not Count Yet</h4>
+                  <ul>
+                    <li>Confidence without record.</li>
+                    <li>Memory without source.</li>
+                    <li>Authority claim without inspection.</li>
+                    <li>Explanation without observable support.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="audit-question">
+                <span>Audit question</span>
+                Can this evidence be inspected, traced, compared, and matched to the exact claim it is being used to support?
+              </div>
+
+              <div class="return-row">
+                <a class="return-chip" href="/laws/scientific-law/evidence/">Open full Evidence page</a>
+                <a class="return-chip gold" href="#primary-doors">Return to Primary Doors</a>
+              </div>
+            </article>
+
+            <article class="definition-card" id="measure">
+              <input class="local-radio local-platform" type="radio" name="lens-measure" id="measure-platform" checked>
+              <input class="local-radio local-engineering" type="radio" name="lens-measure" id="measure-engineering">
+
+              <b>Measure</b>
+              <strong>The coordinate system attached to a claim.</strong>
+
+              <div class="local-scope">
+                <div class="local-toggle-row" role="radiogroup" aria-label="Measure language lens">
+                  <label class="local-toggle-label is-platform" for="measure-platform" tabindex="0">Platform</label>
+                  <label class="local-toggle-label is-engineering" for="measure-engineering" tabindex="0">Engineering</label>
+                </div>
+
+                <div class="copy-box local-platform-content">
+                  <p>Measurement is how a claim becomes accountable. It takes something vague and gives it coordinates so people can compare the same thing instead of arguing from different maps.</p>
+                  <p>To measure well, a person must know what is being measured, what unit is being used, what method is being followed, what tool is being trusted, when the measurement happens, and how much error may be present.</p>
+                  <p>Measurement does not remove all uncertainty, but it makes uncertainty visible. A claim becomes weaker when its measurement changes depending on who wants the result.</p>
+                </div>
+
+                <div class="copy-box local-engineering-content">
+                  <p>Measurement is the coordinate system attached to a claim. It defines the object, unit, method, calibration state, sampling frame, detection limit, comparison standard, uncertainty range, and acceptable error boundary.</p>
+                  <p>Measurement converts observation into structured comparison. It allows multiple observers, instruments, or passes to evaluate whether they are addressing the same variable under compatible conditions.</p>
+                  <p>A number without method, unit, calibration, sampling, and error bounds is not a stable measurement. It is an unsupported quantity.</p>
+                </div>
+              </div>
+
+              <div class="mini-grid">
+                <div class="mini-box">
+                  <h4>Requires</h4>
+                  <ul>
+                    <li>Object and variable.</li>
+                    <li>Unit and method.</li>
+                    <li>Instrument or observer.</li>
+                    <li>Calibration and uncertainty.</li>
+                  </ul>
+                </div>
+                <div class="mini-box">
+                  <h4>Prevents</h4>
+                  <ul>
+                    <li>Vague claim inflation.</li>
+                    <li>Numbers without units.</li>
+                    <li>False precision.</li>
+                    <li>Comparing unlike conditions.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="audit-question">
+                <span>Audit question</span>
+                Is the measurement method clear enough that another qualified observer could understand what was measured, how it was measured, and what error range travels with the result?
+              </div>
+
+              <div class="return-row">
+                <a class="return-chip" href="/laws/scientific-law/measure/">Open full Measure page</a>
+                <a class="return-chip gold" href="#primary-doors">Return to Primary Doors</a>
+              </div>
+            </article>
+
+            <article class="definition-card" id="limits">
+              <input class="local-radio local-platform" type="radio" name="lens-limits" id="limits-platform" checked>
+              <input class="local-radio local-engineering" type="radio" name="lens-limits" id="limits-engineering">
+
+              <b>Limits</b>
+              <strong>The boundary that protects truth from overclaiming.</strong>
+
+              <div class="local-scope">
+                <div class="local-toggle-row" role="radiogroup" aria-label="Limits language lens">
+                  <label class="local-toggle-label is-platform" for="limits-platform" tabindex="0">Platform</label>
+                  <label class="local-toggle-label is-engineering" for="limits-engineering" tabindex="0">Engineering</label>
+                </div>
+
+                <div class="copy-box local-platform-content">
+                  <p>Limits are not weakness. Limits are what keep a claim honest. A claim becomes more trustworthy when it clearly says what it can support, what it cannot support, what is still unknown, and what could change the conclusion.</p>
+                  <p>A claim without limits tries to sound stronger than it is. That may feel persuasive, but it makes the claim less safe. Limits protect reality from being stretched beyond the evidence.</p>
+                  <p>Scientific Law requires limits because evidence always arrives with boundaries: time, method, sample, instrument, context, domain, uncertainty, and interpretation.</p>
+                </div>
+
+                <div class="copy-box local-engineering-content">
+                  <p>Limits define the valid boundary of a claim. They include confidence range, uncertainty range, domain constraint, sampling constraint, instrument constraint, model applicability, unresolved variables, and revision conditions.</p>
+                  <p>A limit is not a failure state. It is a control field. It prevents the claim from expanding beyond what the evidence, measurement, theory, and comparison can support.</p>
+                  <p>Limits must travel with the claim. A result that is valid under one condition may become invalid under another. A model that performs inside one domain may mislead outside its operating range.</p>
+                </div>
+              </div>
+
+              <div class="mini-grid">
+                <div class="mini-box">
+                  <h4>Declares</h4>
+                  <ul>
+                    <li>What the claim can say.</li>
+                    <li>What the claim cannot say.</li>
+                    <li>Where evidence applies.</li>
+                    <li>What would change the conclusion.</li>
+                  </ul>
+                </div>
+                <div class="mini-box">
+                  <h4>Prevents</h4>
+                  <ul>
+                    <li>Overclaiming.</li>
+                    <li>False certainty.</li>
+                    <li>Universalizing local evidence.</li>
+                    <li>Using models outside their domain.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="audit-question">
+                <span>Audit question</span>
+                Does the claim carry its boundary clearly enough that a reader can tell where the claim stops being reliable?
+              </div>
+
+              <div class="return-row">
+                <a class="return-chip" href="/laws/scientific-law/limits/">Open full Limits page</a>
+                <a class="return-chip gold" href="#primary-doors">Return to Primary Doors</a>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel section" id="scientific-route" aria-labelledby="scientific-route-title">
+          <input class="local-radio local-platform" type="radio" name="lens-route" id="route-platform" checked>
+          <input class="local-radio local-engineering" type="radio" name="lens-route" id="route-engineering">
+
+          <div class="kicker">Scientific route</div>
+          <div class="section-header">
+            <h2 id="scientific-route-title">A claim becomes stronger through a disciplined reality check.</h2>
+            <p class="page-platform">The route keeps a claim from skipping straight from impression to conclusion.</p>
+            <p class="page-engineering">The route formalizes claim maturation through observation, definition, measurement, comparison, revision, and limitation.</p>
+          </div>
+
+          <div class="local-scope">
+            <div class="local-toggle-row" role="radiogroup" aria-label="Scientific route language lens">
+              <label class="local-toggle-label is-platform" for="route-platform" tabindex="0">Platform</label>
+              <label class="local-toggle-label is-engineering" for="route-engineering" tabindex="0">Engineering</label>
+            </div>
+
+            <div class="route-steps">
+              <article class="route-card">
+                <b>01 · Observe</b>
+                <strong>Start with contact.</strong>
+                <div class="copy-box local-platform-content"><p>Observation begins with what is actually noticed, detected, recorded, or encountered. It does not begin with the explanation. Observation asks the system to start with contact before conclusion.</p></div>
+                <div class="copy-box local-engineering-content"><p>Observation is the initial record of a phenomenon, signal, event, condition, pattern, anomaly, or result. It must remain distinguishable from interpretation.</p></div>
+                <div class="audit-question"><span>Audit question</span>What was actually observed before explanation was added?</div>
+              </article>
+
+              <article class="route-card">
+                <b>02 · Define</b>
+                <strong>Name the boundary.</strong>
+                <div class="copy-box local-platform-content"><p>Definition names the claim and draws the boundary. It tells the reader what is being talked about, what is not being talked about, and what would count as the same thing.</p></div>
+                <div class="copy-box local-engineering-content"><p>Definition identifies the object, variable, context, scope, boundary condition, classification, and claim type. Without definition, measurement and comparison become unstable.</p></div>
+                <div class="audit-question"><span>Audit question</span>Is the claim defined tightly enough to be tested?</div>
+              </article>
+
+              <article class="route-card">
+                <b>03 · Measure</b>
+                <strong>Make it comparable.</strong>
+                <div class="copy-box local-platform-content"><p>Measurement makes the claim accountable. It turns a claim into something that can be compared rather than merely argued.</p></div>
+                <div class="copy-box local-engineering-content"><p>Measurement applies a method, unit, instrument, sampling frame, calibration state, and uncertainty range to the defined claim.</p></div>
+                <div class="audit-question"><span>Audit question</span>Can another observer understand the method and repeat the measurement logic?</div>
+              </article>
+
+              <article class="route-card">
+                <b>04 · Compare</b>
+                <strong>Test against another pass.</strong>
+                <div class="copy-box local-platform-content"><p>Comparison asks whether the result survives another pass. A claim grows stronger when it can be checked against another source, attempt, condition, or expectation.</p></div>
+                <div class="copy-box local-engineering-content"><p>Comparison evaluates the result against replication, controls, baseline conditions, competing models, historical values, independent datasets, or expected outputs.</p></div>
+                <div class="audit-question"><span>Audit question</span>What is this result being compared against?</div>
+              </article>
+
+              <article class="route-card">
+                <b>05 · Revise</b>
+                <strong>Let correction work.</strong>
+                <div class="copy-box local-platform-content"><p>Revision is where the system stays honest. If reality changes the answer, the explanation must change with it.</p></div>
+                <div class="copy-box local-engineering-content"><p>Revision updates the model, boundary, confidence level, assumptions, or classification when evidence contradicts, narrows, or refines the prior claim.</p></div>
+                <div class="audit-question"><span>Audit question</span>What would change if the evidence disagreed?</div>
+              </article>
+
+              <article class="route-card">
+                <b>06 · Limit</b>
+                <strong>State where it stops.</strong>
+                <div class="copy-box local-platform-content"><p>Limiting the claim tells the reader what the result can honestly say. This keeps the claim strong because it keeps the claim honest.</p></div>
+                <div class="copy-box local-engineering-content"><p>Limitation attaches uncertainty, domain scope, unresolved variables, confidence boundary, and applicability constraints to the final claim.</p></div>
+                <div class="audit-question"><span>Audit question</span>Where does this claim stop?</div>
+              </article>
+            </div>
+          </div>
+
+          <div class="return-row">
+            <a class="return-chip gold" href="#scientific-route">Return to Scientific Route</a>
+            <a class="return-chip" href="#primary-doors">Return to Primary Doors</a>
+          </div>
+        </section>
+
+        <section class="panel section" id="deeper-terms" aria-labelledby="deeper-terms-title">
+          <input class="local-radio local-platform" type="radio" name="lens-terms" id="terms-platform" checked>
+          <input class="local-radio local-engineering" type="radio" name="lens-terms" id="terms-engineering">
+
+          <div class="kicker">Deeper terms</div>
+          <div class="section-header">
+            <h2 id="deeper-terms-title">Open only what the claim requires.</h2>
+            <p class="page-platform">These terms keep the reality test honest without overwhelming the first read.</p>
+            <p class="page-engineering">These terms define the minimum scientific controls required for repeatable, falsifiable, calibrated, uncertainty-aware, causality-bounded, scope-aware claims.</p>
+          </div>
+
+          <div class="local-scope">
+            <div class="local-toggle-row" role="radiogroup" aria-label="Deeper terms language lens">
+              <label class="local-toggle-label is-platform" for="terms-platform" tabindex="0">Platform</label>
+              <label class="local-toggle-label is-engineering" for="terms-engineering" tabindex="0">Engineering</label>
+            </div>
+
+            <div class="term-grid">
+              <article class="term-card">
+                <b>Repeatability</b>
+                <strong>The result has to survive another pass.</strong>
+                <div class="copy-box local-platform-content"><p>Repeatability means the result has to be more than a one-time impression. It does not require every result to be identical, but it does require the method and result to remain stable enough to compare.</p></div>
+                <div class="copy-box local-engineering-content"><p>Repeatability means a method can produce comparable results across attempts, observers, instruments, or conditions within a defined tolerance. The tolerance must be declared or inferable from the claim.</p></div>
+                <div class="audit-question"><span>Audit question</span>Can the result survive another pass under comparable conditions?</div>
+              </article>
+
+              <article class="term-card">
+                <b>Falsifiability</b>
+                <strong>A serious theory must be able to lose.</strong>
+                <div class="copy-box local-platform-content"><p>Falsifiability means a serious theory must be able to lose. If nothing could ever count against the claim, the claim is not being tested by reality.</p></div>
+                <div class="copy-box local-engineering-content"><p>Falsifiability means the claim exposes a condition under which it could be contradicted, narrowed, revised, or rejected. A non-falsifiable claim may be meaningful, but it is not functioning as scientific law.</p></div>
+                <div class="audit-question"><span>Audit question</span>What result would count against this claim?</div>
+              </article>
+
+              <article class="term-card">
+                <b>Calibration</b>
+                <strong>The tool has to be accountable.</strong>
+                <div class="copy-box local-platform-content"><p>Calibration means the tool has to be accountable before the result can be trusted. If the tool is off, the result may be off even when the process looks careful.</p></div>
+                <div class="copy-box local-engineering-content"><p>Calibration evaluates whether the instrument, observer, unit, method, reference standard, and comparison system are stable enough to support the measurement.</p></div>
+                <div class="audit-question"><span>Audit question</span>How do we know the tool or method was aligned before it produced the result?</div>
+              </article>
+
+              <article class="term-card">
+                <b>Uncertainty</b>
+                <strong>Honesty includes possible error.</strong>
+                <div class="copy-box local-platform-content"><p>Uncertainty does not destroy knowledge. It protects knowledge from pretending to be more exact than it is.</p></div>
+                <div class="copy-box local-engineering-content"><p>Uncertainty quantifies or declares the possible error range created by measurement limits, sampling limits, model mismatch, instrument limits, environmental variation, or unresolved variables.</p></div>
+                <div class="audit-question"><span>Audit question</span>What range of error or unresolved condition travels with this claim?</div>
+              </article>
+
+              <article class="term-card">
+                <b>Causality</b>
+                <strong>Cause requires more than sequence.</strong>
+                <div class="copy-box local-platform-content"><p>Causality means more than “this happened after that.” Cause requires the relationship to survive comparison, controls, and alternative explanations.</p></div>
+                <div class="copy-box local-engineering-content"><p>Causality requires evidence that a relationship is not merely sequential, coincidental, confounded, or selection-biased. It requires mechanism review, control logic, comparison, and alternative-explanation testing.</p></div>
+                <div class="audit-question"><span>Audit question</span>What alternative explanation has been ruled out, and by what method?</div>
+              </article>
+
+              <article class="term-card">
+                <b>Model Scope</b>
+                <strong>A model carries its boundary.</strong>
+                <div class="copy-box local-platform-content"><p>Model scope means a model can be useful in one range and misleading somewhere else. A good model carries its boundary with it.</p></div>
+                <div class="copy-box local-engineering-content"><p>Model scope defines the domain, assumptions, inputs, operating range, constraints, exclusions, and boundary conditions under which the model remains valid.</p></div>
+                <div class="audit-question"><span>Audit question</span>Where does this model apply, and where should it stop being trusted?</div>
+              </article>
+            </div>
+          </div>
+
+          <div class="return-row">
+            <a class="return-chip gold" href="#deeper-terms">Return to Deeper Terms</a>
+            <a class="return-chip" href="#primary-doors">Return to Primary Doors</a>
+          </div>
+        </section>
+
+        <section class="panel section" id="claim-ladder" aria-labelledby="claim-ladder-title">
+          <input class="local-radio local-platform" type="radio" name="lens-ladder" id="ladder-platform" checked>
+          <input class="local-radio local-engineering" type="radio" name="lens-ladder" id="ladder-engineering">
+
+          <div class="kicker">Claim testing ladder</div>
+          <div class="section-header">
+            <h2 id="claim-ladder-title">How a claim matures.</h2>
+            <p class="page-platform">The ladder shows why a claim should not jump from first impression to final truth.</p>
+            <p class="page-engineering">The ladder defines claim maturity states from subjective signal to bounded scientific claim.</p>
+          </div>
+
+          <div class="local-scope">
+            <div class="local-toggle-row" role="radiogroup" aria-label="Claim ladder language lens">
+              <label class="local-toggle-label is-platform" for="ladder-platform" tabindex="0">Platform</label>
+              <label class="local-toggle-label is-engineering" for="ladder-engineering" tabindex="0">Engineering</label>
+            </div>
+
+            <div class="ladder-grid">
+              <article class="ladder-card">
+                <b>01</b>
+                <strong>Impression</strong>
+                <div class="copy-box local-platform-content"><p>Something appears true.</p></div>
+                <div class="copy-box local-engineering-content"><p>A subjective or preliminary signal exists, but no stable record, measurement, or boundary has been attached.</p></div>
+              </article>
+
+              <article class="ladder-card">
+                <b>02</b>
+                <strong>Observation</strong>
+                <div class="copy-box local-platform-content"><p>Something is noticed or recorded.</p></div>
+                <div class="copy-box local-engineering-content"><p>The claim has contact with an observed event, condition, signal, or pattern.</p></div>
+              </article>
+
+              <article class="ladder-card">
+                <b>03</b>
+                <strong>Evidence</strong>
+                <div class="copy-box local-platform-content"><p>The record can be inspected.</p></div>
+                <div class="copy-box local-engineering-content"><p>The observation gains provenance, relevance, and a checkable record.</p></div>
+              </article>
+
+              <article class="ladder-card">
+                <b>04</b>
+                <strong>Measurement</strong>
+                <div class="copy-box local-platform-content"><p>The record gains coordinates.</p></div>
+                <div class="copy-box local-engineering-content"><p>The evidence is attached to a unit, method, calibration state, sampling frame, and uncertainty boundary.</p></div>
+              </article>
+
+              <article class="ladder-card">
+                <b>05</b>
+                <strong>Repeatability</strong>
+                <div class="copy-box local-platform-content"><p>The result survives another pass.</p></div>
+                <div class="copy-box local-engineering-content"><p>Comparable results appear across attempts, observers, instruments, or conditions.</p></div>
+              </article>
+
+              <article class="ladder-card">
+                <b>06</b>
+                <strong>Model</strong>
+                <div class="copy-box local-platform-content"><p>A theory explains the pattern.</p></div>
+                <div class="copy-box local-engineering-content"><p>A model organizes the result into expected behavior while exposing assumptions and revision conditions.</p></div>
+              </article>
+
+              <article class="ladder-card">
+                <b>07</b>
+                <strong>Limitation</strong>
+                <div class="copy-box local-platform-content"><p>The boundary is declared.</p></div>
+                <div class="copy-box local-engineering-content"><p>The claim carries uncertainty, scope, domain limits, unresolved variables, and confidence boundaries.</p></div>
+              </article>
+
+              <article class="ladder-card">
+                <b>08</b>
+                <strong>Scientific Claim</strong>
+                <div class="copy-box local-platform-content"><p>The claim is now bounded, testable, and open to correction.</p></div>
+                <div class="copy-box local-engineering-content"><p>The claim has observation, evidence, measurement, repeatability value, model structure, falsifiability exposure, calibration awareness, uncertainty boundary, and stated scope.</p></div>
+              </article>
+            </div>
+          </div>
+
+          <div class="return-row">
+            <a class="return-chip gold" href="#claim-ladder">Return to Claim Ladder</a>
+            <a class="return-chip" href="#branch-orbit">Return to Branch Orbit</a>
+          </div>
+        </section>
+
+        <section class="panel section" id="branch-routes" aria-labelledby="branch-routes-title">
+          <div class="kicker">Branch routes</div>
+          <div class="section-header">
+            <h2 id="branch-routes-title">Scientific Law remains attached to the governing Laws chamber.</h2>
+            <p class="page-platform">
+              These routes keep the chamber connected to parent law, source category, proof checking, and the four full branch pages.
             </p>
-          </article>
-        </div>
-      </section>
+            <p class="page-engineering">
+              Branch routes preserve parent, source, taxonomy, proof, and primary-door page access without turning the current route into a grid replacement.
+            </p>
+          </div>
 
-      <section class="panel section" id="application" aria-labelledby="application-title">
-        <div class="kicker">Application</div>
-        <h2 id="application-title">How this category is used.</h2>
+          <div class="branch-grid">
+            <a class="branch-card" href="/laws/">
+              <b>Parent</b>
+              <strong>Governing Laws</strong>
+              <p>Return to the rule chamber.</p>
+            </a>
 
-        <p>
-          The Reality category is used whenever a claim needs to be separated from appearance. It applies to science, law, relationships, systems, infrastructure, frontier claims, public promises, private assumptions, and personal accountability.
-        </p>
+            <a class="branch-card" href="/laws/categories/reality/">
+              <b>Source</b>
+              <strong>Reality Source</strong>
+              <p>Open the source category for reality claims.</p>
+            </a>
 
-        <ul class="application-list" aria-label="Reality application questions">
-          <li>Does the claim match the evidence?</li>
-          <li>Does the claim survive contradiction?</li>
-          <li>Does the claim hold under consequence?</li>
-          <li>Does the claim remain coherent across the system?</li>
-          <li>Does the claim admit uncertainty?</li>
-          <li>Does the claim have a lawful audit path?</li>
-        </ul>
-      </section>
+            <a class="branch-card" href="/laws/categories/">
+              <b>Taxonomy</b>
+              <strong>Categories</strong>
+              <p>Open the taxonomy and branch map.</p>
+            </a>
 
-      <section class="panel section" id="audit" aria-labelledby="audit-title">
-        <div class="kicker">Boundary / Audit</div>
-        <h2 id="audit-title">Reality is not certainty theater.</h2>
+            <a class="branch-card" href="/gauges/">
+              <b>Proof</b>
+              <strong>Gauges</strong>
+              <p>Open proof and route checking.</p>
+            </a>
 
-        <div class="boundary">
-          <strong>Reality separates established reality from open question, unknown condition, false claim, unstable claim, and audit-ready claim.</strong>
-          <p>
-            A strong Reality page does not pretend every answer is already known. What holds may proceed. What fails must be revised. What remains unknown must be named.
-          </p>
-        </div>
+            <a class="branch-card" href="/laws/scientific-law/theory/">
+              <b>Primary</b>
+              <strong>Theory</strong>
+              <p>Open the full Theory branch.</p>
+            </a>
 
-        <div class="actions">
-          <a class="button gold" href="/laws/">Back to Laws</a>
-          <a class="button" href="/laws/categories/">Law Categories</a>
-          <a class="button" href="/">Compass</a>
-        </div>
-      </section>
+            <a class="branch-card" href="/laws/scientific-law/evidence/">
+              <b>Primary</b>
+              <strong>Evidence</strong>
+              <p>Open the full Evidence branch.</p>
+            </a>
 
-      <template id="route-receipt" data-route-receipt>
-REALITY_LAW_CATEGORY_ROUTE_RENEWAL_TNT_v1
-binding=REALITY_LAW_CATEGORY_ROUTE_RENEWAL_PREGAME_TO_POSTGAME_BINDING_v1
-route=/laws/categories/reality/
-target=/laws/categories/reality/index.html
-branch=Laws
-category=Reality
-legacy_placeholder_discarded=true
-legacy_tech_allowed=false
-modern_static_html_css=true
+            <a class="branch-card" href="/laws/scientific-law/measure/">
+              <b>Primary</b>
+              <strong>Measure</strong>
+              <p>Open the full Measure branch.</p>
+            </a>
+
+            <a class="branch-card" href="/laws/scientific-law/limits/">
+              <b>Primary</b>
+              <strong>Limits</strong>
+              <p>Open the full Limits branch.</p>
+            </a>
+          </div>
+
+          <div class="return-row">
+            <a class="return-chip gold" href="#branch-orbit">Return to Branch Orbit</a>
+            <a class="return-chip" href="/laws/">Return to Laws</a>
+          </div>
+        </section>
+
+        <template id="route-receipt" data-route-receipt>
+SCIENTIFIC_LAW_GEM_ORBIT_DEEP_DEFINITION_REALITY_TEST_CHAMBER_TNT_v1
+binding=SCIENTIFIC_LAW_GEM_ORBIT_DEEP_DEFINITION_REALITY_TEST_CHAMBER_PREGAME_TO_POSTGAME_BINDING_v1
+route=/laws/scientific-law/
+target=/laws/scientific-law/index.html
+scientific_law_branch_preserved=true
+laws_parent_preserved=true
+reality_source_preserved=true
+platform_engineering_language_standard=true
+public_technical_labels_retired=true
+global_platform_engineering_toggle=true
+local_section_language_toggles=true
+top_branch_orbit_added=true
+large_primary_scientific_law_diamonds=true
+four_primary_doors_preserved=true
+four_primary_doors_deeply_expanded=true
+scientific_route_deeply_expanded=true
+deeper_terms_deeply_expanded=true
+claim_testing_ladder_added=true
+branch_routes_preserved=true
+svg_crystal_renderer_required=true
+lawCrystalGem_used_for_law_affiliated_items=true
+routeColorGem_used_for_outbound_items=true
+css_polygon_regression_forbidden=true
 javascript_dependency=false
 heavy_runtime=false
 generated_image=false
-graphic_box=false
-frontier_orbit_model=false
-public_thesis=Reality_is_what_still_holds_after_the_claim_is_tested
-definition=Reality_is_the_constraint_surface
-required_content=hero_definition_what_reality_is_what_reality_is_not_how_reality_is_tested_application_boundary_audit
-required_cards=Evidence,Constraint,Consequence,Coherence,Falsifiability,Audit
-forbidden_collapse=Reality_as_preference_majority_agreement_emotional_intensity_visual_appearance_only_certainty_without_evidence_claim_without_audit_slogan_authority_assertion_untestable_belief_placeholder_category
-final_boundary=What_holds_may_proceed_What_fails_must_be_revised_What_remains_unknown_must_be_named
+graphic_block=false
 visual_pass_claimed=false
-      </template>
+deploy_marker=SCIENTIFIC_LAW_GEM_ORBIT_DEEP_DEFINITION_REALITY_TEST_CHAMBER_DEPLOY_MARKER_v1
+        </template>
+      </div>
     </main>
 
     <footer>
-      REALITY_LAW_CATEGORY_ROUTE_RENEWAL_TNT_v1 · Laws / Categories / Reality · Tested constraint.
+      SCIENTIFIC_LAW_GEM_ORBIT_DEEP_DEFINITION_REALITY_TEST_CHAMBER_TNT_v1 · Scientific Law · Reality Test Chamber.
     </footer>
   </div>
 </body>

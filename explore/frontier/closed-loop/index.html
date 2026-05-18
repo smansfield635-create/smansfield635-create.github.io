@@ -1,11 +1,13 @@
+<!-- TARGET FILE: /explore/frontier/closed-loop/index.html -->
 <!doctype html>
 <html
   lang="en"
   data-route="/explore/frontier/closed-loop/"
   data-page="frontier-closed-loop"
-  data-version="G2-V1"
-  data-contract="FRONTIER_CLOSED_LOOP_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1"
-  data-source-binding="FRONTIER_CLOSED_LOOP_COMPASS_GEM_DUAL_LENS_PREGAME_TO_POSTGAME_BINDING_v1"
+  data-version="G2-V2"
+  data-contract="FRONTIER_CLOSED_LOOP_MINIMUM_NAV_RETURN_TWINKLING_GEM_GLOW_RENEWAL_TNT_v2"
+  data-previous-contract="FRONTIER_CLOSED_LOOP_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1"
+  data-source-binding="FRONTIER_CLOSED_LOOP_MINIMUM_NAV_RETURN_TWINKLING_GEM_GLOW_PREGAME_TO_POSTGAME_BINDING_v1"
   data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
   data-design-reference="FRONTIER_ENERGY_COMPASS_GEM_PRINT_LEGIBILITY_RENEWAL_TNT_v19"
   data-mirror-reference-1="FRONTIER_WATER_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1"
@@ -19,6 +21,12 @@
   data-per-pathway-dual-lens="true"
   data-platform-lens="true"
   data-engineering-lens="true"
+  data-minimum-top-nav="true"
+  data-top-nav="Compass,Home,Door,Laws,Frontier"
+  data-return-to-frontier-action="true"
+  data-return-to-closed-loop-orbit-preserved="true"
+  data-twinkling-star-glow-behind-gems="true"
+  data-existing-compass-organic-gem-preserved="true"
   data-closed-loop-law="valid-loop-requires-boundary-inputs-outputs-capture-storage-reuse-transformation-inventory-residual-uncertainty-receipt-audit-path"
   data-static-page-usable-without-js="true"
   data-heavy-runtime-loaded="false"
@@ -57,6 +65,7 @@
       --brand-gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
       --orbit-duration:52s;
       --gem-breathe-duration:8.8s;
+      --star-glow-duration:4.8s;
     }
 
     *{box-sizing:border-box}
@@ -492,6 +501,7 @@
       text-align:center;
       color:var(--ink);
       z-index:4;
+      isolation:isolate;
       transition:transform .18s ease,filter .18s ease;
       animation:gemFloat 7.2s ease-in-out infinite;
       animation-delay:var(--delay,0s);
@@ -515,11 +525,79 @@
       transform:translate(-50%,-50%);
     }
 
+    .compass-center::before,
+    .compass-node::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:0;
+      width:124%;
+      height:150%;
+      border-radius:50%;
+      transform:translate(-50%,-50%) scale(.96);
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,.72) 0 4%,rgba(255,232,163,.48) 5% 12%,rgba(141,216,255,.30) 13% 26%,rgba(36,120,255,.16) 27% 48%,transparent 72%);
+      filter:blur(9px);
+      opacity:.78;
+      animation:gemStarGlow var(--star-glow-duration) ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+    }
+
+    .compass-center::after,
+    .compass-node::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:1;
+      width:34%;
+      height:48%;
+      border-radius:50%;
+      transform:translate(-50%,-50%) scale(.96);
+      pointer-events:none;
+      background:
+        linear-gradient(90deg,transparent 0 42%,rgba(255,255,255,.92) 49% 51%,transparent 58% 100%),
+        linear-gradient(0deg,transparent 0 42%,rgba(255,255,255,.80) 49% 51%,transparent 58% 100%),
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,1) 0 11%,rgba(255,232,163,.88) 12% 23%,rgba(141,216,255,.48) 24% 42%,transparent 70%);
+      opacity:.86;
+      filter:blur(.25px) drop-shadow(0 0 .75rem rgba(255,244,216,.55)) drop-shadow(0 0 1.2rem rgba(141,216,255,.28));
+      animation:gemStarTwinkle calc(var(--star-glow-duration) * .72) ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+    }
+
+    .compass-center::before{
+      width:132%;
+      height:158%;
+      filter:blur(12px);
+      opacity:.82;
+    }
+
+    .compass-center::after{
+      width:31%;
+      height:43%;
+      opacity:.92;
+    }
+
     .compass-node:hover,
     .compass-node:focus-visible{
       transform:translate(-50%,-50%) scale(1.055);
       filter:brightness(1.13) saturate(1.08);
       outline:none;
+    }
+
+    @keyframes gemStarGlow{
+      0%,100%{opacity:.58;transform:translate(-50%,-50%) scale(.90);filter:blur(9px) brightness(1)}
+      42%{opacity:.94;transform:translate(-50%,-50%) scale(1.07);filter:blur(10px) brightness(1.25)}
+      58%{opacity:.80;transform:translate(-50%,-50%) scale(.99);filter:blur(8px) brightness(1.12)}
+    }
+
+    @keyframes gemStarTwinkle{
+      0%,100%{opacity:.56;transform:translate(-50%,-50%) scale(.82) rotate(0deg)}
+      34%{opacity:1;transform:translate(-50%,-50%) scale(1.18) rotate(12deg)}
+      55%{opacity:.74;transform:translate(-50%,-50%) scale(.94) rotate(-8deg)}
+      72%{opacity:.98;transform:translate(-50%,-50%) scale(1.06) rotate(5deg)}
     }
 
     @keyframes gemFloat{
@@ -530,6 +608,7 @@
     .gem-core{
       position:absolute;
       inset:0;
+      z-index:2;
       display:grid;
       place-items:center;
       pointer-events:none;
@@ -873,6 +952,19 @@
         transform:none;
       }
 
+      .compass-center::before,
+      .compass-node::before{
+        width:112%;
+        height:132%;
+        filter:blur(7px);
+      }
+
+      .compass-center::after,
+      .compass-node::after{
+        width:28%;
+        height:40%;
+      }
+
       .compass-node:hover,
       .compass-node:focus-visible{transform:scale(1.05)}
 
@@ -925,7 +1017,17 @@
       .compass-stage::before,
       .compass-stage::after,
       .compass-center,
-      .compass-node{animation:none!important}
+      .compass-node,
+      .compass-center::before,
+      .compass-center::after,
+      .compass-node::before,
+      .compass-node::after{animation:none!important}
+
+      .compass-center::before,
+      .compass-node::before{opacity:.72!important;transform:translate(-50%,-50%) scale(1)!important}
+
+      .compass-center::after,
+      .compass-node::after{opacity:.76!important;transform:translate(-50%,-50%) scale(.94)!important}
     }
   </style>
 </head>
@@ -1037,19 +1139,10 @@
 
       <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
-        <a href="/door/">Door</a>
         <a href="/home/">Home</a>
-        <a href="/products/">Products</a>
+        <a href="/door/">Door</a>
         <a href="/laws/">Laws</a>
-        <a href="/showroom/globe/">Interactive Narrative</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/explore/frontier/energy/">Energy</a>
-        <a href="/explore/frontier/water/">Water</a>
-        <a href="/explore/frontier/waste/">Waste</a>
-        <a href="/explore/frontier/lattice/">Lattice</a>
-        <a href="/explore/frontier/urban/">Urban</a>
-        <a href="/explore/frontier/closed-loop/" aria-current="page">Closed Loop</a>
-        <a href="/gauges/">Gauges</a>
+        <a href="/frontier/" aria-current="page">Frontier</a>
       </nav>
     </header>
 
@@ -1071,6 +1164,7 @@
           <a class="button gold" href="#closed-loop-orbit">Choose a Pathway</a>
           <a class="button" href="#audralia-loop">Start with Audralia</a>
           <a class="button green" href="#kill-conditions">Open Kill Conditions</a>
+          <a class="button" href="/frontier/">Return to Frontier</a>
         </div>
       </section>
 
@@ -1676,6 +1770,7 @@
         </p>
         <div class="actions">
           <a class="button gold" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
+          <a class="button" href="/frontier/">Return to Frontier</a>
           <a class="button" href="/showroom/globe/audralia/">Open Audralia</a>
           <a class="button green" href="/explore/frontier/water/">Open Water</a>
           <a class="button" href="/explore/frontier/waste/">Open Waste</a>
@@ -1685,8 +1780,9 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_CLOSED_LOOP_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1
-binding=FRONTIER_CLOSED_LOOP_COMPASS_GEM_DUAL_LENS_PREGAME_TO_POSTGAME_BINDING_v1
+FRONTIER_CLOSED_LOOP_MINIMUM_NAV_RETURN_TWINKLING_GEM_GLOW_RENEWAL_TNT_v2
+previous=FRONTIER_CLOSED_LOOP_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1
+binding=FRONTIER_CLOSED_LOOP_MINIMUM_NAV_RETURN_TWINKLING_GEM_GLOW_PREGAME_TO_POSTGAME_BINDING_v1
 route=/explore/frontier/closed-loop/
 page=frontier_closed_loop
 html=/explore/frontier/closed-loop/index.html
@@ -1705,12 +1801,26 @@ audralia_closed_loop_first=true
 center_anchor=Closed_Loop_Accountable_Flow
 pathways=Audralia_Loop,Boundary,Inputs,Outputs,Capture,Storage,Reuse,Transform,Inventory,Residuals,Receipts,Kill_Conditions
 public_subject=closed_loop_systems_system_boundary_inputs_outputs_capture_storage_reuse_transformation_inventory_residuals_receipts_audit_kill_conditions
+minimum_top_nav=true
+top_nav=Compass,Home,Door,Laws,Frontier
+return_to_frontier_action=true
+return_to_frontier_route=/frontier/
+return_to_closed_loop_orbit_preserved=true
+return_to_closed_loop_orbit_target=#closed-loop-orbit
+return_to_closed_loop_orbit_under_every_pathway=true
+per_pathway_platform_engineering_lenses_preserved=true
 per_pathway_dual_lens=true
 platform_lens_per_pathway=true
 engineering_lens_per_pathway=true
 top_only_lens_toggle=false
 side_by_side_platform_engineering=false
-return_to_closed_loop_orbit_under_every_pathway=true
+twinkling_star_glow_behind_gems=true
+existing_compassOrganicGem_preserved=true
+gems_not_replaced_by_stars=true
+css_only_animation=true
+reduced_motion_supported=true
+performance_budget_managed=true
+no_js_added=true
 closed_loop_law=valid_loop_requires_boundary_inputs_outputs_capture_storage_reuse_transformation_inventory_residual_uncertainty_receipt_audit_path
 hazardous_mass_standard=M_in_equals_M_out_plus_M_dest_plus_delta_M_inv_plus_or_minus_epsilon
 closure_residual=U_equals_M_in_minus_M_out_plus_M_dest_plus_delta_M_inv
@@ -1722,6 +1832,8 @@ audit_boundary=audit_failure_blocks_closure
 final_lock=declare_boundary_measure_input_name_output_track_storage_define_reuse_reconcile_residual_require_receipts_survive_audit
 static_page_usable_without_js=true
 heavy_runtime=false
+canvas=false
+webgl=false
 generated_image=false
 graphic_box=false
 streaming=false
@@ -1730,7 +1842,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      FRONTIER_CLOSED_LOOP_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1 · Closed Loop · Audralia first · Per-pathway Platform and Engineering lenses.
+      FRONTIER_CLOSED_LOOP_MINIMUM_NAV_RETURN_TWINKLING_GEM_GLOW_RENEWAL_TNT_v2 · Closed Loop · Minimum Nav · Return to Frontier · Twinkling Gem Glow.
     </footer>
   </div>
 </body>

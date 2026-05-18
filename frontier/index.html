@@ -4,35 +4,34 @@
   lang="en"
   data-route="/explore/frontier/"
   data-page="explore-frontier"
-  data-version="FUSION-G2"
-  data-contract="EXPLORE_FRONTIER_RADIATING_GLOW_PULSE_TNT_v2"
-  data-previous-contract="EXPLORE_FRONTIER_CLOSE_SOURCE_FUSION_GLOW_TNT_v1"
+  data-version="FUSION-G3"
+  data-contract="EXPLORE_FRONTIER_LIVING_RADIANT_FIELD_RENEWAL_TNT_v3"
+  data-previous-contract="EXPLORE_FRONTIER_RADIATING_GLOW_PULSE_TNT_v2"
   data-source-binding="EXPLORE_FRONTIER_RADIATING_GLOW_PULSE_INTEGRATION_BINDING_v1"
-  data-source-visual-authority="FRONTIER_V11_TWINKLING_HIDDEN_STAR_GLOW_INTENSIFICATION_TNT_v1"
+  data-renewal-standard="CONTRACT_RENEWAL_ADVANCES_VISIBLE_CONTEXT_GRAPHIC_PREMISE_AND_PUBLIC_THESIS"
   data-parent-route="/explore/"
   data-frontier-root="/frontier/"
   data-child-lane-base="/explore/frontier/"
   data-role="explore-frontier-parent-hub"
   data-route-distinction="explore-side-frontier-hub-not-root-frontier-not-child-lane"
+  data-living-radiant-field="true"
+  data-static-lane-selector="superseded"
+  data-radiant-context-renewed="true"
+  data-visible-copy-renewed="true"
+  data-graphic-premise-renewed="true"
+  data-motion-system-renewed="true"
   data-return-to-frontier="true"
   data-close-fusion-star-source="true"
   data-star-distance="near-contact"
   data-node-eclipses-star="true"
   data-fusion-backlight="true"
   data-rim-corona="true"
-  data-ambient-spill-secondary="true"
-  data-hidden-star-glow="true"
-  data-natural-spill-glow="true"
-  data-large-frontier-circles="true"
-  data-stable-halo-glow="true"
-  data-radiating-glow-pulse="true"
+  data-radiating-field-waves="true"
+  data-node-pulse-staggered="true"
   data-pseudo-random-css-pulse="true"
   data-node-body-animation="false"
   data-label-animation="false"
   data-layout-animation="false"
-  data-animated-filter="false"
-  data-animated-blur="false"
-  data-hard-circular-glow="false"
   data-generated-image="false"
   data-graphic-box="false"
   data-canvas="false"
@@ -45,10 +44,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Explore Frontier · Diamond Gate Bridge</title>
+  <title>Explore Frontier · Living Radiant Field · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Explore Frontier is the Explore-side parent hub for the Frontier lanes: Closed Loop, Energy, Infrastructure, Lattice, Manual, Shimmer, Trajectory, Waste, Water, Vision, and Urban."
+    content="Explore Frontier is the living radiant field for the Frontier lanes: Closed Loop, Energy, Infrastructure, Lattice, Manual, Shimmer, Trajectory, Waste, Water, Vision, and Urban."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/explore/frontier/">
   <meta name="theme-color" content="#02040b">
@@ -191,10 +190,7 @@
       text-shadow:0 2px 10px rgba(0,0,0,.85);
     }
 
-    .brand-copy{
-      display:grid;
-      gap:.18rem;
-    }
+    .brand-copy{display:grid;gap:.18rem}
 
     .brand-copy strong{
       font-size:clamp(1.08rem,3vw,1.7rem);
@@ -262,7 +258,7 @@
 
     .hero{
       position:relative;
-      min-height:clamp(24rem,42vw,34rem);
+      min-height:clamp(25rem,44vw,35rem);
       display:grid;
       align-content:center;
       gap:1rem;
@@ -324,8 +320,8 @@
 
     h1{
       margin:0;
-      max-width:980px;
-      font-size:clamp(3.1rem,10vw,7rem);
+      max-width:1020px;
+      font-size:clamp(3.25rem,10.4vw,7.2rem);
       line-height:.84;
       letter-spacing:-.105em;
       text-wrap:balance;
@@ -335,6 +331,7 @@
 
     h2{
       margin:0;
+      max-width:970px;
       color:var(--gold);
       font-size:clamp(1.45rem,4.7vw,2.65rem);
       line-height:.98;
@@ -363,7 +360,9 @@
       border:1px solid rgba(243,200,111,.22);
       border-radius:1.2rem;
       color:rgba(255,244,216,.92);
-      background:rgba(243,200,111,.065);
+      background:
+        radial-gradient(circle at 12% 0%,rgba(141,216,255,.10),transparent 60%),
+        rgba(243,200,111,.065);
       font-weight:850;
       position:relative;
       z-index:2;
@@ -424,12 +423,13 @@
 
     .frontier-orbit-stage{
       position:relative;
-      min-height:clamp(44rem,106vw,60rem);
+      min-height:clamp(46rem,108vw,62rem);
       display:grid;
-      grid-template-rows:auto minmax(29rem,1fr);
+      grid-template-rows:auto minmax(31rem,1fr);
       gap:.8rem;
       overflow:hidden;
       isolation:isolate;
+      contain:layout paint style;
       border:1px solid rgba(184,205,255,.13);
       border-radius:clamp(1.35rem,5vw,2.35rem);
       padding:clamp(.75rem,2vw,1rem);
@@ -442,16 +442,82 @@
         radial-gradient(circle at 28% 63%,rgba(141,216,255,.16),transparent 15rem),
         radial-gradient(circle at 72% 63%,rgba(143,101,255,.16),transparent 15rem),
         linear-gradient(180deg,rgba(1,5,16,.70),rgba(2,6,16,.94));
-      background-size:
-        260px 220px,
-        310px 270px,
-        330px 300px,
-        370px 320px,
-        auto,
-        auto,
-        auto,
-        auto;
+      background-size:260px 220px,310px 270px,330px 300px,370px 320px,auto,auto,auto,auto;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .radiant-field{
+      position:absolute;
+      inset:0;
+      z-index:1;
+      pointer-events:none;
+      overflow:hidden;
+      border-radius:inherit;
+    }
+
+    .radiant-field span{
+      position:absolute;
+      left:50%;
+      top:58%;
+      width:64%;
+      height:42%;
+      border:1px solid rgba(141,216,255,.16);
+      border-radius:50%;
+      transform:translate(-50%,-50%) rotate(var(--wave-rotation,0deg)) scale(.86);
+      opacity:.20;
+      box-shadow:
+        0 0 2.2rem rgba(141,216,255,.11),
+        inset 0 0 2.2rem rgba(243,200,111,.04);
+      animation:radiantFieldWave var(--wave-duration,11s) ease-in-out infinite;
+      animation-delay:var(--wave-delay,0s);
+      will-change:transform,opacity;
+    }
+
+    .radiant-field span:nth-child(1){
+      --wave-duration:10.8s;
+      --wave-delay:-1.7s;
+      --wave-rotation:-13deg;
+      width:46%;
+      height:30%;
+    }
+
+    .radiant-field span:nth-child(2){
+      --wave-duration:14.1s;
+      --wave-delay:-6.2s;
+      --wave-rotation:9deg;
+      width:62%;
+      height:41%;
+    }
+
+    .radiant-field span:nth-child(3){
+      --wave-duration:12.7s;
+      --wave-delay:-3.9s;
+      --wave-rotation:32deg;
+      width:78%;
+      height:51%;
+    }
+
+    .radiant-field span:nth-child(4){
+      --wave-duration:16.4s;
+      --wave-delay:-9.4s;
+      --wave-rotation:-31deg;
+      width:92%;
+      height:60%;
+    }
+
+    @keyframes radiantFieldWave{
+      0%,100%{
+        opacity:.08;
+        transform:translate(-50%,-50%) rotate(var(--wave-rotation,0deg)) scale(.78);
+      }
+      38%{
+        opacity:.26;
+        transform:translate(-50%,-50%) rotate(var(--wave-rotation,0deg)) scale(1.04);
+      }
+      68%{
+        opacity:.13;
+        transform:translate(-50%,-50%) rotate(var(--wave-rotation,0deg)) scale(1.18);
+      }
     }
 
     .frontier-top-stack{
@@ -464,15 +530,15 @@
 
     .frontier-anchor{
       position:relative;
-      width:clamp(8.4rem,20vw,11.8rem);
-      height:clamp(8.4rem,20vw,11.8rem);
+      width:clamp(8.7rem,20.8vw,12.2rem);
+      height:clamp(8.7rem,20.8vw,12.2rem);
       display:grid;
       place-items:center;
       isolation:isolate;
       --pulse-duration:12.4s;
       --pulse-delay:-1.7s;
-      --pulse-scale:.075;
-      --pulse-opacity:.16;
+      --pulse-scale:.13;
+      --pulse-opacity:.22;
     }
 
     .support-routes{
@@ -510,7 +576,7 @@
     .frontier-figure-eight-zone{
       position:relative;
       z-index:4;
-      min-height:clamp(29rem,72vw,42rem);
+      min-height:clamp(31rem,74vw,44rem);
       overflow:hidden;
       border:1px solid rgba(255,255,255,.085);
       border-radius:clamp(1.2rem,4vw,2rem);
@@ -587,74 +653,70 @@
     .frontier-node{
       position:absolute;
       z-index:5;
-      width:clamp(7.4rem,16.8vw,10.2rem);
-      height:clamp(7.4rem,16.8vw,10.2rem);
+      width:clamp(7.8rem,17.4vw,10.8rem);
+      height:clamp(7.8rem,17.4vw,10.8rem);
       display:grid;
       place-items:center;
       transform:translate(-50%,-50%);
       isolation:isolate;
       --pulse-duration:8.8s;
       --pulse-delay:var(--delay,0s);
-      --pulse-scale:.075;
-      --pulse-opacity:.18;
+      --pulse-scale:.11;
+      --pulse-opacity:.22;
     }
 
     .frontier-node.primary-row{
-      width:clamp(7.8rem,17.6vw,10.8rem);
-      height:clamp(7.8rem,17.6vw,10.8rem);
+      width:clamp(8.05rem,18vw,11.25rem);
+      height:clamp(8.05rem,18vw,11.25rem);
     }
 
     .frontier-anchor::after,
     .frontier-node::after{
       content:"";
       position:absolute;
-      inset:-44%;
+      inset:-55%;
       z-index:1;
       pointer-events:none;
       border-radius:42% 58% 55% 45% / 50% 44% 56% 50%;
       background:
-        radial-gradient(circle at 50% 50%,rgba(255,255,255,.22),transparent 14%),
-        radial-gradient(circle at 50% 50%,rgba(255,232,163,.26),transparent 32%),
-        radial-gradient(circle at 50% 50%,rgba(141,216,255,.24),transparent 60%),
-        radial-gradient(circle at 50% 50%,rgba(143,101,255,.17),transparent 86%);
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,.25),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(255,232,163,.30),transparent 32%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.28),transparent 60%),
+        radial-gradient(circle at 50% 50%,rgba(143,101,255,.18),transparent 88%);
       filter:blur(22px);
-      opacity:.88;
-      transform:scale(.98);
+      opacity:.90;
+      transform:scale(.92);
       animation:radiatingHaloPulse var(--pulse-duration,8.8s) ease-in-out infinite;
       animation-delay:var(--pulse-delay,var(--delay,0s));
+      will-change:transform,opacity;
     }
 
     .frontier-anchor::after{
-      inset:-40%;
-      opacity:.90;
-      filter:blur(22px);
+      inset:-50%;
+      opacity:.92;
     }
 
     .frontier-node.primary-row::after{
-      inset:-46%;
-      opacity:.90;
-      filter:blur(22px);
+      inset:-58%;
+      opacity:.92;
     }
 
     @keyframes radiatingHaloPulse{
       0%,100%{
-        opacity:calc(.78 + var(--pulse-opacity,.16));
-        transform:scale(.96);
+        opacity:.76;
+        transform:scale(.90);
       }
-
-      32%{
+      28%{
+        opacity:calc(.74 + var(--pulse-opacity,.22));
+        transform:scale(calc(1 + var(--pulse-scale,.11)));
+      }
+      51%{
+        opacity:.88;
+        transform:scale(1.025);
+      }
+      74%{
         opacity:.98;
-        transform:scale(calc(1 + var(--pulse-scale,.075)));
-      }
-
-      58%{
-        opacity:.86;
-        transform:scale(1.015);
-      }
-
-      76%{
-        opacity:.96;
-        transform:scale(calc(1.02 + (var(--pulse-scale,.075) * .62)));
+        transform:scale(calc(1.035 + (var(--pulse-scale,.11) * .58)));
       }
     }
 
@@ -686,11 +748,7 @@
       animation-delay:var(--delay,0s);
     }
 
-    .frontier-anchor::before{
-      width:92%;
-      height:92%;
-    }
-
+    .frontier-anchor::before,
     .frontier-node.primary-row::before{
       width:92%;
       height:92%;
@@ -701,12 +759,10 @@
         opacity:.92;
         transform:translate(-50%,-50%) scale(.985);
       }
-
       42%{
         opacity:1;
         transform:translate(-50%,-50%) scale(1.018);
       }
-
       72%{
         opacity:.98;
         transform:translate(-50%,-50%) scale(1.035);
@@ -721,93 +777,17 @@
       filter:brightness(1.10) saturate(1.05);
     }
 
-    .frontier-node.closed-loop{
-      left:27.5%;top:13%;
-      --pulse-duration:10.8s;
-      --pulse-delay:-1.2s;
-      --pulse-scale:.068;
-      --pulse-opacity:.13;
-    }
-
-    .frontier-node.energy{
-      left:72.5%;top:13%;
-      --pulse-duration:7.6s;
-      --pulse-delay:-4.7s;
-      --pulse-scale:.090;
-      --pulse-opacity:.20;
-    }
-
-    .frontier-node.infrastructure{
-      left:15%;top:37%;
-      --pulse-duration:9.9s;
-      --pulse-delay:-6.1s;
-      --pulse-scale:.073;
-      --pulse-opacity:.15;
-    }
-
-    .frontier-node.lattice{
-      left:85%;top:37%;
-      --pulse-duration:11.2s;
-      --pulse-delay:-2.8s;
-      --pulse-scale:.060;
-      --pulse-opacity:.12;
-    }
-
-    .frontier-node.manual{
-      left:23%;top:58.5%;
-      --pulse-duration:8.4s;
-      --pulse-delay:-5.5s;
-      --pulse-scale:.082;
-      --pulse-opacity:.17;
-    }
-
-    .frontier-node.trajectory{
-      left:77%;top:58.5%;
-      --pulse-duration:10.2s;
-      --pulse-delay:-.9s;
-      --pulse-scale:.070;
-      --pulse-opacity:.16;
-    }
-
-    .frontier-node.shimmer{
-      left:50%;top:47.5%;
-      --pulse-duration:7.1s;
-      --pulse-delay:-3.3s;
-      --pulse-scale:.095;
-      --pulse-opacity:.21;
-    }
-
-    .frontier-node.waste{
-      left:18%;top:83.5%;
-      --pulse-duration:11.6s;
-      --pulse-delay:-8.1s;
-      --pulse-scale:.058;
-      --pulse-opacity:.12;
-    }
-
-    .frontier-node.water{
-      left:39.33%;top:83.5%;
-      --pulse-duration:8.2s;
-      --pulse-delay:-2.2s;
-      --pulse-scale:.086;
-      --pulse-opacity:.18;
-    }
-
-    .frontier-node.vision{
-      left:60.66%;top:83.5%;
-      --pulse-duration:12.1s;
-      --pulse-delay:-4.4s;
-      --pulse-scale:.064;
-      --pulse-opacity:.14;
-    }
-
-    .frontier-node.urban{
-      left:82%;top:83.5%;
-      --pulse-duration:9.1s;
-      --pulse-delay:-6.9s;
-      --pulse-scale:.078;
-      --pulse-opacity:.17;
-    }
+    .frontier-node.closed-loop{left:27.5%;top:13%;--pulse-duration:10.8s;--pulse-delay:-1.2s;--pulse-scale:.10;--pulse-opacity:.18}
+    .frontier-node.energy{left:72.5%;top:13%;--pulse-duration:7.6s;--pulse-delay:-4.7s;--pulse-scale:.14;--pulse-opacity:.26}
+    .frontier-node.infrastructure{left:15%;top:37%;--pulse-duration:9.9s;--pulse-delay:-6.1s;--pulse-scale:.11;--pulse-opacity:.20}
+    .frontier-node.lattice{left:85%;top:37%;--pulse-duration:11.2s;--pulse-delay:-2.8s;--pulse-scale:.09;--pulse-opacity:.18}
+    .frontier-node.manual{left:23%;top:58.5%;--pulse-duration:8.4s;--pulse-delay:-5.5s;--pulse-scale:.12;--pulse-opacity:.22}
+    .frontier-node.trajectory{left:77%;top:58.5%;--pulse-duration:10.2s;--pulse-delay:-.9s;--pulse-scale:.10;--pulse-opacity:.20}
+    .frontier-node.shimmer{left:50%;top:47.5%;--pulse-duration:7.1s;--pulse-delay:-3.3s;--pulse-scale:.15;--pulse-opacity:.28}
+    .frontier-node.waste{left:18%;top:83.5%;--pulse-duration:11.6s;--pulse-delay:-8.1s;--pulse-scale:.09;--pulse-opacity:.17}
+    .frontier-node.water{left:39.33%;top:83.5%;--pulse-duration:8.2s;--pulse-delay:-2.2s;--pulse-scale:.13;--pulse-opacity:.23}
+    .frontier-node.vision{left:60.66%;top:83.5%;--pulse-duration:12.1s;--pulse-delay:-4.4s;--pulse-scale:.10;--pulse-opacity:.18}
+    .frontier-node.urban{left:82%;top:83.5%;--pulse-duration:9.1s;--pulse-delay:-6.9s;--pulse-scale:.12;--pulse-opacity:.21}
 
     .frontier-star-body,
     .frontier-anchor-body{
@@ -1124,9 +1104,9 @@
       .button{width:100%}
 
       .frontier-orbit-stage{
-        min-height:45rem;
+        min-height:46rem;
         padding:.65rem;
-        grid-template-rows:auto minmax(31rem,1fr);
+        grid-template-rows:auto minmax(32rem,1fr);
       }
 
       .support-routes a{
@@ -1135,31 +1115,29 @@
         font-size:.43rem;
       }
 
-      .frontier-figure-eight-zone{
-        min-height:31rem;
-      }
+      .frontier-figure-eight-zone{min-height:32rem}
 
       .frontier-node{
-        width:6.2rem;
-        height:6.2rem;
-        --pulse-scale:.045;
-        --pulse-opacity:.11;
+        width:6.35rem;
+        height:6.35rem;
+        --pulse-scale:.070;
+        --pulse-opacity:.15;
       }
 
       .frontier-node.primary-row{
-        width:6.4rem;
-        height:6.4rem;
+        width:6.55rem;
+        height:6.55rem;
       }
 
       .frontier-anchor::after,
       .frontier-node::after{
-        inset:-38%;
+        inset:-42%;
         filter:blur(18px);
-        opacity:.86;
+        opacity:.88;
       }
 
       .frontier-node.primary-row::after{
-        inset:-40%;
+        inset:-44%;
         filter:blur(18px);
       }
 
@@ -1176,9 +1154,7 @@
       }
 
       .frontier-star-body,
-      .frontier-anchor-body{
-        inset:10%;
-      }
+      .frontier-anchor-body{inset:10%}
 
       .frontier-node.closed-loop{left:27.5%;top:13%}
       .frontier-node.energy{left:72.5%;top:13%}
@@ -1203,28 +1179,19 @@
         letter-spacing:.045em;
       }
 
-      .frontier-label span{
-        display:none;
-      }
+      .frontier-label span{display:none}
 
-      .frontier-node.primary-row .frontier-label{
-        min-height:2.54rem;
-      }
-
-      .frontier-node.primary-row .frontier-label b{
-        font-size:.45rem;
-      }
+      .frontier-node.primary-row .frontier-label{min-height:2.54rem}
+      .frontier-node.primary-row .frontier-label b{font-size:.45rem}
 
       .frontier-anchor{
-        width:7.45rem;
-        height:7.45rem;
-        --pulse-scale:.052;
-        --pulse-opacity:.12;
+        width:7.6rem;
+        height:7.6rem;
+        --pulse-scale:.070;
+        --pulse-opacity:.15;
       }
 
-      .frontier-anchor .frontier-label b{
-        font-size:.56rem;
-      }
+      .frontier-anchor .frontier-label b{font-size:.56rem}
 
       .frontier-gravity{
         width:2.2rem;
@@ -1238,47 +1205,29 @@
     }
 
     @media (max-width:430px){
-      .frontier-orbit-stage{
-        min-height:43.5rem;
-      }
-
-      .frontier-figure-eight-zone{
-        min-height:30rem;
-      }
+      .frontier-orbit-stage{min-height:44rem}
+      .frontier-figure-eight-zone{min-height:30.5rem}
 
       .frontier-node{
-        width:5.9rem;
-        height:5.9rem;
+        width:5.95rem;
+        height:5.95rem;
       }
 
       .frontier-node.primary-row{
-        width:6.1rem;
-        height:6.1rem;
+        width:6.15rem;
+        height:6.15rem;
       }
 
-      .frontier-node.infrastructure{left:16%;top:37%}
-      .frontier-node.lattice{left:84%;top:37%}
-
-      .frontier-label{
-        min-height:2.24rem;
-      }
-
-      .frontier-label b{
-        font-size:.39rem;
-      }
-
-      .frontier-node.primary-row .frontier-label b{
-        font-size:.40rem;
-      }
+      .frontier-label{min-height:2.24rem}
+      .frontier-label b{font-size:.39rem}
+      .frontier-node.primary-row .frontier-label b{font-size:.40rem}
 
       .frontier-anchor{
-        width:6.9rem;
-        height:6.9rem;
+        width:6.95rem;
+        height:6.95rem;
       }
 
-      .frontier-anchor .frontier-label b{
-        font-size:.50rem;
-      }
+      .frontier-anchor .frontier-label b{font-size:.50rem}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -1291,6 +1240,7 @@
         transition-duration:.01ms!important;
       }
 
+      .radiant-field span,
       .frontier-anchor::before,
       .frontier-node::before,
       .frontier-anchor::after,
@@ -1312,7 +1262,7 @@
         <span class="brand-mark" aria-hidden="true"><span>EF</span></span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge · Explore</span>
-          <strong>Frontier Hub</strong>
+          <strong>Frontier Field</strong>
         </span>
       </a>
 
@@ -1332,40 +1282,47 @@
 
     <main id="explore-frontier-main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Explore Frontier · Parent Hub</div>
+        <div class="kicker">Explore Frontier · Living Radiant Field</div>
 
-        <h1 id="page-title">One Explore hub. Eleven Frontier lanes.</h1>
+        <h1 id="page-title">Eleven radiant lanes. One living edge.</h1>
 
-        <h2>The future stays open, but it keeps its map.</h2>
+        <h2>The Frontier is no longer a static selector. It is the field where future routes begin to emit signal.</h2>
 
         <p class="lead">
-          Explore Frontier is the parent lane-selector for the Frontier child routes. It keeps Closed Loop, Energy, Infrastructure, Lattice, Manual, Shimmer, Trajectory, Waste, Water, Vision, and Urban directly accessible without turning the hub into any one child lane.
+          Explore Frontier now functions as a living parent field for the Frontier lanes. Closed Loop, Energy, Infrastructure, Lattice, Manual, Shimmer, Trajectory, Waste, Water, Vision, and Urban remain directly accessible, but the page now shows them as active radiant bodies inside the Explore-side map.
         </p>
 
         <div class="principle">
-          Explore Frontier restores the accepted Frontier visual field while preserving route discipline: this page is /explore/frontier/, the public Frontier root remains /frontier/, and every child lane stays under /explore/frontier/.
+          Each lane holds its own rhythm. The glow does not decorate the map; it proves that the edge is alive while every route remains attached, named, and reachable.
         </div>
 
         <div class="actions">
-          <a class="button gold" href="/laws/">Open Laws</a>
-          <a class="button" href="/gauges/">Check Gauges</a>
+          <a class="button gold" href="#frontier-field">Enter the Radiant Field</a>
+          <a class="button" href="/frontier/">Return to Frontier</a>
           <a class="button violet" href="/showroom/globe/">Enter Interactive Narrative</a>
           <a class="button" href="/nine-summits/universe/">Open Universe</a>
-          <a class="button gold" href="/frontier/">Return to Frontier</a>
+          <a class="button" href="/gauges/">Check Gauges</a>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="orbit-title">
-        <div class="kicker">Explore Frontier lane field</div>
-        <h2 id="orbit-title">The Frontier lanes stay named, visible, and attached to the Explore-side hub.</h2>
+      <section class="panel section" aria-labelledby="orbit-title" id="frontier-field">
+        <div class="kicker">Radiant Frontier field</div>
+        <h2 id="orbit-title">The lanes pulse at different speeds, but they stay inside one parent field.</h2>
 
-        <div class="frontier-orbit-stage" aria-label="Explore Frontier support routes above and Frontier child-lane items inside the visible figure-eight field">
+        <div class="frontier-orbit-stage" aria-label="Explore Frontier living radiant field with support routes and Frontier child-lane items">
+          <div class="radiant-field" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
           <div class="frontier-top-stack">
-            <a class="frontier-anchor" href="/explore/frontier/" aria-label="Explore Frontier parent hub">
+            <a class="frontier-anchor" href="/explore/frontier/" aria-label="Explore Frontier parent field">
               <span class="frontier-anchor-body" aria-hidden="true"></span>
               <span class="frontier-label">
                 <b>Explore Frontier</b>
-                <span>Parent Hub</span>
+                <span>Living Field</span>
               </span>
             </a>
 
@@ -1446,44 +1403,156 @@
       </section>
 
       <section class="panel section" aria-labelledby="lanes-title">
-        <div class="kicker">Lane map</div>
-        <h2 id="lanes-title">Each Frontier lane remains directly accessible from the Explore hub.</h2>
+        <div class="kicker">Active lane bodies</div>
+        <h2 id="lanes-title">Each lane is still a route. Now it also carries a field role.</h2>
 
         <div class="lane-grid">
-          <a class="lane-card" href="/explore/frontier/closed-loop/"><b>Closed Loop</b><strong>Accountable flow</strong><span>Return signals, correction paths, and loops that make future systems accountable.</span><span class="open-path">Open lane</span></a>
-          <a class="lane-card" href="/explore/frontier/energy/"><b>Energy</b><strong>Power</strong><span>Power, force, supply, motion, and the energy required to keep expansion alive.</span><span class="open-path">Open lane</span></a>
-          <a class="lane-card" href="/explore/frontier/infrastructure/"><b>Infrastructure</b><strong>Support</strong><span>Roads, frameworks, utilities, supports, and systems that let the edge function.</span><span class="open-path">Open lane</span></a>
-          <a class="lane-card" href="/explore/frontier/lattice/"><b>Lattice</b><strong>Grid</strong><span>Pattern, structure, placement, relationship, and measurable expansion logic.</span><span class="open-path">Open lane</span></a>
-          <a class="lane-card" href="/explore/frontier/manual/"><b>Manual</b><strong>Guide</strong><span>Instructions, methods, field notes, operating language, and how-to structure.</span><span class="open-path">Open lane</span></a>
-          <a class="lane-card" href="/explore/frontier/shimmer/"><b>Shimmer</b><strong>Signal</strong><span>Light, indication, attention, surface change, and the visible clue that something is moving.</span><span class="open-path">Open lane</span></a>
-          <a class="lane-card" href="/explore/frontier/trajectory/"><b>Trajectory</b><strong>Motion</strong><span>Direction, path, launch, arc, impact, and movement across future distance.</span><span class="open-path">Open lane</span></a>
-          <a class="lane-card" href="/explore/frontier/urban/"><b>Urban</b><strong>City</strong><span>Civic density, public systems, movement corridors, and built-world pressure.</span><span class="open-path">Open lane</span></a>
-          <a class="lane-card" href="/explore/frontier/vision/"><b>Vision</b><strong>Future</strong><span>Near future, distant future, public imagination, and the horizon beyond the current map.</span><span class="open-path">Open lane</span></a>
-          <a class="lane-card" href="/explore/frontier/waste/"><b>Waste</b><strong>Reuse</strong><span>Material return, discarded value, repair paths, reuse, and cleaner system design.</span><span class="open-path">Open lane</span></a>
-          <a class="lane-card" href="/explore/frontier/water/"><b>Water</b><strong>Flow</strong><span>Water movement, support, storage, shimmer, routing, and life-carrying infrastructure.</span><span class="open-path">Open lane</span></a>
+          <a class="lane-card" href="/explore/frontier/closed-loop/">
+            <b>Closed Loop</b>
+            <strong>Accountable return field.</strong>
+            <span>Correction, feedback, capture, receipt, and the route by which future systems prove they can answer back.</span>
+            <span class="open-path">Open lane</span>
+          </a>
+
+          <a class="lane-card" href="/explore/frontier/energy/">
+            <b>Energy</b>
+            <strong>Power emission field.</strong>
+            <span>Supply, motion, voltage, force, and the charge required to keep the Frontier alive.</span>
+            <span class="open-path">Open lane</span>
+          </a>
+
+          <a class="lane-card" href="/explore/frontier/infrastructure/">
+            <b>Infrastructure</b>
+            <strong>Support-load field.</strong>
+            <span>Roads, frameworks, utilities, supports, and the physical logic that lets the edge carry weight.</span>
+            <span class="open-path">Open lane</span>
+          </a>
+
+          <a class="lane-card" href="/explore/frontier/lattice/">
+            <b>Lattice</b>
+            <strong>Pattern field.</strong>
+            <span>Placement, relationship, count, grid, and measurable expansion logic across the living map.</span>
+            <span class="open-path">Open lane</span>
+          </a>
+
+          <a class="lane-card" href="/explore/frontier/manual/">
+            <b>Manual</b>
+            <strong>Instruction field.</strong>
+            <span>Methods, operating language, field notes, and the human-readable path through the future edge.</span>
+            <span class="open-path">Open lane</span>
+          </a>
+
+          <a class="lane-card" href="/explore/frontier/shimmer/">
+            <b>Shimmer</b>
+            <strong>Signal field.</strong>
+            <span>Light, indication, attention, surface change, and the visible clue that motion is beginning.</span>
+            <span class="open-path">Open lane</span>
+          </a>
+
+          <a class="lane-card" href="/explore/frontier/trajectory/">
+            <b>Trajectory</b>
+            <strong>Direction field.</strong>
+            <span>Path, launch, arc, impact, and the motion line that carries the Frontier forward.</span>
+            <span class="open-path">Open lane</span>
+          </a>
+
+          <a class="lane-card" href="/explore/frontier/urban/">
+            <b>Urban</b>
+            <strong>Civic-density field.</strong>
+            <span>Public systems, corridors, density, city pressure, and built-world consequence.</span>
+            <span class="open-path">Open lane</span>
+          </a>
+
+          <a class="lane-card" href="/explore/frontier/vision/">
+            <b>Vision</b>
+            <strong>Horizon field.</strong>
+            <span>Near future, distant future, public imagination, and the readable horizon beyond the current map.</span>
+            <span class="open-path">Open lane</span>
+          </a>
+
+          <a class="lane-card" href="/explore/frontier/waste/">
+            <b>Waste</b>
+            <strong>Return-material field.</strong>
+            <span>Discarded value, repair paths, reuse, cleaner system design, and the refusal to lose material meaning.</span>
+            <span class="open-path">Open lane</span>
+          </a>
+
+          <a class="lane-card" href="/explore/frontier/water/">
+            <b>Water</b>
+            <strong>Flow field.</strong>
+            <span>Movement, storage, routing, shimmer, life support, and the pressure path that carries continuity.</span>
+            <span class="open-path">Open lane</span>
+          </a>
         </div>
       </section>
 
       <section class="panel section" aria-labelledby="return-title">
-        <div class="kicker">Support routes</div>
-        <h2 id="return-title">The Explore-side hub keeps Frontier attached to the larger estate.</h2>
+        <div class="kicker">Stabilizing routes</div>
+        <h2 id="return-title">The living field remains attached to the estate.</h2>
 
         <div class="return-grid">
-          <a class="return-card" href="/"><b>Compass</b><strong>Return to the root.</strong><span>The estate control surface keeps orientation clean.</span><span class="open-path">Open Compass</span></a>
-          <a class="return-card" href="/frontier/"><b>Frontier</b><strong>Return to the public root.</strong><span>The public Frontier page remains the expansion-edge root while this page remains the Explore-side hub.</span><span class="open-path">Return to Frontier</span></a>
-          <a class="return-card" href="/laws/"><b>Laws</b><strong>Proof, truth, and boundary.</strong><span>Laws keeps the future from expanding without discipline, consequence, or scientific backing.</span><span class="open-path">Open Laws</span></a>
-          <a class="return-card" href="/showroom/globe/"><b>Interactive Narrative</b><strong>Enter the world path.</strong><span>Story, worlds, consequence, survival, and possibility remain attached to the map.</span><span class="open-path">Enter Narrative</span></a>
-          <a class="return-card" href="/nine-summits/universe/"><b>Universe</b><strong>Open the world around the climb.</strong><span>The Universe keeps the climb attached to its larger world setting.</span><span class="open-path">Open Universe</span></a>
-          <a class="return-card" href="/showroom/"><b>Showroom</b><strong>Inspect visible objects.</strong><span>Showroom carries visible software-object display without becoming the proof path.</span><span class="open-path">Open Showroom</span></a>
-          <a class="return-card" href="/products/"><b>Products</b><strong>Move into usable chambers.</strong><span>The message becomes tools, games, supports, and product lanes.</span><span class="open-path">Open Products</span></a>
-          <a class="return-card" href="/gauges/"><b>Gauges</b><strong>Summarize route truth.</strong><span>Gauges summarize what the served page contains, holds, or needs reviewed.</span><span class="open-path">Check Gauges</span></a>
+          <a class="return-card" href="/">
+            <b>Compass</b>
+            <strong>Orientation control.</strong>
+            <span>The root keeps the field from becoming directionless.</span>
+            <span class="open-path">Open Compass</span>
+          </a>
+
+          <a class="return-card" href="/frontier/">
+            <b>Frontier</b>
+            <strong>Public expansion root.</strong>
+            <span>The public Frontier page remains the outward edge while this page remains the Explore-side living field.</span>
+            <span class="open-path">Return to Frontier</span>
+          </a>
+
+          <a class="return-card" href="/laws/">
+            <b>Laws</b>
+            <strong>Boundary and proof.</strong>
+            <span>Laws keep the radiant field from expanding without discipline, consequence, or scientific backing.</span>
+            <span class="open-path">Open Laws</span>
+          </a>
+
+          <a class="return-card" href="/showroom/globe/">
+            <b>Interactive Narrative</b>
+            <strong>World path.</strong>
+            <span>Story, worlds, consequence, survival, and possibility remain attached to the larger map.</span>
+            <span class="open-path">Enter Narrative</span>
+          </a>
+
+          <a class="return-card" href="/nine-summits/universe/">
+            <b>Universe</b>
+            <strong>Outer context.</strong>
+            <span>The Universe keeps the climb attached to the world around it.</span>
+            <span class="open-path">Open Universe</span>
+          </a>
+
+          <a class="return-card" href="/showroom/">
+            <b>Showroom</b>
+            <strong>Visible object display.</strong>
+            <span>Showroom carries inspection without becoming the proof path.</span>
+            <span class="open-path">Open Showroom</span>
+          </a>
+
+          <a class="return-card" href="/products/">
+            <b>Products</b>
+            <strong>Usable chambers.</strong>
+            <span>The message becomes tools, games, supports, and product lanes.</span>
+            <span class="open-path">Open Products</span>
+          </a>
+
+          <a class="return-card" href="/gauges/">
+            <b>Gauges</b>
+            <strong>Route truth summary.</strong>
+            <span>Gauges summarize what the served page contains, holds, or needs reviewed.</span>
+            <span class="open-path">Check Gauges</span>
+          </a>
         </div>
       </section>
 
       <section class="final-band" aria-label="Explore Frontier final statement">
-        <strong>Explore Frontier now treats each node as an eclipse body in front of a close fusion source.</strong>
+        <strong>Explore Frontier is now a living radiant field, not a static list of future lanes.</strong>
         <p>
-          Eleven Frontier lanes occupy the readable figure-eight field. Each dark node eclipses a near-contact fusion star, producing a stronger rim-corona while the wider ambient glow remains secondary, stable, and now slowly radiates through staggered pulse timing.
+          Eleven Frontier bodies remain readable inside the figure-eight field. Each one eclipses a close source, radiates at its own rhythm, and stays attached to the Explore-side hub without becoming the public Frontier root or collapsing into any single child lane.
         </p>
 
         <div class="actions">
@@ -1496,9 +1565,10 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-EXPLORE_FRONTIER_RADIATING_GLOW_PULSE_TNT_v2
-previous=EXPLORE_FRONTIER_CLOSE_SOURCE_FUSION_GLOW_TNT_v1
+EXPLORE_FRONTIER_LIVING_RADIANT_FIELD_RENEWAL_TNT_v3
+previous=EXPLORE_FRONTIER_RADIATING_GLOW_PULSE_TNT_v2
 binding=EXPLORE_FRONTIER_RADIATING_GLOW_PULSE_INTEGRATION_BINDING_v1
+renewal_standard=contract_renewal_advances_visible_context_graphic_premise_public_thesis_operating_level
 route=/explore/frontier/
 target=/explore/frontier/index.html
 page=explore-frontier
@@ -1512,6 +1582,15 @@ return_to_frontier_preserved=true
 hub_not_child_lane=true
 child_lane_links_preserved=true
 large_node_scale_preserved=true
+visible_copy_renewed=true
+hero_thesis_renewed=true
+orbit_context_renewed=true
+lane_card_context_renewed=true
+support_route_context_renewed=true
+final_band_context_renewed=true
+static_lane_selector_superseded=true
+living_radiant_field=true
+radiant_field_waves=true
 close_fusion_star_source=true
 star_distance=near_contact
 node_eclipses_star=true
@@ -1525,7 +1604,7 @@ radiating_glow_pulse=true
 pseudo_random_css_pulse=true
 synchronized_pulse=false
 halo_animation=true
-halo_animation_targets=frontier_anchor_after_frontier_node_after
+field_wave_animation=true
 node_body_animation=false
 label_animation=false
 layout_animation=false
@@ -1544,12 +1623,12 @@ non_regression=true
 segregated_energy_logic=true
 segregated_closed_loop_logic=true
 segregated_legacy_frontier_root_logic=true
-deploy_marker=EXPLORE_FRONTIER_RADIATING_GLOW_PULSE_DEPLOY_MARKER_v2
+deploy_marker=EXPLORE_FRONTIER_LIVING_RADIANT_FIELD_DEPLOY_MARKER_v3
       </template>
     </main>
 
     <footer>
-      EXPLORE_FRONTIER_RADIATING_GLOW_PULSE_TNT_v2 · /explore/frontier/ · Radiating staggered glow pulse · Close-source fusion halo preserved.
+      EXPLORE_FRONTIER_LIVING_RADIANT_FIELD_RENEWAL_TNT_v3 · /explore/frontier/ · Living radiant field · Context, graphics, and pulse system renewed.
     </footer>
   </div>
 </body>

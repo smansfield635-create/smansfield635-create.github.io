@@ -3,9 +3,10 @@
   lang="en"
   data-route="/explore/frontier/energy/"
   data-page="frontier-energy"
-  data-version="G2-V19"
-  data-contract="FRONTIER_ENERGY_COMPASS_GEM_PRINT_LEGIBILITY_RENEWAL_TNT_v19"
-  data-previous-contract="FRONTIER_ENERGY_COMPASS_GEM_BASELINE_DUAL_LENS_RENEWAL_TNT_v18"
+  data-version="G2-V20"
+  data-contract="FRONTIER_ENERGY_PLASMA_CHARGE_GEM_GLOW_RUNTIME_SAFE_RENEWAL_TNT_v20"
+  data-previous-contract="FRONTIER_ENERGY_COMPASS_GEM_PRINT_LEGIBILITY_RENEWAL_TNT_v19"
+  data-source-binding="FRONTIER_ENERGY_PLASMA_CHARGE_GEM_GLOW_CANONICAL_BINDING_v1"
   data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
   data-source-symbol-authority="compassOrganicGem"
   data-role="frontier-energy"
@@ -13,7 +14,17 @@
   data-per-pathway-dual-lens="true"
   data-platform-lens="true"
   data-engineering-lens="true"
-  data-gem-print-legibility-increased="true"
+  data-gem-print-legibility-preserved="true"
+  data-energy-plasma-charge-gem-glow="true"
+  data-plasma-corona="true"
+  data-electrical-edge-charge="true"
+  data-ionized-rim-glow="true"
+  data-charged-facet-veins="true"
+  data-fusion-backstar-model="false"
+  data-circular-halo-model="false"
+  data-globe-glow-model="false"
+  data-runtime-safe-plasma-glow="true"
+  data-return-to-explore-frontier-route="/explore/frontier/"
   data-incorrect-model="discarded"
   data-static-page-usable-without-js="true"
   data-heavy-runtime-loaded="false"
@@ -45,13 +56,15 @@
       --blue:#8dd8ff;
       --green:#8ff0c3;
       --violet:#8f65ff;
+      --plasma-cyan:rgba(141,216,255,.72);
+      --plasma-blue:rgba(36,120,255,.54);
+      --plasma-violet:rgba(143,101,255,.46);
+      --plasma-white:rgba(245,253,255,.88);
       --panel:rgba(9,15,31,.88);
       --line:rgba(184,205,255,.18);
       --shadow:0 32px 110px rgba(0,0,0,.48);
       --max:1180px;
       --brand-gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
-      --orbit-duration:52s;
-      --gem-breathe-duration:8.8s;
     }
 
     *{box-sizing:border-box}
@@ -276,14 +289,9 @@
         radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
         radial-gradient(circle at 50% 72%,rgba(36,120,255,.18),transparent 62%),
         linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
-      animation:heroAnchorPulse 8s ease-in-out infinite;
       pointer-events:none;
-      opacity:.52;
-    }
-
-    @keyframes heroAnchorPulse{
-      0%,100%{opacity:.42;filter:brightness(.95)}
-      50%{opacity:.58;filter:brightness(1.1)}
+      opacity:.50;
+      animation:none;
     }
 
     .kicker{
@@ -450,6 +458,7 @@
       border-radius:50%;
       transform:translate(-50%,-50%);
       pointer-events:none;
+      animation:none;
     }
 
     .compass-stage::before{
@@ -457,27 +466,15 @@
       height:min(62%,28rem);
       border:1px solid rgba(243,200,111,.13);
       box-shadow:
-        0 0 3rem rgba(36,120,255,.12),
-        inset 0 0 30px rgba(141,216,255,.045);
-      animation:orbitTurn 42s linear infinite;
+        0 0 2.3rem rgba(36,120,255,.08),
+        inset 0 0 22px rgba(141,216,255,.035);
     }
 
     .compass-stage::after{
       width:min(62%,30rem);
       height:min(42%,19rem);
       border:1px solid rgba(141,216,255,.13);
-      box-shadow:0 0 3rem rgba(141,216,255,.08);
-      animation:orbitTurnReverse 38s linear infinite;
-    }
-
-    @keyframes orbitTurn{
-      from{transform:translate(-50%,-50%) rotate(-12deg)}
-      to{transform:translate(-50%,-50%) rotate(348deg)}
-    }
-
-    @keyframes orbitTurnReverse{
-      from{transform:translate(-50%,-50%) rotate(24deg)}
-      to{transform:translate(-50%,-50%) rotate(-336deg)}
+      box-shadow:0 0 2.1rem rgba(141,216,255,.06);
     }
 
     .compass-center,
@@ -488,9 +485,10 @@
       text-align:center;
       color:var(--ink);
       z-index:4;
+      overflow:visible;
+      isolation:isolate;
       transition:transform .18s ease,filter .18s ease;
-      animation:gemFloat 7.2s ease-in-out infinite;
-      animation-delay:var(--delay,0s);
+      animation:none;
     }
 
     .compass-center{
@@ -511,32 +509,93 @@
       transform:translate(-50%,-50%);
     }
 
-    .compass-node:hover,
-    .compass-node:focus-visible{
-      transform:translate(-50%,-50%) scale(1.055);
-      filter:brightness(1.13) saturate(1.08);
-      outline:none;
+    .compass-center::before,
+    .compass-node::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:0;
+      width:190%;
+      height:220%;
+      transform:translate(-50%,-50%) rotate(-9deg) scale(1);
+      pointer-events:none;
+      border:0;
+      border-radius:44% 56% 52% 48% / 46% 42% 58% 54%;
+      background:
+        linear-gradient(112deg,transparent 0 33%,rgba(141,216,255,.26) 44%,rgba(245,253,255,.20) 48%,rgba(143,101,255,.22) 53%,transparent 66%),
+        linear-gradient(28deg,transparent 0 38%,rgba(36,120,255,.18) 47%,rgba(141,216,255,.18) 52%,transparent 64%),
+        radial-gradient(ellipse at 50% 50%,rgba(245,253,255,.24) 0 6%,rgba(141,216,255,.23) 13%,rgba(36,120,255,.16) 28%,rgba(143,101,255,.13) 46%,transparent 72%),
+        radial-gradient(ellipse at 39% 45%,rgba(141,216,255,.18) 0 11%,transparent 36%),
+        radial-gradient(ellipse at 62% 58%,rgba(143,101,255,.16) 0 10%,transparent 40%),
+        radial-gradient(ellipse at 52% 67%,rgba(243,200,111,.08) 0 7%,transparent 32%);
+      box-shadow:
+        0 0 .9rem rgba(141,216,255,.22),
+        0 0 1.8rem rgba(36,120,255,.18),
+        0 0 2.9rem rgba(143,101,255,.13);
+      opacity:.76;
+      filter:none;
+      animation:none!important;
     }
 
-    @keyframes gemFloat{
-      0%,100%{margin-top:0}
-      50%{margin-top:-.42rem}
+    .compass-center::after,
+    .compass-node::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:1;
+      width:122%;
+      height:145%;
+      transform:translate(-50%,-50%) rotate(5deg) scale(1);
+      pointer-events:none;
+      border:0;
+      border-radius:46% 54% 55% 45% / 49% 44% 56% 51%;
+      background:
+        linear-gradient(92deg,transparent 0 32%,rgba(245,253,255,.76) 48%,rgba(141,216,255,.46) 51%,transparent 67%),
+        linear-gradient(6deg,transparent 0 34%,rgba(141,216,255,.42) 49%,rgba(143,101,255,.34) 52%,transparent 66%),
+        linear-gradient(140deg,transparent 0 42%,rgba(245,253,255,.44) 49%,rgba(36,120,255,.24) 52%,transparent 59%),
+        linear-gradient(38deg,transparent 0 41%,rgba(143,101,255,.34) 49%,rgba(141,216,255,.28) 52%,transparent 60%),
+        radial-gradient(ellipse at 50% 50%,rgba(245,253,255,.86) 0 5%,rgba(141,216,255,.54) 12%,rgba(36,120,255,.28) 31%,rgba(143,101,255,.18) 52%,transparent 76%);
+      box-shadow:
+        0 0 .45rem rgba(245,253,255,.32),
+        0 0 .95rem rgba(141,216,255,.34),
+        0 0 1.55rem rgba(36,120,255,.25),
+        0 0 2.35rem rgba(143,101,255,.16);
+      opacity:.92;
+      filter:none;
+      animation:none;
+    }
+
+    .compass-center::before{
+      width:218%;
+      height:250%;
+      opacity:.84;
+    }
+
+    .compass-center::after{
+      width:136%;
+      height:160%;
+      opacity:.98;
+    }
+
+    .compass-node:hover,
+    .compass-node:focus-visible{
+      transform:translate(-50%,-50%) scale(1.045);
+      filter:brightness(1.10) saturate(1.06);
+      outline:none;
     }
 
     .gem-core{
       position:absolute;
       inset:0;
+      z-index:2;
       display:grid;
       place-items:center;
       pointer-events:none;
-      animation:gemBreathe var(--gem-breathe-duration) ease-in-out infinite;
-      animation-delay:var(--delay,0s);
+      transform:rotate(var(--tilt-a,-1.6deg)) scale(1);
       transform-origin:50% 50%;
-    }
-
-    @keyframes gemBreathe{
-      0%,100%{transform:translateY(0) rotate(var(--tilt-a,-1.6deg)) scale(1);filter:brightness(1)}
-      50%{transform:translateY(-.22rem) rotate(var(--tilt-b,2deg)) scale(1.025);filter:brightness(1.12)}
+      animation:none;
     }
 
     .gem-svg{
@@ -547,40 +606,31 @@
       overflow:visible;
       pointer-events:none;
       filter:
-        drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
-        drop-shadow(0 0 1.15rem rgba(36,120,255,.18))
-        drop-shadow(0 0 .55rem rgba(243,200,111,.10));
+        drop-shadow(0 1rem 1.15rem rgba(0,0,0,.34))
+        drop-shadow(0 0 .9rem rgba(141,216,255,.20));
     }
 
     .compass-center .gem-svg{
       filter:
-        drop-shadow(0 1.55rem 1.85rem rgba(0,0,0,.42))
-        drop-shadow(0 0 1.65rem rgba(36,120,255,.23))
-        drop-shadow(0 0 .85rem rgba(243,200,111,.16));
+        drop-shadow(0 1.35rem 1.55rem rgba(0,0,0,.38))
+        drop-shadow(0 0 1.15rem rgba(141,216,255,.24));
     }
 
     .gem-glint{
-      animation:gemGlint 8.5s ease-in-out infinite;
+      opacity:.34;
+      transform:translateX(8px);
+      animation:none;
       transform-origin:110px 80px;
     }
 
     .gem-star{
-      animation:gemFacetTurn 30s linear infinite;
+      animation:none;
       transform-origin:110px 80px;
-    }
-
-    @keyframes gemGlint{
-      0%,100%{opacity:.07;transform:translateX(-36px)}
-      48%,55%{opacity:.56;transform:translateX(34px)}
-    }
-
-    @keyframes gemFacetTurn{
-      to{transform:rotate(360deg)}
     }
 
     .gem-label{
       position:relative;
-      z-index:3;
+      z-index:4;
       width:86%;
       display:grid;
       place-items:center;
@@ -879,9 +929,23 @@
         transform:none;
       }
 
+      .compass-center::before,
+      .compass-node::before{
+        width:176%;
+        height:202%;
+        opacity:.68;
+      }
+
+      .compass-center::after,
+      .compass-node::after{
+        width:118%;
+        height:138%;
+        opacity:.88;
+      }
+
       .compass-node:hover,
       .compass-node:focus-visible{
-        transform:scale(1.05);
+        transform:scale(1.035);
       }
 
       .compass-center{
@@ -987,7 +1051,11 @@
       .compass-stage::before,
       .compass-stage::after,
       .compass-center,
-      .compass-node{
+      .compass-node,
+      .compass-center::before,
+      .compass-center::after,
+      .compass-node::before,
+      .compass-node::after{
         animation:none!important;
       }
     }
@@ -1035,7 +1103,7 @@
       </linearGradient>
 
       <filter id="compassGemGlow" x="-42%" y="-50%" width="184%" height="200%">
-        <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="blur"/>
+        <feGaussianBlur in="SourceAlpha" stdDeviation="1.25" result="blur"/>
         <feColorMatrix
           in="blur"
           type="matrix"
@@ -1144,6 +1212,7 @@
           data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
           data-source-symbol-authority="compassOrganicGem"
           data-per-pathway-dual-lens="true"
+          data-energy-plasma-charge-gem-glow="true"
         >
           <div class="compass-center" aria-hidden="true" style="--delay:-.1s;--tilt-a:-1.4deg;--tilt-b:1.8deg;">
             <span class="gem-core">
@@ -1814,13 +1883,14 @@
           <a class="button gold" href="#energy-orbit">Return to Energy Orbit</a>
           <a class="button" href="/showroom/globe/audralia/">Open Audralia</a>
           <a class="button green" href="/explore/frontier/water/">Open Water</a>
-          <a class="button" href="/frontier/">Return to Frontier</a>
+          <a class="button" href="/explore/frontier/">Return to Explore Frontier</a>
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_ENERGY_COMPASS_GEM_PRINT_LEGIBILITY_RENEWAL_TNT_v19
-previous=FRONTIER_ENERGY_COMPASS_GEM_BASELINE_DUAL_LENS_RENEWAL_TNT_v18
+FRONTIER_ENERGY_PLASMA_CHARGE_GEM_GLOW_RUNTIME_SAFE_RENEWAL_TNT_v20
+previous=FRONTIER_ENERGY_COMPASS_GEM_PRINT_LEGIBILITY_RENEWAL_TNT_v19
+binding=FRONTIER_ENERGY_PLASMA_CHARGE_GEM_GLOW_CANONICAL_BINDING_v1
 route=/explore/frontier/energy/
 page=frontier_energy
 html=/explore/frontier/energy/index.html
@@ -1828,10 +1898,42 @@ source_visual_authority=COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2
 source_symbol_authority=compassOrganicGem
 visual_authority_preserved=true
 design_preserved=true
-gem_print_legibility_increased=true
-gem_label_width_increased=true
-gem_label_font_size_increased=true
-mobile_gem_print_size_increased=true
+gem_print_legibility_preserved=true
+gem_label_width_preserved=true
+gem_label_font_size_preserved=true
+mobile_gem_print_size_preserved=true
+energy_plasma_charge_gem_glow=true
+plasma_corona=true
+electrical_edge_charge=true
+ionized_rim_glow=true
+charged_facet_veins=true
+plasma_charge_glow_clings_to_gem=true
+cyan_blue_violet_dominant=true
+gold_continuity_preserved=true
+fusion_backstar_model=false
+closed_loop_backstar_model_imported=false
+circular_halo_model=false
+globe_glow_model=false
+particle_engine=false
+animated_blur=false
+animated_filter=false
+runtime_safe_plasma_glow=true
+hero_pulse_removed=true
+stage_orbit_animation_removed=true
+gem_float_removed=true
+gem_breathe_removed=true
+gem_glint_animation_removed=true
+gem_facet_turn_animation_removed=true
+svg_filter_blur_reduced=true
+static_page_usable_without_js=true
+javascript_added=false
+canvas=false
+webgl=false
+heavy_runtime=false
+generated_image=false
+graphic_box=false
+streaming=false
+visual_pass_claimed=false
 incorrect_fabricated_energy_visual_model=discarded
 legacy_hybrid_model=discarded
 forced_polygon_model=discarded
@@ -1844,22 +1946,18 @@ engineering_lens_per_pathway=true
 top_only_lens_toggle=false
 side_by_side_platform_engineering=false
 return_to_energy_orbit_under_every_pathway=true
+return_to_explore_frontier_route=/explore/frontier/
+final_band_return_corrected=Return_to_Explore_Frontier
 solar_lock=solar_supports_pathway_does_not_become_fusion
 plasma_lock=plasma_is_operating_state_not_storage
 storage_fields_lock=bridge_infrastructure_only_not_fusion_farms
 q_boundary=Q_target_Q_plasma_Q_plant_separated
 final_lock=do_not_sell_fusion_sell_readiness
-static_page_usable_without_js=true
-heavy_runtime=false
-generated_image=false
-graphic_box=false
-streaming=false
-visual_pass_claimed=false
       </template>
     </main>
 
     <footer>
-      FRONTIER_ENERGY_COMPASS_GEM_PRINT_LEGIBILITY_RENEWAL_TNT_v19 · Energy · Compass gem design preserved · Print legibility increased.
+      FRONTIER_ENERGY_PLASMA_CHARGE_GEM_GLOW_RUNTIME_SAFE_RENEWAL_TNT_v20 · Energy · Plasma charge gem glow · Runtime-safe · Return to Explore Frontier.
     </footer>
   </div>
 </body>

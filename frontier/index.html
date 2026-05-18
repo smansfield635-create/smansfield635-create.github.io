@@ -3,15 +3,15 @@
   lang="en"
   data-route="/frontier/"
   data-page="frontier"
-  data-contract="FRONTIER_V11_BEHIND_GLOBE_STAR_GLOW_MICRO_RENEWAL_TNT_v1"
-  data-previous-contract="FRONTIER_V11_BEHIND_NODE_COSMIC_STAR_GLOW_TNT_v1"
+  data-contract="FRONTIER_V11_TWINKLING_HIDDEN_STAR_GLOW_INTENSIFICATION_TNT_v1"
+  data-previous-contract="FRONTIER_V11_BEHIND_GLOBE_STAR_GLOW_MICRO_RENEWAL_TNT_v1"
   data-accepted-baseline="FRONTIER_PRIMARY_BASE_ROW_LEGIBILITY_RENEWAL_TNT_v11"
-  data-source-binding="FRONTIER_V11_BEHIND_GLOBE_STAR_GLOW_MICRO_RENEWAL_PREGAME_TO_POSTGAME_BINDING_v1"
+  data-source-binding="FRONTIER_V11_TWINKLING_HIDDEN_STAR_GLOW_INTENSIFICATION_PREGAME_TO_POSTGAME_BINDING_v1"
   data-role="expansion-edge"
   data-frontier-role="expansion-edge"
   data-renewal="true"
   data-not-rewrite="true"
-  data-renewal-class="behind-globe-star-glow-micro-renewal-only"
+  data-renewal-class="twinkling-hidden-star-glow-intensification-only"
   data-frontier-anchor-position="top"
   data-support-routes-position="top"
   data-figure-eight-field="frontier-lane-items-only"
@@ -23,6 +23,7 @@
   data-center-crossing="Shimmer"
   data-dark-globes-remain-front-controls="true"
   data-bright-hidden-star-behind-each-globe="true"
+  data-twinkling-hidden-star="true"
   data-edge-spill-glow="true"
   data-defined-star-shape="false"
   data-generated-image="false"
@@ -61,12 +62,10 @@
       --shadow:0 32px 110px rgba(0,0,0,.46);
       --max:1180px;
       --gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
-      --node-dark:rgba(3,7,19,.88);
-      --node-dark-2:rgba(8,13,30,.98);
       --star-white:rgba(255,255,255,.98);
-      --star-gold:rgba(243,200,111,.62);
-      --star-blue:rgba(141,216,255,.50);
-      --star-violet:rgba(143,101,255,.28);
+      --star-gold:rgba(243,200,111,.68);
+      --star-blue:rgba(141,216,255,.56);
+      --star-violet:rgba(143,101,255,.30);
     }
 
     *{box-sizing:border-box}
@@ -480,39 +479,39 @@
       left:50%;
       top:50%;
       z-index:1;
-      width:86%;
-      height:86%;
+      width:98%;
+      height:98%;
       border-radius:50%;
       transform:translate(-50%,-50%);
       background:
-        radial-gradient(circle at 50% 50%,rgba(255,255,255,1) 0 .35rem,transparent .42rem),
-        radial-gradient(circle at 50% 50%,rgba(255,232,163,.88),transparent 22%),
-        radial-gradient(circle at 50% 50%,rgba(243,200,111,.52),transparent 42%),
-        radial-gradient(circle at 50% 50%,rgba(141,216,255,.34),transparent 68%),
-        radial-gradient(circle at 50% 50%,rgba(143,101,255,.18),transparent 82%);
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,1) 0 .32rem,transparent .42rem),
+        radial-gradient(circle at 50% 50%,rgba(255,244,216,.92),transparent 18%),
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.70),transparent 36%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.46),transparent 63%),
+        radial-gradient(circle at 50% 50%,rgba(143,101,255,.24),transparent 84%);
       box-shadow:
-        0 0 .95rem rgba(255,255,255,.38),
-        0 0 1.75rem rgba(243,200,111,.42),
-        0 0 2.85rem rgba(141,216,255,.30),
-        0 0 4.2rem rgba(143,101,255,.18);
-      animation:behindStarPulse 5.8s ease-in-out infinite;
+        0 0 .95rem rgba(255,255,255,.42),
+        0 0 1.85rem rgba(243,200,111,.50),
+        0 0 3.05rem rgba(141,216,255,.36),
+        0 0 4.55rem rgba(143,101,255,.24);
+      animation:behindStarTwinkle 6.2s ease-in-out infinite;
       pointer-events:none;
     }
 
     .frontier-anchor::after{
       content:"";
       position:absolute;
-      inset:-8%;
+      inset:-13%;
       z-index:2;
       border-radius:50%;
       background:
-        radial-gradient(circle at 50% 50%,rgba(255,244,216,.20),transparent 34%),
-        radial-gradient(circle at 50% 50%,rgba(141,216,255,.16),transparent 58%),
-        radial-gradient(circle at 50% 50%,rgba(143,101,255,.10),transparent 78%);
-      filter:blur(10px);
-      opacity:.76;
+        radial-gradient(circle at 50% 50%,rgba(255,244,216,.24),transparent 31%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.19),transparent 58%),
+        radial-gradient(circle at 50% 50%,rgba(143,101,255,.12),transparent 78%);
+      filter:blur(11px);
+      opacity:.82;
       pointer-events:none;
-      animation:effervescentHaze 7.8s ease-in-out infinite;
+      animation:effervescentStarSpill 8.2s ease-in-out infinite;
     }
 
     .support-routes{
@@ -639,41 +638,41 @@
       left:50%;
       top:50%;
       z-index:1;
-      width:88%;
-      height:88%;
+      width:98%;
+      height:98%;
       border-radius:50%;
       transform:translate(-50%,-50%);
       background:
-        radial-gradient(circle at 50% 50%,rgba(255,255,255,1) 0 .28rem,transparent .34rem),
-        radial-gradient(circle at 50% 50%,rgba(255,232,163,.86),transparent 22%),
-        radial-gradient(circle at 50% 50%,rgba(243,200,111,.50),transparent 42%),
-        radial-gradient(circle at 50% 50%,rgba(141,216,255,.34),transparent 68%),
-        radial-gradient(circle at 50% 50%,rgba(143,101,255,.18),transparent 82%);
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,1) 0 .26rem,transparent .35rem),
+        radial-gradient(circle at 50% 50%,rgba(255,244,216,.92),transparent 18%),
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.66),transparent 36%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.45),transparent 63%),
+        radial-gradient(circle at 50% 50%,rgba(143,101,255,.24),transparent 84%);
       box-shadow:
-        0 0 .82rem rgba(255,255,255,.34),
-        0 0 1.45rem rgba(243,200,111,.40),
-        0 0 2.45rem rgba(141,216,255,.30),
-        0 0 3.65rem rgba(143,101,255,.18);
+        0 0 .82rem rgba(255,255,255,.38),
+        0 0 1.55rem rgba(243,200,111,.48),
+        0 0 2.7rem rgba(141,216,255,.36),
+        0 0 4.05rem rgba(143,101,255,.24);
       opacity:.98;
       pointer-events:none;
-      animation:behindStarPulse 5.8s ease-in-out infinite;
+      animation:behindStarTwinkle 6.2s ease-in-out infinite;
       animation-delay:var(--delay,0s);
     }
 
     .frontier-node::after{
       content:"";
       position:absolute;
-      inset:-6%;
+      inset:-12%;
       z-index:2;
       border-radius:50%;
       background:
-        radial-gradient(circle at 50% 50%,rgba(255,244,216,.20),transparent 33%),
-        radial-gradient(circle at 50% 50%,rgba(141,216,255,.17),transparent 58%),
-        radial-gradient(circle at 50% 50%,rgba(143,101,255,.10),transparent 78%);
-      filter:blur(10px);
-      opacity:.70;
+        radial-gradient(circle at 50% 50%,rgba(255,244,216,.24),transparent 31%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.19),transparent 58%),
+        radial-gradient(circle at 50% 50%,rgba(143,101,255,.12),transparent 78%);
+      filter:blur(11px);
+      opacity:.78;
       pointer-events:none;
-      animation:effervescentHaze 8.2s ease-in-out infinite;
+      animation:effervescentStarSpill 8.4s ease-in-out infinite;
       animation-delay:var(--delay,0s);
     }
 
@@ -683,13 +682,18 @@
     }
 
     .frontier-node.primary-row::before{
-      width:90%;
-      height:90%;
+      width:100%;
+      height:100%;
       box-shadow:
-        0 0 .9rem rgba(255,255,255,.36),
-        0 0 1.58rem rgba(243,200,111,.42),
-        0 0 2.65rem rgba(141,216,255,.32),
-        0 0 3.95rem rgba(143,101,255,.20);
+        0 0 .92rem rgba(255,255,255,.40),
+        0 0 1.7rem rgba(243,200,111,.50),
+        0 0 2.9rem rgba(141,216,255,.38),
+        0 0 4.35rem rgba(143,101,255,.26);
+    }
+
+    .frontier-node.primary-row::after{
+      inset:-14%;
+      opacity:.80;
     }
 
     .frontier-node:hover,
@@ -714,7 +718,7 @@
     .frontier-star-body,
     .frontier-anchor-body{
       position:absolute;
-      inset:11%;
+      inset:13%;
       z-index:3;
       border-radius:50%;
       opacity:.985;
@@ -737,7 +741,7 @@
     }
 
     .frontier-node.primary-row .frontier-star-body{
-      inset:10%;
+      inset:12%;
       box-shadow:
         inset 0 1px 0 rgba(255,255,255,.11),
         inset 0 -1.15rem 1.4rem rgba(0,0,0,.36),
@@ -746,7 +750,7 @@
     }
 
     .frontier-anchor-body{
-      inset:10%;
+      inset:12%;
       background:
         radial-gradient(circle at 50% 18%,rgba(255,255,255,.12),transparent 18%),
         radial-gradient(circle at 50% 52%,rgba(243,200,111,.10),transparent 42%),
@@ -761,24 +765,65 @@
       animation:frontierAnchorControlBreathe 7.2s ease-in-out infinite;
     }
 
-    @keyframes behindStarPulse{
-      0%,100%{filter:brightness(1) saturate(1);transform:translate(-50%,-50%) scale(1)}
-      50%{filter:brightness(1.22) saturate(1.10);transform:translate(-50%,-50%) scale(1.035)}
+    @keyframes behindStarTwinkle{
+      0%,100%{
+        opacity:.90;
+        filter:brightness(1.04) saturate(1);
+        transform:translate(-50%,-50%) scale(1);
+      }
+      18%{
+        opacity:1;
+        filter:brightness(1.42) saturate(1.16);
+        transform:translate(-50%,-50%) scale(1.035);
+      }
+      26%{
+        opacity:.94;
+        filter:brightness(1.10) saturate(1.05);
+        transform:translate(-50%,-50%) scale(1.006);
+      }
+      54%{
+        opacity:.98;
+        filter:brightness(1.24) saturate(1.10);
+        transform:translate(-50%,-50%) scale(1.02);
+      }
+      68%{
+        opacity:1;
+        filter:brightness(1.52) saturate(1.20);
+        transform:translate(-50%,-50%) scale(1.048);
+      }
+      74%{
+        opacity:.94;
+        filter:brightness(1.12) saturate(1.06);
+        transform:translate(-50%,-50%) scale(1.01);
+      }
     }
 
-    @keyframes effervescentHaze{
-      0%,100%{opacity:.62;filter:blur(10px)}
-      50%{opacity:.78;filter:blur(12px)}
+    @keyframes effervescentStarSpill{
+      0%,100%{
+        opacity:.64;
+        filter:blur(10px) brightness(1);
+        transform:scale(1);
+      }
+      36%{
+        opacity:.82;
+        filter:blur(12px) brightness(1.12);
+        transform:scale(1.025);
+      }
+      68%{
+        opacity:.88;
+        filter:blur(13px) brightness(1.18);
+        transform:scale(1.04);
+      }
     }
 
     @keyframes frontierControlBreathe{
       0%,100%{filter:brightness(1) saturate(1)}
-      50%{filter:brightness(1.04) saturate(1.025)}
+      50%{filter:brightness(1.035) saturate(1.02)}
     }
 
     @keyframes frontierAnchorControlBreathe{
       0%,100%{filter:brightness(1) saturate(1)}
-      50%{filter:brightness(1.06) saturate(1.035)}
+      50%{filter:brightness(1.05) saturate(1.03)}
     }
 
     .frontier-label{
@@ -1069,18 +1114,18 @@
       }
 
       .frontier-node::before{
-        width:92%;
-        height:92%;
+        width:100%;
+        height:100%;
       }
 
       .frontier-node.primary-row::before{
-        width:94%;
-        height:94%;
+        width:102%;
+        height:102%;
       }
 
       .frontier-star-body,
       .frontier-anchor-body{
-        inset:12%;
+        inset:14%;
       }
 
       .frontier-node.closed-loop{left:27.5%;top:13%}
@@ -1125,8 +1170,8 @@
       }
 
       .frontier-anchor::before{
-        width:90%;
-        height:90%;
+        width:100%;
+        height:100%;
       }
 
       .frontier-anchor .frontier-label b{
@@ -1195,6 +1240,10 @@
         transition-duration:.01ms!important;
       }
 
+      .frontier-node::before,
+      .frontier-node::after,
+      .frontier-anchor::before,
+      .frontier-anchor::after,
       .frontier-star-body,
       .frontier-anchor-body{
         animation:none!important;
@@ -1508,16 +1557,16 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_V11_BEHIND_GLOBE_STAR_GLOW_MICRO_RENEWAL_TNT_v1
-previous=FRONTIER_V11_BEHIND_NODE_COSMIC_STAR_GLOW_TNT_v1
+FRONTIER_V11_TWINKLING_HIDDEN_STAR_GLOW_INTENSIFICATION_TNT_v1
+previous=FRONTIER_V11_BEHIND_GLOBE_STAR_GLOW_MICRO_RENEWAL_TNT_v1
 accepted_baseline=FRONTIER_PRIMARY_BASE_ROW_LEGIBILITY_RENEWAL_TNT_v11
-source_binding=FRONTIER_V11_BEHIND_GLOBE_STAR_GLOW_MICRO_RENEWAL_PREGAME_TO_POSTGAME_BINDING_v1
+source_binding=FRONTIER_V11_TWINKLING_HIDDEN_STAR_GLOW_INTENSIFICATION_PREGAME_TO_POSTGAME_BINDING_v1
 route=/frontier/
 target=/frontier/index.html
 page=frontier
 renewal=true
 not_rewrite=true
-renewal_class=behind_globe_star_glow_micro_renewal_only
+renewal_class=twinkling_hidden_star_glow_intensification_only
 frontier_anchor_position=top
 support_routes_position=top
 figure_eight_field=frontier_lane_items_only
@@ -1530,22 +1579,30 @@ dual_gravity_centers=true
 center_crossing=Shimmer
 frontier_lane_items=Closed_Loop,Energy,Infrastructure,Lattice,Manual,Shimmer,Trajectory,Urban,Vision,Waste,Water
 support_routes=Compass,Explore,Laws,Interactive_Narrative,Universe,Showroom,Products,Gauges
-visual_correction=bright_hidden_star_glow_behind_dark_frontier_globe_controls
+visual_correction=intensified_bright_twinkling_hidden_star_glow_behind_dark_frontier_globe_controls
 dark_globes_remain_front_controls=true
 bright_hidden_star_behind_each_globe=true
+twinkling_hidden_star=true
 luminous_backlight=true
+rim_glow=true
 edge_spill_glow=true
 soft_halo=true
 effervescent_glow=true
 defined_star_shape=false
+front_facing_star_icon=false
 cookie_cutter_star=false
 new_front_star=false
 new_bubble=false
 planet=false
-frontier_node_before_owns_large_hidden_star_glow=true
+frontier_node_before_owns_twinkling_hidden_star_source=true
 frontier_node_after_owns_outer_halo_spill=true
 frontier_star_body_remains_dark_front_control_globe=true
 frontier_label_remains_readability_layer=true
+css_only_animation=true
+staggered_twinkle=true
+reduced_motion_safe=true
+label_flicker=false
+layout_movement=false
 figure_eight_geometry_preserved=true
 support_route_row_preserved=true
 shimmer_crossing_preserved=true
@@ -1562,12 +1619,12 @@ webgl=false
 heavy_runtime_loaded=false
 javascript_particle_engine=false
 visual_pass_claimed=false
-deploy_marker=FRONTIER_V11_BEHIND_GLOBE_STAR_GLOW_MICRO_RENEWAL_DEPLOY_MARKER_v1
+deploy_marker=FRONTIER_V11_TWINKLING_HIDDEN_STAR_GLOW_INTENSIFICATION_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer>
-      FRONTIER_V11_BEHIND_GLOBE_STAR_GLOW_MICRO_RENEWAL_TNT_v1 · Frontier · Behind-Globe Star Glow · Even Primary Base Row.
+      FRONTIER_V11_TWINKLING_HIDDEN_STAR_GLOW_INTENSIFICATION_TNT_v1 · Frontier · Twinkling Hidden Star Glow · Even Primary Base Row.
     </footer>
   </div>
 </body>

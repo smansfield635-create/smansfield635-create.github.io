@@ -3,10 +3,10 @@
   lang="en"
   data-route="/explore/frontier/closed-loop/"
   data-page="frontier-closed-loop"
-  data-version="G2-V5"
-  data-contract="FRONTIER_CLOSED_LOOP_GEM_FUSION_GLOW_RUNTIME_BUDGET_RENEWAL_TNT_v1"
-  data-previous-contract="FRONTIER_CLOSED_LOOP_GEM_CLOSE_SOURCE_FUSION_GLOW_TNT_v1"
-  data-source-binding="FRONTIER_CLOSED_LOOP_GEM_CLOSE_SOURCE_FUSION_GLOW_PREGAME_TO_POSTGAME_BINDING_v1"
+  data-version="G2-V6"
+  data-contract="FRONTIER_CLOSED_LOOP_RETURN_TO_FRONTIER_FINAL_CONTROL_TNT_v1"
+  data-previous-contract="FRONTIER_CLOSED_LOOP_GEM_FUSION_GLOW_RUNTIME_BUDGET_RENEWAL_TNT_v1"
+  data-source-binding="FRONTIER_CLOSED_LOOP_RETURN_TO_FRONTIER_FINAL_CONTROL_MICRO_RENEWAL_v1"
   data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
   data-design-reference="FRONTIER_ENERGY_COMPASS_GEM_PRINT_LEGIBILITY_RENEWAL_TNT_v19"
   data-engineering-authority="CCL_ICE_ICPI_CRI_CRP_CLOSED_LOOP_FRONTIER_STANDARD"
@@ -18,8 +18,9 @@
   data-engineering-lens="true"
   data-primary-top-nav-reduced="true"
   data-return-to-frontier-preserved="true"
+  data-return-to-frontier-under-pathways="true"
   data-return-to-frontier-is-not-top-nav-bubble="true"
-  data-runtime-budget-renewal="true"
+  data-runtime-budget-renewal-preserved="true"
   data-static-fusion-glow="true"
   data-natural-backstar-glow="true"
   data-gem-close-source-fusion-glow="true"
@@ -796,31 +797,51 @@
 
     .section-return{
       display:flex;
+      flex-wrap:wrap;
       justify-content:flex-end;
+      gap:.55rem;
       margin-top:.1rem;
     }
 
-    .return-orbit{
+    .return-orbit,
+    .return-frontier{
       min-height:2.5rem;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      border:1px solid rgba(243,200,111,.86);
       border-radius:999px;
       padding:.6rem .95rem;
-      color:#060811;
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
       font-size:.72rem;
       font-weight:950;
       letter-spacing:.07em;
       text-transform:uppercase;
-      transition:transform .18s ease;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .return-orbit{
+      border:1px solid rgba(243,200,111,.86);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .return-frontier{
+      border:1px solid rgba(255,255,255,.16);
+      color:rgba(241,246,255,.88);
+      background:rgba(255,255,255,.045);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
     }
 
     .return-orbit:hover,
-    .return-orbit:focus-visible{
+    .return-orbit:focus-visible,
+    .return-frontier:hover,
+    .return-frontier:focus-visible{
       transform:translateY(-2px);
       outline:none;
+    }
+
+    .return-frontier:hover,
+    .return-frontier:focus-visible{
+      border-color:rgba(243,200,111,.58);
     }
 
     .final-band{
@@ -953,7 +974,8 @@
       .compass-center .gem-label span{font-size:.60rem}
       .lens-tabs{display:grid;grid-template-columns:1fr 1fr}
       .section-return{justify-content:stretch}
-      .return-orbit{width:100%}
+      .return-orbit,
+      .return-frontier{width:100%}
     }
 
     @media (max-width:420px){
@@ -1252,7 +1274,10 @@
           </div>
 
           <div class="boundary">Boundary: Audralia may simulate closed-loop behavior; Audralia may not prove real-world deployment.</div>
-          <div class="section-return"><a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a></div>
+          <div class="section-return">
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+            <a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
+          </div>
         </article>
       </section>
 
@@ -1294,7 +1319,10 @@
           </div>
 
           <div class="boundary">Boundary: no boundary, no closed-loop claim.</div>
-          <div class="section-return"><a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a></div>
+          <div class="section-return">
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+            <a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
+          </div>
         </article>
       </section>
 
@@ -1336,7 +1364,10 @@
           </div>
 
           <div class="boundary">Boundary: unmeasured input creates false closure.</div>
-          <div class="section-return"><a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a></div>
+          <div class="section-return">
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+            <a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
+          </div>
         </article>
       </section>
 
@@ -1378,7 +1409,10 @@
           </div>
 
           <div class="boundary">Boundary: unmeasured output becomes hidden residual.</div>
-          <div class="section-return"><a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a></div>
+          <div class="section-return">
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+            <a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
+          </div>
         </article>
       </section>
 
@@ -1420,7 +1454,10 @@
           </div>
 
           <div class="boundary">Boundary: capture is not closure.</div>
-          <div class="section-return"><a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a></div>
+          <div class="section-return">
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+            <a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
+          </div>
         </article>
       </section>
 
@@ -1462,7 +1499,10 @@
           </div>
 
           <div class="boundary">Boundary: storage is not safety without tracking, maintenance, and turnover.</div>
-          <div class="section-return"><a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a></div>
+          <div class="section-return">
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+            <a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
+          </div>
         </article>
       </section>
 
@@ -1504,7 +1544,10 @@
           </div>
 
           <div class="boundary">Boundary: reuse is purpose-specific. Reuse is not universal approval.</div>
-          <div class="section-return"><a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a></div>
+          <div class="section-return">
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+            <a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
+          </div>
         </article>
       </section>
 
@@ -1546,7 +1589,10 @@
           </div>
 
           <div class="boundary">Boundary: transformation is not proof unless the before, after, and byproducts reconcile.</div>
-          <div class="section-return"><a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a></div>
+          <div class="section-return">
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+            <a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
+          </div>
         </article>
       </section>
 
@@ -1588,7 +1634,10 @@
           </div>
 
           <div class="boundary">Boundary: hidden inventory becomes unresolved residual.</div>
-          <div class="section-return"><a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a></div>
+          <div class="section-return">
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+            <a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
+          </div>
         </article>
       </section>
 
@@ -1630,7 +1679,10 @@
           </div>
 
           <div class="boundary">Boundary: a residual cannot be ignored because it is inconvenient.</div>
-          <div class="section-return"><a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a></div>
+          <div class="section-return">
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+            <a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
+          </div>
         </article>
       </section>
 
@@ -1672,7 +1724,10 @@
           </div>
 
           <div class="boundary">Boundary: no receipt, no durable loop state.</div>
-          <div class="section-return"><a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a></div>
+          <div class="section-return">
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+            <a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
+          </div>
         </article>
       </section>
 
@@ -1722,7 +1777,10 @@
           </div>
 
           <div class="boundary">Boundary: stop if the boundary is missing, inputs are unmeasured, outputs are hidden, residuals are ignored, failure is shifted, receipts are missing, or simulation replaces validation.</div>
-          <div class="section-return"><a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a></div>
+          <div class="section-return">
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+            <a class="return-orbit" href="#closed-loop-orbit">Return to Closed Loop Orbit</a>
+          </div>
         </article>
       </section>
 
@@ -1743,9 +1801,9 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_CLOSED_LOOP_GEM_FUSION_GLOW_RUNTIME_BUDGET_RENEWAL_TNT_v1
-previous=FRONTIER_CLOSED_LOOP_GEM_CLOSE_SOURCE_FUSION_GLOW_TNT_v1
-binding=FRONTIER_CLOSED_LOOP_GEM_CLOSE_SOURCE_FUSION_GLOW_PREGAME_TO_POSTGAME_BINDING_v1
+FRONTIER_CLOSED_LOOP_RETURN_TO_FRONTIER_FINAL_CONTROL_TNT_v1
+previous=FRONTIER_CLOSED_LOOP_GEM_FUSION_GLOW_RUNTIME_BUDGET_RENEWAL_TNT_v1
+binding=FRONTIER_CLOSED_LOOP_RETURN_TO_FRONTIER_FINAL_CONTROL_MICRO_RENEWAL_v1
 route=/explore/frontier/closed-loop/
 page=frontier_closed_loop
 html=/explore/frontier/closed-loop/index.html
@@ -1754,7 +1812,7 @@ design_reference=FRONTIER_ENERGY_COMPASS_GEM_PRINT_LEGIBILITY_RENEWAL_TNT_v19
 engineering_authority=CCL_ICE_ICPI_CRI_CRP_CLOSED_LOOP_FRONTIER_STANDARD
 source_symbol_authority=compassOrganicGem
 visual_result_preserved=true
-runtime_budget_renewal=true
+runtime_budget_renewal_preserved=true
 static_fusion_glow=true
 gem_system_preserved=true
 compassOrganicGem_preserved=true
@@ -1767,6 +1825,7 @@ top_navigation_primary_set=Compass,Door,Home,Laws,Narrative,Frontier
 top_navigation_reduced_without_removing_parent_return=true
 return_to_frontier_preserved=true
 return_to_frontier_route=/explore/frontier/
+return_to_frontier_under_pathways=true
 return_to_frontier_is_not_top_nav_bubble=true
 return_to_orbit_preserved=true
 return_to_closed_loop_orbit_preserved=true
@@ -1828,7 +1887,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      FRONTIER_CLOSED_LOOP_GEM_FUSION_GLOW_RUNTIME_BUDGET_RENEWAL_TNT_v1 · Closed Loop · Static Fusion Glow · Runtime Budget Renewal · Return to Frontier.
+      FRONTIER_CLOSED_LOOP_RETURN_TO_FRONTIER_FINAL_CONTROL_TNT_v1 · Closed Loop · Return to Frontier Final Control · Static Fusion Glow preserved.
     </footer>
   </div>
 </body>

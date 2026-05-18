@@ -2,20 +2,28 @@
 <html
   lang="en"
   data-route="/frontier/"
-  data-page="frontier-future-starfield"
-  data-contract="FRONTIER_FUTURE_STARFIELD_ELEVEN_LANE_RENEWAL_TNT_v3"
-  data-previous-contract="FRONTIER_EXPANSION_EDGE_ELEVEN_LANE_PUBLIC_RENEWAL_TNT_v2"
+  data-page="frontier-cosmic-starfield"
+  data-contract="FRONTIER_COSMIC_STAR_VISUAL_LANGUAGE_RENEWAL_TNT_v1"
+  data-previous-contract="FRONTIER_FUTURE_STARFIELD_ELEVEN_LANE_RENEWAL_TNT_v3"
+  data-source-binding="FRONTIER_COSMIC_STAR_VISUAL_LANGUAGE_PREGAME_TO_POSTGAME_BINDING_v1"
   data-role="expansion-edge"
   data-message="one-edge-eleven-lanes"
   data-core-principle="the-unknown-still-needs-a-parent-map"
   data-parent-route="/explore/"
   data-lane-base="/explore/frontier/"
-  data-visual-system="future-starfield-expansion-edge"
+  data-visual-system="cosmic-starfield-expansion-edge"
+  data-renewal-class="visual-language-contract-renewal-only"
+  data-cookie-cutter-stars-replaced="true"
+  data-cosmic-light-field-stars="true"
+  data-route-gems-remain-controls="true"
+  data-cosmic-stars-remain-environmental-depth="true"
   data-animation-method="css-only"
   data-js-required="false"
   data-generated-image="false"
   data-graphic-box="false"
   data-heavy-runtime-loaded="false"
+  data-canvas="false"
+  data-webgl="false"
   data-streaming="false"
   data-visual-pass-claimed="false"
 >
@@ -46,7 +54,10 @@
       --line:rgba(184,205,255,.18);
       --shadow:0 32px 110px rgba(0,0,0,.48);
       --max:1180px;
-      --star-cut:polygon(50% 0%,61% 34%,98% 35%,68% 56%,79% 91%,50% 70%,21% 91%,32% 56%,2% 35%,39% 34%);
+      --cosmic-core:rgba(255,255,255,.92);
+      --cosmic-blue:rgba(141,216,255,.46);
+      --cosmic-gold:rgba(243,200,111,.34);
+      --cosmic-violet:rgba(143,101,255,.34);
     }
 
     * { box-sizing:border-box; }
@@ -84,12 +95,13 @@
       z-index:0;
       pointer-events:none;
       background-image:
-        radial-gradient(circle,rgba(255,255,255,.20) 0 1px,transparent 1.5px),
-        radial-gradient(circle,rgba(243,200,111,.18) 0 1px,transparent 1.6px),
-        radial-gradient(circle,rgba(141,216,255,.16) 0 1px,transparent 1.6px),
+        radial-gradient(circle at 12% 16%,rgba(255,255,255,.22) 0 1px,transparent 1.7px),
+        radial-gradient(circle at 66% 22%,rgba(243,200,111,.19) 0 1px,transparent 1.8px),
+        radial-gradient(circle at 28% 74%,rgba(141,216,255,.17) 0 1px,transparent 1.8px),
+        radial-gradient(circle at 82% 68%,rgba(190,170,255,.16) 0 1px,transparent 1.7px),
         linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
         linear-gradient(90deg,rgba(190,170,255,.045) 1px,transparent 1px);
-      background-size:220px 260px,310px 280px,270px 330px,54px 54px,54px 54px;
+      background-size:220px 260px,310px 280px,270px 330px,360px 310px,54px 54px,54px 54px;
       opacity:.24;
       mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.54) 64%,rgba(0,0,0,.24));
     }
@@ -166,29 +178,60 @@
     }
 
     .brand-mark {
+      position:relative;
       width:4.2rem;
       height:4.2rem;
       display:grid;
       place-items:center;
-      border:1px solid rgba(243,200,111,.44);
-      transform:rotate(45deg);
-      clip-path:var(--star-cut);
+      border:1px solid rgba(243,200,111,.34);
+      border-radius:50%;
+      transform:rotate(0deg);
       background:
-        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.30),rgba(36,120,255,.22),rgba(143,101,255,.22),rgba(243,200,111,.28),rgba(255,255,255,.30)),
-        radial-gradient(circle at 48% 22%,rgba(255,255,255,.32),transparent 42%),
-        linear-gradient(145deg,rgba(14,42,94,.96),rgba(5,8,20,.98));
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,.92) 0 .2rem,transparent .23rem),
+        radial-gradient(circle at 50% 50%,rgba(255,232,163,.40),transparent 32%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.22),transparent 56%),
+        radial-gradient(circle at 50% 50%,rgba(143,101,255,.18),transparent 72%),
+        rgba(6,10,24,.82);
       box-shadow:
-        0 0 2rem rgba(36,120,255,.24),
+        0 0 .85rem rgba(255,255,255,.18),
+        0 0 1.7rem rgba(141,216,255,.28),
+        0 0 2.7rem rgba(243,200,111,.14),
         0 1.2rem 2.8rem rgba(0,0,0,.46),
-        inset 0 1px 0 rgba(255,255,255,.16);
+        inset 0 0 1.4rem rgba(141,216,255,.14);
+      isolation:isolate;
+    }
+
+    .brand-mark::before,
+    .brand-mark::after {
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:118%;
+      height:2px;
+      transform:translate(-50%,-50%) rotate(18deg);
+      background:linear-gradient(90deg,transparent,rgba(255,244,216,.62),transparent);
+      filter:blur(.2px);
+      opacity:.68;
+      z-index:0;
+    }
+
+    .brand-mark::after {
+      width:90%;
+      transform:translate(-50%,-50%) rotate(108deg);
+      opacity:.36;
     }
 
     .brand-mark span {
-      transform:rotate(-45deg);
+      position:relative;
+      z-index:2;
+      transform:none;
       font-weight:950;
       letter-spacing:.04em;
       color:rgba(255,244,216,.98);
-      text-shadow:0 2px 10px rgba(0,0,0,.85);
+      text-shadow:
+        0 2px 10px rgba(0,0,0,.85),
+        0 0 10px rgba(141,216,255,.42);
     }
 
     .brand-copy {
@@ -310,9 +353,14 @@
       content:"";
       width:.72rem;
       height:.72rem;
-      clip-path:var(--star-cut);
-      background:linear-gradient(135deg,var(--blue),var(--gold));
-      box-shadow:0 0 1.1rem rgba(141,216,255,.42);
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,.98) 0 .12rem,transparent .14rem),
+        radial-gradient(circle at 50% 50%,var(--blue),transparent 68%);
+      box-shadow:
+        0 0 .65rem rgba(255,255,255,.35),
+        0 0 1.1rem rgba(141,216,255,.42),
+        0 0 1.7rem rgba(243,200,111,.18);
     }
 
     h1 {
@@ -451,10 +499,23 @@
       border:1px solid rgba(184,205,255,.13);
       border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
+        radial-gradient(circle at 18% 18%,rgba(255,255,255,.16) 0 .08rem,transparent .11rem),
+        radial-gradient(circle at 72% 14%,rgba(243,200,111,.16) 0 .08rem,transparent .12rem),
+        radial-gradient(circle at 84% 66%,rgba(141,216,255,.15) 0 .08rem,transparent .12rem),
+        radial-gradient(circle at 34% 82%,rgba(190,170,255,.14) 0 .08rem,transparent .12rem),
         radial-gradient(circle at 50% 42%,rgba(36,120,255,.15),transparent 20rem),
         radial-gradient(circle at 50% 54%,rgba(143,101,255,.12),transparent 25rem),
         radial-gradient(circle at 50% 76%,rgba(243,200,111,.08),transparent 30rem),
         linear-gradient(180deg,rgba(1,5,16,.68),rgba(2,6,16,.92));
+      background-size:
+        240px 220px,
+        280px 260px,
+        320px 300px,
+        360px 310px,
+        auto,
+        auto,
+        auto,
+        auto;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
@@ -568,28 +629,44 @@
     .star-shell {
       position:absolute;
       inset:0;
-      clip-path:var(--star-cut);
+      border-radius:50%;
       background:
-        radial-gradient(circle at 50% 34%,rgba(255,255,255,.38),transparent 30%),
-        conic-gradient(from 0deg at 50% 50%,rgba(255,255,255,.18),rgba(141,216,255,.25),rgba(143,101,255,.18),rgba(243,200,111,.22),rgba(255,255,255,.18)),
-        radial-gradient(circle at 50% 50%,rgba(36,120,255,.34),rgba(5,8,20,.96) 70%);
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,.98) 0 .22rem,transparent .25rem),
+        radial-gradient(circle at 50% 50%,rgba(255,244,216,.42),transparent 18%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.28),transparent 42%),
+        radial-gradient(circle at 50% 50%,rgba(143,101,255,.16),transparent 64%),
+        radial-gradient(circle at 50% 50%,rgba(2,6,18,.10),rgba(2,6,18,.76) 74%);
       box-shadow:
-        0 0 1.4rem rgba(141,216,255,.22),
-        0 0 2rem rgba(243,200,111,.12),
-        0 1rem 2.2rem rgba(0,0,0,.34);
+        0 0 .85rem rgba(255,255,255,.18),
+        0 0 1.5rem rgba(141,216,255,.28),
+        0 0 2.25rem rgba(143,101,255,.18),
+        0 0 3rem rgba(243,200,111,.12),
+        0 1rem 2.2rem rgba(0,0,0,.34),
+        inset 0 0 1.4rem rgba(141,216,255,.12);
       animation:futureStarPulse 6.8s ease-in-out infinite;
       animation-delay:var(--delay,0s);
       transform-origin:center;
+      overflow:visible;
     }
 
     .star-shell::before {
       content:"";
       position:absolute;
-      inset:22%;
-      clip-path:var(--star-cut);
+      left:50%;
+      top:50%;
+      width:155%;
+      height:2px;
+      transform:translate(-50%,-50%) rotate(var(--flare-a,14deg));
+      border-radius:999px;
       background:
-        radial-gradient(circle at 50% 50%,rgba(255,255,255,.24),transparent 62%);
-      opacity:.72;
+        linear-gradient(90deg,
+          transparent 0%,
+          rgba(141,216,255,.12) 18%,
+          rgba(255,244,216,.62) 50%,
+          rgba(243,200,111,.13) 82%,
+          transparent 100%);
+      filter:blur(.2px);
+      opacity:.66;
     }
 
     .star-shell::after {
@@ -597,34 +674,61 @@
       position:absolute;
       left:50%;
       top:50%;
-      width:140%;
-      height:1px;
-      transform:translate(-50%,-50%) rotate(0deg);
-      background:linear-gradient(90deg,transparent,rgba(255,244,216,.50),transparent);
-      opacity:.32;
+      width:2px;
+      height:138%;
+      transform:translate(-50%,-50%) rotate(var(--flare-b,-16deg));
+      border-radius:999px;
+      background:
+        linear-gradient(180deg,
+          transparent 0%,
+          rgba(190,170,255,.10) 18%,
+          rgba(255,255,255,.44) 50%,
+          rgba(141,216,255,.12) 82%,
+          transparent 100%);
+      filter:blur(.25px);
+      opacity:.44;
     }
 
     .center-star .star-shell {
       background:
-        radial-gradient(circle at 50% 34%,rgba(255,255,255,.42),transparent 30%),
-        conic-gradient(from 0deg at 50% 50%,rgba(255,255,255,.20),rgba(243,200,111,.34),rgba(36,120,255,.26),rgba(143,101,255,.22),rgba(255,255,255,.20)),
-        radial-gradient(circle at 50% 50%,rgba(36,120,255,.38),rgba(5,8,20,.98) 72%);
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,1) 0 .32rem,transparent .35rem),
+        radial-gradient(circle at 50% 50%,rgba(255,232,163,.52),transparent 21%),
+        radial-gradient(circle at 50% 50%,rgba(36,120,255,.34),transparent 46%),
+        radial-gradient(circle at 50% 50%,rgba(143,101,255,.22),transparent 68%),
+        radial-gradient(circle at 50% 50%,rgba(2,6,18,.12),rgba(2,6,18,.86) 76%);
       box-shadow:
+        0 0 1.15rem rgba(255,255,255,.20),
         0 0 2.2rem rgba(243,200,111,.24),
         0 0 3rem rgba(36,120,255,.24),
-        0 1.5rem 3rem rgba(0,0,0,.42);
+        0 0 4.4rem rgba(143,101,255,.16),
+        0 1.5rem 3rem rgba(0,0,0,.42),
+        inset 0 0 1.8rem rgba(255,232,163,.10);
       animation:centerStarPulse 7.6s ease-in-out infinite;
+    }
+
+    .center-star .star-shell::before {
+      width:172%;
+      opacity:.74;
+    }
+
+    .center-star .star-shell::after {
+      height:158%;
+      opacity:.52;
     }
 
     .anchor-star .star-shell {
       background:
-        radial-gradient(circle at 50% 34%,rgba(255,255,255,.38),transparent 30%),
-        conic-gradient(from 0deg at 50% 50%,rgba(255,255,255,.18),rgba(141,216,255,.28),rgba(243,200,111,.20),rgba(36,120,255,.28),rgba(255,255,255,.18)),
-        radial-gradient(circle at 50% 50%,rgba(16,46,96,.46),rgba(5,8,20,.98) 70%);
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,.98) 0 .24rem,transparent .27rem),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.42),transparent 26%),
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.18),transparent 48%),
+        radial-gradient(circle at 50% 50%,rgba(36,120,255,.20),transparent 68%),
+        radial-gradient(circle at 50% 50%,rgba(5,8,20,.18),rgba(5,8,20,.88) 76%);
       box-shadow:
+        0 0 1rem rgba(255,255,255,.14),
         0 0 1.7rem rgba(141,216,255,.26),
         0 0 2.2rem rgba(243,200,111,.12),
-        0 1rem 2.2rem rgba(0,0,0,.34);
+        0 1rem 2.2rem rgba(0,0,0,.34),
+        inset 0 0 1.25rem rgba(141,216,255,.10);
       animation:anchorStarHold 9s ease-in-out infinite;
     }
 
@@ -665,14 +769,14 @@
       text-align:center;
       pointer-events:none;
       text-shadow:
-        0 2px 12px rgba(0,0,0,.96),
-        0 0 10px rgba(0,28,90,.86),
-        0 0 2px rgba(255,255,255,.42);
+        0 2px 12px rgba(0,0,0,.98),
+        0 0 10px rgba(0,28,90,.92),
+        0 0 3px rgba(255,255,255,.50);
     }
 
     .star-label b {
       display:block;
-      color:rgba(255,244,216,.98);
+      color:rgba(255,244,216,.99);
       font-size:clamp(.50rem,1.45vw,.78rem);
       font-weight:950;
       letter-spacing:.07em;
@@ -681,7 +785,7 @@
     }
 
     .star-label span {
-      color:rgba(230,238,255,.78);
+      color:rgba(230,238,255,.82);
       font-size:clamp(.38rem,.95vw,.52rem);
       font-weight:900;
       letter-spacing:.08em;
@@ -989,57 +1093,57 @@
             <span class="star-label"><b>Frontier</b><span>Edge Star</span></span>
           </div>
 
-          <a class="future-star" style="--x:22%;--y:22%;--mobile-y:56%;--delay:-.2s" href="/explore/frontier/closed-loop/" aria-label="Closed Loop future star">
+          <a class="future-star" style="--x:22%;--y:22%;--mobile-y:56%;--delay:-.2s;--flare-a:9deg;--flare-b:-22deg;" href="/explore/frontier/closed-loop/" aria-label="Closed Loop future star">
             <span class="star-shell" aria-hidden="true"></span>
             <span class="star-label"><b>Closed Loop</b><span>Feedback</span></span>
           </a>
 
-          <a class="future-star" style="--x:37%;--y:18%;--mobile-y:59.5%;--delay:-.7s" href="/explore/frontier/energy/" aria-label="Energy future star">
+          <a class="future-star" style="--x:37%;--y:18%;--mobile-y:59.5%;--delay:-.7s;--flare-a:-16deg;--flare-b:18deg;" href="/explore/frontier/energy/" aria-label="Energy future star">
             <span class="star-shell" aria-hidden="true"></span>
             <span class="star-label"><b>Energy</b><span>Power</span></span>
           </a>
 
-          <a class="future-star" style="--x:63%;--y:18%;--mobile-y:63%;--delay:-1.2s" href="/explore/frontier/infrastructure/" aria-label="Infrastructure future star">
+          <a class="future-star" style="--x:63%;--y:18%;--mobile-y:63%;--delay:-1.2s;--flare-a:21deg;--flare-b:-10deg;" href="/explore/frontier/infrastructure/" aria-label="Infrastructure future star">
             <span class="star-shell" aria-hidden="true"></span>
             <span class="star-label"><b>Infrastructure</b><span>Support</span></span>
           </a>
 
-          <a class="future-star" style="--x:78%;--y:22%;--mobile-y:66.5%;--delay:-1.7s" href="/explore/frontier/lattice/" aria-label="Lattice future star">
+          <a class="future-star" style="--x:78%;--y:22%;--mobile-y:66.5%;--delay:-1.7s;--flare-a:-7deg;--flare-b:26deg;" href="/explore/frontier/lattice/" aria-label="Lattice future star">
             <span class="star-shell" aria-hidden="true"></span>
             <span class="star-label"><b>Lattice</b><span>Grid</span></span>
           </a>
 
-          <a class="future-star" style="--x:20%;--y:68%;--mobile-y:70%;--delay:-2.2s" href="/explore/frontier/manual/" aria-label="Manual future star">
+          <a class="future-star" style="--x:20%;--y:68%;--mobile-y:70%;--delay:-2.2s;--flare-a:18deg;--flare-b:-14deg;" href="/explore/frontier/manual/" aria-label="Manual future star">
             <span class="star-shell" aria-hidden="true"></span>
             <span class="star-label"><b>Manual</b><span>Guide</span></span>
           </a>
 
-          <a class="future-star" style="--x:32%;--y:78%;--mobile-y:73.5%;--delay:-2.7s" href="/explore/frontier/shimmer/" aria-label="Shimmer future star">
+          <a class="future-star" style="--x:32%;--y:78%;--mobile-y:73.5%;--delay:-2.7s;--flare-a:-24deg;--flare-b:12deg;" href="/explore/frontier/shimmer/" aria-label="Shimmer future star">
             <span class="star-shell" aria-hidden="true"></span>
             <span class="star-label"><b>Shimmer</b><span>Signal</span></span>
           </a>
 
-          <a class="future-star" style="--x:47%;--y:82%;--mobile-y:77%;--delay:-3.2s" href="/explore/frontier/trajectory/" aria-label="Trajectory future star">
+          <a class="future-star" style="--x:47%;--y:82%;--mobile-y:77%;--delay:-3.2s;--flare-a:5deg;--flare-b:-28deg;" href="/explore/frontier/trajectory/" aria-label="Trajectory future star">
             <span class="star-shell" aria-hidden="true"></span>
             <span class="star-label"><b>Trajectory</b><span>Motion</span></span>
           </a>
 
-          <a class="future-star" style="--x:62%;--y:80%;--mobile-y:80.5%;--delay:-3.7s" href="/explore/frontier/urban/" aria-label="Urban future star">
+          <a class="future-star" style="--x:62%;--y:80%;--mobile-y:80.5%;--delay:-3.7s;--flare-a:-12deg;--flare-b:20deg;" href="/explore/frontier/urban/" aria-label="Urban future star">
             <span class="star-shell" aria-hidden="true"></span>
             <span class="star-label"><b>Urban</b><span>City</span></span>
           </a>
 
-          <a class="future-star" style="--x:79%;--y:68%;--mobile-y:84%;--delay:-4.2s" href="/explore/frontier/vision/" aria-label="Vision future star">
+          <a class="future-star" style="--x:79%;--y:68%;--mobile-y:84%;--delay:-4.2s;--flare-a:24deg;--flare-b:-8deg;" href="/explore/frontier/vision/" aria-label="Vision future star">
             <span class="star-shell" aria-hidden="true"></span>
             <span class="star-label"><b>Vision</b><span>Future</span></span>
           </a>
 
-          <a class="future-star" style="--x:31%;--y:50%;--mobile-y:87.5%;--delay:-4.7s" href="/explore/frontier/waste/" aria-label="Waste future star">
+          <a class="future-star" style="--x:31%;--y:50%;--mobile-y:87.5%;--delay:-4.7s;--flare-a:-18deg;--flare-b:15deg;" href="/explore/frontier/waste/" aria-label="Waste future star">
             <span class="star-shell" aria-hidden="true"></span>
             <span class="star-label"><b>Waste</b><span>Reuse</span></span>
           </a>
 
-          <a class="future-star" style="--x:69%;--y:50%;--mobile-y:91%;--delay:-5.2s" href="/explore/frontier/water/" aria-label="Water future star">
+          <a class="future-star" style="--x:69%;--y:50%;--mobile-y:91%;--delay:-5.2s;--flare-a:13deg;--flare-b:-18deg;" href="/explore/frontier/water/" aria-label="Water future star">
             <span class="star-shell" aria-hidden="true"></span>
             <span class="star-label"><b>Water</b><span>Flow</span></span>
           </a>
@@ -1209,17 +1313,27 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_FUTURE_STARFIELD_ELEVEN_LANE_RENEWAL_TNT_v3
-previous=FRONTIER_EXPANSION_EDGE_ELEVEN_LANE_PUBLIC_RENEWAL_TNT_v2
+FRONTIER_COSMIC_STAR_VISUAL_LANGUAGE_RENEWAL_TNT_v1
+previous=FRONTIER_FUTURE_STARFIELD_ELEVEN_LANE_RENEWAL_TNT_v3
+source_binding=FRONTIER_COSMIC_STAR_VISUAL_LANGUAGE_PREGAME_TO_POSTGAME_BINDING_v1
 route=/frontier/
+target=/frontier/index.html
 page=frontier
 role=expansion_edge
+renewal_class=visual_language_contract_renewal_only
 message=One edge. Eleven lanes.
 core_principle=The unknown still needs a parent map.
 public_copy=Frontier_turns_the_edge_of_the_estate_into_a_future_sky_eleven_visible_paths_four_return_anchors_and_one_rule_expansion_must_stay_attached_to_the_map
 center=frontier_edge_star
-design_object=future_starfield_expansion_edge
+design_object=cosmic_starfield_expansion_edge
 public_visual_language=edge_of_the_map_turning_into_future_sky
+replaced_cookie_cutter_stars=true
+replaced_hard_polygon_star_cut=true
+cosmic_light_field_objects=true
+cosmic_star_language=stellar_glow,cosmic_dust,soft_flare,nebula_pressure,deep_space_depth,subtle_gravitational_field
+route_controls_preserved=true
+stars_already_clickable_controls_preserved=true
+cosmic_stars_do_not_create_new_clickable_routes=true
 anchor_stars=compass,explore,laws,gauges
 future_stars=closed_loop,energy,infrastructure,lattice,manual,shimmer,trajectory,urban,vision,waste,water
 lane_base=/explore/frontier/
@@ -1227,27 +1341,34 @@ parent_route=/explore/
 boundary_route=/laws/
 proof_route=/gauges/
 return_route=/explore/
+route_targets_preserved=true
+lane_names_preserved=true
+navigation_structure_preserved=true
 visible_label_corrections=Explore_not_Manor,Return_to_Explore_not_Return_to_Manor
-replaced_visual_language=gem_field_to_future_starfield
 receipt_visibility=hidden_template_only
-visual_system=css_only_future_starfield_expansion_edge
+visual_system=css_only_cosmic_starfield_expansion_edge
 animation_method=css_only
 js_required=false
-route_owns=frontier_root,expansion_edge,11_lane_links,future_starfield,anchor_stars,return_routes,hidden_receipt
-route_does_not_own=frontier_lane_pages,body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic,products_root,showroom_runtime
+route_owns=frontier_root,expansion_edge,11_lane_links,cosmic_starfield,anchor_stars,return_routes,hidden_receipt
+route_does_not_own=frontier_lane_pages,body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic,products_root,showroom_runtime,frontier_water_child_lane
+frontier_water_touched=false
+frontier_child_lanes_touched=false
 heavy_runtime_loaded=false
 render_files_touched=false
 instrument_touched=false
 gauges_logic_touched=false
 generated_image=false
 graphic_box=false
+canvas=false
+webgl=false
 streaming=false
 visual_pass_claimed=false
+deploy_marker=FRONTIER_COSMIC_STAR_VISUAL_LANGUAGE_RENEWAL_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer>
-      FRONTIER_FUTURE_STARFIELD_ELEVEN_LANE_RENEWAL_TNT_v3 · Frontier · Future Starfield · Eleven Lanes.
+      FRONTIER_COSMIC_STAR_VISUAL_LANGUAGE_RENEWAL_TNT_v1 · Frontier · Cosmic Starfield · Eleven Lanes.
     </footer>
   </div>
 </body>

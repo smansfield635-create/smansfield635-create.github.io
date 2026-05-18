@@ -4,10 +4,10 @@
   lang="en"
   data-route="/explore/frontier/"
   data-page="explore-frontier"
-  data-version="RESTORE-G3"
-  data-contract="EXPLORE_FRONTIER_PARENT_HUB_RESTORE_GLOW_SCALE_STABLE_HALO_TNT_v3"
-  data-previous-contract="EXPLORE_FRONTIER_PARENT_HUB_RESTORE_GLOW_SCALE_RENEWAL_TNT_v2"
-  data-source-binding="EXPLORE_FRONTIER_PARENT_HUB_RESTORE_GLOW_SCALE_STABLE_HALO_PREGAME_TO_POSTGAME_BINDING_v3"
+  data-version="FUSION-G1"
+  data-contract="EXPLORE_FRONTIER_CLOSE_SOURCE_FUSION_GLOW_TNT_v1"
+  data-previous-contract="EXPLORE_FRONTIER_PARENT_HUB_RESTORE_GLOW_SCALE_STABLE_HALO_TNT_v3"
+  data-source-binding="EXPLORE_FRONTIER_CLOSE_SOURCE_FUSION_GLOW_PREGAME_TO_POSTGAME_BINDING_v1"
   data-source-visual-authority="FRONTIER_V11_TWINKLING_HIDDEN_STAR_GLOW_INTENSIFICATION_TNT_v1"
   data-parent-route="/explore/"
   data-frontier-root="/frontier/"
@@ -15,6 +15,13 @@
   data-role="explore-frontier-parent-hub"
   data-route-distinction="explore-side-frontier-hub-not-root-frontier-not-child-lane"
   data-return-to-frontier="true"
+  data-close-fusion-star-source="true"
+  data-star-distance="near-contact"
+  data-distant-star-read="false"
+  data-node-eclipses-star="true"
+  data-fusion-backlight="true"
+  data-rim-corona="true"
+  data-ambient-spill-secondary="true"
   data-hidden-star-glow="true"
   data-natural-spill-glow="true"
   data-large-frontier-circles="true"
@@ -591,29 +598,29 @@
     .frontier-node::after{
       content:"";
       position:absolute;
-      inset:-38%;
+      inset:-44%;
       z-index:1;
       pointer-events:none;
       border-radius:42% 58% 55% 45% / 50% 44% 56% 50%;
       background:
-        radial-gradient(circle at 50% 50%,rgba(255,255,255,.36),transparent 12%),
-        radial-gradient(circle at 50% 50%,rgba(255,232,163,.32),transparent 26%),
-        radial-gradient(circle at 50% 50%,rgba(141,216,255,.27),transparent 54%),
-        radial-gradient(circle at 50% 50%,rgba(143,101,255,.17),transparent 82%);
-      filter:blur(21px);
-      opacity:.96;
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,.22),transparent 14%),
+        radial-gradient(circle at 50% 50%,rgba(255,232,163,.26),transparent 32%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.24),transparent 60%),
+        radial-gradient(circle at 50% 50%,rgba(143,101,255,.17),transparent 86%);
+      filter:blur(22px);
+      opacity:.98;
       transform:scale(1);
       animation:none!important;
     }
 
     .frontier-anchor::after{
-      inset:-32%;
+      inset:-40%;
       opacity:.98;
       filter:blur(22px);
     }
 
     .frontier-node.primary-row::after{
-      inset:-40%;
+      inset:-46%;
       opacity:.98;
       filter:blur(22px);
     }
@@ -625,49 +632,51 @@
       left:50%;
       top:50%;
       z-index:2;
-      width:44%;
-      height:44%;
+      width:88%;
+      height:88%;
       pointer-events:none;
       border-radius:50%;
       transform:translate(-50%,-50%);
       background:
-        radial-gradient(circle at 50% 50%,rgba(255,255,255,1) 0 7%,transparent 9%),
-        radial-gradient(circle at 50% 50%,rgba(255,244,216,.88),transparent 27%),
-        radial-gradient(circle at 50% 50%,rgba(243,200,111,.48),transparent 55%),
-        radial-gradient(circle at 50% 50%,rgba(141,216,255,.30),transparent 74%);
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,1) 0 8%,transparent 10%),
+        radial-gradient(circle at 50% 50%,rgba(255,247,218,.98),transparent 23%),
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.78),transparent 43%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.56),transparent 66%),
+        radial-gradient(circle at 50% 50%,rgba(143,101,255,.32),transparent 86%);
       box-shadow:
-        0 0 .72rem rgba(255,255,255,.34),
-        0 0 1.25rem rgba(243,200,111,.32),
-        0 0 1.9rem rgba(141,216,255,.24);
+        0 0 .9rem rgba(255,255,255,.48),
+        0 0 1.8rem rgba(243,200,111,.52),
+        0 0 2.8rem rgba(141,216,255,.38),
+        0 0 4.1rem rgba(143,101,255,.24);
       opacity:.92;
-      animation:hiddenStarCoreOnlyTwinkle 7.4s ease-in-out infinite;
+      animation:hiddenCloseFusionStarPulse 7.4s ease-in-out infinite;
       animation-delay:var(--delay,0s);
     }
 
     .frontier-anchor::before{
-      width:46%;
-      height:46%;
+      width:92%;
+      height:92%;
     }
 
-    @keyframes hiddenStarCoreOnlyTwinkle{
+    .frontier-node.primary-row::before{
+      width:92%;
+      height:92%;
+    }
+
+    @keyframes hiddenCloseFusionStarPulse{
       0%,100%{
-        opacity:.82;
-        transform:translate(-50%,-50%) scale(.96);
+        opacity:.92;
+        transform:translate(-50%,-50%) scale(.985);
       }
 
       42%{
-        opacity:.98;
-        transform:translate(-50%,-50%) scale(1.03);
-      }
-
-      58%{
-        opacity:.88;
-        transform:translate(-50%,-50%) scale(.99);
+        opacity:1;
+        transform:translate(-50%,-50%) scale(1.018);
       }
 
       72%{
-        opacity:1;
-        transform:translate(-50%,-50%) scale(1.05);
+        opacity:.98;
+        transform:translate(-50%,-50%) scale(1.035);
       }
     }
 
@@ -704,24 +713,26 @@
         linear-gradient(180deg,rgba(9,15,34,.94),rgba(2,5,15,.985));
       border:1px solid rgba(255,255,255,.075);
       box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.12),
-        inset 0 -1.1rem 1.35rem rgba(0,0,0,.38),
-        0 1.1rem 1.35rem rgba(0,0,0,.50),
-        0 0 .92rem rgba(141,216,255,.12);
-      filter:
-        drop-shadow(0 1rem 1.25rem rgba(0,0,0,.46))
-        drop-shadow(0 0 .72rem rgba(141,216,255,.10));
-      transform-origin:50% 50%;
+        inset 0 1px 0 rgba(255,255,255,.14),
+        inset 0 -1.15rem 1.45rem rgba(0,0,0,.40),
+        0 1.15rem 1.4rem rgba(0,0,0,.52),
+        0 0 .55rem rgba(255,255,255,.30),
+        0 0 1.15rem rgba(255,232,163,.38),
+        0 0 2rem rgba(141,216,255,.30),
+        0 0 3.2rem rgba(143,101,255,.18);
       pointer-events:none;
     }
 
     .frontier-node.primary-row .frontier-star-body{
       inset:9.5%;
       box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.12),
-        inset 0 -1.15rem 1.4rem rgba(0,0,0,.40),
-        0 1.15rem 1.4rem rgba(0,0,0,.52),
-        0 0 .96rem rgba(141,216,255,.13);
+        inset 0 1px 0 rgba(255,255,255,.14),
+        inset 0 -1.18rem 1.48rem rgba(0,0,0,.42),
+        0 1.18rem 1.45rem rgba(0,0,0,.54),
+        0 0 .6rem rgba(255,255,255,.32),
+        0 0 1.25rem rgba(255,232,163,.40),
+        0 0 2.15rem rgba(141,216,255,.32),
+        0 0 3.4rem rgba(143,101,255,.20);
     }
 
     .frontier-anchor-body{
@@ -732,11 +743,13 @@
         radial-gradient(circle at 50% 58%,rgba(141,216,255,.12),transparent 62%),
         linear-gradient(180deg,rgba(9,15,34,.94),rgba(2,5,15,.985));
       box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.13),
-        inset 0 -1.15rem 1.45rem rgba(0,0,0,.38),
-        0 1.25rem 1.55rem rgba(0,0,0,.50),
-        0 0 1rem rgba(243,200,111,.13),
-        0 0 1.4rem rgba(141,216,255,.11);
+        inset 0 1px 0 rgba(255,255,255,.15),
+        inset 0 -1.2rem 1.5rem rgba(0,0,0,.42),
+        0 1.25rem 1.55rem rgba(0,0,0,.54),
+        0 0 .65rem rgba(255,255,255,.32),
+        0 0 1.35rem rgba(255,232,163,.42),
+        0 0 2.25rem rgba(141,216,255,.34),
+        0 0 3.65rem rgba(143,101,255,.22);
     }
 
     .frontier-label{
@@ -1029,14 +1042,26 @@
 
       .frontier-anchor::after,
       .frontier-node::after{
-        inset:-34%;
+        inset:-38%;
         filter:blur(18px);
-        opacity:.96;
+        opacity:.98;
       }
 
       .frontier-node.primary-row::after{
-        inset:-36%;
-        filter:blur(19px);
+        inset:-40%;
+        filter:blur(18px);
+      }
+
+      .frontier-anchor::before,
+      .frontier-node::before{
+        width:88%;
+        height:88%;
+      }
+
+      .frontier-anchor::before,
+      .frontier-node.primary-row::before{
+        width:92%;
+        height:92%;
       }
 
       .frontier-star-body,
@@ -1455,9 +1480,9 @@
       </section>
 
       <section class="final-band" aria-label="Explore Frontier final statement">
-        <strong>Explore Frontier restores the glow, restores the scale, and keeps Return to Frontier intact.</strong>
+        <strong>Explore Frontier now treats each node as an eclipse body in front of a close fusion source.</strong>
         <p>
-          Eleven Frontier lanes occupy the readable figure-eight field. The hidden star behind each object may subtly twinkle, but the halo glow remains steady, natural, strong, and unconstrained by a hard circular boundary.
+          Eleven Frontier lanes occupy the readable figure-eight field. Each dark node eclipses a near-contact fusion star, producing a stronger rim-corona while the wider ambient glow remains secondary and stable.
         </p>
 
         <div class="actions">
@@ -1470,9 +1495,9 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-EXPLORE_FRONTIER_PARENT_HUB_RESTORE_GLOW_SCALE_STABLE_HALO_TNT_v3
-previous=EXPLORE_FRONTIER_PARENT_HUB_RESTORE_GLOW_SCALE_RENEWAL_TNT_v2
-binding=EXPLORE_FRONTIER_PARENT_HUB_RESTORE_GLOW_SCALE_STABLE_HALO_PREGAME_TO_POSTGAME_BINDING_v3
+EXPLORE_FRONTIER_CLOSE_SOURCE_FUSION_GLOW_TNT_v1
+previous=EXPLORE_FRONTIER_PARENT_HUB_RESTORE_GLOW_SCALE_STABLE_HALO_TNT_v3
+binding=EXPLORE_FRONTIER_CLOSE_SOURCE_FUSION_GLOW_PREGAME_TO_POSTGAME_BINDING_v1
 source_visual_authority=FRONTIER_V11_TWINKLING_HIDDEN_STAR_GLOW_INTENSIFICATION_TNT_v1
 route=/explore/frontier/
 target=/explore/frontier/index.html
@@ -1500,8 +1525,14 @@ water=/explore/frontier/water/
 vision=/explore/frontier/vision/
 urban=/explore/frontier/urban/
 child_lane_links_preserved=true
-large_node_scale_restored=true
-mobile_node_scale_restored=true
+large_node_scale_preserved=true
+close_fusion_star_source=true
+star_distance=near_contact
+distant_star_read=false
+node_eclipses_star=true
+fusion_backlight=true
+rim_corona=true
+ambient_spill_secondary=true
 hidden_star_glow=true
 natural_spill_glow=true
 stable_halo_glow=true
@@ -1514,12 +1545,13 @@ animated_blur=false
 hard_circular_glow=false
 front_facing_star_icon=false
 cookie_cutter_star=false
+front_object_remains_dark=true
 front_object_remains_readable=true
-star_sits_behind_object=true
+star_sits_directly_behind_object=true
 glow_spills_beyond_rim=true
 css_only=true
 css_only_animation=true
-staggered_star_core_twinkle=true
+close_star_opacity_scale_pulse_only=true
 reduced_motion_safe=true
 label_flicker=false
 layout_movement=false
@@ -1531,12 +1563,12 @@ heavy_runtime_loaded=false
 javascript_particle_engine=false
 visual_pass_claimed=false
 non_regression=true
-deploy_marker=EXPLORE_FRONTIER_PARENT_HUB_RESTORE_GLOW_SCALE_STABLE_HALO_DEPLOY_MARKER_v3
+deploy_marker=EXPLORE_FRONTIER_CLOSE_SOURCE_FUSION_GLOW_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer>
-      EXPLORE_FRONTIER_PARENT_HUB_RESTORE_GLOW_SCALE_STABLE_HALO_TNT_v3 · /explore/frontier/ · Large Nodes · Stable Hidden-Star Halo · Return to Frontier preserved.
+      EXPLORE_FRONTIER_CLOSE_SOURCE_FUSION_GLOW_TNT_v1 · /explore/frontier/ · Near-Contact Fusion Backlight · Rim Corona · Return to Frontier preserved.
     </footer>
   </div>
 </body>

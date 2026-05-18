@@ -3,1845 +3,1773 @@
   lang="en"
   data-route="/laws/categories/"
   data-page="laws-categories"
-  data-contract="LAWS_CATEGORIES_RETURN_TO_ORBIT_CONTROL_TNT_v1"
-  data-previous-contract="LAWS_CATEGORIES_RESTORE_FULL_BASELINE_WITH_LOCAL_CATEGORY_TOGGLES_TNT_v1"
-  data-binding="LAWS_CATEGORIES_RETURN_TO_ORBIT_CONTROL_PREGAME_TO_POSTGAME_BINDING_v1"
-  data-renderer="SVG_CRYSTAL_GEM_RENDERER_RESTORED"
+  data-version="G15-V1"
+  data-contract="LAWS_CATEGORIES_CRYSTAL_FAMILY_RETURN_ORBIT_CONTRACT_RENEWAL_TNT_v1"
+  data-source-binding="LAWS_CATEGORIES_TED_NARRATIVE_AND_ENGINEERING_EXPRESSION_PREGAME_TO_POSTGAME_BINDING_v1"
+  data-branch="laws-categories"
+  data-role="laws-family-interpretive-category-map"
+  data-visible-header-context="Manor_and_Estate_Laws_Category_Map"
+  data-crystal-svg-renderer-restored="true"
+  data-css-polygon-gem-regression-removed="true"
+  data-large-category-diamonds-restored-to-svg-crystals="true"
+  data-orbit-law-diamonds-restored-to-svg-crystals="true"
+  data-orbit-route-diamonds-restored-to-route-color-svg-crystals="true"
+  data-local-category-card-toggles-preserved="true"
+  data-eight-law-categories-preserved="true"
+  data-sixteen-law-pairings-preserved="true"
+  data-return-to-orbit-target="catalog-groups"
+  data-top-route-orbit-preserved="true"
+  data-center-gravity-rotation-preserved="true"
+  data-label-contrast-preserved="true"
+  data-route-normalization="active"
+  data-modern-static-html-css="true"
+  data-javascript-dependency="false"
   data-heavy-runtime-loaded="false"
-  data-javascript-required="false"
   data-generated-image="false"
+  data-graphic-block="false"
+  data-canvas="false"
+  data-webgl="false"
+  data-visual-pass-claimed="false"
 >
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
   <title>Laws Categories · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Shared catalog bridge for governing law, scientific law, reality source, category objects, and proof routes inside Diamond Gate Bridge."
-  />
+    content="Diamond Gate Bridge Laws Categories map: eight grouped categories organize sixteen laws so every claim knows its category, governing law, testable evidence, and return path."
+  >
 
   <style>
-    :root {
-      --bg-0: #050913;
-      --bg-1: #091426;
-      --bg-2: #0d1d34;
-      --panel: rgba(12, 28, 51, 0.82);
-      --panel-2: rgba(18, 42, 72, 0.72);
-      --panel-3: rgba(255, 255, 255, 0.055);
-      --text: #f6f1df;
-      --muted: #c9c2aa;
-      --soft: #9fb3c9;
-      --gold: #f1c76b;
-      --gold-2: #ffd985;
-      --amber: #c98234;
-      --copper: #b87439;
-      --blue: #6fb6ff;
-      --cyan: #87e4ff;
-      --green: #9be7b2;
-      --red: #ff9d8f;
-      --white-gem: #fffaf0;
-      --line: rgba(241, 199, 107, 0.27);
-      --line-2: rgba(255, 255, 255, 0.12);
-      --shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
-      --radius-xl: 34px;
-      --radius-lg: 24px;
-      --radius-md: 16px;
-      --max: 1180px;
-      color-scheme: dark;
+    :root{
+      color-scheme:dark;
+      --bg:#02050d;
+      --panel:rgba(8,15,31,.84);
+      --ink:#fff4d8;
+      --muted:rgba(232,240,255,.80);
+      --soft:rgba(232,240,255,.60);
+      --gold:#f3c86f;
+      --gold2:#ffe8a3;
+      --blue:#8dd8ff;
+      --line:rgba(214,229,255,.16);
+      --shadow:0 30px 100px rgba(0,0,0,.48);
+      --max:1180px;
+      --gem-breathe-duration:8.8s;
+      --orbit-duration:76s;
     }
 
-    * {
-      box-sizing: border-box;
+    *{box-sizing:border-box}
+
+    html{
+      min-width:320px;
+      min-height:100%;
+      scroll-behavior:smooth;
+      scroll-padding-top:1rem;
+      overflow-x:hidden;
+      background:var(--bg);
     }
 
-    html {
-      scroll-behavior: smooth;
+    body{
+      margin:0;
+      min-width:320px;
+      min-height:100vh;
+      overflow-x:hidden;
+      color:var(--ink);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.5;
       background:
-        radial-gradient(circle at 50% -10%, rgba(241, 199, 107, 0.16), transparent 32rem),
-        radial-gradient(circle at 15% 12%, rgba(111, 182, 255, 0.13), transparent 28rem),
-        radial-gradient(circle at 85% 8%, rgba(255, 217, 133, 0.09), transparent 22rem),
-        linear-gradient(180deg, var(--bg-0), var(--bg-1) 38%, #050913);
+        radial-gradient(circle at 50% -10%,rgba(243,200,111,.18),transparent 30rem),
+        radial-gradient(circle at 12% 20%,rgba(141,216,255,.13),transparent 27rem),
+        radial-gradient(circle at 88% 24%,rgba(36,120,255,.14),transparent 30rem),
+        linear-gradient(180deg,#071226 0%,#030816 54%,#01030a 100%);
+      -webkit-font-smoothing:antialiased;
+      text-rendering:geometricPrecision;
     }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--text);
-      font-family:
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-      line-height: 1.55;
-      background:
-        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-      background-size: 72px 72px;
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        linear-gradient(rgba(141,216,255,.035) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.035) 1px,transparent 1px),
+        radial-gradient(circle,rgba(255,255,255,.17) 0 1px,transparent 1.5px);
+      background-size:58px 58px,58px 58px,240px 280px;
+      opacity:.22;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.95),rgba(0,0,0,.45) 72%,rgba(0,0,0,.20));
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    a{color:inherit;text-decoration:none}
 
     a:focus-visible,
-    button:focus-visible,
-    label:focus-visible {
-      outline: 3px solid var(--gold-2);
-      outline-offset: 4px;
+    label:focus-visible{
+      outline:2px solid var(--gold);
+      outline-offset:4px;
     }
 
-    .skip-link {
-      position: absolute;
-      left: 1rem;
-      top: 1rem;
-      z-index: 20;
-      transform: translateY(-160%);
-      padding: 0.75rem 1rem;
-      border: 1px solid var(--gold);
-      border-radius: 999px;
-      background: #07101f;
-      color: var(--gold-2);
-      transition: transform 180ms ease;
+    .svg-defs{
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+      pointer-events:none;
     }
 
-    .skip-link:focus {
-      transform: translateY(0);
+    .skip{
+      position:absolute;
+      left:-999px;
+      top:10px;
+      z-index:20;
+      padding:.75rem 1rem;
+      border-radius:999px;
+      color:#05070d;
+      background:var(--gold);
+      font-weight:950;
     }
 
-    .site-shell {
-      width: min(var(--max), calc(100% - 2rem));
-      margin: 0 auto;
-      padding: 1.2rem 0 4rem;
+    .skip:focus{left:10px}
+
+    .shell{
+      position:relative;
+      z-index:1;
+      width:min(var(--max),calc(100% - 28px));
+      margin:0 auto;
+      padding:max(22px,env(safe-area-inset-top)) 0 max(44px,env(safe-area-inset-bottom));
     }
 
-    .top-rail {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      margin: 0 -1rem 2rem;
-      padding: 0.75rem 1rem;
-      backdrop-filter: blur(18px);
-      background: rgba(5, 9, 19, 0.78);
-      border-bottom: 1px solid var(--line-2);
-    }
-
-    .top-rail-inner {
-      width: min(var(--max), 100%);
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      min-width: 240px;
-    }
-
-    .brand-mark {
-      width: 2.4rem;
-      height: 2.4rem;
-      flex: 0 0 auto;
-      filter: drop-shadow(0 0 18px rgba(241, 199, 107, 0.45));
-    }
-
-    .brand-title {
-      display: grid;
-      gap: 0.05rem;
-    }
-
-    .brand-title strong {
-      font-size: 0.92rem;
-      letter-spacing: 0.09em;
-      text-transform: uppercase;
-      color: var(--gold-2);
-    }
-
-    .brand-title span {
-      font-size: 0.78rem;
-      color: var(--muted);
-    }
-
-    .nav-links {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 0.5rem;
-    }
-
-    .nav-links a,
-    .return-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 2.3rem;
-      padding: 0.58rem 0.82rem;
-      border: 1px solid var(--line-2);
-      border-radius: 999px;
-      color: var(--soft);
-      background: rgba(255, 255, 255, 0.035);
-      transition:
-        border-color 180ms ease,
-        color 180ms ease,
-        background 180ms ease,
-        transform 180ms ease;
-    }
-
-    .nav-links a:hover,
-    .return-link:hover {
-      color: var(--gold-2);
-      border-color: rgba(241, 199, 107, 0.52);
-      background: rgba(241, 199, 107, 0.08);
-      transform: translateY(-1px);
-    }
-
-    .hero {
-      position: relative;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-xl);
+    .topbar{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:1rem;
+      margin-bottom:1rem;
+      padding:.85rem;
+      border:1px solid var(--line);
+      border-radius:1.35rem;
       background:
-        radial-gradient(circle at 50% 0%, rgba(241, 199, 107, 0.14), transparent 34rem),
-        radial-gradient(circle at 80% 22%, rgba(111, 182, 255, 0.12), transparent 28rem),
-        linear-gradient(135deg, rgba(14, 31, 56, 0.92), rgba(5, 9, 19, 0.98));
-      box-shadow: var(--shadow);
-      padding: clamp(1.25rem, 3.2vw, 3rem);
+        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.025)),
+        rgba(6,12,25,.78);
+      box-shadow:0 1.2rem 3.5rem rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.07);
     }
 
-    .hero::before,
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: auto;
-      pointer-events: none;
-      border-radius: 999px;
-      opacity: 0.6;
+    .brand{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:.85rem;
+      min-width:250px;
     }
 
-    .hero::before {
-      width: 26rem;
-      height: 26rem;
-      right: -10rem;
-      top: -12rem;
-      background: radial-gradient(circle, rgba(255, 217, 133, 0.16), transparent 68%);
-    }
-
-    .hero::after {
-      width: 20rem;
-      height: 20rem;
-      left: -8rem;
-      bottom: -9rem;
-      background: radial-gradient(circle, rgba(135, 228, 255, 0.12), transparent 70%);
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.42rem 0.75rem;
-      border: 1px solid rgba(241, 199, 107, 0.32);
-      border-radius: 999px;
-      background: rgba(241, 199, 107, 0.075);
-      color: var(--gold-2);
-      font-size: 0.78rem;
-      letter-spacing: 0.11em;
-      text-transform: uppercase;
-    }
-
-    .hero-grid {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.92fr);
-      gap: clamp(1.25rem, 4vw, 3.25rem);
-      align-items: center;
-    }
-
-    h1 {
-      margin: 1.2rem 0 1rem;
-      max-width: 790px;
-      font-size: clamp(2.5rem, 7vw, 5.8rem);
-      line-height: 0.92;
-      letter-spacing: -0.065em;
-    }
-
-    .hero-copy {
-      max-width: 720px;
-      color: var(--muted);
-      font-size: clamp(1rem, 1.8vw, 1.18rem);
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-top: 1.5rem;
-    }
-
-    .primary-action,
-    .secondary-action {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 2.8rem;
-      padding: 0.72rem 1.05rem;
-      border-radius: 999px;
-      font-weight: 750;
-      letter-spacing: 0.01em;
-    }
-
-    .primary-action {
-      color: #09101d;
-      background: linear-gradient(135deg, var(--gold-2), var(--gold));
-      box-shadow: 0 12px 32px rgba(241, 199, 107, 0.22);
-    }
-
-    .secondary-action {
-      color: var(--gold-2);
-      border: 1px solid rgba(241, 199, 107, 0.36);
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    .mode-panel {
-      border: 1px solid var(--line-2);
-      border-radius: var(--radius-lg);
-      background: rgba(255, 255, 255, 0.045);
-      padding: 1rem;
-    }
-
-    .mode-panel h2 {
-      margin: 0 0 0.7rem;
-      color: var(--gold-2);
-      font-size: 1rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .mode-toggle {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-
-    input[type="radio"] {
-      position: absolute;
-      inline-size: 1px;
-      block-size: 1px;
-      overflow: hidden;
-      clip-path: inset(50%);
-      white-space: nowrap;
-    }
-
-    .mode-toggle label,
-    .local-toggle label {
-      cursor: pointer;
-      user-select: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 2.35rem;
-      padding: 0.58rem 0.75rem;
-      border: 1px solid var(--line-2);
-      border-radius: 999px;
-      color: var(--soft);
-      background: rgba(0, 0, 0, 0.12);
-      font-size: 0.86rem;
-      font-weight: 750;
-    }
-
-    #page-platform:checked ~ .site-shell .for-page-platform,
-    #page-engineering:checked ~ .site-shell .for-page-engineering {
-      display: block;
-    }
-
-    #page-platform:checked ~ .site-shell label[for="page-platform"],
-    #page-engineering:checked ~ .site-shell label[for="page-engineering"] {
-      color: #07101f;
-      border-color: transparent;
-      background: linear-gradient(135deg, var(--gold-2), var(--gold));
-    }
-
-    .for-page-platform,
-    .for-page-engineering {
-      display: none;
-      color: var(--muted);
-      margin: 0;
-    }
-
-    .catalog-orbit-wrap {
-      margin-top: 2rem;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-xl);
+    .brand-mark{
+      width:3.6rem;
+      height:3.6rem;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(243,200,111,.46);
+      border-radius:1rem;
+      transform:rotate(45deg);
       background:
-        radial-gradient(circle at center, rgba(241, 199, 107, 0.08), transparent 32rem),
-        rgba(255, 255, 255, 0.035);
-      padding: clamp(1rem, 2.5vw, 2rem);
-      overflow: hidden;
+        linear-gradient(135deg,rgba(255,232,163,.26),rgba(141,216,255,.10) 38%,rgba(3,10,28,.96)),
+        radial-gradient(circle at 35% 25%,rgba(255,255,255,.28),transparent 42%);
+      box-shadow:0 0 1.6rem rgba(243,200,111,.14),inset 0 1px 0 rgba(255,255,255,.16);
     }
 
-    .section-kicker {
-      margin: 0 0 0.45rem;
-      color: var(--gold-2);
-      font-size: 0.8rem;
-      letter-spacing: 0.13em;
-      text-transform: uppercase;
+    .brand-mark span{
+      transform:rotate(-45deg);
+      color:var(--gold);
+      font-weight:950;
+      letter-spacing:.05em;
+      text-shadow:0 2px 10px rgba(0,0,0,.70);
     }
 
-    .section-title {
-      margin: 0;
-      font-size: clamp(1.55rem, 3.4vw, 2.8rem);
-      line-height: 1.04;
-      letter-spacing: -0.035em;
+    .brand-copy{display:grid;gap:.16rem}
+
+    .brand-copy span{
+      color:var(--soft);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.13em;
+      text-transform:uppercase;
     }
 
-    .section-lede {
-      max-width: 820px;
-      color: var(--muted);
-      margin: 0.85rem 0 0;
+    .brand-copy strong{
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1rem,2.6vw,1.48rem);
+      line-height:1;
+      letter-spacing:-.035em;
     }
 
-    .catalog-orbit {
-      position: relative;
-      min-height: 310px;
-      margin-top: 1.5rem;
-      border: 1px solid rgba(255, 255, 255, 0.095);
-      border-radius: 30px;
+    .nav{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:.48rem;
+    }
+
+    .nav a{
+      min-height:2.35rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:.55rem .8rem;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:999px;
+      color:rgba(241,246,255,.84);
+      background:rgba(255,255,255,.04);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.56);
+      outline:none;
+    }
+
+    .nav a[aria-current="page"]{
+      border-color:rgba(243,200,111,.88);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .panel{
+      border:1px solid var(--line);
+      border-radius:clamp(1.35rem,4vw,2.1rem);
       background:
-        radial-gradient(ellipse at center, rgba(111, 182, 255, 0.08), transparent 65%),
-        radial-gradient(ellipse at center, transparent 39%, rgba(241, 199, 107, 0.12) 40%, transparent 42%),
-        linear-gradient(180deg, rgba(5, 9, 19, 0.2), rgba(5, 9, 19, 0.48));
-      overflow: hidden;
+        radial-gradient(circle at 16% 0%,rgba(141,216,255,.10),transparent 28rem),
+        radial-gradient(circle at 90% 12%,rgba(243,200,111,.10),transparent 30rem),
+        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
+        var(--panel);
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
     }
 
-    .catalog-orbit::before,
-    .catalog-orbit::after {
-      content: "";
-      position: absolute;
-      left: 8%;
-      right: 8%;
-      top: 50%;
-      height: 46%;
-      border: 1px solid rgba(241, 199, 107, 0.22);
-      border-radius: 50%;
-      transform: translateY(-50%) rotate(12deg);
+    .hero{
+      position:relative;
+      min-height:clamp(24rem,42vw,34rem);
+      display:grid;
+      align-content:center;
+      gap:1rem;
+      padding:clamp(1.25rem,5vw,3.25rem);
+      isolation:isolate;
     }
 
-    .catalog-orbit::after {
-      transform: translateY(-50%) rotate(-12deg);
-      border-color: rgba(111, 182, 255, 0.2);
-    }
-
-    .orbit-center {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      z-index: 2;
-      width: min(220px, 52vw);
-      transform: translate(-50%, -50%);
-      text-align: center;
-      padding: 1rem;
-      border: 1px solid rgba(241, 199, 107, 0.35);
-      border-radius: 24px;
-      background: rgba(5, 9, 19, 0.78);
-      box-shadow: 0 0 38px rgba(241, 199, 107, 0.12);
-    }
-
-    .orbit-center strong {
-      display: block;
-      color: var(--gold-2);
-      font-size: 1.05rem;
-    }
-
-    .orbit-center span {
-      display: block;
-      margin-top: 0.35rem;
-      color: var(--muted);
-      font-size: 0.82rem;
-    }
-
-    .orbit-node {
-      position: absolute;
-      z-index: 3;
-      display: grid;
-      place-items: center;
-      width: 122px;
-      min-height: 78px;
-      padding: 0.62rem;
-      border: 1px solid rgba(255, 255, 255, 0.13);
-      border-radius: 18px;
-      color: var(--text);
-      background: rgba(5, 9, 19, 0.74);
-      text-align: center;
-      font-size: 0.78rem;
-      font-weight: 800;
-      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.25);
-    }
-
-    .orbit-node svg {
-      width: 34px;
-      height: 34px;
-      margin-bottom: 0.24rem;
-    }
-
-    .orbit-node:nth-of-type(2) { left: 5%; top: 12%; }
-    .orbit-node:nth-of-type(3) { left: 23%; top: 5%; }
-    .orbit-node:nth-of-type(4) { right: 23%; top: 5%; }
-    .orbit-node:nth-of-type(5) { right: 5%; top: 12%; }
-    .orbit-node:nth-of-type(6) { left: 10%; bottom: 11%; }
-    .orbit-node:nth-of-type(7) { left: 31%; bottom: 5%; }
-    .orbit-node:nth-of-type(8) { right: 31%; bottom: 5%; }
-    .orbit-node:nth-of-type(9) { right: 10%; bottom: 11%; }
-
-    @media (prefers-reduced-motion: no-preference) {
-      .catalog-orbit::before {
-        animation: orbitBreathA 13s ease-in-out infinite;
-      }
-
-      .catalog-orbit::after {
-        animation: orbitBreathB 15s ease-in-out infinite;
-      }
-
-      .orbit-node {
-        animation: nodeFloat 7s ease-in-out infinite;
-      }
-
-      .orbit-node:nth-of-type(odd) {
-        animation-delay: -2s;
-      }
-    }
-
-    @keyframes orbitBreathA {
-      0%, 100% { transform: translateY(-50%) rotate(12deg) scaleX(1); opacity: 0.76; }
-      50% { transform: translateY(-50%) rotate(9deg) scaleX(1.04); opacity: 1; }
-    }
-
-    @keyframes orbitBreathB {
-      0%, 100% { transform: translateY(-50%) rotate(-12deg) scaleX(1); opacity: 0.72; }
-      50% { transform: translateY(-50%) rotate(-9deg) scaleX(1.05); opacity: 0.96; }
-    }
-
-    @keyframes nodeFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-7px); }
-    }
-
-    .return-strip {
-      margin: 1.25rem 0;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 0.65rem;
-    }
-
-    .return-link {
-      color: var(--gold-2);
-      border-color: rgba(241, 199, 107, 0.35);
-      background: rgba(241, 199, 107, 0.07);
-      font-weight: 800;
-    }
-
-    .return-link small {
-      color: var(--muted);
-      font-weight: 650;
-      margin-left: 0.35rem;
-    }
-
-    .content-section {
-      margin-top: 2rem;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-xl);
+    .hero::after{
+      content:"";
+      position:absolute;
+      right:clamp(1.2rem,7vw,5.5rem);
+      top:50%;
+      z-index:-1;
+      width:clamp(12rem,28vw,22rem);
+      height:clamp(12rem,28vw,22rem);
+      border:1px solid rgba(243,200,111,.18);
+      border-radius:50%;
+      transform:translateY(-50%);
       background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.025)),
-        rgba(5, 9, 19, 0.58);
-      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.18);
-      padding: clamp(1.1rem, 2.8vw, 2rem);
+        radial-gradient(circle at 50% 50%,rgba(255,232,163,.13),transparent 38%),
+        conic-gradient(from 0deg,rgba(243,200,111,.10),rgba(141,216,255,.10),rgba(255,255,255,.04),rgba(243,200,111,.10));
+      box-shadow:inset 0 0 3rem rgba(141,216,255,.06),0 0 4rem rgba(0,0,0,.18);
+      opacity:.65;
     }
 
-    .category-diamond-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 1rem;
-      margin-top: 1.4rem;
+    .kicker{
+      width:fit-content;
+      display:inline-flex;
+      align-items:center;
+      gap:.55rem;
+      padding:.55rem .9rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      color:rgba(230,238,255,.86);
+      background:rgba(255,255,255,.04);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
     }
 
-    .category-diamond {
-      display: grid;
-      gap: 0.7rem;
-      align-content: start;
-      min-height: 212px;
-      padding: 1rem;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 24px;
+    .kicker::before{
+      content:"";
+      width:.7rem;
+      height:.7rem;
+      border-radius:.18rem;
+      transform:rotate(45deg);
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+      box-shadow:0 0 1rem rgba(243,200,111,.45);
+    }
+
+    h1{
+      margin:0;
+      max-width:980px;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(3.35rem,9vw,7.15rem);
+      line-height:.86;
+      letter-spacing:-.07em;
+      text-wrap:balance;
+    }
+
+    h2{
+      margin:0;
+      color:var(--gold);
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(1.6rem,4vw,2.75rem);
+      line-height:1;
+      letter-spacing:-.055em;
+      text-wrap:balance;
+    }
+
+    p{
+      margin:0;
+      max-width:920px;
+      color:var(--muted);
+      font-size:clamp(.98rem,2.6vw,1.12rem);
+      line-height:1.62;
+    }
+
+    .lead{
+      max-width:960px;
+      color:rgba(232,240,255,.84);
+      font-size:clamp(1.04rem,2.8vw,1.25rem);
+    }
+
+    .truth-card{
+      max-width:980px;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(243,200,111,.24);
+      border-radius:1.15rem;
+      color:rgba(255,244,216,.94);
       background:
-        radial-gradient(circle at 50% 0%, rgba(241, 199, 107, 0.11), transparent 70%),
-        rgba(255, 255, 255, 0.035);
-      transition:
-        transform 180ms ease,
-        border-color 180ms ease,
-        background 180ms ease;
+        radial-gradient(circle at 12% 0%,rgba(243,200,111,.12),transparent 22rem),
+        rgba(243,200,111,.055);
+      font-weight:850;
+      font-size:clamp(1rem,2.6vw,1.16rem);
     }
 
-    .category-diamond:hover {
-      transform: translateY(-2px);
-      border-color: rgba(241, 199, 107, 0.38);
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.62rem;
+      margin-top:.2rem;
+    }
+
+    .button,
+    .return-chip{
+      min-height:2.65rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:.66rem 1rem;
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:999px;
+      color:rgba(241,246,255,.88);
+      background:rgba(255,255,255,.045);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .button:hover,
+    .button:focus-visible,
+    .return-chip:hover,
+    .return-chip:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.60);
+      outline:none;
+    }
+
+    .button.gold,
+    .return-chip.gold{
+      border-color:rgba(243,200,111,.88);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .lens-radio,
+    .card-radio{
+      position:absolute;
+      opacity:0;
+      pointer-events:none;
+    }
+
+    .page-platform,
+    .page-engineering{display:none}
+
+    #lens-platform:checked ~ .lens-scope .page-platform{display:block}
+    #lens-engineering:checked ~ .lens-scope .page-engineering{display:block}
+
+    .lens-toggle{
+      display:grid;
+      gap:.8rem;
+      margin-top:1rem;
+      padding:1rem;
+    }
+
+    .toggle-row,
+    .local-toggle-row{
+      width:fit-content;
+      display:flex;
+      flex-wrap:wrap;
+      gap:.45rem;
+      padding:.38rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      background:rgba(255,255,255,.04);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .toggle-label,
+    .local-toggle-label{
+      min-height:2.42rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:.58rem .9rem;
+      border:1px solid transparent;
+      border-radius:999px;
+      color:rgba(232,240,255,.78);
+      cursor:pointer;
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      user-select:none;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease,color .18s ease;
+    }
+
+    .local-toggle-label{
+      min-height:2.2rem;
+      padding:.5rem .78rem;
+      font-size:.66rem;
+    }
+
+    .toggle-label:hover,
+    .local-toggle-label:hover{
+      transform:translateY(-1px);
+      border-color:rgba(243,200,111,.36);
+    }
+
+    #lens-platform:checked ~ .lens-scope .toggle-label[for="lens-platform"],
+    #lens-engineering:checked ~ .lens-scope .toggle-label[for="lens-engineering"],
+    #authority-route-platform:checked ~ .card-lens-scope .local-toggle-label[for="authority-route-platform"],
+    #authority-route-engineering:checked ~ .card-lens-scope .local-toggle-label[for="authority-route-engineering"],
+    #proof-receipt-platform:checked ~ .card-lens-scope .local-toggle-label[for="proof-receipt-platform"],
+    #proof-receipt-engineering:checked ~ .card-lens-scope .local-toggle-label[for="proof-receipt-engineering"],
+    #runtime-animation-platform:checked ~ .card-lens-scope .local-toggle-label[for="runtime-animation-platform"],
+    #runtime-animation-engineering:checked ~ .card-lens-scope .local-toggle-label[for="runtime-animation-engineering"],
+    #generation-visual-platform:checked ~ .card-lens-scope .local-toggle-label[for="generation-visual-platform"],
+    #generation-visual-engineering:checked ~ .card-lens-scope .local-toggle-label[for="generation-visual-engineering"],
+    #human-interaction-platform:checked ~ .card-lens-scope .local-toggle-label[for="human-interaction-platform"],
+    #human-interaction-engineering:checked ~ .card-lens-scope .local-toggle-label[for="human-interaction-engineering"],
+    #access-return-platform:checked ~ .card-lens-scope .local-toggle-label[for="access-return-platform"],
+    #access-return-engineering:checked ~ .card-lens-scope .local-toggle-label[for="access-return-engineering"],
+    #product-foreground-platform:checked ~ .card-lens-scope .local-toggle-label[for="product-foreground-platform"],
+    #product-foreground-engineering:checked ~ .card-lens-scope .local-toggle-label[for="product-foreground-engineering"],
+    #scope-stale-platform:checked ~ .card-lens-scope .local-toggle-label[for="scope-stale-platform"],
+    #scope-stale-engineering:checked ~ .card-lens-scope .local-toggle-label[for="scope-stale-engineering"]{
+      color:#060811;
+      border-color:rgba(243,200,111,.88);
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .card-platform,
+    .card-engineering{display:none}
+
+    #authority-route-platform:checked ~ .card-lens-scope .card-platform,
+    #proof-receipt-platform:checked ~ .card-lens-scope .card-platform,
+    #runtime-animation-platform:checked ~ .card-lens-scope .card-platform,
+    #generation-visual-platform:checked ~ .card-lens-scope .card-platform,
+    #human-interaction-platform:checked ~ .card-lens-scope .card-platform,
+    #access-return-platform:checked ~ .card-lens-scope .card-platform,
+    #product-foreground-platform:checked ~ .card-lens-scope .card-platform,
+    #scope-stale-platform:checked ~ .card-lens-scope .card-platform{display:grid}
+
+    #authority-route-engineering:checked ~ .card-lens-scope .card-engineering,
+    #proof-receipt-engineering:checked ~ .card-lens-scope .card-engineering,
+    #runtime-animation-engineering:checked ~ .card-lens-scope .card-engineering,
+    #generation-visual-engineering:checked ~ .card-lens-scope .card-engineering,
+    #human-interaction-engineering:checked ~ .card-lens-scope .card-engineering,
+    #access-return-engineering:checked ~ .card-lens-scope .card-engineering,
+    #product-foreground-engineering:checked ~ .card-lens-scope .card-engineering,
+    #scope-stale-engineering:checked ~ .card-lens-scope .card-engineering{display:grid}
+
+    .section{
+      display:grid;
+      gap:1rem;
+      margin-top:1rem;
+      padding:clamp(1.1rem,3.2vw,1.6rem);
+    }
+
+    .section-header{
+      display:grid;
+      gap:.7rem;
+      max-width:980px;
+    }
+
+    .gem-stage{
+      position:relative;
+      display:grid;
+      gap:1rem;
+      padding:clamp(1rem,3vw,1.5rem);
+      border:1px solid rgba(184,205,255,.14);
+      border-radius:clamp(1.35rem,4vw,2rem);
       background:
-        radial-gradient(circle at 50% 0%, rgba(241, 199, 107, 0.16), transparent 70%),
-        rgba(255, 255, 255, 0.052);
+        radial-gradient(circle at 50% 42%,rgba(141,216,255,.12),transparent 22rem),
+        radial-gradient(circle at 50% 84%,rgba(243,200,111,.08),transparent 30rem),
+        linear-gradient(180deg,rgba(1,5,16,.62),rgba(2,6,16,.92));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      overflow:hidden;
+      isolation:isolate;
     }
 
-    .category-diamond svg {
-      width: 62px;
-      height: 62px;
-      filter: drop-shadow(0 0 18px rgba(241, 199, 107, 0.2));
+    .orbit-section{overflow:visible}
+
+    .orbit-wrap{
+      display:grid;
+      place-items:center;
+      padding:clamp(3.75rem,7vw,6.25rem);
+      overflow:visible;
     }
 
-    .category-diamond strong {
-      display: block;
-      color: var(--gold-2);
-      font-size: 1.02rem;
-      line-height: 1.15;
+    .orbit-stage{
+      --orbit-size:min(100%,56rem);
+      position:relative;
+      width:var(--orbit-size);
+      aspect-ratio:1/1;
+      max-width:56rem;
+      min-width:20rem;
+      overflow:visible;
+      border:1px solid rgba(243,200,111,.18);
+      border-radius:2.2rem;
+      background:
+        radial-gradient(circle at 50% 48%,rgba(243,200,111,.13),transparent 18rem),
+        radial-gradient(circle at 50% 48%,rgba(141,216,255,.12),transparent 28rem),
+        linear-gradient(180deg,rgba(1,5,16,.60),rgba(2,6,16,.94));
+      isolation:isolate;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.06),
+        0 1.2rem 3.5rem rgba(0,0,0,.22);
     }
 
-    .category-diamond span {
-      color: var(--muted);
-      font-size: 0.88rem;
+    .orbit-stage::before{
+      content:"";
+      position:absolute;
+      inset:clamp(1rem,2.5vw,2.35rem);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:1.7rem;
+      pointer-events:none;
     }
 
-    .category-diamond small {
-      color: var(--soft);
-      font-size: 0.75rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    .orbit-ring,
+    .orbit-track{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:70%;
+      height:70%;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      transform-origin:50% 50%;
+      pointer-events:none;
     }
 
-    .route-grid,
-    .definition-grid,
-    .category-card-grid {
-      display: grid;
-      gap: 1rem;
-      margin-top: 1.4rem;
+    .orbit-ring{
+      border:1px solid rgba(243,200,111,.22);
+      box-shadow:
+        inset 0 0 3rem rgba(243,200,111,.05),
+        0 0 3rem rgba(0,0,0,.18);
     }
 
-    .route-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+    .orbit-ring.inner{
+      width:46%;
+      height:46%;
+      border-color:rgba(141,216,255,.16);
     }
 
-    .definition-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    .orbit-track{
+      --orbit-r:min(19.15rem,32vw);
+      animation:orbitSpin var(--orbit-duration) linear infinite;
+      z-index:3;
     }
 
-    .category-card-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    @keyframes orbitSpin{
+      from{transform:translate(-50%,-50%) rotate(0deg)}
+      to{transform:translate(-50%,-50%) rotate(360deg)}
     }
 
-    .route-card,
-    .definition-card,
-    .category-card {
-      border: 1px solid var(--line-2);
-      border-radius: 24px;
-      background: rgba(255, 255, 255, 0.04);
-      padding: 1rem;
+    .orbit-center{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:4;
+      width:clamp(8.8rem,18vw,13.25rem);
+      min-height:clamp(6.5rem,12vw,9.7rem);
+      display:grid;
+      place-items:center;
+      padding:1rem;
+      border:1px solid rgba(243,200,111,.30);
+      border-radius:1.25rem;
+      transform:translate(-50%,-50%);
+      background:
+        radial-gradient(circle at 50% 20%,rgba(255,232,163,.14),transparent 62%),
+        rgba(255,255,255,.05);
+      text-align:center;
+      box-shadow:0 1rem 2.4rem rgba(0,0,0,.28);
     }
 
-    .route-card {
-      min-height: 160px;
-      display: grid;
-      gap: 0.65rem;
-      align-content: start;
+    .orbit-center b{
+      color:var(--gold);
+      font-size:.9rem;
+      font-weight:950;
+      letter-spacing:.13em;
+      text-transform:uppercase;
     }
 
-    .route-card svg,
-    .definition-card svg {
-      width: 48px;
-      height: 48px;
+    .orbit-center span{
+      color:var(--muted);
+      font-size:.86rem;
+      line-height:1.28;
     }
 
-    .route-card strong,
-    .definition-card strong,
-    .category-card h3 {
-      color: var(--gold-2);
+    .orbit-diamond{
+      --a:0deg;
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:5;
+      width:clamp(6.35rem,11.2vw,8.75rem);
+      height:clamp(4.8rem,8.45vw,6.65rem);
+      display:grid;
+      place-items:center;
+      transform:
+        translate(-50%,-50%)
+        rotate(var(--a))
+        translateY(calc(-1 * var(--orbit-r)))
+        rotate(calc(-1 * var(--a)));
+      pointer-events:auto;
+      transition:filter .18s ease;
     }
 
-    .route-card p,
-    .definition-card p,
-    .category-card p {
-      color: var(--muted);
-      margin: 0.55rem 0 0;
+    .orbit-face{
+      position:relative;
+      width:100%;
+      height:100%;
+      display:grid;
+      place-items:center;
+      animation:counterOrbit var(--orbit-duration) linear infinite;
+      transform-origin:50% 50%;
+      transition:filter .18s ease,scale .18s ease;
     }
 
-    .category-card {
-      display: grid;
-      gap: 0.9rem;
+    .orbit-diamond:hover .orbit-face,
+    .orbit-diamond:focus-visible .orbit-face{
+      filter:brightness(1.18) saturate(1.05);
+      scale:1.05;
+      outline:none;
     }
 
-    .category-card-head {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 0.85rem;
-      align-items: center;
+    @keyframes counterOrbit{
+      from{transform:rotate(0deg)}
+      to{transform:rotate(-360deg)}
     }
 
-    .category-card-head svg {
-      width: 54px;
-      height: 54px;
+    .large-law-field{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:clamp(.9rem,2vw,1.15rem);
+      align-items:stretch;
     }
 
-    .category-card h3 {
-      margin: 0;
-      font-size: 1.18rem;
+    .large-law-diamond{
+      position:relative;
+      min-height:clamp(10.2rem,18vw,13.2rem);
+      display:grid;
+      place-items:center;
+      text-align:center;
+      border:1px solid rgba(232,248,255,.16);
+      border-radius:1.35rem;
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.07),transparent 52%),
+        rgba(255,255,255,.025);
+      overflow:hidden;
+      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
     }
 
-    .category-card .tag-line {
-      color: var(--soft);
-      font-size: 0.82rem;
-      margin-top: 0.2rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+    .large-law-diamond:hover,
+    .large-law-diamond:focus-visible{
+      transform:translateY(-4px);
+      border-color:rgba(232,248,255,.46);
+      filter:brightness(1.12) saturate(1.06);
+      outline:none;
     }
 
-    .local-toggle {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.45rem;
+    .gem-core{
+      position:absolute;
+      inset:8% 5%;
+      display:grid;
+      place-items:center;
+      animation:gemBreathe var(--gem-breathe-duration) ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+      transform-origin:50% 50%;
+      pointer-events:none;
     }
 
-    .local-copy {
-      display: none;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 18px;
-      padding: 0.85rem;
-      background: rgba(0, 0, 0, 0.13);
-      color: var(--muted);
+    .large-law-diamond .gem-core{inset:4% 2%}
+    .orbit-diamond .gem-core{inset:0}
+
+    @keyframes gemBreathe{
+      0%,100%{transform:translateY(0) rotate(var(--tilt-a,-1.6deg)) scale(1);filter:brightness(1)}
+      50%{transform:translateY(-.26rem) rotate(var(--tilt-b,2deg)) scale(1.025);filter:brightness(1.13)}
     }
 
-    #cat1-platform:checked ~ .category-card-grid label[for="cat1-platform"],
-    #cat1-engineering:checked ~ .category-card-grid label[for="cat1-engineering"],
-    #cat2-platform:checked ~ .category-card-grid label[for="cat2-platform"],
-    #cat2-engineering:checked ~ .category-card-grid label[for="cat2-engineering"],
-    #cat3-platform:checked ~ .category-card-grid label[for="cat3-platform"],
-    #cat3-engineering:checked ~ .category-card-grid label[for="cat3-engineering"],
-    #cat4-platform:checked ~ .category-card-grid label[for="cat4-platform"],
-    #cat4-engineering:checked ~ .category-card-grid label[for="cat4-engineering"],
-    #cat5-platform:checked ~ .category-card-grid label[for="cat5-platform"],
-    #cat5-engineering:checked ~ .category-card-grid label[for="cat5-engineering"],
-    #cat6-platform:checked ~ .category-card-grid label[for="cat6-platform"],
-    #cat6-engineering:checked ~ .category-card-grid label[for="cat6-engineering"],
-    #cat7-platform:checked ~ .category-card-grid label[for="cat7-platform"],
-    #cat7-engineering:checked ~ .category-card-grid label[for="cat7-engineering"],
-    #cat8-platform:checked ~ .category-card-grid label[for="cat8-platform"],
-    #cat8-engineering:checked ~ .category-card-grid label[for="cat8-engineering"],
-    #cat9-platform:checked ~ .category-card-grid label[for="cat9-platform"],
-    #cat9-engineering:checked ~ .category-card-grid label[for="cat9-engineering"],
-    #cat10-platform:checked ~ .category-card-grid label[for="cat10-platform"],
-    #cat10-engineering:checked ~ .category-card-grid label[for="cat10-engineering"],
-    #cat11-platform:checked ~ .category-card-grid label[for="cat11-platform"],
-    #cat11-engineering:checked ~ .category-card-grid label[for="cat11-engineering"],
-    #cat12-platform:checked ~ .category-card-grid label[for="cat12-platform"],
-    #cat12-engineering:checked ~ .category-card-grid label[for="cat12-engineering"],
-    #cat13-platform:checked ~ .category-card-grid label[for="cat13-platform"],
-    #cat13-engineering:checked ~ .category-card-grid label[for="cat13-engineering"],
-    #cat14-platform:checked ~ .category-card-grid label[for="cat14-platform"],
-    #cat14-engineering:checked ~ .category-card-grid label[for="cat14-engineering"],
-    #cat15-platform:checked ~ .category-card-grid label[for="cat15-platform"],
-    #cat15-engineering:checked ~ .category-card-grid label[for="cat15-engineering"],
-    #cat16-platform:checked ~ .category-card-grid label[for="cat16-platform"],
-    #cat16-engineering:checked ~ .category-card-grid label[for="cat16-engineering"] {
-      color: #07101f;
-      border-color: transparent;
-      background: linear-gradient(135deg, var(--gold-2), var(--gold));
+    .gem-svg{
+      width:100%;
+      height:100%;
+      overflow:visible;
+      pointer-events:none;
+      filter:
+        drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
+        drop-shadow(0 0 1.15rem rgba(36,120,255,.18))
+        drop-shadow(0 0 .55rem rgba(243,200,111,.10));
     }
 
-    #cat1-platform:checked ~ .category-card-grid .cat1 .platform-copy,
-    #cat1-engineering:checked ~ .category-card-grid .cat1 .engineering-copy,
-    #cat2-platform:checked ~ .category-card-grid .cat2 .platform-copy,
-    #cat2-engineering:checked ~ .category-card-grid .cat2 .engineering-copy,
-    #cat3-platform:checked ~ .category-card-grid .cat3 .platform-copy,
-    #cat3-engineering:checked ~ .category-card-grid .cat3 .engineering-copy,
-    #cat4-platform:checked ~ .category-card-grid .cat4 .platform-copy,
-    #cat4-engineering:checked ~ .category-card-grid .cat4 .engineering-copy,
-    #cat5-platform:checked ~ .category-card-grid .cat5 .platform-copy,
-    #cat5-engineering:checked ~ .category-card-grid .cat5 .engineering-copy,
-    #cat6-platform:checked ~ .category-card-grid .cat6 .platform-copy,
-    #cat6-engineering:checked ~ .category-card-grid .cat6 .engineering-copy,
-    #cat7-platform:checked ~ .category-card-grid .cat7 .platform-copy,
-    #cat7-engineering:checked ~ .category-card-grid .cat7 .engineering-copy,
-    #cat8-platform:checked ~ .category-card-grid .cat8 .platform-copy,
-    #cat8-engineering:checked ~ .category-card-grid .cat8 .engineering-copy,
-    #cat9-platform:checked ~ .category-card-grid .cat9 .platform-copy,
-    #cat9-engineering:checked ~ .category-card-grid .cat9 .engineering-copy,
-    #cat10-platform:checked ~ .category-card-grid .cat10 .platform-copy,
-    #cat10-engineering:checked ~ .category-card-grid .cat10 .engineering-copy,
-    #cat11-platform:checked ~ .category-card-grid .cat11 .platform-copy,
-    #cat11-engineering:checked ~ .category-card-grid .cat11 .engineering-copy,
-    #cat12-platform:checked ~ .category-card-grid .cat12 .platform-copy,
-    #cat12-engineering:checked ~ .category-card-grid .cat12 .engineering-copy,
-    #cat13-platform:checked ~ .category-card-grid .cat13 .platform-copy,
-    #cat13-engineering:checked ~ .category-card-grid .cat13 .engineering-copy,
-    #cat14-platform:checked ~ .category-card-grid .cat14 .platform-copy,
-    #cat14-engineering:checked ~ .category-card-grid .cat14 .engineering-copy,
-    #cat15-platform:checked ~ .category-card-grid .cat15 .platform-copy,
-    #cat15-engineering:checked ~ .category-card-grid .cat15 .engineering-copy,
-    #cat16-platform:checked ~ .category-card-grid .cat16 .platform-copy,
-    #cat16-engineering:checked ~ .category-card-grid .cat16 .engineering-copy {
-      display: block;
+    .gem-glint{
+      animation:gemGlint 8.5s ease-in-out infinite;
+      transform-origin:110px 80px;
     }
 
-    .proof-list {
-      display: grid;
-      gap: 0.75rem;
-      margin: 1.25rem 0 0;
-      padding: 0;
-      list-style: none;
+    .gem-star{
+      animation:gemFacetTurn 30s linear infinite;
+      transform-origin:110px 80px;
     }
 
-    .proof-list li {
-      padding: 0.82rem 0.95rem;
-      border: 1px solid var(--line-2);
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.035);
-      color: var(--muted);
+    @keyframes gemGlint{
+      0%,100%{opacity:.07;transform:translateX(-36px)}
+      48%,55%{opacity:.56;transform:translateX(34px)}
     }
 
-    .proof-list strong {
-      color: var(--gold-2);
+    @keyframes gemFacetTurn{
+      to{transform:rotate(360deg)}
     }
 
-    .receipt {
-      margin-top: 2rem;
-      padding: 1rem;
-      border: 1px solid rgba(155, 231, 178, 0.22);
-      border-radius: 22px;
-      background: rgba(155, 231, 178, 0.055);
-      color: var(--muted);
-      font-size: 0.9rem;
+    .gem-label{
+      position:relative;
+      z-index:3;
+      width:84%;
+      display:grid;
+      place-items:center;
+      gap:.2rem;
+      text-align:center;
+      pointer-events:none;
+      text-shadow:
+        0 3px 14px rgba(0,0,0,.98),
+        0 0 12px rgba(0,28,90,.88),
+        0 0 3px rgba(255,255,255,.58);
     }
 
-    .receipt strong {
-      color: var(--green);
+    .large-law-diamond .gem-label b{
+      display:block;
+      color:rgba(255,244,216,.99);
+      font-size:clamp(.82rem,1.9vw,1.16rem);
+      font-weight:950;
+      letter-spacing:.065em;
+      line-height:1.02;
+      text-transform:uppercase;
     }
 
-    .site-footer {
-      margin-top: 2rem;
-      padding: 1.25rem;
-      border: 1px solid var(--line-2);
-      border-radius: 24px;
-      background: rgba(255, 255, 255, 0.03);
-      color: var(--muted);
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1rem;
+    .large-law-diamond .gem-label span{
+      color:rgba(230,238,255,.88);
+      font-size:clamp(.50rem,1.12vw,.70rem);
+      font-weight:950;
+      letter-spacing:.065em;
+      line-height:1.08;
+      text-transform:uppercase;
     }
 
-    .site-footer a {
-      color: var(--gold-2);
+    .orbit-diamond .gem-label{
+      width:92%;
+      max-width:7.2rem;
+      min-height:2.18rem;
+      display:grid;
+      place-items:center;
+      gap:.04rem;
+      padding:.34rem .42rem;
+      border:1px solid rgba(255,255,255,.20);
+      border-radius:999px;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,255,255,.12),transparent 70%),
+        rgba(2,6,16,.74);
+      box-shadow:
+        0 .45rem 1rem rgba(0,0,0,.50),
+        inset 0 1px 0 rgba(255,255,255,.12),
+        inset 0 0 1.2rem rgba(141,216,255,.08);
+      color:#fff8e7;
+      text-shadow:
+        0 3px 10px rgba(0,0,0,1),
+        0 0 9px rgba(0,0,0,.98),
+        0 0 3px rgba(255,255,255,.42);
+      backdrop-filter:blur(2px);
     }
 
-    .gem-stroke {
-      stroke: rgba(255, 255, 255, 0.72);
-      stroke-width: 1.2;
-      vector-effect: non-scaling-stroke;
+    .orbit-diamond .gem-label b{
+      display:block;
+      color:#fff8e7;
+      font-size:clamp(.76rem,1.2vw,.96rem);
+      font-weight:1000;
+      letter-spacing:.018em;
+      line-height:.96;
+      text-transform:uppercase;
+      white-space:nowrap;
     }
 
-    .gem-line {
-      stroke: rgba(255, 255, 255, 0.46);
-      stroke-width: 0.9;
-      vector-effect: non-scaling-stroke;
+    .orbit-diamond .gem-label span{
+      display:block;
+      color:rgba(235,246,255,.96);
+      font-size:clamp(.52rem,.88vw,.68rem);
+      font-weight:950;
+      letter-spacing:.018em;
+      line-height:1;
+      text-transform:uppercase;
+      white-space:nowrap;
     }
 
-    .gem-glint {
-      fill: rgba(255, 255, 255, 0.78);
+    .return-row{
+      display:flex;
+      justify-content:flex-end;
+      margin-top:.15rem;
     }
 
-    @media (max-width: 980px) {
-      .hero-grid,
-      .definition-grid,
-      .category-card-grid,
-      .route-grid {
-        grid-template-columns: 1fr;
+    .law-summary-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.9rem;
+    }
+
+    .law-summary-card{
+      position:relative;
+      display:grid;
+      gap:.8rem;
+      padding:1.05rem;
+      border:1px solid rgba(232,248,255,.14);
+      border-radius:1.15rem;
+      background:
+        radial-gradient(circle at 18% 0%,rgba(232,248,255,.08),transparent 22rem),
+        rgba(255,255,255,.032);
+      scroll-margin-top:1rem;
+    }
+
+    .law-summary-card > b{
+      width:fit-content;
+      padding:.36rem .55rem;
+      border:1px solid rgba(243,200,111,.24);
+      border-radius:999px;
+      color:var(--gold);
+      background:rgba(243,200,111,.05);
+      font-size:.65rem;
+      font-weight:950;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .law-summary-card strong{
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.05rem,2.3vw,1.26rem);
+      line-height:1.08;
+    }
+
+    .card-lens-scope{
+      display:grid;
+      gap:.8rem;
+    }
+
+    .definition{
+      gap:.8rem;
+      padding:.9rem;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:1rem;
+      background:rgba(2,6,16,.30);
+    }
+
+    .definition p{
+      font-size:.95rem;
+      line-height:1.55;
+    }
+
+    .mini-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.7rem;
+    }
+
+    .mini-box{
+      display:grid;
+      gap:.35rem;
+      padding:.75rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:.85rem;
+      background:rgba(255,255,255,.035);
+    }
+
+    .mini-box h4{
+      margin:0;
+      color:var(--gold);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .mini-box ul{
+      margin:0;
+      padding-left:1rem;
+      color:rgba(232,240,255,.78);
+      font-size:.86rem;
+      line-height:1.45;
+    }
+
+    .mini-box li{margin:.22rem 0}
+
+    .audit-question{
+      padding:.75rem .85rem;
+      border:1px solid rgba(141,216,255,.18);
+      border-radius:.9rem;
+      color:rgba(235,246,255,.92);
+      background:rgba(141,216,255,.055);
+      font-size:.9rem;
+      line-height:1.45;
+    }
+
+    .audit-question span{
+      display:block;
+      margin-bottom:.2rem;
+      color:var(--gold);
+      font-size:.66rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .law-summary-card .return-chip{
+      width:fit-content;
+      min-height:2.25rem;
+      padding:.5rem .72rem;
+      font-size:.62rem;
+      margin-top:.15rem;
+    }
+
+    .branch{
+      padding:1rem;
+      border:1px solid rgba(243,200,111,.28);
+      border-radius:1.2rem;
+      background:
+        radial-gradient(circle at 10% 0%,rgba(243,200,111,.12),transparent 22rem),
+        rgba(243,200,111,.045);
+    }
+
+    .branch strong{
+      display:block;
+      margin-bottom:.5rem;
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.05rem,2.8vw,1.35rem);
+      line-height:1.1;
+    }
+
+    .receipt,
+    [data-route-receipt]{
+      display:none!important;
+      visibility:hidden!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
+      overflow:hidden!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      position:absolute!important;
+      clip-path:inset(50%)!important;
+      white-space:nowrap!important;
+    }
+
+    footer{
+      padding:1.25rem 0 .35rem;
+      color:var(--soft);
+      text-align:center;
+      font-size:.76rem;
+    }
+
+    @media (max-width:1080px){
+      .large-law-field{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .law-summary-grid{grid-template-columns:1fr}
+    }
+
+    @media (max-width:860px){
+      .topbar{grid-template-columns:1fr}
+      .nav{justify-content:flex-start}
+      .orbit-wrap{padding:4rem .9rem}
+      .orbit-stage{width:min(100%,35rem);min-width:20rem}
+      .orbit-track{--orbit-r:min(11.5rem,34vw)}
+      .orbit-diamond{width:clamp(5.2rem,17.2vw,6.25rem);height:clamp(3.94rem,13vw,4.72rem)}
+      .orbit-diamond .gem-label{max-width:5.4rem;min-height:1.9rem;padding:.30rem .35rem}
+      .orbit-diamond .gem-label b{font-size:clamp(.58rem,1.95vw,.72rem);letter-spacing:.01em}
+      .orbit-diamond .gem-label span{font-size:clamp(.40rem,1.32vw,.48rem)}
+      .orbit-center{width:8rem;min-height:6rem}
+      .orbit-center b{font-size:.68rem}
+      .orbit-center span{font-size:.65rem}
+    }
+
+    @media (max-width:640px){
+      .shell{width:min(var(--max),calc(100% - 20px))}
+      .topbar{padding:.72rem;border-radius:1.05rem}
+      .hero{min-height:31rem;padding:1rem}
+      .hero::after{opacity:.36;right:-4rem}
+      h1{font-size:clamp(3rem,16vw,5.15rem)}
+      .actions{display:grid}
+      .button{width:100%}
+      .toggle-row,.local-toggle-row{width:100%;display:grid;grid-template-columns:1fr 1fr;border-radius:1rem}
+      .toggle-label,.local-toggle-label{border-radius:.8rem}
+      .section{padding:1rem}
+      .gem-stage{padding:1rem}
+      .large-law-field{grid-template-columns:1fr}
+      .return-row{justify-content:stretch}
+      .return-row .return-chip{width:100%}
+      .mini-grid{grid-template-columns:1fr}
+    }
+
+    @media (max-width:430px){
+      .orbit-wrap{padding:3.65rem .35rem}
+      .orbit-stage{width:min(100%,24.75rem);min-width:20rem}
+      .orbit-track{--orbit-r:8.55rem}
+      .orbit-diamond{width:4.55rem;height:3.45rem}
+      .orbit-diamond .gem-label{width:96%;max-width:4.35rem;min-height:1.66rem;padding:.24rem .25rem}
+      .orbit-diamond .gem-label b{font-size:.49rem;letter-spacing:0}
+      .orbit-diamond .gem-label span{display:none}
+      .orbit-center{width:6.7rem;min-height:5.15rem;padding:.65rem}
+      .orbit-center b{font-size:.56rem}
+      .orbit-center span{font-size:.56rem}
+    }
+
+    @media (max-width:360px){
+      .orbit-stage{width:22.9rem;transform:translateX(-.25rem)}
+      .orbit-track{--orbit-r:7.95rem}
+      .orbit-diamond{width:4.25rem;height:3.22rem}
+      .orbit-diamond .gem-label{max-width:4.05rem}
+      .orbit-diamond .gem-label b{font-size:.45rem}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *,
+      *::before,
+      *::after{
+        scroll-behavior:auto!important;
+        transition-duration:.01ms!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
       }
 
-      .category-diamond-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .catalog-orbit {
-        min-height: 520px;
-      }
-
-      .orbit-node {
-        width: 42%;
-      }
-
-      .orbit-node:nth-of-type(2) { left: 5%; top: 5%; }
-      .orbit-node:nth-of-type(3) { right: 5%; left: auto; top: 5%; }
-      .orbit-node:nth-of-type(4) { left: 5%; top: 21%; right: auto; }
-      .orbit-node:nth-of-type(5) { right: 5%; top: 21%; }
-      .orbit-node:nth-of-type(6) { left: 5%; bottom: 21%; }
-      .orbit-node:nth-of-type(7) { right: 5%; left: auto; bottom: 21%; }
-      .orbit-node:nth-of-type(8) { left: 5%; right: auto; bottom: 5%; }
-      .orbit-node:nth-of-type(9) { right: 5%; bottom: 5%; }
-
-      .orbit-center {
-        top: 50%;
-      }
-    }
-
-    @media (max-width: 620px) {
-      .site-shell {
-        width: min(100% - 1rem, var(--max));
-      }
-
-      .top-rail {
-        margin-left: -0.5rem;
-        margin-right: -0.5rem;
-      }
-
-      .category-diamond-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .nav-links {
-        justify-content: flex-start;
-      }
-
-      .hero,
-      .content-section,
-      .catalog-orbit-wrap {
-        border-radius: 24px;
-      }
-
-      h1 {
-        font-size: clamp(2.35rem, 15vw, 4rem);
+      .orbit-track,
+      .orbit-face,
+      .gem-core,
+      .gem-glint,
+      .gem-star{
+        animation:none!important;
       }
     }
   </style>
 </head>
 
 <body>
-  <input id="page-platform" name="page-mode" type="radio" checked />
-  <input id="page-engineering" name="page-mode" type="radio" />
-
-  <a class="skip-link" href="#main">Skip to category catalog</a>
-
-  <div class="site-shell">
-    <header class="top-rail" aria-label="Primary navigation">
-      <div class="top-rail-inner">
-        <a class="brand" href="/">
-          <svg class="brand-mark" viewBox="0 0 100 100" aria-hidden="true">
-            <defs>
-              <linearGradient id="brandGem" x1="0" x2="1" y1="0" y2="1">
-                <stop offset="0%" stop-color="#fffaf0" />
-                <stop offset="45%" stop-color="#f1c76b" />
-                <stop offset="100%" stop-color="#6fb6ff" />
-              </linearGradient>
-            </defs>
-            <path d="M50 4 92 31 76 88 24 88 8 31Z" fill="url(#brandGem)" opacity="0.95" />
-            <path d="M50 4 61 31 50 88 39 31Z" fill="rgba(255,255,255,0.34)" />
-            <path d="M8 31h84M24 88 39 31 50 4 61 31 76 88" fill="none" class="gem-stroke" />
-          </svg>
-          <span class="brand-title">
-            <strong>Diamond Gate Bridge</strong>
-            <span>Laws · Categories · Shared catalog</span>
-          </span>
-        </a>
-
-        <nav class="nav-links" aria-label="Route links">
-          <a href="/">Compass</a>
-          <a href="/laws/">Laws</a>
-          <a href="/laws/scientific-law/">Scientific Law</a>
-          <a href="/laws/reality-source/">Reality Source</a>
-          <a href="/gauges/">Gauges</a>
-        </nav>
-      </div>
-    </header>
-
-    <main id="main">
-      <section class="hero" aria-labelledby="page-title">
-        <div class="hero-grid">
-          <div>
-            <span class="eyebrow">Shared Catalog Bridge</span>
-            <h1 id="page-title">Laws Categories</h1>
-            <p class="hero-copy">
-              This page organizes the category objects that connect governing Laws, Scientific Law,
-              Reality Source, proof routes, and build-facing implementation language.
-            </p>
-            <div class="hero-actions">
-              <a class="primary-action" href="#catalog-groups">Enter Category Orbit</a>
-              <a class="secondary-action" href="/laws/">Return to Laws</a>
-              <a class="secondary-action" href="/laws/reality-source/">Reality Source</a>
-            </div>
-          </div>
-
-          <aside class="mode-panel" aria-label="Page framing mode">
-            <h2>Page Frame</h2>
-            <div class="mode-toggle" role="group" aria-label="Choose page framing">
-              <label for="page-platform">Platform</label>
-              <label for="page-engineering">Engineering</label>
-            </div>
-            <p class="for-page-platform">
-              Platform read: this catalog gives visitors a clear map of what each law-category does
-              and where it routes.
-            </p>
-            <p class="for-page-engineering">
-              Engineering read: this page is a static, CSS-only index with local category toggles,
-              stable anchors, restored SVG crystal gems, and no runtime dependency.
-            </p>
-          </aside>
-        </div>
-      </section>
-
-      <div class="return-strip" aria-label="Return control after hero">
-        <a class="return-link" href="#catalog-groups">Return to Orbit <small>#catalog-groups</small></a>
-      </div>
-
-      <section class="catalog-orbit-wrap" aria-labelledby="orbit-title">
-        <p class="section-kicker">Top Catalog Orbit</p>
-        <h2 id="orbit-title" class="section-title">Routes held in one catalog field</h2>
-        <p class="section-lede">
-          The orbit is the navigation field. The large category diamonds below are the same-page
-          catalog target. Return controls point back to those category diamonds.
-        </p>
-
-        <div class="catalog-orbit" aria-label="Catalog route orbit">
-          <div class="orbit-center">
-            <strong>Laws Categories</strong>
-            <span>Catalog bridge between law, reality, measurement, and build routes.</span>
-          </div>
-
-          <a class="orbit-node" href="/laws/">
-            <svg viewBox="0 0 100 100" aria-hidden="true">
-              <use href="#gem-white"></use>
-            </svg>
-            Laws
-          </a>
-
-          <a class="orbit-node" href="/laws/scientific-law/">
-            <svg viewBox="0 0 100 100" aria-hidden="true">
-              <use href="#gem-white"></use>
-            </svg>
-            Scientific Law
-          </a>
-
-          <a class="orbit-node" href="/laws/reality-source/">
-            <svg viewBox="0 0 100 100" aria-hidden="true">
-              <use href="#gem-gold"></use>
-            </svg>
-            Reality Source
-          </a>
-
-          <a class="orbit-node" href="/gauges/">
-            <svg viewBox="0 0 100 100" aria-hidden="true">
-              <use href="#gem-blue"></use>
-            </svg>
-            Gauges
-          </a>
-
-          <a class="orbit-node" href="#catalog-groups">
-            <svg viewBox="0 0 100 100" aria-hidden="true">
-              <use href="#gem-gold"></use>
-            </svg>
-            Category Groups
-          </a>
-
-          <a class="orbit-node" href="#shared-catalog">
-            <svg viewBox="0 0 100 100" aria-hidden="true">
-              <use href="#gem-cyan"></use>
-            </svg>
-            Shared Catalog
-          </a>
-
-          <a class="orbit-node" href="#category-definitions">
-            <svg viewBox="0 0 100 100" aria-hidden="true">
-              <use href="#gem-white"></use>
-            </svg>
-            Definitions
-          </a>
-
-          <a class="orbit-node" href="#receipts">
-            <svg viewBox="0 0 100 100" aria-hidden="true">
-              <use href="#gem-green"></use>
-            </svg>
-            Receipts
-          </a>
-        </div>
-      </section>
-
-      <section id="catalog-groups" class="content-section" aria-labelledby="catalog-groups-title">
-        <p class="section-kicker">Same-Page Category Diamonds</p>
-        <h2 id="catalog-groups-title" class="section-title">Category groups</h2>
-        <p class="section-lede">
-          These diamonds are the orbit return target. Each route below lands inside the same page
-          without creating a fake standalone route or a runtime dependency.
-        </p>
-
-        <div class="category-diamond-grid">
-          <a class="category-diamond" href="#governing-law">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-white"></use></svg>
-            <small>Category 01</small>
-            <strong>Governing Law</strong>
-            <span>Authority rules that determine what the system is allowed to mean.</span>
-          </a>
-
-          <a class="category-diamond" href="#scientific-law">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-white"></use></svg>
-            <small>Category 02</small>
-            <strong>Scientific Law</strong>
-            <span>Reality testing through theory, evidence, measure, and limits.</span>
-          </a>
-
-          <a class="category-diamond" href="#reality-source">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-gold"></use></svg>
-            <small>Category 03</small>
-            <strong>Reality Source</strong>
-            <span>The anchor that prevents decorative claims from becoming proof.</span>
-          </a>
-
-          <a class="category-diamond" href="#proof-measurement">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-blue"></use></svg>
-            <small>Category 04</small>
-            <strong>Proof Measurement</strong>
-            <span>Measurement routes, audit surfaces, and status summaries.</span>
-          </a>
-
-          <a class="category-diamond" href="#platform-language">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-cyan"></use></svg>
-            <small>Category 05</small>
-            <strong>Platform Language</strong>
-            <span>Visitor-facing translation without lowering authority.</span>
-          </a>
-
-          <a class="category-diamond" href="#engineering-language">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-cyan"></use></svg>
-            <small>Category 06</small>
-            <strong>Engineering Language</strong>
-            <span>Implementation-facing constraints, receipts, and boundaries.</span>
-          </a>
-
-          <a class="category-diamond" href="#route-authority">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-gold"></use></svg>
-            <small>Category 07</small>
-            <strong>Route Authority</strong>
-            <span>Which page owns which meaning, link, and public responsibility.</span>
-          </a>
-
-          <a class="category-diamond" href="#category-objects">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-white"></use></svg>
-            <small>Category 08</small>
-            <strong>Category Objects</strong>
-            <span>The object layer that keeps catalog groups from collapsing.</span>
-          </a>
-
-          <a class="category-diamond" href="#branch-routes">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-blue"></use></svg>
-            <small>Category 09</small>
-            <strong>Branch Routes</strong>
-            <span>Child pages that extend law without replacing the law page.</span>
-          </a>
-
-          <a class="category-diamond" href="#boundary-law">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-white"></use></svg>
-            <small>Category 10</small>
-            <strong>Boundary Law</strong>
-            <span>Limits that prevent responsibility bleed and authority drift.</span>
-          </a>
-
-          <a class="category-diamond" href="#admissibility">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-green"></use></svg>
-            <small>Category 11</small>
-            <strong>Admissibility</strong>
-            <span>What may enter the system and what must remain outside.</span>
-          </a>
-
-          <a class="category-diamond" href="#coherence">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-green"></use></svg>
-            <small>Category 12</small>
-            <strong>Coherence</strong>
-            <span>Alignment between claim, route, law, measure, and receipt.</span>
-          </a>
-
-          <a class="category-diamond" href="#public-risk">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-gold"></use></svg>
-            <small>Category 13</small>
-            <strong>Public Risk</strong>
-            <span>Readable risk posture without fake live health claims.</span>
-          </a>
-
-          <a class="category-diamond" href="#decision-index">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-cyan"></use></svg>
-            <small>Category 14</small>
-            <strong>Decision Index</strong>
-            <span>The accountable route from condition to decision to receipt.</span>
-          </a>
-
-          <a class="category-diamond" href="#compliance-grid">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-blue"></use></svg>
-            <small>Category 15</small>
-            <strong>Compliance Grid</strong>
-            <span>Audit-facing structure for constraints and obligations.</span>
-          </a>
-
-          <a class="category-diamond" href="#policy-engine">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-white"></use></svg>
-            <small>Category 16</small>
-            <strong>Policy Engine</strong>
-            <span>Policy logic as category guidance, not unchecked runtime power.</span>
-          </a>
-        </div>
-      </section>
-
-      <div class="return-strip" aria-label="Return control after category diamonds">
-        <a class="return-link" href="#catalog-groups">Return to Orbit <small>#catalog-groups</small></a>
-        <a class="return-link" href="#shared-catalog">Continue to Shared Catalog</a>
-      </div>
-
-      <section id="shared-catalog" class="content-section" aria-labelledby="shared-catalog-title">
-        <p class="section-kicker">Shared Catalog Split</p>
-        <h2 id="shared-catalog-title" class="section-title">Law routes and proof routes stay distinct</h2>
-        <p class="section-lede">
-          The catalog connects routes without merging their authority. Laws defines boundary.
-          Scientific Law tests claims. Reality Source anchors reality. Gauges summarizes measurement.
-        </p>
-
-        <div class="route-grid">
-          <a class="route-card" href="/laws/">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-white"></use></svg>
-            <strong>Governing Laws</strong>
-            <p>The public law room that defines structural boundaries and admissible meaning.</p>
-          </a>
-
-          <a class="route-card" href="/laws/scientific-law/">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-white"></use></svg>
-            <strong>Scientific Law</strong>
-            <p>The branch chamber for testing claims through theory, evidence, measure, and limits.</p>
-          </a>
-
-          <a class="route-card" href="/laws/reality-source/">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-gold"></use></svg>
-            <strong>Reality Source</strong>
-            <p>The source anchor that keeps proof language connected to real-world constraint.</p>
-          </a>
-
-          <a class="route-card" href="/gauges/">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-blue"></use></svg>
-            <strong>Gauges</strong>
-            <p>The measurement and route-status summary. It does not replace law authority.</p>
-          </a>
-
-          <a class="route-card" href="/governance/">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-cyan"></use></svg>
-            <strong>Governance</strong>
-            <p>The public governance branch for policy, compliance, risk, and decision framing.</p>
-          </a>
-
-          <a class="route-card" href="/">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-gold"></use></svg>
-            <strong>Compass</strong>
-            <p>The root return route. The catalog remains inside Laws, not above the estate.</p>
-          </a>
-        </div>
-      </section>
-
-      <div class="return-strip" aria-label="Return control after shared catalog">
-        <a class="return-link" href="#catalog-groups">Return to Orbit <small>#catalog-groups</small></a>
-      </div>
-
-      <section id="category-definitions" class="content-section" aria-labelledby="category-definitions-title">
-        <p class="section-kicker">Local Category Toggles</p>
-        <h2 id="category-definitions-title" class="section-title">Every category keeps its own Platform / Engineering read</h2>
-        <p class="section-lede">
-          The top page toggle frames the page only. These local toggles belong to each category
-          card individually, preserving the correction that engineering mode must live with each
-          category instead of only at the top.
-        </p>
-
-        <input id="cat1-platform" name="cat1-mode" type="radio" checked />
-        <input id="cat1-engineering" name="cat1-mode" type="radio" />
-        <input id="cat2-platform" name="cat2-mode" type="radio" checked />
-        <input id="cat2-engineering" name="cat2-mode" type="radio" />
-        <input id="cat3-platform" name="cat3-mode" type="radio" checked />
-        <input id="cat3-engineering" name="cat3-mode" type="radio" />
-        <input id="cat4-platform" name="cat4-mode" type="radio" checked />
-        <input id="cat4-engineering" name="cat4-mode" type="radio" />
-        <input id="cat5-platform" name="cat5-mode" type="radio" checked />
-        <input id="cat5-engineering" name="cat5-mode" type="radio" />
-        <input id="cat6-platform" name="cat6-mode" type="radio" checked />
-        <input id="cat6-engineering" name="cat6-mode" type="radio" />
-        <input id="cat7-platform" name="cat7-mode" type="radio" checked />
-        <input id="cat7-engineering" name="cat7-mode" type="radio" />
-        <input id="cat8-platform" name="cat8-mode" type="radio" checked />
-        <input id="cat8-engineering" name="cat8-mode" type="radio" />
-        <input id="cat9-platform" name="cat9-mode" type="radio" checked />
-        <input id="cat9-engineering" name="cat9-mode" type="radio" />
-        <input id="cat10-platform" name="cat10-mode" type="radio" checked />
-        <input id="cat10-engineering" name="cat10-mode" type="radio" />
-        <input id="cat11-platform" name="cat11-mode" type="radio" checked />
-        <input id="cat11-engineering" name="cat11-mode" type="radio" />
-        <input id="cat12-platform" name="cat12-mode" type="radio" checked />
-        <input id="cat12-engineering" name="cat12-mode" type="radio" />
-        <input id="cat13-platform" name="cat13-mode" type="radio" checked />
-        <input id="cat13-engineering" name="cat13-mode" type="radio" />
-        <input id="cat14-platform" name="cat14-mode" type="radio" checked />
-        <input id="cat14-engineering" name="cat14-mode" type="radio" />
-        <input id="cat15-platform" name="cat15-mode" type="radio" checked />
-        <input id="cat15-engineering" name="cat15-mode" type="radio" />
-        <input id="cat16-platform" name="cat16-mode" type="radio" checked />
-        <input id="cat16-engineering" name="cat16-mode" type="radio" />
-
-        <div class="category-card-grid">
-          <article id="governing-law" class="category-card cat1">
-            <div class="category-card-head">
-              <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-white"></use></svg>
-              <div>
-                <h3>Governing Law</h3>
-                <div class="tag-line">Authority category</div>
-              </div>
-            </div>
-            <div class="local-toggle">
-              <label for="cat1-platform">Platform</label>
-              <label for="cat1-engineering">Engineering</label>
-            </div>
-            <p class="local-copy platform-copy">
-              Governing Law explains the boundaries that make the site trustworthy. It tells the
-              visitor what holds authority and what cannot be treated as proof.
-            </p>
-            <p class="local-copy engineering-copy">
-              Governing Law is the parent category for route authority, admissibility, and
-              boundary enforcement. It must not be overwritten by gauges, runtime, animation, or copy.
-            </p>
-          </article>
-
-          <article id="scientific-law" class="category-card cat2">
-            <div class="category-card-head">
-              <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-white"></use></svg>
-              <div>
-                <h3>Scientific Law</h3>
-                <div class="tag-line">Reality-test category</div>
-              </div>
-            </div>
-            <div class="local-toggle">
-              <label for="cat2-platform">Platform</label>
-              <label for="cat2-engineering">Engineering</label>
-            </div>
-            <p class="local-copy platform-copy">
-              Scientific Law shows how a claim becomes testable: state the theory, show the
-              evidence, measure the result, and respect the limits.
-            </p>
-            <p class="local-copy engineering-copy">
-              Scientific Law routes to `/laws/scientific-law/` and must preserve its branch identity.
-              It is not a category summary alone; it is a claim-testing chamber.
-            </p>
-          </article>
-
-          <article id="reality-source" class="category-card cat3">
-            <div class="category-card-head">
-              <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-gold"></use></svg>
-              <div>
-                <h3>Reality Source</h3>
-                <div class="tag-line">Anchor category</div>
-              </div>
-            </div>
-            <div class="local-toggle">
-              <label for="cat3-platform">Platform</label>
-              <label for="cat3-engineering">Engineering</label>
-            </div>
-            <p class="local-copy platform-copy">
-              Reality Source keeps the catalog grounded. It is the place where claim language must
-              return before it presents itself as real.
-            </p>
-            <p class="local-copy engineering-copy">
-              Reality Source remains the central anchor route. Category anchors may point to it, but
-              cannot absorb it or create duplicate source authority.
-            </p>
-          </article>
-
-          <article id="proof-measurement" class="category-card cat4">
-            <div class="category-card-head">
-              <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-blue"></use></svg>
-              <div>
-                <h3>Proof Measurement</h3>
-                <div class="tag-line">Audit category</div>
-              </div>
-            </div>
-            <div class="local-toggle">
-              <label for="cat4-platform">Platform</label>
-              <label for="cat4-engineering">Engineering</label>
-            </div>
-            <p class="local-copy platform-copy">
-              Proof Measurement tells the visitor where status, route checks, and measurement
-              summaries live.
-            </p>
-            <p class="local-copy engineering-copy">
-              Measurement belongs to Gauges and audit surfaces. It summarizes status; it does not
-              outrank Laws, Scientific Law, or Reality Source.
-            </p>
-          </article>
-
-          <article id="platform-language" class="category-card cat5">
-            <div class="category-card-head">
-              <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-cyan"></use></svg>
-              <div>
-                <h3>Platform Language</h3>
-                <div class="tag-line">Public-facing category</div>
-              </div>
-            </div>
-            <div class="local-toggle">
-              <label for="cat5-platform">Platform</label>
-              <label for="cat5-engineering">Engineering</label>
-            </div>
-            <p class="local-copy platform-copy">
-              Platform Language converts structure into readable public meaning without making the
-              page feel like a code receipt.
-            </p>
-            <p class="local-copy engineering-copy">
-              Platform Language is copy-facing. It may translate implementation into visitor terms,
-              but may not relax route contracts or remove receipts.
-            </p>
-          </article>
-
-          <article id="engineering-language" class="category-card cat6">
-            <div class="category-card-head">
-              <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-cyan"></use></svg>
-              <div>
-                <h3>Engineering Language</h3>
-                <div class="tag-line">Implementation category</div>
-              </div>
-            </div>
-            <div class="local-toggle">
-              <label for="cat6-platform">Platform</label>
-              <label for="cat6-engineering">Engineering</label>
-            </div>
-            <p class="local-copy platform-copy">
-              Engineering Language gives builders a clean way to understand what must stay intact.
-            </p>
-            <p class="local-copy engineering-copy">
-              Engineering Language owns constraints, path names, contracts, cache-safe anchors,
-              no-runtime guarantees, and full-file replacement expectations.
-            </p>
-          </article>
-
-          <article id="route-authority" class="category-card cat7">
-            <div class="category-card-head">
-              <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-gold"></use></svg>
-              <div>
-                <h3>Route Authority</h3>
-                <div class="tag-line">Ownership category</div>
-              </div>
-            </div>
-            <div class="local-toggle">
-              <label for="cat7-platform">Platform</label>
-              <label for="cat7-engineering">Engineering</label>
-            </div>
-            <p class="local-copy platform-copy">
-              Route Authority keeps every page clear about what it owns and where it sends the
-              visitor next.
-            </p>
-            <p class="local-copy engineering-copy">
-              Route Authority prevents duplicate roots, fake standalone pages, and ownership bleed
-              between `/laws/`, `/laws/categories/`, `/laws/scientific-law/`, and Gauges.
-            </p>
-          </article>
-
-          <article id="category-objects" class="category-card cat8">
-            <div class="category-card-head">
-              <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-white"></use></svg>
-              <div>
-                <h3>Category Objects</h3>
-                <div class="tag-line">Catalog-object category</div>
-              </div>
-            </div>
-            <div class="local-toggle">
-              <label for="cat8-platform">Platform</label>
-              <label for="cat8-engineering">Engineering</label>
-            </div>
-            <p class="local-copy platform-copy">
-              Category Objects keep the catalog readable by giving each group a stable identity.
-            </p>
-            <p class="local-copy engineering-copy">
-              Category Objects are anchorable content objects with local toggle state. They are not
-              generated graphics, not JS widgets, and not runtime-owned modules.
-            </p>
-          </article>
-
-          <article id="branch-routes" class="category-card cat9">
-            <div class="category-card-head">
-              <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-blue"></use></svg>
-              <div>
-                <h3>Branch Routes</h3>
-                <div class="tag-line">Extension category</div>
-              </div>
-            </div>
-            <div class="local-toggle">
-              <label for="cat9-platform">Platform</label>
-              <label for="cat9-engineering">Engineering</label>
-            </div>
-            <p class="local-copy platform-copy">
-              Branch Routes let the visitor move into deeper rooms without losing the catalog map.
-            </p>
-            <p class="local-copy engineering-copy">
-              Branch Routes must preserve parent lineage. A branch may deepen one law category; it
-              cannot replace the parent law route.
-            </p>
-          </article>
-
-          <article id="boundary-law" class="category-card cat10">
-            <div class="category-card-head">
-              <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-white"></use></svg>
-              <div>
-                <h3>Boundary Law</h3>
-                <div class="tag-line">Limit category</div>
-              </div>
-            </div>
-            <div class="local-toggle">
-              <label for="cat10-platform">Platform</label>
-              <label for="cat10-engineering">Engineering</label>
-            </div>
-            <p class="local-copy platform-copy">
-              Boundary Law makes clear what a page, claim, tool, or route is not allowed to become.
-            </p>
-            <p class="local-copy engineering-copy">
-              Boundary Law prevents scope bleed. It defines precinct and jurisdiction before code or
-              public copy expands meaning.
-            </p>
-          </article>
-
-          <article id="admissibility" class="category-card cat11">
-            <div class="category-card-head">
-              <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-green"></use></svg>
-              <div>
-                <h3>Admissibility</h3>
-                <div class="tag-line">Entry category</div>
-              </div>
-            </div>
-            <div class="local-toggle">
-              <label for="cat11-platform">Platform</label>
-              <label for="cat11-engineering">Engineering</label>
-            </div>
-            <p class="local-copy platform-copy">
-              Admissibility explains what information may enter the catalog and what must stay out.
-            </p>
-            <p class="local-copy engineering-copy">
-              Admissibility is the intake rule. Coherent information may enter the field; incoherent
-              claims must not mutate law, source, or route authority.
-            </p>
-          </article>
-
-          <article id="coherence" class="category-card cat12">
-            <div class="category-card-head">
-              <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-green"></use></svg>
-              <div>
-                <h3>Coherence</h3>
-                <div class="tag-line">Alignment category</div>
-              </div>
-            </div>
-            <div class="local-toggle">
-              <label for="cat12-platform">Platform</label>
-              <label for="cat12-engineering">Engineering</label>
-            </div>
-            <p class="local-copy platform-copy">
-              Coherence means the page, claim, proof, and route all point in the same direction.
-            </p>
-            <p class="local-copy engineering-copy">
-              Coherence requires claim-route-law-measure alignment. Apparent drift caused by a
-              better classification should be re-slotted, not treated as authorized mutation.
-            </p>
-          </article>
-
-          <article id="public-risk" class="category-card cat13">
-            <div class="category-card-head">
-              <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-gold"></use></svg>
-              <div>
-                <h3>Public Risk</h3>
-                <div class="tag-line">Risk category</div>
-              </div>
-            </div>
-            <div class="local-toggle">
-              <label for="cat13-platform">Platform</label>
-              <label for="cat13-engineering">Engineering</label>
-            </div>
-            <p class="local-copy platform-copy">
-              Public Risk gives a readable view of what is stable, what is staged, and what is not
-              yet proven.
-            </p>
-            <p class="local-copy engineering-copy">
-              Public Risk may summarize posture. It must not publish fake live health values or
-              claim audit authority without a real measurement route.
-            </p>
-          </article>
-
-          <article id="decision-index" class="category-card cat14">
-            <div class="category-card-head">
-              <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-cyan"></use></svg>
-              <div>
-                <h3>Decision Index</h3>
-                <div class="tag-line">Decision category</div>
-              </div>
-            </div>
-            <div class="local-toggle">
-              <label for="cat14-platform">Platform</label>
-              <label for="cat14-engineering">Engineering</label>
-            </div>
-            <p class="local-copy platform-copy">
-              Decision Index shows how a condition becomes a decision and how that decision returns
-              to a receipt.
-            </p>
-            <p class="local-copy engineering-copy">
-              Decision Index must preserve traceability: condition, authority, decision, route,
-              receipt, and next admissible action.
-            </p>
-          </article>
-
-          <article id="compliance-grid" class="category-card cat15">
-            <div class="category-card-head">
-              <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-blue"></use></svg>
-              <div>
-                <h3>Compliance Grid</h3>
-                <div class="tag-line">Constraint category</div>
-              </div>
-            </div>
-            <div class="local-toggle">
-              <label for="cat15-platform">Platform</label>
-              <label for="cat15-engineering">Engineering</label>
-            </div>
-            <p class="local-copy platform-copy">
-              Compliance Grid helps organize obligations so visitors can understand what the system
-              is checking against.
-            </p>
-            <p class="local-copy engineering-copy">
-              Compliance Grid is an audit-facing structure. It maps obligations and checks, but
-              cannot invent pass/fail authority without a measurement source.
-            </p>
-          </article>
-
-          <article id="policy-engine" class="category-card cat16">
-            <div class="category-card-head">
-              <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-white"></use></svg>
-              <div>
-                <h3>Policy Engine</h3>
-                <div class="tag-line">Policy category</div>
-              </div>
-            </div>
-            <div class="local-toggle">
-              <label for="cat16-platform">Platform</label>
-              <label for="cat16-engineering">Engineering</label>
-            </div>
-            <p class="local-copy platform-copy">
-              Policy Engine explains how policy logic can guide action while staying accountable to
-              law and reality.
-            </p>
-            <p class="local-copy engineering-copy">
-              Policy Engine is guidance architecture. It does not gain unchecked runtime control and
-              must remain subordinate to law, source, and admissibility.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <div class="return-strip" aria-label="Return control after local toggles">
-        <a class="return-link" href="#catalog-groups">Return to Orbit <small>#catalog-groups</small></a>
-      </div>
-
-      <section class="content-section" aria-labelledby="reality-anchor-title">
-        <p class="section-kicker">Option A Reality Source Anchor Alignment</p>
-        <h2 id="reality-anchor-title" class="section-title">Reality Source stays central without swallowing the catalog</h2>
-        <p class="section-lede">
-          Category routes may point toward Reality Source as the anchor, but the category page remains
-          a catalog bridge. This avoids collapse between source, category, law, and measurement.
-        </p>
-
-        <div class="definition-grid">
-          <article class="definition-card">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-gold"></use></svg>
-            <strong>Anchor</strong>
-            <p>Reality Source is the source-return route for claims that need grounding.</p>
-          </article>
-
-          <article class="definition-card">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-white"></use></svg>
-            <strong>Catalog</strong>
-            <p>Categories remain an index of objects, routes, boundaries, and proof relationships.</p>
-          </article>
-
-          <article class="definition-card">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-blue"></use></svg>
-            <strong>Measurement</strong>
-            <p>Gauges may summarize the route condition but does not become source authority.</p>
-          </article>
-
-          <article class="definition-card">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#gem-green"></use></svg>
-            <strong>Admissibility</strong>
-            <p>Claims enter only when they survive boundary, coherence, and source-return checks.</p>
-          </article>
-        </div>
-
-        <div class="hero-actions">
-          <a class="primary-action" href="/laws/reality-source/">Open Reality Source</a>
-          <a class="secondary-action" href="/laws/scientific-law/">Open Scientific Law</a>
-        </div>
-      </section>
-
-      <div class="return-strip" aria-label="Return control after Reality Source section">
-        <a class="return-link" href="#catalog-groups">Return to Orbit <small>#catalog-groups</small></a>
-      </div>
-
-      <section id="receipts" class="content-section" aria-labelledby="receipts-title">
-        <p class="section-kicker">Receipts</p>
-        <h2 id="receipts-title" class="section-title">Static-page proof markers</h2>
-        <p class="section-lede">
-          This page remains a readable law-category catalog. The receipts below are page-level
-          markers, not fake live health values.
-        </p>
-
-        <ul class="proof-list">
-          <li><strong>Return target:</strong> `#catalog-groups` is the stable same-page orbit return target.</li>
-          <li><strong>Return controls:</strong> visible Return to Orbit controls are placed after major readable sections.</li>
-          <li><strong>Renderer:</strong> SVG crystal gem renderer is restored through inline symbol reuse.</li>
-          <li><strong>Toggles:</strong> top Platform / Engineering toggle is page framing only; every category has its own local toggle.</li>
-          <li><strong>Runtime:</strong> no JavaScript, no heavy runtime, no generated images, no graphic box dependency.</li>
-          <li><strong>Authority:</strong> Laws, Scientific Law, Reality Source, Gauges, and Governance remain distinct routes.</li>
-        </ul>
-
-        <div class="receipt">
-          <strong>Contract receipt:</strong>
-          LAWS_CATEGORIES_RETURN_TO_ORBIT_CONTROL_TNT_v1 preserves the restored full Categories
-          baseline and adds visible Return to Orbit controls pointing to #catalog-groups.
-        </div>
-      </section>
-
-      <div class="return-strip" aria-label="Final return control">
-        <a class="return-link" href="#catalog-groups">Return to Orbit <small>#catalog-groups</small></a>
-        <a class="return-link" href="/laws/">Return to Laws</a>
-      </div>
-    </main>
-
-    <footer class="site-footer">
-      <span>Diamond Gate Bridge · Laws Categories</span>
-      <span>
-        <a href="/">Compass</a> ·
-        <a href="/laws/">Laws</a> ·
-        <a href="/gauges/">Gauges</a>
-      </span>
-    </footer>
-  </div>
-
-  <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
     <defs>
-      <linearGradient id="gradWhiteGem" x1="0" x2="1" y1="0" y2="1">
-        <stop offset="0%" stop-color="#ffffff" />
-        <stop offset="35%" stop-color="#fff4cc" />
-        <stop offset="72%" stop-color="#d8e9ff" />
-        <stop offset="100%" stop-color="#f1c76b" />
+      <linearGradient id="lawGemBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".98"/>
+        <stop offset=".17" stop-color="#eaf8ff" stop-opacity=".82"/>
+        <stop offset=".34" stop-color="#bfeaff" stop-opacity=".58"/>
+        <stop offset=".55" stop-color="#8dd8ff" stop-opacity=".36"/>
+        <stop offset=".74" stop-color="#f8fbff" stop-opacity=".22"/>
+        <stop offset="1" stop-color="#08111d" stop-opacity=".92"/>
       </linearGradient>
 
-      <linearGradient id="gradGoldGem" x1="0" x2="1" y1="0" y2="1">
-        <stop offset="0%" stop-color="#fff8d2" />
-        <stop offset="40%" stop-color="#ffd985" />
-        <stop offset="72%" stop-color="#c98234" />
-        <stop offset="100%" stop-color="#6fb6ff" />
+      <linearGradient id="lawGemAir" x1="48" y1="10" x2="168" y2="80" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".98"/>
+        <stop offset=".36" stop-color="#eefaff" stop-opacity=".62"/>
+        <stop offset=".70" stop-color="#d6f3ff" stop-opacity=".22"/>
+        <stop offset="1" stop-color="#8dd8ff" stop-opacity=".12"/>
       </linearGradient>
 
-      <linearGradient id="gradBlueGem" x1="0" x2="1" y1="0" y2="1">
-        <stop offset="0%" stop-color="#f8fdff" />
-        <stop offset="38%" stop-color="#87e4ff" />
-        <stop offset="78%" stop-color="#6fb6ff" />
-        <stop offset="100%" stop-color="#f1c76b" />
+      <radialGradient id="lawGemGlow" cx="50%" cy="38%" r="64%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".68"/>
+        <stop offset=".28" stop-color="#dff8ff" stop-opacity=".34"/>
+        <stop offset=".58" stop-color="#ffffff" stop-opacity=".14"/>
+        <stop offset="1" stop-color="#020611" stop-opacity="0"/>
+      </radialGradient>
+
+      <linearGradient id="routeGemBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#fff8dc" stop-opacity=".96"/>
+        <stop offset=".16" stop-color="#ffe8a3" stop-opacity=".72"/>
+        <stop offset=".36" stop-color="#f3c86f" stop-opacity=".56"/>
+        <stop offset=".56" stop-color="#8dd8ff" stop-opacity=".32"/>
+        <stop offset=".76" stop-color="#2d5f9a" stop-opacity=".36"/>
+        <stop offset="1" stop-color="#020816" stop-opacity=".94"/>
       </linearGradient>
 
-      <linearGradient id="gradCyanGem" x1="0" x2="1" y1="0" y2="1">
-        <stop offset="0%" stop-color="#ffffff" />
-        <stop offset="45%" stop-color="#87e4ff" />
-        <stop offset="100%" stop-color="#9be7b2" />
+      <linearGradient id="routeGemAir" x1="48" y1="10" x2="168" y2="80" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".94"/>
+        <stop offset=".34" stop-color="#fff0a3" stop-opacity=".48"/>
+        <stop offset=".68" stop-color="#8dd8ff" stop-opacity=".20"/>
+        <stop offset="1" stop-color="#f3c86f" stop-opacity=".12"/>
       </linearGradient>
 
-      <linearGradient id="gradGreenGem" x1="0" x2="1" y1="0" y2="1">
-        <stop offset="0%" stop-color="#fffaf0" />
-        <stop offset="42%" stop-color="#9be7b2" />
-        <stop offset="100%" stop-color="#f1c76b" />
+      <linearGradient id="gemDepth" x1="110" y1="36" x2="110" y2="156" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".18"/>
+        <stop offset=".30" stop-color="#8dd8ff" stop-opacity=".20"/>
+        <stop offset=".62" stop-color="#f3c86f" stop-opacity=".13"/>
+        <stop offset="1" stop-color="#020716" stop-opacity=".66"/>
       </linearGradient>
 
-      <filter id="gemGlowFilter" x="-40%" y="-40%" width="180%" height="180%">
-        <feGaussianBlur stdDeviation="3.5" result="blur" />
+      <linearGradient id="gemGlintLine" x1="28" y1="130" x2="184" y2="24" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset=".45" stop-color="#ffffff" stop-opacity=".84"/>
+        <stop offset=".52" stop-color="#fff0a3" stop-opacity=".30"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+
+      <filter id="gemGlowFilter" x="-42%" y="-50%" width="184%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="blur"/>
         <feColorMatrix
           in="blur"
           type="matrix"
           values="
-            1 0 0 0 0.95
-            0 1 0 0 0.78
-            0 0 1 0 0.36
-            0 0 0 0.62 0"
+            0.42 0 0 0 0.08
+            0 .58 0 0 0.14
+            0 0 1.00 0 0.28
+            0 0 0 0.52 0"
           result="glow"
         />
         <feMerge>
-          <feMergeNode in="glow" />
-          <feMergeNode in="SourceGraphic" />
+          <feMergeNode in="glow"/>
+          <feMergeNode in="SourceGraphic"/>
         </feMerge>
       </filter>
 
-      <symbol id="gem-white" viewBox="0 0 100 100">
+      <symbol id="lawCrystalGem" viewBox="0 0 220 160">
         <g filter="url(#gemGlowFilter)">
-          <path d="M50 3 94 30 78 90 22 90 6 30Z" fill="url(#gradWhiteGem)" />
-          <path d="M50 3 63 30 50 90 37 30Z" fill="rgba(255,255,255,0.35)" />
-          <path d="M6 30h88M22 90 37 30 50 3 63 30 78 90" fill="none" class="gem-stroke" />
-          <path d="M18 30 50 90 82 30M37 30h26" fill="none" class="gem-line" />
-          <circle cx="33" cy="21" r="3.4" class="gem-glint" />
-          <path d="M66 15 70 23 78 26 70 29 66 37 62 29 54 26 62 23Z" class="gem-glint" opacity="0.72" />
+          <path d="M108 4 L146 12 L184 39 L209 76 L188 108 L147 139 L111 155 L69 136 L27 105 L12 73 L39 37 L77 14 Z" fill="url(#lawGemBody)" stroke="rgba(235,248,255,.66)" stroke-width="1.35"/>
+          <path d="M108 4 L146 12 L130 38 L109 30 L87 39 L77 14 Z" fill="url(#lawGemAir)" opacity=".92"/>
+          <path d="M87 39 L109 30 L130 38 L159 60 L148 83 L110 101 L72 83 L61 58 Z" fill="url(#lawGemGlow)" stroke="rgba(255,255,255,.34)" stroke-width=".9"/>
+          <path d="M77 14 L87 39 L61 58 L39 37 Z" fill="rgba(255,255,255,.26)"/>
+          <path d="M146 12 L130 38 L159 60 L184 39 Z" fill="rgba(255,255,255,.18)"/>
+          <path d="M12 73 L53 83 L69 136 L27 105 Z" fill="rgba(141,216,255,.14)"/>
+          <path d="M209 76 L166 81 L147 139 L188 108 Z" fill="rgba(255,255,255,.10)"/>
+          <path d="M72 83 L110 101 L111 155 Z" fill="url(#gemDepth)" opacity=".62"/>
+          <path d="M148 83 L110 101 L111 155 Z" fill="rgba(4,10,22,.30)"/>
+          <path d="M108 4 L111 155" stroke="rgba(255,255,255,.38)" stroke-width="1.15"/>
+          <path d="M12 73 L209 76" stroke="rgba(255,255,255,.32)" stroke-width="1.05"/>
+          <path d="M39 37 L188 108" stroke="rgba(255,255,255,.18)" stroke-width=".9"/>
+          <path d="M184 39 L27 105" stroke="rgba(255,255,255,.18)" stroke-width=".9"/>
+          <g class="gem-star" opacity=".84">
+            <path d="M109 27 L116 70 L110 106 L103 70 Z" fill="rgba(255,255,255,.30)"/>
+            <path d="M61 58 L105 72 L159 60 L116 79 Z" fill="rgba(255,255,255,.18)"/>
+            <path d="M72 83 L105 75 L148 83 L114 92 Z" fill="rgba(141,216,255,.14)"/>
+          </g>
+          <path class="gem-glint" d="M33 118 L176 22 L188 38 L48 130 Z" fill="url(#gemGlintLine)"/>
         </g>
       </symbol>
 
-      <symbol id="gem-gold" viewBox="0 0 100 100">
+      <symbol id="routeColorGem" viewBox="0 0 220 160">
         <g filter="url(#gemGlowFilter)">
-          <path d="M50 3 94 30 78 90 22 90 6 30Z" fill="url(#gradGoldGem)" />
-          <path d="M50 3 63 30 50 90 37 30Z" fill="rgba(255,255,255,0.28)" />
-          <path d="M6 30h88M22 90 37 30 50 3 63 30 78 90" fill="none" class="gem-stroke" />
-          <path d="M18 30 50 90 82 30M37 30h26" fill="none" class="gem-line" />
-          <circle cx="32" cy="21" r="3.4" class="gem-glint" />
-          <path d="M67 14 71 23 80 27 71 31 67 40 63 31 54 27 63 23Z" class="gem-glint" opacity="0.68" />
-        </g>
-      </symbol>
-
-      <symbol id="gem-blue" viewBox="0 0 100 100">
-        <g filter="url(#gemGlowFilter)">
-          <path d="M50 3 94 30 78 90 22 90 6 30Z" fill="url(#gradBlueGem)" />
-          <path d="M50 3 63 30 50 90 37 30Z" fill="rgba(255,255,255,0.26)" />
-          <path d="M6 30h88M22 90 37 30 50 3 63 30 78 90" fill="none" class="gem-stroke" />
-          <path d="M18 30 50 90 82 30M37 30h26" fill="none" class="gem-line" />
-          <circle cx="33" cy="21" r="3.4" class="gem-glint" />
-          <path d="M66 15 70 23 78 26 70 29 66 37 62 29 54 26 62 23Z" class="gem-glint" opacity="0.68" />
-        </g>
-      </symbol>
-
-      <symbol id="gem-cyan" viewBox="0 0 100 100">
-        <g filter="url(#gemGlowFilter)">
-          <path d="M50 3 94 30 78 90 22 90 6 30Z" fill="url(#gradCyanGem)" />
-          <path d="M50 3 63 30 50 90 37 30Z" fill="rgba(255,255,255,0.27)" />
-          <path d="M6 30h88M22 90 37 30 50 3 63 30 78 90" fill="none" class="gem-stroke" />
-          <path d="M18 30 50 90 82 30M37 30h26" fill="none" class="gem-line" />
-          <circle cx="33" cy="21" r="3.4" class="gem-glint" />
-          <path d="M66 15 70 23 78 26 70 29 66 37 62 29 54 26 62 23Z" class="gem-glint" opacity="0.68" />
-        </g>
-      </symbol>
-
-      <symbol id="gem-green" viewBox="0 0 100 100">
-        <g filter="url(#gemGlowFilter)">
-          <path d="M50 3 94 30 78 90 22 90 6 30Z" fill="url(#gradGreenGem)" />
-          <path d="M50 3 63 30 50 90 37 30Z" fill="rgba(255,255,255,0.27)" />
-          <path d="M6 30h88M22 90 37 30 50 3 63 30 78 90" fill="none" class="gem-stroke" />
-          <path d="M18 30 50 90 82 30M37 30h26" fill="none" class="gem-line" />
-          <circle cx="33" cy="21" r="3.4" class="gem-glint" />
-          <path d="M66 15 70 23 78 26 70 29 66 37 62 29 54 26 62 23Z" class="gem-glint" opacity="0.68" />
+          <path d="M108 4 L146 12 L184 39 L209 76 L188 108 L147 139 L111 155 L69 136 L27 105 L12 73 L39 37 L77 14 Z" fill="url(#routeGemBody)" stroke="rgba(255,232,163,.58)" stroke-width="1.35"/>
+          <path d="M108 4 L146 12 L130 38 L109 30 L87 39 L77 14 Z" fill="url(#routeGemAir)" opacity=".88"/>
+          <path d="M87 39 L109 30 L130 38 L159 60 L148 83 L110 101 L72 83 L61 58 Z" fill="rgba(255,232,163,.15)" stroke="rgba(255,255,255,.26)" stroke-width=".9"/>
+          <path d="M77 14 L87 39 L61 58 L39 37 Z" fill="rgba(255,255,255,.18)"/>
+          <path d="M146 12 L130 38 L159 60 L184 39 Z" fill="rgba(243,200,111,.20)"/>
+          <path d="M12 73 L53 83 L69 136 L27 105 Z" fill="rgba(141,216,255,.12)"/>
+          <path d="M209 76 L166 81 L147 139 L188 108 Z" fill="rgba(243,200,111,.16)"/>
+          <path d="M72 83 L110 101 L111 155 Z" fill="url(#gemDepth)" opacity=".70"/>
+          <path d="M148 83 L110 101 L111 155 Z" fill="rgba(4,10,22,.34)"/>
+          <path d="M108 4 L111 155" stroke="rgba(255,255,255,.34)" stroke-width="1.15"/>
+          <path d="M12 73 L209 76" stroke="rgba(255,255,255,.28)" stroke-width="1.05"/>
+          <path d="M39 37 L188 108" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M184 39 L27 105" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <g class="gem-star" opacity=".82">
+            <path d="M109 27 L116 70 L110 106 L103 70 Z" fill="rgba(255,255,255,.27)"/>
+            <path d="M61 58 L105 72 L159 60 L116 79 Z" fill="rgba(255,255,255,.16)"/>
+            <path d="M72 83 L105 75 L148 83 L114 92 Z" fill="rgba(243,200,111,.12)"/>
+          </g>
+          <path class="gem-glint" d="M33 118 L176 22 L188 38 L48 130 Z" fill="url(#gemGlintLine)"/>
         </g>
       </symbol>
     </defs>
   </svg>
+
+  <a class="skip" href="#categories-main">Skip to Laws Categories</a>
+
+  <div class="shell">
+    <header class="topbar" aria-label="Laws categories header">
+      <a class="brand" href="/laws/categories/">
+        <span class="brand-mark" aria-hidden="true"><span>CAT</span></span>
+        <span class="brand-copy">
+          <span>Diamond Gate Bridge</span>
+          <strong>Manor and Estate · Laws Category Map</strong>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/laws/">Laws</a>
+        <a href="/laws/categories/" aria-current="page">Categories</a>
+        <a href="/laws/scientific-law/">Scientific Law</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </header>
+
+    <main id="categories-main">
+      <input class="lens-radio" type="radio" name="categories-lens" id="lens-platform" checked>
+      <input class="lens-radio" type="radio" name="categories-lens" id="lens-engineering">
+
+      <div class="lens-scope">
+        <section class="panel hero" aria-labelledby="page-title">
+          <div class="kicker">Laws Categories · Interpretive Map</div>
+
+          <h1 id="page-title">Law is easier to trust when it has a map.</h1>
+
+          <p class="lead page-platform">
+            The Laws chamber contains sixteen laws, but a visitor should not have to hold all sixteen in mind at once. These categories group the laws by the kind of problem they solve: authority, proof, runtime, generation, human boundary, access, product separation, and scope discipline.
+          </p>
+
+          <p class="lead page-engineering">
+            /laws/categories/ is the Laws-family category index. It preserves the eight grouped law categories, the sixteen-law pairing structure, same-page category anchors, law-affiliated outbound route distinction, route-color separation, local card-level language toggles, and Return to Orbit behavior targeting #catalog-groups.
+          </p>
+
+          <div class="truth-card">
+            “A system becomes trustworthy when every claim knows its category, governing law, testable evidence, and return path.”
+          </div>
+
+          <div class="actions">
+            <a class="button gold" href="#route-orbit">Route Orbit</a>
+            <a class="button" href="#catalog-groups">Category Diamonds</a>
+            <a class="button" href="#category-summary">Read Categories</a>
+          </div>
+        </section>
+
+        <section class="panel lens-toggle" aria-labelledby="lens-title">
+          <div class="section-header">
+            <div class="kicker">Page Language Lens</div>
+            <h2 id="lens-title">Choose the page-level language layer.</h2>
+            <p class="page-platform">
+              The public layer explains why the categories exist. Most systems fail because they treat different kinds of failures as if they are the same failure. A broken route, an unsupported claim, an overloaded runtime, and a missing return path require different laws.
+            </p>
+            <p class="page-engineering">
+              The engineering layer defines identity, anchors, route color, scope, toggles, return target, and receipt posture. The global toggle controls page-level copy only. Each category card below keeps its own local Platform / Engineering toggle.
+            </p>
+          </div>
+
+          <div class="toggle-row" role="radiogroup" aria-label="Page-level language lens">
+            <label class="toggle-label" for="lens-platform" tabindex="0">Platform</label>
+            <label class="toggle-label" for="lens-engineering" tabindex="0">Engineering</label>
+          </div>
+        </section>
+
+        <section class="panel section orbit-section" id="route-orbit" aria-labelledby="route-orbit-title">
+          <div class="kicker">Top orbital page-changing diamonds</div>
+          <div class="section-header">
+            <h2 id="route-orbit-title">Some diamonds move inside Laws. Some diamonds leave Laws.</h2>
+            <p class="page-platform">
+              The orbit is for page-changing routes. A diamond can leave this page and still belong to the Laws family. White crystals stay law-affiliated. Gold route crystals move to other parts of the bridge.
+            </p>
+            <p class="page-engineering">
+              Layout determines page-changing behavior. Color determines law affiliation. Size determines current-page content priority. The top route orbit is not the Return to Orbit target for category reading.
+            </p>
+          </div>
+
+          <div class="orbit-wrap">
+            <div class="orbit-stage" aria-label="Orbital page-changing diamond navigation">
+              <div class="orbit-ring" aria-hidden="true"></div>
+              <div class="orbit-ring inner" aria-hidden="true"></div>
+
+              <div class="orbit-center" aria-hidden="true">
+                <b>Categories Route Orbit</b>
+                <span class="page-platform">White = Laws family. Gold = outside Laws.</span>
+                <span class="page-engineering">Small diamonds = page-changing routes.</span>
+              </div>
+
+              <div class="orbit-track">
+                <a class="orbit-diamond law-orbit" href="/laws/scientific-law/" style="--a:0deg;" aria-label="Open Scientific Law">
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                    <span class="gem-label"><b>Scientific</b><span>Law</span></span>
+                  </span>
+                </a>
+
+                <a class="orbit-diamond route-orbit" href="/" style="--a:36deg;" aria-label="Open Compass">
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+                    <span class="gem-label"><b>Compass</b><span>Root</span></span>
+                  </span>
+                </a>
+
+                <a class="orbit-diamond route-orbit" href="/door/" style="--a:72deg;" aria-label="Open Door">
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+                    <span class="gem-label"><b>Door</b><span>Entry</span></span>
+                  </span>
+                </a>
+
+                <a class="orbit-diamond route-orbit" href="/home/" style="--a:108deg;" aria-label="Open Home">
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+                    <span class="gem-label"><b>Home</b><span>Return</span></span>
+                  </span>
+                </a>
+
+                <a class="orbit-diamond route-orbit" href="/explore/" style="--a:144deg;" aria-label="Open Manor Explore Map">
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+                    <span class="gem-label"><b>Explore</b><span>Map</span></span>
+                  </span>
+                </a>
+
+                <a class="orbit-diamond law-orbit" href="/laws/categories/reality/" style="--a:180deg;" aria-label="Open Reality Category">
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                    <span class="gem-label"><b>Reality</b><span>Category</span></span>
+                  </span>
+                </a>
+
+                <a class="orbit-diamond route-orbit" href="/products/" style="--a:216deg;" aria-label="Open Products">
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+                    <span class="gem-label"><b>Products</b><span>Offer</span></span>
+                  </span>
+                </a>
+
+                <a class="orbit-diamond route-orbit" href="/showroom/" style="--a:252deg;" aria-label="Open Showroom">
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+                    <span class="gem-label"><b>Showroom</b><span>Objects</span></span>
+                  </span>
+                </a>
+
+                <a class="orbit-diamond route-orbit" href="/explore/frontier/" style="--a:288deg;" aria-label="Open Frontier">
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+                    <span class="gem-label"><b>Frontier</b><span>Future</span></span>
+                  </span>
+                </a>
+
+                <a class="orbit-diamond route-orbit" href="/gauges/" style="--a:324deg;" aria-label="Open Gauges">
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+                    <span class="gem-label"><b>Gauges</b><span>Measure</span></span>
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel section" id="catalog-groups" aria-labelledby="catalog-groups-title">
+          <div class="kicker">Large same-page category diamonds</div>
+          <div class="section-header">
+            <h2 id="catalog-groups-title">The eight categories turn sixteen laws into a readable map.</h2>
+            <p class="page-platform">
+              These large white crystals are the category orbit. Choose a category, read the public explanation, switch into Engineering if needed, then return here without losing orientation.
+            </p>
+            <p class="page-engineering">
+              Large diamonds are reserved for same-page Categories anchors. They do not resolve to outbound routes and do not load runtime. Return to Orbit on this page always targets #catalog-groups.
+            </p>
+          </div>
+
+          <div class="gem-stage" aria-label="Large grouped law-category diamond field">
+            <div class="large-law-field">
+              <a class="large-law-diamond" href="#authority-route" style="--delay:-.1s;--tilt-a:-1.6deg;--tilt-b:1.8deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                <span class="gem-label"><b>Authority / Route</b><span>Who + Where</span></span>
+              </a>
+
+              <a class="large-law-diamond" href="#proof-receipt" style="--delay:-.6s;--tilt-a:1.5deg;--tilt-b:-2deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                <span class="gem-label"><b>Proof / Receipt</b><span>Check + Record</span></span>
+              </a>
+
+              <a class="large-law-diamond" href="#runtime-animation" style="--delay:-1.1s;--tilt-a:-2deg;--tilt-b:1.4deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                <span class="gem-label"><b>Runtime / Animation</b><span>Motion + Meaning</span></span>
+              </a>
+
+              <a class="large-law-diamond" href="#generation-visual" style="--delay:-1.6s;--tilt-a:1.8deg;--tilt-b:-1.6deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                <span class="gem-label"><b>Generation / Visual</b><span>Stage + Claim</span></span>
+              </a>
+
+              <a class="large-law-diamond" href="#human-interaction" style="--delay:-2.1s;--tilt-a:-1.7deg;--tilt-b:2.1deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                <span class="gem-label"><b>Human / Interaction</b><span>Boundary + Use</span></span>
+              </a>
+
+              <a class="large-law-diamond" href="#access-return" style="--delay:-2.6s;--tilt-a:2deg;--tilt-b:-1.4deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                <span class="gem-label"><b>Access / Return</b><span>Reach + Re-anchor</span></span>
+              </a>
+
+              <a class="large-law-diamond" href="#product-foreground" style="--delay:-3.1s;--tilt-a:-1.6deg;--tilt-b:1.9deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                <span class="gem-label"><b>Product / Foreground</b><span>Separate + Visible</span></span>
+              </a>
+
+              <a class="large-law-diamond" href="#scope-stale" style="--delay:-3.6s;--tilt-a:1.7deg;--tilt-b:-1.8deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                <span class="gem-label"><b>Scope / Stale</b><span>Boundary + Renewal</span></span>
+              </a>
+            </div>
+          </div>
+
+          <div class="return-row">
+            <a class="return-chip gold" href="#catalog-groups">Return to Orbit</a>
+          </div>
+        </section>
+
+        <section class="panel section" id="category-explanation" aria-labelledby="category-explanation-title">
+          <div class="kicker">Why categories matter</div>
+          <div class="branch">
+            <strong id="category-explanation-title" class="page-platform">The Categories page turns law into a readable map.</strong>
+            <strong class="page-engineering">The Categories page is the interpretive map for /laws/, not a duplicate of /laws/.</strong>
+
+            <p class="page-platform">
+              Most systems fail because they treat every problem as the same kind of problem. A broken route, an unsupported claim, an overloaded runtime, a visual overclaim, and a missing return path are not the same failure. Categories let the visitor understand what kind of problem is being governed before the system tries to solve it.
+            </p>
+            <p class="page-engineering">
+              This page preserves the eight grouped law categories and sixteen-law pairings while exposing the implementation logic through local category toggles. It maps category identity, paired laws, route behavior, color treatment, same-page anchors, and return controls without becoming the parent Laws chamber.
+            </p>
+          </div>
+
+          <div class="return-row">
+            <a class="return-chip gold" href="#catalog-groups">Return to Orbit</a>
+          </div>
+        </section>
+
+        <section class="panel section" id="category-summary" aria-labelledby="category-summary-title">
+          <div class="kicker">Expanded category definitions</div>
+          <div class="section-header">
+            <h2 id="category-summary-title">Eight categories. Sixteen laws. One return field.</h2>
+            <p class="page-platform">
+              Each category answers a different question. Enter the public layer first, then switch to Engineering when the implementation boundary matters.
+            </p>
+            <p class="page-engineering">
+              Each category card owns an independent CSS-only radio group. Local toggles affect only the local definition block and do not mutate route, orbit, return, receipt, or color state.
+            </p>
+          </div>
+
+          <div class="law-summary-grid">
+            <article class="law-summary-card" id="authority-route">
+              <input class="card-radio" type="radio" name="category-lens-authority-route" id="authority-route-platform" checked>
+              <input class="card-radio" type="radio" name="category-lens-authority-route" id="authority-route-engineering">
+              <b>Authority / Route</b>
+              <strong>Authority Law + Route Law</strong>
+              <div class="card-lens-scope">
+                <div class="local-toggle-row" role="radiogroup" aria-label="Authority and Route language lens">
+                  <label class="local-toggle-label" for="authority-route-platform" tabindex="0">Platform</label>
+                  <label class="local-toggle-label" for="authority-route-engineering" tabindex="0">Engineering</label>
+                </div>
+                <div class="definition card-platform">
+                  <p>Authority asks: who is allowed to speak here? Route asks: where does this thing live, where does it send the visitor, and how does the visitor return?</p>
+                  <p>Without authority, a page can claim more than it owns. Without route, a visitor can enter a beautiful room and still get lost. This category keeps the system from becoming a collection of floating pages.</p>
+                </div>
+                <div class="definition card-engineering">
+                  <p>Authority / Route governs ownership, route identity, parent-child relationship, admissible scope, outbound movement, inbound movement, and return-path coherence.</p>
+                  <p>A page must declare what it owns before it speaks, and a route must remain connected to the larger route system.</p>
+                </div>
+              </div>
+              <div class="mini-grid"><div class="mini-box"><h4>Governs</h4><ul><li>Route ownership</li><li>Parent identity</li><li>Admissible scope</li><li>Inbound movement</li><li>Return coherence</li></ul></div><div class="mini-box"><h4>Prevents</h4><ul><li>Floating pages</li><li>False authority</li><li>Unowned claims</li><li>Route drift</li><li>Lost visitors</li></ul></div></div>
+              <div class="audit-question"><span>Category question</span>Does this page know what it owns, where it lives, where it sends the visitor, and how the visitor returns?</div>
+              <a class="return-chip" href="#catalog-groups">Return to Orbit</a>
+            </article>
+
+            <article class="law-summary-card" id="proof-receipt">
+              <input class="card-radio" type="radio" name="category-lens-proof-receipt" id="proof-receipt-platform" checked>
+              <input class="card-radio" type="radio" name="category-lens-proof-receipt" id="proof-receipt-engineering">
+              <b>Proof / Receipt</b>
+              <strong>Proof Law + Receipt Law</strong>
+              <div class="card-lens-scope">
+                <div class="local-toggle-row" role="radiogroup" aria-label="Proof and Receipt language lens">
+                  <label class="local-toggle-label" for="proof-receipt-platform" tabindex="0">Platform</label>
+                  <label class="local-toggle-label" for="proof-receipt-engineering" tabindex="0">Engineering</label>
+                </div>
+                <div class="definition card-platform">
+                  <p>Proof asks: can this be checked? Receipt asks: can we tell what changed?</p>
+                  <p>Confidence is not enough. A claim may sound right, look right, or feel right, but the system cannot treat it as reliable until it can be checked. A receipt keeps the change from disappearing into memory or opinion.</p>
+                </div>
+                <div class="definition card-engineering">
+                  <p>Proof / Receipt governs evidence hierarchy, route behavior, auditability, version markers, changed scope, preserved scope, deployment posture, and verification state.</p>
+                  <p>Proof outranks confidence. Receipts preserve traceability.</p>
+                </div>
+              </div>
+              <div class="mini-grid"><div class="mini-box"><h4>Governs</h4><ul><li>Evidence hierarchy</li><li>Auditability</li><li>Changed scope</li><li>Preserved scope</li><li>Verification state</li></ul></div><div class="mini-box"><h4>Prevents</h4><ul><li>Unsupported confidence</li><li>Missing receipts</li><li>False completion</li><li>Invisible changes</li><li>Opinion replacing proof</li></ul></div></div>
+              <div class="audit-question"><span>Category question</span>Can the claim be checked, and can the next room tell what changed?</div>
+              <a class="return-chip" href="#catalog-groups">Return to Orbit</a>
+            </article>
+
+            <article class="law-summary-card" id="runtime-animation">
+              <input class="card-radio" type="radio" name="category-lens-runtime-animation" id="runtime-animation-platform" checked>
+              <input class="card-radio" type="radio" name="category-lens-runtime-animation" id="runtime-animation-engineering">
+              <b>Runtime / Animation</b>
+              <strong>Runtime Law + Animation Law</strong>
+              <div class="card-lens-scope">
+                <div class="local-toggle-row" role="radiogroup" aria-label="Runtime and Animation language lens">
+                  <label class="local-toggle-label" for="runtime-animation-platform" tabindex="0">Platform</label>
+                  <label class="local-toggle-label" for="runtime-animation-engineering" tabindex="0">Engineering</label>
+                </div>
+                <div class="definition card-platform">
+                  <p>Runtime asks: does this page need motion? Animation asks: does motion clarify the structure, or is it hiding weak structure?</p>
+                  <p>Motion can help the visitor understand relationship and energy. But motion should never become a substitute for meaning. A page must still make sense when the animation stops.</p>
+                </div>
+                <div class="definition card-engineering">
+                  <p>Runtime / Animation governs whether a page may load motion, whether that motion is lightweight, whether reduced-motion users are protected, and whether static readability survives.</p>
+                  <p>Static law pages must not import heavy runtime unless explicitly authorized.</p>
+                </div>
+              </div>
+              <div class="mini-grid"><div class="mini-box"><h4>Governs</h4><ul><li>Motion authority</li><li>Animation purpose</li><li>Runtime limits</li><li>Static readability</li><li>Reduced-motion support</li></ul></div><div class="mini-box"><h4>Prevents</h4><ul><li>Runtime overreach</li><li>Motion hiding weak structure</li><li>Heavy dependencies</li><li>Unreadable animation</li><li>Decorative confusion</li></ul></div></div>
+              <div class="audit-question"><span>Category question</span>Does the page remain understandable when motion stops?</div>
+              <a class="return-chip" href="#catalog-groups">Return to Orbit</a>
+            </article>
+
+            <article class="law-summary-card" id="generation-visual">
+              <input class="card-radio" type="radio" name="category-lens-generation-visual" id="generation-visual-platform" checked>
+              <input class="card-radio" type="radio" name="category-lens-generation-visual" id="generation-visual-engineering">
+              <b>Generation / Visual Claim</b>
+              <strong>Generation Law + Visual Claim Law</strong>
+              <div class="card-lens-scope">
+                <div class="local-toggle-row" role="radiogroup" aria-label="Generation and Visual Claim language lens">
+                  <label class="local-toggle-label" for="generation-visual-platform" tabindex="0">Platform</label>
+                  <label class="local-toggle-label" for="generation-visual-engineering" tabindex="0">Engineering</label>
+                </div>
+                <div class="definition card-platform">
+                  <p>Generation asks: what stage is this really in? Visual Claim asks: does the appearance prove anything, or only express something?</p>
+                  <p>A polished page can still be unfinished. A beautiful diamond, planet, orbit, or route field can help the visitor understand the system, but beauty is not proof. The page must say what is real, what is staged, and what still needs verification.</p>
+                </div>
+                <div class="definition card-engineering">
+                  <p>Generation / Visual Claim governs baseline labels, readiness claims, visual-pass boundaries, staged development, source truth, and proof separation.</p>
+                  <p>Visual polish cannot become evidence. A visual-pass claim remains forbidden unless explicitly reviewed and accepted.</p>
+                </div>
+              </div>
+              <div class="mini-grid"><div class="mini-box"><h4>Governs</h4><ul><li>Generation labels</li><li>Readiness claims</li><li>Visual boundaries</li><li>Source truth</li><li>Staged status</li></ul></div><div class="mini-box"><h4>Prevents</h4><ul><li>Beauty becoming proof</li><li>False readiness</li><li>Visual-pass overclaiming</li><li>Baseline confusion</li><li>Evidence collapse</li></ul></div></div>
+              <div class="audit-question"><span>Category question</span>Is the page claiming only what the current source, route behavior, receipt, and review actually support?</div>
+              <a class="return-chip" href="#catalog-groups">Return to Orbit</a>
+            </article>
+
+            <article class="law-summary-card" id="human-interaction">
+              <input class="card-radio" type="radio" name="category-lens-human-interaction" id="human-interaction-platform" checked>
+              <input class="card-radio" type="radio" name="category-lens-human-interaction" id="human-interaction-engineering">
+              <b>Human / Interaction</b>
+              <strong>Human Boundary Law + Interaction Law</strong>
+              <div class="card-lens-scope">
+                <div class="local-toggle-row" role="radiogroup" aria-label="Human and Interaction language lens">
+                  <label class="local-toggle-label" for="human-interaction-platform" tabindex="0">Platform</label>
+                  <label class="local-toggle-label" for="human-interaction-engineering" tabindex="0">Engineering</label>
+                </div>
+                <div class="definition card-platform">
+                  <p>Human Boundary asks: where does the system stop? Interaction asks: can the visitor tell what they can do?</p>
+                  <p>A system can guide, organize, teach, and clarify without pretending to replace human authority where human authority is required. A visitor should also be able to tell which objects are controls and which objects are decoration.</p>
+                </div>
+                <div class="definition card-engineering">
+                  <p>Human / Interaction governs high-stakes boundary language, role limitation, clickable controls, decorative objects, focus states, touch targets, label clarity, and interface affordance.</p>
+                  <p>Interactive objects must communicate function before activation.</p>
+                </div>
+              </div>
+              <div class="mini-grid"><div class="mini-box"><h4>Governs</h4><ul><li>Human boundary</li><li>Role limitation</li><li>Clickable controls</li><li>Decorative objects</li><li>Focus clarity</li></ul></div><div class="mini-box"><h4>Prevents</h4><ul><li>Authority impersonation</li><li>Fake controls</li><li>Hidden interaction</li><li>Unsafe certainty</li><li>Confusing interface objects</li></ul></div></div>
+              <div class="audit-question"><span>Category question</span>Can a visitor tell what the system can help with, what needs verification, and what can be clicked?</div>
+              <a class="return-chip" href="#catalog-groups">Return to Orbit</a>
+            </article>
+
+            <article class="law-summary-card" id="access-return">
+              <input class="card-radio" type="radio" name="category-lens-access-return" id="access-return-platform" checked>
+              <input class="card-radio" type="radio" name="category-lens-access-return" id="access-return-engineering">
+              <b>Access / Return</b>
+              <strong>Access Law + Return Law</strong>
+              <div class="card-lens-scope">
+                <div class="local-toggle-row" role="radiogroup" aria-label="Access and Return language lens">
+                  <label class="local-toggle-label" for="access-return-platform" tabindex="0">Platform</label>
+                  <label class="local-toggle-label" for="access-return-engineering" tabindex="0">Engineering</label>
+                </div>
+                <div class="definition card-platform">
+                  <p>Access asks: can the visitor reach the law? Return asks: can they get back after they move?</p>
+                  <p>A law chamber that cannot be found cannot govern. A route that sends the visitor outward without a return path turns exploration into abandonment. This category keeps movement from becoming disorientation.</p>
+                </div>
+                <div class="definition card-engineering">
+                  <p>Access / Return governs discoverability, branch movement, section anchors, route loops, same-page return controls, and re-orientation behavior.</p>
+                  <p>On /laws/categories/, Return to Orbit must target #catalog-groups.</p>
+                </div>
+              </div>
+              <div class="mini-grid"><div class="mini-box"><h4>Governs</h4><ul><li>Reachability</li><li>Route loops</li><li>Branch movement</li><li>Section anchors</li><li>Return target</li></ul></div><div class="mini-box"><h4>Prevents</h4><ul><li>One-way movement</li><li>Lost context</li><li>Orphan chambers</li><li>Wrong return targets</li><li>Top-orbit confusion</li></ul></div></div>
+              <div class="audit-question"><span>Category question</span>Can a visitor enter, read, move, and return to the correct category field without confusion?</div>
+              <a class="return-chip" href="#catalog-groups">Return to Orbit</a>
+            </article>
+
+            <article class="law-summary-card" id="product-foreground">
+              <input class="card-radio" type="radio" name="category-lens-product-foreground" id="product-foreground-platform" checked>
+              <input class="card-radio" type="radio" name="category-lens-product-foreground" id="product-foreground-engineering">
+              <b>Product / Foreground</b>
+              <strong>Product and Planet Separation Law + Foreground Law</strong>
+              <div class="card-lens-scope">
+                <div class="local-toggle-row" role="radiogroup" aria-label="Product and Foreground language lens">
+                  <label class="local-toggle-label" for="product-foreground-platform" tabindex="0">Platform</label>
+                  <label class="local-toggle-label" for="product-foreground-engineering" tabindex="0">Engineering</label>
+                </div>
+                <div class="definition card-platform">
+                  <p>Product and Planet Separation asks: are different kinds of things being kept distinct? Foreground asks: are the most important controls still visible?</p>
+                  <p>A product, a planet, a law, a story route, and a proof route may share visual language, but they do not share the same job. This category keeps objects from being blended together just because they look related.</p>
+                </div>
+                <div class="definition card-engineering">
+                  <p>Product / Foreground governs route-class separation, object identity, product boundaries, planet boundaries, law boundaries, and visibility of governing controls.</p>
+                  <p>The foreground must preserve law, proof, entry, return, and route clarity.</p>
+                </div>
+              </div>
+              <div class="mini-grid"><div class="mini-box"><h4>Governs</h4><ul><li>Route class</li><li>Object identity</li><li>Product boundary</li><li>Planet boundary</li><li>Foreground controls</li></ul></div><div class="mini-box"><h4>Prevents</h4><ul><li>Product/planet collapse</li><li>Law/product confusion</li><li>Proof route burial</li><li>Control disappearance</li><li>Visual family overreach</li></ul></div></div>
+              <div class="audit-question"><span>Category question</span>Are different route classes distinct, and are the governing controls still visible?</div>
+              <a class="return-chip" href="#catalog-groups">Return to Orbit</a>
+            </article>
+
+            <article class="law-summary-card" id="scope-stale">
+              <input class="card-radio" type="radio" name="category-lens-scope-stale" id="scope-stale-platform" checked>
+              <input class="card-radio" type="radio" name="category-lens-scope-stale" id="scope-stale-engineering">
+              <b>Scope / Stale Language</b>
+              <strong>Scope Law + Stale Language Law</strong>
+              <div class="card-lens-scope">
+                <div class="local-toggle-row" role="radiogroup" aria-label="Scope and Stale Language lens">
+                  <label class="local-toggle-label" for="scope-stale-platform" tabindex="0">Platform</label>
+                  <label class="local-toggle-label" for="scope-stale-engineering" tabindex="0">Engineering</label>
+                </div>
+                <div class="definition card-platform">
+                  <p>Scope asks: are we changing only what was authorized? Stale Language asks: is old language still controlling a page that has moved on?</p>
+                  <p>A small renewal can become damage if it silently expands. Old labels can also pull a page backward if they remain active after the contract changes. This category protects the current page from both overreach and outdated meaning.</p>
+                </div>
+                <div class="definition card-engineering">
+                  <p>Scope / Stale Language governs file boundaries, TNT scope, retired labels, current route identity, prior-contract handling, and stale semantic cleanup.</p>
+                  <p>A contract renewal must be bounded to the authorized file and must not let deprecated language regain authority.</p>
+                </div>
+              </div>
+              <div class="mini-grid"><div class="mini-box"><h4>Governs</h4><ul><li>File boundary</li><li>TNT scope</li><li>Route identity</li><li>Prior contract handling</li><li>Stale cleanup</li></ul></div><div class="mini-box"><h4>Prevents</h4><ul><li>Silent expansion</li><li>Old labels returning</li><li>Partial-patch control</li><li>Unauthorized mutation</li><li>Semantic drift</li></ul></div></div>
+              <div class="audit-question"><span>Category question</span>Is the renewal bounded to the authorized file and free of retired language regaining control?</div>
+              <a class="return-chip" href="#catalog-groups">Return to Orbit</a>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel section" id="reality-category" aria-labelledby="reality-category-title">
+          <div class="kicker">Reality category branch</div>
+          <div class="branch">
+            <strong id="reality-category-title" class="page-platform">Reality is what still holds after the claim is tested.</strong>
+            <strong class="page-engineering">/laws/categories/reality/ is the active Laws Category branch standard.</strong>
+
+            <p class="page-platform">
+              Reality is not the first impression, the confident statement, or the desired outcome. Reality is what survives evidence, contradiction, consequence, pressure, measurement, limits, and audit.
+            </p>
+            <p class="page-engineering">
+              The Reality category gem-field chain is: Reality → Theory → Evidence → Measure → Limits → Audit. The Reality Category route remains distinct from Reality Source and remains law-affiliated when represented as a route diamond.
+            </p>
+
+            <div class="actions">
+              <a class="button gold" href="/laws/categories/reality/">Open Reality Category</a>
+              <a class="button" href="/laws/scientific-law/">Open Scientific Law</a>
+            </div>
+          </div>
+
+          <div class="return-row">
+            <a class="return-chip gold" href="#catalog-groups">Return to Orbit</a>
+          </div>
+        </section>
+
+        <section class="panel section" id="route-logic" aria-labelledby="route-logic-title">
+          <div class="kicker">Size, color, and return law</div>
+          <div class="branch">
+            <strong id="route-logic-title" class="page-platform">The visitor should know whether a diamond reads, leaves, or returns.</strong>
+            <strong class="page-engineering">Large white diamonds are same-page content. Small white diamonds are law-affiliated outbound routes. Small route-color diamonds are non-law outbound routes.</strong>
+
+            <p class="page-platform">
+              Some diamonds move within the category map. Some diamonds leave the page and still belong to Laws. Some diamonds leave the Laws family entirely. The page uses size and color so the visitor can tell the difference before clicking.
+            </p>
+            <p class="page-engineering">
+              Large same-page category diamonds target anchors inside this document. Small white route diamonds target law-affiliated outbound routes such as /laws/scientific-law/ and /laws/categories/reality/. Small route-color diamonds target normalized non-law outbound routes: /, /door/, /home/, /explore/, /products/, /showroom/, /explore/frontier/, and /gauges/.
+            </p>
+          </div>
+
+          <div class="return-row">
+            <a class="return-chip gold" href="#catalog-groups">Return to Orbit</a>
+          </div>
+        </section>
+
+        <template id="route-receipt" data-route-receipt>
+LAWS_CATEGORIES_CRYSTAL_FAMILY_RETURN_ORBIT_CONTRACT_RENEWAL_TNT_v1
+binding=LAWS_CATEGORIES_TED_NARRATIVE_AND_ENGINEERING_EXPRESSION_PREGAME_TO_POSTGAME_BINDING_v1
+route=/laws/categories/
+target=/laws/categories/index.html
+renewal_class=FULL_CONTRACT_RENEWAL
+page_role=laws_family_interpretive_category_map
+not_repair=true
+not_reconstruction=true
+not_duplicate_laws_page=true
+not_new_law_system=true
+core_thesis=claim_category_governing_law_testable_evidence_return_path
+ted_sequence=problem_insight_consequence_map_choice_return
+engineering_sequence=identity_anchors_route_color_scope_toggles_return_target_receipt
+crystal_svg_renderer_restored=true
+css_polygon_gem_regression_removed=true
+large_same_page_category_diamonds=true
+large_category_return_target=catalog_groups
+return_to_orbit_target=#catalog-groups
+top_route_orbit_page_changing_only=true
+local_category_card_toggles_preserved=true
+global_toggle_page_level_only=true
+eight_categories_preserved=true
+sixteen_laws_preserved=true
+authority_route=Authority Law + Route Law
+proof_receipt=Proof Law + Receipt Law
+runtime_animation=Runtime Law + Animation Law
+generation_visual=Generation Law + Visual Claim Law
+human_interaction=Human Boundary Law + Interaction Law
+access_return=Access Law + Return Law
+product_foreground=Product and Planet Separation Law + Foreground Law
+scope_stale=Scope Law + Stale Language Law
+reality_category_route=/laws/categories/reality/
+reality_category_chain=Reality -> Theory -> Evidence -> Measure -> Limits -> Audit
+reality_category_distinct_from_reality_source=true
+normalized_route_compass=/
+normalized_route_door=/door/
+normalized_route_home=/home/
+normalized_route_explore=/explore/
+normalized_route_products=/products/
+normalized_route_showroom=/showroom/
+normalized_route_frontier=/explore/frontier/
+normalized_route_gauges=/gauges/
+normalized_route_scientific_law=/laws/scientific-law/
+normalized_route_reality_category=/laws/categories/reality/
+size_color_law=large_white_same_page_categories__small_white_law_affiliated_outbound__small_route_color_non_law_outbound
+javascript_dependency=false
+heavy_runtime=false
+generated_image=false
+graphic_block=false
+canvas=false
+webgl=false
+visual_pass_claimed=false
+deploy_marker=LAWS_CATEGORIES_CRYSTAL_FAMILY_RETURN_ORBIT_CONTRACT_RENEWAL_DEPLOY_MARKER_v1
+        </template>
+      </div>
+    </main>
+
+    <footer>
+      LAWS_CATEGORIES_CRYSTAL_FAMILY_RETURN_ORBIT_CONTRACT_RENEWAL_TNT_v1 · Laws Categories · Contract renewal.
+    </footer>
+  </div>
 </body>
 </html>

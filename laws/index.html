@@ -4,29 +4,27 @@
   lang="en"
   data-route="/laws/"
   data-page="laws"
-  data-version="G10-V1"
-  data-contract="LAWS_PAGE_ORBIT_BOX_SCALE_CENTER_GRAVITY_ROTATION_TNT_v1"
-  data-source-binding="LAWS_PAGE_ORBIT_BOX_SCALE_CENTER_GRAVITY_ROTATION_PREGAME_TO_POSTGAME_BINDING_v1"
+  data-version="G11-V1"
+  data-contract="LAWS_PAGE_ORBIT_LABEL_CONTRAST_AND_CATEGORY_RETURN_TNT_v1"
+  data-source-binding="LAWS_PAGE_ORBIT_LABEL_CONTRAST_AND_CATEGORY_RETURN_PREGAME_TO_POSTGAME_BINDING_v1"
   data-branch="laws"
   data-role="law-chamber"
   data-visible-header-context="Manor_and_Estate_Law_Chamber"
-  data-top-orbit="true"
-  data-orbit-chamber-enlarged="true"
-  data-orbit-diamonds-enlarged="true"
-  data-orbit-label-readability-improved="true"
-  data-center-gravity-rotation="true"
-  data-center-anchor-fixed="true"
-  data-orbit-track-rotates="true"
-  data-gem-labels-counter-rotate="true"
-  data-reduced-motion-safe="true"
-  data-platform-engineering-toggle="true"
-  data-toggle-changes-language-only="true"
-  data-same-page-law-content="large-white-crystal-diamonds"
-  data-law-affiliated-page-change="small-orbital-white-crystal-diamonds"
-  data-non-law-page-change="small-orbital-route-color-diamonds"
+  data-orbit-chamber-preserved="true"
+  data-orbit-diamonds-size-preserved-or-larger="true"
+  data-orbit-label-readability-renewed="true"
+  data-label-color-decoupled-from-gem-color="true"
+  data-label-contrast-plate="true"
+  data-mobile-label-legibility="true"
+  data-mobile-label-simplification-allowed="true"
+  data-gem-color-law-preserved="true"
+  data-center-gravity-rotation-preserved="true"
+  data-platform-engineering-toggle-preserved="true"
   data-return-to-orbit-controls="true"
-  data-outbound-route-grid-removed="true"
-  data-large-and-orbit-css-separated="true"
+  data-return-to-orbit-target="law-diamonds"
+  data-grouped-law-cards-return-to-law-diamonds="true"
+  data-return-to-orbit-does-not-target-route-orbit="true"
+  data-large-law-category-diamonds-are-return-target="true"
   data-modern-static-html-css="true"
   data-javascript-dependency="false"
   data-heavy-runtime-loaded="false"
@@ -772,35 +770,61 @@
     }
 
     .orbit-diamond .gem-label{
-      width:88%;
-      gap:.1rem;
+      width:92%;
+      max-width:7.2rem;
+      min-height:2.18rem;
+      display:grid;
+      place-items:center;
+      gap:.04rem;
+      padding:.34rem .42rem;
+      border:1px solid rgba(255,255,255,.20);
+      border-radius:999px;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,255,255,.12),transparent 70%),
+        rgba(2,6,16,.74);
+      box-shadow:
+        0 .45rem 1rem rgba(0,0,0,.50),
+        inset 0 1px 0 rgba(255,255,255,.12),
+        inset 0 0 1.2rem rgba(141,216,255,.08);
+      color:#fff8e7;
       text-shadow:
-        0 4px 16px rgba(0,0,0,1),
-        0 0 16px rgba(0,28,90,.95),
-        0 0 4px rgba(255,255,255,.74);
+        0 3px 10px rgba(0,0,0,1),
+        0 0 9px rgba(0,0,0,.98),
+        0 0 3px rgba(255,255,255,.42);
+      backdrop-filter:blur(2px);
     }
 
     .orbit-diamond .gem-label b{
       display:block;
-      font-size:clamp(.57rem,1.12vw,.84rem);
-      font-weight:950;
-      letter-spacing:.045em;
-      line-height:1.02;
+      color:#fff8e7;
+      font-size:clamp(.76rem,1.2vw,.96rem);
+      font-weight:1000;
+      letter-spacing:.018em;
+      line-height:.96;
       text-transform:uppercase;
+      white-space:nowrap;
     }
 
     .orbit-diamond .gem-label span{
-      font-size:clamp(.42rem,.86vw,.60rem);
+      display:block;
+      color:rgba(235,246,255,.96);
+      font-size:clamp(.52rem,.88vw,.68rem);
       font-weight:950;
-      letter-spacing:.035em;
-      line-height:1.02;
+      letter-spacing:.018em;
+      line-height:1;
       text-transform:uppercase;
+      white-space:nowrap;
     }
 
-    .law-orbit .gem-label b{color:rgba(255,244,216,.99)}
-    .law-orbit .gem-label span{color:rgba(230,238,255,.94)}
-    .route-orbit .gem-label b{color:rgba(255,232,163,.99)}
-    .route-orbit .gem-label span{color:rgba(242,247,255,.92)}
+    .law-orbit .gem-label b,
+    .route-orbit .gem-label b{
+      color:#fff8e7;
+    }
+
+    .law-orbit .gem-label span,
+    .route-orbit .gem-label span{
+      color:rgba(235,246,255,.96);
+    }
 
     .return-row{
       display:flex;
@@ -923,8 +947,20 @@
         height:clamp(3.94rem,13vw,4.72rem);
       }
 
-      .orbit-diamond .gem-label b{font-size:clamp(.48rem,1.65vw,.66rem)}
-      .orbit-diamond .gem-label span{font-size:clamp(.36rem,1.25vw,.48rem)}
+      .orbit-diamond .gem-label{
+        max-width:5.4rem;
+        min-height:1.9rem;
+        padding:.30rem .35rem;
+      }
+
+      .orbit-diamond .gem-label b{
+        font-size:clamp(.58rem,1.95vw,.72rem);
+        letter-spacing:.01em;
+      }
+
+      .orbit-diamond .gem-label span{
+        font-size:clamp(.40rem,1.32vw,.48rem);
+      }
 
       .orbit-center{
         width:8rem;
@@ -973,8 +1009,21 @@
         height:3.45rem;
       }
 
-      .orbit-diamond .gem-label b{font-size:.38rem}
-      .orbit-diamond .gem-label span{font-size:.285rem}
+      .orbit-diamond .gem-label{
+        width:96%;
+        max-width:4.35rem;
+        min-height:1.66rem;
+        padding:.24rem .25rem;
+      }
+
+      .orbit-diamond .gem-label b{
+        font-size:.49rem;
+        letter-spacing:0;
+      }
+
+      .orbit-diamond .gem-label span{
+        display:none;
+      }
 
       .orbit-center{
         width:6.7rem;
@@ -1001,8 +1050,13 @@
         height:3.22rem;
       }
 
-      .orbit-diamond .gem-label b{font-size:.35rem}
-      .orbit-diamond .gem-label span{font-size:.26rem}
+      .orbit-diamond .gem-label{
+        max-width:4.05rem;
+      }
+
+      .orbit-diamond .gem-label b{
+        font-size:.45rem;
+      }
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -1374,7 +1428,7 @@
           </div>
 
           <div class="return-row">
-            <a class="return-chip gold" href="#route-orbit">Back to Top Orbit</a>
+            <a class="return-chip gold" href="#law-diamonds">Back to Law Categories</a>
           </div>
         </section>
 
@@ -1396,7 +1450,7 @@
               <strong>Authority Law + Route Law</strong>
               <p class="platform-copy">Root ownership stays explicit. Every chamber must know where it lives, what owns it, and where it returns.</p>
               <p class="engineering-copy">Defines route parentage, ownership, admissible location, and return-path requirements before any larger claim can be made.</p>
-              <a class="return-chip" href="#route-orbit">Return to Orbit</a>
+              <a class="return-chip" href="#law-diamonds">Return to Orbit</a>
             </article>
 
             <article class="law-summary-card" id="proof-receipt">
@@ -1404,7 +1458,7 @@
               <strong>Proof Law + Receipt Law</strong>
               <p class="platform-copy">Gauges, receipts, diagnostics, and visible routes outrank confidence. Every renewal leaves a route receipt.</p>
               <p class="engineering-copy">Proof, diagnostics, and receipt metadata outrank unsupported claims. Each major TNT must preserve audit traceability.</p>
-              <a class="return-chip" href="#route-orbit">Return to Orbit</a>
+              <a class="return-chip" href="#law-diamonds">Return to Orbit</a>
             </article>
 
             <article class="law-summary-card" id="runtime-animation">
@@ -1412,7 +1466,7 @@
               <strong>Runtime Law + Animation Law</strong>
               <p class="platform-copy">Motion must stay contained. Animation expresses hierarchy; it does not replace readable structure.</p>
               <p class="engineering-copy">Static law pages must not load heavy render chains. Motion may express hierarchy, but route authority remains structural.</p>
-              <a class="return-chip" href="#route-orbit">Return to Orbit</a>
+              <a class="return-chip" href="#law-diamonds">Return to Orbit</a>
             </article>
 
             <article class="law-summary-card" id="generation-visual">
@@ -1420,7 +1474,7 @@
               <strong>Generation Law + Visual Claim Law</strong>
               <p class="platform-copy">Baseline, readiness, visual polish, and generation state remain distinct. Appearance is not source truth.</p>
               <p class="engineering-copy">Generation labels, visual state, source truth, readiness claims, and pass status remain separately audited fields.</p>
-              <a class="return-chip" href="#route-orbit">Return to Orbit</a>
+              <a class="return-chip" href="#law-diamonds">Return to Orbit</a>
             </article>
 
             <article class="law-summary-card" id="human-interaction">
@@ -1428,7 +1482,7 @@
               <strong>Human Boundary Law + Interaction Law</strong>
               <p class="platform-copy">Support does not impersonate authority. Users must know what can be touched and what is decorative.</p>
               <p class="engineering-copy">High-stakes boundaries remain explicit. Interactive controls must be distinguishable from decorative visual anchors.</p>
-              <a class="return-chip" href="#route-orbit">Return to Orbit</a>
+              <a class="return-chip" href="#law-diamonds">Return to Orbit</a>
             </article>
 
             <article class="law-summary-card" id="access-return">
@@ -1436,7 +1490,7 @@
               <strong>Access Law + Return Law</strong>
               <p class="platform-copy">Laws must stay reachable from the public route system. Every outward route needs a way back.</p>
               <p class="engineering-copy">Public route reachability and return paths must be preserved across Compass, Door, Home, Laws, branches, and Gauges.</p>
-              <a class="return-chip" href="#route-orbit">Return to Orbit</a>
+              <a class="return-chip" href="#law-diamonds">Return to Orbit</a>
             </article>
 
             <article class="law-summary-card" id="product-foreground">
@@ -1444,7 +1498,7 @@
               <strong>Product and Planet Separation Law + Foreground Law</strong>
               <p class="platform-copy">Products stay products; planets stay planets. Laws, Entry, Proof, and Return remain foreground controls.</p>
               <p class="engineering-copy">Product, estate, law, and planetary route classes must not collapse. Foreground controls preserve entry, proof, and return logic.</p>
-              <a class="return-chip" href="#route-orbit">Return to Orbit</a>
+              <a class="return-chip" href="#law-diamonds">Return to Orbit</a>
             </article>
 
             <article class="law-summary-card" id="scope-stale">
@@ -1452,7 +1506,7 @@
               <strong>Scope Law + Stale Language Law</strong>
               <p class="platform-copy">Full-file TNT only for touched files. Retired labels must not control current pages.</p>
               <p class="engineering-copy">Touched files require full replacement. Deprecated control language must not remain active unless intentionally preserved by route law.</p>
-              <a class="return-chip" href="#route-orbit">Return to Orbit</a>
+              <a class="return-chip" href="#law-diamonds">Return to Orbit</a>
             </article>
           </div>
         </section>
@@ -1473,41 +1527,38 @@
         </section>
 
         <template id="route-receipt" data-route-receipt>
-LAWS_PAGE_ORBIT_BOX_SCALE_CENTER_GRAVITY_ROTATION_TNT_v1
-binding=LAWS_PAGE_ORBIT_BOX_SCALE_CENTER_GRAVITY_ROTATION_PREGAME_TO_POSTGAME_BINDING_v1
+LAWS_PAGE_ORBIT_LABEL_CONTRAST_AND_CATEGORY_RETURN_TNT_v1
+binding=LAWS_PAGE_ORBIT_LABEL_CONTRAST_AND_CATEGORY_RETURN_PREGAME_TO_POSTGAME_BINDING_v1
 route=/laws/
 target=/laws/index.html
-visible_header_context=Manor_and_Estate_Law_Chamber
-top_orbit=true
-orbit_chamber_enlarged=true
-orbit_diamonds_enlarged=true
-orbit_label_readability_improved=true
-center_gravity_rotation=true
-center_anchor_fixed=true
-orbit_track_rotates=true
-gem_labels_counter_rotate=true
-reduced_motion_safe=true
-platform_engineering_toggle=true
-toggle_changes_language_only=true
-same_page_law_content=large_white_crystal_diamonds
-law_affiliated_page_change=small_orbital_white_crystal_diamonds
-non_law_page_change=small_orbital_route_color_diamonds
+orbit_chamber_preserved=true
+orbit_diamonds_size_preserved_or_larger=true
+orbit_label_readability_renewed=true
+label_color_decoupled_from_gem_color=true
+label_contrast_plate=true
+mobile_label_legibility=true
+mobile_label_simplification_allowed=true
+gem_color_law_preserved=true
+center_gravity_rotation_preserved=true
+platform_engineering_toggle_preserved=true
 return_to_orbit_controls=true
-outbound_route_grid_removed=true
-large_and_orbit_css_separated=true
+return_to_orbit_target=law_diamonds
+grouped_law_cards_return_to_law_diamonds=true
+return_to_orbit_does_not_target_route_orbit=true
+large_law_category_diamonds_are_return_target=true
 generated_image=false
 graphic_block=false
 heavy_runtime=false
 javascript_dependency=false
 external_legacy_css_dependency=false
 visual_pass_claimed=false
-deploy_marker=LAWS_PAGE_ORBIT_BOX_SCALE_CENTER_GRAVITY_ROTATION_DEPLOY_MARKER_v1
+deploy_marker=LAWS_PAGE_ORBIT_LABEL_CONTRAST_AND_CATEGORY_RETURN_DEPLOY_MARKER_v1
         </template>
       </div>
     </main>
 
     <footer>
-      LAWS_PAGE_ORBIT_BOX_SCALE_CENTER_GRAVITY_ROTATION_TNT_v1 · Laws · Enlarged orbit chamber · Center-gravity rotation.
+      LAWS_PAGE_ORBIT_LABEL_CONTRAST_AND_CATEGORY_RETURN_TNT_v1 · Laws · Orbit label contrast · Category-return path.
     </footer>
   </div>
 </body>

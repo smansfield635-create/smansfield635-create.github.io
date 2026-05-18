@@ -4,22 +4,24 @@
   lang="en"
   data-route="/laws/"
   data-page="laws"
-  data-version="G13-V1"
-  data-contract="LAWS_PAGE_LOCAL_LAW_CARD_LANGUAGE_TOGGLE_TNT_v1"
-  data-source-binding="LAWS_PAGE_LOCAL_LAW_CARD_LANGUAGE_TOGGLE_PREGAME_TO_POSTGAME_BINDING_v1"
+  data-version="G14-V1"
+  data-contract="LAWS_PAGE_RESTORE_CRYSTAL_GEM_RENDERER_TNT_v1"
+  data-source-binding="LAWS_PAGE_RESTORE_CRYSTAL_GEM_RENDERER_PREGAME_TO_POSTGAME_BINDING_v1"
   data-branch="laws"
   data-role="law-chamber"
   data-visible-header-context="Manor_and_Estate_Law_Chamber"
-  data-top-global-toggle-preserved="true"
-  data-local-law-card-toggles="true"
-  data-local-toggles-default-platform="true"
-  data-local-toggles-control-own-card-only="true"
-  data-engineering-available-inside-each-law-card="true"
-  data-platform-available-inside-each-law-card="true"
-  data-all-sixteen-laws-remain-defined="true"
+  data-crystal-svg-renderer-restored="true"
+  data-css-polygon-gem-regression-removed="true"
+  data-large-law-diamonds-restored-to-svg-crystals="true"
+  data-orbit-law-diamonds-restored-to-svg-crystals="true"
+  data-orbit-route-diamonds-restored-to-route-color-svg-crystals="true"
+  data-local-law-card-toggles-preserved="true"
+  data-expanded-law-definitions-preserved="true"
+  data-all-sixteen-laws-preserved="true"
   data-return-to-orbit-target="law-diamonds"
   data-top-route-orbit-preserved="true"
-  data-large-law-category-diamonds-preserved="true"
+  data-center-gravity-rotation-preserved="true"
+  data-label-contrast-preserved="true"
   data-modern-static-html-css="true"
   data-javascript-dependency="false"
   data-heavy-runtime-loaded="false"
@@ -103,6 +105,14 @@
     label:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
+    }
+
+    .svg-defs{
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+      pointer-events:none;
     }
 
     .skip{
@@ -388,17 +398,10 @@
     }
 
     .page-platform,
-    .page-engineering{
-      display:none;
-    }
+    .page-engineering{display:none}
 
-    #lens-platform:checked ~ .lens-scope .page-platform{
-      display:block;
-    }
-
-    #lens-engineering:checked ~ .lens-scope .page-engineering{
-      display:block;
-    }
+    #lens-platform:checked ~ .lens-scope .page-platform{display:block}
+    #lens-engineering:checked ~ .lens-scope .page-engineering{display:block}
 
     .lens-toggle{
       display:grid;
@@ -475,9 +478,7 @@
     }
 
     .card-platform,
-    .card-engineering{
-      display:none;
-    }
+    .card-engineering{display:none}
 
     #authority-route-platform:checked ~ .card-lens-scope .card-platform,
     #proof-receipt-platform:checked ~ .card-lens-scope .card-platform,
@@ -486,9 +487,7 @@
     #human-interaction-platform:checked ~ .card-lens-scope .card-platform,
     #access-return-platform:checked ~ .card-lens-scope .card-platform,
     #product-foreground-platform:checked ~ .card-lens-scope .card-platform,
-    #scope-stale-platform:checked ~ .card-lens-scope .card-platform{
-      display:grid;
-    }
+    #scope-stale-platform:checked ~ .card-lens-scope .card-platform{display:grid}
 
     #authority-route-engineering:checked ~ .card-lens-scope .card-engineering,
     #proof-receipt-engineering:checked ~ .card-lens-scope .card-engineering,
@@ -497,9 +496,7 @@
     #human-interaction-engineering:checked ~ .card-lens-scope .card-engineering,
     #access-return-engineering:checked ~ .card-lens-scope .card-engineering,
     #product-foreground-engineering:checked ~ .card-lens-scope .card-engineering,
-    #scope-stale-engineering:checked ~ .card-lens-scope .card-engineering{
-      display:grid;
-    }
+    #scope-stale-engineering:checked ~ .card-lens-scope .card-engineering{display:grid}
 
     .section{
       display:grid;
@@ -730,24 +727,34 @@
       50%{transform:translateY(-.26rem) rotate(var(--tilt-b,2deg)) scale(1.025);filter:brightness(1.13)}
     }
 
-    .gem-shape{
+    .gem-svg{
       width:100%;
       height:100%;
-      clip-path:polygon(50% 0%,82% 8%,100% 45%,86% 74%,52% 100%,18% 76%,0% 46%,18% 12%);
-      border:1px solid rgba(255,255,255,.22);
-      background:
-        linear-gradient(135deg,rgba(255,255,255,.96),rgba(141,216,255,.34) 44%,rgba(4,10,22,.92)),
-        radial-gradient(circle at 40% 20%,rgba(255,255,255,.45),transparent 44%);
-      box-shadow:
-        0 1.15rem 1.35rem rgba(0,0,0,.36),
-        0 0 1.15rem rgba(36,120,255,.18),
-        inset 0 0 2rem rgba(255,255,255,.08);
+      overflow:visible;
+      pointer-events:none;
+      filter:
+        drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
+        drop-shadow(0 0 1.15rem rgba(36,120,255,.18))
+        drop-shadow(0 0 .55rem rgba(243,200,111,.10));
     }
 
-    .route-orbit .gem-shape{
-      background:
-        linear-gradient(135deg,rgba(255,248,220,.98),rgba(243,200,111,.54) 35%,rgba(141,216,255,.28) 62%,rgba(2,8,22,.94)),
-        radial-gradient(circle at 40% 20%,rgba(255,255,255,.42),transparent 44%);
+    .gem-glint{
+      animation:gemGlint 8.5s ease-in-out infinite;
+      transform-origin:110px 80px;
+    }
+
+    .gem-star{
+      animation:gemFacetTurn 30s linear infinite;
+      transform-origin:110px 80px;
+    }
+
+    @keyframes gemGlint{
+      0%,100%{opacity:.07;transform:translateX(-36px)}
+      48%,55%{opacity:.56;transform:translateX(34px)}
+    }
+
+    @keyframes gemFacetTurn{
+      to{transform:rotate(360deg)}
     }
 
     .gem-label{
@@ -1070,7 +1077,9 @@
 
       .orbit-track,
       .orbit-face,
-      .gem-core{
+      .gem-core,
+      .gem-glint,
+      .gem-star{
         animation:none!important;
       }
     }
@@ -1078,6 +1087,129 @@
 </head>
 
 <body>
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="lawGemBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".98"/>
+        <stop offset=".17" stop-color="#eaf8ff" stop-opacity=".82"/>
+        <stop offset=".34" stop-color="#bfeaff" stop-opacity=".58"/>
+        <stop offset=".55" stop-color="#8dd8ff" stop-opacity=".36"/>
+        <stop offset=".74" stop-color="#f8fbff" stop-opacity=".22"/>
+        <stop offset="1" stop-color="#08111d" stop-opacity=".92"/>
+      </linearGradient>
+
+      <linearGradient id="lawGemAir" x1="48" y1="10" x2="168" y2="80" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".98"/>
+        <stop offset=".36" stop-color="#eefaff" stop-opacity=".62"/>
+        <stop offset=".70" stop-color="#d6f3ff" stop-opacity=".22"/>
+        <stop offset="1" stop-color="#8dd8ff" stop-opacity=".12"/>
+      </linearGradient>
+
+      <radialGradient id="lawGemGlow" cx="50%" cy="38%" r="64%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".68"/>
+        <stop offset=".28" stop-color="#dff8ff" stop-opacity=".34"/>
+        <stop offset=".58" stop-color="#ffffff" stop-opacity=".14"/>
+        <stop offset="1" stop-color="#020611" stop-opacity="0"/>
+      </radialGradient>
+
+      <linearGradient id="routeGemBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#fff8dc" stop-opacity=".96"/>
+        <stop offset=".16" stop-color="#ffe8a3" stop-opacity=".72"/>
+        <stop offset=".36" stop-color="#f3c86f" stop-opacity=".56"/>
+        <stop offset=".56" stop-color="#8dd8ff" stop-opacity=".32"/>
+        <stop offset=".76" stop-color="#2d5f9a" stop-opacity=".36"/>
+        <stop offset="1" stop-color="#020816" stop-opacity=".94"/>
+      </linearGradient>
+
+      <linearGradient id="routeGemAir" x1="48" y1="10" x2="168" y2="80" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".94"/>
+        <stop offset=".34" stop-color="#fff0a3" stop-opacity=".48"/>
+        <stop offset=".68" stop-color="#8dd8ff" stop-opacity=".20"/>
+        <stop offset="1" stop-color="#f3c86f" stop-opacity=".12"/>
+      </linearGradient>
+
+      <linearGradient id="gemDepth" x1="110" y1="36" x2="110" y2="156" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".18"/>
+        <stop offset=".30" stop-color="#8dd8ff" stop-opacity=".20"/>
+        <stop offset=".62" stop-color="#f3c86f" stop-opacity=".13"/>
+        <stop offset="1" stop-color="#020716" stop-opacity=".66"/>
+      </linearGradient>
+
+      <linearGradient id="gemGlintLine" x1="28" y1="130" x2="184" y2="24" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset=".45" stop-color="#ffffff" stop-opacity=".84"/>
+        <stop offset=".52" stop-color="#fff0a3" stop-opacity=".30"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+
+      <filter id="gemGlowFilter" x="-42%" y="-50%" width="184%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="blur"/>
+        <feColorMatrix
+          in="blur"
+          type="matrix"
+          values="
+            0.42 0 0 0 0.08
+            0 .58 0 0 0.14
+            0 0 1.00 0 0.28
+            0 0 0 0.52 0"
+          result="glow"
+        />
+        <feMerge>
+          <feMergeNode in="glow"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      <symbol id="lawCrystalGem" viewBox="0 0 220 160">
+        <g filter="url(#gemGlowFilter)">
+          <path d="M108 4 L146 12 L184 39 L209 76 L188 108 L147 139 L111 155 L69 136 L27 105 L12 73 L39 37 L77 14 Z" fill="url(#lawGemBody)" stroke="rgba(235,248,255,.66)" stroke-width="1.35"/>
+          <path d="M108 4 L146 12 L130 38 L109 30 L87 39 L77 14 Z" fill="url(#lawGemAir)" opacity=".92"/>
+          <path d="M87 39 L109 30 L130 38 L159 60 L148 83 L110 101 L72 83 L61 58 Z" fill="url(#lawGemGlow)" stroke="rgba(255,255,255,.34)" stroke-width=".9"/>
+          <path d="M77 14 L87 39 L61 58 L39 37 Z" fill="rgba(255,255,255,.26)"/>
+          <path d="M146 12 L130 38 L159 60 L184 39 Z" fill="rgba(255,255,255,.18)"/>
+          <path d="M12 73 L53 83 L69 136 L27 105 Z" fill="rgba(141,216,255,.14)"/>
+          <path d="M209 76 L166 81 L147 139 L188 108 Z" fill="rgba(255,255,255,.10)"/>
+          <path d="M72 83 L110 101 L111 155 Z" fill="url(#gemDepth)" opacity=".62"/>
+          <path d="M148 83 L110 101 L111 155 Z" fill="rgba(4,10,22,.30)"/>
+          <path d="M108 4 L111 155" stroke="rgba(255,255,255,.38)" stroke-width="1.15"/>
+          <path d="M12 73 L209 76" stroke="rgba(255,255,255,.32)" stroke-width="1.05"/>
+          <path d="M39 37 L188 108" stroke="rgba(255,255,255,.18)" stroke-width=".9"/>
+          <path d="M184 39 L27 105" stroke="rgba(255,255,255,.18)" stroke-width=".9"/>
+          <g class="gem-star" opacity=".84">
+            <path d="M109 27 L116 70 L110 106 L103 70 Z" fill="rgba(255,255,255,.30)"/>
+            <path d="M61 58 L105 72 L159 60 L116 79 Z" fill="rgba(255,255,255,.18)"/>
+            <path d="M72 83 L105 75 L148 83 L114 92 Z" fill="rgba(141,216,255,.14)"/>
+          </g>
+          <path class="gem-glint" d="M33 118 L176 22 L188 38 L48 130 Z" fill="url(#gemGlintLine)"/>
+        </g>
+      </symbol>
+
+      <symbol id="routeColorGem" viewBox="0 0 220 160">
+        <g filter="url(#gemGlowFilter)">
+          <path d="M108 4 L146 12 L184 39 L209 76 L188 108 L147 139 L111 155 L69 136 L27 105 L12 73 L39 37 L77 14 Z" fill="url(#routeGemBody)" stroke="rgba(255,232,163,.58)" stroke-width="1.35"/>
+          <path d="M108 4 L146 12 L130 38 L109 30 L87 39 L77 14 Z" fill="url(#routeGemAir)" opacity=".88"/>
+          <path d="M87 39 L109 30 L130 38 L159 60 L148 83 L110 101 L72 83 L61 58 Z" fill="rgba(255,232,163,.15)" stroke="rgba(255,255,255,.26)" stroke-width=".9"/>
+          <path d="M77 14 L87 39 L61 58 L39 37 Z" fill="rgba(255,255,255,.18)"/>
+          <path d="M146 12 L130 38 L159 60 L184 39 Z" fill="rgba(243,200,111,.20)"/>
+          <path d="M12 73 L53 83 L69 136 L27 105 Z" fill="rgba(141,216,255,.12)"/>
+          <path d="M209 76 L166 81 L147 139 L188 108 Z" fill="rgba(243,200,111,.16)"/>
+          <path d="M72 83 L110 101 L111 155 Z" fill="url(#gemDepth)" opacity=".70"/>
+          <path d="M148 83 L110 101 L111 155 Z" fill="rgba(4,10,22,.34)"/>
+          <path d="M108 4 L111 155" stroke="rgba(255,255,255,.34)" stroke-width="1.15"/>
+          <path d="M12 73 L209 76" stroke="rgba(255,255,255,.28)" stroke-width="1.05"/>
+          <path d="M39 37 L188 108" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M184 39 L27 105" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <g class="gem-star" opacity=".82">
+            <path d="M109 27 L116 70 L110 106 L103 70 Z" fill="rgba(255,255,255,.27)"/>
+            <path d="M61 58 L105 72 L159 60 L116 79 Z" fill="rgba(255,255,255,.16)"/>
+            <path d="M72 83 L105 75 L148 83 L114 92 Z" fill="rgba(243,200,111,.12)"/>
+          </g>
+          <path class="gem-glint" d="M33 118 L176 22 L188 38 L48 130 Z" fill="url(#gemGlintLine)"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
   <a class="skip" href="#laws-main">Skip to Laws</a>
 
   <div class="shell">
@@ -1172,34 +1304,73 @@
 
               <div class="orbit-track">
                 <a class="orbit-diamond law-orbit" href="/laws/scientific-law/" style="--a:0deg;" aria-label="Open Scientific Law">
-                  <span class="orbit-face"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Scientific</b><span>Law</span></span></span>
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                    <span class="gem-label"><b>Scientific</b><span>Law</span></span>
+                  </span>
                 </a>
+
                 <a class="orbit-diamond route-orbit" href="/" style="--a:36deg;" aria-label="Open Compass">
-                  <span class="orbit-face"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Compass</b><span>Root</span></span></span>
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+                    <span class="gem-label"><b>Compass</b><span>Root</span></span>
+                  </span>
                 </a>
+
                 <a class="orbit-diamond route-orbit" href="/door/" style="--a:72deg;" aria-label="Open Door">
-                  <span class="orbit-face"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Door</b><span>Entry</span></span></span>
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+                    <span class="gem-label"><b>Door</b><span>Entry</span></span>
+                  </span>
                 </a>
+
                 <a class="orbit-diamond route-orbit" href="/home/" style="--a:108deg;" aria-label="Open Home">
-                  <span class="orbit-face"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Home</b><span>Return</span></span></span>
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+                    <span class="gem-label"><b>Home</b><span>Return</span></span>
+                  </span>
                 </a>
+
                 <a class="orbit-diamond route-orbit" href="/explore/" style="--a:144deg;" aria-label="Open Manor">
-                  <span class="orbit-face"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Manor</b><span>Map</span></span></span>
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+                    <span class="gem-label"><b>Manor</b><span>Map</span></span>
+                  </span>
                 </a>
+
                 <a class="orbit-diamond law-orbit" href="/laws/categories/reality/" style="--a:180deg;" aria-label="Open Reality law category">
-                  <span class="orbit-face"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Reality</b><span>Category</span></span></span>
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                    <span class="gem-label"><b>Reality</b><span>Category</span></span>
+                  </span>
                 </a>
+
                 <a class="orbit-diamond route-orbit" href="/products/" style="--a:216deg;" aria-label="Open Products">
-                  <span class="orbit-face"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Products</b><span>Offer</span></span></span>
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+                    <span class="gem-label"><b>Products</b><span>Offer</span></span>
+                  </span>
                 </a>
+
                 <a class="orbit-diamond route-orbit" href="/showroom/" style="--a:252deg;" aria-label="Open Showroom">
-                  <span class="orbit-face"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Showroom</b><span>Objects</span></span></span>
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+                    <span class="gem-label"><b>Showroom</b><span>Objects</span></span>
+                  </span>
                 </a>
+
                 <a class="orbit-diamond route-orbit" href="/frontier/" style="--a:288deg;" aria-label="Open Frontier">
-                  <span class="orbit-face"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Frontier</b><span>Future</span></span></span>
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+                    <span class="gem-label"><b>Frontier</b><span>Future</span></span>
+                  </span>
                 </a>
+
                 <a class="orbit-diamond route-orbit" href="/gauges/" style="--a:324deg;" aria-label="Open Gauges">
-                  <span class="orbit-face"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Gauges</b><span>Measure</span></span></span>
+                  <span class="orbit-face">
+                    <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#routeColorGem"></use></svg></span>
+                    <span class="gem-label"><b>Gauges</b><span>Measure</span></span>
+                  </span>
                 </a>
               </div>
             </div>
@@ -1220,14 +1391,45 @@
 
           <div class="gem-stage" aria-label="Large grouped law diamond field">
             <div class="large-law-field">
-              <a class="large-law-diamond" href="#authority-route" style="--delay:-.1s;--tilt-a:-1.6deg;--tilt-b:1.8deg;"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Authority / Route</b><span>Owner + Where</span></span></a>
-              <a class="large-law-diamond" href="#proof-receipt" style="--delay:-.6s;--tilt-a:1.5deg;--tilt-b:-2deg;"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Proof / Receipt</b><span>Evidence + Record</span></span></a>
-              <a class="large-law-diamond" href="#runtime-animation" style="--delay:-1.1s;--tilt-a:-2deg;--tilt-b:1.4deg;"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Runtime / Animation</b><span>Motion + Hierarchy</span></span></a>
-              <a class="large-law-diamond" href="#generation-visual" style="--delay:-1.6s;--tilt-a:1.8deg;--tilt-b:-1.6deg;"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Generation / Visual</b><span>Baseline + Claim</span></span></a>
-              <a class="large-law-diamond" href="#human-interaction" style="--delay:-2.1s;--tilt-a:-1.7deg;--tilt-b:2.1deg;"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Human / Interaction</b><span>Boundary + Touch</span></span></a>
-              <a class="large-law-diamond" href="#access-return" style="--delay:-2.6s;--tilt-a:2deg;--tilt-b:-1.4deg;"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Access / Return</b><span>Reachable + Back Path</span></span></a>
-              <a class="large-law-diamond" href="#product-foreground" style="--delay:-3.1s;--tilt-a:-1.6deg;--tilt-b:1.9deg;"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Product / Foreground</b><span>Separate + Core</span></span></a>
-              <a class="large-law-diamond" href="#scope-stale" style="--delay:-3.6s;--tilt-a:1.7deg;--tilt-b:-1.8deg;"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Scope / Stale</b><span>Boundary + Language</span></span></a>
+              <a class="large-law-diamond" href="#authority-route" style="--delay:-.1s;--tilt-a:-1.6deg;--tilt-b:1.8deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                <span class="gem-label"><b>Authority / Route</b><span>Owner + Where</span></span>
+              </a>
+
+              <a class="large-law-diamond" href="#proof-receipt" style="--delay:-.6s;--tilt-a:1.5deg;--tilt-b:-2deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                <span class="gem-label"><b>Proof / Receipt</b><span>Evidence + Record</span></span>
+              </a>
+
+              <a class="large-law-diamond" href="#runtime-animation" style="--delay:-1.1s;--tilt-a:-2deg;--tilt-b:1.4deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                <span class="gem-label"><b>Runtime / Animation</b><span>Motion + Hierarchy</span></span>
+              </a>
+
+              <a class="large-law-diamond" href="#generation-visual" style="--delay:-1.6s;--tilt-a:1.8deg;--tilt-b:-1.6deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                <span class="gem-label"><b>Generation / Visual</b><span>Baseline + Claim</span></span>
+              </a>
+
+              <a class="large-law-diamond" href="#human-interaction" style="--delay:-2.1s;--tilt-a:-1.7deg;--tilt-b:2.1deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                <span class="gem-label"><b>Human / Interaction</b><span>Boundary + Touch</span></span>
+              </a>
+
+              <a class="large-law-diamond" href="#access-return" style="--delay:-2.6s;--tilt-a:2deg;--tilt-b:-1.4deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                <span class="gem-label"><b>Access / Return</b><span>Reachable + Back Path</span></span>
+              </a>
+
+              <a class="large-law-diamond" href="#product-foreground" style="--delay:-3.1s;--tilt-a:-1.6deg;--tilt-b:1.9deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                <span class="gem-label"><b>Product / Foreground</b><span>Separate + Core</span></span>
+              </a>
+
+              <a class="large-law-diamond" href="#scope-stale" style="--delay:-3.6s;--tilt-a:1.7deg;--tilt-b:-1.8deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true"><use href="#lawCrystalGem"></use></svg></span>
+                <span class="gem-label"><b>Scope / Stale</b><span>Boundary + Language</span></span>
+              </a>
             </div>
           </div>
 
@@ -1459,32 +1661,34 @@
         </section>
 
         <template id="route-receipt" data-route-receipt>
-LAWS_PAGE_LOCAL_LAW_CARD_LANGUAGE_TOGGLE_TNT_v1
-binding=LAWS_PAGE_LOCAL_LAW_CARD_LANGUAGE_TOGGLE_PREGAME_TO_POSTGAME_BINDING_v1
+LAWS_PAGE_RESTORE_CRYSTAL_GEM_RENDERER_TNT_v1
+binding=LAWS_PAGE_RESTORE_CRYSTAL_GEM_RENDERER_PREGAME_TO_POSTGAME_BINDING_v1
 route=/laws/
 target=/laws/index.html
-top_global_toggle_preserved=true
-local_law_card_toggles=true
-local_toggles_default_platform=true
-local_toggles_control_own_card_only=true
-engineering_available_inside_each_law_card=true
-platform_available_inside_each_law_card=true
-all_sixteen_laws_remain_defined=true
+crystal_svg_renderer_restored=true
+css_polygon_gem_regression_removed=true
+large_law_diamonds_restored_to_svg_crystals=true
+orbit_law_diamonds_restored_to_svg_crystals=true
+orbit_route_diamonds_restored_to_route_color_svg_crystals=true
+local_law_card_toggles_preserved=true
+expanded_law_definitions_preserved=true
+all_sixteen_laws_preserved=true
 return_to_orbit_target=law_diamonds
 top_route_orbit_preserved=true
-large_law_category_diamonds_preserved=true
+center_gravity_rotation_preserved=true
+label_contrast_preserved=true
 javascript_dependency=false
 heavy_runtime=false
 generated_image=false
 graphic_block=false
 visual_pass_claimed=false
-deploy_marker=LAWS_PAGE_LOCAL_LAW_CARD_LANGUAGE_TOGGLE_DEPLOY_MARKER_v1
+deploy_marker=LAWS_PAGE_RESTORE_CRYSTAL_GEM_RENDERER_DEPLOY_MARKER_v1
         </template>
       </div>
     </main>
 
     <footer>
-      LAWS_PAGE_LOCAL_LAW_CARD_LANGUAGE_TOGGLE_TNT_v1 · Laws · Local Platform / Engineering toggles.
+      LAWS_PAGE_RESTORE_CRYSTAL_GEM_RENDERER_TNT_v1 · Laws · SVG crystal gem renderer restored.
     </footer>
   </div>
 </body>

@@ -3,21 +3,18 @@
   lang="en"
   data-route="/explore/frontier/infrastructure/"
   data-page="frontier-infrastructure"
-  data-version="G3-V2"
-  data-contract="FRONTIER_INFRASTRUCTURE_LIVING_BACKBONE_UNDER_LOAD_TNT_v2"
-  data-previous-contract="FRONTIER_INFRASTRUCTURE_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1"
+  data-version="G3-V3"
+  data-contract="FRONTIER_INFRASTRUCTURE_DROPDOWN_BACKBONE_RETURN_RESTORATION_TNT_v3"
   data-role="frontier-infrastructure"
   data-active-route="/explore/frontier/infrastructure/"
   data-parent-return="/explore/frontier/"
   data-artistic-identity="living-backbone-under-load"
+  data-dropdown-navigation="active"
   data-backbone-field="active"
-  data-load-capacity-dependency-field="active"
   data-compass-gems="active"
   data-pathway-gems="active"
-  data-audralia-first="true"
   data-platform-lens="active"
   data-engineering-lens="active"
-  data-dropdown-navigation="active"
   data-static-page-usable-without-js="true"
   data-runtime-scope="css-only"
   data-generated-image="false"
@@ -108,10 +105,8 @@
     a{color:inherit;text-decoration:none}
 
     a:focus-visible,
-    button:focus-visible,
     summary:focus-visible,
-    label:focus-visible,
-    [tabindex]:focus-visible{
+    label:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
     }
@@ -175,10 +170,7 @@
         conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.28),rgba(57,255,159,.16),rgba(1,15,60,.58),rgba(243,200,111,.20),rgba(255,255,255,.28)),
         radial-gradient(circle at 48% 22%,rgba(255,255,255,.30),transparent 42%),
         linear-gradient(145deg,rgba(9,44,112,.95),rgba(5,8,20,.98));
-      box-shadow:
-        0 0 2rem rgba(243,200,111,.18),
-        0 1.2rem 2.8rem rgba(0,0,0,.46),
-        inset 0 1px 0 rgba(255,255,255,.16);
+      box-shadow:0 0 2rem rgba(243,200,111,.18),0 1.2rem 2.8rem rgba(0,0,0,.46),inset 0 1px 0 rgba(255,255,255,.16);
     }
 
     .brand-mark span{
@@ -190,20 +182,8 @@
     }
 
     .brand-copy{display:grid;gap:.18rem}
-
-    .brand-copy strong{
-      font-size:clamp(1.08rem,3vw,1.7rem);
-      line-height:1;
-      letter-spacing:-.045em;
-    }
-
-    .brand-copy span{
-      color:var(--muted);
-      font-size:.74rem;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-    }
+    .brand-copy strong{font-size:clamp(1.08rem,3vw,1.7rem);line-height:1;letter-spacing:-.045em}
+    .brand-copy span{color:var(--muted);font-size:.74rem;font-weight:950;letter-spacing:.14em;text-transform:uppercase}
 
     .nav{
       display:flex;
@@ -229,29 +209,20 @@
       border-radius:999px;
       padding:.62rem .85rem;
       color:rgba(241,246,255,.90);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(57,255,159,.13),transparent 70%),
-        rgba(255,255,255,.045);
+      background:radial-gradient(circle at 50% 0%,rgba(57,255,159,.13),transparent 70%),rgba(255,255,255,.045);
       font-size:.72rem;
       font-weight:950;
       letter-spacing:.075em;
       text-transform:uppercase;
-      box-shadow:
-        0 0 1.15rem rgba(57,255,159,.08),
-        inset 0 1px 0 rgba(255,255,255,.08);
+      box-shadow:0 0 1.15rem rgba(57,255,159,.08),inset 0 1px 0 rgba(255,255,255,.08);
       backdrop-filter:blur(7px);
     }
 
     .route-menu[open] summary{
       border-color:rgba(57,255,159,.66);
       color:rgba(226,255,239,.98);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(57,255,159,.28),transparent 72%),
-        linear-gradient(180deg,rgba(12,34,31,.72),rgba(4,9,20,.84));
-      box-shadow:
-        0 0 1.8rem rgba(57,255,159,.30),
-        0 0 3.2rem rgba(57,255,159,.10),
-        inset 0 1px 0 rgba(255,255,255,.12);
+      background:radial-gradient(circle at 50% 0%,rgba(57,255,159,.28),transparent 72%),linear-gradient(180deg,rgba(12,34,31,.72),rgba(4,9,20,.84));
+      box-shadow:0 0 1.8rem rgba(57,255,159,.30),0 0 3.2rem rgba(57,255,159,.10),inset 0 1px 0 rgba(255,255,255,.12);
     }
 
     .route-menu summary::-webkit-details-marker{display:none}
@@ -265,10 +236,7 @@
       transform:rotate(45deg) translateY(-.12rem);
     }
 
-    .route-menu[open] summary::after{
-      transform:rotate(225deg) translateY(-.08rem);
-      border-color:rgba(57,255,159,.95);
-    }
+    .route-menu[open] summary::after{transform:rotate(225deg) translateY(-.08rem);border-color:rgba(57,255,159,.95)}
 
     .route-menu-panel{
       position:absolute;
@@ -283,10 +251,7 @@
         radial-gradient(circle at 12% 0%,rgba(57,255,159,.24),transparent 15rem),
         radial-gradient(circle at 96% 25%,rgba(141,216,255,.09),transparent 15rem),
         linear-gradient(180deg,rgba(6,23,28,.97),rgba(3,7,18,.98));
-      box-shadow:
-        0 0 2.8rem rgba(57,255,159,.22),
-        0 1.4rem 3.4rem rgba(0,0,0,.42),
-        inset 0 1px 0 rgba(255,255,255,.09);
+      box-shadow:0 0 2.8rem rgba(57,255,159,.22),0 1.4rem 3.4rem rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.09);
     }
 
     .route-menu-grid{
@@ -304,17 +269,13 @@
       border-radius:.86rem;
       padding:.5rem .62rem;
       color:rgba(232,255,241,.88);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(57,255,159,.11),transparent 72%),
-        linear-gradient(180deg,rgba(255,255,255,.048),rgba(255,255,255,.020));
+      background:radial-gradient(circle at 50% 0%,rgba(57,255,159,.11),transparent 72%),linear-gradient(180deg,rgba(255,255,255,.048),rgba(255,255,255,.020));
       font-size:.64rem;
       font-weight:950;
       letter-spacing:.06em;
       text-align:center;
       text-transform:uppercase;
-      box-shadow:
-        0 0 .85rem rgba(57,255,159,.08),
-        inset 0 1px 0 rgba(255,255,255,.07);
+      box-shadow:0 0 .85rem rgba(57,255,159,.08),inset 0 1px 0 rgba(255,255,255,.07);
     }
 
     .route-menu-link:hover,
@@ -322,24 +283,16 @@
       transform:translateY(-2px);
       border-color:rgba(57,255,159,.64);
       color:rgba(245,255,249,.98);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(57,255,159,.22),transparent 72%),
-        linear-gradient(180deg,rgba(57,255,159,.085),rgba(255,255,255,.028));
-      box-shadow:
-        0 0 1.35rem rgba(57,255,159,.24),
-        inset 0 1px 0 rgba(255,255,255,.10);
+      background:radial-gradient(circle at 50% 0%,rgba(57,255,159,.22),transparent 72%),linear-gradient(180deg,rgba(57,255,159,.085),rgba(255,255,255,.028));
+      box-shadow:0 0 1.35rem rgba(57,255,159,.24),inset 0 1px 0 rgba(255,255,255,.10);
       outline:none;
     }
 
     .route-menu-link[aria-current="page"]{
       color:#041009;
       border-color:rgba(243,200,111,.86);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(57,255,159,.28),transparent 70%),
-        linear-gradient(135deg,#fff2a8,#f3c86f);
-      box-shadow:
-        0 0 1.6rem rgba(57,255,159,.24),
-        0 0 1rem rgba(243,200,111,.22);
+      background:radial-gradient(circle at 50% 0%,rgba(57,255,159,.28),transparent 70%),linear-gradient(135deg,#fff2a8,#f3c86f);
+      box-shadow:0 0 1.6rem rgba(57,255,159,.24),0 0 1rem rgba(243,200,111,.22);
     }
 
     .panel{
@@ -394,7 +347,7 @@
     h1{
       margin:0;
       max-width:1020px;
-      font-size:clamp(3.3rem,10vw,7.05rem);
+      font-size:clamp(3.1rem,9.8vw,6.8rem);
       line-height:.84;
       letter-spacing:-.105em;
       text-wrap:balance;
@@ -525,14 +478,8 @@
         linear-gradient(90deg,rgba(141,216,255,.072) 1px,transparent 1px),
         linear-gradient(rgba(243,200,111,.038) 1px,transparent 1px),
         linear-gradient(90deg,rgba(243,200,111,.038) 1px,transparent 1px);
-      background-size:
-        8.33% 8.33%,
-        8.33% 8.33%,
-        25% 25%,
-        25% 25%;
-      box-shadow:
-        inset 0 0 3rem rgba(243,200,111,.040),
-        0 0 2.4rem rgba(36,120,255,.08);
+      background-size:8.33% 8.33%,8.33% 8.33%,25% 25%,25% 25%;
+      box-shadow:inset 0 0 3rem rgba(243,200,111,.040),0 0 2.4rem rgba(36,120,255,.08);
       mask-image:linear-gradient(180deg,rgba(0,0,0,.94),rgba(0,0,0,.76));
     }
 
@@ -551,10 +498,7 @@
         linear-gradient(180deg,rgba(255,244,216,.48),rgba(243,200,111,.28),rgba(57,255,159,.18),rgba(255,179,107,.28),rgba(255,244,216,.36)),
         radial-gradient(circle at 50% 14%,rgba(255,255,255,.72),transparent 16%),
         rgba(4,8,19,.88);
-      box-shadow:
-        0 0 1.8rem rgba(243,200,111,.26),
-        0 0 3.2rem rgba(57,255,159,.12),
-        inset 0 0 1.2rem rgba(255,255,255,.16);
+      box-shadow:0 0 1.8rem rgba(243,200,111,.26),0 0 3.2rem rgba(57,255,159,.12),inset 0 0 1.2rem rgba(255,255,255,.16);
     }
 
     .capacity-band{
@@ -567,9 +511,7 @@
       border:1px solid var(--band-color);
       border-radius:50%;
       transform:translate(-50%,-50%) rotate(var(--r));
-      box-shadow:
-        0 0 1.8rem var(--band-glow),
-        inset 0 0 1.2rem rgba(255,255,255,.035);
+      box-shadow:0 0 1.8rem var(--band-glow),inset 0 0 1.2rem rgba(255,255,255,.035);
       opacity:.70;
       animation:capacityBreathe var(--t,8s) ease-in-out infinite;
       animation-delay:var(--d,0s);
@@ -589,8 +531,7 @@
       height:2px;
       transform:rotate(var(--r));
       transform-origin:left center;
-      background:
-        linear-gradient(90deg,rgba(243,200,111,.80),rgba(57,255,159,.44),rgba(141,216,255,.20),transparent);
+      background:linear-gradient(90deg,rgba(243,200,111,.80),rgba(57,255,159,.44),rgba(141,216,255,.20),transparent);
       opacity:.56;
       box-shadow:0 0 1rem rgba(243,200,111,.20);
       animation:dependencyCarry var(--t,7s) ease-in-out infinite;
@@ -601,8 +542,7 @@
       transform-origin:right center;
       left:auto;
       right:50%;
-      background:
-        linear-gradient(270deg,rgba(243,200,111,.80),rgba(57,255,159,.44),rgba(141,216,255,.20),transparent);
+      background:linear-gradient(270deg,rgba(243,200,111,.80),rgba(57,255,159,.44),rgba(141,216,255,.20),transparent);
     }
 
     .dependency-line::after{
@@ -620,9 +560,7 @@
       animation-delay:var(--d,0s);
     }
 
-    .dependency-line.left::after{
-      animation-name:loadPacketReverse;
-    }
+    .dependency-line.left::after{animation-name:loadPacketReverse}
 
     @keyframes dependencyCarry{
       0%,100%{opacity:.24;filter:brightness(.85)}
@@ -654,12 +592,8 @@
       border:1px solid rgba(57,255,159,.76);
       border-radius:50%;
       transform:translateX(-50%);
-      background:
-        radial-gradient(circle at 42% 34%,rgba(255,255,255,.98),transparent 18%),
-        radial-gradient(circle at 50% 50%,rgba(57,255,159,.78),rgba(3,8,18,.88) 70%);
-      box-shadow:
-        0 0 1rem rgba(57,255,159,.72),
-        0 0 2.6rem rgba(57,255,159,.28);
+      background:radial-gradient(circle at 42% 34%,rgba(255,255,255,.98),transparent 18%),radial-gradient(circle at 50% 50%,rgba(57,255,159,.78),rgba(3,8,18,.88) 70%);
+      box-shadow:0 0 1rem rgba(57,255,159,.72),0 0 2.6rem rgba(57,255,159,.28);
       animation:maintenanceTravel 12s ease-in-out infinite;
     }
 
@@ -682,33 +616,14 @@
       border:1px solid rgba(255,255,255,.14);
       border-radius:999px;
       color:rgba(255,244,216,.94);
-      background:
-        radial-gradient(circle at 50% 0%,var(--node-bg),transparent 72%),
-        rgba(3,6,18,.72);
-      box-shadow:
-        0 0 1rem var(--node-glow),
-        inset 0 1px 0 rgba(255,255,255,.08);
+      background:radial-gradient(circle at 50% 0%,var(--node-bg),transparent 72%),rgba(3,6,18,.72);
+      box-shadow:0 0 1rem var(--node-glow),inset 0 1px 0 rgba(255,255,255,.08);
       transform:translate(-50%,-50%);
       backdrop-filter:blur(7px);
     }
 
-    .infra-node b{
-      color:rgba(255,244,216,.98);
-      font-size:.62rem;
-      font-weight:950;
-      letter-spacing:.11em;
-      line-height:1;
-      text-transform:uppercase;
-    }
-
-    .infra-node span{
-      color:rgba(230,238,255,.72);
-      font-size:.50rem;
-      font-weight:950;
-      letter-spacing:.09em;
-      line-height:1;
-      text-transform:uppercase;
-    }
+    .infra-node b{color:rgba(255,244,216,.98);font-size:.62rem;font-weight:950;letter-spacing:.11em;line-height:1;text-transform:uppercase}
+    .infra-node span{color:rgba(230,238,255,.72);font-size:.50rem;font-weight:950;letter-spacing:.09em;line-height:1;text-transform:uppercase}
 
     .infra-node.power{--node-bg:rgba(243,200,111,.24);--node-glow:rgba(243,200,111,.22)}
     .infra-node.water{--node-bg:rgba(141,216,255,.22);--node-glow:rgba(141,216,255,.22)}
@@ -729,13 +644,8 @@
       border:1px solid rgba(255,255,255,.18);
       border-radius:50%;
       transform:translate(-50%,-50%);
-      background:
-        radial-gradient(circle at 42% 34%,rgba(255,255,255,.92),transparent 18%),
-        radial-gradient(circle at 50% 50%,var(--c),rgba(3,8,18,.88) 68%);
-      box-shadow:
-        0 0 .8rem var(--glow),
-        0 0 1.6rem var(--glow-soft),
-        inset 0 1px 0 rgba(255,255,255,.20);
+      background:radial-gradient(circle at 42% 34%,rgba(255,255,255,.92),transparent 18%),radial-gradient(circle at 50% 50%,var(--c),rgba(3,8,18,.88) 68%);
+      box-shadow:0 0 .8rem var(--glow),0 0 1.6rem var(--glow-soft),inset 0 1px 0 rgba(255,255,255,.20);
       animation:supportPulse var(--t,6s) ease-in-out infinite;
       animation-delay:var(--d,0s);
     }
@@ -758,12 +668,8 @@
       padding:1rem;
       border:1px solid rgba(57,255,159,.22);
       border-radius:1.25rem;
-      background:
-        radial-gradient(circle at 16% 0%,rgba(57,255,159,.13),transparent 20rem),
-        rgba(3,6,18,.52);
-      box-shadow:
-        0 0 1.5rem rgba(57,255,159,.08),
-        inset 0 1px 0 rgba(255,255,255,.06);
+      background:radial-gradient(circle at 16% 0%,rgba(57,255,159,.13),transparent 20rem),rgba(3,6,18,.52);
+      box-shadow:0 0 1.5rem rgba(57,255,159,.08),inset 0 1px 0 rgba(255,255,255,.06);
       backdrop-filter:blur(8px);
     }
 
@@ -803,18 +709,8 @@
       box-shadow:0 0 .78rem var(--key-color,var(--gold));
     }
 
-    .key-mark.line{
-      height:.22rem;
-      margin-top:.45rem;
-      border-radius:999px;
-    }
-
-    .key-mark.spine{
-      width:.42rem;
-      height:1.2rem;
-      margin-left:.25rem;
-      border-radius:999px;
-    }
+    .key-mark.line{height:.22rem;margin-top:.45rem;border-radius:999px}
+    .key-mark.spine{width:.42rem;height:1.2rem;margin-left:.25rem;border-radius:999px}
 
     .compass-stage{
       position:relative;
@@ -848,9 +744,7 @@
       width:min(84%,44rem);
       height:min(62%,28rem);
       border:1px solid rgba(243,200,111,.13);
-      box-shadow:
-        0 0 3rem rgba(36,120,255,.12),
-        inset 0 0 30px rgba(141,216,255,.045);
+      box-shadow:0 0 3rem rgba(36,120,255,.12),inset 0 0 30px rgba(141,216,255,.045);
       animation:orbitTurn 42s linear infinite;
     }
 
@@ -921,11 +815,7 @@
         radial-gradient(circle at 50% 50%,rgba(243,200,111,.66),transparent 36%),
         radial-gradient(circle at 50% 50%,rgba(141,216,255,.45),transparent 63%),
         radial-gradient(circle at 50% 50%,rgba(143,101,255,.24),transparent 84%);
-      box-shadow:
-        0 0 .78rem rgba(255,255,255,.38),
-        0 0 1.42rem rgba(243,200,111,.46),
-        0 0 2.55rem rgba(141,216,255,.35),
-        0 0 3.75rem rgba(143,101,255,.22);
+      box-shadow:0 0 .78rem rgba(255,255,255,.38),0 0 1.42rem rgba(243,200,111,.46),0 0 2.55rem rgba(141,216,255,.35),0 0 3.75rem rgba(143,101,255,.22);
       opacity:.94;
       pointer-events:none;
       animation:behindGemStarTwinkle 6.2s ease-in-out infinite;
@@ -935,11 +825,7 @@
     .compass-center::before{
       width:96%;
       height:118%;
-      box-shadow:
-        0 0 .95rem rgba(255,255,255,.42),
-        0 0 1.75rem rgba(243,200,111,.50),
-        0 0 3rem rgba(141,216,255,.38),
-        0 0 4.4rem rgba(143,101,255,.26);
+      box-shadow:0 0 .95rem rgba(255,255,255,.42),0 0 1.75rem rgba(243,200,111,.50),0 0 3rem rgba(141,216,255,.38),0 0 4.4rem rgba(143,101,255,.26);
     }
 
     .compass-center::after,
@@ -960,10 +846,7 @@
       animation-delay:var(--delay,0s);
     }
 
-    .compass-center::after{
-      inset:-12%;
-      opacity:.80;
-    }
+    .compass-center::after{inset:-12%;opacity:.80}
 
     .compass-node:hover,
     .compass-node:focus-visible{
@@ -1016,37 +899,22 @@
       height:100%;
       overflow:visible;
       pointer-events:none;
-      filter:
-        drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
-        drop-shadow(0 0 1.15rem rgba(36,120,255,.18))
-        drop-shadow(0 0 .55rem rgba(243,200,111,.10));
+      filter:drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36)) drop-shadow(0 0 1.15rem rgba(36,120,255,.18)) drop-shadow(0 0 .55rem rgba(243,200,111,.10));
     }
 
     .compass-center .gem-svg{
-      filter:
-        drop-shadow(0 1.55rem 1.85rem rgba(0,0,0,.42))
-        drop-shadow(0 0 1.65rem rgba(36,120,255,.23))
-        drop-shadow(0 0 .85rem rgba(243,200,111,.16));
+      filter:drop-shadow(0 1.55rem 1.85rem rgba(0,0,0,.42)) drop-shadow(0 0 1.65rem rgba(36,120,255,.23)) drop-shadow(0 0 .85rem rgba(243,200,111,.16));
     }
 
-    .gem-glint{
-      animation:gemGlint 8.5s ease-in-out infinite;
-      transform-origin:110px 80px;
-    }
-
-    .gem-star{
-      animation:gemFacetTurn 30s linear infinite;
-      transform-origin:110px 80px;
-    }
+    .gem-glint{animation:gemGlint 8.5s ease-in-out infinite;transform-origin:110px 80px}
+    .gem-star{animation:gemFacetTurn 30s linear infinite;transform-origin:110px 80px}
 
     @keyframes gemGlint{
       0%,100%{opacity:.07;transform:translateX(-36px)}
       48%,55%{opacity:.56;transform:translateX(34px)}
     }
 
-    @keyframes gemFacetTurn{
-      to{transform:rotate(360deg)}
-    }
+    @keyframes gemFacetTurn{to{transform:rotate(360deg)}}
 
     .gem-label{
       position:relative;
@@ -1057,10 +925,7 @@
       gap:.18rem;
       text-align:center;
       pointer-events:none;
-      text-shadow:
-        0 3px 14px rgba(0,0,0,.98),
-        0 0 12px rgba(0,28,90,.88),
-        0 0 3px rgba(255,255,255,.58);
+      text-shadow:0 3px 14px rgba(0,0,0,.98),0 0 12px rgba(0,28,90,.88),0 0 3px rgba(255,255,255,.58);
     }
 
     .gem-label b{
@@ -1082,21 +947,9 @@
       text-transform:uppercase;
     }
 
-    .compass-center .gem-label{
-      width:84%;
-      gap:.2rem;
-    }
-
-    .compass-center .gem-label b{
-      color:var(--gold);
-      font-size:clamp(1.02rem,2.35vw,1.42rem);
-      letter-spacing:.13em;
-    }
-
-    .compass-center .gem-label span{
-      font-size:clamp(.72rem,1.48vw,.94rem);
-      letter-spacing:.085em;
-    }
+    .compass-center .gem-label{width:84%;gap:.2rem}
+    .compass-center .gem-label b{color:var(--gold);font-size:clamp(1.02rem,2.35vw,1.42rem);letter-spacing:.13em}
+    .compass-center .gem-label span{font-size:clamp(.72rem,1.48vw,.94rem);letter-spacing:.085em}
 
     .pathway-module{
       display:grid;
@@ -1104,20 +957,12 @@
       padding:1rem;
       border:1px solid rgba(255,255,255,.12);
       border-radius:1.35rem;
-      background:
-        radial-gradient(circle at 18% 0%,rgba(36,120,255,.10),transparent 28rem),
-        radial-gradient(circle at 88% 10%,rgba(57,255,159,.060),transparent 24rem),
-        rgba(255,255,255,.035);
+      background:radial-gradient(circle at 18% 0%,rgba(36,120,255,.10),transparent 28rem),radial-gradient(circle at 88% 10%,rgba(57,255,159,.060),transparent 24rem),rgba(255,255,255,.035);
       overflow:hidden;
     }
 
     .lens-shell{position:relative;display:grid;gap:.8rem}
-
-    .lens-radio{
-      position:absolute;
-      opacity:0;
-      pointer-events:none;
-    }
+    .lens-radio{position:absolute;opacity:0;pointer-events:none}
 
     .lens-tabs{
       display:flex;
@@ -1143,10 +988,7 @@
       user-select:none;
     }
 
-    .lens-tab:hover{
-      transform:translateY(-2px);
-      border-color:rgba(243,200,111,.46);
-    }
+    .lens-tab:hover{transform:translateY(-2px);border-color:rgba(243,200,111,.46)}
 
     .platform-radio:checked ~ .lens-tabs .platform-tab,
     .engineering-radio:checked ~ .lens-tabs .engineering-tab{
@@ -1158,9 +1000,7 @@
     .lens-body{
       border:1px solid rgba(255,255,255,.12);
       border-radius:1.15rem;
-      background:
-        radial-gradient(circle at 10% 0%,rgba(141,216,255,.08),transparent 24rem),
-        linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.022));
+      background:radial-gradient(circle at 10% 0%,rgba(141,216,255,.08),transparent 24rem),linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.022));
       overflow:hidden;
     }
 
@@ -1239,9 +1079,7 @@
     .return-frontier{
       border:1px solid rgba(57,255,159,.24);
       color:rgba(232,255,241,.90);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(57,255,159,.13),transparent 70%),
-        rgba(255,255,255,.045);
+      background:radial-gradient(circle at 50% 0%,rgba(57,255,159,.13),transparent 70%),rgba(255,255,255,.045);
       box-shadow:0 0 .9rem rgba(57,255,159,.08),inset 0 1px 0 rgba(255,255,255,.07);
     }
 
@@ -1260,10 +1098,7 @@
       gap:.85rem;
       border:1px solid rgba(243,200,111,.28);
       border-radius:1.55rem;
-      background:
-        radial-gradient(circle at 18% 0%,rgba(243,200,111,.12),transparent 32rem),
-        radial-gradient(circle at 88% 20%,rgba(57,255,159,.09),transparent 28rem),
-        linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.025));
+      background:radial-gradient(circle at 18% 0%,rgba(243,200,111,.12),transparent 32rem),radial-gradient(circle at 88% 20%,rgba(57,255,159,.09),transparent 28rem),linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.025));
       box-shadow:0 1.3rem 3.4rem rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.08);
     }
 
@@ -1308,17 +1143,14 @@
 
     @media (max-width:760px){
       .shell{width:min(100% - 22px,var(--max))}
-      h1{font-size:clamp(3.05rem,15vw,5.5rem)}
+      h1{font-size:clamp(2.55rem,13.5vw,4.6rem)}
       .actions{display:grid}
       .button{width:100%}
       .route-menu{width:100%}
       .route-menu-panel{position:static;margin-top:.45rem;width:100%}
       .route-menu-grid{grid-template-columns:1fr}
       .backbone-stage{min-height:32rem}
-      .infra-node{
-        min-width:4.7rem;
-        padding:.42rem .48rem;
-      }
+      .infra-node{min-width:4.7rem;padding:.42rem .48rem}
       .infra-node b{font-size:.52rem}
       .infra-node span{font-size:.42rem}
       .compass-stage{
@@ -1351,26 +1183,12 @@
         height:5.45rem;
       }
       .compass-center::before,
-      .compass-node::before{
-        width:96%;
-        height:116%;
-      }
+      .compass-node::before{width:96%;height:116%}
       .compass-center::after,
-      .compass-node::after{
-        inset:-7%;
-      }
-      .gem-label{
-        width:88%;
-        gap:.14rem;
-      }
-      .gem-label b{
-        font-size:.62rem;
-        letter-spacing:.046em;
-      }
-      .gem-label span{
-        font-size:.44rem;
-        letter-spacing:.044em;
-      }
+      .compass-node::after{inset:-7%}
+      .gem-label{width:88%;gap:.14rem}
+      .gem-label b{font-size:.62rem;letter-spacing:.046em}
+      .gem-label span{font-size:.44rem;letter-spacing:.044em}
       .compass-center .gem-label b{font-size:.88rem}
       .compass-center .gem-label span{font-size:.60rem}
       .lens-tabs{display:grid;grid-template-columns:1fr 1fr}
@@ -1379,24 +1197,13 @@
     }
 
     @media (max-width:420px){
+      h1{font-size:clamp(2.45rem,12.5vw,4.1rem);letter-spacing:-.095em}
       .compass-stage{gap:.9rem .62rem}
-      .compass-node{
-        width:6.85rem;
-        height:5rem;
-      }
+      .compass-node{width:6.85rem;height:5rem}
       .gem-label{width:90%}
-      .gem-label b{
-        font-size:.54rem;
-        letter-spacing:.036em;
-      }
-      .gem-label span{
-        font-size:.38rem;
-        letter-spacing:.034em;
-      }
-      .compass-center{
-        width:8.95rem;
-        height:6.5rem;
-      }
+      .gem-label b{font-size:.54rem;letter-spacing:.036em}
+      .gem-label span{font-size:.38rem;letter-spacing:.034em}
+      .compass-center{width:8.95rem;height:6.5rem}
       .compass-center .gem-label b{font-size:.78rem}
       .compass-center .gem-label span{font-size:.52rem}
     }
@@ -1475,16 +1282,7 @@
 
       <filter id="compassGemGlow" x="-42%" y="-50%" width="184%" height="200%">
         <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="blur"/>
-        <feColorMatrix
-          in="blur"
-          type="matrix"
-          values="
-            0.42 0 0 0 0.08
-            0 .58 0 0 0.14
-            0 0 1.00 0 0.28
-            0 0 0 0.52 0"
-          result="glow"
-        />
+        <feColorMatrix in="blur" type="matrix" values="0.42 0 0 0 0.08 0 .58 0 0 0.14 0 0 1.00 0 0.28 0 0 0 0.52 0" result="glow"/>
         <feMerge>
           <feMergeNode in="glow"/>
           <feMergeNode in="SourceGraphic"/>
@@ -1655,81 +1453,24 @@
         <div class="kicker">Infrastructure field · Active backbone pathways</div>
         <h2 id="orbit-title">Choose the pathway first. Choose the language lens inside the pathway.</h2>
 
-        <div
-          class="compass-stage"
-          aria-label="Infrastructure compass gem pathway field"
-          data-infrastructure-pathway-field="true"
-          data-source-symbol-authority="compassOrganicGem"
-          data-per-pathway-dual-lens="true"
-        >
+        <div class="compass-stage" aria-label="Infrastructure compass gem pathway field">
           <div class="compass-center" aria-hidden="true" style="--delay:-.1s;--tilt-a:-1.4deg;--tilt-b:1.8deg;">
-            <span class="gem-core">
-              <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
-                <use href="#compassOrganicGem"></use>
-              </svg>
-            </span>
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Infrastructure</b><span>Backbone</span></span>
           </div>
 
-          <a class="compass-node" style="--x:50%;--y:11%;--delay:-.2s;--tilt-a:-2.2deg;--tilt-b:1.4deg;" href="#audralia-infrastructure" aria-label="Open Audralia Infrastructure">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Audralia</b><span>Support</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:73%;--y:17%;--delay:-.8s;--tilt-a:1.5deg;--tilt-b:-2.3deg;" href="#load" aria-label="Open Load">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Load</b><span>Demand</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:87%;--y:34%;--delay:-1.4s;--tilt-a:-1.6deg;--tilt-b:2.6deg;" href="#capacity" aria-label="Open Capacity">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Capacity</b><span>Carry</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:87%;--y:62%;--delay:-2.0s;--tilt-a:1.9deg;--tilt-b:-1.6deg;" href="#power" aria-label="Open Power">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Power</b><span>Continuity</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:73%;--y:80%;--delay:-2.6s;--tilt-a:-2deg;--tilt-b:2deg;" href="#water" aria-label="Open Water">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Water</b><span>Service</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:50%;--y:88%;--delay:-3.0s;--tilt-a:1.4deg;--tilt-b:-2.4deg;" href="#transport" aria-label="Open Transport">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Transport</b><span>Movement</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:27%;--y:80%;--delay:-3.4s;--tilt-a:-1.9deg;--tilt-b:1.8deg;" href="#communications" aria-label="Open Communications">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Comms</b><span>Coordinate</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:13%;--y:62%;--delay:-3.8s;--tilt-a:1.7deg;--tilt-b:-1.5deg;" href="#storage" aria-label="Open Storage">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Storage</b><span>Reserve</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:13%;--y:34%;--delay:-4.2s;--tilt-a:-2.1deg;--tilt-b:1.5deg;" href="#maintenance" aria-label="Open Maintenance">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Maintenance</b><span>Keep Alive</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:27%;--y:17%;--delay:-4.6s;--tilt-a:1.6deg;--tilt-b:-2.2deg;" href="#continuity" aria-label="Open Continuity">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Continuity</b><span>Survive</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:34%;--y:6%;--delay:-5.0s;--tilt-a:-1.6deg;--tilt-b:2.1deg;" href="#governance" aria-label="Open Governance">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Governance</b><span>Service</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:66%;--y:6%;--delay:-5.4s;--tilt-a:2.0deg;--tilt-b:-1.8deg;" href="#kill-conditions" aria-label="Open Kill Conditions">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Kill</b><span>Conditions</span></span>
-          </a>
+          <a class="compass-node" style="--x:50%;--y:11%;--delay:-.2s;--tilt-a:-2.2deg;--tilt-b:1.4deg;" href="#audralia-infrastructure"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Audralia</b><span>Support</span></span></a>
+          <a class="compass-node" style="--x:73%;--y:17%;--delay:-.8s;--tilt-a:1.5deg;--tilt-b:-2.3deg;" href="#load"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Load</b><span>Demand</span></span></a>
+          <a class="compass-node" style="--x:87%;--y:34%;--delay:-1.4s;--tilt-a:-1.6deg;--tilt-b:2.6deg;" href="#capacity"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Capacity</b><span>Carry</span></span></a>
+          <a class="compass-node" style="--x:87%;--y:62%;--delay:-2.0s;--tilt-a:1.9deg;--tilt-b:-1.6deg;" href="#power"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Power</b><span>Continuity</span></span></a>
+          <a class="compass-node" style="--x:73%;--y:80%;--delay:-2.6s;--tilt-a:-2deg;--tilt-b:2deg;" href="#water"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Water</b><span>Service</span></span></a>
+          <a class="compass-node" style="--x:50%;--y:88%;--delay:-3.0s;--tilt-a:1.4deg;--tilt-b:-2.4deg;" href="#transport"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Transport</b><span>Movement</span></span></a>
+          <a class="compass-node" style="--x:27%;--y:80%;--delay:-3.4s;--tilt-a:-1.9deg;--tilt-b:1.8deg;" href="#communications"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Comms</b><span>Coordinate</span></span></a>
+          <a class="compass-node" style="--x:13%;--y:62%;--delay:-3.8s;--tilt-a:1.7deg;--tilt-b:-1.5deg;" href="#storage"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Storage</b><span>Reserve</span></span></a>
+          <a class="compass-node" style="--x:13%;--y:34%;--delay:-4.2s;--tilt-a:-2.1deg;--tilt-b:1.5deg;" href="#maintenance"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Maintenance</b><span>Keep Alive</span></span></a>
+          <a class="compass-node" style="--x:27%;--y:17%;--delay:-4.6s;--tilt-a:1.6deg;--tilt-b:-2.2deg;" href="#continuity"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Continuity</b><span>Survive</span></span></a>
+          <a class="compass-node" style="--x:34%;--y:6%;--delay:-5.0s;--tilt-a:-1.6deg;--tilt-b:2.1deg;" href="#governance"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Governance</b><span>Service</span></span></a>
+          <a class="compass-node" style="--x:66%;--y:6%;--delay:-5.4s;--tilt-a:2.0deg;--tilt-b:-1.8deg;" href="#kill-conditions"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Kill</b><span>Conditions</span></span></a>
         </div>
       </section>
 
@@ -1991,16 +1732,18 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_INFRASTRUCTURE_LIVING_BACKBONE_UNDER_LOAD_TNT_v2
-previous=FRONTIER_INFRASTRUCTURE_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1
+FRONTIER_INFRASTRUCTURE_DROPDOWN_BACKBONE_RETURN_RESTORATION_TNT_v3
 route=/explore/frontier/infrastructure/
 page=frontier_infrastructure
 html=/explore/frontier/infrastructure/index.html
 parent_return=/explore/frontier/
 runtime_scope=css_only
-artistic_identity=living_backbone_under_load
+dropdown_navigation=active
+site_menu_dropdown=active
+frontier_lanes_dropdown=active
+living_backbone_under_load=active
 backbone_load_capacity_dependency_field=active
-central_backbone_spine=active
+central_support_spine=active
 load_packets=active
 capacity_bands=active
 dependency_branches=active
@@ -2011,30 +1754,24 @@ failure_path_markers=active
 map_key=active
 compass_gems=active
 pathway_gems=active
-compass_organic_gem=active
-dropdown_navigation=active
-site_menu=active
-frontier_lanes_menu=active
-audralia_first=active
 platform_lens_per_pathway=active
 engineering_lens_per_pathway=active
 return_to_infrastructure_orbit_under_every_pathway=active
 return_to_frontier_under_every_pathway=active
+return_to_frontier=/explore/frontier/
 pathways=audralia_infrastructure,load,capacity,power,water,transport,communications,storage,maintenance,continuity,governance,kill_conditions
 public_lock=declare_load_measure_capacity_map_dependencies_name_failure_path_maintain_backbone_protect_continuity_govern_service_require_receipts_survive_audit
-visual_identity=infrastructure_support_backbone_utility_corridor_service_spine_emergency_continuity_layer
-external_dependency_scope=zero
 canvas_scope=none
 webgl_scope=none
 generated_image_scope=none
 graphic_box_scope=none
 visual_pass_claimed=false
-deploy_marker=FRONTIER_INFRASTRUCTURE_LIVING_BACKBONE_UNDER_LOAD_DEPLOY_MARKER_v2
+deploy_marker=FRONTIER_INFRASTRUCTURE_DROPDOWN_BACKBONE_RETURN_RESTORATION_DEPLOY_MARKER_v3
       </template>
     </main>
 
     <footer>
-      FRONTIER_INFRASTRUCTURE_LIVING_BACKBONE_UNDER_LOAD_TNT_v2 · Infrastructure · Living Backbone Under Load · Compass Gem Pathways.
+      FRONTIER_INFRASTRUCTURE_DROPDOWN_BACKBONE_RETURN_RESTORATION_TNT_v3 · Infrastructure · Dropdowns · Living Backbone · Return to Frontier · Compass Gem Pathways.
     </footer>
   </div>
 </body>

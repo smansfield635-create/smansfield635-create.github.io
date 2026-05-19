@@ -4,10 +4,10 @@
   lang="en"
   data-route="/explore/frontier/trajectory/"
   data-page="frontier-trajectory-science"
-  data-version="G3-V2"
-  data-contract="FRONTIER_TRAJECTORY_DROPDOWN_RETURN_ARC_VECTOR_PROOF_TNT_v1"
-  data-previous-contract="FRONTIER_TRAJECTORY_SCIENCE_ENERGY_CARRYFORWARD_TNT_v1"
-  data-source-binding="PREBUILD_TO_POSTBUILD_TRAJECTORY_DROPDOWN_RETURN_ARC_VECTOR_PROOF_BINDING_v1"
+  data-version="G3-V3"
+  data-contract="FRONTIER_TRAJECTORY_ARC_FIELD_DIAGRAM_LENS_CLEANUP_TNT_v1"
+  data-previous-contract="FRONTIER_TRAJECTORY_DROPDOWN_RETURN_ARC_VECTOR_PROOF_TNT_v1"
+  data-source-binding="CCR_TRAJECTORY_ARC_FIELD_DIAGRAM_LENS_CLEANUP_COHERENCE_CONSTRAINTS_RUNTIME_v1"
   data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
   data-design-reference="FRONTIER_ENERGY_COMPASS_GEM_PRINT_LEGIBILITY_RENEWAL_TNT_v19"
   data-active-subject="trajectory-science"
@@ -23,6 +23,12 @@
   data-frontier-lanes-dropdown="active"
   data-return-to-frontier="active"
   data-trajectory-arc-vector-field="active"
+  data-diagram-lens-toggle="active"
+  data-diagram-platform-lens="active"
+  data-diagram-engineering-lens="active"
+  data-diagram-visual-cleanup="active"
+  data-diagram-scope-only="true"
+  data-rest-of-page-unfettered="true"
   data-served-state-proof="active"
   data-per-pathway-dual-lens="true"
   data-platform-lens="true"
@@ -42,7 +48,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Trajectory Science · Arc Vector Field · Diamond Gate Bridge</title>
+  <title>Trajectory Science · Arc Field Lens Cleanup · Diamond Gate Bridge</title>
   <meta
     name="description"
     content="Trajectory Science explains how yesterday’s retained energy plus today’s added energy, minus losses and uncertainty, determines tomorrow’s projected usable energy."
@@ -582,47 +588,159 @@
       gap:1.05rem;
     }
 
-    .arc-stage{
+    .trajectory-diagram-lens-shell{
       position:relative;
-      min-height:clamp(30rem,58vw,44rem);
+      display:grid;
+      gap:.8rem;
+      padding:1rem;
+      border:1px solid rgba(141,216,255,.16);
+      border-radius:1.25rem;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(141,216,255,.10),transparent 22rem),
+        radial-gradient(circle at 90% 20%,rgba(243,200,111,.075),transparent 20rem),
+        rgba(255,255,255,.030);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .trajectory-diagram-radio{
+      position:absolute;
+      opacity:0;
+      pointer-events:none;
+    }
+
+    .trajectory-diagram-tabs{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.45rem;
+    }
+
+    .trajectory-diagram-tab{
+      cursor:pointer;
+      min-height:2.35rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      padding:.56rem .84rem;
+      color:rgba(241,246,255,.84);
+      background:rgba(255,255,255,.04);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.07em;
+      text-transform:uppercase;
+      user-select:none;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .trajectory-diagram-tab:hover{
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.46);
+    }
+
+    .diagram-platform-radio:checked ~ .trajectory-diagram-tabs .diagram-platform-tab,
+    .diagram-engineering-radio:checked ~ .trajectory-diagram-tabs .diagram-engineering-tab{
+      border-color:rgba(243,200,111,.86);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .trajectory-diagram-copy{
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.05rem;
+      background:
+        radial-gradient(circle at 10% 0%,rgba(141,216,255,.08),transparent 24rem),
+        linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.022));
+      overflow:hidden;
+    }
+
+    .diagram-copy-panel{
+      display:none;
+      padding:1rem;
+    }
+
+    .diagram-platform-radio:checked ~ .trajectory-diagram-copy .diagram-platform-copy,
+    .diagram-engineering-radio:checked ~ .trajectory-diagram-copy .diagram-engineering-copy{
+      display:grid;
+      gap:.72rem;
+    }
+
+    .diagram-copy-panel b{
+      color:var(--gold);
+      font-size:.7rem;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .diagram-copy-panel strong{
+      color:rgba(255,244,216,.96);
+      font-size:clamp(1rem,2.4vw,1.24rem);
+      line-height:1.12;
+      letter-spacing:-.035em;
+    }
+
+    .diagram-copy-panel code{
+      display:block;
+      width:fit-content;
+      max-width:100%;
+      overflow-wrap:anywhere;
+      padding:.58rem .72rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:.76rem;
+      color:rgba(230,238,255,.92);
+      background:rgba(1,5,15,.54);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+      font-size:.88rem;
+      font-weight:850;
+    }
+
+    .diagram-proof-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.55rem;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+
+    .diagram-proof-grid li{
+      padding:.68rem .76rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:.9rem;
+      background:rgba(255,255,255,.030);
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.4;
+    }
+
+    .trajectory-arc-stage{
+      position:relative;
+      min-height:clamp(31rem,57vw,43rem);
       border:1px solid rgba(184,205,255,.14);
       border-radius:clamp(1.25rem,4vw,2rem);
       overflow:hidden;
       isolation:isolate;
       background:
-        radial-gradient(circle at 20% 40%,rgba(243,200,111,.12),transparent 18rem),
-        radial-gradient(circle at 78% 38%,rgba(143,240,195,.10),transparent 20rem),
-        radial-gradient(circle at 58% 70%,rgba(143,101,255,.13),transparent 22rem),
+        radial-gradient(circle at 17% 44%,rgba(243,200,111,.12),transparent 17rem),
+        radial-gradient(circle at 42% 64%,rgba(143,240,195,.10),transparent 19rem),
+        radial-gradient(circle at 83% 38%,rgba(143,101,255,.13),transparent 20rem),
         linear-gradient(180deg,rgba(3,9,26,.78),rgba(2,6,16,.95));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .arc-stage::before{
+    .trajectory-arc-stage::before{
       content:"";
       position:absolute;
       inset:clamp(1rem,3vw,2rem);
       z-index:0;
-      border:1px solid rgba(141,216,255,.12);
+      border:1px solid rgba(141,216,255,.11);
       border-radius:1.3rem;
       background-image:
-        linear-gradient(rgba(141,216,255,.055) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(141,216,255,.055) 1px,transparent 1px);
+        linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px);
       background-size:3rem 3rem;
-      opacity:.46;
+      opacity:.42;
       mask-image:radial-gradient(circle at 52% 50%,rgba(0,0,0,.95),rgba(0,0,0,.42) 64%,transparent 100%);
-    }
-
-    .arc-stage::after{
-      content:"";
-      position:absolute;
-      left:12%;
-      right:10%;
-      top:49%;
-      z-index:1;
-      height:1px;
-      background:linear-gradient(90deg,transparent,rgba(243,200,111,.42),rgba(141,216,255,.34),rgba(143,240,195,.46),transparent);
-      box-shadow:0 0 2rem rgba(141,216,255,.18);
-      transform:rotate(-8deg);
     }
 
     .served-proof{
@@ -630,7 +748,7 @@
       left:clamp(.9rem,3vw,1.5rem);
       top:clamp(.9rem,3vw,1.5rem);
       z-index:12;
-      max-width:min(31rem,calc(100% - 2rem));
+      max-width:min(33rem,calc(100% - 2rem));
       display:grid;
       gap:.25rem;
       padding:.72rem .9rem;
@@ -661,239 +779,222 @@
       text-transform:uppercase;
     }
 
-    .arc-band{
+    .trajectory-main-arc{
       position:absolute;
-      left:12%;
-      top:34%;
-      z-index:2;
-      width:78%;
-      height:38%;
-      border:1px solid rgba(143,101,255,.16);
-      border-radius:50%;
-      transform:rotate(-8deg);
-      background:
-        radial-gradient(ellipse at 72% 48%,rgba(143,101,255,.12),transparent 38%),
-        radial-gradient(ellipse at 62% 52%,rgba(141,216,255,.08),transparent 48%);
-      box-shadow:0 0 2.4rem rgba(143,101,255,.10),inset 0 0 2rem rgba(141,216,255,.05);
-      animation:uncertaintyBandPulse 7.6s ease-in-out infinite;
+      left:13%;
+      top:48%;
+      z-index:3;
+      width:73%;
+      height:18%;
+      border-top:4px solid rgba(243,200,111,.72);
+      border-radius:58% 64% 0 0;
+      transform:rotate(-7deg);
+      filter:drop-shadow(0 0 1rem rgba(243,200,111,.34));
+      animation:trajectoryMainCarry 7.2s ease-in-out infinite;
     }
 
-    @keyframes uncertaintyBandPulse{
-      0%,100%{opacity:.48;filter:brightness(.9);transform:rotate(-8deg) scale(.985)}
-      50%{opacity:.82;filter:brightness(1.13);transform:rotate(-8deg) scale(1.015)}
+    .trajectory-main-arc::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:-.32rem;
+      width:100%;
+      height:.45rem;
+      border-radius:999px;
+      background:linear-gradient(90deg,rgba(243,200,111,.04),rgba(243,200,111,.44),rgba(141,216,255,.40),rgba(143,240,195,.48),rgba(255,244,216,.76));
+      opacity:.68;
     }
 
-    .yesterday-arc,
-    .today-vector,
-    .tomorrow-vector,
-    .return-vector{
+    .trajectory-main-arc::after{
+      content:"";
+      position:absolute;
+      right:-.36rem;
+      top:-.78rem;
+      width:1.05rem;
+      height:1.05rem;
+      border-right:3px solid rgba(255,244,216,.92);
+      border-top:3px solid rgba(255,244,216,.92);
+      transform:rotate(45deg);
+      filter:drop-shadow(0 0 .6rem rgba(243,200,111,.42));
+    }
+
+    @keyframes trajectoryMainCarry{
+      0%,100%{opacity:.70;filter:drop-shadow(0 0 .8rem rgba(243,200,111,.24))}
+      50%{opacity:1;filter:drop-shadow(0 0 1.4rem rgba(243,200,111,.46))}
+    }
+
+    .trajectory-vector{
       position:absolute;
       z-index:4;
+      height:3px;
+      border-radius:999px;
       pointer-events:none;
     }
 
-    .yesterday-arc{
-      left:10%;
-      top:42%;
-      width:38%;
-      height:20%;
-      border-top:3px solid rgba(243,200,111,.72);
-      border-radius:70% 85% 0 0;
-      transform:rotate(-13deg);
-      filter:drop-shadow(0 0 .9rem rgba(243,200,111,.36));
-      animation:yesterdayArcCarry 6.8s ease-in-out infinite;
-    }
-
-    .today-vector{
-      left:45%;
-      top:54%;
-      width:31%;
-      height:3px;
-      transform:rotate(-25deg);
-      background:linear-gradient(90deg,transparent,rgba(143,240,195,.30),rgba(143,240,195,.92));
-      box-shadow:0 0 1rem rgba(143,240,195,.36);
-      animation:todayVectorInput 5.9s ease-in-out infinite;
-    }
-
-    .today-vector::after,
-    .tomorrow-vector::after,
-    .return-vector::after{
+    .trajectory-vector::after{
       content:"";
       position:absolute;
-      right:-.15rem;
+      right:-.13rem;
       top:50%;
-      width:.74rem;
-      height:.74rem;
+      width:.72rem;
+      height:.72rem;
       border-right:2px solid currentColor;
       border-top:2px solid currentColor;
       transform:translateY(-50%) rotate(45deg);
-      color:rgba(143,240,195,.92);
     }
 
-    .tomorrow-vector{
-      left:49%;
-      top:44%;
+    .trajectory-vector.today{
+      left:31%;
+      top:66%;
+      width:24%;
+      color:rgba(143,240,195,.94);
+      transform:rotate(-27deg);
+      background:linear-gradient(90deg,transparent,rgba(143,240,195,.32),rgba(143,240,195,.92));
+      box-shadow:0 0 1rem rgba(143,240,195,.32);
+      animation:trajectoryTodayInput 6.2s ease-in-out infinite;
+    }
+
+    .trajectory-vector.loss{
+      left:56%;
+      top:51%;
+      width:16%;
+      color:rgba(255,179,107,.92);
+      transform:rotate(68deg);
+      background:linear-gradient(90deg,rgba(255,179,107,.80),rgba(255,157,145,.54),transparent);
+      box-shadow:0 0 .9rem rgba(255,179,107,.26);
+      animation:trajectoryLossSubtract 6.8s ease-in-out infinite;
+    }
+
+    .trajectory-vector.audit{
+      right:13%;
+      top:63%;
       width:38%;
-      height:3px;
-      transform:rotate(-7deg);
-      background:linear-gradient(90deg,rgba(141,216,255,.12),rgba(243,200,111,.42),rgba(255,255,255,.76));
-      box-shadow:0 0 1.1rem rgba(243,200,111,.26);
-      animation:tomorrowVectorProject 7.3s ease-in-out infinite;
-    }
-
-    .tomorrow-vector::after{color:rgba(255,244,216,.96)}
-
-    .return-vector{
-      right:15%;
-      top:62%;
-      width:34%;
-      height:2px;
+      color:rgba(141,216,255,.92);
       transform:rotate(154deg);
-      background:linear-gradient(90deg,rgba(143,101,255,.10),rgba(141,216,255,.36),rgba(243,200,111,.62));
+      background:linear-gradient(90deg,rgba(143,101,255,.12),rgba(141,216,255,.42),rgba(243,200,111,.62));
       box-shadow:0 0 .9rem rgba(141,216,255,.22);
-      animation:returnVectorCorrect 8.4s ease-in-out infinite;
+      animation:trajectoryAuditReturn 8.4s ease-in-out infinite;
     }
 
-    .return-vector::after{color:rgba(243,200,111,.86)}
-
-    @keyframes yesterdayArcCarry{
-      0%,100%{opacity:.48;filter:drop-shadow(0 0 .7rem rgba(243,200,111,.25));}
-      42%{opacity:1;filter:drop-shadow(0 0 1.3rem rgba(243,200,111,.54));}
+    @keyframes trajectoryTodayInput{
+      0%,100%{opacity:.52;transform:rotate(-27deg) scaleX(.94)}
+      50%{opacity:1;transform:rotate(-27deg) scaleX(1.06)}
     }
 
-    @keyframes todayVectorInput{
-      0%,100%{opacity:.44;transform:rotate(-25deg) scaleX(.92)}
-      50%{opacity:1;transform:rotate(-25deg) scaleX(1.04)}
+    @keyframes trajectoryLossSubtract{
+      0%,100%{opacity:.42;transform:rotate(68deg) scaleX(.90)}
+      45%{opacity:1;transform:rotate(68deg) scaleX(1.05)}
     }
 
-    @keyframes tomorrowVectorProject{
-      0%,100%{opacity:.46;transform:rotate(-7deg) scaleX(.94)}
-      48%{opacity:1;transform:rotate(-7deg) scaleX(1.05)}
-    }
-
-    @keyframes returnVectorCorrect{
+    @keyframes trajectoryAuditReturn{
       0%,100%{opacity:.36;transform:rotate(154deg) scaleX(.90)}
       54%{opacity:.84;transform:rotate(154deg) scaleX(1.03)}
     }
 
-    .loss-trail{
+    .trajectory-uncertainty-band{
       position:absolute;
-      z-index:5;
-      width:2px;
-      height:clamp(3.2rem,7vw,5.8rem);
-      background:linear-gradient(180deg,rgba(255,179,107,.82),rgba(255,157,145,.42),transparent);
-      border-radius:999px;
-      box-shadow:0 0 .85rem rgba(255,179,107,.28);
-      transform:rotate(var(--r,-9deg));
-      animation:lossTrailFall var(--t,5.8s) ease-in-out infinite;
-      animation-delay:var(--d,0s);
-    }
-
-    .loss-trail::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      bottom:-.08rem;
-      width:.48rem;
-      height:.48rem;
+      left:66%;
+      top:24%;
+      z-index:2;
+      width:25%;
+      height:30%;
+      border:1px solid rgba(143,101,255,.24);
       border-radius:50%;
-      transform:translateX(-50%);
-      background:rgba(255,157,145,.78);
-      box-shadow:0 0 .8rem rgba(255,157,145,.45);
+      background:
+        radial-gradient(ellipse at 50% 50%,rgba(143,101,255,.15),transparent 58%),
+        radial-gradient(ellipse at 50% 50%,rgba(141,216,255,.11),transparent 74%);
+      box-shadow:0 0 2.2rem rgba(143,101,255,.13),inset 0 0 1.7rem rgba(141,216,255,.06);
+      animation:trajectoryUncertaintyPulse 7.6s ease-in-out infinite;
     }
 
-    @keyframes lossTrailFall{
-      0%,100%{opacity:.28;filter:brightness(.85);transform:rotate(var(--r,-9deg)) translateY(-.2rem)}
-      38%{opacity:.90;filter:brightness(1.18);transform:rotate(var(--r,-9deg)) translateY(.4rem)}
-      72%{opacity:.42;filter:brightness(.95);transform:rotate(var(--r,-9deg)) translateY(.8rem)}
+    @keyframes trajectoryUncertaintyPulse{
+      0%,100%{opacity:.50;filter:brightness(.92);transform:scale(.98)}
+      50%{opacity:.88;filter:brightness(1.12);transform:scale(1.04)}
     }
 
-    .receipt-node,
-    .projection-node{
+    .trajectory-node{
       position:absolute;
       z-index:8;
       left:var(--x);
       top:var(--y);
-      width:clamp(1.05rem,2vw,1.45rem);
-      height:clamp(1.05rem,2vw,1.45rem);
+      min-width:clamp(6.4rem,10vw,8.7rem);
+      display:grid;
+      gap:.12rem;
+      place-items:center;
+      padding:.62rem .72rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      color:rgba(255,244,216,.94);
+      background:
+        radial-gradient(circle at 50% 0%,var(--node-bg,rgba(243,200,111,.18)),transparent 72%),
+        rgba(3,6,18,.78);
+      box-shadow:0 0 1.1rem var(--node-glow,rgba(243,200,111,.18)),inset 0 1px 0 rgba(255,255,255,.08);
+      transform:translate(-50%,-50%);
+      backdrop-filter:blur(7px);
+    }
+
+    .trajectory-node b{
+      color:rgba(255,244,216,.98);
+      font-size:.62rem;
+      font-weight:950;
+      letter-spacing:.11em;
+      line-height:1;
+      text-transform:uppercase;
+    }
+
+    .trajectory-node span{
+      color:rgba(230,238,255,.74);
+      font-size:.50rem;
+      font-weight:950;
+      letter-spacing:.09em;
+      line-height:1;
+      text-transform:uppercase;
+    }
+
+    .trajectory-node.yesterday{--node-bg:rgba(243,200,111,.24);--node-glow:rgba(243,200,111,.22)}
+    .trajectory-node.today{--node-bg:rgba(143,240,195,.22);--node-glow:rgba(143,240,195,.20)}
+    .trajectory-node.losses{--node-bg:rgba(255,179,107,.22);--node-glow:rgba(255,179,107,.20)}
+    .trajectory-node.uncertainty{--node-bg:rgba(143,101,255,.22);--node-glow:rgba(143,101,255,.20)}
+    .trajectory-node.tomorrow{
+      min-width:clamp(7rem,11vw,9.25rem);
+      --node-bg:rgba(255,244,216,.24);
+      --node-glow:rgba(143,240,195,.24);
+      border-color:rgba(243,200,111,.30);
+      box-shadow:0 0 1.4rem rgba(243,200,111,.24),0 0 2.1rem rgba(143,240,195,.12),inset 0 1px 0 rgba(255,255,255,.10);
+    }
+
+    .trajectory-receipt-dot{
+      position:absolute;
+      z-index:9;
+      left:var(--x);
+      top:var(--y);
+      width:clamp(.82rem,1.45vw,1.04rem);
+      height:clamp(.82rem,1.45vw,1.04rem);
       border:1px solid rgba(255,255,255,.22);
       border-radius:50%;
       transform:translate(-50%,-50%);
       background:
         radial-gradient(circle at 40% 34%,rgba(255,255,255,.96),transparent 18%),
-        radial-gradient(circle at 50% 50%,var(--node-color,var(--gold)),rgba(3,8,18,.90) 68%);
-      box-shadow:
-        0 0 .85rem var(--node-glow,rgba(243,200,111,.52)),
-        0 0 1.65rem var(--node-soft,rgba(243,200,111,.22)),
-        inset 0 1px 0 rgba(255,255,255,.20);
-      animation:receiptPulse var(--t,6s) ease-in-out infinite;
+        radial-gradient(circle at 50% 50%,var(--dot-color,var(--gold)),rgba(3,8,18,.90) 68%);
+      box-shadow:0 0 .72rem var(--dot-glow,rgba(243,200,111,.48)),inset 0 1px 0 rgba(255,255,255,.18);
+      animation:trajectoryReceiptPulse var(--t,6s) ease-in-out infinite;
       animation-delay:var(--d,0s);
     }
 
-    .receipt-node.retained{--node-color:var(--gold);--node-glow:rgba(243,200,111,.62);--node-soft:rgba(243,200,111,.25)}
-    .receipt-node.input{--node-color:var(--green);--node-glow:rgba(143,240,195,.62);--node-soft:rgba(143,240,195,.25)}
-    .receipt-node.loss{--node-color:var(--orange);--node-glow:rgba(255,179,107,.62);--node-soft:rgba(255,179,107,.25)}
-    .receipt-node.storage{--node-color:var(--blue);--node-glow:rgba(141,216,255,.62);--node-soft:rgba(141,216,255,.25)}
-    .receipt-node.uncertain{--node-color:var(--violet);--node-glow:rgba(143,101,255,.62);--node-soft:rgba(143,101,255,.25)}
+    .trajectory-receipt-dot.retained{--dot-color:var(--gold);--dot-glow:rgba(243,200,111,.58)}
+    .trajectory-receipt-dot.input{--dot-color:var(--green);--dot-glow:rgba(143,240,195,.58)}
+    .trajectory-receipt-dot.loss{--dot-color:var(--orange);--dot-glow:rgba(255,179,107,.58)}
+    .trajectory-receipt-dot.storage{--dot-color:var(--blue);--dot-glow:rgba(141,216,255,.58)}
+    .trajectory-receipt-dot.uncertain{--dot-color:var(--violet);--dot-glow:rgba(143,101,255,.58)}
+    .trajectory-receipt-dot.projected{--dot-color:rgba(255,244,216,.95);--dot-glow:rgba(243,200,111,.70)}
 
-    .projection-node{
-      width:clamp(1.75rem,3.8vw,2.5rem);
-      height:clamp(1.75rem,3.8vw,2.5rem);
-      --node-color:rgba(255,244,216,.96);
-      --node-glow:rgba(243,200,111,.74);
-      --node-soft:rgba(143,240,195,.28);
-      animation:projectionNodePulse 6.4s ease-in-out infinite;
-    }
-
-    @keyframes receiptPulse{
+    @keyframes trajectoryReceiptPulse{
       0%,100%{opacity:.64;filter:brightness(.88);transform:translate(-50%,-50%) scale(.95)}
       38%{opacity:1;filter:brightness(1.28);transform:translate(-50%,-50%) scale(1.08)}
       62%{opacity:.78;filter:brightness(1);transform:translate(-50%,-50%) scale(.99)}
     }
 
-    @keyframes projectionNodePulse{
-      0%,100%{opacity:.70;filter:brightness(.95);transform:translate(-50%,-50%) scale(.96)}
-      50%{opacity:1;filter:brightness(1.32);transform:translate(-50%,-50%) scale(1.08)}
-    }
-
-    .arc-label{
-      position:absolute;
-      z-index:9;
-      left:var(--x);
-      top:var(--y);
-      transform:translate(-50%,-50%);
-      min-width:7rem;
-      display:grid;
-      gap:.08rem;
-      padding:.42rem .52rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:.75rem;
-      background:rgba(2,6,18,.68);
-      color:rgba(255,244,216,.94);
-      text-align:center;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-      backdrop-filter:blur(7px);
-    }
-
-    .arc-label b{
-      color:var(--gold);
-      font-size:.54rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      line-height:1;
-      text-transform:uppercase;
-    }
-
-    .arc-label span{
-      color:rgba(230,238,255,.74);
-      font-size:.48rem;
-      font-weight:950;
-      letter-spacing:.08em;
-      line-height:1;
-      text-transform:uppercase;
-    }
-
-    .arc-equation{
+    .trajectory-arc-equation{
       position:absolute;
       left:50%;
       bottom:clamp(1rem,3vw,1.6rem);
@@ -907,19 +1008,19 @@
       transform:translateX(-50%);
       background:
         radial-gradient(circle at 12% 0%,rgba(141,216,255,.12),transparent 20rem),
-        rgba(2,6,18,.70);
+        rgba(2,6,18,.72);
       box-shadow:0 0 1.4rem rgba(141,216,255,.08),inset 0 1px 0 rgba(255,255,255,.07);
       backdrop-filter:blur(8px);
     }
 
-    .arc-equation strong{
+    .trajectory-arc-equation strong{
       color:rgba(255,244,216,.98);
       font-size:clamp(.92rem,2.4vw,1.28rem);
       line-height:1.1;
       letter-spacing:-.035em;
     }
 
-    .arc-equation code{
+    .trajectory-arc-equation code{
       color:rgba(230,238,255,.90);
       font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
       font-size:clamp(.76rem,2vw,.94rem);
@@ -1379,16 +1480,25 @@
       .route-menu-panel{position:static;margin-top:.45rem;width:100%}
       .route-menu-grid{grid-template-columns:1fr}
 
-      .arc-stage{min-height:38rem}
+      .diagram-proof-grid{grid-template-columns:1fr}
+      .trajectory-diagram-tabs{display:grid;grid-template-columns:1fr 1fr}
+
+      .trajectory-arc-stage{min-height:42rem}
       .served-proof{position:relative;left:auto;top:auto;margin:1rem;max-width:none}
-      .arc-band{left:8%;top:38%;width:86%;height:28%}
-      .yesterday-arc{left:8%;top:47%;width:43%}
-      .today-vector{left:42%;top:58%;width:34%}
-      .tomorrow-vector{left:48%;top:47%;width:37%}
-      .return-vector{right:11%;top:65%;width:40%}
-      .arc-label{min-width:5.8rem}
-      .arc-label b{font-size:.46rem}
-      .arc-label span{font-size:.40rem}
+      .trajectory-main-arc{left:10%;top:47%;width:78%;height:14%}
+      .trajectory-vector.today{left:27%;top:68%;width:29%}
+      .trajectory-vector.loss{left:56%;top:52%;width:19%}
+      .trajectory-vector.audit{right:8%;top:65%;width:44%}
+      .trajectory-uncertainty-band{left:61%;top:27%;width:33%;height:25%}
+      .trajectory-node{min-width:5.8rem;padding:.52rem .54rem}
+      .trajectory-node b{font-size:.50rem}
+      .trajectory-node span{font-size:.41rem}
+      .trajectory-node.yesterday{left:18%!important;top:55%!important}
+      .trajectory-node.today{left:35%!important;top:72%!important}
+      .trajectory-node.losses{left:58%!important;top:59%!important}
+      .trajectory-node.uncertainty{left:72%!important;top:25%!important}
+      .trajectory-node.tomorrow{left:84%!important;top:39%!important}
+      .trajectory-arc-equation{position:absolute;bottom:.95rem}
 
       .compass-stage{
         min-height:auto;
@@ -1436,6 +1546,14 @@
     }
 
     @media (max-width:420px){
+      .trajectory-diagram-tabs{grid-template-columns:1fr}
+      .trajectory-arc-stage{min-height:45rem}
+      .trajectory-node{min-width:5.2rem}
+      .trajectory-node b{font-size:.44rem}
+      .trajectory-node span{font-size:.36rem}
+      .trajectory-arc-equation strong{font-size:.86rem}
+      .trajectory-arc-equation code{font-size:.70rem}
+
       .compass-stage{gap:.9rem .62rem}
       .compass-node{width:6.85rem;height:5rem}
       .gem-label{width:90%}
@@ -1463,14 +1581,10 @@
       .compass-stage::after,
       .compass-center,
       .compass-node,
-      .arc-band,
-      .yesterday-arc,
-      .today-vector,
-      .tomorrow-vector,
-      .return-vector,
-      .loss-trail,
-      .receipt-node,
-      .projection-node{animation:none!important}
+      .trajectory-main-arc,
+      .trajectory-vector,
+      .trajectory-uncertainty-band,
+      .trajectory-receipt-dot{animation:none!important}
     }
   </style>
 </head>
@@ -1650,40 +1764,77 @@
         <div class="kicker">Trajectory Arc Vector Field</div>
         <h2 id="arc-field-title">Yesterday is retained. Today is added. Losses subtract. Tomorrow is projected.</h2>
         <p>
-          The field below visualizes the carryforward equation as a temporal path: retained energy enters from yesterday, new input enters from today, losses fall away, uncertainty surrounds the projection, and receipts force the future claim back through audit.
+          This diagram turns the carryforward equation into a readable path. It shows retained energy, new input, loss subtraction, uncertainty, projection, and the audit return that keeps tomorrow’s claim accountable.
         </p>
 
-        <div class="arc-stage" aria-label="Trajectory Arc Vector Field showing retained energy, today's input, losses, uncertainty, projection, correction vector, and receipt markers">
-          <div class="served-proof" aria-label="Served-state proof">
-            <b>Served Trajectory File</b>
-            <span>Dropdown + Return + Arc Vector Field Active</span>
+        <div class="trajectory-diagram-lens-shell" aria-label="Trajectory diagram explanation lens">
+          <input class="trajectory-diagram-radio diagram-platform-radio" id="diagram-platform" name="trajectory-diagram-lens" type="radio" checked>
+          <input class="trajectory-diagram-radio diagram-engineering-radio" id="diagram-engineering" name="trajectory-diagram-lens" type="radio">
+
+          <div class="trajectory-diagram-tabs">
+            <label class="trajectory-diagram-tab diagram-platform-tab" for="diagram-platform">Platform Lens</label>
+            <label class="trajectory-diagram-tab diagram-engineering-tab" for="diagram-engineering">Engineering Lens</label>
           </div>
 
-          <span class="arc-band" aria-hidden="true"></span>
-          <span class="yesterday-arc" aria-hidden="true"></span>
-          <span class="today-vector" aria-hidden="true"></span>
-          <span class="tomorrow-vector" aria-hidden="true"></span>
-          <span class="return-vector" aria-hidden="true"></span>
+          <div class="trajectory-diagram-copy">
+            <div class="diagram-copy-panel diagram-platform-copy">
+              <b>Platform Lens</b>
+              <strong>The future is not guessed. It is carried forward.</strong>
+              <p>Yesterday is what the system kept. Today is what the system adds. Losses are what leaks, degrades, wastes, or fails. Uncertainty is what is not fully known yet. Tomorrow is the projected usable result after all of that is accounted for.</p>
+              <ul class="diagram-proof-grid">
+                <li><b>Yesterday:</b> retained usable energy.</li>
+                <li><b>Today:</b> new input entering the system.</li>
+                <li><b>Losses:</b> the subtraction path.</li>
+                <li><b>Tomorrow:</b> the accountable projection.</li>
+              </ul>
+            </div>
 
-          <span class="loss-trail" style="left:50%;top:51%;--r:-7deg;--t:5.8s;--d:-.4s" aria-hidden="true"></span>
-          <span class="loss-trail" style="left:59%;top:48%;--r:5deg;--t:6.4s;--d:-1.8s" aria-hidden="true"></span>
-          <span class="loss-trail" style="left:68%;top:45%;--r:-12deg;--t:7.1s;--d:-3.1s" aria-hidden="true"></span>
+            <div class="diagram-copy-panel diagram-engineering-copy">
+              <b>Engineering Lens</b>
+              <strong>The diagram is governed by the carryforward equation.</strong>
+              <code>E_tomorrow = E_yesterday_retained + E_today_added - E_losses ± ε</code>
+              <ul class="diagram-proof-grid">
+                <li>Retained-state receipt</li>
+                <li>Today-input receipt</li>
+                <li>Loss receipt</li>
+                <li>Storage / conversion receipt</li>
+                <li>Uncertainty band</li>
+                <li>Tomorrow projection node</li>
+                <li>Audit return vector</li>
+                <li>Projection cannot be treated as proof</li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
-          <span class="receipt-node retained" style="--x:22%;--y:51%;--t:5.9s;--d:-.2s" aria-label="Retained state receipt"></span>
-          <span class="receipt-node input" style="--x:48%;--y:55%;--t:6.5s;--d:-1.2s" aria-label="Input receipt"></span>
-          <span class="receipt-node loss" style="--x:59%;--y:49%;--t:6.8s;--d:-2.1s" aria-label="Loss receipt"></span>
-          <span class="receipt-node storage" style="--x:65%;--y:42%;--t:7.0s;--d:-3s" aria-label="Storage and conversion receipt"></span>
-          <span class="receipt-node uncertain" style="--x:74%;--y:41%;--t:7.4s;--d:-4s" aria-label="Uncertainty receipt"></span>
-          <span class="projection-node" style="--x:86%;--y:39%" aria-label="Tomorrow projection node"></span>
+        <div class="trajectory-arc-stage" aria-label="Clean Trajectory Arc Vector Field showing retained energy, today's input, loss subtraction, uncertainty, projection, and audit return">
+          <div class="served-proof" aria-label="Served-state proof">
+            <b>Served Trajectory File</b>
+            <span>Diagram Lens + Clean Arc Active</span>
+            <span>Dropdown + Return + Arc Vector Field Preserved</span>
+          </div>
 
-          <span class="arc-label" style="--x:20%;--y:42%"><b>Yesterday</b><span>Retained</span></span>
-          <span class="arc-label" style="--x:47%;--y:66%"><b>Today</b><span>Added</span></span>
-          <span class="arc-label" style="--x:61%;--y:61%"><b>Losses</b><span>Subtract</span></span>
-          <span class="arc-label" style="--x:75%;--y:31%"><b>ε Band</b><span>Uncertainty</span></span>
-          <span class="arc-label" style="--x:87%;--y:30%"><b>Tomorrow</b><span>Projected</span></span>
+          <span class="trajectory-uncertainty-band" aria-hidden="true"></span>
+          <span class="trajectory-main-arc" aria-hidden="true"></span>
+          <span class="trajectory-vector today" aria-hidden="true"></span>
+          <span class="trajectory-vector loss" aria-hidden="true"></span>
+          <span class="trajectory-vector audit" aria-hidden="true"></span>
 
-          <div class="arc-equation">
-            <strong>Trajectory accounting requires every future claim to pass through retained state, new input, losses, uncertainty, and receipts.</strong>
+          <span class="trajectory-node yesterday" style="--x:19%;--y:55%"><b>Yesterday</b><span>Retained</span></span>
+          <span class="trajectory-node today" style="--x:37%;--y:70%"><b>Today</b><span>Added</span></span>
+          <span class="trajectory-node losses" style="--x:59%;--y:58%"><b>Losses</b><span>Subtract</span></span>
+          <span class="trajectory-node uncertainty" style="--x:73%;--y:29%"><b>ε Band</b><span>Uncertain</span></span>
+          <span class="trajectory-node tomorrow" style="--x:85%;--y:40%"><b>Tomorrow</b><span>Projected</span></span>
+
+          <span class="trajectory-receipt-dot retained" style="--x:22%;--y:48%;--t:5.9s;--d:-.2s" aria-label="Retained state receipt"></span>
+          <span class="trajectory-receipt-dot input" style="--x:43%;--y:59%;--t:6.5s;--d:-1.2s" aria-label="Input receipt"></span>
+          <span class="trajectory-receipt-dot loss" style="--x:59%;--y:50%;--t:6.8s;--d:-2.1s" aria-label="Loss receipt"></span>
+          <span class="trajectory-receipt-dot storage" style="--x:66%;--y:42%;--t:7.0s;--d:-3s" aria-label="Storage and conversion receipt"></span>
+          <span class="trajectory-receipt-dot uncertain" style="--x:74%;--y:42%;--t:7.4s;--d:-4s" aria-label="Uncertainty receipt"></span>
+          <span class="trajectory-receipt-dot projected" style="--x:86%;--y:33%;--t:6.6s;--d:-5s" aria-label="Projection receipt"></span>
+
+          <div class="trajectory-arc-equation">
+            <strong>The projection only holds when retained state, today’s input, losses, uncertainty, and receipts all remain accountable.</strong>
             <code>E_tomorrow = E_yesterday_retained + E_today_added - E_losses ± ε</code>
           </div>
         </div>
@@ -2339,9 +2490,9 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_TRAJECTORY_DROPDOWN_RETURN_ARC_VECTOR_PROOF_TNT_v1
-previous=FRONTIER_TRAJECTORY_SCIENCE_ENERGY_CARRYFORWARD_TNT_v1
-binding=PREBUILD_TO_POSTBUILD_TRAJECTORY_DROPDOWN_RETURN_ARC_VECTOR_PROOF_BINDING_v1
+FRONTIER_TRAJECTORY_ARC_FIELD_DIAGRAM_LENS_CLEANUP_TNT_v1
+previous=FRONTIER_TRAJECTORY_DROPDOWN_RETURN_ARC_VECTOR_PROOF_TNT_v1
+binding=CCR_TRAJECTORY_ARC_FIELD_DIAGRAM_LENS_CLEANUP_COHERENCE_CONSTRAINTS_RUNTIME_v1
 route=/explore/frontier/trajectory/
 page=frontier_trajectory_science
 html=/explore/frontier/trajectory/index.html
@@ -2357,15 +2508,28 @@ large_readable_print_preserved=true
 dropdown_navigation=active
 site_menu_dropdown=active
 frontier_lanes_dropdown=active
-long_top_bubble_nav_replaced=true
 return_to_frontier_hero=active
 return_to_frontier_every_pathway=active
 return_to_frontier_final_lock=active
 return_to_frontier=/explore/frontier/
 trajectory_arc_vector_field=active
+diagram_lens_toggle=active
+diagram_platform_lens=active
+diagram_engineering_lens=active
+trajectory_arc_visual_cleanup=active
+diagram_scope_only=true
+rest_of_page_unfettered=true
 served_state_proof=active
-served_state_proof_text=DROPDOWN_RETURN_ARC_VECTOR_FIELD_ACTIVE
-arc_vector_components=yesterday_retained_arc,today_added_vector,loss_subtraction_trails,uncertainty_band,tomorrow_projection_node,correction_return_vector,receipt_markers
+served_state_proof_text=DIAGRAM_LENS_CLEAN_ARC_ACTIVE_DROPDOWN_RETURN_ARC_VECTOR_FIELD_PRESERVED
+arc_vector_components=yesterday_retained_arc,today_added_vector,loss_subtraction_vector,uncertainty_band,tomorrow_projection_node,audit_return_vector,receipt_markers
+diagram_platform_lens_meaning=yesterday_kept_today_added_losses_subtract_uncertainty_unknown_tomorrow_projected_usable_result
+diagram_engineering_lens_meaning=E_tomorrow_equals_E_yesterday_retained_plus_E_today_added_minus_E_losses_plus_or_minus_epsilon_with_receipts_and_audit_return_vector
+dropdown_navigation_preserved=true
+return_to_frontier_preserved=true
+compass_gems_preserved=true
+pathway_gems_preserved=true
+pathway_lenses_preserved=true
+pathway_modules_preserved=true
 audralia_story_world_energy_trajectory_field_first=true
 center_anchor=Trajectory_Science_Tomorrows_Energy
 pathways=Audralia_Energy_Trajectory,Yesterdays_Energy,Todays_Energy,Tomorrows_Energy,Carryforward,Storage,Conversion,Losses,Compounding,Uncertainty,Receipts,Kill_Conditions
@@ -2381,6 +2545,7 @@ forbidden_collapse=energy_created_from_nothing_slogan_as_physics_proof_projectio
 audit_boundary=audit_failure_blocks_closure
 final_lock=measure_yesterdays_retained_energy_measure_todays_added_energy_subtract_losses_account_for_storage_account_for_conversion_declare_uncertainty_project_tomorrows_usable_energy_require_receipts_survive_audit
 static_page_usable_without_js=true
+runtime_scope=css_only
 heavy_runtime=false
 generated_image=false
 graphic_box=false
@@ -2388,12 +2553,12 @@ canvas=false
 webgl=false
 streaming=false
 visual_pass_claimed=false
-deploy_marker=FRONTIER_TRAJECTORY_DROPDOWN_RETURN_ARC_VECTOR_PROOF_DEPLOY_MARKER_v1
+deploy_marker=FRONTIER_TRAJECTORY_ARC_FIELD_DIAGRAM_LENS_CLEANUP_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer>
-      FRONTIER_TRAJECTORY_DROPDOWN_RETURN_ARC_VECTOR_PROOF_TNT_v1 · Trajectory Science · Dropdowns · Return to Frontier · Arc Vector Field · Yesterday’s energy + today’s energy = tomorrow’s energy.
+      FRONTIER_TRAJECTORY_ARC_FIELD_DIAGRAM_LENS_CLEANUP_TNT_v1 · Trajectory Science · Diagram Lens Toggle · Clean Arc Field · Dropdowns Preserved · Return to Frontier Preserved.
     </footer>
   </div>
 </body>

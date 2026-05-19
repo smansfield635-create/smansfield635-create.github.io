@@ -4,14 +4,14 @@
   lang="en"
   data-route="/explore/frontier/water/"
   data-page="frontier-water"
-  data-version="G2-V7"
-  data-contract="FRONTIER_WATER_SEPARATED_RAIN_AND_CASCADE_DROPLET_PHYSICS_TNT_v7"
-  data-previous-contract="FRONTIER_WATER_DUAL_LATTICE_CAUSAL_SPRING_SHOWER_RENEWAL_TNT_v6"
-  data-source-binding="FRONTIER_WATER_SPRING_SHOWER_CASCADE_PHYSICS_CCR_AUDIT_v7"
+  data-version="G2-V8"
+  data-contract="FRONTIER_WATER_RUNTIME_OPTIMIZED_GLASS_DROPLET_DROPDOWN_TNT_v8"
+  data-previous-contract="FRONTIER_WATER_SEPARATED_RAIN_AND_CASCADE_DROPLET_PHYSICS_TNT_v7"
+  data-source-binding="FRONTIER_WATER_RUNTIME_OPTIMIZED_GLASS_DROPLET_DROPDOWN_CCR_AUDIT_v8"
   data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
-  data-design-reference="FRONTIER_WATER_DUAL_LATTICE_CAUSAL_SPRING_SHOWER_RENEWAL_TNT_v6"
+  data-design-reference="FRONTIER_WATER_SEPARATED_RAIN_AND_CASCADE_DROPLET_PHYSICS_TNT_v7"
   data-source-symbol-authority="compassOrganicGem"
-  data-role="frontier-water-separated-rain-cascade-droplet-physics"
+  data-role="frontier-water-runtime-optimized-glass-droplet-dropdown"
   data-audralia-water-first="true"
   data-per-pathway-dual-lens="true"
   data-platform-lens="true"
@@ -22,7 +22,14 @@
   data-water-true-form-expression="true"
   data-physics-informed-water-behavior="true"
   data-runtime-reallocation="true"
+  data-runtime-optimized-v8="true"
   data-not-removal="true"
+  data-site-dropdown-menu="true"
+  data-dropdown-glass-droplets="true"
+  data-dropdown-droplets-static="true"
+  data-text-stability-lock="true"
+  data-readable-text-animated="false"
+  data-text-motion-only-if-attached-to-floating-object="true"
   data-rain-lattice="RAIN_FIELD_LATTICE_256"
   data-diamond-lattice="DIAMOND_SURFACE_LATTICE_256"
   data-coupling-lattice="RAIN_TO_DIAMOND_CAUSAL_GATE_256"
@@ -76,10 +83,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Water · Separated Rain & Cascade Droplet Physics · Diamond Gate Bridge</title>
+  <title>Water · Optimized Glass-Droplet Simulation · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Water is a live Frontier simulation for future water systems, using separated spring-shower rain layers and one-way cascade droplet physics on visible route gems."
+    content="Diamond Gate Bridge Water is a live Frontier simulation for future water systems, using optimized separated rain layers, one-way cascade droplet physics, and a glass-droplet site menu."
   >
 
   <style>
@@ -100,7 +107,7 @@
       --shadow:0 32px 110px rgba(0,0,0,.48);
       --max:1180px;
       --brand-gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
-      --water-cycle:14.8s;
+      --water-cycle:15.2s;
     }
 
     *{box-sizing:border-box}
@@ -152,6 +159,7 @@
 
     a:focus-visible,
     button:focus-visible,
+    summary:focus-visible,
     label:focus-visible,
     [tabindex]:focus-visible{
       outline:2px solid var(--gold);
@@ -272,13 +280,13 @@
       letter-spacing:.055em;
       text-transform:uppercase;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+      transition:border-color .18s ease,background .18s ease,color .18s ease;
     }
 
     .nav a:hover,
     .nav a:focus-visible{
-      transform:translateY(-2px);
       border-color:rgba(159,231,255,.54);
+      background:rgba(159,231,255,.07);
       outline:none;
     }
 
@@ -286,6 +294,216 @@
       border-color:rgba(159,231,255,.88);
       color:#041018;
       background:linear-gradient(135deg,#e8fbff,#8dd8ff);
+    }
+
+    .site-menu{
+      grid-column:1 / -1;
+      position:relative;
+      z-index:10;
+      margin-top:-.25rem;
+    }
+
+    .site-menu-summary{
+      list-style:none;
+      width:fit-content;
+      min-height:2.75rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:.7rem;
+      padding:.62rem 1rem;
+      border:1px solid rgba(159,231,255,.34);
+      border-radius:999px;
+      color:rgba(241,246,255,.92);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(223,248,255,.12),transparent 70%),
+        rgba(255,255,255,.05);
+      box-shadow:
+        0 .8rem 1.8rem rgba(0,0,0,.18),
+        inset 0 1px 0 rgba(255,255,255,.09);
+      cursor:pointer;
+      user-select:none;
+      transition:border-color .18s ease,background .18s ease;
+    }
+
+    .site-menu-summary::-webkit-details-marker{display:none}
+
+    .site-menu-summary span{
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+
+    .site-menu-summary b{
+      color:var(--water2);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .site-menu-summary::before{
+      content:"";
+      width:.72rem;
+      height:.72rem;
+      border-radius:50% 50% 57% 43%;
+      transform:rotate(28deg);
+      background:
+        radial-gradient(circle at 35% 24%,rgba(255,255,255,.95),transparent 24%),
+        linear-gradient(135deg,var(--water2),var(--water));
+      box-shadow:0 0 .9rem rgba(159,231,255,.38);
+      flex:0 0 auto;
+    }
+
+    .site-menu-summary::after{
+      content:"Open";
+      min-width:3.3rem;
+      text-align:center;
+      padding:.28rem .52rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;
+      color:rgba(223,248,255,.88);
+      background:rgba(1,8,20,.32);
+      font-size:.58rem;
+      font-weight:950;
+      letter-spacing:.09em;
+      text-transform:uppercase;
+    }
+
+    .site-menu[open] .site-menu-summary{
+      border-color:rgba(159,231,255,.66);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(223,248,255,.16),transparent 70%),
+        rgba(255,255,255,.07);
+    }
+
+    .site-menu[open] .site-menu-summary::after{content:"Close"}
+
+    .site-menu-panel{
+      position:relative;
+      margin-top:.7rem;
+      padding:1rem;
+      border:1px solid rgba(159,231,255,.24);
+      border-radius:1.45rem;
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.026)),
+        rgba(5,12,25,.88);
+      box-shadow:
+        0 1.5rem 3.5rem rgba(0,0,0,.34),
+        inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+
+    .site-menu-panel::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      opacity:.48;
+      background:
+        radial-gradient(circle at 8% 12%,rgba(255,255,255,.56) 0 .08rem,rgba(159,231,255,.24) .09rem .22rem,transparent .24rem),
+        radial-gradient(circle at 16% 62%,rgba(223,248,255,.42) 0 .07rem,rgba(159,231,255,.20) .08rem .18rem,transparent .20rem),
+        radial-gradient(circle at 29% 28%,rgba(255,255,255,.44) 0 .06rem,rgba(159,231,255,.18) .07rem .16rem,transparent .18rem),
+        radial-gradient(circle at 42% 78%,rgba(223,248,255,.38) 0 .07rem,rgba(159,231,255,.18) .08rem .19rem,transparent .21rem),
+        radial-gradient(circle at 58% 20%,rgba(255,255,255,.48) 0 .08rem,rgba(159,231,255,.20) .09rem .21rem,transparent .23rem),
+        radial-gradient(circle at 76% 68%,rgba(223,248,255,.38) 0 .06rem,rgba(159,231,255,.16) .07rem .17rem,transparent .19rem),
+        radial-gradient(circle at 91% 32%,rgba(255,255,255,.42) 0 .07rem,rgba(159,231,255,.18) .08rem .19rem,transparent .21rem),
+        radial-gradient(ellipse at 50% 0%,rgba(223,248,255,.10),transparent 72%);
+      background-size:100% 100%;
+    }
+
+    .site-menu-panel::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      opacity:.18;
+      background:
+        linear-gradient(180deg,transparent 0 11%,rgba(223,248,255,.24) 12%,transparent 28%),
+        linear-gradient(180deg,transparent 0 20%,rgba(159,231,255,.18) 21%,transparent 48%),
+        linear-gradient(180deg,transparent 0 34%,rgba(223,248,255,.20) 35%,transparent 60%);
+      background-size:13rem 100%,17rem 100%,21rem 100%;
+      background-position:4% 0,47% 0,84% 0;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.85),rgba(0,0,0,.42) 72%,transparent);
+    }
+
+    .site-menu-grid{
+      position:relative;
+      z-index:1;
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.75rem;
+    }
+
+    .site-menu-group{
+      display:grid;
+      gap:.55rem;
+      align-content:start;
+      min-height:100%;
+      padding:.8rem;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:1.05rem;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(159,231,255,.10),transparent 70%),
+        rgba(1,8,20,.44);
+    }
+
+    .site-menu-group strong{
+      color:var(--gold);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .site-menu-links{
+      display:grid;
+      gap:.42rem;
+    }
+
+    .site-menu-links a{
+      min-height:2.15rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:.65rem;
+      padding:.52rem .62rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:.82rem;
+      color:rgba(241,246,255,.86);
+      background:rgba(255,255,255,.035);
+      font-size:.74rem;
+      font-weight:900;
+      letter-spacing:.035em;
+      line-height:1.15;
+      transition:border-color .18s ease,background .18s ease,color .18s ease;
+    }
+
+    .site-menu-links a:hover,
+    .site-menu-links a:focus-visible{
+      border-color:rgba(159,231,255,.52);
+      background:rgba(159,231,255,.075);
+      color:rgba(255,244,216,.96);
+      outline:none;
+    }
+
+    .site-menu-links a[aria-current="page"]{
+      border-color:rgba(159,231,255,.86);
+      color:#041018;
+      background:linear-gradient(135deg,#e8fbff,#8dd8ff);
+    }
+
+    .site-menu-links a[aria-current="page"]::after{
+      content:"Current";
+      color:#041018;
+      font-size:.56rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      opacity:.82;
     }
 
     .panel{
@@ -444,13 +662,13 @@
       letter-spacing:.055em;
       text-transform:uppercase;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+      transition:border-color .18s ease,background .18s ease,color .18s ease;
     }
 
     .button:hover,
     .button:focus-visible{
-      transform:translateY(-2px);
       border-color:rgba(159,231,255,.62);
+      background:rgba(159,231,255,.075);
       outline:none;
     }
 
@@ -502,7 +720,7 @@
       z-index:1;
       overflow:hidden;
       border-radius:inherit;
-      opacity:.92;
+      opacity:.88;
       mix-blend-mode:screen;
     }
 
@@ -518,93 +736,67 @@
       pointer-events:none;
     }
 
-    .rain-sheet{
-      opacity:0;
-      transform:translate3d(0,-8%,0);
-      will-change:background-position,transform,opacity;
-    }
-
     .rain-sheet.far{
+      opacity:.13;
+      transform:translate3d(-2%,-1%,0) skewX(-4deg);
       background-image:
         linear-gradient(109deg,transparent 0 5%,rgba(223,248,255,.10) 5.2% 5.55%,transparent 5.8% 18%,rgba(159,231,255,.08) 18.2% 18.48%,transparent 18.8% 37%,rgba(223,248,255,.07) 37.2% 37.45%,transparent 37.8% 100%),
         radial-gradient(circle at 18% 12%,rgba(223,248,255,.12) 0 1px,transparent 2px),
         radial-gradient(circle at 74% 42%,rgba(159,231,255,.10) 0 1px,transparent 2px);
       background-size:255px 360px,190px 260px,270px 330px;
-      opacity:.16;
-      transform:translate3d(-2%,-10%,0) skewX(-4deg);
-      animation:rainFarFall 5.8s linear infinite;
+      background-position:0 0,0 0,0 0;
     }
 
     .rain-sheet.mid{
-      background-image:
-        linear-gradient(113deg,transparent 0 8%,rgba(223,248,255,.18) 8.2% 8.55%,rgba(159,231,255,.10) 8.6% 8.9%,transparent 9.2% 26%,rgba(223,248,255,.13) 26.2% 26.58%,transparent 26.9% 44%,rgba(223,248,255,.16) 44.1% 44.42%,transparent 44.8% 68%,rgba(159,231,255,.10) 68.3% 68.62%,transparent 68.95% 100%),
-        radial-gradient(circle at 34% 28%,rgba(255,255,255,.13) 0 1px,transparent 2px);
-      background-size:210px 305px,175px 280px;
-      opacity:.30;
+      opacity:.27;
       transform:translate3d(1%,-9%,0) skewX(-7deg);
-      animation:rainMidFall 3.65s linear infinite;
+      background-image:
+        linear-gradient(113deg,transparent 0 8%,rgba(223,248,255,.18) 8.2% 8.55%,rgba(159,231,255,.10) 8.6% 8.9%,transparent 9.2% 26%,rgba(223,248,255,.13) 26.2% 26.58%,transparent 26.9% 44%,rgba(223,248,255,.16) 44.1% 44.42%,transparent 44.8% 68%,rgba(159,231,255,.10) 68.3% 68.62%,transparent 68.95% 100%);
+      background-size:220px 320px;
+      animation:rainMidFall 4.4s linear infinite;
     }
 
     .rain-sheet.near{
-      background-image:
-        linear-gradient(116deg,transparent 0 7%,rgba(255,255,255,.34) 7.25% 7.75%,rgba(159,231,255,.18) 7.8% 8.3%,transparent 8.65% 21%,rgba(223,248,255,.22) 21.25% 21.75%,transparent 22.15% 52%,rgba(255,255,255,.26) 52.2% 52.75%,rgba(159,231,255,.12) 52.8% 53.2%,transparent 53.55% 79%,rgba(223,248,255,.16) 79.1% 79.45%,transparent 79.85% 100%),
-        radial-gradient(ellipse at 12% 20%,rgba(255,255,255,.22) 0 1px,transparent 2px),
-        radial-gradient(ellipse at 84% 72%,rgba(223,248,255,.18) 0 1px,transparent 2px);
-      background-size:168px 260px,140px 220px,215px 290px;
-      opacity:.42;
+      opacity:.34;
       transform:translate3d(-1%,-8%,0) skewX(-10deg);
-      animation:rainNearFall 2.35s linear infinite;
+      background-image:
+        linear-gradient(116deg,transparent 0 7%,rgba(255,255,255,.32) 7.25% 7.75%,rgba(159,231,255,.16) 7.8% 8.3%,transparent 8.65% 21%,rgba(223,248,255,.20) 21.25% 21.75%,transparent 22.15% 52%,rgba(255,255,255,.23) 52.2% 52.75%,rgba(159,231,255,.10) 52.8% 53.2%,transparent 53.55% 79%,rgba(223,248,255,.14) 79.1% 79.45%,transparent 79.85% 100%);
+      background-size:180px 275px;
+      animation:rainNearFall 3.05s linear infinite;
     }
 
     .rain-bead-field{
       z-index:2;
-      opacity:.38;
+      opacity:.24;
       background:
-        radial-gradient(ellipse at 11% 10%,rgba(255,255,255,.45) 0 .07rem,rgba(159,231,255,.18) .08rem .16rem,transparent .18rem),
-        radial-gradient(ellipse at 24% 74%,rgba(223,248,255,.36) 0 .06rem,rgba(159,231,255,.16) .07rem .14rem,transparent .16rem),
-        radial-gradient(ellipse at 39% 38%,rgba(255,255,255,.34) 0 .06rem,transparent .15rem),
-        radial-gradient(ellipse at 57% 18%,rgba(223,248,255,.34) 0 .06rem,rgba(159,231,255,.14) .07rem .14rem,transparent .16rem),
-        radial-gradient(ellipse at 72% 62%,rgba(255,255,255,.40) 0 .07rem,transparent .16rem),
-        radial-gradient(ellipse at 88% 28%,rgba(223,248,255,.30) 0 .05rem,rgba(159,231,255,.12) .06rem .12rem,transparent .15rem);
+        radial-gradient(ellipse at 11% 10%,rgba(255,255,255,.42) 0 .07rem,rgba(159,231,255,.16) .08rem .16rem,transparent .18rem),
+        radial-gradient(ellipse at 24% 74%,rgba(223,248,255,.32) 0 .06rem,rgba(159,231,255,.14) .07rem .14rem,transparent .16rem),
+        radial-gradient(ellipse at 39% 38%,rgba(255,255,255,.30) 0 .06rem,transparent .15rem),
+        radial-gradient(ellipse at 57% 18%,rgba(223,248,255,.30) 0 .06rem,rgba(159,231,255,.12) .07rem .14rem,transparent .16rem),
+        radial-gradient(ellipse at 72% 62%,rgba(255,255,255,.34) 0 .07rem,transparent .16rem),
+        radial-gradient(ellipse at 88% 28%,rgba(223,248,255,.26) 0 .05rem,rgba(159,231,255,.10) .06rem .12rem,transparent .15rem);
       background-size:260px 380px,230px 330px,310px 420px,275px 390px,240px 360px,300px 440px;
-      animation:rainBeadsFall 4.2s linear infinite;
-      filter:drop-shadow(0 0 .35rem rgba(159,231,255,.10));
+      background-position:0 0,20px 30px,-30px 40px,10px 60px,-15px 80px,35px 20px;
     }
 
     .rain-mist-layer{
       z-index:0;
+      opacity:.34;
       background:
         radial-gradient(ellipse at 22% 18%,rgba(223,248,255,.08),transparent 36%),
         radial-gradient(ellipse at 78% 64%,rgba(159,231,255,.06),transparent 42%),
         radial-gradient(ellipse at 50% 90%,rgba(143,240,195,.045),transparent 46%),
         linear-gradient(180deg,rgba(159,231,255,.030),transparent 52%,rgba(159,231,255,.024));
-      opacity:.45;
-      animation:mistBreath 10s ease-in-out infinite;
-    }
-
-    @keyframes rainFarFall{
-      from{background-position:0 -360px,0 -220px,0 -300px;transform:translate3d(-2%,-10%,0) skewX(-4deg)}
-      to{background-position:-68px 360px,34px 220px,-42px 300px;transform:translate3d(-3%,7%,0) skewX(-4deg)}
     }
 
     @keyframes rainMidFall{
-      from{background-position:0 -305px,0 -230px;transform:translate3d(1%,-9%,0) skewX(-7deg)}
-      to{background-position:-104px 305px,46px 230px;transform:translate3d(-1%,9%,0) skewX(-7deg)}
+      from{background-position:0 -320px}
+      to{background-position:-96px 320px}
     }
 
     @keyframes rainNearFall{
-      from{background-position:0 -260px,0 -180px,0 -240px;transform:translate3d(-1%,-8%,0) skewX(-10deg)}
-      to{background-position:-138px 260px,48px 180px,-64px 240px;transform:translate3d(-3%,10%,0) skewX(-10deg)}
-    }
-
-    @keyframes rainBeadsFall{
-      from{background-position:0 -380px,20px -330px,-30px -420px,10px -390px,-15px -360px,35px -440px}
-      to{background-position:-58px 380px,-34px 330px,-88px 420px,-44px 390px,-80px 360px,-28px 440px}
-    }
-
-    @keyframes mistBreath{
-      0%,100%{opacity:.32;filter:blur(0)}
-      50%{opacity:.52;filter:blur(.25px)}
+      from{background-position:0 -275px}
+      to{background-position:-120px 275px}
     }
 
     .compass-stage::before,
@@ -648,7 +840,7 @@
       transition:transform .18s ease,filter .18s ease;
       pointer-events:auto;
       --water-delay:0s;
-      --water-cycle:14.8s;
+      --water-cycle:15.2s;
       --contact-x:50%;
       --flow-x:50%;
       --split-left:31%;
@@ -665,7 +857,6 @@
       transform:translate(-50%,-50%);
       z-index:6;
       pointer-events:none;
-      animation:centerFulcrumBreath 13.6s ease-in-out infinite;
       --water-delay:-.15s;
       --contact-x:50%;
       --flow-x:49%;
@@ -688,11 +879,6 @@
       transform:translate(-50%,-50%) scale(1.055);
       filter:brightness(1.13) saturate(1.08);
       outline:none;
-    }
-
-    @keyframes centerFulcrumBreath{
-      0%,100%{filter:brightness(1)}
-      50%{filter:brightness(1.08)}
     }
 
     .gem-core{
@@ -724,9 +910,8 @@
       transform:translateX(-50%) rotate(10deg);
       opacity:0;
       background:
-        linear-gradient(180deg,transparent 0%,rgba(223,248,255,.08) 12%,rgba(223,248,255,.44) 30%,rgba(255,255,255,.44) 51%,rgba(159,231,255,.18) 72%,transparent 100%),
-        radial-gradient(circle at 50% 78%,rgba(255,255,255,.62) 0 .06rem,transparent .12rem);
-      filter:drop-shadow(0 0 .24rem rgba(159,231,255,.18));
+        linear-gradient(180deg,transparent 0%,rgba(223,248,255,.08) 12%,rgba(223,248,255,.40) 30%,rgba(255,255,255,.40) 51%,rgba(159,231,255,.16) 72%,transparent 100%),
+        radial-gradient(circle at 50% 78%,rgba(255,255,255,.56) 0 .06rem,transparent .12rem);
       animation:causalGate var(--water-cycle) cubic-bezier(.25,.60,.35,1) infinite;
       animation-delay:var(--water-delay);
     }
@@ -735,19 +920,18 @@
       left:var(--contact-x);
       top:17%;
       z-index:5;
-      width:60%;
-      height:28%;
+      width:56%;
+      height:26%;
       border-radius:50%;
       transform:translate(-50%,-50%) scale(.48);
       opacity:0;
       background:
-        radial-gradient(ellipse at 50% 52%,rgba(255,255,255,.62) 0 4%,rgba(223,248,255,.36) 5% 13%,transparent 14%),
-        radial-gradient(ellipse at 26% 57%,rgba(223,248,255,.35) 0 3%,transparent 10%),
-        radial-gradient(ellipse at 73% 55%,rgba(223,248,255,.30) 0 3%,transparent 10%),
-        radial-gradient(circle at 28% 65%,rgba(255,255,255,.70) 0 .07rem,rgba(159,231,255,.28) .08rem .16rem,transparent .18rem),
-        radial-gradient(circle at 50% 69%,rgba(255,255,255,.62) 0 .055rem,rgba(159,231,255,.22) .065rem .13rem,transparent .15rem),
-        radial-gradient(circle at 68% 58%,rgba(255,255,255,.58) 0 .07rem,rgba(159,231,255,.22) .08rem .16rem,transparent .18rem),
-        linear-gradient(90deg,transparent 0 19%,rgba(223,248,255,.40) 33% 39%,rgba(255,255,255,.38) 49% 53%,rgba(223,248,255,.30) 62% 70%,transparent 80%);
+        radial-gradient(ellipse at 50% 52%,rgba(255,255,255,.58) 0 4%,rgba(223,248,255,.32) 5% 13%,transparent 14%),
+        radial-gradient(ellipse at 26% 57%,rgba(223,248,255,.28) 0 3%,transparent 10%),
+        radial-gradient(ellipse at 73% 55%,rgba(223,248,255,.25) 0 3%,transparent 10%),
+        radial-gradient(circle at 28% 65%,rgba(255,255,255,.60) 0 .06rem,rgba(159,231,255,.22) .07rem .14rem,transparent .16rem),
+        radial-gradient(circle at 68% 58%,rgba(255,255,255,.48) 0 .06rem,rgba(159,231,255,.18) .07rem .14rem,transparent .16rem),
+        linear-gradient(90deg,transparent 0 21%,rgba(223,248,255,.34) 34% 39%,rgba(255,255,255,.32) 49% 53%,rgba(223,248,255,.24) 62% 69%,transparent 79%);
       animation:smallSpringSplash var(--water-cycle) cubic-bezier(.21,.62,.28,1) infinite;
       animation-delay:var(--water-delay);
     }
@@ -756,21 +940,19 @@
       left:var(--flow-x);
       top:53%;
       z-index:3;
-      width:92%;
-      height:92%;
+      width:88%;
+      height:88%;
       clip-path:var(--brand-gem);
       transform:translate(-50%,-50%) translateY(-.22rem) scale(.96);
       opacity:0;
       background:
-        linear-gradient(122deg,transparent 0 17%,rgba(223,248,255,.12) 18% 20%,transparent 22%),
-        linear-gradient(74deg,transparent 0 38%,rgba(159,231,255,.13) 40% 41.5%,rgba(255,255,255,.18) 42%,transparent 45%),
-        linear-gradient(101deg,transparent 0 54%,rgba(223,248,255,.18) 55% 56.4%,transparent 58%),
-        linear-gradient(82deg,transparent 0 66%,rgba(159,231,255,.13) 67.2% 68.2%,transparent 70%),
-        radial-gradient(circle at var(--split-left) 42%,rgba(255,255,255,.43) 0 .065rem,rgba(159,231,255,.20) .07rem .14rem,transparent .16rem),
-        radial-gradient(circle at 49% 57%,rgba(255,255,255,.36) 0 .05rem,rgba(159,231,255,.16) .06rem .12rem,transparent .14rem),
-        radial-gradient(circle at var(--split-right) 63%,rgba(255,255,255,.36) 0 .05rem,rgba(159,231,255,.16) .06rem .12rem,transparent .14rem),
-        radial-gradient(ellipse at 44% 36%,rgba(223,248,255,.12),transparent 62%),
-        radial-gradient(ellipse at 50% 77%,rgba(159,231,255,.13),transparent 45%);
+        linear-gradient(122deg,transparent 0 18%,rgba(223,248,255,.11) 19% 20%,transparent 22%),
+        linear-gradient(74deg,transparent 0 40%,rgba(159,231,255,.12) 41% 42%,rgba(255,255,255,.15) 42.4%,transparent 45%),
+        linear-gradient(101deg,transparent 0 55%,rgba(223,248,255,.15) 56% 57%,transparent 59%),
+        radial-gradient(circle at var(--split-left) 42%,rgba(255,255,255,.35) 0 .055rem,rgba(159,231,255,.17) .06rem .12rem,transparent .14rem),
+        radial-gradient(circle at var(--split-right) 63%,rgba(255,255,255,.30) 0 .05rem,rgba(159,231,255,.14) .06rem .11rem,transparent .13rem),
+        radial-gradient(ellipse at 44% 36%,rgba(223,248,255,.10),transparent 62%),
+        radial-gradient(ellipse at 50% 77%,rgba(159,231,255,.11),transparent 45%);
       animation:surfaceAccumulation var(--water-cycle) cubic-bezier(.22,.58,.28,1) infinite;
       animation-delay:var(--water-delay);
     }
@@ -786,9 +968,8 @@
 
     .water-accumulation-system::before{
       background:
-        linear-gradient(128deg,transparent 0 28%,rgba(223,248,255,.34) 29% 30.2%,rgba(159,231,255,.13) 30.5% 31.2%,transparent 32.6%),
-        linear-gradient(94deg,transparent 0 47%,rgba(223,248,255,.22) 48% 49%,transparent 50.5%),
-        radial-gradient(circle at 33% 71%,rgba(255,255,255,.40) 0 .05rem,transparent .13rem);
+        linear-gradient(128deg,transparent 0 28%,rgba(223,248,255,.28) 29% 30%,rgba(159,231,255,.11) 30.3% 31%,transparent 32.4%),
+        radial-gradient(circle at 33% 71%,rgba(255,255,255,.32) 0 .05rem,transparent .13rem);
       transform:translateY(-.1rem);
       animation:facetSplitLeft var(--water-cycle) cubic-bezier(.23,.62,.30,1) infinite;
       animation-delay:var(--water-delay);
@@ -796,9 +977,8 @@
 
     .water-accumulation-system::after{
       background:
-        linear-gradient(55deg,transparent 0 55%,rgba(223,248,255,.32) 56% 57.2%,rgba(159,231,255,.14) 57.5% 58.1%,transparent 59.5%),
-        linear-gradient(100deg,transparent 0 62%,rgba(223,248,255,.20) 63% 64%,transparent 65.4%),
-        radial-gradient(circle at 67% 75%,rgba(255,255,255,.36) 0 .05rem,transparent .13rem);
+        linear-gradient(55deg,transparent 0 55%,rgba(223,248,255,.27) 56% 57%,rgba(159,231,255,.12) 57.4% 58%,transparent 59.2%),
+        radial-gradient(circle at 67% 75%,rgba(255,255,255,.30) 0 .05rem,transparent .13rem);
       transform:translateY(-.06rem);
       animation:facetSplitRight var(--water-cycle) cubic-bezier(.23,.62,.30,1) infinite;
       animation-delay:calc(var(--water-delay) + .18s);
@@ -808,18 +988,17 @@
       left:50%;
       top:80%;
       z-index:5;
-      width:3.4rem;
-      height:5.4rem;
+      width:3.2rem;
+      height:5.2rem;
       transform:translateX(calc(-50% + var(--drip-offset))) translateY(0) rotate(var(--edge-tilt)) scale(.52);
       opacity:0;
       background:
-        radial-gradient(ellipse at 50% 4%,rgba(223,248,255,.70) 0 .18rem,rgba(159,231,255,.24) .19rem .32rem,transparent .34rem),
-        radial-gradient(ellipse at 40% 16%,rgba(223,248,255,.42) 0 .12rem,rgba(159,231,255,.18) .13rem .24rem,transparent .26rem),
-        radial-gradient(ellipse at 61% 18%,rgba(223,248,255,.38) 0 .11rem,rgba(159,231,255,.16) .12rem .23rem,transparent .25rem),
-        radial-gradient(circle at 44% 34%,rgba(255,255,255,.78) 0 .07rem,transparent .10rem),
-        radial-gradient(ellipse at 51% 45%,rgba(223,248,255,.84) 0 .17rem,rgba(141,216,255,.36) .18rem .32rem,transparent .34rem),
-        radial-gradient(ellipse at 53% 75%,rgba(223,248,255,.70) 0 .14rem,rgba(141,216,255,.28) .15rem .27rem,transparent .30rem);
-      filter:drop-shadow(0 0 .22rem rgba(159,231,255,.20));
+        radial-gradient(ellipse at 50% 4%,rgba(223,248,255,.64) 0 .17rem,rgba(159,231,255,.22) .18rem .30rem,transparent .32rem),
+        radial-gradient(ellipse at 40% 16%,rgba(223,248,255,.34) 0 .10rem,rgba(159,231,255,.15) .11rem .22rem,transparent .24rem),
+        radial-gradient(ellipse at 61% 18%,rgba(223,248,255,.30) 0 .10rem,rgba(159,231,255,.14) .11rem .22rem,transparent .24rem),
+        radial-gradient(circle at 44% 34%,rgba(255,255,255,.70) 0 .065rem,transparent .10rem),
+        radial-gradient(ellipse at 51% 45%,rgba(223,248,255,.78) 0 .16rem,rgba(141,216,255,.32) .17rem .30rem,transparent .32rem),
+        radial-gradient(ellipse at 53% 75%,rgba(223,248,255,.62) 0 .13rem,rgba(141,216,255,.24) .14rem .25rem,transparent .28rem);
       animation:oneWayTeardropFall var(--water-cycle) cubic-bezier(.18,.66,.22,1) infinite;
       animation-delay:var(--water-delay);
     }
@@ -830,15 +1009,15 @@
         transform:translateX(-50%) translateY(-.86rem) rotate(10deg) scaleY(.82);
       }
       28%{
-        opacity:.24;
+        opacity:.22;
         transform:translateX(-50%) translateY(-.34rem) rotate(10deg) scaleY(.94);
       }
       32%{
-        opacity:.46;
+        opacity:.42;
         transform:translateX(-50%) translateY(.18rem) rotate(10deg) scaleY(1.03);
       }
       36%{
-        opacity:.18;
+        opacity:.16;
         transform:translateX(-50%) translateY(.76rem) rotate(10deg) scaleY(.92);
       }
       39%{
@@ -853,20 +1032,20 @@
         transform:translate(-50%,-50%) scale(.42);
       }
       32%{
-        opacity:.56;
+        opacity:.50;
         transform:translate(-50%,-50%) scale(.70);
       }
       38%{
-        opacity:.44;
-        transform:translate(-50%,-50%) scaleX(1.06) scaleY(.72) translateY(.06rem);
+        opacity:.36;
+        transform:translate(-50%,-50%) scaleX(1.04) scaleY(.72) translateY(.06rem);
       }
       47%{
-        opacity:.20;
-        transform:translate(-50%,-50%) scaleX(1.24) scaleY(.84) translateY(.18rem);
+        opacity:.17;
+        transform:translate(-50%,-50%) scaleX(1.18) scaleY(.84) translateY(.18rem);
       }
       56%{
         opacity:0;
-        transform:translate(-50%,-50%) scaleX(1.32) scaleY(.92) translateY(.28rem);
+        transform:translate(-50%,-50%) scaleX(1.24) scaleY(.92) translateY(.28rem);
       }
     }
 
@@ -876,19 +1055,19 @@
         transform:translate(-50%,-50%) translateY(-.30rem) scale(.95);
       }
       50%{
-        opacity:.22;
+        opacity:.18;
         transform:translate(-50%,-50%) translateY(-.08rem) scale(.98);
       }
       62%{
-        opacity:.39;
+        opacity:.32;
         transform:translate(-50%,-50%) translateY(.24rem) scale(1);
       }
       77%{
-        opacity:.34;
+        opacity:.28;
         transform:translate(-50%,-50%) translateY(.74rem) scale(1.01);
       }
       91%{
-        opacity:.12;
+        opacity:.10;
         transform:translate(-50%,-50%) translateY(1.28rem) scale(1.01);
       }
       97%{
@@ -903,15 +1082,15 @@
         transform:translateY(-.16rem) translateX(.04rem);
       }
       58%{
-        opacity:.36;
+        opacity:.28;
         transform:translateY(.06rem) translateX(-.04rem);
       }
       74%{
-        opacity:.28;
+        opacity:.22;
         transform:translateY(.58rem) translateX(-.16rem);
       }
       90%{
-        opacity:.07;
+        opacity:.06;
         transform:translateY(1.1rem) translateX(-.22rem);
       }
     }
@@ -922,15 +1101,15 @@
         transform:translateY(-.14rem) translateX(-.03rem);
       }
       60%{
-        opacity:.32;
+        opacity:.26;
         transform:translateY(.08rem) translateX(.05rem);
       }
       76%{
-        opacity:.25;
+        opacity:.20;
         transform:translateY(.62rem) translateX(.17rem);
       }
       91%{
-        opacity:.06;
+        opacity:.05;
         transform:translateY(1.16rem) translateX(.23rem);
       }
     }
@@ -941,19 +1120,19 @@
         transform:translateX(calc(-50% + var(--drip-offset))) translateY(-.10rem) rotate(var(--edge-tilt)) scale(.42);
       }
       76%{
-        opacity:.48;
+        opacity:.42;
         transform:translateX(calc(-50% + var(--drip-offset))) translateY(.08rem) rotate(var(--edge-tilt)) scale(.68);
       }
       83%{
-        opacity:.74;
+        opacity:.68;
         transform:translateX(calc(-50% + var(--drip-offset))) translateY(.38rem) rotate(var(--edge-tilt)) scale(.90);
       }
       90%{
-        opacity:.62;
+        opacity:.52;
         transform:translateX(calc(-50% + var(--drip-offset))) translateY(1.06rem) rotate(var(--edge-tilt)) scale(.84);
       }
       97%{
-        opacity:.10;
+        opacity:.09;
         transform:translateX(calc(-50% + var(--drip-offset))) translateY(2.45rem) rotate(var(--edge-tilt)) scale(.54);
       }
       99%{
@@ -971,15 +1150,15 @@
       pointer-events:none;
       filter:
         drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
-        drop-shadow(0 0 1.15rem rgba(36,120,255,.18))
-        drop-shadow(0 0 .55rem rgba(159,231,255,.12));
+        drop-shadow(0 0 1.15rem rgba(36,120,255,.16))
+        drop-shadow(0 0 .55rem rgba(159,231,255,.10));
     }
 
     .compass-center .gem-svg{
       filter:
         drop-shadow(0 1.55rem 1.85rem rgba(0,0,0,.42))
-        drop-shadow(0 0 1.65rem rgba(36,120,255,.23))
-        drop-shadow(0 0 .85rem rgba(159,231,255,.18));
+        drop-shadow(0 0 1.65rem rgba(36,120,255,.18))
+        drop-shadow(0 0 .85rem rgba(159,231,255,.14));
     }
 
     .gem-glint,
@@ -1160,12 +1339,12 @@
       letter-spacing:.07em;
       text-transform:uppercase;
       user-select:none;
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+      transition:border-color .18s ease,background .18s ease,color .18s ease;
     }
 
     .lens-tab:hover{
-      transform:translateY(-2px);
       border-color:rgba(159,231,255,.46);
+      background:rgba(159,231,255,.065);
     }
 
     .platform-radio:checked ~ .lens-tabs .platform-tab,
@@ -1254,7 +1433,7 @@
       font-weight:950;
       letter-spacing:.07em;
       text-transform:uppercase;
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+      transition:border-color .18s ease,background .18s ease,color .18s ease;
     }
 
     .return-orbit{
@@ -1276,13 +1455,9 @@
     .return-orbit:focus-visible,
     .return-frontier:hover,
     .return-frontier:focus-visible{
-      transform:translateY(-2px);
-      outline:none;
-    }
-
-    .return-frontier:hover,
-    .return-frontier:focus-visible{
       border-color:rgba(159,231,255,.54);
+      background:rgba(159,231,255,.075);
+      outline:none;
     }
 
     .final-band{
@@ -1336,6 +1511,10 @@
       font-size:.76rem;
     }
 
+    @media (max-width:1080px){
+      .site-menu-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+
     @media (max-width:980px){
       .topbar{
         grid-template-columns:1fr;
@@ -1364,6 +1543,15 @@
         width:100%;
       }
 
+      .site-menu-summary{
+        width:100%;
+        justify-content:space-between;
+      }
+
+      .site-menu-grid{
+        grid-template-columns:1fr;
+      }
+
       .compass-stage{
         min-height:auto;
         display:grid;
@@ -1373,12 +1561,12 @@
         place-items:center;
       }
 
-      .rain-lattice{opacity:.58}
-      .rain-sheet.far{opacity:.11}
-      .rain-sheet.mid{opacity:.18}
-      .rain-sheet.near{opacity:.24}
-      .rain-bead-field{opacity:.22}
-      .rain-mist-layer{opacity:.25}
+      .rain-lattice{opacity:.54}
+      .rain-sheet.far{opacity:.10}
+      .rain-sheet.mid{opacity:.17}
+      .rain-sheet.near{opacity:.22}
+      .rain-bead-field{opacity:.18}
+      .rain-mist-layer{opacity:.22}
 
       .compass-stage::before,
       .compass-stage::after{
@@ -1404,7 +1592,6 @@
         width:9.8rem;
         height:7.1rem;
         order:-2;
-        animation:none;
       }
 
       .compass-node{
@@ -1418,8 +1605,8 @@
       }
 
       .causal-contact-gate{height:31%}
-      .water-contact-system{width:58%;height:28%}
-      .water-accumulation-system{width:92%;height:94%}
+      .water-contact-system{width:56%;height:26%}
+      .water-accumulation-system{width:88%;height:90%}
       .water-drip-system{width:2.8rem;height:4.7rem}
 
       .gem-label{
@@ -1519,10 +1706,7 @@
         transition-duration:.01ms!important;
       }
 
-      .compass-center,
       .rain-sheet,
-      .rain-bead-field,
-      .rain-mist-layer,
       .causal-contact-gate,
       .water-contact-system,
       .water-accumulation-system,
@@ -1532,15 +1716,15 @@
         animation:none!important;
       }
 
-      .rain-sheet.far{opacity:.12!important}
-      .rain-sheet.mid{opacity:.20!important}
-      .rain-sheet.near{opacity:.22!important}
-      .rain-bead-field{opacity:.18!important}
-      .rain-mist-layer{opacity:.26!important}
-      .causal-contact-gate{opacity:.13!important;transform:translateX(-50%) translateY(.2rem) rotate(10deg) scaleY(.9)!important}
-      .water-contact-system{opacity:.16!important;transform:translate(-50%,-50%) scale(.78)!important}
-      .water-accumulation-system{opacity:.18!important;transform:translate(-50%,-50%) translateY(.68rem) scale(1)!important}
-      .water-drip-system{opacity:.20!important;transform:translateX(calc(-50% + var(--drip-offset))) translateY(1.28rem) rotate(var(--edge-tilt)) scale(.68)!important}
+      .rain-sheet.far{opacity:.10!important}
+      .rain-sheet.mid{opacity:.16!important}
+      .rain-sheet.near{opacity:.18!important}
+      .rain-bead-field{opacity:.16!important}
+      .rain-mist-layer{opacity:.22!important}
+      .causal-contact-gate{opacity:.12!important;transform:translateX(-50%) translateY(.2rem) rotate(10deg) scaleY(.9)!important}
+      .water-contact-system{opacity:.14!important;transform:translate(-50%,-50%) scale(.78)!important}
+      .water-accumulation-system{opacity:.16!important;transform:translate(-50%,-50%) translateY(.68rem) scale(1)!important}
+      .water-drip-system{opacity:.18!important;transform:translateX(calc(-50% + var(--drip-offset))) translateY(1.28rem) rotate(var(--edge-tilt)) scale(.68)!important}
     }
   </style>
 </head>
@@ -1663,6 +1847,64 @@
         <a href="/explore/frontier/water/" aria-current="page">Water</a>
         <a href="/gauges/">Gauges</a>
       </nav>
+
+      <details class="site-menu">
+        <summary class="site-menu-summary">
+          <span>Site Menu</span>
+          <b>Glass Droplet Map</b>
+        </summary>
+
+        <div class="site-menu-panel" aria-label="Cardinal site menu with glass droplet background">
+          <div class="site-menu-grid">
+            <section class="site-menu-group" aria-labelledby="menu-north">
+              <strong id="menu-north">North · Proof / Law</strong>
+              <div class="site-menu-links">
+                <a href="/laws/">Laws</a>
+                <a href="/gauges/">Gauges</a>
+              </div>
+            </section>
+
+            <section class="site-menu-group" aria-labelledby="menu-east">
+              <strong id="menu-east">East · Story / Display</strong>
+              <div class="site-menu-links">
+                <a href="/showroom/globe/">Interactive Narrative</a>
+                <a href="/showroom/">Showroom</a>
+                <a href="/nine-summits/universe/">Universe</a>
+                <a href="/nine-summits/">Nine Summits</a>
+                <a href="/nine-summits-of-love/">Book</a>
+              </div>
+            </section>
+
+            <section class="site-menu-group" aria-labelledby="menu-south">
+              <strong id="menu-south">South · Frontier / Survival Systems</strong>
+              <div class="site-menu-links">
+                <a href="/explore/frontier/">Frontier</a>
+                <a href="/explore/frontier/energy/">Energy</a>
+                <a href="/explore/frontier/water/" aria-current="page">Water</a>
+                <a href="/explore/frontier/waste/">Waste</a>
+                <a href="/explore/frontier/lattice/">Lattice</a>
+                <a href="/explore/frontier/urban/">Urban</a>
+                <a href="/explore/frontier/closed-loop/">Closed Loop</a>
+                <a href="/explore/frontier/manual/">Manual</a>
+                <a href="/explore/frontier/shimmer/">Shimmer</a>
+                <a href="/explore/frontier/infrastructure/">Infrastructure</a>
+                <a href="/explore/frontier/trajectory/">Trajectory</a>
+              </div>
+            </section>
+
+            <section class="site-menu-group" aria-labelledby="menu-west">
+              <strong id="menu-west">West · Person / House / Practical</strong>
+              <div class="site-menu-links">
+                <a href="/">Compass</a>
+                <a href="/door/">Door</a>
+                <a href="/home/">Home</a>
+                <a href="/products/">Products</a>
+                <a href="/meet-sean-mansfield/">Meet Sean</a>
+              </div>
+            </section>
+          </div>
+        </div>
+      </details>
     </header>
 
     <main id="main">
@@ -1693,7 +1935,7 @@
 
         <div
           class="compass-stage"
-          aria-label="Water pathway field with separated rain layers and one-way cascade droplet physics"
+          aria-label="Water pathway field with optimized separated rain layers and one-way cascade droplet physics"
           data-rain-lattice="RAIN_FIELD_LATTICE_256"
           data-diamond-lattice="DIAMOND_SURFACE_LATTICE_256"
           data-coupling-lattice="RAIN_TO_DIAMOND_CAUSAL_GATE_256"
@@ -1720,7 +1962,7 @@
           </div>
 
           <div class="diamond-lattice" aria-hidden="false">
-            <div class="compass-center" aria-hidden="true" style="--contact-x:50%;--flow-x:49%;--split-left:29%;--split-right:69%;--water-delay:-.15s;--water-cycle:14.8s;--drip-offset:.02rem;--edge-tilt:-1deg;">
+            <div class="compass-center" aria-hidden="true" style="--contact-x:50%;--flow-x:49%;--split-left:29%;--split-right:69%;--water-delay:-.15s;--water-cycle:15.2s;--drip-offset:.02rem;--edge-tilt:-1deg;">
               <span class="causal-contact-gate"></span>
               <span class="water-contact-system"></span>
               <span class="water-accumulation-system"></span>
@@ -2426,7 +2668,7 @@
       <section class="final-band" id="final-lock" aria-label="Water final lock">
         <strong>Water is becoming a live simulation for future survival systems.</strong>
         <p>
-          The Water pathway is active now as a closed-loop science map. The current visual layer uses interacting lattices: rain falls through separated foreground, midground, and background layers; each diamond carries its own surface response; and the causal gate makes contact visible as a spring-shower effect. Water beads, splits across facets, cascades downward, gathers along the lower edge, releases as a teardrop, and continues falling away.
+          The Water pathway is active now as a closed-loop science map. The current visual layer uses optimized interacting lattices: rain falls through separated foreground, midground, and background layers; each diamond carries its own surface response; and the causal gate makes contact visible as a spring-shower effect. Water beads, splits across facets, cascades downward, gathers along the lower edge, releases as a teardrop, and continues falling away.
         </p>
         <div class="actions">
           <a class="button gold" href="#water-orbit">Return to Water Orbit</a>
@@ -2437,21 +2679,39 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_WATER_SEPARATED_RAIN_AND_CASCADE_DROPLET_PHYSICS_TNT_v7
-previous=FRONTIER_WATER_DUAL_LATTICE_CAUSAL_SPRING_SHOWER_RENEWAL_TNT_v6
-binding=FRONTIER_WATER_SPRING_SHOWER_CASCADE_PHYSICS_CCR_AUDIT_v7
+FRONTIER_WATER_RUNTIME_OPTIMIZED_GLASS_DROPLET_DROPDOWN_TNT_v8
+previous=FRONTIER_WATER_SEPARATED_RAIN_AND_CASCADE_DROPLET_PHYSICS_TNT_v7
+binding=FRONTIER_WATER_RUNTIME_OPTIMIZED_GLASS_DROPLET_DROPDOWN_CCR_AUDIT_v8
 route=/explore/frontier/water/
 page=frontier_water
 html=/explore/frontier/water/index.html
 source_visual_authority=COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2
-design_reference=FRONTIER_WATER_DUAL_LATTICE_CAUSAL_SPRING_SHOWER_RENEWAL_TNT_v6
+design_reference=FRONTIER_WATER_SEPARATED_RAIN_AND_CASCADE_DROPLET_PHYSICS_TNT_v7
 source_symbol_authority=compassOrganicGem
 visual_baseline_preserved=true
 future_simulation_context_preserved=true
 water_true_form_expression=true
 physics_informed_water_behavior=true
 runtime_reallocation=true
+runtime_optimized_v8=true
 not_removal=true
+site_dropdown_menu=true
+dropdown_glass_droplets=true
+dropdown_droplets_static=true
+dropdown_uses_details_summary=true
+dropdown_javascript=false
+dropdown_current_page=Water
+dropdown_north=Laws_Gauges
+dropdown_east=Interactive_Narrative_Showroom_Universe_Nine_Summits_Book
+dropdown_south=Frontier_Energy_Water_Waste_Lattice_Urban_Closed_Loop_Manual_Shimmer_Infrastructure_Trajectory
+dropdown_west=Compass_Door_Home_Products_Meet_Sean
+electrical_energy_dropdown_entry=false_unconfirmed_route_held
+text_stability_lock=true
+readable_text_animated=false
+text_motion_only_if_attached_to_floating_object=true
+dropdown_text_static=true
+body_text_static=true
+gem_label_motion_only_if_parent_gem_moves=true
 rain_lattice=RAIN_FIELD_LATTICE_256
 diamond_lattice=DIAMOND_SURFACE_LATTICE_256
 coupling_lattice=RAIN_TO_DIAMOND_CAUSAL_GATE_256
@@ -2475,11 +2735,11 @@ glow_inheritance=false
 rain_depth_separation=true
 broken_rain_lanes=true
 foreground_midground_background_rain=true
-far_rain_layer=true
-mid_rain_layer=true
-near_rain_layer=true
-foreground_bead_drop_layer=true
-background_mist_layer=true
+far_rain_layer=static
+mid_rain_layer=animated_primary_motion
+near_rain_layer=animated_light_foreground_motion
+foreground_bead_drop_layer=static_texture
+background_mist_layer=static
 uniform_linear_rain=false
 parallel_rail_rain=false
 impact_spread_expression=true
@@ -2511,7 +2771,7 @@ psalm_term_lock=true
 som_alias_rejected=true
 psalm_use_class=A_static_css_symbolic_and_B_runtime_motion
 spatial_counterweight_symbolic=true
-temporal_damping_background_slower_foreground_faster=true
+temporal_damping_dropdown_calmer_than_main_field=true
 fibonacci_density_scale_falloff=true
 platform_engineering_contrast_local_only=true
 dual_return_under_every_pathway=true
@@ -2526,14 +2786,13 @@ graphic_box=false
 generated_image=false
 particle_engine=false
 heavy_runtime=false
-runtime_optimized=true
 true_collision_physics=false
 visual_physics_approximation=true
 reduced_motion_safe=true
 audralia_water_first=true
 center_anchor=Water_Fulcrum
 pathways=Audralia_Water,Closed_Loop,Source_Water,Contaminants,Filtration,Softening,Storage,Reuse,Household,Community,Science_Boundary,Kill_Conditions
-public_subject=future_water_systems_separated_rain_layers_cascade_droplet_physics_dual_lattice_causal_spring_shower_rain_field_diamond_surface_contact_splash_bead_split_accumulation_runoff_drip_capture_filtration_storage_reuse_contamination_pressure_household_protection_failure_points
+public_subject=future_water_systems_runtime_optimized_glass_droplet_dropdown_separated_rain_layers_cascade_droplet_physics_dual_lattice_causal_spring_shower_rain_field_diamond_surface_contact_splash_bead_split_accumulation_runoff_drip_capture_filtration_storage_reuse_contamination_pressure_household_protection_failure_points
 per_pathway_dual_lens=true
 platform_lens_per_pathway=true
 engineering_lens_per_pathway=true
@@ -2547,16 +2806,16 @@ filtration_boundary=no_total_removal_claim
 softening_boundary=not_universal_filtration
 reuse_boundary=non_potable_reuse_not_drinking_water_approval
 pricing_boundary=no_verified_pricing_without_current_source
-final_lock=separated_rain_layers_and_one_way_cascade_droplet_physics_for_future_survival_systems
+final_lock=runtime_optimized_water_page_with_static_glass_droplet_dropdown_and_one_way_cascade_droplet_physics
 static_page_usable_without_js=true
 streaming=false
 visual_pass_claimed=false
-deploy_marker=FRONTIER_WATER_SEPARATED_RAIN_AND_CASCADE_DROPLET_PHYSICS_DEPLOY_MARKER_v7
+deploy_marker=FRONTIER_WATER_RUNTIME_OPTIMIZED_GLASS_DROPLET_DROPDOWN_DEPLOY_MARKER_v8
       </template>
     </main>
 
     <footer>
-      FRONTIER_WATER_SEPARATED_RAIN_AND_CASCADE_DROPLET_PHYSICS_TNT_v7 · Water · Separated rain layers · Cascade droplet physics · One-way falloff.
+      FRONTIER_WATER_RUNTIME_OPTIMIZED_GLASS_DROPLET_DROPDOWN_TNT_v8 · Water · Runtime optimized · Glass droplet dropdown · One-way cascade physics.
     </footer>
   </div>
 </body>

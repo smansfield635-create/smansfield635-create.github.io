@@ -4,17 +4,25 @@
   lang="en"
   data-route="/explore/frontier/waste/"
   data-page="frontier-waste"
-  data-version="G2-V2"
-  data-contract="FRONTIER_WASTE_NO_AWAY_RECOVERY_FLOW_RENEWAL_TNT_v2"
-  data-previous-contract="WASTE_G1_OPTIMAL_CONCRETE_RECOVERY_FLOW_TNT_v1"
-  data-source-binding="FRONTIER_WASTE_NO_AWAY_RECOVERY_FLOW_FINAL_PRECODE_DRAFT_v2"
+  data-version="G2-V3"
+  data-contract="FRONTIER_WASTE_LATTICE_MAP_KEY_DROPDOWN_NAV_RENEWAL_TNT_v3"
+  data-previous-contract="FRONTIER_WASTE_NO_AWAY_RECOVERY_FLOW_RENEWAL_TNT_v2"
+  data-source-binding="FRONTIER_WASTE_LATTICE_MAP_KEY_DROPDOWN_NAV_FINAL_PRECODE_DRAFT_v3"
   data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
   data-source-symbol-authority="compassOrganicGem"
-  data-role="frontier-waste-no-away-recovery-flow"
+  data-role="frontier-waste-recovery-lattice"
   data-no-away-law="true"
   data-recover-contain-residue="true"
   data-waste-is-escaped-value="true"
-  data-page-animation="NO_AWAY_RECOVERY_FLOW"
+  data-page-animation="NO_AWAY_RECOVERY_LATTICE_FLOW"
+  data-visible-lattice="4x4"
+  data-visible-cells="16"
+  data-governance-formula="16_visible_cells_x_16_internal_checks"
+  data-waste-state-addresses="256"
+  data-state-expression="governance-not-dom-object-count"
+  data-map-key="true"
+  data-dropdown-navigation="true"
+  data-dropdown-js="false"
   data-audralia-waste-first="true"
   data-per-pathway-dual-lens="true"
   data-platform-lens="true"
@@ -36,10 +44,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Waste · No-Away Recovery Flow · Diamond Gate Bridge</title>
+  <title>Waste · Recovery Lattice · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Waste is the Frontier no-away recovery pathway where escaped value is identified, captured, separated, recovered, contained, or classified as residue with proof."
+    content="Diamond Gate Bridge Waste is the Frontier recovery lattice where escaped value is identified, captured, separated, recovered, contained, or classified as residue with proof."
   >
 
   <style>
@@ -52,7 +60,6 @@
       --gold:#f3c86f;
       --gold2:#ffe8a3;
       --blue:#8dd8ff;
-      --green:#8ff0c3;
       --recover:#96ffbd;
       --contain:#9fdcff;
       --residue:#94a0b8;
@@ -111,6 +118,7 @@
 
     a:focus-visible,
     button:focus-visible,
+    summary:focus-visible,
     label:focus-visible,
     [tabindex]:focus-visible{
       outline:2px solid var(--gold);
@@ -150,7 +158,7 @@
     .topbar{
       display:grid;
       grid-template-columns:auto 1fr;
-      align-items:center;
+      align-items:start;
       gap:18px;
       padding:12px 0 18px;
     }
@@ -213,36 +221,101 @@
       display:flex;
       flex-wrap:wrap;
       justify-content:flex-end;
-      gap:.48rem;
+      gap:.6rem;
     }
 
-    .nav a{
-      min-height:2.25rem;
-      display:inline-flex;
+    .route-menu{
+      position:relative;
+      min-width:min(16rem,100%);
+    }
+
+    .route-menu summary{
+      list-style:none;
+      cursor:pointer;
+      min-height:2.6rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:.75rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      padding:.62rem .85rem;
+      color:rgba(241,246,255,.88);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(150,255,189,.08),transparent 70%),
+        rgba(255,255,255,.045);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.075em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      backdrop-filter:blur(7px);
+    }
+
+    .route-menu summary::-webkit-details-marker{display:none}
+
+    .route-menu summary::after{
+      content:"";
+      width:.55rem;
+      height:.55rem;
+      border-right:2px solid rgba(255,244,216,.76);
+      border-bottom:2px solid rgba(255,244,216,.76);
+      transform:rotate(45deg) translateY(-.12rem);
+      transition:transform .18s ease;
+    }
+
+    .route-menu[open] summary::after{
+      transform:rotate(225deg) translateY(-.08rem);
+    }
+
+    .route-menu-panel{
+      position:absolute;
+      right:0;
+      top:calc(100% + .55rem);
+      z-index:40;
+      width:min(28rem,calc(100vw - 2rem));
+      padding:.75rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:1.1rem;
+      background:
+        radial-gradient(circle at 14% 0%,rgba(150,255,189,.11),transparent 18rem),
+        linear-gradient(180deg,rgba(13,20,43,.96),rgba(4,7,18,.98));
+      box-shadow:0 1.4rem 3.4rem rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .route-menu-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.45rem;
+    }
+
+    .route-menu-link{
+      min-height:2.35rem;
+      display:flex;
       align-items:center;
       justify-content:center;
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:999px;
-      padding:.5rem .74rem;
-      color:rgba(241,246,255,.84);
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:.8rem;
+      padding:.5rem .62rem;
+      color:rgba(241,246,255,.86);
       background:rgba(255,255,255,.035);
-      font-size:.68rem;
+      font-size:.64rem;
       font-weight:950;
-      letter-spacing:.055em;
+      letter-spacing:.06em;
+      text-align:center;
       text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
-    .nav a:hover,
-    .nav a:focus-visible{
+    .route-menu-link:hover,
+    .route-menu-link:focus-visible,
+    .route-menu-link[aria-current="page"]{
       transform:translateY(-2px);
-      border-color:rgba(243,200,111,.46);
+      border-color:rgba(243,200,111,.55);
       outline:none;
     }
 
-    .nav a[aria-current="page"]{
-      border-color:rgba(243,200,111,.88);
+    .route-menu-link[aria-current="page"]{
       color:#060811;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
     }
@@ -261,13 +334,32 @@
 
     .hero{
       position:relative;
-      min-height:clamp(31rem,58vw,43rem);
+      min-height:clamp(29rem,52vw,39rem);
       display:grid;
       align-content:center;
       gap:1rem;
       padding:clamp(1.45rem,5vw,3.4rem);
       margin-top:.6rem;
       isolation:isolate;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      right:clamp(1rem,6vw,5.5rem);
+      top:50%;
+      z-index:0;
+      width:clamp(10rem,28vw,20rem);
+      height:clamp(10rem,28vw,20rem);
+      border:1px solid rgba(243,200,111,.18);
+      border-radius:2.9rem;
+      transform:translateY(-50%) rotate(45deg);
+      background:
+        radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
+        radial-gradient(circle at 50% 72%,rgba(150,255,189,.14),transparent 62%),
+        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+      pointer-events:none;
+      opacity:.52;
     }
 
     .hero > *{
@@ -311,8 +403,6 @@
       line-height:.84;
       letter-spacing:-.112em;
       text-wrap:balance;
-      position:relative;
-      z-index:2;
       text-shadow:0 1.2rem 2.4rem rgba(0,0,0,.60);
     }
 
@@ -323,8 +413,6 @@
       line-height:.98;
       letter-spacing:-.07em;
       text-wrap:balance;
-      position:relative;
-      z-index:2;
     }
 
     h3{
@@ -342,11 +430,7 @@
       line-height:1.55;
     }
 
-    .lead{
-      max-width:940px;
-      position:relative;
-      z-index:2;
-    }
+    .lead{max-width:940px}
 
     .quote{
       max-width:930px;
@@ -357,8 +441,6 @@
       background:rgba(5,9,24,.62);
       font-size:clamp(1rem,2.7vw,1.18rem);
       font-weight:850;
-      position:relative;
-      z-index:2;
       backdrop-filter:blur(7px);
     }
 
@@ -367,8 +449,6 @@
       flex-wrap:wrap;
       gap:.62rem;
       margin-top:.2rem;
-      position:relative;
-      z-index:2;
     }
 
     .button{
@@ -417,13 +497,17 @@
       gap:1.05rem;
     }
 
-    .waste-recovery-field{
+    .waste-lattice-field{
       position:relative;
-      min-height:clamp(26rem,50vw,38rem);
+      min-height:clamp(34rem,62vw,47rem);
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(17rem,25rem);
+      gap:1rem;
       border:1px solid rgba(184,205,255,.13);
       border-radius:clamp(1.25rem,4vw,2rem);
       overflow:hidden;
       isolation:isolate;
+      padding:clamp(.85rem,2vw,1.25rem);
       background:
         radial-gradient(circle at 18% 42%,rgba(148,160,184,.14),transparent 18rem),
         radial-gradient(circle at 48% 48%,rgba(243,200,111,.14),transparent 16rem),
@@ -432,211 +516,290 @@
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .waste-recovery-field::before{
+    .waste-lattice-field::before{
       content:"";
       position:absolute;
       inset:0;
       z-index:0;
       pointer-events:none;
-      opacity:.20;
+      opacity:.17;
       background-image:
-        linear-gradient(rgba(141,216,255,.050) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(141,216,255,.050) 1px,transparent 1px);
+        linear-gradient(rgba(141,216,255,.055) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.055) 1px,transparent 1px);
       background-size:48px 48px;
       mask-image:radial-gradient(ellipse at 50% 44%,rgba(0,0,0,.88),transparent 76%);
     }
 
-    .waste-leak-stream,
-    .waste-capture-gate,
-    .waste-separation-band,
-    .waste-route,
-    .waste-proof-node{
+    .waste-map-wrap,
+    .waste-map-key{
+      position:relative;
+      z-index:2;
+    }
+
+    .waste-map-wrap{
+      min-height:30rem;
+      display:grid;
+      place-items:center;
+      padding:.35rem;
+    }
+
+    .waste-map-grid{
+      position:relative;
+      width:min(100%,42rem);
+      aspect-ratio:1 / 1;
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      grid-template-rows:repeat(4,1fr);
+      gap:.48rem;
+      padding:.65rem;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:1.35rem;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.08),transparent 62%),
+        rgba(0,0,0,.18);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      overflow:hidden;
+    }
+
+    .waste-cell{
+      position:relative;
+      z-index:3;
+      display:grid;
+      align-content:center;
+      gap:.18rem;
+      padding:.55rem;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:.9rem;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,255,255,.060),transparent 70%),
+        rgba(255,255,255,.035);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
+      overflow:hidden;
+    }
+
+    .waste-cell::before{
+      content:attr(data-index);
       position:absolute;
+      right:.42rem;
+      top:.36rem;
+      color:rgba(230,238,255,.34);
+      font-size:.52rem;
+      font-weight:950;
+      letter-spacing:.08em;
+    }
+
+    .waste-cell b{
+      color:rgba(255,244,216,.98);
+      font-size:clamp(.52rem,1.05vw,.72rem);
+      font-weight:950;
+      letter-spacing:.06em;
+      line-height:1;
+      text-transform:uppercase;
+    }
+
+    .waste-cell span{
+      color:rgba(230,238,255,.70);
+      font-size:clamp(.42rem,.84vw,.58rem);
+      font-weight:850;
+      line-height:1.12;
+      text-transform:uppercase;
+    }
+
+    .waste-cell.source{border-color:rgba(255,244,216,.24)}
+    .waste-cell.leak{border-color:rgba(148,160,184,.38)}
+    .waste-cell.identify{border-color:rgba(243,200,111,.34)}
+    .waste-cell.capture{
+      border-color:rgba(243,200,111,.58);
+      clip-path:var(--brand-gem);
+      background:
+        radial-gradient(circle at 50% 40%,rgba(243,200,111,.18),transparent 60%),
+        rgba(9,15,31,.72);
+    }
+    .waste-cell.separate{border-color:rgba(243,200,111,.48)}
+    .waste-cell.recover{border-color:rgba(150,255,189,.54)}
+    .waste-cell.return{border-color:rgba(150,255,189,.40)}
+    .waste-cell.contain{border-color:rgba(159,220,255,.52)}
+    .waste-cell.residue{border-color:rgba(148,160,184,.50)}
+    .waste-cell.proof{border-color:rgba(243,200,111,.58)}
+    .waste-cell.stop{opacity:.74}
+
+    .waste-route-overlay{
+      position:absolute;
+      inset:.65rem;
+      z-index:2;
       pointer-events:none;
     }
 
-    .waste-leak-stream{
-      left:-12%;
-      top:45%;
-      z-index:2;
-      width:48%;
-      height:18%;
+    .route-line{
+      position:absolute;
+      height:.24rem;
       border-radius:999px;
+      opacity:.86;
+      transform-origin:left center;
+      filter:drop-shadow(0 0 .62rem rgba(255,244,216,.12));
+    }
+
+    .route-line.leak-in{
+      left:4%;
+      top:25%;
+      width:43%;
       background:
-        linear-gradient(90deg,transparent 0%,rgba(148,160,184,.18) 16%,rgba(255,244,216,.34) 44%,rgba(243,200,111,.28) 64%,transparent 100%),
-        repeating-linear-gradient(90deg,transparent 0 1.35rem,rgba(255,255,255,.18) 1.38rem 1.48rem,transparent 1.52rem 2.55rem);
-      filter:drop-shadow(0 0 1rem rgba(243,200,111,.13));
-      transform:skewY(-4deg);
-      opacity:.78;
+        linear-gradient(90deg,rgba(148,160,184,.04),rgba(255,244,216,.34),rgba(243,200,111,.32)),
+        repeating-linear-gradient(90deg,transparent 0 1.1rem,rgba(255,255,255,.20) 1.12rem 1.22rem,transparent 1.25rem 2.2rem);
+      background-size:220% 100%,auto;
       animation:leakStreamMotion 8.6s linear infinite;
     }
 
-    .waste-capture-gate{
-      left:50%;
-      top:50%;
-      z-index:4;
-      width:clamp(9.4rem,21vw,15rem);
-      height:clamp(9.4rem,21vw,15rem);
-      transform:translate(-50%,-50%) rotate(45deg);
-      clip-path:var(--brand-gem);
-      border:1px solid rgba(243,200,111,.42);
+    .route-line.capture-to-separate{
+      left:31%;
+      top:38%;
+      width:30%;
+      background:linear-gradient(90deg,rgba(243,200,111,.22),rgba(255,244,216,.50),rgba(243,200,111,.32));
+      animation:gateRoutePulse 7.4s ease-in-out infinite;
+    }
+
+    .route-line.recover{
+      left:56%;
+      top:29%;
+      width:34%;
+      transform:rotate(-20deg);
       background:
-        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.22) 21% 23%,transparent 24%),
-        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.22),rgba(150,255,189,.18),rgba(2,8,24,.92),rgba(159,220,255,.18),rgba(255,255,255,.22)),
-        radial-gradient(circle at 50% 40%,rgba(243,200,111,.22),transparent 46%),
-        linear-gradient(145deg,rgba(8,24,52,.94),rgba(2,5,14,.98));
-      box-shadow:
-        0 0 1.2rem rgba(243,200,111,.18),
-        0 0 3.4rem rgba(150,255,189,.10),
-        inset 0 1px 0 rgba(255,255,255,.14);
-      animation:captureGatePulse 7.4s ease-in-out infinite;
-    }
-
-    .waste-capture-gate::before{
-      content:"CAPTURE";
-      position:absolute;
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%) rotate(-45deg);
-      color:rgba(255,244,216,.98);
-      font-size:clamp(.70rem,1.8vw,1.1rem);
-      font-weight:950;
-      letter-spacing:.18em;
-      text-shadow:0 2px 12px rgba(0,0,0,.92);
-    }
-
-    .waste-separation-band{
-      left:50%;
-      top:50%;
-      z-index:3;
-      width:54%;
-      height:2px;
-      transform:translate(0,-50%);
-      background:linear-gradient(90deg,rgba(243,200,111,.50),rgba(255,255,255,.40),transparent);
-      filter:drop-shadow(0 0 .8rem rgba(243,200,111,.18));
-      opacity:.70;
-      animation:separationOpen 8.6s ease-in-out infinite;
-    }
-
-    .waste-route{
-      left:50%;
-      z-index:2;
-      width:43%;
-      height:4.3rem;
-      border-radius:999px;
-      opacity:.86;
-    }
-
-    .waste-route.recover{
-      top:27%;
-      transform:rotate(-18deg);
-      background:
-        linear-gradient(90deg,rgba(150,255,189,.04),rgba(150,255,189,.42),rgba(255,244,216,.34),rgba(150,255,189,.12)),
-        repeating-linear-gradient(90deg,transparent 0 1.1rem,rgba(255,255,255,.26) 1.12rem 1.22rem,transparent 1.25rem 2.3rem);
+        linear-gradient(90deg,rgba(150,255,189,.08),rgba(150,255,189,.54),rgba(255,244,216,.30),rgba(150,255,189,.18)),
+        repeating-linear-gradient(90deg,transparent 0 1.1rem,rgba(255,255,255,.25) 1.12rem 1.22rem,transparent 1.25rem 2.3rem);
       background-size:220% 100%,auto;
-      box-shadow:0 0 1.8rem rgba(150,255,189,.18);
+      box-shadow:0 0 1.2rem rgba(150,255,189,.14);
       animation:recoverReturnFlow 7.8s linear infinite;
     }
 
-    .waste-route.contain{
-      top:48%;
+    .route-line.contain{
+      left:56%;
+      top:50%;
+      width:34%;
       background:
-        linear-gradient(90deg,rgba(159,220,255,.06),rgba(159,220,255,.26),rgba(255,255,255,.18),rgba(159,220,255,.14)),
-        repeating-linear-gradient(90deg,transparent 0 1.4rem,rgba(159,220,255,.18) 1.42rem 1.52rem,transparent 1.56rem 2.7rem);
-      box-shadow:0 0 1.4rem rgba(159,220,255,.13);
+        linear-gradient(90deg,rgba(159,220,255,.08),rgba(159,220,255,.34),rgba(255,255,255,.16),rgba(159,220,255,.18));
+      box-shadow:0 0 1.1rem rgba(159,220,255,.12);
       animation:containBandHold 9.2s ease-in-out infinite;
     }
 
-    .waste-route.residue{
-      top:68%;
-      transform:rotate(15deg);
+    .route-line.residue{
+      left:56%;
+      top:70%;
+      width:34%;
+      transform:rotate(20deg);
       background:
-        linear-gradient(90deg,rgba(148,160,184,.03),rgba(148,160,184,.26),rgba(148,160,184,.12),transparent),
-        repeating-linear-gradient(90deg,transparent 0 1.6rem,rgba(148,160,184,.18) 1.62rem 1.72rem,transparent 1.78rem 3rem);
-      box-shadow:0 0 1rem rgba(148,160,184,.08);
+        linear-gradient(90deg,rgba(148,160,184,.08),rgba(148,160,184,.34),rgba(148,160,184,.14),transparent);
+      box-shadow:0 0 .9rem rgba(148,160,184,.08);
       animation:residueFadeHold 10s ease-in-out infinite;
     }
 
-    .waste-route::after{
-      content:attr(data-label);
+    .capture-pulse{
       position:absolute;
-      right:.8rem;
-      top:50%;
-      transform:translateY(-50%);
-      color:rgba(255,244,216,.92);
-      font-size:.64rem;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      text-shadow:0 2px 10px rgba(0,0,0,.90);
+      z-index:4;
+      left:calc(25% + .2rem);
+      top:calc(25% + .2rem);
+      width:calc(25% - .4rem);
+      height:calc(25% - .4rem);
+      clip-path:var(--brand-gem);
+      border:1px solid rgba(243,200,111,.42);
+      box-shadow:
+        0 0 1.2rem rgba(243,200,111,.20),
+        0 0 3.4rem rgba(150,255,189,.10),
+        inset 0 1px 0 rgba(255,255,255,.14);
+      animation:captureGatePulse 7.4s ease-in-out infinite;
+      pointer-events:none;
     }
 
-    .waste-proof-node{
-      right:clamp(1.2rem,5vw,4rem);
-      top:50%;
-      z-index:5;
-      width:clamp(5.4rem,11vw,8.2rem);
-      height:clamp(5.4rem,11vw,8.2rem);
-      transform:translateY(-50%);
-      display:grid;
-      place-items:center;
-      border-radius:50%;
-      border:1px solid rgba(243,200,111,.36);
-      background:
-        radial-gradient(circle at 50% 35%,rgba(255,244,216,.24),transparent 40%),
-        radial-gradient(circle at 50% 50%,rgba(150,255,189,.12),transparent 62%),
-        rgba(3,7,18,.82);
+    .proof-pulse{
+      position:absolute;
+      z-index:4;
+      left:calc(50% + .25rem);
+      top:calc(50% + .25rem);
+      width:calc(25% - .5rem);
+      height:calc(25% - .5rem);
+      border-radius:.9rem;
+      border:1px solid rgba(243,200,111,.34);
       box-shadow:
-        0 0 1.2rem rgba(243,200,111,.12),
+        0 0 1.4rem rgba(243,200,111,.18),
         0 0 2.3rem rgba(150,255,189,.08),
         inset 0 1px 0 rgba(255,255,255,.10);
       animation:proofNodePulse 8.6s ease-in-out infinite;
+      pointer-events:none;
     }
 
-    .waste-proof-node::before{
-      content:"PROOF";
-      color:var(--gold);
-      font-size:clamp(.58rem,1.4vw,.82rem);
-      font-weight:950;
-      letter-spacing:.18em;
-      text-shadow:0 2px 12px rgba(0,0,0,.92);
-    }
-
-    .waste-outcome-labels{
-      position:absolute;
-      left:clamp(1rem,4vw,2rem);
-      bottom:clamp(1rem,4vw,2rem);
-      z-index:6;
+    .waste-map-key{
+      align-self:stretch;
       display:grid;
-      gap:.45rem;
-      max-width:18rem;
-    }
-
-    .waste-outcome-labels span{
-      display:inline-flex;
-      width:max-content;
-      max-width:100%;
-      align-items:center;
-      gap:.5rem;
-      padding:.42rem .68rem;
+      align-content:start;
+      gap:.68rem;
+      padding:1rem;
       border:1px solid rgba(255,255,255,.12);
-      border-radius:999px;
-      color:rgba(241,246,255,.86);
-      background:rgba(3,6,18,.58);
-      font-size:.62rem;
-      font-weight:950;
-      letter-spacing:.09em;
-      text-transform:uppercase;
-      backdrop-filter:blur(6px);
+      border-radius:1.25rem;
+      background:
+        radial-gradient(circle at 16% 0%,rgba(150,255,189,.10),transparent 20rem),
+        rgba(3,6,18,.52);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      backdrop-filter:blur(8px);
     }
 
-    .waste-outcome-labels span::before{
-      content:"";
-      width:.5rem;
-      height:.5rem;
+    .waste-map-key strong{
+      color:var(--gold);
+      font-size:.78rem;
+      font-weight:950;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .key-list{
+      display:grid;
+      gap:.48rem;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+
+    .key-list li{
+      display:grid;
+      grid-template-columns:1.25rem 1fr;
+      gap:.58rem;
+      align-items:start;
+      color:var(--muted);
+      font-size:.85rem;
+      line-height:1.32;
+    }
+
+    .key-mark{
+      width:1rem;
+      height:1rem;
+      margin-top:.12rem;
+      border:1px solid rgba(255,255,255,.18);
       border-radius:50%;
-      background:var(--dot,var(--gold));
-      box-shadow:0 0 .75rem var(--dot,var(--gold));
+      background:var(--key-color,var(--gold));
+      box-shadow:0 0 .78rem var(--key-color,var(--gold));
+    }
+
+    .key-mark.diamond{
+      border-radius:.18rem;
+      transform:rotate(45deg);
+    }
+
+    .key-mark.line{
+      height:.22rem;
+      margin-top:.45rem;
+      border-radius:999px;
+    }
+
+    .key-mark.node{
+      background:rgba(255,255,255,.06);
+      border-color:rgba(255,255,255,.28);
+    }
+
+    .key-mark.pulse{
+      animation:keyPulse 2.4s ease-in-out infinite;
+    }
+
+    .key-mark.stop{
+      opacity:.45;
+      box-shadow:none;
     }
 
     @keyframes leakStreamMotion{
@@ -644,14 +807,14 @@
       to{background-position:220% 0,8rem 0}
     }
 
-    @keyframes captureGatePulse{
-      0%,100%{filter:brightness(1);opacity:.88}
-      48%{filter:brightness(1.18);opacity:1}
+    @keyframes gateRoutePulse{
+      0%,100%{opacity:.46;filter:brightness(.92)}
+      50%{opacity:.88;filter:brightness(1.18)}
     }
 
-    @keyframes separationOpen{
-      0%,22%,100%{opacity:.34;transform:translate(0,-50%) scaleX(.72)}
-      46%,72%{opacity:.78;transform:translate(0,-50%) scaleX(1)}
+    @keyframes captureGatePulse{
+      0%,100%{filter:brightness(1);opacity:.62;transform:scale(.98)}
+      48%{filter:brightness(1.18);opacity:1;transform:scale(1.015)}
     }
 
     @keyframes recoverReturnFlow{
@@ -671,8 +834,13 @@
     }
 
     @keyframes proofNodePulse{
-      0%,100%{opacity:.76;transform:translateY(-50%) scale(.98)}
-      54%{opacity:1;transform:translateY(-50%) scale(1.02)}
+      0%,100%{opacity:.60;transform:scale(.98)}
+      54%{opacity:1;transform:scale(1.02)}
+    }
+
+    @keyframes keyPulse{
+      0%,100%{opacity:.56;transform:scale(.94)}
+      50%{opacity:1;transform:scale(1.08)}
     }
 
     .compass-stage{
@@ -848,9 +1016,7 @@
       overflow:hidden;
     }
 
-    .pathway-module > p{
-      max-width:980px;
-    }
+    .pathway-module > p{max-width:980px}
 
     .lens-shell{
       position:relative;
@@ -964,9 +1130,7 @@
       margin-top:.1rem;
     }
 
-    .section-return.dual-return{
-      flex-wrap:wrap;
-    }
+    .section-return.dual-return{flex-wrap:wrap}
 
     .return-orbit,
     .return-frontier{
@@ -1063,72 +1227,29 @@
     }
 
     @media (max-width:980px){
-      .topbar{
-        grid-template-columns:1fr;
-        align-items:start;
-      }
-
+      .topbar{grid-template-columns:1fr}
       .nav{justify-content:flex-start}
+      .route-menu-panel{left:0;right:auto}
+      .waste-lattice-field{grid-template-columns:1fr}
+      .waste-map-key{order:2}
     }
 
     @media (max-width:760px){
       .shell{width:min(100% - 22px,var(--max))}
-
       h1{font-size:clamp(3.2rem,16vw,5.6rem)}
-
-      .hero{
-        min-height:34rem;
-        padding:1rem;
-      }
-
-      .actions{
-        display:grid;
-      }
-
-      .button{
-        width:100%;
-      }
-
-      .waste-recovery-field{
-        min-height:31rem;
-      }
-
-      .waste-leak-stream{
-        left:-25%;
-        width:70%;
-        height:16%;
-      }
-
-      .waste-capture-gate{
-        width:8.4rem;
-        height:8.4rem;
-      }
-
-      .waste-route{
-        width:52%;
-        height:3.3rem;
-      }
-
-      .waste-route::after{
-        font-size:.50rem;
-        right:.48rem;
-      }
-
-      .waste-proof-node{
-        right:.85rem;
-        width:4.8rem;
-        height:4.8rem;
-      }
-
-      .waste-outcome-labels{
-        left:.85rem;
-        bottom:.85rem;
-      }
-
-      .waste-outcome-labels span{
-        font-size:.50rem;
-      }
-
+      .hero{min-height:32rem;padding:1rem}
+      .actions{display:grid}
+      .button{width:100%}
+      .route-menu{width:100%}
+      .route-menu-panel{position:static;margin-top:.45rem;width:100%}
+      .route-menu-grid{grid-template-columns:1fr}
+      .waste-lattice-field{min-height:auto}
+      .waste-map-wrap{min-height:auto}
+      .waste-map-grid{gap:.32rem;padding:.4rem}
+      .waste-cell{padding:.42rem;border-radius:.72rem}
+      .waste-cell b{font-size:.48rem}
+      .waste-cell span{font-size:.34rem}
+      .key-list li{font-size:.78rem}
       .compass-stage{
         min-height:auto;
         display:grid;
@@ -1139,9 +1260,7 @@
       }
 
       .compass-stage::before,
-      .compass-stage::after{
-        display:none;
-      }
+      .compass-stage::after{display:none}
 
       .compass-center,
       .compass-node{
@@ -1152,9 +1271,7 @@
       }
 
       .compass-node:hover,
-      .compass-node:focus-visible{
-        transform:scale(1.05);
-      }
+      .compass-node:focus-visible{transform:scale(1.05)}
 
       .compass-center{
         grid-column:1 / -1;
@@ -1168,83 +1285,31 @@
         height:5.45rem;
       }
 
-      .gem-label{
-        width:88%;
-        gap:.14rem;
-      }
-
-      .gem-label b{
-        font-size:.62rem;
-        letter-spacing:.046em;
-      }
-
-      .gem-label span{
-        font-size:.44rem;
-        letter-spacing:.044em;
-      }
-
-      .compass-center .gem-label b{
-        font-size:.88rem;
-      }
-
-      .compass-center .gem-label span{
-        font-size:.60rem;
-      }
-
-      .lens-tabs{
-        display:grid;
-        grid-template-columns:1fr 1fr;
-      }
-
+      .gem-label{width:88%;gap:.14rem}
+      .gem-label b{font-size:.62rem;letter-spacing:.046em}
+      .gem-label span{font-size:.44rem;letter-spacing:.044em}
+      .compass-center .gem-label b{font-size:.88rem}
+      .compass-center .gem-label span{font-size:.60rem}
+      .lens-tabs{display:grid;grid-template-columns:1fr 1fr}
       .section-return,
       .section-return.dual-return{
         display:grid;
         grid-template-columns:1fr;
         justify-content:stretch;
       }
-
       .return-orbit,
-      .return-frontier{
-        width:100%;
-      }
+      .return-frontier{width:100%}
     }
 
     @media (max-width:420px){
-      .compass-stage{
-        gap:.9rem .62rem;
-      }
-
-      .compass-node{
-        width:6.85rem;
-        height:5rem;
-      }
-
-      .gem-label{
-        width:90%;
-      }
-
-      .gem-label b{
-        font-size:.54rem;
-        letter-spacing:.036em;
-      }
-
-      .gem-label span{
-        font-size:.38rem;
-        letter-spacing:.034em;
-      }
-
-      .compass-center{
-        width:8.95rem;
-        height:6.5rem;
-      }
-
-      .compass-center .gem-label b{
-        font-size:.78rem;
-      }
-
-      .compass-center .gem-label span{
-        font-size:.52rem;
-      }
+      .compass-stage{gap:.9rem .62rem}
+      .compass-node{width:6.85rem;height:5rem}
+      .gem-label{width:90%}
+      .gem-label b{font-size:.54rem;letter-spacing:.036em}
+      .gem-label span{font-size:.38rem;letter-spacing:.034em}
+      .compass-center{width:8.95rem;height:6.5rem}
+      .compass-center .gem-label b{font-size:.78rem}
+      .compass-center .gem-label span{font-size:.52rem}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -1357,31 +1422,53 @@
         </span>
       </a>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/products/">Products</a>
-        <a href="/laws/">Laws</a>
-        <a href="/showroom/globe/">Interactive Narrative</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/explore/frontier/">Frontier</a>
-        <a href="/explore/frontier/energy/">Energy</a>
-        <a href="/explore/frontier/water/">Water</a>
-        <a href="/explore/frontier/waste/" aria-current="page">Waste</a>
-        <a href="/explore/frontier/urban/">Urban</a>
-        <a href="/gauges/">Gauges</a>
+      <nav class="nav" aria-label="Reusable route menus">
+        <details class="route-menu">
+          <summary class="route-menu-summary">Site Menu</summary>
+          <div class="route-menu-panel">
+            <div class="route-menu-grid">
+              <a class="route-menu-link" href="/">Compass</a>
+              <a class="route-menu-link" href="/door/">Door</a>
+              <a class="route-menu-link" href="/home/">Home</a>
+              <a class="route-menu-link" href="/laws/">Laws</a>
+              <a class="route-menu-link" href="/showroom/globe/">Interactive Narrative</a>
+              <a class="route-menu-link" href="/showroom/">Showroom</a>
+              <a class="route-menu-link" href="/products/">Products</a>
+              <a class="route-menu-link" href="/gauges/">Gauges</a>
+            </div>
+          </div>
+        </details>
+
+        <details class="route-menu">
+          <summary class="route-menu-summary">Frontier Lanes</summary>
+          <div class="route-menu-panel">
+            <div class="route-menu-grid">
+              <a class="route-menu-link" href="/explore/frontier/">Frontier</a>
+              <a class="route-menu-link" href="/explore/frontier/energy/">Energy</a>
+              <a class="route-menu-link" href="/explore/frontier/water/">Water</a>
+              <a class="route-menu-link" href="/explore/frontier/waste/" aria-current="page">Waste</a>
+              <a class="route-menu-link" href="/explore/frontier/urban/">Urban</a>
+              <a class="route-menu-link" href="/explore/frontier/lattice/">Lattice</a>
+              <a class="route-menu-link" href="/explore/frontier/infrastructure/">Infrastructure</a>
+              <a class="route-menu-link" href="/explore/frontier/closed-loop/">Closed Loop</a>
+              <a class="route-menu-link" href="/explore/frontier/manual/">Manual</a>
+              <a class="route-menu-link" href="/explore/frontier/shimmer/">Shimmer</a>
+              <a class="route-menu-link" href="/explore/frontier/trajectory/">Trajectory</a>
+              <a class="route-menu-link" href="/explore/frontier/vision/">Vision</a>
+            </div>
+          </div>
+        </details>
       </nav>
     </header>
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">No-Away Recovery Flow · Frontier Waste System</div>
+        <div class="kicker">No-Away Recovery Lattice · Frontier Waste System</div>
 
         <h1 id="page-title">Waste is escaped value under audit.</h1>
 
         <p class="lead">
-          Waste is not the end of value. Waste is the point where value has lost its route. The Frontier task is to name the leak, capture the stream, separate the material, recover what can return, contain what must be held, and mark residue honestly.
+          Waste is the Frontier lane where escaped value is forced through a governed lattice. The stream must be named, captured, separated, and assigned an outcome. It can return, be contained, or become residue, but it cannot disappear.
         </p>
 
         <div class="quote">
@@ -1389,36 +1476,72 @@
         </div>
 
         <div class="actions">
-          <a class="button gold" href="#waste-orbit">Choose a Pathway</a>
+          <a class="button gold" href="#waste-lattice">Read the Lattice</a>
           <a class="button" href="/explore/frontier/">Return to Frontier</a>
-          <a class="button green" href="#recovery-flow">Watch Recovery Flow</a>
+          <a class="button green" href="#waste-orbit">Choose a Pathway</a>
           <a class="button" href="#kill-conditions">Open Kill Conditions</a>
         </div>
       </section>
 
-      <section class="panel section" id="recovery-flow" aria-labelledby="recovery-flow-title">
-        <div class="kicker">No-Away Recovery Flow</div>
-        <h2 id="recovery-flow-title">Escaped value enters the field. The system forces an outcome: recover, contain, or residue.</h2>
+      <section class="panel section" id="waste-lattice" aria-labelledby="waste-lattice-title">
+        <div class="kicker">Waste Recovery Lattice · 4 × 4 public map</div>
+        <h2 id="waste-lattice-title">A stream enters the lattice. The map forces an outcome: recover, contain, or residue.</h2>
 
-        <div class="waste-recovery-field" aria-label="No-Away Recovery Flow visualization">
-          <span class="waste-leak-stream" aria-hidden="true"></span>
-          <span class="waste-capture-gate" aria-hidden="true"></span>
-          <span class="waste-separation-band" aria-hidden="true"></span>
-          <span class="waste-route recover" data-label="Recover" aria-hidden="true"></span>
-          <span class="waste-route contain" data-label="Contain" aria-hidden="true"></span>
-          <span class="waste-route residue" data-label="Residue" aria-hidden="true"></span>
-          <span class="waste-proof-node" aria-hidden="true"></span>
-          <div class="waste-outcome-labels" aria-hidden="true">
-            <span style="--dot:var(--recover)">Recover: return as value</span>
-            <span style="--dot:var(--contain)">Contain: hold safely</span>
-            <span style="--dot:var(--residue)">Residue: classify and stop</span>
+        <div class="waste-lattice-field" aria-label="Waste Recovery Lattice with map key">
+          <div class="waste-map-wrap">
+            <div class="waste-map-grid" aria-label="4 by 4 Waste Recovery Lattice">
+              <div class="waste-route-overlay" aria-hidden="true">
+                <span class="route-line leak-in"></span>
+                <span class="route-line capture-to-separate"></span>
+                <span class="route-line recover"></span>
+                <span class="route-line contain"></span>
+                <span class="route-line residue"></span>
+                <span class="capture-pulse"></span>
+                <span class="proof-pulse"></span>
+              </div>
+
+              <div class="waste-cell source" data-index="01"><b>Source</b><span>First system</span></div>
+              <div class="waste-cell leak" data-index="02"><b>Leakage</b><span>Escape</span></div>
+              <div class="waste-cell identify" data-index="03"><b>Identify</b><span>Name stream</span></div>
+              <div class="waste-cell capture" data-index="04"><b>Capture</b><span>Sorting gate</span></div>
+
+              <div class="waste-cell separate" data-index="05"><b>Separate</b><span>Assign route</span></div>
+              <div class="waste-cell recover" data-index="06"><b>Recover</b><span>Value path</span></div>
+              <div class="waste-cell return" data-index="07"><b>Return</b><span>Use again</span></div>
+              <div class="waste-cell contain" data-index="08"><b>Contain</b><span>Hold safely</span></div>
+
+              <div class="waste-cell residue" data-index="09"><b>Residue</b><span>Classify stop</span></div>
+              <div class="waste-cell proof" data-index="10"><b>Proof</b><span>Receipt</span></div>
+              <div class="waste-cell" data-index="11"><b>No-Away</b><span>Accounting</span></div>
+              <div class="waste-cell" data-index="12"><b>System</b><span>Coupling</span></div>
+
+              <div class="waste-cell stop" data-index="13"><b>Hazard</b><span>Check</span></div>
+              <div class="waste-cell stop" data-index="14"><b>Destination</b><span>Check</span></div>
+              <div class="waste-cell stop" data-index="15"><b>Receipt</b><span>Check</span></div>
+              <div class="waste-cell stop" data-index="16"><b>Kill</b><span>Conditions</span></div>
+            </div>
           </div>
+
+          <aside class="waste-map-key" aria-label="Waste lattice map key">
+            <strong>Map Key</strong>
+            <ul class="key-list">
+              <li><span class="key-mark" style="--key-color:var(--gold)"></span><span><b>Gold</b> means audit, proof, and receipt posture.</span></li>
+              <li><span class="key-mark" style="--key-color:var(--recover)"></span><span><b>Green</b> means recoverable value returning to use.</span></li>
+              <li><span class="key-mark" style="--key-color:var(--contain)"></span><span><b>Blue</b> means contained material held safely.</span></li>
+              <li><span class="key-mark" style="--key-color:var(--residue)"></span><span><b>Gray</b> means residue classified and stopped.</span></li>
+              <li><span class="key-mark diamond" style="--key-color:var(--gold)"></span><span><b>Diamond</b> means capture or sorting gate.</span></li>
+              <li><span class="key-mark line" style="--key-color:var(--recover)"></span><span><b>Line</b> means material or value route.</span></li>
+              <li><span class="key-mark node"></span><span><b>Node</b> means governed decision point.</span></li>
+              <li><span class="key-mark pulse" style="--key-color:var(--gold)"></span><span><b>Pulse</b> means currently active pathway.</span></li>
+              <li><span class="key-mark stop" style="--key-color:var(--residue)"></span><span><b>Dim stop</b> means the route cannot continue without proof.</span></li>
+            </ul>
+          </aside>
         </div>
       </section>
 
       <section class="panel section" aria-labelledby="field-title" id="waste-orbit">
-        <div class="kicker">Waste field · Active recovery pathways</div>
-        <h2 id="field-title">Choose the pathway first. Choose the language lens inside the pathway.</h2>
+        <div class="kicker">Waste field · Pathway orbit</div>
+        <h2 id="field-title">The orbit supports the lattice. The lattice governs the route.</h2>
 
         <div
           class="compass-stage"
@@ -1429,681 +1552,299 @@
           data-per-pathway-dual-lens="true"
         >
           <div class="compass-center" aria-hidden="true">
-            <span class="gem-core">
-              <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
-                <use href="#compassOrganicGem"></use>
-              </svg>
-            </span>
-            <span class="gem-label"><b>Waste</b><span>No-Away</span></span>
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Waste</b><span>Lattice</span></span>
           </div>
 
-          <a class="compass-node" style="--x:50%;--y:11%;" href="#leakage" aria-label="Open Leakage">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Leakage</b><span>Escape</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:73%;--y:17%;" href="#identify" aria-label="Open Identify">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Identify</b><span>Name</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:87%;--y:34%;" href="#capture" aria-label="Open Capture">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Capture</b><span>Hold</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:87%;--y:62%;" href="#separate" aria-label="Open Separate">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Separate</b><span>Sort</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:73%;--y:80%;" href="#recover" aria-label="Open Recover">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Recover</b><span>Value</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:50%;--y:88%;" href="#return" aria-label="Open Return">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Return</b><span>Use</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:27%;--y:80%;" href="#proof" aria-label="Open Proof">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Proof</b><span>Receipt</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:13%;--y:62%;" href="#containment" aria-label="Open Containment">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Contain</b><span>Hold</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:13%;--y:34%;" href="#residue" aria-label="Open Residue">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Residue</b><span>Stop</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:27%;--y:17%;" href="#no-away-accounting" aria-label="Open No-Away Accounting">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>No-Away</b><span>Account</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:34%;--y:6%;" href="#system-coupling" aria-label="Open System Coupling">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>System</b><span>Coupling</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:66%;--y:6%;" href="#kill-conditions" aria-label="Open Kill Conditions">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Kill</b><span>Conditions</span></span>
-          </a>
+          <a class="compass-node" style="--x:50%;--y:11%;" href="#leakage" aria-label="Open Leakage"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Leakage</b><span>Escape</span></span></a>
+          <a class="compass-node" style="--x:73%;--y:17%;" href="#identify" aria-label="Open Identify"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Identify</b><span>Name</span></span></a>
+          <a class="compass-node" style="--x:87%;--y:34%;" href="#capture" aria-label="Open Capture"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Capture</b><span>Hold</span></span></a>
+          <a class="compass-node" style="--x:87%;--y:62%;" href="#separate" aria-label="Open Separate"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Separate</b><span>Sort</span></span></a>
+          <a class="compass-node" style="--x:73%;--y:80%;" href="#recover" aria-label="Open Recover"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Recover</b><span>Value</span></span></a>
+          <a class="compass-node" style="--x:50%;--y:88%;" href="#return" aria-label="Open Return"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Return</b><span>Use</span></span></a>
+          <a class="compass-node" style="--x:27%;--y:80%;" href="#proof" aria-label="Open Proof"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Proof</b><span>Receipt</span></span></a>
+          <a class="compass-node" style="--x:13%;--y:62%;" href="#containment" aria-label="Open Containment"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Contain</b><span>Hold</span></span></a>
+          <a class="compass-node" style="--x:13%;--y:34%;" href="#residue" aria-label="Open Residue"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Residue</b><span>Stop</span></span></a>
+          <a class="compass-node" style="--x:27%;--y:17%;" href="#no-away-accounting" aria-label="Open No-Away Accounting"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>No-Away</b><span>Account</span></span></a>
+          <a class="compass-node" style="--x:34%;--y:6%;" href="#system-coupling" aria-label="Open System Coupling"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>System</b><span>Coupling</span></span></a>
+          <a class="compass-node" style="--x:66%;--y:6%;" href="#kill-conditions" aria-label="Open Kill Conditions"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Kill</b><span>Conditions</span></span></a>
         </div>
       </section>
 
       <section class="panel section" id="leakage" aria-labelledby="leakage-title">
         <div class="kicker">Pathway One</div>
         <h2 id="leakage-title">Leakage</h2>
-
         <article class="pathway-module">
           <h3>Waste begins when value escapes without a return path.</h3>
-          <p>Leakage is not only a spill or mess. It is any material, energy, information, cost, byproduct, or hazard leaving the first system without an accountable destination.</p>
-
+          <p>Leakage is any material, energy, information, cost, byproduct, or hazard leaving the first system without an accountable destination.</p>
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="leakage-platform" name="leakage-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="leakage-engineering" name="leakage-lens" type="radio">
-
-            <div class="lens-tabs">
-              <label class="lens-tab platform-tab" for="leakage-platform">Platform Lens</label>
-              <label class="lens-tab engineering-tab" for="leakage-engineering">Engineering Lens</label>
-            </div>
-
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="leakage-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="leakage-engineering">Engineering Lens</label></div>
             <div class="lens-body">
-              <div class="lens-copy platform-copy">
-                <b>Platform Lens</b>
-                <p>The first waste question is not “what smells bad?” The first question is “what escaped, and where did it go?” A system becomes honest when leakage can no longer hide.</p>
-                <ul class="lens-list">
-                  <li>Waste is often unnamed inventory.</li>
-                  <li>Leakage exposes what the first system failed to hold.</li>
-                  <li>No “away” claim is allowed without a destination.</li>
-                </ul>
-              </div>
-
-              <div class="lens-copy engineering-copy">
-                <b>Engineering Lens</b>
-                <p>Operating object: leakage detection layer. Inputs include escaped material, source system, flow path, loss rate, hazard status, and missing receipt.</p>
-                <ul class="lens-list">
-                  <li>Outputs: detected leakage, unidentified leakage, contained leakage, or audit failure.</li>
-                  <li>Constraint: leakage must carry source, path, quantity, and destination status.</li>
-                  <li>Stop condition: no “away” claim without a destination.</li>
-                </ul>
-              </div>
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>The first waste question is not “what smells bad?” The first question is “what escaped, and where did it go?”</p><ul class="lens-list"><li>Waste is often unnamed inventory.</li><li>Leakage exposes what the first system failed to hold.</li><li>No “away” claim is allowed without a destination.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: leakage detection layer. Inputs include escaped material, source system, flow path, loss rate, hazard status, and missing receipt.</p><ul class="lens-list"><li>Outputs: detected leakage, unidentified leakage, contained leakage, or audit failure.</li><li>Constraint: leakage must carry source, path, quantity, and destination status.</li><li>Stop condition: no “away” claim without a destination.</li></ul></div>
             </div>
           </div>
-
           <div class="boundary">Boundary: leakage cannot be treated as solved because it left view.</div>
-          <div class="section-return dual-return">
-            <a class="return-orbit" href="#waste-orbit">Return to Waste Orbit</a>
-            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return dual-return"><a class="return-orbit" href="#waste-orbit">Return to Waste Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
       <section class="panel section" id="identify" aria-labelledby="identify-title">
         <div class="kicker">Pathway Two</div>
         <h2 id="identify-title">Identify</h2>
-
         <article class="pathway-module">
           <h3>Waste cannot be recovered until it is named.</h3>
-          <p>Identification turns an escaped stream into an auditable object. Without identification, there is no safe recovery, no safe containment, and no honest residue classification.</p>
-
+          <p>Identification turns an escaped stream into an auditable object.</p>
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="identify-platform" name="identify-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="identify-engineering" name="identify-lens" type="radio">
-
-            <div class="lens-tabs">
-              <label class="lens-tab platform-tab" for="identify-platform">Platform Lens</label>
-              <label class="lens-tab engineering-tab" for="identify-engineering">Engineering Lens</label>
-            </div>
-
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="identify-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="identify-engineering">Engineering Lens</label></div>
             <div class="lens-body">
-              <div class="lens-copy platform-copy">
-                <b>Platform Lens</b>
-                <p>Identification gives waste a name. Once the stream is named, it can be tested, separated, recovered, contained, or rejected with a reason.</p>
-                <ul class="lens-list">
-                  <li>Unnamed waste becomes public confusion.</li>
-                  <li>Classification prevents false recovery claims.</li>
-                  <li>Hazard status must be known before reuse language appears.</li>
-                </ul>
-              </div>
-
-              <div class="lens-copy engineering-copy">
-                <b>Engineering Lens</b>
-                <p>Operating object: waste identification layer. Inputs include material class, chemical profile, biological profile, hazard status, source process, volume, and contamination state.</p>
-                <ul class="lens-list">
-                  <li>Outputs: classified material, unknown material, hazardous stream, recoverable candidate, or reject candidate.</li>
-                  <li>Constraint: unknown material cannot enter recovery.</li>
-                  <li>Stop condition: no reuse claim without identification.</li>
-                </ul>
-              </div>
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Identification gives waste a name. Once the stream is named, it can be tested, separated, recovered, contained, or rejected with a reason.</p><ul class="lens-list"><li>Unnamed waste becomes public confusion.</li><li>Classification prevents false recovery claims.</li><li>Hazard status must be known before reuse language appears.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: waste identification layer. Inputs include material class, chemical profile, biological profile, hazard status, source process, volume, and contamination state.</p><ul class="lens-list"><li>Outputs: classified material, unknown material, hazardous stream, recoverable candidate, or reject candidate.</li><li>Constraint: unknown material cannot enter recovery.</li><li>Stop condition: no reuse claim without identification.</li></ul></div>
             </div>
           </div>
-
           <div class="boundary">Boundary: unknown material cannot be called recoverable.</div>
-          <div class="section-return dual-return">
-            <a class="return-orbit" href="#waste-orbit">Return to Waste Orbit</a>
-            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return dual-return"><a class="return-orbit" href="#waste-orbit">Return to Waste Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
       <section class="panel section" id="capture" aria-labelledby="capture-title">
         <div class="kicker">Pathway Three</div>
         <h2 id="capture-title">Capture</h2>
-
         <article class="pathway-module">
           <h3>Capture stops escaped value from becoming invisible loss.</h3>
           <p>Capture is the point where the system intercepts the stream and prevents it from drifting into unmeasured disappearance.</p>
-
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="capture-platform" name="capture-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="capture-engineering" name="capture-lens" type="radio">
-
-            <div class="lens-tabs">
-              <label class="lens-tab platform-tab" for="capture-platform">Platform Lens</label>
-              <label class="lens-tab engineering-tab" for="capture-engineering">Engineering Lens</label>
-            </div>
-
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="capture-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="capture-engineering">Engineering Lens</label></div>
             <div class="lens-body">
-              <div class="lens-copy platform-copy">
-                <b>Platform Lens</b>
-                <p>Capture is the difference between “it got away” and “we can account for it.” The stream does not need to be useful yet; it must first be held.</p>
-                <ul class="lens-list">
-                  <li>Capture protects the audit trail.</li>
-                  <li>Captured does not automatically mean safe.</li>
-                  <li>Captured does not automatically mean recovered.</li>
-                </ul>
-              </div>
-
-              <div class="lens-copy engineering-copy">
-                <b>Engineering Lens</b>
-                <p>Operating object: capture layer. Inputs include source point, interception method, containment vessel, transfer path, capacity, safety boundary, and measurement receipt.</p>
-                <ul class="lens-list">
-                  <li>Outputs: captured stream, missed stream, unsafe capture, or capacity failure.</li>
-                  <li>Constraint: capture must preserve identity and safety status.</li>
-                  <li>Stop condition: captured material cannot be treated as recovered material.</li>
-                </ul>
-              </div>
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Capture is the difference between “it got away” and “we can account for it.” The stream does not need to be useful yet; it must first be held.</p><ul class="lens-list"><li>Capture protects the audit trail.</li><li>Captured does not automatically mean safe.</li><li>Captured does not automatically mean recovered.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: capture layer. Inputs include source point, interception method, containment vessel, transfer path, capacity, safety boundary, and measurement receipt.</p><ul class="lens-list"><li>Outputs: captured stream, missed stream, unsafe capture, or capacity failure.</li><li>Constraint: capture must preserve identity and safety status.</li><li>Stop condition: captured material cannot be treated as recovered material.</li></ul></div>
             </div>
           </div>
-
           <div class="boundary">Boundary: capture is not recovery.</div>
-          <div class="section-return dual-return">
-            <a class="return-orbit" href="#waste-orbit">Return to Waste Orbit</a>
-            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return dual-return"><a class="return-orbit" href="#waste-orbit">Return to Waste Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
       <section class="panel section" id="separate" aria-labelledby="separate-title">
         <div class="kicker">Pathway Four</div>
         <h2 id="separate-title">Separate</h2>
-
         <article class="pathway-module">
           <h3>Separation decides what can return, what must be held, and what must stop.</h3>
-          <p>Separation is where a mixed stream becomes accountable routes. Recovery begins only after the stream has been divided honestly.</p>
-
+          <p>Separation is where a mixed stream becomes accountable routes.</p>
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="separate-platform" name="separate-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="separate-engineering" name="separate-lens" type="radio">
-
-            <div class="lens-tabs">
-              <label class="lens-tab platform-tab" for="separate-platform">Platform Lens</label>
-              <label class="lens-tab engineering-tab" for="separate-engineering">Engineering Lens</label>
-            </div>
-
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="separate-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="separate-engineering">Engineering Lens</label></div>
             <div class="lens-body">
-              <div class="lens-copy platform-copy">
-                <b>Platform Lens</b>
-                <p>Separation keeps the recovery claim honest. If recoverable value is mixed with contamination or residue, the system must separate before it promises return.</p>
-                <ul class="lens-list">
-                  <li>Mixed waste cannot be collapsed into one claim.</li>
-                  <li>Separation protects both recovery and safety.</li>
-                  <li>Containment and residue must remain visible outcomes.</li>
-                </ul>
-              </div>
-
-              <div class="lens-copy engineering-copy">
-                <b>Engineering Lens</b>
-                <p>Operating object: separation layer. Inputs include material classes, hazard status, contamination level, recoverable fraction, containment fraction, residue fraction, and sorting method.</p>
-                <ul class="lens-list">
-                  <li>Outputs: recover stream, contain stream, residue stream, or failed separation.</li>
-                  <li>Constraint: no single outcome may be assigned to a mixed stream without separation proof.</li>
-                  <li>Stop condition: separation failure blocks recovery language.</li>
-                </ul>
-              </div>
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Separation keeps the recovery claim honest. If recoverable value is mixed with contamination or residue, the system must separate before it promises return.</p><ul class="lens-list"><li>Mixed waste cannot be collapsed into one claim.</li><li>Separation protects both recovery and safety.</li><li>Containment and residue must remain visible outcomes.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: separation layer. Inputs include material classes, hazard status, contamination level, recoverable fraction, containment fraction, residue fraction, and sorting method.</p><ul class="lens-list"><li>Outputs: recover stream, contain stream, residue stream, or failed separation.</li><li>Constraint: no single outcome may be assigned to a mixed stream without separation proof.</li><li>Stop condition: separation failure blocks recovery language.</li></ul></div>
             </div>
           </div>
-
           <div class="boundary">Boundary: separation failure blocks recovery language.</div>
-          <div class="section-return dual-return">
-            <a class="return-orbit" href="#waste-orbit">Return to Waste Orbit</a>
-            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return dual-return"><a class="return-orbit" href="#waste-orbit">Return to Waste Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
       <section class="panel section" id="recover" aria-labelledby="recover-title">
         <div class="kicker">Pathway Five</div>
         <h2 id="recover-title">Recover</h2>
-
         <article class="pathway-module">
           <h3>Recovery gives escaped value a lawful job.</h3>
-          <p>Recovery is not a mood. It is the verified return of usable value after identification, capture, separation, and safety checks.</p>
-
+          <p>Recovery is the verified return of usable value after identification, capture, separation, and safety checks.</p>
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="recover-platform" name="recover-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="recover-engineering" name="recover-lens" type="radio">
-
-            <div class="lens-tabs">
-              <label class="lens-tab platform-tab" for="recover-platform">Platform Lens</label>
-              <label class="lens-tab engineering-tab" for="recover-engineering">Engineering Lens</label>
-            </div>
-
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="recover-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="recover-engineering">Engineering Lens</label></div>
             <div class="lens-body">
-              <div class="lens-copy platform-copy">
-                <b>Platform Lens</b>
-                <p>Recovery asks whether lost value can serve again. It does not pretend everything can return. It proves what can return and says what cannot.</p>
-                <ul class="lens-list">
-                  <li>Recovered value must have a destination.</li>
-                  <li>Recovery is not automatic.</li>
-                  <li>Recovered material must not carry hidden risk into the next system.</li>
-                </ul>
-              </div>
-
-              <div class="lens-copy engineering-copy">
-                <b>Engineering Lens</b>
-                <p>Operating object: recovery layer. Inputs include separated stream, use case, safety result, quality threshold, conversion requirement, destination system, and acceptance receipt.</p>
-                <ul class="lens-list">
-                  <li>Outputs: recovered value, conditional recovery, rejected recovery, or unsafe return.</li>
-                  <li>Constraint: recovery requires destination, specification, and acceptance.</li>
-                  <li>Stop condition: no recovery claim without verified use path.</li>
-                </ul>
-              </div>
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Recovery asks whether lost value can serve again. It proves what can return and says what cannot.</p><ul class="lens-list"><li>Recovered value must have a destination.</li><li>Recovery is not automatic.</li><li>Recovered material must not carry hidden risk into the next system.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: recovery layer. Inputs include separated stream, use case, safety result, quality threshold, conversion requirement, destination system, and acceptance receipt.</p><ul class="lens-list"><li>Outputs: recovered value, conditional recovery, rejected recovery, or unsafe return.</li><li>Constraint: recovery requires destination, specification, and acceptance.</li><li>Stop condition: no recovery claim without verified use path.</li></ul></div>
             </div>
           </div>
-
           <div class="boundary">Boundary: no recovery claim without verified use path.</div>
-          <div class="section-return dual-return">
-            <a class="return-orbit" href="#waste-orbit">Return to Waste Orbit</a>
-            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return dual-return"><a class="return-orbit" href="#waste-orbit">Return to Waste Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
       <section class="panel section" id="return" aria-labelledby="return-title">
         <div class="kicker">Pathway Six</div>
         <h2 id="return-title">Return</h2>
-
         <article class="pathway-module">
           <h3>Return closes the route only when value re-enters a real system.</h3>
-          <p>A material does not return because the page says it did. It returns when another system accepts it, uses it, and carries the receipt.</p>
-
+          <p>A material returns when another system accepts it, uses it, and carries the receipt.</p>
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="return-platform" name="return-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="return-engineering" name="return-lens" type="radio">
-
-            <div class="lens-tabs">
-              <label class="lens-tab platform-tab" for="return-platform">Platform Lens</label>
-              <label class="lens-tab engineering-tab" for="return-engineering">Engineering Lens</label>
-            </div>
-
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="return-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="return-engineering">Engineering Lens</label></div>
             <div class="lens-body">
-              <div class="lens-copy platform-copy">
-                <b>Platform Lens</b>
-                <p>Return is the opposite of “away.” It means the value has a named destination and a lawful role inside another process.</p>
-                <ul class="lens-list">
-                  <li>Return requires acceptance.</li>
-                  <li>Return must be more than storage.</li>
-                  <li>Return should reduce loss without creating hidden harm.</li>
-                </ul>
-              </div>
-
-              <div class="lens-copy engineering-copy">
-                <b>Engineering Lens</b>
-                <p>Operating object: return-path layer. Inputs include destination system, acceptance criteria, transfer method, performance requirement, risk screen, and return receipt.</p>
-                <ul class="lens-list">
-                  <li>Outputs: accepted return, pending return, failed return, or unsafe return.</li>
-                  <li>Constraint: returned material must meet the destination system’s acceptance boundary.</li>
-                  <li>Stop condition: storage cannot be counted as return.</li>
-                </ul>
-              </div>
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Return is the opposite of “away.” It means the value has a named destination and a lawful role inside another process.</p><ul class="lens-list"><li>Return requires acceptance.</li><li>Return must be more than storage.</li><li>Return should reduce loss without creating hidden harm.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: return-path layer. Inputs include destination system, acceptance criteria, transfer method, performance requirement, risk screen, and return receipt.</p><ul class="lens-list"><li>Outputs: accepted return, pending return, failed return, or unsafe return.</li><li>Constraint: returned material must meet the destination system’s acceptance boundary.</li><li>Stop condition: storage cannot be counted as return.</li></ul></div>
             </div>
           </div>
-
           <div class="boundary">Boundary: storage cannot be counted as return.</div>
-          <div class="section-return dual-return">
-            <a class="return-orbit" href="#waste-orbit">Return to Waste Orbit</a>
-            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return dual-return"><a class="return-orbit" href="#waste-orbit">Return to Waste Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
       <section class="panel section" id="proof" aria-labelledby="proof-title">
         <div class="kicker">Pathway Seven</div>
         <h2 id="proof-title">Proof</h2>
-
         <article class="pathway-module">
           <h3>Proof is the receipt that prevents recovery from becoming a story.</h3>
           <p>Proof connects source, capture, separation, recovery, containment, residue, and return into one accountable record.</p>
-
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="proof-platform" name="proof-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="proof-engineering" name="proof-lens" type="radio">
-
-            <div class="lens-tabs">
-              <label class="lens-tab platform-tab" for="proof-platform">Platform Lens</label>
-              <label class="lens-tab engineering-tab" for="proof-engineering">Engineering Lens</label>
-            </div>
-
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="proof-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="proof-engineering">Engineering Lens</label></div>
             <div class="lens-body">
-              <div class="lens-copy platform-copy">
-                <b>Platform Lens</b>
-                <p>Proof keeps the waste page honest. It shows whether the stream returned, stayed contained, or became residue.</p>
-                <ul class="lens-list">
-                  <li>Visual routing is not proof.</li>
-                  <li>A claim needs a receipt.</li>
-                  <li>Proof must survive audit after the animation ends.</li>
-                </ul>
-              </div>
-
-              <div class="lens-copy engineering-copy">
-                <b>Engineering Lens</b>
-                <p>Operating object: proof layer. Inputs include source record, material identity, quantity, pathway assignment, treatment result, destination, containment record, residue record, and audit status.</p>
-                <ul class="lens-list">
-                  <li>Outputs: accepted proof, incomplete proof, contradiction, or audit failure.</li>
-                  <li>Constraint: every outcome needs its own receipt.</li>
-                  <li>Stop condition: visual routing cannot be used as proof.</li>
-                </ul>
-              </div>
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Proof keeps the waste page honest. It shows whether the stream returned, stayed contained, or became residue.</p><ul class="lens-list"><li>Visual routing is not proof.</li><li>A claim needs a receipt.</li><li>Proof must survive audit after the animation ends.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: proof layer. Inputs include source record, material identity, quantity, pathway assignment, treatment result, destination, containment record, residue record, and audit status.</p><ul class="lens-list"><li>Outputs: accepted proof, incomplete proof, contradiction, or audit failure.</li><li>Constraint: every outcome needs its own receipt.</li><li>Stop condition: visual routing cannot be used as proof.</li></ul></div>
             </div>
           </div>
-
           <div class="boundary">Boundary: visual routing cannot be used as proof.</div>
-          <div class="section-return dual-return">
-            <a class="return-orbit" href="#waste-orbit">Return to Waste Orbit</a>
-            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return dual-return"><a class="return-orbit" href="#waste-orbit">Return to Waste Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
       <section class="panel section" id="containment" aria-labelledby="containment-title">
         <div class="kicker">Pathway Eight</div>
         <h2 id="containment-title">Containment</h2>
-
         <article class="pathway-module">
           <h3>Containment is a lawful holding path, not a recovery claim.</h3>
-          <p>Some streams cannot safely return yet. Containment keeps them visible, bounded, and monitored instead of pretending they vanished.</p>
-
+          <p>Some streams cannot safely return yet. Containment keeps them visible, bounded, and monitored.</p>
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="containment-platform" name="containment-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="containment-engineering" name="containment-lens" type="radio">
-
-            <div class="lens-tabs">
-              <label class="lens-tab platform-tab" for="containment-platform">Platform Lens</label>
-              <label class="lens-tab engineering-tab" for="containment-engineering">Engineering Lens</label>
-            </div>
-
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="containment-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="containment-engineering">Engineering Lens</label></div>
             <div class="lens-body">
-              <div class="lens-copy platform-copy">
-                <b>Platform Lens</b>
-                <p>Containment is the honest answer when return is not ready. It protects the system from pretending that unsafe material has become useful.</p>
-                <ul class="lens-list">
-                  <li>Containment keeps risk visible.</li>
-                  <li>Containment requires monitoring.</li>
-                  <li>Containment is not recovery.</li>
-                </ul>
-              </div>
-
-              <div class="lens-copy engineering-copy">
-                <b>Engineering Lens</b>
-                <p>Operating object: containment layer. Inputs include material identity, hazard status, container type, duration, monitoring plan, failure envelope, and review trigger.</p>
-                <ul class="lens-list">
-                  <li>Outputs: stable containment, unstable containment, release risk, or reclassification candidate.</li>
-                  <li>Constraint: containment must remain inspectable.</li>
-                  <li>Stop condition: containment cannot be counted as value return.</li>
-                </ul>
-              </div>
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Containment is the honest answer when return is not ready. It protects the system from pretending unsafe material has become useful.</p><ul class="lens-list"><li>Containment keeps risk visible.</li><li>Containment requires monitoring.</li><li>Containment is not recovery.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: containment layer. Inputs include material identity, hazard status, container type, duration, monitoring plan, failure envelope, and review trigger.</p><ul class="lens-list"><li>Outputs: stable containment, unstable containment, release risk, or reclassification candidate.</li><li>Constraint: containment must remain inspectable.</li><li>Stop condition: containment cannot be counted as value return.</li></ul></div>
             </div>
           </div>
-
           <div class="boundary">Boundary: containment cannot be counted as value return.</div>
-          <div class="section-return dual-return">
-            <a class="return-orbit" href="#waste-orbit">Return to Waste Orbit</a>
-            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return dual-return"><a class="return-orbit" href="#waste-orbit">Return to Waste Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
       <section class="panel section" id="residue" aria-labelledby="residue-title">
         <div class="kicker">Pathway Nine</div>
         <h2 id="residue-title">Residue</h2>
-
         <article class="pathway-module">
           <h3>Residue is what remains after honest recovery and containment decisions.</h3>
-          <p>Residue does not disappear. It is classified, stopped, and held in the record as material that cannot currently return.</p>
-
+          <p>Residue does not disappear. It is classified, stopped, and held in the record.</p>
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="residue-platform" name="residue-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="residue-engineering" name="residue-lens" type="radio">
-
-            <div class="lens-tabs">
-              <label class="lens-tab platform-tab" for="residue-platform">Platform Lens</label>
-              <label class="lens-tab engineering-tab" for="residue-engineering">Engineering Lens</label>
-            </div>
-
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="residue-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="residue-engineering">Engineering Lens</label></div>
             <div class="lens-body">
-              <div class="lens-copy platform-copy">
-                <b>Platform Lens</b>
-                <p>Residue is not a failure to mention. It is the part of the stream the system must not hide, rebrand, or pretend to recover.</p>
-                <ul class="lens-list">
-                  <li>Residue must remain accounted for.</li>
-                  <li>Residue cannot be made invisible.</li>
-                  <li>Residue may change later, but only after reclassification.</li>
-                </ul>
-              </div>
-
-              <div class="lens-copy engineering-copy">
-                <b>Engineering Lens</b>
-                <p>Operating object: residue classification layer. Inputs include non-recoverable fraction, hazard status, treatment failure, containment eligibility, disposal boundary, and record requirement.</p>
-                <ul class="lens-list">
-                  <li>Outputs: classified residue, hazardous residue, inert residue, or unresolved residue.</li>
-                  <li>Constraint: residue remains part of the accounting system.</li>
-                  <li>Stop condition: residue cannot disappear from the record.</li>
-                </ul>
-              </div>
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Residue is not a failure to mention. It is the part of the stream the system must not hide, rebrand, or pretend to recover.</p><ul class="lens-list"><li>Residue must remain accounted for.</li><li>Residue cannot be made invisible.</li><li>Residue may change later, but only after reclassification.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: residue classification layer. Inputs include non-recoverable fraction, hazard status, treatment failure, containment eligibility, disposal boundary, and record requirement.</p><ul class="lens-list"><li>Outputs: classified residue, hazardous residue, inert residue, or unresolved residue.</li><li>Constraint: residue remains part of the accounting system.</li><li>Stop condition: residue cannot disappear from the record.</li></ul></div>
             </div>
           </div>
-
           <div class="boundary">Boundary: residue cannot disappear from the record.</div>
-          <div class="section-return dual-return">
-            <a class="return-orbit" href="#waste-orbit">Return to Waste Orbit</a>
-            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return dual-return"><a class="return-orbit" href="#waste-orbit">Return to Waste Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
       <section class="panel section" id="no-away-accounting" aria-labelledby="no-away-title">
         <div class="kicker">Pathway Ten</div>
         <h2 id="no-away-title">No-Away Accounting</h2>
-
         <article class="pathway-module">
           <h3>There is no “away.” There is only a missing destination.</h3>
           <p>No-away accounting forces every stream to keep its identity until a lawful outcome is assigned.</p>
-
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="no-away-platform" name="no-away-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="no-away-engineering" name="no-away-lens" type="radio">
-
-            <div class="lens-tabs">
-              <label class="lens-tab platform-tab" for="no-away-platform">Platform Lens</label>
-              <label class="lens-tab engineering-tab" for="no-away-engineering">Engineering Lens</label>
-            </div>
-
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="no-away-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="no-away-engineering">Engineering Lens</label></div>
             <div class="lens-body">
-              <div class="lens-copy platform-copy">
-                <b>Platform Lens</b>
-                <p>No-away accounting changes the public question. The issue is not whether waste leaves the room. The issue is whether it can still be named, followed, and resolved.</p>
-                <ul class="lens-list">
-                  <li>No-away means the route must remain visible.</li>
-                  <li>Every stream needs an outcome.</li>
-                  <li>Accounting prevents “out of sight” from becoming “solved.”</li>
-                </ul>
-              </div>
-
-              <div class="lens-copy engineering-copy">
-                <b>Engineering Lens</b>
-                <p>Operating object: no-away accounting layer. Inputs include source, stream identity, mass or volume, hazard status, route, destination, current state, and outcome receipt.</p>
-                <ul class="lens-list">
-                  <li>Outputs: complete account, incomplete account, contradiction, or missing destination.</li>
-                  <li>Constraint: every stream must resolve to recover, contain, or residue.</li>
-                  <li>Stop condition: no outcome means no closure.</li>
-                </ul>
-              </div>
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>No-away accounting changes the public question. The issue is not whether waste leaves the room. The issue is whether it can still be named, followed, and resolved.</p><ul class="lens-list"><li>No-away means the route must remain visible.</li><li>Every stream needs an outcome.</li><li>Accounting prevents “out of sight” from becoming “solved.”</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: no-away accounting layer. Inputs include source, stream identity, mass or volume, hazard status, route, destination, current state, and outcome receipt.</p><ul class="lens-list"><li>Outputs: complete account, incomplete account, contradiction, or missing destination.</li><li>Constraint: every stream must resolve to recover, contain, or residue.</li><li>Stop condition: no outcome means no closure.</li></ul></div>
             </div>
           </div>
-
           <div class="boundary">Boundary: no outcome means no closure.</div>
-          <div class="section-return dual-return">
-            <a class="return-orbit" href="#waste-orbit">Return to Waste Orbit</a>
-            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return dual-return"><a class="return-orbit" href="#waste-orbit">Return to Waste Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
       <section class="panel section" id="system-coupling" aria-labelledby="system-coupling-title">
         <div class="kicker">Pathway Eleven</div>
         <h2 id="system-coupling-title">System Coupling</h2>
-
         <article class="pathway-module">
           <h3>Waste connects to other systems without replacing their authority.</h3>
           <p>Waste supports Water, Energy, Urban, Infrastructure, Closed Loop, and Lattice by tracking what leaves those systems and whether it can return, be contained, or remain residue.</p>
-
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="coupling-platform" name="coupling-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="coupling-engineering" name="coupling-lens" type="radio">
-
-            <div class="lens-tabs">
-              <label class="lens-tab platform-tab" for="coupling-platform">Platform Lens</label>
-              <label class="lens-tab engineering-tab" for="coupling-engineering">Engineering Lens</label>
-            </div>
-
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="coupling-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="coupling-engineering">Engineering Lens</label></div>
             <div class="lens-body">
-              <div class="lens-copy platform-copy">
-                <b>Platform Lens</b>
-                <p>Waste is a connector page. It asks what escaped from another system and whether the escaped value can become useful somewhere else without creating hidden harm.</p>
-                <ul class="lens-list">
-                  <li>Waste coordinates with other Frontier lanes.</li>
-                  <li>Waste does not replace category-specific science.</li>
-                  <li>Return paths must respect the receiving system.</li>
-                </ul>
-              </div>
-
-              <div class="lens-copy engineering-copy">
-                <b>Engineering Lens</b>
-                <p>Operating object: system-coupling layer. Inputs include source category, receiving category, stream identity, interface requirement, conversion requirement, acceptance boundary, and cross-category receipt.</p>
-                <ul class="lens-list">
-                  <li>Outputs: valid coupling, invalid coupling, pending coupling, or authority conflict.</li>
-                  <li>Constraint: Waste cannot override Water, Energy, Urban, Infrastructure, Closed Loop, or Lattice authority.</li>
-                  <li>Stop condition: route coupling fails if the receiving system rejects the stream.</li>
-                </ul>
-              </div>
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Waste is a connector page. It asks what escaped from another system and whether the escaped value can become useful somewhere else without hidden harm.</p><ul class="lens-list"><li>Waste coordinates with other Frontier lanes.</li><li>Waste does not replace category-specific science.</li><li>Return paths must respect the receiving system.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: system-coupling layer. Inputs include source category, receiving category, stream identity, interface requirement, conversion requirement, acceptance boundary, and cross-category receipt.</p><ul class="lens-list"><li>Outputs: valid coupling, invalid coupling, pending coupling, or authority conflict.</li><li>Constraint: Waste cannot override Water, Energy, Urban, Infrastructure, Closed Loop, or Lattice authority.</li><li>Stop condition: route coupling fails if the receiving system rejects the stream.</li></ul></div>
             </div>
           </div>
-
           <div class="boundary">Boundary: Waste coordinates with other systems; it does not replace their science.</div>
-          <div class="section-return dual-return">
-            <a class="return-orbit" href="#waste-orbit">Return to Waste Orbit</a>
-            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return dual-return"><a class="return-orbit" href="#waste-orbit">Return to Waste Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
       <section class="panel section" id="kill-conditions" aria-labelledby="kill-title">
         <div class="kicker">Pathway Twelve</div>
         <h2 id="kill-title">Kill Conditions</h2>
-
         <article class="pathway-module">
           <h3>The waste claim stops when disappearance replaces accounting.</h3>
           <p>A waste system fails when it says material is gone, recovered, safe, or closed without identity, pathway, outcome, and receipt.</p>
-
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="kill-platform" name="kill-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="kill-engineering" name="kill-lens" type="radio">
-
-            <div class="lens-tabs">
-              <label class="lens-tab platform-tab" for="kill-platform">Platform Lens</label>
-              <label class="lens-tab engineering-tab" for="kill-engineering">Engineering Lens</label>
-            </div>
-
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="kill-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="kill-engineering">Engineering Lens</label></div>
             <div class="lens-body">
-              <div class="lens-copy platform-copy">
-                <b>Platform Lens</b>
-                <p>The waste page must stop whenever it turns accountability into decoration. Recovery cannot be a glow, a promise, or a route graphic. The stream must have a real outcome.</p>
-                <ul class="lens-list">
-                  <li>Stop if waste vanishes.</li>
-                  <li>Stop if recovery is automatic.</li>
-                  <li>Stop if containment is called recovery.</li>
-                  <li>Stop if residue is ignored.</li>
-                  <li>Stop if visual routing is treated as proof.</li>
-                </ul>
-              </div>
-
-              <div class="lens-copy engineering-copy">
-                <b>Engineering Lens</b>
-                <p>Operating object: waste stop-rule list. Inputs include stream identity, route assignment, outcome claim, containment claim, recovery claim, residue status, destination, and receipt.</p>
-                <ul class="lens-list">
-                  <li>Stop if the destination is missing.</li>
-                  <li>Stop if the material identity is unknown.</li>
-                  <li>Stop if all waste is treated as reusable.</li>
-                  <li>Stop if residue leaves the record.</li>
-                  <li>Stop if closure is claimed without proof.</li>
-                </ul>
-              </div>
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>The waste page must stop whenever it turns accountability into decoration. Recovery cannot be a glow, a promise, or a route graphic. The stream must have a real outcome.</p><ul class="lens-list"><li>Stop if waste vanishes.</li><li>Stop if recovery is automatic.</li><li>Stop if containment is called recovery.</li><li>Stop if residue is ignored.</li><li>Stop if visual routing is treated as proof.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: waste stop-rule list. Inputs include stream identity, route assignment, outcome claim, containment claim, recovery claim, residue status, destination, and receipt.</p><ul class="lens-list"><li>Stop if the destination is missing.</li><li>Stop if the material identity is unknown.</li><li>Stop if all waste is treated as reusable.</li><li>Stop if residue leaves the record.</li><li>Stop if closure is claimed without proof.</li></ul></div>
             </div>
           </div>
-
           <div class="boundary">Boundary: stop if disappearance replaces accounting, if recovery is automatic, if containment equals recovery, if residue is ignored, or if closure is claimed without proof.</div>
-          <div class="section-return dual-return">
-            <a class="return-orbit" href="#waste-orbit">Return to Waste Orbit</a>
-            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return dual-return"><a class="return-orbit" href="#waste-orbit">Return to Waste Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
       <section class="final-band" id="final-lock" aria-label="Waste final lock">
         <strong>Waste is the Frontier lane where escaped value is forced to answer.</strong>
         <p>
-          Every stream must resolve into a lawful outcome: recover, contain, or residue. Nothing is allowed to disappear just because it left the first system. The recovery flow is not trash imagery, not decay, and not a generic glow. It is a no-away accounting field.
+          Every stream must resolve into a lawful outcome: recover, contain, or residue. The visible 4 × 4 map is the public lattice; the 256-state logic remains governance, not object count.
         </p>
         <div class="actions">
-          <a class="button gold" href="#waste-orbit">Return to Waste Orbit</a>
+          <a class="button gold" href="#waste-lattice">Return to Waste Lattice</a>
+          <a class="button" href="#waste-orbit">Return to Waste Orbit</a>
           <a class="button" href="/explore/frontier/">Return to Frontier</a>
           <a class="button green" href="/explore/frontier/water/">Open Water</a>
           <a class="button" href="/explore/frontier/energy/">Open Energy</a>
           <a class="button" href="/explore/frontier/urban/">Open Urban</a>
-          <a class="button" href="/explore/frontier/lattice/">Open Lattice</a>
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_WASTE_NO_AWAY_RECOVERY_FLOW_RENEWAL_TNT_v2
-previous=WASTE_G1_OPTIMAL_CONCRETE_RECOVERY_FLOW_TNT_v1
-binding=FRONTIER_WASTE_NO_AWAY_RECOVERY_FLOW_FINAL_PRECODE_DRAFT_v2
+FRONTIER_WASTE_LATTICE_MAP_KEY_DROPDOWN_NAV_RENEWAL_TNT_v3
+previous=FRONTIER_WASTE_NO_AWAY_RECOVERY_FLOW_RENEWAL_TNT_v2
+binding=FRONTIER_WASTE_LATTICE_MAP_KEY_DROPDOWN_NAV_FINAL_PRECODE_DRAFT_v3
 route=/explore/frontier/waste/
 page=frontier_waste
 html=/explore/frontier/waste/index.html
 source_visual_authority=COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2
 source_symbol_authority=compassOrganicGem
-animation=NO_AWAY_RECOVERY_FLOW
+animation=NO_AWAY_RECOVERY_LATTICE_FLOW
+visible_lattice=4x4
+visible_cells=16
+governance_formula=16_visible_cells_x_16_internal_checks
+waste_state_addresses=256
+state_expression=governance_not_dom_object_count
+map_key=true
+dropdown_navigation=true
+dropdown_js=false
+route_menu_component=details_summary_css_only
 no_away_law=true
 waste_is_escaped_value=true
 recover_contain_residue=true
@@ -2121,10 +1862,9 @@ generic_glow_as_thesis=false
 energy_lightning_inheritance=false
 water_rain_inheritance=false
 urban_skyline_inheritance=false
-closed_loop_backstar_inheritance=false
 runtime_static_first=true
-active_animation_families_max=5
-animation_families=leak_stream_motion,capture_gate_pulse,recover_return_flow,contain_band_hold,residue_fade_hold
+active_animation_families_max=6
+animation_families=leak_stream_motion,capture_gate_pulse,recover_route_movement,containment_route_hold,residue_fade_stop,proof_node_pulse
 css_only=true
 javascript_added=false
 canvas=false
@@ -2139,15 +1879,13 @@ pathways=Leakage,Identify,Capture,Separate,Recover,Return,Proof,Containment,Resi
 per_pathway_dual_lens=true
 platform_lens_per_pathway=true
 engineering_lens_per_pathway=true
-top_only_lens_toggle=false
-side_by_side_platform_engineering=false
 dual_return_under_every_pathway=true
 return_to_waste_orbit_under_every_pathway=true
 return_to_frontier_under_every_pathway=true
 return_to_frontier_route=/explore/frontier/
+waste_lattice_distinction=recovery_routing_map_for_escaped_value_not_frontier_lattice_page_authority
 waste_owns=leakage_detection,identification,capture,separation,recovery,containment,residue_classification,proof,no_away_accounting,system_coupling
-waste_does_not_own=water_flow,energy_conversion,urban_infrastructure,lattice_authority,laws_authority,gauges_scoring,route_mutation,visual_pass_claims
-category_relation=waste_supports_water_energy_urban_infrastructure_closed_loop_lattice_without_replacing_their_science_or_page_authority
+waste_does_not_own=water_flow,energy_conversion,urban_infrastructure,frontier_lattice_page_authority,laws_authority,gauges_scoring,route_mutation,visual_pass_claims
 forbidden_collapses=trash_as_waste,dumpster_as_waste,landfill_as_waste,pollution_fog_as_waste,decay_as_waste,generic_glow_as_recovery,collection_as_closure,containment_as_recovery,residue_as_disappearance,visual_routing_as_proof
 compliance_status=pass
 constraint_status=pass
@@ -2155,12 +1893,12 @@ runtime_status=pass_conditionally
 static_page_usable_without_js=true
 streaming=false
 visual_pass_claimed=false
-deploy_marker=FRONTIER_WASTE_NO_AWAY_RECOVERY_FLOW_DEPLOY_MARKER_v2
+deploy_marker=FRONTIER_WASTE_LATTICE_MAP_KEY_DROPDOWN_NAV_DEPLOY_MARKER_v3
       </template>
     </main>
 
     <footer>
-      FRONTIER_WASTE_NO_AWAY_RECOVERY_FLOW_RENEWAL_TNT_v2 · Waste · No-Away Recovery Flow · Recover / Contain / Residue.
+      FRONTIER_WASTE_LATTICE_MAP_KEY_DROPDOWN_NAV_RENEWAL_TNT_v3 · Waste · 4 × 4 Recovery Lattice · No-Away Accounting.
     </footer>
   </div>
 </body>

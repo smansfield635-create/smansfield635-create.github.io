@@ -1,20 +1,21 @@
-<!-- TARGET FILE: /explore/frontier/urban/index.html -->
 <!doctype html>
 <html
   lang="en"
   data-route="/explore/frontier/urban/"
   data-page="frontier-urban"
-  data-version="G2-V10"
-  data-contract="FRONTIER_URBAN_TOUCH_ACTIVATED_OCCUPANCY_LATTICE_TNT_v10"
+  data-version="G2-V11"
+  data-contract="FRONTIER_URBAN_OPAQUE_BUILDING_AND_GEM_ORBIT_RELAYER_TNT_v11"
   data-runtime-scope="css-plus-touch-controller"
-  data-visual-baseline="v9-preserved"
+  data-visual-baseline="v11-relayer-active"
+  data-opaque-building-material="active"
+  data-gem-orbit="active"
+  data-touch-window-activation="active"
   data-per-building-lattice="active"
   data-building-local-scope="16x16"
   data-building-local-addresses="256"
   data-one-building-one-occupancy-map="active"
   data-per-building-programmed-lights="active"
   data-per-building-unique-chronology="active"
-  data-touch-window-activation="active"
   data-delegated-touch-listener="active"
   data-manual-window-override="session"
   data-greenline-ephemeral-glow="active"
@@ -24,8 +25,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Urban Construct · Touch Activated Occupancy Lattice · Diamond Gate Bridge</title>
-  <meta name="description" content="Urban Construct tests city-scale systems with a Dallas-inspired skyline, per-building 16 × 16 occupancy lattices, programmed light chronology, touch-activated windows, and a greenline pulse.">
+  <title>Urban Construct · Opaque Skyline · Gem Orbit · Diamond Gate Bridge</title>
+  <meta name="description" content="Urban Construct tests city-scale systems with a Dallas-inspired opaque skyline, touch-activated windows, per-building 16 × 16 occupancy lattices, and restored gem-orbit pathway navigation.">
 
   <style>
     :root{
@@ -38,9 +39,9 @@
       --gold2:#ffe8a3;
       --blue:#8dd8ff;
       --green:#39ff9f;
-      --panel:rgba(9,15,31,.88);
+      --panel:rgba(9,15,31,.90);
       --line:rgba(184,205,255,.18);
-      --shadow:0 32px 110px rgba(0,0,0,.48);
+      --shadow:0 32px 110px rgba(0,0,0,.50);
       --max:1180px;
       --brand-gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
     }
@@ -539,12 +540,18 @@
 
     .skyline-depth-layer.far{
       z-index:2;
-      opacity:.56;
-      filter:saturate(.72) brightness(.72);
+      filter:saturate(.74) brightness(.74);
     }
 
-    .skyline-depth-layer.mid{z-index:3;opacity:.98}
-    .skyline-depth-layer.front{z-index:4;opacity:1}
+    .skyline-depth-layer.mid{
+      z-index:3;
+      filter:saturate(.98) brightness(.98);
+    }
+
+    .skyline-depth-layer.front{
+      z-index:4;
+      filter:saturate(.82) brightness(.70);
+    }
 
     .urban-building{
       position:absolute;
@@ -552,19 +559,41 @@
       bottom:var(--b-bottom);
       width:var(--b-width);
       height:var(--b-height);
-      opacity:var(--b-haze,.92);
       border:1px solid rgba(255,255,255,var(--b-contrast,.10));
       background:
-        linear-gradient(180deg,rgba(255,255,255,.055),transparent 28%),
-        linear-gradient(180deg,rgba(12,23,49,.96),rgba(2,5,16,.98));
+        linear-gradient(180deg,rgba(255,255,255,.06),transparent 24%),
+        linear-gradient(180deg,#121e3a 0%,#071127 54%,#030814 100%);
       box-shadow:
         inset 0 1px 0 rgba(255,255,255,.08),
+        inset 0 -1.2rem 2.2rem rgba(0,0,0,.44),
         0 0 var(--b-glow,1.35rem) rgba(57,255,159,var(--b-glow-alpha,.08)),
         0 0 2rem rgba(0,0,0,.36);
       transform:translateZ(0);
       animation:buildingBreath var(--b-duration,17s) ease-in-out infinite;
       animation-delay:var(--b-delay,0s);
       pointer-events:auto;
+    }
+
+    .skyline-depth-layer.far .urban-building{
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.035),transparent 26%),
+        linear-gradient(180deg,#0d1830 0%,#071024 58%,#030714 100%);
+      border-color:rgba(255,255,255,.05);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.04),
+        inset 0 -1rem 2rem rgba(0,0,0,.42),
+        0 0 1.2rem rgba(0,0,0,.20);
+    }
+
+    .skyline-depth-layer.front .urban-building{
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.025),transparent 20%),
+        linear-gradient(180deg,#070c18 0%,#030611 60%,#01030a 100%);
+      border-color:rgba(255,255,255,.05);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.04),
+        inset 0 -1.6rem 2.4rem rgba(0,0,0,.66),
+        0 -1rem 2.6rem rgba(0,0,0,.42);
     }
 
     .urban-building.step{
@@ -581,10 +610,10 @@
       inset:.52rem .42rem .62rem;
       z-index:1;
       pointer-events:none;
-      opacity:var(--facade-opacity,.22);
+      opacity:var(--facade-opacity,.24);
       background-image:
-        repeating-linear-gradient(90deg,transparent 0 calc(var(--b-window-x,.74rem) * .46),rgba(126,171,207,.18) calc(var(--b-window-x,.74rem) * .46) calc(var(--b-window-x,.74rem) * .58),transparent calc(var(--b-window-x,.74rem) * .58) var(--b-window-x,.74rem)),
-        repeating-linear-gradient(0deg,transparent 0 calc(var(--b-window-y,.86rem) * .46),rgba(126,171,207,.13) calc(var(--b-window-y,.86rem) * .46) calc(var(--b-window-y,.86rem) * .58),transparent calc(var(--b-window-y,.86rem) * .58) var(--b-window-y,.86rem));
+        repeating-linear-gradient(90deg,transparent 0 calc(var(--b-window-x,.74rem) * .46),rgba(126,171,207,.20) calc(var(--b-window-x,.74rem) * .46) calc(var(--b-window-x,.74rem) * .58),transparent calc(var(--b-window-x,.74rem) * .58) var(--b-window-x,.74rem)),
+        repeating-linear-gradient(0deg,transparent 0 calc(var(--b-window-y,.86rem) * .46),rgba(126,171,207,.14) calc(var(--b-window-y,.86rem) * .46) calc(var(--b-window-y,.86rem) * .58),transparent calc(var(--b-window-y,.86rem) * .58) var(--b-window-y,.86rem));
       mask-image:linear-gradient(180deg,rgba(0,0,0,.94),rgba(0,0,0,.68) 64%,rgba(0,0,0,.34));
     }
 
@@ -644,7 +673,7 @@
     .quiet .window-tile,
     .far-building .window-tile,
     .civic .window-tile{
-      opacity:.10;
+      opacity:.12;
       background:linear-gradient(180deg,rgba(216,238,255,.58),rgba(141,216,255,.28) 58%,rgba(255,226,145,.16));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
     }
@@ -652,7 +681,7 @@
     .quiet .window-tile.is-on,
     .far-building .window-tile.is-on,
     .civic .window-tile.is-on{
-      opacity:.56;
+      opacity:.58;
       filter:brightness(.96);
       box-shadow:0 0 .16rem rgba(141,216,255,.18);
     }
@@ -667,22 +696,15 @@
       box-shadow:0 0 .14rem rgba(255,226,145,.10);
     }
 
-    .skyline-depth-layer.far .urban-building{
-      border-color:rgba(255,255,255,.045);
-      box-shadow:0 0 1.2rem rgba(0,0,0,.20);
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.025),transparent 28%),
-        linear-gradient(180deg,rgba(9,18,41,.74),rgba(2,5,16,.90));
-    }
-
     .greenline{
       background:
         linear-gradient(90deg,transparent 0 12%,rgba(57,255,159,.50) 13% 18%,transparent 19% 81%,rgba(57,255,159,.48) 82% 87%,transparent 88%),
-        linear-gradient(180deg,rgba(16,39,52,.98),rgba(2,8,16,.98));
+        linear-gradient(180deg,#102934 0%,#051120 64%,#020713 100%);
       border-color:rgba(57,255,159,.28);
       box-shadow:
         0 0 var(--b-glow,2.2rem) rgba(57,255,159,.24),
-        inset 0 1px 0 rgba(255,255,255,.10);
+        inset 0 1px 0 rgba(255,255,255,.10),
+        inset 0 -1.4rem 2.8rem rgba(0,0,0,.58);
       animation:greenlineBuildingPulse var(--b-duration,31s) ease-in-out infinite;
       animation-delay:var(--b-delay,-7s);
     }
@@ -735,9 +757,11 @@
     .reunion{
       background:
         linear-gradient(90deg,transparent 0 45%,rgba(206,231,255,.66) 46% 54%,transparent 55%),
-        linear-gradient(180deg,transparent 0 20%,rgba(5,10,22,.96) 21% 100%);
-      border-color:transparent;
-      box-shadow:none;
+        linear-gradient(180deg,#070c18 0%,#030812 100%);
+      border-color:rgba(255,255,255,.08);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.08),
+        inset 0 -1.4rem 2.2rem rgba(0,0,0,.58);
     }
 
     .reunion::before{
@@ -753,7 +777,7 @@
       background:
         radial-gradient(circle at 38% 30%,rgba(255,255,255,.52),transparent 18%),
         radial-gradient(circle at 50% 50%,rgba(255,232,163,.22),transparent 58%),
-        rgba(5,10,22,.95);
+        #050a16;
       box-shadow:
         0 0 .9rem rgba(255,232,163,.20),
         0 0 1.7rem rgba(141,216,255,.12);
@@ -772,15 +796,6 @@
       background:linear-gradient(180deg,rgba(255,255,255,.56),rgba(141,216,255,.25),rgba(255,255,255,.06));
     }
 
-    .foreground{
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.025),transparent 24%),
-        linear-gradient(180deg,rgba(5,9,18,.96),rgba(0,0,0,.99));
-      border-color:rgba(255,255,255,.045);
-      box-shadow:0 -1rem 2.6rem rgba(0,0,0,.42);
-      opacity:.92;
-    }
-
     @keyframes urbanHorizonBreathe{
       0%,100%{opacity:.58;filter:brightness(.94)}
       50%{opacity:.82;filter:brightness(1.08)}
@@ -794,11 +809,11 @@
     @keyframes greenlineBuildingPulse{
       0%,100%{
         filter:brightness(.98);
-        box-shadow:0 0 var(--b-glow,2.3rem) rgba(57,255,159,.22),inset 0 1px 0 rgba(255,255,255,.10);
+        box-shadow:0 0 var(--b-glow,2.3rem) rgba(57,255,159,.22),inset 0 1px 0 rgba(255,255,255,.10),inset 0 -1.4rem 2.8rem rgba(0,0,0,.58);
       }
       44%{
         filter:brightness(var(--b-bright-active,1.18));
-        box-shadow:0 0 var(--b-glow-active,3.6rem) rgba(57,255,159,.44),0 0 1.4rem rgba(243,200,111,.10),inset 0 1px 0 rgba(255,255,255,.12);
+        box-shadow:0 0 var(--b-glow-active,3.6rem) rgba(57,255,159,.44),0 0 1.4rem rgba(243,200,111,.10),inset 0 1px 0 rgba(255,255,255,.12),inset 0 -1.4rem 2.8rem rgba(0,0,0,.58);
       }
       71%{filter:brightness(1.05)}
     }
@@ -910,32 +925,200 @@
       gap:1.05rem;
     }
 
-    .pathway-grid{
+    .compass-stage{
+      position:relative;
+      min-height:clamp(42rem,78vw,58rem);
       display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:.9rem;
-    }
-
-    .pathway-card{
-      display:grid;
-      gap:.5rem;
-      padding:1rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.2rem;
+      place-items:center;
+      overflow:hidden;
+      isolation:isolate;
+      border:1px solid rgba(184,205,255,.13);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
-        radial-gradient(circle at 18% 0%,rgba(36,120,255,.10),transparent 20rem),
-        rgba(255,255,255,.035);
+        radial-gradient(circle at 50% 40%,rgba(141,216,255,.10),transparent 18rem),
+        radial-gradient(circle at 50% 62%,rgba(57,255,159,.08),transparent 24rem),
+        radial-gradient(circle at 50% 77%,rgba(243,200,111,.065),transparent 28rem),
+        linear-gradient(180deg,rgba(1,5,16,.72),rgba(2,6,16,.96));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .pathway-card strong{
-      color:var(--gold);
-      font-size:.78rem;
-      letter-spacing:.12em;
+    .compass-stage::before,
+    .compass-stage::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+      z-index:2;
+    }
+
+    .compass-stage::before{
+      width:min(84%,44rem);
+      height:min(62%,28rem);
+      border:1px solid rgba(243,200,111,.13);
+      box-shadow:0 0 3rem rgba(36,120,255,.12),inset 0 0 30px rgba(141,216,255,.045);
+    }
+
+    .compass-stage::after{
+      width:min(62%,30rem);
+      height:min(42%,19rem);
+      border:1px solid rgba(57,255,159,.14);
+      box-shadow:0 0 3rem rgba(57,255,159,.07);
+    }
+
+    .compass-center,
+    .compass-node{
+      position:absolute;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      color:var(--ink);
+      z-index:4;
+      transition:transform .18s ease,filter .18s ease;
+    }
+
+    .compass-center{
+      left:50%;
+      top:50%;
+      width:clamp(11rem,24vw,16rem);
+      height:clamp(8rem,17vw,11.6rem);
+      transform:translate(-50%,-50%);
+      z-index:6;
+      pointer-events:none;
+    }
+
+    .compass-node{
+      width:clamp(7.15rem,14.2vw,10.4rem);
+      height:clamp(5.25rem,10.4vw,7.65rem);
+      left:var(--x);
+      top:var(--y);
+      transform:translate(-50%,-50%);
+    }
+
+    .compass-node:hover,
+    .compass-node:focus-visible{
+      transform:translate(-50%,-50%) scale(1.055);
+      filter:brightness(1.13) saturate(1.08);
+      outline:none;
+    }
+
+    .gem-core{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      pointer-events:none;
+    }
+
+    .gem-shape{
+      position:absolute;
+      inset:0;
+      clip-path:var(--brand-gem);
+      background:
+        linear-gradient(35deg,transparent 0 22%,rgba(255,255,255,.20) 23% 25%,transparent 26%),
+        radial-gradient(circle at 50% 32%,rgba(255,255,255,.42),transparent 30%),
+        linear-gradient(135deg,rgba(255,248,220,.72),rgba(141,216,255,.44) 30%,rgba(36,120,255,.26) 48%,rgba(243,200,111,.20) 70%,rgba(3,7,19,.94));
+      border:1px solid rgba(235,248,255,.40);
+      box-shadow:0 1.1rem 1.4rem rgba(0,0,0,.35),0 0 1.2rem rgba(57,255,159,.14);
+    }
+
+    .gem-shape::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(90deg,transparent 49%,rgba(255,255,255,.28) 50%,transparent 51%),
+        linear-gradient(0deg,transparent 49%,rgba(255,255,255,.22) 50%,transparent 51%),
+        linear-gradient(35deg,transparent 42%,rgba(255,255,255,.14) 43% 44%,transparent 45%);
+      opacity:.84;
+    }
+
+    .gem-label{
+      position:relative;
+      z-index:3;
+      width:86%;
+      display:grid;
+      place-items:center;
+      gap:.18rem;
+      text-align:center;
+      pointer-events:none;
+      text-shadow:0 3px 14px rgba(0,0,0,.98),0 0 12px rgba(0,28,90,.88),0 0 3px rgba(255,255,255,.58);
+    }
+
+    .gem-label b{
+      display:block;
+      color:rgba(255,244,216,.99);
+      font-size:clamp(.70rem,1.62vw,1rem);
+      font-weight:950;
+      letter-spacing:.065em;
+      line-height:1.02;
       text-transform:uppercase;
     }
 
-    .pathway-card p{
-      font-size:.95rem;
+    .gem-label span{
+      color:rgba(230,238,255,.88);
+      font-size:clamp(.48rem,1.06vw,.66rem);
+      font-weight:950;
+      letter-spacing:.065em;
+      line-height:1.02;
+      text-transform:uppercase;
+    }
+
+    .compass-center .gem-label b{
+      color:var(--gold);
+      font-size:clamp(1.02rem,2.35vw,1.42rem);
+      letter-spacing:.13em;
+    }
+
+    .compass-center .gem-label span{
+      font-size:clamp(.72rem,1.48vw,.94rem);
+      letter-spacing:.085em;
+    }
+
+    .pathway-module{
+      display:grid;
+      gap:.85rem;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.35rem;
+      background:
+        radial-gradient(circle at 18% 0%,rgba(36,120,255,.10),transparent 28rem),
+        radial-gradient(circle at 88% 10%,rgba(57,255,159,.060),transparent 24rem),
+        rgba(255,255,255,.035);
+      overflow:hidden;
+    }
+
+    .pathway-module > p{max-width:980px}
+
+    .pathway-list{
+      display:grid;
+      gap:.55rem;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+
+    .pathway-list li{
+      padding:.68rem .76rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:.9rem;
+      background:rgba(255,255,255,.030);
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.4;
+    }
+
+    .boundary{
+      padding:.8rem .9rem;
+      border:1px solid rgba(255,157,145,.18);
+      border-radius:1rem;
+      color:rgba(255,229,225,.88);
+      background:rgba(255,157,145,.055);
+      font-size:.9rem;
+      line-height:1.42;
+      font-weight:850;
     }
 
     .section-return{
@@ -1037,7 +1220,6 @@
       .nav{justify-content:flex-start}
       .route-menu-panel{left:0;right:auto}
       .construct-grid{grid-template-columns:1fr}
-      .pathway-grid{grid-template-columns:1fr}
     }
 
     @media (max-width:760px){
@@ -1056,6 +1238,35 @@
       .window-tile{
         min-width:.44rem;
         min-height:.50rem;
+      }
+      .compass-stage{
+        min-height:auto;
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:1rem .85rem;
+        padding:1.2rem 1rem;
+        place-items:center;
+      }
+      .compass-stage::before,
+      .compass-stage::after{display:none}
+      .compass-center,
+      .compass-node{
+        position:relative;
+        left:auto!important;
+        top:auto!important;
+        transform:none;
+      }
+      .compass-node:hover,
+      .compass-node:focus-visible{transform:scale(1.05)}
+      .compass-center{
+        grid-column:1 / -1;
+        width:9.8rem;
+        height:7.1rem;
+        order:-2;
+      }
+      .compass-node{
+        width:7.45rem;
+        height:5.45rem;
       }
       .section-return{display:grid;grid-template-columns:1fr;justify-content:stretch}
       .return-orbit,.return-frontier{width:100%}
@@ -1126,77 +1337,77 @@
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Dallas-inspired touch occupancy skyline · Frontier Urban Simulation</div>
+        <div class="kicker">Dallas-inspired opaque skyline · Gem Orbit · Frontier Urban Simulation</div>
 
         <h1 id="page-title">The skyline is the surface. The load is the city.</h1>
 
         <p class="lead">
-          Urban Construct turns the night skyline into a city-system field. Each building carries its own local light chronology, and selected windows respond to touch.
+          Urban Construct turns the night skyline into a city-system field. Each building carries solid material, local light chronology, and selected windows that respond to touch.
         </p>
 
         <div class="quote">
-          Tap a window to change its state. Programmed occupancy continues around the manual choices for the current session.
+          Tap a window to change its state. The building program continues around your session choices.
         </div>
 
         <div class="actions">
           <a class="button gold" href="#urban-construct-field">Inspect the Construct Field</a>
-          <a class="button" href="/explore/frontier/">Return to Frontier</a>
           <a class="button green" href="#urban-orbit">Choose a Pathway</a>
+          <a class="button" href="/explore/frontier/">Return to Frontier</a>
           <a class="button" href="#kill-conditions">Open Kill Conditions</a>
         </div>
       </section>
 
       <section class="panel construct-visual" id="urban-construct-field" aria-labelledby="construct-title">
-        <div class="kicker">Urban Construct Field · Touch-activated windows</div>
+        <div class="kicker">Urban Construct Field · Opaque building material</div>
 
         <div class="construct-copy">
-          <h2 id="construct-title">Each building owns its own light program. Each touched window carries your session choice.</h2>
+          <h2 id="construct-title">The buildings are solid objects. The windows are touchable state points.</h2>
           <p>
-            The visual baseline stays calm and architectural. Office, residential, mixed-use, quiet, far, and foreground buildings each run their own programmed occupancy rhythm. The green tower keeps its Dallas-like vertical grid and receives an ephemeral green halo.
+            The skyline uses opaque façade bodies, depth layers, and controlled haze behind the structures. Office, residential, mixed-use, quiet, far, and foreground buildings each carry their own light program. The green tower keeps its Dallas-like vertical grid and ephemeral halo.
           </p>
         </div>
 
         <div class="construct-grid">
-          <div class="urban-skyline-stage construct-skyline" data-urban-stage aria-label="Interactive Dallas-inspired skyline with touch-activated windows">
+          <div class="urban-skyline-stage construct-skyline" data-urban-stage aria-label="Interactive Dallas-inspired skyline with opaque buildings and touch-activated windows">
             <div class="skyline-depth-layer far">
-              <span class="urban-building city-building far-building" data-building="b08" style="--b-left:3%;--b-bottom:23%;--b-width:3rem;--b-height:8rem;--b-haze:.42;--b-window-x:.95rem;--b-window-y:1.05rem;--b-delay:-2s;--b-duration:19s;--pane-w:.28rem;--pane-h:.42rem;">
+              <span class="urban-building city-building far-building" data-building="b08" style="--b-left:3%;--b-bottom:23%;--b-width:3rem;--b-height:8rem;--b-window-x:.95rem;--b-window-y:1.05rem;--b-delay:-2s;--b-duration:19s;--pane-w:.28rem;--pane-h:.42rem;">
                 <button class="window-tile" data-address="02-04" aria-label="Far inherited window 02-04" style="--x:26;--y:21"></button>
                 <button class="window-tile" data-address="05-07" aria-label="Far inherited window 05-07" style="--x:52;--y:38"></button>
                 <button class="window-tile" data-address="07-10" aria-label="Far inherited window 07-10" style="--x:34;--y:61"></button>
               </span>
 
-              <span class="urban-building city-building far-building step" data-building="b08" style="--b-left:11%;--b-bottom:22%;--b-width:4.2rem;--b-height:10.4rem;--b-haze:.46;--b-window-x:.86rem;--b-window-y:1.06rem;--b-delay:-5s;--b-duration:23s;--pane-w:.30rem;--pane-h:.44rem;">
+              <span class="urban-building city-building far-building step" data-building="b08" style="--b-left:11%;--b-bottom:22%;--b-width:4.2rem;--b-height:10.4rem;--b-window-x:.86rem;--b-window-y:1.06rem;--b-delay:-5s;--b-duration:23s;--pane-w:.30rem;--pane-h:.44rem;">
                 <button class="window-tile" data-address="03-04" aria-label="Far step window 03-04" style="--x:22;--y:20"></button>
                 <button class="window-tile" data-address="06-06" aria-label="Far step window 06-06" style="--x:48;--y:32"></button>
                 <button class="window-tile" data-address="09-09" aria-label="Far step window 09-09" style="--x:68;--y:52"></button>
                 <button class="window-tile" data-address="04-12" aria-label="Far step window 04-12" style="--x:30;--y:72"></button>
               </span>
 
-              <span class="urban-building city-building quiet roof" data-building="b07" style="--b-left:22%;--b-bottom:22%;--b-width:3.7rem;--b-height:9rem;--b-haze:.38;--b-window-x:.98rem;--b-window-y:1.12rem;--b-delay:-11s;--b-duration:27s;--pane-w:.30rem;--pane-h:.44rem;">
+              <span class="urban-building city-building quiet roof" data-building="b07" style="--b-left:22%;--b-bottom:22%;--b-width:3.7rem;--b-height:9rem;--b-window-x:.98rem;--b-window-y:1.12rem;--b-delay:-11s;--b-duration:27s;--pane-w:.30rem;--pane-h:.44rem;">
                 <button class="window-tile" data-address="04-05" aria-label="Quiet roof window 04-05" style="--x:38;--y:28"></button>
                 <button class="window-tile" data-address="07-08" aria-label="Quiet roof window 07-08" style="--x:58;--y:49"></button>
                 <button class="window-tile" data-address="03-11" aria-label="Quiet roof window 03-11" style="--x:30;--y:69"></button>
               </span>
 
-              <span class="urban-building city-building far-building" data-building="b08" style="--b-left:69%;--b-bottom:22%;--b-width:4.4rem;--b-height:10.2rem;--b-haze:.42;--b-window-x:.92rem;--b-window-y:1.08rem;--b-delay:-8s;--b-duration:21s;--pane-w:.30rem;--pane-h:.44rem;">
+              <span class="urban-building city-building far-building" data-building="b08" style="--b-left:69%;--b-bottom:22%;--b-width:4.4rem;--b-height:10.2rem;--b-window-x:.92rem;--b-window-y:1.08rem;--b-delay:-8s;--b-duration:21s;--pane-w:.30rem;--pane-h:.44rem;">
                 <button class="window-tile" data-address="02-04" aria-label="Far right window 02-04" style="--x:24;--y:22"></button>
                 <button class="window-tile" data-address="06-07" aria-label="Far right window 06-07" style="--x:52;--y:42"></button>
                 <button class="window-tile" data-address="09-11" aria-label="Far right window 09-11" style="--x:72;--y:66"></button>
               </span>
 
-              <span class="urban-building city-building civic step" data-building="b07" style="--b-left:82%;--b-bottom:22%;--b-width:3.6rem;--b-height:9.3rem;--b-haze:.36;--b-window-x:.92rem;--b-window-y:1.14rem;--b-delay:-13s;--b-duration:26s;--pane-w:.30rem;--pane-h:.44rem;">
+              <span class="urban-building city-building civic step" data-building="b07" style="--b-left:82%;--b-bottom:22%;--b-width:3.6rem;--b-height:9.3rem;--b-window-x:.92rem;--b-window-y:1.14rem;--b-delay:-13s;--b-duration:26s;--pane-w:.30rem;--pane-h:.44rem;">
                 <button class="window-tile" data-address="03-05" aria-label="Civic window 03-05" style="--x:30;--y:30"></button>
                 <button class="window-tile" data-address="07-08" aria-label="Civic window 07-08" style="--x:60;--y:51"></button>
               </span>
 
-              <span class="urban-building city-building quiet roof" data-building="b07" style="--b-left:92%;--b-bottom:22%;--b-width:3.2rem;--b-height:8.5rem;--b-haze:.34;--b-window-x:1rem;--b-window-y:1.2rem;--b-delay:-17s;--b-duration:28s;--pane-w:.28rem;--pane-h:.42rem;">
+              <span class="urban-building city-building quiet roof" data-building="b07" style="--b-left:92%;--b-bottom:22%;--b-width:3.2rem;--b-height:8.5rem;--b-window-x:1rem;--b-window-y:1.2rem;--b-delay:-17s;--b-duration:28s;--pane-w:.28rem;--pane-h:.42rem;">
                 <button class="window-tile" data-address="03-05" aria-label="Quiet far edge window 03-05" style="--x:36;--y:35"></button>
                 <button class="window-tile" data-address="06-09" aria-label="Quiet far edge window 06-09" style="--x:58;--y:64"></button>
               </span>
             </div>
 
             <div class="skyline-depth-layer mid">
-              <span class="urban-building city-building office" data-building="b01" style="--b-left:4%;--b-bottom:8%;--b-width:3.5rem;--b-height:9.8rem;--b-haze:.86;--b-window-x:.72rem;--b-window-y:.86rem;--b-delay:-2s;--b-duration:11s;--pane-w:.28rem;--pane-h:.46rem;">
+              <span class="urban-building city-building office" data-building="b01" style="--b-left:4%;--b-bottom:8%;--b-width:3.5rem;--b-height:9.8rem;--b-window-x:.72rem;--b-window-y:.86rem;--b-delay:-2s;--b-duration:11s;--pane-w:.28rem;--pane-h:.46rem;">
                 <button class="window-tile" data-address="03-03" aria-label="Office window 03-03" style="--x:25;--y:18"></button>
                 <button class="window-tile" data-address="07-04" aria-label="Office window 07-04" style="--x:56;--y:24"></button>
                 <button class="window-tile" data-address="04-07" aria-label="Office window 04-07" style="--x:32;--y:43"></button>
@@ -1204,7 +1415,7 @@
                 <button class="window-tile" data-address="03-11" aria-label="Office window 03-11" style="--x:25;--y:69"></button>
               </span>
 
-              <span class="urban-building city-building residential step" data-building="b02" style="--b-left:13%;--b-bottom:8%;--b-width:4.6rem;--b-height:13.6rem;--b-haze:.94;--b-window-x:.66rem;--b-window-y:.80rem;--b-delay:-7s;--b-duration:17s;--pane-w:.30rem;--pane-h:.48rem;">
+              <span class="urban-building city-building residential step" data-building="b02" style="--b-left:13%;--b-bottom:8%;--b-width:4.6rem;--b-height:13.6rem;--b-window-x:.66rem;--b-window-y:.80rem;--b-delay:-7s;--b-duration:17s;--pane-w:.30rem;--pane-h:.48rem;">
                 <button class="window-tile" data-address="03-03" aria-label="Residential window 03-03" style="--x:22;--y:15"></button>
                 <button class="window-tile" data-address="06-04" aria-label="Residential window 06-04" style="--x:44;--y:22"></button>
                 <button class="window-tile" data-address="09-05" aria-label="Residential window 09-05" style="--x:66;--y:29"></button>
@@ -1214,7 +1425,7 @@
                 <button class="window-tile" data-address="07-12" aria-label="Residential window 07-12" style="--x:52;--y:76"></button>
               </span>
 
-              <span class="urban-building city-building mixed roof" data-building="b03" style="--b-left:25%;--b-bottom:8%;--b-width:3.8rem;--b-height:11.2rem;--b-haze:.88;--b-window-x:.78rem;--b-window-y:.88rem;--b-delay:-5s;--b-duration:13s;--pane-w:.30rem;--pane-h:.46rem;">
+              <span class="urban-building city-building mixed roof" data-building="b03" style="--b-left:25%;--b-bottom:8%;--b-width:3.8rem;--b-height:11.2rem;--b-window-x:.78rem;--b-window-y:.88rem;--b-delay:-5s;--b-duration:13s;--pane-w:.30rem;--pane-h:.46rem;">
                 <button class="window-tile" data-address="04-04" aria-label="Mixed-use window 04-04" style="--x:30;--y:23"></button>
                 <button class="window-tile" data-address="07-05" aria-label="Mixed-use window 07-05" style="--x:58;--y:30"></button>
                 <button class="window-tile" data-address="03-08" aria-label="Mixed-use window 03-08" style="--x:24;--y:51"></button>
@@ -1222,9 +1433,9 @@
                 <button class="window-tile" data-address="08-12" aria-label="Mixed-use window 08-12" style="--x:68;--y:76"></button>
               </span>
 
-              <span class="urban-building reunion" style="--b-left:37%;--b-bottom:8%;--b-width:4.4rem;--b-height:18.8rem;--b-haze:.96;--b-delay:-3s;--b-duration:19s;"></span>
+              <span class="urban-building reunion" style="--b-left:37%;--b-bottom:8%;--b-width:4.4rem;--b-height:18.8rem;--b-delay:-3s;--b-duration:19s;"></span>
 
-              <span class="urban-building city-building office" data-building="b05" style="--b-left:49%;--b-bottom:8%;--b-width:4.9rem;--b-height:15.3rem;--b-haze:.94;--b-window-x:.62rem;--b-window-y:.76rem;--b-delay:-11s;--b-duration:23s;--pane-w:.26rem;--pane-h:.44rem;">
+              <span class="urban-building city-building office" data-building="b05" style="--b-left:49%;--b-bottom:8%;--b-width:4.9rem;--b-height:15.3rem;--b-window-x:.62rem;--b-window-y:.76rem;--b-delay:-11s;--b-duration:23s;--pane-w:.26rem;--pane-h:.44rem;">
                 <button class="window-tile" data-address="03-03" aria-label="Tall office window 03-03" style="--x:20;--y:14"></button>
                 <button class="window-tile" data-address="06-04" aria-label="Tall office window 06-04" style="--x:40;--y:20"></button>
                 <button class="window-tile" data-address="09-05" aria-label="Tall office window 09-05" style="--x:62;--y:26"></button>
@@ -1234,9 +1445,9 @@
                 <button class="window-tile" data-address="03-12" aria-label="Tall office window 03-12" style="--x:20;--y:72"></button>
               </span>
 
-              <span class="urban-building greenline" style="--b-left:63%;--b-bottom:8%;--b-width:4.3rem;--b-height:23.5rem;--b-haze:.98;--b-window-x:.58rem;--b-window-y:.72rem;--b-glow:2.3rem;--b-glow-active:3.6rem;--b-delay:-13s;--b-duration:31s;--a-cycle:37s;"></span>
+              <span class="urban-building greenline" style="--b-left:63%;--b-bottom:8%;--b-width:4.3rem;--b-height:23.5rem;--b-window-x:.58rem;--b-window-y:.72rem;--b-glow:2.3rem;--b-glow-active:3.6rem;--b-delay:-13s;--b-duration:31s;--a-cycle:37s;"></span>
 
-              <span class="urban-building city-building office roof" data-building="b06" style="--b-left:76%;--b-bottom:8%;--b-width:4.6rem;--b-height:14.4rem;--b-haze:.90;--b-window-x:.72rem;--b-window-y:.84rem;--b-delay:-17s;--b-duration:19s;--pane-w:.30rem;--pane-h:.48rem;">
+              <span class="urban-building city-building office roof" data-building="b06" style="--b-left:76%;--b-bottom:8%;--b-width:4.6rem;--b-height:14.4rem;--b-window-x:.72rem;--b-window-y:.84rem;--b-delay:-17s;--b-duration:19s;--pane-w:.30rem;--pane-h:.48rem;">
                 <button class="window-tile" data-address="03-04" aria-label="Right office window 03-04" style="--x:22;--y:20"></button>
                 <button class="window-tile" data-address="07-05" aria-label="Right office window 07-05" style="--x:52;--y:28"></button>
                 <button class="window-tile" data-address="10-06" aria-label="Right office window 10-06" style="--x:74;--y:35"></button>
@@ -1245,7 +1456,7 @@
                 <button class="window-tile" data-address="03-13" aria-label="Right office window 03-13" style="--x:22;--y:82"></button>
               </span>
 
-              <span class="urban-building city-building quiet step" data-building="b07" style="--b-left:88%;--b-bottom:8%;--b-width:4.1rem;--b-height:11.7rem;--b-haze:.86;--b-window-x:.82rem;--b-window-y:.94rem;--b-delay:-19s;--b-duration:29s;--pane-w:.28rem;--pane-h:.44rem;">
+              <span class="urban-building city-building quiet step" data-building="b07" style="--b-left:88%;--b-bottom:8%;--b-width:4.1rem;--b-height:11.7rem;--b-window-x:.82rem;--b-window-y:.94rem;--b-delay:-19s;--b-duration:29s;--pane-w:.28rem;--pane-h:.44rem;">
                 <button class="window-tile" data-address="04-04" aria-label="Quiet right window 04-04" style="--x:32;--y:24"></button>
                 <button class="window-tile" data-address="08-07" aria-label="Quiet right window 08-07" style="--x:64;--y:45"></button>
                 <button class="window-tile" data-address="05-11" aria-label="Quiet right window 05-11" style="--x:40;--y:72"></button>
@@ -1253,19 +1464,19 @@
             </div>
 
             <div class="skyline-depth-layer front">
-              <span class="urban-building city-building foreground" data-building="b09" style="--b-left:-4%;--b-bottom:0;--b-width:18rem;--b-height:7rem;--b-haze:.96;--b-window-x:.9rem;--b-window-y:1rem;--b-delay:-1s;--b-duration:29s;--pane-w:.28rem;--pane-h:.40rem;">
+              <span class="urban-building city-building foreground" data-building="b09" style="--b-left:-4%;--b-bottom:0;--b-width:18rem;--b-height:7rem;--b-window-x:.9rem;--b-window-y:1rem;--b-delay:-1s;--b-duration:29s;--pane-w:.28rem;--pane-h:.40rem;">
                 <button class="window-tile" data-address="05-04" aria-label="Foreground left window 05-04" style="--x:18;--y:28"></button>
                 <button class="window-tile" data-address="10-07" aria-label="Foreground left window 10-07" style="--x:38;--y:50"></button>
                 <button class="window-tile" data-address="14-09" aria-label="Foreground left window 14-09" style="--x:58;--y:66"></button>
               </span>
 
-              <span class="urban-building city-building foreground step" data-building="b09" style="--b-left:28%;--b-bottom:0;--b-width:25rem;--b-height:6.5rem;--b-haze:.96;--b-window-x:.84rem;--b-window-y:.92rem;--b-delay:-4s;--b-duration:34s;--pane-w:.28rem;--pane-h:.40rem;">
+              <span class="urban-building city-building foreground step" data-building="b09" style="--b-left:28%;--b-bottom:0;--b-width:25rem;--b-height:6.5rem;--b-window-x:.84rem;--b-window-y:.92rem;--b-delay:-4s;--b-duration:34s;--pane-w:.28rem;--pane-h:.40rem;">
                 <button class="window-tile" data-address="04-05" aria-label="Foreground center window 04-05" style="--x:16;--y:40"></button>
                 <button class="window-tile" data-address="09-06" aria-label="Foreground center window 09-06" style="--x:36;--y:50"></button>
                 <button class="window-tile" data-address="15-07" aria-label="Foreground center window 15-07" style="--x:62;--y:58"></button>
               </span>
 
-              <span class="urban-building city-building foreground" data-building="b09" style="--b-left:67%;--b-bottom:0;--b-width:23rem;--b-height:7.9rem;--b-haze:.96;--b-window-x:.88rem;--b-window-y:.96rem;--b-delay:-7s;--b-duration:37s;--pane-w:.28rem;--pane-h:.40rem;">
+              <span class="urban-building city-building foreground" data-building="b09" style="--b-left:67%;--b-bottom:0;--b-width:23rem;--b-height:7.9rem;--b-window-x:.88rem;--b-window-y:.96rem;--b-delay:-7s;--b-duration:37s;--pane-w:.28rem;--pane-h:.40rem;">
                 <button class="window-tile" data-address="06-04" aria-label="Foreground right window 06-04" style="--x:22;--y:30"></button>
                 <button class="window-tile" data-address="11-07" aria-label="Foreground right window 11-07" style="--x:44;--y:52"></button>
                 <button class="window-tile" data-address="16-09" aria-label="Foreground right window 16-09" style="--x:68;--y:68"></button>
@@ -1280,9 +1491,9 @@
               <li><span class="key-mark" style="--key-color:var(--green)"></span><span><b>Green edge</b> means active city-system continuity.</span></li>
               <li><span class="key-mark" style="--key-color:var(--blue)"></span><span><b>Blue haze</b> means distance and inherited infrastructure.</span></li>
               <li><span class="key-mark dark"></span><span><b>Dark foreground</b> means ground-level hidden systems.</span></li>
-              <li><span class="key-mark square" style="--key-color:rgba(255,244,216,.82)"></span><span><b>One building, one map</b> means each building owns its light program.</span></li>
+              <li><span class="key-mark square" style="--key-color:rgba(255,244,216,.82)"></span><span><b>Opaque buildings</b> mean solid physical city objects.</span></li>
               <li><span class="key-mark line" style="--key-color:var(--gold)"></span><span><b>Touch windows</b> means the visitor can change individual panes.</span></li>
-              <li><span class="key-mark" style="--key-color:rgba(57,255,159,.72)"></span><span><b>Greenline tower</b> keeps the Dallas-like vertical grid and receives an ephemeral halo.</span></li>
+              <li><span class="key-mark" style="--key-color:rgba(57,255,159,.72)"></span><span><b>Greenline tower</b> keeps the Dallas-like vertical grid and halo.</span></li>
             </ul>
           </aside>
         </div>
@@ -1293,107 +1504,220 @@
       </section>
 
       <section class="panel section" aria-labelledby="field-title" id="urban-orbit">
-        <div class="kicker">Urban field · Active city-system pathways</div>
-        <h2 id="field-title">A city is proven by whether its systems can carry people under pressure.</h2>
+        <div class="kicker">Urban field · Gem pathway orbit</div>
+        <h2 id="field-title">Choose the pathway first. Inspect the city-system meaning inside the pathway.</h2>
 
-        <div class="pathway-grid">
-          <a class="pathway-card" href="#audralia-urban"><strong>Audralia Urban</strong><p>Story-world simulation and learning field.</p></a>
-          <a class="pathway-card" href="#city-form"><strong>City Form</strong><p>Shape, access, district spacing, and emergency movement.</p></a>
-          <a class="pathway-card" href="#housing"><strong>Housing</strong><p>Stability, affordability, safety, and utility support.</p></a>
-          <a class="pathway-card" href="#mobility"><strong>Mobility</strong><p>Access to work, food, care, school, service, and safety.</p></a>
-          <a class="pathway-card" href="#water"><strong>Water</strong><p>Quality, pressure, storage, drainage, reuse, and trust.</p></a>
-          <a class="pathway-card" href="#energy"><strong>Energy</strong><p>Daily load, critical load, reserve, and recovery continuity.</p></a>
-          <a class="pathway-card" href="#waste"><strong>Waste</strong><p>Collection, capture, processing, inventory, and closure.</p></a>
-          <a class="pathway-card" href="#food"><strong>Food</strong><p>Access, affordability, cold storage, supply, and continuity.</p></a>
-          <a class="pathway-card" href="#public-safety"><strong>Public Safety</strong><p>Prevention, response, lighting, health, fire, and trust.</p></a>
-          <a class="pathway-card" href="#governance"><strong>Governance</strong><p>Authority, execution, budget, responsibility, and audit.</p></a>
-          <a class="pathway-card" href="#resilience"><strong>Resilience</strong><p>Reserve capacity, recovery time, and cascade visibility.</p></a>
-          <a class="pathway-card" href="#kill-conditions"><strong>Kill Conditions</strong><p>Stop rules for appearance, load, receipt, and accountability.</p></a>
+        <div class="compass-stage" aria-label="Urban pathway gem orbit">
+          <div class="compass-center" aria-hidden="true">
+            <span class="gem-core"><span class="gem-shape"></span></span>
+            <span class="gem-label"><b>Urban</b><span>Construct</span></span>
+          </div>
+
+          <a class="compass-node" style="--x:50%;--y:11%;" href="#audralia-urban"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Audralia</b><span>Urban</span></span></a>
+          <a class="compass-node" style="--x:73%;--y:17%;" href="#city-form"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>City</b><span>Form</span></span></a>
+          <a class="compass-node" style="--x:87%;--y:34%;" href="#housing"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Housing</b><span>Stability</span></span></a>
+          <a class="compass-node" style="--x:87%;--y:62%;" href="#mobility"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Mobility</b><span>Access</span></span></a>
+          <a class="compass-node" style="--x:73%;--y:80%;" href="#water"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Water</b><span>Security</span></span></a>
+          <a class="compass-node" style="--x:50%;--y:88%;" href="#energy"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Energy</b><span>Continuity</span></span></a>
+          <a class="compass-node" style="--x:27%;--y:80%;" href="#waste"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Waste</b><span>Closure</span></span></a>
+          <a class="compass-node" style="--x:13%;--y:62%;" href="#food"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Food</b><span>Access</span></span></a>
+          <a class="compass-node" style="--x:13%;--y:34%;" href="#public-safety"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Public</b><span>Safety</span></span></a>
+          <a class="compass-node" style="--x:27%;--y:17%;" href="#governance"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Governance</b><span>Account</span></span></a>
+          <a class="compass-node" style="--x:34%;--y:6%;" href="#resilience"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Resilience</b><span>Recovery</span></span></a>
+          <a class="compass-node" style="--x:66%;--y:6%;" href="#kill-conditions"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Kill</b><span>Conditions</span></span></a>
         </div>
       </section>
 
       <section class="panel section" id="audralia-urban">
         <div class="kicker">Pathway One</div>
         <h2>Audralia Urban</h2>
-        <p>Audralia turns the urban construct into a living city simulation. The visitor sees shelter, movement, water, energy, waste closure, food access, safety, and governance operating together.</p>
-        <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        <article class="pathway-module">
+          <h3>Audralia turns the urban construct into a living city simulation before a real-world claim is made.</h3>
+          <p>Audralia lets the visitor see shelter, movement, water, energy, waste closure, food access, safety, and governance operating together.</p>
+          <ul class="pathway-list">
+            <li>The city is treated as a human survival system.</li>
+            <li>Each district depends on multiple support systems.</li>
+            <li>Simulation teaches pressure, timing, and dependency.</li>
+          </ul>
+          <div class="boundary">Boundary: Audralia may simulate urban life; real-world deployment belongs to separate validation.</div>
+          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        </article>
       </section>
 
       <section class="panel section" id="city-form">
         <div class="kicker">Pathway Two</div>
         <h2>City Form</h2>
-        <p>City form controls access, distance, pressure, crowding, service delivery, public space, utility corridors, and emergency response.</p>
-        <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        <article class="pathway-module">
+          <h3>City form determines whether people, resources, services, and risk can move coherently.</h3>
+          <p>A city is more than buildings. Its shape controls access, distance, pressure, crowding, service delivery, and emergency response.</p>
+          <ul class="pathway-list">
+            <li>Buildings establish density; access establishes usability.</li>
+            <li>Distance and service radius shape lived experience.</li>
+            <li>Public space and emergency movement carry the form under stress.</li>
+          </ul>
+          <div class="boundary">Boundary: visual density must be measured with livability, access, and emergency movement.</div>
+          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        </article>
       </section>
 
       <section class="panel section" id="housing">
         <div class="kicker">Pathway Three</div>
         <h2>Housing</h2>
-        <p>Housing links dignity, affordability, utility demand, neighborhood stability, maintenance, safety, and public trust.</p>
-        <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        <article class="pathway-module">
+          <h3>Housing is the first urban stability layer.</h3>
+          <p>A city becomes personal where people sleep, raise families, build memory, and depend on utilities, affordability, maintenance, and safety.</p>
+          <ul class="pathway-list">
+            <li>Housing capacity carries people only when access, safety, and utilities are present.</li>
+            <li>Affordability and displacement belong inside the readiness map.</li>
+            <li>Housing pressure can destabilize mobility, food, safety, and trust.</li>
+          </ul>
+          <div class="boundary">Boundary: housing readiness requires units, safety, affordability, access, and utility support.</div>
+          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        </article>
       </section>
 
       <section class="panel section" id="mobility">
         <div class="kicker">Pathway Four</div>
         <h2>Mobility</h2>
-        <p>Mobility measures whether people, goods, services, and emergency response can reach what life requires.</p>
-        <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        <article class="pathway-module">
+          <h3>Mobility decides whether a city can function without trapping its people.</h3>
+          <p>People must be able to reach work, food, school, services, community, emergency help, and safety.</p>
+          <ul class="pathway-list">
+            <li>Pedestrian, transit, freight, road, and service access all matter.</li>
+            <li>Emergency routes must remain available during stress events.</li>
+            <li>Mobility success is measured by reachable needs, not road presence alone.</li>
+          </ul>
+          <div class="boundary">Boundary: mobility readiness requires access, time, capacity, and emergency movement.</div>
+          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        </article>
       </section>
 
       <section class="panel section" id="water">
         <div class="kicker">Pathway Five</div>
         <h2>Water</h2>
-        <p>Urban water carries source quality, pressure, storage, treatment, drainage, reuse, and public confidence.</p>
-        <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        <article class="pathway-module">
+          <h3>Urban water must support people before, during, and after pressure events.</h3>
+          <p>A city depends on clean water, pressure, storage, treatment, drainage, reuse, and public confidence.</p>
+          <ul class="pathway-list">
+            <li>Water supports homes, hospitals, food, safety, sanitation, and firefighting.</li>
+            <li>Pressure events reveal weak storage and distribution systems.</li>
+            <li>Reuse and storage require bounded water-quality rules.</li>
+          </ul>
+          <div class="boundary">Boundary: water security requires access, quality, pressure, storage, and failure planning.</div>
+          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        </article>
       </section>
 
       <section class="panel section" id="energy">
         <div class="kicker">Pathway Six</div>
         <h2>Energy</h2>
-        <p>Urban energy supports homes, hospitals, water systems, communications, transit, food storage, safety, and recovery continuity.</p>
-        <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        <article class="pathway-module">
+          <h3>Urban energy must support daily life and emergency continuity.</h3>
+          <p>Homes, hospitals, communications, water systems, transit, food storage, and safety all depend on energy continuity.</p>
+          <ul class="pathway-list">
+            <li>Critical load continuity carries survival systems through outages.</li>
+            <li>Storage and backup must map to real demand.</li>
+            <li>Energy failure cascades into water, food, safety, mobility, and governance.</li>
+          </ul>
+          <div class="boundary">Boundary: energy readiness requires critical-load continuity, reserve, and recovery timing.</div>
+          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        </article>
       </section>
 
       <section class="panel section" id="waste">
         <div class="kicker">Pathway Seven</div>
         <h2>Waste</h2>
-        <p>Urban waste requires capture, processing, inventory, byproduct accounting, discharge control, and closure receipts.</p>
-        <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        <article class="pathway-module">
+          <h3>A city is clean only when material remains accountable after collection.</h3>
+          <p>Urban waste becomes honest when the city can account for capture, processing, inventory, discharge, byproducts, and closure.</p>
+          <ul class="pathway-list">
+            <li>Collection is the visible start of the waste path.</li>
+            <li>Processing and byproducts require accountable routing.</li>
+            <li>Closure requires receipts beyond the curb.</li>
+          </ul>
+          <div class="boundary">Boundary: waste readiness requires capture, accounting, processing, and closure receipts.</div>
+          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        </article>
       </section>
 
       <section class="panel section" id="food">
         <div class="kicker">Pathway Eight</div>
         <h2>Food</h2>
-        <p>Food access connects transportation, energy, refrigeration, land use, local supply, affordability, and emergency planning.</p>
-        <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        <article class="pathway-module">
+          <h3>Food access determines whether urban life remains stable under pressure.</h3>
+          <p>A city depends on affordable, reachable, reliable, nutritious food and the energy, transit, refrigeration, and supply paths that carry it.</p>
+          <ul class="pathway-list">
+            <li>Food access links distance, affordability, supply, and mobility.</li>
+            <li>Cold storage depends on energy continuity.</li>
+            <li>Emergency food planning belongs inside city resilience.</li>
+          </ul>
+          <div class="boundary">Boundary: food readiness requires presence, affordability, reachability, supply, and storage continuity.</div>
+          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        </article>
       </section>
 
       <section class="panel section" id="public-safety">
         <div class="kicker">Pathway Nine</div>
         <h2>Public Safety</h2>
-        <p>Public safety includes prevention, response, lighting, emergency access, health care, fire readiness, disaster planning, and trust.</p>
-        <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        <article class="pathway-module">
+          <h3>Public safety is the city’s ability to protect people before disorder becomes collapse.</h3>
+          <p>Safety includes lighting, emergency response, health access, fire readiness, infrastructure safety, disaster planning, and public trust.</p>
+          <ul class="pathway-list">
+            <li>Prevention and response work together.</li>
+            <li>Trust is a public-safety asset.</li>
+            <li>Hazard exposure should be visible before crisis.</li>
+          </ul>
+          <div class="boundary">Boundary: public safety requires trust, response, prevention, reachability, and hazard visibility.</div>
+          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        </article>
       </section>
 
       <section class="panel section" id="governance">
         <div class="kicker">Pathway Ten</div>
         <h2>Governance</h2>
-        <p>Governance turns urban systems into accountable decisions through authority, execution, budget, responsibility, and audit.</p>
-        <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        <article class="pathway-module">
+          <h3>Governance turns urban systems into accountable decisions.</h3>
+          <p>Cities need visible responsibility, rule authority, execution paths, budget alignment, public obligation, and audit records.</p>
+          <ul class="pathway-list">
+            <li>Rules need responsible actors.</li>
+            <li>Plans need execution paths.</li>
+            <li>Public trust depends on accountability.</li>
+          </ul>
+          <div class="boundary">Boundary: governance readiness requires authority, execution, accountability, budget, and audit.</div>
+          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        </article>
       </section>
 
       <section class="panel section" id="resilience">
         <div class="kicker">Pathway Eleven</div>
         <h2>Resilience</h2>
-        <p>Resilience measures reserve capacity, recovery time, dependency maps, emergency planning, and visible cascade control.</p>
-        <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        <article class="pathway-module">
+          <h3>Resilience is the city’s ability to absorb pressure while telling the truth about failure.</h3>
+          <p>A resilient city prepares for outage, flood, heat, supply disruption, contamination, violence, displacement, and system overload.</p>
+          <ul class="pathway-list">
+            <li>Reserve capacity must be real and located.</li>
+            <li>Recovery time must be measured.</li>
+            <li>Failure cascades should be visible before crisis.</li>
+          </ul>
+          <div class="boundary">Boundary: resilience readiness requires tested reserve, recovery timing, dependency mapping, and visible cascade control.</div>
+          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        </article>
       </section>
 
       <section class="panel section" id="kill-conditions">
         <div class="kicker">Pathway Twelve</div>
         <h2>Kill Conditions</h2>
-        <p>The urban claim stops when appearance outruns livability, infrastructure is assumed, receipts are missing, or accountability cannot carry the load.</p>
-        <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        <article class="pathway-module">
+          <h3>The urban claim stops when appearance outruns livability.</h3>
+          <p>The construct must pause when people cannot live, move, drink, power, eat, discharge waste, stay safe, or trust governance inside it.</p>
+          <ul class="pathway-list">
+            <li>Appearance must remain subordinate to livability.</li>
+            <li>Infrastructure assumptions require receipts.</li>
+            <li>Audit contradictions require resolution before readiness claims.</li>
+          </ul>
+          <div class="boundary">Boundary: stop-rule readiness requires load proof, route proof, receipt proof, and accountability proof.</div>
+          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        </article>
       </section>
 
       <section class="final-band" id="final-lock" aria-label="Urban final lock">
@@ -1414,34 +1738,37 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_URBAN_TOUCH_ACTIVATED_OCCUPANCY_LATTICE_TNT_v10
+FRONTIER_URBAN_OPAQUE_BUILDING_AND_GEM_ORBIT_RELAYER_TNT_v11
 route=/explore/frontier/urban/
 page=frontier_urban_construct
 html=/explore/frontier/urban/index.html
 runtime_scope=css_plus_touch_controller
-visual_baseline=v9_preserved
+visual_baseline=v11_relater_active
+opaque_building_material=active
+solid_city_silhouette=active
+touch_window_activation=active
+delegated_touch_listener=active
+manual_window_override=session
+programmed_occupancy_sequences=active
 per_building_lattice=active
 building_local_scope=16x16
 building_local_addresses=256
 one_building_one_occupancy_map=active
 per_building_programmed_lights=active
 per_building_unique_chronology=active
-touch_window_activation=active
-delegated_touch_listener=active
-manual_window_override=session
-programmed_occupancy_sequences=active
 greenline_ephemeral_glow=active
 greenline_prior_condition=preserved
+gem_orbit=active
 dropdown_green_glow=active
 route_menu_component=details_summary_css
 dual_return_under_every_pathway=active
-zero_external_dependencies=active
-deploy_marker=FRONTIER_URBAN_TOUCH_ACTIVATED_OCCUPANCY_LATTICE_DEPLOY_MARKER_v10
+external_dependency_scope=none
+deploy_marker=FRONTIER_URBAN_OPAQUE_BUILDING_AND_GEM_ORBIT_RELAYER_DEPLOY_MARKER_v11
       </template>
     </main>
 
     <footer>
-      FRONTIER_URBAN_TOUCH_ACTIVATED_OCCUPANCY_LATTICE_TNT_v10 · Touch windows · Per-building chronology · Greenline halo.
+      FRONTIER_URBAN_OPAQUE_BUILDING_AND_GEM_ORBIT_RELAYER_TNT_v11 · Opaque skyline · Touch windows · Gem orbit.
     </footer>
   </div>
 

@@ -4,13 +4,16 @@
   lang="en"
   data-route="/explore/frontier/manual/"
   data-page="frontier-manual"
-  data-version="G2-V1"
-  data-contract="FRONTIER_MANUAL_DARK_OPAL_INSTRUCTION_SCROLL_DROPMENU_RENEWAL_TNT_v1"
-  data-previous-contract="FRONTIER_MANUAL_PREVIOUS_BASELINE_UNPROVIDED_AT_TNT_TIME"
-  data-source-binding="FRONTIER_MANUAL_DARK_OPAL_INSTRUCTION_SCROLL_DROPMENU_FINAL_PRECODE_DRAFT_v1"
+  data-version="G2-V2"
+  data-contract="FRONTIER_MANUAL_DARK_OPAL_TRUE_CRYSTAL_INSTRUCTION_SCROLL_DROPMENU_TNT_v2"
+  data-previous-contract="FRONTIER_MANUAL_DARK_OPAL_INSTRUCTION_SCROLL_DROPMENU_RENEWAL_TNT_v1"
+  data-source-binding="FRONTIER_MANUAL_BADGE_TO_TRUE_CRYSTAL_CORRECTION_BINDING_v2"
   data-role="frontier-manual-controlled-instruction-chamber"
-  data-animation-identity="MANUAL_INSTRUCTION_SCROLL_AND_DARK_OPAL_INDEX_LIGHT_v1"
-  data-gem-identity="DARK_OPAL_MANUAL_CRYSTALS_v1"
+  data-animation-identity="MANUAL_INSTRUCTION_SCROLL_AND_DARK_OPAL_INDEX_LIGHT_v2"
+  data-gem-identity="DARK_OPAL_TRUE_MANUAL_CRYSTALS_v2"
+  data-badge-primitive-removed="true"
+  data-css-clip-path-badge-gems-removed="true"
+  data-svg-faceted-crystal-primitive="true"
   data-drop-menu="Manual Menu"
   data-top-bubbles-removed="true"
   data-reader-text-motion="false"
@@ -44,7 +47,7 @@
   <title>Manual · Controlled Instruction · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Manual is the Frontier instruction chamber: dark opal route crystals, stable guidance, Platform and Engineering lenses, receipts, boundaries, and return controls."
+    content="Diamond Gate Bridge Manual is the Frontier instruction chamber: dark opal faceted crystals, stable guidance, Platform and Engineering lenses, receipts, boundaries, and return controls."
   >
 
   <style>
@@ -68,7 +71,6 @@
       --gem:polygon(50% 0%,77% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,23% 9%);
       --page-cycle:22s;
       --index-cycle:18s;
-      --opal-cycle:16s;
     }
 
     *{box-sizing:border-box}
@@ -123,6 +125,14 @@
     [tabindex]:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
+    }
+
+    .svg-defs{
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+      pointer-events:none;
     }
 
     .skip{
@@ -526,7 +536,7 @@
 
     .manual-stage{
       position:relative;
-      min-height:clamp(42rem,78vw,58rem);
+      min-height:clamp(44rem,82vw,60rem);
       display:grid;
       place-items:center;
       overflow:hidden;
@@ -672,16 +682,16 @@
     .manual-center{
       left:50%;
       top:50%;
-      width:clamp(11rem,24vw,16rem);
-      height:clamp(8rem,17vw,11.6rem);
+      width:clamp(10.8rem,22vw,15.4rem);
+      height:clamp(9.2rem,18.6vw,13.1rem);
       transform:translate(-50%,-50%);
       z-index:7;
       pointer-events:none;
     }
 
     .manual-node{
-      width:clamp(7.45rem,14.7vw,10.75rem);
-      height:clamp(5.45rem,10.7vw,7.85rem);
+      width:clamp(7.65rem,14.4vw,10.35rem);
+      height:clamp(6.5rem,12.3vw,8.85rem);
       left:var(--x);
       top:var(--y);
       transform:translate(-50%,-50%);
@@ -694,96 +704,53 @@
       outline:none;
     }
 
-    .manual-gem{
+    .manual-crystal-svg{
       position:absolute;
-      inset:0;
-      clip-path:var(--gem);
-      background:
-        linear-gradient(35deg,transparent 0 18%,rgba(255,255,255,.28) 19% 20%,transparent 22%),
-        radial-gradient(circle at 27% 20%,rgba(255,255,255,.34),transparent 19%),
-        radial-gradient(circle at 70% 27%,rgba(141,234,255,.30),transparent 25%),
-        radial-gradient(circle at 36% 72%,rgba(155,108,255,.26),transparent 33%),
-        radial-gradient(circle at 67% 76%,rgba(127,240,189,.16),transparent 28%),
-        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.16),rgba(141,234,255,.18),rgba(11,12,34,.96),rgba(155,108,255,.22),rgba(255,155,216,.15),rgba(243,200,111,.12),rgba(255,255,255,.16)),
-        linear-gradient(145deg,#111633,#040711 70%,#010207);
-      border:1px solid rgba(141,234,255,.36);
-      box-shadow:
-        0 1.25rem 1.55rem rgba(0,0,0,.38),
-        0 0 1.15rem rgba(141,234,255,.18),
-        inset 0 1px 0 rgba(255,255,255,.18),
-        inset 0 -1.2rem 2.2rem rgba(0,0,0,.54);
-      pointer-events:none;
-    }
-
-    .manual-center .manual-gem{
-      box-shadow:
-        0 1.55rem 1.85rem rgba(0,0,0,.42),
-        0 0 1.65rem rgba(141,234,255,.22),
-        inset 0 1px 0 rgba(255,255,255,.18),
-        inset 0 -1.35rem 2.45rem rgba(0,0,0,.58);
-    }
-
-    .manual-gem::before{
-      content:"";
-      position:absolute;
-      inset:-18%;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 24% 32%,rgba(141,234,255,.32),transparent 18%),
-        radial-gradient(circle at 72% 38%,rgba(255,155,216,.24),transparent 16%),
-        radial-gradient(circle at 44% 68%,rgba(127,240,189,.22),transparent 18%),
-        radial-gradient(circle at 58% 24%,rgba(243,200,111,.18),transparent 14%),
-        linear-gradient(118deg,transparent 0 34%,rgba(255,255,255,.16) 42%,transparent 52% 100%);
-      background-size:180% 180%;
-      mix-blend-mode:screen;
-      opacity:.64;
-      animation:opalFireDrift var(--opal-cycle) ease-in-out infinite;
-    }
-
-    @keyframes opalFireDrift{
-      0%,100%{background-position:0% 45%;opacity:.44}
-      50%{background-position:100% 55%;opacity:.68}
-    }
-
-    .manual-gem::after{
-      content:"";
-      position:absolute;
-      left:-30%;
-      top:-18%;
-      width:42%;
-      height:140%;
-      transform:rotate(28deg) translateX(-120%);
-      pointer-events:none;
-      background:linear-gradient(90deg,transparent,rgba(255,255,255,.38),rgba(141,234,255,.18),transparent);
-      opacity:.38;
-      animation:opalFacetSweep 12s ease-in-out infinite;
-      animation-delay:var(--glint-delay,0s);
-    }
-
-    @keyframes opalFacetSweep{
-      0%,38%,100%{transform:rotate(28deg) translateX(-150%);opacity:.0}
-      52%{transform:rotate(28deg) translateX(320%);opacity:.42}
-      62%{transform:rotate(28deg) translateX(420%);opacity:.0}
-    }
-
-    .manual-facet-lines{
-      position:absolute;
-      inset:0;
+      inset:-6%;
       z-index:2;
-      clip-path:var(--gem);
+      width:112%;
+      height:112%;
+      overflow:visible;
       pointer-events:none;
-      background:
-        linear-gradient(90deg,transparent 0 49%,rgba(255,255,255,.18) 50%,transparent 51%),
-        linear-gradient(35deg,transparent 0 49%,rgba(255,255,255,.13) 50%,transparent 51%),
-        linear-gradient(145deg,transparent 0 49%,rgba(141,234,255,.12) 50%,transparent 51%),
-        linear-gradient(0deg,transparent 0 54%,rgba(243,200,111,.10) 55%,transparent 56%);
-      opacity:.74;
+      filter:
+        drop-shadow(0 1.35rem 1.55rem rgba(0,0,0,.42))
+        drop-shadow(0 0 1.05rem rgba(141,234,255,.18));
+    }
+
+    .manual-center .manual-crystal-svg{
+      inset:-8%;
+      width:116%;
+      height:116%;
+      filter:
+        drop-shadow(0 1.65rem 1.95rem rgba(0,0,0,.48))
+        drop-shadow(0 0 1.45rem rgba(141,234,255,.22));
+    }
+
+    .manual-opal-fire{
+      transform-origin:110px 95px;
+      animation:manualOpalFireShift 16s ease-in-out infinite;
+    }
+
+    @keyframes manualOpalFireShift{
+      0%,100%{opacity:.42;transform:translate3d(-2px,1px,0) scale(.98)}
+      50%{opacity:.70;transform:translate3d(3px,-2px,0) scale(1.02)}
+    }
+
+    .manual-opal-glint{
+      transform-origin:110px 95px;
+      animation:manualOpalCutSweep 12s ease-in-out infinite;
+    }
+
+    @keyframes manualOpalCutSweep{
+      0%,38%,100%{opacity:0;transform:translateX(-30px)}
+      50%{opacity:.46;transform:translateX(20px)}
+      62%{opacity:0;transform:translateX(42px)}
     }
 
     .manual-label{
       position:relative;
       z-index:4;
-      width:86%;
+      width:82%;
       display:grid;
       place-items:center;
       gap:.18rem;
@@ -798,7 +765,7 @@
     .manual-label b{
       display:block;
       color:rgba(255,244,216,.99);
-      font-size:clamp(.70rem,1.62vw,1rem);
+      font-size:clamp(.68rem,1.5vw,.94rem);
       font-weight:950;
       letter-spacing:.065em;
       line-height:1.02;
@@ -807,7 +774,7 @@
 
     .manual-label span{
       color:rgba(230,238,255,.88);
-      font-size:clamp(.48rem,1.06vw,.66rem);
+      font-size:clamp(.46rem,1vw,.62rem);
       font-weight:950;
       letter-spacing:.065em;
       line-height:1.02;
@@ -815,18 +782,18 @@
     }
 
     .manual-center .manual-label{
-      width:84%;
+      width:80%;
       gap:.2rem;
     }
 
     .manual-center .manual-label b{
       color:var(--gold);
-      font-size:clamp(1.02rem,2.35vw,1.42rem);
+      font-size:clamp(.98rem,2.22vw,1.34rem);
       letter-spacing:.13em;
     }
 
     .manual-center .manual-label span{
-      font-size:clamp(.72rem,1.48vw,.94rem);
+      font-size:clamp(.68rem,1.38vw,.88rem);
       letter-spacing:.085em;
     }
 
@@ -1136,21 +1103,21 @@
 
       .manual-center{
         grid-column:1 / -1;
-        width:9.8rem;
-        height:7.1rem;
+        width:9.5rem;
+        height:8.1rem;
         order:-2;
       }
 
       .manual-node{
-        width:7.45rem;
-        height:5.45rem;
+        width:7.15rem;
+        height:6.05rem;
       }
 
-      .manual-label{width:88%;gap:.14rem}
-      .manual-label b{font-size:.62rem;letter-spacing:.046em}
-      .manual-label span{font-size:.44rem;letter-spacing:.044em}
-      .manual-center .manual-label b{font-size:.88rem}
-      .manual-center .manual-label span{font-size:.60rem}
+      .manual-label{width:82%;gap:.14rem}
+      .manual-label b{font-size:.56rem;letter-spacing:.046em}
+      .manual-label span{font-size:.40rem;letter-spacing:.044em}
+      .manual-center .manual-label b{font-size:.80rem}
+      .manual-center .manual-label span{font-size:.56rem}
       .lens-tabs{display:grid;grid-template-columns:1fr 1fr}
       .section-return{justify-content:stretch}
       .return-orbit,
@@ -1159,13 +1126,13 @@
 
     @media (max-width:420px){
       .manual-stage{gap:.9rem .62rem}
-      .manual-node{width:6.85rem;height:5rem}
-      .manual-label{width:90%}
-      .manual-label b{font-size:.54rem;letter-spacing:.036em}
-      .manual-label span{font-size:.38rem;letter-spacing:.034em}
-      .manual-center{width:8.95rem;height:6.5rem}
-      .manual-center .manual-label b{font-size:.78rem}
-      .manual-center .manual-label span{font-size:.52rem}
+      .manual-node{width:6.55rem;height:5.55rem}
+      .manual-label{width:84%}
+      .manual-label b{font-size:.49rem;letter-spacing:.034em}
+      .manual-label span{font-size:.34rem;letter-spacing:.032em}
+      .manual-center{width:8.8rem;height:7.45rem}
+      .manual-center .manual-label b{font-size:.72rem}
+      .manual-center .manual-label span{font-size:.50rem}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -1181,8 +1148,8 @@
       .manual-stage::before,
       .manual-index-tick,
       .manual-bookmark-tab,
-      .manual-gem::before,
-      .manual-gem::after{
+      .manual-opal-fire,
+      .manual-opal-glint{
         animation:none!important;
       }
     }
@@ -1190,6 +1157,101 @@
 </head>
 
 <body>
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="manualOpalBody" x1="24" y1="8" x2="196" y2="176" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#f8fbff" stop-opacity=".78"/>
+        <stop offset=".10" stop-color="#b9f3ff" stop-opacity=".46"/>
+        <stop offset=".25" stop-color="#7f65ff" stop-opacity=".42"/>
+        <stop offset=".42" stop-color="#132044" stop-opacity=".92"/>
+        <stop offset=".62" stop-color="#050817" stop-opacity=".98"/>
+        <stop offset=".78" stop-color="#13291f" stop-opacity=".88"/>
+        <stop offset="1" stop-color="#020309" stop-opacity="1"/>
+      </linearGradient>
+
+      <radialGradient id="manualOpalFire" cx="50%" cy="42%" r="68%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".34"/>
+        <stop offset=".20" stop-color="#8deaff" stop-opacity=".30"/>
+        <stop offset=".38" stop-color="#9b6cff" stop-opacity=".24"/>
+        <stop offset=".56" stop-color="#7ff0bd" stop-opacity=".18"/>
+        <stop offset=".72" stop-color="#ff9bd8" stop-opacity=".14"/>
+        <stop offset="1" stop-color="#020309" stop-opacity="0"/>
+      </radialGradient>
+
+      <linearGradient id="manualOpalFacetLight" x1="42" y1="144" x2="180" y2="24" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset=".46" stop-color="#ffffff" stop-opacity=".68"/>
+        <stop offset=".55" stop-color="#8deaff" stop-opacity=".22"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+
+      <filter id="manualOpalGlow" x="-35%" y="-42%" width="170%" height="188%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="1.5" result="blur"/>
+        <feColorMatrix
+          in="blur"
+          type="matrix"
+          values="
+            0.35 0 0 0 0.05
+            0 .70 0 0 0.12
+            0 0 1.00 0 0.30
+            0 0 0 .46 0"
+          result="glow"
+        />
+        <feMerge>
+          <feMergeNode in="glow"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      <symbol id="manualDarkOpalCrystal" viewBox="0 0 220 190">
+        <g filter="url(#manualOpalGlow)">
+          <path
+            d="M110 5 L148 18 L190 50 L210 88 L185 130 L146 166 L110 185 L74 166 L35 130 L10 88 L30 50 L72 18 Z"
+            fill="url(#manualOpalBody)"
+            stroke="rgba(221,248,255,.58)"
+            stroke-width="1.35"
+          />
+
+          <path d="M110 5 L148 18 L130 52 L110 42 L90 52 L72 18 Z" fill="rgba(255,255,255,.22)"/>
+          <path d="M72 18 L90 52 L62 76 L30 50 Z" fill="rgba(141,234,255,.16)"/>
+          <path d="M148 18 L130 52 L158 76 L190 50 Z" fill="rgba(155,108,255,.16)"/>
+          <path d="M30 50 L62 76 L54 104 L10 88 Z" fill="rgba(255,255,255,.09)"/>
+          <path d="M190 50 L158 76 L166 104 L210 88 Z" fill="rgba(127,240,189,.10)"/>
+
+          <path
+            d="M90 52 L110 42 L130 52 L158 76 L146 108 L110 126 L74 108 L62 76 Z"
+            fill="url(#manualOpalFire)"
+            stroke="rgba(255,255,255,.24)"
+            stroke-width=".9"
+          />
+
+          <path d="M10 88 L54 104 L74 166 L35 130 Z" fill="rgba(5,9,24,.52)"/>
+          <path d="M210 88 L166 104 L146 166 L185 130 Z" fill="rgba(10,18,40,.48)"/>
+          <path d="M54 104 L74 108 L110 185 L74 166 Z" fill="rgba(2,4,12,.64)"/>
+          <path d="M166 104 L146 108 L110 185 L146 166 Z" fill="rgba(4,14,22,.58)"/>
+          <path d="M74 108 L110 126 L110 185 Z" fill="rgba(9,16,39,.72)"/>
+          <path d="M146 108 L110 126 L110 185 Z" fill="rgba(2,5,14,.70)"/>
+
+          <path d="M110 5 L110 185" stroke="rgba(255,255,255,.30)" stroke-width="1.05"/>
+          <path d="M10 88 L210 88" stroke="rgba(255,255,255,.22)" stroke-width=".95"/>
+          <path d="M30 50 L185 130" stroke="rgba(255,255,255,.13)" stroke-width=".85"/>
+          <path d="M190 50 L35 130" stroke="rgba(255,255,255,.13)" stroke-width=".85"/>
+          <path d="M72 18 L110 126 L148 18" stroke="rgba(255,255,255,.14)" stroke-width=".85" fill="none"/>
+          <path d="M35 130 L110 126 L185 130" stroke="rgba(141,234,255,.11)" stroke-width=".85" fill="none"/>
+
+          <g class="manual-opal-fire">
+            <path d="M88 58 L110 42 L132 58 L116 86 L92 82 Z" fill="rgba(141,234,255,.18)"/>
+            <path d="M72 92 L104 78 L110 126 L84 112 Z" fill="rgba(155,108,255,.18)"/>
+            <path d="M148 92 L116 78 L110 126 L136 112 Z" fill="rgba(127,240,189,.15)"/>
+            <path d="M94 124 L110 132 L126 124 L110 174 Z" fill="rgba(255,155,216,.10)"/>
+          </g>
+
+          <path class="manual-opal-glint" d="M34 146 L174 24 L188 44 L50 162 Z" fill="url(#manualOpalFacetLight)"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
   <a class="skip" href="#main">Skip to Manual</a>
 
   <div class="shell">
@@ -1268,10 +1330,10 @@
       </section>
 
       <section class="panel section" aria-labelledby="manual-orbit-title" id="manual-orbit">
-        <div class="kicker">Manual field · Dark opal instruction index</div>
-        <h2 id="manual-orbit-title">The dark opal crystals hold the route. The index rails organize the instruction field.</h2>
+        <div class="kicker">Manual field · True dark opal crystals</div>
+        <h2 id="manual-orbit-title">The crystals are no longer badges. They are faceted dark opal route stones with pavilion depth and internal fire.</h2>
 
-        <div class="manual-stage" aria-label="Manual pathway field with dark opal crystals and instruction index animation">
+        <div class="manual-stage" aria-label="Manual pathway field with true dark opal faceted crystals and instruction index animation">
           <div class="manual-index-field" aria-hidden="true">
             <span class="manual-index-rail" style="--rail-left:50%;--rail-top:17%;--rail-width:32rem;--rail-angle:0deg;"></span>
             <span class="manual-index-rail" style="--rail-left:50%;--rail-top:83%;--rail-width:32rem;--rail-angle:0deg;"></span>
@@ -1299,54 +1361,55 @@
             <span class="manual-bookmark-tab" style="--tab-top:76%;--tab-delay:-8s;"></span>
           </div>
 
-          <div class="manual-center" aria-hidden="true" style="--glint-delay:-.2s;">
-            <span class="manual-gem"></span>
-            <span class="manual-facet-lines"></span>
+          <div class="manual-center" aria-hidden="true">
+            <svg class="manual-crystal-svg" viewBox="0 0 220 190" aria-hidden="true" focusable="false">
+              <use href="#manualDarkOpalCrystal"></use>
+            </svg>
             <span class="manual-label"><b>Manual</b><span>Instruction Chamber</span></span>
           </div>
 
-          <a class="manual-node" style="--x:50%;--y:11%;--glint-delay:-.6s;" href="#audralia-manual" aria-label="Open Audralia Manual">
-            <span class="manual-gem"></span><span class="manual-facet-lines"></span>
+          <a class="manual-node" style="--x:50%;--y:11%;" href="#audralia-manual" aria-label="Open Audralia Manual">
+            <svg class="manual-crystal-svg" viewBox="0 0 220 190" aria-hidden="true" focusable="false"><use href="#manualDarkOpalCrystal"></use></svg>
             <span class="manual-label"><b>Audralia</b><span>Manual</span></span>
           </a>
 
-          <a class="manual-node" style="--x:73%;--y:17%;--glint-delay:-1.2s;" href="#purpose" aria-label="Open Purpose">
-            <span class="manual-gem"></span><span class="manual-facet-lines"></span>
+          <a class="manual-node" style="--x:73%;--y:17%;" href="#purpose" aria-label="Open Purpose">
+            <svg class="manual-crystal-svg" viewBox="0 0 220 190" aria-hidden="true" focusable="false"><use href="#manualDarkOpalCrystal"></use></svg>
             <span class="manual-label"><b>Purpose</b><span>Why</span></span>
           </a>
 
-          <a class="manual-node" style="--x:87%;--y:42%;--glint-delay:-1.8s;" href="#instructions" aria-label="Open Instructions">
-            <span class="manual-gem"></span><span class="manual-facet-lines"></span>
+          <a class="manual-node" style="--x:87%;--y:42%;" href="#instructions" aria-label="Open Instructions">
+            <svg class="manual-crystal-svg" viewBox="0 0 220 190" aria-hidden="true" focusable="false"><use href="#manualDarkOpalCrystal"></use></svg>
             <span class="manual-label"><b>Instructions</b><span>How</span></span>
           </a>
 
-          <a class="manual-node" style="--x:73%;--y:80%;--glint-delay:-2.4s;" href="#use-cases" aria-label="Open Use Cases">
-            <span class="manual-gem"></span><span class="manual-facet-lines"></span>
+          <a class="manual-node" style="--x:73%;--y:80%;" href="#use-cases" aria-label="Open Use Cases">
+            <svg class="manual-crystal-svg" viewBox="0 0 220 190" aria-hidden="true" focusable="false"><use href="#manualDarkOpalCrystal"></use></svg>
             <span class="manual-label"><b>Use Cases</b><span>When</span></span>
           </a>
 
-          <a class="manual-node" style="--x:50%;--y:88%;--glint-delay:-3s;" href="#controls" aria-label="Open Controls">
-            <span class="manual-gem"></span><span class="manual-facet-lines"></span>
+          <a class="manual-node" style="--x:50%;--y:88%;" href="#controls" aria-label="Open Controls">
+            <svg class="manual-crystal-svg" viewBox="0 0 220 190" aria-hidden="true" focusable="false"><use href="#manualDarkOpalCrystal"></use></svg>
             <span class="manual-label"><b>Controls</b><span>Move</span></span>
           </a>
 
-          <a class="manual-node" style="--x:27%;--y:80%;--glint-delay:-3.6s;" href="#boundaries" aria-label="Open Boundaries">
-            <span class="manual-gem"></span><span class="manual-facet-lines"></span>
+          <a class="manual-node" style="--x:27%;--y:80%;" href="#boundaries" aria-label="Open Boundaries">
+            <svg class="manual-crystal-svg" viewBox="0 0 220 190" aria-hidden="true" focusable="false"><use href="#manualDarkOpalCrystal"></use></svg>
             <span class="manual-label"><b>Boundaries</b><span>Limit</span></span>
           </a>
 
-          <a class="manual-node" style="--x:13%;--y:42%;--glint-delay:-4.2s;" href="#receipts" aria-label="Open Receipts">
-            <span class="manual-gem"></span><span class="manual-facet-lines"></span>
+          <a class="manual-node" style="--x:13%;--y:42%;" href="#receipts" aria-label="Open Receipts">
+            <svg class="manual-crystal-svg" viewBox="0 0 220 190" aria-hidden="true" focusable="false"><use href="#manualDarkOpalCrystal"></use></svg>
             <span class="manual-label"><b>Receipts</b><span>Record</span></span>
           </a>
 
-          <a class="manual-node" style="--x:27%;--y:17%;--glint-delay:-4.8s;" href="#failure-modes" aria-label="Open Failure Modes">
-            <span class="manual-gem"></span><span class="manual-facet-lines"></span>
+          <a class="manual-node" style="--x:27%;--y:17%;" href="#failure-modes" aria-label="Open Failure Modes">
+            <svg class="manual-crystal-svg" viewBox="0 0 220 190" aria-hidden="true" focusable="false"><use href="#manualDarkOpalCrystal"></use></svg>
             <span class="manual-label"><b>Failure</b><span>Modes</span></span>
           </a>
 
-          <a class="manual-node" style="--x:66%;--y:6%;--glint-delay:-5.4s;" href="#kill-conditions" aria-label="Open Kill Conditions">
-            <span class="manual-gem"></span><span class="manual-facet-lines"></span>
+          <a class="manual-node" style="--x:66%;--y:6%;" href="#kill-conditions" aria-label="Open Kill Conditions">
+            <svg class="manual-crystal-svg" viewBox="0 0 220 190" aria-hidden="true" focusable="false"><use href="#manualDarkOpalCrystal"></use></svg>
             <span class="manual-label"><b>Kill</b><span>Conditions</span></span>
           </a>
         </div>
@@ -1676,7 +1739,7 @@
 
         <article class="pathway-module">
           <h3>Manual warns when the visitor or system is reading the page incorrectly.</h3>
-          <p>Failure begins when instruction becomes speculation, labels drift, anchors break, gems become rocks, or page animation fights readability.</p>
+          <p>Failure begins when instruction becomes speculation, labels drift, anchors break, gems become badges or rocks, or page animation fights readability.</p>
 
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="failure-platform" name="failure-lens" type="radio" checked>
@@ -1688,9 +1751,10 @@
             <div class="lens-body">
               <div class="lens-copy platform-copy">
                 <b>Platform Lens</b>
-                <p>The Manual fails when it stops helping the visitor move. If the gems look like rocks, if the text shakes, or if the menu points nowhere, the page has lost control.</p>
+                <p>The Manual fails when it stops helping the visitor move. If the gems look like badges, if the text shakes, or if the menu points nowhere, the page has lost control.</p>
                 <ul class="lens-list">
-                  <li>Rock gems break the visual contract.</li>
+                  <li>Badge gems break the visual contract.</li>
+                  <li>Rock gems break the material contract.</li>
                   <li>Moving text breaks readability.</li>
                   <li>Broken anchors break instruction.</li>
                   <li>Speculative claims break trust.</li>
@@ -1698,17 +1762,17 @@
               </div>
               <div class="lens-copy engineering-copy">
                 <b>Engineering Lens</b>
-                <p>Operating object: Manual failure-mode list. Inputs include gem material, animation scope, anchor integrity, route validity, copy claim, and receipt state.</p>
+                <p>Operating object: Manual failure-mode list. Inputs include gem primitive, gem material, animation scope, anchor integrity, route validity, copy claim, and receipt state.</p>
                 <ul class="lens-list">
                   <li>Output: repair, hold, or stop condition.</li>
                   <li>Constraint: failure must be visible to the audit.</li>
-                  <li>Stop condition: broken controls or moving reader text block completion.</li>
+                  <li>Stop condition: badge primitive, broken controls, or moving reader text block completion.</li>
                 </ul>
               </div>
             </div>
           </div>
 
-          <div class="boundary">Boundary: readable instruction outranks animation effect.</div>
+          <div class="boundary">Boundary: readable instruction outranks animation effect. True crystal primitive outranks badge geometry.</div>
           <div class="section-return">
             <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
             <a class="return-orbit" href="#manual-orbit">Return to Orbit</a>
@@ -1721,8 +1785,8 @@
         <h2 id="kill-title">Kill Conditions</h2>
 
         <article class="pathway-module">
-          <h3>Stop when instruction becomes speculation, proof claim, or decoration.</h3>
-          <p>The Manual must stop if it lacks scope, controls, receipt, boundary, return path, audit posture, or readable instruction.</p>
+          <h3>Stop when instruction becomes speculation, proof claim, decoration, badge, or rock.</h3>
+          <p>The Manual must stop if it lacks scope, controls, receipt, boundary, return path, audit posture, stable text, or true crystal form.</p>
 
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="kill-platform" name="kill-lens" type="radio" checked>
@@ -1734,30 +1798,32 @@
             <div class="lens-body">
               <div class="lens-copy platform-copy">
                 <b>Platform Lens</b>
-                <p>The Manual stops when it stops being useful. It cannot become a pretty book, a technical swamp, a proof claim, or a route maze.</p>
+                <p>The Manual stops when it stops being useful. It cannot become a pretty book, a technical swamp, a proof claim, a badge wall, or a route maze.</p>
                 <ul class="lens-list">
                   <li>Stop if the page becomes decoration.</li>
                   <li>Stop if text motion hurts reading.</li>
                   <li>Stop if the menu becomes bubbles again.</li>
+                  <li>Stop if the gems read as badges.</li>
                   <li>Stop if the gems read as rocks.</li>
                   <li>Stop if the page claims proof it does not have.</li>
                 </ul>
               </div>
               <div class="lens-copy engineering-copy">
                 <b>Engineering Lens</b>
-                <p>Operating object: Manual stop-rule list. Inputs include scope, control integrity, text stability, route integrity, material read, receipt state, and visual-pass claim.</p>
+                <p>Operating object: Manual stop-rule list. Inputs include scope, control integrity, text stability, route integrity, material read, primitive shape, receipt state, and visual-pass claim.</p>
                 <ul class="lens-list">
                   <li>Stop if scope is missing.</li>
                   <li>Stop if controls are broken.</li>
                   <li>Stop if return paths are missing.</li>
                   <li>Stop if text moves independently.</li>
+                  <li>Stop if CSS badge geometry replaces true crystal geometry.</li>
                   <li>Stop if visual pass is claimed without served proof.</li>
                 </ul>
               </div>
             </div>
           </div>
 
-          <div class="boundary">Boundary: stop if Manual lacks scope, controls, receipt, boundary, return path, audit posture, or stable readable instruction.</div>
+          <div class="boundary">Boundary: stop if Manual lacks scope, controls, receipt, boundary, return path, audit posture, stable readable instruction, or true faceted crystal form.</div>
           <div class="section-return">
             <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
             <a class="return-orbit" href="#manual-orbit">Return to Orbit</a>
@@ -1768,7 +1834,7 @@
       <section class="final-band" id="final-lock" aria-label="Manual final lock">
         <strong>Manual is the Frontier instruction chamber.</strong>
         <p>
-          Manual does not prove the Frontier system. It teaches the visitor how to move through it: choose a path, switch the language lens, read the boundary, preserve the receipt, and return before instruction becomes speculation.
+          Manual does not prove the Frontier system. It teaches the visitor how to move through it: choose a path, switch the language lens, read the boundary, preserve the receipt, and return before instruction becomes speculation. The gem field now uses true faceted dark opal crystals instead of badge-shaped CSS plaques.
         </p>
         <div class="actions">
           <a class="button gold" href="#manual-orbit">Return to Orbit</a>
@@ -1781,23 +1847,31 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_MANUAL_DARK_OPAL_INSTRUCTION_SCROLL_DROPMENU_RENEWAL_TNT_v1
-previous=FRONTIER_MANUAL_PREVIOUS_BASELINE_UNPROVIDED_AT_TNT_TIME
-binding=FRONTIER_MANUAL_DARK_OPAL_INSTRUCTION_SCROLL_DROPMENU_FINAL_PRECODE_DRAFT_v1
+FRONTIER_MANUAL_DARK_OPAL_TRUE_CRYSTAL_INSTRUCTION_SCROLL_DROPMENU_TNT_v2
+previous=FRONTIER_MANUAL_DARK_OPAL_INSTRUCTION_SCROLL_DROPMENU_RENEWAL_TNT_v1
+binding=FRONTIER_MANUAL_BADGE_TO_TRUE_CRYSTAL_CORRECTION_BINDING_v2
 route=/explore/frontier/manual/
 page=frontier_manual
 html=/explore/frontier/manual/index.html
 role=frontier_manual_controlled_instruction_chamber
 core_law=a_manual_is_not_decoration_a_manual_is_controlled_instruction
-animation_identity=MANUAL_INSTRUCTION_SCROLL_AND_DARK_OPAL_INDEX_LIGHT_v1
-gem_identity=DARK_OPAL_MANUAL_CRYSTALS_v1
+animation_identity=MANUAL_INSTRUCTION_SCROLL_AND_DARK_OPAL_INDEX_LIGHT_v2
+gem_identity=DARK_OPAL_TRUE_MANUAL_CRYSTALS_v2
+badge_primitive_removed=true
+css_clip_path_badge_gems_removed=true
+svg_faceted_crystal_primitive=true
+true_crystal_viewbox=0_0_220_190
 dark_opal_body=true
 black_violet_deep_indigo_crystal_base=true
 internal_spectral_fire=true
 crisp_faceted_edges=true
-glossy_cut_surface=true
+pavilion_depth=true
+crown_facets=true
+polished_cut_surface=true
 rock_read_rejected=true
 stone_texture_rejected=true
+badge_read_rejected=true
+plaque_read_rejected=true
 random_rainbow_noise_rejected=true
 manual_menu=true
 drop_menu_replaces_top_bubbles=true
@@ -1817,7 +1891,7 @@ pathway_copy_motion=false
 heading_motion=false
 button_text_motion=false
 allowed_motion=page_edge_turn_light,index_rails,bookmark_tabs,dark_opal_internal_fire,facet_refraction_sweep,instruction_ruler_marks,section_edge_guide_bar
-forbidden_animation=bubbles,water_droplets,energy_lightning,closed_loop_ledger_traces,circular_halo_logic,generic_pulse_field,rock_glow,floating_paragraph_copy,vibrating_labels,shimmer_on_readable_words,animated_blur
+forbidden_animation=bubbles,water_droplets,energy_lightning,closed_loop_ledger_traces,circular_halo_logic,generic_pulse_field,rock_glow,badge_glow,floating_paragraph_copy,vibrating_labels,shimmer_on_readable_words,animated_blur
 per_pathway_dual_lens=true
 platform_lens_per_pathway=true
 engineering_lens_per_pathway=true
@@ -1837,13 +1911,12 @@ generated_image=false
 graphic_box=false
 streaming=false
 visual_pass_claimed=false
-actual_previous_manual_code_unprovided=true
-acceptance=dark_opal_crystals_manual_specific_animation_manual_menu_return_controls_stable_text_css_only
+acceptance=true_faceted_dark_opal_crystals_manual_specific_animation_manual_menu_return_controls_stable_text_css_only
       </template>
     </main>
 
     <footer>
-      FRONTIER_MANUAL_DARK_OPAL_INSTRUCTION_SCROLL_DROPMENU_RENEWAL_TNT_v1 · Manual · Dark Opal Instruction Chamber · Manual Menu · Stable Text.
+      FRONTIER_MANUAL_DARK_OPAL_TRUE_CRYSTAL_INSTRUCTION_SCROLL_DROPMENU_TNT_v2 · Manual · True Dark Opal Faceted Crystals · No Badges · Stable Text.
     </footer>
   </div>
 </body>

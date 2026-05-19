@@ -1,10 +1,11 @@
+<!-- TARGET FILE: /nine-summits/universe/index.html -->
 <!doctype html>
 <html
   lang="en"
   data-route="/nine-summits/universe/"
   data-page="nine-summits-universe"
-  data-contract="NINE_SUMMITS_UNIVERSE_CONTEXT_ALIGNMENT_HTML_TNT_v7"
-  data-previous-contract="NINE_SUMMITS_UNIVERSE_WORLD_SETTING_VIOLET_GOLD_INLAY_RENEWAL_TNT_v6"
+  data-contract="NINE_SUMMITS_UNIVERSE_DEMO_UNIVERSE_RELATIONSHIP_FIELD_TNT_v8"
+  data-previous-contract="NINE_SUMMITS_UNIVERSE_CONTEXT_ALIGNMENT_HTML_TNT_v7"
   data-role="nine-summits-world-setting"
   data-book-role="human-climb"
   data-universe-role="world-around-the-climb"
@@ -13,8 +14,23 @@
   data-gauges-role="measurement-audit-route-status-summary"
   data-showroom-role="visible-software-object-display"
   data-interactive-narrative-route="/showroom/globe/"
+  data-demo-universe="active"
+  data-demo-universe-bodies="Sun,Earth,Moon"
+  data-earth-sun-moon-relationship="active"
+  data-sun-role="light-source"
+  data-earth-role="reference-body"
+  data-moon-role="reflection-phase-body"
+  data-orbital-orientation="true"
+  data-solar-lunar-relationship="true"
+  data-cardinal-house-orientation="false"
+  data-final-universe-map-claimed="false"
+  data-frontier-route-corrected="/explore/frontier/"
+  data-css-only-animation="true"
+  data-static-page-usable-without-js="true"
   data-generated-image="false"
   data-graphic-box="false"
+  data-canvas="false"
+  data-webgl="false"
   data-streaming="false"
   data-heavy-runtime-loaded="false"
   data-visual-pass-claimed="false"
@@ -26,7 +42,7 @@
   <title>Nine Summits Universe · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="The Nine Summits Universe opens the world around the human climb: Audralia as the Possibility Path, the Book as the human climb, Showroom as visible software-object display, and Frontier as the expansion edge."
+    content="The Nine Summits Universe opens the world around the human climb and now includes a Demo Universe relationship field showing Sun, Earth, Moon, orbit, light, phase, and reference."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/nine-summits/universe/">
   <meta name="theme-color" content="#02040b">
@@ -321,6 +337,15 @@
       z-index:2;
     }
 
+    h3{
+      margin:0;
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.18rem,3vw,1.7rem);
+      line-height:1.04;
+      letter-spacing:-.048em;
+      text-wrap:balance;
+    }
+
     p{
       margin:0;
       color:var(--muted);
@@ -397,6 +422,333 @@
       padding:clamp(1rem,3vw,1.45rem);
       display:grid;
       gap:1.05rem;
+    }
+
+    .demo-universe-layout{
+      display:grid;
+      grid-template-columns:minmax(0,1.15fr) minmax(18rem,.85fr);
+      gap:.95rem;
+      align-items:stretch;
+    }
+
+    .demo-universe-stage{
+      position:relative;
+      min-height:clamp(34rem,64vw,48rem);
+      border:1px solid rgba(184,205,255,.14);
+      border-radius:clamp(1.25rem,4vw,2rem);
+      overflow:hidden;
+      isolation:isolate;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.10),transparent 16rem),
+        radial-gradient(circle at 28% 36%,rgba(143,101,255,.18),transparent 20rem),
+        radial-gradient(circle at 72% 65%,rgba(141,216,255,.11),transparent 20rem),
+        linear-gradient(180deg,rgba(1,5,16,.72),rgba(2,6,16,.96));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .demo-universe-stage::before{
+      content:"";
+      position:absolute;
+      inset:1.25rem;
+      z-index:0;
+      border:1px solid rgba(143,101,255,.13);
+      border-radius:1.4rem;
+      background-image:
+        radial-gradient(circle,rgba(255,255,255,.22) 0 1px,transparent 1.5px),
+        radial-gradient(circle,rgba(243,200,111,.16) 0 1px,transparent 1.5px),
+        linear-gradient(rgba(141,216,255,.040) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.040) 1px,transparent 1px);
+      background-size:140px 160px,220px 190px,42px 42px,42px 42px;
+      opacity:.30;
+      mask-image:radial-gradient(circle at 50% 50%,rgba(0,0,0,.95),rgba(0,0,0,.62) 58%,rgba(0,0,0,.18) 86%);
+    }
+
+    .demo-universe-stage::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:1;
+      width:min(82%,43rem);
+      height:min(58%,26rem);
+      border:1px solid rgba(243,200,111,.11);
+      border-radius:50%;
+      transform:translate(-50%,-50%) rotate(-12deg);
+      box-shadow:
+        0 0 2.4rem rgba(143,101,255,.10),
+        inset 0 0 2rem rgba(243,200,111,.035);
+      animation:demoOuterOrbitPulse 13s ease-in-out infinite;
+    }
+
+    @keyframes demoOuterOrbitPulse{
+      0%,100%{opacity:.44;filter:brightness(.92)}
+      50%{opacity:.72;filter:brightness(1.16)}
+    }
+
+    .demo-sun{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:6;
+      width:clamp(4.8rem,12vw,7.5rem);
+      height:clamp(4.8rem,12vw,7.5rem);
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      background:
+        radial-gradient(circle at 38% 30%,rgba(255,255,255,.98),transparent 14%),
+        radial-gradient(circle at 50% 50%,#fff8c8 0 18%,#ffe48d 28%,#f3c86f 45%,rgba(243,200,111,.24) 68%,rgba(243,200,111,.00) 74%);
+      box-shadow:
+        0 0 .85rem rgba(255,255,255,.46),
+        0 0 2.1rem rgba(243,200,111,.62),
+        0 0 4.8rem rgba(243,200,111,.30),
+        0 0 7.5rem rgba(143,101,255,.14);
+      animation:demoSunPulse 6.8s ease-in-out infinite;
+    }
+
+    @keyframes demoSunPulse{
+      0%,100%{filter:brightness(.98) saturate(1);box-shadow:0 0 .85rem rgba(255,255,255,.42),0 0 2rem rgba(243,200,111,.54),0 0 4.4rem rgba(243,200,111,.26),0 0 7rem rgba(143,101,255,.12)}
+      50%{filter:brightness(1.15) saturate(1.08);box-shadow:0 0 1.1rem rgba(255,255,255,.58),0 0 2.6rem rgba(243,200,111,.72),0 0 5.4rem rgba(243,200,111,.34),0 0 8rem rgba(143,101,255,.18)}
+    }
+
+    .demo-earth-orbit{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:3;
+      width:min(70%,36rem);
+      height:min(47%,21rem);
+      border:1px solid rgba(141,216,255,.18);
+      border-radius:50%;
+      transform:translate(-50%,-50%) rotate(-12deg);
+      box-shadow:
+        0 0 1.6rem rgba(141,216,255,.08),
+        inset 0 0 1.4rem rgba(141,216,255,.035);
+    }
+
+    .demo-light-ray{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:4;
+      width:clamp(8.5rem,26vw,16rem);
+      height:2px;
+      transform-origin:left center;
+      background:
+        linear-gradient(90deg,
+          rgba(255,248,200,.88),
+          rgba(243,200,111,.46),
+          rgba(141,216,255,.16),
+          transparent
+        );
+      box-shadow:
+        0 0 .8rem rgba(243,200,111,.28),
+        0 0 1.8rem rgba(255,248,200,.12);
+      animation:demoEarthOrbit 34s linear infinite;
+    }
+
+    .demo-earth-system{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:7;
+      width:0;
+      height:0;
+      transform-origin:0 0;
+      animation:demoEarthOrbit 34s linear infinite;
+    }
+
+    @keyframes demoEarthOrbit{
+      from{transform:rotate(0deg)}
+      to{transform:rotate(360deg)}
+    }
+
+    .demo-earth-wrap{
+      position:absolute;
+      left:0;
+      top:0;
+      width:0;
+      height:0;
+      transform:translateX(clamp(8.5rem,26vw,16rem));
+    }
+
+    .demo-earth{
+      position:absolute;
+      left:0;
+      top:0;
+      width:clamp(2.55rem,6.5vw,4rem);
+      height:clamp(2.55rem,6.5vw,4rem);
+      border:1px solid rgba(141,216,255,.44);
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      background:
+        radial-gradient(circle at 34% 28%,rgba(255,255,255,.80),transparent 10%),
+        radial-gradient(circle at 62% 58%,rgba(143,240,195,.50),transparent 18%),
+        radial-gradient(circle at 44% 50%,rgba(141,216,255,.86),rgba(36,120,255,.58) 46%,rgba(6,20,54,.94) 76%);
+      box-shadow:
+        0 0 .8rem rgba(141,216,255,.35),
+        0 0 1.8rem rgba(36,120,255,.18),
+        inset -.55rem -.35rem .75rem rgba(0,0,0,.36),
+        inset .35rem .2rem .65rem rgba(255,255,255,.10);
+      animation:demoEarthCounter 34s linear infinite reverse;
+    }
+
+    @keyframes demoEarthCounter{
+      from{rotate:0deg}
+      to{rotate:360deg}
+    }
+
+    .demo-moon-orbit{
+      position:absolute;
+      left:0;
+      top:0;
+      z-index:8;
+      width:clamp(5.2rem,13vw,7.4rem);
+      height:clamp(5.2rem,13vw,7.4rem);
+      border:1px solid rgba(230,238,255,.20);
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      box-shadow:0 0 1rem rgba(230,238,255,.06);
+    }
+
+    .demo-moon-system{
+      position:absolute;
+      left:0;
+      top:0;
+      z-index:9;
+      width:0;
+      height:0;
+      animation:demoMoonOrbit 7.8s linear infinite;
+      transform-origin:0 0;
+    }
+
+    @keyframes demoMoonOrbit{
+      from{transform:rotate(0deg)}
+      to{transform:rotate(360deg)}
+    }
+
+    .demo-moon{
+      position:absolute;
+      left:0;
+      top:0;
+      width:clamp(1.05rem,2.7vw,1.55rem);
+      height:clamp(1.05rem,2.7vw,1.55rem);
+      border:1px solid rgba(230,238,255,.36);
+      border-radius:50%;
+      transform:
+        translateX(clamp(2.6rem,6.5vw,3.7rem))
+        translate(-50%,-50%);
+      background:
+        linear-gradient(90deg,rgba(255,255,255,.92) 0 42%,rgba(180,190,215,.42) 43% 62%,rgba(24,28,44,.92) 63% 100%);
+      box-shadow:
+        0 0 .55rem rgba(230,238,255,.26),
+        0 0 1rem rgba(141,216,255,.10);
+    }
+
+    .demo-phase-band{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:5;
+      width:min(78%,40rem);
+      height:min(50%,22rem);
+      transform:translate(-50%,-50%) rotate(-12deg);
+      border-radius:50%;
+      background:
+        linear-gradient(90deg,
+          rgba(255,248,200,.055),
+          transparent 36%,
+          transparent 64%,
+          rgba(20,10,62,.18)
+        );
+      pointer-events:none;
+      opacity:.76;
+      mask-image:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,.82),rgba(0,0,0,.16) 68%,transparent 76%);
+    }
+
+    .demo-label{
+      position:absolute;
+      z-index:12;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:2rem;
+      padding:.38rem .58rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      color:rgba(255,244,216,.94);
+      background:rgba(3,6,18,.70);
+      box-shadow:0 0 1rem rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.08);
+      font-size:.62rem;
+      font-weight:950;
+      letter-spacing:.10em;
+      line-height:1;
+      text-transform:uppercase;
+      backdrop-filter:blur(7px);
+    }
+
+    .demo-label.sun{left:50%;top:50%;transform:translate(-50%,calc(-50% - clamp(3.7rem,9vw,5.7rem)))}
+    .demo-label.earth{right:clamp(1rem,4vw,2.8rem);top:48%}
+    .demo-label.moon{right:clamp(1rem,5vw,4.2rem);top:34%}
+    .demo-label.orbit{left:clamp(1rem,4vw,2.6rem);top:30%}
+    .demo-label.phase{left:clamp(1rem,4vw,2.6rem);bottom:28%}
+    .demo-label.reference{left:50%;bottom:clamp(1rem,4vw,2.2rem);transform:translateX(-50%)}
+
+    .demo-receipt-marker{
+      position:absolute;
+      z-index:11;
+      width:.65rem;
+      height:.65rem;
+      border:1px solid rgba(143,240,195,.54);
+      border-radius:50%;
+      background:radial-gradient(circle at 42% 34%,rgba(255,255,255,.92),transparent 20%),rgba(143,240,195,.42);
+      box-shadow:0 0 .8rem rgba(143,240,195,.38);
+    }
+
+    .demo-receipt-marker.light{left:57%;top:48%}
+    .demo-receipt-marker.orbit{left:30%;top:28%}
+    .demo-receipt-marker.phase{right:30%;bottom:26%}
+
+    .demo-universe-note{
+      display:grid;
+      align-content:start;
+      gap:.75rem;
+      padding:1rem;
+      border:1px solid rgba(143,101,255,.22);
+      border-radius:1.35rem;
+      background:
+        radial-gradient(circle at 16% 0%,rgba(143,101,255,.12),transparent 22rem),
+        rgba(255,255,255,.035);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .demo-universe-note b{
+      color:var(--gold);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .demo-list{
+      display:grid;
+      gap:.55rem;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+
+    .demo-list li{
+      padding:.68rem .76rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:.9rem;
+      background:rgba(255,255,255,.030);
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.4;
+    }
+
+    .demo-list strong{
+      color:rgba(255,244,216,.94);
     }
 
     .diamond-field{
@@ -601,7 +953,8 @@
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
 
-      .instrument-panel{
+      .instrument-panel,
+      .demo-universe-layout{
         grid-template-columns:1fr;
       }
 
@@ -630,6 +983,33 @@
       .instrument-grid{
         grid-template-columns:1fr;
       }
+
+      .demo-universe-stage{
+        min-height:31rem;
+      }
+
+      .demo-earth-orbit{
+        width:78%;
+        height:48%;
+      }
+
+      .demo-light-ray{
+        width:clamp(7rem,24vw,9rem);
+      }
+
+      .demo-earth-wrap{
+        transform:translateX(clamp(7rem,24vw,9rem));
+      }
+
+      .demo-label{
+        font-size:.52rem;
+        padding:.34rem .48rem;
+      }
+
+      .demo-label.earth{right:.7rem;top:49%}
+      .demo-label.moon{right:.8rem;top:37%}
+      .demo-label.orbit{left:.7rem;top:25%}
+      .demo-label.phase{left:.7rem;bottom:26%}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -640,6 +1020,28 @@
         animation-duration:.01ms!important;
         animation-iteration-count:1!important;
         transition-duration:.01ms!important;
+      }
+
+      .hero::before,
+      .demo-universe-stage::after,
+      .demo-sun,
+      .demo-light-ray,
+      .demo-earth-system,
+      .demo-earth,
+      .demo-moon-system{
+        animation:none!important;
+      }
+
+      .demo-light-ray{
+        transform:rotate(0deg)!important;
+      }
+
+      .demo-earth-system{
+        transform:rotate(0deg)!important;
+      }
+
+      .demo-moon-system{
+        transform:rotate(35deg)!important;
       }
     }
   </style>
@@ -669,7 +1071,7 @@
         <a href="/nine-summits/">Nine Summits</a>
         <a href="/nine-summits-of-love/">Book</a>
         <a href="/nine-summits/universe/" aria-current="page">Universe</a>
-        <a href="/frontier/">Frontier</a>
+        <a href="/explore/frontier/">Frontier</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
@@ -691,8 +1093,67 @@
         <div class="actions">
           <a class="button gold" href="/showroom/globe/audralia/">Inspect Audralia</a>
           <a class="button" href="/nine-summits-of-love/">Open the Book</a>
-          <a class="button violet" href="/showroom/globe/">Enter Interactive Narrative</a>
+          <a class="button violet" href="#demo-universe">View Demo Universe</a>
           <a class="button" href="/laws/">Open Laws</a>
+        </div>
+      </section>
+
+      <section class="panel section" id="demo-universe" aria-labelledby="demo-universe-title">
+        <div class="kicker">Demo Universe · Earth / Sun / Moon Relationship</div>
+        <h2 id="demo-universe-title">The Demo Universe shows how light, orbit, reflection, and reference behave before the larger world opens.</h2>
+
+        <div class="demo-universe-layout">
+          <div
+            class="demo-universe-stage"
+            role="img"
+            aria-label="CSS-only Demo Universe relationship model showing the Sun as light source, Earth as reference body, Moon orbiting Earth, and Moon phase implied by reflected sunlight."
+            data-demo-universe-stage="true"
+            data-demo-universe-bodies="Sun,Earth,Moon"
+            data-orbital-orientation="true"
+          >
+            <div class="demo-phase-band" aria-hidden="true"></div>
+            <div class="demo-earth-orbit" aria-hidden="true"></div>
+            <div class="demo-light-ray" aria-hidden="true"></div>
+
+            <div class="demo-sun" aria-hidden="true"></div>
+
+            <div class="demo-earth-system" aria-hidden="true">
+              <div class="demo-earth-wrap">
+                <div class="demo-moon-orbit"></div>
+                <div class="demo-moon-system">
+                  <div class="demo-moon"></div>
+                </div>
+                <div class="demo-earth"></div>
+              </div>
+            </div>
+
+            <span class="demo-receipt-marker light" aria-hidden="true"></span>
+            <span class="demo-receipt-marker orbit" aria-hidden="true"></span>
+            <span class="demo-receipt-marker phase" aria-hidden="true"></span>
+
+            <span class="demo-label sun">Sun · Light Source</span>
+            <span class="demo-label earth">Earth · Reference</span>
+            <span class="demo-label moon">Moon · Phase</span>
+            <span class="demo-label orbit">Orbit · Relation</span>
+            <span class="demo-label phase">Reflection · Light</span>
+            <span class="demo-label reference">Demo Model · Not Final Cosmology</span>
+          </div>
+
+          <aside class="demo-universe-note" aria-label="Demo Universe explanatory notes">
+            <b>Relationship Read</b>
+            <p>
+              This is a teaching model, not the final Nine Summits cosmos. It shows a small relationship system before the page expands into the larger world setting.
+            </p>
+
+            <ul class="demo-list">
+              <li><strong>Sun:</strong> stable light source.</li>
+              <li><strong>Earth:</strong> reference body for the demonstration.</li>
+              <li><strong>Moon:</strong> reflection and phase body tied to Earth.</li>
+              <li><strong>Orbit:</strong> relationship motion, not house-cardinal orientation.</li>
+              <li><strong>Phase:</strong> lunar light implied by the Sun.</li>
+              <li><strong>Boundary:</strong> demo universe only; no final cosmology claimed.</li>
+            </ul>
+          </aside>
         </div>
       </section>
 
@@ -722,7 +1183,7 @@
             <span class="open-path">Open Showroom</span>
           </a>
 
-          <a class="world-card" href="/frontier/">
+          <a class="world-card" href="/explore/frontier/">
             <b>Frontier</b>
             <strong>Expansion Edge.</strong>
             <span>Frontier keeps future stories, media paths, experiences, and unfinished territory open without false completion.</span>
@@ -848,14 +1309,14 @@
         <div class="actions">
           <a class="button gold" href="/nine-summits-of-love/">Open the Book</a>
           <a class="button" href="/showroom/globe/audralia/">Inspect Audralia</a>
-          <a class="button violet" href="/showroom/globe/">Enter Interactive Narrative</a>
+          <a class="button violet" href="#demo-universe">View Demo Universe</a>
           <a class="button" href="/laws/">Open Laws</a>
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-NINE_SUMMITS_UNIVERSE_CONTEXT_ALIGNMENT_HTML_TNT_v7
-previous=NINE_SUMMITS_UNIVERSE_WORLD_SETTING_VIOLET_GOLD_INLAY_RENEWAL_TNT_v6
+NINE_SUMMITS_UNIVERSE_DEMO_UNIVERSE_RELATIONSHIP_FIELD_TNT_v8
+previous=NINE_SUMMITS_UNIVERSE_CONTEXT_ALIGNMENT_HTML_TNT_v7
 route=/nine-summits/universe/
 page=nine_summits_universe
 role=nine_summits_world_setting
@@ -873,22 +1334,41 @@ interactive_narrative_route=/showroom/globe/
 showroom_route=/showroom/
 products_role=community_practical_path
 book_path=/nine-summits-of-love/
+demo_universe=active
+demo_universe_bodies=Sun,Earth,Moon
+earth_sun_moon_relationship=active
+sun_role=light_source
+earth_role=reference_body
+moon_role=reflection_phase_body
+orbital_orientation=true
+solar_lunar_relationship=true
+cardinal_house_orientation=false
+final_universe_map_claimed=false
+css_only_animation=true
+javascript_added=false
+canvas=false
+webgl=false
+generated_image=false
+graphic_box=false
+visual_pass_claimed=false
+frontier_route_corrected=/explore/frontier/
 cards=audralia_possibility_path,book_human_climb,showroom_visible_object_atrium,frontier_expansion_edge
 return_routes=compass,laws,interactive_narrative,showroom,products,gauges,nine_summits,explore
 removed_language=showroom_as_primary_proof_atrium,gauges_as_progress_engine,audralia_as_only_untouched_scenic_body
 preserved=violet_field,gold_inlay,world_setting,frontier_edge,book_connection,audralia_route,showroom_route,gauges_route
-route_owns=universe_public_copy,world_setting_cards,route_labels,return_routes,hidden_receipt
+route_owns=universe_public_copy,world_setting_cards,route_labels,return_routes,demo_universe_relationship_field,hidden_receipt
 route_does_not_own=laws_page,gauges_logic,showroom_renderer,audralia_renderer,interactive_narrative_runtime,book_page,frontier_page
 generated_image=false
 graphic_box=false
 streaming=false
 heavy_runtime_loaded=false
 visual_pass_claimed=false
+deploy_marker=NINE_SUMMITS_UNIVERSE_DEMO_UNIVERSE_RELATIONSHIP_FIELD_DEPLOY_MARKER_v8
       </template>
     </main>
 
     <footer>
-      NINE_SUMMITS_UNIVERSE_CONTEXT_ALIGNMENT_HTML_TNT_v7 · Universe · World Around the Climb · Audralia Possibility Path.
+      NINE_SUMMITS_UNIVERSE_DEMO_UNIVERSE_RELATIONSHIP_FIELD_TNT_v8 · Universe · Demo Universe · Sun Earth Moon Relationship · World Around the Climb.
     </footer>
   </div>
 </body>

@@ -3,15 +3,24 @@
   lang="en"
   data-route="/home/"
   data-page="home"
-  data-contract="HOME_RECEIVER_ORBIT_SVG_GEM_RENEWAL_TNT_v2"
-  data-previous-contract="HOME_TOP_TRAVERSAL_RECEIVER_CRYSTAL_STANDARD_TNT_v1"
-  data-role="estate-receiver"
-  data-top-traversal="compass-door-home-manor-showroom-gauges"
+  data-contract="HOME_HEART_RECEIVER_DROPDOWN_RENEWAL_TNT_v3"
+  data-previous-contract="HOME_RECEIVER_ORBIT_SVG_GEM_RENEWAL_TNT_v2"
+  data-theme="home-is-where-the-heart-is"
+  data-role="estate-heart-receiver"
+  data-home-role="estate-heart-center"
+  data-site-dropdown-menu="true"
+  data-home-dropdown-estate-heart-map="true"
+  data-top-nav-bubbles-removed="true"
+  data-readable-text-stable="true"
+  data-object-motion-only="true"
+  data-readable-text-vibration="false"
   data-static-page-usable-without-js="true"
   data-runtime-public-message="false"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
   data-graphic-box="false"
+  data-canvas="false"
+  data-webgl="false"
   data-streaming="false"
   data-visual-pass-claimed="false"
 >
@@ -19,10 +28,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Home · Rich Manor and Estate · Diamond Gate Bridge</title>
+  <title>Home · Where the Heart Is · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Home keeps the Diamond Gate Bridge journey coherent after the Door. It receives the visitor, stabilizes the estate route, and sends each person to the correct room."
+    content="Home is where the heart of the Rich Manor and Estate stays coherent. It receives the visitor, steadies the route, and sends each person to the room that fits."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/home/">
   <meta name="theme-color" content="#02040b">
@@ -38,6 +47,8 @@
       --gold2:#ffe8a3;
       --blue:#8dd8ff;
       --green:#9ef0bf;
+      --heart:#ffb98f;
+      --heart2:#ffd3b7;
       --panel:rgba(9,15,31,.88);
       --line:rgba(184,205,255,.18);
       --shadow:0 32px 110px rgba(0,0,0,.46);
@@ -66,8 +77,9 @@
       background:
         radial-gradient(circle at 50% -8%,rgba(243,200,111,.20),transparent 28rem),
         radial-gradient(circle at 12% 18%,rgba(141,216,255,.16),transparent 28rem),
-        radial-gradient(circle at 88% 28%,rgba(158,240,191,.11),transparent 28rem),
-        radial-gradient(circle at 50% 78%,rgba(243,200,111,.09),transparent 34rem),
+        radial-gradient(circle at 88% 28%,rgba(255,185,143,.13),transparent 28rem),
+        radial-gradient(circle at 50% 78%,rgba(243,200,111,.10),transparent 34rem),
+        radial-gradient(circle at 50% 48%,rgba(255,211,183,.055),transparent 38rem),
         linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
       -webkit-font-smoothing:antialiased;
       text-rendering:geometricPrecision;
@@ -90,7 +102,8 @@
 
     a { color:inherit; text-decoration:none; }
 
-    a:focus-visible {
+    a:focus-visible,
+    summary:focus-visible {
       outline:2px solid var(--gold);
       outline-offset:4px;
     }
@@ -151,11 +164,11 @@
       transform:rotate(45deg);
       background:
         linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.26) 21% 23%,transparent 24%),
-        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.26),rgba(141,216,255,.18),rgba(8,32,80,.58),rgba(243,200,111,.18),rgba(255,255,255,.26)),
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.26),rgba(255,185,143,.20),rgba(8,32,80,.58),rgba(243,200,111,.18),rgba(255,255,255,.26)),
         radial-gradient(circle at 48% 22%,rgba(255,255,255,.28),transparent 42%),
-        linear-gradient(145deg,rgba(18,49,88,.95),rgba(5,8,20,.98));
+        linear-gradient(145deg,rgba(55,35,50,.95),rgba(5,8,20,.98));
       box-shadow:
-        0 0 2rem rgba(141,216,255,.22),
+        0 0 2rem rgba(255,185,143,.16),
         0 1.2rem 2.8rem rgba(0,0,0,.46),
         inset 0 1px 0 rgba(255,255,255,.16);
     }
@@ -187,34 +200,218 @@
       letter-spacing:-.045em;
     }
 
-    .nav {
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      gap:.48rem;
+    .site-menu{
+      justify-self:end;
+      position:relative;
+      z-index:10;
+      width:min(100%,46rem);
     }
 
-    .nav a {
-      min-height:2.25rem;
+    .site-menu-summary{
+      list-style:none;
+      width:fit-content;
+      margin-left:auto;
+      min-height:2.75rem;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      border:1px solid rgba(255,255,255,.13);
+      gap:.7rem;
+      padding:.62rem 1rem;
+      border:1px solid rgba(243,200,111,.34);
       border-radius:999px;
-      padding:.5rem .74rem;
-      color:rgba(241,246,255,.84);
-      background:rgba(255,255,255,.035);
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.055em;
-      text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      color:rgba(241,246,255,.92);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(255,211,183,.14),transparent 70%),
+        radial-gradient(circle at 80% 100%,rgba(141,216,255,.11),transparent 70%),
+        rgba(255,255,255,.05);
+      box-shadow:
+        0 .8rem 1.8rem rgba(0,0,0,.18),
+        inset 0 1px 0 rgba(255,255,255,.09);
+      cursor:pointer;
+      user-select:none;
+      transition:border-color .18s ease,background .18s ease;
     }
 
-    .nav a[aria-current="page"] {
-      border-color:rgba(243,200,111,.88);
+    .site-menu-summary::-webkit-details-marker{display:none}
+
+    .site-menu-summary span{
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+
+    .site-menu-summary b{
+      color:var(--gold2);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .site-menu-summary::before{
+      content:"";
+      width:.72rem;
+      height:.72rem;
+      border-radius:.18rem;
+      transform:rotate(45deg);
+      background:
+        radial-gradient(circle at 35% 24%,rgba(255,255,255,.95),transparent 24%),
+        linear-gradient(135deg,var(--heart2),var(--gold));
+      box-shadow:
+        0 0 .9rem rgba(243,200,111,.34),
+        0 0 1.35rem rgba(255,185,143,.22);
+      flex:0 0 auto;
+    }
+
+    .site-menu-summary::after{
+      content:"Open";
+      min-width:3.3rem;
+      text-align:center;
+      padding:.28rem .52rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;
+      color:rgba(255,244,216,.88);
+      background:rgba(1,8,20,.32);
+      font-size:.58rem;
+      font-weight:950;
+      letter-spacing:.09em;
+      text-transform:uppercase;
+    }
+
+    .site-menu[open] .site-menu-summary{
+      border-color:rgba(243,200,111,.66);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(255,211,183,.18),transparent 70%),
+        radial-gradient(circle at 80% 100%,rgba(141,216,255,.15),transparent 70%),
+        rgba(255,255,255,.07);
+    }
+
+    .site-menu[open] .site-menu-summary::after{content:"Close"}
+
+    .site-menu-panel{
+      position:absolute;
+      right:0;
+      top:calc(100% + .7rem);
+      width:min(46rem,calc(100vw - 28px));
+      padding:1rem;
+      border:1px solid rgba(243,200,111,.25);
+      border-radius:1.45rem;
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.026)),
+        rgba(5,12,25,.94);
+      box-shadow:
+        0 1.5rem 3.5rem rgba(0,0,0,.42),
+        inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+
+    .site-menu-panel::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      opacity:.42;
+      background:
+        radial-gradient(circle at 9% 14%,rgba(255,211,183,.30) 0 .08rem,rgba(243,200,111,.12) .09rem .24rem,transparent .26rem),
+        radial-gradient(circle at 17% 68%,rgba(239,231,255,.26) 0 .07rem,rgba(141,216,255,.12) .08rem .20rem,transparent .22rem),
+        radial-gradient(circle at 35% 28%,rgba(255,255,255,.25) 0 .06rem,rgba(255,185,143,.13) .07rem .17rem,transparent .19rem),
+        radial-gradient(circle at 53% 82%,rgba(255,211,183,.28) 0 .07rem,rgba(243,200,111,.14) .08rem .20rem,transparent .22rem),
+        radial-gradient(circle at 70% 22%,rgba(239,231,255,.26) 0 .08rem,rgba(141,216,255,.12) .09rem .22rem,transparent .24rem),
+        radial-gradient(circle at 89% 59%,rgba(255,211,183,.30) 0 .07rem,rgba(243,200,111,.13) .08rem .20rem,transparent .22rem),
+        radial-gradient(ellipse at 50% 0%,rgba(255,185,143,.10),transparent 72%);
+    }
+
+    .site-menu-panel::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      opacity:.18;
+      background:
+        linear-gradient(135deg,transparent 0 42%,rgba(255,255,255,.18) 43%,transparent 46%),
+        linear-gradient(45deg,transparent 0 55%,rgba(255,185,143,.18) 56%,transparent 59%),
+        linear-gradient(90deg,transparent 0 49%,rgba(243,200,111,.13) 50%,transparent 51%);
+      background-size:12rem 12rem,16rem 16rem,18rem 18rem;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.75),rgba(0,0,0,.36) 72%,transparent);
+    }
+
+    .site-menu-grid{
+      position:relative;
+      z-index:1;
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.75rem;
+    }
+
+    .site-menu-group{
+      display:grid;
+      gap:.55rem;
+      align-content:start;
+      min-height:100%;
+      padding:.8rem;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:1.05rem;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(255,185,143,.10),transparent 70%),
+        rgba(1,8,20,.50);
+    }
+
+    .site-menu-group strong{
+      color:var(--gold);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .site-menu-links{
+      display:grid;
+      gap:.42rem;
+    }
+
+    .site-menu-links a{
+      min-height:2.15rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:.65rem;
+      padding:.52rem .62rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:.82rem;
+      color:rgba(241,246,255,.86);
+      background:rgba(255,255,255,.035);
+      font-size:.74rem;
+      font-weight:900;
+      letter-spacing:.035em;
+      line-height:1.15;
+      transition:border-color .18s ease,background .18s ease,color .18s ease;
+    }
+
+    .site-menu-links a:hover,
+    .site-menu-links a:focus-visible{
+      border-color:rgba(243,200,111,.52);
+      background:rgba(243,200,111,.075);
+      color:rgba(255,244,216,.96);
+      outline:none;
+    }
+
+    .site-menu-links a[aria-current="page"]{
+      border-color:rgba(243,200,111,.86);
       color:#060811;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .site-menu-links a[aria-current="page"]::after{
+      content:"Current";
+      color:#060811;
+      font-size:.56rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      opacity:.82;
     }
 
     .panel {
@@ -222,7 +419,7 @@
       border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
         radial-gradient(circle at 14% 0%,rgba(141,216,255,.10),transparent 28rem),
-        radial-gradient(circle at 86% 18%,rgba(243,200,111,.12),transparent 28rem),
+        radial-gradient(circle at 86% 18%,rgba(255,185,143,.11),transparent 28rem),
         linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
         var(--panel);
       box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
@@ -248,11 +445,11 @@
       z-index:0;
       width:clamp(9rem,25vw,18rem);
       height:clamp(9rem,25vw,18rem);
-      border:1px solid rgba(243,200,111,.20);
+      border:1px solid rgba(255,185,143,.20);
       border-radius:2.9rem;
       transform:translateY(-50%) rotate(45deg);
       background:
-        radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
+        radial-gradient(circle at 50% 42%,rgba(255,211,183,.14),transparent 48%),
         radial-gradient(circle at 50% 72%,rgba(141,216,255,.16),transparent 62%),
         linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
       animation:anchorPulse 8s ease-in-out infinite;
@@ -289,8 +486,8 @@
       height:.72rem;
       border-radius:.18rem;
       transform:rotate(45deg);
-      background:linear-gradient(135deg,var(--gold2),var(--gold));
-      box-shadow:0 0 1.1rem rgba(243,200,111,.46);
+      background:linear-gradient(135deg,var(--heart2),var(--gold));
+      box-shadow:0 0 1.1rem rgba(243,200,111,.36);
     }
 
     h1 {
@@ -322,13 +519,21 @@
       line-height:1.55;
     }
 
+    .lead {
+      max-width:920px;
+      position:relative;
+      z-index:2;
+    }
+
     .quote {
       max-width:880px;
       padding:1rem 1.1rem;
       border:1px solid rgba(243,200,111,.22);
       border-radius:1.2rem;
       color:rgba(255,244,216,.92);
-      background:rgba(243,200,111,.065);
+      background:
+        radial-gradient(circle at 10% 0%,rgba(255,185,143,.09),transparent 70%),
+        rgba(243,200,111,.058);
       font-weight:850;
       position:relative;
       z-index:2;
@@ -392,8 +597,9 @@
       border:1px solid rgba(184,205,255,.13);
       border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
-        radial-gradient(circle at 50% 44%,rgba(243,200,111,.14),transparent 20rem),
-        radial-gradient(circle at 50% 56%,rgba(141,216,255,.12),transparent 28rem),
+        radial-gradient(circle at 50% 44%,rgba(255,185,143,.13),transparent 20rem),
+        radial-gradient(circle at 50% 56%,rgba(243,200,111,.10),transparent 26rem),
+        radial-gradient(circle at 50% 62%,rgba(141,216,255,.12),transparent 28rem),
         linear-gradient(180deg,rgba(1,5,16,.68),rgba(2,6,16,.92));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
@@ -420,7 +626,7 @@
     .home-stage::after {
       width:min(54%,24rem);
       height:min(44%,18rem);
-      border:1px solid rgba(141,216,255,.13);
+      border:1px solid rgba(255,185,143,.12);
       animation:orbitGuideReverse 38s linear infinite;
     }
 
@@ -579,7 +785,7 @@
       animation-duration:34s;
       filter:
         drop-shadow(0 1.55rem 1.85rem rgba(0,0,0,.42))
-        drop-shadow(0 0 1.65rem rgba(36,120,255,.23))
+        drop-shadow(0 0 1.65rem rgba(255,185,143,.20))
         drop-shadow(0 0 .85rem rgba(243,200,111,.16));
     }
 
@@ -692,7 +898,7 @@
       border:1px solid rgba(255,255,255,.12);
       border-radius:1.2rem;
       background:
-        radial-gradient(circle at 20% 0%,rgba(141,216,255,.08),transparent 60%),
+        radial-gradient(circle at 20% 0%,rgba(255,185,143,.075),transparent 60%),
         rgba(255,255,255,.035);
       transition:transform .18s ease,border-color .18s ease;
     }
@@ -753,9 +959,30 @@
       font-size:.76rem;
     }
 
+    @media (max-width:1080px){
+      .site-menu-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+    }
+
     @media (max-width:980px) {
       .topbar { grid-template-columns:1fr; align-items:start; }
-      .nav { justify-content:flex-start; }
+
+      .site-menu{
+        justify-self:stretch;
+        width:100%;
+      }
+
+      .site-menu-summary{
+        margin-left:0;
+      }
+
+      .site-menu-panel{
+        position:relative;
+        right:auto;
+        top:auto;
+        width:100%;
+        margin-top:.7rem;
+      }
+
       .room-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
     }
 
@@ -765,6 +992,15 @@
       .hero { min-height:27rem; padding:1rem; }
       .actions { display:grid; }
       .button { width:100%; }
+
+      .site-menu-summary{
+        width:100%;
+        justify-content:space-between;
+      }
+
+      .site-menu-grid{
+        grid-template-columns:1fr;
+      }
 
       .home-stage {
         min-height:31rem;
@@ -947,28 +1183,83 @@
         <span class="brand-mark" aria-hidden="true"><span>HM</span></span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge</span>
-          <strong>Rich Manor and Estate</strong>
+          <strong>Home · Estate Heart</strong>
         </span>
       </a>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/" aria-current="page">Home</a>
-        <a href="/explore/">Manor</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/gauges/">Gauges</a>
-      </nav>
+      <details class="site-menu">
+        <summary class="site-menu-summary">
+          <span>Home Menu</span>
+          <b>Estate Heart Map</b>
+        </summary>
+
+        <div class="site-menu-panel" aria-label="Home estate-heart dropdown menu">
+          <div class="site-menu-grid">
+            <section class="site-menu-group" aria-labelledby="menu-north">
+              <strong id="menu-north">North · Laws / Proof</strong>
+              <div class="site-menu-links">
+                <a href="/laws/">Laws</a>
+                <a href="/gauges/">Gauges</a>
+              </div>
+            </section>
+
+            <section class="site-menu-group" aria-labelledby="menu-east">
+              <strong id="menu-east">East · Story / World</strong>
+              <div class="site-menu-links">
+                <a href="/showroom/globe/">Interactive Narrative</a>
+                <a href="/showroom/">Showroom</a>
+                <a href="/nine-summits/universe/">Universe</a>
+                <a href="/nine-summits/">Nine Summits</a>
+                <a href="/nine-summits-of-love/">Book</a>
+                <a href="/characters/">Characters</a>
+              </div>
+            </section>
+
+            <section class="site-menu-group" aria-labelledby="menu-south">
+              <strong id="menu-south">South · Frontier / Systems</strong>
+              <div class="site-menu-links">
+                <a href="/explore/frontier/">Frontier</a>
+                <a href="/explore/frontier/energy/">Energy</a>
+                <a href="/explore/frontier/water/">Water</a>
+                <a href="/explore/frontier/waste/">Waste</a>
+                <a href="/explore/frontier/lattice/">Lattice</a>
+                <a href="/explore/frontier/urban/">Urban</a>
+                <a href="/explore/frontier/closed-loop/">Closed Loop</a>
+                <a href="/explore/frontier/manual/">Manual</a>
+                <a href="/explore/frontier/shimmer/">Shimmer</a>
+                <a href="/explore/frontier/infrastructure/">Infrastructure</a>
+                <a href="/explore/frontier/trajectory/">Trajectory</a>
+              </div>
+            </section>
+
+            <section class="site-menu-group" aria-labelledby="menu-west">
+              <strong id="menu-west">West · House / Practical</strong>
+              <div class="site-menu-links">
+                <a href="/">Compass</a>
+                <a href="/door/">Door</a>
+                <a href="/home/" aria-current="page">Home</a>
+                <a href="/explore/">Manor / Explore</a>
+                <a href="/products/">Products</a>
+                <a href="/meet-sean-mansfield/">Meet Sean</a>
+              </div>
+            </section>
+          </div>
+        </div>
+      </details>
     </header>
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Home · Estate Receiver</div>
+        <div class="kicker">Home · Estate Heart</div>
 
-        <h1 id="page-title">Home keeps the journey coherent.</h1>
+        <h1 id="page-title">Home is where the heart is.</h1>
+
+        <p class="lead">
+          The Door gets you inside. Home receives you, steadies the route, and sends you to the room that fits.
+        </p>
 
         <div class="quote">
-          “The Door gets you in. Home helps you know where you are.”
+          “The Door gets you in. Home reminds you why you came.”
         </div>
 
         <div class="actions">
@@ -980,21 +1271,21 @@
       </section>
 
       <section class="panel section" aria-labelledby="receiver-title">
-        <div class="kicker">Four-point receiver orbit</div>
-        <h2 id="receiver-title">Home stabilizes the estate.</h2>
+        <div class="kicker">Estate-heart receiver orbit</div>
+        <h2 id="receiver-title">Home holds the center so every room can stay connected.</h2>
 
         <p>
-          Home receives the visitor after the Door, keeps the route clean, and sends each person to the correct room.
+          Home is the heart of the estate: the place where the visitor returns, regains orientation, and chooses the next room without losing the larger journey.
         </p>
 
-        <div class="home-stage" aria-label="Home receiver orbit with SVG organic digital gems">
+        <div class="home-stage" aria-label="Home estate-heart receiver orbit with SVG organic digital gems">
           <div class="home-anchor" aria-hidden="true" style="--tilt-a:-1.4deg;--tilt-b:1.8deg;">
             <span class="gem-core">
               <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
                 <use href="#homeOrganicGemA"></use>
               </svg>
             </span>
-            <span class="gem-label"><b>Home</b><span>Estate Receiver</span></span>
+            <span class="gem-label"><b>Home</b><span>Estate Heart</span></span>
           </div>
 
           <div class="home-orbit manor">
@@ -1045,7 +1336,7 @@
 
       <section class="panel section" aria-labelledby="rooms-title">
         <div class="kicker">Rooms from Home</div>
-        <h2 id="rooms-title">The receiver keeps the estate connected.</h2>
+        <h2 id="rooms-title">The heart keeps the estate connected.</h2>
 
         <div class="room-grid">
           <a class="room-card" href="/">
@@ -1086,27 +1377,43 @@
         </div>
 
         <template id="route-receipt" data-route-receipt>
-HOME_RECEIVER_ORBIT_SVG_GEM_RENEWAL_TNT_v2
-previous=HOME_TOP_TRAVERSAL_RECEIVER_CRYSTAL_STANDARD_TNT_v1
+HOME_HEART_RECEIVER_DROPDOWN_RENEWAL_TNT_v3
+previous=HOME_RECEIVER_ORBIT_SVG_GEM_RENEWAL_TNT_v2
 route=/home/
 page=home
-role=estate_receiver
+role=estate_heart_receiver
 public_identity=Rich_Manor_and_Estate
-headline=Home_keeps_the_journey_coherent
-quote=The_Door_gets_you_in_Home_helps_you_know_where_you_are
-top_traversal=compass,door,home,manor,showroom,gauges
+theme=home_is_where_the_heart_is
+headline=Home_is_where_the_heart_is
+quote=The_Door_gets_you_in_Home_reminds_you_why_you_came
+top_nav_bubbles_removed=true
+site_dropdown_menu=true
+home_dropdown_estate_heart_map=true
+north=Laws_Gauges
+east=Interactive_Narrative_Showroom_Universe_Nine_Summits_Book_Characters
+south=Frontier_Energy_Water_Waste_Lattice_Urban_Closed_Loop_Manual_Shimmer_Infrastructure_Trajectory
+west=Compass_Door_Home_Manor_Products_Meet_Sean
+receiver_orbit_preserved=true
 receiver_orbit=manor,book,showroom,gauges
 rooms_from_home=compass,door,manor,laws,products,showroom
-gem_restore=true
-svg_organic_gems=true
-orbital_rotation=true
-center_gem=home_estate_receiver
+center_gem=home_estate_heart_receiver
 orbit_gems=manor,book,showroom,gauges
+gem_restore=true
+svg_organic_gems_preserved=true
+orbital_rotation=true
+object_motion_only=true
+readable_text_stable=true
+text_vibration=false
+text_independent_animation=false
+allowed_text_motion=attached_to_moving_object_only
 animation=homeOrbitTurn,gemBodyTurn,gemBreathe,gemGlint,gemFacetTurn,homeAnchorFloat,orbitGuideTurn,orbitGuideReverse
 rightful_form=inline_svg_faceted_organic_digital_gem
 static_page_usable_without_js=true
+javascript_added=false
 runtime_public_message=false
 heavy_runtime_loaded=false
+canvas=false
+webgl=false
 generated_image=false
 graphic_box=false
 streaming=false
@@ -1116,7 +1423,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      HOME_RECEIVER_ORBIT_SVG_GEM_RENEWAL_TNT_v2 · Home · Estate Receiver · SVG gem orbit restored.
+      HOME_HEART_RECEIVER_DROPDOWN_RENEWAL_TNT_v3 · Home · Estate Heart Receiver · Dropdown active · SVG gem orbit preserved.
     </footer>
   </div>
 </body>

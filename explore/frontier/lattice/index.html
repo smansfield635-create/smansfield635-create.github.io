@@ -3,12 +3,12 @@
   lang="en"
   data-route="/explore/frontier/lattice/"
   data-page="frontier-lattice"
-  data-version="G3-V2"
-  data-contract="FRONTIER_LATTICE_LIVING_256_CONSTRAINT_FIELD_TNT_v2"
+  data-version="G3-V3"
+  data-contract="FRONTIER_LATTICE_COMPASS_GEMS_RESTORED_WITH_LIVING_256_FIELD_TNT_v3"
   data-role="frontier-lattice"
   data-active-route="/explore/frontier/lattice/"
   data-parent-return="/explore/frontier/"
-  data-artistic-identity="living-256-constraint-field"
+  data-artistic-identity="living-256-constraint-field-with-compass-gem-pathways"
   data-lattice-field="active"
   data-lattice-scale="16x16"
   data-lattice-addresses="256"
@@ -17,21 +17,28 @@
   data-receipt-nodes="active"
   data-held-nodes="active"
   data-constraint-locks="active"
+  data-compass-gems="active"
+  data-compass-gem-donor="FRONTIER_LATTICE_MINIMUM_NAV_RETURN_TWINKLING_GEM_GLOW_CONSOLIDATION_TNT_v1"
+  data-compass-organic-gem="active"
   data-platform-lens="active"
   data-engineering-lens="active"
   data-dropdown-navigation="active"
   data-static-page-usable-without-js="true"
   data-runtime-scope="css-only"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-canvas="false"
+  data-webgl="false"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Lattice · Living 256 Constraint Field · Diamond Gate Bridge</title>
+  <title>Lattice · Living 256 Field · Compass Gems · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Lattice presents a living 16 × 16 / 256 constraint field where pressure, routes, receipts, boundaries, and audit states become visible."
+    content="Diamond Gate Bridge Lattice presents a living 16 × 16 / 256 constraint field with restored compass-style crystal gem pathway navigation, Platform lenses, and Engineering lenses."
   >
 
   <style>
@@ -45,6 +52,7 @@
       --gold2:#ffe8a3;
       --blue:#8dd8ff;
       --green:#39ff9f;
+      --softgreen:#8ff0c3;
       --violet:#8f65ff;
       --red:#ff9d91;
       --panel:rgba(9,15,31,.90);
@@ -52,6 +60,7 @@
       --shadow:0 32px 110px rgba(0,0,0,.50);
       --max:1180px;
       --brand-gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
+      --gem-breathe-duration:8.8s;
     }
 
     *{box-sizing:border-box}
@@ -91,10 +100,11 @@
       pointer-events:none;
       background-image:
         radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
+        radial-gradient(circle,rgba(243,200,111,.13) 0 1px,transparent 1.5px),
         linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
         linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px);
-      background-size:220px 260px,54px 54px,54px 54px;
-      opacity:.18;
+      background-size:220px 260px,310px 280px,54px 54px,54px 54px;
+      opacity:.20;
       mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
     }
 
@@ -103,9 +113,18 @@
     a:focus-visible,
     button:focus-visible,
     summary:focus-visible,
-    label:focus-visible{
+    label:focus-visible,
+    [tabindex]:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
+    }
+
+    .svg-defs{
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+      pointer-events:none;
     }
 
     .skip{
@@ -619,8 +638,8 @@
         radial-gradient(circle at 42% 34%,rgba(255,255,255,.92),transparent 18%),
         radial-gradient(circle at 50% 50%,var(--c),rgba(3,8,18,.88) 68%);
       box-shadow:
-        0 0 .7rem color-mix(in srgb,var(--c),transparent 35%),
-        0 0 1.4rem color-mix(in srgb,var(--c),transparent 65%),
+        0 0 .7rem var(--glow),
+        0 0 1.4rem var(--glow-soft),
         inset 0 1px 0 rgba(255,255,255,.20);
       animation:nodePulse var(--t,5.8s) ease-in-out infinite;
       animation-delay:var(--d,0s);
@@ -641,11 +660,11 @@
       text-shadow:0 2px 8px rgba(0,0,0,.82);
     }
 
-    .node.receipt{--c:var(--green)}
-    .node.pressure{--c:var(--gold)}
-    .node.hold{--c:var(--blue)}
-    .node.lock{--c:var(--violet)}
-    .node.contradiction{--c:var(--red)}
+    .node.receipt{--c:var(--green);--glow:rgba(57,255,159,.62);--glow-soft:rgba(57,255,159,.26)}
+    .node.pressure{--c:var(--gold);--glow:rgba(243,200,111,.62);--glow-soft:rgba(243,200,111,.26)}
+    .node.hold{--c:var(--blue);--glow:rgba(141,216,255,.60);--glow-soft:rgba(141,216,255,.25)}
+    .node.lock{--c:var(--violet);--glow:rgba(143,101,255,.60);--glow-soft:rgba(143,101,255,.24)}
+    .node.contradiction{--c:var(--red);--glow:rgba(255,157,145,.62);--glow-soft:rgba(255,157,145,.24)}
 
     .node.lock{
       border-radius:.24rem;
@@ -758,50 +777,286 @@
       border-radius:999px;
     }
 
-    .pathway-grid{
+    .compass-stage{
+      position:relative;
+      min-height:clamp(42rem,78vw,58rem);
       display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:1rem;
-    }
-
-    .orbit-link{
-      display:grid;
-      gap:.45rem;
-      min-height:7.2rem;
-      padding:1rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.1rem;
+      place-items:center;
+      overflow:hidden;
+      isolation:isolate;
+      border:1px solid rgba(184,205,255,.13);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
-        radial-gradient(circle at 18% 0%,rgba(57,255,159,.11),transparent 16rem),
-        linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018));
+        radial-gradient(circle at 50% 40%,rgba(141,216,255,.10),transparent 18rem),
+        radial-gradient(circle at 50% 62%,rgba(36,120,255,.13),transparent 24rem),
+        radial-gradient(circle at 50% 77%,rgba(243,200,111,.065),transparent 28rem),
+        linear-gradient(180deg,rgba(1,5,16,.70),rgba(2,6,16,.94));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .orbit-link:hover,
-    .orbit-link:focus-visible{
-      transform:translateY(-3px);
-      border-color:rgba(243,200,111,.48);
+    .compass-stage::before,
+    .compass-stage::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+    }
+
+    .compass-stage::before{
+      width:min(84%,44rem);
+      height:min(62%,28rem);
+      border:1px solid rgba(243,200,111,.13);
+      box-shadow:
+        0 0 3rem rgba(36,120,255,.12),
+        inset 0 0 30px rgba(141,216,255,.045);
+      animation:orbitTurn 42s linear infinite;
+    }
+
+    .compass-stage::after{
+      width:min(62%,30rem);
+      height:min(42%,19rem);
+      border:1px solid rgba(141,216,255,.13);
+      box-shadow:0 0 3rem rgba(141,216,255,.08);
+      animation:orbitTurnReverse 38s linear infinite;
+    }
+
+    @keyframes orbitTurn{
+      from{transform:translate(-50%,-50%) rotate(-12deg)}
+      to{transform:translate(-50%,-50%) rotate(348deg)}
+    }
+
+    @keyframes orbitTurnReverse{
+      from{transform:translate(-50%,-50%) rotate(24deg)}
+      to{transform:translate(-50%,-50%) rotate(-336deg)}
+    }
+
+    .compass-center,
+    .compass-node{
+      position:absolute;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      color:var(--ink);
+      z-index:4;
+      transition:transform .18s ease,filter .18s ease;
+      animation:gemFloat 7.2s ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+      isolation:isolate;
+    }
+
+    .compass-center{
+      left:50%;
+      top:50%;
+      width:clamp(11rem,24vw,16rem);
+      height:clamp(8rem,17vw,11.6rem);
+      transform:translate(-50%,-50%);
+      z-index:6;
+      pointer-events:none;
+    }
+
+    .compass-node{
+      width:clamp(7.15rem,14.2vw,10.4rem);
+      height:clamp(5.25rem,10.4vw,7.65rem);
+      left:var(--x);
+      top:var(--y);
+      transform:translate(-50%,-50%);
+    }
+
+    .compass-center::before,
+    .compass-node::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:0;
+      width:92%;
+      height:112%;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,1) 0 .22rem,transparent .31rem),
+        radial-gradient(circle at 50% 50%,rgba(255,244,216,.92),transparent 18%),
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.66),transparent 36%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.45),transparent 63%),
+        radial-gradient(circle at 50% 50%,rgba(143,101,255,.24),transparent 84%);
+      box-shadow:
+        0 0 .78rem rgba(255,255,255,.38),
+        0 0 1.42rem rgba(243,200,111,.46),
+        0 0 2.55rem rgba(141,216,255,.35),
+        0 0 3.75rem rgba(143,101,255,.22);
+      opacity:.94;
+      pointer-events:none;
+      animation:behindGemStarTwinkle 6.2s ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+    }
+
+    .compass-center::before{
+      width:96%;
+      height:118%;
+      box-shadow:
+        0 0 .95rem rgba(255,255,255,.42),
+        0 0 1.75rem rgba(243,200,111,.50),
+        0 0 3rem rgba(141,216,255,.38),
+        0 0 4.4rem rgba(143,101,255,.26);
+    }
+
+    .compass-center::after,
+    .compass-node::after{
+      content:"";
+      position:absolute;
+      inset:-9%;
+      z-index:1;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,244,216,.22),transparent 31%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.18),transparent 58%),
+        radial-gradient(circle at 50% 50%,rgba(143,101,255,.11),transparent 78%);
+      filter:blur(11px);
+      opacity:.74;
+      pointer-events:none;
+      animation:effervescentGemStarSpill 8.4s ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+    }
+
+    .compass-center::after{
+      inset:-12%;
+      opacity:.80;
+    }
+
+    .compass-node:hover,
+    .compass-node:focus-visible{
+      transform:translate(-50%,-50%) scale(1.055);
+      filter:brightness(1.13) saturate(1.08);
       outline:none;
     }
 
-    .orbit-link b{
-      color:var(--gold);
-      font-size:.72rem;
+    @keyframes gemFloat{
+      0%,100%{margin-top:0}
+      50%{margin-top:-.42rem}
+    }
+
+    @keyframes behindGemStarTwinkle{
+      0%,100%{opacity:.88;filter:brightness(1.03) saturate(1);transform:translate(-50%,-50%) scale(1)}
+      18%{opacity:1;filter:brightness(1.36) saturate(1.14);transform:translate(-50%,-50%) scale(1.035)}
+      26%{opacity:.92;filter:brightness(1.10) saturate(1.05);transform:translate(-50%,-50%) scale(1.006)}
+      54%{opacity:.98;filter:brightness(1.22) saturate(1.10);transform:translate(-50%,-50%) scale(1.02)}
+      68%{opacity:1;filter:brightness(1.48) saturate(1.18);transform:translate(-50%,-50%) scale(1.046)}
+      74%{opacity:.93;filter:brightness(1.12) saturate(1.06);transform:translate(-50%,-50%) scale(1.01)}
+    }
+
+    @keyframes effervescentGemStarSpill{
+      0%,100%{opacity:.60;filter:blur(10px) brightness(1);transform:scale(1)}
+      36%{opacity:.78;filter:blur(12px) brightness(1.12);transform:scale(1.025)}
+      68%{opacity:.84;filter:blur(13px) brightness(1.18);transform:scale(1.04)}
+    }
+
+    .gem-core{
+      position:absolute;
+      inset:0;
+      z-index:2;
+      display:grid;
+      place-items:center;
+      pointer-events:none;
+      animation:gemBreathe var(--gem-breathe-duration) ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+      transform-origin:50% 50%;
+    }
+
+    @keyframes gemBreathe{
+      0%,100%{transform:translateY(0) rotate(var(--tilt-a,-1.6deg)) scale(1);filter:brightness(1)}
+      50%{transform:translateY(-.22rem) rotate(var(--tilt-b,2deg)) scale(1.025);filter:brightness(1.12)}
+    }
+
+    .gem-svg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      overflow:visible;
+      pointer-events:none;
+      filter:
+        drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
+        drop-shadow(0 0 1.15rem rgba(36,120,255,.18))
+        drop-shadow(0 0 .55rem rgba(243,200,111,.10));
+    }
+
+    .compass-center .gem-svg{
+      filter:
+        drop-shadow(0 1.55rem 1.85rem rgba(0,0,0,.42))
+        drop-shadow(0 0 1.65rem rgba(36,120,255,.23))
+        drop-shadow(0 0 .85rem rgba(243,200,111,.16));
+    }
+
+    .gem-glint{
+      animation:gemGlint 8.5s ease-in-out infinite;
+      transform-origin:110px 80px;
+    }
+
+    .gem-star{
+      animation:gemFacetTurn 30s linear infinite;
+      transform-origin:110px 80px;
+    }
+
+    @keyframes gemGlint{
+      0%,100%{opacity:.07;transform:translateX(-36px)}
+      48%,55%{opacity:.56;transform:translateX(34px)}
+    }
+
+    @keyframes gemFacetTurn{
+      to{transform:rotate(360deg)}
+    }
+
+    .gem-label{
+      position:relative;
+      z-index:3;
+      width:86%;
+      display:grid;
+      place-items:center;
+      gap:.18rem;
+      text-align:center;
+      pointer-events:none;
+      text-shadow:
+        0 3px 14px rgba(0,0,0,.98),
+        0 0 12px rgba(0,28,90,.88),
+        0 0 3px rgba(255,255,255,.58);
+    }
+
+    .gem-label b{
+      display:block;
+      color:rgba(255,244,216,.99);
+      font-size:clamp(.70rem,1.62vw,1rem);
       font-weight:950;
-      letter-spacing:.12em;
+      letter-spacing:.065em;
+      line-height:1.02;
       text-transform:uppercase;
     }
 
-    .orbit-link strong{
-      color:rgba(255,244,216,.98);
-      font-size:1.15rem;
-      line-height:1.05;
+    .gem-label span{
+      color:rgba(230,238,255,.88);
+      font-size:clamp(.48rem,1.06vw,.66rem);
+      font-weight:950;
+      letter-spacing:.065em;
+      line-height:1.02;
+      text-transform:uppercase;
     }
 
-    .orbit-link span{
-      color:var(--muted);
-      font-size:.9rem;
-      line-height:1.38;
+    .compass-center .gem-label{
+      width:84%;
+      gap:.2rem;
+    }
+
+    .compass-center .gem-label b{
+      color:var(--gold);
+      font-size:clamp(1.02rem,2.35vw,1.42rem);
+      letter-spacing:.13em;
+    }
+
+    .compass-center .gem-label span{
+      font-size:clamp(.72rem,1.48vw,.94rem);
+      letter-spacing:.085em;
     }
 
     .pathway-module{
@@ -1010,7 +1265,6 @@
       .nav{justify-content:flex-start}
       .route-menu-panel{left:0;right:auto}
       .lattice-wrap{grid-template-columns:1fr}
-      .pathway-grid{grid-template-columns:1fr}
     }
 
     @media (max-width:760px){
@@ -1026,23 +1280,210 @@
       .gate.east{right:.42rem}
       .gate.west{left:.42rem}
       .node::after{display:none}
+      .compass-stage{
+        min-height:auto;
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:1rem .85rem;
+        padding:1.2rem 1rem;
+        place-items:center;
+      }
+      .compass-stage::before,
+      .compass-stage::after{display:none}
+      .compass-center,
+      .compass-node{
+        position:relative;
+        left:auto!important;
+        top:auto!important;
+        transform:none;
+      }
+      .compass-node:hover,
+      .compass-node:focus-visible{transform:scale(1.05)}
+      .compass-center{
+        grid-column:1 / -1;
+        width:9.8rem;
+        height:7.1rem;
+        order:-2;
+      }
+      .compass-node{
+        width:7.45rem;
+        height:5.45rem;
+      }
+      .compass-center::before,
+      .compass-node::before{
+        width:96%;
+        height:116%;
+      }
+      .compass-center::after,
+      .compass-node::after{
+        inset:-7%;
+      }
+      .gem-label{
+        width:88%;
+        gap:.14rem;
+      }
+      .gem-label b{
+        font-size:.62rem;
+        letter-spacing:.046em;
+      }
+      .gem-label span{
+        font-size:.44rem;
+        letter-spacing:.044em;
+      }
+      .compass-center .gem-label b{font-size:.88rem}
+      .compass-center .gem-label span{font-size:.60rem}
       .lens-tabs{display:grid;grid-template-columns:1fr 1fr}
       .section-return{display:grid;grid-template-columns:1fr;justify-content:stretch}
       .return-orbit,.return-frontier{width:100%}
     }
 
+    @media (max-width:420px){
+      .compass-stage{gap:.9rem .62rem}
+      .compass-node{
+        width:6.85rem;
+        height:5rem;
+      }
+      .gem-label{width:90%}
+      .gem-label b{
+        font-size:.54rem;
+        letter-spacing:.036em;
+      }
+      .gem-label span{
+        font-size:.38rem;
+        letter-spacing:.034em;
+      }
+      .compass-center{
+        width:8.95rem;
+        height:6.5rem;
+      }
+      .compass-center .gem-label b{font-size:.78rem}
+      .compass-center .gem-label span{font-size:.52rem}
+    }
+
     @media (prefers-reduced-motion:reduce){
-      *,*::before,*::after{
+      *,
+      *::before,
+      *::after{
         scroll-behavior:auto!important;
         animation-duration:.01ms!important;
         animation-iteration-count:1!important;
         transition-duration:.01ms!important;
+      }
+
+      .gem-core,
+      .gem-glint,
+      .gem-star,
+      .compass-stage::before,
+      .compass-stage::after,
+      .compass-center,
+      .compass-node,
+      .compass-center::before,
+      .compass-center::after,
+      .compass-node::before,
+      .compass-node::after,
+      .route-line,
+      .route-line::after,
+      .node,
+      .constraint-ribbon{
+        animation:none!important;
       }
     }
   </style>
 </head>
 
 <body>
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="compassGemBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#fff8dc" stop-opacity=".92"/>
+        <stop offset=".13" stop-color="#dff5ff" stop-opacity=".70"/>
+        <stop offset=".30" stop-color="#8dd8ff" stop-opacity=".56"/>
+        <stop offset=".48" stop-color="#2478ff" stop-opacity=".40"/>
+        <stop offset=".66" stop-color="#f3c86f" stop-opacity=".24"/>
+        <stop offset="1" stop-color="#020816" stop-opacity=".94"/>
+      </linearGradient>
+
+      <linearGradient id="compassGemAir" x1="48" y1="10" x2="168" y2="80" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".90"/>
+        <stop offset=".34" stop-color="#eaf7ff" stop-opacity=".46"/>
+        <stop offset=".68" stop-color="#fff0a3" stop-opacity=".18"/>
+        <stop offset="1" stop-color="#8dd8ff" stop-opacity=".10"/>
+      </linearGradient>
+
+      <linearGradient id="compassGemDepth" x1="110" y1="36" x2="110" y2="156" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".18"/>
+        <stop offset=".30" stop-color="#8dd8ff" stop-opacity=".20"/>
+        <stop offset=".62" stop-color="#f3c86f" stop-opacity=".13"/>
+        <stop offset="1" stop-color="#020716" stop-opacity=".66"/>
+      </linearGradient>
+
+      <radialGradient id="compassGemTableGlow" cx="50%" cy="38%" r="64%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".56"/>
+        <stop offset=".28" stop-color="#8dd8ff" stop-opacity=".28"/>
+        <stop offset=".58" stop-color="#ffe8a3" stop-opacity=".12"/>
+        <stop offset="1" stop-color="#020611" stop-opacity="0"/>
+      </radialGradient>
+
+      <linearGradient id="compassGemGlint" x1="28" y1="130" x2="184" y2="24" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset=".45" stop-color="#ffffff" stop-opacity=".84"/>
+        <stop offset=".52" stop-color="#fff0a3" stop-opacity=".30"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+
+      <filter id="compassGemGlow" x="-42%" y="-50%" width="184%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="blur"/>
+        <feColorMatrix
+          in="blur"
+          type="matrix"
+          values="
+            0.42 0 0 0 0.08
+            0 .58 0 0 0.14
+            0 0 1.00 0 0.28
+            0 0 0 0.52 0"
+          result="glow"
+        />
+        <feMerge>
+          <feMergeNode in="glow"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      <symbol id="compassOrganicGem" viewBox="0 0 220 160">
+        <g filter="url(#compassGemGlow)">
+          <path d="M108 4 L146 12 L184 39 L209 76 L188 108 L147 139 L111 155 L69 136 L27 105 L12 73 L39 37 L77 14 Z" fill="url(#compassGemBody)" stroke="rgba(235,248,255,.58)" stroke-width="1.35"/>
+          <path d="M108 4 L146 12 L130 38 L109 30 L87 39 L77 14 Z" fill="url(#compassGemAir)" opacity=".84"/>
+          <path d="M77 14 L87 39 L61 58 L39 37 Z" fill="rgba(255,255,255,.23)"/>
+          <path d="M146 12 L130 38 L159 60 L184 39 Z" fill="rgba(255,255,255,.15)"/>
+          <path d="M39 37 L61 58 L53 83 L12 73 Z" fill="rgba(141,216,255,.12)"/>
+          <path d="M184 39 L159 60 L166 81 L209 76 Z" fill="rgba(243,200,111,.12)"/>
+          <path d="M87 39 L109 30 L130 38 L159 60 L148 83 L110 101 L72 83 L61 58 Z" fill="url(#compassGemTableGlow)" stroke="rgba(255,255,255,.30)" stroke-width=".9"/>
+          <path d="M12 73 L53 83 L69 136 L27 105 Z" fill="rgba(141,216,255,.14)"/>
+          <path d="M209 76 L166 81 L147 139 L188 108 Z" fill="rgba(243,200,111,.11)"/>
+          <path d="M53 83 L72 83 L111 155 L69 136 Z" fill="rgba(2,8,24,.40)"/>
+          <path d="M166 81 L148 83 L111 155 L147 139 Z" fill="rgba(243,200,111,.10)"/>
+          <path d="M72 83 L110 101 L111 155 Z" fill="url(#compassGemDepth)" opacity=".76"/>
+          <path d="M148 83 L110 101 L111 155 Z" fill="rgba(4,10,22,.36)"/>
+          <path d="M108 4 L111 155" stroke="rgba(255,255,255,.34)" stroke-width="1.15"/>
+          <path d="M12 73 L209 76" stroke="rgba(255,255,255,.28)" stroke-width="1.05"/>
+          <path d="M39 37 L188 108" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M184 39 L27 105" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M77 14 L110 101 L146 12" stroke="rgba(255,255,255,.18)" stroke-width=".9" fill="none"/>
+          <path d="M39 37 L110 101 L184 39" stroke="rgba(255,255,255,.16)" stroke-width=".9" fill="none"/>
+          <path d="M27 105 L110 101 L188 108" stroke="rgba(243,200,111,.14)" stroke-width=".9" fill="none"/>
+          <g class="gem-star" opacity=".82">
+            <path d="M109 27 L116 70 L110 106 L103 70 Z" fill="rgba(255,255,255,.27)"/>
+            <path d="M61 58 L105 72 L159 60 L116 79 Z" fill="rgba(255,255,255,.16)"/>
+            <path d="M72 83 L105 75 L148 83 L114 92 Z" fill="rgba(141,216,255,.13)"/>
+            <path d="M110 101 L126 81 L148 83 L129 96 Z" fill="rgba(255,255,255,.13)"/>
+            <path d="M110 101 L94 81 L72 83 L91 96 Z" fill="rgba(243,200,111,.08)"/>
+          </g>
+          <path class="gem-glint" d="M33 118 L176 22 L188 38 L48 130 Z" fill="url(#compassGemGlint)"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
   <a class="skip" href="#main">Skip to Lattice</a>
 
   <div class="shell">
@@ -1096,7 +1537,7 @@
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Living 16 × 16 / 256 Constraint Field</div>
+        <div class="kicker">Living 16 × 16 / 256 Field · Compass Gem Pathways</div>
 
         <h1 id="page-title">The lattice is the routing layer beneath the frontier.</h1>
 
@@ -1159,23 +1600,85 @@
         </div>
       </section>
 
-      <section class="panel section" id="lattice-orbit" aria-labelledby="orbit-title">
-        <div class="kicker">Lattice pathways · 256 field navigation</div>
+      <section class="panel section" aria-labelledby="orbit-title" id="lattice-orbit">
+        <div class="kicker">Lattice field · Restored compass gem pathways</div>
         <h2 id="orbit-title">Choose the pathway first. Choose the language lens inside the pathway.</h2>
 
-        <div class="pathway-grid">
-          <a class="orbit-link" href="#audralia-lattice"><b>Pathway One</b><strong>Audralia Lattice</strong><span>The simulation world makes the routing substrate visible.</span></a>
-          <a class="orbit-link" href="#field-256"><b>Pathway Two</b><strong>256 Field</strong><span>The full field gives every claim an addressable surface.</span></a>
-          <a class="orbit-link" href="#coordinates"><b>Pathway Three</b><strong>Coordinates</strong><span>Coordinates keep objects from drifting.</span></a>
-          <a class="orbit-link" href="#nodes"><b>Pathway Four</b><strong>Nodes</strong><span>Nodes require role, state, and receipt.</span></a>
-          <a class="orbit-link" href="#categories"><b>Pathway Five</b><strong>Categories</strong><span>Categories stay distinct inside one map.</span></a>
-          <a class="orbit-link" href="#pathways"><b>Pathway Six</b><strong>Pathways</strong><span>Pathways let visitors enter and return.</span></a>
-          <a class="orbit-link" href="#states"><b>Pathway Seven</b><strong>States</strong><span>States declare readiness, hold, or failure.</span></a>
-          <a class="orbit-link" href="#transitions"><b>Pathway Eight</b><strong>Transitions</strong><span>Transitions govern lawful motion.</span></a>
-          <a class="orbit-link" href="#boundaries"><b>Pathway Nine</b><strong>Boundaries</strong><span>Boundaries preserve category meaning.</span></a>
-          <a class="orbit-link" href="#receipts"><b>Pathway Ten</b><strong>Receipts</strong><span>Receipts turn movement into accountable history.</span></a>
-          <a class="orbit-link" href="#audit"><b>Pathway Eleven</b><strong>Audit</strong><span>Audit challenges route, state, and receipt claims.</span></a>
-          <a class="orbit-link" href="#kill-conditions"><b>Pathway Twelve</b><strong>Kill Conditions</strong><span>Stop conditions protect the field from false closure.</span></a>
+        <div
+          class="compass-stage"
+          aria-label="Lattice compass gem pathway field"
+          data-lattice-pathway-field="true"
+          data-source-symbol-authority="compassOrganicGem"
+          data-per-pathway-dual-lens="true"
+        >
+          <div class="compass-center" aria-hidden="true" style="--delay:-.1s;--tilt-a:-1.4deg;--tilt-b:1.8deg;">
+            <span class="gem-core">
+              <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+                <use href="#compassOrganicGem"></use>
+              </svg>
+            </span>
+            <span class="gem-label"><b>Lattice</b><span>256 Field</span></span>
+          </div>
+
+          <a class="compass-node" style="--x:50%;--y:11%;--delay:-.2s;--tilt-a:-2.2deg;--tilt-b:1.4deg;" href="#audralia-lattice" aria-label="Open Audralia Lattice">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Audralia</b><span>Lattice</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:73%;--y:17%;--delay:-.8s;--tilt-a:1.5deg;--tilt-b:-2.3deg;" href="#field-256" aria-label="Open 256 Field">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>256</b><span>Field</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:87%;--y:34%;--delay:-1.4s;--tilt-a:-1.6deg;--tilt-b:2.6deg;" href="#coordinates" aria-label="Open Coordinates">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Coordinates</b><span>Address</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:87%;--y:62%;--delay:-2.0s;--tilt-a:1.9deg;--tilt-b:-1.6deg;" href="#nodes" aria-label="Open Nodes">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Nodes</b><span>Identity</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:73%;--y:80%;--delay:-2.6s;--tilt-a:-2deg;--tilt-b:2deg;" href="#categories" aria-label="Open Categories">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Categories</b><span>Frontier</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:50%;--y:88%;--delay:-3.0s;--tilt-a:1.4deg;--tilt-b:-2.4deg;" href="#pathways" aria-label="Open Pathways">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Pathways</b><span>Return</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:27%;--y:80%;--delay:-3.4s;--tilt-a:-1.9deg;--tilt-b:1.8deg;" href="#states" aria-label="Open States">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>States</b><span>Status</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:13%;--y:62%;--delay:-3.8s;--tilt-a:1.7deg;--tilt-b:-1.5deg;" href="#transitions" aria-label="Open Transitions">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Transitions</b><span>Motion</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:13%;--y:34%;--delay:-4.2s;--tilt-a:-2.1deg;--tilt-b:1.5deg;" href="#boundaries" aria-label="Open Boundaries">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Boundaries</b><span>Limit</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:27%;--y:17%;--delay:-4.6s;--tilt-a:1.6deg;--tilt-b:-2.2deg;" href="#receipts" aria-label="Open Receipts">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Receipts</b><span>Memory</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:34%;--y:6%;--delay:-5.0s;--tilt-a:-1.6deg;--tilt-b:2.1deg;" href="#audit" aria-label="Open Audit">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Audit</b><span>Challenge</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:66%;--y:6%;--delay:-5.4s;--tilt-a:2.0deg;--tilt-b:-1.8deg;" href="#kill-conditions" aria-label="Open Kill Conditions">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Kill</b><span>Conditions</span></span>
+          </a>
         </div>
       </section>
 
@@ -1420,7 +1923,7 @@
       </section>
 
       <section class="final-band" id="final-lock" aria-label="Lattice final lock">
-        <strong>The lattice is the map beneath the frontier. The 256 field is the addressable routing surface. Audralia is the simulation world.</strong>
+        <strong>The lattice is the map beneath the frontier. The 256 field is the addressable routing surface. The restored compass gems are the pathway navigation authority.</strong>
         <p>
           Lattice supports Energy, Water, Waste, Urban, and future Frontier categories through coordinate, route, state, boundary, receipt, and audit behavior.
         </p>
@@ -1437,7 +1940,7 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_LATTICE_LIVING_256_CONSTRAINT_FIELD_TNT_v2
+FRONTIER_LATTICE_COMPASS_GEMS_RESTORED_WITH_LIVING_256_FIELD_TNT_v3
 route=/explore/frontier/lattice/
 page=frontier_lattice
 html=/explore/frontier/lattice/index.html
@@ -1455,6 +1958,24 @@ held_nodes=active
 constraint_locks=active
 contradiction_nodes=active
 map_key=active
+compass_gems=active
+compass_gem_donor=FRONTIER_LATTICE_MINIMUM_NAV_RETURN_TWINKLING_GEM_GLOW_CONSOLIDATION_TNT_v1
+compass_organic_gem=active
+compassGemBody=active
+compassGemAir=active
+compassGemDepth=active
+compassGemTableGlow=active
+compassGemGlint=active
+compassGemGlow=active
+compassOrganicGem=active
+compass_stage=active
+compass_center=active
+compass_node=active
+gem_core=active
+gem_svg=active
+gem_label=active
+gem_glint=active
+gem_star=active
 dropdown_navigation=active
 site_menu=active
 frontier_lanes_menu=active
@@ -1464,18 +1985,18 @@ return_to_lattice_orbit_under_every_pathway=active
 return_to_frontier_under_every_pathway=active
 pathways=audralia_lattice,field_256,coordinates,nodes,categories,pathways,states,transitions,boundaries,receipts,audit,kill_conditions
 lattice_law=node_requires_position_purpose_category_state_boundary_transition_rule_receipt_audit_path
-visual_identity=living_constraint_field
-artistic_authority=route_pressure_constraint_receipt_behavior
+visual_identity=living_constraint_field_plus_compass_gem_pathways
+artistic_authority=route_pressure_constraint_receipt_behavior_and_compass_gem_navigation
 external_dependency_scope=zero
 canvas_scope=none
 webgl_scope=none
 generated_image_scope=none
-deploy_marker=FRONTIER_LATTICE_LIVING_256_CONSTRAINT_FIELD_DEPLOY_MARKER_v2
+deploy_marker=FRONTIER_LATTICE_COMPASS_GEMS_RESTORED_WITH_LIVING_256_FIELD_DEPLOY_MARKER_v3
       </template>
     </main>
 
     <footer>
-      FRONTIER_LATTICE_LIVING_256_CONSTRAINT_FIELD_TNT_v2 · Lattice · Living 16 × 16 / 256 Constraint Field.
+      FRONTIER_LATTICE_COMPASS_GEMS_RESTORED_WITH_LIVING_256_FIELD_TNT_v3 · Lattice · Living 16 × 16 / 256 Field · Compass Gem Pathways.
     </footer>
   </div>
 </body>

@@ -4,20 +4,25 @@
   lang="en"
   data-route="/explore/frontier/urban/"
   data-page="frontier-urban"
-  data-version="G2-V4"
-  data-contract="FRONTIER_URBAN_PER_BUILDING_256_LATTICE_LIVING_SKYLINE_RENEWAL_TNT_v4"
-  data-previous-contract="FRONTIER_URBAN_DROPDOWN_NAV_DEPTH_SKYLINE_RENEWAL_TNT_v3"
-  data-source-binding="FRONTIER_URBAN_PER_BUILDING_256_LATTICE_LIVING_SKYLINE_FINAL_PRECODE_BINDING_v4"
+  data-version="G2-V5"
+  data-contract="FRONTIER_URBAN_PER_BUILDING_CHRONOLOGY_OCCUPANCY_LIGHTS_RENEWAL_TNT_v5"
+  data-previous-contract="FRONTIER_URBAN_PER_BUILDING_256_LATTICE_LIVING_SKYLINE_RENEWAL_TNT_v4"
+  data-source-binding="FRONTIER_URBAN_PER_BUILDING_CHRONOLOGY_OCCUPANCY_LIGHTS_FINAL_PRECODE_BINDING_AND_CCR_v5"
   data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
   data-source-symbol-authority="compassOrganicGem"
-  data-role="frontier-urban-per-building-lattice-living-skyline"
-  data-skyline-relocation-correction="true"
+  data-role="frontier-urban-per-building-chronology-occupancy-lights"
   data-hero-skyline-preserved="true"
-  data-construct-skyline-box-added="true"
+  data-construct-skyline-box-preserved="true"
   data-per-building-lattice="true"
   data-building-local-scope="16x16"
   data-building-local-addresses="256"
   data-state-expression="geometry-not-dom-object-count"
+  data-per-building-chronology="true"
+  data-per-building-occupancy="true"
+  data-asynchronous-building-timing="true"
+  data-inhabited-window-activity="true"
+  data-active-glow="true"
+  data-active-glow-css-only="true"
   data-parent-skyline-field="true"
   data-independent-building-objects="true"
   data-skyline-depth-layers="far_mid_front"
@@ -53,10 +58,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Urban Construct · Living Skyline · Diamond Gate Bridge</title>
+  <title>Urban Construct · Occupancy Skyline · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Urban Construct is the Frontier simulation lane where city-scale systems are tested together under metropolitan load, with reusable CSS-only navigation and a living per-building lattice skyline."
+    content="Diamond Gate Bridge Urban Construct is the Frontier simulation lane where city-scale systems are tested together under metropolitan load, with reusable CSS-only navigation and a per-building chronology skyline."
   >
 
   <style>
@@ -448,10 +453,10 @@
         linear-gradient(180deg,rgba(12,23,49,.96),rgba(2,5,16,.98));
       box-shadow:
         inset 0 1px 0 rgba(255,255,255,.08),
-        0 0 var(--b-glow,1.6rem) rgba(57,255,159,.10),
+        0 0 var(--b-glow,1.6rem) rgba(57,255,159,var(--b-glow-alpha,.10)),
         0 0 2rem rgba(0,0,0,.36);
       transform:translateZ(0);
-      animation:buildingLive var(--b-duration,10s) ease-in-out infinite;
+      animation:buildingChronology var(--b-duration,13s) ease-in-out infinite;
       animation-delay:var(--b-delay,0s);
     }
 
@@ -460,14 +465,32 @@
       position:absolute;
       inset:.48rem .38rem .58rem;
       z-index:2;
-      opacity:var(--b-light-density,.40);
+      opacity:var(--b-light-off,.22);
       background-image:
-        linear-gradient(90deg,rgba(255,235,160,.88) 0 var(--b-window-scale,.12rem),transparent var(--b-window-scale,.12rem) var(--b-window-x,.72rem)),
-        linear-gradient(rgba(141,216,255,.62) 0 var(--b-window-scale,.12rem),transparent var(--b-window-scale,.12rem) var(--b-window-y,.84rem));
-      background-size:var(--b-window-x,.72rem) var(--b-window-y,.84rem);
+        repeating-linear-gradient(
+          90deg,
+          transparent 0 calc(var(--b-window-x,.72rem) * .34),
+          rgba(255,235,160,.86) calc(var(--b-window-x,.72rem) * .34) calc(var(--b-window-x,.72rem) * .44),
+          transparent calc(var(--b-window-x,.72rem) * .44) var(--b-window-x,.72rem)
+        ),
+        repeating-linear-gradient(
+          0deg,
+          transparent 0 calc(var(--b-window-y,.84rem) * .36),
+          rgba(141,216,255,.58) calc(var(--b-window-y,.84rem) * .36) calc(var(--b-window-y,.84rem) * .46),
+          transparent calc(var(--b-window-y,.84rem) * .46) var(--b-window-y,.84rem)
+        ),
+        linear-gradient(135deg,rgba(255,232,163,.20),transparent 42%,rgba(57,255,159,.10));
+      background-size:
+        var(--b-window-x,.72rem) var(--b-window-y,.84rem),
+        var(--b-window-x,.72rem) var(--b-window-y,.84rem),
+        100% 100%;
+      background-position:
+        0 0,
+        calc(var(--b-phase,0) * 1px) calc(var(--b-phase,0) * .35px),
+        0 0;
       mask-image:linear-gradient(180deg,rgba(0,0,0,.96),rgba(0,0,0,.72) 62%,rgba(0,0,0,.36));
-      animation:windowLoad var(--b-duration,10s) ease-in-out infinite;
-      animation-delay:calc(var(--b-delay,0s) * -1);
+      animation:occupancyWindowCycle var(--b-night-cycle,var(--b-duration,13s)) ease-in-out infinite;
+      animation-delay:var(--b-delay,0s);
     }
 
     .urban-building::after{
@@ -487,8 +510,11 @@
     }
 
     .skyline-depth-layer.far .urban-building::before{
-      opacity:calc(var(--b-light-density,.24) * .50);
-      background-size:calc(var(--b-window-x,.9rem) * 1.2) calc(var(--b-window-y,1rem) * 1.2);
+      opacity:var(--b-light-off,.11);
+      background-size:
+        calc(var(--b-window-x,.9rem) * 1.2) calc(var(--b-window-y,1rem) * 1.2),
+        calc(var(--b-window-x,.9rem) * 1.2) calc(var(--b-window-y,1rem) * 1.2),
+        100% 100%;
     }
 
     .urban-building.step{
@@ -511,8 +537,19 @@
 
     .urban-building.greenline::before{
       background-image:
-        linear-gradient(90deg,rgba(57,255,159,.90) 0 var(--b-window-scale,.11rem),transparent var(--b-window-scale,.11rem) var(--b-window-x,.58rem)),
-        linear-gradient(rgba(230,255,235,.48) 0 var(--b-window-scale,.11rem),transparent var(--b-window-scale,.11rem) var(--b-window-y,.72rem));
+        repeating-linear-gradient(
+          90deg,
+          transparent 0 calc(var(--b-window-x,.58rem) * .30),
+          rgba(57,255,159,.92) calc(var(--b-window-x,.58rem) * .30) calc(var(--b-window-x,.58rem) * .42),
+          transparent calc(var(--b-window-x,.58rem) * .42) var(--b-window-x,.58rem)
+        ),
+        repeating-linear-gradient(
+          0deg,
+          transparent 0 calc(var(--b-window-y,.72rem) * .34),
+          rgba(230,255,235,.50) calc(var(--b-window-y,.72rem) * .34) calc(var(--b-window-y,.72rem) * .45),
+          transparent calc(var(--b-window-y,.72rem) * .45) var(--b-window-y,.72rem)
+        ),
+        linear-gradient(135deg,rgba(57,255,159,.22),transparent 45%,rgba(255,232,163,.10));
     }
 
     .urban-building.reunion{
@@ -541,7 +578,7 @@
         0 0 .9rem rgba(255,232,163,.20),
         0 0 1.7rem rgba(141,216,255,.12);
       opacity:1;
-      animation:buildingLive var(--b-duration,10s) ease-in-out infinite;
+      animation:landmarkBreathing var(--b-duration,14s) ease-in-out infinite;
       animation-delay:var(--b-delay,0s);
       mask-image:none;
     }
@@ -568,7 +605,9 @@
     }
 
     .urban-building.front-shadow::before{
-      opacity:.055;
+      opacity:var(--b-light-off,.055);
+      animation:foregroundLowGlow var(--b-duration,18s) ease-in-out infinite;
+      animation-delay:var(--b-delay,0s);
     }
 
     @keyframes urbanHorizonBreathe{
@@ -576,16 +615,90 @@
       50%{opacity:.82;filter:brightness(1.08)}
     }
 
-    @keyframes buildingLive{
-      0%,100%{filter:brightness(.95)}
-      45%{filter:brightness(1.08)}
-      68%{filter:brightness(1.01)}
+    @keyframes buildingChronology{
+      0%,100%{
+        filter:brightness(.94);
+        box-shadow:
+          inset 0 1px 0 rgba(255,255,255,.08),
+          0 0 var(--b-glow,1.6rem) rgba(57,255,159,var(--b-glow-alpha,.10)),
+          0 0 2rem rgba(0,0,0,.36);
+      }
+      34%{
+        filter:brightness(var(--b-bright-active,1.08));
+        box-shadow:
+          inset 0 1px 0 rgba(255,255,255,.10),
+          0 0 var(--b-glow-active,2.4rem) rgba(57,255,159,var(--b-glow-alpha-active,.22)),
+          0 0 2.3rem rgba(243,200,111,.08),
+          0 0 2.2rem rgba(0,0,0,.34);
+      }
+      61%{
+        filter:brightness(var(--b-bright-mid,1.01));
+      }
+      78%{
+        filter:brightness(.97);
+      }
     }
 
-    @keyframes windowLoad{
-      0%,100%{opacity:calc(var(--b-light-density,.40) * .78)}
-      46%{opacity:var(--b-light-density,.40)}
-      72%{opacity:calc(var(--b-light-density,.40) * .88)}
+    @keyframes occupancyWindowCycle{
+      0%,100%{
+        opacity:var(--b-light-off,.22);
+        background-position:
+          0 0,
+          0 0,
+          0 0;
+        filter:brightness(.94);
+      }
+      23%{
+        opacity:var(--b-occupancy,.34);
+        background-position:
+          calc(var(--b-phase,0) * .03rem) 0,
+          0 calc(var(--b-phase,0) * .02rem),
+          0 0;
+        filter:brightness(1.02);
+      }
+      47%{
+        opacity:var(--b-light-on,.52);
+        background-position:
+          calc(var(--b-phase,0) * .07rem) calc(var(--b-phase,0) * -.02rem),
+          calc(var(--b-phase,0) * -.04rem) calc(var(--b-phase,0) * .05rem),
+          0 0;
+        filter:brightness(1.16);
+      }
+      66%{
+        opacity:var(--b-occupancy,.36);
+        background-position:
+          calc(var(--b-phase,0) * -.03rem) calc(var(--b-phase,0) * .03rem),
+          calc(var(--b-phase,0) * .02rem) 0,
+          0 0;
+        filter:brightness(1.04);
+      }
+      84%{
+        opacity:var(--b-light-rest,.25);
+        filter:brightness(.98);
+      }
+    }
+
+    @keyframes landmarkBreathing{
+      0%,100%{
+        opacity:.88;
+        filter:brightness(.92);
+        box-shadow:
+          0 0 .9rem rgba(255,232,163,.18),
+          0 0 1.7rem rgba(141,216,255,.11);
+      }
+      52%{
+        opacity:1;
+        filter:brightness(1.10);
+        box-shadow:
+          0 0 1.2rem rgba(255,232,163,.28),
+          0 0 2.3rem rgba(141,216,255,.18);
+      }
+    }
+
+    @keyframes foregroundLowGlow{
+      0%,100%{opacity:.04;filter:brightness(.84)}
+      48%{opacity:.10;filter:brightness(1.02)}
+      78%{opacity:.06;filter:brightness(.92)}
     }
 
     .construct-visual{
@@ -658,9 +771,7 @@
       box-shadow:0 0 .78rem var(--key-color,var(--gold));
     }
 
-    .key-mark.square{
-      border-radius:.18rem;
-    }
+    .key-mark.square{border-radius:.18rem}
 
     .key-mark.line{
       height:.22rem;
@@ -1205,8 +1316,8 @@
       .urban-skyline-stage{min-height:25rem}
       .hero .urban-skyline-stage{min-height:0}
       .urban-building{
-        width:calc(var(--b-width) * .78);
-        height:calc(var(--b-height) * .78);
+        transform:scale(.78) translateZ(0);
+        transform-origin:left bottom;
       }
 
       .compass-stage{
@@ -1424,33 +1535,33 @@
       <section class="panel hero" aria-labelledby="page-title">
         <div class="urban-skyline-stage hero-skyline" aria-hidden="true">
           <div class="skyline-depth-layer far">
-            <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:4%;--b-bottom:21%;--b-width:3.2rem;--b-height:8.2rem;--b-haze:.38;--b-contrast:.045;--b-light-density:.18;--b-window-x:.95rem;--b-window-y:1.08rem;--b-delay:-1s;--b-duration:12s;"></span>
-            <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:13%;--b-bottom:20%;--b-width:4rem;--b-height:10rem;--b-haze:.42;--b-light-density:.20;--b-window-x:.9rem;--b-window-y:1.1rem;--b-delay:-3s;--b-duration:14s;"></span>
-            <span class="urban-building roof" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:25%;--b-bottom:20%;--b-width:3.6rem;--b-height:9.2rem;--b-haze:.36;--b-light-density:.16;--b-window-x:1rem;--b-window-y:1.2rem;--b-delay:-6s;--b-duration:13s;"></span>
-            <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:58%;--b-bottom:21%;--b-width:4.4rem;--b-height:10.7rem;--b-haze:.40;--b-light-density:.18;--b-window-x:.88rem;--b-window-y:1rem;--b-delay:-4s;--b-duration:15s;"></span>
-            <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:72%;--b-bottom:20%;--b-width:3.7rem;--b-height:9.6rem;--b-haze:.36;--b-light-density:.16;--b-window-x:.92rem;--b-window-y:1.14rem;--b-delay:-7s;--b-duration:13s;"></span>
-            <span class="urban-building roof" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:86%;--b-bottom:20%;--b-width:3.2rem;--b-height:8.8rem;--b-haze:.34;--b-light-density:.15;--b-window-x:1rem;--b-window-y:1.2rem;--b-delay:-9s;--b-duration:16s;"></span>
+            <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" data-era="far-inherited" style="--b-left:4%;--b-bottom:21%;--b-width:3.2rem;--b-height:8.2rem;--b-haze:.38;--b-contrast:.045;--b-light-off:.10;--b-occupancy:.14;--b-light-on:.20;--b-light-rest:.12;--b-window-x:.95rem;--b-window-y:1.08rem;--b-phase:2;--b-delay:-1s;--b-duration:18s;--b-night-cycle:23s;--b-glow-alpha:.04;--b-glow-alpha-active:.08;"></span>
+            <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" data-era="far-inherited" style="--b-left:13%;--b-bottom:20%;--b-width:4rem;--b-height:10rem;--b-haze:.42;--b-light-off:.12;--b-occupancy:.17;--b-light-on:.24;--b-light-rest:.13;--b-window-x:.9rem;--b-window-y:1.1rem;--b-phase:5;--b-delay:-7s;--b-duration:21s;--b-night-cycle:27s;--b-glow-alpha:.04;--b-glow-alpha-active:.09;"></span>
+            <span class="urban-building roof" data-local-lattice="16x16" data-local-addresses="256" data-era="far-quiet" style="--b-left:25%;--b-bottom:20%;--b-width:3.6rem;--b-height:9.2rem;--b-haze:.36;--b-light-off:.08;--b-occupancy:.13;--b-light-on:.18;--b-light-rest:.10;--b-window-x:1rem;--b-window-y:1.2rem;--b-phase:9;--b-delay:-11s;--b-duration:24s;--b-night-cycle:31s;"></span>
+            <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" data-era="far-office" style="--b-left:58%;--b-bottom:21%;--b-width:4.4rem;--b-height:10.7rem;--b-haze:.40;--b-light-off:.10;--b-occupancy:.16;--b-light-on:.22;--b-light-rest:.12;--b-window-x:.88rem;--b-window-y:1rem;--b-phase:13;--b-delay:-4s;--b-duration:20s;--b-night-cycle:29s;"></span>
+            <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" data-era="far-civic" style="--b-left:72%;--b-bottom:20%;--b-width:3.7rem;--b-height:9.6rem;--b-haze:.36;--b-light-off:.09;--b-occupancy:.14;--b-light-on:.20;--b-light-rest:.11;--b-window-x:.92rem;--b-window-y:1.14rem;--b-phase:16;--b-delay:-13s;--b-duration:26s;--b-night-cycle:34s;"></span>
+            <span class="urban-building roof" data-local-lattice="16x16" data-local-addresses="256" data-era="far-quiet" style="--b-left:86%;--b-bottom:20%;--b-width:3.2rem;--b-height:8.8rem;--b-haze:.34;--b-light-off:.08;--b-occupancy:.12;--b-light-on:.17;--b-light-rest:.10;--b-window-x:1rem;--b-window-y:1.2rem;--b-phase:20;--b-delay:-17s;--b-duration:28s;--b-night-cycle:37s;"></span>
           </div>
 
           <div class="skyline-depth-layer mid">
-            <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:5%;--b-bottom:9%;--b-width:3.4rem;--b-height:9.5rem;--b-haze:.86;--b-contrast:.11;--b-light-density:.32;--b-window-x:.72rem;--b-window-y:.86rem;--b-delay:-1s;--b-duration:10s;"></span>
-            <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:14%;--b-bottom:9%;--b-width:4.5rem;--b-height:13.2rem;--b-haze:.92;--b-light-density:.38;--b-window-x:.68rem;--b-window-y:.82rem;--b-delay:-2s;--b-duration:11s;"></span>
-            <span class="urban-building roof" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:26%;--b-bottom:9%;--b-width:3.7rem;--b-height:10.9rem;--b-haze:.88;--b-light-density:.34;--b-window-x:.78rem;--b-window-y:.88rem;--b-delay:-4s;--b-duration:12s;"></span>
-            <span class="urban-building reunion" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:38%;--b-bottom:9%;--b-width:4.3rem;--b-height:18.5rem;--b-haze:.96;--b-delay:-2.5s;--b-duration:12s;"></span>
-            <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:49%;--b-bottom:9%;--b-width:4.9rem;--b-height:15rem;--b-haze:.94;--b-light-density:.42;--b-window-x:.62rem;--b-window-y:.76rem;--b-delay:-5s;--b-duration:10s;"></span>
-            <span class="urban-building greenline" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:63%;--b-bottom:9%;--b-width:4.2rem;--b-height:23rem;--b-haze:.98;--b-light-density:.34;--b-window-x:.58rem;--b-window-y:.72rem;--b-glow:2.2rem;--b-delay:-7s;--b-duration:13s;"></span>
-            <span class="urban-building roof" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:76%;--b-bottom:9%;--b-width:4.6rem;--b-height:14.2rem;--b-haze:.90;--b-light-density:.35;--b-window-x:.72rem;--b-window-y:.84rem;--b-delay:-6s;--b-duration:11s;"></span>
-            <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:89%;--b-bottom:9%;--b-width:4rem;--b-height:11.4rem;--b-haze:.86;--b-light-density:.30;--b-window-x:.82rem;--b-window-y:.94rem;--b-delay:-8s;--b-duration:14s;"></span>
+            <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" data-era="active-office" style="--b-left:5%;--b-bottom:9%;--b-width:3.4rem;--b-height:9.5rem;--b-haze:.86;--b-contrast:.11;--b-light-off:.20;--b-occupancy:.32;--b-light-on:.48;--b-light-rest:.26;--b-window-x:.72rem;--b-window-y:.86rem;--b-phase:3;--b-delay:-2s;--b-duration:11s;--b-night-cycle:17s;--b-glow-alpha:.09;--b-glow-alpha-active:.20;"></span>
+            <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" data-era="active-residential" style="--b-left:14%;--b-bottom:9%;--b-width:4.5rem;--b-height:13.2rem;--b-haze:.92;--b-light-off:.22;--b-occupancy:.38;--b-light-on:.58;--b-light-rest:.31;--b-window-x:.68rem;--b-window-y:.82rem;--b-phase:7;--b-delay:-8s;--b-duration:17s;--b-night-cycle:23s;--b-glow-alpha:.10;--b-glow-alpha-active:.22;"></span>
+            <span class="urban-building roof" data-local-lattice="16x16" data-local-addresses="256" data-era="active-mixed" style="--b-left:26%;--b-bottom:9%;--b-width:3.7rem;--b-height:10.9rem;--b-haze:.88;--b-light-off:.18;--b-occupancy:.30;--b-light-on:.43;--b-light-rest:.22;--b-window-x:.78rem;--b-window-y:.88rem;--b-phase:11;--b-delay:-5s;--b-duration:13s;--b-night-cycle:19s;--b-glow-alpha:.08;--b-glow-alpha-active:.18;"></span>
+            <span class="urban-building reunion" data-local-lattice="16x16" data-local-addresses="256" data-era="landmark" style="--b-left:38%;--b-bottom:9%;--b-width:4.3rem;--b-height:18.5rem;--b-haze:.96;--b-phase:4;--b-delay:-3s;--b-duration:19s;--b-night-cycle:19s;"></span>
+            <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" data-era="active-office" style="--b-left:49%;--b-bottom:9%;--b-width:4.9rem;--b-height:15rem;--b-haze:.94;--b-light-off:.24;--b-occupancy:.42;--b-light-on:.64;--b-light-rest:.33;--b-window-x:.62rem;--b-window-y:.76rem;--b-phase:15;--b-delay:-11s;--b-duration:23s;--b-night-cycle:29s;--b-glow-alpha:.10;--b-glow-alpha-active:.24;"></span>
+            <span class="urban-building greenline" data-local-lattice="16x16" data-local-addresses="256" data-era="active-continuity" style="--b-left:63%;--b-bottom:9%;--b-width:4.2rem;--b-height:23rem;--b-haze:.98;--b-light-off:.22;--b-occupancy:.40;--b-light-on:.72;--b-light-rest:.34;--b-window-x:.58rem;--b-window-y:.72rem;--b-glow:2.2rem;--b-glow-active:3.4rem;--b-glow-alpha:.18;--b-glow-alpha-active:.42;--b-bright-active:1.18;--b-phase:21;--b-delay:-7s;--b-duration:31s;--b-night-cycle:37s;"></span>
+            <span class="urban-building roof" data-local-lattice="16x16" data-local-addresses="256" data-era="active-office" style="--b-left:76%;--b-bottom:9%;--b-width:4.6rem;--b-height:14.2rem;--b-haze:.90;--b-light-off:.19;--b-occupancy:.33;--b-light-on:.50;--b-light-rest:.26;--b-window-x:.72rem;--b-window-y:.84rem;--b-phase:18;--b-delay:-13s;--b-duration:19s;--b-night-cycle:25s;--b-glow-alpha:.08;--b-glow-alpha-active:.20;"></span>
+            <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" data-era="active-quiet" style="--b-left:89%;--b-bottom:9%;--b-width:4rem;--b-height:11.4rem;--b-haze:.86;--b-light-off:.16;--b-occupancy:.25;--b-light-on:.38;--b-light-rest:.20;--b-window-x:.82rem;--b-window-y:.94rem;--b-phase:25;--b-delay:-17s;--b-duration:29s;--b-night-cycle:41s;--b-glow-alpha:.07;--b-glow-alpha-active:.15;"></span>
           </div>
 
           <div class="skyline-depth-layer front">
-            <span class="urban-building front-shadow" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:-4%;--b-bottom:0;--b-width:18rem;--b-height:7rem;--b-haze:.96;--b-light-density:.08;--b-delay:-1s;--b-duration:15s;"></span>
-            <span class="urban-building front-shadow step" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:30%;--b-bottom:0;--b-width:24rem;--b-height:6.2rem;--b-haze:.96;--b-light-density:.06;--b-delay:-4s;--b-duration:16s;"></span>
-            <span class="urban-building front-shadow" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:68%;--b-bottom:0;--b-width:22rem;--b-height:7.8rem;--b-haze:.96;--b-light-density:.06;--b-delay:-7s;--b-duration:17s;"></span>
+            <span class="urban-building front-shadow" data-local-lattice="16x16" data-local-addresses="256" data-era="foreground-hidden" style="--b-left:-4%;--b-bottom:0;--b-width:18rem;--b-height:7rem;--b-haze:.96;--b-light-off:.04;--b-occupancy:.07;--b-light-on:.11;--b-window-x:.9rem;--b-window-y:1rem;--b-phase:6;--b-delay:-1s;--b-duration:29s;--b-night-cycle:43s;"></span>
+            <span class="urban-building front-shadow step" data-local-lattice="16x16" data-local-addresses="256" data-era="foreground-hidden" style="--b-left:30%;--b-bottom:0;--b-width:24rem;--b-height:6.2rem;--b-haze:.96;--b-light-off:.035;--b-occupancy:.06;--b-light-on:.10;--b-window-x:.84rem;--b-window-y:.92rem;--b-phase:12;--b-delay:-4s;--b-duration:34s;--b-night-cycle:47s;"></span>
+            <span class="urban-building front-shadow" data-local-lattice="16x16" data-local-addresses="256" data-era="foreground-hidden" style="--b-left:68%;--b-bottom:0;--b-width:22rem;--b-height:7.8rem;--b-haze:.96;--b-light-off:.04;--b-occupancy:.08;--b-light-on:.12;--b-window-x:.88rem;--b-window-y:.96rem;--b-phase:18;--b-delay:-7s;--b-duration:37s;--b-night-cycle:53s;"></span>
           </div>
         </div>
 
-        <div class="kicker">Dallas-inspired living skyline · Frontier Urban Simulation</div>
+        <div class="kicker">Dallas-inspired occupancy skyline · Frontier Urban Simulation</div>
 
         <h1 id="page-title">The skyline is the surface. The load is the city.</h1>
 
@@ -1471,41 +1582,41 @@
       </section>
 
       <section class="panel construct-visual" id="urban-construct-field" aria-labelledby="construct-title">
-        <div class="kicker">Urban Construct Field · Per-building 256 lattice</div>
+        <div class="kicker">Urban Construct Field · Per-building chronology</div>
 
         <div class="construct-copy">
-          <h2 id="construct-title">The city field is not one global skyline strip. Every building carries its own local geometry.</h2>
+          <h2 id="construct-title">A city does not turn on all at once. Every building has its own geometry and its own time behavior.</h2>
           <p>
-            The parent skyline field owns depth, horizon, atmosphere, and composition. Each building owns its own 16 × 16 local lattice: window rhythm, floor spacing, roof form, edge breaks, light density, facade proportion, silhouette identity, local glow, and perspective weight.
+            The parent skyline field owns depth, horizon, atmosphere, and composition. Each building owns its own 16 × 16 local lattice and its own chronology: window rhythm, floor spacing, roof form, edge breaks, light density, occupancy pattern, local glow, and night cycle.
           </p>
         </div>
 
         <div class="construct-grid">
-          <div class="urban-skyline-stage construct-skyline" aria-label="Inspectable Dallas-inspired living skyline with per-building local lattice">
+          <div class="urban-skyline-stage construct-skyline" aria-label="Inspectable Dallas-inspired living skyline with per-building chronology and local lattice">
             <div class="skyline-depth-layer far">
-              <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:3%;--b-bottom:23%;--b-width:3rem;--b-height:8rem;--b-haze:.42;--b-light-density:.18;--b-window-x:.95rem;--b-window-y:1.05rem;--b-delay:-1s;--b-duration:12s;"></span>
-              <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:11%;--b-bottom:22%;--b-width:4.2rem;--b-height:10.4rem;--b-haze:.46;--b-light-density:.21;--b-window-x:.86rem;--b-window-y:1.06rem;--b-delay:-3s;--b-duration:14s;"></span>
-              <span class="urban-building roof" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:22%;--b-bottom:22%;--b-width:3.7rem;--b-height:9rem;--b-haze:.38;--b-light-density:.17;--b-window-x:.98rem;--b-window-y:1.12rem;--b-delay:-5s;--b-duration:13s;"></span>
-              <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:69%;--b-bottom:22%;--b-width:4.4rem;--b-height:10.2rem;--b-haze:.42;--b-light-density:.18;--b-window-x:.92rem;--b-window-y:1.08rem;--b-delay:-8s;--b-duration:15s;"></span>
-              <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:82%;--b-bottom:22%;--b-width:3.6rem;--b-height:9.3rem;--b-haze:.36;--b-light-density:.16;--b-window-x:.92rem;--b-window-y:1.14rem;--b-delay:-6s;--b-duration:14s;"></span>
-              <span class="urban-building roof" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:92%;--b-bottom:22%;--b-width:3.2rem;--b-height:8.5rem;--b-haze:.34;--b-light-density:.15;--b-window-x:1rem;--b-window-y:1.2rem;--b-delay:-9s;--b-duration:16s;"></span>
+              <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" data-era="far-inherited" style="--b-left:3%;--b-bottom:23%;--b-width:3rem;--b-height:8rem;--b-haze:.42;--b-light-off:.10;--b-occupancy:.15;--b-light-on:.22;--b-light-rest:.12;--b-window-x:.95rem;--b-window-y:1.05rem;--b-phase:3;--b-delay:-2s;--b-duration:19s;--b-night-cycle:25s;--b-glow-alpha:.04;--b-glow-alpha-active:.08;"></span>
+              <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" data-era="far-inherited" style="--b-left:11%;--b-bottom:22%;--b-width:4.2rem;--b-height:10.4rem;--b-haze:.46;--b-light-off:.12;--b-occupancy:.18;--b-light-on:.26;--b-light-rest:.14;--b-window-x:.86rem;--b-window-y:1.06rem;--b-phase:8;--b-delay:-5s;--b-duration:23s;--b-night-cycle:31s;"></span>
+              <span class="urban-building roof" data-local-lattice="16x16" data-local-addresses="256" data-era="far-quiet" style="--b-left:22%;--b-bottom:22%;--b-width:3.7rem;--b-height:9rem;--b-haze:.38;--b-light-off:.09;--b-occupancy:.14;--b-light-on:.19;--b-light-rest:.10;--b-window-x:.98rem;--b-window-y:1.12rem;--b-phase:13;--b-delay:-11s;--b-duration:27s;--b-night-cycle:37s;"></span>
+              <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" data-era="far-office" style="--b-left:69%;--b-bottom:22%;--b-width:4.4rem;--b-height:10.2rem;--b-haze:.42;--b-light-off:.10;--b-occupancy:.16;--b-light-on:.23;--b-light-rest:.12;--b-window-x:.92rem;--b-window-y:1.08rem;--b-phase:18;--b-delay:-8s;--b-duration:21s;--b-night-cycle:29s;"></span>
+              <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" data-era="far-civic" style="--b-left:82%;--b-bottom:22%;--b-width:3.6rem;--b-height:9.3rem;--b-haze:.36;--b-light-off:.09;--b-occupancy:.14;--b-light-on:.21;--b-light-rest:.11;--b-window-x:.92rem;--b-window-y:1.14rem;--b-phase:24;--b-delay:-13s;--b-duration:26s;--b-night-cycle:34s;"></span>
+              <span class="urban-building roof" data-local-lattice="16x16" data-local-addresses="256" data-era="far-quiet" style="--b-left:92%;--b-bottom:22%;--b-width:3.2rem;--b-height:8.5rem;--b-haze:.34;--b-light-off:.08;--b-occupancy:.12;--b-light-on:.17;--b-light-rest:.10;--b-window-x:1rem;--b-window-y:1.2rem;--b-phase:29;--b-delay:-17s;--b-duration:28s;--b-night-cycle:39s;"></span>
             </div>
 
             <div class="skyline-depth-layer mid">
-              <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:4%;--b-bottom:8%;--b-width:3.5rem;--b-height:9.8rem;--b-haze:.86;--b-light-density:.33;--b-window-x:.72rem;--b-window-y:.86rem;--b-delay:-1s;--b-duration:10s;"></span>
-              <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:13%;--b-bottom:8%;--b-width:4.6rem;--b-height:13.6rem;--b-haze:.94;--b-light-density:.40;--b-window-x:.66rem;--b-window-y:.80rem;--b-delay:-2s;--b-duration:11s;"></span>
-              <span class="urban-building roof" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:25%;--b-bottom:8%;--b-width:3.8rem;--b-height:11.2rem;--b-haze:.88;--b-light-density:.35;--b-window-x:.78rem;--b-window-y:.88rem;--b-delay:-4s;--b-duration:12s;"></span>
-              <span class="urban-building reunion" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:37%;--b-bottom:8%;--b-width:4.4rem;--b-height:18.8rem;--b-haze:.96;--b-delay:-2.5s;--b-duration:12s;"></span>
-              <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:49%;--b-bottom:8%;--b-width:4.9rem;--b-height:15.3rem;--b-haze:.94;--b-light-density:.43;--b-window-x:.62rem;--b-window-y:.76rem;--b-delay:-5s;--b-duration:10s;"></span>
-              <span class="urban-building greenline" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:63%;--b-bottom:8%;--b-width:4.3rem;--b-height:23.5rem;--b-haze:.98;--b-light-density:.36;--b-window-x:.58rem;--b-window-y:.72rem;--b-glow:2.3rem;--b-delay:-7s;--b-duration:13s;"></span>
-              <span class="urban-building roof" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:76%;--b-bottom:8%;--b-width:4.6rem;--b-height:14.4rem;--b-haze:.90;--b-light-density:.36;--b-window-x:.72rem;--b-window-y:.84rem;--b-delay:-6s;--b-duration:11s;"></span>
-              <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:88%;--b-bottom:8%;--b-width:4.1rem;--b-height:11.7rem;--b-haze:.86;--b-light-density:.31;--b-window-x:.82rem;--b-window-y:.94rem;--b-delay:-8s;--b-duration:14s;"></span>
+              <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" data-era="active-office" style="--b-left:4%;--b-bottom:8%;--b-width:3.5rem;--b-height:9.8rem;--b-haze:.86;--b-light-off:.21;--b-occupancy:.34;--b-light-on:.50;--b-light-rest:.27;--b-window-x:.72rem;--b-window-y:.86rem;--b-phase:4;--b-delay:-2s;--b-duration:11s;--b-night-cycle:17s;--b-glow-alpha:.09;--b-glow-alpha-active:.20;"></span>
+              <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" data-era="active-residential" style="--b-left:13%;--b-bottom:8%;--b-width:4.6rem;--b-height:13.6rem;--b-haze:.94;--b-light-off:.24;--b-occupancy:.40;--b-light-on:.62;--b-light-rest:.32;--b-window-x:.66rem;--b-window-y:.80rem;--b-phase:9;--b-delay:-7s;--b-duration:17s;--b-night-cycle:23s;--b-glow-alpha:.10;--b-glow-alpha-active:.23;"></span>
+              <span class="urban-building roof" data-local-lattice="16x16" data-local-addresses="256" data-era="active-mixed" style="--b-left:25%;--b-bottom:8%;--b-width:3.8rem;--b-height:11.2rem;--b-haze:.88;--b-light-off:.19;--b-occupancy:.31;--b-light-on:.45;--b-light-rest:.24;--b-window-x:.78rem;--b-window-y:.88rem;--b-phase:14;--b-delay:-5s;--b-duration:13s;--b-night-cycle:19s;"></span>
+              <span class="urban-building reunion" data-local-lattice="16x16" data-local-addresses="256" data-era="landmark" style="--b-left:37%;--b-bottom:8%;--b-width:4.4rem;--b-height:18.8rem;--b-haze:.96;--b-phase:6;--b-delay:-3s;--b-duration:19s;--b-night-cycle:19s;"></span>
+              <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" data-era="active-office" style="--b-left:49%;--b-bottom:8%;--b-width:4.9rem;--b-height:15.3rem;--b-haze:.94;--b-light-off:.25;--b-occupancy:.44;--b-light-on:.66;--b-light-rest:.34;--b-window-x:.62rem;--b-window-y:.76rem;--b-phase:19;--b-delay:-11s;--b-duration:23s;--b-night-cycle:29s;--b-glow-alpha:.10;--b-glow-alpha-active:.24;"></span>
+              <span class="urban-building greenline" data-local-lattice="16x16" data-local-addresses="256" data-era="active-continuity" style="--b-left:63%;--b-bottom:8%;--b-width:4.3rem;--b-height:23.5rem;--b-haze:.98;--b-light-off:.23;--b-occupancy:.42;--b-light-on:.76;--b-light-rest:.35;--b-window-x:.58rem;--b-window-y:.72rem;--b-glow:2.3rem;--b-glow-active:3.6rem;--b-glow-alpha:.18;--b-glow-alpha-active:.44;--b-bright-active:1.20;--b-phase:26;--b-delay:-13s;--b-duration:31s;--b-night-cycle:37s;"></span>
+              <span class="urban-building roof" data-local-lattice="16x16" data-local-addresses="256" data-era="active-office" style="--b-left:76%;--b-bottom:8%;--b-width:4.6rem;--b-height:14.4rem;--b-haze:.90;--b-light-off:.20;--b-occupancy:.35;--b-light-on:.52;--b-light-rest:.27;--b-window-x:.72rem;--b-window-y:.84rem;--b-phase:22;--b-delay:-17s;--b-duration:19s;--b-night-cycle:25s;"></span>
+              <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" data-era="active-quiet" style="--b-left:88%;--b-bottom:8%;--b-width:4.1rem;--b-height:11.7rem;--b-haze:.86;--b-light-off:.16;--b-occupancy:.26;--b-light-on:.39;--b-light-rest:.20;--b-window-x:.82rem;--b-window-y:.94rem;--b-phase:31;--b-delay:-19s;--b-duration:29s;--b-night-cycle:41s;"></span>
             </div>
 
             <div class="skyline-depth-layer front">
-              <span class="urban-building front-shadow" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:-4%;--b-bottom:0;--b-width:18rem;--b-height:7rem;--b-haze:.96;--b-light-density:.08;--b-delay:-1s;--b-duration:15s;"></span>
-              <span class="urban-building front-shadow step" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:28%;--b-bottom:0;--b-width:25rem;--b-height:6.5rem;--b-haze:.96;--b-light-density:.06;--b-delay:-4s;--b-duration:16s;"></span>
-              <span class="urban-building front-shadow" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:67%;--b-bottom:0;--b-width:23rem;--b-height:7.9rem;--b-haze:.96;--b-light-density:.06;--b-delay:-7s;--b-duration:17s;"></span>
+              <span class="urban-building front-shadow" data-local-lattice="16x16" data-local-addresses="256" data-era="foreground-hidden" style="--b-left:-4%;--b-bottom:0;--b-width:18rem;--b-height:7rem;--b-haze:.96;--b-light-off:.04;--b-occupancy:.07;--b-light-on:.11;--b-window-x:.9rem;--b-window-y:1rem;--b-phase:7;--b-delay:-1s;--b-duration:29s;--b-night-cycle:43s;"></span>
+              <span class="urban-building front-shadow step" data-local-lattice="16x16" data-local-addresses="256" data-era="foreground-hidden" style="--b-left:28%;--b-bottom:0;--b-width:25rem;--b-height:6.5rem;--b-haze:.96;--b-light-off:.035;--b-occupancy:.06;--b-light-on:.10;--b-window-x:.84rem;--b-window-y:.92rem;--b-phase:15;--b-delay:-4s;--b-duration:34s;--b-night-cycle:47s;"></span>
+              <span class="urban-building front-shadow" data-local-lattice="16x16" data-local-addresses="256" data-era="foreground-hidden" style="--b-left:67%;--b-bottom:0;--b-width:23rem;--b-height:7.9rem;--b-haze:.96;--b-light-off:.04;--b-occupancy:.08;--b-light-on:.12;--b-window-x:.88rem;--b-window-y:.96rem;--b-phase:23;--b-delay:-7s;--b-duration:37s;--b-night-cycle:53s;"></span>
             </div>
           </div>
 
@@ -1518,7 +1629,7 @@
               <li><span class="key-mark dark"></span><span><b>Dark foreground</b> means ground-level hidden systems.</span></li>
               <li><span class="key-mark square" style="--key-color:rgba(255,244,216,.82)"></span><span><b>Independent buildings</b> mean separate local 16 × 16 / 256 lattices.</span></li>
               <li><span class="key-mark line" style="--key-color:var(--gold)"></span><span><b>Window rhythm</b> means occupied system load.</span></li>
-              <li><span class="key-mark" style="--key-color:rgba(57,255,159,.72)"></span><span><b>Soft breathing</b> means city systems are running, not flashing.</span></li>
+              <li><span class="key-mark" style="--key-color:rgba(57,255,159,.72)"></span><span><b>Building chronology</b> means each structure has its own night cycle.</span></li>
             </ul>
           </aside>
         </div>
@@ -1818,25 +1929,30 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_URBAN_PER_BUILDING_256_LATTICE_LIVING_SKYLINE_RENEWAL_TNT_v4
-previous=FRONTIER_URBAN_DROPDOWN_NAV_DEPTH_SKYLINE_RENEWAL_TNT_v3
-binding=FRONTIER_URBAN_PER_BUILDING_256_LATTICE_LIVING_SKYLINE_FINAL_PRECODE_BINDING_v4
+FRONTIER_URBAN_PER_BUILDING_CHRONOLOGY_OCCUPANCY_LIGHTS_RENEWAL_TNT_v5
+previous=FRONTIER_URBAN_PER_BUILDING_256_LATTICE_LIVING_SKYLINE_RENEWAL_TNT_v4
+binding=FRONTIER_URBAN_PER_BUILDING_CHRONOLOGY_OCCUPANCY_LIGHTS_FINAL_PRECODE_BINDING_AND_CCR_v5
 route=/explore/frontier/urban/
 page=frontier_urban_construct
 html=/explore/frontier/urban/index.html
 source_visual_authority=COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2
 source_symbol_authority=compassOrganicGem
-skyline_relocation_correction=true
 hero_skyline_preserved=true
-construct_skyline_box_added=true
+construct_skyline_box_preserved=true
 per_building_lattice=true
 building_local_scope=16x16
 building_local_addresses=256
 state_expression=geometry_not_dom_object_count
+per_building_chronology=true
+per_building_occupancy=true
+asynchronous_building_timing=true
+inhabited_window_activity=true
+active_glow=true
+active_glow_css_only=true
 parent_skyline_field=true
 independent_building_objects=true
 parent_skyline_owns=depth_layer,horizon_placement,atmospheric_glow,far_mid_front_separation,composition,stage_visibility,city_field_framing
-building_owns=window_rhythm,floor_spacing,roof_form,edge_breaks,light_density,facade_proportion,silhouette_identity,local_glow,depth_weight,perspective_behavior,local_visual_variance
+building_owns=window_rhythm,floor_spacing,roof_form,edge_breaks,light_density,facade_proportion,silhouette_identity,local_glow,depth_weight,perspective_behavior,local_visual_variance,local_chronology,night_cycle,occupancy_pattern
 skyline_depth_layers=far_mid_front
 skyline_alive=true
 alive_standard=subtle_occupancy_horizon_breathing_asynchronous_building_light_variation
@@ -1856,6 +1972,8 @@ site_menu=true
 frontier_lanes_menu=true
 dallas_inspired_skyline=true
 photographic_accuracy_claimed=false
+real_occupancy_data_claimed=false
+live_sensor_data_claimed=false
 urban_contextual_upgrade=true
 skyline_is_surface_load_is_city=true
 urban_system_pressure_thesis=true
@@ -1873,19 +1991,22 @@ dual_return_under_every_pathway=true
 return_to_urban_orbit_under_every_pathway=true
 return_to_frontier_under_every_pathway=true
 return_to_frontier_route=/explore/frontier/
-urban_owns=city_form,housing,mobility,urban_water_pressure,urban_energy_pressure,urban_waste_pressure,food_access,public_safety,governance,resilience,metropolitan_load,emergency_response_pressure,city_scale_consequence
-urban_does_not_own=water_science,energy_conversion,waste_no_away_accounting,frontier_lattice_page_authority,laws_authority,gauges_scoring,route_mutation,visual_pass_claims
-forbidden_collapses=one_global_lattice_controls_all_buildings,256_as_dom_count,skyline_disappears,skyline_only_in_hero,construct_box_lacks_skyline_expression,flat_single_strip,random_depth_scale,alive_as_flicker,skyline_as_tourism,visual_depth_as_proof,simulation_as_validation
+urban_owns=city_form,housing,mobility,urban_water_pressure,urban_energy_pressure,urban_waste_pressure,food_access,public_safety,governance,resilience,metropolitan_load,emergency_response_pressure,city_scale_consequence,occupancy_expression_as_visual_metaphor
+urban_does_not_own=water_science,energy_conversion,waste_no_away_accounting,frontier_lattice_page_authority,laws_authority,gauges_scoring,route_mutation,real_dallas_data,visual_pass_claims
+forbidden_collapses=one_global_lattice_controls_all_buildings,one_global_animation_clock_for_all_buildings,256_as_dom_count,per_window_dom,traffic_animation,rapid_flicker,js_randomization,skyline_as_tourism,visual_depth_as_proof,simulation_as_validation
+compliance_status=pass
+constraint_status=pass
+runtime_status=pass_conditionally
 static_page_usable_without_js=true
 heavy_runtime=false
 streaming=false
 visual_pass_claimed=false
-deploy_marker=FRONTIER_URBAN_PER_BUILDING_256_LATTICE_LIVING_SKYLINE_DEPLOY_MARKER_v4
+deploy_marker=FRONTIER_URBAN_PER_BUILDING_CHRONOLOGY_OCCUPANCY_LIGHTS_DEPLOY_MARKER_v5
       </template>
     </main>
 
     <footer>
-      FRONTIER_URBAN_PER_BUILDING_256_LATTICE_LIVING_SKYLINE_RENEWAL_TNT_v4 · Urban Construct · Hero skyline preserved · Construct skyline added · Per-building 256 lattice.
+      FRONTIER_URBAN_PER_BUILDING_CHRONOLOGY_OCCUPANCY_LIGHTS_RENEWAL_TNT_v5 · Urban Construct · Per-building chronology · Occupancy lights · CSS-only.
     </footer>
   </div>
 </body>

@@ -4,14 +4,14 @@
   lang="en"
   data-route="/explore/frontier/water/"
   data-page="frontier-water"
-  data-version="G2-V8"
-  data-contract="FRONTIER_WATER_RUNTIME_OPTIMIZED_GLASS_DROPLET_DROPDOWN_TNT_v8"
-  data-previous-contract="FRONTIER_WATER_SEPARATED_RAIN_AND_CASCADE_DROPLET_PHYSICS_TNT_v7"
-  data-source-binding="FRONTIER_WATER_RUNTIME_OPTIMIZED_GLASS_DROPLET_DROPDOWN_CCR_AUDIT_v8"
+  data-version="G2-V9"
+  data-contract="FRONTIER_WATER_TOP_NAV_REDUNDANCY_REMOVAL_TNT_v9"
+  data-previous-contract="FRONTIER_WATER_RUNTIME_OPTIMIZED_GLASS_DROPLET_DROPDOWN_TNT_v8"
+  data-source-binding="FRONTIER_WATER_TOP_NAV_REDUNDANCY_REMOVAL_DIRECT_RENEWAL_v9"
   data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
-  data-design-reference="FRONTIER_WATER_SEPARATED_RAIN_AND_CASCADE_DROPLET_PHYSICS_TNT_v7"
+  data-design-reference="FRONTIER_WATER_RUNTIME_OPTIMIZED_GLASS_DROPLET_DROPDOWN_TNT_v8"
   data-source-symbol-authority="compassOrganicGem"
-  data-role="frontier-water-runtime-optimized-glass-droplet-dropdown"
+  data-role="frontier-water-runtime-optimized-glass-droplet-dropdown-no-redundant-top-bubbles"
   data-audralia-water-first="true"
   data-per-pathway-dual-lens="true"
   data-platform-lens="true"
@@ -23,6 +23,8 @@
   data-physics-informed-water-behavior="true"
   data-runtime-reallocation="true"
   data-runtime-optimized-v8="true"
+  data-top-nav-bubbles-removed="true"
+  data-site-dropdown-menu-retained="true"
   data-not-removal="true"
   data-site-dropdown-menu="true"
   data-dropdown-glass-droplets="true"
@@ -256,44 +258,6 @@
       font-weight:950;
       letter-spacing:.14em;
       text-transform:uppercase;
-    }
-
-    .nav{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      gap:.48rem;
-    }
-
-    .nav a{
-      min-height:2.25rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:999px;
-      padding:.5rem .74rem;
-      color:rgba(241,246,255,.84);
-      background:rgba(255,255,255,.035);
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.055em;
-      text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-      transition:border-color .18s ease,background .18s ease,color .18s ease;
-    }
-
-    .nav a:hover,
-    .nav a:focus-visible{
-      border-color:rgba(159,231,255,.54);
-      background:rgba(159,231,255,.07);
-      outline:none;
-    }
-
-    .nav a[aria-current="page"]{
-      border-color:rgba(159,231,255,.88);
-      color:#041018;
-      background:linear-gradient(135deg,#e8fbff,#8dd8ff);
     }
 
     .site-menu{
@@ -1521,7 +1485,6 @@
         align-items:start;
       }
 
-      .nav{justify-content:flex-start}
       .watchlist-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
@@ -1833,20 +1796,6 @@
           <strong>Water</strong>
         </span>
       </a>
-
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/products/">Products</a>
-        <a href="/laws/">Laws</a>
-        <a href="/showroom/globe/">Interactive Narrative</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/explore/frontier/">Frontier</a>
-        <a href="/explore/frontier/energy/">Energy</a>
-        <a href="/explore/frontier/water/" aria-current="page">Water</a>
-        <a href="/gauges/">Gauges</a>
-      </nav>
 
       <details class="site-menu">
         <summary class="site-menu-summary">
@@ -2679,22 +2628,18 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_WATER_RUNTIME_OPTIMIZED_GLASS_DROPLET_DROPDOWN_TNT_v8
-previous=FRONTIER_WATER_SEPARATED_RAIN_AND_CASCADE_DROPLET_PHYSICS_TNT_v7
-binding=FRONTIER_WATER_RUNTIME_OPTIMIZED_GLASS_DROPLET_DROPDOWN_CCR_AUDIT_v8
+FRONTIER_WATER_TOP_NAV_REDUNDANCY_REMOVAL_TNT_v9
+previous=FRONTIER_WATER_RUNTIME_OPTIMIZED_GLASS_DROPLET_DROPDOWN_TNT_v8
+binding=FRONTIER_WATER_TOP_NAV_REDUNDANCY_REMOVAL_DIRECT_RENEWAL_v9
 route=/explore/frontier/water/
 page=frontier_water
 html=/explore/frontier/water/index.html
 source_visual_authority=COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2
-design_reference=FRONTIER_WATER_SEPARATED_RAIN_AND_CASCADE_DROPLET_PHYSICS_TNT_v7
+design_reference=FRONTIER_WATER_RUNTIME_OPTIMIZED_GLASS_DROPLET_DROPDOWN_TNT_v8
 source_symbol_authority=compassOrganicGem
-visual_baseline_preserved=true
-future_simulation_context_preserved=true
-water_true_form_expression=true
-physics_informed_water_behavior=true
-runtime_reallocation=true
-runtime_optimized_v8=true
-not_removal=true
+top_nav_bubbles_removed=true
+redundant_primary_nav_removed=true
+site_dropdown_menu_retained=true
 site_dropdown_menu=true
 dropdown_glass_droplets=true
 dropdown_droplets_static=true
@@ -2706,6 +2651,13 @@ dropdown_east=Interactive_Narrative_Showroom_Universe_Nine_Summits_Book
 dropdown_south=Frontier_Energy_Water_Waste_Lattice_Urban_Closed_Loop_Manual_Shimmer_Infrastructure_Trajectory
 dropdown_west=Compass_Door_Home_Products_Meet_Sean
 electrical_energy_dropdown_entry=false_unconfirmed_route_held
+visual_baseline_preserved=true
+future_simulation_context_preserved=true
+water_true_form_expression=true
+physics_informed_water_behavior=true
+runtime_reallocation=true
+runtime_optimized_v8=true
+not_removal=true
 text_stability_lock=true
 readable_text_animated=false
 text_motion_only_if_attached_to_floating_object=true
@@ -2792,7 +2744,7 @@ reduced_motion_safe=true
 audralia_water_first=true
 center_anchor=Water_Fulcrum
 pathways=Audralia_Water,Closed_Loop,Source_Water,Contaminants,Filtration,Softening,Storage,Reuse,Household,Community,Science_Boundary,Kill_Conditions
-public_subject=future_water_systems_runtime_optimized_glass_droplet_dropdown_separated_rain_layers_cascade_droplet_physics_dual_lattice_causal_spring_shower_rain_field_diamond_surface_contact_splash_bead_split_accumulation_runoff_drip_capture_filtration_storage_reuse_contamination_pressure_household_protection_failure_points
+public_subject=future_water_systems_top_nav_redundancy_removed_runtime_optimized_glass_droplet_dropdown_separated_rain_layers_cascade_droplet_physics_dual_lattice_causal_spring_shower_rain_field_diamond_surface_contact_splash_bead_split_accumulation_runoff_drip_capture_filtration_storage_reuse_contamination_pressure_household_protection_failure_points
 per_pathway_dual_lens=true
 platform_lens_per_pathway=true
 engineering_lens_per_pathway=true
@@ -2806,16 +2758,16 @@ filtration_boundary=no_total_removal_claim
 softening_boundary=not_universal_filtration
 reuse_boundary=non_potable_reuse_not_drinking_water_approval
 pricing_boundary=no_verified_pricing_without_current_source
-final_lock=runtime_optimized_water_page_with_static_glass_droplet_dropdown_and_one_way_cascade_droplet_physics
+final_lock=top_nav_bubbles_removed_dropdown_retained_runtime_optimized_water_page_with_static_glass_droplet_dropdown_and_one_way_cascade_droplet_physics
 static_page_usable_without_js=true
 streaming=false
 visual_pass_claimed=false
-deploy_marker=FRONTIER_WATER_RUNTIME_OPTIMIZED_GLASS_DROPLET_DROPDOWN_DEPLOY_MARKER_v8
+deploy_marker=FRONTIER_WATER_TOP_NAV_REDUNDANCY_REMOVAL_DEPLOY_MARKER_v9
       </template>
     </main>
 
     <footer>
-      FRONTIER_WATER_RUNTIME_OPTIMIZED_GLASS_DROPLET_DROPDOWN_TNT_v8 · Water · Runtime optimized · Glass droplet dropdown · One-way cascade physics.
+      FRONTIER_WATER_TOP_NAV_REDUNDANCY_REMOVAL_TNT_v9 · Water · Top nav redundancy removed · Glass droplet dropdown retained.
     </footer>
   </div>
 </body>

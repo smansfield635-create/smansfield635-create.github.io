@@ -1,824 +1,781 @@
-<!doctype html>
-<html
-  lang="en"
-  data-route="/showroom/globe/audralia/"
-  data-page="audralia-possibility-path"
-  data-contract="AUDRALIA_NARRATIVE_ALIGNMENT_GLOBE_PRESERVATION_HTML_TNT_v1"
-  data-previous-contract="AUDRALIA_TOUCH_SCOPE_HTML_MARRIAGE_TNT_v11"
-  data-role="showroom-globe-child-route"
-  data-world="Audralia"
-  data-canonical-spelling="A_U_D_R_A_L_I_A"
-  data-parent-route="/showroom/globe/"
-  data-public-path="possibility"
-  data-view-model="possibility-path-existing-globe-contained"
-  data-route-loader="/showroom/globe/audralia/index.js"
-  data-route-loader-contract="AUDRALIA_TOUCH_SCOPE_BOXED_GLOBE_LOADER_TNT_v11"
-  data-html-marriage-contract="AUDRALIA_TOUCH_SCOPE_HTML_MARRIAGE_TNT_v11"
-  data-canvas-contract="AUDRALIA_EXISTING_GLOBE_BOXED_ASSET_CONSUMER_TNT_v11"
-  data-globe-preserved="true"
-  data-canvas-mount-preserved="true"
-  data-touch-scope-preserved="box-only"
-  data-generated-image="false"
-  data-graphic-box="false"
-  data-procedural-world-fallback="false"
-  data-heavy-runtime-loaded="false"
-  data-streaming="false"
-  data-visual-pass-claimed="false"
->
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
+/* TARGET FILE: /showroom/globe/audralia/index.js */
+/*
+  AUDRALIA_ORGANIC_LANDFORM_HYDROLOGY_VISUAL_RENEWAL_TNT_v1
+  route=/showroom/globe/audralia/
+  purpose=replace one-big-land-glob read with organic landform + hydrology globe
+  preserves=#audraliaCanvasMount, boxed containment, touch scope, Audralia spelling, no generated image, no GraphicBox
+*/
 
-  <title>Audralia · Possibility Path · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Audralia is the Possibility Path inside Interactive Narrative: a clean-slate mirror world where lawful systems, technology, and future structure can be tested and mirrored back to Earth."
-  >
-  <link rel="canonical" href="https://diamondgatebridge.com/showroom/globe/audralia/">
-  <meta name="theme-color" content="#02040b">
+(function () {
+  "use strict";
 
-  <style>
-    :root {
-      color-scheme:dark;
-      --bg:#02040b;
-      --ink:#fff4d8;
-      --muted:rgba(230,238,255,.78);
-      --faint:rgba(230,238,255,.52);
-      --gold:#f3c86f;
-      --green:#9ef0bf;
-      --panel:rgba(9,15,31,.88);
-      --line:rgba(184,205,255,.18);
-      --shadow:0 32px 110px rgba(0,0,0,.48);
-      --max:1180px;
+  const CONTRACT = "AUDRALIA_ORGANIC_LANDFORM_HYDROLOGY_VISUAL_RENEWAL_TNT_v1";
+  const ROUTE = "/showroom/globe/audralia/";
+  const WORLD = "Audralia";
+
+  const mount =
+    document.getElementById("audraliaCanvasMount") ||
+    document.querySelector("[data-audralia-canvas-mount='true']") ||
+    document.querySelector("[data-audralia-globe-mount='true']");
+
+  const stage =
+    document.getElementById("audralia-stage") ||
+    document.querySelector("[data-audralia-stage='true']") ||
+    (mount ? mount.closest(".stage") : null);
+
+  const routeNotice =
+    document.getElementById("audraliaRouteLoaderNotice") ||
+    document.querySelector("[data-audralia-route-loader-notice='true']");
+
+  const routeStatus =
+    document.getElementById("audraliaRouteStatus") ||
+    document.querySelector("[data-audralia-route-status='true']");
+
+  if (!mount) {
+    if (stage) stage.setAttribute("data-loader-state", "fallback");
+    if (routeNotice) routeNotice.textContent = "Audralia mount missing";
+    if (routeStatus) routeStatus.textContent = "Organic globe renewal held";
+    return;
+  }
+
+  window.DGB_AUDRALIA_ORGANIC_LANDFORM_HYDROLOGY_VISUAL_RENEWAL = CONTRACT;
+  window.DGB_AUDRALIA_CANONICAL_SPELLING = "A_U_D_R_A_L_I_A";
+  window.DGB_AUDRALIA_TOUCH_SCOPE = "box-only";
+  window.DGB_AUDRALIA_GENERATED_IMAGE = false;
+  window.DGB_AUDRALIA_GRAPHIC_BOX = false;
+  window.DGB_AUDRALIA_VISUAL_PASS_CLAIMED = false;
+
+  mount.textContent = "";
+  mount.setAttribute("data-audralia-organic-landform-hydrology", "true");
+  mount.setAttribute("data-audralia-contract", CONTRACT);
+  mount.setAttribute("data-audralia-world", WORLD);
+  mount.setAttribute("data-audralia-touch-scope", "box-only");
+  mount.setAttribute("data-generated-image", "false");
+  mount.setAttribute("data-graphic-box", "false");
+  mount.setAttribute("data-visual-pass-claimed", "false");
+
+  if (stage) {
+    stage.setAttribute("data-loader-state", "mounted");
+    stage.setAttribute("data-audralia-visual-renewal", CONTRACT);
+    stage.setAttribute("data-landform-problem-corrected", "one-big-glob-targeted");
+    stage.setAttribute("data-touch-scope", "box-only");
+  }
+
+  if (routeNotice) routeNotice.textContent = "Organic landform hydrology active";
+  if (routeStatus) routeStatus.textContent = "Audralia globe contained";
+
+  const canvas = document.createElement("canvas");
+  canvas.setAttribute("aria-label", "Audralia organic landform and hydrology globe");
+  canvas.setAttribute("data-audralia-visible-canvas", "true");
+  canvas.setAttribute("data-audralia-globe", "organic-landform-hydrology");
+  canvas.setAttribute("data-audralia-contract", CONTRACT);
+  canvas.setAttribute("data-generated-image", "false");
+  canvas.setAttribute("data-graphic-box", "false");
+  canvas.setAttribute("data-visual-pass-claimed", "false");
+
+  Object.assign(canvas.style, {
+    position: "absolute",
+    inset: "0",
+    width: "100%",
+    height: "100%",
+    display: "block",
+    touchAction: "none",
+    userSelect: "none",
+    WebkitUserSelect: "none",
+    cursor: "grab"
+  });
+
+  mount.appendChild(canvas);
+
+  const ctx = canvas.getContext("2d", {
+    alpha: true,
+    desynchronized: true
+  });
+
+  const TEX_W = 720;
+  const TEX_H = 360;
+  const texture = buildPlanetTexture(TEX_W, TEX_H);
+
+  const sphereBuffer = document.createElement("canvas");
+  const sphereCtx = sphereBuffer.getContext("2d", {
+    alpha: true,
+    willReadFrequently: true
+  });
+
+  const state = {
+    width: 1,
+    height: 1,
+    dpr: 1,
+    sphereSize: 420,
+    radius: 180,
+    cx: 0,
+    cy: 0,
+    rotation: -0.88,
+    targetRotation: -0.88,
+    tilt: -0.11,
+    targetTilt: -0.11,
+    pointerActive: false,
+    startX: 0,
+    startY: 0,
+    startRotation: -0.88,
+    startTilt: -0.11,
+    lastTime: performance.now(),
+    lastRenderTime: 0,
+    visible: true,
+    reducedMotion: window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  };
+
+  function hash2(x, y) {
+    let n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453123;
+    return n - Math.floor(n);
+  }
+
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
+
+  function clamp(v, min, max) {
+    return Math.max(min, Math.min(max, v));
+  }
+
+  function smoothstep(edge0, edge1, x) {
+    const t = clamp((x - edge0) / (edge1 - edge0), 0, 1);
+    return t * t * (3 - 2 * t);
+  }
+
+  function wrapLon(x) {
+    while (x < -Math.PI) x += Math.PI * 2;
+    while (x > Math.PI) x -= Math.PI * 2;
+    return x;
+  }
+
+  function noise2(x, y) {
+    const ix = Math.floor(x);
+    const iy = Math.floor(y);
+    const fx = x - ix;
+    const fy = y - iy;
+    const ux = fx * fx * (3 - 2 * fx);
+    const uy = fy * fy * (3 - 2 * fy);
+
+    const a = hash2(ix, iy);
+    const b = hash2(ix + 1, iy);
+    const c = hash2(ix, iy + 1);
+    const d = hash2(ix + 1, iy + 1);
+
+    return lerp(lerp(a, b, ux), lerp(c, d, ux), uy);
+  }
+
+  function fbm(x, y) {
+    let value = 0;
+    let amp = 0.5;
+    let freq = 1;
+    for (let i = 0; i < 5; i += 1) {
+      value += amp * noise2(x * freq, y * freq);
+      freq *= 2.05;
+      amp *= 0.5;
     }
+    return value;
+  }
 
-    * { box-sizing:border-box; }
+  function ellipseField(lon, lat, item) {
+    const dlon = wrapLon(lon - item.lon);
+    const dlat = lat - item.lat;
+    const rx = item.rx;
+    const ry = item.ry;
+    const q = (dlon * dlon) / (rx * rx) + (dlat * dlat) / (ry * ry);
+    return 1 - q;
+  }
 
-    html {
-      min-width:320px;
-      min-height:100%;
-      background:var(--bg);
-      scroll-behavior:smooth;
-      overflow-x:hidden;
-      touch-action:pan-y;
-    }
+  function buildPlanetTexture(w, h) {
+    const data = new Uint8ClampedArray(w * h * 4);
 
-    body {
-      margin:0;
-      min-width:320px;
-      min-height:100vh;
-      color:var(--ink);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      line-height:1.5;
-      overflow-x:hidden;
-      touch-action:pan-y;
-      background:
-        radial-gradient(circle at 50% -8%,rgba(158,240,191,.16),transparent 28rem),
-        radial-gradient(circle at 12% 18%,rgba(36,120,255,.15),transparent 28rem),
-        radial-gradient(circle at 88% 30%,rgba(243,200,111,.10),transparent 28rem),
-        radial-gradient(circle at 50% 78%,rgba(141,216,255,.10),transparent 34rem),
-        linear-gradient(180deg,#07101a 0%,#030713 58%,#010207 100%);
-      -webkit-font-smoothing:antialiased;
-      text-rendering:geometricPrecision;
-    }
+    const continents = [
+      { lon: -2.42, lat: -0.18, rx: 0.54, ry: 0.36, strength: 1.08 },
+      { lon: -1.72, lat: 0.32, rx: 0.46, ry: 0.30, strength: 0.98 },
+      { lon: -0.86, lat: -0.08, rx: 0.60, ry: 0.34, strength: 1.04 },
+      { lon: -0.04, lat: 0.24, rx: 0.42, ry: 0.27, strength: 0.90 },
+      { lon: 0.72, lat: -0.30, rx: 0.50, ry: 0.31, strength: 0.98 },
+      { lon: 1.42, lat: 0.18, rx: 0.47, ry: 0.34, strength: 0.94 },
+      { lon: 2.34, lat: -0.06, rx: 0.54, ry: 0.30, strength: 1.00 },
+      { lon: 2.78, lat: 0.44, rx: 0.34, ry: 0.22, strength: 0.72 }
+    ];
 
-    body::before {
-      content:"";
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      background-image:
-        radial-gradient(circle,rgba(255,255,255,.16) 0 1px,transparent 1.5px),
-        linear-gradient(rgba(143,240,195,.035) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(141,216,255,.032) 1px,transparent 1px);
-      background-size:220px 260px,54px 54px,54px 54px;
-      opacity:.20;
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
-    }
+    const waterCuts = [
+      { lon: -2.08, lat: 0.06, rx: 0.22, ry: 0.42, strength: 0.92 },
+      { lon: -1.20, lat: 0.16, rx: 0.18, ry: 0.34, strength: 0.82 },
+      { lon: -0.48, lat: -0.24, rx: 0.24, ry: 0.28, strength: 0.88 },
+      { lon: 0.34, lat: 0.04, rx: 0.20, ry: 0.38, strength: 0.82 },
+      { lon: 1.06, lat: 0.34, rx: 0.22, ry: 0.28, strength: 0.74 },
+      { lon: 1.86, lat: -0.20, rx: 0.19, ry: 0.38, strength: 0.90 },
+      { lon: 2.58, lat: 0.18, rx: 0.21, ry: 0.28, strength: 0.78 }
+    ];
 
-    a { color:inherit; text-decoration:none; }
+    const inlandWaters = [
+      { lon: -1.60, lat: 0.10, rx: 0.075, ry: 0.045, strength: 1 },
+      { lon: -0.72, lat: 0.18, rx: 0.090, ry: 0.052, strength: 1 },
+      { lon: 0.84, lat: -0.08, rx: 0.080, ry: 0.050, strength: 1 },
+      { lon: 1.62, lat: 0.23, rx: 0.070, ry: 0.042, strength: 1 },
+      { lon: 2.28, lat: -0.18, rx: 0.090, ry: 0.050, strength: 1 }
+    ];
 
-    a:focus-visible,
-    button:focus-visible,
-    [tabindex]:focus-visible {
-      outline:2px solid var(--gold);
-      outline-offset:4px;
-    }
+    const islands = [
+      { lon: -2.88, lat: -0.52, rx: 0.16, ry: 0.09, strength: 0.82 },
+      { lon: -2.70, lat: -0.36, rx: 0.10, ry: 0.06, strength: 0.74 },
+      { lon: -1.02, lat: -0.48, rx: 0.15, ry: 0.08, strength: 0.78 },
+      { lon: -0.20, lat: -0.50, rx: 0.12, ry: 0.07, strength: 0.70 },
+      { lon: 0.28, lat: 0.54, rx: 0.13, ry: 0.07, strength: 0.66 },
+      { lon: 1.12, lat: -0.54, rx: 0.16, ry: 0.08, strength: 0.80 },
+      { lon: 2.02, lat: 0.52, rx: 0.14, ry: 0.08, strength: 0.74 },
+      { lon: 2.88, lat: -0.42, rx: 0.18, ry: 0.08, strength: 0.82 }
+    ];
 
-    .skip {
-      position:absolute;
-      left:-999px;
-      top:8px;
-      z-index:50;
-      padding:.75rem 1rem;
-      border-radius:999px;
-      color:#05070d;
-      background:var(--gold);
-      font-weight:950;
-    }
+    for (let y = 0; y < h; y += 1) {
+      const v = y / (h - 1);
+      const lat = (0.5 - v) * Math.PI;
 
-    .skip:focus { left:8px; }
+      for (let x = 0; x < w; x += 1) {
+        const u = x / (w - 1);
+        const lon = u * Math.PI * 2 - Math.PI;
 
-    .shell {
-      position:relative;
-      z-index:2;
-      width:min(var(--max),calc(100% - 28px));
-      margin:0 auto;
-      padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
-    }
+        const warpA = fbm(lon * 1.2 + 9.7, lat * 1.5 - 4.1) - 0.5;
+        const warpB = fbm(lon * 2.4 - 3.2, lat * 2.2 + 8.6) - 0.5;
+        const wlon = lon + warpA * 0.22 + Math.sin(lat * 3.0) * 0.05;
+        const wlat = lat + warpB * 0.12;
 
-    .topbar {
-      display:grid;
-      grid-template-columns:auto 1fr;
-      align-items:center;
-      gap:18px;
-      padding:12px 0 18px;
-    }
+        let landScore = -0.55;
 
-    .brand {
-      display:grid;
-      grid-template-columns:auto 1fr;
-      align-items:center;
-      gap:.9rem;
-      min-width:260px;
-    }
+        for (const c of continents) {
+          const e = ellipseField(wlon, wlat, c);
+          if (e > -0.55) {
+            const coastNoise =
+              (fbm(wlon * 3.7 + c.lon * 2.0, wlat * 4.3 + c.lat * 2.0) - 0.5) * 0.42 +
+              (fbm(wlon * 8.4 - c.lon, wlat * 7.2 + c.lat) - 0.5) * 0.15;
+            landScore = Math.max(landScore, e * c.strength + coastNoise);
+          }
+        }
 
-    .brand-mark {
-      width:4.2rem;
-      height:4.2rem;
-      display:grid;
-      place-items:center;
-      border:1px solid rgba(158,240,191,.42);
-      border-radius:1.15rem;
-      transform:rotate(45deg);
-      background:
-        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.28) 21% 23%,transparent 24%),
-        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.22),rgba(158,240,191,.23),rgba(36,120,255,.18),rgba(243,200,111,.13),rgba(255,255,255,.22)),
-        radial-gradient(circle at 48% 22%,rgba(255,255,255,.30),transparent 42%),
-        linear-gradient(145deg,rgba(26,83,61,.95),rgba(5,8,20,.98));
-      box-shadow:
-        0 0 2rem rgba(158,240,191,.18),
-        0 1.2rem 2.8rem rgba(0,0,0,.46),
-        inset 0 1px 0 rgba(255,255,255,.16);
-    }
+        for (const island of islands) {
+          const e = ellipseField(wlon, wlat, island);
+          if (e > -0.3) {
+            const islandNoise = (fbm(wlon * 9.0, wlat * 9.0) - 0.5) * 0.28;
+            landScore = Math.max(landScore, e * island.strength + islandNoise - 0.05);
+          }
+        }
 
-    .brand-mark span {
-      transform:rotate(-45deg);
-      font-weight:950;
-      letter-spacing:.04em;
-      color:rgba(255,244,216,.98);
-      text-shadow:0 2px 10px rgba(0,0,0,.85);
-    }
+        let cutScore = 0;
+        for (const cut of waterCuts) {
+          const e = ellipseField(wlon, wlat, cut);
+          if (e > 0) {
+            const edgeSoft = smoothstep(0.0, 0.95, e);
+            cutScore = Math.max(cutScore, edgeSoft * cut.strength);
+          }
+        }
 
-    .brand-copy {
-      display:grid;
-      gap:.18rem;
-    }
+        const corridor =
+          Math.abs(Math.sin(wlon * 3.4 + Math.sin(wlat * 5.6) * 0.9)) < 0.115 &&
+          Math.abs(wlat) < 0.62
+            ? 0.16
+            : 0;
 
-    .brand-copy strong {
-      font-size:clamp(1.08rem,3vw,1.7rem);
-      line-height:1;
-      letter-spacing:-.045em;
-    }
+        landScore -= cutScore * 0.94;
+        landScore -= corridor * smoothstep(-0.16, 0.36, landScore);
 
-    .brand-copy span {
-      color:var(--muted);
-      font-size:.74rem;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-    }
+        let inlandWater = false;
+        let inlandValue = 0;
+        for (const lake of inlandWaters) {
+          const e = ellipseField(wlon, wlat, lake);
+          if (e > 0.15 && landScore > 0.04) {
+            inlandWater = true;
+            inlandValue = Math.max(inlandValue, e);
+          }
+        }
 
-    .nav {
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      gap:.48rem;
-    }
+        const latitudeIce = smoothstep(1.17, 1.48, Math.abs(lat));
+        const coastBand = smoothstep(-0.18, 0.10, landScore);
+        const shelfBand = smoothstep(-0.30, 0.03, landScore);
+        const land = landScore > 0.025 && !inlandWater;
 
-    .nav a {
-      min-height:2.25rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:999px;
-      padding:.5rem .74rem;
-      color:rgba(241,246,255,.84);
-      background:rgba(255,255,255,.035);
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.055em;
-      text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-    }
+        const ridge =
+          fbm(wlon * 9.2 + 2.0, wlat * 4.0 - 1.0) * 0.55 +
+          fbm(wlon * 18.0 - 8.0, wlat * 11.0 + 5.0) * 0.24;
 
-    .nav a[aria-current="page"] {
-      border-color:rgba(158,240,191,.82);
-      color:#06101c;
-      background:linear-gradient(135deg,#c8ffd8,#8eeab2);
-    }
+        const drainage =
+          1 -
+          smoothstep(
+            0.018,
+            0.090,
+            Math.abs(Math.sin(wlon * 5.8 + wlat * 3.4 + fbm(wlon * 4.2, wlat * 4.2) * 1.6))
+          );
 
-    .panel {
-      border:1px solid var(--line);
-      border-radius:clamp(1.35rem,5vw,2.35rem);
-      background:
-        radial-gradient(circle at 14% 0%,rgba(158,240,191,.08),transparent 28rem),
-        radial-gradient(circle at 86% 18%,rgba(36,120,255,.10),transparent 28rem),
-        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
-        var(--panel);
-      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
-      overflow:hidden;
-    }
+        const px = (y * w + x) * 4;
 
-    .hero {
-      position:relative;
-      min-height:clamp(23rem,42vw,34rem);
-      display:grid;
-      align-content:center;
-      gap:1rem;
-      padding:clamp(1.45rem,5vw,3.4rem);
-      margin-top:.6rem;
-      isolation:isolate;
-    }
+        let r;
+        let g;
+        let b;
 
-    .kicker {
-      width:fit-content;
-      display:inline-flex;
-      align-items:center;
-      gap:.58rem;
-      padding:.58rem .95rem;
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:999px;
-      color:rgba(230,238,255,.86);
-      background:rgba(255,255,255,.04);
-      font-size:.72rem;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      position:relative;
-      z-index:2;
-    }
+        if (land) {
+          const lowland = smoothstep(0.02, 0.22, landScore);
+          const highland = smoothstep(0.26, 0.72, landScore + ridge * 0.16);
+          const wet = clamp(drainage * 0.42 + (1 - lowland) * 0.28 + (fbm(wlon * 5.0, wlat * 5.0) - 0.5) * 0.18, 0, 1);
+          const dry = smoothstep(0.20, 0.70, fbm(wlon * 1.8 - 5.5, wlat * 2.2 + 1.2));
 
-    .kicker::before {
-      content:"";
-      width:.72rem;
-      height:.72rem;
-      border-radius:.18rem;
-      transform:rotate(45deg);
-      background:linear-gradient(135deg,#c8ffd8,var(--green));
-      box-shadow:0 0 1.1rem rgba(158,240,191,.44);
-    }
+          const plains = [123, 142, 88];
+          const lush = [76, 136, 95];
+          const upland = [135, 121, 79];
+          const ridgeColor = [118, 102, 78];
+          const wetland = [70, 128, 102];
 
-    h1 {
-      margin:0;
-      max-width:1000px;
-      font-size:clamp(3.1rem,9vw,6.9rem);
-      line-height:.86;
-      letter-spacing:-.102em;
-      text-wrap:balance;
-      position:relative;
-      z-index:2;
-    }
+          let base = mixColor(plains, lush, wet);
+          base = mixColor(base, upland, dry * 0.55);
+          base = mixColor(base, ridgeColor, highland * 0.62);
+          base = mixColor(base, wetland, drainage * 0.24 * (1 - highland));
 
-    h2 {
-      margin:0;
-      color:var(--gold);
-      font-size:clamp(1.45rem,4.7vw,2.65rem);
-      line-height:.98;
-      letter-spacing:-.07em;
-      text-wrap:balance;
-      position:relative;
-      z-index:2;
-    }
+          const texturePulse = (fbm(wlon * 24.0, wlat * 18.0) - 0.5) * 18;
+          r = base[0] + texturePulse;
+          g = base[1] + texturePulse * 0.9;
+          b = base[2] + texturePulse * 0.65;
 
-    .subtitle {
-      max-width:960px;
-      color:var(--green);
-      font-size:clamp(1.25rem,4vw,2.3rem);
-      line-height:1;
-      letter-spacing:-.05em;
-      font-weight:950;
-      text-wrap:balance;
-      position:relative;
-      z-index:2;
-    }
+          if (latitudeIce > 0) {
+            const ice = [205, 226, 218];
+            const mixed = mixColor([r, g, b], ice, latitudeIce * 0.72);
+            r = mixed[0];
+            g = mixed[1];
+            b = mixed[2];
+          }
+        } else {
+          const deep = [4, 24, 62];
+          const mid = [11, 76, 112];
+          const shelf = [72, 164, 164];
+          const turquoise = [142, 204, 174];
+          const lake = [36, 120, 132];
 
-    p {
-      margin:0;
-      color:var(--muted);
-      font-size:clamp(.98rem,2.7vw,1.16rem);
-      line-height:1.55;
-    }
+          if (inlandWater) {
+            const mixed = mixColor(lake, turquoise, smoothstep(0.15, 1, inlandValue) * 0.50);
+            r = mixed[0];
+            g = mixed[1];
+            b = mixed[2];
+          } else {
+            let water = mixColor(deep, mid, shelfBand * 0.68);
+            water = mixColor(water, shelf, shelfBand * 0.42);
+            water = mixColor(water, turquoise, smoothstep(-0.08, 0.025, landScore) * 0.58);
+            const waveNoise = (fbm(wlon * 18.0, wlat * 12.0) - 0.5) * 9;
+            r = water[0] + waveNoise * 0.35;
+            g = water[1] + waveNoise * 0.75;
+            b = water[2] + waveNoise;
+          }
 
-    .lead {
-      max-width:930px;
-      position:relative;
-      z-index:2;
-    }
+          if (latitudeIce > 0) {
+            const iceWater = [180, 216, 218];
+            const mixed = mixColor([r, g, b], iceWater, latitudeIce * 0.55);
+            r = mixed[0];
+            g = mixed[1];
+            b = mixed[2];
+          }
+        }
 
-    .principle {
-      max-width:980px;
-      padding:1rem 1.1rem;
-      border:1px solid rgba(158,240,191,.26);
-      border-radius:1.2rem;
-      color:rgba(206,255,228,.96);
-      background:rgba(28,80,58,.16);
-      font-weight:900;
-      position:relative;
-      z-index:2;
-    }
+        const coastLight = !land && !inlandWater ? smoothstep(-0.06, 0.030, landScore) : 0;
+        if (coastLight > 0) {
+          r = lerp(r, 190, coastLight * 0.28);
+          g = lerp(g, 224, coastLight * 0.32);
+          b = lerp(b, 190, coastLight * 0.30);
+        }
 
-    .actions {
-      display:flex;
-      flex-wrap:wrap;
-      gap:.62rem;
-      margin-top:.2rem;
-      position:relative;
-      z-index:2;
-    }
-
-    .button {
-      min-height:2.65rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(255,255,255,.15);
-      border-radius:999px;
-      padding:.65rem 1rem;
-      background:rgba(255,255,255,.045);
-      color:rgba(241,246,255,.88);
-      font-size:.76rem;
-      font-weight:950;
-      letter-spacing:.055em;
-      text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
-    }
-
-    .button:hover,
-    .button:focus-visible {
-      transform:translateY(-2px);
-      border-color:rgba(158,240,191,.62);
-      outline:none;
-    }
-
-    .button.gold {
-      border-color:rgba(158,240,191,.9);
-      color:#06101c;
-      background:linear-gradient(135deg,#c8ffd8,#8eeab2);
-      box-shadow:0 .8rem 1.8rem rgba(158,240,191,.13);
-    }
-
-    .section {
-      margin-top:1.15rem;
-      padding:clamp(1rem,3vw,1.45rem);
-      display:grid;
-      gap:1.05rem;
-    }
-
-    .stage {
-      position:relative;
-      width:100%;
-      height:clamp(24rem,68vw,46rem);
-      max-height:74vh;
-      border:1px solid rgba(243,200,111,.22);
-      border-radius:clamp(1.35rem,5vw,2.35rem);
-      overflow:hidden!important;
-      contain:layout paint size;
-      isolation:isolate;
-      touch-action:none;
-      overscroll-behavior:contain;
-      background:
-        radial-gradient(circle at 50% 50%,rgba(36,120,255,.14),transparent 44%),
-        radial-gradient(circle at 50% 50%,rgba(158,240,191,.08),transparent 60%),
-        linear-gradient(180deg,rgba(1,5,16,.78),rgba(2,6,16,.96));
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 1.2rem 4rem rgba(0,0,0,.30);
-    }
-
-    .stage-fallback {
-      position:absolute;
-      inset:0;
-      z-index:1;
-      display:grid;
-      place-items:center;
-      padding:1rem;
-      color:rgba(230,238,255,.72);
-      text-align:center;
-      font-weight:850;
-      pointer-events:none;
-    }
-
-    [data-audralia-canvas-mount="true"] {
-      position:absolute!important;
-      inset:0!important;
-      z-index:2!important;
-      width:100%!important;
-      height:100%!important;
-      max-width:100%!important;
-      max-height:100%!important;
-      overflow:hidden!important;
-      contain:layout paint size!important;
-      transform:none!important;
-      transform-origin:center center!important;
-      border-radius:inherit;
-      touch-action:none;
-      overscroll-behavior:contain;
-    }
-
-    [data-audralia-canvas-mount="true"] > *,
-    [data-audralia-canvas-mount="true"] canvas,
-    [data-audralia-canvas-mount="true"] svg,
-    [data-audralia-canvas-mount="true"] video {
-      position:absolute!important;
-      inset:0!important;
-      width:100%!important;
-      height:100%!important;
-      max-width:100%!important;
-      max-height:100%!important;
-      min-width:0!important;
-      min-height:0!important;
-      margin:0!important;
-      display:block!important;
-      overflow:hidden!important;
-      object-fit:contain!important;
-      transform-origin:center center!important;
-      box-sizing:border-box!important;
-      touch-action:none!important;
-    }
-
-    body > canvas[data-audralia-visible-canvas],
-    body > canvas[data-audralia-globe],
-    body > canvas[data-audralia-satellite],
-    body > [data-audralia-mounted="true"] {
-      display:none!important;
-      pointer-events:none!important;
-    }
-
-    .stage[data-loader-state="mounted"] .stage-fallback {
-      opacity:0;
-      visibility:hidden;
-    }
-
-    .stage[data-loader-state="fallback"] .stage-fallback {
-      color:rgba(255,244,216,.84);
-    }
-
-    .public-status {
-      display:flex;
-      flex-wrap:wrap;
-      gap:.5rem;
-      align-items:center;
-      justify-content:center;
-      color:rgba(206,255,228,.92);
-      font-size:.74rem;
-      font-weight:950;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    .public-status span {
-      display:inline-flex;
-      min-height:2rem;
-      align-items:center;
-      border:1px solid rgba(158,240,191,.24);
-      border-radius:999px;
-      padding:.38rem .7rem;
-      background:rgba(28,80,58,.13);
-    }
-
-    .cards {
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:.85rem;
-    }
-
-    .card {
-      display:grid;
-      gap:.6rem;
-      min-height:100%;
-      padding:1rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.2rem;
-      background:
-        radial-gradient(circle at 20% 0%,rgba(158,240,191,.08),transparent 60%),
-        rgba(255,255,255,.035);
-    }
-
-    .card b {
-      color:var(--green);
-      font-size:.68rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .card strong {
-      color:rgba(255,244,216,.98);
-      font-size:1.15rem;
-      line-height:1.1;
-    }
-
-    .card span {
-      color:var(--muted);
-      font-size:.94rem;
-      line-height:1.42;
-    }
-
-    .micro-links{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.54rem;
-    }
-
-    .micro-links a{
-      min-height:2.35rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:999px;
-      padding:.55rem .78rem;
-      color:rgba(241,246,255,.84);
-      background:rgba(255,255,255,.035);
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.055em;
-      text-transform:uppercase;
-    }
-
-    .micro-links a.primary{
-      border-color:rgba(158,240,191,.62);
-      color:#06101c;
-      background:linear-gradient(135deg,#c8ffd8,#8eeab2);
-    }
-
-    .route-receipt,
-    [data-route-receipt],
-    [data-contract-receipt],
-    [data-debug-receipt],
-    .receipt {
-      display:none!important;
-      visibility:hidden!important;
-      overflow:hidden!important;
-      width:0!important;
-      height:0!important;
-      max-width:0!important;
-      max-height:0!important;
-      margin:0!important;
-      padding:0!important;
-      border:0!important;
-      opacity:0!important;
-      pointer-events:none!important;
-      position:absolute!important;
-      inset:auto!important;
-      clip-path:inset(50%)!important;
-      white-space:nowrap!important;
-    }
-
-    [data-audralia-update-bar],
-    [data-audralia-visible-update],
-    [data-audralia-route-status-bar],
-    [data-audralia-loader-notice-bar],
-    .audralia-update-bar,
-    .audralia-visible-update,
-    .audralia-route-status-bar {
-      display:none!important;
-      visibility:hidden!important;
-      opacity:0!important;
-      pointer-events:none!important;
-      width:0!important;
-      height:0!important;
-      max-width:0!important;
-      max-height:0!important;
-      overflow:hidden!important;
-      position:absolute!important;
-      inset:auto!important;
-      clip-path:inset(50%)!important;
-    }
-
-    footer {
-      padding:1.35rem 0 .5rem;
-      color:var(--faint);
-      text-align:center;
-      font-size:.76rem;
-    }
-
-    @media (max-width:980px) {
-      .topbar { grid-template-columns:1fr; align-items:start; }
-      .nav { justify-content:flex-start; }
-    }
-
-    @media (max-width:720px) {
-      .shell { width:min(100% - 22px,var(--max)); }
-      h1 { font-size:clamp(3rem,17vw,5rem); }
-      .hero { min-height:27rem; padding:1rem; }
-      .actions { display:grid; }
-      .button { width:100%; }
-      .cards { grid-template-columns:1fr; }
-      .stage {
-        height:clamp(23rem,92vw,34rem);
-        max-height:68vh;
+        data[px] = clamp(Math.round(r), 0, 255);
+        data[px + 1] = clamp(Math.round(g), 0, 255);
+        data[px + 2] = clamp(Math.round(b), 0, 255);
+        data[px + 3] = 255;
       }
     }
 
-    @media (prefers-reduced-motion:reduce) {
-      *,
-      *::before,
-      *::after {
-        scroll-behavior:auto!important;
-        animation-duration:.01ms!important;
-        animation-iteration-count:1!important;
-        transition-duration:.01ms!important;
+    return { width: w, height: h, data };
+  }
+
+  function mixColor(a, b, t) {
+    const k = clamp(t, 0, 1);
+    return [
+      lerp(a[0], b[0], k),
+      lerp(a[1], b[1], k),
+      lerp(a[2], b[2], k)
+    ];
+  }
+
+  function sampleTexture(lon, lat) {
+    let u = (wrapLon(lon) + Math.PI) / (Math.PI * 2);
+    let v = 0.5 - lat / Math.PI;
+
+    u = u - Math.floor(u);
+    v = clamp(v, 0, 0.999999);
+
+    const x = Math.floor(u * texture.width);
+    const y = Math.floor(v * texture.height);
+    const index = (y * texture.width + x) * 4;
+
+    return [
+      texture.data[index],
+      texture.data[index + 1],
+      texture.data[index + 2],
+      texture.data[index + 3]
+    ];
+  }
+
+  function resizeCanvas() {
+    const rect = mount.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.65);
+
+    state.width = Math.max(320, Math.floor(rect.width));
+    state.height = Math.max(260, Math.floor(rect.height));
+    state.dpr = dpr;
+
+    canvas.width = Math.max(1, Math.floor(state.width * dpr));
+    canvas.height = Math.max(1, Math.floor(state.height * dpr));
+    canvas.style.width = state.width + "px";
+    canvas.style.height = state.height + "px";
+
+    state.radius = Math.min(canvas.width, canvas.height) * 0.365;
+    state.cx = canvas.width * 0.50;
+    state.cy = canvas.height * 0.51;
+    state.sphereSize = Math.min(560, Math.max(340, Math.floor(state.radius * 2)));
+
+    sphereBuffer.width = state.sphereSize;
+    sphereBuffer.height = state.sphereSize;
+  }
+
+  function renderBackground() {
+    const w = canvas.width;
+    const h = canvas.height;
+
+    ctx.clearRect(0, 0, w, h);
+
+    const bg = ctx.createRadialGradient(w * 0.50, h * 0.45, w * 0.06, w * 0.50, h * 0.52, w * 0.78);
+    bg.addColorStop(0, "rgba(24, 52, 70, 0.95)");
+    bg.addColorStop(0.38, "rgba(6, 17, 35, 0.98)");
+    bg.addColorStop(1, "rgba(1, 4, 13, 1)");
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, w, h);
+
+    ctx.save();
+    ctx.globalAlpha = 0.55;
+    for (let i = 0; i < 70; i += 1) {
+      const x = hash2(i + 11, 4) * w;
+      const y = hash2(i + 17, 7) * h;
+      const r = 0.7 + hash2(i, 9) * 1.6;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(210, 248, 230, 0.12)";
+      ctx.fill();
+    }
+    ctx.restore();
+
+    ctx.save();
+    ctx.globalAlpha = 0.14;
+    ctx.strokeStyle = "rgba(158, 240, 191, 0.22)";
+    ctx.lineWidth = Math.max(1, canvas.width * 0.0012);
+    for (let i = 0; i < 8; i += 1) {
+      const y = h * (0.18 + i * 0.095);
+      ctx.beginPath();
+      ctx.moveTo(w * 0.08, y);
+      ctx.bezierCurveTo(w * 0.28, y - 22, w * 0.66, y + 18, w * 0.92, y - 6);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function renderSphere() {
+    const size = state.sphereSize;
+    const radius = size * 0.5;
+    const image = sphereCtx.createImageData(size, size);
+    const out = image.data;
+
+    const rotation = state.rotation;
+    const tilt = state.tilt;
+    const sinTilt = Math.sin(tilt);
+    const cosTilt = Math.cos(tilt);
+
+    const light = normalize([-0.45, 0.34, 0.82]);
+    const hazeShift = performance.now() * 0.00003;
+
+    for (let y = 0; y < size; y += 1) {
+      const ny = (y - radius) / radius;
+
+      for (let x = 0; x < size; x += 1) {
+        const nx = (x - radius) / radius;
+        const d2 = nx * nx + ny * ny;
+        const px = (y * size + x) * 4;
+
+        if (d2 > 1) {
+          out[px + 3] = 0;
+          continue;
+        }
+
+        const z = Math.sqrt(1 - d2);
+
+        const y3 = -ny * cosTilt - z * sinTilt;
+        const z3 = -ny * sinTilt + z * cosTilt;
+        const x3 = nx;
+
+        const lat = Math.asin(clamp(y3, -1, 1));
+        const lon = Math.atan2(x3, z3) + rotation;
+
+        const color = sampleTexture(lon, lat);
+        const normal = normalize([x3, y3, z3]);
+        const lightDot = clamp(normal[0] * light[0] + normal[1] * light[1] + normal[2] * light[2], -1, 1);
+
+        const daylight = 0.28 + Math.max(0, lightDot) * 0.82;
+        const night = smoothstep(-0.48, 0.12, lightDot);
+        const limb = Math.pow(1 - z, 1.8);
+        const rim = Math.pow(1 - z, 3.0);
+        const cloudNoise =
+          fbm(
+            (lon + hazeShift) * 2.2 + Math.sin(lat * 4.0) * 0.3,
+            lat * 3.0 + hazeShift
+          );
+
+        const cloud = smoothstep(0.64, 0.82, cloudNoise) * smoothstep(-0.95, 0.55, lightDot) * 0.18;
+
+        let r = color[0] * daylight;
+        let g = color[1] * daylight;
+        let b = color[2] * daylight;
+
+        r = lerp(r * 0.45, r, night);
+        g = lerp(g * 0.52, g, night);
+        b = lerp(b * 0.70, b, night);
+
+        r = lerp(r, 220, cloud);
+        g = lerp(g, 238, cloud);
+        b = lerp(b, 232, cloud);
+
+        r = lerp(r, 92, limb * 0.26);
+        g = lerp(g, 156, limb * 0.20);
+        b = lerp(b, 176, limb * 0.26);
+
+        r = lerp(r, 142, rim * 0.36);
+        g = lerp(g, 224, rim * 0.30);
+        b = lerp(b, 204, rim * 0.34);
+
+        out[px] = clamp(Math.round(r), 0, 255);
+        out[px + 1] = clamp(Math.round(g), 0, 255);
+        out[px + 2] = clamp(Math.round(b), 0, 255);
+        out[px + 3] = clamp(Math.round(255 * smoothstep(1.005, 0.985, d2)), 0, 255);
       }
     }
-  </style>
-</head>
 
-<body>
-  <a class="skip" href="/showroom/globe/audralia/#audralia-main">Skip to Audralia</a>
+    sphereCtx.putImageData(image, 0, 0);
+  }
 
-  <div class="shell">
-    <header class="topbar" aria-label="Audralia header">
-      <a class="brand" href="/showroom/globe/audralia/">
-        <span class="brand-mark" aria-hidden="true"><span>AU</span></span>
-        <span class="brand-copy">
-          <span>Diamond Gate Bridge</span>
-          <strong>Audralia</strong>
-        </span>
-      </a>
+  function normalize(v) {
+    const len = Math.hypot(v[0], v[1], v[2]) || 1;
+    return [v[0] / len, v[1] / len, v[2] / len];
+  }
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/">Interactive Narrative</a>
-        <a href="/showroom/globe/earth/">ZIONTS</a>
-        <a href="/showroom/globe/h-earth/">H-Earth</a>
-        <a href="/showroom/globe/audralia/" aria-current="page">Audralia</a>
-        <a href="/gauges/">Gauges</a>
-      </nav>
-    </header>
+  function draw() {
+    renderBackground();
 
-    <main id="audralia-main">
-      <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Audralia · The Possibility Path</div>
+    const glowR = state.radius * 1.26;
+    const glow = ctx.createRadialGradient(state.cx, state.cy, state.radius * 0.48, state.cx, state.cy, glowR);
+    glow.addColorStop(0, "rgba(158,240,191,0.02)");
+    glow.addColorStop(0.52, "rgba(141,216,255,0.08)");
+    glow.addColorStop(0.78, "rgba(158,240,191,0.10)");
+    glow.addColorStop(1, "rgba(158,240,191,0)");
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(state.cx, state.cy, glowR, 0, Math.PI * 2);
+    ctx.fill();
 
-        <h1 id="page-title">Possibility is not fantasy.</h1>
+    ctx.save();
+    ctx.globalAlpha = 0.55;
+    ctx.strokeStyle = "rgba(158,240,191,0.16)";
+    ctx.lineWidth = Math.max(1, canvas.width * 0.002);
+    ctx.beginPath();
+    ctx.arc(state.cx, state.cy, state.radius * 1.025, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
 
-        <div class="subtitle">A clean-slate mirror world for proving what a better future could become.</div>
+    renderSphere();
 
-        <p class="lead">
-          Audralia is the clean-slate mirror-world path: a visible future where lawful systems, technology, and survival infrastructure can be developed before Earth’s future shadow becomes final.
-        </p>
+    const diameter = state.radius * 2;
+    ctx.drawImage(
+      sphereBuffer,
+      state.cx - state.radius,
+      state.cy - state.radius,
+      diameter,
+      diameter
+    );
 
-        <div class="principle">
-          Audralia remains inspectable inside the box so the visitor can see the possibility, not just read about it.
-        </div>
+    ctx.save();
+    ctx.globalCompositeOperation = "screen";
+    ctx.globalAlpha = 0.23;
+    const spec = ctx.createRadialGradient(
+      state.cx - state.radius * 0.22,
+      state.cy - state.radius * 0.38,
+      0,
+      state.cx - state.radius * 0.22,
+      state.cy - state.radius * 0.38,
+      state.radius * 0.74
+    );
+    spec.addColorStop(0, "rgba(255,255,255,0.60)");
+    spec.addColorStop(0.24, "rgba(214,255,235,0.18)");
+    spec.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.fillStyle = spec;
+    ctx.beginPath();
+    ctx.arc(state.cx, state.cy, state.radius, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
 
-        <div class="actions">
-          <a class="button gold" href="/showroom/globe/audralia/#audralia-stage">Inspect Audralia</a>
-          <a class="button" href="/showroom/globe/">Return to Interactive Narrative</a>
-          <a class="button" href="/showroom/globe/earth/">Face Consequence</a>
-          <a class="button" href="/showroom/globe/h-earth/">Open Survival</a>
-        </div>
-      </section>
+    ctx.save();
+    ctx.globalAlpha = 0.18;
+    ctx.strokeStyle = "rgba(243,200,111,0.20)";
+    ctx.lineWidth = Math.max(1, canvas.width * 0.0015);
+    ctx.beginPath();
+    ctx.ellipse(state.cx, state.cy, state.radius * 1.08, state.radius * 0.68, -0.08, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
 
-      <section class="panel section" aria-labelledby="stage-title">
-        <div class="kicker">Inspectable mirror world</div>
-        <h2 id="stage-title">The world remains visible inside the inspection box.</h2>
+    drawStageLabels();
+  }
 
-        <div
-          class="stage"
-          id="audralia-stage"
-          data-audralia-stage="true"
-          data-audralia-box-stage="true"
-          data-audralia-globe-stage="true"
-          data-loader-state="pending"
-          aria-label="Audralia boxed possibility globe stage"
-        >
-          <div class="stage-fallback" data-stage-fallback="true">
-            Connecting to the existing Audralia globe. No procedural substitute will be painted.
-          </div>
+  function drawStageLabels() {
+    const w = canvas.width;
+    const h = canvas.height;
+    const dpr = state.dpr;
 
-          <div
-            id="audraliaCanvasMount"
-            data-audralia-canvas-mount="true"
-            data-audralia-globe-mount="true"
-            data-audralia-satellite-mount="true"
-            data-audralia-contained-mount="true"
-            data-audralia-box-target="true"
-            data-audralia-adoption-target="true"
-            data-audralia-touch-scope="box-only"
-            aria-label="Audralia boxed possibility globe canvas mount"
-          ></div>
-        </div>
+    const pill = function (text, x, y, width) {
+      const height = 34 * dpr;
+      const radius = height / 2;
+      ctx.save();
+      ctx.fillStyle = "rgba(6, 16, 20, 0.74)";
+      ctx.strokeStyle = "rgba(158, 240, 191, 0.28)";
+      ctx.lineWidth = 1 * dpr;
+      roundedRect(ctx, x, y, width, height, radius);
+      ctx.fill();
+      ctx.stroke();
 
-        <div class="public-status" aria-live="polite">
-          <span id="audraliaRouteLoaderNotice" data-audralia-route-loader-notice="true">Touch-scoped globe bridge preparing</span>
-          <span id="audraliaRouteStatus" data-audralia-route-status="true">Existing asset chain pending</span>
-        </div>
-      </section>
+      ctx.fillStyle = "rgba(205, 255, 228, 0.92)";
+      ctx.font = `${Math.max(10, 12 * dpr)}px ui-sans-serif, system-ui, sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.letterSpacing = "2px";
+      ctx.fillText(text, x + width / 2, y + height / 2 + 0.5 * dpr);
+      ctx.restore();
+    };
 
-      <section class="panel section" aria-labelledby="standards-title">
-        <div class="kicker">Possibility conditions</div>
-        <h2 id="standards-title">A living future still needs lawful structure.</h2>
+    pill("ORGANIC LANDFORM ACTIVE", w * 0.50 - 150 * dpr, h * 0.82, 300 * dpr);
+    pill("HYDROLOGY SHAPES COAST", w * 0.50 - 160 * dpr, h * 0.89, 320 * dpr);
+  }
 
-        <div class="cards">
-          <article class="card">
-            <b>Clean-slate world</b>
-            <strong>Audralia begins without Earth’s inherited historical deficit.</strong>
-            <span>The world carries the possibility of development without starting from the same accumulated damage, conflict, and broken systems.</span>
-          </article>
+  function roundedRect(context, x, y, width, height, radius) {
+    const r = Math.min(radius, width / 2, height / 2);
+    context.beginPath();
+    context.moveTo(x + r, y);
+    context.arcTo(x + width, y, x + width, y + height, r);
+    context.arcTo(x + width, y + height, x, y + height, r);
+    context.arcTo(x, y + height, x, y, r);
+    context.arcTo(x, y, x + width, y, r);
+    context.closePath();
+  }
 
-          <article class="card">
-            <b>Lawful development</b>
-            <strong>A future still needs structure.</strong>
-            <span>Energy, habitat, governance, technology, survival systems, and return value must be developed lawfully before possibility becomes livable.</span>
-          </article>
+  function pointerDown(event) {
+    state.pointerActive = true;
+    state.startX = event.clientX;
+    state.startY = event.clientY;
+    state.startRotation = state.targetRotation;
+    state.startTilt = state.targetTilt;
+    canvas.style.cursor = "grabbing";
 
-          <article class="card">
-            <b>Mirror back to Earth</b>
-            <strong>What is proven there should become useful here.</strong>
-            <span>Audralia is not escape fantasy. What is tested and proven on Audralia can become a model for Earth instead of staying trapped inside fiction.</span>
-          </article>
-        </div>
+    try {
+      canvas.setPointerCapture(event.pointerId);
+    } catch (error) {}
+  }
 
-        <div class="micro-links" aria-label="Return path links">
-          <a class="primary" href="/showroom/globe/">Return to Interactive Narrative</a>
-          <a href="/showroom/globe/earth/">ZIONTS</a>
-          <a href="/showroom/globe/h-earth/">H-Earth</a>
-          <a href="/gauges/">Gauges</a>
-        </div>
-      </section>
+  function pointerMove(event) {
+    if (!state.pointerActive) return;
 
-      <template id="route-receipt" data-route-receipt>
-AUDRALIA_NARRATIVE_ALIGNMENT_GLOBE_PRESERVATION_HTML_TNT_v1
-previous=AUDRALIA_TOUCH_SCOPE_HTML_MARRIAGE_TNT_v11
-route=/showroom/globe/audralia/
-page=audralia
-role=showroom_globe_child_route
-public_path=possibility
-narrative_role=Possibility_Path
-world=Audralia
+    const dx = event.clientX - state.startX;
+    const dy = event.clientY - state.startY;
+
+    state.targetRotation = state.startRotation + dx * 0.010;
+    state.targetTilt = clamp(state.startTilt + dy * 0.004, -0.55, 0.45);
+  }
+
+  function pointerUp(event) {
+    state.pointerActive = false;
+    canvas.style.cursor = "grab";
+
+    try {
+      canvas.releasePointerCapture(event.pointerId);
+    } catch (error) {}
+  }
+
+  function tick(now) {
+    const dt = Math.min(64, now - state.lastTime);
+    state.lastTime = now;
+
+    if (!state.reducedMotion && !state.pointerActive) {
+      state.targetRotation += dt * 0.000035;
+    }
+
+    state.rotation += (state.targetRotation - state.rotation) * 0.16;
+    state.tilt += (state.targetTilt - state.tilt) * 0.14;
+
+    if (state.visible && now - state.lastRenderTime > 42) {
+      draw();
+      state.lastRenderTime = now;
+    }
+
+    window.requestAnimationFrame(tick);
+  }
+
+  function handleResize() {
+    resizeCanvas();
+    draw();
+  }
+
+  canvas.addEventListener("pointerdown", pointerDown, { passive: true });
+  canvas.addEventListener("pointermove", pointerMove, { passive: true });
+  canvas.addEventListener("pointerup", pointerUp, { passive: true });
+  canvas.addEventListener("pointercancel", pointerUp, { passive: true });
+  canvas.addEventListener("lostpointercapture", pointerUp, { passive: true });
+
+  window.addEventListener("resize", handleResize, { passive: true });
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      function (entries) {
+        state.visible = entries.some((entry) => entry.isIntersecting);
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(canvas);
+  }
+
+  const receipt = document.createElement("template");
+  receipt.id = "audralia-organic-landform-hydrology-receipt";
+  receipt.setAttribute("data-route-receipt", "");
+  receipt.innerHTML = `
+${CONTRACT}
+route=${ROUTE}
+world=${WORLD}
 canonical_spelling=A_U_D_R_A_L_I_A
-parent_route=/showroom/globe/
-public_parent_label=Interactive_Narrative
-route_loader=/showroom/globe/audralia/index.js
-route_loader_contract=AUDRALIA_TOUCH_SCOPE_BOXED_GLOBE_LOADER_TNT_v11
-html_marriage_contract_preserved=AUDRALIA_TOUCH_SCOPE_HTML_MARRIAGE_TNT_v11
-script_cache_key=AUDRALIA_TOUCH_SCOPE_BOXED_GLOBE_LOADER_TNT_v11
-canvas_mount=#audraliaCanvasMount
-canvas_mount_preserved=true
-canvas_contract=AUDRALIA_EXISTING_GLOBE_BOXED_ASSET_CONSUMER_TNT_v11
-globe_preserved=true
-render_preserved=true
+target_file=/showroom/globe/audralia/index.js
+mount=#audraliaCanvasMount
+problem=one_big_land_glob
+correction=organic_landform_hydrology_visual_renewal
+ocean_dominant=true
+organic_coastline_breakup=true
+bays_gulfs_peninsulas=true
+island_chains=true
+inland_water=true
+coastal_shelves=true
+deep_ocean_contrast=true
+terrain_follows_hydrology=true
 touch_scope=box_only
-page_scroll_outside_box=true
-stage_overflow_hidden=true
-asset_adoption=true
-existing_globe_required=true
-asset_chain_required=true
-procedural_world_fallback=false
+box_containment=true
 generated_image=false
 graphic_box=false
-streaming=false
 visual_pass_claimed=false
-public_copy_renewal=true
-removed_public_thesis=satellite_access_to_existing_globe
-new_public_thesis=clean_slate_mirror_world_possibility_path
-stage_heading=Inspectable_mirror_world
-conditions=clean_slate_world,lawful_development,mirror_back_to_earth
-route_owns=route_shell,public_copy,canvas_mount,public_status,containment_box,legacy_mount_aliases,touch_scope_css,update_bar_suppression,narrative_alignment
-route_does_not_own=land_footprint,climate_authority,surface_truth,gauges_logic,planet_generation,procedural_landscape,render_files,runtime_files,asset_files
-receipt_visibility=hidden_template_only
-      </template>
-    </main>
+`;
+  document.body.appendChild(receipt);
 
-    <footer>
-      Audralia · The Possibility Path · Existing globe preserved inside the inspection box.
-    </footer>
-  </div>
-
-  <script>
-    window.DGB_AUDRALIA_ROUTE_KEY = "AUDRALIA_TOUCH_SCOPE_BOXED_GLOBE_LOADER_TNT_v11";
-    window.DGB_AUDRALIA_HTML_MARRIAGE_KEY = "AUDRALIA_TOUCH_SCOPE_HTML_MARRIAGE_TNT_v11";
-    window.DGB_AUDRALIA_NARRATIVE_ALIGNMENT_KEY = "AUDRALIA_NARRATIVE_ALIGNMENT_GLOBE_PRESERVATION_HTML_TNT_v1";
-    window.DGB_AUDRALIA_BOX_CONTAINMENT = true;
-    window.DGB_AUDRALIA_RESTORE_EXISTING_GLOBE = true;
-    window.DGB_AUDRALIA_NO_PROCEDURAL_FALLBACK = true;
-    window.DGB_AUDRALIA_REFRESH_SAFE = true;
-    window.DGB_AUDRALIA_REFRESH_EXIT_SAFE = true;
-    window.DGB_AUDRALIA_TOUCH_SCOPE = "box-only";
-    window.DGB_AUDRALIA_HIDE_UPDATE_BAR = true;
-  </script>
-  <script
-    src="/showroom/globe/audralia/index.js?v=AUDRALIA_TOUCH_SCOPE_BOXED_GLOBE_LOADER_TNT_v11"
-    data-audralia-loader-script="AUDRALIA_TOUCH_SCOPE_BOXED_GLOBE_LOADER_TNT_v11"
-    data-audralia-html-marriage="AUDRALIA_TOUCH_SCOPE_HTML_MARRIAGE_TNT_v11"
-    defer
-  ></script>
-</body>
-</html>
+  resizeCanvas();
+  draw();
+  window.requestAnimationFrame(tick);
+})();

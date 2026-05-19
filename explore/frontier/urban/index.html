@@ -4,39 +4,28 @@
   lang="en"
   data-route="/explore/frontier/urban/"
   data-page="frontier-urban"
-  data-version="G2-V9"
-  data-contract="FRONTIER_URBAN_PER_BUILDING_SINGLE_OCCUPANCY_LATTICE_RENEWAL_TNT_v9"
-  data-previous-contract="FRONTIER_URBAN_RECTANGULAR_WINDOW_TILE_LIGHT_RENEWAL_TNT_v8"
-  data-source-binding="FRONTIER_URBAN_PER_BUILDING_SINGLE_OCCUPANCY_LATTICE_RENEWAL_PREWRITE_v9"
-  data-per-building-single-occupancy-lattice="true"
-  data-one-building-one-occupancy-map="true"
-  data-stacked-light-layers-removed="true"
-  data-three-layer-light-system="false"
-  data-grouped-light-layers="false"
-  data-per-building-unique-light-rotation="true"
+  data-version="G2-V10"
+  data-contract="FRONTIER_URBAN_TOUCH_ACTIVATED_OCCUPANCY_LATTICE_TNT_v10"
+  data-runtime-scope="css-plus-touch-controller"
+  data-visual-baseline="v9-preserved"
+  data-per-building-lattice="active"
   data-building-local-scope="16x16"
   data-building-local-addresses="256"
-  data-state-expression="geometry-not-dom-object-count"
-  data-greenline-prior-condition-restored="true"
-  data-greenline-blob-lights="false"
-  data-greenline-rectangular-grid-preserved="true"
-  data-greenline-dallas-skyline-reference-preserved="true"
-  data-normal-building-rectangular-pane-lights="true"
-  data-normal-building-blob-lights="false"
-  data-whole-building-flicker="false"
-  data-per-window-dom="false"
-  data-javascript-added="false"
-  data-canvas="false"
-  data-webgl="false"
-  data-particle-engine="false"
-  data-visual-pass-claimed="false"
+  data-one-building-one-occupancy-map="active"
+  data-per-building-programmed-lights="active"
+  data-per-building-unique-chronology="active"
+  data-touch-window-activation="active"
+  data-delegated-touch-listener="active"
+  data-manual-window-override="session"
+  data-greenline-ephemeral-glow="active"
+  data-greenline-prior-condition="preserved"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Urban Construct · Per-Building Occupancy Lattice · Diamond Gate Bridge</title>
-  <meta name="description" content="Diamond Gate Bridge Urban Construct is the Frontier simulation lane where city-scale systems are tested together under metropolitan load, with each skyline building carrying its own local 16 × 16 / 256 occupancy lattice.">
+  <title>Urban Construct · Touch Activated Occupancy Lattice · Diamond Gate Bridge</title>
+  <meta name="description" content="Urban Construct tests city-scale systems with a Dallas-inspired skyline, per-building 16 × 16 occupancy lattices, programmed light chronology, touch-activated windows, and a greenline pulse.">
 
   <style>
     :root{
@@ -44,12 +33,11 @@
       --bg:#02040b;
       --ink:#fff4d8;
       --muted:rgba(230,238,255,.78);
-      --faint:rgba(230,238,255,.50);
+      --faint:rgba(230,238,255,.52);
       --gold:#f3c86f;
       --gold2:#ffe8a3;
       --blue:#8dd8ff;
       --green:#39ff9f;
-      --green2:#8ff0c3;
       --panel:rgba(9,15,31,.88);
       --line:rgba(184,205,255,.18);
       --shadow:0 32px 110px rgba(0,0,0,.48);
@@ -104,6 +92,7 @@
     a{color:inherit;text-decoration:none}
 
     a:focus-visible,
+    button:focus-visible,
     summary:focus-visible,
     label:focus-visible{
       outline:2px solid var(--gold);
@@ -344,482 +333,11 @@
     }
 
     .hero{
-      position:relative;
-      min-height:clamp(32rem,58vw,44rem);
       display:grid;
-      align-content:center;
       gap:1rem;
       padding:clamp(1.45rem,5vw,3.4rem);
       margin-top:.6rem;
       isolation:isolate;
-    }
-
-    .hero > *:not(.urban-skyline-stage){
-      position:relative;
-      z-index:5;
-    }
-
-    .urban-skyline-stage{
-      position:relative;
-      min-height:clamp(24rem,44vw,34rem);
-      border:1px solid rgba(184,205,255,.13);
-      border-radius:clamp(1.25rem,4vw,2rem);
-      overflow:hidden;
-      isolation:isolate;
-      background:
-        radial-gradient(circle at 50% 82%,rgba(255,199,101,.24),transparent 28rem),
-        radial-gradient(circle at 37% 76%,rgba(57,255,159,.16),transparent 23rem),
-        radial-gradient(circle at 72% 80%,rgba(141,216,255,.18),transparent 26rem),
-        linear-gradient(180deg,#06122c 0%,#071023 46%,#040814 72%,#02040b 100%);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-    }
-
-    .hero .urban-skyline-stage{
-      position:absolute;
-      inset:0;
-      z-index:0;
-      min-height:0;
-      border:0;
-      border-radius:inherit;
-      box-shadow:none;
-    }
-
-    .urban-skyline-stage::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 16% 16%,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
-        radial-gradient(circle at 76% 22%,rgba(255,255,255,.14) 0 1px,transparent 1.5px),
-        radial-gradient(circle at 58% 13%,rgba(243,200,111,.14) 0 1px,transparent 1.5px);
-      background-size:220px 240px,280px 260px,340px 300px;
-      opacity:.72;
-    }
-
-    .urban-skyline-stage::after{
-      content:"";
-      position:absolute;
-      left:-10%;
-      right:-10%;
-      bottom:6%;
-      z-index:1;
-      height:44%;
-      pointer-events:none;
-      background:
-        radial-gradient(ellipse at 50% 96%,rgba(255,199,101,.34),transparent 55%),
-        radial-gradient(ellipse at 34% 88%,rgba(57,255,159,.14),transparent 38%),
-        radial-gradient(ellipse at 72% 86%,rgba(141,216,255,.16),transparent 46%);
-      opacity:.72;
-      animation:urbanHorizonBreathe 11s ease-in-out infinite;
-    }
-
-    .skyline-depth-layer{
-      position:absolute;
-      inset:0;
-      z-index:2;
-      pointer-events:none;
-    }
-
-    .skyline-depth-layer.far{
-      z-index:2;
-      opacity:.56;
-      filter:saturate(.72) brightness(.72);
-    }
-
-    .skyline-depth-layer.mid{z-index:3;opacity:.98}
-    .skyline-depth-layer.front{z-index:4;opacity:1}
-
-    .urban-building{
-      position:absolute;
-      left:var(--b-left);
-      bottom:var(--b-bottom);
-      width:var(--b-width);
-      height:var(--b-height);
-      opacity:var(--b-haze,.92);
-      border:1px solid rgba(255,255,255,var(--b-contrast,.10));
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.055),transparent 28%),
-        linear-gradient(180deg,rgba(12,23,49,.96),rgba(2,5,16,.98));
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.08),
-        0 0 var(--b-glow,1.35rem) rgba(57,255,159,var(--b-glow-alpha,.08)),
-        0 0 2rem rgba(0,0,0,.36);
-      transform:translateZ(0);
-      animation:buildingBreath var(--b-duration,17s) ease-in-out infinite;
-      animation-delay:var(--b-delay,0s);
-    }
-
-    .urban-building.step{
-      clip-path:polygon(0 16%,24% 16%,24% 0,100% 0,100% 100%,0 100%);
-    }
-
-    .urban-building.roof{
-      clip-path:polygon(0 12%,50% 0,100% 12%,100% 100%,0 100%);
-    }
-
-    .urban-building:not(.greenline):not(.reunion)::before{
-      content:"";
-      position:absolute;
-      inset:.52rem .42rem .62rem;
-      z-index:1;
-      pointer-events:none;
-      opacity:var(--facade-opacity,.22);
-      background-image:
-        repeating-linear-gradient(90deg,transparent 0 calc(var(--b-window-x,.74rem) * .46),rgba(126,171,207,.18) calc(var(--b-window-x,.74rem) * .46) calc(var(--b-window-x,.74rem) * .58),transparent calc(var(--b-window-x,.74rem) * .58) var(--b-window-x,.74rem)),
-        repeating-linear-gradient(0deg,transparent 0 calc(var(--b-window-y,.86rem) * .46),rgba(126,171,207,.13) calc(var(--b-window-y,.86rem) * .46) calc(var(--b-window-y,.86rem) * .58),transparent calc(var(--b-window-y,.86rem) * .58) var(--b-window-y,.86rem));
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.94),rgba(0,0,0,.68) 64%,rgba(0,0,0,.34));
-    }
-
-    .urban-building:not(.greenline):not(.reunion)::after{
-      content:"";
-      position:absolute;
-      z-index:2;
-      left:var(--pane-left,.62rem);
-      top:var(--pane-top,.72rem);
-      width:var(--pane-w,.34rem);
-      height:var(--pane-h,.54rem);
-      border-radius:.07rem;
-      background:
-        linear-gradient(180deg,rgba(255,246,214,.92),rgba(255,204,112,.78) 54%,rgba(255,160,64,.34));
-      box-shadow:var(--occ-0,none);
-      opacity:var(--occ-opacity,.92);
-      filter:drop-shadow(0 0 .10rem rgba(255,221,140,.24));
-      animation:var(--occ-animation,b01Occupancy) var(--occ-cycle,19s) steps(1,end) infinite;
-      animation-delay:var(--occ-delay,-2s);
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.96),rgba(0,0,0,.72) 74%,rgba(0,0,0,.30));
-    }
-
-    .office::after{
-      background:linear-gradient(180deg,rgba(230,248,255,.92),rgba(141,216,255,.52) 56%,rgba(255,226,145,.22));
-      filter:drop-shadow(0 0 .09rem rgba(141,216,255,.20));
-    }
-
-    .residential::after{
-      background:linear-gradient(180deg,rgba(255,246,214,.96),rgba(255,198,104,.72) 56%,rgba(255,154,75,.30));
-      filter:drop-shadow(0 0 .10rem rgba(255,204,112,.22));
-    }
-
-    .mixed::after{
-      background:linear-gradient(180deg,rgba(255,238,180,.90),rgba(255,197,95,.62) 52%,rgba(141,216,255,.24));
-    }
-
-    .quiet::after,
-    .far-building::after,
-    .civic::after{
-      background:linear-gradient(180deg,rgba(216,238,255,.58),rgba(141,216,255,.28) 58%,rgba(255,226,145,.16));
-      filter:none;
-      opacity:.72;
-    }
-
-    .foreground::after{
-      background:linear-gradient(180deg,rgba(255,226,145,.40),rgba(141,216,255,.18));
-      filter:none;
-      opacity:.32;
-    }
-
-    .skyline-depth-layer.far .urban-building{
-      border-color:rgba(255,255,255,.045);
-      box-shadow:0 0 1.2rem rgba(0,0,0,.20);
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.025),transparent 28%),
-        linear-gradient(180deg,rgba(9,18,41,.74),rgba(2,5,16,.90));
-    }
-
-    .greenline{
-      background:
-        linear-gradient(90deg,transparent 0 12%,rgba(57,255,159,.50) 13% 18%,transparent 19% 81%,rgba(57,255,159,.48) 82% 87%,transparent 88%),
-        linear-gradient(180deg,rgba(16,39,52,.98),rgba(2,8,16,.98));
-      border-color:rgba(57,255,159,.28);
-      box-shadow:
-        0 0 var(--b-glow,2.2rem) rgba(57,255,159,.24),
-        inset 0 1px 0 rgba(255,255,255,.10);
-      animation-name:greenlineBuildingPulse;
-    }
-
-    .greenline::before{
-      content:"";
-      position:absolute;
-      inset:.45rem .36rem .55rem;
-      z-index:2;
-      pointer-events:none;
-      opacity:.48;
-      background-image:
-        repeating-linear-gradient(
-          90deg,
-          transparent 0 calc(var(--b-window-x,.58rem) * .30),
-          rgba(57,255,159,.92) calc(var(--b-window-x,.58rem) * .30) calc(var(--b-window-x,.58rem) * .42),
-          transparent calc(var(--b-window-x,.58rem) * .42) var(--b-window-x,.58rem)
-        ),
-        repeating-linear-gradient(
-          0deg,
-          transparent 0 calc(var(--b-window-y,.72rem) * .34),
-          rgba(230,255,235,.50) calc(var(--b-window-y,.72rem) * .34) calc(var(--b-window-y,.72rem) * .45),
-          transparent calc(var(--b-window-y,.72rem) * .45) var(--b-window-y,.72rem)
-        ),
-        linear-gradient(135deg,rgba(57,255,159,.22),transparent 45%,rgba(255,232,163,.10));
-      background-size:
-        var(--b-window-x,.58rem) var(--b-window-y,.72rem),
-        var(--b-window-x,.58rem) var(--b-window-y,.72rem),
-        100% 100%;
-      background-position:0 0,0 0,0 0;
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.96),rgba(0,0,0,.76) 64%,rgba(0,0,0,.36));
-      animation:greenlineGridPulse var(--a-cycle,37s) ease-in-out infinite;
-      animation-delay:var(--b-delay,-7s);
-    }
-
-    .greenline::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      z-index:3;
-      opacity:.30;
-      pointer-events:none;
-      background:
-        linear-gradient(90deg,transparent 0 9%,rgba(57,255,159,.00) 10%,rgba(57,255,159,.55) 14%,rgba(57,255,159,.00) 20%,transparent 21% 80%,rgba(57,255,159,.00) 81%,rgba(57,255,159,.50) 85%,rgba(57,255,159,.00) 91%,transparent 92%);
-      background-size:100% 140%;
-      animation:greenlineContinuityFlow var(--b-duration,31s) ease-in-out infinite;
-      animation-delay:var(--b-delay,-7s);
-    }
-
-    .reunion{
-      background:
-        linear-gradient(90deg,transparent 0 45%,rgba(206,231,255,.66) 46% 54%,transparent 55%),
-        linear-gradient(180deg,transparent 0 20%,rgba(5,10,22,.96) 21% 100%);
-      border-color:transparent;
-      box-shadow:none;
-    }
-
-    .reunion::before{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:2%;
-      width:min(88%,4.1rem);
-      aspect-ratio:1/1;
-      transform:translateX(-50%);
-      border-radius:50%;
-      border:1px solid rgba(255,232,163,.42);
-      background:
-        radial-gradient(circle at 38% 30%,rgba(255,255,255,.52),transparent 18%),
-        radial-gradient(circle at 50% 50%,rgba(255,232,163,.22),transparent 58%),
-        rgba(5,10,22,.95);
-      box-shadow:
-        0 0 .9rem rgba(255,232,163,.20),
-        0 0 1.7rem rgba(141,216,255,.12);
-      animation:landmarkBreathing var(--b-duration,19s) ease-in-out infinite;
-      animation-delay:var(--b-delay,-3s);
-    }
-
-    .reunion::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:16%;
-      bottom:0;
-      width:1px;
-      transform:translateX(-50%);
-      background:linear-gradient(180deg,rgba(255,255,255,.56),rgba(141,216,255,.25),rgba(255,255,255,.06));
-    }
-
-    .foreground{
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.025),transparent 24%),
-        linear-gradient(180deg,rgba(5,9,18,.96),rgba(0,0,0,.99));
-      border-color:rgba(255,255,255,.045);
-      box-shadow:0 -1rem 2.6rem rgba(0,0,0,.42);
-      opacity:.92;
-    }
-
-    @keyframes urbanHorizonBreathe{
-      0%,100%{opacity:.58;filter:brightness(.94)}
-      50%{opacity:.82;filter:brightness(1.08)}
-    }
-
-    @keyframes buildingBreath{
-      0%,100%{filter:brightness(.96)}
-      50%{filter:brightness(1.025)}
-    }
-
-    @keyframes b01OfficeOccupancy{
-      0%,100%{box-shadow:.80rem .34rem rgba(225,248,255,.44),1.58rem 1.14rem rgba(255,225,145,.26),.72rem 2.05rem rgba(225,248,255,.36),1.50rem 3.10rem rgba(255,225,145,.32),.72rem 4.03rem rgba(225,248,255,.30);}
-      25%{box-shadow:1.52rem .45rem rgba(255,225,145,.34),.76rem 1.28rem rgba(225,248,255,.46),1.50rem 2.34rem rgba(225,248,255,.28),.77rem 3.30rem rgba(255,225,145,.38),1.52rem 4.34rem rgba(225,248,255,.24);}
-      50%{box-shadow:.76rem .55rem rgba(225,248,255,.28),1.50rem 1.55rem rgba(255,225,145,.24),.76rem 2.56rem rgba(255,225,145,.40),1.50rem 3.55rem rgba(225,248,255,.35),.76rem 4.55rem rgba(225,248,255,.22);}
-      75%{box-shadow:1.50rem .74rem rgba(225,248,255,.38),.76rem 1.74rem rgba(255,225,145,.30),1.50rem 2.74rem rgba(225,248,255,.44),.76rem 3.74rem rgba(255,225,145,.18),1.50rem 4.74rem rgba(225,248,255,.30);}
-    }
-
-    @keyframes b02ResidentialOccupancy{
-      0%,100%{box-shadow:.78rem .46rem rgba(255,214,128,.48),1.62rem 1.34rem rgba(255,244,216,.32),2.44rem 2.12rem rgba(255,214,128,.26),.80rem 3.26rem rgba(255,214,128,.44),1.62rem 4.14rem rgba(255,244,216,.24),2.45rem 5.05rem rgba(255,214,128,.34);}
-      20%{box-shadow:1.62rem .46rem rgba(255,214,128,.30),2.45rem 1.38rem rgba(255,244,216,.42),.80rem 2.28rem rgba(255,214,128,.36),1.62rem 3.20rem rgba(255,214,128,.22),2.45rem 4.12rem rgba(255,244,216,.34),.80rem 5.10rem rgba(255,214,128,.48);}
-      55%{box-shadow:.80rem .88rem rgba(255,244,216,.28),2.45rem 1.76rem rgba(255,214,128,.40),1.62rem 2.68rem rgba(255,214,128,.50),.80rem 3.62rem rgba(255,244,216,.22),2.45rem 4.58rem rgba(255,214,128,.36),1.62rem 5.44rem rgba(255,244,216,.26);}
-      78%{box-shadow:2.45rem .64rem rgba(255,214,128,.42),.80rem 1.56rem rgba(255,244,216,.34),1.62rem 2.44rem rgba(255,214,128,.24),2.45rem 3.32rem rgba(255,214,128,.46),.80rem 4.24rem rgba(255,244,216,.24),1.62rem 5.18rem rgba(255,214,128,.32);}
-    }
-
-    @keyframes b03MixedOccupancy{
-      0%,100%{box-shadow:.74rem .66rem rgba(255,214,128,.36),1.54rem 1.56rem rgba(225,248,255,.26),.74rem 2.46rem rgba(255,214,128,.42),1.54rem 3.36rem rgba(225,248,255,.20),.74rem 4.20rem rgba(255,214,128,.22);}
-      30%{box-shadow:1.54rem .76rem rgba(225,248,255,.34),.74rem 1.72rem rgba(255,214,128,.26),1.54rem 2.62rem rgba(255,214,128,.46),.74rem 3.54rem rgba(225,248,255,.22),1.54rem 4.46rem rgba(255,214,128,.32);}
-      60%{box-shadow:.74rem .96rem rgba(255,214,128,.24),1.54rem 1.86rem rgba(255,214,128,.50),.74rem 2.78rem rgba(225,248,255,.26),1.54rem 3.68rem rgba(255,214,128,.30),.74rem 4.58rem rgba(225,248,255,.20);}
-      84%{box-shadow:1.54rem .54rem rgba(255,214,128,.38),.74rem 1.44rem rgba(225,248,255,.18),1.54rem 2.34rem rgba(255,214,128,.34),.74rem 3.24rem rgba(255,214,128,.44),1.54rem 4.14rem rgba(225,248,255,.26);}
-    }
-
-    @keyframes b04OfficeOccupancy{
-      0%,100%{box-shadow:.74rem .50rem rgba(225,248,255,.34),1.50rem 1.32rem rgba(225,248,255,.22),2.24rem 2.10rem rgba(255,225,145,.24),.74rem 2.96rem rgba(225,248,255,.38),1.50rem 3.82rem rgba(225,248,255,.30),2.24rem 4.66rem rgba(255,225,145,.18);}
-      24%{box-shadow:2.24rem .52rem rgba(225,248,255,.40),.74rem 1.32rem rgba(255,225,145,.28),1.50rem 2.16rem rgba(225,248,255,.32),2.24rem 2.98rem rgba(225,248,255,.24),.74rem 3.84rem rgba(255,225,145,.26),1.50rem 4.68rem rgba(225,248,255,.36);}
-      52%{box-shadow:1.50rem .64rem rgba(225,248,255,.46),2.24rem 1.46rem rgba(255,225,145,.20),.74rem 2.28rem rgba(225,248,255,.28),1.50rem 3.12rem rgba(255,225,145,.32),2.24rem 3.96rem rgba(225,248,255,.22),.74rem 4.82rem rgba(225,248,255,.36);}
-      76%{box-shadow:.74rem .84rem rgba(255,225,145,.22),1.50rem 1.66rem rgba(225,248,255,.38),2.24rem 2.50rem rgba(225,248,255,.30),.74rem 3.34rem rgba(255,225,145,.20),1.50rem 4.18rem rgba(225,248,255,.42),2.24rem 5.02rem rgba(225,248,255,.24);}
-    }
-
-    @keyframes b05OfficeOccupancy{
-      0%,100%{box-shadow:.76rem .58rem rgba(225,248,255,.38),1.54rem 1.40rem rgba(225,248,255,.24),2.34rem 2.22rem rgba(255,225,145,.20),3.10rem 3.02rem rgba(225,248,255,.32),.76rem 3.90rem rgba(225,248,255,.40),1.54rem 4.72rem rgba(255,225,145,.22),2.34rem 5.55rem rgba(225,248,255,.30);}
-      22%{box-shadow:1.54rem .62rem rgba(225,248,255,.44),2.34rem 1.42rem rgba(255,225,145,.28),3.10rem 2.24rem rgba(225,248,255,.26),.76rem 3.04rem rgba(225,248,255,.34),1.54rem 3.88rem rgba(255,225,145,.22),2.34rem 4.72rem rgba(225,248,255,.38),3.10rem 5.56rem rgba(225,248,255,.24);}
-      49%{box-shadow:2.34rem .74rem rgba(255,225,145,.24),3.10rem 1.54rem rgba(225,248,255,.42),.76rem 2.36rem rgba(225,248,255,.26),1.54rem 3.16rem rgba(225,248,255,.36),2.34rem 4.00rem rgba(255,225,145,.28),3.10rem 4.84rem rgba(225,248,255,.22),.76rem 5.66rem rgba(225,248,255,.34);}
-      71%{box-shadow:3.10rem .54rem rgba(225,248,255,.32),.76rem 1.36rem rgba(255,225,145,.24),1.54rem 2.18rem rgba(225,248,255,.40),2.34rem 3.00rem rgba(225,248,255,.28),3.10rem 3.82rem rgba(255,225,145,.18),.76rem 4.64rem rgba(225,248,255,.36),1.54rem 5.48rem rgba(225,248,255,.26);}
-    }
-
-    @keyframes b06OfficeOccupancy{
-      0%,100%{box-shadow:.80rem .60rem rgba(225,248,255,.30),1.62rem 1.50rem rgba(255,225,145,.22),2.44rem 2.40rem rgba(225,248,255,.38),.80rem 3.30rem rgba(225,248,255,.24),1.62rem 4.20rem rgba(255,225,145,.28),2.44rem 5.10rem rgba(225,248,255,.34);}
-      27%{box-shadow:1.62rem .74rem rgba(225,248,255,.38),2.44rem 1.64rem rgba(225,248,255,.24),.80rem 2.54rem rgba(255,225,145,.26),1.62rem 3.44rem rgba(225,248,255,.42),2.44rem 4.34rem rgba(255,225,145,.20),.80rem 5.24rem rgba(225,248,255,.32);}
-      53%{box-shadow:2.44rem .86rem rgba(255,225,145,.22),.80rem 1.76rem rgba(225,248,255,.40),1.62rem 2.66rem rgba(225,248,255,.28),2.44rem 3.56rem rgba(225,248,255,.34),.80rem 4.46rem rgba(255,225,145,.30),1.62rem 5.36rem rgba(225,248,255,.22);}
-      81%{box-shadow:.80rem .48rem rgba(225,248,255,.44),1.62rem 1.38rem rgba(255,225,145,.18),2.44rem 2.28rem rgba(225,248,255,.26),.80rem 3.18rem rgba(255,225,145,.24),1.62rem 4.08rem rgba(225,248,255,.36),2.44rem 4.98rem rgba(225,248,255,.28);}
-    }
-
-    @keyframes b07QuietOccupancy{
-      0%,100%{box-shadow:.78rem .72rem rgba(225,248,255,.15),1.58rem 1.70rem rgba(255,225,145,.11),.78rem 2.70rem rgba(225,248,255,.12),1.58rem 3.70rem rgba(225,248,255,.14);}
-      36%{box-shadow:1.58rem .88rem rgba(225,248,255,.17),.78rem 1.88rem rgba(255,225,145,.13),1.58rem 2.88rem rgba(225,248,255,.11),.78rem 3.88rem rgba(225,248,255,.16);}
-      68%{box-shadow:.78rem 1.05rem rgba(255,225,145,.12),1.58rem 2.05rem rgba(225,248,255,.15),.78rem 3.05rem rgba(225,248,255,.10),1.58rem 4.05rem rgba(255,225,145,.13);}
-    }
-
-    @keyframes b08FarOccupancy{
-      0%,100%{box-shadow:.70rem .70rem rgba(225,248,255,.10),1.45rem 1.75rem rgba(255,225,145,.08),.70rem 2.82rem rgba(225,248,255,.09);}
-      44%{box-shadow:1.45rem .82rem rgba(225,248,255,.12),.70rem 1.88rem rgba(255,225,145,.09),1.45rem 2.96rem rgba(225,248,255,.08);}
-      72%{box-shadow:.70rem 1.00rem rgba(255,225,145,.08),1.45rem 2.06rem rgba(225,248,255,.10),.70rem 3.14rem rgba(225,248,255,.07);}
-    }
-
-    @keyframes b09ForegroundOccupancy{
-      0%,100%{box-shadow:1.0rem .90rem rgba(255,225,145,.055),2.2rem 1.80rem rgba(225,248,255,.045),3.4rem 2.70rem rgba(255,225,145,.04);}
-      50%{box-shadow:2.2rem .95rem rgba(225,248,255,.06),3.4rem 1.85rem rgba(255,225,145,.045),1.0rem 2.75rem rgba(225,248,255,.035);}
-    }
-
-    @keyframes greenlineBuildingPulse{
-      0%,100%{
-        filter:brightness(.98);
-        box-shadow:0 0 var(--b-glow,2.3rem) rgba(57,255,159,.22),inset 0 1px 0 rgba(255,255,255,.10);
-      }
-      44%{
-        filter:brightness(var(--b-bright-active,1.18));
-        box-shadow:0 0 var(--b-glow-active,3.6rem) rgba(57,255,159,.44),0 0 1.4rem rgba(243,200,111,.10),inset 0 1px 0 rgba(255,255,255,.12);
-      }
-      71%{filter:brightness(1.05)}
-    }
-
-    @keyframes greenlineGridPulse{
-      0%,100%{opacity:.38;filter:brightness(.96)}
-      34%{opacity:.58;filter:brightness(1.10)}
-      61%{opacity:.46;filter:brightness(1.03)}
-    }
-
-    @keyframes greenlineContinuityFlow{
-      0%,100%{opacity:.16;background-position:0 0}
-      50%{opacity:.36;background-position:0 100%}
-    }
-
-    @keyframes landmarkBreathing{
-      0%,100%{
-        opacity:.88;
-        filter:brightness(.92);
-        box-shadow:0 0 .9rem rgba(255,232,163,.18),0 0 1.7rem rgba(141,216,255,.11);
-      }
-      52%{
-        opacity:1;
-        filter:brightness(1.10);
-        box-shadow:0 0 1.2rem rgba(255,232,163,.28),0 0 2.3rem rgba(141,216,255,.18);
-      }
-    }
-
-    .construct-visual{
-      margin-top:1.15rem;
-      padding:clamp(1rem,3vw,1.45rem);
-      display:grid;
-      gap:1rem;
-    }
-
-    .construct-copy{
-      display:grid;
-      gap:.65rem;
-      max-width:980px;
-    }
-
-    .construct-grid{
-      display:grid;
-      grid-template-columns:minmax(0,1fr) minmax(16rem,24rem);
-      gap:1rem;
-      align-items:stretch;
-    }
-
-    .construct-key{
-      display:grid;
-      align-content:start;
-      gap:.72rem;
-      padding:1rem;
-      border:1px solid rgba(57,255,159,.22);
-      border-radius:1.25rem;
-      background:
-        radial-gradient(circle at 16% 0%,rgba(57,255,159,.13),transparent 20rem),
-        rgba(3,6,18,.52);
-      box-shadow:
-        0 0 1.5rem rgba(57,255,159,.08),
-        inset 0 1px 0 rgba(255,255,255,.06);
-      backdrop-filter:blur(8px);
-    }
-
-    .construct-key strong{
-      color:var(--gold);
-      font-size:.78rem;
-      font-weight:950;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-    }
-
-    .key-list{
-      display:grid;
-      gap:.5rem;
-      margin:0;
-      padding:0;
-      list-style:none;
-    }
-
-    .key-list li{
-      display:grid;
-      grid-template-columns:1.2rem 1fr;
-      gap:.56rem;
-      align-items:start;
-      color:var(--muted);
-      font-size:.86rem;
-      line-height:1.34;
-    }
-
-    .key-mark{
-      width:.95rem;
-      height:.95rem;
-      margin-top:.14rem;
-      border:1px solid rgba(255,255,255,.18);
-      border-radius:50%;
-      background:var(--key-color,var(--gold));
-      box-shadow:0 0 .78rem var(--key-color,var(--gold));
-    }
-
-    .key-mark.square{border-radius:.18rem}
-
-    .key-mark.line{
-      height:.22rem;
-      margin-top:.45rem;
-      border-radius:999px;
-    }
-
-    .key-mark.dark{
-      background:#05070d;
-      box-shadow:0 0 .8rem rgba(0,0,0,.7);
     }
 
     .kicker{
@@ -854,9 +372,9 @@
     h1{
       margin:0;
       max-width:1020px;
-      font-size:clamp(3.7rem,11vw,7.2rem);
+      font-size:clamp(3.4rem,10vw,7.2rem);
       line-height:.84;
-      letter-spacing:-.112em;
+      letter-spacing:-.105em;
       text-wrap:balance;
       text-shadow:0 1.2rem 2.4rem rgba(0,0,0,.60);
     }
@@ -945,6 +463,446 @@
       background:rgba(57,255,159,.08);
     }
 
+    .construct-visual{
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.45rem);
+      display:grid;
+      gap:1rem;
+    }
+
+    .construct-copy{
+      display:grid;
+      gap:.65rem;
+      max-width:980px;
+    }
+
+    .construct-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(16rem,24rem);
+      gap:1rem;
+      align-items:stretch;
+    }
+
+    .urban-skyline-stage{
+      position:relative;
+      min-height:clamp(24rem,44vw,34rem);
+      border:1px solid rgba(184,205,255,.13);
+      border-radius:clamp(1.25rem,4vw,2rem);
+      overflow:hidden;
+      isolation:isolate;
+      background:
+        radial-gradient(circle at 50% 82%,rgba(255,199,101,.24),transparent 28rem),
+        radial-gradient(circle at 37% 76%,rgba(57,255,159,.16),transparent 23rem),
+        radial-gradient(circle at 72% 80%,rgba(141,216,255,.18),transparent 26rem),
+        linear-gradient(180deg,#06122c 0%,#071023 46%,#040814 72%,#02040b 100%);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      touch-action:manipulation;
+    }
+
+    .urban-skyline-stage::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 16% 16%,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
+        radial-gradient(circle at 76% 22%,rgba(255,255,255,.14) 0 1px,transparent 1.5px),
+        radial-gradient(circle at 58% 13%,rgba(243,200,111,.14) 0 1px,transparent 1.5px);
+      background-size:220px 240px,280px 260px,340px 300px;
+      opacity:.72;
+    }
+
+    .urban-skyline-stage::after{
+      content:"";
+      position:absolute;
+      left:-10%;
+      right:-10%;
+      bottom:6%;
+      z-index:1;
+      height:44%;
+      pointer-events:none;
+      background:
+        radial-gradient(ellipse at 50% 96%,rgba(255,199,101,.34),transparent 55%),
+        radial-gradient(ellipse at 34% 88%,rgba(57,255,159,.14),transparent 38%),
+        radial-gradient(ellipse at 72% 86%,rgba(141,216,255,.16),transparent 46%);
+      opacity:.72;
+      animation:urbanHorizonBreathe 11s ease-in-out infinite;
+    }
+
+    .skyline-depth-layer{
+      position:absolute;
+      inset:0;
+      z-index:2;
+      pointer-events:none;
+    }
+
+    .skyline-depth-layer.far{
+      z-index:2;
+      opacity:.56;
+      filter:saturate(.72) brightness(.72);
+    }
+
+    .skyline-depth-layer.mid{z-index:3;opacity:.98}
+    .skyline-depth-layer.front{z-index:4;opacity:1}
+
+    .urban-building{
+      position:absolute;
+      left:var(--b-left);
+      bottom:var(--b-bottom);
+      width:var(--b-width);
+      height:var(--b-height);
+      opacity:var(--b-haze,.92);
+      border:1px solid rgba(255,255,255,var(--b-contrast,.10));
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.055),transparent 28%),
+        linear-gradient(180deg,rgba(12,23,49,.96),rgba(2,5,16,.98));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.08),
+        0 0 var(--b-glow,1.35rem) rgba(57,255,159,var(--b-glow-alpha,.08)),
+        0 0 2rem rgba(0,0,0,.36);
+      transform:translateZ(0);
+      animation:buildingBreath var(--b-duration,17s) ease-in-out infinite;
+      animation-delay:var(--b-delay,0s);
+      pointer-events:auto;
+    }
+
+    .urban-building.step{
+      clip-path:polygon(0 16%,24% 16%,24% 0,100% 0,100% 100%,0 100%);
+    }
+
+    .urban-building.roof{
+      clip-path:polygon(0 12%,50% 0,100% 12%,100% 100%,0 100%);
+    }
+
+    .city-building::before{
+      content:"";
+      position:absolute;
+      inset:.52rem .42rem .62rem;
+      z-index:1;
+      pointer-events:none;
+      opacity:var(--facade-opacity,.22);
+      background-image:
+        repeating-linear-gradient(90deg,transparent 0 calc(var(--b-window-x,.74rem) * .46),rgba(126,171,207,.18) calc(var(--b-window-x,.74rem) * .46) calc(var(--b-window-x,.74rem) * .58),transparent calc(var(--b-window-x,.74rem) * .58) var(--b-window-x,.74rem)),
+        repeating-linear-gradient(0deg,transparent 0 calc(var(--b-window-y,.86rem) * .46),rgba(126,171,207,.13) calc(var(--b-window-y,.86rem) * .46) calc(var(--b-window-y,.86rem) * .58),transparent calc(var(--b-window-y,.86rem) * .58) var(--b-window-y,.86rem));
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.94),rgba(0,0,0,.68) 64%,rgba(0,0,0,.34));
+    }
+
+    .window-tile{
+      position:absolute;
+      z-index:3;
+      left:calc(var(--x) * 1%);
+      top:calc(var(--y) * 1%);
+      width:var(--pane-w,.34rem);
+      height:var(--pane-h,.50rem);
+      border:0;
+      border-radius:.07rem;
+      padding:0;
+      opacity:.16;
+      cursor:pointer;
+      background:
+        linear-gradient(180deg,rgba(255,246,214,.88),rgba(255,204,112,.74) 54%,rgba(255,160,64,.30));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.24);
+      transform:translateZ(0);
+      transition:opacity .18s ease,filter .18s ease,box-shadow .18s ease,background .18s ease;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    .window-tile.is-on{
+      opacity:var(--on-opacity,.88);
+      filter:brightness(1.08);
+      box-shadow:
+        0 0 .28rem rgba(255,214,128,.40),
+        inset 0 1px 0 rgba(255,255,255,.34);
+    }
+
+    .window-tile.manual{
+      box-shadow:
+        0 0 .36rem rgba(255,232,163,.52),
+        0 0 .85rem rgba(57,255,159,.10),
+        inset 0 1px 0 rgba(255,255,255,.34);
+    }
+
+    .office .window-tile{
+      background:linear-gradient(180deg,rgba(230,248,255,.90),rgba(141,216,255,.50) 56%,rgba(255,226,145,.20));
+    }
+
+    .office .window-tile.is-on{
+      box-shadow:
+        0 0 .24rem rgba(141,216,255,.34),
+        inset 0 1px 0 rgba(255,255,255,.34);
+    }
+
+    .residential .window-tile{
+      background:linear-gradient(180deg,rgba(255,246,214,.96),rgba(255,198,104,.72) 56%,rgba(255,154,75,.30));
+    }
+
+    .mixed .window-tile{
+      background:linear-gradient(180deg,rgba(255,238,180,.90),rgba(255,197,95,.62) 52%,rgba(141,216,255,.24));
+    }
+
+    .quiet .window-tile,
+    .far-building .window-tile,
+    .civic .window-tile{
+      opacity:.10;
+      background:linear-gradient(180deg,rgba(216,238,255,.58),rgba(141,216,255,.28) 58%,rgba(255,226,145,.16));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
+    }
+
+    .quiet .window-tile.is-on,
+    .far-building .window-tile.is-on,
+    .civic .window-tile.is-on{
+      opacity:.56;
+      filter:brightness(.96);
+      box-shadow:0 0 .16rem rgba(141,216,255,.18);
+    }
+
+    .foreground .window-tile{
+      opacity:.08;
+      background:linear-gradient(180deg,rgba(255,226,145,.40),rgba(141,216,255,.18));
+    }
+
+    .foreground .window-tile.is-on{
+      opacity:.30;
+      box-shadow:0 0 .14rem rgba(255,226,145,.10);
+    }
+
+    .skyline-depth-layer.far .urban-building{
+      border-color:rgba(255,255,255,.045);
+      box-shadow:0 0 1.2rem rgba(0,0,0,.20);
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.025),transparent 28%),
+        linear-gradient(180deg,rgba(9,18,41,.74),rgba(2,5,16,.90));
+    }
+
+    .greenline{
+      background:
+        linear-gradient(90deg,transparent 0 12%,rgba(57,255,159,.50) 13% 18%,transparent 19% 81%,rgba(57,255,159,.48) 82% 87%,transparent 88%),
+        linear-gradient(180deg,rgba(16,39,52,.98),rgba(2,8,16,.98));
+      border-color:rgba(57,255,159,.28);
+      box-shadow:
+        0 0 var(--b-glow,2.2rem) rgba(57,255,159,.24),
+        inset 0 1px 0 rgba(255,255,255,.10);
+      animation:greenlineBuildingPulse var(--b-duration,31s) ease-in-out infinite;
+      animation-delay:var(--b-delay,-7s);
+    }
+
+    .greenline::before{
+      content:"";
+      position:absolute;
+      inset:.45rem .36rem .55rem;
+      z-index:2;
+      pointer-events:none;
+      opacity:.48;
+      background-image:
+        repeating-linear-gradient(
+          90deg,
+          transparent 0 calc(var(--b-window-x,.58rem) * .30),
+          rgba(57,255,159,.92) calc(var(--b-window-x,.58rem) * .30) calc(var(--b-window-x,.58rem) * .42),
+          transparent calc(var(--b-window-x,.58rem) * .42) var(--b-window-x,.58rem)
+        ),
+        repeating-linear-gradient(
+          0deg,
+          transparent 0 calc(var(--b-window-y,.72rem) * .34),
+          rgba(230,255,235,.50) calc(var(--b-window-y,.72rem) * .34) calc(var(--b-window-y,.72rem) * .45),
+          transparent calc(var(--b-window-y,.72rem) * .45) var(--b-window-y,.72rem)
+        ),
+        linear-gradient(135deg,rgba(57,255,159,.22),transparent 45%,rgba(255,232,163,.10));
+      background-size:
+        var(--b-window-x,.58rem) var(--b-window-y,.72rem),
+        var(--b-window-x,.58rem) var(--b-window-y,.72rem),
+        100% 100%;
+      background-position:0 0,0 0,0 0;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.96),rgba(0,0,0,.76) 64%,rgba(0,0,0,.36));
+      animation:greenlineGridPulse var(--a-cycle,37s) ease-in-out infinite;
+      animation-delay:var(--b-delay,-7s);
+    }
+
+    .greenline::after{
+      content:"";
+      position:absolute;
+      inset:-14%;
+      z-index:0;
+      pointer-events:none;
+      opacity:.38;
+      border-radius:1.2rem;
+      background:
+        radial-gradient(ellipse at 50% 50%,rgba(57,255,159,.46),rgba(57,255,159,.18) 34%,transparent 68%);
+      filter:blur(.55rem);
+      animation:greenlineEphemeralHalo 7.5s ease-in-out infinite;
+    }
+
+    .reunion{
+      background:
+        linear-gradient(90deg,transparent 0 45%,rgba(206,231,255,.66) 46% 54%,transparent 55%),
+        linear-gradient(180deg,transparent 0 20%,rgba(5,10,22,.96) 21% 100%);
+      border-color:transparent;
+      box-shadow:none;
+    }
+
+    .reunion::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:2%;
+      width:min(88%,4.1rem);
+      aspect-ratio:1/1;
+      transform:translateX(-50%);
+      border-radius:50%;
+      border:1px solid rgba(255,232,163,.42);
+      background:
+        radial-gradient(circle at 38% 30%,rgba(255,255,255,.52),transparent 18%),
+        radial-gradient(circle at 50% 50%,rgba(255,232,163,.22),transparent 58%),
+        rgba(5,10,22,.95);
+      box-shadow:
+        0 0 .9rem rgba(255,232,163,.20),
+        0 0 1.7rem rgba(141,216,255,.12);
+      animation:landmarkBreathing var(--b-duration,19s) ease-in-out infinite;
+      animation-delay:var(--b-delay,-3s);
+    }
+
+    .reunion::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:16%;
+      bottom:0;
+      width:1px;
+      transform:translateX(-50%);
+      background:linear-gradient(180deg,rgba(255,255,255,.56),rgba(141,216,255,.25),rgba(255,255,255,.06));
+    }
+
+    .foreground{
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.025),transparent 24%),
+        linear-gradient(180deg,rgba(5,9,18,.96),rgba(0,0,0,.99));
+      border-color:rgba(255,255,255,.045);
+      box-shadow:0 -1rem 2.6rem rgba(0,0,0,.42);
+      opacity:.92;
+    }
+
+    @keyframes urbanHorizonBreathe{
+      0%,100%{opacity:.58;filter:brightness(.94)}
+      50%{opacity:.82;filter:brightness(1.08)}
+    }
+
+    @keyframes buildingBreath{
+      0%,100%{filter:brightness(.96)}
+      50%{filter:brightness(1.025)}
+    }
+
+    @keyframes greenlineBuildingPulse{
+      0%,100%{
+        filter:brightness(.98);
+        box-shadow:0 0 var(--b-glow,2.3rem) rgba(57,255,159,.22),inset 0 1px 0 rgba(255,255,255,.10);
+      }
+      44%{
+        filter:brightness(var(--b-bright-active,1.18));
+        box-shadow:0 0 var(--b-glow-active,3.6rem) rgba(57,255,159,.44),0 0 1.4rem rgba(243,200,111,.10),inset 0 1px 0 rgba(255,255,255,.12);
+      }
+      71%{filter:brightness(1.05)}
+    }
+
+    @keyframes greenlineGridPulse{
+      0%,100%{opacity:.38;filter:brightness(.96)}
+      34%{opacity:.58;filter:brightness(1.10)}
+      61%{opacity:.46;filter:brightness(1.03)}
+    }
+
+    @keyframes greenlineEphemeralHalo{
+      0%,100%{opacity:.26;transform:scale(.98)}
+      44%{opacity:.66;transform:scale(1.035)}
+      72%{opacity:.38;transform:scale(1.01)}
+    }
+
+    @keyframes landmarkBreathing{
+      0%,100%{
+        opacity:.88;
+        filter:brightness(.92);
+        box-shadow:0 0 .9rem rgba(255,232,163,.18),0 0 1.7rem rgba(141,216,255,.11);
+      }
+      52%{
+        opacity:1;
+        filter:brightness(1.10);
+        box-shadow:0 0 1.2rem rgba(255,232,163,.28),0 0 2.3rem rgba(141,216,255,.18);
+      }
+    }
+
+    .construct-key{
+      display:grid;
+      align-content:start;
+      gap:.72rem;
+      padding:1rem;
+      border:1px solid rgba(57,255,159,.22);
+      border-radius:1.25rem;
+      background:
+        radial-gradient(circle at 16% 0%,rgba(57,255,159,.13),transparent 20rem),
+        rgba(3,6,18,.52);
+      box-shadow:
+        0 0 1.5rem rgba(57,255,159,.08),
+        inset 0 1px 0 rgba(255,255,255,.06);
+      backdrop-filter:blur(8px);
+    }
+
+    .construct-key strong{
+      color:var(--gold);
+      font-size:.78rem;
+      font-weight:950;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .key-list{
+      display:grid;
+      gap:.5rem;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+
+    .key-list li{
+      display:grid;
+      grid-template-columns:1.2rem 1fr;
+      gap:.56rem;
+      align-items:start;
+      color:var(--muted);
+      font-size:.86rem;
+      line-height:1.34;
+    }
+
+    .key-mark{
+      width:.95rem;
+      height:.95rem;
+      margin-top:.14rem;
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:50%;
+      background:var(--key-color,var(--gold));
+      box-shadow:0 0 .78rem var(--key-color,var(--gold));
+    }
+
+    .key-mark.square{border-radius:.18rem}
+
+    .key-mark.line{
+      height:.22rem;
+      margin-top:.45rem;
+      border-radius:999px;
+    }
+
+    .key-mark.dark{
+      background:#05070d;
+      box-shadow:0 0 .8rem rgba(0,0,0,.7);
+    }
+
+    .touch-note{
+      padding:.85rem .95rem;
+      border:1px solid rgba(57,255,159,.20);
+      border-radius:1rem;
+      color:rgba(232,255,241,.88);
+      background:rgba(57,255,159,.055);
+      font-size:.9rem;
+      font-weight:800;
+    }
+
     .section{
       margin-top:1.15rem;
       padding:clamp(1rem,3vw,1.45rem);
@@ -952,269 +910,32 @@
       gap:1.05rem;
     }
 
-    .compass-stage{
-      position:relative;
-      min-height:clamp(42rem,78vw,58rem);
+    .pathway-grid{
       display:grid;
-      place-items:center;
-      overflow:hidden;
-      isolation:isolate;
-      border:1px solid rgba(184,205,255,.13);
-      border-radius:clamp(1.35rem,5vw,2.35rem);
-      background:
-        radial-gradient(circle at 50% 40%,rgba(141,216,255,.10),transparent 18rem),
-        radial-gradient(circle at 50% 62%,rgba(57,255,159,.08),transparent 24rem),
-        radial-gradient(circle at 50% 77%,rgba(243,200,111,.065),transparent 28rem),
-        linear-gradient(180deg,rgba(1,5,16,.70),rgba(2,6,16,.94));
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-    }
-
-    .compass-stage::before,
-    .compass-stage::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:50%;
-      border-radius:50%;
-      transform:translate(-50%,-50%);
-      pointer-events:none;
-      z-index:2;
-    }
-
-    .compass-stage::before{
-      width:min(84%,44rem);
-      height:min(62%,28rem);
-      border:1px solid rgba(243,200,111,.13);
-      box-shadow:0 0 3rem rgba(36,120,255,.12),inset 0 0 30px rgba(141,216,255,.045);
-    }
-
-    .compass-stage::after{
-      width:min(62%,30rem);
-      height:min(42%,19rem);
-      border:1px solid rgba(57,255,159,.14);
-      box-shadow:0 0 3rem rgba(57,255,159,.07);
-    }
-
-    .compass-center,
-    .compass-node{
-      position:absolute;
-      display:grid;
-      place-items:center;
-      text-align:center;
-      color:var(--ink);
-      z-index:4;
-      transition:transform .18s ease,filter .18s ease;
-    }
-
-    .compass-center{
-      left:50%;
-      top:50%;
-      width:clamp(11rem,24vw,16rem);
-      height:clamp(8rem,17vw,11.6rem);
-      transform:translate(-50%,-50%);
-      z-index:6;
-      pointer-events:none;
-    }
-
-    .compass-node{
-      width:clamp(7.15rem,14.2vw,10.4rem);
-      height:clamp(5.25rem,10.4vw,7.65rem);
-      left:var(--x);
-      top:var(--y);
-      transform:translate(-50%,-50%);
-    }
-
-    .compass-node:hover,
-    .compass-node:focus-visible{
-      transform:translate(-50%,-50%) scale(1.055);
-      filter:brightness(1.13) saturate(1.08);
-      outline:none;
-    }
-
-    .gem-core{
-      position:absolute;
-      inset:0;
-      display:grid;
-      place-items:center;
-      pointer-events:none;
-    }
-
-    .gem-shape{
-      position:absolute;
-      inset:0;
-      clip-path:var(--brand-gem);
-      background:
-        linear-gradient(35deg,transparent 0 22%,rgba(255,255,255,.20) 23% 25%,transparent 26%),
-        radial-gradient(circle at 50% 32%,rgba(255,255,255,.42),transparent 30%),
-        linear-gradient(135deg,rgba(255,248,220,.72),rgba(141,216,255,.44) 30%,rgba(36,120,255,.26) 48%,rgba(243,200,111,.20) 70%,rgba(3,7,19,.94));
-      border:1px solid rgba(235,248,255,.40);
-      box-shadow:0 1.1rem 1.4rem rgba(0,0,0,.35),0 0 1.2rem rgba(57,255,159,.14);
-    }
-
-    .gem-shape::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(90deg,transparent 49%,rgba(255,255,255,.28) 50%,transparent 51%),
-        linear-gradient(0deg,transparent 49%,rgba(255,255,255,.22) 50%,transparent 51%),
-        linear-gradient(35deg,transparent 42%,rgba(255,255,255,.14) 43% 44%,transparent 45%);
-      opacity:.84;
-    }
-
-    .gem-label{
-      position:relative;
-      z-index:3;
-      width:86%;
-      display:grid;
-      place-items:center;
-      gap:.18rem;
-      text-align:center;
-      pointer-events:none;
-      text-shadow:0 3px 14px rgba(0,0,0,.98),0 0 12px rgba(0,28,90,.88),0 0 3px rgba(255,255,255,.58);
-    }
-
-    .gem-label b{
-      display:block;
-      color:rgba(255,244,216,.99);
-      font-size:clamp(.70rem,1.62vw,1rem);
-      font-weight:950;
-      letter-spacing:.065em;
-      line-height:1.02;
-      text-transform:uppercase;
-    }
-
-    .gem-label span{
-      color:rgba(230,238,255,.88);
-      font-size:clamp(.48rem,1.06vw,.66rem);
-      font-weight:950;
-      letter-spacing:.065em;
-      line-height:1.02;
-      text-transform:uppercase;
-    }
-
-    .compass-center .gem-label b{
-      color:var(--gold);
-      font-size:clamp(1.02rem,2.35vw,1.42rem);
-      letter-spacing:.13em;
-    }
-
-    .compass-center .gem-label span{
-      font-size:clamp(.72rem,1.48vw,.94rem);
-      letter-spacing:.085em;
-    }
-
-    .pathway-module{
-      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
       gap:.9rem;
+    }
+
+    .pathway-card{
+      display:grid;
+      gap:.5rem;
       padding:1rem;
       border:1px solid rgba(255,255,255,.12);
-      border-radius:1.35rem;
+      border-radius:1.2rem;
       background:
-        radial-gradient(circle at 18% 0%,rgba(36,120,255,.10),transparent 28rem),
-        radial-gradient(circle at 88% 10%,rgba(57,255,159,.060),transparent 24rem),
+        radial-gradient(circle at 18% 0%,rgba(36,120,255,.10),transparent 20rem),
         rgba(255,255,255,.035);
-      overflow:hidden;
     }
 
-    .pathway-module > p{max-width:980px}
-
-    .lens-shell{position:relative;display:grid;gap:.8rem}
-
-    .lens-radio{
-      position:absolute;
-      opacity:0;
-      pointer-events:none;
-    }
-
-    .lens-tabs{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.45rem;
-    }
-
-    .lens-tab{
-      cursor:pointer;
-      min-height:2.35rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:999px;
-      padding:.56rem .84rem;
-      color:rgba(241,246,255,.84);
-      background:rgba(255,255,255,.04);
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.07em;
-      text-transform:uppercase;
-      user-select:none;
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
-    }
-
-    .lens-tab:hover{
-      transform:translateY(-2px);
-      border-color:rgba(243,200,111,.46);
-    }
-
-    .platform-radio:checked ~ .lens-tabs .platform-tab,
-    .engineering-radio:checked ~ .lens-tabs .engineering-tab{
-      border-color:rgba(243,200,111,.86);
-      color:#060811;
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
-    }
-
-    .lens-body{
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.15rem;
-      background:
-        radial-gradient(circle at 10% 0%,rgba(141,216,255,.08),transparent 24rem),
-        linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.022));
-      overflow:hidden;
-    }
-
-    .lens-copy{display:none;padding:1rem}
-
-    .platform-radio:checked ~ .lens-body .platform-copy,
-    .engineering-radio:checked ~ .lens-body .engineering-copy{
-      display:grid;
-      gap:.78rem;
-    }
-
-    .lens-copy b{
+    .pathway-card strong{
       color:var(--gold);
-      font-size:.7rem;
-      letter-spacing:.13em;
+      font-size:.78rem;
+      letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .lens-list{
-      display:grid;
-      gap:.55rem;
-      margin:0;
-      padding:0;
-      list-style:none;
-    }
-
-    .lens-list li{
-      padding:.68rem .76rem;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:.9rem;
-      background:rgba(255,255,255,.030);
-      color:var(--muted);
-      font-size:.92rem;
-      line-height:1.4;
-    }
-
-    .boundary{
-      padding:.8rem .9rem;
-      border:1px solid rgba(255,157,145,.18);
-      border-radius:1rem;
-      color:rgba(255,229,225,.88);
-      background:rgba(255,157,145,.055);
-      font-size:.9rem;
-      line-height:1.42;
-      font-weight:850;
+    .pathway-card p{
+      font-size:.95rem;
     }
 
     .section-return{
@@ -1265,14 +986,6 @@
       outline:none;
     }
 
-    .return-frontier:hover,
-    .return-frontier:focus-visible{
-      border-color:rgba(57,255,159,.54);
-      box-shadow:
-        0 0 1.3rem rgba(57,255,159,.20),
-        inset 0 1px 0 rgba(255,255,255,.09);
-    }
-
     .final-band{
       margin-top:1.15rem;
       padding:clamp(1rem,3vw,1.45rem);
@@ -1294,9 +1007,7 @@
       letter-spacing:-.045em;
     }
 
-    .route-receipt,
-    [data-route-receipt],
-    [data-contract-receipt]{
+    [data-route-receipt]{
       display:none!important;
       visibility:hidden!important;
       overflow:hidden!important;
@@ -1326,60 +1037,26 @@
       .nav{justify-content:flex-start}
       .route-menu-panel{left:0;right:auto}
       .construct-grid{grid-template-columns:1fr}
+      .pathway-grid{grid-template-columns:1fr}
     }
 
     @media (max-width:760px){
       .shell{width:min(100% - 22px,var(--max))}
-      h1{font-size:clamp(3.2rem,16vw,5.6rem)}
-      .hero{min-height:36rem;padding:1rem}
+      h1{font-size:clamp(3.1rem,15vw,5.6rem)}
       .actions{display:grid}
       .button{width:100%}
       .route-menu{width:100%}
       .route-menu-panel{position:static;margin-top:.45rem;width:100%}
       .route-menu-grid{grid-template-columns:1fr}
       .urban-skyline-stage{min-height:25rem}
-      .hero .urban-skyline-stage{min-height:0}
       .urban-building{
         transform:scale(.78) translateZ(0);
         transform-origin:left bottom;
       }
-
-      .compass-stage{
-        min-height:auto;
-        display:grid;
-        grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:1rem .85rem;
-        padding:1.2rem 1rem;
-        place-items:center;
+      .window-tile{
+        min-width:.44rem;
+        min-height:.50rem;
       }
-
-      .compass-stage::before,
-      .compass-stage::after{display:none}
-
-      .compass-center,
-      .compass-node{
-        position:relative;
-        left:auto!important;
-        top:auto!important;
-        transform:none;
-      }
-
-      .compass-node:hover,
-      .compass-node:focus-visible{transform:scale(1.05)}
-
-      .compass-center{
-        grid-column:1 / -1;
-        width:9.8rem;
-        height:7.1rem;
-        order:-2;
-      }
-
-      .compass-node{
-        width:7.45rem;
-        height:5.45rem;
-      }
-
-      .lens-tabs{display:grid;grid-template-columns:1fr 1fr}
       .section-return{display:grid;grid-template-columns:1fr;justify-content:stretch}
       .return-orbit,.return-frontier{width:100%}
     }
@@ -1449,44 +1126,16 @@
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="urban-skyline-stage hero-skyline" aria-hidden="true">
-          <div class="skyline-depth-layer far">
-            <span class="urban-building far-building b08" style="--b-left:4%;--b-bottom:21%;--b-width:3.2rem;--b-height:8.2rem;--b-haze:.38;--b-contrast:.045;--b-window-x:.95rem;--b-window-y:1.08rem;--b-delay:-1s;--b-duration:18s;--pane-w:.28rem;--pane-h:.42rem;--pane-left:.58rem;--pane-top:.66rem;--occ-animation:b08FarOccupancy;--occ-cycle:31s;--occ-delay:-7s;"></span>
-            <span class="urban-building far-building b08 step" style="--b-left:13%;--b-bottom:20%;--b-width:4rem;--b-height:10rem;--b-haze:.42;--b-window-x:.9rem;--b-window-y:1.1rem;--b-delay:-7s;--b-duration:21s;--pane-w:.30rem;--pane-h:.44rem;--pane-left:.62rem;--pane-top:.70rem;--occ-animation:b08FarOccupancy;--occ-cycle:37s;--occ-delay:-13s;"></span>
-            <span class="urban-building quiet b07 roof" style="--b-left:25%;--b-bottom:20%;--b-width:3.6rem;--b-height:9.2rem;--b-haze:.36;--b-window-x:1rem;--b-window-y:1.2rem;--b-delay:-11s;--b-duration:24s;--pane-w:.30rem;--pane-h:.44rem;--pane-left:.60rem;--pane-top:.78rem;--occ-animation:b07QuietOccupancy;--occ-cycle:41s;--occ-delay:-17s;"></span>
-            <span class="urban-building far-building b08" style="--b-left:58%;--b-bottom:21%;--b-width:4.4rem;--b-height:10.7rem;--b-haze:.40;--b-window-x:.88rem;--b-window-y:1rem;--b-delay:-4s;--b-duration:20s;--pane-w:.30rem;--pane-h:.44rem;--pane-left:.66rem;--pane-top:.72rem;--occ-animation:b08FarOccupancy;--occ-cycle:43s;--occ-delay:-23s;"></span>
-            <span class="urban-building civic b07 step" style="--b-left:72%;--b-bottom:20%;--b-width:3.7rem;--b-height:9.6rem;--b-haze:.36;--b-window-x:.92rem;--b-window-y:1.14rem;--b-delay:-13s;--b-duration:26s;--pane-w:.30rem;--pane-h:.44rem;--pane-left:.64rem;--pane-top:.74rem;--occ-animation:b07QuietOccupancy;--occ-cycle:47s;--occ-delay:-29s;"></span>
-            <span class="urban-building quiet b07 roof" style="--b-left:86%;--b-bottom:20%;--b-width:3.2rem;--b-height:8.8rem;--b-haze:.34;--b-window-x:1rem;--b-window-y:1.2rem;--b-delay:-17s;--b-duration:28s;--pane-w:.28rem;--pane-h:.42rem;--pane-left:.58rem;--pane-top:.78rem;--occ-animation:b07QuietOccupancy;--occ-cycle:53s;--occ-delay:-31s;"></span>
-          </div>
-
-          <div class="skyline-depth-layer mid">
-            <span class="urban-building office b01" style="--b-left:5%;--b-bottom:9%;--b-width:3.4rem;--b-height:9.5rem;--b-haze:.86;--b-contrast:.11;--b-window-x:.72rem;--b-window-y:.86rem;--b-delay:-2s;--b-duration:11s;--pane-w:.28rem;--pane-h:.46rem;--pane-left:.54rem;--pane-top:.62rem;--occ-animation:b01OfficeOccupancy;--occ-cycle:17s;--occ-delay:-3s;"></span>
-            <span class="urban-building residential b02 step" style="--b-left:14%;--b-bottom:9%;--b-width:4.5rem;--b-height:13.2rem;--b-haze:.92;--b-window-x:.68rem;--b-window-y:.82rem;--b-delay:-8s;--b-duration:17s;--pane-w:.30rem;--pane-h:.48rem;--pane-left:.58rem;--pane-top:.72rem;--occ-animation:b02ResidentialOccupancy;--occ-cycle:23s;--occ-delay:-11s;"></span>
-            <span class="urban-building mixed b03 roof" style="--b-left:26%;--b-bottom:9%;--b-width:3.7rem;--b-height:10.9rem;--b-haze:.88;--b-window-x:.78rem;--b-window-y:.88rem;--b-delay:-5s;--b-duration:13s;--pane-w:.30rem;--pane-h:.46rem;--pane-left:.56rem;--pane-top:.68rem;--occ-animation:b03MixedOccupancy;--occ-cycle:19s;--occ-delay:-5s;"></span>
-            <span class="urban-building reunion" style="--b-left:38%;--b-bottom:9%;--b-width:4.3rem;--b-height:18.5rem;--b-haze:.96;--b-delay:-3s;--b-duration:19s;"></span>
-            <span class="urban-building office b05" style="--b-left:49%;--b-bottom:9%;--b-width:4.9rem;--b-height:15rem;--b-haze:.94;--b-window-x:.62rem;--b-window-y:.76rem;--b-delay:-11s;--b-duration:23s;--pane-w:.26rem;--pane-h:.44rem;--pane-left:.56rem;--pane-top:.68rem;--occ-animation:b05OfficeOccupancy;--occ-cycle:29s;--occ-delay:-17s;"></span>
-            <span class="urban-building greenline" style="--b-left:63%;--b-bottom:9%;--b-width:4.2rem;--b-height:23rem;--b-haze:.98;--b-window-x:.58rem;--b-window-y:.72rem;--b-glow:2.2rem;--b-glow-active:3.4rem;--b-delay:-7s;--b-duration:31s;--a-cycle:37s;"></span>
-            <span class="urban-building office b06 roof" style="--b-left:76%;--b-bottom:9%;--b-width:4.6rem;--b-height:14.2rem;--b-haze:.90;--b-window-x:.72rem;--b-window-y:.84rem;--b-delay:-13s;--b-duration:19s;--pane-w:.30rem;--pane-h:.48rem;--pane-left:.62rem;--pane-top:.70rem;--occ-animation:b06OfficeOccupancy;--occ-cycle:25s;--occ-delay:-13s;"></span>
-            <span class="urban-building quiet b07 step" style="--b-left:89%;--b-bottom:9%;--b-width:4rem;--b-height:11.4rem;--b-haze:.86;--b-window-x:.82rem;--b-window-y:.94rem;--b-delay:-17s;--b-duration:29s;--pane-w:.28rem;--pane-h:.44rem;--pane-left:.62rem;--pane-top:.76rem;--occ-animation:b07QuietOccupancy;--occ-cycle:41s;--occ-delay:-23s;"></span>
-          </div>
-
-          <div class="skyline-depth-layer front">
-            <span class="urban-building foreground b09" style="--b-left:-4%;--b-bottom:0;--b-width:18rem;--b-height:7rem;--b-haze:.96;--b-window-x:.9rem;--b-window-y:1rem;--b-delay:-1s;--b-duration:29s;--pane-w:.28rem;--pane-h:.40rem;--pane-left:.86rem;--pane-top:.82rem;--occ-animation:b09ForegroundOccupancy;--occ-cycle:43s;--occ-delay:-19s;"></span>
-            <span class="urban-building foreground b09 step" style="--b-left:30%;--b-bottom:0;--b-width:24rem;--b-height:6.2rem;--b-haze:.96;--b-window-x:.84rem;--b-window-y:.92rem;--b-delay:-4s;--b-duration:34s;--pane-w:.28rem;--pane-h:.40rem;--pane-left:.92rem;--pane-top:.82rem;--occ-animation:b09ForegroundOccupancy;--occ-cycle:47s;--occ-delay:-29s;"></span>
-            <span class="urban-building foreground b09" style="--b-left:68%;--b-bottom:0;--b-width:22rem;--b-height:7.8rem;--b-haze:.96;--b-window-x:.88rem;--b-window-y:.96rem;--b-delay:-7s;--b-duration:37s;--pane-w:.28rem;--pane-h:.40rem;--pane-left:.88rem;--pane-top:.90rem;--occ-animation:b09ForegroundOccupancy;--occ-cycle:53s;--occ-delay:-37s;"></span>
-          </div>
-        </div>
-
-        <div class="kicker">Dallas-inspired occupancy skyline · Frontier Urban Simulation</div>
+        <div class="kicker">Dallas-inspired touch occupancy skyline · Frontier Urban Simulation</div>
 
         <h1 id="page-title">The skyline is the surface. The load is the city.</h1>
 
         <p class="lead">
-          From a distance, a city becomes light on the horizon. Inside the grid, that same light depends on water, power, housing, mobility, waste closure, food access, safety, governance, and trust.
+          Urban Construct turns the night skyline into a city-system field. Each building carries its own local light chronology, and selected windows respond to touch.
         </p>
 
         <div class="quote">
-          Urban Construct is the Frontier simulation lane where those systems are not treated separately. They are tested together under city-scale pressure.
+          Tap a window to change its state. Programmed occupancy continues around the manual choices for the current session.
         </div>
 
         <div class="actions">
@@ -1498,41 +1147,129 @@
       </section>
 
       <section class="panel construct-visual" id="urban-construct-field" aria-labelledby="construct-title">
-        <div class="kicker">Urban Construct Field · One building, one occupancy lattice</div>
+        <div class="kicker">Urban Construct Field · Touch-activated windows</div>
 
         <div class="construct-copy">
-          <h2 id="construct-title">Each building owns its own local 16 × 16 / 256 light rotation.</h2>
+          <h2 id="construct-title">Each building owns its own light program. Each touched window carries your session choice.</h2>
           <p>
-            The repeated three-layer light model is removed. Each normal building now carries one building-owned occupancy map using rectangular pane coordinates. The building body stays stable, the full sheet does not flicker, and the active windows rotate by that building’s own chronology.
+            The visual baseline stays calm and architectural. Office, residential, mixed-use, quiet, far, and foreground buildings each run their own programmed occupancy rhythm. The green tower keeps its Dallas-like vertical grid and receives an ephemeral green halo.
           </p>
         </div>
 
         <div class="construct-grid">
-          <div class="urban-skyline-stage construct-skyline" aria-label="Inspectable Dallas-inspired skyline with per-building single occupancy lattices">
+          <div class="urban-skyline-stage construct-skyline" data-urban-stage aria-label="Interactive Dallas-inspired skyline with touch-activated windows">
             <div class="skyline-depth-layer far">
-              <span class="urban-building far-building b08" style="--b-left:3%;--b-bottom:23%;--b-width:3rem;--b-height:8rem;--b-haze:.42;--b-window-x:.95rem;--b-window-y:1.05rem;--b-delay:-2s;--b-duration:19s;--pane-w:.28rem;--pane-h:.42rem;--pane-left:.58rem;--pane-top:.66rem;--occ-animation:b08FarOccupancy;--occ-cycle:31s;--occ-delay:-7s;"></span>
-              <span class="urban-building far-building b08 step" style="--b-left:11%;--b-bottom:22%;--b-width:4.2rem;--b-height:10.4rem;--b-haze:.46;--b-window-x:.86rem;--b-window-y:1.06rem;--b-delay:-5s;--b-duration:23s;--pane-w:.30rem;--pane-h:.44rem;--pane-left:.62rem;--pane-top:.70rem;--occ-animation:b08FarOccupancy;--occ-cycle:37s;--occ-delay:-13s;"></span>
-              <span class="urban-building quiet b07 roof" style="--b-left:22%;--b-bottom:22%;--b-width:3.7rem;--b-height:9rem;--b-haze:.38;--b-window-x:.98rem;--b-window-y:1.12rem;--b-delay:-11s;--b-duration:27s;--pane-w:.30rem;--pane-h:.44rem;--pane-left:.60rem;--pane-top:.78rem;--occ-animation:b07QuietOccupancy;--occ-cycle:41s;--occ-delay:-17s;"></span>
-              <span class="urban-building far-building b08" style="--b-left:69%;--b-bottom:22%;--b-width:4.4rem;--b-height:10.2rem;--b-haze:.42;--b-window-x:.92rem;--b-window-y:1.08rem;--b-delay:-8s;--b-duration:21s;--pane-w:.30rem;--pane-h:.44rem;--pane-left:.66rem;--pane-top:.72rem;--occ-animation:b08FarOccupancy;--occ-cycle:43s;--occ-delay:-23s;"></span>
-              <span class="urban-building civic b07 step" style="--b-left:82%;--b-bottom:22%;--b-width:3.6rem;--b-height:9.3rem;--b-haze:.36;--b-window-x:.92rem;--b-window-y:1.14rem;--b-delay:-13s;--b-duration:26s;--pane-w:.30rem;--pane-h:.44rem;--pane-left:.64rem;--pane-top:.74rem;--occ-animation:b07QuietOccupancy;--occ-cycle:47s;--occ-delay:-29s;"></span>
-              <span class="urban-building quiet b07 roof" style="--b-left:92%;--b-bottom:22%;--b-width:3.2rem;--b-height:8.5rem;--b-haze:.34;--b-window-x:1rem;--b-window-y:1.2rem;--b-delay:-17s;--b-duration:28s;--pane-w:.28rem;--pane-h:.42rem;--pane-left:.58rem;--pane-top:.78rem;--occ-animation:b07QuietOccupancy;--occ-cycle:53s;--occ-delay:-31s;"></span>
+              <span class="urban-building city-building far-building" data-building="b08" style="--b-left:3%;--b-bottom:23%;--b-width:3rem;--b-height:8rem;--b-haze:.42;--b-window-x:.95rem;--b-window-y:1.05rem;--b-delay:-2s;--b-duration:19s;--pane-w:.28rem;--pane-h:.42rem;">
+                <button class="window-tile" data-address="02-04" aria-label="Far inherited window 02-04" style="--x:26;--y:21"></button>
+                <button class="window-tile" data-address="05-07" aria-label="Far inherited window 05-07" style="--x:52;--y:38"></button>
+                <button class="window-tile" data-address="07-10" aria-label="Far inherited window 07-10" style="--x:34;--y:61"></button>
+              </span>
+
+              <span class="urban-building city-building far-building step" data-building="b08" style="--b-left:11%;--b-bottom:22%;--b-width:4.2rem;--b-height:10.4rem;--b-haze:.46;--b-window-x:.86rem;--b-window-y:1.06rem;--b-delay:-5s;--b-duration:23s;--pane-w:.30rem;--pane-h:.44rem;">
+                <button class="window-tile" data-address="03-04" aria-label="Far step window 03-04" style="--x:22;--y:20"></button>
+                <button class="window-tile" data-address="06-06" aria-label="Far step window 06-06" style="--x:48;--y:32"></button>
+                <button class="window-tile" data-address="09-09" aria-label="Far step window 09-09" style="--x:68;--y:52"></button>
+                <button class="window-tile" data-address="04-12" aria-label="Far step window 04-12" style="--x:30;--y:72"></button>
+              </span>
+
+              <span class="urban-building city-building quiet roof" data-building="b07" style="--b-left:22%;--b-bottom:22%;--b-width:3.7rem;--b-height:9rem;--b-haze:.38;--b-window-x:.98rem;--b-window-y:1.12rem;--b-delay:-11s;--b-duration:27s;--pane-w:.30rem;--pane-h:.44rem;">
+                <button class="window-tile" data-address="04-05" aria-label="Quiet roof window 04-05" style="--x:38;--y:28"></button>
+                <button class="window-tile" data-address="07-08" aria-label="Quiet roof window 07-08" style="--x:58;--y:49"></button>
+                <button class="window-tile" data-address="03-11" aria-label="Quiet roof window 03-11" style="--x:30;--y:69"></button>
+              </span>
+
+              <span class="urban-building city-building far-building" data-building="b08" style="--b-left:69%;--b-bottom:22%;--b-width:4.4rem;--b-height:10.2rem;--b-haze:.42;--b-window-x:.92rem;--b-window-y:1.08rem;--b-delay:-8s;--b-duration:21s;--pane-w:.30rem;--pane-h:.44rem;">
+                <button class="window-tile" data-address="02-04" aria-label="Far right window 02-04" style="--x:24;--y:22"></button>
+                <button class="window-tile" data-address="06-07" aria-label="Far right window 06-07" style="--x:52;--y:42"></button>
+                <button class="window-tile" data-address="09-11" aria-label="Far right window 09-11" style="--x:72;--y:66"></button>
+              </span>
+
+              <span class="urban-building city-building civic step" data-building="b07" style="--b-left:82%;--b-bottom:22%;--b-width:3.6rem;--b-height:9.3rem;--b-haze:.36;--b-window-x:.92rem;--b-window-y:1.14rem;--b-delay:-13s;--b-duration:26s;--pane-w:.30rem;--pane-h:.44rem;">
+                <button class="window-tile" data-address="03-05" aria-label="Civic window 03-05" style="--x:30;--y:30"></button>
+                <button class="window-tile" data-address="07-08" aria-label="Civic window 07-08" style="--x:60;--y:51"></button>
+              </span>
+
+              <span class="urban-building city-building quiet roof" data-building="b07" style="--b-left:92%;--b-bottom:22%;--b-width:3.2rem;--b-height:8.5rem;--b-haze:.34;--b-window-x:1rem;--b-window-y:1.2rem;--b-delay:-17s;--b-duration:28s;--pane-w:.28rem;--pane-h:.42rem;">
+                <button class="window-tile" data-address="03-05" aria-label="Quiet far edge window 03-05" style="--x:36;--y:35"></button>
+                <button class="window-tile" data-address="06-09" aria-label="Quiet far edge window 06-09" style="--x:58;--y:64"></button>
+              </span>
             </div>
 
             <div class="skyline-depth-layer mid">
-              <span class="urban-building office b01" style="--b-left:4%;--b-bottom:8%;--b-width:3.5rem;--b-height:9.8rem;--b-haze:.86;--b-window-x:.72rem;--b-window-y:.86rem;--b-delay:-2s;--b-duration:11s;--pane-w:.28rem;--pane-h:.46rem;--pane-left:.54rem;--pane-top:.62rem;--occ-animation:b01OfficeOccupancy;--occ-cycle:17s;--occ-delay:-3s;"></span>
-              <span class="urban-building residential b02 step" style="--b-left:13%;--b-bottom:8%;--b-width:4.6rem;--b-height:13.6rem;--b-haze:.94;--b-window-x:.66rem;--b-window-y:.80rem;--b-delay:-7s;--b-duration:17s;--pane-w:.30rem;--pane-h:.48rem;--pane-left:.58rem;--pane-top:.72rem;--occ-animation:b02ResidentialOccupancy;--occ-cycle:23s;--occ-delay:-11s;"></span>
-              <span class="urban-building mixed b03 roof" style="--b-left:25%;--b-bottom:8%;--b-width:3.8rem;--b-height:11.2rem;--b-haze:.88;--b-window-x:.78rem;--b-window-y:.88rem;--b-delay:-5s;--b-duration:13s;--pane-w:.30rem;--pane-h:.46rem;--pane-left:.56rem;--pane-top:.68rem;--occ-animation:b03MixedOccupancy;--occ-cycle:19s;--occ-delay:-5s;"></span>
+              <span class="urban-building city-building office" data-building="b01" style="--b-left:4%;--b-bottom:8%;--b-width:3.5rem;--b-height:9.8rem;--b-haze:.86;--b-window-x:.72rem;--b-window-y:.86rem;--b-delay:-2s;--b-duration:11s;--pane-w:.28rem;--pane-h:.46rem;">
+                <button class="window-tile" data-address="03-03" aria-label="Office window 03-03" style="--x:25;--y:18"></button>
+                <button class="window-tile" data-address="07-04" aria-label="Office window 07-04" style="--x:56;--y:24"></button>
+                <button class="window-tile" data-address="04-07" aria-label="Office window 04-07" style="--x:32;--y:43"></button>
+                <button class="window-tile" data-address="08-08" aria-label="Office window 08-08" style="--x:64;--y:51"></button>
+                <button class="window-tile" data-address="03-11" aria-label="Office window 03-11" style="--x:25;--y:69"></button>
+              </span>
+
+              <span class="urban-building city-building residential step" data-building="b02" style="--b-left:13%;--b-bottom:8%;--b-width:4.6rem;--b-height:13.6rem;--b-haze:.94;--b-window-x:.66rem;--b-window-y:.80rem;--b-delay:-7s;--b-duration:17s;--pane-w:.30rem;--pane-h:.48rem;">
+                <button class="window-tile" data-address="03-03" aria-label="Residential window 03-03" style="--x:22;--y:15"></button>
+                <button class="window-tile" data-address="06-04" aria-label="Residential window 06-04" style="--x:44;--y:22"></button>
+                <button class="window-tile" data-address="09-05" aria-label="Residential window 09-05" style="--x:66;--y:29"></button>
+                <button class="window-tile" data-address="04-07" aria-label="Residential window 04-07" style="--x:30;--y:42"></button>
+                <button class="window-tile" data-address="08-08" aria-label="Residential window 08-08" style="--x:60;--y:49"></button>
+                <button class="window-tile" data-address="03-11" aria-label="Residential window 03-11" style="--x:22;--y:69"></button>
+                <button class="window-tile" data-address="07-12" aria-label="Residential window 07-12" style="--x:52;--y:76"></button>
+              </span>
+
+              <span class="urban-building city-building mixed roof" data-building="b03" style="--b-left:25%;--b-bottom:8%;--b-width:3.8rem;--b-height:11.2rem;--b-haze:.88;--b-window-x:.78rem;--b-window-y:.88rem;--b-delay:-5s;--b-duration:13s;--pane-w:.30rem;--pane-h:.46rem;">
+                <button class="window-tile" data-address="04-04" aria-label="Mixed-use window 04-04" style="--x:30;--y:23"></button>
+                <button class="window-tile" data-address="07-05" aria-label="Mixed-use window 07-05" style="--x:58;--y:30"></button>
+                <button class="window-tile" data-address="03-08" aria-label="Mixed-use window 03-08" style="--x:24;--y:51"></button>
+                <button class="window-tile" data-address="06-09" aria-label="Mixed-use window 06-09" style="--x:50;--y:58"></button>
+                <button class="window-tile" data-address="08-12" aria-label="Mixed-use window 08-12" style="--x:68;--y:76"></button>
+              </span>
+
               <span class="urban-building reunion" style="--b-left:37%;--b-bottom:8%;--b-width:4.4rem;--b-height:18.8rem;--b-haze:.96;--b-delay:-3s;--b-duration:19s;"></span>
-              <span class="urban-building office b05" style="--b-left:49%;--b-bottom:8%;--b-width:4.9rem;--b-height:15.3rem;--b-haze:.94;--b-window-x:.62rem;--b-window-y:.76rem;--b-delay:-11s;--b-duration:23s;--pane-w:.26rem;--pane-h:.44rem;--pane-left:.56rem;--pane-top:.68rem;--occ-animation:b05OfficeOccupancy;--occ-cycle:29s;--occ-delay:-17s;"></span>
+
+              <span class="urban-building city-building office" data-building="b05" style="--b-left:49%;--b-bottom:8%;--b-width:4.9rem;--b-height:15.3rem;--b-haze:.94;--b-window-x:.62rem;--b-window-y:.76rem;--b-delay:-11s;--b-duration:23s;--pane-w:.26rem;--pane-h:.44rem;">
+                <button class="window-tile" data-address="03-03" aria-label="Tall office window 03-03" style="--x:20;--y:14"></button>
+                <button class="window-tile" data-address="06-04" aria-label="Tall office window 06-04" style="--x:40;--y:20"></button>
+                <button class="window-tile" data-address="09-05" aria-label="Tall office window 09-05" style="--x:62;--y:26"></button>
+                <button class="window-tile" data-address="04-07" aria-label="Tall office window 04-07" style="--x:26;--y:40"></button>
+                <button class="window-tile" data-address="08-08" aria-label="Tall office window 08-08" style="--x:54;--y:47"></button>
+                <button class="window-tile" data-address="11-09" aria-label="Tall office window 11-09" style="--x:76;--y:54"></button>
+                <button class="window-tile" data-address="03-12" aria-label="Tall office window 03-12" style="--x:20;--y:72"></button>
+              </span>
+
               <span class="urban-building greenline" style="--b-left:63%;--b-bottom:8%;--b-width:4.3rem;--b-height:23.5rem;--b-haze:.98;--b-window-x:.58rem;--b-window-y:.72rem;--b-glow:2.3rem;--b-glow-active:3.6rem;--b-delay:-13s;--b-duration:31s;--a-cycle:37s;"></span>
-              <span class="urban-building office b06 roof" style="--b-left:76%;--b-bottom:8%;--b-width:4.6rem;--b-height:14.4rem;--b-haze:.90;--b-window-x:.72rem;--b-window-y:.84rem;--b-delay:-17s;--b-duration:19s;--pane-w:.30rem;--pane-h:.48rem;--pane-left:.62rem;--pane-top:.70rem;--occ-animation:b06OfficeOccupancy;--occ-cycle:25s;--occ-delay:-13s;"></span>
-              <span class="urban-building quiet b07 step" style="--b-left:88%;--b-bottom:8%;--b-width:4.1rem;--b-height:11.7rem;--b-haze:.86;--b-window-x:.82rem;--b-window-y:.94rem;--b-delay:-19s;--b-duration:29s;--pane-w:.28rem;--pane-h:.44rem;--pane-left:.62rem;--pane-top:.76rem;--occ-animation:b07QuietOccupancy;--occ-cycle:41s;--occ-delay:-23s;"></span>
+
+              <span class="urban-building city-building office roof" data-building="b06" style="--b-left:76%;--b-bottom:8%;--b-width:4.6rem;--b-height:14.4rem;--b-haze:.90;--b-window-x:.72rem;--b-window-y:.84rem;--b-delay:-17s;--b-duration:19s;--pane-w:.30rem;--pane-h:.48rem;">
+                <button class="window-tile" data-address="03-04" aria-label="Right office window 03-04" style="--x:22;--y:20"></button>
+                <button class="window-tile" data-address="07-05" aria-label="Right office window 07-05" style="--x:52;--y:28"></button>
+                <button class="window-tile" data-address="10-06" aria-label="Right office window 10-06" style="--x:74;--y:35"></button>
+                <button class="window-tile" data-address="04-09" aria-label="Right office window 04-09" style="--x:30;--y:58"></button>
+                <button class="window-tile" data-address="08-10" aria-label="Right office window 08-10" style="--x:60;--y:65"></button>
+                <button class="window-tile" data-address="03-13" aria-label="Right office window 03-13" style="--x:22;--y:82"></button>
+              </span>
+
+              <span class="urban-building city-building quiet step" data-building="b07" style="--b-left:88%;--b-bottom:8%;--b-width:4.1rem;--b-height:11.7rem;--b-haze:.86;--b-window-x:.82rem;--b-window-y:.94rem;--b-delay:-19s;--b-duration:29s;--pane-w:.28rem;--pane-h:.44rem;">
+                <button class="window-tile" data-address="04-04" aria-label="Quiet right window 04-04" style="--x:32;--y:24"></button>
+                <button class="window-tile" data-address="08-07" aria-label="Quiet right window 08-07" style="--x:64;--y:45"></button>
+                <button class="window-tile" data-address="05-11" aria-label="Quiet right window 05-11" style="--x:40;--y:72"></button>
+              </span>
             </div>
 
             <div class="skyline-depth-layer front">
-              <span class="urban-building foreground b09" style="--b-left:-4%;--b-bottom:0;--b-width:18rem;--b-height:7rem;--b-haze:.96;--b-window-x:.9rem;--b-window-y:1rem;--b-delay:-1s;--b-duration:29s;--pane-w:.28rem;--pane-h:.40rem;--pane-left:.86rem;--pane-top:.82rem;--occ-animation:b09ForegroundOccupancy;--occ-cycle:43s;--occ-delay:-19s;"></span>
-              <span class="urban-building foreground b09 step" style="--b-left:28%;--b-bottom:0;--b-width:25rem;--b-height:6.5rem;--b-haze:.96;--b-window-x:.84rem;--b-window-y:.92rem;--b-delay:-4s;--b-duration:34s;--pane-w:.28rem;--pane-h:.40rem;--pane-left:.92rem;--pane-top:.82rem;--occ-animation:b09ForegroundOccupancy;--occ-cycle:47s;--occ-delay:-29s;"></span>
-              <span class="urban-building foreground b09" style="--b-left:67%;--b-bottom:0;--b-width:23rem;--b-height:7.9rem;--b-haze:.96;--b-window-x:.88rem;--b-window-y:.96rem;--b-delay:-7s;--b-duration:37s;--pane-w:.28rem;--pane-h:.40rem;--pane-left:.88rem;--pane-top:.90rem;--occ-animation:b09ForegroundOccupancy;--occ-cycle:53s;--occ-delay:-37s;"></span>
+              <span class="urban-building city-building foreground" data-building="b09" style="--b-left:-4%;--b-bottom:0;--b-width:18rem;--b-height:7rem;--b-haze:.96;--b-window-x:.9rem;--b-window-y:1rem;--b-delay:-1s;--b-duration:29s;--pane-w:.28rem;--pane-h:.40rem;">
+                <button class="window-tile" data-address="05-04" aria-label="Foreground left window 05-04" style="--x:18;--y:28"></button>
+                <button class="window-tile" data-address="10-07" aria-label="Foreground left window 10-07" style="--x:38;--y:50"></button>
+                <button class="window-tile" data-address="14-09" aria-label="Foreground left window 14-09" style="--x:58;--y:66"></button>
+              </span>
+
+              <span class="urban-building city-building foreground step" data-building="b09" style="--b-left:28%;--b-bottom:0;--b-width:25rem;--b-height:6.5rem;--b-haze:.96;--b-window-x:.84rem;--b-window-y:.92rem;--b-delay:-4s;--b-duration:34s;--pane-w:.28rem;--pane-h:.40rem;">
+                <button class="window-tile" data-address="04-05" aria-label="Foreground center window 04-05" style="--x:16;--y:40"></button>
+                <button class="window-tile" data-address="09-06" aria-label="Foreground center window 09-06" style="--x:36;--y:50"></button>
+                <button class="window-tile" data-address="15-07" aria-label="Foreground center window 15-07" style="--x:62;--y:58"></button>
+              </span>
+
+              <span class="urban-building city-building foreground" data-building="b09" style="--b-left:67%;--b-bottom:0;--b-width:23rem;--b-height:7.9rem;--b-haze:.96;--b-window-x:.88rem;--b-window-y:.96rem;--b-delay:-7s;--b-duration:37s;--pane-w:.28rem;--pane-h:.40rem;">
+                <button class="window-tile" data-address="06-04" aria-label="Foreground right window 06-04" style="--x:22;--y:30"></button>
+                <button class="window-tile" data-address="11-07" aria-label="Foreground right window 11-07" style="--x:44;--y:52"></button>
+                <button class="window-tile" data-address="16-09" aria-label="Foreground right window 16-09" style="--x:68;--y:68"></button>
+              </span>
             </div>
           </div>
 
@@ -1543,283 +1280,126 @@
               <li><span class="key-mark" style="--key-color:var(--green)"></span><span><b>Green edge</b> means active city-system continuity.</span></li>
               <li><span class="key-mark" style="--key-color:var(--blue)"></span><span><b>Blue haze</b> means distance and inherited infrastructure.</span></li>
               <li><span class="key-mark dark"></span><span><b>Dark foreground</b> means ground-level hidden systems.</span></li>
-              <li><span class="key-mark square" style="--key-color:rgba(255,244,216,.82)"></span><span><b>One building, one map</b> means no stacked light layers.</span></li>
-              <li><span class="key-mark line" style="--key-color:var(--gold)"></span><span><b>Occupancy rotation</b> means window positions change by that building’s own chronology.</span></li>
-              <li><span class="key-mark" style="--key-color:rgba(57,255,159,.72)"></span><span><b>Greenline tower</b> preserves the prior Dallas-like vertical grid condition.</span></li>
+              <li><span class="key-mark square" style="--key-color:rgba(255,244,216,.82)"></span><span><b>One building, one map</b> means each building owns its light program.</span></li>
+              <li><span class="key-mark line" style="--key-color:var(--gold)"></span><span><b>Touch windows</b> means the visitor can change individual panes.</span></li>
+              <li><span class="key-mark" style="--key-color:rgba(57,255,159,.72)"></span><span><b>Greenline tower</b> keeps the Dallas-like vertical grid and receives an ephemeral halo.</span></li>
             </ul>
           </aside>
+        </div>
+
+        <div class="touch-note">
+          Touch model: tap a window to change its state. The programmed rhythm continues across the building while your tapped windows keep their session setting.
         </div>
       </section>
 
       <section class="panel section" aria-labelledby="field-title" id="urban-orbit">
         <div class="kicker">Urban field · Active city-system pathways</div>
-        <h2 id="field-title">A city is not proven by its skyline. A city is proven by whether its systems can carry people under pressure.</h2>
+        <h2 id="field-title">A city is proven by whether its systems can carry people under pressure.</h2>
 
-        <div class="compass-stage" aria-label="Urban pathway field">
-          <div class="compass-center" aria-hidden="true">
-            <span class="gem-core"><span class="gem-shape"></span></span>
-            <span class="gem-label"><b>Urban</b><span>Construct</span></span>
-          </div>
-
-          <a class="compass-node" style="--x:50%;--y:11%;" href="#audralia-urban"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Audralia</b><span>Urban</span></span></a>
-          <a class="compass-node" style="--x:73%;--y:17%;" href="#city-form"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>City</b><span>Form</span></span></a>
-          <a class="compass-node" style="--x:87%;--y:34%;" href="#housing"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Housing</b><span>Stability</span></span></a>
-          <a class="compass-node" style="--x:87%;--y:62%;" href="#mobility"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Mobility</b><span>Access</span></span></a>
-          <a class="compass-node" style="--x:73%;--y:80%;" href="#water"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Water</b><span>Security</span></span></a>
-          <a class="compass-node" style="--x:50%;--y:88%;" href="#energy"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Energy</b><span>Continuity</span></span></a>
-          <a class="compass-node" style="--x:27%;--y:80%;" href="#waste"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Waste</b><span>Closure</span></span></a>
-          <a class="compass-node" style="--x:13%;--y:62%;" href="#food"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Food</b><span>Access</span></span></a>
-          <a class="compass-node" style="--x:13%;--y:34%;" href="#public-safety"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Public</b><span>Safety</span></span></a>
-          <a class="compass-node" style="--x:27%;--y:17%;" href="#governance"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Governance</b><span>Account</span></span></a>
-          <a class="compass-node" style="--x:34%;--y:6%;" href="#resilience"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Resilience</b><span>Recovery</span></span></a>
-          <a class="compass-node" style="--x:66%;--y:6%;" href="#kill-conditions"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Kill</b><span>Conditions</span></span></a>
+        <div class="pathway-grid">
+          <a class="pathway-card" href="#audralia-urban"><strong>Audralia Urban</strong><p>Story-world simulation and learning field.</p></a>
+          <a class="pathway-card" href="#city-form"><strong>City Form</strong><p>Shape, access, district spacing, and emergency movement.</p></a>
+          <a class="pathway-card" href="#housing"><strong>Housing</strong><p>Stability, affordability, safety, and utility support.</p></a>
+          <a class="pathway-card" href="#mobility"><strong>Mobility</strong><p>Access to work, food, care, school, service, and safety.</p></a>
+          <a class="pathway-card" href="#water"><strong>Water</strong><p>Quality, pressure, storage, drainage, reuse, and trust.</p></a>
+          <a class="pathway-card" href="#energy"><strong>Energy</strong><p>Daily load, critical load, reserve, and recovery continuity.</p></a>
+          <a class="pathway-card" href="#waste"><strong>Waste</strong><p>Collection, capture, processing, inventory, and closure.</p></a>
+          <a class="pathway-card" href="#food"><strong>Food</strong><p>Access, affordability, cold storage, supply, and continuity.</p></a>
+          <a class="pathway-card" href="#public-safety"><strong>Public Safety</strong><p>Prevention, response, lighting, health, fire, and trust.</p></a>
+          <a class="pathway-card" href="#governance"><strong>Governance</strong><p>Authority, execution, budget, responsibility, and audit.</p></a>
+          <a class="pathway-card" href="#resilience"><strong>Resilience</strong><p>Reserve capacity, recovery time, and cascade visibility.</p></a>
+          <a class="pathway-card" href="#kill-conditions"><strong>Kill Conditions</strong><p>Stop rules for appearance, load, receipt, and accountability.</p></a>
         </div>
       </section>
 
-      <section class="panel section" id="audralia-urban" aria-labelledby="audralia-title">
+      <section class="panel section" id="audralia-urban">
         <div class="kicker">Pathway One</div>
-        <h2 id="audralia-title">Audralia Urban</h2>
-        <article class="pathway-module">
-          <h3>Audralia turns the urban construct into a living city simulation before it becomes a real-world claim.</h3>
-          <p>Audralia lets the visitor see a city as a living system where people need shelter, movement, water, energy, waste closure, food access, safety, and governance at the same time.</p>
-          <div class="lens-shell">
-            <input class="lens-radio platform-radio" id="audralia-platform" name="audralia-lens" type="radio" checked>
-            <input class="lens-radio engineering-radio" id="audralia-engineering" name="audralia-lens" type="radio">
-            <div class="lens-tabs"><label class="lens-tab platform-tab" for="audralia-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="audralia-engineering">Engineering Lens</label></div>
-            <div class="lens-body">
-              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Audralia makes the city visible as a living organism. The visitor can see how one system pressures another and why urban readiness must be measured across life, infrastructure, and accountability.</p><ul class="lens-list"><li>The city is a human survival system.</li><li>Every district depends on multiple support systems.</li><li>Simulation can teach pressure; it does not validate deployment.</li></ul></div>
-              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: bounded urban-system simulation. Inputs include district type, population load, housing capacity, mobility access, water demand, energy demand, waste load, food access, safety posture, governance state, and receipt status.</p><ul class="lens-list"><li>Outputs: urban readiness posture, pressure points, and system-learning state.</li><li>Constraint: simulation visibility does not equal real-world city validation.</li><li>Stop condition: Audralia cannot be used as proof of deployment readiness.</li></ul></div>
-            </div>
-          </div>
-          <div class="boundary">Boundary: Audralia may simulate urban life; Audralia may not prove real-world city deployment.</div>
-          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
-        </article>
+        <h2>Audralia Urban</h2>
+        <p>Audralia turns the urban construct into a living city simulation. The visitor sees shelter, movement, water, energy, waste closure, food access, safety, and governance operating together.</p>
+        <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
       </section>
 
-      <section class="panel section" id="city-form" aria-labelledby="city-form-title">
+      <section class="panel section" id="city-form">
         <div class="kicker">Pathway Two</div>
-        <h2 id="city-form-title">City Form</h2>
-        <article class="pathway-module">
-          <h3>City form determines whether people, resources, services, and risk can move coherently.</h3>
-          <p>A city is more than buildings. Its shape controls access, distance, pressure, crowding, service delivery, and emergency response.</p>
-          <div class="lens-shell">
-            <input class="lens-radio platform-radio" id="city-platform" name="city-lens" type="radio" checked>
-            <input class="lens-radio engineering-radio" id="city-engineering" name="city-lens" type="radio">
-            <div class="lens-tabs"><label class="lens-tab platform-tab" for="city-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="city-engineering">Engineering Lens</label></div>
-            <div class="lens-body">
-              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>City form shapes daily life. A city may look developed, but if its services are too far, its districts are fragmented, or its emergency routes fail, the form is not carrying life well.</p><ul class="lens-list"><li>Buildings do not create a city by themselves.</li><li>Distance and access shape lived experience.</li><li>Public space and emergency access matter as much as density.</li></ul></div>
-              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: urban form layer. Inputs include land use, density, district spacing, service radius, road/grid structure, utility corridors, public space, and emergency access.</p><ul class="lens-list"><li>Outputs: coherent form, stressed form, fragmented form, or invalid form.</li><li>Constraint: layout must support people, utilities, movement, and emergency response.</li><li>Stop condition: visual density cannot be treated as livability.</li></ul></div>
-            </div>
-          </div>
-          <div class="boundary">Boundary: visual density is not livability.</div>
-          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
-        </article>
+        <h2>City Form</h2>
+        <p>City form controls access, distance, pressure, crowding, service delivery, public space, utility corridors, and emergency response.</p>
+        <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
       </section>
 
-      <section class="panel section" id="housing" aria-labelledby="housing-title">
+      <section class="panel section" id="housing">
         <div class="kicker">Pathway Three</div>
-        <h2 id="housing-title">Housing</h2>
-        <article class="pathway-module">
-          <h3>Housing is not only shelter; it is the first urban stability layer.</h3>
-          <p>A city fails when people cannot live safely inside it. Housing links dignity, affordability, infrastructure demand, neighborhood stability, and public trust.</p>
-          <div class="lens-shell">
-            <input class="lens-radio platform-radio" id="housing-platform" name="housing-lens" type="radio" checked>
-            <input class="lens-radio engineering-radio" id="housing-engineering" name="housing-lens" type="radio">
-            <div class="lens-tabs"><label class="lens-tab platform-tab" for="housing-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="housing-engineering">Engineering Lens</label></div>
-            <div class="lens-body">
-              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Housing is where the city becomes personal. People need safe, affordable, maintained places to live before any urban model can claim readiness.</p><ul class="lens-list"><li>Units are not enough without safety and access.</li><li>Housing pressure can destabilize the whole city.</li><li>Affordability and displacement belong inside the readiness map.</li></ul></div>
-              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: housing capacity layer. Inputs include population, unit count, occupancy, affordability band, utility access, structural safety, maintenance load, and displacement pressure.</p><ul class="lens-list"><li>Outputs: housing readiness, shortage, stress, or failure state.</li><li>Constraint: housing must connect to utilities, mobility, safety, and affordability.</li><li>Stop condition: units do not equal livability.</li></ul></div>
-            </div>
-          </div>
-          <div class="boundary">Boundary: units do not equal livability without access, safety, utilities, and affordability.</div>
-          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
-        </article>
+        <h2>Housing</h2>
+        <p>Housing links dignity, affordability, utility demand, neighborhood stability, maintenance, safety, and public trust.</p>
+        <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
       </section>
 
-      <section class="panel section" id="mobility" aria-labelledby="mobility-title">
+      <section class="panel section" id="mobility">
         <div class="kicker">Pathway Four</div>
-        <h2 id="mobility-title">Mobility</h2>
-        <article class="pathway-module">
-          <h3>Mobility decides whether a city can function without trapping its people.</h3>
-          <p>A city is not coherent if people cannot reach work, food, school, services, community, and safety.</p>
-          <div class="lens-shell">
-            <input class="lens-radio platform-radio" id="mobility-platform" name="mobility-lens" type="radio" checked>
-            <input class="lens-radio engineering-radio" id="mobility-engineering" name="mobility-lens" type="radio">
-            <div class="lens-tabs"><label class="lens-tab platform-tab" for="mobility-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="mobility-engineering">Engineering Lens</label></div>
-            <div class="lens-body">
-              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Mobility is the circulatory system of the urban construct. Roads alone are not mobility; people must be able to reach what life requires.</p><ul class="lens-list"><li>Access matters more than road presence.</li><li>Emergency routes must remain functional.</li><li>Pedestrian, transit, freight, and service access all shape readiness.</li></ul></div>
-              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: mobility access layer. Inputs include trip demand, road capacity, pedestrian access, transit access, freight access, emergency routes, travel time, congestion, and accessibility.</p><ul class="lens-list"><li>Outputs: mobility-ready, mobility-stressed, access-limited, or gridlocked state.</li><li>Constraint: mobility must serve people, goods, services, and emergencies.</li><li>Stop condition: road presence is not mobility success.</li></ul></div>
-            </div>
-          </div>
-          <div class="boundary">Boundary: road presence is not mobility success.</div>
-          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
-        </article>
+        <h2>Mobility</h2>
+        <p>Mobility measures whether people, goods, services, and emergency response can reach what life requires.</p>
+        <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
       </section>
 
-      <section class="panel section" id="water" aria-labelledby="water-title">
+      <section class="panel section" id="water">
         <div class="kicker">Pathway Five</div>
-        <h2 id="water-title">Water</h2>
-        <article class="pathway-module">
-          <h3>Urban water must support people before, during, and after pressure events.</h3>
-          <p>A city depends on clean water, pressure, storage, treatment, drainage, reuse, and trust.</p>
-          <div class="lens-shell">
-            <input class="lens-radio platform-radio" id="water-platform" name="water-lens" type="radio" checked>
-            <input class="lens-radio engineering-radio" id="water-engineering" name="water-lens" type="radio">
-            <div class="lens-tabs"><label class="lens-tab platform-tab" for="water-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="water-engineering">Engineering Lens</label></div>
-            <div class="lens-body">
-              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Urban water is a public stability test. Access alone is not enough if quality, pressure, storage, drainage, and failure planning are weak.</p><ul class="lens-list"><li>Water supports homes, hospitals, food, safety, and sanitation.</li><li>Pressure events reveal weak systems.</li><li>Reuse and storage must remain bounded by water-quality rules.</li></ul></div>
-              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: urban water layer. Inputs include source water, demand, pressure, treatment capacity, storage, leakage, drainage, reuse potential, and water-quality boundary.</p><ul class="lens-list"><li>Outputs: water-ready, water-stressed, contamination-risk, or shortage state.</li><li>Constraint: access must be evaluated with quality, pressure, storage, and failure planning.</li><li>Stop condition: water access is not water security.</li></ul></div>
-            </div>
-          </div>
-          <div class="boundary">Boundary: water access is not water security without quality, pressure, storage, and failure planning.</div>
-          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
-        </article>
+        <h2>Water</h2>
+        <p>Urban water carries source quality, pressure, storage, treatment, drainage, reuse, and public confidence.</p>
+        <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
       </section>
 
-      <section class="panel section" id="energy" aria-labelledby="energy-title">
+      <section class="panel section" id="energy">
         <div class="kicker">Pathway Six</div>
-        <h2 id="energy-title">Energy</h2>
-        <article class="pathway-module">
-          <h3>Urban energy must support daily life and emergency continuity.</h3>
-          <p>Homes, hospitals, communications, water systems, transit, food storage, and safety all depend on energy continuity.</p>
-          <div class="lens-shell">
-            <input class="lens-radio platform-radio" id="energy-platform" name="energy-lens" type="radio" checked>
-            <input class="lens-radio engineering-radio" id="energy-engineering" name="energy-lens" type="radio">
-            <div class="lens-tabs"><label class="lens-tab platform-tab" for="energy-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="energy-engineering">Engineering Lens</label></div>
-            <div class="lens-body">
-              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Energy is what keeps the city awake. Availability is not resilience unless critical loads can survive stress, outages, and recovery windows.</p><ul class="lens-list"><li>Critical load continuity matters.</li><li>Storage and backup must be mapped to real demand.</li><li>Energy failures cascade into water, food, safety, and mobility.</li></ul></div>
-              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: urban energy layer. Inputs include load profile, peak demand, critical load, grid dependency, storage, backup, distributed generation, outage tolerance, and closure stability.</p><ul class="lens-list"><li>Outputs: energy-ready, peak-stressed, outage-risk, or continuity-failure state.</li><li>Constraint: resilience requires critical-load continuity.</li><li>Stop condition: power access is not energy resilience.</li></ul></div>
-            </div>
-          </div>
-          <div class="boundary">Boundary: power availability is not resilience without critical-load continuity.</div>
-          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
-        </article>
+        <h2>Energy</h2>
+        <p>Urban energy supports homes, hospitals, water systems, communications, transit, food storage, safety, and recovery continuity.</p>
+        <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
       </section>
 
-      <section class="panel section" id="waste" aria-labelledby="waste-title">
+      <section class="panel section" id="waste">
         <div class="kicker">Pathway Seven</div>
-        <h2 id="waste-title">Waste</h2>
-        <article class="pathway-module">
-          <h3>A city is not clean because waste leaves the curb.</h3>
-          <p>Urban waste becomes honest when the city can account for where material goes after collection.</p>
-          <div class="lens-shell">
-            <input class="lens-radio platform-radio" id="waste-platform" name="waste-lens" type="radio" checked>
-            <input class="lens-radio engineering-radio" id="waste-engineering" name="waste-lens" type="radio">
-            <div class="lens-tabs"><label class="lens-tab platform-tab" for="waste-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="waste-engineering">Engineering Lens</label></div>
-            <div class="lens-body">
-              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Collection is only the visible start. A city must know whether waste is captured, processed, inventoried, discharged, destroyed, or left unreconciled.</p><ul class="lens-list"><li>Collection is not closure.</li><li>Waste failure often disappears from public view before it is solved.</li><li>Closure requires receipts beyond the curb.</li></ul></div>
-              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: urban waste layer. Inputs include waste stream, hazardous fraction, collection route, transfer point, processing path, discharge, inventory, byproducts, and closure receipt.</p><ul class="lens-list"><li>Outputs: waste-ready, collection-only, closure-risk, or unreconciled state.</li><li>Constraint: waste must remain accountable after collection.</li><li>Stop condition: collection is not closure.</li></ul></div>
-            </div>
-          </div>
-          <div class="boundary">Boundary: collection is not closure.</div>
-          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
-        </article>
+        <h2>Waste</h2>
+        <p>Urban waste requires capture, processing, inventory, byproduct accounting, discharge control, and closure receipts.</p>
+        <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
       </section>
 
-      <section class="panel section" id="food" aria-labelledby="food-title">
+      <section class="panel section" id="food">
         <div class="kicker">Pathway Eight</div>
-        <h2 id="food-title">Food</h2>
-        <article class="pathway-module">
-          <h3>Food access determines whether urban life remains stable under pressure.</h3>
-          <p>A city cannot be called stable if people cannot reach affordable, reliable, nutritious food.</p>
-          <div class="lens-shell">
-            <input class="lens-radio platform-radio" id="food-platform" name="food-lens" type="radio" checked>
-            <input class="lens-radio engineering-radio" id="food-engineering" name="food-lens" type="radio">
-            <div class="lens-tabs"><label class="lens-tab platform-tab" for="food-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="food-engineering">Engineering Lens</label></div>
-            <div class="lens-body">
-              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Food access ties transportation, energy, refrigeration, land use, local supply, affordability, and emergency planning together.</p><ul class="lens-list"><li>Food presence is not food access.</li><li>Affordability and distance matter.</li><li>Cold storage and energy continuity shape food security.</li></ul></div>
-              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: urban food-access layer. Inputs include population, grocery access, food distribution, cold storage, delivery routes, local production, affordability, emergency stock, and energy dependency.</p><ul class="lens-list"><li>Outputs: food-ready, access-stressed, supply-fragile, or food-desert state.</li><li>Constraint: food access requires distance, affordability, supply, and continuity.</li><li>Stop condition: food presence is not food access.</li></ul></div>
-            </div>
-          </div>
-          <div class="boundary">Boundary: food presence is not food access.</div>
-          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
-        </article>
+        <h2>Food</h2>
+        <p>Food access connects transportation, energy, refrigeration, land use, local supply, affordability, and emergency planning.</p>
+        <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
       </section>
 
-      <section class="panel section" id="public-safety" aria-labelledby="public-safety-title">
+      <section class="panel section" id="public-safety">
         <div class="kicker">Pathway Nine</div>
-        <h2 id="public-safety-title">Public Safety</h2>
-        <article class="pathway-module">
-          <h3>Public safety is the city’s ability to protect people before disorder becomes collapse.</h3>
-          <p>Safety is not only enforcement. It includes lighting, emergency response, health access, fire readiness, infrastructure safety, disaster planning, and public trust.</p>
-          <div class="lens-shell">
-            <input class="lens-radio platform-radio" id="safety-platform" name="safety-lens" type="radio" checked>
-            <input class="lens-radio engineering-radio" id="safety-engineering" name="safety-lens" type="radio">
-            <div class="lens-tabs"><label class="lens-tab platform-tab" for="safety-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="safety-engineering">Engineering Lens</label></div>
-            <div class="lens-body">
-              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>A safe city is not merely controlled. It is prepared, lit, reachable, trusted, medically supported, and able to respond before pressure becomes collapse.</p><ul class="lens-list"><li>Safety includes prevention and response.</li><li>Trust is part of public safety.</li><li>Hazard exposure must be mapped before crisis.</li></ul></div>
-              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: public-safety layer. Inputs include emergency response time, fire coverage, medical access, lighting, hazard exposure, communication, evacuation routes, incident frequency, and trust indicators.</p><ul class="lens-list"><li>Outputs: safety-ready, response-stressed, hazard-exposed, or public-risk state.</li><li>Constraint: safety requires trust, response, and prevention.</li><li>Stop condition: control is not safety.</li></ul></div>
-            </div>
-          </div>
-          <div class="boundary">Boundary: control is not safety without trust, response, and prevention.</div>
-          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
-        </article>
+        <h2>Public Safety</h2>
+        <p>Public safety includes prevention, response, lighting, emergency access, health care, fire readiness, disaster planning, and trust.</p>
+        <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
       </section>
 
-      <section class="panel section" id="governance" aria-labelledby="governance-title">
+      <section class="panel section" id="governance">
         <div class="kicker">Pathway Ten</div>
-        <h2 id="governance-title">Governance</h2>
-        <article class="pathway-module">
-          <h3>Governance is the layer that turns urban systems into accountable decisions.</h3>
-          <p>Cities fail when no one can tell who is responsible, what decision was made, what rule applies, and what must happen next.</p>
-          <div class="lens-shell">
-            <input class="lens-radio platform-radio" id="governance-platform" name="governance-lens" type="radio" checked>
-            <input class="lens-radio engineering-radio" id="governance-engineering" name="governance-lens" type="radio">
-            <div class="lens-tabs"><label class="lens-tab platform-tab" for="governance-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="governance-engineering">Engineering Lens</label></div>
-            <div class="lens-body">
-              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Governance makes the city accountable. A plan does not govern by itself. Governance requires authority, execution, budget, public responsibility, and audit.</p><ul class="lens-list"><li>Rules need responsible actors.</li><li>Plans need execution paths.</li><li>Public trust depends on accountability.</li></ul></div>
-              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: urban governance layer. Inputs include authority, policy, enforcement mechanism, budget, public accountability, service obligation, compliance path, and audit record.</p><ul class="lens-list"><li>Outputs: governed, under-governed, fragmented, or noncompliant state.</li><li>Constraint: governance requires authority, execution, accountability, and audit.</li><li>Stop condition: a plan is not governance.</li></ul></div>
-            </div>
-          </div>
-          <div class="boundary">Boundary: a plan is not governance without authority, execution, accountability, and audit.</div>
-          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
-        </article>
+        <h2>Governance</h2>
+        <p>Governance turns urban systems into accountable decisions through authority, execution, budget, responsibility, and audit.</p>
+        <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
       </section>
 
-      <section class="panel section" id="resilience" aria-labelledby="resilience-title">
+      <section class="panel section" id="resilience">
         <div class="kicker">Pathway Eleven</div>
-        <h2 id="resilience-title">Resilience</h2>
-        <article class="pathway-module">
-          <h3>Resilience is the city’s ability to absorb pressure without hiding failure.</h3>
-          <p>A resilient city prepares for outage, flood, heat, supply disruption, contamination, violence, displacement, and system overload.</p>
-          <div class="lens-shell">
-            <input class="lens-radio platform-radio" id="resilience-platform" name="resilience-lens" type="radio" checked>
-            <input class="lens-radio engineering-radio" id="resilience-engineering" name="resilience-lens" type="radio">
-            <div class="lens-tabs"><label class="lens-tab platform-tab" for="resilience-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="resilience-engineering">Engineering Lens</label></div>
-            <div class="lens-body">
-              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Resilience is not optimism. It is the city’s ability to absorb pressure, recover, and tell the truth about what failed and what must be renewed.</p><ul class="lens-list"><li>Reserve capacity must be real.</li><li>Recovery time must be mapped.</li><li>Failure cascades must be visible before crisis.</li></ul></div>
-              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: urban resilience layer. Inputs include critical systems, redundancy, reserve capacity, recovery time, dependency map, failure cascade, emergency plan, and receipt state.</p><ul class="lens-list"><li>Outputs: resilient, fragile, brittle, or cascade-risk state.</li><li>Constraint: resilience requires tested reserve and recovery capacity.</li><li>Stop condition: resilience cannot be claimed from optimism or appearance.</li></ul></div>
-            </div>
-          </div>
-          <div class="boundary">Boundary: resilience is not optimism. It requires tested reserve and recovery capacity.</div>
-          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
-        </article>
+        <h2>Resilience</h2>
+        <p>Resilience measures reserve capacity, recovery time, dependency maps, emergency planning, and visible cascade control.</p>
+        <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
       </section>
 
-      <section class="panel section" id="kill-conditions" aria-labelledby="kill-title">
+      <section class="panel section" id="kill-conditions">
         <div class="kicker">Pathway Twelve</div>
-        <h2 id="kill-title">Kill Conditions</h2>
-        <article class="pathway-module">
-          <h3>The urban claim stops when the city looks complete but cannot carry life.</h3>
-          <p>A beautiful skyline is not enough. If people cannot live, move, drink, power, eat, discharge waste, stay safe, and trust governance inside it, the urban construct is not ready.</p>
-          <div class="lens-shell">
-            <input class="lens-radio platform-radio" id="kill-platform" name="kill-lens" type="radio" checked>
-            <input class="lens-radio engineering-radio" id="kill-engineering" name="kill-lens" type="radio">
-            <div class="lens-tabs"><label class="lens-tab platform-tab" for="kill-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="kill-engineering">Engineering Lens</label></div>
-            <div class="lens-body">
-              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>The urban construct must stop when appearance replaces livability. A city cannot claim readiness if its people, utilities, movement, food, safety, waste closure, or governance cannot hold.</p><ul class="lens-list"><li>Buildings are not a city.</li><li>Density is not livability.</li><li>Roads are not mobility.</li><li>Collection is not waste closure.</li><li>Power access is not energy resilience.</li><li>Simulation is not validation.</li></ul></div>
-              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: urban stop-rule list. Inputs include district map, population load, utility status, mobility status, water status, energy status, waste status, food status, safety status, governance status, receipts, and audit result.</p><ul class="lens-list"><li>Stop if visual completion replaces livability.</li><li>Stop if infrastructure is assumed.</li><li>Stop if failure is shifted to another system.</li><li>Stop if receipts are missing.</li><li>Stop if audit contradictions remain unresolved.</li></ul></div>
-            </div>
-          </div>
-          <div class="boundary">Boundary: stop if visual completion replaces livability, if infrastructure is assumed, if failure is shifted to another system, if receipts are missing, or if audit contradictions remain unresolved.</div>
-          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
-        </article>
+        <h2>Kill Conditions</h2>
+        <p>The urban claim stops when appearance outruns livability, infrastructure is assumed, receipts are missing, or accountability cannot carry the load.</p>
+        <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
       </section>
 
       <section class="final-band" id="final-lock" aria-label="Urban final lock">
-        <strong>The skyline gives the visitor a real horizon. The Frontier construct gives that horizon a test.</strong>
+        <strong>The skyline gives the visitor a horizon. The Frontier construct gives that horizon a test.</strong>
         <p>
-          Urban Construct is the Frontier city-system pathway inside the story-world. It coordinates Energy, Water, Waste, Lattice, Governance, Food, Housing, Mobility, Public Safety, and Resilience without replacing category-specific science or claiming that appearance equals readiness.
+          Urban Construct coordinates Energy, Water, Waste, Lattice, Governance, Food, Housing, Mobility, Public Safety, and Resilience while keeping each category’s science in its own lane.
         </p>
         <div class="actions">
           <a class="button gold" href="#urban-construct-field">Return to Construct Field</a>
@@ -1834,67 +1414,156 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_URBAN_PER_BUILDING_SINGLE_OCCUPANCY_LATTICE_RENEWAL_TNT_v9
-previous=FRONTIER_URBAN_RECTANGULAR_WINDOW_TILE_LIGHT_RENEWAL_TNT_v8
+FRONTIER_URBAN_TOUCH_ACTIVATED_OCCUPANCY_LATTICE_TNT_v10
 route=/explore/frontier/urban/
 page=frontier_urban_construct
 html=/explore/frontier/urban/index.html
-hero_skyline_preserved=true
-construct_skyline_box_preserved=true
-per_building_lattice=true
+runtime_scope=css_plus_touch_controller
+visual_baseline=v9_preserved
+per_building_lattice=active
 building_local_scope=16x16
 building_local_addresses=256
-state_expression=geometry_not_dom_object_count
-one_building_one_occupancy_map=true
-per_building_single_occupancy_lattice=true
-stacked_light_layers_removed=true
-three_layer_light_system=false
-grouped_light_layers=false
-per_building_unique_light_rotation=true
-box_shadow_coordinate_maps=true
-per_window_dom=false
-normal_building_rectangular_pane_lights=true
-normal_building_blob_lights=false
-whole_building_flicker=false
-whole_occupancy_sheet_flicker=false
-normal_building_background_position_animation=false
-normal_windows_slide_left_right=false
-normal_windows_turn_on_off=true
-greenline_prior_condition_restored=true
-greenline_blob_lights=false
-greenline_rectangular_grid_preserved=true
-greenline_dallas_skyline_reference_preserved=true
-greenline_continuity_preserved=true
-greenline_continuity_flow_allowed=true
-active_glow=true
-active_glow_css_only=true
-dropdown_green_glow=true
-dropdown_panel_green_outer_glow=true
-dropdown_route_articles_green_rim=true
-dropdown_runtime_added=false
-dropdown_js=false
-javascript_added=false
-canvas=false
-webgl=false
-graphic_box=false
-generated_image=false
-particle_engine=false
-external_image=false
-traffic_animation=false
-dropdown_navigation=true
-route_menu_component=details_summary_css_only
-dual_return_under_every_pathway=true
-return_to_urban_orbit_under_every_pathway=true
-return_to_frontier_under_every_pathway=true
-return_to_frontier_route=/explore/frontier/
-visual_pass_claimed=false
-deploy_marker=FRONTIER_URBAN_PER_BUILDING_SINGLE_OCCUPANCY_LATTICE_DEPLOY_MARKER_v9
+one_building_one_occupancy_map=active
+per_building_programmed_lights=active
+per_building_unique_chronology=active
+touch_window_activation=active
+delegated_touch_listener=active
+manual_window_override=session
+programmed_occupancy_sequences=active
+greenline_ephemeral_glow=active
+greenline_prior_condition=preserved
+dropdown_green_glow=active
+route_menu_component=details_summary_css
+dual_return_under_every_pathway=active
+zero_external_dependencies=active
+deploy_marker=FRONTIER_URBAN_TOUCH_ACTIVATED_OCCUPANCY_LATTICE_DEPLOY_MARKER_v10
       </template>
     </main>
 
     <footer>
-      FRONTIER_URBAN_PER_BUILDING_SINGLE_OCCUPANCY_LATTICE_RENEWAL_TNT_v9 · One building, one occupancy map · CSS-only.
+      FRONTIER_URBAN_TOUCH_ACTIVATED_OCCUPANCY_LATTICE_TNT_v10 · Touch windows · Per-building chronology · Greenline halo.
     </footer>
   </div>
+
+  <script>
+    (() => {
+      const programs = {
+        b01: [
+          ["03-03","07-04","04-07"],
+          ["07-04","08-08","03-11"],
+          ["03-03","04-07","08-08"],
+          ["07-04","03-11"]
+        ],
+        b02: [
+          ["03-03","09-05","04-07","07-12"],
+          ["06-04","08-08","03-11"],
+          ["09-05","04-07","08-08"],
+          ["03-03","06-04","07-12"]
+        ],
+        b03: [
+          ["04-04","03-08","06-09"],
+          ["07-05","06-09","08-12"],
+          ["04-04","07-05","03-08"],
+          ["06-09","08-12"]
+        ],
+        b05: [
+          ["03-03","09-05","04-07","03-12"],
+          ["06-04","08-08","11-09"],
+          ["09-05","04-07","08-08","03-12"],
+          ["03-03","06-04","11-09"]
+        ],
+        b06: [
+          ["03-04","07-05","04-09"],
+          ["10-06","08-10","03-13"],
+          ["07-05","04-09","08-10"],
+          ["03-04","10-06","03-13"]
+        ],
+        b07: [
+          ["04-04"],
+          ["08-07","05-11"],
+          ["04-04","05-11"],
+          ["08-07"]
+        ],
+        b08: [
+          ["02-04"],
+          ["05-07"],
+          ["07-10","02-04"],
+          ["05-07"]
+        ],
+        b09: [
+          ["05-04"],
+          ["10-07"],
+          ["14-09"],
+          ["05-04","14-09"]
+        ]
+      };
+
+      const cycles = {
+        b01: 2100,
+        b02: 3400,
+        b03: 2800,
+        b05: 2600,
+        b06: 3100,
+        b07: 5200,
+        b08: 6300,
+        b09: 7400
+      };
+
+      const stage = document.querySelector("[data-urban-stage]");
+
+      const applyStep = (building, sequence) => {
+        const active = new Set(sequence);
+        building.querySelectorAll(".window-tile").forEach((tile) => {
+          if (tile.dataset.source === "manual") return;
+          tile.classList.toggle("is-on", active.has(tile.dataset.address));
+          tile.dataset.source = "program";
+        });
+      };
+
+      const startPrograms = () => {
+        if (!stage) return;
+
+        Object.keys(programs).forEach((key, index) => {
+          const buildings = stage.querySelectorAll(`[data-building="${key}"]`);
+          const sequence = programs[key];
+          const cycle = cycles[key] || 4000;
+
+          buildings.forEach((building, buildingIndex) => {
+            let step = (index + buildingIndex) % sequence.length;
+            applyStep(building, sequence[step]);
+
+            window.setInterval(() => {
+              step = (step + 1) % sequence.length;
+              applyStep(building, sequence[step]);
+            }, cycle + buildingIndex * 277);
+          });
+        });
+      };
+
+      const toggleWindow = (tile) => {
+        tile.classList.toggle("is-on");
+        tile.classList.add("manual");
+        tile.dataset.source = "manual";
+      };
+
+      document.addEventListener("pointerdown", (event) => {
+        const tile = event.target.closest(".window-tile");
+        if (!tile) return;
+        event.preventDefault();
+        toggleWindow(tile);
+      }, { passive: false });
+
+      document.addEventListener("keydown", (event) => {
+        const tile = event.target.closest(".window-tile");
+        if (!tile) return;
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          toggleWindow(tile);
+        }
+      });
+
+      startPrograms();
+    })();
+  </script>
 </body>
 </html>

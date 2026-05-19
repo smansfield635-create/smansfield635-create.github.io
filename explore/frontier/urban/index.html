@@ -4,38 +4,23 @@
   lang="en"
   data-route="/explore/frontier/urban/"
   data-page="frontier-urban"
-  data-version="G2-V7"
-  data-contract="FRONTIER_URBAN_INDIVIDUAL_WINDOW_TILE_OCCUPANCY_RENEWAL_TNT_v7"
-  data-previous-contract="FRONTIER_URBAN_OCCUPANCY_LIGHTS_NO_WINDOW_DRIFT_RENEWAL_TNT_v6"
-  data-source-binding="FRONTIER_URBAN_INDIVIDUAL_WINDOW_TILE_OCCUPANCY_FINAL_PRECODE_BINDING_v7"
-  data-role="frontier-urban-individual-window-tile-occupancy"
-  data-hero-skyline-preserved="true"
-  data-construct-skyline-box-preserved="true"
-  data-per-building-lattice="true"
-  data-building-local-scope="16x16"
-  data-building-local-addresses="256"
-  data-state-expression="geometry-not-dom-object-count"
-  data-individual-window-tile-behavior="true"
-  data-filled-window-tiles="true"
-  data-rim-only-window-lighting="false"
-  data-whole-building-flicker="false"
-  data-normal-building-background-position-animation="false"
-  data-normal-windows-slide-left-right="false"
-  data-normal-windows-turn-on-off="true"
-  data-grouped-light-layers="true"
+  data-version="G2-V8"
+  data-contract="FRONTIER_URBAN_RECTANGULAR_WINDOW_TILE_LIGHT_RENEWAL_TNT_v8"
+  data-previous-contract="FRONTIER_URBAN_INDIVIDUAL_WINDOW_TILE_OCCUPANCY_RENEWAL_TNT_v7"
+  data-source-binding="FRONTIER_URBAN_RECTANGULAR_WINDOW_TILE_LIGHT_RENEWAL_PREWRITE_v8"
+  data-greenline-prior-condition-restored="true"
+  data-greenline-blob-lights="false"
+  data-greenline-rectangular-grid-preserved="true"
+  data-greenline-dallas-skyline-reference-preserved="true"
+  data-normal-building-rectangular-pane-lights="true"
+  data-normal-building-blob-lights="false"
+  data-rectangular-window-tiles="true"
+  data-blob-window-lights="false"
+  data-radial-blob-light-model="false"
+  data-window-shape-fits-lattice-cell="true"
+  data-soft-window-edge-preserved="true"
   data-per-window-dom="false"
-  data-greenline-continuity-preserved="true"
-  data-greenline-continuity-flow-allowed="true"
-  data-dropdown-green-glow="true"
-  data-dropdown-panel-green-outer-glow="true"
-  data-dropdown-route-articles-green-rim="true"
-  data-dropdown-runtime-added="false"
-  data-dropdown-js="false"
-  data-greenline-visual-language-extended-to-dropdown="true"
-  data-static-page-usable-without-js="true"
-  data-heavy-runtime-loaded="false"
-  data-generated-image="false"
-  data-graphic-box="false"
+  data-javascript-added="false"
   data-canvas="false"
   data-webgl="false"
   data-particle-engine="false"
@@ -45,8 +30,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Urban Construct · Individual Window Occupancy · Diamond Gate Bridge</title>
-  <meta name="description" content="Diamond Gate Bridge Urban Construct is the Frontier simulation lane where city-scale systems are tested together under metropolitan load, with per-building lattice logic, filled window tile occupancy, and green-glow route menus.">
+  <title>Urban Construct · Rectangular Window Occupancy · Diamond Gate Bridge</title>
+  <meta name="description" content="Diamond Gate Bridge Urban Construct is the Frontier simulation lane where city-scale systems are tested together under metropolitan load, with per-building lattice logic, rectangular window-pane occupancy, restored greenline tower behavior, and green-glow route menus.">
 
   <style>
     :root{
@@ -65,6 +50,10 @@
       --shadow:0 32px 110px rgba(0,0,0,.48);
       --max:1180px;
       --brand-gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
+      --pane-warm:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='34' viewBox='0 0 28 34'%3E%3Crect x='8' y='8' width='12' height='16' rx='1.6' fill='%23fff0bd' opacity='.92'/%3E%3Crect x='9' y='9' width='10' height='14' rx='1.2' fill='%23ffc875' opacity='.55'/%3E%3Crect x='8' y='8' width='12' height='16' rx='1.6' fill='none' stroke='%23fff7dc' stroke-opacity='.25'/%3E%3C/svg%3E");
+      --pane-cool:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='34' viewBox='0 0 30 34'%3E%3Crect x='9' y='8' width='12' height='16' rx='1.6' fill='%23dff5ff' opacity='.80'/%3E%3Crect x='10' y='9' width='10' height='14' rx='1.2' fill='%238dd8ff' opacity='.35'/%3E%3Crect x='9' y='8' width='12' height='16' rx='1.6' fill='none' stroke='%23fff4d8' stroke-opacity='.18'/%3E%3C/svg%3E");
+      --pane-amber:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='36' viewBox='0 0 32 36'%3E%3Crect x='10' y='9' width='12' height='15' rx='1.5' fill='%23ffd27f' opacity='.72'/%3E%3Crect x='11' y='10' width='10' height='13' rx='1.1' fill='%23ffae4c' opacity='.36'/%3E%3Crect x='10' y='9' width='12' height='15' rx='1.5' fill='none' stroke='%23fff4d8' stroke-opacity='.16'/%3E%3C/svg%3E");
+      --pane-dim:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='34' viewBox='0 0 28 34'%3E%3Crect x='8' y='8' width='12' height='16' rx='1.2' fill='%237eaacf' opacity='.25'/%3E%3Crect x='8' y='8' width='12' height='16' rx='1.2' fill='none' stroke='%23e6eeff' stroke-opacity='.10'/%3E%3C/svg%3E");
     }
 
     *{box-sizing:border-box}
@@ -185,10 +174,7 @@
       text-shadow:0 2px 10px rgba(0,0,0,.85);
     }
 
-    .brand-copy{
-      display:grid;
-      gap:.18rem;
-    }
+    .brand-copy{display:grid;gap:.18rem}
 
     .brand-copy strong{
       font-size:clamp(1.08rem,3vw,1.7rem);
@@ -479,17 +465,17 @@
       pointer-events:none;
       border-radius:.12rem;
       background-repeat:repeat;
-      background-image:radial-gradient(ellipse at center,rgba(255,226,145,.92) 0 36%,rgba(255,226,145,.34) 37% 47%,transparent 49%);
+      background-image:var(--pane-warm);
       background-size:var(--tile-x,var(--b-window-x,.74rem)) var(--tile-y,var(--b-window-y,.86rem));
       background-position:var(--tile-pos-x,0) var(--tile-pos-y,0);
       opacity:0;
-      filter:drop-shadow(0 0 .10rem rgba(255,226,145,.34));
+      filter:drop-shadow(0 0 .10rem rgba(255,226,145,.24));
       mask-image:linear-gradient(180deg,rgba(0,0,0,.96),rgba(0,0,0,.72) 62%,rgba(0,0,0,.36));
     }
 
     .light-layer.base{
       opacity:var(--base-opacity,.08);
-      background-image:radial-gradient(ellipse at center,rgba(126,171,207,.26) 0 34%,rgba(126,171,207,.12) 35% 45%,transparent 47%);
+      background-image:var(--pane-dim);
       filter:none;
     }
 
@@ -507,7 +493,7 @@
       --tile-y:calc(var(--b-window-y,.86rem) * 1.65);
       --tile-pos-x:calc(var(--b-phase,1) * .16rem);
       --tile-pos-y:calc(var(--b-phase,1) * .11rem);
-      background-image:radial-gradient(ellipse at center,rgba(255,244,216,.88) 0 35%,rgba(141,216,255,.28) 36% 48%,transparent 50%);
+      background-image:var(--pane-cool);
       animation:lightLayerB var(--b-cycle,23s) steps(1,end) infinite;
       animation-delay:var(--b-layer-delay,-7s);
     }
@@ -517,7 +503,7 @@
       --tile-y:calc(var(--b-window-y,.86rem) * 2.5);
       --tile-pos-x:calc(var(--b-phase,1) * .23rem);
       --tile-pos-y:calc(var(--b-phase,1) * .15rem);
-      background-image:radial-gradient(ellipse at center,rgba(255,204,112,.72) 0 34%,rgba(255,204,112,.20) 35% 46%,transparent 49%);
+      background-image:var(--pane-amber);
       animation:lightLayerC var(--c-cycle,31s) steps(1,end) infinite;
       animation-delay:var(--c-delay,-11s);
     }
@@ -537,9 +523,11 @@
     .quiet .light-layer.a,
     .far-building .light-layer.a,
     .civic .light-layer.a{animation-name:quietLayerA}
+
     .quiet .light-layer.b,
     .far-building .light-layer.b,
     .civic .light-layer.b{animation-name:quietLayerB}
+
     .quiet .light-layer.c,
     .far-building .light-layer.c,
     .civic .light-layer.c{animation-name:quietLayerC}
@@ -557,9 +545,7 @@
         linear-gradient(180deg,rgba(9,18,41,.74),rgba(2,5,16,.90));
     }
 
-    .skyline-depth-layer.far .light-layer{
-      filter:none;
-    }
+    .skyline-depth-layer.far .light-layer{filter:none}
 
     .greenline{
       background:
@@ -572,29 +558,37 @@
       animation-name:greenlineBuildingPulse;
     }
 
-    .greenline .light-layer{
-      background-image:radial-gradient(ellipse at center,rgba(57,255,159,.94) 0 36%,rgba(226,255,239,.34) 37% 48%,transparent 50%);
-      filter:drop-shadow(0 0 .13rem rgba(57,255,159,.42));
-    }
+    .greenline .light-layer{display:none}
 
-    .greenline .light-layer.base{
-      opacity:.18;
-      background-image:radial-gradient(ellipse at center,rgba(57,255,159,.40) 0 34%,rgba(57,255,159,.12) 35% 46%,transparent 48%);
-    }
-
-    .greenline .light-layer.a{
-      animation:greenlineLights var(--a-cycle,31s) ease-in-out infinite;
-      animation-delay:var(--a-delay,-7s);
-    }
-
-    .greenline .light-layer.b{
-      animation:greenlineLights var(--b-cycle,37s) ease-in-out infinite;
-      animation-delay:var(--b-layer-delay,-13s);
-    }
-
-    .greenline .light-layer.c{
-      animation:greenlineLights var(--c-cycle,43s) ease-in-out infinite;
-      animation-delay:var(--c-delay,-19s);
+    .greenline::before{
+      content:"";
+      position:absolute;
+      inset:.45rem .36rem .55rem;
+      z-index:2;
+      pointer-events:none;
+      opacity:.48;
+      background-image:
+        repeating-linear-gradient(
+          90deg,
+          transparent 0 calc(var(--b-window-x,.58rem) * .30),
+          rgba(57,255,159,.92) calc(var(--b-window-x,.58rem) * .30) calc(var(--b-window-x,.58rem) * .42),
+          transparent calc(var(--b-window-x,.58rem) * .42) var(--b-window-x,.58rem)
+        ),
+        repeating-linear-gradient(
+          0deg,
+          transparent 0 calc(var(--b-window-y,.72rem) * .34),
+          rgba(230,255,235,.50) calc(var(--b-window-y,.72rem) * .34) calc(var(--b-window-y,.72rem) * .45),
+          transparent calc(var(--b-window-y,.72rem) * .45) var(--b-window-y,.72rem)
+        ),
+        linear-gradient(135deg,rgba(57,255,159,.22),transparent 45%,rgba(255,232,163,.10));
+      background-size:
+        var(--b-window-x,.58rem) var(--b-window-y,.72rem),
+        var(--b-window-x,.58rem) var(--b-window-y,.72rem),
+        100% 100%;
+      background-position:0 0,0 0,0 0;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.96),rgba(0,0,0,.76) 64%,rgba(0,0,0,.36));
+      animation:greenlineGridPulse var(--a-cycle,37s) ease-in-out infinite;
+      animation-delay:var(--b-delay,-7s);
     }
 
     .greenline::after{
@@ -702,11 +696,10 @@
       71%{filter:brightness(1.05)}
     }
 
-    @keyframes greenlineLights{
-      0%,100%{opacity:.20}
-      28%{opacity:.42}
-      52%{opacity:.76}
-      79%{opacity:.35}
+    @keyframes greenlineGridPulse{
+      0%,100%{opacity:.38;filter:brightness(.96)}
+      34%{opacity:.58;filter:brightness(1.10)}
+      61%{opacity:.46;filter:brightness(1.03)}
     }
 
     @keyframes greenlineContinuityFlow{
@@ -1109,11 +1102,7 @@
 
     .pathway-module > p{max-width:980px}
 
-    .lens-shell{
-      position:relative;
-      display:grid;
-      gap:.8rem;
-    }
+    .lens-shell{position:relative;display:grid;gap:.8rem}
 
     .lens-radio{
       position:absolute;
@@ -1459,7 +1448,7 @@
             <span class="urban-building mixed roof" style="--b-left:26%;--b-bottom:9%;--b-width:3.7rem;--b-height:10.9rem;--b-haze:.88;--b-window-x:.78rem;--b-window-y:.88rem;--b-phase:11;--b-delay:-5s;--b-duration:13s;--a-cycle:19s;--b-cycle:27s;--c-cycle:35s;"><i class="light-layer base"></i><i class="light-layer a"></i><i class="light-layer b"></i><i class="light-layer c"></i></span>
             <span class="urban-building reunion" style="--b-left:38%;--b-bottom:9%;--b-width:4.3rem;--b-height:18.5rem;--b-haze:.96;--b-phase:4;--b-delay:-3s;--b-duration:19s;"></span>
             <span class="urban-building office" style="--b-left:49%;--b-bottom:9%;--b-width:4.9rem;--b-height:15rem;--b-haze:.94;--b-window-x:.62rem;--b-window-y:.76rem;--b-phase:15;--b-delay:-11s;--b-duration:23s;--a-cycle:29s;--b-cycle:37s;--c-cycle:47s;"><i class="light-layer base"></i><i class="light-layer a"></i><i class="light-layer b"></i><i class="light-layer c"></i></span>
-            <span class="urban-building greenline" style="--b-left:63%;--b-bottom:9%;--b-width:4.2rem;--b-height:23rem;--b-haze:.98;--b-window-x:.58rem;--b-window-y:.72rem;--b-glow:2.2rem;--b-glow-active:3.4rem;--b-phase:21;--b-delay:-7s;--b-duration:31s;--a-cycle:37s;--b-cycle:43s;--c-cycle:53s;"><i class="light-layer base"></i><i class="light-layer a"></i><i class="light-layer b"></i><i class="light-layer c"></i></span>
+            <span class="urban-building greenline" style="--b-left:63%;--b-bottom:9%;--b-width:4.2rem;--b-height:23rem;--b-haze:.98;--b-window-x:.58rem;--b-window-y:.72rem;--b-glow:2.2rem;--b-glow-active:3.4rem;--b-phase:21;--b-delay:-7s;--b-duration:31s;--a-cycle:37s;--b-cycle:43s;--c-cycle:53s;"></span>
             <span class="urban-building office roof" style="--b-left:76%;--b-bottom:9%;--b-width:4.6rem;--b-height:14.2rem;--b-haze:.90;--b-window-x:.72rem;--b-window-y:.84rem;--b-phase:18;--b-delay:-13s;--b-duration:19s;--a-cycle:25s;--b-cycle:33s;--c-cycle:45s;"><i class="light-layer base"></i><i class="light-layer a"></i><i class="light-layer b"></i><i class="light-layer c"></i></span>
             <span class="urban-building quiet step" style="--b-left:89%;--b-bottom:9%;--b-width:4rem;--b-height:11.4rem;--b-haze:.86;--b-window-x:.82rem;--b-window-y:.94rem;--b-phase:25;--b-delay:-17s;--b-duration:29s;--a-cycle:41s;--b-cycle:53s;--c-cycle:61s;"><i class="light-layer base"></i><i class="light-layer a"></i><i class="light-layer b"></i><i class="light-layer c"></i></span>
           </div>
@@ -1492,17 +1481,17 @@
       </section>
 
       <section class="panel construct-visual" id="urban-construct-field" aria-labelledby="construct-title">
-        <div class="kicker">Urban Construct Field · Filled window tiles</div>
+        <div class="kicker">Urban Construct Field · Rectangular window panes</div>
 
         <div class="construct-copy">
-          <h2 id="construct-title">The building stays stable. The window groups change state.</h2>
+          <h2 id="construct-title">The green tower returns to its prior Dallas-like condition. The other buildings now use rectangular pane lights.</h2>
           <p>
-            Normal buildings now use grouped fixed light layers. Individual-looking filled window tiles turn on and off without sliding, without rim-only glow, and without treating each window as a DOM object. The green tower keeps its accepted continuity behavior.
+            Normal buildings use grouped fixed light layers shaped as rectangular window panes. The windows can vary in brightness and timing, but they must obey the façade lattice. The green tower is protected as its prior skyline condition: vertical green edge illumination, clean rectangular grid, dark interior structure, and no blob lights.
           </p>
         </div>
 
         <div class="construct-grid">
-          <div class="urban-skyline-stage construct-skyline" aria-label="Inspectable Dallas-inspired skyline with filled individual-looking window tile occupancy">
+          <div class="urban-skyline-stage construct-skyline" aria-label="Inspectable Dallas-inspired skyline with restored greenline and rectangular window pane occupancy">
             <div class="skyline-depth-layer far">
               <span class="urban-building far-building" style="--b-left:3%;--b-bottom:23%;--b-width:3rem;--b-height:8rem;--b-haze:.42;--b-window-x:.95rem;--b-window-y:1.05rem;--b-phase:3;--b-delay:-2s;--b-duration:19s;--a-cycle:25s;--b-cycle:31s;--c-cycle:41s;"><i class="light-layer base"></i><i class="light-layer a"></i><i class="light-layer b"></i><i class="light-layer c"></i></span>
               <span class="urban-building far-building step" style="--b-left:11%;--b-bottom:22%;--b-width:4.2rem;--b-height:10.4rem;--b-haze:.46;--b-window-x:.86rem;--b-window-y:1.06rem;--b-phase:8;--b-delay:-5s;--b-duration:23s;--a-cycle:31s;--b-cycle:37s;--c-cycle:43s;"><i class="light-layer base"></i><i class="light-layer a"></i><i class="light-layer b"></i><i class="light-layer c"></i></span>
@@ -1518,7 +1507,7 @@
               <span class="urban-building mixed roof" style="--b-left:25%;--b-bottom:8%;--b-width:3.8rem;--b-height:11.2rem;--b-haze:.88;--b-window-x:.78rem;--b-window-y:.88rem;--b-phase:14;--b-delay:-5s;--b-duration:13s;--a-cycle:19s;--b-cycle:27s;--c-cycle:35s;"><i class="light-layer base"></i><i class="light-layer a"></i><i class="light-layer b"></i><i class="light-layer c"></i></span>
               <span class="urban-building reunion" style="--b-left:37%;--b-bottom:8%;--b-width:4.4rem;--b-height:18.8rem;--b-haze:.96;--b-phase:6;--b-delay:-3s;--b-duration:19s;"></span>
               <span class="urban-building office" style="--b-left:49%;--b-bottom:8%;--b-width:4.9rem;--b-height:15.3rem;--b-haze:.94;--b-window-x:.62rem;--b-window-y:.76rem;--b-phase:19;--b-delay:-11s;--b-duration:23s;--a-cycle:29s;--b-cycle:37s;--c-cycle:47s;"><i class="light-layer base"></i><i class="light-layer a"></i><i class="light-layer b"></i><i class="light-layer c"></i></span>
-              <span class="urban-building greenline" style="--b-left:63%;--b-bottom:8%;--b-width:4.3rem;--b-height:23.5rem;--b-haze:.98;--b-window-x:.58rem;--b-window-y:.72rem;--b-glow:2.3rem;--b-glow-active:3.6rem;--b-phase:26;--b-delay:-13s;--b-duration:31s;--a-cycle:37s;--b-cycle:43s;--c-cycle:53s;"><i class="light-layer base"></i><i class="light-layer a"></i><i class="light-layer b"></i><i class="light-layer c"></i></span>
+              <span class="urban-building greenline" style="--b-left:63%;--b-bottom:8%;--b-width:4.3rem;--b-height:23.5rem;--b-haze:.98;--b-window-x:.58rem;--b-window-y:.72rem;--b-glow:2.3rem;--b-glow-active:3.6rem;--b-phase:26;--b-delay:-13s;--b-duration:31s;--a-cycle:37s;--b-cycle:43s;--c-cycle:53s;"></span>
               <span class="urban-building office roof" style="--b-left:76%;--b-bottom:8%;--b-width:4.6rem;--b-height:14.4rem;--b-haze:.90;--b-window-x:.72rem;--b-window-y:.84rem;--b-phase:22;--b-delay:-17s;--b-duration:19s;--a-cycle:25s;--b-cycle:33s;--c-cycle:45s;"><i class="light-layer base"></i><i class="light-layer a"></i><i class="light-layer b"></i><i class="light-layer c"></i></span>
               <span class="urban-building quiet step" style="--b-left:88%;--b-bottom:8%;--b-width:4.1rem;--b-height:11.7rem;--b-haze:.86;--b-window-x:.82rem;--b-window-y:.94rem;--b-phase:31;--b-delay:-19s;--b-duration:29s;--a-cycle:41s;--b-cycle:53s;--c-cycle:61s;"><i class="light-layer base"></i><i class="light-layer a"></i><i class="light-layer b"></i><i class="light-layer c"></i></span>
             </div>
@@ -1538,8 +1527,8 @@
               <li><span class="key-mark" style="--key-color:var(--blue)"></span><span><b>Blue haze</b> means distance and inherited infrastructure.</span></li>
               <li><span class="key-mark dark"></span><span><b>Dark foreground</b> means ground-level hidden systems.</span></li>
               <li><span class="key-mark square" style="--key-color:rgba(255,244,216,.82)"></span><span><b>Independent buildings</b> mean separate local 16 × 16 / 256 lattices.</span></li>
-              <li><span class="key-mark line" style="--key-color:var(--gold)"></span><span><b>Filled window tiles</b> mean grouped room-state changes, not rim-only lighting.</span></li>
-              <li><span class="key-mark" style="--key-color:rgba(57,255,159,.72)"></span><span><b>Green route glow</b> carries the continuity language into the dropdown navigation.</span></li>
+              <li><span class="key-mark line" style="--key-color:var(--gold)"></span><span><b>Rectangular panes</b> mean grouped room-state changes that fit the window lattice.</span></li>
+              <li><span class="key-mark" style="--key-color:rgba(57,255,159,.72)"></span><span><b>Greenline tower</b> preserves the prior Dallas-like vertical grid condition.</span></li>
             </ul>
           </aside>
         </div>
@@ -1828,8 +1817,8 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_URBAN_INDIVIDUAL_WINDOW_TILE_OCCUPANCY_RENEWAL_TNT_v7
-previous=FRONTIER_URBAN_OCCUPANCY_LIGHTS_NO_WINDOW_DRIFT_RENEWAL_TNT_v6
+FRONTIER_URBAN_RECTANGULAR_WINDOW_TILE_LIGHT_RENEWAL_TNT_v8
+previous=FRONTIER_URBAN_INDIVIDUAL_WINDOW_TILE_OCCUPANCY_RENEWAL_TNT_v7
 route=/explore/frontier/urban/
 page=frontier_urban_construct
 html=/explore/frontier/urban/index.html
@@ -1841,7 +1830,13 @@ building_local_addresses=256
 state_expression=geometry_not_dom_object_count
 per_building_chronology=true
 per_building_occupancy=true
-individual_window_tile_behavior=true
+rectangular_window_tiles=true
+blob_window_lights=false
+radial_blob_light_model=false
+window_shape_fits_lattice_cell=true
+normal_building_rectangular_pane_lights=true
+normal_building_blob_lights=false
+soft_window_edge_preserved=true
 filled_window_tiles=true
 rim_only_window_lighting=false
 whole_building_flicker=false
@@ -1850,6 +1845,10 @@ normal_windows_slide_left_right=false
 normal_windows_turn_on_off=true
 grouped_light_layers=true
 per_window_dom=false
+greenline_prior_condition_restored=true
+greenline_blob_lights=false
+greenline_rectangular_grid_preserved=true
+greenline_dallas_skyline_reference_preserved=true
 greenline_continuity_preserved=true
 greenline_continuity_flow_allowed=true
 active_glow=true
@@ -1875,12 +1874,12 @@ return_to_urban_orbit_under_every_pathway=true
 return_to_frontier_under_every_pathway=true
 return_to_frontier_route=/explore/frontier/
 visual_pass_claimed=false
-deploy_marker=FRONTIER_URBAN_INDIVIDUAL_WINDOW_TILE_OCCUPANCY_DEPLOY_MARKER_v7
+deploy_marker=FRONTIER_URBAN_RECTANGULAR_WINDOW_TILE_LIGHT_DEPLOY_MARKER_v8
       </template>
     </main>
 
     <footer>
-      FRONTIER_URBAN_INDIVIDUAL_WINDOW_TILE_OCCUPANCY_RENEWAL_TNT_v7 · Filled window tiles · Green-glow dropdown articles · CSS-only.
+      FRONTIER_URBAN_RECTANGULAR_WINDOW_TILE_LIGHT_RENEWAL_TNT_v8 · Rectangular window panes · Restored greenline prior condition · CSS-only.
     </footer>
   </div>
 </body>

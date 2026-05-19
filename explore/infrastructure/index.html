@@ -3,14 +3,17 @@
   lang="en"
   data-route="/explore/frontier/infrastructure/"
   data-page="frontier-infrastructure"
-  data-version="G3-V3"
-  data-contract="FRONTIER_INFRASTRUCTURE_DROPDOWN_BACKBONE_RETURN_RESTORATION_TNT_v3"
+  data-version="G3-V4"
+  data-contract="FRONTIER_INFRASTRUCTURE_STATUS_STRIP_AUDIT_READINESS_TNT_v1"
+  data-previous-contract="FRONTIER_INFRASTRUCTURE_DROPDOWN_BACKBONE_RETURN_RESTORATION_TNT_v3"
   data-role="frontier-infrastructure"
   data-active-route="/explore/frontier/infrastructure/"
   data-parent-return="/explore/frontier/"
   data-artistic-identity="living-backbone-under-load"
   data-dropdown-navigation="active"
   data-backbone-field="active"
+  data-status-strip="active"
+  data-audit-readiness-strip="active"
   data-compass-gems="active"
   data-pathway-gems="active"
   data-platform-lens="active"
@@ -28,10 +31,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Infrastructure · Living Backbone Under Load · Diamond Gate Bridge</title>
+  <title>Infrastructure · Audit Readiness Backbone · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Infrastructure presents the Frontier backbone as a living support field where load, capacity, dependencies, maintenance, continuity, governance, receipts, and failure paths become visible."
+    content="Diamond Gate Bridge Infrastructure presents the Frontier backbone as a living support field with dropdown navigation, return routing, backbone animation, pathway lenses, and audit-readable status."
   >
 
   <style>
@@ -712,6 +715,109 @@
     .key-mark.line{height:.22rem;margin-top:.45rem;border-radius:999px}
     .key-mark.spine{width:.42rem;height:1.2rem;margin-left:.25rem;border-radius:999px}
 
+    .status-board{
+      position:relative;
+      isolation:isolate;
+    }
+
+    .status-board::before{
+      content:"";
+      position:absolute;
+      inset:clamp(.8rem,2vw,1.2rem);
+      z-index:0;
+      border:1px solid rgba(57,255,159,.12);
+      border-radius:clamp(1rem,3vw,1.75rem);
+      background:
+        linear-gradient(rgba(57,255,159,.060) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(57,255,159,.060) 1px,transparent 1px);
+      background-size:2.2rem 2.2rem;
+      opacity:.34;
+      pointer-events:none;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.48));
+    }
+
+    .status-grid{
+      position:relative;
+      z-index:1;
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.75rem;
+    }
+
+    .status-card{
+      min-height:8.4rem;
+      display:grid;
+      align-content:start;
+      gap:.46rem;
+      padding:.9rem;
+      border:1px solid rgba(57,255,159,.20);
+      border-radius:1.05rem;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(57,255,159,.12),transparent 14rem),
+        linear-gradient(180deg,rgba(255,255,255,.050),rgba(255,255,255,.020));
+      box-shadow:0 0 1.2rem rgba(57,255,159,.070),inset 0 1px 0 rgba(255,255,255,.07);
+    }
+
+    .status-card b{
+      color:rgba(255,244,216,.98);
+      font-size:.78rem;
+      line-height:1.05;
+      letter-spacing:.105em;
+      text-transform:uppercase;
+    }
+
+    .status-card span{
+      color:rgba(230,238,255,.76);
+      font-size:.86rem;
+      line-height:1.36;
+    }
+
+    .status-pill{
+      width:fit-content;
+      min-height:1.55rem;
+      display:inline-flex;
+      align-items:center;
+      gap:.42rem;
+      padding:.28rem .56rem;
+      border:1px solid rgba(57,255,159,.26);
+      border-radius:999px;
+      color:rgba(215,255,234,.94);
+      background:rgba(57,255,159,.075);
+      font-size:.58rem;
+      font-weight:950;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+
+    .status-pill::before{
+      content:"";
+      width:.45rem;
+      height:.45rem;
+      border-radius:50%;
+      background:var(--green);
+      box-shadow:0 0 .6rem rgba(57,255,159,.70);
+    }
+
+    .status-card.audit-ready{
+      border-color:rgba(243,200,111,.30);
+      background:
+        radial-gradient(circle at 12% 0%,rgba(243,200,111,.13),transparent 14rem),
+        radial-gradient(circle at 84% 12%,rgba(57,255,159,.13),transparent 14rem),
+        linear-gradient(180deg,rgba(255,255,255,.058),rgba(255,255,255,.022));
+      box-shadow:0 0 1.4rem rgba(243,200,111,.10),0 0 1.8rem rgba(57,255,159,.07),inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .status-card.audit-ready .status-pill{
+      border-color:rgba(243,200,111,.42);
+      color:rgba(255,244,216,.96);
+      background:rgba(243,200,111,.080);
+    }
+
+    .status-card.audit-ready .status-pill::before{
+      background:var(--gold);
+      box-shadow:0 0 .7rem rgba(243,200,111,.72);
+    }
+
     .compass-stage{
       position:relative;
       min-height:clamp(42rem,78vw,58rem);
@@ -1134,6 +1240,10 @@
       font-size:.76rem;
     }
 
+    @media (max-width:1080px){
+      .status-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+
     @media (max-width:980px){
       .topbar{grid-template-columns:1fr}
       .nav{justify-content:flex-start}
@@ -1153,6 +1263,8 @@
       .infra-node{min-width:4.7rem;padding:.42rem .48rem}
       .infra-node b{font-size:.52rem}
       .infra-node span{font-size:.42rem}
+      .status-grid{grid-template-columns:1fr}
+      .status-card{min-height:auto}
       .compass-stage{
         min-height:auto;
         display:grid;
@@ -1391,7 +1503,8 @@
 
         <div class="actions">
           <a class="button gold" href="#backbone-field">Inspect the Backbone</a>
-          <a class="button green" href="#infrastructure-orbit">Choose a Pathway</a>
+          <a class="button green" href="#infrastructure-status">Read Status</a>
+          <a class="button" href="#infrastructure-orbit">Choose a Pathway</a>
           <a class="button" href="#audralia-infrastructure">Start with Audralia</a>
           <a class="button" href="#kill-conditions">Open Kill Conditions</a>
           <a class="button" href="/explore/frontier/">Return to Frontier</a>
@@ -1446,6 +1559,64 @@
               <li><span class="key-mark" style="--key-color:var(--red)"></span><span><b>Failure path</b> means load, capacity, dependency, maintenance, or governance cannot hold.</span></li>
             </ul>
           </aside>
+        </div>
+      </section>
+
+      <section class="panel section status-board" id="infrastructure-status" aria-labelledby="status-title">
+        <div class="kicker">Infrastructure Backbone Status Strip</div>
+        <h2 id="status-title">The restored baseline now reads as operational status.</h2>
+        <p>
+          Infrastructure has moved from feature restoration into audit-readable posture. The page now states what is active, what is linked, what is preserved, and what is ready for served-state review.
+        </p>
+
+        <div class="status-grid" aria-label="Infrastructure operational status board">
+          <article class="status-card">
+            <span class="status-pill">Restored</span>
+            <b>Baseline</b>
+            <span>Authoritative v3 structure preserved as the active source body.</span>
+          </article>
+
+          <article class="status-card">
+            <span class="status-pill">Active</span>
+            <b>Navigation</b>
+            <span>Site Menu and Frontier Lanes dropdown controls are active.</span>
+          </article>
+
+          <article class="status-card">
+            <span class="status-pill">Linked</span>
+            <b>Parent Return</b>
+            <span>Return to Frontier points to the parent route across the page.</span>
+          </article>
+
+          <article class="status-card">
+            <span class="status-pill">Alive</span>
+            <b>Animation</b>
+            <span>Living Backbone Under Load remains the visual support field.</span>
+          </article>
+
+          <article class="status-card">
+            <span class="status-pill">Twelve</span>
+            <b>Pathways</b>
+            <span>All twelve Infrastructure pathways remain active and ordered.</span>
+          </article>
+
+          <article class="status-card">
+            <span class="status-pill">Dual Lens</span>
+            <b>Lenses</b>
+            <span>Platform and Engineering lens mechanics remain per pathway.</span>
+          </article>
+
+          <article class="status-card">
+            <span class="status-pill">CSS Only</span>
+            <b>Runtime</b>
+            <span>No canvas, WebGL, generated image, or heavy runtime is introduced.</span>
+          </article>
+
+          <article class="status-card audit-ready">
+            <span class="status-pill">Ready</span>
+            <b>Audit</b>
+            <span>Served-state check may now verify restored structure plus status advancement.</span>
+          </article>
         </div>
       </section>
 
@@ -1721,10 +1892,11 @@
         </p>
         <div class="actions">
           <a class="button gold" href="#backbone-field">Return to Backbone Field</a>
+          <a class="button green" href="#infrastructure-status">Return to Status Strip</a>
           <a class="button" href="#infrastructure-orbit">Return to Infrastructure Orbit</a>
           <a class="button" href="/explore/frontier/">Return to Frontier</a>
           <a class="button" href="/showroom/globe/audralia/">Open Audralia</a>
-          <a class="button green" href="/explore/frontier/energy/">Open Energy</a>
+          <a class="button" href="/explore/frontier/energy/">Open Energy</a>
           <a class="button" href="/explore/frontier/water/">Open Water</a>
           <a class="button" href="/explore/frontier/urban/">Open Urban</a>
           <a class="button" href="/explore/frontier/closed-loop/">Open Closed Loop</a>
@@ -1732,16 +1904,21 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_INFRASTRUCTURE_DROPDOWN_BACKBONE_RETURN_RESTORATION_TNT_v3
+FRONTIER_INFRASTRUCTURE_STATUS_STRIP_AUDIT_READINESS_TNT_v1
+previous=FRONTIER_INFRASTRUCTURE_DROPDOWN_BACKBONE_RETURN_RESTORATION_TNT_v3
 route=/explore/frontier/infrastructure/
 page=frontier_infrastructure
 html=/explore/frontier/infrastructure/index.html
 parent_return=/explore/frontier/
 runtime_scope=css_only
+baseline_preserved=true
 dropdown_navigation=active
 site_menu_dropdown=active
 frontier_lanes_dropdown=active
 living_backbone_under_load=active
+status_strip=active
+audit_readiness_strip=active
+status_items=baseline_restored,navigation_dropdown_active,parent_return_frontier_linked,animation_living_backbone_active,pathways_twelve_active,lenses_platform_engineering_active,runtime_css_only,audit_ready_for_served_state_check
 backbone_load_capacity_dependency_field=active
 central_support_spine=active
 load_packets=active
@@ -1766,12 +1943,12 @@ webgl_scope=none
 generated_image_scope=none
 graphic_box_scope=none
 visual_pass_claimed=false
-deploy_marker=FRONTIER_INFRASTRUCTURE_DROPDOWN_BACKBONE_RETURN_RESTORATION_DEPLOY_MARKER_v3
+deploy_marker=FRONTIER_INFRASTRUCTURE_STATUS_STRIP_AUDIT_READINESS_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer>
-      FRONTIER_INFRASTRUCTURE_DROPDOWN_BACKBONE_RETURN_RESTORATION_TNT_v3 · Infrastructure · Dropdowns · Living Backbone · Return to Frontier · Compass Gem Pathways.
+      FRONTIER_INFRASTRUCTURE_STATUS_STRIP_AUDIT_READINESS_TNT_v1 · Infrastructure · Status Strip · Audit Readiness · Living Backbone · Compass Gem Pathways.
     </footer>
   </div>
 </body>

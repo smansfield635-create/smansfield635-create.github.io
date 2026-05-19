@@ -4,17 +4,24 @@
   lang="en"
   data-route="/explore/frontier/urban/"
   data-page="frontier-urban"
-  data-version="G2-V2"
-  data-contract="FRONTIER_URBAN_DALLAS_NIGHT_SKLINE_BACKDROP_RENEWAL_TNT_v2"
-  data-previous-contract="FRONTIER_URBAN_CONSTRUCT_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1"
-  data-source-binding="FRONTIER_URBAN_DALLAS_NIGHT_SKLINE_BACKDROP_FINAL_PRECODE_v2"
+  data-version="G2-V3"
+  data-contract="FRONTIER_URBAN_DROPDOWN_NAV_DEPTH_SKYLINE_RENEWAL_TNT_v3"
+  data-previous-contract="FRONTIER_URBAN_DALLAS_NIGHT_SKLINE_BACKDROP_RENEWAL_TNT_v2"
+  data-source-binding="FRONTIER_URBAN_DROPDOWN_NAV_DEPTH_SKYLINE_FINAL_PRECODE_BINDING_v3"
   data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
-  data-design-reference="FRONTIER_URBAN_CONSTRUCT_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1"
   data-source-symbol-authority="compassOrganicGem"
-  data-role="frontier-urban-dallas-inspired-night-skyline-backdrop"
+  data-role="frontier-urban-depth-skyline-dropdown-nav"
+  data-dropdown-navigation="true"
+  data-dropdown-js="false"
+  data-route-menu-component="details_summary_css_only"
+  data-site-menu="true"
+  data-frontier-lanes-menu="true"
+  data-skyline-depth-layers="far_mid_front"
   data-dallas-inspired-skyline="true"
   data-photographic-accuracy-claimed="false"
-  data-urban-pressure-field="true"
+  data-urban-contextual-upgrade="true"
+  data-skyline-is-surface-load-is-city="true"
+  data-urban-system-pressure-thesis="true"
   data-audralia-urban-first="true"
   data-per-pathway-dual-lens="true"
   data-platform-lens="true"
@@ -36,10 +43,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Urban Construct · Dallas Night Skyline · Diamond Gate Bridge</title>
+  <title>Urban Construct · Depth Skyline · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Urban Construct is a Frontier city-system readiness pathway with a Dallas-inspired night skyline backdrop and per-pathway Platform and Engineering lenses."
+    content="Diamond Gate Bridge Urban Construct is the Frontier simulation lane where city-scale systems are tested together under metropolitan load, with a Dallas-inspired depth skyline and reusable CSS-only navigation."
   >
 
   <style>
@@ -53,7 +60,6 @@
       --gold2:#ffe8a3;
       --blue:#8dd8ff;
       --green:#8ff0c3;
-      --violet:#8f65ff;
       --urban-green:#39ff9f;
       --panel:rgba(9,15,31,.88);
       --line:rgba(184,205,255,.18);
@@ -110,6 +116,7 @@
 
     a:focus-visible,
     button:focus-visible,
+    summary:focus-visible,
     label:focus-visible,
     [tabindex]:focus-visible{
       outline:2px solid var(--gold);
@@ -149,7 +156,7 @@
     .topbar{
       display:grid;
       grid-template-columns:auto 1fr;
-      align-items:center;
+      align-items:start;
       gap:18px;
       padding:12px 0 18px;
     }
@@ -212,36 +219,101 @@
       display:flex;
       flex-wrap:wrap;
       justify-content:flex-end;
-      gap:.48rem;
+      gap:.6rem;
     }
 
-    .nav a{
-      min-height:2.25rem;
-      display:inline-flex;
+    .route-menu{
+      position:relative;
+      min-width:min(16rem,100%);
+    }
+
+    .route-menu summary{
+      list-style:none;
+      cursor:pointer;
+      min-height:2.6rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:.75rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      padding:.62rem .85rem;
+      color:rgba(241,246,255,.88);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(57,255,159,.08),transparent 70%),
+        rgba(255,255,255,.045);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.075em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      backdrop-filter:blur(7px);
+    }
+
+    .route-menu summary::-webkit-details-marker{display:none}
+
+    .route-menu summary::after{
+      content:"";
+      width:.55rem;
+      height:.55rem;
+      border-right:2px solid rgba(255,244,216,.76);
+      border-bottom:2px solid rgba(255,244,216,.76);
+      transform:rotate(45deg) translateY(-.12rem);
+      transition:transform .18s ease;
+    }
+
+    .route-menu[open] summary::after{
+      transform:rotate(225deg) translateY(-.08rem);
+    }
+
+    .route-menu-panel{
+      position:absolute;
+      right:0;
+      top:calc(100% + .55rem);
+      z-index:40;
+      width:min(28rem,calc(100vw - 2rem));
+      padding:.75rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:1.1rem;
+      background:
+        radial-gradient(circle at 14% 0%,rgba(57,255,159,.11),transparent 18rem),
+        linear-gradient(180deg,rgba(13,20,43,.96),rgba(4,7,18,.98));
+      box-shadow:0 1.4rem 3.4rem rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .route-menu-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.45rem;
+    }
+
+    .route-menu-link{
+      min-height:2.35rem;
+      display:flex;
       align-items:center;
       justify-content:center;
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:999px;
-      padding:.5rem .74rem;
-      color:rgba(241,246,255,.84);
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:.8rem;
+      padding:.5rem .62rem;
+      color:rgba(241,246,255,.86);
       background:rgba(255,255,255,.035);
-      font-size:.68rem;
+      font-size:.64rem;
       font-weight:950;
-      letter-spacing:.055em;
+      letter-spacing:.06em;
+      text-align:center;
       text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
-    .nav a:hover,
-    .nav a:focus-visible{
+    .route-menu-link:hover,
+    .route-menu-link:focus-visible,
+    .route-menu-link[aria-current="page"]{
       transform:translateY(-2px);
-      border-color:rgba(243,200,111,.46);
+      border-color:rgba(243,200,111,.55);
       outline:none;
     }
 
-    .nav a[aria-current="page"]{
-      border-color:rgba(243,200,111,.88);
+    .route-menu-link[aria-current="page"]{
       color:#060811;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
     }
@@ -260,7 +332,7 @@
 
     .hero{
       position:relative;
-      min-height:clamp(31rem,58vw,43rem);
+      min-height:clamp(32rem,58vw,44rem);
       display:grid;
       align-content:center;
       gap:1rem;
@@ -271,59 +343,111 @@
 
     .hero > *{
       position:relative;
-      z-index:3;
+      z-index:4;
     }
 
-    .urban-night-backdrop{
+    .urban-depth-backdrop{
       position:absolute;
       inset:0;
       z-index:0;
       overflow:hidden;
       pointer-events:none;
       background:
-        radial-gradient(circle at 50% 80%,rgba(243,200,111,.18),transparent 32rem),
-        radial-gradient(circle at 42% 74%,rgba(57,255,159,.12),transparent 20rem),
-        linear-gradient(180deg,rgba(2,5,19,.10),rgba(1,3,10,.58) 62%,rgba(0,0,0,.86));
+        radial-gradient(circle at 48% 78%,rgba(255,199,101,.18),transparent 34rem),
+        radial-gradient(circle at 40% 76%,rgba(57,255,159,.12),transparent 22rem),
+        radial-gradient(circle at 68% 78%,rgba(141,216,255,.16),transparent 26rem),
+        linear-gradient(180deg,#07122c 0%,#071023 42%,#040814 70%,#02040b 100%);
     }
 
-    .urban-night-sky{
+    .urban-depth-backdrop::before{
+      content:"";
       position:absolute;
       inset:0;
+      opacity:.92;
       background:
-        radial-gradient(circle at 20% 16%,rgba(255,255,255,.20) 0 1px,transparent 1.5px),
+        radial-gradient(circle at 16% 16%,rgba(255,255,255,.20) 0 1px,transparent 1.5px),
         radial-gradient(circle at 76% 22%,rgba(255,255,255,.16) 0 1px,transparent 1.5px),
-        radial-gradient(circle at 58% 13%,rgba(243,200,111,.16) 0 1px,transparent 1.5px),
-        linear-gradient(180deg,#07122c 0%,#071023 42%,#040814 70%,#02040b 100%);
-      background-size:220px 240px,280px 260px,340px 300px,auto;
-      opacity:.95;
+        radial-gradient(circle at 58% 13%,rgba(243,200,111,.16) 0 1px,transparent 1.5px);
+      background-size:220px 240px,280px 260px,340px 300px;
     }
 
-    .urban-horizon-glow{
+    .urban-depth-backdrop::after{
+      content:"";
       position:absolute;
       left:-10%;
       right:-10%;
-      bottom:12%;
-      height:34%;
+      bottom:8%;
+      height:42%;
       background:
-        radial-gradient(ellipse at 50% 92%,rgba(255,199,101,.38),transparent 54%),
-        radial-gradient(ellipse at 34% 88%,rgba(57,255,159,.20),transparent 34%),
-        radial-gradient(ellipse at 72% 84%,rgba(141,216,255,.20),transparent 42%);
+        radial-gradient(ellipse at 50% 94%,rgba(255,199,101,.38),transparent 55%),
+        radial-gradient(ellipse at 34% 88%,rgba(57,255,159,.18),transparent 36%),
+        radial-gradient(ellipse at 72% 86%,rgba(141,216,255,.18),transparent 44%);
       opacity:.78;
       filter:blur(1px);
     }
 
-    .urban-skyline{
+    .skyline-layer{
       position:absolute;
       left:50%;
-      bottom:9%;
-      width:min(1080px,108%);
-      height:46%;
-      transform:translateX(-50%);
       display:flex;
       align-items:flex-end;
       justify-content:center;
-      gap:clamp(.22rem,.8vw,.55rem);
+      pointer-events:none;
+    }
+
+    .skyline-layer.far{
+      bottom:17%;
+      z-index:1;
+      width:min(980px,102%);
+      height:31%;
+      gap:clamp(.14rem,.48vw,.34rem);
+      transform:translateX(-50%);
+      opacity:.42;
+      filter:saturate(.72) brightness(.72);
+    }
+
+    .skyline-layer.mid{
+      bottom:10%;
+      z-index:2;
+      width:min(1120px,112%);
+      height:47%;
+      gap:clamp(.22rem,.78vw,.55rem);
+      transform:translateX(-50%);
       opacity:.96;
+    }
+
+    .skyline-layer.front{
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:3;
+      height:22%;
+      display:block;
+      transform:none;
+      background:
+        linear-gradient(180deg,transparent,rgba(0,0,0,.86)),
+        linear-gradient(90deg,rgba(0,0,0,.96),rgba(2,5,13,.78),rgba(0,0,0,.96));
+    }
+
+    .skyline-layer.front::before{
+      content:"";
+      position:absolute;
+      left:-4%;
+      right:-4%;
+      bottom:0;
+      height:64%;
+      background:
+        linear-gradient(90deg,
+          rgba(1,3,10,.96) 0 8%,
+          transparent 8% 10%,
+          rgba(1,3,10,.96) 10% 24%,
+          transparent 24% 27%,
+          rgba(1,3,10,.98) 27% 46%,
+          transparent 46% 49%,
+          rgba(1,3,10,.95) 49% 70%,
+          transparent 70% 73%,
+          rgba(1,3,10,.98) 73% 100%);
+      opacity:.92;
     }
 
     .urban-building{
@@ -339,6 +463,16 @@
         0 0 1.8rem rgba(0,0,0,.42);
     }
 
+    .skyline-layer.far .urban-building{
+      width:calc(var(--w,4rem) * .68);
+      height:calc(var(--h,11rem) * .62);
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.025),transparent 28%),
+        linear-gradient(180deg,rgba(9,18,41,.76),rgba(2,5,16,.90));
+      border-color:rgba(255,255,255,.045);
+      box-shadow:none;
+    }
+
     .urban-building::before{
       content:"";
       position:absolute;
@@ -349,6 +483,11 @@
         linear-gradient(rgba(141,216,255,.58) 0 .13rem,transparent .14rem .72rem);
       background-size:.78rem .92rem;
       mask-image:linear-gradient(180deg,rgba(0,0,0,.96),rgba(0,0,0,.70) 60%,rgba(0,0,0,.38));
+    }
+
+    .skyline-layer.far .urban-building::before{
+      opacity:calc(var(--lights,.30) * .45);
+      background-size:1rem 1.15rem;
     }
 
     .urban-building.step{
@@ -406,7 +545,6 @@
       box-shadow:
         0 0 .9rem rgba(255,232,163,.20),
         0 0 1.7rem rgba(141,216,255,.12);
-      mask-image:none;
       opacity:1;
     }
 
@@ -419,17 +557,6 @@
       height:86%;
       transform:translateX(-50%);
       background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(141,216,255,.25),rgba(255,255,255,.06));
-    }
-
-    .urban-foreground-shadow{
-      position:absolute;
-      left:0;
-      right:0;
-      bottom:0;
-      height:18%;
-      background:
-        linear-gradient(180deg,transparent,rgba(0,0,0,.86)),
-        linear-gradient(90deg,rgba(0,0,0,.94),rgba(2,5,13,.74),rgba(0,0,0,.94));
     }
 
     .kicker{
@@ -468,8 +595,6 @@
       line-height:.84;
       letter-spacing:-.112em;
       text-wrap:balance;
-      position:relative;
-      z-index:2;
       text-shadow:0 1.2rem 2.4rem rgba(0,0,0,.60);
     }
 
@@ -480,8 +605,6 @@
       line-height:.98;
       letter-spacing:-.07em;
       text-wrap:balance;
-      position:relative;
-      z-index:2;
     }
 
     h3{
@@ -499,11 +622,7 @@
       line-height:1.55;
     }
 
-    .lead{
-      max-width:940px;
-      position:relative;
-      z-index:2;
-    }
+    .lead{max-width:940px}
 
     .quote{
       max-width:930px;
@@ -514,8 +633,6 @@
       background:rgba(5,9,24,.62);
       font-size:clamp(1rem,2.7vw,1.18rem);
       font-weight:850;
-      position:relative;
-      z-index:2;
       backdrop-filter:blur(7px);
     }
 
@@ -524,8 +641,6 @@
       flex-wrap:wrap;
       gap:.62rem;
       margin-top:.2rem;
-      position:relative;
-      z-index:2;
     }
 
     .button{
@@ -589,10 +704,6 @@
         radial-gradient(circle at 50% 77%,rgba(243,200,111,.065),transparent 28rem),
         linear-gradient(180deg,rgba(1,5,16,.70),rgba(2,6,16,.94));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-    }
-
-    .compass-stage .urban-night-backdrop{
-      opacity:.66;
     }
 
     .compass-stage::before,
@@ -751,9 +862,7 @@
       overflow:hidden;
     }
 
-    .pathway-module > p{
-      max-width:980px;
-    }
+    .pathway-module > p{max-width:980px}
 
     .lens-shell{
       position:relative;
@@ -867,9 +976,7 @@
       margin-top:.1rem;
     }
 
-    .section-return.dual-return{
-      flex-wrap:wrap;
-    }
+    .section-return.dual-return{flex-wrap:wrap}
 
     .return-orbit,
     .return-frontier{
@@ -966,53 +1073,25 @@
     }
 
     @media (max-width:980px){
-      .topbar{
-        grid-template-columns:1fr;
-        align-items:start;
-      }
-
+      .topbar{grid-template-columns:1fr}
       .nav{justify-content:flex-start}
+      .route-menu-panel{left:0;right:auto}
     }
 
     @media (max-width:760px){
       .shell{width:min(100% - 22px,var(--max))}
-
       h1{font-size:clamp(3.2rem,16vw,5.6rem)}
-
-      .hero{
-        min-height:34rem;
-        padding:1rem;
-      }
-
-      .urban-skyline{
-        width:120%;
-        height:40%;
-        gap:.16rem;
-        bottom:7%;
-      }
-
-      .urban-building{
-        width:calc(var(--w,4rem) * .62);
-        height:calc(var(--h,11rem) * .72);
-      }
-
-      .urban-tower-greenline{
-        width:2.5rem;
-        height:14rem;
-      }
-
-      .urban-tower-reunion{
-        width:2.7rem;
-        height:11rem;
-      }
-
-      .actions{
-        display:grid;
-      }
-
-      .button{
-        width:100%;
-      }
+      .hero{min-height:36rem;padding:1rem}
+      .actions{display:grid}
+      .button{width:100%}
+      .route-menu{width:100%}
+      .route-menu-panel{position:static;margin-top:.45rem;width:100%}
+      .route-menu-grid{grid-template-columns:1fr}
+      .skyline-layer.far{width:128%;height:28%;bottom:18%;gap:.14rem}
+      .skyline-layer.mid{width:128%;height:42%;bottom:9%;gap:.16rem}
+      .urban-building{width:calc(var(--w,4rem) * .62);height:calc(var(--h,11rem) * .72)}
+      .urban-tower-greenline{width:2.5rem;height:14rem}
+      .urban-tower-reunion{width:2.7rem;height:11rem}
 
       .compass-stage{
         min-height:auto;
@@ -1023,14 +1102,8 @@
         place-items:center;
       }
 
-      .compass-stage .urban-night-backdrop{
-        opacity:.36;
-      }
-
       .compass-stage::before,
-      .compass-stage::after{
-        display:none;
-      }
+      .compass-stage::after{display:none}
 
       .compass-center,
       .compass-node{
@@ -1041,9 +1114,7 @@
       }
 
       .compass-node:hover,
-      .compass-node:focus-visible{
-        transform:scale(1.05);
-      }
+      .compass-node:focus-visible{transform:scale(1.05)}
 
       .compass-center{
         grid-column:1 / -1;
@@ -1057,83 +1128,31 @@
         height:5.45rem;
       }
 
-      .gem-label{
-        width:88%;
-        gap:.14rem;
-      }
-
-      .gem-label b{
-        font-size:.62rem;
-        letter-spacing:.046em;
-      }
-
-      .gem-label span{
-        font-size:.44rem;
-        letter-spacing:.044em;
-      }
-
-      .compass-center .gem-label b{
-        font-size:.88rem;
-      }
-
-      .compass-center .gem-label span{
-        font-size:.60rem;
-      }
-
-      .lens-tabs{
-        display:grid;
-        grid-template-columns:1fr 1fr;
-      }
-
+      .gem-label{width:88%;gap:.14rem}
+      .gem-label b{font-size:.62rem;letter-spacing:.046em}
+      .gem-label span{font-size:.44rem;letter-spacing:.044em}
+      .compass-center .gem-label b{font-size:.88rem}
+      .compass-center .gem-label span{font-size:.60rem}
+      .lens-tabs{display:grid;grid-template-columns:1fr 1fr}
       .section-return,
       .section-return.dual-return{
         display:grid;
         grid-template-columns:1fr;
         justify-content:stretch;
       }
-
       .return-orbit,
-      .return-frontier{
-        width:100%;
-      }
+      .return-frontier{width:100%}
     }
 
     @media (max-width:420px){
-      .compass-stage{
-        gap:.9rem .62rem;
-      }
-
-      .compass-node{
-        width:6.85rem;
-        height:5rem;
-      }
-
-      .gem-label{
-        width:90%;
-      }
-
-      .gem-label b{
-        font-size:.54rem;
-        letter-spacing:.036em;
-      }
-
-      .gem-label span{
-        font-size:.38rem;
-        letter-spacing:.034em;
-      }
-
-      .compass-center{
-        width:8.95rem;
-        height:6.5rem;
-      }
-
-      .compass-center .gem-label b{
-        font-size:.78rem;
-      }
-
-      .compass-center .gem-label span{
-        font-size:.52rem;
-      }
+      .compass-stage{gap:.9rem .62rem}
+      .compass-node{width:6.85rem;height:5rem}
+      .gem-label{width:90%}
+      .gem-label b{font-size:.54rem;letter-spacing:.036em}
+      .gem-label span{font-size:.38rem;letter-spacing:.034em}
+      .compass-center{width:8.95rem;height:6.5rem}
+      .compass-center .gem-label b{font-size:.78rem}
+      .compass-center .gem-label span{font-size:.52rem}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -1246,30 +1265,61 @@
         </span>
       </a>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/products/">Products</a>
-        <a href="/laws/">Laws</a>
-        <a href="/showroom/globe/">Interactive Narrative</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/explore/frontier/">Frontier</a>
-        <a href="/explore/frontier/energy/">Energy</a>
-        <a href="/explore/frontier/water/">Water</a>
-        <a href="/explore/frontier/waste/">Waste</a>
-        <a href="/explore/frontier/lattice/">Lattice</a>
-        <a href="/explore/frontier/urban/" aria-current="page">Urban</a>
-        <a href="/gauges/">Gauges</a>
+      <nav class="nav" aria-label="Reusable route menus">
+        <details class="route-menu">
+          <summary class="route-menu-summary">Site Menu</summary>
+          <div class="route-menu-panel">
+            <div class="route-menu-grid">
+              <a class="route-menu-link" href="/">Compass</a>
+              <a class="route-menu-link" href="/door/">Door</a>
+              <a class="route-menu-link" href="/home/">Home</a>
+              <a class="route-menu-link" href="/laws/">Laws</a>
+              <a class="route-menu-link" href="/showroom/globe/">Interactive Narrative</a>
+              <a class="route-menu-link" href="/showroom/">Showroom</a>
+              <a class="route-menu-link" href="/products/">Products</a>
+              <a class="route-menu-link" href="/gauges/">Gauges</a>
+            </div>
+          </div>
+        </details>
+
+        <details class="route-menu">
+          <summary class="route-menu-summary">Frontier Lanes</summary>
+          <div class="route-menu-panel">
+            <div class="route-menu-grid">
+              <a class="route-menu-link" href="/explore/frontier/">Frontier</a>
+              <a class="route-menu-link" href="/explore/frontier/energy/">Energy</a>
+              <a class="route-menu-link" href="/explore/frontier/water/">Water</a>
+              <a class="route-menu-link" href="/explore/frontier/waste/">Waste</a>
+              <a class="route-menu-link" href="/explore/frontier/urban/" aria-current="page">Urban</a>
+              <a class="route-menu-link" href="/explore/frontier/lattice/">Lattice</a>
+              <a class="route-menu-link" href="/explore/frontier/infrastructure/">Infrastructure</a>
+              <a class="route-menu-link" href="/explore/frontier/closed-loop/">Closed Loop</a>
+              <a class="route-menu-link" href="/explore/frontier/manual/">Manual</a>
+              <a class="route-menu-link" href="/explore/frontier/shimmer/">Shimmer</a>
+              <a class="route-menu-link" href="/explore/frontier/trajectory/">Trajectory</a>
+              <a class="route-menu-link" href="/explore/frontier/vision/">Vision</a>
+            </div>
+          </div>
+        </details>
       </nav>
     </header>
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="urban-night-backdrop" aria-hidden="true">
-          <div class="urban-night-sky"></div>
-          <div class="urban-horizon-glow"></div>
-          <div class="urban-skyline">
+        <div class="urban-depth-backdrop" aria-hidden="true">
+          <div class="skyline-layer far">
+            <span class="urban-building" style="--w:3rem;--h:8rem;--lights:.18"></span>
+            <span class="urban-building step" style="--w:4rem;--h:10rem;--lights:.20"></span>
+            <span class="urban-building" style="--w:2.8rem;--h:7rem;--lights:.16"></span>
+            <span class="urban-building roof" style="--w:3.6rem;--h:9rem;--lights:.18"></span>
+            <span class="urban-building" style="--w:4.4rem;--h:11rem;--lights:.17"></span>
+            <span class="urban-building step" style="--w:3.2rem;--h:8rem;--lights:.16"></span>
+            <span class="urban-building" style="--w:4rem;--h:9.5rem;--lights:.18"></span>
+            <span class="urban-building roof" style="--w:3.1rem;--h:7.8rem;--lights:.15"></span>
+            <span class="urban-building" style="--w:3.8rem;--h:8.6rem;--lights:.16"></span>
+          </div>
+
+          <div class="skyline-layer mid">
             <span class="urban-building" style="--w:3.2rem;--h:9rem;--lights:.30"></span>
             <span class="urban-building step" style="--w:4.2rem;--h:13rem;--lights:.38"></span>
             <span class="urban-building roof" style="--w:3.5rem;--h:10.5rem;--lights:.34"></span>
@@ -1281,19 +1331,20 @@
             <span class="urban-building" style="--w:3.1rem;--h:9.5rem;--lights:.30"></span>
             <span class="urban-building step" style="--w:4.1rem;--h:11rem;--lights:.32"></span>
           </div>
-          <div class="urban-foreground-shadow"></div>
+
+          <div class="skyline-layer front"></div>
         </div>
 
-        <div class="kicker">Dallas-inspired night skyline · Frontier Urban Simulation</div>
+        <div class="kicker">Dallas-inspired depth skyline · Frontier Urban Simulation</div>
 
-        <h1 id="page-title">The city is the construct that tests every frontier system at once.</h1>
+        <h1 id="page-title">The skyline is the surface. The load is the city.</h1>
 
         <p class="lead">
-          The skyline is beautiful from a distance. Up close, a city is energy demand, water demand, waste pressure, housing pressure, mobility, public safety, governance, food access, emergency response, and trust under load.
+          From a distance, a city becomes light on the horizon. Inside the grid, that same light depends on water, power, housing, mobility, waste closure, food access, safety, governance, and trust.
         </p>
 
         <div class="quote">
-          Urban Construct keeps the Dallas-inspired night skyline as the visual surface while the actual subject remains city-scale pressure: place the people, map the systems, declare the load, respect the constraints, track the failure paths, require receipts, and survive the audit.
+          Urban Construct is the Frontier simulation lane where those systems are not treated separately. They are tested together under city-scale pressure.
         </div>
 
         <div class="actions">
@@ -1306,33 +1357,16 @@
 
       <section class="panel section" aria-labelledby="field-title" id="urban-orbit">
         <div class="kicker">Urban field · Active city-system pathways</div>
-        <h2 id="field-title">Choose the pathway first. Choose the language lens inside the pathway.</h2>
+        <h2 id="field-title">A city is not proven by its skyline. A city is proven by whether its systems can carry people under pressure.</h2>
 
         <div
           class="compass-stage"
           aria-label="Urban pathway field"
           data-urban-pathway-field="true"
-          data-dallas-inspired-skyline-backdrop="true"
           data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
           data-source-symbol-authority="compassOrganicGem"
           data-per-pathway-dual-lens="true"
         >
-          <div class="urban-night-backdrop" aria-hidden="true">
-            <div class="urban-night-sky"></div>
-            <div class="urban-horizon-glow"></div>
-            <div class="urban-skyline">
-              <span class="urban-building" style="--w:3.2rem;--h:8rem;--lights:.22"></span>
-              <span class="urban-building step" style="--w:4.2rem;--h:12rem;--lights:.30"></span>
-              <span class="urban-building roof" style="--w:3.5rem;--h:10rem;--lights:.25"></span>
-              <span class="urban-tower-reunion"></span>
-              <span class="urban-building" style="--w:4.8rem;--h:14rem;--lights:.28"></span>
-              <span class="urban-tower-greenline"></span>
-              <span class="urban-building roof" style="--w:4.5rem;--h:13rem;--lights:.24"></span>
-              <span class="urban-building" style="--w:3.1rem;--h:8.5rem;--lights:.22"></span>
-            </div>
-            <div class="urban-foreground-shadow"></div>
-          </div>
-
           <div class="compass-center" aria-hidden="true">
             <span class="gem-core">
               <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
@@ -1342,65 +1376,18 @@
             <span class="gem-label"><b>Urban</b><span>Construct</span></span>
           </div>
 
-          <a class="compass-node" style="--x:50%;--y:11%;" href="#audralia-urban" aria-label="Open Audralia Urban">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Audralia</b><span>Urban</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:73%;--y:17%;" href="#city-form" aria-label="Open City Form">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>City</b><span>Form</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:87%;--y:34%;" href="#housing" aria-label="Open Housing">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Housing</b><span>Stability</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:87%;--y:62%;" href="#mobility" aria-label="Open Mobility">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Mobility</b><span>Access</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:73%;--y:80%;" href="#water" aria-label="Open Urban Water">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Water</b><span>Security</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:50%;--y:88%;" href="#energy" aria-label="Open Urban Energy">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Energy</b><span>Continuity</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:27%;--y:80%;" href="#waste" aria-label="Open Urban Waste">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Waste</b><span>Closure</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:13%;--y:62%;" href="#food" aria-label="Open Food Access">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Food</b><span>Access</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:13%;--y:34%;" href="#public-safety" aria-label="Open Public Safety">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Public</b><span>Safety</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:27%;--y:17%;" href="#governance" aria-label="Open Governance">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Governance</b><span>Account</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:34%;--y:6%;" href="#resilience" aria-label="Open Resilience">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Resilience</b><span>Recovery</span></span>
-          </a>
-
-          <a class="compass-node" style="--x:66%;--y:6%;" href="#kill-conditions" aria-label="Open Kill Conditions">
-            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Kill</b><span>Conditions</span></span>
-          </a>
+          <a class="compass-node" style="--x:50%;--y:11%;" href="#audralia-urban" aria-label="Open Audralia Urban"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Audralia</b><span>Urban</span></span></a>
+          <a class="compass-node" style="--x:73%;--y:17%;" href="#city-form" aria-label="Open City Form"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>City</b><span>Form</span></span></a>
+          <a class="compass-node" style="--x:87%;--y:34%;" href="#housing" aria-label="Open Housing"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Housing</b><span>Stability</span></span></a>
+          <a class="compass-node" style="--x:87%;--y:62%;" href="#mobility" aria-label="Open Mobility"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Mobility</b><span>Access</span></span></a>
+          <a class="compass-node" style="--x:73%;--y:80%;" href="#water" aria-label="Open Urban Water"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Water</b><span>Security</span></span></a>
+          <a class="compass-node" style="--x:50%;--y:88%;" href="#energy" aria-label="Open Urban Energy"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Energy</b><span>Continuity</span></span></a>
+          <a class="compass-node" style="--x:27%;--y:80%;" href="#waste" aria-label="Open Urban Waste"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Waste</b><span>Closure</span></span></a>
+          <a class="compass-node" style="--x:13%;--y:62%;" href="#food" aria-label="Open Food Access"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Food</b><span>Access</span></span></a>
+          <a class="compass-node" style="--x:13%;--y:34%;" href="#public-safety" aria-label="Open Public Safety"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Public</b><span>Safety</span></span></a>
+          <a class="compass-node" style="--x:27%;--y:17%;" href="#governance" aria-label="Open Governance"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Governance</b><span>Account</span></span></a>
+          <a class="compass-node" style="--x:34%;--y:6%;" href="#resilience" aria-label="Open Resilience"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Resilience</b><span>Recovery</span></span></a>
+          <a class="compass-node" style="--x:66%;--y:6%;" href="#kill-conditions" aria-label="Open Kill Conditions"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Kill</b><span>Conditions</span></span></a>
         </div>
       </section>
 
@@ -1410,41 +1397,17 @@
         <article class="pathway-module">
           <h3>Audralia turns the urban construct into a living city simulation before it becomes a real-world claim.</h3>
           <p>Audralia lets the visitor see a city as a living system where people need shelter, movement, water, energy, waste closure, food access, safety, and governance at the same time.</p>
-
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="audralia-platform" name="audralia-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="audralia-engineering" name="audralia-lens" type="radio">
-            <div class="lens-tabs">
-              <label class="lens-tab platform-tab" for="audralia-platform">Platform Lens</label>
-              <label class="lens-tab engineering-tab" for="audralia-engineering">Engineering Lens</label>
-            </div>
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="audralia-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="audralia-engineering">Engineering Lens</label></div>
             <div class="lens-body">
-              <div class="lens-copy platform-copy">
-                <b>Platform Lens</b>
-                <p>Audralia makes the city visible as a living organism. The visitor can see how one system pressures another and why urban readiness must be measured across life, infrastructure, and accountability.</p>
-                <ul class="lens-list">
-                  <li>The city is a human survival system.</li>
-                  <li>Every district depends on multiple support systems.</li>
-                  <li>Simulation can teach pressure; it does not validate deployment.</li>
-                </ul>
-              </div>
-              <div class="lens-copy engineering-copy">
-                <b>Engineering Lens</b>
-                <p>Operating object: bounded urban-system simulation. Inputs include district type, population load, housing capacity, mobility access, water demand, energy demand, waste load, food access, safety posture, governance state, and receipt status.</p>
-                <ul class="lens-list">
-                  <li>Outputs: urban readiness posture, pressure points, and system-learning state.</li>
-                  <li>Constraint: simulation visibility does not equal real-world city validation.</li>
-                  <li>Stop condition: Audralia cannot be used as proof of deployment readiness.</li>
-                </ul>
-              </div>
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Audralia makes the city visible as a living organism. The visitor can see how one system pressures another and why urban readiness must be measured across life, infrastructure, and accountability.</p><ul class="lens-list"><li>The city is a human survival system.</li><li>Every district depends on multiple support systems.</li><li>Simulation can teach pressure; it does not validate deployment.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: bounded urban-system simulation. Inputs include district type, population load, housing capacity, mobility access, water demand, energy demand, waste load, food access, safety posture, governance state, and receipt status.</p><ul class="lens-list"><li>Outputs: urban readiness posture, pressure points, and system-learning state.</li><li>Constraint: simulation visibility does not equal real-world city validation.</li><li>Stop condition: Audralia cannot be used as proof of deployment readiness.</li></ul></div>
             </div>
           </div>
-
           <div class="boundary">Boundary: Audralia may simulate urban life; Audralia may not prove real-world city deployment.</div>
-          <div class="section-return dual-return">
-            <a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a>
-            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return dual-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
@@ -1454,41 +1417,17 @@
         <article class="pathway-module">
           <h3>City form determines whether people, resources, services, and risk can move coherently.</h3>
           <p>A city is more than buildings. Its shape controls access, distance, pressure, crowding, service delivery, and emergency response.</p>
-
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="city-platform" name="city-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="city-engineering" name="city-lens" type="radio">
-            <div class="lens-tabs">
-              <label class="lens-tab platform-tab" for="city-platform">Platform Lens</label>
-              <label class="lens-tab engineering-tab" for="city-engineering">Engineering Lens</label>
-            </div>
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="city-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="city-engineering">Engineering Lens</label></div>
             <div class="lens-body">
-              <div class="lens-copy platform-copy">
-                <b>Platform Lens</b>
-                <p>City form shapes daily life. A city may look developed, but if its services are too far, its districts are fragmented, or its emergency routes fail, the form is not carrying life well.</p>
-                <ul class="lens-list">
-                  <li>Buildings do not create a city by themselves.</li>
-                  <li>Distance and access shape lived experience.</li>
-                  <li>Public space and emergency access matter as much as density.</li>
-                </ul>
-              </div>
-              <div class="lens-copy engineering-copy">
-                <b>Engineering Lens</b>
-                <p>Operating object: urban form layer. Inputs include land use, density, district spacing, service radius, road/grid structure, utility corridors, public space, and emergency access.</p>
-                <ul class="lens-list">
-                  <li>Outputs: coherent form, stressed form, fragmented form, or invalid form.</li>
-                  <li>Constraint: layout must support people, utilities, movement, and emergency response.</li>
-                  <li>Stop condition: visual density cannot be treated as livability.</li>
-                </ul>
-              </div>
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>City form shapes daily life. A city may look developed, but if its services are too far, its districts are fragmented, or its emergency routes fail, the form is not carrying life well.</p><ul class="lens-list"><li>Buildings do not create a city by themselves.</li><li>Distance and access shape lived experience.</li><li>Public space and emergency access matter as much as density.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: urban form layer. Inputs include land use, density, district spacing, service radius, road/grid structure, utility corridors, public space, and emergency access.</p><ul class="lens-list"><li>Outputs: coherent form, stressed form, fragmented form, or invalid form.</li><li>Constraint: layout must support people, utilities, movement, and emergency response.</li><li>Stop condition: visual density cannot be treated as livability.</li></ul></div>
             </div>
           </div>
-
           <div class="boundary">Boundary: visual density is not livability.</div>
-          <div class="section-return dual-return">
-            <a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a>
-            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return dual-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
@@ -1498,41 +1437,17 @@
         <article class="pathway-module">
           <h3>Housing is not only shelter; it is the first urban stability layer.</h3>
           <p>A city fails when people cannot live safely inside it. Housing links dignity, affordability, infrastructure demand, neighborhood stability, and public trust.</p>
-
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="housing-platform" name="housing-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="housing-engineering" name="housing-lens" type="radio">
-            <div class="lens-tabs">
-              <label class="lens-tab platform-tab" for="housing-platform">Platform Lens</label>
-              <label class="lens-tab engineering-tab" for="housing-engineering">Engineering Lens</label>
-            </div>
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="housing-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="housing-engineering">Engineering Lens</label></div>
             <div class="lens-body">
-              <div class="lens-copy platform-copy">
-                <b>Platform Lens</b>
-                <p>Housing is where the city becomes personal. People need safe, affordable, maintained places to live before any urban model can claim readiness.</p>
-                <ul class="lens-list">
-                  <li>Units are not enough without safety and access.</li>
-                  <li>Housing pressure can destabilize the whole city.</li>
-                  <li>Affordability and displacement belong inside the readiness map.</li>
-                </ul>
-              </div>
-              <div class="lens-copy engineering-copy">
-                <b>Engineering Lens</b>
-                <p>Operating object: housing capacity layer. Inputs include population, unit count, occupancy, affordability band, utility access, structural safety, maintenance load, and displacement pressure.</p>
-                <ul class="lens-list">
-                  <li>Outputs: housing readiness, shortage, stress, or failure state.</li>
-                  <li>Constraint: housing must connect to utilities, mobility, safety, and affordability.</li>
-                  <li>Stop condition: units do not equal livability.</li>
-                </ul>
-              </div>
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Housing is where the city becomes personal. People need safe, affordable, maintained places to live before any urban model can claim readiness.</p><ul class="lens-list"><li>Units are not enough without safety and access.</li><li>Housing pressure can destabilize the whole city.</li><li>Affordability and displacement belong inside the readiness map.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: housing capacity layer. Inputs include population, unit count, occupancy, affordability band, utility access, structural safety, maintenance load, and displacement pressure.</p><ul class="lens-list"><li>Outputs: housing readiness, shortage, stress, or failure state.</li><li>Constraint: housing must connect to utilities, mobility, safety, and affordability.</li><li>Stop condition: units do not equal livability.</li></ul></div>
             </div>
           </div>
-
           <div class="boundary">Boundary: units do not equal livability without access, safety, utilities, and affordability.</div>
-          <div class="section-return dual-return">
-            <a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a>
-            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return dual-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
@@ -1542,41 +1457,17 @@
         <article class="pathway-module">
           <h3>Mobility decides whether a city can function without trapping its people.</h3>
           <p>A city is not coherent if people cannot reach work, food, school, services, community, and safety.</p>
-
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="mobility-platform" name="mobility-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="mobility-engineering" name="mobility-lens" type="radio">
-            <div class="lens-tabs">
-              <label class="lens-tab platform-tab" for="mobility-platform">Platform Lens</label>
-              <label class="lens-tab engineering-tab" for="mobility-engineering">Engineering Lens</label>
-            </div>
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="mobility-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="mobility-engineering">Engineering Lens</label></div>
             <div class="lens-body">
-              <div class="lens-copy platform-copy">
-                <b>Platform Lens</b>
-                <p>Mobility is the circulatory system of the urban construct. Roads alone are not mobility; people must be able to reach what life requires.</p>
-                <ul class="lens-list">
-                  <li>Access matters more than road presence.</li>
-                  <li>Emergency routes must remain functional.</li>
-                  <li>Pedestrian, transit, freight, and service access all shape readiness.</li>
-                </ul>
-              </div>
-              <div class="lens-copy engineering-copy">
-                <b>Engineering Lens</b>
-                <p>Operating object: mobility access layer. Inputs include trip demand, road capacity, pedestrian access, transit access, freight access, emergency routes, travel time, congestion, and accessibility.</p>
-                <ul class="lens-list">
-                  <li>Outputs: mobility-ready, mobility-stressed, access-limited, or gridlocked state.</li>
-                  <li>Constraint: mobility must serve people, goods, services, and emergencies.</li>
-                  <li>Stop condition: road presence is not mobility success.</li>
-                </ul>
-              </div>
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Mobility is the circulatory system of the urban construct. Roads alone are not mobility; people must be able to reach what life requires.</p><ul class="lens-list"><li>Access matters more than road presence.</li><li>Emergency routes must remain functional.</li><li>Pedestrian, transit, freight, and service access all shape readiness.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: mobility access layer. Inputs include trip demand, road capacity, pedestrian access, transit access, freight access, emergency routes, travel time, congestion, and accessibility.</p><ul class="lens-list"><li>Outputs: mobility-ready, mobility-stressed, access-limited, or gridlocked state.</li><li>Constraint: mobility must serve people, goods, services, and emergencies.</li><li>Stop condition: road presence is not mobility success.</li></ul></div>
             </div>
           </div>
-
           <div class="boundary">Boundary: road presence is not mobility success.</div>
-          <div class="section-return dual-return">
-            <a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a>
-            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return dual-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
@@ -1586,41 +1477,17 @@
         <article class="pathway-module">
           <h3>Urban water must support people before, during, and after pressure events.</h3>
           <p>A city depends on clean water, pressure, storage, treatment, drainage, reuse, and trust.</p>
-
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="water-platform" name="water-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="water-engineering" name="water-lens" type="radio">
-            <div class="lens-tabs">
-              <label class="lens-tab platform-tab" for="water-platform">Platform Lens</label>
-              <label class="lens-tab engineering-tab" for="water-engineering">Engineering Lens</label>
-            </div>
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="water-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="water-engineering">Engineering Lens</label></div>
             <div class="lens-body">
-              <div class="lens-copy platform-copy">
-                <b>Platform Lens</b>
-                <p>Urban water is a public stability test. Access alone is not enough if quality, pressure, storage, drainage, and failure planning are weak.</p>
-                <ul class="lens-list">
-                  <li>Water supports homes, hospitals, food, safety, and sanitation.</li>
-                  <li>Pressure events reveal weak systems.</li>
-                  <li>Reuse and storage must remain bounded by water-quality rules.</li>
-                </ul>
-              </div>
-              <div class="lens-copy engineering-copy">
-                <b>Engineering Lens</b>
-                <p>Operating object: urban water layer. Inputs include source water, demand, pressure, treatment capacity, storage, leakage, drainage, reuse potential, and water-quality boundary.</p>
-                <ul class="lens-list">
-                  <li>Outputs: water-ready, water-stressed, contamination-risk, or shortage state.</li>
-                  <li>Constraint: access must be evaluated with quality, pressure, storage, and failure planning.</li>
-                  <li>Stop condition: water access is not water security.</li>
-                </ul>
-              </div>
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Urban water is a public stability test. Access alone is not enough if quality, pressure, storage, drainage, and failure planning are weak.</p><ul class="lens-list"><li>Water supports homes, hospitals, food, safety, and sanitation.</li><li>Pressure events reveal weak systems.</li><li>Reuse and storage must remain bounded by water-quality rules.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: urban water layer. Inputs include source water, demand, pressure, treatment capacity, storage, leakage, drainage, reuse potential, and water-quality boundary.</p><ul class="lens-list"><li>Outputs: water-ready, water-stressed, contamination-risk, or shortage state.</li><li>Constraint: access must be evaluated with quality, pressure, storage, and failure planning.</li><li>Stop condition: water access is not water security.</li></ul></div>
             </div>
           </div>
-
           <div class="boundary">Boundary: water access is not water security without quality, pressure, storage, and failure planning.</div>
-          <div class="section-return dual-return">
-            <a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a>
-            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return dual-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
@@ -1630,41 +1497,17 @@
         <article class="pathway-module">
           <h3>Urban energy must support daily life and emergency continuity.</h3>
           <p>Homes, hospitals, communications, water systems, transit, food storage, and safety all depend on energy continuity.</p>
-
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="energy-platform" name="energy-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="energy-engineering" name="energy-lens" type="radio">
-            <div class="lens-tabs">
-              <label class="lens-tab platform-tab" for="energy-platform">Platform Lens</label>
-              <label class="lens-tab engineering-tab" for="energy-engineering">Engineering Lens</label>
-            </div>
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="energy-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="energy-engineering">Engineering Lens</label></div>
             <div class="lens-body">
-              <div class="lens-copy platform-copy">
-                <b>Platform Lens</b>
-                <p>Energy is what keeps the city awake. But availability is not resilience unless critical loads can survive stress, outages, and recovery windows.</p>
-                <ul class="lens-list">
-                  <li>Critical load continuity matters.</li>
-                  <li>Storage and backup must be mapped to real demand.</li>
-                  <li>Energy failures cascade into water, food, safety, and mobility.</li>
-                </ul>
-              </div>
-              <div class="lens-copy engineering-copy">
-                <b>Engineering Lens</b>
-                <p>Operating object: urban energy layer. Inputs include load profile, peak demand, critical load, grid dependency, storage, backup, distributed generation, outage tolerance, and closure stability.</p>
-                <ul class="lens-list">
-                  <li>Outputs: energy-ready, peak-stressed, outage-risk, or continuity-failure state.</li>
-                  <li>Constraint: resilience requires critical-load continuity.</li>
-                  <li>Stop condition: power access is not energy resilience.</li>
-                </ul>
-              </div>
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Energy is what keeps the city awake. Availability is not resilience unless critical loads can survive stress, outages, and recovery windows.</p><ul class="lens-list"><li>Critical load continuity matters.</li><li>Storage and backup must be mapped to real demand.</li><li>Energy failures cascade into water, food, safety, and mobility.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: urban energy layer. Inputs include load profile, peak demand, critical load, grid dependency, storage, backup, distributed generation, outage tolerance, and closure stability.</p><ul class="lens-list"><li>Outputs: energy-ready, peak-stressed, outage-risk, or continuity-failure state.</li><li>Constraint: resilience requires critical-load continuity.</li><li>Stop condition: power access is not energy resilience.</li></ul></div>
             </div>
           </div>
-
           <div class="boundary">Boundary: power availability is not resilience without critical-load continuity.</div>
-          <div class="section-return dual-return">
-            <a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a>
-            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return dual-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
@@ -1674,41 +1517,17 @@
         <article class="pathway-module">
           <h3>A city is not clean because waste leaves the curb.</h3>
           <p>Urban waste becomes honest when the city can account for where material goes after collection.</p>
-
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="waste-platform" name="waste-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="waste-engineering" name="waste-lens" type="radio">
-            <div class="lens-tabs">
-              <label class="lens-tab platform-tab" for="waste-platform">Platform Lens</label>
-              <label class="lens-tab engineering-tab" for="waste-engineering">Engineering Lens</label>
-            </div>
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="waste-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="waste-engineering">Engineering Lens</label></div>
             <div class="lens-body">
-              <div class="lens-copy platform-copy">
-                <b>Platform Lens</b>
-                <p>Collection is only the visible start. A city must know whether waste is captured, processed, inventoried, discharged, destroyed, or left unreconciled.</p>
-                <ul class="lens-list">
-                  <li>Collection is not closure.</li>
-                  <li>Waste failure often disappears from public view before it is solved.</li>
-                  <li>Closure requires receipts beyond the curb.</li>
-                </ul>
-              </div>
-              <div class="lens-copy engineering-copy">
-                <b>Engineering Lens</b>
-                <p>Operating object: urban waste layer. Inputs include waste stream, hazardous fraction, collection route, transfer point, processing path, discharge, inventory, byproducts, and closure receipt.</p>
-                <ul class="lens-list">
-                  <li>Outputs: waste-ready, collection-only, closure-risk, or unreconciled state.</li>
-                  <li>Constraint: waste must remain accountable after collection.</li>
-                  <li>Stop condition: collection is not closure.</li>
-                </ul>
-              </div>
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Collection is only the visible start. A city must know whether waste is captured, processed, inventoried, discharged, destroyed, or left unreconciled.</p><ul class="lens-list"><li>Collection is not closure.</li><li>Waste failure often disappears from public view before it is solved.</li><li>Closure requires receipts beyond the curb.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: urban waste layer. Inputs include waste stream, hazardous fraction, collection route, transfer point, processing path, discharge, inventory, byproducts, and closure receipt.</p><ul class="lens-list"><li>Outputs: waste-ready, collection-only, closure-risk, or unreconciled state.</li><li>Constraint: waste must remain accountable after collection.</li><li>Stop condition: collection is not closure.</li></ul></div>
             </div>
           </div>
-
           <div class="boundary">Boundary: collection is not closure.</div>
-          <div class="section-return dual-return">
-            <a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a>
-            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return dual-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
@@ -1718,41 +1537,17 @@
         <article class="pathway-module">
           <h3>Food access determines whether urban life remains stable under pressure.</h3>
           <p>A city cannot be called stable if people cannot reach affordable, reliable, nutritious food.</p>
-
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="food-platform" name="food-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="food-engineering" name="food-lens" type="radio">
-            <div class="lens-tabs">
-              <label class="lens-tab platform-tab" for="food-platform">Platform Lens</label>
-              <label class="lens-tab engineering-tab" for="food-engineering">Engineering Lens</label>
-            </div>
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="food-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="food-engineering">Engineering Lens</label></div>
             <div class="lens-body">
-              <div class="lens-copy platform-copy">
-                <b>Platform Lens</b>
-                <p>Food access ties transportation, energy, refrigeration, land use, local supply, affordability, and emergency planning together.</p>
-                <ul class="lens-list">
-                  <li>Food presence is not food access.</li>
-                  <li>Affordability and distance matter.</li>
-                  <li>Cold storage and energy continuity shape food security.</li>
-                </ul>
-              </div>
-              <div class="lens-copy engineering-copy">
-                <b>Engineering Lens</b>
-                <p>Operating object: urban food-access layer. Inputs include population, grocery access, food distribution, cold storage, delivery routes, local production, affordability, emergency stock, and energy dependency.</p>
-                <ul class="lens-list">
-                  <li>Outputs: food-ready, access-stressed, supply-fragile, or food-desert state.</li>
-                  <li>Constraint: food access requires distance, affordability, supply, and continuity.</li>
-                  <li>Stop condition: food presence is not food access.</li>
-                </ul>
-              </div>
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Food access ties transportation, energy, refrigeration, land use, local supply, affordability, and emergency planning together.</p><ul class="lens-list"><li>Food presence is not food access.</li><li>Affordability and distance matter.</li><li>Cold storage and energy continuity shape food security.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: urban food-access layer. Inputs include population, grocery access, food distribution, cold storage, delivery routes, local production, affordability, emergency stock, and energy dependency.</p><ul class="lens-list"><li>Outputs: food-ready, access-stressed, supply-fragile, or food-desert state.</li><li>Constraint: food access requires distance, affordability, supply, and continuity.</li><li>Stop condition: food presence is not food access.</li></ul></div>
             </div>
           </div>
-
           <div class="boundary">Boundary: food presence is not food access.</div>
-          <div class="section-return dual-return">
-            <a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a>
-            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return dual-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
@@ -1762,41 +1557,17 @@
         <article class="pathway-module">
           <h3>Public safety is the city’s ability to protect people before disorder becomes collapse.</h3>
           <p>Safety is not only enforcement. It includes lighting, emergency response, health access, fire readiness, infrastructure safety, disaster planning, and public trust.</p>
-
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="safety-platform" name="safety-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="safety-engineering" name="safety-lens" type="radio">
-            <div class="lens-tabs">
-              <label class="lens-tab platform-tab" for="safety-platform">Platform Lens</label>
-              <label class="lens-tab engineering-tab" for="safety-engineering">Engineering Lens</label>
-            </div>
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="safety-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="safety-engineering">Engineering Lens</label></div>
             <div class="lens-body">
-              <div class="lens-copy platform-copy">
-                <b>Platform Lens</b>
-                <p>A safe city is not merely controlled. It is prepared, lit, reachable, trusted, medically supported, and able to respond before pressure becomes collapse.</p>
-                <ul class="lens-list">
-                  <li>Safety includes prevention and response.</li>
-                  <li>Trust is part of public safety.</li>
-                  <li>Hazard exposure must be mapped before crisis.</li>
-                </ul>
-              </div>
-              <div class="lens-copy engineering-copy">
-                <b>Engineering Lens</b>
-                <p>Operating object: public-safety layer. Inputs include emergency response time, fire coverage, medical access, lighting, hazard exposure, communication, evacuation routes, incident frequency, and trust indicators.</p>
-                <ul class="lens-list">
-                  <li>Outputs: safety-ready, response-stressed, hazard-exposed, or public-risk state.</li>
-                  <li>Constraint: safety requires trust, response, and prevention.</li>
-                  <li>Stop condition: control is not safety.</li>
-                </ul>
-              </div>
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>A safe city is not merely controlled. It is prepared, lit, reachable, trusted, medically supported, and able to respond before pressure becomes collapse.</p><ul class="lens-list"><li>Safety includes prevention and response.</li><li>Trust is part of public safety.</li><li>Hazard exposure must be mapped before crisis.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: public-safety layer. Inputs include emergency response time, fire coverage, medical access, lighting, hazard exposure, communication, evacuation routes, incident frequency, and trust indicators.</p><ul class="lens-list"><li>Outputs: safety-ready, response-stressed, hazard-exposed, or public-risk state.</li><li>Constraint: safety requires trust, response, and prevention.</li><li>Stop condition: control is not safety.</li></ul></div>
             </div>
           </div>
-
           <div class="boundary">Boundary: control is not safety without trust, response, and prevention.</div>
-          <div class="section-return dual-return">
-            <a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a>
-            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return dual-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
@@ -1806,41 +1577,17 @@
         <article class="pathway-module">
           <h3>Governance is the layer that turns urban systems into accountable decisions.</h3>
           <p>Cities fail when no one can tell who is responsible, what decision was made, what rule applies, and what must happen next.</p>
-
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="governance-platform" name="governance-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="governance-engineering" name="governance-lens" type="radio">
-            <div class="lens-tabs">
-              <label class="lens-tab platform-tab" for="governance-platform">Platform Lens</label>
-              <label class="lens-tab engineering-tab" for="governance-engineering">Engineering Lens</label>
-            </div>
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="governance-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="governance-engineering">Engineering Lens</label></div>
             <div class="lens-body">
-              <div class="lens-copy platform-copy">
-                <b>Platform Lens</b>
-                <p>Governance makes the city accountable. A plan does not govern by itself. Governance requires authority, execution, budget, public responsibility, and audit.</p>
-                <ul class="lens-list">
-                  <li>Rules need responsible actors.</li>
-                  <li>Plans need execution paths.</li>
-                  <li>Public trust depends on accountability.</li>
-                </ul>
-              </div>
-              <div class="lens-copy engineering-copy">
-                <b>Engineering Lens</b>
-                <p>Operating object: urban governance layer. Inputs include authority, policy, enforcement mechanism, budget, public accountability, service obligation, compliance path, and audit record.</p>
-                <ul class="lens-list">
-                  <li>Outputs: governed, under-governed, fragmented, or noncompliant state.</li>
-                  <li>Constraint: governance requires authority, execution, accountability, and audit.</li>
-                  <li>Stop condition: a plan is not governance.</li>
-                </ul>
-              </div>
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Governance makes the city accountable. A plan does not govern by itself. Governance requires authority, execution, budget, public responsibility, and audit.</p><ul class="lens-list"><li>Rules need responsible actors.</li><li>Plans need execution paths.</li><li>Public trust depends on accountability.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: urban governance layer. Inputs include authority, policy, enforcement mechanism, budget, public accountability, service obligation, compliance path, and audit record.</p><ul class="lens-list"><li>Outputs: governed, under-governed, fragmented, or noncompliant state.</li><li>Constraint: governance requires authority, execution, accountability, and audit.</li><li>Stop condition: a plan is not governance.</li></ul></div>
             </div>
           </div>
-
           <div class="boundary">Boundary: a plan is not governance without authority, execution, accountability, and audit.</div>
-          <div class="section-return dual-return">
-            <a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a>
-            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return dual-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
@@ -1850,41 +1597,17 @@
         <article class="pathway-module">
           <h3>Resilience is the city’s ability to absorb pressure without hiding failure.</h3>
           <p>A resilient city prepares for outage, flood, heat, supply disruption, contamination, violence, displacement, and system overload.</p>
-
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="resilience-platform" name="resilience-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="resilience-engineering" name="resilience-lens" type="radio">
-            <div class="lens-tabs">
-              <label class="lens-tab platform-tab" for="resilience-platform">Platform Lens</label>
-              <label class="lens-tab engineering-tab" for="resilience-engineering">Engineering Lens</label>
-            </div>
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="resilience-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="resilience-engineering">Engineering Lens</label></div>
             <div class="lens-body">
-              <div class="lens-copy platform-copy">
-                <b>Platform Lens</b>
-                <p>Resilience is not optimism. It is the city’s ability to absorb pressure, recover, and tell the truth about what failed and what must be renewed.</p>
-                <ul class="lens-list">
-                  <li>Reserve capacity must be real.</li>
-                  <li>Recovery time must be mapped.</li>
-                  <li>Failure cascades must be visible before crisis.</li>
-                </ul>
-              </div>
-              <div class="lens-copy engineering-copy">
-                <b>Engineering Lens</b>
-                <p>Operating object: urban resilience layer. Inputs include critical systems, redundancy, reserve capacity, recovery time, dependency map, failure cascade, emergency plan, and receipt state.</p>
-                <ul class="lens-list">
-                  <li>Outputs: resilient, fragile, brittle, or cascade-risk state.</li>
-                  <li>Constraint: resilience requires tested reserve and recovery capacity.</li>
-                  <li>Stop condition: resilience cannot be claimed from optimism or appearance.</li>
-                </ul>
-              </div>
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Resilience is not optimism. It is the city’s ability to absorb pressure, recover, and tell the truth about what failed and what must be renewed.</p><ul class="lens-list"><li>Reserve capacity must be real.</li><li>Recovery time must be mapped.</li><li>Failure cascades must be visible before crisis.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: urban resilience layer. Inputs include critical systems, redundancy, reserve capacity, recovery time, dependency map, failure cascade, emergency plan, and receipt state.</p><ul class="lens-list"><li>Outputs: resilient, fragile, brittle, or cascade-risk state.</li><li>Constraint: resilience requires tested reserve and recovery capacity.</li><li>Stop condition: resilience cannot be claimed from optimism or appearance.</li></ul></div>
             </div>
           </div>
-
           <div class="boundary">Boundary: resilience is not optimism. It requires tested reserve and recovery capacity.</div>
-          <div class="section-return dual-return">
-            <a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a>
-            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return dual-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
@@ -1893,52 +1616,23 @@
         <h2 id="kill-title">Kill Conditions</h2>
         <article class="pathway-module">
           <h3>The urban claim stops when the city looks complete but cannot carry life.</h3>
-          <p>A beautiful city model is not enough. If people cannot live, move, drink, power, eat, discharge waste, stay safe, and trust governance inside it, the urban construct is not ready.</p>
-
+          <p>A beautiful skyline is not enough. If people cannot live, move, drink, power, eat, discharge waste, stay safe, and trust governance inside it, the urban construct is not ready.</p>
           <div class="lens-shell">
             <input class="lens-radio platform-radio" id="kill-platform" name="kill-lens" type="radio" checked>
             <input class="lens-radio engineering-radio" id="kill-engineering" name="kill-lens" type="radio">
-            <div class="lens-tabs">
-              <label class="lens-tab platform-tab" for="kill-platform">Platform Lens</label>
-              <label class="lens-tab engineering-tab" for="kill-engineering">Engineering Lens</label>
-            </div>
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="kill-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="kill-engineering">Engineering Lens</label></div>
             <div class="lens-body">
-              <div class="lens-copy platform-copy">
-                <b>Platform Lens</b>
-                <p>The urban construct must stop when appearance replaces livability. A city cannot claim readiness if its people, utilities, movement, food, safety, waste closure, or governance cannot hold.</p>
-                <ul class="lens-list">
-                  <li>Buildings are not a city.</li>
-                  <li>Density is not livability.</li>
-                  <li>Roads are not mobility.</li>
-                  <li>Collection is not waste closure.</li>
-                  <li>Power access is not energy resilience.</li>
-                  <li>Simulation is not validation.</li>
-                </ul>
-              </div>
-              <div class="lens-copy engineering-copy">
-                <b>Engineering Lens</b>
-                <p>Operating object: urban stop-rule list. Inputs include district map, population load, utility status, mobility status, water status, energy status, waste status, food status, safety status, governance status, receipts, and audit result.</p>
-                <ul class="lens-list">
-                  <li>Stop if visual completion replaces livability.</li>
-                  <li>Stop if infrastructure is assumed.</li>
-                  <li>Stop if failure is shifted to another system.</li>
-                  <li>Stop if receipts are missing.</li>
-                  <li>Stop if audit contradictions remain unresolved.</li>
-                </ul>
-              </div>
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>The urban construct must stop when appearance replaces livability. A city cannot claim readiness if its people, utilities, movement, food, safety, waste closure, or governance cannot hold.</p><ul class="lens-list"><li>Buildings are not a city.</li><li>Density is not livability.</li><li>Roads are not mobility.</li><li>Collection is not waste closure.</li><li>Power access is not energy resilience.</li><li>Simulation is not validation.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: urban stop-rule list. Inputs include district map, population load, utility status, mobility status, water status, energy status, waste status, food status, safety status, governance status, receipts, and audit result.</p><ul class="lens-list"><li>Stop if visual completion replaces livability.</li><li>Stop if infrastructure is assumed.</li><li>Stop if failure is shifted to another system.</li><li>Stop if receipts are missing.</li><li>Stop if audit contradictions remain unresolved.</li></ul></div>
             </div>
           </div>
-
           <div class="boundary">Boundary: stop if visual completion replaces livability, if infrastructure is assumed, if failure is shifted to another system, if receipts are missing, or if audit contradictions remain unresolved.</div>
-          <div class="section-return dual-return">
-            <a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a>
-            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
-          </div>
+          <div class="section-return dual-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
       <section class="final-band" id="final-lock" aria-label="Urban final lock">
-        <strong>The skyline is the visual surface. The construct is city-scale load.</strong>
+        <strong>The skyline gives the visitor a real horizon. The Frontier construct gives that horizon a test.</strong>
         <p>
           Urban Construct is the Frontier city-system pathway inside the story-world. It coordinates Energy, Water, Waste, Lattice, Governance, Food, Housing, Mobility, Public Safety, and Resilience without replacing category-specific science or claiming that appearance equals readiness.
         </p>
@@ -1954,58 +1648,62 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_URBAN_DALLAS_NIGHT_SKLINE_BACKDROP_RENEWAL_TNT_v2
-previous=FRONTIER_URBAN_CONSTRUCT_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1
-binding=FRONTIER_URBAN_DALLAS_NIGHT_SKLINE_BACKDROP_FINAL_PRECODE_v2
+FRONTIER_URBAN_DROPDOWN_NAV_DEPTH_SKYLINE_RENEWAL_TNT_v3
+previous=FRONTIER_URBAN_DALLAS_NIGHT_SKLINE_BACKDROP_RENEWAL_TNT_v2
+binding=FRONTIER_URBAN_DROPDOWN_NAV_DEPTH_SKYLINE_FINAL_PRECODE_BINDING_v3
 route=/explore/frontier/urban/
 page=frontier_urban_construct
 html=/explore/frontier/urban/index.html
 source_visual_authority=COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2
-design_reference=FRONTIER_URBAN_CONSTRUCT_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1
 source_symbol_authority=compassOrganicGem
-visual_authority_preserved=true
-dallas_inspired_night_skyline_backdrop=true
+dropdown_navigation=true
+dropdown_js=false
+route_menu_component=details_summary_css_only
+site_menu=true
+frontier_lanes_menu=true
+skyline_depth_layers=far_mid_front
+far_skyline_layer=true
+mid_skyline_layer=true
+front_shadow_layer=true
+dallas_inspired_skyline=true
 photographic_accuracy_claimed=false
-skyline_backdrop_css_only=true
-city_pressure_context=true
-urban_not_tourism=true
-runtime_static_first=true
-heavy_runtime=false
-javascript_added=false
+external_image=false
+generated_image=false
 canvas=false
 webgl=false
 graphic_box=false
-generated_image=false
-external_image=false
 particle_engine=false
-animated_traffic=false
-per_window_dom_lights=false
+javascript_added=false
+heavy_runtime=false
+urban_contextual_upgrade=true
+skyline_is_surface_load_is_city=true
+urban_system_pressure_thesis=true
+public_thesis=the_skyline_is_the_surface_the_load_is_the_city
+dallas_boundary=inspired_not_exact_not_photographic
+tourism_page=false
+real_estate_page=false
+skyline_gallery=false
 audralia_urban_first=true
-center_anchor=Urban_Construct
 pathways=Audralia_Urban,City_Form,Housing,Mobility,Water,Energy,Waste,Food,Public_Safety,Governance,Resilience,Kill_Conditions
-public_subject=urban_construct_city_systems_infrastructure_housing_mobility_water_energy_waste_food_public_safety_governance_resilience_receipts_audit_kill_conditions
 per_pathway_dual_lens=true
 platform_lens_per_pathway=true
 engineering_lens_per_pathway=true
-top_only_lens_toggle=false
-side_by_side_platform_engineering=false
+dual_return_under_every_pathway=true
 return_to_urban_orbit_under_every_pathway=true
 return_to_frontier_under_every_pathway=true
 return_to_frontier_route=/explore/frontier/
-urban_law=valid_urban_system_requires_people_housing_mobility_water_energy_waste_food_safety_governance_boundary_receipt_audit_path
-forbidden_collapse=buildings_as_city_density_as_livability_roads_as_mobility_collection_as_waste_closure_power_access_as_energy_resilience_water_access_as_water_security_food_presence_as_food_access_police_presence_as_public_safety_plan_as_governance_map_as_audit_survival_simulation_as_validation
-category_relation=urban_construct_coordinates_energy_water_waste_lattice_governance_food_without_replacing_category_specific_science
-audit_boundary=audit_failure_blocks_closure
-final_lock=skyline_is_visual_surface_construct_is_city_scale_load
+urban_owns=city_form,housing,mobility,urban_water_pressure,urban_energy_pressure,urban_waste_pressure,food_access,public_safety,governance,resilience,metropolitan_load,emergency_response_pressure,city_scale_consequence
+urban_does_not_own=water_science,energy_conversion,waste_no_away_accounting,frontier_lattice_page_authority,laws_authority,gauges_scoring,route_mutation,visual_pass_claims
+forbidden_collapses=skyline_as_city_readiness,buildings_as_city,density_as_livability,roads_as_mobility,power_access_as_energy_resilience,water_access_as_water_security,collection_as_waste_closure,food_presence_as_food_access,control_as_public_safety,plan_as_governance,optimism_as_resilience,simulation_as_validation,dallas_skyline_as_tourism_page,visual_depth_as_proof
 static_page_usable_without_js=true
 streaming=false
 visual_pass_claimed=false
-deploy_marker=FRONTIER_URBAN_DALLAS_NIGHT_SKLINE_BACKDROP_DEPLOY_MARKER_v2
+deploy_marker=FRONTIER_URBAN_DROPDOWN_NAV_DEPTH_SKYLINE_DEPLOY_MARKER_v3
       </template>
     </main>
 
     <footer>
-      FRONTIER_URBAN_DALLAS_NIGHT_SKLINE_BACKDROP_RENEWAL_TNT_v2 · Urban Construct · Dallas-inspired night skyline · City-scale pressure field.
+      FRONTIER_URBAN_DROPDOWN_NAV_DEPTH_SKYLINE_RENEWAL_TNT_v3 · Urban Construct · CSS-only dropdown navigation · Dallas-inspired depth skyline.
     </footer>
   </div>
 </body>

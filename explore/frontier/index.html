@@ -4,13 +4,16 @@
   lang="en"
   data-route="/explore/frontier/"
   data-page="explore-frontier"
-  data-version="FUSION-G5"
-  data-contract="FRONTIER_VISIBLE_PULSE_FIELD_CORRECTION_TNT_v5"
-  data-previous-contract="FRONTIER_LIVE_SIMULATION_FIELD_BUTTON_PULSE_CONTEXT_RENEWAL_TNT_v4"
-  data-source-binding="FRONTIER_VISIBLE_PULSE_FIELD_CORRECTION_v5"
-  data-renewal-standard="VISIBLE_PULSE_REQUIRES_DEDICATED_EMISSION_LAYERS_NOT_SUBTLE_SHADOW_VALUES"
+  data-version="FUSION-G6"
+  data-contract="FRONTIER_EXPLORER_INDEX_DROPDOWN_LEGACY_ALIGNMENT_ANIMATION_PRESERVATION_TNT_v1"
+  data-previous-contract="FRONTIER_VISIBLE_PULSE_FIELD_CORRECTION_TNT_v5"
+  data-source-binding="FRONTIER_EXPLORER_INDEX_DROPDOWN_LEGACY_ALIGNMENT_ANIMATION_PRESERVATION_BINDING_v1"
+  data-renewal-standard="DROPDOWN_NAV_AND_LEGACY_ROUTE_ALIGNMENT_WITH_ANIMATION_PRESERVATION"
   data-parent-route="/explore/"
-  data-frontier-root="/frontier/"
+  data-frontier-root="/explore/frontier/"
+  data-legacy-frontier-root="/frontier/"
+  data-legacy-frontier-root-active-return="false"
+  data-active-frontier-route="/explore/frontier/"
   data-child-lane-base="/explore/frontier/"
   data-role="frontier-live-simulation-field"
   data-route-distinction="served-at-explore-frontier-public-facing-as-frontier"
@@ -19,15 +22,24 @@
   data-live-simulation-field="true"
   data-frontier-science-simulation="true"
   data-static-lane-selector="superseded"
+  data-crowded-top-bubble-nav="superseded"
+  data-dropdown-navigation="active"
+  data-site-menu-dropdown="active"
+  data-frontier-lanes-dropdown="active"
   data-radiant-context-preserved="true"
-  data-visible-copy-preserved-from-v4="true"
+  data-visible-copy-preserved-from-v5="true"
   data-graphic-premise-preserved="true"
-  data-motion-system-renewed="true"
+  data-motion-system-preserved="true"
+  data-animation-preserved="true"
+  data-live-simulation-field-preserved="true"
+  data-figure-eight-animation-preserved="true"
   data-visible-pulse-emitters="true"
-  data-button-pulse-renewed="true"
-  data-card-pulse-renewed="true"
-  data-node-emitter-pulse-renewed="true"
+  data-button-pulse-preserved="true"
+  data-card-pulse-preserved="true"
+  data-node-emitter-pulse-preserved="true"
   data-return-to-frontier="true"
+  data-return-to-frontier-route="/explore/frontier/"
+  data-return-to-frontier-corrected="true"
   data-close-fusion-star-source="true"
   data-star-distance="near-contact"
   data-node-eclipses-star="true"
@@ -128,7 +140,8 @@
     a{color:inherit;text-decoration:none}
 
     a:focus-visible,
-    button:focus-visible{
+    button:focus-visible,
+    summary:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
     }
@@ -158,7 +171,7 @@
     .topbar{
       display:grid;
       grid-template-columns:auto 1fr;
-      align-items:center;
+      align-items:start;
       gap:18px;
       padding:12px 0 18px;
     }
@@ -218,10 +231,12 @@
       display:flex;
       flex-wrap:wrap;
       justify-content:flex-end;
-      gap:.48rem;
+      gap:.6rem;
     }
 
     .nav a,
+    .route-menu summary,
+    .route-menu-link,
     .support-routes a,
     .button{
       --button-pulse-duration:9.8s;
@@ -236,6 +251,8 @@
     }
 
     .nav a::before,
+    .route-menu summary::before,
+    .route-menu-link::before,
     .support-routes a::before,
     .button::before{
       content:"";
@@ -326,16 +343,171 @@
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
-    .nav a:nth-child(1){--button-pulse-duration:12.4s;--button-pulse-delay:-2.1s;--button-pulse-peak:.32;--button-pulse-mid:.18}
-    .nav a:nth-child(2){--button-pulse-duration:10.7s;--button-pulse-delay:-6.4s;--button-pulse-peak:.36;--button-pulse-mid:.20}
-    .nav a:nth-child(3){--button-pulse-duration:13.2s;--button-pulse-delay:-4.8s;--button-pulse-peak:.30;--button-pulse-mid:.16}
-    .nav a:nth-child(4){--button-pulse-duration:9.8s;--button-pulse-delay:-1.6s;--button-pulse-peak:.46;--button-pulse-mid:.24}
-    .nav a:nth-child(5){--button-pulse-duration:8.6s;--button-pulse-delay:-5.2s;--button-pulse-peak:.50;--button-pulse-mid:.26}
-    .nav a:nth-child(6){--button-pulse-duration:11.7s;--button-pulse-delay:-7.4s;--button-pulse-peak:.38;--button-pulse-mid:.20}
-    .nav a:nth-child(7){--button-pulse-duration:14.1s;--button-pulse-delay:-3.3s;--button-pulse-peak:.32;--button-pulse-mid:.17}
-    .nav a:nth-child(8){--button-pulse-duration:10.2s;--button-pulse-delay:-8.5s;--button-pulse-peak:.36;--button-pulse-mid:.19}
-    .nav a:nth-child(9){--button-pulse-duration:12.9s;--button-pulse-delay:-.8s;--button-pulse-peak:.31;--button-pulse-mid:.17}
-    .nav a:nth-child(10){--button-pulse-duration:9.3s;--button-pulse-delay:-4.1s;--button-pulse-peak:.44;--button-pulse-mid:.24}
+    .route-menu{
+      position:relative;
+      min-width:min(16rem,100%);
+    }
+
+    .route-menu summary{
+      list-style:none;
+      cursor:pointer;
+      min-height:2.6rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:.75rem;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:999px;
+      padding:.62rem .85rem;
+      color:rgba(241,246,255,.88);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(141,216,255,.10),transparent 70%),
+        rgba(255,255,255,.045);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.075em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+      backdrop-filter:blur(7px);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .route-menu summary::-webkit-details-marker{display:none}
+
+    .route-menu summary::after{
+      content:"";
+      width:.55rem;
+      height:.55rem;
+      border-right:2px solid rgba(230,238,255,.82);
+      border-bottom:2px solid rgba(230,238,255,.82);
+      transform:rotate(45deg) translateY(-.12rem);
+      transition:transform .18s ease,border-color .18s ease;
+    }
+
+    .route-menu[open] summary{
+      border-color:rgba(243,200,111,.70);
+      color:rgba(255,244,216,.98);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(243,200,111,.20),transparent 72%),
+        radial-gradient(circle at 86% 50%,rgba(141,216,255,.16),transparent 70%),
+        linear-gradient(180deg,rgba(10,19,44,.84),rgba(4,9,20,.88));
+      box-shadow:
+        0 0 1.5rem rgba(243,200,111,.14),
+        0 0 2.6rem rgba(141,216,255,.10),
+        inset 0 1px 0 rgba(255,255,255,.12);
+    }
+
+    .route-menu[open] summary::after{
+      transform:rotate(225deg) translateY(-.08rem);
+      border-color:rgba(243,200,111,.95);
+    }
+
+    .route-menu-panel{
+      position:absolute;
+      right:0;
+      top:calc(100% + .55rem);
+      z-index:40;
+      width:min(28rem,calc(100vw - 2rem));
+      padding:.78rem;
+      border:1px solid rgba(141,216,255,.28);
+      border-radius:1.1rem;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(141,216,255,.20),transparent 15rem),
+        radial-gradient(circle at 96% 25%,rgba(243,200,111,.11),transparent 15rem),
+        linear-gradient(180deg,rgba(5,13,34,.97),rgba(3,7,18,.98));
+      box-shadow:
+        0 0 2.5rem rgba(141,216,255,.16),
+        0 1.4rem 3.4rem rgba(0,0,0,.42),
+        inset 0 1px 0 rgba(255,255,255,.09);
+    }
+
+    .route-menu-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.5rem;
+    }
+
+    .route-menu-link{
+      min-height:2.35rem;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(141,216,255,.20);
+      border-radius:.86rem;
+      padding:.5rem .62rem;
+      color:rgba(236,244,255,.88);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(141,216,255,.10),transparent 72%),
+        linear-gradient(180deg,rgba(255,255,255,.048),rgba(255,255,255,.020));
+      font-size:.64rem;
+      font-weight:950;
+      letter-spacing:.06em;
+      text-align:center;
+      text-transform:uppercase;
+      box-shadow:0 0 .85rem rgba(141,216,255,.08),inset 0 1px 0 rgba(255,255,255,.07);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .route-menu-link:hover,
+    .route-menu-link:focus-visible,
+    .route-menu summary:hover,
+    .route-menu summary:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.56);
+      color:rgba(255,244,216,.98);
+      outline:none;
+    }
+
+    .route-menu-link:hover,
+    .route-menu-link:focus-visible{
+      background:
+        radial-gradient(circle at 50% 0%,rgba(243,200,111,.14),transparent 72%),
+        linear-gradient(180deg,rgba(141,216,255,.075),rgba(255,255,255,.028));
+      box-shadow:
+        0 0 1.35rem rgba(243,200,111,.13),
+        0 0 1.35rem rgba(141,216,255,.12),
+        inset 0 1px 0 rgba(255,255,255,.10);
+    }
+
+    .route-menu-link[aria-current="page"]{
+      color:#060811;
+      border-color:rgba(243,200,111,.88);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(141,216,255,.24),transparent 70%),
+        linear-gradient(135deg,#fff2a8,#f3c86f);
+      box-shadow:
+        0 0 1.6rem rgba(141,216,255,.20),
+        0 0 1rem rgba(243,200,111,.22);
+    }
+
+    .nav a:nth-child(1),
+    .route-menu:nth-child(1) summary{
+      --button-pulse-duration:12.4s;
+      --button-pulse-delay:-2.1s;
+      --button-pulse-peak:.32;
+      --button-pulse-mid:.18;
+    }
+
+    .nav a:nth-child(2),
+    .route-menu:nth-child(2) summary{
+      --button-pulse-duration:10.7s;
+      --button-pulse-delay:-6.4s;
+      --button-pulse-peak:.36;
+      --button-pulse-mid:.20;
+    }
+
+    .route-menu-link:nth-child(1){--button-pulse-duration:12.4s;--button-pulse-delay:-2.1s;--button-pulse-peak:.32;--button-pulse-mid:.18}
+    .route-menu-link:nth-child(2){--button-pulse-duration:10.7s;--button-pulse-delay:-6.4s;--button-pulse-peak:.36;--button-pulse-mid:.20}
+    .route-menu-link:nth-child(3){--button-pulse-duration:13.2s;--button-pulse-delay:-4.8s;--button-pulse-peak:.30;--button-pulse-mid:.16}
+    .route-menu-link:nth-child(4){--button-pulse-duration:9.8s;--button-pulse-delay:-1.6s;--button-pulse-peak:.46;--button-pulse-mid:.24}
+    .route-menu-link:nth-child(5){--button-pulse-duration:8.6s;--button-pulse-delay:-5.2s;--button-pulse-peak:.50;--button-pulse-mid:.26}
+    .route-menu-link:nth-child(6){--button-pulse-duration:11.7s;--button-pulse-delay:-7.4s;--button-pulse-peak:.38;--button-pulse-mid:.20}
+    .route-menu-link:nth-child(7){--button-pulse-duration:14.1s;--button-pulse-delay:-3.3s;--button-pulse-peak:.32;--button-pulse-mid:.17}
+    .route-menu-link:nth-child(8){--button-pulse-duration:10.2s;--button-pulse-delay:-8.5s;--button-pulse-peak:.36;--button-pulse-mid:.19}
+    .route-menu-link:nth-child(9){--button-pulse-duration:12.9s;--button-pulse-delay:-.8s;--button-pulse-peak:.31;--button-pulse-mid:.17}
+    .route-menu-link:nth-child(10){--button-pulse-duration:9.3s;--button-pulse-delay:-4.1s;--button-pulse-peak:.44;--button-pulse-mid:.24}
+    .route-menu-link:nth-child(11){--button-pulse-duration:11.4s;--button-pulse-delay:-6.3s;--button-pulse-peak:.38;--button-pulse-mid:.19}
+    .route-menu-link:nth-child(12){--button-pulse-duration:13.0s;--button-pulse-delay:-2.7s;--button-pulse-peak:.34;--button-pulse-mid:.18}
 
     .nav a:hover,
     .nav a:focus-visible{
@@ -1336,6 +1508,11 @@
       }
 
       .nav{justify-content:flex-start}
+
+      .route-menu-panel{
+        left:0;
+        right:auto;
+      }
     }
 
     @media (max-width:720px){
@@ -1349,6 +1526,25 @@
 
       .actions{display:grid}
       .button{width:100%}
+
+      .nav{
+        display:grid;
+        grid-template-columns:1fr;
+      }
+
+      .route-menu{
+        width:100%;
+      }
+
+      .route-menu-panel{
+        position:static;
+        margin-top:.45rem;
+        width:100%;
+      }
+
+      .route-menu-grid{
+        grid-template-columns:1fr;
+      }
 
       .frontier-orbit-stage{
         min-height:46rem;
@@ -1458,6 +1654,8 @@
       }
 
       .nav a,
+      .route-menu summary,
+      .route-menu-link,
       .support-routes a,
       .button{
         --button-pulse-peak:.34;
@@ -1509,6 +1707,10 @@
 
       .nav a,
       .nav a::before,
+      .route-menu summary,
+      .route-menu summary::before,
+      .route-menu-link,
+      .route-menu-link::before,
       .support-routes a,
       .support-routes a::before,
       .button,
@@ -1545,17 +1747,43 @@
         </span>
       </a>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/laws/">Laws</a>
-        <a href="/frontier/">Frontier</a>
-        <a href="/showroom/globe/">Interactive Narrative</a>
-        <a href="/nine-summits/universe/">Universe</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/products/">Products</a>
-        <a href="/gauges/">Gauges</a>
+      <nav class="nav" aria-label="Reusable route menus">
+        <details class="route-menu">
+          <summary>Site Menu</summary>
+          <div class="route-menu-panel">
+            <div class="route-menu-grid">
+              <a class="route-menu-link" href="/">Compass</a>
+              <a class="route-menu-link" href="/door/">Door</a>
+              <a class="route-menu-link" href="/home/">Home</a>
+              <a class="route-menu-link" href="/laws/">Laws</a>
+              <a class="route-menu-link" href="/showroom/globe/">Interactive Narrative</a>
+              <a class="route-menu-link" href="/nine-summits/universe/">Universe</a>
+              <a class="route-menu-link" href="/showroom/">Showroom</a>
+              <a class="route-menu-link" href="/products/">Products</a>
+              <a class="route-menu-link" href="/gauges/">Gauges</a>
+            </div>
+          </div>
+        </details>
+
+        <details class="route-menu">
+          <summary>Frontier Lanes</summary>
+          <div class="route-menu-panel">
+            <div class="route-menu-grid">
+              <a class="route-menu-link" href="/explore/frontier/" aria-current="page">Frontier</a>
+              <a class="route-menu-link" href="/explore/frontier/energy/">Energy</a>
+              <a class="route-menu-link" href="/explore/frontier/water/">Water</a>
+              <a class="route-menu-link" href="/explore/frontier/waste/">Waste</a>
+              <a class="route-menu-link" href="/explore/frontier/lattice/">Lattice</a>
+              <a class="route-menu-link" href="/explore/frontier/urban/">Urban</a>
+              <a class="route-menu-link" href="/explore/frontier/infrastructure/">Infrastructure</a>
+              <a class="route-menu-link" href="/explore/frontier/trajectory/">Trajectory</a>
+              <a class="route-menu-link" href="/explore/frontier/vision/">Vision</a>
+              <a class="route-menu-link" href="/explore/frontier/closed-loop/">Closed Loop</a>
+              <a class="route-menu-link" href="/explore/frontier/manual/">Manual</a>
+              <a class="route-menu-link" href="/explore/frontier/shimmer/">Shimmer</a>
+            </div>
+          </div>
+        </details>
       </nav>
     </header>
 
@@ -1577,7 +1805,7 @@
 
         <div class="actions">
           <a class="button gold" href="#frontier-field">Enter the Simulation Field</a>
-          <a class="button" href="/frontier/">Return to Frontier</a>
+          <a class="button" href="/explore/frontier/">Return to Frontier</a>
           <a class="button violet" href="/showroom/globe/">Enter Interactive Narrative</a>
           <a class="button" href="/nine-summits/universe/">Open Universe</a>
           <a class="button" href="/gauges/">Check Gauges</a>
@@ -1608,7 +1836,7 @@
             <div class="support-routes" aria-label="Support routes">
               <a class="primary" href="/laws/">Laws</a>
               <a href="/">Compass</a>
-              <a href="/frontier/">Frontier</a>
+              <a href="/explore/frontier/">Frontier</a>
               <a href="/showroom/globe/">Interactive</a>
               <a href="/nine-summits/universe/">Universe</a>
               <a href="/showroom/">Showroom</a>
@@ -1777,10 +2005,10 @@
             <span class="open-path">Open Compass</span>
           </a>
 
-          <a class="return-card" href="/frontier/">
+          <a class="return-card" href="/explore/frontier/">
             <b>Frontier</b>
-            <strong>Public expansion root.</strong>
-            <span>The public Frontier page remains the outward edge while this page serves the live simulation field.</span>
+            <strong>Public simulation root.</strong>
+            <span>The Frontier page remains the active served live simulation field and public-facing edge.</span>
             <span class="open-path">Return to Frontier</span>
           </a>
 
@@ -1835,7 +2063,7 @@
         </p>
 
         <div class="actions">
-          <a class="button gold" href="/frontier/">Return to Frontier</a>
+          <a class="button gold" href="/explore/frontier/">Return to Frontier</a>
           <a class="button" href="/laws/">Open Laws</a>
           <a class="button violet" href="/showroom/globe/">Enter Interactive Narrative</a>
           <a class="button" href="/nine-summits/universe/">Open Universe</a>
@@ -1844,10 +2072,10 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_VISIBLE_PULSE_FIELD_CORRECTION_TNT_v5
-previous=FRONTIER_LIVE_SIMULATION_FIELD_BUTTON_PULSE_CONTEXT_RENEWAL_TNT_v4
-binding=FRONTIER_VISIBLE_PULSE_FIELD_CORRECTION_v5
-renewal_standard=visible_pulse_requires_dedicated_emission_layers_not_subtle_shadow_values
+FRONTIER_EXPLORER_INDEX_DROPDOWN_LEGACY_ALIGNMENT_ANIMATION_PRESERVATION_TNT_v1
+previous=FRONTIER_VISIBLE_PULSE_FIELD_CORRECTION_TNT_v5
+binding=FRONTIER_EXPLORER_INDEX_DROPDOWN_LEGACY_ALIGNMENT_ANIMATION_PRESERVATION_BINDING_v1
+renewal_standard=dropdown_nav_and_legacy_route_alignment_with_animation_preservation
 route=/explore/frontier/
 target=/explore/frontier/index.html
 page=frontier_live_simulation_field
@@ -1855,15 +2083,22 @@ public_facing_name=Frontier
 visible_explore_frontier_labels=false
 canonical_visible_title=Frontier_Live_Simulation_Field
 parent_route=/explore/
-frontier_root=/frontier/
+active_frontier_route=/explore/frontier/
+frontier_root=/explore/frontier/
+legacy_frontier_root=/frontier/
+legacy_frontier_root_active_return=false
 child_lane_base=/explore/frontier/
 route_distinction=served_at_explore_frontier_public_facing_as_frontier
+dropdown_navigation=active
+site_menu_dropdown=active
+frontier_lanes_dropdown=active
+crowded_top_bubble_nav=superseded
 return_to_frontier=true
-return_to_frontier_route=/frontier/
-return_to_frontier_preserved=true
+return_to_frontier_route=/explore/frontier/
+return_to_frontier_corrected=true
 child_lane_links_preserved=true
 large_node_scale_preserved=true
-visible_copy_preserved_from_v4=true
+visible_copy_preserved_from_v5=true
 public_thesis_preserved=true
 hero_thesis_preserved=true
 orbit_context_preserved=true
@@ -1873,10 +2108,14 @@ final_band_context_preserved=true
 static_lane_selector_superseded=true
 live_simulation_field=true
 frontier_science_simulation=true
+live_simulation_field_preserved=true
+figure_eight_animation_preserved=true
 playable_threshold_language=true
 narrative_context_integrated=true
 radiant_field_waves=true
+radiant_field_waves_preserved=true
 close_fusion_star_source=true
+close_fusion_star_source_preserved=true
 star_distance=near_contact
 node_eclipses_star=true
 fusion_backlight=true
@@ -1887,8 +2126,11 @@ natural_spill_glow=true
 stable_halo_glow=true
 visible_pulse_emitters=true
 node_emitter_pulse=true
+node_emitter_pulse_preserved=true
 button_emitter_pulse=true
+button_pulse_preserved=true
 card_emitter_pulse=true
+card_pulse_preserved=true
 radiating_glow_pulse=true
 button_glow_pulse=true
 card_glow_pulse=true
@@ -1901,6 +2143,11 @@ button_animation_targets=button_before_emitter_box_shadow_border_color_only
 card_animation=true
 card_animation_targets=card_before_emitter_box_shadow_border_color_only
 node_emitter_targets=frontier_star_body_before_frontier_anchor_body_before_frontier_node_after_frontier_anchor_after
+node_positions_preserved=true
+pulse_timing_preserved=true
+support_routes_inside_animation_preserved=true
+lane_cards_preserved=true
+return_cards_preserved=true
 node_body_animation=false
 label_animation=false
 layout_animation=false
@@ -1915,16 +2162,17 @@ graphic_box=false
 generated_image=false
 heavy_runtime_loaded=false
 reduced_motion_safe=true
+visual_pass_claimed=false
 non_regression=true
 segregated_energy_lightning_logic=true
 segregated_closed_loop_gem_logic=true
 segregated_legacy_frontier_root_logic=true
-deploy_marker=FRONTIER_VISIBLE_PULSE_FIELD_CORRECTION_DEPLOY_MARKER_v5
+deploy_marker=FRONTIER_EXPLORER_INDEX_DROPDOWN_LEGACY_ALIGNMENT_ANIMATION_PRESERVATION_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer>
-      FRONTIER_VISIBLE_PULSE_FIELD_CORRECTION_TNT_v5 · /explore/frontier/ · Dedicated visible pulse emitters · Frontier live simulation field.
+      FRONTIER_EXPLORER_INDEX_DROPDOWN_LEGACY_ALIGNMENT_ANIMATION_PRESERVATION_TNT_v1 · /explore/frontier/ · Dropdown navigation · Legacy route alignment · Animation preserved.
     </footer>
   </div>
 </body>

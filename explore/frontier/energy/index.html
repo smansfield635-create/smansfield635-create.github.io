@@ -4,10 +4,10 @@
   lang="en"
   data-route="/explore/frontier/energy/"
   data-page="frontier-energy"
-  data-version="G2-V23"
-  data-contract="FRONTIER_ENERGY_LIGHTNING_BOLT_COLLISION_FIELD_TNT_v23"
-  data-previous-contract="FRONTIER_ENERGY_CLOSE_SOURCE_ELECTRIC_SPARK_GLOW_TNT_v22"
-  data-source-binding="FRONTIER_ENERGY_LIGHTNING_BOLT_COLLISION_FIELD_PREGAME_TO_POSTGAME_BINDING_v1"
+  data-version="G2-V24"
+  data-contract="FRONTIER_ENERGY_CARDINAL_DROPDOWN_ELECTRICAL_ENERGY_CIRCUIT_FIELD_TNT_v24"
+  data-previous-contract="FRONTIER_ENERGY_LIGHTNING_BOLT_COLLISION_FIELD_TNT_v23"
+  data-source-binding="FRONTIER_ENERGY_CARDINAL_DROPDOWN_ELECTRICAL_ENERGY_CIRCUIT_FIELD_PREGAME_TO_POSTGAME_BINDING_v1"
   data-source-visual-reference="/explore/frontier/"
   data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
   data-source-symbol-authority="compassOrganicGem"
@@ -16,10 +16,21 @@
   data-per-pathway-dual-lens="true"
   data-platform-lens="true"
   data-engineering-lens="true"
+  data-cardinal-dropdown="active"
+  data-cardinal-north="laws"
+  data-frontier-dropdown-route="/explore/frontier/"
+  data-electrical-energy-dropdown="true"
+  data-electrical-energy-route="/explore/frontier/energy/#electrical-energy"
   data-energy-electric-plasma-glow-standard="true"
   data-close-source-electric-glow="true"
   data-electric-sparks="true"
   data-lightning-bolt-field="true"
+  data-governed-electrical-circuit-field="true"
+  data-current-flow-lines="true"
+  data-conductor-paths="true"
+  data-storage-discharge-rhythm="true"
+  data-loss-bleed="true"
+  data-audit-return-current="true"
   data-natural-electrical-discharge="true"
   data-gem-collision-charge-response="true"
   data-near-contact-electric-source="true"
@@ -137,6 +148,7 @@
     a:focus-visible,
     button:focus-visible,
     label:focus-visible,
+    summary:focus-visible,
     [tabindex]:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
@@ -175,7 +187,7 @@
     .topbar{
       display:grid;
       grid-template-columns:auto 1fr;
-      align-items:center;
+      align-items:start;
       gap:18px;
       padding:12px 0 18px;
     }
@@ -238,38 +250,175 @@
       display:flex;
       flex-wrap:wrap;
       justify-content:flex-end;
+      gap:.6rem;
+    }
+
+    .route-menu{
+      position:relative;
+      min-width:min(17rem,100%);
+    }
+
+    .route-menu summary{
+      list-style:none;
+      cursor:pointer;
+      min-height:2.6rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:.75rem;
+      border:1px solid rgba(121,235,255,.30);
+      border-radius:999px;
+      padding:.62rem .85rem;
+      color:rgba(241,246,255,.90);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(121,235,255,.15),transparent 70%),
+        radial-gradient(circle at 86% 50%,rgba(243,200,111,.11),transparent 70%),
+        rgba(255,255,255,.045);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.075em;
+      text-transform:uppercase;
+      box-shadow:
+        0 0 1.15rem rgba(37,128,255,.10),
+        inset 0 1px 0 rgba(255,255,255,.08);
+      backdrop-filter:blur(7px);
+    }
+
+    .route-menu[open] summary{
+      border-color:rgba(121,235,255,.72);
+      color:rgba(246,253,255,.98);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(121,235,255,.25),transparent 72%),
+        radial-gradient(circle at 86% 50%,rgba(153,92,255,.18),transparent 70%),
+        linear-gradient(180deg,rgba(10,22,48,.84),rgba(4,9,20,.88));
+      box-shadow:
+        0 0 1.8rem rgba(121,235,255,.20),
+        0 0 3.2rem rgba(37,128,255,.14),
+        inset 0 1px 0 rgba(255,255,255,.12);
+    }
+
+    .route-menu summary::-webkit-details-marker{display:none}
+
+    .route-menu summary::after{
+      content:"";
+      width:.55rem;
+      height:.55rem;
+      border-right:2px solid rgba(230,238,255,.82);
+      border-bottom:2px solid rgba(230,238,255,.82);
+      transform:rotate(45deg) translateY(-.12rem);
+    }
+
+    .route-menu[open] summary::after{
+      transform:rotate(225deg) translateY(-.08rem);
+      border-color:rgba(121,235,255,.95);
+    }
+
+    .route-menu-panel{
+      position:absolute;
+      right:0;
+      top:calc(100% + .55rem);
+      z-index:40;
+      width:min(40rem,calc(100vw - 2rem));
+      padding:.82rem;
+      border:1px solid rgba(121,235,255,.32);
+      border-radius:1.1rem;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(121,235,255,.20),transparent 15rem),
+        radial-gradient(circle at 96% 25%,rgba(153,92,255,.12),transparent 15rem),
+        linear-gradient(180deg,rgba(6,16,40,.97),rgba(3,7,18,.98));
+      box-shadow:
+        0 0 2.8rem rgba(37,128,255,.18),
+        0 1.4rem 3.4rem rgba(0,0,0,.42),
+        inset 0 1px 0 rgba(255,255,255,.09);
+    }
+
+    .cardinal-map{
+      display:grid;
+      gap:.72rem;
+    }
+
+    .cardinal-group{
+      display:grid;
+      gap:.46rem;
+      padding:.62rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:.95rem;
+      background:
+        radial-gradient(circle at 0% 0%,rgba(141,216,255,.07),transparent 12rem),
+        rgba(255,255,255,.025);
+    }
+
+    .cardinal-heading{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:baseline;
+      gap:.35rem;
+      color:var(--gold);
+      font-size:.66rem;
+      font-weight:950;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .cardinal-heading span{
+      color:rgba(230,238,255,.58);
+      font-size:.58rem;
+      letter-spacing:.09em;
+    }
+
+    .route-menu-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
       gap:.48rem;
     }
 
-    .nav a{
-      min-height:2.25rem;
-      display:inline-flex;
+    .route-menu-link{
+      min-height:2.35rem;
+      display:flex;
       align-items:center;
       justify-content:center;
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:999px;
-      padding:.5rem .74rem;
-      color:rgba(241,246,255,.84);
-      background:rgba(255,255,255,.035);
-      font-size:.68rem;
+      border:1px solid rgba(184,205,255,.18);
+      border-radius:.86rem;
+      padding:.5rem .62rem;
+      color:rgba(236,242,255,.88);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(121,235,255,.10),transparent 72%),
+        linear-gradient(180deg,rgba(255,255,255,.048),rgba(255,255,255,.020));
+      font-size:.64rem;
       font-weight:950;
-      letter-spacing:.055em;
+      letter-spacing:.06em;
+      text-align:center;
       text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      box-shadow:
+        0 0 .85rem rgba(37,128,255,.08),
+        inset 0 1px 0 rgba(255,255,255,.07);
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
-    .nav a:hover,
-    .nav a:focus-visible{
+    .route-menu-link:hover,
+    .route-menu-link:focus-visible{
       transform:translateY(-2px);
-      border-color:rgba(243,200,111,.46);
+      border-color:rgba(121,235,255,.58);
+      color:rgba(246,253,255,.98);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(121,235,255,.18),transparent 72%),
+        linear-gradient(180deg,rgba(36,120,255,.085),rgba(255,255,255,.028));
+      box-shadow:
+        0 0 1.35rem rgba(121,235,255,.18),
+        0 0 1.35rem rgba(37,128,255,.13),
+        inset 0 1px 0 rgba(255,255,255,.10);
       outline:none;
     }
 
-    .nav a[aria-current="page"]{
-      border-color:rgba(243,200,111,.88);
-      color:#060811;
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    .route-menu-link[aria-current="page"]{
+      color:#041009;
+      border-color:rgba(243,200,111,.86);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(121,235,255,.24),transparent 70%),
+        linear-gradient(135deg,#fff2a8,#f3c86f);
+      box-shadow:
+        0 0 1.6rem rgba(37,128,255,.18),
+        0 0 1rem rgba(243,200,111,.22);
     }
 
     .panel{
@@ -496,6 +645,186 @@
       box-shadow:0 0 2.1rem rgba(141,216,255,.06);
     }
 
+    .circuit-field{
+      position:absolute;
+      inset:0;
+      z-index:2;
+      pointer-events:none;
+      overflow:hidden;
+      border-radius:inherit;
+      opacity:.78;
+    }
+
+    .circuit-field::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:min(58%,28rem);
+      height:min(38%,17rem);
+      border:1px solid rgba(121,235,255,.16);
+      border-radius:50%;
+      transform:translate(-50%,-50%) rotate(-10deg);
+      box-shadow:
+        0 0 1.8rem rgba(37,128,255,.10),
+        inset 0 0 1.4rem rgba(121,235,255,.05);
+      animation:circuitHold 12s ease-in-out infinite;
+    }
+
+    .circuit-field::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:min(76%,38rem);
+      height:min(52%,23rem);
+      border:1px solid rgba(153,92,255,.12);
+      border-radius:50%;
+      transform:translate(-50%,-50%) rotate(17deg);
+      box-shadow:
+        0 0 2rem rgba(153,92,255,.08),
+        inset 0 0 1.6rem rgba(37,128,255,.05);
+      animation:circuitHold 15s ease-in-out infinite reverse;
+    }
+
+    @keyframes circuitHold{
+      0%,100%{opacity:.48;filter:brightness(.95)}
+      50%{opacity:.82;filter:brightness(1.18)}
+    }
+
+    .circuit-line{
+      position:absolute;
+      z-index:3;
+      left:50%;
+      top:var(--y);
+      width:var(--w);
+      height:2px;
+      transform:rotate(var(--r));
+      transform-origin:left center;
+      background:
+        linear-gradient(90deg,
+          rgba(121,235,255,.00),
+          rgba(121,235,255,.38),
+          rgba(246,253,255,.86),
+          rgba(37,128,255,.42),
+          rgba(153,92,255,.00)
+        );
+      opacity:.50;
+      box-shadow:
+        0 0 .45rem rgba(121,235,255,.28),
+        0 0 1rem rgba(37,128,255,.16);
+      animation:circuitLineBreathe var(--t,8s) ease-in-out infinite;
+      animation-delay:var(--d,0s);
+    }
+
+    .circuit-line.left{
+      left:auto;
+      right:50%;
+      transform-origin:right center;
+      background:
+        linear-gradient(270deg,
+          rgba(121,235,255,.00),
+          rgba(121,235,255,.38),
+          rgba(246,253,255,.86),
+          rgba(37,128,255,.42),
+          rgba(153,92,255,.00)
+        );
+    }
+
+    .circuit-line::after{
+      content:"";
+      position:absolute;
+      top:50%;
+      left:0;
+      width:24%;
+      height:.28rem;
+      border-radius:999px;
+      transform:translateY(-50%);
+      background:
+        linear-gradient(90deg,
+          transparent,
+          rgba(246,253,255,.94),
+          rgba(121,235,255,.84),
+          transparent
+        );
+      box-shadow:
+        0 0 .6rem rgba(246,253,255,.42),
+        0 0 1rem rgba(121,235,255,.36);
+      animation:currentPacket var(--t,8s) ease-in-out infinite;
+      animation-delay:var(--d,0s);
+    }
+
+    .circuit-line.left::after{
+      animation-name:currentPacketReverse;
+    }
+
+    @keyframes circuitLineBreathe{
+      0%,100%{opacity:.22;filter:brightness(.92)}
+      38%{opacity:.76;filter:brightness(1.22)}
+      68%{opacity:.42;filter:brightness(.98)}
+    }
+
+    @keyframes currentPacket{
+      0%{left:0;opacity:0}
+      16%{opacity:1}
+      58%{left:78%;opacity:1}
+      84%,100%{left:78%;opacity:0}
+    }
+
+    @keyframes currentPacketReverse{
+      0%{left:78%;opacity:0}
+      16%{opacity:1}
+      58%{left:0;opacity:1}
+      84%,100%{left:0;opacity:0}
+    }
+
+    .loss-bleed{
+      position:absolute;
+      z-index:3;
+      width:var(--w);
+      height:1px;
+      left:var(--x);
+      top:var(--y);
+      transform:rotate(var(--r));
+      background:
+        repeating-linear-gradient(
+          90deg,
+          rgba(255,157,145,.00) 0 .3rem,
+          rgba(255,157,145,.30) .3rem .55rem,
+          rgba(121,235,255,.00) .55rem .95rem
+        );
+      opacity:.34;
+      filter:blur(.1px);
+      animation:lossDissipate var(--t,10s) ease-in-out infinite;
+      animation-delay:var(--d,0s);
+    }
+
+    @keyframes lossDissipate{
+      0%,100%{opacity:.12;transform:rotate(var(--r)) translateX(0)}
+      44%{opacity:.42;transform:rotate(var(--r)) translateX(.45rem)}
+      70%{opacity:.20;transform:rotate(var(--r)) translateX(.9rem)}
+    }
+
+    .audit-return{
+      position:absolute;
+      z-index:3;
+      left:50%;
+      top:50%;
+      width:min(72%,36rem);
+      height:min(49%,22rem);
+      border:1px dashed rgba(143,240,195,.20);
+      border-radius:50%;
+      transform:translate(-50%,-50%) rotate(21deg);
+      opacity:.42;
+      box-shadow:0 0 1.4rem rgba(143,240,195,.10);
+      animation:auditReturn 16s ease-in-out infinite;
+    }
+
+    @keyframes auditReturn{
+      0%,100%{opacity:.26;filter:brightness(.9)}
+      50%{opacity:.54;filter:brightness(1.14)}
+    }
+
     .energy-bolt-field{
       position:absolute;
       inset:0;
@@ -503,7 +832,7 @@
       pointer-events:none;
       overflow:hidden;
       border-radius:inherit;
-      opacity:.92;
+      opacity:.76;
     }
 
     .energy-bolt{
@@ -512,7 +841,7 @@
       height:10rem;
       opacity:0;
       transform-origin:50% 50%;
-      animation:boltDischarge 9.4s steps(1,end) infinite;
+      animation:boltDischarge 11.4s steps(1,end) infinite;
       animation-delay:var(--bolt-delay,0s);
       pointer-events:none;
     }
@@ -525,16 +854,16 @@
       background:
         linear-gradient(90deg,
           transparent 0%,
-          rgba(246,253,255,.34) 9%,
-          rgba(246,253,255,.96) 38%,
-          rgba(121,235,255,.92) 52%,
-          rgba(37,128,255,.58) 72%,
+          rgba(246,253,255,.30) 9%,
+          rgba(246,253,255,.88) 38%,
+          rgba(121,235,255,.82) 52%,
+          rgba(37,128,255,.50) 72%,
           transparent 100%
         );
       box-shadow:
-        0 0 .28rem rgba(246,253,255,.50),
-        0 0 .62rem rgba(121,235,255,.46),
-        0 0 1rem rgba(37,128,255,.26);
+        0 0 .22rem rgba(246,253,255,.40),
+        0 0 .52rem rgba(121,235,255,.34),
+        0 0 .82rem rgba(37,128,255,.20);
     }
 
     .energy-bolt span:nth-child(1){
@@ -556,7 +885,7 @@
       left:9.1rem;
       top:3.55rem;
       transform:rotate(-42deg);
-      opacity:.78;
+      opacity:.70;
     }
 
     .energy-bolt span:nth-child(4){
@@ -564,7 +893,7 @@
       left:12.0rem;
       top:4.4rem;
       transform:rotate(11deg);
-      opacity:.72;
+      opacity:.64;
     }
 
     .energy-bolt::before,
@@ -574,11 +903,11 @@
       width:.22rem;
       height:.22rem;
       border-radius:50%;
-      background:rgba(246,253,255,.94);
+      background:rgba(246,253,255,.90);
       box-shadow:
-        0 0 .45rem rgba(246,253,255,.70),
-        0 0 .9rem rgba(121,235,255,.55),
-        0 0 1.45rem rgba(37,128,255,.32);
+        0 0 .38rem rgba(246,253,255,.58),
+        0 0 .76rem rgba(121,235,255,.42),
+        0 0 1.2rem rgba(37,128,255,.26);
     }
 
     .energy-bolt::before{
@@ -596,7 +925,7 @@
       top:13%;
       transform:rotate(-5deg) scale(.96);
       --bolt-delay:-.7s;
-      animation-duration:8.8s;
+      animation-duration:10.8s;
     }
 
     .bolt-b{
@@ -604,7 +933,7 @@
       top:28%;
       transform:rotate(11deg) scale(.92);
       --bolt-delay:-4.1s;
-      animation-duration:10.6s;
+      animation-duration:12.6s;
     }
 
     .bolt-c{
@@ -612,7 +941,7 @@
       top:56%;
       transform:rotate(8deg) scale(.88);
       --bolt-delay:-7.2s;
-      animation-duration:11.4s;
+      animation-duration:13.4s;
     }
 
     .bolt-d{
@@ -620,7 +949,7 @@
       top:70%;
       transform:rotate(-13deg) scale(.90);
       --bolt-delay:-2.9s;
-      animation-duration:9.8s;
+      animation-duration:11.8s;
     }
 
     .bolt-b span:nth-child(1){
@@ -679,25 +1008,19 @@
       0%,100%{
         opacity:0;
       }
-      9%{
-        opacity:0;
-      }
       10%{
-        opacity:.94;
+        opacity:0;
       }
       11%{
-        opacity:.20;
+        opacity:.72;
       }
       12%{
-        opacity:.78;
+        opacity:.18;
       }
       13%{
-        opacity:0;
+        opacity:.52;
       }
-      14%{
-        opacity:.32;
-      }
-      15%,99%{
+      14%,99%{
         opacity:0;
       }
     }
@@ -903,7 +1226,7 @@
         50% 50%,
         50% 50%;
       opacity:.34;
-      animation:electricSparkLife 3.9s steps(1,end) infinite;
+      animation:electricSparkLife 4.8s steps(1,end) infinite;
       animation-delay:calc(var(--delay,0s) - .45s);
     }
 
@@ -915,14 +1238,14 @@
       border-radius:44% 56% 52% 48% / 46% 42% 58% 54%;
       opacity:0;
       background:
-        radial-gradient(ellipse at 50% 50%,rgba(246,253,255,.64) 0 10%,rgba(121,235,255,.36) 24%,rgba(37,128,255,.20) 44%,transparent 68%),
-        linear-gradient(92deg,transparent 0 36%,rgba(246,253,255,.70) 46%,rgba(121,235,255,.54) 51%,transparent 64%),
-        linear-gradient(8deg,transparent 0 35%,rgba(121,235,255,.44) 45%,rgba(153,92,255,.28) 52%,transparent 65%);
+        radial-gradient(ellipse at 50% 50%,rgba(246,253,255,.58) 0 10%,rgba(121,235,255,.32) 24%,rgba(37,128,255,.18) 44%,transparent 68%),
+        linear-gradient(92deg,transparent 0 36%,rgba(246,253,255,.64) 46%,rgba(121,235,255,.48) 51%,transparent 64%),
+        linear-gradient(8deg,transparent 0 35%,rgba(121,235,255,.40) 45%,rgba(153,92,255,.25) 52%,transparent 65%);
       box-shadow:
-        0 0 .65rem rgba(246,253,255,.45),
-        0 0 1.3rem rgba(121,235,255,.36),
-        0 0 2.2rem rgba(37,128,255,.20);
-      animation:gemCollisionCharge 9.4s steps(1,end) infinite;
+        0 0 .55rem rgba(246,253,255,.34),
+        0 0 1.1rem rgba(121,235,255,.28),
+        0 0 1.8rem rgba(37,128,255,.16);
+      animation:gemCollisionCharge 11.4s steps(1,end) infinite;
       animation-delay:var(--charge-delay,0s);
     }
 
@@ -935,16 +1258,16 @@
       0%,100%{
         opacity:0;
       }
-      10%{
-        opacity:.88;
-      }
       11%{
-        opacity:.24;
+        opacity:.70;
       }
       12%{
-        opacity:.66;
+        opacity:.20;
       }
-      14%{
+      13%{
+        opacity:.48;
+      }
+      15%{
         opacity:0;
       }
       99%{
@@ -958,7 +1281,7 @@
         transform:scale(.99) rotate(0deg);
       }
       18%{
-        opacity:.72;
+        opacity:.66;
         transform:scale(1.01) rotate(.4deg);
       }
       23%{
@@ -966,7 +1289,7 @@
         transform:scale(1) rotate(0deg);
       }
       54%{
-        opacity:.60;
+        opacity:.54;
         transform:scale(1.008) rotate(-.35deg);
       }
       60%{
@@ -974,7 +1297,7 @@
         transform:scale(1) rotate(0deg);
       }
       82%{
-        opacity:.46;
+        opacity:.42;
         transform:scale(1.006) rotate(.25deg);
       }
     }
@@ -1296,6 +1619,7 @@
       }
 
       .nav{justify-content:flex-start}
+      .route-menu-panel{left:0;right:auto}
     }
 
     @media (max-width:760px){
@@ -1316,6 +1640,20 @@
         width:100%;
       }
 
+      .route-menu{
+        width:100%;
+      }
+
+      .route-menu-panel{
+        position:static;
+        margin-top:.45rem;
+        width:100%;
+      }
+
+      .route-menu-grid{
+        grid-template-columns:1fr;
+      }
+
       .compass-stage{
         min-height:auto;
         display:grid;
@@ -1330,8 +1668,18 @@
         display:none;
       }
 
+      .circuit-field{
+        opacity:.52;
+      }
+
+      .circuit-line,
+      .loss-bleed,
+      .audit-return{
+        display:none;
+      }
+
       .energy-bolt-field{
-        opacity:.55;
+        opacity:.48;
       }
 
       .energy-bolt{
@@ -1511,7 +1859,13 @@
       .compass-node::after,
       .gem-core::before,
       .electric-sparks,
-      .charge-flash{
+      .charge-flash,
+      .circuit-field::before,
+      .circuit-field::after,
+      .circuit-line,
+      .circuit-line::after,
+      .loss-bleed,
+      .audit-return{
         animation:none!important;
       }
 
@@ -1632,17 +1986,55 @@
         </span>
       </a>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/products/">Products</a>
-        <a href="/laws/">Laws</a>
-        <a href="/showroom/globe/">Interactive Narrative</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/explore/frontier/">Frontier</a>
-        <a href="/explore/frontier/energy/" aria-current="page">Energy</a>
-        <a href="/gauges/">Gauges</a>
+      <nav class="nav" aria-label="Cardinal dropdown navigation">
+        <details class="route-menu">
+          <summary>Cardinal Map</summary>
+          <div class="route-menu-panel">
+            <div class="cardinal-map">
+              <div class="cardinal-group">
+                <div class="cardinal-heading">Center <span>Core entry and return</span></div>
+                <div class="route-menu-grid">
+                  <a class="route-menu-link" href="/">Compass</a>
+                  <a class="route-menu-link" href="/door/">Door</a>
+                  <a class="route-menu-link" href="/home/">Home</a>
+                </div>
+              </div>
+
+              <div class="cardinal-group">
+                <div class="cardinal-heading">North <span>Laws, proof, and measurement</span></div>
+                <div class="route-menu-grid">
+                  <a class="route-menu-link" href="/laws/">Laws</a>
+                  <a class="route-menu-link" href="/gauges/">Gauges</a>
+                </div>
+              </div>
+
+              <div class="cardinal-group">
+                <div class="cardinal-heading">East <span>Story-world and visible expression</span></div>
+                <div class="route-menu-grid">
+                  <a class="route-menu-link" href="/showroom/globe/">Interactive Narrative</a>
+                  <a class="route-menu-link" href="/showroom/">Showroom</a>
+                </div>
+              </div>
+
+              <div class="cardinal-group">
+                <div class="cardinal-heading">South <span>Frontier and energy field</span></div>
+                <div class="route-menu-grid">
+                  <a class="route-menu-link" href="/explore/frontier/">Frontier</a>
+                  <a class="route-menu-link" href="/explore/frontier/energy/" aria-current="page">Energy</a>
+                  <a class="route-menu-link" href="/explore/frontier/energy/#electrical-energy">Electrical Energy</a>
+                </div>
+              </div>
+
+              <div class="cardinal-group">
+                <div class="cardinal-heading">West <span>Community and public application</span></div>
+                <div class="route-menu-grid">
+                  <a class="route-menu-link" href="/products/">Products</a>
+                  <a class="route-menu-link" href="/meet-sean-mansfield/">Meet Sean</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
       </nav>
     </header>
 
@@ -1662,6 +2054,7 @@
 
         <div class="actions">
           <a class="button gold" href="#energy-orbit">Choose a Pathway</a>
+          <a class="button" href="#electrical-energy">Electrical Energy</a>
           <a class="button" href="#audralia-simulation">Start with Audralia</a>
           <a class="button green" href="#science-boundary">Open Science Boundary</a>
           <a class="button" href="/explore/frontier/">Return to Frontier</a>
@@ -1681,7 +2074,23 @@
           data-per-pathway-dual-lens="true"
           data-close-source-electric-spark-glow="true"
           data-lightning-bolt-collision-field="true"
+          data-governed-electrical-circuit-field="true"
         >
+          <div class="circuit-field" aria-hidden="true">
+            <span class="audit-return"></span>
+            <span class="circuit-line left" style="--y:18%;--w:27%;--r:-19deg;--t:7.8s;--d:-.4s"></span>
+            <span class="circuit-line" style="--y:20%;--w:29%;--r:17deg;--t:8.2s;--d:-1.2s"></span>
+            <span class="circuit-line left" style="--y:39%;--w:34%;--r:5deg;--t:8.8s;--d:-2.1s"></span>
+            <span class="circuit-line" style="--y:39%;--w:35%;--r:-7deg;--t:7.6s;--d:-3.1s"></span>
+            <span class="circuit-line left" style="--y:61%;--w:33%;--r:-7deg;--t:9.1s;--d:-4.2s"></span>
+            <span class="circuit-line" style="--y:61%;--w:34%;--r:6deg;--t:8.5s;--d:-5.2s"></span>
+            <span class="circuit-line left" style="--y:81%;--w:28%;--r:19deg;--t:9.5s;--d:-6.1s"></span>
+            <span class="circuit-line" style="--y:81%;--w:29%;--r:-18deg;--t:8.9s;--d:-6.9s"></span>
+            <span class="loss-bleed" style="--x:54%;--y:47%;--w:13rem;--r:24deg;--t:10s;--d:-2s"></span>
+            <span class="loss-bleed" style="--x:30%;--y:55%;--w:11rem;--r:-31deg;--t:12s;--d:-5s"></span>
+            <span class="loss-bleed" style="--x:62%;--y:73%;--w:10rem;--r:-16deg;--t:11s;--d:-7s"></span>
+          </div>
+
           <div class="energy-bolt-field" aria-hidden="true">
             <span class="energy-bolt bolt-a"><span></span><span></span><span></span><span></span></span>
             <span class="energy-bolt bolt-b"><span></span><span></span><span></span><span></span></span>
@@ -1784,6 +2193,54 @@
             <span class="gem-label"><b>Kill</b><span>Conditions</span></span>
           </a>
         </div>
+      </section>
+
+      <section class="panel section" id="electrical-energy" aria-labelledby="electrical-title">
+        <div class="kicker">Electrical Energy · Carrier Layer</div>
+        <h2 id="electrical-title">Electrical energy is the usable carrier that must be generated, moved, measured, and governed.</h2>
+
+        <article class="pathway-module">
+          <h3>Electrical energy is not the source claim. It is the delivered form that serves the load.</h3>
+          <p>Electrical energy is the carrier layer that makes energy usable at the point of service. It includes current, voltage, charge flow, conversion, storage discharge, grid delivery, load behavior, losses, protection, metering, and receipts.</p>
+
+          <div class="lens-shell">
+            <input class="lens-radio platform-radio" id="electrical-platform" name="electrical-lens" type="radio" checked>
+            <input class="lens-radio engineering-radio" id="electrical-engineering" name="electrical-lens" type="radio">
+
+            <div class="lens-tabs">
+              <label class="lens-tab platform-tab" for="electrical-platform">Platform Lens</label>
+              <label class="lens-tab engineering-tab" for="electrical-engineering">Engineering Lens</label>
+            </div>
+
+            <div class="lens-body">
+              <div class="lens-copy platform-copy">
+                <b>Platform Lens</b>
+                <p>Electrical energy is what people actually use when lights turn on, pumps run, tools work, servers stay awake, and storage releases power. It is not a magic source. It is the delivered form that must be generated, converted, stored, moved, measured, and governed.</p>
+                <ul class="lens-list">
+                  <li>Electrical energy makes power useful at the service point.</li>
+                  <li>The source must still be declared separately.</li>
+                  <li>Delivered electricity requires path, load, loss, and receipt discipline.</li>
+                </ul>
+              </div>
+
+              <div class="lens-copy engineering-copy">
+                <b>Engineering Lens</b>
+                <p>Operating object: electrical carrier and delivery layer. Inputs include source declaration, voltage, current, power, load profile, conversion efficiency, storage discharge behavior, protection systems, interconnection limits, line losses, metering, and audit receipts.</p>
+                <ul class="lens-list">
+                  <li>Outputs: delivered electrical service, load support, storage discharge, loss accounting, and receipt posture.</li>
+                  <li>Constraint: electrical delivery is valid only when source, path, load, loss, and measurement remain accounted for.</li>
+                  <li>Stop condition: delivered electricity cannot imply fusion, solar, plasma, or storage source unless the source pathway is measured and declared.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="boundary">Boundary: electrical energy is a delivered carrier state. It does not prove the source is fusion, solar, plasma, storage, or any other generation category unless that source is measured and declared.</div>
+          <div class="section-return">
+            <a class="return-orbit" href="#energy-orbit">Return to Energy Orbit</a>
+            <a class="return-frontier" href="/explore/frontier/">Return to Frontier</a>
+          </div>
+        </article>
       </section>
 
       <section class="panel section" id="audralia-simulation" aria-labelledby="audralia-title">
@@ -2421,6 +2878,7 @@
         </p>
         <div class="actions">
           <a class="button gold" href="#energy-orbit">Return to Energy Orbit</a>
+          <a class="button" href="#electrical-energy">Electrical Energy</a>
           <a class="button" href="/showroom/globe/audralia/">Open Audralia</a>
           <a class="button green" href="/explore/frontier/water/">Open Water</a>
           <a class="button" href="/explore/frontier/">Return to Frontier</a>
@@ -2428,9 +2886,9 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_ENERGY_LIGHTNING_BOLT_COLLISION_FIELD_TNT_v23
-previous=FRONTIER_ENERGY_CLOSE_SOURCE_ELECTRIC_SPARK_GLOW_TNT_v22
-binding=FRONTIER_ENERGY_LIGHTNING_BOLT_COLLISION_FIELD_PREGAME_TO_POSTGAME_BINDING_v1
+FRONTIER_ENERGY_CARDINAL_DROPDOWN_ELECTRICAL_ENERGY_CIRCUIT_FIELD_TNT_v24
+previous=FRONTIER_ENERGY_LIGHTNING_BOLT_COLLISION_FIELD_TNT_v23
+binding=FRONTIER_ENERGY_CARDINAL_DROPDOWN_ELECTRICAL_ENERGY_CIRCUIT_FIELD_PREGAME_TO_POSTGAME_BINDING_v1
 route=/explore/frontier/energy/
 page=frontier_energy
 html=/explore/frontier/energy/index.html
@@ -2440,6 +2898,20 @@ source_symbol_authority=compassOrganicGem
 visual_authority_preserved=true
 design_preserved=true
 compass_organic_gem_preserved=true
+cardinal_dropdown=active
+legacy_top_bubble_nav_replaced=true
+cardinal_north_anchor=Laws
+cardinal_center=Compass,Door,Home
+cardinal_north=Laws,Gauges
+cardinal_east=Interactive_Narrative,Showroom
+cardinal_south=Frontier,Energy,Electrical_Energy
+cardinal_west=Products,Meet_Sean
+frontier_dropdown_route=/explore/frontier/
+frontier_included_in_dropdown=true
+electrical_energy_dropdown=true
+electrical_energy_route=/explore/frontier/energy/#electrical-energy
+electrical_energy_anchor_present=true
+electrical_energy_claim_boundary=carrier_state_not_source_proof
 energy_electric_plasma_glow_standard=true
 clean_slate_glow=true
 close_source_electric_glow=true
@@ -2448,6 +2920,12 @@ stable_ambient_spill=true
 rim_corona=true
 electric_sparks=true
 lightning_bolt_field=true
+governed_electrical_circuit_field=true
+current_flow_lines=true
+conductor_paths=true
+storage_discharge_rhythm=true
+loss_bleed=true
+audit_return_current=true
 natural_electrical_discharge=true
 gem_collision_charge_response=true
 background_electrical_field=true
@@ -2495,9 +2973,9 @@ globe_glow_model=false
 soft_static_aura_model=false
 electric_blue_cyan_white_violet_dominant=true
 gold_continuity_controlled=true
-animation_targets=bolts_sparks_current_source_core_charge_response_only
+animation_targets=bolts_sparks_current_source_core_charge_response_circuit_lines_loss_bleed_audit_return_only
 audralia_first=true
-public_subject=fusion_readiness_storage_solar_hedge_plasma_boundary_q_boundary_commercial_now_bridge_infrastructure_storage_fields_advanced_buffer_future_offtake_kill_conditions
+public_subject=fusion_readiness_storage_solar_hedge_plasma_boundary_q_boundary_commercial_now_bridge_infrastructure_storage_fields_advanced_buffer_future_offtake_kill_conditions_electrical_energy
 per_pathway_dual_lens=true
 platform_lens_per_pathway=true
 engineering_lens_per_pathway=true
@@ -2514,11 +2992,12 @@ plasma_lock=plasma_is_operating_state_not_storage
 storage_fields_lock=bridge_infrastructure_only_not_fusion_farms
 q_boundary=Q_target_Q_plasma_Q_plant_separated
 final_lock=do_not_sell_fusion_sell_readiness
+deploy_marker=FRONTIER_ENERGY_CARDINAL_DROPDOWN_ELECTRICAL_ENERGY_CIRCUIT_FIELD_DEPLOY_MARKER_v24
       </template>
     </main>
 
     <footer>
-      FRONTIER_ENERGY_LIGHTNING_BOLT_COLLISION_FIELD_TNT_v23 · Energy · Lightning bolt collision field · Close-source electric glow · Return to Frontier controls.
+      FRONTIER_ENERGY_CARDINAL_DROPDOWN_ELECTRICAL_ENERGY_CIRCUIT_FIELD_TNT_v24 · Energy · North is Laws · Electrical Energy anchor · Governed electrical circuit field.
     </footer>
   </div>
 </body>

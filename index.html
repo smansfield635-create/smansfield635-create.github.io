@@ -4,20 +4,21 @@
   lang="en"
   data-route="/"
   data-page="compass"
-  data-version="G2-V4"
-  data-contract="COMPASS_CARDINAL_DROPDOWN_AND_GEM_SYMMETRY_TNT_v1"
-  data-previous-contract="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
+  data-version="G2-V5"
+  data-contract="COMPASS_CARDINAL_NORTH_LAWS_FRONTIER_DROPDOWN_SEVEN_GEM_SYMMETRY_TNT_v2"
+  data-previous-contract="COMPASS_CARDINAL_DROPDOWN_AND_GEM_SYMMETRY_TNT_v1"
   data-role="root-compass"
   data-root-is-compass="true"
   data-proof-path="/laws/"
   data-gauges-role="measurement-audit-route-status"
   data-interactive-narrative-visible-nav="true"
   data-showroom-visible-nav="true"
+  data-frontier-visible-dropdown="true"
   data-cardinal-dropdown="active"
   data-active-bubble-registry="active"
-  data-active-bubbles="Compass,Door,Home,Products,Laws,Interactive Narrative,Showroom,Gauges,Meet Sean"
-  data-diamond-symmetry="renewed"
-  data-meet-sean-symmetry-position="bottom-center"
+  data-active-bubbles="Compass,Door,Home,Products,Laws,Interactive Narrative,Showroom,Gauges,Meet Sean,Frontier"
+  data-cardinal-north="laws"
+  data-diamond-symmetry="seven-gem-field-renewed"
   data-static-page-usable-without-js="true"
   data-runtime-public-message="false"
   data-generated-image="false"
@@ -32,7 +33,7 @@
   <title>Compass · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge begins at the Compass: choose laws, person, interactive narrative, showroom, community, or gauges."
+    content="Diamond Gate Bridge begins at the Compass: choose laws, person, interactive narrative, showroom, community, frontier, or gauges."
   >
 
   <style>
@@ -931,11 +932,6 @@
         height:5.45rem;
       }
 
-      .compass-node.meet-sean-node{
-        grid-column:1 / -1;
-        justify-self:center;
-      }
-
       .gem-label b{font-size:.48rem}
       .gem-label span{font-size:.34rem}
 
@@ -1109,24 +1105,25 @@
               </div>
 
               <div class="cardinal-group">
-                <div class="cardinal-heading">North <span>Interface and engineering layer</span></div>
+                <div class="cardinal-heading">North <span>Laws, proof, and measurement</span></div>
                 <div class="route-menu-grid">
-                  <a class="route-menu-link" href="/showroom/">Showroom</a>
+                  <a class="route-menu-link" href="/laws/">Laws</a>
                   <a class="route-menu-link" href="/gauges/">Gauges</a>
                 </div>
               </div>
 
               <div class="cardinal-group">
-                <div class="cardinal-heading">South <span>Scientific backing and proof</span></div>
+                <div class="cardinal-heading">East <span>Story-world and visible expression</span></div>
                 <div class="route-menu-grid">
-                  <a class="route-menu-link" href="/laws/">Laws</a>
+                  <a class="route-menu-link" href="/showroom/globe/">Interactive Narrative</a>
+                  <a class="route-menu-link" href="/showroom/">Showroom</a>
                 </div>
               </div>
 
               <div class="cardinal-group">
-                <div class="cardinal-heading">East <span>Story-world and imagination</span></div>
+                <div class="cardinal-heading">South <span>Frontier and support field</span></div>
                 <div class="route-menu-grid">
-                  <a class="route-menu-link" href="/showroom/globe/">Interactive Narrative</a>
+                  <a class="route-menu-link" href="/explore/frontier/">Frontier</a>
                 </div>
               </div>
 
@@ -1162,6 +1159,7 @@
           <a class="button" href="/meet-sean-mansfield/">Meet Sean</a>
           <a class="button" href="/showroom/globe/">Enter Interactive Narrative</a>
           <a class="button green" href="/showroom/">Open Showroom</a>
+          <a class="button" href="/explore/frontier/">Open Frontier</a>
           <a class="button" href="/gauges/">Check Gauges</a>
         </div>
       </section>
@@ -1178,7 +1176,7 @@
           data-gauges-role="measurement-audit-route-status"
           data-interactive-narrative-visible-nav="true"
           data-showroom-visible-nav="true"
-          data-diamond-symmetry="six-point-public-path-field"
+          data-diamond-symmetry="center-compass-six-point-outer-ring"
         >
           <div class="compass-center" aria-hidden="true" style="--delay:-.1s;--tilt-a:-1.4deg;--tilt-b:1.8deg;">
             <span class="gem-core">
@@ -1194,29 +1192,29 @@
             <span class="gem-label"><b>Proof</b><span>Laws</span></span>
           </a>
 
-          <a class="compass-node" style="--x:80%;--y:38%;--delay:-.8s;--tilt-a:1.5deg;--tilt-b:-2.3deg;" href="/showroom/globe/" aria-label="Open Interactive Narrative">
+          <a class="compass-node" style="--x:79%;--y:31%;--delay:-.8s;--tilt-a:1.5deg;--tilt-b:-2.3deg;" href="/showroom/globe/" aria-label="Open Interactive Narrative">
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Interactive</b><span>Narrative</span></span>
           </a>
 
-          <a class="compass-node" style="--x:70%;--y:76%;--delay:-1.4s;--tilt-a:-1.6deg;--tilt-b:2.6deg;" href="/showroom/" aria-label="Open Showroom">
+          <a class="compass-node" style="--x:79%;--y:69%;--delay:-1.4s;--tilt-a:-1.6deg;--tilt-b:2.6deg;" href="/showroom/" aria-label="Open Showroom">
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Showroom</b><span>Objects</span></span>
           </a>
 
-          <a class="compass-node meet-sean-node" style="--x:50%;--y:88%;--delay:-2.0s;--tilt-a:1.9deg;--tilt-b:-1.6deg;" href="/meet-sean-mansfield/" aria-label="Open Meet Sean">
+          <a class="compass-node" style="--x:50%;--y:88%;--delay:-2.0s;--tilt-a:1.9deg;--tilt-b:-1.6deg;" href="/gauges/" aria-label="Open Gauges">
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Meet Sean</b><span>Voice</span></span>
+            <span class="gem-label"><b>Gauges</b><span>Measure</span></span>
           </a>
 
-          <a class="compass-node" style="--x:30%;--y:76%;--delay:-2.6s;--tilt-a:-2deg;--tilt-b:2deg;" href="/products/" aria-label="Open Products">
+          <a class="compass-node" style="--x:21%;--y:69%;--delay:-2.6s;--tilt-a:-2deg;--tilt-b:2deg;" href="/products/" aria-label="Open Products">
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Community</b><span>Products</span></span>
           </a>
 
-          <a class="compass-node" style="--x:20%;--y:38%;--delay:-3.2s;--tilt-a:1.6deg;--tilt-b:-2.1deg;" href="/gauges/" aria-label="Open Gauges">
+          <a class="compass-node" style="--x:21%;--y:31%;--delay:-3.2s;--tilt-a:1.6deg;--tilt-b:-2.1deg;" href="/meet-sean-mansfield/" aria-label="Open Meet Sean">
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Gauges</b><span>Measure</span></span>
+            <span class="gem-label"><b>Meet Sean</b><span>Voice</span></span>
           </a>
         </div>
       </section>
@@ -1271,8 +1269,8 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-COMPASS_CARDINAL_DROPDOWN_AND_GEM_SYMMETRY_TNT_v1
-previous=COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2
+COMPASS_CARDINAL_NORTH_LAWS_FRONTIER_DROPDOWN_SEVEN_GEM_SYMMETRY_TNT_v2
+previous=COMPASS_CARDINAL_DROPDOWN_AND_GEM_SYMMETRY_TNT_v1
 route=/
 page=compass
 html=/index.html
@@ -1280,12 +1278,15 @@ role=root_compass
 context_alignment=true
 cardinal_dropdown=active
 legacy_top_bubble_stack_replaced=true
-active_bubble_registry=Compass,Door,Home,Products,Laws,Interactive_Narrative,Showroom,Gauges,Meet_Sean
+active_bubble_registry=Compass,Door,Home,Products,Laws,Interactive_Narrative,Showroom,Gauges,Meet_Sean,Frontier
+cardinal_north_anchor=Laws
 cardinal_center=Compass,Door,Home
-cardinal_north=Showroom,Gauges
-cardinal_south=Laws
-cardinal_east=Interactive_Narrative
+cardinal_north=Laws,Gauges
+cardinal_east=Interactive_Narrative,Showroom
+cardinal_south=Frontier
 cardinal_west=Products,Meet_Sean
+frontier_dropdown_route=/explore/frontier/
+frontier_included_in_dropdown=true
 headline=One_bridge_Choose_your_direction
 proof_path=/laws/
 proof_path_label=Laws
@@ -1299,21 +1300,23 @@ products_route=/products/
 person_route=/meet-sean-mansfield/
 public_paths=Laws,Meet_Sean,Interactive_Narrative,Showroom,Products,Gauges
 gem_field_updated=true
-gem_field_symmetry=six_point_public_path_field
-meet_sean_position=bottom_center_symmetric
-gauges_gem_added_for_public_path_symmetry=true
+gem_field_symmetry=center_compass_six_point_outer_ring
+center_gem=Compass
+outer_gems=Laws,Interactive_Narrative,Showroom,Gauges,Products,Meet_Sean
+meet_sean_position=upper_left_symmetric
+gauges_position=bottom_center_symmetric
 route_owns=compass_root,top_navigation,primary_entry_language,compass_gem_field,root_path_cards
 route_does_not_own=door_page,showroom_page,products_page,laws_page,gauges_logic,sitewide_rebuild,heavy_runtime
 generated_image=false
 graphic_box=false
 streaming=false
 visual_pass_claimed=false
-deploy_marker=COMPASS_CARDINAL_DROPDOWN_AND_GEM_SYMMETRY_DEPLOY_MARKER_v1
+deploy_marker=COMPASS_CARDINAL_NORTH_LAWS_FRONTIER_DROPDOWN_SEVEN_GEM_SYMMETRY_DEPLOY_MARKER_v2
       </template>
     </main>
 
     <footer>
-      COMPASS_CARDINAL_DROPDOWN_AND_GEM_SYMMETRY_TNT_v1 · Compass · Cardinal dropdown · Symmetric public path gems.
+      COMPASS_CARDINAL_NORTH_LAWS_FRONTIER_DROPDOWN_SEVEN_GEM_SYMMETRY_TNT_v2 · Compass · North is Laws · Frontier in dropdown · Seven-gem symmetry.
     </footer>
   </div>
 </body>

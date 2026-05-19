@@ -4,13 +4,11 @@
   lang="en"
   data-route="/explore/frontier/urban/"
   data-page="frontier-urban"
-  data-version="G2-V5"
-  data-contract="FRONTIER_URBAN_PER_BUILDING_CHRONOLOGY_OCCUPANCY_LIGHTS_RENEWAL_TNT_v5"
-  data-previous-contract="FRONTIER_URBAN_PER_BUILDING_256_LATTICE_LIVING_SKYLINE_RENEWAL_TNT_v4"
-  data-source-binding="FRONTIER_URBAN_PER_BUILDING_CHRONOLOGY_OCCUPANCY_LIGHTS_FINAL_PRECODE_BINDING_AND_CCR_v5"
-  data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
-  data-source-symbol-authority="compassOrganicGem"
-  data-role="frontier-urban-per-building-chronology-occupancy-lights"
+  data-version="G2-V6"
+  data-contract="FRONTIER_URBAN_OCCUPANCY_LIGHTS_NO_WINDOW_DRIFT_RENEWAL_TNT_v6"
+  data-previous-contract="FRONTIER_URBAN_PER_BUILDING_CHRONOLOGY_OCCUPANCY_LIGHTS_RENEWAL_TNT_v5"
+  data-source-binding="FRONTIER_URBAN_OCCUPANCY_LIGHTS_NO_WINDOW_DRIFT_PREWRITE_v6"
+  data-role="frontier-urban-no-window-drift-occupancy-lights"
   data-hero-skyline-preserved="true"
   data-construct-skyline-box-preserved="true"
   data-per-building-lattice="true"
@@ -20,38 +18,19 @@
   data-per-building-chronology="true"
   data-per-building-occupancy="true"
   data-asynchronous-building-timing="true"
-  data-inhabited-window-activity="true"
-  data-active-glow="true"
+  data-window-drift-removed="true"
+  data-normal-building-background-position-animation="false"
+  data-greenline-continuity-flow-allowed="true"
   data-active-glow-css-only="true"
-  data-parent-skyline-field="true"
-  data-independent-building-objects="true"
-  data-skyline-depth-layers="far_mid_front"
-  data-skyline-alive="true"
   data-dropdown-navigation="true"
   data-dropdown-js="false"
-  data-route-menu-component="details_summary_css_only"
-  data-site-menu="true"
-  data-frontier-lanes-menu="true"
-  data-dallas-inspired-skyline="true"
-  data-photographic-accuracy-claimed="false"
-  data-urban-contextual-upgrade="true"
-  data-skyline-is-surface-load-is-city="true"
-  data-urban-system-pressure-thesis="true"
-  data-audralia-urban-first="true"
-  data-per-pathway-dual-lens="true"
-  data-platform-lens="true"
-  data-engineering-lens="true"
-  data-dual-return-under-every-pathway="true"
-  data-return-to-frontier-route="/explore/frontier/"
   data-static-page-usable-without-js="true"
   data-heavy-runtime-loaded="false"
-  data-runtime-public-message="false"
   data-generated-image="false"
   data-graphic-box="false"
   data-canvas="false"
   data-webgl="false"
   data-particle-engine="false"
-  data-streaming="false"
   data-visual-pass-claimed="false"
 >
 <head>
@@ -59,10 +38,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
   <title>Urban Construct · Occupancy Skyline · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Diamond Gate Bridge Urban Construct is the Frontier simulation lane where city-scale systems are tested together under metropolitan load, with reusable CSS-only navigation and a per-building chronology skyline."
-  >
+  <meta name="description" content="Diamond Gate Bridge Urban Construct is the Frontier simulation lane where city-scale systems are tested together under metropolitan load, with CSS-only dropdown navigation and per-building occupancy lights.">
 
   <style>
     :root{
@@ -74,7 +50,6 @@
       --gold:#f3c86f;
       --gold2:#ffe8a3;
       --blue:#8dd8ff;
-      --green:#8ff0c3;
       --urban-green:#39ff9f;
       --panel:rgba(9,15,31,.88);
       --line:rgba(184,205,255,.18);
@@ -130,20 +105,10 @@
     a{color:inherit;text-decoration:none}
 
     a:focus-visible,
-    button:focus-visible,
     summary:focus-visible,
-    label:focus-visible,
-    [tabindex]:focus-visible{
+    label:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
-    }
-
-    .svg-defs{
-      position:absolute;
-      width:0;
-      height:0;
-      overflow:hidden;
-      pointer-events:none;
     }
 
     .skip{
@@ -254,9 +219,7 @@
       border-radius:999px;
       padding:.62rem .85rem;
       color:rgba(241,246,255,.88);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(57,255,159,.08),transparent 70%),
-        rgba(255,255,255,.045);
+      background:radial-gradient(circle at 50% 0%,rgba(57,255,159,.08),transparent 70%),rgba(255,255,255,.045);
       font-size:.72rem;
       font-weight:950;
       letter-spacing:.075em;
@@ -290,9 +253,7 @@
       padding:.75rem;
       border:1px solid rgba(255,255,255,.14);
       border-radius:1.1rem;
-      background:
-        radial-gradient(circle at 14% 0%,rgba(57,255,159,.11),transparent 18rem),
-        linear-gradient(180deg,rgba(13,20,43,.96),rgba(4,7,18,.98));
+      background:radial-gradient(circle at 14% 0%,rgba(57,255,159,.11),transparent 18rem),linear-gradient(180deg,rgba(13,20,43,.96),rgba(4,7,18,.98));
       box-shadow:0 1.4rem 3.4rem rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.08);
     }
 
@@ -460,25 +421,20 @@
       animation-delay:var(--b-delay,0s);
     }
 
-    .urban-building::before{
+    .urban-building::before,
+    .urban-building::after{
       content:"";
       position:absolute;
-      inset:.48rem .38rem .58rem;
       z-index:2;
-      opacity:var(--b-light-off,.22);
+      pointer-events:none;
+    }
+
+    .urban-building::before{
+      inset:.48rem .38rem .58rem;
+      opacity:var(--b-light-off,.18);
       background-image:
-        repeating-linear-gradient(
-          90deg,
-          transparent 0 calc(var(--b-window-x,.72rem) * .34),
-          rgba(255,235,160,.86) calc(var(--b-window-x,.72rem) * .34) calc(var(--b-window-x,.72rem) * .44),
-          transparent calc(var(--b-window-x,.72rem) * .44) var(--b-window-x,.72rem)
-        ),
-        repeating-linear-gradient(
-          0deg,
-          transparent 0 calc(var(--b-window-y,.84rem) * .36),
-          rgba(141,216,255,.58) calc(var(--b-window-y,.84rem) * .36) calc(var(--b-window-y,.84rem) * .46),
-          transparent calc(var(--b-window-y,.84rem) * .46) var(--b-window-y,.84rem)
-        ),
+        repeating-linear-gradient(90deg,transparent 0 calc(var(--b-window-x,.72rem) * .34),rgba(255,235,160,.86) calc(var(--b-window-x,.72rem) * .34) calc(var(--b-window-x,.72rem) * .44),transparent calc(var(--b-window-x,.72rem) * .44) var(--b-window-x,.72rem)),
+        repeating-linear-gradient(0deg,transparent 0 calc(var(--b-window-y,.84rem) * .36),rgba(141,216,255,.58) calc(var(--b-window-y,.84rem) * .36) calc(var(--b-window-y,.84rem) * .46),transparent calc(var(--b-window-y,.84rem) * .46) var(--b-window-y,.84rem)),
         linear-gradient(135deg,rgba(255,232,163,.20),transparent 42%,rgba(57,255,159,.10));
       background-size:
         var(--b-window-x,.72rem) var(--b-window-y,.84rem),
@@ -486,20 +442,43 @@
         100% 100%;
       background-position:
         0 0,
-        calc(var(--b-phase,0) * 1px) calc(var(--b-phase,0) * .35px),
+        calc(var(--b-phase,0) * .11rem) calc(var(--b-phase,0) * .04rem),
         0 0;
       mask-image:linear-gradient(180deg,rgba(0,0,0,.96),rgba(0,0,0,.72) 62%,rgba(0,0,0,.36));
-      animation:occupancyWindowCycle var(--b-night-cycle,var(--b-duration,13s)) ease-in-out infinite;
+      animation:quietLights var(--b-night-cycle,var(--b-duration,13s)) steps(1,end) infinite;
       animation-delay:var(--b-delay,0s);
     }
 
-    .urban-building::after{
-      content:"";
-      position:absolute;
-      inset:auto 0 100% 0;
-      height:var(--b-roof-height,.8rem);
-      background:transparent;
+    .urban-building:not(.reunion):not(.greenline):not(.front-shadow)::after{
+      inset:.62rem .52rem .68rem;
+      opacity:var(--b-light-rest,.16);
+      background-image:
+        repeating-linear-gradient(90deg,transparent 0 calc(var(--b-window-x,.72rem) * .58),rgba(255,244,216,.72) calc(var(--b-window-x,.72rem) * .58) calc(var(--b-window-x,.72rem) * .68),transparent calc(var(--b-window-x,.72rem) * .68) var(--b-window-x,.72rem)),
+        repeating-linear-gradient(0deg,transparent 0 calc(var(--b-window-y,.84rem) * .62),rgba(141,216,255,.36) calc(var(--b-window-y,.84rem) * .62) calc(var(--b-window-y,.84rem) * .72),transparent calc(var(--b-window-y,.84rem) * .72) var(--b-window-y,.84rem));
+      background-size:
+        calc(var(--b-window-x,.72rem) * 1.35) calc(var(--b-window-y,.84rem) * 1.12),
+        calc(var(--b-window-x,.72rem) * 1.35) calc(var(--b-window-y,.84rem) * 1.12);
+      background-position:
+        calc(var(--b-phase,0) * .07rem) 0,
+        0 calc(var(--b-phase,0) * .09rem);
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.94),rgba(0,0,0,.62) 64%,rgba(0,0,0,.28));
+      animation:secondaryLightState var(--b-night-cycle,var(--b-duration,13s)) steps(1,end) infinite;
+      animation-delay:calc(var(--b-delay,0s) - 3s);
     }
+
+    .urban-building[data-era*="office"]::before{animation-name:officeLights}
+    .urban-building[data-era*="residential"]::before{animation-name:residentialLights}
+    .urban-building[data-era*="mixed"]::before{animation-name:mixedUseLights}
+    .urban-building[data-era*="quiet"]::before{animation-name:quietLights}
+    .urban-building[data-era*="inherited"]::before{animation-name:quietLights}
+    .urban-building[data-era*="civic"]::before{animation-name:civicLights}
+
+    .urban-building[data-era*="office"]::after{animation-name:officeSecondaryLights}
+    .urban-building[data-era*="residential"]::after{animation-name:residentialSecondaryLights}
+    .urban-building[data-era*="mixed"]::after{animation-name:mixedSecondaryLights}
+    .urban-building[data-era*="quiet"]::after{animation-name:quietSecondaryLights}
+    .urban-building[data-era*="inherited"]::after{animation-name:quietSecondaryLights}
+    .urban-building[data-era*="civic"]::after{animation-name:civicSecondaryLights}
 
     .skyline-depth-layer.far .urban-building{
       border-color:rgba(255,255,255,.045);
@@ -510,7 +489,7 @@
     }
 
     .skyline-depth-layer.far .urban-building::before{
-      opacity:var(--b-light-off,.11);
+      opacity:var(--b-light-off,.10);
       background-size:
         calc(var(--b-window-x,.9rem) * 1.2) calc(var(--b-window-y,1rem) * 1.2),
         calc(var(--b-window-x,.9rem) * 1.2) calc(var(--b-window-y,1rem) * 1.2),
@@ -533,23 +512,27 @@
       box-shadow:
         0 0 var(--b-glow,1.5rem) rgba(57,255,159,.24),
         inset 0 1px 0 rgba(255,255,255,.10);
+      animation-name:greenlineBuildingPulse;
     }
 
     .urban-building.greenline::before{
       background-image:
-        repeating-linear-gradient(
-          90deg,
-          transparent 0 calc(var(--b-window-x,.58rem) * .30),
-          rgba(57,255,159,.92) calc(var(--b-window-x,.58rem) * .30) calc(var(--b-window-x,.58rem) * .42),
-          transparent calc(var(--b-window-x,.58rem) * .42) var(--b-window-x,.58rem)
-        ),
-        repeating-linear-gradient(
-          0deg,
-          transparent 0 calc(var(--b-window-y,.72rem) * .34),
-          rgba(230,255,235,.50) calc(var(--b-window-y,.72rem) * .34) calc(var(--b-window-y,.72rem) * .45),
-          transparent calc(var(--b-window-y,.72rem) * .45) var(--b-window-y,.72rem)
-        ),
+        repeating-linear-gradient(90deg,transparent 0 calc(var(--b-window-x,.58rem) * .30),rgba(57,255,159,.92) calc(var(--b-window-x,.58rem) * .30) calc(var(--b-window-x,.58rem) * .42),transparent calc(var(--b-window-x,.58rem) * .42) var(--b-window-x,.58rem)),
+        repeating-linear-gradient(0deg,transparent 0 calc(var(--b-window-y,.72rem) * .34),rgba(230,255,235,.50) calc(var(--b-window-y,.72rem) * .34) calc(var(--b-window-y,.72rem) * .45),transparent calc(var(--b-window-y,.72rem) * .45) var(--b-window-y,.72rem)),
         linear-gradient(135deg,rgba(57,255,159,.22),transparent 45%,rgba(255,232,163,.10));
+      animation:greenlineLights var(--b-night-cycle,var(--b-duration,31s)) ease-in-out infinite;
+      animation-delay:var(--b-delay,0s);
+    }
+
+    .urban-building.greenline::after{
+      inset:0;
+      z-index:3;
+      opacity:.30;
+      background:
+        linear-gradient(90deg,transparent 0 9%,rgba(57,255,159,.00) 10%,rgba(57,255,159,.55) 14%,rgba(57,255,159,.00) 20%,transparent 21% 80%,rgba(57,255,159,.00) 81%,rgba(57,255,159,.50) 85%,rgba(57,255,159,.00) 91%,transparent 92%);
+      background-size:100% 140%;
+      animation:greenlineContinuityFlow var(--b-duration,31s) ease-in-out infinite;
+      animation-delay:var(--b-delay,0s);
     }
 
     .urban-building.reunion{
@@ -578,14 +561,12 @@
         0 0 .9rem rgba(255,232,163,.20),
         0 0 1.7rem rgba(141,216,255,.12);
       opacity:1;
-      animation:landmarkBreathing var(--b-duration,14s) ease-in-out infinite;
+      animation:landmarkBreathing var(--b-duration,19s) ease-in-out infinite;
       animation-delay:var(--b-delay,0s);
       mask-image:none;
     }
 
     .urban-building.reunion::after{
-      content:"";
-      position:absolute;
       left:50%;
       top:16%;
       bottom:0;
@@ -605,10 +586,12 @@
     }
 
     .urban-building.front-shadow::before{
-      opacity:var(--b-light-off,.055);
-      animation:foregroundLowGlow var(--b-duration,18s) ease-in-out infinite;
+      opacity:var(--b-light-off,.045);
+      animation:foregroundLowGlow var(--b-duration,34s) steps(1,end) infinite;
       animation-delay:var(--b-delay,0s);
     }
+
+    .urban-building.front-shadow::after{display:none}
 
     @keyframes urbanHorizonBreathe{
       0%,100%{opacity:.58;filter:brightness(.94)}
@@ -624,81 +607,125 @@
           0 0 2rem rgba(0,0,0,.36);
       }
       34%{
-        filter:brightness(var(--b-bright-active,1.08));
+        filter:brightness(var(--b-bright-active,1.07));
         box-shadow:
           inset 0 1px 0 rgba(255,255,255,.10),
-          0 0 var(--b-glow-active,2.4rem) rgba(57,255,159,var(--b-glow-alpha-active,.22)),
-          0 0 2.3rem rgba(243,200,111,.08),
+          0 0 var(--b-glow-active,2.4rem) rgba(57,255,159,var(--b-glow-alpha-active,.18)),
+          0 0 2.3rem rgba(243,200,111,.07),
           0 0 2.2rem rgba(0,0,0,.34);
       }
-      61%{
-        filter:brightness(var(--b-bright-mid,1.01));
-      }
-      78%{
-        filter:brightness(.97);
-      }
+      61%{filter:brightness(var(--b-bright-mid,1.01))}
+      78%{filter:brightness(.97)}
     }
 
-    @keyframes occupancyWindowCycle{
+    @keyframes officeLights{
+      0%,100%{opacity:var(--b-light-off,.18);filter:brightness(.92)}
+      18%{opacity:var(--b-occupancy,.30);filter:brightness(1.02)}
+      37%{opacity:var(--b-light-on,.52);filter:brightness(1.14)}
+      58%{opacity:var(--b-occupancy,.34);filter:brightness(1.04)}
+      79%{opacity:var(--b-light-rest,.24);filter:brightness(.98)}
+    }
+
+    @keyframes officeSecondaryLights{
+      0%,100%{opacity:var(--b-light-rest,.14)}
+      31%{opacity:calc(var(--b-light-on,.50) * .44)}
+      49%{opacity:calc(var(--b-light-on,.50) * .28)}
+      72%{opacity:calc(var(--b-light-on,.50) * .50)}
+    }
+
+    @keyframes residentialLights{
+      0%,100%{opacity:var(--b-light-off,.20);filter:brightness(.95)}
+      21%{opacity:var(--b-light-on,.58);filter:brightness(1.12)}
+      42%{opacity:var(--b-occupancy,.38);filter:brightness(1.02)}
+      67%{opacity:var(--b-light-on,.58);filter:brightness(1.10)}
+      86%{opacity:var(--b-light-rest,.30);filter:brightness(.99)}
+    }
+
+    @keyframes residentialSecondaryLights{
+      0%,100%{opacity:calc(var(--b-light-rest,.30) * .32)}
+      17%{opacity:calc(var(--b-light-on,.58) * .50)}
+      53%{opacity:calc(var(--b-light-on,.58) * .22)}
+      76%{opacity:calc(var(--b-light-on,.58) * .42)}
+    }
+
+    @keyframes mixedUseLights{
+      0%,100%{opacity:var(--b-light-off,.18)}
+      14%{opacity:var(--b-occupancy,.31)}
+      36%{opacity:var(--b-light-on,.45)}
+      64%{opacity:var(--b-light-rest,.24)}
+      82%{opacity:var(--b-occupancy,.31)}
+    }
+
+    @keyframes mixedSecondaryLights{
+      0%,100%{opacity:calc(var(--b-light-rest,.24) * .34)}
+      29%{opacity:calc(var(--b-light-on,.45) * .36)}
+      61%{opacity:calc(var(--b-light-on,.45) * .54)}
+      88%{opacity:calc(var(--b-light-on,.45) * .22)}
+    }
+
+    @keyframes civicLights{
+      0%,100%{opacity:var(--b-light-off,.12)}
+      44%{opacity:var(--b-light-on,.22)}
+      72%{opacity:var(--b-occupancy,.16)}
+    }
+
+    @keyframes civicSecondaryLights{
+      0%,100%{opacity:.04}
+      52%{opacity:.10}
+    }
+
+    @keyframes quietLights{
+      0%,100%{opacity:var(--b-light-off,.08)}
+      47%{opacity:var(--b-light-on,.18)}
+      74%{opacity:var(--b-occupancy,.12)}
+    }
+
+    @keyframes quietSecondaryLights{
+      0%,100%{opacity:.03}
+      57%{opacity:.075}
+    }
+
+    @keyframes greenlineBuildingPulse{
       0%,100%{
-        opacity:var(--b-light-off,.22);
-        background-position:
-          0 0,
-          0 0,
-          0 0;
-        filter:brightness(.94);
-      }
-      23%{
-        opacity:var(--b-occupancy,.34);
-        background-position:
-          calc(var(--b-phase,0) * .03rem) 0,
-          0 calc(var(--b-phase,0) * .02rem),
-          0 0;
-        filter:brightness(1.02);
-      }
-      47%{
-        opacity:var(--b-light-on,.52);
-        background-position:
-          calc(var(--b-phase,0) * .07rem) calc(var(--b-phase,0) * -.02rem),
-          calc(var(--b-phase,0) * -.04rem) calc(var(--b-phase,0) * .05rem),
-          0 0;
-        filter:brightness(1.16);
-      }
-      66%{
-        opacity:var(--b-occupancy,.36);
-        background-position:
-          calc(var(--b-phase,0) * -.03rem) calc(var(--b-phase,0) * .03rem),
-          calc(var(--b-phase,0) * .02rem) 0,
-          0 0;
-        filter:brightness(1.04);
-      }
-      84%{
-        opacity:var(--b-light-rest,.25);
         filter:brightness(.98);
+        box-shadow:0 0 var(--b-glow,2.3rem) rgba(57,255,159,.22),inset 0 1px 0 rgba(255,255,255,.10);
       }
+      44%{
+        filter:brightness(var(--b-bright-active,1.18));
+        box-shadow:0 0 var(--b-glow-active,3.6rem) rgba(57,255,159,.44),0 0 1.4rem rgba(243,200,111,.10),inset 0 1px 0 rgba(255,255,255,.12);
+      }
+      71%{filter:brightness(1.05)}
+    }
+
+    @keyframes greenlineLights{
+      0%,100%{opacity:var(--b-light-off,.22);filter:brightness(.96)}
+      28%{opacity:var(--b-occupancy,.42);filter:brightness(1.08)}
+      52%{opacity:var(--b-light-on,.76);filter:brightness(1.20)}
+      79%{opacity:var(--b-light-rest,.35);filter:brightness(1.02)}
+    }
+
+    @keyframes greenlineContinuityFlow{
+      0%,100%{opacity:.16;background-position:0 0}
+      50%{opacity:.36;background-position:0 100%}
     }
 
     @keyframes landmarkBreathing{
       0%,100%{
         opacity:.88;
         filter:brightness(.92);
-        box-shadow:
-          0 0 .9rem rgba(255,232,163,.18),
-          0 0 1.7rem rgba(141,216,255,.11);
+        box-shadow:0 0 .9rem rgba(255,232,163,.18),0 0 1.7rem rgba(141,216,255,.11);
       }
       52%{
         opacity:1;
         filter:brightness(1.10);
-        box-shadow:
-          0 0 1.2rem rgba(255,232,163,.28),
-          0 0 2.3rem rgba(141,216,255,.18);
+        box-shadow:0 0 1.2rem rgba(255,232,163,.28),0 0 2.3rem rgba(141,216,255,.18);
       }
     }
 
     @keyframes foregroundLowGlow{
-      0%,100%{opacity:.04;filter:brightness(.84)}
-      48%{opacity:.10;filter:brightness(1.02)}
-      78%{opacity:.06;filter:brightness(.92)}
+      0%,100%{opacity:.035;filter:brightness(.84)}
+      48%{opacity:.09;filter:brightness(1.02)}
+      78%{opacity:.055;filter:brightness(.92)}
     }
 
     .construct-visual{
@@ -728,9 +755,7 @@
       padding:1rem;
       border:1px solid rgba(255,255,255,.12);
       border-radius:1.25rem;
-      background:
-        radial-gradient(circle at 16% 0%,rgba(57,255,159,.10),transparent 20rem),
-        rgba(3,6,18,.52);
+      background:radial-gradient(circle at 16% 0%,rgba(57,255,159,.10),transparent 20rem),rgba(3,6,18,.52);
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
       backdrop-filter:blur(8px);
     }
@@ -947,9 +972,7 @@
       width:min(84%,44rem);
       height:min(62%,28rem);
       border:1px solid rgba(243,200,111,.13);
-      box-shadow:
-        0 0 3rem rgba(36,120,255,.12),
-        inset 0 0 30px rgba(141,216,255,.045);
+      box-shadow:0 0 3rem rgba(36,120,255,.12),inset 0 0 30px rgba(141,216,255,.045);
     }
 
     .compass-stage::after{
@@ -1001,27 +1024,29 @@
       display:grid;
       place-items:center;
       pointer-events:none;
-      transform-origin:50% 50%;
     }
 
-    .gem-svg{
+    .gem-shape{
       position:absolute;
       inset:0;
-      width:100%;
-      height:100%;
-      overflow:visible;
-      pointer-events:none;
-      filter:
-        drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
-        drop-shadow(0 0 1.15rem rgba(57,255,159,.15))
-        drop-shadow(0 0 .55rem rgba(243,200,111,.10));
+      clip-path:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
+      background:
+        linear-gradient(35deg,transparent 0 22%,rgba(255,255,255,.20) 23% 25%,transparent 26%),
+        radial-gradient(circle at 50% 32%,rgba(255,255,255,.42),transparent 30%),
+        linear-gradient(135deg,rgba(255,248,220,.72),rgba(141,216,255,.44) 30%,rgba(36,120,255,.26) 48%,rgba(243,200,111,.20) 70%,rgba(3,7,19,.94));
+      border:1px solid rgba(235,248,255,.40);
+      box-shadow:0 1.1rem 1.4rem rgba(0,0,0,.35),0 0 1.2rem rgba(57,255,159,.14);
     }
 
-    .compass-center .gem-svg{
-      filter:
-        drop-shadow(0 1.55rem 1.85rem rgba(0,0,0,.42))
-        drop-shadow(0 0 1.65rem rgba(57,255,159,.20))
-        drop-shadow(0 0 .85rem rgba(243,200,111,.16));
+    .gem-shape::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(90deg,transparent 49%,rgba(255,255,255,.28) 50%,transparent 51%),
+        linear-gradient(0deg,transparent 49%,rgba(255,255,255,.22) 50%,transparent 51%),
+        linear-gradient(35deg,transparent 42%,rgba(255,255,255,.14) 43% 44%,transparent 45%);
+      opacity:.84;
     }
 
     .gem-label{
@@ -1033,10 +1058,7 @@
       gap:.18rem;
       text-align:center;
       pointer-events:none;
-      text-shadow:
-        0 3px 14px rgba(0,0,0,.98),
-        0 0 12px rgba(0,28,90,.88),
-        0 0 3px rgba(255,255,255,.58);
+      text-shadow:0 3px 14px rgba(0,0,0,.98),0 0 12px rgba(0,28,90,.88),0 0 3px rgba(255,255,255,.58);
     }
 
     .gem-label b{
@@ -1058,11 +1080,6 @@
       text-transform:uppercase;
     }
 
-    .compass-center .gem-label{
-      width:84%;
-      gap:.2rem;
-    }
-
     .compass-center .gem-label b{
       color:var(--gold);
       font-size:clamp(1.02rem,2.35vw,1.42rem);
@@ -1080,10 +1097,7 @@
       padding:1rem;
       border:1px solid rgba(255,255,255,.12);
       border-radius:1.35rem;
-      background:
-        radial-gradient(circle at 18% 0%,rgba(36,120,255,.10),transparent 28rem),
-        radial-gradient(circle at 88% 10%,rgba(57,255,159,.060),transparent 24rem),
-        rgba(255,255,255,.035);
+      background:radial-gradient(circle at 18% 0%,rgba(36,120,255,.10),transparent 28rem),radial-gradient(circle at 88% 10%,rgba(57,255,159,.060),transparent 24rem),rgba(255,255,255,.035);
       overflow:hidden;
     }
 
@@ -1141,16 +1155,11 @@
     .lens-body{
       border:1px solid rgba(255,255,255,.12);
       border-radius:1.15rem;
-      background:
-        radial-gradient(circle at 10% 0%,rgba(141,216,255,.08),transparent 24rem),
-        linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.022));
+      background:radial-gradient(circle at 10% 0%,rgba(141,216,255,.08),transparent 24rem),linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.022));
       overflow:hidden;
     }
 
-    .lens-copy{
-      display:none;
-      padding:1rem;
-    }
+    .lens-copy{display:none;padding:1rem}
 
     .platform-radio:checked ~ .lens-body .platform-copy,
     .engineering-radio:checked ~ .lens-body .engineering-copy{
@@ -1199,9 +1208,8 @@
       justify-content:flex-end;
       gap:.55rem;
       margin-top:.1rem;
+      flex-wrap:wrap;
     }
-
-    .section-return.dual-return{flex-wrap:wrap}
 
     .return-orbit,
     .return-frontier{
@@ -1227,9 +1235,7 @@
     .return-frontier{
       border:1px solid rgba(255,255,255,.16);
       color:rgba(241,246,255,.88);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(57,255,159,.10),transparent 70%),
-        rgba(255,255,255,.045);
+      background:radial-gradient(circle at 50% 0%,rgba(57,255,159,.10),transparent 70%),rgba(255,255,255,.045);
       box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
     }
 
@@ -1241,11 +1247,6 @@
       outline:none;
     }
 
-    .return-frontier:hover,
-    .return-frontier:focus-visible{
-      border-color:rgba(57,255,159,.42);
-    }
-
     .final-band{
       margin-top:1.15rem;
       padding:clamp(1rem,3vw,1.45rem);
@@ -1253,10 +1254,7 @@
       gap:.85rem;
       border:1px solid rgba(243,200,111,.28);
       border-radius:1.55rem;
-      background:
-        radial-gradient(circle at 18% 0%,rgba(243,200,111,.12),transparent 32rem),
-        radial-gradient(circle at 88% 20%,rgba(57,255,159,.09),transparent 28rem),
-        linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.025));
+      background:radial-gradient(circle at 18% 0%,rgba(243,200,111,.12),transparent 32rem),radial-gradient(circle at 88% 20%,rgba(57,255,159,.09),transparent 28rem),linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.025));
       box-shadow:0 1.3rem 3.4rem rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.08);
     }
 
@@ -1269,9 +1267,7 @@
 
     .route-receipt,
     [data-route-receipt],
-    [data-contract-receipt],
-    [data-debug-receipt],
-    .receipt{
+    [data-contract-receipt]{
       display:none!important;
       visibility:hidden!important;
       overflow:hidden!important;
@@ -1285,7 +1281,6 @@
       opacity:0!important;
       pointer-events:none!important;
       position:absolute!important;
-      inset:auto!important;
       clip-path:inset(50%)!important;
       white-space:nowrap!important;
     }
@@ -1355,37 +1350,13 @@
         height:5.45rem;
       }
 
-      .gem-label{width:88%;gap:.14rem}
-      .gem-label b{font-size:.62rem;letter-spacing:.046em}
-      .gem-label span{font-size:.44rem;letter-spacing:.044em}
-      .compass-center .gem-label b{font-size:.88rem}
-      .compass-center .gem-label span{font-size:.60rem}
       .lens-tabs{display:grid;grid-template-columns:1fr 1fr}
-      .section-return,
-      .section-return.dual-return{
-        display:grid;
-        grid-template-columns:1fr;
-        justify-content:stretch;
-      }
-      .return-orbit,
-      .return-frontier{width:100%}
-    }
-
-    @media (max-width:420px){
-      .compass-stage{gap:.9rem .62rem}
-      .compass-node{width:6.85rem;height:5rem}
-      .gem-label{width:90%}
-      .gem-label b{font-size:.54rem;letter-spacing:.036em}
-      .gem-label span{font-size:.38rem;letter-spacing:.034em}
-      .compass-center{width:8.95rem;height:6.5rem}
-      .compass-center .gem-label b{font-size:.78rem}
-      .compass-center .gem-label span{font-size:.52rem}
+      .section-return{display:grid;grid-template-columns:1fr;justify-content:stretch}
+      .return-orbit,.return-frontier{width:100%}
     }
 
     @media (prefers-reduced-motion:reduce){
-      *,
-      *::before,
-      *::after{
+      *,*::before,*::after{
         scroll-behavior:auto!important;
         animation-duration:.01ms!important;
         animation-iteration-count:1!important;
@@ -1396,90 +1367,6 @@
 </head>
 
 <body>
-  <svg class="svg-defs" aria-hidden="true" focusable="false">
-    <defs>
-      <linearGradient id="compassGemBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#fff8dc" stop-opacity=".92"/>
-        <stop offset=".13" stop-color="#dff5ff" stop-opacity=".70"/>
-        <stop offset=".30" stop-color="#8dd8ff" stop-opacity=".56"/>
-        <stop offset=".48" stop-color="#2478ff" stop-opacity=".40"/>
-        <stop offset=".66" stop-color="#f3c86f" stop-opacity=".24"/>
-        <stop offset="1" stop-color="#020816" stop-opacity=".94"/>
-      </linearGradient>
-
-      <linearGradient id="compassGemAir" x1="48" y1="10" x2="168" y2="80" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#ffffff" stop-opacity=".90"/>
-        <stop offset=".34" stop-color="#eaf7ff" stop-opacity=".46"/>
-        <stop offset=".68" stop-color="#fff0a3" stop-opacity=".18"/>
-        <stop offset="1" stop-color="#8dd8ff" stop-opacity=".10"/>
-      </linearGradient>
-
-      <linearGradient id="compassGemDepth" x1="110" y1="36" x2="110" y2="156" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#ffffff" stop-opacity=".18"/>
-        <stop offset=".30" stop-color="#8dd8ff" stop-opacity=".20"/>
-        <stop offset=".62" stop-color="#f3c86f" stop-opacity=".13"/>
-        <stop offset="1" stop-color="#020716" stop-opacity=".66"/>
-      </linearGradient>
-
-      <radialGradient id="compassGemTableGlow" cx="50%" cy="38%" r="64%">
-        <stop offset="0" stop-color="#ffffff" stop-opacity=".56"/>
-        <stop offset=".28" stop-color="#8dd8ff" stop-opacity=".28"/>
-        <stop offset=".58" stop-color="#ffe8a3" stop-opacity=".12"/>
-        <stop offset="1" stop-color="#020611" stop-opacity="0"/>
-      </radialGradient>
-
-      <filter id="compassGemGlow" x="-42%" y="-50%" width="184%" height="200%">
-        <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="blur"/>
-        <feColorMatrix
-          in="blur"
-          type="matrix"
-          values="
-            0.42 0 0 0 0.08
-            0 .58 0 0 0.14
-            0 0 1.00 0 0.28
-            0 0 0 0.52 0"
-          result="glow"
-        />
-        <feMerge>
-          <feMergeNode in="glow"/>
-          <feMergeNode in="SourceGraphic"/>
-        </feMerge>
-      </filter>
-
-      <symbol id="compassOrganicGem" viewBox="0 0 220 160">
-        <g filter="url(#compassGemGlow)">
-          <path d="M108 4 L146 12 L184 39 L209 76 L188 108 L147 139 L111 155 L69 136 L27 105 L12 73 L39 37 L77 14 Z" fill="url(#compassGemBody)" stroke="rgba(235,248,255,.58)" stroke-width="1.35"/>
-          <path d="M108 4 L146 12 L130 38 L109 30 L87 39 L77 14 Z" fill="url(#compassGemAir)" opacity=".84"/>
-          <path d="M77 14 L87 39 L61 58 L39 37 Z" fill="rgba(255,255,255,.23)"/>
-          <path d="M146 12 L130 38 L159 60 L184 39 Z" fill="rgba(255,255,255,.15)"/>
-          <path d="M39 37 L61 58 L53 83 L12 73 Z" fill="rgba(141,216,255,.12)"/>
-          <path d="M184 39 L159 60 L166 81 L209 76 Z" fill="rgba(243,200,111,.12)"/>
-          <path d="M87 39 L109 30 L130 38 L159 60 L148 83 L110 101 L72 83 L61 58 Z" fill="url(#compassGemTableGlow)" stroke="rgba(255,255,255,.30)" stroke-width=".9"/>
-          <path d="M12 73 L53 83 L69 136 L27 105 Z" fill="rgba(141,216,255,.14)"/>
-          <path d="M209 76 L166 81 L147 139 L188 108 Z" fill="rgba(243,200,111,.11)"/>
-          <path d="M53 83 L72 83 L111 155 L69 136 Z" fill="rgba(2,8,24,.40)"/>
-          <path d="M166 81 L148 83 L111 155 L147 139 Z" fill="rgba(243,200,111,.10)"/>
-          <path d="M72 83 L110 101 L111 155 Z" fill="url(#compassGemDepth)" opacity=".76"/>
-          <path d="M148 83 L110 101 L111 155 Z" fill="rgba(4,10,22,.36)"/>
-          <path d="M108 4 L111 155" stroke="rgba(255,255,255,.34)" stroke-width="1.15"/>
-          <path d="M12 73 L209 76" stroke="rgba(255,255,255,.28)" stroke-width="1.05"/>
-          <path d="M39 37 L188 108" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
-          <path d="M184 39 L27 105" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
-          <path d="M77 14 L110 101 L146 12" stroke="rgba(255,255,255,.18)" stroke-width=".9" fill="none"/>
-          <path d="M39 37 L110 101 L184 39" stroke="rgba(255,255,255,.16)" stroke-width=".9" fill="none"/>
-          <path d="M27 105 L110 101 L188 108" stroke="rgba(243,200,111,.14)" stroke-width=".9" fill="none"/>
-          <g opacity=".82">
-            <path d="M109 27 L116 70 L110 106 L103 70 Z" fill="rgba(255,255,255,.27)"/>
-            <path d="M61 58 L105 72 L159 60 L116 79 Z" fill="rgba(255,255,255,.16)"/>
-            <path d="M72 83 L105 75 L148 83 L114 92 Z" fill="rgba(141,216,255,.13)"/>
-            <path d="M110 101 L126 81 L148 83 L129 96 Z" fill="rgba(255,255,255,.13)"/>
-            <path d="M110 101 L94 81 L72 83 L91 96 Z" fill="rgba(243,200,111,.08)"/>
-          </g>
-        </g>
-      </symbol>
-    </defs>
-  </svg>
-
   <a class="skip" href="#main">Skip to Urban Construct</a>
 
   <div class="shell">
@@ -1582,17 +1469,17 @@
       </section>
 
       <section class="panel construct-visual" id="urban-construct-field" aria-labelledby="construct-title">
-        <div class="kicker">Urban Construct Field · Per-building chronology</div>
+        <div class="kicker">Urban Construct Field · No window drift</div>
 
         <div class="construct-copy">
-          <h2 id="construct-title">A city does not turn on all at once. Every building has its own geometry and its own time behavior.</h2>
+          <h2 id="construct-title">A city does not turn on all at once. Each building has its own light behavior.</h2>
           <p>
-            The parent skyline field owns depth, horizon, atmosphere, and composition. Each building owns its own 16 × 16 local lattice and its own chronology: window rhythm, floor spacing, roof form, edge breaks, light density, occupancy pattern, local glow, and night cycle.
+            Normal buildings now use fixed window lattices with on/off light states. The windows do not slide left to right. The green tower may keep continuity flow because its lit edge already supports that behavior.
           </p>
         </div>
 
         <div class="construct-grid">
-          <div class="urban-skyline-stage construct-skyline" aria-label="Inspectable Dallas-inspired living skyline with per-building chronology and local lattice">
+          <div class="urban-skyline-stage construct-skyline" aria-label="Inspectable Dallas-inspired skyline with fixed window lattices and per-building occupancy logic">
             <div class="skyline-depth-layer far">
               <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" data-era="far-inherited" style="--b-left:3%;--b-bottom:23%;--b-width:3rem;--b-height:8rem;--b-haze:.42;--b-light-off:.10;--b-occupancy:.15;--b-light-on:.22;--b-light-rest:.12;--b-window-x:.95rem;--b-window-y:1.05rem;--b-phase:3;--b-delay:-2s;--b-duration:19s;--b-night-cycle:25s;--b-glow-alpha:.04;--b-glow-alpha-active:.08;"></span>
               <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" data-era="far-inherited" style="--b-left:11%;--b-bottom:22%;--b-width:4.2rem;--b-height:10.4rem;--b-haze:.46;--b-light-off:.12;--b-occupancy:.18;--b-light-on:.26;--b-light-rest:.14;--b-window-x:.86rem;--b-window-y:1.06rem;--b-phase:8;--b-delay:-5s;--b-duration:23s;--b-night-cycle:31s;"></span>
@@ -1639,35 +1526,24 @@
         <div class="kicker">Urban field · Active city-system pathways</div>
         <h2 id="field-title">A city is not proven by its skyline. A city is proven by whether its systems can carry people under pressure.</h2>
 
-        <div
-          class="compass-stage"
-          aria-label="Urban pathway field"
-          data-urban-pathway-field="true"
-          data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
-          data-source-symbol-authority="compassOrganicGem"
-          data-per-pathway-dual-lens="true"
-        >
+        <div class="compass-stage" aria-label="Urban pathway field">
           <div class="compass-center" aria-hidden="true">
-            <span class="gem-core">
-              <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
-                <use href="#compassOrganicGem"></use>
-              </svg>
-            </span>
+            <span class="gem-core"><span class="gem-shape"></span></span>
             <span class="gem-label"><b>Urban</b><span>Construct</span></span>
           </div>
 
-          <a class="compass-node" style="--x:50%;--y:11%;" href="#audralia-urban" aria-label="Open Audralia Urban"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Audralia</b><span>Urban</span></span></a>
-          <a class="compass-node" style="--x:73%;--y:17%;" href="#city-form" aria-label="Open City Form"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>City</b><span>Form</span></span></a>
-          <a class="compass-node" style="--x:87%;--y:34%;" href="#housing" aria-label="Open Housing"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Housing</b><span>Stability</span></span></a>
-          <a class="compass-node" style="--x:87%;--y:62%;" href="#mobility" aria-label="Open Mobility"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Mobility</b><span>Access</span></span></a>
-          <a class="compass-node" style="--x:73%;--y:80%;" href="#water" aria-label="Open Urban Water"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Water</b><span>Security</span></span></a>
-          <a class="compass-node" style="--x:50%;--y:88%;" href="#energy" aria-label="Open Urban Energy"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Energy</b><span>Continuity</span></span></a>
-          <a class="compass-node" style="--x:27%;--y:80%;" href="#waste" aria-label="Open Urban Waste"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Waste</b><span>Closure</span></span></a>
-          <a class="compass-node" style="--x:13%;--y:62%;" href="#food" aria-label="Open Food Access"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Food</b><span>Access</span></span></a>
-          <a class="compass-node" style="--x:13%;--y:34%;" href="#public-safety" aria-label="Open Public Safety"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Public</b><span>Safety</span></span></a>
-          <a class="compass-node" style="--x:27%;--y:17%;" href="#governance" aria-label="Open Governance"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Governance</b><span>Account</span></span></a>
-          <a class="compass-node" style="--x:34%;--y:6%;" href="#resilience" aria-label="Open Resilience"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Resilience</b><span>Recovery</span></span></a>
-          <a class="compass-node" style="--x:66%;--y:6%;" href="#kill-conditions" aria-label="Open Kill Conditions"><span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160"><use href="#compassOrganicGem"></use></svg></span><span class="gem-label"><b>Kill</b><span>Conditions</span></span></a>
+          <a class="compass-node" style="--x:50%;--y:11%;" href="#audralia-urban"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Audralia</b><span>Urban</span></span></a>
+          <a class="compass-node" style="--x:73%;--y:17%;" href="#city-form"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>City</b><span>Form</span></span></a>
+          <a class="compass-node" style="--x:87%;--y:34%;" href="#housing"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Housing</b><span>Stability</span></span></a>
+          <a class="compass-node" style="--x:87%;--y:62%;" href="#mobility"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Mobility</b><span>Access</span></span></a>
+          <a class="compass-node" style="--x:73%;--y:80%;" href="#water"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Water</b><span>Security</span></span></a>
+          <a class="compass-node" style="--x:50%;--y:88%;" href="#energy"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Energy</b><span>Continuity</span></span></a>
+          <a class="compass-node" style="--x:27%;--y:80%;" href="#waste"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Waste</b><span>Closure</span></span></a>
+          <a class="compass-node" style="--x:13%;--y:62%;" href="#food"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Food</b><span>Access</span></span></a>
+          <a class="compass-node" style="--x:13%;--y:34%;" href="#public-safety"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Public</b><span>Safety</span></span></a>
+          <a class="compass-node" style="--x:27%;--y:17%;" href="#governance"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Governance</b><span>Account</span></span></a>
+          <a class="compass-node" style="--x:34%;--y:6%;" href="#resilience"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Resilience</b><span>Recovery</span></span></a>
+          <a class="compass-node" style="--x:66%;--y:6%;" href="#kill-conditions"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Kill</b><span>Conditions</span></span></a>
         </div>
       </section>
 
@@ -1687,7 +1563,7 @@
             </div>
           </div>
           <div class="boundary">Boundary: Audralia may simulate urban life; Audralia may not prove real-world city deployment.</div>
-          <div class="section-return dual-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
@@ -1707,7 +1583,7 @@
             </div>
           </div>
           <div class="boundary">Boundary: visual density is not livability.</div>
-          <div class="section-return dual-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
@@ -1727,7 +1603,7 @@
             </div>
           </div>
           <div class="boundary">Boundary: units do not equal livability without access, safety, utilities, and affordability.</div>
-          <div class="section-return dual-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
@@ -1747,7 +1623,7 @@
             </div>
           </div>
           <div class="boundary">Boundary: road presence is not mobility success.</div>
-          <div class="section-return dual-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
@@ -1767,7 +1643,7 @@
             </div>
           </div>
           <div class="boundary">Boundary: water access is not water security without quality, pressure, storage, and failure planning.</div>
-          <div class="section-return dual-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
@@ -1787,7 +1663,7 @@
             </div>
           </div>
           <div class="boundary">Boundary: power availability is not resilience without critical-load continuity.</div>
-          <div class="section-return dual-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
@@ -1807,7 +1683,7 @@
             </div>
           </div>
           <div class="boundary">Boundary: collection is not closure.</div>
-          <div class="section-return dual-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
@@ -1827,7 +1703,7 @@
             </div>
           </div>
           <div class="boundary">Boundary: food presence is not food access.</div>
-          <div class="section-return dual-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
@@ -1847,7 +1723,7 @@
             </div>
           </div>
           <div class="boundary">Boundary: control is not safety without trust, response, and prevention.</div>
-          <div class="section-return dual-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
@@ -1867,7 +1743,7 @@
             </div>
           </div>
           <div class="boundary">Boundary: a plan is not governance without authority, execution, accountability, and audit.</div>
-          <div class="section-return dual-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
@@ -1887,7 +1763,7 @@
             </div>
           </div>
           <div class="boundary">Boundary: resilience is not optimism. It requires tested reserve and recovery capacity.</div>
-          <div class="section-return dual-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
@@ -1907,7 +1783,7 @@
             </div>
           </div>
           <div class="boundary">Boundary: stop if visual completion replaces livability, if infrastructure is assumed, if failure is shifted to another system, if receipts are missing, or if audit contradictions remain unresolved.</div>
-          <div class="section-return dual-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+          <div class="section-return"><a class="return-orbit" href="#urban-orbit">Return to Urban Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
         </article>
       </section>
 
@@ -1929,14 +1805,11 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_URBAN_PER_BUILDING_CHRONOLOGY_OCCUPANCY_LIGHTS_RENEWAL_TNT_v5
-previous=FRONTIER_URBAN_PER_BUILDING_256_LATTICE_LIVING_SKYLINE_RENEWAL_TNT_v4
-binding=FRONTIER_URBAN_PER_BUILDING_CHRONOLOGY_OCCUPANCY_LIGHTS_FINAL_PRECODE_BINDING_AND_CCR_v5
+FRONTIER_URBAN_OCCUPANCY_LIGHTS_NO_WINDOW_DRIFT_RENEWAL_TNT_v6
+previous=FRONTIER_URBAN_PER_BUILDING_CHRONOLOGY_OCCUPANCY_LIGHTS_RENEWAL_TNT_v5
 route=/explore/frontier/urban/
 page=frontier_urban_construct
 html=/explore/frontier/urban/index.html
-source_visual_authority=COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2
-source_symbol_authority=compassOrganicGem
 hero_skyline_preserved=true
 construct_skyline_box_preserved=true
 per_building_lattice=true
@@ -1946,16 +1819,13 @@ state_expression=geometry_not_dom_object_count
 per_building_chronology=true
 per_building_occupancy=true
 asynchronous_building_timing=true
-inhabited_window_activity=true
+window_drift_removed=true
+normal_building_background_position_animation=false
+greenline_continuity_flow_allowed=true
+normal_windows_turn_on_off=true
+normal_windows_slide_left_right=false
 active_glow=true
 active_glow_css_only=true
-parent_skyline_field=true
-independent_building_objects=true
-parent_skyline_owns=depth_layer,horizon_placement,atmospheric_glow,far_mid_front_separation,composition,stage_visibility,city_field_framing
-building_owns=window_rhythm,floor_spacing,roof_form,edge_breaks,light_density,facade_proportion,silhouette_identity,local_glow,depth_weight,perspective_behavior,local_visual_variance,local_chronology,night_cycle,occupancy_pattern
-skyline_depth_layers=far_mid_front
-skyline_alive=true
-alive_standard=subtle_occupancy_horizon_breathing_asynchronous_building_light_variation
 traffic_animation=false
 per_window_dom=false
 javascript_added=false
@@ -1968,45 +1838,24 @@ external_image=false
 dropdown_navigation=true
 dropdown_js=false
 route_menu_component=details_summary_css_only
-site_menu=true
-frontier_lanes_menu=true
 dallas_inspired_skyline=true
 photographic_accuracy_claimed=false
 real_occupancy_data_claimed=false
 live_sensor_data_claimed=false
-urban_contextual_upgrade=true
-skyline_is_surface_load_is_city=true
-urban_system_pressure_thesis=true
-public_thesis=the_skyline_is_the_surface_the_load_is_the_city
-dallas_boundary=inspired_not_exact_not_photographic
-tourism_page=false
-real_estate_page=false
-skyline_gallery=false
-audralia_urban_first=true
-pathways=Audralia_Urban,City_Form,Housing,Mobility,Water,Energy,Waste,Food,Public_Safety,Governance,Resilience,Kill_Conditions
-per_pathway_dual_lens=true
-platform_lens_per_pathway=true
-engineering_lens_per_pathway=true
 dual_return_under_every_pathway=true
 return_to_urban_orbit_under_every_pathway=true
 return_to_frontier_under_every_pathway=true
 return_to_frontier_route=/explore/frontier/
-urban_owns=city_form,housing,mobility,urban_water_pressure,urban_energy_pressure,urban_waste_pressure,food_access,public_safety,governance,resilience,metropolitan_load,emergency_response_pressure,city_scale_consequence,occupancy_expression_as_visual_metaphor
-urban_does_not_own=water_science,energy_conversion,waste_no_away_accounting,frontier_lattice_page_authority,laws_authority,gauges_scoring,route_mutation,real_dallas_data,visual_pass_claims
-forbidden_collapses=one_global_lattice_controls_all_buildings,one_global_animation_clock_for_all_buildings,256_as_dom_count,per_window_dom,traffic_animation,rapid_flicker,js_randomization,skyline_as_tourism,visual_depth_as_proof,simulation_as_validation
 compliance_status=pass
 constraint_status=pass
 runtime_status=pass_conditionally
-static_page_usable_without_js=true
-heavy_runtime=false
-streaming=false
 visual_pass_claimed=false
-deploy_marker=FRONTIER_URBAN_PER_BUILDING_CHRONOLOGY_OCCUPANCY_LIGHTS_DEPLOY_MARKER_v5
+deploy_marker=FRONTIER_URBAN_OCCUPANCY_LIGHTS_NO_WINDOW_DRIFT_DEPLOY_MARKER_v6
       </template>
     </main>
 
     <footer>
-      FRONTIER_URBAN_PER_BUILDING_CHRONOLOGY_OCCUPANCY_LIGHTS_RENEWAL_TNT_v5 · Urban Construct · Per-building chronology · Occupancy lights · CSS-only.
+      FRONTIER_URBAN_OCCUPANCY_LIGHTS_NO_WINDOW_DRIFT_RENEWAL_TNT_v6 · Urban Construct · Fixed window lattices · Per-building light states · CSS-only.
     </footer>
   </div>
 </body>

@@ -1,80 +1,2041 @@
 <!doctype html>
-<html lang="en">
+<html
+  lang="en"
+  data-route="/explore/frontier/infrastructure/"
+  data-page="frontier-infrastructure"
+  data-version="G3-V2"
+  data-contract="FRONTIER_INFRASTRUCTURE_LIVING_BACKBONE_UNDER_LOAD_TNT_v2"
+  data-previous-contract="FRONTIER_INFRASTRUCTURE_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1"
+  data-role="frontier-infrastructure"
+  data-active-route="/explore/frontier/infrastructure/"
+  data-parent-return="/explore/frontier/"
+  data-artistic-identity="living-backbone-under-load"
+  data-backbone-field="active"
+  data-load-capacity-dependency-field="active"
+  data-compass-gems="active"
+  data-pathway-gems="active"
+  data-audralia-first="true"
+  data-platform-lens="active"
+  data-engineering-lens="active"
+  data-dropdown-navigation="active"
+  data-static-page-usable-without-js="true"
+  data-runtime-scope="css-only"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-canvas="false"
+  data-webgl="false"
+  data-streaming="false"
+  data-visual-pass-claimed="false"
+>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Explore Infrastructure | Diamond Gate Bridge</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+  <title>Infrastructure · Living Backbone Under Load · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Infrastructure exploration under host-first public structure."
-  />
+    content="Diamond Gate Bridge Infrastructure presents the Frontier backbone as a living support field where load, capacity, dependencies, maintenance, continuity, governance, receipts, and failure paths become visible."
+  >
+
   <style>
     :root{
-      --bg:#05070b; --bg2:#08101a; --bg3:#0d1623; --panel:#0b0f16; --panel2:#101722;
-      --line:#1f2a36; --line2:rgba(127,255,212,.16); --text:#e8f6ff; --muted:rgba(232,246,255,.68);
-      --accent:#7fffd4; --shadow:0 14px 40px rgba(0,0,0,.30); --shadow2:0 20px 70px rgba(0,0,0,.38);
-      --safe-top:env(safe-area-inset-top,0px); --safe-right:env(safe-area-inset-right,0px);
-      --safe-bottom:env(safe-area-inset-bottom,0px); --safe-left:env(safe-area-inset-left,0px); --maxw:1360px;
+      color-scheme:dark;
+      --bg:#02040b;
+      --ink:#fff4d8;
+      --muted:rgba(230,238,255,.78);
+      --faint:rgba(230,238,255,.50);
+      --gold:#f3c86f;
+      --gold2:#ffe8a3;
+      --blue:#8dd8ff;
+      --green:#39ff9f;
+      --softgreen:#8ff0c3;
+      --violet:#8f65ff;
+      --red:#ff9d91;
+      --orange:#ffb36b;
+      --panel:rgba(9,15,31,.90);
+      --line:rgba(184,205,255,.18);
+      --shadow:0 32px 110px rgba(0,0,0,.50);
+      --max:1180px;
+      --brand-gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
+      --gem-breathe-duration:8.8s;
     }
+
     *{box-sizing:border-box}
-    html,body{margin:0;min-height:100%;background:radial-gradient(circle at 50% -10%, rgba(111,231,255,.08), transparent 28%),linear-gradient(180deg,var(--bg3),var(--bg2) 36%,var(--bg));color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-    body{min-height:100vh;overflow-x:hidden}
-    .wrap{max-width:var(--maxw);margin:0 auto;padding:calc(16px + var(--safe-top)) calc(16px + var(--safe-right)) calc(28px + var(--safe-bottom)) calc(16px + var(--safe-left))}
-    .topbar,.hero,.panel,.footer{border:1px solid var(--line);border-radius:22px;background:linear-gradient(180deg,rgba(11,15,22,.96),rgba(16,23,34,.96)),radial-gradient(circle at 82% 18%, rgba(111,231,255,.05), transparent 24%);box-shadow:var(--shadow2)}
-    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;margin-bottom:12px;border-radius:14px;box-shadow:var(--shadow)}
-    .brand{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
-    .stamp{font-size:11px;color:var(--muted);white-space:nowrap}
-    .hero{padding:22px 20px 20px;margin-bottom:12px}
-    .eyebrow{display:inline-flex;align-items:center;gap:8px;min-height:34px;padding:8px 12px;border:1px solid var(--line2);border-radius:999px;background:rgba(255,255,255,.03);color:var(--accent);font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px}
-    h1{margin:0 0 14px;font-size:clamp(34px,4.8vw,64px);line-height:.96;letter-spacing:-.06em;max-width:10ch}
-    .heroText{margin:0;max-width:62ch;color:var(--muted);font-size:17px;line-height:1.72}
-    .actionRow{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
-    .action{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:10px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.04);color:var(--text);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;text-decoration:none}
-    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:12px}
-    .panel{padding:16px}
-    .panelTitle{margin:0 0 12px;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);padding-bottom:10px;border-bottom:1px solid var(--line)}
-    .panelText{margin:0;color:var(--muted);font-size:14px;line-height:1.7}
-    .footer{padding:12px 14px;color:var(--muted);font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
-    @media (max-width:980px){.grid{grid-template-columns:1fr}h1{max-width:none}}
-    @media (max-width:760px){.topbar{flex-direction:column;align-items:flex-start}}
+
+    html{
+      min-width:320px;
+      min-height:100%;
+      background:var(--bg);
+      scroll-behavior:smooth;
+      overflow-x:hidden;
+      scroll-padding-top:1rem;
+    }
+
+    body{
+      margin:0;
+      min-width:320px;
+      min-height:100vh;
+      color:var(--ink);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.5;
+      overflow-x:hidden;
+      background:
+        radial-gradient(circle at 50% -8%,rgba(243,200,111,.16),transparent 28rem),
+        radial-gradient(circle at 12% 18%,rgba(36,120,255,.18),transparent 28rem),
+        radial-gradient(circle at 88% 30%,rgba(57,255,159,.11),transparent 28rem),
+        radial-gradient(circle at 50% 78%,rgba(255,179,107,.10),transparent 34rem),
+        linear-gradient(180deg,#070b18 0%,#030713 58%,#010207 100%);
+      -webkit-font-smoothing:antialiased;
+      text-rendering:geometricPrecision;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      background-image:
+        radial-gradient(circle,rgba(255,255,255,.16) 0 1px,transparent 1.5px),
+        radial-gradient(circle,rgba(243,200,111,.12) 0 1px,transparent 1.5px),
+        linear-gradient(rgba(141,216,255,.040) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.040) 1px,transparent 1px);
+      background-size:220px 260px,310px 280px,54px 54px,54px 54px;
+      opacity:.20;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
+    }
+
+    a{color:inherit;text-decoration:none}
+
+    a:focus-visible,
+    button:focus-visible,
+    summary:focus-visible,
+    label:focus-visible,
+    [tabindex]:focus-visible{
+      outline:2px solid var(--gold);
+      outline-offset:4px;
+    }
+
+    .svg-defs{
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+      pointer-events:none;
+    }
+
+    .skip{
+      position:absolute;
+      left:-999px;
+      top:8px;
+      z-index:50;
+      padding:.75rem 1rem;
+      border-radius:999px;
+      color:#05070d;
+      background:var(--gold);
+      font-weight:950;
+    }
+
+    .skip:focus{left:8px}
+
+    .shell{
+      position:relative;
+      z-index:2;
+      width:min(var(--max),calc(100% - 28px));
+      margin:0 auto;
+      padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
+    }
+
+    .topbar{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:start;
+      gap:18px;
+      padding:12px 0 18px;
+    }
+
+    .brand{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:.9rem;
+      min-width:260px;
+    }
+
+    .brand-mark{
+      width:4.2rem;
+      height:4.2rem;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(243,200,111,.44);
+      transform:rotate(45deg);
+      clip-path:var(--brand-gem);
+      background:
+        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.26) 21% 23%,transparent 24%),
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.28),rgba(57,255,159,.16),rgba(1,15,60,.58),rgba(243,200,111,.20),rgba(255,255,255,.28)),
+        radial-gradient(circle at 48% 22%,rgba(255,255,255,.30),transparent 42%),
+        linear-gradient(145deg,rgba(9,44,112,.95),rgba(5,8,20,.98));
+      box-shadow:
+        0 0 2rem rgba(243,200,111,.18),
+        0 1.2rem 2.8rem rgba(0,0,0,.46),
+        inset 0 1px 0 rgba(255,255,255,.16);
+    }
+
+    .brand-mark span{
+      transform:rotate(-45deg);
+      font-weight:950;
+      letter-spacing:.04em;
+      color:rgba(255,244,216,.98);
+      text-shadow:0 2px 10px rgba(0,0,0,.85);
+    }
+
+    .brand-copy{display:grid;gap:.18rem}
+
+    .brand-copy strong{
+      font-size:clamp(1.08rem,3vw,1.7rem);
+      line-height:1;
+      letter-spacing:-.045em;
+    }
+
+    .brand-copy span{
+      color:var(--muted);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .nav{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:.6rem;
+    }
+
+    .route-menu{
+      position:relative;
+      min-width:min(16rem,100%);
+    }
+
+    .route-menu summary{
+      list-style:none;
+      cursor:pointer;
+      min-height:2.6rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:.75rem;
+      border:1px solid rgba(57,255,159,.22);
+      border-radius:999px;
+      padding:.62rem .85rem;
+      color:rgba(241,246,255,.90);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(57,255,159,.13),transparent 70%),
+        rgba(255,255,255,.045);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.075em;
+      text-transform:uppercase;
+      box-shadow:
+        0 0 1.15rem rgba(57,255,159,.08),
+        inset 0 1px 0 rgba(255,255,255,.08);
+      backdrop-filter:blur(7px);
+    }
+
+    .route-menu[open] summary{
+      border-color:rgba(57,255,159,.66);
+      color:rgba(226,255,239,.98);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(57,255,159,.28),transparent 72%),
+        linear-gradient(180deg,rgba(12,34,31,.72),rgba(4,9,20,.84));
+      box-shadow:
+        0 0 1.8rem rgba(57,255,159,.30),
+        0 0 3.2rem rgba(57,255,159,.10),
+        inset 0 1px 0 rgba(255,255,255,.12);
+    }
+
+    .route-menu summary::-webkit-details-marker{display:none}
+
+    .route-menu summary::after{
+      content:"";
+      width:.55rem;
+      height:.55rem;
+      border-right:2px solid rgba(226,255,239,.82);
+      border-bottom:2px solid rgba(226,255,239,.82);
+      transform:rotate(45deg) translateY(-.12rem);
+    }
+
+    .route-menu[open] summary::after{
+      transform:rotate(225deg) translateY(-.08rem);
+      border-color:rgba(57,255,159,.95);
+    }
+
+    .route-menu-panel{
+      position:absolute;
+      right:0;
+      top:calc(100% + .55rem);
+      z-index:40;
+      width:min(28rem,calc(100vw - 2rem));
+      padding:.78rem;
+      border:1px solid rgba(57,255,159,.34);
+      border-radius:1.1rem;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(57,255,159,.24),transparent 15rem),
+        radial-gradient(circle at 96% 25%,rgba(141,216,255,.09),transparent 15rem),
+        linear-gradient(180deg,rgba(6,23,28,.97),rgba(3,7,18,.98));
+      box-shadow:
+        0 0 2.8rem rgba(57,255,159,.22),
+        0 1.4rem 3.4rem rgba(0,0,0,.42),
+        inset 0 1px 0 rgba(255,255,255,.09);
+    }
+
+    .route-menu-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.5rem;
+    }
+
+    .route-menu-link{
+      min-height:2.35rem;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(57,255,159,.24);
+      border-radius:.86rem;
+      padding:.5rem .62rem;
+      color:rgba(232,255,241,.88);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(57,255,159,.11),transparent 72%),
+        linear-gradient(180deg,rgba(255,255,255,.048),rgba(255,255,255,.020));
+      font-size:.64rem;
+      font-weight:950;
+      letter-spacing:.06em;
+      text-align:center;
+      text-transform:uppercase;
+      box-shadow:
+        0 0 .85rem rgba(57,255,159,.08),
+        inset 0 1px 0 rgba(255,255,255,.07);
+    }
+
+    .route-menu-link:hover,
+    .route-menu-link:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(57,255,159,.64);
+      color:rgba(245,255,249,.98);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(57,255,159,.22),transparent 72%),
+        linear-gradient(180deg,rgba(57,255,159,.085),rgba(255,255,255,.028));
+      box-shadow:
+        0 0 1.35rem rgba(57,255,159,.24),
+        inset 0 1px 0 rgba(255,255,255,.10);
+      outline:none;
+    }
+
+    .route-menu-link[aria-current="page"]{
+      color:#041009;
+      border-color:rgba(243,200,111,.86);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(57,255,159,.28),transparent 70%),
+        linear-gradient(135deg,#fff2a8,#f3c86f);
+      box-shadow:
+        0 0 1.6rem rgba(57,255,159,.24),
+        0 0 1rem rgba(243,200,111,.22);
+    }
+
+    .panel{
+      border:1px solid var(--line);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
+      background:
+        radial-gradient(circle at 14% 0%,rgba(141,216,255,.10),transparent 28rem),
+        radial-gradient(circle at 86% 18%,rgba(57,255,159,.09),transparent 28rem),
+        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
+        var(--panel);
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+
+    .hero{
+      display:grid;
+      gap:1rem;
+      padding:clamp(1.45rem,5vw,3.4rem);
+      margin-top:.6rem;
+      isolation:isolate;
+    }
+
+    .kicker{
+      width:fit-content;
+      display:inline-flex;
+      align-items:center;
+      gap:.58rem;
+      padding:.58rem .95rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      color:rgba(230,238,255,.86);
+      background:rgba(3,6,18,.52);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      position:relative;
+      z-index:2;
+      backdrop-filter:blur(7px);
+    }
+
+    .kicker::before{
+      content:"";
+      width:.72rem;
+      height:.72rem;
+      border-radius:.18rem;
+      transform:rotate(45deg);
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+      box-shadow:0 0 1.1rem rgba(243,200,111,.46);
+    }
+
+    h1{
+      margin:0;
+      max-width:1020px;
+      font-size:clamp(3.3rem,10vw,7.05rem);
+      line-height:.84;
+      letter-spacing:-.105em;
+      text-wrap:balance;
+      text-shadow:0 1.2rem 2.4rem rgba(0,0,0,.60);
+    }
+
+    h2{
+      margin:0;
+      color:var(--gold);
+      font-size:clamp(1.45rem,4.7vw,2.75rem);
+      line-height:.98;
+      letter-spacing:-.07em;
+      text-wrap:balance;
+    }
+
+    h3{
+      margin:0;
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.25rem,3.1vw,1.85rem);
+      line-height:1;
+      letter-spacing:-.052em;
+    }
+
+    p{
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(.98rem,2.7vw,1.16rem);
+      line-height:1.55;
+    }
+
+    .lead{max-width:940px}
+
+    .quote{
+      max-width:960px;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(243,200,111,.22);
+      border-radius:1.2rem;
+      color:rgba(255,244,216,.92);
+      background:rgba(5,9,24,.62);
+      font-size:clamp(1rem,2.7vw,1.18rem);
+      font-weight:850;
+      backdrop-filter:blur(7px);
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.62rem;
+      margin-top:.2rem;
+    }
+
+    .button{
+      min-height:2.65rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:999px;
+      padding:.65rem 1rem;
+      background:rgba(3,6,18,.60);
+      color:rgba(241,246,255,.88);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      backdrop-filter:blur(7px);
+    }
+
+    .button:hover,
+    .button:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.62);
+      outline:none;
+    }
+
+    .button.gold{
+      border-color:rgba(243,200,111,.9);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
+    }
+
+    .button.green{
+      border-color:rgba(57,255,159,.48);
+      color:rgba(170,255,210,.95);
+      background:rgba(57,255,159,.08);
+    }
+
+    .section{
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.45rem);
+      display:grid;
+      gap:1.05rem;
+    }
+
+    .backbone-wrap{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(16rem,24rem);
+      gap:1rem;
+      align-items:stretch;
+    }
+
+    .backbone-stage{
+      position:relative;
+      min-height:clamp(34rem,64vw,49rem);
+      border:1px solid rgba(184,205,255,.14);
+      border-radius:clamp(1.25rem,4vw,2rem);
+      overflow:hidden;
+      isolation:isolate;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.13),transparent 20rem),
+        radial-gradient(circle at 16% 22%,rgba(36,120,255,.15),transparent 22rem),
+        radial-gradient(circle at 84% 76%,rgba(57,255,159,.11),transparent 22rem),
+        linear-gradient(180deg,#06101f 0%,#030815 100%);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .backbone-stage::before{
+      content:"";
+      position:absolute;
+      inset:clamp(1.15rem,3vw,2.2rem);
+      z-index:1;
+      border:1px solid rgba(141,216,255,.13);
+      border-radius:1.25rem;
+      background-image:
+        linear-gradient(rgba(141,216,255,.072) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.072) 1px,transparent 1px),
+        linear-gradient(rgba(243,200,111,.038) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(243,200,111,.038) 1px,transparent 1px);
+      background-size:
+        8.33% 8.33%,
+        8.33% 8.33%,
+        25% 25%,
+        25% 25%;
+      box-shadow:
+        inset 0 0 3rem rgba(243,200,111,.040),
+        0 0 2.4rem rgba(36,120,255,.08);
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.94),rgba(0,0,0,.76));
+    }
+
+    .backbone-stage::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:8%;
+      z-index:4;
+      width:clamp(.68rem,1.3vw,1.05rem);
+      height:84%;
+      border:1px solid rgba(243,200,111,.38);
+      border-radius:999px;
+      transform:translateX(-50%) rotate(8deg);
+      background:
+        linear-gradient(180deg,rgba(255,244,216,.48),rgba(243,200,111,.28),rgba(57,255,159,.18),rgba(255,179,107,.28),rgba(255,244,216,.36)),
+        radial-gradient(circle at 50% 14%,rgba(255,255,255,.72),transparent 16%),
+        rgba(4,8,19,.88);
+      box-shadow:
+        0 0 1.8rem rgba(243,200,111,.26),
+        0 0 3.2rem rgba(57,255,159,.12),
+        inset 0 0 1.2rem rgba(255,255,255,.16);
+    }
+
+    .capacity-band{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:2;
+      width:var(--w);
+      height:var(--h);
+      border:1px solid var(--band-color);
+      border-radius:50%;
+      transform:translate(-50%,-50%) rotate(var(--r));
+      box-shadow:
+        0 0 1.8rem var(--band-glow),
+        inset 0 0 1.2rem rgba(255,255,255,.035);
+      opacity:.70;
+      animation:capacityBreathe var(--t,8s) ease-in-out infinite;
+      animation-delay:var(--d,0s);
+    }
+
+    @keyframes capacityBreathe{
+      0%,100%{opacity:.42;filter:brightness(.86);transform:translate(-50%,-50%) rotate(var(--r)) scale(.985)}
+      48%{opacity:.82;filter:brightness(1.14);transform:translate(-50%,-50%) rotate(var(--r)) scale(1.025)}
+    }
+
+    .dependency-line{
+      position:absolute;
+      z-index:3;
+      left:50%;
+      top:var(--y);
+      width:var(--w);
+      height:2px;
+      transform:rotate(var(--r));
+      transform-origin:left center;
+      background:
+        linear-gradient(90deg,rgba(243,200,111,.80),rgba(57,255,159,.44),rgba(141,216,255,.20),transparent);
+      opacity:.56;
+      box-shadow:0 0 1rem rgba(243,200,111,.20);
+      animation:dependencyCarry var(--t,7s) ease-in-out infinite;
+      animation-delay:var(--d,0s);
+    }
+
+    .dependency-line.left{
+      transform-origin:right center;
+      left:auto;
+      right:50%;
+      background:
+        linear-gradient(270deg,rgba(243,200,111,.80),rgba(57,255,159,.44),rgba(141,216,255,.20),transparent);
+    }
+
+    .dependency-line::after{
+      content:"";
+      position:absolute;
+      left:0;
+      top:50%;
+      width:20%;
+      height:.28rem;
+      border-radius:999px;
+      transform:translateY(-50%);
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.92),rgba(243,200,111,.86),transparent);
+      box-shadow:0 0 .9rem rgba(243,200,111,.54);
+      animation:loadPacket var(--t,7s) ease-in-out infinite;
+      animation-delay:var(--d,0s);
+    }
+
+    .dependency-line.left::after{
+      animation-name:loadPacketReverse;
+    }
+
+    @keyframes dependencyCarry{
+      0%,100%{opacity:.24;filter:brightness(.85)}
+      30%{opacity:.86;filter:brightness(1.2)}
+      62%{opacity:.45;filter:brightness(.96)}
+    }
+
+    @keyframes loadPacket{
+      0%{left:0;opacity:0}
+      16%{opacity:1}
+      58%{left:80%;opacity:1}
+      84%,100%{left:80%;opacity:0}
+    }
+
+    @keyframes loadPacketReverse{
+      0%{left:80%;opacity:0}
+      16%{opacity:1}
+      58%{left:0;opacity:1}
+      84%,100%{left:0;opacity:0}
+    }
+
+    .maintenance-pulse{
+      position:absolute;
+      left:50%;
+      top:9%;
+      z-index:5;
+      width:clamp(1.15rem,2.2vw,1.6rem);
+      height:clamp(1.15rem,2.2vw,1.6rem);
+      border:1px solid rgba(57,255,159,.76);
+      border-radius:50%;
+      transform:translateX(-50%);
+      background:
+        radial-gradient(circle at 42% 34%,rgba(255,255,255,.98),transparent 18%),
+        radial-gradient(circle at 50% 50%,rgba(57,255,159,.78),rgba(3,8,18,.88) 70%);
+      box-shadow:
+        0 0 1rem rgba(57,255,159,.72),
+        0 0 2.6rem rgba(57,255,159,.28);
+      animation:maintenanceTravel 12s ease-in-out infinite;
+    }
+
+    @keyframes maintenanceTravel{
+      0%,100%{top:9%;filter:brightness(.9)}
+      45%{top:84%;filter:brightness(1.35)}
+      68%{top:65%;filter:brightness(1.05)}
+    }
+
+    .infra-node{
+      position:absolute;
+      z-index:6;
+      left:var(--x);
+      top:var(--y);
+      min-width:5.8rem;
+      display:grid;
+      gap:.08rem;
+      place-items:center;
+      padding:.52rem .62rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      color:rgba(255,244,216,.94);
+      background:
+        radial-gradient(circle at 50% 0%,var(--node-bg),transparent 72%),
+        rgba(3,6,18,.72);
+      box-shadow:
+        0 0 1rem var(--node-glow),
+        inset 0 1px 0 rgba(255,255,255,.08);
+      transform:translate(-50%,-50%);
+      backdrop-filter:blur(7px);
+    }
+
+    .infra-node b{
+      color:rgba(255,244,216,.98);
+      font-size:.62rem;
+      font-weight:950;
+      letter-spacing:.11em;
+      line-height:1;
+      text-transform:uppercase;
+    }
+
+    .infra-node span{
+      color:rgba(230,238,255,.72);
+      font-size:.50rem;
+      font-weight:950;
+      letter-spacing:.09em;
+      line-height:1;
+      text-transform:uppercase;
+    }
+
+    .infra-node.power{--node-bg:rgba(243,200,111,.24);--node-glow:rgba(243,200,111,.22)}
+    .infra-node.water{--node-bg:rgba(141,216,255,.22);--node-glow:rgba(141,216,255,.22)}
+    .infra-node.transport{--node-bg:rgba(255,179,107,.22);--node-glow:rgba(255,179,107,.20)}
+    .infra-node.comms{--node-bg:rgba(143,101,255,.22);--node-glow:rgba(143,101,255,.20)}
+    .infra-node.storage{--node-bg:rgba(57,255,159,.20);--node-glow:rgba(57,255,159,.18)}
+    .infra-node.maintenance{--node-bg:rgba(57,255,159,.24);--node-glow:rgba(57,255,159,.24)}
+    .infra-node.continuity{--node-bg:rgba(255,244,216,.18);--node-glow:rgba(255,244,216,.18)}
+    .infra-node.governance{--node-bg:rgba(243,200,111,.22);--node-glow:rgba(243,200,111,.20)}
+
+    .support-dot{
+      position:absolute;
+      z-index:7;
+      left:var(--x);
+      top:var(--y);
+      width:clamp(1rem,2vw,1.35rem);
+      height:clamp(1rem,2vw,1.35rem);
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      background:
+        radial-gradient(circle at 42% 34%,rgba(255,255,255,.92),transparent 18%),
+        radial-gradient(circle at 50% 50%,var(--c),rgba(3,8,18,.88) 68%);
+      box-shadow:
+        0 0 .8rem var(--glow),
+        0 0 1.6rem var(--glow-soft),
+        inset 0 1px 0 rgba(255,255,255,.20);
+      animation:supportPulse var(--t,6s) ease-in-out infinite;
+      animation-delay:var(--d,0s);
+    }
+
+    .support-dot.receipt{--c:var(--green);--glow:rgba(57,255,159,.62);--glow-soft:rgba(57,255,159,.26)}
+    .support-dot.load{--c:var(--gold);--glow:rgba(243,200,111,.62);--glow-soft:rgba(243,200,111,.26)}
+    .support-dot.warning{--c:var(--orange);--glow:rgba(255,179,107,.68);--glow-soft:rgba(255,179,107,.28)}
+    .support-dot.failure{--c:var(--red);--glow:rgba(255,157,145,.68);--glow-soft:rgba(255,157,145,.28)}
+
+    @keyframes supportPulse{
+      0%,100%{filter:brightness(.82);opacity:.68}
+      30%{filter:brightness(1.32);opacity:1}
+      52%{filter:brightness(.96);opacity:.82}
+    }
+
+    .backbone-key{
+      display:grid;
+      align-content:start;
+      gap:.72rem;
+      padding:1rem;
+      border:1px solid rgba(57,255,159,.22);
+      border-radius:1.25rem;
+      background:
+        radial-gradient(circle at 16% 0%,rgba(57,255,159,.13),transparent 20rem),
+        rgba(3,6,18,.52);
+      box-shadow:
+        0 0 1.5rem rgba(57,255,159,.08),
+        inset 0 1px 0 rgba(255,255,255,.06);
+      backdrop-filter:blur(8px);
+    }
+
+    .backbone-key strong{
+      color:var(--gold);
+      font-size:.78rem;
+      font-weight:950;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .key-list{
+      display:grid;
+      gap:.5rem;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+
+    .key-list li{
+      display:grid;
+      grid-template-columns:1.2rem 1fr;
+      gap:.56rem;
+      align-items:start;
+      color:var(--muted);
+      font-size:.86rem;
+      line-height:1.34;
+    }
+
+    .key-mark{
+      width:.95rem;
+      height:.95rem;
+      margin-top:.14rem;
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:50%;
+      background:var(--key-color,var(--gold));
+      box-shadow:0 0 .78rem var(--key-color,var(--gold));
+    }
+
+    .key-mark.line{
+      height:.22rem;
+      margin-top:.45rem;
+      border-radius:999px;
+    }
+
+    .key-mark.spine{
+      width:.42rem;
+      height:1.2rem;
+      margin-left:.25rem;
+      border-radius:999px;
+    }
+
+    .compass-stage{
+      position:relative;
+      min-height:clamp(42rem,78vw,58rem);
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      isolation:isolate;
+      border:1px solid rgba(184,205,255,.13);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
+      background:
+        radial-gradient(circle at 50% 40%,rgba(141,216,255,.10),transparent 18rem),
+        radial-gradient(circle at 50% 62%,rgba(36,120,255,.13),transparent 24rem),
+        radial-gradient(circle at 50% 77%,rgba(243,200,111,.065),transparent 28rem),
+        linear-gradient(180deg,rgba(1,5,16,.70),rgba(2,6,16,.94));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .compass-stage::before,
+    .compass-stage::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+    }
+
+    .compass-stage::before{
+      width:min(84%,44rem);
+      height:min(62%,28rem);
+      border:1px solid rgba(243,200,111,.13);
+      box-shadow:
+        0 0 3rem rgba(36,120,255,.12),
+        inset 0 0 30px rgba(141,216,255,.045);
+      animation:orbitTurn 42s linear infinite;
+    }
+
+    .compass-stage::after{
+      width:min(62%,30rem);
+      height:min(42%,19rem);
+      border:1px solid rgba(141,216,255,.13);
+      box-shadow:0 0 3rem rgba(141,216,255,.08);
+      animation:orbitTurnReverse 38s linear infinite;
+    }
+
+    @keyframes orbitTurn{
+      from{transform:translate(-50%,-50%) rotate(-12deg)}
+      to{transform:translate(-50%,-50%) rotate(348deg)}
+    }
+
+    @keyframes orbitTurnReverse{
+      from{transform:translate(-50%,-50%) rotate(24deg)}
+      to{transform:translate(-50%,-50%) rotate(-336deg)}
+    }
+
+    .compass-center,
+    .compass-node{
+      position:absolute;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      color:var(--ink);
+      z-index:4;
+      transition:transform .18s ease,filter .18s ease;
+      animation:gemFloat 7.2s ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+      isolation:isolate;
+    }
+
+    .compass-center{
+      left:50%;
+      top:50%;
+      width:clamp(11rem,24vw,16rem);
+      height:clamp(8rem,17vw,11.6rem);
+      transform:translate(-50%,-50%);
+      z-index:6;
+      pointer-events:none;
+    }
+
+    .compass-node{
+      width:clamp(7.15rem,14.2vw,10.4rem);
+      height:clamp(5.25rem,10.4vw,7.65rem);
+      left:var(--x);
+      top:var(--y);
+      transform:translate(-50%,-50%);
+    }
+
+    .compass-center::before,
+    .compass-node::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:0;
+      width:92%;
+      height:112%;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,1) 0 .22rem,transparent .31rem),
+        radial-gradient(circle at 50% 50%,rgba(255,244,216,.92),transparent 18%),
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.66),transparent 36%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.45),transparent 63%),
+        radial-gradient(circle at 50% 50%,rgba(143,101,255,.24),transparent 84%);
+      box-shadow:
+        0 0 .78rem rgba(255,255,255,.38),
+        0 0 1.42rem rgba(243,200,111,.46),
+        0 0 2.55rem rgba(141,216,255,.35),
+        0 0 3.75rem rgba(143,101,255,.22);
+      opacity:.94;
+      pointer-events:none;
+      animation:behindGemStarTwinkle 6.2s ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+    }
+
+    .compass-center::before{
+      width:96%;
+      height:118%;
+      box-shadow:
+        0 0 .95rem rgba(255,255,255,.42),
+        0 0 1.75rem rgba(243,200,111,.50),
+        0 0 3rem rgba(141,216,255,.38),
+        0 0 4.4rem rgba(143,101,255,.26);
+    }
+
+    .compass-center::after,
+    .compass-node::after{
+      content:"";
+      position:absolute;
+      inset:-9%;
+      z-index:1;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,244,216,.22),transparent 31%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.18),transparent 58%),
+        radial-gradient(circle at 50% 50%,rgba(143,101,255,.11),transparent 78%);
+      filter:blur(11px);
+      opacity:.74;
+      pointer-events:none;
+      animation:effervescentGemStarSpill 8.4s ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+    }
+
+    .compass-center::after{
+      inset:-12%;
+      opacity:.80;
+    }
+
+    .compass-node:hover,
+    .compass-node:focus-visible{
+      transform:translate(-50%,-50%) scale(1.055);
+      filter:brightness(1.13) saturate(1.08);
+      outline:none;
+    }
+
+    @keyframes gemFloat{
+      0%,100%{margin-top:0}
+      50%{margin-top:-.42rem}
+    }
+
+    @keyframes behindGemStarTwinkle{
+      0%,100%{opacity:.88;filter:brightness(1.03) saturate(1);transform:translate(-50%,-50%) scale(1)}
+      18%{opacity:1;filter:brightness(1.36) saturate(1.14);transform:translate(-50%,-50%) scale(1.035)}
+      26%{opacity:.92;filter:brightness(1.10) saturate(1.05);transform:translate(-50%,-50%) scale(1.006)}
+      54%{opacity:.98;filter:brightness(1.22) saturate(1.10);transform:translate(-50%,-50%) scale(1.02)}
+      68%{opacity:1;filter:brightness(1.48) saturate(1.18);transform:translate(-50%,-50%) scale(1.046)}
+      74%{opacity:.93;filter:brightness(1.12) saturate(1.06);transform:translate(-50%,-50%) scale(1.01)}
+    }
+
+    @keyframes effervescentGemStarSpill{
+      0%,100%{opacity:.60;filter:blur(10px) brightness(1);transform:scale(1)}
+      36%{opacity:.78;filter:blur(12px) brightness(1.12);transform:scale(1.025)}
+      68%{opacity:.84;filter:blur(13px) brightness(1.18);transform:scale(1.04)}
+    }
+
+    .gem-core{
+      position:absolute;
+      inset:0;
+      z-index:2;
+      display:grid;
+      place-items:center;
+      pointer-events:none;
+      animation:gemBreathe var(--gem-breathe-duration) ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+      transform-origin:50% 50%;
+    }
+
+    @keyframes gemBreathe{
+      0%,100%{transform:translateY(0) rotate(var(--tilt-a,-1.6deg)) scale(1);filter:brightness(1)}
+      50%{transform:translateY(-.22rem) rotate(var(--tilt-b,2deg)) scale(1.025);filter:brightness(1.12)}
+    }
+
+    .gem-svg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      overflow:visible;
+      pointer-events:none;
+      filter:
+        drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
+        drop-shadow(0 0 1.15rem rgba(36,120,255,.18))
+        drop-shadow(0 0 .55rem rgba(243,200,111,.10));
+    }
+
+    .compass-center .gem-svg{
+      filter:
+        drop-shadow(0 1.55rem 1.85rem rgba(0,0,0,.42))
+        drop-shadow(0 0 1.65rem rgba(36,120,255,.23))
+        drop-shadow(0 0 .85rem rgba(243,200,111,.16));
+    }
+
+    .gem-glint{
+      animation:gemGlint 8.5s ease-in-out infinite;
+      transform-origin:110px 80px;
+    }
+
+    .gem-star{
+      animation:gemFacetTurn 30s linear infinite;
+      transform-origin:110px 80px;
+    }
+
+    @keyframes gemGlint{
+      0%,100%{opacity:.07;transform:translateX(-36px)}
+      48%,55%{opacity:.56;transform:translateX(34px)}
+    }
+
+    @keyframes gemFacetTurn{
+      to{transform:rotate(360deg)}
+    }
+
+    .gem-label{
+      position:relative;
+      z-index:3;
+      width:86%;
+      display:grid;
+      place-items:center;
+      gap:.18rem;
+      text-align:center;
+      pointer-events:none;
+      text-shadow:
+        0 3px 14px rgba(0,0,0,.98),
+        0 0 12px rgba(0,28,90,.88),
+        0 0 3px rgba(255,255,255,.58);
+    }
+
+    .gem-label b{
+      display:block;
+      color:rgba(255,244,216,.99);
+      font-size:clamp(.70rem,1.62vw,1rem);
+      font-weight:950;
+      letter-spacing:.065em;
+      line-height:1.02;
+      text-transform:uppercase;
+    }
+
+    .gem-label span{
+      color:rgba(230,238,255,.88);
+      font-size:clamp(.48rem,1.06vw,.66rem);
+      font-weight:950;
+      letter-spacing:.065em;
+      line-height:1.02;
+      text-transform:uppercase;
+    }
+
+    .compass-center .gem-label{
+      width:84%;
+      gap:.2rem;
+    }
+
+    .compass-center .gem-label b{
+      color:var(--gold);
+      font-size:clamp(1.02rem,2.35vw,1.42rem);
+      letter-spacing:.13em;
+    }
+
+    .compass-center .gem-label span{
+      font-size:clamp(.72rem,1.48vw,.94rem);
+      letter-spacing:.085em;
+    }
+
+    .pathway-module{
+      display:grid;
+      gap:.9rem;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.35rem;
+      background:
+        radial-gradient(circle at 18% 0%,rgba(36,120,255,.10),transparent 28rem),
+        radial-gradient(circle at 88% 10%,rgba(57,255,159,.060),transparent 24rem),
+        rgba(255,255,255,.035);
+      overflow:hidden;
+    }
+
+    .lens-shell{position:relative;display:grid;gap:.8rem}
+
+    .lens-radio{
+      position:absolute;
+      opacity:0;
+      pointer-events:none;
+    }
+
+    .lens-tabs{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.45rem;
+    }
+
+    .lens-tab{
+      cursor:pointer;
+      min-height:2.35rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      padding:.56rem .84rem;
+      color:rgba(241,246,255,.84);
+      background:rgba(255,255,255,.04);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.07em;
+      text-transform:uppercase;
+      user-select:none;
+    }
+
+    .lens-tab:hover{
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.46);
+    }
+
+    .platform-radio:checked ~ .lens-tabs .platform-tab,
+    .engineering-radio:checked ~ .lens-tabs .engineering-tab{
+      border-color:rgba(243,200,111,.86);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .lens-body{
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.15rem;
+      background:
+        radial-gradient(circle at 10% 0%,rgba(141,216,255,.08),transparent 24rem),
+        linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.022));
+      overflow:hidden;
+    }
+
+    .lens-copy{display:none;padding:1rem}
+
+    .platform-radio:checked ~ .lens-body .platform-copy,
+    .engineering-radio:checked ~ .lens-body .engineering-copy{
+      display:grid;
+      gap:.78rem;
+    }
+
+    .lens-copy b{
+      color:var(--gold);
+      font-size:.7rem;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .lens-list{
+      display:grid;
+      gap:.55rem;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+
+    .lens-list li{
+      padding:.68rem .76rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:.9rem;
+      background:rgba(255,255,255,.030);
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.4;
+    }
+
+    .boundary{
+      padding:.8rem .9rem;
+      border:1px solid rgba(255,157,145,.18);
+      border-radius:1rem;
+      color:rgba(255,229,225,.88);
+      background:rgba(255,157,145,.055);
+      font-size:.9rem;
+      line-height:1.42;
+      font-weight:850;
+    }
+
+    .section-return{
+      display:flex;
+      justify-content:flex-end;
+      gap:.55rem;
+      margin-top:.1rem;
+      flex-wrap:wrap;
+    }
+
+    .return-orbit,
+    .return-frontier{
+      min-height:2.5rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      padding:.6rem .95rem;
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.07em;
+      text-transform:uppercase;
+    }
+
+    .return-orbit{
+      border:1px solid rgba(243,200,111,.86);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .return-frontier{
+      border:1px solid rgba(57,255,159,.24);
+      color:rgba(232,255,241,.90);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(57,255,159,.13),transparent 70%),
+        rgba(255,255,255,.045);
+      box-shadow:0 0 .9rem rgba(57,255,159,.08),inset 0 1px 0 rgba(255,255,255,.07);
+    }
+
+    .return-orbit:hover,
+    .return-orbit:focus-visible,
+    .return-frontier:hover,
+    .return-frontier:focus-visible{
+      transform:translateY(-2px);
+      outline:none;
+    }
+
+    .final-band{
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.45rem);
+      display:grid;
+      gap:.85rem;
+      border:1px solid rgba(243,200,111,.28);
+      border-radius:1.55rem;
+      background:
+        radial-gradient(circle at 18% 0%,rgba(243,200,111,.12),transparent 32rem),
+        radial-gradient(circle at 88% 20%,rgba(57,255,159,.09),transparent 28rem),
+        linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.025));
+      box-shadow:0 1.3rem 3.4rem rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .final-band strong{
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.16rem,3vw,1.58rem);
+      line-height:1.05;
+      letter-spacing:-.045em;
+    }
+
+    [data-route-receipt]{
+      display:none!important;
+      visibility:hidden!important;
+      overflow:hidden!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      position:absolute!important;
+      clip-path:inset(50%)!important;
+      white-space:nowrap!important;
+    }
+
+    footer{
+      padding:1.35rem 0 .5rem;
+      color:var(--faint);
+      text-align:center;
+      font-size:.76rem;
+    }
+
+    @media (max-width:980px){
+      .topbar{grid-template-columns:1fr}
+      .nav{justify-content:flex-start}
+      .route-menu-panel{left:0;right:auto}
+      .backbone-wrap{grid-template-columns:1fr}
+    }
+
+    @media (max-width:760px){
+      .shell{width:min(100% - 22px,var(--max))}
+      h1{font-size:clamp(3.05rem,15vw,5.5rem)}
+      .actions{display:grid}
+      .button{width:100%}
+      .route-menu{width:100%}
+      .route-menu-panel{position:static;margin-top:.45rem;width:100%}
+      .route-menu-grid{grid-template-columns:1fr}
+      .backbone-stage{min-height:32rem}
+      .infra-node{
+        min-width:4.7rem;
+        padding:.42rem .48rem;
+      }
+      .infra-node b{font-size:.52rem}
+      .infra-node span{font-size:.42rem}
+      .compass-stage{
+        min-height:auto;
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:1rem .85rem;
+        padding:1.2rem 1rem;
+        place-items:center;
+      }
+      .compass-stage::before,
+      .compass-stage::after{display:none}
+      .compass-center,
+      .compass-node{
+        position:relative;
+        left:auto!important;
+        top:auto!important;
+        transform:none;
+      }
+      .compass-node:hover,
+      .compass-node:focus-visible{transform:scale(1.05)}
+      .compass-center{
+        grid-column:1 / -1;
+        width:9.8rem;
+        height:7.1rem;
+        order:-2;
+      }
+      .compass-node{
+        width:7.45rem;
+        height:5.45rem;
+      }
+      .compass-center::before,
+      .compass-node::before{
+        width:96%;
+        height:116%;
+      }
+      .compass-center::after,
+      .compass-node::after{
+        inset:-7%;
+      }
+      .gem-label{
+        width:88%;
+        gap:.14rem;
+      }
+      .gem-label b{
+        font-size:.62rem;
+        letter-spacing:.046em;
+      }
+      .gem-label span{
+        font-size:.44rem;
+        letter-spacing:.044em;
+      }
+      .compass-center .gem-label b{font-size:.88rem}
+      .compass-center .gem-label span{font-size:.60rem}
+      .lens-tabs{display:grid;grid-template-columns:1fr 1fr}
+      .section-return{display:grid;grid-template-columns:1fr;justify-content:stretch}
+      .return-orbit,.return-frontier{width:100%}
+    }
+
+    @media (max-width:420px){
+      .compass-stage{gap:.9rem .62rem}
+      .compass-node{
+        width:6.85rem;
+        height:5rem;
+      }
+      .gem-label{width:90%}
+      .gem-label b{
+        font-size:.54rem;
+        letter-spacing:.036em;
+      }
+      .gem-label span{
+        font-size:.38rem;
+        letter-spacing:.034em;
+      }
+      .compass-center{
+        width:8.95rem;
+        height:6.5rem;
+      }
+      .compass-center .gem-label b{font-size:.78rem}
+      .compass-center .gem-label span{font-size:.52rem}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *,
+      *::before,
+      *::after{
+        scroll-behavior:auto!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
+      }
+
+      .gem-core,
+      .gem-glint,
+      .gem-star,
+      .compass-stage::before,
+      .compass-stage::after,
+      .compass-center,
+      .compass-node,
+      .compass-center::before,
+      .compass-center::after,
+      .compass-node::before,
+      .compass-node::after,
+      .capacity-band,
+      .dependency-line,
+      .dependency-line::after,
+      .maintenance-pulse,
+      .support-dot{
+        animation:none!important;
+      }
+    }
   </style>
 </head>
+
 <body>
-  <main class="wrap">
-    <div class="topbar">
-      <div class="brand">Explore Infrastructure</div>
-      <div class="stamp">SYSTEM SUPPORT SURFACE</div>
-    </div>
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="compassGemBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#fff8dc" stop-opacity=".92"/>
+        <stop offset=".13" stop-color="#dff5ff" stop-opacity=".70"/>
+        <stop offset=".30" stop-color="#8dd8ff" stop-opacity=".56"/>
+        <stop offset=".48" stop-color="#2478ff" stop-opacity=".40"/>
+        <stop offset=".66" stop-color="#f3c86f" stop-opacity=".24"/>
+        <stop offset="1" stop-color="#020816" stop-opacity=".94"/>
+      </linearGradient>
 
-    <section class="hero">
-      <div class="eyebrow">Support without drift</div>
-      <h1>Infrastructure surface.</h1>
-      <p class="heroText">
-        Infrastructure is a support layer, not a competing front door. It exists to make the house, vault, and descendant routes durable without turning support mechanics into the public story.
-      </p>
-      <div class="actionRow">
-        <a class="action" href="/explore/">Explore</a>
-        <a class="action" href="/">Home</a>
-        <a class="action" href="/gauges/">Gauges</a>
-      </div>
-    </section>
+      <linearGradient id="compassGemAir" x1="48" y1="10" x2="168" y2="80" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".90"/>
+        <stop offset=".34" stop-color="#eaf7ff" stop-opacity=".46"/>
+        <stop offset=".68" stop-color="#fff0a3" stop-opacity=".18"/>
+        <stop offset="1" stop-color="#8dd8ff" stop-opacity=".10"/>
+      </linearGradient>
 
-    <section class="grid">
-      <article class="panel">
-        <h2 class="panelTitle">Purpose</h2>
-        <p class="panelText">Support lawful expansion and continuity across public surfaces.</p>
-      </article>
-      <article class="panel">
-        <h2 class="panelTitle">Boundary</h2>
-        <p class="panelText">Support layers do not become decorative distractions or substitute for host truth.</p>
-      </article>
-      <article class="panel">
-        <h2 class="panelTitle">Read</h2>
-        <p class="panelText">Durability, continuity, routing, and support posture.</p>
-      </article>
-    </section>
+      <linearGradient id="compassGemDepth" x1="110" y1="36" x2="110" y2="156" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".18"/>
+        <stop offset=".30" stop-color="#8dd8ff" stop-opacity=".20"/>
+        <stop offset=".62" stop-color="#f3c86f" stop-opacity=".13"/>
+        <stop offset="1" stop-color="#020716" stop-opacity=".66"/>
+      </linearGradient>
 
-    <div class="footer">BUILD=EXPLORE_INFRASTRUCTURE_G1 | ROLE=SUPPORT_SURFACE | STATUS=ACTIVE</div>
-  </main>
+      <radialGradient id="compassGemTableGlow" cx="50%" cy="38%" r="64%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".56"/>
+        <stop offset=".28" stop-color="#8dd8ff" stop-opacity=".28"/>
+        <stop offset=".58" stop-color="#ffe8a3" stop-opacity=".12"/>
+        <stop offset="1" stop-color="#020611" stop-opacity="0"/>
+      </radialGradient>
+
+      <linearGradient id="compassGemGlint" x1="28" y1="130" x2="184" y2="24" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset=".45" stop-color="#ffffff" stop-opacity=".84"/>
+        <stop offset=".52" stop-color="#fff0a3" stop-opacity=".30"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+
+      <filter id="compassGemGlow" x="-42%" y="-50%" width="184%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="blur"/>
+        <feColorMatrix
+          in="blur"
+          type="matrix"
+          values="
+            0.42 0 0 0 0.08
+            0 .58 0 0 0.14
+            0 0 1.00 0 0.28
+            0 0 0 0.52 0"
+          result="glow"
+        />
+        <feMerge>
+          <feMergeNode in="glow"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      <symbol id="compassOrganicGem" viewBox="0 0 220 160">
+        <g filter="url(#compassGemGlow)">
+          <path d="M108 4 L146 12 L184 39 L209 76 L188 108 L147 139 L111 155 L69 136 L27 105 L12 73 L39 37 L77 14 Z" fill="url(#compassGemBody)" stroke="rgba(235,248,255,.58)" stroke-width="1.35"/>
+          <path d="M108 4 L146 12 L130 38 L109 30 L87 39 L77 14 Z" fill="url(#compassGemAir)" opacity=".84"/>
+          <path d="M77 14 L87 39 L61 58 L39 37 Z" fill="rgba(255,255,255,.23)"/>
+          <path d="M146 12 L130 38 L159 60 L184 39 Z" fill="rgba(255,255,255,.15)"/>
+          <path d="M39 37 L61 58 L53 83 L12 73 Z" fill="rgba(141,216,255,.12)"/>
+          <path d="M184 39 L159 60 L166 81 L209 76 Z" fill="rgba(243,200,111,.12)"/>
+          <path d="M87 39 L109 30 L130 38 L159 60 L148 83 L110 101 L72 83 L61 58 Z" fill="url(#compassGemTableGlow)" stroke="rgba(255,255,255,.30)" stroke-width=".9"/>
+          <path d="M12 73 L53 83 L69 136 L27 105 Z" fill="rgba(141,216,255,.14)"/>
+          <path d="M209 76 L166 81 L147 139 L188 108 Z" fill="rgba(243,200,111,.11)"/>
+          <path d="M53 83 L72 83 L111 155 L69 136 Z" fill="rgba(2,8,24,.40)"/>
+          <path d="M166 81 L148 83 L111 155 L147 139 Z" fill="rgba(243,200,111,.10)"/>
+          <path d="M72 83 L110 101 L111 155 Z" fill="url(#compassGemDepth)" opacity=".76"/>
+          <path d="M148 83 L110 101 L111 155 Z" fill="rgba(4,10,22,.36)"/>
+          <path d="M108 4 L111 155" stroke="rgba(255,255,255,.34)" stroke-width="1.15"/>
+          <path d="M12 73 L209 76" stroke="rgba(255,255,255,.28)" stroke-width="1.05"/>
+          <path d="M39 37 L188 108" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M184 39 L27 105" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M77 14 L110 101 L146 12" stroke="rgba(255,255,255,.18)" stroke-width=".9" fill="none"/>
+          <path d="M39 37 L110 101 L184 39" stroke="rgba(255,255,255,.16)" stroke-width=".9" fill="none"/>
+          <path d="M27 105 L110 101 L188 108" stroke="rgba(243,200,111,.14)" stroke-width=".9" fill="none"/>
+          <g class="gem-star" opacity=".82">
+            <path d="M109 27 L116 70 L110 106 L103 70 Z" fill="rgba(255,255,255,.27)"/>
+            <path d="M61 58 L105 72 L159 60 L116 79 Z" fill="rgba(255,255,255,.16)"/>
+            <path d="M72 83 L105 75 L148 83 L114 92 Z" fill="rgba(141,216,255,.13)"/>
+            <path d="M110 101 L126 81 L148 83 L129 96 Z" fill="rgba(255,255,255,.13)"/>
+            <path d="M110 101 L94 81 L72 83 L91 96 Z" fill="rgba(243,200,111,.08)"/>
+          </g>
+          <path class="gem-glint" d="M33 118 L176 22 L188 38 L48 130 Z" fill="url(#compassGemGlint)"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
+  <a class="skip" href="#main">Skip to Infrastructure</a>
+
+  <div class="shell">
+    <header class="topbar" aria-label="Infrastructure header">
+      <a class="brand" href="/explore/frontier/infrastructure/">
+        <span class="brand-mark" aria-hidden="true"><span>IN</span></span>
+        <span class="brand-copy">
+          <span>Diamond Gate Bridge · Frontier</span>
+          <strong>Infrastructure</strong>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Reusable route menus">
+        <details class="route-menu">
+          <summary class="route-menu-summary">Site Menu</summary>
+          <div class="route-menu-panel">
+            <div class="route-menu-grid">
+              <a class="route-menu-link" href="/">Compass</a>
+              <a class="route-menu-link" href="/door/">Door</a>
+              <a class="route-menu-link" href="/home/">Home</a>
+              <a class="route-menu-link" href="/laws/">Laws</a>
+              <a class="route-menu-link" href="/showroom/globe/">Interactive Narrative</a>
+              <a class="route-menu-link" href="/showroom/">Showroom</a>
+              <a class="route-menu-link" href="/products/">Products</a>
+              <a class="route-menu-link" href="/gauges/">Gauges</a>
+            </div>
+          </div>
+        </details>
+
+        <details class="route-menu">
+          <summary class="route-menu-summary">Frontier Lanes</summary>
+          <div class="route-menu-panel">
+            <div class="route-menu-grid">
+              <a class="route-menu-link" href="/explore/frontier/">Frontier</a>
+              <a class="route-menu-link" href="/explore/frontier/energy/">Energy</a>
+              <a class="route-menu-link" href="/explore/frontier/water/">Water</a>
+              <a class="route-menu-link" href="/explore/frontier/waste/">Waste</a>
+              <a class="route-menu-link" href="/explore/frontier/urban/">Urban</a>
+              <a class="route-menu-link" href="/explore/frontier/lattice/">Lattice</a>
+              <a class="route-menu-link" href="/explore/frontier/infrastructure/" aria-current="page">Infrastructure</a>
+              <a class="route-menu-link" href="/explore/frontier/closed-loop/">Closed Loop</a>
+              <a class="route-menu-link" href="/explore/frontier/manual/">Manual</a>
+              <a class="route-menu-link" href="/explore/frontier/shimmer/">Shimmer</a>
+              <a class="route-menu-link" href="/explore/frontier/trajectory/">Trajectory</a>
+              <a class="route-menu-link" href="/explore/frontier/vision/">Vision</a>
+            </div>
+          </div>
+        </details>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="panel hero" aria-labelledby="page-title">
+        <div class="kicker">Audralia · Frontier Infrastructure Field</div>
+
+        <h1 id="page-title">Infrastructure is the backbone that decides whether the frontier can hold.</h1>
+
+        <p class="lead">
+          Audralia lets infrastructure become visible: power, water, roads, pipes, data, storage, maintenance, emergency continuity, and governance can be tested as support systems before any public claim is treated as readiness.
+        </p>
+
+        <div class="quote">
+          Declare the load. Measure the capacity. Map the dependencies. Name the failure path. Maintain the backbone. Protect continuity. Govern the service. Require receipts. Survive the audit.
+        </div>
+
+        <div class="actions">
+          <a class="button gold" href="#backbone-field">Inspect the Backbone</a>
+          <a class="button green" href="#infrastructure-orbit">Choose a Pathway</a>
+          <a class="button" href="#audralia-infrastructure">Start with Audralia</a>
+          <a class="button" href="#kill-conditions">Open Kill Conditions</a>
+          <a class="button" href="/explore/frontier/">Return to Frontier</a>
+        </div>
+      </section>
+
+      <section class="panel section" id="backbone-field" aria-labelledby="backbone-title">
+        <div class="kicker">Living Backbone Under Load</div>
+        <h2 id="backbone-title">The backbone carries load, reveals dependencies, and marks failure paths.</h2>
+
+        <div class="backbone-wrap">
+          <div class="backbone-stage" aria-label="Living infrastructure backbone with load packets, capacity bands, dependency branches, maintenance pulse, receipt nodes, and warning markers">
+            <span class="capacity-band" style="--w:52%;--h:72%;--r:8deg;--t:9s;--d:-.6s;--band-color:rgba(243,200,111,.20);--band-glow:rgba(243,200,111,.12)"></span>
+            <span class="capacity-band" style="--w:68%;--h:84%;--r:-16deg;--t:10.5s;--d:-2.2s;--band-color:rgba(57,255,159,.17);--band-glow:rgba(57,255,159,.10)"></span>
+            <span class="capacity-band" style="--w:82%;--h:58%;--r:22deg;--t:11.2s;--d:-4.0s;--band-color:rgba(141,216,255,.17);--band-glow:rgba(141,216,255,.10)"></span>
+
+            <span class="dependency-line left" style="--y:18%;--w:29%;--r:-16deg;--t:6.8s;--d:-.2s"></span>
+            <span class="dependency-line" style="--y:22%;--w:31%;--r:14deg;--t:7.4s;--d:-1.1s"></span>
+            <span class="dependency-line left" style="--y:39%;--w:34%;--r:7deg;--t:8.1s;--d:-2.4s"></span>
+            <span class="dependency-line" style="--y:42%;--w:35%;--r:-10deg;--t:7.9s;--d:-3.0s"></span>
+            <span class="dependency-line left" style="--y:61%;--w:32%;--r:-10deg;--t:8.6s;--d:-3.6s"></span>
+            <span class="dependency-line" style="--y:63%;--w:32%;--r:8deg;--t:7.2s;--d:-4.4s"></span>
+            <span class="dependency-line left" style="--y:80%;--w:28%;--r:18deg;--t:9.1s;--d:-5.2s"></span>
+            <span class="dependency-line" style="--y:82%;--w:29%;--r:-16deg;--t:8.4s;--d:-6.0s"></span>
+
+            <span class="maintenance-pulse" aria-hidden="true"></span>
+
+            <span class="infra-node power" style="--x:19%;--y:16%"><b>Power</b><span>Continuity</span></span>
+            <span class="infra-node water" style="--x:81%;--y:20%"><b>Water</b><span>Service</span></span>
+            <span class="infra-node transport" style="--x:17%;--y:39%"><b>Transport</b><span>Movement</span></span>
+            <span class="infra-node comms" style="--x:83%;--y:43%"><b>Comms</b><span>Coordinate</span></span>
+            <span class="infra-node storage" style="--x:18%;--y:62%"><b>Storage</b><span>Reserve</span></span>
+            <span class="infra-node maintenance" style="--x:82%;--y:64%"><b>Maintenance</b><span>Keep Alive</span></span>
+            <span class="infra-node continuity" style="--x:20%;--y:82%"><b>Continuity</b><span>Survive</span></span>
+            <span class="infra-node governance" style="--x:80%;--y:84%"><b>Governance</b><span>Service</span></span>
+
+            <span class="support-dot load" style="--x:50%;--y:13%;--t:5.8s;--d:-.4s"></span>
+            <span class="support-dot receipt" style="--x:51%;--y:31%;--t:6.2s;--d:-1.5s"></span>
+            <span class="support-dot warning" style="--x:49%;--y:47%;--t:7.1s;--d:-2.5s"></span>
+            <span class="support-dot receipt" style="--x:52%;--y:66%;--t:6.8s;--d:-3.7s"></span>
+            <span class="support-dot failure" style="--x:50%;--y:86%;--t:8.0s;--d:-5.0s"></span>
+          </div>
+
+          <aside class="backbone-key" aria-label="Infrastructure backbone map key">
+            <strong>Backbone Read Key</strong>
+            <ul class="key-list">
+              <li><span class="key-mark spine" style="--key-color:var(--gold)"></span><span><b>Backbone</b> is the support spine that carries system demand.</span></li>
+              <li><span class="key-mark" style="--key-color:var(--gold)"></span><span><b>Load</b> means demand created by a public promise.</span></li>
+              <li><span class="key-mark line" style="--key-color:var(--green)"></span><span><b>Dependency branch</b> means a support path tied to a critical service.</span></li>
+              <li><span class="key-mark" style="--key-color:var(--green)"></span><span><b>Receipt</b> means a support claim stabilizes with visible evidence.</span></li>
+              <li><span class="key-mark" style="--key-color:var(--orange)"></span><span><b>Warning</b> means measured stress under load.</span></li>
+              <li><span class="key-mark" style="--key-color:var(--red)"></span><span><b>Failure path</b> means load, capacity, dependency, maintenance, or governance cannot hold.</span></li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="orbit-title" id="infrastructure-orbit">
+        <div class="kicker">Infrastructure field · Active backbone pathways</div>
+        <h2 id="orbit-title">Choose the pathway first. Choose the language lens inside the pathway.</h2>
+
+        <div
+          class="compass-stage"
+          aria-label="Infrastructure compass gem pathway field"
+          data-infrastructure-pathway-field="true"
+          data-source-symbol-authority="compassOrganicGem"
+          data-per-pathway-dual-lens="true"
+        >
+          <div class="compass-center" aria-hidden="true" style="--delay:-.1s;--tilt-a:-1.4deg;--tilt-b:1.8deg;">
+            <span class="gem-core">
+              <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+                <use href="#compassOrganicGem"></use>
+              </svg>
+            </span>
+            <span class="gem-label"><b>Infrastructure</b><span>Backbone</span></span>
+          </div>
+
+          <a class="compass-node" style="--x:50%;--y:11%;--delay:-.2s;--tilt-a:-2.2deg;--tilt-b:1.4deg;" href="#audralia-infrastructure" aria-label="Open Audralia Infrastructure">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Audralia</b><span>Support</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:73%;--y:17%;--delay:-.8s;--tilt-a:1.5deg;--tilt-b:-2.3deg;" href="#load" aria-label="Open Load">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Load</b><span>Demand</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:87%;--y:34%;--delay:-1.4s;--tilt-a:-1.6deg;--tilt-b:2.6deg;" href="#capacity" aria-label="Open Capacity">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Capacity</b><span>Carry</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:87%;--y:62%;--delay:-2.0s;--tilt-a:1.9deg;--tilt-b:-1.6deg;" href="#power" aria-label="Open Power">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Power</b><span>Continuity</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:73%;--y:80%;--delay:-2.6s;--tilt-a:-2deg;--tilt-b:2deg;" href="#water" aria-label="Open Water">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Water</b><span>Service</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:50%;--y:88%;--delay:-3.0s;--tilt-a:1.4deg;--tilt-b:-2.4deg;" href="#transport" aria-label="Open Transport">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Transport</b><span>Movement</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:27%;--y:80%;--delay:-3.4s;--tilt-a:-1.9deg;--tilt-b:1.8deg;" href="#communications" aria-label="Open Communications">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Comms</b><span>Coordinate</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:13%;--y:62%;--delay:-3.8s;--tilt-a:1.7deg;--tilt-b:-1.5deg;" href="#storage" aria-label="Open Storage">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Storage</b><span>Reserve</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:13%;--y:34%;--delay:-4.2s;--tilt-a:-2.1deg;--tilt-b:1.5deg;" href="#maintenance" aria-label="Open Maintenance">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Maintenance</b><span>Keep Alive</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:27%;--y:17%;--delay:-4.6s;--tilt-a:1.6deg;--tilt-b:-2.2deg;" href="#continuity" aria-label="Open Continuity">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Continuity</b><span>Survive</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:34%;--y:6%;--delay:-5.0s;--tilt-a:-1.6deg;--tilt-b:2.1deg;" href="#governance" aria-label="Open Governance">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Governance</b><span>Service</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:66%;--y:6%;--delay:-5.4s;--tilt-a:2.0deg;--tilt-b:-1.8deg;" href="#kill-conditions" aria-label="Open Kill Conditions">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Kill</b><span>Conditions</span></span>
+          </a>
+        </div>
+      </section>
+
+      <section class="panel section" id="audralia-infrastructure">
+        <div class="kicker">Pathway One</div>
+        <h2>Audralia Infrastructure</h2>
+        <article class="pathway-module">
+          <h3>Audralia gives infrastructure a world where support systems can be seen before they are claimed.</h3>
+          <p>Audralia lets the visitor see infrastructure as the hidden backbone beneath life. Power, water, movement, data, storage, maintenance, and governance must work together before the world can carry people.</p>
+          <div class="lens-shell">
+            <input class="lens-radio platform-radio" id="audralia-platform" name="audralia-lens" type="radio" checked>
+            <input class="lens-radio engineering-radio" id="audralia-engineering" name="audralia-lens" type="radio">
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="audralia-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="audralia-engineering">Engineering Lens</label></div>
+            <div class="lens-body">
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Audralia shows that a world cannot live on promise alone. The backbone has to carry people, movement, utilities, safety, and continuity before the story-world can be treated as functional.</p><ul class="lens-list"><li>Infrastructure is the support beneath life.</li><li>Every public promise creates load.</li><li>Simulation may show support logic; it remains separate from deployment readiness.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: Audralia support simulation. Inputs include population pressure, utility demand, movement routes, service dependencies, maintenance state, governance authority, and receipt posture.</p><ul class="lens-list"><li>Outputs: simulated support map, dependency exposure, and readiness posture.</li><li>Constraint: simulation visibility and deployment validation remain separate states.</li><li>Audit condition: support claims require load, capacity, dependency, and receipt visibility.</li></ul></div>
+            </div>
+          </div>
+          <div class="boundary">Boundary: Audralia may simulate infrastructure support. It may not prove real-world deployment readiness.</div>
+          <div class="section-return"><a class="return-orbit" href="#infrastructure-orbit">Return to Infrastructure Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        </article>
+      </section>
+
+      <section class="panel section" id="load">
+        <div class="kicker">Pathway Two</div>
+        <h2>Load</h2>
+        <article class="pathway-module">
+          <h3>Load is what the infrastructure must actually carry.</h3>
+          <p>Every promise creates load. Homes, pumps, roads, data systems, storage, treatment, lighting, hospitals, food systems, and emergency response all place demand on the backbone.</p>
+          <div class="lens-shell">
+            <input class="lens-radio platform-radio" id="load-platform" name="load-lens" type="radio" checked>
+            <input class="lens-radio engineering-radio" id="load-engineering" name="load-lens" type="radio">
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="load-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="load-engineering">Engineering Lens</label></div>
+            <div class="lens-body">
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Load is the demand reality behind the idea. If a system cannot say what it must carry, it cannot honestly say whether the backbone is ready.</p><ul class="lens-list"><li>Load turns promise into demand.</li><li>Critical load must be separated from ordinary use.</li><li>Undeclared load creates false readiness.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: load declaration layer. Inputs include population, peak use, critical service demand, surge conditions, reserve target, and failure tolerance.</p><ul class="lens-list"><li>Outputs: declared load profile, critical-load list, and demand range.</li><li>Constraint: infrastructure evaluation requires declared load before capacity claims.</li><li>Audit condition: no readiness claim without load profile and critical-load separation.</li></ul></div>
+            </div>
+          </div>
+          <div class="boundary">Boundary: infrastructure cannot be evaluated without declared load.</div>
+          <div class="section-return"><a class="return-orbit" href="#infrastructure-orbit">Return to Infrastructure Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        </article>
+      </section>
+
+      <section class="panel section" id="capacity">
+        <div class="kicker">Pathway Three</div>
+        <h2>Capacity</h2>
+        <article class="pathway-module">
+          <h3>Capacity tells whether the backbone can carry the load.</h3>
+          <p>Capacity is not the same as existence. A pipe, road, wire, server, battery, pump, or storage tank only matters if it can carry the demand placed on it.</p>
+          <div class="lens-shell">
+            <input class="lens-radio platform-radio" id="capacity-platform" name="capacity-lens" type="radio" checked>
+            <input class="lens-radio engineering-radio" id="capacity-engineering" name="capacity-lens" type="radio">
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="capacity-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="capacity-engineering">Engineering Lens</label></div>
+            <div class="lens-body">
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>A connected system can still fail when demand rises. Capacity is the difference between “it exists” and “it can carry what we ask of it.”</p><ul class="lens-list"><li>Capacity must be measured against load.</li><li>Reserve margin matters.</li><li>Connection is not capacity.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: capacity measurement layer. Inputs include rated capacity, actual capacity, peak capacity, reserve margin, degradation state, and stress window.</p><ul class="lens-list"><li>Outputs: capacity rating, reserve margin, and stress posture.</li><li>Constraint: connection cannot be treated as carrying capacity.</li><li>Audit condition: capacity claims require measured demand comparison.</li></ul></div>
+            </div>
+          </div>
+          <div class="boundary">Boundary: connection is not capacity.</div>
+          <div class="section-return"><a class="return-orbit" href="#infrastructure-orbit">Return to Infrastructure Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        </article>
+      </section>
+
+      <section class="panel section" id="power">
+        <div class="kicker">Pathway Four</div>
+        <h2>Power</h2>
+        <article class="pathway-module">
+          <h3>Power infrastructure keeps the rest of the system awake.</h3>
+          <p>Energy is not just a category. It is also a support layer. Water systems, communications, food storage, public safety, mobility, and homes all depend on power continuity.</p>
+          <div class="lens-shell">
+            <input class="lens-radio platform-radio" id="power-platform" name="power-lens" type="radio" checked>
+            <input class="lens-radio engineering-radio" id="power-engineering" name="power-lens" type="radio">
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="power-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="power-engineering">Engineering Lens</label></div>
+            <div class="lens-body">
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Power keeps the backbone awake. It supports homes, pumps, food storage, communications, medical support, safety, and every system that must continue under pressure.</p><ul class="lens-list"><li>Power access is not power resilience.</li><li>Critical load needs priority.</li><li>Outage tolerance must be declared.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: power continuity layer. Inputs include generation, grid access, storage, backup, critical-load map, outage duration, and restoration path.</p><ul class="lens-list"><li>Outputs: continuity window, critical-load priority, and backup posture.</li><li>Constraint: power access does not equal power resilience.</li><li>Audit condition: resilience claims require critical-load survival timing.</li></ul></div>
+            </div>
+          </div>
+          <div class="boundary">Boundary: power access is not power resilience.</div>
+          <div class="section-return"><a class="return-orbit" href="#infrastructure-orbit">Return to Infrastructure Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        </article>
+      </section>
+
+      <section class="panel section" id="water">
+        <div class="kicker">Pathway Five</div>
+        <h2>Water</h2>
+        <article class="pathway-module">
+          <h3>Water infrastructure carries health, sanitation, treatment, and trust.</h3>
+          <p>Water infrastructure is more than source water. It includes pipes, pressure, storage, treatment, drainage, quality monitoring, reuse boundaries, and emergency supply.</p>
+          <div class="lens-shell">
+            <input class="lens-radio platform-radio" id="water-platform" name="water-lens" type="radio" checked>
+            <input class="lens-radio engineering-radio" id="water-engineering" name="water-lens" type="radio">
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="water-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="water-engineering">Engineering Lens</label></div>
+            <div class="lens-body">
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Water presence is not water security. The system must carry source, treatment, pressure, storage, quality, drainage, and emergency reserve together.</p><ul class="lens-list"><li>Pressure and quality matter.</li><li>Storage and drainage affect continuity.</li><li>Reuse must stay inside quality boundaries.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: water service layer. Inputs include source, treatment, storage, pressure, distribution, drainage, monitoring, reuse boundary, and emergency reserve.</p><ul class="lens-list"><li>Outputs: water security posture, pressure range, quality state, and reserve window.</li><li>Constraint: water presence does not equal water security.</li><li>Audit condition: service claims require quality, pressure, storage, and failure planning.</li></ul></div>
+            </div>
+          </div>
+          <div class="boundary">Boundary: water presence is not water security.</div>
+          <div class="section-return"><a class="return-orbit" href="#infrastructure-orbit">Return to Infrastructure Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        </article>
+      </section>
+
+      <section class="panel section" id="transport">
+        <div class="kicker">Pathway Six</div>
+        <h2>Transport</h2>
+        <article class="pathway-module">
+          <h3>Transport infrastructure determines whether people and resources can move.</h3>
+          <p>Transport is the physical circulation of the system. People, goods, waste, emergency response, repairs, food, and construction all depend on movement paths.</p>
+          <div class="lens-shell">
+            <input class="lens-radio platform-radio" id="transport-platform" name="transport-lens" type="radio" checked>
+            <input class="lens-radio engineering-radio" id="transport-engineering" name="transport-lens" type="radio">
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="transport-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="transport-engineering">Engineering Lens</label></div>
+            <div class="lens-body">
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Roads are not mobility unless movement works. Transport must carry people, service, goods, emergency response, and maintenance under real pressure.</p><ul class="lens-list"><li>Movement must remain functional.</li><li>Emergency and repair routes matter.</li><li>Congestion can collapse service.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: transport movement layer. Inputs include route network, travel demand, freight demand, emergency access, repair access, congestion state, and closure risk.</p><ul class="lens-list"><li>Outputs: movement posture, service access map, and emergency route status.</li><li>Constraint: roads are not mobility unless movement remains functional.</li><li>Audit condition: transport claims require people, goods, repair, and emergency routing.</li></ul></div>
+            </div>
+          </div>
+          <div class="boundary">Boundary: roads are not mobility unless movement is functional.</div>
+          <div class="section-return"><a class="return-orbit" href="#infrastructure-orbit">Return to Infrastructure Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        </article>
+      </section>
+
+      <section class="panel section" id="communications">
+        <div class="kicker">Pathway Seven</div>
+        <h2>Communications</h2>
+        <article class="pathway-module">
+          <h3>Communications infrastructure lets the system coordinate.</h3>
+          <p>A city or world cannot respond to pressure if information cannot move. Communications support coordination, emergency warning, operations, commerce, education, and trust.</p>
+          <div class="lens-shell">
+            <input class="lens-radio platform-radio" id="communications-platform" name="communications-lens" type="radio" checked>
+            <input class="lens-radio engineering-radio" id="communications-engineering" name="communications-lens" type="radio">
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="communications-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="communications-engineering">Engineering Lens</label></div>
+            <div class="lens-body">
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Connectivity is not coordination by itself. Communication infrastructure has to stay reliable enough to move warnings, operations, decisions, and trust under pressure.</p><ul class="lens-list"><li>Coverage is not enough.</li><li>Reliability and control matter.</li><li>Emergency alert paths must be protected.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: communications coordination layer. Inputs include coverage, redundancy, alert path, operations channel, control authority, outage tolerance, and cyber boundary.</p><ul class="lens-list"><li>Outputs: coordination posture, alert survivability, and operations reliability.</li><li>Constraint: connectivity is not coordination without reliability and control.</li><li>Audit condition: communications claims require emergency alert and operations continuity.</li></ul></div>
+            </div>
+          </div>
+          <div class="boundary">Boundary: connectivity is not coordination without reliability and control.</div>
+          <div class="section-return"><a class="return-orbit" href="#infrastructure-orbit">Return to Infrastructure Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        </article>
+      </section>
+
+      <section class="panel section" id="storage">
+        <div class="kicker">Pathway Eight</div>
+        <h2>Storage</h2>
+        <article class="pathway-module">
+          <h3>Storage gives infrastructure reserve and memory.</h3>
+          <p>Storage helps systems survive delay, outage, peak demand, drought, disruption, and recovery. Batteries, tanks, warehouses, data stores, reserves, and inventories all carry time.</p>
+          <div class="lens-shell">
+            <input class="lens-radio platform-radio" id="storage-platform" name="storage-lens" type="radio" checked>
+            <input class="lens-radio engineering-radio" id="storage-engineering" name="storage-lens" type="radio">
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="storage-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="storage-engineering">Engineering Lens</label></div>
+            <div class="lens-body">
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Storage is useful only when it is sufficient, maintained, accessible, and tracked. Storage can support resilience, but it can also hide risk.</p><ul class="lens-list"><li>Storage carries time.</li><li>Reserve must match demand.</li><li>Storage is not safety by itself.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: reserve storage layer. Inputs include storage type, volume, accessibility, maintenance state, turnover rate, degradation, demand window, and inventory receipt.</p><ul class="lens-list"><li>Outputs: reserve window, sufficiency state, and inventory reliability.</li><li>Constraint: storage is not resilience unless maintained, accessible, and sufficient.</li><li>Audit condition: reserve claims require demand match, maintenance, and inventory receipt.</li></ul></div>
+            </div>
+          </div>
+          <div class="boundary">Boundary: storage is not resilience unless it is maintained, accessible, and sufficient.</div>
+          <div class="section-return"><a class="return-orbit" href="#infrastructure-orbit">Return to Infrastructure Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        </article>
+      </section>
+
+      <section class="panel section" id="maintenance">
+        <div class="kicker">Pathway Nine</div>
+        <h2>Maintenance</h2>
+        <article class="pathway-module">
+          <h3>Maintenance decides whether infrastructure stays alive after launch.</h3>
+          <p>Infrastructure fails when maintenance is ignored. Roads crack, pipes leak, batteries degrade, pumps fail, sensors drift, servers age, and reserves expire.</p>
+          <div class="lens-shell">
+            <input class="lens-radio platform-radio" id="maintenance-platform" name="maintenance-lens" type="radio" checked>
+            <input class="lens-radio engineering-radio" id="maintenance-engineering" name="maintenance-lens" type="radio">
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="maintenance-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="maintenance-engineering">Engineering Lens</label></div>
+            <div class="lens-body">
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Build is not readiness without maintenance. The backbone must be inspected, repaired, staffed, funded, and renewed after the launch moment passes.</p><ul class="lens-list"><li>Assets degrade.</li><li>Inspection intervals matter.</li><li>Deferred maintenance becomes hidden failure.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: maintenance lifecycle layer. Inputs include asset age, inspection interval, repair backlog, staffing, funding, replacement schedule, and failure history.</p><ul class="lens-list"><li>Outputs: maintenance posture, degradation risk, and renewal requirement.</li><li>Constraint: build is not readiness without maintenance.</li><li>Audit condition: readiness claims require inspection, repair, staffing, funding, and renewal path.</li></ul></div>
+            </div>
+          </div>
+          <div class="boundary">Boundary: build is not readiness without maintenance.</div>
+          <div class="section-return"><a class="return-orbit" href="#infrastructure-orbit">Return to Infrastructure Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        </article>
+      </section>
+
+      <section class="panel section" id="continuity">
+        <div class="kicker">Pathway Ten</div>
+        <h2>Continuity</h2>
+        <article class="pathway-module">
+          <h3>Continuity is the ability to keep critical systems running under pressure.</h3>
+          <p>Continuity is what separates ordinary access from resilience. The question is not only whether a system works on a normal day. The question is what survives when pressure arrives.</p>
+          <div class="lens-shell">
+            <input class="lens-radio platform-radio" id="continuity-platform" name="continuity-lens" type="radio" checked>
+            <input class="lens-radio engineering-radio" id="continuity-engineering" name="continuity-lens" type="radio">
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="continuity-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="continuity-engineering">Engineering Lens</label></div>
+            <div class="lens-body">
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Continuity asks what survives when pressure arrives. A backup system is not continuity unless it carries the critical load for the required window.</p><ul class="lens-list"><li>Critical systems need priority.</li><li>Recovery time must be declared.</li><li>Backup is not continuity by itself.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: critical continuity layer. Inputs include critical services, load priority, backup duration, recovery time objective, dependency map, and failure mode.</p><ul class="lens-list"><li>Outputs: continuity window, critical-service survival state, and recovery posture.</li><li>Constraint: backup is not continuity unless it meets the critical-load target.</li><li>Audit condition: continuity claims require duration, load target, and recovery path.</li></ul></div>
+            </div>
+          </div>
+          <div class="boundary">Boundary: backup is not continuity unless it meets the critical-load target.</div>
+          <div class="section-return"><a class="return-orbit" href="#infrastructure-orbit">Return to Infrastructure Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        </article>
+      </section>
+
+      <section class="panel section" id="governance">
+        <div class="kicker">Pathway Eleven</div>
+        <h2>Governance</h2>
+        <article class="pathway-module">
+          <h3>Governance turns infrastructure into accountable service.</h3>
+          <p>Infrastructure needs authority. Someone must decide, fund, maintain, inspect, repair, regulate, and answer for the service when it fails.</p>
+          <div class="lens-shell">
+            <input class="lens-radio platform-radio" id="governance-platform" name="governance-lens" type="radio" checked>
+            <input class="lens-radio engineering-radio" id="governance-engineering" name="governance-lens" type="radio">
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="governance-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="governance-engineering">Engineering Lens</label></div>
+            <div class="lens-body">
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>Governance is what makes support accountable. Ownership is not enough unless responsibility, funding, service obligation, emergency authority, and audit are clear.</p><ul class="lens-list"><li>Authority must be named.</li><li>Funding and maintenance obligations matter.</li><li>Ownership is not governance by itself.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: infrastructure governance layer. Inputs include owner, operator, regulator, funding source, service obligation, emergency authority, audit path, and accountability rule.</p><ul class="lens-list"><li>Outputs: governance posture, responsibility map, and accountability route.</li><li>Constraint: ownership is not governance without obligation and accountability.</li><li>Audit condition: service claims require named authority, funding, obligation, and audit path.</li></ul></div>
+            </div>
+          </div>
+          <div class="boundary">Boundary: ownership is not governance without obligation and accountability.</div>
+          <div class="section-return"><a class="return-orbit" href="#infrastructure-orbit">Return to Infrastructure Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        </article>
+      </section>
+
+      <section class="panel section" id="kill-conditions">
+        <div class="kicker">Pathway Twelve</div>
+        <h2>Kill Conditions</h2>
+        <article class="pathway-module">
+          <h3>The infrastructure claim stops when the system looks connected but cannot carry load.</h3>
+          <p>Infrastructure fails when appearance replaces support. A visible grid, road, pipe, server, pump, battery, tank, or route does not prove readiness unless the system can carry demand, survive pressure, and be maintained.</p>
+          <div class="lens-shell">
+            <input class="lens-radio platform-radio" id="kill-platform" name="kill-lens" type="radio" checked>
+            <input class="lens-radio engineering-radio" id="kill-engineering" name="kill-lens" type="radio">
+            <div class="lens-tabs"><label class="lens-tab platform-tab" for="kill-platform">Platform Lens</label><label class="lens-tab engineering-tab" for="kill-engineering">Engineering Lens</label></div>
+            <div class="lens-body">
+              <div class="lens-copy platform-copy"><b>Platform Lens</b><p>The backbone fails when visible support replaces real support. Connection is not capacity. Access is not resilience. Construction is not service. Backup is not continuity.</p><ul class="lens-list"><li>Connection cannot replace capacity.</li><li>Access cannot replace resilience.</li><li>Installed equipment cannot replace readiness.</li><li>Backup cannot replace continuity.</li><li>Simulation cannot replace validation.</li></ul></div>
+              <div class="lens-copy engineering-copy"><b>Engineering Lens</b><p>Operating object: infrastructure stop-rule layer. Inputs include load profile, capacity measurement, dependency map, maintenance state, continuity window, governance route, and receipt status.</p><ul class="lens-list"><li>Outputs: stop, hold, pass, or contradiction.</li><li>Constraint: visual construction cannot replace measured support performance.</li><li>Audit condition: stop on undeclared load, assumed capacity, hidden dependency, absent maintenance, overstated backup, unclear governance, missing receipt, or simulation-as-validation.</li></ul></div>
+            </div>
+          </div>
+          <div class="boundary">Boundary: stop if load is undeclared, capacity is assumed, dependencies are hidden, maintenance is absent, backup is overstated, governance is unclear, receipts are missing, or simulation replaces validation.</div>
+          <div class="section-return"><a class="return-orbit" href="#infrastructure-orbit">Return to Infrastructure Orbit</a><a class="return-frontier" href="/explore/frontier/">Return to Frontier</a></div>
+        </article>
+      </section>
+
+      <section class="final-band" id="final-lock" aria-label="Infrastructure final lock">
+        <strong>Declare the load. Measure the capacity. Map the dependencies. Name the failure path. Maintain the backbone. Protect continuity. Govern the service. Require receipts. Survive the audit.</strong>
+        <p>
+          Infrastructure is the Frontier backbone and support layer inside the story-world. It coordinates support systems across Energy, Water, Waste, Lattice, Urban Construct, Closed Loop, Manual, Shimmer, and future categories without replacing their science or confusing visible construction with readiness.
+        </p>
+        <div class="actions">
+          <a class="button gold" href="#backbone-field">Return to Backbone Field</a>
+          <a class="button" href="#infrastructure-orbit">Return to Infrastructure Orbit</a>
+          <a class="button" href="/explore/frontier/">Return to Frontier</a>
+          <a class="button" href="/showroom/globe/audralia/">Open Audralia</a>
+          <a class="button green" href="/explore/frontier/energy/">Open Energy</a>
+          <a class="button" href="/explore/frontier/water/">Open Water</a>
+          <a class="button" href="/explore/frontier/urban/">Open Urban</a>
+          <a class="button" href="/explore/frontier/closed-loop/">Open Closed Loop</a>
+        </div>
+      </section>
+
+      <template id="route-receipt" data-route-receipt>
+FRONTIER_INFRASTRUCTURE_LIVING_BACKBONE_UNDER_LOAD_TNT_v2
+previous=FRONTIER_INFRASTRUCTURE_COMPASS_GEM_DUAL_LENS_FINAL_RENEWAL_TNT_v1
+route=/explore/frontier/infrastructure/
+page=frontier_infrastructure
+html=/explore/frontier/infrastructure/index.html
+parent_return=/explore/frontier/
+runtime_scope=css_only
+artistic_identity=living_backbone_under_load
+backbone_load_capacity_dependency_field=active
+central_backbone_spine=active
+load_packets=active
+capacity_bands=active
+dependency_branches=active
+maintenance_pulse=active
+receipt_nodes=active
+warning_nodes=active
+failure_path_markers=active
+map_key=active
+compass_gems=active
+pathway_gems=active
+compass_organic_gem=active
+dropdown_navigation=active
+site_menu=active
+frontier_lanes_menu=active
+audralia_first=active
+platform_lens_per_pathway=active
+engineering_lens_per_pathway=active
+return_to_infrastructure_orbit_under_every_pathway=active
+return_to_frontier_under_every_pathway=active
+pathways=audralia_infrastructure,load,capacity,power,water,transport,communications,storage,maintenance,continuity,governance,kill_conditions
+public_lock=declare_load_measure_capacity_map_dependencies_name_failure_path_maintain_backbone_protect_continuity_govern_service_require_receipts_survive_audit
+visual_identity=infrastructure_support_backbone_utility_corridor_service_spine_emergency_continuity_layer
+external_dependency_scope=zero
+canvas_scope=none
+webgl_scope=none
+generated_image_scope=none
+graphic_box_scope=none
+visual_pass_claimed=false
+deploy_marker=FRONTIER_INFRASTRUCTURE_LIVING_BACKBONE_UNDER_LOAD_DEPLOY_MARKER_v2
+      </template>
+    </main>
+
+    <footer>
+      FRONTIER_INFRASTRUCTURE_LIVING_BACKBONE_UNDER_LOAD_TNT_v2 · Infrastructure · Living Backbone Under Load · Compass Gem Pathways.
+    </footer>
+  </div>
 </body>
 </html>

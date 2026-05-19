@@ -4,8 +4,8 @@
   lang="en"
   data-route="/nine-summits/universe/"
   data-page="nine-summits-universe"
-  data-contract="NINE_SUMMITS_UNIVERSE_DEMO_UNIVERSE_RELATIONSHIP_FIELD_TNT_v8"
-  data-previous-contract="NINE_SUMMITS_UNIVERSE_CONTEXT_ALIGNMENT_HTML_TNT_v7"
+  data-contract="NINE_SUMMITS_UNIVERSE_DEMO_SOLAR_SYSTEM_AND_DROPDOWN_NAV_TNT_v9"
+  data-previous-contract="NINE_SUMMITS_UNIVERSE_DEMO_UNIVERSE_RELATIONSHIP_FIELD_TNT_v8"
   data-role="nine-summits-world-setting"
   data-book-role="human-climb"
   data-universe-role="world-around-the-climb"
@@ -14,12 +14,17 @@
   data-gauges-role="measurement-audit-route-status-summary"
   data-showroom-role="visible-software-object-display"
   data-interactive-narrative-route="/showroom/globe/"
-  data-demo-universe="active"
-  data-demo-universe-bodies="Sun,Earth,Moon"
-  data-earth-sun-moon-relationship="active"
-  data-sun-role="light-source"
-  data-earth-role="reference-body"
-  data-moon-role="reflection-phase-body"
+  data-demo-solar-system="active"
+  data-demo-universe-bodies="Sun,Mercury,Venus,Earth,Moon,Mars,Jupiter,Saturn,Uranus,Neptune"
+  data-eight-planets-visible="true"
+  data-moon-orbits-earth="true"
+  data-moon-orbits-sun-directly="false"
+  data-earth-reference-body="true"
+  data-sun-light-source="true"
+  data-saturn-ring-visible="true"
+  data-demo-model-not-final-cosmology="true"
+  data-dropdown-navigation="active"
+  data-cardinal-dropdown-coordination="active"
   data-orbital-orientation="true"
   data-solar-lunar-relationship="true"
   data-cardinal-house-orientation="false"
@@ -42,7 +47,7 @@
   <title>Nine Summits Universe · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="The Nine Summits Universe opens the world around the human climb and now includes a Demo Universe relationship field showing Sun, Earth, Moon, orbit, light, phase, and reference."
+    content="The Nine Summits Universe opens the world around the human climb and includes a demo solar system field showing Sun, eight planets, Earth as reference body, and the Moon orbiting Earth."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/nine-summits/universe/">
   <meta name="theme-color" content="#02040b">
@@ -112,7 +117,8 @@
 
     a{color:inherit;text-decoration:none}
 
-    a:focus-visible{
+    a:focus-visible,
+    summary:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
     }
@@ -142,7 +148,7 @@
     .topbar{
       display:grid;
       grid-template-columns:auto 1fr;
-      align-items:center;
+      align-items:start;
       gap:18px;
       padding:12px 0 18px;
     }
@@ -205,38 +211,135 @@
       display:flex;
       flex-wrap:wrap;
       justify-content:flex-end;
-      gap:.48rem;
+      gap:.58rem;
     }
 
-    .nav a{
-      min-height:2.25rem;
-      display:inline-flex;
+    .route-menu{
+      position:relative;
+      min-width:min(17rem,100%);
+    }
+
+    .route-menu summary{
+      list-style:none;
+      cursor:pointer;
+      min-height:2.6rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:.72rem;
+      border:1px solid rgba(143,101,255,.24);
+      border-radius:999px;
+      padding:.62rem .86rem;
+      color:rgba(241,246,255,.90);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(143,101,255,.16),transparent 70%),
+        rgba(255,255,255,.045);
+      font-size:.70rem;
+      font-weight:950;
+      letter-spacing:.075em;
+      text-transform:uppercase;
+      box-shadow:0 0 1.15rem rgba(143,101,255,.08),inset 0 1px 0 rgba(255,255,255,.08);
+      backdrop-filter:blur(7px);
+    }
+
+    .route-menu[open] summary{
+      border-color:rgba(243,200,111,.64);
+      color:rgba(255,244,216,.98);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(243,200,111,.18),transparent 72%),
+        linear-gradient(180deg,rgba(35,22,69,.78),rgba(4,9,20,.86));
+      box-shadow:0 0 1.8rem rgba(143,101,255,.30),0 0 2rem rgba(243,200,111,.10),inset 0 1px 0 rgba(255,255,255,.12);
+    }
+
+    .route-menu summary::-webkit-details-marker{display:none}
+
+    .route-menu summary::after{
+      content:"";
+      width:.55rem;
+      height:.55rem;
+      border-right:2px solid rgba(255,244,216,.82);
+      border-bottom:2px solid rgba(255,244,216,.82);
+      transform:rotate(45deg) translateY(-.12rem);
+      flex:0 0 auto;
+    }
+
+    .route-menu[open] summary::after{
+      transform:rotate(225deg) translateY(-.08rem);
+      border-color:rgba(243,200,111,.95);
+    }
+
+    .route-menu-panel{
+      position:absolute;
+      right:0;
+      top:calc(100% + .55rem);
+      z-index:40;
+      width:min(31rem,calc(100vw - 2rem));
+      padding:.78rem;
+      border:1px solid rgba(143,101,255,.34);
+      border-radius:1.1rem;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(143,101,255,.24),transparent 15rem),
+        radial-gradient(circle at 96% 25%,rgba(243,200,111,.10),transparent 15rem),
+        linear-gradient(180deg,rgba(14,12,35,.97),rgba(3,7,18,.98));
+      box-shadow:0 0 2.8rem rgba(143,101,255,.22),0 1.4rem 3.4rem rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.09);
+    }
+
+    .route-menu-group{
+      display:grid;
+      gap:.55rem;
+    }
+
+    .route-menu-role{
+      color:var(--gold);
+      font-size:.63rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .route-menu-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.5rem;
+    }
+
+    .route-menu-link{
+      min-height:2.35rem;
+      display:flex;
       align-items:center;
       justify-content:center;
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:999px;
-      padding:.5rem .74rem;
-      color:rgba(241,246,255,.84);
-      background:rgba(255,255,255,.035);
-      font-size:.68rem;
+      border:1px solid rgba(143,101,255,.24);
+      border-radius:.86rem;
+      padding:.5rem .62rem;
+      color:rgba(241,246,255,.88);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(143,101,255,.11),transparent 72%),
+        linear-gradient(180deg,rgba(255,255,255,.048),rgba(255,255,255,.020));
+      font-size:.62rem;
       font-weight:950;
-      letter-spacing:.055em;
+      letter-spacing:.06em;
+      text-align:center;
       text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-      transition:transform .18s ease,border-color .18s ease;
+      box-shadow:0 0 .85rem rgba(143,101,255,.08),inset 0 1px 0 rgba(255,255,255,.07);
     }
 
-    .nav a:hover,
-    .nav a:focus-visible{
+    .route-menu-link:hover,
+    .route-menu-link:focus-visible{
       transform:translateY(-2px);
-      border-color:rgba(243,200,111,.48);
+      border-color:rgba(243,200,111,.62);
+      color:rgba(255,244,216,.98);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(243,200,111,.16),transparent 72%),
+        linear-gradient(180deg,rgba(143,101,255,.085),rgba(255,255,255,.028));
+      box-shadow:0 0 1.35rem rgba(143,101,255,.24),inset 0 1px 0 rgba(255,255,255,.10);
       outline:none;
     }
 
-    .nav a[aria-current="page"]{
-      border-color:rgba(243,200,111,.88);
+    .route-menu-link[aria-current="page"]{
       color:#060811;
+      border-color:rgba(243,200,111,.86);
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
+      box-shadow:0 0 1.6rem rgba(143,101,255,.24),0 0 1rem rgba(243,200,111,.22);
     }
 
     .panel{
@@ -424,29 +527,29 @@
       gap:1.05rem;
     }
 
-    .demo-universe-layout{
+    .demo-system-layout{
       display:grid;
       grid-template-columns:minmax(0,1.15fr) minmax(18rem,.85fr);
       gap:.95rem;
       align-items:stretch;
     }
 
-    .demo-universe-stage{
+    .demo-system-stage{
       position:relative;
-      min-height:clamp(34rem,64vw,48rem);
+      min-height:clamp(38rem,68vw,52rem);
       border:1px solid rgba(184,205,255,.14);
       border-radius:clamp(1.25rem,4vw,2rem);
       overflow:hidden;
       isolation:isolate;
       background:
-        radial-gradient(circle at 50% 50%,rgba(243,200,111,.10),transparent 16rem),
-        radial-gradient(circle at 28% 36%,rgba(143,101,255,.18),transparent 20rem),
-        radial-gradient(circle at 72% 65%,rgba(141,216,255,.11),transparent 20rem),
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.13),transparent 13rem),
+        radial-gradient(circle at 34% 35%,rgba(143,101,255,.18),transparent 20rem),
+        radial-gradient(circle at 72% 68%,rgba(141,216,255,.11),transparent 22rem),
         linear-gradient(180deg,rgba(1,5,16,.72),rgba(2,6,16,.96));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .demo-universe-stage::before{
+    .demo-system-stage::before{
       content:"";
       position:absolute;
       inset:1.25rem;
@@ -463,35 +566,35 @@
       mask-image:radial-gradient(circle at 50% 50%,rgba(0,0,0,.95),rgba(0,0,0,.62) 58%,rgba(0,0,0,.18) 86%);
     }
 
-    .demo-universe-stage::after{
-      content:"";
+    .demo-light-field{
       position:absolute;
       left:50%;
       top:50%;
       z-index:1;
-      width:min(82%,43rem);
-      height:min(58%,26rem);
-      border:1px solid rgba(243,200,111,.11);
+      width:min(88%,45rem);
+      height:min(88%,45rem);
       border-radius:50%;
-      transform:translate(-50%,-50%) rotate(-12deg);
-      box-shadow:
-        0 0 2.4rem rgba(143,101,255,.10),
-        inset 0 0 2rem rgba(243,200,111,.035);
-      animation:demoOuterOrbitPulse 13s ease-in-out infinite;
+      transform:translate(-50%,-50%);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,248,200,.18),transparent 18%),
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.12),transparent 38%),
+        radial-gradient(circle at 50% 50%,rgba(143,101,255,.12),transparent 72%);
+      animation:demoLightBreath 9s ease-in-out infinite;
+      pointer-events:none;
     }
 
-    @keyframes demoOuterOrbitPulse{
-      0%,100%{opacity:.44;filter:brightness(.92)}
-      50%{opacity:.72;filter:brightness(1.16)}
+    @keyframes demoLightBreath{
+      0%,100%{opacity:.52;filter:brightness(.94)}
+      50%{opacity:.78;filter:brightness(1.16)}
     }
 
-    .demo-sun{
+    .demo-system-sun{
       position:absolute;
       left:50%;
       top:50%;
-      z-index:6;
-      width:clamp(4.8rem,12vw,7.5rem);
-      height:clamp(4.8rem,12vw,7.5rem);
+      z-index:15;
+      width:clamp(4.6rem,11vw,7.4rem);
+      height:clamp(4.6rem,11vw,7.4rem);
       border-radius:50%;
       transform:translate(-50%,-50%);
       background:
@@ -506,119 +609,184 @@
     }
 
     @keyframes demoSunPulse{
-      0%,100%{filter:brightness(.98) saturate(1);box-shadow:0 0 .85rem rgba(255,255,255,.42),0 0 2rem rgba(243,200,111,.54),0 0 4.4rem rgba(243,200,111,.26),0 0 7rem rgba(143,101,255,.12)}
-      50%{filter:brightness(1.15) saturate(1.08);box-shadow:0 0 1.1rem rgba(255,255,255,.58),0 0 2.6rem rgba(243,200,111,.72),0 0 5.4rem rgba(243,200,111,.34),0 0 8rem rgba(143,101,255,.18)}
+      0%,100%{
+        filter:brightness(.98) saturate(1);
+        box-shadow:0 0 .85rem rgba(255,255,255,.42),0 0 2rem rgba(243,200,111,.54),0 0 4.4rem rgba(243,200,111,.26),0 0 7rem rgba(143,101,255,.12);
+      }
+      50%{
+        filter:brightness(1.15) saturate(1.08);
+        box-shadow:0 0 1.1rem rgba(255,255,255,.58),0 0 2.6rem rgba(243,200,111,.72),0 0 5.4rem rgba(243,200,111,.34),0 0 8rem rgba(143,101,255,.18);
+      }
     }
 
-    .demo-earth-orbit{
+    .demo-orbit{
       position:absolute;
       left:50%;
       top:50%;
-      z-index:3;
-      width:min(70%,36rem);
-      height:min(47%,21rem);
-      border:1px solid rgba(141,216,255,.18);
+      z-index:2;
+      border:1px solid rgba(141,216,255,.14);
       border-radius:50%;
-      transform:translate(-50%,-50%) rotate(-12deg);
-      box-shadow:
-        0 0 1.6rem rgba(141,216,255,.08),
-        inset 0 0 1.4rem rgba(141,216,255,.035);
+      transform:translate(-50%,-50%);
+      box-shadow:0 0 1.2rem rgba(141,216,255,.045),inset 0 0 1.1rem rgba(143,101,255,.030);
+      pointer-events:none;
     }
 
-    .demo-light-ray{
-      position:absolute;
-      left:50%;
-      top:50%;
-      z-index:4;
-      width:clamp(8.5rem,26vw,16rem);
-      height:2px;
-      transform-origin:left center;
-      background:
-        linear-gradient(90deg,
-          rgba(255,248,200,.88),
-          rgba(243,200,111,.46),
-          rgba(141,216,255,.16),
-          transparent
-        );
-      box-shadow:
-        0 0 .8rem rgba(243,200,111,.28),
-        0 0 1.8rem rgba(255,248,200,.12);
-      animation:demoEarthOrbit 34s linear infinite;
-    }
+    .demo-orbit-mercury{width:8rem;height:8rem;border-color:rgba(255,244,216,.16)}
+    .demo-orbit-venus{width:11rem;height:11rem;border-color:rgba(243,200,111,.16)}
+    .demo-orbit-earth{width:14.3rem;height:14.3rem;border-color:rgba(141,216,255,.20)}
+    .demo-orbit-mars{width:17.6rem;height:17.6rem;border-color:rgba(255,157,145,.16)}
+    .demo-orbit-jupiter{width:22.4rem;height:22.4rem;border-color:rgba(255,232,163,.14)}
+    .demo-orbit-saturn{width:27.6rem;height:27.6rem;border-color:rgba(243,200,111,.13)}
+    .demo-orbit-uranus{width:32.2rem;height:32.2rem;border-color:rgba(143,240,195,.13)}
+    .demo-orbit-neptune{width:36.4rem;height:36.4rem;border-color:rgba(141,216,255,.13)}
 
+    .demo-planet-system,
     .demo-earth-system{
       position:absolute;
       left:50%;
       top:50%;
-      z-index:7;
+      z-index:8;
       width:0;
       height:0;
       transform-origin:0 0;
-      animation:demoEarthOrbit 34s linear infinite;
+      animation:demoSolarOrbit var(--duration,28s) linear infinite;
+      animation-delay:var(--delay,0s);
     }
 
-    @keyframes demoEarthOrbit{
+    @keyframes demoSolarOrbit{
       from{transform:rotate(0deg)}
       to{transform:rotate(360deg)}
     }
 
-    .demo-earth-wrap{
+    .demo-planet-position,
+    .demo-earth-position{
       position:absolute;
       left:0;
       top:0;
       width:0;
       height:0;
-      transform:translateX(clamp(8.5rem,26vw,16rem));
+      transform:translateX(var(--radius));
     }
 
-    .demo-earth{
+    .orbit-mercury{--radius:4rem;--duration:11s;--delay:-1.3s;z-index:13}
+    .orbit-venus{--radius:5.5rem;--duration:16s;--delay:-4.4s;z-index:12}
+    .orbit-earth{--radius:7.15rem;--duration:22s;--delay:-6.2s;z-index:14}
+    .orbit-mars{--radius:8.8rem;--duration:29s;--delay:-8.8s;z-index:11}
+    .orbit-jupiter{--radius:11.2rem;--duration:42s;--delay:-18s;z-index:10}
+    .orbit-saturn{--radius:13.8rem;--duration:55s;--delay:-21s;z-index:9}
+    .orbit-uranus{--radius:16.1rem;--duration:72s;--delay:-31s;z-index:8}
+    .orbit-neptune{--radius:18.2rem;--duration:88s;--delay:-42s;z-index:7}
+
+    .demo-planet,
+    .demo-earth-body{
       position:absolute;
       left:0;
       top:0;
-      width:clamp(2.55rem,6.5vw,4rem);
-      height:clamp(2.55rem,6.5vw,4rem);
-      border:1px solid rgba(141,216,255,.44);
       border-radius:50%;
       transform:translate(-50%,-50%);
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:0 0 .75rem rgba(255,255,255,.12),inset -.28rem -.18rem .48rem rgba(0,0,0,.35),inset .18rem .10rem .42rem rgba(255,255,255,.10);
+    }
+
+    .demo-planet-mercury{
+      width:.70rem;
+      height:.70rem;
+      background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.60),rgba(145,136,120,.90) 48%,rgba(42,39,42,.96));
+    }
+
+    .demo-planet-venus{
+      width:1.05rem;
+      height:1.05rem;
+      background:radial-gradient(circle at 34% 28%,rgba(255,255,255,.74),rgba(255,219,142,.92) 44%,rgba(133,83,42,.94));
+      box-shadow:0 0 .85rem rgba(243,200,111,.20),inset -.32rem -.18rem .50rem rgba(0,0,0,.32),inset .18rem .10rem .42rem rgba(255,255,255,.12);
+    }
+
+    .demo-earth-body{
+      width:1.36rem;
+      height:1.36rem;
+      border-color:rgba(141,216,255,.48);
       background:
         radial-gradient(circle at 34% 28%,rgba(255,255,255,.80),transparent 10%),
         radial-gradient(circle at 62% 58%,rgba(143,240,195,.50),transparent 18%),
         radial-gradient(circle at 44% 50%,rgba(141,216,255,.86),rgba(36,120,255,.58) 46%,rgba(6,20,54,.94) 76%);
-      box-shadow:
-        0 0 .8rem rgba(141,216,255,.35),
-        0 0 1.8rem rgba(36,120,255,.18),
-        inset -.55rem -.35rem .75rem rgba(0,0,0,.36),
-        inset .35rem .2rem .65rem rgba(255,255,255,.10);
-      animation:demoEarthCounter 34s linear infinite reverse;
+      box-shadow:0 0 .85rem rgba(141,216,255,.35),0 0 1.4rem rgba(36,120,255,.18),inset -.34rem -.18rem .50rem rgba(0,0,0,.36),inset .18rem .12rem .42rem rgba(255,255,255,.12);
     }
 
-    @keyframes demoEarthCounter{
-      from{rotate:0deg}
-      to{rotate:360deg}
+    .demo-planet-mars{
+      width:1rem;
+      height:1rem;
+      background:radial-gradient(circle at 35% 28%,rgba(255,219,190,.70),rgba(210,92,58,.92) 48%,rgba(82,29,24,.96));
+      box-shadow:0 0 .75rem rgba(255,157,145,.18),inset -.30rem -.18rem .48rem rgba(0,0,0,.34),inset .18rem .10rem .42rem rgba(255,255,255,.10);
+    }
+
+    .demo-planet-jupiter{
+      width:2.25rem;
+      height:2.25rem;
+      background:
+        linear-gradient(180deg,rgba(255,232,190,.86),rgba(185,127,80,.88) 28%,rgba(255,220,160,.86) 42%,rgba(124,76,58,.94) 58%,rgba(230,184,124,.88) 75%,rgba(65,43,50,.96)),
+        radial-gradient(circle at 34% 28%,rgba(255,255,255,.55),transparent 12%);
+      box-shadow:0 0 1.1rem rgba(243,200,111,.20),inset -.45rem -.24rem .64rem rgba(0,0,0,.35),inset .22rem .14rem .50rem rgba(255,255,255,.13);
+    }
+
+    .demo-planet-saturn{
+      width:1.92rem;
+      height:1.92rem;
+      background:radial-gradient(circle at 34% 28%,rgba(255,255,255,.66),rgba(235,200,126,.92) 46%,rgba(105,75,54,.96));
+      box-shadow:0 0 1rem rgba(243,200,111,.18),inset -.38rem -.22rem .58rem rgba(0,0,0,.35),inset .20rem .12rem .46rem rgba(255,255,255,.12);
+    }
+
+    .demo-saturn-ring{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:3.35rem;
+      height:.82rem;
+      border:2px solid rgba(255,232,163,.46);
+      border-left-color:rgba(255,232,163,.14);
+      border-right-color:rgba(255,232,163,.20);
+      border-radius:50%;
+      transform:translate(-50%,-50%) rotate(-18deg);
+      box-shadow:0 0 .65rem rgba(243,200,111,.12);
+      pointer-events:none;
+    }
+
+    .demo-planet-uranus{
+      width:1.35rem;
+      height:1.35rem;
+      background:radial-gradient(circle at 34% 28%,rgba(255,255,255,.72),rgba(143,240,195,.80) 46%,rgba(30,102,112,.96));
+      box-shadow:0 0 .85rem rgba(143,240,195,.18),inset -.34rem -.18rem .50rem rgba(0,0,0,.34),inset .18rem .10rem .42rem rgba(255,255,255,.11);
+    }
+
+    .demo-planet-neptune{
+      width:1.35rem;
+      height:1.35rem;
+      background:radial-gradient(circle at 34% 28%,rgba(255,255,255,.62),rgba(80,145,255,.82) 44%,rgba(20,45,130,.96));
+      box-shadow:0 0 .85rem rgba(141,216,255,.18),inset -.34rem -.18rem .50rem rgba(0,0,0,.36),inset .18rem .10rem .42rem rgba(255,255,255,.10);
     }
 
     .demo-moon-orbit{
       position:absolute;
       left:0;
       top:0;
-      z-index:8;
-      width:clamp(5.2rem,13vw,7.4rem);
-      height:clamp(5.2rem,13vw,7.4rem);
-      border:1px solid rgba(230,238,255,.20);
+      z-index:16;
+      width:3.9rem;
+      height:3.9rem;
+      border:1px solid rgba(230,238,255,.25);
       border-radius:50%;
       transform:translate(-50%,-50%);
-      box-shadow:0 0 1rem rgba(230,238,255,.06);
+      box-shadow:0 0 .8rem rgba(230,238,255,.06);
+      pointer-events:none;
     }
 
     .demo-moon-system{
       position:absolute;
       left:0;
       top:0;
-      z-index:9;
+      z-index:17;
       width:0;
       height:0;
-      animation:demoMoonOrbit 7.8s linear infinite;
       transform-origin:0 0;
+      animation:demoMoonOrbit 5.6s linear infinite;
     }
 
     @keyframes demoMoonOrbit{
@@ -626,48 +794,23 @@
       to{transform:rotate(360deg)}
     }
 
-    .demo-moon{
+    .demo-moon-body{
       position:absolute;
       left:0;
       top:0;
-      width:clamp(1.05rem,2.7vw,1.55rem);
-      height:clamp(1.05rem,2.7vw,1.55rem);
-      border:1px solid rgba(230,238,255,.36);
+      width:.62rem;
+      height:.62rem;
+      border:1px solid rgba(230,238,255,.42);
       border-radius:50%;
-      transform:
-        translateX(clamp(2.6rem,6.5vw,3.7rem))
-        translate(-50%,-50%);
+      transform:translateX(1.95rem) translate(-50%,-50%);
       background:
         linear-gradient(90deg,rgba(255,255,255,.92) 0 42%,rgba(180,190,215,.42) 43% 62%,rgba(24,28,44,.92) 63% 100%);
-      box-shadow:
-        0 0 .55rem rgba(230,238,255,.26),
-        0 0 1rem rgba(141,216,255,.10);
+      box-shadow:0 0 .55rem rgba(230,238,255,.32),0 0 .9rem rgba(141,216,255,.12);
     }
 
-    .demo-phase-band{
+    .demo-system-label{
       position:absolute;
-      left:50%;
-      top:50%;
-      z-index:5;
-      width:min(78%,40rem);
-      height:min(50%,22rem);
-      transform:translate(-50%,-50%) rotate(-12deg);
-      border-radius:50%;
-      background:
-        linear-gradient(90deg,
-          rgba(255,248,200,.055),
-          transparent 36%,
-          transparent 64%,
-          rgba(20,10,62,.18)
-        );
-      pointer-events:none;
-      opacity:.76;
-      mask-image:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,.82),rgba(0,0,0,.16) 68%,transparent 76%);
-    }
-
-    .demo-label{
-      position:absolute;
-      z-index:12;
+      z-index:30;
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -676,9 +819,9 @@
       border:1px solid rgba(255,255,255,.14);
       border-radius:999px;
       color:rgba(255,244,216,.94);
-      background:rgba(3,6,18,.70);
+      background:rgba(3,6,18,.76);
       box-shadow:0 0 1rem rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.08);
-      font-size:.62rem;
+      font-size:.60rem;
       font-weight:950;
       letter-spacing:.10em;
       line-height:1;
@@ -686,29 +829,14 @@
       backdrop-filter:blur(7px);
     }
 
-    .demo-label.sun{left:50%;top:50%;transform:translate(-50%,calc(-50% - clamp(3.7rem,9vw,5.7rem)))}
-    .demo-label.earth{right:clamp(1rem,4vw,2.8rem);top:48%}
-    .demo-label.moon{right:clamp(1rem,5vw,4.2rem);top:34%}
-    .demo-label.orbit{left:clamp(1rem,4vw,2.6rem);top:30%}
-    .demo-label.phase{left:clamp(1rem,4vw,2.6rem);bottom:28%}
-    .demo-label.reference{left:50%;bottom:clamp(1rem,4vw,2.2rem);transform:translateX(-50%)}
+    .demo-system-label.sun{left:50%;top:50%;transform:translate(-50%,calc(-50% - clamp(3.7rem,9vw,5.7rem)))}
+    .demo-system-label.planets{left:50%;top:1.6rem;transform:translateX(-50%)}
+    .demo-system-label.earth{right:clamp(1rem,4vw,2.8rem);top:45%}
+    .demo-system-label.moon{right:clamp(1rem,5vw,4.2rem);top:34%}
+    .demo-system-label.saturn{left:clamp(1rem,4vw,2.6rem);top:29%}
+    .demo-system-label.boundary{left:50%;bottom:clamp(1rem,4vw,2.2rem);transform:translateX(-50%)}
 
-    .demo-receipt-marker{
-      position:absolute;
-      z-index:11;
-      width:.65rem;
-      height:.65rem;
-      border:1px solid rgba(143,240,195,.54);
-      border-radius:50%;
-      background:radial-gradient(circle at 42% 34%,rgba(255,255,255,.92),transparent 20%),rgba(143,240,195,.42);
-      box-shadow:0 0 .8rem rgba(143,240,195,.38);
-    }
-
-    .demo-receipt-marker.light{left:57%;top:48%}
-    .demo-receipt-marker.orbit{left:30%;top:28%}
-    .demo-receipt-marker.phase{right:30%;bottom:26%}
-
-    .demo-universe-note{
+    .demo-system-note{
       display:grid;
       align-content:start;
       gap:.75rem;
@@ -721,7 +849,7 @@
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .demo-universe-note b{
+    .demo-system-note b{
       color:var(--gold);
       font-size:.72rem;
       font-weight:950;
@@ -729,7 +857,7 @@
       text-transform:uppercase;
     }
 
-    .demo-list{
+    .demo-system-legend{
       display:grid;
       gap:.55rem;
       margin:0;
@@ -737,7 +865,7 @@
       list-style:none;
     }
 
-    .demo-list li{
+    .demo-system-legend li{
       padding:.68rem .76rem;
       border:1px solid rgba(255,255,255,.10);
       border-radius:.9rem;
@@ -747,8 +875,14 @@
       line-height:1.4;
     }
 
-    .demo-list strong{
+    .demo-system-legend strong{
       color:rgba(255,244,216,.94);
+    }
+
+    .planet-list{
+      color:rgba(230,238,255,.72);
+      font-size:.86rem;
+      line-height:1.45;
     }
 
     .diamond-field{
@@ -954,7 +1088,7 @@
       }
 
       .instrument-panel,
-      .demo-universe-layout{
+      .demo-system-layout{
         grid-template-columns:1fr;
       }
 
@@ -970,6 +1104,7 @@
       }
 
       .nav{justify-content:flex-start}
+      .route-menu-panel{left:0;right:auto}
     }
 
     @media (max-width:720px){
@@ -978,38 +1113,86 @@
       .hero{min-height:28rem;padding:1rem}
       .actions{display:grid}
       .button{width:100%}
+
+      .route-menu{width:100%}
+      .route-menu-panel{
+        position:static;
+        margin-top:.45rem;
+        width:100%;
+      }
+
+      .route-menu-grid{
+        grid-template-columns:1fr;
+      }
+
       .diamond-field,
       .return-grid,
       .instrument-grid{
         grid-template-columns:1fr;
       }
 
-      .demo-universe-stage{
-        min-height:31rem;
+      .demo-system-stage{
+        min-height:34rem;
       }
 
-      .demo-earth-orbit{
-        width:78%;
-        height:48%;
+      .demo-orbit-mercury{width:5.7rem;height:5.7rem}
+      .demo-orbit-venus{width:7.6rem;height:7.6rem}
+      .demo-orbit-earth{width:9.5rem;height:9.5rem}
+      .demo-orbit-mars{width:11.4rem;height:11.4rem}
+      .demo-orbit-jupiter{width:14rem;height:14rem}
+      .demo-orbit-saturn{width:16.7rem;height:16.7rem}
+      .demo-orbit-uranus{width:19rem;height:19rem}
+      .demo-orbit-neptune{width:21.2rem;height:21.2rem}
+
+      .orbit-mercury{--radius:2.85rem}
+      .orbit-venus{--radius:3.8rem}
+      .orbit-earth{--radius:4.75rem}
+      .orbit-mars{--radius:5.7rem}
+      .orbit-jupiter{--radius:7rem}
+      .orbit-saturn{--radius:8.35rem}
+      .orbit-uranus{--radius:9.5rem}
+      .orbit-neptune{--radius:10.6rem}
+
+      .demo-system-sun{
+        width:3.6rem;
+        height:3.6rem;
       }
 
-      .demo-light-ray{
-        width:clamp(7rem,24vw,9rem);
+      .demo-planet-jupiter{
+        width:1.7rem;
+        height:1.7rem;
       }
 
-      .demo-earth-wrap{
-        transform:translateX(clamp(7rem,24vw,9rem));
+      .demo-planet-saturn{
+        width:1.45rem;
+        height:1.45rem;
       }
 
-      .demo-label{
-        font-size:.52rem;
-        padding:.34rem .48rem;
+      .demo-saturn-ring{
+        width:2.45rem;
+        height:.62rem;
       }
 
-      .demo-label.earth{right:.7rem;top:49%}
-      .demo-label.moon{right:.8rem;top:37%}
-      .demo-label.orbit{left:.7rem;top:25%}
-      .demo-label.phase{left:.7rem;bottom:26%}
+      .demo-moon-orbit{
+        width:2.8rem;
+        height:2.8rem;
+      }
+
+      .demo-moon-body{
+        transform:translateX(1.4rem) translate(-50%,-50%);
+      }
+
+      .demo-system-label{
+        font-size:.50rem;
+        padding:.32rem .42rem;
+      }
+
+      .demo-system-label.sun{top:50%;transform:translate(-50%,calc(-50% - 2.9rem))}
+      .demo-system-label.planets{top:1rem}
+      .demo-system-label.earth{right:.6rem;top:47%}
+      .demo-system-label.moon{right:.6rem;top:38%}
+      .demo-system-label.saturn{left:.6rem;top:30%}
+      .demo-system-label.boundary{bottom:.85rem;width:max-content;max-width:80%;text-align:center}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -1023,26 +1206,23 @@
       }
 
       .hero::before,
-      .demo-universe-stage::after,
-      .demo-sun,
-      .demo-light-ray,
+      .demo-light-field,
+      .demo-system-sun,
+      .demo-planet-system,
       .demo-earth-system,
-      .demo-earth,
       .demo-moon-system{
         animation:none!important;
       }
 
-      .demo-light-ray{
-        transform:rotate(0deg)!important;
-      }
-
-      .demo-earth-system{
-        transform:rotate(0deg)!important;
-      }
-
-      .demo-moon-system{
-        transform:rotate(35deg)!important;
-      }
+      .orbit-mercury{transform:rotate(18deg)}
+      .orbit-venus{transform:rotate(62deg)}
+      .orbit-earth{transform:rotate(118deg)}
+      .orbit-mars{transform:rotate(164deg)}
+      .orbit-jupiter{transform:rotate(214deg)}
+      .orbit-saturn{transform:rotate(254deg)}
+      .orbit-uranus{transform:rotate(304deg)}
+      .orbit-neptune{transform:rotate(336deg)}
+      .demo-moon-system{transform:rotate(40deg)}
     }
   </style>
 </head>
@@ -1060,19 +1240,111 @@
         </span>
       </a>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/products/">Products</a>
-        <a href="/laws/">Laws</a>
-        <a href="/showroom/globe/">Interactive Narrative</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/nine-summits/">Nine Summits</a>
-        <a href="/nine-summits-of-love/">Book</a>
-        <a href="/nine-summits/universe/" aria-current="page">Universe</a>
-        <a href="/explore/frontier/">Frontier</a>
-        <a href="/gauges/">Gauges</a>
+      <nav class="nav" aria-label="Grouped route navigation">
+        <details class="route-menu">
+          <summary>CENTER · Core Entry</summary>
+          <div class="route-menu-panel">
+            <div class="route-menu-group">
+              <div class="route-menu-role">Core Entry and Return</div>
+              <div class="route-menu-grid">
+                <a class="route-menu-link" href="/">Compass</a>
+                <a class="route-menu-link" href="/door/">Door</a>
+                <a class="route-menu-link" href="/home/">Home</a>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="route-menu">
+          <summary>NORTH · Laws</summary>
+          <div class="route-menu-panel">
+            <div class="route-menu-group">
+              <div class="route-menu-role">Proof / Truth / Scientific Backing</div>
+              <div class="route-menu-grid">
+                <a class="route-menu-link" href="/laws/">Laws</a>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="route-menu">
+          <summary>EAST · Story World</summary>
+          <div class="route-menu-panel">
+            <div class="route-menu-group">
+              <div class="route-menu-role">Story World and Visible Expression</div>
+              <div class="route-menu-grid">
+                <a class="route-menu-link" href="/showroom/globe/">Interactive Narrative</a>
+                <a class="route-menu-link" href="/showroom/">Showroom</a>
+                <a class="route-menu-link" href="/showroom/globe/audralia/">Audralia</a>
+                <a class="route-menu-link" href="/showroom/globe/earth/">Earth</a>
+                <a class="route-menu-link" href="/showroom/globe/hearth/">Hearth</a>
+                <a class="route-menu-link" href="/showroom/globe/h-earth/">H-Earth</a>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="route-menu">
+          <summary>SOUTH · Frontier</summary>
+          <div class="route-menu-panel">
+            <div class="route-menu-group">
+              <div class="route-menu-role">Build / Expansion / Frontier Lanes</div>
+              <div class="route-menu-grid">
+                <a class="route-menu-link" href="/explore/frontier/">Frontier</a>
+                <a class="route-menu-link" href="/explore/frontier/energy/">Energy</a>
+                <a class="route-menu-link" href="/explore/frontier/energy/">Electrical Energy</a>
+                <a class="route-menu-link" href="/explore/frontier/water/">Water</a>
+                <a class="route-menu-link" href="/explore/frontier/waste/">Waste</a>
+                <a class="route-menu-link" href="/explore/frontier/urban/">Urban</a>
+                <a class="route-menu-link" href="/explore/frontier/lattice/">Lattice</a>
+                <a class="route-menu-link" href="/explore/frontier/infrastructure/">Infrastructure</a>
+                <a class="route-menu-link" href="/explore/frontier/closed-loop/">Closed Loop</a>
+                <a class="route-menu-link" href="/explore/frontier/manual/">Manual</a>
+                <a class="route-menu-link" href="/explore/frontier/shimmer/">Shimmer</a>
+                <a class="route-menu-link" href="/explore/frontier/trajectory/">Trajectory</a>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="route-menu">
+          <summary>WEST · Audit</summary>
+          <div class="route-menu-panel">
+            <div class="route-menu-group">
+              <div class="route-menu-role">Audit / Measurement</div>
+              <div class="route-menu-grid">
+                <a class="route-menu-link" href="/gauges/">Gauges</a>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="route-menu">
+          <summary>SUMMIT · Book</summary>
+          <div class="route-menu-panel">
+            <div class="route-menu-group">
+              <div class="route-menu-role">Nine Summits / Book / Universe</div>
+              <div class="route-menu-grid">
+                <a class="route-menu-link" href="/nine-summits/">Nine Summits</a>
+                <a class="route-menu-link" href="/nine-summits-of-love/">Book</a>
+                <a class="route-menu-link" href="/nine-summits/universe/" aria-current="page">Universe</a>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="route-menu">
+          <summary>COMMUNITY · Public Path</summary>
+          <div class="route-menu-panel">
+            <div class="route-menu-group">
+              <div class="route-menu-role">Practical Public Path</div>
+              <div class="route-menu-grid">
+                <a class="route-menu-link" href="/products/">Products</a>
+                <a class="route-menu-link" href="/meet-sean-mansfield/">Meet Sean</a>
+              </div>
+            </div>
+          </div>
+        </details>
       </nav>
     </header>
 
@@ -1093,66 +1365,118 @@
         <div class="actions">
           <a class="button gold" href="/showroom/globe/audralia/">Inspect Audralia</a>
           <a class="button" href="/nine-summits-of-love/">Open the Book</a>
-          <a class="button violet" href="#demo-universe">View Demo Universe</a>
+          <a class="button violet" href="#demo-universe">View Demo Solar System</a>
           <a class="button" href="/laws/">Open Laws</a>
         </div>
       </section>
 
       <section class="panel section" id="demo-universe" aria-labelledby="demo-universe-title">
-        <div class="kicker">Demo Universe · Earth / Sun / Moon Relationship</div>
-        <h2 id="demo-universe-title">The Demo Universe shows how light, orbit, reflection, and reference behave before the larger world opens.</h2>
+        <div class="kicker">Demo Universe · Sun / Eight Planets / Earth-Moon Relationship</div>
+        <h2 id="demo-universe-title">The Demo Universe shows the Sun, eight planets, Earth as reference body, and the Moon orbiting Earth.</h2>
 
-        <div class="demo-universe-layout">
+        <div class="demo-system-layout">
           <div
-            class="demo-universe-stage"
+            class="demo-system-stage"
             role="img"
-            aria-label="CSS-only Demo Universe relationship model showing the Sun as light source, Earth as reference body, Moon orbiting Earth, and Moon phase implied by reflected sunlight."
-            data-demo-universe-stage="true"
-            data-demo-universe-bodies="Sun,Earth,Moon"
+            aria-label="CSS-only demo solar system showing the Sun as light source, eight planets, Earth as reference body, Saturn with a ring, and the Moon orbiting Earth."
+            data-demo-solar-system-stage="true"
+            data-demo-universe-bodies="Sun,Mercury,Venus,Earth,Moon,Mars,Jupiter,Saturn,Uranus,Neptune"
+            data-eight-planets-visible="true"
+            data-moon-orbits-earth="true"
             data-orbital-orientation="true"
           >
-            <div class="demo-phase-band" aria-hidden="true"></div>
-            <div class="demo-earth-orbit" aria-hidden="true"></div>
-            <div class="demo-light-ray" aria-hidden="true"></div>
+            <div class="demo-light-field" aria-hidden="true"></div>
 
-            <div class="demo-sun" aria-hidden="true"></div>
+            <span class="demo-orbit demo-orbit-mercury" aria-hidden="true"></span>
+            <span class="demo-orbit demo-orbit-venus" aria-hidden="true"></span>
+            <span class="demo-orbit demo-orbit-earth" aria-hidden="true"></span>
+            <span class="demo-orbit demo-orbit-mars" aria-hidden="true"></span>
+            <span class="demo-orbit demo-orbit-jupiter" aria-hidden="true"></span>
+            <span class="demo-orbit demo-orbit-saturn" aria-hidden="true"></span>
+            <span class="demo-orbit demo-orbit-uranus" aria-hidden="true"></span>
+            <span class="demo-orbit demo-orbit-neptune" aria-hidden="true"></span>
 
-            <div class="demo-earth-system" aria-hidden="true">
-              <div class="demo-earth-wrap">
-                <div class="demo-moon-orbit"></div>
-                <div class="demo-moon-system">
-                  <div class="demo-moon"></div>
-                </div>
-                <div class="demo-earth"></div>
+            <div class="demo-system-sun" aria-hidden="true"></div>
+
+            <div class="demo-planet-system orbit-mercury" aria-hidden="true">
+              <div class="demo-planet-position">
+                <div class="demo-planet demo-planet-mercury"></div>
               </div>
             </div>
 
-            <span class="demo-receipt-marker light" aria-hidden="true"></span>
-            <span class="demo-receipt-marker orbit" aria-hidden="true"></span>
-            <span class="demo-receipt-marker phase" aria-hidden="true"></span>
+            <div class="demo-planet-system orbit-venus" aria-hidden="true">
+              <div class="demo-planet-position">
+                <div class="demo-planet demo-planet-venus"></div>
+              </div>
+            </div>
 
-            <span class="demo-label sun">Sun · Light Source</span>
-            <span class="demo-label earth">Earth · Reference</span>
-            <span class="demo-label moon">Moon · Phase</span>
-            <span class="demo-label orbit">Orbit · Relation</span>
-            <span class="demo-label phase">Reflection · Light</span>
-            <span class="demo-label reference">Demo Model · Not Final Cosmology</span>
+            <div class="demo-earth-system orbit-earth" aria-hidden="true">
+              <div class="demo-earth-position">
+                <div class="demo-moon-orbit"></div>
+                <div class="demo-moon-system">
+                  <div class="demo-moon-body"></div>
+                </div>
+                <div class="demo-earth-body"></div>
+              </div>
+            </div>
+
+            <div class="demo-planet-system orbit-mars" aria-hidden="true">
+              <div class="demo-planet-position">
+                <div class="demo-planet demo-planet-mars"></div>
+              </div>
+            </div>
+
+            <div class="demo-planet-system orbit-jupiter" aria-hidden="true">
+              <div class="demo-planet-position">
+                <div class="demo-planet demo-planet-jupiter"></div>
+              </div>
+            </div>
+
+            <div class="demo-planet-system orbit-saturn" aria-hidden="true">
+              <div class="demo-planet-position">
+                <div class="demo-saturn-ring"></div>
+                <div class="demo-planet demo-planet-saturn"></div>
+              </div>
+            </div>
+
+            <div class="demo-planet-system orbit-uranus" aria-hidden="true">
+              <div class="demo-planet-position">
+                <div class="demo-planet demo-planet-uranus"></div>
+              </div>
+            </div>
+
+            <div class="demo-planet-system orbit-neptune" aria-hidden="true">
+              <div class="demo-planet-position">
+                <div class="demo-planet demo-planet-neptune"></div>
+              </div>
+            </div>
+
+            <span class="demo-system-label planets">Eight Planets · Visible Demo</span>
+            <span class="demo-system-label sun">Sun · Light Source</span>
+            <span class="demo-system-label earth">Earth · Reference</span>
+            <span class="demo-system-label moon">Moon · Earth Satellite</span>
+            <span class="demo-system-label saturn">Saturn · Ringed Body</span>
+            <span class="demo-system-label boundary">Demo Model · Not Final Cosmology</span>
           </div>
 
-          <aside class="demo-universe-note" aria-label="Demo Universe explanatory notes">
+          <aside class="demo-system-note" aria-label="Demo Solar System explanatory notes">
             <b>Relationship Read</b>
             <p>
-              This is a teaching model, not the final Nine Summits cosmos. It shows a small relationship system before the page expands into the larger world setting.
+              This field is a teaching model. It shows a compact solar-system relationship before the page expands into the larger Nine Summits world setting. It does not claim final cosmology or scientific scale.
             </p>
 
-            <ul class="demo-list">
+            <ul class="demo-system-legend">
               <li><strong>Sun:</strong> stable light source.</li>
-              <li><strong>Earth:</strong> reference body for the demonstration.</li>
-              <li><strong>Moon:</strong> reflection and phase body tied to Earth.</li>
-              <li><strong>Orbit:</strong> relationship motion, not house-cardinal orientation.</li>
-              <li><strong>Phase:</strong> lunar light implied by the Sun.</li>
-              <li><strong>Boundary:</strong> demo universe only; no final cosmology claimed.</li>
+              <li><strong>Eight planets:</strong> Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune.</li>
+              <li><strong>Earth:</strong> reference body within the eight-planet field.</li>
+              <li><strong>Moon:</strong> satellite orbiting Earth, not a ninth planet.</li>
+              <li><strong>Saturn:</strong> ringed body for immediate visual distinction.</li>
+              <li><strong>Boundary:</strong> demo solar system only; no final cosmology claimed.</li>
             </ul>
+
+            <p class="planet-list">
+              Visible planets: Mercury · Venus · Earth · Mars · Jupiter · Saturn · Uranus · Neptune.
+            </p>
           </aside>
         </div>
       </section>
@@ -1309,14 +1633,14 @@
         <div class="actions">
           <a class="button gold" href="/nine-summits-of-love/">Open the Book</a>
           <a class="button" href="/showroom/globe/audralia/">Inspect Audralia</a>
-          <a class="button violet" href="#demo-universe">View Demo Universe</a>
+          <a class="button violet" href="#demo-universe">View Demo Solar System</a>
           <a class="button" href="/laws/">Open Laws</a>
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-NINE_SUMMITS_UNIVERSE_DEMO_UNIVERSE_RELATIONSHIP_FIELD_TNT_v8
-previous=NINE_SUMMITS_UNIVERSE_CONTEXT_ALIGNMENT_HTML_TNT_v7
+NINE_SUMMITS_UNIVERSE_DEMO_SOLAR_SYSTEM_AND_DROPDOWN_NAV_TNT_v9
+previous=NINE_SUMMITS_UNIVERSE_DEMO_UNIVERSE_RELATIONSHIP_FIELD_TNT_v8
 route=/nine-summits/universe/
 page=nine_summits_universe
 role=nine_summits_world_setting
@@ -1334,41 +1658,54 @@ interactive_narrative_route=/showroom/globe/
 showroom_route=/showroom/
 products_role=community_practical_path
 book_path=/nine-summits-of-love/
-demo_universe=active
-demo_universe_bodies=Sun,Earth,Moon
-earth_sun_moon_relationship=active
-sun_role=light_source
-earth_role=reference_body
-moon_role=reflection_phase_body
+demo_solar_system=active
+demo_universe_bodies=Sun,Mercury,Venus,Earth,Moon,Mars,Jupiter,Saturn,Uranus,Neptune
+eight_planets_visible=true
+planet_list=Mercury,Venus,Earth,Mars,Jupiter,Saturn,Uranus,Neptune
+moon_orbits_earth=true
+moon_orbits_sun_directly=false
+earth_reference_body=true
+sun_light_source=true
+saturn_ring_visible=true
+demo_model_not_final_cosmology=true
 orbital_orientation=true
-solar_lunar_relationship=true
 cardinal_house_orientation=false
-final_universe_map_claimed=false
+dropdown_navigation=active
+cardinal_dropdown_coordination=active
+center_core_dropdown=active
+north_laws_dropdown=active
+east_story_world_dropdown=active
+south_frontier_dropdown=active
+west_audit_dropdown=active
+summit_dropdown=active
+community_products_dropdown=active
+frontier_route_corrected=/explore/frontier/
+electrical_energy_label_points_to=/explore/frontier/energy/
+vision_omitted_while_404=true
 css_only_animation=true
 javascript_added=false
 canvas=false
 webgl=false
 generated_image=false
 graphic_box=false
+heavy_runtime_loaded=false
 visual_pass_claimed=false
-frontier_route_corrected=/explore/frontier/
 cards=audralia_possibility_path,book_human_climb,showroom_visible_object_atrium,frontier_expansion_edge
 return_routes=compass,laws,interactive_narrative,showroom,products,gauges,nine_summits,explore
-removed_language=showroom_as_primary_proof_atrium,gauges_as_progress_engine,audralia_as_only_untouched_scenic_body
-preserved=violet_field,gold_inlay,world_setting,frontier_edge,book_connection,audralia_route,showroom_route,gauges_route
-route_owns=universe_public_copy,world_setting_cards,route_labels,return_routes,demo_universe_relationship_field,hidden_receipt
+preserved=violet_field,gold_inlay,world_setting,frontier_edge,book_connection,audralia_route,showroom_route,gauges_route,world_cards,instruments,return_routes,final_band
+route_owns=universe_public_copy,world_setting_cards,route_labels,return_routes,demo_solar_system_field,dropdown_navigation,hidden_receipt
 route_does_not_own=laws_page,gauges_logic,showroom_renderer,audralia_renderer,interactive_narrative_runtime,book_page,frontier_page
 generated_image=false
 graphic_box=false
 streaming=false
 heavy_runtime_loaded=false
 visual_pass_claimed=false
-deploy_marker=NINE_SUMMITS_UNIVERSE_DEMO_UNIVERSE_RELATIONSHIP_FIELD_DEPLOY_MARKER_v8
+deploy_marker=NINE_SUMMITS_UNIVERSE_DEMO_SOLAR_SYSTEM_AND_DROPDOWN_NAV_DEPLOY_MARKER_v9
       </template>
     </main>
 
     <footer>
-      NINE_SUMMITS_UNIVERSE_DEMO_UNIVERSE_RELATIONSHIP_FIELD_TNT_v8 · Universe · Demo Universe · Sun Earth Moon Relationship · World Around the Climb.
+      NINE_SUMMITS_UNIVERSE_DEMO_SOLAR_SYSTEM_AND_DROPDOWN_NAV_TNT_v9 · Universe · Demo Solar System · Eight Planets · Moon Orbits Earth · Dropdown Navigation.
     </footer>
   </div>
 </body>

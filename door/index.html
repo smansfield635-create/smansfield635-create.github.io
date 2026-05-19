@@ -3,11 +3,11 @@
   lang="en"
   data-route="/door/"
   data-page="door"
-  data-version="G2-V4"
-  data-contract="DOOR_CONTEXT_ALIGNMENT_UNIVERSE_NAV_HTML_JS_TNT_v4"
-  data-previous-contract="DOOR_TRUE_3D_SOLID_OPAQUE_ROUTE_GEM_BROWSER_RENEWAL_HTML_JS_TNT_v3"
+  data-version="G2-V5"
+  data-contract="DOOR_THRESHOLD_DROPDOWN_LEGIBLE_ROUTE_GEMS_TNT_v5"
+  data-previous-contract="DOOR_CONTEXT_ALIGNMENT_UNIVERSE_NAV_HTML_JS_TNT_v4"
   data-alignment-contract="TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2"
-  data-animation-standard="SOLID_OPAQUE_ROUTE_GEM_GRAVITY_ORBIT_STANDARD_v4"
+  data-animation-standard="SOLID_OPAQUE_ROUTE_GEM_GRAVITY_ORBIT_STANDARD_v5"
   data-role="entry-threshold"
   data-proof-path="/laws/"
   data-gauges-role="measurement-audit-route-status-summary"
@@ -15,8 +15,17 @@
   data-universe-route="/nine-summits/universe/"
   data-showroom-role="visible-software-object-display"
   data-products-role="community-practical-path"
+  data-top-nav-bubbles-removed="true"
+  data-site-dropdown-menu="true"
+  data-door-dropdown-threshold-crystal="true"
+  data-route-gems-size-increased="true"
+  data-route-gem-design-preserved="true"
+  data-route-orbit-pattern-preserved="true"
   data-solid-opaque-route-gems-preserved="true"
   data-center-gravity-door-gem-preserved="true"
+  data-labels-front-facing="true"
+  data-label-legibility-renewed="true"
+  data-readable-text-vibration="false"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
   data-graphic-box="false"
@@ -101,7 +110,8 @@
     a{color:inherit;text-decoration:none}
 
     a:focus-visible,
-    button:focus-visible{
+    button:focus-visible,
+    summary:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
     }
@@ -196,42 +206,218 @@
       text-transform:uppercase;
     }
 
-    .nav{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      gap:.48rem;
+    .site-menu{
+      justify-self:end;
+      position:relative;
+      z-index:10;
+      width:min(100%,46rem);
     }
 
-    .nav a{
-      min-height:2.25rem;
+    .site-menu-summary{
+      list-style:none;
+      width:fit-content;
+      margin-left:auto;
+      min-height:2.75rem;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      border:1px solid rgba(255,255,255,.13);
+      gap:.7rem;
+      padding:.62rem 1rem;
+      border:1px solid rgba(243,200,111,.34);
       border-radius:999px;
-      padding:.5rem .74rem;
-      color:rgba(241,246,255,.84);
-      background:rgba(255,255,255,.035);
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.055em;
-      text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-      transition:transform .18s ease,border-color .18s ease;
+      color:rgba(241,246,255,.92);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(255,232,163,.12),transparent 70%),
+        radial-gradient(circle at 80% 100%,rgba(143,101,255,.12),transparent 70%),
+        rgba(255,255,255,.05);
+      box-shadow:
+        0 .8rem 1.8rem rgba(0,0,0,.18),
+        inset 0 1px 0 rgba(255,255,255,.09);
+      cursor:pointer;
+      user-select:none;
+      transition:border-color .18s ease,background .18s ease;
     }
 
-    .nav a:hover,
-    .nav a:focus-visible{
-      transform:translateY(-2px);
-      border-color:rgba(243,200,111,.48);
+    .site-menu-summary::-webkit-details-marker{display:none}
+
+    .site-menu-summary span{
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+
+    .site-menu-summary b{
+      color:var(--gold2);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .site-menu-summary::before{
+      content:"";
+      width:.72rem;
+      height:.72rem;
+      border-radius:.18rem;
+      transform:rotate(45deg);
+      background:
+        linear-gradient(135deg,var(--gold2),var(--gold)),
+        radial-gradient(circle at 35% 24%,rgba(255,255,255,.95),transparent 24%);
+      box-shadow:
+        0 0 .9rem rgba(243,200,111,.40),
+        0 0 1.35rem rgba(143,101,255,.18);
+      flex:0 0 auto;
+    }
+
+    .site-menu-summary::after{
+      content:"Open";
+      min-width:3.3rem;
+      text-align:center;
+      padding:.28rem .52rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;
+      color:rgba(255,244,216,.88);
+      background:rgba(1,8,20,.32);
+      font-size:.58rem;
+      font-weight:950;
+      letter-spacing:.09em;
+      text-transform:uppercase;
+    }
+
+    .site-menu[open] .site-menu-summary{
+      border-color:rgba(243,200,111,.66);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(255,232,163,.16),transparent 70%),
+        radial-gradient(circle at 80% 100%,rgba(143,101,255,.18),transparent 70%),
+        rgba(255,255,255,.07);
+    }
+
+    .site-menu[open] .site-menu-summary::after{content:"Close"}
+
+    .site-menu-panel{
+      position:absolute;
+      right:0;
+      top:calc(100% + .7rem);
+      width:min(46rem,calc(100vw - 28px));
+      padding:1rem;
+      border:1px solid rgba(243,200,111,.25);
+      border-radius:1.45rem;
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.026)),
+        rgba(5,12,25,.94);
+      box-shadow:
+        0 1.5rem 3.5rem rgba(0,0,0,.42),
+        inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+
+    .site-menu-panel::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      opacity:.44;
+      background:
+        radial-gradient(circle at 9% 14%,rgba(255,232,163,.34) 0 .08rem,rgba(143,101,255,.16) .09rem .24rem,transparent .26rem),
+        radial-gradient(circle at 17% 68%,rgba(239,231,255,.34) 0 .07rem,rgba(143,101,255,.18) .08rem .20rem,transparent .22rem),
+        radial-gradient(circle at 35% 28%,rgba(255,255,255,.28) 0 .06rem,rgba(243,200,111,.14) .07rem .17rem,transparent .19rem),
+        radial-gradient(circle at 53% 82%,rgba(255,232,163,.28) 0 .07rem,rgba(143,101,255,.14) .08rem .20rem,transparent .22rem),
+        radial-gradient(circle at 70% 22%,rgba(239,231,255,.30) 0 .08rem,rgba(143,101,255,.16) .09rem .22rem,transparent .24rem),
+        radial-gradient(circle at 89% 59%,rgba(255,232,163,.30) 0 .07rem,rgba(243,200,111,.14) .08rem .20rem,transparent .22rem),
+        radial-gradient(ellipse at 50% 0%,rgba(143,101,255,.14),transparent 72%);
+    }
+
+    .site-menu-panel::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      opacity:.22;
+      background:
+        linear-gradient(135deg,transparent 0 42%,rgba(255,255,255,.18) 43%,transparent 46%),
+        linear-gradient(45deg,transparent 0 55%,rgba(143,101,255,.20) 56%,transparent 59%),
+        linear-gradient(90deg,transparent 0 49%,rgba(243,200,111,.14) 50%,transparent 51%);
+      background-size:12rem 12rem,16rem 16rem,18rem 18rem;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.75),rgba(0,0,0,.36) 72%,transparent);
+    }
+
+    .site-menu-grid{
+      position:relative;
+      z-index:1;
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.75rem;
+    }
+
+    .site-menu-group{
+      display:grid;
+      gap:.55rem;
+      align-content:start;
+      min-height:100%;
+      padding:.8rem;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:1.05rem;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(143,101,255,.12),transparent 70%),
+        rgba(1,8,20,.50);
+    }
+
+    .site-menu-group strong{
+      color:var(--gold);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .site-menu-links{
+      display:grid;
+      gap:.42rem;
+    }
+
+    .site-menu-links a{
+      min-height:2.15rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:.65rem;
+      padding:.52rem .62rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:.82rem;
+      color:rgba(241,246,255,.86);
+      background:rgba(255,255,255,.035);
+      font-size:.74rem;
+      font-weight:900;
+      letter-spacing:.035em;
+      line-height:1.15;
+      transition:border-color .18s ease,background .18s ease,color .18s ease;
+    }
+
+    .site-menu-links a:hover,
+    .site-menu-links a:focus-visible{
+      border-color:rgba(243,200,111,.52);
+      background:rgba(243,200,111,.075);
+      color:rgba(255,244,216,.96);
       outline:none;
     }
 
-    .nav a[aria-current="page"]{
-      border-color:rgba(243,200,111,.88);
+    .site-menu-links a[aria-current="page"]{
+      border-color:rgba(243,200,111,.86);
       color:#060811;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .site-menu-links a[aria-current="page"]::after{
+      content:"Current";
+      color:#060811;
+      font-size:.56rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      opacity:.82;
     }
 
     .panel{
@@ -413,7 +599,7 @@
 
     .door-stage{
       position:relative;
-      min-height:clamp(35rem,70vw,52rem);
+      min-height:clamp(38rem,74vw,56rem);
       display:grid;
       place-items:center;
       overflow:hidden;
@@ -439,15 +625,15 @@
     }
 
     .door-stage::before{
-      width:min(82%,34rem);
-      height:min(82%,34rem);
+      width:min(84%,38rem);
+      height:min(84%,38rem);
       border:1px solid rgba(243,200,111,.08);
       box-shadow:0 0 3rem rgba(143,101,255,.12);
     }
 
     .door-stage::after{
-      width:min(52%,22rem);
-      height:min(52%,22rem);
+      width:min(52%,24rem);
+      height:min(52%,24rem);
       border:1px solid rgba(143,101,255,.15);
     }
 
@@ -500,8 +686,8 @@
       position:absolute;
       left:50%;
       top:50%;
-      width:28.5rem;
-      height:28.5rem;
+      width:32rem;
+      height:32rem;
       z-index:4;
       border-radius:999px;
       pointer-events:none;
@@ -515,16 +701,16 @@
     }
 
     .door-node{
-      --radius:-13.75rem;
+      --radius:-15.25rem;
       position:absolute;
       left:50%;
       top:50%;
       display:grid;
       place-items:center;
       overflow:visible;
-      width:7.25rem;
-      height:5.45rem;
-      margin:-2.725rem 0 0 -3.625rem;
+      width:8.85rem;
+      height:6.65rem;
+      margin:-3.325rem 0 0 -4.425rem;
       transform:
         rotate(var(--angle))
         translateY(var(--radius))
@@ -598,7 +784,7 @@
       justify-content:center;
       width:100%;
       height:100%;
-      padding:.35rem;
+      padding:.44rem;
       text-align:center;
       position:relative;
       z-index:4;
@@ -607,13 +793,13 @@
 
     .door-label-text{
       display:block;
-      max-width:5rem;
+      max-width:6.35rem;
       color:rgba(255,244,216,.98);
       text-align:center;
-      font-size:.58rem;
+      font-size:.74rem;
       font-weight:950;
-      letter-spacing:.07em;
-      line-height:1.1;
+      letter-spacing:.066em;
+      line-height:1.08;
       text-transform:uppercase;
       text-shadow:
         0 2px 12px rgba(0,0,0,.95),
@@ -624,11 +810,11 @@
 
     .door-label-sub{
       display:block;
-      margin-top:.12rem;
-      color:rgba(230,238,255,.76);
-      font-size:.40rem;
+      margin-top:.14rem;
+      color:rgba(230,238,255,.80);
+      font-size:.48rem;
       font-weight:850;
-      letter-spacing:.05em;
+      letter-spacing:.048em;
       line-height:1;
       text-transform:uppercase;
     }
@@ -752,6 +938,7 @@
     @media (max-width:1080px){
       .lens-grid,
       .room-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .site-menu-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
     @media (max-width:980px){
@@ -760,7 +947,22 @@
         align-items:start;
       }
 
-      .nav{justify-content:flex-start}
+      .site-menu{
+        justify-self:stretch;
+        width:100%;
+      }
+
+      .site-menu-summary{
+        margin-left:0;
+      }
+
+      .site-menu-panel{
+        position:relative;
+        right:auto;
+        top:auto;
+        width:100%;
+        margin-top:.7rem;
+      }
     }
 
     @media (max-width:720px){
@@ -772,25 +974,34 @@
         padding:1rem;
       }
 
+      .site-menu-summary{
+        width:100%;
+        justify-content:space-between;
+      }
+
+      .site-menu-grid{
+        grid-template-columns:1fr;
+      }
+
       .door-stage{
-        min-height:34rem;
+        min-height:36rem;
       }
 
       .door-orbit{
-        width:22rem;
-        height:22rem;
+        width:23.5rem;
+        height:23.5rem;
       }
 
       .door-node{
-        --radius:-10.45rem;
-        width:5.45rem;
-        height:4.1rem;
-        margin:-2.05rem 0 0 -2.725rem;
+        --radius:-11.2rem;
+        width:6.2rem;
+        height:4.65rem;
+        margin:-2.325rem 0 0 -3.1rem;
       }
 
       .door-label-text{
-        max-width:3.5rem;
-        font-size:.40rem;
+        max-width:4.1rem;
+        font-size:.48rem;
         letter-spacing:.045em;
       }
 
@@ -814,7 +1025,7 @@
 
     @media (max-width:460px){
       .door-stage{
-        min-height:32rem;
+        min-height:34rem;
       }
 
       .door-anchor{
@@ -831,20 +1042,20 @@
       }
 
       .door-orbit{
-        width:19.5rem;
-        height:19.5rem;
+        width:20.8rem;
+        height:20.8rem;
       }
 
       .door-node{
-        --radius:-9.1rem;
-        width:4.75rem;
-        height:3.58rem;
-        margin:-1.79rem 0 0 -2.375rem;
+        --radius:-9.8rem;
+        width:5.35rem;
+        height:4.05rem;
+        margin:-2.025rem 0 0 -2.675rem;
       }
 
       .door-label-text{
-        max-width:3rem;
-        font-size:.35rem;
+        max-width:3.55rem;
+        font-size:.40rem;
       }
     }
 
@@ -996,17 +1207,64 @@
         </span>
       </a>
 
-      <nav class="nav" aria-label="Primary traversal">
-        <a href="/">Compass</a>
-        <a href="/door/" aria-current="page">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/products/">Products</a>
-        <a href="/laws/">Laws</a>
-        <a href="/showroom/globe/">Interactive Narrative</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/nine-summits/universe/">Universe</a>
-        <a href="/gauges/">Gauges</a>
-      </nav>
+      <details class="site-menu">
+        <summary class="site-menu-summary">
+          <span>Door Menu</span>
+          <b>Threshold Map</b>
+        </summary>
+
+        <div class="site-menu-panel" aria-label="Door threshold dropdown menu">
+          <div class="site-menu-grid">
+            <section class="site-menu-group" aria-labelledby="menu-north">
+              <strong id="menu-north">North · Laws / Proof</strong>
+              <div class="site-menu-links">
+                <a href="/laws/">Laws</a>
+                <a href="/gauges/">Gauges</a>
+              </div>
+            </section>
+
+            <section class="site-menu-group" aria-labelledby="menu-east">
+              <strong id="menu-east">East · Story / World</strong>
+              <div class="site-menu-links">
+                <a href="/showroom/globe/">Interactive Narrative</a>
+                <a href="/showroom/">Showroom</a>
+                <a href="/nine-summits/universe/">Universe</a>
+                <a href="/nine-summits/">Nine Summits</a>
+                <a href="/nine-summits-of-love/">Book</a>
+                <a href="/characters/">Characters</a>
+              </div>
+            </section>
+
+            <section class="site-menu-group" aria-labelledby="menu-south">
+              <strong id="menu-south">South · Frontier / Systems</strong>
+              <div class="site-menu-links">
+                <a href="/explore/frontier/">Frontier</a>
+                <a href="/explore/frontier/energy/">Energy</a>
+                <a href="/explore/frontier/water/">Water</a>
+                <a href="/explore/frontier/waste/">Waste</a>
+                <a href="/explore/frontier/lattice/">Lattice</a>
+                <a href="/explore/frontier/urban/">Urban</a>
+                <a href="/explore/frontier/closed-loop/">Closed Loop</a>
+                <a href="/explore/frontier/manual/">Manual</a>
+                <a href="/explore/frontier/shimmer/">Shimmer</a>
+                <a href="/explore/frontier/infrastructure/">Infrastructure</a>
+                <a href="/explore/frontier/trajectory/">Trajectory</a>
+              </div>
+            </section>
+
+            <section class="site-menu-group" aria-labelledby="menu-west">
+              <strong id="menu-west">West · House / Practical</strong>
+              <div class="site-menu-links">
+                <a href="/">Compass</a>
+                <a href="/door/" aria-current="page">Door</a>
+                <a href="/home/">Home</a>
+                <a href="/products/">Products</a>
+                <a href="/meet-sean-mansfield/">Meet Sean</a>
+              </div>
+            </section>
+          </div>
+        </div>
+      </details>
     </header>
 
     <main id="main">
@@ -1034,7 +1292,7 @@
 
       <section class="panel section" aria-labelledby="field-title">
         <div class="kicker">Solid crystal gravity orbit</div>
-        <h2 id="field-title">The Door gem is the center of gravity. Eight solid route crystals orbit at a safe distance while their labels stay readable.</h2>
+        <h2 id="field-title">The Door gem is the center of gravity. Eight larger solid route crystals orbit at a safe distance while their labels stay readable.</h2>
 
         <div class="door-stage" aria-label="Animated Door eight solid route-crystal gravity field">
           <div class="door-anchor" aria-hidden="true">
@@ -1155,13 +1413,20 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-DOOR_CONTEXT_ALIGNMENT_UNIVERSE_NAV_HTML_JS_TNT_v4
-previous=DOOR_TRUE_3D_SOLID_OPAQUE_ROUTE_GEM_BROWSER_RENEWAL_HTML_JS_TNT_v3
+DOOR_THRESHOLD_DROPDOWN_LEGIBLE_ROUTE_GEMS_TNT_v5
+previous=DOOR_CONTEXT_ALIGNMENT_UNIVERSE_NAV_HTML_JS_TNT_v4
 route=/door/
 page=door
 role=entry_threshold
 message=one_threshold_choose_the_path_that_fits
-top_nav=Compass,Door,Home,Products,Laws,Interactive_Narrative,Showroom,Universe,Gauges
+top_nav_bubbles_removed=true
+site_dropdown_menu=true
+door_dropdown_threshold_crystal=true
+dropdown_current_page=Door
+dropdown_north=Laws_Gauges
+dropdown_east=Interactive_Narrative_Showroom_Universe_Nine_Summits_Book_Characters
+dropdown_south=Frontier_Energy_Water_Waste_Lattice_Urban_Closed_Loop_Manual_Shimmer_Infrastructure_Trajectory
+dropdown_west=Compass_Door_Home_Products_Meet_Sean
 proof_path=/laws/
 gauges_role=measurement_audit_route_status_summary
 gauges_not_proof_path=true
@@ -1173,17 +1438,23 @@ products_role=community_practical_path
 compass_role=root_orientation
 door_role=threshold_crossing_point
 orbit_route_set=Compass,Laws,Interactive_Narrative,Characters,Universe,Products,Home,Gauges
+route_gems_size_increased=true
+route_gem_design_preserved=true
+route_orbit_pattern_preserved=true
+orbit_duration_preserved=46s
 solid_opaque_route_gems_preserved=true
 center_gravity_door_gem_preserved=true
 labels_remain_front_facing=true
+label_legibility_renewed=true
+text_vibration=false
 four_lens_structure_preserved=true
 north=structure_orientation_page_architecture_route_clarity
 south=laws_proof_truth_scientific_backing
 east=interactive_narrative_story_worlds_characters_zionts_h_earth_audralia
 west=community_products_practical_systems
-removed_public_language=Globe_as_top_level_label,Read_Gauges_as_proof_cta,North_routed_primarily_through_Gauges,Frontier_replacing_Universe
+removed_public_language=top_bubble_primary_navigation
 preserved=threshold_identity,solid_crystal_gravity_orbit,center_door_gem,orbit_motion,readable_labels,eight_route_crystals
-route_owns=entry_threshold,top_navigation,solid_route_gem_field,four_lens_cards,eight_door_cards,hidden_receipt
+route_owns=entry_threshold,site_dropdown_menu,solid_route_gem_field,four_lens_cards,eight_door_cards,hidden_receipt
 route_does_not_own=products_page,laws_page,gauges_logic,showroom_page,interactive_narrative_route,universe_page,characters_page,planet_surface,instrument_state
 heavy_runtime_loaded=false
 render_files_touched=false
@@ -1197,7 +1468,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      DOOR_CONTEXT_ALIGNMENT_UNIVERSE_NAV_HTML_JS_TNT_v4 · Door · Universe nav active · Laws proof · Gauges summary · Solid opaque gems preserved.
+      DOOR_THRESHOLD_DROPDOWN_LEGIBLE_ROUTE_GEMS_TNT_v5 · Door · Threshold dropdown active · Larger solid route gems · Top bubbles removed.
     </footer>
   </div>
 </body>

@@ -4,12 +4,18 @@
   lang="en"
   data-route="/explore/frontier/urban/"
   data-page="frontier-urban"
-  data-version="G2-V12"
-  data-contract="FRONTIER_URBAN_MAX_GEM_ORBIT_ENGINEERING_LENS_TNT_v12"
+  data-version="G2-V13"
+  data-contract="FRONTIER_URBAN_SVG_ORGANIC_DIGITAL_GEM_ORBIT_DONOR_INTEGRATION_TNT_v13"
   data-runtime-scope="css-plus-touch-controller"
-  data-visual-baseline="v12-active"
+  data-visual-baseline="v13-active"
   data-opaque-building-material="active"
-  data-maximum-gem-orbit="active"
+  data-svg-organic-digital-gem-orbit="active"
+  data-svg-gem-defs="active"
+  data-organic-gem-symbols="active"
+  data-crown-table-pavilion-depth="active"
+  data-facet-ridges="active"
+  data-glint="active"
+  data-rotating-internal-star="active"
   data-platform-engineering-tabs="active"
   data-touch-window-activation="active"
   data-per-building-lattice="active"
@@ -26,8 +32,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Urban Construct · Maximum Gem Orbit · Engineering Lens · Diamond Gate Bridge</title>
-  <meta name="description" content="Urban Construct tests city-scale systems with an opaque Dallas-inspired skyline, touch-activated windows, per-building 16 × 16 occupancy lattices, maximum crystal gem-orbit navigation, and Platform / Engineering lenses.">
+  <title>Urban Construct · SVG Organic Gem Orbit · Engineering Lens · Diamond Gate Bridge</title>
+  <meta name="description" content="Urban Construct tests city-scale systems with an opaque Dallas-inspired skyline, touch-activated windows, per-building 16 × 16 occupancy lattices, SVG organic digital gem-orbit navigation, and Platform / Engineering lenses.">
 
   <style>
     :root{
@@ -45,6 +51,8 @@
       --shadow:0 32px 110px rgba(0,0,0,.50);
       --max:1180px;
       --brand-gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
+      --gem-float-duration:7.2s;
+      --gem-breathe-duration:8.8s;
     }
 
     *{box-sizing:border-box}
@@ -99,6 +107,14 @@
     label:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
+    }
+
+    .svg-defs{
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+      pointer-events:none;
     }
 
     .skip{
@@ -938,6 +954,7 @@
       height:min(62%,28rem);
       border:1px solid rgba(243,200,111,.18);
       box-shadow:0 0 3rem rgba(36,120,255,.12),inset 0 0 30px rgba(141,216,255,.045);
+      animation:urbanOrbitTurn 42s linear infinite;
     }
 
     .compass-stage::after{
@@ -945,6 +962,17 @@
       height:min(42%,19rem);
       border:1px solid rgba(57,255,159,.18);
       box-shadow:0 0 3rem rgba(57,255,159,.08);
+      animation:urbanOrbitTurnReverse 38s linear infinite;
+    }
+
+    @keyframes urbanOrbitTurn{
+      from{transform:translate(-50%,-50%) rotate(-12deg)}
+      to{transform:translate(-50%,-50%) rotate(348deg)}
+    }
+
+    @keyframes urbanOrbitTurnReverse{
+      from{transform:translate(-50%,-50%) rotate(24deg)}
+      to{transform:translate(-50%,-50%) rotate(-336deg)}
     }
 
     .compass-center,
@@ -956,21 +984,23 @@
       color:var(--ink);
       z-index:4;
       transition:transform .18s ease,filter .18s ease;
+      animation:urbanGemNodeFloat var(--gem-float-duration) ease-in-out infinite;
+      animation-delay:var(--delay,0s);
     }
 
     .compass-center{
       left:50%;
       top:50%;
-      width:clamp(12rem,25vw,17rem);
-      height:clamp(8.5rem,18vw,12rem);
+      width:clamp(10.8rem,24vw,15.8rem);
+      height:clamp(7.9rem,17.4vw,11.55rem);
       transform:translate(-50%,-50%);
       z-index:6;
       pointer-events:none;
     }
 
     .compass-node{
-      width:clamp(7.7rem,14.5vw,10.8rem);
-      height:clamp(5.6rem,10.6vw,7.9rem);
+      width:clamp(7rem,15vw,9.9rem);
+      height:clamp(5.15rem,11vw,7.25rem);
       left:var(--x);
       top:var(--y);
       transform:translate(-50%,-50%);
@@ -978,113 +1008,125 @@
 
     .compass-node:hover,
     .compass-node:focus-visible{
-      transform:translate(-50%,-50%) scale(1.06);
-      filter:brightness(1.16) saturate(1.12);
+      transform:translate(-50%,-50%) scale(1.055);
+      filter:brightness(1.13) saturate(1.08);
       outline:none;
     }
 
-    .gem-core{
+    @keyframes urbanGemNodeFloat{
+      0%,100%{margin-top:0}
+      50%{margin-top:-.42rem}
+    }
+
+    .product-gem-core{
       position:absolute;
       inset:0;
       display:grid;
       place-items:center;
       pointer-events:none;
+      animation:productGemBreathe var(--gem-breathe-duration) ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+      transform-origin:50% 50%;
     }
 
-    .gem-shape{
+    @keyframes productGemBreathe{
+      0%,100%{transform:translateY(0) rotate(var(--tilt-a,-1.6deg)) scale(1);filter:brightness(1)}
+      50%{transform:translateY(-.22rem) rotate(var(--tilt-b,2deg)) scale(1.025);filter:brightness(1.12)}
+    }
+
+    .product-gem-svg{
       position:absolute;
       inset:0;
-      clip-path:var(--brand-gem);
-      background:
-        linear-gradient(35deg,transparent 0 17%,rgba(255,255,255,.34) 18% 20%,transparent 21%),
-        linear-gradient(145deg,rgba(255,255,255,.28),transparent 18% 82%,rgba(255,255,255,.15)),
-        radial-gradient(circle at 50% 18%,rgba(255,255,255,.64),transparent 21%),
-        radial-gradient(circle at 38% 36%,rgba(141,216,255,.40),transparent 35%),
-        radial-gradient(circle at 64% 64%,rgba(57,255,159,.24),transparent 34%),
-        conic-gradient(from 30deg at 50% 52%,rgba(255,255,255,.30),rgba(141,216,255,.30),rgba(8,24,72,.88),rgba(243,200,111,.24),rgba(57,255,159,.20),rgba(255,255,255,.30)),
-        linear-gradient(135deg,rgba(255,248,220,.78),rgba(141,216,255,.42) 28%,rgba(36,120,255,.30) 48%,rgba(243,200,111,.22) 70%,rgba(3,7,19,.96));
-      border:1px solid rgba(235,248,255,.46);
-      box-shadow:
-        0 1.1rem 1.4rem rgba(0,0,0,.35),
-        0 0 1.4rem rgba(57,255,159,.16),
-        inset 0 1px 0 rgba(255,255,255,.38),
-        inset 0 -.9rem 1.4rem rgba(0,0,0,.34);
+      width:100%;
+      height:100%;
+      overflow:visible;
+      pointer-events:none;
+      filter:
+        drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
+        drop-shadow(0 0 1.15rem rgba(36,120,255,.18))
+        drop-shadow(0 0 .55rem rgba(243,200,111,.10));
     }
 
-    .gem-shape::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(90deg,transparent 49%,rgba(255,255,255,.34) 50%,transparent 51%),
-        linear-gradient(0deg,transparent 49%,rgba(255,255,255,.28) 50%,transparent 51%),
-        linear-gradient(33deg,transparent 41%,rgba(255,255,255,.18) 42% 44%,transparent 45%),
-        linear-gradient(147deg,transparent 41%,rgba(255,255,255,.16) 42% 44%,transparent 45%),
-        radial-gradient(ellipse at 50% 22%,rgba(255,255,255,.24),transparent 42%);
-      opacity:.94;
+    .compass-center .product-gem-svg{
+      filter:
+        drop-shadow(0 1.55rem 1.85rem rgba(0,0,0,.42))
+        drop-shadow(0 0 1.65rem rgba(36,120,255,.23))
+        drop-shadow(0 0 .85rem rgba(243,200,111,.16));
     }
 
-    .gem-shape::after{
-      content:"";
-      position:absolute;
-      left:16%;
-      right:16%;
-      top:13%;
-      height:18%;
-      clip-path:polygon(0 100%,18% 0,82% 0,100% 100%);
-      background:linear-gradient(90deg,rgba(255,255,255,.34),rgba(255,232,163,.24),rgba(141,216,255,.30));
-      opacity:.72;
+    .gem-audralia .product-gem-svg{filter:drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36)) drop-shadow(0 0 1.15rem rgba(36,120,255,.20)) drop-shadow(0 0 .7rem rgba(243,200,111,.16)) saturate(1.08) hue-rotate(-8deg)}
+    .gem-city .product-gem-svg{filter:drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36)) drop-shadow(0 0 1.15rem rgba(141,216,255,.19)) drop-shadow(0 0 .55rem rgba(243,200,111,.10)) saturate(1.02) hue-rotate(8deg)}
+    .gem-housing .product-gem-svg{filter:drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36)) drop-shadow(0 0 1.15rem rgba(202,225,255,.16)) drop-shadow(0 0 .55rem rgba(243,200,111,.08)) saturate(.88) hue-rotate(16deg)}
+    .gem-mobility .product-gem-svg{filter:drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36)) drop-shadow(0 0 1.15rem rgba(174,146,255,.18)) drop-shadow(0 0 .55rem rgba(243,200,111,.10)) saturate(1.06) hue-rotate(34deg)}
+    .gem-water .product-gem-svg{filter:drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36)) drop-shadow(0 0 1.15rem rgba(143,240,195,.18)) drop-shadow(0 0 .55rem rgba(243,200,111,.12)) saturate(1.12) hue-rotate(92deg)}
+    .gem-energy .product-gem-svg{filter:drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36)) drop-shadow(0 0 1.15rem rgba(141,216,255,.18)) drop-shadow(0 0 .55rem rgba(243,200,111,.10)) saturate(.98) hue-rotate(-18deg)}
+    .gem-waste .product-gem-svg{filter:drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36)) drop-shadow(0 0 1.15rem rgba(190,170,255,.20)) drop-shadow(0 0 .65rem rgba(243,200,111,.14)) saturate(1.08) hue-rotate(48deg)}
+    .gem-food .product-gem-svg{filter:drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36)) drop-shadow(0 0 1.15rem rgba(243,200,111,.18)) drop-shadow(0 0 .55rem rgba(141,216,255,.10)) saturate(.94) hue-rotate(-34deg)}
+    .gem-safety .product-gem-svg{filter:drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36)) drop-shadow(0 0 1.15rem rgba(141,216,255,.19)) drop-shadow(0 0 .55rem rgba(243,200,111,.10)) saturate(1.02) hue-rotate(8deg)}
+    .gem-governance .product-gem-svg{filter:drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36)) drop-shadow(0 0 1.15rem rgba(202,225,255,.16)) drop-shadow(0 0 .55rem rgba(243,200,111,.08)) saturate(.88) hue-rotate(16deg)}
+    .gem-resilience .product-gem-svg{filter:drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36)) drop-shadow(0 0 1.15rem rgba(143,240,195,.18)) drop-shadow(0 0 .55rem rgba(243,200,111,.12)) saturate(1.12) hue-rotate(92deg)}
+    .gem-kill .product-gem-svg{filter:drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36)) drop-shadow(0 0 1.15rem rgba(243,200,111,.18)) drop-shadow(0 0 .55rem rgba(141,216,255,.10)) saturate(.94) hue-rotate(-34deg)}
+
+    .product-glint{
+      animation:productGlint 8.5s ease-in-out infinite;
+      transform-origin:110px 80px;
     }
 
-    .compass-center .gem-shape{
-      box-shadow:
-        0 1.4rem 1.8rem rgba(0,0,0,.42),
-        0 0 2.4rem rgba(57,255,159,.24),
-        0 0 3.6rem rgba(243,200,111,.12),
-        inset 0 1px 0 rgba(255,255,255,.42),
-        inset 0 -.9rem 1.6rem rgba(0,0,0,.36);
+    .product-star{
+      animation:productFacetTurn 30s linear infinite;
+      transform-origin:110px 80px;
+    }
+
+    @keyframes productGlint{
+      0%,100%{opacity:.07;transform:translateX(-36px)}
+      48%,55%{opacity:.56;transform:translateX(34px)}
+    }
+
+    @keyframes productFacetTurn{
+      to{transform:rotate(360deg)}
     }
 
     .gem-label{
       position:relative;
       z-index:3;
-      width:86%;
+      width:76%;
       display:grid;
       place-items:center;
-      gap:.18rem;
+      gap:.14rem;
       text-align:center;
       pointer-events:none;
-      text-shadow:0 3px 14px rgba(0,0,0,.98),0 0 12px rgba(0,28,90,.88),0 0 3px rgba(255,255,255,.58);
+      text-shadow:
+        0 2px 12px rgba(0,0,0,.95),
+        0 0 10px rgba(0,28,90,.80),
+        0 0 2px rgba(255,255,255,.42);
     }
 
     .gem-label b{
       display:block;
-      color:rgba(255,244,216,.99);
-      font-size:clamp(.70rem,1.62vw,1rem);
+      color:rgba(255,244,216,.98);
+      font-size:clamp(.54rem,1.46vw,.78rem);
       font-weight:950;
-      letter-spacing:.065em;
+      letter-spacing:.07em;
       line-height:1.02;
       text-transform:uppercase;
     }
 
     .gem-label span{
-      color:rgba(230,238,255,.88);
-      font-size:clamp(.48rem,1.06vw,.66rem);
-      font-weight:950;
-      letter-spacing:.065em;
-      line-height:1.02;
+      color:rgba(230,238,255,.78);
+      font-size:clamp(.38rem,.95vw,.52rem);
+      font-weight:900;
+      letter-spacing:.08em;
       text-transform:uppercase;
     }
 
     .compass-center .gem-label b{
       color:var(--gold);
-      font-size:clamp(1.02rem,2.35vw,1.42rem);
-      letter-spacing:.13em;
+      font-size:clamp(.80rem,2vw,1.08rem);
+      letter-spacing:.14em;
     }
 
     .compass-center .gem-label span{
-      font-size:clamp(.72rem,1.48vw,.94rem);
-      letter-spacing:.085em;
+      font-size:clamp(.58rem,1.25vw,.76rem);
     }
 
     .pathway-module{
@@ -1327,17 +1369,29 @@
       .compass-node:focus-visible{transform:scale(1.05)}
       .compass-center{
         grid-column:1 / -1;
-        width:10.4rem;
-        height:7.6rem;
+        width:9rem;
+        height:6.6rem;
         order:-2;
       }
       .compass-node{
-        width:7.8rem;
-        height:5.7rem;
+        width:6.35rem;
+        height:4.7rem;
       }
+      .gem-label b{font-size:.42rem}
+      .gem-label span{font-size:.31rem}
+      .compass-center .gem-label b{font-size:.64rem}
+      .compass-center .gem-label span{font-size:.46rem}
       .lens-tabs{display:grid;grid-template-columns:1fr 1fr}
       .section-return{display:grid;grid-template-columns:1fr;justify-content:stretch}
       .return-orbit,.return-frontier{width:100%}
+    }
+
+    @media (max-width:420px){
+      .compass-stage{gap:.9rem .62rem}
+      .compass-node{width:5.95rem;height:4.38rem}
+      .gem-label b{font-size:.37rem}
+      .gem-label span{font-size:.28rem}
+      .compass-center{width:8.25rem;height:6.05rem}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -1347,11 +1401,212 @@
         animation-iteration-count:1!important;
         transition-duration:.01ms!important;
       }
+
+      .product-gem-core,
+      .product-glint,
+      .product-star,
+      .compass-stage::before,
+      .compass-stage::after,
+      .compass-center,
+      .compass-node{
+        animation:none!important;
+      }
     }
   </style>
 </head>
 
 <body>
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="productGemBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#fff8dc" stop-opacity=".92"/>
+        <stop offset=".13" stop-color="#dff5ff" stop-opacity=".70"/>
+        <stop offset=".30" stop-color="#8dd8ff" stop-opacity=".56"/>
+        <stop offset=".48" stop-color="#2478ff" stop-opacity=".40"/>
+        <stop offset=".66" stop-color="#f3c86f" stop-opacity=".24"/>
+        <stop offset="1" stop-color="#020816" stop-opacity=".94"/>
+      </linearGradient>
+
+      <linearGradient id="productGemAir" x1="48" y1="10" x2="168" y2="80" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".90"/>
+        <stop offset=".34" stop-color="#eaf7ff" stop-opacity=".46"/>
+        <stop offset=".68" stop-color="#fff0a3" stop-opacity=".18"/>
+        <stop offset="1" stop-color="#8dd8ff" stop-opacity=".10"/>
+      </linearGradient>
+
+      <linearGradient id="productGemDepth" x1="110" y1="36" x2="110" y2="156" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".18"/>
+        <stop offset=".30" stop-color="#8dd8ff" stop-opacity=".20"/>
+        <stop offset=".62" stop-color="#f3c86f" stop-opacity=".13"/>
+        <stop offset="1" stop-color="#020716" stop-opacity=".66"/>
+      </linearGradient>
+
+      <radialGradient id="productGemTableGlow" cx="50%" cy="38%" r="64%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".56"/>
+        <stop offset=".28" stop-color="#8dd8ff" stop-opacity=".28"/>
+        <stop offset=".58" stop-color="#ffe8a3" stop-opacity=".12"/>
+        <stop offset="1" stop-color="#020611" stop-opacity="0"/>
+      </radialGradient>
+
+      <linearGradient id="productGemGlint" x1="28" y1="130" x2="184" y2="24" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset=".45" stop-color="#ffffff" stop-opacity=".84"/>
+        <stop offset=".52" stop-color="#fff0a3" stop-opacity=".30"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+
+      <filter id="productGemGlow" x="-42%" y="-50%" width="184%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="blur"/>
+        <feColorMatrix
+          in="blur"
+          type="matrix"
+          values="
+            0.42 0 0 0 0.08
+            0 .58 0 0 0.14
+            0 0 1.00 0 0.28
+            0 0 0 0.52 0"
+          result="glow"
+        />
+        <feMerge>
+          <feMergeNode in="glow"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      <symbol id="productOrganicGemA" viewBox="0 0 220 160">
+        <g filter="url(#productGemGlow)">
+          <path d="M108 4 L146 12 L184 39 L209 76 L188 108 L147 139 L111 155 L69 136 L27 105 L12 73 L39 37 L77 14 Z" fill="url(#productGemBody)" stroke="rgba(235,248,255,.58)" stroke-width="1.35"/>
+          <path d="M108 4 L146 12 L130 38 L109 30 L87 39 L77 14 Z" fill="url(#productGemAir)" opacity=".84"/>
+          <path d="M77 14 L87 39 L61 58 L39 37 Z" fill="rgba(255,255,255,.23)"/>
+          <path d="M146 12 L130 38 L159 60 L184 39 Z" fill="rgba(255,255,255,.15)"/>
+          <path d="M39 37 L61 58 L53 83 L12 73 Z" fill="rgba(141,216,255,.12)"/>
+          <path d="M184 39 L159 60 L166 81 L209 76 Z" fill="rgba(243,200,111,.12)"/>
+          <path d="M87 39 L109 30 L130 38 L159 60 L148 83 L110 101 L72 83 L61 58 Z" fill="url(#productGemTableGlow)" stroke="rgba(255,255,255,.30)" stroke-width=".9"/>
+          <path d="M12 73 L53 83 L69 136 L27 105 Z" fill="rgba(141,216,255,.14)"/>
+          <path d="M209 76 L166 81 L147 139 L188 108 Z" fill="rgba(243,200,111,.11)"/>
+          <path d="M53 83 L72 83 L111 155 L69 136 Z" fill="rgba(2,8,24,.40)"/>
+          <path d="M166 81 L148 83 L111 155 L147 139 Z" fill="rgba(243,200,111,.10)"/>
+          <path d="M72 83 L110 101 L111 155 Z" fill="url(#productGemDepth)" opacity=".76"/>
+          <path d="M148 83 L110 101 L111 155 Z" fill="rgba(4,10,22,.36)"/>
+          <path d="M108 4 L111 155" stroke="rgba(255,255,255,.34)" stroke-width="1.15"/>
+          <path d="M12 73 L209 76" stroke="rgba(255,255,255,.28)" stroke-width="1.05"/>
+          <path d="M39 37 L188 108" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M184 39 L27 105" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M77 14 L110 101 L146 12" stroke="rgba(255,255,255,.18)" stroke-width=".9" fill="none"/>
+          <path d="M39 37 L110 101 L184 39" stroke="rgba(255,255,255,.16)" stroke-width=".9" fill="none"/>
+          <path d="M27 105 L110 101 L188 108" stroke="rgba(243,200,111,.14)" stroke-width=".9" fill="none"/>
+          <g class="product-star" opacity=".82">
+            <path d="M109 27 L116 70 L110 106 L103 70 Z" fill="rgba(255,255,255,.27)"/>
+            <path d="M61 58 L105 72 L159 60 L116 79 Z" fill="rgba(255,255,255,.16)"/>
+            <path d="M72 83 L105 75 L148 83 L114 92 Z" fill="rgba(141,216,255,.13)"/>
+            <path d="M110 101 L126 81 L148 83 L129 96 Z" fill="rgba(255,255,255,.13)"/>
+            <path d="M110 101 L94 81 L72 83 L91 96 Z" fill="rgba(243,200,111,.08)"/>
+          </g>
+          <path class="product-glint" d="M33 118 L176 22 L188 38 L48 130 Z" fill="url(#productGemGlint)"/>
+        </g>
+      </symbol>
+
+      <symbol id="productOrganicGemB" viewBox="0 0 220 160">
+        <g filter="url(#productGemGlow)">
+          <path d="M114 5 L151 17 L188 44 L203 78 L178 114 L137 142 L101 153 L62 132 L24 99 L15 64 L48 31 L84 11 Z" fill="url(#productGemBody)" stroke="rgba(235,248,255,.56)" stroke-width="1.35"/>
+          <path d="M114 5 L151 17 L132 42 L112 31 L91 37 L84 11 Z" fill="url(#productGemAir)" opacity=".82"/>
+          <path d="M84 11 L91 37 L67 61 L48 31 Z" fill="rgba(255,255,255,.22)"/>
+          <path d="M151 17 L132 42 L158 65 L188 44 Z" fill="rgba(255,255,255,.16)"/>
+          <path d="M48 31 L67 61 L56 84 L15 64 Z" fill="rgba(141,216,255,.12)"/>
+          <path d="M188 44 L158 65 L162 88 L203 78 Z" fill="rgba(243,200,111,.11)"/>
+          <path d="M91 37 L112 31 L132 42 L158 65 L144 89 L105 101 L70 84 L67 61 Z" fill="url(#productGemTableGlow)" stroke="rgba(255,255,255,.30)" stroke-width=".9"/>
+          <path d="M15 64 L56 84 L62 132 L24 99 Z" fill="rgba(141,216,255,.14)"/>
+          <path d="M203 78 L162 88 L137 142 L178 114 Z" fill="rgba(243,200,111,.11)"/>
+          <path d="M56 84 L70 84 L101 153 L62 132 Z" fill="rgba(2,8,24,.42)"/>
+          <path d="M162 88 L144 89 L101 153 L137 142 Z" fill="rgba(243,200,111,.10)"/>
+          <path d="M70 84 L105 101 L101 153 Z" fill="url(#productGemDepth)" opacity=".76"/>
+          <path d="M144 89 L105 101 L101 153 Z" fill="rgba(4,10,22,.36)"/>
+          <path d="M114 5 L101 153" stroke="rgba(255,255,255,.32)" stroke-width="1.1"/>
+          <path d="M15 64 L203 78" stroke="rgba(255,255,255,.26)" stroke-width="1.05"/>
+          <path d="M48 31 L178 114" stroke="rgba(255,255,255,.15)" stroke-width=".9"/>
+          <path d="M188 44 L24 99" stroke="rgba(255,255,255,.15)" stroke-width=".9"/>
+          <path d="M84 11 L105 101 L151 17" stroke="rgba(255,255,255,.18)" stroke-width=".9" fill="none"/>
+          <path d="M48 31 L105 101 L188 44" stroke="rgba(255,255,255,.16)" stroke-width=".9" fill="none"/>
+          <path d="M24 99 L105 101 L178 114" stroke="rgba(243,200,111,.14)" stroke-width=".9" fill="none"/>
+          <g class="product-star" opacity=".80">
+            <path d="M112 30 L116 73 L106 106 L102 72 Z" fill="rgba(255,255,255,.26)"/>
+            <path d="M67 61 L104 74 L158 65 L116 81 Z" fill="rgba(255,255,255,.15)"/>
+            <path d="M70 84 L104 77 L144 89 L112 93 Z" fill="rgba(141,216,255,.13)"/>
+            <path d="M105 101 L126 83 L144 89 L126 98 Z" fill="rgba(255,255,255,.13)"/>
+            <path d="M105 101 L94 82 L70 84 L88 97 Z" fill="rgba(243,200,111,.08)"/>
+          </g>
+          <path class="product-glint" d="M42 122 L179 30 L190 47 L54 133 Z" fill="url(#productGemGlint)"/>
+        </g>
+      </symbol>
+
+      <symbol id="productOrganicGemC" viewBox="0 0 220 160">
+        <g filter="url(#productGemGlow)">
+          <path d="M103 4 L139 11 L177 34 L210 70 L196 104 L156 136 L118 154 L74 143 L33 112 L9 79 L31 42 L68 15 Z" fill="url(#productGemBody)" stroke="rgba(235,248,255,.56)" stroke-width="1.35"/>
+          <path d="M103 4 L139 11 L128 36 L106 29 L86 42 L68 15 Z" fill="url(#productGemAir)" opacity=".82"/>
+          <path d="M68 15 L86 42 L59 60 L31 42 Z" fill="rgba(255,255,255,.22)"/>
+          <path d="M139 11 L128 36 L155 57 L177 34 Z" fill="rgba(255,255,255,.16)"/>
+          <path d="M31 42 L59 60 L54 84 L9 79 Z" fill="rgba(141,216,255,.12)"/>
+          <path d="M177 34 L155 57 L166 79 L210 70 Z" fill="rgba(243,200,111,.11)"/>
+          <path d="M86 42 L106 29 L128 36 L155 57 L150 82 L115 104 L75 88 L59 60 Z" fill="url(#productGemTableGlow)" stroke="rgba(255,255,255,.30)" stroke-width=".9"/>
+          <path d="M9 79 L54 84 L74 143 L33 112 Z" fill="rgba(141,216,255,.14)"/>
+          <path d="M210 70 L166 79 L156 136 L196 104 Z" fill="rgba(243,200,111,.11)"/>
+          <path d="M54 84 L75 88 L118 154 L74 143 Z" fill="rgba(2,8,24,.42)"/>
+          <path d="M166 79 L150 82 L118 154 L156 136 Z" fill="rgba(243,200,111,.10)"/>
+          <path d="M75 88 L115 104 L118 154 Z" fill="url(#productGemDepth)" opacity=".76"/>
+          <path d="M150 82 L115 104 L118 154 Z" fill="rgba(4,10,22,.36)"/>
+          <path d="M103 4 L118 154" stroke="rgba(255,255,255,.32)" stroke-width="1.1"/>
+          <path d="M9 79 L210 70" stroke="rgba(255,255,255,.26)" stroke-width="1.05"/>
+          <path d="M31 42 L196 104" stroke="rgba(255,255,255,.15)" stroke-width=".9"/>
+          <path d="M177 34 L33 112" stroke="rgba(255,255,255,.15)" stroke-width=".9"/>
+          <path d="M68 15 L115 104 L139 11" stroke="rgba(255,255,255,.18)" stroke-width=".9" fill="none"/>
+          <path d="M31 42 L115 104 L177 34" stroke="rgba(255,255,255,.16)" stroke-width=".9" fill="none"/>
+          <path d="M33 112 L115 104 L196 104" stroke="rgba(243,200,111,.14)" stroke-width=".9" fill="none"/>
+          <g class="product-star" opacity=".80">
+            <path d="M106 29 L119 72 L115 108 L103 72 Z" fill="rgba(255,255,255,.26)"/>
+            <path d="M59 60 L105 75 L155 57 L119 82 Z" fill="rgba(255,255,255,.15)"/>
+            <path d="M75 88 L108 80 L150 82 L121 94 Z" fill="rgba(141,216,255,.13)"/>
+            <path d="M115 104 L128 82 L150 82 L132 98 Z" fill="rgba(255,255,255,.13)"/>
+            <path d="M115 104 L95 85 L75 88 L92 100 Z" fill="rgba(243,200,111,.08)"/>
+          </g>
+          <path class="product-glint" d="M29 116 L168 19 L184 35 L45 131 Z" fill="url(#productGemGlint)"/>
+        </g>
+      </symbol>
+
+      <symbol id="productOrganicGemD" viewBox="0 0 220 160">
+        <g filter="url(#productGemGlow)">
+          <path d="M112 6 L153 15 L186 37 L205 73 L185 111 L142 143 L105 154 L66 139 L28 109 L12 77 L36 36 L82 12 Z" fill="url(#productGemBody)" stroke="rgba(235,248,255,.56)" stroke-width="1.35"/>
+          <path d="M112 6 L153 15 L132 39 L111 30 L90 37 L82 12 Z" fill="url(#productGemAir)" opacity=".82"/>
+          <path d="M82 12 L90 37 L63 59 L36 36 Z" fill="rgba(255,255,255,.22)"/>
+          <path d="M153 15 L132 39 L160 58 L186 37 Z" fill="rgba(255,255,255,.16)"/>
+          <path d="M36 36 L63 59 L55 83 L12 77 Z" fill="rgba(141,216,255,.12)"/>
+          <path d="M186 37 L160 58 L165 84 L205 73 Z" fill="rgba(243,200,111,.11)"/>
+          <path d="M90 37 L111 30 L132 39 L160 58 L145 86 L108 102 L71 83 L63 59 Z" fill="url(#productGemTableGlow)" stroke="rgba(255,255,255,.30)" stroke-width=".9"/>
+          <path d="M12 77 L55 83 L66 139 L28 109 Z" fill="rgba(141,216,255,.14)"/>
+          <path d="M205 73 L165 84 L142 143 L185 111 Z" fill="rgba(243,200,111,.11)"/>
+          <path d="M55 83 L71 83 L105 154 L66 139 Z" fill="rgba(2,8,24,.42)"/>
+          <path d="M165 84 L145 86 L105 154 L142 143 Z" fill="rgba(243,200,111,.10)"/>
+          <path d="M71 83 L108 102 L105 154 Z" fill="url(#productGemDepth)" opacity=".76"/>
+          <path d="M145 86 L108 102 L105 154 Z" fill="rgba(4,10,22,.36)"/>
+          <path d="M112 6 L105 154" stroke="rgba(255,255,255,.32)" stroke-width="1.1"/>
+          <path d="M12 77 L205 73" stroke="rgba(255,255,255,.26)" stroke-width="1.05"/>
+          <path d="M36 36 L185 111" stroke="rgba(255,255,255,.15)" stroke-width=".9"/>
+          <path d="M186 37 L28 109" stroke="rgba(255,255,255,.15)" stroke-width=".9"/>
+          <path d="M82 12 L108 102 L153 15" stroke="rgba(255,255,255,.18)" stroke-width=".9" fill="none"/>
+          <path d="M36 36 L108 102 L186 37" stroke="rgba(255,255,255,.16)" stroke-width=".9" fill="none"/>
+          <path d="M28 109 L108 102 L185 111" stroke="rgba(243,200,111,.14)" stroke-width=".9" fill="none"/>
+          <g class="product-star" opacity=".80">
+            <path d="M111 30 L117 72 L108 107 L102 72 Z" fill="rgba(255,255,255,.26)"/>
+            <path d="M63 59 L105 74 L160 58 L116 82 Z" fill="rgba(255,255,255,.15)"/>
+            <path d="M71 83 L105 77 L145 86 L113 94 Z" fill="rgba(141,216,255,.13)"/>
+            <path d="M108 102 L126 83 L145 86 L126 99 Z" fill="rgba(255,255,255,.13)"/>
+            <path d="M108 102 L94 83 L71 83 L89 98 Z" fill="rgba(243,200,111,.08)"/>
+          </g>
+          <path class="product-glint" d="M36 120 L180 24 L192 40 L50 132 Z" fill="url(#productGemGlint)"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
   <a class="skip" href="#main">Skip to Urban Construct</a>
 
   <div class="shell">
@@ -1405,7 +1660,7 @@
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Dallas-inspired opaque skyline · Maximum Gem Orbit · Engineering Lens</div>
+        <div class="kicker">Dallas-inspired opaque skyline · SVG Organic Gem Orbit · Engineering Lens</div>
 
         <h1 id="page-title">The skyline is the surface. The load is the city.</h1>
 
@@ -1567,27 +1822,78 @@
       </section>
 
       <section class="panel section" aria-labelledby="field-title" id="urban-orbit">
-        <div class="kicker">Urban field · Maximum gem pathway orbit</div>
+        <div class="kicker">Urban field · SVG organic gem pathway orbit</div>
         <h2 id="field-title">Choose the pathway first. Inspect the Platform Lens and Engineering Lens inside the pathway.</h2>
 
-        <div class="compass-stage" aria-label="Urban pathway maximum gem orbit">
-          <div class="compass-center" aria-hidden="true">
-            <span class="gem-core"><span class="gem-shape"></span></span>
+        <div class="compass-stage" aria-label="Urban pathway SVG organic digital gem orbit">
+          <div class="compass-center" aria-hidden="true" style="--delay:-.1s;--tilt-a:-1.4deg;--tilt-b:1.8deg;">
+            <span class="product-gem-core">
+              <svg class="product-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+                <use href="#productOrganicGemA"></use>
+              </svg>
+            </span>
             <span class="gem-label"><b>Urban</b><span>Construct</span></span>
           </div>
 
-          <a class="compass-node" style="--x:50%;--y:11%;" href="#audralia-urban"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Audralia</b><span>Urban</span></span></a>
-          <a class="compass-node" style="--x:73%;--y:17%;" href="#city-form"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>City</b><span>Form</span></span></a>
-          <a class="compass-node" style="--x:87%;--y:34%;" href="#housing"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Housing</b><span>Stability</span></span></a>
-          <a class="compass-node" style="--x:87%;--y:62%;" href="#mobility"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Mobility</b><span>Access</span></span></a>
-          <a class="compass-node" style="--x:73%;--y:80%;" href="#water"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Water</b><span>Security</span></span></a>
-          <a class="compass-node" style="--x:50%;--y:88%;" href="#energy"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Energy</b><span>Continuity</span></span></a>
-          <a class="compass-node" style="--x:27%;--y:80%;" href="#waste"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Waste</b><span>Closure</span></span></a>
-          <a class="compass-node" style="--x:13%;--y:62%;" href="#food"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Food</b><span>Access</span></span></a>
-          <a class="compass-node" style="--x:13%;--y:34%;" href="#public-safety"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Public</b><span>Safety</span></span></a>
-          <a class="compass-node" style="--x:27%;--y:17%;" href="#governance"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Governance</b><span>Account</span></span></a>
-          <a class="compass-node" style="--x:34%;--y:6%;" href="#resilience"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Resilience</b><span>Recovery</span></span></a>
-          <a class="compass-node" style="--x:66%;--y:6%;" href="#kill-conditions"><span class="gem-core"><span class="gem-shape"></span></span><span class="gem-label"><b>Kill</b><span>Conditions</span></span></a>
+          <a class="compass-node gem-audralia" style="--x:50%;--y:11%;--delay:-.2s;--tilt-a:-2.2deg;--tilt-b:1.4deg;" href="#audralia-urban">
+            <span class="product-gem-core"><svg class="product-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productOrganicGemB"></use></svg></span>
+            <span class="gem-label"><b>Audralia</b><span>Urban</span></span>
+          </a>
+
+          <a class="compass-node gem-city" style="--x:73%;--y:17%;--delay:-.7s;--tilt-a:1.5deg;--tilt-b:-2.3deg;" href="#city-form">
+            <span class="product-gem-core"><svg class="product-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productOrganicGemC"></use></svg></span>
+            <span class="gem-label"><b>City</b><span>Form</span></span>
+          </a>
+
+          <a class="compass-node gem-housing" style="--x:87%;--y:34%;--delay:-1.2s;--tilt-a:-1.6deg;--tilt-b:2.6deg;" href="#housing">
+            <span class="product-gem-core"><svg class="product-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productOrganicGemD"></use></svg></span>
+            <span class="gem-label"><b>Housing</b><span>Stability</span></span>
+          </a>
+
+          <a class="compass-node gem-mobility" style="--x:87%;--y:62%;--delay:-1.7s;--tilt-a:1.9deg;--tilt-b:-1.6deg;" href="#mobility">
+            <span class="product-gem-core"><svg class="product-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productOrganicGemA"></use></svg></span>
+            <span class="gem-label"><b>Mobility</b><span>Access</span></span>
+          </a>
+
+          <a class="compass-node gem-water" style="--x:73%;--y:80%;--delay:-2.2s;--tilt-a:-2deg;--tilt-b:2deg;" href="#water">
+            <span class="product-gem-core"><svg class="product-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productOrganicGemB"></use></svg></span>
+            <span class="gem-label"><b>Water</b><span>Security</span></span>
+          </a>
+
+          <a class="compass-node gem-energy" style="--x:50%;--y:88%;--delay:-2.7s;--tilt-a:1.2deg;--tilt-b:-2.2deg;" href="#energy">
+            <span class="product-gem-core"><svg class="product-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productOrganicGemC"></use></svg></span>
+            <span class="gem-label"><b>Energy</b><span>Continuity</span></span>
+          </a>
+
+          <a class="compass-node gem-waste" style="--x:27%;--y:80%;--delay:-3.2s;--tilt-a:-1.3deg;--tilt-b:2.4deg;" href="#waste">
+            <span class="product-gem-core"><svg class="product-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productOrganicGemD"></use></svg></span>
+            <span class="gem-label"><b>Waste</b><span>Closure</span></span>
+          </a>
+
+          <a class="compass-node gem-food" style="--x:13%;--y:62%;--delay:-3.7s;--tilt-a:2.3deg;--tilt-b:-1.5deg;" href="#food">
+            <span class="product-gem-core"><svg class="product-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productOrganicGemA"></use></svg></span>
+            <span class="gem-label"><b>Food</b><span>Access</span></span>
+          </a>
+
+          <a class="compass-node gem-safety" style="--x:13%;--y:34%;--delay:-4.2s;--tilt-a:-2.2deg;--tilt-b:1.4deg;" href="#public-safety">
+            <span class="product-gem-core"><svg class="product-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productOrganicGemB"></use></svg></span>
+            <span class="gem-label"><b>Public</b><span>Safety</span></span>
+          </a>
+
+          <a class="compass-node gem-governance" style="--x:27%;--y:17%;--delay:-4.7s;--tilt-a:1.5deg;--tilt-b:-2.3deg;" href="#governance">
+            <span class="product-gem-core"><svg class="product-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productOrganicGemC"></use></svg></span>
+            <span class="gem-label"><b>Governance</b><span>Account</span></span>
+          </a>
+
+          <a class="compass-node gem-resilience" style="--x:34%;--y:6%;--delay:-5.2s;--tilt-a:-1.6deg;--tilt-b:2.6deg;" href="#resilience">
+            <span class="product-gem-core"><svg class="product-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productOrganicGemD"></use></svg></span>
+            <span class="gem-label"><b>Resilience</b><span>Recovery</span></span>
+          </a>
+
+          <a class="compass-node gem-kill" style="--x:66%;--y:6%;--delay:-5.7s;--tilt-a:1.9deg;--tilt-b:-1.6deg;" href="#kill-conditions">
+            <span class="product-gem-core"><svg class="product-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#productOrganicGemA"></use></svg></span>
+            <span class="gem-label"><b>Kill</b><span>Conditions</span></span>
+          </a>
         </div>
       </section>
 
@@ -1837,12 +2143,12 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_URBAN_MAX_GEM_ORBIT_ENGINEERING_LENS_TNT_v12
+FRONTIER_URBAN_SVG_ORGANIC_DIGITAL_GEM_ORBIT_DONOR_INTEGRATION_TNT_v13
 route=/explore/frontier/urban/
 page=frontier_urban_construct
 html=/explore/frontier/urban/index.html
 runtime_scope=css_plus_touch_controller
-visual_baseline=v12_active
+visual_baseline=v13_active
 opaque_building_material=active
 solid_city_silhouette=active
 touch_window_activation=active
@@ -1856,20 +2162,27 @@ one_building_one_occupancy_map=active
 per_building_programmed_lights=active
 per_building_unique_chronology=active
 greenline_ephemeral_glow=active
-maximum_gem_orbit=active
-gem_orbit_navigation=active
+svg_organic_digital_gem_orbit=active
+svg_gem_defs=active
+organic_gem_symbols=active
+crown_table_pavilion_depth=active
+facet_ridges=active
+glint=active
+rotating_internal_star=active
+urban_pathway_gems=active
+labels_remain_upright=active
 platform_engineering_tabs=active
 engineering_language=active
 dropdown_green_glow=active
 route_menu_component=details_summary_css
 dual_return_under_every_pathway=active
 external_dependency_scope=zero
-deploy_marker=FRONTIER_URBAN_MAX_GEM_ORBIT_ENGINEERING_LENS_DEPLOY_MARKER_v12
+deploy_marker=FRONTIER_URBAN_SVG_ORGANIC_DIGITAL_GEM_ORBIT_DONOR_INTEGRATION_DEPLOY_MARKER_v13
       </template>
     </main>
 
     <footer>
-      FRONTIER_URBAN_MAX_GEM_ORBIT_ENGINEERING_LENS_TNT_v12 · Opaque skyline · Touch windows · Maximum gem orbit · Engineering lens.
+      FRONTIER_URBAN_SVG_ORGANIC_DIGITAL_GEM_ORBIT_DONOR_INTEGRATION_TNT_v13 · Opaque skyline · Touch windows · SVG organic gem orbit · Engineering lens.
     </footer>
   </div>
 

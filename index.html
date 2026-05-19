@@ -1,17 +1,23 @@
+<!-- TARGET FILE: /index.html -->
 <!doctype html>
 <html
   lang="en"
   data-route="/"
   data-page="compass"
-  data-version="G2-V3"
-  data-contract="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
-  data-previous-contract="COMPASS_TOP_NAV_INTERACTIVE_NARRATIVE_SHOWROOM_RENEWAL_TNT_v1"
+  data-version="G2-V4"
+  data-contract="COMPASS_CARDINAL_DROPDOWN_AND_GEM_SYMMETRY_TNT_v1"
+  data-previous-contract="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
   data-role="root-compass"
   data-root-is-compass="true"
   data-proof-path="/laws/"
   data-gauges-role="measurement-audit-route-status"
   data-interactive-narrative-visible-nav="true"
   data-showroom-visible-nav="true"
+  data-cardinal-dropdown="active"
+  data-active-bubble-registry="active"
+  data-active-bubbles="Compass,Door,Home,Products,Laws,Interactive Narrative,Showroom,Gauges,Meet Sean"
+  data-diamond-symmetry="renewed"
+  data-meet-sean-symmetry-position="bottom-center"
   data-static-page-usable-without-js="true"
   data-runtime-public-message="false"
   data-generated-image="false"
@@ -97,6 +103,7 @@
 
     a:focus-visible,
     button:focus-visible,
+    summary:focus-visible,
     [tabindex]:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
@@ -135,7 +142,7 @@
     .topbar{
       display:grid;
       grid-template-columns:auto 1fr;
-      align-items:center;
+      align-items:start;
       gap:18px;
       padding:12px 0 18px;
     }
@@ -198,38 +205,159 @@
       display:flex;
       flex-wrap:wrap;
       justify-content:flex-end;
+      gap:.6rem;
+    }
+
+    .route-menu{
+      position:relative;
+      min-width:min(17rem,100%);
+    }
+
+    .route-menu summary{
+      list-style:none;
+      cursor:pointer;
+      min-height:2.6rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:.75rem;
+      border:1px solid rgba(243,200,111,.28);
+      border-radius:999px;
+      padding:.62rem .85rem;
+      color:rgba(241,246,255,.90);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(243,200,111,.14),transparent 70%),
+        rgba(255,255,255,.045);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.075em;
+      text-transform:uppercase;
+      box-shadow:0 0 1.15rem rgba(243,200,111,.08),inset 0 1px 0 rgba(255,255,255,.08);
+      backdrop-filter:blur(7px);
+    }
+
+    .route-menu[open] summary{
+      border-color:rgba(243,200,111,.70);
+      color:rgba(255,244,216,.98);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(243,200,111,.25),transparent 72%),
+        radial-gradient(circle at 86% 50%,rgba(36,120,255,.18),transparent 70%),
+        linear-gradient(180deg,rgba(20,18,45,.84),rgba(4,9,20,.88));
+      box-shadow:0 0 1.8rem rgba(243,200,111,.20),0 0 3.2rem rgba(36,120,255,.14),inset 0 1px 0 rgba(255,255,255,.12);
+    }
+
+    .route-menu summary::-webkit-details-marker{display:none}
+
+    .route-menu summary::after{
+      content:"";
+      width:.55rem;
+      height:.55rem;
+      border-right:2px solid rgba(230,238,255,.82);
+      border-bottom:2px solid rgba(230,238,255,.82);
+      transform:rotate(45deg) translateY(-.12rem);
+    }
+
+    .route-menu[open] summary::after{
+      transform:rotate(225deg) translateY(-.08rem);
+      border-color:rgba(243,200,111,.95);
+    }
+
+    .route-menu-panel{
+      position:absolute;
+      right:0;
+      top:calc(100% + .55rem);
+      z-index:40;
+      width:min(38rem,calc(100vw - 2rem));
+      padding:.82rem;
+      border:1px solid rgba(243,200,111,.30);
+      border-radius:1.1rem;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(243,200,111,.20),transparent 15rem),
+        radial-gradient(circle at 96% 25%,rgba(141,216,255,.12),transparent 15rem),
+        linear-gradient(180deg,rgba(11,13,38,.97),rgba(3,7,18,.98));
+      box-shadow:0 0 2.8rem rgba(243,200,111,.14),0 1.4rem 3.4rem rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.09);
+    }
+
+    .cardinal-map{
+      display:grid;
+      gap:.72rem;
+    }
+
+    .cardinal-group{
+      display:grid;
+      gap:.46rem;
+      padding:.62rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:.95rem;
+      background:
+        radial-gradient(circle at 0% 0%,rgba(141,216,255,.07),transparent 12rem),
+        rgba(255,255,255,.025);
+    }
+
+    .cardinal-heading{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:baseline;
+      gap:.35rem;
+      color:var(--gold);
+      font-size:.66rem;
+      font-weight:950;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .cardinal-heading span{
+      color:rgba(230,238,255,.58);
+      font-size:.58rem;
+      letter-spacing:.09em;
+    }
+
+    .route-menu-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
       gap:.48rem;
     }
 
-    .nav a{
-      min-height:2.25rem;
-      display:inline-flex;
+    .route-menu-link{
+      min-height:2.35rem;
+      display:flex;
       align-items:center;
       justify-content:center;
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:999px;
-      padding:.5rem .74rem;
-      color:rgba(241,246,255,.84);
-      background:rgba(255,255,255,.035);
-      font-size:.68rem;
+      border:1px solid rgba(184,205,255,.18);
+      border-radius:.86rem;
+      padding:.5rem .62rem;
+      color:rgba(236,242,255,.88);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(141,216,255,.10),transparent 72%),
+        linear-gradient(180deg,rgba(255,255,255,.048),rgba(255,255,255,.020));
+      font-size:.64rem;
       font-weight:950;
-      letter-spacing:.055em;
+      letter-spacing:.06em;
+      text-align:center;
       text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      box-shadow:0 0 .85rem rgba(36,120,255,.08),inset 0 1px 0 rgba(255,255,255,.07);
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
-    .nav a:hover,
-    .nav a:focus-visible{
+    .route-menu-link:hover,
+    .route-menu-link:focus-visible{
       transform:translateY(-2px);
-      border-color:rgba(243,200,111,.46);
+      border-color:rgba(243,200,111,.56);
+      color:rgba(255,244,216,.98);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(243,200,111,.16),transparent 72%),
+        linear-gradient(180deg,rgba(36,120,255,.085),rgba(255,255,255,.028));
+      box-shadow:0 0 1.35rem rgba(243,200,111,.18),0 0 1.35rem rgba(36,120,255,.13),inset 0 1px 0 rgba(255,255,255,.10);
       outline:none;
     }
 
-    .nav a[aria-current="page"]{
-      border-color:rgba(243,200,111,.88);
-      color:#060811;
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    .route-menu-link[aria-current="page"]{
+      color:#041009;
+      border-color:rgba(243,200,111,.86);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(141,216,255,.24),transparent 70%),
+        linear-gradient(135deg,#fff2a8,#f3c86f);
+      box-shadow:0 0 1.6rem rgba(36,120,255,.18),0 0 1rem rgba(243,200,111,.22);
     }
 
     .panel{
@@ -729,6 +857,7 @@
       }
 
       .nav{justify-content:flex-start}
+      .route-menu-panel{left:0;right:auto}
     }
 
     @media (max-width:760px){
@@ -747,6 +876,20 @@
 
       .button{
         width:100%;
+      }
+
+      .route-menu{
+        width:100%;
+      }
+
+      .route-menu-panel{
+        position:static;
+        margin-top:.45rem;
+        width:100%;
+      }
+
+      .route-menu-grid{
+        grid-template-columns:1fr;
       }
 
       .compass-stage{
@@ -786,6 +929,11 @@
       .compass-node{
         width:7.45rem;
         height:5.45rem;
+      }
+
+      .compass-node.meet-sean-node{
+        grid-column:1 / -1;
+        justify-self:center;
       }
 
       .gem-label b{font-size:.48rem}
@@ -946,15 +1094,52 @@
         </span>
       </a>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/" aria-current="page">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/products/">Products</a>
-        <a href="/laws/">Laws</a>
-        <a href="/showroom/globe/">Interactive Narrative</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/gauges/">Gauges</a>
+      <nav class="nav" aria-label="Cardinal dropdown navigation">
+        <details class="route-menu">
+          <summary>Cardinal Map</summary>
+          <div class="route-menu-panel">
+            <div class="cardinal-map">
+              <div class="cardinal-group">
+                <div class="cardinal-heading">Center <span>Core entry and return</span></div>
+                <div class="route-menu-grid">
+                  <a class="route-menu-link" href="/" aria-current="page">Compass</a>
+                  <a class="route-menu-link" href="/door/">Door</a>
+                  <a class="route-menu-link" href="/home/">Home</a>
+                </div>
+              </div>
+
+              <div class="cardinal-group">
+                <div class="cardinal-heading">North <span>Interface and engineering layer</span></div>
+                <div class="route-menu-grid">
+                  <a class="route-menu-link" href="/showroom/">Showroom</a>
+                  <a class="route-menu-link" href="/gauges/">Gauges</a>
+                </div>
+              </div>
+
+              <div class="cardinal-group">
+                <div class="cardinal-heading">South <span>Scientific backing and proof</span></div>
+                <div class="route-menu-grid">
+                  <a class="route-menu-link" href="/laws/">Laws</a>
+                </div>
+              </div>
+
+              <div class="cardinal-group">
+                <div class="cardinal-heading">East <span>Story-world and imagination</span></div>
+                <div class="route-menu-grid">
+                  <a class="route-menu-link" href="/showroom/globe/">Interactive Narrative</a>
+                </div>
+              </div>
+
+              <div class="cardinal-group">
+                <div class="cardinal-heading">West <span>Community and public application</span></div>
+                <div class="route-menu-grid">
+                  <a class="route-menu-link" href="/products/">Products</a>
+                  <a class="route-menu-link" href="/meet-sean-mansfield/">Meet Sean</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
       </nav>
     </header>
 
@@ -993,6 +1178,7 @@
           data-gauges-role="measurement-audit-route-status"
           data-interactive-narrative-visible-nav="true"
           data-showroom-visible-nav="true"
+          data-diamond-symmetry="six-point-public-path-field"
         >
           <div class="compass-center" aria-hidden="true" style="--delay:-.1s;--tilt-a:-1.4deg;--tilt-b:1.8deg;">
             <span class="gem-core">
@@ -1003,29 +1189,34 @@
             <span class="gem-label"><b>Compass</b><span>Choose Direction</span></span>
           </div>
 
-          <a class="compass-node" style="--x:50%;--y:14%;--delay:-.2s;--tilt-a:-2.2deg;--tilt-b:1.4deg;" href="/laws/" aria-label="Open Laws">
+          <a class="compass-node" style="--x:50%;--y:12%;--delay:-.2s;--tilt-a:-2.2deg;--tilt-b:1.4deg;" href="/laws/" aria-label="Open Laws">
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Proof</b><span>Laws</span></span>
           </a>
 
-          <a class="compass-node" style="--x:79%;--y:50%;--delay:-.8s;--tilt-a:1.5deg;--tilt-b:-2.3deg;" href="/showroom/globe/" aria-label="Open Interactive Narrative">
+          <a class="compass-node" style="--x:80%;--y:38%;--delay:-.8s;--tilt-a:1.5deg;--tilt-b:-2.3deg;" href="/showroom/globe/" aria-label="Open Interactive Narrative">
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Interactive</b><span>Narrative</span></span>
           </a>
 
-          <a class="compass-node" style="--x:68%;--y:78%;--delay:-1.4s;--tilt-a:-1.6deg;--tilt-b:2.6deg;" href="/showroom/" aria-label="Open Showroom">
+          <a class="compass-node" style="--x:70%;--y:76%;--delay:-1.4s;--tilt-a:-1.6deg;--tilt-b:2.6deg;" href="/showroom/" aria-label="Open Showroom">
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Showroom</b><span>Objects</span></span>
           </a>
 
-          <a class="compass-node" style="--x:32%;--y:78%;--delay:-2.0s;--tilt-a:1.9deg;--tilt-b:-1.6deg;" href="/products/" aria-label="Open Products">
+          <a class="compass-node meet-sean-node" style="--x:50%;--y:88%;--delay:-2.0s;--tilt-a:1.9deg;--tilt-b:-1.6deg;" href="/meet-sean-mansfield/" aria-label="Open Meet Sean">
+            <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
+            <span class="gem-label"><b>Meet Sean</b><span>Voice</span></span>
+          </a>
+
+          <a class="compass-node" style="--x:30%;--y:76%;--delay:-2.6s;--tilt-a:-2deg;--tilt-b:2deg;" href="/products/" aria-label="Open Products">
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
             <span class="gem-label"><b>Community</b><span>Products</span></span>
           </a>
 
-          <a class="compass-node" style="--x:21%;--y:50%;--delay:-2.6s;--tilt-a:-2deg;--tilt-b:2deg;" href="/meet-sean-mansfield/" aria-label="Open Meet Sean">
+          <a class="compass-node" style="--x:20%;--y:38%;--delay:-3.2s;--tilt-a:1.6deg;--tilt-b:-2.1deg;" href="/gauges/" aria-label="Open Gauges">
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#compassOrganicGem"></use></svg></span>
-            <span class="gem-label"><b>Meet Sean</b><span>Voice</span></span>
+            <span class="gem-label"><b>Gauges</b><span>Measure</span></span>
           </a>
         </div>
       </section>
@@ -1080,14 +1271,21 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2
-previous=COMPASS_TOP_NAV_INTERACTIVE_NARRATIVE_SHOWROOM_RENEWAL_TNT_v1
+COMPASS_CARDINAL_DROPDOWN_AND_GEM_SYMMETRY_TNT_v1
+previous=COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2
 route=/
 page=compass
 html=/index.html
 role=root_compass
 context_alignment=true
-removed_language=three_ways_in,choose_proof_people_or_story,three_public_entries
+cardinal_dropdown=active
+legacy_top_bubble_stack_replaced=true
+active_bubble_registry=Compass,Door,Home,Products,Laws,Interactive_Narrative,Showroom,Gauges,Meet_Sean
+cardinal_center=Compass,Door,Home
+cardinal_north=Showroom,Gauges
+cardinal_south=Laws
+cardinal_east=Interactive_Narrative
+cardinal_west=Products,Meet_Sean
 headline=One_bridge_Choose_your_direction
 proof_path=/laws/
 proof_path_label=Laws
@@ -1099,20 +1297,23 @@ showroom_route=/showroom/
 products_role=community_path
 products_route=/products/
 person_route=/meet-sean-mansfield/
-preserved_visible_nav=Compass,Door,Home,Products,Laws,Interactive_Narrative,Showroom,Gauges
 public_paths=Laws,Meet_Sean,Interactive_Narrative,Showroom,Products,Gauges
 gem_field_updated=true
+gem_field_symmetry=six_point_public_path_field
+meet_sean_position=bottom_center_symmetric
+gauges_gem_added_for_public_path_symmetry=true
 route_owns=compass_root,top_navigation,primary_entry_language,compass_gem_field,root_path_cards
 route_does_not_own=door_page,showroom_page,products_page,laws_page,gauges_logic,sitewide_rebuild,heavy_runtime
 generated_image=false
 graphic_box=false
 streaming=false
 visual_pass_claimed=false
+deploy_marker=COMPASS_CARDINAL_DROPDOWN_AND_GEM_SYMMETRY_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer>
-      COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2 · Compass · Proof path is Laws · Gauges is measurement.
+      COMPASS_CARDINAL_DROPDOWN_AND_GEM_SYMMETRY_TNT_v1 · Compass · Cardinal dropdown · Symmetric public path gems.
     </footer>
   </div>
 </body>

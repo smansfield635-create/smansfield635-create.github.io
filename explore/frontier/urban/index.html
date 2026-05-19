@@ -4,19 +4,29 @@
   lang="en"
   data-route="/explore/frontier/urban/"
   data-page="frontier-urban"
-  data-version="G2-V3"
-  data-contract="FRONTIER_URBAN_DROPDOWN_NAV_DEPTH_SKYLINE_RENEWAL_TNT_v3"
-  data-previous-contract="FRONTIER_URBAN_DALLAS_NIGHT_SKLINE_BACKDROP_RENEWAL_TNT_v2"
-  data-source-binding="FRONTIER_URBAN_DROPDOWN_NAV_DEPTH_SKYLINE_FINAL_PRECODE_BINDING_v3"
+  data-version="G2-V4"
+  data-contract="FRONTIER_URBAN_PER_BUILDING_256_LATTICE_LIVING_SKYLINE_RENEWAL_TNT_v4"
+  data-previous-contract="FRONTIER_URBAN_DROPDOWN_NAV_DEPTH_SKYLINE_RENEWAL_TNT_v3"
+  data-source-binding="FRONTIER_URBAN_PER_BUILDING_256_LATTICE_LIVING_SKYLINE_FINAL_PRECODE_BINDING_v4"
   data-source-visual-authority="COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2"
   data-source-symbol-authority="compassOrganicGem"
-  data-role="frontier-urban-depth-skyline-dropdown-nav"
+  data-role="frontier-urban-per-building-lattice-living-skyline"
+  data-skyline-relocation-correction="true"
+  data-hero-skyline-preserved="true"
+  data-construct-skyline-box-added="true"
+  data-per-building-lattice="true"
+  data-building-local-scope="16x16"
+  data-building-local-addresses="256"
+  data-state-expression="geometry-not-dom-object-count"
+  data-parent-skyline-field="true"
+  data-independent-building-objects="true"
+  data-skyline-depth-layers="far_mid_front"
+  data-skyline-alive="true"
   data-dropdown-navigation="true"
   data-dropdown-js="false"
   data-route-menu-component="details_summary_css_only"
   data-site-menu="true"
   data-frontier-lanes-menu="true"
-  data-skyline-depth-layers="far_mid_front"
   data-dallas-inspired-skyline="true"
   data-photographic-accuracy-claimed="false"
   data-urban-contextual-upgrade="true"
@@ -43,10 +53,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Urban Construct · Depth Skyline · Diamond Gate Bridge</title>
+  <title>Urban Construct · Living Skyline · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Urban Construct is the Frontier simulation lane where city-scale systems are tested together under metropolitan load, with a Dallas-inspired depth skyline and reusable CSS-only navigation."
+    content="Diamond Gate Bridge Urban Construct is the Frontier simulation lane where city-scale systems are tested together under metropolitan load, with reusable CSS-only navigation and a living per-building lattice skyline."
   >
 
   <style>
@@ -341,200 +351,185 @@
       isolation:isolate;
     }
 
-    .hero > *{
+    .hero > *:not(.urban-skyline-stage){
       position:relative;
-      z-index:4;
+      z-index:5;
     }
 
-    .urban-depth-backdrop{
+    .urban-skyline-stage{
+      position:relative;
+      min-height:clamp(24rem,44vw,34rem);
+      border:1px solid rgba(184,205,255,.13);
+      border-radius:clamp(1.25rem,4vw,2rem);
+      overflow:hidden;
+      isolation:isolate;
+      background:
+        radial-gradient(circle at 50% 82%,rgba(255,199,101,.24),transparent 28rem),
+        radial-gradient(circle at 37% 76%,rgba(57,255,159,.16),transparent 23rem),
+        radial-gradient(circle at 72% 80%,rgba(141,216,255,.18),transparent 26rem),
+        linear-gradient(180deg,#06122c 0%,#071023 46%,#040814 72%,#02040b 100%);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .hero .urban-skyline-stage{
       position:absolute;
       inset:0;
       z-index:0;
-      overflow:hidden;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 48% 78%,rgba(255,199,101,.18),transparent 34rem),
-        radial-gradient(circle at 40% 76%,rgba(57,255,159,.12),transparent 22rem),
-        radial-gradient(circle at 68% 78%,rgba(141,216,255,.16),transparent 26rem),
-        linear-gradient(180deg,#07122c 0%,#071023 42%,#040814 70%,#02040b 100%);
+      min-height:0;
+      border:0;
+      border-radius:inherit;
+      box-shadow:none;
     }
 
-    .urban-depth-backdrop::before{
+    .urban-skyline-stage::before{
       content:"";
       position:absolute;
       inset:0;
-      opacity:.92;
+      z-index:0;
+      pointer-events:none;
       background:
-        radial-gradient(circle at 16% 16%,rgba(255,255,255,.20) 0 1px,transparent 1.5px),
-        radial-gradient(circle at 76% 22%,rgba(255,255,255,.16) 0 1px,transparent 1.5px),
-        radial-gradient(circle at 58% 13%,rgba(243,200,111,.16) 0 1px,transparent 1.5px);
+        radial-gradient(circle at 16% 16%,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
+        radial-gradient(circle at 76% 22%,rgba(255,255,255,.14) 0 1px,transparent 1.5px),
+        radial-gradient(circle at 58% 13%,rgba(243,200,111,.14) 0 1px,transparent 1.5px);
       background-size:220px 240px,280px 260px,340px 300px;
+      opacity:.72;
     }
 
-    .urban-depth-backdrop::after{
+    .urban-skyline-stage::after{
       content:"";
       position:absolute;
       left:-10%;
       right:-10%;
-      bottom:8%;
-      height:42%;
+      bottom:6%;
+      z-index:1;
+      height:44%;
+      pointer-events:none;
       background:
-        radial-gradient(ellipse at 50% 94%,rgba(255,199,101,.38),transparent 55%),
-        radial-gradient(ellipse at 34% 88%,rgba(57,255,159,.18),transparent 36%),
-        radial-gradient(ellipse at 72% 86%,rgba(141,216,255,.18),transparent 44%);
-      opacity:.78;
-      filter:blur(1px);
+        radial-gradient(ellipse at 50% 96%,rgba(255,199,101,.34),transparent 55%),
+        radial-gradient(ellipse at 34% 88%,rgba(57,255,159,.14),transparent 38%),
+        radial-gradient(ellipse at 72% 86%,rgba(141,216,255,.16),transparent 46%);
+      opacity:.72;
+      animation:urbanHorizonBreathe 11s ease-in-out infinite;
     }
 
-    .skyline-layer{
+    .skyline-depth-layer{
       position:absolute;
-      left:50%;
-      display:flex;
-      align-items:flex-end;
-      justify-content:center;
+      inset:0;
+      z-index:2;
       pointer-events:none;
     }
 
-    .skyline-layer.far{
-      bottom:17%;
-      z-index:1;
-      width:min(980px,102%);
-      height:31%;
-      gap:clamp(.14rem,.48vw,.34rem);
-      transform:translateX(-50%);
-      opacity:.42;
+    .skyline-depth-layer.far{
+      z-index:2;
+      opacity:.56;
       filter:saturate(.72) brightness(.72);
     }
 
-    .skyline-layer.mid{
-      bottom:10%;
-      z-index:2;
-      width:min(1120px,112%);
-      height:47%;
-      gap:clamp(.22rem,.78vw,.55rem);
-      transform:translateX(-50%);
-      opacity:.96;
-    }
-
-    .skyline-layer.front{
-      left:0;
-      right:0;
-      bottom:0;
+    .skyline-depth-layer.mid{
       z-index:3;
-      height:22%;
-      display:block;
-      transform:none;
-      background:
-        linear-gradient(180deg,transparent,rgba(0,0,0,.86)),
-        linear-gradient(90deg,rgba(0,0,0,.96),rgba(2,5,13,.78),rgba(0,0,0,.96));
+      opacity:.98;
     }
 
-    .skyline-layer.front::before{
-      content:"";
-      position:absolute;
-      left:-4%;
-      right:-4%;
-      bottom:0;
-      height:64%;
-      background:
-        linear-gradient(90deg,
-          rgba(1,3,10,.96) 0 8%,
-          transparent 8% 10%,
-          rgba(1,3,10,.96) 10% 24%,
-          transparent 24% 27%,
-          rgba(1,3,10,.98) 27% 46%,
-          transparent 46% 49%,
-          rgba(1,3,10,.95) 49% 70%,
-          transparent 70% 73%,
-          rgba(1,3,10,.98) 73% 100%);
-      opacity:.92;
+    .skyline-depth-layer.front{
+      z-index:4;
+      opacity:1;
     }
 
     .urban-building{
-      position:relative;
-      width:var(--w,4.2rem);
-      height:var(--h,11rem);
-      border:1px solid rgba(255,255,255,.08);
+      position:absolute;
+      left:var(--b-left);
+      bottom:var(--b-bottom);
+      width:var(--b-width);
+      height:var(--b-height);
+      opacity:var(--b-haze,.92);
+      border:1px solid rgba(255,255,255,var(--b-contrast,.10));
       background:
-        linear-gradient(180deg,rgba(255,255,255,.05),transparent 28%),
+        linear-gradient(180deg,rgba(255,255,255,.055),transparent 28%),
         linear-gradient(180deg,rgba(12,23,49,.96),rgba(2,5,16,.98));
       box-shadow:
         inset 0 1px 0 rgba(255,255,255,.08),
-        0 0 1.8rem rgba(0,0,0,.42);
-    }
-
-    .skyline-layer.far .urban-building{
-      width:calc(var(--w,4rem) * .68);
-      height:calc(var(--h,11rem) * .62);
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.025),transparent 28%),
-        linear-gradient(180deg,rgba(9,18,41,.76),rgba(2,5,16,.90));
-      border-color:rgba(255,255,255,.045);
-      box-shadow:none;
+        0 0 var(--b-glow,1.6rem) rgba(57,255,159,.10),
+        0 0 2rem rgba(0,0,0,.36);
+      transform:translateZ(0);
+      animation:buildingLive var(--b-duration,10s) ease-in-out infinite;
+      animation-delay:var(--b-delay,0s);
     }
 
     .urban-building::before{
       content:"";
       position:absolute;
-      inset:.55rem .42rem .62rem;
-      opacity:var(--lights,.48);
+      inset:.48rem .38rem .58rem;
+      z-index:2;
+      opacity:var(--b-light-density,.40);
       background-image:
-        linear-gradient(90deg,rgba(255,235,160,.84) 0 .13rem,transparent .14rem .56rem),
-        linear-gradient(rgba(141,216,255,.58) 0 .13rem,transparent .14rem .72rem);
-      background-size:.78rem .92rem;
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.96),rgba(0,0,0,.70) 60%,rgba(0,0,0,.38));
+        linear-gradient(90deg,rgba(255,235,160,.88) 0 var(--b-window-scale,.12rem),transparent var(--b-window-scale,.12rem) var(--b-window-x,.72rem)),
+        linear-gradient(rgba(141,216,255,.62) 0 var(--b-window-scale,.12rem),transparent var(--b-window-scale,.12rem) var(--b-window-y,.84rem));
+      background-size:var(--b-window-x,.72rem) var(--b-window-y,.84rem);
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.96),rgba(0,0,0,.72) 62%,rgba(0,0,0,.36));
+      animation:windowLoad var(--b-duration,10s) ease-in-out infinite;
+      animation-delay:calc(var(--b-delay,0s) * -1);
     }
 
-    .skyline-layer.far .urban-building::before{
-      opacity:calc(var(--lights,.30) * .45);
-      background-size:1rem 1.15rem;
+    .urban-building::after{
+      content:"";
+      position:absolute;
+      inset:auto 0 100% 0;
+      height:var(--b-roof-height,.8rem);
+      background:transparent;
+    }
+
+    .skyline-depth-layer.far .urban-building{
+      border-color:rgba(255,255,255,.045);
+      box-shadow:0 0 1.2rem rgba(0,0,0,.20);
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.025),transparent 28%),
+        linear-gradient(180deg,rgba(9,18,41,.74),rgba(2,5,16,.90));
+    }
+
+    .skyline-depth-layer.far .urban-building::before{
+      opacity:calc(var(--b-light-density,.24) * .50);
+      background-size:calc(var(--b-window-x,.9rem) * 1.2) calc(var(--b-window-y,1rem) * 1.2);
     }
 
     .urban-building.step{
-      clip-path:polygon(0 14%,24% 14%,24% 0,100% 0,100% 100%,0 100%);
+      clip-path:polygon(0 16%,24% 16%,24% 0,100% 0,100% 100%,0 100%);
     }
 
     .urban-building.roof{
-      clip-path:polygon(0 10%,50% 0,100% 10%,100% 100%,0 100%);
+      clip-path:polygon(0 12%,50% 0,100% 12%,100% 100%,0 100%);
     }
 
-    .urban-tower-greenline{
-      width:clamp(2.8rem,5.6vw,4.4rem);
-      height:clamp(16rem,29vw,23rem);
+    .urban-building.greenline{
       background:
-        linear-gradient(90deg,transparent 0 13%,rgba(57,255,159,.50) 14% 18%,transparent 19% 81%,rgba(57,255,159,.46) 82% 86%,transparent 87%),
+        linear-gradient(90deg,transparent 0 12%,rgba(57,255,159,.50) 13% 18%,transparent 19% 81%,rgba(57,255,159,.48) 82% 87%,transparent 88%),
         linear-gradient(180deg,rgba(16,39,52,.98),rgba(2,8,16,.98));
-      border-color:rgba(57,255,159,.24);
+      border-color:rgba(57,255,159,.28);
       box-shadow:
-        0 0 1.3rem rgba(57,255,159,.22),
+        0 0 var(--b-glow,1.5rem) rgba(57,255,159,.24),
         inset 0 1px 0 rgba(255,255,255,.10);
     }
 
-    .urban-tower-greenline::before{
-      opacity:.28;
+    .urban-building.greenline::before{
       background-image:
-        linear-gradient(90deg,rgba(57,255,159,.88) 0 .12rem,transparent .13rem .54rem),
-        linear-gradient(rgba(230,255,235,.46) 0 .11rem,transparent .12rem .70rem);
+        linear-gradient(90deg,rgba(57,255,159,.90) 0 var(--b-window-scale,.11rem),transparent var(--b-window-scale,.11rem) var(--b-window-x,.58rem)),
+        linear-gradient(rgba(230,255,235,.48) 0 var(--b-window-scale,.11rem),transparent var(--b-window-scale,.11rem) var(--b-window-y,.72rem));
     }
 
-    .urban-tower-reunion{
-      position:relative;
-      width:clamp(3rem,5.4vw,4.6rem);
-      height:clamp(12.5rem,22vw,18rem);
+    .urban-building.reunion{
       background:
-        linear-gradient(90deg,transparent 0 44%,rgba(206,231,255,.70) 45% 55%,transparent 56%),
-        linear-gradient(180deg,transparent 0 22%,rgba(5,10,22,.98) 23% 100%);
-      border:0;
+        linear-gradient(90deg,transparent 0 45%,rgba(206,231,255,.66) 46% 54%,transparent 55%),
+        linear-gradient(180deg,transparent 0 20%,rgba(5,10,22,.96) 21% 100%);
+      border-color:transparent;
       box-shadow:none;
     }
 
-    .urban-tower-reunion::before{
-      content:"";
-      position:absolute;
+    .urban-building.reunion::before{
       left:50%;
-      top:4%;
-      width:clamp(2.6rem,4.7vw,3.9rem);
-      height:clamp(2.6rem,4.7vw,3.9rem);
+      top:2%;
+      bottom:auto;
+      width:min(88%,4.1rem);
+      aspect-ratio:1/1;
+      height:auto;
       transform:translateX(-50%);
       border-radius:50%;
       border:1px solid rgba(255,232,163,.42);
@@ -546,17 +541,136 @@
         0 0 .9rem rgba(255,232,163,.20),
         0 0 1.7rem rgba(141,216,255,.12);
       opacity:1;
+      animation:buildingLive var(--b-duration,10s) ease-in-out infinite;
+      animation-delay:var(--b-delay,0s);
+      mask-image:none;
     }
 
-    .urban-tower-reunion::after{
+    .urban-building.reunion::after{
       content:"";
       position:absolute;
       left:50%;
-      top:14%;
+      top:16%;
+      bottom:0;
       width:1px;
-      height:86%;
+      height:auto;
       transform:translateX(-50%);
-      background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(141,216,255,.25),rgba(255,255,255,.06));
+      background:linear-gradient(180deg,rgba(255,255,255,.56),rgba(141,216,255,.25),rgba(255,255,255,.06));
+    }
+
+    .urban-building.front-shadow{
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.025),transparent 24%),
+        linear-gradient(180deg,rgba(5,9,18,.96),rgba(0,0,0,.99));
+      border-color:rgba(255,255,255,.045);
+      box-shadow:0 -1rem 2.6rem rgba(0,0,0,.42);
+      opacity:.92;
+    }
+
+    .urban-building.front-shadow::before{
+      opacity:.055;
+    }
+
+    @keyframes urbanHorizonBreathe{
+      0%,100%{opacity:.58;filter:brightness(.94)}
+      50%{opacity:.82;filter:brightness(1.08)}
+    }
+
+    @keyframes buildingLive{
+      0%,100%{filter:brightness(.95)}
+      45%{filter:brightness(1.08)}
+      68%{filter:brightness(1.01)}
+    }
+
+    @keyframes windowLoad{
+      0%,100%{opacity:calc(var(--b-light-density,.40) * .78)}
+      46%{opacity:var(--b-light-density,.40)}
+      72%{opacity:calc(var(--b-light-density,.40) * .88)}
+    }
+
+    .construct-visual{
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.45rem);
+      display:grid;
+      gap:1rem;
+    }
+
+    .construct-copy{
+      display:grid;
+      gap:.65rem;
+      max-width:980px;
+    }
+
+    .construct-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(16rem,24rem);
+      gap:1rem;
+      align-items:stretch;
+    }
+
+    .construct-key{
+      display:grid;
+      align-content:start;
+      gap:.72rem;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.25rem;
+      background:
+        radial-gradient(circle at 16% 0%,rgba(57,255,159,.10),transparent 20rem),
+        rgba(3,6,18,.52);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      backdrop-filter:blur(8px);
+    }
+
+    .construct-key strong{
+      color:var(--gold);
+      font-size:.78rem;
+      font-weight:950;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .key-list{
+      display:grid;
+      gap:.5rem;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+
+    .key-list li{
+      display:grid;
+      grid-template-columns:1.2rem 1fr;
+      gap:.56rem;
+      align-items:start;
+      color:var(--muted);
+      font-size:.86rem;
+      line-height:1.34;
+    }
+
+    .key-mark{
+      width:.95rem;
+      height:.95rem;
+      margin-top:.14rem;
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:50%;
+      background:var(--key-color,var(--gold));
+      box-shadow:0 0 .78rem var(--key-color,var(--gold));
+    }
+
+    .key-mark.square{
+      border-radius:.18rem;
+    }
+
+    .key-mark.line{
+      height:.22rem;
+      margin-top:.45rem;
+      border-radius:999px;
+    }
+
+    .key-mark.dark{
+      background:#05070d;
+      box-shadow:0 0 .8rem rgba(0,0,0,.7);
     }
 
     .kicker{
@@ -1076,6 +1190,7 @@
       .topbar{grid-template-columns:1fr}
       .nav{justify-content:flex-start}
       .route-menu-panel{left:0;right:auto}
+      .construct-grid{grid-template-columns:1fr}
     }
 
     @media (max-width:760px){
@@ -1087,11 +1202,12 @@
       .route-menu{width:100%}
       .route-menu-panel{position:static;margin-top:.45rem;width:100%}
       .route-menu-grid{grid-template-columns:1fr}
-      .skyline-layer.far{width:128%;height:28%;bottom:18%;gap:.14rem}
-      .skyline-layer.mid{width:128%;height:42%;bottom:9%;gap:.16rem}
-      .urban-building{width:calc(var(--w,4rem) * .62);height:calc(var(--h,11rem) * .72)}
-      .urban-tower-greenline{width:2.5rem;height:14rem}
-      .urban-tower-reunion{width:2.7rem;height:11rem}
+      .urban-skyline-stage{min-height:25rem}
+      .hero .urban-skyline-stage{min-height:0}
+      .urban-building{
+        width:calc(var(--b-width) * .78);
+        height:calc(var(--b-height) * .78);
+      }
 
       .compass-stage{
         min-height:auto;
@@ -1306,36 +1422,35 @@
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="urban-depth-backdrop" aria-hidden="true">
-          <div class="skyline-layer far">
-            <span class="urban-building" style="--w:3rem;--h:8rem;--lights:.18"></span>
-            <span class="urban-building step" style="--w:4rem;--h:10rem;--lights:.20"></span>
-            <span class="urban-building" style="--w:2.8rem;--h:7rem;--lights:.16"></span>
-            <span class="urban-building roof" style="--w:3.6rem;--h:9rem;--lights:.18"></span>
-            <span class="urban-building" style="--w:4.4rem;--h:11rem;--lights:.17"></span>
-            <span class="urban-building step" style="--w:3.2rem;--h:8rem;--lights:.16"></span>
-            <span class="urban-building" style="--w:4rem;--h:9.5rem;--lights:.18"></span>
-            <span class="urban-building roof" style="--w:3.1rem;--h:7.8rem;--lights:.15"></span>
-            <span class="urban-building" style="--w:3.8rem;--h:8.6rem;--lights:.16"></span>
+        <div class="urban-skyline-stage hero-skyline" aria-hidden="true">
+          <div class="skyline-depth-layer far">
+            <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:4%;--b-bottom:21%;--b-width:3.2rem;--b-height:8.2rem;--b-haze:.38;--b-contrast:.045;--b-light-density:.18;--b-window-x:.95rem;--b-window-y:1.08rem;--b-delay:-1s;--b-duration:12s;"></span>
+            <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:13%;--b-bottom:20%;--b-width:4rem;--b-height:10rem;--b-haze:.42;--b-light-density:.20;--b-window-x:.9rem;--b-window-y:1.1rem;--b-delay:-3s;--b-duration:14s;"></span>
+            <span class="urban-building roof" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:25%;--b-bottom:20%;--b-width:3.6rem;--b-height:9.2rem;--b-haze:.36;--b-light-density:.16;--b-window-x:1rem;--b-window-y:1.2rem;--b-delay:-6s;--b-duration:13s;"></span>
+            <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:58%;--b-bottom:21%;--b-width:4.4rem;--b-height:10.7rem;--b-haze:.40;--b-light-density:.18;--b-window-x:.88rem;--b-window-y:1rem;--b-delay:-4s;--b-duration:15s;"></span>
+            <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:72%;--b-bottom:20%;--b-width:3.7rem;--b-height:9.6rem;--b-haze:.36;--b-light-density:.16;--b-window-x:.92rem;--b-window-y:1.14rem;--b-delay:-7s;--b-duration:13s;"></span>
+            <span class="urban-building roof" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:86%;--b-bottom:20%;--b-width:3.2rem;--b-height:8.8rem;--b-haze:.34;--b-light-density:.15;--b-window-x:1rem;--b-window-y:1.2rem;--b-delay:-9s;--b-duration:16s;"></span>
           </div>
 
-          <div class="skyline-layer mid">
-            <span class="urban-building" style="--w:3.2rem;--h:9rem;--lights:.30"></span>
-            <span class="urban-building step" style="--w:4.2rem;--h:13rem;--lights:.38"></span>
-            <span class="urban-building roof" style="--w:3.5rem;--h:10.5rem;--lights:.34"></span>
-            <span class="urban-tower-reunion"></span>
-            <span class="urban-building" style="--w:4.8rem;--h:15rem;--lights:.40"></span>
-            <span class="urban-building step" style="--w:3.8rem;--h:12rem;--lights:.34"></span>
-            <span class="urban-tower-greenline"></span>
-            <span class="urban-building roof" style="--w:4.5rem;--h:14rem;--lights:.36"></span>
-            <span class="urban-building" style="--w:3.1rem;--h:9.5rem;--lights:.30"></span>
-            <span class="urban-building step" style="--w:4.1rem;--h:11rem;--lights:.32"></span>
+          <div class="skyline-depth-layer mid">
+            <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:5%;--b-bottom:9%;--b-width:3.4rem;--b-height:9.5rem;--b-haze:.86;--b-contrast:.11;--b-light-density:.32;--b-window-x:.72rem;--b-window-y:.86rem;--b-delay:-1s;--b-duration:10s;"></span>
+            <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:14%;--b-bottom:9%;--b-width:4.5rem;--b-height:13.2rem;--b-haze:.92;--b-light-density:.38;--b-window-x:.68rem;--b-window-y:.82rem;--b-delay:-2s;--b-duration:11s;"></span>
+            <span class="urban-building roof" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:26%;--b-bottom:9%;--b-width:3.7rem;--b-height:10.9rem;--b-haze:.88;--b-light-density:.34;--b-window-x:.78rem;--b-window-y:.88rem;--b-delay:-4s;--b-duration:12s;"></span>
+            <span class="urban-building reunion" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:38%;--b-bottom:9%;--b-width:4.3rem;--b-height:18.5rem;--b-haze:.96;--b-delay:-2.5s;--b-duration:12s;"></span>
+            <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:49%;--b-bottom:9%;--b-width:4.9rem;--b-height:15rem;--b-haze:.94;--b-light-density:.42;--b-window-x:.62rem;--b-window-y:.76rem;--b-delay:-5s;--b-duration:10s;"></span>
+            <span class="urban-building greenline" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:63%;--b-bottom:9%;--b-width:4.2rem;--b-height:23rem;--b-haze:.98;--b-light-density:.34;--b-window-x:.58rem;--b-window-y:.72rem;--b-glow:2.2rem;--b-delay:-7s;--b-duration:13s;"></span>
+            <span class="urban-building roof" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:76%;--b-bottom:9%;--b-width:4.6rem;--b-height:14.2rem;--b-haze:.90;--b-light-density:.35;--b-window-x:.72rem;--b-window-y:.84rem;--b-delay:-6s;--b-duration:11s;"></span>
+            <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:89%;--b-bottom:9%;--b-width:4rem;--b-height:11.4rem;--b-haze:.86;--b-light-density:.30;--b-window-x:.82rem;--b-window-y:.94rem;--b-delay:-8s;--b-duration:14s;"></span>
           </div>
 
-          <div class="skyline-layer front"></div>
+          <div class="skyline-depth-layer front">
+            <span class="urban-building front-shadow" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:-4%;--b-bottom:0;--b-width:18rem;--b-height:7rem;--b-haze:.96;--b-light-density:.08;--b-delay:-1s;--b-duration:15s;"></span>
+            <span class="urban-building front-shadow step" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:30%;--b-bottom:0;--b-width:24rem;--b-height:6.2rem;--b-haze:.96;--b-light-density:.06;--b-delay:-4s;--b-duration:16s;"></span>
+            <span class="urban-building front-shadow" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:68%;--b-bottom:0;--b-width:22rem;--b-height:7.8rem;--b-haze:.96;--b-light-density:.06;--b-delay:-7s;--b-duration:17s;"></span>
+          </div>
         </div>
 
-        <div class="kicker">Dallas-inspired depth skyline · Frontier Urban Simulation</div>
+        <div class="kicker">Dallas-inspired living skyline · Frontier Urban Simulation</div>
 
         <h1 id="page-title">The skyline is the surface. The load is the city.</h1>
 
@@ -1348,10 +1463,64 @@
         </div>
 
         <div class="actions">
-          <a class="button gold" href="#urban-orbit">Choose a Pathway</a>
+          <a class="button gold" href="#urban-construct-field">Inspect the Construct Field</a>
           <a class="button" href="/explore/frontier/">Return to Frontier</a>
-          <a class="button" href="#audralia-urban">Start with Audralia</a>
-          <a class="button green" href="#kill-conditions">Open Kill Conditions</a>
+          <a class="button green" href="#urban-orbit">Choose a Pathway</a>
+          <a class="button" href="#kill-conditions">Open Kill Conditions</a>
+        </div>
+      </section>
+
+      <section class="panel construct-visual" id="urban-construct-field" aria-labelledby="construct-title">
+        <div class="kicker">Urban Construct Field · Per-building 256 lattice</div>
+
+        <div class="construct-copy">
+          <h2 id="construct-title">The city field is not one global skyline strip. Every building carries its own local geometry.</h2>
+          <p>
+            The parent skyline field owns depth, horizon, atmosphere, and composition. Each building owns its own 16 × 16 local lattice: window rhythm, floor spacing, roof form, edge breaks, light density, facade proportion, silhouette identity, local glow, and perspective weight.
+          </p>
+        </div>
+
+        <div class="construct-grid">
+          <div class="urban-skyline-stage construct-skyline" aria-label="Inspectable Dallas-inspired living skyline with per-building local lattice">
+            <div class="skyline-depth-layer far">
+              <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:3%;--b-bottom:23%;--b-width:3rem;--b-height:8rem;--b-haze:.42;--b-light-density:.18;--b-window-x:.95rem;--b-window-y:1.05rem;--b-delay:-1s;--b-duration:12s;"></span>
+              <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:11%;--b-bottom:22%;--b-width:4.2rem;--b-height:10.4rem;--b-haze:.46;--b-light-density:.21;--b-window-x:.86rem;--b-window-y:1.06rem;--b-delay:-3s;--b-duration:14s;"></span>
+              <span class="urban-building roof" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:22%;--b-bottom:22%;--b-width:3.7rem;--b-height:9rem;--b-haze:.38;--b-light-density:.17;--b-window-x:.98rem;--b-window-y:1.12rem;--b-delay:-5s;--b-duration:13s;"></span>
+              <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:69%;--b-bottom:22%;--b-width:4.4rem;--b-height:10.2rem;--b-haze:.42;--b-light-density:.18;--b-window-x:.92rem;--b-window-y:1.08rem;--b-delay:-8s;--b-duration:15s;"></span>
+              <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:82%;--b-bottom:22%;--b-width:3.6rem;--b-height:9.3rem;--b-haze:.36;--b-light-density:.16;--b-window-x:.92rem;--b-window-y:1.14rem;--b-delay:-6s;--b-duration:14s;"></span>
+              <span class="urban-building roof" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:92%;--b-bottom:22%;--b-width:3.2rem;--b-height:8.5rem;--b-haze:.34;--b-light-density:.15;--b-window-x:1rem;--b-window-y:1.2rem;--b-delay:-9s;--b-duration:16s;"></span>
+            </div>
+
+            <div class="skyline-depth-layer mid">
+              <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:4%;--b-bottom:8%;--b-width:3.5rem;--b-height:9.8rem;--b-haze:.86;--b-light-density:.33;--b-window-x:.72rem;--b-window-y:.86rem;--b-delay:-1s;--b-duration:10s;"></span>
+              <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:13%;--b-bottom:8%;--b-width:4.6rem;--b-height:13.6rem;--b-haze:.94;--b-light-density:.40;--b-window-x:.66rem;--b-window-y:.80rem;--b-delay:-2s;--b-duration:11s;"></span>
+              <span class="urban-building roof" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:25%;--b-bottom:8%;--b-width:3.8rem;--b-height:11.2rem;--b-haze:.88;--b-light-density:.35;--b-window-x:.78rem;--b-window-y:.88rem;--b-delay:-4s;--b-duration:12s;"></span>
+              <span class="urban-building reunion" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:37%;--b-bottom:8%;--b-width:4.4rem;--b-height:18.8rem;--b-haze:.96;--b-delay:-2.5s;--b-duration:12s;"></span>
+              <span class="urban-building" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:49%;--b-bottom:8%;--b-width:4.9rem;--b-height:15.3rem;--b-haze:.94;--b-light-density:.43;--b-window-x:.62rem;--b-window-y:.76rem;--b-delay:-5s;--b-duration:10s;"></span>
+              <span class="urban-building greenline" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:63%;--b-bottom:8%;--b-width:4.3rem;--b-height:23.5rem;--b-haze:.98;--b-light-density:.36;--b-window-x:.58rem;--b-window-y:.72rem;--b-glow:2.3rem;--b-delay:-7s;--b-duration:13s;"></span>
+              <span class="urban-building roof" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:76%;--b-bottom:8%;--b-width:4.6rem;--b-height:14.4rem;--b-haze:.90;--b-light-density:.36;--b-window-x:.72rem;--b-window-y:.84rem;--b-delay:-6s;--b-duration:11s;"></span>
+              <span class="urban-building step" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:88%;--b-bottom:8%;--b-width:4.1rem;--b-height:11.7rem;--b-haze:.86;--b-light-density:.31;--b-window-x:.82rem;--b-window-y:.94rem;--b-delay:-8s;--b-duration:14s;"></span>
+            </div>
+
+            <div class="skyline-depth-layer front">
+              <span class="urban-building front-shadow" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:-4%;--b-bottom:0;--b-width:18rem;--b-height:7rem;--b-haze:.96;--b-light-density:.08;--b-delay:-1s;--b-duration:15s;"></span>
+              <span class="urban-building front-shadow step" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:28%;--b-bottom:0;--b-width:25rem;--b-height:6.5rem;--b-haze:.96;--b-light-density:.06;--b-delay:-4s;--b-duration:16s;"></span>
+              <span class="urban-building front-shadow" data-local-lattice="16x16" data-local-addresses="256" style="--b-left:67%;--b-bottom:0;--b-width:23rem;--b-height:7.9rem;--b-haze:.96;--b-light-density:.06;--b-delay:-7s;--b-duration:17s;"></span>
+            </div>
+          </div>
+
+          <aside class="construct-key" aria-label="Urban construct skyline read key">
+            <strong>Construct Read Key</strong>
+            <ul class="key-list">
+              <li><span class="key-mark" style="--key-color:var(--gold)"></span><span><b>Gold glow</b> means public load and receipt pressure.</span></li>
+              <li><span class="key-mark" style="--key-color:var(--urban-green)"></span><span><b>Green edge</b> means active city-system continuity.</span></li>
+              <li><span class="key-mark" style="--key-color:var(--blue)"></span><span><b>Blue haze</b> means distance and inherited infrastructure.</span></li>
+              <li><span class="key-mark dark"></span><span><b>Dark foreground</b> means ground-level hidden systems.</span></li>
+              <li><span class="key-mark square" style="--key-color:rgba(255,244,216,.82)"></span><span><b>Independent buildings</b> mean separate local 16 × 16 / 256 lattices.</span></li>
+              <li><span class="key-mark line" style="--key-color:var(--gold)"></span><span><b>Window rhythm</b> means occupied system load.</span></li>
+              <li><span class="key-mark" style="--key-color:rgba(57,255,159,.72)"></span><span><b>Soft breathing</b> means city systems are running, not flashing.</span></li>
+            </ul>
+          </aside>
         </div>
       </section>
 
@@ -1637,7 +1806,8 @@
           Urban Construct is the Frontier city-system pathway inside the story-world. It coordinates Energy, Water, Waste, Lattice, Governance, Food, Housing, Mobility, Public Safety, and Resilience without replacing category-specific science or claiming that appearance equals readiness.
         </p>
         <div class="actions">
-          <a class="button gold" href="#urban-orbit">Return to Urban Orbit</a>
+          <a class="button gold" href="#urban-construct-field">Return to Construct Field</a>
+          <a class="button" href="#urban-orbit">Return to Urban Orbit</a>
           <a class="button" href="/explore/frontier/">Return to Frontier</a>
           <a class="button" href="/showroom/globe/audralia/">Open Audralia</a>
           <a class="button green" href="/explore/frontier/energy/">Open Energy</a>
@@ -1648,33 +1818,44 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-FRONTIER_URBAN_DROPDOWN_NAV_DEPTH_SKYLINE_RENEWAL_TNT_v3
-previous=FRONTIER_URBAN_DALLAS_NIGHT_SKLINE_BACKDROP_RENEWAL_TNT_v2
-binding=FRONTIER_URBAN_DROPDOWN_NAV_DEPTH_SKYLINE_FINAL_PRECODE_BINDING_v3
+FRONTIER_URBAN_PER_BUILDING_256_LATTICE_LIVING_SKYLINE_RENEWAL_TNT_v4
+previous=FRONTIER_URBAN_DROPDOWN_NAV_DEPTH_SKYLINE_RENEWAL_TNT_v3
+binding=FRONTIER_URBAN_PER_BUILDING_256_LATTICE_LIVING_SKYLINE_FINAL_PRECODE_BINDING_v4
 route=/explore/frontier/urban/
 page=frontier_urban_construct
 html=/explore/frontier/urban/index.html
 source_visual_authority=COMPASS_CONTEXT_ALIGNMENT_HTML_TNT_v2
 source_symbol_authority=compassOrganicGem
+skyline_relocation_correction=true
+hero_skyline_preserved=true
+construct_skyline_box_added=true
+per_building_lattice=true
+building_local_scope=16x16
+building_local_addresses=256
+state_expression=geometry_not_dom_object_count
+parent_skyline_field=true
+independent_building_objects=true
+parent_skyline_owns=depth_layer,horizon_placement,atmospheric_glow,far_mid_front_separation,composition,stage_visibility,city_field_framing
+building_owns=window_rhythm,floor_spacing,roof_form,edge_breaks,light_density,facade_proportion,silhouette_identity,local_glow,depth_weight,perspective_behavior,local_visual_variance
+skyline_depth_layers=far_mid_front
+skyline_alive=true
+alive_standard=subtle_occupancy_horizon_breathing_asynchronous_building_light_variation
+traffic_animation=false
+per_window_dom=false
+javascript_added=false
+canvas=false
+webgl=false
+graphic_box=false
+generated_image=false
+particle_engine=false
+external_image=false
 dropdown_navigation=true
 dropdown_js=false
 route_menu_component=details_summary_css_only
 site_menu=true
 frontier_lanes_menu=true
-skyline_depth_layers=far_mid_front
-far_skyline_layer=true
-mid_skyline_layer=true
-front_shadow_layer=true
 dallas_inspired_skyline=true
 photographic_accuracy_claimed=false
-external_image=false
-generated_image=false
-canvas=false
-webgl=false
-graphic_box=false
-particle_engine=false
-javascript_added=false
-heavy_runtime=false
 urban_contextual_upgrade=true
 skyline_is_surface_load_is_city=true
 urban_system_pressure_thesis=true
@@ -1694,16 +1875,17 @@ return_to_frontier_under_every_pathway=true
 return_to_frontier_route=/explore/frontier/
 urban_owns=city_form,housing,mobility,urban_water_pressure,urban_energy_pressure,urban_waste_pressure,food_access,public_safety,governance,resilience,metropolitan_load,emergency_response_pressure,city_scale_consequence
 urban_does_not_own=water_science,energy_conversion,waste_no_away_accounting,frontier_lattice_page_authority,laws_authority,gauges_scoring,route_mutation,visual_pass_claims
-forbidden_collapses=skyline_as_city_readiness,buildings_as_city,density_as_livability,roads_as_mobility,power_access_as_energy_resilience,water_access_as_water_security,collection_as_waste_closure,food_presence_as_food_access,control_as_public_safety,plan_as_governance,optimism_as_resilience,simulation_as_validation,dallas_skyline_as_tourism_page,visual_depth_as_proof
+forbidden_collapses=one_global_lattice_controls_all_buildings,256_as_dom_count,skyline_disappears,skyline_only_in_hero,construct_box_lacks_skyline_expression,flat_single_strip,random_depth_scale,alive_as_flicker,skyline_as_tourism,visual_depth_as_proof,simulation_as_validation
 static_page_usable_without_js=true
+heavy_runtime=false
 streaming=false
 visual_pass_claimed=false
-deploy_marker=FRONTIER_URBAN_DROPDOWN_NAV_DEPTH_SKYLINE_DEPLOY_MARKER_v3
+deploy_marker=FRONTIER_URBAN_PER_BUILDING_256_LATTICE_LIVING_SKYLINE_DEPLOY_MARKER_v4
       </template>
     </main>
 
     <footer>
-      FRONTIER_URBAN_DROPDOWN_NAV_DEPTH_SKYLINE_RENEWAL_TNT_v3 · Urban Construct · CSS-only dropdown navigation · Dallas-inspired depth skyline.
+      FRONTIER_URBAN_PER_BUILDING_256_LATTICE_LIVING_SKYLINE_RENEWAL_TNT_v4 · Urban Construct · Hero skyline preserved · Construct skyline added · Per-building 256 lattice.
     </footer>
   </div>
 </body>

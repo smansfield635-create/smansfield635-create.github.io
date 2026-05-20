@@ -3,10 +3,12 @@
   lang="en"
   data-route="/showroom/globe/audralia/"
   data-page="audralia-clean-canvas-route"
-  data-contract="AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_ROUTE_BRIDGE_CACHE_BUMP_TNT_v1"
-  data-previous-contract="AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_BRIDGE_LOADER_TNT_v1"
+  data-contract="AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_VERSIONED_RUNTIME_PATH_LOCK_TNT_v3_1"
+  data-previous-contract="AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_ROUTE_BRIDGE_CACHE_BUMP_TNT_v1"
   data-route-bridge="/showroom/globe/audralia/index.js"
-  data-runtime-path="/assets/audralia/audralia.runtime.js"
+  data-route-bridge-cache-key="AUDRALIA_G2_5_ROUTE_BRIDGE_VERSIONED_RUNTIME_PATH_LOCK_TNT_v3_1"
+  data-runtime-path="/assets/audralia/audralia.runtime.v3.js"
+  data-runtime-cache-key="AUDRALIA_G2_5_RUNTIME_VERSIONED_PATH_LOCK_TNT_v3_1"
   data-clean-parent-path="/assets/audralia/clean/audralia.engine.js"
 >
 <head>
@@ -502,6 +504,7 @@
       <section class="panel copy-panel" aria-labelledby="audraliaTitle">
         <p class="eyebrow">Clean Canvas Route Bridge</p>
         <h1 id="audraliaTitle">Audralia form mount.</h1>
+
         <p class="lead">
           This page is the Audralia child route shell. The HTML owns the page
           structure and mount target only. The route bridge owns runtime import,
@@ -511,13 +514,13 @@
         <ul class="handoff-list" aria-label="Authority handoff">
           <li><strong>HTML shell:</strong> keeps navigation, copy, and the mount target.</li>
           <li><strong>Route bridge:</strong> loads <code>/showroom/globe/audralia/index.js</code>.</li>
-          <li><strong>Runtime shim:</strong> loads <code>/assets/audralia/audralia.runtime.js</code>.</li>
+          <li><strong>Runtime shim:</strong> loads <code>/assets/audralia/audralia.runtime.v3.js</code>.</li>
           <li><strong>Clean parent:</strong> mounts <code>/assets/audralia/clean/audralia.engine.js</code>.</li>
         </ul>
 
         <div class="receipt" aria-label="HTML receipt">
-          AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_ROUTE_BRIDGE_CACHE_BUMP_TNT_v1 ·
-          HTML shell active · route bridge cache key bumped · runtime cache key alignment active.
+          AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_VERSIONED_RUNTIME_PATH_LOCK_TNT_v3_1 ·
+          HTML shell active · versioned runtime path locked · route bridge cache key bumped.
         </div>
       </section>
 
@@ -527,7 +530,7 @@
             <h2 id="mountTitle" class="canvas-title">Authority chain handoff</h2>
             <p class="canvas-subtitle">Clean-canvas form mount target.</p>
           </div>
-          <span class="status-pill">Bridge loader active</span>
+          <span class="status-pill">Versioned bridge active</span>
         </header>
 
         <div
@@ -535,7 +538,7 @@
           data-audralia-canvas-mount
           data-audralia-clean-canvas-mount
           data-audralia-mount-target="true"
-          data-html-contract="AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_ROUTE_BRIDGE_CACHE_BUMP_TNT_v1"
+          data-html-contract="AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_VERSIONED_RUNTIME_PATH_LOCK_TNT_v3_1"
           aria-label="Audralia clean-canvas mount target"
         >
           <div class="standby-card" data-audralia-html-standby="true">
@@ -543,14 +546,14 @@
             <strong>Standby form visible.</strong>
             <span>
               The HTML standby is present while the route bridge loads the
-              runtime handoff. This shell does not own the diagnostic fallback.
+              versioned runtime handoff. This shell does not own the diagnostic fallback.
             </span>
           </div>
         </div>
 
         <footer class="canvas-foot">
           Route bridge script:
-          <code>/showroom/globe/audralia/index.js</code>
+          <code>/showroom/globe/audralia/index.js?v=AUDRALIA_G2_5_ROUTE_BRIDGE_VERSIONED_RUNTIME_PATH_LOCK_TNT_v3_1</code>
         </footer>
       </section>
     </main>
@@ -558,18 +561,19 @@
 
   <script>
     window.AUDRALIA_HTML_BRIDGE_LOADER_RECEIPT = {
-      contract: "AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_ROUTE_BRIDGE_CACHE_BUMP_TNT_v1",
-      previousContract: "AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_BRIDGE_LOADER_TNT_v1",
+      contract: "AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_VERSIONED_RUNTIME_PATH_LOCK_TNT_v3_1",
+      previousContract: "AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_ROUTE_BRIDGE_CACHE_BUMP_TNT_v1",
       route: "/showroom/globe/audralia/",
       target: "/showroom/globe/audralia/index.html",
       routeBridge: "/showroom/globe/audralia/index.js",
-      routeBridgeCacheKey: "AUDRALIA_G2_5_ROUTE_BRIDGE_RUNTIME_CACHE_KEY_ALIGNMENT_TNT_v2_2",
-      runtimePath: "/assets/audralia/audralia.runtime.js",
-      runtimeCacheKey: "AUDRALIA_G2_5_RUNTIME_SHIM_PARENT_DELEGATION_REPAIR_TNT_v3",
+      routeBridgeCacheKey: "AUDRALIA_G2_5_ROUTE_BRIDGE_VERSIONED_RUNTIME_PATH_LOCK_TNT_v3_1",
+      runtimePath: "/assets/audralia/audralia.runtime.v3.js",
+      runtimeCacheKey: "AUDRALIA_G2_5_RUNTIME_VERSIONED_PATH_LOCK_TNT_v3_1",
       cleanParentPath: "/assets/audralia/clean/audralia.engine.js",
-      mode: "html_shell_route_bridge_cache_bump_only",
+      mode: "html_shell_versioned_runtime_path_lock",
       htmlChange: true,
       routeBridgeCacheBumped: true,
+      versionedRuntimePathLocked: true,
       inlineDiagnosticControllerDemoted: true,
       routeBridgeOwnsRuntimeImport: true,
       routeBridgeOwnsFallbackDecision: true,
@@ -585,18 +589,23 @@
 
     document.documentElement.setAttribute(
       "data-audralia-route-bridge-cache-key",
-      "AUDRALIA_G2_5_ROUTE_BRIDGE_RUNTIME_CACHE_KEY_ALIGNMENT_TNT_v2_2"
+      "AUDRALIA_G2_5_ROUTE_BRIDGE_VERSIONED_RUNTIME_PATH_LOCK_TNT_v3_1"
+    );
+
+    document.documentElement.setAttribute(
+      "data-audralia-runtime-path",
+      "/assets/audralia/audralia.runtime.v3.js"
     );
 
     document.documentElement.setAttribute(
       "data-audralia-runtime-cache-key",
-      "AUDRALIA_G2_5_RUNTIME_SHIM_PARENT_DELEGATION_REPAIR_TNT_v3"
+      "AUDRALIA_G2_5_RUNTIME_VERSIONED_PATH_LOCK_TNT_v3_1"
     );
   </script>
 
   <script
     type="module"
-    src="/showroom/globe/audralia/index.js?v=AUDRALIA_G2_5_ROUTE_BRIDGE_RUNTIME_CACHE_KEY_ALIGNMENT_TNT_v2_2"
+    src="/showroom/globe/audralia/index.js?v=AUDRALIA_G2_5_ROUTE_BRIDGE_VERSIONED_RUNTIME_PATH_LOCK_TNT_v3_1"
   ></script>
 </body>
 </html>

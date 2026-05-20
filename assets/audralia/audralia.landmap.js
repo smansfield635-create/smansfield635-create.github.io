@@ -1,504 +1,95 @@
 // /assets/audralia/audralia.landmap.js
-// AUDRALIA_LANDMASS_SEPARATION_AND_ARCHIPELAGO_RENEWAL_TNT_v1
+// AUDRALIA_LANDMAP_CONTINENT_BREAKUP_AND_OCEAN_CUT_AUTHORITY_TNT_v2
 // Full-file replacement.
-// Landmap owns footprint authority only.
+// Landmap owns footprint authority.
 // Purpose:
-// - Renews Audralia away from the one-big-land-glob read.
-// - Separates major landmasses through stronger ocean corridors, straits, bays, gulfs, and interior water pressure.
-// - Adds archipelago chains, offshore fragments, peninsulas, shelf zones, beaches, and sharper coastal interruption.
-// - Preserves Audralia spelling, 256 lattice compatibility, Nine Summits province fields, Earth-legacy mirror-world logic.
-// - Does not render canvas.
-// - Does not color surface.
-// - Does not own hydrology.
-// - Does not own climate.
-// - Does not own elevation.
-// - Does not touch runtime.
-// - Does not touch Gauges.
-// No generated image. No GraphicBox. No visual-pass claim.
+// - Corrects the one-big-land-glob failure upstream.
+// - Uses separated continental bodies, hard ocean-cut authority, seaways, bays, inlets, shelves, beaches, island chains, polar restraint, and ratio telemetry.
+// - Hydrology may shape and classify water behavior, but this file owns the land/sea footprint.
+// - Canvas remains consumer-only.
+// - No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_LANDMASS_SEPARATION_AND_ARCHIPELAGO_RENEWAL_TNT_v1";
-  const RECEIPT = "AUDRALIA_LANDMASS_SEPARATION_AND_ARCHIPELAGO_RENEWAL_RECEIPT_v1";
+  const CONTRACT = "AUDRALIA_LANDMAP_CONTINENT_BREAKUP_AND_OCEAN_CUT_AUTHORITY_TNT_v2";
+  const RECEIPT = "AUDRALIA_LANDMAP_CONTINENT_BREAKUP_AND_OCEAN_CUT_AUTHORITY_RECEIPT_v2";
   const PREVIOUS_CONTRACT = "AUDRALIA_30_BILLION_YEAR_EARTH_LEGACY_ORGANIC_LANDFORM_TNT_v1";
-  const VERSION = "2026-05-19.audralia-landmass-separation-and-archipelago-renewal-v1";
+  const VERSION = "2026-05-19.audralia-landmap-continent-breakup-ocean-cut-v2";
+
+  const PHI = 1.618033988749895;
 
   const TARGET = Object.freeze({
-    landRatioApprox: "28_to_40_percent",
-    oceanRatioApprox: "60_to_72_percent",
-    oneBigGlobCorrected: true,
-    majorLandmassesSeparated: true,
-    archipelagoChains: true,
-    oceanCorridors: true,
-    baysInletsStraits: true,
-    jaggedCoastlines: true,
-    offshoreFragments: true,
-    earthLegacy: true,
-    thirtyBillionYearFuture: true,
-    highTechnologyHiddenInsideNature: true,
-    stewardshipWorld: true,
-    lattice256AsHiddenScaffold: true,
-    nineSummitsAsProvinceFields: true,
-    canvasOwnsFootprint: false
+    landRatioApprox: "28_to_38_percent",
+    oceanRatioApprox: "62_to_72_percent",
+    correction: "break_one_big_land_glob",
+    hardOceanCuts: true,
+    continentSeparation: true,
+    seawaysRequired: true,
+    bayAndInletAuthority: true,
+    islandChains: true,
+    variableShelvesAndBeaches: true,
+    canvasOwnsFootprint: false,
+    landmapOwnsFootprint: true
   });
 
   const SUMMIT_PROVINCES = Object.freeze([
-    {
-      name: "Gratitude",
-      role: "fertile_lowlands",
-      landPressure: 0.012,
-      ridge: 0.10,
-      basin: 0.34,
-      shelf: 0.22,
-      beach: 0.24,
-      coastBite: 0.18,
-      island: 0.12,
-      green: 0.30,
-      technology: "soil_memory"
-    },
-    {
-      name: "Balance",
-      role: "stable_shelves",
-      landPressure: 0.004,
-      ridge: 0.16,
-      basin: 0.16,
-      shelf: 0.34,
-      beach: 0.20,
-      coastBite: 0.22,
-      island: 0.18,
-      green: 0.20,
-      technology: "shelf_stabilization"
-    },
-    {
-      name: "Stability",
-      role: "ancient_craton_cores",
-      landPressure: 0.016,
-      ridge: 0.22,
-      basin: 0.08,
-      shelf: 0.16,
-      beach: 0.12,
-      coastBite: 0.12,
-      island: 0.08,
-      green: 0.16,
-      technology: "deep_craton_anchor"
-    },
-    {
-      name: "Peace",
-      role: "wetlands_and_protected_bays",
-      landPressure: -0.004,
-      ridge: 0.06,
-      basin: 0.40,
-      shelf: 0.28,
-      beach: 0.22,
-      coastBite: 0.24,
-      island: 0.16,
-      green: 0.27,
-      technology: "quiet_water_routing"
-    },
-    {
-      name: "Joy",
-      role: "bright_coasts_and_island_chains",
-      landPressure: 0.002,
-      ridge: 0.10,
-      basin: 0.15,
-      shelf: 0.28,
-      beach: 0.40,
-      coastBite: 0.38,
-      island: 0.34,
-      green: 0.25,
-      technology: "living_coast_light"
-    },
-    {
-      name: "Dignity",
-      role: "mountain_belts_and_mineral_pressure",
-      landPressure: 0.012,
-      ridge: 0.46,
-      basin: 0.06,
-      shelf: 0.13,
-      beach: 0.09,
-      coastBite: 0.18,
-      island: 0.10,
-      green: 0.12,
-      technology: "mineral_memory"
-    },
-    {
-      name: "Free Will",
-      role: "peninsulas_straits_and_branching_edges",
-      landPressure: -0.010,
-      ridge: 0.20,
-      basin: 0.10,
-      shelf: 0.26,
-      beach: 0.18,
-      coastBite: 0.48,
-      island: 0.28,
-      green: 0.15,
-      technology: "branching_frontier_edges"
-    },
-    {
-      name: "Love",
-      role: "sheltered_valleys_and_habitable_basins",
-      landPressure: 0.008,
-      ridge: 0.12,
-      basin: 0.32,
-      shelf: 0.22,
-      beach: 0.26,
-      coastBite: 0.20,
-      island: 0.12,
-      green: 0.34,
-      technology: "protected_habitation_warmth"
-    },
-    {
-      name: "Stewardship",
-      role: "restoration_belts_and_green_infrastructure",
-      landPressure: 0.006,
-      ridge: 0.14,
-      basin: 0.22,
-      shelf: 0.32,
-      beach: 0.22,
-      coastBite: 0.22,
-      island: 0.20,
-      green: 0.40,
-      technology: "hidden_ecological_infrastructure"
-    }
+    { name: "Gratitude", role: "fertile_lowlands", landPressure: 0.010, ridge: 0.10, basin: 0.30, shelf: 0.22, beach: 0.24, coastBite: 0.18, green: 0.32, technology: "soil_memory" },
+    { name: "Balance", role: "stable_shelves", landPressure: 0.004, ridge: 0.14, basin: 0.18, shelf: 0.34, beach: 0.20, coastBite: 0.20, green: 0.22, technology: "shelf_stabilization" },
+    { name: "Stability", role: "ancient_craton_cores", landPressure: 0.014, ridge: 0.22, basin: 0.08, shelf: 0.16, beach: 0.12, coastBite: 0.12, green: 0.16, technology: "deep_craton_anchor" },
+    { name: "Peace", role: "wetlands_and_protected_bays", landPressure: -0.004, ridge: 0.06, basin: 0.42, shelf: 0.28, beach: 0.22, coastBite: 0.28, green: 0.28, technology: "quiet_water_routing" },
+    { name: "Joy", role: "bright_coasts_and_island_chains", landPressure: -0.002, ridge: 0.10, basin: 0.14, shelf: 0.26, beach: 0.38, coastBite: 0.34, green: 0.25, technology: "living_coast_light" },
+    { name: "Dignity", role: "mountain_belts_and_mineral_pressure", landPressure: 0.012, ridge: 0.46, basin: 0.06, shelf: 0.12, beach: 0.10, coastBite: 0.14, green: 0.12, technology: "mineral_memory" },
+    { name: "Free Will", role: "peninsulas_straits_and_branching_edges", landPressure: -0.014, ridge: 0.18, basin: 0.10, shelf: 0.24, beach: 0.20, coastBite: 0.54, green: 0.15, technology: "branching_frontier_edges" },
+    { name: "Love", role: "sheltered_valleys_and_habitable_basins", landPressure: 0.006, ridge: 0.12, basin: 0.34, shelf: 0.22, beach: 0.25, coastBite: 0.20, green: 0.34, technology: "protected_habitation_warmth" },
+    { name: "Stewardship", role: "restoration_belts_and_green_infrastructure", landPressure: 0.008, ridge: 0.14, basin: 0.24, shelf: 0.30, beach: 0.22, coastBite: 0.22, green: 0.42, technology: "hidden_ecological_infrastructure" }
   ]);
 
-  const LAND_BODIES = Object.freeze([
-    {
-      id: "west-audralian-continent",
-      label: "West Audralian Continent",
-      className: "separated-western-continental-body",
-      lon: -132,
-      lat: -8,
-      rx: 33,
-      ry: 30,
-      weight: 0.82,
-      tilt: 4,
-      family: "continental"
-    },
-    {
-      id: "northwest-island-continent",
-      label: "Northwest Island Continent",
-      className: "large-northwest-island-continent",
-      lon: -154,
-      lat: 25,
-      rx: 22,
-      ry: 18,
-      weight: 0.48,
-      tilt: -18,
-      family: "large-island"
-    },
-    {
-      id: "central-mainland-north",
-      label: "Central Mainland North",
-      className: "northern-mainland-fragment",
-      lon: -54,
-      lat: 23,
-      rx: 34,
-      ry: 21,
-      weight: 0.74,
-      tilt: -10,
-      family: "continental"
-    },
-    {
-      id: "central-mainland-south",
-      label: "Central Mainland South",
-      className: "southern-mainland-fragment",
-      lon: -28,
-      lat: -19,
-      rx: 36,
-      ry: 23,
-      weight: 0.78,
-      tilt: 18,
-      family: "continental"
-    },
-    {
-      id: "southwest-shoulder-island",
-      label: "Southwest Shoulder Island",
-      className: "southwest-shelf-island",
-      lon: -66,
-      lat: -39,
-      rx: 22,
-      ry: 15,
-      weight: 0.40,
-      tilt: 24,
-      family: "large-island"
-    },
-    {
-      id: "east-audralian-subcontinent",
-      label: "East Audralian Subcontinent",
-      className: "separated-eastern-subcontinent",
-      lon: 72,
-      lat: -5,
-      rx: 38,
-      ry: 28,
-      weight: 0.78,
-      tilt: 17,
-      family: "subcontinental"
-    },
-    {
-      id: "northeast-crescent-land",
-      label: "Northeast Crescent Land",
-      className: "northeast-crescent-subcontinent",
-      lon: 116,
-      lat: 24,
-      rx: 25,
-      ry: 20,
-      weight: 0.48,
-      tilt: -12,
-      family: "subcontinental"
-    },
-    {
-      id: "southeast-island-land",
-      label: "Southeast Island Land",
-      className: "southeast-large-island-body",
-      lon: 86,
-      lat: -40,
-      rx: 27,
-      ry: 18,
-      weight: 0.44,
-      tilt: -22,
-      family: "large-island"
-    },
-    {
-      id: "southern-continent",
-      label: "Southern Continent",
-      className: "southern-separated-landmass",
-      lon: 10,
-      lat: -52,
-      rx: 45,
-      ry: 17,
-      weight: 0.52,
-      tilt: 3,
-      family: "subcontinental"
-    },
-    {
-      id: "south-polar-shelf-land",
-      label: "South Polar Shelf Land",
-      className: "south-polar-shelf-landmass",
-      lon: -112,
-      lat: -68,
-      rx: 29,
-      ry: 11,
-      weight: 0.24,
-      tilt: -8,
-      family: "polar"
-    },
-    {
-      id: "north-polar-land",
-      label: "North Polar Land",
-      className: "north-polar-landmass",
-      lon: 146,
-      lat: 67,
-      rx: 36,
-      ry: 14,
-      weight: 0.30,
-      tilt: 7,
-      family: "polar"
-    },
-    {
-      id: "northwest-polar-land",
-      label: "Northwest Polar Land",
-      className: "northwest-polar-landmass",
-      lon: -112,
-      lat: 68,
-      rx: 29,
-      ry: 12,
-      weight: 0.26,
-      tilt: -10,
-      family: "polar"
-    }
+  const CONTINENTS = Object.freeze([
+    { id: "western-mainland", label: "Western Mainland", family: "continental", lon: -112, lat: 8, rx: 34, ry: 27, tilt: -18, weight: 1.05 },
+    { id: "northwest-lobe", label: "Northwest Lobe", family: "continental-lobe", lon: -145, lat: 32, rx: 23, ry: 17, tilt: 16, weight: 0.72 },
+    { id: "southwest-lobe", label: "Southwest Lobe", family: "continental-lobe", lon: -132, lat: -28, rx: 22, ry: 17, tilt: -28, weight: 0.66 },
+
+    { id: "central-mainland", label: "Central Mainland", family: "continental", lon: -24, lat: 6, rx: 42, ry: 28, tilt: 10, weight: 1.12 },
+    { id: "central-south-shoulder", label: "Central South Shoulder", family: "subcontinental", lon: -8, lat: -31, rx: 28, ry: 18, tilt: -14, weight: 0.74 },
+    { id: "central-north-plateau", label: "Central North Plateau", family: "continental-lobe", lon: -46, lat: 36, rx: 24, ry: 17, tilt: 18, weight: 0.65 },
+
+    { id: "eastern-subcontinent", label: "Eastern Subcontinent", family: "subcontinental", lon: 72, lat: -4, rx: 35, ry: 26, tilt: -10, weight: 0.96 },
+    { id: "northeast-eastern-lobe", label: "Northeast Eastern Lobe", family: "subcontinental-lobe", lon: 108, lat: 23, rx: 24, ry: 18, tilt: 14, weight: 0.70 },
+    { id: "southeast-eastern-lobe", label: "Southeast Eastern Lobe", family: "large-island", lon: 104, lat: -38, rx: 22, ry: 15, tilt: -22, weight: 0.58 },
+
+    { id: "far-east-island-continent", label: "Far East Island Continent", family: "large-island", lon: 154, lat: -12, rx: 24, ry: 20, tilt: 8, weight: 0.66 },
+    { id: "southern-landmass", label: "Southern Landmass", family: "subcontinental", lon: 16, lat: -56, rx: 40, ry: 14, tilt: 3, weight: 0.52 },
+    { id: "north-polar-lands", label: "North Polar Lands", family: "polar", lon: 112, lat: 69, rx: 36, ry: 12, tilt: 8, weight: 0.30 },
+    { id: "northwest-polar-lands", label: "Northwest Polar Lands", family: "polar", lon: -122, lat: 70, rx: 28, ry: 11, tilt: -8, weight: 0.26 }
   ]);
 
-  const OCEAN_CORRIDORS = Object.freeze([
-    {
-      id: "west-central-great-seaway",
-      lon: -96,
-      lat: 5,
-      rx: 19,
-      ry: 50,
-      weight: 0.32,
-      tilt: -5
-    },
-    {
-      id: "central-split-strait",
-      lon: -18,
-      lat: 3,
-      rx: 15,
-      ry: 49,
-      weight: 0.30,
-      tilt: -17
-    },
-    {
-      id: "east-central-blue-corridor",
-      lon: 34,
-      lat: 10,
-      rx: 18,
-      ry: 47,
-      weight: 0.28,
-      tilt: 12
-    },
-    {
-      id: "southern-basin-corridor",
-      lon: -55,
-      lat: -50,
-      rx: 37,
-      ry: 19,
-      weight: 0.22,
-      tilt: 1
-    },
-    {
-      id: "eastern-subcontinent-strait",
-      lon: 48,
-      lat: -22,
-      rx: 17,
-      ry: 32,
-      weight: 0.22,
-      tilt: -20
-    },
-    {
-      id: "northeast-inner-sea",
-      lon: 100,
-      lat: 9,
-      rx: 19,
-      ry: 23,
-      weight: 0.18,
-      tilt: 18
-    },
-    {
-      id: "equatorial-far-east-sea",
-      lon: 156,
-      lat: -3,
-      rx: 25,
-      ry: 30,
-      weight: 0.20,
-      tilt: -18
-    },
-    {
-      id: "joy-island-sea",
-      lon: 120,
-      lat: -39,
-      rx: 24,
-      ry: 24,
-      weight: 0.18,
-      tilt: 22
-    },
-    {
-      id: "northern-gulf-cut",
-      lon: -38,
-      lat: 41,
-      rx: 30,
-      ry: 15,
-      weight: 0.18,
-      tilt: 8
-    },
-    {
-      id: "central-inland-sea",
-      lon: -42,
-      lat: -2,
-      rx: 13,
-      ry: 18,
-      weight: 0.13,
-      tilt: 6
-    },
-    {
-      id: "eastern-inland-bay",
-      lon: 82,
-      lat: 12,
-      rx: 12,
-      ry: 18,
-      weight: 0.13,
-      tilt: -12
-    },
-    {
-      id: "southern-fjord-field",
-      lon: 20,
-      lat: -43,
-      rx: 18,
-      ry: 13,
-      weight: 0.13,
-      tilt: 12
-    }
+  const HARD_OCEAN_CUTS = Object.freeze([
+    { id: "great-western-seaway", lon: -76, lat: 2, rx: 18, ry: 58, tilt: -3, weight: 0.62 },
+    { id: "central-blue-seaway", lon: 28, lat: 11, rx: 17, ry: 54, tilt: 9, weight: 0.58 },
+    { id: "eastern-sunrise-channel", lon: 132, lat: 4, rx: 20, ry: 46, tilt: -13, weight: 0.46 },
+    { id: "south-central-ocean-basin", lon: -54, lat: -50, rx: 36, ry: 21, tilt: 5, weight: 0.42 },
+    { id: "northern-inner-sea", lon: -10, lat: 38, rx: 26, ry: 18, tilt: -12, weight: 0.34 },
+    { id: "equatorial-blue-channel", lon: 170, lat: -2, rx: 28, ry: 25, tilt: 4, weight: 0.36 },
+    { id: "joy-island-sea", lon: 86, lat: -43, rx: 22, ry: 22, tilt: 20, weight: 0.32 },
+    { id: "free-will-strait", lon: -2, lat: -5, rx: 11, ry: 50, tilt: -18, weight: 0.38 }
   ]);
 
-  const ARCHIPELAGO_CHAINS = Object.freeze([
-    {
-      id: "western-shelf-archipelago",
-      label: "Western Shelf Archipelago",
-      lonA: -174,
-      latA: -34,
-      lonB: -106,
-      latB: -48,
-      count: 12,
-      rx: 7.0,
-      ry: 4.4,
-      weight: 0.34,
-      family: "archipelago"
-    },
-    {
-      id: "northern-crown-islands",
-      label: "Northern Crown Islands",
-      lonA: -82,
-      latA: 47,
-      lonB: 20,
-      latB: 50,
-      count: 15,
-      rx: 6.4,
-      ry: 4.0,
-      weight: 0.28,
-      family: "archipelago"
-    },
-    {
-      id: "east-bright-island-chain",
-      label: "East Bright Island Chain",
-      lonA: 98,
-      latA: -24,
-      lonB: 166,
-      latB: -51,
-      count: 14,
-      rx: 6.2,
-      ry: 4.2,
-      weight: 0.33,
-      family: "archipelago"
-    },
-    {
-      id: "equatorial-blue-islands",
-      label: "Equatorial Blue Islands",
-      lonA: 132,
-      latA: 8,
-      lonB: -166,
-      latB: -10,
-      count: 17,
-      rx: 5.2,
-      ry: 3.6,
-      weight: 0.25,
-      family: "archipelago"
-    },
-    {
-      id: "south-quiet-islands",
-      label: "South Quiet Islands",
-      lonA: -20,
-      latA: -61,
-      lonB: 92,
-      latB: -59,
-      count: 11,
-      rx: 5.6,
-      ry: 3.4,
-      weight: 0.22,
-      family: "archipelago"
-    }
+  const ISLAND_CHAINS = Object.freeze([
+    { id: "western-opal-chain-a", lon: -166, lat: -45, rx: 9, ry: 5, tilt: 20, weight: 0.38 },
+    { id: "western-opal-chain-b", lon: -150, lat: -37, rx: 8, ry: 5, tilt: -18, weight: 0.34 },
+    { id: "southern-joy-isle-a", lon: 74, lat: -58, rx: 11, ry: 5, tilt: 8, weight: 0.34 },
+    { id: "southern-joy-isle-b", lon: 102, lat: -55, rx: 10, ry: 5, tilt: -15, weight: 0.32 },
+    { id: "northeast-peace-isle", lon: 142, lat: 38, rx: 11, ry: 7, tilt: 18, weight: 0.36 },
+    { id: "equatorial-small-chain", lon: -172, lat: 6, rx: 8, ry: 5, tilt: -10, weight: 0.30 }
   ]);
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
   }
 
-  function lerp(a, b, t) {
-    return a + (b - a) * clamp(t, 0, 1);
-  }
-
-  function smoothstep(edge0, edge1, value) {
-    const t = clamp((value - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
+  function smoothstep(edge0, edge1, x) {
+    const t = clamp((x - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
     return t * t * (3 - 2 * t);
   }
 
@@ -508,11 +99,6 @@
 
   function wrapLongitudeDelta(lon, centerLon) {
     return ((lon - centerLon + 540) % 360) - 180;
-  }
-
-  function interpolateLongitude(a, b, t) {
-    const delta = wrapLongitudeDelta(b, a);
-    return ((a + delta * t + 540) % 360) - 180;
   }
 
   function degToRad(value) {
@@ -531,7 +117,7 @@
   }
 
   function noise(u, v, scale, seed) {
-    const s = Math.max(1, Math.floor(scale));
+    const s = Math.max(2, Math.floor(scale));
     const x = wrap01(u) * s;
     const y = clamp(v, 0, 1) * s;
 
@@ -550,7 +136,7 @@
     const c = hash(((x0 % s) + s) % s, y1, seed);
     const d = hash(((x1 % s) + s) % s, y1, seed);
 
-    return lerp(lerp(a, b, sx), lerp(c, d, sx), sy);
+    return (a + (b - a) * sx) * (1 - sy) + (c + (d - c) * sx) * sy;
   }
 
   function fbm(u, v, seed, octaves = 5) {
@@ -563,24 +149,7 @@
       total += noise(u, v, scale, seed + i * 131) * amp;
       norm += amp;
       amp *= 0.52;
-      scale *= 1.92;
-    }
-
-    return total / Math.max(0.000001, norm);
-  }
-
-  function ridgeNoise(u, v, seed, octaves = 4) {
-    let total = 0;
-    let norm = 0;
-    let amp = 0.58;
-    let scale = 4.0;
-
-    for (let i = 0; i < octaves; i += 1) {
-      const n = noise(u, v, scale, seed + i * 197);
-      total += (1 - Math.abs(n * 2 - 1)) * amp;
-      norm += amp;
-      amp *= 0.5;
-      scale *= 1.88;
+      scale *= PHI;
     }
 
     return total / Math.max(0.000001, norm);
@@ -613,7 +182,6 @@
         const result = lattice.coordinatesFromUV(u, v);
         if (result && Number.isFinite(Number(result.cell256))) {
           const fallback = defaultCells(u, v);
-
           return Object.freeze({
             cell256: Number(result.cell256),
             cell64: Number.isFinite(Number(result.cell64)) ? Number(result.cell64) : fallback.cell64,
@@ -654,65 +222,7 @@
     return SUMMIT_PROVINCES[index];
   }
 
-  function nodalInfluence(u, v, cells) {
-    let landPull = 0;
-    let coastBite = 0;
-    let shelfWidth = 0;
-    let beachSoftness = 0;
-    let ridge = 0;
-    let basin = 0;
-    let peninsula = 0;
-    let greenBelt = 0;
-    let island = 0;
-    let technology = 0;
-    let norm = 0;
-
-    for (let oy = -1; oy <= 1; oy += 1) {
-      const row = cells.row16 + oy;
-      if (row < 0 || row > 15) continue;
-
-      for (let ox = -1; ox <= 1; ox += 1) {
-        const col = (cells.col16 + ox + 16) % 16;
-        const centerU = (col + 0.5) / 16;
-        const centerV = (row + 0.5) / 16;
-        const du = ((u - centerU + 0.5) % 1) - 0.5;
-        const dv = v - centerV;
-        const d = Math.sqrt((du * 16) * (du * 16) + (dv * 16) * (dv * 16));
-        const w = 1 - smoothstep(0.0, 1.45, d);
-
-        if (w <= 0) continue;
-
-        landPull += ((hash(col, row, 1001) - 0.5) * 2) * w;
-        coastBite += hash(col, row, 2002) * w;
-        shelfWidth += hash(col, row, 3003) * w;
-        beachSoftness += hash(col, row, 4004) * w;
-        ridge += hash(col, row, 5005) * w;
-        basin += hash(col, row, 6006) * w;
-        peninsula += hash(col, row, 7007) * w;
-        greenBelt += hash(col, row, 8008) * w;
-        island += hash(col, row, 8508) * w;
-        technology += hash(col, row, 9009) * w;
-        norm += w;
-      }
-    }
-
-    const n = Math.max(0.000001, norm);
-
-    return Object.freeze({
-      landPull: clamp(landPull / n, -1, 1),
-      coastBite: clamp(coastBite / n, 0, 1),
-      shelfWidth: clamp(shelfWidth / n, 0, 1),
-      beachSoftness: clamp(beachSoftness / n, 0, 1),
-      ridge: clamp(ridge / n, 0, 1),
-      basin: clamp(basin / n, 0, 1),
-      peninsula: clamp(peninsula / n, 0, 1),
-      greenBelt: clamp(greenBelt / n, 0, 1),
-      island: clamp(island / n, 0, 1),
-      technology: clamp(technology / n, 0, 1)
-    });
-  }
-
-  function ellipticalScore(lon, lat, item) {
+  function lobeScore(lon, lat, item) {
     const dx = wrapLongitudeDelta(lon, item.lon);
     const dy = lat - item.lat;
     const tilt = degToRad(item.tilt || 0);
@@ -721,169 +231,196 @@
     const x = (dx * cos + dy * sin) / item.rx;
     const y = (-dx * sin + dy * cos) / item.ry;
     const d = Math.sqrt(x * x + y * y);
-
     return item.weight * (1 - d);
   }
 
-  function oceanCutScore(lon, lat, cut) {
-    return Math.max(0, ellipticalScore(lon, lat, cut));
+  function hardOceanCut(lon, lat, cut) {
+    const raw = lobeScore(lon, lat, cut);
+    return Math.max(0, raw);
   }
 
-  function nearestLandBody(lon, lat) {
-    let best = LAND_BODIES[0];
+  function nearestBody(lon, lat) {
+    let best = CONTINENTS[0];
     let bestScore = -Infinity;
 
-    for (const body of LAND_BODIES) {
-      const score = ellipticalScore(lon, lat, body);
+    for (const body of CONTINENTS) {
+      const score = lobeScore(lon, lat, body);
       if (score > bestScore) {
         bestScore = score;
         best = body;
       }
     }
 
-    return Object.freeze({
-      body: best,
-      score: bestScore
-    });
-  }
-
-  function archipelagoScore(lon, lat, u, v, province, nodal) {
-    let bestScore = -Infinity;
-    let bestChain = null;
-    let bestIndex = -1;
-
-    for (const chain of ARCHIPELAGO_CHAINS) {
-      for (let i = 0; i < chain.count; i += 1) {
-        const t = chain.count <= 1 ? 0 : i / (chain.count - 1);
-        const seed = hash(i, chain.count, 17000 + chain.id.length);
-        const wobbleLon = (seed - 0.5) * 11;
-        const wobbleLat = (hash(i, chain.count, 18000 + chain.id.length) - 0.5) * 7;
-        const centerLon = interpolateLongitude(chain.lonA, chain.lonB, t) + wobbleLon;
-        const centerLat = lerp(chain.latA, chain.latB, t) + wobbleLat;
-        const rx = chain.rx * lerp(0.72, 1.20, hash(i, 11, 19000));
-        const ry = chain.ry * lerp(0.70, 1.16, hash(i, 13, 20000));
-        const tilt = lerp(-28, 28, hash(i, 17, 21000));
-        const weight = chain.weight * lerp(0.76, 1.16, hash(i, 19, 22000));
-
-        const score = ellipticalScore(lon, lat, {
-          lon: centerLon,
-          lat: centerLat,
-          rx,
-          ry,
-          weight,
-          tilt
-        });
-
-        if (score > bestScore) {
-          bestScore = score;
-          bestChain = chain;
-          bestIndex = i;
-        }
+    for (const island of ISLAND_CHAINS) {
+      const score = lobeScore(lon, lat, island);
+      if (score > bestScore) {
+        bestScore = score;
+        best = {
+          id: island.id,
+          label: island.id.replaceAll("-", " "),
+          family: "large-island",
+          lon: island.lon,
+          lat: island.lat,
+          rx: island.rx,
+          ry: island.ry,
+          tilt: island.tilt,
+          weight: island.weight
+        };
       }
     }
 
-    const islandNoise =
-      (fbm(u * 12.0 + nodal.island * 0.4, v * 9.2 - province.island * 0.3, 244300, 3) - 0.5) * 0.055 +
-      ridgeNoise(u * 23.0 - 0.17, v * 16.0 + 0.11, 244900, 2) * 0.030;
+    return Object.freeze({ body: best, score: bestScore });
+  }
 
-    const provinceLift = province.island * 0.060 + nodal.island * 0.035;
-    const score = bestScore + islandNoise + provinceLift - 0.045;
+  function nodalInfluence(u, v, cells) {
+    const row = clamp(cells.row16, 0, 15);
+    const col = clamp(cells.col16, 0, 15);
 
+    let pull = 0;
+    let coast = 0;
+    let shelf = 0;
+    let beach = 0;
+    let ridge = 0;
+    let basin = 0;
+    let peninsula = 0;
+    let green = 0;
+    let norm = 0;
+
+    for (let oy = -1; oy <= 1; oy += 1) {
+      const yy = row + oy;
+      if (yy < 0 || yy > 15) continue;
+
+      for (let ox = -1; ox <= 1; ox += 1) {
+        const xx = (col + ox + 16) % 16;
+        const centerU = (xx + 0.5) / 16;
+        const centerV = (yy + 0.5) / 16;
+        const du = ((u - centerU + 0.5) % 1) - 0.5;
+        const dv = v - centerV;
+        const dist = Math.sqrt((du * 16) ** 2 + (dv * 16) ** 2);
+        const w = 1 - smoothstep(0, 1.45, dist);
+        if (w <= 0) continue;
+
+        pull += ((hash(xx, yy, 1001) - 0.5) * 2) * w;
+        coast += hash(xx, yy, 2002) * w;
+        shelf += hash(xx, yy, 3003) * w;
+        beach += hash(xx, yy, 4004) * w;
+        ridge += hash(xx, yy, 5005) * w;
+        basin += hash(xx, yy, 6006) * w;
+        peninsula += hash(xx, yy, 7007) * w;
+        green += hash(xx, yy, 8008) * w;
+        norm += w;
+      }
+    }
+
+    const n = Math.max(0.000001, norm);
     return Object.freeze({
-      score,
-      chain: bestChain,
-      index: bestIndex
+      landPull: clamp(pull / n, -1, 1),
+      coastBite: clamp(coast / n, 0, 1),
+      shelfWidth: clamp(shelf / n, 0, 1),
+      beachSoftness: clamp(beach / n, 0, 1),
+      ridge: clamp(ridge / n, 0, 1),
+      basin: clamp(basin / n, 0, 1),
+      peninsula: clamp(peninsula / n, 0, 1),
+      greenBelt: clamp(green / n, 0, 1)
     });
   }
 
-  function landFieldDetails(u, v) {
+  function landFieldDetails(uInput, vInput) {
+    const u = wrap01(Number.isFinite(Number(uInput)) ? Number(uInput) : 0);
+    const v = clamp(Number.isFinite(Number(vInput)) ? Number(vInput) : 0, 0, 1);
     const { longitude, latitude } = uvToLonLat(u, v);
     const cells = latticeCells(u, v);
     const province = summitProvinceFor(cells, longitude, latitude);
     const nodal = nodalInfluence(u, v, cells);
-    const nearest = nearestLandBody(longitude, latitude);
 
-    let bodyScore = -Infinity;
+    const nearest = nearestBody(longitude, latitude);
+    let baseLand = nearest.score;
 
-    for (const body of LAND_BODIES) {
-      const local = ellipticalScore(longitude, latitude, body);
-      const localTexture =
-        (fbm(u * 2.15 + body.lon * 0.002, v * 1.75 - body.lat * 0.003, 311000 + body.id.length, 4) - 0.5) * 0.070 +
-        (ridgeNoise(u * 7.2 - body.lat * 0.004, v * 5.6 + body.lon * 0.002, 312000 + body.id.length, 3) - 0.5) * 0.040;
-
-      bodyScore = Math.max(bodyScore, local + localTexture);
-    }
-
-    const archipelago = archipelagoScore(longitude, latitude, u, v, province, nodal);
-
-    let oceanCut = 0;
-    let strongestCut = null;
-
-    for (const cut of OCEAN_CORRIDORS) {
-      const score = oceanCutScore(longitude, latitude, cut);
-      if (score > oceanCut) {
-        oceanCut = score;
-        strongestCut = cut;
+    for (const body of CONTINENTS) {
+      const score = lobeScore(longitude, latitude, body);
+      if (score > -0.34) {
+        const localNoise =
+          (fbm(u * 3.2 + body.lon * 0.01, v * 3.7 + body.lat * 0.01, 910001, 5) - 0.5) * 0.150 +
+          (fbm(u * 8.2 - body.lat * 0.01, v * 7.6 + body.lon * 0.01, 910777, 4) - 0.5) * 0.070;
+        baseLand = Math.max(baseLand, score + localNoise);
       }
     }
 
-    const continentalTexture =
-      (fbm(u * 1.28 + 0.04, v * 1.02 - 0.02, 411000, 5) - 0.5) * 0.078 +
-      (fbm(u * 4.80 - 0.18, v * 3.85 + 0.07, 411700, 4) - 0.5) * 0.052;
+    for (const island of ISLAND_CHAINS) {
+      const score = lobeScore(longitude, latitude, island);
+      if (score > -0.18) {
+        const islandNoise = (fbm(u * 10.4, v * 9.6, 911111, 3) - 0.5) * 0.095;
+        baseLand = Math.max(baseLand, score + islandNoise - 0.020);
+      }
+    }
 
-    const coastFracture =
-      ridgeNoise(u * 13.0 + nodal.coastBite * 0.31, v * 9.8 - nodal.peninsula * 0.19, 414300, 3) *
-      (0.020 + province.coastBite * 0.052 + nodal.coastBite * 0.034);
+    let cut = 0;
+    let cutId = "none";
 
-    const straitThread =
-      ridgeNoise(u * 18.0 - 0.33, v * 13.5 + 0.21, 415100, 2) *
-      smoothstep(0.54, 0.92, nodal.coastBite) *
-      (0.014 + province.coastBite * 0.018);
+    for (const oceanCut of HARD_OCEAN_CUTS) {
+      const c = hardOceanCut(longitude, latitude, oceanCut);
+      if (c > cut) {
+        cut = c;
+        cutId = oceanCut.id;
+      }
+    }
 
-    const peninsulaPull =
-      smoothstep(0.50, 0.94, nodal.peninsula) *
-      (0.012 + province.coastBite * 0.014) *
-      (Math.sin((u * 9.0 - v * 6.5) * Math.PI * 2) * 0.5 + 0.5);
+    const coastlineNoise =
+      (fbm(u * 5.4 + nodal.coastBite * 0.2, v * 5.0 - nodal.peninsula * 0.2, 912001, 4) - 0.5) *
+      (0.090 + province.coastBite * 0.080 + nodal.coastBite * 0.050);
 
-    const greenLift = smoothstep(0.62, 0.96, nodal.greenBelt) * province.green * 0.014;
+    const fineCut =
+      smoothstep(0.60, 0.98, nodal.coastBite) *
+      (0.030 + province.coastBite * 0.040) *
+      (Math.sin((u * 13.0 - v * 7.0) * Math.PI * 2) * 0.5 + 0.5);
+
+    const polarRestraint = smoothstep(74, 90, Math.abs(latitude)) * 0.155;
+    const provinceLift = province.landPressure;
     const nodalLift = nodal.landPull * 0.040;
-    const polarRestraint = smoothstep(78, 90, Math.abs(latitude)) * 0.130;
-
-    const baseScore = Math.max(bodyScore, archipelago.score);
-    const archipelagoDominant = archipelago.score > bodyScore;
+    const greenLift = smoothstep(0.72, 0.98, nodal.greenBelt) * province.green * 0.012;
 
     const raw =
-      baseScore +
-      continentalTexture +
-      province.landPressure +
+      baseLand +
+      coastlineNoise +
+      provinceLift +
       nodalLift +
-      greenLift +
-      peninsulaPull -
-      oceanCut * (0.90 + province.coastBite * 0.48) -
-      coastFracture -
-      straitThread -
+      greenLift -
+      cut * (0.72 + province.coastBite * 0.25) -
+      fineCut -
       polarRestraint -
-      0.050;
+      0.022;
+
+    const beachWidth = clamp(
+      0.026 + province.beach * 0.036 + nodal.beachSoftness * 0.024 - nodal.ridge * 0.010,
+      0.024,
+      0.082
+    );
+
+    const shelfWidth = clamp(
+      0.120 + province.shelf * 0.090 + nodal.shelfWidth * 0.060 + province.basin * 0.020,
+      0.110,
+      0.240
+    );
+
+    const edge = clamp(1 - Math.abs(raw) / Math.max(0.08, beachWidth + shelfWidth * 0.48), 0, 1);
 
     return Object.freeze({
-      raw,
-      baseScore,
-      bodyScore,
-      archipelagoScore: archipelago.score,
-      archipelagoDominant,
-      archipelagoChain: archipelago.chain,
-      archipelagoIndex: archipelago.index,
+      u,
+      v,
+      longitude,
+      latitude,
       cells,
       province,
       nodal,
-      oceanCut,
-      strongestCut,
-      coastFracture,
-      straitThread,
-      peninsulaPull,
-      longitude,
-      latitude,
-      nearest
+      nearest,
+      raw,
+      hardOceanCut: cut,
+      hardOceanCutId: cutId,
+      beachWidth,
+      shelfWidth,
+      edge,
+      continentSeparationActive: true,
+      hardOceanCutsActive: true
     });
   }
 
@@ -891,57 +428,22 @@
     return landFieldDetails(u, v).raw;
   }
 
-  function beachWidthFor(details) {
-    const { province, nodal, archipelagoDominant } = details;
-
-    return clamp(
-      0.030 +
-      province.beach * 0.045 +
-      nodal.beachSoftness * 0.030 +
-      (archipelagoDominant ? 0.010 : 0) -
-      nodal.ridge * 0.010,
-      0.026,
-      0.092
-    );
-  }
-
-  function shelfWidthFor(details) {
-    const { province, nodal, archipelagoDominant } = details;
-
-    return clamp(
-      0.100 +
-      province.shelf * 0.112 +
-      nodal.shelfWidth * 0.066 +
-      province.basin * 0.022 +
-      (archipelagoDominant ? 0.030 : 0),
-      0.092,
-      0.260
-    );
-  }
-
-  function coastalEdge(raw, beachWidth, shelfWidth) {
-    const width = Math.max(0.082, beachWidth + shelfWidth * 0.48);
-    return clamp(1 - Math.abs(raw) / width, 0, 1);
-  }
-
   function elevationValue(u, v, raw, body, lat, details) {
-    const bodyPressure = clamp((raw + 0.08) / 0.62, 0, 1);
+    const bodyPressure = clamp((raw + 0.08) / 0.70, 0, 1);
     const ridgeField =
-      ridgeNoise(u * 2.1 + 0.16, v * 1.8 - 0.13, 522000, 5) * 0.48 +
-      ridgeNoise(u * 6.3 - 0.08, v * 5.4 + 0.19, 522600, 4) * 0.29;
-
-    const province = details.province;
-    const nodal = details.nodal;
+      fbm(u * 1.9 + 0.16, v * 1.6 - 0.13, 922000, 5) * 0.48 +
+      fbm(u * 5.3 - 0.08, v * 4.4 + 0.19, 922600, 4) * 0.31;
 
     const mountainBias =
-      body.family === "continental" ? 0.11 :
-      body.family === "subcontinental" ? 0.075 :
-      body.family === "polar" ? 0.035 :
-      0.018;
+      body.family === "continental" ? 0.12 :
+      body.family === "subcontinental" ? 0.08 :
+      body.family === "polar" ? 0.04 :
+      body.family === "large-island" ? 0.03 :
+      0.02;
 
-    const summitRidge = province.ridge * 0.20 + nodal.ridge * 0.14;
-    const basinSoftening = province.basin * 0.10 + nodal.basin * 0.05;
-    const coastalLow = details.edge * 0.18;
+    const summitRidge = details.province.ridge * 0.20 + details.nodal.ridge * 0.14;
+    const basinSoftening = details.province.basin * 0.10 + details.nodal.basin * 0.05;
+    const coastalLow = details.edge * 0.20;
     const polarLift = smoothstep(62, 84, Math.abs(lat)) * 0.04;
 
     return clamp(
@@ -959,37 +461,26 @@
 
   function classifyLandTerrain(elev, u, v, body, lat, details) {
     if (Math.abs(lat) >= 72) return "polar-ice";
-    if (details.edge > 0.64 && elev < 0.40) return "coastal-lowland";
-    if (details.archipelagoDominant && elev < 0.52) return "island-lowland";
-    if (elev >= 0.82) return "mountain";
-    if (elev >= 0.67) return "highland";
-    if (elev >= 0.52) return "plateau";
+    if (details.edge > 0.60 && elev < 0.42) return "coastal-lowland";
+    if (elev >= 0.80) return "mountain";
+    if (elev >= 0.66) return "highland";
+    if (elev >= 0.51) return "plateau";
 
     const wetness =
-      fbm(u * 2.2 - 0.11, v * 1.9 + 0.21, 533000, 4) * 0.66 +
+      fbm(u * 2.2 - 0.11, v * 1.9 + 0.21, 933000, 4) * 0.68 +
       details.province.basin * 0.22 +
-      details.nodal.basin * 0.11;
+      details.nodal.basin * 0.10;
 
     if (wetness > 0.72 && Math.abs(lat) < 42) return "wetland";
     if (wetness > 0.52 && Math.abs(lat) < 58) return "forest";
-
     if (body.family === "large-island") return "island-lowland";
     return "lowland";
   }
 
-  function topologyFor(terrainClass, raw, body, details) {
-    if (terrainClass === "ocean") {
-      if (details.strongestCut) return "deep-ocean-corridor";
-      return "deep-ocean";
-    }
-
+  function topologyFor(terrainClass, body, details) {
+    if (terrainClass === "ocean") return "deep-ocean";
     if (terrainClass === "shelf") return "continental-shelf";
-    if (terrainClass === "beach") {
-      if (details.archipelagoDominant) return "island-beach-band";
-      if (details.nodal.beachSoftness > 0.62) return "cloud-soft-beach-band";
-      return "coastal-beach-band";
-    }
-
+    if (terrainClass === "beach") return details.nodal.beachSoftness > 0.62 ? "soft-beach-band" : "coastal-beach-band";
     if (terrainClass === "polar-ice") return "polar-cap";
     if (terrainClass === "mountain") return "ancient-mountain-belt";
     if (terrainClass === "highland") return "highland-shoulder";
@@ -997,7 +488,6 @@
     if (terrainClass === "wetland") return "protected-wetland-basin";
     if (terrainClass === "forest") return "restoration-green-belt";
     if (terrainClass === "coastal-lowland") return "living-coastal-lowland";
-    if (details.archipelagoDominant) return "archipelago-island-body";
     if (body.family === "large-island") return "large-island-body";
     if (body.family === "subcontinental") return "subcontinental-core";
     if (body.family === "polar") return "polar-landmass";
@@ -1023,7 +513,6 @@
 
   function geologyHintFor(terrainClass, details) {
     if (terrainClass === "beach") {
-      if (details.archipelagoDominant) return "opal-archipelago-coast";
       if (details.province.name === "Joy") return "white-opal-bright-coast";
       if (details.province.name === "Dignity") return "black-diamond-mineral-sand";
       if (details.province.name === "Stewardship") return "restoration-shelf-green-gold";
@@ -1034,31 +523,24 @@
     if (terrainClass === "shelf") return "coastal-shelf-transition";
     if (terrainClass === "wetland") return "protected-water-memory";
     if (terrainClass === "forest") return "living-green-belt";
-    if (terrainClass === "island-lowland") return "archipelago-living-edge";
-    return "audralia-earth-legacy-living-surface";
+    return "audralia-separated-continental-living-surface";
   }
 
   function sampleLandmap(uInput, vInput) {
     const u = wrap01(Number.isFinite(Number(uInput)) ? Number(uInput) : 0);
     const v = clamp(Number.isFinite(Number(vInput)) ? Number(vInput) : 0, 0, 1);
-    const detailsBase = landFieldDetails(u, v);
-    const { longitude, latitude, cells, province, nodal } = detailsBase;
-    const raw = detailsBase.raw;
-    const body = detailsBase.nearest.body;
+    const details = landFieldDetails(u, v);
+    const { longitude, latitude, cells, province, nodal, raw, nearest } = details;
+    const body = nearest.body;
 
-    const beachWidth = beachWidthFor(detailsBase);
-    const shelfWidth = shelfWidthFor(detailsBase);
-    const edge = coastalEdge(raw, beachWidth, shelfWidth);
-    const details = Object.freeze({ ...detailsBase, edge, beachWidth, shelfWidth });
-
-    const isShelf = raw <= 0 && raw > -shelfWidth;
-    const isBeach = raw > 0 && raw <= beachWidth;
-    const isOcean = raw <= -shelfWidth;
-    const isLandCore = raw > beachWidth;
+    const isShelf = raw <= 0 && raw > -details.shelfWidth;
+    const isBeach = raw > 0 && raw <= details.beachWidth;
+    const isOcean = raw <= -details.shelfWidth;
+    const isLandCore = raw > details.beachWidth;
 
     const polarCandidate = Math.abs(latitude) >= 72 && (isLandCore || isBeach);
     const polarNoise = fbm(u * 2.4 + 0.33, v * 2.0 - 0.17, 944000, 4);
-    const isPolarIce = polarCandidate && polarNoise > 0.24;
+    const isPolarIce = polarCandidate && polarNoise > 0.22;
 
     let terrainClass = "ocean";
     let elevationScore = 0;
@@ -1068,10 +550,10 @@
       elevationScore = 0;
     } else if (isShelf) {
       terrainClass = "shelf";
-      elevationScore = 0.07 + smoothstep(-shelfWidth, 0, raw) * 0.12;
+      elevationScore = 0.08 + smoothstep(-details.shelfWidth, 0, raw) * 0.12;
     } else if (isBeach && !isPolarIce) {
       terrainClass = "beach";
-      elevationScore = 0.15 + smoothstep(0, beachWidth, raw) * 0.08;
+      elevationScore = 0.16 + smoothstep(0, details.beachWidth, raw) * 0.08;
     } else {
       elevationScore = elevationValue(u, v, raw, body, latitude, details);
       terrainClass = isPolarIce ? "polar-ice" : classifyLandTerrain(elevationScore, u, v, body, latitude, raw, details);
@@ -1079,18 +561,17 @@
 
     const quadrant = quadrantFrom(longitude, latitude);
     const band = bandFrom(latitude);
-    const topology = topologyFor(terrainClass, raw, body, details);
+    const topology = topologyFor(terrainClass, body, details);
     const elevation = elevationLabel(terrainClass, elevationScore);
 
     const shelf = isShelf
-      ? smoothstep(-shelfWidth, 0, raw)
+      ? smoothstep(-details.shelfWidth, 0, raw)
       : isBeach
         ? 1
         : isOcean
-          ? clamp(smoothstep(-shelfWidth * 2.1, -shelfWidth, raw) * 0.22, 0, 0.22)
-          : clamp(1 - smoothstep(beachWidth, beachWidth + 0.25, raw), 0, 1) * 0.28;
+          ? clamp(smoothstep(-details.shelfWidth * 2.1, -details.shelfWidth, raw) * 0.22, 0, 0.22)
+          : clamp(1 - smoothstep(details.beachWidth, details.beachWidth + 0.25, raw), 0, 1) * 0.28;
 
-    const beachEdge = edge;
     const primarySummit = province.name;
     const internalSummit = internalSummitFromCell(cells.cell256, cells.cell64, cells.cell16);
 
@@ -1113,10 +594,10 @@
       summitProvinceRole: province.role,
       summitTechnology: province.technology,
 
-      landmassId: details.archipelagoDominant && details.archipelagoChain ? details.archipelagoChain.id : body.id,
-      landmassLabel: details.archipelagoDominant && details.archipelagoChain ? details.archipelagoChain.label : body.label,
-      landmassClass: details.archipelagoDominant ? "archipelago-island-chain" : body.className,
-      landmassFamily: details.archipelagoDominant ? "archipelago" : body.family,
+      landmassId: body.id,
+      landmassLabel: body.label,
+      landmassClass: body.family,
+      landmassFamily: body.family,
 
       terrainClass,
       topology,
@@ -1124,14 +605,11 @@
       elevationScore,
 
       landScore: raw,
-      bodyScore: details.bodyScore,
-      archipelagoScore: details.archipelagoScore,
-      oceanCut: details.oceanCut,
-      coastline: edge,
+      coastline: details.edge,
       shelf,
-      beachEdge,
-      beachWidth,
-      shelfWidth,
+      beachEdge: details.edge,
+      beachWidth: details.beachWidth,
+      shelfWidth: details.shelfWidth,
 
       isOcean,
       isLand: isLandCore || isBeach || isPolarIce,
@@ -1141,7 +619,6 @@
 
       majorLandmass: body.family === "continental" || body.family === "subcontinental",
       largeIsland: body.family === "large-island",
-      archipelagoIsland: Boolean(details.archipelagoDominant),
       continentalBody: body.family === "continental",
       subcontinentalBody: body.family === "subcontinental",
 
@@ -1153,15 +630,15 @@
       nodalBasin: nodal.basin,
       nodalPeninsula: nodal.peninsula,
       nodalGreenBelt: nodal.greenBelt,
-      nodalIsland: nodal.island,
-      nodalTechnology: nodal.technology,
 
+      hardOceanCut: details.hardOceanCut,
+      hardOceanCutId: details.hardOceanCutId,
+      continentSeparationActive: true,
       oneBigGlobCorrected: true,
-      landmassSeparationActive: true,
-      oceanCorridorsActive: true,
-      archipelagoChainsActive: true,
-      baysInletsStraitsActive: true,
-      jaggedCoastlinesActive: true,
+      oceanCutAuthorityActive: true,
+      separatedContinents: true,
+      visibleSeaways: true,
+      bayInletAuthority: true,
 
       lattice256AsHiddenScaffold: true,
       nineSummitsAsProvinceFields: true,
@@ -1174,7 +651,7 @@
       canvasOwnsFootprint: false,
       landmapOwnsFootprint: true,
       beachBandAvailable: true,
-      wetBeachTransition: isBeach && edge > 0.42,
+      wetBeachTransition: isBeach && details.edge > 0.42,
 
       geologyHint: geologyHintFor(terrainClass, details)
     });
@@ -1186,7 +663,7 @@
     let shelf = 0;
     let ocean = 0;
     let polar = 0;
-    let archipelago = 0;
+    let hardCutCells = 0;
     let total = 0;
 
     for (let y = 0; y < samplesHigh; y += 1) {
@@ -1198,8 +675,8 @@
 
         total += 1;
 
+        if (map.hardOceanCut > 0.12) hardCutCells += 1;
         if (map.isPolarIce) polar += 1;
-        if (map.archipelagoIsland) archipelago += 1;
         if (map.isBeach) beach += 1;
         else if (map.isShelf) shelf += 1;
         else if (map.isOcean) ocean += 1;
@@ -1218,9 +695,11 @@
       oceanRatio: Number(((ocean + shelf) / denom).toFixed(4)),
       deepOceanRatio: Number((ocean / denom).toFixed(4)),
       polarRatio: Number((polar / denom).toFixed(4)),
-      archipelagoRatio: Number((archipelago / denom).toFixed(4)),
+      hardOceanCutRatio: Number((hardCutCells / denom).toFixed(4)),
       targetLandRatio: TARGET.landRatioApprox,
-      targetOceanRatio: TARGET.oceanRatioApprox
+      targetOceanRatio: TARGET.oceanRatioApprox,
+      oneBigGlobCorrected: true,
+      hardOceanCutsActive: true
     });
   }
 
@@ -1234,35 +713,25 @@
       ownsFootprint: true,
       canvasOwnsFootprint: false,
       target: TARGET,
+      ratioEstimate: estimateRatios(96, 48),
       primaryTarget: "/assets/audralia/audralia.landmap.js",
       downstreamTargets: [
         "/assets/audralia/audralia.hydrology.js",
         "/assets/audralia/audralia.topology.js",
         "/assets/audralia/audralia.elevation.js",
         "/assets/audralia/audralia.land.surface.js",
-        "/assets/audralia/audralia.canvas.js"
+        "/assets/audralia/audralia.canvas.js",
+        "/showroom/globe/audralia/index.js"
       ],
       oneBigGlobCorrected: true,
-      landmassSeparationActive: true,
-      oceanCorridorsActive: true,
-      archipelagoChainsActive: true,
-      baysInletsStraitsActive: true,
-      jaggedCoastlinesActive: true,
-      offshoreFragmentsActive: true,
-      earthLegacy: true,
-      thirtyBillionYearFuture: true,
-      highTechnologyHiddenInsideNature: true,
-      stewardshipWorld: true,
-      lattice256AsHiddenScaffold: true,
-      nineSummitsAsProvinceFields: true,
-      organicLandforms: true,
-      organicCoastlines: true,
+      continentSeparationActive: true,
+      hardOceanCutAuthority: true,
+      visibleSeaways: true,
+      bayAndInletAuthority: true,
       variableBeachBands: true,
       variableShelfZones: true,
+      islandChains: true,
       majorLandmasses: true,
-      subcontinentalBodies: true,
-      largeIslands: true,
-      smallIslandScatterOnly: false,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false
@@ -1275,9 +744,9 @@
     previousContract: PREVIOUS_CONTRACT,
     version: VERSION,
     target: TARGET,
-    landBodies: LAND_BODIES,
-    oceanCorridors: OCEAN_CORRIDORS,
-    archipelagoChains: ARCHIPELAGO_CHAINS,
+    continents: CONTINENTS,
+    hardOceanCuts: HARD_OCEAN_CUTS,
+    islandChains: ISLAND_CHAINS,
     summitProvinces: SUMMIT_PROVINCES,
     sampleLandmap,
     sample: sampleLandmap,
@@ -1296,28 +765,15 @@
   document.documentElement.dataset.audraliaLandmapOwnsFootprint = "true";
   document.documentElement.dataset.audraliaCanvasOwnsFootprint = "false";
   document.documentElement.dataset.audraliaOneBigGlobCorrected = "true";
-  document.documentElement.dataset.audraliaLandmassSeparationActive = "true";
-  document.documentElement.dataset.audraliaOceanCorridorsActive = "true";
-  document.documentElement.dataset.audraliaArchipelagoChainsActive = "true";
-  document.documentElement.dataset.audraliaBaysInletsStraitsActive = "true";
-  document.documentElement.dataset.audraliaJaggedCoastlinesActive = "true";
-  document.documentElement.dataset.audraliaOffshoreFragmentsActive = "true";
-  document.documentElement.dataset.audraliaEarthLegacy = "true";
-  document.documentElement.dataset.audraliaThirtyBillionYearFuture = "true";
-  document.documentElement.dataset.audraliaHighTechnologyHiddenInsideNature = "true";
-  document.documentElement.dataset.audraliaStewardshipWorld = "true";
-  document.documentElement.dataset.audraliaLattice256AsHiddenScaffold = "true";
-  document.documentElement.dataset.audraliaNineSummitsAsProvinceFields = "true";
-  document.documentElement.dataset.audraliaOrganicLandforms = "true";
-  document.documentElement.dataset.audraliaOrganicCoastlines = "true";
+  document.documentElement.dataset.audraliaContinentSeparationActive = "true";
+  document.documentElement.dataset.audraliaHardOceanCutAuthority = "true";
+  document.documentElement.dataset.audraliaVisibleSeaways = "true";
+  document.documentElement.dataset.audraliaBayAndInletAuthority = "true";
+  document.documentElement.dataset.audraliaIslandChains = "true";
   document.documentElement.dataset.audraliaVariableBeachBands = "true";
   document.documentElement.dataset.audraliaVariableShelfZones = "true";
-  document.documentElement.dataset.audraliaMajorLandmasses = "true";
-  document.documentElement.dataset.audraliaSubcontinentalBodies = "true";
-  document.documentElement.dataset.audraliaLargeIslands = "true";
-  document.documentElement.dataset.audraliaSmallIslandScatterOnly = "false";
-  document.documentElement.dataset.audraliaTargetLandRatio = "28_to_40_percent";
-  document.documentElement.dataset.audraliaTargetOceanRatio = "60_to_72_percent";
+  document.documentElement.dataset.audraliaTargetLandRatio = "28_to_38_percent";
+  document.documentElement.dataset.audraliaTargetOceanRatio = "62_to_72_percent";
   document.documentElement.dataset.generatedImage = "false";
   document.documentElement.dataset.graphicBox = "false";
   document.documentElement.dataset.visualPassClaimed = "false";

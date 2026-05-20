@@ -1,45 +1,58 @@
-// /assets/audralia/clean/audralia.runtime.js
-// AUDRALIA_CLEAN_RUNTIME_CONTAMINATION_RECOVERY_SHIM_TNT_v1
+// /assets/audralia/audralia.runtime.js
+// AUDRALIA_G2_5_RUNTIME_SHIM_PARENT_DELEGATION_REPAIR_TNT_v3
 // Full-file replacement.
-// Purpose: remove misplaced route-bridge code from the clean runtime position and restore this file as a neutral clean-runtime compatibility shim.
-// Target only: /assets/audralia/clean/audralia.runtime.js
+// Purpose: repair the live legacy runtime import path so it publishes a real ESM contract, loads the clean parent engine, delegates mount, and reports parent-confirmed visibility.
+// Target only: /assets/audralia/audralia.runtime.js
 // Delegates to: /assets/audralia/clean/audralia.engine.js
-// Does not own: /showroom/globe/audralia/index.js, route bridge logic, route HTML, legacy runtime path, continents child, motion child, sky child, parent Globe, Characters, Gauges, Showroom, generated image, GraphicBox, or visual-pass claim.
+// Does not own: /showroom/globe/audralia/index.html, /showroom/globe/audralia/index.js, /assets/audralia/clean/audralia.runtime.js, continents child, motion child, sky child, parent Globe, Characters, Gauges, Showroom, generated image, GraphicBox, or visual-pass claim.
 
-const CONTRACT = "AUDRALIA_CLEAN_RUNTIME_CONTAMINATION_RECOVERY_SHIM_TNT_v1";
-const TARGET = "/assets/audralia/clean/audralia.runtime.js";
-const CLEAN_PARENT_PATH = "/assets/audralia/clean/audralia.engine.js";
+const CONTRACT = "AUDRALIA_G2_5_RUNTIME_SHIM_PARENT_DELEGATION_REPAIR_TNT_v3";
+const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_ESM_AWAITED_PARENT_HANDOFF_RUNTIME_SHIM_TNT_v2_1";
+const FAMILY = "AUDRALIA_G2_5_SIMPLE_ENGINE_CHILD_SPLIT_TNT_v1";
+
+const TARGET = "/assets/audralia/audralia.runtime.js";
 const ROUTE = "/showroom/globe/audralia/";
+const CLEAN_PARENT_PATH = "/assets/audralia/clean/audralia.engine.js";
+const CLEAN_PARENT_CACHE_KEY = "AUDRALIA_G2_5_PARENT_CONTRACT_ALIGNMENT_TNT_v1";
+const CLEAN_PARENT_IMPORT = `${CLEAN_PARENT_PATH}?v=${encodeURIComponent(CLEAN_PARENT_CACHE_KEY)}`;
+
+const WAIT_PARENT_MS = 2400;
+const WAIT_VISIBLE_MS = 2800;
+const POLL_MS = 40;
 
 const PARENT_KEYS = [
-  "AUDRALIA_ENGINE",
-  "AUDRALIA_CLEAN_CANVAS_ENGINE",
   "AUDRALIA_CLEAN_CANVAS_AUTHORITY",
-  "AUDRALIA_CLEAN_ENGINE_PARENT"
+  "AUDRALIA_CLEAN_CANVAS_ENGINE",
+  "AUDRALIA_CLEAN_ENGINE_PARENT",
+  "AUDRALIA_ENGINE"
 ];
-
-const WAIT_VISIBLE_MS = 1600;
-const POLL_MS = 40;
 
 const state = {
   contract: CONTRACT,
+  previousContract: PREVIOUS_CONTRACT,
+  family: FAMILY,
   target: TARGET,
-  cleanParentPath: CLEAN_PARENT_PATH,
   route: ROUTE,
-  recovery: true,
-  routeBridgeCodeRemoved: true,
-  cleanRuntimeShimActive: true,
+  cleanParentPath: CLEAN_PARENT_PATH,
+  cleanParentImport: CLEAN_PARENT_IMPORT,
+  shimActive: true,
+  esmContractExported: true,
+  defaultExportContractBound: true,
   parentRequested: false,
   parentLoaded: false,
   parentDelegated: false,
+  parentAwaited: false,
+  mountCalled: false,
   mounted: false,
-  formVisible: false,
   ready: false,
+  formVisible: false,
   parentStatus: null,
+  lastScope: "module-load",
   errors: []
 };
 
-let parentPromise = null;
+let parentLoadPromise = null;
+let lastMountPromise = null;
 
 function hasWindow() {
   return typeof window !== "undefined";
@@ -61,14 +74,18 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function recordError(scope, error) {
-  const message = error && error.message ? error.message : String(error);
-  state.errors.push({ scope, message, time: nowIso() });
-  publishReceipt();
-}
-
 function isElement(value) {
   return Boolean(value && value.nodeType === 1);
+}
+
+function recordError(scope, error) {
+  const message = error && error.message ? error.message : String(error);
+  state.errors.push({
+    scope,
+    message,
+    time: nowIso()
+  });
+  publishReceipt(scope);
 }
 
 function resolveMountTarget(input) {
@@ -102,114 +119,25 @@ function readParent() {
   for (const key of PARENT_KEYS) {
     const value = window[key];
 
-    if (value && value !== api && typeof value === "object") {
+    if (!value) continue;
+    if (value === api) continue;
+    if (value === window.AUDRALIA_RUNTIME) continue;
+    if (value === window.AUDRALIA_CLEAN_CANVAS_RUNTIME) continue;
+
+    if (typeof value === "object" && typeof value.mount === "function") {
+      return value;
+    }
+
+    if (typeof value === "object" && typeof value.render === "function") {
+      return value;
+    }
+
+    if (typeof value === "object" && typeof value.getStatus === "function") {
       return value;
     }
   }
 
   return null;
-}
-
-function scriptAlreadyLoaded(src) {
-  if (!hasDocument()) return false;
-
-  return Array.from(document.scripts).some((script) => {
-    const raw = script.getAttribute("src") || "";
-    return raw === src || raw.startsWith(`${src}?`) || raw.endsWith(src);
-  });
-}
-
-function loadClassicScriptOnce(src) {
-  return new Promise((resolve, reject) => {
-    if (!hasDocument()) {
-      reject(new Error("Document unavailable; cannot load clean parent engine."));
-      return;
-    }
-
-    if (readParent()) {
-      resolve({ src, loaded: true, reused: true });
-      return;
-    }
-
-    if (scriptAlreadyLoaded(src)) {
-      let tries = 0;
-
-      const check = () => {
-        if (readParent()) {
-          resolve({ src, loaded: true, reused: true });
-          return;
-        }
-
-        tries += 1;
-
-        if (tries > 30) {
-          reject(new Error(`Clean parent script exists but parent global was not found: ${src}`));
-          return;
-        }
-
-        setTimeout(check, POLL_MS);
-      };
-
-      check();
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.src = src;
-    script.async = false;
-    script.defer = false;
-    script.setAttribute("data-audralia-clean-runtime-loader", CONTRACT);
-    script.setAttribute("data-audralia-clean-parent-path", src);
-
-    script.onload = () => resolve({ src, loaded: true, reused: false });
-    script.onerror = () => reject(new Error(`Clean parent engine failed to load: ${src}`));
-
-    document.head.appendChild(script);
-  });
-}
-
-async function loadParent() {
-  const existing = readParent();
-
-  if (existing) {
-    state.parentRequested = true;
-    state.parentLoaded = true;
-    publishReceipt();
-    return existing;
-  }
-
-  if (parentPromise) return parentPromise;
-
-  state.parentRequested = true;
-  publishReceipt();
-
-  parentPromise = loadClassicScriptOnce(CLEAN_PARENT_PATH)
-    .then(async () => {
-      let parent = readParent();
-
-      if (!parent) {
-        for (let i = 0; i < 30; i += 1) {
-          await sleep(POLL_MS);
-          parent = readParent();
-          if (parent) break;
-        }
-      }
-
-      if (!parent) {
-        throw new Error("Clean parent engine loaded but did not publish a recognized parent global.");
-      }
-
-      state.parentLoaded = true;
-      publishReceipt();
-
-      return parent;
-    })
-    .catch((error) => {
-      recordError("loadParent", error);
-      throw error;
-    });
-
-  return parentPromise;
 }
 
 function getParentStatus(parent = readParent()) {
@@ -226,12 +154,123 @@ function getParentStatus(parent = readParent()) {
   return null;
 }
 
+function scriptAlreadyLoaded(src) {
+  if (!hasDocument()) return false;
+
+  return Array.from(document.scripts).some((script) => {
+    const raw = script.getAttribute("src") || "";
+    return raw === src || raw.startsWith(`${src}?`) || raw.endsWith(src);
+  });
+}
+
+function appendParentScript(src) {
+  return new Promise((resolve, reject) => {
+    if (!hasDocument()) {
+      reject(new Error("Document unavailable; cannot append clean parent engine script."));
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = src;
+    script.async = false;
+    script.defer = false;
+    script.setAttribute("data-audralia-runtime-parent-loader", CONTRACT);
+    script.setAttribute("data-audralia-clean-parent-path", CLEAN_PARENT_PATH);
+
+    script.onload = () => resolve({ src, loaded: true, reused: false });
+    script.onerror = () => reject(new Error(`Clean parent engine failed to load: ${src}`));
+
+    document.head.appendChild(script);
+  });
+}
+
+async function waitForParent(timeoutMs = WAIT_PARENT_MS) {
+  const start = Date.now();
+
+  while (Date.now() - start <= timeoutMs) {
+    const parent = readParent();
+
+    if (parent) {
+      state.parentLoaded = true;
+      publishReceipt("parent-found");
+      return parent;
+    }
+
+    await sleep(POLL_MS);
+  }
+
+  return null;
+}
+
+async function loadParent() {
+  const existing = readParent();
+
+  if (existing) {
+    state.parentRequested = true;
+    state.parentLoaded = true;
+    publishReceipt("parent-existing");
+    return existing;
+  }
+
+  if (parentLoadPromise) return parentLoadPromise;
+
+  state.parentRequested = true;
+  state.lastScope = "load-parent";
+  publishReceipt("load-parent-start");
+
+  parentLoadPromise = (async () => {
+    if (scriptAlreadyLoaded(CLEAN_PARENT_PATH) || scriptAlreadyLoaded(CLEAN_PARENT_IMPORT)) {
+      const parentFromExistingScript = await waitForParent(WAIT_PARENT_MS);
+
+      if (parentFromExistingScript) {
+        return parentFromExistingScript;
+      }
+    }
+
+    await appendParentScript(CLEAN_PARENT_IMPORT);
+
+    const parent = await waitForParent(WAIT_PARENT_MS);
+
+    if (!parent) {
+      throw new Error("Clean parent engine script loaded, but no recognized parent global was published.");
+    }
+
+    state.parentLoaded = true;
+    publishReceipt("load-parent-complete");
+
+    return parent;
+  })().catch((error) => {
+    recordError("loadParent", error);
+    throw error;
+  });
+
+  return parentLoadPromise;
+}
+
+function callParent(parent, methodNames, args) {
+  if (!parent) return null;
+
+  for (const methodName of methodNames) {
+    const method = parent[methodName];
+
+    if (typeof method !== "function") continue;
+
+    state.parentDelegated = true;
+    publishReceipt(`delegate-${methodName}`);
+
+    return method.apply(parent, args);
+  }
+
+  throw new Error("Parent engine loaded, but no mount-compatible method was found.");
+}
+
 function syncParentStatus(scope = "sync") {
   const parent = readParent();
   const status = getParentStatus(parent);
 
   state.parentStatus = status || null;
   state.parentLoaded = Boolean(parent);
+
   state.ready = Boolean(
     (status && (status.ready === true || status.mounted === true || status.children)) ||
       (parent && state.parentDelegated)
@@ -244,8 +283,18 @@ function syncParentStatus(scope = "sync") {
           window.AUDRALIA_CLEAN_CANVAS_FORM_VISIBLE === true))
   );
 
+  state.lastScope = scope;
+
+  if (state.parentLoaded && hasWindow()) {
+    window.AUDRALIA_PARENT_ENGINE_LOADED = true;
+  }
+
+  if (state.parentDelegated && hasWindow()) {
+    window.AUDRALIA_PARENT_ENGINE_DELEGATED = true;
+  }
+
   if (state.formVisible && hasWindow()) {
-    window.AUDRALIA_CLEAN_RUNTIME_FORM_VISIBLE_CONFIRMED = true;
+    window.AUDRALIA_RUNTIME_SHIM_FORM_VISIBLE_CONFIRMED = true;
   }
 
   publishReceipt(scope);
@@ -253,28 +302,11 @@ function syncParentStatus(scope = "sync") {
   return status;
 }
 
-function callParent(parent, methodNames, args) {
-  if (!parent) return null;
-
-  for (const name of methodNames) {
-    const method = parent[name];
-
-    if (typeof method !== "function") continue;
-
-    state.parentDelegated = true;
-    publishReceipt();
-
-    return method.apply(parent, args);
-  }
-
-  return null;
-}
-
-async function waitForVisible(timeoutMs = WAIT_VISIBLE_MS) {
+async function awaitVisible(parent, timeoutMs = WAIT_VISIBLE_MS) {
   const start = Date.now();
 
   while (Date.now() - start <= timeoutMs) {
-    const status = syncParentStatus("wait-visible");
+    const status = syncParentStatus("await-visible");
 
     if (
       state.formVisible === true ||
@@ -285,22 +317,22 @@ async function waitForVisible(timeoutMs = WAIT_VISIBLE_MS) {
     ) {
       state.formVisible = true;
       state.ready = true;
-      publishReceipt();
+      publishReceipt("visible-confirmed");
       return true;
     }
 
-    const parent = readParent();
-
-    if (parent && typeof parent.render === "function") {
-      try {
+    try {
+      if (parent && typeof parent.requestRender === "function") {
+        parent.requestRender();
+      } else if (parent && typeof parent.render === "function") {
         parent.render();
-      } catch (_error) {}
-    }
+      }
+    } catch (_error) {}
 
     await sleep(POLL_MS);
   }
 
-  syncParentStatus("wait-visible-timeout");
+  syncParentStatus("await-visible-timeout");
   return state.formVisible === true;
 }
 
@@ -309,96 +341,133 @@ function publishReceipt(scope = "publish") {
 
   const receipt = {
     contract: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
+    family: FAMILY,
     target: TARGET,
     route: ROUTE,
     cleanParentPath: CLEAN_PARENT_PATH,
-    mode: "clean_runtime_contamination_recovery_shim",
+    cleanParentImport: CLEAN_PARENT_IMPORT,
+    mode: "legacy_runtime_parent_delegation_repair_shim",
     scope,
-    recovery: true,
-    routeBridgeCodeRemoved: true,
-    cleanRuntimeShimActive: state.cleanRuntimeShimActive,
+    shimActive: state.shimActive,
+    esmContractExported: true,
+    defaultExportContractBound: true,
     parentRequested: state.parentRequested,
     parentLoaded: state.parentLoaded,
     parentDelegated: state.parentDelegated,
+    parentAwaited: state.parentAwaited,
+    mountCalled: state.mountCalled,
     mounted: state.mounted,
     ready: state.ready,
     formVisible: state.formVisible,
+    formVisibleClaimPolicy: "parent_status_or_parent_global_only",
     parentStatus: state.parentStatus,
     errors: state.errors.slice(),
     htmlChange: false,
     routeBridgeChange: false,
-    legacyRuntimeRewrite: false,
+    cleanRuntimeRewrite: false,
     parentRewrite: false,
     childContractRenewal: false,
     visualPassClaim: false,
     generatedImage: false,
     graphicBox: false,
     preserves: [
+      "ESM named CONTRACT export",
       "default export function",
+      "legacy runtime import path",
       "mount()",
       "render()",
       "start()",
       "boot()",
       "init()",
       "create()",
-      "clean parent delegation only",
-      "no route bridge ownership"
+      "clean parent script loading",
+      "clean parent delegation",
+      "FORM_VISIBLE gated by parent confirmation"
     ]
   };
 
-  window.AUDRALIA_CLEAN_RUNTIME_RECEIPT = receipt;
-  window.AUDRALIA_CLEAN_RUNTIME_SHIM_RECEIPT = receipt;
-  window.AUDRALIA_CLEAN_RUNTIME_CONTAMINATION_RECOVERY_ACTIVE = true;
+  window.AUDRALIA_RUNTIME_SHIM_RECEIPT = receipt;
+  window.AUDRALIA_RUNTIME_RECEIPT = receipt;
+  window.AUDRALIA_CLEAN_CANVAS_RUNTIME_RECEIPT = receipt;
+
+  window.AUDRALIA_LEGACY_RUNTIME_SHIM_ACTIVE = true;
+  window.AUDRALIA_RUNTIME_PARENT_DELEGATION_REPAIR_ACTIVE = true;
+
+  if (state.parentLoaded) {
+    window.AUDRALIA_PARENT_ENGINE_LOADED = true;
+  }
+
+  if (state.parentDelegated) {
+    window.AUDRALIA_PARENT_ENGINE_DELEGATED = true;
+  }
 
   if (hasDocument() && document.documentElement) {
-    document.documentElement.setAttribute("data-audralia-clean-runtime-contract", CONTRACT);
-    document.documentElement.setAttribute("data-audralia-clean-runtime-mode", "contamination-recovery-shim");
-    document.documentElement.setAttribute("data-audralia-clean-runtime-parent-loaded", state.parentLoaded ? "true" : "false");
-    document.documentElement.setAttribute("data-audralia-clean-runtime-parent-delegated", state.parentDelegated ? "true" : "false");
-    document.documentElement.setAttribute("data-audralia-clean-runtime-form-visible", state.formVisible ? "true" : "false");
+    document.documentElement.setAttribute("data-audralia-runtime-contract", CONTRACT);
+    document.documentElement.setAttribute("data-audralia-runtime-target", TARGET);
+    document.documentElement.setAttribute("data-audralia-runtime-mode", "parent-delegation-repair-shim");
+    document.documentElement.setAttribute("data-audralia-clean-parent-path", CLEAN_PARENT_PATH);
+    document.documentElement.setAttribute("data-audralia-parent-loaded", state.parentLoaded ? "true" : "false");
+    document.documentElement.setAttribute("data-audralia-parent-delegated", state.parentDelegated ? "true" : "false");
+    document.documentElement.setAttribute("data-audralia-parent-awaited", state.parentAwaited ? "true" : "false");
+    document.documentElement.setAttribute("data-audralia-runtime-form-visible", state.formVisible ? "true" : "false");
   }
 
   try {
     window.dispatchEvent(
-      new CustomEvent("audralia:clean-runtime:receipt", {
+      new CustomEvent("audralia:runtime-shim:receipt", {
         detail: receipt
       })
     );
   } catch (_error) {
     try {
-      window.dispatchEvent(new Event("audralia:clean-runtime:receipt"));
+      window.dispatchEvent(new Event("audralia:runtime-shim:receipt"));
     } catch (_ignored) {}
   }
 }
 
 async function mount(input, options = {}) {
+  state.mountCalled = true;
   state.mounted = true;
+  state.lastScope = "mount";
   publishReceipt("mount-start");
 
   const target = resolveMountTarget(input);
-  const parent = await loadParent();
 
-  const result = callParent(parent, ["mount", "boot", "start", "init", "create"], [
-    target,
-    {
-      ...(options || {}),
-      delegatedBy: CONTRACT,
-      cleanRuntimeRecoveryShim: true
-    }
-  ]);
-
-  if (result && typeof result.then === "function") {
-    try {
-      await result;
-    } catch (error) {
-      recordError("parentMount", error);
-    }
+  if (!target) {
+    recordError("mount", "No Audralia mount target was found for parent delegation.");
   }
 
-  await waitForVisible(WAIT_VISIBLE_MS);
-  syncParentStatus("mount-complete");
+  try {
+    const parent = await loadParent();
 
-  return getStatus();
+    const parentResult = callParent(parent, ["mount", "boot", "start", "init", "create"], [
+      target,
+      {
+        ...(options || {}),
+        delegatedBy: CONTRACT,
+        runtimeShim: true,
+        parentDelegationRepair: true,
+        route: ROUTE
+      }
+    ]);
+
+    if (parentResult && typeof parentResult.then === "function") {
+      await parentResult;
+    }
+
+    state.parentAwaited = true;
+    publishReceipt("parent-mount-awaited");
+
+    await awaitVisible(parent, WAIT_VISIBLE_MS);
+    syncParentStatus("mount-complete");
+
+    return getStatus();
+  } catch (error) {
+    recordError("mount", error);
+    syncParentStatus("mount-error");
+    return getStatus();
+  }
 }
 
 function boot(input, options = {}) {
@@ -418,26 +487,34 @@ function create(input, options = {}) {
 }
 
 async function render(...args) {
-  const parent = readParent() || (await loadParent());
+  try {
+    const parent = readParent() || (await loadParent());
 
-  const result = callParent(parent, ["render", "draw", "paint"], args);
+    const result = callParent(parent, ["render", "draw", "paint"], args);
 
-  if (result && typeof result.then === "function") {
-    await result;
+    if (result && typeof result.then === "function") {
+      await result;
+    }
+
+    syncParentStatus("render");
+    return getStatus();
+  } catch (error) {
+    recordError("render", error);
+    return getStatus();
   }
-
-  syncParentStatus("render");
-
-  return getStatus();
 }
 
 function requestRender() {
   const parent = readParent();
 
   if (parent) {
-    const result = callParent(parent, ["requestRender", "render"], []);
-    syncParentStatus("requestRender");
-    return result || api;
+    try {
+      const result = callParent(parent, ["requestRender", "render"], []);
+      syncParentStatus("requestRender");
+      return result || api;
+    } catch (error) {
+      recordError("requestRender", error);
+    }
   }
 
   render().catch((error) => recordError("requestRender", error));
@@ -448,9 +525,13 @@ function updateState(next = {}) {
   const parent = readParent();
 
   if (parent) {
-    const result = callParent(parent, ["updateState"], [next]);
-    syncParentStatus("updateState");
-    return result || api;
+    try {
+      const result = callParent(parent, ["updateState"], [next]);
+      syncParentStatus("updateState");
+      return result || api;
+    } catch (error) {
+      recordError("updateState", error);
+    }
   }
 
   Object.assign(state, next || {});
@@ -463,9 +544,13 @@ function destroy() {
   const parent = readParent();
 
   if (parent) {
-    const result = callParent(parent, ["destroy", "dispose", "unmount"], []);
-    syncParentStatus("destroy");
-    return result || api;
+    try {
+      const result = callParent(parent, ["destroy", "dispose", "unmount"], []);
+      syncParentStatus("destroy");
+      return result || api;
+    } catch (error) {
+      recordError("destroy", error);
+    }
   }
 
   state.mounted = false;
@@ -481,39 +566,55 @@ function getStatus() {
 
   return {
     contract: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
+    family: FAMILY,
     target: TARGET,
     route: ROUTE,
     cleanParentPath: CLEAN_PARENT_PATH,
-    mode: "clean_runtime_contamination_recovery_shim",
-    recovery: true,
-    routeBridgeCodeRemoved: true,
-    cleanRuntimeShimActive: state.cleanRuntimeShimActive,
+    cleanParentImport: CLEAN_PARENT_IMPORT,
+    mode: "legacy_runtime_parent_delegation_repair_shim",
+    shimActive: state.shimActive,
+    esmContractExported: true,
+    defaultExportContractBound: true,
     parentRequested: state.parentRequested,
     parentLoaded: state.parentLoaded,
     parentDelegated: state.parentDelegated,
+    parentAwaited: state.parentAwaited,
+    mountCalled: state.mountCalled,
     mounted: state.mounted,
     ready: state.ready,
     formVisible: state.formVisible,
     parentStatus: state.parentStatus,
-    errors: state.errors.slice(),
     htmlChange: false,
     routeBridgeChange: false,
-    legacyRuntimeRewrite: false,
+    cleanRuntimeRewrite: false,
     parentRewrite: false,
     childContractRenewal: false,
-    visualPassClaim: false
+    visualPassClaim: false,
+    errors: state.errors.slice()
   };
 }
 
-async function defaultCleanRuntime(input, options = {}) {
-  return mount(input, options);
+async function defaultRuntime(input, options = {}) {
+  lastMountPromise = mount(input, options);
+  return lastMountPromise;
 }
+
+defaultRuntime.CONTRACT = CONTRACT;
+defaultRuntime.TARGET = TARGET;
+defaultRuntime.ROUTE = ROUTE;
+defaultRuntime.getStatus = getStatus;
+defaultRuntime.mount = mount;
+defaultRuntime.render = render;
 
 const api = {
   CONTRACT,
+  PREVIOUS_CONTRACT,
+  FAMILY,
   TARGET,
   ROUTE,
   CLEAN_PARENT_PATH,
+  CLEAN_PARENT_IMPORT,
   mount,
   boot,
   start,
@@ -525,22 +626,28 @@ const api = {
   destroy,
   getStatus,
   status: getStatus,
-  default: defaultCleanRuntime
+  default: defaultRuntime
 };
 
 if (hasWindow()) {
-  window.AUDRALIA_CLEAN_RUNTIME = api;
-  window.AUDRALIA_CLEAN_RUNTIME_SHIM = api;
-  window.AUDRALIA_CLEAN_RUNTIME_CONTAMINATION_RECOVERY_ACTIVE = true;
+  window.AUDRALIA_RUNTIME = api;
+  window.AUDRALIA_CLEAN_CANVAS_RUNTIME = api;
+  window.AUDRALIA_RUNTIME_SHIM = api;
+
+  window.AUDRALIA_LEGACY_RUNTIME_SHIM_ACTIVE = true;
+  window.AUDRALIA_RUNTIME_PARENT_DELEGATION_REPAIR_ACTIVE = true;
 
   publishReceipt("module-load");
 }
 
 export {
   CONTRACT,
+  PREVIOUS_CONTRACT,
+  FAMILY,
   TARGET,
   ROUTE,
   CLEAN_PARENT_PATH,
+  CLEAN_PARENT_IMPORT,
   api,
   mount,
   boot,
@@ -554,4 +661,4 @@ export {
   getStatus
 };
 
-export default defaultCleanRuntime;
+export default defaultRuntime;

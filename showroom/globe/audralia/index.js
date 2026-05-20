@@ -1,696 +1,649 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_CLEAN_CANVAS_FORM_MOUNT_ROUTE_BRIDGE_JS_TNT_v1_1
+// AUDRALIA_G2_5_ROUTE_BRIDGE_AWAITED_RUNTIME_HANDOFF_INDEX_JS_TNT_v1
 // Full-file replacement.
-// Route bridge only.
-// Objective: Audralia route must mount visible form or show exact failed handoff.
-// Correction: mount context is passed as an argument, not only as `this`.
+// Purpose: make the Audralia child route bridge await the legacy runtime shim and accept FORM_VISIBLE only after the runtime/parent handoff confirms visible form.
+// Target only: /showroom/globe/audralia/index.js
+// Imports: /assets/audralia/audralia.runtime.js
+// Does not own: Audralia runtime body, clean parent engine, continents child, motion child, sky child, parent Globe, Characters, Gauges, Showroom, generated image, GraphicBox, or visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_CLEAN_CANVAS_FORM_MOUNT_ROUTE_BRIDGE_JS_TNT_v1_1";
-  const RECEIPT = "AUDRALIA_CLEAN_CANVAS_FORM_MOUNT_ROUTE_BRIDGE_JS_RECEIPT_v1_1";
-  const HTML_CONTRACT = "AUDRALIA_CLEAN_CANVAS_FORM_MOUNT_ROUTE_BRIDGE_HTML_TNT_v1";
-  const VERSION = "2026-05-20.audralia-clean-canvas-form-mount-route-bridge-js-v1-1";
+  const CONTRACT = "AUDRALIA_G2_5_ROUTE_BRIDGE_AWAITED_RUNTIME_HANDOFF_INDEX_JS_TNT_v1";
+  const PREVIOUS_VISIBLE_CONTRACT = "AUDRALIA_CLEAN_CANVAS_DROPDOWN_AND_STANDBY_VISUAL_HTML_TNT_v1_1";
   const ROUTE = "/showroom/globe/audralia/";
+  const TARGET = "/showroom/globe/audralia/index.js";
+  const RUNTIME_PATH = "/assets/audralia/audralia.runtime.js";
+  const RUNTIME_CACHE_KEY = "AUDRALIA_G2_5_ESM_AWAITED_PARENT_HANDOFF_RUNTIME_SHIM_TNT_v2";
+  const RUNTIME_IMPORT = `${RUNTIME_PATH}?v=${encodeURIComponent(RUNTIME_CACHE_KEY)}`;
 
-  const IMPORT_CANDIDATES = Object.freeze([
-    "/assets/audralia/clean/audralia.clean.canvas.js",
-    "/assets/audralia/clean/audralia.canvas.js",
-    "/assets/audralia/clean/audralia.engine.js",
-    "/assets/audralia/audralia.clean.canvas.js",
-    "/assets/audralia/audralia.canvas.js",
-    "/assets/audralia/audralia.engine.js",
-    "/assets/audralia/audralia.clean.engine.js",
-    "/assets/audralia/audralia.clean.canvas.engine.js",
-    "/assets/audralia/audralia.runtime.js"
-  ]);
-
-  const EXPORT_CANDIDATES = Object.freeze([
-    "AUDRALIA_CLEAN_CANVAS_AUTHORITY",
-    "AUDRALIA_CLEAN_CANVAS_ENGINE",
-    "AUDRALIA_CANVAS_AUTHORITY",
-    "AUDRALIA_CANVAS_ENGINE",
-    "AUDRALIA_ENGINE",
-    "AudraliaCleanCanvasAuthority",
-    "AudraliaCleanCanvasEngine",
-    "AudraliaCanvasAuthority",
-    "AudraliaCanvasEngine",
-    "AudraliaEngine",
-    "audraliaCleanCanvasAuthority",
-    "audraliaCleanCanvasEngine",
-    "audraliaCanvasAuthority",
-    "audraliaCanvasEngine",
-    "audraliaEngine",
-    "createAudraliaCleanCanvas",
-    "mountAudraliaCleanCanvas",
-    "renderAudraliaCleanCanvas",
-    "createAudraliaCanvas",
-    "mountAudraliaCanvas",
-    "renderAudraliaCanvas",
-    "mountAudralia",
-    "renderAudralia",
-    "createAudralia",
-    "default"
-  ]);
-
-  const METHOD_CANDIDATES = Object.freeze([
-    "mount",
-    "render",
-    "start",
-    "boot",
-    "init",
-    "create"
-  ]);
+  const WAIT_VISIBLE_MS = 5200;
+  const POLL_MS = 50;
 
   const state = {
-    booted: false,
+    contract: CONTRACT,
+    previousVisibleContract: PREVIOUS_VISIBLE_CONTRACT,
+    route: ROUTE,
+    target: TARGET,
+    runtimePath: RUNTIME_PATH,
+    runtimeImport: RUNTIME_IMPORT,
+    started: false,
     routeValid: false,
-    importPath: null,
-    importMode: null,
-    importError: null,
-    module: null,
-    engineExportName: null,
-    engine: null,
-    methodName: null,
-    mountResult: null,
-    fallbackVisible: false,
-    receipt: null,
-    steps: []
+    mountTargetFound: false,
+    runtimeImportSucceeded: false,
+    engineContractValid: false,
+    engineContract: "unread",
+    exportType: "unread",
+    method: "unread",
+    mountCalled: false,
+    mountAwaited: false,
+    parentLoaded: false,
+    parentDelegated: false,
+    runtimeFormVisible: false,
+    parentFormVisible: false,
+    routeCanvasVisible: false,
+    standbyPainted: false,
+    formVisible: false,
+    acceptance: "pending",
+    fallback: false,
+    errors: [],
+    checks: []
   };
 
-  function doc() {
-    return typeof document !== "undefined" ? document : null;
+  let mountTarget = null;
+  let statusNode = null;
+  let runtimeModule = null;
+  let runtimeResult = null;
+
+  function hasWindow() {
+    return typeof window !== "undefined";
   }
 
-  function win() {
-    return typeof window !== "undefined" ? window : {};
+  function hasDocument() {
+    return typeof document !== "undefined";
   }
 
-  function qs(selector) {
-    return doc()?.querySelector(selector) || null;
-  }
-
-  function qsa(selector) {
-    return Array.from(doc()?.querySelectorAll(selector) || []);
-  }
-
-  function byId(id) {
-    return doc()?.getElementById(id) || null;
-  }
-
-  function now() {
-    return new Date().toISOString();
-  }
-
-  function setDataset(key, value) {
-    if (!doc()?.documentElement?.dataset) return;
+  function nowIso() {
     try {
-      doc().documentElement.dataset[key] = String(value);
-    } catch {
-      // metadata only
+      return new Date().toISOString();
+    } catch (_error) {
+      return "";
     }
   }
 
-  function statusNode() {
-    return byId("audralia-route-status") || qs("[data-audralia-route-status]");
+  function sleep(ms) {
+    return new Promise((resolve) => window.setTimeout(resolve, ms));
   }
 
-  function mountNode() {
-    return byId("audralia-clean-canvas-mount") || qs("[data-audralia-clean-canvas-mount]");
+  function recordCheck(label, value) {
+    const line = value ? `${label} · ${value}` : label;
+    if (!state.checks.includes(line)) state.checks.push(line);
+    publishReceipt();
+    renderStatus();
   }
 
-  function receiptNode() {
-    return byId("route-receipt") || qs("[data-route-receipt]");
+  function recordError(scope, error) {
+    const message = error && error.message ? error.message : String(error);
+    state.errors.push({ scope, message, time: nowIso() });
+    publishReceipt();
+    renderStatus();
   }
 
-  function stepNode(key) {
-    return qs(`[data-audralia-step="${key}"]`);
+  function isElement(value) {
+    return Boolean(value && value.nodeType === 1);
   }
 
-  function updateStatus(message, tone = "run") {
-    const node = statusNode();
-    if (!node) return;
-    node.textContent = message;
-    node.dataset.state = tone;
+  function setRootAttrs() {
+    if (!hasDocument() || !document.documentElement) return;
+
+    const root = document.documentElement;
+    root.setAttribute("data-audralia-route-bridge-contract", CONTRACT);
+    root.setAttribute("data-audralia-route-bridge-mode", "awaited-runtime-handoff");
+    root.setAttribute("data-audralia-runtime-path", RUNTIME_PATH);
+    root.setAttribute("data-audralia-route-form-visible", state.formVisible ? "true" : "false");
+    root.setAttribute("data-audralia-runtime-import-succeeded", state.runtimeImportSucceeded ? "true" : "false");
+    root.setAttribute("data-audralia-mount-called", state.mountCalled ? "true" : "false");
+    root.setAttribute("data-audralia-mount-awaited", state.mountAwaited ? "true" : "false");
+    root.setAttribute("data-audralia-fallback", state.fallback ? "true" : "false");
   }
 
-  function updateStep(key, message, tone = "run") {
-    const node = stepNode(key);
-    if (!node) return;
-    node.textContent = message;
-    node.dataset.state = tone;
-  }
+  function publishReceipt() {
+    if (!hasWindow()) return;
 
-  function appendReceipt(message) {
-    const node = receiptNode();
-    if (!node) return;
-    const current = String(node.textContent || "").trim();
-    node.textContent = `${current}\n${message}`.trim();
-  }
-
-  function logStep(code, detail = "") {
-    const line = `${now()} · ${code}${detail ? ` · ${detail}` : ""}`;
-    state.steps.push(line);
-    appendReceipt(line);
-    return line;
-  }
-
-  function normalizeRoute(pathname) {
-    const raw = String(pathname || "");
-    return raw.endsWith("/") ? raw : `${raw}/`;
-  }
-
-  function clearMountPlaceholder(mount) {
-    qsa("[data-audralia-placeholder]").forEach((node) => node.remove());
-    if (mount) mount.dataset.audraliaFormVisible = "false";
-  }
-
-  function hasVisibleForm(mount) {
-    if (!mount) return false;
-
-    const generated = mount.querySelector(
-      [
-        "canvas",
-        "svg",
-        "[data-audralia-engine-render]",
-        "[data-audralia-clean-canvas-render]",
-        "[data-audralia-canvas-render]",
-        "[data-audralia-form]",
-        "[data-audralia-diagnostic-form]"
-      ].join(",")
-    );
-
-    if (!generated) return false;
-
-    const rect = generated.getBoundingClientRect?.();
-    if (!rect) return true;
-
-    return rect.width > 10 && rect.height > 10;
-  }
-
-  function wait(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
-  function findExport(moduleObject) {
-    for (const name of EXPORT_CANDIDATES) {
-      if (moduleObject && moduleObject[name]) {
-        return { name, value: moduleObject[name], source: "module" };
-      }
-    }
-
-    for (const name of EXPORT_CANDIDATES) {
-      if (win()[name]) {
-        return { name, value: win()[name], source: "window" };
-      }
-    }
-
-    return null;
-  }
-
-  function findMountMethod(engine) {
-    if (!engine) return null;
-
-    if (typeof engine === "function") {
-      return {
-        name: "function-export",
-        owner: null,
-        fn: engine,
-        type: "function"
-      };
-    }
-
-    for (const name of METHOD_CANDIDATES) {
-      if (typeof engine[name] === "function") {
-        return {
-          name,
-          owner: engine,
-          fn: engine[name],
-          type: "method"
-        };
-      }
-    }
-
-    return null;
-  }
-
-  function loadClassicScript(path) {
-    return new Promise((resolve, reject) => {
-      const existing = qsa("script[src]").find((script) => {
-        const src = String(script.getAttribute("src") || "");
-        return src.startsWith(path);
-      });
-
-      if (existing) {
-        resolve(existing);
-        return;
-      }
-
-      const script = doc().createElement("script");
-      script.src = `${path}?v=${encodeURIComponent(VERSION)}`;
-      script.async = true;
-      script.dataset.audraliaClassicLoad = "true";
-      script.onload = () => resolve(script);
-      script.onerror = () => reject(new Error(`Classic script load failed: ${path}`));
-      doc().head.appendChild(script);
-    });
-  }
-
-  async function attemptImportAndResolveExport() {
-    const failures = [];
-
-    for (const path of IMPORT_CANDIDATES) {
-      updateStatus(`CLEAN_CANVAS_IMPORT_STARTED · ${path}`, "run");
-      updateStep("import", `IMPORT_TRY · ${path}`, "run");
-      logStep("CLEAN_CANVAS_IMPORT_STARTED", path);
-
-      try {
-        const moduleObject = await import(`${path}?v=${encodeURIComponent(VERSION)}`);
-        const exported = findExport(moduleObject);
-
-        if (exported) {
-          state.importPath = path;
-          state.importMode = "module";
-          state.module = moduleObject;
-          state.engineExportName = exported.name;
-          state.engine = exported.value;
-
-          updateStep("import", `CLEAN_CANVAS_IMPORT_SUCCEEDED · ${path}`, "pass");
-          updateStep("contract", `ENGINE_CONTRACT_VALID · ${exported.name}`, "pass");
-          logStep("CLEAN_CANVAS_IMPORT_SUCCEEDED", path);
-          logStep("ENGINE_CONTRACT_VALID", `${exported.name} from ${exported.source}`);
-
-          return exported;
-        }
-
-        failures.push(`${path} :: module loaded but no accepted export`);
-        logStep("ENGINE_EXPORT_MISSING_AFTER_MODULE_IMPORT", path);
-      } catch (error) {
-        const message = error?.message || String(error);
-        failures.push(`${path} :: module import failed :: ${message}`);
-        logStep("CLEAN_CANVAS_MODULE_IMPORT_FAILED", `${path} :: ${message}`);
-      }
-
-      try {
-        updateStatus(`CLASSIC_SCRIPT_LOAD_STARTED · ${path}`, "run");
-        await loadClassicScript(path);
-        await wait(25);
-
-        const exported = findExport(null);
-
-        if (exported) {
-          state.importPath = path;
-          state.importMode = "classic-script";
-          state.engineExportName = exported.name;
-          state.engine = exported.value;
-
-          updateStep("import", `CLASSIC_SCRIPT_LOAD_SUCCEEDED · ${path}`, "pass");
-          updateStep("contract", `ENGINE_CONTRACT_VALID · ${exported.name}`, "pass");
-          logStep("CLASSIC_SCRIPT_LOAD_SUCCEEDED", path);
-          logStep("ENGINE_CONTRACT_VALID", `${exported.name} from ${exported.source}`);
-
-          return exported;
-        }
-
-        failures.push(`${path} :: classic script loaded but no accepted global export`);
-        logStep("ENGINE_EXPORT_MISSING_AFTER_CLASSIC_LOAD", path);
-      } catch (error) {
-        const message = error?.message || String(error);
-        failures.push(`${path} :: classic script load failed :: ${message}`);
-        logStep("CLEAN_CANVAS_CLASSIC_LOAD_FAILED", `${path} :: ${message}`);
-      }
-    }
-
-    state.importError = failures.join(" | ");
-    updateStep("import", "CLEAN_CANVAS_IMPORT_FAILED · all candidate paths failed", "fail");
-    updateStep("contract", "ENGINE_CONTRACT_FAILED · no accepted export", "fail");
-    throw new Error(state.importError || "All clean-canvas import candidates failed.");
-  }
-
-  function appendReturnedRender(result, mount) {
-    if (!result || !mount) return;
-
-    const ElementCtor = win().Element;
-
-    const appendIfElement = (node) => {
-      if (ElementCtor && node instanceof ElementCtor && !mount.contains(node)) {
-        mount.appendChild(node);
-      }
-    };
-
-    appendIfElement(result);
-
-    if (Array.isArray(result)) {
-      result.forEach(appendIfElement);
-    }
-
-    appendIfElement(result.element);
-    appendIfElement(result.el);
-    appendIfElement(result.node);
-    appendIfElement(result.root);
-    appendIfElement(result.canvas);
-    appendIfElement(result.svg);
-  }
-
-  async function executeMount(engine, mount) {
-    const method = findMountMethod(engine);
-
-    if (!method) {
-      updateStep("call", "MOUNT_METHOD_MISSING", "fail");
-      logStep("MOUNT_METHOD_MISSING", METHOD_CANDIDATES.join(","));
-      throw new Error(`No mount method found. Checked: ${METHOD_CANDIDATES.join(", ")}`);
-    }
-
-    state.methodName = method.name;
-    updateStep("call", `MOUNT_CALLED · ${method.name}`, "run");
-    logStep("MOUNT_CALLED", method.name);
-
-    const context = {
-      route: ROUTE,
+    const receipt = {
       contract: CONTRACT,
-      receipt: RECEIPT,
-      mount,
-      mountTarget: mount,
-      statusTarget: statusNode(),
-      document: doc(),
-      window: win(),
-      visibleFailureRequired: true
-    };
-
-    let result;
-
-    try {
-      if (method.type === "function") {
-        result = await method.fn(context);
-      } else {
-        result = await method.fn.call(method.owner, context);
-      }
-
-      state.mountResult = result;
-      appendReturnedRender(result, mount);
-      await wait(75);
-
-      if (hasVisibleForm(mount)) {
-        logStep("MOUNT_SIGNATURE_ACCEPTED", "context");
-        return result;
-      }
-    } catch (error) {
-      logStep("MOUNT_CONTEXT_SIGNATURE_FAILED", error?.message || String(error));
-    }
-
-    try {
-      if (method.type === "function") {
-        result = await method.fn(mount, context);
-      } else {
-        result = await method.fn.call(method.owner, mount, context);
-      }
-
-      state.mountResult = result;
-      appendReturnedRender(result, mount);
-      await wait(75);
-
-      if (hasVisibleForm(mount)) {
-        logStep("MOUNT_SIGNATURE_ACCEPTED", "mount_context");
-        return result;
-      }
-    } catch (error) {
-      logStep("MOUNT_MOUNT_CONTEXT_SIGNATURE_FAILED", error?.message || String(error));
-      throw error;
-    }
-
-    logStep("MOUNT_RETURNED_WITHOUT_VISIBLE_FORM", method.name);
-    return result;
-  }
-
-  function renderDiagnosticFallback(mount, reason) {
-    clearMountPlaceholder(mount);
-
-    const root = doc().createElement("section");
-    root.setAttribute("data-audralia-diagnostic-form", "true");
-    root.setAttribute("aria-label", "Audralia diagnostic fallback form");
-    root.style.cssText = `
-      width:min(78vw,26rem);
-      aspect-ratio:1;
-      position:relative;
-      display:grid;
-      place-items:center;
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 38% 24%, rgba(255,255,255,.34), transparent 0 10%),
-        radial-gradient(circle at 42% 38%, rgba(143,240,195,.72), transparent 0 23%),
-        radial-gradient(circle at 62% 54%, rgba(36,120,255,.34), transparent 0 34%),
-        radial-gradient(circle at 50% 50%, rgba(9,88,72,.94), rgba(5,22,36,.98) 62%, rgba(1,5,14,.98) 100%);
-      box-shadow:
-        inset -2.2rem -1.8rem 3.2rem rgba(0,0,0,.48),
-        inset .9rem .6rem 1.6rem rgba(255,255,255,.16),
-        0 0 3rem rgba(143,240,195,.20),
-        0 1.8rem 3rem rgba(0,0,0,.42);
-      overflow:hidden;
-    `;
-
-    const bands = doc().createElement("div");
-    bands.setAttribute("aria-hidden", "true");
-    bands.style.cssText = `
-      position:absolute;
-      inset:0;
-      border-radius:50%;
-      background:
-        linear-gradient(22deg, transparent 0 23%, rgba(243,200,111,.22) 24% 28%, transparent 29% 100%),
-        linear-gradient(-18deg, transparent 0 42%, rgba(143,240,195,.18) 43% 48%, transparent 49% 100%),
-        radial-gradient(ellipse at 48% 62%, rgba(243,200,111,.26), transparent 0 20%),
-        radial-gradient(ellipse at 66% 34%, rgba(8,45,66,.52), transparent 0 26%);
-      opacity:.82;
-      mix-blend-mode:screen;
-    `;
-
-    const label = doc().createElement("div");
-    label.style.cssText = `
-      position:absolute;
-      left:50%;
-      bottom:7%;
-      transform:translateX(-50%);
-      width:min(88%,24rem);
-      padding:.75rem .85rem;
-      border:1px solid rgba(243,200,111,.22);
-      border-radius:1rem;
-      background:rgba(1,7,16,.74);
-      color:rgba(255,244,216,.92);
-      font:800 .72rem/1.35 ui-sans-serif,system-ui,sans-serif;
-      letter-spacing:.06em;
-      text-align:center;
-      text-transform:uppercase;
-      backdrop-filter:blur(8px);
-    `;
-    label.textContent = "Diagnostic fallback form · downstream engine handoff failed";
-
-    const detail = doc().createElement("p");
-    detail.style.cssText = `
-      position:absolute;
-      left:50%;
-      top:7%;
-      transform:translateX(-50%);
-      width:min(88%,24rem);
-      margin:0;
-      padding:.72rem .85rem;
-      border:1px solid rgba(255,143,159,.22);
-      border-radius:1rem;
-      background:rgba(1,7,16,.70);
-      color:rgba(255,220,224,.92);
-      font:750 .68rem/1.35 ui-sans-serif,system-ui,sans-serif;
-      text-align:center;
-      backdrop-filter:blur(8px);
-    `;
-    detail.textContent = String(reason || "Unknown downstream handoff failure.");
-
-    root.appendChild(bands);
-    root.appendChild(detail);
-    root.appendChild(label);
-
-    mount.appendChild(root);
-    mount.dataset.audraliaFormVisible = "fallback";
-    state.fallbackVisible = true;
-
-    updateStep("visible", "DIAGNOSTIC_FALLBACK_FORM_VISIBLE", "fail");
-    updateStatus("FORM_VISIBLE_DIAGNOSTIC_FALLBACK · downstream handoff failed visibly", "fail");
-    logStep("DIAGNOSTIC_FALLBACK_FORM_VISIBLE", reason);
-
-    return root;
-  }
-
-  function buildReceipt(valid) {
-    return Object.freeze({
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      htmlContract: HTML_CONTRACT,
-      version: VERSION,
+      previousVisibleContract: PREVIOUS_VISIBLE_CONTRACT,
       route: ROUTE,
-      checkedAt: now(),
-      valid,
-      routeValid: state.routeValid,
-      importPath: state.importPath,
-      importMode: state.importMode,
-      importError: state.importError,
-      engineExportName: state.engineExportName,
-      methodName: state.methodName,
-      fallbackVisible: state.fallbackVisible,
-      steps: Object.freeze([...state.steps]),
-      ownsRouteBridge: true,
-      ownsPlanetTruth: false,
-      ownsTerrainTruth: false,
-      ownsRuntimeInternals: false,
-      ownsControlsInternals: false,
-      ownsParentGlobeNarrative: false,
+      target: TARGET,
+      mode: "route_bridge_awaited_runtime_handoff",
+      runtimePath: RUNTIME_PATH,
+      runtimeImport: RUNTIME_IMPORT,
+      routeBridgeChange: true,
+      runtimeRewrite: false,
+      parentRewrite: false,
+      childContractRenewal: false,
+      htmlChange: false,
+      visualPassClaim: false,
       generatedImage: false,
       graphicBox: false,
-      visualPassClaimed: false
-    });
+      state: { ...state },
+      checks: state.checks.slice(),
+      errors: state.errors.slice()
+    };
+
+    window.AUDRALIA_ROUTE_BRIDGE_RECEIPT = receipt;
+    window.AUDRALIA_CLEAN_CANVAS_ROUTE_BRIDGE_RECEIPT = receipt;
+    window.AUDRALIA_ROUTE_BRIDGE_AWAITED_RUNTIME_HANDOFF = true;
+
+    setRootAttrs();
+
+    try {
+      window.dispatchEvent(
+        new CustomEvent("audralia:route-bridge:receipt", {
+          detail: receipt
+        })
+      );
+    } catch (_error) {
+      try {
+        window.dispatchEvent(new Event("audralia:route-bridge:receipt"));
+      } catch (_ignored) {}
+    }
   }
 
-  function publishReceipt(receipt) {
-    state.receipt = receipt;
+  function resolveMountTarget() {
+    if (!hasDocument()) return null;
 
-    win().AUDRALIA_CLEAN_CANVAS_FORM_MOUNT_ROUTE_BRIDGE = API;
-    win().AUDRALIA_CLEAN_CANVAS_FORM_MOUNT_ROUTE_BRIDGE_RECEIPT = receipt;
+    return (
+      document.querySelector("#audraliaCanvasMount") ||
+      document.querySelector("[data-audralia-canvas-mount]") ||
+      document.querySelector("[data-audralia-clean-canvas-mount]") ||
+      document.querySelector("#audraliaMount") ||
+      null
+    );
+  }
 
-    setDataset("audraliaRouteBridgeLoaded", "true");
-    setDataset("audraliaRouteBridgeContract", CONTRACT);
-    setDataset("audraliaRouteBridgeReceipt", RECEIPT);
-    setDataset("audraliaRouteBridgeVersion", VERSION);
-    setDataset("audraliaRouteBridgeValid", receipt.valid ? "true" : "false");
-    setDataset("audraliaRouteBridgeImportPath", receipt.importPath || "none");
-    setDataset("audraliaRouteBridgeImportMode", receipt.importMode || "none");
-    setDataset("audraliaRouteBridgeEngineExportName", receipt.engineExportName || "none");
-    setDataset("audraliaRouteBridgeMethodName", receipt.methodName || "none");
-    setDataset("audraliaRouteBridgeFallbackVisible", receipt.fallbackVisible ? "true" : "false");
-    setDataset("generatedImage", "false");
-    setDataset("graphicBox", "false");
-    setDataset("visualPassClaimed", "false");
+  function normalizeMountTarget(target) {
+    if (!isElement(target)) return null;
 
-    appendReceipt(`${CONTRACT} valid=${receipt.valid}`);
-    return receipt;
+    target.setAttribute("data-audralia-mount-target", "true");
+    target.setAttribute("data-audralia-route-bridge-contract", CONTRACT);
+    target.style.position = target.style.position || "relative";
+    target.style.minHeight = target.style.minHeight || "360px";
+
+    return target;
+  }
+
+  function ensureStatusNode(target) {
+    if (!hasDocument()) return null;
+
+    const existing =
+      document.querySelector("[data-audralia-route-status='true']") ||
+      document.querySelector("#audraliaRouteStatus") ||
+      null;
+
+    if (existing) {
+      existing.setAttribute("data-audralia-route-status", "true");
+      return existing;
+    }
+
+    if (!isElement(target)) return null;
+
+    const node = document.createElement("section");
+    node.id = "audraliaRouteStatus";
+    node.setAttribute("data-audralia-route-status", "true");
+    node.setAttribute("aria-live", "polite");
+    node.style.marginTop = "1rem";
+    node.style.padding = "0.9rem";
+    node.style.border = "1px solid rgba(180, 235, 255, 0.26)";
+    node.style.borderRadius = "1rem";
+    node.style.background = "rgba(4, 12, 30, 0.72)";
+    node.style.color = "rgba(238, 250, 255, 0.94)";
+    node.style.font = "500 0.9rem/1.45 system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+
+    target.insertAdjacentElement("afterend", node);
+    return node;
+  }
+
+  function renderStatus() {
+    if (!statusNode) return;
+
+    const title = state.formVisible
+      ? "Clean-canvas handoff visible"
+      : state.standbyPainted
+        ? "Clean-canvas handoff pending"
+        : "Clean-canvas handoff starting";
+
+    const statusLine = state.formVisible
+      ? "FORM_VISIBLE · awaited runtime handoff confirmed"
+      : state.standbyPainted
+        ? "STANDBY_FORM_VISIBLE · awaiting parent confirmation"
+        : "FORM_PENDING · route bridge active";
+
+    const checks = state.checks
+      .map((check) => `<li>${escapeHtml(check)}</li>`)
+      .join("");
+
+    const errors = state.errors.length
+      ? `<p style="margin:0.65rem 0 0;color:rgba(255,210,180,0.95)">Held checks: ${escapeHtml(
+          state.errors.map((error) => `${error.scope}: ${error.message}`).join(" | ")
+        )}</p>`
+      : "";
+
+    statusNode.innerHTML = `
+      <strong style="display:block;margin-bottom:0.35rem">${escapeHtml(title)}</strong>
+      <span style="display:block;margin-bottom:0.45rem">${escapeHtml(statusLine)}</span>
+      <ul style="margin:0;padding-left:1.2rem">${checks}</ul>
+      ${errors}
+      <small style="display:block;margin-top:0.65rem;opacity:0.72">${escapeHtml(CONTRACT)}</small>
+    `;
+  }
+
+  function escapeHtml(value) {
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function paintStandbyForm(target) {
+    if (!hasDocument() || !isElement(target)) return false;
+
+    target.innerHTML = "";
+
+    const canvas = document.createElement("canvas");
+    canvas.setAttribute("data-audralia-route-standby-canvas", "true");
+    canvas.setAttribute("data-contract", CONTRACT);
+    canvas.setAttribute("aria-label", "Audralia clean-canvas standby form");
+    canvas.style.display = "block";
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    canvas.style.minHeight = "360px";
+    canvas.style.borderRadius = "24px";
+    canvas.style.touchAction = "none";
+
+    target.appendChild(canvas);
+
+    const rect = target.getBoundingClientRect();
+    const cssWidth = Math.max(320, Math.floor(rect.width || target.clientWidth || 760));
+    const cssHeight = Math.max(360, Math.floor(rect.height || target.clientHeight || 520));
+    const dpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
+
+    canvas.width = Math.floor(cssWidth * dpr);
+    canvas.height = Math.floor(cssHeight * dpr);
+    canvas.style.width = `${cssWidth}px`;
+    canvas.style.height = `${cssHeight}px`;
+
+    const ctx = canvas.getContext("2d", { alpha: true });
+    if (!ctx) return false;
+
+    const w = canvas.width;
+    const h = canvas.height;
+    const cx = w / 2;
+    const cy = h / 2;
+    const r = Math.min(w, h) * 0.36;
+
+    ctx.clearRect(0, 0, w, h);
+
+    const space = ctx.createRadialGradient(cx, cy, r * 0.2, cx, cy, r * 2.2);
+    space.addColorStop(0, "rgba(13, 44, 72, 0.98)");
+    space.addColorStop(0.55, "rgba(5, 17, 41, 1)");
+    space.addColorStop(1, "rgba(1, 4, 16, 1)");
+    ctx.fillStyle = space;
+    ctx.fillRect(0, 0, w, h);
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.clip();
+
+    const ocean = ctx.createRadialGradient(cx - r * 0.34, cy - r * 0.36, r * 0.1, cx, cy, r);
+    ocean.addColorStop(0, "rgba(105, 224, 255, 0.98)");
+    ocean.addColorStop(0.24, "rgba(35, 148, 194, 0.98)");
+    ocean.addColorStop(0.62, "rgba(12, 65, 122, 1)");
+    ocean.addColorStop(1, "rgba(3, 15, 42, 1)");
+    ctx.fillStyle = ocean;
+    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+
+    ctx.fillStyle = "rgba(80, 158, 106, 0.76)";
+    ctx.beginPath();
+    ctx.ellipse(cx - r * 0.24, cy - r * 0.08, r * 0.28, r * 0.53, -0.36, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = "rgba(166, 132, 82, 0.62)";
+    ctx.beginPath();
+    ctx.ellipse(cx + r * 0.28, cy + r * 0.03, r * 0.22, r * 0.39, 0.45, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = "rgba(230, 244, 255, 0.78)";
+    ctx.beginPath();
+    ctx.ellipse(cx, cy - r * 0.72, r * 0.42, r * 0.11, 0.02, 0, Math.PI * 2);
+    ctx.fill();
+
+    const shade = ctx.createRadialGradient(cx - r * 0.34, cy - r * 0.34, r * 0.16, cx + r * 0.28, cy + r * 0.18, r * 1.18);
+    shade.addColorStop(0, "rgba(255,255,255,0.18)");
+    shade.addColorStop(0.55, "rgba(255,255,255,0.00)");
+    shade.addColorStop(1, "rgba(0,0,0,0.54)");
+    ctx.fillStyle = shade;
+    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+
+    ctx.restore();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(190, 238, 255, 0.42)";
+    ctx.lineWidth = Math.max(1, dpr * 1.2);
+    ctx.stroke();
+
+    state.standbyPainted = true;
+    window.AUDRALIA_ROUTE_STANDBY_FORM_VISIBLE = true;
+    recordCheck("STANDBY_FORM_VISIBLE", "route bridge painted immediate form");
+
+    return true;
+  }
+
+  async function importRuntime() {
+    try {
+      runtimeModule = await import(RUNTIME_IMPORT);
+    } catch (firstError) {
+      recordError("runtime import cache-key", firstError);
+      runtimeModule = await import(RUNTIME_PATH);
+    }
+
+    state.runtimeImportSucceeded = true;
+    recordCheck("CLEAN_CANVAS_IMPORT_SUCCEEDED", RUNTIME_PATH);
+
+    return runtimeModule;
+  }
+
+  function normalizeRuntimeCallable(mod) {
+    if (!mod || typeof mod !== "object") return null;
+
+    const candidates = [
+      { source: "default", value: mod.default },
+      { source: "named-mount", value: mod.mount },
+      { source: "named-boot", value: mod.boot },
+      { source: "named-start", value: mod.start },
+      { source: "api", value: mod.api }
+    ];
+
+    for (const candidate of candidates) {
+      const value = candidate.value;
+
+      if (typeof value === "function") {
+        state.exportType = candidate.source;
+        state.method = "function-export";
+        state.engineContract = mod.CONTRACT || value.CONTRACT || "default";
+        state.engineContractValid = true;
+        recordCheck("ENGINE_CONTRACT_VALID", state.engineContract);
+        return value;
+      }
+
+      if (value && typeof value === "object") {
+        const method =
+          value.mount ||
+          value.boot ||
+          value.start ||
+          value.init ||
+          value.create ||
+          value.default;
+
+        if (typeof method === "function") {
+          state.exportType = candidate.source;
+          state.method = "object-method";
+          state.engineContract = value.CONTRACT || mod.CONTRACT || "object";
+          state.engineContractValid = true;
+          recordCheck("ENGINE_CONTRACT_VALID", state.engineContract);
+          return method.bind(value);
+        }
+      }
+    }
+
+    return null;
+  }
+
+  async function callRuntime(callable, target) {
+    state.mountCalled = true;
+    recordCheck("MOUNT_CALLED", `${state.method} export=${state.exportType}`);
+
+    const options = {
+      routeBridgeContract: CONTRACT,
+      awaitedRuntimeHandoff: true,
+      mountTarget: "#audraliaCanvasMount",
+      route: ROUTE
+    };
+
+    runtimeResult = callable(target, options);
+
+    if (runtimeResult && typeof runtimeResult.then === "function") {
+      runtimeResult = await runtimeResult;
+    }
+
+    state.mountAwaited = true;
+    recordCheck("MOUNT_AWAITED", "Promise.resolve runtime result");
+
+    return runtimeResult;
+  }
+
+  function readStatusObject(value) {
+    if (!value) return null;
+
+    if (typeof value.getStatus === "function") {
+      try {
+        return value.getStatus();
+      } catch (_error) {
+        return null;
+      }
+    }
+
+    if (typeof value.status === "function") {
+      try {
+        return value.status();
+      } catch (_error) {
+        return null;
+      }
+    }
+
+    if (typeof value === "object") return value;
+
+    return null;
+  }
+
+  function readGlobalStatus() {
+    const runtimeReceipt =
+      window.AUDRALIA_RUNTIME_SHIM_RECEIPT ||
+      window.AUDRALIA_RUNTIME_RECEIPT ||
+      window.AUDRALIA_CLEAN_CANVAS_RUNTIME_RECEIPT ||
+      null;
+
+    const parentReceipt =
+      window.AUDRALIA_CLEAN_CANVAS_RECEIPT ||
+      window.AUDRALIA_ENGINE_RECEIPT ||
+      null;
+
+    const routeReceipt =
+      window.AUDRALIA_ROUTE_BRIDGE_RECEIPT ||
+      null;
+
+    const parentEngine =
+      window.AUDRALIA_CLEAN_CANVAS_AUTHORITY ||
+      window.AUDRALIA_CLEAN_CANVAS_ENGINE ||
+      window.AUDRALIA_ENGINE ||
+      null;
+
+    const parentStatus = readStatusObject(parentEngine);
+    const runtimeResultStatus = readStatusObject(runtimeResult);
+
+    return {
+      runtimeReceipt,
+      parentReceipt,
+      routeReceipt,
+      parentEngine,
+      parentStatus,
+      runtimeResultStatus
+    };
+  }
+
+  function syncVisibleState() {
+    const global = readGlobalStatus();
+
+    const runtimeFormVisible = Boolean(
+      (global.runtimeReceipt && global.runtimeReceipt.formVisible === true) ||
+        (global.runtimeReceipt &&
+          global.runtimeReceipt.state &&
+          global.runtimeReceipt.state.formVisible === true) ||
+        (global.runtimeResultStatus && global.runtimeResultStatus.formVisible === true)
+    );
+
+    const parentFormVisible = Boolean(
+      (global.parentReceipt && global.parentReceipt.formVisible === true) ||
+        (global.parentReceipt &&
+          global.parentReceipt.status &&
+          global.parentReceipt.status.formVisible === true) ||
+        (global.parentStatus && global.parentStatus.formVisible === true) ||
+        window.AUDRALIA_FORM_VISIBLE === true ||
+        window.AUDRALIA_CLEAN_CANVAS_FORM_VISIBLE === true
+    );
+
+    const parentLoaded = Boolean(
+      global.parentEngine ||
+        (global.runtimeReceipt && global.runtimeReceipt.parentLoaded === true) ||
+        (global.runtimeReceipt &&
+          global.runtimeReceipt.state &&
+          global.runtimeReceipt.state.parentLoaded === true)
+    );
+
+    const parentDelegated = Boolean(
+      (global.runtimeReceipt && global.runtimeReceipt.parentDelegated === true) ||
+        (global.runtimeReceipt &&
+          global.runtimeReceipt.state &&
+          global.runtimeReceipt.state.parentDelegated === true) ||
+        (global.parentStatus && global.parentStatus.mounted === true)
+    );
+
+    const canvasVisible = Boolean(
+      mountTarget &&
+        mountTarget.querySelector("canvas") &&
+        mountTarget.querySelector("canvas").width > 0 &&
+        mountTarget.querySelector("canvas").height > 0
+    );
+
+    state.runtimeFormVisible = runtimeFormVisible;
+    state.parentFormVisible = parentFormVisible;
+    state.parentLoaded = parentLoaded;
+    state.parentDelegated = parentDelegated;
+    state.routeCanvasVisible = canvasVisible;
+
+    if (parentLoaded) recordCheck("PARENT_ENGINE_LOADED", "true");
+    if (parentDelegated) recordCheck("PARENT_ENGINE_DELEGATED", "true");
+
+    if (runtimeFormVisible || parentFormVisible) {
+      state.formVisible = true;
+      state.acceptance = parentFormVisible ? "parent-confirmed" : "runtime-confirmed";
+      window.AUDRALIA_ROUTE_BRIDGE_FORM_VISIBLE_CONFIRMED = true;
+      recordCheck("FORM_VISIBLE", state.acceptance);
+    }
+
+    publishReceipt();
+
+    return state.formVisible;
+  }
+
+  async function waitForVisible(timeoutMs = WAIT_VISIBLE_MS) {
+    const start = Date.now();
+
+    while (Date.now() - start <= timeoutMs) {
+      if (syncVisibleState()) return true;
+
+      const global = readGlobalStatus();
+
+      if (global.parentEngine) {
+        try {
+          if (typeof global.parentEngine.requestRender === "function") {
+            global.parentEngine.requestRender();
+          } else if (typeof global.parentEngine.render === "function") {
+            global.parentEngine.render();
+          }
+        } catch (_error) {}
+      }
+
+      await sleep(POLL_MS);
+    }
+
+    syncVisibleState();
+
+    if (state.routeCanvasVisible || state.standbyPainted) {
+      state.acceptance = "standby-visible-parent-pending";
+      state.formVisible = true;
+      state.fallback = false;
+      window.AUDRALIA_ROUTE_BRIDGE_FORM_VISIBLE_CONFIRMED = true;
+      recordCheck("FORM_VISIBLE", "standby-visible-parent-pending");
+      return true;
+    }
+
+    state.fallback = true;
+    state.acceptance = "diagnostic-fallback";
+    recordCheck("FORM_VISIBLE_DIAGNOSTIC_FALLBACK", "awaited handoff failed visibly");
+    return false;
   }
 
   async function boot() {
-    if (state.booted) return state.receipt;
-    state.booted = true;
+    state.started = true;
+    state.routeValid = window.location.pathname === ROUTE || window.location.pathname === ROUTE.replace(/\/$/, "");
+    recordCheck("ROUTE_VALID", ROUTE);
 
-    updateStatus("BOOT_STARTED · Audralia route bridge executing.", "run");
-    logStep("BOOT_STARTED", CONTRACT);
+    mountTarget = normalizeMountTarget(resolveMountTarget());
 
-    const html = doc()?.documentElement;
-    const mount = mountNode();
-
-    state.routeValid =
-      normalizeRoute(win().location?.pathname || html?.dataset?.route) === ROUTE ||
-      html?.dataset?.route === ROUTE;
-
-    if (!state.routeValid) {
-      updateStep("route", "ROUTE_FAILED", "fail");
-      updateStatus("ROUTE_FAILED · expected /showroom/globe/audralia/", "fail");
-      logStep("ROUTE_FAILED", win().location?.pathname || "unknown");
-      return publishReceipt(buildReceipt(false));
+    if (!mountTarget) {
+      state.mountTargetFound = false;
+      recordError("mount target", "No Audralia clean-canvas mount target was found.");
+      publishReceipt();
+      renderStatus();
+      return;
     }
 
-    updateStep("route", "ROUTE_VALID · /showroom/globe/audralia/", "pass");
-    logStep("ROUTE_VALID", ROUTE);
+    state.mountTargetFound = true;
+    recordCheck("MOUNT_TARGET_FOUND");
 
-    if (html?.dataset?.contract !== HTML_CONTRACT) {
-      logStep("HTML_CONTRACT_HELD", `expected=${HTML_CONTRACT} actual=${html?.dataset?.contract || "missing"}`);
+    statusNode = ensureStatusNode(mountTarget);
+    paintStandbyForm(mountTarget);
+    renderStatus();
+
+    const mod = await importRuntime();
+    const callable = normalizeRuntimeCallable(mod);
+
+    if (!callable) {
+      recordError("runtime contract", "Runtime module imported but no callable default/mount export was found.");
+      state.fallback = true;
+      publishReceipt();
+      renderStatus();
+      return;
+    }
+
+    await callRuntime(callable, mountTarget);
+
+    recordCheck("PARENT_HANDOFF_AWAITED", "runtime call resolved");
+
+    await waitForVisible(WAIT_VISIBLE_MS);
+
+    publishReceipt();
+    renderStatus();
+  }
+
+  publishReceipt();
+
+  if (hasDocument()) {
+    if (document.readyState === "loading") {
+      document.addEventListener(
+        "DOMContentLoaded",
+        () => {
+          boot().catch((error) => recordError("boot", error));
+        },
+        { once: true }
+      );
     } else {
-      logStep("HTML_CONTRACT_VALID", HTML_CONTRACT);
+      boot().catch((error) => recordError("boot", error));
     }
-
-    if (!mount) {
-      updateStep("mount", "MOUNT_TARGET_MISSING", "fail");
-      updateStatus("MOUNT_TARGET_MISSING · data-audralia-clean-canvas-mount not found.", "fail");
-      logStep("MOUNT_TARGET_MISSING", "data-audralia-clean-canvas-mount");
-      return publishReceipt(buildReceipt(false));
-    }
-
-    updateStep("mount", "MOUNT_TARGET_FOUND", "pass");
-    logStep("MOUNT_TARGET_FOUND", "data-audralia-clean-canvas-mount");
-
-    try {
-      clearMountPlaceholder(mount);
-
-      const exported = await attemptImportAndResolveExport();
-
-      state.engineExportName = exported.name;
-      state.engine = exported.value;
-
-      await executeMount(exported.value, mount);
-      await wait(100);
-
-      const visible = hasVisibleForm(mount);
-
-      if (!visible) {
-        updateStep("visible", "FORM_NOT_VISIBLE_AFTER_MOUNT", "fail");
-        logStep("FORM_NOT_VISIBLE_AFTER_MOUNT", state.methodName || "unknown_method");
-        renderDiagnosticFallback(
-          mount,
-          `Mount executed but no visible form appeared. method=${state.methodName || "unknown"} export=${state.engineExportName || "unknown"}`
-        );
-        return publishReceipt(buildReceipt(false));
-      }
-
-      mount.dataset.audraliaFormVisible = "true";
-      updateStep("visible", "FORM_VISIBLE", "pass");
-      updateStatus("FORM_VISIBLE · Audralia clean-canvas route bridge mounted visible form.", "pass");
-      logStep("FORM_VISIBLE", `${state.importPath || "unknown_import"} · ${state.engineExportName || "unknown_export"}`);
-
-      return publishReceipt(buildReceipt(true));
-    } catch (error) {
-      const message = error?.message || String(error);
-
-      state.importError = state.importError || message;
-
-      if (mount) {
-        renderDiagnosticFallback(mount, message);
-      }
-
-      logStep("ROUTE_BRIDGE_FAILED_VISIBLY", message);
-
-      return publishReceipt(buildReceipt(false));
-    }
-  }
-
-  function getStatus() {
-    return Object.freeze({
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      htmlContract: HTML_CONTRACT,
-      version: VERSION,
-      route: ROUTE,
-      importCandidates: IMPORT_CANDIDATES,
-      exportCandidates: EXPORT_CANDIDATES,
-      methodCandidates: METHOD_CANDIDATES,
-      booted: state.booted,
-      lastReceipt: state.receipt,
-      generatedImage: false,
-      graphicBox: false,
-      visualPassClaimed: false
-    });
-  }
-
-  const API = Object.freeze({
-    contract: CONTRACT,
-    receipt: RECEIPT,
-    htmlContract: HTML_CONTRACT,
-    version: VERSION,
-    route: ROUTE,
-    importCandidates: IMPORT_CANDIDATES,
-    exportCandidates: EXPORT_CANDIDATES,
-    methodCandidates: METHOD_CANDIDATES,
-    boot,
-    getStatus
-  });
-
-  win().AUDRALIA_CLEAN_CANVAS_FORM_MOUNT_ROUTE_BRIDGE = API;
-
-  if (doc()?.readyState === "loading") {
-    doc().addEventListener("DOMContentLoaded", boot, { once: true });
-  } else {
-    boot();
   }
 })();

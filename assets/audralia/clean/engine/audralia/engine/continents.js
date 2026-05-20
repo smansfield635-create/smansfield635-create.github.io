@@ -1,18 +1,19 @@
 // /assets/audralia/clean/engine/audralia/engine/continents.js
-// AUDRALIA_G2_6_UNIQUE_CONTINENT_LATTICES_BACKSTORY_OBEDIENCE_TNT_v1
+// AUDRALIA_G2_6_TOPOLOGY_ONLY_CONTINENT_CHILD_SPLIT_SEGMENT_1_TNT_v1
 // Full-file replacement.
-// Purpose: renew the Audralia continents child so every continent obeys the stable parent while expressing its own local lattice, backstory pressure, and Summit-specific landform grammar.
-// Child engine only. Classic script. No imports. No exports.
+// Purpose: convert continents.js into a topology-only landmass orchestrator and load the first unique continent topology child: Gratitude.
 // Parent-facing admission contract intentionally remains AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1 for bridge compatibility.
-// Does not own: parent geometry, canvas creation, route bridge, runtime, FORM_VISIBLE, sky, motion, zoom, orbit, generated image, GraphicBox, or visual-pass claim.
+// Segment 1 loads Gratitude only. The other eight Summit continent children remain staged.
+// Does not own: parent geometry, canvas creation, route bridge, runtime, FORM_VISIBLE, ocean body, seawater base, sky, motion, elevation, terrain, zoom, orbit, generated image, GraphicBox, or visual-pass claim.
 
 (() => {
   "use strict";
 
   const CONTRACT = "AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1";
-  const CHILD_RENEWAL_CONTRACT = "AUDRALIA_G2_6_UNIQUE_CONTINENT_LATTICES_BACKSTORY_OBEDIENCE_TNT_v1";
+  const CHILD_SPLIT_CONTRACT = "AUDRALIA_G2_6_TOPOLOGY_ONLY_CONTINENT_CHILD_SPLIT_TNT_v1";
+  const SEGMENT_CONTRACT = "AUDRALIA_G2_6_TOPOLOGY_ONLY_CONTINENT_CHILD_SPLIT_SEGMENT_1_TNT_v1";
   const PARENT_COMPLIANCE_CONTRACT = "AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1";
-  const PREVIOUS_CHILD_RENEWAL_CONTRACT = "AUDRALIA_G2_6_CHILD_OBEYS_PARENT_STANDARD_CONTINENT_RENEWAL_TNT_v1";
+  const PREVIOUS_CHILD_RENEWAL_CONTRACT = "AUDRALIA_G2_6_UNIQUE_CONTINENT_LATTICES_BACKSTORY_OBEDIENCE_TNT_v1";
   const FAMILY = "AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1";
 
   const TARGET = "/assets/audralia/clean/engine/audralia/engine/continents.js";
@@ -27,257 +28,124 @@
   const EXPOSED_LAND_RATIO = EXPOSED_LAND_CELLS / TOTAL_LATTICE_CELLS;
   const OCEAN_SEA_RATIO = OCEAN_SEA_SHELF_CELLS / TOTAL_LATTICE_CELLS;
 
-  const SUMMITS = Object.freeze([
-    "Gratitude",
-    "Generosity",
-    "Dependability",
-    "Accountability",
-    "Forgiveness",
-    "Humility",
-    "Self-Control",
-    "Patience",
-    "Purity"
-  ]);
+  const LAND_ELEVATION = -0.004;
+  const TOPOLOGY_MARK_ELEVATION = -0.0035;
 
-  const ELEVATION = Object.freeze({
-    shelfOuter: -0.03,
-    shelfInner: -0.018,
-    coastalPlain: -0.006,
-    land: -0.004,
-    pressure: -0.003,
-    ridge: -0.002,
-    summit: -0.0015,
-    polar: -0.004
-  });
+  const CHILD_CACHE_KEY = CHILD_SPLIT_CONTRACT;
 
-  const VISIBILITY = Object.freeze({
-    landMin: 0.025,
-    landFull: 0.38,
-    shelfMin: 0.1,
-    shelfFull: 0.52,
-    pressureMin: 0.12,
-    ridgeMin: 0.16,
-    summitMin: 0.24
-  });
-
-  const ALPHA = Object.freeze({
-    shelfOuter: 0.1,
-    shelfInner: 0.2,
-    coastalPlain: 0.4,
-    land: 0.72,
-    coastStroke: 0.2,
-    pressure: 0.2,
-    ridge: 0.3,
-    summit: 0.46
-  });
-
-  const COLORS = Object.freeze({
-    gratitude: "rgba(78, 170, 106, 0.72)",
-    generosity: "rgba(105, 185, 124, 0.68)",
-    dependability: "rgba(66, 145, 108, 0.70)",
-    accountability: "rgba(166, 128, 82, 0.62)",
-    forgiveness: "rgba(84, 163, 132, 0.64)",
-    humility: "rgba(100, 148, 112, 0.60)",
-    selfControl: "rgba(146, 132, 84, 0.60)",
-    patience: "rgba(97, 157, 139, 0.58)",
-    purity: "rgba(224, 244, 250, 0.60)",
-    shelfOuter: "rgba(92, 210, 226, 0.10)",
-    shelfInner: "rgba(102, 216, 228, 0.20)",
-    shelfEdge: "rgba(184, 246, 255, 0.14)",
-    coastStroke: "rgba(235, 250, 236, 0.18)",
-    ridge: "rgba(232, 214, 156, 0.30)",
-    summit: "rgba(255, 239, 184, 0.46)",
-    pressure: "rgba(31, 72, 62, 0.20)"
-  });
-
-  const CONTINENTS = Object.freeze([
+  const CHILDREN = Object.freeze([
     {
-      id: "gratitude-primary",
+      id: "gratitude",
       summit: "Gratitude",
-      localLattice: "gratitude_21_restored_origin_lattice",
-      className: "primary",
       cells: 21,
-      role: "Restored origin body / primary external Summit expression.",
-      backstoryPressure: "broad living mainland, repaired bay systems, generous shelf, stable central basin",
-      color: COLORS.gratitude,
-      secondaryColor: COLORS.generosity,
-      center: { lon: -42, lat: 8 },
-      summitPoint: { lon: -43, lat: 16 },
-      pressureZones: [
-        { lon: -54, lat: -7, rx: 10, ry: 8, rot: 22 },
-        { lon: -39, lat: 21, rx: 8, ry: 7, rot: -12 },
-        { lon: -25, lat: 2, rx: 7, ry: 5, rot: 18 }
-      ],
-      ridges: [
-        { a: [-61, 24], b: [-34, -14], bend: 0.18 },
-        { a: [-46, 34], b: [-20, 6], bend: -0.13 }
-      ]
+      active: true,
+      path: "/assets/audralia/clean/engine/audralia/engine/continents/gratitude.js",
+      globalKey: "AUDRALIA_TOPOLOGY_GRATITUDE"
     },
     {
-      id: "generosity-major",
+      id: "generosity",
       summit: "Generosity",
-      localLattice: "generosity_13_open_fertility_lattice",
-      className: "major",
       cells: 13,
-      role: "Outward-giving landform with open river-mouth logic.",
-      backstoryPressure: "open plains, broad coastal mouths, soft shelf expansion without domination",
-      color: COLORS.generosity,
-      secondaryColor: COLORS.gratitude,
-      center: { lon: 42, lat: 12 },
-      summitPoint: { lon: 42, lat: 20 },
-      pressureZones: [
-        { lon: 39, lat: 18, rx: 8, ry: 6, rot: 8 },
-        { lon: 55, lat: 0, rx: 6, ry: 7, rot: -18 }
-      ],
-      ridges: [
-        { a: [31, 29], b: [57, -10], bend: -0.11 }
-      ]
+      active: false,
+      staged: true,
+      path: "/assets/audralia/clean/engine/audralia/engine/continents/generosity.js",
+      globalKey: "AUDRALIA_TOPOLOGY_GENEROSITY"
     },
     {
-      id: "dependability-major",
+      id: "dependability",
       summit: "Dependability",
-      localLattice: "dependability_13_stable_plate_lattice",
-      className: "major",
       cells: 13,
-      role: "Old stable plate / load-bearing continent.",
-      backstoryPressure: "compact coast, fewer bays, heavier inland pressure, grounded shelf",
-      color: COLORS.dependability,
-      secondaryColor: COLORS.humility,
-      center: { lon: -105, lat: -5 },
-      summitPoint: { lon: -106, lat: -2 },
-      pressureZones: [
-        { lon: -106, lat: -2, rx: 8, ry: 9, rot: -10 },
-        { lon: -116, lat: 9, rx: 5, ry: 5, rot: 18 }
-      ],
-      ridges: [
-        { a: [-118, 13], b: [-96, -22], bend: 0.13 }
-      ]
+      active: false,
+      staged: true,
+      path: "/assets/audralia/clean/engine/audralia/engine/continents/dependability.js",
+      globalKey: "AUDRALIA_TOPOLOGY_DEPENDABILITY"
     },
     {
-      id: "accountability-major",
+      id: "accountability",
       summit: "Accountability",
-      localLattice: "accountability_13_consequence_plate_lattice",
-      className: "major",
       cells: 13,
-      role: "Angular consequence plate.",
-      backstoryPressure: "sharper shoulders, faulted ridges, abrupt controlled shelf breaks",
-      color: COLORS.accountability,
-      secondaryColor: COLORS.selfControl,
-      center: { lon: 115, lat: -3 },
-      summitPoint: { lon: 116, lat: 2 },
-      pressureZones: [
-        { lon: 116, lat: 2, rx: 8, ry: 7, rot: 24 },
-        { lon: 129, lat: 7, rx: 5, ry: 5, rot: -18 }
-      ],
-      ridges: [
-        { a: [102, 15], b: [128, -17], bend: -0.15 }
-      ]
+      active: false,
+      staged: true,
+      path: "/assets/audralia/clean/engine/audralia/engine/continents/accountability.js",
+      globalKey: "AUDRALIA_TOPOLOGY_ACCOUNTABILITY"
     },
     {
-      id: "forgiveness-secondary",
+      id: "forgiveness",
       summit: "Forgiveness",
-      localLattice: "forgiveness_8_broken_restored_lattice",
-      className: "secondary",
       cells: 8,
-      role: "Fractured body rejoined by shelf and bay systems.",
-      backstoryPressure: "broken arcs, restored coastlines, inlets, partial separations",
-      color: COLORS.forgiveness,
-      secondaryColor: COLORS.generosity,
-      center: { lon: -5, lat: -39 },
-      summitPoint: { lon: -5, lat: -36 },
-      pressureZones: [
-        { lon: -7, lat: -36, rx: 7, ry: 5, rot: -5 }
-      ],
-      ridges: [
-        { a: [-18, -36], b: [15, -44], bend: 0.1 }
-      ]
+      active: false,
+      staged: true,
+      path: "/assets/audralia/clean/engine/audralia/engine/continents/forgiveness.js",
+      globalKey: "AUDRALIA_TOPOLOGY_FORGIVENESS"
     },
     {
-      id: "humility-secondary",
+      id: "humility",
       summit: "Humility",
-      localLattice: "humility_8_low_relief_lattice",
-      className: "secondary",
       cells: 8,
-      role: "Subdued embedded body.",
-      backstoryPressure: "low contrast, flatter contour, quiet interior zones",
-      color: COLORS.humility,
-      secondaryColor: COLORS.dependability,
-      center: { lon: 2, lat: 45 },
-      summitPoint: { lon: 4, lat: 45 },
-      pressureZones: [
-        { lon: 4, lat: 45, rx: 9, ry: 4, rot: 3 }
-      ],
-      ridges: [
-        { a: [-15, 48], b: [18, 42], bend: -0.06 }
-      ]
+      active: false,
+      staged: true,
+      path: "/assets/audralia/clean/engine/audralia/engine/continents/humility.js",
+      globalKey: "AUDRALIA_TOPOLOGY_HUMILITY"
     },
     {
-      id: "self-control-island-continent",
+      id: "self-control",
       summit: "Self-Control",
-      localLattice: "self_control_5_constrained_lattice",
-      className: "island-continent",
       cells: 5,
-      role: "Bounded compact island-continent.",
-      backstoryPressure: "tight perimeter, disciplined shelf, minimal sprawl",
-      color: COLORS.selfControl,
-      secondaryColor: COLORS.accountability,
-      center: { lon: 160, lat: 20 },
-      summitPoint: { lon: 159, lat: 21 },
-      pressureZones: [
-        { lon: 159, lat: 21, rx: 4, ry: 3, rot: 14 }
-      ],
-      ridges: [
-        { a: [153, 23], b: [169, 14], bend: 0.04 }
-      ]
+      active: false,
+      staged: true,
+      path: "/assets/audralia/clean/engine/audralia/engine/continents/self-control.js",
+      globalKey: "AUDRALIA_TOPOLOGY_SELF_CONTROL"
     },
     {
-      id: "patience-island-chain",
+      id: "patience",
       summit: "Patience",
-      localLattice: "patience_5_long_duration_chain_lattice",
-      className: "island-continent",
       cells: 5,
-      role: "Slow arc / island-chain formation.",
-      backstoryPressure: "elongated chain, stepping islands, gradual shelf rhythm",
-      color: COLORS.patience,
-      secondaryColor: COLORS.forgiveness,
-      center: { lon: -142, lat: 18 },
-      summitPoint: { lon: -142, lat: 18 },
-      pressureZones: [
-        { lon: -144, lat: 18, rx: 7, ry: 3, rot: -20 }
-      ],
-      ridges: [
-        { a: [-156, 24], b: [-128, 12], bend: 0.04 }
-      ]
+      active: false,
+      staged: true,
+      path: "/assets/audralia/clean/engine/audralia/engine/continents/patience.js",
+      globalKey: "AUDRALIA_TOPOLOGY_PATIENCE"
     },
     {
-      id: "purity-polar-body",
+      id: "purity",
       summit: "Purity",
-      localLattice: "purity_3_polar_clarity_lattice",
-      className: "polar-high-clarity",
       cells: 3,
-      role: "High-clarity polar body.",
-      backstoryPressure: "minimal noise, clean polar form, restrained light logic",
-      color: COLORS.purity,
-      secondaryColor: COLORS.purity,
-      center: { lon: 18, lat: 73 },
-      summitPoint: { lon: 20, lat: 73 },
-      pressureZones: [
-        { lon: 20, lat: 73, rx: 9, ry: 3, rot: 4 }
-      ],
-      ridges: [
-        { a: [-8, 75], b: [31, 71], bend: -0.03 }
-      ]
+      active: false,
+      staged: true,
+      path: "/assets/audralia/clean/engine/audralia/engine/continents/purity.js",
+      globalKey: "AUDRALIA_TOPOLOGY_PURITY"
     }
   ]);
 
+  const SUMMITS = Object.freeze(CHILDREN.map((child) => child.summit));
+
+  const COLORS = Object.freeze({
+    land: "rgba(79, 170, 108, 0.72)",
+    landStroke: "rgba(235, 250, 236, 0.20)",
+    beach: "rgba(235, 222, 157, 0.42)",
+    cliffEdge: "rgba(178, 183, 171, 0.34)",
+    cavernMouth: "rgba(28, 32, 38, 0.38)",
+    lake: "rgba(74, 182, 220, 0.32)",
+    bay: "rgba(106, 218, 232, 0.22)",
+    inlet: "rgba(126, 226, 235, 0.24)",
+    peninsula: "rgba(109, 190, 122, 0.34)",
+    lagoon: "rgba(112, 218, 220, 0.25)",
+    wetland: "rgba(116, 178, 128, 0.30)",
+    oceanAdjacency: "rgba(178, 244, 255, 0.16)"
+  });
+
   const state = {
     contract: CONTRACT,
-    childRenewalContract: CHILD_RENEWAL_CONTRACT,
+    childSplitContract: CHILD_SPLIT_CONTRACT,
+    segmentContract: SEGMENT_CONTRACT,
     parentComplianceContract: PARENT_COMPLIANCE_CONTRACT,
     previousChildRenewalContract: PREVIOUS_CHILD_RENEWAL_CONTRACT,
     family: FAMILY,
     target: TARGET,
     route: ROUTE,
+    segment: 1,
+    topologyOnly: true,
+    terrainOwned: false,
+    elevationOwned: false,
     parentCompliance: true,
     parentFacingContractUnchanged: true,
     childObeysParentStandard: true,
@@ -285,13 +153,16 @@
     ownsFormVisible: false,
     ownsCanvas: false,
     ownsRoute: false,
-    localLatticeSovereignty: true,
-    sharedGlobalLattice: false,
-    nineUniqueContinentLattices: true,
-    backstoryTracedLattices: true,
+    ownsOcean: false,
+    localTopologyChildrenEnabled: true,
+    localTopologyChildrenTotal: CHILDREN.length,
+    localTopologyChildrenActive: CHILDREN.filter((child) => child.active).length,
+    localTopologyChildrenLoaded: 0,
+    localTopologyChildrenStaged: CHILDREN.filter((child) => child.staged).length,
     nineSummits256FibonacciModel: true,
     summitCount: 9,
     continentBodyCount: 9,
+    activeDrawnBodies: 0,
     totalLatticeCells: TOTAL_LATTICE_CELLS,
     exposedLandCells: EXPOSED_LAND_CELLS,
     oceanSeaShelfCells: OCEAN_SEA_SHELF_CELLS,
@@ -303,16 +174,24 @@
     globalPublished: false,
     mountCalled: false,
     drawCount: 0,
+    childLoadStarted: false,
+    childLoadComplete: false,
+    childStatuses: {},
+    topologies: {},
     lastParentContractSeen: "",
     lastDrawSkippedReason: "",
     visualPassClaim: false,
     errors: []
   };
 
-  const localCache = new Map();
+  let loadPromise = null;
 
   function hasWindow() {
     return typeof window !== "undefined";
+  }
+
+  function hasDocument() {
+    return typeof document !== "undefined";
   }
 
   function nowIso() {
@@ -337,20 +216,6 @@
     return Math.max(min, Math.min(max, value));
   }
 
-  function normalizeLon(lon) {
-    let value = lon;
-    while (value > 180) value -= 360;
-    while (value < -180) value += 360;
-    return value;
-  }
-
-  function rotatePoint(x, y, angleRad) {
-    return {
-      x: x * Math.cos(angleRad) - y * Math.sin(angleRad),
-      y: x * Math.sin(angleRad) + y * Math.cos(angleRad)
-    };
-  }
-
   function parseRgba(color) {
     const match = String(color || "").match(/rgba?\s*\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)(?:\s*,\s*([\d.]+))?\s*\)/i);
 
@@ -370,7 +235,7 @@
     return `rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${alpha})`;
   }
 
-  function depthAlpha(z, minVisible, fullStrength) {
+  function depthAlpha(z, minVisible = 0.025, fullStrength = 0.38) {
     if (!Number.isFinite(z) || z <= minVisible) return 0;
     if (z >= fullStrength) return 1;
 
@@ -396,10 +261,6 @@
     return valid;
   }
 
-  function projectPoint(payload, lonDeg, latDeg, elevation = ELEVATION.land) {
-    return payload.project(toRad(lonDeg), toRad(latDeg), elevation);
-  }
-
   function parentContractSeen(payload) {
     const value =
       (payload && payload.contract) ||
@@ -411,245 +272,22 @@
     return state.lastParentContractSeen;
   }
 
-  function node(lon, lat) {
-    return {
-      lon: normalizeLon(lon),
-      lat: clamp(lat, -82, 82)
-    };
+  function projectPoint(payload, lonDeg, latDeg, elevation = LAND_ELEVATION) {
+    return payload.project(toRad(lonDeg), toRad(latDeg), elevation);
   }
 
-  function ellipseNode(center, rx, ry, rotDeg, t, radial = 1) {
-    const rot = toRad(rotDeg || 0);
-    const local = rotatePoint(Math.cos(t) * rx * radial, Math.sin(t) * ry * radial, rot);
-    return node(center.lon + local.x, center.lat + local.y);
-  }
-
-  function modeScale(mode) {
-    if (mode === "shelfOuter") return 1.17;
-    if (mode === "shelfInner") return 1.07;
-    if (mode === "coastalPlain") return 0.82;
-    return 1;
-  }
-
-  function gratitudeCoast(mode) {
-    const scale = modeScale(mode);
-    const center = { lon: -42, lat: 8 };
-    const points = [];
-    const count = 44;
-
-    for (let i = 0; i < count; i += 1) {
-      const t = (TAU * i) / count;
-      const repairedBay = Math.max(0, Math.sin(t * 2.0 - 0.8)) * -0.1;
-      const generousShelf = Math.max(0, Math.cos(t - 0.2)) * 0.08;
-      const basinPulse = Math.sin(t * 3.0 + 0.4) * 0.08 + Math.cos(t * 5.0) * 0.035;
-      const radial = 1 + repairedBay + generousShelf + basinPulse;
-
-      points.push(ellipseNode(center, 33 * scale, 35 * scale, -14, t, radial));
-    }
-
-    return [points];
-  }
-
-  function generosityCoast(mode) {
-    const scale = modeScale(mode);
-    const center = { lon: 42, lat: 12 };
-    const points = [];
-    const count = 36;
-
-    for (let i = 0; i < count; i += 1) {
-      const t = (TAU * i) / count;
-      const mouthEast = Math.exp(-Math.pow(t - 0.05, 2) / 0.11) * -0.18;
-      const mouthSouth = Math.exp(-Math.pow(t - 1.65, 2) / 0.16) * -0.12;
-      const openPlain = Math.sin(t * 2.0 + 0.7) * 0.045;
-      const radial = 1 + mouthEast + mouthSouth + openPlain;
-
-      points.push(ellipseNode(center, 25 * scale, 28 * scale, 18, t, radial));
-    }
-
-    return [points];
-  }
-
-  function dependabilityCoast(mode) {
-    const scale = modeScale(mode);
-    const center = { lon: -105, lat: -5 };
-    const points = [];
-    const count = 34;
-
-    for (let i = 0; i < count; i += 1) {
-      const t = (TAU * i) / count;
-      const shoulder = Math.sign(Math.cos(t)) * Math.pow(Math.abs(Math.cos(t)), 0.62);
-      const vertical = Math.sign(Math.sin(t)) * Math.pow(Math.abs(Math.sin(t)), 0.82);
-      const oldPlate = 1 + Math.sin(t * 4.0) * 0.035 + Math.cos(t * 2.0) * 0.025;
-      const rot = toRad(-8);
-      const local = rotatePoint(shoulder * 23 * scale * oldPlate, vertical * 28 * scale * oldPlate, rot);
-
-      points.push(node(center.lon + local.x, center.lat + local.y));
-    }
-
-    return [points];
-  }
-
-  function accountabilityCoast(mode) {
-    const scale = modeScale(mode);
-    const center = { lon: 115, lat: -3 };
-    const points = [];
-    const corners = [
-      [1.24, 0.1],
-      [0.74, 0.78],
-      [0.22, 1.14],
-      [-0.62, 0.82],
-      [-1.12, 0.2],
-      [-0.82, -0.72],
-      [-0.18, -1.18],
-      [0.78, -0.82]
-    ];
-    const rot = toRad(24);
-
-    for (let i = 0; i < corners.length; i += 1) {
-      const [x1, y1] = corners[i];
-      const [x2, y2] = corners[(i + 1) % corners.length];
-
-      for (let j = 0; j < 4; j += 1) {
-        const k = j / 4;
-        const fault = (j % 2 === 0 ? 0.045 : -0.035) * (mode === "land" ? 1 : 0.55);
-        const x = x1 + (x2 - x1) * k + fault;
-        const y = y1 + (y2 - y1) * k - fault * 0.7;
-        const local = rotatePoint(x * 24 * scale, y * 25 * scale, rot);
-
-        points.push(node(center.lon + local.x, center.lat + local.y));
-      }
-    }
-
-    return [points];
-  }
-
-  function forgivenessCoast(mode) {
-    const scale = modeScale(mode);
-    const center = { lon: -5, lat: -39 };
-    const points = [];
-    const count = 32;
-
-    for (let i = 0; i < count; i += 1) {
-      const t = (TAU * i) / count;
-      const breakWest = Math.exp(-Math.pow(t - 3.1, 2) / 0.08) * -0.26;
-      const restoredBay = Math.exp(-Math.pow(t - 5.0, 2) / 0.13) * -0.18;
-      const healedArc = Math.max(0, Math.sin(t * 2.0 + 0.4)) * 0.11;
-      const seam = Math.sin(t * 6.0) * 0.045;
-      const radial = 1 + breakWest + restoredBay + healedArc + seam;
-
-      points.push(ellipseNode(center, 21 * scale, 15 * scale, -9, t, radial));
-    }
-
-    return [points];
-  }
-
-  function humilityCoast(mode) {
-    const scale = modeScale(mode);
-    const center = { lon: 2, lat: 45 };
-    const points = [];
-    const count = 30;
-
-    for (let i = 0; i < count; i += 1) {
-      const t = (TAU * i) / count;
-      const quiet = 1 + Math.sin(t * 2.0) * 0.025 + Math.cos(t * 5.0) * 0.018;
-      const lowRelief = 0.96 + Math.max(0, Math.sin(t + 0.4)) * 0.04;
-
-      points.push(ellipseNode(center, 25 * scale, 12 * scale, 4, t, quiet * lowRelief));
-    }
-
-    return [points];
-  }
-
-  function selfControlCoast(mode) {
-    const scale = modeScale(mode);
-    const center = { lon: 160, lat: 20 };
-    const points = [];
-    const count = 16;
-
-    for (let i = 0; i < count; i += 1) {
-      const t = (TAU * i) / count;
-      const disciplined = i % 2 === 0 ? 1.03 : 0.91;
-      const contained = 1 + Math.sin(t * 4.0) * 0.025;
-
-      points.push(ellipseNode(center, 12 * scale, 10 * scale, 16, t, disciplined * contained));
-    }
-
-    return [points];
-  }
-
-  function patienceCoast(mode) {
-    const scale = modeScale(mode);
-    const chain = [
-      { center: { lon: -156, lat: 24 }, rx: 7, ry: 5, rot: 24, count: 14, drift: 0.03 },
-      { center: { lon: -142, lat: 18 }, rx: 8, ry: 5, rot: -18, count: 16, drift: 0.04 },
-      { center: { lon: -128, lat: 12 }, rx: 6, ry: 4, rot: 12, count: 14, drift: 0.03 }
-    ];
-
-    return chain.map((island, islandIndex) => {
-      const points = [];
-
-      for (let i = 0; i < island.count; i += 1) {
-        const t = (TAU * i) / island.count;
-        const slowStep = 1 + Math.sin(t * 2.0 + islandIndex) * island.drift + Math.cos(t * 3.0) * island.drift;
-        points.push(ellipseNode(island.center, island.rx * scale, island.ry * scale, island.rot, t, slowStep));
-      }
-
-      return points;
-    });
-  }
-
-  function purityCoast(mode) {
-    const scale = modeScale(mode);
-    const center = { lon: 18, lat: 73 };
-    const points = [];
-    const count = 24;
-
-    for (let i = 0; i < count; i += 1) {
-      const t = (TAU * i) / count;
-      const clarity = 1 + Math.sin(t * 2.0) * 0.018 + Math.cos(t * 4.0) * 0.012;
-      const polarFlatten = t > Math.PI ? 0.95 : 1.04;
-
-      points.push(ellipseNode(center, 30 * scale, 7 * scale, 4, t, clarity * polarFlatten));
-    }
-
-    return [points];
-  }
-
-  function localLatticeSets(continent, mode) {
-    const cacheKey = `${continent.id}:${mode}`;
-
-    if (localCache.has(cacheKey)) return localCache.get(cacheKey);
-
-    let sets;
-
-    if (continent.summit === "Gratitude") sets = gratitudeCoast(mode);
-    else if (continent.summit === "Generosity") sets = generosityCoast(mode);
-    else if (continent.summit === "Dependability") sets = dependabilityCoast(mode);
-    else if (continent.summit === "Accountability") sets = accountabilityCoast(mode);
-    else if (continent.summit === "Forgiveness") sets = forgivenessCoast(mode);
-    else if (continent.summit === "Humility") sets = humilityCoast(mode);
-    else if (continent.summit === "Self-Control") sets = selfControlCoast(mode);
-    else if (continent.summit === "Patience") sets = patienceCoast(mode);
-    else if (continent.summit === "Purity") sets = purityCoast(mode);
-    else sets = [];
-
-    localCache.set(cacheKey, sets);
-
-    return sets;
-  }
-
-  function projectedSet(payload, nodes, elevation) {
-    return nodes.map((point) => ({
+  function projectBoundary(payload, boundary, elevation = LAND_ELEVATION) {
+    return boundary.map((point) => ({
       ...projectPoint(payload, point.lon, point.lat, elevation),
       lon: point.lon,
       lat: point.lat
     }));
   }
 
-  function projectedAverage(payload, nodes, elevation) {
-    if (!nodes.length) return projectPoint(payload, 0, 0, elevation);
+  function averageProjected(payload, boundary, elevation = LAND_ELEVATION) {
+    if (!boundary || !boundary.length) return projectPoint(payload, 0, 0, elevation);
 
-    const sum = nodes.reduce(
+    const sum = boundary.reduce(
       (acc, point) => {
         acc.lon += point.lon;
         acc.lat += point.lat;
@@ -658,10 +296,10 @@
       { lon: 0, lat: 0 }
     );
 
-    return projectPoint(payload, sum.lon / nodes.length, sum.lat / nodes.length, elevation);
+    return projectPoint(payload, sum.lon / boundary.length, sum.lat / boundary.length, elevation);
   }
 
-  function shapeVisibilityOk(points, minRatio) {
+  function shapeVisibilityOk(points, minRatio = 0.5) {
     if (!points || !points.length) return false;
 
     const visible = points.filter((point) => point.visible && point.z > -0.08);
@@ -669,12 +307,12 @@
     return visible.length / points.length >= minRatio;
   }
 
-  function drawClosedPath(ctx, pts) {
-    if (!pts || !pts.length) return false;
+  function drawClosedPath(ctx, points) {
+    if (!points || !points.length) return false;
 
     ctx.beginPath();
 
-    pts.forEach((point, index) => {
+    points.forEach((point, index) => {
       if (index === 0) ctx.moveTo(point.x, point.y);
       else ctx.lineTo(point.x, point.y);
     });
@@ -684,230 +322,315 @@
     return true;
   }
 
-  function drawLocalShape(ctx, payload, continent, options) {
-    const localSets = localLatticeSets(continent, options.mode);
+  function segmentPoints(boundary, start, end) {
+    if (!boundary || !boundary.length) return [];
 
-    for (const nodes of localSets) {
-      const center = projectedAverage(payload, nodes, options.centerElevation ?? options.elevation);
-      const alpha = depthAlpha(center.z, options.minVisible, options.fullStrength);
+    const count = boundary.length;
+    const a = Math.max(0, Math.min(count - 1, Number(start) || 0));
+    const b = Math.max(0, Math.min(count - 1, Number(end) || 0));
 
-      if (!center.visible || alpha <= 0.02) continue;
+    if (a <= b) return boundary.slice(a, b + 1);
 
-      const projected = projectedSet(payload, nodes, options.elevation);
-
-      if (!shapeVisibilityOk(projected, options.minVisibleRatio)) continue;
-
-      ctx.save();
-
-      if (drawClosedPath(ctx, projected)) {
-        ctx.fillStyle = withAlpha(options.fill, alpha, options.centerAlpha);
-        ctx.fill();
-
-        if (options.stroke && options.lineWidth > 0 && alpha > 0.08) {
-          ctx.strokeStyle = withAlpha(options.stroke, alpha * 0.78, options.strokeAlpha);
-          ctx.lineWidth = options.lineWidth;
-          ctx.lineJoin = "round";
-          ctx.lineCap = "round";
-          ctx.stroke();
-        }
-      }
-
-      ctx.restore();
-    }
+    return boundary.slice(a).concat(boundary.slice(0, b + 1));
   }
 
-  function drawShelves(ctx, payload, continent) {
-    drawLocalShape(ctx, payload, continent, {
-      mode: "shelfOuter",
-      elevation: ELEVATION.shelfOuter,
-      centerElevation: ELEVATION.shelfOuter,
-      fill: COLORS.shelfOuter,
-      stroke: COLORS.shelfEdge,
-      centerAlpha: ALPHA.shelfOuter,
-      strokeAlpha: 0.1,
-      minVisible: VISIBILITY.shelfMin,
-      fullStrength: VISIBILITY.shelfFull,
-      minVisibleRatio: 0.72,
-      lineWidth: Math.max(1, payload.geometry.radius * 0.0018)
-    });
+  function drawBoundarySegment(ctx, payload, boundary, segment, color, lineWidthFactor) {
+    const nodes = segmentPoints(boundary, segment.start, segment.end);
+    if (!nodes.length) return;
 
-    drawLocalShape(ctx, payload, continent, {
-      mode: "shelfInner",
-      elevation: ELEVATION.shelfInner,
-      centerElevation: ELEVATION.shelfInner,
-      fill: COLORS.shelfInner,
-      stroke: COLORS.shelfEdge,
-      centerAlpha: ALPHA.shelfInner,
-      strokeAlpha: 0.12,
-      minVisible: VISIBILITY.shelfMin,
-      fullStrength: VISIBILITY.shelfFull,
-      minVisibleRatio: 0.7,
-      lineWidth: Math.max(1, payload.geometry.radius * 0.002)
-    });
-  }
+    const projected = projectBoundary(payload, nodes, TOPOLOGY_MARK_ELEVATION);
+    if (!shapeVisibilityOk(projected, 0.45)) return;
 
-  function drawLand(ctx, payload, continent) {
-    const landElevation = continent.summit === "Purity" ? ELEVATION.polar : ELEVATION.land;
+    const center = averageProjected(payload, nodes, TOPOLOGY_MARK_ELEVATION);
+    const alpha = depthAlpha(center.z, 0.04, 0.46);
 
-    drawLocalShape(ctx, payload, continent, {
-      mode: "land",
-      elevation: landElevation,
-      centerElevation: landElevation,
-      fill: continent.color,
-      stroke: COLORS.coastStroke,
-      centerAlpha: ALPHA.land,
-      strokeAlpha: ALPHA.coastStroke,
-      minVisible: VISIBILITY.landMin,
-      fullStrength: VISIBILITY.landFull,
-      minVisibleRatio: 0.5,
-      lineWidth: Math.max(1, payload.geometry.radius * 0.0028)
-    });
-
-    drawLocalShape(ctx, payload, continent, {
-      mode: "coastalPlain",
-      elevation: ELEVATION.coastalPlain,
-      centerElevation: ELEVATION.coastalPlain,
-      fill: continent.secondaryColor || continent.color,
-      stroke: "",
-      centerAlpha: ALPHA.coastalPlain,
-      strokeAlpha: 0,
-      minVisible: VISIBILITY.landMin + 0.04,
-      fullStrength: VISIBILITY.landFull + 0.12,
-      minVisibleRatio: 0.58,
-      lineWidth: 0
-    });
-  }
-
-  function drawPressureZone(ctx, payload, zone) {
-    const center = projectPoint(payload, zone.lon, zone.lat, ELEVATION.pressure);
-    const alpha = depthAlpha(center.z, VISIBILITY.pressureMin, VISIBILITY.landFull + 0.16);
-
-    if (!center.visible || alpha <= 0.03) return;
-
-    const rot = toRad(zone.rot || 0);
-    const pts = [];
-    const steps = 18;
-
-    for (let i = 0; i < steps; i += 1) {
-      const t = (TAU * i) / steps;
-      const noise = 1 + Math.sin(t * 3.0) * 0.08 + Math.cos(t * 5.0) * 0.04;
-      const local = rotatePoint(Math.cos(t) * zone.rx * noise, Math.sin(t) * zone.ry * noise, rot);
-      const p = projectPoint(
-        payload,
-        normalizeLon(zone.lon + local.x),
-        clamp(zone.lat + local.y, -82, 82),
-        ELEVATION.pressure
-      );
-
-      if (!p.visible || p.z < VISIBILITY.pressureMin - 0.04) return;
-
-      pts.push(p);
-    }
-
-    ctx.save();
-
-    if (drawClosedPath(ctx, pts)) {
-      ctx.fillStyle = withAlpha(COLORS.pressure, alpha, ALPHA.pressure);
-      ctx.fill();
-    }
-
-    ctx.restore();
-  }
-
-  function drawRidge(ctx, payload, ridge) {
-    const [aLon, aLat] = ridge.a;
-    const [bLon, bLat] = ridge.b;
-    const bend = ridge.bend || 0;
-    const mid = projectPoint(payload, (aLon + bLon) / 2, (aLat + bLat) / 2, ELEVATION.ridge);
-    const alpha = depthAlpha(mid.z, VISIBILITY.ridgeMin, 0.58);
-
-    if (!mid.visible || alpha <= 0.04) return;
-
-    const pts = [];
-
-    for (let i = 0; i <= 24; i += 1) {
-      const k = i / 24;
-      const lon = aLon + (bLon - aLon) * k + Math.sin(k * Math.PI) * bend * 18;
-      const lat = aLat + (bLat - aLat) * k + Math.sin(k * Math.PI) * bend * 8;
-      const p = projectPoint(payload, lon, lat, ELEVATION.ridge);
-
-      if (!p.visible || p.z <= VISIBILITY.ridgeMin - 0.06) return;
-
-      pts.push(p);
-    }
+    if (!center.visible || alpha <= 0.02) return;
 
     ctx.save();
     ctx.beginPath();
 
-    pts.forEach((point, index) => {
+    projected.forEach((point, index) => {
       if (index === 0) ctx.moveTo(point.x, point.y);
       else ctx.lineTo(point.x, point.y);
     });
 
-    ctx.strokeStyle = withAlpha(COLORS.ridge, alpha, ALPHA.ridge);
-    ctx.lineWidth = Math.max(1, payload.geometry.radius * 0.0038);
+    ctx.strokeStyle = withAlpha(color, alpha, 0.62);
+    ctx.lineWidth = Math.max(1, payload.geometry.radius * lineWidthFactor);
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.stroke();
     ctx.restore();
   }
 
-  function drawSummit(ctx, payload, continent) {
-    const p = projectPoint(payload, continent.summitPoint.lon, continent.summitPoint.lat, ELEVATION.summit);
-    const alpha = depthAlpha(p.z, VISIBILITY.summitMin, 0.66);
+  function drawPointMarker(ctx, payload, point, color, radiusFactor) {
+    const p = projectPoint(payload, point.lon, point.lat, TOPOLOGY_MARK_ELEVATION);
+    const alpha = depthAlpha(p.z, 0.08, 0.52);
 
-    if (!p.visible || alpha <= 0.05) return;
+    if (!p.visible || alpha <= 0.03) return;
 
-    const scaleByClass =
-      continent.className === "primary"
-        ? 1.12
-        : continent.className === "major"
-          ? 0.98
-          : continent.className === "secondary"
-            ? 0.82
-            : 0.68;
+    const radius = Math.max(1, payload.geometry.radius * radiusFactor) * (0.78 + p.scale * 0.22);
 
-    const r = Math.max(1.1, payload.geometry.radius * 0.0075 * scaleByClass) * (0.76 + p.scale * 0.26);
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, radius, 0, TAU);
+    ctx.fillStyle = withAlpha(color, alpha, 0.62);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawWaterBoundary(ctx, payload, ring, color, alphaMax) {
+    if (!ring || !ring.length) return;
+
+    const projected = projectBoundary(payload, ring, TOPOLOGY_MARK_ELEVATION);
+    if (!shapeVisibilityOk(projected, 0.52)) return;
+
+    const center = averageProjected(payload, ring, TOPOLOGY_MARK_ELEVATION);
+    const alpha = depthAlpha(center.z, 0.06, 0.52);
+
+    if (!center.visible || alpha <= 0.03) return;
 
     ctx.save();
 
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, r * 1.5, 0, TAU);
-    ctx.fillStyle = withAlpha("rgba(255, 232, 158, 0.055)", alpha, 0.06);
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, r, 0, TAU);
-    ctx.fillStyle = withAlpha(COLORS.summit, alpha, ALPHA.summit);
-    ctx.fill();
+    if (drawClosedPath(ctx, projected)) {
+      ctx.fillStyle = withAlpha(color, alpha, alphaMax);
+      ctx.fill();
+      ctx.strokeStyle = withAlpha(color, alpha, Math.min(0.52, alphaMax + 0.12));
+      ctx.lineWidth = Math.max(1, payload.geometry.radius * 0.0018);
+      ctx.stroke();
+    }
 
     ctx.restore();
   }
 
-  function drawContinentalMaterial(ctx, payload) {
-    for (const continent of CONTINENTS) {
-      drawShelves(ctx, payload, continent);
+  function scriptUrl(path) {
+    return `${path}?v=${encodeURIComponent(CHILD_CACHE_KEY)}`;
+  }
+
+  function scriptAlreadyLoaded(path) {
+    if (!hasDocument()) return false;
+
+    const expected = scriptUrl(path);
+
+    return Array.from(document.scripts).some((script) => {
+      const src = script.getAttribute("src") || "";
+      return src === expected;
+    });
+  }
+
+  function loadClassicScript(path) {
+    return new Promise((resolve) => {
+      if (!hasDocument()) {
+        resolve({ path, loaded: false, reason: "document-unavailable" });
+        return;
+      }
+
+      if (scriptAlreadyLoaded(path)) {
+        resolve({ path, loaded: true, reused: true });
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = scriptUrl(path);
+      script.async = false;
+      script.defer = false;
+      script.setAttribute("data-audralia-topology-child-loader", SEGMENT_CONTRACT);
+      script.setAttribute("data-audralia-topology-cache-key", CHILD_CACHE_KEY);
+
+      script.onload = () => resolve({ path, loaded: true, reused: false });
+      script.onerror = () => resolve({ path, loaded: false, reused: false });
+
+      document.head.appendChild(script);
+    });
+  }
+
+  function readChildGlobal(child) {
+    if (!hasWindow()) return null;
+    return window[child.globalKey] || null;
+  }
+
+  function normalizeTopology(child, api) {
+    if (!api) return null;
+
+    try {
+      if (typeof api.getTopology === "function") {
+        return api.getTopology();
+      }
+
+      if (api.topology && typeof api.topology === "object") {
+        return api.topology;
+      }
+    } catch (error) {
+      recordError(`child.${child.id}.getTopology`, error);
+      return null;
     }
 
-    for (const continent of CONTINENTS) {
-      drawLand(ctx, payload, continent);
+    return null;
+  }
+
+  async function loadTopologyChildren() {
+    if (loadPromise) return loadPromise;
+
+    state.childLoadStarted = true;
+    publishReceipt("topology-children-load-start");
+
+    loadPromise = (async () => {
+      for (const child of CHILDREN) {
+        if (!child.active) {
+          state.childStatuses[child.id] = "staged";
+          continue;
+        }
+
+        state.childStatuses[child.id] = "loading";
+        publishReceipt(`topology-child-${child.id}-loading`);
+
+        const result = await loadClassicScript(child.path);
+
+        if (!result.loaded) {
+          state.childStatuses[child.id] = "missing";
+          recordError(`child.${child.id}`, `Topology child failed to load: ${child.path}`);
+          continue;
+        }
+
+        const childApi = readChildGlobal(child);
+
+        if (!childApi) {
+          state.childStatuses[child.id] = "loaded_no_global";
+          recordError(`child.${child.id}`, `Topology child loaded but did not publish expected global: ${child.globalKey}`);
+          continue;
+        }
+
+        const topology = normalizeTopology(child, childApi);
+
+        if (!topology || !Array.isArray(topology.landmasses)) {
+          state.childStatuses[child.id] = "invalid_topology";
+          recordError(`child.${child.id}`, "Topology child returned invalid topology object.");
+          continue;
+        }
+
+        state.topologies[child.id] = topology;
+        state.childStatuses[child.id] = "active";
+      }
+
+      state.localTopologyChildrenLoaded = Object.values(state.childStatuses).filter((status) => status === "active").length;
+      state.childLoadComplete = true;
+
+      publishReceipt("topology-children-load-complete");
+      requestParentRender();
+
+      return getStatus();
+    })();
+
+    return loadPromise;
+  }
+
+  function requestParentRender() {
+    if (!hasWindow()) return;
+
+    try {
+      const parent =
+        window.AUDRALIA_CLEAN_CANVAS_AUTHORITY ||
+        window.AUDRALIA_CLEAN_CANVAS_ENGINE ||
+        window.AUDRALIA_CLEAN_ENGINE_PARENT ||
+        window.AUDRALIA_ENGINE ||
+        null;
+
+      if (parent && typeof parent.requestRender === "function") {
+        parent.requestRender();
+      } else if (parent && typeof parent.render === "function") {
+        parent.render();
+      }
+    } catch (_error) {}
+  }
+
+  function drawLandmass(ctx, payload, landmass, topology) {
+    const boundary = Array.isArray(landmass.boundary) ? landmass.boundary : [];
+    if (!boundary.length) return false;
+
+    const projected = projectBoundary(payload, boundary, LAND_ELEVATION);
+
+    if (!shapeVisibilityOk(projected, 0.5)) return false;
+
+    const center = averageProjected(payload, boundary, LAND_ELEVATION);
+    const alpha = depthAlpha(center.z, 0.025, 0.38);
+
+    if (!center.visible || alpha <= 0.02) return false;
+
+    ctx.save();
+
+    if (drawClosedPath(ctx, projected)) {
+      ctx.fillStyle = withAlpha(topology.color || COLORS.land, alpha, 0.72);
+      ctx.fill();
+
+      ctx.strokeStyle = withAlpha(COLORS.landStroke, alpha, 0.22);
+      ctx.lineWidth = Math.max(1, payload.geometry.radius * 0.0028);
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      ctx.stroke();
     }
 
-    for (const continent of CONTINENTS) {
-      for (const zone of continent.pressureZones || []) {
-        drawPressureZone(ctx, payload, zone);
+    ctx.restore();
+
+    return true;
+  }
+
+  function drawTopologyClasses(ctx, payload, landmass) {
+    const boundary = Array.isArray(landmass.boundary) ? landmass.boundary : [];
+    const topology = landmass.topology || {};
+
+    if (!boundary.length) return;
+
+    for (const segment of topology.beaches || []) {
+      drawBoundarySegment(ctx, payload, boundary, segment, COLORS.beach, 0.0048);
+    }
+
+    for (const segment of topology.cliffEdges || []) {
+      drawBoundarySegment(ctx, payload, boundary, segment, COLORS.cliffEdge, 0.0042);
+    }
+
+    for (const segment of topology.bays || []) {
+      drawBoundarySegment(ctx, payload, boundary, segment, COLORS.bay, 0.0045);
+    }
+
+    for (const segment of topology.inlets || []) {
+      drawBoundarySegment(ctx, payload, boundary, segment, COLORS.inlet, 0.0038);
+    }
+
+    for (const segment of topology.peninsulas || []) {
+      drawBoundarySegment(ctx, payload, boundary, segment, COLORS.peninsula, 0.0036);
+    }
+
+    for (const segment of topology.wetlands || []) {
+      drawBoundarySegment(ctx, payload, boundary, segment, COLORS.wetland, 0.0042);
+    }
+
+    for (const point of topology.cavernMouths || []) {
+      drawPointMarker(ctx, payload, point, COLORS.cavernMouth, 0.0062);
+    }
+
+    for (const lake of topology.lakes || []) {
+      drawWaterBoundary(ctx, payload, lake, COLORS.lake, 0.34);
+    }
+
+    for (const lagoon of topology.lagoons || []) {
+      drawWaterBoundary(ctx, payload, lagoon, COLORS.lagoon, 0.28);
+    }
+  }
+
+  function drawTopology(ctx, payload, topology) {
+    if (!topology || !Array.isArray(topology.landmasses)) return 0;
+
+    let drawn = 0;
+
+    for (const landmass of topology.landmasses) {
+      const didDraw = drawLandmass(ctx, payload, landmass, topology);
+
+      if (didDraw) {
+        drawn += 1;
+        drawTopologyClasses(ctx, payload, landmass);
       }
     }
 
-    for (const continent of CONTINENTS) {
-      for (const ridge of continent.ridges || []) {
-        drawRidge(ctx, payload, ridge);
-      }
-    }
-
-    for (const continent of CONTINENTS) {
-      drawSummit(ctx, payload, continent);
-    }
+    return drawn;
   }
 
   function draw(ctx, payload) {
@@ -921,8 +644,15 @@
 
       state.drawCount += 1;
       state.lastDrawSkippedReason = "";
+      state.activeDrawnBodies = 0;
 
-      drawContinentalMaterial(ctx, payload);
+      if (!state.childLoadStarted) {
+        loadTopologyChildren().catch((error) => recordError("loadTopologyChildren", error));
+      }
+
+      for (const topology of Object.values(state.topologies)) {
+        state.activeDrawnBodies += drawTopology(ctx, payload, topology);
+      }
 
       publishReceipt("draw");
 
@@ -955,6 +685,7 @@
 
   function mount() {
     state.mountCalled = true;
+    loadTopologyChildren().catch((error) => recordError("mount.loadTopologyChildren", error));
     publishReceipt("mount");
     return api;
   }
@@ -980,21 +711,35 @@
   }
 
   function getDistribution() {
-    return CONTINENTS.map((continent) => ({
-      id: continent.id,
-      summit: continent.summit,
-      localLattice: continent.localLattice,
-      className: continent.className,
-      cells: continent.cells,
-      role: continent.role,
-      backstoryPressure: continent.backstoryPressure
+    return CHILDREN.map((child) => ({
+      id: child.id,
+      summit: child.summit,
+      cells: child.cells,
+      active: child.active,
+      staged: Boolean(child.staged),
+      status: state.childStatuses[child.id] || (child.active ? "pending" : "staged"),
+      path: child.path
+    }));
+  }
+
+  function getTopologySummary() {
+    return Object.values(state.topologies).map((topology) => ({
+      id: topology.id,
+      summit: topology.summit,
+      cells: topology.cells,
+      localLattice: topology.localLattice,
+      topologyOnly: topology.topologyOnly === true,
+      terrainOwned: topology.terrainOwned === true,
+      elevationOwned: topology.elevationOwned === true,
+      landmassCount: Array.isArray(topology.landmasses) ? topology.landmasses.length : 0
     }));
   }
 
   function getStatus() {
     return {
       contract: CONTRACT,
-      childRenewalContract: CHILD_RENEWAL_CONTRACT,
+      childSplitContract: CHILD_SPLIT_CONTRACT,
+      segmentContract: SEGMENT_CONTRACT,
       parentComplianceContract: PARENT_COMPLIANCE_CONTRACT,
       previousChildRenewalContract: PREVIOUS_CHILD_RENEWAL_CONTRACT,
       family: FAMILY,
@@ -1002,6 +747,10 @@
       route: ROUTE,
       active: true,
       classicScript: true,
+      segment: 1,
+      topologyOnly: true,
+      terrainOwned: false,
+      elevationOwned: false,
       parentCompliance: true,
       parentFacingContractUnchanged: true,
       childObeysParentStandard: true,
@@ -1009,13 +758,20 @@
       ownsFormVisible: false,
       ownsCanvas: false,
       ownsRoute: false,
-      localLatticeSovereignty: true,
-      sharedGlobalLattice: false,
-      nineUniqueContinentLattices: true,
-      backstoryTracedLattices: true,
+      ownsOcean: false,
+      localTopologyChildrenEnabled: true,
+      localTopologyChildrenTotal: CHILDREN.length,
+      localTopologyChildrenActive: CHILDREN.filter((child) => child.active).length,
+      localTopologyChildrenLoaded: state.localTopologyChildrenLoaded,
+      localTopologyChildrenStaged: state.localTopologyChildrenStaged,
+      childLoadStarted: state.childLoadStarted,
+      childLoadComplete: state.childLoadComplete,
+      childStatuses: { ...state.childStatuses },
+      topologySummary: getTopologySummary(),
       nineSummits256FibonacciModel: true,
       summitCount: 9,
       continentBodyCount: 9,
+      activeDrawnBodies: state.activeDrawnBodies,
       summits: SUMMITS.slice(),
       totalLatticeCells: TOTAL_LATTICE_CELLS,
       exposedLandCells: EXPOSED_LAND_CELLS,
@@ -1024,29 +780,47 @@
       oceanSeaRatio: OCEAN_SEA_RATIO,
       primarySummit: "Gratitude",
       fibonacciDistribution: getDistribution(),
-      landCellTotal: CONTINENTS.reduce((sum, continent) => sum + continent.cells, 0),
-      seaLevelLand: true,
-      submergedShelves: true,
-      softLimbFade: true,
-      noHardLimbSlicing: true,
+      landCellTotal: CHILDREN.reduce((sum, child) => sum + child.cells, 0),
+      categoriesAllowed: [
+        "LANDMASS",
+        "OCEAN_ADJACENCY",
+        "BEACH",
+        "CLIFF_EDGE",
+        "CAVERN_MOUTH",
+        "LAKE",
+        "BAY",
+        "INLET",
+        "PENINSULA",
+        "ISLAND",
+        "LAGOON",
+        "WETLAND"
+      ],
+      forbiddenInThisLayer: [
+        "elevation",
+        "terrain height",
+        "mountains",
+        "valleys",
+        "basins",
+        "raised cliffs",
+        "3D caverns",
+        "terrain shading",
+        "ocean rendering",
+        "sky rendering",
+        "motion activation"
+      ],
       globalPublished: state.globalPublished,
       mountCalled: state.mountCalled,
       drawCount: state.drawCount,
       lastParentContractSeen: state.lastParentContractSeen,
       lastDrawSkippedReason: state.lastDrawSkippedReason,
       owns: [
+        "topology-only orchestration",
         "Nine Summits continent model",
         "89 of 256 exposed-land budget",
-        "167 of 256 ocean/shelf/sea budget",
-        "Fibonacci land distribution",
-        "nine locally sovereign continent lattices",
-        "backstory-traced landform expression",
-        "parent-compliant child surface material",
-        "sea-level land projection",
-        "submerged shelves",
-        "surface pressure ridges",
-        "embedded summit markers",
-        "soft limb fade"
+        "167 of 256 ocean/seawater relationship budget",
+        "parent-compliant landmass boundary rendering",
+        "topology category overlays",
+        "child topology loading"
       ],
       doesNotOwn: [
         "FORM_VISIBLE",
@@ -1055,9 +829,11 @@
         "route fallback",
         "runtime handoff",
         "parent mount",
+        "ocean body",
         "sky",
         "motion",
-        "cloud layer",
+        "terrain",
+        "elevation",
         "zoom",
         "orbit"
       ],
@@ -1071,19 +847,21 @@
 
     const receipt = {
       contract: CONTRACT,
-      childRenewalContract: CHILD_RENEWAL_CONTRACT,
+      childSplitContract: CHILD_SPLIT_CONTRACT,
+      segmentContract: SEGMENT_CONTRACT,
       parentComplianceContract: PARENT_COMPLIANCE_CONTRACT,
       previousChildRenewalContract: PREVIOUS_CHILD_RENEWAL_CONTRACT,
       family: FAMILY,
       target: TARGET,
       route: ROUTE,
-      mode: "g26_unique_continent_lattices_backstory_obedience",
+      mode: "g26_topology_only_continent_child_split_segment_1",
       scope,
       active: true,
       classicScript: true,
-      globalPublished: state.globalPublished,
-      mountCalled: state.mountCalled,
-      drawCount: state.drawCount,
+      segment: 1,
+      topologyOnly: true,
+      terrainOwned: false,
+      elevationOwned: false,
       parentCompliance: true,
       parentFacingContractUnchanged: true,
       childObeysParentStandard: true,
@@ -1091,26 +869,36 @@
       ownsFormVisible: false,
       ownsCanvas: false,
       ownsRoute: false,
-      localLatticeSovereignty: true,
-      sharedGlobalLattice: false,
-      nineUniqueContinentLattices: true,
-      backstoryTracedLattices: true,
+      ownsOcean: false,
+      localTopologyChildrenEnabled: true,
+      localTopologyChildrenTotal: CHILDREN.length,
+      localTopologyChildrenActive: CHILDREN.filter((child) => child.active).length,
+      localTopologyChildrenLoaded: state.localTopologyChildrenLoaded,
+      localTopologyChildrenStaged: state.localTopologyChildrenStaged,
+      childLoadStarted: state.childLoadStarted,
+      childLoadComplete: state.childLoadComplete,
+      childStatuses: { ...state.childStatuses },
+      topologySummary: getTopologySummary(),
+      globalPublished: state.globalPublished,
+      mountCalled: state.mountCalled,
+      drawCount: state.drawCount,
       nineSummits256FibonacciModel: true,
       summitCount: 9,
       continentBodyCount: 9,
+      activeDrawnBodies: state.activeDrawnBodies,
       totalLatticeCells: TOTAL_LATTICE_CELLS,
       exposedLandCells: EXPOSED_LAND_CELLS,
       oceanSeaShelfCells: OCEAN_SEA_SHELF_CELLS,
       exposedLandRatio: EXPOSED_LAND_RATIO,
       oceanSeaRatio: OCEAN_SEA_RATIO,
       primarySummit: "Gratitude",
-      landCellTotal: CONTINENTS.reduce((sum, continent) => sum + continent.cells, 0),
+      landCellTotal: CHILDREN.reduce((sum, child) => sum + child.cells, 0),
       summits: SUMMITS.slice(),
       distribution: getDistribution(),
-      seaLevelLand: true,
-      submergedShelves: true,
-      softLimbFade: true,
-      noHardLimbSlicing: true,
+      topologicalClassesOnly: true,
+      cliffEdgeIsCategoryOnly: true,
+      cavernMouthIsCategoryOnly: true,
+      lakeIsBoundaryOnly: true,
       fiveContinentLawDeprecated: true,
       lastParentContractSeen: state.lastParentContractSeen,
       lastDrawSkippedReason: state.lastDrawSkippedReason,
@@ -1125,7 +913,7 @@
     window.AUDRALIA_CLEAN_CONTINENTS_RECEIPT = receipt;
     window.AUDRALIA_CLEAN_CANVAS_CONTINENTS_RECEIPT = receipt;
     window.AUDRALIA_NINE_SUMMITS_CONTINENTS_RECEIPT = receipt;
-    window.AUDRALIA_UNIQUE_CONTINENT_LATTICES_RECEIPT = receipt;
+    window.AUDRALIA_TOPOLOGY_ONLY_CONTINENTS_RECEIPT = receipt;
 
     try {
       window.dispatchEvent(new CustomEvent("audralia:continents:receipt", { detail: receipt }));
@@ -1138,19 +926,21 @@
 
   const api = {
     CONTRACT,
-    CHILD_RENEWAL_CONTRACT,
+    CHILD_SPLIT_CONTRACT,
+    SEGMENT_CONTRACT,
     PARENT_COMPLIANCE_CONTRACT,
     PREVIOUS_CHILD_RENEWAL_CONTRACT,
     FAMILY,
     TARGET,
     ROUTE,
     SUMMITS,
-    CONTINENTS,
+    CHILDREN,
     TOTAL_LATTICE_CELLS,
     EXPOSED_LAND_CELLS,
     OCEAN_SEA_SHELF_CELLS,
     EXPOSED_LAND_RATIO,
     OCEAN_SEA_RATIO,
+    loadTopologyChildren,
     mount,
     init,
     setup,
@@ -1177,9 +967,11 @@
     window.audraliaContinents = api;
 
     window.AUDRALIA_NINE_SUMMITS_256_FIBONACCI_CONTINENTS_ACTIVE = true;
-    window.AUDRALIA_UNIQUE_CONTINENT_LATTICES_BACKSTORY_OBEDIENCE_ACTIVE = true;
-    window.AUDRALIA_LOCAL_LATTICE_SOVEREIGNTY = true;
-    window.AUDRALIA_SHARED_GLOBAL_LATTICE = false;
+    window.AUDRALIA_TOPOLOGY_ONLY_CONTINENT_CHILD_SPLIT_ACTIVE = true;
+    window.AUDRALIA_TOPOLOGY_ONLY_CONTINENT_CHILD_SPLIT_SEGMENT = 1;
+    window.AUDRALIA_LOCAL_TOPOLOGY_CHILDREN_ENABLED = true;
+    window.AUDRALIA_TERRAIN_OWNED_BY_CONTINENTS = false;
+    window.AUDRALIA_ELEVATION_OWNED_BY_CONTINENTS = false;
     window.AUDRALIA_FIVE_CONTINENT_LAW_ACTIVE = false;
     window.AUDRALIA_FIVE_CONTINENT_LAW_DEPRECATED = true;
     window.AUDRALIA_EXPOSED_LAND_CELLS = EXPOSED_LAND_CELLS;

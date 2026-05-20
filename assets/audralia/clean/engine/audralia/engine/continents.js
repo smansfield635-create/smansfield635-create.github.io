@@ -1,19 +1,21 @@
 // /assets/audralia/clean/engine/audralia/engine/continents.js
-// AUDRALIA_G2_6_TOPOLOGY_ONLY_CONTINENT_CHILD_SPLIT_SEGMENT_1_TNT_v1
+// AUDRALIA_G2_6_CONTINENTS_CHILD_LOAD_AND_DRAW_RECEIPT_ALIGNMENT_TNT_v1
 // Full-file replacement.
-// Purpose: convert continents.js into a topology-only landmass orchestrator and load the first unique continent topology child: Gratitude.
-// Parent-facing admission contract intentionally remains AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1 for bridge compatibility.
-// Segment 1 loads Gratitude only. The other eight Summit continent children remain staged.
-// Does not own: parent geometry, canvas creation, route bridge, runtime, FORM_VISIBLE, ocean body, seawater base, sky, motion, elevation, terrain, zoom, orbit, generated image, GraphicBox, or visual-pass claim.
+// Purpose: make continents.js authoritative for child-load and draw truth, not merely wrapper-load truth.
+// Parent-facing admission contract intentionally remains AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1 for route-bridge compatibility.
+// Segment 1 remains active: Gratitude only. The other eight Summit children remain staged.
+// Does not own: parent geometry, canvas creation, route bridge, runtime, FORM_VISIBLE, ocean body, seawater base, sky, motion, elevation, height maps, mountains, animals, plants, zoom, orbit, generated image, GraphicBox, or visual-pass claim.
 
 (() => {
   "use strict";
 
   const CONTRACT = "AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1";
+  const INTERNAL_CONTRACT = "AUDRALIA_G2_6_CONTINENTS_CHILD_LOAD_AND_DRAW_RECEIPT_ALIGNMENT_TNT_v1";
   const CHILD_SPLIT_CONTRACT = "AUDRALIA_G2_6_TOPOLOGY_ONLY_CONTINENT_CHILD_SPLIT_TNT_v1";
   const SEGMENT_CONTRACT = "AUDRALIA_G2_6_TOPOLOGY_ONLY_CONTINENT_CHILD_SPLIT_SEGMENT_1_TNT_v1";
+  const CHAIN_CONTRACT = "AUDRALIA_G2_6_SINGLE_CACHE_NONCE_CHAIN_ALIGNMENT_TNT_v1";
   const PARENT_COMPLIANCE_CONTRACT = "AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1";
-  const PREVIOUS_CHILD_RENEWAL_CONTRACT = "AUDRALIA_G2_6_UNIQUE_CONTINENT_LATTICES_BACKSTORY_OBEDIENCE_TNT_v1";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G2_6_TOPOLOGY_ONLY_CONTINENT_CHILD_SPLIT_SEGMENT_1_TNT_v1";
   const FAMILY = "AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1";
 
   const TARGET = "/assets/audralia/clean/engine/audralia/engine/continents.js";
@@ -29,9 +31,10 @@
   const OCEAN_SEA_RATIO = OCEAN_SEA_SHELF_CELLS / TOTAL_LATTICE_CELLS;
 
   const LAND_ELEVATION = -0.004;
-  const TOPOLOGY_MARK_ELEVATION = -0.0035;
+  const TOPOLOGY_MARK_ELEVATION = -0.0032;
 
-  const CHILD_CACHE_KEY = CHILD_SPLIT_CONTRACT;
+  const ACTIVE_CHILD_TIMEOUT_MS = 3400;
+  const POLL_MS = 50;
 
   const CHILDREN = Object.freeze([
     {
@@ -39,8 +42,14 @@
       summit: "Gratitude",
       cells: 21,
       active: true,
+      requiredForVisual: true,
       path: "/assets/audralia/clean/engine/audralia/engine/continents/gratitude.js",
-      globalKey: "AUDRALIA_TOPOLOGY_GRATITUDE"
+      globalKey: "AUDRALIA_TOPOLOGY_GRATITUDE",
+      expectedContracts: [
+        "AUDRALIA_G2_6_GRATITUDE_FULL_TOPOLOGY_GROUND_BASIS_CHILD_TNT_v1",
+        "AUDRALIA_G2_6_GRATITUDE_ADVERSITY_SURVIVAL_TOPOLOGY_CHILD_TNT_v1",
+        "AUDRALIA_G2_6_TOPOLOGY_ONLY_GRATITUDE_CHILD_TNT_v1"
+      ]
     },
     {
       id: "generosity",
@@ -49,7 +58,8 @@
       active: false,
       staged: true,
       path: "/assets/audralia/clean/engine/audralia/engine/continents/generosity.js",
-      globalKey: "AUDRALIA_TOPOLOGY_GENEROSITY"
+      globalKey: "AUDRALIA_TOPOLOGY_GENEROSITY",
+      expectedContracts: []
     },
     {
       id: "dependability",
@@ -58,7 +68,8 @@
       active: false,
       staged: true,
       path: "/assets/audralia/clean/engine/audralia/engine/continents/dependability.js",
-      globalKey: "AUDRALIA_TOPOLOGY_DEPENDABILITY"
+      globalKey: "AUDRALIA_TOPOLOGY_DEPENDABILITY",
+      expectedContracts: []
     },
     {
       id: "accountability",
@@ -67,7 +78,8 @@
       active: false,
       staged: true,
       path: "/assets/audralia/clean/engine/audralia/engine/continents/accountability.js",
-      globalKey: "AUDRALIA_TOPOLOGY_ACCOUNTABILITY"
+      globalKey: "AUDRALIA_TOPOLOGY_ACCOUNTABILITY",
+      expectedContracts: []
     },
     {
       id: "forgiveness",
@@ -76,7 +88,8 @@
       active: false,
       staged: true,
       path: "/assets/audralia/clean/engine/audralia/engine/continents/forgiveness.js",
-      globalKey: "AUDRALIA_TOPOLOGY_FORGIVENESS"
+      globalKey: "AUDRALIA_TOPOLOGY_FORGIVENESS",
+      expectedContracts: []
     },
     {
       id: "humility",
@@ -85,7 +98,8 @@
       active: false,
       staged: true,
       path: "/assets/audralia/clean/engine/audralia/engine/continents/humility.js",
-      globalKey: "AUDRALIA_TOPOLOGY_HUMILITY"
+      globalKey: "AUDRALIA_TOPOLOGY_HUMILITY",
+      expectedContracts: []
     },
     {
       id: "self-control",
@@ -94,7 +108,8 @@
       active: false,
       staged: true,
       path: "/assets/audralia/clean/engine/audralia/engine/continents/self-control.js",
-      globalKey: "AUDRALIA_TOPOLOGY_SELF_CONTROL"
+      globalKey: "AUDRALIA_TOPOLOGY_SELF_CONTROL",
+      expectedContracts: []
     },
     {
       id: "patience",
@@ -103,7 +118,8 @@
       active: false,
       staged: true,
       path: "/assets/audralia/clean/engine/audralia/engine/continents/patience.js",
-      globalKey: "AUDRALIA_TOPOLOGY_PATIENCE"
+      globalKey: "AUDRALIA_TOPOLOGY_PATIENCE",
+      expectedContracts: []
     },
     {
       id: "purity",
@@ -112,79 +128,97 @@
       active: false,
       staged: true,
       path: "/assets/audralia/clean/engine/audralia/engine/continents/purity.js",
-      globalKey: "AUDRALIA_TOPOLOGY_PURITY"
+      globalKey: "AUDRALIA_TOPOLOGY_PURITY",
+      expectedContracts: []
     }
   ]);
 
   const SUMMITS = Object.freeze(CHILDREN.map((child) => child.summit));
 
   const COLORS = Object.freeze({
-    land: "rgba(79, 170, 108, 0.72)",
-    landStroke: "rgba(235, 250, 236, 0.20)",
-    beach: "rgba(235, 222, 157, 0.42)",
-    cliffEdge: "rgba(178, 183, 171, 0.34)",
-    cavernMouth: "rgba(28, 32, 38, 0.38)",
-    lake: "rgba(74, 182, 220, 0.32)",
-    bay: "rgba(106, 218, 232, 0.22)",
-    inlet: "rgba(126, 226, 235, 0.24)",
-    peninsula: "rgba(109, 190, 122, 0.34)",
-    lagoon: "rgba(112, 218, 220, 0.25)",
-    wetland: "rgba(116, 178, 128, 0.30)",
-    oceanAdjacency: "rgba(178, 244, 255, 0.16)"
+    land: "rgba(70, 178, 108, 0.80)",
+    landStroke: "rgba(235, 250, 236, 0.26)",
+    beach: "rgba(240, 222, 150, 0.58)",
+    cliffEdge: "rgba(205, 205, 186, 0.52)",
+    cavernMouth: "rgba(18, 22, 30, 0.74)",
+    lake: "rgba(64, 190, 226, 0.48)",
+    bay: "rgba(106, 225, 238, 0.42)",
+    inlet: "rgba(132, 236, 242, 0.48)",
+    peninsula: "rgba(125, 210, 134, 0.46)",
+    lagoon: "rgba(112, 224, 224, 0.42)",
+    wetland: "rgba(122, 188, 128, 0.48)",
+    diagnostic: "rgba(255, 205, 112, 0.72)"
   });
 
   const state = {
     contract: CONTRACT,
+    internalContract: INTERNAL_CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
     childSplitContract: CHILD_SPLIT_CONTRACT,
     segmentContract: SEGMENT_CONTRACT,
+    chainContract: CHAIN_CONTRACT,
     parentComplianceContract: PARENT_COMPLIANCE_CONTRACT,
-    previousChildRenewalContract: PREVIOUS_CHILD_RENEWAL_CONTRACT,
     family: FAMILY,
     target: TARGET,
     route: ROUTE,
+
+    cacheNonce: "",
+    active: true,
+    classicScript: true,
     segment: 1,
+
     topologyOnly: true,
     terrainOwned: false,
     elevationOwned: false,
+    ownsCanvas: false,
+    ownsFormVisible: false,
+    ownsOcean: false,
+    ownsRoute: false,
+
     parentCompliance: true,
     parentFacingContractUnchanged: true,
     childObeysParentStandard: true,
     acceptsParentPayloadOnly: true,
-    ownsFormVisible: false,
-    ownsCanvas: false,
-    ownsRoute: false,
-    ownsOcean: false,
-    localTopologyChildrenEnabled: true,
-    localTopologyChildrenTotal: CHILDREN.length,
-    localTopologyChildrenActive: CHILDREN.filter((child) => child.active).length,
-    localTopologyChildrenLoaded: 0,
-    localTopologyChildrenStaged: CHILDREN.filter((child) => child.staged).length,
+
     nineSummits256FibonacciModel: true,
     summitCount: 9,
     continentBodyCount: 9,
-    activeDrawnBodies: 0,
     totalLatticeCells: TOTAL_LATTICE_CELLS,
     exposedLandCells: EXPOSED_LAND_CELLS,
     oceanSeaShelfCells: OCEAN_SEA_SHELF_CELLS,
     exposedLandRatio: EXPOSED_LAND_RATIO,
     oceanSeaRatio: OCEAN_SEA_RATIO,
     primarySummit: "Gratitude",
-    active: true,
-    classicScript: true,
+
     globalPublished: false,
     mountCalled: false,
     drawCount: 0,
+    activeDrawnBodies: 0,
+    activeTopologyCount: 0,
+
     childLoadStarted: false,
     childLoadComplete: false,
-    childStatuses: {},
-    topologies: {},
+    activeChildLoadComplete: false,
+    childVisualReady: false,
+    childDrawAuthoritative: true,
+    wrapperOnlyValid: false,
+
     lastParentContractSeen: "",
     lastDrawSkippedReason: "",
-    visualPassClaim: false,
-    errors: []
+    lastDrawSummary: null,
+    lastLoadSummary: null,
+
+    childStatuses: {},
+    childContracts: {},
+    childSources: {},
+    topologies: {},
+    topologyErrors: {},
+    errors: [],
+
+    visualPassClaim: false
   };
 
-  let loadPromise = null;
+  const loadPromises = new Map();
 
   function hasWindow() {
     return typeof window !== "undefined";
@@ -202,18 +236,77 @@
     }
   }
 
-  function recordError(scope, error) {
-    const message = error && error.message ? error.message : String(error);
-    state.errors.push({ scope, message, time: nowIso() });
-    publishReceipt(scope);
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
   }
 
   function toRad(degrees) {
     return degrees * DEG;
   }
 
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
+  function getOwnScriptNonce() {
+    if (!hasDocument()) return "";
+
+    try {
+      const scripts = Array.from(document.scripts);
+      const own = scripts.reverse().find((script) => {
+        const src = script.getAttribute("src") || "";
+        return src.includes("/assets/audralia/clean/engine/audralia/engine/continents.js");
+      });
+
+      if (!own) return "";
+
+      return new URL(own.src, window.location.href).searchParams.get("v") || "";
+    } catch (_error) {
+      return "";
+    }
+  }
+
+  function getOrCreateCacheNonce() {
+    if (!hasWindow() || !hasDocument()) {
+      state.cacheNonce = state.cacheNonce || `${CHAIN_CONTRACT}__${Date.now()}`;
+      return state.cacheNonce;
+    }
+
+    const root = document.documentElement;
+
+    const nonce =
+      state.cacheNonce ||
+      (window.AUDRALIA_PAGE_CACHE_NONCE ? String(window.AUDRALIA_PAGE_CACHE_NONCE) : "") ||
+      root.getAttribute("data-audralia-page-cache-nonce") ||
+      root.getAttribute("data-audralia-route-bridge-cache-key") ||
+      (window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT && window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.dynamicCacheKey
+        ? String(window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.dynamicCacheKey)
+        : "") ||
+      getOwnScriptNonce() ||
+      `${CHAIN_CONTRACT}__${Date.now()}__${Math.random().toString(36).slice(2, 8)}`;
+
+    state.cacheNonce = nonce;
+    window.AUDRALIA_PAGE_CACHE_NONCE = nonce;
+    root.setAttribute("data-audralia-page-cache-nonce", nonce);
+    root.setAttribute("data-audralia-single-cache-nonce-chain", "true");
+
+    return nonce;
+  }
+
+  function childUrl(path) {
+    return `${path}?v=${encodeURIComponent(getOrCreateCacheNonce())}`;
+  }
+
+  function recordError(scope, error) {
+    const message = error && error.message ? error.message : String(error);
+    state.errors.push({ scope, message, time: nowIso() });
+    publishReceipt(scope);
+  }
+
+  function setChildStatus(child, status, detail = "") {
+    state.childStatuses[child.id] = status;
+    if (detail) state.topologyErrors[child.id] = detail;
+    publishReceipt(`child-${child.id}-${status}`);
   }
 
   function parseRgba(color) {
@@ -278,37 +371,60 @@
 
   function projectBoundary(payload, boundary, elevation = LAND_ELEVATION) {
     return boundary.map((point) => ({
-      ...projectPoint(payload, point.lon, point.lat, elevation),
-      lon: point.lon,
-      lat: point.lat
+      ...projectPoint(payload, Number(point.lon), Number(point.lat), elevation),
+      lon: Number(point.lon),
+      lat: Number(point.lat)
     }));
   }
 
-  function averageProjected(payload, boundary, elevation = LAND_ELEVATION) {
-    if (!boundary || !boundary.length) return projectPoint(payload, 0, 0, elevation);
+  function averageLonLat(boundary) {
+    if (!Array.isArray(boundary) || !boundary.length) {
+      return { lon: 0, lat: 0 };
+    }
 
-    const sum = boundary.reduce(
-      (acc, point) => {
-        acc.lon += point.lon;
-        acc.lat += point.lat;
+    return boundary.reduce(
+      (acc, point, index, array) => {
+        acc.lon += Number(point.lon || 0) / array.length;
+        acc.lat += Number(point.lat || 0) / array.length;
         return acc;
       },
       { lon: 0, lat: 0 }
     );
-
-    return projectPoint(payload, sum.lon / boundary.length, sum.lat / boundary.length, elevation);
   }
 
-  function shapeVisibilityOk(points, minRatio = 0.5) {
-    if (!points || !points.length) return false;
+  function averageProjected(payload, boundary, elevation = LAND_ELEVATION) {
+    const avg = averageLonLat(boundary);
+    return projectPoint(payload, avg.lon, avg.lat, elevation);
+  }
+
+  function projectedVisibility(points) {
+    if (!Array.isArray(points) || !points.length) {
+      return {
+        visible: [],
+        frontish: [],
+        ratio: 0,
+        frontRatio: 0
+      };
+    }
 
     const visible = points.filter((point) => point.visible && point.z > -0.08);
+    const frontish = points.filter((point) => point.visible && point.z > 0.02);
 
-    return visible.length / points.length >= minRatio;
+    return {
+      visible,
+      frontish,
+      ratio: visible.length / points.length,
+      frontRatio: frontish.length / points.length
+    };
+  }
+
+  function shapeVisibilityOk(points, minRatio = 0.28) {
+    const visibility = projectedVisibility(points);
+    return visibility.visible.length >= 3 && visibility.ratio >= minRatio;
   }
 
   function drawClosedPath(ctx, points) {
-    if (!points || !points.length) return false;
+    if (!points || points.length < 3) return false;
 
     ctx.beginPath();
 
@@ -323,7 +439,7 @@
   }
 
   function segmentPoints(boundary, start, end) {
-    if (!boundary || !boundary.length) return [];
+    if (!Array.isArray(boundary) || !boundary.length) return [];
 
     const count = boundary.length;
     const a = Math.max(0, Math.min(count - 1, Number(start) || 0));
@@ -334,82 +450,121 @@
     return boundary.slice(a).concat(boundary.slice(0, b + 1));
   }
 
-  function drawBoundarySegment(ctx, payload, boundary, segment, color, lineWidthFactor) {
-    const nodes = segmentPoints(boundary, segment.start, segment.end);
-    if (!nodes.length) return;
-
-    const projected = projectBoundary(payload, nodes, TOPOLOGY_MARK_ELEVATION);
-    if (!shapeVisibilityOk(projected, 0.45)) return;
-
-    const center = averageProjected(payload, nodes, TOPOLOGY_MARK_ELEVATION);
-    const alpha = depthAlpha(center.z, 0.04, 0.46);
-
-    if (!center.visible || alpha <= 0.02) return;
-
-    ctx.save();
-    ctx.beginPath();
-
-    projected.forEach((point, index) => {
-      if (index === 0) ctx.moveTo(point.x, point.y);
-      else ctx.lineTo(point.x, point.y);
-    });
-
-    ctx.strokeStyle = withAlpha(color, alpha, 0.62);
-    ctx.lineWidth = Math.max(1, payload.geometry.radius * lineWidthFactor);
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.stroke();
-    ctx.restore();
+  function readChildGlobal(child) {
+    if (!hasWindow()) return null;
+    return window[child.globalKey] || null;
   }
 
-  function drawPointMarker(ctx, payload, point, color, radiusFactor) {
-    const p = projectPoint(payload, point.lon, point.lat, TOPOLOGY_MARK_ELEVATION);
-    const alpha = depthAlpha(p.z, 0.08, 0.52);
+  function childContract(api, topology) {
+    const status =
+      api && typeof api.getStatus === "function"
+        ? safeCall(() => api.getStatus(), null)
+        : api && typeof api.status === "function"
+          ? safeCall(() => api.status(), null)
+          : null;
 
-    if (!p.visible || alpha <= 0.03) return;
-
-    const radius = Math.max(1, payload.geometry.radius * radiusFactor) * (0.78 + p.scale * 0.22);
-
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, radius, 0, TAU);
-    ctx.fillStyle = withAlpha(color, alpha, 0.62);
-    ctx.fill();
-    ctx.restore();
+    return (
+      (status && status.contract) ||
+      (api && api.CONTRACT) ||
+      (topology && topology.contract) ||
+      ""
+    );
   }
 
-  function drawWaterBoundary(ctx, payload, ring, color, alphaMax) {
-    if (!ring || !ring.length) return;
+  function safeCall(fn, fallback) {
+    try {
+      return fn();
+    } catch (_error) {
+      return fallback;
+    }
+  }
 
-    const projected = projectBoundary(payload, ring, TOPOLOGY_MARK_ELEVATION);
-    if (!shapeVisibilityOk(projected, 0.52)) return;
-
-    const center = averageProjected(payload, ring, TOPOLOGY_MARK_ELEVATION);
-    const alpha = depthAlpha(center.z, 0.06, 0.52);
-
-    if (!center.visible || alpha <= 0.03) return;
-
-    ctx.save();
-
-    if (drawClosedPath(ctx, projected)) {
-      ctx.fillStyle = withAlpha(color, alpha, alphaMax);
-      ctx.fill();
-      ctx.strokeStyle = withAlpha(color, alpha, Math.min(0.52, alphaMax + 0.12));
-      ctx.lineWidth = Math.max(1, payload.geometry.radius * 0.0018);
-      ctx.stroke();
+  function validateTopologyObject(child, topology) {
+    if (!topology || typeof topology !== "object") {
+      return "missing_topology_object";
     }
 
-    ctx.restore();
+    if (!Array.isArray(topology.landmasses)) {
+      return "missing_landmasses_array";
+    }
+
+    if (!topology.landmasses.length) {
+      return "empty_landmasses_array";
+    }
+
+    for (const landmass of topology.landmasses) {
+      if (!landmass || typeof landmass !== "object") {
+        return "invalid_landmass_object";
+      }
+
+      if (!Array.isArray(landmass.boundary)) {
+        return `landmass_${landmass.id || "unknown"}_missing_boundary`;
+      }
+
+      if (landmass.boundary.length < 3) {
+        return `landmass_${landmass.id || "unknown"}_boundary_too_short`;
+      }
+    }
+
+    if (child.id === "gratitude" && topology.summit !== "Gratitude") {
+      return "gratitude_child_returned_wrong_summit";
+    }
+
+    return "";
   }
 
-  function scriptUrl(path) {
-    return `${path}?v=${encodeURIComponent(CHILD_CACHE_KEY)}`;
+  function normalizeTopology(child, api) {
+    if (!api) return null;
+
+    let topology = null;
+
+    try {
+      if (typeof api.getTopology === "function") {
+        topology = api.getTopology();
+      } else if (api.topology && typeof api.topology === "object") {
+        topology = api.topology;
+      }
+    } catch (error) {
+      recordError(`child.${child.id}.getTopology`, error);
+      return null;
+    }
+
+    const invalidReason = validateTopologyObject(child, topology);
+
+    if (invalidReason) {
+      state.topologyErrors[child.id] = invalidReason;
+      return null;
+    }
+
+    return topology;
+  }
+
+  function syncAlreadyPublishedChild(child) {
+    const api = readChildGlobal(child);
+
+    if (!api) return false;
+
+    const topology = normalizeTopology(child, api);
+
+    if (!topology) {
+      setChildStatus(child, "invalid_topology", state.topologyErrors[child.id] || "invalid topology");
+      return false;
+    }
+
+    const contract = childContract(api, topology);
+
+    state.topologies[child.id] = topology;
+    state.childContracts[child.id] = contract || "unknown";
+    state.childSources[child.id] = "published-global";
+    setChildStatus(child, "active", "published global topology accepted");
+
+    return true;
   }
 
   function scriptAlreadyLoaded(path) {
     if (!hasDocument()) return false;
 
-    const expected = scriptUrl(path);
+    const expected = childUrl(path);
 
     return Array.from(document.scripts).some((script) => {
       const src = script.getAttribute("src") || "";
@@ -417,110 +572,122 @@
     });
   }
 
-  function loadClassicScript(path) {
+  function loadClassicScript(path, child) {
     return new Promise((resolve) => {
       if (!hasDocument()) {
         resolve({ path, loaded: false, reason: "document-unavailable" });
         return;
       }
 
+      const wanted = childUrl(path);
+
       if (scriptAlreadyLoaded(path)) {
-        resolve({ path, loaded: true, reused: true });
+        resolve({ path: wanted, loaded: true, reused: true });
         return;
       }
 
       const script = document.createElement("script");
-      script.src = scriptUrl(path);
+      script.src = wanted;
       script.async = false;
       script.defer = false;
-      script.setAttribute("data-audralia-topology-child-loader", SEGMENT_CONTRACT);
-      script.setAttribute("data-audralia-topology-cache-key", CHILD_CACHE_KEY);
+      script.setAttribute("data-audralia-topology-child-loader", INTERNAL_CONTRACT);
+      script.setAttribute("data-audralia-topology-child-id", child.id);
+      script.setAttribute("data-audralia-single-cache-nonce-chain", CHAIN_CONTRACT);
+      script.setAttribute("data-audralia-page-cache-nonce", getOrCreateCacheNonce());
 
-      script.onload = () => resolve({ path, loaded: true, reused: false });
-      script.onerror = () => resolve({ path, loaded: false, reused: false });
+      script.onload = () => resolve({ path: wanted, loaded: true, reused: false });
+      script.onerror = () => resolve({ path: wanted, loaded: false, reused: false });
 
       document.head.appendChild(script);
     });
   }
 
-  function readChildGlobal(child) {
-    if (!hasWindow()) return null;
-    return window[child.globalKey] || null;
-  }
-
-  function normalizeTopology(child, api) {
-    if (!api) return null;
-
-    try {
-      if (typeof api.getTopology === "function") {
-        return api.getTopology();
-      }
-
-      if (api.topology && typeof api.topology === "object") {
-        return api.topology;
-      }
-    } catch (error) {
-      recordError(`child.${child.id}.getTopology`, error);
-      return null;
+  async function loadOneChild(child) {
+    if (!child.active) {
+      state.childStatuses[child.id] = "staged";
+      return false;
     }
 
-    return null;
+    if (syncAlreadyPublishedChild(child)) {
+      return true;
+    }
+
+    const key = child.id;
+
+    if (loadPromises.has(key)) {
+      await loadPromises.get(key);
+      return syncAlreadyPublishedChild(child);
+    }
+
+    setChildStatus(child, "loading", "active child script requested");
+
+    const promise = (async () => {
+      const result = await loadClassicScript(child.path, child);
+
+      state.childSources[child.id] = result.path || child.path;
+
+      if (!result.loaded) {
+        setChildStatus(child, "missing_script", `failed to load ${child.path}`);
+        return false;
+      }
+
+      const start = Date.now();
+
+      while (Date.now() - start <= ACTIVE_CHILD_TIMEOUT_MS) {
+        if (syncAlreadyPublishedChild(child)) {
+          return true;
+        }
+
+        await sleep(POLL_MS);
+      }
+
+      setChildStatus(child, "loaded_no_global", `script loaded but ${child.globalKey} was not published`);
+      return false;
+    })();
+
+    loadPromises.set(key, promise);
+
+    return promise;
   }
 
   async function loadTopologyChildren() {
-    if (loadPromise) return loadPromise;
+    if (state.childLoadStarted && state.childLoadComplete) {
+      return getStatus();
+    }
 
     state.childLoadStarted = true;
     publishReceipt("topology-children-load-start");
 
-    loadPromise = (async () => {
-      for (const child of CHILDREN) {
-        if (!child.active) {
-          state.childStatuses[child.id] = "staged";
-          continue;
-        }
+    let activeLoaded = 0;
 
-        state.childStatuses[child.id] = "loading";
-        publishReceipt(`topology-child-${child.id}-loading`);
-
-        const result = await loadClassicScript(child.path);
-
-        if (!result.loaded) {
-          state.childStatuses[child.id] = "missing";
-          recordError(`child.${child.id}`, `Topology child failed to load: ${child.path}`);
-          continue;
-        }
-
-        const childApi = readChildGlobal(child);
-
-        if (!childApi) {
-          state.childStatuses[child.id] = "loaded_no_global";
-          recordError(`child.${child.id}`, `Topology child loaded but did not publish expected global: ${child.globalKey}`);
-          continue;
-        }
-
-        const topology = normalizeTopology(child, childApi);
-
-        if (!topology || !Array.isArray(topology.landmasses)) {
-          state.childStatuses[child.id] = "invalid_topology";
-          recordError(`child.${child.id}`, "Topology child returned invalid topology object.");
-          continue;
-        }
-
-        state.topologies[child.id] = topology;
-        state.childStatuses[child.id] = "active";
+    for (const child of CHILDREN) {
+      if (!child.active) {
+        state.childStatuses[child.id] = "staged";
+        continue;
       }
 
-      state.localTopologyChildrenLoaded = Object.values(state.childStatuses).filter((status) => status === "active").length;
-      state.childLoadComplete = true;
+      const loaded = await loadOneChild(child);
+      if (loaded) activeLoaded += 1;
+    }
 
-      publishReceipt("topology-children-load-complete");
-      requestParentRender();
+    state.activeTopologyCount = Object.keys(state.topologies).length;
+    state.localTopologyChildrenLoaded = activeLoaded;
+    state.activeChildLoadComplete = activeLoaded === CHILDREN.filter((child) => child.active).length;
+    state.childLoadComplete = true;
 
-      return getStatus();
-    })();
+    state.lastLoadSummary = {
+      activeLoaded,
+      activeRequired: CHILDREN.filter((child) => child.active).length,
+      topologies: Object.keys(state.topologies),
+      statuses: { ...state.childStatuses },
+      contracts: { ...state.childContracts }
+    };
 
-    return loadPromise;
+    publishReceipt("topology-children-load-complete");
+
+    requestParentRender();
+
+    return getStatus();
   }
 
   function requestParentRender() {
@@ -539,32 +706,122 @@
       } else if (parent && typeof parent.render === "function") {
         parent.render();
       }
-    } catch (_error) {}
+    } catch (error) {
+      recordError("requestParentRender", error);
+    }
   }
 
   function drawLandmass(ctx, payload, landmass, topology) {
     const boundary = Array.isArray(landmass.boundary) ? landmass.boundary : [];
-    if (!boundary.length) return false;
+    if (boundary.length < 3) return false;
 
     const projected = projectBoundary(payload, boundary, LAND_ELEVATION);
+    const visibility = projectedVisibility(projected);
 
-    if (!shapeVisibilityOk(projected, 0.5)) return false;
+    if (!shapeVisibilityOk(projected, 0.2)) {
+      return false;
+    }
 
     const center = averageProjected(payload, boundary, LAND_ELEVATION);
-    const alpha = depthAlpha(center.z, 0.025, 0.38);
+    const alpha = Math.max(0.18, depthAlpha(center.z, -0.02, 0.36));
 
-    if (!center.visible || alpha <= 0.02) return false;
+    if (!center.visible || alpha <= 0.01) return false;
 
     ctx.save();
 
     if (drawClosedPath(ctx, projected)) {
-      ctx.fillStyle = withAlpha(topology.color || COLORS.land, alpha, 0.72);
+      ctx.fillStyle = withAlpha(topology.color || COLORS.land, alpha, 0.84);
       ctx.fill();
 
-      ctx.strokeStyle = withAlpha(COLORS.landStroke, alpha, 0.22);
-      ctx.lineWidth = Math.max(1, payload.geometry.radius * 0.0028);
+      ctx.strokeStyle = withAlpha(COLORS.landStroke, Math.max(0.26, alpha), 0.34);
+      ctx.lineWidth = Math.max(1, payload.geometry.radius * 0.0032);
       ctx.lineJoin = "round";
       ctx.lineCap = "round";
+      ctx.stroke();
+    }
+
+    ctx.restore();
+
+    return visibility.visible.length >= 3;
+  }
+
+  function drawBoundarySegment(ctx, payload, boundary, segment, color, lineWidthFactor) {
+    const nodes = segmentPoints(boundary, segment.start, segment.end);
+    if (nodes.length < 2) return false;
+
+    const projected = projectBoundary(payload, nodes, TOPOLOGY_MARK_ELEVATION);
+    const visibility = projectedVisibility(projected);
+
+    if (visibility.visible.length < 2) return false;
+
+    const center = averageProjected(payload, nodes, TOPOLOGY_MARK_ELEVATION);
+    const alpha = Math.max(0.12, depthAlpha(center.z, -0.02, 0.42));
+
+    if (!center.visible || alpha <= 0.01) return false;
+
+    ctx.save();
+    ctx.beginPath();
+
+    projected.forEach((point, index) => {
+      if (index === 0) ctx.moveTo(point.x, point.y);
+      else ctx.lineTo(point.x, point.y);
+    });
+
+    ctx.strokeStyle = withAlpha(color, alpha, 0.72);
+    ctx.lineWidth = Math.max(1, payload.geometry.radius * lineWidthFactor);
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.stroke();
+    ctx.restore();
+
+    return true;
+  }
+
+  function drawPointMarker(ctx, payload, point, color, radiusFactor) {
+    const p = projectPoint(payload, point.lon, point.lat, TOPOLOGY_MARK_ELEVATION);
+    const alpha = Math.max(0.14, depthAlpha(p.z, -0.01, 0.5));
+
+    if (!p.visible || alpha <= 0.01) return false;
+
+    const radius = Math.max(1.4, payload.geometry.radius * radiusFactor) * (0.82 + Math.max(0, p.scale) * 0.22);
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, radius, 0, TAU);
+    ctx.fillStyle = withAlpha(color, alpha, 0.74);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, radius * 1.55, 0, TAU);
+    ctx.strokeStyle = withAlpha(color, alpha * 0.68, 0.36);
+    ctx.lineWidth = Math.max(1, payload.geometry.radius * 0.0014);
+    ctx.stroke();
+    ctx.restore();
+
+    return true;
+  }
+
+  function drawWaterBoundary(ctx, payload, ring, color, alphaMax) {
+    if (!Array.isArray(ring) || ring.length < 3) return false;
+
+    const projected = projectBoundary(payload, ring, TOPOLOGY_MARK_ELEVATION);
+    const visibility = projectedVisibility(projected);
+
+    if (visibility.visible.length < 3) return false;
+
+    const center = averageProjected(payload, ring, TOPOLOGY_MARK_ELEVATION);
+    const alpha = Math.max(0.12, depthAlpha(center.z, -0.02, 0.5));
+
+    if (!center.visible || alpha <= 0.01) return false;
+
+    ctx.save();
+
+    if (drawClosedPath(ctx, projected)) {
+      ctx.fillStyle = withAlpha(color, alpha, alphaMax);
+      ctx.fill();
+
+      ctx.strokeStyle = withAlpha(color, alpha, Math.min(0.7, alphaMax + 0.18));
+      ctx.lineWidth = Math.max(1, payload.geometry.radius * 0.0024);
       ctx.stroke();
     }
 
@@ -576,61 +833,112 @@
   function drawTopologyClasses(ctx, payload, landmass) {
     const boundary = Array.isArray(landmass.boundary) ? landmass.boundary : [];
     const topology = landmass.topology || {};
+    const counts = {
+      beaches: 0,
+      cliffEdges: 0,
+      bays: 0,
+      inlets: 0,
+      peninsulas: 0,
+      wetlands: 0,
+      cavernMouths: 0,
+      lakes: 0,
+      lagoons: 0
+    };
 
-    if (!boundary.length) return;
+    if (!boundary.length) return counts;
 
     for (const segment of topology.beaches || []) {
-      drawBoundarySegment(ctx, payload, boundary, segment, COLORS.beach, 0.0048);
+      if (drawBoundarySegment(ctx, payload, boundary, segment, COLORS.beach, 0.0062)) counts.beaches += 1;
     }
 
     for (const segment of topology.cliffEdges || []) {
-      drawBoundarySegment(ctx, payload, boundary, segment, COLORS.cliffEdge, 0.0042);
+      if (drawBoundarySegment(ctx, payload, boundary, segment, COLORS.cliffEdge, 0.0058)) counts.cliffEdges += 1;
     }
 
     for (const segment of topology.bays || []) {
-      drawBoundarySegment(ctx, payload, boundary, segment, COLORS.bay, 0.0045);
+      if (drawBoundarySegment(ctx, payload, boundary, segment, COLORS.bay, 0.0054)) counts.bays += 1;
     }
 
     for (const segment of topology.inlets || []) {
-      drawBoundarySegment(ctx, payload, boundary, segment, COLORS.inlet, 0.0038);
+      if (drawBoundarySegment(ctx, payload, boundary, segment, COLORS.inlet, 0.0048)) counts.inlets += 1;
     }
 
     for (const segment of topology.peninsulas || []) {
-      drawBoundarySegment(ctx, payload, boundary, segment, COLORS.peninsula, 0.0036);
+      if (drawBoundarySegment(ctx, payload, boundary, segment, COLORS.peninsula, 0.0044)) counts.peninsulas += 1;
     }
 
     for (const segment of topology.wetlands || []) {
-      drawBoundarySegment(ctx, payload, boundary, segment, COLORS.wetland, 0.0042);
+      if (drawBoundarySegment(ctx, payload, boundary, segment, COLORS.wetland, 0.0056)) counts.wetlands += 1;
     }
 
     for (const point of topology.cavernMouths || []) {
-      drawPointMarker(ctx, payload, point, COLORS.cavernMouth, 0.0062);
+      if (drawPointMarker(ctx, payload, point, COLORS.cavernMouth, 0.0076)) counts.cavernMouths += 1;
     }
 
     for (const lake of topology.lakes || []) {
-      drawWaterBoundary(ctx, payload, lake, COLORS.lake, 0.34);
+      if (drawWaterBoundary(ctx, payload, lake, COLORS.lake, 0.5)) counts.lakes += 1;
     }
 
     for (const lagoon of topology.lagoons || []) {
-      drawWaterBoundary(ctx, payload, lagoon, COLORS.lagoon, 0.28);
+      if (drawWaterBoundary(ctx, payload, lagoon, COLORS.lagoon, 0.46)) counts.lagoons += 1;
     }
+
+    return counts;
   }
 
   function drawTopology(ctx, payload, topology) {
-    if (!topology || !Array.isArray(topology.landmasses)) return 0;
+    if (!topology || !Array.isArray(topology.landmasses)) {
+      return {
+        drawnBodies: 0,
+        classCounts: {},
+        reason: "invalid_topology"
+      };
+    }
 
-    let drawn = 0;
+    let drawnBodies = 0;
+    const aggregateCounts = {
+      beaches: 0,
+      cliffEdges: 0,
+      bays: 0,
+      inlets: 0,
+      peninsulas: 0,
+      wetlands: 0,
+      cavernMouths: 0,
+      lakes: 0,
+      lagoons: 0
+    };
 
     for (const landmass of topology.landmasses) {
       const didDraw = drawLandmass(ctx, payload, landmass, topology);
 
-      if (didDraw) {
-        drawn += 1;
-        drawTopologyClasses(ctx, payload, landmass);
+      if (!didDraw) continue;
+
+      drawnBodies += 1;
+
+      const counts = drawTopologyClasses(ctx, payload, landmass);
+
+      for (const key of Object.keys(aggregateCounts)) {
+        aggregateCounts[key] += counts[key] || 0;
       }
     }
 
-    return drawn;
+    return {
+      drawnBodies,
+      classCounts: aggregateCounts,
+      reason: drawnBodies > 0 ? "drawn" : "no_visible_landmass"
+    };
+  }
+
+  function hydratePublishedChildrenBeforeDraw() {
+    for (const child of CHILDREN) {
+      if (!child.active) continue;
+
+      if (!state.topologies[child.id]) {
+        syncAlreadyPublishedChild(child);
+      }
+    }
+
+    state.activeTopologyCount = Object.keys(state.topologies).length;
   }
 
   function draw(ctx, payload) {
@@ -640,21 +948,56 @@
         return api;
       }
 
+      if (payload && payload.cacheNonce) {
+        state.cacheNonce = String(payload.cacheNonce);
+      } else {
+        getOrCreateCacheNonce();
+      }
+
       parentContractSeen(payload);
+      hydratePublishedChildrenBeforeDraw();
 
       state.drawCount += 1;
-      state.lastDrawSkippedReason = "";
       state.activeDrawnBodies = 0;
+      state.childVisualReady = false;
+      state.wrapperOnlyValid = false;
+      state.lastDrawSkippedReason = "";
 
       if (!state.childLoadStarted) {
         loadTopologyChildren().catch((error) => recordError("loadTopologyChildren", error));
       }
 
-      for (const topology of Object.values(state.topologies)) {
-        state.activeDrawnBodies += drawTopology(ctx, payload, topology);
+      const drawReports = [];
+
+      for (const [childId, topology] of Object.entries(state.topologies)) {
+        const report = drawTopology(ctx, payload, topology);
+        state.activeDrawnBodies += report.drawnBodies;
+        drawReports.push({
+          childId,
+          summit: topology.summit || "",
+          topologyId: topology.id || "",
+          drawnBodies: report.drawnBodies,
+          classCounts: report.classCounts,
+          reason: report.reason
+        });
       }
 
-      publishReceipt("draw");
+      state.childVisualReady = state.activeDrawnBodies > 0;
+      state.wrapperOnlyValid = !state.childVisualReady;
+      state.lastDrawSummary = {
+        drawCount: state.drawCount,
+        activeTopologyCount: Object.keys(state.topologies).length,
+        activeDrawnBodies: state.activeDrawnBodies,
+        childVisualReady: state.childVisualReady,
+        reports: drawReports,
+        childStatuses: { ...state.childStatuses }
+      };
+
+      if (!state.childVisualReady) {
+        state.lastDrawSkippedReason = "continents_wrapper_valid_but_no_child_landmass_drawn";
+      }
+
+      publishReceipt(state.childVisualReady ? "draw-child-visible" : "draw-no-child-visible");
 
       return api;
     } catch (error) {
@@ -685,8 +1028,12 @@
 
   function mount() {
     state.mountCalled = true;
+    getOrCreateCacheNonce();
+
     loadTopologyChildren().catch((error) => recordError("mount.loadTopologyChildren", error));
+
     publishReceipt("mount");
+
     return api;
   }
 
@@ -716,61 +1063,112 @@
       summit: child.summit,
       cells: child.cells,
       active: child.active,
+      requiredForVisual: Boolean(child.requiredForVisual),
       staged: Boolean(child.staged),
+      path: child.path,
+      globalKey: child.globalKey,
       status: state.childStatuses[child.id] || (child.active ? "pending" : "staged"),
-      path: child.path
+      contract: state.childContracts[child.id] || "",
+      source: state.childSources[child.id] || ""
     }));
   }
 
   function getTopologySummary() {
-    return Object.values(state.topologies).map((topology) => ({
-      id: topology.id,
-      summit: topology.summit,
-      cells: topology.cells,
-      localLattice: topology.localLattice,
+    return Object.entries(state.topologies).map(([childId, topology]) => ({
+      childId,
+      id: topology.id || "",
+      summit: topology.summit || "",
+      cells: topology.cells || 0,
+      className: topology.className || "",
+      localLattice: topology.localLattice || "",
       topologyOnly: topology.topologyOnly === true,
       terrainOwned: topology.terrainOwned === true,
       elevationOwned: topology.elevationOwned === true,
-      landmassCount: Array.isArray(topology.landmasses) ? topology.landmasses.length : 0
+      landmassCount: Array.isArray(topology.landmasses) ? topology.landmasses.length : 0,
+      boundaryNodeCounts: Array.isArray(topology.landmasses)
+        ? topology.landmasses.map((landmass) => ({
+            id: landmass.id || "",
+            boundaryNodeCount: Array.isArray(landmass.boundary) ? landmass.boundary.length : 0
+          }))
+        : []
     }));
+  }
+
+  function getVisualReadiness() {
+    const activeChildren = CHILDREN.filter((child) => child.active);
+    const activeStatuses = activeChildren.map((child) => ({
+      id: child.id,
+      status: state.childStatuses[child.id] || "pending",
+      hasTopology: Boolean(state.topologies[child.id]),
+      contract: state.childContracts[child.id] || "",
+      source: state.childSources[child.id] || ""
+    }));
+
+    return {
+      wrapperLoaded: true,
+      parentFacingContractValid: true,
+      childDrawAuthoritative: true,
+      wrapperOnlyValid: state.wrapperOnlyValid,
+      childVisualReady: state.childVisualReady,
+      activeDrawnBodies: state.activeDrawnBodies,
+      activeTopologyCount: Object.keys(state.topologies).length,
+      activeStatuses,
+      lastDrawSkippedReason: state.lastDrawSkippedReason,
+      lastDrawSummary: state.lastDrawSummary,
+      lastLoadSummary: state.lastLoadSummary
+    };
   }
 
   function getStatus() {
     return {
       contract: CONTRACT,
+      internalContract: INTERNAL_CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       childSplitContract: CHILD_SPLIT_CONTRACT,
       segmentContract: SEGMENT_CONTRACT,
+      chainContract: CHAIN_CONTRACT,
       parentComplianceContract: PARENT_COMPLIANCE_CONTRACT,
-      previousChildRenewalContract: PREVIOUS_CHILD_RENEWAL_CONTRACT,
       family: FAMILY,
       target: TARGET,
       route: ROUTE,
+      cacheNonce: state.cacheNonce || getOrCreateCacheNonce(),
+
       active: true,
       classicScript: true,
       segment: 1,
+
       topologyOnly: true,
       terrainOwned: false,
       elevationOwned: false,
+      ownsCanvas: false,
+      ownsFormVisible: false,
+      ownsOcean: false,
+      ownsRoute: false,
+
       parentCompliance: true,
       parentFacingContractUnchanged: true,
       childObeysParentStandard: true,
       acceptsParentPayloadOnly: true,
-      ownsFormVisible: false,
-      ownsCanvas: false,
-      ownsRoute: false,
-      ownsOcean: false,
-      localTopologyChildrenEnabled: true,
-      localTopologyChildrenTotal: CHILDREN.length,
-      localTopologyChildrenActive: CHILDREN.filter((child) => child.active).length,
-      localTopologyChildrenLoaded: state.localTopologyChildrenLoaded,
-      localTopologyChildrenStaged: state.localTopologyChildrenStaged,
+
+      wrapperLoaded: true,
+      childDrawAuthoritative: true,
+      wrapperOnlyValid: state.wrapperOnlyValid,
+      childVisualReady: state.childVisualReady,
+
       childLoadStarted: state.childLoadStarted,
       childLoadComplete: state.childLoadComplete,
+      activeChildLoadComplete: state.activeChildLoadComplete,
       childStatuses: { ...state.childStatuses },
+      childContracts: { ...state.childContracts },
+      childSources: { ...state.childSources },
+      topologyErrors: { ...state.topologyErrors },
       topologySummary: getTopologySummary(),
+      visualReadiness: getVisualReadiness(),
+
       nineSummits256FibonacciModel: true,
       summitCount: 9,
       continentBodyCount: 9,
+      activeTopologyCount: Object.keys(state.topologies).length,
       activeDrawnBodies: state.activeDrawnBodies,
       summits: SUMMITS.slice(),
       totalLatticeCells: TOTAL_LATTICE_CELLS,
@@ -781,63 +1179,24 @@
       primarySummit: "Gratitude",
       fibonacciDistribution: getDistribution(),
       landCellTotal: CHILDREN.reduce((sum, child) => sum + child.cells, 0),
-      categoriesAllowed: [
-        "LANDMASS",
-        "OCEAN_ADJACENCY",
-        "BEACH",
-        "CLIFF_EDGE",
-        "CAVERN_MOUTH",
-        "LAKE",
-        "BAY",
-        "INLET",
-        "PENINSULA",
-        "ISLAND",
-        "LAGOON",
-        "WETLAND"
-      ],
-      forbiddenInThisLayer: [
-        "elevation",
-        "terrain height",
-        "mountains",
-        "valleys",
-        "basins",
-        "raised cliffs",
-        "3D caverns",
-        "terrain shading",
-        "ocean rendering",
-        "sky rendering",
-        "motion activation"
-      ],
+
+      topologicalClassesOnly: true,
+      cliffEdgeIsCategoryOnly: true,
+      cavernMouthIsCategoryOnly: true,
+      lakeIsBoundaryOnly: true,
+
       globalPublished: state.globalPublished,
       mountCalled: state.mountCalled,
       drawCount: state.drawCount,
       lastParentContractSeen: state.lastParentContractSeen,
       lastDrawSkippedReason: state.lastDrawSkippedReason,
-      owns: [
-        "topology-only orchestration",
-        "Nine Summits continent model",
-        "89 of 256 exposed-land budget",
-        "167 of 256 ocean/seawater relationship budget",
-        "parent-compliant landmass boundary rendering",
-        "topology category overlays",
-        "child topology loading"
-      ],
-      doesNotOwn: [
-        "FORM_VISIBLE",
-        "parent geometry",
-        "canvas creation",
-        "route fallback",
-        "runtime handoff",
-        "parent mount",
-        "ocean body",
-        "sky",
-        "motion",
-        "terrain",
-        "elevation",
-        "zoom",
-        "orbit"
-      ],
+      lastDrawSummary: state.lastDrawSummary,
+      lastLoadSummary: state.lastLoadSummary,
+
       visualPassClaim: false,
+      generatedImage: false,
+      graphicBox: false,
+
       errors: state.errors.slice()
     };
   }
@@ -845,47 +1204,59 @@
   function publishReceipt(scope = "publish") {
     if (!hasWindow()) return;
 
-    const receipt = {
+    const status = {
       contract: CONTRACT,
+      internalContract: INTERNAL_CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       childSplitContract: CHILD_SPLIT_CONTRACT,
       segmentContract: SEGMENT_CONTRACT,
+      chainContract: CHAIN_CONTRACT,
       parentComplianceContract: PARENT_COMPLIANCE_CONTRACT,
-      previousChildRenewalContract: PREVIOUS_CHILD_RENEWAL_CONTRACT,
       family: FAMILY,
       target: TARGET,
       route: ROUTE,
-      mode: "g26_topology_only_continent_child_split_segment_1",
+      cacheNonce: state.cacheNonce || "",
+      mode: "g26_continents_child_load_and_draw_receipt_alignment",
       scope,
+
       active: true,
       classicScript: true,
       segment: 1,
+
       topologyOnly: true,
       terrainOwned: false,
       elevationOwned: false,
-      parentCompliance: true,
-      parentFacingContractUnchanged: true,
-      childObeysParentStandard: true,
-      acceptsParentPayloadOnly: true,
       ownsFormVisible: false,
       ownsCanvas: false,
       ownsRoute: false,
       ownsOcean: false,
-      localTopologyChildrenEnabled: true,
-      localTopologyChildrenTotal: CHILDREN.length,
-      localTopologyChildrenActive: CHILDREN.filter((child) => child.active).length,
-      localTopologyChildrenLoaded: state.localTopologyChildrenLoaded,
-      localTopologyChildrenStaged: state.localTopologyChildrenStaged,
+
+      parentCompliance: true,
+      parentFacingContractUnchanged: true,
+      childObeysParentStandard: true,
+      acceptsParentPayloadOnly: true,
+
+      wrapperLoaded: true,
+      childDrawAuthoritative: true,
+      wrapperOnlyValid: state.wrapperOnlyValid,
+      childVisualReady: state.childVisualReady,
+
       childLoadStarted: state.childLoadStarted,
       childLoadComplete: state.childLoadComplete,
+      activeChildLoadComplete: state.activeChildLoadComplete,
       childStatuses: { ...state.childStatuses },
+      childContracts: { ...state.childContracts },
+      childSources: { ...state.childSources },
+      topologyErrors: { ...state.topologyErrors },
       topologySummary: getTopologySummary(),
-      globalPublished: state.globalPublished,
-      mountCalled: state.mountCalled,
-      drawCount: state.drawCount,
+      visualReadiness: getVisualReadiness(),
+
       nineSummits256FibonacciModel: true,
       summitCount: 9,
       continentBodyCount: 9,
+      activeTopologyCount: Object.keys(state.topologies).length,
       activeDrawnBodies: state.activeDrawnBodies,
+
       totalLatticeCells: TOTAL_LATTICE_CELLS,
       exposedLandCells: EXPOSED_LAND_CELLS,
       oceanSeaShelfCells: OCEAN_SEA_SHELF_CELLS,
@@ -895,28 +1266,50 @@
       landCellTotal: CHILDREN.reduce((sum, child) => sum + child.cells, 0),
       summits: SUMMITS.slice(),
       distribution: getDistribution(),
+
       topologicalClassesOnly: true,
       cliffEdgeIsCategoryOnly: true,
       cavernMouthIsCategoryOnly: true,
       lakeIsBoundaryOnly: true,
       fiveContinentLawDeprecated: true,
+
       lastParentContractSeen: state.lastParentContractSeen,
       lastDrawSkippedReason: state.lastDrawSkippedReason,
+      lastDrawSummary: state.lastDrawSummary,
+      lastLoadSummary: state.lastLoadSummary,
+
+      singleCacheNonceChain: true,
       visualPassClaim: false,
       formVisibleClaim: false,
       generatedImage: false,
       graphicBox: false,
+
       errors: state.errors.slice()
     };
 
-    window.AUDRALIA_CONTINENTS_RECEIPT = receipt;
-    window.AUDRALIA_CLEAN_CONTINENTS_RECEIPT = receipt;
-    window.AUDRALIA_CLEAN_CANVAS_CONTINENTS_RECEIPT = receipt;
-    window.AUDRALIA_NINE_SUMMITS_CONTINENTS_RECEIPT = receipt;
-    window.AUDRALIA_TOPOLOGY_ONLY_CONTINENTS_RECEIPT = receipt;
+    window.AUDRALIA_CONTINENTS_RECEIPT = status;
+    window.AUDRALIA_CLEAN_CONTINENTS_RECEIPT = status;
+    window.AUDRALIA_CLEAN_CANVAS_CONTINENTS_RECEIPT = status;
+    window.AUDRALIA_NINE_SUMMITS_CONTINENTS_RECEIPT = status;
+    window.AUDRALIA_TOPOLOGY_ONLY_CONTINENTS_RECEIPT = status;
+    window.AUDRALIA_SINGLE_CACHE_NONCE_CONTINENTS_RECEIPT = status;
+    window.AUDRALIA_CONTINENTS_CHILD_LOAD_AND_DRAW_RECEIPT = status;
+
+    window.AUDRALIA_CONTINENTS_CHILD_VISUAL_READY = state.childVisualReady;
+    window.AUDRALIA_CONTINENTS_ACTIVE_DRAWN_BODIES = state.activeDrawnBodies;
+    window.AUDRALIA_CONTINENTS_WRAPPER_ONLY_VALID = state.wrapperOnlyValid;
+
+    if (hasDocument() && document.documentElement) {
+      document.documentElement.setAttribute("data-audralia-continents-contract", CONTRACT);
+      document.documentElement.setAttribute("data-audralia-continents-internal-contract", INTERNAL_CONTRACT);
+      document.documentElement.setAttribute("data-audralia-continents-child-visual-ready", state.childVisualReady ? "true" : "false");
+      document.documentElement.setAttribute("data-audralia-continents-active-drawn-bodies", String(state.activeDrawnBodies));
+      document.documentElement.setAttribute("data-audralia-continents-wrapper-only-valid", state.wrapperOnlyValid ? "true" : "false");
+      document.documentElement.setAttribute("data-audralia-continents-last-scope", scope);
+    }
 
     try {
-      window.dispatchEvent(new CustomEvent("audralia:continents:receipt", { detail: receipt }));
+      window.dispatchEvent(new CustomEvent("audralia:continents:receipt", { detail: status }));
     } catch (_error) {
       try {
         window.dispatchEvent(new Event("audralia:continents:receipt"));
@@ -926,37 +1319,49 @@
 
   const api = {
     CONTRACT,
+    INTERNAL_CONTRACT,
+    PREVIOUS_CONTRACT,
     CHILD_SPLIT_CONTRACT,
     SEGMENT_CONTRACT,
+    CHAIN_CONTRACT,
     PARENT_COMPLIANCE_CONTRACT,
-    PREVIOUS_CHILD_RENEWAL_CONTRACT,
     FAMILY,
     TARGET,
     ROUTE,
+
     SUMMITS,
     CHILDREN,
+
     TOTAL_LATTICE_CELLS,
     EXPOSED_LAND_CELLS,
     OCEAN_SEA_SHELF_CELLS,
     EXPOSED_LAND_RATIO,
     OCEAN_SEA_RATIO,
+
     loadTopologyChildren,
     mount,
     init,
     setup,
     boot,
     create,
+
     draw,
     render,
     paint,
     drawContinents,
     renderContinents,
     paintContinents,
+
     getStatus,
-    status: getStatus
+    status: getStatus,
+    getVisualReadiness,
+    getDistribution,
+    getTopologySummary
   };
 
   if (hasWindow()) {
+    getOrCreateCacheNonce();
+
     window.AUDRALIA_NINE_SUMMITS_CONTINENTS_ENGINE = api;
     window.AUDRALIA_CLEAN_CONTINENTS_ENGINE = api;
     window.AUDRALIA_CONTINENTS_ENGINE = api;
@@ -969,6 +1374,7 @@
     window.AUDRALIA_NINE_SUMMITS_256_FIBONACCI_CONTINENTS_ACTIVE = true;
     window.AUDRALIA_TOPOLOGY_ONLY_CONTINENT_CHILD_SPLIT_ACTIVE = true;
     window.AUDRALIA_TOPOLOGY_ONLY_CONTINENT_CHILD_SPLIT_SEGMENT = 1;
+    window.AUDRALIA_CONTINENTS_CHILD_LOAD_AND_DRAW_RECEIPT_ALIGNMENT_ACTIVE = true;
     window.AUDRALIA_LOCAL_TOPOLOGY_CHILDREN_ENABLED = true;
     window.AUDRALIA_TERRAIN_OWNED_BY_CONTINENTS = false;
     window.AUDRALIA_ELEVATION_OWNED_BY_CONTINENTS = false;

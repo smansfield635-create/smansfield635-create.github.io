@@ -1,75 +1,74 @@
-// /showroom/globe/audralia/index.js
-// AUDRALIA_CLEAN_CANVAS_ROUTE_BRIDGE_TNT_v1
+// /showroom/globe/index.js
+// SHOWROOM_GLOBE_LEGACY_ANCHOR_ROUTE_BRIDGE_JS_TNT_v1
 // Full-file replacement.
-// File 17.
-// Audralia route bridge only.
+// Showroom Globe great-grandparent legacy route bridge.
 // Purpose:
-// - Loads the clean 16-file Audralia authority chain in lawful order.
-// - Mounts /assets/audralia/clean/audralia.engine.js into the Audralia page canvas.
-// - Reports route receipts to the HTML expression shell.
-// - Does not own planet science.
-// - Does not own runtime motion.
-// - Does not own controls.
-// - Does not own canvas composition.
-// - Does not own HTML expression.
+// - Keeps /showroom/globe/ as the public planet-family gateway.
+// - Verifies route cards and page-level legacy-anchor posture.
+// - Reports receipts to the HTML shell.
+// - Does not import Audralia clean-canvas files.
+// - Does not mount Audralia engine.
+// - Does not own planet science, runtime motion, controls, canvas composition, or child route authority.
 // No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_CLEAN_CANVAS_ROUTE_BRIDGE_TNT_v1";
-  const RECEIPT = "AUDRALIA_CLEAN_CANVAS_ROUTE_BRIDGE_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_CLEAN_CANVAS_ENGINE_TNT_v1";
-  const VERSION = "2026-05-20.audralia-clean-canvas-route-bridge-v1";
+  const CONTRACT = "SHOWROOM_GLOBE_LEGACY_ANCHOR_ROUTE_BRIDGE_JS_TNT_v1";
+  const RECEIPT = "SHOWROOM_GLOBE_LEGACY_ANCHOR_ROUTE_BRIDGE_JS_RECEIPT_v1";
+  const HTML_CONTRACT = "SHOWROOM_GLOBE_LEGACY_ANCHOR_RENEWAL_HTML_TNT_v1";
+  const VERSION = "2026-05-20.showroom-globe-legacy-anchor-route-bridge-v1";
+  const ROUTE = "/showroom/globe/";
 
-  const ROUTE = "/showroom/globe/audralia/";
-  const HTML_SHELL_CONTRACT = "AUDRALIA_CLEAN_CANVAS_EXPRESSION_SHELL_HTML_TNT_v1";
-  const CACHE_KEY = "2026-05-20-audralia-clean-canvas-route-bridge-v1";
-
-  const CHAIN = Object.freeze([
-    "/assets/showroom/globe/planet/planet.manifest.js",
-    "/assets/showroom/globe/planet/planet.math.js",
-    "/assets/showroom/globe/planet/planet.lattice.js",
-    "/assets/showroom/globe/planet/planet.palette.js",
-    "/assets/audralia/clean/audralia.identity.js",
-    "/assets/audralia/clean/audralia.landmask.js",
-    "/assets/audralia/clean/audralia.hydrology.js",
-    "/assets/audralia/clean/audralia.elevation.js",
-    "/assets/audralia/clean/audralia.climate.js",
-    "/assets/audralia/clean/audralia.biome.js",
-    "/assets/audralia/clean/audralia.surface.js",
-    "/assets/audralia/clean/audralia.atmosphere.js",
-    "/assets/audralia/clean/audralia.runtime.js",
-    "/assets/audralia/clean/audralia.controls.js",
-    "/assets/audralia/clean/audralia.canvas.js",
-    "/assets/audralia/clean/audralia.engine.js"
-  ]);
-
-  const EXPECTED_GLOBALS = Object.freeze([
-    "AUDRALIA_CLEAN_CANVAS_MANIFEST",
-    "AUDRALIA_CLEAN_CANVAS_MATH",
-    "AUDRALIA_CLEAN_CANVAS_LATTICE",
-    "AUDRALIA_CLEAN_CANVAS_PALETTE",
-    "AUDRALIA_CLEAN_CANVAS_IDENTITY",
-    "AUDRALIA_CLEAN_CANVAS_LANDMASK",
-    "AUDRALIA_CLEAN_CANVAS_HYDROLOGY",
-    "AUDRALIA_CLEAN_CANVAS_ELEVATION",
-    "AUDRALIA_CLEAN_CANVAS_CLIMATE",
-    "AUDRALIA_CLEAN_CANVAS_BIOME",
-    "AUDRALIA_CLEAN_CANVAS_SURFACE",
-    "AUDRALIA_CLEAN_CANVAS_ATMOSPHERE",
-    "AUDRALIA_CLEAN_CANVAS_RUNTIME",
-    "AUDRALIA_CLEAN_CANVAS_CONTROLS",
-    "AUDRALIA_CLEAN_CANVAS_COMPOSITOR",
-    "AUDRALIA_CLEAN_CANVAS_ENGINE"
+  const REQUIRED_ROUTES = Object.freeze([
+    {
+      key: "compass",
+      label: "Compass",
+      href: "/",
+      role: "site-root"
+    },
+    {
+      key: "showroom",
+      label: "Showroom",
+      href: "/showroom/",
+      role: "parent-showroom"
+    },
+    {
+      key: "zionts",
+      label: "ZIONTS / Earth",
+      href: "/showroom/globe/earth/",
+      role: "consequence-route"
+    },
+    {
+      key: "audralia",
+      label: "Audralia",
+      href: "/showroom/globe/audralia/",
+      role: "possibility-route"
+    },
+    {
+      key: "h-earth",
+      label: "H-Earth",
+      href: "/showroom/globe/h-earth/",
+      role: "audralia-ground-view-route"
+    },
+    {
+      key: "hearth",
+      label: "Hearth",
+      href: "/showroom/globe/hearth/",
+      role: "formation-route"
+    },
+    {
+      key: "gauges",
+      label: "Gauges",
+      href: "/gauges/",
+      role: "measurement-route"
+    }
   ]);
 
   const state = {
     booted: false,
-    loaded: [],
-    failed: [],
-    engineMount: null,
-    receipt: null
+    receipt: null,
+    checkedAt: null
   };
 
   function doc() {
@@ -87,7 +86,7 @@
     try {
       d.documentElement.dataset[key] = String(value);
     } catch {
-      // Dataset writes are route proof metadata only.
+      // Dataset writes are legacy proof metadata only.
     }
   }
 
@@ -101,11 +100,20 @@
     return d ? d.querySelector(selector) : null;
   }
 
-  function statusNode() {
-    return byId("audralia-route-status") || qs("[data-audralia-route-status]");
+  function qsa(selector) {
+    const d = doc();
+    return d ? Array.from(d.querySelectorAll(selector)) : [];
   }
 
-  function writeStatus(message, tone = "neutral") {
+  function statusNode() {
+    return byId("showroom-globe-status") || qs("[data-showroom-globe-status]");
+  }
+
+  function receiptList() {
+    return byId("showroom-globe-receipts") || qs("[data-showroom-globe-receipts]");
+  }
+
+  function writeStatus(message, tone = "ready") {
     const node = statusNode();
     if (!node) return;
 
@@ -113,210 +121,149 @@
     node.dataset.statusTone = tone;
   }
 
-  function appendReceiptLine(message) {
-    const list = byId("audralia-receipt-list") || qs("[data-audralia-receipts]");
-    if (!list) return;
+  function appendReceipt(message) {
+    const list = receiptList();
+    const d = doc();
 
-    const item = doc().createElement("li");
+    if (!list || !d) return;
+
+    const item = d.createElement("li");
     item.textContent = message;
     list.appendChild(item);
   }
 
-  function chainUrl(path) {
-    return `${path}?v=${encodeURIComponent(CACHE_KEY)}`;
-  }
-
-  function hasScript(path) {
-    const d = doc();
-    if (!d) return false;
-
-    return Boolean(
-      d.querySelector(`script[data-audralia-clean-chain-path="${path}"]`) ||
-      Array.from(d.scripts || []).some((script) => String(script.src || "").includes(path))
-    );
-  }
-
-  function loadScript(path) {
-    return new Promise((resolve, reject) => {
-      const d = doc();
-
-      if (!d) {
-        reject(new Error("document unavailable"));
-        return;
-      }
-
-      if (hasScript(path)) {
-        state.loaded.push(path);
-        resolve({ path, reused: true });
-        return;
-      }
-
-      const script = d.createElement("script");
-      script.src = chainUrl(path);
-      script.async = false;
-      script.defer = false;
-      script.dataset.audraliaCleanChainPath = path;
-      script.dataset.audraliaCleanChainContract = CONTRACT;
-
-      script.onload = () => {
-        state.loaded.push(path);
-        appendReceiptLine(`loaded · ${path}`);
-        resolve({ path, reused: false });
-      };
-
-      script.onerror = () => {
-        state.failed.push(path);
-        reject(new Error(`Failed to load ${path}`));
-      };
-
-      d.head.appendChild(script);
-    });
-  }
-
-  async function loadChain() {
-    writeStatus("Loading Audralia clean-canvas authority chain.", "loading");
-
-    for (const path of CHAIN) {
-      await loadScript(path);
+  function normalizeHref(href) {
+    try {
+      const url = new URL(href, win().location?.origin || "https://diamondgatebridge.com");
+      return url.pathname.endsWith("/") ? url.pathname : `${url.pathname}/`;
+    } catch {
+      const raw = String(href || "").trim();
+      return raw.endsWith("/") ? raw : `${raw}/`;
     }
-
-    const missingGlobals = EXPECTED_GLOBALS.filter((name) => !win()[name]);
-
-    return Object.freeze({
-      expected: CHAIN.length,
-      loaded: state.loaded.length,
-      failed: state.failed.slice(),
-      missingGlobals,
-      complete: state.failed.length === 0 && missingGlobals.length === 0
-    });
   }
 
-  function resolveRoot() {
-    return byId("audralia-main") ||
-      byId("audralia-stage") ||
-      qs("[data-audralia-root]") ||
-      qs("main") ||
-      doc()?.body ||
-      null;
-  }
-
-  function resolveStage() {
-    return byId("audralia-stage") ||
-      qs("[data-audralia-stage]") ||
-      resolveRoot();
-  }
-
-  function resolveCanvas() {
-    const existing =
-      byId("audralia-canvas") ||
-      qs("canvas[data-audralia-canvas]") ||
-      qs(".audralia-clean-canvas");
-
-    if (existing) return existing;
-
-    const stage = resolveStage();
-    if (!stage || !doc()) return null;
-
-    const canvas = doc().createElement("canvas");
-    canvas.id = "audralia-canvas";
-    canvas.className = "audralia-clean-canvas";
-    canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Audralia clean-canvas planet inspection surface");
-    canvas.dataset.audraliaCanvas = "true";
-    canvas.dataset.createdByRouteBridge = CONTRACT;
-
-    stage.appendChild(canvas);
-    return canvas;
-  }
-
-  function verifyHtmlShell() {
+  function inspectHtmlShell() {
     const html = doc()?.documentElement;
 
     return Object.freeze({
       shellAvailable: Boolean(html),
-      expectedContract: HTML_SHELL_CONTRACT,
+      expectedRoute: ROUTE,
+      actualRoute: html?.dataset?.route || null,
+      routeValid: html?.dataset?.route === ROUTE,
+      expectedContract: HTML_CONTRACT,
       actualContract: html?.dataset?.contract || null,
-      route: html?.dataset?.route || null,
+      contractValid: html?.dataset?.contract === HTML_CONTRACT,
       page: html?.dataset?.page || null,
-      validRoute: html?.dataset?.route === ROUTE,
-      validPage: html?.dataset?.page === "audralia",
-      validShellContract: html?.dataset?.contract === HTML_SHELL_CONTRACT
+      pageValid: html?.dataset?.page === "showroom-globe",
+      legacyAnchor: html?.dataset?.grandparentStatus === "legacy-anchor",
+      audraliaCleanCanvasChild: html?.dataset?.audraliaCleanCanvasChild === "false",
+      audraliaEngineMount: html?.dataset?.audraliaEngineMount === "false",
+      generatedImage: html?.dataset?.generatedImage === "false",
+      graphicBox: html?.dataset?.graphicBox === "false",
+      visualPassClaimed: html?.dataset?.visualPassClaimed === "false"
     });
   }
 
-  function mountEngine(chainReceipt) {
-    const engine = win().AUDRALIA_CLEAN_CANVAS_ENGINE || win().AUDRALIA_ENGINE;
-    const root = resolveRoot();
-    const stage = resolveStage();
-    const canvas = resolveCanvas();
+  function inspectRoutes() {
+    const anchors = qsa("a[href]");
+    const hrefs = new Set(anchors.map((anchor) => normalizeHref(anchor.getAttribute("href"))));
 
-    if (!engine?.mountAudralia) {
-      throw new Error("AUDRALIA_CLEAN_CANVAS_ENGINE.mountAudralia unavailable");
-    }
+    const items = REQUIRED_ROUTES.map((route) => {
+      const normalized = normalizeHref(route.href);
 
-    if (!canvas) {
-      throw new Error("Audralia canvas unavailable");
-    }
-
-    const mountResult = engine.mountAudralia({
-      root,
-      stage,
-      canvas,
-      options: {
-        autoStart: true,
-        autoResize: true,
-        autoVisibility: true,
-        proofStatus: false,
-        allowCreateCanvas: false,
-        dprCap: 1.65,
-        frameBudgetMs: 42,
-        textureWidth: 288,
-        textureHeight: 144,
-        radiusScale: 0.365,
-        cxRatio: 0.50,
-        cyRatio: 0.51
-      }
+      return Object.freeze({
+        key: route.key,
+        label: route.label,
+        role: route.role,
+        href: route.href,
+        normalized,
+        present: hrefs.has(normalized)
+      });
     });
-
-    state.engineMount = mountResult;
 
     return Object.freeze({
-      mounted: Boolean(mountResult?.mounted || mountResult?.receipt?.mounted),
-      chain: chainReceipt,
-      engineReceipt: mountResult?.receipt || null,
-      engineAvailable: true,
-      canvasAvailable: true,
-      rootAvailable: Boolean(root),
-      stageAvailable: Boolean(stage)
+      required: REQUIRED_ROUTES.length,
+      present: items.filter((item) => item.present).length,
+      missing: Object.freeze(items.filter((item) => !item.present)),
+      items: Object.freeze(items),
+      complete: items.every((item) => item.present)
     });
   }
 
-  function buildReceipt(chainReceipt, mountReceipt, error = null) {
-    const htmlShell = verifyHtmlShell();
-    const engineStatus =
-      win().AUDRALIA_CLEAN_CANVAS_ENGINE?.getStatus?.() ||
-      win().AUDRALIA_ENGINE?.getStatus?.() ||
-      null;
+  function inspectForbiddenImports() {
+    const scripts = qsa("script[src]");
+    const srcs = scripts.map((script) => script.getAttribute("src") || "");
+
+    const forbidden = srcs.filter((src) =>
+      src.includes("/assets/audralia/clean/") ||
+      src.includes("audralia.engine.js") ||
+      src.includes("audralia.canvas.js") ||
+      src.includes("audralia.runtime.js")
+    );
+
+    return Object.freeze({
+      scriptCount: scripts.length,
+      forbidden,
+      valid: forbidden.length === 0,
+      audraliaEngineMounted: Boolean(win().AUDRALIA_CLEAN_CANVAS_ENGINE || win().AUDRALIA_ENGINE) === false
+    });
+  }
+
+  function inspectNodes() {
+    const gateway = qs("[data-showroom-globe-gateway]");
+    const root = qs("[data-showroom-globe-root]");
+    const planetNodes = qsa(".planet-node");
+
+    return Object.freeze({
+      rootPresent: Boolean(root),
+      gatewayPresent: Boolean(gateway),
+      planetNodeCount: planetNodes.length,
+      minimumPlanetNodesPresent: planetNodes.length >= 4,
+      nodeKeys: Object.freeze(planetNodes.map((node) => node.getAttribute("data-node") || "unknown"))
+    });
+  }
+
+  function buildReceipt() {
+    const htmlShell = inspectHtmlShell();
+    const routes = inspectRoutes();
+    const forbiddenImports = inspectForbiddenImports();
+    const nodes = inspectNodes();
+
+    const valid =
+      htmlShell.routeValid &&
+      htmlShell.contractValid &&
+      htmlShell.pageValid &&
+      htmlShell.legacyAnchor &&
+      htmlShell.audraliaCleanCanvasChild &&
+      htmlShell.audraliaEngineMount &&
+      routes.complete &&
+      forbiddenImports.valid &&
+      nodes.rootPresent &&
+      nodes.gatewayPresent &&
+      nodes.minimumPlanetNodesPresent;
 
     return Object.freeze({
       contract: CONTRACT,
       receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
+      htmlContract: HTML_CONTRACT,
       version: VERSION,
-      authority: "audralia-route-bridge-only",
       route: ROUTE,
+      authority: "showroom-globe-great-grandparent-legacy-route-bridge",
+      checkedAt: new Date().toISOString(),
+      valid,
       htmlShell,
-      chain: chainReceipt,
-      mount: mountReceipt,
-      engineStatus,
-      error: error ? String(error.message || error) : null,
-      ownsRouteBridge: true,
-      ownsHtmlExpression: false,
-      ownsEngine: false,
+      routes,
+      forbiddenImports,
+      nodes,
+      ownsGreatGrandparentRouteSelector: true,
+      ownsPublicGatewayLanguage: true,
+      ownsPlanetScience: false,
+      ownsAudraliaCleanCanvas: false,
+      ownsAudraliaEngineMount: false,
       ownsRuntimeMotion: false,
       ownsControls: false,
       ownsCanvasComposition: false,
-      ownsPlanetScience: false,
+      ownsChildRouteAuthority: false,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false
@@ -325,102 +272,78 @@
 
   function publishReceipt(receipt) {
     state.receipt = receipt;
+    state.checkedAt = receipt.checkedAt;
 
-    win().AUDRALIA_ROUTE_BRIDGE = API;
-    win().AUDRALIA_ROUTE_BRIDGE_RECEIPT = receipt;
-    win().AUDRALIA_CLEAN_CANVAS_ROUTE_BRIDGE = API;
-    win().AUDRALIA_CLEAN_CANVAS_ROUTE_BRIDGE_RECEIPT = receipt;
+    win().SHOWROOM_GLOBE_LEGACY_ANCHOR = API;
+    win().SHOWROOM_GLOBE_LEGACY_ANCHOR_RECEIPT = receipt;
+    win().SHOWROOM_GLOBE_LEGACY_ROUTE_BRIDGE = API;
+    win().SHOWROOM_GLOBE_LEGACY_ROUTE_BRIDGE_RECEIPT = receipt;
 
-    setDataset("audraliaRouteBridgeLoaded", "true");
-    setDataset("audraliaRouteBridgeContract", CONTRACT);
-    setDataset("audraliaRouteBridgeReceipt", RECEIPT);
-    setDataset("audraliaRouteBridgeVersion", VERSION);
-    setDataset("audraliaRouteBridgeOwnsRouteBridge", "true");
-    setDataset("audraliaRouteBridgeOwnsHtmlExpression", "false");
-    setDataset("audraliaRouteBridgeOwnsEngine", "false");
-    setDataset("audraliaRouteBridgeOwnsRuntimeMotion", "false");
-    setDataset("audraliaRouteBridgeOwnsControls", "false");
-    setDataset("audraliaRouteBridgeOwnsCanvasComposition", "false");
-    setDataset("audraliaRouteBridgeOwnsPlanetScience", "false");
-    setDataset("audraliaRouteBridgeChainLoaded", receipt.chain?.complete ? "true" : "false");
-    setDataset("audraliaRouteBridgeMounted", receipt.mount?.mounted ? "true" : "false");
+    setDataset("showroomGlobeLegacyBridgeLoaded", "true");
+    setDataset("showroomGlobeLegacyBridgeContract", CONTRACT);
+    setDataset("showroomGlobeLegacyBridgeReceipt", RECEIPT);
+    setDataset("showroomGlobeLegacyBridgeVersion", VERSION);
+    setDataset("showroomGlobeLegacyAnchorValid", receipt.valid ? "true" : "false");
+    setDataset("showroomGlobeLegacyRoutesComplete", receipt.routes.complete ? "true" : "false");
+    setDataset("showroomGlobeForbiddenAudraliaImports", receipt.forbiddenImports.valid ? "false" : "true");
+    setDataset("showroomGlobeOwnsGreatGrandparentRouteSelector", "true");
+    setDataset("showroomGlobeOwnsPlanetScience", "false");
+    setDataset("showroomGlobeOwnsAudraliaCleanCanvas", "false");
+    setDataset("showroomGlobeOwnsAudraliaEngineMount", "false");
+    setDataset("showroomGlobeOwnsRuntimeMotion", "false");
+    setDataset("showroomGlobeOwnsControls", "false");
+    setDataset("showroomGlobeOwnsCanvasComposition", "false");
     setDataset("generatedImage", "false");
     setDataset("graphicBox", "false");
     setDataset("visualPassClaimed", "false");
 
+    writeStatus(
+      receipt.valid
+        ? "Legacy gateway restored."
+        : "Legacy gateway loaded with held checks.",
+      receipt.valid ? "ready" : "held"
+    );
+
+    appendReceipt(`${CONTRACT} · valid=${receipt.valid}`);
+    appendReceipt(`routes present ${receipt.routes.present}/${receipt.routes.required}`);
+    appendReceipt(`forbidden Audralia clean-canvas imports=${receipt.forbiddenImports.forbidden.length}`);
+
     return receipt;
   }
 
-  async function boot() {
-    if (state.booted) {
-      return state.receipt || buildReceipt(null, null, null);
-    }
+  function boot() {
+    if (state.booted) return state.receipt;
 
     state.booted = true;
+    writeStatus("Checking legacy gateway.", "loading");
+    setDataset("showroomGlobeLegacyBridgeBooting", "true");
 
-    setDataset("audraliaRouteBridgeBooting", "true");
-    writeStatus("Booting Audralia clean-canvas route bridge.", "loading");
+    const receipt = publishReceipt(buildReceipt());
 
-    let chainReceipt = null;
-    let mountReceipt = null;
-
-    try {
-      chainReceipt = await loadChain();
-      mountReceipt = mountEngine(chainReceipt);
-
-      const receipt = publishReceipt(buildReceipt(chainReceipt, mountReceipt, null));
-
-      writeStatus(
-        mountReceipt.mounted
-          ? "Audralia clean-canvas route bridge mounted."
-          : "Audralia clean-canvas route bridge loaded but mount did not complete.",
-        mountReceipt.mounted ? "ready" : "held"
-      );
-
-      appendReceiptLine(`${CONTRACT} · mounted=${mountReceipt.mounted}`);
-
-      setDataset("audraliaRouteBridgeBooting", "false");
-      setDataset("audraliaRouteBridgeReady", mountReceipt.mounted ? "true" : "false");
-
-      return receipt;
-    } catch (error) {
-      const receipt = publishReceipt(buildReceipt(chainReceipt, mountReceipt, error));
-
-      writeStatus(`Audralia route bridge held: ${error.message || error}`, "held");
-      appendReceiptLine(`${CONTRACT} · held · ${error.message || error}`);
-
-      setDataset("audraliaRouteBridgeBooting", "false");
-      setDataset("audraliaRouteBridgeReady", "false");
-      setDataset("audraliaRouteBridgeError", error.message || String(error));
-
-      return receipt;
-    }
+    setDataset("showroomGlobeLegacyBridgeBooting", "false");
+    return receipt;
   }
 
   function getStatus() {
     return Object.freeze({
       contract: CONTRACT,
       receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
+      htmlContract: HTML_CONTRACT,
       version: VERSION,
-      authority: "audralia-route-bridge-only",
       route: ROUTE,
-      htmlShellContract: HTML_SHELL_CONTRACT,
-      cacheKey: CACHE_KEY,
-      chain: CHAIN,
-      expectedGlobals: EXPECTED_GLOBALS,
-      loaded: state.loaded.slice(),
-      failed: state.failed.slice(),
+      requiredRoutes: REQUIRED_ROUTES,
       booted: state.booted,
-      mounted: Boolean(state.engineMount?.mounted || state.engineMount?.receipt?.mounted),
+      checkedAt: state.checkedAt,
       lastReceipt: state.receipt,
-      ownsRouteBridge: true,
-      ownsHtmlExpression: false,
-      ownsEngine: false,
+      ownsGreatGrandparentRouteSelector: true,
+      ownsPublicGatewayLanguage: true,
+      ownsPlanetScience: false,
+      ownsAudraliaCleanCanvas: false,
+      ownsAudraliaEngineMount: false,
       ownsRuntimeMotion: false,
       ownsControls: false,
       ownsCanvasComposition: false,
-      ownsPlanetScience: false,
+      ownsChildRouteAuthority: false,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false
@@ -430,25 +353,23 @@
   const API = Object.freeze({
     contract: CONTRACT,
     receipt: RECEIPT,
-    previousContract: PREVIOUS_CONTRACT,
+    htmlContract: HTML_CONTRACT,
     version: VERSION,
     route: ROUTE,
-    chain: CHAIN,
-    expectedGlobals: EXPECTED_GLOBALS,
+    requiredRoutes: REQUIRED_ROUTES,
     boot,
-    loadChain,
-    mountEngine,
-    verifyHtmlShell,
+    inspectHtmlShell,
+    inspectRoutes,
+    inspectForbiddenImports,
+    inspectNodes,
     getStatus
   });
 
-  win().AUDRALIA_ROUTE_BRIDGE = API;
-  win().AUDRALIA_CLEAN_CANVAS_ROUTE_BRIDGE = API;
+  win().SHOWROOM_GLOBE_LEGACY_ANCHOR = API;
+  win().SHOWROOM_GLOBE_LEGACY_ROUTE_BRIDGE = API;
 
   if (doc()?.readyState === "loading") {
-    doc().addEventListener("DOMContentLoaded", () => {
-      boot();
-    }, { once: true });
+    doc().addEventListener("DOMContentLoaded", boot, { once: true });
   } else {
     boot();
   }

@@ -1,23 +1,21 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1
+// AUDRALIA_G2_6_SINGLE_CACHE_NONCE_CHAIN_ALIGNMENT_ROUTE_BRIDGE_TNT_v1
 // Full-file replacement.
-// Purpose: align the Audralia route bridge with the parent visible-body-first failsafe.
-// Owns: route bridge import, mount call, parent receipt validation, continents receipt validation, visible handoff status.
-// Does not own: runtime internals, parent render, continent model, motion, sky, generated image, GraphicBox, or visual-pass claim.
+// Purpose: route bridge reads the HTML page-load cache nonce and passes it downstream to runtime.
+// Does not own: runtime internals, parent render, continent topology, motion, sky, generated image, GraphicBox, or visual-pass claim.
 
-const BRIDGE_CONTRACT = "AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1";
-const PREVIOUS_BRIDGE_CONTRACT = "AUDRALIA_G2_6_ROUTE_BRIDGE_PARENT_CONFIRMATION_ALIGNMENT_TNT_v1";
+const BRIDGE_CONTRACT = "AUDRALIA_G2_6_SINGLE_CACHE_NONCE_CHAIN_ALIGNMENT_ROUTE_BRIDGE_TNT_v1";
+const PREVIOUS_BRIDGE_CONTRACT = "AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1";
 
 const ROUTE = "/showroom/globe/audralia/";
 const RUNTIME_PATH = "/assets/audralia/audralia.runtime.v3.js";
-const RUNTIME_IMPORT = `${RUNTIME_PATH}?v=${encodeURIComponent(BRIDGE_CONTRACT)}`;
 
 const RUNTIME_CONTRACT = "AUDRALIA_G2_5_RUNTIME_PARENT_CACHE_KEY_ALIGNMENT_TNT_v1";
 const PARENT_CONTRACT = "AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1";
 const CONTINENTS_CONTRACT = "AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1";
 
 const PARENT_TIMEOUT_MS = 5600;
-const CONTINENTS_TIMEOUT_MS = 2800;
+const CONTINENTS_TIMEOUT_MS = 3200;
 const POLL_MS = 50;
 
 const state = {
@@ -25,7 +23,8 @@ const state = {
   previousBridgeContract: PREVIOUS_BRIDGE_CONTRACT,
   route: ROUTE,
   runtimePath: RUNTIME_PATH,
-  runtimeImport: RUNTIME_IMPORT,
+  runtimeImport: "",
+  cacheNonce: "",
   runtimeContractExpected: RUNTIME_CONTRACT,
   parentContractExpected: PARENT_CONTRACT,
   continentsContractExpected: CONTINENTS_CONTRACT,
@@ -46,7 +45,7 @@ const state = {
   finalFormVisible: false,
   status: "pending",
   headline: "Clean-canvas handoff pending",
-  message: "STANDBY_FORM_VISIBLE · awaiting parent confirmation",
+  message: "SINGLE_CACHE_NONCE · loading route bridge chain",
   runtimeReceipt: null,
   parentReceipt: null,
   continentsReceipt: null,
@@ -73,13 +72,6 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function recordError(scope, error) {
-  const message = error && error.message ? error.message : String(error);
-  state.errors.push({ scope, message, time: nowIso() });
-  publishBridgeReceipt(scope);
-  renderStatus();
-}
-
 function getRoutePath() {
   if (!hasWindow()) return ROUTE;
 
@@ -90,6 +82,58 @@ function getRoutePath() {
   } catch (_error) {
     return ROUTE;
   }
+}
+
+function getOwnImportNonce() {
+  try {
+    return new URL(import.meta.url).searchParams.get("v") || "";
+  } catch (_error) {
+    return "";
+  }
+}
+
+function getOrCreateCacheNonce() {
+  if (!hasWindow() || !hasDocument()) {
+    return `${BRIDGE_CONTRACT}__${Date.now()}`;
+  }
+
+  const root = document.documentElement;
+  const bootstrapNonce =
+    window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT &&
+    window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.dynamicCacheKey
+      ? String(window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.dynamicCacheKey)
+      : "";
+
+  const rootNonce = root.getAttribute("data-audralia-route-bridge-cache-key") || "";
+  const windowNonce = window.AUDRALIA_PAGE_CACHE_NONCE ? String(window.AUDRALIA_PAGE_CACHE_NONCE) : "";
+  const importNonce = getOwnImportNonce();
+
+  const nonce =
+    bootstrapNonce ||
+    rootNonce ||
+    windowNonce ||
+    importNonce ||
+    `${BRIDGE_CONTRACT}__${Date.now()}__${Math.random().toString(36).slice(2, 8)}`;
+
+  window.AUDRALIA_PAGE_CACHE_NONCE = nonce;
+  root.setAttribute("data-audralia-page-cache-nonce", nonce);
+  root.setAttribute("data-audralia-single-cache-nonce-chain", "true");
+
+  state.cacheNonce = nonce;
+
+  return nonce;
+}
+
+function versioned(path) {
+  const nonce = getOrCreateCacheNonce();
+  return `${path}?v=${encodeURIComponent(nonce)}`;
+}
+
+function recordError(scope, error) {
+  const message = error && error.message ? error.message : String(error);
+  state.errors.push({ scope, message, time: nowIso() });
+  publishBridgeReceipt(scope);
+  renderStatus();
 }
 
 function resolveMountTarget() {
@@ -107,37 +151,32 @@ function resolveMountTarget() {
 function ensureStatusDom() {
   if (!hasDocument()) return {};
 
-  const panel =
-    document.querySelector("#audraliaHandoffPanel") ||
-    document.querySelector("[data-audralia-handoff-panel]") ||
-    null;
-
-  const title =
-    document.querySelector("#audraliaHandoffTitle") ||
-    document.querySelector("[data-audralia-handoff-title]") ||
-    null;
-
-  const message =
-    document.querySelector("#audraliaHandoffStatus") ||
-    document.querySelector("[data-audralia-handoff-status]") ||
-    null;
-
-  const list =
-    document.querySelector("#audraliaHandoffList") ||
-    document.querySelector("[data-audralia-handoff-list]") ||
-    null;
-
-  const receipt =
-    document.querySelector("#audraliaHandoffReceipt") ||
-    document.querySelector("[data-audralia-handoff-receipt]") ||
-    null;
-
-  const script =
-    document.querySelector("#audraliaBridgeScript") ||
-    document.querySelector("[data-audralia-bridge-script]") ||
-    null;
-
-  return { panel, title, message, list, receipt, script };
+  return {
+    panel:
+      document.querySelector("#audraliaHandoffPanel") ||
+      document.querySelector("[data-audralia-handoff-panel]") ||
+      null,
+    title:
+      document.querySelector("#audraliaHandoffTitle") ||
+      document.querySelector("[data-audralia-handoff-title]") ||
+      null,
+    message:
+      document.querySelector("#audraliaHandoffStatus") ||
+      document.querySelector("[data-audralia-handoff-status]") ||
+      null,
+    list:
+      document.querySelector("#audraliaHandoffList") ||
+      document.querySelector("[data-audralia-handoff-list]") ||
+      null,
+    receipt:
+      document.querySelector("#audraliaHandoffReceipt") ||
+      document.querySelector("[data-audralia-handoff-receipt]") ||
+      null,
+    script:
+      document.querySelector("#audraliaBridgeScript") ||
+      document.querySelector("[data-audralia-bridge-script]") ||
+      null
+  };
 }
 
 function setRootAttributes() {
@@ -146,6 +185,9 @@ function setRootAttributes() {
   document.documentElement.setAttribute("data-audralia-route-bridge-contract", BRIDGE_CONTRACT);
   document.documentElement.setAttribute("data-audralia-route-bridge-previous-contract", PREVIOUS_BRIDGE_CONTRACT);
   document.documentElement.setAttribute("data-audralia-runtime-path", RUNTIME_PATH);
+  document.documentElement.setAttribute("data-audralia-runtime-import", state.runtimeImport || versioned(RUNTIME_PATH));
+  document.documentElement.setAttribute("data-audralia-single-cache-nonce-chain", "true");
+  document.documentElement.setAttribute("data-audralia-page-cache-nonce", getOrCreateCacheNonce());
   document.documentElement.setAttribute("data-audralia-runtime-contract-expected", RUNTIME_CONTRACT);
   document.documentElement.setAttribute("data-audralia-parent-contract-expected", PARENT_CONTRACT);
   document.documentElement.setAttribute("data-audralia-continents-contract-expected", CONTINENTS_CONTRACT);
@@ -160,6 +202,7 @@ function statusRows() {
   const rows = [
     ["ROUTE_VALID", state.routeValid ? ROUTE : false],
     ["MOUNT_TARGET_FOUND", state.mountTargetFound],
+    ["SINGLE_CACHE_NONCE", state.cacheNonce || false],
     ["STANDBY_FORM_VISIBLE", state.standbyFormVisible ? "route bridge painted immediate form" : false],
     ["RUNTIME_IMPORT_SUCCEEDED", state.runtimeImportSucceeded ? RUNTIME_PATH : false],
     ["RUNTIME_CONTRACT_VALID", state.runtimeContractValid ? RUNTIME_CONTRACT : false],
@@ -174,13 +217,8 @@ function statusRows() {
     ["CONTINENTS_CONTRACT_VALID", state.continentsContractValid ? CONTINENTS_CONTRACT : false]
   ];
 
-  if (state.finalFormVisible) {
-    rows.push(["FORM_VISIBLE", "parent-confirmed"]);
-  }
-
-  if (state.errors.length) {
-    rows.push(["ERRORS", `${state.errors.length} recorded`]);
-  }
+  if (state.finalFormVisible) rows.push(["FORM_VISIBLE", "parent-confirmed"]);
+  if (state.errors.length) rows.push(["ERRORS", `${state.errors.length} recorded`]);
 
   return rows;
 }
@@ -195,6 +233,7 @@ function renderStatus() {
   if (panel) {
     panel.setAttribute("data-audralia-handoff-state", state.status);
     panel.setAttribute("data-audralia-form-visible", state.finalFormVisible ? "true" : "false");
+    panel.setAttribute("data-audralia-single-cache-nonce-chain", "true");
   }
 
   if (title) title.textContent = state.headline;
@@ -209,12 +248,9 @@ function renderStatus() {
       const li = document.createElement("li");
       const strong = document.createElement("strong");
       strong.textContent = label;
-
       li.appendChild(strong);
 
-      if (value !== true) {
-        li.appendChild(document.createTextNode(` · ${value}`));
-      }
+      if (value !== true) li.appendChild(document.createTextNode(` · ${value}`));
 
       list.appendChild(li);
     }
@@ -223,7 +259,7 @@ function renderStatus() {
   if (receipt) receipt.textContent = BRIDGE_CONTRACT;
 
   if (script) {
-    script.textContent = `Route bridge script: /showroom/globe/audralia/index.js?v=${BRIDGE_CONTRACT}`;
+    script.textContent = `Route bridge script: /showroom/globe/audralia/index.js · downstream nonce: ${state.cacheNonce || getOrCreateCacheNonce()}`;
   }
 }
 
@@ -282,22 +318,6 @@ function paintStandbyForm(target) {
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, w, h);
 
-  ctx.save();
-  ctx.globalAlpha = 0.22;
-
-  for (let i = 0; i < 89; i += 1) {
-    const x = (i * 131 + 37) % w;
-    const y = (i * 197 + 53) % h;
-    const dot = ((i % 3) + 0.5) * dpr * 0.34;
-
-    ctx.beginPath();
-    ctx.arc(x, y, dot, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(220,246,255,0.58)";
-    ctx.fill();
-  }
-
-  ctx.restore();
-
   const body = ctx.createRadialGradient(cx - r * 0.36, cy - r * 0.34, r * 0.08, cx, cy, r);
   body.addColorStop(0, "rgba(128,232,255,0.92)");
   body.addColorStop(0.28, "rgba(42,156,204,0.92)");
@@ -307,14 +327,6 @@ function paintStandbyForm(target) {
   ctx.beginPath();
   ctx.arc(cx, cy, r, 0, Math.PI * 2);
   ctx.fillStyle = body;
-  ctx.fill();
-
-  const shade = ctx.createRadialGradient(cx + r * 0.25, cy + r * 0.18, r * 0.05, cx, cy, r * 1.1);
-  shade.addColorStop(0, "rgba(0,0,0,0)");
-  shade.addColorStop(1, "rgba(0,0,0,0.48)");
-  ctx.beginPath();
-  ctx.arc(cx, cy, r, 0, Math.PI * 2);
-  ctx.fillStyle = shade;
   ctx.fill();
 
   ctx.beginPath();
@@ -445,31 +457,19 @@ function resolveRuntimeMount(runtimeModule) {
   if (!runtimeModule) return null;
 
   if (typeof runtimeModule.default === "function") {
-    return {
-      type: "function-export export=default",
-      fn: runtimeModule.default
-    };
+    return { type: "function-export export=default", fn: runtimeModule.default };
   }
 
   if (runtimeModule.default && typeof runtimeModule.default.mount === "function") {
-    return {
-      type: "object-export default.mount",
-      fn: runtimeModule.default.mount.bind(runtimeModule.default)
-    };
+    return { type: "object-export default.mount", fn: runtimeModule.default.mount.bind(runtimeModule.default) };
   }
 
   if (typeof runtimeModule.mount === "function") {
-    return {
-      type: "named-export mount",
-      fn: runtimeModule.mount
-    };
+    return { type: "named-export mount", fn: runtimeModule.mount };
   }
 
   if (runtimeModule.api && typeof runtimeModule.api.mount === "function") {
-    return {
-      type: "named-export api.mount",
-      fn: runtimeModule.api.mount.bind(runtimeModule.api)
-    };
+    return { type: "named-export api.mount", fn: runtimeModule.api.mount.bind(runtimeModule.api) };
   }
 
   return null;
@@ -596,11 +596,12 @@ function publishBridgeReceipt(scope = "publish") {
     previousContract: PREVIOUS_BRIDGE_CONTRACT,
     route: ROUTE,
     runtimePath: RUNTIME_PATH,
-    runtimeImport: RUNTIME_IMPORT,
+    runtimeImport: state.runtimeImport || "",
+    cacheNonce: state.cacheNonce || getOrCreateCacheNonce(),
     runtimeContractExpected: RUNTIME_CONTRACT,
     parentContractExpected: PARENT_CONTRACT,
     continentsContractExpected: CONTINENTS_CONTRACT,
-    mode: "g26_parent_visible_body_first_failsafe_bridge",
+    mode: "single_cache_nonce_chain_alignment_route_bridge",
     scope,
     status: state.status,
     headline: state.headline,
@@ -623,7 +624,8 @@ function publishBridgeReceipt(scope = "publish") {
     runtimeReceipt: state.runtimeReceipt,
     parentReceipt: state.parentReceipt,
     continentsReceipt: state.continentsReceipt,
-    htmlChange: true,
+    singleCacheNonceChain: true,
+    htmlChange: false,
     routeBridgeChange: true,
     runtimeRewrite: false,
     parentRewrite: false,
@@ -637,14 +639,10 @@ function publishBridgeReceipt(scope = "publish") {
   };
 
   window.AUDRALIA_ROUTE_BRIDGE_RECEIPT = receipt;
-  window.AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_BRIDGE_RECEIPT = receipt;
+  window.AUDRALIA_SINGLE_CACHE_NONCE_CHAIN_ROUTE_BRIDGE_RECEIPT = receipt;
 
   try {
-    window.dispatchEvent(
-      new CustomEvent("audralia:route-bridge:receipt", {
-        detail: receipt
-      })
-    );
+    window.dispatchEvent(new CustomEvent("audralia:route-bridge:receipt", { detail: receipt }));
   } catch (_error) {
     try {
       window.dispatchEvent(new Event("audralia:route-bridge:receipt"));
@@ -655,6 +653,9 @@ function publishBridgeReceipt(scope = "publish") {
 }
 
 async function bootAudraliaRouteBridge() {
+  state.cacheNonce = getOrCreateCacheNonce();
+  state.runtimeImport = versioned(RUNTIME_PATH);
+
   setRootAttributes();
 
   state.routeValid = getRoutePath() === ROUTE || getRoutePath().endsWith("/showroom/globe/audralia/");
@@ -680,7 +681,7 @@ async function bootAudraliaRouteBridge() {
   let runtimeModule;
 
   try {
-    runtimeModule = await import(RUNTIME_IMPORT);
+    runtimeModule = await import(state.runtimeImport);
     state.runtimeImportSucceeded = true;
     publishBridgeReceipt("runtime-import-succeeded");
     renderStatus();
@@ -689,9 +690,6 @@ async function bootAudraliaRouteBridge() {
     setFailed("runtime import failed");
     return;
   }
-
-  const runtimeReceiptBeforeMount = readRuntimeReceipt();
-  state.runtimeReceipt = runtimeReceiptBeforeMount;
 
   const runtimeMount = resolveRuntimeMount(runtimeModule);
 
@@ -708,6 +706,8 @@ async function bootAudraliaRouteBridge() {
       route: ROUTE,
       delegatedBy: BRIDGE_CONTRACT,
       routeBridge: true,
+      cacheNonce: state.cacheNonce,
+      singleCacheNonceChain: true,
       parentContractExpected: PARENT_CONTRACT,
       continentsContractExpected: CONTINENTS_CONTRACT
     });

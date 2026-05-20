@@ -1,25 +1,24 @@
 // /assets/audralia/clean/engine/audralia.engine.js
 // AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1
 // Full-file replacement.
-// Purpose: parent-visible-body-first failsafe for Audralia G2.6.
-// Parent owns: mount, visible inspection frame, fixed globe geometry, ocean body, atmospheric rim, projection, drag-only longitude rotation, child loading, FORM_VISIBLE confirmation.
-// Parent does not own: route bridge, runtime path, HTML, continent model contents, motion, sky, generated image, GraphicBox, or visual-pass claim.
+// Purpose: parent-visible-body-first failsafe with single page-load cache nonce when admitting continents.js.
+// Chain alignment: AUDRALIA_G2_6_SINGLE_CACHE_NONCE_CHAIN_ALIGNMENT_TNT_v1
+// Parent owns: mount, visible inspection frame, fixed globe geometry, ocean body, atmospheric rim, projection, drag-only longitude rotation, child admission, FORM_VISIBLE confirmation.
+// Parent does not own: route bridge, runtime path, HTML, continent topology contents, motion, sky, generated image, GraphicBox, or visual-pass claim.
 
 (() => {
   "use strict";
 
   const CONTRACT = "AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1";
+  const CHAIN_CONTRACT = "AUDRALIA_G2_6_SINGLE_CACHE_NONCE_CHAIN_ALIGNMENT_TNT_v1";
   const PREVIOUS_CONTRACT = "AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1";
   const FAMILY = "AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1";
 
   const TARGET = "/assets/audralia/clean/engine/audralia.engine.js";
   const ROUTE = "/showroom/globe/audralia/";
 
-  const PHI = 1.61803398875;
   const PHI_INVERSE = 0.61803398875;
-  const PHI_INVERSE_2 = 0.38196601125;
   const PHI_INVERSE_3 = 0.2360679775;
-  const PHI_INVERSE_4 = 0.14589803375;
   const PHI_INVERSE_5 = 0.09016994375;
 
   const SAFE_RADIUS_FACTOR = PHI_INVERSE / 2;
@@ -58,10 +57,12 @@
 
   const state = {
     contract: CONTRACT,
+    chainContract: CHAIN_CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
     family: FAMILY,
     target: TARGET,
     route: ROUTE,
+    cacheNonce: "",
     parentVisibleBodyFirst: true,
     bodyPainted: false,
     oceanBodyPainted: false,
@@ -127,6 +128,61 @@
     return Boolean(value && value.nodeType === 1);
   }
 
+  function getOwnScriptNonce() {
+    if (!hasDocument()) return "";
+
+    try {
+      const scripts = Array.from(document.scripts);
+      const own = scripts.reverse().find((script) => {
+        const src = script.getAttribute("src") || "";
+        return src.includes("/assets/audralia/clean/engine/audralia.engine.js");
+      });
+
+      if (!own) return "";
+
+      return new URL(own.src, window.location.href).searchParams.get("v") || "";
+    } catch (_error) {
+      return "";
+    }
+  }
+
+  function getOrCreateCacheNonce(options = {}) {
+    if (options && options.cacheNonce) {
+      state.cacheNonce = String(options.cacheNonce);
+      return state.cacheNonce;
+    }
+
+    if (!hasWindow() || !hasDocument()) {
+      state.cacheNonce = state.cacheNonce || `${CHAIN_CONTRACT}__${Date.now()}`;
+      return state.cacheNonce;
+    }
+
+    const root = document.documentElement;
+
+    const nonce =
+      state.cacheNonce ||
+      (window.AUDRALIA_PAGE_CACHE_NONCE ? String(window.AUDRALIA_PAGE_CACHE_NONCE) : "") ||
+      root.getAttribute("data-audralia-page-cache-nonce") ||
+      root.getAttribute("data-audralia-route-bridge-cache-key") ||
+      (window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT && window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.dynamicCacheKey
+        ? String(window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.dynamicCacheKey)
+        : "") ||
+      getOwnScriptNonce() ||
+      `${CHAIN_CONTRACT}__${Date.now()}__${Math.random().toString(36).slice(2, 8)}`;
+
+    state.cacheNonce = nonce;
+    window.AUDRALIA_PAGE_CACHE_NONCE = nonce;
+    root.setAttribute("data-audralia-page-cache-nonce", nonce);
+    root.setAttribute("data-audralia-single-cache-nonce-chain", "true");
+
+    return nonce;
+  }
+
+  function childUrl(path) {
+    const nonce = getOrCreateCacheNonce();
+    return `${path}?v=${encodeURIComponent(nonce)}`;
+  }
+
   function recordError(scope, error) {
     const message = error && error.message ? error.message : String(error);
     state.errors.push({ scope, message, time: nowIso() });
@@ -168,6 +224,7 @@
     target.setAttribute("data-audralia-visible-box-frame", "true");
     target.setAttribute("data-audralia-parent-contract", CONTRACT);
     target.setAttribute("data-audralia-parent-visible-body-first", "true");
+    target.setAttribute("data-audralia-single-cache-nonce-chain", "true");
   }
 
   function lockCanvas(canvas) {
@@ -224,16 +281,8 @@
 
     const rect = env.mount.getBoundingClientRect();
 
-    const visibleWidth = Math.max(
-      320,
-      Math.floor(env.mount.clientWidth || rect.width || 760)
-    );
-
-    const visibleHeight = Math.max(
-      420,
-      Math.floor(env.mount.clientHeight || rect.height || 540)
-    );
-
+    const visibleWidth = Math.max(320, Math.floor(env.mount.clientWidth || rect.width || 760));
+    const visibleHeight = Math.max(420, Math.floor(env.mount.clientHeight || rect.height || 540));
     const dpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
 
     env.dpr = dpr;
@@ -281,10 +330,6 @@
       top: env.cy - env.radius,
       bottom: env.cy + env.radius
     };
-  }
-
-  function clearCanvas(ctx, g) {
-    ctx.clearRect(0, 0, g.width, g.height);
   }
 
   function drawSpace(ctx, g) {
@@ -406,6 +451,8 @@
     return {
       scope,
       contract: CONTRACT,
+      chainContract: CHAIN_CONTRACT,
+      cacheNonce: getOrCreateCacheNonce(),
       previousContract: PREVIOUS_CONTRACT,
       family: FAMILY,
       target: TARGET,
@@ -459,7 +506,7 @@
     state.oceanBodyPainted = false;
     state.atmosphericRimPainted = false;
 
-    clearCanvas(ctx, g);
+    ctx.clearRect(0, 0, g.width, g.height);
     drawSpace(ctx, g);
     drawOceanBase(ctx, g);
     drawAtmosphericRim(ctx, g);
@@ -574,11 +621,9 @@
   function scriptAlreadyLoadedCurrent(src) {
     if (!hasDocument()) return false;
 
-    const wanted = `${src}?v=${encodeURIComponent(CONTRACT)}`;
-
     return Array.from(document.scripts).some((script) => {
       const raw = script.getAttribute("src") || "";
-      return raw === wanted;
+      return raw === src;
     });
   }
 
@@ -589,20 +634,23 @@
         return;
       }
 
-      if (scriptAlreadyLoadedCurrent(src)) {
-        resolve({ src, loaded: true, reused: true });
+      const wanted = childUrl(src);
+
+      if (scriptAlreadyLoadedCurrent(wanted)) {
+        resolve({ src: wanted, loaded: true, reused: true });
         return;
       }
 
       const script = document.createElement("script");
-      script.src = `${src}?v=${encodeURIComponent(CONTRACT)}`;
+      script.src = wanted;
       script.async = false;
       script.defer = false;
       script.setAttribute("data-audralia-clean-parent-child-loader", CONTRACT);
-      script.setAttribute("data-audralia-parent-visible-first-child-cache", "true");
+      script.setAttribute("data-audralia-single-cache-nonce-chain", CHAIN_CONTRACT);
+      script.setAttribute("data-audralia-page-cache-nonce", getOrCreateCacheNonce());
 
-      script.onload = () => resolve({ src, loaded: true, reused: false });
-      script.onerror = () => resolve({ src, loaded: false, reused: false });
+      script.onload = () => resolve({ src: wanted, loaded: true, reused: false });
+      script.onerror = () => resolve({ src: wanted, loaded: false, reused: false });
 
       document.head.appendChild(script);
     });
@@ -701,6 +749,7 @@
     window.AUDRALIA_CLEAN_PARENT_ENGINE_GLOBAL_PUBLISHED = true;
     window.AUDRALIA_CLEAN_PARENT_ENGINE_CONTRACT = CONTRACT;
     window.AUDRALIA_PARENT_VISIBLE_BODY_FIRST_FAILSAFE = true;
+    window.AUDRALIA_PARENT_SINGLE_CACHE_NONCE_CHAIN = true;
 
     state.parentGlobalPublished = true;
 
@@ -708,6 +757,8 @@
       document.documentElement.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
       document.documentElement.setAttribute("data-audralia-clean-parent-target", TARGET);
       document.documentElement.setAttribute("data-audralia-parent-visible-body-first-failsafe", "true");
+      document.documentElement.setAttribute("data-audralia-single-cache-nonce-chain", "true");
+      document.documentElement.setAttribute("data-audralia-page-cache-nonce", getOrCreateCacheNonce());
       document.documentElement.setAttribute("data-audralia-clean-parent-mounted", state.mounted ? "true" : "false");
       document.documentElement.setAttribute("data-audralia-clean-parent-form-visible", state.formVisible ? "true" : "false");
     }
@@ -750,11 +801,13 @@
 
     const receipt = {
       contract: CONTRACT,
+      chainContract: CHAIN_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       family: FAMILY,
       target: TARGET,
       route: ROUTE,
-      mode: "parent_visible_body_first_failsafe",
+      cacheNonce: state.cacheNonce || getOrCreateCacheNonce(),
+      mode: "parent_visible_body_first_failsafe_single_cache_nonce_child_admission",
       scope,
       parentVisibleBodyFirst: true,
       bodyPainted: state.bodyPainted,
@@ -767,16 +820,7 @@
       childLoadStarted: state.childLoadStarted,
       childLoadComplete: state.childLoadComplete,
       children: { ...state.children },
-      phi: PHI,
-      phiInverse: PHI_INVERSE,
-      phiInverse2: PHI_INVERSE_2,
-      phiInverse3: PHI_INVERSE_3,
-      phiInverse4: PHI_INVERSE_4,
-      phiInverse5: PHI_INVERSE_5,
-      safeRadiusFactor: SAFE_RADIUS_FACTOR,
-      mobileRadiusFactor: MOBILE_RADIUS_FACTOR,
-      centerXBiasFactor: CENTER_X_BIAS_FACTOR,
-      dragRotationSensitivity: DRAG_ROTATION_SENSITIVITY,
+      singleCacheNonceChain: true,
       centerLocked: true,
       fixedRadius: true,
       fixedCameraDepth: true,
@@ -824,6 +868,8 @@
   }
 
   function mount(input, options = {}) {
+    getOrCreateCacheNonce(options);
+
     state.mountCalled = true;
     state.mounted = true;
     state.delegatedBy = options && options.delegatedBy ? String(options.delegatedBy) : "direct";
@@ -910,11 +956,13 @@
   function getStatus() {
     return {
       contract: CONTRACT,
+      chainContract: CHAIN_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       family: FAMILY,
       target: TARGET,
       route: ROUTE,
-      mode: "parent_visible_body_first_failsafe",
+      cacheNonce: state.cacheNonce || getOrCreateCacheNonce(),
+      mode: "parent_visible_body_first_failsafe_single_cache_nonce_child_admission",
       parentVisibleBodyFirst: true,
       bodyPainted: state.bodyPainted,
       oceanBodyPainted: state.oceanBodyPainted,
@@ -926,6 +974,7 @@
       childLoadStarted: state.childLoadStarted,
       childLoadComplete: state.childLoadComplete,
       children: { ...state.children },
+      singleCacheNonceChain: true,
       centerLocked: true,
       fixedRadius: true,
       fixedCameraDepth: true,
@@ -962,6 +1011,7 @@
 
   const api = {
     CONTRACT,
+    CHAIN_CONTRACT,
     PREVIOUS_CONTRACT,
     FAMILY,
     TARGET,
@@ -981,6 +1031,7 @@
     project
   };
 
+  getOrCreateCacheNonce();
   publishGlobals("module-load");
 
   if (hasDocument()) {

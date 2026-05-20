@@ -1,16 +1,16 @@
 // /assets/audralia/clean/engine/audralia.engine.js
-// AUDRALIA_G2_5_FIBONACCI_CENTER_BIAS_AND_SEA_LEVEL_CONTINENTS_TNT_v1
+// AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1
 // Full-file replacement.
-// Purpose: move Audralia slightly right from prior Fibonacci bias and load sea-level continent expression.
-// Parent owns: visible-frame containment, canvas mount, Fibonacci geometry, ocean base, projection, child loading, FORM_VISIBLE confirmation.
-// Parent does not own: continent shapes, automatic orbit, zoom, camera depth, route bridge, runtime, HTML, generated image, GraphicBox, or visual-pass claim.
+// Purpose: fresh G2.6 parent render baseline for Audralia’s Nine Summits / 256 / Fibonacci continent model.
+// Parent owns: mount, visible inspection frame, fixed globe geometry, ocean body, projection, drag-only longitude rotation, child loading, FORM_VISIBLE confirmation.
+// Parent does not own: continent model, motion, sky, route bridge, runtime path, HTML, generated image, GraphicBox, or visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G2_5_FIBONACCI_CENTER_BIAS_AND_SEA_LEVEL_CONTINENTS_TNT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_PARENT_FIBONACCI_INSPECTION_GEOMETRY_NORMALIZATION_TNT_v1";
-  const FAMILY = "AUDRALIA_G2_5_EXISTING_ARCHITECTURE_PATH_ALIGNMENT_TNT_v1";
+  const CONTRACT = "AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_SEA_LEVEL_CONTINENTS_LIMB_OCCLUSION_4K_SURFACE_TNT_v1";
+  const FAMILY = "AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1";
 
   const TARGET = "/assets/audralia/clean/engine/audralia.engine.js";
   const ROUTE = "/showroom/globe/audralia/";
@@ -18,7 +18,7 @@
   const PHI = 1.61803398875;
   const PHI_INVERSE = 0.61803398875;
   const PHI_INVERSE_2 = 0.38196601125;
-  const PHI_INVERSE_3 = 0.23606797750;
+  const PHI_INVERSE_3 = 0.2360679775;
   const PHI_INVERSE_4 = 0.14589803375;
   const PHI_INVERSE_5 = 0.09016994375;
 
@@ -32,6 +32,7 @@
       enabled: true,
       path: "/assets/audralia/clean/engine/audralia/engine/continents.js",
       globals: [
+        "AUDRALIA_NINE_SUMMITS_CONTINENTS_ENGINE",
         "AUDRALIA_CLEAN_CONTINENTS_ENGINE",
         "AUDRALIA_CONTINENTS_ENGINE",
         "AUDRALIA_CLEAN_CANVAS_CONTINENTS",
@@ -42,13 +43,13 @@
     },
     motion: {
       enabled: false,
-      heldReason: "inspection_lock_motion_noop",
+      heldReason: "motion_neutralized_for_stationary_inspection",
       path: "/assets/audralia/clean/engine/audralia/engine/motion.js",
       globals: []
     },
     sky: {
       enabled: false,
-      heldReason: "sky_held_until_sea_level_surface_confirmed",
+      heldReason: "sky_held_until_surface_baseline_accepted",
       path: "/assets/audralia/clean/engine/audralia/engine/sky.js",
       globals: []
     }
@@ -60,27 +61,8 @@
     family: FAMILY,
     target: TARGET,
     route: ROUTE,
-    fibonacciCenterBiasSeaLevelContinents: true,
-    phi: PHI,
-    phiInverse: PHI_INVERSE,
-    phiInverse2: PHI_INVERSE_2,
-    phiInverse3: PHI_INVERSE_3,
-    phiInverse4: PHI_INVERSE_4,
-    phiInverse5: PHI_INVERSE_5,
-    safeRadiusFactor: SAFE_RADIUS_FACTOR,
-    mobileRadiusFactor: MOBILE_RADIUS_FACTOR,
-    centerXBiasFactor: CENTER_X_BIAS_FACTOR,
-    dragRotationSensitivity: DRAG_ROTATION_SENSITIVITY,
-    visibleBoxCenterAnchored: true,
-    canvasFillsMount: true,
-    centerLocked: true,
-    fixedRadius: true,
-    fixedCameraDepth: true,
-    dragRotationOnly: true,
-    noAutoOrbit: true,
-    motionChildDisabled: true,
-    skyChildHeld: true,
-    noLegacyParentLand: true,
+    g26CleanSurfaceInspectionBaseline: true,
+    nineSummits256FibonacciModel: true,
     parentGlobalPublished: false,
     mountCalled: false,
     mounted: false,
@@ -92,8 +74,8 @@
     childLoadComplete: false,
     children: {
       continents: "pending",
-      motion: "held_motion_noop",
-      sky: "held_sky"
+      motion: "held",
+      sky: "held"
     },
     errors: []
   };
@@ -110,15 +92,15 @@
     cx: 0,
     cy: 0,
     radius: 0,
+    rotation: 0,
+    dragging: false,
+    lastPointer: null,
     childEngines: {
       continents: null,
       motion: null,
       sky: null
     },
-    childPromise: null,
-    rotation: 0,
-    dragging: false,
-    lastPointer: null
+    childPromise: null
   };
 
   function hasWindow() {
@@ -137,14 +119,14 @@
     }
   }
 
+  function isElement(value) {
+    return Boolean(value && value.nodeType === 1);
+  }
+
   function recordError(scope, error) {
     const message = error && error.message ? error.message : String(error);
     state.errors.push({ scope, message, time: nowIso() });
     publishReceipt(scope);
-  }
-
-  function isElement(value) {
-    return Boolean(value && value.nodeType === 1);
   }
 
   function resolveMountTarget(input) {
@@ -177,21 +159,20 @@
     target.style.display = "block";
     target.style.contain = "layout paint";
     target.style.touchAction = "none";
-    if (!target.style.minHeight) target.style.minHeight = "360px";
+    if (!target.style.minHeight) target.style.minHeight = "420px";
 
     target.setAttribute("data-audralia-visible-box-frame", "true");
-    target.setAttribute("data-audralia-parent-center-anchor", "fibonacci-soft-right-bias");
+    target.setAttribute("data-audralia-parent-contract", CONTRACT);
+    target.setAttribute("data-audralia-nine-summits-256-fibonacci-model", "true");
   }
 
-  function lockCanvasToVisibleFrame(canvas) {
+  function lockCanvas(canvas) {
     if (!isElement(canvas)) return;
 
     canvas.style.position = "absolute";
     canvas.style.inset = "0";
     canvas.style.left = "0";
     canvas.style.top = "0";
-    canvas.style.right = "0";
-    canvas.style.bottom = "0";
     canvas.style.display = "block";
     canvas.style.width = "100%";
     canvas.style.height = "100%";
@@ -204,10 +185,10 @@
     canvas.style.userSelect = "none";
     canvas.style.webkitUserSelect = "none";
 
-    canvas.setAttribute("data-audralia-canvas-fills-visible-box", "true");
-    canvas.setAttribute("data-audralia-parent-fixed-center", "true");
-    canvas.setAttribute("data-audralia-parent-fixed-radius", "true");
-    canvas.setAttribute("data-audralia-parent-sea-level-continents", "true");
+    canvas.setAttribute("data-audralia-clean-parent-canvas", "true");
+    canvas.setAttribute("data-audralia-clean-canvas", "true");
+    canvas.setAttribute("data-contract", CONTRACT);
+    canvas.setAttribute("aria-label", "Audralia Nine Summits Fibonacci inspection planet");
   }
 
   function ensureCanvas(target) {
@@ -226,12 +207,7 @@
       target.appendChild(canvas);
     }
 
-    canvas.setAttribute("data-audralia-clean-parent-canvas", "true");
-    canvas.setAttribute("data-audralia-clean-canvas", "true");
-    canvas.setAttribute("data-contract", CONTRACT);
-    canvas.setAttribute("aria-label", "Audralia Fibonacci sea-level inspection planet");
-
-    lockCanvasToVisibleFrame(canvas);
+    lockCanvas(canvas);
 
     return canvas;
   }
@@ -240,7 +216,7 @@
     if (!env.canvas || !env.mount) return;
 
     lockMountFrame(env.mount);
-    lockCanvasToVisibleFrame(env.canvas);
+    lockCanvas(env.canvas);
 
     const rect = env.mount.getBoundingClientRect();
 
@@ -250,8 +226,8 @@
     );
 
     const visibleHeight = Math.max(
-      360,
-      Math.floor(env.mount.clientHeight || rect.height || 520)
+      420,
+      Math.floor(env.mount.clientHeight || rect.height || 540)
     );
 
     const dpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
@@ -276,152 +252,6 @@
     env.canvas.style.height = "100%";
   }
 
-  function publishGlobals(scope = "publish-globals") {
-    if (!hasWindow()) return api;
-
-    window.AUDRALIA_ENGINE = api;
-    window.AUDRALIA_CLEAN_CANVAS_ENGINE = api;
-    window.AUDRALIA_CLEAN_CANVAS_AUTHORITY = api;
-    window.AUDRALIA_CLEAN_ENGINE_PARENT = api;
-
-    window.AUDRALIA_CLEAN_PARENT_ENGINE_GLOBAL_PUBLISHED = true;
-    window.AUDRALIA_CLEAN_PARENT_ENGINE_CONTRACT = CONTRACT;
-    window.AUDRALIA_PARENT_FIBONACCI_CENTER_BIAS_SEA_LEVEL_CONTINENTS = true;
-    window.AUDRALIA_PARENT_CENTER_X_BIAS_FACTOR = CENTER_X_BIAS_FACTOR;
-    window.AUDRALIA_PARENT_DRAG_ROTATION_SENSITIVITY = DRAG_ROTATION_SENSITIVITY;
-    window.AUDRALIA_PARENT_SEA_LEVEL_CONTINENTS_EXPECTED = true;
-    window.AUDRALIA_PARENT_MOTION_CHILD_DISABLED = true;
-    window.AUDRALIA_PARENT_SKY_CHILD_HELD = true;
-
-    state.parentGlobalPublished = true;
-
-    if (hasDocument() && document.documentElement) {
-      document.documentElement.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
-      document.documentElement.setAttribute("data-audralia-clean-parent-target", TARGET);
-      document.documentElement.setAttribute("data-audralia-parent-fibonacci-center-bias-sea-level-continents", "true");
-      document.documentElement.setAttribute("data-audralia-parent-center-x-bias-factor", String(CENTER_X_BIAS_FACTOR));
-      document.documentElement.setAttribute("data-audralia-parent-drag-rotation-sensitivity", String(DRAG_ROTATION_SENSITIVITY));
-      document.documentElement.setAttribute("data-audralia-parent-sea-level-continents-expected", "true");
-      document.documentElement.setAttribute("data-audralia-parent-motion-child-disabled", "true");
-      document.documentElement.setAttribute("data-audralia-parent-sky-child-held", "true");
-      document.documentElement.setAttribute("data-audralia-clean-parent-mounted", state.mounted ? "true" : "false");
-      document.documentElement.setAttribute("data-audralia-clean-parent-form-visible", state.formVisible ? "true" : "false");
-    }
-
-    publishReceipt(scope);
-
-    return api;
-  }
-
-  function publishFormVisible(scope = "form-visible") {
-    state.formVisible = true;
-    state.ready = true;
-
-    if (hasWindow()) {
-      window.AUDRALIA_FORM_VISIBLE = true;
-      window.AUDRALIA_CLEAN_CANVAS_FORM_VISIBLE = true;
-      window.AUDRALIA_CLEAN_PARENT_FORM_VISIBLE = true;
-      window.AUDRALIA_CLEAN_PARENT_ENGINE_READY = true;
-    }
-
-    if (env.mount) {
-      env.mount.setAttribute("data-audralia-form-visible", "true");
-      env.mount.setAttribute("data-audralia-clean-parent-form-visible", "true");
-      env.mount.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
-      env.mount.setAttribute("data-audralia-parent-sea-level-continents-expected", "true");
-    }
-
-    if (env.canvas) {
-      env.canvas.setAttribute("data-audralia-form-visible", "true");
-      env.canvas.setAttribute("data-audralia-clean-parent-form-visible", "true");
-      env.canvas.setAttribute("data-audralia-parent-sea-level-continents-expected", "true");
-    }
-
-    publishReceipt(scope);
-  }
-
-  function publishReceipt(scope = "publish") {
-    if (!hasWindow()) return;
-
-    const receipt = {
-      contract: CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
-      family: FAMILY,
-      target: TARGET,
-      route: ROUTE,
-      mode: "fibonacci_center_bias_and_sea_level_continents",
-      scope,
-      fibonacciCenterBiasSeaLevelContinents: true,
-      phi: PHI,
-      phiInverse: PHI_INVERSE,
-      phiInverse2: PHI_INVERSE_2,
-      phiInverse3: PHI_INVERSE_3,
-      phiInverse4: PHI_INVERSE_4,
-      phiInverse5: PHI_INVERSE_5,
-      safeRadiusFactor: SAFE_RADIUS_FACTOR,
-      mobileRadiusFactor: MOBILE_RADIUS_FACTOR,
-      centerXBiasFactor: CENTER_X_BIAS_FACTOR,
-      dragRotationSensitivity: DRAG_ROTATION_SENSITIVITY,
-      visibleBoxCenterAnchored: true,
-      canvasFillsMount: true,
-      centerLocked: true,
-      fixedRadius: true,
-      fixedCameraDepth: true,
-      dragRotationOnly: true,
-      noAutoOrbit: true,
-      motionChildDisabled: true,
-      skyChildHeld: true,
-      noLegacyParentLand: true,
-      seaLevelContinentsExpected: true,
-      parentGlobalPublished: state.parentGlobalPublished,
-      mountCalled: state.mountCalled,
-      mounted: state.mounted,
-      ready: state.ready,
-      formVisible: state.formVisible,
-      delegatedBy: state.delegatedBy,
-      renderCount: state.renderCount,
-      geometry: {
-        cssWidth: env.cssWidth,
-        cssHeight: env.cssHeight,
-        width: env.width,
-        height: env.height,
-        cx: env.cx,
-        cy: env.cy,
-        radius: env.radius
-      },
-      rotation: env.rotation,
-      children: { ...state.children },
-      childPaths: {
-        continents: CHILDREN.continents.path,
-        motion: CHILDREN.motion.path,
-        sky: CHILDREN.sky.path
-      },
-      childLoadStarted: state.childLoadStarted,
-      childLoadComplete: state.childLoadComplete,
-      errors: state.errors.slice(),
-      htmlChange: false,
-      routeBridgeChange: false,
-      runtimeRewrite: false,
-      parentRewrite: true,
-      childContractRenewal: false,
-      visualPassClaim: false,
-      generatedImage: false,
-      graphicBox: false
-    };
-
-    window.AUDRALIA_CLEAN_CANVAS_RECEIPT = receipt;
-    window.AUDRALIA_ENGINE_RECEIPT = receipt;
-    window.AUDRALIA_CLEAN_PARENT_ENGINE_RECEIPT = receipt;
-
-    try {
-      window.dispatchEvent(new CustomEvent("audralia:clean-parent:receipt", { detail: receipt }));
-    } catch (_error) {
-      try {
-        window.dispatchEvent(new Event("audralia:clean-parent:receipt"));
-      } catch (_ignored) {}
-    }
-  }
-
   function getGeometry() {
     return {
       width: env.width,
@@ -443,24 +273,24 @@
 
   function drawSpace(ctx, g) {
     const bg = ctx.createLinearGradient(0, 0, 0, g.height);
-    bg.addColorStop(0, "rgba(3, 12, 30, 1)");
-    bg.addColorStop(0.55, "rgba(2, 8, 22, 1)");
-    bg.addColorStop(1, "rgba(1, 4, 14, 1)");
+    bg.addColorStop(0, "rgba(4, 12, 28, 1)");
+    bg.addColorStop(0.62, "rgba(2, 7, 20, 1)");
+    bg.addColorStop(1, "rgba(1, 3, 12, 1)");
 
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, g.width, g.height);
 
     ctx.save();
-    ctx.globalAlpha = 0.38;
+    ctx.globalAlpha = 0.26;
 
-    for (let i = 0; i < 76; i += 1) {
-      const x = (i * 131) % Math.max(1, g.width);
-      const y = (i * 197) % Math.max(1, g.height);
-      const r = ((i % 3) + 0.6) * g.dpr * 0.38;
+    for (let i = 0; i < 89; i += 1) {
+      const x = (i * 131 + 37) % Math.max(1, g.width);
+      const y = (i * 197 + 53) % Math.max(1, g.height);
+      const r = ((i % 3) + 0.55) * g.dpr * 0.36;
 
       ctx.beginPath();
       ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(220, 246, 255, 0.66)";
+      ctx.fillStyle = "rgba(220, 246, 255, 0.64)";
       ctx.fill();
     }
 
@@ -484,35 +314,26 @@
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.clip();
 
-    const ocean = ctx.createRadialGradient(cx - r * 0.34, cy - r * 0.36, r * 0.08, cx, cy, r);
-    ocean.addColorStop(0, "rgba(120, 236, 255, 0.98)");
-    ocean.addColorStop(0.2, "rgba(42, 160, 205, 0.98)");
-    ocean.addColorStop(0.55, "rgba(11, 72, 137, 1)");
-    ocean.addColorStop(1, "rgba(2, 17, 52, 1)");
+    const ocean = ctx.createRadialGradient(cx - r * 0.32, cy - r * 0.34, r * 0.08, cx, cy, r);
+    ocean.addColorStop(0, "rgba(126, 232, 255, 0.98)");
+    ocean.addColorStop(0.24, "rgba(42, 158, 205, 0.98)");
+    ocean.addColorStop(0.6, "rgba(9, 69, 132, 1)");
+    ocean.addColorStop(1, "rgba(1, 14, 46, 1)");
     ctx.fillStyle = ocean;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
-    const depth = ctx.createRadialGradient(cx + r * 0.16, cy + r * 0.2, r * 0.08, cx, cy, r * 1.12);
-    depth.addColorStop(0, "rgba(4, 33, 83, 0)");
-    depth.addColorStop(0.56, "rgba(1, 18, 58, 0.1)");
-    depth.addColorStop(1, "rgba(0, 4, 20, 0.54)");
+    const depth = ctx.createRadialGradient(cx + r * 0.22, cy + r * 0.24, r * 0.1, cx, cy, r * 1.15);
+    depth.addColorStop(0, "rgba(5, 38, 86, 0)");
+    depth.addColorStop(0.55, "rgba(1, 18, 58, 0.12)");
+    depth.addColorStop(1, "rgba(0, 4, 20, 0.58)");
     ctx.fillStyle = depth;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
-    const lighting = ctx.createRadialGradient(
-      cx - r * 0.38,
-      cy - r * 0.38,
-      r * 0.14,
-      cx + r * 0.25,
-      cy + r * 0.18,
-      r * 1.16
-    );
-
-    lighting.addColorStop(0, "rgba(255,255,255,0.22)");
-    lighting.addColorStop(0.45, "rgba(255,255,255,0)");
-    lighting.addColorStop(1, "rgba(0,0,0,0.58)");
-
-    ctx.fillStyle = lighting;
+    const light = ctx.createRadialGradient(cx - r * 0.4, cy - r * 0.38, r * 0.1, cx + r * 0.18, cy + r * 0.18, r * 1.16);
+    light.addColorStop(0, "rgba(255,255,255,0.22)");
+    light.addColorStop(0.42, "rgba(255,255,255,0)");
+    light.addColorStop(1, "rgba(0,0,0,0.54)");
+    ctx.fillStyle = light;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
     ctx.restore();
@@ -528,13 +349,13 @@
     ctx.beginPath();
     ctx.arc(cx, cy, r * 0.998, 0, Math.PI * 2);
     ctx.strokeStyle = "rgba(190, 240, 255, 0.32)";
-    ctx.lineWidth = Math.max(1, g.dpr * 1.15);
+    ctx.lineWidth = Math.max(1, g.dpr * 1.18);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.arc(cx, cy, r * 1.002, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(110, 224, 255, 0.1)";
-    ctx.lineWidth = Math.max(1, g.dpr * 0.9);
+    ctx.arc(cx, cy, r * 1.012, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(86, 205, 255, 0.08)";
+    ctx.lineWidth = Math.max(1, g.dpr * 1.2);
     ctx.stroke();
 
     ctx.restore();
@@ -556,7 +377,7 @@
       x: g.cx + x * r,
       y: g.cy - y * r,
       z,
-      visible: z > -0.05,
+      visible: z > -0.06,
       scale: Math.max(0, z)
     };
   }
@@ -669,7 +490,6 @@
         event.preventDefault();
 
         const dx = event.clientX - env.lastPointer.x;
-
         env.rotation += dx * DRAG_ROTATION_SENSITIVITY;
         env.lastPointer = { x: event.clientX, y: event.clientY };
 
@@ -730,7 +550,7 @@
       script.async = false;
       script.defer = false;
       script.setAttribute("data-audralia-clean-parent-child-loader", CONTRACT);
-      script.setAttribute("data-audralia-sea-level-child-cache", "true");
+      script.setAttribute("data-audralia-g26-nine-summits-child-cache", "true");
 
       script.onload = () => resolve({ src, loaded: true, reused: false });
       script.onerror = () => resolve({ src, loaded: false, reused: false });
@@ -772,7 +592,7 @@
     env.childPromise = (async () => {
       for (const [name, child] of Object.entries(CHILDREN)) {
         if (!child.enabled) {
-          state.children[name] = name === "motion" ? "held_motion_noop" : "held_sky";
+          state.children[name] = "held";
           publishReceipt(`child-${name}-held`);
           continue;
         }
@@ -814,6 +634,137 @@
     return env.childPromise;
   }
 
+  function publishGlobals(scope = "publish-globals") {
+    if (!hasWindow()) return api;
+
+    window.AUDRALIA_ENGINE = api;
+    window.AUDRALIA_CLEAN_CANVAS_ENGINE = api;
+    window.AUDRALIA_CLEAN_CANVAS_AUTHORITY = api;
+    window.AUDRALIA_CLEAN_ENGINE_PARENT = api;
+
+    window.AUDRALIA_CLEAN_PARENT_ENGINE_GLOBAL_PUBLISHED = true;
+    window.AUDRALIA_CLEAN_PARENT_ENGINE_CONTRACT = CONTRACT;
+    window.AUDRALIA_G26_NINE_SUMMITS_256_FIBONACCI_PARENT_ACTIVE = true;
+
+    state.parentGlobalPublished = true;
+
+    if (hasDocument() && document.documentElement) {
+      document.documentElement.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
+      document.documentElement.setAttribute("data-audralia-clean-parent-target", TARGET);
+      document.documentElement.setAttribute("data-audralia-g26-nine-summits-256-fibonacci-parent-active", "true");
+      document.documentElement.setAttribute("data-audralia-clean-parent-mounted", state.mounted ? "true" : "false");
+      document.documentElement.setAttribute("data-audralia-clean-parent-form-visible", state.formVisible ? "true" : "false");
+    }
+
+    publishReceipt(scope);
+
+    return api;
+  }
+
+  function publishFormVisible(scope = "form-visible") {
+    state.formVisible = true;
+    state.ready = true;
+
+    if (hasWindow()) {
+      window.AUDRALIA_FORM_VISIBLE = true;
+      window.AUDRALIA_CLEAN_CANVAS_FORM_VISIBLE = true;
+      window.AUDRALIA_CLEAN_PARENT_FORM_VISIBLE = true;
+      window.AUDRALIA_CLEAN_PARENT_ENGINE_READY = true;
+    }
+
+    if (env.mount) {
+      env.mount.setAttribute("data-audralia-form-visible", "true");
+      env.mount.setAttribute("data-audralia-clean-parent-form-visible", "true");
+      env.mount.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
+    }
+
+    if (env.canvas) {
+      env.canvas.setAttribute("data-audralia-form-visible", "true");
+      env.canvas.setAttribute("data-audralia-clean-parent-form-visible", "true");
+    }
+
+    publishReceipt(scope);
+  }
+
+  function publishReceipt(scope = "publish") {
+    if (!hasWindow()) return;
+
+    const receipt = {
+      contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      family: FAMILY,
+      target: TARGET,
+      route: ROUTE,
+      mode: "g26_nine_summits_256_fibonacci_parent_baseline",
+      scope,
+      g26CleanSurfaceInspectionBaseline: true,
+      nineSummits256FibonacciModel: true,
+      phi: PHI,
+      phiInverse: PHI_INVERSE,
+      phiInverse2: PHI_INVERSE_2,
+      phiInverse3: PHI_INVERSE_3,
+      phiInverse4: PHI_INVERSE_4,
+      phiInverse5: PHI_INVERSE_5,
+      safeRadiusFactor: SAFE_RADIUS_FACTOR,
+      mobileRadiusFactor: MOBILE_RADIUS_FACTOR,
+      centerXBiasFactor: CENTER_X_BIAS_FACTOR,
+      dragRotationSensitivity: DRAG_ROTATION_SENSITIVITY,
+      centerLocked: true,
+      fixedRadius: true,
+      fixedCameraDepth: true,
+      dragRotationOnly: true,
+      noAutoOrbit: true,
+      motionChildDisabled: true,
+      skyChildHeld: true,
+      parentGlobalPublished: state.parentGlobalPublished,
+      mountCalled: state.mountCalled,
+      mounted: state.mounted,
+      ready: state.ready,
+      formVisible: state.formVisible,
+      delegatedBy: state.delegatedBy,
+      renderCount: state.renderCount,
+      geometry: {
+        cssWidth: env.cssWidth,
+        cssHeight: env.cssHeight,
+        width: env.width,
+        height: env.height,
+        cx: env.cx,
+        cy: env.cy,
+        radius: env.radius
+      },
+      rotation: env.rotation,
+      children: { ...state.children },
+      childPaths: {
+        continents: CHILDREN.continents.path,
+        motion: CHILDREN.motion.path,
+        sky: CHILDREN.sky.path
+      },
+      childLoadStarted: state.childLoadStarted,
+      childLoadComplete: state.childLoadComplete,
+      errors: state.errors.slice(),
+      htmlChange: false,
+      routeBridgeChange: false,
+      runtimeRewrite: false,
+      parentRewrite: true,
+      childContractRenewal: false,
+      visualPassClaim: false,
+      generatedImage: false,
+      graphicBox: false
+    };
+
+    window.AUDRALIA_CLEAN_CANVAS_RECEIPT = receipt;
+    window.AUDRALIA_ENGINE_RECEIPT = receipt;
+    window.AUDRALIA_CLEAN_PARENT_ENGINE_RECEIPT = receipt;
+
+    try {
+      window.dispatchEvent(new CustomEvent("audralia:clean-parent:receipt", { detail: receipt }));
+    } catch (_error) {
+      try {
+        window.dispatchEvent(new Event("audralia:clean-parent:receipt"));
+      } catch (_ignored) {}
+    }
+  }
+
   function mount(input, options = {}) {
     state.mountCalled = true;
     state.mounted = true;
@@ -828,16 +779,7 @@
     }
 
     env.mount = target;
-
     lockMountFrame(env.mount);
-
-    env.mount.setAttribute("data-audralia-clean-parent-mounted", "true");
-    env.mount.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
-    env.mount.setAttribute("data-audralia-parent-fibonacci-center-bias-sea-level-continents", "true");
-    env.mount.setAttribute("data-audralia-parent-center-x-bias-factor", String(CENTER_X_BIAS_FACTOR));
-    env.mount.setAttribute("data-audralia-parent-sea-level-continents-expected", "true");
-    env.mount.setAttribute("data-audralia-parent-motion-child-disabled", "true");
-    env.mount.setAttribute("data-audralia-parent-sky-child-held", "true");
 
     env.canvas = ensureCanvas(target);
     env.ctx = env.canvas ? env.canvas.getContext("2d", { alpha: true, desynchronized: true }) : null;
@@ -903,19 +845,9 @@
       family: FAMILY,
       target: TARGET,
       route: ROUTE,
-      mode: "fibonacci_center_bias_and_sea_level_continents",
-      fibonacciCenterBiasSeaLevelContinents: true,
-      phi: PHI,
-      phiInverse: PHI_INVERSE,
-      phiInverse2: PHI_INVERSE_2,
-      phiInverse3: PHI_INVERSE_3,
-      phiInverse4: PHI_INVERSE_4,
-      phiInverse5: PHI_INVERSE_5,
-      safeRadiusFactor: SAFE_RADIUS_FACTOR,
-      mobileRadiusFactor: MOBILE_RADIUS_FACTOR,
-      centerXBiasFactor: CENTER_X_BIAS_FACTOR,
-      dragRotationSensitivity: DRAG_ROTATION_SENSITIVITY,
-      seaLevelContinentsExpected: true,
+      mode: "g26_nine_summits_256_fibonacci_parent_baseline",
+      g26CleanSurfaceInspectionBaseline: true,
+      nineSummits256FibonacciModel: true,
       centerLocked: true,
       fixedRadius: true,
       fixedCameraDepth: true,
@@ -923,7 +855,6 @@
       noAutoOrbit: true,
       motionChildDisabled: true,
       skyChildHeld: true,
-      noLegacyParentLand: true,
       parentGlobalPublished: state.parentGlobalPublished,
       mountCalled: state.mountCalled,
       mounted: state.mounted,
@@ -942,11 +873,6 @@
       },
       rotation: env.rotation,
       children: { ...state.children },
-      childPaths: {
-        continents: CHILDREN.continents.path,
-        motion: CHILDREN.motion.path,
-        sky: CHILDREN.sky.path
-      },
       childLoadStarted: state.childLoadStarted,
       childLoadComplete: state.childLoadComplete,
       htmlChange: false,

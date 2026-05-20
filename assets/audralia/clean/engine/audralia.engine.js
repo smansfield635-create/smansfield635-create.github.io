@@ -1,16 +1,15 @@
 // /assets/audralia/clean/engine/audralia.engine.js
-// AUDRALIA_G2_5_PARENT_FIBONACCI_INSPECTION_GEOMETRY_NORMALIZATION_TNT_v1
+// AUDRALIA_G2_5_FIBONACCI_CENTER_BIAS_AND_SEA_LEVEL_CONTINENTS_TNT_v1
 // Full-file replacement.
-// Purpose: normalize Audralia inspection geometry with φ/Fibonacci-derived constants while preserving drag-only inspection.
-// Preserves: continents child expression, fixed radius, no orbit, no auto-motion, no legacy land, FORM_VISIBLE parent confirmation.
+// Purpose: move Audralia slightly right from prior Fibonacci bias and load sea-level continent expression.
 // Parent owns: visible-frame containment, canvas mount, Fibonacci geometry, ocean base, projection, child loading, FORM_VISIBLE confirmation.
-// Parent does not own: continent expression, automatic orbit, zoom, camera depth, route bridge, runtime, HTML, generated image, GraphicBox, or visual-pass claim.
+// Parent does not own: continent shapes, automatic orbit, zoom, camera depth, route bridge, runtime, HTML, generated image, GraphicBox, or visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G2_5_PARENT_FIBONACCI_INSPECTION_GEOMETRY_NORMALIZATION_TNT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_PARENT_SCREEN_CENTER_BIAS_25_DRAG_ROTATION_ONLY_TNT_v1";
+  const CONTRACT = "AUDRALIA_G2_5_FIBONACCI_CENTER_BIAS_AND_SEA_LEVEL_CONTINENTS_TNT_v1";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_PARENT_FIBONACCI_INSPECTION_GEOMETRY_NORMALIZATION_TNT_v1";
   const FAMILY = "AUDRALIA_G2_5_EXISTING_ARCHITECTURE_PATH_ALIGNMENT_TNT_v1";
 
   const TARGET = "/assets/audralia/clean/engine/audralia.engine.js";
@@ -21,10 +20,11 @@
   const PHI_INVERSE_2 = 0.38196601125;
   const PHI_INVERSE_3 = 0.23606797750;
   const PHI_INVERSE_4 = 0.14589803375;
+  const PHI_INVERSE_5 = 0.09016994375;
 
   const SAFE_RADIUS_FACTOR = PHI_INVERSE / 2;
   const MOBILE_RADIUS_FACTOR = SAFE_RADIUS_FACTOR - 0.01803398874;
-  const CENTER_X_BIAS_FACTOR = -PHI_INVERSE_3;
+  const CENTER_X_BIAS_FACTOR = -(PHI_INVERSE_3 - PHI_INVERSE_5 / 4);
   const DRAG_ROTATION_SENSITIVITY = 0.00618033989;
 
   const CHILDREN = Object.freeze({
@@ -42,13 +42,13 @@
     },
     motion: {
       enabled: false,
-      heldReason: "fibonacci_inspection_geometry_lock",
+      heldReason: "inspection_lock_motion_noop",
       path: "/assets/audralia/clean/engine/audralia/engine/motion.js",
       globals: []
     },
     sky: {
       enabled: false,
-      heldReason: "fibonacci_inspection_geometry_lock",
+      heldReason: "sky_held_until_sea_level_surface_confirmed",
       path: "/assets/audralia/clean/engine/audralia/engine/sky.js",
       globals: []
     }
@@ -60,12 +60,15 @@
     family: FAMILY,
     target: TARGET,
     route: ROUTE,
-    fibonacciInspectionGeometry: true,
+    fibonacciCenterBiasSeaLevelContinents: true,
     phi: PHI,
     phiInverse: PHI_INVERSE,
     phiInverse2: PHI_INVERSE_2,
     phiInverse3: PHI_INVERSE_3,
     phiInverse4: PHI_INVERSE_4,
+    phiInverse5: PHI_INVERSE_5,
+    safeRadiusFactor: SAFE_RADIUS_FACTOR,
+    mobileRadiusFactor: MOBILE_RADIUS_FACTOR,
     centerXBiasFactor: CENTER_X_BIAS_FACTOR,
     dragRotationSensitivity: DRAG_ROTATION_SENSITIVITY,
     visibleBoxCenterAnchored: true,
@@ -74,28 +77,23 @@
     fixedRadius: true,
     fixedCameraDepth: true,
     dragRotationOnly: true,
-    inspectionLocked: true,
-    hardInspectionLock: true,
     noAutoOrbit: true,
     motionChildDisabled: true,
     skyChildHeld: true,
-    noOrbit: true,
     noLegacyParentLand: true,
-    dragInspectionEnabled: true,
     parentGlobalPublished: false,
     mountCalled: false,
     mounted: false,
     ready: false,
     formVisible: false,
     renderCount: 0,
-    lastScope: "module-load",
     delegatedBy: "none",
     childLoadStarted: false,
     childLoadComplete: false,
     children: {
       continents: "pending",
-      motion: "held_fibonacci_inspection_geometry",
-      sky: "held_fibonacci_inspection_geometry"
+      motion: "held_motion_noop",
+      sky: "held_sky"
     },
     errors: []
   };
@@ -179,9 +177,10 @@
     target.style.display = "block";
     target.style.contain = "layout paint";
     target.style.touchAction = "none";
+    if (!target.style.minHeight) target.style.minHeight = "360px";
 
     target.setAttribute("data-audralia-visible-box-frame", "true");
-    target.setAttribute("data-audralia-parent-center-anchor", "fibonacci-inspection-geometry");
+    target.setAttribute("data-audralia-parent-center-anchor", "fibonacci-soft-right-bias");
   }
 
   function lockCanvasToVisibleFrame(canvas) {
@@ -208,7 +207,7 @@
     canvas.setAttribute("data-audralia-canvas-fills-visible-box", "true");
     canvas.setAttribute("data-audralia-parent-fixed-center", "true");
     canvas.setAttribute("data-audralia-parent-fixed-radius", "true");
-    canvas.setAttribute("data-audralia-parent-fibonacci-inspection-geometry", "true");
+    canvas.setAttribute("data-audralia-parent-sea-level-continents", "true");
   }
 
   function ensureCanvas(target) {
@@ -223,20 +222,14 @@
 
     if (!canvas) {
       target.innerHTML = "";
-
       canvas = document.createElement("canvas");
-      canvas.setAttribute("data-audralia-clean-parent-canvas", "true");
-      canvas.setAttribute("data-audralia-clean-canvas", "true");
-      canvas.setAttribute("data-contract", CONTRACT);
-      canvas.setAttribute("aria-label", "Audralia Fibonacci inspection planet");
-
       target.appendChild(canvas);
-    } else {
-      canvas.setAttribute("data-audralia-clean-parent-canvas", "true");
-      canvas.setAttribute("data-audralia-clean-canvas", "true");
-      canvas.setAttribute("data-contract", CONTRACT);
-      canvas.setAttribute("aria-label", "Audralia Fibonacci inspection planet");
     }
+
+    canvas.setAttribute("data-audralia-clean-parent-canvas", "true");
+    canvas.setAttribute("data-audralia-clean-canvas", "true");
+    canvas.setAttribute("data-contract", CONTRACT);
+    canvas.setAttribute("aria-label", "Audralia Fibonacci sea-level inspection planet");
 
     lockCanvasToVisibleFrame(canvas);
 
@@ -293,48 +286,24 @@
 
     window.AUDRALIA_CLEAN_PARENT_ENGINE_GLOBAL_PUBLISHED = true;
     window.AUDRALIA_CLEAN_PARENT_ENGINE_CONTRACT = CONTRACT;
-    window.AUDRALIA_EXISTING_ARCHITECTURE_PARENT_ALIGNED = true;
-    window.AUDRALIA_PARENT_FIBONACCI_INSPECTION_GEOMETRY = true;
-    window.AUDRALIA_PARENT_SCREEN_CENTER_BIAS_FIBONACCI = true;
+    window.AUDRALIA_PARENT_FIBONACCI_CENTER_BIAS_SEA_LEVEL_CONTINENTS = true;
     window.AUDRALIA_PARENT_CENTER_X_BIAS_FACTOR = CENTER_X_BIAS_FACTOR;
     window.AUDRALIA_PARENT_DRAG_ROTATION_SENSITIVITY = DRAG_ROTATION_SENSITIVITY;
-    window.AUDRALIA_PARENT_VISIBLE_BOX_CENTER_ANCHORED = true;
-    window.AUDRALIA_PARENT_CANVAS_FILLS_MOUNT = true;
-    window.AUDRALIA_PARENT_CENTER_LOCKED = true;
-    window.AUDRALIA_PARENT_FIXED_RADIUS = true;
-    window.AUDRALIA_PARENT_FIXED_CAMERA_DEPTH = true;
-    window.AUDRALIA_PARENT_DRAG_ROTATION_ONLY = true;
-    window.AUDRALIA_PARENT_INSPECTION_LOCKED = true;
-    window.AUDRALIA_PARENT_HARD_INSPECTION_LOCK = true;
-    window.AUDRALIA_PARENT_NO_AUTO_ORBIT = true;
+    window.AUDRALIA_PARENT_SEA_LEVEL_CONTINENTS_EXPECTED = true;
     window.AUDRALIA_PARENT_MOTION_CHILD_DISABLED = true;
     window.AUDRALIA_PARENT_SKY_CHILD_HELD = true;
-    window.AUDRALIA_PARENT_NO_ORBIT = true;
-    window.AUDRALIA_PARENT_NO_LEGACY_LAND = true;
 
     state.parentGlobalPublished = true;
 
     if (hasDocument() && document.documentElement) {
       document.documentElement.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
       document.documentElement.setAttribute("data-audralia-clean-parent-target", TARGET);
-      document.documentElement.setAttribute("data-audralia-parent-fibonacci-inspection-geometry", "true");
-      document.documentElement.setAttribute("data-audralia-parent-screen-center-bias-fibonacci", "true");
+      document.documentElement.setAttribute("data-audralia-parent-fibonacci-center-bias-sea-level-continents", "true");
       document.documentElement.setAttribute("data-audralia-parent-center-x-bias-factor", String(CENTER_X_BIAS_FACTOR));
       document.documentElement.setAttribute("data-audralia-parent-drag-rotation-sensitivity", String(DRAG_ROTATION_SENSITIVITY));
-      document.documentElement.setAttribute("data-audralia-parent-visible-box-center-anchored", "true");
-      document.documentElement.setAttribute("data-audralia-parent-canvas-fills-mount", "true");
-      document.documentElement.setAttribute("data-audralia-parent-center-locked", "true");
-      document.documentElement.setAttribute("data-audralia-parent-fixed-radius", "true");
-      document.documentElement.setAttribute("data-audralia-parent-fixed-camera-depth", "true");
-      document.documentElement.setAttribute("data-audralia-parent-drag-rotation-only", "true");
-      document.documentElement.setAttribute("data-audralia-parent-inspection-locked", "true");
-      document.documentElement.setAttribute("data-audralia-parent-hard-inspection-lock", "true");
-      document.documentElement.setAttribute("data-audralia-parent-no-auto-orbit", "true");
+      document.documentElement.setAttribute("data-audralia-parent-sea-level-continents-expected", "true");
       document.documentElement.setAttribute("data-audralia-parent-motion-child-disabled", "true");
       document.documentElement.setAttribute("data-audralia-parent-sky-child-held", "true");
-      document.documentElement.setAttribute("data-audralia-parent-no-orbit", "true");
-      document.documentElement.setAttribute("data-audralia-parent-no-legacy-land", "true");
-      document.documentElement.setAttribute("data-audralia-clean-parent-global-published", "true");
       document.documentElement.setAttribute("data-audralia-clean-parent-mounted", state.mounted ? "true" : "false");
       document.documentElement.setAttribute("data-audralia-clean-parent-form-visible", state.formVisible ? "true" : "false");
     }
@@ -359,24 +328,13 @@
       env.mount.setAttribute("data-audralia-form-visible", "true");
       env.mount.setAttribute("data-audralia-clean-parent-form-visible", "true");
       env.mount.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
-      env.mount.setAttribute("data-audralia-parent-fibonacci-inspection-geometry", "true");
-      env.mount.setAttribute("data-audralia-parent-visible-box-center-anchored", "true");
-      env.mount.setAttribute("data-audralia-parent-fixed-center", "true");
-      env.mount.setAttribute("data-audralia-parent-fixed-radius", "true");
+      env.mount.setAttribute("data-audralia-parent-sea-level-continents-expected", "true");
     }
 
     if (env.canvas) {
       env.canvas.setAttribute("data-audralia-form-visible", "true");
       env.canvas.setAttribute("data-audralia-clean-parent-form-visible", "true");
-      env.canvas.setAttribute("data-audralia-parent-fibonacci-inspection-geometry", "true");
-      env.canvas.setAttribute("data-audralia-parent-visible-box-center-anchored", "true");
-      env.canvas.setAttribute("data-audralia-parent-fixed-center", "true");
-      env.canvas.setAttribute("data-audralia-parent-fixed-radius", "true");
-    }
-
-    if (hasDocument() && document.documentElement) {
-      document.documentElement.setAttribute("data-audralia-form-visible", "true");
-      document.documentElement.setAttribute("data-audralia-clean-parent-form-visible", "true");
+      env.canvas.setAttribute("data-audralia-parent-sea-level-continents-expected", "true");
     }
 
     publishReceipt(scope);
@@ -391,33 +349,30 @@
       family: FAMILY,
       target: TARGET,
       route: ROUTE,
-      mode: "fibonacci_inspection_geometry_normalization",
+      mode: "fibonacci_center_bias_and_sea_level_continents",
       scope,
-      fibonacciInspectionGeometry: true,
+      fibonacciCenterBiasSeaLevelContinents: true,
       phi: PHI,
       phiInverse: PHI_INVERSE,
       phiInverse2: PHI_INVERSE_2,
       phiInverse3: PHI_INVERSE_3,
       phiInverse4: PHI_INVERSE_4,
+      phiInverse5: PHI_INVERSE_5,
       safeRadiusFactor: SAFE_RADIUS_FACTOR,
       mobileRadiusFactor: MOBILE_RADIUS_FACTOR,
       centerXBiasFactor: CENTER_X_BIAS_FACTOR,
       dragRotationSensitivity: DRAG_ROTATION_SENSITIVITY,
-      screenCenterBiasFibonacci: true,
       visibleBoxCenterAnchored: true,
       canvasFillsMount: true,
       centerLocked: true,
       fixedRadius: true,
       fixedCameraDepth: true,
       dragRotationOnly: true,
-      inspectionLocked: true,
-      hardInspectionLock: true,
       noAutoOrbit: true,
       motionChildDisabled: true,
       skyChildHeld: true,
-      noOrbit: true,
       noLegacyParentLand: true,
-      dragInspectionEnabled: true,
+      seaLevelContinentsExpected: true,
       parentGlobalPublished: state.parentGlobalPublished,
       mountCalled: state.mountCalled,
       mounted: state.mounted,
@@ -447,7 +402,6 @@
       htmlChange: false,
       routeBridgeChange: false,
       runtimeRewrite: false,
-      cleanRuntimeRewrite: false,
       parentRewrite: true,
       childContractRenewal: false,
       visualPassClaim: false,
@@ -658,7 +612,6 @@
     const g = getGeometry();
 
     state.renderCount += 1;
-    state.lastScope = "render";
 
     clearCanvas(ctx, g);
     drawSpace(ctx, g);
@@ -749,12 +702,14 @@
     );
   }
 
-  function scriptAlreadyLoaded(src) {
+  function scriptAlreadyLoadedCurrent(src) {
     if (!hasDocument()) return false;
+
+    const wanted = `${src}?v=${encodeURIComponent(CONTRACT)}`;
 
     return Array.from(document.scripts).some((script) => {
       const raw = script.getAttribute("src") || "";
-      return raw === src || raw.startsWith(`${src}?`) || raw.endsWith(src);
+      return raw === wanted;
     });
   }
 
@@ -765,7 +720,7 @@
         return;
       }
 
-      if (scriptAlreadyLoaded(src)) {
+      if (scriptAlreadyLoadedCurrent(src)) {
         resolve({ src, loaded: true, reused: true });
         return;
       }
@@ -775,6 +730,7 @@
       script.async = false;
       script.defer = false;
       script.setAttribute("data-audralia-clean-parent-child-loader", CONTRACT);
+      script.setAttribute("data-audralia-sea-level-child-cache", "true");
 
       script.onload = () => resolve({ src, loaded: true, reused: false });
       script.onerror = () => resolve({ src, loaded: false, reused: false });
@@ -816,7 +772,7 @@
     env.childPromise = (async () => {
       for (const [name, child] of Object.entries(CHILDREN)) {
         if (!child.enabled) {
-          state.children[name] = "held_fibonacci_inspection_geometry";
+          state.children[name] = name === "motion" ? "held_motion_noop" : "held_sky";
           publishReceipt(`child-${name}-held`);
           continue;
         }
@@ -862,7 +818,6 @@
     state.mountCalled = true;
     state.mounted = true;
     state.delegatedBy = options && options.delegatedBy ? String(options.delegatedBy) : "direct";
-    state.lastScope = "mount";
 
     const target = resolveMountTarget(input);
 
@@ -878,22 +833,11 @@
 
     env.mount.setAttribute("data-audralia-clean-parent-mounted", "true");
     env.mount.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
-    env.mount.setAttribute("data-audralia-parent-fibonacci-inspection-geometry", "true");
+    env.mount.setAttribute("data-audralia-parent-fibonacci-center-bias-sea-level-continents", "true");
     env.mount.setAttribute("data-audralia-parent-center-x-bias-factor", String(CENTER_X_BIAS_FACTOR));
-    env.mount.setAttribute("data-audralia-parent-drag-rotation-sensitivity", String(DRAG_ROTATION_SENSITIVITY));
-    env.mount.setAttribute("data-audralia-parent-visible-box-center-anchored", "true");
-    env.mount.setAttribute("data-audralia-parent-canvas-fills-mount", "true");
-    env.mount.setAttribute("data-audralia-parent-center-locked", "true");
-    env.mount.setAttribute("data-audralia-parent-fixed-radius", "true");
-    env.mount.setAttribute("data-audralia-parent-fixed-camera-depth", "true");
-    env.mount.setAttribute("data-audralia-parent-drag-rotation-only", "true");
-    env.mount.setAttribute("data-audralia-parent-inspection-locked", "true");
-    env.mount.setAttribute("data-audralia-parent-hard-inspection-lock", "true");
-    env.mount.setAttribute("data-audralia-parent-no-auto-orbit", "true");
+    env.mount.setAttribute("data-audralia-parent-sea-level-continents-expected", "true");
     env.mount.setAttribute("data-audralia-parent-motion-child-disabled", "true");
     env.mount.setAttribute("data-audralia-parent-sky-child-held", "true");
-    env.mount.setAttribute("data-audralia-parent-no-orbit", "true");
-    env.mount.setAttribute("data-audralia-parent-no-legacy-land", "true");
 
     env.canvas = ensureCanvas(target);
     env.ctx = env.canvas ? env.canvas.getContext("2d", { alpha: true, desynchronized: true }) : null;
@@ -959,32 +903,27 @@
       family: FAMILY,
       target: TARGET,
       route: ROUTE,
-      mode: "fibonacci_inspection_geometry_normalization",
-      fibonacciInspectionGeometry: true,
+      mode: "fibonacci_center_bias_and_sea_level_continents",
+      fibonacciCenterBiasSeaLevelContinents: true,
       phi: PHI,
       phiInverse: PHI_INVERSE,
       phiInverse2: PHI_INVERSE_2,
       phiInverse3: PHI_INVERSE_3,
       phiInverse4: PHI_INVERSE_4,
+      phiInverse5: PHI_INVERSE_5,
       safeRadiusFactor: SAFE_RADIUS_FACTOR,
       mobileRadiusFactor: MOBILE_RADIUS_FACTOR,
       centerXBiasFactor: CENTER_X_BIAS_FACTOR,
       dragRotationSensitivity: DRAG_ROTATION_SENSITIVITY,
-      screenCenterBiasFibonacci: true,
-      visibleBoxCenterAnchored: true,
-      canvasFillsMount: true,
+      seaLevelContinentsExpected: true,
       centerLocked: true,
       fixedRadius: true,
       fixedCameraDepth: true,
       dragRotationOnly: true,
-      inspectionLocked: true,
-      hardInspectionLock: true,
       noAutoOrbit: true,
       motionChildDisabled: true,
       skyChildHeld: true,
-      noOrbit: true,
       noLegacyParentLand: true,
-      dragInspectionEnabled: true,
       parentGlobalPublished: state.parentGlobalPublished,
       mountCalled: state.mountCalled,
       mounted: state.mounted,
@@ -1013,7 +952,6 @@
       htmlChange: false,
       routeBridgeChange: false,
       runtimeRewrite: false,
-      cleanRuntimeRewrite: false,
       parentRewrite: true,
       childContractRenewal: false,
       visualPassClaim: false,
@@ -1056,13 +994,7 @@
     );
 
     if (document.readyState === "loading") {
-      document.addEventListener(
-        "DOMContentLoaded",
-        () => {
-          publishGlobals("dom-ready");
-        },
-        { once: true }
-      );
+      document.addEventListener("DOMContentLoaded", () => publishGlobals("dom-ready"), { once: true });
     } else {
       publishGlobals("dom-ready");
     }

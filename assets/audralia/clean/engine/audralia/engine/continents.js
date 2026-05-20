@@ -1,25 +1,28 @@
 // /assets/audralia/clean/engine/audralia/engine/continents.js
-// AUDRALIA_G2_6_CONTINENTS_CHILD_LOAD_AND_DRAW_RECEIPT_ALIGNMENT_TNT_v1
+// AUDRALIA_G2_6_CONTINENTS_GRATITUDE_HYDROLOGY_RENDER_ADAPTER_TNT_v1
 // Full-file replacement.
-// Purpose: make continents.js authoritative for child-load and draw truth, not merely wrapper-load truth.
+// Purpose: consume Gratitude topology + Gratitude downstream hydrology and render sea-level integration so Gratitude stops reading as a flat ornament.
 // Parent-facing admission contract intentionally remains AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1 for route-bridge compatibility.
 // Segment 1 remains active: Gratitude only. The other eight Summit children remain staged.
-// Does not own: parent geometry, canvas creation, route bridge, runtime, FORM_VISIBLE, ocean body, seawater base, sky, motion, elevation, height maps, mountains, animals, plants, zoom, orbit, generated image, GraphicBox, or visual-pass claim.
+// Does not own: parent geometry, canvas creation, route bridge, runtime, FORM_VISIBLE, parent ocean body, global ocean ownership, sky, motion, elevation, height maps, mountains, animals, plants, climate, water physics, zoom, orbit, generated image, GraphicBox, or final visual-pass claim.
 
 (() => {
   "use strict";
 
   const CONTRACT = "AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1";
-  const INTERNAL_CONTRACT = "AUDRALIA_G2_6_CONTINENTS_CHILD_LOAD_AND_DRAW_RECEIPT_ALIGNMENT_TNT_v1";
+  const INTERNAL_CONTRACT = "AUDRALIA_G2_6_CONTINENTS_GRATITUDE_HYDROLOGY_RENDER_ADAPTER_TNT_v1";
+  const PREVIOUS_INTERNAL_CONTRACT = "AUDRALIA_G2_6_CONTINENTS_CHILD_LOAD_AND_DRAW_RECEIPT_ALIGNMENT_TNT_v1";
   const CHILD_SPLIT_CONTRACT = "AUDRALIA_G2_6_TOPOLOGY_ONLY_CONTINENT_CHILD_SPLIT_TNT_v1";
   const SEGMENT_CONTRACT = "AUDRALIA_G2_6_TOPOLOGY_ONLY_CONTINENT_CHILD_SPLIT_SEGMENT_1_TNT_v1";
   const CHAIN_CONTRACT = "AUDRALIA_G2_6_SINGLE_CACHE_NONCE_CHAIN_ALIGNMENT_TNT_v1";
   const PARENT_COMPLIANCE_CONTRACT = "AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G2_6_TOPOLOGY_ONLY_CONTINENT_CHILD_SPLIT_SEGMENT_1_TNT_v1";
   const FAMILY = "AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1";
 
   const TARGET = "/assets/audralia/clean/engine/audralia/engine/continents.js";
   const ROUTE = "/showroom/globe/audralia/";
+
+  const GRATITUDE_TOPOLOGY_CONTRACT = "AUDRALIA_G2_6_GRATITUDE_HEX_PREFACE_ORGANIC_TOPOLOGY_CHILD_TNT_v1";
+  const GRATITUDE_HYDROLOGY_CONTRACT = "AUDRALIA_G2_6_GRATITUDE_DOWNSTREAM_HYDROLOGY_SEA_LEVEL_INTEGRATION_TNT_v1";
 
   const DEG = Math.PI / 180;
   const TAU = Math.PI * 2;
@@ -32,8 +35,10 @@
 
   const LAND_ELEVATION = -0.004;
   const TOPOLOGY_MARK_ELEVATION = -0.0032;
+  const HYDROLOGY_ELEVATION = -0.0038;
 
   const ACTIVE_CHILD_TIMEOUT_MS = 3400;
+  const HYDROLOGY_TIMEOUT_MS = 3400;
   const POLL_MS = 50;
 
   const CHILDREN = Object.freeze([
@@ -46,10 +51,17 @@
       path: "/assets/audralia/clean/engine/audralia/engine/continents/gratitude.js",
       globalKey: "AUDRALIA_TOPOLOGY_GRATITUDE",
       expectedContracts: [
+        GRATITUDE_TOPOLOGY_CONTRACT,
         "AUDRALIA_G2_6_GRATITUDE_FULL_TOPOLOGY_GROUND_BASIS_CHILD_TNT_v1",
         "AUDRALIA_G2_6_GRATITUDE_ADVERSITY_SURVIVAL_TOPOLOGY_CHILD_TNT_v1",
         "AUDRALIA_G2_6_TOPOLOGY_ONLY_GRATITUDE_CHILD_TNT_v1"
-      ]
+      ],
+      hydrology: {
+        enabled: true,
+        path: "/assets/audralia/clean/engine/audralia/engine/continents/gratitude.hydrology.js",
+        globalKey: "AUDRALIA_GRATITUDE_HYDROLOGY",
+        expectedContract: GRATITUDE_HYDROLOGY_CONTRACT
+      }
     },
     {
       id: "generosity",
@@ -59,7 +71,8 @@
       staged: true,
       path: "/assets/audralia/clean/engine/audralia/engine/continents/generosity.js",
       globalKey: "AUDRALIA_TOPOLOGY_GENEROSITY",
-      expectedContracts: []
+      expectedContracts: [],
+      hydrology: { enabled: false }
     },
     {
       id: "dependability",
@@ -69,7 +82,8 @@
       staged: true,
       path: "/assets/audralia/clean/engine/audralia/engine/continents/dependability.js",
       globalKey: "AUDRALIA_TOPOLOGY_DEPENDABILITY",
-      expectedContracts: []
+      expectedContracts: [],
+      hydrology: { enabled: false }
     },
     {
       id: "accountability",
@@ -79,7 +93,8 @@
       staged: true,
       path: "/assets/audralia/clean/engine/audralia/engine/continents/accountability.js",
       globalKey: "AUDRALIA_TOPOLOGY_ACCOUNTABILITY",
-      expectedContracts: []
+      expectedContracts: [],
+      hydrology: { enabled: false }
     },
     {
       id: "forgiveness",
@@ -89,7 +104,8 @@
       staged: true,
       path: "/assets/audralia/clean/engine/audralia/engine/continents/forgiveness.js",
       globalKey: "AUDRALIA_TOPOLOGY_FORGIVENESS",
-      expectedContracts: []
+      expectedContracts: [],
+      hydrology: { enabled: false }
     },
     {
       id: "humility",
@@ -99,7 +115,8 @@
       staged: true,
       path: "/assets/audralia/clean/engine/audralia/engine/continents/humility.js",
       globalKey: "AUDRALIA_TOPOLOGY_HUMILITY",
-      expectedContracts: []
+      expectedContracts: [],
+      hydrology: { enabled: false }
     },
     {
       id: "self-control",
@@ -109,7 +126,8 @@
       staged: true,
       path: "/assets/audralia/clean/engine/audralia/engine/continents/self-control.js",
       globalKey: "AUDRALIA_TOPOLOGY_SELF_CONTROL",
-      expectedContracts: []
+      expectedContracts: [],
+      hydrology: { enabled: false }
     },
     {
       id: "patience",
@@ -119,7 +137,8 @@
       staged: true,
       path: "/assets/audralia/clean/engine/audralia/engine/continents/patience.js",
       globalKey: "AUDRALIA_TOPOLOGY_PATIENCE",
-      expectedContracts: []
+      expectedContracts: [],
+      hydrology: { enabled: false }
     },
     {
       id: "purity",
@@ -129,31 +148,41 @@
       staged: true,
       path: "/assets/audralia/clean/engine/audralia/engine/continents/purity.js",
       globalKey: "AUDRALIA_TOPOLOGY_PURITY",
-      expectedContracts: []
+      expectedContracts: [],
+      hydrology: { enabled: false }
     }
   ]);
 
   const SUMMITS = Object.freeze(CHILDREN.map((child) => child.summit));
 
   const COLORS = Object.freeze({
-    land: "rgba(70, 178, 108, 0.80)",
-    landStroke: "rgba(235, 250, 236, 0.26)",
-    beach: "rgba(240, 222, 150, 0.58)",
-    cliffEdge: "rgba(205, 205, 186, 0.52)",
-    cavernMouth: "rgba(18, 22, 30, 0.74)",
-    lake: "rgba(64, 190, 226, 0.48)",
-    bay: "rgba(106, 225, 238, 0.42)",
-    inlet: "rgba(132, 236, 242, 0.48)",
-    peninsula: "rgba(125, 210, 134, 0.46)",
-    lagoon: "rgba(112, 224, 224, 0.42)",
-    wetland: "rgba(122, 188, 128, 0.48)",
-    diagnostic: "rgba(255, 205, 112, 0.72)"
+    land: "rgba(62, 168, 108, 0.72)",
+    landInterior: "rgba(72, 186, 116, 0.54)",
+    landStroke: "rgba(235, 250, 236, 0.24)",
+
+    shelf: "rgba(70, 190, 226, 0.20)",
+    shelfStrong: "rgba(78, 205, 236, 0.28)",
+    coastalBlend: "rgba(125, 222, 226, 0.22)",
+    beach: "rgba(240, 222, 150, 0.54)",
+    cliffEdge: "rgba(214, 216, 192, 0.54)",
+    cavernMouth: "rgba(14, 18, 28, 0.72)",
+
+    lake: "rgba(64, 190, 226, 0.50)",
+    lakeEdge: "rgba(178, 244, 255, 0.28)",
+    bay: "rgba(86, 210, 236, 0.48)",
+    inlet: "rgba(120, 232, 242, 0.52)",
+    peninsula: "rgba(125, 210, 134, 0.36)",
+    lagoon: "rgba(112, 224, 224, 0.46)",
+    wetland: "rgba(120, 188, 132, 0.46)",
+    repairedWaterline: "rgba(132, 216, 206, 0.36)",
+    hardWaterline: "rgba(215, 242, 248, 0.42)",
+    waterlineShadow: "rgba(0, 12, 34, 0.26)"
   });
 
   const state = {
     contract: CONTRACT,
     internalContract: INTERNAL_CONTRACT,
-    previousContract: PREVIOUS_CONTRACT,
+    previousInternalContract: PREVIOUS_INTERNAL_CONTRACT,
     childSplitContract: CHILD_SPLIT_CONTRACT,
     segmentContract: SEGMENT_CONTRACT,
     chainContract: CHAIN_CONTRACT,
@@ -168,12 +197,16 @@
     segment: 1,
 
     topologyOnly: true,
+    hydrologyAdapterActive: true,
+    hydrologyChildrenEnabled: true,
     terrainOwned: false,
     elevationOwned: false,
     ownsCanvas: false,
     ownsFormVisible: false,
     ownsOcean: false,
+    ownsGlobalOcean: false,
     ownsRoute: false,
+    waterPhysicsOwned: false,
 
     parentCompliance: true,
     parentFacingContractUnchanged: true,
@@ -203,22 +236,44 @@
     childDrawAuthoritative: true,
     wrapperOnlyValid: false,
 
+    hydrologyLoadStarted: false,
+    hydrologyLoadComplete: false,
+    hydrologyLoaded: false,
+    hydrologyContractValid: false,
+    hydrologyReadSucceeded: false,
+    hydrologyVisualConsumed: false,
+    hydrologyRenderPassCount: 0,
+    activeHydrologyChildren: [],
+    seaLevelZoneCount: 0,
+    gratitudeHydrologyContract: "",
+    gratitudeHydrologySource: "",
+    renderAdapterRequired: false,
+
     lastParentContractSeen: "",
     lastDrawSkippedReason: "",
     lastDrawSummary: null,
     lastLoadSummary: null,
+    lastHydrologySummary: null,
 
     childStatuses: {},
     childContracts: {},
     childSources: {},
     topologies: {},
     topologyErrors: {},
+
+    hydrologyStatuses: {},
+    hydrologyContracts: {},
+    hydrologySources: {},
+    hydrologies: {},
+    hydrologyErrors: {},
+
     errors: [],
 
     visualPassClaim: false
   };
 
   const loadPromises = new Map();
+  const hydrologyLoadPromises = new Map();
 
   function hasWindow() {
     return typeof window !== "undefined";
@@ -246,6 +301,14 @@
 
   function toRad(degrees) {
     return degrees * DEG;
+  }
+
+  function safeCall(fn, fallback) {
+    try {
+      return fn();
+    } catch (_error) {
+      return fallback;
+    }
   }
 
   function getOwnScriptNonce() {
@@ -309,6 +372,12 @@
     publishReceipt(`child-${child.id}-${status}`);
   }
 
+  function setHydrologyStatus(child, status, detail = "") {
+    state.hydrologyStatuses[child.id] = status;
+    if (detail) state.hydrologyErrors[child.id] = detail;
+    publishReceipt(`hydrology-${child.id}-${status}`);
+  }
+
   function parseRgba(color) {
     const match = String(color || "").match(/rgba?\s*\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)(?:\s*,\s*([\d.]+))?\s*\)/i);
 
@@ -370,7 +439,7 @@
   }
 
   function projectBoundary(payload, boundary, elevation = LAND_ELEVATION) {
-    return boundary.map((point) => ({
+    return (boundary || []).map((point) => ({
       ...projectPoint(payload, Number(point.lon), Number(point.lat), elevation),
       lon: Number(point.lon),
       lat: Number(point.lat)
@@ -450,9 +519,42 @@
     return boundary.slice(a).concat(boundary.slice(0, b + 1));
   }
 
+  function scaleBoundaryTowardCenter(boundary, scale = 0.92) {
+    if (!Array.isArray(boundary) || !boundary.length) return [];
+
+    const center = averageLonLat(boundary);
+
+    return boundary.map((point) => ({
+      lon: center.lon + (Number(point.lon) - center.lon) * scale,
+      lat: center.lat + (Number(point.lat) - center.lat) * scale
+    }));
+  }
+
+  function normalizeHydrologyBoundary(entry, fallbackBoundary = []) {
+    if (entry && Array.isArray(entry.boundary) && entry.boundary.length) {
+      return entry.boundary;
+    }
+
+    if (
+      entry &&
+      entry.profile &&
+      Array.isArray(entry.profile.sourceBoundary) &&
+      entry.profile.sourceBoundary.length
+    ) {
+      return entry.profile.sourceBoundary;
+    }
+
+    return fallbackBoundary;
+  }
+
   function readChildGlobal(child) {
     if (!hasWindow()) return null;
     return window[child.globalKey] || null;
+  }
+
+  function readHydrologyGlobal(child) {
+    if (!hasWindow() || !child.hydrology || !child.hydrology.globalKey) return null;
+    return window[child.hydrology.globalKey] || null;
   }
 
   function childContract(api, topology) {
@@ -471,12 +573,20 @@
     );
   }
 
-  function safeCall(fn, fallback) {
-    try {
-      return fn();
-    } catch (_error) {
-      return fallback;
-    }
+  function hydrologyContract(api, hydrology) {
+    const status =
+      api && typeof api.getStatus === "function"
+        ? safeCall(() => api.getStatus(), null)
+        : api && typeof api.status === "function"
+          ? safeCall(() => api.status(), null)
+          : null;
+
+    return (
+      (status && status.contract) ||
+      (api && api.CONTRACT) ||
+      (hydrology && hydrology.contract) ||
+      ""
+    );
   }
 
   function validateTopologyObject(child, topology) {
@@ -513,6 +623,30 @@
     return "";
   }
 
+  function validateHydrologyObject(child, hydrology) {
+    if (!child.hydrology || !child.hydrology.enabled) {
+      return "hydrology_not_enabled";
+    }
+
+    if (!hydrology || typeof hydrology !== "object") {
+      return "missing_hydrology_object";
+    }
+
+    if (child.id === "gratitude" && hydrology.continent !== "Gratitude") {
+      return "gratitude_hydrology_returned_wrong_continent";
+    }
+
+    if (!Array.isArray(hydrology.seaLevelZones)) {
+      return "missing_sea_level_zones";
+    }
+
+    if (!hydrology.renderHints || typeof hydrology.renderHints !== "object") {
+      return "missing_render_hints";
+    }
+
+    return "";
+  }
+
   function normalizeTopology(child, api) {
     if (!api) return null;
 
@@ -539,6 +673,32 @@
     return topology;
   }
 
+  function normalizeHydrology(child, api) {
+    if (!api) return null;
+
+    let hydrology = null;
+
+    try {
+      if (typeof api.getHydrology === "function") {
+        hydrology = api.getHydrology();
+      } else if (api.hydrology && typeof api.hydrology === "object") {
+        hydrology = api.hydrology;
+      }
+    } catch (error) {
+      recordError(`hydrology.${child.id}.getHydrology`, error);
+      return null;
+    }
+
+    const invalidReason = validateHydrologyObject(child, hydrology);
+
+    if (invalidReason) {
+      state.hydrologyErrors[child.id] = invalidReason;
+      return null;
+    }
+
+    return hydrology;
+  }
+
   function syncAlreadyPublishedChild(child) {
     const api = readChildGlobal(child);
 
@@ -561,6 +721,44 @@
     return true;
   }
 
+  function syncAlreadyPublishedHydrology(child) {
+    if (!child.hydrology || !child.hydrology.enabled) return false;
+
+    const api = readHydrologyGlobal(child);
+
+    if (!api) return false;
+
+    const hydrology = normalizeHydrology(child, api);
+
+    if (!hydrology) {
+      setHydrologyStatus(child, "invalid_hydrology", state.hydrologyErrors[child.id] || "invalid hydrology");
+      return false;
+    }
+
+    const contract = hydrologyContract(api, hydrology);
+
+    state.hydrologies[child.id] = hydrology;
+    state.hydrologyContracts[child.id] = contract || "unknown";
+    state.hydrologySources[child.id] = "published-global";
+
+    if (child.id === "gratitude") {
+      state.hydrologyLoaded = true;
+      state.hydrologyContractValid = contract === GRATITUDE_HYDROLOGY_CONTRACT;
+      state.hydrologyReadSucceeded = true;
+      state.gratitudeHydrologyContract = contract || "unknown";
+      state.gratitudeHydrologySource = "published-global";
+      state.seaLevelZoneCount = Array.isArray(hydrology.seaLevelZones) ? hydrology.seaLevelZones.length : 0;
+    }
+
+    if (!state.activeHydrologyChildren.includes(child.id)) {
+      state.activeHydrologyChildren.push(child.id);
+    }
+
+    setHydrologyStatus(child, "active", "published hydrology accepted");
+
+    return true;
+  }
+
   function scriptAlreadyLoaded(path) {
     if (!hasDocument()) return false;
 
@@ -572,7 +770,7 @@
     });
   }
 
-  function loadClassicScript(path, child) {
+  function loadClassicScript(path, child, mode) {
     return new Promise((resolve) => {
       if (!hasDocument()) {
         resolve({ path, loaded: false, reason: "document-unavailable" });
@@ -590,7 +788,8 @@
       script.src = wanted;
       script.async = false;
       script.defer = false;
-      script.setAttribute("data-audralia-topology-child-loader", INTERNAL_CONTRACT);
+      script.setAttribute("data-audralia-loader-contract", INTERNAL_CONTRACT);
+      script.setAttribute("data-audralia-loader-mode", mode);
       script.setAttribute("data-audralia-topology-child-id", child.id);
       script.setAttribute("data-audralia-single-cache-nonce-chain", CHAIN_CONTRACT);
       script.setAttribute("data-audralia-page-cache-nonce", getOrCreateCacheNonce());
@@ -622,7 +821,7 @@
     setChildStatus(child, "loading", "active child script requested");
 
     const promise = (async () => {
-      const result = await loadClassicScript(child.path, child);
+      const result = await loadClassicScript(child.path, child, "topology");
 
       state.childSources[child.id] = result.path || child.path;
 
@@ -646,6 +845,56 @@
     })();
 
     loadPromises.set(key, promise);
+
+    return promise;
+  }
+
+  async function loadOneHydrology(child) {
+    if (!child.active || !child.hydrology || !child.hydrology.enabled) {
+      if (child.hydrology && child.hydrology.enabled === false) {
+        state.hydrologyStatuses[child.id] = "not_enabled";
+      }
+      return false;
+    }
+
+    if (syncAlreadyPublishedHydrology(child)) {
+      return true;
+    }
+
+    const key = child.id;
+
+    if (hydrologyLoadPromises.has(key)) {
+      await hydrologyLoadPromises.get(key);
+      return syncAlreadyPublishedHydrology(child);
+    }
+
+    setHydrologyStatus(child, "loading", "active hydrology script requested");
+
+    const promise = (async () => {
+      const result = await loadClassicScript(child.hydrology.path, child, "hydrology");
+
+      state.hydrologySources[child.id] = result.path || child.hydrology.path;
+
+      if (!result.loaded) {
+        setHydrologyStatus(child, "missing_script", `failed to load ${child.hydrology.path}`);
+        return false;
+      }
+
+      const start = Date.now();
+
+      while (Date.now() - start <= HYDROLOGY_TIMEOUT_MS) {
+        if (syncAlreadyPublishedHydrology(child)) {
+          return true;
+        }
+
+        await sleep(POLL_MS);
+      }
+
+      setHydrologyStatus(child, "loaded_no_global", `script loaded but ${child.hydrology.globalKey} was not published`);
+      return false;
+    })();
+
+    hydrologyLoadPromises.set(key, promise);
 
     return promise;
   }
@@ -685,6 +934,50 @@
 
     publishReceipt("topology-children-load-complete");
 
+    loadHydrologyChildren().catch((error) => recordError("loadHydrologyChildren", error));
+    requestParentRender();
+
+    return getStatus();
+  }
+
+  async function loadHydrologyChildren() {
+    if (state.hydrologyLoadStarted && state.hydrologyLoadComplete) {
+      return getStatus();
+    }
+
+    state.hydrologyLoadStarted = true;
+    publishReceipt("hydrology-children-load-start");
+
+    let activeLoaded = 0;
+    const activeHydrologyChildren = CHILDREN.filter((child) => child.active && child.hydrology && child.hydrology.enabled);
+
+    for (const child of CHILDREN) {
+      if (!child.active || !child.hydrology || !child.hydrology.enabled) {
+        if (!child.active) state.hydrologyStatuses[child.id] = "staged";
+        else state.hydrologyStatuses[child.id] = "not_enabled";
+        continue;
+      }
+
+      const loaded = await loadOneHydrology(child);
+      if (loaded) activeLoaded += 1;
+    }
+
+    state.hydrologyLoadComplete = true;
+
+    if (activeLoaded > 0) {
+      state.hydrologyLoaded = true;
+    }
+
+    state.lastHydrologySummary = {
+      activeLoaded,
+      activeRequired: activeHydrologyChildren.length,
+      hydrologies: Object.keys(state.hydrologies),
+      statuses: { ...state.hydrologyStatuses },
+      contracts: { ...state.hydrologyContracts },
+      activeHydrologyChildren: state.activeHydrologyChildren.slice()
+    };
+
+    publishReceipt("hydrology-children-load-complete");
     requestParentRender();
 
     return getStatus();
@@ -711,7 +1004,67 @@
     }
   }
 
-  function drawLandmass(ctx, payload, landmass, topology) {
+  function drawBoundaryStroke(ctx, payload, boundary, color, lineWidthFactor, alphaMax, elevation = HYDROLOGY_ELEVATION) {
+    if (!Array.isArray(boundary) || boundary.length < 2) return false;
+
+    const projected = projectBoundary(payload, boundary, elevation);
+    const visibility = projectedVisibility(projected);
+
+    if (visibility.visible.length < 2) return false;
+
+    const center = averageProjected(payload, boundary, elevation);
+    const alpha = Math.max(0.08, depthAlpha(center.z, -0.02, 0.44));
+
+    if (!center.visible || alpha <= 0.01) return false;
+
+    ctx.save();
+    ctx.beginPath();
+
+    projected.forEach((point, index) => {
+      if (index === 0) ctx.moveTo(point.x, point.y);
+      else ctx.lineTo(point.x, point.y);
+    });
+
+    ctx.strokeStyle = withAlpha(color, alpha, alphaMax);
+    ctx.lineWidth = Math.max(1, payload.geometry.radius * lineWidthFactor);
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.stroke();
+    ctx.restore();
+
+    return true;
+  }
+
+  function drawBoundaryFill(ctx, payload, ring, color, alphaMax, elevation = HYDROLOGY_ELEVATION) {
+    if (!Array.isArray(ring) || ring.length < 3) return false;
+
+    const projected = projectBoundary(payload, ring, elevation);
+    const visibility = projectedVisibility(projected);
+
+    if (visibility.visible.length < 3) return false;
+
+    const center = averageProjected(payload, ring, elevation);
+    const alpha = Math.max(0.08, depthAlpha(center.z, -0.02, 0.5));
+
+    if (!center.visible || alpha <= 0.01) return false;
+
+    ctx.save();
+
+    if (drawClosedPath(ctx, projected)) {
+      ctx.fillStyle = withAlpha(color, alpha, alphaMax);
+      ctx.fill();
+
+      ctx.strokeStyle = withAlpha(color, alpha, Math.min(0.72, alphaMax + 0.14));
+      ctx.lineWidth = Math.max(1, payload.geometry.radius * 0.002);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+
+    return true;
+  }
+
+  function drawLandmassWithSeaLevelModulation(ctx, payload, landmass, topology, hydrology) {
     const boundary = Array.isArray(landmass.boundary) ? landmass.boundary : [];
     if (boundary.length < 3) return false;
 
@@ -723,18 +1076,20 @@
     }
 
     const center = averageProjected(payload, boundary, LAND_ELEVATION);
-    const alpha = Math.max(0.18, depthAlpha(center.z, -0.02, 0.36));
+    const alpha = Math.max(0.16, depthAlpha(center.z, -0.02, 0.36));
 
     if (!center.visible || alpha <= 0.01) return false;
+
+    const hasHydrology = Boolean(hydrology);
 
     ctx.save();
 
     if (drawClosedPath(ctx, projected)) {
-      ctx.fillStyle = withAlpha(topology.color || COLORS.land, alpha, 0.84);
+      ctx.fillStyle = withAlpha(topology.color || COLORS.land, alpha, hasHydrology ? 0.68 : 0.84);
       ctx.fill();
 
-      ctx.strokeStyle = withAlpha(COLORS.landStroke, Math.max(0.26, alpha), 0.34);
-      ctx.lineWidth = Math.max(1, payload.geometry.radius * 0.0032);
+      ctx.strokeStyle = withAlpha(COLORS.landStroke, Math.max(0.24, alpha), hasHydrology ? 0.22 : 0.34);
+      ctx.lineWidth = Math.max(1, payload.geometry.radius * 0.0028);
       ctx.lineJoin = "round";
       ctx.lineCap = "round";
       ctx.stroke();
@@ -742,7 +1097,140 @@
 
     ctx.restore();
 
+    if (hasHydrology) {
+      const innerBoundary = scaleBoundaryTowardCenter(boundary, 0.88);
+      const innerProjected = projectBoundary(payload, innerBoundary, LAND_ELEVATION);
+
+      if (shapeVisibilityOk(innerProjected, 0.22)) {
+        ctx.save();
+
+        if (drawClosedPath(ctx, innerProjected)) {
+          ctx.fillStyle = withAlpha(COLORS.landInterior, alpha, 0.48);
+          ctx.fill();
+        }
+
+        ctx.restore();
+      }
+    }
+
     return visibility.visible.length >= 3;
+  }
+
+  function drawLandmass(ctx, payload, landmass, topology) {
+    return drawLandmassWithSeaLevelModulation(ctx, payload, landmass, topology, null);
+  }
+
+  function drawHydrologyShelvesBeforeLand(ctx, payload, landmass, hydrology) {
+    if (!hydrology) return 0;
+
+    let count = 0;
+    const boundary = Array.isArray(landmass.boundary) ? landmass.boundary : [];
+
+    for (const entry of hydrology.submergedEdgeRegistry || []) {
+      const ring = normalizeHydrologyBoundary(entry, boundary);
+      if (drawBoundaryStroke(ctx, payload, ring, COLORS.shelf, 0.021, 0.24, HYDROLOGY_ELEVATION)) count += 1;
+      if (drawBoundaryStroke(ctx, payload, ring, COLORS.shelfStrong, 0.008, 0.2, HYDROLOGY_ELEVATION)) count += 1;
+    }
+
+    for (const entry of hydrology.coastalShelfRegistry || []) {
+      const ring = normalizeHydrologyBoundary(entry, boundary);
+      const district = entry.district || "";
+      const isWest = district === "WEST_ADVERSITY_EDGE";
+      const isSouth = district === "SOUTH_RESTORATION_BELT";
+      const width = isWest ? 0.008 : isSouth ? 0.018 : 0.014;
+      const alpha = isWest ? 0.18 : isSouth ? 0.32 : 0.26;
+
+      if (drawBoundaryStroke(ctx, payload, ring, COLORS.coastalBlend, width, alpha, HYDROLOGY_ELEVATION)) count += 1;
+    }
+
+    return count;
+  }
+
+  function drawHydrologyBayInletCuts(ctx, payload, landmass, hydrology) {
+    if (!hydrology) return 0;
+
+    let count = 0;
+    const boundary = Array.isArray(landmass.boundary) ? landmass.boundary : [];
+
+    for (const entry of hydrology.bayWaterRegistry || []) {
+      const ring = normalizeHydrologyBoundary(entry, []);
+      const source = ring.length ? ring : boundary;
+      const width = entry.profile && entry.profile.carveStrength ? 0.006 + entry.profile.carveStrength * 0.012 : 0.013;
+
+      if (drawBoundaryStroke(ctx, payload, source, COLORS.bay, width, 0.5, HYDROLOGY_ELEVATION)) count += 1;
+      if (drawBoundaryStroke(ctx, payload, source, COLORS.shelf, Math.max(0.004, width * 0.52), 0.24, HYDROLOGY_ELEVATION)) count += 1;
+    }
+
+    for (const entry of hydrology.inletWaterRegistry || []) {
+      const ring = normalizeHydrologyBoundary(entry, []);
+      const source = ring.length ? ring : boundary;
+      const width = entry.profile && entry.profile.carveStrength ? 0.004 + entry.profile.carveStrength * 0.01 : 0.01;
+
+      if (drawBoundaryStroke(ctx, payload, source, COLORS.inlet, width, 0.54, HYDROLOGY_ELEVATION)) count += 1;
+    }
+
+    return count;
+  }
+
+  function drawHydrologyWetlandLagoonBlends(ctx, payload, landmass, hydrology) {
+    if (!hydrology) return 0;
+
+    let count = 0;
+    const boundary = Array.isArray(landmass.boundary) ? landmass.boundary : [];
+
+    for (const entry of hydrology.wetlandBlendRegistry || []) {
+      const ring = normalizeHydrologyBoundary(entry, boundary);
+      if (drawBoundaryStroke(ctx, payload, ring, COLORS.wetland, 0.016, 0.46, HYDROLOGY_ELEVATION)) count += 1;
+      if (drawBoundaryStroke(ctx, payload, ring, COLORS.lagoon, 0.007, 0.28, HYDROLOGY_ELEVATION)) count += 1;
+    }
+
+    for (const entry of hydrology.lagoonWaterRegistry || []) {
+      const ring = normalizeHydrologyBoundary(entry, []);
+      if (drawBoundaryFill(ctx, payload, ring, COLORS.lagoon, 0.42, HYDROLOGY_ELEVATION)) count += 1;
+    }
+
+    for (const entry of hydrology.repairedWaterlineRegistry || []) {
+      const ring = normalizeHydrologyBoundary(entry, boundary);
+      if (drawBoundaryStroke(ctx, payload, ring, COLORS.repairedWaterline, 0.007, 0.44, HYDROLOGY_ELEVATION)) count += 1;
+    }
+
+    return count;
+  }
+
+  function drawHydrologyInlandWaters(ctx, payload, hydrology) {
+    if (!hydrology) return 0;
+
+    let count = 0;
+
+    for (const entry of hydrology.inlandLakeRegistry || []) {
+      const ring = normalizeHydrologyBoundary(entry, []);
+      if (!ring.length) continue;
+
+      if (drawBoundaryFill(ctx, payload, ring, COLORS.lake, 0.48, HYDROLOGY_ELEVATION)) count += 1;
+      if (drawBoundaryStroke(ctx, payload, ring, COLORS.lakeEdge, 0.0038, 0.34, HYDROLOGY_ELEVATION)) count += 1;
+    }
+
+    return count;
+  }
+
+  function drawHydrologyHardCoastWaterlines(ctx, payload, landmass, hydrology) {
+    if (!hydrology) return 0;
+
+    let count = 0;
+    const boundary = Array.isArray(landmass.boundary) ? landmass.boundary : [];
+
+    for (const entry of hydrology.hardCoastWaterlineRegistry || []) {
+      const ring = normalizeHydrologyBoundary(entry, boundary);
+      if (drawBoundaryStroke(ctx, payload, ring, COLORS.waterlineShadow, 0.0072, 0.34, HYDROLOGY_ELEVATION)) count += 1;
+      if (drawBoundaryStroke(ctx, payload, ring, COLORS.hardWaterline, 0.0032, 0.5, HYDROLOGY_ELEVATION)) count += 1;
+    }
+
+    for (const entry of hydrology.shelterMouthWaterRegistry || []) {
+      if (!Number.isFinite(Number(entry.lon)) || !Number.isFinite(Number(entry.lat))) continue;
+      if (drawPointMarker(ctx, payload, entry, COLORS.waterlineShadow, 0.009)) count += 1;
+    }
+
+    return count;
   }
 
   function drawBoundarySegment(ctx, payload, boundary, segment, color, lineWidthFactor) {
@@ -755,7 +1243,7 @@
     if (visibility.visible.length < 2) return false;
 
     const center = averageProjected(payload, nodes, TOPOLOGY_MARK_ELEVATION);
-    const alpha = Math.max(0.12, depthAlpha(center.z, -0.02, 0.42));
+    const alpha = Math.max(0.1, depthAlpha(center.z, -0.02, 0.42));
 
     if (!center.visible || alpha <= 0.01) return false;
 
@@ -767,7 +1255,7 @@
       else ctx.lineTo(point.x, point.y);
     });
 
-    ctx.strokeStyle = withAlpha(color, alpha, 0.72);
+    ctx.strokeStyle = withAlpha(color, alpha, 0.7);
     ctx.lineWidth = Math.max(1, payload.geometry.radius * lineWidthFactor);
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
@@ -779,7 +1267,7 @@
 
   function drawPointMarker(ctx, payload, point, color, radiusFactor) {
     const p = projectPoint(payload, point.lon, point.lat, TOPOLOGY_MARK_ELEVATION);
-    const alpha = Math.max(0.14, depthAlpha(p.z, -0.01, 0.5));
+    const alpha = Math.max(0.12, depthAlpha(p.z, -0.01, 0.5));
 
     if (!p.visible || alpha <= 0.01) return false;
 
@@ -810,7 +1298,7 @@
     if (visibility.visible.length < 3) return false;
 
     const center = averageProjected(payload, ring, TOPOLOGY_MARK_ELEVATION);
-    const alpha = Math.max(0.12, depthAlpha(center.z, -0.02, 0.5));
+    const alpha = Math.max(0.1, depthAlpha(center.z, -0.02, 0.5));
 
     if (!center.visible || alpha <= 0.01) return false;
 
@@ -820,8 +1308,8 @@
       ctx.fillStyle = withAlpha(color, alpha, alphaMax);
       ctx.fill();
 
-      ctx.strokeStyle = withAlpha(color, alpha, Math.min(0.7, alphaMax + 0.18));
-      ctx.lineWidth = Math.max(1, payload.geometry.radius * 0.0024);
+      ctx.strokeStyle = withAlpha(color, alpha, Math.min(0.66, alphaMax + 0.14));
+      ctx.lineWidth = Math.max(1, payload.geometry.radius * 0.0022);
       ctx.stroke();
     }
 
@@ -848,54 +1336,57 @@
     if (!boundary.length) return counts;
 
     for (const segment of topology.beaches || []) {
-      if (drawBoundarySegment(ctx, payload, boundary, segment, COLORS.beach, 0.0062)) counts.beaches += 1;
+      if (drawBoundarySegment(ctx, payload, boundary, segment, COLORS.beach, 0.0058)) counts.beaches += 1;
     }
 
     for (const segment of topology.cliffEdges || []) {
-      if (drawBoundarySegment(ctx, payload, boundary, segment, COLORS.cliffEdge, 0.0058)) counts.cliffEdges += 1;
+      if (drawBoundarySegment(ctx, payload, boundary, segment, COLORS.cliffEdge, 0.0054)) counts.cliffEdges += 1;
     }
 
     for (const segment of topology.bays || []) {
-      if (drawBoundarySegment(ctx, payload, boundary, segment, COLORS.bay, 0.0054)) counts.bays += 1;
+      if (drawBoundarySegment(ctx, payload, boundary, segment, COLORS.bay, 0.0048)) counts.bays += 1;
     }
 
     for (const segment of topology.inlets || []) {
-      if (drawBoundarySegment(ctx, payload, boundary, segment, COLORS.inlet, 0.0048)) counts.inlets += 1;
+      if (drawBoundarySegment(ctx, payload, boundary, segment, COLORS.inlet, 0.0042)) counts.inlets += 1;
     }
 
     for (const segment of topology.peninsulas || []) {
-      if (drawBoundarySegment(ctx, payload, boundary, segment, COLORS.peninsula, 0.0044)) counts.peninsulas += 1;
+      if (drawBoundarySegment(ctx, payload, boundary, segment, COLORS.peninsula, 0.0038)) counts.peninsulas += 1;
     }
 
     for (const segment of topology.wetlands || []) {
-      if (drawBoundarySegment(ctx, payload, boundary, segment, COLORS.wetland, 0.0056)) counts.wetlands += 1;
+      if (drawBoundarySegment(ctx, payload, boundary, segment, COLORS.wetland, 0.0048)) counts.wetlands += 1;
     }
 
     for (const point of topology.cavernMouths || []) {
-      if (drawPointMarker(ctx, payload, point, COLORS.cavernMouth, 0.0076)) counts.cavernMouths += 1;
+      if (drawPointMarker(ctx, payload, point, COLORS.cavernMouth, 0.0068)) counts.cavernMouths += 1;
     }
 
     for (const lake of topology.lakes || []) {
-      if (drawWaterBoundary(ctx, payload, lake, COLORS.lake, 0.5)) counts.lakes += 1;
+      if (drawWaterBoundary(ctx, payload, lake, COLORS.lake, 0.36)) counts.lakes += 1;
     }
 
     for (const lagoon of topology.lagoons || []) {
-      if (drawWaterBoundary(ctx, payload, lagoon, COLORS.lagoon, 0.46)) counts.lagoons += 1;
+      if (drawWaterBoundary(ctx, payload, lagoon, COLORS.lagoon, 0.34)) counts.lagoons += 1;
     }
 
     return counts;
   }
 
-  function drawTopology(ctx, payload, topology) {
+  function drawTopology(ctx, payload, topology, childId) {
     if (!topology || !Array.isArray(topology.landmasses)) {
       return {
         drawnBodies: 0,
         classCounts: {},
+        hydrologyCounts: {},
+        hydrologyConsumed: false,
         reason: "invalid_topology"
       };
     }
 
     let drawnBodies = 0;
+
     const aggregateCounts = {
       beaches: 0,
       cliffEdges: 0,
@@ -908,12 +1399,36 @@
       lagoons: 0
     };
 
+    const hydrologyCounts = {
+      shelves: 0,
+      bayInletCuts: 0,
+      wetlandLagoonBlends: 0,
+      inlandWaters: 0,
+      hardCoastWaterlines: 0
+    };
+
+    const hydrology = state.hydrologies[childId] || null;
+    let hydrologyConsumed = false;
+
     for (const landmass of topology.landmasses) {
-      const didDraw = drawLandmass(ctx, payload, landmass, topology);
+      if (hydrology) {
+        hydrologyCounts.shelves += drawHydrologyShelvesBeforeLand(ctx, payload, landmass, hydrology);
+      }
+
+      const didDraw = drawLandmassWithSeaLevelModulation(ctx, payload, landmass, topology, hydrology);
 
       if (!didDraw) continue;
 
       drawnBodies += 1;
+
+      if (hydrology) {
+        hydrologyCounts.bayInletCuts += drawHydrologyBayInletCuts(ctx, payload, landmass, hydrology);
+        hydrologyCounts.wetlandLagoonBlends += drawHydrologyWetlandLagoonBlends(ctx, payload, landmass, hydrology);
+        hydrologyCounts.inlandWaters += drawHydrologyInlandWaters(ctx, payload, hydrology);
+        hydrologyCounts.hardCoastWaterlines += drawHydrologyHardCoastWaterlines(ctx, payload, landmass, hydrology);
+
+        hydrologyConsumed = Object.values(hydrologyCounts).some((value) => value > 0);
+      }
 
       const counts = drawTopologyClasses(ctx, payload, landmass);
 
@@ -925,6 +1440,8 @@
     return {
       drawnBodies,
       classCounts: aggregateCounts,
+      hydrologyCounts,
+      hydrologyConsumed,
       reason: drawnBodies > 0 ? "drawn" : "no_visible_landmass"
     };
   }
@@ -935,6 +1452,10 @@
 
       if (!state.topologies[child.id]) {
         syncAlreadyPublishedChild(child);
+      }
+
+      if (!state.hydrologies[child.id]) {
+        syncAlreadyPublishedHydrology(child);
       }
     }
 
@@ -961,36 +1482,55 @@
       state.activeDrawnBodies = 0;
       state.childVisualReady = false;
       state.wrapperOnlyValid = false;
+      state.hydrologyVisualConsumed = false;
       state.lastDrawSkippedReason = "";
 
       if (!state.childLoadStarted) {
         loadTopologyChildren().catch((error) => recordError("loadTopologyChildren", error));
       }
 
+      if (!state.hydrologyLoadStarted) {
+        loadHydrologyChildren().catch((error) => recordError("loadHydrologyChildren", error));
+      }
+
       const drawReports = [];
 
       for (const [childId, topology] of Object.entries(state.topologies)) {
-        const report = drawTopology(ctx, payload, topology);
+        const report = drawTopology(ctx, payload, topology, childId);
+
         state.activeDrawnBodies += report.drawnBodies;
+
+        if (report.hydrologyConsumed) {
+          state.hydrologyVisualConsumed = true;
+          state.hydrologyRenderPassCount += 1;
+        }
+
         drawReports.push({
           childId,
           summit: topology.summit || "",
           topologyId: topology.id || "",
           drawnBodies: report.drawnBodies,
           classCounts: report.classCounts,
+          hydrologyCounts: report.hydrologyCounts,
+          hydrologyConsumed: report.hydrologyConsumed,
           reason: report.reason
         });
       }
 
       state.childVisualReady = state.activeDrawnBodies > 0;
       state.wrapperOnlyValid = !state.childVisualReady;
+
       state.lastDrawSummary = {
         drawCount: state.drawCount,
         activeTopologyCount: Object.keys(state.topologies).length,
         activeDrawnBodies: state.activeDrawnBodies,
         childVisualReady: state.childVisualReady,
+        hydrologyAdapterActive: true,
+        hydrologyVisualConsumed: state.hydrologyVisualConsumed,
+        hydrologyRenderPassCount: state.hydrologyRenderPassCount,
         reports: drawReports,
-        childStatuses: { ...state.childStatuses }
+        childStatuses: { ...state.childStatuses },
+        hydrologyStatuses: { ...state.hydrologyStatuses }
       };
 
       if (!state.childVisualReady) {
@@ -1069,7 +1609,13 @@
       globalKey: child.globalKey,
       status: state.childStatuses[child.id] || (child.active ? "pending" : "staged"),
       contract: state.childContracts[child.id] || "",
-      source: state.childSources[child.id] || ""
+      source: state.childSources[child.id] || "",
+      hydrologyEnabled: Boolean(child.hydrology && child.hydrology.enabled),
+      hydrologyPath: child.hydrology && child.hydrology.path ? child.hydrology.path : "",
+      hydrologyGlobalKey: child.hydrology && child.hydrology.globalKey ? child.hydrology.globalKey : "",
+      hydrologyStatus: state.hydrologyStatuses[child.id] || "",
+      hydrologyContract: state.hydrologyContracts[child.id] || "",
+      hydrologySource: state.hydrologySources[child.id] || ""
     }));
   }
 
@@ -1094,6 +1640,27 @@
     }));
   }
 
+  function getHydrologySummary() {
+    return Object.entries(state.hydrologies).map(([childId, hydrology]) => ({
+      childId,
+      id: hydrology.id || "",
+      continent: hydrology.continent || "",
+      summit: hydrology.summit || "",
+      contract: hydrology.contract || "",
+      hydrologyOnly: hydrology.hydrologyOnly === true,
+      topologyOwned: hydrology.topologyOwned === true,
+      terrainOwned: hydrology.terrainOwned === true,
+      elevationOwned: hydrology.elevationOwned === true,
+      globalOceanOwned: hydrology.globalOceanOwned === true,
+      directDrawing: hydrology.directDrawing === true,
+      seaLevelZoneCount: Array.isArray(hydrology.seaLevelZones) ? hydrology.seaLevelZones.length : 0,
+      coastalShelfCount: Array.isArray(hydrology.coastalShelfRegistry) ? hydrology.coastalShelfRegistry.length : 0,
+      bayWaterCount: Array.isArray(hydrology.bayWaterRegistry) ? hydrology.bayWaterRegistry.length : 0,
+      inletWaterCount: Array.isArray(hydrology.inletWaterRegistry) ? hydrology.inletWaterRegistry.length : 0,
+      inlandLakeCount: Array.isArray(hydrology.inlandLakeRegistry) ? hydrology.inlandLakeRegistry.length : 0
+    }));
+  }
+
   function getVisualReadiness() {
     const activeChildren = CHILDREN.filter((child) => child.active);
     const activeStatuses = activeChildren.map((child) => ({
@@ -1101,7 +1668,11 @@
       status: state.childStatuses[child.id] || "pending",
       hasTopology: Boolean(state.topologies[child.id]),
       contract: state.childContracts[child.id] || "",
-      source: state.childSources[child.id] || ""
+      source: state.childSources[child.id] || "",
+      hydrologyStatus: state.hydrologyStatuses[child.id] || "",
+      hasHydrology: Boolean(state.hydrologies[child.id]),
+      hydrologyContract: state.hydrologyContracts[child.id] || "",
+      hydrologySource: state.hydrologySources[child.id] || ""
     }));
 
     return {
@@ -1112,10 +1683,19 @@
       childVisualReady: state.childVisualReady,
       activeDrawnBodies: state.activeDrawnBodies,
       activeTopologyCount: Object.keys(state.topologies).length,
+      hydrologyAdapterActive: true,
+      hydrologyChildrenEnabled: true,
+      activeHydrologyChildren: state.activeHydrologyChildren.slice(),
+      hydrologyLoaded: state.hydrologyLoaded,
+      hydrologyContractValid: state.hydrologyContractValid,
+      hydrologyVisualConsumed: state.hydrologyVisualConsumed,
+      hydrologyRenderPassCount: state.hydrologyRenderPassCount,
+      seaLevelZoneCount: state.seaLevelZoneCount,
       activeStatuses,
       lastDrawSkippedReason: state.lastDrawSkippedReason,
       lastDrawSummary: state.lastDrawSummary,
-      lastLoadSummary: state.lastLoadSummary
+      lastLoadSummary: state.lastLoadSummary,
+      lastHydrologySummary: state.lastHydrologySummary
     };
   }
 
@@ -1123,7 +1703,7 @@
     return {
       contract: CONTRACT,
       internalContract: INTERNAL_CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
+      previousInternalContract: PREVIOUS_INTERNAL_CONTRACT,
       childSplitContract: CHILD_SPLIT_CONTRACT,
       segmentContract: SEGMENT_CONTRACT,
       chainContract: CHAIN_CONTRACT,
@@ -1138,12 +1718,16 @@
       segment: 1,
 
       topologyOnly: true,
+      hydrologyAdapterActive: true,
+      hydrologyChildrenEnabled: true,
       terrainOwned: false,
       elevationOwned: false,
       ownsCanvas: false,
       ownsFormVisible: false,
       ownsOcean: false,
+      ownsGlobalOcean: false,
       ownsRoute: false,
+      waterPhysicsOwned: false,
 
       parentCompliance: true,
       parentFacingContractUnchanged: true,
@@ -1163,6 +1747,25 @@
       childSources: { ...state.childSources },
       topologyErrors: { ...state.topologyErrors },
       topologySummary: getTopologySummary(),
+
+      hydrologyLoadStarted: state.hydrologyLoadStarted,
+      hydrologyLoadComplete: state.hydrologyLoadComplete,
+      hydrologyLoaded: state.hydrologyLoaded,
+      hydrologyContractValid: state.hydrologyContractValid,
+      hydrologyReadSucceeded: state.hydrologyReadSucceeded,
+      hydrologyVisualConsumed: state.hydrologyVisualConsumed,
+      hydrologyRenderPassCount: state.hydrologyRenderPassCount,
+      activeHydrologyChildren: state.activeHydrologyChildren.slice(),
+      seaLevelZoneCount: state.seaLevelZoneCount,
+      gratitudeHydrologyContract: state.gratitudeHydrologyContract,
+      gratitudeHydrologySource: state.gratitudeHydrologySource,
+      renderAdapterRequired: false,
+      hydrologyStatuses: { ...state.hydrologyStatuses },
+      hydrologyContracts: { ...state.hydrologyContracts },
+      hydrologySources: { ...state.hydrologySources },
+      hydrologyErrors: { ...state.hydrologyErrors },
+      hydrologySummary: getHydrologySummary(),
+
       visualReadiness: getVisualReadiness(),
 
       nineSummits256FibonacciModel: true,
@@ -1181,6 +1784,7 @@
       landCellTotal: CHILDREN.reduce((sum, child) => sum + child.cells, 0),
 
       topologicalClassesOnly: true,
+      hydrologySeaLevelOnly: true,
       cliffEdgeIsCategoryOnly: true,
       cavernMouthIsCategoryOnly: true,
       lakeIsBoundaryOnly: true,
@@ -1192,6 +1796,7 @@
       lastDrawSkippedReason: state.lastDrawSkippedReason,
       lastDrawSummary: state.lastDrawSummary,
       lastLoadSummary: state.lastLoadSummary,
+      lastHydrologySummary: state.lastHydrologySummary,
 
       visualPassClaim: false,
       generatedImage: false,
@@ -1207,7 +1812,7 @@
     const status = {
       contract: CONTRACT,
       internalContract: INTERNAL_CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
+      previousInternalContract: PREVIOUS_INTERNAL_CONTRACT,
       childSplitContract: CHILD_SPLIT_CONTRACT,
       segmentContract: SEGMENT_CONTRACT,
       chainContract: CHAIN_CONTRACT,
@@ -1216,7 +1821,7 @@
       target: TARGET,
       route: ROUTE,
       cacheNonce: state.cacheNonce || "",
-      mode: "g26_continents_child_load_and_draw_receipt_alignment",
+      mode: "g26_continents_gratitude_hydrology_render_adapter",
       scope,
 
       active: true,
@@ -1224,12 +1829,16 @@
       segment: 1,
 
       topologyOnly: true,
+      hydrologyAdapterActive: true,
+      hydrologyChildrenEnabled: true,
       terrainOwned: false,
       elevationOwned: false,
       ownsFormVisible: false,
       ownsCanvas: false,
       ownsRoute: false,
       ownsOcean: false,
+      ownsGlobalOcean: false,
+      waterPhysicsOwned: false,
 
       parentCompliance: true,
       parentFacingContractUnchanged: true,
@@ -1249,6 +1858,25 @@
       childSources: { ...state.childSources },
       topologyErrors: { ...state.topologyErrors },
       topologySummary: getTopologySummary(),
+
+      hydrologyLoadStarted: state.hydrologyLoadStarted,
+      hydrologyLoadComplete: state.hydrologyLoadComplete,
+      hydrologyLoaded: state.hydrologyLoaded,
+      hydrologyContractValid: state.hydrologyContractValid,
+      hydrologyReadSucceeded: state.hydrologyReadSucceeded,
+      hydrologyVisualConsumed: state.hydrologyVisualConsumed,
+      hydrologyRenderPassCount: state.hydrologyRenderPassCount,
+      activeHydrologyChildren: state.activeHydrologyChildren.slice(),
+      seaLevelZoneCount: state.seaLevelZoneCount,
+      gratitudeHydrologyContract: state.gratitudeHydrologyContract,
+      gratitudeHydrologySource: state.gratitudeHydrologySource,
+      renderAdapterRequired: false,
+      hydrologyStatuses: { ...state.hydrologyStatuses },
+      hydrologyContracts: { ...state.hydrologyContracts },
+      hydrologySources: { ...state.hydrologySources },
+      hydrologyErrors: { ...state.hydrologyErrors },
+      hydrologySummary: getHydrologySummary(),
+
       visualReadiness: getVisualReadiness(),
 
       nineSummits256FibonacciModel: true,
@@ -1268,6 +1896,7 @@
       distribution: getDistribution(),
 
       topologicalClassesOnly: true,
+      hydrologySeaLevelOnly: true,
       cliffEdgeIsCategoryOnly: true,
       cavernMouthIsCategoryOnly: true,
       lakeIsBoundaryOnly: true,
@@ -1277,6 +1906,7 @@
       lastDrawSkippedReason: state.lastDrawSkippedReason,
       lastDrawSummary: state.lastDrawSummary,
       lastLoadSummary: state.lastLoadSummary,
+      lastHydrologySummary: state.lastHydrologySummary,
 
       singleCacheNonceChain: true,
       visualPassClaim: false,
@@ -1294,10 +1924,14 @@
     window.AUDRALIA_TOPOLOGY_ONLY_CONTINENTS_RECEIPT = status;
     window.AUDRALIA_SINGLE_CACHE_NONCE_CONTINENTS_RECEIPT = status;
     window.AUDRALIA_CONTINENTS_CHILD_LOAD_AND_DRAW_RECEIPT = status;
+    window.AUDRALIA_CONTINENTS_GRATITUDE_HYDROLOGY_RENDER_ADAPTER_RECEIPT = status;
 
     window.AUDRALIA_CONTINENTS_CHILD_VISUAL_READY = state.childVisualReady;
     window.AUDRALIA_CONTINENTS_ACTIVE_DRAWN_BODIES = state.activeDrawnBodies;
     window.AUDRALIA_CONTINENTS_WRAPPER_ONLY_VALID = state.wrapperOnlyValid;
+    window.AUDRALIA_CONTINENTS_GRATITUDE_HYDROLOGY_RENDER_ADAPTER_ACTIVE = true;
+    window.AUDRALIA_CONTINENTS_HYDROLOGY_VISUAL_CONSUMED = state.hydrologyVisualConsumed;
+    window.AUDRALIA_CONTINENTS_HYDROLOGY_RENDER_PASS_COUNT = state.hydrologyRenderPassCount;
 
     if (hasDocument() && document.documentElement) {
       document.documentElement.setAttribute("data-audralia-continents-contract", CONTRACT);
@@ -1305,6 +1939,11 @@
       document.documentElement.setAttribute("data-audralia-continents-child-visual-ready", state.childVisualReady ? "true" : "false");
       document.documentElement.setAttribute("data-audralia-continents-active-drawn-bodies", String(state.activeDrawnBodies));
       document.documentElement.setAttribute("data-audralia-continents-wrapper-only-valid", state.wrapperOnlyValid ? "true" : "false");
+      document.documentElement.setAttribute("data-audralia-continents-hydrology-adapter-active", "true");
+      document.documentElement.setAttribute("data-audralia-continents-hydrology-loaded", state.hydrologyLoaded ? "true" : "false");
+      document.documentElement.setAttribute("data-audralia-continents-hydrology-contract-valid", state.hydrologyContractValid ? "true" : "false");
+      document.documentElement.setAttribute("data-audralia-continents-hydrology-visual-consumed", state.hydrologyVisualConsumed ? "true" : "false");
+      document.documentElement.setAttribute("data-audralia-continents-hydrology-render-pass-count", String(state.hydrologyRenderPassCount));
       document.documentElement.setAttribute("data-audralia-continents-last-scope", scope);
     }
 
@@ -1320,7 +1959,7 @@
   const api = {
     CONTRACT,
     INTERNAL_CONTRACT,
-    PREVIOUS_CONTRACT,
+    PREVIOUS_INTERNAL_CONTRACT,
     CHILD_SPLIT_CONTRACT,
     SEGMENT_CONTRACT,
     CHAIN_CONTRACT,
@@ -1339,6 +1978,7 @@
     OCEAN_SEA_RATIO,
 
     loadTopologyChildren,
+    loadHydrologyChildren,
     mount,
     init,
     setup,
@@ -1356,7 +1996,8 @@
     status: getStatus,
     getVisualReadiness,
     getDistribution,
-    getTopologySummary
+    getTopologySummary,
+    getHydrologySummary
   };
 
   if (hasWindow()) {
@@ -1375,6 +2016,7 @@
     window.AUDRALIA_TOPOLOGY_ONLY_CONTINENT_CHILD_SPLIT_ACTIVE = true;
     window.AUDRALIA_TOPOLOGY_ONLY_CONTINENT_CHILD_SPLIT_SEGMENT = 1;
     window.AUDRALIA_CONTINENTS_CHILD_LOAD_AND_DRAW_RECEIPT_ALIGNMENT_ACTIVE = true;
+    window.AUDRALIA_CONTINENTS_GRATITUDE_HYDROLOGY_RENDER_ADAPTER_ACTIVE = true;
     window.AUDRALIA_LOCAL_TOPOLOGY_CHILDREN_ENABLED = true;
     window.AUDRALIA_TERRAIN_OWNED_BY_CONTINENTS = false;
     window.AUDRALIA_ELEVATION_OWNED_BY_CONTINENTS = false;

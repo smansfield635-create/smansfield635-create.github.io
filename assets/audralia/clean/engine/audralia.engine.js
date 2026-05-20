@@ -1,21 +1,21 @@
 // /assets/audralia/clean/engine/audralia.engine.js
-// AUDRALIA_G2_5_PARENT_FIXED_CENTER_FIXED_RADIUS_DRAG_ROTATION_ONLY_TNT_v1
+// AUDRALIA_G2_5_PARENT_VISIBLE_BOX_CENTER_ANCHOR_DRAG_ROTATION_ONLY_TNT_v1
 // Full-file replacement.
-// Purpose: keep Audralia fixed in the inspection box while allowing finger drag to rotate surface longitude only.
-// Preserves: center lock, fixed radius, no orbit, no auto-motion, no legacy land, continents child expression, FORM_VISIBLE parent confirmation.
-// Parent owns: canvas mount, containment, fixed geometry, ocean base, projection, child loading, FORM_VISIBLE confirmation.
+// Purpose: anchor Audralia to the visible inspection box center, force canvas-to-mount geometry alignment, and allow finger drag to rotate longitude only.
+// Preserves: continents child expression, fixed radius, no orbit, no auto-motion, no legacy land, FORM_VISIBLE parent confirmation.
+// Parent owns: visible-frame containment, canvas mount, fixed geometry, ocean base, projection, child loading, FORM_VISIBLE confirmation.
 // Parent does not own: continent expression, automatic orbit, zoom, camera depth, route bridge, runtime, HTML, generated image, GraphicBox, or visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G2_5_PARENT_FIXED_CENTER_FIXED_RADIUS_DRAG_ROTATION_ONLY_TNT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_PARENT_HARD_INSPECTION_LOCK_DISABLE_MOTION_CHILD_TNT_v1";
+  const CONTRACT = "AUDRALIA_G2_5_PARENT_VISIBLE_BOX_CENTER_ANCHOR_DRAG_ROTATION_ONLY_TNT_v1";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_PARENT_FIXED_CENTER_FIXED_RADIUS_DRAG_ROTATION_ONLY_TNT_v1";
   const FAMILY = "AUDRALIA_G2_5_EXISTING_ARCHITECTURE_PATH_ALIGNMENT_TNT_v1";
 
   const TARGET = "/assets/audralia/clean/engine/audralia.engine.js";
   const ROUTE = "/showroom/globe/audralia/";
-  const SAFE_RADIUS_FACTOR = 0.34;
+  const SAFE_RADIUS_FACTOR = 0.31;
 
   const CHILDREN = Object.freeze({
     continents: {
@@ -32,13 +32,13 @@
     },
     motion: {
       enabled: false,
-      heldReason: "fixed_center_fixed_radius_inspection_lock",
+      heldReason: "visible_box_center_anchor_inspection_lock",
       path: "/assets/audralia/clean/engine/audralia/engine/motion.js",
       globals: []
     },
     sky: {
       enabled: false,
-      heldReason: "fixed_center_fixed_radius_inspection_lock",
+      heldReason: "visible_box_center_anchor_inspection_lock",
       path: "/assets/audralia/clean/engine/audralia/engine/sky.js",
       globals: []
     }
@@ -50,6 +50,8 @@
     family: FAMILY,
     target: TARGET,
     route: ROUTE,
+    visibleBoxCenterAnchored: true,
+    canvasFillsMount: true,
     centerLocked: true,
     fixedRadius: true,
     fixedCameraDepth: true,
@@ -74,8 +76,8 @@
     childLoadComplete: false,
     children: {
       continents: "pending",
-      motion: "held_fixed_inspection_lock",
-      sky: "held_fixed_inspection_lock"
+      motion: "held_visible_box_center_anchor",
+      sky: "held_visible_box_center_anchor"
     },
     errors: []
   };
@@ -151,8 +153,49 @@
     );
   }
 
+  function lockMountFrame(target) {
+    if (!isElement(target)) return;
+
+    target.style.position = "relative";
+    target.style.overflow = "hidden";
+    target.style.display = "block";
+    target.style.contain = "layout paint";
+    target.style.touchAction = "none";
+
+    target.setAttribute("data-audralia-visible-box-frame", "true");
+    target.setAttribute("data-audralia-parent-center-anchor", "visible-box");
+  }
+
+  function lockCanvasToVisibleFrame(canvas) {
+    if (!isElement(canvas)) return;
+
+    canvas.style.position = "absolute";
+    canvas.style.inset = "0";
+    canvas.style.left = "0";
+    canvas.style.top = "0";
+    canvas.style.right = "0";
+    canvas.style.bottom = "0";
+    canvas.style.display = "block";
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    canvas.style.minWidth = "0";
+    canvas.style.minHeight = "0";
+    canvas.style.maxWidth = "100%";
+    canvas.style.maxHeight = "100%";
+    canvas.style.borderRadius = "24px";
+    canvas.style.touchAction = "none";
+    canvas.style.userSelect = "none";
+    canvas.style.webkitUserSelect = "none";
+
+    canvas.setAttribute("data-audralia-canvas-fills-visible-box", "true");
+    canvas.setAttribute("data-audralia-parent-fixed-center", "true");
+    canvas.setAttribute("data-audralia-parent-fixed-radius", "true");
+  }
+
   function ensureCanvas(target) {
     if (!hasDocument() || !isElement(target)) return null;
+
+    lockMountFrame(target);
 
     let canvas =
       target.querySelector("canvas[data-audralia-clean-parent-canvas='true']") ||
@@ -166,29 +209,17 @@
       canvas.setAttribute("data-audralia-clean-parent-canvas", "true");
       canvas.setAttribute("data-audralia-clean-canvas", "true");
       canvas.setAttribute("data-contract", CONTRACT);
-      canvas.setAttribute("aria-label", "Audralia fixed inspection planet");
-      canvas.style.display = "block";
-      canvas.style.width = "100%";
-      canvas.style.height = "100%";
-      canvas.style.minHeight = "360px";
-      canvas.style.borderRadius = "24px";
-      canvas.style.touchAction = "none";
-      canvas.style.userSelect = "none";
-      canvas.style.webkitUserSelect = "none";
+      canvas.setAttribute("aria-label", "Audralia visible-box centered inspection planet");
 
       target.appendChild(canvas);
     } else {
       canvas.setAttribute("data-audralia-clean-parent-canvas", "true");
       canvas.setAttribute("data-audralia-clean-canvas", "true");
       canvas.setAttribute("data-contract", CONTRACT);
-      canvas.style.display = "block";
-      canvas.style.width = canvas.style.width || "100%";
-      canvas.style.height = canvas.style.height || "100%";
-      canvas.style.minHeight = canvas.style.minHeight || "360px";
-      canvas.style.touchAction = "none";
-      canvas.style.userSelect = "none";
-      canvas.style.webkitUserSelect = "none";
+      canvas.setAttribute("aria-label", "Audralia visible-box centered inspection planet");
     }
+
+    lockCanvasToVisibleFrame(canvas);
 
     return canvas;
   }
@@ -196,29 +227,41 @@
   function resize() {
     if (!env.canvas || !env.mount) return;
 
+    lockMountFrame(env.mount);
+    lockCanvasToVisibleFrame(env.canvas);
+
     const rect = env.mount.getBoundingClientRect();
-    const cssWidth = Math.max(320, Math.floor(rect.width || env.mount.clientWidth || 760));
-    const cssHeight = Math.max(360, Math.floor(rect.height || env.mount.clientHeight || 520));
+
+    const visibleWidth = Math.max(
+      320,
+      Math.floor(env.mount.clientWidth || rect.width || 760)
+    );
+
+    const visibleHeight = Math.max(
+      360,
+      Math.floor(env.mount.clientHeight || rect.height || 520)
+    );
+
     const dpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
 
     env.dpr = dpr;
-    env.cssWidth = cssWidth;
-    env.cssHeight = cssHeight;
-    env.width = Math.floor(cssWidth * dpr);
-    env.height = Math.floor(cssHeight * dpr);
+    env.cssWidth = visibleWidth;
+    env.cssHeight = visibleHeight;
+    env.width = Math.floor(visibleWidth * dpr);
+    env.height = Math.floor(visibleHeight * dpr);
 
     env.cx = env.width / 2;
     env.cy = env.height / 2;
 
-    const mobileTight = cssWidth <= 520;
-    const factor = mobileTight ? 0.32 : SAFE_RADIUS_FACTOR;
+    const mobileTight = visibleWidth <= 520;
+    const factor = mobileTight ? 0.3 : SAFE_RADIUS_FACTOR;
     env.radius = Math.floor(Math.min(env.width, env.height) * factor);
 
     if (env.canvas.width !== env.width) env.canvas.width = env.width;
     if (env.canvas.height !== env.height) env.canvas.height = env.height;
 
-    env.canvas.style.width = `${cssWidth}px`;
-    env.canvas.style.height = `${cssHeight}px`;
+    env.canvas.style.width = "100%";
+    env.canvas.style.height = "100%";
   }
 
   function publishGlobals(scope = "publish-globals") {
@@ -232,6 +275,8 @@
     window.AUDRALIA_CLEAN_PARENT_ENGINE_GLOBAL_PUBLISHED = true;
     window.AUDRALIA_CLEAN_PARENT_ENGINE_CONTRACT = CONTRACT;
     window.AUDRALIA_EXISTING_ARCHITECTURE_PARENT_ALIGNED = true;
+    window.AUDRALIA_PARENT_VISIBLE_BOX_CENTER_ANCHORED = true;
+    window.AUDRALIA_PARENT_CANVAS_FILLS_MOUNT = true;
     window.AUDRALIA_PARENT_CENTER_LOCKED = true;
     window.AUDRALIA_PARENT_FIXED_RADIUS = true;
     window.AUDRALIA_PARENT_FIXED_CAMERA_DEPTH = true;
@@ -249,6 +294,8 @@
     if (hasDocument() && document.documentElement) {
       document.documentElement.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
       document.documentElement.setAttribute("data-audralia-clean-parent-target", TARGET);
+      document.documentElement.setAttribute("data-audralia-parent-visible-box-center-anchored", "true");
+      document.documentElement.setAttribute("data-audralia-parent-canvas-fills-mount", "true");
       document.documentElement.setAttribute("data-audralia-parent-center-locked", "true");
       document.documentElement.setAttribute("data-audralia-parent-fixed-radius", "true");
       document.documentElement.setAttribute("data-audralia-parent-fixed-camera-depth", "true");
@@ -285,6 +332,7 @@
       env.mount.setAttribute("data-audralia-form-visible", "true");
       env.mount.setAttribute("data-audralia-clean-parent-form-visible", "true");
       env.mount.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
+      env.mount.setAttribute("data-audralia-parent-visible-box-center-anchored", "true");
       env.mount.setAttribute("data-audralia-parent-fixed-center", "true");
       env.mount.setAttribute("data-audralia-parent-fixed-radius", "true");
     }
@@ -292,6 +340,7 @@
     if (env.canvas) {
       env.canvas.setAttribute("data-audralia-form-visible", "true");
       env.canvas.setAttribute("data-audralia-clean-parent-form-visible", "true");
+      env.canvas.setAttribute("data-audralia-parent-visible-box-center-anchored", "true");
       env.canvas.setAttribute("data-audralia-parent-fixed-center", "true");
       env.canvas.setAttribute("data-audralia-parent-fixed-radius", "true");
     }
@@ -313,8 +362,10 @@
       family: FAMILY,
       target: TARGET,
       route: ROUTE,
-      mode: "fixed_center_fixed_radius_drag_rotation_only",
+      mode: "visible_box_center_anchor_drag_rotation_only",
       scope,
+      visibleBoxCenterAnchored: true,
+      canvasFillsMount: true,
       centerLocked: true,
       fixedRadius: true,
       fixedCameraDepth: true,
@@ -336,6 +387,8 @@
       delegatedBy: state.delegatedBy,
       renderCount: state.renderCount,
       geometry: {
+        cssWidth: env.cssWidth,
+        cssHeight: env.cssHeight,
         width: env.width,
         height: env.height,
         cx: env.cx,
@@ -724,7 +777,7 @@
     env.childPromise = (async () => {
       for (const [name, child] of Object.entries(CHILDREN)) {
         if (!child.enabled) {
-          state.children[name] = "held_fixed_inspection_lock";
+          state.children[name] = "held_visible_box_center_anchor";
           publishReceipt(`child-${name}-held`);
           continue;
         }
@@ -781,8 +834,13 @@
     }
 
     env.mount = target;
+
+    lockMountFrame(env.mount);
+
     env.mount.setAttribute("data-audralia-clean-parent-mounted", "true");
     env.mount.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
+    env.mount.setAttribute("data-audralia-parent-visible-box-center-anchored", "true");
+    env.mount.setAttribute("data-audralia-parent-canvas-fills-mount", "true");
     env.mount.setAttribute("data-audralia-parent-center-locked", "true");
     env.mount.setAttribute("data-audralia-parent-fixed-radius", "true");
     env.mount.setAttribute("data-audralia-parent-fixed-camera-depth", "true");
@@ -859,7 +917,9 @@
       family: FAMILY,
       target: TARGET,
       route: ROUTE,
-      mode: "fixed_center_fixed_radius_drag_rotation_only",
+      mode: "visible_box_center_anchor_drag_rotation_only",
+      visibleBoxCenterAnchored: true,
+      canvasFillsMount: true,
       centerLocked: true,
       fixedRadius: true,
       fixedCameraDepth: true,
@@ -881,6 +941,8 @@
       delegatedBy: state.delegatedBy,
       renderCount: state.renderCount,
       geometry: {
+        cssWidth: env.cssWidth,
+        cssHeight: env.cssHeight,
         width: env.width,
         height: env.height,
         cx: env.cx,

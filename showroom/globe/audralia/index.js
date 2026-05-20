@@ -1,61 +1,71 @@
 /* TARGET FILE: /showroom/globe/audralia/index.js */
 /*
-  AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_JS_TNT_v1
+  AUDRALIA_ROUTEFINDER_VISIBLE_TEXTURE_GUARD_TNT_v1
   route=/showroom/globe/audralia/
-  pair=AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_TNT_v1
-  purpose=prove index.js execution, mount canvas, render visible Audralia globe, then opportunistically consume renewed asset authorities
-  previous=AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_RENDER_BRIDGE_TNT_v2
-  no generated image. no GraphicBox. no visual-pass claim.
+  pair_context=AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_TNT_v1
+  previous=AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_JS_TNT_v1
+
+  Purpose:
+  - Preserve the proven HTML/script/index.js/canvas boot gates.
+  - Keep RouteFinder-first visible land/ocean/coast/island texture authority.
+  - Prevent optional asset-chain rebuild from washing the globe into atmospheric tint.
+  - Use asset authorities only as secondary enrichment when they pass visible-texture guard.
+  - Report visible texture guard state publicly and in dataset receipts.
+
+  No generated image. No GraphicBox. No visual-pass claim.
 */
 
 (function () {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_JS_TNT_v1";
-  const RECEIPT = "AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_JS_RECEIPT_v1";
-  const PAIR = "AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_TNT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_RENDER_BRIDGE_TNT_v2";
+  const CONTRACT = "AUDRALIA_ROUTEFINDER_VISIBLE_TEXTURE_GUARD_TNT_v1";
+  const RECEIPT = "AUDRALIA_ROUTEFINDER_VISIBLE_TEXTURE_GUARD_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_JS_TNT_v1";
+  const PAIR_CONTEXT = "AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_TNT_v1";
   const ROUTE = "/showroom/globe/audralia/";
   const WORLD = "Audralia";
-  const VERSION = "2026-05-19.audralia-routefinder-boot-proof-pair-js-v1";
+  const VERSION = "2026-05-19.audralia-routefinder-visible-texture-guard-v1";
 
   const TAU = Math.PI * 2;
   const PHI = 1.618033988749895;
 
   const SETTINGS = Object.freeze({
-    fallbackTextureWidth: 640,
-    fallbackTextureHeight: 320,
-    assetTextureWidth: 768,
-    assetTextureHeight: 384,
-    cloudTextureWidth: 256,
-    cloudTextureHeight: 128,
+    textureWidth: 768,
+    textureHeight: 384,
+    cloudWidth: 256,
+    cloudHeight: 128,
     minCanvasWidth: 320,
     minCanvasHeight: 260,
-    maxSphereSize: 460,
-    minSphereSize: 300,
     maxDpr: 1.45,
-    targetFrameMs: 46
+    minSphereSize: 300,
+    maxSphereSize: 470,
+    targetFrameMs: 44,
+    minLandRatio: 0.18,
+    maxLandRatio: 0.58,
+    minWaterRatio: 0.38,
+    minContrast: 26
   });
 
   const COLORS = Object.freeze({
     deepOcean: [3, 18, 48],
-    ocean: [7, 66, 112],
-    blueWater: [18, 104, 142],
+    ocean: [7, 66, 116],
+    openWater: [16, 96, 140],
     shelf: [58, 162, 166],
-    lagoon: [130, 210, 178],
-    river: [34, 130, 146],
-    beach: [198, 184, 128],
-    wetBeach: [154, 158, 112],
-    lowland: [110, 148, 88],
-    green: [74, 140, 92],
-    wetland: [66, 128, 104],
-    highland: [132, 126, 86],
-    mountain: [138, 132, 112],
-    stone: [96, 98, 88],
-    snow: [218, 232, 224],
+    lagoon: [126, 212, 178],
+    river: [34, 132, 146],
+    beach: [208, 190, 128],
+    wetBeach: [158, 158, 112],
+    lowland: [112, 148, 86],
+    green: [70, 142, 92],
+    wetland: [66, 126, 102],
+    highland: [138, 126, 82],
+    mountain: [142, 134, 112],
+    stone: [98, 98, 88],
+    snow: [220, 232, 224],
     cloud: [228, 238, 232],
-    atmosphere: [94, 172, 198],
-    rim: [150, 226, 210]
+    atmosphere: [92, 172, 200],
+    rim: [150, 226, 210],
+    night: [2, 8, 20]
   });
 
   const OPTIONAL_ASSETS = Object.freeze([
@@ -92,13 +102,14 @@
   ]);
 
   window.DGB_AUDRALIA_ROUTEFINDER_PAIR_EXECUTED = CONTRACT;
-  window.DGB_AUDRALIA_ROUTEFINDER_BOOT_PROOF = true;
+  window.DGB_AUDRALIA_ROUTEFINDER_VISIBLE_TEXTURE_GUARD = true;
   window.DGB_AUDRALIA_CANONICAL_SPELLING = "A_U_D_R_A_L_I_A";
   window.DGB_AUDRALIA_GENERATED_IMAGE = false;
   window.DGB_AUDRALIA_GRAPHIC_BOX = false;
   window.DGB_AUDRALIA_VISUAL_PASS_CLAIMED = false;
 
   const doc = document.documentElement;
+
   const mount =
     document.getElementById("audraliaCanvasMount") ||
     document.querySelector("[data-audralia-canvas-mount='true']") ||
@@ -126,19 +137,20 @@
     doc.dataset[key] = String(value);
   }
 
-  function setText(node, text) {
-    if (node) node.textContent = text;
+  function setText(node, value) {
+    if (node) node.textContent = value;
   }
 
-  function publishProof(phase, message) {
+  function publish(phase, message) {
     setData("audraliaRoutefinderPairJsExecuted", "true");
     setData("audraliaRoutefinderJsContract", CONTRACT);
     setData("audraliaRoutefinderJsReceipt", RECEIPT);
-    setData("audraliaRoutefinderPair", PAIR);
+    setData("audraliaRoutefinderPreviousContract", PREVIOUS_CONTRACT);
+    setData("audraliaRoutefinderVisibleTextureGuard", "true");
     setData("audraliaRoutefinderPhase", phase);
-    setData("audraliaRoutefinderGeneratedImage", "false");
-    setData("audraliaRoutefinderGraphicBox", "false");
-    setData("audraliaRoutefinderVisualPassClaimed", "false");
+    setData("generatedImage", "false");
+    setData("graphicBox", "false");
+    setData("visualPassClaimed", "false");
 
     setText(statusNodes.js, `index.js executed · ${phase}`);
     setText(statusNodes.route, message || phase);
@@ -162,15 +174,19 @@
   }
 
   function wrapPi(value) {
-    let out = value;
-    while (out < -Math.PI) out += TAU;
-    while (out > Math.PI) out -= TAU;
-    return out;
+    let output = value;
+    while (output < -Math.PI) output += TAU;
+    while (output > Math.PI) output -= TAU;
+    return output;
   }
 
   function mixColor(a, b, t) {
     const k = clamp(t, 0, 1);
-    return [lerp(a[0], b[0], k), lerp(a[1], b[1], k), lerp(a[2], b[2], k)];
+    return [
+      lerp(a[0], b[0], k),
+      lerp(a[1], b[1], k),
+      lerp(a[2], b[2], k)
+    ];
   }
 
   function shade(color, amount) {
@@ -181,7 +197,7 @@
     ];
   }
 
-  function lower(value) {
+  function text(value) {
     return String(value || "").trim().toLowerCase();
   }
 
@@ -208,10 +224,12 @@
     const yf = y - y0;
     const sx = xf * xf * (3 - 2 * xf);
     const sy = yf * yf * (3 - 2 * yf);
+
     const a = hash(((x0 % s) + s) % s, y0, seed);
     const b = hash(((x1 % s) + s) % s, y0, seed);
     const c = hash(((x0 % s) + s) % s, y1, seed);
     const d = hash(((x1 % s) + s) % s, y1, seed);
+
     return (a + (b - a) * sx) * (1 - sy) + (c + (d - c) * sx) * sy;
   }
 
@@ -235,7 +253,7 @@
     let total = 0;
     let norm = 0;
     let amp = 0.58;
-    let scale = 4.0;
+    let scale = 4;
 
     for (let i = 0; i < octaves; i += 1) {
       const n = noise(u, v, scale, seed + i * 197);
@@ -251,6 +269,16 @@
   function normalize3(vector) {
     const length = Math.hypot(vector[0], vector[1], vector[2]) || 1;
     return [vector[0] / length, vector[1] / length, vector[2] / length];
+  }
+
+  function ellipseScore(lon, lat, item) {
+    const dlon = wrapPi(lon - item.lon);
+    const dlat = lat - item.lat;
+    const cos = Math.cos(item.tilt || 0);
+    const sin = Math.sin(item.tilt || 0);
+    const x = (dlon * cos + dlat * sin) / item.rx;
+    const y = (-dlon * sin + dlat * cos) / item.ry;
+    return 1 - (x * x + y * y);
   }
 
   function cellInfo(u, v) {
@@ -283,17 +311,7 @@
     };
   }
 
-  function ellipseScore(lon, lat, item) {
-    const dlon = wrapPi(lon - item.lon);
-    const dlat = lat - item.lat;
-    const cos = Math.cos(item.tilt || 0);
-    const sin = Math.sin(item.tilt || 0);
-    const x = (dlon * cos + dlat * sin) / item.rx;
-    const y = (-dlon * sin + dlat * cos) / item.ry;
-    return 1 - (x * x + y * y);
-  }
-
-  function internalRouteMap(u, v) {
+  function routefinderMap(u, v) {
     const lon = wrap01(u) * TAU - Math.PI;
     const lat = (0.5 - clamp(v, 0, 1)) * Math.PI;
     const lonDeg = lon * 180 / Math.PI;
@@ -301,35 +319,35 @@
     const cells = cellInfo(u, v);
 
     const continents = [
-      { lon: -2.55, lat: -0.12, rx: 0.55, ry: 0.34, tilt: -0.18, weight: 1.04 },
-      { lon: -1.84, lat: 0.36, rx: 0.40, ry: 0.27, tilt: 0.18, weight: 0.88 },
-      { lon: -1.10, lat: -0.22, rx: 0.42, ry: 0.25, tilt: -0.42, weight: 0.82 },
-      { lon: -0.22, lat: 0.18, rx: 0.44, ry: 0.29, tilt: 0.28, weight: 0.84 },
-      { lon: 0.68, lat: -0.30, rx: 0.47, ry: 0.30, tilt: -0.26, weight: 0.88 },
-      { lon: 1.44, lat: 0.16, rx: 0.45, ry: 0.31, tilt: 0.20, weight: 0.86 },
-      { lon: 2.32, lat: -0.06, rx: 0.50, ry: 0.29, tilt: -0.16, weight: 0.94 },
-      { lon: 2.84, lat: 0.45, rx: 0.31, ry: 0.19, tilt: 0.16, weight: 0.66 }
+      { lon: -2.58, lat: -0.13, rx: 0.56, ry: 0.34, tilt: -0.20, weight: 1.06 },
+      { lon: -1.84, lat: 0.35, rx: 0.41, ry: 0.28, tilt: 0.18, weight: 0.90 },
+      { lon: -1.08, lat: -0.24, rx: 0.43, ry: 0.25, tilt: -0.42, weight: 0.84 },
+      { lon: -0.20, lat: 0.18, rx: 0.45, ry: 0.29, tilt: 0.27, weight: 0.86 },
+      { lon: 0.70, lat: -0.31, rx: 0.48, ry: 0.30, tilt: -0.26, weight: 0.90 },
+      { lon: 1.45, lat: 0.16, rx: 0.46, ry: 0.31, tilt: 0.20, weight: 0.88 },
+      { lon: 2.34, lat: -0.06, rx: 0.51, ry: 0.30, tilt: -0.16, weight: 0.95 },
+      { lon: 2.86, lat: 0.45, rx: 0.32, ry: 0.20, tilt: 0.16, weight: 0.68 }
     ];
 
-    const oceanCuts = [
-      { lon: -2.14, lat: 0.08, rx: 0.20, ry: 0.42, tilt: -0.08, weight: 1.00 },
-      { lon: -1.42, lat: -0.02, rx: 0.17, ry: 0.36, tilt: 0.20, weight: 0.86 },
-      { lon: -0.72, lat: 0.20, rx: 0.19, ry: 0.35, tilt: -0.24, weight: 0.80 },
-      { lon: 0.10, lat: -0.18, rx: 0.22, ry: 0.40, tilt: 0.12, weight: 0.90 },
-      { lon: 0.88, lat: 0.18, rx: 0.18, ry: 0.32, tilt: -0.18, weight: 0.78 },
-      { lon: 1.78, lat: -0.22, rx: 0.19, ry: 0.37, tilt: 0.22, weight: 0.92 },
-      { lon: 2.62, lat: 0.16, rx: 0.20, ry: 0.31, tilt: -0.14, weight: 0.84 }
+    const cuts = [
+      { lon: -2.16, lat: 0.08, rx: 0.20, ry: 0.43, tilt: -0.08, weight: 1.00 },
+      { lon: -1.42, lat: -0.02, rx: 0.17, ry: 0.36, tilt: 0.20, weight: 0.88 },
+      { lon: -0.72, lat: 0.20, rx: 0.19, ry: 0.35, tilt: -0.24, weight: 0.82 },
+      { lon: 0.10, lat: -0.18, rx: 0.22, ry: 0.40, tilt: 0.12, weight: 0.92 },
+      { lon: 0.88, lat: 0.18, rx: 0.18, ry: 0.33, tilt: -0.18, weight: 0.80 },
+      { lon: 1.78, lat: -0.22, rx: 0.19, ry: 0.38, tilt: 0.22, weight: 0.94 },
+      { lon: 2.62, lat: 0.16, rx: 0.20, ry: 0.31, tilt: -0.14, weight: 0.86 }
     ];
 
     const islands = [
       { lon: -2.88, lat: -0.50, rx: 0.16, ry: 0.08, tilt: 0.18, weight: 0.88 },
       { lon: -2.62, lat: -0.34, rx: 0.10, ry: 0.055, tilt: -0.18, weight: 0.76 },
-      { lon: -1.02, lat: -0.49, rx: 0.14, ry: 0.075, tilt: 0.28, weight: 0.78 },
-      { lon: -0.25, lat: -0.52, rx: 0.12, ry: 0.065, tilt: -0.32, weight: 0.74 },
-      { lon: 0.30, lat: 0.54, rx: 0.13, ry: 0.070, tilt: 0.14, weight: 0.70 },
-      { lon: 1.16, lat: -0.54, rx: 0.16, ry: 0.080, tilt: -0.24, weight: 0.84 },
-      { lon: 2.02, lat: 0.52, rx: 0.14, ry: 0.080, tilt: 0.20, weight: 0.76 },
-      { lon: 2.90, lat: -0.42, rx: 0.18, ry: 0.080, tilt: -0.18, weight: 0.84 }
+      { lon: -1.02, lat: -0.49, rx: 0.14, ry: 0.075, tilt: 0.28, weight: 0.80 },
+      { lon: -0.25, lat: -0.52, rx: 0.12, ry: 0.065, tilt: -0.32, weight: 0.76 },
+      { lon: 0.30, lat: 0.54, rx: 0.13, ry: 0.070, tilt: 0.14, weight: 0.72 },
+      { lon: 1.16, lat: -0.54, rx: 0.16, ry: 0.080, tilt: -0.24, weight: 0.86 },
+      { lon: 2.02, lat: 0.52, rx: 0.14, ry: 0.080, tilt: 0.20, weight: 0.78 },
+      { lon: 2.90, lat: -0.42, rx: 0.18, ry: 0.080, tilt: -0.18, weight: 0.86 }
     ];
 
     const lakes = [
@@ -342,7 +360,7 @@
 
     const warpA = fbm(u * 1.2 + 0.27, v * 1.5 - 0.19, 200100, 5) - 0.5;
     const warpB = fbm(u * 2.4 - 0.11, v * 2.2 + 0.31, 200900, 4) - 0.5;
-    const wlon = wrapPi(lon + warpA * 0.22 + Math.sin(lat * 3.0) * 0.05);
+    const wlon = wrapPi(lon + warpA * 0.22 + Math.sin(lat * 3) * 0.05);
     const wlat = clamp(lat + warpB * 0.12, -Math.PI / 2, Math.PI / 2);
 
     let landScore = -0.55;
@@ -352,8 +370,8 @@
       const e = ellipseScore(wlon, wlat, body);
       if (e > -0.58) {
         const coastNoise =
-          (fbm(u * 3.7 + body.lon * 0.2, v * 4.3 + body.lat * 0.2, 201700, 5) - 0.5) * 0.40 +
-          (fbm(u * 8.4 - body.lon * 0.1, v * 7.2 + body.lat * 0.1, 202500, 4) - 0.5) * 0.15;
+          (fbm(u * 3.7 + body.lon * 0.2, v * 4.3 + body.lat * 0.2, 201700, 5) - 0.5) * 0.42 +
+          (fbm(u * 8.4 - body.lon * 0.1, v * 7.2 + body.lat * 0.1, 202500, 4) - 0.5) * 0.16;
         const score = e * body.weight + coastNoise;
         if (score > landScore) {
           landScore = score;
@@ -366,7 +384,7 @@
     for (const island of islands) {
       const e = ellipseScore(wlon, wlat, island);
       if (e > -0.30) {
-        const islandNoise = (fbm(u * 9.0, v * 9.0, 203300, 3) - 0.5) * 0.28;
+        const islandNoise = (fbm(u * 9.0, v * 9.0, 203300, 3) - 0.5) * 0.30;
         const score = e * island.weight + islandNoise - 0.05;
         islandScore = Math.max(islandScore, score);
         if (score > landScore) {
@@ -377,16 +395,16 @@
     }
 
     let cutScore = 0;
-    for (const cut of oceanCuts) {
+    for (const cut of cuts) {
       const e = ellipseScore(wlon, wlat, cut);
       if (e > 0) cutScore = Math.max(cutScore, smoothstep(0.0, 0.95, e) * cut.weight);
     }
 
     const corridorLine = Math.abs(Math.sin(wlon * 3.4 + Math.sin(wlat * 5.6) * 0.9));
-    const corridor = corridorLine < 0.118 && Math.abs(wlat) < 0.66 ? 0.16 : 0;
+    const corridor = corridorLine < 0.118 && Math.abs(wlat) < 0.66 ? 0.17 : 0;
     const landBeforeCut = landScore;
 
-    landScore -= cutScore * 0.94;
+    landScore -= cutScore * 0.96;
     landScore -= corridor * smoothstep(-0.18, 0.36, landScore);
 
     let lakeScore = 0;
@@ -462,7 +480,6 @@
       routefinderLakeScore: lakeScore,
       routefinderWaterCut: cutScore > 0.26 || corridor > 0.08,
       routefinderArchipelago: bodyClass === "archipelago",
-      routefinderInternal: true,
       isOcean,
       isShelf,
       isBeach,
@@ -476,52 +493,14 @@
     });
   }
 
-  function sampleAssetLandmap(u, v) {
+  function sampleAssetMap(u, v) {
     try {
       if (window.AUDRALIA_LANDMAP?.sampleLandmap) return window.AUDRALIA_LANDMAP.sampleLandmap(u, v);
       if (window.AUDRALIA_LANDMAP?.sample) return window.AUDRALIA_LANDMAP.sample(u, v);
     } catch {
-      setData("audraliaRoutefinderAssetLandmapSampleFailed", "true");
+      setData("audraliaVisibleTextureGuardAssetLandmapFailed", "true");
     }
     return null;
-  }
-
-  function sampleMap(u, v) {
-    const internal = internalRouteMap(u, v);
-    const asset = sampleAssetLandmap(u, v);
-
-    if (!asset || typeof asset !== "object") return internal;
-
-    const assetTerrain = lower(asset.terrainClass || asset.topology || asset.elevation);
-    const assetLand = Boolean(asset.isLand || (!asset.isOcean && !asset.isShelf && assetTerrain && assetTerrain !== "ocean"));
-    const routeWaterCut = internal.routefinderWaterCut && assetLand && internal.landBeforeCut > -0.05;
-    const archipelagoLift = internal.routefinderArchipelago && internal.isLand && Boolean(asset.isOcean || asset.isShelf);
-
-    if (routeWaterCut) {
-      return Object.freeze({
-        ...asset,
-        u,
-        v,
-        terrainClass: internal.isShelf ? "shelf" : "ocean",
-        topology: "routefinder-water-cut",
-        elevation: "sea-level",
-        isOcean: true,
-        isShelf: internal.isShelf,
-        isBeach: false,
-        isLand: false,
-        isInlandWater: false,
-        shelf: Math.max(Number(asset.shelf || 0), internal.shelf),
-        beachEdge: Math.max(Number(asset.beachEdge || 0), internal.beachEdge),
-        routefinderCompanion: internal,
-        routefinderVisualCut: true
-      });
-    }
-
-    if (archipelagoLift) {
-      return Object.freeze({ ...internal, assetCompanion: asset, routefinderVisualIslandLift: true });
-    }
-
-    return Object.freeze({ ...asset, u, v, routefinderCompanion: internal });
   }
 
   function sampleHydrology(map) {
@@ -529,23 +508,20 @@
       if (window.AUDRALIA_HYDROLOGY?.sampleHydrology) return window.AUDRALIA_HYDROLOGY.sampleHydrology(map);
       if (window.AUDRALIA_HYDROLOGY?.sample) return window.AUDRALIA_HYDROLOGY.sample(map);
     } catch {
-      setData("audraliaRoutefinderHydrologySampleFailed", "true");
+      setData("audraliaVisibleTextureGuardHydrologyFailed", "true");
     }
 
-    const base = map.routefinderCompanion || map;
-    const river = ridgeNoise(Number(base.u || 0) * 7.2, Number(base.v || 0) * 5.6, 300100, 4);
-    const lake = Number(base.routefinderLakeScore || 0);
-    const cut = Number(base.routefinderCutScore || 0);
-    const corridor = Number(base.routefinderCorridor || 0);
-    const coast = Number(base.beachEdge || base.coastline || 0);
+    const river = ridgeNoise(Number(map.u || 0) * 7.2, Number(map.v || 0) * 5.6, 300100, 4);
+    const lake = Number(map.routefinderLakeScore || 0);
+    const cut = Number(map.routefinderCutScore || 0);
+    const corridor = Number(map.routefinderCorridor || 0);
+    const coast = Number(map.beachEdge || map.coastline || 0);
 
     return Object.freeze({
-      contract: "routefinder-internal-hydrology",
-      class: base.isInlandWater ? "lake" : cut > 0.32 ? "inlet-edge" : river > 0.70 ? "river" : coast > 0.48 ? "coastal-shelf" : "hydrology-background",
-      zone: base.isInlandWater ? "interior-water" : coast > 0.48 ? "coastal" : "land",
-      form: "routefinder-hydrology-field",
-      isInlandWater: Boolean(base.isInlandWater),
-      isSurfaceWater: Boolean(base.isInlandWater || base.isOcean || base.isShelf),
+      contract: "routefinder-visible-guard-internal-hydrology",
+      class: map.isInlandWater ? "lake" : cut > 0.32 ? "inlet-edge" : river > 0.70 ? "river" : coast > 0.48 ? "coastal-shelf" : "hydrology-background",
+      isInlandWater: Boolean(map.isInlandWater),
+      isSurfaceWater: Boolean(map.isInlandWater || map.isOcean || map.isShelf),
       river,
       lake,
       inlandSea: lake > 0.66 ? lake : 0,
@@ -555,21 +531,11 @@
       inlet: cut,
       estuary: river * coast,
       lagoon: coast * 0.60,
-      coastalShelfWater: Number(base.shelf || 0),
+      coastalShelfWater: Number(map.shelf || 0),
       drainage: river,
       watershed: Math.max(river, coast),
       landCutPressure: Math.max(cut, corridor),
-      surfaceWaterPressure: Math.max(lake, cut, river * 0.58),
-      visualGuidance: {
-        shouldPaintWater: Boolean(base.isInlandWater || lake > 0.50),
-        shouldShapeLand: Boolean(cut > 0.24 || corridor > 0.05),
-        shouldInterruptSolidLandmass: Boolean(cut > 0.28 || corridor > 0.08),
-        shouldSupportWetlandColor: river > 0.64,
-        shouldSupportRiverCorridor: river > 0.64,
-        shouldSupportBayInletBreaks: cut > 0.24,
-        shouldSupportArchipelagoWater: Boolean(base.routefinderArchipelago),
-        shouldSupportInlandWater: lake > 0.30
-      }
+      surfaceWaterPressure: Math.max(lake, cut, river * 0.58)
     });
   }
 
@@ -578,46 +544,75 @@
       if (window.AUDRALIA_LAND_SURFACE?.sampleSurface) return window.AUDRALIA_LAND_SURFACE.sampleSurface(map);
       if (window.AUDRALIA_LAND_SURFACE?.sample) return window.AUDRALIA_LAND_SURFACE.sample(map);
     } catch {
-      setData("audraliaRoutefinderSurfaceSampleFailed", "true");
+      setData("audraliaVisibleTextureGuardSurfaceFailed", "true");
     }
     return null;
   }
 
   function isOceanLike(map) {
-    return Boolean(map?.isOcean || map?.terrainClass === "ocean" || lower(map?.topology).includes("ocean"));
+    return Boolean(map?.isOcean || map?.terrainClass === "ocean" || text(map?.topology).includes("ocean"));
   }
 
   function isShelfLike(map) {
-    return Boolean(map?.isShelf || map?.terrainClass === "shelf" || lower(map?.topology).includes("shelf"));
+    return Boolean(map?.isShelf || map?.terrainClass === "shelf" || text(map?.topology).includes("shelf"));
   }
 
   function isBeachLike(map) {
-    return Boolean(map?.isBeach || map?.terrainClass === "beach" || lower(map?.topology).includes("beach"));
+    return Boolean(map?.isBeach || map?.terrainClass === "beach" || text(map?.topology).includes("beach"));
+  }
+
+  function guardedMap(u, v, mode) {
+    const route = routefinderMap(u, v);
+
+    if (mode !== "enriched") return route;
+
+    const asset = sampleAssetMap(u, v);
+    if (!asset || typeof asset !== "object") return route;
+
+    const assetLand = Boolean(asset.isLand && !asset.isOcean && !asset.isShelf);
+    const routeCut = route.routefinderWaterCut && route.landBeforeCut > -0.05;
+    const routeIsland = route.routefinderArchipelago && route.isLand;
+
+    if (routeCut) return route;
+    if (routeIsland && (asset.isOcean || asset.isShelf)) return route;
+
+    if (assetLand && route.isLand) {
+      return Object.freeze({
+        ...asset,
+        u,
+        v,
+        routefinderCompanion: route,
+        beachEdge: Math.max(Number(asset.beachEdge || 0), route.beachEdge * 0.55),
+        shelf: Math.max(Number(asset.shelf || 0), route.shelf * 0.35)
+      });
+    }
+
+    return route;
   }
 
   function waterColor(map, hydrology, u, v) {
     const shelf = clamp(Number(map.shelf || hydrology.coastalShelfWater || 0), 0, 1);
     const coast = clamp(Number(map.beachEdge || map.coastline || 0), 0, 1);
     const depth = fbm(u * 1.3 + 0.22, v * 1.1 - 0.17, 400100, 5);
-    const wave = fbm(u * 16.0 - 0.10, v * 10.0 + 0.25, 400900, 3);
+    const wave = fbm(u * 16 - 0.10, v * 10 + 0.25, 400900, 3);
     const inland = Boolean(hydrology.isInlandWater || map.isInlandWater || hydrology.lake > 0.55 || hydrology.inlandSea > 0.48);
     const lagoon = clamp(Number(hydrology.lagoon || 0), 0, 1);
     const river = clamp(Number(hydrology.river || 0), 0, 1);
     const bay = clamp(Math.max(Number(hydrology.bay || 0), Number(hydrology.inlet || 0)), 0, 1);
 
-    let color = mixColor(COLORS.deepOcean, COLORS.ocean, smoothstep(0.25, 0.86, depth));
+    let color = mixColor(COLORS.deepOcean, COLORS.ocean, smoothstep(0.22, 0.86, depth));
 
     if (isShelfLike(map) || shelf > 0.20) color = mixColor(color, COLORS.shelf, smoothstep(0.12, 0.86, shelf) * 0.78);
     if (coast > 0.30 || lagoon > 0.20) color = mixColor(color, COLORS.lagoon, clamp(coast * 0.34 + lagoon * 0.42, 0, 0.70));
-    if (inland) color = mixColor(COLORS.blueWater, COLORS.lagoon, clamp(Number(hydrology.lake || 0) * 0.38 + Number(hydrology.inlandSea || 0) * 0.18, 0, 0.50));
+    if (inland) color = mixColor(COLORS.openWater, COLORS.lagoon, clamp(Number(hydrology.lake || 0) * 0.38 + Number(hydrology.inlandSea || 0) * 0.18, 0, 0.50));
     if (river > 0.60 && !isOceanLike(map)) color = mixColor(color, COLORS.river, clamp((river - 0.55) * 0.90, 0, 0.55));
-    if (bay > 0.32) color = mixColor(color, COLORS.blueWater, bay * 0.25);
+    if (bay > 0.32) color = mixColor(color, COLORS.openWater, bay * 0.25);
 
     return shade(color, (wave - 0.5) * 9);
   }
 
-  function fallbackLandColor(map, hydrology, u, v) {
-    const terrain = lower(map.terrainClass || map.topology || map.elevation);
+  function landColor(map, hydrology, u, v, mode) {
+    const terrain = text(map.terrainClass || map.topology || map.elevation);
     const ridge = ridgeNoise(u * 8.0 + 0.17, v * 5.6 - 0.22, 500100, 4);
     const wet = fbm(u * 4.2 - 0.27, v * 3.8 + 0.19, 500900, 4);
     const dry = fbm(u * 2.2 + 0.41, v * 2.6 - 0.31, 501700, 4);
@@ -626,80 +621,84 @@
     let color = mixColor(COLORS.lowland, COLORS.green, wet * 0.42);
     color = mixColor(color, COLORS.highland, dry * 0.34);
 
+    if (mode === "enriched") {
+      const surface = sampleSurface(map);
+      if (surface?.allowed && Array.isArray(surface.color)) {
+        color = mixColor(color, surface.color, 0.38);
+      }
+    }
+
     if (terrain.includes("mountain") || terrain.includes("ridge") || ridge > 0.74) {
       color = mixColor(color, COLORS.mountain, clamp(ridge * 0.50, 0, 0.55));
-      color = shade(color, ridge * 10 - 5);
+      color = shade(color, ridge * 12 - 6);
     }
 
     if (terrain.includes("highland") || terrain.includes("plateau")) color = mixColor(color, COLORS.highland, 0.38);
     if (terrain.includes("wetland") || hydroWet > 0.30) color = mixColor(color, COLORS.wetland, clamp(0.24 + hydroWet * 0.38, 0, 0.62));
     if (terrain.includes("polar") || map.isPolarIce) color = mixColor(color, COLORS.snow, 0.70);
 
-    return shade(color, (fbm(u * 22.0, v * 16.0, 502500, 3) - 0.5) * 16);
+    return shade(color, (fbm(u * 22, v * 16, 502500, 3) - 0.5) * 16);
   }
 
-  function textureColor(map, hydrology, u, v) {
-    const guidance = hydrology?.visualGuidance || {};
-    const river = clamp(Number(hydrology?.river || 0), 0, 1);
-    const lake = clamp(Number(hydrology?.lake || 0), 0, 1);
-    const inlandSea = clamp(Number(hydrology?.inlandSea || 0), 0, 1);
-    const waterPressure = clamp(Number(hydrology?.surfaceWaterPressure || 0), 0, 1);
-    const landCut = clamp(Number(hydrology?.landCutPressure || 0), 0, 1);
-    const hydroClass = lower(hydrology?.class);
+  function pixelColor(map, hydrology, u, v, mode) {
+    const river = clamp(Number(hydrology.river || 0), 0, 1);
+    const lake = clamp(Number(hydrology.lake || 0), 0, 1);
+    const inlandSea = clamp(Number(hydrology.inlandSea || 0), 0, 1);
+    const waterPressure = clamp(Number(hydrology.surfaceWaterPressure || 0), 0, 1);
+    const landCut = clamp(Number(hydrology.landCutPressure || 0), 0, 1);
+    const hydroClass = text(hydrology.class);
 
-    if (isOceanLike(map) || isShelfLike(map)) return waterColor(map, hydrology || {}, u, v);
+    if (isOceanLike(map) || isShelfLike(map)) return waterColor(map, hydrology, u, v);
+
     if (lake > 0.66 || inlandSea > 0.58 || map.isInlandWater || hydroClass === "lake" || hydroClass === "inland-sea") {
-      return waterColor({ ...map, isInlandWater: true }, hydrology || {}, u, v);
+      return waterColor({ ...map, isInlandWater: true }, hydrology, u, v);
     }
 
-    if ((guidance.shouldPaintWater || hydroClass === "river") && river > 0.70) {
-      const line = ridgeNoise(u * 18.0 - river, v * 14.0 + river, 503300, 3);
-      if (line > 0.70) return waterColor({ ...map, isInlandWater: true }, hydrology || {}, u, v);
+    if (river > 0.70) {
+      const line = ridgeNoise(u * 18 - river, v * 14 + river, 503300, 3);
+      if (line > 0.70) return waterColor({ ...map, isInlandWater: true }, hydrology, u, v);
     }
 
-    if ((guidance.shouldInterruptSolidLandmass || landCut > 0.58) && waterPressure > 0.48) {
-      return waterColor({ ...map, isInlandWater: true }, hydrology || {}, u, v);
+    if (landCut > 0.58 && waterPressure > 0.48) {
+      return waterColor({ ...map, isInlandWater: true }, hydrology, u, v);
     }
 
     if (isBeachLike(map)) {
       let beach = mixColor(COLORS.beach, COLORS.wetBeach, clamp(Number(map.beachEdge || 0), 0, 1) * 0.34);
       beach = mixColor(beach, COLORS.lagoon, clamp(Number(map.shelf || 0), 0, 1) * 0.18);
-      return shade(beach, (fbm(u * 20.0, v * 14.0, 504100, 3) - 0.5) * 10);
+      return shade(beach, (fbm(u * 20, v * 14, 504100, 3) - 0.5) * 10);
     }
 
-    const surface = sampleSurface(map);
-    if (surface?.allowed && Array.isArray(surface.color)) {
-      let color = surface.color;
-      if (Number(hydrology?.wetland || 0) > 0.48 || Number(hydrology?.delta || 0) > 0.46) {
-        color = mixColor(color, COLORS.wetland, clamp(Number(hydrology.wetland || 0) * 0.30 + Number(hydrology.delta || 0) * 0.22, 0, 0.42));
-      }
-      return shade(color, (fbm(u * 22.0 + 0.1, v * 17.0 - 0.2, 504900, 3) - 0.5) * 10);
-    }
-
-    return fallbackLandColor(map, hydrology || {}, u, v);
+    return landColor(map, hydrology, u, v, mode);
   }
 
-  function buildTexture(width, height, source) {
+  function buildTexture(mode) {
+    const width = SETTINGS.textureWidth;
+    const height = SETTINGS.textureHeight;
     const data = new Uint8ClampedArray(width * height * 4);
     let landPixels = 0;
     let waterPixels = 0;
-    let surfaceReads = 0;
-    let hydrologyReads = 0;
+    let totalLuma = 0;
+    let minLuma = 255;
+    let maxLuma = 0;
 
     for (let y = 0; y < height; y += 1) {
       const v = y / Math.max(1, height - 1);
+
       for (let x = 0; x < width; x += 1) {
         const u = x / Math.max(1, width - 1);
-        const map = sampleMap(u, v);
-        const hydrology = sampleHydrology(map);
-        const color = textureColor(map, hydrology, u, v);
+        const map = guardedMap(u, v, mode);
+        const hydro = sampleHydrology(map);
+        const color = pixelColor(map, hydro, u, v, mode);
         const index = (y * width + x) * 4;
+        const luma = color[0] * 0.2126 + color[1] * 0.7152 + color[2] * 0.0722;
 
-        if (isOceanLike(map) || isShelfLike(map) || map.isInlandWater || hydrology?.isSurfaceWater) waterPixels += 1;
+        if (isOceanLike(map) || isShelfLike(map) || map.isInlandWater || hydro.isSurfaceWater) waterPixels += 1;
         else landPixels += 1;
 
-        if (hydrology) hydrologyReads += 1;
-        if (window.AUDRALIA_LAND_SURFACE) surfaceReads += 1;
+        totalLuma += luma;
+        minLuma = Math.min(minLuma, luma);
+        maxLuma = Math.max(maxLuma, luma);
 
         data[index] = clamp(Math.round(color[0]), 0, 255);
         data[index + 1] = clamp(Math.round(color[1]), 0, 255);
@@ -709,21 +708,30 @@
     }
 
     const total = Math.max(1, landPixels + waterPixels);
+    const landRatio = landPixels / total;
+    const waterRatio = waterPixels / total;
+    const contrast = maxLuma - minLuma;
+
     return Object.freeze({
       width,
       height,
       data,
-      source,
-      landRatio: Number((landPixels / total).toFixed(4)),
-      waterRatio: Number((waterPixels / total).toFixed(4)),
-      hydrologyReads,
-      surfaceReads
+      source: mode,
+      landRatio: Number(landRatio.toFixed(4)),
+      waterRatio: Number(waterRatio.toFixed(4)),
+      averageLuma: Number((totalLuma / total).toFixed(2)),
+      contrast: Number(contrast.toFixed(2)),
+      guardPassed:
+        landRatio >= SETTINGS.minLandRatio &&
+        landRatio <= SETTINGS.maxLandRatio &&
+        waterRatio >= SETTINGS.minWaterRatio &&
+        contrast >= SETTINGS.minContrast
     });
   }
 
   function buildCloudTexture() {
-    const width = SETTINGS.cloudTextureWidth;
-    const height = SETTINGS.cloudTextureHeight;
+    const width = SETTINGS.cloudWidth;
+    const height = SETTINGS.cloudHeight;
     const data = new Uint8ClampedArray(width * height);
 
     for (let y = 0; y < height; y += 1) {
@@ -741,14 +749,14 @@
   }
 
   if (!mount) {
-    publishProof("mount-missing", "Mount missing: #audraliaCanvasMount not found");
+    publish("mount-missing", "Mount missing: #audraliaCanvasMount not found");
     setText(statusNodes.mount, "mount missing");
     if (stage) stage.setAttribute("data-loader-state", "fallback");
     return;
   }
 
   mount.textContent = "";
-  mount.dataset.audraliaRoutefinderPairMount = CONTRACT;
+  mount.dataset.audraliaRoutefinderVisibleTextureGuard = CONTRACT;
   mount.dataset.audraliaContract = CONTRACT;
   mount.dataset.generatedImage = "false";
   mount.dataset.graphicBox = "false";
@@ -763,9 +771,9 @@
   });
 
   const canvas = document.createElement("canvas");
-  canvas.setAttribute("aria-label", "Audralia RouteFinder boot-proof active globe render");
+  canvas.setAttribute("aria-label", "Audralia RouteFinder visible texture guard globe");
   canvas.dataset.audraliaVisibleCanvas = "true";
-  canvas.dataset.audraliaGlobe = "routefinder-boot-proof-pair";
+  canvas.dataset.audraliaGlobe = "routefinder-visible-texture-guard";
   canvas.dataset.audraliaContract = CONTRACT;
   canvas.dataset.audraliaReceipt = RECEIPT;
   canvas.dataset.generatedImage = "false";
@@ -786,12 +794,12 @@
 
   mount.appendChild(canvas);
 
-  const context = canvas.getContext("2d", { alpha: true, desynchronized: true });
-  const sphereBuffer = document.createElement("canvas");
-  const sphereContext = sphereBuffer.getContext("2d", { alpha: true, willReadFrequently: true });
+  const ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
+  const sphere = document.createElement("canvas");
+  const sphereCtx = sphere.getContext("2d", { alpha: true, willReadFrequently: true });
 
-  if (!context || !sphereContext) {
-    publishProof("canvas-context-failed", "Canvas context failed");
+  if (!ctx || !sphereCtx) {
+    publish("canvas-context-failed", "Canvas context failed");
     setText(statusNodes.mount, "canvas context failed");
     if (stage) stage.setAttribute("data-loader-state", "fallback");
     return;
@@ -802,8 +810,8 @@
     height: 1,
     dpr: 1,
     radius: 180,
-    centerX: 0,
-    centerY: 0,
+    cx: 0,
+    cy: 0,
     sphereSize: 360,
     rotation: -0.92,
     targetRotation: -0.92,
@@ -819,10 +827,11 @@
     visible: true,
     reducedMotion: window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     texture: null,
-    textureSource: "pending",
-    cloudTexture: buildCloudTexture(),
-    assetStatus: {},
-    chainReady: false
+    baseTexture: null,
+    enrichedTexture: null,
+    cloud: buildCloudTexture(),
+    activeTextureSource: "pending",
+    assetStatus: {}
   };
 
   function resizeCanvas() {
@@ -841,13 +850,13 @@
     canvas.style.width = `${width}px`;
     canvas.style.height = `${height}px`;
 
-    state.radius = Math.min(canvas.width, canvas.height) * 0.365;
-    state.centerX = canvas.width * 0.5;
-    state.centerY = canvas.height * 0.5;
+    state.radius = Math.min(canvas.width, canvas.height) * 0.368;
+    state.cx = canvas.width * 0.50;
+    state.cy = canvas.height * 0.50;
     state.sphereSize = Math.min(SETTINGS.maxSphereSize, Math.max(SETTINGS.minSphereSize, Math.floor(state.radius * 2)));
 
-    sphereBuffer.width = state.sphereSize;
-    sphereBuffer.height = state.sphereSize;
+    sphere.width = state.sphereSize;
+    sphere.height = state.sphereSize;
   }
 
   function sampleTexture(texture, lon, lat) {
@@ -860,39 +869,38 @@
   }
 
   function sampleCloud(lon, lat, drift) {
-    const texture = state.cloudTexture;
     const u = wrap01((wrapPi(lon + drift) + Math.PI) / TAU);
     const v = clamp(0.5 - lat / Math.PI, 0, 0.999999);
-    const x = Math.floor(u * texture.width) % texture.width;
-    const y = clamp(Math.floor(v * texture.height), 0, texture.height - 1);
-    return texture.data[y * texture.width + x] / 255;
+    const x = Math.floor(u * state.cloud.width) % state.cloud.width;
+    const y = clamp(Math.floor(v * state.cloud.height), 0, state.cloud.height - 1);
+    return state.cloud.data[y * state.cloud.width + x] / 255;
   }
 
   function renderBackground() {
     const w = canvas.width;
     const h = canvas.height;
 
-    context.clearRect(0, 0, w, h);
+    ctx.clearRect(0, 0, w, h);
 
-    const bg = context.createRadialGradient(w * 0.50, h * 0.45, w * 0.06, w * 0.50, h * 0.52, w * 0.78);
-    bg.addColorStop(0, "rgba(24, 58, 70, 0.96)");
-    bg.addColorStop(0.34, "rgba(8, 22, 38, 0.98)");
-    bg.addColorStop(1, "rgba(1, 4, 13, 1)");
-    context.fillStyle = bg;
-    context.fillRect(0, 0, w, h);
+    const bg = ctx.createRadialGradient(w * 0.50, h * 0.45, w * 0.06, w * 0.50, h * 0.52, w * 0.78);
+    bg.addColorStop(0, "rgba(24,58,70,.96)");
+    bg.addColorStop(0.36, "rgba(8,22,38,.98)");
+    bg.addColorStop(1, "rgba(1,4,13,1)");
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, w, h);
 
-    context.save();
-    context.globalAlpha = 0.40;
+    ctx.save();
+    ctx.globalAlpha = 0.38;
     for (let i = 0; i < 76; i += 1) {
       const x = hash(i + 11, 4, 700100) * w;
       const y = hash(i + 17, 7, 700900) * h;
       const r = (0.6 + hash(i, 9, 701700) * 1.5) * state.dpr;
-      context.beginPath();
-      context.arc(x, y, r, 0, TAU);
-      context.fillStyle = "rgba(210, 248, 230, 0.13)";
-      context.fill();
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, TAU);
+      ctx.fillStyle = "rgba(210,248,230,.13)";
+      ctx.fill();
     }
-    context.restore();
+    ctx.restore();
   }
 
   function renderSphere(now) {
@@ -901,7 +909,7 @@
 
     const size = state.sphereSize;
     const radius = size * 0.5;
-    const image = sphereContext.createImageData(size, size);
+    const image = sphereCtx.createImageData(size, size);
     const out = image.data;
     const sinTilt = Math.sin(state.tilt);
     const cosTilt = Math.cos(state.tilt);
@@ -910,6 +918,7 @@
 
     for (let y = 0; y < size; y += 1) {
       const ny = (y - radius) / radius;
+
       for (let x = 0; x < size; x += 1) {
         const nx = (x - radius) / radius;
         const d2 = nx * nx + ny * ny;
@@ -929,28 +938,31 @@
         const color = sampleTexture(texture, lon, lat);
         const normal = normalize3([x3, y3, z3]);
         const lightDot = clamp(normal[0] * light[0] + normal[1] * light[1] + normal[2] * light[2], -1, 1);
-        const daylight = 0.32 + Math.max(0, lightDot) * 0.86;
+        const daylight = 0.36 + Math.max(0, lightDot) * 0.90;
         const terminator = smoothstep(-0.46, 0.12, lightDot);
         const limb = Math.pow(1 - z, 1.75);
         const rim = Math.pow(1 - z, 3.0);
-        const cloud = sampleCloud(lon, lat, cloudDrift) * smoothstep(-0.82, 0.56, lightDot) * 0.17;
+        const cloud = sampleCloud(lon, lat, cloudDrift) * smoothstep(-0.82, 0.56, lightDot) * 0.13;
 
         let r = color[0] * daylight;
         let g = color[1] * daylight;
         let b = color[2] * daylight;
 
-        r = lerp(r * 0.46, r, terminator);
-        g = lerp(g * 0.54, g, terminator);
-        b = lerp(b * 0.72, b, terminator);
+        r = lerp(r * 0.48, r, terminator);
+        g = lerp(g * 0.56, g, terminator);
+        b = lerp(b * 0.74, b, terminator);
+
         r = lerp(r, COLORS.cloud[0], cloud);
         g = lerp(g, COLORS.cloud[1], cloud);
         b = lerp(b, COLORS.cloud[2], cloud);
-        r = lerp(r, COLORS.atmosphere[0], limb * 0.24);
-        g = lerp(g, COLORS.atmosphere[1], limb * 0.20);
-        b = lerp(b, COLORS.atmosphere[2], limb * 0.26);
-        r = lerp(r, COLORS.rim[0], rim * 0.35);
-        g = lerp(g, COLORS.rim[1], rim * 0.30);
-        b = lerp(b, COLORS.rim[2], rim * 0.34);
+
+        r = lerp(r, COLORS.atmosphere[0], limb * 0.18);
+        g = lerp(g, COLORS.atmosphere[1], limb * 0.16);
+        b = lerp(b, COLORS.atmosphere[2], limb * 0.20);
+
+        r = lerp(r, COLORS.rim[0], rim * 0.30);
+        g = lerp(g, COLORS.rim[1], rim * 0.26);
+        b = lerp(b, COLORS.rim[2], rim * 0.30);
 
         out[index] = clamp(Math.round(r), 0, 255);
         out[index + 1] = clamp(Math.round(g), 0, 255);
@@ -959,60 +971,68 @@
       }
     }
 
-    sphereContext.putImageData(image, 0, 0);
+    sphereCtx.putImageData(image, 0, 0);
   }
 
   function draw(now = performance.now()) {
     renderBackground();
 
     const glowRadius = state.radius * 1.30;
-    const glow = context.createRadialGradient(state.centerX, state.centerY, state.radius * 0.48, state.centerX, state.centerY, glowRadius);
-    glow.addColorStop(0, "rgba(158,240,191,0.03)");
-    glow.addColorStop(0.52, "rgba(141,216,255,0.10)");
-    glow.addColorStop(0.78, "rgba(158,240,191,0.12)");
+    const glow = ctx.createRadialGradient(state.cx, state.cy, state.radius * 0.48, state.cx, state.cy, glowRadius);
+    glow.addColorStop(0, "rgba(158,240,191,.03)");
+    glow.addColorStop(0.52, "rgba(141,216,255,.10)");
+    glow.addColorStop(0.78, "rgba(158,240,191,.12)");
     glow.addColorStop(1, "rgba(158,240,191,0)");
-    context.fillStyle = glow;
-    context.beginPath();
-    context.arc(state.centerX, state.centerY, glowRadius, 0, TAU);
-    context.fill();
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(state.cx, state.cy, glowRadius, 0, TAU);
+    ctx.fill();
 
     renderSphere(now);
 
     const diameter = state.radius * 2;
-    context.drawImage(sphereBuffer, state.centerX - state.radius, state.centerY - state.radius, diameter, diameter);
+    ctx.drawImage(sphere, state.cx - state.radius, state.cy - state.radius, diameter, diameter);
 
-    context.save();
-    context.globalCompositeOperation = "screen";
-    context.globalAlpha = 0.24;
-    const spec = context.createRadialGradient(
-      state.centerX - state.radius * 0.24,
-      state.centerY - state.radius * 0.38,
+    ctx.save();
+    ctx.globalCompositeOperation = "screen";
+    ctx.globalAlpha = 0.20;
+    const spec = ctx.createRadialGradient(
+      state.cx - state.radius * 0.24,
+      state.cy - state.radius * 0.38,
       0,
-      state.centerX - state.radius * 0.24,
-      state.centerY - state.radius * 0.38,
+      state.cx - state.radius * 0.24,
+      state.cy - state.radius * 0.38,
       state.radius * 0.74
     );
-    spec.addColorStop(0, "rgba(255,255,255,0.62)");
-    spec.addColorStop(0.22, "rgba(214,255,235,0.18)");
+    spec.addColorStop(0, "rgba(255,255,255,.58)");
+    spec.addColorStop(0.22, "rgba(214,255,235,.16)");
     spec.addColorStop(1, "rgba(255,255,255,0)");
-    context.fillStyle = spec;
-    context.beginPath();
-    context.arc(state.centerX, state.centerY, state.radius, 0, TAU);
-    context.fill();
-    context.restore();
+    ctx.fillStyle = spec;
+    ctx.beginPath();
+    ctx.arc(state.cx, state.cy, state.radius, 0, TAU);
+    ctx.fill();
+    ctx.restore();
   }
 
-  function publishTextureStatus(phase) {
-    const texture = state.texture || {};
-    setData("audraliaRoutefinderTextureSource", state.textureSource);
-    setData("audraliaRoutefinderTextureLandRatio", texture.landRatio ?? "pending");
-    setData("audraliaRoutefinderTextureWaterRatio", texture.waterRatio ?? "pending");
-    setData("audraliaRoutefinderHydrologyReads", texture.hydrologyReads ?? "pending");
-    setData("audraliaRoutefinderSurfaceReads", texture.surfaceReads ?? "pending");
-    canvas.dataset.audraliaTextureSource = state.textureSource;
-    canvas.dataset.audraliaTextureLandRatio = String(texture.landRatio ?? "pending");
-    canvas.dataset.audraliaTextureWaterRatio = String(texture.waterRatio ?? "pending");
-    publishProof(phase, `RouteFinder mounted · ${state.textureSource}`);
+  function publishTexture(texture, phase) {
+    state.texture = texture;
+    state.activeTextureSource = texture.source;
+
+    canvas.dataset.audraliaTextureSource = texture.source;
+    canvas.dataset.audraliaTextureLandRatio = String(texture.landRatio);
+    canvas.dataset.audraliaTextureWaterRatio = String(texture.waterRatio);
+    canvas.dataset.audraliaTextureContrast = String(texture.contrast);
+    canvas.dataset.audraliaVisibleTextureGuardPassed = String(texture.guardPassed);
+
+    setData("audraliaRoutefinderTextureSource", texture.source);
+    setData("audraliaRoutefinderTextureLandRatio", texture.landRatio);
+    setData("audraliaRoutefinderTextureWaterRatio", texture.waterRatio);
+    setData("audraliaRoutefinderTextureContrast", texture.contrast);
+    setData("audraliaRoutefinderVisibleTextureGuardPassed", texture.guardPassed);
+    setData("audraliaRoutefinderActiveTextureSource", texture.source);
+
+    publish(phase, `RouteFinder mounted · ${texture.source}`);
+    setText(statusNodes.notice, `Visible texture guard active · ${texture.source}`);
   }
 
   function pointerDown(event) {
@@ -1023,6 +1043,7 @@
     state.startTilt = state.targetTilt;
     canvas.style.cursor = "grabbing";
     if (event.cancelable) event.preventDefault();
+
     try {
       canvas.setPointerCapture(event.pointerId);
     } catch {}
@@ -1031,8 +1052,10 @@
   function pointerMove(event) {
     if (!state.pointerActive) return;
     if (event.cancelable) event.preventDefault();
+
     const dx = event.clientX - state.startX;
     const dy = event.clientY - state.startY;
+
     state.targetRotation = state.startRotation + dx * 0.010;
     state.targetTilt = clamp(state.startTilt + dy * 0.004, -0.56, 0.46);
   }
@@ -1040,6 +1063,7 @@
   function pointerUp(event) {
     state.pointerActive = false;
     canvas.style.cursor = "grab";
+
     try {
       canvas.releasePointerCapture(event.pointerId);
     } catch {}
@@ -1049,7 +1073,9 @@
     const dt = Math.min(64, now - state.lastTime);
     state.lastTime = now;
 
-    if (!state.reducedMotion && !state.pointerActive) state.targetRotation += dt * 0.000035;
+    if (!state.reducedMotion && !state.pointerActive) {
+      state.targetRotation += dt * 0.000035;
+    }
 
     state.rotation += (state.targetRotation - state.rotation) * 0.16;
     state.tilt += (state.targetTilt - state.tilt) * 0.14;
@@ -1092,41 +1118,54 @@
     });
   }
 
-  async function loadOptionalAssetsAndRebuild() {
-    setText(statusNodes.notice, "RouteFinder mounted · loading optional asset authorities");
+  async function enrichWithoutReplacingVisibleGuard() {
+    setText(statusNodes.notice, "Visible texture guard active · loading optional asset authorities");
     await Promise.allSettled(OPTIONAL_ASSETS.map(loadAsset));
 
-    state.chainReady = true;
-    state.texture = buildTexture(SETTINGS.assetTextureWidth, SETTINGS.assetTextureHeight, "asset-chain-with-routefinder-override");
-    state.textureSource = "asset-chain-with-routefinder-override";
+    state.enrichedTexture = buildTexture("enriched");
     setData("audraliaRoutefinderAssetStatus", JSON.stringify(state.assetStatus));
-    setData("audraliaRoutefinderChainReady", "true");
-    publishTextureStatus("asset-chain-texture-ready");
-    draw();
+    setData("audraliaRoutefinderEnrichedLandRatio", state.enrichedTexture.landRatio);
+    setData("audraliaRoutefinderEnrichedWaterRatio", state.enrichedTexture.waterRatio);
+    setData("audraliaRoutefinderEnrichedContrast", state.enrichedTexture.contrast);
+    setData("audraliaRoutefinderEnrichedGuardPassed", state.enrichedTexture.guardPassed);
+
+    if (state.enrichedTexture.guardPassed) {
+      publishTexture(state.enrichedTexture, "enriched-texture-guard-passed");
+      return;
+    }
+
+    setData("audraliaRoutefinderEnrichedTextureRejected", "true");
+    setData("audraliaRoutefinderRejectionReason", "asset_chain_texture_failed_visible_guard");
+    publishTexture(state.baseTexture, "asset-chain-rejected-visible-guard-preserved");
   }
 
   function appendReceipt() {
-    const prior = document.getElementById("audralia-routefinder-boot-proof-pair-js-receipt");
+    const prior = document.getElementById("audralia-routefinder-visible-texture-guard-receipt");
     if (prior) prior.remove();
 
     const receipt = document.createElement("template");
-    receipt.id = "audralia-routefinder-boot-proof-pair-js-receipt";
+    receipt.id = "audralia-routefinder-visible-texture-guard-receipt";
     receipt.setAttribute("data-route-receipt", "");
     receipt.innerHTML = `
 ${CONTRACT}
 receipt=${RECEIPT}
-pair=${PAIR}
 previous=${PREVIOUS_CONTRACT}
+pair_context=${PAIR_CONTEXT}
 version=${VERSION}
 route=${ROUTE}
 world=${WORLD}
 target_file=/showroom/globe/audralia/index.js
 mount=#audraliaCanvasMount
-js_execution_proof=true
-canvas_mount_proof=true
-visible_fallback_texture=true
-asset_chain_optional_rebuild=true
-routefinder_override=true
+boot_proof_preserved=true
+html_loaded_gate_preserved=true
+script_loaded_gate_preserved=true
+index_js_executed_gate_preserved=true
+canvas_mounted_gate_preserved=true
+visible_texture_guard=true
+routefinder_first_texture=true
+asset_chain_secondary_only=true
+asset_chain_may_not_replace_if_low_contrast=true
+asset_chain_may_not_replace_if_land_water_ratio_invalid=true
 organic_landform=true
 hydrology_visible=true
 ocean_dominant=true
@@ -1145,23 +1184,25 @@ visual_pass_claimed=false
   function boot() {
     if (stage) {
       stage.setAttribute("data-loader-state", "mounted");
-      stage.dataset.audraliaRoutefinderPair = CONTRACT;
+      stage.dataset.audraliaRoutefinderVisibleTextureGuard = CONTRACT;
     }
 
     setText(statusNodes.mount, "mount found · canvas mounted");
-    setText(statusNodes.notice, "RouteFinder mounted · visible fallback texture active");
+    setText(statusNodes.script, "script loaded");
+    setText(statusNodes.html, "HTML loaded");
 
     resizeCanvas();
-    state.texture = buildTexture(SETTINGS.fallbackTextureWidth, SETTINGS.fallbackTextureHeight, "routefinder-visible-fallback");
-    state.textureSource = "routefinder-visible-fallback";
-    publishTextureStatus("visible-fallback-texture-ready");
+
+    state.baseTexture = buildTexture("routefinder-visible-guard");
+    publishTexture(state.baseTexture, "routefinder-visible-guard-ready");
+
     appendReceipt();
     draw();
     window.requestAnimationFrame(tick);
 
-    loadOptionalAssetsAndRebuild().catch((error) => {
-      setData("audraliaRoutefinderOptionalAssetError", error instanceof Error ? error.message : String(error));
-      publishProof("optional-assets-held", "RouteFinder mounted · optional assets held");
+    enrichWithoutReplacingVisibleGuard().catch((error) => {
+      setData("audraliaVisibleTextureGuardEnrichmentError", error instanceof Error ? error.message : String(error));
+      publishTexture(state.baseTexture, "enrichment-held-visible-guard-preserved");
     });
   }
 
@@ -1170,10 +1211,15 @@ visual_pass_claimed=false
   canvas.addEventListener("pointerup", pointerUp, { passive: true });
   canvas.addEventListener("pointercancel", pointerUp, { passive: true });
   canvas.addEventListener("lostpointercapture", pointerUp, { passive: true });
-  window.addEventListener("resize", () => {
-    resizeCanvas();
-    draw();
-  }, { passive: true });
+
+  window.addEventListener(
+    "resize",
+    () => {
+      resizeCanvas();
+      draw();
+    },
+    { passive: true }
+  );
 
   if ("IntersectionObserver" in window) {
     const observer = new IntersectionObserver(
@@ -1188,35 +1234,43 @@ visual_pass_claimed=false
   window.AUDRALIA_ROUTEFINDER = Object.freeze({
     contract: CONTRACT,
     receipt: RECEIPT,
-    pair: PAIR,
     previousContract: PREVIOUS_CONTRACT,
+    pairContext: PAIR_CONTEXT,
     version: VERSION,
     route: ROUTE,
     world: WORLD,
-    sampleMap,
-    sampleHydrology,
+    sampleMap: routefinderMap,
     buildTexture,
-    getStatus: () => Object.freeze({
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      pair: PAIR,
-      mounted: true,
-      chainReady: state.chainReady,
-      textureSource: state.textureSource,
-      assetStatus: state.assetStatus,
-      texture: state.texture
-        ? {
-            width: state.texture.width,
-            height: state.texture.height,
-            source: state.texture.source,
-            landRatio: state.texture.landRatio,
-            waterRatio: state.texture.waterRatio
-          }
-        : null,
-      generatedImage: false,
-      graphicBox: false,
-      visualPassClaimed: false
-    })
+    getStatus: () =>
+      Object.freeze({
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        mounted: true,
+        visibleTextureGuard: true,
+        activeTextureSource: state.activeTextureSource,
+        baseTexture: state.baseTexture
+          ? {
+              source: state.baseTexture.source,
+              landRatio: state.baseTexture.landRatio,
+              waterRatio: state.baseTexture.waterRatio,
+              contrast: state.baseTexture.contrast,
+              guardPassed: state.baseTexture.guardPassed
+            }
+          : null,
+        enrichedTexture: state.enrichedTexture
+          ? {
+              source: state.enrichedTexture.source,
+              landRatio: state.enrichedTexture.landRatio,
+              waterRatio: state.enrichedTexture.waterRatio,
+              contrast: state.enrichedTexture.contrast,
+              guardPassed: state.enrichedTexture.guardPassed
+            }
+          : null,
+        assetStatus: state.assetStatus,
+        generatedImage: false,
+        graphicBox: false,
+        visualPassClaimed: false
+      })
   });
 
   window.AUDRALIA_ROUTEFINDER_RECEIPT = window.AUDRALIA_ROUTEFINDER.getStatus();
@@ -1224,8 +1278,8 @@ visual_pass_claimed=false
   try {
     boot();
   } catch (error) {
-    setData("audraliaRoutefinderBootError", error instanceof Error ? error.message : String(error));
-    publishProof("boot-error", "RouteFinder boot error");
+    setData("audraliaVisibleTextureGuardBootError", error instanceof Error ? error.message : String(error));
+    publish("boot-error", "RouteFinder visible texture guard boot error");
     if (stage) stage.setAttribute("data-loader-state", "fallback");
   }
 })();

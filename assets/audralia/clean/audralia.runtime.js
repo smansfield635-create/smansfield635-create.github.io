@@ -1,729 +1,542 @@
-// /assets/audralia/clean/audralia.runtime.js
-// AUDRALIA_CLEAN_CANVAS_RUNTIME_TNT_v1
+// /assets/audralia/audralia.runtime.js
+// AUDRALIA_G2_5_ESM_LEGACY_RUNTIME_TO_CLEAN_PARENT_SHIM_TNT_v1
 // Full-file replacement.
-// File 13 of 16.
-// Planet Audralia runtime / motion-only authority.
-// Purpose:
-// - Establishes Audralia-specific runtime motion authority.
-// - Owns spin, glide, frame pacing, resize state, reduced-motion handling, timing state, and motion snapshots.
-// - Provides motion state to controls, canvas, and engine without owning their responsibilities.
-// - Does not create land/ocean footprint.
-// - Does not create water behavior.
-// - Does not create elevation.
-// - Does not create climate fields.
-// - Does not create biome categories.
-// - Does not synthesize surface material.
-// - Does not create atmosphere/weather.
-// - Does not attach pointer/touch listeners.
-// - Does not render canvas.
-// - Does not own controls, canvas composition, route bridge, or HTML shell.
-// No generated image. No GraphicBox. No visual-pass claim.
+// Purpose: preserve the legacy ESM runtime route contract while delegating visible authority to the clean-canvas parent engine.
+// Target only: /assets/audralia/audralia.runtime.js
+// Delegates to: /assets/audralia/clean/audralia.engine.js
+// Does not own: continents, motion, sky, terrain truth, route HTML, route bridge JS, parent Globe, Characters, Gauges, Showroom, generated image, GraphicBox, or visual-pass claim.
 
-(() => {
-  "use strict";
+const CONTRACT = "AUDRALIA_G2_5_ESM_LEGACY_RUNTIME_TO_CLEAN_PARENT_SHIM_TNT_v1";
+const FAMILY = "AUDRALIA_G2_5_SIMPLE_ENGINE_CHILD_SPLIT_TNT_v1";
+const TARGET = "/assets/audralia/audralia.runtime.js";
+const CLEAN_PARENT_PATH = "/assets/audralia/clean/audralia.engine.js";
+const ROUTE = "/showroom/globe/audralia/";
 
-  const CONTRACT = "AUDRALIA_CLEAN_CANVAS_RUNTIME_TNT_v1";
-  const RECEIPT = "AUDRALIA_CLEAN_CANVAS_RUNTIME_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_CLEAN_CANVAS_ATMOSPHERE_TNT_v1";
-  const VERSION = "2026-05-20.audralia-clean-canvas-runtime-v1";
+const GLOBAL_PARENT_KEYS = [
+  "AUDRALIA_ENGINE",
+  "AUDRALIA_CLEAN_CANVAS_ENGINE",
+  "AUDRALIA_CLEAN_CANVAS_AUTHORITY",
+  "AUDRALIA_CLEAN_ENGINE_PARENT"
+];
 
-  const FILE_NUMBER = 13;
-  const PRIMARY_NODE = 13;
-  const SUBNODE_RANGE = Object.freeze([193, 208]);
+const state = {
+  contract: CONTRACT,
+  family: FAMILY,
+  target: TARGET,
+  route: ROUTE,
+  shimActive: true,
+  parentRequested: false,
+  parentLoaded: false,
+  parentDelegated: false,
+  mounted: false,
+  mountCalled: false,
+  formVisible: false,
+  ready: false,
+  errors: [],
+  lastScope: "created",
+  parentStatus: null
+};
 
-  const UNIVERSAL_ANCHOR = "/showroom/globe/";
-  const AUDRALIA_ROUTE = "/showroom/globe/audralia/";
-  const H_EARTH_ROUTE = "/showroom/globe/h-earth/";
+let parentPromise = null;
+let lastMountInput = null;
+let lastMountOptions = null;
 
-  const PHI = 1.618033988749895;
-  const TAU = Math.PI * 2;
-  const DEFAULT_DPR_CAP = 1.65;
+function hasWindow() {
+  return typeof window !== "undefined";
+}
 
-  const RUNTIME_TARGETS = Object.freeze({
-    spin: true,
-    glide: true,
-    framePacing: true,
-    resizeState: true,
-    reducedMotionHandling: true,
-    timingState: true,
-    motionSnapshots: true,
-    ownsMotionOnly: true,
-    ownsControls: false,
-    ownsCanvas: false,
-    ownsRoute: false,
-    ownsHtml: false
+function hasDocument() {
+  return typeof document !== "undefined";
+}
+
+function nowIso() {
+  try {
+    return new Date().toISOString();
+  } catch (_error) {
+    return "";
+  }
+}
+
+function recordError(scope, error) {
+  const message = error && error.message ? error.message : String(error);
+  state.errors.push({
+    scope,
+    message,
+    time: nowIso()
   });
+  publishReceipt();
+}
 
-  const DEFAULTS = Object.freeze({
-    rotation: -0.88,
-    tilt: -0.11,
-    targetRotation: -0.88,
-    targetTilt: -0.11,
-    minTilt: -0.58,
-    maxTilt: 0.48,
-    autoSpinRadiansPerMs: 0.000035,
-    glideStrength: 0.155,
-    tiltGlideStrength: 0.135,
-    frameBudgetMs: 42,
-    maxDeltaMs: 64,
-    idleSettleEpsilon: 0.00005,
-    reducedMotionAutoSpin: false,
-    width: 1,
-    height: 1,
-    dpr: 1,
-    radius: 180,
-    cx: 0,
-    cy: 0,
-    sphereSize: 420,
-    paused: false,
-    visible: true,
-    autoSpin: true
+function readParent() {
+  if (!hasWindow()) return null;
+
+  for (const key of GLOBAL_PARENT_KEYS) {
+    const value = window[key];
+    if (value && value !== api) return value;
+  }
+
+  return null;
+}
+
+function scriptAlreadyLoaded(src) {
+  if (!hasDocument()) return false;
+
+  return Array.from(document.scripts).some((script) => {
+    const raw = script.getAttribute("src") || "";
+    return raw === src || raw.startsWith(`${src}?`) || raw.endsWith(src);
   });
+}
 
-  function M() {
-    return window.DGB_PLANET_FAMILY_MATH || window.AUDRALIA_CLEAN_CANVAS_MATH || null;
-  }
-
-  function finite(value, fallback = 0) {
-    const helper = M();
-    if (helper?.finite) return helper.finite(value, fallback);
-    const number = Number(value);
-    return Number.isFinite(number) ? number : fallback;
-  }
-
-  function clamp(value, min, max) {
-    const helper = M();
-    if (helper?.clamp) return helper.clamp(value, min, max);
-    return Math.max(min, Math.min(max, finite(value, min)));
-  }
-
-  function clamp01(value) {
-    const helper = M();
-    if (helper?.clamp01) return helper.clamp01(value);
-    return clamp(value, 0, 1);
-  }
-
-  function lerp(a, b, t) {
-    const helper = M();
-    if (helper?.lerp) return helper.lerp(a, b, t);
-    return finite(a, 0) + (finite(b, 0) - finite(a, 0)) * clamp01(t);
-  }
-
-  function wrapRadians(value) {
-    const helper = M();
-    if (helper?.wrapRadians) return helper.wrapRadians(value);
-
-    let out = finite(value, 0);
-    while (out < -Math.PI) out += TAU;
-    while (out > Math.PI) out -= TAU;
-    return out;
-  }
-
-  function nowMs() {
-    if (typeof performance !== "undefined" && typeof performance.now === "function") {
-      return performance.now();
+function loadScriptOnce(src) {
+  return new Promise((resolve, reject) => {
+    if (!hasDocument()) {
+      reject(new Error("Document is unavailable; cannot load clean parent engine."));
+      return;
     }
 
-    return Date.now();
-  }
-
-  function readReducedMotion() {
-    try {
-      return Boolean(
-        typeof window !== "undefined" &&
-        window.matchMedia &&
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      );
-    } catch {
-      return false;
+    if (scriptAlreadyLoaded(src) || readParent()) {
+      resolve({
+        loaded: true,
+        reused: true,
+        src
+      });
+      return;
     }
-  }
 
-  function readDevicePixelRatio(maxDpr = DEFAULT_DPR_CAP) {
-    const native = typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
-    return clamp(native, 1, finite(maxDpr, DEFAULT_DPR_CAP));
-  }
+    const script = document.createElement("script");
+    script.src = src;
+    script.async = false;
+    script.defer = false;
+    script.setAttribute("data-audralia-runtime-shim-loader", CONTRACT);
 
-  function cloneState(state) {
-    return Object.freeze({
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      authority: "audralia-motion-only-runtime",
-      fileNumber: FILE_NUMBER,
-      primaryNode: PRIMARY_NODE,
-      subnodes: SUBNODE_RANGE,
-
-      rotation: state.rotation,
-      targetRotation: state.targetRotation,
-      tilt: state.tilt,
-      targetTilt: state.targetTilt,
-      minTilt: state.minTilt,
-      maxTilt: state.maxTilt,
-
-      width: state.width,
-      height: state.height,
-      dpr: state.dpr,
-      radius: state.radius,
-      cx: state.cx,
-      cy: state.cy,
-      sphereSize: state.sphereSize,
-
-      frameBudgetMs: state.frameBudgetMs,
-      lastTime: state.lastTime,
-      lastRenderTime: state.lastRenderTime,
-      deltaMs: state.deltaMs,
-      elapsedMs: state.elapsedMs,
-      frame: state.frame,
-
-      paused: state.paused,
-      visible: state.visible,
-      autoSpin: state.autoSpin,
-      reducedMotion: state.reducedMotion,
-      interacting: state.interacting,
-      dirty: state.dirty,
-      settled: state.settled,
-
-      ownsRuntime: true,
-      ownsMotionOnly: true,
-      ownsControls: false,
-      ownsCanvas: false,
-      ownsRoute: false,
-      ownsHtml: false,
-      ownsFootprint: false,
-      ownsHydrology: false,
-      ownsElevation: false,
-      ownsClimate: false,
-      ownsBiome: false,
-      ownsSurface: false,
-      ownsAtmosphere: false,
-
-      generatedImage: false,
-      graphicBox: false,
-      visualPassClaimed: false
-    });
-  }
-
-  function computeFramePacing(deltaMs, options = {}) {
-    const dt = clamp(deltaMs, 0, finite(options.maxDeltaMs, DEFAULTS.maxDeltaMs));
-    const frameBudgetMs = Math.max(8, finite(options.frameBudgetMs, DEFAULTS.frameBudgetMs));
-    const pressure = clamp01(dt / frameBudgetMs);
-    const fibonacciEase = clamp01(1 - Math.pow(1 - pressure, PHI));
-
-    return Object.freeze({
-      deltaMs: dt,
-      frameBudgetMs,
-      pressure,
-      fibonacciEase,
-      shouldRender: dt >= frameBudgetMs,
-      shouldThrottle: pressure > 1,
-      fpsApprox: dt > 0 ? Math.round(1000 / dt) : 0
-    });
-  }
-
-  function computeResizeState(widthInput, heightInput, options = {}) {
-    const width = Math.max(1, Math.floor(finite(widthInput, DEFAULTS.width)));
-    const height = Math.max(1, Math.floor(finite(heightInput, DEFAULTS.height)));
-    const dpr = readDevicePixelRatio(options.dprCap ?? DEFAULT_DPR_CAP);
-    const pixelWidth = Math.max(1, Math.floor(width * dpr));
-    const pixelHeight = Math.max(1, Math.floor(height * dpr));
-    const radiusScale = finite(options.radiusScale, 0.365);
-    const radius = Math.min(pixelWidth, pixelHeight) * radiusScale;
-    const cx = pixelWidth * finite(options.cxRatio, 0.50);
-    const cy = pixelHeight * finite(options.cyRatio, 0.51);
-    const sphereSize = clamp(Math.floor(radius * 2), 340, 620);
-
-    return Object.freeze({
-      width,
-      height,
-      dpr,
-      pixelWidth,
-      pixelHeight,
-      radius,
-      cx,
-      cy,
-      sphereSize
-    });
-  }
-
-  function normalizeOptions(options = {}) {
-    return Object.freeze({
-      rotation: finite(options.rotation, DEFAULTS.rotation),
-      tilt: finite(options.tilt, DEFAULTS.tilt),
-      targetRotation: finite(options.targetRotation, options.rotation ?? DEFAULTS.targetRotation),
-      targetTilt: finite(options.targetTilt, options.tilt ?? DEFAULTS.targetTilt),
-      minTilt: finite(options.minTilt, DEFAULTS.minTilt),
-      maxTilt: finite(options.maxTilt, DEFAULTS.maxTilt),
-      autoSpinRadiansPerMs: finite(options.autoSpinRadiansPerMs, DEFAULTS.autoSpinRadiansPerMs),
-      glideStrength: clamp01(options.glideStrength ?? DEFAULTS.glideStrength),
-      tiltGlideStrength: clamp01(options.tiltGlideStrength ?? DEFAULTS.tiltGlideStrength),
-      frameBudgetMs: Math.max(8, finite(options.frameBudgetMs, DEFAULTS.frameBudgetMs)),
-      maxDeltaMs: Math.max(16, finite(options.maxDeltaMs, DEFAULTS.maxDeltaMs)),
-      idleSettleEpsilon: Math.max(0.000001, finite(options.idleSettleEpsilon, DEFAULTS.idleSettleEpsilon)),
-      reducedMotionAutoSpin: Boolean(options.reducedMotionAutoSpin ?? DEFAULTS.reducedMotionAutoSpin),
-      autoSpin: Boolean(options.autoSpin ?? DEFAULTS.autoSpin),
-      paused: Boolean(options.paused ?? DEFAULTS.paused),
-      visible: Boolean(options.visible ?? DEFAULTS.visible),
-      dprCap: finite(options.dprCap, DEFAULT_DPR_CAP),
-      radiusScale: finite(options.radiusScale, 0.365),
-      cxRatio: finite(options.cxRatio, 0.50),
-      cyRatio: finite(options.cyRatio, 0.51)
-    });
-  }
-
-  function createRuntime(options = {}) {
-    const opts = normalizeOptions(options);
-    const start = nowMs();
-    const resize = computeResizeState(options.width ?? DEFAULTS.width, options.height ?? DEFAULTS.height, opts);
-
-    const state = {
-      rotation: wrapRadians(opts.rotation),
-      targetRotation: wrapRadians(opts.targetRotation),
-      tilt: clamp(opts.tilt, opts.minTilt, opts.maxTilt),
-      targetTilt: clamp(opts.targetTilt, opts.minTilt, opts.maxTilt),
-      minTilt: Math.min(opts.minTilt, opts.maxTilt),
-      maxTilt: Math.max(opts.minTilt, opts.maxTilt),
-
-      autoSpinRadiansPerMs: opts.autoSpinRadiansPerMs,
-      glideStrength: opts.glideStrength,
-      tiltGlideStrength: opts.tiltGlideStrength,
-      frameBudgetMs: opts.frameBudgetMs,
-      maxDeltaMs: opts.maxDeltaMs,
-      idleSettleEpsilon: opts.idleSettleEpsilon,
-      reducedMotionAutoSpin: opts.reducedMotionAutoSpin,
-
-      width: resize.width,
-      height: resize.height,
-      dpr: resize.dpr,
-      pixelWidth: resize.pixelWidth,
-      pixelHeight: resize.pixelHeight,
-      radius: resize.radius,
-      cx: resize.cx,
-      cy: resize.cy,
-      sphereSize: resize.sphereSize,
-
-      lastTime: start,
-      lastRenderTime: 0,
-      deltaMs: 0,
-      elapsedMs: 0,
-      frame: 0,
-
-      paused: opts.paused,
-      visible: opts.visible,
-      autoSpin: opts.autoSpin,
-      reducedMotion: readReducedMotion(),
-      interacting: false,
-      dirty: true,
-      settled: false,
-      destroyed: false
+    script.onload = () => {
+      resolve({
+        loaded: true,
+        reused: false,
+        src
+      });
     };
 
-    function setVisible(value) {
-      state.visible = Boolean(value);
-      state.dirty = true;
-      return cloneState(state);
-    }
+    script.onerror = () => {
+      reject(new Error(`Clean parent engine script failed to load: ${src}`));
+    };
 
-    function setPaused(value) {
-      state.paused = Boolean(value);
-      state.dirty = true;
-      return cloneState(state);
-    }
+    document.head.appendChild(script);
+  });
+}
 
-    function setAutoSpin(value) {
-      state.autoSpin = Boolean(value);
-      state.dirty = true;
-      return cloneState(state);
-    }
+async function loadParent() {
+  const existing = readParent();
+  if (existing) {
+    state.parentRequested = true;
+    state.parentLoaded = true;
+    publishReceipt();
+    return existing;
+  }
 
-    function setInteracting(value) {
-      state.interacting = Boolean(value);
-      state.dirty = true;
-      return cloneState(state);
-    }
+  if (parentPromise) return parentPromise;
 
-    function setReducedMotion(value) {
-      state.reducedMotion = Boolean(value);
-      state.dirty = true;
-      return cloneState(state);
-    }
+  state.parentRequested = true;
+  state.lastScope = "load-parent";
+  publishReceipt();
 
-    function refreshReducedMotion() {
-      state.reducedMotion = readReducedMotion();
-      state.dirty = true;
-      return cloneState(state);
-    }
+  parentPromise = loadScriptOnce(CLEAN_PARENT_PATH)
+    .then(() => {
+      const parent = readParent();
 
-    function setTarget(rotation, tilt) {
-      state.targetRotation = wrapRadians(rotation);
-      state.targetTilt = clamp(tilt, state.minTilt, state.maxTilt);
-      state.dirty = true;
-      state.settled = false;
-      return cloneState(state);
-    }
-
-    function nudgeTarget(deltaRotation = 0, deltaTilt = 0) {
-      state.targetRotation = wrapRadians(state.targetRotation + finite(deltaRotation, 0));
-      state.targetTilt = clamp(state.targetTilt + finite(deltaTilt, 0), state.minTilt, state.maxTilt);
-      state.dirty = true;
-      state.settled = false;
-      return cloneState(state);
-    }
-
-    function setRotation(rotation, tilt = state.tilt) {
-      state.rotation = wrapRadians(rotation);
-      state.targetRotation = state.rotation;
-      state.tilt = clamp(tilt, state.minTilt, state.maxTilt);
-      state.targetTilt = state.tilt;
-      state.dirty = true;
-      state.settled = true;
-      return cloneState(state);
-    }
-
-    function resize(width, height, resizeOptions = {}) {
-      const next = computeResizeState(width, height, {
-        dprCap: resizeOptions.dprCap ?? opts.dprCap,
-        radiusScale: resizeOptions.radiusScale ?? opts.radiusScale,
-        cxRatio: resizeOptions.cxRatio ?? opts.cxRatio,
-        cyRatio: resizeOptions.cyRatio ?? opts.cyRatio
-      });
-
-      state.width = next.width;
-      state.height = next.height;
-      state.dpr = next.dpr;
-      state.pixelWidth = next.pixelWidth;
-      state.pixelHeight = next.pixelHeight;
-      state.radius = next.radius;
-      state.cx = next.cx;
-      state.cy = next.cy;
-      state.sphereSize = next.sphereSize;
-      state.dirty = true;
-
-      return cloneState(state);
-    }
-
-    function update(timeInput) {
-      if (state.destroyed) {
-        return Object.freeze({
-          state: cloneState(state),
-          render: false,
-          destroyed: true,
-          reason: "runtime_destroyed"
-        });
+      if (!parent) {
+        throw new Error("Clean parent engine loaded but did not publish a recognized parent global.");
       }
 
-      const current = finite(timeInput, nowMs());
-      const rawDelta = current - state.lastTime;
-      const dt = clamp(rawDelta, 0, state.maxDeltaMs);
+      state.parentLoaded = true;
+      publishReceipt();
 
-      state.lastTime = current;
-      state.deltaMs = dt;
-      state.elapsedMs += dt;
-      state.frame += 1;
-
-      const pacing = computeFramePacing(current - state.lastRenderTime, {
-        frameBudgetMs: state.frameBudgetMs,
-        maxDeltaMs: state.maxDeltaMs
-      });
-
-      const canAutoSpin = Boolean(
-        state.autoSpin &&
-        state.visible &&
-        !state.paused &&
-        !state.interacting &&
-        (!state.reducedMotion || state.reducedMotionAutoSpin)
-      );
-
-      if (canAutoSpin) {
-        state.targetRotation = wrapRadians(state.targetRotation + dt * state.autoSpinRadiansPerMs);
-      }
-
-      if (!state.paused) {
-        const rotationBefore = state.rotation;
-        const tiltBefore = state.tilt;
-
-        const rotationDelta = wrapRadians(state.targetRotation - state.rotation);
-        state.rotation = wrapRadians(state.rotation + rotationDelta * state.glideStrength);
-        state.tilt = lerp(state.tilt, state.targetTilt, state.tiltGlideStrength);
-
-        const rotationMoved = Math.abs(wrapRadians(state.rotation - rotationBefore));
-        const tiltMoved = Math.abs(state.tilt - tiltBefore);
-
-        state.dirty = state.dirty || rotationMoved > state.idleSettleEpsilon || tiltMoved > state.idleSettleEpsilon || canAutoSpin;
-        state.settled =
-          Math.abs(wrapRadians(state.targetRotation - state.rotation)) <= state.idleSettleEpsilon &&
-          Math.abs(state.targetTilt - state.tilt) <= state.idleSettleEpsilon &&
-          !canAutoSpin;
-      }
-
-      const shouldRender = Boolean(
-        state.visible &&
-        (state.dirty || !state.settled) &&
-        (current - state.lastRenderTime >= state.frameBudgetMs)
-      );
-
-      if (shouldRender) {
-        state.lastRenderTime = current;
-        state.dirty = false;
-      }
-
-      return Object.freeze({
-        state: cloneState(state),
-        pacing,
-        render: shouldRender,
-        reason: shouldRender ? "runtime_frame_ready" : "runtime_frame_held",
-        ownsMotionOnly: true
-      });
-    }
-
-    function forceRender(timeInput) {
-      const current = finite(timeInput, nowMs());
-      state.lastRenderTime = current;
-      state.dirty = false;
-
-      return Object.freeze({
-        state: cloneState(state),
-        render: true,
-        reason: "runtime_force_render"
-      });
-    }
-
-    function markDirty() {
-      state.dirty = true;
-      return cloneState(state);
-    }
-
-    function getState() {
-      return cloneState(state);
-    }
-
-    function getMotionSnapshot() {
-      return Object.freeze({
-        rotation: state.rotation,
-        targetRotation: state.targetRotation,
-        tilt: state.tilt,
-        targetTilt: state.targetTilt,
-        radius: state.radius,
-        cx: state.cx,
-        cy: state.cy,
-        width: state.width,
-        height: state.height,
-        pixelWidth: state.pixelWidth,
-        pixelHeight: state.pixelHeight,
-        dpr: state.dpr,
-        sphereSize: state.sphereSize,
-        visible: state.visible,
-        paused: state.paused,
-        autoSpin: state.autoSpin,
-        reducedMotion: state.reducedMotion,
-        interacting: state.interacting,
-        frame: state.frame,
-        elapsedMs: state.elapsedMs,
-        ownsMotionOnly: true
-      });
-    }
-
-    function destroy() {
-      state.destroyed = true;
-      state.paused = true;
-      state.visible = false;
-      state.dirty = false;
-      return cloneState(state);
-    }
-
-    return Object.freeze({
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      authority: "audralia-motion-only-runtime-instance",
-
-      setVisible,
-      setPaused,
-      setAutoSpin,
-      setInteracting,
-      setReducedMotion,
-      refreshReducedMotion,
-      setTarget,
-      nudgeTarget,
-      setRotation,
-      resize,
-      update,
-      forceRender,
-      markDirty,
-      getState,
-      getMotionSnapshot,
-      destroy
+      return parent;
+    })
+    .catch((error) => {
+      recordError("loadParent", error);
+      throw error;
     });
+
+  return parentPromise;
+}
+
+function resolveMountTarget(input) {
+  if (!hasDocument()) return input || null;
+
+  if (input && input.nodeType === 1) return input;
+
+  if (typeof input === "string") {
+    return document.querySelector(input);
   }
 
-  function validateManifestRegistration() {
-    try {
-      const manifest = window.DGB_PLANET_FAMILY_MANIFEST || window.AUDRALIA_CLEAN_CANVAS_MANIFEST;
-      if (!manifest || typeof manifest.validatePrimaryFile !== "function") {
-        return Object.freeze({
-          manifestAvailable: false,
-          valid: true,
-          reason: "manifest_not_loaded_yet_runtime_can_still_register"
-        });
-      }
+  if (input && input.mount && input.mount.nodeType === 1) return input.mount;
+  if (input && input.element && input.element.nodeType === 1) return input.element;
+  if (input && input.el && input.el.nodeType === 1) return input.el;
 
-      return manifest.validatePrimaryFile({
-        path: "/assets/audralia/clean/audralia.runtime.js",
-        contract: CONTRACT
-      });
-    } catch (error) {
-      return Object.freeze({
-        manifestAvailable: true,
-        valid: false,
-        reason: error instanceof Error ? error.message : String(error)
-      });
+  if (input && typeof input.mount === "string") return document.querySelector(input.mount);
+  if (input && typeof input.selector === "string") return document.querySelector(input.selector);
+
+  return (
+    document.querySelector("#audraliaCanvasMount") ||
+    document.querySelector("[data-audralia-canvas-mount]") ||
+    document.querySelector("[data-audralia-clean-canvas-mount]") ||
+    document.querySelector("#audraliaMount") ||
+    null
+  );
+}
+
+function callParent(parent, methodNames, args) {
+  if (!parent) return null;
+
+  for (const methodName of methodNames) {
+    const method = parent[methodName];
+
+    if (typeof method !== "function") continue;
+
+    state.parentDelegated = true;
+    publishReceipt();
+
+    return method.apply(parent, args);
+  }
+
+  return null;
+}
+
+function syncParentStatus(scope = "sync") {
+  const parent = readParent();
+
+  if (!parent) {
+    state.parentStatus = null;
+    state.ready = false;
+    state.formVisible = false;
+    state.lastScope = scope;
+    publishReceipt();
+    return null;
+  }
+
+  let status = null;
+
+  try {
+    if (typeof parent.getStatus === "function") {
+      status = parent.getStatus();
+    } else if (typeof parent.status === "function") {
+      status = parent.status();
+    } else if (parent.RECEIPT) {
+      status = parent.RECEIPT;
     }
+  } catch (error) {
+    recordError("syncParentStatus", error);
   }
 
-  function validatePriorAuthorities() {
-    const math = M();
-    const atmosphere = window.AUDRALIA_ATMOSPHERE || window.AUDRALIA_CLEAN_CANVAS_ATMOSPHERE || window.AUDRALIA_WEATHER || null;
+  state.parentStatus = status || null;
+  state.parentLoaded = true;
+  state.ready = Boolean(
+    status &&
+      (status.ready === true ||
+        status.mounted === true ||
+        status.formVisible === true ||
+        status.children)
+  );
 
-    return Object.freeze({
-      math: Object.freeze({
-        available: Boolean(math),
-        expectedContract: "AUDRALIA_CLEAN_CANVAS_PLANET_FAMILY_MATH_TNT_v1",
-        actualContract: math?.contract || null,
-        valid: !math || math.contract === "AUDRALIA_CLEAN_CANVAS_PLANET_FAMILY_MATH_TNT_v1"
-      }),
-      atmosphere: Object.freeze({
-        available: Boolean(atmosphere),
-        expectedContract: "AUDRALIA_CLEAN_CANVAS_ATMOSPHERE_TNT_v1",
-        actualContract: atmosphere?.contract || null,
-        valid: !atmosphere || atmosphere.contract === "AUDRALIA_CLEAN_CANVAS_ATMOSPHERE_TNT_v1"
-      })
-    });
+  state.formVisible = Boolean(
+    (status && status.formVisible === true) ||
+      (hasWindow() &&
+        (window.AUDRALIA_FORM_VISIBLE === true ||
+          window.AUDRALIA_CLEAN_CANVAS_FORM_VISIBLE === true))
+  );
+
+  state.lastScope = scope;
+
+  if (state.formVisible && hasWindow()) {
+    window.AUDRALIA_RUNTIME_SHIM_FORM_VISIBLE_CONFIRMED = true;
   }
 
-  function getStatus() {
-    return Object.freeze({
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      version: VERSION,
-      authority: "audralia-motion-only-runtime",
-      fileNumber: FILE_NUMBER,
-      primaryNode: PRIMARY_NODE,
-      subnodes: SUBNODE_RANGE,
-      parentAnchor: "/showroom/globe/audralia/index.js",
-      universalParent: UNIVERSAL_ANCHOR,
-      downstreamGroundView: H_EARTH_ROUTE,
-      targets: RUNTIME_TARGETS,
-      defaults: DEFAULTS,
-      owns: Object.freeze([
-        "spin",
-        "glide",
-        "motion timing",
-        "frame pacing",
-        "resize state",
-        "reduced-motion handling",
-        "motion snapshots",
-        "runtime dirty/settled state"
-      ]),
-      doesNotOwn: Object.freeze([
-        "universal manifest law",
-        "math primitives",
-        "lattice authority",
-        "palette constants",
-        "Audralia identity",
-        "land/ocean footprint",
-        "continent creation",
-        "water behavior",
-        "hydrology authority",
-        "elevation depth",
-        "climate fields",
-        "biome categories",
-        "surface material synthesis",
-        "atmosphere behavior",
-        "weather behavior",
-        "pointer listeners",
-        "touch listeners",
-        "controls",
-        "canvas rendering",
-        "canvas composition",
-        "route bridge",
-        "HTML expression"
-      ]),
-      manifestRegistration: validateManifestRegistration(),
-      priorAuthorities: validatePriorAuthorities(),
-      ownsMotionOnly: true,
-      controlsForbidden: true,
-      canvasRenderingForbidden: true,
-      routeBridgeForbidden: true,
-      htmlExpressionForbidden: true,
-      fibonacciChronology: true,
-      primaryStructure16: true,
-      nodalConstruct256: true,
-      oneFileOneJob: true,
-      generatedImage: false,
-      graphicBox: false,
-      visualPassClaimed: false
-    });
-  }
+  publishReceipt();
 
-  const API = Object.freeze({
+  return status;
+}
+
+function publishReceipt() {
+  if (!hasWindow()) return;
+
+  const receipt = {
     contract: CONTRACT,
-    receipt: RECEIPT,
-    previousContract: PREVIOUS_CONTRACT,
-    version: VERSION,
+    family: FAMILY,
+    target: TARGET,
+    route: ROUTE,
+    mode: "legacy_runtime_esm_shim_to_clean_parent",
+    legacyRuntimeAuthorityDemoted: true,
+    cleanParentPath: CLEAN_PARENT_PATH,
+    shimActive: state.shimActive,
+    parentRequested: state.parentRequested,
+    parentLoaded: state.parentLoaded,
+    parentDelegated: state.parentDelegated,
+    mounted: state.mounted,
+    mountCalled: state.mountCalled,
+    ready: state.ready,
+    formVisible: state.formVisible,
+    formVisibleClaimPolicy: "parent_status_or_parent_global_only",
+    htmlChange: false,
+    routeBridgeChange: false,
+    childContractRenewal: false,
+    visualPassClaim: false,
+    generatedImage: false,
+    graphicBox: false,
+    preserves: [
+      "default export function",
+      "mount()",
+      "render()",
+      "start()",
+      "boot()",
+      "init()",
+      "create()",
+      "legacy runtime import path",
+      "clean parent delegation",
+      "FORM_VISIBLE gated by parent confirmation"
+    ],
+    parentStatus: state.parentStatus,
+    errors: state.errors.slice()
+  };
 
-    FILE_NUMBER,
-    PRIMARY_NODE,
-    SUBNODE_RANGE,
-    UNIVERSAL_ANCHOR,
-    AUDRALIA_ROUTE,
-    H_EARTH_ROUTE,
-    PHI,
-    TAU,
-    DEFAULTS,
-    RUNTIME_TARGETS,
+  window.AUDRALIA_RUNTIME_SHIM_RECEIPT = receipt;
+  window.AUDRALIA_RUNTIME_RECEIPT = receipt;
+  window.AUDRALIA_CLEAN_CANVAS_RUNTIME_RECEIPT = receipt;
 
-    createRuntime,
-    computeFramePacing,
-    computeResizeState,
-    readReducedMotion,
-    readDevicePixelRatio,
-    validateManifestRegistration,
-    validatePriorAuthorities,
-    getStatus
+  if (hasDocument() && document.documentElement) {
+    document.documentElement.setAttribute("data-audralia-runtime-contract", CONTRACT);
+    document.documentElement.setAttribute("data-audralia-runtime-mode", "legacy-shim");
+    document.documentElement.setAttribute("data-audralia-clean-parent-path", CLEAN_PARENT_PATH);
+    document.documentElement.setAttribute(
+      "data-audralia-parent-delegated",
+      state.parentDelegated ? "true" : "false"
+    );
+    document.documentElement.setAttribute(
+      "data-audralia-runtime-shim-active",
+      state.shimActive ? "true" : "false"
+    );
+  }
+
+  try {
+    window.dispatchEvent(
+      new CustomEvent("audralia:runtime-shim:receipt", {
+        detail: receipt
+      })
+    );
+  } catch (_error) {
+    try {
+      window.dispatchEvent(new Event("audralia:runtime-shim:receipt"));
+    } catch (_ignored) {}
+  }
+}
+
+async function delegate(methodNames, args, scope) {
+  state.lastScope = scope;
+  publishReceipt();
+
+  const parent = await loadParent();
+  const result = callParent(parent, methodNames, args);
+
+  syncParentStatus(scope);
+
+  return result === undefined || result === null ? api : result;
+}
+
+function mount(input, options = {}) {
+  state.mountCalled = true;
+  state.mounted = true;
+  lastMountInput = resolveMountTarget(input);
+  lastMountOptions = options || {};
+  publishReceipt();
+
+  delegate(
+    ["mount", "boot", "start", "init", "create"],
+    [lastMountInput, lastMountOptions],
+    "mount"
+  ).catch((error) => {
+    recordError("mount", error);
   });
 
-  window.AUDRALIA_RUNTIME = API;
-  window.AUDRALIA_RUNTIME_RECEIPT = getStatus();
+  return api;
+}
 
-  window.AUDRALIA_CLEAN_CANVAS_RUNTIME = API;
-  window.AUDRALIA_CLEAN_CANVAS_RUNTIME_RECEIPT = getStatus();
+function boot(input, options = {}) {
+  return mount(input, options);
+}
 
-  if (typeof document !== "undefined" && document.documentElement?.dataset) {
-    document.documentElement.dataset.audraliaRuntimeLoaded = "true";
-    document.documentElement.dataset.audraliaRuntimeContract = CONTRACT;
-    document.documentElement.dataset.audraliaRuntimeReceipt = RECEIPT;
-    document.documentElement.dataset.audraliaRuntimeVersion = VERSION;
-    document.documentElement.dataset.audraliaCleanCanvasRuntimeLoaded = "true";
-    document.documentElement.dataset.audraliaCleanCanvasRuntimeContract = CONTRACT;
-    document.documentElement.dataset.audraliaCleanCanvasRuntimeReceipt = RECEIPT;
-    document.documentElement.dataset.audraliaCleanCanvasRuntimeNode = String(PRIMARY_NODE);
-    document.documentElement.dataset.audraliaCleanCanvasRuntimeSubnodes = "193-208";
-    document.documentElement.dataset.audraliaRuntimeOwnsMotionOnly = "true";
-    document.documentElement.dataset.audraliaRuntimeOwnsControls = "false";
-    document.documentElement.dataset.audraliaRuntimeOwnsCanvas = "false";
-    document.documentElement.dataset.audraliaRuntimeOwnsRoute = "false";
-    document.documentElement.dataset.audraliaRuntimeOwnsHtml = "false";
-    document.documentElement.dataset.audraliaRuntimeSpin = "true";
-    document.documentElement.dataset.audraliaRuntimeGlide = "true";
-    document.documentElement.dataset.audraliaRuntimeFramePacing = "true";
-    document.documentElement.dataset.audraliaRuntimeResizeState = "true";
-    document.documentElement.dataset.audraliaRuntimeReducedMotion = "true";
-    document.documentElement.dataset.hEarthMayReceiveAudraliaRuntimeMotionState = "true";
-    document.documentElement.dataset.audraliaCleanCanvasFibonacciChronology = "true";
-    document.documentElement.dataset.audraliaCleanCanvasPrimaryStructure16 = "true";
-    document.documentElement.dataset.audraliaCleanCanvasNodalConstruct256 = "true";
-    document.documentElement.dataset.audraliaCleanCanvasOneFileOneJob = "true";
-    document.documentElement.dataset.generatedImage = "false";
-    document.documentElement.dataset.graphicBox = "false";
-    document.documentElement.dataset.visualPassClaimed = "false";
+function start(input, options = {}) {
+  return mount(input, options);
+}
+
+function init(input, options = {}) {
+  return mount(input, options);
+}
+
+function create(input, options = {}) {
+  return mount(input, options);
+}
+
+function render(...args) {
+  const parent = readParent();
+
+  if (parent) {
+    const result = callParent(parent, ["render", "draw", "paint"], args);
+    syncParentStatus("render");
+    return result || api;
   }
-})();
+
+  delegate(["render", "draw", "paint"], args, "render").catch((error) => {
+    recordError("render", error);
+  });
+
+  return api;
+}
+
+function requestRender() {
+  const parent = readParent();
+
+  if (parent) {
+    const result = callParent(parent, ["requestRender", "render"], []);
+    syncParentStatus("requestRender");
+    return result || api;
+  }
+
+  return render();
+}
+
+function updateState(next = {}) {
+  const parent = readParent();
+
+  if (parent) {
+    const result = callParent(parent, ["updateState"], [next]);
+    syncParentStatus("updateState");
+    return result || api;
+  }
+
+  Object.assign(state, next || {});
+  publishReceipt();
+  return api;
+}
+
+function destroy() {
+  const parent = readParent();
+
+  if (parent) {
+    const result = callParent(parent, ["destroy", "dispose", "unmount"], []);
+    syncParentStatus("destroy");
+    return result || api;
+  }
+
+  state.mounted = false;
+  state.ready = false;
+  state.formVisible = false;
+  publishReceipt();
+
+  return api;
+}
+
+function getStatus() {
+  syncParentStatus("status-read");
+
+  return {
+    contract: CONTRACT,
+    family: FAMILY,
+    target: TARGET,
+    route: ROUTE,
+    mode: "legacy_runtime_esm_shim_to_clean_parent",
+    legacyRuntimeAuthorityDemoted: true,
+    cleanParentPath: CLEAN_PARENT_PATH,
+    shimActive: state.shimActive,
+    parentRequested: state.parentRequested,
+    parentLoaded: state.parentLoaded,
+    parentDelegated: state.parentDelegated,
+    mounted: state.mounted,
+    mountCalled: state.mountCalled,
+    ready: state.ready,
+    formVisible: state.formVisible,
+    htmlChange: false,
+    routeBridgeChange: false,
+    childContractRenewal: false,
+    visualPassClaim: false,
+    parentStatus: state.parentStatus,
+    errors: state.errors.slice()
+  };
+}
+
+function defaultRuntime(input, options = {}) {
+  return mount(input, options);
+}
+
+const api = {
+  CONTRACT,
+  FAMILY,
+  TARGET,
+  ROUTE,
+  CLEAN_PARENT_PATH,
+  mount,
+  boot,
+  start,
+  init,
+  create,
+  render,
+  requestRender,
+  updateState,
+  destroy,
+  getStatus,
+  status: getStatus,
+  default: defaultRuntime
+};
+
+if (hasWindow()) {
+  window.AUDRALIA_RUNTIME = api;
+  window.AUDRALIA_CLEAN_CANVAS_RUNTIME = api;
+  window.AUDRALIA_RUNTIME_SHIM = api;
+
+  if (!window.AUDRALIA_ENGINE) {
+    window.AUDRALIA_ENGINE = api;
+  }
+
+  if (!window.AUDRALIA_CLEAN_CANVAS_ENGINE) {
+    window.AUDRALIA_CLEAN_CANVAS_ENGINE = api;
+  }
+
+  window.AUDRALIA_LEGACY_RUNTIME_SHIM_ACTIVE = true;
+
+  publishReceipt();
+
+  if (hasDocument()) {
+    const autoMount = () => {
+      const target = resolveMountTarget(null);
+      if (target && !state.mountCalled) {
+        mount(target);
+      }
+    };
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", autoMount, { once: true });
+    } else {
+      queueMicrotask(autoMount);
+    }
+  }
+}
+
+export {
+  CONTRACT,
+  FAMILY,
+  TARGET,
+  ROUTE,
+  CLEAN_PARENT_PATH,
+  api,
+  mount,
+  boot,
+  start,
+  init,
+  create,
+  render,
+  requestRender,
+  updateState,
+  destroy,
+  getStatus
+};
+
+export default defaultRuntime;

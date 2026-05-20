@@ -1,19 +1,19 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_G2_5_ROUTE_BRIDGE_AWAITED_RUNTIME_HANDOFF_INDEX_JS_TNT_v2_1
+// AUDRALIA_G2_5_ROUTE_BRIDGE_RUNTIME_CACHE_KEY_ALIGNMENT_TNT_v2_2
 // Full-file replacement.
-// Purpose: make the Audralia route bridge await the legacy runtime shim and accept visible form only after runtime/parent confirmation.
+// Purpose: force the Audralia route bridge to import the repaired v3 legacy runtime shim and await the runtime/parent handoff.
 // Target only: /showroom/globe/audralia/index.js
-// Imports: /assets/audralia/audralia.runtime.js
+// Imports: /assets/audralia/audralia.runtime.js?v=AUDRALIA_G2_5_RUNTIME_SHIM_PARENT_DELEGATION_REPAIR_TNT_v3
 // Does not own: runtime body, clean parent engine, clean runtime file, continents child, motion child, sky child, HTML shell, parent Globe, Characters, Gauges, Showroom, generated image, GraphicBox, or visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G2_5_ROUTE_BRIDGE_AWAITED_RUNTIME_HANDOFF_INDEX_JS_TNT_v2_1";
+  const CONTRACT = "AUDRALIA_G2_5_ROUTE_BRIDGE_RUNTIME_CACHE_KEY_ALIGNMENT_TNT_v2_2";
   const TARGET = "/showroom/globe/audralia/index.js";
   const ROUTE = "/showroom/globe/audralia/";
   const RUNTIME_PATH = "/assets/audralia/audralia.runtime.js";
-  const RUNTIME_CACHE_KEY = "AUDRALIA_G2_5_ESM_AWAITED_PARENT_HANDOFF_RUNTIME_SHIM_TNT_v2_1";
+  const RUNTIME_CACHE_KEY = "AUDRALIA_G2_5_RUNTIME_SHIM_PARENT_DELEGATION_REPAIR_TNT_v3";
   const RUNTIME_IMPORT = `${RUNTIME_PATH}?v=${encodeURIComponent(RUNTIME_CACHE_KEY)}`;
 
   const WAIT_VISIBLE_MS = 5600;
@@ -106,9 +106,10 @@
     const root = document.documentElement;
     root.setAttribute("data-audralia-route-bridge-contract", CONTRACT);
     root.setAttribute("data-audralia-route-bridge-target", TARGET);
-    root.setAttribute("data-audralia-route-bridge-mode", "awaited-runtime-handoff");
+    root.setAttribute("data-audralia-route-bridge-mode", "runtime-cache-key-alignment");
     root.setAttribute("data-audralia-runtime-path", RUNTIME_PATH);
     root.setAttribute("data-audralia-runtime-import", RUNTIME_IMPORT);
+    root.setAttribute("data-audralia-runtime-cache-key", RUNTIME_CACHE_KEY);
     root.setAttribute("data-audralia-route-form-visible", state.formVisible ? "true" : "false");
     root.setAttribute("data-audralia-runtime-import-succeeded", state.runtimeImportSucceeded ? "true" : "false");
     root.setAttribute("data-audralia-mount-called", state.mountCalled ? "true" : "false");
@@ -123,15 +124,16 @@
       contract: CONTRACT,
       target: TARGET,
       route: ROUTE,
-      mode: "route_bridge_awaited_runtime_handoff",
+      mode: "route_bridge_runtime_cache_key_alignment",
       runtimePath: RUNTIME_PATH,
+      runtimeCacheKey: RUNTIME_CACHE_KEY,
       runtimeImport: RUNTIME_IMPORT,
       routeBridgeChange: true,
-      htmlChange: false,
       runtimeRewrite: false,
       cleanRuntimeRewrite: false,
       parentRewrite: false,
       childContractRenewal: false,
+      htmlChange: false,
       visualPassClaim: false,
       generatedImage: false,
       graphicBox: false,
@@ -143,6 +145,7 @@
     window.AUDRALIA_ROUTE_BRIDGE_RECEIPT = receipt;
     window.AUDRALIA_CLEAN_CANVAS_ROUTE_BRIDGE_RECEIPT = receipt;
     window.AUDRALIA_ROUTE_BRIDGE_AWAITED_RUNTIME_HANDOFF = true;
+    window.AUDRALIA_ROUTE_BRIDGE_RUNTIME_CACHE_KEY_ALIGNED = true;
 
     setRootAttrs();
 
@@ -417,6 +420,7 @@
     const options = {
       routeBridgeContract: CONTRACT,
       awaitedRuntimeHandoff: true,
+      runtimeCacheKey: RUNTIME_CACHE_KEY,
       mountTarget: "#audraliaCanvasMount",
       route: ROUTE
     };
@@ -516,6 +520,7 @@
 
     const parentLoaded = Boolean(
       global.parentEngine ||
+        window.AUDRALIA_PARENT_ENGINE_LOADED === true ||
         (global.runtimeReceipt && global.runtimeReceipt.parentLoaded === true) ||
         (global.runtimeReceipt &&
           global.runtimeReceipt.state &&
@@ -523,7 +528,8 @@
     );
 
     const parentDelegated = Boolean(
-      (global.runtimeReceipt && global.runtimeReceipt.parentDelegated === true) ||
+      window.AUDRALIA_PARENT_ENGINE_DELEGATED === true ||
+        (global.runtimeReceipt && global.runtimeReceipt.parentDelegated === true) ||
         (global.runtimeReceipt &&
           global.runtimeReceipt.state &&
           global.runtimeReceipt.state.parentDelegated === true) ||

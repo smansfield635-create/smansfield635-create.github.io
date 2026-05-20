@@ -1,24 +1,23 @@
 // /assets/audralia/audralia.runtime.v3.js
 // AUDRALIA_G2_5_RUNTIME_PARENT_CACHE_KEY_ALIGNMENT_TNT_v1
 // Full-file replacement.
-// Purpose: keep the versioned runtime path active while forcing the parent engine import to the latest Fibonacci center-bias + sea-level continents parent contract.
-// Loads parent from: /assets/audralia/clean/engine/audralia.engine.js
-// Parent cache key: AUDRALIA_G2_5_FIBONACCI_CENTER_BIAS_AND_SEA_LEVEL_CONTINENTS_TNT_v1
-// Does not own: route HTML, route bridge, parent internals, child engines, generated image, GraphicBox, or visual-pass claim.
+// Purpose: keep the versioned runtime path active while forcing the clean parent import to the G2.6 parent visible-body-first failsafe.
+// Parent cache key: AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1
+// Does not own: HTML, route bridge, parent geometry, continent model, motion, sky, generated image, GraphicBox, or visual-pass claim.
 
 const CONTRACT = "AUDRALIA_G2_5_RUNTIME_PARENT_CACHE_KEY_ALIGNMENT_TNT_v1";
-const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_EXISTING_ARCHITECTURE_PATH_ALIGNMENT_RUNTIME_TNT_v1";
-const FAMILY = "AUDRALIA_G2_5_EXISTING_ARCHITECTURE_PATH_ALIGNMENT_TNT_v1";
+const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_RUNTIME_PARENT_CACHE_KEY_ALIGNMENT_TNT_v1";
+const FAMILY = "AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1";
 
 const TARGET = "/assets/audralia/audralia.runtime.v3.js";
 const ROUTE = "/showroom/globe/audralia/";
 
 const CLEAN_PARENT_PATH = "/assets/audralia/clean/engine/audralia.engine.js";
-const CLEAN_PARENT_CACHE_KEY = "AUDRALIA_G2_5_FIBONACCI_CENTER_BIAS_AND_SEA_LEVEL_CONTINENTS_TNT_v1";
+const CLEAN_PARENT_CACHE_KEY = "AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1";
 const CLEAN_PARENT_IMPORT = `${CLEAN_PARENT_PATH}?v=${encodeURIComponent(CLEAN_PARENT_CACHE_KEY)}`;
 
-const WAIT_PARENT_MS = 4200;
-const WAIT_VISIBLE_MS = 4200;
+const WAIT_PARENT_MS = 5200;
+const WAIT_VISIBLE_MS = 5200;
 const POLL_MS = 40;
 
 const PARENT_KEYS = [
@@ -38,8 +37,7 @@ const state = {
   cleanParentCacheKey: CLEAN_PARENT_CACHE_KEY,
   cleanParentImport: CLEAN_PARENT_IMPORT,
   runtimeParentCacheKeyAligned: true,
-  fibonacciSeaLevelParentCacheKey: true,
-  versionedPathLock: true,
+  parentVisibleBodyFirstFailsafeCacheKey: true,
   parentRequested: false,
   parentLoaded: false,
   parentDelegated: false,
@@ -181,8 +179,7 @@ function appendParentScript(src) {
     script.setAttribute("data-audralia-runtime-parent-loader", CONTRACT);
     script.setAttribute("data-audralia-clean-parent-path", CLEAN_PARENT_PATH);
     script.setAttribute("data-audralia-clean-parent-cache-key", CLEAN_PARENT_CACHE_KEY);
-    script.setAttribute("data-audralia-runtime-parent-cache-key-aligned", "true");
-    script.setAttribute("data-audralia-fibonacci-sea-level-parent-cache-key", "true");
+    script.setAttribute("data-audralia-parent-visible-body-first-failsafe-cache-key", "true");
 
     script.onload = () => resolve({ src, loaded: true });
     script.onerror = () => reject(new Error(`Clean parent engine failed to load: ${src}`));
@@ -275,7 +272,7 @@ function syncParentStatus(scope = "sync") {
   state.parentLoaded = Boolean(parent && parentMatchesCurrentCache(parent));
 
   state.ready = Boolean(
-    (status && (status.ready === true || status.mounted === true || status.children)) ||
+    (status && (status.ready === true || status.mounted === true || status.formVisible === true)) ||
       (parent && state.parentDelegated)
   );
 
@@ -283,7 +280,8 @@ function syncParentStatus(scope = "sync") {
     (status && status.formVisible === true) ||
       (hasWindow() &&
         (window.AUDRALIA_FORM_VISIBLE === true ||
-          window.AUDRALIA_CLEAN_CANVAS_FORM_VISIBLE === true))
+          window.AUDRALIA_CLEAN_CANVAS_FORM_VISIBLE === true ||
+          window.AUDRALIA_CLEAN_PARENT_FORM_VISIBLE === true))
   );
 
   if (hasWindow()) {
@@ -308,7 +306,8 @@ async function awaitVisible(parent, timeoutMs = WAIT_VISIBLE_MS) {
       (status && status.formVisible === true) ||
       (hasWindow() &&
         (window.AUDRALIA_FORM_VISIBLE === true ||
-          window.AUDRALIA_CLEAN_CANVAS_FORM_VISIBLE === true))
+          window.AUDRALIA_CLEAN_CANVAS_FORM_VISIBLE === true ||
+          window.AUDRALIA_CLEAN_PARENT_FORM_VISIBLE === true))
     ) {
       state.formVisible = true;
       state.ready = true;
@@ -346,8 +345,7 @@ function publishReceipt(scope = "publish") {
     mode: "runtime_parent_cache_key_alignment",
     scope,
     runtimeParentCacheKeyAligned: true,
-    fibonacciSeaLevelParentCacheKey: true,
-    versionedPathLock: true,
+    parentVisibleBodyFirstFailsafeCacheKey: true,
     parentRequested: state.parentRequested,
     parentLoaded: state.parentLoaded,
     parentDelegated: state.parentDelegated,
@@ -371,9 +369,8 @@ function publishReceipt(scope = "publish") {
   window.AUDRALIA_RUNTIME_RECEIPT = receipt;
   window.AUDRALIA_CLEAN_CANVAS_RUNTIME_RECEIPT = receipt;
 
-  window.AUDRALIA_RUNTIME_VERSIONED_PATH_LOCK_ACTIVE = true;
   window.AUDRALIA_RUNTIME_PARENT_CACHE_KEY_ALIGNED = true;
-  window.AUDRALIA_RUNTIME_FIBONACCI_SEA_LEVEL_PARENT_CACHE_KEY = true;
+  window.AUDRALIA_RUNTIME_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_CACHE_KEY = true;
   window.AUDRALIA_RUNTIME_PARENT_DELEGATION_REPAIR_ACTIVE = true;
 
   if (state.parentLoaded) window.AUDRALIA_PARENT_ENGINE_LOADED = true;
@@ -383,8 +380,7 @@ function publishReceipt(scope = "publish") {
     document.documentElement.setAttribute("data-audralia-runtime-contract", CONTRACT);
     document.documentElement.setAttribute("data-audralia-runtime-target", TARGET);
     document.documentElement.setAttribute("data-audralia-clean-parent-cache-key", CLEAN_PARENT_CACHE_KEY);
-    document.documentElement.setAttribute("data-audralia-runtime-parent-cache-key-aligned", "true");
-    document.documentElement.setAttribute("data-audralia-runtime-fibonacci-sea-level-parent-cache-key", "true");
+    document.documentElement.setAttribute("data-audralia-runtime-parent-visible-body-first-failsafe-cache-key", "true");
     document.documentElement.setAttribute("data-audralia-parent-loaded", state.parentLoaded ? "true" : "false");
     document.documentElement.setAttribute("data-audralia-parent-delegated", state.parentDelegated ? "true" : "false");
     document.documentElement.setAttribute("data-audralia-parent-awaited", state.parentAwaited ? "true" : "false");
@@ -420,9 +416,8 @@ async function mount(input, options = {}) {
         ...(options || {}),
         delegatedBy: CONTRACT,
         runtimeShim: true,
-        versionedPathLock: true,
         runtimeParentCacheKeyAligned: true,
-        fibonacciSeaLevelParentCacheKey: true,
+        parentVisibleBodyFirstFailsafeCacheKey: true,
         parentDelegationRepair: true,
         route: ROUTE
       }
@@ -549,8 +544,7 @@ function getStatus() {
     cleanParentImport: CLEAN_PARENT_IMPORT,
     mode: "runtime_parent_cache_key_alignment",
     runtimeParentCacheKeyAligned: true,
-    fibonacciSeaLevelParentCacheKey: true,
-    versionedPathLock: true,
+    parentVisibleBodyFirstFailsafeCacheKey: true,
     parentRequested: state.parentRequested,
     parentLoaded: state.parentLoaded,
     parentDelegated: state.parentDelegated,
@@ -619,9 +613,8 @@ if (hasWindow()) {
   window.AUDRALIA_CLEAN_CANVAS_RUNTIME = api;
   window.AUDRALIA_RUNTIME_SHIM = api;
 
-  window.AUDRALIA_RUNTIME_VERSIONED_PATH_LOCK_ACTIVE = true;
   window.AUDRALIA_RUNTIME_PARENT_CACHE_KEY_ALIGNED = true;
-  window.AUDRALIA_RUNTIME_FIBONACCI_SEA_LEVEL_PARENT_CACHE_KEY = true;
+  window.AUDRALIA_RUNTIME_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_CACHE_KEY = true;
   window.AUDRALIA_RUNTIME_PARENT_DELEGATION_REPAIR_ACTIVE = true;
 
   publishReceipt("module-load");

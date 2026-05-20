@@ -1,545 +1,597 @@
-// /assets/audralia/clean/engine/continents.js
-// AUDRALIA_G2_5_CONTINENTS_CHILD_ENGINE_TNT_v1
-// Child engine for Audralia clean-canvas stack.
-// Owns: five-continent law, exposed-land eligibility, submerged shelves, South Pole ice-only rule, North Polar continent, Nine-Summits terrain pressure.
-// Does not own: mount, canvas creation, motion, sky, route bridge, HTML, or parent Globe.
+// /assets/audralia/clean/engine/audralia/engine/continents.js
+// AUDRALIA_G2_5_CONTINENTS_EXPRESSION_ENGINE_TNT_v1
+// Full-file replacement.
+// Purpose: give Audralia its ocean-dominant Five-Continent Nine-Summits land/water expression.
+// Child engine only. Classic script. No imports. No exports.
+// Does not own: canvas creation, route bridge, runtime, parent mount, FORM_VISIBLE, sky, motion, generated image, GraphicBox, or visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G2_5_CONTINENTS_CHILD_ENGINE_TNT_v1";
-  const RECEIPT = "AUDRALIA_G2_5_CONTINENTS_CHILD_ENGINE_RECEIPT_v1";
+  const CONTRACT = "AUDRALIA_G2_5_CONTINENTS_EXPRESSION_ENGINE_TNT_v1";
+  const FAMILY = "AUDRALIA_G2_5_EXISTING_ARCHITECTURE_PATH_ALIGNMENT_TNT_v1";
+  const TARGET = "/assets/audralia/clean/engine/audralia/engine/continents.js";
   const ROUTE = "/showroom/globe/audralia/";
-  const VERSION = "2026-05-20.audralia-g2-5-continents-child-engine-v1";
 
-  const PLANET = Object.freeze({
-    seed: 25645161,
-    nodeCount: 256,
-    sectorCount: 16,
-    regionCount: 4,
-    summitCount: 9,
-    continentCount: 5,
-    mainContinents: 4,
-    northPolarContinent: true,
-    southPoleIceOnly: true,
-    terrainPressureBelowSeaLevel: true,
-    seaLevelExposureClassification: true,
-    seaLevel: 0.735,
-    exposedLandTarget: "ocean-dominant",
-    continents: Object.freeze([
-      Object.freeze({
-        id: "MAIN_A",
-        kind: "main",
-        u: -0.42,
-        v: -0.10,
-        rx: 0.30,
-        ry: 0.22,
-        angle: -0.54,
-        lift: 0.030,
-        spine: Object.freeze([
-          [-1.00, -0.18],
-          [-0.62, 0.12],
-          [-0.18, -0.04],
-          [0.34, 0.20],
-          [0.92, -0.02]
-        ])
-      }),
-      Object.freeze({
-        id: "MAIN_B",
-        kind: "main",
-        u: -0.12,
-        v: 0.31,
-        rx: 0.25,
-        ry: 0.19,
-        angle: 0.44,
-        lift: 0.034,
-        spine: Object.freeze([
-          [-0.92, 0.16],
-          [-0.48, -0.08],
-          [-0.04, 0.10],
-          [0.42, -0.18],
-          [0.92, 0.12]
-        ])
-      }),
-      Object.freeze({
-        id: "MAIN_C",
-        kind: "main",
-        u: 0.26,
-        v: 0.02,
-        rx: 0.31,
-        ry: 0.23,
-        angle: 0.18,
-        lift: 0.026,
-        spine: Object.freeze([
-          [-0.94, 0.02],
-          [-0.56, -0.24],
-          [-0.06, -0.04],
-          [0.46, 0.22],
-          [0.96, 0.08]
-        ])
-      }),
-      Object.freeze({
-        id: "MAIN_D",
-        kind: "main",
-        u: 0.18,
-        v: -0.42,
-        rx: 0.24,
-        ry: 0.17,
-        angle: -0.72,
-        lift: 0.038,
-        spine: Object.freeze([
-          [-0.90, -0.12],
-          [-0.44, 0.16],
-          [0.00, -0.10],
-          [0.46, 0.10],
-          [0.86, -0.04]
-        ])
-      }),
-      Object.freeze({
-        id: "NORTH_POLAR",
-        kind: "north-polar",
-        u: 0.02,
-        v: 0.77,
-        rx: 0.42,
-        ry: 0.16,
-        angle: 0.02,
-        lift: 0.112,
-        spine: Object.freeze([
-          [-1.00, 0.00],
-          [-0.52, 0.16],
-          [0.00, -0.04],
-          [0.50, 0.14],
-          [1.00, -0.02]
-        ])
-      })
-    ])
-  });
+  const DEG = Math.PI / 180;
 
-  const state = {
-    lastRatios: null,
-    lastClassificationAt: null,
-    classificationCount: 0
+  const COLORS = {
+    shelf: "rgba(91, 210, 224, 0.24)",
+    shelfLine: "rgba(178, 246, 255, 0.26)",
+    lowland: "rgba(74, 150, 98, 0.72)",
+    green: "rgba(93, 171, 109, 0.76)",
+    highland: "rgba(162, 129, 79, 0.62)",
+    dryHighland: "rgba(185, 145, 86, 0.58)",
+    ridge: "rgba(238, 219, 158, 0.38)",
+    summit: "rgba(255, 238, 178, 0.72)",
+    darkKnot: "rgba(39, 67, 62, 0.32)",
+    polarLand: "rgba(125, 179, 138, 0.58)",
+    ice: "rgba(232, 249, 255, 0.76)",
+    iceSoft: "rgba(203, 236, 248, 0.36)"
   };
 
-  function win() {
-    return typeof window !== "undefined" ? window : {};
+  const CONTINENTS = [
+    {
+      id: "auralis-main",
+      name: "Auralis Main",
+      role: "western-large highland continent",
+      terrainPressure: 0.84,
+      summitPressure: 0.92,
+      lobes: [
+        { lon: -62, lat: 8, sx: 26, sy: 36, rot: -18, color: COLORS.green, wobble: 0.12 },
+        { lon: -78, lat: -4, sx: 16, sy: 24, rot: 18, color: COLORS.lowland, wobble: 0.13 },
+        { lon: -49, lat: 27, sx: 14, sy: 20, rot: -8, color: COLORS.highland, wobble: 0.1 }
+      ],
+      ridges: [
+        { a: [-72, 20], b: [-52, -12], bend: 0.24 },
+        { a: [-58, 33], b: [-39, 7], bend: -0.18 }
+      ],
+      summits: [
+        { lon: -64, lat: 22, rank: 1 },
+        { lon: -49, lat: 8, rank: 2 },
+        { lon: -76, lat: -11, rank: 3 }
+      ]
+    },
+    {
+      id: "veyra-shelf",
+      name: "Veyra Shelf",
+      role: "eastern medium continent with broad shelves",
+      terrainPressure: 0.66,
+      summitPressure: 0.58,
+      lobes: [
+        { lon: 44, lat: 13, sx: 18, sy: 31, rot: 22, color: COLORS.lowland, wobble: 0.11 },
+        { lon: 61, lat: 3, sx: 13, sy: 22, rot: -11, color: COLORS.highland, wobble: 0.13 },
+        { lon: 34, lat: -8, sx: 10, sy: 18, rot: 34, color: COLORS.green, wobble: 0.1 }
+      ],
+      ridges: [
+        { a: [38, 28], b: [61, -11], bend: -0.16 },
+        { a: [51, 20], b: [67, 5], bend: 0.12 }
+      ],
+      summits: [
+        { lon: 47, lat: 22, rank: 4 },
+        { lon: 63, lat: 1, rank: 5 }
+      ]
+    },
+    {
+      id: "caldrin-reach",
+      name: "Caldrin Reach",
+      role: "southern broken continent and archipelago edge",
+      terrainPressure: 0.62,
+      summitPressure: 0.46,
+      lobes: [
+        { lon: -8, lat: -34, sx: 18, sy: 15, rot: -9, color: COLORS.dryHighland, wobble: 0.16 },
+        { lon: 13, lat: -39, sx: 12, sy: 10, rot: 20, color: COLORS.highland, wobble: 0.14 },
+        { lon: -28, lat: -43, sx: 10, sy: 8, rot: -25, color: COLORS.green, wobble: 0.16 }
+      ],
+      ridges: [
+        { a: [-28, -37], b: [14, -43], bend: 0.12 }
+      ],
+      summits: [
+        { lon: -8, lat: -32, rank: 6 },
+        { lon: 18, lat: -39, rank: 7 }
+      ]
+    },
+    {
+      id: "marrowen-belt",
+      name: "Marrowen Belt",
+      role: "equatorial fractured continent chain",
+      terrainPressure: 0.52,
+      summitPressure: 0.36,
+      lobes: [
+        { lon: 125, lat: -2, sx: 11, sy: 10, rot: 18, color: COLORS.green, wobble: 0.16 },
+        { lon: 143, lat: 5, sx: 9, sy: 8, rot: -12, color: COLORS.highland, wobble: 0.14 },
+        { lon: 158, lat: -6, sx: 7, sy: 7, rot: 28, color: COLORS.lowland, wobble: 0.14 }
+      ],
+      ridges: [
+        { a: [120, -3], b: [160, -4], bend: 0.1 }
+      ],
+      summits: [
+        { lon: 143, lat: 5, rank: 8 }
+      ]
+    },
+    {
+      id: "north-polar-crown",
+      name: "North Polar Crown",
+      role: "fifth exposed north polar continent",
+      terrainPressure: 0.74,
+      summitPressure: 0.66,
+      lobes: [
+        { lon: 12, lat: 67, sx: 36, sy: 14, rot: 4, color: COLORS.polarLand, wobble: 0.11 },
+        { lon: -28, lat: 72, sx: 18, sy: 10, rot: -16, color: COLORS.iceSoft, wobble: 0.08 },
+        { lon: 52, lat: 70, sx: 16, sy: 9, rot: 16, color: COLORS.highland, wobble: 0.08 }
+      ],
+      ridges: [
+        { a: [-22, 70], b: [54, 68], bend: -0.1 }
+      ],
+      summits: [
+        { lon: 15, lat: 68, rank: 9 }
+      ]
+    }
+  ];
+
+  const state = {
+    contract: CONTRACT,
+    family: FAMILY,
+    target: TARGET,
+    route: ROUTE,
+    active: true,
+    classicScript: true,
+    globalPublished: false,
+    mountCalled: false,
+    drawCount: 0,
+    lastScope: "module-load",
+    oceanDominant: true,
+    fiveContinentLaw: true,
+    southPoleIceOnly: true,
+    visualPassClaim: false,
+    errors: []
+  };
+
+  function hasWindow() {
+    return typeof window !== "undefined";
   }
 
-  function now() {
-    return new Date().toISOString();
+  function nowIso() {
+    try {
+      return new Date().toISOString();
+    } catch (_error) {
+      return "";
+    }
   }
 
-  function clamp01(value) {
-    return Math.max(0, Math.min(1, value));
+  function recordError(scope, error) {
+    const message = error && error.message ? error.message : String(error);
+    state.errors.push({ scope, message, time: nowIso() });
+    publishReceipt(scope);
+  }
+
+  function toRad(degrees) {
+    return degrees * DEG;
   }
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
   }
 
-  function lerp(a, b, t) {
-    return a + (b - a) * t;
+  function validPayload(ctx, payload) {
+    return Boolean(
+      ctx &&
+        payload &&
+        payload.geometry &&
+        payload.project &&
+        typeof payload.project === "function" &&
+        Number.isFinite(payload.geometry.cx) &&
+        Number.isFinite(payload.geometry.cy) &&
+        Number.isFinite(payload.geometry.radius)
+    );
   }
 
-  function fade(t) {
-    return t * t * t * (t * (t * 6 - 15) + 10);
+  function projectPoint(payload, lonDeg, latDeg, elevation = 0.006) {
+    return payload.project(toRad(lonDeg), toRad(latDeg), elevation);
   }
 
-  function smoothstep(edge0, edge1, x) {
-    const t = clamp01((x - edge0) / Math.max(0.00001, edge1 - edge0));
-    return t * t * (3 - 2 * t);
-  }
+  function projectedEllipse(payload, lobe, scale = 1, elevation = 0.006, steps = 42) {
+    const pts = [];
+    const rot = toRad(lobe.rot || 0);
+    const cx = lobe.lon;
+    const cy = lobe.lat;
+    const sx = lobe.sx * scale;
+    const sy = lobe.sy * scale;
+    const wobble = lobe.wobble || 0.08;
 
-  function normalize3(v) {
-    const x = Number(v?.x || 0);
-    const y = Number(v?.y || 0);
-    const z = Number(v?.z || 0);
-    const m = Math.hypot(x, y, z) || 1;
-    return { x: x / m, y: y / m, z: z / m };
-  }
+    for (let i = 0; i < steps; i += 1) {
+      const t = (Math.PI * 2 * i) / steps;
 
-  function dot3(a, b) {
-    return a.x * b.x + a.y * b.y + a.z * b.z;
-  }
+      const n =
+        1 +
+        Math.sin(t * 3 + cx * 0.07) * wobble +
+        Math.cos(t * 5 + cy * 0.09) * wobble * 0.58 +
+        Math.sin(t * 9) * wobble * 0.24;
 
-  function hash2(x, y, seed = PLANET.seed) {
-    let n = Math.imul(x ^ seed, 374761393) ^ Math.imul(y + seed, 668265263);
-    n = (n ^ (n >>> 13)) >>> 0;
-    n = Math.imul(n, 1274126177) >>> 0;
-    return ((n ^ (n >>> 16)) >>> 0) / 4294967295;
-  }
+      const ex = Math.cos(t) * sx * n;
+      const ey = Math.sin(t) * sy * n;
 
-  function valueNoise(x, y, scale, seedOffset = 0) {
-    const sx = x * scale;
-    const sy = y * scale;
-    const x0 = Math.floor(sx);
-    const y0 = Math.floor(sy);
-    const tx = fade(sx - x0);
-    const ty = fade(sy - y0);
+      const lon = cx + ex * Math.cos(rot) - ey * Math.sin(rot);
+      const lat = clamp(cy + ex * Math.sin(rot) + ey * Math.cos(rot), -82, 82);
 
-    const a = hash2(x0, y0, PLANET.seed + seedOffset);
-    const b = hash2(x0 + 1, y0, PLANET.seed + seedOffset);
-    const c = hash2(x0, y0 + 1, PLANET.seed + seedOffset);
-    const d = hash2(x0 + 1, y0 + 1, PLANET.seed + seedOffset);
-
-    return lerp(lerp(a, b, tx), lerp(c, d, tx), ty);
-  }
-
-  function fbm(x, y, baseScale, octaves, seedOffset = 0) {
-    let total = 0;
-    let amp = 0.5;
-    let scale = baseScale;
-    let norm = 0;
-
-    for (let i = 0; i < octaves; i += 1) {
-      total += valueNoise(x, y, scale, seedOffset + i * 997) * amp;
-      norm += amp;
-      amp *= 0.5;
-      scale *= 2.03;
+      const p = projectPoint(payload, lon, lat, elevation);
+      pts.push({ ...p, lon, lat });
     }
 
-    return total / Math.max(0.0001, norm);
+    return pts;
   }
 
-  function wrapUnitDistance(a, b) {
-    let d = a - b;
-    if (d > 1) d -= 2;
-    if (d < -1) d += 2;
-    return d;
+  function drawProjectedShape(ctx, payload, lobe, options = {}) {
+    const scale = options.scale || 1;
+    const elevation = options.elevation ?? 0.006;
+    const fill = options.fill || lobe.color || COLORS.green;
+    const stroke = options.stroke || "rgba(226, 246, 230, 0.18)";
+    const lineWidth = options.lineWidth || 1;
+    const pts = projectedEllipse(payload, lobe, scale, elevation);
+
+    const visible = pts.filter((p) => p.visible && p.z > -0.04);
+
+    if (visible.length < 7) return false;
+
+    ctx.save();
+
+    ctx.beginPath();
+    visible.forEach((p, index) => {
+      if (index === 0) ctx.moveTo(p.x, p.y);
+      else ctx.lineTo(p.x, p.y);
+    });
+
+    ctx.closePath();
+    ctx.fillStyle = fill;
+    ctx.fill();
+
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = lineWidth;
+    ctx.stroke();
+
+    ctx.restore();
+
+    return true;
   }
 
-  function normalToUV(worldNormal) {
-    const n = normalize3(worldNormal);
-    const lon = Math.atan2(n.x, n.z);
-    const lat = Math.asin(clamp(n.y, -1, 1));
+  function drawRidge(ctx, payload, ridge) {
+    const [aLon, aLat] = ridge.a;
+    const [bLon, bLat] = ridge.b;
+    const bend = ridge.bend || 0;
+    const pts = [];
 
-    return {
-      normal: n,
-      lon,
-      lat,
-      u: lon / Math.PI,
-      v: lat / (Math.PI / 2)
-    };
-  }
-
-  function distanceToSegment(px, py, ax, ay, bx, by) {
-    const vx = bx - ax;
-    const vy = by - ay;
-    const wx = px - ax;
-    const wy = py - ay;
-    const len2 = vx * vx + vy * vy || 1;
-    const t = clamp01((wx * vx + wy * vy) / len2);
-    const qx = ax + vx * t;
-    const qy = ay + vy * t;
-
-    return {
-      distance: Math.hypot(px - qx, py - qy),
-      t
-    };
-  }
-
-  function spineField(localX, localY, spine) {
-    let best = 0;
-
-    for (let i = 0; i < spine.length - 1; i += 1) {
-      const a = spine[i];
-      const b = spine[i + 1];
-      const d = distanceToSegment(localX, localY, a[0], a[1], b[0], b[1]);
-      const width = 0.34 + 0.10 * Math.sin((i + 1) * 1.7);
-      const core = 1 - smoothstep(width * 0.36, width, d.distance);
-      const taper = smoothstep(-0.08, 0.18, d.t) * (1 - smoothstep(0.82, 1.10, d.t));
-      best = Math.max(best, core * (0.72 + taper * 0.28));
+    for (let i = 0; i <= 22; i += 1) {
+      const k = i / 22;
+      const lon = aLon + (bLon - aLon) * k + Math.sin(k * Math.PI) * bend * 18;
+      const lat = aLat + (bLat - aLat) * k + Math.sin(k * Math.PI) * bend * 8;
+      const p = projectPoint(payload, lon, lat, 0.012);
+      if (p.visible && p.z > -0.02) pts.push(p);
     }
 
-    return clamp01(best);
+    if (pts.length < 4) return;
+
+    ctx.save();
+    ctx.beginPath();
+
+    pts.forEach((p, index) => {
+      if (index === 0) ctx.moveTo(p.x, p.y);
+      else ctx.lineTo(p.x, p.y);
+    });
+
+    ctx.strokeStyle = COLORS.ridge;
+    ctx.lineWidth = Math.max(1, payload.geometry.radius * 0.008);
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.stroke();
+
+    ctx.restore();
   }
 
-  function continentInfluence(continent, u, v, roughness) {
-    const du = wrapUnitDistance(u, continent.u);
-    const dv = v - continent.v;
-    const cos = Math.cos(continent.angle);
-    const sin = Math.sin(continent.angle);
+  function drawSummit(ctx, payload, summit) {
+    const p = projectPoint(payload, summit.lon, summit.lat, 0.018);
 
-    const x = (du * cos - dv * sin) / continent.rx;
-    const y = (du * sin + dv * cos) / continent.ry;
+    if (!p.visible || p.z < -0.02) return;
 
-    const spine = spineField(x, y, continent.spine);
+    const r = Math.max(1.8, payload.geometry.radius * (0.012 + summit.rank * 0.0008)) * (0.7 + p.scale * 0.5);
 
-    const lobeA = Math.max(0, 1 - Math.hypot(x + 0.36, y - 0.10) / (0.55 + roughness * 0.18));
-    const lobeB = Math.max(0, 1 - Math.hypot(x - 0.30, y + 0.06) / (0.48 + roughness * 0.16));
-    const lobeC = Math.max(0, 1 - Math.hypot(x - 0.02, y - 0.28) / (0.42 + roughness * 0.14));
+    ctx.save();
 
-    const bayNoise = fbm(u * 1.7 + continent.rx * 11, v * 1.3 - continent.ry * 9, 19.0, 3, 4300);
-    const inletNoise = fbm(u - continent.rx * 7, v + continent.ry * 8, 31.0, 2, 5100);
-    const edgeNoise = fbm(u + continent.rx * 17, v - continent.ry * 19, 44.0, 2, 6100);
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, r * 2.2, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(255, 235, 168, 0.08)";
+    ctx.fill();
 
-    const ridgeBody = spine * 0.84 + lobeA * 0.24 + lobeB * 0.22 + lobeC * 0.17;
-    const bayCuts = smoothstep(0.58, 0.88, bayNoise) * 0.22 + smoothstep(0.64, 0.92, inletNoise) * 0.16;
-    const roughEdge = (roughness - 0.5) * 0.14 + (edgeNoise - 0.5) * 0.09;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+    ctx.fillStyle = COLORS.summit;
+    ctx.fill();
 
-    const field = ridgeBody + roughEdge - bayCuts;
+    ctx.beginPath();
+    ctx.moveTo(p.x - r * 1.7, p.y);
+    ctx.lineTo(p.x + r * 1.7, p.y);
+    ctx.moveTo(p.x, p.y - r * 1.7);
+    ctx.lineTo(p.x, p.y + r * 1.7);
+    ctx.strokeStyle = "rgba(255, 248, 206, 0.34)";
+    ctx.lineWidth = Math.max(1, r * 0.35);
+    ctx.stroke();
 
-    return clamp01(smoothstep(0.18, 0.74, field));
+    ctx.restore();
   }
 
-  function continentField(u, v) {
-    const roughA = fbm(u + 3.0, v - 1.5, 8.0, 4, 400);
-    const roughB = fbm(u - 4.2, v + 2.4, 18.0, 3, 900);
-    const roughness = clamp01(roughA * 0.70 + roughB * 0.30);
-
-    let best = {
-      id: "OCEAN",
-      kind: "ocean",
-      strength: 0,
-      lift: 0,
-      main: false,
-      northPolar: false
-    };
-
-    for (const continent of PLANET.continents) {
-      const influence = continentInfluence(continent, u, v, roughness);
-
-      if (influence > best.strength) {
-        best = {
-          id: continent.id,
-          kind: continent.kind,
-          strength: influence,
-          lift: continent.lift,
-          main: continent.kind === "main",
-          northPolar: continent.kind === "north-polar"
-        };
-      }
-    }
-
-    return best;
-  }
-
-  function summitPressure(worldNormal) {
-    const n = normalize3(worldNormal);
-
-    const summitSeeds = [
-      [-0.52, -0.35, 0.72],
-      [-0.25, -0.54, 0.76],
-      [0.08, -0.45, 0.84],
-      [0.38, -0.24, 0.80],
-      [0.55, 0.02, 0.72],
-      [0.34, 0.34, 0.74],
-      [0.02, 0.50, 0.80],
-      [-0.34, 0.30, 0.78],
-      [-0.58, 0.02, 0.70]
+  function drawSouthPoleIceOnly(ctx, payload) {
+    const lobes = [
+      { lon: 0, lat: -74, sx: 92, sy: 9, rot: 0, color: COLORS.ice, wobble: 0.04 },
+      { lon: 50, lat: -79, sx: 42, sy: 6, rot: 8, color: COLORS.iceSoft, wobble: 0.05 },
+      { lon: -70, lat: -78, sx: 34, sy: 5, rot: -12, color: COLORS.iceSoft, wobble: 0.05 }
     ];
 
-    let field = 0;
-
-    for (let i = 0; i < summitSeeds.length; i += 1) {
-      const s = normalize3({ x: summitSeeds[i][0], y: summitSeeds[i][1], z: summitSeeds[i][2] });
-      const alignment = Math.max(0, dot3(n, s));
-      field += Math.pow(alignment, 42) * (0.92 + (i % 3) * 0.10);
+    for (const lobe of lobes) {
+      drawProjectedShape(ctx, payload, lobe, {
+        scale: 1,
+        elevation: 0.01,
+        fill: lobe.color,
+        stroke: "rgba(244, 253, 255, 0.24)",
+        lineWidth: Math.max(1, payload.geometry.radius * 0.004)
+      });
     }
-
-    return clamp01(field);
   }
 
-  function classifySurface(worldNormal, context = {}) {
-    const uv = normalToUV(worldNormal);
-    const n = uv.normal;
-    const u = uv.u;
-    const v = uv.v;
+  function drawShelfField(ctx, payload, continent) {
+    for (const lobe of continent.lobes) {
+      drawProjectedShape(ctx, payload, lobe, {
+        scale: 1.22,
+        elevation: -0.006,
+        fill: COLORS.shelf,
+        stroke: COLORS.shelfLine,
+        lineWidth: Math.max(1, payload.geometry.radius * 0.004)
+      });
+    }
+  }
 
-    const seaLevel = Number.isFinite(context.seaLevel) ? context.seaLevel : PLANET.seaLevel;
-    const continent = continentField(u, v);
+  function drawLandField(ctx, payload, continent) {
+    for (const lobe of continent.lobes) {
+      drawProjectedShape(ctx, payload, lobe, {
+        scale: 1,
+        elevation: 0.012,
+        fill: lobe.color,
+        stroke: "rgba(226, 246, 230, 0.22)",
+        lineWidth: Math.max(1, payload.geometry.radius * 0.005)
+      });
 
-    const broad = fbm(u + 1.72, v + 2.36, 2.25, 5, 100);
-    const coast = fbm(u + 4.1, v - 1.7, 7.0, 5, 600);
-    const ridgeNoise = fbm(u - 3.5, v + 5.2, 14.5, 4, 1200);
-    const grain = fbm(u + 8.0, v - 7.0, 34.0, 3, 1800);
-
-    const terrainCandidate = clamp01(
-      continent.strength * 0.88 +
-      broad * 0.055 +
-      coast * 0.045 +
-      ridgeNoise * 0.025
-    );
-
-    const summit = summitPressure(n);
-    const ridge = clamp01((ridgeNoise - 0.49) * 1.85);
-    const basin = clamp01((0.57 - broad) * 1.22 + (0.42 - coast) * 0.64);
-
-    const northPolarBoost = continent.northPolar ? 0.115 : 0;
-    const mainLift = continent.main ? continent.lift || 0 : 0;
-
-    let elevation = clamp01(
-      terrainCandidate * 0.66 +
-      summit * 0.24 +
-      ridge * 0.105 +
-      northPolarBoost +
-      mainLift -
-      basin * 0.255
-    );
-
-    const southPole = v < -0.68;
-    const southIce = smoothstep(-0.68, -0.95, v) * (0.76 + grain * 0.24);
-    const northIce = smoothstep(0.79, 0.96, v) * (0.30 + grain * 0.30);
-    const polarIce = clamp01(Math.max(southIce, northIce));
-
-    if (southPole) {
-      elevation = Math.min(elevation, seaLevel - 0.065);
+      drawProjectedShape(ctx, payload, {
+        ...lobe,
+        sx: lobe.sx * 0.46,
+        sy: lobe.sy * 0.38,
+        color: COLORS.darkKnot
+      }, {
+        scale: 1,
+        elevation: 0.016,
+        fill: COLORS.darkKnot,
+        stroke: "rgba(255,255,255,0)",
+        lineWidth: 0
+      });
     }
 
-    const exposedLand =
-      !southPole &&
-      continent.strength > 0.36 &&
-      terrainCandidate > 0.44 &&
-      elevation > seaLevel;
+    for (const ridge of continent.ridges || []) {
+      drawRidge(ctx, payload, ridge);
+    }
 
-    const exposureDistance = elevation - seaLevel;
+    for (const summit of continent.summits || []) {
+      drawSummit(ctx, payload, summit);
+    }
+  }
 
-    const nearSeaShelf =
-      !exposedLand &&
-      terrainCandidate > 0.33 &&
-      elevation > seaLevel - 0.16;
+  function clipToSphere(ctx, geometry) {
+    ctx.beginPath();
+    ctx.arc(geometry.cx, geometry.cy, geometry.radius * 0.997, 0, Math.PI * 2);
+    ctx.clip();
+  }
 
-    const drownedContinent =
-      !exposedLand &&
-      terrainCandidate > 0.47 &&
-      elevation <= seaLevel;
+  function draw(ctx, payload) {
+    if (!validPayload(ctx, payload)) return api;
 
-    const deepOcean =
-      !exposedLand &&
-      !nearSeaShelf &&
-      !drownedContinent;
+    state.drawCount += 1;
+    state.lastScope = "draw";
 
-    const mountain = exposedLand
-      ? clamp01(summit * 1.35 + smoothstep(0.76, 0.96, elevation) * 0.64)
-      : 0;
+    ctx.save();
+    clipToSphere(ctx, payload.geometry);
 
-    const coastLine = exposedLand ? smoothstep(0.060, 0.0, Math.abs(exposureDistance)) : 0;
+    ctx.globalCompositeOperation = "source-over";
 
-    state.classificationCount += 1;
-    state.lastClassificationAt = now();
+    for (const continent of CONTINENTS) {
+      drawShelfField(ctx, payload, continent);
+    }
 
-    return Object.freeze({
+    for (const continent of CONTINENTS) {
+      drawLandField(ctx, payload, continent);
+    }
+
+    drawSouthPoleIceOnly(ctx, payload);
+
+    ctx.restore();
+
+    publishReceipt("draw");
+
+    return api;
+  }
+
+  function render(ctx, payload) {
+    return draw(ctx, payload);
+  }
+
+  function paint(ctx, payload) {
+    return draw(ctx, payload);
+  }
+
+  function drawContinents(ctx, payload) {
+    return draw(ctx, payload);
+  }
+
+  function renderContinents(ctx, payload) {
+    return draw(ctx, payload);
+  }
+
+  function paintContinents(ctx, payload) {
+    return draw(ctx, payload);
+  }
+
+  function mount(payload = {}) {
+    state.mountCalled = true;
+    state.lastScope = "mount";
+    publishReceipt("mount");
+    return api;
+  }
+
+  function init(payload = {}) {
+    state.lastScope = "init";
+    publishReceipt("init");
+    return api;
+  }
+
+  function setup(payload = {}) {
+    state.lastScope = "setup";
+    publishReceipt("setup");
+    return api;
+  }
+
+  function boot(payload = {}) {
+    state.lastScope = "boot";
+    publishReceipt("boot");
+    return api;
+  }
+
+  function create(payload = {}) {
+    state.lastScope = "create";
+    publishReceipt("create");
+    return api;
+  }
+
+  function getStatus() {
+    return {
       contract: CONTRACT,
-      normal: n,
-      lon: uv.lon,
-      lat: uv.lat,
-      u,
-      v,
-      continent,
-      broad,
-      coast,
-      ridgeNoise,
-      grain,
-      terrainCandidate,
-      elevation,
-      seaLevel,
-      exposureDistance,
-      exposedLand,
-      nearSeaShelf,
-      drownedContinent,
-      deepOcean,
-      summit,
-      mountain,
-      basin,
-      ridge,
-      polarIce,
-      southPole,
-      southIce,
-      northIce,
-      coastLine,
-      classification: exposedLand
-        ? "exposed-land"
-        : southPole
-          ? "south-pole-ice-water"
-          : drownedContinent
-            ? "drowned-continent"
-            : nearSeaShelf
-              ? "near-sea-shelf"
-              : "deep-ocean"
-    });
-  }
-
-  function sampleRatios(options = {}) {
-    const samples = Number.isFinite(options.samples) ? Math.max(64, Math.min(4096, options.samples)) : 1024;
-    const stats = {
-      total: 0,
-      exposedLand: 0,
-      shelf: 0,
-      drownedContinent: 0,
-      deepOcean: 0,
-      ice: 0,
-      northPolar: 0,
-      southPole: 0
-    };
-
-    for (let i = 0; i < samples; i += 1) {
-      const t = (i + 0.5) / samples;
-      const z = 1 - 2 * t;
-      const radial = Math.sqrt(Math.max(0, 1 - z * z));
-      const theta = Math.PI * (3 - Math.sqrt(5)) * i;
-      const n = {
-        x: Math.cos(theta) * radial,
-        y: z,
-        z: Math.sin(theta) * radial
-      };
-
-      const surface = classifySurface(n, options);
-
-      stats.total += 1;
-      if (surface.exposedLand) stats.exposedLand += 1;
-      if (surface.nearSeaShelf) stats.shelf += 1;
-      if (surface.drownedContinent) stats.drownedContinent += 1;
-      if (surface.deepOcean) stats.deepOcean += 1;
-      if (surface.polarIce > 0.40 || surface.southPole) stats.ice += 1;
-      if (surface.continent.northPolar) stats.northPolar += 1;
-      if (surface.southPole) stats.southPole += 1;
-    }
-
-    state.lastRatios = Object.freeze({
-      total: stats.total,
-      exposedLandRatio: Number((stats.exposedLand / stats.total).toFixed(4)),
-      shelfRatio: Number((stats.shelf / stats.total).toFixed(4)),
-      drownedContinentRatio: Number((stats.drownedContinent / stats.total).toFixed(4)),
-      deepOceanRatio: Number((stats.deepOcean / stats.total).toFixed(4)),
-      iceRatio: Number((stats.ice / stats.total).toFixed(4)),
-      northPolarInfluenceRatio: Number((stats.northPolar / stats.total).toFixed(4)),
-      southPoleRatio: Number((stats.southPole / stats.total).toFixed(4))
-    });
-
-    return state.lastRatios;
-  }
-
-  function getContinentStatus() {
-    return Object.freeze({
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      version: VERSION,
+      family: FAMILY,
+      target: TARGET,
       route: ROUTE,
-      planet: PLANET,
-      lastRatios: state.lastRatios,
-      lastClassificationAt: state.lastClassificationAt,
-      classificationCount: state.classificationCount,
+      active: true,
+      classicScript: true,
+      globalPublished: state.globalPublished,
+      mountCalled: state.mountCalled,
+      drawCount: state.drawCount,
+      fiveContinentLaw: true,
+      oceanDominant: true,
+      southPoleIceOnly: true,
+      continentCount: 5,
+      continents: CONTINENTS.map((continent) => ({
+        id: continent.id,
+        name: continent.name,
+        role: continent.role,
+        lobes: continent.lobes.length,
+        summits: continent.summits.length
+      })),
+      ratioTarget: {
+        ocean: "62-72%",
+        exposedLand: "20-30%",
+        iceShelfSubmergedPressure: "8-14%"
+      },
+      owns: [
+        "five-continent law",
+        "ocean-dominant footprint",
+        "non-blob coastlines",
+        "north polar continent",
+        "south pole ice-only rule",
+        "submerged shelves",
+        "Nine-Summits terrain pressure"
+      ],
+      doesNotOwn: [
+        "FORM_VISIBLE",
+        "canvas creation",
+        "route fallback",
+        "runtime handoff",
+        "parent mount",
+        "sky",
+        "motion"
+      ],
+      visualPassClaim: false,
+      errors: state.errors.slice()
+    };
+  }
+
+  function publishReceipt(scope = "publish") {
+    if (!hasWindow()) return;
+
+    const receipt = {
+      contract: CONTRACT,
+      family: FAMILY,
+      target: TARGET,
+      route: ROUTE,
+      mode: "continents_expression_child_engine",
+      scope,
+      active: true,
+      classicScript: true,
+      globalPublished: state.globalPublished,
+      mountCalled: state.mountCalled,
+      drawCount: state.drawCount,
+      fiveContinentLaw: true,
+      oceanDominant: true,
+      southPoleIceOnly: true,
+      continentCount: 5,
+      visualPassClaim: false,
+      formVisibleClaim: false,
       generatedImage: false,
       graphicBox: false,
-      visualPassClaimed: false
-    });
+      errors: state.errors.slice()
+    };
+
+    window.AUDRALIA_CONTINENTS_RECEIPT = receipt;
+    window.AUDRALIA_CLEAN_CONTINENTS_RECEIPT = receipt;
+    window.AUDRALIA_CLEAN_CANVAS_CONTINENTS_RECEIPT = receipt;
+
+    try {
+      window.dispatchEvent(
+        new CustomEvent("audralia:continents:receipt", { detail: receipt })
+      );
+    } catch (_error) {
+      try {
+        window.dispatchEvent(new Event("audralia:continents:receipt"));
+      } catch (_ignored) {}
+    }
   }
 
-  const AUDRALIA_CONTINENTS_ENGINE = Object.freeze({
-    contract: CONTRACT,
-    receipt: RECEIPT,
-    version: VERSION,
-    route: ROUTE,
-    planet: PLANET,
-    classifySurface,
-    sampleRatios,
-    getContinentStatus,
-    getStatus: getContinentStatus
-  });
+  const api = {
+    CONTRACT,
+    FAMILY,
+    TARGET,
+    ROUTE,
+    CONTINENTS,
+    mount,
+    init,
+    setup,
+    boot,
+    create,
+    draw,
+    render,
+    paint,
+    drawContinents,
+    renderContinents,
+    paintContinents,
+    getStatus,
+    status: getStatus
+  };
 
-  const global = win();
+  if (hasWindow()) {
+    window.AUDRALIA_CLEAN_CONTINENTS_ENGINE = api;
+    window.AUDRALIA_CONTINENTS_ENGINE = api;
+    window.AUDRALIA_CLEAN_CANVAS_CONTINENTS = api;
 
-  global.AUDRALIA_CONTINENTS_ENGINE = AUDRALIA_CONTINENTS_ENGINE;
-  global.AudraliaContinentsEngine = AUDRALIA_CONTINENTS_ENGINE;
-  global.audraliaContinentsEngine = AUDRALIA_CONTINENTS_ENGINE;
+    window.AudraliaContinentsEngine = api;
+    window.AudraliaContinents = api;
+    window.audraliaContinents = api;
+
+    window.AUDRALIA_CONTINENTS_EXPRESSION_ACTIVE = true;
+    window.AUDRALIA_FIVE_CONTINENT_LAW_ACTIVE = true;
+    window.AUDRALIA_SOUTH_POLE_ICE_ONLY = true;
+
+    state.globalPublished = true;
+    publishReceipt("module-load");
+  }
 })();

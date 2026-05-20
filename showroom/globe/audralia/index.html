@@ -3,10 +3,10 @@
   lang="en"
   data-route="/showroom/globe/audralia/"
   data-page="audralia"
-  data-contract="AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_HTML_CACHE_READY_TNT_v1"
-  data-previous-contract="AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1"
-  data-route-bridge-contract="AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1"
-  data-html-cache-key="AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_HTML_CACHE_READY_TNT_v1"
+  data-contract="AUDRALIA_G2_6_HTML_DYNAMIC_ROUTE_BRIDGE_BOOTSTRAP_TNT_v1"
+  data-previous-contract="AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_HTML_CACHE_READY_TNT_v1"
+  data-html-cache-strategy="dynamic-route-bridge-bootstrap"
+  data-route-bridge-path="/showroom/globe/audralia/index.js"
   data-runtime-path="/assets/audralia/audralia.runtime.v3.js"
   data-parent-path="/assets/audralia/clean/engine/audralia.engine.js"
   data-continents-path="/assets/audralia/clean/engine/audralia/engine/continents.js"
@@ -27,17 +27,12 @@
       :root {
         color-scheme: dark;
         --bg: #01040d;
-        --panel: rgba(7, 20, 43, 0.92);
-        --panel-2: rgba(9, 31, 62, 0.82);
         --line: rgba(133, 217, 255, 0.22);
         --line-strong: rgba(133, 217, 255, 0.42);
         --text: rgba(239, 248, 255, 0.96);
         --muted: rgba(190, 217, 232, 0.76);
         --dim: rgba(142, 171, 190, 0.62);
         --accent: #7de8ff;
-        --danger: #ffb3b3;
-        --hold: #ffe2a6;
-        --ok: #bfffe1;
       }
 
       * {
@@ -72,10 +67,13 @@
         text-decoration: none;
       }
 
-      a:focus-visible,
-      button:focus-visible {
+      a:focus-visible {
         outline: 2px solid var(--accent);
         outline-offset: 3px;
+      }
+
+      code {
+        color: rgba(222, 246, 255, 0.95);
       }
 
       .skip-link {
@@ -451,15 +449,15 @@
 
         <p class="lead">
           This page is the Audralia child route shell. The HTML owns navigation, copy, and the mount
-          target only. The route bridge owns runtime import, awaited handoff, parent confirmation,
-          continent receipt validation, and fallback status.
+          target only. A permanent dynamic bootstrap loads the route bridge with a fresh cache key on
+          each page load so the HTML does not need to be renewed every time the downstream route logic changes.
         </p>
 
         <section class="chain" aria-label="Authority chain">
           <p><strong>Authority chain handoff</strong></p>
           <ul>
-            <li><strong>HTML shell:</strong> keeps navigation, copy, and the mount target.</li>
-            <li><strong>Route bridge:</strong> loads <code>/showroom/globe/audralia/index.js</code>.</li>
+            <li><strong>HTML shell:</strong> keeps navigation, copy, mount target, and permanent bridge bootstrap.</li>
+            <li><strong>Route bridge:</strong> dynamically loads <code>/showroom/globe/audralia/index.js</code>.</li>
             <li><strong>Runtime shim:</strong> loads <code>/assets/audralia/audralia.runtime.v3.js</code>.</li>
             <li><strong>Clean parent:</strong> mounts <code>/assets/audralia/clean/engine/audralia.engine.js</code>.</li>
             <li><strong>Continents child:</strong> loads <code>/assets/audralia/clean/engine/audralia/engine/continents.js</code>.</li>
@@ -467,14 +465,14 @@
         </section>
 
         <p class="contract-line">
-          AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_HTML_CACHE_READY_TNT_v1 · HTML shell active · route bridge cache ready · parent visible-body-first failsafe expected.
+          AUDRALIA_G2_6_HTML_DYNAMIC_ROUTE_BRIDGE_BOOTSTRAP_TNT_v1 · HTML shell active · permanent dynamic route-bridge bootstrap active · no recurring HTML cache-key edits required.
         </p>
 
         <section class="stage-card" aria-label="Audralia clean canvas inspection">
           <div class="stage-head">
             <h2>Authority chain handoff</h2>
             <p>Clean-canvas form mount target.</p>
-            <div class="bridge-badge">Versioned bridge active</div>
+            <div class="bridge-badge">Dynamic bridge bootstrap active</div>
           </div>
 
           <div class="canvas-shell">
@@ -499,32 +497,114 @@
             </h3>
 
             <p id="audraliaHandoffStatus" class="handoff-status" data-audralia-handoff-status>
-              STANDBY_FORM_VISIBLE · awaiting parent confirmation
+              DYNAMIC_BOOTSTRAP · loading route bridge
             </p>
 
             <ul id="audraliaHandoffList" class="handoff-list" data-audralia-handoff-list>
               <li><strong>ROUTE_VALID</strong> · /showroom/globe/audralia/</li>
               <li><strong>MOUNT_TARGET_FOUND</strong></li>
-              <li><strong>STANDBY_FORM_VISIBLE</strong> · route bridge pending</li>
+              <li><strong>DYNAMIC_BOOTSTRAP</strong> · route bridge cache key generated at page load</li>
             </ul>
 
             <p id="audraliaHandoffReceipt" class="handoff-receipt" data-audralia-handoff-receipt>
-              AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_HTML_CACHE_READY_TNT_v1
+              AUDRALIA_G2_6_HTML_DYNAMIC_ROUTE_BRIDGE_BOOTSTRAP_TNT_v1
             </p>
 
             <p id="audraliaBridgeScript" class="bridge-script" data-audralia-bridge-script>
-              Route bridge script: /showroom/globe/audralia/index.js?v=AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1
+              Route bridge script: dynamic bootstrap pending
             </p>
           </section>
         </section>
       </main>
     </div>
 
-    <script
-      type="module"
-      src="/showroom/globe/audralia/index.js?v=AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1"
-      data-audralia-route-bridge-loader="AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1"
-      data-audralia-html-cache-key="AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_HTML_CACHE_READY_TNT_v1"
-    ></script>
+    <script type="module">
+      const HTML_CONTRACT = "AUDRALIA_G2_6_HTML_DYNAMIC_ROUTE_BRIDGE_BOOTSTRAP_TNT_v1";
+      const ROUTE_BRIDGE_PATH = "/showroom/globe/audralia/index.js";
+      const ROOT = document.documentElement;
+      const now = Date.now();
+      const random = Math.random().toString(36).slice(2, 8);
+      const query = new URLSearchParams(window.location.search);
+
+      const externalCacheKey =
+        query.get("audraliaCache") ||
+        query.get("cache") ||
+        query.get("v") ||
+        "";
+
+      const dynamicCacheKey =
+        externalCacheKey ||
+        `${HTML_CONTRACT}__${now}__${random}`;
+
+      const bridgeUrl = `${ROUTE_BRIDGE_PATH}?v=${encodeURIComponent(dynamicCacheKey)}`;
+
+      ROOT.setAttribute("data-audralia-html-contract", HTML_CONTRACT);
+      ROOT.setAttribute("data-audralia-route-bridge-bootstrap", "dynamic");
+      ROOT.setAttribute("data-audralia-route-bridge-path", ROUTE_BRIDGE_PATH);
+      ROOT.setAttribute("data-audralia-route-bridge-cache-key", dynamicCacheKey);
+      ROOT.setAttribute("data-audralia-route-bridge-url", bridgeUrl);
+
+      window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT = {
+        contract: HTML_CONTRACT,
+        routeBridgePath: ROUTE_BRIDGE_PATH,
+        routeBridgeUrl: bridgeUrl,
+        dynamicCacheKey,
+        externalCacheKey: Boolean(externalCacheKey),
+        noRecurringHtmlCacheKeyEditsRequired: true,
+        runtimeRewrite: false,
+        parentRewrite: false,
+        continentsRewrite: false,
+        visualPassClaim: false,
+        generatedImage: false,
+        graphicBox: false
+      };
+
+      const scriptLine = document.querySelector("#audraliaBridgeScript");
+      const title = document.querySelector("#audraliaHandoffTitle");
+      const status = document.querySelector("#audraliaHandoffStatus");
+      const panel = document.querySelector("#audraliaHandoffPanel");
+
+      if (scriptLine) {
+        scriptLine.textContent = `Route bridge script: ${bridgeUrl}`;
+      }
+
+      if (title) {
+        title.textContent = "Clean-canvas handoff pending";
+      }
+
+      if (status) {
+        status.textContent = "DYNAMIC_BOOTSTRAP · loading route bridge";
+      }
+
+      if (panel) {
+        panel.setAttribute("data-audralia-handoff-state", "pending");
+        panel.setAttribute("data-audralia-html-dynamic-bootstrap", "true");
+      }
+
+      try {
+        await import(bridgeUrl);
+
+        window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.routeBridgeImportSucceeded = true;
+        ROOT.setAttribute("data-audralia-route-bridge-import-succeeded", "true");
+      } catch (error) {
+        window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.routeBridgeImportSucceeded = false;
+        window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.error = error && error.message ? error.message : String(error);
+
+        ROOT.setAttribute("data-audralia-route-bridge-import-succeeded", "false");
+        ROOT.setAttribute("data-audralia-route-bridge-import-error", window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.error);
+
+        if (title) {
+          title.textContent = "Clean-canvas handoff failed";
+        }
+
+        if (status) {
+          status.textContent = "HANDOFF_FAILED · dynamic route bridge import failed";
+        }
+
+        if (panel) {
+          panel.setAttribute("data-audralia-handoff-state", "failed");
+        }
+      }
+    </script>
   </body>
 </html>

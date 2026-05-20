@@ -1,15 +1,15 @@
 // /assets/audralia/clean/engine/audralia.engine.js
-// AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1
+// AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1
 // Full-file replacement.
-// Purpose: fresh G2.6 parent render baseline for Audralia’s Nine Summits / 256 / Fibonacci continent model.
-// Parent owns: mount, visible inspection frame, fixed globe geometry, ocean body, projection, drag-only longitude rotation, child loading, FORM_VISIBLE confirmation.
-// Parent does not own: continent model, motion, sky, route bridge, runtime path, HTML, generated image, GraphicBox, or visual-pass claim.
+// Purpose: parent-visible-body-first failsafe for Audralia G2.6.
+// Parent owns: mount, visible inspection frame, fixed globe geometry, ocean body, atmospheric rim, projection, drag-only longitude rotation, child loading, FORM_VISIBLE confirmation.
+// Parent does not own: route bridge, runtime path, HTML, continent model contents, motion, sky, generated image, GraphicBox, or visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_SEA_LEVEL_CONTINENTS_LIMB_OCCLUSION_4K_SURFACE_TNT_v1";
+  const CONTRACT = "AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1";
   const FAMILY = "AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1";
 
   const TARGET = "/assets/audralia/clean/engine/audralia.engine.js";
@@ -31,6 +31,7 @@
     continents: {
       enabled: true,
       path: "/assets/audralia/clean/engine/audralia/engine/continents.js",
+      expectedContract: "AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1",
       globals: [
         "AUDRALIA_NINE_SUMMITS_CONTINENTS_ENGINE",
         "AUDRALIA_CLEAN_CONTINENTS_ENGINE",
@@ -61,8 +62,11 @@
     family: FAMILY,
     target: TARGET,
     route: ROUTE,
-    g26CleanSurfaceInspectionBaseline: true,
-    nineSummits256FibonacciModel: true,
+    parentVisibleBodyFirst: true,
+    bodyPainted: false,
+    oceanBodyPainted: false,
+    atmosphericRimPainted: false,
+    childLoadDeferredUntilVisible: true,
     parentGlobalPublished: false,
     mountCalled: false,
     mounted: false,
@@ -73,7 +77,7 @@
     childLoadStarted: false,
     childLoadComplete: false,
     children: {
-      continents: "pending",
+      continents: "deferred_until_parent_visible",
       motion: "held",
       sky: "held"
     },
@@ -163,7 +167,7 @@
 
     target.setAttribute("data-audralia-visible-box-frame", "true");
     target.setAttribute("data-audralia-parent-contract", CONTRACT);
-    target.setAttribute("data-audralia-nine-summits-256-fibonacci-model", "true");
+    target.setAttribute("data-audralia-parent-visible-body-first", "true");
   }
 
   function lockCanvas(canvas) {
@@ -188,7 +192,7 @@
     canvas.setAttribute("data-audralia-clean-parent-canvas", "true");
     canvas.setAttribute("data-audralia-clean-canvas", "true");
     canvas.setAttribute("data-contract", CONTRACT);
-    canvas.setAttribute("aria-label", "Audralia Nine Summits Fibonacci inspection planet");
+    canvas.setAttribute("aria-label", "Audralia parent visible body first failsafe");
   }
 
   function ensureCanvas(target) {
@@ -213,7 +217,7 @@
   }
 
   function resize() {
-    if (!env.canvas || !env.mount) return;
+    if (!env.canvas || !env.mount) return false;
 
     lockMountFrame(env.mount);
     lockCanvas(env.canvas);
@@ -245,11 +249,23 @@
     const factor = mobileTight ? MOBILE_RADIUS_FACTOR : SAFE_RADIUS_FACTOR;
     env.radius = Math.floor(Math.min(env.width, env.height) * factor);
 
+    if (!Number.isFinite(env.width) || !Number.isFinite(env.height) || env.width <= 0 || env.height <= 0) {
+      recordError("resize", "Invalid canvas dimensions.");
+      return false;
+    }
+
+    if (!Number.isFinite(env.radius) || env.radius <= 0) {
+      recordError("resize", "Invalid globe radius.");
+      return false;
+    }
+
     if (env.canvas.width !== env.width) env.canvas.width = env.width;
     if (env.canvas.height !== env.height) env.canvas.height = env.height;
 
     env.canvas.style.width = "100%";
     env.canvas.style.height = "100%";
+
+    return true;
   }
 
   function getGeometry() {
@@ -337,6 +353,8 @@
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
     ctx.restore();
+
+    state.oceanBodyPainted = true;
   }
 
   function drawAtmosphericRim(ctx, g) {
@@ -359,6 +377,8 @@
     ctx.stroke();
 
     ctx.restore();
+
+    state.atmosphericRimPainted = true;
   }
 
   function project(lon, lat, elevation = 0) {
@@ -417,6 +437,7 @@
         return true;
       } catch (error) {
         recordError(`${name}.${methodName}`, error);
+        state.children[name] = "hold_child_error";
         return false;
       }
     }
@@ -424,39 +445,67 @@
     return false;
   }
 
-  function render() {
-    if (!env.canvas || !env.ctx) return api;
+  function renderBodyOnly() {
+    if (!env.canvas || !env.ctx) return false;
 
-    resize();
+    const resized = resize();
+    if (!resized) return false;
 
     const ctx = env.ctx;
     const g = getGeometry();
 
     state.renderCount += 1;
+    state.bodyPainted = false;
+    state.oceanBodyPainted = false;
+    state.atmosphericRimPainted = false;
 
     clearCanvas(ctx, g);
     drawSpace(ctx, g);
     drawOceanBase(ctx, g);
-
-    ctx.save();
-    clipToPlanet(ctx, g);
-
-    const payload = makePayload("render");
-
-    invokeChild("continents", [
-      "draw",
-      "render",
-      "paint",
-      "drawContinents",
-      "renderContinents",
-      "paintContinents"
-    ], payload);
-
-    ctx.restore();
-
     drawAtmosphericRim(ctx, g);
 
-    publishFormVisible("render-visible");
+    state.bodyPainted = true;
+    publishFormVisible("parent-body-visible");
+
+    return true;
+  }
+
+  function render() {
+    if (!env.canvas || !env.ctx) return api;
+
+    const bodyVisible = renderBodyOnly();
+
+    if (!bodyVisible) {
+      publishReceipt("render-body-failed");
+      return api;
+    }
+
+    if (env.childEngines.continents) {
+      try {
+        const ctx = env.ctx;
+        const g = getGeometry();
+
+        ctx.save();
+        clipToPlanet(ctx, g);
+
+        invokeChild("continents", [
+          "draw",
+          "render",
+          "paint",
+          "drawContinents",
+          "renderContinents",
+          "paintContinents"
+        ], makePayload("render-continents"));
+
+        ctx.restore();
+
+        drawAtmosphericRim(ctx, g);
+        publishFormVisible("render-visible-with-continents");
+      } catch (error) {
+        recordError("render-continents", error);
+        publishFormVisible("render-visible-child-hold");
+      }
+    }
 
     return api;
   }
@@ -550,7 +599,7 @@
       script.async = false;
       script.defer = false;
       script.setAttribute("data-audralia-clean-parent-child-loader", CONTRACT);
-      script.setAttribute("data-audralia-g26-nine-summits-child-cache", "true");
+      script.setAttribute("data-audralia-parent-visible-first-child-cache", "true");
 
       script.onload = () => resolve({ src, loaded: true, reused: false });
       script.onerror = () => resolve({ src, loaded: false, reused: false });
@@ -583,11 +632,12 @@
     return raw;
   }
 
-  async function loadChildren() {
+  async function loadChildrenAfterVisible() {
     if (state.childLoadStarted) return env.childPromise;
 
     state.childLoadStarted = true;
-    publishReceipt("children-load-start");
+    state.children.continents = "loading_after_parent_visible";
+    publishReceipt("children-load-start-after-parent-visible");
 
     env.childPromise = (async () => {
       for (const [name, child] of Object.entries(CHILDREN)) {
@@ -603,8 +653,9 @@
         const result = await loadScriptOnce(child.path);
 
         if (!result.loaded) {
-          state.children[name] = "missing";
+          state.children[name] = "hold_missing";
           recordError(`child.${name}`, `Unable to load child file: ${child.path}`);
+          publishFormVisible("child-missing-parent-remains-visible");
           continue;
         }
 
@@ -612,8 +663,9 @@
         const normalized = normalizeChild(name, raw);
 
         if (!normalized) {
-          state.children[name] = "loaded_no_global";
+          state.children[name] = "hold_loaded_no_global";
           recordError(`child.${name}`, `Child loaded but no recognized global was published: ${child.path}`);
+          publishFormVisible("child-no-global-parent-remains-visible");
           continue;
         }
 
@@ -629,7 +681,11 @@
       requestRender();
 
       return getStatus();
-    })();
+    })().catch((error) => {
+      recordError("loadChildrenAfterVisible", error);
+      publishFormVisible("children-load-error-parent-remains-visible");
+      return getStatus();
+    });
 
     return env.childPromise;
   }
@@ -644,14 +700,14 @@
 
     window.AUDRALIA_CLEAN_PARENT_ENGINE_GLOBAL_PUBLISHED = true;
     window.AUDRALIA_CLEAN_PARENT_ENGINE_CONTRACT = CONTRACT;
-    window.AUDRALIA_G26_NINE_SUMMITS_256_FIBONACCI_PARENT_ACTIVE = true;
+    window.AUDRALIA_PARENT_VISIBLE_BODY_FIRST_FAILSAFE = true;
 
     state.parentGlobalPublished = true;
 
     if (hasDocument() && document.documentElement) {
       document.documentElement.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
       document.documentElement.setAttribute("data-audralia-clean-parent-target", TARGET);
-      document.documentElement.setAttribute("data-audralia-g26-nine-summits-256-fibonacci-parent-active", "true");
+      document.documentElement.setAttribute("data-audralia-parent-visible-body-first-failsafe", "true");
       document.documentElement.setAttribute("data-audralia-clean-parent-mounted", state.mounted ? "true" : "false");
       document.documentElement.setAttribute("data-audralia-clean-parent-form-visible", state.formVisible ? "true" : "false");
     }
@@ -670,17 +726,20 @@
       window.AUDRALIA_CLEAN_CANVAS_FORM_VISIBLE = true;
       window.AUDRALIA_CLEAN_PARENT_FORM_VISIBLE = true;
       window.AUDRALIA_CLEAN_PARENT_ENGINE_READY = true;
+      window.AUDRALIA_PARENT_VISIBLE_BODY_FIRST_FAILSAFE = true;
     }
 
     if (env.mount) {
       env.mount.setAttribute("data-audralia-form-visible", "true");
       env.mount.setAttribute("data-audralia-clean-parent-form-visible", "true");
       env.mount.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
+      env.mount.setAttribute("data-audralia-parent-visible-body-first-failsafe", "true");
     }
 
     if (env.canvas) {
       env.canvas.setAttribute("data-audralia-form-visible", "true");
       env.canvas.setAttribute("data-audralia-clean-parent-form-visible", "true");
+      env.canvas.setAttribute("data-audralia-parent-visible-body-first-failsafe", "true");
     }
 
     publishReceipt(scope);
@@ -695,10 +754,19 @@
       family: FAMILY,
       target: TARGET,
       route: ROUTE,
-      mode: "g26_nine_summits_256_fibonacci_parent_baseline",
+      mode: "parent_visible_body_first_failsafe",
       scope,
-      g26CleanSurfaceInspectionBaseline: true,
-      nineSummits256FibonacciModel: true,
+      parentVisibleBodyFirst: true,
+      bodyPainted: state.bodyPainted,
+      oceanBodyPainted: state.oceanBodyPainted,
+      atmosphericRimPainted: state.atmosphericRimPainted,
+      formVisible: state.formVisible,
+      mounted: state.mounted,
+      ready: state.ready,
+      childLoadDeferredUntilVisible: true,
+      childLoadStarted: state.childLoadStarted,
+      childLoadComplete: state.childLoadComplete,
+      children: { ...state.children },
       phi: PHI,
       phiInverse: PHI_INVERSE,
       phiInverse2: PHI_INVERSE_2,
@@ -714,13 +782,11 @@
       fixedCameraDepth: true,
       dragRotationOnly: true,
       noAutoOrbit: true,
+      noZoom: true,
       motionChildDisabled: true,
       skyChildHeld: true,
       parentGlobalPublished: state.parentGlobalPublished,
       mountCalled: state.mountCalled,
-      mounted: state.mounted,
-      ready: state.ready,
-      formVisible: state.formVisible,
       delegatedBy: state.delegatedBy,
       renderCount: state.renderCount,
       geometry: {
@@ -733,14 +799,6 @@
         radius: env.radius
       },
       rotation: env.rotation,
-      children: { ...state.children },
-      childPaths: {
-        continents: CHILDREN.continents.path,
-        motion: CHILDREN.motion.path,
-        sky: CHILDREN.sky.path
-      },
-      childLoadStarted: state.childLoadStarted,
-      childLoadComplete: state.childLoadComplete,
       errors: state.errors.slice(),
       htmlChange: false,
       routeBridgeChange: false,
@@ -770,6 +828,8 @@
     state.mounted = true;
     state.delegatedBy = options && options.delegatedBy ? String(options.delegatedBy) : "direct";
 
+    publishReceipt("mount-start");
+
     const target = resolveMountTarget(input);
 
     if (!target) {
@@ -792,11 +852,20 @@
 
     resize();
     bindPointerControls();
-    render();
 
-    loadChildren().catch((error) => recordError("loadChildren", error));
+    const bodyVisible = renderBodyOnly();
 
-    publishFormVisible("mount-complete");
+    if (!bodyVisible) {
+      recordError("mount", "Parent body-first render failed before child loading.");
+      return api;
+    }
+
+    loadChildrenAfterVisible().catch((error) => {
+      recordError("loadChildrenAfterVisible", error);
+      publishFormVisible("child-load-error-parent-remains-visible");
+    });
+
+    publishFormVisible("mount-complete-parent-visible-first");
 
     return api;
   }
@@ -845,21 +914,28 @@
       family: FAMILY,
       target: TARGET,
       route: ROUTE,
-      mode: "g26_nine_summits_256_fibonacci_parent_baseline",
-      g26CleanSurfaceInspectionBaseline: true,
-      nineSummits256FibonacciModel: true,
+      mode: "parent_visible_body_first_failsafe",
+      parentVisibleBodyFirst: true,
+      bodyPainted: state.bodyPainted,
+      oceanBodyPainted: state.oceanBodyPainted,
+      atmosphericRimPainted: state.atmosphericRimPainted,
+      formVisible: state.formVisible,
+      mounted: state.mounted,
+      ready: state.ready,
+      childLoadDeferredUntilVisible: true,
+      childLoadStarted: state.childLoadStarted,
+      childLoadComplete: state.childLoadComplete,
+      children: { ...state.children },
       centerLocked: true,
       fixedRadius: true,
       fixedCameraDepth: true,
       dragRotationOnly: true,
       noAutoOrbit: true,
+      noZoom: true,
       motionChildDisabled: true,
       skyChildHeld: true,
       parentGlobalPublished: state.parentGlobalPublished,
       mountCalled: state.mountCalled,
-      mounted: state.mounted,
-      ready: state.ready,
-      formVisible: state.formVisible,
       delegatedBy: state.delegatedBy,
       renderCount: state.renderCount,
       geometry: {
@@ -872,9 +948,6 @@
         radius: env.radius
       },
       rotation: env.rotation,
-      children: { ...state.children },
-      childLoadStarted: state.childLoadStarted,
-      childLoadComplete: state.childLoadComplete,
       htmlChange: false,
       routeBridgeChange: false,
       runtimeRewrite: false,

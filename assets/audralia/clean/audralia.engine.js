@@ -1,31 +1,47 @@
 // /assets/audralia/clean/audralia.engine.js
-// AUDRALIA_G2_NINE_SUMMITS_PLANET_FORM_ENGINE_TNT_v1
+// AUDRALIA_G2_2_FIVE_CONTINENT_SEA_LEVEL_EXPOSURE_ENGINE_TNT_v1
 // Full-file replacement.
-// Purpose: keep the successful Audralia route-bridge mount contract, then upgrade the visible body from standby/diagnostic form to a stronger Nine-Summits-style planet render.
+// Purpose: preserve the successful Audralia route-bridge mount contract while rendering Audralia as an ocean-dominant Five-Continent Nine-Summits planet.
+// Continental law: four main exposed continents, one North Polar continent, South Pole ice only.
+// Hydration law: terrain pressure may exist below sea level; exposed land appears only above calibrated sea level.
 // Owns: visible clean-canvas Audralia planet form handoff.
-// Does not own: parent Globe route, route bridge HTML, global navigation, character page, gauges logic, or downstream child-module split.
+// Does not own: parent Globe route, route bridge HTML, route bridge JS, global navigation, character page, gauges logic, or downstream child-module split.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G2_NINE_SUMMITS_PLANET_FORM_ENGINE_TNT_v1";
-  const RECEIPT = "AUDRALIA_G2_NINE_SUMMITS_PLANET_FORM_ENGINE_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_CLEAN_CANVAS_ENGINE_MOUNT_CONTRACT_TNT_v1";
+  const CONTRACT = "AUDRALIA_G2_2_FIVE_CONTINENT_SEA_LEVEL_EXPOSURE_ENGINE_TNT_v1";
+  const RECEIPT = "AUDRALIA_G2_2_FIVE_CONTINENT_SEA_LEVEL_EXPOSURE_ENGINE_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G2_NINE_SUMMITS_PLANET_FORM_ENGINE_TNT_v1";
   const ROUTE = "/showroom/globe/audralia/";
-  const VERSION = "2026-05-20.audralia-g2-nine-summits-planet-form-engine-v1";
+  const VERSION = "2026-05-20.audralia-g2-2-five-continent-sea-level-exposure-engine-v1";
 
   const PLANET = Object.freeze({
     seed: 25645161,
     nodeCount: 256,
-    summitCount: 9,
     sectorCount: 16,
     regionCount: 4,
+    summitCount: 9,
+    continentCount: 5,
+    mainContinents: 4,
+    northPolarContinent: true,
+    southPoleIceOnly: true,
+    terrainPressureBelowSeaLevel: true,
+    seaLevelExposureClassification: true,
+    seaLevel: 0.635,
     light: Object.freeze({ x: -0.62, y: -0.48, z: 0.62 }),
     atmosphere: Object.freeze({
-      rimStrength: 0.78,
-      hazeStrength: 0.34,
-      cloudStrength: 0.28
-    })
+      rimStrength: 0.82,
+      hazeStrength: 0.22,
+      cloudStrength: 0.24
+    }),
+    continents: Object.freeze([
+      Object.freeze({ id: "MAIN_A", kind: "main", u: -0.36, v: -0.04, rx: 0.25, ry: 0.30, angle: -0.42, lift: 0.03 }),
+      Object.freeze({ id: "MAIN_B", kind: "main", u: -0.10, v: 0.30, rx: 0.21, ry: 0.23, angle: 0.58, lift: 0.05 }),
+      Object.freeze({ id: "MAIN_C", kind: "main", u: 0.26, v: 0.02, rx: 0.24, ry: 0.28, angle: 0.18, lift: 0.02 }),
+      Object.freeze({ id: "MAIN_D", kind: "main", u: 0.17, v: -0.38, rx: 0.20, ry: 0.21, angle: -0.76, lift: 0.04 }),
+      Object.freeze({ id: "NORTH_POLAR", kind: "north-polar", u: 0.02, v: 0.74, rx: 0.46, ry: 0.22, angle: 0.0, lift: 0.09 })
+    ])
   });
 
   const state = {
@@ -94,7 +110,7 @@
       overflow:hidden;
       border-radius:1.25rem;
       background:
-        radial-gradient(circle at 50% 34%,rgba(143,240,195,.18),transparent 16rem),
+        radial-gradient(circle at 50% 34%,rgba(143,240,195,.16),transparent 16rem),
         radial-gradient(circle at 50% 58%,rgba(36,120,255,.12),transparent 24rem),
         radial-gradient(circle at 50% 80%,rgba(243,200,111,.06),transparent 26rem),
         linear-gradient(180deg,rgba(1,7,16,.28),rgba(1,4,12,.76));
@@ -138,19 +154,37 @@
     `;
   }
 
-  function hash2(x, y, seed = PLANET.seed) {
-    let n = Math.imul(x ^ seed, 374761393) ^ Math.imul(y + seed, 668265263);
-    n = (n ^ (n >>> 13)) >>> 0;
-    n = Math.imul(n, 1274126177) >>> 0;
-    return ((n ^ (n >>> 16)) >>> 0) / 4294967295;
+  function clamp01(value) {
+    return Math.max(0, Math.min(1, value));
+  }
+
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
   }
 
   function fade(t) {
     return t * t * t * (t * (t * 6 - 15) + 10);
   }
 
-  function lerp(a, b, t) {
-    return a + (b - a) * t;
+  function smoothstep(edge0, edge1, x) {
+    const t = clamp01((x - edge0) / Math.max(0.00001, edge1 - edge0));
+    return t * t * (3 - 2 * t);
+  }
+
+  function normalize3(v) {
+    const m = Math.hypot(v.x, v.y, v.z) || 1;
+    return { x: v.x / m, y: v.y / m, z: v.z / m };
+  }
+
+  function dot3(a, b) {
+    return a.x * b.x + a.y * b.y + a.z * b.z;
+  }
+
+  function hash2(x, y, seed = PLANET.seed) {
+    let n = Math.imul(x ^ seed, 374761393) ^ Math.imul(y + seed, 668265263);
+    n = (n ^ (n >>> 13)) >>> 0;
+    n = Math.imul(n, 1274126177) >>> 0;
+    return ((n ^ (n >>> 16)) >>> 0) / 4294967295;
   }
 
   function valueNoise(x, y, scale, seedOffset = 0) {
@@ -185,22 +219,11 @@
     return total / Math.max(0.0001, norm);
   }
 
-  function normalize3(v) {
-    const m = Math.hypot(v.x, v.y, v.z) || 1;
-    return { x: v.x / m, y: v.y / m, z: v.z / m };
-  }
-
-  function dot3(a, b) {
-    return a.x * b.x + a.y * b.y + a.z * b.z;
-  }
-
-  function clamp01(v) {
-    return Math.max(0, Math.min(1, v));
-  }
-
-  function smoothstep(edge0, edge1, x) {
-    const t = clamp01((x - edge0) / Math.max(0.00001, edge1 - edge0));
-    return t * t * (3 - 2 * t);
+  function wrapUnitDistance(a, b) {
+    let d = a - b;
+    if (d > 1) d -= 2;
+    if (d < -1) d += 2;
+    return d;
   }
 
   function mixColor(a, b, t) {
@@ -212,11 +235,57 @@
     ];
   }
 
-  function rgba(c) {
-    return `rgba(${c[0]},${c[1]},${c[2]},${c[3]})`;
+  function continentInfluence(continent, u, v, roughness) {
+    const du = wrapUnitDistance(u, continent.u);
+    const dv = v - continent.v;
+    const cos = Math.cos(continent.angle);
+    const sin = Math.sin(continent.angle);
+
+    const x = du * cos - dv * sin;
+    const y = du * sin + dv * cos;
+
+    const rx = continent.rx * (0.88 + roughness * 0.24);
+    const ry = continent.ry * (0.88 + roughness * 0.22);
+    const d = Math.sqrt((x * x) / (rx * rx) + (y * y) / (ry * ry));
+
+    const ragged = (roughness - 0.5) * 0.22;
+    const edge = 1.02 + ragged;
+
+    return clamp01(1 - smoothstep(edge * 0.64, edge, d));
   }
 
-  function addSummitField(nx, ny, nz) {
+  function continentField(u, v) {
+    const roughA = fbm(u + 3.0, v - 1.5, 8.0, 4, 400);
+    const roughB = fbm(u - 4.2, v + 2.4, 17.0, 3, 900);
+    const roughness = clamp01(roughA * 0.72 + roughB * 0.28);
+
+    let best = {
+      id: "OCEAN",
+      kind: "ocean",
+      strength: 0,
+      main: false,
+      northPolar: false
+    };
+
+    for (const continent of PLANET.continents) {
+      const influence = continentInfluence(continent, u, v, roughness);
+
+      if (influence > best.strength) {
+        best = {
+          id: continent.id,
+          kind: continent.kind,
+          strength: influence,
+          lift: continent.lift,
+          main: continent.kind === "main",
+          northPolar: continent.kind === "north-polar"
+        };
+      }
+    }
+
+    return best;
+  }
+
+  function summitPressure(nx, ny, nz) {
     const summitSeeds = [
       [-0.52, -0.35, 0.72],
       [-0.25, -0.54, 0.76],
@@ -234,7 +303,7 @@
     for (let i = 0; i < summitSeeds.length; i += 1) {
       const s = normalize3({ x: summitSeeds[i][0], y: summitSeeds[i][1], z: summitSeeds[i][2] });
       const alignment = Math.max(0, nx * s.x + ny * s.y + nz * s.z);
-      field += Math.pow(alignment, 34) * (1.05 + (i % 3) * 0.11);
+      field += Math.pow(alignment, 38) * (1.0 + (i % 3) * 0.10);
     }
 
     return clamp01(field);
@@ -246,51 +315,117 @@
     const u = lon / Math.PI;
     const v = lat / (Math.PI / 2);
 
-    const broad = fbm(u + 1.72, v + 2.36, 2.15, 5, 100);
-    const coast = fbm(u + 4.1, v - 1.7, 5.65, 5, 600);
-    const detail = fbm(u - 3.5, v + 5.2, 13.5, 4, 1200);
+    const continent = continentField(u, v);
+
+    const broad = fbm(u + 1.72, v + 2.36, 2.2, 5, 100);
+    const coast = fbm(u + 4.1, v - 1.7, 6.3, 5, 600);
+    const ridgeNoise = fbm(u - 3.5, v + 5.2, 13.5, 4, 1200);
     const grain = fbm(u + 8.0, v - 7.0, 31.0, 3, 1800);
 
-    const continents =
-      broad * 0.54 +
-      coast * 0.32 +
-      detail * 0.11 +
-      grain * 0.03;
+    const terrainCandidate = clamp01(
+      continent.strength * 0.86 +
+      broad * 0.08 +
+      coast * 0.05 +
+      ridgeNoise * 0.03
+    );
 
-    const summit = addSummitField(nx, ny, nz);
-    const polar = Math.pow(Math.abs(ny), 4.4);
-    const elevation = clamp01((continents - 0.49) * 2.4 + summit * 0.62 + detail * 0.16);
-    const land = continents + summit * 0.18 > 0.515;
-    const shelf = smoothstep(0.47, 0.56, continents);
-    const mountain = land ? clamp01(summit * 1.35 + smoothstep(0.64, 0.86, elevation) * 0.7) : 0;
-    const basin = land ? clamp01((1 - elevation) * smoothstep(0.52, 0.62, continents)) : 0;
-    const ice = smoothstep(0.80, 0.98, Math.abs(ny)) * (0.50 + detail * 0.5);
+    const summit = summitPressure(nx, ny, nz);
+    const ridge = clamp01((ridgeNoise - 0.48) * 1.9);
+    const basin = clamp01((0.56 - broad) * 1.18 + (0.40 - coast) * 0.58);
+    const northPolarBoost = continent.northPolar ? 0.095 : 0;
+    const mainLift = continent.main ? continent.lift || 0 : 0;
+
+    let elevation = clamp01(
+      terrainCandidate * 0.72 +
+      summit * 0.27 +
+      ridge * 0.12 +
+      northPolarBoost +
+      mainLift -
+      basin * 0.22
+    );
+
+    const southPole = v < -0.68;
+    const southIce = smoothstep(-0.68, -0.95, v) * (0.72 + grain * 0.28);
+    const northIce = smoothstep(0.78, 0.96, v) * (0.34 + grain * 0.32);
+    const polarIce = clamp01(Math.max(southIce, northIce));
+
+    if (southPole) {
+      elevation = Math.min(elevation, PLANET.seaLevel - 0.035);
+    }
+
+    const exposedLand =
+      !southPole &&
+      continent.strength > 0.22 &&
+      elevation > PLANET.seaLevel;
+
+    const exposureDistance = elevation - PLANET.seaLevel;
+    const nearSeaLevel = Math.abs(exposureDistance);
+    const coastalShelf =
+      !exposedLand &&
+      terrainCandidate > 0.28 &&
+      elevation > PLANET.seaLevel - 0.18;
+
+    const submergedShelf =
+      !exposedLand &&
+      terrainCandidate > 0.40 &&
+      elevation <= PLANET.seaLevel;
+
+    const deepOcean =
+      !exposedLand &&
+      !coastalShelf &&
+      !submergedShelf;
+
+    const mountain = exposedLand ? clamp01(summit * 1.28 + smoothstep(0.68, 0.93, elevation) * 0.62) : 0;
+    const coastLine = exposedLand ? smoothstep(0.052, 0.0, nearSeaLevel) : 0;
 
     return {
       lon,
       lat,
       u,
       v,
+      continent,
       broad,
       coast,
-      detail,
+      ridgeNoise,
       grain,
-      continents,
-      land,
-      shelf,
+      terrainCandidate,
       elevation,
+      exposureDistance,
+      exposedLand,
+      coastalShelf,
+      submergedShelf,
+      deepOcean,
       summit,
       mountain,
       basin,
-      ice,
-      polar
+      ridge,
+      polarIce,
+      southPole,
+      southIce,
+      northIce,
+      coastLine
     };
+  }
+
+  function computeCloud(surface, nx, ny, nz) {
+    const beltA = 1 - Math.abs(surface.v - 0.16) * 5.2;
+    const beltB = 1 - Math.abs(surface.v + 0.30) * 4.6;
+    const streak = fbm(surface.u * 1.4 + 2.2, surface.v * 0.82 - 0.5, 9.5, 4, 2600);
+    const fine = fbm(surface.u - 8.3, surface.v + 3.8, 22.0, 3, 3200);
+
+    return clamp01(
+      Math.max(beltA, beltB) * 0.46 +
+      streak * 0.32 +
+      fine * 0.13 -
+      Math.abs(nx) * 0.08 +
+      nz * 0.06
+    );
   }
 
   function drawPlanetPixels(canvas) {
     const rect = canvas.getBoundingClientRect();
     const cssSize = Math.max(300, Math.min(rect.width || 460, 620));
-    const dpr = Math.max(1, Math.min(2.5, win().devicePixelRatio || 1));
+    const dpr = Math.max(1, Math.min(2.0, win().devicePixelRatio || 1));
     const size = Math.round(cssSize * dpr);
 
     if (canvas.width !== size || canvas.height !== size) {
@@ -312,15 +447,17 @@
     const image = ctx.createImageData(size, size);
     const data = image.data;
 
-    const oceanDeep = [3, 20, 36, 1];
-    const oceanMid = [9, 78, 88, 1];
-    const oceanShelf = [39, 151, 139, 1];
-    const coastSand = [172, 158, 103, 1];
-    const landLow = [88, 130, 84, 1];
-    const landMid = [105, 145, 91, 1];
-    const highland = [142, 142, 102, 1];
-    const summitColor = [215, 211, 177, 1];
-    const iceColor = [218, 245, 239, 1];
+    const oceanDeep = [2, 15, 34, 1];
+    const oceanMid = [6, 68, 89, 1];
+    const oceanShelf = [29, 139, 137, 1];
+    const shallowReef = [83, 188, 166, 1];
+
+    const coastSand = [176, 164, 111, 1];
+    const landLow = [82, 128, 82, 1];
+    const landMid = [101, 143, 90, 1];
+    const highland = [139, 137, 100, 1];
+    const summitColor = [218, 213, 176, 1];
+    const iceColor = [221, 247, 241, 1];
     const nightBlue = [1, 7, 17, 1];
 
     for (let y = 0; y < size; y += 1) {
@@ -343,31 +480,40 @@
         const surface = classifySurface(nx, ny, nz);
         let color;
 
-        if (surface.land) {
-          const relief = clamp01(surface.elevation * 0.72 + surface.mountain * 0.38);
-          const coastBlend = smoothstep(0.50, 0.57, surface.continents);
+        if (surface.exposedLand) {
+          const relief = clamp01(surface.elevation * 0.72 + surface.mountain * 0.34);
+          const coastBlend = smoothstep(0.02, 0.10, surface.exposureDistance);
 
           color = mixColor(coastSand, landLow, coastBlend);
           color = mixColor(color, landMid, clamp01(relief * 0.58));
-          color = mixColor(color, highland, clamp01(surface.mountain * 0.55));
-          color = mixColor(color, summitColor, clamp01(surface.mountain * 0.52 + surface.ice * 0.28));
+          color = mixColor(color, highland, clamp01(surface.mountain * 0.52));
+          color = mixColor(color, summitColor, clamp01(surface.mountain * 0.46 + surface.polarIce * 0.26));
 
-          const basinTint = [54, 112, 91, 1];
-          color = mixColor(color, basinTint, clamp01(surface.basin * 0.20));
+          if (surface.continent.northPolar) {
+            color = mixColor(color, iceColor, clamp01(surface.polarIce * 0.42 + 0.10));
+          }
+
+          color = mixColor(color, coastSand, clamp01(surface.coastLine * 0.32));
+        } else if (surface.coastalShelf || surface.submergedShelf) {
+          const shelfLift = clamp01(surface.terrainCandidate * 0.68 + surface.elevation * 0.28);
+          color = mixColor(oceanMid, oceanShelf, shelfLift);
+          color = mixColor(color, shallowReef, clamp01(surface.coastalShelf ? 0.36 : 0.18));
+          color = mixColor(color, coastSand, clamp01((surface.terrainCandidate - 0.48) * 0.18));
         } else {
-          const depth = clamp01((0.53 - surface.continents) * 3.2);
+          const depth = clamp01((0.55 - surface.terrainCandidate) * 2.6 + (PLANET.seaLevel - surface.elevation) * 0.72);
           color = mixColor(oceanShelf, oceanMid, depth);
-          color = mixColor(color, oceanDeep, clamp01(depth * 0.82));
-          color = mixColor(color, oceanShelf, clamp01(surface.shelf * 0.34));
+          color = mixColor(color, oceanDeep, clamp01(depth * 0.84));
         }
 
-        if (surface.ice > 0.34) {
-          color = mixColor(color, iceColor, clamp01((surface.ice - 0.24) * 0.52));
+        if (surface.southPole) {
+          color = mixColor(color, iceColor, clamp01(surface.southIce * 0.62));
+        } else if (surface.polarIce > 0.36) {
+          color = mixColor(color, iceColor, clamp01((surface.polarIce - 0.22) * 0.42));
         }
 
         const normal = normalize3({
-          x: nx + (surface.detail - 0.5) * 0.035,
-          y: ny + (surface.grain - 0.5) * 0.028,
+          x: nx + (surface.ridgeNoise - 0.5) * 0.030,
+          y: ny + (surface.grain - 0.5) * 0.024,
           z: nz
         });
 
@@ -375,28 +521,28 @@
         const terminator = smoothstep(-0.18, 0.78, dot3(normal, light));
         const limb = Math.pow(clamp01(1 - rr), 0.32);
         const edgeDark = smoothstep(0.98, 0.35, rr);
-        const atmosphericLift = Math.pow(clamp01(rr), 2.7) * PLANET.atmosphere.hazeStrength;
+        const atmosphericLift = Math.pow(clamp01(rr), 3.2) * PLANET.atmosphere.hazeStrength;
 
         let lit = lightAmount * (0.58 + terminator * 0.56);
         lit *= 0.76 + limb * 0.32;
         lit *= 0.78 + edgeDark * 0.28;
 
         color = mixColor(nightBlue, color, clamp01(lit));
-        color = mixColor(color, [126, 232, 202, 1], atmosphericLift * 0.20);
+        color = mixColor(color, [126, 232, 202, 1], atmosphericLift * 0.18);
 
-        const cloud = computeCloud(surface.u, surface.v, nx, ny, nz);
-        if (cloud > 0.52) {
-          const cloudAlpha = clamp01((cloud - 0.52) * 0.46) * PLANET.atmosphere.cloudStrength;
+        const cloud = computeCloud(surface, nx, ny, nz);
+        if (cloud > 0.57) {
+          const cloudAlpha = clamp01((cloud - 0.57) * 0.42) * PLANET.atmosphere.cloudStrength;
           color = mixColor(color, [235, 248, 235, 1], cloudAlpha);
         }
 
-        const haze = Math.pow(clamp01(rr), 5.4) * 0.22;
+        const haze = Math.pow(clamp01(rr), 5.7) * 0.18;
         color = mixColor(color, [125, 220, 205, 1], haze);
 
         data[idx] = color[0];
         data[idx + 1] = color[1];
         data[idx + 2] = color[2];
-        data[idx + 3] = Math.round(255 * clamp01(0.98 + haze * 0.08));
+        data[idx + 3] = Math.round(255 * clamp01(0.985 + haze * 0.05));
       }
     }
 
@@ -404,36 +550,23 @@
 
     drawAtmosphericRim(ctx, cx, cy, r, size);
     drawSummitSignals(ctx, cx, cy, r, light);
+    drawSubmergedShelfGlints(ctx, cx, cy, r, size);
     drawSubtleOrbitReceipt(ctx, cx, cy, r, size);
 
     return true;
   }
 
-  function computeCloud(u, v, nx, ny, nz) {
-    const beltA = 1 - Math.abs(v - 0.16) * 5.2;
-    const beltB = 1 - Math.abs(v + 0.30) * 4.6;
-    const streak = fbm(u * 1.4 + 2.2, v * 0.82 - 0.5, 9.5, 4, 2600);
-    const fine = fbm(u - 8.3, v + 3.8, 22.0, 3, 3200);
-
-    return clamp01(
-      Math.max(beltA, beltB) * 0.52 +
-      streak * 0.34 +
-      fine * 0.14 -
-      Math.abs(nx) * 0.08 +
-      nz * 0.06
-    );
-  }
-
   function drawAtmosphericRim(ctx, cx, cy, r, size) {
-    const rim = ctx.createRadialGradient(cx, cy, r * 0.82, cx, cy, r * 1.12);
+    const rim = ctx.createRadialGradient(cx, cy, r * 0.82, cx, cy, r * 1.13);
     rim.addColorStop(0, "rgba(143,240,195,0)");
-    rim.addColorStop(0.66, "rgba(143,240,195,0.06)");
-    rim.addColorStop(0.88, "rgba(141,216,255,0.16)");
+    rim.addColorStop(0.66, "rgba(143,240,195,0.055)");
+    rim.addColorStop(0.88, "rgba(141,216,255,0.17)");
     rim.addColorStop(1, "rgba(143,240,195,0)");
 
     ctx.save();
+
     ctx.beginPath();
-    ctx.arc(cx, cy, r * 1.12, 0, Math.PI * 2);
+    ctx.arc(cx, cy, r * 1.13, 0, Math.PI * 2);
     ctx.fillStyle = rim;
     ctx.fill();
 
@@ -444,10 +577,11 @@
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.arc(cx, cy, r * 1.034, 0, Math.PI * 2);
+    ctx.arc(cx, cy, r * 1.036, 0, Math.PI * 2);
     ctx.strokeStyle = "rgba(141,216,255,0.12)";
     ctx.lineWidth = Math.max(1, size * 0.003);
     ctx.stroke();
+
     ctx.restore();
   }
 
@@ -478,14 +612,41 @@
 
       ctx.beginPath();
       ctx.arc(px, py, radius, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255,244,216,${0.10 + lightAmount * 0.16})`;
+      ctx.fillStyle = `rgba(255,244,216,${0.10 + lightAmount * 0.15})`;
       ctx.fill();
 
       ctx.beginPath();
-      ctx.arc(px, py, radius * 2.9, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(243,200,111,${0.06 + lightAmount * 0.08})`;
+      ctx.arc(px, py, radius * 2.8, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(243,200,111,${0.055 + lightAmount * 0.075})`;
       ctx.lineWidth = 1;
       ctx.stroke();
+    });
+
+    ctx.restore();
+  }
+
+  function drawSubmergedShelfGlints(ctx, cx, cy, r, size) {
+    ctx.save();
+    ctx.translate(cx, cy);
+
+    const rings = [
+      { y: -0.28, rot: 0.18, w: 0.78, a: 0.045 },
+      { y: 0.06, rot: -0.22, w: 0.88, a: 0.038 },
+      { y: 0.32, rot: 0.31, w: 0.68, a: 0.030 }
+    ];
+
+    rings.forEach((ring) => {
+      ctx.save();
+      ctx.rotate(ring.rot);
+      ctx.scale(1, 0.22);
+
+      ctx.beginPath();
+      ctx.ellipse(0, ring.y * r, r * ring.w, r * 0.16, 0, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(143,240,195,${ring.a})`;
+      ctx.lineWidth = Math.max(1, size * 0.0014);
+      ctx.stroke();
+
+      ctx.restore();
     });
 
     ctx.restore();
@@ -498,13 +659,13 @@
 
     ctx.beginPath();
     ctx.ellipse(0, 0, r * 1.30, r * 0.36, 0, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(143,240,195,0.075)";
+    ctx.strokeStyle = "rgba(143,240,195,0.070)";
     ctx.lineWidth = Math.max(1, size * 0.002);
     ctx.stroke();
 
     ctx.beginPath();
     ctx.ellipse(0, 0, r * 1.18, r * 0.29, 0, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(243,200,111,0.045)";
+    ctx.strokeStyle = "rgba(243,200,111,0.042)";
     ctx.lineWidth = Math.max(1, size * 0.0015);
     ctx.stroke();
 
@@ -518,7 +679,7 @@
     const root = makeEl(documentRef, "section", "audralia-engine-root", {
       "data-audralia-engine-render": "true",
       "data-audralia-clean-canvas-render": "true",
-      "data-audralia-g2-nine-summits-planet-form": "true",
+      "data-audralia-g2-2-five-continent-sea-level-exposure": "true",
       "data-contract": CONTRACT,
       "data-previous-contract": PREVIOUS_CONTRACT
     });
@@ -526,15 +687,15 @@
     styleRoot(root);
 
     const canvas = makeEl(documentRef, "canvas", "audralia-engine-canvas", {
-      "data-audralia-form": "g2-nine-summits-engine-canvas",
-      "aria-label": "Audralia G2 Nine-Summits clean-canvas planet form"
+      "data-audralia-form": "g2-2-five-continent-sea-level-engine-canvas",
+      "aria-label": "Audralia G2.2 Five-Continent sea-level exposure planet form"
     });
 
     styleCanvas(canvas);
 
     const label = makeEl(documentRef, "div", "audralia-engine-label");
     styleLabel(label);
-    label.textContent = "Audralia G2 · Nine-Summits planet form mounted";
+    label.textContent = "Audralia G2.2 · Five-Continent sea-level planet form mounted";
 
     root.appendChild(canvas);
     root.appendChild(label);
@@ -569,11 +730,11 @@
     const documentRef = doc(input);
 
     if (!mountTarget) {
-      throw new Error("Audralia G2 engine mount target missing.");
+      throw new Error("Audralia G2.2 engine mount target missing.");
     }
 
     if (!documentRef) {
-      throw new Error("Audralia G2 engine document missing.");
+      throw new Error("Audralia G2.2 engine document missing.");
     }
 
     const render = createRender(input);
@@ -592,11 +753,11 @@
     mountTarget.dataset.audraliaFormVisible = "true";
     mountTarget.dataset.audraliaEngineMounted = "true";
     mountTarget.dataset.audraliaEngineContract = CONTRACT;
-    mountTarget.dataset.audraliaG2NineSummitsPlanetForm = "true";
+    mountTarget.dataset.audraliaG22FiveContinentSeaLevelExposure = "true";
 
     const statusTarget = input?.statusTarget;
     if (isElement(statusTarget)) {
-      statusTarget.textContent = "FORM_VISIBLE · Audralia G2 Nine-Summits planet form mounted.";
+      statusTarget.textContent = "FORM_VISIBLE · Audralia G2.2 Five-Continent sea-level planet form mounted.";
       statusTarget.dataset.state = "pass";
     }
 
@@ -623,14 +784,22 @@
       mounted: state.mounted,
       mountedAt: state.mountedAt,
       mountCount: state.mountCount,
-      planetStandard: "G2 Nine-Summits clean-canvas planet form",
+      planetStandard: "G2.2 Five-Continent sea-level exposure clean-canvas planet form",
+      continentCount: PLANET.continentCount,
+      mainContinents: PLANET.mainContinents,
+      northPolarContinent: PLANET.northPolarContinent,
+      southPoleIceOnly: PLANET.southPoleIceOnly,
+      terrainPressureBelowSeaLevel: PLANET.terrainPressureBelowSeaLevel,
+      seaLevelExposureClassification: PLANET.seaLevelExposureClassification,
+      seaLevel: PLANET.seaLevel,
       nodeCount: PLANET.nodeCount,
-      summitCount: PLANET.summitCount,
       sectorCount: PLANET.sectorCount,
       regionCount: PLANET.regionCount,
+      summitCount: PLANET.summitCount,
       ownsVisibleFormHandoff: true,
       ownsParentGlobeRoute: false,
       ownsRouteBridgeHtml: false,
+      ownsRouteBridgeJs: false,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false

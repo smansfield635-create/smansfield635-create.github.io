@@ -4,7 +4,7 @@
 // Purpose: keep the versioned runtime path active while forcing the parent engine import to the latest served parent contract.
 // Target only: /assets/audralia/audralia.runtime.v3.js
 // Loads parent from: /assets/audralia/clean/engine/audralia.engine.js
-// Parent cache key: AUDRALIA_G2_5_PARENT_VISIBLE_BOX_CENTER_ANCHOR_DRAG_ROTATION_ONLY_TNT_v1
+// Parent cache key: AUDRALIA_G2_5_PARENT_SCREEN_CENTER_BIAS_25_DRAG_ROTATION_ONLY_TNT_v1
 // Does not own: route HTML, route bridge, clean runtime, parent internals, child engines, generated image, GraphicBox, or visual-pass claim.
 
 const CONTRACT = "AUDRALIA_G2_5_RUNTIME_PARENT_CACHE_KEY_ALIGNMENT_TNT_v1";
@@ -15,7 +15,7 @@ const TARGET = "/assets/audralia/audralia.runtime.v3.js";
 const ROUTE = "/showroom/globe/audralia/";
 
 const CLEAN_PARENT_PATH = "/assets/audralia/clean/engine/audralia.engine.js";
-const CLEAN_PARENT_CACHE_KEY = "AUDRALIA_G2_5_PARENT_VISIBLE_BOX_CENTER_ANCHOR_DRAG_ROTATION_ONLY_TNT_v1";
+const CLEAN_PARENT_CACHE_KEY = "AUDRALIA_G2_5_PARENT_SCREEN_CENTER_BIAS_25_DRAG_ROTATION_ONLY_TNT_v1";
 const CLEAN_PARENT_IMPORT = `${CLEAN_PARENT_PATH}?v=${encodeURIComponent(CLEAN_PARENT_CACHE_KEY)}`;
 
 const WAIT_PARENT_MS = 3600;
@@ -160,7 +160,6 @@ function parentMatchesCurrentCache(parent) {
   try {
     const status = getParentStatus(parent) || {};
     const contract = parent.CONTRACT || status.contract || "";
-
     return contract === CLEAN_PARENT_CACHE_KEY;
   } catch (_error) {
     return false;

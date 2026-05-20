@@ -1,19 +1,18 @@
 // /assets/audralia/clean/audralia.engine.js
-// AUDRALIA_G2_3_VISIBLE_SEA_LEVEL_DELTA_AND_CONTINENT_MASK_TNT_v1
+// AUDRALIA_G2_4_AXIS_ROTATION_FINGER_DRAG_NON_BLOB_CONTINENT_ENGINE_TNT_v1
 // Full-file replacement.
-// Purpose: preserve FORM_VISIBLE while forcing an undeniable visual sea-level delta:
-// less exposed land, bluer submerged shelves, four main continents, one North Polar continent, South Pole ice only.
+// Purpose: preserve FORM_VISIBLE while giving Audralia Earth-like axial rotation, finger-drag inspection, and non-blob continent masks.
 // Owns: Audralia clean-canvas visible planet form handoff.
 // Does not own: parent Globe route, Audralia HTML, Audralia route bridge JS, Characters, Gauges, Showroom, or global navigation.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G2_3_VISIBLE_SEA_LEVEL_DELTA_AND_CONTINENT_MASK_TNT_v1";
-  const RECEIPT = "AUDRALIA_G2_3_VISIBLE_SEA_LEVEL_DELTA_AND_CONTINENT_MASK_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G2_2_FIVE_CONTINENT_SEA_LEVEL_EXPOSURE_ENGINE_TNT_v1";
+  const CONTRACT = "AUDRALIA_G2_4_AXIS_ROTATION_FINGER_DRAG_NON_BLOB_CONTINENT_ENGINE_TNT_v1";
+  const RECEIPT = "AUDRALIA_G2_4_AXIS_ROTATION_FINGER_DRAG_NON_BLOB_CONTINENT_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G2_3_VISIBLE_SEA_LEVEL_DELTA_AND_CONTINENT_MASK_TNT_v1";
   const ROUTE = "/showroom/globe/audralia/";
-  const VERSION = "2026-05-20.audralia-g2-3-visible-sea-level-delta-continent-mask-v1";
+  const VERSION = "2026-05-20.audralia-g2-4-axis-rotation-finger-drag-non-blob-continent-v1";
 
   const PLANET = Object.freeze({
     seed: 25645161,
@@ -27,28 +26,75 @@
     southPoleIceOnly: true,
     terrainPressureBelowSeaLevel: true,
     seaLevelExposureClassification: true,
-
-    // Higher waterline for an obvious visual delta.
     seaLevel: 0.735,
-
-    // Exposed land must be visibly lower than prior pass.
+    axisTiltDegrees: 23.5,
+    autoRotationStep: 0.018,
+    autoRotationFrameMs: 120,
+    dragRotationScale: 0.0085,
+    dragPitchScale: 0.0045,
+    maxViewPitch: 0.62,
     exposedLandTarget: "reduced-aggressively",
     submergedShelfMustRenderBlue: true,
-
+    rotationLaw: "earth-like-axis-longitude-reprojection",
+    fingerDrag: true,
     light: Object.freeze({ x: -0.64, y: -0.46, z: 0.62 }),
-
-    atmosphere: Object.freeze({
-      rimStrength: 0.86,
-      hazeStrength: 0.16,
-      cloudStrength: 0.18
-    }),
-
+    atmosphere: Object.freeze({ rimStrength: 0.86, hazeStrength: 0.16, cloudStrength: 0.18 }),
     continents: Object.freeze([
-      Object.freeze({ id: "MAIN_A", kind: "main", u: -0.39, v: -0.08, rx: 0.20, ry: 0.25, angle: -0.55, lift: 0.030 }),
-      Object.freeze({ id: "MAIN_B", kind: "main", u: -0.12, v: 0.30, rx: 0.18, ry: 0.20, angle: 0.54, lift: 0.034 }),
-      Object.freeze({ id: "MAIN_C", kind: "main", u: 0.24, v: 0.03, rx: 0.21, ry: 0.24, angle: 0.18, lift: 0.026 }),
-      Object.freeze({ id: "MAIN_D", kind: "main", u: 0.19, v: -0.40, rx: 0.17, ry: 0.18, angle: -0.74, lift: 0.038 }),
-      Object.freeze({ id: "NORTH_POLAR", kind: "north-polar", u: 0.02, v: 0.76, rx: 0.33, ry: 0.18, angle: 0.02, lift: 0.105 })
+      Object.freeze({
+        id: "MAIN_A",
+        kind: "main",
+        u: -0.40,
+        v: -0.10,
+        rx: 0.26,
+        ry: 0.22,
+        angle: -0.58,
+        lift: 0.030,
+        spine: Object.freeze([[-0.95, -0.25], [-0.48, 0.10], [0.02, 0.02], [0.58, 0.32], [0.94, 0.02]])
+      }),
+      Object.freeze({
+        id: "MAIN_B",
+        kind: "main",
+        u: -0.13,
+        v: 0.31,
+        rx: 0.23,
+        ry: 0.19,
+        angle: 0.45,
+        lift: 0.034,
+        spine: Object.freeze([[-0.88, 0.18], [-0.42, -0.05], [0.06, 0.12], [0.48, -0.18], [0.92, 0.14]])
+      }),
+      Object.freeze({
+        id: "MAIN_C",
+        kind: "main",
+        u: 0.24,
+        v: 0.02,
+        rx: 0.27,
+        ry: 0.23,
+        angle: 0.17,
+        lift: 0.026,
+        spine: Object.freeze([[-0.92, 0.02], [-0.56, -0.24], [-0.05, -0.04], [0.44, 0.22], [0.94, 0.10]])
+      }),
+      Object.freeze({
+        id: "MAIN_D",
+        kind: "main",
+        u: 0.18,
+        v: -0.40,
+        rx: 0.22,
+        ry: 0.17,
+        angle: -0.72,
+        lift: 0.038,
+        spine: Object.freeze([[-0.88, -0.12], [-0.42, 0.16], [0.00, -0.10], [0.46, 0.10], [0.86, -0.04]])
+      }),
+      Object.freeze({
+        id: "NORTH_POLAR",
+        kind: "north-polar",
+        u: 0.02,
+        v: 0.77,
+        rx: 0.40,
+        ry: 0.16,
+        angle: 0.02,
+        lift: 0.112,
+        spine: Object.freeze([[-1.00, 0.00], [-0.50, 0.16], [0.00, -0.04], [0.48, 0.14], [1.00, -0.02]])
+      })
     ])
   });
 
@@ -61,7 +107,15 @@
     lastMount: null,
     lastReceipt: null,
     lastSize: 0,
-    lastRatios: null
+    lastRatios: null,
+    rotationLon: 0,
+    viewPitch: 0.10,
+    dragging: false,
+    lastPointerX: 0,
+    lastPointerY: 0,
+    drawPending: false,
+    animationFrame: 0,
+    lastAutoFrameAt: 0
   };
 
   function win() {
@@ -137,6 +191,8 @@
         drop-shadow(0 0 1.5rem rgba(141,216,255,.13))
         drop-shadow(0 2rem 2.6rem rgba(0,0,0,.48));
       touch-action:none;
+      cursor:grab;
+      user-select:none;
     `;
   }
 
@@ -166,6 +222,10 @@
     return Math.max(0, Math.min(1, value));
   }
 
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
   function lerp(a, b, t) {
     return a + (b - a) * t;
   }
@@ -186,6 +246,30 @@
 
   function dot3(a, b) {
     return a.x * b.x + a.y * b.y + a.z * b.z;
+  }
+
+  function rotateX(v, a) {
+    const c = Math.cos(a);
+    const s = Math.sin(a);
+    return { x: v.x, y: v.y * c - v.z * s, z: v.y * s + v.z * c };
+  }
+
+  function rotateY(v, a) {
+    const c = Math.cos(a);
+    const s = Math.sin(a);
+    return { x: v.x * c + v.z * s, y: v.y, z: -v.x * s + v.z * c };
+  }
+
+  function axisTiltRad() {
+    return (PLANET.axisTiltDegrees * Math.PI) / 180;
+  }
+
+  function worldNormalFromView(nx, ny, nz) {
+    let v = { x: nx, y: ny, z: nz };
+    v = rotateX(v, state.viewPitch);
+    v = rotateX(v, axisTiltRad());
+    v = rotateY(v, state.rotationLon);
+    return normalize3(v);
   }
 
   function hash2(x, y, seed = PLANET.seed) {
@@ -243,23 +327,55 @@
     ];
   }
 
+  function distanceToSegment(px, py, ax, ay, bx, by) {
+    const vx = bx - ax;
+    const vy = by - ay;
+    const wx = px - ax;
+    const wy = py - ay;
+    const len2 = vx * vx + vy * vy || 1;
+    const t = clamp01((wx * vx + wy * vy) / len2);
+    const qx = ax + vx * t;
+    const qy = ay + vy * t;
+    return { distance: Math.hypot(px - qx, py - qy), t };
+  }
+
+  function spineField(localX, localY, spine) {
+    let best = 0;
+
+    for (let i = 0; i < spine.length - 1; i += 1) {
+      const a = spine[i];
+      const b = spine[i + 1];
+      const d = distanceToSegment(localX, localY, a[0], a[1], b[0], b[1]);
+      const segmentWidth = 0.34 + 0.12 * Math.sin((i + 1) * 1.7);
+      const core = 1 - smoothstep(segmentWidth * 0.38, segmentWidth, d.distance);
+      const taper = smoothstep(-0.10, 0.18, d.t) * (1 - smoothstep(0.82, 1.12, d.t));
+      best = Math.max(best, core * (0.72 + taper * 0.28));
+    }
+
+    return clamp01(best);
+  }
+
   function continentInfluence(continent, u, v, roughness) {
     const du = wrapUnitDistance(u, continent.u);
     const dv = v - continent.v;
     const cos = Math.cos(continent.angle);
     const sin = Math.sin(continent.angle);
 
-    const x = du * cos - dv * sin;
-    const y = du * sin + dv * cos;
+    const x = (du * cos - dv * sin) / continent.rx;
+    const y = (du * sin + dv * cos) / continent.ry;
 
-    const rx = continent.rx * (0.82 + roughness * 0.18);
-    const ry = continent.ry * (0.82 + roughness * 0.16);
-    const d = Math.sqrt((x * x) / (rx * rx) + (y * y) / (ry * ry));
+    const spine = spineField(x, y, continent.spine);
+    const lobeA = Math.max(0, 1 - Math.hypot(x + 0.36, y - 0.10) / (0.55 + roughness * 0.18));
+    const lobeB = Math.max(0, 1 - Math.hypot(x - 0.30, y + 0.06) / (0.48 + roughness * 0.16));
+    const lobeC = Math.max(0, 1 - Math.hypot(x - 0.02, y - 0.28) / (0.42 + roughness * 0.14));
+    const bayNoise = fbm(u * 1.7 + continent.rx * 11, v * 1.3 - continent.ry * 9, 19.0, 3, 4300);
+    const inletNoise = fbm(u - continent.rx * 7, v + continent.ry * 8, 31.0, 2, 5100);
 
-    const ragged = (roughness - 0.5) * 0.28;
-    const edge = 0.96 + ragged;
+    const ridged = spine * 0.82 + lobeA * 0.26 + lobeB * 0.24 + lobeC * 0.18;
+    const bayCuts = smoothstep(0.58, 0.88, bayNoise) * 0.22 + smoothstep(0.64, 0.92, inletNoise) * 0.16;
+    const field = ridged + (roughness - 0.5) * 0.15 - bayCuts;
 
-    return clamp01(1 - smoothstep(edge * 0.54, edge, d));
+    return clamp01(smoothstep(0.18, 0.74, field));
   }
 
   function continentField(u, v) {
@@ -428,10 +544,10 @@
     const fine = fbm(surface.u - 8.3, surface.v + 3.8, 24.0, 3, 3200);
 
     return clamp01(
-      Math.max(beltA, beltB) * 0.38 +
-      streak * 0.29 +
-      fine * 0.10 -
-      Math.abs(nx) * 0.07 +
+      Math.max(beltA, beltB) * 0.34 +
+      streak * 0.27 +
+      fine * 0.09 -
+      Math.abs(nx) * 0.06 +
       nz * 0.06
     );
   }
@@ -439,7 +555,7 @@
   function drawPlanetPixels(canvas) {
     const rect = canvas.getBoundingClientRect();
     const cssSize = Math.max(300, Math.min(rect.width || 460, 560));
-    const dpr = Math.max(1, Math.min(1.6, win().devicePixelRatio || 1));
+    const dpr = Math.max(1, Math.min(1.35, win().devicePixelRatio || 1));
     const size = Math.round(cssSize * dpr);
 
     if (canvas.width !== size || canvas.height !== size) {
@@ -461,21 +577,13 @@
     const image = ctx.createImageData(size, size);
     const data = image.data;
 
-    const stats = {
-      total: 0,
-      exposedLand: 0,
-      shelf: 0,
-      drownedContinent: 0,
-      deepOcean: 0,
-      ice: 0
-    };
+    const stats = { total: 0, exposedLand: 0, shelf: 0, drownedContinent: 0, deepOcean: 0, ice: 0 };
 
     const oceanDeep = [1, 13, 32, 1];
     const oceanMid = [5, 59, 91, 1];
     const oceanShelf = [21, 122, 145, 1];
     const drownedBlue = [18, 104, 128, 1];
     const shallowReef = [62, 174, 166, 1];
-
     const coastSand = [170, 154, 104, 1];
     const landLow = [78, 125, 80, 1];
     const landMid = [96, 139, 88, 1];
@@ -499,9 +607,11 @@
         stats.total += 1;
 
         const z = Math.sqrt(Math.max(0, 1 - rr));
-        const nx = dx;
-        const ny = -dy;
-        const nz = z;
+        const viewNormal = { x: dx, y: -dy, z };
+        const worldNormal = worldNormalFromView(viewNormal.x, viewNormal.y, viewNormal.z);
+        const nx = worldNormal.x;
+        const ny = worldNormal.y;
+        const nz = worldNormal.z;
 
         const surface = classifySurface(nx, ny, nz);
         let color;
@@ -551,14 +661,14 @@
           color = mixColor(color, iceColor, clamp01((surface.polarIce - 0.22) * 0.42));
         }
 
-        const normal = normalize3({
+        const perturbedWorldNormal = normalize3({
           x: nx + (surface.ridgeNoise - 0.5) * 0.028,
           y: ny + (surface.grain - 0.5) * 0.022,
           z: nz
         });
 
-        const lightAmount = clamp01(dot3(normal, light) * 0.72 + 0.36);
-        const terminator = smoothstep(-0.18, 0.78, dot3(normal, light));
+        const lightAmount = clamp01(dot3(perturbedWorldNormal, light) * 0.72 + 0.36);
+        const terminator = smoothstep(-0.18, 0.78, dot3(perturbedWorldNormal, light));
         const limb = Math.pow(clamp01(1 - rr), 0.32);
         const edgeDark = smoothstep(0.98, 0.35, rr);
         const atmosphericLift = Math.pow(clamp01(rr), 3.4) * PLANET.atmosphere.hazeStrength;
@@ -570,9 +680,9 @@
         color = mixColor(nightBlue, color, clamp01(lit));
         color = mixColor(color, [126, 232, 202, 1], atmosphericLift * 0.16);
 
-        const cloud = computeCloud(surface, nx, nz);
-        if (cloud > 0.62) {
-          const cloudAlpha = clamp01((cloud - 0.62) * 0.34) * PLANET.atmosphere.cloudStrength;
+        const cloud = computeCloud(surface, viewNormal.x, viewNormal.z);
+        if (cloud > 0.64) {
+          const cloudAlpha = clamp01((cloud - 0.64) * 0.30) * PLANET.atmosphere.cloudStrength;
           color = mixColor(color, [235, 248, 235, 1], cloudAlpha);
         }
 
@@ -598,6 +708,7 @@
     ctx.putImageData(image, 0, 0);
 
     drawAtmosphericRim(ctx, cx, cy, r, size);
+    drawAxisOverlay(ctx, cx, cy, r, size);
     drawSummitSignals(ctx, cx, cy, r, light);
     drawSubmergedShelfGlints(ctx, cx, cy, r, size);
     drawSubtleOrbitReceipt(ctx, cx, cy, r, size);
@@ -613,7 +724,6 @@
     rim.addColorStop(1, "rgba(143,240,195,0)");
 
     ctx.save();
-
     ctx.beginPath();
     ctx.arc(cx, cy, r * 1.13, 0, Math.PI * 2);
     ctx.fillStyle = rim;
@@ -630,7 +740,32 @@
     ctx.strokeStyle = "rgba(141,216,255,0.12)";
     ctx.lineWidth = Math.max(1, size * 0.003);
     ctx.stroke();
+    ctx.restore();
+  }
 
+  function drawAxisOverlay(ctx, cx, cy, r, size) {
+    const tilt = -axisTiltRad() + state.viewPitch * 0.30;
+    const length = r * 1.18;
+    const dx = Math.sin(tilt) * length;
+    const dy = Math.cos(tilt) * length;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(cx - dx, cy + dy);
+    ctx.lineTo(cx + dx, cy - dy);
+    ctx.strokeStyle = "rgba(208,255,236,0.105)";
+    ctx.lineWidth = Math.max(1, size * 0.0017);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(cx + dx, cy - dy, r * 0.017, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(224,248,243,0.16)";
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(cx - dx, cy + dy, r * 0.013, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(141,216,255,0.10)";
+    ctx.fill();
     ctx.restore();
   }
 
@@ -650,10 +785,14 @@
     ctx.save();
 
     summitPoints.forEach((raw, index) => {
-      const s = normalize3({ x: raw[0], y: raw[1], z: raw[2] });
+      let s = normalize3({ x: raw[0], y: raw[1], z: raw[2] });
+      s = rotateY(s, -state.rotationLon);
+      s = rotateX(s, -axisTiltRad());
+      s = rotateX(s, -state.viewPitch);
+
       if (s.z < 0.10) return;
 
-      const lightAmount = clamp01(dot3(s, light) * 0.60 + 0.46);
+      const lightAmount = clamp01(dot3(normalize3({ x: raw[0], y: raw[1], z: raw[2] }), light) * 0.60 + 0.46);
       const px = cx + s.x * r;
       const py = cy - s.y * r;
       const radius = r * (0.009 + (index % 3) * 0.002);
@@ -676,6 +815,7 @@
   function drawSubmergedShelfGlints(ctx, cx, cy, r, size) {
     ctx.save();
     ctx.translate(cx, cy);
+    ctx.rotate(-state.rotationLon * 0.18);
 
     const rings = [
       { y: -0.28, rot: 0.18, w: 0.80, a: 0.060 },
@@ -722,12 +862,12 @@
 
   function createRender(context) {
     const documentRef = doc(context);
-    if (!documentRef) throw new Error("Document unavailable for Audralia G2.3 engine render.");
+    if (!documentRef) throw new Error("Document unavailable for Audralia G2.4 engine render.");
 
     const root = makeEl(documentRef, "section", "audralia-engine-root", {
       "data-audralia-engine-render": "true",
       "data-audralia-clean-canvas-render": "true",
-      "data-audralia-g2-3-visible-sea-level-delta": "true",
+      "data-audralia-g2-4-axis-rotation-finger-drag": "true",
       "data-contract": CONTRACT,
       "data-previous-contract": PREVIOUS_CONTRACT
     });
@@ -735,15 +875,15 @@
     styleRoot(root);
 
     const canvas = makeEl(documentRef, "canvas", "audralia-engine-canvas", {
-      "data-audralia-form": "g2-3-visible-sea-level-delta-engine-canvas",
-      "aria-label": "Audralia G2.3 visible sea-level delta planet form"
+      "data-audralia-form": "g2-4-axis-rotation-finger-drag-engine-canvas",
+      "aria-label": "Audralia G2.4 axis-tilted rotatable planet form. Drag to rotate."
     });
 
     styleCanvas(canvas);
 
     const label = makeEl(documentRef, "div", "audralia-engine-label");
     styleLabel(label);
-    label.textContent = "Audralia G2.3 · visible sea-level delta planet form mounted";
+    label.textContent = "Audralia G2.4 · axis rotation · drag to inspect";
 
     root.appendChild(canvas);
     root.appendChild(label);
@@ -751,14 +891,101 @@
     return { root, canvas, label };
   }
 
-  function requestDraw(canvas) {
-    const draw = () => drawPlanetPixels(canvas);
+  function requestDraw(canvas, immediate = false) {
+    if (!canvas) return;
+
+    if (immediate) {
+      state.drawPending = false;
+      drawPlanetPixels(canvas);
+      return;
+    }
+
+    if (state.drawPending) return;
+
+    state.drawPending = true;
+
+    const draw = () => {
+      state.drawPending = false;
+      drawPlanetPixels(canvas);
+    };
 
     if (typeof win().requestAnimationFrame === "function") {
       win().requestAnimationFrame(draw);
     } else {
       setTimeout(draw, 0);
     }
+  }
+
+  function startAutoRotation(canvas) {
+    if (state.animationFrame && typeof win().cancelAnimationFrame === "function") {
+      win().cancelAnimationFrame(state.animationFrame);
+    }
+
+    const loop = (timestamp) => {
+      const time = Number(timestamp || Date.now());
+
+      if (!state.dragging && time - state.lastAutoFrameAt >= PLANET.autoRotationFrameMs) {
+        state.rotationLon = (state.rotationLon + PLANET.autoRotationStep) % (Math.PI * 2);
+        state.lastAutoFrameAt = time;
+        requestDraw(canvas);
+      }
+
+      if (typeof win().requestAnimationFrame === "function") {
+        state.animationFrame = win().requestAnimationFrame(loop);
+      } else {
+        state.animationFrame = setTimeout(() => loop(Date.now()), PLANET.autoRotationFrameMs);
+      }
+    };
+
+    loop(Date.now());
+  }
+
+  function installFingerDrag(canvas) {
+    if (!canvas || canvas.dataset.audraliaFingerDragBound === "true") return;
+    canvas.dataset.audraliaFingerDragBound = "true";
+
+    const onDown = (event) => {
+      state.dragging = true;
+      state.lastPointerX = Number(event.clientX || 0);
+      state.lastPointerY = Number(event.clientY || 0);
+      canvas.style.cursor = "grabbing";
+      canvas.setPointerCapture?.(event.pointerId);
+      event.preventDefault?.();
+    };
+
+    const onMove = (event) => {
+      if (!state.dragging) return;
+
+      const x = Number(event.clientX || 0);
+      const y = Number(event.clientY || 0);
+      const dx = x - state.lastPointerX;
+      const dy = y - state.lastPointerY;
+
+      state.lastPointerX = x;
+      state.lastPointerY = y;
+
+      state.rotationLon = (state.rotationLon + dx * PLANET.dragRotationScale) % (Math.PI * 2);
+      state.viewPitch = clamp(state.viewPitch + dy * PLANET.dragPitchScale, -PLANET.maxViewPitch, PLANET.maxViewPitch);
+
+      requestDraw(canvas, true);
+      event.preventDefault?.();
+    };
+
+    const onUp = (event) => {
+      state.dragging = false;
+      canvas.style.cursor = "grab";
+      canvas.releasePointerCapture?.(event.pointerId);
+      event.preventDefault?.();
+    };
+
+    canvas.addEventListener("pointerdown", onDown, { passive: false });
+    canvas.addEventListener("pointermove", onMove, { passive: false });
+    canvas.addEventListener("pointerup", onUp, { passive: false });
+    canvas.addEventListener("pointercancel", onUp, { passive: false });
+    canvas.addEventListener("lostpointercapture", () => {
+      state.dragging = false;
+      canvas.style.cursor = "grab";
+    });
   }
 
   function installResizeRedraw(root, canvas) {
@@ -777,19 +1004,17 @@
     const mountTarget = resolveMount(input);
     const documentRef = doc(input);
 
-    if (!mountTarget) {
-      throw new Error("Audralia G2.3 engine mount target missing.");
-    }
-
-    if (!documentRef) {
-      throw new Error("Audralia G2.3 engine document missing.");
-    }
+    if (!mountTarget) throw new Error("Audralia G2.4 engine mount target missing.");
+    if (!documentRef) throw new Error("Audralia G2.4 engine document missing.");
 
     const render = createRender(input);
 
     mountTarget.replaceChildren(render.root);
 
-    requestDraw(render.canvas);
+    requestDraw(render.canvas, true);
+    installFingerDrag(render.canvas);
+    installResizeRedraw(render.root, render.canvas);
+    startAutoRotation(render.canvas);
 
     state.mounted = true;
     state.mountedAt = now();
@@ -801,24 +1026,17 @@
     mountTarget.dataset.audraliaFormVisible = "true";
     mountTarget.dataset.audraliaEngineMounted = "true";
     mountTarget.dataset.audraliaEngineContract = CONTRACT;
-    mountTarget.dataset.audraliaG23VisibleSeaLevelDelta = "true";
+    mountTarget.dataset.audraliaG24AxisRotationFingerDrag = "true";
 
     const statusTarget = input?.statusTarget;
     if (isElement(statusTarget)) {
-      statusTarget.textContent = "FORM_VISIBLE · Audralia G2.3 visible sea-level delta planet form mounted.";
+      statusTarget.textContent = "FORM_VISIBLE · Audralia G2.4 axis-tilted drag-rotatable planet form mounted.";
       statusTarget.dataset.state = "pass";
     }
 
     state.lastReceipt = buildReceipt(true);
 
-    installResizeRedraw(render.root, render.canvas);
-
-    return {
-      element: render.root,
-      canvas: render.canvas,
-      contract: CONTRACT,
-      receipt: state.lastReceipt
-    };
+    return { element: render.root, canvas: render.canvas, contract: CONTRACT, receipt: state.lastReceipt };
   }
 
   function buildReceipt(valid) {
@@ -832,7 +1050,7 @@
       mounted: state.mounted,
       mountedAt: state.mountedAt,
       mountCount: state.mountCount,
-      planetStandard: "G2.3 visible sea-level delta and continent mask clean-canvas planet form",
+      planetStandard: "G2.4 Earth-like axis rotation, finger drag, non-blob continent clean-canvas planet form",
       continentCount: PLANET.continentCount,
       mainContinents: PLANET.mainContinents,
       northPolarContinent: PLANET.northPolarContinent,
@@ -840,8 +1058,9 @@
       terrainPressureBelowSeaLevel: PLANET.terrainPressureBelowSeaLevel,
       seaLevelExposureClassification: PLANET.seaLevelExposureClassification,
       seaLevel: PLANET.seaLevel,
-      exposedLandTarget: PLANET.exposedLandTarget,
-      submergedShelfMustRenderBlue: PLANET.submergedShelfMustRenderBlue,
+      axisTiltDegrees: PLANET.axisTiltDegrees,
+      rotationLaw: PLANET.rotationLaw,
+      fingerDrag: PLANET.fingerDrag,
       ratios: state.lastRatios,
       nodeCount: PLANET.nodeCount,
       sectorCount: PLANET.sectorCount,
@@ -870,6 +1089,9 @@
       lastReceipt: state.lastReceipt,
       lastSize: state.lastSize,
       ratios: state.lastRatios,
+      rotationLon: state.rotationLon,
+      viewPitch: state.viewPitch,
+      axisTiltDegrees: PLANET.axisTiltDegrees,
       planet: PLANET,
       generatedImage: false,
       graphicBox: false,

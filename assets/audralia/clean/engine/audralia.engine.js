@@ -1,15 +1,14 @@
 // /assets/audralia/clean/engine/audralia.engine.js
-// AUDRALIA_G2_7_PARENT_FULL_TEXTURE_ATLAS_RENDERER_LEGACY_PROMOTION_TNT_v1
+// AUDRALIA_G2_8_PARENT_FIELD_ATLAS_RENDERER_TNT_v1
 // Full-file replacement.
 // Parent-facing route compatibility contract preserved:
 // AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1
 //
 // Purpose:
-// - Promote the legacy full-texture-atlas sphere renderer as the G2.7 visual standard.
-// - Keep current route/contract/receipt compatibility.
-// - Stop treating projected polygon/dot overlays as the primary planet material renderer.
-// - Build a cached material atlas from Gratitude topology, hydrology, and surface authority.
-// - During motion, rotate the sphere texture lookup instead of live-resampling projected child dots.
+// - Replace closed-boundary land containment with a continuous field-atlas renderer.
+// - Build Gratitude as pressure, erosion, shelf, water-cut, lake, lagoon, wetland, and coastline fields.
+// - Keep topology, hydrology, and surface children as authority inputs without depending on closed-containment drawing.
+// - Keep motion cheap by rotating cached sphere texture lookup.
 // - Preserve FORM_VISIBLE.
 // - No generated image. No GraphicBox. No visual-pass claim.
 
@@ -17,10 +16,10 @@
   "use strict";
 
   const CONTRACT = "AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1";
-  const INTERNAL_CONTRACT = "AUDRALIA_G2_7_PARENT_FULL_TEXTURE_ATLAS_RENDERER_LEGACY_PROMOTION_TNT_v1";
-  const GENERATION_STANDARD = "AUDRALIA_G2_7_LEGACY_TEXTURE_ATLAS_PLANETARY_STANDARD_v1";
-  const RECEIPT = "AUDRALIA_G2_7_PARENT_FULL_TEXTURE_ATLAS_RENDERER_LEGACY_PROMOTION_RECEIPT_v1";
-  const PREVIOUS_INTERNAL_CONTRACT = "AUDRALIA_G2_6_PARENT_PROJECTOR_CONSUMES_MOTION_STATE_NO_STRETCH_TNT_v1";
+  const INTERNAL_CONTRACT = "AUDRALIA_G2_8_PARENT_FIELD_ATLAS_RENDERER_TNT_v1";
+  const GENERATION_STANDARD = "AUDRALIA_G2_8_FIELD_ATLAS_PLANETARY_STANDARD_v1";
+  const RECEIPT = "AUDRALIA_G2_8_PARENT_FIELD_ATLAS_RENDERER_RECEIPT_v1";
+  const PREVIOUS_INTERNAL_CONTRACT = "AUDRALIA_G2_7_PARENT_FULL_TEXTURE_ATLAS_RENDERER_LEGACY_PROMOTION_TNT_v1";
 
   const TARGET = "/assets/audralia/clean/engine/audralia.engine.js";
   const ROUTE = "/showroom/globe/audralia/";
@@ -52,12 +51,12 @@
     minCanvasSize: 300,
     maxCanvasSize: 920,
     maxDpr: 1.35,
-    textureWidth: 520,
-    textureHeight: 260,
-    spherePixelsIdle: 520,
-    spherePixelsDrag: 390,
-    minSpherePixels: 320,
-    maxSpherePixels: 560,
+    textureWidth: 480,
+    textureHeight: 240,
+    spherePixelsIdle: 430,
+    spherePixelsDrag: 310,
+    minSpherePixels: 280,
+    maxSpherePixels: 460,
     fallbackStageHeight: 520,
     atmosphereRadius: 1.13
   });
@@ -69,21 +68,22 @@
     maxPitch: 0.62,
     dragRadiansPerPixel: 0.0105,
     pitchRadiansPerPixel: 0.0048,
-    autoRotateSpeed: 0.000052,
-    smoothing: 0.18,
-    pitchSmoothing: 0.16,
+    autoRotateSpeed: 0.000045,
+    smoothing: 0.20,
+    pitchSmoothing: 0.18,
     inertiaDecay: 0.925,
     inertiaMin: 0.000012,
-    maxVelocity: 0.038
+    maxVelocity: 0.038,
+    idleFrameMs: 58
   });
 
   const COLORS = Object.freeze({
     deepOcean: [2, 13, 40],
     ocean: [5, 52, 102],
-    openOcean: [8, 70, 124],
-    shelf: [24, 136, 160],
-    shallow: [70, 175, 174],
-    lagoon: [104, 205, 188],
+    openOcean: [8, 72, 126],
+    shelf: [25, 137, 160],
+    shallow: [70, 176, 174],
+    lagoon: [105, 205, 188],
     lake: [36, 136, 170],
     bay: [60, 176, 205],
     inlet: [86, 208, 224],
@@ -104,28 +104,41 @@
     gold: [198, 166, 91]
   });
 
-  const FALLBACK_BOUNDARY = Object.freeze([
-    p(-83.8, -8.8), p(-87.2, -3.1), p(-84.4, 2.6), p(-87.8, 8.7),
-    p(-84.6, 15.2), p(-86.7, 22.4), p(-79.8, 29.4), p(-73.2, 35.8),
-    p(-65.4, 41.2), p(-55.2, 44.5), p(-43.8, 44.1), p(-32.6, 40.7),
-    p(-23.1, 35.7), p(-15.9, 28.4), p(-8.8, 20.6), p(-13.8, 14.7),
-    p(-6.2, 8.2), p(-13.4, 2.2), p(-8.4, -4.8), p(-16.8, -10.6),
-    p(-21.6, -17.4), p(-30.2, -22.2), p(-38.6, -27.8), p(-48.3, -30.8),
-    p(-57.4, -28.5), p(-65.6, -33.2), p(-72.4, -27.6), p(-78.2, -22.2),
-    p(-72.5, -17.6), p(-80.5, -13.8)
-  ]);
-
-  const FALLBACK_LAKES = Object.freeze([
-    organicRing(-47.8, 14.3, 8.8, 6.1, 24, 5101, 0.06),
-    organicRing(-60.1, -9.6, 6.9, 4.8, 20, 5102, 0.07),
-    organicRing(-35.9, 31.2, 3.8, 2.7, 14, 5103, 0.08),
-    organicRing(-40.4, -22.7, 4.4, 3.0, 14, 5104, 0.08)
-  ]);
-
-  const FALLBACK_LAGOONS = Object.freeze([
-    organicRing(-53.2, -27.1, 8.4, 3.2, 18, 5201, 0.09),
-    organicRing(-13.5, 3.2, 4.4, 2.7, 14, 5202, 0.09)
-  ]);
+  const FIELD_MODEL = Object.freeze({
+    positive: Object.freeze([
+      fieldNode(-49, 7, 45, 37, 1.05, -8, "main-survival-mass"),
+      fieldNode(-70, 11, 20, 35, 0.56, -14, "west-adversity-wall"),
+      fieldNode(-43, 31, 28, 15, 0.42, 3, "north-continuance-shoulder"),
+      fieldNode(-18, 15, 18, 18, 0.36, 10, "east-reopening-reach"),
+      fieldNode(-47, -23, 29, 13, 0.38, 2, "south-restoration-belt"),
+      fieldNode(-33, -8, 19, 21, 0.26, 18, "interior-memory-rise")
+    ]),
+    cuts: Object.freeze([
+      fieldNode(-9, 6, 14, 24, 0.60, 8, "east-inlet-cut"),
+      fieldNode(-14, -8, 18, 13, 0.35, -18, "southeast-fracture-cut"),
+      fieldNode(-55, -31, 20, 9, 0.45, 3, "south-lagoon-cut"),
+      fieldNode(-80, -17, 13, 13, 0.25, -12, "west-pressure-bite"),
+      fieldNode(-77, 4, 12, 11, 0.20, 18, "west-shelter-cut")
+    ]),
+    lakes: Object.freeze([
+      fieldNode(-47.8, 14.3, 8.9, 6.2, 1.00, 4, "north-memory-lake"),
+      fieldNode(-60.1, -9.6, 7.0, 4.8, 1.00, -8, "west-memory-lake"),
+      fieldNode(-35.9, 31.2, 3.9, 2.8, 0.75, 0, "north-small-lake"),
+      fieldNode(-40.4, -22.7, 4.6, 3.1, 0.75, 5, "south-small-lake")
+    ]),
+    lagoons: Object.freeze([
+      fieldNode(-53.2, -27.1, 9.0, 3.6, 0.95, 2, "south-restoration-lagoon"),
+      fieldNode(-13.5, 3.2, 4.9, 2.9, 0.82, 0, "east-reopening-lagoon")
+    ]),
+    wetlands: Object.freeze([
+      fieldNode(-50, -23, 28, 10, 0.54, 2, "southern-soft-restoration"),
+      fieldNode(-18, -5, 14, 11, 0.34, -8, "southeast-repaired-wetland")
+    ]),
+    hardCoast: Object.freeze([
+      fieldNode(-76, 6, 14, 31, 0.60, -4, "western-hard-coast"),
+      fieldNode(-67, -20, 14, 20, 0.40, 8, "southwest-hard-coast")
+    ])
+  });
 
   const state = {
     contract: CONTRACT,
@@ -169,17 +182,25 @@
     textureAtlasLandRatio: 0,
     textureAtlasWaterRatio: 0,
     textureAtlasHydrologyRatio: 0,
-    textureAtlasConsumesContinents: true,
+    textureAtlasSurfaceRatio: 0,
+    textureAtlasFieldCoverageRatio: 0,
+    textureAtlasContainmentModel: "continuous-field",
+    textureAtlasClosedContainmentUsed: false,
+    textureAtlasConsumesContinents: false,
     textureAtlasConsumesGratitudeTopology: false,
     textureAtlasConsumesGratitudeHydrology: false,
     textureAtlasConsumesGratitudeSurface: false,
+    textureAtlasLandContainmentProved: false,
 
+    fieldAtlasActive: true,
+    continuousFieldLandMask: true,
+    closedBoundaryContainmentReleased: true,
+    boundaryDrawingPrimary: false,
+    projectedOverlayPrimaryRenderer: false,
     motionRedrawUsesCachedAtlas: true,
     dragFrameLiveChildSampling: false,
     sphereUvLookupActive: true,
     planetMaterialIntegrated: false,
-    projectedOverlayPrimaryRenderer: false,
-    legacyVisualStandardPromoted: true,
 
     motionLoaded: false,
     motionContract: "",
@@ -208,6 +229,12 @@
 
     skyLoaded: false,
 
+    derivedPositiveNodes: [],
+    derivedCutNodes: [],
+    derivedLakeNodes: [],
+    derivedLagoonNodes: [],
+    derivedWetlandNodes: [],
+
     rotation: MOTION.initialRotation,
     targetRotation: MOTION.initialRotation,
     pitch: MOTION.initialPitch,
@@ -221,10 +248,12 @@
     reducedMotion: false,
 
     frameId: 0,
+    loopId: 0,
     renderScheduled: false,
     renderCount: 0,
     requestRenderCount: 0,
     lastFrameTime: 0,
+    lastLoopRenderTime: 0,
     lastRenderTime: 0,
     lastMotionReason: "module-load",
     lastRenderReason: "",
@@ -292,6 +321,13 @@
   function wrap01(value) {
     const number = finite(value, 0);
     return ((number % 1) + 1) % 1;
+  }
+
+  function wrapDegrees(value) {
+    let out = finite(value, 0);
+    while (out <= -180) out += 360;
+    while (out > 180) out -= 360;
+    return out;
   }
 
   function wrapRadians(value) {
@@ -386,34 +422,33 @@
     ];
   }
 
-  function p(lon, lat) {
+  function fieldNode(lon, lat, radiusLon, radiusLat, weight, tilt, id) {
     return Object.freeze({
-      lon: Math.round(Number(lon) * 1000) / 1000,
-      lat: Math.round(Number(lat) * 1000) / 1000
+      id: String(id || "field-node"),
+      lon: finite(lon, 0),
+      lat: finite(lat, 0),
+      radiusLon: Math.max(0.0001, finite(radiusLon, 1)),
+      radiusLat: Math.max(0.0001, finite(radiusLat, 1)),
+      weight: finite(weight, 1),
+      tilt: finite(tilt, 0)
     });
   }
 
-  function organicRing(cx, cy, rx, ry, count, seed, wobble = 0.08) {
-    const points = [];
+  function fieldScore(lon, lat, node) {
+    const dx = wrapDegrees(finite(lon, 0) - node.lon);
+    const dy = finite(lat, 0) - node.lat;
+    const angle = node.tilt * Math.PI / 180;
+    const c = Math.cos(-angle);
+    const s = Math.sin(-angle);
 
-    for (let i = 0; i < count; i += 1) {
-      const angle = (TAU * i) / count;
-      const pulseA = Math.sin(angle * 3 + seed * 0.011) * wobble;
-      const pulseB = Math.cos(angle * 5 + seed * 0.017) * wobble * 0.55;
-      const pulseC = Math.sin(angle * 7 + seed * 0.023) * wobble * 0.28;
-      const scale = 1 + pulseA + pulseB + pulseC;
+    const x = dx * c - dy * s;
+    const y = dx * s + dy * c;
 
-      points.push(p(cx + Math.cos(angle) * rx * scale, cy + Math.sin(angle) * ry * scale));
-    }
+    const q = (x * x) / (node.radiusLon * node.radiusLon) + (y * y) / (node.radiusLat * node.radiusLat);
+    const core = smoothstep(1.18, -0.20, q);
+    const fringe = smoothstep(1.85, 0.72, q) * 0.28;
 
-    return Object.freeze(points);
-  }
-
-  function lonLatToUV(lon, lat) {
-    return {
-      u: wrap01((finite(lon, 0) + 180) / 360),
-      v: clamp01((90 - finite(lat, 0)) / 180)
-    };
+    return clamp01(core + fringe) * node.weight;
   }
 
   function uvToLonLat(u, v) {
@@ -423,795 +458,283 @@
     };
   }
 
-  function pointInPolygon(lon, lat, polygon) {
-    if (!Array.isArray(polygon) || polygon.length < 3) return false;
+  function ringStats(points) {
+    const source = Array.isArray(points) ? points : [];
 
-    let inside = false;
-    const x = finite(lon, 0);
-    const y = finite(lat, 0);
-
-    for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i, i += 1) {
-      const xi = finite(polygon[i].lon, 0);
-      const yi = finite(polygon[i].lat, 0);
-      const xj = finite(polygon[j].lon, 0);
-      const yj = finite(polygon[j].lat, 0);
-
-      const intersect = yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / Math.max(0.000001, yj - yi) + xi;
-      if (intersect) inside = !inside;
+    if (!source.length) {
+      return null;
     }
 
-    return inside;
-  }
-
-  function distanceToSegment(point, a, b) {
-    const x = finite(point.lon, 0);
-    const y = finite(point.lat, 0);
-    const x1 = finite(a.lon, 0);
-    const y1 = finite(a.lat, 0);
-    const x2 = finite(b.lon, 0);
-    const y2 = finite(b.lat, 0);
-    const dx = x2 - x1;
-    const dy = y2 - y1;
-    const len2 = dx * dx + dy * dy;
-
-    if (len2 <= 0.000001) {
-      return Math.hypot(x - x1, y - y1);
-    }
-
-    const t = clamp(((x - x1) * dx + (y - y1) * dy) / len2, 0, 1);
-    const px = x1 + t * dx;
-    const py = y1 + t * dy;
-
-    return Math.hypot(x - px, y - py);
-  }
-
-  function nearestBoundaryDistance(lon, lat, boundary) {
-    if (!Array.isArray(boundary) || boundary.length < 2) {
-      return { distance: 999, segmentIndex: -1 };
-    }
-
-    const point = { lon, lat };
-    let best = 999;
-    let index = -1;
-
-    for (let i = 0; i < boundary.length; i += 1) {
-      const d = distanceToSegment(point, boundary[i], boundary[(i + 1) % boundary.length]);
-      if (d < best) {
-        best = d;
-        index = i;
-      }
-    }
-
-    return { distance: best, segmentIndex: index };
-  }
-
-  function boundaryBox(boundary) {
-    const points = Array.isArray(boundary) ? boundary : [];
-
-    if (!points.length) {
-      return {
-        minLon: -90,
-        maxLon: -5,
-        minLat: -36,
-        maxLat: 46
-      };
-    }
-
-    let minLon = Infinity;
-    let maxLon = -Infinity;
-    let minLat = Infinity;
-    let maxLat = -Infinity;
-
-    for (const point of points) {
-      const lon = finite(point.lon, 0);
-      const lat = finite(point.lat, 0);
-      minLon = Math.min(minLon, lon);
-      maxLon = Math.max(maxLon, lon);
-      minLat = Math.min(minLat, lat);
-      maxLat = Math.max(maxLat, lat);
-    }
-
-    return { minLon, maxLon, minLat, maxLat };
-  }
-
-  function recordError(scope, error) {
-    const message = error && error.message ? error.message : String(error);
-    state.lastDrawError = `${scope}: ${message}`;
-    state.errors.push({
-      scope,
-      message,
-      time: new Date().toISOString()
-    });
-    publishReceipt(scope);
-  }
-
-  function safe(fn, fallback) {
-    try {
-      return fn();
-    } catch (_error) {
-      return fallback;
-    }
-  }
-
-  function getRoot() {
-    return hasDocument() ? document.documentElement : null;
-  }
-
-  function getCacheNonce() {
-    if (state.cacheNonce) return state.cacheNonce;
-
-    const root = getRoot();
-
-    const fromRoot =
-      root &&
-      (
-        root.getAttribute("data-audralia-page-cache-nonce") ||
-        root.getAttribute("data-audralia-route-bridge-cache-key") ||
-        root.getAttribute("data-html-cache-key")
-      );
-
-    const fromBootstrap =
-      hasWindow() &&
-      window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT &&
-      window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.dynamicCacheKey
-        ? String(window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.dynamicCacheKey)
-        : "";
-
-    const fromWindow =
-      hasWindow() && window.AUDRALIA_PAGE_CACHE_NONCE
-        ? String(window.AUDRALIA_PAGE_CACHE_NONCE)
-        : "";
-
-    state.cacheNonce =
-      fromWindow ||
-      fromBootstrap ||
-      fromRoot ||
-      `${INTERNAL_CONTRACT}__${Date.now()}__${Math.random().toString(36).slice(2, 8)}`;
-
-    if (hasWindow()) window.AUDRALIA_PAGE_CACHE_NONCE = state.cacheNonce;
-
-    if (root) {
-      root.setAttribute("data-audralia-page-cache-nonce", state.cacheNonce);
-      root.setAttribute("data-audralia-g27-atlas-cache-nonce", state.cacheNonce);
-    }
-
-    return state.cacheNonce;
-  }
-
-  function versioned(path) {
-    return `${path}?v=${encodeURIComponent(getCacheNonce())}`;
-  }
-
-  function scriptLoaded(path) {
-    if (!hasDocument()) return false;
-    return Array.from(document.scripts).some((script) => {
-      const src = script.getAttribute("src") || "";
-      return src === versioned(path) || src.startsWith(`${path}?`);
-    });
-  }
-
-  function loadScript(path, key) {
-    if (!hasDocument()) return Promise.resolve(false);
-
-    if (scriptLoaded(path)) return Promise.resolve(true);
-
-    const src = versioned(path);
-
-    if (loadPromises.has(src)) return loadPromises.get(src);
-
-    const promise = new Promise((resolve) => {
-      const script = document.createElement("script");
-      script.src = src;
-      script.async = false;
-      script.defer = false;
-      script.setAttribute("data-audralia-g27-loader", INTERNAL_CONTRACT);
-      script.setAttribute("data-audralia-g27-child", key);
-      script.setAttribute("data-generated-image", "false");
-      script.setAttribute("data-graphic-box", "false");
-      script.setAttribute("data-visual-pass-claimed", "false");
-
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-
-      document.head.appendChild(script);
-    });
-
-    loadPromises.set(src, promise);
-
-    return promise;
-  }
-
-  function resolveMountNode(node) {
-    if (node && node.nodeType === 1) return node;
-
-    if (!hasDocument()) return null;
-
-    return (
-      document.querySelector("[data-audralia-form-mount='true']") ||
-      document.querySelector("[data-audralia-mount='true']") ||
-      document.querySelector("[data-audralia-stage='true']") ||
-      document.querySelector("#audralia-form-mount") ||
-      document.querySelector("#audralia-stage") ||
-      document.querySelector("#main") ||
-      document.body
-    );
-  }
-
-  function prepareMount(node) {
-    if (!node || !node.style) return;
-
-    node.style.position = node.style.position || "relative";
-    node.style.overflow = "hidden";
-    node.style.touchAction = "none";
-    node.style.userSelect = "none";
-    node.style.WebkitUserSelect = "none";
-
-    if (!node.style.minHeight) {
-      node.style.minHeight = `${GEOMETRY.fallbackStageHeight}px`;
-    }
-
-    node.setAttribute("data-audralia-parent-contract", CONTRACT);
-    node.setAttribute("data-audralia-parent-internal-contract", INTERNAL_CONTRACT);
-    node.setAttribute("data-audralia-generation-standard", GENERATION_STANDARD);
-    node.setAttribute("data-audralia-g27-atlas-renderer", "true");
-    node.setAttribute("data-audralia-motion-no-stretch", "true");
-
-    suppressTransforms(node);
-  }
-
-  function suppressTransforms(node) {
-    if (!node || !node.style) return 0;
-
+    let lonSum = 0;
+    let latSum = 0;
     let count = 0;
 
-    if (node.style.transform && node.style.transform !== "none") {
-      node.style.transform = "none";
+    for (const point of source) {
+      const lon = finite(point.lon, NaN);
+      const lat = finite(point.lat, NaN);
+
+      if (!Number.isFinite(lon) || !Number.isFinite(lat)) continue;
+
+      lonSum += lon;
+      latSum += lat;
       count += 1;
     }
 
-    if (node.style.translate && node.style.translate !== "none") {
-      node.style.translate = "none";
-      count += 1;
+    if (!count) return null;
+
+    const lon = lonSum / count;
+    const lat = latSum / count;
+
+    let lonSpread = 0;
+    let latSpread = 0;
+
+    for (const point of source) {
+      const pLon = finite(point.lon, lon);
+      const pLat = finite(point.lat, lat);
+      lonSpread = Math.max(lonSpread, Math.abs(wrapDegrees(pLon - lon)));
+      latSpread = Math.max(latSpread, Math.abs(pLat - lat));
     }
 
-    if (node.style.scale && node.style.scale !== "none") {
-      node.style.scale = "none";
-      count += 1;
-    }
-
-    if (node.style.rotate && node.style.rotate !== "none") {
-      node.style.rotate = "none";
-      count += 1;
-    }
-
-    node.style.transformOrigin = "50% 50%";
-
-    return count;
-  }
-
-  function enforceNoStretch() {
-    let count = 0;
-
-    count += suppressTransforms(state.mountNode);
-    count += suppressTransforms(state.canvas);
-
-    if (hasDocument()) {
-      document
-        .querySelectorAll(
-          "canvas[data-audralia-g27-atlas-canvas='true'],canvas[data-audralia-visible-canvas='true'],[data-audralia-motion-no-stretch='true']"
-        )
-        .forEach((node) => {
-          count += suppressTransforms(node);
-          if (node.style) {
-            node.style.touchAction = "none";
-            node.style.userSelect = "none";
-            node.style.WebkitUserSelect = "none";
-          }
-        });
-    }
-
-    return count;
-  }
-
-  function ensureCanvas() {
-    if (!hasDocument() || !state.mountNode) return false;
-
-    state.mountNode
-      .querySelectorAll("canvas[data-audralia-g27-atlas-canvas='true']")
-      .forEach((node) => node.remove());
-
-    const canvas = document.createElement("canvas");
-
-    canvas.setAttribute("data-audralia-g27-atlas-canvas", "true");
-    canvas.setAttribute("data-audralia-visible-canvas", "true");
-    canvas.setAttribute("data-audralia-parent-contract", CONTRACT);
-    canvas.setAttribute("data-audralia-parent-internal-contract", INTERNAL_CONTRACT);
-    canvas.setAttribute("data-audralia-generation-standard", GENERATION_STANDARD);
-    canvas.setAttribute("data-audralia-form-visible", "true");
-    canvas.setAttribute("data-audralia-motion-no-stretch", "true");
-    canvas.setAttribute("data-generated-image", "false");
-    canvas.setAttribute("data-graphic-box", "false");
-    canvas.setAttribute("data-visual-pass-claimed", "false");
-    canvas.setAttribute("aria-label", "Audralia G2.7 full texture atlas planet renderer");
-
-    Object.assign(canvas.style, {
-      position: "absolute",
-      inset: "0",
-      width: "100%",
-      height: "100%",
-      minWidth: `${GEOMETRY.minCanvasSize}px`,
-      minHeight: `${GEOMETRY.minCanvasSize}px`,
-      display: "block",
-      zIndex: "4",
-      background: "transparent",
-      touchAction: "none",
-      userSelect: "none",
-      WebkitUserSelect: "none",
-      cursor: "grab",
-      transform: "none",
-      transformOrigin: "50% 50%"
-    });
-
-    state.mountNode.appendChild(canvas);
-
-    state.canvas = canvas;
-    state.ctx = canvas.getContext("2d", {
-      alpha: true,
-      desynchronized: true
-    });
-
-    state.sphereCanvas = document.createElement("canvas");
-    state.sphereCtx = state.sphereCanvas.getContext("2d", {
-      alpha: true,
-      willReadFrequently: false
-    });
-
-    bindCanvasEvents(canvas);
-
-    return Boolean(state.ctx && state.sphereCtx);
-  }
-
-  function getBestRect() {
-    if (!state.mountNode || typeof state.mountNode.getBoundingClientRect !== "function") {
-      const size = hasWindow() ? Math.min(window.innerWidth || 420, GEOMETRY.maxCanvasSize) : 420;
-      return { width: size, height: size };
-    }
-
-    const mountRect = state.mountNode.getBoundingClientRect();
-    const parentRect =
-      state.mountNode.parentElement &&
-      typeof state.mountNode.parentElement.getBoundingClientRect === "function"
-        ? state.mountNode.parentElement.getBoundingClientRect()
-        : null;
-
-    const candidates = [mountRect, parentRect].filter(Boolean);
-    const usable = candidates.find((rect) => rect.width >= 120 && rect.height >= 120);
-
-    if (usable) return usable;
-
-    const width = hasWindow() ? Math.min(window.innerWidth || 420, GEOMETRY.maxCanvasSize) : 420;
     return {
-      width,
-      height: Math.max(GEOMETRY.fallbackStageHeight, width)
+      lon,
+      lat,
+      radiusLon: clamp(lonSpread * 0.72, 3, 46),
+      radiusLat: clamp(latSpread * 0.72, 2, 38)
     };
   }
 
-  function resize() {
-    if (!state.canvas || !state.ctx || !state.sphereCanvas) return false;
-
-    const rect = getBestRect();
-    const dpr = Math.min(GEOMETRY.maxDpr, hasWindow() ? window.devicePixelRatio || 1 : 1);
-
-    const cssWidth = Math.max(GEOMETRY.minCanvasSize, Math.floor(rect.width || GEOMETRY.minCanvasSize));
-    const cssHeight = Math.max(GEOMETRY.minCanvasSize, Math.floor(rect.height || rect.width || GEOMETRY.minCanvasSize));
-
-    const width = Math.max(GEOMETRY.minCanvasSize, Math.floor(cssWidth * dpr));
-    const height = Math.max(GEOMETRY.minCanvasSize, Math.floor(cssHeight * dpr));
-
-    state.cssWidth = cssWidth;
-    state.cssHeight = cssHeight;
-    state.dpr = dpr;
-
-    if (state.canvas.width !== width) state.canvas.width = width;
-    if (state.canvas.height !== height) state.canvas.height = height;
-
-    state.width = width;
-    state.height = height;
-
-    const base = Math.min(width, height);
-    state.cx = width * GEOMETRY.centerX;
-    state.cy = height * GEOMETRY.centerY;
-    state.radius = base * GEOMETRY.radiusRatio;
-
-    const desiredSphere = clamp(
-      Math.floor((state.dragging ? GEOMETRY.spherePixelsDrag : GEOMETRY.spherePixelsIdle) * clamp(base / 620, 0.72, 1.08)),
-      GEOMETRY.minSpherePixels,
-      GEOMETRY.maxSpherePixels
-    );
-
-    state.sphereSize = desiredSphere;
-
-    if (state.sphereCanvas.width !== desiredSphere) state.sphereCanvas.width = desiredSphere;
-    if (state.sphereCanvas.height !== desiredSphere) state.sphereCanvas.height = desiredSphere;
-
-    return true;
-  }
-
-  function resolveMotionApi() {
-    if (!hasWindow()) return null;
-
-    return (
-      window.AUDRALIA_MOTION ||
-      window.AUDRALIA_CLEAN_MOTION ||
-      window.AUDRALIA_CLEAN_CANVAS_MOTION ||
-      window.AUDRALIA_CLEAN_CANVAS_MOTION_ENGINE ||
-      window.AUDRALIA_MOTION_ENGINE ||
-      null
-    );
-  }
-
-  function resolveContinentsApi() {
-    if (!hasWindow()) return null;
-
-    return (
-      window.AUDRALIA_CLEAN_CANVAS_CONTINENTS ||
-      window.AUDRALIA_CONTINENTS_ENGINE ||
-      window.AUDRALIA_CLEAN_CONTINENTS_ENGINE ||
-      window.AUDRALIA_NINE_SUMMITS_CONTINENTS_ENGINE ||
-      window.AudraliaContinents ||
-      window.audraliaContinents ||
-      null
-    );
-  }
-
-  function resolveTopologyApi() {
-    if (!hasWindow()) return null;
-    return window.AUDRALIA_TOPOLOGY_GRATITUDE || null;
-  }
-
-  function resolveHydrologyApi() {
-    if (!hasWindow()) return null;
-    return window.AUDRALIA_GRATITUDE_HYDROLOGY || null;
-  }
-
-  function resolveSurfaceApi() {
-    if (!hasWindow()) return null;
-    return window.AUDRALIA_GRATITUDE_SURFACE || null;
-  }
-
-  function readContract(api, objectValue) {
-    if (api && typeof api.getStatus === "function") {
-      const status = safe(() => api.getStatus(), null);
-      if (status && status.contract) return String(status.contract);
-      if (status && status.internalContract) return String(status.internalContract);
+  function readBoundaryLike(entry) {
+    if (entry && Array.isArray(entry.boundary) && entry.boundary.length) return entry.boundary;
+    if (entry && entry.profile && Array.isArray(entry.profile.sourceBoundary) && entry.profile.sourceBoundary.length) {
+      return entry.profile.sourceBoundary;
     }
-
-    if (api && typeof api.status === "function") {
-      const status = safe(() => api.status(), null);
-      if (status && status.contract) return String(status.contract);
-      if (status && status.internalContract) return String(status.internalContract);
-    }
-
-    return String(
-      (api && (api.CONTRACT || api.contract || api.INTERNAL_CONTRACT || api.internalContract)) ||
-        (objectValue && objectValue.contract) ||
-        ""
-    );
+    if (Array.isArray(entry) && entry.length) return entry;
+    return [];
   }
 
-  async function loadChildren() {
-    if (state.childLoadStarted && state.childLoadComplete) return true;
+  function deriveAuthorityField() {
+    const positive = [];
+    const cuts = [];
+    const lakes = [];
+    const lagoons = [];
+    const wetlands = [];
 
-    state.childLoadStarted = true;
-    publishReceipt("child-load-start");
-
-    await Promise.all([
-      loadScript(PATHS.motion, "motion"),
-      loadScript(PATHS.continents, "continents"),
-      loadScript(PATHS.gratitudeTopology, "gratitude-topology"),
-      loadScript(PATHS.gratitudeHydrology, "gratitude-hydrology"),
-      loadScript(PATHS.gratitudeSurface, "gratitude-surface"),
-      loadScript(PATHS.sky, "sky")
-    ]);
-
-    syncAuthorities();
-
-    const motion = resolveMotionApi();
-    if (motion && typeof motion.bind === "function") {
-      safe(() => motion.bind(state.mountNode || state.canvas, { parent: api }), null);
-    } else if (motion && typeof motion.mount === "function") {
-      safe(() => motion.mount(state.mountNode || state.canvas, { parent: api }), null);
-    }
-
-    state.childLoadComplete = true;
-
-    publishReceipt("child-load-complete");
-
-    buildTextureAtlas();
-    requestRender("child-load-complete");
-
-    return true;
-  }
-
-  function syncAuthorities() {
-    const motion = resolveMotionApi();
-    const continents = resolveContinentsApi();
-    const topologyApi = resolveTopologyApi();
-    const hydrologyApi = resolveHydrologyApi();
-    const surfaceApi = resolveSurfaceApi();
-
-    state.motionLoaded = Boolean(motion);
-    state.motionContract = readContract(motion, null);
-    state.motionContractValid = !state.motionContract || state.motionContract === EXPECTED.motion;
-
-    state.continentsLoaded = Boolean(continents);
-    if (continents && typeof continents.getStatus === "function") {
-      const status = safe(() => continents.getStatus(), {});
-      state.continentsContract = String(status.contract || continents.contract || "");
-      state.continentsInternalContract = String(status.internalContract || continents.INTERNAL_CONTRACT || "");
-      state.continentsBrokerConsumed = true;
-    } else if (continents) {
-      state.continentsContract = String(continents.contract || continents.CONTRACT || "");
-      state.continentsInternalContract = String(continents.internalContract || continents.INTERNAL_CONTRACT || "");
-      state.continentsBrokerConsumed = true;
-    }
-
-    let topology = null;
-
-    if (topologyApi && typeof topologyApi.getTopology === "function") {
-      topology = safe(() => topologyApi.getTopology(), null);
-    }
-
-    state.topologyLoaded = Boolean(topology);
-    state.topologyObject = topology;
-    state.topologyContract = readContract(topologyApi, topology);
-    state.topologyContractValid =
-      !state.topologyContract ||
-      state.topologyContract === EXPECTED.topology ||
-      state.topologyContract.includes("GRATITUDE");
-
-    let hydrology = null;
-
-    if (hydrologyApi && typeof hydrologyApi.getHydrology === "function") {
-      hydrology = safe(() => hydrologyApi.getHydrology(), null);
-    }
-
-    state.hydrologyLoaded = Boolean(hydrology);
-    state.hydrologyObject = hydrology;
-    state.hydrologyContract = readContract(hydrologyApi, hydrology);
-    state.hydrologyContractValid =
-      !state.hydrologyContract ||
-      state.hydrologyContract === EXPECTED.hydrology ||
-      state.hydrologyContract.includes("GRATITUDE");
-
-    state.surfaceLoaded = Boolean(surfaceApi && typeof surfaceApi.sampleSurface === "function");
-    state.surfaceApi = surfaceApi;
-    state.surfaceContract = readContract(surfaceApi, null);
-    state.surfaceContractValid =
-      !state.surfaceContract ||
-      state.surfaceContract === EXPECTED.surface ||
-      state.surfaceContract.includes("GRATITUDE");
-
-    state.skyLoaded = Boolean(
-      hasWindow() &&
-        (
-          window.AUDRALIA_SKY ||
-          window.AUDRALIA_CLEAN_SKY ||
-          window.AUDRALIA_CLEAN_CANVAS_SKY ||
-          window.AUDRALIA_SKY_ENGINE
-        )
-    );
-  }
-
-  function primaryLandmass() {
     const topology = state.topologyObject;
 
-    if (
-      topology &&
-      Array.isArray(topology.landmasses) &&
-      topology.landmasses.length &&
-      Array.isArray(topology.landmasses[0].boundary)
-    ) {
-      return topology.landmasses[0];
-    }
+    if (topology && Array.isArray(topology.landmasses)) {
+      topology.landmasses.forEach((landmass, index) => {
+        const stats = ringStats(landmass.boundary);
 
-    return {
-      id: "gratitude-fallback-g27-atlas-landmass",
-      boundary: FALLBACK_BOUNDARY,
-      topology: {
-        lakes: FALLBACK_LAKES,
-        lagoons: FALLBACK_LAGOONS
-      }
-    };
-  }
+        if (stats) {
+          positive.push(fieldNode(
+            stats.lon,
+            stats.lat,
+            stats.radiusLon * 1.08,
+            stats.radiusLat * 1.08,
+            index === 0 ? 0.38 : 0.22,
+            -6,
+            `topology-body-${index}`
+          ));
+        }
 
-  function getBoundary() {
-    const landmass = primaryLandmass();
-    return Array.isArray(landmass.boundary) && landmass.boundary.length ? landmass.boundary : FALLBACK_BOUNDARY;
-  }
+        const local = landmass.topology || {};
 
-  function ringsFromHydrology(key, fallbackRings) {
-    const hydrology = state.hydrologyObject;
+        (local.lakes || []).forEach((ring, lakeIndex) => {
+          const lake = ringStats(ring);
+          if (lake) lakes.push(fieldNode(lake.lon, lake.lat, lake.radiusLon, lake.radiusLat, 0.82, 0, `topology-lake-${lakeIndex}`));
+        });
 
-    if (!hydrology || !Array.isArray(hydrology[key])) return fallbackRings || [];
-
-    return hydrology[key]
-      .map((entry) => {
-        if (entry && Array.isArray(entry.boundary) && entry.boundary.length) return entry.boundary;
-        if (entry && entry.profile && Array.isArray(entry.profile.sourceBoundary)) return entry.profile.sourceBoundary;
-        return null;
-      })
-      .filter(Boolean);
-  }
-
-  function sampleHydrologyClass(lon, lat, boundary, coastDistance, inside) {
-    const lakes = ringsFromHydrology("inlandLakeRegistry", FALLBACK_LAKES);
-    const lagoons = ringsFromHydrology("lagoonWaterRegistry", FALLBACK_LAGOONS);
-
-    for (const lake of lakes) {
-      if (pointInPolygon(lon, lat, lake)) {
-        return { type: "lake", strength: 1, water: true };
-      }
-    }
-
-    for (const lagoon of lagoons) {
-      if (pointInPolygon(lon, lat, lagoon)) {
-        return { type: "lagoon", strength: 1, water: true };
-      }
+        (local.lagoons || []).forEach((ring, lagoonIndex) => {
+          const lagoon = ringStats(ring);
+          if (lagoon) lagoons.push(fieldNode(lagoon.lon, lagoon.lat, lagoon.radiusLon, lagoon.radiusLat, 0.78, 0, `topology-lagoon-${lagoonIndex}`));
+        });
+      });
     }
 
     const hydrology = state.hydrologyObject;
 
     if (hydrology) {
-      const checks = [
-        { key: "bayWaterRegistry", type: "bay", threshold: 3.0, water: true },
-        { key: "inletWaterRegistry", type: "inlet", threshold: 2.1, water: true },
-        { key: "wetlandBlendRegistry", type: "wetland", threshold: 3.5, water: false },
-        { key: "repairedWaterlineRegistry", type: "repaired", threshold: 2.4, water: false },
-        { key: "hardCoastWaterlineRegistry", type: "hardCoast", threshold: 1.9, water: false },
-        { key: "coastalShelfRegistry", type: "shelf", threshold: 4.0, water: true },
-        { key: "submergedEdgeRegistry", type: "shelf", threshold: 4.8, water: true }
+      const hydrologyNodeMap = [
+        ["bayWaterRegistry", cuts, 0.36, "bay-cut"],
+        ["inletWaterRegistry", cuts, 0.42, "inlet-cut"],
+        ["coastalShelfRegistry", cuts, 0.18, "shelf-soft-cut"],
+        ["submergedEdgeRegistry", cuts, 0.20, "submerged-edge-cut"],
+        ["inlandLakeRegistry", lakes, 0.90, "inland-lake"],
+        ["lagoonWaterRegistry", lagoons, 0.86, "lagoon"],
+        ["wetlandBlendRegistry", wetlands, 0.48, "wetland"],
+        ["repairedWaterlineRegistry", wetlands, 0.36, "repaired-waterline"],
+        ["hardCoastWaterlineRegistry", cuts, 0.22, "hard-coast-cut"]
       ];
 
-      for (const check of checks) {
-        const entries = Array.isArray(hydrology[check.key]) ? hydrology[check.key] : [];
+      hydrologyNodeMap.forEach(([key, target, weight, label]) => {
+        const entries = Array.isArray(hydrology[key]) ? hydrology[key] : [];
 
-        for (const entry of entries) {
-          const ring =
-            entry && Array.isArray(entry.boundary) && entry.boundary.length
-              ? entry.boundary
-              : entry && entry.profile && Array.isArray(entry.profile.sourceBoundary)
-                ? entry.profile.sourceBoundary
-                : boundary;
+        entries.forEach((entry, index) => {
+          const stats = ringStats(readBoundaryLike(entry));
+          if (!stats) return;
 
-          const d = nearestBoundaryDistance(lon, lat, ring).distance;
-
-          if (d <= check.threshold) {
-            return {
-              type: check.type,
-              strength: clamp01(1 - d / Math.max(0.000001, check.threshold)),
-              water: check.water
-            };
-          }
-        }
-      }
+          target.push(fieldNode(
+            stats.lon,
+            stats.lat,
+            stats.radiusLon,
+            stats.radiusLat,
+            weight,
+            0,
+            `${label}-${index}`
+          ));
+        });
+      });
     }
 
-    if (!inside && coastDistance <= 4.6) {
-      return { type: "shelf", strength: clamp01(1 - coastDistance / 4.6), water: true };
-    }
-
-    if (inside && coastDistance <= 1.4) {
-      return { type: "beach", strength: clamp01(1 - coastDistance / 1.4), water: false };
-    }
-
-    if (inside && coastDistance <= 4.0) {
-      return { type: "coastal", strength: clamp01(1 - coastDistance / 4.0), water: false };
-    }
-
-    return { type: "none", strength: 0, water: false };
+    state.derivedPositiveNodes = positive;
+    state.derivedCutNodes = cuts;
+    state.derivedLakeNodes = lakes;
+    state.derivedLagoonNodes = lagoons;
+    state.derivedWetlandNodes = wetlands;
   }
 
-  function district(lon, lat, coastDistance) {
-    if (lat >= 24) return "north";
-    if (lon <= -68) return "west";
-    if (lon >= -24 && lat > -18) return "east";
-    if (lat <= -16) return "south";
-    if (coastDistance > 5.6) return "interior";
-    return "interior";
+  function maxNodeScore(lon, lat, nodes) {
+    let best = 0;
+
+    for (const node of nodes) {
+      best = Math.max(best, fieldScore(lon, lat, node));
+    }
+
+    return clamp01(best);
   }
 
-  function atlasSample(lon, lat, u, v) {
-    const boundary = getBoundary();
-    const inside = pointInPolygon(lon, lat, boundary);
-    const nearest = nearestBoundaryDistance(lon, lat, boundary);
-    const coastDistance = nearest.distance;
-    const coast = clamp01(1 - coastDistance / 7.0);
-    const hyd = sampleHydrologyClass(lon, lat, boundary, coastDistance, inside);
-    const zone = district(lon, lat, coastDistance);
+  function sumNodeScore(lon, lat, nodes, cap = 2) {
+    let total = 0;
 
-    const openOceanNoise = fbm(u * 2.4 + 0.17, v * 1.7 - 0.23, 2001, 5);
-    const depthNoise = fbm(u * 5.1 - 0.21, v * 3.6 + 0.14, 2002, 4);
-    const oceanWave = ridgeNoise(u * 11.0 + 0.11, v * 8.0 - 0.09, 2003, 3) * 0.12;
+    for (const node of nodes) {
+      total += fieldScore(lon, lat, node);
+    }
 
-    let color = mixColor(COLORS.deepOcean, COLORS.ocean, openOceanNoise * 0.70 + depthNoise * 0.18);
-    color = mixColor(color, COLORS.openOcean, oceanWave);
+    return clamp(total, 0, cap);
+  }
 
+  function computeFieldSample(lon, lat, u, v) {
+    const baseLand =
+      sumNodeScore(lon, lat, FIELD_MODEL.positive, 2.2) +
+      sumNodeScore(lon, lat, state.derivedPositiveNodes, 0.8);
+
+    const baseCut =
+      sumNodeScore(lon, lat, FIELD_MODEL.cuts, 1.5) +
+      sumNodeScore(lon, lat, state.derivedCutNodes, 0.8);
+
+    const lake =
+      maxNodeScore(lon, lat, FIELD_MODEL.lakes) ||
+      maxNodeScore(lon, lat, state.derivedLakeNodes);
+
+    const lagoon =
+      maxNodeScore(lon, lat, FIELD_MODEL.lagoons) ||
+      maxNodeScore(lon, lat, state.derivedLagoonNodes);
+
+    const wetland =
+      maxNodeScore(lon, lat, FIELD_MODEL.wetlands) ||
+      maxNodeScore(lon, lat, state.derivedWetlandNodes);
+
+    const hardCoast = maxNodeScore(lon, lat, FIELD_MODEL.hardCoast);
+
+    const oldPressure = fbm(u * 6.6 - 0.22, v * 4.9 + 0.14, 8101, 5);
+    const fracture = ridgeNoise(u * 13.2 + 0.11, v * 9.4 - 0.18, 8102, 4);
+    const coastBreak = ridgeNoise(u * 23.0 - 0.37, v * 17.5 + 0.24, 8103, 3);
+    const grain = fbm(u * 32.0 + 0.18, v * 21.0 - 0.27, 8104, 3);
+
+    const rawLand = baseLand - baseCut * 0.72 + oldPressure * 0.12 + fracture * 0.07 - 0.56;
+    const fieldLand = rawLand > 0;
+    const shore = smoothstep(-0.12, 0.10, rawLand) * (1 - smoothstep(0.10, 0.38, rawLand));
+    const shelf = !fieldLand && rawLand > -0.25;
+    const coast = clamp01(shore + shelf * 0.48 + hardCoast * 0.24);
+
+    let type = "ocean";
     let land = false;
     let water = true;
-    let hydrologySignal = hyd.strength;
+    let hydrologySignal = 0;
+    let fieldCoverage = clamp01(smoothstep(-0.26, 0.26, rawLand));
 
-    if (hyd.type === "shelf") {
-      color = mixColor(color, COLORS.shelf, 0.46 + hyd.strength * 0.40);
-      color = mixColor(color, COLORS.shallow, hyd.strength * 0.36);
+    let color = mixColor(
+      COLORS.deepOcean,
+      COLORS.ocean,
+      fbm(u * 2.4 + 0.17, v * 1.7 - 0.23, 2001, 5) * 0.72
+    );
+
+    color = mixColor(color, COLORS.openOcean, ridgeNoise(u * 11.0 + 0.11, v * 8.0 - 0.09, 2003, 3) * 0.12);
+
+    if (shelf) {
+      type = "shelf";
+      hydrologySignal = Math.max(hydrologySignal, 0.32 + coast * 0.52);
+      color = mixColor(color, COLORS.shelf, 0.42 + coast * 0.34);
+      color = mixColor(color, COLORS.shallow, coast * 0.28);
     }
 
-    if (inside) {
+    if (fieldLand) {
+      type = "land";
       land = true;
       water = false;
-
-      const broad = fbm(u * 8.0 + 0.33, v * 5.8 - 0.18, 3001, 5);
-      const grain = fbm(u * 28.0 - 0.18, v * 19.5 + 0.22, 3002, 3);
-      const pressure = ridgeNoise(u * 10.5 + 0.12, v * 7.5 - 0.18, 3003, 4);
-      const oldness = fbm(u * 4.0 - 0.44, v * 3.3 + 0.25, 3004, 4);
 
       let landColor = COLORS.land;
 
-      if (zone === "west") landColor = mixColor(landColor, COLORS.hardCoast, 0.38);
-      if (zone === "north") landColor = mixColor(landColor, COLORS.landBright, 0.26);
-      if (zone === "east") landColor = mixColor(landColor, COLORS.repaired, 0.18);
-      if (zone === "south") landColor = mixColor(landColor, COLORS.wetland, 0.30);
+      if (lon <= -68) landColor = mixColor(landColor, COLORS.hardCoast, 0.34 + hardCoast * 0.22);
+      if (lat >= 24) landColor = mixColor(landColor, COLORS.landBright, 0.24);
+      if (lon >= -24 && lat > -18) landColor = mixColor(landColor, COLORS.repaired, 0.18);
+      if (lat <= -16) landColor = mixColor(landColor, COLORS.wetland, 0.24 + wetland * 0.20);
 
-      landColor = mixColor(landColor, COLORS.landDeep, pressure * 0.16);
-      landColor = mixColor(landColor, COLORS.highTint, oldness * 0.12);
-      landColor = shade(landColor, (broad - 0.5) * 18 + (grain - 0.5) * 9 - coast * 8);
+      landColor = mixColor(landColor, COLORS.landDeep, fracture * 0.14);
+      landColor = mixColor(landColor, COLORS.highTint, oldPressure * 0.10);
+      landColor = shade(landColor, (oldPressure - 0.5) * 16 + (grain - 0.5) * 9 - shore * 7);
+
+      if (shore > 0.18) {
+        landColor = mixColor(landColor, COLORS.beach, shore * 0.20);
+        landColor = mixColor(landColor, COLORS.shelf, shore * 0.08);
+      }
+
+      if (wetland > 0.22) {
+        landColor = mixColor(landColor, COLORS.wetland, wetland * 0.32);
+        hydrologySignal = Math.max(hydrologySignal, wetland);
+      }
 
       color = landColor;
-
-      if (coastDistance <= 5.2) {
-        color = mixColor(color, COLORS.beach, clamp01(1 - coastDistance / 5.2) * 0.18);
-        color = mixColor(color, COLORS.shelf, clamp01(1 - coastDistance / 3.3) * 0.10);
-      }
     }
 
-    if (hyd.type === "lake") {
+    if (lake > 0.54) {
+      type = "lake";
+      land = false;
+      water = true;
+      hydrologySignal = Math.max(hydrologySignal, lake);
       color = mixColor(COLORS.lake, COLORS.shallow, fbm(u * 20, v * 16, 4101, 3) * 0.18);
-      land = false;
-      water = true;
-    } else if (hyd.type === "lagoon") {
-      color = mixColor(COLORS.lagoon, COLORS.shallow, 0.22);
-      land = false;
-      water = true;
-    } else if (hyd.type === "bay") {
-      color = mixColor(color, COLORS.bay, 0.45 + hyd.strength * 0.28);
-      land = false;
-      water = true;
-    } else if (hyd.type === "inlet") {
-      color = mixColor(color, COLORS.inlet, 0.52 + hyd.strength * 0.22);
-      land = false;
-      water = true;
-    } else if (hyd.type === "wetland" && inside) {
-      color = mixColor(color, COLORS.wetland, 0.24 + hyd.strength * 0.28);
-      land = true;
-      water = false;
-    } else if (hyd.type === "repaired" && inside) {
-      color = mixColor(color, COLORS.repaired, 0.18 + hyd.strength * 0.30);
-    } else if (hyd.type === "hardCoast" && inside) {
-      color = mixColor(color, COLORS.hardCoast, 0.22 + hyd.strength * 0.26);
-    } else if (hyd.type === "beach" && inside) {
-      color = mixColor(color, COLORS.beach, 0.28 + hyd.strength * 0.24);
-    } else if (hyd.type === "coastal" && inside) {
-      color = mixColor(color, COLORS.wetBeach, hyd.strength * 0.12);
     }
+
+    if (lagoon > 0.50) {
+      type = "lagoon";
+      land = false;
+      water = true;
+      hydrologySignal = Math.max(hydrologySignal, lagoon);
+      color = mixColor(COLORS.lagoon, COLORS.shallow, 0.22);
+    }
+
+    if (!fieldLand && baseCut > 0.42 && rawLand > -0.38) {
+      type = baseCut > 0.72 ? "inlet" : "bay";
+      hydrologySignal = Math.max(hydrologySignal, baseCut);
+      color = mixColor(color, type === "inlet" ? COLORS.inlet : COLORS.bay, clamp01(0.34 + baseCut * 0.32));
+    }
+
+    let surfaceUsed = false;
 
     if (state.surfaceApi && typeof state.surfaceApi.sampleSurface === "function") {
-      if (inside || coastDistance <= 4.8) {
+      if (fieldCoverage > 0.10 || hydrologySignal > 0.22) {
         const surface = safe(
           () =>
             state.surfaceApi.sampleSurface(lon, lat, {
               sphericalDepth: 1,
               lightDot: 0.72,
-              limbFade: 1
+              limbFade: 1,
+              fieldCoverage,
+              fieldType: type,
+              fieldLand: land,
+              fieldWater: water,
+              fieldHydrology: hydrologySignal,
+              closedContainmentUsed: false
             }),
           null
         );
@@ -1223,9 +746,10 @@
             clamp(Math.round(surface.color[2]), 0, 255)
           ];
 
-          const alpha = clamp01(surface.materialAlpha === undefined ? surface.alpha || 0.22 : surface.materialAlpha);
-          color = mixColor(color, surfaceColor, inside ? Math.min(0.30, alpha * 0.42) : Math.min(0.18, alpha * 0.28));
+          const alpha = clamp01(surface.materialAlpha === undefined ? surface.alpha || 0.18 : surface.materialAlpha);
+          color = mixColor(color, surfaceColor, Math.min(0.30, alpha * (land ? 0.48 : 0.30)));
           hydrologySignal = Math.max(hydrologySignal, alpha * 0.4);
+          surfaceUsed = true;
         }
       }
     }
@@ -1235,9 +759,11 @@
       land,
       water,
       hydrologySignal,
-      inside,
-      coast,
-      type: hyd.type
+      surfaceUsed,
+      fieldCoverage,
+      type,
+      rawLand,
+      closedContainmentUsed: false
     };
   }
 
@@ -1245,6 +771,7 @@
     if (state.textureAtlasBuildStarted && !state.textureAtlasBuildComplete) return state.textureAtlas;
 
     syncAuthorities();
+    deriveAuthorityField();
 
     state.textureAtlasBuildStarted = true;
     state.textureAtlasBuildComplete = false;
@@ -1258,6 +785,8 @@
       let landPixels = 0;
       let waterPixels = 0;
       let hydrologyPixels = 0;
+      let surfacePixels = 0;
+      let fieldPixels = 0;
 
       for (let y = 0; y < height; y += 1) {
         const v = y / Math.max(1, height - 1);
@@ -1265,7 +794,7 @@
         for (let x = 0; x < width; x += 1) {
           const u = x / width;
           const lonLat = uvToLonLat(u, v);
-          const sample = atlasSample(lonLat.lon, lonLat.lat, u, v);
+          const sample = computeFieldSample(lonLat.lon, lonLat.lat, u, v);
           const index = (y * width + x) * 4;
 
           data[index] = sample.color[0];
@@ -1276,8 +805,18 @@
           if (sample.land) landPixels += 1;
           if (sample.water) waterPixels += 1;
           if (sample.hydrologySignal > 0.16) hydrologyPixels += 1;
+          if (sample.surfaceUsed) surfacePixels += 1;
+          if (sample.fieldCoverage > 0.08) fieldPixels += 1;
         }
       }
+
+      const total = Math.max(1, width * height);
+      const landRatio = Number((landPixels / total).toFixed(4));
+      const waterRatio = Number((waterPixels / total).toFixed(4));
+      const hydrologyRatio = Number((hydrologyPixels / total).toFixed(4));
+      const surfaceRatio = Number((surfacePixels / total).toFixed(4));
+      const fieldCoverageRatio = Number((fieldPixels / total).toFixed(4));
+      const landContainmentProved = landRatio >= 0.035 && fieldCoverageRatio >= 0.06;
 
       state.textureAtlas = {
         width,
@@ -1285,21 +824,28 @@
         data,
         createdAt: Date.now(),
         contract: INTERNAL_CONTRACT,
-        generationStandard: GENERATION_STANDARD
+        generationStandard: GENERATION_STANDARD,
+        containmentModel: "continuous-field",
+        closedContainmentUsed: false
       };
 
       state.textureAtlasBuilt = true;
       state.textureAtlasBuildComplete = true;
       state.textureAtlasVersion = `${INTERNAL_CONTRACT}__${Date.now()}`;
-      state.textureAtlasLandRatio = Number((landPixels / Math.max(1, width * height)).toFixed(4));
-      state.textureAtlasWaterRatio = Number((waterPixels / Math.max(1, width * height)).toFixed(4));
-      state.textureAtlasHydrologyRatio = Number((hydrologyPixels / Math.max(1, width * height)).toFixed(4));
+      state.textureAtlasLandRatio = landRatio;
+      state.textureAtlasWaterRatio = waterRatio;
+      state.textureAtlasHydrologyRatio = hydrologyRatio;
+      state.textureAtlasSurfaceRatio = surfaceRatio;
+      state.textureAtlasFieldCoverageRatio = fieldCoverageRatio;
+      state.textureAtlasLandContainmentProved = landContainmentProved;
 
-      state.textureAtlasConsumesGratitudeTopology = state.topologyLoaded || true;
-      state.textureAtlasConsumesGratitudeHydrology = state.hydrologyLoaded || true;
-      state.textureAtlasConsumesGratitudeSurface = state.surfaceLoaded;
+      state.textureAtlasConsumesContinents = state.continentsLoaded;
+      state.textureAtlasConsumesGratitudeTopology = state.topologyLoaded && state.topologyContractValid;
+      state.textureAtlasConsumesGratitudeHydrology = state.hydrologyLoaded && state.hydrologyContractValid;
+      state.textureAtlasConsumesGratitudeSurface = state.surfaceLoaded && state.surfaceContractValid && surfaceRatio > 0;
 
-      state.planetMaterialIntegrated = true;
+      state.textureAtlasClosedContainmentUsed = false;
+      state.planetMaterialIntegrated = landContainmentProved;
 
       publishReceipt("texture-atlas-built");
       requestRender("texture-atlas-built");
@@ -1327,35 +873,44 @@
     ];
   }
 
+  function hasAcceptableMotionSource(projection) {
+    if (!projection || typeof projection !== "object") return false;
+
+    const dragMode = String(projection.dragMode || projection.mode || "").toLowerCase();
+    const noStretch =
+      projection.noStretch === true ||
+      projection.spherical === true ||
+      projection.screenPlaneDragForbidden === true ||
+      dragMode.includes("spherical");
+
+    return noStretch;
+  }
+
   function readMotionState() {
     const motion = resolveMotionApi();
 
     if (motion && typeof motion.getProjectionState === "function") {
       const projection = safe(() => motion.getProjectionState(), null);
 
-      if (projection) {
+      if (hasAcceptableMotionSource(projection)) {
         state.motionConsumed = true;
-        const rotation = wrapRadians(
-          Number.isFinite(Number(projection.longitudeRotationRadians))
-            ? projection.longitudeRotationRadians
-            : Number.isFinite(Number(projection.rotation))
-              ? projection.rotation
-              : state.rotation
-        );
-
-        const pitch = clamp(
-          Number.isFinite(Number(projection.pitchRadians))
-            ? projection.pitchRadians
-            : Number.isFinite(Number(projection.pitch))
-              ? projection.pitch
-              : state.pitch,
-          MOTION.minPitch,
-          MOTION.maxPitch
-        );
-
         return {
-          rotation,
-          pitch,
+          rotation: wrapRadians(
+            Number.isFinite(Number(projection.longitudeRotationRadians))
+              ? projection.longitudeRotationRadians
+              : Number.isFinite(Number(projection.rotation))
+                ? projection.rotation
+                : state.rotation
+          ),
+          pitch: clamp(
+            Number.isFinite(Number(projection.pitchRadians))
+              ? projection.pitchRadians
+              : Number.isFinite(Number(projection.pitch))
+                ? projection.pitch
+                : state.pitch,
+            MOTION.minPitch,
+            MOTION.maxPitch
+          ),
           dragging: Boolean(projection.dragging),
           source: "motion-api",
           dragMode: projection.dragMode || ""
@@ -1366,7 +921,7 @@
     if (motion && typeof motion.getState === "function") {
       const projection = safe(() => motion.getState(), null);
 
-      if (projection) {
+      if (hasAcceptableMotionSource(projection)) {
         state.motionConsumed = true;
 
         return {
@@ -1393,38 +948,11 @@
       }
     }
 
-    if (hasWindow() && window.AUDRALIA_MOTION_STATE) {
-      const projection = window.AUDRALIA_MOTION_STATE;
-      state.motionConsumed = true;
-
-      return {
-        rotation: wrapRadians(
-          Number.isFinite(Number(projection.longitudeRotationRadians))
-            ? projection.longitudeRotationRadians
-            : Number.isFinite(Number(projection.rotation))
-              ? projection.rotation
-              : state.rotation
-        ),
-        pitch: clamp(
-          Number.isFinite(Number(projection.pitchRadians))
-            ? projection.pitchRadians
-            : Number.isFinite(Number(projection.pitch))
-              ? projection.pitch
-              : state.pitch,
-          MOTION.minPitch,
-          MOTION.maxPitch
-        ),
-        dragging: Boolean(projection.dragging),
-        source: "global-motion-state",
-        dragMode: projection.dragMode || ""
-      };
-    }
-
     return {
       rotation: state.rotation,
       pitch: state.pitch,
       dragging: state.dragging,
-      source: "parent-local-fallback",
+      source: "parent-field-atlas-local",
       dragMode: "spherical-state"
     };
   }
@@ -1467,7 +995,7 @@
     const sinPitch = Math.sin(pitch);
     const cosPitch = Math.cos(pitch);
     const light = [-0.46, 0.30, 0.84];
-    const cloudShift = time * 0.000035;
+    const cloudShift = time * 0.000034;
 
     for (let y = 0; y < size; y += 1) {
       const ny = (y + 0.5 - radius) / radius;
@@ -1508,7 +1036,7 @@
           4
         );
 
-        const cloud = smoothstep(0.70, 0.89, cloudNoise) * smoothstep(-0.94, 0.55, lightDot) * 0.15;
+        const cloud = smoothstep(0.71, 0.90, cloudNoise) * smoothstep(-0.94, 0.55, lightDot) * 0.12;
 
         let r = color[0] * daylight;
         let g = color[1] * daylight;
@@ -1621,7 +1149,6 @@
 
   function drawAtmosphere(ctx) {
     ctx.save();
-
     ctx.globalCompositeOperation = "screen";
 
     const halo = ctx.createRadialGradient(
@@ -1642,7 +1169,6 @@
     ctx.beginPath();
     ctx.arc(state.cx, state.cy, state.radius * GEOMETRY.atmosphereRadius, 0, TAU);
     ctx.fill();
-
     ctx.restore();
 
     ctx.save();
@@ -1681,13 +1207,6 @@
       updateLocalMotion(dt);
 
       const motion = readMotionState();
-
-      if (motion.source !== "parent-local-fallback") {
-        state.rotation = motion.rotation;
-        state.targetRotation = motion.rotation;
-        state.pitch = motion.pitch;
-        state.targetPitch = motion.pitch;
-      }
 
       drawBackground(ctx);
 
@@ -1733,11 +1252,6 @@
       state.lastRenderReason = reason;
       state.lastDrawError = "";
 
-      state.motionRedrawUsesCachedAtlas = true;
-      state.dragFrameLiveChildSampling = false;
-      state.sphereUvLookupActive = true;
-      state.planetMaterialIntegrated = Boolean(state.textureAtlasBuilt);
-
       publishReceipt(`draw-${reason}`);
     } catch (error) {
       recordError("drawFrame", error);
@@ -1767,20 +1281,21 @@
       if (state.disposed) return;
 
       const time = Number.isFinite(Number(t)) ? Number(t) : now();
-      const shouldAnimate =
+
+      if (
         state.dragging ||
         Math.abs(state.velocity) > MOTION.inertiaMin ||
         Math.abs(state.pitchVelocity) > MOTION.inertiaMin ||
-        !state.reducedMotion;
-
-      if (shouldAnimate) {
+        time - state.lastLoopRenderTime > MOTION.idleFrameMs
+      ) {
+        state.lastLoopRenderTime = time;
         requestRender("motion-loop");
       }
 
-      window.requestAnimationFrame(loop);
+      state.loopId = window.requestAnimationFrame(loop);
     }
 
-    window.requestAnimationFrame(loop);
+    state.loopId = window.requestAnimationFrame(loop);
   }
 
   function pointerDown(event) {
@@ -1828,8 +1343,8 @@
 
     state.targetRotation = wrapRadians(state.targetRotation + rotationDelta);
     state.targetPitch = clamp(state.targetPitch + pitchDelta, MOTION.minPitch, MOTION.maxPitch);
-    state.rotation = wrapRadians(state.rotation + rotationDelta * 0.86);
-    state.pitch = clamp(state.pitch + pitchDelta * 0.86, MOTION.minPitch, MOTION.maxPitch);
+    state.rotation = wrapRadians(state.rotation + rotationDelta * 0.90);
+    state.pitch = clamp(state.pitch + pitchDelta * 0.90, MOTION.minPitch, MOTION.maxPitch);
 
     state.velocity = clamp(rotationDelta / dt, -MOTION.maxVelocity, MOTION.maxVelocity);
     state.pitchVelocity = clamp(pitchDelta / dt, -MOTION.maxVelocity, MOTION.maxVelocity);
@@ -1896,6 +1411,9 @@
     window.AUDRALIA_MOTION_STATE = {
       contract: INTERNAL_CONTRACT,
       dragMode: "spherical-state",
+      noStretch: true,
+      spherical: true,
+      screenPlaneDragForbidden: true,
       rotation: state.rotation,
       targetRotation: state.targetRotation,
       longitudeRotation: state.rotation,
@@ -1909,7 +1427,7 @@
       dragging: state.dragging,
       velocity: state.velocity,
       pitchVelocity: state.pitchVelocity,
-      source: "g27-parent-local-fallback",
+      source: "g28-parent-field-atlas",
       reason
     };
 
@@ -1921,6 +1439,496 @@
     try {
       window.dispatchEvent(new CustomEvent("audralia:motion:update", { detail: window.AUDRALIA_MOTION_STATE }));
     } catch (_error) {}
+  }
+
+  function hasAcceptableContract(actual, expected, fallbackTerm) {
+    const value = String(actual || "");
+    if (!value) return false;
+    if (value === expected) return true;
+    return fallbackTerm ? value.includes(fallbackTerm) : false;
+  }
+
+  function resolveMotionApi() {
+    if (!hasWindow()) return null;
+
+    return (
+      window.AUDRALIA_MOTION ||
+      window.AUDRALIA_CLEAN_MOTION ||
+      window.AUDRALIA_CLEAN_CANVAS_MOTION ||
+      window.AUDRALIA_CLEAN_CANVAS_MOTION_ENGINE ||
+      window.AUDRALIA_MOTION_ENGINE ||
+      null
+    );
+  }
+
+  function resolveContinentsApi() {
+    if (!hasWindow()) return null;
+
+    return (
+      window.AUDRALIA_CLEAN_CANVAS_CONTINENTS ||
+      window.AUDRALIA_CONTINENTS_ENGINE ||
+      window.AUDRALIA_CLEAN_CONTINENTS_ENGINE ||
+      window.AUDRALIA_NINE_SUMMITS_CONTINENTS_ENGINE ||
+      window.AudraliaContinents ||
+      window.audraliaContinents ||
+      null
+    );
+  }
+
+  function resolveTopologyApi() {
+    if (!hasWindow()) return null;
+    return window.AUDRALIA_TOPOLOGY_GRATITUDE || null;
+  }
+
+  function resolveHydrologyApi() {
+    if (!hasWindow()) return null;
+    return window.AUDRALIA_GRATITUDE_HYDROLOGY || null;
+  }
+
+  function resolveSurfaceApi() {
+    if (!hasWindow()) return null;
+    return window.AUDRALIA_GRATITUDE_SURFACE || null;
+  }
+
+  function readContract(api, objectValue) {
+    if (api && typeof api.getStatus === "function") {
+      const status = safe(() => api.getStatus(), null);
+      if (status && status.contract) return String(status.contract);
+      if (status && status.internalContract) return String(status.internalContract);
+    }
+
+    if (api && typeof api.status === "function") {
+      const status = safe(() => api.status(), null);
+      if (status && status.contract) return String(status.contract);
+      if (status && status.internalContract) return String(status.internalContract);
+    }
+
+    return String(
+      (api && (api.CONTRACT || api.contract || api.INTERNAL_CONTRACT || api.internalContract)) ||
+        (objectValue && objectValue.contract) ||
+        ""
+    );
+  }
+
+  async function loadChildren() {
+    if (state.childLoadStarted && state.childLoadComplete) return true;
+
+    state.childLoadStarted = true;
+    publishReceipt("child-load-start");
+
+    await Promise.all([
+      loadScript(PATHS.motion, "motion"),
+      loadScript(PATHS.continents, "continents"),
+      loadScript(PATHS.gratitudeTopology, "gratitude-topology"),
+      loadScript(PATHS.gratitudeHydrology, "gratitude-hydrology"),
+      loadScript(PATHS.gratitudeSurface, "gratitude-surface"),
+      loadScript(PATHS.sky, "sky")
+    ]);
+
+    syncAuthorities();
+
+    const motion = resolveMotionApi();
+
+    if (motion && typeof motion.bind === "function") {
+      safe(() => motion.bind(state.mountNode || state.canvas, { parent: api }), null);
+    } else if (motion && typeof motion.mount === "function") {
+      safe(() => motion.mount(state.mountNode || state.canvas, { parent: api }), null);
+    }
+
+    state.childLoadComplete = true;
+
+    publishReceipt("child-load-complete");
+
+    rebuildTextureAtlas();
+    requestRender("child-load-complete");
+
+    return true;
+  }
+
+  function syncAuthorities() {
+    const motion = resolveMotionApi();
+    const continents = resolveContinentsApi();
+    const topologyApi = resolveTopologyApi();
+    const hydrologyApi = resolveHydrologyApi();
+    const surfaceApi = resolveSurfaceApi();
+
+    state.motionLoaded = Boolean(motion);
+    state.motionContract = readContract(motion, null);
+    state.motionContractValid = hasAcceptableContract(state.motionContract, EXPECTED.motion, "MOTION");
+
+    state.continentsLoaded = Boolean(continents);
+    if (continents && typeof continents.getStatus === "function") {
+      const status = safe(() => continents.getStatus(), {});
+      state.continentsContract = String(status.contract || continents.contract || "");
+      state.continentsInternalContract = String(status.internalContract || continents.INTERNAL_CONTRACT || "");
+      state.continentsBrokerConsumed = true;
+    } else if (continents) {
+      state.continentsContract = String(continents.contract || continents.CONTRACT || "");
+      state.continentsInternalContract = String(continents.internalContract || continents.INTERNAL_CONTRACT || "");
+      state.continentsBrokerConsumed = true;
+    }
+
+    let topology = null;
+
+    if (topologyApi && typeof topologyApi.getTopology === "function") {
+      topology = safe(() => topologyApi.getTopology(), null);
+    }
+
+    state.topologyLoaded = Boolean(topology);
+    state.topologyObject = topology;
+    state.topologyContract = readContract(topologyApi, topology);
+    state.topologyContractValid = hasAcceptableContract(state.topologyContract, EXPECTED.topology, "GRATITUDE");
+
+    let hydrology = null;
+
+    if (hydrologyApi && typeof hydrologyApi.getHydrology === "function") {
+      hydrology = safe(() => hydrologyApi.getHydrology(), null);
+    }
+
+    state.hydrologyLoaded = Boolean(hydrology);
+    state.hydrologyObject = hydrology;
+    state.hydrologyContract = readContract(hydrologyApi, hydrology);
+    state.hydrologyContractValid = hasAcceptableContract(state.hydrologyContract, EXPECTED.hydrology, "GRATITUDE");
+
+    state.surfaceLoaded = Boolean(surfaceApi && typeof surfaceApi.sampleSurface === "function");
+    state.surfaceApi = surfaceApi;
+    state.surfaceContract = readContract(surfaceApi, null);
+    state.surfaceContractValid = hasAcceptableContract(state.surfaceContract, EXPECTED.surface, "GRATITUDE");
+
+    state.skyLoaded = Boolean(
+      hasWindow() &&
+        (
+          window.AUDRALIA_SKY ||
+          window.AUDRALIA_CLEAN_SKY ||
+          window.AUDRALIA_CLEAN_CANVAS_SKY ||
+          window.AUDRALIA_SKY_ENGINE
+        )
+    );
+  }
+
+  function getRoot() {
+    return hasDocument() ? document.documentElement : null;
+  }
+
+  function getCacheNonce() {
+    if (state.cacheNonce) return state.cacheNonce;
+
+    const root = getRoot();
+
+    const fromRoot =
+      root &&
+      (
+        root.getAttribute("data-audralia-page-cache-nonce") ||
+        root.getAttribute("data-audralia-route-bridge-cache-key") ||
+        root.getAttribute("data-html-cache-key")
+      );
+
+    const fromBootstrap =
+      hasWindow() &&
+      window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT &&
+      window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.dynamicCacheKey
+        ? String(window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.dynamicCacheKey)
+        : "";
+
+    const fromWindow =
+      hasWindow() && window.AUDRALIA_PAGE_CACHE_NONCE
+        ? String(window.AUDRALIA_PAGE_CACHE_NONCE)
+        : "";
+
+    state.cacheNonce =
+      fromWindow ||
+      fromBootstrap ||
+      fromRoot ||
+      `${INTERNAL_CONTRACT}__${Date.now()}__${Math.random().toString(36).slice(2, 8)}`;
+
+    if (hasWindow()) window.AUDRALIA_PAGE_CACHE_NONCE = state.cacheNonce;
+
+    if (root) {
+      root.setAttribute("data-audralia-page-cache-nonce", state.cacheNonce);
+      root.setAttribute("data-audralia-g28-field-atlas-cache-nonce", state.cacheNonce);
+    }
+
+    return state.cacheNonce;
+  }
+
+  function versioned(path) {
+    return `${path}?v=${encodeURIComponent(getCacheNonce())}`;
+  }
+
+  function scriptLoaded(path) {
+    if (!hasDocument()) return false;
+
+    return Array.from(document.scripts).some((script) => {
+      const src = script.getAttribute("src") || "";
+      return src === versioned(path) || src.startsWith(`${path}?`);
+    });
+  }
+
+  function loadScript(path, key) {
+    if (!hasDocument()) return Promise.resolve(false);
+
+    if (scriptLoaded(path)) return Promise.resolve(true);
+
+    const src = versioned(path);
+
+    if (loadPromises.has(src)) return loadPromises.get(src);
+
+    const promise = new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = src;
+      script.async = false;
+      script.defer = false;
+      script.setAttribute("data-audralia-g28-loader", INTERNAL_CONTRACT);
+      script.setAttribute("data-audralia-g28-child", key);
+      script.setAttribute("data-generated-image", "false");
+      script.setAttribute("data-graphic-box", "false");
+      script.setAttribute("data-visual-pass-claimed", "false");
+
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+
+      document.head.appendChild(script);
+    });
+
+    loadPromises.set(src, promise);
+
+    return promise;
+  }
+
+  function resolveMountNode(node) {
+    if (node && node.nodeType === 1) return node;
+
+    if (!hasDocument()) return null;
+
+    return (
+      document.querySelector("[data-audralia-form-mount='true']") ||
+      document.querySelector("[data-audralia-mount='true']") ||
+      document.querySelector("[data-audralia-stage='true']") ||
+      document.querySelector("#audralia-form-mount") ||
+      document.querySelector("#audralia-stage") ||
+      document.querySelector("#main") ||
+      document.body
+    );
+  }
+
+  function prepareMount(node) {
+    if (!node || !node.style) return;
+
+    node.style.position = node.style.position || "relative";
+    node.style.overflow = "hidden";
+    node.style.touchAction = "none";
+    node.style.userSelect = "none";
+    node.style.WebkitUserSelect = "none";
+
+    if (!node.style.minHeight) {
+      node.style.minHeight = `${GEOMETRY.fallbackStageHeight}px`;
+    }
+
+    node.setAttribute("data-audralia-parent-contract", CONTRACT);
+    node.setAttribute("data-audralia-parent-internal-contract", INTERNAL_CONTRACT);
+    node.setAttribute("data-audralia-generation-standard", GENERATION_STANDARD);
+    node.setAttribute("data-audralia-g28-field-atlas-renderer", "true");
+    node.setAttribute("data-audralia-motion-no-stretch", "true");
+
+    suppressTransforms(node);
+  }
+
+  function suppressTransforms(node) {
+    if (!node || !node.style) return 0;
+
+    let count = 0;
+
+    if (node.style.transform && node.style.transform !== "none") {
+      node.style.transform = "none";
+      count += 1;
+    }
+
+    if (node.style.translate && node.style.translate !== "none") {
+      node.style.translate = "none";
+      count += 1;
+    }
+
+    if (node.style.scale && node.style.scale !== "none") {
+      node.style.scale = "none";
+      count += 1;
+    }
+
+    if (node.style.rotate && node.style.rotate !== "none") {
+      node.style.rotate = "none";
+      count += 1;
+    }
+
+    node.style.transformOrigin = "50% 50%";
+
+    return count;
+  }
+
+  function enforceNoStretch() {
+    let count = 0;
+
+    count += suppressTransforms(state.mountNode);
+    count += suppressTransforms(state.canvas);
+
+    if (hasDocument()) {
+      document
+        .querySelectorAll(
+          "canvas[data-audralia-g27-atlas-canvas='true'],canvas[data-audralia-g28-field-atlas-canvas='true'],canvas[data-audralia-visible-canvas='true'],[data-audralia-motion-no-stretch='true']"
+        )
+        .forEach((node) => {
+          count += suppressTransforms(node);
+          if (node.style) {
+            node.style.touchAction = "none";
+            node.style.userSelect = "none";
+            node.style.WebkitUserSelect = "none";
+          }
+        });
+    }
+
+    return count;
+  }
+
+  function ensureCanvas() {
+    if (!hasDocument() || !state.mountNode) return false;
+
+    state.mountNode
+      .querySelectorAll("canvas[data-audralia-g27-atlas-canvas='true'], canvas[data-audralia-g28-field-atlas-canvas='true']")
+      .forEach((node) => node.remove());
+
+    const canvas = document.createElement("canvas");
+
+    canvas.setAttribute("data-audralia-g28-field-atlas-canvas", "true");
+    canvas.setAttribute("data-audralia-visible-canvas", "true");
+    canvas.setAttribute("data-audralia-parent-contract", CONTRACT);
+    canvas.setAttribute("data-audralia-parent-internal-contract", INTERNAL_CONTRACT);
+    canvas.setAttribute("data-audralia-generation-standard", GENERATION_STANDARD);
+    canvas.setAttribute("data-audralia-form-visible", "true");
+    canvas.setAttribute("data-audralia-motion-no-stretch", "true");
+    canvas.setAttribute("data-generated-image", "false");
+    canvas.setAttribute("data-graphic-box", "false");
+    canvas.setAttribute("data-visual-pass-claimed", "false");
+    canvas.setAttribute("aria-label", "Audralia field atlas planet renderer");
+
+    Object.assign(canvas.style, {
+      position: "absolute",
+      inset: "0",
+      width: "100%",
+      height: "100%",
+      minWidth: `${GEOMETRY.minCanvasSize}px`,
+      minHeight: `${GEOMETRY.minCanvasSize}px`,
+      display: "block",
+      zIndex: "4",
+      background: "transparent",
+      touchAction: "none",
+      userSelect: "none",
+      WebkitUserSelect: "none",
+      cursor: "grab",
+      transform: "none",
+      transformOrigin: "50% 50%"
+    });
+
+    state.mountNode.appendChild(canvas);
+
+    state.canvas = canvas;
+    state.ctx = canvas.getContext("2d", {
+      alpha: true,
+      desynchronized: true
+    });
+
+    state.sphereCanvas = document.createElement("canvas");
+    state.sphereCtx = state.sphereCanvas.getContext("2d", {
+      alpha: true,
+      willReadFrequently: false
+    });
+
+    bindCanvasEvents(canvas);
+
+    return Boolean(state.ctx && state.sphereCtx);
+  }
+
+  function getBestRect() {
+    if (!state.mountNode || typeof state.mountNode.getBoundingClientRect !== "function") {
+      const size = hasWindow() ? Math.min(window.innerWidth || 420, GEOMETRY.maxCanvasSize) : 420;
+      return { width: size, height: size };
+    }
+
+    const mountRect = state.mountNode.getBoundingClientRect();
+    const parentRect =
+      state.mountNode.parentElement &&
+      typeof state.mountNode.parentElement.getBoundingClientRect === "function"
+        ? state.mountNode.parentElement.getBoundingClientRect()
+        : null;
+
+    const candidates = [mountRect, parentRect].filter(Boolean);
+    const usable = candidates.find((rect) => rect.width >= 120 && rect.height >= 120);
+
+    if (usable) return usable;
+
+    const width = hasWindow() ? Math.min(window.innerWidth || 420, GEOMETRY.maxCanvasSize) : 420;
+
+    return {
+      width,
+      height: Math.max(GEOMETRY.fallbackStageHeight, width)
+    };
+  }
+
+  function resize() {
+    if (!state.canvas || !state.ctx || !state.sphereCanvas) return false;
+
+    const rect = getBestRect();
+    const dpr = Math.min(GEOMETRY.maxDpr, hasWindow() ? window.devicePixelRatio || 1 : 1);
+
+    const cssWidth = Math.max(GEOMETRY.minCanvasSize, Math.floor(rect.width || GEOMETRY.minCanvasSize));
+    const cssHeight = Math.max(GEOMETRY.minCanvasSize, Math.floor(rect.height || rect.width || GEOMETRY.minCanvasSize));
+
+    const width = Math.max(GEOMETRY.minCanvasSize, Math.floor(cssWidth * dpr));
+    const height = Math.max(GEOMETRY.minCanvasSize, Math.floor(cssHeight * dpr));
+
+    state.cssWidth = cssWidth;
+    state.cssHeight = cssHeight;
+    state.dpr = dpr;
+
+    if (state.canvas.width !== width) state.canvas.width = width;
+    if (state.canvas.height !== height) state.canvas.height = height;
+
+    state.width = width;
+    state.height = height;
+
+    const base = Math.min(width, height);
+    state.cx = width * GEOMETRY.centerX;
+    state.cy = height * GEOMETRY.centerY;
+    state.radius = base * GEOMETRY.radiusRatio;
+
+    const desiredSphere = clamp(
+      Math.floor((state.dragging ? GEOMETRY.spherePixelsDrag : GEOMETRY.spherePixelsIdle) * clamp(base / 620, 0.72, 1.08)),
+      GEOMETRY.minSpherePixels,
+      GEOMETRY.maxSpherePixels
+    );
+
+    state.sphereSize = desiredSphere;
+
+    if (state.sphereCanvas.width !== desiredSphere) state.sphereCanvas.width = desiredSphere;
+    if (state.sphereCanvas.height !== desiredSphere) state.sphereCanvas.height = desiredSphere;
+
+    return true;
+  }
+
+  function safe(fn, fallback) {
+    try {
+      return fn();
+    } catch (_error) {
+      return fallback;
+    }
+  }
+
+  function recordError(scope, error) {
+    const message = error && error.message ? error.message : String(error);
+    state.lastDrawError = `${scope}: ${message}`;
+    state.errors.push({
+      scope,
+      message,
+      time: new Date().toISOString()
+    });
+    publishReceipt(scope);
   }
 
   function mount(node, options = {}) {
@@ -1955,7 +1963,7 @@
       window.AUDRALIA_CLEAN_ENGINE_PARENT = api;
       window.AUDRALIA_ENGINE = api;
       window.AUDRALIA_CLEAN_PARENT_ENGINE = api;
-      window.AUDRALIA_PARENT_FULL_TEXTURE_ATLAS_ENGINE = api;
+      window.AUDRALIA_PARENT_FIELD_ATLAS_ENGINE = api;
 
       window.addEventListener("resize", () => requestRender("resize"), { passive: true });
       window.addEventListener("audralia:motion:update", () => requestRender("motion-update"), { passive: true });
@@ -2002,7 +2010,12 @@
       window.cancelAnimationFrame(state.frameId);
     }
 
+    if (state.loopId && hasWindow()) {
+      window.cancelAnimationFrame(state.loopId);
+    }
+
     state.frameId = 0;
+    state.loopId = 0;
     state.renderScheduled = false;
 
     if (state.canvas && state.canvas.parentElement) {
@@ -2040,8 +2053,11 @@
       target: TARGET,
       route: ROUTE,
 
-      renderModel: "full-texture-atlas-sphere-renderer",
-      legacyVisualStandardPromoted: true,
+      renderModel: "field-atlas-sphere-renderer",
+      fieldAtlasActive: true,
+      continuousFieldLandMask: true,
+      closedBoundaryContainmentReleased: true,
+      boundaryDrawingPrimary: false,
       projectedOverlayPrimaryRenderer: false,
       projectedOverlayDemoted: true,
 
@@ -2074,7 +2090,12 @@
       textureAtlasLandRatio: state.textureAtlasLandRatio,
       textureAtlasWaterRatio: state.textureAtlasWaterRatio,
       textureAtlasHydrologyRatio: state.textureAtlasHydrologyRatio,
-      textureAtlasConsumesContinents: true,
+      textureAtlasSurfaceRatio: state.textureAtlasSurfaceRatio,
+      textureAtlasFieldCoverageRatio: state.textureAtlasFieldCoverageRatio,
+      textureAtlasContainmentModel: "continuous-field",
+      textureAtlasClosedContainmentUsed: false,
+      textureAtlasLandContainmentProved: state.textureAtlasLandContainmentProved,
+      textureAtlasConsumesContinents: state.textureAtlasConsumesContinents,
       textureAtlasConsumesGratitudeTopology: state.textureAtlasConsumesGratitudeTopology,
       textureAtlasConsumesGratitudeHydrology: state.textureAtlasConsumesGratitudeHydrology,
       textureAtlasConsumesGratitudeSurface: state.textureAtlasConsumesGratitudeSurface,
@@ -2131,7 +2152,7 @@
       owns: [
         "canvas composition",
         "visible planet body",
-        "full texture atlas",
+        "field atlas",
         "sphere UV lookup",
         "atmosphere",
         "rim lighting",
@@ -2180,13 +2201,17 @@
     window.AUDRALIA_CLEAN_ENGINE_RECEIPT = receipt;
     window.AUDRALIA_CLEAN_CANVAS_ENGINE_RECEIPT = receipt;
     window.AUDRALIA_PARENT_ENGINE_RECEIPT = receipt;
-    window.AUDRALIA_G2_7_PARENT_FULL_TEXTURE_ATLAS_RENDERER_RECEIPT = receipt;
+    window.AUDRALIA_G2_8_PARENT_FIELD_ATLAS_RENDERER_RECEIPT = receipt;
 
     window.AUDRALIA_ENGINE_FORM_VISIBLE = state.formVisible;
     window.AUDRALIA_PARENT_FORM_VISIBLE = state.formVisible;
-    window.AUDRALIA_G2_7_LEGACY_TEXTURE_ATLAS_PLANETARY_STANDARD_ACTIVE = true;
-    window.AUDRALIA_G2_7_PARENT_FULL_TEXTURE_ATLAS_RENDERER_ACTIVE = true;
+    window.AUDRALIA_G2_8_FIELD_ATLAS_PLANETARY_STANDARD_ACTIVE = true;
+    window.AUDRALIA_G2_8_PARENT_FIELD_ATLAS_RENDERER_ACTIVE = true;
     window.AUDRALIA_TEXTURE_ATLAS_BUILT = state.textureAtlasBuilt;
+    window.AUDRALIA_FIELD_ATLAS_ACTIVE = true;
+    window.AUDRALIA_CONTINUOUS_FIELD_LAND_MASK = true;
+    window.AUDRALIA_CLOSED_BOUNDARY_CONTAINMENT_RELEASED = true;
+    window.AUDRALIA_BOUNDARY_DRAWING_PRIMARY = false;
     window.AUDRALIA_MOTION_REDRAW_USES_CACHED_ATLAS = true;
     window.AUDRALIA_DRAG_FRAME_LIVE_CHILD_SAMPLING = false;
     window.AUDRALIA_PROJECTED_OVERLAY_PRIMARY_RENDERER = false;
@@ -2199,11 +2224,22 @@
       root.dataset.audraliaGenerationStandard = GENERATION_STANDARD;
       root.dataset.audraliaParentReceipt = RECEIPT;
       root.dataset.audraliaParentFormVisible = state.formVisible ? "true" : "false";
-      root.dataset.audraliaRenderModel = "full-texture-atlas-sphere-renderer";
-      root.dataset.audraliaLegacyVisualStandardPromoted = "true";
+      root.dataset.audraliaRenderModel = "field-atlas-sphere-renderer";
+      root.dataset.audraliaFieldAtlasActive = "true";
+      root.dataset.audraliaContinuousFieldLandMask = "true";
+      root.dataset.audraliaClosedBoundaryContainmentReleased = "true";
+      root.dataset.audraliaBoundaryDrawingPrimary = "false";
       root.dataset.audraliaProjectedOverlayPrimaryRenderer = "false";
       root.dataset.audraliaTextureAtlasBuilt = state.textureAtlasBuilt ? "true" : "false";
-      root.dataset.audraliaTextureAtlasConsumesContinents = "true";
+      root.dataset.audraliaTextureAtlasContainmentModel = "continuous-field";
+      root.dataset.audraliaTextureAtlasClosedContainmentUsed = "false";
+      root.dataset.audraliaTextureAtlasLandContainmentProved = state.textureAtlasLandContainmentProved ? "true" : "false";
+      root.dataset.audraliaTextureAtlasLandRatio = String(state.textureAtlasLandRatio);
+      root.dataset.audraliaTextureAtlasWaterRatio = String(state.textureAtlasWaterRatio);
+      root.dataset.audraliaTextureAtlasHydrologyRatio = String(state.textureAtlasHydrologyRatio);
+      root.dataset.audraliaTextureAtlasSurfaceRatio = String(state.textureAtlasSurfaceRatio);
+      root.dataset.audraliaTextureAtlasFieldCoverageRatio = String(state.textureAtlasFieldCoverageRatio);
+      root.dataset.audraliaTextureAtlasConsumesContinents = state.textureAtlasConsumesContinents ? "true" : "false";
       root.dataset.audraliaTextureAtlasConsumesGratitudeTopology = state.textureAtlasConsumesGratitudeTopology ? "true" : "false";
       root.dataset.audraliaTextureAtlasConsumesGratitudeHydrology = state.textureAtlasConsumesGratitudeHydrology ? "true" : "false";
       root.dataset.audraliaTextureAtlasConsumesGratitudeSurface = state.textureAtlasConsumesGratitudeSurface ? "true" : "false";
@@ -2261,7 +2297,7 @@
     window.AUDRALIA_CLEAN_ENGINE_PARENT = api;
     window.AUDRALIA_ENGINE = api;
     window.AUDRALIA_CLEAN_PARENT_ENGINE = api;
-    window.AUDRALIA_PARENT_FULL_TEXTURE_ATLAS_ENGINE = api;
+    window.AUDRALIA_PARENT_FIELD_ATLAS_ENGINE = api;
 
     publishReceipt("module-load");
   }

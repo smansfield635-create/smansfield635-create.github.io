@@ -1,24 +1,25 @@
 // /assets/audralia/audralia.runtime.v3.js
-// AUDRALIA_G2_5_EXISTING_ARCHITECTURE_PATH_ALIGNMENT_RUNTIME_TNT_v1
+// AUDRALIA_G2_5_RUNTIME_PARENT_CACHE_KEY_ALIGNMENT_TNT_v1
 // Full-file replacement.
-// Purpose: preserve the versioned runtime path while aligning the clean parent path to the existing repository architecture.
+// Purpose: keep the versioned runtime path active while forcing the parent engine import to the latest served parent contract.
 // Target only: /assets/audralia/audralia.runtime.v3.js
 // Loads parent from: /assets/audralia/clean/engine/audralia.engine.js
+// Parent cache key: AUDRALIA_G2_5_PARENT_VISIBLE_BOX_CENTER_ANCHOR_DRAG_ROTATION_ONLY_TNT_v1
 // Does not own: route HTML, route bridge, clean runtime, parent internals, child engines, generated image, GraphicBox, or visual-pass claim.
 
-const CONTRACT = "AUDRALIA_G2_5_EXISTING_ARCHITECTURE_PATH_ALIGNMENT_RUNTIME_TNT_v1";
-const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_RUNTIME_VERSIONED_PATH_LOCK_TNT_v3_1";
+const CONTRACT = "AUDRALIA_G2_5_RUNTIME_PARENT_CACHE_KEY_ALIGNMENT_TNT_v1";
+const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_EXISTING_ARCHITECTURE_PATH_ALIGNMENT_RUNTIME_TNT_v1";
 const FAMILY = "AUDRALIA_G2_5_EXISTING_ARCHITECTURE_PATH_ALIGNMENT_TNT_v1";
 
 const TARGET = "/assets/audralia/audralia.runtime.v3.js";
 const ROUTE = "/showroom/globe/audralia/";
 
 const CLEAN_PARENT_PATH = "/assets/audralia/clean/engine/audralia.engine.js";
-const CLEAN_PARENT_CACHE_KEY = "AUDRALIA_G2_5_EXISTING_ARCHITECTURE_PATH_ALIGNMENT_PARENT_TNT_v1";
+const CLEAN_PARENT_CACHE_KEY = "AUDRALIA_G2_5_PARENT_VISIBLE_BOX_CENTER_ANCHOR_DRAG_ROTATION_ONLY_TNT_v1";
 const CLEAN_PARENT_IMPORT = `${CLEAN_PARENT_PATH}?v=${encodeURIComponent(CLEAN_PARENT_CACHE_KEY)}`;
 
-const WAIT_PARENT_MS = 3200;
-const WAIT_VISIBLE_MS = 3400;
+const WAIT_PARENT_MS = 3600;
+const WAIT_VISIBLE_MS = 3600;
 const POLL_MS = 40;
 
 const PARENT_KEYS = [
@@ -35,7 +36,9 @@ const state = {
   target: TARGET,
   route: ROUTE,
   cleanParentPath: CLEAN_PARENT_PATH,
+  cleanParentCacheKey: CLEAN_PARENT_CACHE_KEY,
   cleanParentImport: CLEAN_PARENT_IMPORT,
+  runtimeParentCacheKeyAligned: true,
   existingArchitecturePathAligned: true,
   versionedPathLock: true,
   shimActive: true,
@@ -151,18 +154,25 @@ function getParentStatus(parent = readParent()) {
   return null;
 }
 
-function scriptAlreadyLoaded(src) {
+function parentMatchesCurrentCache(parent) {
+  if (!parent) return false;
+
+  try {
+    const status = getParentStatus(parent) || {};
+    const contract = parent.CONTRACT || status.contract || "";
+
+    return contract === CLEAN_PARENT_CACHE_KEY;
+  } catch (_error) {
+    return false;
+  }
+}
+
+function scriptAlreadyLoadedCurrentParent() {
   if (!hasDocument()) return false;
 
   return Array.from(document.scripts).some((script) => {
     const raw = script.getAttribute("src") || "";
-    return (
-      raw === src ||
-      raw.startsWith(`${src}?`) ||
-      raw === CLEAN_PARENT_IMPORT ||
-      raw.startsWith(`${CLEAN_PARENT_PATH}?`) ||
-      raw.endsWith(CLEAN_PARENT_PATH)
-    );
+    return raw === CLEAN_PARENT_IMPORT;
   });
 }
 
@@ -180,6 +190,7 @@ function appendParentScript(src) {
     script.setAttribute("data-audralia-runtime-parent-loader", CONTRACT);
     script.setAttribute("data-audralia-clean-parent-path", CLEAN_PARENT_PATH);
     script.setAttribute("data-audralia-clean-parent-cache-key", CLEAN_PARENT_CACHE_KEY);
+    script.setAttribute("data-audralia-runtime-parent-cache-key-aligned", "true");
     script.setAttribute("data-audralia-existing-architecture-path-aligned", "true");
 
     script.onload = () => resolve({ src, loaded: true, reused: false });
@@ -195,9 +206,9 @@ async function waitForParent(timeoutMs = WAIT_PARENT_MS) {
   while (Date.now() - start <= timeoutMs) {
     const parent = readParent();
 
-    if (parent) {
+    if (parent && parentMatchesCurrentCache(parent)) {
       state.parentLoaded = true;
-      publishReceipt("parent-found");
+      publishReceipt("parent-found-current-cache");
       return parent;
     }
 
@@ -210,10 +221,10 @@ async function waitForParent(timeoutMs = WAIT_PARENT_MS) {
 async function loadParent() {
   const existing = readParent();
 
-  if (existing) {
+  if (existing && parentMatchesCurrentCache(existing)) {
     state.parentRequested = true;
     state.parentLoaded = true;
-    publishReceipt("parent-existing");
+    publishReceipt("parent-existing-current-cache");
     return existing;
   }
 
@@ -224,9 +235,9 @@ async function loadParent() {
   publishReceipt("load-parent-start");
 
   parentLoadPromise = (async () => {
-    if (scriptAlreadyLoaded(CLEAN_PARENT_PATH) || scriptAlreadyLoaded(CLEAN_PARENT_IMPORT)) {
-      const parentFromExistingScript = await waitForParent(WAIT_PARENT_MS);
-      if (parentFromExistingScript) return parentFromExistingScript;
+    if (scriptAlreadyLoadedCurrentParent()) {
+      const parentFromExistingCurrentScript = await waitForParent(WAIT_PARENT_MS);
+      if (parentFromExistingCurrentScript) return parentFromExistingCurrentScript;
     }
 
     await appendParentScript(CLEAN_PARENT_IMPORT);
@@ -234,7 +245,9 @@ async function loadParent() {
     const parent = await waitForParent(WAIT_PARENT_MS);
 
     if (!parent) {
-      throw new Error("Clean parent engine script loaded from existing architecture path, but no recognized parent global was published.");
+      throw new Error(
+        `Clean parent engine script loaded from latest parent cache key, but no recognized matching parent global was published: ${CLEAN_PARENT_CACHE_KEY}`
+      );
     }
 
     state.parentLoaded = true;
@@ -271,7 +284,7 @@ function syncParentStatus(scope = "sync") {
   const status = getParentStatus(parent);
 
   state.parentStatus = status || null;
-  state.parentLoaded = Boolean(parent);
+  state.parentLoaded = Boolean(parent && parentMatchesCurrentCache(parent));
 
   state.ready = Boolean(
     (status && (status.ready === true || status.mounted === true || status.children)) ||
@@ -344,8 +357,9 @@ function publishReceipt(scope = "publish") {
     cleanParentPath: CLEAN_PARENT_PATH,
     cleanParentCacheKey: CLEAN_PARENT_CACHE_KEY,
     cleanParentImport: CLEAN_PARENT_IMPORT,
-    mode: "existing_architecture_path_alignment_runtime_shim",
+    mode: "runtime_parent_cache_key_alignment",
     scope,
+    runtimeParentCacheKeyAligned: true,
     existingArchitecturePathAligned: true,
     versionedPathLock: true,
     shimActive: state.shimActive,
@@ -380,6 +394,7 @@ function publishReceipt(scope = "publish") {
   window.AUDRALIA_LEGACY_RUNTIME_SHIM_ACTIVE = true;
   window.AUDRALIA_RUNTIME_VERSIONED_PATH_LOCK_ACTIVE = true;
   window.AUDRALIA_EXISTING_ARCHITECTURE_PATH_ALIGNED = true;
+  window.AUDRALIA_RUNTIME_PARENT_CACHE_KEY_ALIGNED = true;
   window.AUDRALIA_RUNTIME_PARENT_DELEGATION_REPAIR_ACTIVE = true;
 
   if (state.parentLoaded) window.AUDRALIA_PARENT_ENGINE_LOADED = true;
@@ -388,9 +403,11 @@ function publishReceipt(scope = "publish") {
   if (hasDocument() && document.documentElement) {
     document.documentElement.setAttribute("data-audralia-runtime-contract", CONTRACT);
     document.documentElement.setAttribute("data-audralia-runtime-target", TARGET);
-    document.documentElement.setAttribute("data-audralia-runtime-mode", "existing-architecture-path-alignment");
+    document.documentElement.setAttribute("data-audralia-runtime-mode", "parent-cache-key-alignment");
     document.documentElement.setAttribute("data-audralia-clean-parent-path", CLEAN_PARENT_PATH);
     document.documentElement.setAttribute("data-audralia-clean-parent-cache-key", CLEAN_PARENT_CACHE_KEY);
+    document.documentElement.setAttribute("data-audralia-clean-parent-import", CLEAN_PARENT_IMPORT);
+    document.documentElement.setAttribute("data-audralia-runtime-parent-cache-key-aligned", "true");
     document.documentElement.setAttribute("data-audralia-existing-architecture-path-aligned", "true");
     document.documentElement.setAttribute("data-audralia-parent-loaded", state.parentLoaded ? "true" : "false");
     document.documentElement.setAttribute("data-audralia-parent-delegated", state.parentDelegated ? "true" : "false");
@@ -434,6 +451,7 @@ async function mount(input, options = {}) {
         runtimeShim: true,
         versionedPathLock: true,
         existingArchitecturePathAligned: true,
+        runtimeParentCacheKeyAligned: true,
         parentDelegationRepair: true,
         route: ROUTE
       }
@@ -558,7 +576,8 @@ function getStatus() {
     cleanParentPath: CLEAN_PARENT_PATH,
     cleanParentCacheKey: CLEAN_PARENT_CACHE_KEY,
     cleanParentImport: CLEAN_PARENT_IMPORT,
-    mode: "existing_architecture_path_alignment_runtime_shim",
+    mode: "runtime_parent_cache_key_alignment",
+    runtimeParentCacheKeyAligned: true,
     existingArchitecturePathAligned: true,
     versionedPathLock: true,
     shimActive: state.shimActive,
@@ -637,6 +656,7 @@ if (hasWindow()) {
   window.AUDRALIA_LEGACY_RUNTIME_SHIM_ACTIVE = true;
   window.AUDRALIA_RUNTIME_VERSIONED_PATH_LOCK_ACTIVE = true;
   window.AUDRALIA_EXISTING_ARCHITECTURE_PATH_ALIGNED = true;
+  window.AUDRALIA_RUNTIME_PARENT_CACHE_KEY_ALIGNED = true;
   window.AUDRALIA_RUNTIME_PARENT_DELEGATION_REPAIR_ACTIVE = true;
 
   publishReceipt("module-load");

@@ -3,9 +3,9 @@
   lang="en"
   data-route="/showroom/globe/"
   data-page="showroom-globe"
-  data-version="2026-05-20.showroom-globe-mirrorland-orbit-gem-gateway-v2"
-  data-contract="SHOWROOM_GLOBE_MIRRORLAND_ORBIT_GEM_GATEWAY_HTML_TNT_v2"
-  data-previous-contract="SHOWROOM_GLOBE_MIRRORLAND_NARRATIVE_GATEWAY_HTML_TNT_v1"
+  data-version="2026-05-20.showroom-globe-mirrorland-orbit-gem-gateway-visual-restoration-v3"
+  data-contract="SHOWROOM_GLOBE_MIRRORLAND_ORBIT_GEM_GATEWAY_VISUAL_RESTORATION_HTML_TNT_v3"
+  data-previous-contract="SHOWROOM_GLOBE_MIRRORLAND_ORBIT_GEM_GATEWAY_HTML_TNT_v2"
   data-authority="great-grandparent-mirrorland-orbit-gem-gateway-expression-only"
   data-role="mirrorland-narrative-orbit-gateway"
   data-season="Shadows Never Shatter in Mirrorland"
@@ -28,55 +28,46 @@
 
   <style>
     :root {
-      --bg-0: #01030b;
-      --bg-1: #030914;
-      --bg-2: #071726;
+      --bg0: #01030b;
+      --bg1: #030914;
       --ink: #fff4d8;
       --muted: rgba(235, 244, 239, 0.76);
       --soft: rgba(235, 244, 239, 0.58);
-      --line: rgba(166, 241, 205, 0.30);
-      --line-soft: rgba(166, 241, 205, 0.14);
+      --line: rgba(166, 241, 205, 0.28);
+      --line2: rgba(166, 241, 205, 0.14);
       --green: #a6f1cd;
       --blue: #66c7ea;
       --gold: #f3c86f;
       --violet: #b9a8ff;
       --ruby: #ff8f9f;
       --panel: rgba(4, 18, 30, 0.82);
-      --panel-soft: rgba(8, 32, 48, 0.58);
-      --shadow: 0 26px 90px rgba(0, 0, 0, 0.48);
       color-scheme: dark;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html {
-      min-height: 100%;
-      background: var(--bg-0);
+      background: var(--bg0);
       scroll-behavior: smooth;
     }
 
     body {
-      min-height: 100%;
       margin: 0;
+      min-height: 100%;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--ink);
       background:
         radial-gradient(circle at 50% 4%, rgba(102, 199, 234, 0.16), transparent 34rem),
         radial-gradient(circle at 18% 20%, rgba(166, 241, 205, 0.12), transparent 28rem),
         radial-gradient(circle at 82% 28%, rgba(185, 168, 255, 0.10), transparent 24rem),
-        linear-gradient(180deg, var(--bg-1), var(--bg-0) 60%, #000309);
+        linear-gradient(180deg, var(--bg1), var(--bg0) 62%, #000309);
       overflow-x: hidden;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    a { color: inherit; text-decoration: none; }
 
     a:focus-visible,
-    button:focus-visible {
+    summary:focus-visible {
       outline: 2px solid var(--green);
       outline-offset: 4px;
     }
@@ -89,15 +80,12 @@
       transform: translateY(-180%);
       padding: 0.7rem 1rem;
       border: 1px solid var(--line);
-      border-radius: 999px;
       background: rgba(1, 8, 16, 0.94);
       color: var(--ink);
       transition: transform 0.18s ease;
     }
 
-    .skip-link:focus {
-      transform: translateY(0);
-    }
+    .skip-link:focus { transform: translateY(0); }
 
     .shell {
       width: min(1180px, calc(100vw - 32px));
@@ -108,99 +96,78 @@
       position: sticky;
       top: 0;
       z-index: 30;
-      border-bottom: 1px solid var(--line-soft);
-      background: rgba(1, 6, 14, 0.88);
+      border-bottom: 1px solid var(--line2);
+      background: rgba(1, 6, 14, 0.90);
       backdrop-filter: blur(18px);
     }
 
     .topbar-inner {
-      display: flex;
+      min-height: 76px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
       align-items: center;
-      justify-content: space-between;
-      min-height: 72px;
       gap: 1rem;
     }
 
     .brand {
       display: inline-flex;
       align-items: center;
-      gap: 0.72rem;
-      min-width: max-content;
+      gap: 0.8rem;
       font-weight: 850;
       letter-spacing: -0.035em;
     }
 
-    .brand-mark {
+    .brand-gem {
       display: grid;
       place-items: center;
-      width: 2.35rem;
-      height: 2.35rem;
-      border: 1px solid rgba(166, 241, 205, 0.42);
-      border-radius: 0.72rem;
+      width: 2.65rem;
+      height: 2.65rem;
       color: var(--green);
       background:
-        linear-gradient(135deg, transparent 0 28%, rgba(255, 255, 255, 0.22) 28% 31%, transparent 31%),
-        radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.28), transparent 0.42rem),
-        radial-gradient(circle, rgba(166, 241, 205, 0.18), rgba(102, 199, 234, 0.08));
+        linear-gradient(135deg, rgba(255,255,255,0.20), transparent 31%),
+        radial-gradient(circle at 35% 28%, rgba(255,255,255,0.30), transparent 0.42rem),
+        linear-gradient(145deg, rgba(12, 48, 64, 0.92), rgba(2, 13, 25, 0.96));
+      clip-path: polygon(50% 0%, 88% 18%, 100% 50%, 82% 88%, 50% 100%, 18% 88%, 0% 50%, 12% 18%);
       box-shadow: 0 0 34px rgba(166, 241, 205, 0.16);
-      transform: rotate(45deg);
-    }
-
-    .brand-mark span {
-      transform: rotate(-45deg);
-      font-size: 0.78rem;
-      font-weight: 900;
     }
 
     .brand-text {
       display: grid;
-      gap: 0.05rem;
       line-height: 1;
+      gap: 0.08rem;
     }
 
     .brand-text small {
       color: var(--muted);
       font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.10em;
+      font-weight: 750;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
     }
 
-    .nav-wrap {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 0.6rem;
-    }
-
     .nav {
+      justify-self: center;
       display: flex;
       align-items: center;
-      justify-content: flex-end;
-      gap: 0.45rem;
+      justify-content: center;
+      gap: 0.48rem;
       flex-wrap: wrap;
     }
 
     .nav a,
-    .pill,
-    .menu-button {
+    .orbit-link {
       display: inline-flex;
       align-items: center;
-      min-height: 2.2rem;
-      padding: 0.58rem 0.78rem;
+      justify-content: center;
+      min-height: 2.3rem;
+      padding: 0.58rem 0.82rem;
       border: 1px solid rgba(166, 241, 205, 0.18);
-      border-radius: 999px;
-      color: rgba(255, 244, 216, 0.86);
-      background: rgba(255, 255, 255, 0.035);
+      color: rgba(255, 244, 216, 0.88);
+      background: linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.015));
       font-size: 0.88rem;
-      font-weight: 750;
+      font-weight: 800;
       line-height: 1;
-    }
-
-    .menu-button {
-      cursor: pointer;
-      font-family: inherit;
+      clip-path: polygon(12% 0, 88% 0, 100% 50%, 88% 100%, 12% 100%, 0 50%);
     }
 
     .nav a[aria-current="page"] {
@@ -209,52 +176,65 @@
       background: rgba(166, 241, 205, 0.10);
     }
 
-    .dropdown {
+    .site-menu {
+      position: relative;
+      justify-self: end;
+    }
+
+    .site-menu summary {
+      list-style: none;
+      cursor: pointer;
+      min-height: 2.75rem;
+      padding: 0.7rem 1.05rem;
+      border: 1px solid rgba(166, 241, 205, 0.26);
+      color: var(--ink);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.08), transparent 34%),
+        rgba(3, 14, 26, 0.90);
+      font-weight: 900;
+      clip-path: polygon(13% 0, 87% 0, 100% 50%, 87% 100%, 13% 100%, 0 50%);
+    }
+
+    .site-menu summary::-webkit-details-marker { display: none; }
+
+    .menu-panel {
       position: absolute;
       right: 0;
-      top: calc(100% + 0.7rem);
-      z-index: 50;
-      display: none;
-      width: min(21rem, calc(100vw - 2rem));
+      top: calc(100% + 0.65rem);
+      width: min(22rem, calc(100vw - 2rem));
+      z-index: 80;
       padding: 0.75rem;
       border: 1px solid rgba(166, 241, 205, 0.18);
-      border-radius: 1.1rem;
-      background: rgba(1, 7, 16, 0.96);
-      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
-      backdrop-filter: blur(18px);
+      background: rgba(1, 7, 16, 0.98);
+      box-shadow: 0 24px 70px rgba(0,0,0,0.46);
     }
 
-    .dropdown[data-open="true"] {
+    .menu-panel a {
       display: grid;
-      gap: 0.45rem;
-    }
-
-    .dropdown a {
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
+      grid-template-columns: 1fr auto;
+      gap: 0.8rem;
+      align-items: center;
       padding: 0.72rem 0.75rem;
       border: 1px solid rgba(166, 241, 205, 0.12);
-      border-radius: 0.8rem;
-      color: rgba(255, 244, 216, 0.88);
-      background: rgba(255, 255, 255, 0.03);
-      font-weight: 800;
+      background: rgba(255,255,255,0.025);
+      color: rgba(255,244,216,0.90);
+      font-weight: 850;
     }
 
-    .dropdown small {
+    .menu-panel a + a { margin-top: 0.42rem; }
+
+    .menu-panel small {
       color: var(--soft);
-      font-weight: 700;
-      letter-spacing: 0.06em;
+      font-weight: 750;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    main {
-      padding: 4rem 0 5rem;
-    }
+    main { padding: 4rem 0 5rem; }
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 0.95fr) minmax(330px, 1.05fr);
+      grid-template-columns: minmax(0, 0.9fr) minmax(340px, 1.1fr);
       align-items: center;
       gap: clamp(2rem, 5vw, 4.5rem);
       min-height: calc(100vh - 120px);
@@ -281,7 +261,7 @@
       margin: 1.15rem 0 0;
       max-width: 39rem;
       color: var(--gold);
-      font-size: clamp(1.25rem, 2.6vw, 2.1rem);
+      font-size: clamp(1.22rem, 2.5vw, 2.05rem);
       line-height: 1.08;
       letter-spacing: -0.045em;
       font-weight: 850;
@@ -295,9 +275,7 @@
       line-height: 1.68;
     }
 
-    .hero-copy strong {
-      color: var(--ink);
-    }
+    .hero-copy strong { color: var(--ink); }
 
     .hero-actions {
       display: flex;
@@ -313,30 +291,28 @@
       min-height: 2.95rem;
       padding: 0.88rem 1.12rem;
       border: 1px solid rgba(166, 241, 205, 0.35);
-      border-radius: 999px;
       background: rgba(166, 241, 205, 0.10);
       color: var(--ink);
       font-weight: 850;
+      clip-path: polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0 50%);
     }
 
     .button.primary {
       border-color: rgba(243, 200, 111, 0.62);
       background:
-        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.18), transparent 0.7rem),
-        linear-gradient(135deg, rgba(243, 200, 111, 0.28), rgba(166, 241, 205, 0.14));
-      color: #fff7dd;
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.18), transparent 0.7rem),
+        linear-gradient(135deg, rgba(243, 200, 111, 0.26), rgba(166, 241, 205, 0.14));
     }
 
     .orbit-stage {
       position: relative;
-      min-height: clamp(560px, 70vw, 760px);
+      min-height: clamp(620px, 74vw, 790px);
       border: 1px solid rgba(166, 241, 205, 0.22);
-      border-radius: 2rem;
       background:
-        radial-gradient(circle at 50% 40%, rgba(166, 241, 205, 0.12), transparent 16rem),
+        radial-gradient(circle at 50% 44%, rgba(166, 241, 205, 0.12), transparent 16rem),
         radial-gradient(circle at 50% 48%, rgba(102, 199, 234, 0.16), transparent 24rem),
-        linear-gradient(180deg, rgba(6, 24, 39, 0.84), rgba(2, 8, 16, 0.92));
-      box-shadow: var(--shadow);
+        linear-gradient(180deg, rgba(6,24,39,0.84), rgba(2,8,16,0.94));
+      box-shadow: 0 26px 90px rgba(0,0,0,0.48);
       overflow: hidden;
       isolation: isolate;
     }
@@ -344,60 +320,39 @@
     .orbit-stage::before {
       content: "";
       position: absolute;
-      inset: -18%;
-      z-index: -2;
-      background:
-        radial-gradient(circle at 44% 38%, rgba(166, 241, 205, 0.18), transparent 16rem),
-        radial-gradient(circle at 58% 52%, rgba(185, 168, 255, 0.14), transparent 18rem);
-      filter: blur(12px);
-    }
-
-    .orbit-stage::after {
-      content: "";
-      position: absolute;
       inset: 1rem;
-      z-index: -1;
       border: 1px solid rgba(166, 241, 205, 0.10);
-      border-radius: 1.45rem;
       background:
-        linear-gradient(90deg, transparent 49.9%, rgba(166, 241, 205, 0.08) 50%, transparent 50.1%),
-        linear-gradient(0deg, transparent 49.9%, rgba(102, 199, 234, 0.07) 50%, transparent 50.1%),
-        radial-gradient(circle at 50% 50%, transparent 0 30%, rgba(255, 255, 255, 0.035) 30.2% 30.5%, transparent 30.7%),
-        radial-gradient(circle at 50% 50%, transparent 0 45%, rgba(255, 255, 255, 0.035) 45.2% 45.5%, transparent 45.7%);
-      opacity: 0.88;
+        linear-gradient(90deg, transparent 49.9%, rgba(166,241,205,0.07) 50%, transparent 50.1%),
+        linear-gradient(0deg, transparent 49.9%, rgba(102,199,234,0.06) 50%, transparent 50.1%),
+        radial-gradient(circle at 50% 50%, transparent 0 32%, rgba(255,255,255,0.035) 32.15% 32.35%, transparent 32.5%),
+        radial-gradient(circle at 50% 50%, transparent 0 47%, rgba(255,255,255,0.035) 47.15% 47.35%, transparent 47.5%);
+      opacity: 0.9;
     }
 
     .status-ribbon {
       position: absolute;
+      top: 1rem;
       left: 1rem;
       right: 1rem;
-      top: 1rem;
-      z-index: 5;
+      z-index: 8;
       display: flex;
       justify-content: space-between;
       gap: 1rem;
       pointer-events: none;
     }
 
-    .status-pill {
+    .status-chip {
       max-width: 72%;
-      padding: 0.6rem 0.82rem;
+      padding: 0.62rem 0.86rem;
       border: 1px solid rgba(166, 241, 205, 0.22);
-      border-radius: 999px;
       background: rgba(1, 8, 16, 0.72);
       color: var(--green);
       font-size: 0.78rem;
-      font-weight: 800;
+      font-weight: 850;
       line-height: 1.2;
       backdrop-filter: blur(12px);
-    }
-
-    .status-pill[data-status-tone="held"] {
-      color: var(--gold);
-    }
-
-    .status-pill[data-status-tone="loading"] {
-      color: var(--blue);
+      clip-path: polygon(8% 0, 92% 0, 100% 50%, 92% 100%, 8% 100%, 0 50%);
     }
 
     .orbit-core {
@@ -408,181 +363,182 @@
       padding: 2rem;
     }
 
-    .orbit-ring {
+    .orbit-field {
       position: relative;
-      width: min(610px, 84vw);
+      width: min(650px, 88vw);
       aspect-ratio: 1;
-      border: 1px solid rgba(166, 241, 205, 0.18);
-      border-radius: 999px;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(166, 241, 205, 0.12), transparent 5rem),
-        radial-gradient(circle at 50% 50%, rgba(102, 199, 234, 0.11), transparent 13rem);
-      box-shadow:
-        inset 0 0 52px rgba(102, 199, 234, 0.08),
-        0 0 90px rgba(166, 241, 205, 0.08);
-    }
-
-    .orbit-ring::before,
-    .orbit-ring::after {
-      content: "";
-      position: absolute;
-      inset: 13%;
-      border: 1px solid rgba(102, 199, 234, 0.16);
-      border-radius: 999px;
-      transform: rotate(32deg) scaleX(1.28);
-    }
-
-    .orbit-ring::after {
-      inset: 24%;
-      border-color: rgba(243, 200, 111, 0.14);
-      transform: rotate(-28deg) scaleX(1.34);
-    }
-
-    .center-gem {
-      position: absolute;
-      inset: 50% auto auto 50%;
-      z-index: 3;
       display: grid;
       place-items: center;
-      width: clamp(10rem, 22vw, 15rem);
-      min-height: clamp(7rem, 15vw, 10.5rem);
-      padding: 1rem;
-      transform: translate(-50%, -50%);
-      clip-path: polygon(15% 18%, 42% 4%, 75% 10%, 96% 42%, 83% 82%, 48% 96%, 12% 80%, 2% 42%);
-      border: 1px solid rgba(166, 241, 205, 0.22);
-      background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 26%),
-        radial-gradient(circle at 38% 28%, rgba(255, 255, 255, 0.24), transparent 1.8rem),
-        linear-gradient(135deg, rgba(19, 58, 80, 0.92), rgba(4, 16, 32, 0.96));
-      box-shadow:
-        inset 0 0 40px rgba(166, 241, 205, 0.10),
-        0 0 72px rgba(102, 199, 234, 0.13);
-      text-align: center;
     }
 
-    .center-gem strong {
-      display: block;
-      color: var(--gold);
-      font-size: clamp(1.02rem, 2.1vw, 1.55rem);
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
+    .orbit-field::before,
+    .orbit-field::after {
+      content: "";
+      position: absolute;
+      border: 1px solid rgba(166, 241, 205, 0.18);
+      border-radius: 50%;
+      pointer-events: none;
     }
 
-    .center-gem span {
-      display: block;
-      margin-top: 0.5rem;
-      color: var(--muted);
-      font-size: 0.86rem;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    .orbit-field::before {
+      width: 94%;
+      height: 58%;
+      transform: rotate(-7deg);
     }
 
+    .orbit-field::after {
+      width: 78%;
+      height: 45%;
+      border-color: rgba(102, 199, 234, 0.16);
+      transform: rotate(18deg);
+    }
+
+    .orbit-rotor {
+      position: absolute;
+      inset: 0;
+      animation: mirrorOrbitSpin 38s linear infinite;
+      transform-origin: center;
+    }
+
+    .orbit-rotor:hover {
+      animation-play-state: paused;
+    }
+
+    .counter-spin {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      height: 100%;
+      animation: mirrorCounterSpin 38s linear infinite;
+    }
+
+    .orbit-rotor:hover .counter-spin {
+      animation-play-state: paused;
+    }
+
+    @keyframes mirrorOrbitSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes mirrorCounterSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(-360deg); }
+    }
+
+    .center-gem,
     .primary-gem,
     .secondary-gem {
       position: absolute;
-      z-index: 4;
       display: grid;
       place-items: center;
       text-align: center;
       color: var(--ink);
       font-weight: 900;
       line-height: 1.08;
-      transform-origin: center;
-      transition: transform 0.18s ease, filter 0.18s ease;
+      isolation: isolate;
     }
 
-    .primary-gem:hover,
-    .secondary-gem:hover {
-      filter: brightness(1.12);
+    .center-gem {
+      z-index: 5;
+      width: clamp(12rem, 24vw, 16.5rem);
+      aspect-ratio: 1.38;
     }
 
     .primary-gem {
-      width: clamp(7.8rem, 15vw, 10.5rem);
-      min-height: clamp(5.9rem, 11vw, 8.1rem);
-      padding: 0.9rem;
-      clip-path: polygon(16% 18%, 44% 3%, 78% 12%, 98% 45%, 80% 82%, 46% 97%, 12% 78%, 2% 42%);
-      border: 1px solid rgba(166, 241, 205, 0.34);
-      background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.20), transparent 26%),
-        radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.24), transparent 1rem),
-        linear-gradient(135deg, rgba(10, 44, 62, 0.96), rgba(3, 12, 24, 0.96));
-      box-shadow:
-        0 18px 52px rgba(0, 0, 0, 0.34),
-        0 0 42px rgba(166, 241, 205, 0.10);
+      z-index: 6;
+      width: clamp(9rem, 16vw, 12.2rem);
+      aspect-ratio: 1.28;
     }
 
-    .primary-gem span,
-    .secondary-gem span {
-      display: block;
-      padding: 0.2rem;
+    .secondary-gem {
+      width: clamp(6.2rem, 10vw, 8.2rem);
+      aspect-ratio: 1.5;
+      z-index: 7;
     }
 
-    .primary-gem small,
-    .secondary-gem small {
-      display: block;
-      margin-top: 0.35rem;
+    .gem-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      filter:
+        drop-shadow(0 18px 34px rgba(0,0,0,0.34))
+        drop-shadow(0 0 24px rgba(166,241,205,0.10));
+    }
+
+    .gem-label {
+      position: relative;
+      z-index: 4;
+      display: grid;
+      gap: 0.38rem;
+      padding: 0.6rem;
+      text-shadow: 0 2px 14px rgba(0,0,0,0.62);
+    }
+
+    .gem-label b {
+      color: var(--ink);
+      font-size: clamp(0.88rem, 1.8vw, 1.28rem);
+      letter-spacing: 0.02em;
+    }
+
+    .center-gem .gem-label b {
+      color: var(--gold);
+      font-size: clamp(1.05rem, 2.2vw, 1.65rem);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .gem-label small {
       color: var(--soft);
-      font-size: 0.64rem;
+      font-size: 0.68rem;
       font-weight: 850;
       letter-spacing: 0.12em;
       text-transform: uppercase;
     }
 
+    .secondary-gem .gem-label b {
+      font-size: 0.72rem;
+      letter-spacing: 0.01em;
+    }
+
+    .secondary-gem .gem-label small {
+      display: none;
+    }
+
     .primary-gem[data-primary-gem="zionts"] {
-      top: 8%;
+      top: 3%;
       left: 50%;
-      transform: translateX(-50%);
-      border-color: rgba(102, 199, 234, 0.42);
+      transform: translate(-50%, 0);
     }
 
     .primary-gem[data-primary-gem="audralia"] {
-      right: 4%;
-      top: 56%;
-      transform: translateY(-50%);
-      border-color: rgba(166, 241, 205, 0.44);
-      background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.20), transparent 26%),
-        radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.24), transparent 1rem),
-        linear-gradient(135deg, rgba(20, 82, 70, 0.95), rgba(44, 18, 58, 0.92));
+      top: 54%;
+      right: 0;
+      transform: translate(0, -50%);
     }
 
     .primary-gem[data-primary-gem="h-earth"] {
-      left: 4%;
-      top: 56%;
-      transform: translateY(-50%);
-      border-color: rgba(243, 200, 111, 0.42);
-      background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.20), transparent 26%),
-        radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.24), transparent 1rem),
-        linear-gradient(135deg, rgba(92, 74, 34, 0.95), rgba(10, 48, 70, 0.92));
+      top: 54%;
+      left: 0;
+      transform: translate(0, -50%);
     }
 
-    .secondary-orbit {
+    .secondary-ring {
       position: absolute;
-      left: 1rem;
-      right: 1rem;
-      bottom: 1rem;
-      z-index: 6;
+      inset: auto 0 1rem 0;
+      z-index: 10;
+      display: grid;
+      justify-items: center;
+      gap: 0.62rem;
+      padding: 0 1rem 1rem;
+    }
+
+    .secondary-row {
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 0.58rem;
-    }
-
-    .secondary-gem {
-      position: relative;
-      width: auto;
-      min-width: 7.4rem;
-      min-height: 2.9rem;
-      padding: 0.72rem 0.84rem;
-      clip-path: polygon(12% 0%, 88% 0%, 100% 50%, 88% 100%, 12% 100%, 0% 50%);
-      border: 1px solid rgba(166, 241, 205, 0.22);
-      background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.10), transparent 32%),
-        rgba(3, 14, 26, 0.82);
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.26);
-      font-size: 0.72rem;
+      gap: 0.66rem;
     }
 
     .section-grid {
@@ -597,11 +553,10 @@
       min-height: 18rem;
       padding: clamp(1.25rem, 3vw, 2rem);
       border: 1px solid rgba(166, 241, 205, 0.18);
-      border-radius: 1.35rem;
       background:
         radial-gradient(circle at 20% 20%, rgba(166, 241, 205, 0.08), transparent 18rem),
         var(--panel);
-      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.24);
+      box-shadow: 0 18px 60px rgba(0,0,0,0.24);
     }
 
     .story-section .tag {
@@ -638,13 +593,12 @@
       margin-top: 1rem;
       padding: 1rem;
       border: 1px solid rgba(166, 241, 205, 0.14);
-      border-radius: 1.25rem;
-      background: rgba(1, 8, 16, 0.52);
+      background: rgba(1,8,16,0.52);
     }
 
     .receipt-panel summary {
       cursor: pointer;
-      color: rgba(255, 244, 216, 0.84);
+      color: rgba(255,244,216,0.84);
       font-weight: 800;
     }
 
@@ -653,7 +607,7 @@
       margin: 0.8rem 0 0;
       padding-left: 1.2rem;
       overflow: auto;
-      color: rgba(232, 242, 238, 0.68);
+      color: rgba(232,242,238,0.68);
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       font-size: 0.78rem;
       line-height: 1.55;
@@ -665,22 +619,26 @@
       gap: 0.65rem;
       margin-top: 2rem;
       padding-top: 2rem;
-      border-top: 1px solid rgba(166, 241, 205, 0.16);
+      border-top: 1px solid rgba(166,241,205,0.16);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .orbit-rotor,
+      .counter-spin {
+        animation: none;
+      }
     }
 
     @media (max-width: 980px) {
       .topbar-inner {
-        align-items: flex-start;
-        flex-direction: column;
+        grid-template-columns: 1fr auto;
         padding: 1rem 0;
       }
 
-      .nav-wrap {
-        width: 100%;
-        justify-content: space-between;
-      }
-
       .nav {
+        grid-column: 1 / -1;
+        justify-self: start;
         justify-content: flex-start;
       }
 
@@ -694,7 +652,7 @@
       }
 
       .orbit-stage {
-        min-height: 700px;
+        min-height: 760px;
       }
     }
 
@@ -703,9 +661,7 @@
         width: min(100vw - 20px, 1180px);
       }
 
-      main {
-        padding-top: 2rem;
-      }
+      main { padding-top: 2rem; }
 
       .nav a {
         font-size: 0.78rem;
@@ -713,53 +669,33 @@
       }
 
       .orbit-stage {
-        min-height: 720px;
-        border-radius: 1.35rem;
+        min-height: 760px;
       }
 
-      .orbit-ring {
-        width: min(390px, 88vw);
+      .orbit-field {
+        width: min(420px, 90vw);
       }
 
       .center-gem {
-        width: 10rem;
-        min-height: 7rem;
+        width: 11.4rem;
       }
 
       .primary-gem {
-        width: 7.2rem;
-        min-height: 5.5rem;
-        font-size: 0.78rem;
+        width: 7.65rem;
       }
 
-      .primary-gem small {
-        font-size: 0.56rem;
-      }
-
-      .primary-gem[data-primary-gem="audralia"] {
-        right: -1%;
-      }
-
-      .primary-gem[data-primary-gem="h-earth"] {
-        left: -1%;
-      }
-
-      .secondary-orbit {
-        align-items: center;
-        justify-content: center;
-      }
+      .primary-gem[data-primary-gem="audralia"] { right: -0.4rem; }
+      .primary-gem[data-primary-gem="h-earth"] { left: -0.4rem; }
 
       .secondary-gem {
-        min-width: 6.8rem;
-        font-size: 0.64rem;
+        width: 6.1rem;
       }
 
       .status-ribbon {
-        align-items: flex-start;
         flex-direction: column;
       }
 
-      .status-pill {
+      .status-chip {
         max-width: 100%;
       }
     }
@@ -772,44 +708,34 @@
   <header class="topbar" aria-label="Mirrorland narrative gateway navigation">
     <div class="shell topbar-inner">
       <a class="brand" href="/showroom/globe/" aria-label="Diamond Gate Bridge Mirrorland orbit gateway">
-        <span class="brand-mark" aria-hidden="true"><span>DG</span></span>
+        <span class="brand-gem" aria-hidden="true">DG</span>
         <span class="brand-text">
           <span>Diamond Gate Bridge</span>
           <small>Mirrorland Orbit</small>
         </span>
       </a>
 
-      <div class="nav-wrap">
-        <nav class="nav" aria-label="Primary">
-          <a href="/">Compass</a>
-          <a href="/showroom/">Showroom</a>
-          <a href="/showroom/globe/" aria-current="page">Mirrorland</a>
-          <a href="/showroom/globe/earth/">ZIONTS</a>
-          <a href="/showroom/globe/audralia/">Audralia</a>
-          <a href="/showroom/globe/h-earth/">H-Earth</a>
-        </nav>
+      <nav class="nav" aria-label="Primary">
+        <a href="/">Compass</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/showroom/globe/" aria-current="page">Mirrorland</a>
+        <a href="/showroom/globe/earth/">ZIONTS</a>
+        <a href="/showroom/globe/audralia/">Audralia</a>
+        <a href="/showroom/globe/h-earth/">H-Earth</a>
+      </nav>
 
-        <button
-          id="mirrorland-menu-button"
-          class="menu-button"
-          type="button"
-          aria-expanded="false"
-          aria-controls="mirrorland-dropdown"
-          data-dropdown-trigger
-        >
-          Menu
-        </button>
-
-        <div id="mirrorland-dropdown" class="dropdown" data-dropdown-panel>
+      <details class="site-menu" data-site-menu>
+        <summary>Menu</summary>
+        <div class="menu-panel">
           <a href="#mirrorland-orbit">Return to Orbit <small>Anchor</small></a>
           <a href="#portal-premise">Portal Premise <small>Story</small></a>
           <a href="#mirror-law">Mirror Law <small>Rule</small></a>
           <a href="#no-return-rule">No Return Rule <small>Law</small></a>
-          <a href="#window-rule">Window Rule <small>Outside</small></a>
+          <a href="#window-rule">Window Rule <small>Window</small></a>
           <a href="/characters/">Characters <small>People</small></a>
           <a href="/gauges/">Gauges <small>Measure</small></a>
         </div>
-      </div>
+      </details>
     </div>
   </header>
 
@@ -839,41 +765,109 @@
         aria-label="Mirrorland orbit gem gateway"
       >
         <div class="status-ribbon">
-          <div class="status-pill">Great-grandparent narrative orbit · no child engine mount</div>
-          <div id="mirrorland-orbit-status" class="status-pill" data-mirrorland-orbit-status data-status-tone="loading">
+          <div class="status-chip">Great-grandparent narrative orbit · no child engine mount</div>
+          <div id="mirrorland-orbit-status" class="status-chip" data-mirrorland-orbit-status>
             Awaiting orbit gateway check.
           </div>
         </div>
 
         <div class="orbit-core">
-          <div class="orbit-ring" data-primary-orbit>
-            <a class="primary-gem" data-primary-gem="zionts" href="/showroom/globe/earth/">
-              <span>ZIONTS<small>Consequence</small></span>
-            </a>
-
-            <a class="primary-gem" data-primary-gem="audralia" href="/showroom/globe/audralia/">
-              <span>Audralia<small>Possibility</small></span>
-            </a>
-
-            <a class="primary-gem" data-primary-gem="h-earth" href="/showroom/globe/h-earth/">
-              <span>H-Earth<small>Survival</small></span>
-            </a>
-
+          <div class="orbit-field" data-primary-orbit>
             <a class="center-gem" href="#window-rule" aria-label="The website is the window">
-              <strong>Globe</strong>
-              <span>The Window</span>
+              <svg class="gem-svg" viewBox="0 0 300 220" aria-hidden="true">
+                <defs>
+                  <linearGradient id="centerGemA" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#fff7d0" stop-opacity=".26"/>
+                    <stop offset=".46" stop-color="#66c7ea" stop-opacity=".28"/>
+                    <stop offset="1" stop-color="#020914" stop-opacity=".96"/>
+                  </linearGradient>
+                </defs>
+                <polygon points="38,36 126,10 230,28 288,100 246,184 138,210 30,176 10,92" fill="url(#centerGemA)" stroke="rgba(166,241,205,.42)" stroke-width="2"/>
+                <polygon points="38,36 126,10 138,210 10,92" fill="rgba(255,255,255,.08)"/>
+                <polygon points="126,10 230,28 138,210" fill="rgba(102,199,234,.10)"/>
+                <polygon points="230,28 288,100 246,184 138,210" fill="rgba(185,168,255,.09)"/>
+                <polyline points="38,36 138,210 230,28" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="1"/>
+                <polyline points="10,92 138,210 288,100" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="1"/>
+              </svg>
+              <span class="gem-label"><b>Globe</b><small>The Window</small></span>
             </a>
+
+            <div class="orbit-rotor">
+              <a class="primary-gem" data-primary-gem="zionts" href="/showroom/globe/earth/">
+                <span class="counter-spin">
+                  <svg class="gem-svg" viewBox="0 0 280 220" aria-hidden="true">
+                    <polygon points="42,28 150,4 238,46 270,112 214,190 104,212 24,154 12,78" fill="rgba(11,34,54,.96)" stroke="rgba(102,199,234,.45)" stroke-width="2"/>
+                    <polygon points="42,28 150,4 104,212 12,78" fill="rgba(255,255,255,.08)"/>
+                    <polygon points="150,4 238,46 104,212" fill="rgba(102,199,234,.12)"/>
+                    <polygon points="238,46 270,112 214,190 104,212" fill="rgba(166,241,205,.09)"/>
+                    <polyline points="42,28 104,212 238,46" fill="none" stroke="rgba(255,255,255,.13)" stroke-width="1"/>
+                  </svg>
+                  <span class="gem-label"><b>ZIONTS</b><small>Consequence</small></span>
+                </span>
+              </a>
+
+              <a class="primary-gem" data-primary-gem="audralia" href="/showroom/globe/audralia/">
+                <span class="counter-spin">
+                  <svg class="gem-svg" viewBox="0 0 280 220" aria-hidden="true">
+                    <polygon points="38,36 142,6 240,42 272,108 214,188 98,210 18,150 10,82" fill="rgba(18,70,60,.95)" stroke="rgba(166,241,205,.50)" stroke-width="2"/>
+                    <polygon points="38,36 142,6 98,210 10,82" fill="rgba(255,255,255,.10)"/>
+                    <polygon points="142,6 240,42 98,210" fill="rgba(166,241,205,.13)"/>
+                    <polygon points="240,42 272,108 214,188 98,210" fill="rgba(255,143,159,.12)"/>
+                    <polyline points="38,36 98,210 240,42" fill="none" stroke="rgba(255,255,255,.13)" stroke-width="1"/>
+                  </svg>
+                  <span class="gem-label"><b>Audralia</b><small>Possibility</small></span>
+                </span>
+              </a>
+
+              <a class="primary-gem" data-primary-gem="h-earth" href="/showroom/globe/h-earth/">
+                <span class="counter-spin">
+                  <svg class="gem-svg" viewBox="0 0 280 220" aria-hidden="true">
+                    <polygon points="44,34 142,5 236,38 270,108 218,184 108,212 24,154 12,80" fill="rgba(88,72,36,.95)" stroke="rgba(243,200,111,.48)" stroke-width="2"/>
+                    <polygon points="44,34 142,5 108,212 12,80" fill="rgba(255,255,255,.09)"/>
+                    <polygon points="142,5 236,38 108,212" fill="rgba(243,200,111,.12)"/>
+                    <polygon points="236,38 270,108 218,184 108,212" fill="rgba(102,199,234,.12)"/>
+                    <polyline points="44,34 108,212 236,38" fill="none" stroke="rgba(255,255,255,.13)" stroke-width="1"/>
+                  </svg>
+                  <span class="gem-label"><b>H-Earth</b><small>Survival</small></span>
+                </span>
+              </a>
+            </div>
           </div>
         </div>
 
-        <nav class="secondary-orbit" aria-label="Mirrorland secondary gem jumps">
-          <a class="secondary-gem" data-secondary-gem="portal-premise" href="#portal-premise"><span>Portal Premise</span></a>
-          <a class="secondary-gem" data-secondary-gem="mirror-law" href="#mirror-law"><span>Mirror Law</span></a>
-          <a class="secondary-gem" data-secondary-gem="no-return-rule" href="#no-return-rule"><span>No Return Rule</span></a>
-          <a class="secondary-gem" data-secondary-gem="window-rule" href="#window-rule"><span>Window Rule</span></a>
-          <a class="secondary-gem" data-secondary-gem="characters" href="/characters/"><span>Characters</span></a>
-          <a class="secondary-gem" data-secondary-gem="showroom" href="/showroom/"><span>Showroom</span></a>
-          <a class="secondary-gem" data-secondary-gem="gauges" href="/gauges/"><span>Gauges</span></a>
+        <nav class="secondary-ring" aria-label="Mirrorland secondary gem jumps">
+          <div class="secondary-row">
+            <a class="secondary-gem" data-secondary-gem="portal-premise" href="#portal-premise">
+              <svg class="gem-svg" viewBox="0 0 220 140" aria-hidden="true"><polygon points="28,12 128,4 204,42 180,126 72,134 10,80" fill="rgba(4,18,30,.94)" stroke="rgba(166,241,205,.35)" stroke-width="2"/><polyline points="28,12 72,134 204,42" fill="none" stroke="rgba(255,255,255,.12)"/></svg>
+              <span class="gem-label"><b>Portal Premise</b></span>
+            </a>
+            <a class="secondary-gem" data-secondary-gem="mirror-law" href="#mirror-law">
+              <svg class="gem-svg" viewBox="0 0 220 140" aria-hidden="true"><polygon points="28,12 128,4 204,42 180,126 72,134 10,80" fill="rgba(4,18,30,.94)" stroke="rgba(102,199,234,.35)" stroke-width="2"/><polyline points="28,12 72,134 204,42" fill="none" stroke="rgba(255,255,255,.12)"/></svg>
+              <span class="gem-label"><b>Mirror Law</b></span>
+            </a>
+            <a class="secondary-gem" data-secondary-gem="no-return-rule" href="#no-return-rule">
+              <svg class="gem-svg" viewBox="0 0 220 140" aria-hidden="true"><polygon points="28,12 128,4 204,42 180,126 72,134 10,80" fill="rgba(4,18,30,.94)" stroke="rgba(243,200,111,.35)" stroke-width="2"/><polyline points="28,12 72,134 204,42" fill="none" stroke="rgba(255,255,255,.12)"/></svg>
+              <span class="gem-label"><b>No Return</b></span>
+            </a>
+            <a class="secondary-gem" data-secondary-gem="window-rule" href="#window-rule">
+              <svg class="gem-svg" viewBox="0 0 220 140" aria-hidden="true"><polygon points="28,12 128,4 204,42 180,126 72,134 10,80" fill="rgba(4,18,30,.94)" stroke="rgba(185,168,255,.35)" stroke-width="2"/><polyline points="28,12 72,134 204,42" fill="none" stroke="rgba(255,255,255,.12)"/></svg>
+              <span class="gem-label"><b>Window Rule</b></span>
+            </a>
+          </div>
+          <div class="secondary-row">
+            <a class="secondary-gem" data-secondary-gem="characters" href="/characters/">
+              <svg class="gem-svg" viewBox="0 0 220 140" aria-hidden="true"><polygon points="28,12 128,4 204,42 180,126 72,134 10,80" fill="rgba(4,18,30,.94)" stroke="rgba(185,168,255,.35)" stroke-width="2"/><polyline points="28,12 72,134 204,42" fill="none" stroke="rgba(255,255,255,.12)"/></svg>
+              <span class="gem-label"><b>Characters</b></span>
+            </a>
+            <a class="secondary-gem" data-secondary-gem="showroom" href="/showroom/">
+              <svg class="gem-svg" viewBox="0 0 220 140" aria-hidden="true"><polygon points="28,12 128,4 204,42 180,126 72,134 10,80" fill="rgba(4,18,30,.94)" stroke="rgba(166,241,205,.35)" stroke-width="2"/><polyline points="28,12 72,134 204,42" fill="none" stroke="rgba(255,255,255,.12)"/></svg>
+              <span class="gem-label"><b>Showroom</b></span>
+            </a>
+            <a class="secondary-gem" data-secondary-gem="gauges" href="/gauges/">
+              <svg class="gem-svg" viewBox="0 0 220 140" aria-hidden="true"><polygon points="28,12 128,4 204,42 180,126 72,134 10,80" fill="rgba(4,18,30,.94)" stroke="rgba(255,143,159,.35)" stroke-width="2"/><polyline points="28,12 72,134 204,42" fill="none" stroke="rgba(255,255,255,.12)"/></svg>
+              <span class="gem-label"><b>Gauges</b></span>
+            </a>
+          </div>
         </nav>
       </section>
     </section>
@@ -882,49 +876,29 @@
       <article id="portal-premise" class="story-section" data-info-section="portal-premise">
         <p class="tag">Portal Premise</p>
         <h2>The Bermuda Triangle was a door.</h2>
-        <p>
-          The old world called it a mystery because it could not read the threshold. In this story-world,
-          the ocean portal opens into Mirrorland, and crossing it changes the law of return.
-        </p>
-        <div class="return-row">
-          <a class="button" data-return-to-orbit href="#mirrorland-orbit">Return to Orbit</a>
-        </div>
+        <p>The old world called it a mystery because it could not read the threshold. In this story-world, the ocean portal opens into Mirrorland, and crossing it changes the law of return.</p>
+        <div class="return-row"><a class="button" data-return-to-orbit href="#mirrorland-orbit">Return to Orbit</a></div>
       </article>
 
       <article id="mirror-law" class="story-section" data-info-section="mirror-law">
         <p class="tag">Mirror Law</p>
         <h2>The cover is true, but incomplete.</h2>
-        <p>
-          A shadow may distort the first read without becoming false. A mirror may show a surface that is lawful
-          and still not show the whole. Mirrorland begins where the first interpretation fails.
-        </p>
-        <div class="return-row">
-          <a class="button" data-return-to-orbit href="#mirrorland-orbit">Return to Orbit</a>
-        </div>
+        <p>A shadow may distort the first read without becoming false. A mirror may show a surface that is lawful and still not show the whole. Mirrorland begins where the first interpretation fails.</p>
+        <div class="return-row"><a class="button" data-return-to-orbit href="#mirrorland-orbit">Return to Orbit</a></div>
       </article>
 
       <article id="no-return-rule" class="story-section" data-info-section="no-return-rule">
         <p class="tag">No Return Rule</p>
         <h2>Those who enter cannot come back.</h2>
-        <p>
-          Mirrorland is not a vacation, dream, or decorative fantasy. It is a one-way crossing into a world
-          whose surface can be read, but not easily escaped.
-        </p>
-        <div class="return-row">
-          <a class="button" data-return-to-orbit href="#mirrorland-orbit">Return to Orbit</a>
-        </div>
+        <p>Mirrorland is not a vacation, dream, or decorative fantasy. It is a one-way crossing into a world whose surface can be read, but not easily escaped.</p>
+        <div class="return-row"><a class="button" data-return-to-orbit href="#mirrorland-orbit">Return to Orbit</a></div>
       </article>
 
       <article id="window-rule" class="story-section" data-info-section="window-rule">
         <p class="tag">Window Rule</p>
         <h2>The website is the window outside.</h2>
-        <p>
-          The public pages let the outside world look in. The site is not the portal. It is the window:
-          a lawful view into the story-world for everyone still standing outside the crossing.
-        </p>
-        <div class="return-row">
-          <a class="button" data-return-to-orbit href="#mirrorland-orbit">Return to Orbit</a>
-        </div>
+        <p>The public pages let the outside world look in. The site is not the portal. It is the window: a lawful view into the story-world for everyone still standing outside the crossing.</p>
+        <div class="return-row"><a class="button" data-return-to-orbit href="#mirrorland-orbit">Return to Orbit</a></div>
       </article>
     </section>
 
@@ -932,73 +906,53 @@
       <article class="story-section">
         <p class="tag">Consequence</p>
         <h2>ZIONTS / Earth</h2>
-        <p>
-          Consequence is the pressure of the world left outside the portal. It keeps Mirrorland tied to what Earth must face.
-        </p>
-        <div class="return-row">
-          <a class="button" href="/showroom/globe/earth/">Face Consequence</a>
-          <a class="button" data-return-to-orbit href="#mirrorland-orbit">Return to Orbit</a>
-        </div>
+        <p>Consequence is the pressure of the world left outside the portal. It keeps Mirrorland tied to what Earth must face.</p>
+        <div class="return-row"><a class="button" href="/showroom/globe/earth/">Face Consequence</a><a class="button" data-return-to-orbit href="#mirrorland-orbit">Return to Orbit</a></div>
       </article>
 
       <article class="story-section">
         <p class="tag">Possibility</p>
         <h2>Audralia</h2>
-        <p>
-          Audralia is the clean-slate mirror-world path: the possibility field where lawful systems can be tested.
-        </p>
-        <div class="return-row">
-          <a class="button" href="/showroom/globe/audralia/">Enter Audralia</a>
-          <a class="button" data-return-to-orbit href="#mirrorland-orbit">Return to Orbit</a>
-        </div>
+        <p>Audralia is the clean-slate mirror-world path: the possibility field where lawful systems can be tested.</p>
+        <div class="return-row"><a class="button" href="/showroom/globe/audralia/">Enter Audralia</a><a class="button" data-return-to-orbit href="#mirrorland-orbit">Return to Orbit</a></div>
       </article>
 
       <article class="story-section">
         <p class="tag">Survival</p>
         <h2>H-Earth</h2>
-        <p>
-          H-Earth is Audralia’s downstream ground-view survival expression. It is not a separate planet.
-        </p>
-        <div class="return-row">
-          <a class="button" href="/showroom/globe/h-earth/">Open H-Earth</a>
-          <a class="button" data-return-to-orbit href="#mirrorland-orbit">Return to Orbit</a>
-        </div>
+        <p>H-Earth is Audralia’s downstream ground-view survival expression. It is not a separate planet.</p>
+        <div class="return-row"><a class="button" href="/showroom/globe/h-earth/">Open H-Earth</a><a class="button" data-return-to-orbit href="#mirrorland-orbit">Return to Orbit</a></div>
       </article>
 
       <article class="story-section">
         <p class="tag">People Inside</p>
         <h2>Characters</h2>
-        <p>
-          The Characters page carries the roster and the people inside the story. This page keeps the narrative gateway clean.
-        </p>
-        <div class="return-row">
-          <a class="button" href="/characters/">Meet Characters</a>
-          <a class="button" data-return-to-orbit href="#mirrorland-orbit">Return to Orbit</a>
-        </div>
+        <p>The Characters page carries the roster and the people inside the story. This page keeps the narrative gateway clean.</p>
+        <div class="return-row"><a class="button" href="/characters/">Meet Characters</a><a class="button" data-return-to-orbit href="#mirrorland-orbit">Return to Orbit</a></div>
       </article>
     </section>
 
     <details class="receipt-panel">
       <summary>Mirrorland orbit gateway receipts</summary>
       <ul id="mirrorland-orbit-receipts" data-mirrorland-orbit-receipts>
-        <li>SHOWROOM_GLOBE_MIRRORLAND_ORBIT_GEM_GATEWAY_HTML_TNT_v2 · HTML orbit gateway shell loaded.</li>
+        <li>SHOWROOM_GLOBE_MIRRORLAND_ORBIT_GEM_GATEWAY_VISUAL_RESTORATION_HTML_TNT_v3 · HTML visual restoration shell loaded.</li>
       </ul>
     </details>
 
     <nav class="bottom-routes" aria-label="Mirrorland related routes">
-      <a class="pill" href="/">Compass</a>
-      <a class="pill" href="/showroom/">Showroom</a>
-      <a class="pill" href="/showroom/globe/earth/">ZIONTS</a>
-      <a class="pill" href="/showroom/globe/audralia/">Audralia</a>
-      <a class="pill" href="/showroom/globe/h-earth/">H-Earth</a>
-      <a class="pill" href="/characters/">Characters</a>
-      <a class="pill" href="/gauges/">Gauges</a>
+      <a class="orbit-link" href="/">Compass</a>
+      <a class="orbit-link" href="/showroom/">Showroom</a>
+      <a class="orbit-link" href="/showroom/globe/earth/">ZIONTS</a>
+      <a class="orbit-link" href="/showroom/globe/audralia/">Audralia</a>
+      <a class="orbit-link" href="/showroom/globe/h-earth/">H-Earth</a>
+      <a class="orbit-link" href="/characters/">Characters</a>
+      <a class="orbit-link" href="/gauges/">Gauges</a>
     </nav>
   </main>
 
   <script
-    src="/showroom/globe/index.js?v=2026-05-20-showroom-globe-mirrorland-orbit-gem-gateway-v2"
-    data-contract="SHOWROOM_GLOBE_MIRRORLAND_ORBIT_GEM_GATEWAY_JS_TNT_v2"
+    src="/showroom/globe/index.js?v=2026-05-20-showroom-globe-mirrorland-orbit-gem-gateway-visual-restoration-v3"
+    data-contract="SHOWROOM_GLOBE_MIRRORLAND_ORBIT_GEM_GATEWAY_VISUAL_RESTORATION_JS_TNT_v3"
     data-mirrorland-orbit-gateway-bridge="true"
   ></script>
 </body>

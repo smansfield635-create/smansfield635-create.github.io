@@ -3,8 +3,9 @@
   lang="en"
   data-route="/showroom/globe/"
   data-page="showroom-globe"
-  data-version="2026-05-20.showroom-globe-mirrorland-donor-adaptation-v4"
+  data-version="2026-05-20.showroom-globe-mirrorland-donor-adaptation-v4-size-renewal"
   data-contract="SHOWROOM_GLOBE_MIRRORLAND_ORBIT_GEM_GATEWAY_DONOR_ADAPTATION_HTML_TNT_v4"
+  data-size-renewal="SHOWROOM_GLOBE_MIRRORLAND_ORBIT_GEM_GATEWAY_HTML_SIZE_TNT_v4_1"
   data-previous-contract="SHOWROOM_GLOBE_MIRRORLAND_ORBIT_GEM_GATEWAY_VISUAL_RESTORATION_HTML_TNT_v3"
   data-authority="great-grandparent-mirrorland-orbit-gem-gateway-expression-only"
   data-role="mirrorland-narrative-orbit-gateway"
@@ -544,7 +545,7 @@
 
     .mirror-stage{
       position:relative;
-      min-height:clamp(41rem,78vw,60rem);
+      min-height:clamp(48rem,86vw,66rem);
       display:grid;
       place-items:center;
       overflow:hidden;
@@ -572,8 +573,8 @@
     }
 
     .mirror-stage::before{
-      width:min(86%,43rem);
-      height:min(86%,43rem);
+      width:min(92%,48rem);
+      height:min(92%,48rem);
       border:1px solid rgba(243,200,111,.12);
       box-shadow:
         0 0 3.4rem rgba(36,120,255,.15),
@@ -581,8 +582,8 @@
     }
 
     .mirror-stage::after{
-      width:min(61%,29rem);
-      height:min(61%,29rem);
+      width:min(70%,34rem);
+      height:min(70%,34rem);
       border:1px solid rgba(141,216,255,.18);
       box-shadow:0 0 3rem rgba(141,216,255,.08);
     }
@@ -600,8 +601,8 @@
       left:50%;
       top:50%;
       z-index:3;
-      width:clamp(11.4rem,25vw,16.2rem);
-      height:clamp(8.28rem,18.2vw,11.78rem);
+      width:clamp(17.1rem,37.5vw,24.3rem);
+      height:clamp(12.42rem,27.3vw,17.67rem);
       transform:translate(-50%,-50%);
       pointer-events:auto;
       opacity:.86;
@@ -665,15 +666,15 @@
     }
 
     .orbit-ring.inner{
-      width:22rem;
-      height:22rem;
+      width:31rem;
+      height:31rem;
       z-index:6;
       animation:orbitClockwise var(--inner-orbit-duration) linear infinite;
     }
 
     .orbit-ring.outer{
-      width:38rem;
-      height:38rem;
+      width:47rem;
+      height:47rem;
       z-index:5;
       animation:orbitCounter var(--outer-orbit-duration) linear infinite;
     }
@@ -709,15 +710,15 @@
     }
 
     .orbit-ring.inner .diamond-node{
-      --radius:-10.8rem;
-      width:8.2rem;
-      height:5.96rem;
+      --radius:-15.2rem;
+      width:12.3rem;
+      height:8.94rem;
     }
 
     .orbit-ring.outer .diamond-node{
-      --radius:-18.4rem;
-      width:6.15rem;
-      height:4.47rem;
+      --radius:-22.2rem;
+      width:9.23rem;
+      height:6.71rem;
     }
 
     .diamond-node:hover,
@@ -786,7 +787,7 @@
 
     .diamond-content strong{
       color:rgba(255,244,216,.99);
-      font-size:.72rem;
+      font-size:1.44rem;
       line-height:1.02;
       font-weight:950;
       letter-spacing:.055em;
@@ -798,12 +799,12 @@
     }
 
     .orbit-ring.outer .diamond-content strong{
-      font-size:.52rem;
+      font-size:1.04rem;
     }
 
     .diamond-content span{
       color:rgba(230,238,255,.78);
-      font-size:.43rem;
+      font-size:.86rem;
       line-height:1;
       font-weight:850;
       letter-spacing:.055em;
@@ -817,13 +818,13 @@
 
     .mirror-center-anchor .diamond-content strong{
       color:var(--gold);
-      font-size:clamp(.86rem,2.12vw,1.16rem);
+      font-size:clamp(1.72rem,4.24vw,2.32rem);
       letter-spacing:.14em;
       line-height:1.15;
     }
 
     .mirror-center-anchor .diamond-content span{
-      font-size:clamp(.60rem,1.3vw,.78rem);
+      font-size:clamp(1.2rem,2.6vw,1.56rem);
     }
 
     .orbit-status{
@@ -1055,49 +1056,60 @@
       }
 
       .mirror-stage{
-        min-height:41rem;
+        min-height:48rem;
       }
 
       .mirror-center-anchor{
-        width:8.45rem;
-        height:6.15rem;
+        width:12.68rem;
+        height:9.23rem;
       }
 
       .orbit-ring.inner{
-        width:16.2rem;
-        height:16.2rem;
+        width:21.2rem;
+        height:21.2rem;
       }
 
       .orbit-ring.outer{
-        width:26.8rem;
-        height:26.8rem;
+        width:30.6rem;
+        height:30.6rem;
       }
 
       .orbit-ring.inner .diamond-node{
-        --radius:-7.7rem;
-        width:5.72rem;
-        height:4.16rem;
+        --radius:-9.95rem;
+        width:8.58rem;
+        height:6.24rem;
       }
 
       .orbit-ring.outer .diamond-node{
-        --radius:-12.65rem;
-        width:4.28rem;
-        height:3.11rem;
+        --radius:-14.35rem;
+        width:6.42rem;
+        height:4.67rem;
       }
 
       .diamond-content strong{
-        font-size:.42rem;
+        font-size:.84rem;
         letter-spacing:.035em;
       }
 
       .orbit-ring.outer .diamond-content strong{
-        font-size:.31rem;
+        font-size:.62rem;
       }
 
-      .diamond-content span{display:none}
+      .diamond-content span{
+        display:block;
+        font-size:.54rem;
+      }
+
+      .orbit-ring.outer .diamond-content span{
+        display:none;
+      }
 
       .mirror-center-anchor .diamond-content strong{
-        font-size:.58rem;
+        font-size:1.16rem;
+      }
+
+      .mirror-center-anchor .diamond-content span{
+        font-size:.88rem;
       }
 
       .path-grid{
@@ -1106,45 +1118,60 @@
     }
 
     @media (max-width:460px){
-      .mirror-stage{min-height:37rem}
+      .mirror-stage{
+        min-height:44rem;
+      }
 
       .mirror-center-anchor{
-        width:7.2rem;
-        height:5.25rem;
+        width:10.8rem;
+        height:7.88rem;
       }
 
       .orbit-ring.inner{
-        width:13.6rem;
-        height:13.6rem;
+        width:18rem;
+        height:18rem;
       }
 
       .orbit-ring.outer{
-        width:22.8rem;
-        height:22.8rem;
+        width:25.6rem;
+        height:25.6rem;
       }
 
       .orbit-ring.inner .diamond-node{
-        --radius:-6.42rem;
-        width:4.68rem;
-        height:3.4rem;
+        --radius:-8.3rem;
+        width:7.02rem;
+        height:5.1rem;
       }
 
       .orbit-ring.outer .diamond-node{
-        --radius:-10.75rem;
-        width:3.64rem;
-        height:2.65rem;
+        --radius:-12rem;
+        width:5.46rem;
+        height:3.98rem;
       }
 
       .diamond-content strong{
-        font-size:.34rem;
+        font-size:.68rem;
       }
 
       .orbit-ring.outer .diamond-content strong{
-        font-size:.25rem;
+        font-size:.5rem;
+      }
+
+      .diamond-content span{
+        display:block;
+        font-size:.42rem;
+      }
+
+      .orbit-ring.outer .diamond-content span{
+        display:none;
       }
 
       .mirror-center-anchor .diamond-content strong{
-        font-size:.50rem;
+        font-size:1rem;
+      }
+
+      .mirror-center-anchor .diamond-content span{
+        font-size:.72rem;
       }
     }
 
@@ -1577,6 +1604,7 @@
 
       <template id="route-receipt" data-route-receipt>
 SHOWROOM_GLOBE_MIRRORLAND_ORBIT_GEM_GATEWAY_DONOR_ADAPTATION_HTML_TNT_v4
+size_renewal=SHOWROOM_GLOBE_MIRRORLAND_ORBIT_GEM_GATEWAY_HTML_SIZE_TNT_v4_1
 previous=SHOWROOM_GLOBE_MIRRORLAND_ORBIT_GEM_GATEWAY_VISUAL_RESTORATION_HTML_TNT_v3
 route=/showroom/globe/
 page=showroom_globe
@@ -1590,6 +1618,8 @@ triad=ZIONTS_consequence,H_Earth_survival,Audralia_possibility
 center_gem=Globe_Window
 inner_ring=ZIONTS,Audralia,H_Earth
 outer_ring=Portal_Premise,Mirror_Law,No_Return_Rule,Window_Rule,Characters,Showroom,Gauges,Return_to_Orbit
+size_adjustment=diamond_objects_plus_50_percent
+text_adjustment=label_text_plus_100_percent_after_diamond_resize
 donor_compass_organic_gems=true
 donor_explore_rotating_orbits=true
 native_details_menu=true
@@ -1601,7 +1631,7 @@ gem_wrapper_counter_motion=true
 animation_targets=orbit_rings,diamond_object_wrapper,svg_facets,glint,center_anchor
 forbidden_text_animation=shimmer,pulse,blur,bounce,flicker,independent_rotation,vibration
 route_owns=mirrorland_gateway,public_narrative_expression,gem_orbit_layout,anchor_sections,dropdown_markup
-route_does_not_own=audralia_clean_canvas,planet_runtime,canvas_rendering,webgl,character_roster_depth,gauges_logic
+route_does_not_own=audralia_clean_canvas,planet_runtime,canvas_rendering,three_d_graphics_engine,character_roster_depth,gauges_logic
 external_motion_js=false
 canvas_runtime=false
 requestAnimationFrame=false
@@ -1613,7 +1643,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      SHOWROOM_GLOBE_MIRRORLAND_ORBIT_GEM_GATEWAY_DONOR_ADAPTATION_HTML_TNT_v4 · Enter the Globe · Choose the future path · Donor-adapted gem orbit.
+      SHOWROOM_GLOBE_MIRRORLAND_ORBIT_GEM_GATEWAY_HTML_SIZE_TNT_v4_1 · Enter the Globe · Choose the future path · HTML-only gem and label scale renewal.
     </footer>
   </div>
 

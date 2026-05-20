@@ -1,22 +1,21 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_G2_5_ROUTE_BRIDGE_RUNTIME_CACHE_KEY_ALIGNMENT_TNT_v2_2
+// AUDRALIA_G2_5_ROUTE_BRIDGE_VERSIONED_RUNTIME_PATH_LOCK_TNT_v3_1
 // Full-file replacement.
-// Purpose: force the Audralia route bridge to import the repaired v3 legacy runtime shim and await the runtime/parent handoff.
-// Target only: /showroom/globe/audralia/index.js
-// Imports: /assets/audralia/audralia.runtime.js?v=AUDRALIA_G2_5_RUNTIME_SHIM_PARENT_DELEGATION_REPAIR_TNT_v3
-// Does not own: runtime body, clean parent engine, clean runtime file, continents child, motion child, sky child, HTML shell, parent Globe, Characters, Gauges, Showroom, generated image, GraphicBox, or visual-pass claim.
+// Purpose: lock the Audralia route bridge to the versioned runtime path and bypass the stale legacy runtime URL.
+// Imports: /assets/audralia/audralia.runtime.v3.js
+// Does not own: runtime body, clean parent engine, clean runtime file, child engines, HTML shell, generated image, GraphicBox, or visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G2_5_ROUTE_BRIDGE_RUNTIME_CACHE_KEY_ALIGNMENT_TNT_v2_2";
+  const CONTRACT = "AUDRALIA_G2_5_ROUTE_BRIDGE_VERSIONED_RUNTIME_PATH_LOCK_TNT_v3_1";
   const TARGET = "/showroom/globe/audralia/index.js";
   const ROUTE = "/showroom/globe/audralia/";
-  const RUNTIME_PATH = "/assets/audralia/audralia.runtime.js";
-  const RUNTIME_CACHE_KEY = "AUDRALIA_G2_5_RUNTIME_SHIM_PARENT_DELEGATION_REPAIR_TNT_v3";
+  const RUNTIME_PATH = "/assets/audralia/audralia.runtime.v3.js";
+  const RUNTIME_CACHE_KEY = "AUDRALIA_G2_5_RUNTIME_VERSIONED_PATH_LOCK_TNT_v3_1";
   const RUNTIME_IMPORT = `${RUNTIME_PATH}?v=${encodeURIComponent(RUNTIME_CACHE_KEY)}`;
 
-  const WAIT_VISIBLE_MS = 5600;
+  const WAIT_VISIBLE_MS = 5800;
   const POLL_MS = 50;
 
   const state = {
@@ -25,6 +24,7 @@
     route: ROUTE,
     runtimePath: RUNTIME_PATH,
     runtimeImport: RUNTIME_IMPORT,
+    runtimeCacheKey: RUNTIME_CACHE_KEY,
     started: false,
     routeValid: false,
     mountTargetFound: false,
@@ -106,7 +106,7 @@
     const root = document.documentElement;
     root.setAttribute("data-audralia-route-bridge-contract", CONTRACT);
     root.setAttribute("data-audralia-route-bridge-target", TARGET);
-    root.setAttribute("data-audralia-route-bridge-mode", "runtime-cache-key-alignment");
+    root.setAttribute("data-audralia-route-bridge-mode", "versioned-runtime-path-lock");
     root.setAttribute("data-audralia-runtime-path", RUNTIME_PATH);
     root.setAttribute("data-audralia-runtime-import", RUNTIME_IMPORT);
     root.setAttribute("data-audralia-runtime-cache-key", RUNTIME_CACHE_KEY);
@@ -124,7 +124,7 @@
       contract: CONTRACT,
       target: TARGET,
       route: ROUTE,
-      mode: "route_bridge_runtime_cache_key_alignment",
+      mode: "route_bridge_versioned_runtime_path_lock",
       runtimePath: RUNTIME_PATH,
       runtimeCacheKey: RUNTIME_CACHE_KEY,
       runtimeImport: RUNTIME_IMPORT,
@@ -145,7 +145,7 @@
     window.AUDRALIA_ROUTE_BRIDGE_RECEIPT = receipt;
     window.AUDRALIA_CLEAN_CANVAS_ROUTE_BRIDGE_RECEIPT = receipt;
     window.AUDRALIA_ROUTE_BRIDGE_AWAITED_RUNTIME_HANDOFF = true;
-    window.AUDRALIA_ROUTE_BRIDGE_RUNTIME_CACHE_KEY_ALIGNED = true;
+    window.AUDRALIA_ROUTE_BRIDGE_VERSIONED_RUNTIME_PATH_LOCK = true;
 
     setRootAttrs();
 
@@ -357,7 +357,7 @@
     try {
       runtimeModule = await import(RUNTIME_IMPORT);
     } catch (firstError) {
-      recordError("runtime import cache-key", firstError);
+      recordError("runtime import versioned path", firstError);
       runtimeModule = await import(RUNTIME_PATH);
     }
 
@@ -420,6 +420,8 @@
     const options = {
       routeBridgeContract: CONTRACT,
       awaitedRuntimeHandoff: true,
+      versionedRuntimePathLock: true,
+      runtimePath: RUNTIME_PATH,
       runtimeCacheKey: RUNTIME_CACHE_KEY,
       mountTarget: "#audraliaCanvasMount",
       route: ROUTE
@@ -473,11 +475,6 @@
       window.AUDRALIA_ENGINE_RECEIPT ||
       null;
 
-    const cleanRuntimeReceipt =
-      window.AUDRALIA_CLEAN_RUNTIME_RECEIPT ||
-      window.AUDRALIA_CLEAN_RUNTIME_SHIM_RECEIPT ||
-      null;
-
     const parentEngine =
       window.AUDRALIA_CLEAN_CANVAS_AUTHORITY ||
       window.AUDRALIA_CLEAN_CANVAS_ENGINE ||
@@ -489,7 +486,6 @@
 
     return {
       runtimeReceipt,
-      cleanRuntimeReceipt,
       parentReceipt,
       parentEngine,
       parentStatus,

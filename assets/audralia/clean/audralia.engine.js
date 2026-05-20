@@ -210,6 +210,7 @@
     shade.addColorStop(0.34, "rgba(255,255,255,0.02)");
     shade.addColorStop(0.70, "rgba(0,0,0,0.20)");
     shade.addColorStop(1, "rgba(0,0,0,0.62)");
+
     ctx.fillStyle = shade;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
@@ -309,6 +310,28 @@
     return { root, canvas, label };
   }
 
+  function requestDraw(canvas) {
+    const draw = () => drawAudralia(canvas);
+
+    if (typeof win().requestAnimationFrame === "function") {
+      win().requestAnimationFrame(draw);
+    } else {
+      setTimeout(draw, 0);
+    }
+  }
+
+  function installResizeRedraw(root, canvas) {
+    if (!root || !canvas) return;
+
+    if (typeof win().ResizeObserver === "function") {
+      const observer = new (win().ResizeObserver)(() => requestDraw(canvas));
+      observer.observe(root);
+      return;
+    }
+
+    win().addEventListener?.("resize", () => requestDraw(canvas), { passive: true });
+  }
+
   function mount(input) {
     const mountTarget = resolveMount(input);
     const documentRef = doc(input);
@@ -354,28 +377,6 @@
       contract: CONTRACT,
       receipt: state.lastReceipt
     };
-  }
-
-  function requestDraw(canvas) {
-    const draw = () => drawAudralia(canvas);
-
-    if (typeof win().requestAnimationFrame === "function") {
-      win().requestAnimationFrame(draw);
-    } else {
-      setTimeout(draw, 0);
-    }
-  }
-
-  function installResizeRedraw(root, canvas) {
-    if (!root || !canvas) return;
-
-    if (typeof win().ResizeObserver === "function") {
-      const observer = new (win().ResizeObserver)(() => requestDraw(canvas));
-      observer.observe(root);
-      return;
-    }
-
-    win().addEventListener?.("resize", () => requestDraw(canvas), { passive: true });
   }
 
   function buildReceipt(valid) {

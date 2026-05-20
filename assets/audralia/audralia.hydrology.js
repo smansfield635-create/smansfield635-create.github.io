@@ -1,10 +1,13 @@
 // /assets/audralia/audralia.hydrology.js
-// AUDRALIA_ORGANIC_HYDRATION_AND_WATERSHED_AUTHORITY_TNT_v1
+// AUDRALIA_HYDROLOGY_CORRIDOR_AND_INLAND_WATER_RENEWAL_TNT_v2
 // Full-file replacement.
 // Hydrology / hydration authority only.
 // Purpose:
-// - Gives Audralia organic water-shaped landform logic before further surface detail.
-// - Defines inland lakes, inland seas, rivers, drainage corridors, wetlands, deltas, marsh basins, bays, inlets, estuaries, peninsulas, lagoon systems, watershed basins, mountain-fed rivers, dry channels, and meltwater fields.
+// - Consumes renewed separated Audralia Landmap authority.
+// - Strengthens visible hydrology guidance after landmass separation.
+// - Defines water corridors, inland lakes, inland seas, rivers, drainage corridors, wetlands, deltas, marsh basins,
+//   bays, inlets, estuaries, peninsulas, lagoon systems, watershed basins, mountain-fed rivers,
+//   dry channels, meltwater fields, coastal shelf water, and solid-land interruption pressure.
 // - Does not own land/sea footprint.
 // - Does not replace Landmap.
 // - Does not own beaches.
@@ -19,13 +22,34 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_ORGANIC_HYDRATION_AND_WATERSHED_AUTHORITY_TNT_v1";
-  const RECEIPT = "AUDRALIA_ORGANIC_HYDRATION_AND_WATERSHED_AUTHORITY_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_HYDROLOGY_HELD_OR_UNDEFINED";
-  const VERSION = "2026-05-15.audralia-organic-hydration-and-watershed-authority-v1";
+  const CONTRACT = "AUDRALIA_HYDROLOGY_CORRIDOR_AND_INLAND_WATER_RENEWAL_TNT_v2";
+  const RECEIPT = "AUDRALIA_HYDROLOGY_CORRIDOR_AND_INLAND_WATER_RENEWAL_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "AUDRALIA_ORGANIC_HYDRATION_AND_WATERSHED_AUTHORITY_TNT_v1";
+  const VERSION = "2026-05-19.audralia-hydrology-corridor-and-inland-water-renewal-v2";
 
   const PHI = 1.618033988749895;
   const INV_PHI = 1 / PHI;
+
+  const WATER_CLASSES = Object.freeze({
+    OPEN_OCEAN: "open-ocean",
+    SHELF_WATER: "shelf-water",
+    BAY_WATER: "bay-water",
+    INLET_WATER: "inlet-water",
+    LAGOON_WATER: "lagoon-water",
+    INLAND_SEA: "inland-sea",
+    LAKE: "lake",
+    RIVER: "river",
+    WETLAND: "wetland",
+    MARSH_BASIN: "marsh-basin",
+    DELTA: "delta",
+    ESTUARY: "estuary",
+    PENINSULA: "peninsula",
+    BAY_EDGE: "bay-edge",
+    INLET_EDGE: "inlet-edge",
+    WATERSHED: "watershed",
+    DRY_CHANNEL: "dry-channel",
+    ORDINARY_LAND: "ordinary-land"
+  });
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
@@ -131,6 +155,63 @@
     return total / Math.max(0.000001, norm);
   }
 
+  function fallbackMap(uInput, vInput) {
+    const u = wrap01(Number.isFinite(Number(uInput)) ? Number(uInput) : 0);
+    const v = clamp(Number.isFinite(Number(vInput)) ? Number(vInput) : 0, 0, 1);
+    const longitude = u * 360 - 180;
+    const latitude = 90 - v * 180;
+    const row16 = clamp(Math.floor(v * 16), 0, 15);
+    const col16 = clamp(Math.floor(u * 16), 0, 15);
+    const cell256 = row16 * 16 + col16 + 1;
+    const signal = fbm(u * 1.4 + 0.14, v * 1.1 - 0.08, 50001, 5);
+    const isOcean = signal < 0.56;
+
+    return Object.freeze({
+      u,
+      v,
+      longitude,
+      latitude,
+      cell256,
+      cell64: Math.floor(row16 / 2) * 8 + Math.floor(col16 / 2) + 1,
+      cell16: Math.floor(row16 / 4) * 4 + Math.floor(col16 / 4) + 1,
+      row16,
+      col16,
+      terrainClass: isOcean ? "ocean" : "lowland",
+      topology: isOcean ? "deep-ocean" : "fallback-land",
+      elevation: isOcean ? "sea" : "lowland",
+      shelf: isOcean ? smoothstep(0.48, 0.60, signal) * 0.36 : smoothstep(0.56, 0.62, signal) * 0.42,
+      beachEdge: smoothstep(0.52, 0.60, signal) * (1 - smoothstep(0.61, 0.72, signal)),
+      isOcean,
+      isShelf: isOcean && signal > 0.48,
+      isBeach: !isOcean && signal < 0.62,
+      isLand: !isOcean,
+      hydrologyFallbackMap: true
+    });
+  }
+
+  function coerceMap(input, maybeV) {
+    if (input && typeof input === "object") return input;
+
+    const u = wrap01(Number.isFinite(Number(input)) ? Number(input) : 0);
+    const v = clamp(Number.isFinite(Number(maybeV)) ? Number(maybeV) : 0, 0, 1);
+
+    try {
+      if (window.AUDRALIA_LANDMAP?.sampleLandmap) {
+        const map = window.AUDRALIA_LANDMAP.sampleLandmap(u, v);
+        if (map && typeof map === "object") return map;
+      }
+
+      if (window.AUDRALIA_LANDMAP?.sample) {
+        const map = window.AUDRALIA_LANDMAP.sample(u, v);
+        if (map && typeof map === "object") return map;
+      }
+    } catch {
+      document.documentElement.dataset.audraliaHydrologyLandmapReadFailed = "true";
+    }
+
+    return fallbackMap(u, v);
+  }
+
   function getCell256(map) {
     const existing = Number(map?.cell256);
     if (Number.isFinite(existing) && existing >= 1 && existing <= 256) return Math.floor(existing);
@@ -153,7 +234,8 @@
       map?.isOcean ||
       map?.terrainClass === "ocean" ||
       map?.terrainClass === "shelf" ||
-      map?.isShelf
+      map?.isShelf ||
+      includesAny(map?.topology, ["ocean", "shelf", "sea"])
     );
   }
 
@@ -161,7 +243,17 @@
     return Boolean(
       map?.isBeach ||
       map?.terrainClass === "beach" ||
-      includesAny(map?.topology, ["beach", "shore", "coastline"])
+      includesAny(map?.topology, ["beach", "shore", "coastline", "coastal"])
+    );
+  }
+
+  function isSeparatedLandmap(map) {
+    return Boolean(
+      map?.oneBigGlobCorrected ||
+      map?.landmassSeparationActive ||
+      map?.oceanCorridorsActive ||
+      map?.archipelagoChainsActive ||
+      map?.baysInletsStraitsActive
     );
   }
 
@@ -183,19 +275,19 @@
     return null;
   }
 
-  function readTerrainFingers(map) {
+  function readTopology(map) {
     try {
-      if (window.AUDRALIA_TERRAIN_FINGERS?.sampleTerrainFingers) {
-        const value = window.AUDRALIA_TERRAIN_FINGERS.sampleTerrainFingers(map);
+      if (window.AUDRALIA_TOPOLOGY?.sampleTopology) {
+        const value = window.AUDRALIA_TOPOLOGY.sampleTopology(map);
         if (value && typeof value === "object") return value;
       }
 
-      if (window.AUDRALIA_TERRAIN_FINGERS?.sample) {
-        const value = window.AUDRALIA_TERRAIN_FINGERS.sample(map);
+      if (window.AUDRALIA_TOPOLOGY?.sample) {
+        const value = window.AUDRALIA_TOPOLOGY.sample(map);
         if (value && typeof value === "object") return value;
       }
     } catch {
-      document.documentElement.dataset.audraliaHydrologyTerrainFingersReadFailed = "true";
+      document.documentElement.dataset.audraliaHydrologyTopologyReadFailed = "true";
     }
 
     return null;
@@ -237,6 +329,24 @@
     return null;
   }
 
+  function readTerrainFingers(map) {
+    try {
+      if (window.AUDRALIA_TERRAIN_FINGERS?.sampleTerrainFingers) {
+        const value = window.AUDRALIA_TERRAIN_FINGERS.sampleTerrainFingers(map);
+        if (value && typeof value === "object") return value;
+      }
+
+      if (window.AUDRALIA_TERRAIN_FINGERS?.sample) {
+        const value = window.AUDRALIA_TERRAIN_FINGERS.sample(map);
+        if (value && typeof value === "object") return value;
+      }
+    } catch {
+      document.documentElement.dataset.audraliaHydrologyTerrainFingersReadFailed = "true";
+    }
+
+    return null;
+  }
+
   function latitudeBands(latitude) {
     const absLat = Math.abs(latitude);
 
@@ -250,7 +360,7 @@
     });
   }
 
-  function baseSignals(map, elevation, terrain, climate) {
+  function baseSignals(map, elevation, topology, terrain, climate, beach) {
     const u = wrap01(Number(map?.u || 0));
     const v = clamp(Number(map?.v || 0), 0, 1);
     const latitude = Number.isFinite(Number(map?.latitude)) ? Number(map.latitude) : 90 - v * 180;
@@ -264,15 +374,23 @@
 
     const shelf = normalize01(map?.shelf, 0.18);
     const beachEdge = normalize01(map?.beachEdge, 0);
+    const coastline = normalize01(map?.coastline, shelf * 0.28 + beachEdge * 0.52);
+
     const coastalText = includesAny(
-      [map?.terrainClass, map?.topology, map?.elevation].map(text).join(" "),
-      ["coast", "shore", "beach", "landrise", "shelf", "delta"]
+      [map?.terrainClass, map?.topology, map?.elevation, map?.geologyHint].map(text).join(" "),
+      ["coast", "shore", "beach", "landrise", "shelf", "delta", "bay", "inlet", "archipelago", "island"]
     ) ? 0.32 : 0;
 
-    const coastline = clamp(shelf * 0.28 + beachEdge * 0.52 + coastalText + (isBeachLike(map) ? 0.28 : 0), 0, 1);
     const ocean = isOceanLike(map);
+    const beachLike = isBeachLike(map);
+    const separated = isSeparatedLandmap(map);
+    const archipelago = Boolean(map?.archipelagoIsland || map?.landmassFamily === "archipelago" || includesAny(map?.topology, ["archipelago", "island"]));
+    const oceanCut = normalize01(map?.oceanCut, 0);
+    const bodyScore = normalize01(map?.bodyScore, 0.48);
+    const archipelagoScore = normalize01(map?.archipelagoScore, archipelago ? 0.66 : 0.22);
+    const landScore = Number.isFinite(Number(map?.landScore)) ? Number(map.landScore) : ocean ? -0.18 : 0.18;
 
-    const elevation01 = normalize01(elevation?.elevation01 ?? elevation?.height ?? elevation?.altitude, 0.38);
+    const elevation01 = normalize01(elevation?.elevation01 ?? elevation?.height ?? elevation?.altitude ?? map?.elevationScore, ocean ? 0 : 0.40);
     const slope = normalize01(elevation?.slope, 0.34);
     const relief = normalize01(elevation?.relief, 0.34);
     const mountain = normalize01(elevation?.mountain, 0.10) * 0.58 + normalize01(terrain?.mountainFinger, 0) * 0.42;
@@ -290,18 +408,20 @@
     const cold = normalize01(climate?.cold, lat.tundra * 0.55 + lat.polar * 0.80);
     const wetlandPotential = normalize01(climate?.wetlandPotential, basin * 0.36 + valley * 0.28 + moisture * 0.24);
     const desertPotential = normalize01(climate?.desertPotential, aridity * 0.72);
+    const beachWetness = normalize01(beach?.wetness ?? beach?.tidalWash ?? beach?.beachEdge, beachEdge);
 
-    const waterMemory = fbm(u * 0.74 + cellPhaseX, v * 0.66 - cellPhaseY, 101010, 5);
-    const basinMemory = fbm(u * 1.10 - cellPhaseY, v * 0.96 + cellPhaseX, 101810, 5);
-    const riverField = ridgeNoise(u * 4.6 + cellPhaseY, v * 3.8 - cellPhaseX, 102610, 5);
-    const tributaryField = ridgeNoise(u * 11.5 - cellPhaseX, v * 9.6 + cellPhaseY, 103410, 4);
-    const bayField = fbm(u * 2.2 + 0.31, v * 1.9 - 0.24, 104210, 5);
-    const inletField = ridgeNoise(u * 7.2 - 0.41, v * 5.9 + 0.27, 105010, 4);
-    const lakeField = fbm(u * 3.2 + cellPhaseX, v * 2.7 - cellPhaseY, 105810, 4);
-    const wetlandField = fbm(u * 5.6 - cellPhaseY, v * 4.4 + cellPhaseX, 106610, 4);
-    const deltaField = ridgeNoise(u * 8.7 + 0.13, v * 7.4 - 0.19, 107410, 3);
-    const peninsulaField = ridgeNoise(u * 2.8 - cellPhaseX, v * 2.3 + cellPhaseY, 108210, 4);
-    const islandField = fbm(u * 9.1 + cellPhaseY, v * 8.3 - cellPhaseX, 109010, 3);
+    const waterMemory = fbm(u * 0.74 + cellPhaseX, v * 0.66 - cellPhaseY, 201010, 5);
+    const basinMemory = fbm(u * 1.10 - cellPhaseY, v * 0.96 + cellPhaseX, 201810, 5);
+    const riverField = ridgeNoise(u * 4.8 + cellPhaseY, v * 3.9 - cellPhaseX, 202610, 5);
+    const tributaryField = ridgeNoise(u * 12.0 - cellPhaseX, v * 9.8 + cellPhaseY, 203410, 4);
+    const bayField = fbm(u * 2.6 + 0.31, v * 2.2 - 0.24, 204210, 5);
+    const inletField = ridgeNoise(u * 8.8 - 0.41, v * 6.9 + 0.27, 205010, 4);
+    const lakeField = fbm(u * 3.4 + cellPhaseX, v * 2.8 - cellPhaseY, 205810, 4);
+    const wetlandField = fbm(u * 5.8 - cellPhaseY, v * 4.6 + cellPhaseX, 206610, 4);
+    const deltaField = ridgeNoise(u * 9.4 + 0.13, v * 7.8 - 0.19, 207410, 3);
+    const peninsulaField = ridgeNoise(u * 3.2 - cellPhaseX, v * 2.6 + cellPhaseY, 208210, 4);
+    const islandField = fbm(u * 10.4 + cellPhaseY, v * 8.9 - cellPhaseX, 209010, 3);
+    const corridorField = ridgeNoise(u * 3.6 + oceanCut * 0.4, v * 2.8 - coastline * 0.2, 209810, 5);
 
     return Object.freeze({
       u,
@@ -313,9 +433,17 @@
       cellY: cell.y,
       lat,
       ocean,
-      coastline,
+      beachLike,
+      separated,
+      archipelago,
+      coastline: clamp(coastline + coastalText + (beachLike ? 0.24 : 0) + (archipelago ? 0.16 : 0), 0, 1),
       shelf,
       beachEdge,
+      beachWetness,
+      oceanCut,
+      bodyScore,
+      archipelagoScore,
+      landScore,
       elevation01,
       slope,
       relief,
@@ -343,13 +471,38 @@
       wetlandField,
       deltaField,
       peninsulaField,
-      islandField
+      islandField,
+      corridorField,
+      topologySeaFloor: normalize01(topology?.seaFloorShape ?? topology?.belowSeaDepth, ocean ? 0.60 : 0.24),
+      topologyShelf: normalize01(topology?.shelf, shelf),
+      topologyBasin: normalize01(topology?.basin, basin),
+      topologyLandEligibility: normalize01(topology?.landEligibility, ocean ? 0.18 : 0.72),
+      topologyIslandEligibility: normalize01(topology?.islandEligibility, archipelago ? 0.72 : 0.28)
     });
   }
 
   function computeHydrology(signals) {
-    const highlandSource = clamp(signals.mountain * 0.38 + signals.ridge * 0.24 + signals.elevation01 * 0.18, 0, 1);
-    const lowlandReceiver = clamp(signals.basin * 0.30 + signals.valley * 0.26 + (1 - signals.elevation01) * 0.18 + signals.wetlandPotential * 0.14, 0, 1);
+    const separatedBoost = signals.separated ? 0.10 : 0;
+    const archipelagoBoost = signals.archipelago ? 0.14 : 0;
+
+    const highlandSource = clamp(
+      signals.mountain * 0.38 +
+      signals.ridge * 0.24 +
+      signals.elevation01 * 0.18 +
+      signals.relief * 0.10,
+      0,
+      1
+    );
+
+    const lowlandReceiver = clamp(
+      signals.basin * 0.30 +
+      signals.valley * 0.26 +
+      (1 - signals.elevation01) * 0.18 +
+      signals.wetlandPotential * 0.14 +
+      signals.topologyBasin * 0.10,
+      0,
+      1
+    );
 
     const rainfallSupply = clamp(
       signals.moisture * 0.36 +
@@ -378,13 +531,32 @@
       1
     );
 
+    const oceanCorridor = clamp(
+      signals.oceanCut * 0.42 +
+      signals.corridorField * 0.24 +
+      signals.topologySeaFloor * 0.18 +
+      separatedBoost,
+      0,
+      1
+    );
+
+    const coastalCut = clamp(
+      signals.coastline * 0.28 +
+      signals.oceanCut * 0.26 +
+      signals.inletField * 0.16 +
+      signals.bayField * 0.12 +
+      archipelagoBoost,
+      0,
+      1
+    );
+
     const watershed = clamp(
-      signals.waterMemory * 0.22 +
+      signals.waterMemory * 0.20 +
       highlandSource * 0.22 +
       lowlandReceiver * 0.18 +
       rainfallSupply * 0.18 +
       meltwaterSupply * 0.10 +
-      signals.riverField * 0.10,
+      signals.riverField * 0.12,
       0,
       1
     );
@@ -395,7 +567,8 @@
       signals.valley * 0.22 +
       highlandSource * 0.10 +
       lowlandReceiver * 0.14 +
-      rainfallSupply * 0.10,
+      rainfallSupply * 0.10 +
+      separatedBoost * 0.20,
       0,
       1
     );
@@ -434,10 +607,11 @@
     );
 
     const inlandSea = clamp(
-      lake * 0.36 +
-      signals.basin * 0.26 +
-      signals.basinMemory * 0.20 +
-      signals.waterMemory * 0.12 -
+      lake * 0.34 +
+      signals.basin * 0.24 +
+      signals.basinMemory * 0.18 +
+      signals.waterMemory * 0.11 +
+      signals.oceanCut * 0.08 -
       signals.mountain * 0.14 -
       signals.slope * 0.12,
       0,
@@ -469,10 +643,11 @@
     );
 
     const bay = clamp(
-      signals.coastline * 0.32 +
-      signals.bayField * 0.26 +
+      signals.coastline * 0.30 +
+      signals.bayField * 0.24 +
       signals.inletField * 0.14 +
-      signals.shelf * 0.14 -
+      signals.shelf * 0.14 +
+      oceanCorridor * 0.12 -
       signals.cliff * 0.16 -
       signals.mountain * 0.10,
       0,
@@ -480,11 +655,12 @@
     );
 
     const inlet = clamp(
-      signals.coastline * 0.26 +
+      signals.coastline * 0.24 +
       signals.inletField * 0.30 +
       signals.valley * 0.14 +
       river * 0.10 +
-      signals.shelf * 0.08 -
+      signals.shelf * 0.08 +
+      coastalCut * 0.14 -
       signals.cliff * 0.16,
       0,
       1
@@ -501,7 +677,7 @@
     );
 
     const peninsula = clamp(
-      signals.coastline * 0.24 +
+      signals.coastline * 0.22 +
       signals.peninsulaField * 0.28 +
       bay * 0.18 +
       inlet * 0.16 +
@@ -517,6 +693,7 @@
       bay * 0.18 +
       signals.shelf * 0.20 +
       signals.islandField * 0.14 +
+      archipelagoBoost +
       signals.lat.tropical * 0.10 +
       signals.lat.subtropical * 0.08 -
       signals.cliff * 0.12,
@@ -540,7 +717,33 @@
       signals.shelf * 0.28 +
       bay * 0.14 +
       lagoon * 0.12 +
-      signals.beachEdge * 0.08,
+      signals.beachEdge * 0.08 +
+      signals.topologyShelf * 0.10,
+      0,
+      1
+    );
+
+    const landCutPressure = clamp(
+      oceanCorridor * 0.26 +
+      bay * 0.20 +
+      inlet * 0.22 +
+      inlandSea * 0.12 +
+      lagoon * 0.08 +
+      delta * 0.06 +
+      peninsula * 0.06,
+      0,
+      1
+    );
+
+    const surfaceWaterPressure = clamp(
+      lake * 0.18 +
+      inlandSea * 0.20 +
+      river * 0.18 +
+      wetland * 0.14 +
+      delta * 0.10 +
+      estuary * 0.08 +
+      marshBasin * 0.08 +
+      coastalShelfWater * 0.04,
       0,
       1
     );
@@ -551,6 +754,8 @@
       rainfallSupply,
       meltwaterSupply,
       seasonalDryness,
+      oceanCorridor,
+      coastalCut,
       watershed,
       drainage,
       river,
@@ -565,86 +770,124 @@
       peninsula,
       lagoon,
       marshBasin,
-      coastalShelfWater
+      coastalShelfWater,
+      landCutPressure,
+      surfaceWaterPressure
     });
   }
 
   function classifyHydrology(signals, hydro) {
     if (signals.ocean) {
-      if (hydro.bay > 0.62) return ["bay-water", "coastal-water", "bay-shaped-coast"];
-      if (hydro.inlet > 0.62) return ["inlet-water", "coastal-water", "inlet-shaped-coast"];
-      if (hydro.lagoon > 0.64) return ["lagoon-water", "coastal-water", "lagoon-shelf"];
-      if (hydro.coastalShelfWater > 0.58) return ["shelf-water", "coastal-shelf", "shallow-shelf-transition"];
-      return ["open-ocean", "marine", "ocean-held"];
+      if (hydro.oceanCorridor > 0.64) return [WATER_CLASSES.OPEN_OCEAN, "marine-corridor", "ocean-corridor"];
+      if (hydro.bay > 0.62) return [WATER_CLASSES.BAY_WATER, "coastal-water", "bay-shaped-coast"];
+      if (hydro.inlet > 0.62) return [WATER_CLASSES.INLET_WATER, "coastal-water", "inlet-shaped-coast"];
+      if (hydro.lagoon > 0.64) return [WATER_CLASSES.LAGOON_WATER, "coastal-water", "lagoon-shelf"];
+      if (hydro.coastalShelfWater > 0.56) return [WATER_CLASSES.SHELF_WATER, "coastal-shelf", "shallow-shelf-transition"];
+      return [WATER_CLASSES.OPEN_OCEAN, "marine", "ocean-held"];
     }
 
-    if (hydro.inlandSea > 0.72 && hydro.lake > 0.62) return ["inland-sea", "interior-water", "large-basin-water"];
-    if (hydro.lake > 0.68) return ["lake", "interior-water", "lake-basin"];
-    if (hydro.marshBasin > 0.68) return ["marsh-basin", "wetland", "low-basin-marsh"];
-    if (hydro.wetland > 0.68) return ["wetland", "wetland", "saturated-lowland"];
-    if (hydro.delta > 0.66) return ["delta", "coastal-wetland", "river-mouth-delta"];
-    if (hydro.estuary > 0.64) return ["estuary", "coastal-water", "river-meets-sea"];
-    if (hydro.river > 0.68) return ["river", "drainage", "flowing-river-corridor"];
-    if (hydro.dryChannel > 0.70) return ["dry-channel", "seasonal-drainage", "dry-riverbed"];
-    if (hydro.peninsula > 0.66) return ["peninsula", "coastal-landform", "water-shaped-land-arm"];
-    if (hydro.bay > 0.62) return ["bay-edge", "coastal-landform", "land-shaped-by-bay"];
-    if (hydro.inlet > 0.62) return ["inlet-edge", "coastal-landform", "narrow-water-cut"];
-    if (hydro.watershed > 0.58) return ["watershed", "drainage-basin", "water-shaped-terrain"];
+    if (hydro.inlandSea > 0.70 && hydro.lake > 0.58) return [WATER_CLASSES.INLAND_SEA, "interior-water", "large-basin-water"];
+    if (hydro.lake > 0.66) return [WATER_CLASSES.LAKE, "interior-water", "lake-basin"];
+    if (hydro.marshBasin > 0.66) return [WATER_CLASSES.MARSH_BASIN, "wetland", "low-basin-marsh"];
+    if (hydro.wetland > 0.66) return [WATER_CLASSES.WETLAND, "wetland", "saturated-lowland"];
+    if (hydro.delta > 0.64) return [WATER_CLASSES.DELTA, "coastal-wetland", "river-mouth-delta"];
+    if (hydro.estuary > 0.62) return [WATER_CLASSES.ESTUARY, "coastal-water", "river-meets-sea"];
+    if (hydro.river > 0.66) return [WATER_CLASSES.RIVER, "drainage", "flowing-river-corridor"];
+    if (hydro.dryChannel > 0.70) return [WATER_CLASSES.DRY_CHANNEL, "seasonal-drainage", "dry-riverbed"];
+    if (hydro.peninsula > 0.64) return [WATER_CLASSES.PENINSULA, "coastal-landform", "water-shaped-land-arm"];
+    if (hydro.bay > 0.60) return [WATER_CLASSES.BAY_EDGE, "coastal-landform", "land-shaped-by-bay"];
+    if (hydro.inlet > 0.60) return [WATER_CLASSES.INLET_EDGE, "coastal-landform", "narrow-water-cut"];
+    if (hydro.watershed > 0.56) return [WATER_CLASSES.WATERSHED, "drainage-basin", "water-shaped-terrain"];
 
-    return ["ordinary-land", "dry-land", "hydrology-background"];
+    return [WATER_CLASSES.ORDINARY_LAND, "dry-land", "hydrology-background"];
   }
 
-  function sampleHydrology(map) {
-    const source = map && typeof map === "object" ? map : {};
+  function waterColorHintFor(waterClass) {
+    switch (waterClass) {
+      case WATER_CLASSES.INLAND_SEA:
+        return "deep-inland-blue";
+      case WATER_CLASSES.LAKE:
+        return "lake-blue";
+      case WATER_CLASSES.RIVER:
+        return "river-blue-green";
+      case WATER_CLASSES.WETLAND:
+        return "wetland-green-blue";
+      case WATER_CLASSES.MARSH_BASIN:
+        return "marsh-green";
+      case WATER_CLASSES.DELTA:
+        return "delta-green-blue";
+      case WATER_CLASSES.ESTUARY:
+        return "estuary-blue-green";
+      case WATER_CLASSES.LAGOON_WATER:
+        return "lagoon-turquoise";
+      case WATER_CLASSES.SHELF_WATER:
+        return "shelf-blue";
+      case WATER_CLASSES.BAY_WATER:
+        return "bay-blue";
+      case WATER_CLASSES.INLET_WATER:
+        return "inlet-blue";
+      case WATER_CLASSES.OPEN_OCEAN:
+        return "deep-ocean-blue";
+      default:
+        return "hydrology-background";
+    }
+  }
+
+  function sampleHydrology(input, maybeV) {
+    const source = coerceMap(input, maybeV);
     const elevation = readElevation(source);
+    const topology = readTopology(source);
     const terrain = readTerrainFingers(source);
     const climate = readClimate(source);
     const beach = readBeach(source);
 
-    const signals = baseSignals(source, elevation, terrain, climate);
+    const signals = baseSignals(source, elevation, topology, terrain, climate, beach);
     const hydro = computeHydrology(signals);
     const [waterClass, zone, form] = classifyHydrology(signals, hydro);
 
     const isInlandWater = !signals.ocean && (
-      waterClass === "inland-sea" ||
-      waterClass === "lake" ||
-      waterClass === "river" ||
-      waterClass === "wetland" ||
-      waterClass === "marsh-basin" ||
-      waterClass === "delta" ||
-      waterClass === "estuary"
+      waterClass === WATER_CLASSES.INLAND_SEA ||
+      waterClass === WATER_CLASSES.LAKE ||
+      waterClass === WATER_CLASSES.RIVER ||
+      waterClass === WATER_CLASSES.WETLAND ||
+      waterClass === WATER_CLASSES.MARSH_BASIN ||
+      waterClass === WATER_CLASSES.DELTA ||
+      waterClass === WATER_CLASSES.ESTUARY
     );
 
     const isSurfaceWater = Boolean(
       signals.ocean ||
       isInlandWater ||
-      hydro.lake > 0.68 ||
-      hydro.river > 0.68 ||
-      hydro.wetland > 0.68 ||
-      hydro.delta > 0.66 ||
-      hydro.estuary > 0.64
+      hydro.surfaceWaterPressure > 0.54 ||
+      hydro.lake > 0.64 ||
+      hydro.river > 0.64 ||
+      hydro.wetland > 0.64 ||
+      hydro.delta > 0.62 ||
+      hydro.estuary > 0.60
     );
 
     const isLandformShaping = Boolean(
-      hydro.peninsula > 0.58 ||
-      hydro.bay > 0.58 ||
-      hydro.inlet > 0.58 ||
-      hydro.watershed > 0.56 ||
-      hydro.drainage > 0.58 ||
-      hydro.coastalShelfWater > 0.56
+      hydro.landCutPressure > 0.48 ||
+      hydro.peninsula > 0.56 ||
+      hydro.bay > 0.56 ||
+      hydro.inlet > 0.56 ||
+      hydro.oceanCorridor > 0.56 ||
+      hydro.watershed > 0.54 ||
+      hydro.drainage > 0.56 ||
+      hydro.coastalShelfWater > 0.54
     );
 
-    const waterColorHint =
-      waterClass === "inland-sea" ? "deep-inland-blue" :
-      waterClass === "lake" ? "lake-blue" :
-      waterClass === "river" ? "river-blue-green" :
-      waterClass === "wetland" ? "wetland-green-blue" :
-      waterClass === "marsh-basin" ? "marsh-green" :
-      waterClass === "delta" ? "delta-green-blue" :
-      waterClass === "estuary" ? "estuary-blue-green" :
-      waterClass === "lagoon-water" ? "lagoon-turquoise" :
-      waterClass === "shelf-water" ? "shelf-blue" :
-      "hydrology-background";
+    const shouldInterruptSolidLandmass = Boolean(
+      !signals.ocean &&
+      (
+        hydro.landCutPressure > 0.54 ||
+        hydro.inlandSea > 0.66 ||
+        hydro.bay > 0.62 ||
+        hydro.inlet > 0.62 ||
+        hydro.lagoon > 0.64 ||
+        hydro.oceanCorridor > 0.64
+      )
+    );
 
     return Object.freeze({
       allowed: true,
@@ -652,22 +895,33 @@
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
-      authority: "audralia-organic-hydration-and-watershed-authority",
+      authority: "audralia-hydrology-corridor-and-inland-water-renewal",
       mathBinding: "high_order_computable_planetary_math",
       chronologicalFormationFirst: true,
+
       cell256: signals.cell256,
       cellX: signals.cellX,
       cellY: signals.cellY,
       latitude: signals.latitude,
       longitude: signals.longitude,
+
       isOcean: signals.ocean,
+      isSeparatedLandmap: signals.separated,
+      isArchipelago: signals.archipelago,
       isInlandWater,
       isSurfaceWater,
       isLandformShaping,
+
       class: waterClass,
       zone,
       form,
-      waterColorHint,
+      waterColorHint: waterColorHintFor(waterClass),
+
+      oceanCorridor: sharpen(hydro.oceanCorridor, 1.12),
+      coastalCut: sharpen(hydro.coastalCut, 1.14),
+      landCutPressure: sharpen(hydro.landCutPressure, 1.18),
+      surfaceWaterPressure: sharpen(hydro.surfaceWaterPressure, 1.14),
+
       watershed: hydro.watershed,
       drainage: hydro.drainage,
       river: hydro.river,
@@ -688,25 +942,36 @@
       rainfallSupply: hydro.rainfallSupply,
       meltwaterSupply: hydro.meltwaterSupply,
       seasonalDryness: hydro.seasonalDryness,
+
       sourceReads: {
+        landmap: Boolean(window.AUDRALIA_LANDMAP?.sampleLandmap || window.AUDRALIA_LANDMAP?.sample),
+        separatedLandmap: signals.separated,
         elevation: Boolean(elevation),
+        topology: Boolean(topology),
         terrainFingers: Boolean(terrain),
         climate: Boolean(climate),
         beachAuthority: Boolean(beach)
       },
+
       visualGuidance: {
         shouldPaintWater: isSurfaceWater && !signals.ocean,
         shouldShapeLand: isLandformShaping,
-        shouldInterruptSolidLandmass: hydro.bay > 0.60 || hydro.inlet > 0.60 || hydro.peninsula > 0.62 || hydro.inlandSea > 0.68,
-        shouldSupportWetlandColor: hydro.wetland > 0.60 || hydro.marshBasin > 0.60 || hydro.delta > 0.60,
-        shouldSupportRiverCorridor: hydro.river > 0.60 || hydro.drainage > 0.60,
-        shouldSupportDryChannel: hydro.dryChannel > 0.66
+        shouldInterruptSolidLandmass,
+        shouldSupportWetlandColor: hydro.wetland > 0.58 || hydro.marshBasin > 0.58 || hydro.delta > 0.58,
+        shouldSupportRiverCorridor: hydro.river > 0.58 || hydro.drainage > 0.58,
+        shouldSupportDryChannel: hydro.dryChannel > 0.64,
+        shouldSupportArchipelagoWater: signals.archipelago && (hydro.lagoon > 0.48 || hydro.coastalShelfWater > 0.48),
+        shouldSupportOceanCorridor: hydro.oceanCorridor > 0.56,
+        shouldSupportBayInletBreaks: hydro.bay > 0.56 || hydro.inlet > 0.56,
+        shouldSupportInlandWater: hydro.lake > 0.60 || hydro.inlandSea > 0.60
       },
+
       ownsFootprint: false,
       ownsLandSea: false,
       ownsBeach: false,
       ownsClimate: false,
       ownsElevation: false,
+      ownsTopology: false,
       ownsTerrainFingers: false,
       ownsSurfaceColor: false,
       ownsCanvas: false,
@@ -717,13 +982,12 @@
     });
   }
 
-  function sample(map) {
-    return sampleHydrology(map);
+  function sample(input, maybeV) {
+    return sampleHydrology(input, maybeV);
   }
 
-  function classifyWater(map) {
-    const sampleResult = sampleHydrology(map);
-    return sampleResult.class;
+  function classifyWater(input, maybeV) {
+    return sampleHydrology(input, maybeV).class;
   }
 
   function getStatus() {
@@ -733,8 +997,10 @@
       previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       authority: "audralia-hydrology-authority",
-      role: "organic_hydration_and_watershed_authority",
+      role: "hydrology_corridor_and_inland_water_renewal",
       mathBinding: "high_order_computable_planetary_math",
+      consumesRenewedLandmap: true,
+      expectsLandmapContract: "AUDRALIA_LANDMASS_SEPARATION_AND_ARCHIPELAGO_RENEWAL_TNT_v1",
       exposes: [
         "sampleHydrology",
         "sample",
@@ -742,6 +1008,8 @@
         "getStatus"
       ],
       hydrologyOutputs: [
+        "ocean_corridors",
+        "coastal_cuts",
         "inland_lakes",
         "inland_seas",
         "river_systems",
@@ -759,22 +1027,25 @@
         "desert_dry_channels",
         "tropical_wetlands",
         "subtropical_seasonal_rivers",
-        "tundra_meltwater_fields"
+        "tundra_meltwater_fields",
+        "archipelago_shelf_water",
+        "solid_land_interruption_pressure"
       ],
       canonicalLaw: [
-        "terrain_detail_cannot_be_natural_until_water_system_and_landform_footprint_are_natural",
-        "landform_shape_must_precede_landform_decoration",
-        "hydrology_shapes_land_before_surface_adds_detail",
-        "peninsulas_require_water_cut_logic",
-        "bays_and_inlets_break_continental_slabs",
-        "rivers_follow_terrain_logic",
-        "interior_land_cannot_be_all_dry_terrain"
+        "hydrology_does_not_own_footprint",
+        "landmap_separates_landmasses_before_hydrology_guides_water_expression",
+        "hydrology_shapes_visible_water_behavior_without_replacing_landmap",
+        "bays_and_inlets_must_visibly_break_solid_continental_read",
+        "rivers_follow_elevation_and_drainage_logic",
+        "interior_land_cannot_be_all_dry_terrain",
+        "archipelagos_require_shelf_lagoon_and_channel_guidance"
       ],
       ownsFootprint: false,
       ownsLandSea: false,
       ownsBeach: false,
       ownsClimate: false,
       ownsElevation: false,
+      ownsTopology: false,
       ownsTerrainFingers: false,
       ownsSurfaceColor: false,
       ownsCanvas: false,
@@ -791,6 +1062,7 @@
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     version: VERSION,
+    waterClasses: WATER_CLASSES,
     sampleHydrology,
     sample,
     classifyWater,
@@ -803,9 +1075,11 @@
   document.documentElement.dataset.audraliaHydrologyContract = CONTRACT;
   document.documentElement.dataset.audraliaHydrologyReceipt = RECEIPT;
   document.documentElement.dataset.audraliaHydrologyPreviousContract = PREVIOUS_CONTRACT;
-  document.documentElement.dataset.audraliaHydrologyRole = "organic_hydration_and_watershed_authority";
+  document.documentElement.dataset.audraliaHydrologyRole = "hydrology_corridor_and_inland_water_renewal";
   document.documentElement.dataset.audraliaHydrologyMathBinding = "high_order_computable_planetary_math";
-  document.documentElement.dataset.audraliaHydrologyChronologyFirst = "true";
+  document.documentElement.dataset.audraliaHydrologyConsumesRenewedLandmap = "true";
+  document.documentElement.dataset.audraliaHydrologyOceanCorridors = "true";
+  document.documentElement.dataset.audraliaHydrologyCoastalCuts = "true";
   document.documentElement.dataset.audraliaHydrologyWatersheds = "true";
   document.documentElement.dataset.audraliaHydrologyRivers = "true";
   document.documentElement.dataset.audraliaHydrologyLakes = "true";
@@ -816,11 +1090,14 @@
   document.documentElement.dataset.audraliaHydrologyInlets = "true";
   document.documentElement.dataset.audraliaHydrologyPeninsulas = "true";
   document.documentElement.dataset.audraliaHydrologyLagoons = "true";
+  document.documentElement.dataset.audraliaHydrologyArchipelagoShelfWater = "true";
+  document.documentElement.dataset.audraliaHydrologySolidLandInterruptionPressure = "true";
   document.documentElement.dataset.audraliaHydrologyOwnsFootprint = "false";
   document.documentElement.dataset.audraliaHydrologyOwnsLandSea = "false";
   document.documentElement.dataset.audraliaHydrologyOwnsBeach = "false";
   document.documentElement.dataset.audraliaHydrologyOwnsClimate = "false";
   document.documentElement.dataset.audraliaHydrologyOwnsElevation = "false";
+  document.documentElement.dataset.audraliaHydrologyOwnsTopology = "false";
   document.documentElement.dataset.audraliaHydrologyOwnsTerrainFingers = "false";
   document.documentElement.dataset.audraliaHydrologyOwnsSurfaceColor = "false";
   document.documentElement.dataset.audraliaHydrologyOwnsCanvas = "false";

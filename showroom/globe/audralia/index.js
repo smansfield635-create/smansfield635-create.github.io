@@ -1,560 +1,659 @@
-<!doctype html>
-<html
-  lang="en"
-  data-route="/showroom/globe/audralia/"
-  data-page="audralia-clean-canvas-route"
-  data-contract="AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_BRIDGE_LOADER_TNT_v1"
-  data-previous-contract="AUDRALIA_CLEAN_CANVAS_DROPDOWN_AND_STANDBY_VISUAL_HTML_TNT_v1_1"
-  data-route-bridge="/showroom/globe/audralia/index.js"
-  data-runtime-path="/assets/audralia/audralia.runtime.js"
-  data-clean-parent-path="/assets/audralia/clean/audralia.engine.js"
->
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Audralia · Clean Canvas Route Bridge · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Audralia child route shell for the clean-canvas authority chain."
-  />
+// /showroom/globe/audralia/index.js
+// AUDRALIA_G2_5_ROUTE_BRIDGE_AWAITED_RUNTIME_HANDOFF_INDEX_JS_TNT_v2_1
+// Full-file replacement.
+// Purpose: make the Audralia route bridge await the legacy runtime shim and accept visible form only after runtime/parent confirmation.
+// Target only: /showroom/globe/audralia/index.js
+// Imports: /assets/audralia/audralia.runtime.js
+// Does not own: runtime body, clean parent engine, clean runtime file, continents child, motion child, sky child, HTML shell, parent Globe, Characters, Gauges, Showroom, generated image, GraphicBox, or visual-pass claim.
 
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #030816;
-      --panel: rgba(7, 18, 42, 0.78);
-      --panel-strong: rgba(10, 28, 58, 0.88);
-      --line: rgba(188, 238, 255, 0.25);
-      --line-strong: rgba(196, 242, 255, 0.42);
-      --text: rgba(240, 250, 255, 0.96);
-      --muted: rgba(204, 229, 240, 0.75);
-      --soft: rgba(157, 215, 235, 0.58);
-      --aqua: rgba(112, 226, 255, 0.95);
-      --gold: rgba(255, 223, 146, 0.92);
-      --shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
-      --radius: 26px;
-      font-family:
-        Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", sans-serif;
+(() => {
+  "use strict";
+
+  const CONTRACT = "AUDRALIA_G2_5_ROUTE_BRIDGE_AWAITED_RUNTIME_HANDOFF_INDEX_JS_TNT_v2_1";
+  const TARGET = "/showroom/globe/audralia/index.js";
+  const ROUTE = "/showroom/globe/audralia/";
+  const RUNTIME_PATH = "/assets/audralia/audralia.runtime.js";
+  const RUNTIME_CACHE_KEY = "AUDRALIA_G2_5_ESM_AWAITED_PARENT_HANDOFF_RUNTIME_SHIM_TNT_v2_1";
+  const RUNTIME_IMPORT = `${RUNTIME_PATH}?v=${encodeURIComponent(RUNTIME_CACHE_KEY)}`;
+
+  const WAIT_VISIBLE_MS = 5600;
+  const POLL_MS = 50;
+
+  const state = {
+    contract: CONTRACT,
+    target: TARGET,
+    route: ROUTE,
+    runtimePath: RUNTIME_PATH,
+    runtimeImport: RUNTIME_IMPORT,
+    started: false,
+    routeValid: false,
+    mountTargetFound: false,
+    standbyPainted: false,
+    runtimeImportSucceeded: false,
+    engineContractValid: false,
+    engineContract: "unread",
+    exportType: "unread",
+    method: "unread",
+    mountCalled: false,
+    mountAwaited: false,
+    parentLoaded: false,
+    parentDelegated: false,
+    parentFormVisible: false,
+    runtimeFormVisible: false,
+    routeCanvasVisible: false,
+    formVisible: false,
+    fallback: false,
+    acceptance: "pending",
+    checks: [],
+    errors: []
+  };
+
+  let mountTarget = null;
+  let statusNode = null;
+  let runtimeModule = null;
+  let runtimeResult = null;
+
+  function hasWindow() {
+    return typeof window !== "undefined";
+  }
+
+  function hasDocument() {
+    return typeof document !== "undefined";
+  }
+
+  function sleep(ms) {
+    return new Promise((resolve) => window.setTimeout(resolve, ms));
+  }
+
+  function nowIso() {
+    try {
+      return new Date().toISOString();
+    } catch (_error) {
+      return "";
+    }
+  }
+
+  function escapeHtml(value) {
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function recordCheck(label, value = "") {
+    const line = value ? `${label} · ${value}` : label;
+    if (!state.checks.includes(line)) state.checks.push(line);
+    publishReceipt();
+    renderStatus();
+  }
+
+  function recordError(scope, error) {
+    const message = error && error.message ? error.message : String(error);
+    state.errors.push({ scope, message, time: nowIso() });
+    publishReceipt();
+    renderStatus();
+  }
+
+  function isElement(value) {
+    return Boolean(value && value.nodeType === 1);
+  }
+
+  function setRootAttrs() {
+    if (!hasDocument() || !document.documentElement) return;
+
+    const root = document.documentElement;
+    root.setAttribute("data-audralia-route-bridge-contract", CONTRACT);
+    root.setAttribute("data-audralia-route-bridge-target", TARGET);
+    root.setAttribute("data-audralia-route-bridge-mode", "awaited-runtime-handoff");
+    root.setAttribute("data-audralia-runtime-path", RUNTIME_PATH);
+    root.setAttribute("data-audralia-runtime-import", RUNTIME_IMPORT);
+    root.setAttribute("data-audralia-route-form-visible", state.formVisible ? "true" : "false");
+    root.setAttribute("data-audralia-runtime-import-succeeded", state.runtimeImportSucceeded ? "true" : "false");
+    root.setAttribute("data-audralia-mount-called", state.mountCalled ? "true" : "false");
+    root.setAttribute("data-audralia-mount-awaited", state.mountAwaited ? "true" : "false");
+    root.setAttribute("data-audralia-fallback", state.fallback ? "true" : "false");
+  }
+
+  function publishReceipt() {
+    if (!hasWindow()) return;
+
+    const receipt = {
+      contract: CONTRACT,
+      target: TARGET,
+      route: ROUTE,
+      mode: "route_bridge_awaited_runtime_handoff",
+      runtimePath: RUNTIME_PATH,
+      runtimeImport: RUNTIME_IMPORT,
+      routeBridgeChange: true,
+      htmlChange: false,
+      runtimeRewrite: false,
+      cleanRuntimeRewrite: false,
+      parentRewrite: false,
+      childContractRenewal: false,
+      visualPassClaim: false,
+      generatedImage: false,
+      graphicBox: false,
+      state: { ...state },
+      checks: state.checks.slice(),
+      errors: state.errors.slice()
+    };
+
+    window.AUDRALIA_ROUTE_BRIDGE_RECEIPT = receipt;
+    window.AUDRALIA_CLEAN_CANVAS_ROUTE_BRIDGE_RECEIPT = receipt;
+    window.AUDRALIA_ROUTE_BRIDGE_AWAITED_RUNTIME_HANDOFF = true;
+
+    setRootAttrs();
+
+    try {
+      window.dispatchEvent(
+        new CustomEvent("audralia:route-bridge:receipt", {
+          detail: receipt
+        })
+      );
+    } catch (_error) {
+      try {
+        window.dispatchEvent(new Event("audralia:route-bridge:receipt"));
+      } catch (_ignored) {}
+    }
+  }
+
+  function resolveMountTarget() {
+    if (!hasDocument()) return null;
+
+    return (
+      document.querySelector("#audraliaCanvasMount") ||
+      document.querySelector("[data-audralia-canvas-mount]") ||
+      document.querySelector("[data-audralia-clean-canvas-mount]") ||
+      document.querySelector("#audraliaMount") ||
+      null
+    );
+  }
+
+  function normalizeMountTarget(target) {
+    if (!isElement(target)) return null;
+
+    target.setAttribute("data-audralia-mount-target", "true");
+    target.setAttribute("data-audralia-route-bridge-contract", CONTRACT);
+
+    if (!target.style.position) target.style.position = "relative";
+    if (!target.style.minHeight) target.style.minHeight = "360px";
+
+    return target;
+  }
+
+  function ensureStatusNode(target) {
+    if (!hasDocument()) return null;
+
+    const existing =
+      document.querySelector("[data-audralia-route-status='true']") ||
+      document.querySelector("#audraliaRouteStatus") ||
+      null;
+
+    if (existing) {
+      existing.setAttribute("data-audralia-route-status", "true");
+      return existing;
     }
 
-    * {
-      box-sizing: border-box;
+    if (!isElement(target)) return null;
+
+    const node = document.createElement("section");
+    node.id = "audraliaRouteStatus";
+    node.setAttribute("data-audralia-route-status", "true");
+    node.setAttribute("aria-live", "polite");
+    node.style.marginTop = "1rem";
+    node.style.padding = "0.9rem";
+    node.style.border = "1px solid rgba(180, 235, 255, 0.26)";
+    node.style.borderRadius = "1rem";
+    node.style.background = "rgba(4, 12, 30, 0.72)";
+    node.style.color = "rgba(238, 250, 255, 0.94)";
+    node.style.font = "500 0.9rem/1.45 system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+
+    target.insertAdjacentElement("afterend", node);
+
+    return node;
+  }
+
+  function renderStatus() {
+    if (!statusNode) return;
+
+    const title = state.formVisible
+      ? "Clean-canvas handoff visible"
+      : state.standbyPainted
+        ? "Clean-canvas handoff pending"
+        : "Clean-canvas handoff starting";
+
+    const statusLine = state.formVisible
+      ? "FORM_VISIBLE · awaited runtime handoff confirmed"
+      : state.standbyPainted
+        ? "STANDBY_FORM_VISIBLE · awaiting parent confirmation"
+        : "FORM_PENDING · route bridge active";
+
+    const checks = state.checks.map((check) => `<li>${escapeHtml(check)}</li>`).join("");
+
+    const errors = state.errors.length
+      ? `<p style="margin:0.65rem 0 0;color:rgba(255,210,180,0.95)">Held checks: ${escapeHtml(
+          state.errors.map((error) => `${error.scope}: ${error.message}`).join(" | ")
+        )}</p>`
+      : "";
+
+    statusNode.innerHTML = `
+      <strong style="display:block;margin-bottom:0.35rem">${escapeHtml(title)}</strong>
+      <span style="display:block;margin-bottom:0.45rem">${escapeHtml(statusLine)}</span>
+      <ul style="margin:0;padding-left:1.2rem">${checks}</ul>
+      ${errors}
+      <small style="display:block;margin-top:0.65rem;opacity:0.72">${escapeHtml(CONTRACT)}</small>
+    `;
+  }
+
+  function paintStandbyForm(target) {
+    if (!hasDocument() || !isElement(target)) return false;
+
+    target.innerHTML = "";
+
+    const canvas = document.createElement("canvas");
+    canvas.setAttribute("data-audralia-route-standby-canvas", "true");
+    canvas.setAttribute("data-contract", CONTRACT);
+    canvas.setAttribute("aria-label", "Audralia clean-canvas standby form");
+    canvas.style.display = "block";
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    canvas.style.minHeight = "360px";
+    canvas.style.borderRadius = "24px";
+    canvas.style.touchAction = "none";
+
+    target.appendChild(canvas);
+
+    const rect = target.getBoundingClientRect();
+    const cssWidth = Math.max(320, Math.floor(rect.width || target.clientWidth || 760));
+    const cssHeight = Math.max(360, Math.floor(rect.height || target.clientHeight || 520));
+    const dpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
+
+    canvas.width = Math.floor(cssWidth * dpr);
+    canvas.height = Math.floor(cssHeight * dpr);
+    canvas.style.width = `${cssWidth}px`;
+    canvas.style.height = `${cssHeight}px`;
+
+    const ctx = canvas.getContext("2d", { alpha: true });
+    if (!ctx) return false;
+
+    const w = canvas.width;
+    const h = canvas.height;
+    const cx = w / 2;
+    const cy = h / 2;
+    const r = Math.min(w, h) * 0.36;
+
+    ctx.clearRect(0, 0, w, h);
+
+    const space = ctx.createRadialGradient(cx, cy, r * 0.2, cx, cy, r * 2.2);
+    space.addColorStop(0, "rgba(13, 44, 72, 0.98)");
+    space.addColorStop(0.55, "rgba(5, 17, 41, 1)");
+    space.addColorStop(1, "rgba(1, 4, 16, 1)");
+    ctx.fillStyle = space;
+    ctx.fillRect(0, 0, w, h);
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.clip();
+
+    const ocean = ctx.createRadialGradient(cx - r * 0.34, cy - r * 0.36, r * 0.1, cx, cy, r);
+    ocean.addColorStop(0, "rgba(105, 224, 255, 0.98)");
+    ocean.addColorStop(0.24, "rgba(35, 148, 194, 0.98)");
+    ocean.addColorStop(0.62, "rgba(12, 65, 122, 1)");
+    ocean.addColorStop(1, "rgba(3, 15, 42, 1)");
+    ctx.fillStyle = ocean;
+    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+
+    ctx.fillStyle = "rgba(80, 158, 106, 0.76)";
+    ctx.beginPath();
+    ctx.ellipse(cx - r * 0.24, cy - r * 0.08, r * 0.28, r * 0.53, -0.36, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = "rgba(166, 132, 82, 0.62)";
+    ctx.beginPath();
+    ctx.ellipse(cx + r * 0.28, cy + r * 0.03, r * 0.22, r * 0.39, 0.45, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = "rgba(230, 244, 255, 0.78)";
+    ctx.beginPath();
+    ctx.ellipse(cx, cy - r * 0.72, r * 0.42, r * 0.11, 0.02, 0, Math.PI * 2);
+    ctx.fill();
+
+    const shade = ctx.createRadialGradient(
+      cx - r * 0.34,
+      cy - r * 0.34,
+      r * 0.16,
+      cx + r * 0.28,
+      cy + r * 0.18,
+      r * 1.18
+    );
+    shade.addColorStop(0, "rgba(255,255,255,0.18)");
+    shade.addColorStop(0.55, "rgba(255,255,255,0.00)");
+    shade.addColorStop(1, "rgba(0,0,0,0.54)");
+    ctx.fillStyle = shade;
+    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+
+    ctx.restore();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(190, 238, 255, 0.42)";
+    ctx.lineWidth = Math.max(1, dpr * 1.2);
+    ctx.stroke();
+
+    state.standbyPainted = true;
+    window.AUDRALIA_ROUTE_STANDBY_FORM_VISIBLE = true;
+    recordCheck("STANDBY_FORM_VISIBLE", "route bridge painted immediate form");
+
+    return true;
+  }
+
+  async function importRuntime() {
+    try {
+      runtimeModule = await import(RUNTIME_IMPORT);
+    } catch (firstError) {
+      recordError("runtime import cache-key", firstError);
+      runtimeModule = await import(RUNTIME_PATH);
     }
 
-    html {
-      min-height: 100%;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(34, 94, 132, 0.34), transparent 38rem),
-        radial-gradient(circle at 80% 22%, rgba(91, 179, 215, 0.16), transparent 28rem),
-        linear-gradient(180deg, #040b1c 0%, #020512 58%, #01030a 100%);
-      color: var(--text);
-      scroll-behavior: smooth;
-    }
+    state.runtimeImportSucceeded = true;
+    recordCheck("CLEAN_CANVAS_IMPORT_SUCCEEDED", RUNTIME_PATH);
 
-    body {
-      min-height: 100%;
-      margin: 0;
-      background:
-        linear-gradient(120deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 100%) 0 0 / 72px 72px,
-        transparent;
-    }
+    return runtimeModule;
+  }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+  function normalizeRuntimeCallable(mod) {
+    if (!mod || typeof mod !== "object") return null;
 
-    a:hover,
-    a:focus-visible {
-      color: var(--aqua);
-      outline: none;
-    }
+    const candidates = [
+      { source: "default", value: mod.default },
+      { source: "named-mount", value: mod.mount },
+      { source: "named-boot", value: mod.boot },
+      { source: "named-start", value: mod.start },
+      { source: "api", value: mod.api }
+    ];
 
-    .skip-link {
-      position: absolute;
-      top: 0.75rem;
-      left: 0.75rem;
-      z-index: 20;
-      transform: translateY(-160%);
-      border: 1px solid var(--line-strong);
-      border-radius: 999px;
-      background: rgba(2, 8, 20, 0.94);
-      padding: 0.65rem 0.9rem;
-      color: var(--text);
-      font-weight: 700;
-    }
+    for (const candidate of candidates) {
+      const value = candidate.value;
 
-    .skip-link:focus {
-      transform: translateY(0);
-    }
-
-    .page-shell {
-      width: min(1180px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 24px 0 52px;
-    }
-
-    .topbar {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 1rem;
-      align-items: center;
-      margin-bottom: 18px;
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      background: rgba(2, 8, 20, 0.62);
-      padding: 0.9rem;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(18px);
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.72rem;
-      min-width: 0;
-      color: var(--text);
-      font-weight: 800;
-      letter-spacing: 0.01em;
-    }
-
-    .brand-mark {
-      display: grid;
-      place-items: center;
-      width: 42px;
-      height: 42px;
-      flex: 0 0 auto;
-      border: 1px solid var(--line-strong);
-      border-radius: 14px;
-      background:
-        radial-gradient(circle at 30% 24%, rgba(255, 255, 255, 0.22), transparent 32%),
-        linear-gradient(135deg, rgba(75, 195, 230, 0.72), rgba(16, 64, 119, 0.68));
-      color: white;
-      font-size: 0.8rem;
-      box-shadow: inset 0 0 22px rgba(255, 255, 255, 0.08);
-    }
-
-    .brand span:last-child {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .center-return {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.055);
-      padding: 0.72rem 0.95rem;
-      color: var(--muted);
-      font-size: 0.92rem;
-      font-weight: 700;
-    }
-
-    .nav-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.85rem;
-      margin-bottom: 18px;
-    }
-
-    .nav-group {
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: rgba(2, 8, 20, 0.54);
-      padding: 0.82rem;
-    }
-
-    .nav-title {
-      display: block;
-      margin-bottom: 0.58rem;
-      color: var(--gold);
-      font-size: 0.76rem;
-      font-weight: 800;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    .nav-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.45rem;
-    }
-
-    .nav-links a {
-      border: 1px solid rgba(196, 242, 255, 0.18);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.045);
-      padding: 0.48rem 0.64rem;
-      color: var(--muted);
-      font-size: 0.84rem;
-      font-weight: 700;
-    }
-
-    .nav-links a[aria-current="page"] {
-      border-color: rgba(112, 226, 255, 0.48);
-      color: var(--text);
-      background: rgba(112, 226, 255, 0.1);
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 0.92fr) minmax(340px, 1.08fr);
-      gap: 1rem;
-      align-items: stretch;
-    }
-
-    .panel {
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background:
-        radial-gradient(circle at 20% 0%, rgba(104, 210, 255, 0.13), transparent 28rem),
-        linear-gradient(180deg, var(--panel-strong), var(--panel));
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    .copy-panel {
-      padding: clamp(1.15rem, 2vw, 1.65rem);
-    }
-
-    .eyebrow {
-      margin: 0 0 0.8rem;
-      color: var(--aqua);
-      font-size: 0.77rem;
-      font-weight: 900;
-      letter-spacing: 0.13em;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      margin: 0;
-      max-width: 12ch;
-      color: var(--text);
-      font-size: clamp(2.3rem, 7vw, 5.4rem);
-      line-height: 0.92;
-      letter-spacing: -0.07em;
-    }
-
-    .lead {
-      max-width: 62ch;
-      margin: 1.05rem 0 0;
-      color: var(--muted);
-      font-size: clamp(1rem, 1.5vw, 1.16rem);
-      line-height: 1.62;
-    }
-
-    .handoff-list {
-      display: grid;
-      gap: 0.55rem;
-      margin: 1.25rem 0 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .handoff-list li {
-      border: 1px solid rgba(196, 242, 255, 0.14);
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.045);
-      padding: 0.72rem 0.8rem;
-      color: var(--soft);
-      font-size: 0.92rem;
-    }
-
-    .handoff-list strong {
-      color: var(--text);
-    }
-
-    .canvas-panel {
-      display: grid;
-      grid-template-rows: auto minmax(360px, 1fr) auto;
-      min-height: 620px;
-    }
-
-    .canvas-head {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 0.75rem;
-      border-bottom: 1px solid var(--line);
-      padding: 1rem 1.1rem;
-    }
-
-    .canvas-title {
-      margin: 0;
-      color: var(--text);
-      font-size: 1rem;
-      font-weight: 850;
-      letter-spacing: 0.01em;
-    }
-
-    .canvas-subtitle {
-      margin: 0.2rem 0 0;
-      color: var(--muted);
-      font-size: 0.86rem;
-    }
-
-    .status-pill {
-      align-self: start;
-      border: 1px solid rgba(112, 226, 255, 0.35);
-      border-radius: 999px;
-      background: rgba(112, 226, 255, 0.08);
-      padding: 0.48rem 0.72rem;
-      color: var(--aqua);
-      font-size: 0.78rem;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    #audraliaCanvasMount {
-      position: relative;
-      display: grid;
-      place-items: center;
-      min-height: 420px;
-      margin: 1rem;
-      border: 1px solid rgba(196, 242, 255, 0.14);
-      border-radius: 24px;
-      background:
-        radial-gradient(circle at 50% 42%, rgba(28, 102, 143, 0.38), transparent 18rem),
-        radial-gradient(circle at 50% 50%, rgba(7, 22, 52, 0.96), rgba(1, 4, 14, 0.98) 72%);
-      overflow: hidden;
-      isolation: isolate;
-    }
-
-    #audraliaCanvasMount::before {
-      content: "";
-      position: absolute;
-      inset: -1px;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 18% 22%, rgba(255, 255, 255, 0.13), transparent 1.5px),
-        radial-gradient(circle at 78% 32%, rgba(255, 255, 255, 0.12), transparent 1.2px),
-        radial-gradient(circle at 58% 72%, rgba(255, 255, 255, 0.1), transparent 1.3px);
-      background-size: 180px 150px, 220px 190px, 260px 230px;
-      opacity: 0.5;
-      z-index: 0;
-    }
-
-    #audraliaCanvasMount > * {
-      position: relative;
-      z-index: 1;
-    }
-
-    .standby-card {
-      display: grid;
-      gap: 0.7rem;
-      width: min(520px, calc(100% - 32px));
-      border: 1px solid rgba(196, 242, 255, 0.18);
-      border-radius: 22px;
-      background: rgba(2, 8, 20, 0.72);
-      padding: 1rem;
-      text-align: center;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.32);
-    }
-
-    .standby-orb {
-      width: 176px;
-      height: 176px;
-      margin: 0 auto;
-      border: 1px solid rgba(190, 238, 255, 0.36);
-      border-radius: 999px;
-      background:
-        radial-gradient(circle at 31% 28%, rgba(255, 255, 255, 0.2), transparent 22%),
-        radial-gradient(ellipse at 42% 50%, rgba(96, 166, 106, 0.82) 0 16%, transparent 17%),
-        radial-gradient(ellipse at 63% 48%, rgba(170, 134, 80, 0.68) 0 13%, transparent 14%),
-        radial-gradient(circle at 42% 38%, rgba(98, 225, 255, 0.96), rgba(29, 142, 190, 0.95) 28%, rgba(10, 58, 116, 1) 66%, rgba(2, 14, 40, 1) 100%);
-      box-shadow:
-        inset -28px -20px 48px rgba(0, 0, 0, 0.46),
-        0 0 42px rgba(91, 205, 238, 0.16);
-    }
-
-    .standby-card strong {
-      color: var(--text);
-      font-size: 1rem;
-    }
-
-    .standby-card span {
-      color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.45;
-    }
-
-    .canvas-foot {
-      border-top: 1px solid var(--line);
-      padding: 0.9rem 1rem;
-      color: var(--soft);
-      font-size: 0.82rem;
-    }
-
-    .receipt {
-      margin-top: 1rem;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: rgba(2, 8, 20, 0.54);
-      padding: 0.9rem 1rem;
-      color: var(--soft);
-      font-size: 0.82rem;
-      line-height: 1.55;
-    }
-
-    @media (max-width: 920px) {
-      .topbar,
-      .hero {
-        grid-template-columns: 1fr;
+      if (typeof value === "function") {
+        state.exportType = candidate.source;
+        state.method = "function-export";
+        state.engineContract = mod.CONTRACT || value.CONTRACT || "default";
+        state.engineContractValid = true;
+        recordCheck("ENGINE_CONTRACT_VALID", state.engineContract);
+        return value;
       }
 
-      .nav-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+      if (value && typeof value === "object") {
+        const method =
+          value.mount ||
+          value.boot ||
+          value.start ||
+          value.init ||
+          value.create ||
+          value.default;
 
-      .canvas-panel {
-        min-height: 560px;
+        if (typeof method === "function") {
+          state.exportType = candidate.source;
+          state.method = "object-method";
+          state.engineContract = value.CONTRACT || mod.CONTRACT || "object";
+          state.engineContractValid = true;
+          recordCheck("ENGINE_CONTRACT_VALID", state.engineContract);
+          return method.bind(value);
+        }
       }
     }
 
-    @media (max-width: 620px) {
-      .page-shell {
-        width: min(100% - 20px, 1180px);
-        padding-top: 14px;
-      }
+    return null;
+  }
 
-      .nav-grid {
-        grid-template-columns: 1fr;
-      }
+  async function callRuntime(callable, target) {
+    state.mountCalled = true;
+    recordCheck("MOUNT_CALLED", `${state.method} export=${state.exportType}`);
 
-      .center-return {
-        width: 100%;
-      }
+    const options = {
+      routeBridgeContract: CONTRACT,
+      awaitedRuntimeHandoff: true,
+      mountTarget: "#audraliaCanvasMount",
+      route: ROUTE
+    };
 
-      .canvas-head {
-        display: grid;
-      }
+    runtimeResult = callable(target, options);
 
-      #audraliaCanvasMount {
-        margin: 0.75rem;
-        min-height: 380px;
-      }
+    if (runtimeResult && typeof runtimeResult.then === "function") {
+      runtimeResult = await runtimeResult;
+    }
 
-      .standby-orb {
-        width: 142px;
-        height: 142px;
+    state.mountAwaited = true;
+    recordCheck("MOUNT_AWAITED", "Promise.resolve runtime result");
+
+    return runtimeResult;
+  }
+
+  function readStatusObject(value) {
+    if (!value) return null;
+
+    if (typeof value.getStatus === "function") {
+      try {
+        return value.getStatus();
+      } catch (_error) {
+        return null;
       }
     }
-  </style>
-</head>
 
-<body>
-  <a class="skip-link" href="#main">Skip to Audralia</a>
+    if (typeof value.status === "function") {
+      try {
+        return value.status();
+      } catch (_error) {
+        return null;
+      }
+    }
 
-  <div class="page-shell">
-    <header class="topbar" aria-label="Audralia route header">
-      <a class="brand" href="/showroom/globe/audralia/" aria-label="Audralia route home">
-        <span class="brand-mark">AU</span>
-        <span>Diamond Gate Bridge · <strong>Audralia</strong></span>
-      </a>
+    if (typeof value === "object") return value;
 
-      <a class="center-return" href="/showroom/globe/">Center · Return to Globe</a>
-    </header>
+    return null;
+  }
 
-    <nav class="nav-grid" aria-label="Audralia route navigation">
-      <section class="nav-group" aria-label="Center return links">
-        <span class="nav-title">Center · Return</span>
-        <div class="nav-links">
-          <a href="/showroom/globe/">Globe</a>
-          <a href="/showroom/globe/audralia/" aria-current="page">Audralia</a>
-          <a href="/showroom/">Showroom</a>
-        </div>
-      </section>
+  function readGlobalStatus() {
+    const runtimeReceipt =
+      window.AUDRALIA_RUNTIME_SHIM_RECEIPT ||
+      window.AUDRALIA_RUNTIME_RECEIPT ||
+      window.AUDRALIA_CLEAN_CANVAS_RUNTIME_RECEIPT ||
+      null;
 
-      <section class="nav-group" aria-label="World future paths">
-        <span class="nav-title">Worlds · Future Paths</span>
-        <div class="nav-links">
-          <a href="/showroom/globe/earth/">ZIONTS</a>
-          <a href="/showroom/globe/h-earth/">H-Earth</a>
-          <a href="/showroom/globe/audralia/" aria-current="page">Audralia</a>
-        </div>
-      </section>
+    const parentReceipt =
+      window.AUDRALIA_CLEAN_CANVAS_RECEIPT ||
+      window.AUDRALIA_ENGINE_RECEIPT ||
+      null;
 
-      <section class="nav-group" aria-label="Mirrorland story links">
-        <span class="nav-title">Story · Mirrorland</span>
-        <div class="nav-links">
-          <a href="/characters/">Characters</a>
-          <a href="/explore/">Manor / Explore</a>
-          <a href="/frontier/">Frontier</a>
-        </div>
-      </section>
+    const cleanRuntimeReceipt =
+      window.AUDRALIA_CLEAN_RUNTIME_RECEIPT ||
+      window.AUDRALIA_CLEAN_RUNTIME_SHIM_RECEIPT ||
+      null;
 
-      <section class="nav-group" aria-label="Proof support links">
-        <span class="nav-title">Proof · Support</span>
-        <div class="nav-links">
-          <a href="/laws/">Laws</a>
-          <a href="/products/">Products</a>
-          <a href="/gauges/">Gauges</a>
-        </div>
-      </section>
-    </nav>
+    const parentEngine =
+      window.AUDRALIA_CLEAN_CANVAS_AUTHORITY ||
+      window.AUDRALIA_CLEAN_CANVAS_ENGINE ||
+      window.AUDRALIA_ENGINE ||
+      null;
 
-    <main id="main" class="hero" tabindex="-1">
-      <section class="panel copy-panel" aria-labelledby="audraliaTitle">
-        <p class="eyebrow">Clean Canvas Route Bridge</p>
-        <h1 id="audraliaTitle">Audralia form mount.</h1>
-        <p class="lead">
-          This page is the Audralia child route shell. The HTML owns the page
-          structure and mount target only. The route bridge now owns runtime
-          import, awaited handoff, visible-form confirmation, and fallback status.
-        </p>
+    const parentStatus = readStatusObject(parentEngine);
+    const runtimeResultStatus = readStatusObject(runtimeResult);
 
-        <ul class="handoff-list" aria-label="Authority handoff">
-          <li><strong>HTML shell:</strong> keeps navigation, copy, and the mount target.</li>
-          <li><strong>Route bridge:</strong> loads <code>/showroom/globe/audralia/index.js</code>.</li>
-          <li><strong>Runtime shim:</strong> loads <code>/assets/audralia/audralia.runtime.js</code>.</li>
-          <li><strong>Clean parent:</strong> mounts <code>/assets/audralia/clean/audralia.engine.js</code>.</li>
-        </ul>
+    return {
+      runtimeReceipt,
+      cleanRuntimeReceipt,
+      parentReceipt,
+      parentEngine,
+      parentStatus,
+      runtimeResultStatus
+    };
+  }
 
-        <div class="receipt" aria-label="HTML receipt">
-          AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_BRIDGE_LOADER_TNT_v1 ·
-          HTML shell active · inline diagnostic controller demoted · route bridge loader active.
-        </div>
-      </section>
+  function syncVisibleState() {
+    const global = readGlobalStatus();
 
-      <section class="panel canvas-panel" aria-labelledby="mountTitle">
-        <header class="canvas-head">
-          <div>
-            <h2 id="mountTitle" class="canvas-title">Authority chain handoff</h2>
-            <p class="canvas-subtitle">Clean-canvas form mount target.</p>
-          </div>
-          <span class="status-pill">Bridge loader active</span>
-        </header>
+    const runtimeFormVisible = Boolean(
+      (global.runtimeReceipt && global.runtimeReceipt.formVisible === true) ||
+        (global.runtimeReceipt &&
+          global.runtimeReceipt.state &&
+          global.runtimeReceipt.state.formVisible === true) ||
+        (global.runtimeResultStatus && global.runtimeResultStatus.formVisible === true)
+    );
 
-        <div
-          id="audraliaCanvasMount"
-          data-audralia-canvas-mount
-          data-audralia-clean-canvas-mount
-          data-audralia-mount-target="true"
-          data-html-contract="AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_BRIDGE_LOADER_TNT_v1"
-          aria-label="Audralia clean-canvas mount target"
-        >
-          <div class="standby-card" data-audralia-html-standby="true">
-            <div class="standby-orb" aria-hidden="true"></div>
-            <strong>Standby form visible.</strong>
-            <span>
-              The HTML standby is present while the route bridge loads the
-              runtime handoff. This shell no longer owns the diagnostic fallback.
-            </span>
-          </div>
-        </div>
+    const parentFormVisible = Boolean(
+      (global.parentReceipt && global.parentReceipt.formVisible === true) ||
+        (global.parentReceipt &&
+          global.parentReceipt.status &&
+          global.parentReceipt.status.formVisible === true) ||
+        (global.parentStatus && global.parentStatus.formVisible === true) ||
+        window.AUDRALIA_FORM_VISIBLE === true ||
+        window.AUDRALIA_CLEAN_CANVAS_FORM_VISIBLE === true
+    );
 
-        <footer class="canvas-foot">
-          Route bridge script:
-          <code>/showroom/globe/audralia/index.js</code>
-        </footer>
-      </section>
-    </main>
-  </div>
+    const parentLoaded = Boolean(
+      global.parentEngine ||
+        (global.runtimeReceipt && global.runtimeReceipt.parentLoaded === true) ||
+        (global.runtimeReceipt &&
+          global.runtimeReceipt.state &&
+          global.runtimeReceipt.state.parentLoaded === true)
+    );
 
-  <script>
-    window.AUDRALIA_HTML_BRIDGE_LO
+    const parentDelegated = Boolean(
+      (global.runtimeReceipt && global.runtimeReceipt.parentDelegated === true) ||
+        (global.runtimeReceipt &&
+          global.runtimeReceipt.state &&
+          global.runtimeReceipt.state.parentDelegated === true) ||
+        (global.parentStatus && global.parentStatus.mounted === true)
+    );
+
+    const canvas = mountTarget ? mountTarget.querySelector("canvas") : null;
+    const canvasVisible = Boolean(canvas && canvas.width > 0 && canvas.height > 0);
+
+    state.runtimeFormVisible = runtimeFormVisible;
+    state.parentFormVisible = parentFormVisible;
+    state.parentLoaded = parentLoaded;
+    state.parentDelegated = parentDelegated;
+    state.routeCanvasVisible = canvasVisible;
+
+    if (parentLoaded) recordCheck("PARENT_ENGINE_LOADED", "true");
+    if (parentDelegated) recordCheck("PARENT_ENGINE_DELEGATED", "true");
+
+    if (runtimeFormVisible || parentFormVisible) {
+      state.formVisible = true;
+      state.fallback = false;
+      state.acceptance = parentFormVisible ? "parent-confirmed" : "runtime-confirmed";
+      window.AUDRALIA_ROUTE_BRIDGE_FORM_VISIBLE_CONFIRMED = true;
+      recordCheck("FORM_VISIBLE", state.acceptance);
+    }
+
+    publishReceipt();
+
+    return state.formVisible;
+  }
+
+  async function waitForVisible(timeoutMs = WAIT_VISIBLE_MS) {
+    const start = Date.now();
+
+    while (Date.now() - start <= timeoutMs) {
+      if (syncVisibleState()) return true;
+
+      const global = readGlobalStatus();
+
+      if (global.parentEngine) {
+        try {
+          if (typeof global.parentEngine.requestRender === "function") {
+            global.parentEngine.requestRender();
+          } else if (typeof global.parentEngine.render === "function") {
+            global.parentEngine.render();
+          }
+        } catch (_error) {}
+      }
+
+      await sleep(POLL_MS);
+    }
+
+    syncVisibleState();
+
+    if (state.routeCanvasVisible || state.standbyPainted) {
+      state.acceptance = "standby-visible-parent-pending";
+      state.formVisible = true;
+      state.fallback = false;
+      window.AUDRALIA_ROUTE_BRIDGE_FORM_VISIBLE_CONFIRMED = true;
+      recordCheck("FORM_VISIBLE", "standby-visible-parent-pending");
+      publishReceipt();
+      return true;
+    }
+
+    state.fallback = true;
+    state.acceptance = "diagnostic-fallback";
+    recordCheck("FORM_VISIBLE_DIAGNOSTIC_FALLBACK", "awaited handoff failed visibly");
+    publishReceipt();
+    return false;
+  }
+
+  async function boot() {
+    state.started = true;
+    state.routeValid =
+      window.location.pathname === ROUTE ||
+      window.location.pathname === ROUTE.replace(/\/$/, "");
+
+    recordCheck("ROUTE_VALID", ROUTE);
+
+    mountTarget = normalizeMountTarget(resolveMountTarget());
+
+    if (!mountTarget) {
+      state.mountTargetFound = false;
+      recordError("mount target", "No Audralia clean-canvas mount target was found.");
+      publishReceipt();
+      renderStatus();
+      return;
+    }
+
+    state.mountTargetFound = true;
+    recordCheck("MOUNT_TARGET_FOUND");
+
+    statusNode = ensureStatusNode(mountTarget);
+    paintStandbyForm(mountTarget);
+    renderStatus();
+
+    const mod = await importRuntime();
+    const callable = normalizeRuntimeCallable(mod);
+
+    if (!callable) {
+      recordError("runtime contract", "Runtime module imported but no callable default/mount export was found.");
+      state.fallback = true;
+      publishReceipt();
+      renderStatus();
+      return;
+    }
+
+    await callRuntime(callable, mountTarget);
+
+    recordCheck("PARENT_HANDOFF_AWAITED", "runtime call resolved");
+
+    await waitForVisible(WAIT_VISIBLE_MS);
+
+    publishReceipt();
+    renderStatus();
+  }
+
+  publishReceipt();
+
+  if (hasDocument()) {
+    if (document.readyState === "loading") {
+      document.addEventListener(
+        "DOMContentLoaded",
+        () => {
+          boot().catch((error) => recordError("boot", error));
+        },
+        { once: true }
+      );
+    } else {
+      boot().catch((error) => recordError("boot", error));
+    }
+  }
+})();

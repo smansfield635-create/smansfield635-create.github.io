@@ -1,28 +1,25 @@
 // /assets/audralia/clean/engine/audralia.engine.js
-// AUDRALIA_G2_5_EXISTING_ARCHITECTURE_PATH_ALIGNMENT_PARENT_TNT_v1
+// AUDRALIA_G2_5_PARENT_CENTER_LOCKED_OCEAN_BASE_NO_ORBIT_NO_LEGACY_LAND_TNT_v1
 // Full-file replacement.
-// Purpose: align the clean parent engine to the repository’s existing architecture and publish parent globals immediately.
-// Parent file: /assets/audralia/clean/engine/audralia.engine.js
-// Child files:
-//   /assets/audralia/clean/engine/audralia/engine/continents.js
-//   /assets/audralia/clean/engine/audralia/engine/motion.js
-//   /assets/audralia/clean/engine/audralia/engine/sky.js
-// Does not own: route HTML, route bridge, versioned runtime, clean runtime, parent Globe, Characters, Gauges, Showroom, generated image, GraphicBox, or visual-pass claim.
+// Purpose: center-lock Audralia inside the mount, remove orbit/drift, remove parent legacy land blobs, and preserve child continent expression.
+// Parent owns: canvas mount, safe containment, ocean base, water depth, lighting, projection, child loading, FORM_VISIBLE confirmation.
+// Parent does not own: continent expression, legacy land blobs, orbit rings, route bridge, runtime, HTML, generated image, GraphicBox, or visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G2_5_EXISTING_ARCHITECTURE_PATH_ALIGNMENT_PARENT_TNT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_CLEAN_PARENT_ENGINE_GLOBAL_PUBLICATION_AND_MOUNT_CONFIRMATION_TNT_v1";
+  const CONTRACT = "AUDRALIA_G2_5_PARENT_CENTER_LOCKED_OCEAN_BASE_NO_ORBIT_NO_LEGACY_LAND_TNT_v1";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_EXISTING_ARCHITECTURE_PATH_ALIGNMENT_PARENT_TNT_v1";
   const FAMILY = "AUDRALIA_G2_5_EXISTING_ARCHITECTURE_PATH_ALIGNMENT_TNT_v1";
 
   const TARGET = "/assets/audralia/clean/engine/audralia.engine.js";
   const ROUTE = "/showroom/globe/audralia/";
 
+  const SAFE_RADIUS_FACTOR = 0.34;
+
   const CHILDREN = Object.freeze({
     continents: {
       path: "/assets/audralia/clean/engine/audralia/engine/continents.js",
-      owns: "continent law, five-continent exposure, submerged shelves, terrain pressure, Nine-Summits pressure",
       globals: [
         "AUDRALIA_CLEAN_CONTINENTS_ENGINE",
         "AUDRALIA_CONTINENTS_ENGINE",
@@ -34,7 +31,6 @@
     },
     motion: {
       path: "/assets/audralia/clean/engine/audralia/engine/motion.js",
-      owns: "axis tilt, rotation, drag, pitch bounds, redraw triggers",
       globals: [
         "AUDRALIA_CLEAN_MOTION_ENGINE",
         "AUDRALIA_MOTION_ENGINE",
@@ -46,7 +42,6 @@
     },
     sky: {
       path: "/assets/audralia/clean/engine/audralia/engine/sky.js",
-      owns: "rim glow, haze, clouds, lighting tint, weather inheritance toward H-Earth",
       globals: [
         "AUDRALIA_CLEAN_SKY_ENGINE",
         "AUDRALIA_SKY_ENGINE",
@@ -64,7 +59,9 @@
     family: FAMILY,
     target: TARGET,
     route: ROUTE,
-    existingArchitecturePathAligned: true,
+    centerLocked: true,
+    noOrbit: true,
+    noLegacyParentLand: true,
     parentGlobalPublished: false,
     mountCalled: false,
     mounted: false,
@@ -136,7 +133,6 @@
     if (!hasDocument()) return input || null;
 
     if (isElement(input)) return input;
-
     if (typeof input === "string") return document.querySelector(input);
 
     if (input && isElement(input.mount)) return input.mount;
@@ -170,7 +166,7 @@
       canvas.setAttribute("data-audralia-clean-parent-canvas", "true");
       canvas.setAttribute("data-audralia-clean-canvas", "true");
       canvas.setAttribute("data-contract", CONTRACT);
-      canvas.setAttribute("aria-label", "Audralia clean parent engine planet render");
+      canvas.setAttribute("aria-label", "Audralia center-locked ocean base");
       canvas.style.display = "block";
       canvas.style.width = "100%";
       canvas.style.height = "100%";
@@ -206,9 +202,13 @@
     env.dpr = dpr;
     env.width = Math.floor(cssWidth * dpr);
     env.height = Math.floor(cssHeight * dpr);
+
     env.cx = env.width / 2;
     env.cy = env.height / 2;
-    env.radius = Math.floor(Math.min(env.width, env.height) * 0.36);
+
+    const mobileTight = cssWidth <= 520;
+    const factor = mobileTight ? 0.32 : SAFE_RADIUS_FACTOR;
+    env.radius = Math.floor(Math.min(env.width, env.height) * factor);
 
     if (env.canvas.width !== env.width) env.canvas.width = env.width;
     if (env.canvas.height !== env.height) env.canvas.height = env.height;
@@ -228,13 +228,18 @@
     window.AUDRALIA_CLEAN_PARENT_ENGINE_GLOBAL_PUBLISHED = true;
     window.AUDRALIA_CLEAN_PARENT_ENGINE_CONTRACT = CONTRACT;
     window.AUDRALIA_EXISTING_ARCHITECTURE_PARENT_ALIGNED = true;
+    window.AUDRALIA_PARENT_CENTER_LOCKED = true;
+    window.AUDRALIA_PARENT_NO_ORBIT = true;
+    window.AUDRALIA_PARENT_NO_LEGACY_LAND = true;
 
     state.parentGlobalPublished = true;
 
     if (hasDocument() && document.documentElement) {
       document.documentElement.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
       document.documentElement.setAttribute("data-audralia-clean-parent-target", TARGET);
-      document.documentElement.setAttribute("data-audralia-existing-architecture-parent-aligned", "true");
+      document.documentElement.setAttribute("data-audralia-parent-center-locked", "true");
+      document.documentElement.setAttribute("data-audralia-parent-no-orbit", "true");
+      document.documentElement.setAttribute("data-audralia-parent-no-legacy-land", "true");
       document.documentElement.setAttribute("data-audralia-clean-parent-global-published", "true");
       document.documentElement.setAttribute("data-audralia-clean-parent-mounted", state.mounted ? "true" : "false");
       document.documentElement.setAttribute("data-audralia-clean-parent-form-visible", state.formVisible ? "true" : "false");
@@ -284,9 +289,12 @@
       family: FAMILY,
       target: TARGET,
       route: ROUTE,
-      mode: "existing_architecture_path_alignment_parent_engine",
+      mode: "center_locked_ocean_base_no_orbit_no_legacy_land",
       scope,
-      existingArchitecturePathAligned: true,
+      centerLocked: true,
+      safeRadiusFactor: SAFE_RADIUS_FACTOR,
+      noOrbit: true,
+      noLegacyParentLand: true,
       parentGlobalPublished: state.parentGlobalPublished,
       mountCalled: state.mountCalled,
       mounted: state.mounted,
@@ -294,6 +302,13 @@
       formVisible: state.formVisible,
       delegatedBy: state.delegatedBy,
       renderCount: state.renderCount,
+      geometry: {
+        width: env.width,
+        height: env.height,
+        cx: env.cx,
+        cy: env.cy,
+        radius: env.radius
+      },
       children: { ...state.children },
       childPaths: {
         continents: CHILDREN.continents.path,
@@ -311,22 +326,7 @@
       childContractRenewal: false,
       visualPassClaim: false,
       generatedImage: false,
-      graphicBox: false,
-      preserves: [
-        "AUDRALIA_ENGINE",
-        "AUDRALIA_CLEAN_CANVAS_ENGINE",
-        "AUDRALIA_CLEAN_CANVAS_AUTHORITY",
-        "AUDRALIA_CLEAN_ENGINE_PARENT",
-        "mount()",
-        "boot()",
-        "start()",
-        "init()",
-        "create()",
-        "render()",
-        "requestRender()",
-        "getStatus()",
-        "FORM_VISIBLE parent confirmation"
-      ]
+      graphicBox: false
     };
 
     window.AUDRALIA_CLEAN_CANVAS_RECEIPT = receipt;
@@ -334,9 +334,7 @@
     window.AUDRALIA_CLEAN_PARENT_ENGINE_RECEIPT = receipt;
 
     try {
-      window.dispatchEvent(
-        new CustomEvent("audralia:clean-parent:receipt", { detail: receipt })
-      );
+      window.dispatchEvent(new CustomEvent("audralia:clean-parent:receipt", { detail: receipt }));
     } catch (_error) {
       try {
         window.dispatchEvent(new Event("audralia:clean-parent:receipt"));
@@ -359,72 +357,46 @@
     };
   }
 
+  function clearCanvas(ctx, g) {
+    ctx.clearRect(0, 0, g.width, g.height);
+  }
+
   function drawSpace(ctx, g) {
-    const bg = ctx.createRadialGradient(g.cx, g.cy, g.radius * 0.2, g.cx, g.cy, g.radius * 2.3);
-    bg.addColorStop(0, "rgba(13, 44, 72, 0.96)");
-    bg.addColorStop(0.48, "rgba(5, 17, 41, 1)");
-    bg.addColorStop(1, "rgba(1, 4, 16, 1)");
+    const bg = ctx.createLinearGradient(0, 0, 0, g.height);
+    bg.addColorStop(0, "rgba(3, 12, 30, 1)");
+    bg.addColorStop(0.55, "rgba(2, 8, 22, 1)");
+    bg.addColorStop(1, "rgba(1, 4, 14, 1)");
 
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, g.width, g.height);
 
     ctx.save();
-    ctx.globalAlpha = 0.42;
+    ctx.globalAlpha = 0.38;
 
-    for (let i = 0; i < 90; i += 1) {
+    for (let i = 0; i < 76; i += 1) {
       const x = (i * 131) % Math.max(1, g.width);
       const y = (i * 197) % Math.max(1, g.height);
-      const r = ((i % 3) + 0.6) * g.dpr * 0.42;
+      const r = ((i % 3) + 0.6) * g.dpr * 0.38;
 
       ctx.beginPath();
       ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(220, 246, 255, 0.72)";
+      ctx.fillStyle = "rgba(220, 246, 255, 0.66)";
       ctx.fill();
     }
 
     ctx.restore();
   }
 
-  function drawLandmass(ctx, cx, cy, r, nx, ny, sx, sy, rot, fill) {
-    ctx.save();
-    ctx.translate(cx + nx * r, cy + ny * r);
-    ctx.rotate(rot);
+  function clipToPlanet(ctx, g) {
     ctx.beginPath();
-
-    const points = 18;
-
-    for (let i = 0; i <= points; i += 1) {
-      const t = (Math.PI * 2 * i) / points;
-      const noise =
-        1 +
-        Math.sin(t * 3.1 + nx * 4.7) * 0.1 +
-        Math.cos(t * 5.2 + ny * 3.3) * 0.07 +
-        Math.sin(t * 8.0) * 0.035;
-
-      const x = Math.cos(t) * r * sx * noise;
-      const y = Math.sin(t) * r * sy * noise;
-
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    }
-
-    ctx.closePath();
-    ctx.fillStyle = fill;
-    ctx.fill();
-
-    ctx.strokeStyle = "rgba(225, 244, 212, 0.18)";
-    ctx.lineWidth = Math.max(1, r * 0.006);
-    ctx.stroke();
-
-    ctx.restore();
+    ctx.arc(g.cx, g.cy, g.radius, 0, Math.PI * 2);
+    ctx.clip();
   }
 
-  function drawParentPlanet(ctx, g) {
+  function drawOceanBase(ctx, g) {
     const cx = g.cx;
     const cy = g.cy;
     const r = g.radius;
-    const yaw = env.rotation;
-    const tilt = Math.sin(yaw * 0.7) * 0.06 + env.pitch;
 
     ctx.save();
 
@@ -433,62 +405,72 @@
     ctx.clip();
 
     const ocean = ctx.createRadialGradient(cx - r * 0.34, cy - r * 0.36, r * 0.08, cx, cy, r);
-    ocean.addColorStop(0, "rgba(112, 232, 255, 0.98)");
-    ocean.addColorStop(0.22, "rgba(39, 154, 199, 0.98)");
-    ocean.addColorStop(0.58, "rgba(11, 70, 132, 1)");
-    ocean.addColorStop(1, "rgba(2, 16, 48, 1)");
+    ocean.addColorStop(0, "rgba(120, 236, 255, 0.98)");
+    ocean.addColorStop(0.2, "rgba(42, 160, 205, 0.98)");
+    ocean.addColorStop(0.55, "rgba(11, 72, 137, 1)");
+    ocean.addColorStop(1, "rgba(2, 17, 52, 1)");
     ctx.fillStyle = ocean;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
-    drawLandmass(ctx, cx, cy, r, -0.34 + Math.sin(yaw) * 0.08, -0.05 + tilt, 0.32, 0.56, -0.34, "rgba(78, 154, 103, 0.78)");
-    drawLandmass(ctx, cx, cy, r, 0.28 + Math.cos(yaw * 0.8) * 0.07, 0.06 - tilt * 0.5, 0.24, 0.42, 0.46, "rgba(165, 130, 82, 0.64)");
-    drawLandmass(ctx, cx, cy, r, 0.06 + Math.sin(yaw * 1.2) * 0.05, -0.47, 0.2, 0.22, -0.12, "rgba(108, 178, 118, 0.6)");
-    drawLandmass(ctx, cx, cy, r, -0.08 + Math.cos(yaw) * 0.03, 0.38, 0.18, 0.24, 0.18, "rgba(144, 116, 82, 0.52)");
+    const depth = ctx.createRadialGradient(cx + r * 0.16, cy + r * 0.2, r * 0.08, cx, cy, r * 1.12);
+    depth.addColorStop(0, "rgba(4, 33, 83, 0)");
+    depth.addColorStop(0.56, "rgba(1, 18, 58, 0.1)");
+    depth.addColorStop(1, "rgba(0, 4, 20, 0.54)");
+    ctx.fillStyle = depth;
+    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
     ctx.save();
     ctx.globalCompositeOperation = "screen";
-    ctx.globalAlpha = 0.26;
+    ctx.globalAlpha = 0.2;
 
-    for (let i = 0; i < 9; i += 1) {
-      const bandY = cy - r * 0.58 + i * r * 0.14 + Math.sin(yaw + i) * r * 0.015;
+    for (let i = 0; i < 8; i += 1) {
+      const bandY = cy - r * 0.54 + i * r * 0.15;
       ctx.beginPath();
-      ctx.ellipse(cx, bandY, r * (0.74 + (i % 3) * 0.04), r * 0.022, 0, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(230, 248, 255, 0.18)";
+      ctx.ellipse(cx, bandY, r * (0.66 + (i % 3) * 0.045), r * 0.016, 0, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(225, 248, 255, 0.18)";
       ctx.fill();
     }
 
     ctx.restore();
 
-    const shade = ctx.createRadialGradient(
+    const lighting = ctx.createRadialGradient(
       cx - r * 0.38,
       cy - r * 0.38,
-      r * 0.16,
-      cx + r * 0.28,
+      r * 0.14,
+      cx + r * 0.25,
       cy + r * 0.18,
-      r * 1.2
+      r * 1.16
     );
 
-    shade.addColorStop(0, "rgba(255,255,255,0.18)");
-    shade.addColorStop(0.5, "rgba(255,255,255,0)");
-    shade.addColorStop(1, "rgba(0,0,0,0.58)");
+    lighting.addColorStop(0, "rgba(255,255,255,0.22)");
+    lighting.addColorStop(0.45, "rgba(255,255,255,0)");
+    lighting.addColorStop(1, "rgba(0,0,0,0.58)");
 
-    ctx.fillStyle = shade;
+    ctx.fillStyle = lighting;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
     ctx.restore();
+  }
+
+  function drawAtmosphericRim(ctx, g) {
+    const cx = g.cx;
+    const cy = g.cy;
+    const r = g.radius;
 
     ctx.save();
+
     ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(190, 240, 255, 0.44)";
-    ctx.lineWidth = Math.max(1, g.dpr * 1.35);
+    ctx.arc(cx, cy, r * 0.998, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(190, 240, 255, 0.36)";
+    ctx.lineWidth = Math.max(1, g.dpr * 1.25);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.arc(cx, cy, r * 1.025, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(118, 224, 255, 0.2)";
-    ctx.lineWidth = Math.max(1, g.dpr * 2.2);
+    ctx.arc(cx, cy, r * 1.004, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(110, 224, 255, 0.13)";
+    ctx.lineWidth = Math.max(1, g.dpr * 1.15);
     ctx.stroke();
+
     ctx.restore();
   }
 
@@ -566,8 +548,12 @@
     state.renderCount += 1;
     state.lastScope = "render";
 
+    clearCanvas(ctx, g);
     drawSpace(ctx, g);
-    drawParentPlanet(ctx, g);
+    drawOceanBase(ctx, g);
+
+    ctx.save();
+    clipToPlanet(ctx, g);
 
     const payload = makePayload("render");
 
@@ -591,6 +577,10 @@
       "paintAtmosphere",
       "drawOverlay"
     ], payload);
+
+    ctx.restore();
+
+    drawAtmosphericRim(ctx, g);
 
     publishFormVisible("render-visible");
 
@@ -790,6 +780,9 @@
     env.mount = target;
     env.mount.setAttribute("data-audralia-clean-parent-mounted", "true");
     env.mount.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
+    env.mount.setAttribute("data-audralia-parent-center-locked", "true");
+    env.mount.setAttribute("data-audralia-parent-no-orbit", "true");
+    env.mount.setAttribute("data-audralia-parent-no-legacy-land", "true");
 
     env.canvas = ensureCanvas(target);
     env.ctx = env.canvas ? env.canvas.getContext("2d", { alpha: true, desynchronized: true }) : null;
@@ -859,8 +852,11 @@
       family: FAMILY,
       target: TARGET,
       route: ROUTE,
-      mode: "existing_architecture_path_alignment_parent_engine",
-      existingArchitecturePathAligned: true,
+      mode: "center_locked_ocean_base_no_orbit_no_legacy_land",
+      centerLocked: true,
+      safeRadiusFactor: SAFE_RADIUS_FACTOR,
+      noOrbit: true,
+      noLegacyParentLand: true,
       parentGlobalPublished: state.parentGlobalPublished,
       mountCalled: state.mountCalled,
       mounted: state.mounted,
@@ -868,6 +864,13 @@
       formVisible: state.formVisible,
       delegatedBy: state.delegatedBy,
       renderCount: state.renderCount,
+      geometry: {
+        width: env.width,
+        height: env.height,
+        cx: env.cx,
+        cy: env.cy,
+        radius: env.radius
+      },
       children: { ...state.children },
       childPaths: {
         continents: CHILDREN.continents.path,

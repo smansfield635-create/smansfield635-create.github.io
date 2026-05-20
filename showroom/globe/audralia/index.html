@@ -3,8 +3,8 @@
   lang="en"
   data-route="/showroom/globe/audralia/"
   data-page="audralia-clean-canvas-route"
-  data-contract="AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_BRIDGE_LOADER_TNT_v1"
-  data-previous-contract="AUDRALIA_CLEAN_CANVAS_DROPDOWN_AND_STANDBY_VISUAL_HTML_TNT_v1_1"
+  data-contract="AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_ROUTE_BRIDGE_CACHE_BUMP_TNT_v1"
+  data-previous-contract="AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_BRIDGE_LOADER_TNT_v1"
   data-route-bridge="/showroom/globe/audralia/index.js"
   data-runtime-path="/assets/audralia/audralia.runtime.js"
   data-clean-parent-path="/assets/audralia/clean/audralia.engine.js"
@@ -504,8 +504,8 @@
         <h1 id="audraliaTitle">Audralia form mount.</h1>
         <p class="lead">
           This page is the Audralia child route shell. The HTML owns the page
-          structure and mount target only. The route bridge now owns runtime
-          import, awaited handoff, visible-form confirmation, and fallback status.
+          structure and mount target only. The route bridge owns runtime import,
+          awaited handoff, visible-form confirmation, and fallback status.
         </p>
 
         <ul class="handoff-list" aria-label="Authority handoff">
@@ -516,8 +516,8 @@
         </ul>
 
         <div class="receipt" aria-label="HTML receipt">
-          AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_BRIDGE_LOADER_TNT_v1 ·
-          HTML shell active · inline diagnostic controller demoted · route bridge loader active.
+          AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_ROUTE_BRIDGE_CACHE_BUMP_TNT_v1 ·
+          HTML shell active · route bridge cache key bumped · runtime cache key alignment active.
         </div>
       </section>
 
@@ -535,7 +535,7 @@
           data-audralia-canvas-mount
           data-audralia-clean-canvas-mount
           data-audralia-mount-target="true"
-          data-html-contract="AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_BRIDGE_LOADER_TNT_v1"
+          data-html-contract="AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_ROUTE_BRIDGE_CACHE_BUMP_TNT_v1"
           aria-label="Audralia clean-canvas mount target"
         >
           <div class="standby-card" data-audralia-html-standby="true">
@@ -543,7 +543,7 @@
             <strong>Standby form visible.</strong>
             <span>
               The HTML standby is present while the route bridge loads the
-              runtime handoff. This shell no longer owns the diagnostic fallback.
+              runtime handoff. This shell does not own the diagnostic fallback.
             </span>
           </div>
         </div>
@@ -558,15 +558,18 @@
 
   <script>
     window.AUDRALIA_HTML_BRIDGE_LOADER_RECEIPT = {
-      contract: "AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_BRIDGE_LOADER_TNT_v1",
-      previousContract: "AUDRALIA_CLEAN_CANVAS_DROPDOWN_AND_STANDBY_VISUAL_HTML_TNT_v1_1",
+      contract: "AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_ROUTE_BRIDGE_CACHE_BUMP_TNT_v1",
+      previousContract: "AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_BRIDGE_LOADER_TNT_v1",
       route: "/showroom/globe/audralia/",
       target: "/showroom/globe/audralia/index.html",
       routeBridge: "/showroom/globe/audralia/index.js",
+      routeBridgeCacheKey: "AUDRALIA_G2_5_ROUTE_BRIDGE_RUNTIME_CACHE_KEY_ALIGNMENT_TNT_v2_2",
       runtimePath: "/assets/audralia/audralia.runtime.js",
+      runtimeCacheKey: "AUDRALIA_G2_5_RUNTIME_SHIM_PARENT_DELEGATION_REPAIR_TNT_v3",
       cleanParentPath: "/assets/audralia/clean/audralia.engine.js",
-      mode: "html_shell_bridge_loader_only",
+      mode: "html_shell_route_bridge_cache_bump_only",
       htmlChange: true,
+      routeBridgeCacheBumped: true,
       inlineDiagnosticControllerDemoted: true,
       routeBridgeOwnsRuntimeImport: true,
       routeBridgeOwnsFallbackDecision: true,
@@ -579,11 +582,21 @@
       "data-audralia-html-bridge-loader-active",
       "true"
     );
+
+    document.documentElement.setAttribute(
+      "data-audralia-route-bridge-cache-key",
+      "AUDRALIA_G2_5_ROUTE_BRIDGE_RUNTIME_CACHE_KEY_ALIGNMENT_TNT_v2_2"
+    );
+
+    document.documentElement.setAttribute(
+      "data-audralia-runtime-cache-key",
+      "AUDRALIA_G2_5_RUNTIME_SHIM_PARENT_DELEGATION_REPAIR_TNT_v3"
+    );
   </script>
 
   <script
     type="module"
-    src="/showroom/globe/audralia/index.js?v=AUDRALIA_G2_5_ROUTE_BRIDGE_AWAITED_RUNTIME_HANDOFF_INDEX_JS_TNT_v2_1"
+    src="/showroom/globe/audralia/index.js?v=AUDRALIA_G2_5_ROUTE_BRIDGE_RUNTIME_CACHE_KEY_ALIGNMENT_TNT_v2_2"
   ></script>
 </body>
 </html>

@@ -1,15 +1,16 @@
 <!doctype html>
 <html
   lang="en"
-  data-route="/showroom/globe/audralia/"
-  data-page="audralia"
-  data-version="2026-05-20.audralia-clean-canvas-expression-shell-v1"
-  data-contract="AUDRALIA_CLEAN_CANVAS_EXPRESSION_SHELL_HTML_TNT_v1"
-  data-previous-contract="AUDRALIA_CLEAN_CANVAS_ROUTE_BRIDGE_TNT_v1"
-  data-authority="html-expression-shell-only"
-  data-clean-canvas="true"
-  data-audralia-planet-instance="true"
-  data-h-earth-is-audralia-ground-view="true"
+  data-route="/showroom/globe/"
+  data-page="showroom-globe"
+  data-version="2026-05-20.showroom-globe-legacy-anchor-renewal-v1"
+  data-contract="SHOWROOM_GLOBE_LEGACY_ANCHOR_RENEWAL_HTML_TNT_v1"
+  data-previous-contract="SHOWROOM_GLOBE_SELECTOR_LEGACY_GATEWAY_STANDARD"
+  data-authority="great-grandparent-route-selector-expression-only"
+  data-role="interactive-narrative-gateway"
+  data-grandparent-status="legacy-anchor"
+  data-audralia-clean-canvas-child="false"
+  data-audralia-engine-mount="false"
   data-generated-image="false"
   data-graphic-box="false"
   data-visual-pass-claimed="false"
@@ -18,27 +19,28 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#020914" />
-  <title>Audralia · The Possibility Path · Diamond Gate Bridge</title>
+  <title>Interactive Narrative · Globe Gateway · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Audralia is the Possibility Path: a clean-slate mirror world for proving what a better future could become."
+    content="The Showroom Globe gateway routes visitors into the planet-family narrative without owning any planet engine or child authority."
   />
 
   <style>
     :root {
-      --audralia-bg-0: #01040d;
-      --audralia-bg-1: #030b18;
-      --audralia-bg-2: #061827;
-      --audralia-ink: #fff4d8;
-      --audralia-muted: rgba(232, 242, 238, 0.76);
-      --audralia-line: rgba(158, 240, 191, 0.42);
-      --audralia-line-soft: rgba(158, 240, 191, 0.18);
-      --audralia-gold: #f3c86f;
-      --audralia-green: #9ef0bf;
-      --audralia-blue: #5fb6d5;
-      --audralia-panel: rgba(4, 18, 30, 0.82);
-      --audralia-panel-soft: rgba(8, 32, 48, 0.60);
-      --audralia-shadow: 0 26px 90px rgba(0, 0, 0, 0.46);
+      --bg-0: #01040d;
+      --bg-1: #030b18;
+      --bg-2: #071a2a;
+      --ink: #fff4d8;
+      --muted: rgba(232, 242, 238, 0.75);
+      --soft: rgba(232, 242, 238, 0.55);
+      --line: rgba(158, 240, 191, 0.28);
+      --line-soft: rgba(158, 240, 191, 0.14);
+      --green: #9ef0bf;
+      --blue: #5fb6d5;
+      --gold: #f3c86f;
+      --panel: rgba(4, 18, 30, 0.82);
+      --panel-soft: rgba(8, 32, 48, 0.58);
+      --shadow: 0 26px 90px rgba(0, 0, 0, 0.45);
       color-scheme: dark;
     }
 
@@ -48,7 +50,7 @@
 
     html {
       min-height: 100%;
-      background: var(--audralia-bg-0);
+      background: var(--bg-0);
       scroll-behavior: smooth;
     }
 
@@ -63,11 +65,12 @@
         BlinkMacSystemFont,
         "Segoe UI",
         sans-serif;
-      color: var(--audralia-ink);
+      color: var(--ink);
       background:
         radial-gradient(circle at 50% 8%, rgba(95, 182, 213, 0.18), transparent 34rem),
         radial-gradient(circle at 18% 18%, rgba(158, 240, 191, 0.12), transparent 28rem),
-        linear-gradient(180deg, var(--audralia-bg-1), var(--audralia-bg-0) 60%, #00040a);
+        radial-gradient(circle at 80% 28%, rgba(243, 200, 111, 0.10), transparent 24rem),
+        linear-gradient(180deg, var(--bg-1), var(--bg-0) 62%, #00040a);
       overflow-x: hidden;
     }
 
@@ -77,9 +80,8 @@
     }
 
     a:focus-visible,
-    button:focus-visible,
-    canvas:focus-visible {
-      outline: 2px solid var(--audralia-green);
+    button:focus-visible {
+      outline: 2px solid var(--green);
       outline-offset: 4px;
     }
 
@@ -90,10 +92,10 @@
       z-index: 50;
       transform: translateY(-180%);
       padding: 0.7rem 1rem;
-      border: 1px solid var(--audralia-line);
+      border: 1px solid var(--line);
       border-radius: 999px;
       background: rgba(1, 8, 16, 0.94);
-      color: var(--audralia-ink);
+      color: var(--ink);
       transition: transform 0.18s ease;
     }
 
@@ -101,7 +103,7 @@
       transform: translateY(0);
     }
 
-    .site-shell {
+    .shell {
       width: min(1180px, calc(100vw - 32px));
       margin: 0 auto;
     }
@@ -110,8 +112,8 @@
       position: sticky;
       top: 0;
       z-index: 20;
-      border-bottom: 1px solid rgba(158, 240, 191, 0.18);
-      background: rgba(1, 6, 14, 0.82);
+      border-bottom: 1px solid var(--line-soft);
+      background: rgba(1, 6, 14, 0.84);
       backdrop-filter: blur(18px);
     }
 
@@ -128,7 +130,7 @@
       align-items: center;
       gap: 0.72rem;
       min-width: max-content;
-      font-weight: 800;
+      font-weight: 850;
       letter-spacing: -0.035em;
     }
 
@@ -139,7 +141,7 @@
       height: 2.25rem;
       border: 1px solid rgba(158, 240, 191, 0.42);
       border-radius: 999px;
-      color: var(--audralia-green);
+      color: var(--green);
       background:
         radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.26), transparent 0.4rem),
         radial-gradient(circle, rgba(158, 240, 191, 0.18), rgba(95, 182, 213, 0.08));
@@ -153,9 +155,9 @@
     }
 
     .brand-text small {
-      color: var(--audralia-muted);
+      color: var(--muted);
       font-size: 0.72rem;
-      font-weight: 650;
+      font-weight: 700;
       letter-spacing: 0.10em;
       text-transform: uppercase;
     }
@@ -169,7 +171,7 @@
     }
 
     .nav a,
-    .route-pill {
+    .pill {
       display: inline-flex;
       align-items: center;
       min-height: 2.2rem;
@@ -179,13 +181,13 @@
       color: rgba(255, 244, 216, 0.86);
       background: rgba(255, 255, 255, 0.035);
       font-size: 0.88rem;
-      font-weight: 720;
+      font-weight: 750;
       line-height: 1;
     }
 
     .nav a[aria-current="page"] {
       border-color: rgba(158, 240, 191, 0.52);
-      color: var(--audralia-green);
+      color: var(--green);
       background: rgba(158, 240, 191, 0.10);
     }
 
@@ -195,7 +197,7 @@
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 0.92fr) minmax(320px, 1.08fr);
+      grid-template-columns: minmax(0, 0.92fr) minmax(330px, 1.08fr);
       align-items: center;
       gap: clamp(2rem, 5vw, 4.5rem);
       min-height: calc(100vh - 120px);
@@ -203,7 +205,7 @@
 
     .eyebrow {
       margin: 0 0 1rem;
-      color: var(--audralia-green);
+      color: var(--green);
       font-size: 0.82rem;
       font-weight: 850;
       letter-spacing: 0.17em;
@@ -212,22 +214,22 @@
 
     h1 {
       margin: 0;
-      max-width: 13ch;
-      font-size: clamp(3.15rem, 8vw, 7.2rem);
-      line-height: 0.88;
+      max-width: 12ch;
+      font-size: clamp(3rem, 8vw, 7.05rem);
+      line-height: 0.9;
       letter-spacing: -0.08em;
     }
 
     .hero-copy {
       margin: 1.4rem 0 0;
-      max-width: 45rem;
-      color: var(--audralia-muted);
-      font-size: clamp(1.04rem, 1.6vw, 1.22rem);
+      max-width: 46rem;
+      color: var(--muted);
+      font-size: clamp(1.04rem, 1.55vw, 1.22rem);
       line-height: 1.68;
     }
 
     .hero-copy strong {
-      color: var(--audralia-ink);
+      color: var(--ink);
     }
 
     .hero-actions {
@@ -246,7 +248,7 @@
       border: 1px solid rgba(158, 240, 191, 0.35);
       border-radius: 999px;
       background: rgba(158, 240, 191, 0.10);
-      color: var(--audralia-ink);
+      color: var(--ink);
       font-weight: 850;
     }
 
@@ -258,141 +260,244 @@
       color: #fff7dd;
     }
 
-    .stage-card {
+    .gateway-panel {
       position: relative;
-      min-height: clamp(420px, 65vw, 690px);
+      min-height: clamp(430px, 62vw, 680px);
       border: 1px solid rgba(158, 240, 191, 0.22);
       border-radius: 2rem;
       background:
         radial-gradient(circle at 50% 38%, rgba(95, 182, 213, 0.14), transparent 22rem),
         linear-gradient(180deg, rgba(6, 24, 39, 0.84), rgba(2, 8, 16, 0.92));
-      box-shadow: var(--audralia-shadow);
+      box-shadow: var(--shadow);
       overflow: hidden;
       isolation: isolate;
     }
 
-    .stage-card::before {
+    .gateway-panel::before {
       content: "";
       position: absolute;
-      inset: -22%;
-      z-index: -1;
+      inset: -20%;
+      z-index: -2;
       background:
         radial-gradient(circle at 45% 40%, rgba(158, 240, 191, 0.18), transparent 16rem),
         radial-gradient(circle at 58% 50%, rgba(95, 182, 213, 0.16), transparent 20rem);
-      filter: blur(12px);
+      filter: blur(10px);
     }
 
-    .stage-header {
+    .gateway-panel::after {
+      content: "";
       position: absolute;
-      top: 1rem;
+      inset: 1rem;
+      z-index: -1;
+      border: 1px solid rgba(158, 240, 191, 0.10);
+      border-radius: 1.45rem;
+      background:
+        linear-gradient(90deg, transparent 49.9%, rgba(158, 240, 191, 0.10) 50%, transparent 50.1%),
+        linear-gradient(0deg, transparent 49.9%, rgba(95, 182, 213, 0.08) 50%, transparent 50.1%);
+      opacity: 0.72;
+    }
+
+    .gateway-core {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 2rem;
+    }
+
+    .orbit {
+      position: relative;
+      width: min(500px, 74vw);
+      aspect-ratio: 1;
+      border: 1px solid rgba(158, 240, 191, 0.18);
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(158, 240, 191, 0.12), transparent 5rem),
+        radial-gradient(circle at 50% 50%, rgba(95, 182, 213, 0.12), transparent 12rem);
+      box-shadow:
+        inset 0 0 52px rgba(95, 182, 213, 0.08),
+        0 0 90px rgba(158, 240, 191, 0.08);
+    }
+
+    .orbit::before,
+    .orbit::after {
+      content: "";
+      position: absolute;
+      inset: 15%;
+      border: 1px solid rgba(95, 182, 213, 0.16);
+      border-radius: 999px;
+      transform: rotate(32deg) scaleX(1.28);
+    }
+
+    .orbit::after {
+      inset: 23%;
+      border-color: rgba(243, 200, 111, 0.14);
+      transform: rotate(-28deg) scaleX(1.34);
+    }
+
+    .gateway-title {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: min(17rem, 62vw);
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .gateway-title strong {
+      display: block;
+      color: var(--ink);
+      font-size: clamp(1.28rem, 3vw, 2rem);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    .gateway-title span {
+      display: block;
+      margin-top: 0.55rem;
+      color: var(--soft);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .planet-node {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      width: clamp(5.2rem, 11vw, 7.4rem);
+      min-height: clamp(5.2rem, 11vw, 7.4rem);
+      padding: 0.7rem;
+      border: 1px solid rgba(158, 240, 191, 0.28);
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.22), transparent 0.8rem),
+        linear-gradient(135deg, rgba(8, 42, 58, 0.92), rgba(2, 12, 22, 0.92));
+      box-shadow:
+        0 14px 40px rgba(0, 0, 0, 0.26),
+        0 0 36px rgba(158, 240, 191, 0.08);
+      color: var(--ink);
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 850;
+      line-height: 1.12;
+    }
+
+    .planet-node small {
+      display: block;
+      margin-top: 0.32rem;
+      color: var(--soft);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .planet-node[data-node="zionts"] {
+      top: 3%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .planet-node[data-node="audralia"] {
+      right: 1%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .planet-node[data-node="h-earth"] {
+      left: 50%;
+      bottom: 3%;
+      transform: translateX(-50%);
+    }
+
+    .planet-node[data-node="hearth"] {
+      left: 1%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .status-ribbon {
+      position: absolute;
       left: 1rem;
       right: 1rem;
+      top: 1rem;
       z-index: 5;
       display: flex;
-      align-items: center;
       justify-content: space-between;
       gap: 1rem;
       pointer-events: none;
     }
 
-    .stage-label,
-    .stage-status {
-      max-width: 70%;
+    .status-pill {
+      max-width: 72%;
       padding: 0.6rem 0.82rem;
       border: 1px solid rgba(158, 240, 191, 0.22);
       border-radius: 999px;
       background: rgba(1, 8, 16, 0.72);
-      color: rgba(255, 244, 216, 0.88);
+      color: var(--green);
       font-size: 0.78rem;
       font-weight: 800;
       line-height: 1.2;
       backdrop-filter: blur(12px);
     }
 
-    .stage-status {
-      color: var(--audralia-green);
-      text-align: right;
-    }
-
-    .stage-status[data-status-tone="held"] {
-      color: var(--audralia-gold);
-    }
-
-    .stage-status[data-status-tone="loading"] {
-      color: var(--audralia-blue);
-    }
-
-    .canvas-wrap {
-      position: absolute;
-      inset: 0;
+    .grid {
       display: grid;
-      place-items: center;
-      min-height: 100%;
-    }
-
-    .audralia-clean-canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-      min-height: clamp(420px, 65vw, 690px);
-      border: 0;
-      background: transparent;
-      cursor: grab;
-      touch-action: none;
-    }
-
-    .stage-footer {
-      position: absolute;
-      left: 1rem;
-      right: 1rem;
-      bottom: 1rem;
-      z-index: 5;
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
-      pointer-events: none;
-    }
-
-    .stage-note {
-      max-width: 42rem;
-      margin: 0;
-      padding: 0.72rem 0.85rem;
-      border: 1px solid rgba(158, 240, 191, 0.18);
-      border-radius: 1rem;
-      background: rgba(1, 8, 16, 0.66);
-      color: rgba(255, 244, 216, 0.76);
-      font-size: 0.82rem;
-      line-height: 1.4;
-      backdrop-filter: blur(12px);
-    }
-
-    .conditions {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 1rem;
       margin-top: 2rem;
     }
 
-    .condition-card {
-      min-height: 15rem;
-      padding: 1.25rem;
+    .card {
+      min-height: 17rem;
+      padding: 1.2rem;
       border: 1px solid rgba(158, 240, 191, 0.18);
       border-radius: 1.35rem;
-      background: var(--audralia-panel);
+      background: var(--panel);
       box-shadow: 0 18px 60px rgba(0, 0, 0, 0.24);
     }
 
-    .condition-card h2 {
-      margin: 0;
-      color: var(--audralia-ink);
-      font-size: 1.05rem;
-      letter-spacing: -0.02em;
+    .card .tag {
+      margin: 0 0 0.8rem;
+      color: var(--green);
+      font-size: 0.72rem;
+      font-weight: 850;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
     }
 
-    .condition-card p {
-      margin: 0.75rem 0 0;
-      color: var(--audralia-muted);
-      line-height: 1.62;
+    .card h2 {
+      margin: 0;
+      color: var(--ink);
+      font-size: 1.16rem;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .card p {
+      margin: 0.8rem 0 0;
+      color: var(--muted);
+      line-height: 1.58;
+    }
+
+    .card a {
+      display: inline-flex;
+      margin-top: 1rem;
+      color: var(--gold);
+      font-weight: 850;
+    }
+
+    .legacy-note {
+      margin-top: 2rem;
+      padding: 1.25rem;
+      border: 1px solid var(--line-soft);
+      border-radius: 1.35rem;
+      background: rgba(1, 8, 16, 0.52);
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .legacy-note strong {
+      color: var(--ink);
     }
 
     .receipt-panel {
@@ -429,7 +534,7 @@
       border-top: 1px solid rgba(158, 240, 191, 0.16);
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 980px) {
       .topbar-inner {
         align-items: flex-start;
         flex-direction: column;
@@ -445,18 +550,17 @@
         min-height: 0;
       }
 
-      .conditions {
-        grid-template-columns: 1fr;
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .stage-card,
-      .audralia-clean-canvas {
-        min-height: 520px;
+      .gateway-panel {
+        min-height: 540px;
       }
     }
 
-    @media (max-width: 560px) {
-      .site-shell {
+    @media (max-width: 620px) {
+      .shell {
         width: min(100vw - 20px, 1180px);
       }
 
@@ -464,153 +568,183 @@
         padding-top: 2rem;
       }
 
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
       .nav a {
         font-size: 0.78rem;
         padding: 0.55rem 0.65rem;
       }
 
-      .stage-header,
-      .stage-footer {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .stage-label,
-      .stage-status {
-        max-width: 100%;
-        text-align: left;
-      }
-
-      .stage-card,
-      .audralia-clean-canvas {
-        min-height: 500px;
+      .gateway-panel {
+        min-height: 520px;
         border-radius: 1.35rem;
+      }
+
+      .orbit {
+        width: min(410px, 86vw);
+      }
+
+      .planet-node {
+        width: 5.25rem;
+        min-height: 5.25rem;
+        font-size: 0.72rem;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip-link" href="#audralia-main">Skip to Audralia</a>
+  <a class="skip-link" href="#showroom-globe-main">Skip to Interactive Narrative</a>
 
-  <header class="topbar" aria-label="Audralia route navigation">
-    <div class="site-shell topbar-inner">
-      <a class="brand" href="/showroom/globe/audralia/" aria-label="Diamond Gate Bridge Audralia">
-        <span class="brand-mark" aria-hidden="true">AU</span>
+  <header class="topbar" aria-label="Showroom Globe gateway navigation">
+    <div class="shell topbar-inner">
+      <a class="brand" href="/showroom/globe/" aria-label="Diamond Gate Bridge Interactive Narrative">
+        <span class="brand-mark" aria-hidden="true">DG</span>
         <span class="brand-text">
           <span>Diamond Gate Bridge</span>
-          <small>Audralia</small>
+          <small>Interactive Narrative</small>
         </span>
       </a>
 
       <nav class="nav" aria-label="Primary">
         <a href="/">Compass</a>
         <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/">Interactive Narrative</a>
+        <a href="/showroom/globe/" aria-current="page">Interactive Narrative</a>
         <a href="/showroom/globe/earth/">ZIONTS</a>
+        <a href="/showroom/globe/audralia/">Audralia</a>
         <a href="/showroom/globe/h-earth/">H-Earth</a>
-        <a href="/showroom/globe/audralia/" aria-current="page">Audralia</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </div>
   </header>
 
-  <main id="audralia-main" class="site-shell" data-audralia-root>
-    <section class="hero" aria-labelledby="audralia-title">
+  <main id="showroom-globe-main" class="shell" data-showroom-globe-root>
+    <section class="hero" aria-labelledby="showroom-globe-title">
       <div>
-        <p class="eyebrow">Audralia · The Possibility Path</p>
-        <h1 id="audralia-title">Possibility is not fantasy.</h1>
+        <p class="eyebrow">Globe Showcase · Gateway</p>
+        <h1 id="showroom-globe-title">This is the entrance.</h1>
         <p class="hero-copy">
-          Audralia is the clean-slate mirror-world path: a visible future where lawful systems, technology,
-          survival infrastructure, ecology, and return value can be developed before Earth’s future shadow becomes final.
-          <strong>H-Earth is Audralia’s downstream ground view, not a separate planet.</strong>
+          The Showroom Globe page is the <strong>legacy gateway</strong> into the planet-family narrative.
+          It routes visitors into the active worlds without becoming a child engine, without mounting Audralia’s
+          clean-canvas authority chain, and without letting any single planet stand in the entrance path.
         </p>
 
-        <div class="hero-actions" aria-label="Audralia actions">
-          <a class="button primary" href="#audralia-stage">Inspect Audralia</a>
-          <a class="button" href="/showroom/globe/">Return to Interactive Narrative</a>
-          <a class="button" href="/showroom/globe/earth/">Face Consequence</a>
-          <a class="button" href="/showroom/globe/h-earth/">Open Survival</a>
+        <div class="hero-actions" aria-label="Gateway actions">
+          <a class="button primary" href="#planet-gateway">Choose a world</a>
+          <a class="button" href="/showroom/">Return to Showroom</a>
+          <a class="button" href="/showroom/globe/audralia/">Enter Audralia</a>
+          <a class="button" href="/showroom/globe/h-earth/">Open H-Earth</a>
         </div>
       </div>
 
       <section
-        id="audralia-stage"
-        class="stage-card"
-        data-audralia-stage
-        aria-label="Audralia inspectable planet stage"
+        id="planet-gateway"
+        class="gateway-panel"
+        data-showroom-globe-gateway
+        aria-label="Planet family gateway"
       >
-        <div class="stage-header" aria-hidden="false">
-          <div class="stage-label">Inspectable mirror world · clean-canvas authority chain</div>
-          <div id="audralia-route-status" class="stage-status" data-audralia-route-status data-status-tone="loading">
-            Awaiting route bridge.
+        <div class="status-ribbon">
+          <div class="status-pill">Great-grandparent legacy anchor · route selector only</div>
+          <div id="showroom-globe-status" class="status-pill" data-showroom-globe-status>
+            Awaiting legacy route bridge.
           </div>
         </div>
 
-        <div class="canvas-wrap">
-          <canvas
-            id="audralia-canvas"
-            class="audralia-clean-canvas"
-            data-audralia-canvas="true"
-            role="img"
-            aria-label="Audralia clean-canvas planet inspection surface"
-          ></canvas>
-        </div>
-
-        <div class="stage-footer">
-          <p class="stage-note">
-            The page is the expression shell only. Planet truth comes from the clean authority chain;
-            the route bridge mounts the engine; the engine orchestrates runtime, controls, and canvas.
-          </p>
+        <div class="gateway-core" aria-hidden="false">
+          <div class="orbit">
+            <a class="planet-node" data-node="zionts" href="/showroom/globe/earth/">
+              ZIONTS
+              <small>Consequence</small>
+            </a>
+            <a class="planet-node" data-node="audralia" href="/showroom/globe/audralia/">
+              Audralia
+              <small>Possibility</small>
+            </a>
+            <a class="planet-node" data-node="h-earth" href="/showroom/globe/h-earth/">
+              H-Earth
+              <small>Ground View</small>
+            </a>
+            <a class="planet-node" data-node="hearth" href="/showroom/globe/hearth/">
+              Hearth
+              <small>Formation</small>
+            </a>
+            <div class="gateway-title">
+              <strong>Interactive Narrative</strong>
+              <span>Selector surface only. The planet engines live downstream.</span>
+            </div>
+          </div>
         </div>
       </section>
     </section>
 
-    <section class="conditions" aria-label="Possibility conditions">
-      <article class="condition-card">
-        <h2>Clean-slate world</h2>
+    <section class="grid" aria-label="Planet route cards">
+      <article class="card">
+        <p class="tag">Consequence Route</p>
+        <h2>ZIONTS / Earth</h2>
         <p>
-          Audralia begins without Earth’s inherited historical deficit. The planet carries the possibility
-          of development without starting from the same accumulated damage, conflict, and broken systems.
+          The consequence-facing reference route. It holds the Earth-facing mirror without owning this gateway.
         </p>
+        <a href="/showroom/globe/earth/">Face Consequence</a>
       </article>
 
-      <article class="condition-card">
-        <h2>Lawful development</h2>
+      <article class="card">
+        <p class="tag">Possibility Route</p>
+        <h2>Audralia</h2>
         <p>
-          A future still needs structure. Energy, habitat, governance, technology, survival systems,
-          weather inheritance, and return value must be developed lawfully before possibility becomes livable.
+          The clean-slate mirror-world path. Its clean-canvas engine belongs downstream on the Audralia route only.
         </p>
+        <a href="/showroom/globe/audralia/">Enter Audralia</a>
       </article>
 
-      <article class="condition-card">
-        <h2>Mirror back to Earth</h2>
+      <article class="card">
+        <p class="tag">Ground-View Route</p>
+        <h2>H-Earth</h2>
         <p>
-          Audralia is not escape fantasy. What is tested and proven on Audralia can become a model for Earth,
-          and H-Earth carries the ground-view survival expression downstream.
+          H-Earth is Audralia’s downstream ground-view expression, not a separate planet authority.
         </p>
+        <a href="/showroom/globe/h-earth/">Open H-Earth</a>
+      </article>
+
+      <article class="card">
+        <p class="tag">Formation Route</p>
+        <h2>Hearth</h2>
+        <p>
+          The formation lane remains a planet-family route and should stay separated from the Audralia clean-canvas chain.
+        </p>
+        <a href="/showroom/globe/hearth/">Open Hearth</a>
       </article>
     </section>
 
+    <section class="legacy-note" aria-label="Legacy anchor boundary">
+      <strong>Boundary:</strong>
+      this page is a great-grandparent legacy anchor and selector. It may reference planet routes, but it must not import
+      or mount Audralia’s clean-canvas engine. The Audralia route owns its own route bridge. The Showroom Globe gateway
+      owns public routing language only.
+    </section>
+
     <details class="receipt-panel">
-      <summary>Audralia clean-canvas route receipts</summary>
-      <ul id="audralia-receipt-list" data-audralia-receipts>
-        <li>AUDRALIA_CLEAN_CANVAS_EXPRESSION_SHELL_HTML_TNT_v1 · HTML expression shell loaded.</li>
+      <summary>Showroom Globe legacy receipts</summary>
+      <ul id="showroom-globe-receipts" data-showroom-globe-receipts>
+        <li>SHOWROOM_GLOBE_LEGACY_ANCHOR_RENEWAL_HTML_TNT_v1 · HTML legacy anchor shell loaded.</li>
       </ul>
     </details>
 
-    <nav class="bottom-routes" aria-label="Audralia related routes">
-      <a class="route-pill" href="/showroom/globe/">Return to Interactive Narrative</a>
-      <a class="route-pill" href="/showroom/globe/earth/">ZIONTS</a>
-      <a class="route-pill" href="/showroom/globe/h-earth/">H-Earth</a>
-      <a class="route-pill" href="/gauges/">Gauges</a>
+    <nav class="bottom-routes" aria-label="Related routes">
+      <a class="pill" href="/">Compass</a>
+      <a class="pill" href="/showroom/">Showroom</a>
+      <a class="pill" href="/showroom/globe/earth/">ZIONTS</a>
+      <a class="pill" href="/showroom/globe/audralia/">Audralia</a>
+      <a class="pill" href="/showroom/globe/h-earth/">H-Earth</a>
+      <a class="pill" href="/gauges/">Gauges</a>
     </nav>
   </main>
 
   <script
-    src="/showroom/globe/audralia/index.js?v=2026-05-20-audralia-clean-canvas-expression-shell-v1"
-    data-audralia-route-bridge-script="true"
-    data-contract="AUDRALIA_CLEAN_CANVAS_ROUTE_BRIDGE_TNT_v1"
+    src="/showroom/globe/index.js?v=2026-05-20-showroom-globe-legacy-anchor-renewal-v1"
+    data-contract="SHOWROOM_GLOBE_LEGACY_ANCHOR_ROUTE_BRIDGE_JS_TNT_v1"
+    data-showroom-globe-legacy-bridge="true"
   ></script>
 </body>
 </html>

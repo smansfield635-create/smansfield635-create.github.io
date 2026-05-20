@@ -2,856 +2,588 @@
 <html
   lang="en"
   data-route="/showroom/globe/audralia/"
-  data-page="audralia"
-  data-version="2026-05-20.audralia-clean-canvas-dropdown-standby-visual-v1-1"
-  data-contract="AUDRALIA_CLEAN_CANVAS_FORM_MOUNT_ROUTE_BRIDGE_HTML_TNT_v1"
-  data-html-renewal="AUDRALIA_CLEAN_CANVAS_DROPDOWN_AND_STANDBY_VISUAL_HTML_TNT_v1_1"
-  data-previous-contract="AUDRALIA_ROUTEFINDER_PROJECTION_SPACE_LANDMASK_TNT_v1"
-  data-authority="audralia-child-route-expression-shell"
-  data-role="audralia-clean-canvas-route-bridge"
-  data-parent-route="/showroom/globe/"
-  data-planet="audralia"
-  data-planet-truth-owned-by="clean-canvas-authority-chain"
-  data-html-owns="shell,mount-target,status,receipt,route-copy,standby-visual"
-  data-html-does-not-own="planet-truth,terrain-truth,runtime-motion,controls,canvas-logic,engine-internals"
-  data-clean-canvas-route-bridge="active"
-  data-form-mount-required="true"
-  data-standby-visual-required="true"
-  data-visible-failure-required="true"
-  data-native-dropdown-menu="true"
-  data-generated-image="false"
-  data-graphic-box="false"
-  data-visual-pass-claimed="false"
+  data-page="audralia-clean-canvas-route"
+  data-contract="AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_BRIDGE_LOADER_TNT_v1"
+  data-previous-contract="AUDRALIA_CLEAN_CANVAS_DROPDOWN_AND_STANDBY_VISUAL_HTML_TNT_v1_1"
+  data-route-bridge="/showroom/globe/audralia/index.js"
+  data-runtime-path="/assets/audralia/audralia.runtime.js"
+  data-clean-parent-path="/assets/audralia/clean/audralia.engine.js"
 >
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Audralia · Clean Canvas Mount</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Audralia · Clean Canvas Route Bridge · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Audralia clean-canvas route bridge. The route shell mounts the visible Audralia form or shows the exact failed handoff."
-  >
+    content="Audralia child route shell for the clean-canvas authority chain."
+  />
 
   <style>
-    :root{
-      color-scheme:dark;
-      --bg:#02040b;
-      --ink:#fff4d8;
-      --muted:rgba(230,238,255,.76);
-      --faint:rgba(230,238,255,.52);
-      --gold:#f3c86f;
-      --gold2:#ffe8a3;
-      --blue:#8dd8ff;
-      --green:#8ff0c3;
-      --red:#ff8f9f;
-      --panel:rgba(9,15,31,.88);
-      --line:rgba(184,205,255,.18);
-      --shadow:0 32px 110px rgba(0,0,0,.48);
-      --max:1180px;
+    :root {
+      color-scheme: dark;
+      --bg: #030816;
+      --panel: rgba(7, 18, 42, 0.78);
+      --panel-strong: rgba(10, 28, 58, 0.88);
+      --line: rgba(188, 238, 255, 0.25);
+      --line-strong: rgba(196, 242, 255, 0.42);
+      --text: rgba(240, 250, 255, 0.96);
+      --muted: rgba(204, 229, 240, 0.75);
+      --soft: rgba(157, 215, 235, 0.58);
+      --aqua: rgba(112, 226, 255, 0.95);
+      --gold: rgba(255, 223, 146, 0.92);
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
+      --radius: 26px;
+      font-family:
+        Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
     }
 
-    *{box-sizing:border-box}
-
-    html{
-      min-width:320px;
-      min-height:100%;
-      background:var(--bg);
-      scroll-behavior:smooth;
-      overflow-x:hidden;
+    * {
+      box-sizing: border-box;
     }
 
-    body{
-      margin:0;
-      min-width:320px;
-      min-height:100vh;
-      color:var(--ink);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      line-height:1.5;
-      overflow-x:hidden;
+    html {
+      min-height: 100%;
       background:
-        radial-gradient(circle at 50% -8%,rgba(143,240,195,.18),transparent 28rem),
-        radial-gradient(circle at 14% 18%,rgba(36,120,255,.18),transparent 30rem),
-        radial-gradient(circle at 88% 30%,rgba(243,200,111,.13),transparent 28rem),
-        radial-gradient(circle at 50% 78%,rgba(143,240,195,.10),transparent 34rem),
-        linear-gradient(180deg,#071018 0%,#030713 58%,#010207 100%);
-      -webkit-font-smoothing:antialiased;
-      text-rendering:geometricPrecision;
+        radial-gradient(circle at 50% 0%, rgba(34, 94, 132, 0.34), transparent 38rem),
+        radial-gradient(circle at 80% 22%, rgba(91, 179, 215, 0.16), transparent 28rem),
+        linear-gradient(180deg, #040b1c 0%, #020512 58%, #01030a 100%);
+      color: var(--text);
+      scroll-behavior: smooth;
     }
 
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      background-image:
-        radial-gradient(circle,rgba(255,255,255,.17) 0 1px,transparent 1.5px),
-        linear-gradient(rgba(141,216,255,.040) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(141,216,255,.040) 1px,transparent 1px);
-      background-size:220px 260px,54px 54px,54px 54px;
-      opacity:.22;
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.50) 64%,rgba(0,0,0,.22));
-    }
-
-    a{color:inherit;text-decoration:none}
-
-    a:focus-visible,
-    summary:focus-visible,
-    button:focus-visible{
-      outline:2px solid var(--gold);
-      outline-offset:4px;
-    }
-
-    .skip{
-      position:absolute;
-      left:-999px;
-      top:8px;
-      z-index:50;
-      padding:.75rem 1rem;
-      border-radius:999px;
-      color:#05070d;
-      background:var(--gold);
-      font-weight:950;
-    }
-
-    .skip:focus{left:8px}
-
-    .shell{
-      position:relative;
-      z-index:2;
-      width:min(var(--max),calc(100% - 28px));
-      margin:0 auto;
-      padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
-    }
-
-    .topbar{
-      display:grid;
-      grid-template-columns:auto 1fr;
-      align-items:start;
-      gap:18px;
-      padding:12px 0 18px;
-    }
-
-    .brand{
-      display:grid;
-      grid-template-columns:auto 1fr;
-      align-items:center;
-      gap:.9rem;
-      min-width:260px;
-    }
-
-    .brand-mark{
-      width:4.2rem;
-      height:4.2rem;
-      display:grid;
-      place-items:center;
-      border:1px solid rgba(143,240,195,.46);
-      transform:rotate(45deg);
-      clip-path:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
+    body {
+      min-height: 100%;
+      margin: 0;
       background:
-        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.26) 21% 23%,transparent 24%),
-        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.28),rgba(143,240,195,.22),rgba(1,40,40,.62),rgba(243,200,111,.18),rgba(255,255,255,.28)),
-        radial-gradient(circle at 48% 22%,rgba(255,255,255,.30),transparent 42%),
-        linear-gradient(145deg,rgba(8,72,62,.95),rgba(5,8,20,.98));
+        linear-gradient(120deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 100%) 0 0 / 72px 72px,
+        transparent;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a:hover,
+    a:focus-visible {
+      color: var(--aqua);
+      outline: none;
+    }
+
+    .skip-link {
+      position: absolute;
+      top: 0.75rem;
+      left: 0.75rem;
+      z-index: 20;
+      transform: translateY(-160%);
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      background: rgba(2, 8, 20, 0.94);
+      padding: 0.65rem 0.9rem;
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .page-shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 52px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 18px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(2, 8, 20, 0.62);
+      padding: 0.9rem;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.72rem;
+      min-width: 0;
+      color: var(--text);
+      font-weight: 800;
+      letter-spacing: 0.01em;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      flex: 0 0 auto;
+      border: 1px solid var(--line-strong);
+      border-radius: 14px;
+      background:
+        radial-gradient(circle at 30% 24%, rgba(255, 255, 255, 0.22), transparent 32%),
+        linear-gradient(135deg, rgba(75, 195, 230, 0.72), rgba(16, 64, 119, 0.68));
+      color: white;
+      font-size: 0.8rem;
+      box-shadow: inset 0 0 22px rgba(255, 255, 255, 0.08);
+    }
+
+    .brand span:last-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .center-return {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.055);
+      padding: 0.72rem 0.95rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.85rem;
+      margin-bottom: 18px;
+    }
+
+    .nav-group {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(2, 8, 20, 0.54);
+      padding: 0.82rem;
+    }
+
+    .nav-title {
+      display: block;
+      margin-bottom: 0.58rem;
+      color: var(--gold);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .nav-links a {
+      border: 1px solid rgba(196, 242, 255, 0.18);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.045);
+      padding: 0.48rem 0.64rem;
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .nav-links a[aria-current="page"] {
+      border-color: rgba(112, 226, 255, 0.48);
+      color: var(--text);
+      background: rgba(112, 226, 255, 0.1);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 0.92fr) minmax(340px, 1.08fr);
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(104, 210, 255, 0.13), transparent 28rem),
+        linear-gradient(180deg, var(--panel-strong), var(--panel));
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .copy-panel {
+      padding: clamp(1.15rem, 2vw, 1.65rem);
+    }
+
+    .eyebrow {
+      margin: 0 0 0.8rem;
+      color: var(--aqua);
+      font-size: 0.77rem;
+      font-weight: 900;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 12ch;
+      color: var(--text);
+      font-size: clamp(2.3rem, 7vw, 5.4rem);
+      line-height: 0.92;
+      letter-spacing: -0.07em;
+    }
+
+    .lead {
+      max-width: 62ch;
+      margin: 1.05rem 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.5vw, 1.16rem);
+      line-height: 1.62;
+    }
+
+    .handoff-list {
+      display: grid;
+      gap: 0.55rem;
+      margin: 1.25rem 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .handoff-list li {
+      border: 1px solid rgba(196, 242, 255, 0.14);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.045);
+      padding: 0.72rem 0.8rem;
+      color: var(--soft);
+      font-size: 0.92rem;
+    }
+
+    .handoff-list strong {
+      color: var(--text);
+    }
+
+    .canvas-panel {
+      display: grid;
+      grid-template-rows: auto minmax(360px, 1fr) auto;
+      min-height: 620px;
+    }
+
+    .canvas-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.75rem;
+      border-bottom: 1px solid var(--line);
+      padding: 1rem 1.1rem;
+    }
+
+    .canvas-title {
+      margin: 0;
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 850;
+      letter-spacing: 0.01em;
+    }
+
+    .canvas-subtitle {
+      margin: 0.2rem 0 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .status-pill {
+      align-self: start;
+      border: 1px solid rgba(112, 226, 255, 0.35);
+      border-radius: 999px;
+      background: rgba(112, 226, 255, 0.08);
+      padding: 0.48rem 0.72rem;
+      color: var(--aqua);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    #audraliaCanvasMount {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 420px;
+      margin: 1rem;
+      border: 1px solid rgba(196, 242, 255, 0.14);
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(28, 102, 143, 0.38), transparent 18rem),
+        radial-gradient(circle at 50% 50%, rgba(7, 22, 52, 0.96), rgba(1, 4, 14, 0.98) 72%);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    #audraliaCanvasMount::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 18% 22%, rgba(255, 255, 255, 0.13), transparent 1.5px),
+        radial-gradient(circle at 78% 32%, rgba(255, 255, 255, 0.12), transparent 1.2px),
+        radial-gradient(circle at 58% 72%, rgba(255, 255, 255, 0.1), transparent 1.3px);
+      background-size: 180px 150px, 220px 190px, 260px 230px;
+      opacity: 0.5;
+      z-index: 0;
+    }
+
+    #audraliaCanvasMount > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .standby-card {
+      display: grid;
+      gap: 0.7rem;
+      width: min(520px, calc(100% - 32px));
+      border: 1px solid rgba(196, 242, 255, 0.18);
+      border-radius: 22px;
+      background: rgba(2, 8, 20, 0.72);
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.32);
+    }
+
+    .standby-orb {
+      width: 176px;
+      height: 176px;
+      margin: 0 auto;
+      border: 1px solid rgba(190, 238, 255, 0.36);
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 31% 28%, rgba(255, 255, 255, 0.2), transparent 22%),
+        radial-gradient(ellipse at 42% 50%, rgba(96, 166, 106, 0.82) 0 16%, transparent 17%),
+        radial-gradient(ellipse at 63% 48%, rgba(170, 134, 80, 0.68) 0 13%, transparent 14%),
+        radial-gradient(circle at 42% 38%, rgba(98, 225, 255, 0.96), rgba(29, 142, 190, 0.95) 28%, rgba(10, 58, 116, 1) 66%, rgba(2, 14, 40, 1) 100%);
       box-shadow:
-        0 0 2rem rgba(143,240,195,.24),
-        0 1.2rem 2.8rem rgba(0,0,0,.46),
-        inset 0 1px 0 rgba(255,255,255,.16);
+        inset -28px -20px 48px rgba(0, 0, 0, 0.46),
+        0 0 42px rgba(91, 205, 238, 0.16);
     }
 
-    .brand-mark span{
-      transform:rotate(-45deg);
-      font-weight:950;
-      letter-spacing:.04em;
-      color:rgba(255,244,216,.98);
-      text-shadow:0 2px 10px rgba(0,0,0,.85);
+    .standby-card strong {
+      color: var(--text);
+      font-size: 1rem;
     }
 
-    .brand-copy{
-      display:grid;
-      gap:.18rem;
+    .standby-card span {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.45;
     }
 
-    .brand-copy span{
-      color:var(--muted);
-      font-size:.74rem;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
+    .canvas-foot {
+      border-top: 1px solid var(--line);
+      padding: 0.9rem 1rem;
+      color: var(--soft);
+      font-size: 0.82rem;
     }
 
-    .brand-copy strong{
-      font-size:clamp(1.08rem,3vw,1.7rem);
-      line-height:1;
-      letter-spacing:-.045em;
+    .receipt {
+      margin-top: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(2, 8, 20, 0.54);
+      padding: 0.9rem 1rem;
+      color: var(--soft);
+      font-size: 0.82rem;
+      line-height: 1.55;
     }
 
-    .site-menu{
-      justify-self:end;
-      position:relative;
-      z-index:20;
-      width:min(100%,48rem);
+    @media (max-width: 920px) {
+      .topbar,
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .canvas-panel {
+        min-height: 560px;
+      }
     }
 
-    .site-menu-summary{
-      list-style:none;
-      width:fit-content;
-      margin-left:auto;
-      min-height:2.75rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:.7rem;
-      padding:.62rem 1rem;
-      border:1px solid rgba(143,240,195,.24);
-      border-radius:999px;
-      color:rgba(244,255,248,.92);
-      background:
-        radial-gradient(circle at 20% 0%,rgba(143,240,195,.16),transparent 70%),
-        radial-gradient(circle at 80% 100%,rgba(243,200,111,.10),transparent 70%),
-        rgba(143,240,195,.065);
-      box-shadow:
-        0 .8rem 1.8rem rgba(0,0,0,.18),
-        inset 0 1px 0 rgba(255,255,255,.09);
-      cursor:pointer;
-      user-select:none;
-    }
+    @media (max-width: 620px) {
+      .page-shell {
+        width: min(100% - 20px, 1180px);
+        padding-top: 14px;
+      }
 
-    .site-menu-summary::-webkit-details-marker{display:none}
+      .nav-grid {
+        grid-template-columns: 1fr;
+      }
 
-    .site-menu-summary span{
-      font-size:.72rem;
-      font-weight:950;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-    }
+      .center-return {
+        width: 100%;
+      }
 
-    .site-menu-summary b{
-      color:var(--gold2);
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
+      .canvas-head {
+        display: grid;
+      }
 
-    .site-menu-summary::before{
-      content:"";
-      width:.72rem;
-      height:.72rem;
-      transform:rotate(45deg);
-      border-radius:.14rem;
-      background:linear-gradient(135deg,var(--green),#2fbb91);
-      box-shadow:
-        0 0 .9rem rgba(143,240,195,.48),
-        0 0 1.35rem rgba(36,120,255,.18);
-      flex:0 0 auto;
-    }
+      #audraliaCanvasMount {
+        margin: 0.75rem;
+        min-height: 380px;
+      }
 
-    .site-menu-summary::after{
-      content:"Open";
-      min-width:3.3rem;
-      text-align:center;
-      padding:.28rem .52rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:999px;
-      color:rgba(255,244,216,.88);
-      background:rgba(4,10,20,.36);
-      font-size:.58rem;
-      font-weight:950;
-      letter-spacing:.09em;
-      text-transform:uppercase;
-    }
-
-    .site-menu[open] .site-menu-summary{
-      border-color:rgba(243,200,111,.58);
-      background:
-        radial-gradient(circle at 20% 0%,rgba(143,240,195,.20),transparent 70%),
-        radial-gradient(circle at 80% 100%,rgba(243,200,111,.14),transparent 70%),
-        rgba(143,240,195,.085);
-    }
-
-    .site-menu[open] .site-menu-summary::after{content:"Close"}
-
-    .site-menu-panel{
-      position:absolute;
-      right:0;
-      top:calc(100% + .7rem);
-      width:min(48rem,calc(100vw - 28px));
-      padding:1rem;
-      border:1px solid rgba(143,240,195,.22);
-      border-radius:1.45rem;
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.026)),
-        rgba(3,12,20,.97);
-      box-shadow:
-        0 1.5rem 3.5rem rgba(0,0,0,.44),
-        inset 0 1px 0 rgba(255,255,255,.08);
-      overflow:hidden;
-    }
-
-    .site-menu-panel::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      opacity:.30;
-      background:
-        radial-gradient(circle at 9% 14%,rgba(143,240,195,.28) 0 .08rem,rgba(143,240,195,.12) .09rem .24rem,transparent .26rem),
-        radial-gradient(circle at 35% 28%,rgba(255,255,255,.22) 0 .06rem,rgba(143,240,195,.13) .07rem .17rem,transparent .19rem),
-        radial-gradient(circle at 53% 82%,rgba(243,200,111,.22) 0 .07rem,rgba(243,200,111,.12) .08rem .20rem,transparent .22rem),
-        radial-gradient(circle at 89% 59%,rgba(141,216,255,.24) 0 .07rem,rgba(141,216,255,.13) .08rem .20rem,transparent .22rem),
-        radial-gradient(ellipse at 50% 0%,rgba(143,240,195,.12),transparent 72%);
-    }
-
-    .site-menu-grid{
-      position:relative;
-      z-index:1;
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:.75rem;
-    }
-
-    .site-menu-group{
-      display:grid;
-      gap:.55rem;
-      align-content:start;
-      min-height:100%;
-      padding:.8rem;
-      border:1px solid rgba(255,255,255,.11);
-      border-radius:1.05rem;
-      background:
-        radial-gradient(circle at 12% 0%,rgba(143,240,195,.12),transparent 70%),
-        rgba(5,18,28,.56);
-    }
-
-    .site-menu-group strong{
-      color:var(--gold);
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .site-menu-links{
-      display:grid;
-      gap:.42rem;
-    }
-
-    .site-menu-links a{
-      min-height:2.15rem;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:.65rem;
-      padding:.52rem .62rem;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:.82rem;
-      color:rgba(236,248,255,.86);
-      background:rgba(143,240,195,.045);
-      font-size:.74rem;
-      font-weight:900;
-      letter-spacing:.035em;
-      line-height:1.15;
-    }
-
-    .site-menu-links a:hover,
-    .site-menu-links a:focus-visible{
-      border-color:rgba(243,200,111,.52);
-      background:rgba(243,200,111,.075);
-      color:rgba(255,244,216,.96);
-      outline:none;
-    }
-
-    .site-menu-links a[aria-current="page"]{
-      border-color:rgba(143,240,195,.86);
-      color:#041009;
-      background:linear-gradient(135deg,#d7ffe8,#8ff0c3);
-    }
-
-    .site-menu-links a[aria-current="page"]::after{
-      content:"Current";
-      color:#041009;
-      font-size:.56rem;
-      font-weight:950;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      opacity:.82;
-    }
-
-    .panel{
-      border:1px solid var(--line);
-      border-radius:clamp(1.35rem,5vw,2.35rem);
-      background:
-        radial-gradient(circle at 14% 0%,rgba(143,240,195,.10),transparent 28rem),
-        radial-gradient(circle at 86% 18%,rgba(36,120,255,.14),transparent 28rem),
-        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
-        var(--panel);
-      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
-      overflow:hidden;
-    }
-
-    .hero{
-      position:relative;
-      display:grid;
-      gap:1rem;
-      padding:clamp(1.45rem,5vw,3.4rem);
-      margin-top:.6rem;
-      isolation:isolate;
-    }
-
-    .kicker{
-      width:fit-content;
-      display:inline-flex;
-      align-items:center;
-      gap:.58rem;
-      padding:.58rem .95rem;
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:999px;
-      color:rgba(230,238,255,.86);
-      background:rgba(255,255,255,.04);
-      font-size:.72rem;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      position:relative;
-      z-index:2;
-    }
-
-    .kicker::before{
-      content:"";
-      width:.72rem;
-      height:.72rem;
-      border-radius:.18rem;
-      transform:rotate(45deg);
-      background:linear-gradient(135deg,var(--green),var(--gold));
-      box-shadow:0 0 1.1rem rgba(143,240,195,.46);
-    }
-
-    h1{
-      margin:0;
-      max-width:980px;
-      font-size:clamp(3.4rem,10vw,7rem);
-      line-height:.84;
-      letter-spacing:-.105em;
-      text-wrap:balance;
-      position:relative;
-      z-index:2;
-    }
-
-    h2{
-      margin:0;
-      color:var(--gold);
-      font-size:clamp(1.45rem,4.7vw,2.75rem);
-      line-height:.98;
-      letter-spacing:-.07em;
-      text-wrap:balance;
-      position:relative;
-      z-index:2;
-    }
-
-    p{
-      margin:0;
-      color:var(--muted);
-      font-size:clamp(.98rem,2.7vw,1.16rem);
-      line-height:1.55;
-    }
-
-    .lead{max-width:900px}
-
-    .mount-panel{
-      margin-top:1.15rem;
-      padding:clamp(1rem,3vw,1.45rem);
-      display:grid;
-      gap:1.05rem;
-    }
-
-    .mount-grid{
-      display:grid;
-      grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);
-      gap:1rem;
-      align-items:stretch;
-    }
-
-    .audralia-stage{
-      position:relative;
-      min-height:clamp(28rem,58vw,44rem);
-      display:grid;
-      place-items:center;
-      overflow:hidden;
-      isolation:isolate;
-      border:1px solid rgba(143,240,195,.18);
-      border-radius:clamp(1.2rem,4vw,2rem);
-      background:
-        radial-gradient(circle at 50% 34%,rgba(143,240,195,.18),transparent 18rem),
-        radial-gradient(circle at 50% 62%,rgba(36,120,255,.12),transparent 24rem),
-        linear-gradient(180deg,rgba(1,5,16,.70),rgba(2,6,16,.94));
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-    }
-
-    .audralia-stage::before{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:min(82%,34rem);
-      height:min(82%,34rem);
-      transform:translate(-50%,-50%);
-      border:1px solid rgba(143,240,195,.14);
-      border-radius:50%;
-      pointer-events:none;
-      box-shadow:
-        0 0 3rem rgba(143,240,195,.12),
-        inset 0 0 40px rgba(141,216,255,.04);
-    }
-
-    .audralia-mount{
-      position:relative;
-      z-index:3;
-      width:min(92%,38rem);
-      min-height:26rem;
-      display:grid;
-      place-items:center;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:1.4rem;
-      background:
-        radial-gradient(circle at 50% 40%,rgba(255,255,255,.05),transparent 15rem),
-        rgba(255,255,255,.025);
-      overflow:hidden;
-    }
-
-    .mount-placeholder{
-      display:grid;
-      gap:.9rem;
-      place-items:center;
-      text-align:center;
-      padding:1.4rem;
-      color:var(--muted);
-    }
-
-    .mount-placeholder strong{
-      color:var(--green);
-      font-size:.78rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .audralia-standby-form{
-      width:min(76vw,27rem);
-      aspect-ratio:1;
-      position:relative;
-      display:grid;
-      place-items:center;
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 34% 22%,rgba(255,255,255,.36),transparent 0 10%),
-        radial-gradient(ellipse at 41% 36%,rgba(143,240,195,.76),transparent 0 23%),
-        radial-gradient(ellipse at 61% 54%,rgba(36,120,255,.36),transparent 0 34%),
-        radial-gradient(ellipse at 48% 64%,rgba(243,200,111,.22),transparent 0 20%),
-        radial-gradient(circle at 50% 50%,rgba(9,88,72,.95),rgba(5,24,38,.98) 62%,rgba(1,5,14,.98) 100%);
-      box-shadow:
-        inset -2.4rem -2rem 3.4rem rgba(0,0,0,.50),
-        inset 1rem .7rem 1.8rem rgba(255,255,255,.16),
-        0 0 3.4rem rgba(143,240,195,.20),
-        0 1.8rem 3rem rgba(0,0,0,.42);
-      overflow:hidden;
-    }
-
-    .audralia-standby-form::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius:50%;
-      background:
-        linear-gradient(22deg,transparent 0 23%,rgba(243,200,111,.22) 24% 28%,transparent 29% 100%),
-        linear-gradient(-18deg,transparent 0 42%,rgba(143,240,195,.18) 43% 48%,transparent 49% 100%),
-        radial-gradient(ellipse at 68% 32%,rgba(2,20,33,.52),transparent 0 24%),
-        radial-gradient(ellipse at 36% 70%,rgba(143,240,195,.12),transparent 0 32%);
-      opacity:.86;
-      mix-blend-mode:screen;
-    }
-
-    .audralia-standby-form::after{
-      content:"";
-      position:absolute;
-      inset:7%;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow:inset 0 0 3rem rgba(255,255,255,.04);
-    }
-
-    .standby-label{
-      position:absolute;
-      left:50%;
-      bottom:7%;
-      transform:translateX(-50%);
-      width:min(88%,24rem);
-      padding:.75rem .85rem;
-      border:1px solid rgba(243,200,111,.22);
-      border-radius:1rem;
-      background:rgba(1,7,16,.74);
-      color:rgba(255,244,216,.92);
-      font-size:.72rem;
-      font-weight:850;
-      line-height:1.35;
-      letter-spacing:.06em;
-      text-align:center;
-      text-transform:uppercase;
-      backdrop-filter:blur(8px);
-    }
-
-    .status-card{
-      display:grid;
-      gap:.9rem;
-      padding:1rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.2rem;
-      background:rgba(255,255,255,.035);
-    }
-
-    .status-line{
-      padding:.82rem .9rem;
-      border:1px solid rgba(243,200,111,.18);
-      border-radius:1rem;
-      color:rgba(255,244,216,.92);
-      background:rgba(243,200,111,.065);
-      font-weight:850;
-    }
-
-    .step-list{
-      display:grid;
-      gap:.45rem;
-      margin:0;
-      padding:0;
-      list-style:none;
-    }
-
-    .step-list li{
-      padding:.58rem .7rem;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:.82rem;
-      color:var(--muted);
-      background:rgba(255,255,255,.030);
-      font-size:.84rem;
-      font-weight:750;
-    }
-
-    .step-list li[data-state="pass"]{
-      border-color:rgba(143,240,195,.30);
-      color:rgba(215,255,232,.92);
-      background:rgba(143,240,195,.065);
-    }
-
-    .step-list li[data-state="fail"]{
-      border-color:rgba(255,143,159,.34);
-      color:rgba(255,210,216,.94);
-      background:rgba(255,143,159,.065);
-    }
-
-    .step-list li[data-state="run"]{
-      border-color:rgba(243,200,111,.30);
-      color:rgba(255,244,216,.92);
-      background:rgba(243,200,111,.065);
-    }
-
-    .route-receipt,
-    [data-route-receipt],
-    [data-contract-receipt],
-    [data-debug-receipt]{
-      display:none!important;
-      visibility:hidden!important;
-      overflow:hidden!important;
-      width:0!important;
-      height:0!important;
-      max-width:0!important;
-      max-height:0!important;
-      margin:0!important;
-      padding:0!important;
-      border:0!important;
-      opacity:0!important;
-      pointer-events:none!important;
-      position:absolute!important;
-      inset:auto!important;
-      clip-path:inset(50%)!important;
-      white-space:nowrap!important;
-    }
-
-    footer{
-      padding:1.35rem 0 .5rem;
-      color:var(--faint);
-      text-align:center;
-      font-size:.76rem;
-    }
-
-    @media(max-width:1080px){
-      .site-menu-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-    }
-
-    @media(max-width:860px){
-      .topbar{grid-template-columns:1fr}
-      .site-menu{justify-self:stretch;width:100%}
-      .site-menu-summary{margin-left:0}
-      .site-menu-panel{position:relative;right:auto;top:auto;width:100%;margin-top:.7rem}
-      .mount-grid{grid-template-columns:1fr}
-    }
-
-    @media(max-width:560px){
-      .shell{width:min(100% - 22px,var(--max))}
-      h1{font-size:clamp(3.1rem,17vw,5rem)}
-      .site-menu-summary{width:100%;justify-content:space-between}
-      .site-menu-grid{grid-template-columns:1fr}
-      .audralia-mount{min-height:24rem}
-      .audralia-standby-form{width:min(82vw,22rem)}
+      .standby-orb {
+        width: 142px;
+        height: 142px;
+      }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="#main">Skip to Audralia</a>
+  <a class="skip-link" href="#main">Skip to Audralia</a>
 
-  <div class="shell">
+  <div class="page-shell">
     <header class="topbar" aria-label="Audralia route header">
-      <a class="brand" href="/showroom/globe/audralia/" aria-label="Audralia">
-        <span class="brand-mark" aria-hidden="true"><span>AU</span></span>
-        <span class="brand-copy">
-          <span>Diamond Gate Bridge</span>
-          <strong>Audralia</strong>
-        </span>
+      <a class="brand" href="/showroom/globe/audralia/" aria-label="Audralia route home">
+        <span class="brand-mark">AU</span>
+        <span>Diamond Gate Bridge · <strong>Audralia</strong></span>
       </a>
 
-      <details class="site-menu" data-native-menu>
-        <summary class="site-menu-summary">
-          <span>Audralia Menu</span>
-          <b>Planet Route</b>
-        </summary>
-
-        <div class="site-menu-panel" aria-label="Audralia dropdown route menu">
-          <div class="site-menu-grid">
-            <section class="site-menu-group" aria-labelledby="menu-center">
-              <strong id="menu-center">Center · Return</strong>
-              <div class="site-menu-links">
-                <a href="/showroom/globe/">Globe</a>
-                <a href="/showroom/globe/audralia/" aria-current="page">Audralia</a>
-                <a href="/showroom/">Showroom</a>
-              </div>
-            </section>
-
-            <section class="site-menu-group" aria-labelledby="menu-worlds">
-              <strong id="menu-worlds">Worlds · Future Paths</strong>
-              <div class="site-menu-links">
-                <a href="/showroom/globe/earth/">ZIONTS</a>
-                <a href="/showroom/globe/h-earth/">H-Earth</a>
-                <a href="/showroom/globe/audralia/">Audralia</a>
-              </div>
-            </section>
-
-            <section class="site-menu-group" aria-labelledby="menu-story">
-              <strong id="menu-story">Story · Mirrorland</strong>
-              <div class="site-menu-links">
-                <a href="/characters/">Characters</a>
-                <a href="/explore/">Manor / Explore</a>
-                <a href="/frontier/">Frontier</a>
-              </div>
-            </section>
-
-            <section class="site-menu-group" aria-labelledby="menu-proof">
-              <strong id="menu-proof">Proof · Support</strong>
-              <div class="site-menu-links">
-                <a href="/laws/">Laws</a>
-                <a href="/products/">Products</a>
-                <a href="/gauges/">Gauges</a>
-              </div>
-            </section>
-          </div>
-        </div>
-      </details>
+      <a class="center-return" href="/showroom/globe/">Center · Return to Globe</a>
     </header>
 
-    <main id="main">
-      <section class="panel hero" aria-labelledby="audralia-title">
-        <div class="kicker">Clean Canvas Route Bridge</div>
-        <h1 id="audralia-title">Audralia form mount.</h1>
-        <p class="lead">
-          This page is the Audralia child route expression shell. The visible standby form is present immediately, while the route bridge attempts to replace it with the clean-canvas authority-chain render.
-        </p>
-      </section>
-
-      <section class="panel mount-panel" aria-labelledby="mount-title">
-        <div class="kicker">Authority chain handoff</div>
-        <h2 id="mount-title">Clean-canvas form mount target.</h2>
-
-        <div class="mount-grid">
-          <section class="audralia-stage" aria-label="Audralia visible form stage">
-            <div
-              id="audralia-clean-canvas-mount"
-              class="audralia-mount"
-              data-audralia-clean-canvas-mount="true"
-              data-audralia-form-visible="standby"
-            >
-              <div class="mount-placeholder" data-audralia-placeholder>
-                <div class="audralia-standby-form" data-audralia-form="standby-html">
-                  <div class="standby-label">Audralia standby form · route bridge awaiting clean-canvas handoff</div>
-                </div>
-                <strong>Standby form visible</strong>
-                <p>The page now displays a visible Audralia form before the downstream clean-canvas engine handoff completes.</p>
-              </div>
-            </div>
-          </section>
-
-          <aside class="status-card" aria-label="Audralia route bridge status">
-            <div
-              id="audralia-route-status"
-              class="status-line"
-              data-audralia-route-status="true"
-            >
-              BOOT_PENDING · Audralia route bridge has not started.
-            </div>
-
-            <ul class="step-list" aria-label="Audralia bridge mount steps">
-              <li data-audralia-step="route">ROUTE_NOT_CHECKED</li>
-              <li data-audralia-step="mount">MOUNT_TARGET_NOT_CHECKED</li>
-              <li data-audralia-step="import">CLEAN_CANVAS_IMPORT_NOT_STARTED</li>
-              <li data-audralia-step="contract">ENGINE_CONTRACT_NOT_CHECKED</li>
-              <li data-audralia-step="call">MOUNT_NOT_CALLED</li>
-              <li data-audralia-step="visible">FORM_NOT_CHECKED</li>
-            </ul>
-          </aside>
+    <nav class="nav-grid" aria-label="Audralia route navigation">
+      <section class="nav-group" aria-label="Center return links">
+        <span class="nav-title">Center · Return</span>
+        <div class="nav-links">
+          <a href="/showroom/globe/">Globe</a>
+          <a href="/showroom/globe/audralia/" aria-current="page">Audralia</a>
+          <a href="/showroom/">Showroom</a>
         </div>
       </section>
 
-      <template id="route-receipt" data-route-receipt>
-AUDRALIA_CLEAN_CANVAS_FORM_MOUNT_ROUTE_BRIDGE_HTML_TNT_v1
-html_renewal=AUDRALIA_CLEAN_CANVAS_DROPDOWN_AND_STANDBY_VISUAL_HTML_TNT_v1_1
-route=/showroom/globe/audralia/
-page=audralia
-role=audralia_clean_canvas_route_bridge
-parent_route=/showroom/globe/
-html_owns=shell,mount_target,status,receipt,route_copy,standby_visual
-html_does_not_own=planet_truth,terrain_truth,runtime_motion,controls,canvas_logic,engine_internals
-native_dropdown_menu=true
-mount_target=data_audralia_clean_canvas_mount
-status_target=data_audralia_route_status
-standby_visual_present=true
-visible_failure_required=true
-terminal_loading_forbidden=true
-asset_chain_held_terminal_state=false
-parent_globe_contamination=false
-generated_image=false
-graphic_box=false
-visual_pass_claimed=false
-      </template>
-    </main>
+      <section class="nav-group" aria-label="World future paths">
+        <span class="nav-title">Worlds · Future Paths</span>
+        <div class="nav-links">
+          <a href="/showroom/globe/earth/">ZIONTS</a>
+          <a href="/showroom/globe/h-earth/">H-Earth</a>
+          <a href="/showroom/globe/audralia/" aria-current="page">Audralia</a>
+        </div>
+      </section>
 
-    <footer>
-      AUDRALIA_CLEAN_CANVAS_DROPDOWN_AND_STANDBY_VISUAL_HTML_TNT_v1_1 · Audralia · dropdown active · standby form visible.
-    </footer>
+      <section class="nav-group" aria-label="Mirrorland story links">
+        <span class="nav-title">Story · Mirrorland</span>
+        <div class="nav-links">
+          <a href="/characters/">Characters</a>
+          <a href="/explore/">Manor / Explore</a>
+          <a href="/frontier/">Frontier</a>
+        </div>
+      </section>
+
+      <section class="nav-group" aria-label="Proof support links">
+        <span class="nav-title">Proof · Support</span>
+        <div class="nav-links">
+          <a href="/laws/">Laws</a>
+          <a href="/products/">Products</a>
+          <a href="/gauges/">Gauges</a>
+        </div>
+      </section>
+    </nav>
+
+    <main id="main" class="hero" tabindex="-1">
+      <section class="panel copy-panel" aria-labelledby="audraliaTitle">
+        <p class="eyebrow">Clean Canvas Route Bridge</p>
+        <h1 id="audraliaTitle">Audralia form mount.</h1>
+        <p class="lead">
+          This page is the Audralia child route shell. The HTML owns the page
+          structure and mount target only. The route bridge now owns runtime
+          import, awaited handoff, visible-form confirmation, and fallback status.
+        </p>
+
+        <ul class="handoff-list" aria-label="Authority handoff">
+          <li><strong>HTML shell:</strong> keeps navigation, copy, and the mount target.</li>
+          <li><strong>Route bridge:</strong> loads <code>/showroom/globe/audralia/index.js</code>.</li>
+          <li><strong>Runtime shim:</strong> loads <code>/assets/audralia/audralia.runtime.js</code>.</li>
+          <li><strong>Clean parent:</strong> mounts <code>/assets/audralia/clean/audralia.engine.js</code>.</li>
+        </ul>
+
+        <div class="receipt" aria-label="HTML receipt">
+          AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_BRIDGE_LOADER_TNT_v1 ·
+          HTML shell active · inline diagnostic controller demoted · route bridge loader active.
+        </div>
+      </section>
+
+      <section class="panel canvas-panel" aria-labelledby="mountTitle">
+        <header class="canvas-head">
+          <div>
+            <h2 id="mountTitle" class="canvas-title">Authority chain handoff</h2>
+            <p class="canvas-subtitle">Clean-canvas form mount target.</p>
+          </div>
+          <span class="status-pill">Bridge loader active</span>
+        </header>
+
+        <div
+          id="audraliaCanvasMount"
+          data-audralia-canvas-mount
+          data-audralia-clean-canvas-mount
+          data-audralia-mount-target="true"
+          data-html-contract="AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_BRIDGE_LOADER_TNT_v1"
+          aria-label="Audralia clean-canvas mount target"
+        >
+          <div class="standby-card" data-audralia-html-standby="true">
+            <div class="standby-orb" aria-hidden="true"></div>
+            <strong>Standby form visible.</strong>
+            <span>
+              The HTML standby is present while the route bridge loads the
+              runtime handoff. This shell no longer owns the diagnostic fallback.
+            </span>
+          </div>
+        </div>
+
+        <footer class="canvas-foot">
+          Route bridge script:
+          <code>/showroom/globe/audralia/index.js</code>
+        </footer>
+      </section>
+    </main>
   </div>
 
+  <script>
+    window.AUDRALIA_HTML_BRIDGE_LOADER_RECEIPT = {
+      contract: "AUDRALIA_G2_5_SHOWROOM_GLOBE_AUDRALIA_HTML_BRIDGE_LOADER_TNT_v1",
+      previousContract: "AUDRALIA_CLEAN_CANVAS_DROPDOWN_AND_STANDBY_VISUAL_HTML_TNT_v1_1",
+      route: "/showroom/globe/audralia/",
+      target: "/showroom/globe/audralia/index.html",
+      routeBridge: "/showroom/globe/audralia/index.js",
+      runtimePath: "/assets/audralia/audralia.runtime.js",
+      cleanParentPath: "/assets/audralia/clean/audralia.engine.js",
+      mode: "html_shell_bridge_loader_only",
+      htmlChange: true,
+      inlineDiagnosticControllerDemoted: true,
+      routeBridgeOwnsRuntimeImport: true,
+      routeBridgeOwnsFallbackDecision: true,
+      visualPassClaim: false,
+      generatedImage: false,
+      graphicBox: false
+    };
+
+    document.documentElement.setAttribute(
+      "data-audralia-html-bridge-loader-active",
+      "true"
+    );
+  </script>
+
   <script
-    src="/showroom/globe/audralia/index.js?v=2026-05-20-audralia-clean-canvas-form-mount-route-bridge-v1-1"
-    data-contract="AUDRALIA_CLEAN_CANVAS_FORM_MOUNT_ROUTE_BRIDGE_JS_TNT_v1_1"
-    data-audralia-route-bridge="true"
+    type="module"
+    src="/showroom/globe/audralia/index.js?v=AUDRALIA_G2_5_ROUTE_BRIDGE_AWAITED_RUNTIME_HANDOFF_INDEX_JS_TNT_v2_1"
   ></script>
 </body>
 </html>

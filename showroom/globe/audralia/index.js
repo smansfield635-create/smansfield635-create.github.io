@@ -1,19 +1,19 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_G2_6_ROUTE_BRIDGE_PARENT_CONFIRMATION_ALIGNMENT_TNT_v1
+// AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1
 // Full-file replacement.
-// Purpose: align the Audralia route bridge with the G2.6 parent-confirmed handoff.
+// Purpose: align the Audralia route bridge with the parent visible-body-first failsafe.
 // Owns: route bridge import, mount call, parent receipt validation, continents receipt validation, visible handoff status.
 // Does not own: runtime internals, parent render, continent model, motion, sky, generated image, GraphicBox, or visual-pass claim.
 
-const BRIDGE_CONTRACT = "AUDRALIA_G2_6_ROUTE_BRIDGE_PARENT_CONFIRMATION_ALIGNMENT_TNT_v1";
-const PREVIOUS_BRIDGE_CONTRACT = "AUDRALIA_G2_5_ROUTE_BRIDGE_VERSIONED_RUNTIME_PATH_LOCK_TNT_v3_1";
+const BRIDGE_CONTRACT = "AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1";
+const PREVIOUS_BRIDGE_CONTRACT = "AUDRALIA_G2_6_ROUTE_BRIDGE_PARENT_CONFIRMATION_ALIGNMENT_TNT_v1";
 
 const ROUTE = "/showroom/globe/audralia/";
 const RUNTIME_PATH = "/assets/audralia/audralia.runtime.v3.js";
 const RUNTIME_IMPORT = `${RUNTIME_PATH}?v=${encodeURIComponent(BRIDGE_CONTRACT)}`;
 
 const RUNTIME_CONTRACT = "AUDRALIA_G2_5_RUNTIME_PARENT_CACHE_KEY_ALIGNMENT_TNT_v1";
-const PARENT_CONTRACT = "AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1";
+const PARENT_CONTRACT = "AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1";
 const CONTINENTS_CONTRACT = "AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1";
 
 const PARENT_TIMEOUT_MS = 5600;
@@ -422,6 +422,7 @@ function validateParentVisible(receipt) {
   return Boolean(
     receipt.formVisible === true ||
       receipt.ready === true ||
+      receipt.bodyPainted === true ||
       (hasWindow() &&
         (window.AUDRALIA_FORM_VISIBLE === true ||
           window.AUDRALIA_CLEAN_CANVAS_FORM_VISIBLE === true ||
@@ -599,7 +600,7 @@ function publishBridgeReceipt(scope = "publish") {
     runtimeContractExpected: RUNTIME_CONTRACT,
     parentContractExpected: PARENT_CONTRACT,
     continentsContractExpected: CONTINENTS_CONTRACT,
-    mode: "g26_route_bridge_parent_confirmation_alignment",
+    mode: "g26_parent_visible_body_first_failsafe_bridge",
     scope,
     status: state.status,
     headline: state.headline,
@@ -636,7 +637,7 @@ function publishBridgeReceipt(scope = "publish") {
   };
 
   window.AUDRALIA_ROUTE_BRIDGE_RECEIPT = receipt;
-  window.AUDRALIA_G2_6_ROUTE_BRIDGE_PARENT_CONFIRMATION_ALIGNMENT_RECEIPT = receipt;
+  window.AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_BRIDGE_RECEIPT = receipt;
 
   try {
     window.dispatchEvent(

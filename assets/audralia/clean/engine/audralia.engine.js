@@ -1,10 +1,16 @@
 // /assets/audralia/clean/audralia.engine.js
-// AUDRALIA_G2_5_PARENT_ENGINE_CHILD_CONTRACT_ALIGNMENT_TNT_v1
+// AUDRALIA_G2_5_PARENT_ENGINE_AUDRALIA_NESTED_CHILD_PATH_ALIGNMENT_TNT_v1
 // Full-file replacement.
-// Purpose: renew the parent Audralia engine contract so it consumes the already-created three child engines:
-//   /assets/audralia/clean/engine/continents.js
-//   /assets/audralia/clean/engine/motion.js
-//   /assets/audralia/clean/engine/sky.js
+// Purpose: renew the parent Audralia engine contract to match the current nested child architecture:
+//
+// Parent:
+//   /assets/audralia/clean/audralia.engine.js
+//
+// Children:
+//   /assets/audralia/clean/audralia/engine/continents.js
+//   /assets/audralia/clean/audralia/engine/motion.js
+//   /assets/audralia/clean/audralia/engine/sky.js
+//
 // Children remain unchanged.
 // Parent owns: mount, child loading, canvas creation, pixel composition, route-bridge compatibility, FORM_VISIBLE.
 // Parent does not own: continent law, motion law, sky/weather law, route HTML, route bridge JS, parent Globe, Characters, Gauges, Showroom, or navigation.
@@ -12,25 +18,25 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G2_5_PARENT_ENGINE_CHILD_CONTRACT_ALIGNMENT_TNT_v1";
-  const RECEIPT = "AUDRALIA_G2_5_PARENT_ENGINE_CHILD_CONTRACT_ALIGNMENT_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G2_4_AXIS_ROTATION_FINGER_DRAG_NON_BLOB_CONTINENT_ENGINE_TNT_v1";
+  const CONTRACT = "AUDRALIA_G2_5_PARENT_ENGINE_AUDRALIA_NESTED_CHILD_PATH_ALIGNMENT_TNT_v1";
+  const RECEIPT = "AUDRALIA_G2_5_PARENT_ENGINE_AUDRALIA_NESTED_CHILD_PATH_ALIGNMENT_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_PARENT_ENGINE_CHILD_CONTRACT_ALIGNMENT_TNT_v1";
   const ROUTE = "/showroom/globe/audralia/";
-  const VERSION = "2026-05-20.audralia-g2-5-parent-engine-child-contract-alignment-v1";
+  const VERSION = "2026-05-20.audralia-g2-5-parent-engine-audralia-nested-child-path-alignment-v1";
 
   const CHILDREN = Object.freeze({
     continents: Object.freeze({
-      path: "/assets/audralia/clean/engine/continents.js",
+      path: "/assets/audralia/clean/audralia/engine/continents.js",
       globalName: "AUDRALIA_CONTINENTS_ENGINE",
       requiredContract: "AUDRALIA_G2_5_CONTINENTS_CHILD_ENGINE_TNT_v1"
     }),
     motion: Object.freeze({
-      path: "/assets/audralia/clean/engine/motion.js",
+      path: "/assets/audralia/clean/audralia/engine/motion.js",
       globalName: "AUDRALIA_MOTION_ENGINE",
       requiredContract: "AUDRALIA_G2_5_MOTION_CHILD_ENGINE_TNT_v1"
     }),
     sky: Object.freeze({
-      path: "/assets/audralia/clean/engine/sky.js",
+      path: "/assets/audralia/clean/audralia/engine/sky.js",
       globalName: "AUDRALIA_SKY_ENGINE",
       requiredContract: "AUDRALIA_G2_5_SKY_CHILD_ENGINE_TNT_v1"
     })
@@ -49,6 +55,7 @@
     seaLevel: 0.735,
     axisTiltDegrees: 23.5,
     childStack: true,
+    childArchitecture: "/assets/audralia/clean/audralia/engine/",
     generatedImage: false,
     graphicBox: false,
     visualPassClaimed: false
@@ -284,6 +291,7 @@
 
     if (!loaded) {
       const moduleResult = await importAsModule(child.path, child.globalName);
+
       if (moduleResult && !moduleResult.error) {
         loaded = moduleResult;
       } else if (moduleResult?.error) {
@@ -293,6 +301,7 @@
 
     if (!loaded) {
       loaded = await loadAsClassicScript(child.path, child.globalName);
+
       if (!loaded && !state.childErrors[name]) {
         state.childErrors[name] = "classic-script-load-failed";
       }
@@ -827,7 +836,7 @@
     const m = state.childStatus.motion;
     const s = state.childStatus.sky;
 
-    label.textContent = `Audralia G2.5 · child stack active · lon ${lon} · land ${land} · ocean ${ocean} · ${c}/${m}/${s}`;
+    label.textContent = `Audralia G2.5 · nested child stack active · lon ${lon} · land ${land} · ocean ${ocean} · ${c}/${m}/${s}`;
   }
 
   function requestDraw(canvas, immediate = false) {
@@ -871,12 +880,12 @@
 
   function createRender(context) {
     const documentRef = doc(context);
-    if (!documentRef) throw new Error("Document unavailable for Audralia G2.5 parent engine render.");
+    if (!documentRef) throw new Error("Document unavailable for Audralia G2.5 nested child parent engine render.");
 
     const root = makeEl(documentRef, "section", "audralia-engine-root", {
       "data-audralia-engine-render": "true",
       "data-audralia-clean-canvas-render": "true",
-      "data-audralia-g2-5-child-stack": "true",
+      "data-audralia-g2-5-nested-child-stack": "true",
       "data-contract": CONTRACT,
       "data-previous-contract": PREVIOUS_CONTRACT
     });
@@ -884,8 +893,8 @@
     styleRoot(root);
 
     const canvas = makeEl(documentRef, "canvas", "audralia-engine-canvas", {
-      "data-audralia-form": "g2-5-child-stack-engine-canvas",
-      "aria-label": "Audralia G2.5 child-stack planet form. Drag to rotate."
+      "data-audralia-form": "g2-5-nested-child-stack-engine-canvas",
+      "aria-label": "Audralia G2.5 nested child-stack planet form. Drag to rotate."
     });
 
     styleCanvas(canvas);
@@ -895,7 +904,7 @@
     });
 
     styleLabel(label);
-    label.textContent = "Audralia G2.5 · child engine stack loading";
+    label.textContent = "Audralia G2.5 · nested child engine stack loading";
 
     root.appendChild(canvas);
     root.appendChild(label);
@@ -908,8 +917,8 @@
     const mountTarget = resolveMount(context);
     const documentRef = doc(context);
 
-    if (!mountTarget) throw new Error("Audralia G2.5 parent engine mount target missing.");
-    if (!documentRef) throw new Error("Audralia G2.5 parent engine document missing.");
+    if (!mountTarget) throw new Error("Audralia G2.5 nested child parent engine mount target missing.");
+    if (!documentRef) throw new Error("Audralia G2.5 nested child parent engine document missing.");
 
     const render = createRender(context);
     mountTarget.replaceChildren(render.root);
@@ -940,14 +949,15 @@
     mountTarget.dataset.audraliaFormVisible = "true";
     mountTarget.dataset.audraliaEngineMounted = "true";
     mountTarget.dataset.audraliaEngineContract = CONTRACT;
-    mountTarget.dataset.audraliaG25ChildStack = "true";
+    mountTarget.dataset.audraliaG25NestedChildStack = "true";
+    mountTarget.dataset.audraliaChildArchitecture = PLANET.childArchitecture;
     mountTarget.dataset.audraliaChildContinents = state.childStatus.continents;
     mountTarget.dataset.audraliaChildMotion = state.childStatus.motion;
     mountTarget.dataset.audraliaChildSky = state.childStatus.sky;
 
     const statusTarget = context?.statusTarget;
     if (isElement(statusTarget)) {
-      statusTarget.textContent = "FORM_VISIBLE · Audralia G2.5 child-stack parent engine mounted.";
+      statusTarget.textContent = "FORM_VISIBLE · Audralia G2.5 nested child-stack parent engine mounted.";
       statusTarget.dataset.state = "pass";
     }
 
@@ -975,6 +985,12 @@
       mountCount: state.mountCount,
       parentRole: "mount-composition-engine",
       childStack: true,
+      childArchitecture: PLANET.childArchitecture,
+      childPaths: Object.freeze({
+        continents: CHILDREN.continents.path,
+        motion: CHILDREN.motion.path,
+        sky: CHILDREN.sky.path
+      }),
       childrenLoaded: Object.freeze({ ...state.childStatus }),
       childrenFallbackUsed: Object.freeze([...state.fallbacksUsed]),
       childContracts: Object.freeze({ ...state.childContracts }),
@@ -983,7 +999,7 @@
       motionEngineContract: state.childContracts.motion,
       skyEngineContract: state.childContracts.sky,
       ratios: state.lastRatios,
-      planetStandard: "G2.5 simple child-engine split planet form",
+      planetStandard: "G2.5 nested Audralia child-engine split planet form",
       continentCount: PLANET.continentCount,
       mainContinents: PLANET.mainContinents,
       northPolarContinent: PLANET.northPolarContinent,
@@ -1024,6 +1040,7 @@
       childrenFallbackUsed: Object.freeze([...state.fallbacksUsed]),
       childContracts: Object.freeze({ ...state.childContracts }),
       childErrors: Object.freeze({ ...state.childErrors }),
+      childArchitecture: PLANET.childArchitecture,
       motion: state.motionState?.getStatus ? state.motionState.getStatus() : null,
       planet: PLANET,
       generatedImage: false,
@@ -1057,4 +1074,6 @@
   global.audraliaCleanCanvasEngine = AUDRALIA_ENGINE;
   global.mountAudraliaCleanCanvas = mount;
   global.renderAudraliaCleanCanvas = mount;
+  global.mountAudralia = mount;
+  global.renderAudralia = mount;
 })();

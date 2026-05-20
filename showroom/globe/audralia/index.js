@@ -1,75 +1,82 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_CLEAN_CANVAS_ROUTE_BRIDGE_TNT_v1
+// AUDRALIA_CLEAN_CANVAS_FORM_MOUNT_ROUTE_BRIDGE_JS_TNT_v1_1
 // Full-file replacement.
-// File 17.
-// Audralia route bridge only.
-// Purpose:
-// - Loads the clean 16-file Audralia authority chain in lawful order.
-// - Mounts /assets/audralia/clean/audralia.engine.js into the Audralia page canvas.
-// - Reports route receipts to the HTML expression shell.
-// - Does not own planet science.
-// - Does not own runtime motion.
-// - Does not own controls.
-// - Does not own canvas composition.
-// - Does not own HTML expression.
-// No generated image. No GraphicBox. No visual-pass claim.
+// Route bridge only.
+// Objective: Audralia route must mount visible form or show exact failed handoff.
+// Correction: mount context is passed as an argument, not only as `this`.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_CLEAN_CANVAS_ROUTE_BRIDGE_TNT_v1";
-  const RECEIPT = "AUDRALIA_CLEAN_CANVAS_ROUTE_BRIDGE_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_CLEAN_CANVAS_ENGINE_TNT_v1";
-  const VERSION = "2026-05-20.audralia-clean-canvas-route-bridge-v1";
-
+  const CONTRACT = "AUDRALIA_CLEAN_CANVAS_FORM_MOUNT_ROUTE_BRIDGE_JS_TNT_v1_1";
+  const RECEIPT = "AUDRALIA_CLEAN_CANVAS_FORM_MOUNT_ROUTE_BRIDGE_JS_RECEIPT_v1_1";
+  const HTML_CONTRACT = "AUDRALIA_CLEAN_CANVAS_FORM_MOUNT_ROUTE_BRIDGE_HTML_TNT_v1";
+  const VERSION = "2026-05-20.audralia-clean-canvas-form-mount-route-bridge-js-v1-1";
   const ROUTE = "/showroom/globe/audralia/";
-  const HTML_SHELL_CONTRACT = "AUDRALIA_CLEAN_CANVAS_EXPRESSION_SHELL_HTML_TNT_v1";
-  const CACHE_KEY = "2026-05-20-audralia-clean-canvas-route-bridge-v1";
 
-  const CHAIN = Object.freeze([
-    "/assets/showroom/globe/planet/planet.manifest.js",
-    "/assets/showroom/globe/planet/planet.math.js",
-    "/assets/showroom/globe/planet/planet.lattice.js",
-    "/assets/showroom/globe/planet/planet.palette.js",
-    "/assets/audralia/clean/audralia.identity.js",
-    "/assets/audralia/clean/audralia.landmask.js",
-    "/assets/audralia/clean/audralia.hydrology.js",
-    "/assets/audralia/clean/audralia.elevation.js",
-    "/assets/audralia/clean/audralia.climate.js",
-    "/assets/audralia/clean/audralia.biome.js",
-    "/assets/audralia/clean/audralia.surface.js",
-    "/assets/audralia/clean/audralia.atmosphere.js",
-    "/assets/audralia/clean/audralia.runtime.js",
-    "/assets/audralia/clean/audralia.controls.js",
+  const IMPORT_CANDIDATES = Object.freeze([
+    "/assets/audralia/clean/audralia.clean.canvas.js",
     "/assets/audralia/clean/audralia.canvas.js",
-    "/assets/audralia/clean/audralia.engine.js"
+    "/assets/audralia/clean/audralia.engine.js",
+    "/assets/audralia/audralia.clean.canvas.js",
+    "/assets/audralia/audralia.canvas.js",
+    "/assets/audralia/audralia.engine.js",
+    "/assets/audralia/audralia.clean.engine.js",
+    "/assets/audralia/audralia.clean.canvas.engine.js",
+    "/assets/audralia/audralia.runtime.js"
   ]);
 
-  const EXPECTED_GLOBALS = Object.freeze([
-    "AUDRALIA_CLEAN_CANVAS_MANIFEST",
-    "AUDRALIA_CLEAN_CANVAS_MATH",
-    "AUDRALIA_CLEAN_CANVAS_LATTICE",
-    "AUDRALIA_CLEAN_CANVAS_PALETTE",
-    "AUDRALIA_CLEAN_CANVAS_IDENTITY",
-    "AUDRALIA_CLEAN_CANVAS_LANDMASK",
-    "AUDRALIA_CLEAN_CANVAS_HYDROLOGY",
-    "AUDRALIA_CLEAN_CANVAS_ELEVATION",
-    "AUDRALIA_CLEAN_CANVAS_CLIMATE",
-    "AUDRALIA_CLEAN_CANVAS_BIOME",
-    "AUDRALIA_CLEAN_CANVAS_SURFACE",
-    "AUDRALIA_CLEAN_CANVAS_ATMOSPHERE",
-    "AUDRALIA_CLEAN_CANVAS_RUNTIME",
-    "AUDRALIA_CLEAN_CANVAS_CONTROLS",
-    "AUDRALIA_CLEAN_CANVAS_COMPOSITOR",
-    "AUDRALIA_CLEAN_CANVAS_ENGINE"
+  const EXPORT_CANDIDATES = Object.freeze([
+    "AUDRALIA_CLEAN_CANVAS_AUTHORITY",
+    "AUDRALIA_CLEAN_CANVAS_ENGINE",
+    "AUDRALIA_CANVAS_AUTHORITY",
+    "AUDRALIA_CANVAS_ENGINE",
+    "AUDRALIA_ENGINE",
+    "AudraliaCleanCanvasAuthority",
+    "AudraliaCleanCanvasEngine",
+    "AudraliaCanvasAuthority",
+    "AudraliaCanvasEngine",
+    "AudraliaEngine",
+    "audraliaCleanCanvasAuthority",
+    "audraliaCleanCanvasEngine",
+    "audraliaCanvasAuthority",
+    "audraliaCanvasEngine",
+    "audraliaEngine",
+    "createAudraliaCleanCanvas",
+    "mountAudraliaCleanCanvas",
+    "renderAudraliaCleanCanvas",
+    "createAudraliaCanvas",
+    "mountAudraliaCanvas",
+    "renderAudraliaCanvas",
+    "mountAudralia",
+    "renderAudralia",
+    "createAudralia",
+    "default"
+  ]);
+
+  const METHOD_CANDIDATES = Object.freeze([
+    "mount",
+    "render",
+    "start",
+    "boot",
+    "init",
+    "create"
   ]);
 
   const state = {
     booted: false,
-    loaded: [],
-    failed: [],
-    engineMount: null,
-    receipt: null
+    routeValid: false,
+    importPath: null,
+    importMode: null,
+    importError: null,
+    module: null,
+    engineExportName: null,
+    engine: null,
+    methodName: null,
+    mountResult: null,
+    fallbackVisible: false,
+    receipt: null,
+    steps: []
   };
 
   function doc() {
@@ -80,243 +87,460 @@
     return typeof window !== "undefined" ? window : {};
   }
 
-  function setDataset(key, value) {
-    const d = doc();
-    if (!d?.documentElement?.dataset) return;
+  function qs(selector) {
+    return doc()?.querySelector(selector) || null;
+  }
 
-    try {
-      d.documentElement.dataset[key] = String(value);
-    } catch {
-      // Dataset writes are route proof metadata only.
-    }
+  function qsa(selector) {
+    return Array.from(doc()?.querySelectorAll(selector) || []);
   }
 
   function byId(id) {
-    const d = doc();
-    return d ? d.getElementById(id) : null;
+    return doc()?.getElementById(id) || null;
   }
 
-  function qs(selector) {
-    const d = doc();
-    return d ? d.querySelector(selector) : null;
+  function now() {
+    return new Date().toISOString();
+  }
+
+  function setDataset(key, value) {
+    if (!doc()?.documentElement?.dataset) return;
+    try {
+      doc().documentElement.dataset[key] = String(value);
+    } catch {
+      // metadata only
+    }
   }
 
   function statusNode() {
     return byId("audralia-route-status") || qs("[data-audralia-route-status]");
   }
 
-  function writeStatus(message, tone = "neutral") {
+  function mountNode() {
+    return byId("audralia-clean-canvas-mount") || qs("[data-audralia-clean-canvas-mount]");
+  }
+
+  function receiptNode() {
+    return byId("route-receipt") || qs("[data-route-receipt]");
+  }
+
+  function stepNode(key) {
+    return qs(`[data-audralia-step="${key}"]`);
+  }
+
+  function updateStatus(message, tone = "run") {
     const node = statusNode();
     if (!node) return;
-
     node.textContent = message;
-    node.dataset.statusTone = tone;
+    node.dataset.state = tone;
   }
 
-  function appendReceiptLine(message) {
-    const list = byId("audralia-receipt-list") || qs("[data-audralia-receipts]");
-    if (!list) return;
-
-    const item = doc().createElement("li");
-    item.textContent = message;
-    list.appendChild(item);
+  function updateStep(key, message, tone = "run") {
+    const node = stepNode(key);
+    if (!node) return;
+    node.textContent = message;
+    node.dataset.state = tone;
   }
 
-  function chainUrl(path) {
-    return `${path}?v=${encodeURIComponent(CACHE_KEY)}`;
+  function appendReceipt(message) {
+    const node = receiptNode();
+    if (!node) return;
+    const current = String(node.textContent || "").trim();
+    node.textContent = `${current}\n${message}`.trim();
   }
 
-  function hasScript(path) {
-    const d = doc();
-    if (!d) return false;
+  function logStep(code, detail = "") {
+    const line = `${now()} · ${code}${detail ? ` · ${detail}` : ""}`;
+    state.steps.push(line);
+    appendReceipt(line);
+    return line;
+  }
 
-    return Boolean(
-      d.querySelector(`script[data-audralia-clean-chain-path="${path}"]`) ||
-      Array.from(d.scripts || []).some((script) => String(script.src || "").includes(path))
+  function normalizeRoute(pathname) {
+    const raw = String(pathname || "");
+    return raw.endsWith("/") ? raw : `${raw}/`;
+  }
+
+  function clearMountPlaceholder(mount) {
+    qsa("[data-audralia-placeholder]").forEach((node) => node.remove());
+    if (mount) mount.dataset.audraliaFormVisible = "false";
+  }
+
+  function hasVisibleForm(mount) {
+    if (!mount) return false;
+
+    const generated = mount.querySelector(
+      [
+        "canvas",
+        "svg",
+        "[data-audralia-engine-render]",
+        "[data-audralia-clean-canvas-render]",
+        "[data-audralia-canvas-render]",
+        "[data-audralia-form]",
+        "[data-audralia-diagnostic-form]"
+      ].join(",")
     );
+
+    if (!generated) return false;
+
+    const rect = generated.getBoundingClientRect?.();
+    if (!rect) return true;
+
+    return rect.width > 10 && rect.height > 10;
   }
 
-  function loadScript(path) {
+  function wait(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  function findExport(moduleObject) {
+    for (const name of EXPORT_CANDIDATES) {
+      if (moduleObject && moduleObject[name]) {
+        return { name, value: moduleObject[name], source: "module" };
+      }
+    }
+
+    for (const name of EXPORT_CANDIDATES) {
+      if (win()[name]) {
+        return { name, value: win()[name], source: "window" };
+      }
+    }
+
+    return null;
+  }
+
+  function findMountMethod(engine) {
+    if (!engine) return null;
+
+    if (typeof engine === "function") {
+      return {
+        name: "function-export",
+        owner: null,
+        fn: engine,
+        type: "function"
+      };
+    }
+
+    for (const name of METHOD_CANDIDATES) {
+      if (typeof engine[name] === "function") {
+        return {
+          name,
+          owner: engine,
+          fn: engine[name],
+          type: "method"
+        };
+      }
+    }
+
+    return null;
+  }
+
+  function loadClassicScript(path) {
     return new Promise((resolve, reject) => {
-      const d = doc();
+      const existing = qsa("script[src]").find((script) => {
+        const src = String(script.getAttribute("src") || "");
+        return src.startsWith(path);
+      });
 
-      if (!d) {
-        reject(new Error("document unavailable"));
+      if (existing) {
+        resolve(existing);
         return;
       }
 
-      if (hasScript(path)) {
-        state.loaded.push(path);
-        resolve({ path, reused: true });
-        return;
+      const script = doc().createElement("script");
+      script.src = `${path}?v=${encodeURIComponent(VERSION)}`;
+      script.async = true;
+      script.dataset.audraliaClassicLoad = "true";
+      script.onload = () => resolve(script);
+      script.onerror = () => reject(new Error(`Classic script load failed: ${path}`));
+      doc().head.appendChild(script);
+    });
+  }
+
+  async function attemptImportAndResolveExport() {
+    const failures = [];
+
+    for (const path of IMPORT_CANDIDATES) {
+      updateStatus(`CLEAN_CANVAS_IMPORT_STARTED · ${path}`, "run");
+      updateStep("import", `IMPORT_TRY · ${path}`, "run");
+      logStep("CLEAN_CANVAS_IMPORT_STARTED", path);
+
+      try {
+        const moduleObject = await import(`${path}?v=${encodeURIComponent(VERSION)}`);
+        const exported = findExport(moduleObject);
+
+        if (exported) {
+          state.importPath = path;
+          state.importMode = "module";
+          state.module = moduleObject;
+          state.engineExportName = exported.name;
+          state.engine = exported.value;
+
+          updateStep("import", `CLEAN_CANVAS_IMPORT_SUCCEEDED · ${path}`, "pass");
+          updateStep("contract", `ENGINE_CONTRACT_VALID · ${exported.name}`, "pass");
+          logStep("CLEAN_CANVAS_IMPORT_SUCCEEDED", path);
+          logStep("ENGINE_CONTRACT_VALID", `${exported.name} from ${exported.source}`);
+
+          return exported;
+        }
+
+        failures.push(`${path} :: module loaded but no accepted export`);
+        logStep("ENGINE_EXPORT_MISSING_AFTER_MODULE_IMPORT", path);
+      } catch (error) {
+        const message = error?.message || String(error);
+        failures.push(`${path} :: module import failed :: ${message}`);
+        logStep("CLEAN_CANVAS_MODULE_IMPORT_FAILED", `${path} :: ${message}`);
       }
 
-      const script = d.createElement("script");
-      script.src = chainUrl(path);
-      script.async = false;
-      script.defer = false;
-      script.dataset.audraliaCleanChainPath = path;
-      script.dataset.audraliaCleanChainContract = CONTRACT;
+      try {
+        updateStatus(`CLASSIC_SCRIPT_LOAD_STARTED · ${path}`, "run");
+        await loadClassicScript(path);
+        await wait(25);
 
-      script.onload = () => {
-        state.loaded.push(path);
-        appendReceiptLine(`loaded · ${path}`);
-        resolve({ path, reused: false });
-      };
+        const exported = findExport(null);
 
-      script.onerror = () => {
-        state.failed.push(path);
-        reject(new Error(`Failed to load ${path}`));
-      };
+        if (exported) {
+          state.importPath = path;
+          state.importMode = "classic-script";
+          state.engineExportName = exported.name;
+          state.engine = exported.value;
 
-      d.head.appendChild(script);
-    });
-  }
+          updateStep("import", `CLASSIC_SCRIPT_LOAD_SUCCEEDED · ${path}`, "pass");
+          updateStep("contract", `ENGINE_CONTRACT_VALID · ${exported.name}`, "pass");
+          logStep("CLASSIC_SCRIPT_LOAD_SUCCEEDED", path);
+          logStep("ENGINE_CONTRACT_VALID", `${exported.name} from ${exported.source}`);
 
-  async function loadChain() {
-    writeStatus("Loading Audralia clean-canvas authority chain.", "loading");
+          return exported;
+        }
 
-    for (const path of CHAIN) {
-      await loadScript(path);
-    }
-
-    const missingGlobals = EXPECTED_GLOBALS.filter((name) => !win()[name]);
-
-    return Object.freeze({
-      expected: CHAIN.length,
-      loaded: state.loaded.length,
-      failed: state.failed.slice(),
-      missingGlobals,
-      complete: state.failed.length === 0 && missingGlobals.length === 0
-    });
-  }
-
-  function resolveRoot() {
-    return byId("audralia-main") ||
-      byId("audralia-stage") ||
-      qs("[data-audralia-root]") ||
-      qs("main") ||
-      doc()?.body ||
-      null;
-  }
-
-  function resolveStage() {
-    return byId("audralia-stage") ||
-      qs("[data-audralia-stage]") ||
-      resolveRoot();
-  }
-
-  function resolveCanvas() {
-    const existing =
-      byId("audralia-canvas") ||
-      qs("canvas[data-audralia-canvas]") ||
-      qs(".audralia-clean-canvas");
-
-    if (existing) return existing;
-
-    const stage = resolveStage();
-    if (!stage || !doc()) return null;
-
-    const canvas = doc().createElement("canvas");
-    canvas.id = "audralia-canvas";
-    canvas.className = "audralia-clean-canvas";
-    canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Audralia clean-canvas planet inspection surface");
-    canvas.dataset.audraliaCanvas = "true";
-    canvas.dataset.createdByRouteBridge = CONTRACT;
-
-    stage.appendChild(canvas);
-    return canvas;
-  }
-
-  function verifyHtmlShell() {
-    const html = doc()?.documentElement;
-
-    return Object.freeze({
-      shellAvailable: Boolean(html),
-      expectedContract: HTML_SHELL_CONTRACT,
-      actualContract: html?.dataset?.contract || null,
-      route: html?.dataset?.route || null,
-      page: html?.dataset?.page || null,
-      validRoute: html?.dataset?.route === ROUTE,
-      validPage: html?.dataset?.page === "audralia",
-      validShellContract: html?.dataset?.contract === HTML_SHELL_CONTRACT
-    });
-  }
-
-  function mountEngine(chainReceipt) {
-    const engine = win().AUDRALIA_CLEAN_CANVAS_ENGINE || win().AUDRALIA_ENGINE;
-    const root = resolveRoot();
-    const stage = resolveStage();
-    const canvas = resolveCanvas();
-
-    if (!engine?.mountAudralia) {
-      throw new Error("AUDRALIA_CLEAN_CANVAS_ENGINE.mountAudralia unavailable");
-    }
-
-    if (!canvas) {
-      throw new Error("Audralia canvas unavailable");
-    }
-
-    const mountResult = engine.mountAudralia({
-      root,
-      stage,
-      canvas,
-      options: {
-        autoStart: true,
-        autoResize: true,
-        autoVisibility: true,
-        proofStatus: false,
-        allowCreateCanvas: false,
-        dprCap: 1.65,
-        frameBudgetMs: 42,
-        textureWidth: 288,
-        textureHeight: 144,
-        radiusScale: 0.365,
-        cxRatio: 0.50,
-        cyRatio: 0.51
+        failures.push(`${path} :: classic script loaded but no accepted global export`);
+        logStep("ENGINE_EXPORT_MISSING_AFTER_CLASSIC_LOAD", path);
+      } catch (error) {
+        const message = error?.message || String(error);
+        failures.push(`${path} :: classic script load failed :: ${message}`);
+        logStep("CLEAN_CANVAS_CLASSIC_LOAD_FAILED", `${path} :: ${message}`);
       }
-    });
+    }
 
-    state.engineMount = mountResult;
-
-    return Object.freeze({
-      mounted: Boolean(mountResult?.mounted || mountResult?.receipt?.mounted),
-      chain: chainReceipt,
-      engineReceipt: mountResult?.receipt || null,
-      engineAvailable: true,
-      canvasAvailable: true,
-      rootAvailable: Boolean(root),
-      stageAvailable: Boolean(stage)
-    });
+    state.importError = failures.join(" | ");
+    updateStep("import", "CLEAN_CANVAS_IMPORT_FAILED · all candidate paths failed", "fail");
+    updateStep("contract", "ENGINE_CONTRACT_FAILED · no accepted export", "fail");
+    throw new Error(state.importError || "All clean-canvas import candidates failed.");
   }
 
-  function buildReceipt(chainReceipt, mountReceipt, error = null) {
-    const htmlShell = verifyHtmlShell();
-    const engineStatus =
-      win().AUDRALIA_CLEAN_CANVAS_ENGINE?.getStatus?.() ||
-      win().AUDRALIA_ENGINE?.getStatus?.() ||
-      null;
+  function appendReturnedRender(result, mount) {
+    if (!result || !mount) return;
 
+    const ElementCtor = win().Element;
+
+    const appendIfElement = (node) => {
+      if (ElementCtor && node instanceof ElementCtor && !mount.contains(node)) {
+        mount.appendChild(node);
+      }
+    };
+
+    appendIfElement(result);
+
+    if (Array.isArray(result)) {
+      result.forEach(appendIfElement);
+    }
+
+    appendIfElement(result.element);
+    appendIfElement(result.el);
+    appendIfElement(result.node);
+    appendIfElement(result.root);
+    appendIfElement(result.canvas);
+    appendIfElement(result.svg);
+  }
+
+  async function executeMount(engine, mount) {
+    const method = findMountMethod(engine);
+
+    if (!method) {
+      updateStep("call", "MOUNT_METHOD_MISSING", "fail");
+      logStep("MOUNT_METHOD_MISSING", METHOD_CANDIDATES.join(","));
+      throw new Error(`No mount method found. Checked: ${METHOD_CANDIDATES.join(", ")}`);
+    }
+
+    state.methodName = method.name;
+    updateStep("call", `MOUNT_CALLED · ${method.name}`, "run");
+    logStep("MOUNT_CALLED", method.name);
+
+    const context = {
+      route: ROUTE,
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      mount,
+      mountTarget: mount,
+      statusTarget: statusNode(),
+      document: doc(),
+      window: win(),
+      visibleFailureRequired: true
+    };
+
+    let result;
+
+    try {
+      if (method.type === "function") {
+        result = await method.fn(context);
+      } else {
+        result = await method.fn.call(method.owner, context);
+      }
+
+      state.mountResult = result;
+      appendReturnedRender(result, mount);
+      await wait(75);
+
+      if (hasVisibleForm(mount)) {
+        logStep("MOUNT_SIGNATURE_ACCEPTED", "context");
+        return result;
+      }
+    } catch (error) {
+      logStep("MOUNT_CONTEXT_SIGNATURE_FAILED", error?.message || String(error));
+    }
+
+    try {
+      if (method.type === "function") {
+        result = await method.fn(mount, context);
+      } else {
+        result = await method.fn.call(method.owner, mount, context);
+      }
+
+      state.mountResult = result;
+      appendReturnedRender(result, mount);
+      await wait(75);
+
+      if (hasVisibleForm(mount)) {
+        logStep("MOUNT_SIGNATURE_ACCEPTED", "mount_context");
+        return result;
+      }
+    } catch (error) {
+      logStep("MOUNT_MOUNT_CONTEXT_SIGNATURE_FAILED", error?.message || String(error));
+      throw error;
+    }
+
+    logStep("MOUNT_RETURNED_WITHOUT_VISIBLE_FORM", method.name);
+    return result;
+  }
+
+  function renderDiagnosticFallback(mount, reason) {
+    clearMountPlaceholder(mount);
+
+    const root = doc().createElement("section");
+    root.setAttribute("data-audralia-diagnostic-form", "true");
+    root.setAttribute("aria-label", "Audralia diagnostic fallback form");
+    root.style.cssText = `
+      width:min(78vw,26rem);
+      aspect-ratio:1;
+      position:relative;
+      display:grid;
+      place-items:center;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 38% 24%, rgba(255,255,255,.34), transparent 0 10%),
+        radial-gradient(circle at 42% 38%, rgba(143,240,195,.72), transparent 0 23%),
+        radial-gradient(circle at 62% 54%, rgba(36,120,255,.34), transparent 0 34%),
+        radial-gradient(circle at 50% 50%, rgba(9,88,72,.94), rgba(5,22,36,.98) 62%, rgba(1,5,14,.98) 100%);
+      box-shadow:
+        inset -2.2rem -1.8rem 3.2rem rgba(0,0,0,.48),
+        inset .9rem .6rem 1.6rem rgba(255,255,255,.16),
+        0 0 3rem rgba(143,240,195,.20),
+        0 1.8rem 3rem rgba(0,0,0,.42);
+      overflow:hidden;
+    `;
+
+    const bands = doc().createElement("div");
+    bands.setAttribute("aria-hidden", "true");
+    bands.style.cssText = `
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+      background:
+        linear-gradient(22deg, transparent 0 23%, rgba(243,200,111,.22) 24% 28%, transparent 29% 100%),
+        linear-gradient(-18deg, transparent 0 42%, rgba(143,240,195,.18) 43% 48%, transparent 49% 100%),
+        radial-gradient(ellipse at 48% 62%, rgba(243,200,111,.26), transparent 0 20%),
+        radial-gradient(ellipse at 66% 34%, rgba(8,45,66,.52), transparent 0 26%);
+      opacity:.82;
+      mix-blend-mode:screen;
+    `;
+
+    const label = doc().createElement("div");
+    label.style.cssText = `
+      position:absolute;
+      left:50%;
+      bottom:7%;
+      transform:translateX(-50%);
+      width:min(88%,24rem);
+      padding:.75rem .85rem;
+      border:1px solid rgba(243,200,111,.22);
+      border-radius:1rem;
+      background:rgba(1,7,16,.74);
+      color:rgba(255,244,216,.92);
+      font:800 .72rem/1.35 ui-sans-serif,system-ui,sans-serif;
+      letter-spacing:.06em;
+      text-align:center;
+      text-transform:uppercase;
+      backdrop-filter:blur(8px);
+    `;
+    label.textContent = "Diagnostic fallback form · downstream engine handoff failed";
+
+    const detail = doc().createElement("p");
+    detail.style.cssText = `
+      position:absolute;
+      left:50%;
+      top:7%;
+      transform:translateX(-50%);
+      width:min(88%,24rem);
+      margin:0;
+      padding:.72rem .85rem;
+      border:1px solid rgba(255,143,159,.22);
+      border-radius:1rem;
+      background:rgba(1,7,16,.70);
+      color:rgba(255,220,224,.92);
+      font:750 .68rem/1.35 ui-sans-serif,system-ui,sans-serif;
+      text-align:center;
+      backdrop-filter:blur(8px);
+    `;
+    detail.textContent = String(reason || "Unknown downstream handoff failure.");
+
+    root.appendChild(bands);
+    root.appendChild(detail);
+    root.appendChild(label);
+
+    mount.appendChild(root);
+    mount.dataset.audraliaFormVisible = "fallback";
+    state.fallbackVisible = true;
+
+    updateStep("visible", "DIAGNOSTIC_FALLBACK_FORM_VISIBLE", "fail");
+    updateStatus("FORM_VISIBLE_DIAGNOSTIC_FALLBACK · downstream handoff failed visibly", "fail");
+    logStep("DIAGNOSTIC_FALLBACK_FORM_VISIBLE", reason);
+
+    return root;
+  }
+
+  function buildReceipt(valid) {
     return Object.freeze({
       contract: CONTRACT,
       receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
+      htmlContract: HTML_CONTRACT,
       version: VERSION,
-      authority: "audralia-route-bridge-only",
       route: ROUTE,
-      htmlShell,
-      chain: chainReceipt,
-      mount: mountReceipt,
-      engineStatus,
-      error: error ? String(error.message || error) : null,
+      checkedAt: now(),
+      valid,
+      routeValid: state.routeValid,
+      importPath: state.importPath,
+      importMode: state.importMode,
+      importError: state.importError,
+      engineExportName: state.engineExportName,
+      methodName: state.methodName,
+      fallbackVisible: state.fallbackVisible,
+      steps: Object.freeze([...state.steps]),
       ownsRouteBridge: true,
-      ownsHtmlExpression: false,
-      ownsEngine: false,
-      ownsRuntimeMotion: false,
-      ownsControls: false,
-      ownsCanvasComposition: false,
-      ownsPlanetScience: false,
+      ownsPlanetTruth: false,
+      ownsTerrainTruth: false,
+      ownsRuntimeInternals: false,
+      ownsControlsInternals: false,
+      ownsParentGlobeNarrative: false,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false
@@ -326,74 +550,108 @@
   function publishReceipt(receipt) {
     state.receipt = receipt;
 
-    win().AUDRALIA_ROUTE_BRIDGE = API;
-    win().AUDRALIA_ROUTE_BRIDGE_RECEIPT = receipt;
-    win().AUDRALIA_CLEAN_CANVAS_ROUTE_BRIDGE = API;
-    win().AUDRALIA_CLEAN_CANVAS_ROUTE_BRIDGE_RECEIPT = receipt;
+    win().AUDRALIA_CLEAN_CANVAS_FORM_MOUNT_ROUTE_BRIDGE = API;
+    win().AUDRALIA_CLEAN_CANVAS_FORM_MOUNT_ROUTE_BRIDGE_RECEIPT = receipt;
 
     setDataset("audraliaRouteBridgeLoaded", "true");
     setDataset("audraliaRouteBridgeContract", CONTRACT);
     setDataset("audraliaRouteBridgeReceipt", RECEIPT);
     setDataset("audraliaRouteBridgeVersion", VERSION);
-    setDataset("audraliaRouteBridgeOwnsRouteBridge", "true");
-    setDataset("audraliaRouteBridgeOwnsHtmlExpression", "false");
-    setDataset("audraliaRouteBridgeOwnsEngine", "false");
-    setDataset("audraliaRouteBridgeOwnsRuntimeMotion", "false");
-    setDataset("audraliaRouteBridgeOwnsControls", "false");
-    setDataset("audraliaRouteBridgeOwnsCanvasComposition", "false");
-    setDataset("audraliaRouteBridgeOwnsPlanetScience", "false");
-    setDataset("audraliaRouteBridgeChainLoaded", receipt.chain?.complete ? "true" : "false");
-    setDataset("audraliaRouteBridgeMounted", receipt.mount?.mounted ? "true" : "false");
+    setDataset("audraliaRouteBridgeValid", receipt.valid ? "true" : "false");
+    setDataset("audraliaRouteBridgeImportPath", receipt.importPath || "none");
+    setDataset("audraliaRouteBridgeImportMode", receipt.importMode || "none");
+    setDataset("audraliaRouteBridgeEngineExportName", receipt.engineExportName || "none");
+    setDataset("audraliaRouteBridgeMethodName", receipt.methodName || "none");
+    setDataset("audraliaRouteBridgeFallbackVisible", receipt.fallbackVisible ? "true" : "false");
     setDataset("generatedImage", "false");
     setDataset("graphicBox", "false");
     setDataset("visualPassClaimed", "false");
 
+    appendReceipt(`${CONTRACT} valid=${receipt.valid}`);
     return receipt;
   }
 
   async function boot() {
-    if (state.booted) {
-      return state.receipt || buildReceipt(null, null, null);
-    }
-
+    if (state.booted) return state.receipt;
     state.booted = true;
 
-    setDataset("audraliaRouteBridgeBooting", "true");
-    writeStatus("Booting Audralia clean-canvas route bridge.", "loading");
+    updateStatus("BOOT_STARTED · Audralia route bridge executing.", "run");
+    logStep("BOOT_STARTED", CONTRACT);
 
-    let chainReceipt = null;
-    let mountReceipt = null;
+    const html = doc()?.documentElement;
+    const mount = mountNode();
+
+    state.routeValid =
+      normalizeRoute(win().location?.pathname || html?.dataset?.route) === ROUTE ||
+      html?.dataset?.route === ROUTE;
+
+    if (!state.routeValid) {
+      updateStep("route", "ROUTE_FAILED", "fail");
+      updateStatus("ROUTE_FAILED · expected /showroom/globe/audralia/", "fail");
+      logStep("ROUTE_FAILED", win().location?.pathname || "unknown");
+      return publishReceipt(buildReceipt(false));
+    }
+
+    updateStep("route", "ROUTE_VALID · /showroom/globe/audralia/", "pass");
+    logStep("ROUTE_VALID", ROUTE);
+
+    if (html?.dataset?.contract !== HTML_CONTRACT) {
+      logStep("HTML_CONTRACT_HELD", `expected=${HTML_CONTRACT} actual=${html?.dataset?.contract || "missing"}`);
+    } else {
+      logStep("HTML_CONTRACT_VALID", HTML_CONTRACT);
+    }
+
+    if (!mount) {
+      updateStep("mount", "MOUNT_TARGET_MISSING", "fail");
+      updateStatus("MOUNT_TARGET_MISSING · data-audralia-clean-canvas-mount not found.", "fail");
+      logStep("MOUNT_TARGET_MISSING", "data-audralia-clean-canvas-mount");
+      return publishReceipt(buildReceipt(false));
+    }
+
+    updateStep("mount", "MOUNT_TARGET_FOUND", "pass");
+    logStep("MOUNT_TARGET_FOUND", "data-audralia-clean-canvas-mount");
 
     try {
-      chainReceipt = await loadChain();
-      mountReceipt = mountEngine(chainReceipt);
+      clearMountPlaceholder(mount);
 
-      const receipt = publishReceipt(buildReceipt(chainReceipt, mountReceipt, null));
+      const exported = await attemptImportAndResolveExport();
 
-      writeStatus(
-        mountReceipt.mounted
-          ? "Audralia clean-canvas route bridge mounted."
-          : "Audralia clean-canvas route bridge loaded but mount did not complete.",
-        mountReceipt.mounted ? "ready" : "held"
-      );
+      state.engineExportName = exported.name;
+      state.engine = exported.value;
 
-      appendReceiptLine(`${CONTRACT} · mounted=${mountReceipt.mounted}`);
+      await executeMount(exported.value, mount);
+      await wait(100);
 
-      setDataset("audraliaRouteBridgeBooting", "false");
-      setDataset("audraliaRouteBridgeReady", mountReceipt.mounted ? "true" : "false");
+      const visible = hasVisibleForm(mount);
 
-      return receipt;
+      if (!visible) {
+        updateStep("visible", "FORM_NOT_VISIBLE_AFTER_MOUNT", "fail");
+        logStep("FORM_NOT_VISIBLE_AFTER_MOUNT", state.methodName || "unknown_method");
+        renderDiagnosticFallback(
+          mount,
+          `Mount executed but no visible form appeared. method=${state.methodName || "unknown"} export=${state.engineExportName || "unknown"}`
+        );
+        return publishReceipt(buildReceipt(false));
+      }
+
+      mount.dataset.audraliaFormVisible = "true";
+      updateStep("visible", "FORM_VISIBLE", "pass");
+      updateStatus("FORM_VISIBLE · Audralia clean-canvas route bridge mounted visible form.", "pass");
+      logStep("FORM_VISIBLE", `${state.importPath || "unknown_import"} · ${state.engineExportName || "unknown_export"}`);
+
+      return publishReceipt(buildReceipt(true));
     } catch (error) {
-      const receipt = publishReceipt(buildReceipt(chainReceipt, mountReceipt, error));
+      const message = error?.message || String(error);
 
-      writeStatus(`Audralia route bridge held: ${error.message || error}`, "held");
-      appendReceiptLine(`${CONTRACT} · held · ${error.message || error}`);
+      state.importError = state.importError || message;
 
-      setDataset("audraliaRouteBridgeBooting", "false");
-      setDataset("audraliaRouteBridgeReady", "false");
-      setDataset("audraliaRouteBridgeError", error.message || String(error));
+      if (mount) {
+        renderDiagnosticFallback(mount, message);
+      }
 
-      return receipt;
+      logStep("ROUTE_BRIDGE_FAILED_VISIBLY", message);
+
+      return publishReceipt(buildReceipt(false));
     }
   }
 
@@ -401,26 +659,14 @@
     return Object.freeze({
       contract: CONTRACT,
       receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
+      htmlContract: HTML_CONTRACT,
       version: VERSION,
-      authority: "audralia-route-bridge-only",
       route: ROUTE,
-      htmlShellContract: HTML_SHELL_CONTRACT,
-      cacheKey: CACHE_KEY,
-      chain: CHAIN,
-      expectedGlobals: EXPECTED_GLOBALS,
-      loaded: state.loaded.slice(),
-      failed: state.failed.slice(),
+      importCandidates: IMPORT_CANDIDATES,
+      exportCandidates: EXPORT_CANDIDATES,
+      methodCandidates: METHOD_CANDIDATES,
       booted: state.booted,
-      mounted: Boolean(state.engineMount?.mounted || state.engineMount?.receipt?.mounted),
       lastReceipt: state.receipt,
-      ownsRouteBridge: true,
-      ownsHtmlExpression: false,
-      ownsEngine: false,
-      ownsRuntimeMotion: false,
-      ownsControls: false,
-      ownsCanvasComposition: false,
-      ownsPlanetScience: false,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false
@@ -430,25 +676,20 @@
   const API = Object.freeze({
     contract: CONTRACT,
     receipt: RECEIPT,
-    previousContract: PREVIOUS_CONTRACT,
+    htmlContract: HTML_CONTRACT,
     version: VERSION,
     route: ROUTE,
-    chain: CHAIN,
-    expectedGlobals: EXPECTED_GLOBALS,
+    importCandidates: IMPORT_CANDIDATES,
+    exportCandidates: EXPORT_CANDIDATES,
+    methodCandidates: METHOD_CANDIDATES,
     boot,
-    loadChain,
-    mountEngine,
-    verifyHtmlShell,
     getStatus
   });
 
-  win().AUDRALIA_ROUTE_BRIDGE = API;
-  win().AUDRALIA_CLEAN_CANVAS_ROUTE_BRIDGE = API;
+  win().AUDRALIA_CLEAN_CANVAS_FORM_MOUNT_ROUTE_BRIDGE = API;
 
   if (doc()?.readyState === "loading") {
-    doc().addEventListener("DOMContentLoaded", () => {
-      boot();
-    }, { once: true });
+    doc().addEventListener("DOMContentLoaded", boot, { once: true });
   } else {
     boot();
   }

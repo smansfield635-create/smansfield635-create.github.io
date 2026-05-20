@@ -1,21 +1,31 @@
 // /assets/audralia/clean/engine/audralia.engine.js
-// AUDRALIA_G2_5_PARENT_VISIBLE_BOX_CENTER_ANCHOR_DRAG_ROTATION_ONLY_TNT_v1
+// AUDRALIA_G2_5_PARENT_FIBONACCI_INSPECTION_GEOMETRY_NORMALIZATION_TNT_v1
 // Full-file replacement.
-// Purpose: anchor Audralia to the visible inspection box center, force canvas-to-mount geometry alignment, and allow finger drag to rotate longitude only.
+// Purpose: normalize Audralia inspection geometry with φ/Fibonacci-derived constants while preserving drag-only inspection.
 // Preserves: continents child expression, fixed radius, no orbit, no auto-motion, no legacy land, FORM_VISIBLE parent confirmation.
-// Parent owns: visible-frame containment, canvas mount, fixed geometry, ocean base, projection, child loading, FORM_VISIBLE confirmation.
+// Parent owns: visible-frame containment, canvas mount, Fibonacci geometry, ocean base, projection, child loading, FORM_VISIBLE confirmation.
 // Parent does not own: continent expression, automatic orbit, zoom, camera depth, route bridge, runtime, HTML, generated image, GraphicBox, or visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G2_5_PARENT_VISIBLE_BOX_CENTER_ANCHOR_DRAG_ROTATION_ONLY_TNT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_PARENT_FIXED_CENTER_FIXED_RADIUS_DRAG_ROTATION_ONLY_TNT_v1";
+  const CONTRACT = "AUDRALIA_G2_5_PARENT_FIBONACCI_INSPECTION_GEOMETRY_NORMALIZATION_TNT_v1";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_PARENT_SCREEN_CENTER_BIAS_25_DRAG_ROTATION_ONLY_TNT_v1";
   const FAMILY = "AUDRALIA_G2_5_EXISTING_ARCHITECTURE_PATH_ALIGNMENT_TNT_v1";
 
   const TARGET = "/assets/audralia/clean/engine/audralia.engine.js";
   const ROUTE = "/showroom/globe/audralia/";
-  const SAFE_RADIUS_FACTOR = 0.31;
+
+  const PHI = 1.61803398875;
+  const PHI_INVERSE = 0.61803398875;
+  const PHI_INVERSE_2 = 0.38196601125;
+  const PHI_INVERSE_3 = 0.23606797750;
+  const PHI_INVERSE_4 = 0.14589803375;
+
+  const SAFE_RADIUS_FACTOR = PHI_INVERSE / 2;
+  const MOBILE_RADIUS_FACTOR = SAFE_RADIUS_FACTOR - 0.01803398874;
+  const CENTER_X_BIAS_FACTOR = -PHI_INVERSE_3;
+  const DRAG_ROTATION_SENSITIVITY = 0.00618033989;
 
   const CHILDREN = Object.freeze({
     continents: {
@@ -32,13 +42,13 @@
     },
     motion: {
       enabled: false,
-      heldReason: "visible_box_center_anchor_inspection_lock",
+      heldReason: "fibonacci_inspection_geometry_lock",
       path: "/assets/audralia/clean/engine/audralia/engine/motion.js",
       globals: []
     },
     sky: {
       enabled: false,
-      heldReason: "visible_box_center_anchor_inspection_lock",
+      heldReason: "fibonacci_inspection_geometry_lock",
       path: "/assets/audralia/clean/engine/audralia/engine/sky.js",
       globals: []
     }
@@ -50,6 +60,14 @@
     family: FAMILY,
     target: TARGET,
     route: ROUTE,
+    fibonacciInspectionGeometry: true,
+    phi: PHI,
+    phiInverse: PHI_INVERSE,
+    phiInverse2: PHI_INVERSE_2,
+    phiInverse3: PHI_INVERSE_3,
+    phiInverse4: PHI_INVERSE_4,
+    centerXBiasFactor: CENTER_X_BIAS_FACTOR,
+    dragRotationSensitivity: DRAG_ROTATION_SENSITIVITY,
     visibleBoxCenterAnchored: true,
     canvasFillsMount: true,
     centerLocked: true,
@@ -76,8 +94,8 @@
     childLoadComplete: false,
     children: {
       continents: "pending",
-      motion: "held_visible_box_center_anchor",
-      sky: "held_visible_box_center_anchor"
+      motion: "held_fibonacci_inspection_geometry",
+      sky: "held_fibonacci_inspection_geometry"
     },
     errors: []
   };
@@ -163,7 +181,7 @@
     target.style.touchAction = "none";
 
     target.setAttribute("data-audralia-visible-box-frame", "true");
-    target.setAttribute("data-audralia-parent-center-anchor", "visible-box");
+    target.setAttribute("data-audralia-parent-center-anchor", "fibonacci-inspection-geometry");
   }
 
   function lockCanvasToVisibleFrame(canvas) {
@@ -190,6 +208,7 @@
     canvas.setAttribute("data-audralia-canvas-fills-visible-box", "true");
     canvas.setAttribute("data-audralia-parent-fixed-center", "true");
     canvas.setAttribute("data-audralia-parent-fixed-radius", "true");
+    canvas.setAttribute("data-audralia-parent-fibonacci-inspection-geometry", "true");
   }
 
   function ensureCanvas(target) {
@@ -209,14 +228,14 @@
       canvas.setAttribute("data-audralia-clean-parent-canvas", "true");
       canvas.setAttribute("data-audralia-clean-canvas", "true");
       canvas.setAttribute("data-contract", CONTRACT);
-      canvas.setAttribute("aria-label", "Audralia visible-box centered inspection planet");
+      canvas.setAttribute("aria-label", "Audralia Fibonacci inspection planet");
 
       target.appendChild(canvas);
     } else {
       canvas.setAttribute("data-audralia-clean-parent-canvas", "true");
       canvas.setAttribute("data-audralia-clean-canvas", "true");
       canvas.setAttribute("data-contract", CONTRACT);
-      canvas.setAttribute("aria-label", "Audralia visible-box centered inspection planet");
+      canvas.setAttribute("aria-label", "Audralia Fibonacci inspection planet");
     }
 
     lockCanvasToVisibleFrame(canvas);
@@ -250,11 +269,11 @@
     env.width = Math.floor(visibleWidth * dpr);
     env.height = Math.floor(visibleHeight * dpr);
 
-    env.cx = env.width / 2;
+    env.cx = env.width / 2 + env.width * CENTER_X_BIAS_FACTOR;
     env.cy = env.height / 2;
 
     const mobileTight = visibleWidth <= 520;
-    const factor = mobileTight ? 0.3 : SAFE_RADIUS_FACTOR;
+    const factor = mobileTight ? MOBILE_RADIUS_FACTOR : SAFE_RADIUS_FACTOR;
     env.radius = Math.floor(Math.min(env.width, env.height) * factor);
 
     if (env.canvas.width !== env.width) env.canvas.width = env.width;
@@ -275,6 +294,10 @@
     window.AUDRALIA_CLEAN_PARENT_ENGINE_GLOBAL_PUBLISHED = true;
     window.AUDRALIA_CLEAN_PARENT_ENGINE_CONTRACT = CONTRACT;
     window.AUDRALIA_EXISTING_ARCHITECTURE_PARENT_ALIGNED = true;
+    window.AUDRALIA_PARENT_FIBONACCI_INSPECTION_GEOMETRY = true;
+    window.AUDRALIA_PARENT_SCREEN_CENTER_BIAS_FIBONACCI = true;
+    window.AUDRALIA_PARENT_CENTER_X_BIAS_FACTOR = CENTER_X_BIAS_FACTOR;
+    window.AUDRALIA_PARENT_DRAG_ROTATION_SENSITIVITY = DRAG_ROTATION_SENSITIVITY;
     window.AUDRALIA_PARENT_VISIBLE_BOX_CENTER_ANCHORED = true;
     window.AUDRALIA_PARENT_CANVAS_FILLS_MOUNT = true;
     window.AUDRALIA_PARENT_CENTER_LOCKED = true;
@@ -294,6 +317,10 @@
     if (hasDocument() && document.documentElement) {
       document.documentElement.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
       document.documentElement.setAttribute("data-audralia-clean-parent-target", TARGET);
+      document.documentElement.setAttribute("data-audralia-parent-fibonacci-inspection-geometry", "true");
+      document.documentElement.setAttribute("data-audralia-parent-screen-center-bias-fibonacci", "true");
+      document.documentElement.setAttribute("data-audralia-parent-center-x-bias-factor", String(CENTER_X_BIAS_FACTOR));
+      document.documentElement.setAttribute("data-audralia-parent-drag-rotation-sensitivity", String(DRAG_ROTATION_SENSITIVITY));
       document.documentElement.setAttribute("data-audralia-parent-visible-box-center-anchored", "true");
       document.documentElement.setAttribute("data-audralia-parent-canvas-fills-mount", "true");
       document.documentElement.setAttribute("data-audralia-parent-center-locked", "true");
@@ -332,6 +359,7 @@
       env.mount.setAttribute("data-audralia-form-visible", "true");
       env.mount.setAttribute("data-audralia-clean-parent-form-visible", "true");
       env.mount.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
+      env.mount.setAttribute("data-audralia-parent-fibonacci-inspection-geometry", "true");
       env.mount.setAttribute("data-audralia-parent-visible-box-center-anchored", "true");
       env.mount.setAttribute("data-audralia-parent-fixed-center", "true");
       env.mount.setAttribute("data-audralia-parent-fixed-radius", "true");
@@ -340,6 +368,7 @@
     if (env.canvas) {
       env.canvas.setAttribute("data-audralia-form-visible", "true");
       env.canvas.setAttribute("data-audralia-clean-parent-form-visible", "true");
+      env.canvas.setAttribute("data-audralia-parent-fibonacci-inspection-geometry", "true");
       env.canvas.setAttribute("data-audralia-parent-visible-box-center-anchored", "true");
       env.canvas.setAttribute("data-audralia-parent-fixed-center", "true");
       env.canvas.setAttribute("data-audralia-parent-fixed-radius", "true");
@@ -362,8 +391,19 @@
       family: FAMILY,
       target: TARGET,
       route: ROUTE,
-      mode: "visible_box_center_anchor_drag_rotation_only",
+      mode: "fibonacci_inspection_geometry_normalization",
       scope,
+      fibonacciInspectionGeometry: true,
+      phi: PHI,
+      phiInverse: PHI_INVERSE,
+      phiInverse2: PHI_INVERSE_2,
+      phiInverse3: PHI_INVERSE_3,
+      phiInverse4: PHI_INVERSE_4,
+      safeRadiusFactor: SAFE_RADIUS_FACTOR,
+      mobileRadiusFactor: MOBILE_RADIUS_FACTOR,
+      centerXBiasFactor: CENTER_X_BIAS_FACTOR,
+      dragRotationSensitivity: DRAG_ROTATION_SENSITIVITY,
+      screenCenterBiasFibonacci: true,
       visibleBoxCenterAnchored: true,
       canvasFillsMount: true,
       centerLocked: true,
@@ -378,7 +418,6 @@
       noOrbit: true,
       noLegacyParentLand: true,
       dragInspectionEnabled: true,
-      safeRadiusFactor: SAFE_RADIUS_FACTOR,
       parentGlobalPublished: state.parentGlobalPublished,
       mountCalled: state.mountCalled,
       mounted: state.mounted,
@@ -678,7 +717,7 @@
 
         const dx = event.clientX - env.lastPointer.x;
 
-        env.rotation += dx * 0.006;
+        env.rotation += dx * DRAG_ROTATION_SENSITIVITY;
         env.lastPointer = { x: event.clientX, y: event.clientY };
 
         requestRender();
@@ -777,7 +816,7 @@
     env.childPromise = (async () => {
       for (const [name, child] of Object.entries(CHILDREN)) {
         if (!child.enabled) {
-          state.children[name] = "held_visible_box_center_anchor";
+          state.children[name] = "held_fibonacci_inspection_geometry";
           publishReceipt(`child-${name}-held`);
           continue;
         }
@@ -839,6 +878,9 @@
 
     env.mount.setAttribute("data-audralia-clean-parent-mounted", "true");
     env.mount.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
+    env.mount.setAttribute("data-audralia-parent-fibonacci-inspection-geometry", "true");
+    env.mount.setAttribute("data-audralia-parent-center-x-bias-factor", String(CENTER_X_BIAS_FACTOR));
+    env.mount.setAttribute("data-audralia-parent-drag-rotation-sensitivity", String(DRAG_ROTATION_SENSITIVITY));
     env.mount.setAttribute("data-audralia-parent-visible-box-center-anchored", "true");
     env.mount.setAttribute("data-audralia-parent-canvas-fills-mount", "true");
     env.mount.setAttribute("data-audralia-parent-center-locked", "true");
@@ -917,7 +959,18 @@
       family: FAMILY,
       target: TARGET,
       route: ROUTE,
-      mode: "visible_box_center_anchor_drag_rotation_only",
+      mode: "fibonacci_inspection_geometry_normalization",
+      fibonacciInspectionGeometry: true,
+      phi: PHI,
+      phiInverse: PHI_INVERSE,
+      phiInverse2: PHI_INVERSE_2,
+      phiInverse3: PHI_INVERSE_3,
+      phiInverse4: PHI_INVERSE_4,
+      safeRadiusFactor: SAFE_RADIUS_FACTOR,
+      mobileRadiusFactor: MOBILE_RADIUS_FACTOR,
+      centerXBiasFactor: CENTER_X_BIAS_FACTOR,
+      dragRotationSensitivity: DRAG_ROTATION_SENSITIVITY,
+      screenCenterBiasFibonacci: true,
       visibleBoxCenterAnchored: true,
       canvasFillsMount: true,
       centerLocked: true,
@@ -932,7 +985,6 @@
       noOrbit: true,
       noLegacyParentLand: true,
       dragInspectionEnabled: true,
-      safeRadiusFactor: SAFE_RADIUS_FACTOR,
       parentGlobalPublished: state.parentGlobalPublished,
       mountCalled: state.mountCalled,
       mounted: state.mounted,

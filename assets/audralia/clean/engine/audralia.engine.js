@@ -1,25 +1,25 @@
 // /assets/audralia/clean/engine/audralia.engine.js
-// AUDRALIA_G2_5_PARENT_INSPECTION_LOCK_NO_AUTO_ORBIT_TNT_v1
+// AUDRALIA_G2_5_PARENT_HARD_INSPECTION_LOCK_DISABLE_MOTION_CHILD_TNT_v1
 // Full-file replacement.
-// Purpose: keep Audralia stationary inside the inspection box by disabling automatic parent motion.
-// Preserves: center lock, no legacy parent land, child continent expression, drag inspection, FORM_VISIBLE parent confirmation.
-// Parent owns: canvas mount, safe containment, ocean base, water depth, lighting, projection, child loading, FORM_VISIBLE confirmation.
-// Parent does not own: continent expression, orbit rings, automatic orbit, route bridge, runtime, HTML, generated image, GraphicBox, or visual-pass claim.
+// Purpose: make Audralia stationary by default for inspection by disabling automatic motion and disabling motion-child consumption.
+// Preserves: center lock, no orbit ring, no legacy parent land, continents child expression, drag inspection, FORM_VISIBLE parent confirmation.
+// Parent owns: canvas mount, containment, ocean base, lighting, projection, child loading, FORM_VISIBLE confirmation.
+// Parent does not own: continent expression, automatic orbit, motion-child execution, route bridge, runtime, HTML, generated image, GraphicBox, or visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G2_5_PARENT_INSPECTION_LOCK_NO_AUTO_ORBIT_TNT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_PARENT_CENTER_LOCKED_OCEAN_BASE_NO_ORBIT_NO_LEGACY_LAND_TNT_v1";
+  const CONTRACT = "AUDRALIA_G2_5_PARENT_HARD_INSPECTION_LOCK_DISABLE_MOTION_CHILD_TNT_v1";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_PARENT_INSPECTION_LOCK_NO_AUTO_ORBIT_TNT_v1";
   const FAMILY = "AUDRALIA_G2_5_EXISTING_ARCHITECTURE_PATH_ALIGNMENT_TNT_v1";
 
   const TARGET = "/assets/audralia/clean/engine/audralia.engine.js";
   const ROUTE = "/showroom/globe/audralia/";
-
   const SAFE_RADIUS_FACTOR = 0.34;
 
   const CHILDREN = Object.freeze({
     continents: {
+      enabled: true,
       path: "/assets/audralia/clean/engine/audralia/engine/continents.js",
       globals: [
         "AUDRALIA_CLEAN_CONTINENTS_ENGINE",
@@ -31,17 +31,13 @@
       ]
     },
     motion: {
+      enabled: false,
+      heldReason: "inspection_lock_stationary_default",
       path: "/assets/audralia/clean/engine/audralia/engine/motion.js",
-      globals: [
-        "AUDRALIA_CLEAN_MOTION_ENGINE",
-        "AUDRALIA_MOTION_ENGINE",
-        "AUDRALIA_CLEAN_CANVAS_MOTION",
-        "AudraliaMotionEngine",
-        "AudraliaMotion",
-        "audraliaMotion"
-      ]
+      globals: []
     },
     sky: {
+      enabled: true,
       path: "/assets/audralia/clean/engine/audralia/engine/sky.js",
       globals: [
         "AUDRALIA_CLEAN_SKY_ENGINE",
@@ -62,7 +58,9 @@
     route: ROUTE,
     centerLocked: true,
     inspectionLocked: true,
+    hardInspectionLock: true,
     noAutoOrbit: true,
+    motionChildDisabled: true,
     noOrbit: true,
     noLegacyParentLand: true,
     dragInspectionEnabled: true,
@@ -78,7 +76,7 @@
     childLoadComplete: false,
     children: {
       continents: "pending",
-      motion: "pending",
+      motion: "held_inspection_lock",
       sky: "pending"
     },
     errors: []
@@ -233,7 +231,9 @@
     window.AUDRALIA_EXISTING_ARCHITECTURE_PARENT_ALIGNED = true;
     window.AUDRALIA_PARENT_CENTER_LOCKED = true;
     window.AUDRALIA_PARENT_INSPECTION_LOCKED = true;
+    window.AUDRALIA_PARENT_HARD_INSPECTION_LOCK = true;
     window.AUDRALIA_PARENT_NO_AUTO_ORBIT = true;
+    window.AUDRALIA_PARENT_MOTION_CHILD_DISABLED = true;
     window.AUDRALIA_PARENT_NO_ORBIT = true;
     window.AUDRALIA_PARENT_NO_LEGACY_LAND = true;
 
@@ -244,7 +244,9 @@
       document.documentElement.setAttribute("data-audralia-clean-parent-target", TARGET);
       document.documentElement.setAttribute("data-audralia-parent-center-locked", "true");
       document.documentElement.setAttribute("data-audralia-parent-inspection-locked", "true");
+      document.documentElement.setAttribute("data-audralia-parent-hard-inspection-lock", "true");
       document.documentElement.setAttribute("data-audralia-parent-no-auto-orbit", "true");
+      document.documentElement.setAttribute("data-audralia-parent-motion-child-disabled", "true");
       document.documentElement.setAttribute("data-audralia-parent-no-orbit", "true");
       document.documentElement.setAttribute("data-audralia-parent-no-legacy-land", "true");
       document.documentElement.setAttribute("data-audralia-clean-parent-global-published", "true");
@@ -296,11 +298,13 @@
       family: FAMILY,
       target: TARGET,
       route: ROUTE,
-      mode: "inspection_lock_no_auto_orbit",
+      mode: "hard_inspection_lock_disable_motion_child",
       scope,
       centerLocked: true,
       inspectionLocked: true,
+      hardInspectionLock: true,
       noAutoOrbit: true,
+      motionChildDisabled: true,
       noOrbit: true,
       noLegacyParentLand: true,
       dragInspectionEnabled: true,
@@ -429,20 +433,6 @@
     ctx.fillStyle = depth;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
-    ctx.save();
-    ctx.globalCompositeOperation = "screen";
-    ctx.globalAlpha = 0.2;
-
-    for (let i = 0; i < 8; i += 1) {
-      const bandY = cy - r * 0.54 + i * r * 0.15;
-      ctx.beginPath();
-      ctx.ellipse(cx, bandY, r * (0.66 + (i % 3) * 0.045), r * 0.016, 0, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(225, 248, 255, 0.18)";
-      ctx.fill();
-    }
-
-    ctx.restore();
-
     const lighting = ctx.createRadialGradient(
       cx - r * 0.38,
       cy - r * 0.38,
@@ -566,8 +556,6 @@
     clipToPlanet(ctx, g);
 
     const payload = makePayload("render");
-
-    invokeChild("motion", ["frame", "tick", "update", "step"], payload);
 
     invokeChild("continents", [
       "draw",
@@ -723,6 +711,12 @@
 
     env.childPromise = (async () => {
       for (const [name, child] of Object.entries(CHILDREN)) {
+        if (!child.enabled) {
+          state.children[name] = "held_inspection_lock";
+          publishReceipt(`child-${name}-held`);
+          continue;
+        }
+
         state.children[name] = "loading";
         publishReceipt(`child-${name}-loading`);
 
@@ -779,7 +773,9 @@
     env.mount.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
     env.mount.setAttribute("data-audralia-parent-center-locked", "true");
     env.mount.setAttribute("data-audralia-parent-inspection-locked", "true");
+    env.mount.setAttribute("data-audralia-parent-hard-inspection-lock", "true");
     env.mount.setAttribute("data-audralia-parent-no-auto-orbit", "true");
+    env.mount.setAttribute("data-audralia-parent-motion-child-disabled", "true");
     env.mount.setAttribute("data-audralia-parent-no-orbit", "true");
     env.mount.setAttribute("data-audralia-parent-no-legacy-land", "true");
 
@@ -833,7 +829,8 @@
     state.mounted = false;
     state.ready = false;
     state.formVisible = false;
-    state.dragging = false;
+    env.dragging = false;
+    env.lastPointer = null;
 
     publishReceipt("destroy");
 
@@ -847,10 +844,12 @@
       family: FAMILY,
       target: TARGET,
       route: ROUTE,
-      mode: "inspection_lock_no_auto_orbit",
+      mode: "hard_inspection_lock_disable_motion_child",
       centerLocked: true,
       inspectionLocked: true,
+      hardInspectionLock: true,
       noAutoOrbit: true,
+      motionChildDisabled: true,
       noOrbit: true,
       noLegacyParentLand: true,
       dragInspectionEnabled: true,

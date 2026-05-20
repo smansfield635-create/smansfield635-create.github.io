@@ -3,34 +3,21 @@
   lang="en"
   data-route="/showroom/globe/audralia/"
   data-page="audralia-possibility-path"
-  data-contract="AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_HTML_TNT_v1"
-  data-pair-contract="AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_TNT_v1"
-  data-previous-contract="AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_SHELL_ALIGNMENT_HTML_TNT_v1"
-  data-required-loader-contract="AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_JS_TNT_v1"
-  data-role="showroom-globe-child-route"
+  data-contract="AUDRALIA_ROUTEFINDER_VISIBLE_TEXTURE_GUARD_CACHE_KEY_PAIR_HTML_TNT_v1"
+  data-previous-contract="AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_HTML_TNT_v1"
+  data-route-loader="/showroom/globe/audralia/index.js"
+  data-route-loader-contract="AUDRALIA_ROUTEFINDER_VISIBLE_TEXTURE_GUARD_TNT_v1"
+  data-cache-key-enforcement="true"
+  data-visible-texture-guard-required="true"
+  data-routefinder-first-texture-required="true"
+  data-asset-chain-secondary-only="true"
+  data-asset-chain-may-replace-visible-texture="false"
   data-world="Audralia"
   data-canonical-spelling="A_U_D_R_A_L_I_A"
   data-parent-route="/showroom/globe/"
-  data-public-path="possibility"
-  data-view-model="possibility-path-routefinder-boot-proof-contained"
-  data-route-loader="/showroom/globe/audralia/index.js"
-  data-route-loader-contract="AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_JS_TNT_v1"
-  data-route-loader-receipt="AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_JS_RECEIPT_v1"
-  data-script-cache-key="AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_JS_TNT_v1"
-  data-boot-proof-required="true"
-  data-html-loaded-proof="true"
-  data-script-request-proof="true"
-  data-js-execution-proof-required="true"
-  data-canvas-mount-proof-required="true"
-  data-canvas-mount-preserved="true"
-  data-touch-scope-preserved="box-only"
-  data-old-route-shell-v3-wait-state-removed="true"
-  data-old-climate-v2-status-loader-removed="true"
+  data-touch-scope="box-only"
   data-generated-image="false"
   data-graphic-box="false"
-  data-procedural-world-fallback="false"
-  data-heavy-runtime-loaded="false"
-  data-streaming="false"
   data-visual-pass-claimed="false"
 >
 <head>
@@ -49,7 +36,7 @@
   <meta name="theme-color" content="#02040b">
 
   <style>
-    :root {
+    :root{
       color-scheme:dark;
       --bg:#02040b;
       --ink:#fff4d8;
@@ -57,26 +44,24 @@
       --faint:rgba(230,238,255,.52);
       --gold:#f3c86f;
       --green:#9ef0bf;
-      --blue:#8dd8ff;
       --panel:rgba(9,15,31,.88);
       --line:rgba(184,205,255,.18);
       --shadow:0 32px 110px rgba(0,0,0,.48);
       --max:1180px;
     }
 
-    * { box-sizing:border-box; }
+    *{box-sizing:border-box}
 
-    html {
+    html{
       min-width:320px;
       min-height:100%;
       background:var(--bg);
       scroll-behavior:smooth;
       overflow-x:hidden;
       touch-action:pan-y;
-      scroll-padding-top:1rem;
     }
 
-    body {
+    body{
       margin:0;
       min-width:320px;
       min-height:100vh;
@@ -95,7 +80,7 @@
       text-rendering:geometricPrecision;
     }
 
-    body::before {
+    body::before{
       content:"";
       position:fixed;
       inset:0;
@@ -110,16 +95,16 @@
       mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
     }
 
-    a { color:inherit; text-decoration:none; }
+    a{color:inherit;text-decoration:none}
 
     a:focus-visible,
     button:focus-visible,
-    [tabindex]:focus-visible {
+    [tabindex]:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
     }
 
-    .skip {
+    .skip{
       position:absolute;
       left:-999px;
       top:8px;
@@ -131,9 +116,9 @@
       font-weight:950;
     }
 
-    .skip:focus { left:8px; }
+    .skip:focus{left:8px}
 
-    .shell {
+    .shell{
       position:relative;
       z-index:2;
       width:min(var(--max),calc(100% - 28px));
@@ -141,7 +126,7 @@
       padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
     }
 
-    .topbar {
+    .topbar{
       display:grid;
       grid-template-columns:auto 1fr;
       align-items:center;
@@ -149,7 +134,7 @@
       padding:12px 0 18px;
     }
 
-    .brand {
+    .brand{
       display:grid;
       grid-template-columns:auto 1fr;
       align-items:center;
@@ -157,7 +142,7 @@
       min-width:260px;
     }
 
-    .brand-mark {
+    .brand-mark{
       width:4.2rem;
       height:4.2rem;
       display:grid;
@@ -176,7 +161,7 @@
         inset 0 1px 0 rgba(255,255,255,.16);
     }
 
-    .brand-mark span {
+    .brand-mark span{
       transform:rotate(-45deg);
       font-weight:950;
       letter-spacing:.04em;
@@ -184,18 +169,15 @@
       text-shadow:0 2px 10px rgba(0,0,0,.85);
     }
 
-    .brand-copy {
-      display:grid;
-      gap:.18rem;
-    }
+    .brand-copy{display:grid;gap:.18rem}
 
-    .brand-copy strong {
+    .brand-copy strong{
       font-size:clamp(1.08rem,3vw,1.7rem);
       line-height:1;
       letter-spacing:-.045em;
     }
 
-    .brand-copy span {
+    .brand-copy span{
       color:var(--muted);
       font-size:.74rem;
       font-weight:950;
@@ -203,14 +185,14 @@
       text-transform:uppercase;
     }
 
-    .nav {
+    .nav{
       display:flex;
       flex-wrap:wrap;
       justify-content:flex-end;
       gap:.48rem;
     }
 
-    .nav a {
+    .nav a{
       min-height:2.25rem;
       display:inline-flex;
       align-items:center;
@@ -225,23 +207,15 @@
       letter-spacing:.055em;
       text-transform:uppercase;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
-    .nav a:hover,
-    .nav a:focus-visible {
-      transform:translateY(-2px);
-      border-color:rgba(158,240,191,.48);
-      outline:none;
-    }
-
-    .nav a[aria-current="page"] {
+    .nav a[aria-current="page"]{
       border-color:rgba(158,240,191,.82);
       color:#06101c;
       background:linear-gradient(135deg,#c8ffd8,#8eeab2);
     }
 
-    .panel {
+    .panel{
       border:1px solid var(--line);
       border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
@@ -253,7 +227,7 @@
       overflow:hidden;
     }
 
-    .hero {
+    .hero{
       position:relative;
       min-height:clamp(23rem,42vw,34rem);
       display:grid;
@@ -264,7 +238,7 @@
       isolation:isolate;
     }
 
-    .kicker {
+    .kicker{
       width:fit-content;
       display:inline-flex;
       align-items:center;
@@ -282,7 +256,7 @@
       z-index:2;
     }
 
-    .kicker::before {
+    .kicker::before{
       content:"";
       width:.72rem;
       height:.72rem;
@@ -292,7 +266,7 @@
       box-shadow:0 0 1.1rem rgba(158,240,191,.44);
     }
 
-    h1 {
+    h1{
       margin:0;
       max-width:1000px;
       font-size:clamp(3.1rem,9vw,6.9rem);
@@ -303,7 +277,7 @@
       z-index:2;
     }
 
-    h2 {
+    h2{
       margin:0;
       color:var(--gold);
       font-size:clamp(1.45rem,4.7vw,2.65rem);
@@ -314,7 +288,7 @@
       z-index:2;
     }
 
-    .subtitle {
+    .subtitle{
       max-width:960px;
       color:var(--green);
       font-size:clamp(1.25rem,4vw,2.3rem);
@@ -326,20 +300,16 @@
       z-index:2;
     }
 
-    p {
+    p{
       margin:0;
       color:var(--muted);
       font-size:clamp(.98rem,2.7vw,1.16rem);
       line-height:1.55;
     }
 
-    .lead {
-      max-width:930px;
-      position:relative;
-      z-index:2;
-    }
+    .lead{max-width:930px;position:relative;z-index:2}
 
-    .principle {
+    .principle{
       max-width:980px;
       padding:1rem 1.1rem;
       border:1px solid rgba(158,240,191,.26);
@@ -351,7 +321,7 @@
       z-index:2;
     }
 
-    .actions {
+    .actions{
       display:flex;
       flex-wrap:wrap;
       gap:.62rem;
@@ -360,7 +330,7 @@
       z-index:2;
     }
 
-    .button {
+    .button{
       min-height:2.65rem;
       display:inline-flex;
       align-items:center;
@@ -379,27 +349,27 @@
     }
 
     .button:hover,
-    .button:focus-visible {
+    .button:focus-visible{
       transform:translateY(-2px);
       border-color:rgba(158,240,191,.62);
       outline:none;
     }
 
-    .button.gold {
+    .button.gold{
       border-color:rgba(158,240,191,.9);
       color:#06101c;
       background:linear-gradient(135deg,#c8ffd8,#8eeab2);
       box-shadow:0 .8rem 1.8rem rgba(158,240,191,.13);
     }
 
-    .section {
+    .section{
       margin-top:1.15rem;
       padding:clamp(1rem,3vw,1.45rem);
       display:grid;
       gap:1.05rem;
     }
 
-    .stage {
+    .stage{
       position:relative;
       width:100%;
       height:clamp(24rem,68vw,46rem);
@@ -418,7 +388,7 @@
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 1.2rem 4rem rgba(0,0,0,.30);
     }
 
-    .stage-fallback {
+    .stage-fallback{
       position:absolute;
       inset:0;
       z-index:1;
@@ -431,7 +401,7 @@
       pointer-events:none;
     }
 
-    [data-audralia-canvas-mount="true"] {
+    [data-audralia-canvas-mount="true"]{
       position:absolute!important;
       inset:0!important;
       z-index:2!important;
@@ -446,49 +416,14 @@
       border-radius:inherit;
       touch-action:none;
       overscroll-behavior:contain;
-      background:transparent;
     }
 
-    [data-audralia-canvas-mount="true"] > *,
-    [data-audralia-canvas-mount="true"] canvas,
-    [data-audralia-canvas-mount="true"] svg,
-    [data-audralia-canvas-mount="true"] video {
-      position:absolute!important;
-      inset:0!important;
-      width:100%!important;
-      height:100%!important;
-      max-width:100%!important;
-      max-height:100%!important;
-      min-width:0!important;
-      min-height:0!important;
-      margin:0!important;
-      display:block!important;
-      overflow:hidden!important;
-      object-fit:contain!important;
-      transform-origin:center center!important;
-      box-sizing:border-box!important;
-      touch-action:none!important;
-    }
-
-    body > canvas[data-audralia-visible-canvas],
-    body > canvas[data-audralia-globe],
-    body > canvas[data-audralia-satellite],
-    body > [data-audralia-mounted="true"] {
-      display:none!important;
-      pointer-events:none!important;
-    }
-
-    .stage[data-loader-state="mounted"] .stage-fallback {
+    .stage[data-loader-state="mounted"] .stage-fallback{
       opacity:0;
       visibility:hidden;
     }
 
-    .stage[data-loader-state="fallback"] .stage-fallback {
-      color:rgba(255,244,216,.84);
-    }
-
-    .public-status,
-    .proof-status {
+    .public-status{
       display:flex;
       flex-wrap:wrap;
       gap:.5rem;
@@ -501,8 +436,7 @@
       text-transform:uppercase;
     }
 
-    .public-status span,
-    .proof-status span {
+    .public-status span{
       display:inline-flex;
       min-height:2rem;
       align-items:center;
@@ -512,19 +446,13 @@
       background:rgba(28,80,58,.13);
     }
 
-    .proof-status span {
-      border-color:rgba(243,200,111,.22);
-      color:rgba(255,244,216,.86);
-      background:rgba(243,200,111,.08);
-    }
-
-    .cards {
+    .cards{
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
       gap:.85rem;
     }
 
-    .card {
+    .card{
       display:grid;
       gap:.6rem;
       min-height:100%;
@@ -536,32 +464,32 @@
         rgba(255,255,255,.035);
     }
 
-    .card b {
+    .card b{
       color:var(--green);
       font-size:.68rem;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .card strong {
+    .card strong{
       color:rgba(255,244,216,.98);
       font-size:1.15rem;
       line-height:1.1;
     }
 
-    .card span {
+    .card span{
       color:var(--muted);
       font-size:.94rem;
       line-height:1.42;
     }
 
-    .micro-links {
+    .micro-links{
       display:flex;
       flex-wrap:wrap;
       gap:.54rem;
     }
 
-    .micro-links a {
+    .micro-links a{
       min-height:2.35rem;
       display:inline-flex;
       align-items:center;
@@ -577,7 +505,7 @@
       text-transform:uppercase;
     }
 
-    .micro-links a.primary {
+    .micro-links a.primary{
       border-color:rgba(158,240,191,.62);
       color:#06101c;
       background:linear-gradient(135deg,#c8ffd8,#8eeab2);
@@ -587,7 +515,7 @@
     [data-route-receipt],
     [data-contract-receipt],
     [data-debug-receipt],
-    .receipt {
+    .receipt{
       display:none!important;
       visibility:hidden!important;
       overflow:hidden!important;
@@ -606,56 +534,35 @@
       white-space:nowrap!important;
     }
 
-    [data-audralia-update-bar],
-    [data-audralia-visible-update],
-    [data-audralia-route-status-bar],
-    [data-audralia-loader-notice-bar],
-    .audralia-update-bar,
-    .audralia-visible-update,
-    .audralia-route-status-bar {
-      display:none!important;
-      visibility:hidden!important;
-      opacity:0!important;
-      pointer-events:none!important;
-      width:0!important;
-      height:0!important;
-      max-width:0!important;
-      max-height:0!important;
-      overflow:hidden!important;
-      position:absolute!important;
-      inset:auto!important;
-      clip-path:inset(50%)!important;
-    }
-
-    footer {
+    footer{
       padding:1.35rem 0 .5rem;
       color:var(--faint);
       text-align:center;
       font-size:.76rem;
     }
 
-    @media (max-width:980px) {
-      .topbar { grid-template-columns:1fr; align-items:start; }
-      .nav { justify-content:flex-start; }
+    @media (max-width:980px){
+      .topbar{grid-template-columns:1fr;align-items:start}
+      .nav{justify-content:flex-start}
     }
 
-    @media (max-width:720px) {
-      .shell { width:min(100% - 22px,var(--max)); }
-      h1 { font-size:clamp(3rem,17vw,5rem); }
-      .hero { min-height:27rem; padding:1rem; }
-      .actions { display:grid; }
-      .button { width:100%; }
-      .cards { grid-template-columns:1fr; }
-      .stage {
+    @media (max-width:720px){
+      .shell{width:min(100% - 22px,var(--max))}
+      h1{font-size:clamp(3rem,17vw,5rem)}
+      .hero{min-height:27rem;padding:1rem}
+      .actions{display:grid}
+      .button{width:100%}
+      .cards{grid-template-columns:1fr}
+      .stage{
         height:clamp(23rem,92vw,34rem);
         max-height:68vh;
       }
     }
 
-    @media (prefers-reduced-motion:reduce) {
+    @media (prefers-reduced-motion:reduce){
       *,
       *::before,
-      *::after {
+      *::after{
         scroll-behavior:auto!important;
         animation-duration:.01ms!important;
         animation-iteration-count:1!important;
@@ -724,39 +631,32 @@
           data-audralia-box-stage="true"
           data-audralia-globe-stage="true"
           data-loader-state="pending"
-          data-required-loader-contract="AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_JS_TNT_v1"
+          data-visible-texture-guard-required="true"
           aria-label="Audralia boxed possibility globe stage"
         >
           <div class="stage-fallback" data-stage-fallback="true">
-            RouteFinder boot proof preparing. The page will report whether HTML, script request, index.js execution, and canvas mount all occur.
+            Visible texture guard preparing. RouteFinder-first texture is required before any asset-chain enrichment.
           </div>
 
           <div
             id="audraliaCanvasMount"
             data-audralia-canvas-mount="true"
             data-audralia-globe-mount="true"
+            data-audralia-satellite-mount="true"
             data-audralia-contained-mount="true"
             data-audralia-box-target="true"
-            data-audralia-adoption-target="true"
             data-audralia-touch-scope="box-only"
-            data-required-loader-contract="AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_JS_TNT_v1"
-            data-generated-image="false"
-            data-graphic-box="false"
-            data-visual-pass-claimed="false"
             aria-label="Audralia boxed possibility globe canvas mount"
           ></div>
         </div>
 
-        <div class="proof-status" aria-live="polite">
-          <span data-audralia-proof-html>HTML loaded</span>
-          <span data-audralia-proof-script>script requested</span>
-          <span data-audralia-proof-js>index.js awaiting execution</span>
-          <span data-audralia-proof-mount>mount pending</span>
-        </div>
-
         <div class="public-status" aria-live="polite">
-          <span id="audraliaRouteLoaderNotice" data-audralia-route-loader-notice="true">RouteFinder boot proof preparing</span>
-          <span id="audraliaRouteStatus" data-audralia-route-status="true">Awaiting AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_JS_TNT_v1</span>
+          <span data-audralia-proof-html="true">HTML loaded · visible guard shell</span>
+          <span data-audralia-proof-script="true">Script pending · visible guard cache key</span>
+          <span data-audralia-proof-js="true">Index.js pending · visible texture guard</span>
+          <span data-audralia-proof-mount="true">Mount pending</span>
+          <span id="audraliaRouteLoaderNotice" data-audralia-route-loader-notice="true">Visible texture guard preparing</span>
+          <span id="audraliaRouteStatus" data-audralia-route-status="true">RouteFinder-first texture pending</span>
         </div>
       </section>
 
@@ -793,107 +693,51 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_HTML_TNT_v1
-pair=AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_TNT_v1
-previous=AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_SHELL_ALIGNMENT_HTML_TNT_v1
+AUDRALIA_ROUTEFINDER_VISIBLE_TEXTURE_GUARD_CACHE_KEY_PAIR_HTML_TNT_v1
+previous=AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_HTML_TNT_v1
 route=/showroom/globe/audralia/
 page=audralia
-role=showroom_globe_child_route
-world=Audralia
-canonical_spelling=A_U_D_R_A_L_I_A
 target_file=/showroom/globe/audralia/index.html
 route_loader=/showroom/globe/audralia/index.js
-route_loader_contract=AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_JS_TNT_v1
-route_loader_receipt=AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_JS_RECEIPT_v1
-script_cache_key=AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_JS_TNT_v1
-boot_proof_required=true
-proof_states=html_loaded,script_requested,index_js_executed,routefinder_mounted
-canvas_mount=#audraliaCanvasMount
-canvas_mount_preserved=true
+script_cache_key=AUDRALIA_ROUTEFINDER_VISIBLE_TEXTURE_GUARD_TNT_v1
+required_js_contract=AUDRALIA_ROUTEFINDER_VISIBLE_TEXTURE_GUARD_TNT_v1
+visible_texture_guard_required=true
+routefinder_first_texture_required=true
+asset_chain_secondary_only=true
+asset_chain_may_replace_visible_texture=false
+old_asset_chain_texture_ready_label_removed=true
+old_routefinder_asset_chain_override_label_removed=true
+mount=#audraliaCanvasMount
 touch_scope=box_only
-box_containment=true
-old_route_shell_v3_wait_state_removed=true
-old_climate_v2_status_loader_removed=true
 generated_image=false
 graphic_box=false
-procedural_world_fallback=false
-streaming=false
 visual_pass_claimed=false
       </template>
     </main>
 
     <footer>
-      AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_HTML_TNT_v1 · Audralia · RouteFinder boot proof pair.
+      AUDRALIA_ROUTEFINDER_VISIBLE_TEXTURE_GUARD_CACHE_KEY_PAIR_HTML_TNT_v1 · Audralia · Visible texture guard cache key enforced.
     </footer>
   </div>
 
   <script>
-    window.DGB_AUDRALIA_HTML_SHELL_CONTRACT = "AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_HTML_TNT_v1";
-    window.DGB_AUDRALIA_REQUIRED_LOADER_CONTRACT = "AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_JS_TNT_v1";
-    window.DGB_AUDRALIA_PAIR_CONTRACT = "AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_TNT_v1";
+    window.DGB_AUDRALIA_ROUTE_KEY = "AUDRALIA_ROUTEFINDER_VISIBLE_TEXTURE_GUARD_TNT_v1";
+    window.DGB_AUDRALIA_HTML_CONTRACT = "AUDRALIA_ROUTEFINDER_VISIBLE_TEXTURE_GUARD_CACHE_KEY_PAIR_HTML_TNT_v1";
     window.DGB_AUDRALIA_CANONICAL_SPELLING = "A_U_D_R_A_L_I_A";
-    window.DGB_AUDRALIA_ROUTEFINDER_ACTIVE = true;
-    window.DGB_AUDRALIA_TOUCH_SCOPE = "box-only";
+    window.DGB_AUDRALIA_VISIBLE_TEXTURE_GUARD_REQUIRED = true;
+    window.DGB_AUDRALIA_ROUTEFINDER_FIRST_TEXTURE_REQUIRED = true;
+    window.DGB_AUDRALIA_ASSET_CHAIN_SECONDARY_ONLY = true;
+    window.DGB_AUDRALIA_ASSET_CHAIN_MAY_REPLACE_VISIBLE_TEXTURE = false;
     window.DGB_AUDRALIA_GENERATED_IMAGE = false;
     window.DGB_AUDRALIA_GRAPHIC_BOX = false;
     window.DGB_AUDRALIA_VISUAL_PASS_CLAIMED = false;
-
-    document.documentElement.dataset.audraliaHtmlShellLoaded = "true";
-    document.documentElement.dataset.audraliaHtmlShellContract = "AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_HTML_TNT_v1";
-    document.documentElement.dataset.audraliaRequiredLoaderContract = "AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_JS_TNT_v1";
-    document.documentElement.dataset.audraliaScriptRequestIssued = "true";
-
-    window.dgbAudraliaShellStatus = function dgbAudraliaShellStatus(type, message) {
-      var scriptProof = document.querySelector("[data-audralia-proof-script]");
-      var jsProof = document.querySelector("[data-audralia-proof-js]");
-      var mountProof = document.querySelector("[data-audralia-proof-mount]");
-      var notice = document.getElementById("audraliaRouteLoaderNotice");
-      var status = document.getElementById("audraliaRouteStatus");
-
-      if (type === "script-loaded" && scriptProof) scriptProof.textContent = "script loaded";
-      if (type === "script-error" && scriptProof) scriptProof.textContent = "script failed";
-      if (type === "js-missing" && jsProof) jsProof.textContent = "index.js did not execute";
-      if (type === "js-loaded-no-sentinel" && jsProof) jsProof.textContent = "index.js loaded but sentinel missing";
-      if (type === "mounted" && mountProof) mountProof.textContent = "mount found";
-
-      if (notice) notice.textContent = message;
-      if (status) status.textContent = message;
-    };
   </script>
 
   <script
-    src="/showroom/globe/audralia/index.js?v=AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_JS_TNT_v1"
-    data-audralia-loader-script="AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_JS_TNT_v1"
-    data-audralia-required-loader-contract="AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_JS_TNT_v1"
-    data-audralia-html-shell-alignment="AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_HTML_TNT_v1"
-    onload="document.documentElement.dataset.audraliaExternalScriptLoaded='true'; if(window.dgbAudraliaShellStatus) window.dgbAudraliaShellStatus('script-loaded','index.js network load completed');"
-    onerror="document.documentElement.dataset.audraliaExternalScriptError='true'; if(window.dgbAudraliaShellStatus) window.dgbAudraliaShellStatus('script-error','index.js failed to load from /showroom/globe/audralia/index.js');"
+    src="/showroom/globe/audralia/index.js?v=AUDRALIA_ROUTEFINDER_VISIBLE_TEXTURE_GUARD_TNT_v1"
+    data-audralia-loader-script="AUDRALIA_ROUTEFINDER_VISIBLE_TEXTURE_GUARD_TNT_v1"
+    data-cache-key-enforcement="AUDRALIA_ROUTEFINDER_VISIBLE_TEXTURE_GUARD_TNT_v1"
     defer
   ></script>
-
-  <script>
-    window.setTimeout(function auditAudraliaBootProof() {
-      if (window.DGB_AUDRALIA_ROUTEFINDER_PAIR_EXECUTED) return;
-
-      if (document.documentElement.dataset.audraliaExternalScriptLoaded === "true") {
-        if (window.dgbAudraliaShellStatus) {
-          window.dgbAudraliaShellStatus(
-            "js-loaded-no-sentinel",
-            "index.js loaded, but AUDRALIA_ROUTEFINDER_BOOT_PROOF_PAIR_JS_TNT_v1 did not execute"
-          );
-        }
-        document.documentElement.dataset.audraliaBootProofFailure = "script_loaded_but_js_sentinel_missing";
-        return;
-      }
-
-      if (window.dgbAudraliaShellStatus) {
-        window.dgbAudraliaShellStatus(
-          "js-missing",
-          "index.js has not executed yet; check script path, deploy, or cache"
-        );
-      }
-      document.documentElement.dataset.audraliaBootProofFailure = "index_js_not_executed";
-    }, 1800);
-  </script>
 </body>
 </html>

@@ -1,68 +1,93 @@
 // /showroom/globe/index.js
-// SHOWROOM_GLOBE_LEGACY_ANCHOR_ROUTE_BRIDGE_JS_TNT_v1
+// SHOWROOM_GLOBE_MIRRORLAND_NARRATIVE_GATEWAY_JS_TNT_v1
 // Full-file replacement.
-// Showroom Globe great-grandparent legacy route bridge.
+// Showroom Globe great-grandparent Mirrorland narrative gateway verifier.
 // Purpose:
-// - Keeps /showroom/globe/ as the public planet-family gateway.
-// - Verifies route cards and page-level legacy-anchor posture.
-// - Reports receipts to the HTML shell.
-// - Does not import Audralia clean-canvas files.
-// - Does not mount Audralia engine.
-// - Does not own planet science, runtime motion, controls, canvas composition, or child route authority.
+// - Verifies /showroom/globe/ as the narrative gateway for Shadows Never Shatter in Mirrorland.
+// - Confirms required gem-door links exist.
+// - Confirms forbidden Audralia clean-canvas imports are absent.
+// - Confirms no Audralia engine is mounted.
+// - Updates a small status line and receipt list.
+// - Does not create the visual identity.
+// - Does not import child planet files.
+// - Does not mount runtime, controls, canvas, or engine.
 // No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "SHOWROOM_GLOBE_LEGACY_ANCHOR_ROUTE_BRIDGE_JS_TNT_v1";
-  const RECEIPT = "SHOWROOM_GLOBE_LEGACY_ANCHOR_ROUTE_BRIDGE_JS_RECEIPT_v1";
-  const HTML_CONTRACT = "SHOWROOM_GLOBE_LEGACY_ANCHOR_RENEWAL_HTML_TNT_v1";
-  const VERSION = "2026-05-20.showroom-globe-legacy-anchor-route-bridge-v1";
+  const CONTRACT = "SHOWROOM_GLOBE_MIRRORLAND_NARRATIVE_GATEWAY_JS_TNT_v1";
+  const RECEIPT = "SHOWROOM_GLOBE_MIRRORLAND_NARRATIVE_GATEWAY_JS_RECEIPT_v1";
+  const HTML_CONTRACT = "SHOWROOM_GLOBE_MIRRORLAND_NARRATIVE_GATEWAY_HTML_TNT_v1";
+  const PREVIOUS_CONTRACT = "SHOWROOM_GLOBE_LEGACY_ANCHOR_ROUTE_BRIDGE_JS_TNT_v1";
+  const VERSION = "2026-05-20.showroom-globe-mirrorland-narrative-gateway-js-v1";
   const ROUTE = "/showroom/globe/";
+  const SEASON_TITLE = "Shadows Never Shatter in Mirrorland";
 
-  const REQUIRED_ROUTES = Object.freeze([
+  const REQUIRED_DOORS = Object.freeze([
     {
-      key: "compass",
-      label: "Compass",
-      href: "/",
-      role: "site-root"
-    },
-    {
-      key: "showroom",
-      label: "Showroom",
-      href: "/showroom/",
-      role: "parent-showroom"
-    },
-    {
-      key: "zionts",
-      label: "ZIONTS / Earth",
+      key: "consequence",
+      label: "ZIONTS / Consequence",
       href: "/showroom/globe/earth/",
-      role: "consequence-route"
+      selector: '[data-door="consequence"]',
+      role: "consequence-story-door"
     },
     {
-      key: "audralia",
-      label: "Audralia",
+      key: "possibility",
+      label: "Audralia / Possibility",
       href: "/showroom/globe/audralia/",
-      role: "possibility-route"
+      selector: '[data-door="possibility"]',
+      role: "possibility-story-door"
     },
     {
-      key: "h-earth",
-      label: "H-Earth",
+      key: "survival",
+      label: "H-Earth / Survival",
       href: "/showroom/globe/h-earth/",
-      role: "audralia-ground-view-route"
+      selector: '[data-door="survival"]',
+      role: "survival-story-door"
     },
     {
-      key: "hearth",
-      label: "Hearth",
-      href: "/showroom/globe/hearth/",
-      role: "formation-route"
+      key: "characters",
+      label: "Characters / People inside the story",
+      href: "/characters/",
+      selector: '[data-door="characters"]',
+      role: "character-story-door"
     },
     {
-      key: "gauges",
-      label: "Gauges",
+      key: "proof",
+      label: "Showroom / Proof surface",
+      href: "/showroom/",
+      selector: '[data-door="proof"]',
+      role: "proof-surface-door"
+    },
+    {
+      key: "measure",
+      label: "Gauges / Measurement",
       href: "/gauges/",
-      role: "measurement-route"
+      selector: '[data-door="measure"]',
+      role: "measurement-door"
     }
+  ]);
+
+  const FORBIDDEN_SCRIPT_PATTERNS = Object.freeze([
+    "/assets/audralia/clean/",
+    "audralia.engine.js",
+    "audralia.canvas.js",
+    "audralia.runtime.js",
+    "audralia.controls.js",
+    "audralia.surface.js",
+    "audralia.atmosphere.js",
+    "three.min.js",
+    "webgl"
+  ]);
+
+  const FORBIDDEN_GLOBALS = Object.freeze([
+    "AUDRALIA_CLEAN_CANVAS_ENGINE",
+    "AUDRALIA_ENGINE",
+    "AUDRALIA_CLEAN_CANVAS_RUNTIME",
+    "AUDRALIA_RUNTIME",
+    "AUDRALIA_CLEAN_CANVAS_COMPOSITOR",
+    "AUDRALIA_CANVAS"
   ]);
 
   const state = {
@@ -86,7 +111,7 @@
     try {
       d.documentElement.dataset[key] = String(value);
     } catch {
-      // Dataset writes are legacy proof metadata only.
+      // Dataset writes are proof metadata only.
     }
   }
 
@@ -106,11 +131,11 @@
   }
 
   function statusNode() {
-    return byId("showroom-globe-status") || qs("[data-showroom-globe-status]");
+    return byId("mirrorland-gateway-status") || qs("[data-mirrorland-gateway-status]");
   }
 
   function receiptList() {
-    return byId("showroom-globe-receipts") || qs("[data-showroom-globe-receipts]");
+    return byId("mirrorland-gateway-receipts") || qs("[data-mirrorland-gateway-receipts]");
   }
 
   function writeStatus(message, tone = "ready") {
@@ -150,11 +175,25 @@
       expectedRoute: ROUTE,
       actualRoute: html?.dataset?.route || null,
       routeValid: html?.dataset?.route === ROUTE,
+
       expectedContract: HTML_CONTRACT,
       actualContract: html?.dataset?.contract || null,
       contractValid: html?.dataset?.contract === HTML_CONTRACT,
-      page: html?.dataset?.page || null,
+
+      expectedPage: "showroom-globe",
+      actualPage: html?.dataset?.page || null,
       pageValid: html?.dataset?.page === "showroom-globe",
+
+      expectedSeason: SEASON_TITLE,
+      actualSeason: html?.dataset?.season || null,
+      seasonValid: html?.dataset?.season === SEASON_TITLE,
+
+      authority: html?.dataset?.authority || null,
+      authorityValid: html?.dataset?.authority === "great-grandparent-narrative-gateway-expression-only",
+
+      role: html?.dataset?.role || null,
+      roleValid: html?.dataset?.role === "mirrorland-narrative-gateway",
+
       legacyAnchor: html?.dataset?.grandparentStatus === "legacy-anchor",
       audraliaCleanCanvasChild: html?.dataset?.audraliaCleanCanvasChild === "false",
       audraliaEngineMount: html?.dataset?.audraliaEngineMount === "false",
@@ -164,99 +203,146 @@
     });
   }
 
-  function inspectRoutes() {
+  function inspectNarrativeContent() {
+    const text = String(doc()?.body?.innerText || "");
+
+    const checks = Object.freeze({
+      titlePresent: text.includes(SEASON_TITLE),
+      oceanDoorPresent: text.includes("The ocean did not hide a mystery. It hid a door."),
+      bermudaPresent: text.includes("Bermuda Triangle"),
+      noReturnPresent: text.includes("cannot come back"),
+      windowRulePresent: text.includes("window"),
+      coverLawPresent: text.includes("cover") && text.includes("true") && text.includes("incomplete"),
+      charactersSeparated: text.includes("character page") || text.includes("Characters page") || text.includes("The character page")
+    });
+
+    const valid = Object.values(checks).every(Boolean);
+
+    return Object.freeze({
+      valid,
+      checks
+    });
+  }
+
+  function inspectGemDoors() {
     const anchors = qsa("a[href]");
     const hrefs = new Set(anchors.map((anchor) => normalizeHref(anchor.getAttribute("href"))));
 
-    const items = REQUIRED_ROUTES.map((route) => {
-      const normalized = normalizeHref(route.href);
+    const items = REQUIRED_DOORS.map((door) => {
+      const node = qs(door.selector);
+      const normalized = normalizeHref(door.href);
+      const nodeHref = node?.getAttribute?.("href") || null;
 
       return Object.freeze({
-        key: route.key,
-        label: route.label,
-        role: route.role,
-        href: route.href,
+        key: door.key,
+        label: door.label,
+        role: door.role,
+        href: door.href,
         normalized,
-        present: hrefs.has(normalized)
+        selector: door.selector,
+        nodePresent: Boolean(node),
+        hrefPresent: hrefs.has(normalized),
+        nodeHrefValid: normalizeHref(nodeHref || "") === normalized,
+        valid: Boolean(node) && hrefs.has(normalized) && normalizeHref(nodeHref || "") === normalized
       });
     });
 
     return Object.freeze({
-      required: REQUIRED_ROUTES.length,
-      present: items.filter((item) => item.present).length,
-      missing: Object.freeze(items.filter((item) => !item.present)),
+      required: REQUIRED_DOORS.length,
+      validCount: items.filter((item) => item.valid).length,
+      presentCount: items.filter((item) => item.nodePresent).length,
+      missing: Object.freeze(items.filter((item) => !item.valid)),
       items: Object.freeze(items),
-      complete: items.every((item) => item.present)
+      complete: items.every((item) => item.valid)
     });
   }
 
   function inspectForbiddenImports() {
     const scripts = qsa("script[src]");
-    const srcs = scripts.map((script) => script.getAttribute("src") || "");
+    const srcs = scripts.map((script) => String(script.getAttribute("src") || ""));
 
-    const forbidden = srcs.filter((src) =>
-      src.includes("/assets/audralia/clean/") ||
-      src.includes("audralia.engine.js") ||
-      src.includes("audralia.canvas.js") ||
-      src.includes("audralia.runtime.js")
-    );
+    const forbiddenScripts = srcs.filter((src) => {
+      const lower = src.toLowerCase();
+      return FORBIDDEN_SCRIPT_PATTERNS.some((pattern) => lower.includes(String(pattern).toLowerCase()));
+    });
+
+    const forbiddenGlobals = FORBIDDEN_GLOBALS.filter((name) => Boolean(win()[name]));
 
     return Object.freeze({
       scriptCount: scripts.length,
-      forbidden,
-      valid: forbidden.length === 0,
-      audraliaEngineMounted: Boolean(win().AUDRALIA_CLEAN_CANVAS_ENGINE || win().AUDRALIA_ENGINE) === false
+      scripts: Object.freeze(srcs),
+      forbiddenScripts: Object.freeze(forbiddenScripts),
+      forbiddenGlobals: Object.freeze(forbiddenGlobals),
+      valid: forbiddenScripts.length === 0 && forbiddenGlobals.length === 0,
+      audraliaEngineMounted: forbiddenGlobals.includes("AUDRALIA_CLEAN_CANVAS_ENGINE") || forbiddenGlobals.includes("AUDRALIA_ENGINE")
     });
   }
 
-  function inspectNodes() {
-    const gateway = qs("[data-showroom-globe-gateway]");
-    const root = qs("[data-showroom-globe-root]");
-    const planetNodes = qsa(".planet-node");
+  function inspectStructure() {
+    const root = qs("[data-mirrorland-root]");
+    const gateway = qs("[data-mirrorland-gem-gateway]");
+    const gem = qs(".mirror-gem");
+    const cards = qsa(".story-card");
+    const panels = qsa(".wide-panel");
 
     return Object.freeze({
       rootPresent: Boolean(root),
       gatewayPresent: Boolean(gateway),
-      planetNodeCount: planetNodes.length,
-      minimumPlanetNodesPresent: planetNodes.length >= 4,
-      nodeKeys: Object.freeze(planetNodes.map((node) => node.getAttribute("data-node") || "unknown"))
+      gemPresent: Boolean(gem),
+      storyCardCount: cards.length,
+      widePanelCount: panels.length,
+      enoughStoryCards: cards.length >= 6,
+      enoughPanels: panels.length >= 2,
+      valid: Boolean(root) && Boolean(gateway) && Boolean(gem) && cards.length >= 6 && panels.length >= 2
     });
   }
 
   function buildReceipt() {
     const htmlShell = inspectHtmlShell();
-    const routes = inspectRoutes();
+    const narrative = inspectNarrativeContent();
+    const gemDoors = inspectGemDoors();
     const forbiddenImports = inspectForbiddenImports();
-    const nodes = inspectNodes();
+    const structure = inspectStructure();
 
     const valid =
       htmlShell.routeValid &&
       htmlShell.contractValid &&
       htmlShell.pageValid &&
+      htmlShell.seasonValid &&
+      htmlShell.authorityValid &&
+      htmlShell.roleValid &&
       htmlShell.legacyAnchor &&
       htmlShell.audraliaCleanCanvasChild &&
       htmlShell.audraliaEngineMount &&
-      routes.complete &&
+      htmlShell.generatedImage &&
+      htmlShell.graphicBox &&
+      htmlShell.visualPassClaimed &&
+      narrative.valid &&
+      gemDoors.complete &&
       forbiddenImports.valid &&
-      nodes.rootPresent &&
-      nodes.gatewayPresent &&
-      nodes.minimumPlanetNodesPresent;
+      structure.valid;
 
     return Object.freeze({
       contract: CONTRACT,
       receipt: RECEIPT,
       htmlContract: HTML_CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       route: ROUTE,
-      authority: "showroom-globe-great-grandparent-legacy-route-bridge",
+      seasonTitle: SEASON_TITLE,
+      authority: "showroom-globe-great-grandparent-mirrorland-narrative-gateway-verifier",
       checkedAt: new Date().toISOString(),
       valid,
+
       htmlShell,
-      routes,
+      narrative,
+      gemDoors,
       forbiddenImports,
-      nodes,
-      ownsGreatGrandparentRouteSelector: true,
-      ownsPublicGatewayLanguage: true,
+      structure,
+
+      ownsGreatGrandparentNarrativeGateway: true,
+      ownsPublicNarrativeExpression: false,
+      ownsVisualIdentity: false,
       ownsPlanetScience: false,
       ownsAudraliaCleanCanvas: false,
       ownsAudraliaEngineMount: false,
@@ -264,6 +350,7 @@
       ownsControls: false,
       ownsCanvasComposition: false,
       ownsChildRouteAuthority: false,
+
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false
@@ -274,39 +361,42 @@
     state.receipt = receipt;
     state.checkedAt = receipt.checkedAt;
 
-    win().SHOWROOM_GLOBE_LEGACY_ANCHOR = API;
-    win().SHOWROOM_GLOBE_LEGACY_ANCHOR_RECEIPT = receipt;
-    win().SHOWROOM_GLOBE_LEGACY_ROUTE_BRIDGE = API;
-    win().SHOWROOM_GLOBE_LEGACY_ROUTE_BRIDGE_RECEIPT = receipt;
+    win().SHOWROOM_GLOBE_MIRRORLAND_NARRATIVE_GATEWAY = API;
+    win().SHOWROOM_GLOBE_MIRRORLAND_NARRATIVE_GATEWAY_RECEIPT = receipt;
+    win().MIRRORLAND_NARRATIVE_GATEWAY = API;
+    win().MIRRORLAND_NARRATIVE_GATEWAY_RECEIPT = receipt;
 
-    setDataset("showroomGlobeLegacyBridgeLoaded", "true");
-    setDataset("showroomGlobeLegacyBridgeContract", CONTRACT);
-    setDataset("showroomGlobeLegacyBridgeReceipt", RECEIPT);
-    setDataset("showroomGlobeLegacyBridgeVersion", VERSION);
-    setDataset("showroomGlobeLegacyAnchorValid", receipt.valid ? "true" : "false");
-    setDataset("showroomGlobeLegacyRoutesComplete", receipt.routes.complete ? "true" : "false");
-    setDataset("showroomGlobeForbiddenAudraliaImports", receipt.forbiddenImports.valid ? "false" : "true");
-    setDataset("showroomGlobeOwnsGreatGrandparentRouteSelector", "true");
-    setDataset("showroomGlobeOwnsPlanetScience", "false");
-    setDataset("showroomGlobeOwnsAudraliaCleanCanvas", "false");
-    setDataset("showroomGlobeOwnsAudraliaEngineMount", "false");
-    setDataset("showroomGlobeOwnsRuntimeMotion", "false");
-    setDataset("showroomGlobeOwnsControls", "false");
-    setDataset("showroomGlobeOwnsCanvasComposition", "false");
+    setDataset("mirrorlandNarrativeGatewayBridgeLoaded", "true");
+    setDataset("mirrorlandNarrativeGatewayBridgeContract", CONTRACT);
+    setDataset("mirrorlandNarrativeGatewayBridgeReceipt", RECEIPT);
+    setDataset("mirrorlandNarrativeGatewayBridgeVersion", VERSION);
+    setDataset("mirrorlandNarrativeGatewayValid", receipt.valid ? "true" : "false");
+    setDataset("mirrorlandNarrativeGatewayDoorsComplete", receipt.gemDoors.complete ? "true" : "false");
+    setDataset("mirrorlandNarrativeGatewayNarrativeValid", receipt.narrative.valid ? "true" : "false");
+    setDataset("mirrorlandNarrativeGatewayForbiddenImportsPresent", receipt.forbiddenImports.valid ? "false" : "true");
+    setDataset("mirrorlandNarrativeGatewayOwnsGreatGrandparentNarrativeGateway", "true");
+    setDataset("mirrorlandNarrativeGatewayOwnsPlanetScience", "false");
+    setDataset("mirrorlandNarrativeGatewayOwnsAudraliaCleanCanvas", "false");
+    setDataset("mirrorlandNarrativeGatewayOwnsAudraliaEngineMount", "false");
+    setDataset("mirrorlandNarrativeGatewayOwnsRuntimeMotion", "false");
+    setDataset("mirrorlandNarrativeGatewayOwnsControls", "false");
+    setDataset("mirrorlandNarrativeGatewayOwnsCanvasComposition", "false");
     setDataset("generatedImage", "false");
     setDataset("graphicBox", "false");
     setDataset("visualPassClaimed", "false");
 
     writeStatus(
       receipt.valid
-        ? "Legacy gateway restored."
-        : "Legacy gateway loaded with held checks.",
+        ? "Mirrorland narrative gateway verified."
+        : "Mirrorland narrative gateway loaded with held checks.",
       receipt.valid ? "ready" : "held"
     );
 
     appendReceipt(`${CONTRACT} · valid=${receipt.valid}`);
-    appendReceipt(`routes present ${receipt.routes.present}/${receipt.routes.required}`);
-    appendReceipt(`forbidden Audralia clean-canvas imports=${receipt.forbiddenImports.forbidden.length}`);
+    appendReceipt(`gem doors valid ${receipt.gemDoors.validCount}/${receipt.gemDoors.required}`);
+    appendReceipt(`narrative checks valid=${receipt.narrative.valid}`);
+    appendReceipt(`forbidden child-engine imports=${receipt.forbiddenImports.forbiddenScripts.length}`);
+    appendReceipt(`forbidden child-engine globals=${receipt.forbiddenImports.forbiddenGlobals.length}`);
 
     return receipt;
   }
@@ -315,12 +405,12 @@
     if (state.booted) return state.receipt;
 
     state.booted = true;
-    writeStatus("Checking legacy gateway.", "loading");
-    setDataset("showroomGlobeLegacyBridgeBooting", "true");
+    writeStatus("Checking Mirrorland narrative gateway.", "loading");
+    setDataset("mirrorlandNarrativeGatewayBridgeBooting", "true");
 
     const receipt = publishReceipt(buildReceipt());
 
-    setDataset("showroomGlobeLegacyBridgeBooting", "false");
+    setDataset("mirrorlandNarrativeGatewayBridgeBooting", "false");
     return receipt;
   }
 
@@ -329,14 +419,20 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       htmlContract: HTML_CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       route: ROUTE,
-      requiredRoutes: REQUIRED_ROUTES,
+      seasonTitle: SEASON_TITLE,
+      requiredDoors: REQUIRED_DOORS,
+      forbiddenScriptPatterns: FORBIDDEN_SCRIPT_PATTERNS,
+      forbiddenGlobals: FORBIDDEN_GLOBALS,
       booted: state.booted,
       checkedAt: state.checkedAt,
       lastReceipt: state.receipt,
-      ownsGreatGrandparentRouteSelector: true,
-      ownsPublicGatewayLanguage: true,
+
+      ownsGreatGrandparentNarrativeGateway: true,
+      ownsPublicNarrativeExpression: false,
+      ownsVisualIdentity: false,
       ownsPlanetScience: false,
       ownsAudraliaCleanCanvas: false,
       ownsAudraliaEngineMount: false,
@@ -344,6 +440,7 @@
       ownsControls: false,
       ownsCanvasComposition: false,
       ownsChildRouteAuthority: false,
+
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false
@@ -354,19 +451,23 @@
     contract: CONTRACT,
     receipt: RECEIPT,
     htmlContract: HTML_CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
     version: VERSION,
     route: ROUTE,
-    requiredRoutes: REQUIRED_ROUTES,
+    seasonTitle: SEASON_TITLE,
+    requiredDoors: REQUIRED_DOORS,
+
     boot,
     inspectHtmlShell,
-    inspectRoutes,
+    inspectNarrativeContent,
+    inspectGemDoors,
     inspectForbiddenImports,
-    inspectNodes,
+    inspectStructure,
     getStatus
   });
 
-  win().SHOWROOM_GLOBE_LEGACY_ANCHOR = API;
-  win().SHOWROOM_GLOBE_LEGACY_ROUTE_BRIDGE = API;
+  win().SHOWROOM_GLOBE_MIRRORLAND_NARRATIVE_GATEWAY = API;
+  win().MIRRORLAND_NARRATIVE_GATEWAY = API;
 
   if (doc()?.readyState === "loading") {
     doc().addEventListener("DOMContentLoaded", boot, { once: true });

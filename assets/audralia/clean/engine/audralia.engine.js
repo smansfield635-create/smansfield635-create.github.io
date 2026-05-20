@@ -1,1079 +1,705 @@
 // /assets/audralia/clean/audralia.engine.js
-// AUDRALIA_G2_5_PARENT_ENGINE_AUDRALIA_NESTED_CHILD_PATH_ALIGNMENT_TNT_v1
+// AUDRALIA_G2_5_PARENT_CONTRACT_ALIGNMENT_TNT_v1
 // Full-file replacement.
-// Purpose: renew the parent Audralia engine contract to match the current nested child architecture:
-//
-// Parent:
-//   /assets/audralia/clean/audralia.engine.js
-//
-// Children:
-//   /assets/audralia/clean/audralia/engine/continents.js
-//   /assets/audralia/clean/audralia/engine/motion.js
-//   /assets/audralia/clean/audralia/engine/sky.js
-//
-// Children remain unchanged.
-// Parent owns: mount, child loading, canvas creation, pixel composition, route-bridge compatibility, FORM_VISIBLE.
-// Parent does not own: continent law, motion law, sky/weather law, route HTML, route bridge JS, parent Globe, Characters, Gauges, Showroom, or navigation.
+// Purpose: align the Audralia clean-canvas parent engine contract to the current three-child architecture.
+// Parent owns: mount, composition surface, child dependency loading, bridge compatibility, receipt/status publication.
+// Children own:
+//   /assets/audralia/clean/engine/continents.js — continent law, sea-level exposure, shelves, terrain pressure, Nine-Summits pressure.
+//   /assets/audralia/clean/engine/motion.js     — axis tilt, rotation, drag, pitch bounds, redraw triggers.
+//   /assets/audralia/clean/engine/sky.js        — rim glow, haze, clouds/weather, lighting tint.
+// Does not own: parent Globe route, Audralia HTML, Audralia route bridge JS, Characters, Gauges, Showroom, generated image, GraphicBox, or visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G2_5_PARENT_ENGINE_AUDRALIA_NESTED_CHILD_PATH_ALIGNMENT_TNT_v1";
-  const RECEIPT = "AUDRALIA_G2_5_PARENT_ENGINE_AUDRALIA_NESTED_CHILD_PATH_ALIGNMENT_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_PARENT_ENGINE_CHILD_CONTRACT_ALIGNMENT_TNT_v1";
+  const CONTRACT = "AUDRALIA_G2_5_PARENT_CONTRACT_ALIGNMENT_TNT_v1";
+  const FAMILY = "AUDRALIA_G2_5_SIMPLE_ENGINE_CHILD_SPLIT_TNT_v1";
   const ROUTE = "/showroom/globe/audralia/";
-  const VERSION = "2026-05-20.audralia-g2-5-parent-engine-audralia-nested-child-path-alignment-v1";
+  const TARGET = "/assets/audralia/clean/audralia.engine.js";
 
   const CHILDREN = Object.freeze({
-    continents: Object.freeze({
-      path: "/assets/audralia/clean/audralia/engine/continents.js",
-      globalName: "AUDRALIA_CONTINENTS_ENGINE",
-      requiredContract: "AUDRALIA_G2_5_CONTINENTS_CHILD_ENGINE_TNT_v1"
-    }),
-    motion: Object.freeze({
-      path: "/assets/audralia/clean/audralia/engine/motion.js",
-      globalName: "AUDRALIA_MOTION_ENGINE",
-      requiredContract: "AUDRALIA_G2_5_MOTION_CHILD_ENGINE_TNT_v1"
-    }),
-    sky: Object.freeze({
-      path: "/assets/audralia/clean/audralia/engine/sky.js",
-      globalName: "AUDRALIA_SKY_ENGINE",
-      requiredContract: "AUDRALIA_G2_5_SKY_CHILD_ENGINE_TNT_v1"
-    })
+    continents: {
+      path: "/assets/audralia/clean/engine/continents.js",
+      owns: "five-continent law, four main continents, one North Polar continent, South Pole ice-only rule, non-blob shaping, sea-level exposure, shelves, terrain pressure, Nine-Summits pressure",
+      globals: [
+        "AUDRALIA_CLEAN_CONTINENTS_ENGINE",
+        "AUDRALIA_CONTINENTS_ENGINE",
+        "AUDRALIA_CLEAN_CANVAS_CONTINENTS",
+        "AudraliaContinentsEngine",
+        "AudraliaContinents",
+        "audraliaContinents"
+      ]
+    },
+    motion: {
+      path: "/assets/audralia/clean/engine/motion.js",
+      owns: "Earth-like axis tilt, longitude rotation, auto rotation, finger drag, pitch bounds, redraw triggers",
+      globals: [
+        "AUDRALIA_CLEAN_MOTION_ENGINE",
+        "AUDRALIA_MOTION_ENGINE",
+        "AUDRALIA_CLEAN_CANVAS_MOTION",
+        "AudraliaMotionEngine",
+        "AudraliaMotion",
+        "audraliaMotion"
+      ]
+    },
+    sky: {
+      path: "/assets/audralia/clean/engine/sky.js",
+      owns: "rim glow, haze, clouds/weather, lighting tint, future weather inheritance toward H-Earth",
+      globals: [
+        "AUDRALIA_CLEAN_SKY_ENGINE",
+        "AUDRALIA_SKY_ENGINE",
+        "AUDRALIA_CLEAN_CANVAS_SKY",
+        "AudraliaSkyEngine",
+        "AudraliaSky",
+        "audraliaSky"
+      ]
+    }
   });
 
-  const PLANET = Object.freeze({
-    seed: 25645161,
-    nodeCount: 256,
-    sectorCount: 16,
-    regionCount: 4,
-    summitCount: 9,
-    continentCount: 5,
-    mainContinents: 4,
-    northPolarContinent: true,
-    southPoleIceOnly: true,
-    seaLevel: 0.735,
-    axisTiltDegrees: 23.5,
-    childStack: true,
-    childArchitecture: "/assets/audralia/clean/audralia/engine/",
+  const RECEIPT = Object.freeze({
+    contract: CONTRACT,
+    family: FAMILY,
+    target: TARGET,
+    route: ROUTE,
+    mode: "parent_contract_alignment_only",
+    childContractRenewal: false,
+    htmlChange: false,
+    routeBridgeChange: false,
+    visualPassClaim: false,
     generatedImage: false,
     graphicBox: false,
-    visualPassClaimed: false
+    preserves: [
+      "AUDRALIA_ENGINE",
+      "AUDRALIA_CLEAN_CANVAS_ENGINE",
+      "AUDRALIA_CLEAN_CANVAS_AUTHORITY",
+      "mount()",
+      "render()",
+      "start()",
+      "boot()",
+      "init()",
+      "create()",
+      "FORM_VISIBLE route-bridge compatibility"
+    ],
+    children: CHILDREN
   });
 
   const state = {
+    contract: CONTRACT,
+    family: FAMILY,
     mounted: false,
-    mountedAt: null,
-    mountCount: 0,
-    lastCanvas: null,
-    lastRoot: null,
-    lastMount: null,
-    lastReceipt: null,
-    lastSize: 0,
-    lastRatios: null,
+    ready: false,
+    formVisible: false,
+    renderRequested: true,
+    frame: 0,
+    time: 0,
+    rotation: 0,
+    pitch: 0,
+    axisTilt: (23.44 * Math.PI) / 180,
+    dragActive: false,
+    errors: [],
     children: {
-      continents: null,
-      motion: null,
-      sky: null
-    },
-    childStatus: {
-      continents: "not-loaded",
-      motion: "not-loaded",
-      sky: "not-loaded"
-    },
-    childContracts: {
-      continents: null,
-      motion: null,
-      sky: null
-    },
-    childErrors: {
-      continents: null,
-      motion: null,
-      sky: null
-    },
-    fallbacksUsed: [],
-    motionState: null,
-    drawPending: false,
-    drawCount: 0,
-    lastDrawAt: null,
-    lastError: null
+      continents: "pending",
+      motion: "pending",
+      sky: "pending"
+    }
   };
 
-  function win() {
-    return typeof window !== "undefined" ? window : {};
-  }
-
-  function doc(context) {
-    return context?.document || (typeof document !== "undefined" ? document : null);
-  }
-
-  function now() {
-    return new Date().toISOString();
-  }
+  const env = {
+    mount: null,
+    canvas: null,
+    ctx: null,
+    dpr: 1,
+    width: 0,
+    height: 0,
+    radius: 0,
+    cx: 0,
+    cy: 0,
+    raf: 0,
+    bootPromise: null,
+    childEngines: {
+      continents: null,
+      motion: null,
+      sky: null
+    }
+  };
 
   function isElement(value) {
-    const ElementCtor = win().Element;
-    return Boolean(ElementCtor && value instanceof ElementCtor);
-  }
-
-  function resolveCallContext(input, selfRef) {
-    if (input && typeof input === "object" && Object.keys(input).length) return input;
-    if (selfRef && typeof selfRef === "object") return selfRef;
-    return input || {};
+    return Boolean(value && value.nodeType === 1);
   }
 
   function resolveMount(input) {
     if (isElement(input)) return input;
-    if (isElement(input?.mount)) return input.mount;
-    if (isElement(input?.mountTarget)) return input.mountTarget;
-    if (isElement(input?.target)) return input.target;
 
-    const documentRef = doc(input);
+    if (typeof input === "string") {
+      return document.querySelector(input);
+    }
+
+    if (input && isElement(input.mount)) return input.mount;
+    if (input && isElement(input.element)) return input.element;
+    if (input && isElement(input.el)) return input.el;
+
+    if (input && typeof input.mount === "string") {
+      return document.querySelector(input.mount);
+    }
+
+    if (input && typeof input.selector === "string") {
+      return document.querySelector(input.selector);
+    }
 
     return (
-      documentRef?.getElementById?.("audralia-clean-canvas-mount") ||
-      documentRef?.querySelector?.("[data-audralia-clean-canvas-mount]") ||
-      null
+      document.querySelector("#audraliaCanvasMount") ||
+      document.querySelector("[data-audralia-canvas-mount]") ||
+      document.querySelector("[data-audralia-clean-canvas-mount]") ||
+      document.querySelector("#audraliaMount") ||
+      document.body
     );
   }
 
-  function makeEl(documentRef, tag, className, attrs = {}) {
-    const el = documentRef.createElement(tag);
-    if (className) el.className = className;
+  function ensureCanvas(mount, options = {}) {
+    let canvas = null;
 
-    for (const [key, value] of Object.entries(attrs)) {
-      el.setAttribute(key, String(value));
+    if (options.canvas && isElement(options.canvas)) {
+      canvas = options.canvas;
+    } else {
+      canvas =
+        mount.querySelector("canvas[data-audralia-clean-canvas='true']") ||
+        mount.querySelector("canvas");
     }
 
-    return el;
+    if (!canvas) {
+      canvas = document.createElement("canvas");
+      canvas.setAttribute("data-audralia-clean-canvas", "true");
+      canvas.setAttribute("data-contract", CONTRACT);
+      canvas.setAttribute("aria-label", "Audralia clean canvas planet form");
+      canvas.style.display = "block";
+      canvas.style.width = "100%";
+      canvas.style.height = "100%";
+      canvas.style.minHeight = "320px";
+      canvas.style.touchAction = "none";
+      canvas.style.userSelect = "none";
+
+      if (mount !== document.body) {
+        mount.textContent = "";
+      }
+
+      mount.appendChild(canvas);
+    }
+
+    return canvas;
   }
 
-  function styleRoot(root) {
-    root.style.cssText = `
-      width:100%;
-      min-height:27rem;
-      display:grid;
-      place-items:center;
-      position:relative;
-      isolation:isolate;
-      overflow:hidden;
-      border-radius:1.25rem;
-      background:
-        radial-gradient(circle at 50% 34%,rgba(143,240,195,.14),transparent 16rem),
-        radial-gradient(circle at 50% 58%,rgba(36,120,255,.15),transparent 24rem),
-        radial-gradient(circle at 50% 80%,rgba(243,200,111,.045),transparent 26rem),
-        linear-gradient(180deg,rgba(1,7,16,.30),rgba(1,4,12,.78));
-    `;
+  function resize() {
+    if (!env.canvas || !env.mount) return;
+
+    const rect = env.mount.getBoundingClientRect();
+    const cssWidth = Math.max(320, Math.floor(rect.width || env.mount.clientWidth || 720));
+    const cssHeight = Math.max(320, Math.floor(rect.height || env.mount.clientHeight || 520));
+    const dpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
+
+    env.dpr = dpr;
+    env.width = Math.floor(cssWidth * dpr);
+    env.height = Math.floor(cssHeight * dpr);
+    env.cx = env.width / 2;
+    env.cy = env.height / 2;
+    env.radius = Math.floor(Math.min(env.width, env.height) * 0.39);
+
+    if (env.canvas.width !== env.width) env.canvas.width = env.width;
+    if (env.canvas.height !== env.height) env.canvas.height = env.height;
+
+    env.canvas.style.width = `${cssWidth}px`;
+    env.canvas.style.height = `${cssHeight}px`;
+
+    state.renderRequested = true;
   }
 
-  function styleCanvas(canvas) {
-    canvas.style.cssText = `
-      width:min(82vw,31rem);
-      height:min(82vw,31rem);
-      max-width:100%;
-      display:block;
-      border-radius:50%;
-      filter:
-        drop-shadow(0 0 2.9rem rgba(143,240,195,.23))
-        drop-shadow(0 0 1.5rem rgba(141,216,255,.13))
-        drop-shadow(0 2rem 2.6rem rgba(0,0,0,.48));
-      touch-action:none;
-      cursor:grab;
-      user-select:none;
-    `;
-  }
+  function publishReceipt() {
+    const payload = {
+      ...RECEIPT,
+      status: getStatus()
+    };
 
-  function styleLabel(label) {
-    label.style.cssText = `
-      position:absolute;
-      left:50%;
-      bottom:7%;
-      transform:translateX(-50%);
-      width:min(92%,28rem);
-      padding:.78rem .9rem;
-      border:1px solid rgba(143,240,195,.28);
-      border-radius:1rem;
-      background:rgba(1,7,16,.78);
-      color:rgba(255,244,216,.94);
-      font:850 .72rem/1.35 ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      letter-spacing:.075em;
-      text-align:center;
-      text-transform:uppercase;
-      backdrop-filter:blur(8px);
-      z-index:5;
-      pointer-events:none;
-    `;
-  }
+    window.AUDRALIA_CLEAN_CANVAS_RECEIPT = payload;
+    window.AUDRALIA_ENGINE_RECEIPT = payload;
 
-  function clamp01(value) {
-    return Math.max(0, Math.min(1, value));
-  }
+    if (document.documentElement) {
+      document.documentElement.setAttribute("data-audralia-engine-contract", CONTRACT);
+      document.documentElement.setAttribute("data-audralia-engine-family", FAMILY);
+      document.documentElement.setAttribute("data-audralia-parent-contract-aligned", "true");
+    }
 
-  function lerp(a, b, t) {
-    return a + (b - a) * t;
-  }
-
-  function smoothstep(edge0, edge1, x) {
-    const t = clamp01((x - edge0) / Math.max(0.00001, edge1 - edge0));
-    return t * t * (3 - 2 * t);
-  }
-
-  function normalize3(v) {
-    const x = Number(v?.x || 0);
-    const y = Number(v?.y || 0);
-    const z = Number(v?.z || 0);
-    const m = Math.hypot(x, y, z) || 1;
-    return { x: x / m, y: y / m, z: z / m };
-  }
-
-  function dot3(a, b) {
-    return a.x * b.x + a.y * b.y + a.z * b.z;
-  }
-
-  function mixColor(a, b, t) {
-    return [
-      Math.round(lerp(a[0], b[0], t)),
-      Math.round(lerp(a[1], b[1], t)),
-      Math.round(lerp(a[2], b[2], t)),
-      lerp(a[3] ?? 1, b[3] ?? 1, t)
-    ];
-  }
-
-  async function importAsModule(path, globalName) {
     try {
-      await import(`${path}?v=${encodeURIComponent(VERSION)}`);
-      return win()[globalName] || null;
-    } catch (error) {
-      return { error };
+      window.dispatchEvent(
+        new CustomEvent("audralia:engine:receipt", {
+          detail: payload
+        })
+      );
+    } catch (_error) {
+      window.dispatchEvent(new Event("audralia:engine:receipt"));
     }
   }
 
-  function loadAsClassicScript(path, globalName) {
-    return new Promise((resolve) => {
-      const global = win();
+  function publishFormVisible() {
+    state.formVisible = true;
+    window.AUDRALIA_FORM_VISIBLE = true;
+    window.AUDRALIA_CLEAN_CANVAS_FORM_VISIBLE = true;
 
-      if (global[globalName]) {
-        resolve(global[globalName]);
-        return;
-      }
+    if (env.mount) {
+      env.mount.setAttribute("data-audralia-form-visible", "true");
+      env.mount.setAttribute("data-audralia-engine-contract", CONTRACT);
+    }
 
-      const documentRef = doc();
-      if (!documentRef?.head) {
-        resolve(null);
-        return;
-      }
+    if (document.documentElement) {
+      document.documentElement.setAttribute("data-audralia-form-visible", "true");
+    }
+  }
 
-      const existing = Array.from(documentRef.querySelectorAll("script[src]")).find((script) => {
-        const src = String(script.getAttribute("src") || "");
-        return src.startsWith(path);
-      });
-
-      if (existing) {
-        setTimeout(() => resolve(global[globalName] || null), 50);
-        return;
-      }
-
-      const script = documentRef.createElement("script");
-      script.src = `${path}?v=${encodeURIComponent(VERSION)}`;
-      script.async = true;
-      script.dataset.audraliaChildEngine = globalName;
-      script.onload = () => resolve(global[globalName] || null);
-      script.onerror = () => resolve(null);
-      documentRef.head.appendChild(script);
+  function recordError(scope, error) {
+    const message = error && error.message ? error.message : String(error);
+    state.errors.push({
+      scope,
+      message,
+      time: new Date().toISOString()
     });
   }
 
-  async function loadChild(name, fallbackFactory) {
-    const child = CHILDREN[name];
-    const global = win();
+  function scriptAlreadyLoaded(src) {
+    return Array.from(document.scripts).some((script) => {
+      const raw = script.getAttribute("src") || "";
+      return raw === src || raw.endsWith(src);
+    });
+  }
 
-    let loaded = global[child.globalName] || null;
+  function loadScriptOnce(src) {
+    return new Promise((resolve) => {
+      if (scriptAlreadyLoaded(src)) {
+        resolve({ src, loaded: true, reused: true });
+        return;
+      }
 
-    if (!loaded) {
-      const moduleResult = await importAsModule(child.path, child.globalName);
+      const script = document.createElement("script");
+      script.src = src;
+      script.async = false;
+      script.defer = false;
+      script.setAttribute("data-audralia-child-loader", CONTRACT);
 
-      if (moduleResult && !moduleResult.error) {
-        loaded = moduleResult;
-      } else if (moduleResult?.error) {
-        state.childErrors[name] = `module:${moduleResult.error?.message || String(moduleResult.error)}`;
+      script.onload = () => resolve({ src, loaded: true, reused: false });
+      script.onerror = () => resolve({ src, loaded: false, reused: false });
+
+      document.head.appendChild(script);
+    });
+  }
+
+  function readGlobal(keys) {
+    for (const key of keys) {
+      if (window[key]) return window[key];
+    }
+    return null;
+  }
+
+  function normalizeChild(name, raw) {
+    if (!raw) return null;
+
+    if (typeof raw === "function") {
+      try {
+        const created = raw(createChildPayload(name));
+        return created || raw;
+      } catch (_error) {
+        return raw;
       }
     }
 
-    if (!loaded) {
-      loaded = await loadAsClassicScript(child.path, child.globalName);
-
-      if (!loaded && !state.childErrors[name]) {
-        state.childErrors[name] = "classic-script-load-failed";
-      }
-    }
-
-    if (!loaded) {
-      loaded = fallbackFactory();
-      state.childStatus[name] = "fallback";
-      state.fallbacksUsed.push(name);
-    } else {
-      state.childStatus[name] = loaded.contract === child.requiredContract ? "loaded-matching" : "loaded-contract-mismatch";
-    }
-
-    state.children[name] = loaded;
-    state.childContracts[name] = loaded?.contract || "missing";
-
-    return loaded;
+    return raw;
   }
 
   async function loadChildren() {
-    const continents = await loadChild("continents", fallbackContinentsEngine);
-    const motion = await loadChild("motion", fallbackMotionEngine);
-    const sky = await loadChild("sky", fallbackSkyEngine);
+    const entries = Object.entries(CHILDREN);
 
-    return { continents, motion, sky };
+    for (const [name, child] of entries) {
+      state.children[name] = "loading";
+      const result = await loadScriptOnce(child.path);
+
+      if (!result.loaded) {
+        state.children[name] = "missing";
+        recordError(name, `Unable to load child file: ${child.path}`);
+        continue;
+      }
+
+      const raw = readGlobal(child.globals);
+      const normalized = normalizeChild(name, raw);
+
+      if (!normalized) {
+        state.children[name] = "loaded_no_global";
+        recordError(name, `Child loaded but did not publish a recognized global: ${child.path}`);
+        continue;
+      }
+
+      env.childEngines[name] = normalized;
+      state.children[name] = "active";
+    }
   }
 
-  function fallbackContinentsEngine() {
-    const FALLBACK_CONTRACT = "AUDRALIA_G2_5_FALLBACK_CONTINENTS_CHILD";
+  function invoke(engine, methodNames, payload) {
+    if (!engine) return false;
 
-    function classifySurface(worldNormal) {
-      const n = normalize3(worldNormal);
-      const lon = Math.atan2(n.x, n.z);
-      const lat = Math.asin(Math.max(-1, Math.min(1, n.y)));
-      const u = lon / Math.PI;
-      const v = lat / (Math.PI / 2);
+    for (const methodName of methodNames) {
+      const method = engine[methodName];
 
-      const mainA = Math.exp(-Math.pow((u + 0.42) / 0.30, 2) - Math.pow((v + 0.10) / 0.22, 2));
-      const mainB = Math.exp(-Math.pow((u + 0.12) / 0.25, 2) - Math.pow((v - 0.31) / 0.19, 2));
-      const mainC = Math.exp(-Math.pow((u - 0.26) / 0.31, 2) - Math.pow((v - 0.02) / 0.23, 2));
-      const mainD = Math.exp(-Math.pow((u - 0.18) / 0.24, 2) - Math.pow((v + 0.42) / 0.17, 2));
-      const north = Math.exp(-Math.pow((u - 0.02) / 0.42, 2) - Math.pow((v - 0.77) / 0.16, 2));
+      if (typeof method !== "function") continue;
 
-      const terrainCandidate = clamp01(Math.max(mainA, mainB, mainC, mainD, north));
-      const summit = clamp01(Math.pow(Math.max(0, dot3(n, normalize3({ x: 0.08, y: 0.38, z: 0.92 }))), 32));
-      const elevation = clamp01(terrainCandidate * 0.66 + summit * 0.22);
-      const seaLevel = PLANET.seaLevel;
-
-      const southPole = v < -0.68;
-      const southIce = southPole ? 0.86 : 0;
-      const northIce = v > 0.78 ? 0.46 : 0;
-      const polarIce = Math.max(southIce, northIce);
-
-      const exposedLand = !southPole && terrainCandidate > 0.44 && elevation > seaLevel;
-      const drownedContinent = !exposedLand && terrainCandidate > 0.47;
-      const nearSeaShelf = !exposedLand && terrainCandidate > 0.33 && !drownedContinent;
-      const deepOcean = !exposedLand && !drownedContinent && !nearSeaShelf;
-
-      return Object.freeze({
-        contract: FALLBACK_CONTRACT,
-        normal: n,
-        lon,
-        lat,
-        u,
-        v,
-        continent: {
-          id: north > 0.35 ? "NORTH_POLAR" : terrainCandidate > 0.35 ? "MAIN" : "OCEAN",
-          kind: north > 0.35 ? "north-polar" : terrainCandidate > 0.35 ? "main" : "ocean",
-          strength: terrainCandidate,
-          northPolar: north > 0.35,
-          main: terrainCandidate > 0.35 && north <= 0.35
-        },
-        terrainCandidate,
-        elevation,
-        seaLevel,
-        exposureDistance: elevation - seaLevel,
-        exposedLand,
-        nearSeaShelf,
-        drownedContinent,
-        deepOcean,
-        summit,
-        mountain: exposedLand ? summit : 0,
-        basin: 0,
-        ridge: 0,
-        ridgeNoise: 0.5,
-        grain: 0.5,
-        polarIce,
-        southPole,
-        southIce,
-        northIce,
-        coastLine: exposedLand ? 0.25 : 0,
-        classification: exposedLand
-          ? "exposed-land"
-          : southPole
-            ? "south-pole-ice-water"
-            : drownedContinent
-              ? "drowned-continent"
-              : nearSeaShelf
-                ? "near-sea-shelf"
-                : "deep-ocean"
-      });
+      try {
+        if (method.length >= 2) {
+          method.call(engine, payload.ctx, payload);
+        } else {
+          method.call(engine, payload);
+        }
+        return true;
+      } catch (error) {
+        recordError(methodName, error);
+        return false;
+      }
     }
 
-    function getStatus() {
-      return Object.freeze({ contract: FALLBACK_CONTRACT, fallback: true });
-    }
+    return false;
+  }
 
-    return Object.freeze({
-      contract: FALLBACK_CONTRACT,
-      classifySurface,
+  function initChildren() {
+    const payload = createChildPayload("init");
+
+    invoke(env.childEngines.continents, ["mount", "init", "setup", "boot", "create"], payload);
+    invoke(env.childEngines.sky, ["mount", "init", "setup", "boot", "create"], payload);
+    invoke(env.childEngines.motion, ["mount", "bind", "init", "setup", "boot", "create"], payload);
+  }
+
+  function createChildPayload(scope) {
+    return {
+      scope,
+      contract: CONTRACT,
+      family: FAMILY,
+      receipt: RECEIPT,
+      canvas: env.canvas,
+      ctx: env.ctx,
+      mount: env.mount,
+      state,
+      geometry: getGeometry(),
+      project,
+      requestRender,
+      updateState,
       getStatus,
-      getContinentStatus: getStatus
-    });
-  }
-
-  function fallbackMotionEngine() {
-    const FALLBACK_CONTRACT = "AUDRALIA_G2_5_FALLBACK_MOTION_CHILD";
-
-    function rotateX(v, angle) {
-      const c = Math.cos(angle);
-      const s = Math.sin(angle);
-      return { x: v.x, y: v.y * c - v.z * s, z: v.y * s + v.z * c };
-    }
-
-    function rotateY(v, angle) {
-      const c = Math.cos(angle);
-      const s = Math.sin(angle);
-      return { x: v.x * c + v.z * s, y: v.y, z: -v.x * s + v.z * c };
-    }
-
-    function createMotionState(canvas, redraw) {
-      const motionState = {
-        contract: FALLBACK_CONTRACT,
-        rotationLon: 0,
-        viewPitch: 0.10,
-        axisTiltDegrees: PLANET.axisTiltDegrees,
-        dragging: false,
-        projectViewToWorld(viewNormal) {
-          let v = normalize3(viewNormal);
-          v = rotateX(v, motionState.viewPitch);
-          v = rotateX(v, (motionState.axisTiltDegrees * Math.PI) / 180);
-          v = rotateY(v, motionState.rotationLon);
-          return normalize3(v);
-        },
-        getStatus() {
-          return {
-            contract: FALLBACK_CONTRACT,
-            fallback: true,
-            rotationLon: motionState.rotationLon,
-            viewPitch: motionState.viewPitch
-          };
-        }
-      };
-
-      if (canvas) {
-        canvas.dataset.audraliaMotionEngine = FALLBACK_CONTRACT;
-        canvas.style.cursor = "grab";
-
-        let down = false;
-        let lastX = 0;
-        let lastY = 0;
-
-        canvas.addEventListener("pointerdown", (event) => {
-          down = true;
-          motionState.dragging = true;
-          lastX = event.clientX || 0;
-          lastY = event.clientY || 0;
-          canvas.style.cursor = "grabbing";
-          canvas.setPointerCapture?.(event.pointerId);
-          event.preventDefault?.();
-        }, { passive: false });
-
-        canvas.addEventListener("pointermove", (event) => {
-          if (!down) return;
-
-          const x = event.clientX || 0;
-          const y = event.clientY || 0;
-
-          motionState.rotationLon += (x - lastX) * 0.0085;
-          motionState.viewPitch = Math.max(-0.62, Math.min(0.62, motionState.viewPitch + (y - lastY) * 0.0045));
-
-          lastX = x;
-          lastY = y;
-
-          if (typeof redraw === "function") redraw(motionState);
-          event.preventDefault?.();
-        }, { passive: false });
-
-        const release = (event) => {
-          down = false;
-          motionState.dragging = false;
-          canvas.style.cursor = "grab";
-          canvas.releasePointerCapture?.(event.pointerId);
-          event.preventDefault?.();
-        };
-
-        canvas.addEventListener("pointerup", release, { passive: false });
-        canvas.addEventListener("pointercancel", release, { passive: false });
-
-        const loop = () => {
-          if (!down) {
-            motionState.rotationLon += 0.018;
-            if (typeof redraw === "function") redraw(motionState);
-          }
-
-          win().requestAnimationFrame?.(loop);
-        };
-
-        win().requestAnimationFrame?.(loop);
-      }
-
-      return motionState;
-    }
-
-    return Object.freeze({
-      contract: FALLBACK_CONTRACT,
-      createMotionState,
-      projectViewToWorld(viewNormal, motionState) {
-        return motionState?.projectViewToWorld ? motionState.projectViewToWorld(viewNormal) : normalize3(viewNormal);
-      },
-      getStatus() {
-        return { contract: FALLBACK_CONTRACT, fallback: true };
-      },
-      getMotionStatus() {
-        return { contract: FALLBACK_CONTRACT, fallback: true };
-      }
-    });
-  }
-
-  function fallbackSkyEngine() {
-    const FALLBACK_CONTRACT = "AUDRALIA_G2_5_FALLBACK_SKY_CHILD";
-
-    function applySkyColor(color, surface = {}, lighting = null, context = {}) {
-      const rr = clamp01(Number(context.radiusRatio || 0));
-      const n = normalize3(surface.normal || { x: 0, y: 0, z: 1 });
-      const light = normalize3(context.light || { x: -0.64, y: -0.46, z: 0.62 });
-      const lit = clamp01(dot3(n, light) * 0.74 + 0.44);
-      let out = mixColor([1, 7, 17, 1], color, lit);
-      out = mixColor(out, [126, 232, 202, 1], Math.pow(rr, 3.4) * 0.025);
-      return out;
-    }
-
-    function drawAtmosphere(ctx, geometry = {}) {
-      const cx = Number(geometry.cx || 0);
-      const cy = Number(geometry.cy || 0);
-      const r = Number(geometry.r || 0);
-      const size = Number(geometry.size || Math.max(r * 2, 1));
-
-      if (!ctx || !r) return false;
-
-      const rim = ctx.createRadialGradient(cx, cy, r * 0.82, cx, cy, r * 1.13);
-      rim.addColorStop(0, "rgba(143,240,195,0)");
-      rim.addColorStop(0.88, "rgba(141,216,255,0.18)");
-      rim.addColorStop(1, "rgba(143,240,195,0)");
-
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(cx, cy, r * 1.13, 0, Math.PI * 2);
-      ctx.fillStyle = rim;
-      ctx.fill();
-
-      ctx.beginPath();
-      ctx.arc(cx, cy, r * 1.004, 0, Math.PI * 2);
-      ctx.strokeStyle = "rgba(208,255,236,0.22)";
-      ctx.lineWidth = Math.max(1, size * 0.0032);
-      ctx.stroke();
-      ctx.restore();
-
-      return true;
-    }
-
-    function drawWeatherVeil() {
-      return false;
-    }
-
-    function getStatus() {
-      return Object.freeze({ contract: FALLBACK_CONTRACT, fallback: true });
-    }
-
-    return Object.freeze({
-      contract: FALLBACK_CONTRACT,
-      applySkyColor,
-      drawAtmosphere,
-      drawWeatherVeil,
-      getStatus,
-      getSkyStatus: getStatus
-    });
-  }
-
-  function baseSurfaceColor(surface) {
-    const oceanDeep = [1, 13, 32, 1];
-    const oceanMid = [5, 59, 91, 1];
-    const oceanShelf = [21, 122, 145, 1];
-    const drownedBlue = [18, 104, 128, 1];
-    const shallowReef = [62, 174, 166, 1];
-
-    const coastSand = [170, 154, 104, 1];
-    const landLow = [78, 125, 80, 1];
-    const landMid = [96, 139, 88, 1];
-    const highland = [133, 132, 98, 1];
-    const summitColor = [218, 213, 176, 1];
-    const iceColor = [224, 248, 243, 1];
-
-    let color;
-
-    if (surface.exposedLand) {
-      const relief = clamp01((surface.elevation || 0) * 0.68 + (surface.mountain || 0) * 0.36);
-      const coastBlend = smoothstep(0.022, 0.115, surface.exposureDistance || 0);
-
-      color = mixColor(coastSand, landLow, coastBlend);
-      color = mixColor(color, landMid, clamp01(relief * 0.56));
-      color = mixColor(color, highland, clamp01((surface.mountain || 0) * 0.50));
-      color = mixColor(color, summitColor, clamp01((surface.mountain || 0) * 0.42 + (surface.polarIce || 0) * 0.22));
-
-      if (surface.continent?.northPolar) {
-        color = mixColor(color, iceColor, clamp01((surface.polarIce || 0) * 0.48 + 0.12));
-      }
-
-      color = mixColor(color, coastSand, clamp01((surface.coastLine || 0) * 0.38));
-    } else if (surface.drownedContinent) {
-      const underwaterRelief = clamp01((surface.terrainCandidate || 0) * 0.55 + (surface.elevation || 0) * 0.28);
-      color = mixColor(oceanMid, drownedBlue, underwaterRelief);
-      color = mixColor(color, oceanShelf, clamp01(underwaterRelief * 0.42));
-      color = mixColor(color, shallowReef, clamp01(((surface.elevation || 0) - ((surface.seaLevel || PLANET.seaLevel) - 0.10)) * 1.7));
-    } else if (surface.nearSeaShelf) {
-      const shelfLift = clamp01((surface.terrainCandidate || 0) * 0.55 + (surface.elevation || 0) * 0.22);
-      color = mixColor(oceanMid, oceanShelf, shelfLift);
-      color = mixColor(color, shallowReef, clamp01(shelfLift * 0.24));
-    } else {
-      const depth = clamp01((0.56 - (surface.terrainCandidate || 0)) * 2.8 + ((surface.seaLevel || PLANET.seaLevel) - (surface.elevation || 0)) * 0.74);
-      color = mixColor(oceanShelf, oceanMid, depth);
-      color = mixColor(color, oceanDeep, clamp01(depth * 0.88));
-    }
-
-    if (surface.southPole) {
-      color = mixColor(color, iceColor, clamp01((surface.southIce || 0) * 0.72));
-    } else if ((surface.polarIce || 0) > 0.40) {
-      color = mixColor(color, iceColor, clamp01(((surface.polarIce || 0) - 0.22) * 0.42));
-    }
-
-    return color;
-  }
-
-  function drawAxisOverlay(ctx, cx, cy, r, size) {
-    const motion = state.motionState || {};
-    const tilt = -((Number(motion.axisTiltDegrees || PLANET.axisTiltDegrees) * Math.PI) / 180) + Number(motion.viewPitch || 0) * 0.30;
-    const length = r * 1.18;
-    const dx = Math.sin(tilt) * length;
-    const dy = Math.cos(tilt) * length;
-
-    ctx.save();
-
-    ctx.beginPath();
-    ctx.moveTo(cx - dx, cy + dy);
-    ctx.lineTo(cx + dx, cy - dy);
-    ctx.strokeStyle = "rgba(208,255,236,0.105)";
-    ctx.lineWidth = Math.max(1, size * 0.0017);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.arc(cx + dx, cy - dy, r * 0.017, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(224,248,243,0.16)";
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.arc(cx - dx, cy + dy, r * 0.013, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(141,216,255,0.10)";
-    ctx.fill();
-
-    ctx.restore();
-  }
-
-  function drawSubtleOrbitReceipt(ctx, cx, cy, r, size) {
-    ctx.save();
-    ctx.translate(cx, cy);
-    ctx.rotate(-0.18);
-
-    ctx.beginPath();
-    ctx.ellipse(0, 0, r * 1.30, r * 0.36, 0, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(143,240,195,0.070)";
-    ctx.lineWidth = Math.max(1, size * 0.002);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.ellipse(0, 0, r * 1.18, r * 0.29, 0, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(243,200,111,0.040)";
-    ctx.lineWidth = Math.max(1, size * 0.0015);
-    ctx.stroke();
-
-    ctx.restore();
-  }
-
-  function drawPlanetPixels(canvas) {
-    if (!canvas) return false;
-
-    const rect = canvas.getBoundingClientRect();
-    const cssSize = Math.max(300, Math.min(rect.width || 460, 560));
-    const dpr = Math.max(1, Math.min(1.35, win().devicePixelRatio || 1));
-    const size = Math.round(cssSize * dpr);
-
-    if (canvas.width !== size || canvas.height !== size) {
-      canvas.width = size;
-      canvas.height = size;
-      state.lastSize = size;
-    }
-
-    const ctx = canvas.getContext("2d", { alpha: true });
-    if (!ctx) return false;
-
-    ctx.clearRect(0, 0, size, size);
-
-    const continents = state.children.continents || fallbackContinentsEngine();
-    const sky = state.children.sky || fallbackSkyEngine();
-    const motionState = state.motionState;
-
-    const cx = size / 2;
-    const cy = size / 2;
-    const r = size * 0.432;
-
-    const image = ctx.createImageData(size, size);
-    const data = image.data;
-
-    const stats = {
-      total: 0,
-      exposedLand: 0,
-      shelf: 0,
-      drownedContinent: 0,
-      deepOcean: 0,
-      ice: 0
+      api
     };
-
-    for (let y = 0; y < size; y += 1) {
-      for (let x = 0; x < size; x += 1) {
-        const dx = (x + 0.5 - cx) / r;
-        const dy = (y + 0.5 - cy) / r;
-        const rr = dx * dx + dy * dy;
-        const idx = (y * size + x) * 4;
-
-        if (rr > 1) {
-          data[idx + 3] = 0;
-          continue;
-        }
-
-        stats.total += 1;
-
-        const z = Math.sqrt(Math.max(0, 1 - rr));
-        const viewNormal = { x: dx, y: -dy, z };
-        const worldNormal = motionState?.projectViewToWorld
-          ? motionState.projectViewToWorld(viewNormal)
-          : normalize3(viewNormal);
-
-        const surface = continents.classifySurface(worldNormal, {
-          seaLevel: PLANET.seaLevel,
-          parentContract: CONTRACT
-        });
-
-        if (surface.exposedLand) stats.exposedLand += 1;
-        if (surface.nearSeaShelf) stats.shelf += 1;
-        if (surface.drownedContinent) stats.drownedContinent += 1;
-        if (surface.deepOcean) stats.deepOcean += 1;
-        if (surface.southPole || surface.polarIce > 0.40) stats.ice += 1;
-
-        let color = baseSurfaceColor(surface);
-
-        if (sky.applySkyColor) {
-          color = sky.applySkyColor(
-            color,
-            {
-              ...surface,
-              normal: worldNormal,
-              viewNormal
-            },
-            null,
-            {
-              viewNormal,
-              screenNormal: viewNormal,
-              radiusRatio: rr,
-              light: { x: -0.64, y: -0.46, z: 0.62 },
-              rotationLon: Number(motionState?.rotationLon || 0)
-            }
-          );
-        }
-
-        data[idx] = color[0];
-        data[idx + 1] = color[1];
-        data[idx + 2] = color[2];
-        data[idx + 3] = Math.round(255 * clamp01(color[3] ?? 1));
-      }
-    }
-
-    state.lastRatios = Object.freeze({
-      total: stats.total,
-      exposedLandRatio: stats.total ? Number((stats.exposedLand / stats.total).toFixed(4)) : 0,
-      shelfRatio: stats.total ? Number((stats.shelf / stats.total).toFixed(4)) : 0,
-      drownedContinentRatio: stats.total ? Number((stats.drownedContinent / stats.total).toFixed(4)) : 0,
-      deepOceanRatio: stats.total ? Number((stats.deepOcean / stats.total).toFixed(4)) : 0,
-      iceRatio: stats.total ? Number((stats.ice / stats.total).toFixed(4)) : 0
-    });
-
-    ctx.putImageData(image, 0, 0);
-
-    if (sky.drawAtmosphere) {
-      sky.drawAtmosphere(ctx, { cx, cy, r, size }, {
-        rotationLon: Number(motionState?.rotationLon || 0)
-      });
-    }
-
-    if (sky.drawWeatherVeil) {
-      sky.drawWeatherVeil(ctx, { cx, cy, r, size }, {
-        rotationLon: Number(motionState?.rotationLon || 0)
-      });
-    }
-
-    drawAxisOverlay(ctx, cx, cy, r, size);
-    drawSubtleOrbitReceipt(ctx, cx, cy, r, size);
-
-    state.drawCount += 1;
-    state.lastDrawAt = now();
-
-    return true;
   }
 
-  function updateLabel() {
-    const label = state.lastRoot?.querySelector?.("[data-audralia-engine-label]");
-    if (!label) return;
-
-    const motion = state.motionState;
-    const lon = Number(motion?.rotationLon || 0).toFixed(2);
-    const land = state.lastRatios?.exposedLandRatio ?? "n/a";
-    const ocean = state.lastRatios?.deepOceanRatio ?? "n/a";
-    const c = state.childStatus.continents;
-    const m = state.childStatus.motion;
-    const s = state.childStatus.sky;
-
-    label.textContent = `Audralia G2.5 · nested child stack active · lon ${lon} · land ${land} · ocean ${ocean} · ${c}/${m}/${s}`;
-  }
-
-  function requestDraw(canvas, immediate = false) {
-    if (!canvas) return;
-
-    if (immediate) {
-      state.drawPending = false;
-      drawPlanetPixels(canvas);
-      updateLabel();
-      return;
-    }
-
-    if (state.drawPending) return;
-
-    state.drawPending = true;
-
-    const draw = () => {
-      state.drawPending = false;
-      drawPlanetPixels(canvas);
-      updateLabel();
+  function getGeometry() {
+    return {
+      width: env.width,
+      height: env.height,
+      dpr: env.dpr,
+      cx: env.cx,
+      cy: env.cy,
+      radius: env.radius,
+      left: env.cx - env.radius,
+      right: env.cx + env.radius,
+      top: env.cy - env.radius,
+      bottom: env.cy + env.radius
     };
-
-    if (typeof win().requestAnimationFrame === "function") {
-      win().requestAnimationFrame(draw);
-    } else {
-      setTimeout(draw, 0);
-    }
   }
 
-  function installResizeRedraw(root, canvas) {
-    if (!root || !canvas) return;
-
-    if (typeof win().ResizeObserver === "function") {
-      const observer = new (win().ResizeObserver)(() => requestDraw(canvas));
-      observer.observe(root);
-      return;
-    }
-
-    win().addEventListener?.("resize", () => requestDraw(canvas), { passive: true });
+  function requestRender() {
+    state.renderRequested = true;
   }
 
-  function createRender(context) {
-    const documentRef = doc(context);
-    if (!documentRef) throw new Error("Document unavailable for Audralia G2.5 nested child parent engine render.");
-
-    const root = makeEl(documentRef, "section", "audralia-engine-root", {
-      "data-audralia-engine-render": "true",
-      "data-audralia-clean-canvas-render": "true",
-      "data-audralia-g2-5-nested-child-stack": "true",
-      "data-contract": CONTRACT,
-      "data-previous-contract": PREVIOUS_CONTRACT
-    });
-
-    styleRoot(root);
-
-    const canvas = makeEl(documentRef, "canvas", "audralia-engine-canvas", {
-      "data-audralia-form": "g2-5-nested-child-stack-engine-canvas",
-      "aria-label": "Audralia G2.5 nested child-stack planet form. Drag to rotate."
-    });
-
-    styleCanvas(canvas);
-
-    const label = makeEl(documentRef, "div", "audralia-engine-label", {
-      "data-audralia-engine-label": "true"
-    });
-
-    styleLabel(label);
-    label.textContent = "Audralia G2.5 · nested child engine stack loading";
-
-    root.appendChild(canvas);
-    root.appendChild(label);
-
-    return { root, canvas, label };
+  function updateState(next = {}) {
+    Object.assign(state, next);
+    state.renderRequested = true;
   }
 
-  async function mount(input = {}) {
-    const context = resolveCallContext(input, this);
-    const mountTarget = resolveMount(context);
-    const documentRef = doc(context);
+  function project(lon, lat, elevation = 0) {
+    const lambda = typeof lon === "number" ? lon : 0;
+    const phi = typeof lat === "number" ? lat : 0;
+    const r = env.radius * (1 + elevation);
 
-    if (!mountTarget) throw new Error("Audralia G2.5 nested child parent engine mount target missing.");
-    if (!documentRef) throw new Error("Audralia G2.5 nested child parent engine document missing.");
+    const yaw = state.rotation || 0;
+    const pitch = (state.pitch || 0) + (state.axisTilt || 0);
 
-    const render = createRender(context);
-    mountTarget.replaceChildren(render.root);
+    const cosPhi = Math.cos(phi);
+    let x = cosPhi * Math.sin(lambda + yaw);
+    let y = Math.sin(phi);
+    let z = cosPhi * Math.cos(lambda + yaw);
 
-    await loadChildren();
+    const cp = Math.cos(pitch);
+    const sp = Math.sin(pitch);
 
-    const redraw = () => requestDraw(render.canvas, true);
-
-    if (state.children.motion?.createMotionState) {
-      state.motionState = state.children.motion.createMotionState(render.canvas, redraw, {
-        axisTiltDegrees: PLANET.axisTiltDegrees,
-        autoRotationEnabled: true,
-        initialViewPitch: 0.10
-      });
-    } else {
-      state.motionState = fallbackMotionEngine().createMotionState(render.canvas, redraw);
-    }
-
-    installResizeRedraw(render.root, render.canvas);
-
-    state.mounted = true;
-    state.mountedAt = now();
-    state.mountCount += 1;
-    state.lastCanvas = render.canvas;
-    state.lastRoot = render.root;
-    state.lastMount = mountTarget;
-
-    mountTarget.dataset.audraliaFormVisible = "true";
-    mountTarget.dataset.audraliaEngineMounted = "true";
-    mountTarget.dataset.audraliaEngineContract = CONTRACT;
-    mountTarget.dataset.audraliaG25NestedChildStack = "true";
-    mountTarget.dataset.audraliaChildArchitecture = PLANET.childArchitecture;
-    mountTarget.dataset.audraliaChildContinents = state.childStatus.continents;
-    mountTarget.dataset.audraliaChildMotion = state.childStatus.motion;
-    mountTarget.dataset.audraliaChildSky = state.childStatus.sky;
-
-    const statusTarget = context?.statusTarget;
-    if (isElement(statusTarget)) {
-      statusTarget.textContent = "FORM_VISIBLE · Audralia G2.5 nested child-stack parent engine mounted.";
-      statusTarget.dataset.state = "pass";
-    }
-
-    requestDraw(render.canvas, true);
-    state.lastReceipt = buildReceipt(true);
+    const y2 = y * cp - z * sp;
+    const z2 = y * sp + z * cp;
 
     return {
-      element: render.root,
-      canvas: render.canvas,
-      contract: CONTRACT,
-      receipt: state.lastReceipt
+      x: env.cx + x * r,
+      y: env.cy - y2 * r,
+      z: z2,
+      visible: z2 > -0.02,
+      scale: Math.max(0, z2)
     };
   }
 
-  function buildReceipt(valid) {
-    return Object.freeze({
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      version: VERSION,
-      route: ROUTE,
-      valid,
-      mounted: state.mounted,
-      mountedAt: state.mountedAt,
-      mountCount: state.mountCount,
-      parentRole: "mount-composition-engine",
-      childStack: true,
-      childArchitecture: PLANET.childArchitecture,
-      childPaths: Object.freeze({
-        continents: CHILDREN.continents.path,
-        motion: CHILDREN.motion.path,
-        sky: CHILDREN.sky.path
-      }),
-      childrenLoaded: Object.freeze({ ...state.childStatus }),
-      childrenFallbackUsed: Object.freeze([...state.fallbacksUsed]),
-      childContracts: Object.freeze({ ...state.childContracts }),
-      childErrors: Object.freeze({ ...state.childErrors }),
-      continentEngineContract: state.childContracts.continents,
-      motionEngineContract: state.childContracts.motion,
-      skyEngineContract: state.childContracts.sky,
-      ratios: state.lastRatios,
-      planetStandard: "G2.5 nested Audralia child-engine split planet form",
-      continentCount: PLANET.continentCount,
-      mainContinents: PLANET.mainContinents,
-      northPolarContinent: PLANET.northPolarContinent,
-      southPoleIceOnly: PLANET.southPoleIceOnly,
-      axisRotation: true,
-      fingerDrag: true,
-      skyLayer: true,
-      nodeCount: PLANET.nodeCount,
-      sectorCount: PLANET.sectorCount,
-      regionCount: PLANET.regionCount,
-      summitCount: PLANET.summitCount,
-      ownsVisibleFormHandoff: true,
-      ownsParentGlobeRoute: false,
-      ownsRouteBridgeHtml: false,
-      ownsRouteBridgeJs: false,
-      generatedImage: false,
-      graphicBox: false,
-      visualPassClaimed: false
-    });
+  function drawBasePlanet() {
+    const ctx = env.ctx;
+    const g = getGeometry();
+
+    ctx.save();
+
+    ctx.beginPath();
+    ctx.arc(g.cx, g.cy, g.radius, 0, Math.PI * 2);
+    ctx.clip();
+
+    const ocean = ctx.createRadialGradient(
+      g.cx - g.radius * 0.34,
+      g.cy - g.radius * 0.42,
+      g.radius * 0.1,
+      g.cx,
+      g.cy,
+      g.radius
+    );
+
+    ocean.addColorStop(0, "rgba(104, 220, 255, 0.98)");
+    ocean.addColorStop(0.24, "rgba(30, 143, 190, 0.98)");
+    ocean.addColorStop(0.62, "rgba(13, 65, 114, 0.98)");
+    ocean.addColorStop(1, "rgba(4, 14, 38, 1)");
+
+    ctx.fillStyle = ocean;
+    ctx.fillRect(g.left, g.top, g.radius * 2, g.radius * 2);
+
+    const shade = ctx.createRadialGradient(
+      g.cx - g.radius * 0.32,
+      g.cy - g.radius * 0.34,
+      g.radius * 0.2,
+      g.cx + g.radius * 0.25,
+      g.cy + g.radius * 0.16,
+      g.radius * 1.18
+    );
+
+    shade.addColorStop(0, "rgba(255,255,255,0.16)");
+    shade.addColorStop(0.54, "rgba(255,255,255,0.00)");
+    shade.addColorStop(1, "rgba(0,0,0,0.48)");
+
+    ctx.fillStyle = shade;
+    ctx.fillRect(g.left, g.top, g.radius * 2, g.radius * 2);
+
+    ctx.restore();
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(g.cx, g.cy, g.radius, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(180, 235, 255, 0.34)";
+    ctx.lineWidth = Math.max(1, env.dpr * 1.2);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function clearCanvas() {
+    if (!env.ctx) return;
+    env.ctx.clearRect(0, 0, env.width, env.height);
+  }
+
+  function render() {
+    if (!env.ctx || !env.canvas) return api;
+
+    resize();
+    clearCanvas();
+
+    state.frame += 1;
+    state.time = performance.now();
+
+    const payload = createChildPayload("render");
+
+    invoke(env.childEngines.motion, ["frame", "tick", "update", "step"], payload);
+
+    invoke(env.childEngines.sky, [
+      "drawBackground",
+      "renderBackground",
+      "paintBackground",
+      "drawSkyBackground"
+    ], payload);
+
+    drawBasePlanet();
+
+    invoke(env.childEngines.continents, [
+      "draw",
+      "render",
+      "paint",
+      "drawContinents",
+      "renderContinents",
+      "paintContinents"
+    ], payload);
+
+    invoke(env.childEngines.sky, [
+      "draw",
+      "render",
+      "paint",
+      "drawAtmosphere",
+      "renderAtmosphere",
+      "paintAtmosphere",
+      "drawOverlay"
+    ], payload);
+
+    publishFormVisible();
+    state.renderRequested = false;
+
+    return api;
+  }
+
+  function loop() {
+    env.raf = window.requestAnimationFrame(loop);
+
+    if (state.renderRequested || state.children.motion === "active") {
+      render();
+    }
+  }
+
+  async function boot(input, options = {}) {
+    const mount = resolveMount(input || options.mount || options.selector);
+    if (!mount) {
+      recordError("mount", "No valid Audralia mount target was found.");
+      publishReceipt();
+      return api;
+    }
+
+    env.mount = mount;
+    env.canvas = ensureCanvas(mount, options);
+    env.ctx = env.canvas.getContext("2d", { alpha: true, desynchronized: true });
+
+    if (!env.ctx) {
+      recordError("canvas", "2D canvas context unavailable.");
+      publishReceipt();
+      return api;
+    }
+
+    state.mounted = true;
+
+    window.addEventListener("resize", requestRender, { passive: true });
+
+    resize();
+    render();
+
+    if (!env.bootPromise) {
+      env.bootPromise = loadChildren()
+        .then(() => {
+          initChildren();
+          state.ready = true;
+          state.renderRequested = true;
+          render();
+
+          if (!env.raf) {
+            loop();
+          }
+
+          publishReceipt();
+          return api;
+        })
+        .catch((error) => {
+          recordError("boot", error);
+          publishReceipt();
+          return api;
+        });
+    }
+
+    publishReceipt();
+    return env.bootPromise;
+  }
+
+  function mount(input, options = {}) {
+    boot(input, options);
+    return api;
+  }
+
+  function start(input, options = {}) {
+    return mount(input, options);
+  }
+
+  function init(input, options = {}) {
+    return mount(input, options);
+  }
+
+  function create(input, options = {}) {
+    return mount(input, options);
+  }
+
+  function destroy() {
+    if (env.raf) {
+      window.cancelAnimationFrame(env.raf);
+      env.raf = 0;
+    }
+
+    window.removeEventListener("resize", requestRender);
+
+    state.ready = false;
+    state.mounted = false;
+
+    return api;
   }
 
   function getStatus() {
-    return Object.freeze({
+    return {
       contract: CONTRACT,
-      receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      version: VERSION,
+      family: FAMILY,
       route: ROUTE,
+      target: TARGET,
       mounted: state.mounted,
-      mountedAt: state.mountedAt,
-      mountCount: state.mountCount,
-      lastReceipt: state.lastReceipt,
-      lastSize: state.lastSize,
-      drawCount: state.drawCount,
-      lastDrawAt: state.lastDrawAt,
-      ratios: state.lastRatios,
-      childrenLoaded: Object.freeze({ ...state.childStatus }),
-      childrenFallbackUsed: Object.freeze([...state.fallbacksUsed]),
-      childContracts: Object.freeze({ ...state.childContracts }),
-      childErrors: Object.freeze({ ...state.childErrors }),
-      childArchitecture: PLANET.childArchitecture,
-      motion: state.motionState?.getStatus ? state.motionState.getStatus() : null,
-      planet: PLANET,
-      generatedImage: false,
-      graphicBox: false,
-      visualPassClaimed: false
-    });
+      ready: state.ready,
+      formVisible: state.formVisible,
+      childContractRenewal: false,
+      htmlChange: false,
+      routeBridgeChange: false,
+      visualPassClaim: false,
+      children: { ...state.children },
+      childPaths: {
+        continents: CHILDREN.continents.path,
+        motion: CHILDREN.motion.path,
+        sky: CHILDREN.sky.path
+      },
+      preserves: RECEIPT.preserves.slice(),
+      errors: state.errors.slice()
+    };
   }
 
-  const AUDRALIA_ENGINE = Object.freeze({
-    contract: CONTRACT,
-    receipt: RECEIPT,
-    previousContract: PREVIOUS_CONTRACT,
-    version: VERSION,
-    route: ROUTE,
-    planet: PLANET,
+  const api = {
+    CONTRACT,
+    FAMILY,
+    ROUTE,
+    TARGET,
+    RECEIPT,
+    CHILDREN,
     mount,
-    render: mount,
-    start: mount,
-    boot: mount,
-    init: mount,
-    create: mount,
-    getStatus
-  });
+    render,
+    start,
+    boot,
+    init,
+    create,
+    destroy,
+    requestRender,
+    updateState,
+    getStatus,
+    status: getStatus,
+    project
+  };
 
-  const global = win();
+  window.AUDRALIA_ENGINE = api;
+  window.AUDRALIA_CLEAN_CANVAS_ENGINE = api;
+  window.AUDRALIA_CLEAN_CANVAS_AUTHORITY = api;
+  window.AUDRALIA_CLEAN_ENGINE_PARENT = api;
 
-  global.AUDRALIA_ENGINE = AUDRALIA_ENGINE;
-  global.AUDRALIA_CLEAN_CANVAS_ENGINE = AUDRALIA_ENGINE;
-  global.AUDRALIA_CLEAN_CANVAS_AUTHORITY = AUDRALIA_ENGINE;
-  global.AudraliaCleanCanvasEngine = AUDRALIA_ENGINE;
-  global.audraliaCleanCanvasEngine = AUDRALIA_ENGINE;
-  global.mountAudraliaCleanCanvas = mount;
-  global.renderAudraliaCleanCanvas = mount;
-  global.mountAudralia = mount;
-  global.renderAudralia = mount;
+  publishReceipt();
+
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+        const autoMount = document.querySelector("#audraliaCanvasMount");
+        if (autoMount) mount(autoMount);
+      },
+      { once: true }
+    );
+  } else {
+    const autoMount = document.querySelector("#audraliaCanvasMount");
+    if (autoMount) mount(autoMount);
+  }
 })();

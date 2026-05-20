@@ -1,224 +1,454 @@
-// /showroom/globe/index.js
-// TNT FULL-FILE REPLACEMENT
-// SHOWROOM_GLOBE_PARENT_RESTORE_AND_H_EARTH_CHILD_ROUTE_PLACEMENT_TNT_v1
-// Parent /showroom/globe/ only.
-// Lightweight selector/status helper.
-// No H-Earth ground-level scene here.
-// No canvas runtime. No material renderer import. No requestAnimationFrame. No drag/glide.
+// /showroom/globe/audralia/index.js
+// AUDRALIA_CLEAN_CANVAS_ROUTE_BRIDGE_TNT_v1
+// Full-file replacement.
+// File 17.
+// Audralia route bridge only.
+// Purpose:
+// - Loads the clean 16-file Audralia authority chain in lawful order.
+// - Mounts /assets/audralia/clean/audralia.engine.js into the Audralia page canvas.
+// - Reports route receipts to the HTML expression shell.
+// - Does not own planet science.
+// - Does not own runtime motion.
+// - Does not own controls.
+// - Does not own canvas composition.
+// - Does not own HTML expression.
+// No generated image. No GraphicBox. No visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "SHOWROOM_GLOBE_PARENT_RESTORE_AND_H_EARTH_CHILD_ROUTE_PLACEMENT_TNT_v1";
-  const PREVIOUS_CONTRACT = "SHOWROOM_GLOBE_PARENT_SELECTOR_LIGHT_ANIMATION_RESTORE_TNT_v1";
+  const CONTRACT = "AUDRALIA_CLEAN_CANVAS_ROUTE_BRIDGE_TNT_v1";
+  const RECEIPT = "AUDRALIA_CLEAN_CANVAS_ROUTE_BRIDGE_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "AUDRALIA_CLEAN_CANVAS_ENGINE_TNT_v1";
+  const VERSION = "2026-05-20.audralia-clean-canvas-route-bridge-v1";
 
-  const ROUTES = Object.freeze({
-    zionts: Object.freeze({
-      key: "zionts",
-      label: "ZIONTS",
-      route: "/showroom/globe/earth/",
-      role: "child-route-render-authority",
-      owns: "zionts-rendering-only"
-    }),
-    "h-earth": Object.freeze({
-      key: "h-earth",
-      label: "H-Earth",
-      route: "/showroom/globe/h-earth/",
-      role: "child-route-ground-level-condition-authority",
-      owns: "h-earth-earth-water-air-condition-stack"
-    }),
-    audralia: Object.freeze({
-      key: "audralia",
-      label: "Audralia",
-      route: "/showroom/globe/audralia/",
-      role: "child-route-render-authority",
-      owns: "audralia-rendering-only"
-    })
-  });
+  const ROUTE = "/showroom/globe/audralia/";
+  const HTML_SHELL_CONTRACT = "AUDRALIA_CLEAN_CANVAS_EXPRESSION_SHELL_HTML_TNT_v1";
+  const CACHE_KEY = "2026-05-20-audralia-clean-canvas-route-bridge-v1";
 
-  const STATUS = Object.freeze({
-    ok: true,
-    contract: CONTRACT,
-    previousContract: PREVIOUS_CONTRACT,
-    route: "/showroom/globe/",
-    page: "showroom-globe-parent-selector",
-    role: "parent-selector-only",
-    primaryLaw: "selector_selects_child_planet_route_renders",
-    repair: "parent_selector_restored_after_h_earth_condition_stack_was_seen_on_parent_route",
-    parentSelectorOnly: true,
-    selectorAnimation: "css-only-light",
-    cssOnlyAnimation: true,
-    hEarthConditionStackOnParent: false,
-    liveCanvasRuntime: false,
-    materialRendererImport: false,
-    requestAnimationFrame: false,
-    pointerDragRuntime: false,
-    glideRuntime: false,
-    sharedInterplanetaryRendering: false,
-    childRoutesOwnRendering: true,
-    generatedImage: false,
-    graphicBox: false,
-    streaming: false,
-    visualPassClaimed: false,
-    routes: ROUTES
-  });
+  const CHAIN = Object.freeze([
+    "/assets/showroom/globe/planet/planet.manifest.js",
+    "/assets/showroom/globe/planet/planet.math.js",
+    "/assets/showroom/globe/planet/planet.lattice.js",
+    "/assets/showroom/globe/planet/planet.palette.js",
+    "/assets/audralia/clean/audralia.identity.js",
+    "/assets/audralia/clean/audralia.landmask.js",
+    "/assets/audralia/clean/audralia.hydrology.js",
+    "/assets/audralia/clean/audralia.elevation.js",
+    "/assets/audralia/clean/audralia.climate.js",
+    "/assets/audralia/clean/audralia.biome.js",
+    "/assets/audralia/clean/audralia.surface.js",
+    "/assets/audralia/clean/audralia.atmosphere.js",
+    "/assets/audralia/clean/audralia.runtime.js",
+    "/assets/audralia/clean/audralia.controls.js",
+    "/assets/audralia/clean/audralia.canvas.js",
+    "/assets/audralia/clean/audralia.engine.js"
+  ]);
 
-  function publishStatus(extra = {}) {
-    const status = Object.freeze({ ...STATUS, ...extra });
+  const EXPECTED_GLOBALS = Object.freeze([
+    "AUDRALIA_CLEAN_CANVAS_MANIFEST",
+    "AUDRALIA_CLEAN_CANVAS_MATH",
+    "AUDRALIA_CLEAN_CANVAS_LATTICE",
+    "AUDRALIA_CLEAN_CANVAS_PALETTE",
+    "AUDRALIA_CLEAN_CANVAS_IDENTITY",
+    "AUDRALIA_CLEAN_CANVAS_LANDMASK",
+    "AUDRALIA_CLEAN_CANVAS_HYDROLOGY",
+    "AUDRALIA_CLEAN_CANVAS_ELEVATION",
+    "AUDRALIA_CLEAN_CANVAS_CLIMATE",
+    "AUDRALIA_CLEAN_CANVAS_BIOME",
+    "AUDRALIA_CLEAN_CANVAS_SURFACE",
+    "AUDRALIA_CLEAN_CANVAS_ATMOSPHERE",
+    "AUDRALIA_CLEAN_CANVAS_RUNTIME",
+    "AUDRALIA_CLEAN_CANVAS_CONTROLS",
+    "AUDRALIA_CLEAN_CANVAS_COMPOSITOR",
+    "AUDRALIA_CLEAN_CANVAS_ENGINE"
+  ]);
 
-    window.DGBShowroomGlobeSelector = Object.freeze({
-      status() {
-        return status;
-      },
-      routes() {
-        return ROUTES;
-      },
-      open(key) {
-        const target = ROUTES[key];
-        if (!target) return false;
-        window.location.href = target.route;
-        return true;
+  const state = {
+    booted: false,
+    loaded: [],
+    failed: [],
+    engineMount: null,
+    receipt: null
+  };
+
+  function doc() {
+    return typeof document !== "undefined" ? document : null;
+  }
+
+  function win() {
+    return typeof window !== "undefined" ? window : {};
+  }
+
+  function setDataset(key, value) {
+    const d = doc();
+    if (!d?.documentElement?.dataset) return;
+
+    try {
+      d.documentElement.dataset[key] = String(value);
+    } catch {
+      // Dataset writes are route proof metadata only.
+    }
+  }
+
+  function byId(id) {
+    const d = doc();
+    return d ? d.getElementById(id) : null;
+  }
+
+  function qs(selector) {
+    const d = doc();
+    return d ? d.querySelector(selector) : null;
+  }
+
+  function statusNode() {
+    return byId("audralia-route-status") || qs("[data-audralia-route-status]");
+  }
+
+  function writeStatus(message, tone = "neutral") {
+    const node = statusNode();
+    if (!node) return;
+
+    node.textContent = message;
+    node.dataset.statusTone = tone;
+  }
+
+  function appendReceiptLine(message) {
+    const list = byId("audralia-receipt-list") || qs("[data-audralia-receipts]");
+    if (!list) return;
+
+    const item = doc().createElement("li");
+    item.textContent = message;
+    list.appendChild(item);
+  }
+
+  function chainUrl(path) {
+    return `${path}?v=${encodeURIComponent(CACHE_KEY)}`;
+  }
+
+  function hasScript(path) {
+    const d = doc();
+    if (!d) return false;
+
+    return Boolean(
+      d.querySelector(`script[data-audralia-clean-chain-path="${path}"]`) ||
+      Array.from(d.scripts || []).some((script) => String(script.src || "").includes(path))
+    );
+  }
+
+  function loadScript(path) {
+    return new Promise((resolve, reject) => {
+      const d = doc();
+
+      if (!d) {
+        reject(new Error("document unavailable"));
+        return;
       }
+
+      if (hasScript(path)) {
+        state.loaded.push(path);
+        resolve({ path, reused: true });
+        return;
+      }
+
+      const script = d.createElement("script");
+      script.src = chainUrl(path);
+      script.async = false;
+      script.defer = false;
+      script.dataset.audraliaCleanChainPath = path;
+      script.dataset.audraliaCleanChainContract = CONTRACT;
+
+      script.onload = () => {
+        state.loaded.push(path);
+        appendReceiptLine(`loaded · ${path}`);
+        resolve({ path, reused: false });
+      };
+
+      script.onerror = () => {
+        state.failed.push(path);
+        reject(new Error(`Failed to load ${path}`));
+      };
+
+      d.head.appendChild(script);
     });
+  }
 
-    window.DGBShowroomGlobeReceipt = status;
+  async function loadChain() {
+    writeStatus("Loading Audralia clean-canvas authority chain.", "loading");
 
-    document.documentElement.dataset.contract = CONTRACT;
-    document.documentElement.dataset.previousContract = PREVIOUS_CONTRACT;
-    document.documentElement.dataset.parentSelectorOnly = "true";
-    document.documentElement.dataset.selectorAnimation = "css-only-light";
-    document.documentElement.dataset.cssOnlyAnimation = "true";
-    document.documentElement.dataset.hEarthConditionStackOnParent = "false";
-    document.documentElement.dataset.liveCanvasRuntime = "false";
-    document.documentElement.dataset.materialRendererImport = "false";
-    document.documentElement.dataset.requestAnimationFrame = "false";
-    document.documentElement.dataset.pointerDragRuntime = "false";
-    document.documentElement.dataset.glideRuntime = "false";
-    document.documentElement.dataset.sharedInterplanetaryRendering = "false";
-    document.documentElement.dataset.childRoutesOwnRendering = "true";
-    document.documentElement.dataset.generatedImage = "false";
-    document.documentElement.dataset.graphicBox = "false";
-    document.documentElement.dataset.streaming = "false";
-    document.documentElement.dataset.visualPassClaimed = "false";
-
-    if (document.body) {
-      document.body.dataset.contract = CONTRACT;
-      document.body.dataset.parentSelectorOnly = "true";
-      document.body.dataset.selectorAnimation = "css-only-light";
-      document.body.dataset.cssOnlyAnimation = "true";
-      document.body.dataset.hEarthConditionStackOnParent = "false";
-      document.body.dataset.liveCanvasRuntime = "false";
-      document.body.dataset.materialRendererImport = "false";
-      document.body.dataset.childRoutesOwnRendering = "true";
+    for (const path of CHAIN) {
+      await loadScript(path);
     }
 
-    return status;
-  }
+    const missingGlobals = EXPECTED_GLOBALS.filter((name) => !win()[name]);
 
-  function protectRouteNavigation() {
-    document.querySelectorAll("a[href]").forEach((link) => {
-      link.addEventListener(
-        "pointerdown",
-        () => {
-          document.documentElement.dataset.routeIntent = link.getAttribute("href") || "";
-        },
-        { passive: true }
-      );
-
-      link.addEventListener(
-        "click",
-        () => {
-          document.documentElement.dataset.routeClickReleased = "true";
-        },
-        { passive: true }
-      );
+    return Object.freeze({
+      expected: CHAIN.length,
+      loaded: state.loaded.length,
+      failed: state.failed.slice(),
+      missingGlobals,
+      complete: state.failed.length === 0 && missingGlobals.length === 0
     });
   }
 
-  function markCardsReady() {
-    const cards = Array.from(document.querySelectorAll(".planet-card[href]"));
+  function resolveRoot() {
+    return byId("audralia-main") ||
+      byId("audralia-stage") ||
+      qs("[data-audralia-root]") ||
+      qs("main") ||
+      doc()?.body ||
+      null;
+  }
 
-    cards.forEach((card) => {
-      const href = card.getAttribute("href") || "";
-      const key = Object.values(ROUTES).find((route) => route.route === href)?.key;
+  function resolveStage() {
+    return byId("audralia-stage") ||
+      qs("[data-audralia-stage]") ||
+      resolveRoot();
+  }
 
-      if (key) {
-        card.dataset.selectorRoute = key;
-        card.dataset.childRouteOwnsRendering = "true";
-        card.dataset.parentSelectorOnly = "true";
-        card.dataset.cssOnlyAnimation = "true";
+  function resolveCanvas() {
+    const existing =
+      byId("audralia-canvas") ||
+      qs("canvas[data-audralia-canvas]") ||
+      qs(".audralia-clean-canvas");
+
+    if (existing) return existing;
+
+    const stage = resolveStage();
+    if (!stage || !doc()) return null;
+
+    const canvas = doc().createElement("canvas");
+    canvas.id = "audralia-canvas";
+    canvas.className = "audralia-clean-canvas";
+    canvas.setAttribute("role", "img");
+    canvas.setAttribute("aria-label", "Audralia clean-canvas planet inspection surface");
+    canvas.dataset.audraliaCanvas = "true";
+    canvas.dataset.createdByRouteBridge = CONTRACT;
+
+    stage.appendChild(canvas);
+    return canvas;
+  }
+
+  function verifyHtmlShell() {
+    const html = doc()?.documentElement;
+
+    return Object.freeze({
+      shellAvailable: Boolean(html),
+      expectedContract: HTML_SHELL_CONTRACT,
+      actualContract: html?.dataset?.contract || null,
+      route: html?.dataset?.route || null,
+      page: html?.dataset?.page || null,
+      validRoute: html?.dataset?.route === ROUTE,
+      validPage: html?.dataset?.page === "audralia",
+      validShellContract: html?.dataset?.contract === HTML_SHELL_CONTRACT
+    });
+  }
+
+  function mountEngine(chainReceipt) {
+    const engine = win().AUDRALIA_CLEAN_CANVAS_ENGINE || win().AUDRALIA_ENGINE;
+    const root = resolveRoot();
+    const stage = resolveStage();
+    const canvas = resolveCanvas();
+
+    if (!engine?.mountAudralia) {
+      throw new Error("AUDRALIA_CLEAN_CANVAS_ENGINE.mountAudralia unavailable");
+    }
+
+    if (!canvas) {
+      throw new Error("Audralia canvas unavailable");
+    }
+
+    const mountResult = engine.mountAudralia({
+      root,
+      stage,
+      canvas,
+      options: {
+        autoStart: true,
+        autoResize: true,
+        autoVisibility: true,
+        proofStatus: false,
+        allowCreateCanvas: false,
+        dprCap: 1.65,
+        frameBudgetMs: 42,
+        textureWidth: 288,
+        textureHeight: 144,
+        radiusScale: 0.365,
+        cxRatio: 0.50,
+        cyRatio: 0.51
       }
     });
 
-    return {
-      cardCount: cards.length,
-      routeCardsReady: cards.length === Object.keys(ROUTES).length
-    };
-  }
-
-  function hideVisibleReceipts() {
-    const receiptNodes = Array.from(
-      document.querySelectorAll(".receipt, [data-route-receipt], [data-contract-receipt], [data-debug-receipt]")
-    );
-
-    receiptNodes.forEach((node) => {
-      if (node instanceof HTMLTemplateElement) return;
-      node.hidden = true;
-      node.setAttribute("aria-hidden", "true");
-      node.setAttribute("data-debug-receipt", "hidden-by-selector-runtime");
-    });
-
-    return {
-      visibleReceiptNodesHidden: receiptNodes.filter((node) => !(node instanceof HTMLTemplateElement)).length,
-      templateReceiptPresent: Boolean(document.querySelector("template[data-route-receipt]"))
-    };
-  }
-
-  function auditForbiddenRuntime() {
-    const canvasCount = document.querySelectorAll("canvas").length;
-    const conditionStageFound = Boolean(document.querySelector("[data-scene-canvas], .condition-stage"));
+    state.engineMount = mountResult;
 
     return Object.freeze({
-      canvasFound: canvasCount > 0,
-      canvasCount,
-      conditionStageFound,
-      hEarthConditionStackOnParent: conditionStageFound,
-      materialScriptFound: Array.from(document.scripts).some((script) =>
-        String(script.src || "").includes("showroom.globe.cinematic.material")
-      ),
-      parentHasCanvasRuntime: false,
-      parentImportsMaterialRenderer: false,
-      parentRunsRequestAnimationFrame: false,
-      parentHandlesDragGlide: false,
-      parentSwitchesLiveBodies: false,
-      cssOnlySelectorMotion: true,
-      childRoutesOwnRendering: true,
-      pass: canvasCount === 0 && conditionStageFound === false
+      mounted: Boolean(mountResult?.mounted || mountResult?.receipt?.mounted),
+      chain: chainReceipt,
+      engineReceipt: mountResult?.receipt || null,
+      engineAvailable: true,
+      canvasAvailable: true,
+      rootAvailable: Boolean(root),
+      stageAvailable: Boolean(stage)
     });
   }
 
-  function boot() {
-    const cards = markCardsReady();
-    const receipts = hideVisibleReceipts();
-    const audit = auditForbiddenRuntime();
+  function buildReceipt(chainReceipt, mountReceipt, error = null) {
+    const htmlShell = verifyHtmlShell();
+    const engineStatus =
+      win().AUDRALIA_CLEAN_CANVAS_ENGINE?.getStatus?.() ||
+      win().AUDRALIA_ENGINE?.getStatus?.() ||
+      null;
 
-    protectRouteNavigation();
-
-    publishStatus({
-      booted: true,
-      selectorHelperOnly: true,
-      lightAnimationRestored: true,
-      animationAuthority: "css-only-selector-motion",
-      parentRestored: true,
-      cards,
-      receipts,
-      forbiddenRuntimePresent: !audit.pass,
-      audit
+    return Object.freeze({
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      version: VERSION,
+      authority: "audralia-route-bridge-only",
+      route: ROUTE,
+      htmlShell,
+      chain: chainReceipt,
+      mount: mountReceipt,
+      engineStatus,
+      error: error ? String(error.message || error) : null,
+      ownsRouteBridge: true,
+      ownsHtmlExpression: false,
+      ownsEngine: false,
+      ownsRuntimeMotion: false,
+      ownsControls: false,
+      ownsCanvasComposition: false,
+      ownsPlanetScience: false,
+      generatedImage: false,
+      graphicBox: false,
+      visualPassClaimed: false
     });
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot, { once: true });
+  function publishReceipt(receipt) {
+    state.receipt = receipt;
+
+    win().AUDRALIA_ROUTE_BRIDGE = API;
+    win().AUDRALIA_ROUTE_BRIDGE_RECEIPT = receipt;
+    win().AUDRALIA_CLEAN_CANVAS_ROUTE_BRIDGE = API;
+    win().AUDRALIA_CLEAN_CANVAS_ROUTE_BRIDGE_RECEIPT = receipt;
+
+    setDataset("audraliaRouteBridgeLoaded", "true");
+    setDataset("audraliaRouteBridgeContract", CONTRACT);
+    setDataset("audraliaRouteBridgeReceipt", RECEIPT);
+    setDataset("audraliaRouteBridgeVersion", VERSION);
+    setDataset("audraliaRouteBridgeOwnsRouteBridge", "true");
+    setDataset("audraliaRouteBridgeOwnsHtmlExpression", "false");
+    setDataset("audraliaRouteBridgeOwnsEngine", "false");
+    setDataset("audraliaRouteBridgeOwnsRuntimeMotion", "false");
+    setDataset("audraliaRouteBridgeOwnsControls", "false");
+    setDataset("audraliaRouteBridgeOwnsCanvasComposition", "false");
+    setDataset("audraliaRouteBridgeOwnsPlanetScience", "false");
+    setDataset("audraliaRouteBridgeChainLoaded", receipt.chain?.complete ? "true" : "false");
+    setDataset("audraliaRouteBridgeMounted", receipt.mount?.mounted ? "true" : "false");
+    setDataset("generatedImage", "false");
+    setDataset("graphicBox", "false");
+    setDataset("visualPassClaimed", "false");
+
+    return receipt;
+  }
+
+  async function boot() {
+    if (state.booted) {
+      return state.receipt || buildReceipt(null, null, null);
+    }
+
+    state.booted = true;
+
+    setDataset("audraliaRouteBridgeBooting", "true");
+    writeStatus("Booting Audralia clean-canvas route bridge.", "loading");
+
+    let chainReceipt = null;
+    let mountReceipt = null;
+
+    try {
+      chainReceipt = await loadChain();
+      mountReceipt = mountEngine(chainReceipt);
+
+      const receipt = publishReceipt(buildReceipt(chainReceipt, mountReceipt, null));
+
+      writeStatus(
+        mountReceipt.mounted
+          ? "Audralia clean-canvas route bridge mounted."
+          : "Audralia clean-canvas route bridge loaded but mount did not complete.",
+        mountReceipt.mounted ? "ready" : "held"
+      );
+
+      appendReceiptLine(`${CONTRACT} · mounted=${mountReceipt.mounted}`);
+
+      setDataset("audraliaRouteBridgeBooting", "false");
+      setDataset("audraliaRouteBridgeReady", mountReceipt.mounted ? "true" : "false");
+
+      return receipt;
+    } catch (error) {
+      const receipt = publishReceipt(buildReceipt(chainReceipt, mountReceipt, error));
+
+      writeStatus(`Audralia route bridge held: ${error.message || error}`, "held");
+      appendReceiptLine(`${CONTRACT} · held · ${error.message || error}`);
+
+      setDataset("audraliaRouteBridgeBooting", "false");
+      setDataset("audraliaRouteBridgeReady", "false");
+      setDataset("audraliaRouteBridgeError", error.message || String(error));
+
+      return receipt;
+    }
+  }
+
+  function getStatus() {
+    return Object.freeze({
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      version: VERSION,
+      authority: "audralia-route-bridge-only",
+      route: ROUTE,
+      htmlShellContract: HTML_SHELL_CONTRACT,
+      cacheKey: CACHE_KEY,
+      chain: CHAIN,
+      expectedGlobals: EXPECTED_GLOBALS,
+      loaded: state.loaded.slice(),
+      failed: state.failed.slice(),
+      booted: state.booted,
+      mounted: Boolean(state.engineMount?.mounted || state.engineMount?.receipt?.mounted),
+      lastReceipt: state.receipt,
+      ownsRouteBridge: true,
+      ownsHtmlExpression: false,
+      ownsEngine: false,
+      ownsRuntimeMotion: false,
+      ownsControls: false,
+      ownsCanvasComposition: false,
+      ownsPlanetScience: false,
+      generatedImage: false,
+      graphicBox: false,
+      visualPassClaimed: false
+    });
+  }
+
+  const API = Object.freeze({
+    contract: CONTRACT,
+    receipt: RECEIPT,
+    previousContract: PREVIOUS_CONTRACT,
+    version: VERSION,
+    route: ROUTE,
+    chain: CHAIN,
+    expectedGlobals: EXPECTED_GLOBALS,
+    boot,
+    loadChain,
+    mountEngine,
+    verifyHtmlShell,
+    getStatus
+  });
+
+  win().AUDRALIA_ROUTE_BRIDGE = API;
+  win().AUDRALIA_CLEAN_CANVAS_ROUTE_BRIDGE = API;
+
+  if (doc()?.readyState === "loading") {
+    doc().addEventListener("DOMContentLoaded", () => {
+      boot();
+    }, { once: true });
   } else {
     boot();
   }

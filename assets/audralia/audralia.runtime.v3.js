@@ -1,12 +1,12 @@
 // /assets/audralia/audralia.runtime.v3.js
 // AUDRALIA_G2_5_RUNTIME_PARENT_CACHE_KEY_ALIGNMENT_TNT_v1
 // Full-file replacement.
-// Purpose: keep the versioned runtime path active while forcing the clean parent import to the G2.6 parent visible-body-first failsafe.
-// Parent cache key: AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1
-// Does not own: HTML, route bridge, parent geometry, continent model, motion, sky, generated image, GraphicBox, or visual-pass claim.
+// Purpose: runtime reads the route/page cache nonce and uses it when loading the clean parent engine.
+// Chain alignment: AUDRALIA_G2_6_SINGLE_CACHE_NONCE_CHAIN_ALIGNMENT_TNT_v1
+// Does not own: HTML, route bridge, parent geometry, continent topology, motion, sky, generated image, GraphicBox, or visual-pass claim.
 
 const CONTRACT = "AUDRALIA_G2_5_RUNTIME_PARENT_CACHE_KEY_ALIGNMENT_TNT_v1";
-const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_RUNTIME_PARENT_CACHE_KEY_ALIGNMENT_TNT_v1";
+const CHAIN_CONTRACT = "AUDRALIA_G2_6_SINGLE_CACHE_NONCE_CHAIN_ALIGNMENT_TNT_v1";
 const FAMILY = "AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1";
 
 const TARGET = "/assets/audralia/audralia.runtime.v3.js";
@@ -14,7 +14,6 @@ const ROUTE = "/showroom/globe/audralia/";
 
 const CLEAN_PARENT_PATH = "/assets/audralia/clean/engine/audralia.engine.js";
 const CLEAN_PARENT_CACHE_KEY = "AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1";
-const CLEAN_PARENT_IMPORT = `${CLEAN_PARENT_PATH}?v=${encodeURIComponent(CLEAN_PARENT_CACHE_KEY)}`;
 
 const WAIT_PARENT_MS = 5200;
 const WAIT_VISIBLE_MS = 5200;
@@ -29,15 +28,16 @@ const PARENT_KEYS = [
 
 const state = {
   contract: CONTRACT,
-  previousContract: PREVIOUS_CONTRACT,
+  chainContract: CHAIN_CONTRACT,
   family: FAMILY,
   target: TARGET,
   route: ROUTE,
   cleanParentPath: CLEAN_PARENT_PATH,
   cleanParentCacheKey: CLEAN_PARENT_CACHE_KEY,
-  cleanParentImport: CLEAN_PARENT_IMPORT,
+  cleanParentImport: "",
+  cacheNonce: "",
   runtimeParentCacheKeyAligned: true,
-  parentVisibleBodyFirstFailsafeCacheKey: true,
+  singleCacheNonceChain: true,
   parentRequested: false,
   parentLoaded: false,
   parentDelegated: false,
@@ -74,6 +74,53 @@ function sleep(ms) {
 
 function isElement(value) {
   return Boolean(value && value.nodeType === 1);
+}
+
+function getOwnImportNonce() {
+  try {
+    return new URL(import.meta.url).searchParams.get("v") || "";
+  } catch (_error) {
+    return "";
+  }
+}
+
+function getOrCreateCacheNonce(options = {}) {
+  if (options && options.cacheNonce) {
+    state.cacheNonce = String(options.cacheNonce);
+    return state.cacheNonce;
+  }
+
+  if (!hasWindow() || !hasDocument()) {
+    state.cacheNonce = state.cacheNonce || `${CHAIN_CONTRACT}__${Date.now()}`;
+    return state.cacheNonce;
+  }
+
+  const root = document.documentElement;
+
+  const nonce =
+    state.cacheNonce ||
+    (window.AUDRALIA_PAGE_CACHE_NONCE ? String(window.AUDRALIA_PAGE_CACHE_NONCE) : "") ||
+    root.getAttribute("data-audralia-page-cache-nonce") ||
+    root.getAttribute("data-audralia-route-bridge-cache-key") ||
+    (window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT && window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.dynamicCacheKey
+      ? String(window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.dynamicCacheKey)
+      : "") ||
+    getOwnImportNonce() ||
+    `${CHAIN_CONTRACT}__${Date.now()}__${Math.random().toString(36).slice(2, 8)}`;
+
+  state.cacheNonce = nonce;
+  window.AUDRALIA_PAGE_CACHE_NONCE = nonce;
+  root.setAttribute("data-audralia-page-cache-nonce", nonce);
+  root.setAttribute("data-audralia-single-cache-nonce-chain", "true");
+
+  return nonce;
+}
+
+function parentImportUrl(options = {}) {
+  const nonce = getOrCreateCacheNonce(options);
+  const url = `${CLEAN_PARENT_PATH}?v=${encodeURIComponent(nonce)}`;
+  state.cleanParentImport = url;
+  return url;
 }
 
 function recordError(scope, error) {
@@ -144,24 +191,25 @@ function getParentStatus(parent = readParent()) {
   return null;
 }
 
-function parentMatchesCurrentCache(parent) {
+function parentMatchesCurrent(parent) {
   if (!parent) return false;
 
   try {
     const status = getParentStatus(parent) || {};
     const contract = parent.CONTRACT || status.contract || "";
-    return contract === CLEAN_PARENT_CACHE_KEY;
+    const parentNonce = status.cacheNonce || "";
+    return contract === CLEAN_PARENT_CACHE_KEY && (!parentNonce || parentNonce === state.cacheNonce);
   } catch (_error) {
     return false;
   }
 }
 
-function scriptAlreadyLoadedCurrentParent() {
+function scriptAlreadyLoadedCurrentParent(src) {
   if (!hasDocument()) return false;
 
   return Array.from(document.scripts).some((script) => {
     const raw = script.getAttribute("src") || "";
-    return raw === CLEAN_PARENT_IMPORT;
+    return raw === src;
   });
 }
 
@@ -177,9 +225,10 @@ function appendParentScript(src) {
     script.async = false;
     script.defer = false;
     script.setAttribute("data-audralia-runtime-parent-loader", CONTRACT);
+    script.setAttribute("data-audralia-single-cache-nonce-chain", CHAIN_CONTRACT);
+    script.setAttribute("data-audralia-page-cache-nonce", state.cacheNonce);
     script.setAttribute("data-audralia-clean-parent-path", CLEAN_PARENT_PATH);
     script.setAttribute("data-audralia-clean-parent-cache-key", CLEAN_PARENT_CACHE_KEY);
-    script.setAttribute("data-audralia-parent-visible-body-first-failsafe-cache-key", "true");
 
     script.onload = () => resolve({ src, loaded: true });
     script.onerror = () => reject(new Error(`Clean parent engine failed to load: ${src}`));
@@ -194,7 +243,7 @@ async function waitForParent(timeoutMs = WAIT_PARENT_MS) {
   while (Date.now() - start <= timeoutMs) {
     const parent = readParent();
 
-    if (parent && parentMatchesCurrentCache(parent)) {
+    if (parent && parentMatchesCurrent(parent)) {
       state.parentLoaded = true;
       publishReceipt("parent-found-current-cache");
       return parent;
@@ -206,10 +255,13 @@ async function waitForParent(timeoutMs = WAIT_PARENT_MS) {
   return null;
 }
 
-async function loadParent() {
+async function loadParent(options = {}) {
+  getOrCreateCacheNonce(options);
+  const src = parentImportUrl(options);
+
   const existing = readParent();
 
-  if (existing && parentMatchesCurrentCache(existing)) {
+  if (existing && parentMatchesCurrent(existing)) {
     state.parentRequested = true;
     state.parentLoaded = true;
     publishReceipt("parent-existing-current-cache");
@@ -222,12 +274,12 @@ async function loadParent() {
   publishReceipt("load-parent-start");
 
   parentLoadPromise = (async () => {
-    if (scriptAlreadyLoadedCurrentParent()) {
+    if (scriptAlreadyLoadedCurrentParent(src)) {
       const current = await waitForParent(WAIT_PARENT_MS);
       if (current) return current;
     }
 
-    await appendParentScript(CLEAN_PARENT_IMPORT);
+    await appendParentScript(src);
 
     const parent = await waitForParent(WAIT_PARENT_MS);
 
@@ -269,7 +321,7 @@ function syncParentStatus(scope = "sync") {
   const status = getParentStatus(parent);
 
   state.parentStatus = status || null;
-  state.parentLoaded = Boolean(parent && parentMatchesCurrentCache(parent));
+  state.parentLoaded = Boolean(parent && parentMatchesCurrent(parent));
 
   state.ready = Boolean(
     (status && (status.ready === true || status.mounted === true || status.formVisible === true)) ||
@@ -335,17 +387,18 @@ function publishReceipt(scope = "publish") {
 
   const receipt = {
     contract: CONTRACT,
-    previousContract: PREVIOUS_CONTRACT,
+    chainContract: CHAIN_CONTRACT,
     family: FAMILY,
     target: TARGET,
     route: ROUTE,
     cleanParentPath: CLEAN_PARENT_PATH,
     cleanParentCacheKey: CLEAN_PARENT_CACHE_KEY,
-    cleanParentImport: CLEAN_PARENT_IMPORT,
-    mode: "runtime_parent_cache_key_alignment",
+    cleanParentImport: state.cleanParentImport || "",
+    cacheNonce: state.cacheNonce || "",
+    mode: "runtime_single_cache_nonce_parent_alignment",
     scope,
     runtimeParentCacheKeyAligned: true,
-    parentVisibleBodyFirstFailsafeCacheKey: true,
+    singleCacheNonceChain: true,
     parentRequested: state.parentRequested,
     parentLoaded: state.parentLoaded,
     parentDelegated: state.parentDelegated,
@@ -370,8 +423,7 @@ function publishReceipt(scope = "publish") {
   window.AUDRALIA_CLEAN_CANVAS_RUNTIME_RECEIPT = receipt;
 
   window.AUDRALIA_RUNTIME_PARENT_CACHE_KEY_ALIGNED = true;
-  window.AUDRALIA_RUNTIME_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_CACHE_KEY = true;
-  window.AUDRALIA_RUNTIME_PARENT_DELEGATION_REPAIR_ACTIVE = true;
+  window.AUDRALIA_RUNTIME_SINGLE_CACHE_NONCE_CHAIN = true;
 
   if (state.parentLoaded) window.AUDRALIA_PARENT_ENGINE_LOADED = true;
   if (state.parentDelegated) window.AUDRALIA_PARENT_ENGINE_DELEGATED = true;
@@ -379,8 +431,9 @@ function publishReceipt(scope = "publish") {
   if (hasDocument() && document.documentElement) {
     document.documentElement.setAttribute("data-audralia-runtime-contract", CONTRACT);
     document.documentElement.setAttribute("data-audralia-runtime-target", TARGET);
+    document.documentElement.setAttribute("data-audralia-runtime-single-cache-nonce-chain", "true");
+    document.documentElement.setAttribute("data-audralia-page-cache-nonce", state.cacheNonce || "");
     document.documentElement.setAttribute("data-audralia-clean-parent-cache-key", CLEAN_PARENT_CACHE_KEY);
-    document.documentElement.setAttribute("data-audralia-runtime-parent-visible-body-first-failsafe-cache-key", "true");
     document.documentElement.setAttribute("data-audralia-parent-loaded", state.parentLoaded ? "true" : "false");
     document.documentElement.setAttribute("data-audralia-parent-delegated", state.parentDelegated ? "true" : "false");
     document.documentElement.setAttribute("data-audralia-parent-awaited", state.parentAwaited ? "true" : "false");
@@ -399,6 +452,7 @@ function publishReceipt(scope = "publish") {
 async function mount(input, options = {}) {
   state.mountCalled = true;
   state.mounted = true;
+  getOrCreateCacheNonce(options);
   publishReceipt("mount-start");
 
   const target = resolveMountTarget(input);
@@ -408,7 +462,7 @@ async function mount(input, options = {}) {
   }
 
   try {
-    const parent = await loadParent();
+    const parent = await loadParent(options);
 
     const parentResult = callParent(parent, ["mount", "boot", "start", "init", "create"], [
       target,
@@ -417,8 +471,8 @@ async function mount(input, options = {}) {
         delegatedBy: CONTRACT,
         runtimeShim: true,
         runtimeParentCacheKeyAligned: true,
-        parentVisibleBodyFirstFailsafeCacheKey: true,
-        parentDelegationRepair: true,
+        singleCacheNonceChain: true,
+        cacheNonce: state.cacheNonce,
         route: ROUTE
       }
     ]);
@@ -462,9 +516,7 @@ async function render(...args) {
     const parent = readParent() || (await loadParent());
     const result = callParent(parent, ["render", "draw", "paint"], args);
 
-    if (result && typeof result.then === "function") {
-      await result;
-    }
+    if (result && typeof result.then === "function") await result;
 
     syncParentStatus("render");
     return getStatus();
@@ -535,16 +587,17 @@ function getStatus() {
 
   return {
     contract: CONTRACT,
-    previousContract: PREVIOUS_CONTRACT,
+    chainContract: CHAIN_CONTRACT,
     family: FAMILY,
     target: TARGET,
     route: ROUTE,
     cleanParentPath: CLEAN_PARENT_PATH,
     cleanParentCacheKey: CLEAN_PARENT_CACHE_KEY,
-    cleanParentImport: CLEAN_PARENT_IMPORT,
-    mode: "runtime_parent_cache_key_alignment",
+    cleanParentImport: state.cleanParentImport || "",
+    cacheNonce: state.cacheNonce || "",
+    mode: "runtime_single_cache_nonce_parent_alignment",
     runtimeParentCacheKeyAligned: true,
-    parentVisibleBodyFirstFailsafeCacheKey: true,
+    singleCacheNonceChain: true,
     parentRequested: state.parentRequested,
     parentLoaded: state.parentLoaded,
     parentDelegated: state.parentDelegated,
@@ -568,12 +621,11 @@ async function defaultRuntime(input, options = {}) {
 }
 
 defaultRuntime.CONTRACT = CONTRACT;
-defaultRuntime.PREVIOUS_CONTRACT = PREVIOUS_CONTRACT;
+defaultRuntime.CHAIN_CONTRACT = CHAIN_CONTRACT;
 defaultRuntime.FAMILY = FAMILY;
 defaultRuntime.TARGET = TARGET;
 defaultRuntime.ROUTE = ROUTE;
 defaultRuntime.CLEAN_PARENT_PATH = CLEAN_PARENT_PATH;
-defaultRuntime.CLEAN_PARENT_IMPORT = CLEAN_PARENT_IMPORT;
 defaultRuntime.mount = mount;
 defaultRuntime.boot = boot;
 defaultRuntime.start = start;
@@ -588,12 +640,11 @@ defaultRuntime.status = getStatus;
 
 const api = {
   CONTRACT,
-  PREVIOUS_CONTRACT,
+  CHAIN_CONTRACT,
   FAMILY,
   TARGET,
   ROUTE,
   CLEAN_PARENT_PATH,
-  CLEAN_PARENT_IMPORT,
   mount,
   boot,
   start,
@@ -609,25 +660,25 @@ const api = {
 };
 
 if (hasWindow()) {
+  getOrCreateCacheNonce();
+
   window.AUDRALIA_RUNTIME = api;
   window.AUDRALIA_CLEAN_CANVAS_RUNTIME = api;
   window.AUDRALIA_RUNTIME_SHIM = api;
 
   window.AUDRALIA_RUNTIME_PARENT_CACHE_KEY_ALIGNED = true;
-  window.AUDRALIA_RUNTIME_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_CACHE_KEY = true;
-  window.AUDRALIA_RUNTIME_PARENT_DELEGATION_REPAIR_ACTIVE = true;
+  window.AUDRALIA_RUNTIME_SINGLE_CACHE_NONCE_CHAIN = true;
 
   publishReceipt("module-load");
 }
 
 export {
   CONTRACT,
-  PREVIOUS_CONTRACT,
+  CHAIN_CONTRACT,
   FAMILY,
   TARGET,
   ROUTE,
   CLEAN_PARENT_PATH,
-  CLEAN_PARENT_IMPORT,
   api,
   mount,
   boot,

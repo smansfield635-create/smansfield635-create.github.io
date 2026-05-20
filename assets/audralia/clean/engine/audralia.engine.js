@@ -1,94 +1,85 @@
 // /assets/audralia/clean/engine/audralia.engine.js
-// AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1
+// AUDRALIA_G2_6_PARENT_PROJECTOR_CONSUMES_MOTION_STATE_NO_STRETCH_TNT_v1
 // Full-file replacement.
-// Purpose: parent-visible-body-first failsafe with single page-load cache nonce when admitting continents.js.
-// Chain alignment: AUDRALIA_G2_6_SINGLE_CACHE_NONCE_CHAIN_ALIGNMENT_TNT_v1
-// Parent owns: mount, visible inspection frame, fixed globe geometry, ocean body, atmospheric rim, projection, drag-only longitude rotation, child admission, FORM_VISIBLE confirmation.
-// Parent does not own: route bridge, runtime path, HTML, continent topology contents, motion, sky, generated image, GraphicBox, or visual-pass claim.
+// Parent-facing contract preserved for route bridge compatibility:
+// AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1
+//
+// Purpose:
+// - Keep FORM_VISIBLE parent handoff stable.
+// - Consume motion.js spherical rotation/pitch state.
+// - Prevent finger drag from stretching, translating, scaling, skewing, or CSS-transforming the rendered frame.
+// - Reproject the planet and all children from spherical state on every redraw.
+// - Provide a stable parent payload: geometry + project(lonRad, latRad, elevation).
+//
+// Does not own: Gratitude topology, Gratitude hydrology, Gratitude surface material, continents truth,
+// terrain elevation, mountains, animals, plants, climate, route bridge, HTML shell, generated image,
+// GraphicBox, or final visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1";
-  const CHAIN_CONTRACT = "AUDRALIA_G2_6_SINGLE_CACHE_NONCE_CHAIN_ALIGNMENT_TNT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1";
-  const FAMILY = "AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1";
-
+  const PARENT_FACING_CONTRACT = "AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1";
+  const INTERNAL_CONTRACT = "AUDRALIA_G2_6_PARENT_PROJECTOR_CONSUMES_MOTION_STATE_NO_STRETCH_TNT_v1";
+  const RECEIPT = "AUDRALIA_G2_6_PARENT_PROJECTOR_CONSUMES_MOTION_STATE_NO_STRETCH_RECEIPT_v1";
+  const PREVIOUS_INTERNAL_CONTRACT = "AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1";
   const TARGET = "/assets/audralia/clean/engine/audralia.engine.js";
   const ROUTE = "/showroom/globe/audralia/";
 
-  const PHI_INVERSE = 0.61803398875;
-  const PHI_INVERSE_3 = 0.2360679775;
-  const PHI_INVERSE_5 = 0.09016994375;
+  const MOTION_PATH = "/assets/audralia/clean/engine/audralia/engine/motion.js";
+  const CONTINENTS_PATH = "/assets/audralia/clean/engine/audralia/engine/continents.js";
+  const SKY_PATH = "/assets/audralia/clean/engine/audralia/engine/sky.js";
 
-  const SAFE_RADIUS_FACTOR = PHI_INVERSE / 2;
-  const MOBILE_RADIUS_FACTOR = SAFE_RADIUS_FACTOR - 0.01803398874;
-  const CENTER_X_BIAS_FACTOR = -(PHI_INVERSE_3 - PHI_INVERSE_5 / 4);
-  const DRAG_ROTATION_SENSITIVITY = 0.00618033989;
+  const MOTION_EXPECTED_CONTRACT = "AUDRALIA_G2_6_MOTION_SPHERICAL_INSPECTION_NO_STRETCH_TNT_v1";
+  const CONTINENTS_EXPECTED_INTERNAL = "AUDRALIA_G2_6_CONTINENTS_GRATITUDE_HEX_SURFACE_RENDER_ADAPTER_TNT_v1";
 
-  const CHILDREN = Object.freeze({
-    continents: {
-      enabled: true,
-      path: "/assets/audralia/clean/engine/audralia/engine/continents.js",
-      expectedContract: "AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1",
-      globals: [
-        "AUDRALIA_NINE_SUMMITS_CONTINENTS_ENGINE",
-        "AUDRALIA_CLEAN_CONTINENTS_ENGINE",
-        "AUDRALIA_CONTINENTS_ENGINE",
-        "AUDRALIA_CLEAN_CANVAS_CONTINENTS",
-        "AudraliaContinentsEngine",
-        "AudraliaContinents",
-        "audraliaContinents"
-      ]
-    },
-    motion: {
-      enabled: false,
-      heldReason: "motion_neutralized_for_stationary_inspection",
-      path: "/assets/audralia/clean/engine/audralia/engine/motion.js",
-      globals: []
-    },
-    sky: {
-      enabled: false,
-      heldReason: "sky_held_until_surface_baseline_accepted",
-      path: "/assets/audralia/clean/engine/audralia/engine/sky.js",
-      globals: []
-    }
+  const TAU = Math.PI * 2;
+
+  const CONFIG = Object.freeze({
+    maxDpr: 1.35,
+    minCanvasSize: 300,
+    maxCanvasSize: 900,
+    centerX: 0.5,
+    centerY: 0.50,
+    radiusRatio: 0.382,
+    minRadius: 120,
+    fallbackRotationSpeed: 0.000052,
+    fallbackRotation: -0.92,
+    fallbackPitch: -0.11,
+    defaultStageHeight: 520
+  });
+
+  const COLORS = Object.freeze({
+    background0: "rgba(2, 5, 15, 1)",
+    background1: "rgba(4, 15, 36, 1)",
+    background2: "rgba(1, 4, 13, 1)",
+    ocean0: "rgba(35, 150, 190, 1)",
+    ocean1: "rgba(7, 82, 135, 1)",
+    ocean2: "rgba(3, 26, 70, 1)",
+    ocean3: "rgba(2, 12, 36, 1)",
+    rim: "rgba(188, 229, 255, 0.42)",
+    rim2: "rgba(88, 178, 232, 0.18)",
+    atmosphere: "rgba(112, 205, 240, 0.13)",
+    specular: "rgba(255, 255, 255, 0.34)"
   });
 
   const state = {
-    contract: CONTRACT,
-    chainContract: CHAIN_CONTRACT,
-    previousContract: PREVIOUS_CONTRACT,
-    family: FAMILY,
+    contract: PARENT_FACING_CONTRACT,
+    internalContract: INTERNAL_CONTRACT,
+    receipt: RECEIPT,
+    previousInternalContract: PREVIOUS_INTERNAL_CONTRACT,
     target: TARGET,
     route: ROUTE,
-    cacheNonce: "",
-    parentVisibleBodyFirst: true,
-    bodyPainted: false,
-    oceanBodyPainted: false,
-    atmosphericRimPainted: false,
-    childLoadDeferredUntilVisible: true,
-    parentGlobalPublished: false,
-    mountCalled: false,
-    mounted: false,
-    ready: false,
-    formVisible: false,
-    renderCount: 0,
-    delegatedBy: "none",
-    childLoadStarted: false,
-    childLoadComplete: false,
-    children: {
-      continents: "deferred_until_parent_visible",
-      motion: "held",
-      sky: "held"
-    },
-    errors: []
-  };
 
-  const env = {
-    mount: null,
+    mounted: false,
+    booted: false,
+    disposed: false,
+    canvasCreated: false,
+    formVisible: false,
+
+    mountNode: null,
     canvas: null,
     ctx: null,
+
     dpr: 1,
     width: 0,
     height: 0,
@@ -97,16 +88,64 @@
     cx: 0,
     cy: 0,
     radius: 0,
-    rotation: 0,
-    dragging: false,
-    lastPointer: null,
-    childEngines: {
-      continents: null,
-      motion: null,
-      sky: null
-    },
-    childPromise: null
+
+    frameId: 0,
+    renderScheduled: false,
+    renderCount: 0,
+    requestRenderCount: 0,
+    lastFrameTime: 0,
+
+    dynamicCacheNonce: "",
+    childLoadStarted: false,
+    childLoadComplete: false,
+
+    motionLoaded: false,
+    motionContract: "",
+    motionConsumed: false,
+    motionStateActive: false,
+    dragMode: "",
+    projectionConsumesMotion: true,
+
+    continentsLoaded: false,
+    continentsContract: "",
+    continentsInternalContract: "",
+    continentsConsumed: false,
+    continentsDrawCount: 0,
+
+    skyLoaded: false,
+    skyConsumed: false,
+
+    canvasTransformForbidden: true,
+    cssTransformForbidden: true,
+    bitmapStretchForbidden: true,
+    screenPlaneDragForbidden: true,
+    parentProjectionActive: true,
+    sphericalProjectionActive: true,
+
+    lastRotation: CONFIG.fallbackRotation,
+    lastPitch: CONFIG.fallbackPitch,
+    fallbackRotation: CONFIG.fallbackRotation,
+
+    lastDrawError: "",
+    lastDrawSummary: null,
+    lastChildSummary: null,
+    errors: [],
+
+    ownsTopology: false,
+    ownsHydrology: false,
+    ownsSurface: false,
+    ownsTerrain: false,
+    ownsElevation: false,
+    ownsContinentsTruth: false,
+    ownsMotionState: false,
+    ownsRoute: false,
+    ownsHtml: false,
+    generatedImage: false,
+    graphicBox: false,
+    visualPassClaim: false
   };
+
+  const loadPromises = new Map();
 
   function hasWindow() {
     return typeof window !== "undefined";
@@ -116,937 +155,1142 @@
     return typeof document !== "undefined";
   }
 
-  function nowIso() {
-    try {
-      return new Date().toISOString();
-    } catch (_error) {
-      return "";
-    }
+  function finite(value, fallback = 0) {
+    const number = Number(value);
+    return Number.isFinite(number) ? number : fallback;
   }
 
-  function isElement(value) {
-    return Boolean(value && value.nodeType === 1);
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, finite(value, min)));
   }
 
-  function getOwnScriptNonce() {
-    if (!hasDocument()) return "";
-
-    try {
-      const scripts = Array.from(document.scripts);
-      const own = scripts.reverse().find((script) => {
-        const src = script.getAttribute("src") || "";
-        return src.includes("/assets/audralia/clean/engine/audralia.engine.js");
-      });
-
-      if (!own) return "";
-
-      return new URL(own.src, window.location.href).searchParams.get("v") || "";
-    } catch (_error) {
-      return "";
-    }
+  function clamp01(value) {
+    return clamp(value, 0, 1);
   }
 
-  function getOrCreateCacheNonce(options = {}) {
-    if (options && options.cacheNonce) {
-      state.cacheNonce = String(options.cacheNonce);
-      return state.cacheNonce;
-    }
-
-    if (!hasWindow() || !hasDocument()) {
-      state.cacheNonce = state.cacheNonce || `${CHAIN_CONTRACT}__${Date.now()}`;
-      return state.cacheNonce;
-    }
-
-    const root = document.documentElement;
-
-    const nonce =
-      state.cacheNonce ||
-      (window.AUDRALIA_PAGE_CACHE_NONCE ? String(window.AUDRALIA_PAGE_CACHE_NONCE) : "") ||
-      root.getAttribute("data-audralia-page-cache-nonce") ||
-      root.getAttribute("data-audralia-route-bridge-cache-key") ||
-      (window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT && window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.dynamicCacheKey
-        ? String(window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.dynamicCacheKey)
-        : "") ||
-      getOwnScriptNonce() ||
-      `${CHAIN_CONTRACT}__${Date.now()}__${Math.random().toString(36).slice(2, 8)}`;
-
-    state.cacheNonce = nonce;
-    window.AUDRALIA_PAGE_CACHE_NONCE = nonce;
-    root.setAttribute("data-audralia-page-cache-nonce", nonce);
-    root.setAttribute("data-audralia-single-cache-nonce-chain", "true");
-
-    return nonce;
+  function wrapRadians(value) {
+    let out = finite(value, 0);
+    while (out <= -Math.PI) out += TAU;
+    while (out > Math.PI) out -= TAU;
+    return out;
   }
 
-  function childUrl(path) {
-    const nonce = getOrCreateCacheNonce();
-    return `${path}?v=${encodeURIComponent(nonce)}`;
+  function now() {
+    if (hasWindow() && window.performance && typeof window.performance.now === "function") {
+      return window.performance.now();
+    }
+    return Date.now();
   }
 
   function recordError(scope, error) {
     const message = error && error.message ? error.message : String(error);
-    state.errors.push({ scope, message, time: nowIso() });
+    state.lastDrawError = `${scope}: ${message}`;
+    state.errors.push({
+      scope,
+      message,
+      time: new Date().toISOString()
+    });
     publishReceipt(scope);
   }
 
-  function resolveMountTarget(input) {
-    if (!hasDocument()) return input || null;
+  function getRoot() {
+    return hasDocument() ? document.documentElement : null;
+  }
 
-    if (isElement(input)) return input;
-    if (typeof input === "string") return document.querySelector(input);
+  function getDynamicCacheNonce() {
+    if (state.dynamicCacheNonce) return state.dynamicCacheNonce;
 
-    if (input && isElement(input.mount)) return input.mount;
-    if (input && isElement(input.element)) return input.element;
-    if (input && isElement(input.el)) return input.el;
+    const root = getRoot();
 
-    if (input && typeof input.mount === "string") return document.querySelector(input.mount);
-    if (input && typeof input.selector === "string") return document.querySelector(input.selector);
+    const rootNonce =
+      root &&
+      (
+        root.getAttribute("data-audralia-page-cache-nonce") ||
+        root.getAttribute("data-audralia-route-bridge-cache-key") ||
+        root.getAttribute("data-html-cache-key")
+      );
+
+    const bootstrapNonce =
+      hasWindow() &&
+      window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT &&
+      window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.dynamicCacheKey
+        ? String(window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.dynamicCacheKey)
+        : "";
+
+    const globalNonce =
+      hasWindow() && window.AUDRALIA_PAGE_CACHE_NONCE
+        ? String(window.AUDRALIA_PAGE_CACHE_NONCE)
+        : "";
+
+    state.dynamicCacheNonce =
+      globalNonce ||
+      bootstrapNonce ||
+      rootNonce ||
+      `${INTERNAL_CONTRACT}__${Date.now()}__${Math.random().toString(36).slice(2, 8)}`;
+
+    if (hasWindow()) window.AUDRALIA_PAGE_CACHE_NONCE = state.dynamicCacheNonce;
+    if (root) {
+      root.setAttribute("data-audralia-page-cache-nonce", state.dynamicCacheNonce);
+      root.setAttribute("data-audralia-parent-projector-cache-nonce", state.dynamicCacheNonce);
+    }
+
+    return state.dynamicCacheNonce;
+  }
+
+  function versioned(path) {
+    return `${path}?v=${encodeURIComponent(getDynamicCacheNonce())}`;
+  }
+
+  function loadClassicScript(path, key) {
+    if (!hasDocument()) return Promise.resolve(false);
+
+    const src = versioned(path);
+
+    if (loadPromises.has(src)) return loadPromises.get(src);
+
+    const existing = Array.from(document.scripts).find((script) => {
+      const scriptSrc = script.getAttribute("src") || "";
+      return scriptSrc === src || scriptSrc.startsWith(`${path}?`);
+    });
+
+    if (existing && existing.dataset.audraliaLoaded === "true") {
+      return Promise.resolve(true);
+    }
+
+    const promise = new Promise((resolve) => {
+      const script = existing || document.createElement("script");
+
+      script.setAttribute("data-audralia-parent-projector-loader", INTERNAL_CONTRACT);
+      script.setAttribute("data-audralia-parent-projector-child", key);
+      script.setAttribute("data-generated-image", "false");
+      script.setAttribute("data-graphic-box", "false");
+      script.setAttribute("data-visual-pass-claimed", "false");
+
+      script.onload = () => {
+        script.dataset.audraliaLoaded = "true";
+        resolve(true);
+      };
+
+      script.onerror = () => resolve(false);
+
+      if (!existing) {
+        script.src = src;
+        script.async = false;
+        script.defer = false;
+        document.head.appendChild(script);
+      } else {
+        resolve(true);
+      }
+    });
+
+    loadPromises.set(src, promise);
+    return promise;
+  }
+
+  function resolveMotionApi() {
+    if (!hasWindow()) return null;
 
     return (
-      document.querySelector("#audraliaCanvasMount") ||
-      document.querySelector("[data-audralia-canvas-mount]") ||
-      document.querySelector("[data-audralia-clean-canvas-mount]") ||
-      document.querySelector("#audraliaMount") ||
+      window.AUDRALIA_MOTION ||
+      window.AUDRALIA_CLEAN_MOTION ||
+      window.AUDRALIA_CLEAN_CANVAS_MOTION ||
+      window.AUDRALIA_CLEAN_CANVAS_MOTION_ENGINE ||
+      window.AUDRALIA_MOTION_ENGINE ||
       null
     );
   }
 
-  function lockMountFrame(target) {
-    if (!isElement(target)) return;
+  function resolveContinentsApi() {
+    if (!hasWindow()) return null;
 
-    target.style.position = "relative";
-    target.style.overflow = "hidden";
-    target.style.display = "block";
-    target.style.contain = "layout paint";
-    target.style.touchAction = "none";
-    if (!target.style.minHeight) target.style.minHeight = "420px";
-
-    target.setAttribute("data-audralia-visible-box-frame", "true");
-    target.setAttribute("data-audralia-parent-contract", CONTRACT);
-    target.setAttribute("data-audralia-parent-visible-body-first", "true");
-    target.setAttribute("data-audralia-single-cache-nonce-chain", "true");
+    return (
+      window.AUDRALIA_CLEAN_CANVAS_CONTINENTS ||
+      window.AUDRALIA_CONTINENTS_ENGINE ||
+      window.AUDRALIA_CLEAN_CONTINENTS_ENGINE ||
+      window.AUDRALIA_NINE_SUMMITS_CONTINENTS_ENGINE ||
+      window.AudraliaContinents ||
+      window.audraliaContinents ||
+      null
+    );
   }
 
-  function lockCanvas(canvas) {
-    if (!isElement(canvas)) return;
+  function resolveSkyApi() {
+    if (!hasWindow()) return null;
 
-    canvas.style.position = "absolute";
-    canvas.style.inset = "0";
-    canvas.style.left = "0";
-    canvas.style.top = "0";
-    canvas.style.display = "block";
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
-    canvas.style.minWidth = "0";
-    canvas.style.minHeight = "0";
-    canvas.style.maxWidth = "100%";
-    canvas.style.maxHeight = "100%";
-    canvas.style.borderRadius = "24px";
-    canvas.style.touchAction = "none";
-    canvas.style.userSelect = "none";
-    canvas.style.webkitUserSelect = "none";
-
-    canvas.setAttribute("data-audralia-clean-parent-canvas", "true");
-    canvas.setAttribute("data-audralia-clean-canvas", "true");
-    canvas.setAttribute("data-contract", CONTRACT);
-    canvas.setAttribute("aria-label", "Audralia parent visible body first failsafe");
+    return (
+      window.AUDRALIA_SKY ||
+      window.AUDRALIA_CLEAN_SKY ||
+      window.AUDRALIA_CLEAN_CANVAS_SKY ||
+      window.AUDRALIA_SKY_ENGINE ||
+      null
+    );
   }
 
-  function ensureCanvas(target) {
-    if (!hasDocument() || !isElement(target)) return null;
+  async function loadChildren() {
+    if (state.childLoadStarted && state.childLoadComplete) return true;
 
-    lockMountFrame(target);
+    state.childLoadStarted = true;
+    publishReceipt("child-load-start");
 
-    let canvas =
-      target.querySelector("canvas[data-audralia-clean-parent-canvas='true']") ||
-      target.querySelector("canvas[data-audralia-clean-canvas='true']") ||
-      target.querySelector("canvas");
+    const motionOk = await loadClassicScript(MOTION_PATH, "motion");
+    const continentsOk = await loadClassicScript(CONTINENTS_PATH, "continents");
+    const skyOk = await loadClassicScript(SKY_PATH, "sky");
 
-    if (!canvas) {
-      target.innerHTML = "";
-      canvas = document.createElement("canvas");
-      target.appendChild(canvas);
+    const motion = resolveMotionApi();
+    const continents = resolveContinentsApi();
+    const sky = resolveSkyApi();
+
+    state.motionLoaded = Boolean(motionOk && motion);
+    state.continentsLoaded = Boolean(continentsOk && continents);
+    state.skyLoaded = Boolean(skyOk && sky);
+
+    if (motion && typeof motion.getStatus === "function") {
+      const status = safe(() => motion.getStatus(), {});
+      state.motionContract = String(status.contract || motion.contract || "");
+      state.dragMode = String(status.dragMode || "");
+    } else if (motion) {
+      state.motionContract = String(motion.contract || "");
     }
 
-    lockCanvas(canvas);
-
-    return canvas;
-  }
-
-  function resize() {
-    if (!env.canvas || !env.mount) return false;
-
-    lockMountFrame(env.mount);
-    lockCanvas(env.canvas);
-
-    const rect = env.mount.getBoundingClientRect();
-
-    const visibleWidth = Math.max(320, Math.floor(env.mount.clientWidth || rect.width || 760));
-    const visibleHeight = Math.max(420, Math.floor(env.mount.clientHeight || rect.height || 540));
-    const dpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
-
-    env.dpr = dpr;
-    env.cssWidth = visibleWidth;
-    env.cssHeight = visibleHeight;
-    env.width = Math.floor(visibleWidth * dpr);
-    env.height = Math.floor(visibleHeight * dpr);
-
-    env.cx = env.width / 2 + env.width * CENTER_X_BIAS_FACTOR;
-    env.cy = env.height / 2;
-
-    const mobileTight = visibleWidth <= 520;
-    const factor = mobileTight ? MOBILE_RADIUS_FACTOR : SAFE_RADIUS_FACTOR;
-    env.radius = Math.floor(Math.min(env.width, env.height) * factor);
-
-    if (!Number.isFinite(env.width) || !Number.isFinite(env.height) || env.width <= 0 || env.height <= 0) {
-      recordError("resize", "Invalid canvas dimensions.");
-      return false;
+    if (continents && typeof continents.getStatus === "function") {
+      const status = safe(() => continents.getStatus(), {});
+      state.continentsContract = String(status.contract || continents.CONTRACT || continents.contract || "");
+      state.continentsInternalContract = String(status.internalContract || continents.INTERNAL_CONTRACT || "");
+    } else if (continents) {
+      state.continentsContract = String(continents.CONTRACT || continents.contract || "");
+      state.continentsInternalContract = String(continents.INTERNAL_CONTRACT || "");
     }
 
-    if (!Number.isFinite(env.radius) || env.radius <= 0) {
-      recordError("resize", "Invalid globe radius.");
-      return false;
+    if (motion && typeof motion.bind === "function" && state.mountNode) {
+      safe(() => motion.bind(state.mountNode, { parent: api }), null);
+    } else if (motion && typeof motion.mount === "function" && state.mountNode) {
+      safe(() => motion.mount(state.mountNode, { parent: api }), null);
     }
 
-    if (env.canvas.width !== env.width) env.canvas.width = env.width;
-    if (env.canvas.height !== env.height) env.canvas.height = env.height;
+    state.childLoadComplete = true;
+    state.lastChildSummary = {
+      motionLoaded: state.motionLoaded,
+      motionContract: state.motionContract,
+      continentsLoaded: state.continentsLoaded,
+      continentsContract: state.continentsContract,
+      continentsInternalContract: state.continentsInternalContract,
+      skyLoaded: state.skyLoaded
+    };
 
-    env.canvas.style.width = "100%";
-    env.canvas.style.height = "100%";
+    publishReceipt("child-load-complete");
+    requestRender("child-load-complete");
 
     return true;
   }
 
-  function getGeometry() {
+  function safe(fn, fallback) {
+    try {
+      return fn();
+    } catch (_error) {
+      return fallback;
+    }
+  }
+
+  function resolveMountNode(node) {
+    if (node && node.nodeType === 1) return node;
+
+    if (!hasDocument()) return null;
+
+    return (
+      document.querySelector("[data-audralia-form-mount='true']") ||
+      document.querySelector("[data-audralia-mount='true']") ||
+      document.querySelector("[data-audralia-stage='true']") ||
+      document.querySelector("#audralia-form-mount") ||
+      document.querySelector("#audralia-stage") ||
+      document.querySelector("#main") ||
+      document.body
+    );
+  }
+
+  function prepareMount(mountNode) {
+    if (!mountNode || !mountNode.style) return;
+
+    mountNode.style.position = mountNode.style.position || "relative";
+    mountNode.style.overflow = "hidden";
+    mountNode.style.touchAction = "none";
+    mountNode.style.userSelect = "none";
+    mountNode.style.WebkitUserSelect = "none";
+
+    if (!mountNode.style.minHeight) {
+      mountNode.style.minHeight = `${CONFIG.defaultStageHeight}px`;
+    }
+
+    mountNode.setAttribute("data-audralia-parent-projector-mount", "true");
+    mountNode.setAttribute("data-audralia-motion-no-stretch", "true");
+    mountNode.setAttribute("data-audralia-parent-contract", PARENT_FACING_CONTRACT);
+    mountNode.setAttribute("data-audralia-parent-internal-contract", INTERNAL_CONTRACT);
+
+    suppressTransforms(mountNode);
+  }
+
+  function suppressTransforms(node) {
+    if (!node || !node.style) return 0;
+
+    let count = 0;
+
+    if (node.style.transform && node.style.transform !== "none") {
+      node.style.transform = "none";
+      count += 1;
+    }
+
+    if (node.style.translate && node.style.translate !== "none") {
+      node.style.translate = "none";
+      count += 1;
+    }
+
+    if (node.style.scale && node.style.scale !== "none") {
+      node.style.scale = "none";
+      count += 1;
+    }
+
+    if (node.style.rotate && node.style.rotate !== "none") {
+      node.style.rotate = "none";
+      count += 1;
+    }
+
+    node.style.transformOrigin = "50% 50%";
+
+    return count;
+  }
+
+  function enforceNoStretch() {
+    let count = 0;
+
+    count += suppressTransforms(state.mountNode);
+    count += suppressTransforms(state.canvas);
+
+    if (hasDocument()) {
+      document
+        .querySelectorAll(
+          "canvas[data-audralia-parent-engine-canvas='true'],canvas[data-audralia-visible-canvas='true'],[data-audralia-motion-no-stretch='true']"
+        )
+        .forEach((node) => {
+          count += suppressTransforms(node);
+          if (node.style) {
+            node.style.touchAction = "none";
+            node.style.userSelect = "none";
+            node.style.WebkitUserSelect = "none";
+          }
+        });
+    }
+
+    return count;
+  }
+
+  function ensureCanvas(mountNode) {
+    if (!hasDocument() || !mountNode) return null;
+
+    mountNode
+      .querySelectorAll("canvas[data-audralia-parent-engine-canvas='true']")
+      .forEach((node) => node.remove());
+
+    const canvas = document.createElement("canvas");
+
+    canvas.setAttribute("data-audralia-parent-engine-canvas", "true");
+    canvas.setAttribute("data-audralia-visible-canvas", "true");
+    canvas.setAttribute("data-audralia-parent-contract", PARENT_FACING_CONTRACT);
+    canvas.setAttribute("data-audralia-parent-internal-contract", INTERNAL_CONTRACT);
+    canvas.setAttribute("data-audralia-form-visible", "true");
+    canvas.setAttribute("data-audralia-motion-no-stretch", "true");
+    canvas.setAttribute("data-generated-image", "false");
+    canvas.setAttribute("data-graphic-box", "false");
+    canvas.setAttribute("data-visual-pass-claimed", "false");
+    canvas.setAttribute("aria-label", "Audralia clean-canvas spherical parent projector");
+
+    Object.assign(canvas.style, {
+      position: "absolute",
+      inset: "0",
+      width: "100%",
+      height: "100%",
+      minWidth: `${CONFIG.minCanvasSize}px`,
+      minHeight: `${CONFIG.minCanvasSize}px`,
+      display: "block",
+      zIndex: "4",
+      background: "transparent",
+      touchAction: "none",
+      userSelect: "none",
+      WebkitUserSelect: "none",
+      cursor: "grab",
+      transform: "none",
+      transformOrigin: "50% 50%"
+    });
+
+    mountNode.appendChild(canvas);
+
+    state.canvas = canvas;
+    state.ctx = canvas.getContext("2d", {
+      alpha: true,
+      desynchronized: true
+    });
+    state.canvasCreated = Boolean(state.ctx);
+
+    return canvas;
+  }
+
+  function getBestRect() {
+    if (!state.mountNode || typeof state.mountNode.getBoundingClientRect !== "function") {
+      const size = hasWindow() ? Math.min(window.innerWidth || 420, CONFIG.maxCanvasSize) : 420;
+      return { width: size, height: size };
+    }
+
+    const mountRect = state.mountNode.getBoundingClientRect();
+    const parentRect =
+      state.mountNode.parentElement &&
+      typeof state.mountNode.parentElement.getBoundingClientRect === "function"
+        ? state.mountNode.parentElement.getBoundingClientRect()
+        : null;
+
+    const candidates = [mountRect, parentRect].filter(Boolean);
+    const usable = candidates.find((rect) => rect.width >= 120 && rect.height >= 120);
+
+    if (usable) return usable;
+
+    const width = hasWindow() ? Math.min(window.innerWidth || 420, CONFIG.maxCanvasSize) : 420;
     return {
-      width: env.width,
-      height: env.height,
-      dpr: env.dpr,
-      cx: env.cx,
-      cy: env.cy,
-      radius: env.radius,
-      left: env.cx - env.radius,
-      right: env.cx + env.radius,
-      top: env.cy - env.radius,
-      bottom: env.cy + env.radius
+      width,
+      height: Math.max(CONFIG.defaultStageHeight, width)
     };
   }
 
-  function drawSpace(ctx, g) {
-    const bg = ctx.createLinearGradient(0, 0, 0, g.height);
-    bg.addColorStop(0, "rgba(4, 12, 28, 1)");
-    bg.addColorStop(0.62, "rgba(2, 7, 20, 1)");
-    bg.addColorStop(1, "rgba(1, 3, 12, 1)");
+  function resize() {
+    if (!state.canvas || !state.ctx) return false;
+
+    const rect = getBestRect();
+    const dpr = Math.min(CONFIG.maxDpr, hasWindow() ? window.devicePixelRatio || 1 : 1);
+
+    const cssWidth = Math.max(CONFIG.minCanvasSize, Math.floor(rect.width || CONFIG.minCanvasSize));
+    const cssHeight = Math.max(CONFIG.minCanvasSize, Math.floor(rect.height || rect.width || CONFIG.minCanvasSize));
+
+    const width = Math.max(CONFIG.minCanvasSize, Math.floor(cssWidth * dpr));
+    const height = Math.max(CONFIG.minCanvasSize, Math.floor(cssHeight * dpr));
+
+    state.cssWidth = cssWidth;
+    state.cssHeight = cssHeight;
+    state.dpr = dpr;
+
+    if (state.canvas.width !== width) state.canvas.width = width;
+    if (state.canvas.height !== height) state.canvas.height = height;
+
+    state.width = width;
+    state.height = height;
+
+    const base = Math.min(width, height);
+    state.cx = width * CONFIG.centerX;
+    state.cy = height * CONFIG.centerY;
+    state.radius = Math.max(CONFIG.minRadius, base * CONFIG.radiusRatio);
+
+    return true;
+  }
+
+  function readMotionState() {
+    const motion = resolveMotionApi();
+
+    let motionState = null;
+
+    if (motion && typeof motion.getProjectionState === "function") {
+      motionState = safe(() => motion.getProjectionState(), null);
+    }
+
+    if (!motionState && motion && typeof motion.getState === "function") {
+      motionState = safe(() => motion.getState(), null);
+    }
+
+    if (!motionState && hasWindow() && window.AUDRALIA_MOTION_STATE) {
+      motionState = window.AUDRALIA_MOTION_STATE;
+    }
+
+    const rotation = wrapRadians(
+      motionState && Number.isFinite(Number(motionState.longitudeRotationRadians))
+        ? Number(motionState.longitudeRotationRadians)
+        : motionState && Number.isFinite(Number(motionState.longitudeRotation))
+          ? Number(motionState.longitudeRotation)
+          : motionState && Number.isFinite(Number(motionState.rotation))
+            ? Number(motionState.rotation)
+            : state.fallbackRotation
+    );
+
+    const pitch = clamp(
+      motionState && Number.isFinite(Number(motionState.pitchRadians))
+        ? Number(motionState.pitchRadians)
+        : motionState && Number.isFinite(Number(motionState.pitch))
+          ? Number(motionState.pitch)
+          : motionState && Number.isFinite(Number(motionState.tilt))
+            ? Number(motionState.tilt)
+            : CONFIG.fallbackPitch,
+      -0.78,
+      0.70
+    );
+
+    const dragMode = motionState && motionState.dragMode ? String(motionState.dragMode) : "";
+
+    state.motionConsumed = Boolean(motionState);
+    state.motionStateActive = Boolean(motionState);
+    state.dragMode = dragMode;
+    state.lastRotation = rotation;
+    state.lastPitch = pitch;
+
+    return {
+      rotation,
+      pitch,
+      dragMode,
+      consumed: Boolean(motionState),
+      source: motion ? "motion-api" : motionState ? "global-motion-state" : "fallback"
+    };
+  }
+
+  function project(lonRad, latRad, elevation = 0) {
+    const motion = readMotionState();
+
+    const lon = finite(lonRad, 0) + motion.rotation;
+    const lat = clamp(finite(latRad, 0), -Math.PI / 2, Math.PI / 2);
+    const pitch = motion.pitch;
+
+    const cosLat = Math.cos(lat);
+    const x0 = cosLat * Math.sin(lon);
+    const y0 = Math.sin(lat);
+    const z0 = cosLat * Math.cos(lon);
+
+    const cosPitch = Math.cos(pitch);
+    const sinPitch = Math.sin(pitch);
+
+    const y1 = y0 * cosPitch - z0 * sinPitch;
+    const z1 = y0 * sinPitch + z0 * cosPitch;
+    const x1 = x0;
+
+    const radius = state.radius * (1 + finite(elevation, 0));
+    const perspective = clamp(0.92 + z1 * 0.10, 0.82, 1.05);
+
+    return {
+      x: state.cx + x1 * radius * perspective,
+      y: state.cy - y1 * radius * perspective,
+      z: z1,
+      scale: perspective,
+      visible: z1 > -0.12,
+      front: z1 > 0.02,
+      lon: lonRad,
+      lat: latRad,
+      rotation: motion.rotation,
+      pitch: motion.pitch
+    };
+  }
+
+  function makePayload() {
+    const motion = readMotionState();
+
+    return {
+      contract: PARENT_FACING_CONTRACT,
+      internalContract: INTERNAL_CONTRACT,
+      receipt: RECEIPT,
+      route: ROUTE,
+      cacheNonce: getDynamicCacheNonce(),
+
+      geometry: {
+        width: state.width,
+        height: state.height,
+        cssWidth: state.cssWidth,
+        cssHeight: state.cssHeight,
+        dpr: state.dpr,
+        cx: state.cx,
+        cy: state.cy,
+        radius: state.radius
+      },
+
+      motion,
+      rotation: motion.rotation,
+      pitch: motion.pitch,
+      tilt: motion.pitch,
+
+      project,
+
+      parentProjectionActive: true,
+      sphericalProjectionActive: true,
+      projectionConsumesMotion: true,
+      canvasTransformForbidden: true,
+      cssTransformForbidden: true,
+      bitmapStretchForbidden: true,
+      screenPlaneDragForbidden: true,
+
+      state: getStatus()
+    };
+  }
+
+  function drawBackground(ctx) {
+    const width = state.width;
+    const height = state.height;
+
+    ctx.clearRect(0, 0, width, height);
+
+    const bg = ctx.createRadialGradient(
+      state.cx,
+      state.cy,
+      state.radius * 0.08,
+      state.cx,
+      state.cy,
+      Math.max(width, height) * 0.74
+    );
+
+    bg.addColorStop(0, "rgba(8, 48, 72, 0.70)");
+    bg.addColorStop(0.38, COLORS.background1);
+    bg.addColorStop(1, COLORS.background2);
 
     ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, g.width, g.height);
+    ctx.fillRect(0, 0, width, height);
 
     ctx.save();
-    ctx.globalAlpha = 0.26;
+    ctx.globalAlpha = 0.44;
 
-    for (let i = 0; i < 89; i += 1) {
-      const x = (i * 131 + 37) % Math.max(1, g.width);
-      const y = (i * 197 + 53) % Math.max(1, g.height);
-      const r = ((i % 3) + 0.55) * g.dpr * 0.36;
+    for (let i = 0; i < 70; i += 1) {
+      const x = seeded(i, 13, 9101) * width;
+      const y = seeded(i, 17, 9102) * height;
+      const r = 0.55 + seeded(i, 19, 9103) * 1.5;
 
       ctx.beginPath();
-      ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(220, 246, 255, 0.64)";
+      ctx.arc(x, y, r, 0, TAU);
+      ctx.fillStyle = "rgba(214, 244, 238, 0.12)";
       ctx.fill();
     }
 
     ctx.restore();
   }
 
-  function clipToPlanet(ctx, g) {
-    ctx.beginPath();
-    ctx.arc(g.cx, g.cy, g.radius, 0, Math.PI * 2);
-    ctx.clip();
+  function seeded(a, b, seed) {
+    const v = Math.sin(a * 127.1 + b * 311.7 + seed * 74.7) * 43758.5453123;
+    return v - Math.floor(v);
   }
 
-  function drawOceanBase(ctx, g) {
-    const cx = g.cx;
-    const cy = g.cy;
-    const r = g.radius;
-
+  function drawOceanSphere(ctx) {
     ctx.save();
 
     ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.arc(state.cx, state.cy, state.radius, 0, TAU);
     ctx.clip();
 
-    const ocean = ctx.createRadialGradient(cx - r * 0.32, cy - r * 0.34, r * 0.08, cx, cy, r);
-    ocean.addColorStop(0, "rgba(126, 232, 255, 0.98)");
-    ocean.addColorStop(0.24, "rgba(42, 158, 205, 0.98)");
-    ocean.addColorStop(0.6, "rgba(9, 69, 132, 1)");
-    ocean.addColorStop(1, "rgba(1, 14, 46, 1)");
+    const ocean = ctx.createRadialGradient(
+      state.cx - state.radius * 0.28,
+      state.cy - state.radius * 0.34,
+      state.radius * 0.05,
+      state.cx + state.radius * 0.14,
+      state.cy + state.radius * 0.10,
+      state.radius * 1.15
+    );
+
+    ocean.addColorStop(0, COLORS.ocean0);
+    ocean.addColorStop(0.34, COLORS.ocean1);
+    ocean.addColorStop(0.76, COLORS.ocean2);
+    ocean.addColorStop(1, COLORS.ocean3);
+
     ctx.fillStyle = ocean;
-    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+    ctx.fillRect(state.cx - state.radius, state.cy - state.radius, state.radius * 2, state.radius * 2);
 
-    const depth = ctx.createRadialGradient(cx + r * 0.22, cy + r * 0.24, r * 0.1, cx, cy, r * 1.15);
-    depth.addColorStop(0, "rgba(5, 38, 86, 0)");
-    depth.addColorStop(0.55, "rgba(1, 18, 58, 0.12)");
-    depth.addColorStop(1, "rgba(0, 4, 20, 0.58)");
-    ctx.fillStyle = depth;
-    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+    const limb = ctx.createRadialGradient(state.cx, state.cy, state.radius * 0.58, state.cx, state.cy, state.radius);
+    limb.addColorStop(0, "rgba(0,0,0,0)");
+    limb.addColorStop(0.78, "rgba(0, 10, 30, 0.18)");
+    limb.addColorStop(1, "rgba(0, 6, 18, 0.58)");
 
-    const light = ctx.createRadialGradient(cx - r * 0.4, cy - r * 0.38, r * 0.1, cx + r * 0.18, cy + r * 0.18, r * 1.16);
-    light.addColorStop(0, "rgba(255,255,255,0.22)");
-    light.addColorStop(0.42, "rgba(255,255,255,0)");
-    light.addColorStop(1, "rgba(0,0,0,0.54)");
-    ctx.fillStyle = light;
-    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+    ctx.fillStyle = limb;
+    ctx.fillRect(state.cx - state.radius, state.cy - state.radius, state.radius * 2, state.radius * 2);
 
     ctx.restore();
-
-    state.oceanBodyPainted = true;
   }
 
-  function drawAtmosphericRim(ctx, g) {
-    const cx = g.cx;
-    const cy = g.cy;
-    const r = g.radius;
+  function drawChildren(ctx, payload) {
+    let continentsConsumed = false;
+    let skyConsumed = false;
+
+    const sky = resolveSkyApi();
+    if (sky) {
+      skyConsumed =
+        callChildDraw(sky, ctx, payload, ["drawBefore", "drawSkyBefore", "renderBefore", "paintBefore"]) ||
+        false;
+    }
 
     ctx.save();
-
     ctx.beginPath();
-    ctx.arc(cx, cy, r * 0.998, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(190, 240, 255, 0.32)";
-    ctx.lineWidth = Math.max(1, g.dpr * 1.18);
-    ctx.stroke();
+    ctx.arc(state.cx, state.cy, state.radius, 0, TAU);
+    ctx.clip();
 
-    ctx.beginPath();
-    ctx.arc(cx, cy, r * 1.012, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(86, 205, 255, 0.08)";
-    ctx.lineWidth = Math.max(1, g.dpr * 1.2);
-    ctx.stroke();
-
-    ctx.restore();
-
-    state.atmosphericRimPainted = true;
-  }
-
-  function project(lon, lat, elevation = 0) {
-    const g = getGeometry();
-    const lambda = typeof lon === "number" ? lon : 0;
-    const phi = typeof lat === "number" ? lat : 0;
-    const r = g.radius * (1 + elevation);
-    const yaw = env.rotation;
-
-    const cosPhi = Math.cos(phi);
-    const x = cosPhi * Math.sin(lambda + yaw);
-    const y = Math.sin(phi);
-    const z = cosPhi * Math.cos(lambda + yaw);
-
-    return {
-      x: g.cx + x * r,
-      y: g.cy - y * r,
-      z,
-      visible: z > -0.06,
-      scale: Math.max(0, z)
-    };
-  }
-
-  function makePayload(scope) {
-    return {
-      scope,
-      contract: CONTRACT,
-      chainContract: CHAIN_CONTRACT,
-      cacheNonce: getOrCreateCacheNonce(),
-      previousContract: PREVIOUS_CONTRACT,
-      family: FAMILY,
-      target: TARGET,
-      route: ROUTE,
-      state,
-      mount: env.mount,
-      canvas: env.canvas,
-      ctx: env.ctx,
-      geometry: getGeometry(),
-      requestRender,
-      render,
-      getStatus,
-      api,
-      project
-    };
-  }
-
-  function invokeChild(name, methodNames, payload) {
-    const child = env.childEngines[name];
-    if (!child) return false;
-
-    for (const methodName of methodNames) {
-      const method = child[methodName];
-      if (typeof method !== "function") continue;
-
-      try {
-        if (method.length >= 2) method.call(child, payload.ctx, payload);
-        else method.call(child, payload);
-        return true;
-      } catch (error) {
-        recordError(`${name}.${methodName}`, error);
-        state.children[name] = "hold_child_error";
-        return false;
-      }
-    }
-
-    return false;
-  }
-
-  function renderBodyOnly() {
-    if (!env.canvas || !env.ctx) return false;
-
-    const resized = resize();
-    if (!resized) return false;
-
-    const ctx = env.ctx;
-    const g = getGeometry();
-
-    state.renderCount += 1;
-    state.bodyPainted = false;
-    state.oceanBodyPainted = false;
-    state.atmosphericRimPainted = false;
-
-    ctx.clearRect(0, 0, g.width, g.height);
-    drawSpace(ctx, g);
-    drawOceanBase(ctx, g);
-    drawAtmosphericRim(ctx, g);
-
-    state.bodyPainted = true;
-    publishFormVisible("parent-body-visible");
-
-    return true;
-  }
-
-  function render() {
-    if (!env.canvas || !env.ctx) return api;
-
-    const bodyVisible = renderBodyOnly();
-
-    if (!bodyVisible) {
-      publishReceipt("render-body-failed");
-      return api;
-    }
-
-    if (env.childEngines.continents) {
-      try {
-        const ctx = env.ctx;
-        const g = getGeometry();
-
-        ctx.save();
-        clipToPlanet(ctx, g);
-
-        invokeChild("continents", [
+    const continents = resolveContinentsApi();
+    if (continents) {
+      continentsConsumed =
+        callChildDraw(continents, ctx, payload, [
           "draw",
           "render",
           "paint",
           "drawContinents",
           "renderContinents",
           "paintContinents"
-        ], makePayload("render-continents"));
-
-        ctx.restore();
-
-        drawAtmosphericRim(ctx, g);
-        publishFormVisible("render-visible-with-continents");
-      } catch (error) {
-        recordError("render-continents", error);
-        publishFormVisible("render-visible-child-hold");
-      }
+        ]) || false;
     }
 
-    return api;
-  }
+    ctx.restore();
 
-  function requestRender() {
-    render();
-    return api;
-  }
-
-  function bindPointerControls() {
-    if (!env.canvas || env.canvas.__audraliaCleanParentControlsBound) return;
-
-    env.canvas.__audraliaCleanParentControlsBound = true;
-
-    env.canvas.addEventListener(
-      "pointerdown",
-      (event) => {
-        event.preventDefault();
-        env.dragging = true;
-        env.lastPointer = { x: event.clientX, y: event.clientY };
-        env.canvas.setPointerCapture?.(event.pointerId);
-      },
-      { passive: false }
-    );
-
-    env.canvas.addEventListener(
-      "pointermove",
-      (event) => {
-        if (!env.dragging || !env.lastPointer) return;
-
-        event.preventDefault();
-
-        const dx = event.clientX - env.lastPointer.x;
-        env.rotation += dx * DRAG_ROTATION_SENSITIVITY;
-        env.lastPointer = { x: event.clientX, y: event.clientY };
-
-        requestRender();
-      },
-      { passive: false }
-    );
-
-    env.canvas.addEventListener(
-      "pointerup",
-      (event) => {
-        event.preventDefault();
-        env.dragging = false;
-        env.lastPointer = null;
-        env.canvas.releasePointerCapture?.(event.pointerId);
-        requestRender();
-      },
-      { passive: false }
-    );
-
-    env.canvas.addEventListener(
-      "pointercancel",
-      (event) => {
-        event.preventDefault();
-        env.dragging = false;
-        env.lastPointer = null;
-        requestRender();
-      },
-      { passive: false }
-    );
-  }
-
-  function scriptAlreadyLoadedCurrent(src) {
-    if (!hasDocument()) return false;
-
-    return Array.from(document.scripts).some((script) => {
-      const raw = script.getAttribute("src") || "";
-      return raw === src;
-    });
-  }
-
-  function loadScriptOnce(src) {
-    return new Promise((resolve) => {
-      if (!hasDocument()) {
-        resolve({ src, loaded: false, reason: "document-unavailable" });
-        return;
-      }
-
-      const wanted = childUrl(src);
-
-      if (scriptAlreadyLoadedCurrent(wanted)) {
-        resolve({ src: wanted, loaded: true, reused: true });
-        return;
-      }
-
-      const script = document.createElement("script");
-      script.src = wanted;
-      script.async = false;
-      script.defer = false;
-      script.setAttribute("data-audralia-clean-parent-child-loader", CONTRACT);
-      script.setAttribute("data-audralia-single-cache-nonce-chain", CHAIN_CONTRACT);
-      script.setAttribute("data-audralia-page-cache-nonce", getOrCreateCacheNonce());
-
-      script.onload = () => resolve({ src: wanted, loaded: true, reused: false });
-      script.onerror = () => resolve({ src: wanted, loaded: false, reused: false });
-
-      document.head.appendChild(script);
-    });
-  }
-
-  function readChildGlobal(keys) {
-    if (!hasWindow()) return null;
-
-    for (const key of keys) {
-      if (window[key]) return window[key];
+    if (sky) {
+      skyConsumed =
+        callChildDraw(sky, ctx, payload, ["drawAfter", "drawSkyAfter", "renderAfter", "paintAfter"]) ||
+        skyConsumed;
     }
 
-    return null;
-  }
+    state.continentsConsumed = continentsConsumed;
+    state.skyConsumed = skyConsumed;
 
-  function normalizeChild(name, raw) {
-    if (!raw) return null;
-
-    if (typeof raw === "function") {
-      try {
-        return raw(makePayload(name)) || raw;
-      } catch (_error) {
-        return raw;
-      }
+    if (continentsConsumed) {
+      state.continentsDrawCount += 1;
     }
 
-    return raw;
-  }
-
-  async function loadChildrenAfterVisible() {
-    if (state.childLoadStarted) return env.childPromise;
-
-    state.childLoadStarted = true;
-    state.children.continents = "loading_after_parent_visible";
-    publishReceipt("children-load-start-after-parent-visible");
-
-    env.childPromise = (async () => {
-      for (const [name, child] of Object.entries(CHILDREN)) {
-        if (!child.enabled) {
-          state.children[name] = "held";
-          publishReceipt(`child-${name}-held`);
-          continue;
-        }
-
-        state.children[name] = "loading";
-        publishReceipt(`child-${name}-loading`);
-
-        const result = await loadScriptOnce(child.path);
-
-        if (!result.loaded) {
-          state.children[name] = "hold_missing";
-          recordError(`child.${name}`, `Unable to load child file: ${child.path}`);
-          publishFormVisible("child-missing-parent-remains-visible");
-          continue;
-        }
-
-        const raw = readChildGlobal(child.globals);
-        const normalized = normalizeChild(name, raw);
-
-        if (!normalized) {
-          state.children[name] = "hold_loaded_no_global";
-          recordError(`child.${name}`, `Child loaded but no recognized global was published: ${child.path}`);
-          publishFormVisible("child-no-global-parent-remains-visible");
-          continue;
-        }
-
-        env.childEngines[name] = normalized;
-        state.children[name] = "active";
-
-        invokeChild(name, ["mount", "init", "setup", "boot", "create"], makePayload(`child-${name}-init`));
-        publishReceipt(`child-${name}-active`);
-      }
-
-      state.childLoadComplete = true;
-      publishReceipt("children-load-complete");
-      requestRender();
-
-      return getStatus();
-    })().catch((error) => {
-      recordError("loadChildrenAfterVisible", error);
-      publishFormVisible("children-load-error-parent-remains-visible");
-      return getStatus();
-    });
-
-    return env.childPromise;
-  }
-
-  function publishGlobals(scope = "publish-globals") {
-    if (!hasWindow()) return api;
-
-    window.AUDRALIA_ENGINE = api;
-    window.AUDRALIA_CLEAN_CANVAS_ENGINE = api;
-    window.AUDRALIA_CLEAN_CANVAS_AUTHORITY = api;
-    window.AUDRALIA_CLEAN_ENGINE_PARENT = api;
-
-    window.AUDRALIA_CLEAN_PARENT_ENGINE_GLOBAL_PUBLISHED = true;
-    window.AUDRALIA_CLEAN_PARENT_ENGINE_CONTRACT = CONTRACT;
-    window.AUDRALIA_PARENT_VISIBLE_BODY_FIRST_FAILSAFE = true;
-    window.AUDRALIA_PARENT_SINGLE_CACHE_NONCE_CHAIN = true;
-
-    state.parentGlobalPublished = true;
-
-    if (hasDocument() && document.documentElement) {
-      document.documentElement.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
-      document.documentElement.setAttribute("data-audralia-clean-parent-target", TARGET);
-      document.documentElement.setAttribute("data-audralia-parent-visible-body-first-failsafe", "true");
-      document.documentElement.setAttribute("data-audralia-single-cache-nonce-chain", "true");
-      document.documentElement.setAttribute("data-audralia-page-cache-nonce", getOrCreateCacheNonce());
-      document.documentElement.setAttribute("data-audralia-clean-parent-mounted", state.mounted ? "true" : "false");
-      document.documentElement.setAttribute("data-audralia-clean-parent-form-visible", state.formVisible ? "true" : "false");
-    }
-
-    publishReceipt(scope);
-
-    return api;
-  }
-
-  function publishFormVisible(scope = "form-visible") {
-    state.formVisible = true;
-    state.ready = true;
-
-    if (hasWindow()) {
-      window.AUDRALIA_FORM_VISIBLE = true;
-      window.AUDRALIA_CLEAN_CANVAS_FORM_VISIBLE = true;
-      window.AUDRALIA_CLEAN_PARENT_FORM_VISIBLE = true;
-      window.AUDRALIA_CLEAN_PARENT_ENGINE_READY = true;
-      window.AUDRALIA_PARENT_VISIBLE_BODY_FIRST_FAILSAFE = true;
-    }
-
-    if (env.mount) {
-      env.mount.setAttribute("data-audralia-form-visible", "true");
-      env.mount.setAttribute("data-audralia-clean-parent-form-visible", "true");
-      env.mount.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
-      env.mount.setAttribute("data-audralia-parent-visible-body-first-failsafe", "true");
-    }
-
-    if (env.canvas) {
-      env.canvas.setAttribute("data-audralia-form-visible", "true");
-      env.canvas.setAttribute("data-audralia-clean-parent-form-visible", "true");
-      env.canvas.setAttribute("data-audralia-parent-visible-body-first-failsafe", "true");
-    }
-
-    publishReceipt(scope);
-  }
-
-  function publishReceipt(scope = "publish") {
-    if (!hasWindow()) return;
-
-    const receipt = {
-      contract: CONTRACT,
-      chainContract: CHAIN_CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
-      family: FAMILY,
-      target: TARGET,
-      route: ROUTE,
-      cacheNonce: state.cacheNonce || getOrCreateCacheNonce(),
-      mode: "parent_visible_body_first_failsafe_single_cache_nonce_child_admission",
-      scope,
-      parentVisibleBodyFirst: true,
-      bodyPainted: state.bodyPainted,
-      oceanBodyPainted: state.oceanBodyPainted,
-      atmosphericRimPainted: state.atmosphericRimPainted,
-      formVisible: state.formVisible,
-      mounted: state.mounted,
-      ready: state.ready,
-      childLoadDeferredUntilVisible: true,
-      childLoadStarted: state.childLoadStarted,
-      childLoadComplete: state.childLoadComplete,
-      children: { ...state.children },
-      singleCacheNonceChain: true,
-      centerLocked: true,
-      fixedRadius: true,
-      fixedCameraDepth: true,
-      dragRotationOnly: true,
-      noAutoOrbit: true,
-      noZoom: true,
-      motionChildDisabled: true,
-      skyChildHeld: true,
-      parentGlobalPublished: state.parentGlobalPublished,
-      mountCalled: state.mountCalled,
-      delegatedBy: state.delegatedBy,
-      renderCount: state.renderCount,
-      geometry: {
-        cssWidth: env.cssWidth,
-        cssHeight: env.cssHeight,
-        width: env.width,
-        height: env.height,
-        cx: env.cx,
-        cy: env.cy,
-        radius: env.radius
-      },
-      rotation: env.rotation,
-      errors: state.errors.slice(),
-      htmlChange: false,
-      routeBridgeChange: false,
-      runtimeRewrite: false,
-      parentRewrite: true,
-      childContractRenewal: false,
-      visualPassClaim: false,
-      generatedImage: false,
-      graphicBox: false
+    return {
+      continentsConsumed,
+      skyConsumed
     };
+  }
 
-    window.AUDRALIA_CLEAN_CANVAS_RECEIPT = receipt;
-    window.AUDRALIA_ENGINE_RECEIPT = receipt;
-    window.AUDRALIA_CLEAN_PARENT_ENGINE_RECEIPT = receipt;
+  function callChildDraw(apiObject, ctx, payload, names) {
+    for (const name of names) {
+      if (apiObject && typeof apiObject[name] === "function") {
+        try {
+          apiObject[name](ctx, payload);
+          return true;
+        } catch (error) {
+          recordError(`child.${name}`, error);
+          return false;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  function drawSpecular(ctx) {
+    ctx.save();
+
+    ctx.globalCompositeOperation = "screen";
+
+    const spec = ctx.createRadialGradient(
+      state.cx - state.radius * 0.34,
+      state.cy - state.radius * 0.38,
+      0,
+      state.cx - state.radius * 0.32,
+      state.cy - state.radius * 0.36,
+      state.radius * 0.72
+    );
+
+    spec.addColorStop(0, "rgba(255, 255, 255, 0.46)");
+    spec.addColorStop(0.24, "rgba(210, 255, 245, 0.16)");
+    spec.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+    ctx.fillStyle = spec;
+    ctx.beginPath();
+    ctx.arc(state.cx, state.cy, state.radius, 0, TAU);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  function drawAtmosphere(ctx) {
+    ctx.save();
+
+    const halo = ctx.createRadialGradient(
+      state.cx,
+      state.cy,
+      state.radius * 0.82,
+      state.cx,
+      state.cy,
+      state.radius * 1.13
+    );
+
+    halo.addColorStop(0, "rgba(130, 220, 255, 0)");
+    halo.addColorStop(0.54, COLORS.atmosphere);
+    halo.addColorStop(1, "rgba(130, 220, 255, 0)");
+
+    ctx.fillStyle = halo;
+    ctx.beginPath();
+    ctx.arc(state.cx, state.cy, state.radius * 1.13, 0, TAU);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(state.cx, state.cy, state.radius + Math.max(1, state.width * 0.0014), 0, TAU);
+    ctx.strokeStyle = COLORS.rim;
+    ctx.lineWidth = Math.max(1, state.width * 0.0025);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(state.cx, state.cy, state.radius + Math.max(2, state.width * 0.008), 0, TAU);
+    ctx.strokeStyle = COLORS.rim2;
+    ctx.lineWidth = Math.max(1, state.width * 0.0045);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function drawFrame(reason = "render") {
+    state.renderScheduled = false;
+
+    if (state.disposed || !state.ctx || !state.canvas) return;
 
     try {
-      window.dispatchEvent(new CustomEvent("audralia:clean-parent:receipt", { detail: receipt }));
-    } catch (_error) {
-      try {
-        window.dispatchEvent(new Event("audralia:clean-parent:receipt"));
-      } catch (_ignored) {}
+      enforceNoStretch();
+      resize();
+
+      const ctx = state.ctx;
+      const payload = makePayload();
+
+      drawBackground(ctx);
+      drawOceanSphere(ctx);
+
+      const childSummary = drawChildren(ctx, payload);
+
+      drawSpecular(ctx);
+      drawAtmosphere(ctx);
+
+      state.renderCount += 1;
+      state.formVisible = true;
+      state.lastDrawError = "";
+      state.lastDrawSummary = {
+        reason,
+        renderCount: state.renderCount,
+        motionConsumed: state.motionConsumed,
+        rotation: state.lastRotation,
+        pitch: state.lastPitch,
+        projectionConsumesMotion: true,
+        continentsConsumed: childSummary.continentsConsumed,
+        skyConsumed: childSummary.skyConsumed,
+        noStretchEnforced: true
+      };
+
+      publishReceipt(`draw-${reason}`);
+    } catch (error) {
+      recordError("drawFrame", error);
     }
   }
 
-  function mount(input, options = {}) {
-    getOrCreateCacheNonce(options);
+  function requestRender(reason = "external") {
+    if (reason && typeof reason === "object") {
+      if (Number.isFinite(Number(reason.rotation))) {
+        state.lastRotation = wrapRadians(reason.rotation);
+      }
+      if (Number.isFinite(Number(reason.pitch))) {
+        state.lastPitch = clamp(reason.pitch, -0.78, 0.70);
+      }
+      reason = "motion-state-request";
+    }
 
-    state.mountCalled = true;
+    state.requestRenderCount += 1;
+
+    if (state.renderScheduled) return api;
+
+    state.renderScheduled = true;
+
+    if (hasWindow() && typeof window.requestAnimationFrame === "function") {
+      state.frameId = window.requestAnimationFrame(() => drawFrame(String(reason || "request")));
+    } else {
+      setTimeout(() => drawFrame(String(reason || "request")), 16);
+    }
+
+    return api;
+  }
+
+  function startFallbackLoop() {
+    if (!hasWindow()) return;
+
+    function loop(t) {
+      if (state.disposed) return;
+
+      const time = Number.isFinite(Number(t)) ? Number(t) : now();
+      const last = state.lastFrameTime || time;
+      const dt = clamp(time - last, 0, 80);
+
+      state.lastFrameTime = time;
+
+      if (!resolveMotionApi()) {
+        state.fallbackRotation = wrapRadians(state.fallbackRotation + dt * CONFIG.fallbackRotationSpeed);
+        requestRender("fallback-motion-loop");
+      }
+
+      window.requestAnimationFrame(loop);
+    }
+
+    window.requestAnimationFrame(loop);
+  }
+
+  function mount(node, options = {}) {
+    const mountNode = resolveMountNode(node);
+
+    if (!mountNode) {
+      recordError("mount", "mount_node_missing");
+      return api;
+    }
+
+    state.mountNode = mountNode;
+    state.disposed = false;
     state.mounted = true;
-    state.delegatedBy = options && options.delegatedBy ? String(options.delegatedBy) : "direct";
+    state.booted = true;
 
-    publishReceipt("mount-start");
-
-    const target = resolveMountTarget(input);
-
-    if (!target) {
-      recordError("mount", "No Audralia clean parent mount target was found.");
-      publishReceipt("mount-no-target");
-      return api;
-    }
-
-    env.mount = target;
-    lockMountFrame(env.mount);
-
-    env.canvas = ensureCanvas(target);
-    env.ctx = env.canvas ? env.canvas.getContext("2d", { alpha: true, desynchronized: true }) : null;
-
-    if (!env.canvas || !env.ctx) {
-      recordError("mount", "Unable to create or acquire 2D canvas context.");
-      publishReceipt("mount-no-canvas");
-      return api;
-    }
-
+    prepareMount(mountNode);
+    ensureCanvas(mountNode);
     resize();
-    bindPointerControls();
 
-    const bodyVisible = renderBodyOnly();
-
-    if (!bodyVisible) {
-      recordError("mount", "Parent body-first render failed before child loading.");
-      return api;
+    if (hasWindow()) {
+      window.AUDRALIA_CLEAN_CANVAS_AUTHORITY = api;
+      window.AUDRALIA_CLEAN_CANVAS_ENGINE = api;
+      window.AUDRALIA_CLEAN_ENGINE_PARENT = api;
+      window.AUDRALIA_ENGINE = api;
+      window.AUDRALIA_CLEAN_PARENT_ENGINE = api;
     }
 
-    loadChildrenAfterVisible().catch((error) => {
-      recordError("loadChildrenAfterVisible", error);
-      publishFormVisible("child-load-error-parent-remains-visible");
-    });
+    loadChildren().catch((error) => recordError("loadChildren", error));
 
-    publishFormVisible("mount-complete-parent-visible-first");
+    if (hasWindow()) {
+      window.addEventListener("resize", () => requestRender("resize"), { passive: true });
+      window.addEventListener("audralia:motion:update", () => requestRender("motion-update"), { passive: true });
+    }
+
+    requestRender("mount");
+    startFallbackLoop();
+    publishReceipt("mount");
 
     return api;
   }
 
-  function boot(input, options = {}) {
-    return mount(input, options);
+  function render() {
+    return requestRender("render");
   }
 
-  function start(input, options = {}) {
-    return mount(input, options);
+  function redraw() {
+    return requestRender("redraw");
   }
 
-  function init(input, options = {}) {
-    return mount(input, options);
+  function start(node, options = {}) {
+    return mount(node, options);
   }
 
-  function create(input, options = {}) {
-    return mount(input, options);
+  function boot(node, options = {}) {
+    return mount(node, options);
   }
 
-  function updateState(next = {}) {
-    if (next && typeof next === "object") {
-      if (typeof next.rotation === "number") env.rotation = next.rotation;
+  function init(node, options = {}) {
+    return mount(node, options);
+  }
+
+  function create(node, options = {}) {
+    return mount(node, options);
+  }
+
+  function dispose() {
+    state.disposed = true;
+
+    if (state.frameId && hasWindow()) {
+      window.cancelAnimationFrame(state.frameId);
     }
 
-    render();
-    return api;
-  }
+    state.frameId = 0;
+    state.renderScheduled = false;
 
-  function destroy() {
+    if (state.canvas && state.canvas.parentElement) {
+      state.canvas.remove();
+    }
+
+    state.canvas = null;
+    state.ctx = null;
+    state.canvasCreated = false;
     state.mounted = false;
-    state.ready = false;
     state.formVisible = false;
-    env.dragging = false;
-    env.lastPointer = null;
 
-    publishReceipt("destroy");
+    publishReceipt("dispose");
 
     return api;
   }
 
   function getStatus() {
     return {
-      contract: CONTRACT,
-      chainContract: CHAIN_CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
-      family: FAMILY,
+      contract: PARENT_FACING_CONTRACT,
+      internalContract: INTERNAL_CONTRACT,
+      receipt: RECEIPT,
+      previousInternalContract: PREVIOUS_INTERNAL_CONTRACT,
       target: TARGET,
       route: ROUTE,
-      cacheNonce: state.cacheNonce || getOrCreateCacheNonce(),
-      mode: "parent_visible_body_first_failsafe_single_cache_nonce_child_admission",
-      parentVisibleBodyFirst: true,
-      bodyPainted: state.bodyPainted,
-      oceanBodyPainted: state.oceanBodyPainted,
-      atmosphericRimPainted: state.atmosphericRimPainted,
-      formVisible: state.formVisible,
+
       mounted: state.mounted,
-      ready: state.ready,
-      childLoadDeferredUntilVisible: true,
-      childLoadStarted: state.childLoadStarted,
-      childLoadComplete: state.childLoadComplete,
-      children: { ...state.children },
-      singleCacheNonceChain: true,
-      centerLocked: true,
-      fixedRadius: true,
-      fixedCameraDepth: true,
-      dragRotationOnly: true,
-      noAutoOrbit: true,
-      noZoom: true,
-      motionChildDisabled: true,
-      skyChildHeld: true,
-      parentGlobalPublished: state.parentGlobalPublished,
-      mountCalled: state.mountCalled,
-      delegatedBy: state.delegatedBy,
-      renderCount: state.renderCount,
+      booted: state.booted,
+      disposed: state.disposed,
+      canvasCreated: state.canvasCreated,
+      formVisible: state.formVisible,
+
       geometry: {
-        cssWidth: env.cssWidth,
-        cssHeight: env.cssHeight,
-        width: env.width,
-        height: env.height,
-        cx: env.cx,
-        cy: env.cy,
-        radius: env.radius
+        width: state.width,
+        height: state.height,
+        cssWidth: state.cssWidth,
+        cssHeight: state.cssHeight,
+        dpr: state.dpr,
+        cx: state.cx,
+        cy: state.cy,
+        radius: state.radius
       },
-      rotation: env.rotation,
-      htmlChange: false,
-      routeBridgeChange: false,
-      runtimeRewrite: false,
-      parentRewrite: true,
-      childContractRenewal: false,
-      visualPassClaim: false,
+
+      dynamicCacheNonce: state.dynamicCacheNonce || getDynamicCacheNonce(),
+
+      motionLoaded: state.motionLoaded,
+      motionContract: state.motionContract,
+      motionContractExpected: MOTION_EXPECTED_CONTRACT,
+      motionContractValid: !state.motionContract || state.motionContract === MOTION_EXPECTED_CONTRACT,
+      motionConsumed: state.motionConsumed,
+      motionStateActive: state.motionStateActive,
+      dragMode: state.dragMode,
+      projectionConsumesMotion: true,
+
+      continentsLoaded: state.continentsLoaded,
+      continentsContract: state.continentsContract,
+      continentsInternalContract: state.continentsInternalContract,
+      continentsExpectedInternalContract: CONTINENTS_EXPECTED_INTERNAL,
+      continentsConsumed: state.continentsConsumed,
+      continentsDrawCount: state.continentsDrawCount,
+
+      skyLoaded: state.skyLoaded,
+      skyConsumed: state.skyConsumed,
+
+      canvasTransformForbidden: true,
+      cssTransformForbidden: true,
+      bitmapStretchForbidden: true,
+      screenPlaneDragForbidden: true,
+      parentProjectionActive: true,
+      sphericalProjectionActive: true,
+
+      lastRotation: state.lastRotation,
+      lastPitch: state.lastPitch,
+      renderCount: state.renderCount,
+      requestRenderCount: state.requestRenderCount,
+      lastDrawError: state.lastDrawError,
+      lastDrawSummary: state.lastDrawSummary,
+      lastChildSummary: state.lastChildSummary,
+
+      owns: [
+        "canvas composition",
+        "parent projection",
+        "sphere body draw",
+        "child draw payload",
+        "FORM_VISIBLE parent handoff",
+        "no-stretch projection restraint"
+      ],
+
+      doesNotOwn: [
+        "Gratitude topology",
+        "Gratitude hydrology",
+        "Gratitude surface material",
+        "continents truth",
+        "terrain elevation",
+        "mountains",
+        "animals",
+        "plants",
+        "climate",
+        "route bridge",
+        "HTML shell"
+      ],
+
+      ownsTopology: false,
+      ownsHydrology: false,
+      ownsSurface: false,
+      ownsTerrain: false,
+      ownsElevation: false,
+      ownsContinentsTruth: false,
+      ownsMotionState: false,
+      ownsRoute: false,
+      ownsHtml: false,
+
       generatedImage: false,
       graphicBox: false,
+      visualPassClaim: false,
+
       errors: state.errors.slice()
     };
   }
 
+  function publishReceipt(scope = "publish") {
+    if (!hasWindow()) return;
+
+    const receipt = getStatus();
+    receipt.scope = scope;
+
+    window.AUDRALIA_ENGINE_RECEIPT = receipt;
+    window.AUDRALIA_CLEAN_ENGINE_RECEIPT = receipt;
+    window.AUDRALIA_CLEAN_CANVAS_ENGINE_RECEIPT = receipt;
+    window.AUDRALIA_PARENT_ENGINE_RECEIPT = receipt;
+    window.AUDRALIA_PARENT_PROJECTOR_NO_STRETCH_RECEIPT = receipt;
+
+    window.AUDRALIA_ENGINE_FORM_VISIBLE = state.formVisible;
+    window.AUDRALIA_PARENT_FORM_VISIBLE = state.formVisible;
+    window.AUDRALIA_PARENT_PROJECTOR_CONSUMES_MOTION_STATE_ACTIVE = true;
+    window.AUDRALIA_PARENT_PROJECTOR_NO_STRETCH_ACTIVE = true;
+
+    const root = getRoot();
+
+    if (root) {
+      root.dataset.audraliaParentContract = PARENT_FACING_CONTRACT;
+      root.dataset.audraliaParentInternalContract = INTERNAL_CONTRACT;
+      root.dataset.audraliaParentReceipt = RECEIPT;
+      root.dataset.audraliaParentFormVisible = state.formVisible ? "true" : "false";
+      root.dataset.audraliaParentProjectorConsumesMotion = "true";
+      root.dataset.audraliaParentProjectorNoStretch = "true";
+      root.dataset.audraliaParentProjectionActive = "true";
+      root.dataset.audraliaParentSphericalProjectionActive = "true";
+      root.dataset.audraliaParentCanvasTransformForbidden = "true";
+      root.dataset.audraliaParentCssTransformForbidden = "true";
+      root.dataset.audraliaParentBitmapStretchForbidden = "true";
+      root.dataset.audraliaParentScreenPlaneDragForbidden = "true";
+      root.dataset.audraliaParentMotionConsumed = state.motionConsumed ? "true" : "false";
+      root.dataset.audraliaParentContinentsConsumed = state.continentsConsumed ? "true" : "false";
+      root.dataset.generatedImage = "false";
+      root.dataset.graphicBox = "false";
+      root.dataset.visualPassClaimed = "false";
+    }
+
+    try {
+      window.dispatchEvent(new CustomEvent("audralia:parent:receipt", { detail: receipt }));
+    } catch (_error) {
+      try {
+        window.dispatchEvent(new Event("audralia:parent:receipt"));
+      } catch (_ignored) {}
+    }
+  }
+
   const api = {
-    CONTRACT,
-    CHAIN_CONTRACT,
-    PREVIOUS_CONTRACT,
-    FAMILY,
-    TARGET,
-    ROUTE,
-    CHILDREN,
+    contract: PARENT_FACING_CONTRACT,
+    CONTRACT: PARENT_FACING_CONTRACT,
+    internalContract: INTERNAL_CONTRACT,
+    INTERNAL_CONTRACT,
+    receipt: RECEIPT,
+    target: TARGET,
+    route: ROUTE,
+
     mount,
-    boot,
     start,
+    boot,
     init,
     create,
+    dispose,
+
     render,
+    redraw,
     requestRender,
-    updateState,
-    destroy,
+
+    project,
+    makePayload,
+
     getStatus,
     status: getStatus,
-    project
+    publishReceipt
   };
 
-  getOrCreateCacheNonce();
-  publishGlobals("module-load");
+  if (hasWindow()) {
+    window.AUDRALIA_CLEAN_CANVAS_AUTHORITY = api;
+    window.AUDRALIA_CLEAN_CANVAS_ENGINE = api;
+    window.AUDRALIA_CLEAN_ENGINE_PARENT = api;
+    window.AUDRALIA_ENGINE = api;
+    window.AUDRALIA_CLEAN_PARENT_ENGINE = api;
+    window.AUDRALIA_PARENT_PROJECTOR_ENGINE = api;
 
-  if (hasDocument()) {
-    window.addEventListener(
-      "resize",
-      () => {
-        if (state.mounted) requestRender();
-      },
-      { passive: true }
-    );
-
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", () => publishGlobals("dom-ready"), { once: true });
-    } else {
-      publishGlobals("dom-ready");
-    }
+    publishReceipt("module-load");
   }
 })();

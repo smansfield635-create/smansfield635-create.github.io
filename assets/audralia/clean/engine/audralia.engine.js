@@ -1,16 +1,16 @@
 // /assets/audralia/clean/engine/audralia.engine.js
-// AUDRALIA_G2_5_PARENT_HARD_INSPECTION_LOCK_DISABLE_MOTION_CHILD_TNT_v1
+// AUDRALIA_G2_5_PARENT_FIXED_CENTER_FIXED_RADIUS_DRAG_ROTATION_ONLY_TNT_v1
 // Full-file replacement.
-// Purpose: make Audralia stationary by default for inspection by disabling automatic motion and disabling motion-child consumption.
-// Preserves: center lock, no orbit ring, no legacy parent land, continents child expression, drag inspection, FORM_VISIBLE parent confirmation.
-// Parent owns: canvas mount, containment, ocean base, lighting, projection, child loading, FORM_VISIBLE confirmation.
-// Parent does not own: continent expression, automatic orbit, motion-child execution, route bridge, runtime, HTML, generated image, GraphicBox, or visual-pass claim.
+// Purpose: keep Audralia fixed in the inspection box while allowing finger drag to rotate surface longitude only.
+// Preserves: center lock, fixed radius, no orbit, no auto-motion, no legacy land, continents child expression, FORM_VISIBLE parent confirmation.
+// Parent owns: canvas mount, containment, fixed geometry, ocean base, projection, child loading, FORM_VISIBLE confirmation.
+// Parent does not own: continent expression, automatic orbit, zoom, camera depth, route bridge, runtime, HTML, generated image, GraphicBox, or visual-pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G2_5_PARENT_HARD_INSPECTION_LOCK_DISABLE_MOTION_CHILD_TNT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_PARENT_INSPECTION_LOCK_NO_AUTO_ORBIT_TNT_v1";
+  const CONTRACT = "AUDRALIA_G2_5_PARENT_FIXED_CENTER_FIXED_RADIUS_DRAG_ROTATION_ONLY_TNT_v1";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_PARENT_HARD_INSPECTION_LOCK_DISABLE_MOTION_CHILD_TNT_v1";
   const FAMILY = "AUDRALIA_G2_5_EXISTING_ARCHITECTURE_PATH_ALIGNMENT_TNT_v1";
 
   const TARGET = "/assets/audralia/clean/engine/audralia.engine.js";
@@ -32,21 +32,15 @@
     },
     motion: {
       enabled: false,
-      heldReason: "inspection_lock_stationary_default",
+      heldReason: "fixed_center_fixed_radius_inspection_lock",
       path: "/assets/audralia/clean/engine/audralia/engine/motion.js",
       globals: []
     },
     sky: {
-      enabled: true,
+      enabled: false,
+      heldReason: "fixed_center_fixed_radius_inspection_lock",
       path: "/assets/audralia/clean/engine/audralia/engine/sky.js",
-      globals: [
-        "AUDRALIA_CLEAN_SKY_ENGINE",
-        "AUDRALIA_SKY_ENGINE",
-        "AUDRALIA_CLEAN_CANVAS_SKY",
-        "AudraliaSkyEngine",
-        "AudraliaSky",
-        "audraliaSky"
-      ]
+      globals: []
     }
   });
 
@@ -57,10 +51,14 @@
     target: TARGET,
     route: ROUTE,
     centerLocked: true,
+    fixedRadius: true,
+    fixedCameraDepth: true,
+    dragRotationOnly: true,
     inspectionLocked: true,
     hardInspectionLock: true,
     noAutoOrbit: true,
     motionChildDisabled: true,
+    skyChildHeld: true,
     noOrbit: true,
     noLegacyParentLand: true,
     dragInspectionEnabled: true,
@@ -76,8 +74,8 @@
     childLoadComplete: false,
     children: {
       continents: "pending",
-      motion: "held_inspection_lock",
-      sky: "pending"
+      motion: "held_fixed_inspection_lock",
+      sky: "held_fixed_inspection_lock"
     },
     errors: []
   };
@@ -89,6 +87,8 @@
     dpr: 1,
     width: 0,
     height: 0,
+    cssWidth: 0,
+    cssHeight: 0,
     cx: 0,
     cy: 0,
     radius: 0,
@@ -99,7 +99,6 @@
     },
     childPromise: null,
     rotation: 0,
-    pitch: -0.08,
     dragging: false,
     lastPointer: null
   };
@@ -167,7 +166,7 @@
       canvas.setAttribute("data-audralia-clean-parent-canvas", "true");
       canvas.setAttribute("data-audralia-clean-canvas", "true");
       canvas.setAttribute("data-contract", CONTRACT);
-      canvas.setAttribute("aria-label", "Audralia stationary inspection planet");
+      canvas.setAttribute("aria-label", "Audralia fixed inspection planet");
       canvas.style.display = "block";
       canvas.style.width = "100%";
       canvas.style.height = "100%";
@@ -175,6 +174,7 @@
       canvas.style.borderRadius = "24px";
       canvas.style.touchAction = "none";
       canvas.style.userSelect = "none";
+      canvas.style.webkitUserSelect = "none";
 
       target.appendChild(canvas);
     } else {
@@ -187,6 +187,7 @@
       canvas.style.minHeight = canvas.style.minHeight || "360px";
       canvas.style.touchAction = "none";
       canvas.style.userSelect = "none";
+      canvas.style.webkitUserSelect = "none";
     }
 
     return canvas;
@@ -201,6 +202,8 @@
     const dpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
 
     env.dpr = dpr;
+    env.cssWidth = cssWidth;
+    env.cssHeight = cssHeight;
     env.width = Math.floor(cssWidth * dpr);
     env.height = Math.floor(cssHeight * dpr);
 
@@ -230,10 +233,14 @@
     window.AUDRALIA_CLEAN_PARENT_ENGINE_CONTRACT = CONTRACT;
     window.AUDRALIA_EXISTING_ARCHITECTURE_PARENT_ALIGNED = true;
     window.AUDRALIA_PARENT_CENTER_LOCKED = true;
+    window.AUDRALIA_PARENT_FIXED_RADIUS = true;
+    window.AUDRALIA_PARENT_FIXED_CAMERA_DEPTH = true;
+    window.AUDRALIA_PARENT_DRAG_ROTATION_ONLY = true;
     window.AUDRALIA_PARENT_INSPECTION_LOCKED = true;
     window.AUDRALIA_PARENT_HARD_INSPECTION_LOCK = true;
     window.AUDRALIA_PARENT_NO_AUTO_ORBIT = true;
     window.AUDRALIA_PARENT_MOTION_CHILD_DISABLED = true;
+    window.AUDRALIA_PARENT_SKY_CHILD_HELD = true;
     window.AUDRALIA_PARENT_NO_ORBIT = true;
     window.AUDRALIA_PARENT_NO_LEGACY_LAND = true;
 
@@ -243,10 +250,14 @@
       document.documentElement.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
       document.documentElement.setAttribute("data-audralia-clean-parent-target", TARGET);
       document.documentElement.setAttribute("data-audralia-parent-center-locked", "true");
+      document.documentElement.setAttribute("data-audralia-parent-fixed-radius", "true");
+      document.documentElement.setAttribute("data-audralia-parent-fixed-camera-depth", "true");
+      document.documentElement.setAttribute("data-audralia-parent-drag-rotation-only", "true");
       document.documentElement.setAttribute("data-audralia-parent-inspection-locked", "true");
       document.documentElement.setAttribute("data-audralia-parent-hard-inspection-lock", "true");
       document.documentElement.setAttribute("data-audralia-parent-no-auto-orbit", "true");
       document.documentElement.setAttribute("data-audralia-parent-motion-child-disabled", "true");
+      document.documentElement.setAttribute("data-audralia-parent-sky-child-held", "true");
       document.documentElement.setAttribute("data-audralia-parent-no-orbit", "true");
       document.documentElement.setAttribute("data-audralia-parent-no-legacy-land", "true");
       document.documentElement.setAttribute("data-audralia-clean-parent-global-published", "true");
@@ -274,11 +285,15 @@
       env.mount.setAttribute("data-audralia-form-visible", "true");
       env.mount.setAttribute("data-audralia-clean-parent-form-visible", "true");
       env.mount.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
+      env.mount.setAttribute("data-audralia-parent-fixed-center", "true");
+      env.mount.setAttribute("data-audralia-parent-fixed-radius", "true");
     }
 
     if (env.canvas) {
       env.canvas.setAttribute("data-audralia-form-visible", "true");
       env.canvas.setAttribute("data-audralia-clean-parent-form-visible", "true");
+      env.canvas.setAttribute("data-audralia-parent-fixed-center", "true");
+      env.canvas.setAttribute("data-audralia-parent-fixed-radius", "true");
     }
 
     if (hasDocument() && document.documentElement) {
@@ -298,13 +313,17 @@
       family: FAMILY,
       target: TARGET,
       route: ROUTE,
-      mode: "hard_inspection_lock_disable_motion_child",
+      mode: "fixed_center_fixed_radius_drag_rotation_only",
       scope,
       centerLocked: true,
+      fixedRadius: true,
+      fixedCameraDepth: true,
+      dragRotationOnly: true,
       inspectionLocked: true,
       hardInspectionLock: true,
       noAutoOrbit: true,
       motionChildDisabled: true,
+      skyChildHeld: true,
       noOrbit: true,
       noLegacyParentLand: true,
       dragInspectionEnabled: true,
@@ -323,6 +342,7 @@
         cy: env.cy,
         radius: env.radius
       },
+      rotation: env.rotation,
       children: { ...state.children },
       childPaths: {
         continents: CHILDREN.continents.path,
@@ -566,16 +586,6 @@
       "paintContinents"
     ], payload);
 
-    invokeChild("sky", [
-      "draw",
-      "render",
-      "paint",
-      "drawAtmosphere",
-      "renderAtmosphere",
-      "paintAtmosphere",
-      "drawOverlay"
-    ], payload);
-
     ctx.restore();
 
     drawAtmosphericRim(ctx, g);
@@ -598,11 +608,12 @@
     env.canvas.addEventListener(
       "pointerdown",
       (event) => {
+        event.preventDefault();
         env.dragging = true;
         env.lastPointer = { x: event.clientX, y: event.clientY };
         env.canvas.setPointerCapture?.(event.pointerId);
       },
-      { passive: true }
+      { passive: false }
     );
 
     env.canvas.addEventListener(
@@ -610,38 +621,39 @@
       (event) => {
         if (!env.dragging || !env.lastPointer) return;
 
+        event.preventDefault();
+
         const dx = event.clientX - env.lastPointer.x;
-        const dy = event.clientY - env.lastPointer.y;
 
         env.rotation += dx * 0.006;
-        env.pitch = Math.max(-0.42, Math.min(0.42, env.pitch + dy * 0.003));
-
         env.lastPointer = { x: event.clientX, y: event.clientY };
 
         requestRender();
       },
-      { passive: true }
+      { passive: false }
     );
 
     env.canvas.addEventListener(
       "pointerup",
       (event) => {
+        event.preventDefault();
         env.dragging = false;
         env.lastPointer = null;
         env.canvas.releasePointerCapture?.(event.pointerId);
         requestRender();
       },
-      { passive: true }
+      { passive: false }
     );
 
     env.canvas.addEventListener(
       "pointercancel",
-      () => {
+      (event) => {
+        event.preventDefault();
         env.dragging = false;
         env.lastPointer = null;
         requestRender();
       },
-      { passive: true }
+      { passive: false }
     );
   }
 
@@ -712,7 +724,7 @@
     env.childPromise = (async () => {
       for (const [name, child] of Object.entries(CHILDREN)) {
         if (!child.enabled) {
-          state.children[name] = "held_inspection_lock";
+          state.children[name] = "held_fixed_inspection_lock";
           publishReceipt(`child-${name}-held`);
           continue;
         }
@@ -772,10 +784,14 @@
     env.mount.setAttribute("data-audralia-clean-parent-mounted", "true");
     env.mount.setAttribute("data-audralia-clean-parent-contract", CONTRACT);
     env.mount.setAttribute("data-audralia-parent-center-locked", "true");
+    env.mount.setAttribute("data-audralia-parent-fixed-radius", "true");
+    env.mount.setAttribute("data-audralia-parent-fixed-camera-depth", "true");
+    env.mount.setAttribute("data-audralia-parent-drag-rotation-only", "true");
     env.mount.setAttribute("data-audralia-parent-inspection-locked", "true");
     env.mount.setAttribute("data-audralia-parent-hard-inspection-lock", "true");
     env.mount.setAttribute("data-audralia-parent-no-auto-orbit", "true");
     env.mount.setAttribute("data-audralia-parent-motion-child-disabled", "true");
+    env.mount.setAttribute("data-audralia-parent-sky-child-held", "true");
     env.mount.setAttribute("data-audralia-parent-no-orbit", "true");
     env.mount.setAttribute("data-audralia-parent-no-legacy-land", "true");
 
@@ -818,7 +834,6 @@
   function updateState(next = {}) {
     if (next && typeof next === "object") {
       if (typeof next.rotation === "number") env.rotation = next.rotation;
-      if (typeof next.pitch === "number") env.pitch = next.pitch;
     }
 
     render();
@@ -844,12 +859,16 @@
       family: FAMILY,
       target: TARGET,
       route: ROUTE,
-      mode: "hard_inspection_lock_disable_motion_child",
+      mode: "fixed_center_fixed_radius_drag_rotation_only",
       centerLocked: true,
+      fixedRadius: true,
+      fixedCameraDepth: true,
+      dragRotationOnly: true,
       inspectionLocked: true,
       hardInspectionLock: true,
       noAutoOrbit: true,
       motionChildDisabled: true,
+      skyChildHeld: true,
       noOrbit: true,
       noLegacyParentLand: true,
       dragInspectionEnabled: true,
@@ -868,6 +887,7 @@
         cy: env.cy,
         radius: env.radius
       },
+      rotation: env.rotation,
       children: { ...state.children },
       childPaths: {
         continents: CHILDREN.continents.path,

@@ -1,21 +1,25 @@
 // /assets/audralia/clean/engine/audralia/engine/continents.js
-// AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1
+// AUDRALIA_G2_6_NINE_SUMMITS_CONTINENT_EXPRESSION_REFINEMENT_TNT_v1
 // Full-file replacement.
-// Purpose: fresh Nine Summits / 256 lattice / Fibonacci continent model for Audralia.
+// Purpose: refine Audralia's Nine Summits / 256 lattice / Fibonacci continent expression from oval lobes into coastline-node landforms.
 // Child engine only. Classic script. No imports. No exports.
+// Bridge compatibility: receipt.contract remains AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1 because the locked route bridge validates that contract.
+// Active expression contract is exposed separately as expressionContract.
 // Does not own: parent geometry, canvas creation, route bridge, runtime, FORM_VISIBLE, sky, motion, generated image, GraphicBox, or visual-pass claim.
 
 (() => {
   "use strict";
 
   const CONTRACT = "AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G2_5_SEA_LEVEL_CONTINENTS_LIMB_OCCLUSION_4K_SURFACE_TNT_v1";
+  const EXPRESSION_CONTRACT = "AUDRALIA_G2_6_NINE_SUMMITS_CONTINENT_EXPRESSION_REFINEMENT_TNT_v1";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1";
   const FAMILY = "AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1";
 
   const TARGET = "/assets/audralia/clean/engine/audralia/engine/continents.js";
   const ROUTE = "/showroom/globe/audralia/";
 
   const DEG = Math.PI / 180;
+  const TAU = Math.PI * 2;
 
   const TOTAL_LATTICE_CELLS = 256;
   const EXPOSED_LAND_CELLS = 89;
@@ -35,42 +39,54 @@
     "Purity"
   ]);
 
-  const SHELF_ELEVATION = -0.018;
-  const LAND_ELEVATION = -0.004;
-  const RIDGE_ELEVATION = -0.002;
-  const SUMMIT_ELEVATION = -0.0015;
-  const PRESSURE_KNOT_ELEVATION = -0.003;
-  const POLAR_ELEVATION = -0.004;
+  const ELEVATION = Object.freeze({
+    shelfOuter: -0.026,
+    shelfInner: -0.018,
+    land: -0.004,
+    pressure: -0.003,
+    ridge: -0.002,
+    summit: -0.0015,
+    polar: -0.004
+  });
 
-  const LAND_VISIBLE_MIN = 0.04;
-  const LAND_FULL_STRENGTH = 0.38;
-  const SHELF_VISIBLE_MIN = 0.16;
-  const SHELF_FULL_STRENGTH = 0.52;
-  const RIDGE_VISIBLE_MIN = 0.18;
-  const SUMMIT_VISIBLE_MIN = 0.25;
+  const VISIBILITY = Object.freeze({
+    landMin: 0.035,
+    landFull: 0.38,
+    shelfMin: 0.12,
+    shelfFull: 0.52,
+    ridgeMin: 0.16,
+    summitMin: 0.24
+  });
 
-  const LAND_CENTER_ALPHA = 0.72;
-  const SHELF_CENTER_ALPHA = 0.20;
-  const RIDGE_CENTER_ALPHA = 0.32;
-  const SUMMIT_CENTER_ALPHA = 0.48;
-  const PRESSURE_ALPHA = 0.22;
+  const ALPHA = Object.freeze({
+    land: 0.72,
+    shelfOuter: 0.12,
+    shelfInner: 0.22,
+    coastStroke: 0.19,
+    pressure: 0.22,
+    ridge: 0.32,
+    summit: 0.48
+  });
 
-  const COLORS = {
-    gratitude: "rgba(92, 176, 112, 0.70)",
-    generosity: "rgba(113, 186, 123, 0.66)",
-    dependability: "rgba(76, 150, 106, 0.68)",
-    accountability: "rgba(166, 127, 82, 0.60)",
-    forgiveness: "rgba(94, 168, 130, 0.62)",
-    humility: "rgba(106, 151, 112, 0.58)",
-    selfControl: "rgba(149, 132, 82, 0.58)",
-    patience: "rgba(104, 160, 138, 0.56)",
-    purity: "rgba(224, 244, 250, 0.58)",
-    shelf: "rgba(94, 212, 226, 0.20)",
-    shelfEdge: "rgba(180, 246, 255, 0.16)",
+  const COLORS = Object.freeze({
+    gratitude: "rgba(82, 172, 108, 0.72)",
+    generosity: "rgba(104, 184, 123, 0.68)",
+    dependability: "rgba(69, 146, 108, 0.70)",
+    accountability: "rgba(162, 127, 83, 0.62)",
+    forgiveness: "rgba(85, 162, 132, 0.64)",
+    humility: "rgba(99, 146, 111, 0.60)",
+    selfControl: "rgba(145, 132, 84, 0.60)",
+    patience: "rgba(98, 157, 140, 0.58)",
+    purity: "rgba(224, 244, 250, 0.60)",
+    shelfOuter: "rgba(99, 216, 230, 0.12)",
+    shelfInner: "rgba(103, 215, 226, 0.22)",
+    shelfEdge: "rgba(184, 246, 255, 0.15)",
+    coastStroke: "rgba(235, 250, 236, 0.18)",
     ridge: "rgba(232, 214, 156, 0.30)",
     summit: "rgba(255, 239, 184, 0.48)",
-    pressure: "rgba(38, 68, 63, 0.22)"
-  };
+    pressure: "rgba(31, 72, 62, 0.22)",
+    shadow: "rgba(0, 15, 28, 0.16)"
+  });
 
   const CONTINENTS = Object.freeze([
     {
@@ -79,14 +95,27 @@
       className: "primary",
       cells: 21,
       role: "Audralia primary external Summit body",
-      lobes: [
-        { lon: -42, lat: 8, sx: 28, sy: 32, rot: -16, color: COLORS.gratitude, wobble: 0.11 },
-        { lon: -59, lat: -8, sx: 16, sy: 20, rot: 18, color: COLORS.gratitude, wobble: 0.12 },
-        { lon: -29, lat: 25, sx: 13, sy: 17, rot: -10, color: COLORS.generosity, wobble: 0.09 }
+      color: COLORS.gratitude,
+      center: { lon: -42, lat: 8 },
+      radius: { lon: 31, lat: 34 },
+      rotation: -14,
+      nodes: 34,
+      jag: 0.22,
+      bay: 0.17,
+      shelf: 1.16,
+      anchors: [
+        { lon: -70, lat: 22, pull: 0.18 },
+        { lon: -55, lat: -18, pull: -0.10 },
+        { lon: -26, lat: 31, pull: 0.14 },
+        { lon: -16, lat: -2, pull: -0.12 }
+      ],
+      pressureZones: [
+        { lon: -53, lat: -9, sx: 0.32, sy: 0.26, rot: 22 },
+        { lon: -39, lat: 21, sx: 0.26, sy: 0.22, rot: -12 }
       ],
       ridges: [
-        { a: [-58, 23], b: [-35, -14], bend: 0.2 },
-        { a: [-44, 34], b: [-23, 5], bend: -0.16 }
+        { a: [-61, 24], b: [-34, -14], bend: 0.18 },
+        { a: [-46, 34], b: [-20, 6], bend: -0.13 }
       ],
       summitPoint: { lon: -43, lat: 16 }
     },
@@ -96,12 +125,26 @@
       className: "major",
       cells: 13,
       role: "open fertile major body with broad shelf logic",
-      lobes: [
-        { lon: 38, lat: 14, sx: 18, sy: 26, rot: 20, color: COLORS.generosity, wobble: 0.1 },
-        { lon: 55, lat: 2, sx: 11, sy: 17, rot: -12, color: COLORS.gratitude, wobble: 0.1 }
+      color: COLORS.generosity,
+      center: { lon: 42, lat: 12 },
+      radius: { lon: 23, lat: 27 },
+      rotation: 18,
+      nodes: 29,
+      jag: 0.2,
+      bay: 0.13,
+      shelf: 1.15,
+      anchors: [
+        { lon: 25, lat: 31, pull: 0.12 },
+        { lon: 62, lat: 22, pull: -0.08 },
+        { lon: 55, lat: -13, pull: 0.13 },
+        { lon: 30, lat: -7, pull: -0.1 }
+      ],
+      pressureZones: [
+        { lon: 39, lat: 18, sx: 0.3, sy: 0.22, rot: 8 },
+        { lon: 55, lat: 0, sx: 0.2, sy: 0.22, rot: -18 }
       ],
       ridges: [
-        { a: [31, 29], b: [55, -9], bend: -0.12 }
+        { a: [31, 29], b: [57, -10], bend: -0.11 }
       ],
       summitPoint: { lon: 42, lat: 20 }
     },
@@ -111,12 +154,26 @@
       className: "major",
       cells: 13,
       role: "stable structural major landmass",
-      lobes: [
-        { lon: -104, lat: -8, sx: 16, sy: 24, rot: -8, color: COLORS.dependability, wobble: 0.09 },
-        { lon: -119, lat: 8, sx: 10, sy: 14, rot: 24, color: COLORS.humility, wobble: 0.08 }
+      color: COLORS.dependability,
+      center: { lon: -105, lat: -5 },
+      radius: { lon: 22, lat: 27 },
+      rotation: -8,
+      nodes: 29,
+      jag: 0.17,
+      bay: 0.1,
+      shelf: 1.12,
+      anchors: [
+        { lon: -123, lat: 10, pull: 0.1 },
+        { lon: -92, lat: 18, pull: -0.08 },
+        { lon: -97, lat: -25, pull: 0.13 },
+        { lon: -120, lat: -10, pull: -0.09 }
+      ],
+      pressureZones: [
+        { lon: -106, lat: -2, sx: 0.28, sy: 0.3, rot: -10 },
+        { lon: -116, lat: 9, sx: 0.18, sy: 0.18, rot: 18 }
       ],
       ridges: [
-        { a: [-116, 11], b: [-97, -21], bend: 0.14 }
+        { a: [-118, 13], b: [-96, -22], bend: 0.13 }
       ],
       summitPoint: { lon: -106, lat: -2 }
     },
@@ -126,12 +183,26 @@
       className: "major",
       cells: 13,
       role: "angular pressure-bearing major continent",
-      lobes: [
-        { lon: 112, lat: -4, sx: 17, sy: 22, rot: 26, color: COLORS.accountability, wobble: 0.12 },
-        { lon: 129, lat: 8, sx: 10, sy: 13, rot: -20, color: COLORS.selfControl, wobble: 0.1 }
+      color: COLORS.accountability,
+      center: { lon: 115, lat: -3 },
+      radius: { lon: 23, lat: 24 },
+      rotation: 24,
+      nodes: 28,
+      jag: 0.24,
+      bay: 0.14,
+      shelf: 1.13,
+      anchors: [
+        { lon: 101, lat: 16, pull: 0.12 },
+        { lon: 134, lat: 11, pull: 0.08 },
+        { lon: 126, lat: -20, pull: -0.1 },
+        { lon: 101, lat: -12, pull: 0.13 }
+      ],
+      pressureZones: [
+        { lon: 116, lat: 2, sx: 0.3, sy: 0.24, rot: 24 },
+        { lon: 129, lat: 7, sx: 0.16, sy: 0.18, rot: -18 }
       ],
       ridges: [
-        { a: [102, 15], b: [128, -17], bend: -0.16 }
+        { a: [102, 15], b: [128, -17], bend: -0.15 }
       ],
       summitPoint: { lon: 116, lat: 2 }
     },
@@ -141,9 +212,22 @@
       className: "secondary",
       cells: 8,
       role: "broken-but-restored coast and bay logic",
-      lobes: [
-        { lon: -6, lat: -38, sx: 14, sy: 13, rot: -10, color: COLORS.forgiveness, wobble: 0.15 },
-        { lon: 13, lat: -43, sx: 8, sy: 7, rot: 18, color: COLORS.generosity, wobble: 0.13 }
+      color: COLORS.forgiveness,
+      center: { lon: -5, lat: -39 },
+      radius: { lon: 19, lat: 15 },
+      rotation: -9,
+      nodes: 24,
+      jag: 0.25,
+      bay: 0.19,
+      shelf: 1.18,
+      anchors: [
+        { lon: -20, lat: -34, pull: 0.09 },
+        { lon: 14, lat: -44, pull: 0.13 },
+        { lon: 3, lat: -29, pull: -0.1 },
+        { lon: -12, lat: -50, pull: 0.08 }
+      ],
+      pressureZones: [
+        { lon: -7, lat: -36, sx: 0.28, sy: 0.2, rot: -5 }
       ],
       ridges: [
         { a: [-18, -36], b: [15, -44], bend: 0.1 }
@@ -156,9 +240,22 @@
       className: "secondary",
       cells: 8,
       role: "lower-relief embedded surface body",
-      lobes: [
-        { lon: 2, lat: 44, sx: 18, sy: 12, rot: 4, color: COLORS.humility, wobble: 0.08 },
-        { lon: -18, lat: 49, sx: 8, sy: 7, rot: -14, color: COLORS.dependability, wobble: 0.07 }
+      color: COLORS.humility,
+      center: { lon: 2, lat: 45 },
+      radius: { lon: 23, lat: 12 },
+      rotation: 4,
+      nodes: 24,
+      jag: 0.14,
+      bay: 0.09,
+      shelf: 1.1,
+      anchors: [
+        { lon: -20, lat: 49, pull: 0.08 },
+        { lon: 24, lat: 43, pull: 0.1 },
+        { lon: 7, lat: 53, pull: -0.08 },
+        { lon: -5, lat: 38, pull: 0.06 }
+      ],
+      pressureZones: [
+        { lon: 4, lat: 45, sx: 0.32, sy: 0.16, rot: 3 }
       ],
       ridges: [
         { a: [-15, 48], b: [18, 42], bend: -0.06 }
@@ -171,9 +268,21 @@
       className: "island-continent",
       cells: 5,
       role: "constrained compact body",
-      lobes: [
-        { lon: 158, lat: 21, sx: 8, sy: 8, rot: 16, color: COLORS.selfControl, wobble: 0.11 },
-        { lon: 169, lat: 15, sx: 5, sy: 5, rot: -10, color: COLORS.accountability, wobble: 0.1 }
+      color: COLORS.selfControl,
+      center: { lon: 160, lat: 20 },
+      radius: { lon: 12, lat: 10 },
+      rotation: 16,
+      nodes: 18,
+      jag: 0.19,
+      bay: 0.1,
+      shelf: 1.14,
+      anchors: [
+        { lon: 151, lat: 24, pull: 0.08 },
+        { lon: 170, lat: 14, pull: 0.08 },
+        { lon: 162, lat: 29, pull: -0.07 }
+      ],
+      pressureZones: [
+        { lon: 159, lat: 21, sx: 0.28, sy: 0.22, rot: 14 }
       ],
       ridges: [
         { a: [153, 23], b: [169, 14], bend: 0.04 }
@@ -186,10 +295,21 @@
       className: "island-continent",
       cells: 5,
       role: "long arc island-continent chain",
-      lobes: [
-        { lon: -154, lat: 24, sx: 7, sy: 5, rot: 24, color: COLORS.patience, wobble: 0.12 },
-        { lon: -141, lat: 18, sx: 6, sy: 5, rot: -14, color: COLORS.patience, wobble: 0.1 },
-        { lon: -129, lat: 12, sx: 4, sy: 4, rot: 12, color: COLORS.forgiveness, wobble: 0.1 }
+      color: COLORS.patience,
+      center: { lon: -142, lat: 18 },
+      radius: { lon: 20, lat: 8 },
+      rotation: -24,
+      nodes: 21,
+      jag: 0.22,
+      bay: 0.13,
+      shelf: 1.16,
+      anchors: [
+        { lon: -157, lat: 25, pull: 0.09 },
+        { lon: -128, lat: 12, pull: 0.1 },
+        { lon: -142, lat: 22, pull: -0.07 }
+      ],
+      pressureZones: [
+        { lon: -144, lat: 18, sx: 0.28, sy: 0.16, rot: -20 }
       ],
       ridges: [
         { a: [-156, 24], b: [-128, 12], bend: 0.04 }
@@ -202,9 +322,21 @@
       className: "polar-high-clarity",
       cells: 3,
       role: "high-clarity polar expression",
-      lobes: [
-        { lon: 24, lat: 72, sx: 17, sy: 7, rot: 5, color: COLORS.purity, wobble: 0.05 },
-        { lon: -12, lat: 76, sx: 10, sy: 5, rot: -9, color: COLORS.purity, wobble: 0.04 }
+      color: COLORS.purity,
+      center: { lon: 18, lat: 73 },
+      radius: { lon: 29, lat: 7 },
+      rotation: 4,
+      nodes: 22,
+      jag: 0.09,
+      bay: 0.05,
+      shelf: 1.08,
+      anchors: [
+        { lon: -12, lat: 76, pull: 0.08 },
+        { lon: 35, lat: 71, pull: 0.08 },
+        { lon: 18, lat: 78, pull: -0.06 }
+      ],
+      pressureZones: [
+        { lon: 20, lat: 73, sx: 0.3, sy: 0.12, rot: 4 }
       ],
       ridges: [
         { a: [-8, 75], b: [31, 71], bend: -0.03 }
@@ -215,11 +347,14 @@
 
   const state = {
     contract: CONTRACT,
+    expressionContract: EXPRESSION_CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
     family: FAMILY,
     target: TARGET,
     route: ROUTE,
     nineSummits256FibonacciModel: true,
+    coastlineNodeExpression: true,
+    ovalLobesDemotedToScaffolding: true,
     summitCount: 9,
     continentBodyCount: 9,
     totalLatticeCells: TOTAL_LATTICE_CELLS,
@@ -236,6 +371,8 @@
     visualPassClaim: false,
     errors: []
   };
+
+  const coastlineCache = new Map();
 
   function hasWindow() {
     return typeof window !== "undefined";
@@ -303,65 +440,112 @@
     );
   }
 
-  function projectPoint(payload, lonDeg, latDeg, elevation = LAND_ELEVATION) {
+  function projectPoint(payload, lonDeg, latDeg, elevation = ELEVATION.land) {
     return payload.project(toRad(lonDeg), toRad(latDeg), elevation);
   }
 
-  function projectedEllipse(payload, lobe, scale = 1, elevation = LAND_ELEVATION, steps = 48) {
-    const pts = [];
-    const rot = toRad(lobe.rot || 0);
-    const cx = lobe.lon;
-    const cy = lobe.lat;
-    const sx = lobe.sx * scale;
-    const sy = lobe.sy * scale;
-    const wobble = lobe.wobble || 0.08;
-
-    for (let i = 0; i < steps; i += 1) {
-      const t = (Math.PI * 2 * i) / steps;
-
-      const n =
-        1 +
-        Math.sin(t * 3 + cx * 0.07) * wobble +
-        Math.cos(t * 5 + cy * 0.09) * wobble * 0.52 +
-        Math.sin(t * 8) * wobble * 0.18;
-
-      const ex = Math.cos(t) * sx * n;
-      const ey = Math.sin(t) * sy * n;
-
-      const lon = cx + ex * Math.cos(rot) - ey * Math.sin(rot);
-      const lat = clamp(cy + ex * Math.sin(rot) + ey * Math.cos(rot), -82, 82);
-      const p = projectPoint(payload, lon, lat, elevation);
-
-      pts.push({ ...p, lon, lat });
-    }
-
-    return pts;
+  function hashNumber(seed, index) {
+    const x = Math.sin(seed * 12.9898 + index * 78.233) * 43758.5453123;
+    return x - Math.floor(x);
   }
 
-  function drawProjectedLobe(ctx, payload, lobe, options = {}) {
-    const elevation = options.elevation ?? LAND_ELEVATION;
-    const centerElevation = options.centerElevation ?? elevation;
-    const scale = options.scale || 1;
-    const fill = options.fill || lobe.color || COLORS.gratitude;
-    const stroke = options.stroke || "rgba(226, 246, 230, 0.14)";
-    const centerAlpha = options.centerAlpha ?? LAND_CENTER_ALPHA;
-    const strokeAlpha = options.strokeAlpha ?? 0.18;
-    const minVisible = options.minVisible ?? LAND_VISIBLE_MIN;
-    const fullStrength = options.fullStrength ?? LAND_FULL_STRENGTH;
-    const minVisibleRatio = options.minVisibleRatio ?? 0.72;
-    const lineWidth = options.lineWidth || Math.max(1, payload.geometry.radius * 0.0035);
+  function rotatePoint(x, y, angleRad) {
+    return {
+      x: x * Math.cos(angleRad) - y * Math.sin(angleRad),
+      y: x * Math.sin(angleRad) + y * Math.cos(angleRad)
+    };
+  }
 
-    const center = projectPoint(payload, lobe.lon, lobe.lat, centerElevation);
-    const alpha = depthAlpha(center.z, minVisible, fullStrength);
+  function normalizeLon(lon) {
+    let value = lon;
+    while (value > 180) value -= 360;
+    while (value < -180) value += 360;
+    return value;
+  }
 
-    if (!center.visible || alpha <= 0.02) return false;
+  function anchorPull(continent, lon, lat, index) {
+    let pull = 0;
 
-    const pts = projectedEllipse(payload, lobe, scale, elevation);
-    const visiblePts = pts.filter((p) => p.visible && p.z > -0.08);
+    for (const anchor of continent.anchors || []) {
+      const dLon = Math.abs(normalizeLon(lon - anchor.lon));
+      const dLat = Math.abs(lat - anchor.lat);
+      const dist = Math.sqrt(dLon * dLon + dLat * dLat);
+      const influence = Math.max(0, 1 - dist / 42);
+      pull += influence * (anchor.pull || 0);
+    }
 
-    if (visiblePts.length / pts.length < minVisibleRatio) return false;
+    pull += (hashNumber(continent.cells + continent.nodes, index) - 0.5) * continent.jag;
+    pull += Math.sin(index * 1.618 + continent.cells) * continent.jag * 0.28;
+    pull -= Math.max(0, Math.sin(index * 2.0 + continent.cells * 0.3)) * continent.bay * 0.42;
 
-    ctx.save();
+    return clamp(1 + pull, 0.62, 1.34);
+  }
+
+  function buildCoastline(continent, scale = 1, mode = "land") {
+    const cacheKey = `${continent.id}:${scale}:${mode}`;
+    if (coastlineCache.has(cacheKey)) return coastlineCache.get(cacheKey);
+
+    const nodes = [];
+    const count = continent.nodes || 24;
+    const rot = toRad(continent.rotation || 0);
+    const seed = continent.cells * 31 + continent.center.lon * 0.17 + continent.center.lat * 0.19;
+
+    for (let i = 0; i < count; i += 1) {
+      const t = (TAU * i) / count;
+
+      const baseX = Math.cos(t);
+      const baseY = Math.sin(t);
+
+      const directionalVariance =
+        1 +
+        Math.sin(t * 3 + seed) * continent.jag * 0.36 +
+        Math.cos(t * 5 + seed * 0.7) * continent.jag * 0.24 +
+        Math.sin(t * 8 + seed * 0.13) * continent.jag * 0.11;
+
+      const localX = baseX * continent.radius.lon * scale * directionalVariance;
+      const localY = baseY * continent.radius.lat * scale * directionalVariance;
+
+      const rotated = rotatePoint(localX, localY, rot);
+
+      let lon = continent.center.lon + rotated.x;
+      let lat = continent.center.lat + rotated.y;
+
+      const pull = anchorPull(continent, lon, lat, i);
+
+      lon = continent.center.lon + (lon - continent.center.lon) * pull;
+      lat = continent.center.lat + (lat - continent.center.lat) * pull;
+
+      if (mode === "shelf-outer") {
+        lon = continent.center.lon + (lon - continent.center.lon) * 1.08;
+        lat = continent.center.lat + (lat - continent.center.lat) * 1.08;
+      }
+
+      if (mode === "shelf-inner") {
+        lon = continent.center.lon + (lon - continent.center.lon) * 1.035;
+        lat = continent.center.lat + (lat - continent.center.lat) * 1.035;
+      }
+
+      nodes.push({
+        lon: normalizeLon(lon),
+        lat: clamp(lat, -82, 82)
+      });
+    }
+
+    coastlineCache.set(cacheKey, nodes);
+    return nodes;
+  }
+
+  function projectedCoastline(payload, continent, scale, elevation, mode) {
+    const nodes = buildCoastline(continent, scale, mode);
+    return nodes.map((node) => ({
+      ...projectPoint(payload, node.lon, node.lat, elevation),
+      lon: node.lon,
+      lat: node.lat
+    }));
+  }
+
+  function drawPathFromProjected(ctx, pts) {
+    if (!pts.length) return;
 
     ctx.beginPath();
 
@@ -371,12 +555,34 @@
     });
 
     ctx.closePath();
-    ctx.fillStyle = withAlpha(fill, alpha, centerAlpha);
+  }
+
+  function projectedCenter(payload, continent, elevation = ELEVATION.land) {
+    return projectPoint(payload, continent.center.lon, continent.center.lat, elevation);
+  }
+
+  function drawCoastShape(ctx, payload, continent, options) {
+    const center = projectedCenter(payload, continent, options.centerElevation ?? options.elevation);
+    const alpha = depthAlpha(center.z, options.minVisible, options.fullStrength);
+
+    if (!center.visible || alpha <= 0.02) return false;
+
+    const pts = projectedCoastline(payload, continent, options.scale, options.elevation, options.mode);
+    const visiblePts = pts.filter((p) => p.visible && p.z > -0.08);
+
+    if (visiblePts.length / pts.length < options.minVisibleRatio) return false;
+
+    ctx.save();
+
+    drawPathFromProjected(ctx, pts);
+    ctx.fillStyle = withAlpha(options.fill, alpha, options.centerAlpha);
     ctx.fill();
 
-    if (lineWidth > 0 && alpha > 0.12) {
-      ctx.strokeStyle = withAlpha(stroke, alpha * 0.75, strokeAlpha);
-      ctx.lineWidth = lineWidth;
+    if (options.stroke && options.lineWidth > 0 && alpha > 0.08) {
+      ctx.strokeStyle = withAlpha(options.stroke, alpha * 0.78, options.strokeAlpha);
+      ctx.lineWidth = options.lineWidth;
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
       ctx.stroke();
     }
 
@@ -385,70 +591,95 @@
     return true;
   }
 
-  function drawShelf(ctx, payload, continent) {
-    for (const lobe of continent.lobes) {
-      drawProjectedLobe(ctx, payload, lobe, {
-        scale: 1.18,
-        elevation: SHELF_ELEVATION,
-        centerElevation: SHELF_ELEVATION,
-        fill: COLORS.shelf,
-        stroke: COLORS.shelfEdge,
-        centerAlpha: SHELF_CENTER_ALPHA,
-        strokeAlpha: 0.12,
-        minVisible: SHELF_VISIBLE_MIN,
-        fullStrength: SHELF_FULL_STRENGTH,
-        minVisibleRatio: 0.84,
-        lineWidth: Math.max(1, payload.geometry.radius * 0.0022)
-      });
-    }
+  function drawShelves(ctx, payload, continent) {
+    drawCoastShape(ctx, payload, continent, {
+      mode: "shelf-outer",
+      scale: continent.shelf || 1.14,
+      elevation: ELEVATION.shelfOuter,
+      centerElevation: ELEVATION.shelfOuter,
+      fill: COLORS.shelfOuter,
+      stroke: COLORS.shelfEdge,
+      centerAlpha: ALPHA.shelfOuter,
+      strokeAlpha: 0.1,
+      minVisible: VISIBILITY.shelfMin,
+      fullStrength: VISIBILITY.shelfFull,
+      minVisibleRatio: 0.78,
+      lineWidth: Math.max(1, payload.geometry.radius * 0.002)
+    });
+
+    drawCoastShape(ctx, payload, continent, {
+      mode: "shelf-inner",
+      scale: (continent.shelf || 1.14) * 0.98,
+      elevation: ELEVATION.shelfInner,
+      centerElevation: ELEVATION.shelfInner,
+      fill: COLORS.shelfInner,
+      stroke: COLORS.shelfEdge,
+      centerAlpha: ALPHA.shelfInner,
+      strokeAlpha: 0.12,
+      minVisible: VISIBILITY.shelfMin,
+      fullStrength: VISIBILITY.shelfFull,
+      minVisibleRatio: 0.76,
+      lineWidth: Math.max(1, payload.geometry.radius * 0.0022)
+    });
   }
 
   function drawLand(ctx, payload, continent) {
-    for (const lobe of continent.lobes) {
-      drawProjectedLobe(ctx, payload, lobe, {
-        scale: 1,
-        elevation: continent.summit === "Purity" ? POLAR_ELEVATION : LAND_ELEVATION,
-        fill: lobe.color,
-        stroke: "rgba(235, 250, 235, 0.18)",
-        centerAlpha: LAND_CENTER_ALPHA,
-        strokeAlpha: 0.18,
-        minVisible: LAND_VISIBLE_MIN,
-        fullStrength: LAND_FULL_STRENGTH,
-        minVisibleRatio: 0.68,
-        lineWidth: Math.max(1, payload.geometry.radius * 0.0032)
-      });
+    return drawCoastShape(ctx, payload, continent, {
+      mode: "land",
+      scale: 1,
+      elevation: continent.summit === "Purity" ? ELEVATION.polar : ELEVATION.land,
+      centerElevation: continent.summit === "Purity" ? ELEVATION.polar : ELEVATION.land,
+      fill: continent.color,
+      stroke: COLORS.coastStroke,
+      centerAlpha: ALPHA.land,
+      strokeAlpha: ALPHA.coastStroke,
+      minVisible: VISIBILITY.landMin,
+      fullStrength: VISIBILITY.landFull,
+      minVisibleRatio: 0.58,
+      lineWidth: Math.max(1, payload.geometry.radius * 0.003)
+    });
+  }
 
-      drawProjectedLobe(
-        ctx,
+  function drawPressureZone(ctx, payload, continent, zone) {
+    const center = projectPoint(payload, zone.lon, zone.lat, ELEVATION.pressure);
+    const alpha = depthAlpha(center.z, VISIBILITY.landMin + 0.1, VISIBILITY.landFull + 0.16);
+
+    if (!center.visible || alpha <= 0.03) return;
+
+    const rot = toRad(zone.rot || continent.rotation || 0);
+    const pts = [];
+    const steps = 18;
+
+    for (let i = 0; i < steps; i += 1) {
+      const t = (TAU * i) / steps;
+      const noise = 1 + Math.sin(t * 3 + continent.cells) * 0.12 + Math.cos(t * 5) * 0.06;
+      const localX = Math.cos(t) * continent.radius.lon * zone.sx * noise;
+      const localY = Math.sin(t) * continent.radius.lat * zone.sy * noise;
+      const rotated = rotatePoint(localX, localY, rot);
+      const p = projectPoint(
         payload,
-        {
-          ...lobe,
-          sx: lobe.sx * 0.42,
-          sy: lobe.sy * 0.34,
-          color: COLORS.pressure
-        },
-        {
-          scale: 1,
-          elevation: PRESSURE_KNOT_ELEVATION,
-          fill: COLORS.pressure,
-          stroke: "rgba(255,255,255,0)",
-          centerAlpha: PRESSURE_ALPHA,
-          strokeAlpha: 0,
-          minVisible: LAND_VISIBLE_MIN + 0.1,
-          fullStrength: LAND_FULL_STRENGTH + 0.12,
-          minVisibleRatio: 0.78,
-          lineWidth: 0
-        }
+        normalizeLon(zone.lon + rotated.x),
+        clamp(zone.lat + rotated.y, -82, 82),
+        ELEVATION.pressure
       );
+
+      if (!p.visible || p.z < VISIBILITY.landMin) return;
+      pts.push(p);
     }
+
+    ctx.save();
+    drawPathFromProjected(ctx, pts);
+    ctx.fillStyle = withAlpha(COLORS.pressure, alpha, ALPHA.pressure);
+    ctx.fill();
+    ctx.restore();
   }
 
   function drawRidge(ctx, payload, ridge) {
     const [aLon, aLat] = ridge.a;
     const [bLon, bLat] = ridge.b;
     const bend = ridge.bend || 0;
-    const mid = projectPoint(payload, (aLon + bLon) / 2, (aLat + bLat) / 2, RIDGE_ELEVATION);
-    const alpha = depthAlpha(mid.z, RIDGE_VISIBLE_MIN, 0.58);
+    const mid = projectPoint(payload, (aLon + bLon) / 2, (aLat + bLat) / 2, ELEVATION.ridge);
+    const alpha = depthAlpha(mid.z, VISIBILITY.ridgeMin, 0.58);
 
     if (!mid.visible || alpha <= 0.04) return;
 
@@ -458,9 +689,9 @@
       const k = i / 24;
       const lon = aLon + (bLon - aLon) * k + Math.sin(k * Math.PI) * bend * 18;
       const lat = aLat + (bLat - aLat) * k + Math.sin(k * Math.PI) * bend * 8;
-      const p = projectPoint(payload, lon, lat, RIDGE_ELEVATION);
+      const p = projectPoint(payload, lon, lat, ELEVATION.ridge);
 
-      if (!p.visible || p.z <= RIDGE_VISIBLE_MIN - 0.06) return;
+      if (!p.visible || p.z <= VISIBILITY.ridgeMin - 0.06) return;
       pts.push(p);
     }
 
@@ -472,8 +703,8 @@
       else ctx.lineTo(p.x, p.y);
     });
 
-    ctx.strokeStyle = withAlpha(COLORS.ridge, alpha, RIDGE_CENTER_ALPHA);
-    ctx.lineWidth = Math.max(1, payload.geometry.radius * 0.0048);
+    ctx.strokeStyle = withAlpha(COLORS.ridge, alpha, ALPHA.ridge);
+    ctx.lineWidth = Math.max(1, payload.geometry.radius * 0.0042);
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.stroke();
@@ -482,51 +713,40 @@
   }
 
   function drawSummit(ctx, payload, continent) {
-    const p = projectPoint(payload, continent.summitPoint.lon, continent.summitPoint.lat, SUMMIT_ELEVATION);
-    const alpha = depthAlpha(p.z, SUMMIT_VISIBLE_MIN, 0.66);
+    const p = projectPoint(payload, continent.summitPoint.lon, continent.summitPoint.lat, ELEVATION.summit);
+    const alpha = depthAlpha(p.z, VISIBILITY.summitMin, 0.66);
 
     if (!p.visible || alpha <= 0.05) return;
 
     const scaleByClass =
       continent.className === "primary"
-        ? 1.18
+        ? 1.12
         : continent.className === "major"
-          ? 1
+          ? 0.98
           : continent.className === "secondary"
-            ? 0.84
-            : 0.72;
+            ? 0.82
+            : 0.68;
 
-    const r = Math.max(1.1, payload.geometry.radius * 0.009 * scaleByClass) * (0.76 + p.scale * 0.28);
+    const r = Math.max(1.1, payload.geometry.radius * 0.0078 * scaleByClass) * (0.76 + p.scale * 0.26);
 
     ctx.save();
 
     ctx.beginPath();
-    ctx.arc(p.x, p.y, r * 1.55, 0, Math.PI * 2);
-    ctx.fillStyle = withAlpha("rgba(255, 232, 158, 0.065)", alpha, 0.07);
+    ctx.arc(p.x, p.y, r * 1.5, 0, TAU);
+    ctx.fillStyle = withAlpha("rgba(255, 232, 158, 0.055)", alpha, 0.06);
     ctx.fill();
 
     ctx.beginPath();
-    ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-    ctx.fillStyle = withAlpha(COLORS.summit, alpha, SUMMIT_CENTER_ALPHA);
+    ctx.arc(p.x, p.y, r, 0, TAU);
+    ctx.fillStyle = withAlpha(COLORS.summit, alpha, ALPHA.summit);
     ctx.fill();
 
     ctx.restore();
   }
 
-  function drawContinentBody(ctx, payload, continent) {
-    drawShelf(ctx, payload, continent);
-    drawLand(ctx, payload, continent);
-
-    for (const ridge of continent.ridges || []) {
-      drawRidge(ctx, payload, ridge);
-    }
-
-    drawSummit(ctx, payload, continent);
-  }
-
   function clipToSphere(ctx, geometry) {
     ctx.beginPath();
-    ctx.arc(geometry.cx, geometry.cy, geometry.radius * 0.994, 0, Math.PI * 2);
+    ctx.arc(geometry.cx, geometry.cy, geometry.radius * 0.994, 0, TAU);
     ctx.clip();
   }
 
@@ -540,11 +760,17 @@
     ctx.globalCompositeOperation = "source-over";
 
     for (const continent of CONTINENTS) {
-      drawShelf(ctx, payload, continent);
+      drawShelves(ctx, payload, continent);
     }
 
     for (const continent of CONTINENTS) {
       drawLand(ctx, payload, continent);
+    }
+
+    for (const continent of CONTINENTS) {
+      for (const zone of continent.pressureZones || []) {
+        drawPressureZone(ctx, payload, continent, zone);
+      }
     }
 
     for (const continent of CONTINENTS) {
@@ -610,9 +836,21 @@
     return api;
   }
 
+  function getDistribution() {
+    return CONTINENTS.map((continent) => ({
+      id: continent.id,
+      summit: continent.summit,
+      className: continent.className,
+      cells: continent.cells,
+      role: continent.role,
+      coastlineNodes: continent.nodes
+    }));
+  }
+
   function getStatus() {
     return {
       contract: CONTRACT,
+      expressionContract: EXPRESSION_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       family: FAMILY,
       target: TARGET,
@@ -620,6 +858,8 @@
       active: true,
       classicScript: true,
       nineSummits256FibonacciModel: true,
+      coastlineNodeExpression: true,
+      ovalLobesDemotedToScaffolding: true,
       summitCount: 9,
       continentBodyCount: 9,
       summits: SUMMITS.slice(),
@@ -629,13 +869,7 @@
       exposedLandRatio: EXPOSED_LAND_RATIO,
       oceanSeaRatio: OCEAN_SEA_RATIO,
       primarySummit: "Gratitude",
-      fibonacciDistribution: CONTINENTS.map((continent) => ({
-        id: continent.id,
-        summit: continent.summit,
-        className: continent.className,
-        cells: continent.cells,
-        role: continent.role
-      })),
+      fibonacciDistribution: getDistribution(),
       landCellTotal: CONTINENTS.reduce((sum, continent) => sum + continent.cells, 0),
       seaLevelLand: true,
       submergedShelves: true,
@@ -649,6 +883,7 @@
         "89 of 256 exposed-land budget",
         "167 of 256 ocean/shelf/sea budget",
         "Fibonacci land distribution",
+        "coastline-node landform expression",
         "sea-level land projection",
         "submerged shelves",
         "surface pressure ridges",
@@ -676,11 +911,12 @@
 
     const receipt = {
       contract: CONTRACT,
+      expressionContract: EXPRESSION_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       family: FAMILY,
       target: TARGET,
       route: ROUTE,
-      mode: "g26_nine_summits_256_fibonacci_continent_baseline",
+      mode: "g26_nine_summits_continent_expression_refinement",
       scope,
       active: true,
       classicScript: true,
@@ -688,6 +924,8 @@
       mountCalled: state.mountCalled,
       drawCount: state.drawCount,
       nineSummits256FibonacciModel: true,
+      coastlineNodeExpression: true,
+      ovalLobesDemotedToScaffolding: true,
       summitCount: 9,
       continentBodyCount: 9,
       totalLatticeCells: TOTAL_LATTICE_CELLS,
@@ -698,12 +936,7 @@
       primarySummit: "Gratitude",
       landCellTotal: CONTINENTS.reduce((sum, continent) => sum + continent.cells, 0),
       summits: SUMMITS.slice(),
-      distribution: CONTINENTS.map((continent) => ({
-        id: continent.id,
-        summit: continent.summit,
-        className: continent.className,
-        cells: continent.cells
-      })),
+      distribution: getDistribution(),
       seaLevelLand: true,
       submergedShelves: true,
       softLimbFade: true,
@@ -732,6 +965,7 @@
 
   const api = {
     CONTRACT,
+    EXPRESSION_CONTRACT,
     PREVIOUS_CONTRACT,
     FAMILY,
     TARGET,
@@ -769,6 +1003,7 @@
     window.audraliaContinents = api;
 
     window.AUDRALIA_NINE_SUMMITS_256_FIBONACCI_CONTINENTS_ACTIVE = true;
+    window.AUDRALIA_NINE_SUMMITS_CONTINENT_EXPRESSION_REFINEMENT_ACTIVE = true;
     window.AUDRALIA_FIVE_CONTINENT_LAW_ACTIVE = false;
     window.AUDRALIA_FIVE_CONTINENT_LAW_DEPRECATED = true;
     window.AUDRALIA_EXPOSED_LAND_CELLS = EXPOSED_LAND_CELLS;

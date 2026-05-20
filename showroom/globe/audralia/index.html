@@ -1,23 +1,25 @@
-<!-- TARGET FILE: /showroom/globe/audralia/index.html -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/globe/audralia/"
   data-page="audralia-possibility-path"
-  data-contract="AUDRALIA_ORGANIC_LANDFORM_HYDROLOGY_HTML_JS_PAIR_TNT_v1"
-  data-previous-contract="AUDRALIA_NARRATIVE_ALIGNMENT_GLOBE_PRESERVATION_HTML_TNT_v1"
-  data-js-contract="AUDRALIA_ORGANIC_LANDFORM_HYDROLOGY_VISUAL_RENEWAL_TNT_v1"
+  data-contract="AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_SHELL_ALIGNMENT_HTML_TNT_v1"
+  data-previous-contract="AUDRALIA_ROUTE_SHELL_V3_LOADER_BUMP_TNT_v3"
+  data-supersedes="AUDRALIA_NARRATIVE_ALIGNMENT_GLOBE_PRESERVATION_HTML_TNT_v1"
   data-role="showroom-globe-child-route"
   data-world="Audralia"
   data-canonical-spelling="A_U_D_R_A_L_I_A"
   data-parent-route="/showroom/globe/"
   data-public-path="possibility"
-  data-view-model="possibility-path-organic-landform-hydrology-contained"
+  data-view-model="possibility-path-routefinder-active-globe-contained"
   data-route-loader="/showroom/globe/audralia/index.js"
-  data-route-loader-contract="AUDRALIA_ORGANIC_LANDFORM_HYDROLOGY_VISUAL_RENEWAL_TNT_v1"
-  data-html-marriage-contract="AUDRALIA_ORGANIC_LANDFORM_HYDROLOGY_HTML_JS_PAIR_TNT_v1"
-  data-canvas-contract="AUDRALIA_ORGANIC_LANDFORM_HYDROLOGY_VISUAL_RENEWAL_TNT_v1"
-  data-globe-preserved="true"
+  data-route-loader-contract="AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_RENDER_BRIDGE_TNT_v2"
+  data-route-loader-receipt="AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_RENDER_BRIDGE_RECEIPT_v2"
+  data-required-loader-contract="AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_RENDER_BRIDGE_TNT_v2"
+  data-script-cache-key="AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_RENDER_BRIDGE_TNT_v2"
+  data-html-shell-aligned-to-routefinder="true"
+  data-old-climate-v2-status-loader-removed="true"
+  data-old-route-shell-v3-wait-state-removed="true"
   data-canvas-mount-preserved="true"
   data-touch-scope-preserved="box-only"
   data-generated-image="false"
@@ -51,6 +53,7 @@
       --faint:rgba(230,238,255,.52);
       --gold:#f3c86f;
       --green:#9ef0bf;
+      --blue:#8dd8ff;
       --panel:rgba(9,15,31,.88);
       --line:rgba(184,205,255,.18);
       --shadow:0 32px 110px rgba(0,0,0,.48);
@@ -66,6 +69,7 @@
       scroll-behavior:smooth;
       overflow-x:hidden;
       touch-action:pan-y;
+      scroll-padding-top:1rem;
     }
 
     body {
@@ -106,6 +110,7 @@
 
     a:focus-visible,
     button:focus-visible,
+    summary:focus-visible,
     [tabindex]:focus-visible {
       outline:2px solid var(--gold);
       outline-offset:4px;
@@ -217,6 +222,14 @@
       letter-spacing:.055em;
       text-transform:uppercase;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible {
+      transform:translateY(-2px);
+      border-color:rgba(158,240,191,.48);
+      outline:none;
     }
 
     .nav a[aria-current="page"] {
@@ -430,6 +443,7 @@
       border-radius:inherit;
       touch-action:none;
       overscroll-behavior:contain;
+      background:transparent;
     }
 
     [data-audralia-canvas-mount="true"] > *,
@@ -530,13 +544,13 @@
       line-height:1.42;
     }
 
-    .micro-links{
+    .micro-links {
       display:flex;
       flex-wrap:wrap;
       gap:.54rem;
     }
 
-    .micro-links a{
+    .micro-links a {
       min-height:2.35rem;
       display:inline-flex;
       align-items:center;
@@ -552,7 +566,7 @@
       text-transform:uppercase;
     }
 
-    .micro-links a.primary{
+    .micro-links a.primary {
       border-color:rgba(158,240,191,.62);
       color:#06101c;
       background:linear-gradient(135deg,#c8ffd8,#8eeab2);
@@ -699,10 +713,13 @@
           data-audralia-box-stage="true"
           data-audralia-globe-stage="true"
           data-loader-state="pending"
+          data-required-loader-contract="AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_RENDER_BRIDGE_TNT_v2"
+          data-old-climate-v2-status-loader-removed="true"
+          data-old-route-shell-v3-wait-state-removed="true"
           aria-label="Audralia boxed possibility globe stage"
         >
           <div class="stage-fallback" data-stage-fallback="true">
-            Connecting to the organic Audralia landform and hydrology globe.
+            RouteFinder active globe bridge preparing. The old climate-v2 route-shell wait state has been removed.
           </div>
 
           <div
@@ -714,13 +731,17 @@
             data-audralia-box-target="true"
             data-audralia-adoption-target="true"
             data-audralia-touch-scope="box-only"
+            data-required-loader-contract="AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_RENDER_BRIDGE_TNT_v2"
+            data-generated-image="false"
+            data-graphic-box="false"
+            data-visual-pass-claimed="false"
             aria-label="Audralia boxed possibility globe canvas mount"
           ></div>
         </div>
 
         <div class="public-status" aria-live="polite">
-          <span id="audraliaRouteLoaderNotice" data-audralia-route-loader-notice="true">Organic landform bridge preparing</span>
-          <span id="audraliaRouteStatus" data-audralia-route-status="true">Hydrology chain pending</span>
+          <span id="audraliaRouteLoaderNotice" data-audralia-route-loader-notice="true">RouteFinder active globe bridge preparing</span>
+          <span id="audraliaRouteStatus" data-audralia-route-status="true">Awaiting AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_RENDER_BRIDGE_TNT_v2</span>
         </div>
       </section>
 
@@ -757,9 +778,9 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-AUDRALIA_ORGANIC_LANDFORM_HYDROLOGY_HTML_JS_PAIR_TNT_v1
-previous=AUDRALIA_NARRATIVE_ALIGNMENT_GLOBE_PRESERVATION_HTML_TNT_v1
-js_contract=AUDRALIA_ORGANIC_LANDFORM_HYDROLOGY_VISUAL_RENEWAL_TNT_v1
+AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_SHELL_ALIGNMENT_HTML_TNT_v1
+previous=AUDRALIA_ROUTE_SHELL_V3_LOADER_BUMP_TNT_v3
+supersedes=AUDRALIA_NARRATIVE_ALIGNMENT_GLOBE_PRESERVATION_HTML_TNT_v1
 route=/showroom/globe/audralia/
 page=audralia
 role=showroom_globe_child_route
@@ -769,53 +790,63 @@ world=Audralia
 canonical_spelling=A_U_D_R_A_L_I_A
 parent_route=/showroom/globe/
 public_parent_label=Interactive_Narrative
+target_file=/showroom/globe/audralia/index.html
 route_loader=/showroom/globe/audralia/index.js
-route_loader_contract=AUDRALIA_ORGANIC_LANDFORM_HYDROLOGY_VISUAL_RENEWAL_TNT_v1
-script_cache_key=AUDRALIA_ORGANIC_LANDFORM_HYDROLOGY_VISUAL_RENEWAL_TNT_v1
+route_loader_contract=AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_RENDER_BRIDGE_TNT_v2
+route_loader_receipt=AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_RENDER_BRIDGE_RECEIPT_v2
+required_loader_contract=AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_RENDER_BRIDGE_TNT_v2
+script_cache_key=AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_RENDER_BRIDGE_TNT_v2
+old_route_shell_v3_wait_state_removed=true
+old_climate_v2_status_loader_removed=true
 canvas_mount=#audraliaCanvasMount
 canvas_mount_preserved=true
-globe_preserved=true
 touch_scope=box_only
-page_scroll_outside_box=true
-stage_overflow_hidden=true
-organic_landform_renewal=true
-hydrology_shapes_land=true
-procedural_world_fallback=false
+box_containment=true
+routefinder_bridge_expected=true
+asset_chain_expected=lattice256,landmap,topology,elevation,hydrology,land_surface,routefinder_texture,canvas_draw
+stage_fallback_text=RouteFinder_active_globe_bridge_preparing
+public_status_label=Awaiting_AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_RENDER_BRIDGE_TNT_v2
 generated_image=false
 graphic_box=false
+procedural_world_fallback=false
 streaming=false
 visual_pass_claimed=false
-public_copy_preserved=true
-stage_heading=Inspectable_mirror_world
-conditions=clean_slate_world,lawful_development,mirror_back_to_earth
-route_owns=route_shell,public_copy,canvas_mount,public_status,containment_box,touch_scope_css,update_bar_suppression,narrative_alignment
-route_does_not_own=gauges_logic,product_chamber_content,earth_route,h_earth_route
+route_owns=route_shell,public_copy,canvas_mount,public_status,containment_box,touch_scope_css,routefinder_loader_alignment,old_wait_state_removal
+route_does_not_own=land_footprint,climate_authority,surface_truth,gauges_logic,planet_generation,asset_authority,runtime_files
 receipt_visibility=hidden_template_only
       </template>
     </main>
 
     <footer>
-      Audralia · The Possibility Path · Organic landform and hydrology globe contained inside the inspection box.
+      AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_SHELL_ALIGNMENT_HTML_TNT_v1 · Audralia · RouteFinder active globe bridge expected.
     </footer>
   </div>
 
   <script>
-    window.DGB_AUDRALIA_ROUTE_KEY = "AUDRALIA_ORGANIC_LANDFORM_HYDROLOGY_VISUAL_RENEWAL_TNT_v1";
-    window.DGB_AUDRALIA_HTML_MARRIAGE_KEY = "AUDRALIA_ORGANIC_LANDFORM_HYDROLOGY_HTML_JS_PAIR_TNT_v1";
-    window.DGB_AUDRALIA_NARRATIVE_ALIGNMENT_KEY = "AUDRALIA_ORGANIC_LANDFORM_HYDROLOGY_HTML_JS_PAIR_TNT_v1";
+    window.DGB_AUDRALIA_ROUTE_KEY = "AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_RENDER_BRIDGE_TNT_v2";
+    window.DGB_AUDRALIA_REQUIRED_LOADER_CONTRACT = "AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_RENDER_BRIDGE_TNT_v2";
+    window.DGB_AUDRALIA_HTML_SHELL_ALIGNMENT_KEY = "AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_SHELL_ALIGNMENT_HTML_TNT_v1";
+    window.DGB_AUDRALIA_CANONICAL_SPELLING = "A_U_D_R_A_L_I_A";
     window.DGB_AUDRALIA_BOX_CONTAINMENT = true;
-    window.DGB_AUDRALIA_RESTORE_EXISTING_GLOBE = true;
+    window.DGB_AUDRALIA_ROUTEFINDER_ACTIVE = true;
+    window.DGB_AUDRALIA_RESTORE_EXISTING_GLOBE = false;
     window.DGB_AUDRALIA_NO_PROCEDURAL_FALLBACK = true;
     window.DGB_AUDRALIA_REFRESH_SAFE = true;
     window.DGB_AUDRALIA_REFRESH_EXIT_SAFE = true;
     window.DGB_AUDRALIA_TOUCH_SCOPE = "box-only";
     window.DGB_AUDRALIA_HIDE_UPDATE_BAR = true;
+    window.DGB_AUDRALIA_GENERATED_IMAGE = false;
+    window.DGB_AUDRALIA_GRAPHIC_BOX = false;
+    window.DGB_AUDRALIA_VISUAL_PASS_CLAIMED = false;
+
+    document.documentElement.dataset.audraliaHtmlShellLoaded = "true";
+    document.documentElement.dataset.audraliaHtmlShellContract = "AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_SHELL_ALIGNMENT_HTML_TNT_v1";
+    document.documentElement.dataset.audraliaRequiredLoaderContract = "AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_RENDER_BRIDGE_TNT_v2";
+    document.documentElement.dataset.audraliaOldRouteShellV3WaitStateRemoved = "true";
+    document.documentElement.dataset.audraliaOldClimateV2StatusLoaderRemoved = "true";
   </script>
+
   <script
-    src="/showroom/globe/audralia/index.js?v=AUDRALIA_ORGANIC_LANDFORM_HYDROLOGY_VISUAL_RENEWAL_TNT_v1"
-    data-audralia-loader-script="AUDRALIA_ORGANIC_LANDFORM_HYDROLOGY_VISUAL_RENEWAL_TNT_v1"
-    data-audralia-html-marriage="AUDRALIA_ORGANIC_LANDFORM_HYDROLOGY_HTML_JS_PAIR_TNT_v1"
-    defer
-  ></script>
-</body>
-</html>
+    src="/showroom/globe/audralia/index.js?v=AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_RENDER_BRIDGE_TNT_v2"
+    data-audralia-loader-script="AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_RENDER_BRIDGE_TNT_v2"
+    data-audralia-required-loader-contract="AUDRALIA_ROUTEFINDER_ACTIVE_GLOBE_RENDER_BRIDGE

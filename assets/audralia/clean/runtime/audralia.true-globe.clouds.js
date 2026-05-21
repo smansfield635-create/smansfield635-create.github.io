@@ -1,9 +1,12 @@
 // /assets/audralia/clean/runtime/audralia.true-globe.clouds.js
 // TNT FULL-FILE REPLACEMENT
+// AUDRALIA_G2_TRUE_RUNTIME_CLOUD_LIFECYCLE_CONSERVATION_CHILD_TNT_v3
+//
+// Public cloud contract intentionally preserved for runtime compatibility:
 // AUDRALIA_G2_TRUE_RUNTIME_ORGANIC_MOISTURE_CLOUD_FLOW_CHILD_TNT_v2
 //
-// Supersedes:
-// AUDRALIA_G2_TRUE_RUNTIME_4K_MOISTURE_CLOUD_CHILD_TNT_v1
+// Supersedes internally:
+// AUDRALIA_G2_TRUE_RUNTIME_ORGANIC_MOISTURE_CLOUD_FLOW_CHILD_TNT_v2
 //
 // Family:
 // /assets/audralia/clean/runtime/
@@ -14,11 +17,12 @@
 //
 // Purpose:
 // - Preserve moisture-driven cloud authority.
-// - Reduce visible cloud speed.
-// - Stop visible clouds from exposing the 16 × 16 / 256 diagnostic lattice.
-// - Use the 256 lattice/moisture field as hidden atmospheric authority.
-// - Render a higher-density organic cloud-flow layer for Planet View only.
-// - Add slow atmospheric drift, circulation swirl, local shear, and stable turbulence.
+// - Preserve runtime compatibility.
+// - Add natural-time cloud lifecycle conservation.
+// - Prevent time-lapse growth.
+// - Prevent indefinite cloud inflation.
+// - Preserve organic swirl flow.
+// - Keep clouds Planet View only.
 // - Do not create canvas.
 // - Do not modify HTML.
 // - Do not own route JS.
@@ -29,9 +33,10 @@
   "use strict";
 
   var CONTRACT = "AUDRALIA_G2_TRUE_RUNTIME_ORGANIC_MOISTURE_CLOUD_FLOW_CHILD_TNT_v2";
+  var LIFECYCLE_CONSERVATION_CONTRACT = "AUDRALIA_G2_TRUE_RUNTIME_CLOUD_LIFECYCLE_CONSERVATION_CHILD_TNT_v3";
   var PREVIOUS_CONTRACT = "AUDRALIA_G2_TRUE_RUNTIME_4K_MOISTURE_CLOUD_CHILD_TNT_v1";
   var MOISTURE_CONTRACT = "AUDRALIA_G2_TRUE_RUNTIME_MOISTURE_FIELD_CHILD_TNT_v1";
-  var STANDARD = "AUDRALIA_G2_ORGANIC_MOISTURE_CLOUD_FLOW_REFINEMENT_STANDARD_v1";
+  var STANDARD = "AUDRALIA_G2_CLOUD_LIFECYCLE_CONSERVATION_AND_NATURAL_TIME_STANDARD_v1";
   var FAMILY = "/assets/audralia/clean/runtime/";
   var FILE = "/assets/audralia/clean/runtime/audralia.true-globe.clouds.js";
 
@@ -40,30 +45,43 @@
   var LATTICE_STATES = 256;
   var TAU = Math.PI * 2;
 
-  var DEFAULT_OPTIONS = {
-    cloudOpacityScale: 0.92,
-    cloudSizeScale: 1.0,
-    cloudSoftnessScale: 1.16,
+  var MAX_CLOUD_WIDTH_BASE = 58;
+  var MAX_CLOUD_HEIGHT_BASE = 28;
+  var MAX_FRAGMENT_WIDTH_BASE = 24;
+  var MAX_FRAGMENT_HEIGHT_BASE = 14;
+  var MAX_OPACITY = 0.64;
 
-    // Organic field density. Not the diagnostic lattice.
+  var DEFAULT_OPTIONS = {
+    cloudOpacityScale: 0.84,
+    cloudSizeScale: 0.92,
+    cloudSoftnessScale: 1.10,
+
     organicColumns: 56,
     organicRows: 28,
-    maxCloudsPerFrame: 190,
+    maxCloudsPerFrame: 160,
     microFragmentCount: 7,
 
-    // Slowed substantially from the first live version.
-    globalCloudTimeScale: 0.055,
-    swirlTimeScale: 0.032,
-    textureTimeScale: 0.018,
+    weatherAdvectionTimeScale: 0.012,
+    swirlTimeScale: 0.009,
+    textureTimeScale: 0.006,
+    lifecycleTimeScale: 0.004,
 
-    // Visibility / behavior.
+    lifecycleMinimum: 0.34,
+    lifecycleMaximum: 1.0,
+    breathingStrength: 0.045,
+    dissipationStrength: 0.34,
+
     frontVisibilityFloor: 0.16,
     backVisibilityFloor: 0.0,
     rimCompression: 0.68,
     limbFadeStart: 0.72,
     limbFadeEnd: 1.03,
 
-    proceduralResolution: "4k-ready-organic-flow",
+    massCap: 1.0,
+    opacityCap: MAX_OPACITY,
+    densityCap: 0.86,
+
+    proceduralResolution: "4k-ready-organic-flow-conserved",
     materialClass: "cool-white-blue-gray-moisture-cloud",
 
     generatedImage: false,
@@ -76,11 +94,11 @@
   };
 
   var SWIRL_CENTERS = [
-    { lon: -2.56, lat: 0.52, radius: 0.82, strength: 0.34, drift: 0.020, sign: 1 },
-    { lon: -0.92, lat: -0.34, radius: 1.04, strength: 0.28, drift: -0.015, sign: -1 },
-    { lon: 0.74, lat: 0.24, radius: 0.74, strength: 0.32, drift: 0.012, sign: 1 },
-    { lon: 2.20, lat: -0.58, radius: 0.94, strength: 0.24, drift: -0.018, sign: -1 },
-    { lon: 2.92, lat: 0.68, radius: 0.62, strength: 0.18, drift: 0.010, sign: 1 }
+    { lon: -2.56, lat: 0.52, radius: 0.82, strength: 0.30, drift: 0.006, sign: 1 },
+    { lon: -0.92, lat: -0.34, radius: 1.04, strength: 0.25, drift: -0.005, sign: -1 },
+    { lon: 0.74, lat: 0.24, radius: 0.74, strength: 0.28, drift: 0.004, sign: 1 },
+    { lon: 2.20, lat: -0.58, radius: 0.94, strength: 0.22, drift: -0.005, sign: -1 },
+    { lon: 2.92, lat: 0.68, radius: 0.62, strength: 0.16, drift: 0.003, sign: 1 }
   ];
 
   var state = {
@@ -99,13 +117,24 @@
     lastMoistureEligibleCount: 0,
     lastAverageCloudOpacity: 0,
 
-    layerVersion: CONTRACT,
-    layerKind: "organic-high-density-moisture-cloud-flow",
+    lastMaxCloudWidth: 0,
+    lastMaxCloudHeight: 0,
+
+    layerVersion: LIFECYCLE_CONSERVATION_CONTRACT,
+    publicContract: CONTRACT,
+    layerKind: "organic-high-density-moisture-cloud-flow-with-lifecycle-conservation",
     renderMode: "canvas-2d-runtime-consumer-planet-view-only",
 
-    organicFlowActive: true,
-    highDensityCloudFieldActive: true,
+    naturalTimeActive: true,
+    timeLapseBlocked: true,
     cloudSpeedReduced: true,
+    cloudMassConservationActive: true,
+    cloudGrowthClamped: true,
+    lifecycleEnvelopeActive: true,
+    nonMonotonicDissipationActive: true,
+    cloudCountStableRange: true,
+    organicSwirlFlowActive: true,
+    highDensityCloudFieldActive: true,
     cloudsNotVisible256Grid: true,
 
     errors: []
@@ -183,8 +212,8 @@
 
     for (i = 0; i < 5; i += 1) {
       total += valueNoise2(
-        x * freq + time * (0.13 + i * 0.019),
-        y * freq - time * (0.09 + i * 0.013),
+        x * freq + time * (0.08 + i * 0.011),
+        y * freq - time * (0.06 + i * 0.009),
         salt + i * 17.37
       ) * amp;
 
@@ -198,6 +227,22 @@
 
   function getMoistureApi() {
     return window.AUDRALIA_TRUE_GLOBE_MOISTURE || window.AUDRALIA_G2_TRUE_GLOBE_MOISTURE || null;
+  }
+
+  function getWeatherTime(frame) {
+    return finite(frame && frame.renderTime, 0) * state.options.weatherAdvectionTimeScale;
+  }
+
+  function getSwirlTime(frame) {
+    return finite(frame && frame.renderTime, 0) * state.options.swirlTimeScale;
+  }
+
+  function getTextureTime(frame) {
+    return finite(frame && frame.renderTime, 0) * state.options.textureTimeScale;
+  }
+
+  function getLifecycleTime(frame) {
+    return finite(frame && frame.renderTime, 0) * state.options.lifecycleTimeScale;
   }
 
   function getFrameMetrics(frame) {
@@ -303,7 +348,7 @@
     return 2 * Math.atan2(Math.sqrt(h), Math.sqrt(Math.max(0, 1 - h)));
   }
 
-  function swirlInfluence(lon, lat, slowTime) {
+  function swirlInfluence(lon, lat, swirlTime) {
     var influenceLon = 0;
     var influenceLat = 0;
     var bend = 0;
@@ -312,15 +357,15 @@
 
     for (i = 0; i < SWIRL_CENTERS.length; i += 1) {
       var center = SWIRL_CENTERS[i];
-      var centerLon = wrapLongitude(center.lon + slowTime * center.drift);
-      var centerLat = clamp(center.lat + Math.sin(slowTime * 0.19 + i * 1.7) * 0.045, -1.28, 1.28);
+      var centerLon = wrapLongitude(center.lon + swirlTime * center.drift);
+      var centerLat = clamp(center.lat + Math.sin(swirlTime * 0.11 + i * 1.7) * 0.028, -1.28, 1.28);
       var distance = greatCircleDistance(lon, lat, centerLon, centerLat);
       var force = Math.exp(-(distance * distance) / Math.max(0.001, center.radius * center.radius));
       var dLon = wrapLongitude(lon - centerLon);
       var dLat = lat - centerLat;
 
       influenceLon += -dLat * force * center.strength * center.sign;
-      influenceLat += dLon * force * center.strength * center.sign * 0.42;
+      influenceLat += dLon * force * center.strength * center.sign * 0.36;
       bend += force * center.strength * center.sign;
       strengthSum += force;
     }
@@ -333,57 +378,92 @@
     };
   }
 
-  function zonalDrift(lat, slowTime) {
+  function zonalDrift(lat, weatherTime) {
     var abs = Math.abs(lat) / (Math.PI / 2);
     var equator = 1 - smoothstep(0.16, 0.46, abs);
     var temperate = smoothstep(0.22, 0.55, abs) * (1 - smoothstep(0.68, 0.92, abs));
     var polar = smoothstep(0.72, 1.0, abs);
 
-    return slowTime * (
-      equator * 0.34 +
-      temperate * -0.24 +
-      polar * 0.10
+    return weatherTime * (
+      equator * 0.18 +
+      temperate * -0.13 +
+      polar * 0.05
     );
   }
 
-  function organicSamplePoint(col, row, cols, rows, frame) {
-    var renderTime = finite(frame && frame.renderTime, 0);
-    var slowTime = renderTime * state.options.globalCloudTimeScale;
-    var swirlTime = renderTime * state.options.swirlTimeScale;
-    var textureTime = renderTime * state.options.textureTimeScale;
+  function getLifecycleEnvelope(cellId, lifecycleTime) {
+    var phaseOffset = hash3(cellId, 21.7, 4.9);
+    var maturityBias = hash3(cellId, 13.1, 8.2);
+    var dissipationBias = hash3(cellId, 33.4, 17.6);
+    var breathingBias = hash3(cellId, 47.2, 25.3);
 
+    var phase = fract(lifecycleTime * (0.035 + maturityBias * 0.025) + phaseOffset);
+
+    var formation = smoothstep(0.04, 0.24, phase);
+    var maturity = 1 - smoothstep(0.52 + dissipationBias * 0.08, 0.76 + dissipationBias * 0.08, phase);
+    var renewal = smoothstep(0.86, 1.0, phase) * 0.18;
+
+    var envelope = clamp(formation * maturity + renewal, state.options.lifecycleMinimum, state.options.lifecycleMaximum);
+
+    var breathing =
+      1 +
+      Math.sin((phase + breathingBias) * TAU) *
+      state.options.breathingStrength *
+      envelope;
+
+    var dissipation = smoothstep(0.62, 0.92, phase) * state.options.dissipationStrength;
+
+    return {
+      phase: phase,
+      formation: formation,
+      maturity: maturity,
+      renewal: renewal,
+      envelope: clamp(envelope * breathing, state.options.lifecycleMinimum, state.options.lifecycleMaximum),
+      densityEnvelope: clamp(envelope * (1 - dissipation * 0.34), 0.16, state.options.densityCap),
+      opacityEnvelope: clamp(envelope * (1 - dissipation * 0.48), 0.12, 1),
+      sizeEnvelope: clamp(0.58 + envelope * 0.42 - dissipation * 0.18, 0.42, 1),
+      dissipation: dissipation,
+      breathing: breathing,
+      nonMonotonic: true
+    };
+  }
+
+  function organicSamplePoint(col, row, cols, rows, frame) {
+    var weatherTime = getWeatherTime(frame);
+    var swirlTime = getSwirlTime(frame);
+    var textureTime = getTextureTime(frame);
+
+    var cellId = row * cols + col;
     var rowSeed = hash3(row, cols, 3.17);
     var colSeed = hash3(col, row, 8.91);
     var colSeedB = hash3(col + 11, row + 5, 15.37);
 
-    // Equal-area latitude. Jitter is small and stable.
-    var u = (row + 0.5 + (rowSeed - 0.5) * 0.28) / rows;
+    var u = (row + 0.5 + (rowSeed - 0.5) * 0.22) / rows;
     var y = 1 - 2 * u;
     var lat = Math.asin(clamp(y, -1, 1));
 
-    // Golden-ratio row offset breaks columns.
     var golden = 0.61803398875;
-    var rowOffset = fract(row * golden + rowSeed * 0.21);
-    var lon = -Math.PI + TAU * ((col + rowOffset + (colSeed - 0.5) * 0.42) / cols);
+    var rowOffset = fract(row * golden + rowSeed * 0.19);
+    var lon = -Math.PI + TAU * ((col + rowOffset + (colSeed - 0.5) * 0.34) / cols);
 
-    lon = wrapLongitude(lon + zonalDrift(lat, slowTime));
+    lon = wrapLongitude(lon + zonalDrift(lat, weatherTime));
 
-    // Organic turbulence before moisture sampling.
     var nx = (lon + Math.PI) / TAU;
     var ny = (lat + Math.PI / 2) / Math.PI;
-    var lowFlow = fbm2(nx * 3.1, ny * 2.4, textureTime, 27.4);
-    var midFlow = fbm2(nx * 7.7 + 0.4, ny * 5.8 - 0.2, textureTime * 0.72, 63.2);
+    var lowFlow = fbm2(nx * 2.7, ny * 2.1, textureTime, 27.4);
+    var midFlow = fbm2(nx * 6.4 + 0.4, ny * 4.9 - 0.2, textureTime * 0.70, 63.2);
     var swirl = swirlInfluence(lon, lat, swirlTime);
 
-    lon = wrapLongitude(lon + (lowFlow - 0.5) * 0.18 + swirl.lon * 0.42);
-    lat = clamp(lat + (midFlow - 0.5) * 0.075 + swirl.lat * 0.34, -1.42, 1.42);
+    lon = wrapLongitude(lon + (lowFlow - 0.5) * 0.075 + swirl.lon * 0.24);
+    lat = clamp(lat + (midFlow - 0.5) * 0.038 + swirl.lat * 0.18, -1.42, 1.42);
 
     return {
+      cellId: cellId,
       col: col,
       row: row,
       longitude: lon,
       latitude: lat,
-      slowTime: slowTime,
+      weatherTime: weatherTime,
       swirlTime: swirlTime,
       textureTime: textureTime,
       noise: lowFlow * 0.62 + midFlow * 0.38,
@@ -393,11 +473,47 @@
     };
   }
 
+  function applyMassConservation(cloud, projection) {
+    var perspective = clamp(projection.perspective, 0.44, 2.25);
+    var maxCloudWidth = MAX_CLOUD_WIDTH_BASE * perspective;
+    var maxCloudHeight = MAX_CLOUD_HEIGHT_BASE * perspective;
+
+    cloud.width = clamp(cloud.width, 4.0 * perspective, maxCloudWidth);
+    cloud.height = clamp(cloud.height, 2.2 * perspective, maxCloudHeight);
+    cloud.cloudOpacity = clamp(cloud.cloudOpacity, 0, state.options.opacityCap);
+    cloud.cloudDensity = clamp(cloud.cloudDensity, 0, state.options.densityCap);
+
+    cloud.massEnvelope = clamp(
+      (cloud.width * cloud.height * cloud.cloudOpacity) / Math.max(1, maxCloudWidth * maxCloudHeight * state.options.opacityCap),
+      0,
+      state.options.massCap
+    );
+
+    if (cloud.massEnvelope >= state.options.massCap) {
+      var compression = Math.sqrt(state.options.massCap / Math.max(0.001, cloud.massEnvelope));
+      cloud.width *= compression;
+      cloud.height *= compression;
+      cloud.cloudOpacity *= 0.96;
+      cloud.massEnvelope = state.options.massCap;
+    }
+
+    state.lastMaxCloudWidth = Math.max(state.lastMaxCloudWidth, cloud.width);
+    state.lastMaxCloudHeight = Math.max(state.lastMaxCloudHeight, cloud.height);
+
+    cloud.cloudGrowthClamped = true;
+    cloud.cloudMassConservationActive = true;
+
+    return cloud;
+  }
+
   function evaluateOrganicCloud(samplePoint, moistureApi, frame) {
+    var lifecycleTime = getLifecycleTime(frame);
+    var lifecycle = getLifecycleEnvelope(samplePoint.cellId, lifecycleTime);
+
     var moisture = moistureApi.sample(
       samplePoint.longitude,
       samplePoint.latitude,
-      samplePoint.slowTime
+      samplePoint.weatherTime
     );
 
     var projection = projectLonLat(samplePoint.longitude, samplePoint.latitude, frame);
@@ -407,56 +523,66 @@
     }
 
     var coherence =
-      samplePoint.noise * 0.24 +
-      samplePoint.swirl.strength * 0.26 +
-      moisture.condensation * 0.32 +
-      moisture.circulation * 0.18;
+      samplePoint.noise * 0.22 +
+      samplePoint.swirl.strength * 0.22 +
+      moisture.condensation * 0.34 +
+      moisture.circulation * 0.16 +
+      lifecycle.densityEnvelope * 0.06;
 
     var threshold =
-      0.56 +
-      smoothstep(0.75, 1.0, projection.limbFactor) * 0.06 -
-      samplePoint.swirl.strength * 0.035;
+      0.57 +
+      smoothstep(0.75, 1.0, projection.limbFactor) * 0.07 -
+      samplePoint.swirl.strength * 0.026;
 
     var probability = moisture.cloudProbability * 0.72 + coherence * 0.28;
-
-    // Blue-noise pruning removes rows/flecks without turning into random frame noise.
     var blueNoise = hash3(samplePoint.col * 2.71, samplePoint.row * 5.13, 91.7);
-    var retain = probability + (blueNoise - 0.5) * 0.16;
+    var retain = probability + (blueNoise - 0.5) * 0.12;
 
     if (retain < threshold) return null;
 
-    var density = smoothstep(threshold, 0.95, retain);
+    var density = smoothstep(threshold, 0.95, retain) * lifecycle.densityEnvelope;
     var perspective = clamp(projection.perspective, 0.44, 2.25);
     var limbFade = 1 - smoothstep(0.88, 1.08, projection.limbFactor);
 
-    var baseSize = (5.5 + density * 20.0) * perspective * state.options.cloudSizeScale;
+    var baseSize = (5.2 + density * 14.0) * perspective * state.options.cloudSizeScale;
     var shear =
-      1.1 +
-      moisture.circulation * 1.2 +
-      samplePoint.swirl.strength * 1.6 +
-      Math.abs(Math.sin(samplePoint.latitude)) * 0.25;
+      1.05 +
+      moisture.circulation * 0.82 +
+      samplePoint.swirl.strength * 1.05 +
+      Math.abs(Math.sin(samplePoint.latitude)) * 0.16;
 
-    var width = baseSize * shear * lerp(1.0, state.options.rimCompression, projection.limbFactor);
-    var height = baseSize * (0.34 + moisture.cloudSoftness * 0.42) * lerp(1.0, 0.58, projection.limbFactor);
+    var width =
+      baseSize *
+      shear *
+      lifecycle.sizeEnvelope *
+      lerp(1.0, state.options.rimCompression, projection.limbFactor);
+
+    var height =
+      baseSize *
+      (0.32 + moisture.cloudSoftness * 0.36) *
+      lifecycle.sizeEnvelope *
+      lerp(1.0, 0.58, projection.limbFactor);
 
     var opacity =
-      (0.18 + density * 0.54 + moisture.condensation * 0.18) *
+      (0.16 + density * 0.48 + moisture.condensation * 0.13) *
       state.options.cloudOpacityScale *
       projection.visibility *
-      limbFade;
+      limbFade *
+      lifecycle.opacityEnvelope;
 
-    opacity = clamp(opacity, 0, 0.74);
+    opacity = clamp(opacity, 0, state.options.opacityCap);
 
     if (opacity < 0.025) return null;
 
     var angle =
-      samplePoint.latitude * 1.35 +
-      samplePoint.swirl.bend * 1.18 +
-      (samplePoint.noise - 0.5) * 0.92 +
-      Math.sin(samplePoint.longitude + samplePoint.slowTime * 0.8) * 0.18;
+      samplePoint.latitude * 1.22 +
+      samplePoint.swirl.bend * 0.92 +
+      (samplePoint.noise - 0.5) * 0.64 +
+      Math.sin(samplePoint.longitude + samplePoint.weatherTime * 0.42) * 0.10;
 
-    return {
-      sampleIndex: samplePoint.row * state.options.organicColumns + samplePoint.col,
+    var cloud = {
+      sampleIndex: samplePoint.cellId,
+      cellId: samplePoint.cellId,
       col: samplePoint.col,
       row: samplePoint.row,
 
@@ -480,8 +606,8 @@
       cloudDensity: density,
       cloudOpacity: opacity,
 
-      denseCloudEligible: probability > 0.76,
-      stormEligible: probability > 0.88,
+      denseCloudEligible: probability > 0.78,
+      stormEligible: probability > 0.90,
 
       width: width,
       height: height,
@@ -493,14 +619,30 @@
       seed: samplePoint.seed,
       seedB: samplePoint.seedB,
 
+      lifecyclePhase: lifecycle.phase,
+      lifecycleEnvelope: lifecycle.envelope,
+      densityEnvelope: lifecycle.densityEnvelope,
+      opacityEnvelope: lifecycle.opacityEnvelope,
+      sizeEnvelope: lifecycle.sizeEnvelope,
+      dissipationCurve: lifecycle.dissipation,
+      breathingFactor: lifecycle.breathing,
+      nonMonotonicDissipationActive: lifecycle.nonMonotonic,
+
       materialClass: state.options.materialClass,
-      source: "organic-moisture-flow-field",
+      source: "organic-moisture-flow-field-with-lifecycle-conservation",
       cloudsDerivedFromMoisture: true,
       cloudsNotRandomPatches: true,
       cloudsNotVisible256Grid: true,
+      cloudMassConservationActive: true,
+      cloudGrowthClamped: true,
+      lifecycleEnvelopeActive: true,
+      timeLapseBlocked: true,
+      naturalTimeActive: true,
       randomPatchClouds: false,
       flatProjection: false
     };
+
+    return applyMassConservation(cloud, projection);
   }
 
   function buildFragments(cloud) {
@@ -508,14 +650,17 @@
     var count = Math.max(
       3,
       Math.min(
-        12,
+        10,
         Math.round(
           state.options.microFragmentCount +
-          cloud.cloudDensity * 4 +
-          cloud.flowStrength * 3
+          cloud.cloudDensity * 3 +
+          cloud.flowStrength * 2
         )
       )
     );
+
+    var maxFragmentWidth = MAX_FRAGMENT_WIDTH_BASE * cloud.perspective;
+    var maxFragmentHeight = MAX_FRAGMENT_HEIGHT_BASE * cloud.perspective;
 
     var i;
 
@@ -524,21 +669,25 @@
       var seedB = hash3(cloud.sampleIndex + 4.2, i + 9.1, 33.4);
       var seedC = hash3(cloud.sampleIndex + 11.8, i + 17.6, 70.2);
 
-      var flowAngle = cloud.angle + (seed - 0.5) * (0.46 + cloud.flowStrength * 0.38);
-      var offsetRadius = cloud.width * (0.05 + seedB * 0.26);
+      var flowAngle = cloud.angle + (seed - 0.5) * (0.38 + cloud.flowStrength * 0.24);
+      var offsetRadius = cloud.width * (0.045 + seedB * 0.20);
       var offsetX = Math.cos(flowAngle) * offsetRadius;
-      var offsetY = Math.sin(flowAngle) * offsetRadius * 0.48;
+      var offsetY = Math.sin(flowAngle) * offsetRadius * 0.42;
+
+      var fragmentWidth = cloud.width * (0.15 + seed * 0.24);
+      var fragmentHeight = cloud.height * (0.20 + seedC * 0.28);
 
       fragments.push({
         x: cloud.x + offsetX,
         y: cloud.y + offsetY,
-        width: cloud.width * (0.17 + seed * 0.30),
-        height: cloud.height * (0.22 + seedC * 0.34),
+        width: clamp(fragmentWidth, 1.0 * cloud.perspective, maxFragmentWidth),
+        height: clamp(fragmentHeight, 0.8 * cloud.perspective, maxFragmentHeight),
         angle: flowAngle,
-        opacity: cloud.cloudOpacity * (0.28 + seedB * 0.42),
+        opacity: clamp(cloud.cloudOpacity * (0.26 + seedB * 0.36), 0, MAX_OPACITY),
         softness: cloud.softness,
         shade: seedC,
-        flowStrength: cloud.flowStrength
+        flowStrength: cloud.flowStrength,
+        cloudGrowthClamped: true
       });
     }
 
@@ -549,6 +698,8 @@
     var moistureApi = getMoistureApi();
 
     state.moistureDetected = Boolean(moistureApi && typeof moistureApi.sample === "function");
+    state.lastMaxCloudWidth = 0;
+    state.lastMaxCloudHeight = 0;
 
     if (!state.moistureDetected) {
       state.cloudsReady = false;
@@ -556,6 +707,7 @@
 
       return {
         contract: CONTRACT,
+        lifecycleConservationContract: LIFECYCLE_CONSERVATION_CONTRACT,
         previousContract: PREVIOUS_CONTRACT,
         standard: STANDARD,
         family: FAMILY,
@@ -581,7 +733,7 @@
 
     var cols = Math.max(24, Math.min(96, state.options.organicColumns));
     var rows = Math.max(12, Math.min(48, state.options.organicRows));
-    var limit = Math.max(32, Math.min(260, state.options.maxCloudsPerFrame));
+    var limit = Math.max(32, Math.min(220, state.options.maxCloudsPerFrame));
 
     var clouds = [];
     var cloudOpacitySum = 0;
@@ -628,6 +780,7 @@
 
     var layer = {
       contract: CONTRACT,
+      lifecycleConservationContract: LIFECYCLE_CONSERVATION_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       standard: STANDARD,
       family: FAMILY,
@@ -644,6 +797,11 @@
 
       frameIndex: state.lastFrameIndex,
       renderTime: state.lastRenderTime,
+
+      weatherAdvectionTime: getWeatherTime(frame || {}),
+      swirlTime: getSwirlTime(frame || {}),
+      textureTime: getTextureTime(frame || {}),
+      lifecycleTime: getLifecycleTime(frame || {}),
 
       radialNodes: RADIAL_NODES,
       fibonacciBands: FIBONACCI_BANDS,
@@ -663,6 +821,13 @@
       moistureEligibleCount: eligibleCount,
       averageCloudOpacity: state.lastAverageCloudOpacity,
 
+      maxCloudWidthObserved: state.lastMaxCloudWidth,
+      maxCloudHeightObserved: state.lastMaxCloudHeight,
+      maxCloudWidthCap: MAX_CLOUD_WIDTH_BASE,
+      maxCloudHeightCap: MAX_CLOUD_HEIGHT_BASE,
+      maxFragmentWidthCap: MAX_FRAGMENT_WIDTH_BASE,
+      maxFragmentHeightCap: MAX_FRAGMENT_HEIGHT_BASE,
+
       cloudsReady: state.cloudsReady,
       rendererReady: state.rendererReady,
       cloudsDerivedFromMoisture: true,
@@ -671,7 +836,15 @@
       cloudsOnSphericalCarrier: true,
       procedural4KReady: true,
 
+      naturalTimeActive: true,
+      timeLapseBlocked: true,
       cloudSpeedReduced: true,
+      cloudMassConservationActive: true,
+      cloudGrowthClamped: true,
+      lifecycleEnvelopeActive: true,
+      nonMonotonicDissipationActive: true,
+      cloudCountStableRange: true,
+
       organicSwirlFlowActive: true,
       highDensityCloudFieldActive: true,
 
@@ -695,7 +868,7 @@
   function drawSoftFragment(ctx, fragment, baseOpacity) {
     var w = Math.max(1, fragment.width);
     var h = Math.max(1, fragment.height);
-    var opacity = clamp(fragment.opacity * baseOpacity, 0, 0.74);
+    var opacity = clamp(fragment.opacity * baseOpacity, 0, MAX_OPACITY);
 
     if (opacity <= 0.01) return;
 
@@ -707,9 +880,9 @@
     var radius = Math.max(w, h);
     var gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, radius);
 
-    gradient.addColorStop(0, "rgba(255,255,255," + (0.76 * opacity).toFixed(4) + ")");
-    gradient.addColorStop(0.28, "rgba(238,249,255," + (0.54 * opacity).toFixed(4) + ")");
-    gradient.addColorStop(0.60, "rgba(186,218,238," + (0.24 * opacity).toFixed(4) + ")");
+    gradient.addColorStop(0, "rgba(255,255,255," + (0.70 * opacity).toFixed(4) + ")");
+    gradient.addColorStop(0.28, "rgba(238,249,255," + (0.50 * opacity).toFixed(4) + ")");
+    gradient.addColorStop(0.60, "rgba(186,218,238," + (0.22 * opacity).toFixed(4) + ")");
     gradient.addColorStop(1, "rgba(120,160,196,0)");
 
     ctx.fillStyle = gradient;
@@ -718,11 +891,11 @@
     ctx.fill();
 
     if (fragment.flowStrength > 0.20) {
-      ctx.globalAlpha = opacity * 0.10;
-      ctx.strokeStyle = "rgba(245,252,255,0.75)";
-      ctx.lineWidth = Math.max(0.7, radius * 0.035);
+      ctx.globalAlpha = opacity * 0.08;
+      ctx.strokeStyle = "rgba(245,252,255,0.70)";
+      ctx.lineWidth = Math.max(0.7, radius * 0.026);
       ctx.beginPath();
-      ctx.ellipse(0, 0, w * 0.68, h * 0.54, 0, -0.8, 0.8);
+      ctx.ellipse(0, 0, w * 0.64, h * 0.50, 0, -0.72, 0.72);
       ctx.stroke();
     }
 
@@ -732,7 +905,7 @@
   function drawCloud(ctx, cloud) {
     if (!ctx || !cloud || !cloud.fragments) return;
 
-    var baseOpacity = clamp(cloud.cloudOpacity, 0, 0.74);
+    var baseOpacity = clamp(cloud.cloudOpacity, 0, MAX_OPACITY);
     var i;
 
     ctx.save();
@@ -743,14 +916,14 @@
     }
 
     if (cloud.denseCloudEligible) {
-      ctx.globalAlpha = clamp(baseOpacity * 0.10, 0, 0.14);
-      ctx.fillStyle = "rgba(255,255,255,0.68)";
+      ctx.globalAlpha = clamp(baseOpacity * 0.08, 0, 0.11);
+      ctx.fillStyle = "rgba(255,255,255,0.62)";
       ctx.beginPath();
       ctx.ellipse(
         cloud.x,
         cloud.y,
-        cloud.width * 0.30,
-        cloud.height * 0.22,
+        cloud.width * 0.24,
+        cloud.height * 0.18,
         cloud.angle,
         0,
         TAU
@@ -820,6 +993,7 @@
   function status() {
     return {
       contract: CONTRACT,
+      lifecycleConservationContract: LIFECYCLE_CONSERVATION_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       standard: STANDARD,
       family: FAMILY,
@@ -834,6 +1008,7 @@
       diagnosticReady: state.diagnosticReady,
 
       layerVersion: state.layerVersion,
+      publicContract: state.publicContract,
       layerKind: state.layerKind,
       renderMode: state.renderMode,
 
@@ -845,9 +1020,16 @@
       organicRows: state.options.organicRows,
       maxCloudsPerFrame: state.options.maxCloudsPerFrame,
 
-      globalCloudTimeScale: state.options.globalCloudTimeScale,
+      weatherAdvectionTimeScale: state.options.weatherAdvectionTimeScale,
       swirlTimeScale: state.options.swirlTimeScale,
       textureTimeScale: state.options.textureTimeScale,
+      lifecycleTimeScale: state.options.lifecycleTimeScale,
+
+      maxCloudWidthBase: MAX_CLOUD_WIDTH_BASE,
+      maxCloudHeightBase: MAX_CLOUD_HEIGHT_BASE,
+      maxFragmentWidthBase: MAX_FRAGMENT_WIDTH_BASE,
+      maxFragmentHeightBase: MAX_FRAGMENT_HEIGHT_BASE,
+      maxOpacity: MAX_OPACITY,
 
       lastFrameIndex: state.lastFrameIndex,
       lastRenderTime: state.lastRenderTime,
@@ -855,6 +1037,8 @@
       lastFragmentCount: state.lastFragmentCount,
       lastMoistureEligibleCount: state.lastMoistureEligibleCount,
       lastAverageCloudOpacity: state.lastAverageCloudOpacity,
+      lastMaxCloudWidth: state.lastMaxCloudWidth,
+      lastMaxCloudHeight: state.lastMaxCloudHeight,
 
       cloudsDerivedFromMoisture: true,
       cloudsNotRandomPatches: true,
@@ -862,7 +1046,15 @@
       cloudsOnSphericalCarrier: true,
       procedural4KReady: true,
 
+      naturalTimeActive: true,
+      timeLapseBlocked: true,
       cloudSpeedReduced: true,
+      cloudMassConservationActive: true,
+      cloudGrowthClamped: true,
+      lifecycleEnvelopeActive: true,
+      nonMonotonicDissipationActive: true,
+      cloudCountStableRange: true,
+
       organicSwirlFlowActive: true,
       highDensityCloudFieldActive: true,
 
@@ -894,6 +1086,7 @@
 
     window.AUDRALIA_TRUE_GLOBE_CLOUD_ERROR = {
       contract: CONTRACT,
+      lifecycleConservationContract: LIFECYCLE_CONSERVATION_CONTRACT,
       scope: scope,
       message: message,
       errors: state.errors.slice()
@@ -905,6 +1098,7 @@
   function publish() {
     var api = {
       contract: CONTRACT,
+      lifecycleConservationContract: LIFECYCLE_CONSERVATION_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       standard: STANDARD,
       family: FAMILY,
@@ -937,17 +1131,25 @@
 
       window.AUDRALIA_TRUE_GLOBE_CLOUDS_BOOT = {
         contract: CONTRACT,
+        lifecycleConservationContract: LIFECYCLE_CONSERVATION_CONTRACT,
         previousContract: PREVIOUS_CONTRACT,
         standard: STANDARD,
         family: FAMILY,
         file: FILE,
         moistureDetected: state.moistureDetected,
+        naturalTimeActive: true,
+        timeLapseBlocked: true,
         cloudSpeedReduced: true,
+        cloudMassConservationActive: true,
+        cloudGrowthClamped: true,
+        lifecycleEnvelopeActive: true,
+        nonMonotonicDissipationActive: true,
+        cloudCountStableRange: true,
         organicSwirlFlowActive: true,
         highDensityCloudFieldActive: true,
         cloudsNotVisible256Grid: true,
         bootedAt: new Date().toISOString(),
-        meaning: "Organic cloud child evaluated. Planet View may now render slower moisture-driven cloud flow without exposing the 256 lattice."
+        meaning: "Cloud lifecycle conservation child evaluated. Public v2 contract preserved for runtime compatibility; v3 lifecycle conservation active."
       };
 
       return status();

@@ -1,28 +1,25 @@
 // /assets/audralia/clean/runtime/audralia.true-globe.runtime.js
 // TNT FULL-FILE REPLACEMENT
-// AUDRALIA_G2_TRUE_GLOBE_RUNTIME_DATUM_MANIFEST_CONSUMER_TNT_v7
+// AUDRALIA_G2_GRATITUDE_FRONT_FACE_AND_DATUM_VISUAL_PROOF_ALIGNMENT_TNT_v1
 //
 // Public runtime contract intentionally preserved for route JS compatibility:
 // AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2
 //
-// Existing route-confirmed surface capability marker preserved:
+// Existing route-confirmed capability marker preserved:
 // AUDRALIA_G2_TRUE_GLOBE_RUNTIME_SURFACE_RENDERER_MANIFEST_CONSUMER_TNT_v6
 //
-// New internal datum capability marker:
+// Existing datum consumer marker preserved:
 // AUDRALIA_G2_TRUE_GLOBE_RUNTIME_DATUM_MANIFEST_CONSUMER_TNT_v7
-//
-// Consumes manifest:
-// /assets/audralia/clean/runtime/audralia.true-globe.family.manifest.js
 //
 // Purpose:
 // - Preserve runtime public compatibility.
-// - Preserve protected Lattice View.
-// - Preserve surface renderer v6 compatibility for current route JS.
-// - Load family manifest first.
-// - Load planetary datum child before terrain/ecosystem.
-// - Expose frame.datum and frame.datumReady.
-// - Expose runtime.getDatum().
-// - Preserve terrain → moisture → surface → clouds chain after datum.
+// - Preserve runtime v7 datum loading.
+// - Preserve route JS v4 compatibility by retaining the surface v6 capability field.
+// - Preserve datum → terrain → moisture → surface → clouds child order.
+// - Change only the opening visual proof orientation.
+// - Face the Gratitude continent at initial load and reset.
+// - Preserve finger control.
+// - Preserve Lattice View.
 // - Do not draw.
 // - Do not create canvas.
 // - Do not touch HTML.
@@ -37,9 +34,10 @@
   var TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_TERRAIN_ECOSYSTEM_MANIFEST_CONSUMER_TNT_v5";
   var SURFACE_RENDERER_CONSUMER_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_SURFACE_RENDERER_MANIFEST_CONSUMER_TNT_v6";
   var DATUM_MANIFEST_CONSUMER_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_DATUM_MANIFEST_CONSUMER_TNT_v7";
-  var PREVIOUS_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_SURFACE_RENDERER_MANIFEST_CONSUMER_TNT_v6";
+  var VISUAL_PROOF_ALIGNMENT_CONTRACT = "AUDRALIA_G2_GRATITUDE_FRONT_FACE_AND_DATUM_VISUAL_PROOF_ALIGNMENT_TNT_v1";
+  var PREVIOUS_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_DATUM_MANIFEST_CONSUMER_TNT_v7";
 
-  var STANDARD = "AUDRALIA_G2_DATUM_PARENT_CHAIN_SPEC_OPS_v1";
+  var STANDARD = "AUDRALIA_G2_GRATITUDE_FRONT_FACE_AND_DATUM_VISUAL_PROOF_ALIGNMENT_SPEC_OPS_v1";
   var FAMILY_STANDARD = "AUDRALIA_G2_PARENT_CHILD_CONTRACT_HANDSHAKE_AND_FAMILY_MANIFEST_STANDARD_v1";
   var FAMILY = "/assets/audralia/clean/runtime/";
   var FILE = "/assets/audralia/clean/runtime/audralia.true-globe.runtime.js";
@@ -48,45 +46,11 @@
   var MANIFEST_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_FAMILY_MANIFEST_PARENT_CHILD_HANDSHAKE_TNT_v1";
   var MANIFEST_CACHE_KEY = "AUDRALIA_G2_TRUE_GLOBE_FAMILY_MANIFEST_DATUM_CHILD_REGISTRATION_TNT_v4";
 
-  var FALLBACK_DATUM = {
-    path: "/assets/audralia/clean/runtime/audralia.true-globe.datum.js",
-    publicContract: "AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1",
-    cacheKey: "AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1",
-    capabilityField: "contract",
-    capabilityMarker: "AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1"
-  };
-
-  var FALLBACK_TERRAIN_ECOSYSTEM = {
-    path: "/assets/audralia/clean/runtime/audralia.true-globe.terrain-ecosystem.js",
-    publicContract: "AUDRALIA_G2_TRUE_RUNTIME_TERRAIN_ECOSYSTEM_FORCING_FIELD_CHILD_TNT_v1",
-    cacheKey: "AUDRALIA_G2_TRUE_RUNTIME_TERRAIN_ECOSYSTEM_FORCING_FIELD_CHILD_TNT_v1",
-    capabilityField: "contract",
-    capabilityMarker: "AUDRALIA_G2_TRUE_RUNTIME_TERRAIN_ECOSYSTEM_FORCING_FIELD_CHILD_TNT_v1"
-  };
-
-  var FALLBACK_MOISTURE = {
-    path: "/assets/audralia/clean/runtime/audralia.true-globe.moisture.js",
-    publicContract: "AUDRALIA_G2_TRUE_RUNTIME_MOISTURE_FIELD_CHILD_TNT_v1",
-    cacheKey: "AUDRALIA_G2_TRUE_RUNTIME_MOISTURE_TERRAIN_FORCING_CONSUMER_TNT_v2",
-    capabilityField: "contract",
-    capabilityMarker: "AUDRALIA_G2_TRUE_RUNTIME_MOISTURE_FIELD_CHILD_TNT_v1"
-  };
-
-  var FALLBACK_SURFACE = {
-    path: "/assets/audralia/clean/runtime/audralia.true-globe.surface.js",
-    publicContract: "AUDRALIA_G2_TRUE_RUNTIME_GRATITUDE_CONTINENT_SURFACE_RENDERER_CHILD_TNT_v1",
-    cacheKey: "AUDRALIA_G2_TRUE_RUNTIME_GRATITUDE_CONTINENT_SURFACE_RENDERER_CHILD_TNT_v1",
-    capabilityField: "contract",
-    capabilityMarker: "AUDRALIA_G2_TRUE_RUNTIME_GRATITUDE_CONTINENT_SURFACE_RENDERER_CHILD_TNT_v1"
-  };
-
-  var FALLBACK_CLOUDS = {
-    path: "/assets/audralia/clean/runtime/audralia.true-globe.clouds.js",
-    publicContract: "AUDRALIA_G2_TRUE_RUNTIME_ORGANIC_MOISTURE_CLOUD_FLOW_CHILD_TNT_v2",
-    cacheKey: "AUDRALIA_G2_TRUE_RUNTIME_GLOBAL_MULTI_LAYER_CLOUD_SHELL_CHILD_TNT_v5",
-    capabilityField: "lifecycleConservationContract",
-    capabilityMarker: "AUDRALIA_G2_TRUE_RUNTIME_CLOUD_LIFECYCLE_CONSERVATION_CHILD_TNT_v3"
-  };
+  var OPENING_LONGITUDE_TARGET = -2.42;
+  var OPENING_LATITUDE_TARGET = 0.42;
+  var GRATITUDE_PROOF_YAW = 2.42;
+  var GRATITUDE_PROOF_PITCH = -0.16;
+  var GRATITUDE_PROOF_ROLL = 0.02;
 
   var RADIAL_NODES = 16;
   var FIBONACCI_BANDS = 16;
@@ -99,6 +63,44 @@
   ];
 
   var FIBONACCI_OFFSETS = [1, 2, 3, 5, 8, 13];
+
+  var FALLBACK_ENTRIES = {
+    datum: {
+      path: "/assets/audralia/clean/runtime/audralia.true-globe.datum.js",
+      publicContract: "AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1",
+      cacheKey: "AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1",
+      capabilityField: "contract",
+      capabilityMarker: "AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1"
+    },
+    terrainEcosystem: {
+      path: "/assets/audralia/clean/runtime/audralia.true-globe.terrain-ecosystem.js",
+      publicContract: "AUDRALIA_G2_TRUE_RUNTIME_TERRAIN_ECOSYSTEM_FORCING_FIELD_CHILD_TNT_v1",
+      cacheKey: "AUDRALIA_G2_TRUE_RUNTIME_TERRAIN_ECOSYSTEM_FORCING_FIELD_CHILD_TNT_v1",
+      capabilityField: "contract",
+      capabilityMarker: "AUDRALIA_G2_TRUE_RUNTIME_TERRAIN_ECOSYSTEM_FORCING_FIELD_CHILD_TNT_v1"
+    },
+    moisture: {
+      path: "/assets/audralia/clean/runtime/audralia.true-globe.moisture.js",
+      publicContract: "AUDRALIA_G2_TRUE_RUNTIME_MOISTURE_FIELD_CHILD_TNT_v1",
+      cacheKey: "AUDRALIA_G2_TRUE_RUNTIME_MOISTURE_TERRAIN_FORCING_CONSUMER_TNT_v2",
+      capabilityField: "contract",
+      capabilityMarker: "AUDRALIA_G2_TRUE_RUNTIME_MOISTURE_FIELD_CHILD_TNT_v1"
+    },
+    surface: {
+      path: "/assets/audralia/clean/runtime/audralia.true-globe.surface.js",
+      publicContract: "AUDRALIA_G2_TRUE_RUNTIME_GRATITUDE_CONTINENT_SURFACE_RENDERER_CHILD_TNT_v1",
+      cacheKey: "AUDRALIA_G2_TRUE_RUNTIME_GRATITUDE_CONTINENT_SURFACE_RENDERER_CHILD_TNT_v1",
+      capabilityField: "contract",
+      capabilityMarker: "AUDRALIA_G2_TRUE_RUNTIME_GRATITUDE_CONTINENT_SURFACE_RENDERER_CHILD_TNT_v1"
+    },
+    clouds: {
+      path: "/assets/audralia/clean/runtime/audralia.true-globe.clouds.js",
+      publicContract: "AUDRALIA_G2_TRUE_RUNTIME_ORGANIC_MOISTURE_CLOUD_FLOW_CHILD_TNT_v2",
+      cacheKey: "AUDRALIA_G2_TRUE_RUNTIME_GLOBAL_MULTI_LAYER_CLOUD_SHELL_CHILD_TNT_v5",
+      capabilityField: "lifecycleConservationContract",
+      capabilityMarker: "AUDRALIA_G2_TRUE_RUNTIME_CLOUD_LIFECYCLE_CONSERVATION_CHILD_TNT_v3"
+    }
+  };
 
   var state = {
     initialized: false,
@@ -115,9 +117,9 @@
     renderTime: 0,
     frameIndex: 0,
 
-    yaw: -0.56,
-    pitch: -0.18,
-    roll: 0.02,
+    yaw: GRATITUDE_PROOF_YAW,
+    pitch: GRATITUDE_PROOF_PITCH,
+    roll: GRATITUDE_PROOF_ROLL,
     velocityYaw: 0,
     velocityPitch: 0,
 
@@ -208,6 +210,12 @@
     latticeViewReady: false,
     diagnosticScopeReady: false,
 
+    gratitudeFrontFaceProofActive: true,
+    defaultViewFacesGratitude: true,
+    openingLongitudeTarget: OPENING_LONGITUDE_TARGET,
+    openingLatitudeTarget: OPENING_LATITUDE_TARGET,
+    visualProofAlignmentActive: true,
+
     errors: []
   };
 
@@ -236,7 +244,6 @@
 
   function getNestedValue(source, path) {
     if (!source || !path) return undefined;
-
     var parts = String(path).split(".");
     var cursor = source;
 
@@ -311,12 +318,15 @@
       } catch (_error) {}
     }
 
-    if (entryName === "datum") return FALLBACK_DATUM;
-    if (entryName === "terrainEcosystem") return FALLBACK_TERRAIN_ECOSYSTEM;
-    if (entryName === "moisture") return FALLBACK_MOISTURE;
-    if (entryName === "surface") return FALLBACK_SURFACE;
-    if (entryName === "clouds") return FALLBACK_CLOUDS;
+    return FALLBACK_ENTRIES[entryName] || null;
+  }
 
+  function getChildApi(entryName) {
+    if (entryName === "datum") return getDatumApi();
+    if (entryName === "terrainEcosystem") return getTerrainEcosystemApi();
+    if (entryName === "moisture") return getMoistureApi();
+    if (entryName === "surface") return getSurfaceApi();
+    if (entryName === "clouds") return getCloudsApi();
     return null;
   }
 
@@ -360,7 +370,7 @@
       expectedCapabilityMarker: entry.capabilityMarker,
       actualCapabilityMarker: capabilityValue || "",
       cacheKey: entry.cacheKey,
-      fetchUrl: entry.path + "?v=" + encodeURIComponent(entry.cacheKey || entry.publicContract || DATUM_MANIFEST_CONSUMER_CONTRACT),
+      fetchUrl: entry.path + "?v=" + encodeURIComponent(entry.cacheKey || entry.publicContract || VISUAL_PROOF_ALIGNMENT_CONTRACT),
       reason: publicOk && capabilityOk
         ? "PASS"
         : !publicOk
@@ -373,16 +383,9 @@
     return validateApiAgainstEntry(entryName, api).ok;
   }
 
-  function getChildApi(entryName) {
-    if (entryName === "datum") return getDatumApi();
-    if (entryName === "terrainEcosystem") return getTerrainEcosystemApi();
-    if (entryName === "moisture") return getMoistureApi();
-    if (entryName === "surface") return getSurfaceApi();
-    if (entryName === "clouds") return getCloudsApi();
-    return null;
-  }
-
   function removeWrongChildScripts(entryName, entry) {
+    if (typeof document === "undefined") return;
+
     var scripts = document.querySelectorAll("script[data-audralia-runtime-child='" + entryName + "']");
 
     for (var i = 0; i < scripts.length; i += 1) {
@@ -397,6 +400,11 @@
 
   function loadScript(path, cacheKey, attrs) {
     return new Promise(function (resolve, reject) {
+      if (typeof document === "undefined") {
+        reject(new Error("AUDRALIA_DOCUMENT_UNAVAILABLE_FOR_SCRIPT_LOAD"));
+        return;
+      }
+
       var script = document.createElement("script");
       script.src = path + "?v=" + encodeURIComponent(cacheKey);
       script.async = true;
@@ -429,32 +437,19 @@
       }
 
       if (state.manifestLoading) {
-        var attempts = 0;
-        var interval = window.setInterval(function () {
-          attempts += 1;
-          var api = getManifestApi();
-
-          if (api && typeof api.status === "function") {
-            window.clearInterval(interval);
-            state.manifestApi = api;
-            state.manifestLoaded = true;
-            state.manifestReady = true;
-            resolve(api);
-          }
-
-          if (attempts > 80) {
-            window.clearInterval(interval);
-            reject(new Error("AUDRALIA_FAMILY_MANIFEST_WAIT_TIMEOUT"));
-          }
-        }, 50);
-
+        waitForApi(getManifestApi, "AUDRALIA_FAMILY_MANIFEST_WAIT_TIMEOUT").then(function (api) {
+          state.manifestApi = api;
+          state.manifestLoaded = true;
+          state.manifestReady = true;
+          resolve(api);
+        }).catch(reject);
         return;
       }
 
       state.manifestLoading = true;
 
       loadScript(MANIFEST_PATH, MANIFEST_CACHE_KEY, {
-        "data-audralia-runtime-family-manifest": DATUM_MANIFEST_CONSUMER_CONTRACT,
+        "data-audralia-runtime-family-manifest": VISUAL_PROOF_ALIGNMENT_CONTRACT,
         "data-contract": MANIFEST_CONTRACT,
         "data-cache-key": MANIFEST_CACHE_KEY
       }).then(function () {
@@ -477,6 +472,27 @@
     });
   }
 
+  function waitForApi(getter, timeoutMessage) {
+    return new Promise(function (resolve, reject) {
+      var attempts = 0;
+      var interval = window.setInterval(function () {
+        attempts += 1;
+
+        var api = getter();
+
+        if (api && typeof api.status === "function") {
+          window.clearInterval(interval);
+          resolve(api);
+        }
+
+        if (attempts > 80) {
+          window.clearInterval(interval);
+          reject(new Error(timeoutMessage));
+        }
+      }, 50);
+    });
+  }
+
   function loadChildFromManifest(entryName) {
     return new Promise(function (resolve, reject) {
       var entry = getManifestEntry(entryName);
@@ -487,36 +503,23 @@
       }
 
       var existing = getChildApi(entryName);
-      var existingValidation = validateApiAgainstEntry(entryName, existing);
 
-      if (existingValidation.ok) {
+      if (childApiMatches(entryName, existing)) {
         resolve(existing);
         return;
       }
 
       removeWrongChildScripts(entryName, entry);
 
-      var existingScript = document.querySelector(
-        "script[data-audralia-runtime-child='" + entryName + "'][data-cache-key='" + entry.cacheKey + "']"
-      );
+      var existingScript = typeof document !== "undefined"
+        ? document.querySelector("script[data-audralia-runtime-child='" + entryName + "'][data-cache-key='" + entry.cacheKey + "']")
+        : null;
 
       if (existingScript) {
-        var attempts = 0;
-        var interval = window.setInterval(function () {
-          attempts += 1;
+        waitForApi(function () {
           var api = getChildApi(entryName);
-
-          if (childApiMatches(entryName, api)) {
-            window.clearInterval(interval);
-            resolve(api);
-          }
-
-          if (attempts > 80) {
-            window.clearInterval(interval);
-            reject(new Error("AUDRALIA_CHILD_WAIT_TIMEOUT_" + entryName + "_" + entry.cacheKey));
-          }
-        }, 50);
-
+          return childApiMatches(entryName, api) ? api : null;
+        }, "AUDRALIA_CHILD_WAIT_TIMEOUT_" + entryName + "_" + entry.cacheKey).then(resolve).catch(reject);
         return;
       }
 
@@ -527,7 +530,7 @@
         "data-capability-field": entry.capabilityField,
         "data-capability-marker": entry.capabilityMarker,
         "data-manifest-contract": MANIFEST_CONTRACT,
-        "data-runtime-consumer-contract": DATUM_MANIFEST_CONSUMER_CONTRACT
+        "data-runtime-consumer-contract": VISUAL_PROOF_ALIGNMENT_CONTRACT
       }).then(function () {
         var api = getChildApi(entryName);
         var validation = validateApiAgainstEntry(entryName, api);
@@ -564,7 +567,6 @@
         state.datumLoaded = true;
         state.datumReady = true;
         state.datumLoading = false;
-
         buildDatumFrameData();
 
         state.terrainEcosystemLoading = true;
@@ -575,7 +577,6 @@
         state.terrainEcosystemLoaded = true;
         state.terrainEcosystemReady = true;
         state.terrainEcosystemLoading = false;
-
         buildTerrainEcosystemFrameData();
 
         state.moistureLoading = true;
@@ -586,7 +587,6 @@
         state.moistureLoaded = true;
         state.moistureFieldReady = true;
         state.moistureLoading = false;
-
         buildMoistureFrameData();
 
         state.surfaceLoading = true;
@@ -595,24 +595,21 @@
       .then(function (surfaceApi) {
         state.surfaceApi = surfaceApi;
         state.surfaceLoaded = true;
-        state.surfaceLoading = false;
         state.surfaceRendererReady = true;
-
+        state.surfaceLoading = false;
         buildSurfaceFrameData();
 
         state.cloudsLoading = true;
         state.organicCloudChildRequested = true;
-
         return loadChildFromManifest("clouds");
       })
       .then(function (cloudsApi) {
         state.cloudsApi = cloudsApi;
         state.cloudsLoaded = true;
-        state.cloudsLoading = false;
         state.cloudRendererReady = true;
+        state.cloudsLoading = false;
         state.runtimeCloudChildKeyCurrent = true;
         state.diagnosticStateReady = true;
-
         buildAtmosphereFrameData();
         publish();
       })
@@ -713,7 +710,6 @@
       surfaceNormal: normal,
       fibonacci: fibonacci,
       fibonacciWeight: fibonacciWeight,
-      frontFacing: true,
       renderPriority: radialIndex % 4 === 0 ? 1 : radialIndex % 2 === 0 ? 0.74 : 0.54,
       connectionPriority: radialIndex % 4 === 0 ? 1 : radialIndex % 2 === 0 ? 0.70 : 0.48,
       futureMaterialClass: "pending-audralia-material",
@@ -903,6 +899,7 @@
       terrainEcosystemConsumerContract: TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT,
       surfaceRendererConsumerContract: SURFACE_RENDERER_CONSUMER_CONTRACT,
       datumManifestConsumerContract: DATUM_MANIFEST_CONSUMER_CONTRACT,
+      visualProofAlignmentContract: VISUAL_PROOF_ALIGNMENT_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       standard: STANDARD,
       familyStandard: FAMILY_STANDARD,
@@ -989,7 +986,13 @@
       terrainDirectCloudPaint: false,
 
       organicCloudChildRequested: state.organicCloudChildRequested,
-      runtimeCloudChildKeyCurrent: state.runtimeCloudChildKeyCurrent
+      runtimeCloudChildKeyCurrent: state.runtimeCloudChildKeyCurrent,
+
+      gratitudeFrontFaceProofActive: true,
+      defaultViewFacesGratitude: true,
+      openingLongitudeTarget: OPENING_LONGITUDE_TARGET,
+      openingLatitudeTarget: OPENING_LATITUDE_TARGET,
+      visualProofAlignmentActive: true
     };
   }
 
@@ -1151,12 +1154,15 @@
   }
 
   function reset() {
-    state.yaw = -0.56;
-    state.pitch = -0.18;
-    state.roll = 0.02;
+    state.yaw = GRATITUDE_PROOF_YAW;
+    state.pitch = GRATITUDE_PROOF_PITCH;
+    state.roll = GRATITUDE_PROOF_ROLL;
     state.velocityYaw = 0;
     state.velocityPitch = 0;
     state.dragging = false;
+    state.gratitudeFrontFaceProofActive = true;
+    state.defaultViewFacesGratitude = true;
+    state.visualProofAlignmentActive = true;
     buildProjectedFrame();
     return getFrame();
   }
@@ -1236,7 +1242,7 @@
     }
 
     state.pitch = clamp(state.pitch, -1.05, 1.05);
-    state.roll = Math.sin(state.renderTime * 0.16) * 0.015;
+    state.roll = GRATITUDE_PROOF_ROLL + Math.sin(state.renderTime * 0.16) * 0.015;
     state.frameIndex += 1;
     state.motionStateReady = true;
 
@@ -1296,12 +1302,6 @@
   }
 
   function status() {
-    var datumEntry = getManifestEntry("datum") || FALLBACK_DATUM;
-    var terrainEntry = getManifestEntry("terrainEcosystem") || FALLBACK_TERRAIN_ECOSYSTEM;
-    var moistureEntry = getManifestEntry("moisture") || FALLBACK_MOISTURE;
-    var surfaceEntry = getManifestEntry("surface") || FALLBACK_SURFACE;
-    var cloudEntry = getManifestEntry("clouds") || FALLBACK_CLOUDS;
-
     var manifestStatus = state.manifestApi && typeof state.manifestApi.status === "function" ? state.manifestApi.status() : null;
     var datumStatus = state.datumApi && typeof state.datumApi.status === "function" ? state.datumApi.status() : null;
     var terrainStatus = state.terrainEcosystemApi && typeof state.terrainEcosystemApi.status === "function" ? state.terrainEcosystemApi.status() : null;
@@ -1315,6 +1315,7 @@
       terrainEcosystemConsumerContract: TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT,
       surfaceRendererConsumerContract: SURFACE_RENDERER_CONSUMER_CONTRACT,
       datumManifestConsumerContract: DATUM_MANIFEST_CONSUMER_CONTRACT,
+      visualProofAlignmentContract: VISUAL_PROOF_ALIGNMENT_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       standard: STANDARD,
       familyStandard: FAMILY_STANDARD,
@@ -1347,42 +1348,27 @@
       manifestReady: state.manifestReady,
       manifestStatus: manifestStatus,
 
-      datumPath: datumEntry.path,
-      datumPublicContract: datumEntry.publicContract,
-      datumCacheKey: datumEntry.cacheKey,
       datumLoaded: state.datumLoaded,
       datumReady: state.datumReady,
       datumStatus: datumStatus,
       datumHandshake: validateApiAgainstEntry("datum", state.datumApi),
 
-      terrainEcosystemPath: terrainEntry.path,
-      terrainEcosystemPublicContract: terrainEntry.publicContract,
-      terrainEcosystemCacheKey: terrainEntry.cacheKey,
       terrainEcosystemLoaded: state.terrainEcosystemLoaded,
       terrainEcosystemReady: state.terrainEcosystemReady,
       terrainEcosystemStatus: terrainStatus,
       terrainEcosystemHandshake: validateApiAgainstEntry("terrainEcosystem", state.terrainEcosystemApi),
 
-      moisturePath: moistureEntry.path,
-      moisturePublicContract: moistureEntry.publicContract,
-      moistureCacheKey: moistureEntry.cacheKey,
       moistureLoaded: state.moistureLoaded,
       moistureFieldReady: state.moistureFieldReady,
       moistureStatus: moistureStatus,
       moistureHandshake: validateApiAgainstEntry("moisture", state.moistureApi),
 
-      surfacePath: surfaceEntry.path,
-      surfacePublicContract: surfaceEntry.publicContract,
-      surfaceCacheKey: surfaceEntry.cacheKey,
       surfaceLoaded: state.surfaceLoaded,
       surfaceRendererReady: state.surfaceRendererReady,
       gratitudeContinentVisible: state.gratitudeContinentVisible,
       surfaceStatus: surfaceStatus,
       surfaceHandshake: validateApiAgainstEntry("surface", state.surfaceApi),
 
-      cloudsPath: cloudEntry.path,
-      cloudsPublicContract: cloudEntry.publicContract,
-      cloudsCacheKey: cloudEntry.cacheKey,
       cloudsLoaded: state.cloudsLoaded,
       cloudRendererReady: state.cloudRendererReady,
       cloudStatus: cloudStatus,
@@ -1420,6 +1406,27 @@
       frameDatumExposed: Boolean(state.datum),
       getDatumApiReady: true,
 
+      gratitudeFrontFaceProofActive: true,
+      defaultViewFacesGratitude: true,
+      openingLongitudeTarget: OPENING_LONGITUDE_TARGET,
+      openingLatitudeTarget: OPENING_LATITUDE_TARGET,
+      defaultYaw: GRATITUDE_PROOF_YAW,
+      resetYaw: GRATITUDE_PROOF_YAW,
+      defaultPitch: GRATITUDE_PROOF_PITCH,
+      resetPitch: GRATITUDE_PROOF_PITCH,
+      visualProofAlignmentActive: true,
+
+      runtimeDefaultYawUpdated: true,
+      resetYawUpdated: true,
+      openingViewFacesGratitude: true,
+      fingerControlPreserved: true,
+      datumConsumerPreserved: true,
+      terrainConsumerPreserved: true,
+      moistureConsumerPreserved: true,
+      surfaceConsumerPreserved: true,
+      cloudConsumerPreserved: true,
+      latticeViewProtected: true,
+
       generatedImage: false,
       graphicBox: false,
       flatProjection: false,
@@ -1438,6 +1445,7 @@
       terrainEcosystemConsumerContract: TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT,
       surfaceRendererConsumerContract: SURFACE_RENDERER_CONSUMER_CONTRACT,
       datumManifestConsumerContract: DATUM_MANIFEST_CONSUMER_CONTRACT,
+      visualProofAlignmentContract: VISUAL_PROOF_ALIGNMENT_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       standard: STANDARD,
       familyStandard: FAMILY_STANDARD,
@@ -1487,6 +1495,7 @@
       terrainEcosystemConsumerContract: TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT,
       surfaceRendererConsumerContract: SURFACE_RENDERER_CONSUMER_CONTRACT,
       datumManifestConsumerContract: DATUM_MANIFEST_CONSUMER_CONTRACT,
+      visualProofAlignmentContract: VISUAL_PROOF_ALIGNMENT_CONTRACT,
       scope: scope,
       message: message,
       errors: state.errors.slice()
@@ -1505,6 +1514,10 @@
       state.dpr = Math.max(1, finite(options.dpr, state.dpr));
       state.reducedMotion = typeof options.reducedMotion === "boolean" ? options.reducedMotion : detectReducedMotion();
 
+      state.yaw = typeof options.yaw === "number" ? finite(options.yaw, GRATITUDE_PROOF_YAW) : GRATITUDE_PROOF_YAW;
+      state.pitch = typeof options.pitch === "number" ? finite(options.pitch, GRATITUDE_PROOF_PITCH) : GRATITUDE_PROOF_PITCH;
+      state.roll = typeof options.roll === "number" ? finite(options.roll, GRATITUDE_PROOF_ROLL) : GRATITUDE_PROOF_ROLL;
+
       if (!state.seats.length) buildSphereCarrier();
 
       state.initialized = true;
@@ -1512,6 +1525,9 @@
       state.motionStateReady = true;
       state.diagnosticStateReady = true;
       state.diagnosticScopeReady = true;
+      state.gratitudeFrontFaceProofActive = true;
+      state.defaultViewFacesGratitude = true;
+      state.visualProofAlignmentActive = true;
 
       if (state.activeLens === "planet") state.planetViewReady = true;
       if (state.activeLens === "lattice") state.latticeViewReady = true;
@@ -1534,6 +1550,7 @@
     terrainEcosystemConsumerContract: TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT,
     surfaceRendererConsumerContract: SURFACE_RENDERER_CONSUMER_CONTRACT,
     datumManifestConsumerContract: DATUM_MANIFEST_CONSUMER_CONTRACT,
+    visualProofAlignmentContract: VISUAL_PROOF_ALIGNMENT_CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
     standard: STANDARD,
     familyStandard: FAMILY_STANDARD,
@@ -1542,14 +1559,32 @@
     manifestPath: MANIFEST_PATH,
     manifestContract: MANIFEST_CONTRACT,
     manifestCacheKey: MANIFEST_CACHE_KEY,
+
+    gratitudeFrontFaceProofActive: true,
+    defaultViewFacesGratitude: true,
+    openingLongitudeTarget: OPENING_LONGITUDE_TARGET,
+    openingLatitudeTarget: OPENING_LATITUDE_TARGET,
+    defaultYaw: GRATITUDE_PROOF_YAW,
+    resetYaw: GRATITUDE_PROOF_YAW,
+    defaultPitch: GRATITUDE_PROOF_PITCH,
+    resetPitch: GRATITUDE_PROOF_PITCH,
+    visualProofAlignmentActive: true,
+
+    runtimeDefaultYawUpdated: true,
+    resetYawUpdated: true,
+    openingViewFacesGratitude: true,
+    fingerControlPreserved: true,
+
     parentAcceptsByPublicContract: true,
     parentFetchesByCacheKey: true,
     parentVerifiesChildCapabilityMarker: true,
     staleGlobalRejectedIfCapabilityMissing: true,
+
     datumLoadsBeforeTerrainEcosystem: true,
     datumLoadsBeforeMoisture: true,
     datumLoadsBeforeSurface: true,
     datumLoadsBeforeClouds: true,
+
     terrainEcosystemLoadsBeforeMoisture: true,
     moistureLoadsBeforeSurface: true,
     surfaceLoadsBeforeClouds: true,
@@ -1558,10 +1593,12 @@
     surfaceDrawsBeforeClouds: true,
     cloudsRenderAboveSurface: true,
     terrainDirectCloudPaint: false,
+
     frameDatumExposed: true,
     getDatumApiReady: true,
+
     bootedAt: new Date().toISOString(),
-    meaning: "Runtime evaluated with planetary datum manifest consumer. Datum loads before terrain/ecosystem and is exposed as frame.datum plus runtime.getDatum()."
+    meaning: "Runtime evaluated with Gratitude front-face visual proof alignment. Default and reset yaw now face the Gratitude continent proof target while preserving datum, terrain, moisture, surface, cloud, finger-control, and Lattice View behavior."
   };
 
   publish();

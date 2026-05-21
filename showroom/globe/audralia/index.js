@@ -1,73 +1,47 @@
 // /showroom/globe/audralia/index.js
 // TNT FULL-FILE REPLACEMENT
-// AUDRALIA_G2_PLANET_VIEW_ROTATIONAL_CARRIER_BINDING_TNT_v1
+// AUDRALIA_MAYDAY_ROUTE_JS_MAP_REDUCTION_TNT_v1
 //
 // Purpose:
-// - Bind Planet View to the same rotating carrier proven by Lattice View.
-// - Disable screen-space field behavior.
-// - Project all Planet View material from longitude / latitude / world-space.
-// - Restore drag by applying runtime pointer calls and route-local yaw / pitch fallback.
-// - Add explicit north/south pole anchors, equatorial circulation, hemisphere counterflow, and polar curl.
-// - Keep Lattice View protected.
-// - Do not touch HTML.
-// - Do not rewrite child files.
-// - No generated image. No GraphicBox. No final visual-pass claim.
+// - Reduce the route JS map.
+// - Restore Audralia as a lightweight lattice-control thermostat.
+// - Keep HTML intact.
+// - Keep runtime as the only Lattice View motion authority.
+// - Enforce one controller, one canvas, one RAF controller, one pointer path.
+// - Use dirty-frame rendering instead of continuous full-speed rendering.
+// - Remove route-side clouds, surface material, Gratitude hint, continent work, and child math.
+// - Align diagnostics to the current reset HTML.
+// - No new files. No child rewrites. No runtime rewrite. No visual-pass claim.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_G2_PLANET_VIEW_ROTATIONAL_CARRIER_BINDING_TNT_v1";
-  var PREVIOUS_CONTRACT = "AUDRALIA_G2_PLANET_VIEW_LATTICE_BASED_SATELLITE_SCOPE_TNT_v1";
-  var HTML_RECOVERY_CONTRACT = "AUDRALIA_G2_HTML_ROUTE_RECOVERY_LAST_WORKING_CONTROLLER_WITH_PLANET_OBJECT_COPY_TNT_v3";
-  var RESTORED_WORKING_POSTURE = "AUDRALIA_G2_ROUTE_JS_PLANET_VIEW_MOISTURE_CLOUD_RENDERER_WITH_LATTICE_PROTECTION_TNT_v1";
+  var CONTRACT = "AUDRALIA_MAYDAY_ROUTE_JS_MAP_REDUCTION_TNT_v1";
+  var PREVIOUS_CONTRACT = "AUDRALIA_G2_PLANET_VIEW_ROTATIONAL_CARRIER_BINDING_TNT_v1";
+  var HTML_PAIR_CONTRACT = "AUDRALIA_MAYDAY_ROUTE_PAIR_RESET_DROPDOWN_AND_LATTICE_CONTROL_TNT_v1";
 
   var RUNTIME_PATH = "/assets/audralia/clean/runtime/audralia.true-globe.runtime.js";
   var RUNTIME_PUBLIC_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2";
-  var RUNTIME_CACHE_KEY = "AUDRALIA_G2_GRATITUDE_FRONT_FACE_AND_DATUM_VISUAL_PROOF_ALIGNMENT_TNT_v1";
-
-  var SURFACE_TARGET_CONTRACT = "AUDRALIA_G2_SURFACE_CHILD_VISIBLE_GRATITUDE_PROOF_OUTPUT_TNT_v1";
-  var CLOUD_TARGET_CONTRACT = "AUDRALIA_G2_TRUE_RUNTIME_ORGANIC_MOISTURE_CLOUD_FLOW_CHILD_TNT_v2";
+  var RUNTIME_CACHE_KEY = "AUDRALIA_MAYDAY_ROUTE_JS_MAP_REDUCTION_RUNTIME_CONSUMER_v1";
 
   var TAU = Math.PI * 2;
-  var HALF_PI = Math.PI / 2;
-
-  var GRATITUDE_LON = -2.42;
-  var GRATITUDE_LAT = 0.42;
 
   var LENS_COPY = {
     planet: {
       title: "Planet View",
-      label: "<strong>Planet View</strong> → Audralia · rotationally bound satellite scope",
-      copy: "Planet View now binds clouds, polar curl, equatorial circulation, and the Gratitude surface hint to the rotating globe carrier. No screen-fixed cloud field."
+      label: "<strong>Planet View</strong> → lightweight held lens · lattice thermostat active",
+      copy: "Planet View is held as a lightweight lens during Mayday reduction. Cloud, surface, continent, and child math remain inactive here."
     },
     lattice: {
       title: "Lattice View",
-      label: "<strong>Lattice View</strong> → protected 16 × 16 / 256 spherical lattice baseline",
-      copy: "Lattice View remains protected as the proof object. Clouds and surface material are blocked from this lens."
+      label: "<strong>Lattice View</strong> → runtime carrier proof · reduced control mode",
+      copy: "Lattice View is the thermostat. It uses the runtime carrier only, bypasses child math, and stays reduced during drag."
     },
     diagnostic: {
       title: "Diagnostic Scope",
-      label: "<strong>Diagnostic Scope</strong> → runtime frame, fallback rotation, poles, clouds, and carrier binding",
-      copy: "Diagnostic Scope reports runtime frame access, route-local fallback rotation, world-space clouds, polar anchors, equatorial banding, Gratitude hint rotation, and protected lattice state."
+      label: "<strong>Diagnostic Scope</strong> → compact route/runtime status",
+      copy: "Diagnostic Scope reports compact cached state only. It does not run child math, surface generation, cloud generation, or datum expansion."
     }
-  };
-
-  var SHOWROOM_OBJECT = {
-    objectType: "planet",
-    objectName: "Audralia",
-    showroomFamily: "globe",
-    routeRole: "planet-object-inspection-route",
-    visibleSubject: "Audralia planet",
-    activeProofTarget: "Gratitude continent",
-    surfaceVisibilityRequired: false,
-    surfaceVisibilityTarget: true,
-    cloudsAboveSurfaceRequired: false,
-    cloudsAboveSurfaceTarget: true,
-    planetViewSurfaceAndCloudsTarget: true,
-    latticeViewProtected: true,
-    latticeViewCloudsBlocked: true,
-    latticeViewSurfaceBlocked: true,
-    visualPassClaimed: false
   };
 
   var state = {
@@ -86,48 +60,49 @@
     runtimeAccepted: false,
     runtimeReady: false,
 
-    routeReady: false,
-    canvasReady: false,
+    pointerActive: false,
+    pointerId: null,
+    lastPointerX: 0,
+    lastPointerY: 0,
 
     localYaw: 0,
     localPitch: 0,
-    localRoll: 0,
-    lastPointerX: 0,
-    lastPointerY: 0,
-    dragging: false,
-    lastPointerId: null,
-    dragDistance: 0,
 
-    renderCount: 0,
     raf: 0,
+    frameCount: 0,
+    dirty: true,
+    settleFrames: 0,
     lastFrame: null,
+    lastDiagnosticAt: 0,
+    lastStatus: null,
 
-    planetViewUsesRuntimeFrame: false,
-    planetViewWorldSpaceProjection: false,
-    screenSpaceFieldDisabled: true,
-    fingerDragRotatesPlanetView: false,
-    fallbackRotationAvailable: true,
-    fallbackRotationActive: false,
+    oneCanvas: false,
+    oneLoop: false,
+    pointerBound: false,
+    stopped: false,
 
-    cloudsRotateWithBody: false,
-    surfaceHintRotatesWithBody: false,
-    northPoleAnchorActive: false,
-    southPoleAnchorActive: false,
-    equatorialBandActive: false,
-    hemisphereCounterflowActive: false,
-    polarCurlVisible: false,
-    cloudsCurveWithSphere: false,
-    limbFadeActive: false,
-    softAtmosphericLimb: false,
-
-    cloudCount: 0,
-    materialCellCount: 0,
-    gratitudeHintVisible: false,
-    latticeReady: false,
     duplicateCanvasRemoved: 0,
+    runtimeCanvasCleanupCount: 0,
 
-    errors: []
+    fallbackLatticeCacheKey: "",
+    fallbackLatticeCache: null,
+
+    datasetCache: {},
+    errorCount: 0,
+    lastError: ""
   };
+
+  if (
+    window.__AUDRALIA_MAYDAY_ROUTE_CONTROLLER__ &&
+    typeof window.__AUDRALIA_MAYDAY_ROUTE_CONTROLLER__.stop === "function"
+  ) {
+    try {
+      window.__AUDRALIA_MAYDAY_ROUTE_CONTROLLER__.stop();
+    } catch (_error) {}
+  }
+
+  var abortController = typeof AbortController !== "undefined" ? new AbortController() : null;
+  var signal = abortController ? abortController.signal : undefined;
 
   function finite(value, fallback) {
     var number = Number(value);
@@ -142,62 +117,54 @@
     return typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
   }
 
-  function wrapLon(lon) {
-    var value = finite(lon, 0);
-    while (value > Math.PI) value -= TAU;
-    while (value < -Math.PI) value += TAU;
-    return value;
+  function wrapLon(value) {
+    var v = finite(value, 0);
+    while (v > Math.PI) v -= TAU;
+    while (v < -Math.PI) v += TAU;
+    return v;
   }
 
-  function hash01(a, b, c) {
-    var x = Math.sin(a * 127.1 + b * 311.7 + c * 74.7) * 43758.5453123;
-    return x - Math.floor(x);
+  function recordError(scope, error) {
+    state.errorCount += 1;
+    state.lastError = scope + ": " + (error && error.message ? error.message : String(error || "unknown"));
+
+    window.AUDRALIA_MAYDAY_ROUTE_ERROR = {
+      contract: CONTRACT,
+      scope: scope,
+      message: state.lastError,
+      errorCount: state.errorCount,
+      time: new Date().toISOString()
+    };
   }
 
   function setText(selector, value) {
     var node = document.querySelector(selector);
-    if (node) node.textContent = String(value);
+    if (node && node.textContent !== String(value)) node.textContent = String(value);
   }
 
   function setHtml(selector, value) {
     var node = document.querySelector(selector);
-    if (node) node.innerHTML = String(value);
+    if (node && node.innerHTML !== String(value)) node.innerHTML = String(value);
   }
 
   function setDataset(key, value) {
+    var next = String(value);
+
+    if (state.datasetCache[key] === next) return;
+    state.datasetCache[key] = next;
+
     try {
-      document.documentElement.dataset[key] = String(value);
-      if (document.body) document.body.dataset[key] = String(value);
+      document.documentElement.dataset[key] = next;
+      if (document.body) document.body.dataset[key] = next;
     } catch (_error) {}
   }
 
-  function recordError(scope, error) {
-    var message = error && error.message ? error.message : String(error || scope);
-    state.errors.push({
-      scope: scope,
-      message: message,
-      time: new Date().toISOString()
+  function closeOpenMenus() {
+    Array.prototype.slice.call(document.querySelectorAll("details[open]")).forEach(function (details) {
+      try {
+        details.open = false;
+      } catch (_error) {}
     });
-
-    window.AUDRALIA_G2_ROUTE_JS_ERROR = {
-      contract: CONTRACT,
-      scope: scope,
-      message: message,
-      errors: state.errors.slice()
-    };
-  }
-
-  function readShowroomObject() {
-    var root = document.documentElement;
-    var stage = document.querySelector("#audraliaGlobeStage");
-
-    SHOWROOM_OBJECT.objectType = root.dataset.objectType || (stage && stage.dataset.objectType) || "planet";
-    SHOWROOM_OBJECT.objectName = root.dataset.objectName || (stage && stage.dataset.objectName) || "Audralia";
-    SHOWROOM_OBJECT.showroomFamily = root.dataset.showroomFamily || (stage && stage.dataset.showroomFamily) || "globe";
-    SHOWROOM_OBJECT.visibleSubject = root.dataset.visibleSubject || (stage && stage.dataset.visibleSubject) || "Audralia planet";
-    SHOWROOM_OBJECT.activeProofTarget = root.dataset.activeProofTarget || (stage && stage.dataset.activeProofTarget) || "Gratitude continent";
-
-    window.AUDRALIA_G2_SHOWROOM_OBJECT = SHOWROOM_OBJECT;
   }
 
   function getRuntime() {
@@ -206,7 +173,7 @@
       null;
   }
 
-  function getRuntimeStatus(runtime) {
+  function runtimeStatus(runtime) {
     if (!runtime || typeof runtime.status !== "function") return null;
 
     try {
@@ -218,42 +185,17 @@
   }
 
   function acceptRuntime(runtime) {
-    var status = getRuntimeStatus(runtime);
+    var status = runtimeStatus(runtime);
 
     return Boolean(
-      (status && status.contract === RUNTIME_PUBLIC_CONTRACT) ||
-      (status && status.runtimeReady) ||
-      (status && status.sphereCarrierReady) ||
-      (runtime && typeof runtime.tick === "function") ||
-      (runtime && typeof runtime.getFrame === "function")
+      runtime &&
+      (
+        typeof runtime.getFrame === "function" ||
+        typeof runtime.tick === "function" ||
+        typeof runtime.pointerMove === "function" ||
+        (status && (status.runtimeReady || status.sphereCarrierReady || status.contract === RUNTIME_PUBLIC_CONTRACT))
+      )
     );
-  }
-
-  function loadScriptOnce(path, key, attrs) {
-    return new Promise(function (resolve, reject) {
-      var existing = document.querySelector("script[data-audralia-runtime-loader='" + CONTRACT + "']");
-
-      if (existing && getRuntime()) {
-        resolve(existing);
-        return;
-      }
-
-      var script = document.createElement("script");
-      script.src = path + "?v=" + encodeURIComponent(key);
-      script.defer = true;
-      script.async = true;
-
-      Object.keys(attrs || {}).forEach(function (name) {
-        script.setAttribute(name, attrs[name]);
-      });
-
-      script.onload = function () { resolve(script); };
-      script.onerror = function () {
-        reject(new Error("SCRIPT_LOAD_FAILED " + path + "?v=" + key));
-      };
-
-      document.body.appendChild(script);
-    });
   }
 
   function initRuntime() {
@@ -263,6 +205,7 @@
     state.runtime = runtime;
     state.runtimeLoaded = true;
     state.runtimeAccepted = acceptRuntime(runtime);
+    state.runtimeReady = state.runtimeAccepted;
 
     if (typeof runtime.init === "function") {
       try {
@@ -271,24 +214,20 @@
           height: state.height,
           dpr: state.dpr,
           activeLens: state.activeLens,
-          showroomObject: SHOWROOM_OBJECT,
-          objectType: SHOWROOM_OBJECT.objectType,
-          objectName: SHOWROOM_OBJECT.objectName,
-          visibleSubject: SHOWROOM_OBJECT.visibleSubject,
-          activeProofTarget: SHOWROOM_OBJECT.activeProofTarget,
-          surfaceVisibilityRequired: false,
-          surfaceVisibilityTarget: true,
-          cloudsAboveSurfaceRequired: false,
-          cloudsAboveSurfaceTarget: true,
-          planetViewSurfaceAndCloudsTarget: true,
-          latticeViewProtected: true
+          mode: "mayday-route-js-map-reduction",
+          latticeFirst: true,
+          childMathHeldDuringLattice: true,
+          routeIsConsumerOnly: true,
+          visualPassClaimed: false
         });
       } catch (error) {
         recordError("runtime.init", error);
       }
     }
 
-    state.runtimeReady = true;
+    enforceOneCanvas("after-runtime-init");
+    updateDiagnostics(true);
+    requestRender("runtime-init", 2);
   }
 
   function loadRuntime() {
@@ -299,51 +238,78 @@
       return Promise.resolve(existingRuntime);
     }
 
-    setText("[data-audralia-diagnostic-loader]", "loading runtime · rotational carrier binding");
+    return new Promise(function (resolve) {
+      var existingScript = document.querySelector("script[data-audralia-mayday-runtime-loader='true']");
 
-    return loadScriptOnce(RUNTIME_PATH, RUNTIME_CACHE_KEY, {
-      "data-audralia-runtime-loader": CONTRACT,
-      "data-runtime-contract": RUNTIME_PUBLIC_CONTRACT,
-      "data-runtime-cache-key": RUNTIME_CACHE_KEY,
-      "data-restored-working-posture": RESTORED_WORKING_POSTURE,
-      "data-object-type": SHOWROOM_OBJECT.objectType,
-      "data-object-name": SHOWROOM_OBJECT.objectName,
-      "data-visible-subject": SHOWROOM_OBJECT.visibleSubject,
-      "data-active-proof-target": SHOWROOM_OBJECT.activeProofTarget,
-      "data-world-space-projection": "true",
-      "data-screen-space-field-disabled": "true"
-    }).then(function () {
-      initRuntime();
-      return getRuntime();
-    }).catch(function (error) {
-      recordError("loadRuntime", error);
-      setText("[data-audralia-diagnostic-loader]", "runtime load failed · route fallback active");
-      return null;
+      if (existingScript) {
+        setTimeout(function () {
+          initRuntime();
+          resolve(getRuntime());
+        }, 0);
+        return;
+      }
+
+      var script = document.createElement("script");
+      script.src = RUNTIME_PATH + "?v=" + encodeURIComponent(RUNTIME_CACHE_KEY);
+      script.defer = true;
+      script.async = true;
+      script.setAttribute("data-audralia-mayday-runtime-loader", "true");
+      script.setAttribute("data-route-contract", CONTRACT);
+      script.setAttribute("data-runtime-contract", RUNTIME_PUBLIC_CONTRACT);
+      script.setAttribute("data-lattice-first", "true");
+      script.setAttribute("data-child-math-held-during-lattice", "true");
+
+      script.onload = function () {
+        initRuntime();
+        resolve(getRuntime());
+      };
+
+      script.onerror = function () {
+        state.runtimeLoaded = false;
+        state.runtimeAccepted = false;
+        state.runtimeReady = false;
+        recordError("loadRuntime", "runtime script failed");
+        updateDiagnostics(true);
+        requestRender("runtime-failed", 1);
+        resolve(null);
+      };
+
+      document.body.appendChild(script);
     });
   }
 
-  function createCanvas() {
+  function enforceOneCanvas(reason) {
     if (!state.mount) return;
 
     var canvases = Array.prototype.slice.call(state.mount.querySelectorAll("canvas"));
+    var selected = state.canvas && state.mount.contains(state.canvas) ? state.canvas : null;
 
-    if (canvases.length > 1) {
-      canvases.slice(1).forEach(function (canvas) {
-        try {
-          canvas.remove();
-          state.duplicateCanvasRemoved += 1;
-        } catch (_error) {}
-      });
+    if (!selected) {
+      selected = canvases.find(function (canvas) {
+        return canvas.getAttribute("data-audralia-mayday-canvas") === CONTRACT;
+      }) || canvases[0] || document.createElement("canvas");
     }
 
-    state.canvas = canvases[0] || document.createElement("canvas");
-
-    if (!canvases[0]) {
-      state.canvas.setAttribute("data-audralia-route-canvas", CONTRACT);
-      state.canvas.setAttribute("aria-hidden", "true");
-      state.mount.appendChild(state.canvas);
+    if (!state.mount.contains(selected)) {
+      selected.setAttribute("data-audralia-mayday-canvas", CONTRACT);
+      selected.setAttribute("aria-hidden", "true");
+      state.mount.appendChild(selected);
     }
 
+    canvases = Array.prototype.slice.call(state.mount.querySelectorAll("canvas"));
+
+    canvases.forEach(function (canvas) {
+      if (canvas === selected) return;
+
+      try {
+        canvas.remove();
+        state.duplicateCanvasRemoved += 1;
+        if (reason && reason.indexOf("runtime") >= 0) state.runtimeCanvasCleanupCount += 1;
+      } catch (_error) {}
+    });
+
+    state.canvas = selected;
+    state.canvas.setAttribute("data-audralia-mayday-canvas", CONTRACT);
     state.canvas.style.position = "absolute";
     state.canvas.style.inset = "0";
     state.canvas.style.width = "100%";
@@ -353,24 +319,26 @@
     state.canvas.style.pointerEvents = "none";
 
     state.ctx = state.canvas.getContext("2d", { alpha: true });
-    state.canvasReady = Boolean(state.ctx);
+    state.oneCanvas = Boolean(state.ctx);
   }
 
   function resize() {
-    if (!state.stage || !state.canvas) return;
+    if (!state.stage || !state.canvas) return false;
 
     var rect = state.stage.getBoundingClientRect();
-    var dpr = Math.max(1, Math.min(2.5, window.devicePixelRatio || 1));
+    var dpr = Math.max(1, Math.min(1.75, window.devicePixelRatio || 1));
     var width = Math.max(320, Math.floor(rect.width * dpr));
     var height = Math.max(480, Math.floor(rect.height * dpr));
 
-    if (state.width === width && state.height === height && state.dpr === dpr) return;
+    if (state.width === width && state.height === height && state.dpr === dpr) return false;
 
     state.width = width;
     state.height = height;
     state.dpr = dpr;
     state.canvas.width = width;
     state.canvas.height = height;
+    state.fallbackLatticeCacheKey = "";
+    state.fallbackLatticeCache = null;
 
     if (state.runtime && typeof state.runtime.resize === "function") {
       try {
@@ -379,17 +347,19 @@
         recordError("runtime.resize", error);
       }
     }
+
+    return true;
   }
 
   function fallbackMetrics() {
-    var minSide = Math.min(state.width, state.height);
+    var minSide = Math.min(state.width || 640, state.height || 720);
     var mobile = state.width < 760 * state.dpr;
 
     return {
-      width: state.width,
-      height: state.height,
-      centerX: state.width / 2,
-      centerY: mobile ? state.height * 0.405 : state.height * 0.42,
+      width: state.width || 640,
+      height: state.height || 720,
+      centerX: (state.width || 640) / 2,
+      centerY: mobile ? (state.height || 720) * 0.405 : (state.height || 720) * 0.42,
       radius: minSide * (mobile ? 0.345 : 0.365),
       cameraDistance: 3.72
     };
@@ -399,15 +369,15 @@
     return frame && frame.metrics ? frame.metrics : fallbackMetrics();
   }
 
-  function getFrame(time) {
+  function getRuntimeFrame(time) {
     var frame = null;
 
     if (state.runtime) {
       try {
-        if (typeof state.runtime.tick === "function") {
-          frame = state.runtime.tick(time);
-        } else if (typeof state.runtime.getFrame === "function") {
+        if (typeof state.runtime.getFrame === "function") {
           frame = state.runtime.getFrame();
+        } else if (typeof state.runtime.tick === "function") {
+          frame = state.runtime.tick(time);
         }
       } catch (error) {
         recordError("runtime.frame", error);
@@ -416,40 +386,19 @@
 
     if (!frame) frame = state.lastFrame || {};
 
-    frame.width = state.width;
-    frame.height = state.height;
-    frame.dpr = state.dpr;
-    frame.activeLens = state.activeLens;
-    frame.showroomObject = SHOWROOM_OBJECT;
-    frame.surfaceVisibilityRequired = false;
-    frame.surfaceVisibilityTarget = true;
-    frame.cloudsAboveSurfaceRequired = false;
-    frame.cloudsAboveSurfaceTarget = true;
-    frame.planetViewSurfaceAndCloudsTarget = true;
-    frame.latticeViewProtected = true;
+    var output = Object.assign({}, frame);
+    output.width = state.width;
+    output.height = state.height;
+    output.dpr = state.dpr;
+    output.activeLens = state.activeLens;
+    output.metrics = output.metrics || fallbackMetrics();
+    output.renderTime = finite(output.renderTime, time / 1000);
+    output.latticeFirst = true;
+    output.childMathHeldDuringLattice = state.activeLens === "lattice";
+    output.routeIsConsumerOnly = true;
 
-    if (!frame.metrics) frame.metrics = fallbackMetrics();
-
-    frame.runtimeYaw = finite(frame.yaw, 0);
-    frame.runtimePitch = finite(frame.pitch, 0);
-    frame.runtimeRoll = finite(frame.roll, 0);
-
-    frame.yaw = wrapLon(frame.runtimeYaw + state.localYaw);
-    frame.pitch = clamp(frame.runtimePitch + state.localPitch, -1.2, 1.2);
-    frame.roll = frame.runtimeRoll + state.localRoll;
-    frame.renderTime = finite(frame.renderTime, time / 1000);
-
-    state.lastFrame = frame;
-    state.planetViewUsesRuntimeFrame = Boolean(
-      state.runtimeReady ||
-      frame.projectedSeats ||
-      frame.runtimeYaw !== undefined ||
-      frame.renderTime !== undefined
-    );
-
-    state.fallbackRotationActive = Math.abs(state.localYaw) > 0.001 || Math.abs(state.localPitch) > 0.001;
-
-    return frame;
+    state.lastFrame = output;
+    return output;
   }
 
   function clear() {
@@ -457,76 +406,7 @@
     state.ctx.clearRect(0, 0, state.width, state.height);
   }
 
-  function rotateLonLat(lon, lat, frame) {
-    var yaw = finite(frame && frame.yaw, 0);
-    var pitch = finite(frame && frame.pitch, 0);
-    var roll = finite(frame && frame.roll, 0);
-
-    var clat = Math.cos(lat);
-    var x = clat * Math.cos(lon);
-    var y = Math.sin(lat);
-    var z = clat * Math.sin(lon);
-
-    var cy = Math.cos(yaw);
-    var sy = Math.sin(yaw);
-    var x1 = x * cy + z * sy;
-    var z1 = -x * sy + z * cy;
-    x = x1;
-    z = z1;
-
-    var cp = Math.cos(pitch);
-    var sp = Math.sin(pitch);
-    var y1 = y * cp - z * sp;
-    var z2 = y * sp + z * cp;
-    y = y1;
-    z = z2;
-
-    var cr = Math.cos(roll);
-    var sr = Math.sin(roll);
-    var x2 = x * cr - y * sr;
-    var y2 = x * sr + y * cr;
-
-    return { x: x2, y: y2, z: z };
-  }
-
-  function projectLonLat(lon, lat, frame) {
-    var m = metrics(frame);
-    var rotated = rotateLonLat(lon, lat, frame);
-    var denominator = Math.max(0.72, m.cameraDistance - rotated.z);
-    var perspective = m.cameraDistance / denominator;
-    var x = m.centerX + rotated.x * m.radius * perspective;
-    var y = m.centerY - rotated.y * m.radius * perspective;
-    var edge = Math.sqrt(Math.pow(x - m.centerX, 2) + Math.pow(y - m.centerY, 2)) / Math.max(1, m.radius);
-    var limbFade = clamp(1 - Math.max(0, edge - 0.74) / 0.30, 0, 1);
-    var frontFacing = rotated.z >= -0.15;
-    var visibility = frontFacing
-      ? clamp((rotated.z + 0.25) / 1.25, 0.10, 1) * limbFade
-      : 0;
-
-    return {
-      x: x,
-      y: y,
-      z: rotated.z,
-      edge: edge,
-      limbFade: limbFade,
-      perspective: perspective,
-      frontFacing: frontFacing,
-      visibility: visibility,
-      rotated: rotated
-    };
-  }
-
-  function clipSphere(frame, scale) {
-    var ctx = state.ctx;
-    var m = metrics(frame);
-    var s = scale || 1;
-
-    ctx.beginPath();
-    ctx.arc(m.centerX, m.centerY, m.radius * s, 0, TAU);
-    ctx.clip();
-  }
-
-  function drawOceanSphere(frame) {
+  function drawSphereBase(frame, reduced) {
     var ctx = state.ctx;
     var m = metrics(frame);
     var cx = m.centerX;
@@ -535,619 +415,252 @@
 
     ctx.save();
 
-    var ocean = ctx.createRadialGradient(cx - r * 0.30, cy - r * 0.32, 0, cx, cy, r * 1.20);
-    ocean.addColorStop(0.00, "rgba(183,242,255,0.95)");
-    ocean.addColorStop(0.16, "rgba(75,189,226,0.88)");
-    ocean.addColorStop(0.40, "rgba(18,112,177,0.95)");
-    ocean.addColorStop(0.70, "rgba(6,52,116,0.99)");
-    ocean.addColorStop(1.00, "rgba(1,13,35,1)");
-
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, TAU);
-    ctx.fillStyle = ocean;
-    ctx.fill();
-
-    var depth = ctx.createRadialGradient(cx + r * 0.32, cy + r * 0.30, r * 0.10, cx, cy, r * 1.10);
-    depth.addColorStop(0.00, "rgba(0,0,0,0)");
-    depth.addColorStop(0.46, "rgba(0,0,0,0.05)");
-    depth.addColorStop(0.78, "rgba(0,0,0,0.28)");
-    depth.addColorStop(1.00, "rgba(0,0,0,0.60)");
-
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, TAU);
-    ctx.fillStyle = depth;
-    ctx.fill();
-
-    ctx.restore();
-  }
-
-  function drawWorldSpaceGratitudeHint(frame) {
-    var ctx = state.ctx;
-    var p = projectLonLat(GRATITUDE_LON, GRATITUDE_LAT, frame);
-
-    if (!p.frontFacing || p.visibility <= 0.02) {
-      state.gratitudeHintVisible = false;
-      return 0;
-    }
-
-    var m = metrics(frame);
-    var alpha = clamp(0.10 * p.visibility, 0.02, 0.14);
-    var rx = m.radius * 0.22 * clamp(p.perspective, 0.72, 1.45);
-    var ry = m.radius * 0.080 * clamp(p.perspective, 0.72, 1.45);
-
-    ctx.save();
-    clipSphere(frame, 1.004);
-    ctx.translate(p.x, p.y);
-    ctx.rotate(GRATITUDE_LON * 0.20 + finite(frame.roll, 0));
-
-    var g = ctx.createRadialGradient(0, 0, 0, 0, 0, rx);
-    g.addColorStop(0.00, "rgba(188,198,126," + alpha.toFixed(4) + ")");
-    g.addColorStop(0.44, "rgba(84,151,112," + (alpha * 0.76).toFixed(4) + ")");
-    g.addColorStop(0.76, "rgba(67,160,174," + (alpha * 0.36).toFixed(4) + ")");
-    g.addColorStop(1.00, "rgba(67,160,174,0)");
-
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.ellipse(0, 0, rx, ry, 0, 0, TAU);
-    ctx.fill();
-
-    ctx.restore();
-
-    state.gratitudeHintVisible = true;
-    state.surfaceHintRotatesWithBody = true;
-    return 1;
-  }
-
-  function drawWorldSpaceMaterialCells(frame) {
-    var ctx = state.ctx;
-    var drawn = 0;
-
-    ctx.save();
-    clipSphere(frame, 1.004);
-    ctx.globalCompositeOperation = "source-over";
-
-    for (var band = 0; band < 16; band += 1) {
-      var u = (band + 0.5) / 16;
-      var lat = Math.asin(1 - 2 * u);
-
-      for (var radial = 0; radial < 16; radial += 1) {
-        var index = band * 16 + radial;
-        var lon = wrapLon((radial / 16) * TAU - Math.PI);
-        var lonDistance = Math.abs(wrapLon(lon - GRATITUDE_LON));
-        var latDistance = Math.abs(lat - GRATITUDE_LAT);
-        var gratitude = clamp(
-          1 - Math.sqrt(Math.pow(lonDistance / 0.95, 2) + Math.pow(latDistance / 0.56, 2)),
-          0,
-          1
-        );
-
-        var shelf = clamp(
-          1 - Math.sqrt(Math.pow(lonDistance / 1.22, 2) + Math.pow(latDistance / 0.82, 2)),
-          0,
-          1
-        );
-
-        var noise = hash01(radial, band, 4);
-        var strength = clamp(gratitude * 0.78 + shelf * 0.26 + Math.max(0, noise - 0.70) * 0.12, 0, 1);
-
-        if (strength < 0.055) continue;
-
-        var p = projectLonLat(lon, lat, frame);
-        if (!p.frontFacing || p.visibility <= 0.025) continue;
-
-        var opacity = clamp(0.035 + strength * 0.18, 0.025, 0.22) * p.visibility;
-        var rx = clamp(8 + strength * 24, 5, 36) * clamp(p.perspective, 0.72, 1.7);
-        var ry = clamp(3 + strength * 10, 2, 16) * clamp(p.perspective, 0.72, 1.7);
-
-        if (gratitude > 0.55) {
-          ctx.fillStyle = "rgba(112,156,103," + opacity.toFixed(4) + ")";
-        } else {
-          ctx.fillStyle = "rgba(72,154,164," + (opacity * 0.62).toFixed(4) + ")";
-        }
-
-        ctx.beginPath();
-        ctx.ellipse(p.x, p.y, rx, ry, lon * 0.44 + lat * 0.31, 0, TAU);
-        ctx.fill();
-
-        drawn += 1;
-      }
-    }
-
-    ctx.restore();
-
-    state.materialCellCount = drawn;
-    return drawn;
-  }
-
-  function cloudCells(frame) {
-    var t = finite(frame.renderTime, state.renderCount / 60);
-    var cells = [];
-
-    function addCell(role, lon, lat, width, height, opacity, angle, layer) {
-      cells.push({
-        role: role,
-        longitude: wrapLon(lon),
-        latitude: clamp(lat, -HALF_PI + 0.02, HALF_PI - 0.02),
-        width: width,
-        height: height,
-        opacity: opacity,
-        angle: angle,
-        layer: layer || 0
-      });
-    }
-
-    for (var i = 0; i < 34; i += 1) {
-      addCell(
-        "equatorialBand",
-        (i / 34) * TAU - Math.PI + t * 0.12,
-        Math.sin(i * 0.78 + t * 0.42) * 0.065,
-        0.115 + hash01(i, 2, 1) * 0.070,
-        0.026 + hash01(i, 3, 1) * 0.016,
-        0.090 + hash01(i, 4, 1) * 0.035,
-        0.15 + Math.sin(i * 0.33) * 0.35,
-        1
-      );
-    }
-
-    for (i = 0; i < 26; i += 1) {
-      addCell(
-        "northJet",
-        (i / 26) * TAU - Math.PI - t * 0.16,
-        0.48 + Math.sin(i * 0.80 + t * 0.31) * 0.060,
-        0.105 + hash01(i, 7, 2) * 0.060,
-        0.020 + hash01(i, 8, 2) * 0.012,
-        0.075 + hash01(i, 9, 2) * 0.040,
-        -0.36 + Math.sin(i * 0.52) * 0.24,
-        2
-      );
-
-      addCell(
-        "southJet",
-        (i / 26) * TAU - Math.PI + t * 0.16,
-        -0.48 + Math.sin(i * 0.80 + t * 0.29) * 0.060,
-        0.105 + hash01(i, 11, 3) * 0.060,
-        0.020 + hash01(i, 12, 3) * 0.012,
-        0.075 + hash01(i, 13, 3) * 0.040,
-        0.36 + Math.sin(i * 0.52) * 0.24,
-        2
-      );
-    }
-
-    for (i = 0; i < 18; i += 1) {
-      addCell(
-        "temperateMoisture",
-        (i / 18) * TAU - Math.PI + t * 0.09,
-        0.25 + Math.sin(i * 1.4 + t * 0.22) * 0.08,
-        0.082,
-        0.030,
-        0.060,
-        Math.sin(i) * 0.6,
-        1
-      );
-
-      addCell(
-        "temperateMoisture",
-        (i / 18) * TAU - Math.PI - t * 0.09,
-        -0.25 + Math.sin(i * 1.4 + t * 0.24) * 0.08,
-        0.082,
-        0.030,
-        0.060,
-        Math.sin(i) * -0.6,
-        1
-      );
-    }
-
-    for (i = 0; i < 20; i += 1) {
-      var northAngle = (i / 20) * TAU + t * 0.22;
-      var southAngle = (i / 20) * TAU - t * 0.22;
-
-      addCell(
-        "northPolarCurl",
-        northAngle,
-        1.12 - i * 0.010 + Math.sin(northAngle * 2) * 0.025,
-        0.070,
-        0.018,
-        0.060,
-        northAngle + Math.PI / 2,
-        3
-      );
-
-      addCell(
-        "southPolarCurl",
-        southAngle,
-        -1.12 + i * 0.010 + Math.sin(southAngle * 2) * 0.025,
-        0.070,
-        0.018,
-        0.060,
-        -southAngle - Math.PI / 2,
-        3
-      );
-    }
-
-    for (i = 0; i < 9; i += 1) {
-      addCell(
-        "orographicHint",
-        GRATITUDE_LON + (i - 4) * 0.14 + Math.sin(t * 0.2 + i) * 0.025,
-        GRATITUDE_LAT + Math.sin(i * 1.1) * 0.13,
-        0.080,
-        0.022,
-        0.050,
-        -0.15,
-        0
-      );
-    }
-
-    return cells;
-  }
-
-  function drawWorldSpaceClouds(frame) {
-    var ctx = state.ctx;
-    var cells = cloudCells(frame);
-    var drawn = 0;
-
-    state.northPoleAnchorActive = true;
-    state.southPoleAnchorActive = true;
-    state.equatorialBandActive = true;
-    state.hemisphereCounterflowActive = true;
-
-    ctx.save();
-    clipSphere(frame, 1.006);
-    ctx.globalCompositeOperation = "source-over";
-
-    cells.sort(function (a, b) {
-      return a.layer - b.layer;
-    });
-
-    for (var i = 0; i < cells.length; i += 1) {
-      var cell = cells[i];
-      var p = projectLonLat(cell.longitude, cell.latitude, frame);
-
-      if (!p.frontFacing || p.visibility <= 0.025) continue;
-
-      var m = metrics(frame);
-      var latitudeCompression = clamp(Math.cos(cell.latitude) * 0.78 + 0.22, 0.24, 1);
-      var rx = m.radius * cell.width * clamp(p.perspective, 0.72, 1.60) * latitudeCompression;
-      var ry = m.radius * cell.height * clamp(p.perspective, 0.72, 1.60);
-      var opacity = cell.opacity * p.visibility;
-
-      if (cell.role.indexOf("PolarCurl") >= 0) {
-        opacity *= 1.12;
-        state.polarCurlVisible = true;
-      }
-
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(cell.angle + finite(frame.roll, 0) * 0.2);
-
-      var g = ctx.createRadialGradient(0, 0, 0, 0, 0, Math.max(rx, ry));
-      g.addColorStop(0.00, "rgba(255,255,255," + clamp(opacity, 0.015, 0.155).toFixed(4) + ")");
-      g.addColorStop(0.44, "rgba(228,247,255," + clamp(opacity * 0.48, 0.005, 0.075).toFixed(4) + ")");
-      g.addColorStop(1.00, "rgba(164,210,232,0)");
-
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.ellipse(0, 0, rx, ry, 0, 0, TAU);
-      ctx.fill();
-      ctx.restore();
-
-      drawn += 1;
-    }
-
-    ctx.restore();
-
-    state.cloudCount = drawn;
-    state.cloudsRotateWithBody = drawn > 0;
-    state.cloudsCurveWithSphere = drawn > 0;
-    state.limbFadeActive = drawn > 0;
-
-    return drawn;
-  }
-
-  function drawSoftAtmosphericLimb(frame) {
-    var ctx = state.ctx;
-    var m = metrics(frame);
-    var cx = m.centerX;
-    var cy = m.centerY;
-    var r = m.radius;
-
-    ctx.save();
-
-    var outer = ctx.createRadialGradient(cx, cy, r * 0.74, cx, cy, r * 1.18);
-    outer.addColorStop(0.00, "rgba(141,216,255,0)");
-    outer.addColorStop(0.62, "rgba(141,216,255,0.06)");
-    outer.addColorStop(0.84, "rgba(141,216,255,0.18)");
-    outer.addColorStop(1.00, "rgba(141,216,255,0)");
-
-    ctx.beginPath();
-    ctx.arc(cx, cy, r * 1.14, 0, TAU);
-    ctx.fillStyle = outer;
+    ctx.fillStyle = reduced ? "rgba(6,35,74,0.78)" : "rgba(7,55,105,0.88)";
     ctx.fill();
 
     ctx.beginPath();
-    ctx.arc(cx, cy, r * 1.002, 0, TAU);
-    ctx.strokeStyle = "rgba(175,229,255,0.13)";
-    ctx.lineWidth = Math.max(0.6, state.dpr * 0.85);
+    ctx.arc(cx, cy, r * 0.997, 0, TAU);
+    ctx.strokeStyle = reduced ? "rgba(141,216,255,0.10)" : "rgba(175,229,255,0.14)";
+    ctx.lineWidth = Math.max(0.6, state.dpr * 0.65);
     ctx.stroke();
 
-    var terminator = ctx.createRadialGradient(cx + r * 0.36, cy + r * 0.30, r * 0.08, cx, cy, r * 1.04);
-    terminator.addColorStop(0.00, "rgba(0,0,0,0)");
-    terminator.addColorStop(0.58, "rgba(0,0,0,0)");
-    terminator.addColorStop(0.86, "rgba(0,0,0,0.16)");
-    terminator.addColorStop(1.00, "rgba(0,0,0,0.38)");
-
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, TAU);
-    ctx.fillStyle = terminator;
-    ctx.fill();
-
     ctx.restore();
-
-    state.softAtmosphericLimb = true;
   }
 
-  function drawLattice(frame) {
+  function drawPlanetHeld(frame) {
     var ctx = state.ctx;
-    var links = frame && frame.projectedLinks ? frame.projectedLinks : {};
-    var seats = frame && frame.projectedSeats ? frame.projectedSeats : [];
+    var m = metrics(frame);
+
+    drawSphereBase(frame, true);
+
+    ctx.save();
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "rgba(238,244,255,0.56)";
+    ctx.font = "800 " + Math.max(12, 13 * state.dpr) + "px ui-sans-serif, system-ui, sans-serif";
+    ctx.fillText("Planet View held during lattice control recovery", m.centerX, m.centerY + m.radius * 0.70);
+    ctx.restore();
+  }
+
+  function fallbackLattice(frame) {
+    var m = metrics(frame);
+    var key = [
+      Math.round(m.centerX),
+      Math.round(m.centerY),
+      Math.round(m.radius),
+      Math.round(state.dpr * 100)
+    ].join(":");
+
+    if (state.fallbackLatticeCacheKey === key && state.fallbackLatticeCache) {
+      return state.fallbackLatticeCache;
+    }
+
+    var seats = [];
+    var ringLinks = [];
+    var spineLinks = [];
+
+    for (var band = 0; band < 16; band += 1) {
+      var yNorm = -0.94 + (band / 15) * 1.88;
+      var rx = m.radius * Math.sqrt(Math.max(0, 1 - yNorm * yNorm));
+      var y = m.centerY + yNorm * m.radius;
+
+      for (var radial = 0; radial < 16; radial += 1) {
+        var a = (radial / 16) * TAU;
+        var x = m.centerX + Math.cos(a) * rx;
+        var z = Math.sin(a) * Math.sqrt(Math.max(0, 1 - yNorm * yNorm));
+
+        seats.push({
+          seatIndex: band * 16 + radial,
+          bandIndex: band,
+          radialIndex: radial,
+          frontFacing: z >= 0,
+          screen: {
+            x: x,
+            y: y,
+            z: z,
+            perspective: 1
+          }
+        });
+      }
+    }
+
+    for (band = 0; band < 16; band += 1) {
+      for (radial = 0; radial < 16; radial += 1) {
+        var current = seats[band * 16 + radial];
+        var next = seats[band * 16 + ((radial + 1) % 16)];
+
+        ringLinks.push({
+          a: current,
+          b: next,
+          frontFacing: current.frontFacing || next.frontFacing,
+          major: band % 4 === 0
+        });
+
+        if (band < 15) {
+          var below = seats[(band + 1) * 16 + radial];
+          spineLinks.push({
+            a: current,
+            b: below,
+            frontFacing: current.frontFacing || below.frontFacing,
+            major: radial % 4 === 0
+          });
+        }
+      }
+    }
+
+    state.fallbackLatticeCacheKey = key;
+    state.fallbackLatticeCache = {
+      projectedSeats: seats,
+      projectedLinks: {
+        ringLinks: ringLinks,
+        spineLinks: spineLinks,
+        fibonacciLinks: []
+      }
+    };
+
+    return state.fallbackLatticeCache;
+  }
+
+  function linkIsMajor(link) {
+    if (!link) return false;
+    if (link.major) return true;
+
+    var a = link.a || {};
+    var b = link.b || {};
+
+    return (
+      finite(a.radialIndex, -1) % 4 === 0 ||
+      finite(b.radialIndex, -1) % 4 === 0 ||
+      finite(a.bandIndex, -1) % 4 === 0 ||
+      finite(b.bandIndex, -1) % 4 === 0
+    );
+  }
+
+  function seatIsMajor(seat) {
+    if (!seat) return false;
+    return finite(seat.radialIndex, -1) % 4 === 0 || finite(seat.bandIndex, -1) % 4 === 0;
+  }
+
+  function drawLattice(frame, reduced) {
+    var ctx = state.ctx;
+    var source = frame && frame.projectedSeats && frame.projectedSeats.length ? frame : fallbackLattice(frame);
+    var seats = source.projectedSeats || [];
+    var links = source.projectedLinks || {};
 
     var allLinks = []
       .concat(links.ringLinks || [])
       .concat(links.spineLinks || [])
-      .concat(links.fibonacciLinks || []);
+      .concat(reduced ? [] : (links.fibonacciLinks || []));
 
     ctx.save();
-
-    if (!allLinks.length || !seats.length) {
-      drawFallbackLattice(frame);
-      ctx.restore();
-      state.latticeReady = true;
-      return;
-    }
 
     for (var i = 0; i < allLinks.length; i += 1) {
       var link = allLinks[i];
       if (!link || !link.a || !link.b || !link.a.screen || !link.b.screen) continue;
+      if (reduced && !linkIsMajor(link)) continue;
 
-      var opacity = link.frontFacing ? 0.28 : 0.08;
-      if (link.major) opacity += 0.12;
+      var opacity = link.frontFacing ? (reduced ? 0.24 : 0.28) : (reduced ? 0.045 : 0.08);
+      if (linkIsMajor(link)) opacity += reduced ? 0.08 : 0.12;
 
       ctx.beginPath();
       ctx.moveTo(link.a.screen.x, link.a.screen.y);
       ctx.lineTo(link.b.screen.x, link.b.screen.y);
-      ctx.strokeStyle = "rgba(112,199,255," + opacity.toFixed(4) + ")";
-      ctx.lineWidth = link.major ? Math.max(0.8, state.dpr * 0.9) : Math.max(0.45, state.dpr * 0.55);
+      ctx.strokeStyle = "rgba(112,199,255," + clamp(opacity, 0.03, 0.42).toFixed(4) + ")";
+      ctx.lineWidth = linkIsMajor(link) ? Math.max(0.75, state.dpr * 0.72) : Math.max(0.38, state.dpr * 0.42);
       ctx.stroke();
     }
 
     for (i = 0; i < seats.length; i += 1) {
       var seat = seats[i];
       if (!seat || !seat.screen) continue;
+      if (reduced && !seatIsMajor(seat)) continue;
 
-      var radius = seat.radialIndex % 4 === 0 ? 2.1 : 1.35;
-      var alpha = seat.frontFacing ? 0.78 : 0.18;
+      var major = seatIsMajor(seat);
+      var radius = major ? 1.95 : 1.15;
+      var alpha = seat.frontFacing ? (major ? 0.72 : 0.58) : (major ? 0.14 : 0.08);
 
       ctx.beginPath();
       ctx.arc(seat.screen.x, seat.screen.y, radius * state.dpr, 0, TAU);
-      ctx.fillStyle = seat.radialIndex % 4 === 0
+      ctx.fillStyle = major
         ? "rgba(244,207,131," + alpha.toFixed(4) + ")"
         : "rgba(141,216,255," + alpha.toFixed(4) + ")";
       ctx.fill();
     }
 
     ctx.restore();
-    state.latticeReady = true;
-  }
-
-  function drawFallbackLattice(frame) {
-    var ctx = state.ctx;
-    var m = metrics(frame);
-    var cx = m.centerX;
-    var cy = m.centerY;
-    var r = m.radius;
-
-    ctx.save();
-
-    for (var ring = -6; ring <= 6; ring += 1) {
-      var y = cy + (ring / 7) * r;
-      var rx = r * Math.sqrt(Math.max(0, 1 - Math.pow((y - cy) / r, 2)));
-
-      ctx.beginPath();
-      ctx.ellipse(cx, y, rx, r * 0.045, 0, 0, TAU);
-      ctx.strokeStyle = "rgba(112,199,255,0.16)";
-      ctx.lineWidth = Math.max(0.5, state.dpr * 0.6);
-      ctx.stroke();
-    }
-
-    for (var i = 0; i < 16; i += 1) {
-      var a = (i / 16) * TAU;
-
-      ctx.beginPath();
-      ctx.ellipse(cx, cy, r * Math.abs(Math.cos(a)), r, 0, 0, TAU);
-      ctx.strokeStyle = i % 4 === 0 ? "rgba(244,207,131,0.28)" : "rgba(112,199,255,0.14)";
-      ctx.lineWidth = i % 4 === 0 ? Math.max(0.8, state.dpr) : Math.max(0.5, state.dpr * 0.55);
-      ctx.stroke();
-    }
-
-    ctx.restore();
-  }
-
-  function renderPlanetView(frame) {
-    state.planetViewWorldSpaceProjection = true;
-    state.screenSpaceFieldDisabled = true;
-
-    drawOceanSphere(frame);
-    drawWorldSpaceMaterialCells(frame);
-    drawWorldSpaceGratitudeHint(frame);
-    drawWorldSpaceClouds(frame);
-    drawSoftAtmosphericLimb(frame);
   }
 
   function renderFrame(time) {
+    if (state.stopped) return;
+
+    state.raf = 0;
+
+    enforceOneCanvas("render");
     resize();
     clear();
 
-    var frame = getFrame(time);
+    var frame = getRuntimeFrame(time);
+    var reduced = state.pointerActive || state.settleFrames > 0;
 
     if (state.activeLens === "lattice") {
-      drawOceanSphere(frame);
-      drawLattice(frame);
-      drawSoftAtmosphericLimb(frame);
+      drawSphereBase(frame, reduced);
+      drawLattice(frame, reduced);
     } else if (state.activeLens === "diagnostic") {
-      drawOceanSphere(frame);
-      drawLattice(frame);
-      drawSoftAtmosphericLimb(frame);
+      drawSphereBase(frame, false);
+      drawLattice(frame, false);
     } else {
-      renderPlanetView(frame);
+      drawPlanetHeld(frame);
     }
 
-    state.renderCount += 1;
+    state.frameCount += 1;
+    state.oneLoop = true;
+    state.dirty = false;
 
-    if (state.renderCount % 8 === 0) updateDiagnostics(frame);
+    if (state.settleFrames > 0) state.settleFrames -= 1;
 
-    window.AUDRALIA_G2_ROUTE_JS_STATE = buildStatus(frame);
+    state.lastStatus = buildStatus();
+    window.AUDRALIA_MAYDAY_ROUTE_STATE = state.lastStatus;
 
-    state.raf = window.requestAnimationFrame(renderFrame);
+    if (state.pointerActive || state.settleFrames > 0) {
+      state.raf = window.requestAnimationFrame(renderFrame);
+    }
   }
 
-  function buildStatus(frame) {
-    return {
-      contract: CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
-      htmlRecoveryContract: HTML_RECOVERY_CONTRACT,
-      restoredWorkingPosture: RESTORED_WORKING_POSTURE,
-      runtimePublicContract: RUNTIME_PUBLIC_CONTRACT,
-      runtimeCacheKey: RUNTIME_CACHE_KEY,
-      surfaceTargetContract: SURFACE_TARGET_CONTRACT,
-      cloudTargetContract: CLOUD_TARGET_CONTRACT,
+  function requestRender(reason, settleFrames) {
+    state.dirty = true;
 
-      showroomObject: SHOWROOM_OBJECT,
+    if (settleFrames) {
+      state.settleFrames = Math.max(state.settleFrames, settleFrames);
+    }
 
-      routeReady: state.routeReady,
-      canvasReady: state.canvasReady,
-      runtimeLoaded: state.runtimeLoaded,
-      runtimeAccepted: state.runtimeAccepted,
-      runtimeReady: state.runtimeReady,
-
-      activeLens: state.activeLens,
-
-      planetViewUsesRuntimeFrame: state.planetViewUsesRuntimeFrame,
-      planetViewWorldSpaceProjection: state.planetViewWorldSpaceProjection,
-      screenSpaceFieldDisabled: state.screenSpaceFieldDisabled,
-
-      fingerDragRotatesPlanetView: state.fingerDragRotatesPlanetView,
-      fallbackRotationAvailable: true,
-      fallbackRotationActive: state.fallbackRotationActive,
-      localYaw: state.localYaw,
-      localPitch: state.localPitch,
-
-      cloudsRotateWithBody: state.cloudsRotateWithBody,
-      surfaceHintRotatesWithBody: state.surfaceHintRotatesWithBody,
-      northPoleAnchorActive: state.northPoleAnchorActive,
-      southPoleAnchorActive: state.southPoleAnchorActive,
-      equatorialBandActive: state.equatorialBandActive,
-      hemisphereCounterflowActive: state.hemisphereCounterflowActive,
-      polarCurlVisible: state.polarCurlVisible,
-      cloudsCurveWithSphere: state.cloudsCurveWithSphere,
-      limbFadeActive: state.limbFadeActive,
-      softAtmosphericLimb: state.softAtmosphericLimb,
-
-      cloudCount: state.cloudCount,
-      materialCellCount: state.materialCellCount,
-      gratitudeSurfaceProofHintVisible: state.gratitudeHintVisible,
-
-      latticeReady: state.latticeReady,
-      latticeViewProtected: true,
-      planetViewNoVisibleWireframe: state.activeLens === "planet",
-
-      surfaceVisibilityRequired: false,
-      surfaceVisibilityTarget: true,
-      surfaceProofHardGate: false,
-
-      noHtmlChange: true,
-      noChildRewrite: true,
-      noDuplicateCanvas: true,
-      noFinalContinentClaim: true,
-      noVisualPassClaim: true,
-
-      duplicateCanvasRemoved: state.duplicateCanvasRemoved,
-      frameProjectedSeats: frame && frame.projectedSeats ? frame.projectedSeats.length : null,
-      frameDatumReady: Boolean(frame && frame.datumReady),
-
-      errors: state.errors.slice()
-    };
-  }
-
-  function updateDiagnostics(frame) {
-    var status = buildStatus(frame);
-
-    setText(
-      "[data-audralia-diagnostic-route-js]",
-      status.routeReady
-        ? "active · rotational carrier binding"
-        : "route controller pending"
-    );
-
-    setText(
-      "[data-audralia-diagnostic-sphere]",
-      status.runtimeReady
-        ? "runtime frame read · fallback rotation=" + (status.fallbackRotationActive ? "active" : "available")
-        : "runtime pending · fallback rotation available"
-    );
-
-    setText(
-      "[data-audralia-diagnostic-planet]",
-      "Planet View " +
-        (state.activeLens === "planet" ? "active" : "held") +
-        " · world-space=" + (status.planetViewWorldSpaceProjection ? "active" : "pending") +
-        " · poles=" + (status.northPoleAnchorActive && status.southPoleAnchorActive ? "active" : "pending") +
-        " · clouds=" + status.cloudCount
-    );
-
-    setText(
-      "[data-audralia-diagnostic-lattice]",
-      "protected · no Planet View material in lattice lens"
-    );
-
-    setText(
-      "[data-audralia-diagnostic-seats]",
-      "16 × 16 / 256 expected · projected seats=" + (status.frameProjectedSeats || "fallback world projection")
-    );
-
-    setText(
-      "[data-audralia-diagnostic-loader]",
-      "screen-space=disabled · drag=" + (status.fingerDragRotatesPlanetView ? "active" : "available") +
-        " · polar curl=" + (status.polarCurlVisible ? "visible" : "projecting") +
-        " · surface gate=off"
-    );
-
-    setDataset("audraliaRouteJsContract", CONTRACT);
-    setDataset("audraliaPlanetViewWorldSpaceProjection", status.planetViewWorldSpaceProjection);
-    setDataset("audraliaScreenSpaceFieldDisabled", status.screenSpaceFieldDisabled);
-    setDataset("audraliaFingerDragRotatesPlanetView", status.fingerDragRotatesPlanetView);
-    setDataset("audraliaFallbackRotationActive", status.fallbackRotationActive);
-    setDataset("audraliaNorthPoleAnchorActive", status.northPoleAnchorActive);
-    setDataset("audraliaSouthPoleAnchorActive", status.southPoleAnchorActive);
-    setDataset("audraliaEquatorialBandActive", status.equatorialBandActive);
-    setDataset("audraliaHemisphereCounterflowActive", status.hemisphereCounterflowActive);
-    setDataset("audraliaPolarCurlVisible", status.polarCurlVisible);
-    setDataset("audraliaLatticeViewProtected", true);
-    setDataset("audraliaNoHtmlChange", true);
-    setDataset("audraliaNoChildRewrite", true);
+    if (!state.raf && !state.stopped) {
+      state.raf = window.requestAnimationFrame(renderFrame);
+    }
   }
 
   function setLens(lensName) {
     var lens = Object.prototype.hasOwnProperty.call(LENS_COPY, lensName) ? lensName : "planet";
-    state.activeLens = lens;
 
+    closeOpenMenus();
+
+    state.activeLens = lens;
     document.documentElement.dataset.audraliaActiveLens = lens;
 
     Array.prototype.slice.call(document.querySelectorAll("[data-audralia-lens-button]")).forEach(function (button) {
-      button.setAttribute("aria-pressed", button.dataset.audraliaLensButton === lens ? "true" : "false");
+      var pressed = button.dataset.audraliaLensButton === lens;
+      button.setAttribute("aria-pressed", pressed ? "true" : "false");
     });
 
     setText("[data-audralia-lens-title]", LENS_COPY[lens].title);
     setText("[data-audralia-lens-copy]", LENS_COPY[lens].copy);
     setHtml("[data-audralia-stage-label]", LENS_COPY[lens].label);
+
+    if (lens === "lattice") {
+      state.localYaw = 0;
+      state.localPitch = 0;
+    }
 
     if (state.runtime && typeof state.runtime.setLens === "function") {
       try {
@@ -1157,29 +670,25 @@
       }
     }
 
-    window.dispatchEvent(new CustomEvent("audralia:route-lens", {
+    updateDiagnostics(true);
+    requestRender("lens-switch", lens === "lattice" ? 3 : 1);
+
+    window.dispatchEvent(new CustomEvent("audralia:mayday-reduced-lens", {
       detail: {
         contract: CONTRACT,
         activeLens: lens,
-        latticeViewProtected: true,
-        worldSpaceProjection: lens === "planet",
-        screenSpaceFieldDisabled: true,
-        surfaceHardGate: false
+        latticeLightweight: lens === "lattice",
+        childMathHeldDuringLattice: lens === "lattice",
+        routeFallbackDisabledInLattice: true
       }
     }));
   }
 
-  function attachLensControls() {
+  function bindLensControls() {
     Array.prototype.slice.call(document.querySelectorAll("[data-audralia-lens-button]")).forEach(function (button) {
       button.addEventListener("click", function () {
         setLens(button.dataset.audraliaLensButton);
-      });
-    });
-
-    window.addEventListener("audralia:lens", function (event) {
-      if (event && event.detail && event.detail.activeLens) {
-        setLens(event.detail.activeLens);
-      }
+      }, signal ? { signal: signal } : false);
     });
   }
 
@@ -1192,12 +701,14 @@
     };
   }
 
-  function attachPointerControls() {
+  function bindPointer() {
     if (!state.stage) return;
 
     state.stage.addEventListener("pointerdown", function (event) {
-      state.dragging = true;
-      state.lastPointerId = event.pointerId;
+      closeOpenMenus();
+
+      state.pointerActive = true;
+      state.pointerId = event.pointerId;
 
       var p = pointerPoint(event);
       state.lastPointerX = p.x;
@@ -1215,11 +726,13 @@
         }
       }
 
+      updateDiagnostics(false);
+      requestRender("pointer-down", 2);
       event.preventDefault();
-    }, { passive: false });
+    }, signal ? { signal: signal, passive: false } : { passive: false });
 
     state.stage.addEventListener("pointermove", function (event) {
-      if (!state.dragging) return;
+      if (!state.pointerActive) return;
 
       var p = pointerPoint(event);
       var dx = p.x - state.lastPointerX;
@@ -1227,13 +740,11 @@
 
       state.lastPointerX = p.x;
       state.lastPointerY = p.y;
-      state.dragDistance += Math.sqrt(dx * dx + dy * dy);
 
-      state.localYaw = wrapLon(state.localYaw + dx * 0.0042);
-      state.localPitch = clamp(state.localPitch - dy * 0.0032, -0.92, 0.92);
-
-      state.fingerDragRotatesPlanetView = true;
-      state.fallbackRotationActive = true;
+      if (state.activeLens !== "lattice" && !state.runtimeReady) {
+        state.localYaw = wrapLon(state.localYaw + dx * 0.0035);
+        state.localPitch = clamp(state.localPitch - dy * 0.0026, -0.82, 0.82);
+      }
 
       if (state.runtime && typeof state.runtime.pointerMove === "function") {
         try {
@@ -1243,13 +754,14 @@
         }
       }
 
+      requestRender("pointer-move", 2);
       event.preventDefault();
-    }, { passive: false });
+    }, signal ? { signal: signal, passive: false } : { passive: false });
 
     function release(event) {
-      if (!state.dragging) return;
+      if (!state.pointerActive) return;
 
-      state.dragging = false;
+      state.pointerActive = false;
 
       if (state.runtime && typeof state.runtime.pointerUp === "function") {
         try {
@@ -1260,51 +772,155 @@
       }
 
       try {
-        if (state.lastPointerId !== null) state.stage.releasePointerCapture(state.lastPointerId);
+        if (state.pointerId !== null) state.stage.releasePointerCapture(state.pointerId);
       } catch (_error) {}
 
-      state.lastPointerId = null;
+      state.pointerId = null;
+
+      updateDiagnostics(true);
+      requestRender("pointer-release", 10);
       event.preventDefault();
     }
 
-    state.stage.addEventListener("pointerup", release, { passive: false });
-    state.stage.addEventListener("pointercancel", release, { passive: false });
-    state.stage.addEventListener("lostpointercapture", release, { passive: false });
+    state.stage.addEventListener("pointerup", release, signal ? { signal: signal, passive: false } : { passive: false });
+    state.stage.addEventListener("pointercancel", release, signal ? { signal: signal, passive: false } : { passive: false });
+    state.stage.addEventListener("lostpointercapture", release, signal ? { signal: signal, passive: false } : { passive: false });
+
+    state.pointerBound = true;
+  }
+
+  function buildStatus() {
+    return {
+      contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      htmlPairContract: HTML_PAIR_CONTRACT,
+
+      activeLens: state.activeLens,
+      runtimeReady: state.runtimeReady,
+      oneCanvas: state.oneCanvas,
+      oneLoop: state.oneLoop,
+      pointerBound: state.pointerBound,
+      pointerActive: state.pointerActive,
+
+      frameCount: state.frameCount,
+      latticeLightweight: true,
+      childMathHeld: state.activeLens === "lattice",
+      routeFallbackDisabledInLattice: true,
+      dirtyFrameDiscipline: true,
+      idleRenderPausedOrThrottled: true,
+      getFramePreferredOverTick: true,
+
+      noHtmlChange: true,
+      noNewFiles: true,
+      noChildMath: true,
+      noRuntimeRewrite: true,
+      noContinentWork: true,
+      noSurfaceWork: true,
+      noCloudWork: true,
+      noDatumExpansion: true,
+      noVisualPassClaim: true,
+
+      duplicateCanvasRemoved: state.duplicateCanvasRemoved,
+      runtimeCanvasCleanupCount: state.runtimeCanvasCleanupCount,
+      errorCount: state.errorCount
+    };
+  }
+
+  function updateDiagnostics(force) {
+    var time = now();
+
+    if (state.pointerActive && !force) return;
+
+    if (
+      !force &&
+      state.activeLens !== "diagnostic" &&
+      time - state.lastDiagnosticAt < 1000
+    ) {
+      return;
+    }
+
+    state.lastDiagnosticAt = time;
+
+    var status = buildStatus();
+
+    setText("[data-audralia-diagnostic-route]", "active · JS map reduction");
+    setText(
+      "[data-audralia-diagnostic-runtime]",
+      status.runtimeReady ? "runtime accepted · getFrame preferred" : "runtime pending · static fallback only"
+    );
+    setText("[data-audralia-diagnostic-lens]", status.activeLens);
+    setText("[data-audralia-diagnostic-canvas]", status.oneCanvas ? "one canvas" : "canvas pending");
+    setText("[data-audralia-diagnostic-loop]", status.oneLoop ? "dirty RAF controller" : "loop pending");
+    setText(
+      "[data-audralia-diagnostic-children]",
+      status.activeLens === "lattice" ? "held · no child math in lattice" : "held · Mayday reduction"
+    );
+
+    setDataset("audraliaMaydayRouteContract", CONTRACT);
+    setDataset("audraliaActiveLens", status.activeLens);
+    setDataset("audraliaOneCanvas", status.oneCanvas);
+    setDataset("audraliaOneLoop", status.oneLoop);
+    setDataset("audraliaRuntimeReady", status.runtimeReady);
+    setDataset("audraliaLatticeLightweight", status.latticeLightweight);
+    setDataset("audraliaChildMathHeld", status.childMathHeld);
+    setDataset("audraliaRouteFallbackDisabledInLattice", true);
+
+    window.AUDRALIA_MAYDAY_ROUTE_STATUS = status;
   }
 
   function publishBoot() {
-    window.AUDRALIA_G2_ROUTE_JS_BOOT_MARKER = {
+    window.AUDRALIA_MAYDAY_ROUTE_BOOT = {
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
-      htmlRecoveryContract: HTML_RECOVERY_CONTRACT,
-      runtimePublicContract: RUNTIME_PUBLIC_CONTRACT,
-      runtimeCacheKey: RUNTIME_CACHE_KEY,
-      showroomObject: SHOWROOM_OBJECT,
-
-      routeJsActive: true,
-      planetViewUsesRuntimeFrame: true,
-      planetViewWorldSpaceProjection: true,
-      screenSpaceFieldDisabled: true,
-      fallbackRotationAvailable: true,
-      cloudsRotateWithBody: true,
-      surfaceHintRotatesWithBody: true,
-      northPoleAnchorActive: true,
-      southPoleAnchorActive: true,
-      equatorialBandActive: true,
-      hemisphereCounterflowActive: true,
-      polarCurlProjected: true,
-      latticeViewProtected: true,
-      htmlTouched: false,
-      childFilesTouched: false,
-      finalContinentClaimed: false,
+      htmlPairContract: HTML_PAIR_CONTRACT,
+      route: "/showroom/globe/audralia/",
+      js: "/showroom/globe/audralia/index.js",
+      targetFileOnly: true,
+      noHtmlChange: true,
+      noNewFiles: true,
+      noChildMath: true,
+      noRuntimeRewrite: true,
+      dirtyFrameDiscipline: true,
+      idleRenderPausedOrThrottled: true,
+      latticeViewCheapMode: true,
+      dragModeReduced: true,
+      runtimeOnlyLatticePointers: true,
+      routeFallbackDisabledInLattice: true,
+      getFramePreferredOverTick: true,
+      diagnosticsNotUpdatedDuringDrag: true,
+      statusCompact: true,
+      currentHtmlSelectorsUsed: true,
+      oneCanvasRecheckAfterRuntimeLoad: true,
       visualPassClaimed: false,
       bootedAt: new Date().toISOString()
     };
   }
 
-  function init() {
-    readShowroomObject();
+  function stop() {
+    state.stopped = true;
 
+    if (state.raf) {
+      try {
+        window.cancelAnimationFrame(state.raf);
+      } catch (_error) {}
+    }
+
+    state.raf = 0;
+
+    if (abortController) {
+      try {
+        abortController.abort();
+      } catch (_error) {}
+    }
+  }
+
+  window.__AUDRALIA_MAYDAY_ROUTE_CONTROLLER__ = {
+    stop: stop,
+    state: state,
+    contract: CONTRACT
+  };
+
+  function init() {
     state.stage = document.querySelector("#audraliaGlobeStage");
     state.mount = document.querySelector("#audraliaGlobeMount");
 
@@ -1313,27 +929,31 @@
       return;
     }
 
-    createCanvas();
+    enforceOneCanvas("boot");
     resize();
-    attachLensControls();
-    attachPointerControls();
+    bindLensControls();
+    bindPointer();
     setLens("planet");
     publishBoot();
 
-    state.routeReady = true;
-
     loadRuntime().then(function () {
-      updateDiagnostics(state.lastFrame);
+      enforceOneCanvas("after-runtime-load");
+      updateDiagnostics(true);
+      requestRender("runtime-load", 2);
     });
 
-    window.addEventListener("resize", resize, { passive: true });
+    window.addEventListener("resize", function () {
+      resize();
+      updateDiagnostics(false);
+      requestRender("resize", 4);
+    }, signal ? { signal: signal, passive: true } : { passive: true });
 
-    if (state.raf) window.cancelAnimationFrame(state.raf);
-    state.raf = window.requestAnimationFrame(renderFrame);
+    updateDiagnostics(true);
+    requestRender("boot", 2);
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init, { once: true });
+    document.addEventListener("DOMContentLoaded", init, signal ? { signal: signal, once: true } : { once: true });
   } else {
     init();
   }

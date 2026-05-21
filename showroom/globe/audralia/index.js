@@ -1,17 +1,19 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_G2_9_ROUTE_BRIDGE_PLANET_FAMILY_ALIGNED_RETURN_VERIFIER_TNT_v1
+// AUDRALIA_G2_10_ROUTE_BRIDGE_SELECTABLE_STATUS_AND_DUPLICATE_PANEL_SANITIZER_TNT_v1
 // Full-file replacement.
-// Purpose: align the Audralia route bridge with the shared Showroom Globe planet-family primitives,
-// mount the runtime/parent chain once, close handoff from lawful parent visibility, and publish the
-// figure-eight return receipt without child visual precedence.
-// Owns: route verification, primitive-family readiness checks, single-cache nonce continuity,
-// mount coordination, idempotent status presentation, and return-receipt publication.
-// Does not own: planet math, lattice, palette, manifest law, source topology, hydrology, surface,
-// runtime motion, parent rendering, canvas drawing, terrain, elevation, climate, generated image,
-// GraphicBox, or visual-pass claim.
+// Purpose: preserve the G2.9 planet-family-aligned route bridge, then sanitize the handoff/status UI
+// so the page closes once from parent visibility, exposes one selectable receipt panel, prevents stale
+// pending/visible duplicate panels, and avoids mobile text-copy interception.
+// Owns: route verification, primitive-family readiness, runtime mount coordination, idempotent/selectable
+// status presentation, duplicate status sanitation, mobile overflow guard, and figure-eight return receipt.
+// Does not own: planet math, lattice, palette, manifest law, source topology, hydrology, surface, runtime
+// motion, parent rendering, canvas drawing, terrain, elevation, climate, generated image, GraphicBox,
+// or visual-pass claim.
 
-const AUDRALIA_ROUTE_CONTRACT = "AUDRALIA_G2_9_ROUTE_BRIDGE_PLANET_FAMILY_ALIGNED_RETURN_VERIFIER_TNT_v1";
+const AUDRALIA_ROUTE_CONTRACT = "AUDRALIA_G2_10_ROUTE_BRIDGE_SELECTABLE_STATUS_AND_DUPLICATE_PANEL_SANITIZER_TNT_v1";
+const PREVIOUS_ROUTE_CONTRACT = "AUDRALIA_G2_9_ROUTE_BRIDGE_PLANET_FAMILY_ALIGNED_RETURN_VERIFIER_TNT_v1";
 const AUDRALIA_ROUTE_LINEAGE_CONTRACTS = Object.freeze([
+  PREVIOUS_ROUTE_CONTRACT,
   "AUDRALIA_G2_6_SINGLE_CACHE_NONCE_CHAIN_ALIGNMENT_ROUTE_BRIDGE_TNT_v1",
   "AUDRALIA_G2_6_HTML_DYNAMIC_ROUTE_BRIDGE_BOOTSTRAP_TNT_v1",
   "AUDRALIA_ROUTE_PROOF_CHAIN_ALIGNMENT_TNT_v13",
@@ -20,6 +22,8 @@ const AUDRALIA_ROUTE_LINEAGE_CONTRACTS = Object.freeze([
 
 const ROUTE = "/showroom/globe/audralia/";
 const TARGET = "/showroom/globe/audralia/index.js";
+const STATUS_ID = "audraliaRouteBridgeSelectableStatus";
+const STYLE_ID = "audralia-route-bridge-selectable-overflow-guard";
 const CHAIN_CONTRACT = "AUDRALIA_G2_6_SINGLE_CACHE_NONCE_CHAIN_ALIGNMENT_ROUTE_BRIDGE_TNT_v1";
 const PARENT_COMPATIBILITY_CONTRACT = "AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1";
 const RUNTIME_EXPECTED_CONTRACT = "AUDRALIA_G2_5_RUNTIME_PARENT_CACHE_KEY_ALIGNMENT_TNT_v1";
@@ -39,11 +43,11 @@ const EXPECTED_PRIMITIVES = Object.freeze({
   palette: "AUDRALIA_CLEAN_CANVAS_PLANET_FAMILY_PALETTE_TNT_v1"
 });
 
-const GLOBALS = Object.freeze({
-  manifest: "DGB_PLANET_FAMILY_MANIFEST",
-  math: "DGB_PLANET_FAMILY_MATH",
-  lattice: "DGB_PLANET_FAMILY_LATTICE",
-  palette: "DGB_PLANET_FAMILY_PALETTE"
+const PRIMITIVE_GLOBALS = Object.freeze({
+  manifest: Object.freeze(["DGB_PLANET_FAMILY_MANIFEST", "AUDRALIA_CLEAN_CANVAS_MANIFEST", "AUDRALIA_PLANET_FAMILY_MANIFEST"]),
+  math: Object.freeze(["DGB_PLANET_FAMILY_MATH", "AUDRALIA_CLEAN_CANVAS_MATH", "AUDRALIA_PLANET_FAMILY_MATH"]),
+  lattice: Object.freeze(["DGB_PLANET_FAMILY_LATTICE", "AUDRALIA_CLEAN_CANVAS_LATTICE", "AUDRALIA_PLANET_FAMILY_LATTICE"]),
+  palette: Object.freeze(["DGB_PLANET_FAMILY_PALETTE", "AUDRALIA_CLEAN_CANVAS_PALETTE", "AUDRALIA_PLANET_FAMILY_PALETTE"])
 });
 
 const BOOT = Object.freeze({
@@ -55,18 +59,27 @@ const BOOT = Object.freeze({
 
 const state = {
   contract: AUDRALIA_ROUTE_CONTRACT,
+  previousContract: PREVIOUS_ROUTE_CONTRACT,
   target: TARGET,
   route: ROUTE,
   cacheNonce: "",
+
   bootStarted: false,
   bootComplete: false,
   routeValid: false,
   mountFound: false,
   mountTarget: null,
+
   statusNode: null,
   statusCardReused: false,
+  staleStatusPanelsHidden: 0,
+  staleStatusTextNodesHidden: 0,
   duplicateStatusPanelsPrevented: false,
+  selectableStatusActive: false,
+  statusTouchIsolationActive: false,
   mobileOverflowGuardActive: false,
+  parentCanvasOverlayGuardActive: false,
+
   singleCacheNonceChain: false,
   primitiveLoadStarted: false,
   primitiveLoadComplete: false,
@@ -75,10 +88,12 @@ const state = {
   planetLatticeReady: false,
   planetPaletteReady: false,
   primitiveContracts: {},
+
   runtimeImportStarted: false,
   runtimeImportSucceeded: false,
   runtimeContract: "",
   runtimeContractValid: false,
+
   mountCalled: false,
   mountAwaited: false,
   parentHandoffAwaited: false,
@@ -88,9 +103,11 @@ const state = {
   parentExpressionAccepted: false,
   parentFormVisibleAccepted: false,
   handoffClosedFromParentReceipt: false,
+
   gratitudeSourceFieldReady: false,
   gratitudeFigureEightSourceReady: false,
   gratitudeReceiptReturnReady: false,
+
   status: "route-script-loaded",
   visibleLabel: "Clean-canvas handoff pending",
   visibleSubstatus: "SINGLE_CACHE_NONCE · loading route bridge chain",
@@ -235,47 +252,58 @@ function getMount() {
   return mount;
 }
 
-function installMobileOverflowGuard() {
+function installSelectableOverflowGuard() {
   if (!hasDocument()) return false;
-  if (document.querySelector("#audralia-route-bridge-overflow-guard")) {
+  if (document.querySelector(`#${STYLE_ID}`)) {
     state.mobileOverflowGuardActive = true;
     return true;
   }
 
   const style = document.createElement("style");
-  style.id = "audralia-route-bridge-overflow-guard";
+  style.id = STYLE_ID;
   style.textContent = `
-    [data-audralia-route-bridge-panel="true"],
-    [data-audralia-status],
-    [data-audralia-route-status],
-    [data-audralia-handoff-status],
-    #audraliaRouteStatus,
-    #audraliaBridgeStatus,
-    #audraliaHandoffStatus {
-      box-sizing: border-box;
-      max-width: 100%;
-      overflow-x: hidden;
-      overflow-wrap: anywhere;
-      word-break: normal;
+    #${STATUS_ID},
+    #${STATUS_ID} *,
+    [data-audralia-selectable-status="true"],
+    [data-audralia-selectable-status="true"] * {
+      -webkit-user-select: text !important;
+      user-select: text !important;
+      -webkit-touch-callout: default !important;
+      touch-action: pan-y !important;
+      pointer-events: auto !important;
     }
-    [data-audralia-route-bridge-panel="true"] pre,
-    [data-audralia-route-bridge-panel="true"] code,
-    [data-audralia-status] pre,
-    [data-audralia-status] code,
-    #audraliaRouteStatus pre,
-    #audraliaRouteStatus code {
-      max-width: 100%;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      overflow-x: hidden;
+    #${STATUS_ID},
+    [data-audralia-selectable-status="true"] {
+      position: relative !important;
+      z-index: 80 !important;
+      box-sizing: border-box !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      overflow-x: hidden !important;
+      overflow-wrap: anywhere !important;
+      word-break: normal !important;
+      contain: layout style !important;
     }
-    [data-audralia-route-bridge-panel="true"] ul {
-      margin-left: 1.1rem;
-      padding-left: 0;
-    }
+    #${STATUS_ID} pre,
+    #${STATUS_ID} code,
+    #${STATUS_ID} span,
+    #${STATUS_ID} p,
+    #${STATUS_ID} li,
+    #${STATUS_ID} strong,
     [data-audralia-route-bridge-value="true"] {
-      overflow-wrap: anywhere;
-      word-break: break-word;
+      max-width: 100% !important;
+      white-space: normal !important;
+      overflow-wrap: anywhere !important;
+      word-break: break-word !important;
+      overflow-x: hidden !important;
+    }
+    #${STATUS_ID} ul {
+      margin-left: 1.1rem !important;
+      padding-left: 0 !important;
+    }
+    [data-audralia-route-bridge-superseded="true"] {
+      display: none !important;
+      visibility: hidden !important;
     }
   `;
   document.head.appendChild(style);
@@ -283,16 +311,135 @@ function installMobileOverflowGuard() {
   return true;
 }
 
-function preventDuplicateBridgePanels() {
-  if (!hasDocument()) return false;
-  const panels = Array.from(document.querySelectorAll("[data-audralia-route-bridge-panel='true']"));
-  if (panels.length <= 1) {
-    state.duplicateStatusPanelsPrevented = true;
-    return true;
-  }
+function textOf(node) {
+  return String(node && node.textContent ? node.textContent : "").replace(/\s+/g, " ").trim();
+}
 
-  panels.slice(1).forEach((panel) => panel.remove());
+function isBridgeStatusLike(node) {
+  const text = textOf(node);
+  if (!text) return false;
+  return (
+    text.includes("Clean-canvas handoff") ||
+    text.includes("SINGLE_CACHE_NONCE") ||
+    text.includes("PARENT_FORM_VISIBLE") ||
+    text.includes("PLANET_MANIFEST_READY") ||
+    text.includes("DYNAMIC BRIDGE BOOTSTRAP ACTIVE")
+  );
+}
+
+function hideNode(node) {
+  if (!isElement(node) || node.id === STATUS_ID) return false;
+  node.setAttribute("data-audralia-route-bridge-superseded", "true");
+  node.setAttribute("aria-hidden", "true");
+  try { node.hidden = true; } catch (_error) {}
+  if (node.style) {
+    node.style.display = "none";
+    node.style.visibility = "hidden";
+  }
+  return true;
+}
+
+function hideStaleStatusPanels(keep = null) {
+  if (!hasDocument()) return 0;
+  let hidden = 0;
+  const selectors = [
+    "#audraliaBridgeStatus",
+    "#audraliaHandoffStatus",
+    "#audraliaRouteStatus",
+    "[data-audralia-route-bridge-panel='true']",
+    "[data-audralia-handoff-status]",
+    "[data-audralia-route-status]",
+    "[data-audralia-status]"
+  ].join(",");
+
+  document.querySelectorAll(selectors).forEach((node) => {
+    if (!isElement(node)) return;
+    if (node === keep || node.contains(keep) || keep?.contains(node)) return;
+    if (!isBridgeStatusLike(node)) return;
+    if (hideNode(node)) hidden += 1;
+  });
+
+  document.querySelectorAll("h1,h2,h3,h4,h5,h6,p,strong,li,div").forEach((node) => {
+    if (!isElement(node)) return;
+    if (node === keep || node.contains(keep) || keep?.contains(node)) return;
+    const text = textOf(node);
+    const exactStale = text === "Clean-canvas handoff pending" || text === "Clean-canvas handoff visible";
+    if (!exactStale) return;
+
+    const markedAncestor = node.closest("#audraliaBridgeStatus,#audraliaHandoffStatus,#audraliaRouteStatus,[data-audralia-route-bridge-panel='true'],[data-audralia-handoff-status],[data-audralia-route-status],[data-audralia-status]");
+    const target = markedAncestor && markedAncestor !== keep && !markedAncestor.contains(keep) ? markedAncestor : node;
+    if (hideNode(target)) {
+      if (target === node) state.staleStatusTextNodesHidden += 1;
+      else hidden += 1;
+    }
+  });
+
+  state.staleStatusPanelsHidden += hidden;
   state.duplicateStatusPanelsPrevented = true;
+  return hidden;
+}
+
+function makeSelectable(node) {
+  if (!isElement(node)) return false;
+  node.setAttribute("data-audralia-selectable-status", "true");
+  node.setAttribute("data-audralia-route-bridge-panel", "true");
+  node.setAttribute("data-audralia-route-bridge-contract", AUDRALIA_ROUTE_CONTRACT);
+  node.style.position = "relative";
+  node.style.zIndex = "80";
+  node.style.boxSizing = "border-box";
+  node.style.maxWidth = "100%";
+  node.style.overflowX = "hidden";
+  node.style.overflowWrap = "anywhere";
+  node.style.userSelect = "text";
+  node.style.WebkitUserSelect = "text";
+  node.style.WebkitTouchCallout = "default";
+  node.style.touchAction = "pan-y";
+  node.style.pointerEvents = "auto";
+
+  node.querySelectorAll("*").forEach((child) => {
+    child.style.userSelect = "text";
+    child.style.WebkitUserSelect = "text";
+    child.style.WebkitTouchCallout = "default";
+    child.style.touchAction = "pan-y";
+    child.style.pointerEvents = "auto";
+  });
+
+  state.selectableStatusActive = true;
+  return true;
+}
+
+function isolateStatusTouch(node) {
+  if (!isElement(node) || node.dataset.audraliaTouchIsolationBound === "true") return false;
+
+  const stopOnly = (event) => {
+    event.stopPropagation();
+  };
+
+  ["pointerdown", "pointermove", "pointerup", "pointercancel", "touchstart", "touchmove", "touchend", "mousedown", "mouseup", "click"].forEach((type) => {
+    node.addEventListener(type, stopOnly, { capture: true, passive: true });
+  });
+
+  node.dataset.audraliaTouchIsolationBound = "true";
+  state.statusTouchIsolationActive = true;
+  return true;
+}
+
+function guardParentCanvasOverlay() {
+  if (!hasDocument()) return false;
+  const status = state.statusNode;
+
+  document.querySelectorAll("canvas[data-audralia-visible-canvas='true'],canvas[data-audralia-g27-atlas-canvas='true'],canvas[data-audralia-parent-chain-canvas='true']").forEach((canvas) => {
+    if (!isElement(canvas)) return;
+    if (status && status.contains(canvas)) return;
+    canvas.style.pointerEvents = "auto";
+    canvas.style.touchAction = "none";
+    canvas.style.userSelect = "none";
+    canvas.style.WebkitUserSelect = "none";
+    if (!canvas.style.zIndex || Number(canvas.style.zIndex) > 50) canvas.style.zIndex = "4";
+    canvas.setAttribute("data-audralia-canvas-contained-before-status", "true");
+  });
+
+  state.parentCanvasOverlayGuardActive = true;
   return true;
 }
 
@@ -300,43 +447,40 @@ function resolveStatusNode() {
   if (state.statusNode && isElement(state.statusNode)) return state.statusNode;
   if (!hasDocument()) return null;
 
-  preventDuplicateBridgePanels();
+  installSelectableOverflowGuard();
 
-  const existing =
-    document.querySelector("[data-audralia-route-bridge-panel='true']") ||
-    document.querySelector("#audraliaBridgeStatus") ||
-    document.querySelector("#audraliaHandoffStatus") ||
-    document.querySelector("#audraliaRouteStatus") ||
-    document.querySelector("[data-audralia-handoff-status]") ||
-    document.querySelector("[data-audralia-route-status]") ||
-    document.querySelector("[data-audralia-status]");
-
+  const existing = document.querySelector(`#${STATUS_ID}`);
   if (existing) {
-    existing.setAttribute("data-audralia-route-bridge-panel", "true");
-    existing.setAttribute("data-audralia-route-bridge-owned-update", "true");
     state.statusNode = existing;
     state.statusCardReused = true;
+    makeSelectable(existing);
+    isolateStatusTouch(existing);
+    hideStaleStatusPanels(existing);
+    guardParentCanvasOverlay();
     return existing;
   }
 
-  const mount = getMount();
+  hideStaleStatusPanels(null);
+
   const panel = document.createElement("section");
-  panel.id = "audraliaBridgeStatus";
+  panel.id = STATUS_ID;
   panel.setAttribute("data-audralia-route-bridge-panel", "true");
+  panel.setAttribute("data-audralia-selectable-status", "true");
   panel.setAttribute("data-audralia-status", "true");
   panel.setAttribute("aria-live", "polite");
-  panel.style.boxSizing = "border-box";
-  panel.style.maxWidth = "100%";
-  panel.style.overflowX = "hidden";
-  panel.style.overflowWrap = "anywhere";
 
+  const mount = getMount();
   const parent = mount && mount.parentElement ? mount.parentElement : document.body;
   if (mount && mount.nextSibling) parent.insertBefore(panel, mount.nextSibling);
   else parent.appendChild(panel);
 
   state.statusNode = panel;
   state.statusCardReused = false;
-  preventDuplicateBridgePanels();
+  makeSelectable(panel);
+  isolateStatusTouch(panel);
+  hideStaleStatusPanels(panel);
+  guardParentCanvasOverlay();
+
   return panel;
 }
 
@@ -356,7 +500,7 @@ function appendText(parent, tag, text, options = {}) {
 }
 
 function statusRows() {
-  const rows = [
+  return [
     ["ROUTE_VALID", state.routeValid ? ROUTE : "false"],
     ["MOUNT_TARGET_FOUND", state.mountFound ? "true" : "false"],
     ["SINGLE_CACHE_NONCE", state.cacheNonce || getOrCreateCacheNonce()],
@@ -374,10 +518,10 @@ function statusRows() {
     ["PARENT_CONTRACT_VALID", state.parentContractValid ? PARENT_COMPATIBILITY_CONTRACT : "false"],
     ["PARENT_FORM_VISIBLE", state.parentFormVisibleAccepted ? "true" : "false"],
     ["GRATITUDE_SOURCE_FIELD_READY", state.gratitudeSourceFieldReady ? "true" : "optional/pending"],
-    ["GRATITUDE_RECEIPT_RETURN_READY", state.gratitudeReceiptReturnReady ? "true" : "optional/pending"]
+    ["GRATITUDE_RECEIPT_RETURN_READY", state.gratitudeReceiptReturnReady ? "true" : "optional/pending"],
+    ["SELECTABLE_STATUS_ACTIVE", state.selectableStatusActive ? "true" : "false"],
+    ["DUPLICATE_STATUS_PANELS_PREVENTED", state.duplicateStatusPanelsPrevented ? "true" : "false"]
   ];
-
-  return rows;
 }
 
 function updateStatus(scope = "status", force = false) {
@@ -387,15 +531,20 @@ function updateStatus(scope = "status", force = false) {
   if (!force && time - state.lastStatusWrite < BOOT.statusUpdateMinMs) return;
   state.lastStatusWrite = time;
 
-  installMobileOverflowGuard();
+  installSelectableOverflowGuard();
   const node = resolveStatusNode();
   if (!node) return;
 
+  hideStaleStatusPanels(node);
+  guardParentCanvasOverlay();
+
   node.setAttribute("data-audralia-route-bridge-scope", scope);
   node.setAttribute("data-audralia-route-bridge-contract", AUDRALIA_ROUTE_CONTRACT);
+  node.setAttribute("data-audralia-route-bridge-previous-contract", PREVIOUS_ROUTE_CONTRACT);
   node.setAttribute("data-audralia-route-bridge-idempotent", "true");
   node.setAttribute("data-audralia-figure-eight-return-verifier", "true");
   node.setAttribute("data-audralia-mobile-overflow-guard", "true");
+  node.setAttribute("data-audralia-selectable-status", "true");
 
   clearNode(node);
 
@@ -421,17 +570,26 @@ function updateStatus(scope = "status", force = false) {
   appendText(node, "p", `Route bridge script: ${TARGET} · downstream nonce: ${state.cacheNonce || getOrCreateCacheNonce()}`, { muted: true, value: true });
 
   if (state.finalMessage) appendText(node, "p", state.finalMessage, { bold: true });
+
+  makeSelectable(node);
+  isolateStatusTouch(node);
 }
 
-function scriptGlobalReady(kind) {
-  if (!hasWindow()) return false;
-  const value = window[GLOBALS[kind]];
-  return Boolean(value && typeof value === "object");
+function readPrimitiveGlobal(kind) {
+  if (!hasWindow()) return null;
+  const names = PRIMITIVE_GLOBALS[kind] || [];
+  for (const name of names) {
+    if (window[name] && typeof window[name] === "object") return window[name];
+  }
+  return null;
 }
 
-function scriptContract(kind) {
-  if (!hasWindow()) return "";
-  const api = window[GLOBALS[kind]];
+function primitiveReady(kind) {
+  return Boolean(readPrimitiveGlobal(kind));
+}
+
+function primitiveContract(kind) {
+  const api = readPrimitiveGlobal(kind);
   if (!api) return "";
   if (api.contract) return String(api.contract);
   if (typeof api.getStatus === "function") {
@@ -451,7 +609,7 @@ function anyScriptAlreadyLoaded(path) {
 
 function appendClassicScript(path, kind) {
   if (!hasDocument()) return Promise.resolve(false);
-  if (scriptGlobalReady(kind)) return Promise.resolve(true);
+  if (primitiveReady(kind)) return Promise.resolve(true);
 
   const normalized = normalizePath(path);
   if (loadedScripts.has(normalized)) return loadedScripts.get(normalized);
@@ -460,7 +618,7 @@ function appendClassicScript(path, kind) {
     if (anyScriptAlreadyLoaded(path)) {
       const start = Date.now();
       const wait = () => {
-        if (scriptGlobalReady(kind)) {
+        if (primitiveReady(kind)) {
           resolve(true);
           return;
         }
@@ -484,7 +642,7 @@ function appendClassicScript(path, kind) {
     script.setAttribute("data-generated-image", "false");
     script.setAttribute("data-graphic-box", "false");
     script.setAttribute("data-visual-pass-claimed", "false");
-    script.onload = () => resolve(scriptGlobalReady(kind));
+    script.onload = () => resolve(primitiveReady(kind));
     script.onerror = () => resolve(false);
     document.head.appendChild(script);
   });
@@ -494,9 +652,9 @@ function appendClassicScript(path, kind) {
 }
 
 async function ensurePlanetPrimitive(kind, path) {
-  if (scriptGlobalReady(kind)) return true;
+  if (primitiveReady(kind)) return true;
   const loaded = await appendClassicScript(path, kind);
-  return Boolean(loaded || scriptGlobalReady(kind));
+  return Boolean(loaded || primitiveReady(kind));
 }
 
 async function ensurePlanetFamily() {
@@ -507,34 +665,29 @@ async function ensurePlanetFamily() {
 
   const manifest = await ensurePlanetPrimitive("manifest", PATHS.manifest);
   state.planetManifestReady = manifest;
-  state.primitiveContracts.manifest = scriptContract("manifest");
+  state.primitiveContracts.manifest = primitiveContract("manifest");
   publishReceipt("planet-manifest-ready");
 
   const math = await ensurePlanetPrimitive("math", PATHS.math);
   state.planetMathReady = math;
-  state.primitiveContracts.math = scriptContract("math");
+  state.primitiveContracts.math = primitiveContract("math");
   publishReceipt("planet-math-ready");
 
   const lattice = await ensurePlanetPrimitive("lattice", PATHS.lattice);
   state.planetLatticeReady = lattice;
-  state.primitiveContracts.lattice = scriptContract("lattice");
+  state.primitiveContracts.lattice = primitiveContract("lattice");
   publishReceipt("planet-lattice-ready");
 
   const palette = await ensurePlanetPrimitive("palette", PATHS.palette);
   state.planetPaletteReady = palette;
-  state.primitiveContracts.palette = scriptContract("palette");
+  state.primitiveContracts.palette = primitiveContract("palette");
 
   state.primitiveLoadComplete = true;
   state.status = "planet-family-checked";
   publishReceipt("planet-family-checked");
   updateStatus("planet-family-checked", true);
 
-  return {
-    manifest,
-    math,
-    lattice,
-    palette
-  };
+  return { manifest, math, lattice, palette };
 }
 
 function resolveRuntimeApi(moduleValue = null) {
@@ -708,7 +861,7 @@ function syncGratitudeSourceSupport() {
     (topology && typeof topology.getFigureEightSource === "function")
   );
   state.gratitudeReceiptReturnReady = Boolean(
-    traversal && traversal.receiptReturnReady !== false ||
+    (traversal && traversal.receiptReturnReady !== false) ||
     (topology && typeof topology.getTraversalReceipt === "function")
   );
 }
@@ -725,7 +878,7 @@ function closeHandoffIfAllowed(scope = "close-check") {
     state.visibleSubstatus = state.gratitudeReceiptReturnReady
       ? "FORM_VISIBLE · parent-confirmed · source-return ready"
       : "FORM_VISIBLE · parent-confirmed · source pending";
-    state.finalMessage = "Figure-eight return verifier closed from lawful parent expression.";
+    state.finalMessage = "Figure-eight return verifier closed from lawful parent expression. Status panel is selectable.";
 
     const root = getRoot();
     if (root) {
@@ -735,6 +888,8 @@ function closeHandoffIfAllowed(scope = "close-check") {
       root.dataset.audraliaParentFormVisible = "true";
       root.dataset.audraliaFigureEightReturnVerifier = "true";
       root.dataset.audraliaChildVisualPrecedenceRequired = "false";
+      root.dataset.audraliaSelectableStatusActive = String(state.selectableStatusActive);
+      root.dataset.audraliaDuplicateStatusPanelsPrevented = String(state.duplicateStatusPanelsPrevented);
     }
 
     publishReceipt(scope);
@@ -766,7 +921,10 @@ async function callRuntimeMount(runtime, mount) {
     target: TARGET,
     cacheNonce: getOrCreateCacheNonce(),
     delegatedBy: AUDRALIA_ROUTE_CONTRACT,
+    previousDelegation: PREVIOUS_ROUTE_CONTRACT,
     planetFamilyAligned: true,
+    selectableStatusActive: true,
+    duplicateStatusPanelsPrevented: true,
     figureEightReturnVerifier: true,
     childVisualPrecedenceRequired: false,
     sourceFieldSupportOptional: true
@@ -814,6 +972,7 @@ function publishReceipt(scope = "publish", partial = {}) {
 
   const receipt = {
     contract: AUDRALIA_ROUTE_CONTRACT,
+    previousContract: PREVIOUS_ROUTE_CONTRACT,
     lineageContracts: Array.from(AUDRALIA_ROUTE_LINEAGE_CONTRACTS),
     target: TARGET,
     route: ROUTE,
@@ -823,6 +982,7 @@ function publishReceipt(scope = "publish", partial = {}) {
 
     routeBridgeIdempotent: true,
     planetFamilyAligned: true,
+    selectableStatusSanitizer: true,
     figureEightReturnVerifier: true,
     singleCacheNonceChain: true,
     cacheNonce: state.cacheNonce || getOrCreateCacheNonce(),
@@ -862,9 +1022,14 @@ function publishReceipt(scope = "publish", partial = {}) {
     gratitudeReceiptReturnReady: state.gratitudeReceiptReturnReady,
 
     statusCardReused: state.statusCardReused,
+    selectableStatusActive: state.selectableStatusActive,
+    statusTouchIsolationActive: state.statusTouchIsolationActive,
     duplicateStatusPanelsPrevented: state.duplicateStatusPanelsPrevented,
+    staleStatusPanelsHidden: state.staleStatusPanelsHidden,
+    staleStatusTextNodesHidden: state.staleStatusTextNodesHidden,
     pendingLoopPrevented: true,
     mobileOverflowGuardActive: state.mobileOverflowGuardActive,
+    parentCanvasOverlayGuardActive: state.parentCanvasOverlayGuardActive,
 
     bridgeOwnsPlanetTruth: false,
     bridgeOwnsRenderTruth: false,
@@ -890,11 +1055,14 @@ function publishReceipt(scope = "publish", partial = {}) {
   window.AUDRALIA_FIGURE_EIGHT_RETURN_VERIFIER_RECEIPT = receipt;
   window.AUDRALIA_ROUTE_BRIDGE_IDEMPOTENT = true;
   window.AUDRALIA_ROUTE_BRIDGE_PLANET_FAMILY_ALIGNED = true;
+  window.AUDRALIA_ROUTE_BRIDGE_SELECTABLE_STATUS_ACTIVE = state.selectableStatusActive;
+  window.AUDRALIA_ROUTE_BRIDGE_DUPLICATE_STATUS_PANELS_PREVENTED = state.duplicateStatusPanelsPrevented;
   window.AUDRALIA_CHILD_VISUAL_PRECEDENCE_REQUIRED = false;
 
   const root = getRoot();
   if (root) {
     root.dataset.audraliaRouteContract = AUDRALIA_ROUTE_CONTRACT;
+    root.dataset.audraliaRoutePreviousContract = PREVIOUS_ROUTE_CONTRACT;
     root.dataset.audraliaRouteStatus = state.status;
     root.dataset.audraliaRouteBridgeIdempotent = "true";
     root.dataset.audraliaPlanetFamilyAligned = "true";
@@ -912,6 +1080,9 @@ function publishReceipt(scope = "publish", partial = {}) {
     root.dataset.audraliaParentContractValid = String(state.parentContractValid);
     root.dataset.audraliaParentFormVisible = String(state.parentFormVisibleAccepted);
     root.dataset.audraliaChildVisualPrecedenceRequired = "false";
+    root.dataset.audraliaSelectableStatusActive = String(state.selectableStatusActive);
+    root.dataset.audraliaStatusTouchIsolationActive = String(state.statusTouchIsolationActive);
+    root.dataset.audraliaDuplicateStatusPanelsPrevented = String(state.duplicateStatusPanelsPrevented);
     root.dataset.audraliaMobileOverflowGuardActive = String(state.mobileOverflowGuardActive);
     root.dataset.generatedImage = "false";
     root.dataset.graphicBox = "false";
@@ -934,10 +1105,12 @@ async function bootAudraliaDoorway() {
     state.bootStarted = true;
     state.routeValid = routeIsValid();
     getOrCreateCacheNonce();
-    installMobileOverflowGuard();
+    installSelectableOverflowGuard();
+    resolveStatusNode();
 
     const mount = getMount();
     state.mountFound = Boolean(mount);
+    guardParentCanvasOverlay();
 
     if (!state.routeValid) {
       state.status = "route-invalid";
@@ -988,6 +1161,8 @@ async function bootAudraliaDoorway() {
     }
 
     state.bootComplete = true;
+    hideStaleStatusPanels(state.statusNode);
+    guardParentCanvasOverlay();
     publishReceipt("boot-complete");
     return getStatus();
   })().catch((error) => {
@@ -1004,6 +1179,7 @@ function getStatus() {
 
   return {
     contract: AUDRALIA_ROUTE_CONTRACT,
+    previousContract: PREVIOUS_ROUTE_CONTRACT,
     lineageContracts: Array.from(AUDRALIA_ROUTE_LINEAGE_CONTRACTS),
     target: TARGET,
     route: ROUTE,
@@ -1011,6 +1187,7 @@ function getStatus() {
     cacheNonce: state.cacheNonce || getOrCreateCacheNonce(),
     routeBridgeIdempotent: true,
     planetFamilyAligned: true,
+    selectableStatusSanitizer: true,
     figureEightReturnVerifier: true,
     singleCacheNonceChain: true,
     routeValid: state.routeValid,
@@ -1039,9 +1216,14 @@ function getStatus() {
     gratitudeFigureEightSourceReady: state.gratitudeFigureEightSourceReady,
     gratitudeReceiptReturnReady: state.gratitudeReceiptReturnReady,
     statusCardReused: state.statusCardReused,
+    selectableStatusActive: state.selectableStatusActive,
+    statusTouchIsolationActive: state.statusTouchIsolationActive,
     duplicateStatusPanelsPrevented: state.duplicateStatusPanelsPrevented,
+    staleStatusPanelsHidden: state.staleStatusPanelsHidden,
+    staleStatusTextNodesHidden: state.staleStatusTextNodesHidden,
     pendingLoopPrevented: true,
     mobileOverflowGuardActive: state.mobileOverflowGuardActive,
+    parentCanvasOverlayGuardActive: state.parentCanvasOverlayGuardActive,
     generatedImage: false,
     graphicBox: false,
     visualPassClaim: false,
@@ -1068,6 +1250,7 @@ function create() {
 const api = Object.freeze({
   contract: AUDRALIA_ROUTE_CONTRACT,
   CONTRACT: AUDRALIA_ROUTE_CONTRACT,
+  previousContract: PREVIOUS_ROUTE_CONTRACT,
   lineageContracts: AUDRALIA_ROUTE_LINEAGE_CONTRACTS,
   target: TARGET,
   route: ROUTE,
@@ -1086,6 +1269,7 @@ if (hasWindow()) {
   window.AUDRALIA_ROUTE_BRIDGE = api;
   window.AUDRALIA_ROUTE_BRIDGE_API = api;
   window.AUDRALIA_PLANET_FAMILY_ALIGNED_ROUTE_BRIDGE = api;
+  window.AUDRALIA_ROUTE_BRIDGE_SELECTABLE_STATUS_SANITIZER = api;
   publishReceipt("module-load");
 }
 
@@ -1099,6 +1283,7 @@ if (hasDocument()) {
 
 export {
   AUDRALIA_ROUTE_CONTRACT,
+  PREVIOUS_ROUTE_CONTRACT,
   AUDRALIA_ROUTE_LINEAGE_CONTRACTS,
   bootAudraliaDoorway,
   exposeRouteReceipt,

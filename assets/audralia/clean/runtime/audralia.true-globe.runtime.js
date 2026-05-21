@@ -1,15 +1,15 @@
 // /assets/audralia/clean/runtime/audralia.true-globe.runtime.js
 // TNT FULL-FILE REPLACEMENT
-// AUDRALIA_G2_TRUE_GLOBE_RUNTIME_SURFACE_RENDERER_MANIFEST_CONSUMER_TNT_v6
+// AUDRALIA_G2_TRUE_GLOBE_RUNTIME_DATUM_MANIFEST_CONSUMER_TNT_v7
 //
 // Public runtime contract intentionally preserved for route JS compatibility:
 // AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2
 //
-// Existing route-confirmed capability marker preserved:
-// AUDRALIA_G2_TRUE_GLOBE_RUNTIME_TERRAIN_ECOSYSTEM_MANIFEST_CONSUMER_TNT_v5
-//
-// New internal capability marker:
+// Existing route-confirmed surface capability marker preserved:
 // AUDRALIA_G2_TRUE_GLOBE_RUNTIME_SURFACE_RENDERER_MANIFEST_CONSUMER_TNT_v6
+//
+// New internal datum capability marker:
+// AUDRALIA_G2_TRUE_GLOBE_RUNTIME_DATUM_MANIFEST_CONSUMER_TNT_v7
 //
 // Consumes manifest:
 // /assets/audralia/clean/runtime/audralia.true-globe.family.manifest.js
@@ -17,13 +17,12 @@
 // Purpose:
 // - Preserve runtime public compatibility.
 // - Preserve protected Lattice View.
+// - Preserve surface renderer v6 compatibility for current route JS.
 // - Load family manifest first.
-// - Load terrain/ecosystem forcing child.
-// - Load moisture child.
-// - Load Gratitude surface renderer child.
-// - Load cloud child after surface availability.
-// - Expose surface layer on runtime frame.
-// - Preserve cloud-over-surface draw order authority.
+// - Load planetary datum child before terrain/ecosystem.
+// - Expose frame.datum and frame.datumReady.
+// - Expose runtime.getDatum().
+// - Preserve terrain → moisture → surface → clouds chain after datum.
 // - Do not draw.
 // - Do not create canvas.
 // - Do not touch HTML.
@@ -37,14 +36,25 @@
   var CHILD_KEY_RENEWAL_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_ORGANIC_CLOUD_CHILD_KEY_RENEWAL_TNT_v3";
   var TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_TERRAIN_ECOSYSTEM_MANIFEST_CONSUMER_TNT_v5";
   var SURFACE_RENDERER_CONSUMER_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_SURFACE_RENDERER_MANIFEST_CONSUMER_TNT_v6";
-  var PREVIOUS_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_TERRAIN_ECOSYSTEM_MANIFEST_CONSUMER_TNT_v5";
-  var STANDARD = "AUDRALIA_G2_GRATITUDE_CONTINENT_SURFACE_VISUALIZATION_SPEC_OPS_v1";
+  var DATUM_MANIFEST_CONSUMER_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_DATUM_MANIFEST_CONSUMER_TNT_v7";
+  var PREVIOUS_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_SURFACE_RENDERER_MANIFEST_CONSUMER_TNT_v6";
+
+  var STANDARD = "AUDRALIA_G2_DATUM_PARENT_CHAIN_SPEC_OPS_v1";
   var FAMILY_STANDARD = "AUDRALIA_G2_PARENT_CHILD_CONTRACT_HANDSHAKE_AND_FAMILY_MANIFEST_STANDARD_v1";
   var FAMILY = "/assets/audralia/clean/runtime/";
   var FILE = "/assets/audralia/clean/runtime/audralia.true-globe.runtime.js";
 
   var MANIFEST_PATH = "/assets/audralia/clean/runtime/audralia.true-globe.family.manifest.js";
   var MANIFEST_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_FAMILY_MANIFEST_PARENT_CHILD_HANDSHAKE_TNT_v1";
+  var MANIFEST_CACHE_KEY = "AUDRALIA_G2_TRUE_GLOBE_FAMILY_MANIFEST_DATUM_CHILD_REGISTRATION_TNT_v4";
+
+  var FALLBACK_DATUM = {
+    path: "/assets/audralia/clean/runtime/audralia.true-globe.datum.js",
+    publicContract: "AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1",
+    cacheKey: "AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1",
+    capabilityField: "contract",
+    capabilityMarker: "AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1"
+  };
 
   var FALLBACK_TERRAIN_ECOSYSTEM = {
     path: "/assets/audralia/clean/runtime/audralia.true-globe.terrain-ecosystem.js",
@@ -135,6 +145,12 @@
     manifestLoading: false,
     manifestReady: false,
 
+    datumApi: null,
+    datumLoaded: false,
+    datumLoading: false,
+    datum: null,
+    datumReady: false,
+
     terrainEcosystemApi: null,
     terrainEcosystemLoaded: false,
     terrainEcosystemLoading: false,
@@ -173,6 +189,11 @@
     parentFetchesByCacheKey: true,
     parentVerifiesChildCapabilityMarker: true,
     staleGlobalRejectedIfCapabilityMissing: true,
+
+    datumLoadsBeforeTerrainEcosystem: true,
+    datumLoadsBeforeMoisture: true,
+    datumLoadsBeforeSurface: true,
+    datumLoadsBeforeClouds: true,
 
     terrainForcingDrivesMoisture: true,
     moistureDrivesClouds: true,
@@ -250,6 +271,12 @@
       null;
   }
 
+  function getDatumApi() {
+    return window.AUDRALIA_TRUE_GLOBE_DATUM ||
+      window.AUDRALIA_G2_TRUE_GLOBE_DATUM ||
+      null;
+  }
+
   function getTerrainEcosystemApi() {
     return window.AUDRALIA_TRUE_GLOBE_TERRAIN_ECOSYSTEM ||
       window.AUDRALIA_G2_TRUE_GLOBE_TERRAIN_ECOSYSTEM ||
@@ -284,18 +311,13 @@
       } catch (_error) {}
     }
 
+    if (entryName === "datum") return FALLBACK_DATUM;
     if (entryName === "terrainEcosystem") return FALLBACK_TERRAIN_ECOSYSTEM;
     if (entryName === "moisture") return FALLBACK_MOISTURE;
     if (entryName === "surface") return FALLBACK_SURFACE;
     if (entryName === "clouds") return FALLBACK_CLOUDS;
 
     return null;
-  }
-
-  function buildEntryUrl(entry) {
-    if (!entry || !entry.path) return "";
-    var key = entry.cacheKey || entry.publicContract || SURFACE_RENDERER_CONSUMER_CONTRACT;
-    return entry.path + "?v=" + encodeURIComponent(key);
   }
 
   function validateApiAgainstEntry(entryName, api) {
@@ -338,7 +360,7 @@
       expectedCapabilityMarker: entry.capabilityMarker,
       actualCapabilityMarker: capabilityValue || "",
       cacheKey: entry.cacheKey,
-      fetchUrl: buildEntryUrl(entry),
+      fetchUrl: entry.path + "?v=" + encodeURIComponent(entry.cacheKey || entry.publicContract || DATUM_MANIFEST_CONSUMER_CONTRACT),
       reason: publicOk && capabilityOk
         ? "PASS"
         : !publicOk
@@ -352,6 +374,7 @@
   }
 
   function getChildApi(entryName) {
+    if (entryName === "datum") return getDatumApi();
     if (entryName === "terrainEcosystem") return getTerrainEcosystemApi();
     if (entryName === "moisture") return getMoistureApi();
     if (entryName === "surface") return getSurfaceApi();
@@ -361,9 +384,8 @@
 
   function removeWrongChildScripts(entryName, entry) {
     var scripts = document.querySelectorAll("script[data-audralia-runtime-child='" + entryName + "']");
-    var i;
 
-    for (i = 0; i < scripts.length; i += 1) {
+    for (var i = 0; i < scripts.length; i += 1) {
       var script = scripts[i];
       var key = script.getAttribute("data-cache-key") || script.getAttribute("data-contract") || "";
 
@@ -431,10 +453,10 @@
 
       state.manifestLoading = true;
 
-      loadScript(MANIFEST_PATH, MANIFEST_CONTRACT, {
-        "data-audralia-runtime-family-manifest": SURFACE_RENDERER_CONSUMER_CONTRACT,
+      loadScript(MANIFEST_PATH, MANIFEST_CACHE_KEY, {
+        "data-audralia-runtime-family-manifest": DATUM_MANIFEST_CONSUMER_CONTRACT,
         "data-contract": MANIFEST_CONTRACT,
-        "data-cache-key": MANIFEST_CONTRACT
+        "data-cache-key": MANIFEST_CACHE_KEY
       }).then(function () {
         var api = getManifestApi();
 
@@ -505,7 +527,7 @@
         "data-capability-field": entry.capabilityField,
         "data-capability-marker": entry.capabilityMarker,
         "data-manifest-contract": MANIFEST_CONTRACT,
-        "data-runtime-consumer-contract": SURFACE_RENDERER_CONSUMER_CONTRACT
+        "data-runtime-consumer-contract": DATUM_MANIFEST_CONSUMER_CONTRACT
       }).then(function () {
         var api = getChildApi(entryName);
         var validation = validateApiAgainstEntry(entryName, api);
@@ -523,6 +545,7 @@
   function ensureAtmosphereChildren() {
     if (
       state.manifestLoading ||
+      state.datumLoading ||
       state.terrainEcosystemLoading ||
       state.moistureLoading ||
       state.surfaceLoading ||
@@ -533,6 +556,17 @@
 
     loadManifestOnce()
       .then(function () {
+        state.datumLoading = true;
+        return loadChildFromManifest("datum");
+      })
+      .then(function (datumApi) {
+        state.datumApi = datumApi;
+        state.datumLoaded = true;
+        state.datumReady = true;
+        state.datumLoading = false;
+
+        buildDatumFrameData();
+
         state.terrainEcosystemLoading = true;
         return loadChildFromManifest("terrainEcosystem");
       })
@@ -553,7 +587,7 @@
         state.moistureFieldReady = true;
         state.moistureLoading = false;
 
-        buildAtmosphereFrameData();
+        buildMoistureFrameData();
 
         state.surfaceLoading = true;
         return loadChildFromManifest("surface");
@@ -584,6 +618,7 @@
       })
       .catch(function (error) {
         state.manifestLoading = false;
+        state.datumLoading = false;
         state.terrainEcosystemLoading = false;
         state.moistureLoading = false;
         state.surfaceLoading = false;
@@ -867,6 +902,7 @@
       childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
       terrainEcosystemConsumerContract: TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT,
       surfaceRendererConsumerContract: SURFACE_RENDERER_CONSUMER_CONTRACT,
+      datumManifestConsumerContract: DATUM_MANIFEST_CONSUMER_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       standard: STANDARD,
       familyStandard: FAMILY_STANDARD,
@@ -915,6 +951,10 @@
       manifestLoaded: state.manifestLoaded,
       manifestReady: state.manifestReady,
 
+      datumLoaded: state.datumLoaded,
+      datumReady: state.datumReady,
+      datum: state.datum,
+
       terrainEcosystemLoaded: state.terrainEcosystemLoaded,
       terrainEcosystemReady: state.terrainEcosystemReady,
       terrainEcosystemField: state.terrainEcosystemField,
@@ -937,6 +977,11 @@
       parentVerifiesChildCapabilityMarker: true,
       staleGlobalRejectedIfCapabilityMissing: true,
 
+      datumLoadsBeforeTerrainEcosystem: true,
+      datumLoadsBeforeMoisture: true,
+      datumLoadsBeforeSurface: true,
+      datumLoadsBeforeClouds: true,
+
       terrainForcingDrivesMoisture: true,
       moistureDrivesClouds: true,
       surfaceDrawsBeforeClouds: true,
@@ -948,13 +993,39 @@
     };
   }
 
+  function buildDatumFrameData() {
+    state.datumApi = state.datumApi || getDatumApi();
+    state.datumLoaded = childApiMatches("datum", state.datumApi);
+
+    if (state.datumLoaded && typeof state.datumApi.getDatum === "function") {
+      try {
+        state.datum = state.datumApi.getDatum(buildFrameBase());
+        state.datumReady = Boolean(
+          state.datum &&
+          state.datum.datumReady &&
+          state.datum.trueNorthDefined &&
+          state.datum.trueSouthDefined &&
+          state.datum.equatorDefined
+        );
+      } catch (error) {
+        recordError("datumField", error);
+      }
+    }
+  }
+
   function buildTerrainEcosystemFrameData() {
+    buildDatumFrameData();
+
+    var frame = buildFrameBase();
+    frame.datum = state.datum;
+    frame.datumReady = state.datumReady;
+
     state.terrainEcosystemApi = state.terrainEcosystemApi || getTerrainEcosystemApi();
     state.terrainEcosystemLoaded = childApiMatches("terrainEcosystem", state.terrainEcosystemApi);
 
     if (state.terrainEcosystemLoaded && typeof state.terrainEcosystemApi.getField === "function") {
       try {
-        state.terrainEcosystemField = state.terrainEcosystemApi.getField(buildFrameBase());
+        state.terrainEcosystemField = state.terrainEcosystemApi.getField(frame);
         state.terrainEcosystemReady = Boolean(
           state.terrainEcosystemField &&
           state.terrainEcosystemField.forcingFieldReady
@@ -967,6 +1038,8 @@
 
   function buildMoistureFrameData() {
     var frame = buildFrameBase();
+    frame.datum = state.datum;
+    frame.datumReady = state.datumReady;
     frame.terrainEcosystemField = state.terrainEcosystemField;
 
     state.moistureApi = state.moistureApi || getMoistureApi();
@@ -984,6 +1057,8 @@
 
   function buildSurfaceFrameData() {
     var frame = buildFrameBase();
+    frame.datum = state.datum;
+    frame.datumReady = state.datumReady;
     frame.terrainEcosystemField = state.terrainEcosystemField;
     frame.moistureField = state.moistureField;
 
@@ -1009,6 +1084,8 @@
 
   function buildCloudFrameData() {
     var frame = buildFrameBase();
+    frame.datum = state.datum;
+    frame.datumReady = state.datumReady;
     frame.terrainEcosystemField = state.terrainEcosystemField;
     frame.moistureField = state.moistureField;
     frame.surfaceLayer = state.surfaceLayer;
@@ -1032,11 +1109,13 @@
     state.manifestLoaded = Boolean(state.manifestApi);
     state.manifestReady = Boolean(state.manifestApi);
 
+    state.datumApi = state.datumApi || getDatumApi();
     state.terrainEcosystemApi = state.terrainEcosystemApi || getTerrainEcosystemApi();
     state.moistureApi = state.moistureApi || getMoistureApi();
     state.surfaceApi = state.surfaceApi || getSurfaceApi();
     state.cloudsApi = state.cloudsApi || getCloudsApi();
 
+    buildDatumFrameData();
     buildTerrainEcosystemFrameData();
     buildMoistureFrameData();
     buildSurfaceFrameData();
@@ -1169,6 +1248,8 @@
     buildAtmosphereFrameData();
 
     var frame = buildFrameBase();
+    frame.datum = state.datum;
+    frame.datumReady = state.datumReady;
     frame.terrainEcosystemField = state.terrainEcosystemField;
     frame.moistureField = state.moistureField;
     frame.surfaceLayer = state.surfaceLayer;
@@ -1187,6 +1268,11 @@
       spineLinks: state.spineLinks.slice(),
       fibonacciLinks: state.fibonacciLinks.slice()
     };
+  }
+
+  function getDatum() {
+    buildDatumFrameData();
+    return state.datum;
   }
 
   function getTerrainEcosystemField() {
@@ -1210,36 +1296,25 @@
   }
 
   function status() {
+    var datumEntry = getManifestEntry("datum") || FALLBACK_DATUM;
     var terrainEntry = getManifestEntry("terrainEcosystem") || FALLBACK_TERRAIN_ECOSYSTEM;
     var moistureEntry = getManifestEntry("moisture") || FALLBACK_MOISTURE;
     var surfaceEntry = getManifestEntry("surface") || FALLBACK_SURFACE;
     var cloudEntry = getManifestEntry("clouds") || FALLBACK_CLOUDS;
 
-    var terrainStatus = state.terrainEcosystemApi && typeof state.terrainEcosystemApi.status === "function"
-      ? state.terrainEcosystemApi.status()
-      : null;
-
-    var moistureStatus = state.moistureApi && typeof state.moistureApi.status === "function"
-      ? state.moistureApi.status()
-      : null;
-
-    var surfaceStatus = state.surfaceApi && typeof state.surfaceApi.status === "function"
-      ? state.surfaceApi.status()
-      : null;
-
-    var cloudStatus = state.cloudsApi && typeof state.cloudsApi.status === "function"
-      ? state.cloudsApi.status()
-      : null;
-
-    var manifestStatus = state.manifestApi && typeof state.manifestApi.status === "function"
-      ? state.manifestApi.status()
-      : null;
+    var manifestStatus = state.manifestApi && typeof state.manifestApi.status === "function" ? state.manifestApi.status() : null;
+    var datumStatus = state.datumApi && typeof state.datumApi.status === "function" ? state.datumApi.status() : null;
+    var terrainStatus = state.terrainEcosystemApi && typeof state.terrainEcosystemApi.status === "function" ? state.terrainEcosystemApi.status() : null;
+    var moistureStatus = state.moistureApi && typeof state.moistureApi.status === "function" ? state.moistureApi.status() : null;
+    var surfaceStatus = state.surfaceApi && typeof state.surfaceApi.status === "function" ? state.surfaceApi.status() : null;
+    var cloudStatus = state.cloudsApi && typeof state.cloudsApi.status === "function" ? state.cloudsApi.status() : null;
 
     return {
       contract: CONTRACT,
       childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
       terrainEcosystemConsumerContract: TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT,
       surfaceRendererConsumerContract: SURFACE_RENDERER_CONSUMER_CONTRACT,
+      datumManifestConsumerContract: DATUM_MANIFEST_CONSUMER_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       standard: STANDARD,
       familyStandard: FAMILY_STANDARD,
@@ -1267,9 +1342,18 @@
 
       manifestPath: MANIFEST_PATH,
       manifestContract: MANIFEST_CONTRACT,
+      manifestCacheKey: MANIFEST_CACHE_KEY,
       manifestLoaded: state.manifestLoaded,
       manifestReady: state.manifestReady,
       manifestStatus: manifestStatus,
+
+      datumPath: datumEntry.path,
+      datumPublicContract: datumEntry.publicContract,
+      datumCacheKey: datumEntry.cacheKey,
+      datumLoaded: state.datumLoaded,
+      datumReady: state.datumReady,
+      datumStatus: datumStatus,
+      datumHandshake: validateApiAgainstEntry("datum", state.datumApi),
 
       terrainEcosystemPath: terrainEntry.path,
       terrainEcosystemPublicContract: terrainEntry.publicContract,
@@ -1309,6 +1393,11 @@
       parentVerifiesChildCapabilityMarker: true,
       staleGlobalRejectedIfCapabilityMissing: true,
 
+      datumLoadsBeforeTerrainEcosystem: true,
+      datumLoadsBeforeMoisture: true,
+      datumLoadsBeforeSurface: true,
+      datumLoadsBeforeClouds: true,
+
       terrainForcingDrivesMoisture: true,
       moistureDrivesClouds: true,
       surfaceDrawsBeforeClouds: true,
@@ -1328,6 +1417,9 @@
       frameIndex: state.frameIndex,
       renderTime: state.renderTime,
 
+      frameDatumExposed: Boolean(state.datum),
+      getDatumApiReady: true,
+
       generatedImage: false,
       graphicBox: false,
       flatProjection: false,
@@ -1345,6 +1437,7 @@
       childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
       terrainEcosystemConsumerContract: TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT,
       surfaceRendererConsumerContract: SURFACE_RENDERER_CONSUMER_CONTRACT,
+      datumManifestConsumerContract: DATUM_MANIFEST_CONSUMER_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       standard: STANDARD,
       familyStandard: FAMILY_STANDARD,
@@ -1362,6 +1455,7 @@
       getFrame: getFrame,
       getSeats: getSeats,
       getLinks: getLinks,
+      getDatum: getDatum,
       getTerrainEcosystemField: getTerrainEcosystemField,
       getMoistureField: getMoistureField,
       getSurfaceLayer: getSurfaceLayer,
@@ -1392,6 +1486,7 @@
       childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
       terrainEcosystemConsumerContract: TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT,
       surfaceRendererConsumerContract: SURFACE_RENDERER_CONSUMER_CONTRACT,
+      datumManifestConsumerContract: DATUM_MANIFEST_CONSUMER_CONTRACT,
       scope: scope,
       message: message,
       errors: state.errors.slice()
@@ -1408,9 +1503,7 @@
       state.width = Math.max(320, Math.floor(finite(options.width, state.width)));
       state.height = Math.max(320, Math.floor(finite(options.height, state.height)));
       state.dpr = Math.max(1, finite(options.dpr, state.dpr));
-      state.reducedMotion = typeof options.reducedMotion === "boolean"
-        ? options.reducedMotion
-        : detectReducedMotion();
+      state.reducedMotion = typeof options.reducedMotion === "boolean" ? options.reducedMotion : detectReducedMotion();
 
       if (!state.seats.length) buildSphereCarrier();
 
@@ -1440,6 +1533,7 @@
     childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
     terrainEcosystemConsumerContract: TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT,
     surfaceRendererConsumerContract: SURFACE_RENDERER_CONSUMER_CONTRACT,
+    datumManifestConsumerContract: DATUM_MANIFEST_CONSUMER_CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
     standard: STANDARD,
     familyStandard: FAMILY_STANDARD,
@@ -1447,10 +1541,15 @@
     file: FILE,
     manifestPath: MANIFEST_PATH,
     manifestContract: MANIFEST_CONTRACT,
+    manifestCacheKey: MANIFEST_CACHE_KEY,
     parentAcceptsByPublicContract: true,
     parentFetchesByCacheKey: true,
     parentVerifiesChildCapabilityMarker: true,
     staleGlobalRejectedIfCapabilityMissing: true,
+    datumLoadsBeforeTerrainEcosystem: true,
+    datumLoadsBeforeMoisture: true,
+    datumLoadsBeforeSurface: true,
+    datumLoadsBeforeClouds: true,
     terrainEcosystemLoadsBeforeMoisture: true,
     moistureLoadsBeforeSurface: true,
     surfaceLoadsBeforeClouds: true,
@@ -1459,8 +1558,10 @@
     surfaceDrawsBeforeClouds: true,
     cloudsRenderAboveSurface: true,
     terrainDirectCloudPaint: false,
+    frameDatumExposed: true,
+    getDatumApiReady: true,
     bootedAt: new Date().toISOString(),
-    meaning: "Runtime evaluated with Gratitude surface renderer manifest consumer. Surface layer is loaded after moisture and before clouds and exposed on frame.surfaceLayer."
+    meaning: "Runtime evaluated with planetary datum manifest consumer. Datum loads before terrain/ecosystem and is exposed as frame.datum plus runtime.getDatum()."
   };
 
   publish();

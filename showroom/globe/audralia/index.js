@@ -1,54 +1,59 @@
 // /showroom/globe/audralia/index.js
 // TNT FULL-FILE REPLACEMENT
+// AUDRALIA_G2_ROUTE_JS_PLANET_VIEW_MOISTURE_CLOUD_RENDERER_WITH_LATTICE_PROTECTION_TNT_v1
+//
+// Supersedes:
 // AUDRALIA_G2_TRUE_GLOBE_ROUTE_JS_RUNTIME_CONSUMER_AND_RENDERER_TNT_v1
 //
 // Consumes runtime:
 // /assets/audralia/clean/runtime/audralia.true-globe.runtime.js
 //
 // Runtime contract:
-// AUDRALIA_G2_TRUE_GLOBE_RUNTIME_FAMILY_SEPARATION_TNT_v1
+// AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2
+//
+// Runtime children:
+// /assets/audralia/clean/runtime/audralia.true-globe.moisture.js
+// /assets/audralia/clean/runtime/audralia.true-globe.clouds.js
 //
 // Paired HTML:
-// AUDRALIA_G2_TRUE_GLOBE_SPHERICAL_LATTICE_HTML_SHELL_TNT_v1
+// AUDRALIA_G2_HTML_ROUTE_JS_RUNTIME_CONSUMER_IMPORT_KEY_RENEWAL_TNT_v1
 //
 // Purpose:
-// - Make the page visually change now.
-// - Keep route JS as doorway/consumer/renderer, not source-of-truth runtime.
-// - Load or detect the Audralia true-globe runtime from the proper family.
-// - Claim the canonical visual mount.
-// - Create one canvas.
-// - Render Planet View from runtime frame.
-// - Render Lattice View from runtime frame.
-// - Update Diagnostic Scope.
-// - Support drag, momentum, reset, and lens controls.
-// - No generated image. No GraphicBox. No CSS-ring proof. No visible legacy handoff wall.
+// - Preserve the current working Lattice View baseline.
+// - Update route JS to consume runtime v2.
+// - Render moisture-driven cloud layer in Planet View only.
+// - Block clouds from Lattice View.
+// - Preserve finger control, runtime sphere, 16 × 16 / 256 lattice, and compact diagnostics.
+// - No generated image. No GraphicBox. No flat projection. No legacy handoff wall.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_ROUTE_JS_RUNTIME_CONSUMER_AND_RENDERER_TNT_v1";
-  var HTML_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_SPHERICAL_LATTICE_HTML_SHELL_TNT_v1";
-  var RUNTIME_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_FAMILY_SEPARATION_TNT_v1";
+  var CONTRACT = "AUDRALIA_G2_ROUTE_JS_PLANET_VIEW_MOISTURE_CLOUD_RENDERER_WITH_LATTICE_PROTECTION_TNT_v1";
+  var PREVIOUS_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_ROUTE_JS_RUNTIME_CONSUMER_AND_RENDERER_TNT_v1";
+  var HTML_CONTRACT = "AUDRALIA_G2_HTML_ROUTE_JS_RUNTIME_CONSUMER_IMPORT_KEY_RENEWAL_TNT_v1";
+  var RUNTIME_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2";
+  var PREVIOUS_RUNTIME_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_FAMILY_SEPARATION_TNT_v1";
   var RUNTIME_PATH = "/assets/audralia/clean/runtime/audralia.true-globe.runtime.js";
-  var STANDARD = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_FAMILY_SEPARATION_STANDARD_v1";
+  var STANDARD = "AUDRALIA_G2_PLANET_VIEW_MOISTURE_CLOUD_INTEGRATION_WITH_LATTICE_PROTECTION_STANDARD_v1";
 
   var TAU = Math.PI * 2;
 
   var LENS_COPY = {
     planet: {
       title: "Planet View",
-      label: "<strong>Planet View</strong> → Audralia · runtime-driven spherical globe",
-      copy: "Planet View renders Audralia from the true-globe runtime. No lattice overlay. The route JS consumes runtime state and draws the material globe."
+      label: "<strong>Planet View</strong> → Audralia · moisture-driven atmospheric globe",
+      copy: "Planet View renders Audralia from the true-globe runtime and adds the moisture-driven cloud layer. No lattice overlay. No beta patch field."
     },
     lattice: {
       title: "Lattice View",
-      label: "<strong>Lattice View</strong> → runtime 16 × 16 / 256 spherical lattice",
-      copy: "Lattice View renders the runtime-owned 16 radial nodes × 16 Fibonacci bands as a spherical 256-seat structure with front/back visibility."
+      label: "<strong>Lattice View</strong> → protected 16 × 16 / 256 spherical lattice baseline",
+      copy: "Lattice View is protected. It preserves the runtime-owned 16 radial nodes × 16 Fibonacci bands as a spherical 256-seat structure with front/back visibility."
     },
     diagnostic: {
       title: "Diagnostic Scope",
-      label: "<strong>Diagnostic Scope</strong> → runtime, route, canvas, and spherical carrier status",
-      copy: "Diagnostic Scope reports whether the route JS, runtime, canvas, spherical carrier, and lens render loop are alive."
+      label: "<strong>Diagnostic Scope</strong> → runtime, moisture, cloud, canvas, and lattice status",
+      copy: "Diagnostic Scope reports route JS, runtime v2, moisture field, cloud renderer, active lens, and the protected lattice state without replacing the visual object."
     }
   };
 
@@ -65,18 +70,23 @@
     dpr: 1,
     raf: 0,
     renderCount: 0,
+
     runtimeLoadStarted: false,
     runtimeLoaded: false,
     runtimeDetected: false,
+    runtimeV2Consumed: false,
+
     routeReady: false,
     canvasReady: false,
     planetViewReady: false,
     latticeViewReady: false,
     diagnosticScopeReady: false,
+    moistureFieldReady: false,
+    cloudRendererReady: false,
+    latticeViewProtected: true,
     duplicateCanvasCount: 0,
 
     dragging: false,
-
     errors: []
   };
 
@@ -101,27 +111,60 @@
     } catch (_error) {}
   }
 
+  function getCloudApi() {
+    return window.AUDRALIA_TRUE_GLOBE_CLOUDS || window.AUDRALIA_G2_TRUE_GLOBE_CLOUDS || null;
+  }
+
+  function getMoistureApi() {
+    return window.AUDRALIA_TRUE_GLOBE_MOISTURE || window.AUDRALIA_G2_TRUE_GLOBE_MOISTURE || null;
+  }
+
+  function getRuntime() {
+    return window.AUDRALIA_TRUE_GLOBE_RUNTIME || window.AUDRALIA_G2_TRUE_GLOBE_RUNTIME || null;
+  }
+
+  function runtimeContract(runtime) {
+    if (!runtime || typeof runtime.status !== "function") return "";
+    try {
+      return String(runtime.status().contract || "");
+    } catch (_error) {
+      return "";
+    }
+  }
+
+  function runtimeIsV2(runtime) {
+    return runtimeContract(runtime) === RUNTIME_CONTRACT;
+  }
+
   function markBoot() {
     window.AUDRALIA_G2_ROUTE_JS_BOOT_MARKER = {
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       runtimeContract: RUNTIME_CONTRACT,
+      previousRuntimeContract: PREVIOUS_RUNTIME_CONTRACT,
       htmlContract: HTML_CONTRACT,
+      standard: STANDARD,
       reached: true,
       reachedAt: new Date().toISOString(),
-      meaning: "Route JS evaluated. If the page still does not change, the failure is after route JS boot."
+      meaning: "Route JS evaluated. Planet View may now consume runtime v2 moisture/cloud children while Lattice View remains protected."
     };
 
     window.AUDRALIA_G2_ROUTE_JS_CONTRACT = CONTRACT;
 
     setDataset("audraliaRouteJsBootMarker", "reached");
     setDataset("audraliaRouteJsContract", CONTRACT);
-    setDataset("audraliaRouteJsRuntimeConsumer", "true");
+    setDataset("audraliaRouteJsPreviousContract", PREVIOUS_CONTRACT);
+    setDataset("audraliaRuntimeContractExpected", RUNTIME_CONTRACT);
+    setDataset("audraliaLatticeViewProtected", "true");
+    setDataset("audraliaPlanetViewCloudsOnly", "true");
+    setDataset("audraliaLatticeViewCloudsBlocked", "true");
 
-    setText("[data-audralia-diagnostic-route-js]", "route JS booted · loading runtime");
-    setText("[data-audralia-diagnostic-sphere]", "runtime pending");
-    setText("[data-audralia-diagnostic-planet]", "renderer pending");
-    setText("[data-audralia-diagnostic-lattice]", "renderer pending");
+    setText("[data-audralia-diagnostic-route-js]", "route JS booted · loading runtime v2");
+    setText("[data-audralia-diagnostic-sphere]", "runtime v2 pending");
+    setText("[data-audralia-diagnostic-planet]", "Planet View pending");
+    setText("[data-audralia-diagnostic-lattice]", "Lattice View protected");
     setText("[data-audralia-diagnostic-seats]", "16 × 16 / 256 expected");
+    setText("[data-audralia-diagnostic-loader]", "route JS active");
   }
 
   markBoot();
@@ -141,23 +184,20 @@
     setText("[data-audralia-diagnostic-route-js]", "error · " + scope);
     setText("[data-audralia-diagnostic-sphere]", state.runtimeDetected ? "runtime detected before error" : "runtime not detected");
     setText("[data-audralia-diagnostic-planet]", message);
-    setText("[data-audralia-diagnostic-lattice]", "blocked by route JS/runtime error");
+    setText("[data-audralia-diagnostic-lattice]", "protected · not rewritten");
 
     publishStatus("error:" + scope);
-  }
-
-  function getRuntime() {
-    return window.AUDRALIA_TRUE_GLOBE_RUNTIME || window.AUDRALIA_G2_TRUE_GLOBE_RUNTIME || null;
   }
 
   function loadRuntime() {
     return new Promise(function (resolve, reject) {
       var existing = getRuntime();
 
-      if (existing && typeof existing.init === "function") {
+      if (runtimeIsV2(existing)) {
         state.runtime = existing;
         state.runtimeDetected = true;
         state.runtimeLoaded = true;
+        state.runtimeV2Consumed = true;
         resolve(existing);
         return;
       }
@@ -166,19 +206,21 @@
         var attempts = 0;
         var interval = window.setInterval(function () {
           attempts += 1;
+
           var runtime = getRuntime();
 
-          if (runtime && typeof runtime.init === "function") {
+          if (runtimeIsV2(runtime)) {
             window.clearInterval(interval);
             state.runtime = runtime;
             state.runtimeDetected = true;
             state.runtimeLoaded = true;
+            state.runtimeV2Consumed = true;
             resolve(runtime);
           }
 
-          if (attempts > 80) {
+          if (attempts > 100) {
             window.clearInterval(interval);
-            reject(new Error("AUDRALIA_RUNTIME_WAIT_TIMEOUT"));
+            reject(new Error("AUDRALIA_RUNTIME_V2_WAIT_TIMEOUT"));
           }
         }, 50);
 
@@ -187,6 +229,13 @@
 
       state.runtimeLoadStarted = true;
       setDataset("audraliaRuntimeLoadStarted", "true");
+      setDataset("audraliaRuntimeContractRequested", RUNTIME_CONTRACT);
+      setText("[data-audralia-diagnostic-loader]", "loading runtime v2");
+
+      var oldLoader = document.querySelector("script[data-audralia-runtime-loader='" + PREVIOUS_CONTRACT + "']");
+      if (oldLoader) {
+        try { oldLoader.remove(); } catch (_error) {}
+      }
 
       var script = document.createElement("script");
       script.src = RUNTIME_PATH + "?v=" + encodeURIComponent(RUNTIME_CONTRACT);
@@ -194,23 +243,27 @@
       script.defer = true;
       script.setAttribute("data-audralia-runtime-loader", CONTRACT);
       script.setAttribute("data-runtime-contract", RUNTIME_CONTRACT);
+      script.setAttribute("data-previous-runtime-contract", PREVIOUS_RUNTIME_CONTRACT);
 
       script.onload = function () {
         var runtime = getRuntime();
 
-        if (runtime && typeof runtime.init === "function") {
+        if (runtimeIsV2(runtime)) {
           state.runtime = runtime;
           state.runtimeDetected = true;
           state.runtimeLoaded = true;
+          state.runtimeV2Consumed = true;
           setDataset("audraliaRuntimeLoaded", "true");
+          setDataset("audraliaRuntimeV2Consumed", "true");
+          setText("[data-audralia-diagnostic-loader]", "runtime v2 loaded");
           resolve(runtime);
         } else {
-          reject(new Error("AUDRALIA_RUNTIME_SCRIPT_LOADED_BUT_GLOBAL_MISSING"));
+          reject(new Error("AUDRALIA_RUNTIME_SCRIPT_LOADED_BUT_V2_GLOBAL_MISSING"));
         }
       };
 
       script.onerror = function () {
-        reject(new Error("AUDRALIA_RUNTIME_SCRIPT_LOAD_FAILED"));
+        reject(new Error("AUDRALIA_RUNTIME_V2_SCRIPT_LOAD_FAILED"));
       };
 
       document.head.appendChild(script);
@@ -282,6 +335,8 @@
     canvas.setAttribute("data-flat-projection-blocked", "true");
     canvas.setAttribute("data-generated-image", "false");
     canvas.setAttribute("data-graphic-box", "false");
+    canvas.setAttribute("data-lattice-view-protected", "true");
+    canvas.setAttribute("data-planet-view-clouds-only", "true");
 
     canvas.style.position = "absolute";
     canvas.style.inset = "0";
@@ -407,7 +462,24 @@
 
     ctx.save();
     clipSphere(ctx, frame);
-    drawRuntimeMaterialPatches(ctx, frame);
+
+    var oceanPressure = ctx.createRadialGradient(
+      metrics.centerX + radius * 0.10,
+      metrics.centerY + radius * 0.16,
+      radius * 0.10,
+      metrics.centerX,
+      metrics.centerY,
+      radius
+    );
+
+    oceanPressure.addColorStop(0, "rgba(24,128,176,0.12)");
+    oceanPressure.addColorStop(0.45, "rgba(7,72,126,0.16)");
+    oceanPressure.addColorStop(1, "rgba(0,4,16,0.30)");
+
+    ctx.fillStyle = oceanPressure;
+    ctx.beginPath();
+    ctx.arc(metrics.centerX, metrics.centerY, radius, 0, TAU);
+    ctx.fill();
 
     var shade = ctx.createLinearGradient(
       metrics.centerX - radius,
@@ -416,10 +488,10 @@
       metrics.centerY + radius
     );
 
-    shade.addColorStop(0, "rgba(255,255,255,0.16)");
-    shade.addColorStop(0.42, "rgba(255,255,255,0.02)");
+    shade.addColorStop(0, "rgba(255,255,255,0.14)");
+    shade.addColorStop(0.42, "rgba(255,255,255,0.018)");
     shade.addColorStop(0.72, "rgba(0,0,0,0.24)");
-    shade.addColorStop(1, "rgba(0,0,0,0.56)");
+    shade.addColorStop(1, "rgba(0,0,0,0.58)");
 
     ctx.fillStyle = shade;
     ctx.beginPath();
@@ -428,52 +500,41 @@
 
     ctx.restore();
     ctx.restore();
-
-    drawLimb(ctx, frame, 1);
   }
 
-  function drawRuntimeMaterialPatches(ctx, frame) {
-    var seats = frame.projectedSeats || [];
+  function drawMoistureCloudLayer(ctx, frame) {
+    if (state.activeLens !== "planet") return null;
 
-    if (!seats.length) return;
+    var cloudApi = getCloudApi();
 
-    ctx.save();
-
-    for (var i = 0; i < seats.length; i += 1) {
-      var seat = seats[i];
-
-      if (!seat.frontFacing) continue;
-
-      var landSeed =
-        (seat.radialIndex * 17 + seat.bandIndex * 31 + Math.floor(seat.fibonacciWeight * 997)) % 23;
-
-      var isLand =
-        landSeed === 2 ||
-        landSeed === 4 ||
-        landSeed === 7 ||
-        landSeed === 11 ||
-        landSeed === 16 ||
-        landSeed === 19;
-
-      if (!isLand) continue;
-
-      var x = seat.screen.x;
-      var y = seat.screen.y;
-      var size = (4.5 + seat.renderPriority * 4.8) * state.dpr * seat.screen.perspective;
-      var alpha = 0.22 + seat.visibility * 0.35;
-
-      ctx.globalAlpha = alpha;
-      ctx.fillStyle =
-        seat.bandIndex < 3 || seat.bandIndex > 12
-          ? "rgba(232,238,226,0.70)"
-          : "rgba(176,212,194,0.66)";
-
-      ctx.beginPath();
-      ctx.ellipse(x, y, size * 1.55, size * 0.72, seat.longitude || 0, 0, TAU);
-      ctx.fill();
+    if (!cloudApi || typeof cloudApi.render !== "function") {
+      state.cloudRendererReady = false;
+      return null;
     }
 
-    ctx.restore();
+    try {
+      var layer = cloudApi.render(ctx, frame, {
+        activeLens: "planet",
+        protectedLattice: true
+      });
+
+      state.cloudRendererReady = Boolean(layer && layer.rendererReady);
+      state.moistureFieldReady = Boolean(layer && layer.moistureFieldReady);
+      return layer;
+    } catch (error) {
+      recordError("cloud-render", error);
+      return null;
+    }
+  }
+
+  function drawPlanetView(ctx, frame) {
+    drawPlanetBody(ctx, frame);
+    var cloudLayer = drawMoistureCloudLayer(ctx, frame);
+    drawLimb(ctx, frame, 1);
+
+    state.planetViewReady = true;
+
+    return cloudLayer;
   }
 
   function drawLink(ctx, link, type) {
@@ -597,6 +658,9 @@
     for (var n = 0; n < seats.length; n += 1) {
       drawSeat(ctx, seats[n]);
     }
+
+    state.latticeViewReady = true;
+    state.latticeViewProtected = true;
   }
 
   function render() {
@@ -604,25 +668,24 @@
       if (!state.ctx || !state.canvas || !state.runtime) return;
 
       resizeCanvas();
-      var frame = state.runtime.tick(performance.now());
 
+      var frame = state.runtime.tick(performance.now());
       clear();
+
+      var cloudLayer = null;
 
       if (state.activeLens === "lattice") {
         drawLattice(state.ctx, frame);
-        state.latticeViewReady = true;
       } else if (state.activeLens === "diagnostic") {
         drawLattice(state.ctx, frame);
-        state.latticeViewReady = true;
       } else {
-        drawPlanetBody(state.ctx, frame);
-        state.planetViewReady = true;
+        cloudLayer = drawPlanetView(state.ctx, frame);
       }
 
       state.renderCount += 1;
 
-      updateDiagnostics(frame);
-      publishStatus("render", frame);
+      updateDiagnostics(frame, cloudLayer);
+      publishStatus("render", frame, cloudLayer);
     } catch (error) {
       recordError("render", error);
     }
@@ -726,25 +789,52 @@
     state.stage.addEventListener("pointerleave", release, { passive: true });
   }
 
-  function updateDiagnostics(frame) {
+  function updateDiagnostics(frame, cloudLayer) {
     var runtimeStatus = state.runtime && typeof state.runtime.status === "function"
       ? state.runtime.status()
       : null;
 
-    setText("[data-audralia-diagnostic-route-js]", "active · runtime consumer");
+    var moistureApi = getMoistureApi();
+    var cloudApi = getCloudApi();
+
+    var moistureStatus = moistureApi && typeof moistureApi.status === "function"
+      ? moistureApi.status()
+      : null;
+
+    var cloudStatus = cloudApi && typeof cloudApi.status === "function"
+      ? cloudApi.status()
+      : null;
+
+    state.moistureFieldReady = Boolean(
+      cloudLayer && cloudLayer.moistureFieldReady ||
+      runtimeStatus && runtimeStatus.moistureFieldReady ||
+      moistureStatus && moistureStatus.moistureFieldReady
+    );
+
+    state.cloudRendererReady = Boolean(
+      cloudLayer && cloudLayer.rendererReady ||
+      runtimeStatus && runtimeStatus.cloudRendererReady ||
+      cloudStatus && cloudStatus.rendererReady
+    );
+
+    setText("[data-audralia-diagnostic-route-js]", "active · Planet View cloud consumer");
     setText(
       "[data-audralia-diagnostic-sphere]",
       runtimeStatus && runtimeStatus.sphereSeats === 256
-        ? "active · 256 seats · runtime sphere"
+        ? "runtime v2 active · 256 seats"
         : "runtime detected · sphere pending"
     );
     setText(
       "[data-audralia-diagnostic-planet]",
-      state.planetViewReady ? "active · clean material globe" : "ready · awaiting Planet View"
+      state.planetViewReady
+        ? "active · moisture-cloud Planet View"
+        : "ready · awaiting Planet View"
     );
     setText(
       "[data-audralia-diagnostic-lattice]",
-      state.latticeViewReady ? "active · spherical runtime lattice" : "ready · awaiting Lattice View"
+      state.latticeViewReady
+        ? "protected · spherical runtime lattice"
+        : "protected · held baseline"
     );
     setText(
       "[data-audralia-diagnostic-seats]",
@@ -752,14 +842,34 @@
         ? runtimeStatus.radialNodes + " × " + runtimeStatus.fibonacciBands + " = " + runtimeStatus.sphereSeats
         : "runtime status pending"
     );
+    setText(
+      "[data-audralia-diagnostic-loader]",
+      "moisture=" + (state.moistureFieldReady ? "active" : "pending") +
+      " · clouds=" + (state.cloudRendererReady ? "active" : "pending") +
+      " · count=" + (cloudLayer && cloudLayer.cloudCount != null ? cloudLayer.cloudCount : 0) +
+      " · fragments=" + (cloudLayer && cloudLayer.fragmentCount != null ? cloudLayer.fragmentCount : 0)
+    );
 
     setDataset("audraliaRuntimeDetected", state.runtimeDetected ? "true" : "false");
     setDataset("audraliaRuntimeLoaded", state.runtimeLoaded ? "true" : "false");
+    setDataset("audraliaRuntimeV2Consumed", state.runtimeV2Consumed ? "true" : "false");
     setDataset("audraliaRouteRenderCount", String(state.renderCount));
+    setDataset("audraliaMoistureFieldReady", state.moistureFieldReady ? "true" : "false");
+    setDataset("audraliaCloudRendererReady", state.cloudRendererReady ? "true" : "false");
+    setDataset("audraliaCloudsDerivedFromMoisture", state.cloudRendererReady ? "true" : "false");
+    setDataset("audraliaCloudsNotRandomPatches", state.cloudRendererReady ? "true" : "false");
+    setDataset("audraliaPlanetViewCloudsOnly", "true");
+    setDataset("audraliaLatticeViewProtected", "true");
+    setDataset("audraliaLatticeViewCloudsBlocked", "true");
 
     if (frame) {
       setDataset("audraliaRuntimeFrameIndex", String(frame.frameIndex || 0));
       setDataset("audraliaRuntimeSphereSeats", String(frame.sphereSeats || 0));
+    }
+
+    if (cloudLayer) {
+      setDataset("audraliaCloudCount", String(cloudLayer.cloudCount || 0));
+      setDataset("audraliaCloudFragmentCount", String(cloudLayer.fragmentCount || 0));
     }
   }
 
@@ -768,16 +878,29 @@
       ? state.runtime.status()
       : null;
 
+    var cloudApi = getCloudApi();
+    var cloudStatus = cloudApi && typeof cloudApi.status === "function"
+      ? cloudApi.status()
+      : null;
+
+    var moistureApi = getMoistureApi();
+    var moistureStatus = moistureApi && typeof moistureApi.status === "function"
+      ? moistureApi.status()
+      : null;
+
     return {
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       htmlContract: HTML_CONTRACT,
       runtimeContract: RUNTIME_CONTRACT,
+      previousRuntimeContract: PREVIOUS_RUNTIME_CONTRACT,
       standard: STANDARD,
       route: "/showroom/globe/audralia/",
 
       runtimePath: RUNTIME_PATH,
       runtimeDetected: state.runtimeDetected,
       runtimeLoaded: state.runtimeLoaded,
+      runtimeV2Consumed: state.runtimeV2Consumed,
       runtimeStatus: runtimeStatus,
 
       routeReady: state.routeReady,
@@ -787,7 +910,13 @@
 
       planetViewReady: state.planetViewReady,
       latticeViewReady: state.latticeViewReady,
+      latticeViewProtected: state.latticeViewProtected,
       diagnosticScopeReady: state.diagnosticScopeReady,
+
+      moistureFieldReady: state.moistureFieldReady,
+      cloudRendererReady: state.cloudRendererReady,
+      moistureStatus: moistureStatus,
+      cloudStatus: cloudStatus,
 
       duplicateCanvas: state.duplicateCanvasCount > 0,
       duplicateCanvasCount: state.duplicateCanvasCount,
@@ -800,11 +929,16 @@
       earthCrossover: false,
       australiaNamingDrift: false,
 
+      planetViewCloudsOnly: true,
+      latticeViewCloudsBlocked: true,
+      cloudsDerivedFromMoisture: state.cloudRendererReady,
+      cloudsNotRandomPatches: state.cloudRendererReady,
+
       errors: state.errors.slice()
     };
   }
 
-  function publishStatus(scope, frame) {
+  function publishStatus(scope, frame, cloudLayer) {
     var payload = status();
     payload.scope = scope || "publish";
     payload.updatedAt = new Date().toISOString();
@@ -820,8 +954,21 @@
       };
     }
 
+    if (cloudLayer) {
+      payload.cloudLayer = {
+        cloudCount: cloudLayer.cloudCount,
+        fragmentCount: cloudLayer.fragmentCount,
+        moistureEligibleCount: cloudLayer.moistureEligibleCount,
+        averageMoisture: cloudLayer.averageMoisture,
+        averageCondensation: cloudLayer.averageCondensation,
+        rendererReady: cloudLayer.rendererReady,
+        cloudsDerivedFromMoisture: cloudLayer.cloudsDerivedFromMoisture
+      };
+    }
+
     window.AUDRALIA_G2_ROUTE_JS_CONSUMER_STATUS = payload;
     window.AUDRALIA_G2_TRUE_GLOBE_STATUS = payload;
+    window.AUDRALIA_G2_MOISTURE_CLOUD_ROUTE_STATUS = payload;
 
     return payload;
   }
@@ -829,6 +976,7 @@
   function publishApi() {
     window.AUDRALIA_G2_ROUTE_JS_CONSUMER = {
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       htmlContract: HTML_CONTRACT,
       runtimeContract: RUNTIME_CONTRACT,
       runtimePath: RUNTIME_PATH,
@@ -854,6 +1002,10 @@
       reducedMotion: window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches
     });
 
+    if (typeof runtime.ensureAtmosphereChildren === "function") {
+      runtime.ensureAtmosphereChildren();
+    }
+
     runtime.resize(width, height, dpr);
   }
 
@@ -869,8 +1021,9 @@
           state.runtime = runtime;
           state.runtimeDetected = true;
           state.runtimeLoaded = true;
+          state.runtimeV2Consumed = true;
 
-          setText("[data-audralia-diagnostic-route-js]", "runtime loaded · initializing");
+          setText("[data-audralia-diagnostic-route-js]", "runtime v2 loaded · initializing");
 
           initRuntime(runtime);
 
@@ -880,8 +1033,10 @@
           state.routeReady = true;
 
           setDataset("audraliaRouteReady", "true");
+          setDataset("audraliaRuntimeV2Consumed", "true");
+          setDataset("audraliaLatticeViewProtected", "true");
 
-          updateDiagnostics(runtime.getFrame ? runtime.getFrame() : null);
+          updateDiagnostics(runtime.getFrame ? runtime.getFrame() : null, null);
           publishApi();
           publishStatus("init-complete");
 

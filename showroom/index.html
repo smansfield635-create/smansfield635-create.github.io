@@ -2,22 +2,30 @@
 <html
   lang="en"
   data-route="/showroom/"
-  data-page="showroom-diamond"
-  data-contract="SHOWROOM_DIAMOND_LATTICE_RESTORATION_REBASE_HTML_TNT_v1"
-  data-pair-contract="SHOWROOM_DIAMOND_LATTICE_RESTORATION_REBASE_TNT_v1"
-  data-previous-contract="SHOWROOM_PRODUCTS_GEM_GEOMETRY_ANCHOR_HTML_ONLY_TNT_v1"
-  data-role="showroom-raised-webgl-crown-cut-256-lattice-diamond"
+  data-page="showroom-diamond-g2"
+  data-contract="SHOWROOM_DIAMOND_G2_FIBONACCI_16_NODE_256_LATTICE_HTML_STAGE_BINDING_TNT_v1"
+  data-pair-contract="SHOWROOM_DIAMOND_G2_FIBONACCI_16_NODE_256_LATTICE_PROOF_OBJECT_RENEWAL_JS_TNT_v1"
+  data-standard="SHOWROOM_DIAMOND_G2_FIBONACCI_16_NODE_256_LATTICE_PROOF_OBJECT_STANDARD_v1"
+  data-previous-contract="SHOWROOM_DIAMOND_LATTICE_RESTORATION_REBASE_HTML_TNT_v1"
+  data-role="showroom-g2-fibonacci-16-node-256-lattice-proof-object-stage"
+  data-generation="G2"
+  data-generation-one-status="lost-overwritten"
   data-diamond-lock="CROWN_CUT_256_LATTICE_FIXED_FORM"
   data-renderer="native-webgl"
-  data-visible-radial-metric="16"
+  data-radial-nodes="16"
+  data-fibonacci-bands="16"
   data-lattice-states="256"
+  data-lattice-equation="16_RADIAL_NODES_X_16_FIBONACCI_BANDS_EQUALS_256_LATTICE_SEATS"
   data-default-lens="crystal-form"
   data-secondary-lens="lattice-structure"
   data-touch-glide-diamond="true"
+  data-js-cache-key="SHOWROOM_DIAMOND_G2_FIBONACCI_16_NODE_256_LATTICE_PROOF_OBJECT_RENEWAL_JS_TNT_v1"
   data-public-receipts-visible="false"
   data-generated-image="false"
   data-graphic-box="false"
   data-visual-pass-claimed="false"
+  data-audralia-inheritance="false"
+  data-planet-template-inheritance="false"
 >
 <head>
   <meta charset="utf-8">
@@ -26,7 +34,7 @@
   <title>Showroom · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="The Showroom restores the raised interactive WebGL Crown Cut 256 Lattice Diamond through Crystal Form and Lattice Structure, then opens the launchpad into Characters, Products, Laws, Globe, and Gauges."
+    content="The Showroom presents the Generation 2 Fibonacci 16-node 256-lattice Crown Cut Diamond proof object through Crystal Form and Lattice Structure."
   >
 
   <style>
@@ -101,7 +109,6 @@
       border-radius: 999px;
       z-index: 20;
       font-weight: 900;
-      text-decoration: none;
     }
 
     .skip:focus { transform: translateY(0); }
@@ -127,7 +134,6 @@
       align-items: center;
       gap: 10px;
       color: var(--gold);
-      text-decoration: none;
       font-weight: 950;
       letter-spacing: 0.02em;
       text-transform: uppercase;
@@ -163,7 +169,6 @@
       border-radius: 999px;
       padding: 0 13px;
       color: rgba(238,244,255,0.82);
-      text-decoration: none;
       background: rgba(255,255,255,0.035);
       font-size: 0.82rem;
       font-weight: 850;
@@ -175,7 +180,6 @@
     .button:hover {
       transform: translateY(-1px);
       border-color: rgba(244,207,131,0.42);
-      text-decoration: none;
     }
 
     .nav a[aria-current="page"],
@@ -250,7 +254,7 @@
     }
 
     .lede {
-      max-width: 880px;
+      max-width: 900px;
       margin: 22px 0 0;
       color: var(--muted);
       font-size: clamp(1.02rem, 2.6vw, 1.34rem);
@@ -381,40 +385,44 @@
 
     .diamond-stage {
       position: relative;
-      min-height: clamp(640px, 92vw, 820px);
+      min-height: clamp(680px, 94vw, 860px);
       border: 1px solid rgba(244,207,131,0.18);
       border-radius: 30px;
       overflow: hidden;
       background:
-        radial-gradient(circle at 50% 58%, rgba(244,207,131,0.08), transparent 24%),
-        radial-gradient(circle at 50% 26%, rgba(92,132,172,0.16), transparent 42%),
+        radial-gradient(circle at 50% 54%, rgba(244,207,131,0.08), transparent 24%),
+        radial-gradient(circle at 50% 23%, rgba(92,132,172,0.18), transparent 42%),
         linear-gradient(180deg, rgba(4,11,24,0.92), rgba(2,7,16,0.96));
       touch-action: none;
       user-select: none;
+      -webkit-user-select: none;
     }
 
     .diamond-canvas {
       position: absolute;
       inset: 0;
+      z-index: 2;
       display: block;
       width: 100%;
       height: 100%;
       touch-action: none;
+      background: transparent;
     }
 
     .diamond-route {
       position: absolute;
       left: 50%;
-      bottom: clamp(150px, 24vw, 190px);
+      bottom: clamp(154px, 24vw, 194px);
       transform: translateX(-50%);
-      width: min(calc(100% - 44px), 760px);
+      width: min(calc(100% - 44px), 780px);
       text-align: center;
-      color: rgba(238,244,255,0.68);
+      color: rgba(238,244,255,0.70);
       font-weight: 900;
       letter-spacing: 0.02em;
       line-height: 1.25;
       z-index: 3;
       pointer-events: none;
+      text-shadow: 0 2px 16px rgba(0,0,0,0.70);
     }
 
     .diamond-instruction {
@@ -422,6 +430,7 @@
       left: clamp(16px, 4vw, 36px);
       right: clamp(16px, 4vw, 36px);
       bottom: clamp(16px, 4vw, 34px);
+      z-index: 3;
       border-top: 1px solid rgba(255,255,255,0.12);
       border-bottom: 1px solid rgba(255,255,255,0.12);
       padding: 14px 10px;
@@ -431,7 +440,6 @@
       font-size: clamp(0.98rem, 3.8vw, 1.32rem);
       background: rgba(3,8,18,0.42);
       backdrop-filter: blur(8px);
-      z-index: 3;
       pointer-events: none;
     }
 
@@ -462,7 +470,7 @@
 
     .object-card p,
     .launchpad-shell p {
-      max-width: 840px;
+      max-width: 860px;
       margin: 16px 0 0;
       color: var(--muted);
       font-size: clamp(1rem, 2.8vw, 1.22rem);
@@ -486,7 +494,6 @@
       border-radius: 22px;
       padding: 16px;
       color: inherit;
-      text-decoration: none;
       background:
         radial-gradient(circle at 50% 20%, rgba(141,216,255,0.10), transparent 38%),
         radial-gradient(circle at 16% 0%, rgba(244,207,131,0.10), transparent 58%),
@@ -514,7 +521,6 @@
       transform: translateY(-4px);
       border-color: rgba(244,207,131,0.52);
       filter: brightness(1.08);
-      text-decoration: none;
     }
 
     .launch-card > b {
@@ -522,8 +528,6 @@
       font-size: 0.68rem;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      position: relative;
-      z-index: 2;
     }
 
     .launch-card > strong {
@@ -531,21 +535,21 @@
       font-size: 1.08rem;
       line-height: 1.06;
       letter-spacing: -0.035em;
-      position: relative;
-      z-index: 2;
     }
 
     .launch-card > span {
       color: rgba(238,244,255,0.66);
       font-size: 0.9rem;
       line-height: 1.34;
-      position: relative;
-      z-index: 2;
     }
 
     .hidden-receipt {
       display: none !important;
       visibility: hidden !important;
+      width: 0 !important;
+      height: 0 !important;
+      overflow: hidden !important;
+      pointer-events: none !important;
     }
 
     .footer {
@@ -596,7 +600,7 @@
       .launch-card:last-child { grid-column: auto; }
 
       .diamond-stage {
-        min-height: 660px;
+        min-height: 700px;
       }
     }
 
@@ -636,26 +640,26 @@
 
     <main id="showroom-main">
       <section class="hero">
-        <p class="eyebrow">Showroom · raised WebGL true 3D diamond proof surface</p>
+        <p class="eyebrow">Showroom · G2 Fibonacci 16-node 256-lattice proof object</p>
         <h1>The Diamond holds the room.</h1>
         <p class="lede">
-          The Showroom begins with the fixed Crown Cut 256 Lattice Diamond. The page proves interactive WebGL 3D software expression, teaches the structure through two inspection lenses, then opens the launchpad into the story, the laws, and the community line.
+          The Showroom begins with the Generation 2 Crown Cut Diamond: one fixed proof object expressed through Crystal Form and Lattice Structure. The structure is generated from 16 radial nodes multiplied through 16 Fibonacci-governed bands to produce 256 addressable lattice seats.
         </p>
 
         <div class="claim-strip" aria-label="Showroom claims">
           <div class="claim">
             <b>Proof Object</b>
-            <span>The Diamond demonstrates real interactive 3D content directly inside the site.</span>
+            <span>The Diamond demonstrates real interactive software expression directly inside the site.</span>
           </div>
 
           <div class="claim">
-            <b>Dual Lens</b>
-            <span>Crystal Form shows the raised WebGL mesh. Lattice Structure reveals the 16-point order beneath it.</span>
+            <b>Fibonacci Standard</b>
+            <span>Sixteen radial nodes move through sixteen Fibonacci-governed bands.</span>
           </div>
 
           <div class="claim">
-            <b>Launchpad</b>
-            <span>The room opens Characters, Laws, Products, Globe, and Triple G.</span>
+            <b>256 Lattice</b>
+            <span>The lattice view exposes the address field behind the same Crown Cut object.</span>
           </div>
         </div>
 
@@ -669,8 +673,8 @@
         </div>
       </section>
 
-      <section class="diamond-shell" aria-label="Locked Raised WebGL Crown Cut 256 Lattice Diamond">
-        <p class="diamond-title">WebGL · true 3D mesh · restored raised stage · 16 radial compass metric · 256 lattice</p>
+      <section class="diamond-shell" aria-label="Generation 2 Fibonacci 16-node 256-lattice Crown Cut Diamond">
+        <p class="diamond-title">WebGL · G2 · Crown Cut fixed form · 16 radial nodes × 16 Fibonacci bands · 256 lattice seats</p>
 
         <div class="diamond-toolbar" aria-label="Diamond inspection lenses">
           <div class="lens-toggle" role="group" aria-label="Choose Diamond lens">
@@ -681,7 +685,7 @@
           <article class="lens-copy" aria-live="polite">
             <b data-diamond-lens-title>Crystal Form</b>
             <p data-diamond-lens-copy>
-              This view shows the finished Crown Cut Diamond as a true 3D crystal body: table, crown, faceted girdle, pavilion, culet, light, and touch inspection. This is the public object. It proves the site can render interactive 3D content with a fixed form instead of a flat graphic.
+              This view renews the Diamond as a deterministic Crown Cut proof object: table, crown, girdle, pavilion, culet, sharp facets, finger drag, and release momentum. The object is generated from the same 16-node × 16 Fibonacci-band lattice that governs the structural view.
             </p>
           </article>
         </div>
@@ -690,37 +694,55 @@
           id="diamond-stage"
           class="diamond-stage"
           data-showroom-diamond-stage
+          data-generation="G2"
+          data-generation-one-status="lost-overwritten"
           data-diamond-lock="CROWN_CUT_256_LATTICE_FIXED_FORM"
           data-renderer="native-webgl"
-          data-visible-radial-metric="16"
+          data-render-model="cpu-projected-deterministic-3d-geometry-to-webgl"
+          data-radial-nodes="16"
+          data-fibonacci-bands="16"
           data-lattice-states="256"
-          data-webgl-depth-buffer="true"
-          data-perspective-camera="true"
-          data-real-mesh="true"
-          data-real-object-rotation="true"
-          data-stage-correction="restored-raised-above-instruction-box"
+          data-lattice-equation="16_RADIAL_NODES_X_16_FIBONACCI_BANDS_EQUALS_256_LATTICE_SEATS"
+          data-default-lens="crystal-form"
+          data-secondary-lens="lattice-structure"
+          data-lens-rule="lens-changes-expression-not-object-identity"
           data-touch-glide="true"
+          data-double-tap-reset="true"
           data-geometry-mutable-by-touch="false"
+          data-stage-correction="g2-fibonacci-proof-object-stage-binding"
           data-generated-image="false"
           data-graphic-box="false"
-          aria-label="Touchable Raised WebGL Crown Cut 256 Lattice Diamond"
+          data-audralia-inheritance="false"
+          data-planet-template-inheritance="false"
+          aria-label="Touchable Generation 2 Fibonacci 16-node 256-lattice Crown Cut Diamond"
         >
-          <canvas class="diamond-canvas" data-showroom-diamond-canvas></canvas>
+          <canvas
+            class="diamond-canvas"
+            data-showroom-diamond-canvas
+            data-generation="G2"
+            data-renderer="native-webgl"
+            data-radial-nodes="16"
+            data-fibonacci-bands="16"
+            data-lattice-states="256"
+            data-generated-image="false"
+            data-graphic-box="false"
+            aria-label="Generation 2 Diamond WebGL canvas"
+          ></canvas>
 
           <div class="diamond-route" data-diamond-route-label>
-            Crystal Form → WebGL true 3D Crown Cut Diamond · restored raised inspection view
+            Crystal Form → Generation 2 Crown Cut Diamond · Fibonacci 16-node proof object
           </div>
 
           <div class="diamond-instruction">
-            Drag inside the box to inspect the fixed WebGL Diamond. Release for momentum. Double tap to reset. Use the lens toggle to switch between the true 3D crystal mesh and the lattice structure.
+            Drag inside the box to inspect the fixed G2 Diamond. Release for momentum. Double tap to reset. Use the lens toggle to switch between Crystal Form and the 16-node × 16 Fibonacci-band lattice.
           </div>
         </div>
 
         <article class="object-card">
           <p class="label">Object truth</p>
-          <h2>The Diamond proves the build. The dual lens teaches the structure.</h2>
+          <h2>The Diamond is the flex object. The lens changes. The Diamond does not.</h2>
           <p>
-            Crystal Form presents the Diamond as a real WebGL mesh with perspective, depth buffer, object rotation, crown, girdle, pavilion, and culet. Lattice Structure reveals the 16-point compass geometry and the 256-state address system behind the same object. The lens changes. The Diamond does not.
+            Crystal Form presents the visible Crown Cut object. Lattice Structure exposes the computable structure beneath it: 16 radial nodes, 16 Fibonacci-governed bands, and 256 addressable lattice seats. The object is not a glow, not a badge, not a generated image, and not a planet template.
           </p>
         </article>
       </section>
@@ -765,45 +787,52 @@
         </div>
 
         <template id="showroom-route-receipt" class="hidden-receipt">
-SHOWROOM_DIAMOND_LATTICE_RESTORATION_REBASE_HTML_TNT_v1
-pair=SHOWROOM_DIAMOND_LATTICE_RESTORATION_REBASE_TNT_v1
+SHOWROOM_DIAMOND_G2_FIBONACCI_16_NODE_256_LATTICE_HTML_STAGE_BINDING_TNT_v1
 route=/showroom/
 html=/showroom/index.html
 js=/showroom/index.js
-js_cache_key=SHOWROOM_DIAMOND_LATTICE_RESTORATION_REBASE_JS_TNT_v1
+js_cache_key=SHOWROOM_DIAMOND_G2_FIBONACCI_16_NODE_256_LATTICE_PROOF_OBJECT_RENEWAL_JS_TNT_v1
+standard=SHOWROOM_DIAMOND_G2_FIBONACCI_16_NODE_256_LATTICE_PROOF_OBJECT_STANDARD_v1
+generation=G2
+generation_one_status=lost_overwritten
 diamond_lock=CROWN_CUT_256_LATTICE_FIXED_FORM
 renderer=native_webgl
-webgl_depth_buffer=true
-perspective_camera=true
-real_mesh=true
-real_object_rotation=true
-stage_correction=restored_raised_above_instruction_box
-visible_radial_metric=16
+render_model=cpu_projected_deterministic_3d_geometry_to_webgl
+radial_nodes=16
+fibonacci_bands=16
 lattice_states=256
+lattice_equation=16_RADIAL_NODES_X_16_FIBONACCI_BANDS_EQUALS_256_LATTICE_SEATS
 default_lens=crystal_form
 secondary_lens=lattice_structure
-lens_rule=toggle_changes_inspection_lens_not_object_identity
+lens_rule=lens_changes_expression_not_object_identity
+touch_glide=true
+double_tap_reset=true
 geometry_mutable_by_touch=false
-flat_badge_blocked=true
+html_owns=public_shell,diamond_stage,canvas_target,lens_controls,instruction_text,launchpad,hidden_receipt,js_cache_binding
+js_owns=diamond_geometry,fibonacci_seats,webgl_rendering,drag_momentum,double_tap_reset,hidden_status_api
+visible_diagnostics=false
+public_receipts_visible=false
 generated_image=false
 graphic_box=false
+audralia_inheritance=false
+planet_template_inheritance=false
 visual_pass_claimed=false
         </template>
       </section>
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Showroom · Restored WebGL True 3D Crown Cut 256 Lattice Diamond.
+      Diamond Gate Bridge · Showroom · G2 Fibonacci 16-node 256-lattice Crown Cut Diamond.
     </footer>
   </div>
 
   <script>
-    window.DGB_SHOWROOM_HTML_CACHE_KEY = "SHOWROOM_DIAMOND_LATTICE_RESTORATION_REBASE_HTML_TNT_v1";
-    window.DGB_SHOWROOM_JS_CACHE_KEY = "SHOWROOM_DIAMOND_LATTICE_RESTORATION_REBASE_JS_TNT_v1";
+    window.DGB_SHOWROOM_HTML_CACHE_KEY = "SHOWROOM_DIAMOND_G2_FIBONACCI_16_NODE_256_LATTICE_HTML_STAGE_BINDING_TNT_v1";
+    window.DGB_SHOWROOM_JS_CACHE_KEY = "SHOWROOM_DIAMOND_G2_FIBONACCI_16_NODE_256_LATTICE_PROOF_OBJECT_RENEWAL_JS_TNT_v1";
   </script>
   <script
     type="module"
-    src="/showroom/index.js?v=SHOWROOM_DIAMOND_LATTICE_RESTORATION_REBASE_JS_TNT_v1"
+    src="/showroom/index.js?v=SHOWROOM_DIAMOND_G2_FIBONACCI_16_NODE_256_LATTICE_PROOF_OBJECT_RENEWAL_JS_TNT_v1"
   ></script>
 </body>
 </html>

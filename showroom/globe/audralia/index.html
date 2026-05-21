@@ -3,9 +3,17 @@
   lang="en"
   data-route="/showroom/globe/audralia/"
   data-page="audralia"
-  data-contract="AUDRALIA_G2_6_HTML_DYNAMIC_ROUTE_BRIDGE_BOOTSTRAP_TNT_v1"
-  data-previous-contract="AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_HTML_CACHE_READY_TNT_v1"
+  data-contract="AUDRALIA_G2_10A_HTML_HANDOFF_PANEL_DOM_CONTRACT_AND_SELECTABLE_RECEIPT_TNT_v1"
+  data-previous-contract="AUDRALIA_G2_6_HTML_DYNAMIC_ROUTE_BRIDGE_BOOTSTRAP_TNT_v1"
+  data-grandparent-contract="AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_HTML_CACHE_READY_TNT_v1"
   data-html-cache-strategy="dynamic-route-bridge-bootstrap"
+  data-handoff-panel-dom-contract="true"
+  data-route-bridge-must-reuse-existing-panel="true"
+  data-route-bridge-may-create-status-panel="false"
+  data-route-bridge-may-hide-legacy-panel="false"
+  data-route-bridge-may-scan-broad-dom="false"
+  data-selectable-receipt-panel="true"
+  data-canvas-shell-status-insertion-forbidden="true"
   data-route-bridge-path="/showroom/globe/audralia/index.js"
   data-runtime-path="/assets/audralia/audralia.runtime.v3.js"
   data-parent-path="/assets/audralia/clean/engine/audralia.engine.js"
@@ -240,6 +248,7 @@
         font-size: 0.86rem;
         line-height: 1.45;
         word-break: break-word;
+        overflow-wrap: anywhere;
       }
 
       .chain {
@@ -325,14 +334,34 @@
         overflow: hidden;
         border-radius: 0;
         touch-action: none;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
       }
 
       .handoff-panel {
+        position: relative;
+        z-index: 5;
         display: grid;
         gap: 0.8rem;
+        max-width: 100%;
+        overflow-x: hidden;
+        overflow-wrap: anywhere;
         padding: clamp(1rem, 3vw, 1.55rem);
         border-top: 1px solid rgba(133, 217, 255, 0.14);
         background: rgba(3, 11, 26, 0.96);
+        pointer-events: auto;
+        touch-action: pan-y;
+        user-select: text;
+        -webkit-user-select: text;
+        -webkit-touch-callout: default;
+      }
+
+      .handoff-panel,
+      .handoff-panel * {
+        user-select: text;
+        -webkit-user-select: text;
+        -webkit-touch-callout: default;
       }
 
       .handoff-panel[data-audralia-handoff-state="visible"] {
@@ -376,7 +405,9 @@
       .bridge-script {
         margin: 0;
         max-width: 100%;
+        overflow-x: hidden;
         overflow-wrap: anywhere;
+        word-break: break-word;
         color: var(--dim);
         font-family:
           ui-monospace,
@@ -388,6 +419,16 @@
           monospace;
         font-size: 0.82rem;
         line-height: 1.45;
+        white-space: normal;
+      }
+
+      [data-audralia-bridge-receipt-target="true"],
+      [data-audralia-bridge-script-target="true"],
+      [data-audralia-bridge-list-target="true"] {
+        max-width: 100%;
+        overflow-x: hidden;
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
 
       @media (min-width: 760px) {
@@ -448,16 +489,16 @@
         <h1>Audralia form mount.</h1>
 
         <p class="lead">
-          This page is the Audralia child route shell. The HTML owns navigation, copy, and the mount
-          target only. A permanent dynamic bootstrap loads the route bridge with a fresh cache key on
-          each page load so the HTML does not need to be renewed every time the downstream route logic changes.
+          This page is the Audralia child route shell. The HTML owns navigation, copy, mount target,
+          selectable handoff panel, and permanent dynamic bridge bootstrap only. The route bridge must
+          reuse the existing handoff panel and may not create or hide competing status panels.
         </p>
 
         <section class="chain" aria-label="Authority chain">
           <p><strong>Authority chain handoff</strong></p>
           <ul>
-            <li><strong>HTML shell:</strong> keeps navigation, copy, mount target, and permanent bridge bootstrap.</li>
-            <li><strong>Route bridge:</strong> dynamically loads <code>/showroom/globe/audralia/index.js</code>.</li>
+            <li><strong>HTML shell:</strong> keeps navigation, copy, mount target, selectable handoff panel, and permanent bridge bootstrap.</li>
+            <li><strong>Route bridge:</strong> dynamically loads <code>/showroom/globe/audralia/index.js</code> and updates the existing handoff panel only.</li>
             <li><strong>Runtime shim:</strong> loads <code>/assets/audralia/audralia.runtime.v3.js</code>.</li>
             <li><strong>Clean parent:</strong> mounts <code>/assets/audralia/clean/engine/audralia.engine.js</code>.</li>
             <li><strong>Continents child:</strong> loads <code>/assets/audralia/clean/engine/audralia/engine/continents.js</code>.</li>
@@ -465,7 +506,7 @@
         </section>
 
         <p class="contract-line">
-          AUDRALIA_G2_6_HTML_DYNAMIC_ROUTE_BRIDGE_BOOTSTRAP_TNT_v1 · HTML shell active · permanent dynamic route-bridge bootstrap active · no recurring HTML cache-key edits required.
+          AUDRALIA_G2_10A_HTML_HANDOFF_PANEL_DOM_CONTRACT_AND_SELECTABLE_RECEIPT_TNT_v1 · HTML shell active · existing handoff panel is the lawful route-bridge status target · no duplicate bridge panel authorized.
         </p>
 
         <section class="stage-card" aria-label="Audralia clean canvas inspection">
@@ -475,12 +516,13 @@
             <div class="bridge-badge">Dynamic bridge bootstrap active</div>
           </div>
 
-          <div class="canvas-shell">
+          <div class="canvas-shell" data-audralia-canvas-shell data-audralia-status-insertion-forbidden="true">
             <div
               id="audraliaCanvasMount"
               class="canvas-mount"
               data-audralia-canvas-mount
               data-audralia-clean-canvas-mount
+              data-audralia-status-insertion-forbidden="true"
               aria-label="Audralia clean canvas mount"
             ></div>
           </div>
@@ -490,27 +532,55 @@
             class="handoff-panel"
             data-audralia-handoff-panel
             data-audralia-handoff-state="pending"
+            data-audralia-route-bridge-status-target="true"
+            data-audralia-existing-handoff-panel="true"
+            data-audralia-nondestructive-bridge-target="true"
+            data-audralia-selectable-receipt-panel="true"
             aria-live="polite"
           >
-            <h3 id="audraliaHandoffTitle" data-audralia-handoff-title>
+            <h3
+              id="audraliaHandoffTitle"
+              data-audralia-handoff-title
+              data-audralia-bridge-title-target="true"
+            >
               Clean-canvas handoff pending
             </h3>
 
-            <p id="audraliaHandoffStatus" class="handoff-status" data-audralia-handoff-status>
+            <p
+              id="audraliaHandoffStatus"
+              class="handoff-status"
+              data-audralia-handoff-status
+              data-audralia-bridge-status-target="true"
+            >
               DYNAMIC_BOOTSTRAP · loading route bridge
             </p>
 
-            <ul id="audraliaHandoffList" class="handoff-list" data-audralia-handoff-list>
+            <ul
+              id="audraliaHandoffList"
+              class="handoff-list"
+              data-audralia-handoff-list
+              data-audralia-bridge-list-target="true"
+            >
               <li><strong>ROUTE_VALID</strong> · /showroom/globe/audralia/</li>
               <li><strong>MOUNT_TARGET_FOUND</strong></li>
               <li><strong>DYNAMIC_BOOTSTRAP</strong> · route bridge cache key generated at page load</li>
             </ul>
 
-            <p id="audraliaHandoffReceipt" class="handoff-receipt" data-audralia-handoff-receipt>
-              AUDRALIA_G2_6_HTML_DYNAMIC_ROUTE_BRIDGE_BOOTSTRAP_TNT_v1
+            <p
+              id="audraliaHandoffReceipt"
+              class="handoff-receipt"
+              data-audralia-handoff-receipt
+              data-audralia-bridge-receipt-target="true"
+            >
+              AUDRALIA_G2_10A_HTML_HANDOFF_PANEL_DOM_CONTRACT_AND_SELECTABLE_RECEIPT_TNT_v1
             </p>
 
-            <p id="audraliaBridgeScript" class="bridge-script" data-audralia-bridge-script>
+            <p
+              id="audraliaBridgeScript"
+              class="bridge-script"
+              data-audralia-bridge-script
+              data-audralia-bridge-script-target="true"
+            >
               Route bridge script: dynamic bootstrap pending
             </p>
           </section>
@@ -519,7 +589,8 @@
     </div>
 
     <script type="module">
-      const HTML_CONTRACT = "AUDRALIA_G2_6_HTML_DYNAMIC_ROUTE_BRIDGE_BOOTSTRAP_TNT_v1";
+      const HTML_CONTRACT = "AUDRALIA_G2_10A_HTML_HANDOFF_PANEL_DOM_CONTRACT_AND_SELECTABLE_RECEIPT_TNT_v1";
+      const PREVIOUS_HTML_CONTRACT = "AUDRALIA_G2_6_HTML_DYNAMIC_ROUTE_BRIDGE_BOOTSTRAP_TNT_v1";
       const ROUTE_BRIDGE_PATH = "/showroom/globe/audralia/index.js";
       const ROOT = document.documentElement;
       const now = Date.now();
@@ -539,17 +610,45 @@
       const bridgeUrl = `${ROUTE_BRIDGE_PATH}?v=${encodeURIComponent(dynamicCacheKey)}`;
 
       ROOT.setAttribute("data-audralia-html-contract", HTML_CONTRACT);
+      ROOT.setAttribute("data-audralia-html-previous-contract", PREVIOUS_HTML_CONTRACT);
       ROOT.setAttribute("data-audralia-route-bridge-bootstrap", "dynamic");
       ROOT.setAttribute("data-audralia-route-bridge-path", ROUTE_BRIDGE_PATH);
       ROOT.setAttribute("data-audralia-route-bridge-cache-key", dynamicCacheKey);
       ROOT.setAttribute("data-audralia-route-bridge-url", bridgeUrl);
+      ROOT.setAttribute("data-audralia-handoff-panel-dom-contract", "true");
+      ROOT.setAttribute("data-audralia-route-bridge-must-reuse-existing-panel", "true");
+      ROOT.setAttribute("data-audralia-route-bridge-may-create-status-panel", "false");
+      ROOT.setAttribute("data-audralia-route-bridge-may-hide-legacy-panel", "false");
+      ROOT.setAttribute("data-audralia-route-bridge-may-scan-broad-dom", "false");
+      ROOT.setAttribute("data-audralia-selectable-receipt-panel", "true");
+      ROOT.setAttribute("data-audralia-canvas-shell-status-insertion-forbidden", "true");
 
       window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT = {
         contract: HTML_CONTRACT,
+        previousContract: PREVIOUS_HTML_CONTRACT,
         routeBridgePath: ROUTE_BRIDGE_PATH,
         routeBridgeUrl: bridgeUrl,
         dynamicCacheKey,
         externalCacheKey: Boolean(externalCacheKey),
+
+        handoffPanelDomContract: true,
+        existingHandoffPanelRequired: true,
+        routeBridgeMustReuseExistingPanel: true,
+        routeBridgeMayCreateStatusPanel: false,
+        routeBridgeMayHideLegacyPanel: false,
+        routeBridgeMayScanBroadDom: false,
+        selectableReceiptPanel: true,
+        canvasShellStatusInsertionForbidden: true,
+
+        handoffPanelTargets: {
+          panel: "#audraliaHandoffPanel",
+          title: "#audraliaHandoffTitle",
+          status: "#audraliaHandoffStatus",
+          list: "#audraliaHandoffList",
+          receipt: "#audraliaHandoffReceipt",
+          script: "#audraliaBridgeScript"
+        },
+
         noRecurringHtmlCacheKeyEditsRequired: true,
         runtimeRewrite: false,
         parentRewrite: false,
@@ -559,10 +658,20 @@
         graphicBox: false
       };
 
+      const panel = document.querySelector("#audraliaHandoffPanel");
       const scriptLine = document.querySelector("#audraliaBridgeScript");
       const title = document.querySelector("#audraliaHandoffTitle");
       const status = document.querySelector("#audraliaHandoffStatus");
-      const panel = document.querySelector("#audraliaHandoffPanel");
+      const receipt = document.querySelector("#audraliaHandoffReceipt");
+
+      if (panel) {
+        panel.setAttribute("data-audralia-handoff-state", "pending");
+        panel.setAttribute("data-audralia-html-dynamic-bootstrap", "true");
+        panel.setAttribute("data-audralia-route-bridge-status-target", "true");
+        panel.setAttribute("data-audralia-existing-handoff-panel", "true");
+        panel.setAttribute("data-audralia-nondestructive-bridge-target", "true");
+        panel.setAttribute("data-audralia-selectable-receipt-panel", "true");
+      }
 
       if (scriptLine) {
         scriptLine.textContent = `Route bridge script: ${bridgeUrl}`;
@@ -576,9 +685,8 @@
         status.textContent = "DYNAMIC_BOOTSTRAP · loading route bridge";
       }
 
-      if (panel) {
-        panel.setAttribute("data-audralia-handoff-state", "pending");
-        panel.setAttribute("data-audralia-html-dynamic-bootstrap", "true");
+      if (receipt) {
+        receipt.textContent = HTML_CONTRACT;
       }
 
       try {

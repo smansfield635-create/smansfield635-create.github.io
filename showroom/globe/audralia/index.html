@@ -2,24 +2,26 @@
 <html
   lang="en"
   data-route="/showroom/globe/audralia/"
-  data-page="audralia-g2-true-globe-spherical-lattice"
-  data-contract="AUDRALIA_G2_TRUE_GLOBE_SPHERICAL_LATTICE_HTML_SHELL_TNT_v1"
-  data-next-js-contract="AUDRALIA_G2_TRUE_GLOBE_SPHERICAL_LATTICE_ROUTE_JS_TNT_v1"
-  data-previous-contract="AUDRALIA_G2_SEPARATED_PLANET_LATTICE_DIAGNOSTIC_SCOPE_HTML_SHELL_TNT_v1"
-  data-standard="AUDRALIA_G2_TRUE_GLOBE_SPHERICAL_LATTICE_STANDARD_v1"
-  data-role="audralia-public-planet-template-true-globe-spherical-carrier-shell"
+  data-page="audralia-g2-runtime-consumer-import-key"
+  data-contract="AUDRALIA_G2_HTML_ROUTE_JS_RUNTIME_CONSUMER_IMPORT_KEY_RENEWAL_TNT_v1"
+  data-previous-contract="AUDRALIA_G2_TRUE_GLOBE_SPHERICAL_LATTICE_HTML_SHELL_TNT_v1"
+  data-next-js-contract="AUDRALIA_G2_TRUE_GLOBE_ROUTE_JS_RUNTIME_CONSUMER_AND_RENDERER_TNT_v1"
+  data-runtime-contract="AUDRALIA_G2_TRUE_GLOBE_RUNTIME_FAMILY_SEPARATION_TNT_v1"
+  data-standard="AUDRALIA_G2_TRUE_GLOBE_RUNTIME_FAMILY_SEPARATION_STANDARD_v1"
+  data-role="audralia-public-shell-classic-route-js-runtime-consumer-loader"
   data-generation="G2"
   data-globe-carrier="sphere"
   data-spherical-projection-required="true"
   data-flat-projection-blocked="true"
-  data-planet-view="material-globe-expression"
-  data-lattice-view="spherical-16-node-16-fibonacci-band-256-seat-structure"
-  data-diagnostic-scope="compact-state-return"
+  data-route-js-loader="classic-script"
+  data-module-importer-disabled="true"
+  data-runtime-family="/assets/audralia/clean/runtime/"
+  data-runtime-path="/assets/audralia/clean/runtime/audralia.true-globe.runtime.js"
+  data-route-js-path="/showroom/globe/audralia/index.js"
   data-radial-nodes="16"
   data-fibonacci-bands="16"
   data-lattice-states="256"
   data-lattice-equation="16_RADIAL_NODES_X_16_FIBONACCI_BANDS_EQUALS_256_LATTICE_SEATS"
-  data-figure-eight-traversal="source-runtime-visual-diagnostic-return-source"
   data-visible-legacy-handoff="false"
   data-generated-image="false"
   data-graphic-box="false"
@@ -34,7 +36,7 @@
   <title>Audralia · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Audralia is a public software planet object prepared for true spherical globe math: Planet View, Lattice View, and Diagnostic Scope."
+    content="Audralia is a runtime-driven public software planet object with Planet View, Lattice View, and Diagnostic Scope."
   >
 
   <style>
@@ -42,10 +44,7 @@
       color-scheme: dark;
       --bg: #020711;
       --panel: rgba(7, 17, 34, 0.88);
-      --panel-strong: rgba(10, 28, 56, 0.92);
       --line: rgba(244, 207, 131, 0.18);
-      --line-blue: rgba(141, 216, 255, 0.18);
-      --line-strong: rgba(244, 207, 131, 0.34);
       --text: rgba(238, 244, 255, 0.94);
       --muted: rgba(238, 244, 255, 0.68);
       --faint: rgba(238, 244, 255, 0.46);
@@ -56,9 +55,7 @@
       --max: 1120px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html {
       min-height: 100%;
@@ -76,14 +73,7 @@
       min-height: 100vh;
       overflow-x: hidden;
       color: var(--text);
-      font-family:
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       letter-spacing: -0.015em;
       -webkit-font-smoothing: antialiased;
       text-rendering: geometricPrecision;
@@ -99,21 +89,16 @@
       inset: 0;
       z-index: 0;
       pointer-events: none;
-      background:
-        radial-gradient(circle, rgba(255, 255, 255, 0.18) 0 1px, transparent 1.4px);
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.18) 0 1px, transparent 1.4px);
       background-size: 230px 250px;
       opacity: 0.15;
       mask-image: linear-gradient(180deg, rgba(0,0,0,0.92), rgba(0,0,0,0.48) 62%, rgba(0,0,0,0.14));
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    a { color: inherit; text-decoration: none; }
 
     a:focus-visible,
-    button:focus-visible,
-    summary:focus-visible {
+    button:focus-visible {
       outline: 2px solid var(--gold);
       outline-offset: 4px;
     }
@@ -131,9 +116,7 @@
       font-weight: 950;
     }
 
-    .skip:focus {
-      transform: translateY(0);
-    }
+    .skip:focus { transform: translateY(0); }
 
     .page {
       position: relative;
@@ -256,25 +239,6 @@
       box-shadow: var(--shadow);
     }
 
-    .hero::after {
-      content: "";
-      position: absolute;
-      right: -8rem;
-      top: -8rem;
-      z-index: -1;
-      width: 24rem;
-      height: 24rem;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(244,207,131,0.16), transparent 68%);
-      animation: heroGlow 9s ease-in-out infinite;
-      pointer-events: none;
-    }
-
-    @keyframes heroGlow {
-      0%, 100% { opacity: 0.42; transform: scale(1); }
-      50% { opacity: 0.78; transform: scale(1.08); }
-    }
-
     .kicker,
     .section-title {
       margin: 0 0 14px;
@@ -395,19 +359,6 @@
         linear-gradient(180deg, transparent, rgba(0,0,0,0.14));
     }
 
-    .globe-stage::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-      background:
-        radial-gradient(circle, rgba(255,255,255,0.16) 0 1px, transparent 1.4px);
-      background-size: 180px 220px;
-      opacity: 0.12;
-      mask-image: linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.28) 70%, transparent);
-    }
-
     .globe-mount {
       position: absolute;
       inset: 0;
@@ -441,7 +392,7 @@
     }
 
     html[data-audralia-active-lens="diagnostic"] .globe-mount {
-      opacity: 0.24;
+      opacity: 0.28;
     }
 
     .diagnostic-card {
@@ -683,10 +634,7 @@
         min-height: 700px;
       }
 
-      .route-grid {
-        grid-template-columns: 1fr;
-      }
-
+      .route-grid,
       .diagnostic-grid {
         grid-template-columns: 1fr;
       }
@@ -730,11 +678,11 @@
 
     <main id="audralia-main">
       <section class="hero">
-        <p class="kicker">Audralia Globe · Spherical Carrier Required</p>
-        <h1>The globe must be spherical before the planet can be finished.</h1>
+        <p class="kicker">Audralia Globe · Runtime Consumer Active</p>
+        <h1>The page now loads the runtime consumer directly.</h1>
 
         <p class="lede">
-          Audralia now prepares for true globe math. Planet View will express the material world on a spherical carrier. Lattice View must map 16 radial nodes through 16 Fibonacci bands onto that sphere, producing 256 planetary seats. Diagnostic Scope verifies the route without becoming the page body.
+          Audralia uses a proper runtime family file for spherical state, Fibonacci seats, projection, motion, and diagnostics. The page shell now loads the route JS through a classic script loader so the runtime consumer can execute and render.
         </p>
 
         <div class="actions">
@@ -745,8 +693,8 @@
         </div>
       </section>
 
-      <section class="stage-shell" aria-label="Audralia true globe spherical stage shell">
-        <p class="section-title">Planet · Spherical Lattice · Diagnostic Scope</p>
+      <section class="stage-shell" aria-label="Audralia runtime-driven true globe stage shell">
+        <p class="section-title">Planet · Runtime Lattice · Diagnostic Scope</p>
 
         <div class="lens-toolbar" aria-label="Audralia lens controls">
           <div class="lens-toggle" role="group" aria-label="Choose Audralia lens">
@@ -764,7 +712,7 @@
           <article class="lens-copy" aria-live="polite">
             <b data-audralia-lens-title>Planet View</b>
             <p data-audralia-lens-copy>
-              Planet View shows Audralia as the material globe. No lattice overlay. No diagnostic wall. The route JS must provide the true spherical carrier.
+              Planet View renders Audralia from the true-globe runtime. No lattice overlay. The route JS consumes runtime state and draws the material globe.
             </p>
           </article>
         </div>
@@ -774,9 +722,10 @@
           class="globe-stage"
           data-audralia-globe-stage
           data-audralia-stage
-          data-globe-carrier="sphere"
+          data-globe-carrier="runtime-sphere"
           data-spherical-projection-required="true"
           data-flat-projection-blocked="true"
+          data-route-js-loader="classic-script"
           data-generation="G2"
           data-radial-nodes="16"
           data-fibonacci-bands="16"
@@ -785,7 +734,7 @@
           data-visible-legacy-handoff="false"
           data-generated-image="false"
           data-graphic-box="false"
-          aria-label="Audralia true globe spherical carrier stage"
+          aria-label="Audralia runtime-driven true globe stage"
         >
           <div
             id="audraliaGlobeMount"
@@ -794,10 +743,10 @@
             data-audralia-canvas-mount
             data-audralia-clean-canvas-mount
             data-audralia-canonical-visual-mount
-            data-globe-carrier="sphere"
+            data-globe-carrier="runtime-sphere"
             data-spherical-projection-required="true"
             data-flat-projection-blocked="true"
-            aria-label="Audralia canonical visual mount for Planet View and Lattice View"
+            aria-label="Audralia canonical visual mount for runtime Planet View and Lattice View"
           ></div>
 
           <div
@@ -811,11 +760,11 @@
               <div class="diagnostic-grid" data-audralia-diagnostic-grid>
                 <span>
                   <b>Route JS</b>
-                  <em data-audralia-diagnostic-route-js>pending</em>
+                  <em data-audralia-diagnostic-route-js>classic loader pending</em>
                 </span>
                 <span>
-                  <b>Sphere Math</b>
-                  <em data-audralia-diagnostic-sphere>pending</em>
+                  <b>Runtime</b>
+                  <em data-audralia-diagnostic-sphere>runtime pending</em>
                 </span>
                 <span>
                   <b>Planet Renderer</b>
@@ -830,27 +779,27 @@
                   <em data-audralia-diagnostic-seats>16 × 16 / 256 expected</em>
                 </span>
                 <span>
-                  <b>Traversal</b>
-                  <em>source → runtime → visual → diagnostic → source</em>
+                  <b>Loader</b>
+                  <em data-audralia-diagnostic-loader>classic script preparing</em>
                 </span>
               </div>
             </article>
           </div>
 
           <div class="stage-label" data-audralia-stage-label>
-            <strong>Planet View</strong> → Audralia · material globe expression
+            <strong>Planet View</strong> → Audralia · runtime-driven spherical globe
           </div>
 
           <div class="stage-instruction">
-            Drag inside the globe stage to inspect Audralia when the route JS mounts the true spherical carrier. Use the lens controls to separate the planet, the spherical lattice, and the diagnostic scope.
+            Drag inside the globe stage to inspect Audralia. Use the lens controls to separate the planet, the runtime lattice, and the diagnostic scope.
           </div>
         </div>
 
         <article class="object-card">
           <p class="label">Object truth</p>
-          <h2>Globe first. Planet second. Lattice separate. Diagnostic compact.</h2>
+          <h2>HTML hosts. Route JS consumes. Runtime carries the globe.</h2>
           <p>
-            The HTML shell no longer treats flat CSS rings as proof. The route JS must render the spherical carrier, then express either the material planet or the spherical 256-seat lattice on that carrier. Diagnostic Scope reports whether the route, sphere math, renderer, and lens state are alive.
+            The shell no longer uses module import for the route controller. It loads the route JS as a classic script with the current runtime-consumer contract key. The route JS then loads the Audralia true-globe runtime from the Audralia clean family and renders the active lens.
           </p>
         </article>
       </section>
@@ -885,29 +834,30 @@
         </div>
 
         <template id="audralia-route-receipt" class="hidden-receipt">
-AUDRALIA_G2_TRUE_GLOBE_SPHERICAL_LATTICE_HTML_SHELL_TNT_v1
+AUDRALIA_G2_HTML_ROUTE_JS_RUNTIME_CONSUMER_IMPORT_KEY_RENEWAL_TNT_v1
 route=/showroom/globe/audralia/
 html=/showroom/globe/audralia/index.html
-next_js=/showroom/globe/audralia/index.js
-next_js_contract=AUDRALIA_G2_TRUE_GLOBE_SPHERICAL_LATTICE_ROUTE_JS_TNT_v1
-previous_contract=AUDRALIA_G2_SEPARATED_PLANET_LATTICE_DIAGNOSTIC_SCOPE_HTML_SHELL_TNT_v1
-standard=AUDRALIA_G2_TRUE_GLOBE_SPHERICAL_LATTICE_STANDARD_v1
+route_js=/showroom/globe/audralia/index.js
+route_js_contract=AUDRALIA_G2_TRUE_GLOBE_ROUTE_JS_RUNTIME_CONSUMER_AND_RENDERER_TNT_v1
+route_js_loader=classic_script
+module_importer_disabled=true
+runtime=/assets/audralia/clean/runtime/audralia.true-globe.runtime.js
+runtime_contract=AUDRALIA_G2_TRUE_GLOBE_RUNTIME_FAMILY_SEPARATION_TNT_v1
+previous_html_contract=AUDRALIA_G2_TRUE_GLOBE_SPHERICAL_LATTICE_HTML_SHELL_TNT_v1
+standard=AUDRALIA_G2_TRUE_GLOBE_RUNTIME_FAMILY_SEPARATION_STANDARD_v1
 generation=G2
-globe_carrier=sphere
+globe_carrier=runtime_sphere
 spherical_projection_required=true
 flat_projection_blocked=true
-planet_equals_material_expression_on_spherical_carrier=true
-lattice_equals_16_by_16_256_structure_on_spherical_carrier=true
+planet_equals_material_expression_on_runtime_spherical_carrier=true
+lattice_equals_16_by_16_256_structure_from_runtime=true
 diagnostic_equals_compact_state_return=true
 radial_nodes=16
 fibonacci_bands=16
 lattice_states=256
-lattice_equation=16_RADIAL_NODES_X_16_FIBONACCI_BANDS_EQUALS_256_LATTICE_SEATS
-html_owns=public_shell,lens_controls,canonical_mount,diagnostic_mount,hidden_receipt,js_import
+html_owns=public_shell,lens_controls,canonical_mount,diagnostic_mount,hidden_receipt,classic_route_js_loader
 html_does_not_own=spherical_math,planet_material,lattice_projection,render_loop,motion_engine
-canonical_visual_mount=#audraliaGlobeMount
-diagnostic_mount=#audraliaDiagnosticMount
-flat_css_ring_proof=false
+classic_route_js_loader_active=true
 visible_legacy_handoff=false
 duplicate_canvas=false
 generated_image=false
@@ -920,105 +870,140 @@ visual_pass_claimed=false
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Audralia · true spherical globe carrier pending route JS.
+      Diamond Gate Bridge · Audralia · runtime-driven true globe route JS loader active.
     </footer>
   </div>
 
   <script>
-    window.AUDRALIA_G2_HTML_SHELL_CONTRACT =
-      "AUDRALIA_G2_TRUE_GLOBE_SPHERICAL_LATTICE_HTML_SHELL_TNT_v1";
+    (function () {
+      "use strict";
 
-    window.AUDRALIA_G2_ROUTE_JS_CONTRACT =
-      "AUDRALIA_G2_TRUE_GLOBE_SPHERICAL_LATTICE_ROUTE_JS_TNT_v1";
-  </script>
+      var HTML_CONTRACT = "AUDRALIA_G2_HTML_ROUTE_JS_RUNTIME_CONSUMER_IMPORT_KEY_RENEWAL_TNT_v1";
+      var ROUTE_JS_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_ROUTE_JS_RUNTIME_CONSUMER_AND_RENDERER_TNT_v1";
+      var RUNTIME_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_FAMILY_SEPARATION_TNT_v1";
+      var ROUTE_JS_PATH = "/showroom/globe/audralia/index.js";
 
-  <script type="module">
-    const HTML_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_SPHERICAL_LATTICE_HTML_SHELL_TNT_v1";
-    const ROUTE_JS_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_SPHERICAL_LATTICE_ROUTE_JS_TNT_v1";
-    const ROUTE_JS_PATH = "/showroom/globe/audralia/index.js";
-
-    const LENS_COPY = {
-      planet: {
-        title: "Planet View",
-        label: "<strong>Planet View</strong> → Audralia · material globe expression",
-        copy: "Planet View shows Audralia as the material globe. No lattice overlay. No diagnostic wall. The route JS must provide the true spherical carrier."
-      },
-      lattice: {
-        title: "Lattice View",
-        label: "<strong>Lattice View</strong> → spherical 16 × 16 / 256 planetary-seat structure",
-        copy: "Lattice View maps 16 radial nodes through 16 Fibonacci bands onto a spherical carrier, producing 256 planetary seats. Flat projection is blocked."
-      },
-      diagnostic: {
-        title: "Diagnostic Scope",
-        label: "<strong>Diagnostic Scope</strong> → compact return path · route and sphere math status",
-        copy: "Diagnostic Scope reports whether the route JS, spherical carrier, lens state, renderer, and 256-seat lattice are alive. It is not the public page body."
-      }
-    };
-
-    const root = document.documentElement;
-    const buttons = Array.from(document.querySelectorAll("[data-audralia-lens-button]"));
-    const title = document.querySelector("[data-audralia-lens-title]");
-    const copy = document.querySelector("[data-audralia-lens-copy]");
-    const label = document.querySelector("[data-audralia-stage-label]");
-
-    function setAudraliaLens(nextLens) {
-      const lens = Object.prototype.hasOwnProperty.call(LENS_COPY, nextLens) ? nextLens : "planet";
-
-      root.dataset.audraliaActiveLens = lens;
-
-      buttons.forEach((button) => {
-        button.setAttribute("aria-pressed", button.dataset.audraliaLensButton === lens ? "true" : "false");
-      });
-
-      if (title) title.textContent = LENS_COPY[lens].title;
-      if (copy) copy.textContent = LENS_COPY[lens].copy;
-      if (label) label.innerHTML = LENS_COPY[lens].label;
-
-      window.AUDRALIA_G2_HTML_SHELL_STATE = {
-        contract: HTML_CONTRACT,
-        nextRouteJsContract: ROUTE_JS_CONTRACT,
-        activeLens: lens,
-        globeCarrier: "sphere",
-        sphericalProjectionRequired: true,
-        flatProjectionBlocked: true,
-        radialNodes: 16,
-        fibonacciBands: 16,
-        latticeStates: 256,
-        visibleLegacyHandoff: false,
-        generatedImage: false,
-        graphicBox: false,
-        visualPassClaim: false
+      var LENS_COPY = {
+        planet: {
+          title: "Planet View",
+          label: "<strong>Planet View</strong> → Audralia · runtime-driven spherical globe",
+          copy: "Planet View renders Audralia from the true-globe runtime. No lattice overlay. The route JS consumes runtime state and draws the material globe."
+        },
+        lattice: {
+          title: "Lattice View",
+          label: "<strong>Lattice View</strong> → runtime 16 × 16 / 256 spherical lattice",
+          copy: "Lattice View renders the runtime-owned 16 radial nodes × 16 Fibonacci bands as a spherical 256-seat structure with front/back visibility."
+        },
+        diagnostic: {
+          title: "Diagnostic Scope",
+          label: "<strong>Diagnostic Scope</strong> → runtime, route, canvas, and spherical carrier status",
+          copy: "Diagnostic Scope reports whether the route JS, runtime, canvas, spherical carrier, and lens render loop are alive."
+        }
       };
 
-      window.dispatchEvent(new CustomEvent("audralia:lens", {
-        detail: window.AUDRALIA_G2_HTML_SHELL_STATE
-      }));
-    }
+      var root = document.documentElement;
+      var buttons = Array.prototype.slice.call(document.querySelectorAll("[data-audralia-lens-button]"));
+      var title = document.querySelector("[data-audralia-lens-title]");
+      var copy = document.querySelector("[data-audralia-lens-copy]");
+      var label = document.querySelector("[data-audralia-stage-label]");
+      var routeDiagnostic = document.querySelector("[data-audralia-diagnostic-route-js]");
+      var loaderDiagnostic = document.querySelector("[data-audralia-diagnostic-loader]");
 
-    buttons.forEach((button) => {
-      button.addEventListener("click", () => {
-        setAudraliaLens(button.dataset.audraliaLensButton);
+      function setText(node, value) {
+        if (node) node.textContent = value;
+      }
+
+      function setLens(nextLens) {
+        var lens = Object.prototype.hasOwnProperty.call(LENS_COPY, nextLens) ? nextLens : "planet";
+
+        root.dataset.audraliaActiveLens = lens;
+
+        buttons.forEach(function (button) {
+          button.setAttribute("aria-pressed", button.dataset.audraliaLensButton === lens ? "true" : "false");
+        });
+
+        if (title) title.textContent = LENS_COPY[lens].title;
+        if (copy) copy.textContent = LENS_COPY[lens].copy;
+        if (label) label.innerHTML = LENS_COPY[lens].label;
+
+        window.AUDRALIA_G2_HTML_SHELL_STATE = {
+          contract: HTML_CONTRACT,
+          routeJsContract: ROUTE_JS_CONTRACT,
+          runtimeContract: RUNTIME_CONTRACT,
+          activeLens: lens,
+          routeJsLoader: "classic-script",
+          moduleImporterDisabled: true,
+          radialNodes: 16,
+          fibonacciBands: 16,
+          latticeStates: 256,
+          flatProjectionBlocked: true,
+          visibleLegacyHandoff: false,
+          generatedImage: false,
+          graphicBox: false,
+          visualPassClaim: false
+        };
+
+        window.dispatchEvent(new CustomEvent("audralia:lens", {
+          detail: window.AUDRALIA_G2_HTML_SHELL_STATE
+        }));
+      }
+
+      buttons.forEach(function (button) {
+        button.addEventListener("click", function () {
+          setLens(button.dataset.audraliaLensButton);
+        });
       });
-    });
 
-    setAudraliaLens("planet");
+      function loadRouteJs() {
+        var url = ROUTE_JS_PATH + "?v=" + encodeURIComponent(ROUTE_JS_CONTRACT);
 
-    root.dataset.audraliaHtmlContract = HTML_CONTRACT;
-    root.dataset.audraliaNextRouteJsContract = ROUTE_JS_CONTRACT;
-    root.dataset.audraliaRouteJsPath = ROUTE_JS_PATH;
-    root.dataset.audraliaSphericalProjectionRequired = "true";
-    root.dataset.audraliaFlatProjectionBlocked = "true";
-    root.dataset.visibleLegacyHandoff = "false";
+        root.dataset.audraliaHtmlContract = HTML_CONTRACT;
+        root.dataset.audraliaRouteJsContractExpected = ROUTE_JS_CONTRACT;
+        root.dataset.audraliaRuntimeContractExpected = RUNTIME_CONTRACT;
+        root.dataset.audraliaRouteJsPath = ROUTE_JS_PATH;
+        root.dataset.audraliaRouteJsLoader = "classic-script";
+        root.dataset.audraliaModuleImporterDisabled = "true";
+        root.dataset.visibleLegacyHandoff = "false";
 
-    try {
-      const url = `${ROUTE_JS_PATH}?v=${encodeURIComponent(ROUTE_JS_CONTRACT)}`;
-      await import(url);
-      root.dataset.audraliaRouteJsImportSucceeded = "true";
-      root.dataset.audraliaRouteJsImportUrl = url;
-    } catch (error) {
-      root.dataset.audraliaRouteJsImportSucceeded = "false";
-      root.dataset.audraliaRouteJsImportError = error && error.message ? error.message : String(error);
-    }
+        window.AUDRALIA_G2_HTML_SHELL_CONTRACT = HTML_CONTRACT;
+        window.AUDRALIA_G2_ROUTE_JS_CONTRACT_EXPECTED = ROUTE_JS_CONTRACT;
+        window.AUDRALIA_G2_RUNTIME_CONTRACT_EXPECTED = RUNTIME_CONTRACT;
+
+        setText(routeDiagnostic, "classic loader active");
+        setText(loaderDiagnostic, "loading " + ROUTE_JS_CONTRACT);
+
+        var existing = document.querySelector("script[data-audralia-route-js-loader='classic-runtime-consumer']");
+        if (existing) {
+          try { existing.remove(); } catch (_error) {}
+        }
+
+        var script = document.createElement("script");
+        script.src = url;
+        script.defer = true;
+        script.setAttribute("data-audralia-route-js-loader", "classic-runtime-consumer");
+        script.setAttribute("data-route-js-contract", ROUTE_JS_CONTRACT);
+        script.setAttribute("data-html-contract", HTML_CONTRACT);
+
+        script.onload = function () {
+          root.dataset.audraliaRouteJsClassicLoadSucceeded = "true";
+          root.dataset.audraliaRouteJsClassicLoadUrl = url;
+          setText(loaderDiagnostic, "classic script loaded");
+          setText(routeDiagnostic, "classic script loaded · waiting for route boot marker");
+        };
+
+        script.onerror = function () {
+          root.dataset.audraliaRouteJsClassicLoadSucceeded = "false";
+          root.dataset.audraliaRouteJsClassicLoadUrl = url;
+          setText(loaderDiagnostic, "classic script load failed");
+          setText(routeDiagnostic, "route JS load failed");
+        };
+
+        document.body.appendChild(script);
+      }
+
+      setLens("planet");
+      loadRouteJs();
+    })();
   </script>
 </body>
 </html>

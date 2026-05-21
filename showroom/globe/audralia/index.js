@@ -1,47 +1,56 @@
 // /showroom/globe/audralia/index.js
 // TNT FULL-FILE REPLACEMENT
-// AUDRALIA_MAYDAY_ROUTE_JS_MAP_REDUCTION_TNT_v1
+// AUDRALIA_MAYDAY_ROUTE_JS_FRAMEPATH_PISTON_REDUCTION_WITH_NEWS_LATTICE_SCOPE_TNT_v1
 //
 // Purpose:
-// - Reduce the route JS map.
-// - Restore Audralia as a lightweight lattice-control thermostat.
-// - Keep HTML intact.
-// - Keep runtime as the only Lattice View motion authority.
-// - Enforce one controller, one canvas, one RAF controller, one pointer path.
-// - Use dirty-frame rendering instead of continuous full-speed rendering.
-// - Remove route-side clouds, surface material, Gratitude hint, continent work, and child math.
-// - Align diagnostics to the current reset HTML.
-// - No new files. No child rewrites. No runtime rewrite. No visual-pass claim.
+// - Remove the real frame-path bottleneck.
+// - Keep the route as a lightweight thermostat controller.
+// - Preserve the 360 Fibonacci diagnostic lattice standard.
+// - Publicize NEWS cell law without inventing NEWS math in the route.
+// - Keep runtime as the primary source for projected lattice seats and links.
+// - Keep fallback lattice as emergency fallback only, never the success standard.
+// - Keep renderFrame free of DOM/layout/canvas validation work.
+// - No HTML change. No new files. No child math. No runtime rewrite. No visual-pass claim.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_MAYDAY_ROUTE_JS_MAP_REDUCTION_TNT_v1";
-  var PREVIOUS_CONTRACT = "AUDRALIA_G2_PLANET_VIEW_ROTATIONAL_CARRIER_BINDING_TNT_v1";
+  var CONTRACT = "AUDRALIA_MAYDAY_ROUTE_JS_FRAMEPATH_PISTON_REDUCTION_WITH_NEWS_LATTICE_SCOPE_TNT_v1";
+  var PREVIOUS_CONTRACT = "AUDRALIA_MAYDAY_ROUTE_JS_MAP_REDUCTION_TNT_v1";
   var HTML_PAIR_CONTRACT = "AUDRALIA_MAYDAY_ROUTE_PAIR_RESET_DROPDOWN_AND_LATTICE_CONTROL_TNT_v1";
 
   var RUNTIME_PATH = "/assets/audralia/clean/runtime/audralia.true-globe.runtime.js";
   var RUNTIME_PUBLIC_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2";
-  var RUNTIME_CACHE_KEY = "AUDRALIA_MAYDAY_ROUTE_JS_MAP_REDUCTION_RUNTIME_CONSUMER_v1";
+  var RUNTIME_CACHE_KEY = "AUDRALIA_MAYDAY_FRAMEPATH_PISTON_NEWS_SCOPE_RUNTIME_CONSUMER_v1";
 
   var TAU = Math.PI * 2;
 
   var LENS_COPY = {
     planet: {
       title: "Planet View",
-      label: "<strong>Planet View</strong> → lightweight held lens · lattice thermostat active",
-      copy: "Planet View is held as a lightweight lens during Mayday reduction. Cloud, surface, continent, and child math remain inactive here."
+      label: "<strong>Planet View</strong> → held lens · thermostat remains lattice-first",
+      copy: "Planet View remains held during Mayday control recovery. Surface, cloud, continent, terrain, moisture, and datum expansion are not executed from this route."
     },
     lattice: {
       title: "Lattice View",
-      label: "<strong>Lattice View</strong> → runtime carrier proof · reduced control mode",
-      copy: "Lattice View is the thermostat. It uses the runtime carrier only, bypasses child math, and stays reduced during drag."
+      label: "<strong>Lattice View</strong> → 360 Fibonacci diagnostic lattice · NEWS-aware public scope",
+      copy: "Lattice View is the thermostat. Runtime is the primary source for projected seats and links. Fallback is emergency-only and is not accepted as the lattice standard."
     },
     diagnostic: {
       title: "Diagnostic Scope",
-      label: "<strong>Diagnostic Scope</strong> → compact route/runtime status",
-      copy: "Diagnostic Scope reports compact cached state only. It does not run child math, surface generation, cloud generation, or datum expansion."
+      label: "<strong>Diagnostic Scope</strong> → piston, thermostat, NEWS, and runtime-source status",
+      copy: "Diagnostic Scope publicizes compact status only: piston law, thermostat law, NEWS cell law, and 360 Fibonacci diagnostic lattice law."
     }
+  };
+
+  var NEWS_STANDARD = {
+    name: "NEWS",
+    north: "origin / pole / predecessor authority",
+    east: "formation / successor expression",
+    west: "correction / memory / opposite relation",
+    south: "completion / grounding / stability",
+    routeOwnsNewsMath: false,
+    routePublicizesNewsStatus: true
   };
 
   var state = {
@@ -49,10 +58,12 @@
     mount: null,
     canvas: null,
     ctx: null,
+    cachedDetails: [],
 
     width: 0,
     height: 0,
     dpr: 1,
+    stageRect: null,
 
     activeLens: "planet",
     runtime: null,
@@ -64,9 +75,6 @@
     pointerId: null,
     lastPointerX: 0,
     lastPointerY: 0,
-
-    localYaw: 0,
-    localPitch: 0,
 
     raf: 0,
     frameCount: 0,
@@ -81,15 +89,21 @@
     pointerBound: false,
     stopped: false,
 
-    duplicateCanvasRemoved: 0,
-    runtimeCanvasCleanupCount: 0,
-
+    fallbackActive: false,
     fallbackLatticeCacheKey: "",
     fallbackLatticeCache: null,
 
+    duplicateCanvasRemoved: 0,
+    runtimeCanvasCleanupCount: 0,
+
     datasetCache: {},
     errorCount: 0,
-    lastError: ""
+    lastError: "",
+
+    renderFrameDomFree: true,
+    newsStandardPublicized: true,
+    routeOwnsNewsMath: false,
+    fallbackIsSuccessStandard: false
   };
 
   if (
@@ -103,6 +117,7 @@
 
   var abortController = typeof AbortController !== "undefined" ? new AbortController() : null;
   var signal = abortController ? abortController.signal : undefined;
+  var resizeObserver = null;
 
   function finite(value, fallback) {
     var number = Number(value);
@@ -115,13 +130,6 @@
 
   function now() {
     return typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
-  }
-
-  function wrapLon(value) {
-    var v = finite(value, 0);
-    while (v > Math.PI) v -= TAU;
-    while (v < -Math.PI) v += TAU;
-    return v;
   }
 
   function recordError(scope, error) {
@@ -139,18 +147,20 @@
 
   function setText(selector, value) {
     var node = document.querySelector(selector);
-    if (node && node.textContent !== String(value)) node.textContent = String(value);
+    var next = String(value);
+    if (node && node.textContent !== next) node.textContent = next;
   }
 
   function setHtml(selector, value) {
     var node = document.querySelector(selector);
-    if (node && node.innerHTML !== String(value)) node.innerHTML = String(value);
+    var next = String(value);
+    if (node && node.innerHTML !== next) node.innerHTML = next;
   }
 
   function setDataset(key, value) {
     var next = String(value);
-
     if (state.datasetCache[key] === next) return;
+
     state.datasetCache[key] = next;
 
     try {
@@ -159,12 +169,12 @@
     } catch (_error) {}
   }
 
-  function closeOpenMenus() {
-    Array.prototype.slice.call(document.querySelectorAll("details[open]")).forEach(function (details) {
+  function closeCachedMenus() {
+    for (var i = 0; i < state.cachedDetails.length; i += 1) {
       try {
-        details.open = false;
+        state.cachedDetails[i].open = false;
       } catch (_error) {}
-    });
+    }
   }
 
   function getRuntime() {
@@ -196,86 +206,6 @@
         (status && (status.runtimeReady || status.sphereCarrierReady || status.contract === RUNTIME_PUBLIC_CONTRACT))
       )
     );
-  }
-
-  function initRuntime() {
-    var runtime = getRuntime();
-    if (!runtime) return;
-
-    state.runtime = runtime;
-    state.runtimeLoaded = true;
-    state.runtimeAccepted = acceptRuntime(runtime);
-    state.runtimeReady = state.runtimeAccepted;
-
-    if (typeof runtime.init === "function") {
-      try {
-        runtime.init({
-          width: state.width,
-          height: state.height,
-          dpr: state.dpr,
-          activeLens: state.activeLens,
-          mode: "mayday-route-js-map-reduction",
-          latticeFirst: true,
-          childMathHeldDuringLattice: true,
-          routeIsConsumerOnly: true,
-          visualPassClaimed: false
-        });
-      } catch (error) {
-        recordError("runtime.init", error);
-      }
-    }
-
-    enforceOneCanvas("after-runtime-init");
-    updateDiagnostics(true);
-    requestRender("runtime-init", 2);
-  }
-
-  function loadRuntime() {
-    var existingRuntime = getRuntime();
-
-    if (existingRuntime) {
-      initRuntime();
-      return Promise.resolve(existingRuntime);
-    }
-
-    return new Promise(function (resolve) {
-      var existingScript = document.querySelector("script[data-audralia-mayday-runtime-loader='true']");
-
-      if (existingScript) {
-        setTimeout(function () {
-          initRuntime();
-          resolve(getRuntime());
-        }, 0);
-        return;
-      }
-
-      var script = document.createElement("script");
-      script.src = RUNTIME_PATH + "?v=" + encodeURIComponent(RUNTIME_CACHE_KEY);
-      script.defer = true;
-      script.async = true;
-      script.setAttribute("data-audralia-mayday-runtime-loader", "true");
-      script.setAttribute("data-route-contract", CONTRACT);
-      script.setAttribute("data-runtime-contract", RUNTIME_PUBLIC_CONTRACT);
-      script.setAttribute("data-lattice-first", "true");
-      script.setAttribute("data-child-math-held-during-lattice", "true");
-
-      script.onload = function () {
-        initRuntime();
-        resolve(getRuntime());
-      };
-
-      script.onerror = function () {
-        state.runtimeLoaded = false;
-        state.runtimeAccepted = false;
-        state.runtimeReady = false;
-        recordError("loadRuntime", "runtime script failed");
-        updateDiagnostics(true);
-        requestRender("runtime-failed", 1);
-        resolve(null);
-      };
-
-      document.body.appendChild(script);
-    });
   }
 
   function enforceOneCanvas(reason) {
@@ -322,13 +252,19 @@
     state.oneCanvas = Boolean(state.ctx);
   }
 
-  function resize() {
-    if (!state.stage || !state.canvas) return false;
+  function updateDimensionsFromRect(rect) {
+    if (!rect || !state.canvas) return false;
 
-    var rect = state.stage.getBoundingClientRect();
     var dpr = Math.max(1, Math.min(1.75, window.devicePixelRatio || 1));
     var width = Math.max(320, Math.floor(rect.width * dpr));
     var height = Math.max(480, Math.floor(rect.height * dpr));
+
+    state.stageRect = {
+      left: rect.left,
+      top: rect.top,
+      width: rect.width,
+      height: rect.height
+    };
 
     if (state.width === width && state.height === height && state.dpr === dpr) return false;
 
@@ -337,6 +273,7 @@
     state.dpr = dpr;
     state.canvas.width = width;
     state.canvas.height = height;
+
     state.fallbackLatticeCacheKey = "";
     state.fallbackLatticeCache = null;
 
@@ -348,18 +285,64 @@
       }
     }
 
+    requestRender("dimension-update", 4);
     return true;
   }
 
+  function measureStageOnce() {
+    if (!state.stage) return false;
+    return updateDimensionsFromRect(state.stage.getBoundingClientRect());
+  }
+
+  function setupResizeHandling() {
+    measureStageOnce();
+
+    if (typeof ResizeObserver !== "undefined" && state.stage) {
+      resizeObserver = new ResizeObserver(function (entries) {
+        if (!entries || !entries[0]) return;
+
+        var rect = entries[0].contentRect;
+        var box = state.stage.getBoundingClientRect();
+
+        updateDimensionsFromRect({
+          left: box.left,
+          top: box.top,
+          width: rect.width,
+          height: rect.height
+        });
+      });
+
+      try {
+        resizeObserver.observe(state.stage);
+      } catch (_error) {}
+    }
+
+    window.addEventListener("resize", function () {
+      measureStageOnce();
+      updateDiagnostics(false);
+      requestRender("window-resize", 4);
+    }, signal ? { signal: signal, passive: true } : { passive: true });
+
+    window.addEventListener("orientationchange", function () {
+      setTimeout(function () {
+        measureStageOnce();
+        updateDiagnostics(false);
+        requestRender("orientationchange", 4);
+      }, 120);
+    }, signal ? { signal: signal, passive: true } : { passive: true });
+  }
+
   function fallbackMetrics() {
-    var minSide = Math.min(state.width || 640, state.height || 720);
-    var mobile = state.width < 760 * state.dpr;
+    var width = state.width || 640;
+    var height = state.height || 720;
+    var minSide = Math.min(width, height);
+    var mobile = width < 760 * (state.dpr || 1);
 
     return {
-      width: state.width || 640,
-      height: state.height || 720,
-      centerX: (state.width || 640) / 2,
-      centerY: mobile ? (state.height || 720) * 0.405 : (state.height || 720) * 0.42,
+      width: width,
+      height: height,
+      centerX: width / 2,
+      centerY: mobile ? height * 0.405 : height * 0.42,
       radius: minSide * (mobile ? 0.345 : 0.365),
       cameraDistance: 3.72
     };
@@ -367,6 +350,90 @@
 
   function metrics(frame) {
     return frame && frame.metrics ? frame.metrics : fallbackMetrics();
+  }
+
+  function initRuntime() {
+    var runtime = getRuntime();
+    if (!runtime) return;
+
+    state.runtime = runtime;
+    state.runtimeLoaded = true;
+    state.runtimeAccepted = acceptRuntime(runtime);
+    state.runtimeReady = state.runtimeAccepted;
+
+    if (typeof runtime.init === "function") {
+      try {
+        runtime.init({
+          width: state.width,
+          height: state.height,
+          dpr: state.dpr,
+          activeLens: state.activeLens,
+          mode: "mayday-framepath-piston-news-lattice-scope",
+          latticeFirst: true,
+          newsStandardActive: true,
+          routePublicizesNewsOnly: true,
+          routeOwnsNewsMath: false,
+          childMathHeldDuringLattice: true,
+          routeIsConsumerOnly: true,
+          visualPassClaimed: false
+        });
+      } catch (error) {
+        recordError("runtime.init", error);
+      }
+    }
+
+    enforceOneCanvas("after-runtime-init");
+    updateDiagnostics(true);
+    requestRender("runtime-init", 4);
+  }
+
+  function loadRuntime() {
+    var existingRuntime = getRuntime();
+
+    if (existingRuntime) {
+      initRuntime();
+      return Promise.resolve(existingRuntime);
+    }
+
+    return new Promise(function (resolve) {
+      var existingScript = document.querySelector("script[data-audralia-mayday-runtime-loader='true']");
+
+      if (existingScript) {
+        setTimeout(function () {
+          initRuntime();
+          resolve(getRuntime());
+        }, 0);
+        return;
+      }
+
+      var script = document.createElement("script");
+      script.src = RUNTIME_PATH + "?v=" + encodeURIComponent(RUNTIME_CACHE_KEY);
+      script.defer = true;
+      script.async = true;
+      script.setAttribute("data-audralia-mayday-runtime-loader", "true");
+      script.setAttribute("data-route-contract", CONTRACT);
+      script.setAttribute("data-runtime-contract", RUNTIME_PUBLIC_CONTRACT);
+      script.setAttribute("data-news-standard-active", "true");
+      script.setAttribute("data-lattice-first", "true");
+      script.setAttribute("data-child-math-held-during-lattice", "true");
+
+      script.onload = function () {
+        initRuntime();
+        resolve(getRuntime());
+      };
+
+      script.onerror = function () {
+        state.runtimeLoaded = false;
+        state.runtimeAccepted = false;
+        state.runtimeReady = false;
+        recordError("loadRuntime", "runtime script failed");
+        updateDiagnostics(true);
+        requestRender("runtime-failed", 1);
+        resolve(null);
+      };
+
+      document.body.appendChild(script);
+    });
   }
 
   function getRuntimeFrame(time) {
@@ -394,6 +461,8 @@
     output.metrics = output.metrics || fallbackMetrics();
     output.renderTime = finite(output.renderTime, time / 1000);
     output.latticeFirst = true;
+    output.newsStandardActive = true;
+    output.routePublicizesNewsOnly = true;
     output.childMathHeldDuringLattice = state.activeLens === "lattice";
     output.routeIsConsumerOnly = true;
 
@@ -402,7 +471,6 @@
   }
 
   function clear() {
-    if (!state.ctx) return;
     state.ctx.clearRect(0, 0, state.width, state.height);
   }
 
@@ -417,12 +485,12 @@
 
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, TAU);
-    ctx.fillStyle = reduced ? "rgba(6,35,74,0.78)" : "rgba(7,55,105,0.88)";
+    ctx.fillStyle = reduced ? "rgba(5,30,68,0.76)" : "rgba(7,52,104,0.88)";
     ctx.fill();
 
     ctx.beginPath();
     ctx.arc(cx, cy, r * 0.997, 0, TAU);
-    ctx.strokeStyle = reduced ? "rgba(141,216,255,0.10)" : "rgba(175,229,255,0.14)";
+    ctx.strokeStyle = reduced ? "rgba(141,216,255,0.12)" : "rgba(175,229,255,0.16)";
     ctx.lineWidth = Math.max(0.6, state.dpr * 0.65);
     ctx.stroke();
 
@@ -440,7 +508,7 @@
     ctx.textBaseline = "middle";
     ctx.fillStyle = "rgba(238,244,255,0.56)";
     ctx.font = "800 " + Math.max(12, 13 * state.dpr) + "px ui-sans-serif, system-ui, sans-serif";
-    ctx.fillText("Planet View held during lattice control recovery", m.centerX, m.centerY + m.radius * 0.70);
+    ctx.fillText("Planet View held · lattice thermostat active", m.centerX, m.centerY + m.radius * 0.70);
     ctx.restore();
   }
 
@@ -476,6 +544,9 @@
           bandIndex: band,
           radialIndex: radial,
           frontFacing: z >= 0,
+          fallback: true,
+          newsStandardExpected: true,
+          newsComputedHere: false,
           screen: {
             x: x,
             y: y,
@@ -495,7 +566,8 @@
           a: current,
           b: next,
           frontFacing: current.frontFacing || next.frontFacing,
-          major: band % 4 === 0
+          major: band % 4 === 0,
+          fallback: true
         });
 
         if (band < 15) {
@@ -504,7 +576,8 @@
             a: current,
             b: below,
             frontFacing: current.frontFacing || below.frontFacing,
-            major: radial % 4 === 0
+            major: radial % 4 === 0,
+            fallback: true
           });
         }
       }
@@ -512,6 +585,7 @@
 
     state.fallbackLatticeCacheKey = key;
     state.fallbackLatticeCache = {
+      fallback: true,
       projectedSeats: seats,
       projectedLinks: {
         ringLinks: ringLinks,
@@ -545,7 +619,17 @@
 
   function drawLattice(frame, reduced) {
     var ctx = state.ctx;
-    var source = frame && frame.projectedSeats && frame.projectedSeats.length ? frame : fallbackLattice(frame);
+    var source;
+    var runtimeHasLattice = Boolean(frame && frame.projectedSeats && frame.projectedSeats.length);
+
+    if (runtimeHasLattice) {
+      source = frame;
+      state.fallbackActive = false;
+    } else {
+      source = fallbackLattice(frame);
+      state.fallbackActive = true;
+    }
+
     var seats = source.projectedSeats || [];
     var links = source.projectedLinks || {};
 
@@ -561,13 +645,15 @@
       if (!link || !link.a || !link.b || !link.a.screen || !link.b.screen) continue;
       if (reduced && !linkIsMajor(link)) continue;
 
-      var opacity = link.frontFacing ? (reduced ? 0.24 : 0.28) : (reduced ? 0.045 : 0.08);
+      var opacity = link.frontFacing ? (reduced ? 0.24 : 0.30) : (reduced ? 0.045 : 0.08);
       if (linkIsMajor(link)) opacity += reduced ? 0.08 : 0.12;
 
       ctx.beginPath();
       ctx.moveTo(link.a.screen.x, link.a.screen.y);
       ctx.lineTo(link.b.screen.x, link.b.screen.y);
-      ctx.strokeStyle = "rgba(112,199,255," + clamp(opacity, 0.03, 0.42).toFixed(4) + ")";
+      ctx.strokeStyle = link.fallback
+        ? "rgba(150,190,210," + clamp(opacity * 0.72, 0.03, 0.30).toFixed(4) + ")"
+        : "rgba(112,199,255," + clamp(opacity, 0.03, 0.44).toFixed(4) + ")";
       ctx.lineWidth = linkIsMajor(link) ? Math.max(0.75, state.dpr * 0.72) : Math.max(0.38, state.dpr * 0.42);
       ctx.stroke();
     }
@@ -585,7 +671,9 @@
       ctx.arc(seat.screen.x, seat.screen.y, radius * state.dpr, 0, TAU);
       ctx.fillStyle = major
         ? "rgba(244,207,131," + alpha.toFixed(4) + ")"
-        : "rgba(141,216,255," + alpha.toFixed(4) + ")";
+        : (state.fallbackActive
+          ? "rgba(150,190,210," + alpha.toFixed(4) + ")"
+          : "rgba(141,216,255," + alpha.toFixed(4) + ")");
       ctx.fill();
     }
 
@@ -593,12 +681,10 @@
   }
 
   function renderFrame(time) {
-    if (state.stopped) return;
+    if (state.stopped || !state.ctx) return;
 
     state.raf = 0;
 
-    enforceOneCanvas("render");
-    resize();
     clear();
 
     var frame = getRuntimeFrame(time);
@@ -643,7 +729,7 @@
   function setLens(lensName) {
     var lens = Object.prototype.hasOwnProperty.call(LENS_COPY, lensName) ? lensName : "planet";
 
-    closeOpenMenus();
+    closeCachedMenus();
 
     state.activeLens = lens;
     document.documentElement.dataset.audraliaActiveLens = lens;
@@ -657,11 +743,6 @@
     setText("[data-audralia-lens-copy]", LENS_COPY[lens].copy);
     setHtml("[data-audralia-stage-label]", LENS_COPY[lens].label);
 
-    if (lens === "lattice") {
-      state.localYaw = 0;
-      state.localPitch = 0;
-    }
-
     if (state.runtime && typeof state.runtime.setLens === "function") {
       try {
         state.runtime.setLens(lens);
@@ -670,16 +751,20 @@
       }
     }
 
+    enforceOneCanvas("lens-switch");
     updateDiagnostics(true);
-    requestRender("lens-switch", lens === "lattice" ? 3 : 1);
+    requestRender("lens-switch", lens === "lattice" ? 4 : 1);
 
-    window.dispatchEvent(new CustomEvent("audralia:mayday-reduced-lens", {
+    window.dispatchEvent(new CustomEvent("audralia:mayday-news-lens", {
       detail: {
         contract: CONTRACT,
         activeLens: lens,
         latticeLightweight: lens === "lattice",
-        childMathHeldDuringLattice: lens === "lattice",
-        routeFallbackDisabledInLattice: true
+        runtimeLatticePrimary: true,
+        fallbackIsEmergencyOnly: true,
+        newsStandardActive: true,
+        routeOwnsNewsMath: false,
+        childMathHeldDuringLattice: lens === "lattice"
       }
     }));
   }
@@ -693,7 +778,14 @@
   }
 
   function pointerPoint(event) {
-    var rect = state.stage.getBoundingClientRect();
+    var rect = state.stageRect;
+
+    if (!rect) {
+      return {
+        x: event.clientX * state.dpr,
+        y: event.clientY * state.dpr
+      };
+    }
 
     return {
       x: (event.clientX - rect.left) * state.dpr,
@@ -705,7 +797,7 @@
     if (!state.stage) return;
 
     state.stage.addEventListener("pointerdown", function (event) {
-      closeOpenMenus();
+      closeCachedMenus();
 
       state.pointerActive = true;
       state.pointerId = event.pointerId;
@@ -726,7 +818,6 @@
         }
       }
 
-      updateDiagnostics(false);
       requestRender("pointer-down", 2);
       event.preventDefault();
     }, signal ? { signal: signal, passive: false } : { passive: false });
@@ -735,16 +826,8 @@
       if (!state.pointerActive) return;
 
       var p = pointerPoint(event);
-      var dx = p.x - state.lastPointerX;
-      var dy = p.y - state.lastPointerY;
-
       state.lastPointerX = p.x;
       state.lastPointerY = p.y;
-
-      if (state.activeLens !== "lattice" && !state.runtimeReady) {
-        state.localYaw = wrapLon(state.localYaw + dx * 0.0035);
-        state.localPitch = clamp(state.localPitch - dy * 0.0026, -0.82, 0.82);
-      }
 
       if (state.runtime && typeof state.runtime.pointerMove === "function") {
         try {
@@ -778,7 +861,7 @@
       state.pointerId = null;
 
       updateDiagnostics(true);
-      requestRender("pointer-release", 10);
+      requestRender("pointer-release", 12);
       event.preventDefault();
     }
 
@@ -797,18 +880,41 @@
 
       activeLens: state.activeLens,
       runtimeReady: state.runtimeReady,
+      runtimeLatticePrimary: !state.fallbackActive,
+      fallbackActive: state.fallbackActive,
+      fallbackIsEmergencyOnly: true,
+      fallbackIsSuccessStandard: false,
+
       oneCanvas: state.oneCanvas,
       oneLoop: state.oneLoop,
       pointerBound: state.pointerBound,
       pointerActive: state.pointerActive,
 
       frameCount: state.frameCount,
-      latticeLightweight: true,
-      childMathHeld: state.activeLens === "lattice",
-      routeFallbackDisabledInLattice: true,
+      pistonLawActive: true,
+      renderFrameDomFree: true,
+      noCanvasScanInRender: true,
+      noResizeInRender: true,
+      noDiagnosticsInRender: true,
+      dragPathDomFree: true,
       dirtyFrameDiscipline: true,
       idleRenderPausedOrThrottled: true,
-      getFramePreferredOverTick: true,
+
+      newsStandardActive: true,
+      newsCellRequiresNorthEastWestSouth: true,
+      routePublicizesNewsStatus: true,
+      routeOwnsNewsMath: false,
+      runtimeProjectsNewsCells: "expected",
+      datumDefinesNewsChronology: "expected",
+
+      fibonacciDiagnosticLatticeActive: true,
+      radialLanes: 16,
+      fibonacciBands: 16,
+      latticeSeats: 256,
+      diagnosticChronologyPublicized: true,
+
+      childMathHeld: state.activeLens === "lattice",
+      routeFallbackDisabledInLattice: true,
 
       noHtmlChange: true,
       noNewFiles: true,
@@ -843,27 +949,32 @@
 
     var status = buildStatus();
 
-    setText("[data-audralia-diagnostic-route]", "active · JS map reduction");
+    setText("[data-audralia-diagnostic-route]", "active · piston-reduced NEWS scope");
     setText(
       "[data-audralia-diagnostic-runtime]",
-      status.runtimeReady ? "runtime accepted · getFrame preferred" : "runtime pending · static fallback only"
+      status.runtimeReady
+        ? (status.runtimeLatticePrimary ? "runtime primary · projected lattice expected" : "runtime loaded · fallback currently active")
+        : "runtime pending · emergency fallback only"
     );
     setText("[data-audralia-diagnostic-lens]", status.activeLens);
     setText("[data-audralia-diagnostic-canvas]", status.oneCanvas ? "one canvas" : "canvas pending");
-    setText("[data-audralia-diagnostic-loop]", status.oneLoop ? "dirty RAF controller" : "loop pending");
+    setText("[data-audralia-diagnostic-loop]", status.oneLoop ? "dirty RAF · piston DOM-free" : "loop pending");
     setText(
       "[data-audralia-diagnostic-children]",
-      status.activeLens === "lattice" ? "held · no child math in lattice" : "held · Mayday reduction"
+      "NEWS active · route publicizes only · child math held"
     );
 
     setDataset("audraliaMaydayRouteContract", CONTRACT);
     setDataset("audraliaActiveLens", status.activeLens);
-    setDataset("audraliaOneCanvas", status.oneCanvas);
-    setDataset("audraliaOneLoop", status.oneLoop);
     setDataset("audraliaRuntimeReady", status.runtimeReady);
-    setDataset("audraliaLatticeLightweight", status.latticeLightweight);
-    setDataset("audraliaChildMathHeld", status.childMathHeld);
-    setDataset("audraliaRouteFallbackDisabledInLattice", true);
+    setDataset("audraliaRuntimeLatticePrimary", status.runtimeLatticePrimary);
+    setDataset("audraliaFallbackActive", status.fallbackActive);
+    setDataset("audraliaPistonLawActive", status.pistonLawActive);
+    setDataset("audraliaNewsStandardActive", status.newsStandardActive);
+    setDataset("audraliaRouteOwnsNewsMath", false);
+    setDataset("audraliaRenderFrameDomFree", true);
+    setDataset("audraliaNoCanvasScanInRender", true);
+    setDataset("audraliaNoResizeInRender", true);
 
     window.AUDRALIA_MAYDAY_ROUTE_STATUS = status;
   }
@@ -875,22 +986,51 @@
       htmlPairContract: HTML_PAIR_CONTRACT,
       route: "/showroom/globe/audralia/",
       js: "/showroom/globe/audralia/index.js",
+
       targetFileOnly: true,
       noHtmlChange: true,
       noNewFiles: true,
       noChildMath: true,
       noRuntimeRewrite: true,
-      dirtyFrameDiscipline: true,
-      idleRenderPausedOrThrottled: true,
-      latticeViewCheapMode: true,
-      dragModeReduced: true,
-      runtimeOnlyLatticePointers: true,
-      routeFallbackDisabledInLattice: true,
-      getFramePreferredOverTick: true,
-      diagnosticsNotUpdatedDuringDrag: true,
-      statusCompact: true,
-      currentHtmlSelectorsUsed: true,
-      oneCanvasRecheckAfterRuntimeLoad: true,
+
+      pistonLawActive: true,
+      thermostatLawActive: true,
+      newsCellLawActive: true,
+      fibonacciDiagnosticLatticeLawActive: true,
+
+      renderFrameDomFree: true,
+      noCanvasScanInRender: true,
+      noResizeInRender: true,
+      noDomDiagnosticsInRender: true,
+      dragPathDomFree: true,
+
+      runtimeLatticePrimary: true,
+      fallbackEmergencyOnly: true,
+      fallbackIsSuccessStandard: false,
+
+      newsStandard: NEWS_STANDARD,
+      newsStandardPublicized: true,
+      routeOwnsNewsMath: false,
+
+      diagnosticChronology: [
+        "axis / pole authority",
+        "north origin",
+        "16-compass chronology",
+        "Fibonacci sequence phase",
+        "16 radial lanes",
+        "16 bands",
+        "256 lattice seats",
+        "hex-cell address",
+        "NEWS completion",
+        "predecessor / successor relation",
+        "opposite-node relation",
+        "hemisphere relation",
+        "equator / polar relation",
+        "circulation role",
+        "runtime projection",
+        "visible diagnostic proof"
+      ],
+
       visualPassClaimed: false,
       bootedAt: new Date().toISOString()
     };
@@ -906,6 +1046,12 @@
     }
 
     state.raf = 0;
+
+    if (resizeObserver) {
+      try {
+        resizeObserver.disconnect();
+      } catch (_error) {}
+    }
 
     if (abortController) {
       try {
@@ -923,6 +1069,7 @@
   function init() {
     state.stage = document.querySelector("#audraliaGlobeStage");
     state.mount = document.querySelector("#audraliaGlobeMount");
+    state.cachedDetails = Array.prototype.slice.call(document.querySelectorAll("details"));
 
     if (!state.stage || !state.mount) {
       recordError("init", "Missing #audraliaGlobeStage or #audraliaGlobeMount");
@@ -930,7 +1077,7 @@
     }
 
     enforceOneCanvas("boot");
-    resize();
+    setupResizeHandling();
     bindLensControls();
     bindPointer();
     setLens("planet");
@@ -939,17 +1086,11 @@
     loadRuntime().then(function () {
       enforceOneCanvas("after-runtime-load");
       updateDiagnostics(true);
-      requestRender("runtime-load", 2);
+      requestRender("runtime-load", 4);
     });
 
-    window.addEventListener("resize", function () {
-      resize();
-      updateDiagnostics(false);
-      requestRender("resize", 4);
-    }, signal ? { signal: signal, passive: true } : { passive: true });
-
     updateDiagnostics(true);
-    requestRender("boot", 2);
+    requestRender("boot", 3);
   }
 
   if (document.readyState === "loading") {

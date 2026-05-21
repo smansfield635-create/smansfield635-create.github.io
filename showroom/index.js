@@ -1,33 +1,52 @@
 // /showroom/index.js
 // TNT FULL-FILE REPLACEMENT
-// SHOWROOM_DIAMOND_OBJECT_REINSTATEMENT_JS_ONLY_TNT_v1
-// Pair held: SHOWROOM_DIAMOND_LATTICE_RESTORATION_REBASE_HTML_TNT_v1
-// Scope: /showroom/ proof-object renderer only.
+// SHOWROOM_DIAMOND_G2_CONSUMPTION_FINGERPRINT_AUDIT_JS_TNT_v1
+//
+// Governing proof-object contract preserved as active runtime contract:
+// SHOWROOM_DIAMOND_G2_FIBONACCI_16_NODE_256_LATTICE_PROOF_OBJECT_RENEWAL_JS_TNT_v1
+//
+// Scope: /showroom/ diamond proof-object consumption audit + renderer ownership.
 // Purpose:
-// - Reinstate the visible, manipulable WebGL Crown Cut 256 Lattice Diamond.
-// - Restore Crystal Form and Lattice Structure as the Showroom proof flex.
-// - Preserve finger drag, momentum, double-tap reset, 16 radial metric, and 256 lattice claim.
-// - Do not alter public page layout.
-// - Do not inherit Audralia or planet-template standards.
-// - No generated image. No GraphicBox. No visible diagnostics.
+// - Prove whether the live route is consuming the G2 diamond JS.
+// - Preserve the G2 Fibonacci 16-node 256-lattice proof-object standard.
+// - Bind to one canonical canvas only.
+// - Remove/neutralize duplicate legacy diamond canvases inside the stage.
+// - Publish hidden status API with renderCount, contract, generation, and latticeNodeCount.
+// - Continue rendering the G2 diamond object so consumption has a visible consequence.
+// - No visible diagnostics. No Audralia inheritance. No planet-template inheritance. No generated image. No GraphicBox.
+
+const CONSUMPTION_AUDIT_CONTRACT = "SHOWROOM_DIAMOND_G2_CONSUMPTION_FINGERPRINT_AUDIT_JS_TNT_v1";
+const ACTIVE_PROOF_OBJECT_CONTRACT = "SHOWROOM_DIAMOND_G2_FIBONACCI_16_NODE_256_LATTICE_PROOF_OBJECT_RENEWAL_JS_TNT_v1";
+const ACTIVE_STANDARD = "SHOWROOM_DIAMOND_G2_FIBONACCI_16_NODE_256_LATTICE_PROOF_OBJECT_STANDARD_v1";
+const PAIRED_HTML_CONTRACT = "SHOWROOM_DIAMOND_G2_FIBONACCI_16_NODE_256_LATTICE_HTML_STAGE_BINDING_TNT_v1";
+
+const RADIAL_NODES = 16;
+const FIBONACCI_BANDS = 16;
+const LATTICE_STATES = 256;
+const TAU = Math.PI * 2;
+
+const FIBONACCI_SEQUENCE = Object.freeze([
+  1, 1, 2, 3, 5, 8, 13, 21,
+  34, 55, 89, 144, 233, 377, 610, 987
+]);
 
 const SHOWROOM_DIAMOND_STATE = Object.freeze({
-  contract: "SHOWROOM_DIAMOND_OBJECT_REINSTATEMENT_JS_ONLY_TNT_v1",
-  pairedHtmlContract: "SHOWROOM_DIAMOND_LATTICE_RESTORATION_REBASE_HTML_TNT_v1",
+  contract: ACTIVE_PROOF_OBJECT_CONTRACT,
+  auditContract: CONSUMPTION_AUDIT_CONTRACT,
+  pairedHtmlContract: PAIRED_HTML_CONTRACT,
+  standard: ACTIVE_STANDARD,
   route: "/showroom/",
-  role: "showroom-visible-webgl-crown-cut-256-lattice-proof-object",
+  generation: "G2",
+  generationOneStatus: "lost-overwritten",
   diamondLock: "CROWN_CUT_256_LATTICE_FIXED_FORM",
   renderer: "native-webgl",
-  fallbackRenderer: "none",
-  defaultLens: "crystal",
-  secondaryLens: "lattice",
-  lensRule: "toggle-changes-inspection-lens-not-object-identity",
-  visibleRadialMetric: 16,
-  latticeStates: 256,
+  renderModel: "single-canonical-canvas-deterministic-fibonacci-lattice-webgl",
+  radialNodes: RADIAL_NODES,
+  fibonacciBands: FIBONACCI_BANDS,
+  latticeStates: LATTICE_STATES,
+  latticeEquation: "16_RADIAL_NODES_X_16_FIBONACCI_BANDS_EQUALS_256_LATTICE_SEATS",
   touchGlide: true,
   doubleTapReset: true,
-  geometryMutableByTouch: false,
-  publicReceiptsVisible: false,
   generatedImage: false,
   graphicBox: false,
   audraliaInheritance: false,
@@ -35,38 +54,23 @@ const SHOWROOM_DIAMOND_STATE = Object.freeze({
   visualPassClaim: false
 });
 
-const TAU = Math.PI * 2;
-const RADIAL_POINTS = 16;
-const LATTICE_STATES = 256;
-
 const LENS_COPY = Object.freeze({
   crystal: {
     title: "Crystal Form",
-    route: "Crystal Form → WebGL true 3D Crown Cut Diamond · visible proof object",
-    copy: "This view shows the finished Crown Cut Diamond as a true 3D crystal body: table, crown, faceted girdle, pavilion, culet, light, and touch inspection. This is the Showroom proof object. It proves the site can render interactive 3D content with a fixed form instead of a flat graphic."
+    route: "Crystal Form → Generation 2 Crown Cut Diamond · Fibonacci 16-node proof object",
+    copy:
+      "This view renews the Diamond as a deterministic Crown Cut proof object: table, crown, girdle, pavilion, culet, sharp facets, finger drag, and release momentum. The object is generated from the same 16-node × 16 Fibonacci-band lattice that governs the structural view."
   },
   lattice: {
     title: "Lattice Structure",
-    route: "Lattice Structure → WebGL 16-point compass geometry · 256 lattice proof view",
-    copy: "This view exposes the structural order beneath the Diamond. The 16-point compass metric organizes the visible geometry, while the 256 lattice expresses the deeper address system behind the form. The lens changes. The Diamond does not."
+    route: "Lattice Structure → 16 radial nodes × 16 Fibonacci bands = 256 lattice seats",
+    copy:
+      "This view exposes the Diamond’s computable structure. Sixteen radial nodes are multiplied through sixteen Fibonacci-governed bands to produce 256 addressable lattice seats. The lens changes. The Diamond does not."
   }
 });
 
 const state = {
   lens: "crystal",
-  yaw: -0.58,
-  pitch: -0.24,
-  roll: 0.02,
-  velocityYaw: 0,
-  velocityPitch: 0,
-  dragging: false,
-  pointerX: 0,
-  pointerY: 0,
-  lastTap: 0,
-  lastTime: 0,
-  time: 0,
-  raf: 0,
-  dpr: 1,
 
   stage: null,
   canvas: null,
@@ -76,16 +80,47 @@ const state = {
   lineProgram: null,
   pointProgram: null,
 
-  crystalMesh: null,
-  crystalEdges: null,
-  crystalPoints: null,
-  latticeGhost: null,
-  latticeLines: null,
-  latticePoints: null,
+  solidPositionBuffer: null,
+  solidColorBuffer: null,
+  linePositionBuffer: null,
+  lineColorBuffer: null,
+  pointPositionBuffer: null,
+  pointColorBuffer: null,
+  pointSizeBuffer: null,
 
+  seats: [],
+  triangles: [],
+  crystalEdges: [],
+  latticeLines: [],
+  crystalPoints: [],
+  latticePoints: [],
+
+  yaw: -0.62,
+  pitch: -0.24,
+  roll: 0.015,
+  velocityYaw: 0,
+  velocityPitch: 0,
+  dragging: false,
+  pointerX: 0,
+  pointerY: 0,
+  lastTap: 0,
+
+  dpr: 1,
+  time: 0,
+  lastFrame: 0,
+  raf: 0,
+  renderCount: 0,
+
+  geometryBuilt: false,
+  crystalMeshReady: false,
+  latticeMeshReady: false,
   canvasReady: false,
   glReady: false,
+  touchReady: false,
   initialized: false,
+  duplicateCanvasCount: 0,
+  canonicalCanvasBound: false,
+
   errors: []
 };
 
@@ -98,33 +133,372 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, finite(value, min)));
 }
 
-function makePoint(x, y, z) {
-  return [x, y, z];
+function lerp(a, b, t) {
+  return a + (b - a) * clamp(t, 0, 1);
 }
 
-function subtract3(a, b) {
-  return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
-}
-
-function cross3(a, b) {
+function mixColor(a, b, t) {
   return [
-    a[1] * b[2] - a[2] * b[1],
-    a[2] * b[0] - a[0] * b[2],
-    a[0] * b[1] - a[1] * b[0]
+    lerp(a[0], b[0], t),
+    lerp(a[1], b[1], t),
+    lerp(a[2], b[2], t),
+    lerp(a[3], b[3], t)
   ];
 }
 
 function normalize3(v) {
-  const length = Math.hypot(v[0], v[1], v[2]) || 1;
-  return [v[0] / length, v[1] / length, v[2] / length];
+  const length = Math.hypot(v.x, v.y, v.z) || 1;
+  return { x: v.x / length, y: v.y / length, z: v.z / length };
+}
+
+function sub3(a, b) {
+  return { x: a.x - b.x, y: a.y - b.y, z: a.z - b.z };
+}
+
+function cross3(a, b) {
+  return {
+    x: a.y * b.z - a.z * b.y,
+    y: a.z * b.x - a.x * b.z,
+    z: a.x * b.y - a.y * b.x
+  };
 }
 
 function faceNormal(a, b, c) {
-  return normalize3(cross3(subtract3(b, a), subtract3(c, a)));
+  return normalize3(cross3(sub3(b, a), sub3(c, a)));
+}
+
+function fibonacciWeight(band) {
+  const max = FIBONACCI_SEQUENCE[FIBONACCI_SEQUENCE.length - 1];
+  return FIBONACCI_SEQUENCE[band] / max;
+}
+
+function pointFromSeat(seat) {
+  return { x: seat.x, y: seat.y, z: seat.z };
+}
+
+function roleColor(role, alpha = 1) {
+  if (role === "table") return [0.95, 0.99, 1.00, 0.88 * alpha];
+  if (role === "crown") return [0.70, 0.91, 1.00, 0.78 * alpha];
+  if (role === "girdle") return [1.00, 0.84, 0.38, 0.72 * alpha];
+  if (role === "pavilion") return [0.26, 0.50, 0.94, 0.78 * alpha];
+  return [0.92, 0.97, 1.00, 0.64 * alpha];
+}
+
+function createSeat(band, radial) {
+  const radiusProfile = [
+    0.050, 0.200, 0.335, 0.490,
+    0.650, 0.835, 1.035, 1.115,
+    1.040, 0.810, 0.640, 0.495,
+    0.355, 0.225, 0.110, 0.030
+  ];
+
+  const heightProfile = [
+    0.730, 0.655, 0.570, 0.445,
+    0.300, 0.150, 0.020, -0.080,
+    -0.220, -0.385, -0.535, -0.675,
+    -0.805, -0.920, -1.020, -1.100
+  ];
+
+  const fib = FIBONACCI_SEQUENCE[band];
+  const fibNorm = fibonacciWeight(band);
+  const angle = (radial / RADIAL_NODES) * TAU;
+  const compassCut = radial % 2 === 0 ? 1.0 : 0.94;
+  const cardinalBoost = radial % 4 === 0 ? 1.055 : 1.0;
+  const fibonacciBreath = 1 + (fibNorm - 0.5) * 0.075;
+  const radius = radiusProfile[band] * compassCut * cardinalBoost * fibonacciBreath;
+  const height = heightProfile[band];
+
+  const role =
+    band <= 2 ? "table" :
+    band <= 5 ? "crown" :
+    band <= 8 ? "girdle" :
+    band <= 14 ? "pavilion" :
+    "culet";
+
+  return Object.freeze({
+    seatIndex: band * RADIAL_NODES + radial,
+    band,
+    radial,
+    fibonacci: fib,
+    fibonacciWeight: fibNorm,
+    angle,
+    radius,
+    height,
+    x: Math.cos(angle) * radius,
+    y: height,
+    z: Math.sin(angle) * radius * 0.72,
+    role,
+    visibilityPriority: radial % 4 === 0 ? 1 : radial % 2 === 0 ? 0.78 : 0.58,
+    connectionPriority: radial % 4 === 0 ? 1 : radial % 2 === 0 ? 0.72 : 0.52
+  });
+}
+
+function buildGeometry() {
+  const rings = [];
+
+  for (let band = 0; band < FIBONACCI_BANDS; band += 1) {
+    const ring = [];
+
+    for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
+      ring.push(createSeat(band, radial));
+    }
+
+    rings.push(Object.freeze(ring));
+  }
+
+  const triangles = [];
+  const crystalEdges = [];
+  const latticeLines = [];
+  const crystalPoints = [];
+  const latticePoints = [];
+
+  function seat(band, radial) {
+    return rings[band][((radial % RADIAL_NODES) + RADIAL_NODES) % RADIAL_NODES];
+  }
+
+  function addTriangle(a, b, c, color) {
+    triangles.push({
+      a,
+      b,
+      c,
+      normal: faceNormal(pointFromSeat(a), pointFromSeat(b), pointFromSeat(c)),
+      color,
+      role: a.role
+    });
+  }
+
+  function addCrystalEdge(a, b, color, weight = 1) {
+    crystalEdges.push({ a, b, color, weight, family: "crystal-edge" });
+  }
+
+  function addLatticeLine(a, b, color, weight = 1, family = "lattice-line") {
+    latticeLines.push({ a, b, color, weight, family });
+  }
+
+  for (let band = 0; band < FIBONACCI_BANDS - 1; band += 1) {
+    for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
+      const next = radial + 1;
+
+      const a = seat(band, radial);
+      const b = seat(band, next);
+      const c = seat(band + 1, next);
+      const d = seat(band + 1, radial);
+
+      const base = roleColor(a.role, 1);
+      const fibTint = [1.0, 0.80, 0.35, 0.74];
+      const color = mixColor(base, fibTint, Math.min(0.26, a.fibonacciWeight * 0.40));
+
+      addTriangle(a, d, c, color);
+      addTriangle(a, c, b, color);
+    }
+  }
+
+  for (let band = 0; band < FIBONACCI_BANDS; band += 1) {
+    for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
+      const a = seat(band, radial);
+      const b = seat(band, radial + 1);
+      const major = radial % 4 === 0;
+      const even = radial % 2 === 0;
+
+      addCrystalEdge(
+        a,
+        b,
+        major ? [1.0, 0.88, 0.44, 0.86] : [0.82, 0.96, 1.0, 0.50],
+        major ? 1.85 : even ? 1.35 : 1.0
+      );
+
+      addLatticeLine(
+        a,
+        b,
+        major ? [1.0, 0.84, 0.36, 0.90] : [0.50, 0.86, 1.0, 0.62],
+        major ? 1.75 : 1.0,
+        "fibonacci-band-ring"
+      );
+    }
+  }
+
+  for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
+    for (let band = 0; band < FIBONACCI_BANDS - 1; band += 1) {
+      const a = seat(band, radial);
+      const b = seat(band + 1, radial);
+      const major = radial % 4 === 0;
+
+      addCrystalEdge(
+        a,
+        b,
+        major ? [1.0, 0.92, 0.54, 0.82] : [0.88, 0.98, 1.0, 0.48],
+        major ? 1.75 : 1.05
+      );
+
+      addLatticeLine(
+        a,
+        b,
+        major ? [1.0, 0.88, 0.44, 0.90] : [0.56, 0.88, 1.0, 0.62],
+        major ? 1.85 : 1.0,
+        "radial-node-spine"
+      );
+    }
+  }
+
+  const fibonacciOffsets = [1, 2, 3, 5, 8, 13];
+
+  for (let band = 0; band < FIBONACCI_BANDS - 1; band += 1) {
+    const offset = fibonacciOffsets[band % fibonacciOffsets.length];
+
+    for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
+      const a = seat(band, radial);
+      const b = seat(band + 1, radial + offset);
+      const c = seat(band + 1, radial - offset);
+      const priority = radial % 4 === 0 || band % 4 === 0;
+
+      addLatticeLine(
+        a,
+        b,
+        priority ? [1.0, 0.76, 0.28, 0.56] : [0.42, 0.76, 1.0, 0.30],
+        priority ? 1.10 : 0.72,
+        "fibonacci-forward-link"
+      );
+
+      if (band % 2 === 0) {
+        addLatticeLine(
+          a,
+          c,
+          priority ? [0.92, 0.98, 1.0, 0.42] : [0.44, 0.70, 1.0, 0.24],
+          priority ? 0.92 : 0.62,
+          "fibonacci-return-link"
+        );
+      }
+    }
+  }
+
+  for (let band = 0; band < FIBONACCI_BANDS; band += 1) {
+    for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
+      const s = seat(band, radial);
+      const major = radial % 4 === 0;
+      const even = radial % 2 === 0;
+
+      latticePoints.push({
+        seat: s,
+        color: major ? [1.0, 0.84, 0.34, 0.96] : even ? [0.68, 0.94, 1.0, 0.76] : [0.50, 0.78, 1.0, 0.56],
+        size: major ? 8.0 : even ? 5.8 : 4.4,
+        family: "256-seat"
+      });
+
+      if (band === 0 || band === 2 || band === 6 || band === 8 || band === 14 || major) {
+        crystalPoints.push({
+          seat: s,
+          color: major ? [1.0, 0.88, 0.44, 0.84] : [0.86, 0.98, 1.0, 0.64],
+          size: major ? 5.8 : 4.2,
+          family: "crystal-anchor"
+        });
+      }
+    }
+  }
+
+  state.seats = rings.flat();
+  state.triangles = triangles;
+  state.crystalEdges = crystalEdges;
+  state.latticeLines = latticeLines;
+  state.crystalPoints = crystalPoints;
+  state.latticePoints = latticePoints;
+
+  state.geometryBuilt = state.seats.length === LATTICE_STATES;
+  state.crystalMeshReady = triangles.length > 0 && crystalEdges.length > 0;
+  state.latticeMeshReady = latticeLines.length > 0 && latticePoints.length === LATTICE_STATES;
+}
+
+function rotatePoint(point) {
+  let x = point.x;
+  let y = point.y;
+  let z = point.z;
+
+  const cy = Math.cos(state.yaw);
+  const sy = Math.sin(state.yaw);
+  const yx = x * cy + z * sy;
+  const yz = -x * sy + z * cy;
+  x = yx;
+  z = yz;
+
+  const cp = Math.cos(state.pitch);
+  const sp = Math.sin(state.pitch);
+  const py = y * cp - z * sp;
+  const pz = y * sp + z * cp;
+  y = py;
+  z = pz;
+
+  const cr = Math.cos(state.roll);
+  const sr = Math.sin(state.roll);
+  const rx = x * cr - y * sr;
+  const ry = x * sr + y * cr;
+
+  return { x: rx, y: ry, z };
+}
+
+function stageFit() {
+  const canvas = state.canvas;
+  const width = canvas ? canvas.width : 640;
+  const height = canvas ? canvas.height : 720;
+  const rect = canvas && canvas.getBoundingClientRect ? canvas.getBoundingClientRect() : { width, height };
+  const mobile = rect.width < 680;
+  const aspect = width / Math.max(1, height);
+
+  return {
+    scale: mobile ? 0.64 : 0.70,
+    offsetY: mobile ? 0.25 : 0.23,
+    aspectFit: aspect > 1 ? 1 / aspect : 1,
+    cameraDistance: 4.65
+  };
+}
+
+function projectPoint(point) {
+  const rotated = rotatePoint(point);
+  const fit = stageFit();
+  const perspective = fit.cameraDistance / (fit.cameraDistance - rotated.z);
+
+  return {
+    x: rotated.x * fit.scale * fit.aspectFit * perspective,
+    y: rotated.y * fit.scale * perspective + fit.offsetY,
+    z: rotated.z,
+    perspective
+  };
+}
+
+function projectedSeat(seat) {
+  return projectPoint(pointFromSeat(seat));
+}
+
+function triangleDepth(triangle) {
+  const a = rotatePoint(pointFromSeat(triangle.a));
+  const b = rotatePoint(pointFromSeat(triangle.b));
+  const c = rotatePoint(pointFromSeat(triangle.c));
+
+  return (a.z + b.z + c.z) / 3;
+}
+
+function lightingForTriangle(triangle) {
+  const normal = rotatePoint(triangle.normal);
+  const key = normalize3({ x: -0.45, y: 0.72, z: 0.84 });
+  const rim = normalize3({ x: 0.74, y: 0.24, z: 0.55 });
+
+  const keyDot = Math.max(0, normal.x * key.x + normal.y * key.y + normal.z * key.z);
+  const rimDot = Math.max(0, normal.x * rim.x + normal.y * rim.y + normal.z * rim.z);
+  const pulse = 0.5 + 0.5 * Math.sin(state.time * 1.7 + triangle.a.band * 0.45 + triangle.a.radial * 0.22);
+
+  return clamp(0.52 + keyDot * 0.56 + rimDot * 0.24 + pulse * 0.08, 0.38, 1.20);
+}
+
+function shadedColor(color, light, alphaScale = 1) {
+  return [
+    clamp(color[0] * light + 0.05, 0, 1),
+    clamp(color[1] * light + 0.05, 0, 1),
+    clamp(color[2] * light + 0.05, 0, 1),
+    clamp(color[3] * alphaScale, 0, 1)
+  ];
 }
 
 function createShader(gl, type, source) {
   const shader = gl.createShader(type);
+
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
 
@@ -158,605 +532,250 @@ function createProgram(gl, vertexSource, fragmentSource) {
   return program;
 }
 
-function createBuffer(gl, data, target = gl.ARRAY_BUFFER) {
-  const buffer = gl.createBuffer();
-  gl.bindBuffer(target, buffer);
-  gl.bufferData(target, data, gl.STATIC_DRAW);
-  return buffer;
+function createBuffer(gl) {
+  const out = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, out);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(0), gl.DYNAMIC_DRAW);
+  return out;
 }
 
-function bindAttribute(gl, buffer, location, size) {
-  if (location < 0 || !buffer) return;
+function updateBuffer(gl, targetBuffer, data) {
+  gl.bindBuffer(gl.ARRAY_BUFFER, targetBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, data, gl.DYNAMIC_DRAW);
+}
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+function bindAttrib(gl, program, targetBuffer, name, size) {
+  const location = gl.getAttribLocation(program, name);
+  if (location < 0) return;
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, targetBuffer);
   gl.enableVertexAttribArray(location);
   gl.vertexAttribPointer(location, size, gl.FLOAT, false, 0, 0);
-}
-
-function getAttrib(gl, program, name) {
-  return gl.getAttribLocation(program, name);
-}
-
-function getUniform(gl, program, name) {
-  return gl.getUniformLocation(program, name);
-}
-
-function recordError(scope, error) {
-  const message = error && error.message ? error.message : String(error || scope);
-
-  state.errors.push({
-    scope,
-    message,
-    time: new Date().toISOString()
-  });
-
-  document.documentElement.dataset.showroomDiamondError = message;
-}
-
-function buildDiamondGeometry() {
-  const table = [];
-  const crownInner = [];
-  const crownOuter = [];
-  const girdleTop = [];
-  const girdleBottom = [];
-  const pavilion = [];
-  const culetRing = [];
-
-  for (let i = 0; i < RADIAL_POINTS; i += 1) {
-    const angle = (i / RADIAL_POINTS) * TAU;
-    const compassCut = i % 2 === 0 ? 1 : 0.93;
-    const cardinalBoost = i % 4 === 0 ? 1.04 : 1;
-
-    table.push(makePoint(Math.cos(angle) * 0.34 * compassCut, 0.56, Math.sin(angle) * 0.34 * compassCut));
-    crownInner.push(makePoint(Math.cos(angle) * 0.52 * compassCut, 0.38, Math.sin(angle) * 0.52 * compassCut));
-    crownOuter.push(makePoint(Math.cos(angle) * 0.78 * compassCut * cardinalBoost, 0.12, Math.sin(angle) * 0.78 * compassCut * cardinalBoost));
-    girdleTop.push(makePoint(Math.cos(angle) * 1.08 * compassCut * cardinalBoost, -0.04, Math.sin(angle) * 1.08 * compassCut * cardinalBoost));
-    girdleBottom.push(makePoint(Math.cos(angle) * 1.02 * compassCut * cardinalBoost, -0.20, Math.sin(angle) * 1.02 * compassCut * cardinalBoost));
-    pavilion.push(makePoint(Math.cos(angle) * 0.50 * compassCut, -0.60, Math.sin(angle) * 0.50 * compassCut));
-    culetRing.push(makePoint(Math.cos(angle) * 0.12 * compassCut, -0.84, Math.sin(angle) * 0.12 * compassCut));
-  }
-
-  const tableCenter = makePoint(0, 0.62, 0);
-  const culet = makePoint(0, -1.02, 0);
-
-  const positions = [];
-  const normals = [];
-  const colors = [];
-  const indices = [];
-  const edgePositions = [];
-  const pointPositions = [];
-
-  const colorMap = Object.freeze({
-    table: [0.94, 0.99, 1.0, 0.86],
-    crown: [0.70, 0.90, 1.0, 0.74],
-    shoulder: [0.52, 0.72, 0.98, 0.66],
-    girdle: [0.92, 0.98, 1.0, 0.62],
-    pavilion: [0.25, 0.44, 0.78, 0.76],
-    culet: [0.78, 0.92, 1.0, 0.56]
-  });
-
-  function addVertex(vertex, normal, color) {
-    const index = positions.length / 3;
-
-    positions.push(vertex[0], vertex[1], vertex[2]);
-    normals.push(normal[0], normal[1], normal[2]);
-    colors.push(color[0], color[1], color[2], color[3]);
-
-    return index;
-  }
-
-  function pushEdge(a, b) {
-    edgePositions.push(a[0], a[1], a[2], b[0], b[1], b[2]);
-  }
-
-  function pushPoint(point) {
-    pointPositions.push(point[0], point[1], point[2]);
-  }
-
-  function addTriangle(a, b, c, colorName) {
-    const normal = faceNormal(a, b, c);
-    const color = colorMap[colorName] || colorMap.crown;
-
-    const ia = addVertex(a, normal, color);
-    const ib = addVertex(b, normal, color);
-    const ic = addVertex(c, normal, color);
-
-    indices.push(ia, ib, ic);
-
-    pushEdge(a, b);
-    pushEdge(b, c);
-    pushEdge(c, a);
-  }
-
-  function addQuad(a, b, c, d, colorName) {
-    addTriangle(a, b, c, colorName);
-    addTriangle(a, c, d, colorName);
-  }
-
-  for (let i = 0; i < RADIAL_POINTS; i += 1) {
-    const n = (i + 1) % RADIAL_POINTS;
-
-    addTriangle(tableCenter, table[i], table[n], "table");
-    addQuad(table[i], crownInner[i], crownInner[n], table[n], "table");
-    addQuad(crownInner[i], crownOuter[i], crownOuter[n], crownInner[n], "crown");
-    addQuad(crownOuter[i], girdleTop[i], girdleTop[n], crownOuter[n], "shoulder");
-    addQuad(girdleTop[i], girdleBottom[i], girdleBottom[n], girdleTop[n], "girdle");
-    addQuad(girdleBottom[i], pavilion[i], pavilion[n], girdleBottom[n], "pavilion");
-    addQuad(pavilion[i], culetRing[i], culetRing[n], pavilion[n], "pavilion");
-    addTriangle(culetRing[i], culet, culetRing[n], "culet");
-
-    pushEdge(table[i], crownInner[i]);
-    pushEdge(crownInner[i], crownOuter[i]);
-    pushEdge(crownOuter[i], girdleTop[i]);
-    pushEdge(girdleTop[i], girdleBottom[i]);
-    pushEdge(girdleBottom[i], pavilion[i]);
-    pushEdge(pavilion[i], culetRing[i]);
-    pushEdge(culetRing[i], culet);
-
-    pushPoint(table[i]);
-    pushPoint(crownInner[i]);
-    pushPoint(crownOuter[i]);
-    pushPoint(girdleTop[i]);
-    pushPoint(girdleBottom[i]);
-    pushPoint(pavilion[i]);
-    pushPoint(culetRing[i]);
-  }
-
-  pushPoint(tableCenter);
-  pushPoint(culet);
-
-  return {
-    positions: new Float32Array(positions),
-    normals: new Float32Array(normals),
-    colors: new Float32Array(colors),
-    indices: new Uint16Array(indices),
-    edgePositions: new Float32Array(edgePositions),
-    pointPositions: new Float32Array(pointPositions)
-  };
-}
-
-function buildLatticeGeometry() {
-  const lines = [];
-  const points = [];
-
-  const ringDefs = [
-    [0.22, 0.62],
-    [0.34, 0.56],
-    [0.52, 0.38],
-    [0.78, 0.12],
-    [1.08, -0.04],
-    [1.02, -0.20],
-    [0.50, -0.60],
-    [0.12, -0.84]
-  ];
-
-  const rings = ringDefs.map(([radius, y], ringIndex) => {
-    const ring = [];
-
-    for (let i = 0; i < RADIAL_POINTS; i += 1) {
-      const angle = (i / RADIAL_POINTS) * TAU + (ringIndex % 2 ? TAU / 32 : 0);
-      const compassCut = i % 2 === 0 ? 1 : 0.93;
-      const cardinalBoost = i % 4 === 0 ? 1.04 : 1;
-      const point = makePoint(
-        Math.cos(angle) * radius * compassCut * cardinalBoost,
-        y,
-        Math.sin(angle) * radius * compassCut * cardinalBoost
-      );
-
-      ring.push(point);
-      points.push(point);
-    }
-
-    return ring;
-  });
-
-  const centerTop = makePoint(0, 0.68, 0);
-  const centerCore = makePoint(0, -0.04, 0);
-  const centerBottom = makePoint(0, -1.02, 0);
-
-  points.push(centerTop, centerCore, centerBottom);
-
-  function pushLine(a, b) {
-    lines.push(a[0], a[1], a[2], b[0], b[1], b[2]);
-  }
-
-  for (const ring of rings) {
-    for (let i = 0; i < RADIAL_POINTS; i += 1) {
-      pushLine(ring[i], ring[(i + 1) % RADIAL_POINTS]);
-    }
-  }
-
-  for (let i = 0; i < RADIAL_POINTS; i += 1) {
-    for (let r = 0; r < rings.length - 1; r += 1) {
-      pushLine(rings[r][i], rings[r + 1][i]);
-    }
-
-    pushLine(centerTop, rings[3][i]);
-    pushLine(centerCore, rings[4][i]);
-    pushLine(centerBottom, rings[6][i]);
-
-    if (i % 2 === 0) {
-      pushLine(rings[0][i], rings[4][(i + 2) % RADIAL_POINTS]);
-      pushLine(rings[2][i], rings[5][(i + 3) % RADIAL_POINTS]);
-      pushLine(rings[4][i], rings[7][(i + 4) % RADIAL_POINTS]);
-    }
-
-    if (i % 4 === 0) {
-      pushLine(rings[1][i], rings[6][(i + 8) % RADIAL_POINTS]);
-      pushLine(rings[3][i], rings[5][(i + 4) % RADIAL_POINTS]);
-    }
-  }
-
-  return {
-    linePositions: new Float32Array(lines),
-    pointPositions: new Float32Array(points.flat())
-  };
-}
-
-function makeMesh(gl, geometry) {
-  return {
-    position: createBuffer(gl, geometry.positions),
-    normal: createBuffer(gl, geometry.normals),
-    color: createBuffer(gl, geometry.colors),
-    index: createBuffer(gl, geometry.indices, gl.ELEMENT_ARRAY_BUFFER),
-    count: geometry.indices.length
-  };
-}
-
-function makeLineMesh(gl, positions) {
-  return {
-    position: createBuffer(gl, positions),
-    count: positions.length / 3
-  };
-}
-
-function makePointMesh(gl, positions) {
-  return {
-    position: createBuffer(gl, positions),
-    count: positions.length / 3
-  };
 }
 
 function initPrograms(gl) {
   const solidVertex = `
     precision mediump float;
 
-    attribute vec3 aPosition;
-    attribute vec3 aNormal;
+    attribute vec2 aPosition;
     attribute vec4 aColor;
 
-    uniform float uYaw;
-    uniform float uPitch;
-    uniform float uRoll;
-    uniform float uScale;
-    uniform float uOffsetY;
-    uniform float uAspectFit;
-
-    varying vec3 vNormal;
-    varying vec3 vPosition;
     varying vec4 vColor;
 
-    vec3 rotateX(vec3 p, float a) {
-      float s = sin(a);
-      float c = cos(a);
-      return vec3(p.x, p.y * c - p.z * s, p.y * s + p.z * c);
-    }
-
-    vec3 rotateY(vec3 p, float a) {
-      float s = sin(a);
-      float c = cos(a);
-      return vec3(p.x * c + p.z * s, p.y, -p.x * s + p.z * c);
-    }
-
-    vec3 rotateZ(vec3 p, float a) {
-      float s = sin(a);
-      float c = cos(a);
-      return vec3(p.x * c - p.y * s, p.x * s + p.y * c, p.z);
-    }
-
     void main() {
-      vec3 p = aPosition;
-      vec3 n = aNormal;
-
-      p = rotateY(p, uYaw);
-      p = rotateX(p, uPitch);
-      p = rotateZ(p, uRoll);
-
-      n = rotateY(n, uYaw);
-      n = rotateX(n, uPitch);
-      n = rotateZ(n, uRoll);
-
-      float perspective = 1.0 / (1.0 + max(0.0, p.z + 0.8) * 0.10);
-      float x = p.x * uScale * uAspectFit * perspective;
-      float y = p.y * uScale * perspective + uOffsetY;
-      float z = 0.42 + p.z * 0.055;
-
-      vNormal = normalize(n);
-      vPosition = p;
       vColor = aColor;
-
-      gl_Position = vec4(x, y, z, 1.0);
+      gl_Position = vec4(aPosition, 0.0, 1.0);
     }
   `;
 
   const solidFragment = `
     precision mediump float;
 
-    varying vec3 vNormal;
-    varying vec3 vPosition;
     varying vec4 vColor;
 
-    uniform float uTime;
-    uniform float uLens;
-
     void main() {
-      vec3 n = normalize(vNormal);
-
-      vec3 keyLight = normalize(vec3(-0.55, 0.72, 0.82));
-      vec3 rimLight = normalize(vec3(0.82, 0.18, 0.48));
-      vec3 underLight = normalize(vec3(-0.20, -0.82, 0.32));
-
-      float key = max(dot(n, keyLight), 0.0);
-      float rim = pow(max(dot(n, rimLight), 0.0), 1.45);
-      float under = max(dot(n, underLight), 0.0);
-      float fresnel = pow(1.0 - max(dot(n, vec3(0.0, 0.0, 1.0)), 0.0), 1.8);
-      float pulse = 0.5 + 0.5 * sin(uTime * 1.55 + vPosition.x * 7.0 + vPosition.y * 9.0 + vPosition.z * 5.0);
-
-      vec3 deep = vec3(0.035, 0.08, 0.18);
-      vec3 ice = vec3(0.80, 0.94, 1.0);
-      vec3 gold = vec3(1.0, 0.78, 0.34);
-      vec3 violet = vec3(0.78, 0.64, 1.0);
-
-      float brilliance = key * 0.92 + rim * 0.72 + under * 0.18 + pulse * 0.12;
-      vec3 color = mix(deep, vColor.rgb, clamp(brilliance + 0.22, 0.0, 1.0));
-      color = mix(color, ice, clamp(key * 0.42 + fresnel * 0.12, 0.0, 0.68));
-      color = mix(color, gold, clamp(rim * 0.18 + pulse * 0.055, 0.0, 0.24));
-      color = mix(color, violet, clamp(fresnel * 0.16 + uLens * 0.06, 0.0, 0.22));
-
-      float alpha = clamp(vColor.a + fresnel * 0.16 + key * 0.06 - uLens * 0.18, 0.24, 0.92);
-
-      gl_FragColor = vec4(color, alpha);
+      gl_FragColor = vColor;
     }
   `;
 
-  const lineVertex = `
+  const pointVertex = `
     precision mediump float;
 
-    attribute vec3 aPosition;
+    attribute vec2 aPosition;
+    attribute vec4 aColor;
+    attribute float aSize;
 
-    uniform float uYaw;
-    uniform float uPitch;
-    uniform float uRoll;
-    uniform float uScale;
-    uniform float uOffsetY;
-    uniform float uAspectFit;
-    uniform float uPointSize;
-
-    varying float vDepth;
-    varying float vSpark;
-
-    vec3 rotateX(vec3 p, float a) {
-      float s = sin(a);
-      float c = cos(a);
-      return vec3(p.x, p.y * c - p.z * s, p.y * s + p.z * c);
-    }
-
-    vec3 rotateY(vec3 p, float a) {
-      float s = sin(a);
-      float c = cos(a);
-      return vec3(p.x * c + p.z * s, p.y, -p.x * s + p.z * c);
-    }
-
-    vec3 rotateZ(vec3 p, float a) {
-      float s = sin(a);
-      float c = cos(a);
-      return vec3(p.x * c - p.y * s, p.x * s + p.y * c, p.z);
-    }
+    varying vec4 vColor;
 
     void main() {
-      vec3 p = aPosition;
-      p = rotateY(p, uYaw);
-      p = rotateX(p, uPitch);
-      p = rotateZ(p, uRoll);
-
-      float perspective = 1.0 / (1.0 + max(0.0, p.z + 0.8) * 0.10);
-      float x = p.x * uScale * uAspectFit * perspective;
-      float y = p.y * uScale * perspective + uOffsetY;
-      float z = 0.42 + p.z * 0.055;
-
-      vDepth = clamp((p.z + 1.2) / 2.4, 0.0, 1.0);
-      vSpark = clamp((p.y + 1.1) / 1.9, 0.0, 1.0);
-
-      gl_Position = vec4(x, y, z, 1.0);
-      gl_PointSize = uPointSize;
+      vColor = aColor;
+      gl_Position = vec4(aPosition, 0.0, 1.0);
+      gl_PointSize = aSize;
     }
   `;
-
-  const lineFragment = `
-    precision mediump float;
-
-    uniform vec4 uColor;
-    uniform float uTime;
-    uniform float uPulse;
-
-    varying float vDepth;
-    varying float vSpark;
-
-    void main() {
-      float pulse = 0.78 + 0.22 * sin(uTime * 1.9 + vDepth * 8.0 + vSpark * 4.0);
-      gl_FragColor = vec4(uColor.rgb, uColor.a * mix(1.0, pulse, uPulse));
-    }
-  `;
-
-  const pointVertex = lineVertex;
 
   const pointFragment = `
     precision mediump float;
 
-    uniform vec4 uColor;
-    uniform float uTime;
-
-    varying float vDepth;
-    varying float vSpark;
+    varying vec4 vColor;
 
     void main() {
       vec2 coord = gl_PointCoord - vec2(0.5);
-      float dist = length(coord);
-      if (dist > 0.5) discard;
+      float d = length(coord);
+      if (d > 0.5) discard;
 
-      float core = smoothstep(0.5, 0.0, dist);
-      float pulse = 0.74 + 0.26 * sin(uTime * 2.1 + vDepth * 8.0 + vSpark * 5.0);
+      float core = smoothstep(0.5, 0.08, d);
+      float rim = smoothstep(0.5, 0.34, d) * 0.30;
 
-      gl_FragColor = vec4(uColor.rgb, uColor.a * core * pulse);
+      gl_FragColor = vec4(vColor.rgb, vColor.a * (core + rim));
     }
   `;
 
   state.solidProgram = createProgram(gl, solidVertex, solidFragment);
-  state.lineProgram = createProgram(gl, lineVertex, lineFragment);
+  state.lineProgram = createProgram(gl, solidVertex, solidFragment);
   state.pointProgram = createProgram(gl, pointVertex, pointFragment);
-}
 
-function computeFit() {
-  const canvas = state.canvas;
-  const width = canvas ? canvas.width : 640;
-  const height = canvas ? canvas.height : 720;
-  const cssWidth = canvas && canvas.getBoundingClientRect ? canvas.getBoundingClientRect().width : width;
-  const mobile = cssWidth < 680;
-  const aspect = width / Math.max(1, height);
-
-  return {
-    scale: mobile ? 0.68 : 0.76,
-    offsetY: mobile ? 0.24 : 0.20,
-    aspectFit: aspect < 1 ? Math.max(0.74, aspect * 0.96) : 1
-  };
-}
-
-function applyObjectUniforms(gl, program, extra = {}) {
-  const fit = computeFit();
-
-  gl.uniform1f(getUniform(gl, program, "uYaw"), state.yaw);
-  gl.uniform1f(getUniform(gl, program, "uPitch"), state.pitch);
-  gl.uniform1f(getUniform(gl, program, "uRoll"), state.roll);
-  gl.uniform1f(getUniform(gl, program, "uScale"), fit.scale);
-  gl.uniform1f(getUniform(gl, program, "uOffsetY"), fit.offsetY);
-  gl.uniform1f(getUniform(gl, program, "uAspectFit"), fit.aspectFit);
-
-  if ("time" in extra) gl.uniform1f(getUniform(gl, program, "uTime"), extra.time);
-  if ("lens" in extra) gl.uniform1f(getUniform(gl, program, "uLens"), extra.lens);
-  if ("pulse" in extra) gl.uniform1f(getUniform(gl, program, "uPulse"), extra.pulse);
-  if ("pointSize" in extra) gl.uniform1f(getUniform(gl, program, "uPointSize"), extra.pointSize);
-  if ("color" in extra) gl.uniform4fv(getUniform(gl, program, "uColor"), extra.color);
-}
-
-function drawSolidMesh(gl, mesh, lensStrength = 0) {
-  gl.useProgram(state.solidProgram);
-
-  bindAttribute(gl, mesh.position, getAttrib(gl, state.solidProgram, "aPosition"), 3);
-  bindAttribute(gl, mesh.normal, getAttrib(gl, state.solidProgram, "aNormal"), 3);
-  bindAttribute(gl, mesh.color, getAttrib(gl, state.solidProgram, "aColor"), 4);
-
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.index);
-
-  applyObjectUniforms(gl, state.solidProgram, {
-    time: state.time,
-    lens: lensStrength
-  });
-
-  gl.drawElements(gl.TRIANGLES, mesh.count, gl.UNSIGNED_SHORT, 0);
-}
-
-function drawLineMesh(gl, mesh, color, pointSize = 1, pulse = 0.5) {
-  gl.useProgram(state.lineProgram);
-
-  bindAttribute(gl, mesh.position, getAttrib(gl, state.lineProgram, "aPosition"), 3);
-
-  applyObjectUniforms(gl, state.lineProgram, {
-    time: state.time,
-    color,
-    pulse,
-    pointSize
-  });
-
-  gl.drawArrays(gl.LINES, 0, mesh.count);
-}
-
-function drawPointMesh(gl, mesh, color, pointSize = 5) {
-  gl.useProgram(state.pointProgram);
-
-  bindAttribute(gl, mesh.position, getAttrib(gl, state.pointProgram, "aPosition"), 3);
-
-  applyObjectUniforms(gl, state.pointProgram, {
-    time: state.time,
-    color,
-    pointSize: pointSize * state.dpr
-  });
-
-  gl.drawArrays(gl.POINTS, 0, mesh.count);
+  state.solidPositionBuffer = createBuffer(gl);
+  state.solidColorBuffer = createBuffer(gl);
+  state.linePositionBuffer = createBuffer(gl);
+  state.lineColorBuffer = createBuffer(gl);
+  state.pointPositionBuffer = createBuffer(gl);
+  state.pointColorBuffer = createBuffer(gl);
+  state.pointSizeBuffer = createBuffer(gl);
 }
 
 function resizeCanvas() {
-  const canvas = state.canvas;
-  const gl = state.gl;
+  if (!state.canvas || !state.gl) return;
 
-  if (!canvas || !gl) return;
-
-  const rect = canvas.getBoundingClientRect();
+  const rect = state.canvas.getBoundingClientRect();
   const dpr = Math.min(1.8, window.devicePixelRatio || 1);
   const width = Math.max(320, Math.floor((rect.width || 640) * dpr));
   const height = Math.max(520, Math.floor((rect.height || 720) * dpr));
 
-  if (canvas.width !== width) canvas.width = width;
-  if (canvas.height !== height) canvas.height = height;
+  if (state.canvas.width !== width) state.canvas.width = width;
+  if (state.canvas.height !== height) state.canvas.height = height;
 
   state.dpr = dpr;
-  gl.viewport(0, 0, canvas.width, canvas.height);
+  state.gl.viewport(0, 0, width, height);
+}
+
+function drawTriangles(gl, triangles, alphaScale = 1) {
+  const positions = [];
+  const colors = [];
+  const sorted = triangles.slice().sort((a, b) => triangleDepth(a) - triangleDepth(b));
+
+  for (const triangle of sorted) {
+    const a = projectedSeat(triangle.a);
+    const b = projectedSeat(triangle.b);
+    const c = projectedSeat(triangle.c);
+    const light = lightingForTriangle(triangle);
+    const color = shadedColor(triangle.color, light, alphaScale);
+
+    positions.push(a.x, a.y, b.x, b.y, c.x, c.y);
+    colors.push(...color, ...color, ...color);
+  }
+
+  if (!positions.length) return;
+
+  gl.useProgram(state.solidProgram);
+  updateBuffer(gl, state.solidPositionBuffer, new Float32Array(positions));
+  updateBuffer(gl, state.solidColorBuffer, new Float32Array(colors));
+
+  bindAttrib(gl, state.solidProgram, state.solidPositionBuffer, "aPosition", 2);
+  bindAttrib(gl, state.solidProgram, state.solidColorBuffer, "aColor", 4);
+
+  gl.drawArrays(gl.TRIANGLES, 0, positions.length / 2);
+}
+
+function drawLines(gl, lines, alphaScale = 1) {
+  const positions = [];
+  const colors = [];
+
+  for (const line of lines) {
+    const a = projectedSeat(line.a);
+    const b = projectedSeat(line.b);
+    const depth = clamp(0.82 + ((a.z + b.z) / 2) * 0.08, 0.60, 1.12);
+    const pulse = line.family && line.family.includes("fibonacci")
+      ? 0.88 + Math.sin(state.time * 1.6 + line.a.band * 0.45 + line.a.radial * 0.18) * 0.12
+      : 1;
+
+    const color = [
+      clamp(line.color[0] * depth, 0, 1),
+      clamp(line.color[1] * depth, 0, 1),
+      clamp(line.color[2] * depth, 0, 1),
+      clamp(line.color[3] * alphaScale * pulse, 0, 1)
+    ];
+
+    positions.push(a.x, a.y, b.x, b.y);
+    colors.push(...color, ...color);
+  }
+
+  if (!positions.length) return;
+
+  gl.useProgram(state.lineProgram);
+  updateBuffer(gl, state.linePositionBuffer, new Float32Array(positions));
+  updateBuffer(gl, state.lineColorBuffer, new Float32Array(colors));
+
+  bindAttrib(gl, state.lineProgram, state.linePositionBuffer, "aPosition", 2);
+  bindAttrib(gl, state.lineProgram, state.lineColorBuffer, "aColor", 4);
+
+  gl.drawArrays(gl.LINES, 0, positions.length / 2);
+}
+
+function drawPoints(gl, points, alphaScale = 1) {
+  const positions = [];
+  const colors = [];
+  const sizes = [];
+
+  for (const point of points) {
+    const projected = projectedSeat(point.seat);
+    const pulse = 0.88 + Math.sin(state.time * 2.1 + point.seat.band * 0.42 + point.seat.radial * 0.31) * 0.12;
+    const depth = clamp(0.86 + projected.z * 0.10, 0.66, 1.18);
+
+    const color = [
+      clamp(point.color[0] * depth, 0, 1),
+      clamp(point.color[1] * depth, 0, 1),
+      clamp(point.color[2] * depth, 0, 1),
+      clamp(point.color[3] * alphaScale * pulse, 0, 1)
+    ];
+
+    positions.push(projected.x, projected.y);
+    colors.push(...color);
+    sizes.push(Math.max(2.5, point.size * state.dpr * projected.perspective));
+  }
+
+  if (!positions.length) return;
+
+  gl.useProgram(state.pointProgram);
+  updateBuffer(gl, state.pointPositionBuffer, new Float32Array(positions));
+  updateBuffer(gl, state.pointColorBuffer, new Float32Array(colors));
+  updateBuffer(gl, state.pointSizeBuffer, new Float32Array(sizes));
+
+  bindAttrib(gl, state.pointProgram, state.pointPositionBuffer, "aPosition", 2);
+  bindAttrib(gl, state.pointProgram, state.pointColorBuffer, "aColor", 4);
+  bindAttrib(gl, state.pointProgram, state.pointSizeBuffer, "aSize", 1);
+
+  gl.drawArrays(gl.POINTS, 0, positions.length / 2);
 }
 
 function renderWebGL() {
-  const gl = state.gl;
+  if (!state.gl || !state.geometryBuilt) return;
 
-  if (!gl) return;
+  const gl = state.gl;
 
   resizeCanvas();
 
-  gl.clearColor(0.004, 0.014, 0.034, 1);
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-  gl.enable(gl.DEPTH_TEST);
-  gl.depthFunc(gl.LEQUAL);
+  gl.clearColor(0.004, 0.014, 0.034, 0.0);
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.disable(gl.DEPTH_TEST);
   gl.enable(gl.BLEND);
   gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
   if (state.lens === "crystal") {
-    gl.depthMask(true);
-    drawSolidMesh(gl, state.crystalMesh, 0);
-
-    gl.depthMask(false);
-    drawLineMesh(gl, state.crystalEdges, new Float32Array([0.86, 0.96, 1.0, 0.42]), 1.4 * state.dpr, 0.45);
-    drawPointMesh(gl, state.crystalPoints, new Float32Array([1.0, 0.88, 0.48, 0.48]), 5.2);
-    gl.depthMask(true);
+    drawTriangles(gl, state.triangles, 1.0);
+    drawLines(gl, state.crystalEdges, 0.84);
+    drawPoints(gl, state.crystalPoints, 0.96);
   } else {
-    gl.depthMask(true);
-    drawSolidMesh(gl, state.latticeGhost, 1);
-
-    gl.depthMask(false);
-    drawLineMesh(gl, state.latticeLines, new Float32Array([0.52, 0.86, 1.0, 0.72]), 1.65 * state.dpr, 0.9);
-    drawLineMesh(gl, state.crystalEdges, new Float32Array([1.0, 0.78, 0.34, 0.38]), 1.1 * state.dpr, 0.65);
-    drawPointMesh(gl, state.latticePoints, new Float32Array([1.0, 0.82, 0.40, 0.84]), 6.4);
-    gl.depthMask(true);
+    drawTriangles(gl, state.triangles, 0.16);
+    drawLines(gl, state.latticeLines, 0.94);
+    drawLines(gl, state.crystalEdges, 0.32);
+    drawPoints(gl, state.latticePoints, 0.98);
   }
+
+  state.renderCount += 1;
+  publishFingerprint("render");
 }
 
 function step(timestamp) {
-  const dt = state.lastTime ? clamp((timestamp - state.lastTime) / 1000, 0, 0.05) : 0;
-  state.lastTime = timestamp;
+  const dt = state.lastFrame ? clamp((timestamp - state.lastFrame) / 1000, 0, 0.05) : 0;
+  state.lastFrame = timestamp;
   state.time += dt;
 
   if (!state.dragging) {
     state.yaw += state.velocityYaw;
     state.pitch += state.velocityPitch;
 
-    const damping = Math.pow(0.944, dt * 60);
+    const damping = Math.pow(0.938, dt * 60);
     state.velocityYaw *= damping;
     state.velocityPitch *= damping;
 
@@ -768,18 +787,18 @@ function step(timestamp) {
     }
   }
 
-  state.pitch = clamp(state.pitch, -1.04, 0.82);
-  state.roll = Math.sin(state.time * 0.16) * 0.018;
+  state.pitch = clamp(state.pitch, -0.98, 0.78);
+  state.roll = Math.sin(state.time * 0.18) * 0.014;
 
   renderWebGL();
 
-  state.raf = requestAnimationFrame(step);
+  state.raf = window.requestAnimationFrame(step);
 }
 
 function resetDiamond() {
-  state.yaw = -0.58;
+  state.yaw = -0.62;
   state.pitch = -0.24;
-  state.roll = 0.02;
+  state.roll = 0.015;
   state.velocityYaw = 0;
   state.velocityPitch = 0;
   state.time = 0;
@@ -818,11 +837,11 @@ function bindPointer(stage) {
     state.pointerX = event.clientX;
     state.pointerY = event.clientY;
 
-    state.yaw += dx * 0.0084;
-    state.pitch = clamp(state.pitch + dy * 0.0058, -1.04, 0.82);
+    state.yaw += dx * 0.0085;
+    state.pitch = clamp(state.pitch + dy * 0.0058, -0.98, 0.78);
 
-    state.velocityYaw = clamp(dx * 0.00235, -0.050, 0.050);
-    state.velocityPitch = clamp(dy * 0.00155, -0.038, 0.038);
+    state.velocityYaw = clamp(dx * 0.0024, -0.052, 0.052);
+    state.velocityPitch = clamp(dy * 0.0016, -0.040, 0.040);
 
     try {
       event.preventDefault();
@@ -831,7 +850,6 @@ function bindPointer(stage) {
 
   const release = (event) => {
     if (!state.dragging) return;
-
     state.dragging = false;
 
     try {
@@ -842,6 +860,8 @@ function bindPointer(stage) {
   stage.addEventListener("pointerup", release, { passive: true });
   stage.addEventListener("pointercancel", release, { passive: true });
   stage.addEventListener("pointerleave", release, { passive: true });
+
+  state.touchReady = true;
 }
 
 function setLens(nextLens) {
@@ -876,23 +896,103 @@ function bindLensControls() {
   setLens(state.lens);
 }
 
+function createWebGLContext(canvas) {
+  return (
+    canvas.getContext("webgl", {
+      alpha: true,
+      antialias: true,
+      depth: false,
+      premultipliedAlpha: false,
+      preserveDrawingBuffer: false
+    }) ||
+    canvas.getContext("experimental-webgl", {
+      alpha: true,
+      antialias: true,
+      depth: false,
+      premultipliedAlpha: false,
+      preserveDrawingBuffer: false
+    })
+  );
+}
+
+function neutralizeDuplicateCanvases(stage, canonicalCanvas) {
+  const canvases = Array.from(stage.querySelectorAll("canvas"));
+  let duplicates = 0;
+
+  for (const canvas of canvases) {
+    if (canvas === canonicalCanvas) continue;
+
+    duplicates += 1;
+
+    canvas.setAttribute("data-showroom-diamond-legacy-neutralized", "true");
+    canvas.style.display = "none";
+    canvas.style.visibility = "hidden";
+    canvas.style.pointerEvents = "none";
+
+    try {
+      canvas.remove();
+    } catch (_error) {}
+  }
+
+  state.duplicateCanvasCount += duplicates;
+}
+
+function enforceCanonicalCanvas(stage, canvas) {
+  neutralizeDuplicateCanvases(stage, canvas);
+
+  Object.assign(canvas.style, {
+    position: "absolute",
+    inset: "0",
+    width: "100%",
+    height: "100%",
+    display: "block",
+    zIndex: "2",
+    pointerEvents: "none",
+    background: "transparent",
+    imageRendering: "auto"
+  });
+
+  canvas.setAttribute("data-showroom-diamond-canonical-canvas", "true");
+  canvas.setAttribute("data-showroom-diamond-consumption-audit-contract", CONSUMPTION_AUDIT_CONTRACT);
+  canvas.setAttribute("data-showroom-diamond-contract", ACTIVE_PROOF_OBJECT_CONTRACT);
+  canvas.setAttribute("data-generation", "G2");
+  canvas.setAttribute("data-radial-nodes", String(RADIAL_NODES));
+  canvas.setAttribute("data-fibonacci-bands", String(FIBONACCI_BANDS));
+  canvas.setAttribute("data-lattice-states", String(LATTICE_STATES));
+  canvas.setAttribute("data-generated-image", "false");
+  canvas.setAttribute("data-graphic-box", "false");
+
+  state.canonicalCanvasBound = true;
+
+  if (typeof MutationObserver === "function") {
+    const observer = new MutationObserver(() => {
+      neutralizeDuplicateCanvases(stage, canvas);
+    });
+
+    observer.observe(stage, { childList: true, subtree: false });
+  }
+}
+
 function markRoute() {
   const markers = {
-    showroomStatus: "diamond-proof-object-reinstated",
-    showroomContract: SHOWROOM_DIAMOND_STATE.contract,
-    showroomPairedHtmlContract: SHOWROOM_DIAMOND_STATE.pairedHtmlContract,
+    showroomContract: ACTIVE_PROOF_OBJECT_CONTRACT,
+    showroomConsumptionAuditContract: CONSUMPTION_AUDIT_CONTRACT,
+    showroomStandard: ACTIVE_STANDARD,
+    showroomPairedHtmlContract: PAIRED_HTML_CONTRACT,
+    showroomGeneration: "G2",
+    showroomGenerationOneStatus: "lost-overwritten",
+    showroomStatus: "g2-consumption-fingerprint-audit-active",
     diamondLock: "CROWN_CUT_256_LATTICE_FIXED_FORM",
     renderer: "native-webgl",
-    visibleRadialMetric: String(RADIAL_POINTS),
+    renderModel: "single-canonical-canvas-deterministic-fibonacci-lattice-webgl",
+    radialNodes: String(RADIAL_NODES),
+    fibonacciBands: String(FIBONACCI_BANDS),
     latticeStates: String(LATTICE_STATES),
+    latticeEquation: "16_RADIAL_NODES_X_16_FIBONACCI_BANDS_EQUALS_256_LATTICE_SEATS",
     defaultLens: "crystal-form",
     secondaryLens: "lattice-structure",
-    lensRule: "toggle-changes-inspection-lens-not-object-identity",
     touchGlideDiamond: "true",
     doubleTapReset: "true",
-    geometryMutableByTouch: "false",
-    inspectionControl: "webgl-perspective-camera-object-rotation",
-    proofObject: "visible-webgl-crown-cut-256-lattice-diamond",
     generatedImage: "false",
     graphicBox: "false",
     audraliaInheritance: "false",
@@ -904,25 +1004,85 @@ function markRoute() {
     document.documentElement.dataset[key] = value;
     if (document.body) document.body.dataset[key] = value;
   });
+
+  window.DGB_SHOWROOM_JS_CACHE_KEY = ACTIVE_PROOF_OBJECT_CONTRACT;
+  window.DGB_SHOWROOM_CONSUMPTION_AUDIT_CONTRACT = CONSUMPTION_AUDIT_CONTRACT;
 }
 
-function createWebGLContext(canvas) {
-  return (
-    canvas.getContext("webgl", {
-      alpha: true,
-      antialias: true,
-      depth: true,
-      premultipliedAlpha: false,
-      preserveDrawingBuffer: false
-    }) ||
-    canvas.getContext("experimental-webgl", {
-      alpha: true,
-      antialias: true,
-      depth: true,
-      premultipliedAlpha: false,
-      preserveDrawingBuffer: false
-    })
-  );
+function recordError(scope, error) {
+  const message = error && error.message ? error.message : String(error || scope);
+
+  state.errors.push({
+    scope,
+    message,
+    time: new Date().toISOString()
+  });
+
+  document.documentElement.dataset.showroomDiamondError = message;
+  publishFingerprint(`error:${scope}`);
+}
+
+function publishFingerprint(scope = "publish") {
+  const payload = Object.freeze({
+    scope,
+    contract: ACTIVE_PROOF_OBJECT_CONTRACT,
+    auditContract: CONSUMPTION_AUDIT_CONTRACT,
+    pairedHtmlContract: PAIRED_HTML_CONTRACT,
+    standard: ACTIVE_STANDARD,
+    generation: "G2",
+    generationOneStatus: "lost-overwritten",
+    route: "/showroom/",
+    renderer: "native-webgl",
+    canonicalCanvasBound: state.canonicalCanvasBound,
+    duplicateCanvasCount: state.duplicateCanvasCount,
+    activeLens: state.lens,
+    radialNodes: RADIAL_NODES,
+    fibonacciBands: FIBONACCI_BANDS,
+    latticeStates: LATTICE_STATES,
+    latticeNodeCount: state.latticePoints.length,
+    latticeSeats: state.seats.length,
+    geometryBuilt: state.geometryBuilt,
+    crystalMeshReady: state.crystalMeshReady,
+    latticeMeshReady: state.latticeMeshReady,
+    touchReady: state.touchReady,
+    canvasReady: state.canvasReady,
+    glReady: state.glReady,
+    initialized: state.initialized,
+    renderCount: state.renderCount,
+    yaw: state.yaw,
+    pitch: state.pitch,
+    generatedImage: false,
+    graphicBox: false,
+    audraliaInheritance: false,
+    planetTemplateInheritance: false,
+    visualPassClaim: false,
+    errors: state.errors.slice()
+  });
+
+  window.DGB_SHOWROOM_DIAMOND_CONSUMPTION_FINGERPRINT = payload;
+  window.DGBShowroomDiamondConsumptionFingerprint = payload;
+
+  document.documentElement.dataset.showroomDiamondRenderCount = String(state.renderCount);
+  document.documentElement.dataset.showroomDiamondLatticeNodeCount = String(state.latticePoints.length);
+  document.documentElement.dataset.showroomDiamondGeometryBuilt = state.geometryBuilt ? "true" : "false";
+  document.documentElement.dataset.showroomDiamondCanvasReady = state.canvasReady ? "true" : "false";
+  document.documentElement.dataset.showroomDiamondGlReady = state.glReady ? "true" : "false";
+
+  return payload;
+}
+
+function publishApi() {
+  window.DGBShowroomDiamond = {
+    ...SHOWROOM_DIAMOND_STATE,
+    setLens,
+    resetDiamond,
+    render: renderWebGL,
+    status() {
+      return publishFingerprint("status");
+    }
+  };
+
+  return window.DGBShowroomDiamond;
 }
 
 function initWebGL(canvas) {
@@ -935,105 +1095,53 @@ function initWebGL(canvas) {
 
   initPrograms(gl);
 
-  const diamondGeometry = buildDiamondGeometry();
-  const latticeGeometry = buildLatticeGeometry();
-
-  state.crystalMesh = makeMesh(gl, diamondGeometry);
-  state.crystalEdges = makeLineMesh(gl, diamondGeometry.edgePositions);
-  state.crystalPoints = makePointMesh(gl, diamondGeometry.pointPositions);
-
-  state.latticeGhost = makeMesh(gl, diamondGeometry);
-  state.latticeLines = makeLineMesh(gl, latticeGeometry.linePositions);
-  state.latticePoints = makePointMesh(gl, latticeGeometry.pointPositions);
-
-  gl.enable(gl.DEPTH_TEST);
-  gl.enable(gl.BLEND);
-  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-
   state.gl = gl;
   state.glReady = true;
 
   return gl;
 }
 
-function publishApi() {
-  window.DGBShowroomDiamond = Object.freeze({
-    ...SHOWROOM_DIAMOND_STATE,
-    setLens,
-    resetDiamond,
-    status() {
-      return Object.freeze({
-        ...SHOWROOM_DIAMOND_STATE,
-        ready: state.initialized,
-        canvasReady: state.canvasReady,
-        glReady: state.glReady,
-        activeLens: state.lens,
-        fixedForm: true,
-        crownCut: true,
-        lattice256: true,
-        latticeStates: LATTICE_STATES,
-        visibleRadialMetric: RADIAL_POINTS,
-        touchGlide: true,
-        doubleTapReset: true,
-        yaw: state.yaw,
-        pitch: state.pitch,
-        errors: state.errors.slice(),
-        generatedImage: false,
-        graphicBox: false,
-        audraliaInheritance: false,
-        planetTemplateInheritance: false,
-        visualPassClaim: false
-      });
-    }
-  });
-
-  return window.DGBShowroomDiamond;
-}
-
 function initShowroomDiamond() {
   try {
     markRoute();
-    bindLensControls();
 
     const stage = document.querySelector("[data-showroom-diamond-stage]");
     const canvas = document.querySelector("[data-showroom-diamond-canvas]");
 
     if (!stage || !canvas) {
       document.documentElement.dataset.showroomDiamondError = "STAGE_OR_CANVAS_MISSING";
+      publishFingerprint("stage-or-canvas-missing");
       return null;
     }
 
     state.stage = stage;
     state.canvas = canvas;
 
-    Object.assign(canvas.style, {
-      position: "absolute",
-      inset: "0",
-      width: "100%",
-      height: "100%",
-      display: "block",
-      zIndex: "2",
-      pointerEvents: "none",
-      background: "transparent"
-    });
+    enforceCanonicalCanvas(stage, canvas);
+    buildGeometry();
+    bindLensControls();
 
     const gl = initWebGL(canvas);
     if (!gl) return null;
 
     bindPointer(stage);
     resizeCanvas();
-    renderWebGL();
 
     state.canvasReady = true;
     state.initialized = true;
 
+    renderWebGL();
+    publishApi();
+
     window.addEventListener("resize", renderWebGL, { passive: true });
 
     if (!state.raf) {
-      state.raf = requestAnimationFrame(step);
+      state.raf = window.requestAnimationFrame(step);
     }
 
-    return publishApi();
+    publishFingerprint("init-complete");
+
+    return window.DGBShowroomDiamond;
   } catch (error) {
     recordError("initShowroomDiamond", error);
     return null;
@@ -1048,6 +1156,8 @@ if (document.readyState === "loading") {
 
 export {
   SHOWROOM_DIAMOND_STATE,
+  CONSUMPTION_AUDIT_CONTRACT,
+  ACTIVE_PROOF_OBJECT_CONTRACT,
   initShowroomDiamond,
   setLens,
   resetDiamond

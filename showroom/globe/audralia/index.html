@@ -2,71 +2,23 @@
 <html
   lang="en"
   data-route="/showroom/globe/audralia/"
-  data-page="audralia-showroom-planet-object"
-  data-contract="AUDRALIA_G2_HTML_BASELINE_PRESERVING_PLANET_OBJECT_GRANDPARENT_MERGE_TNT_v2"
-  data-previous-contract="AUDRALIA_G2_HTML_ROUTE_JS_MOISTURE_CLOUD_CONSUMER_KEY_RENEWAL_TNT_v1"
-  data-route-js-contract="AUDRALIA_G2_ROUTE_JS_SHOWROOM_PLANET_OBJECT_GRANDPARENT_CONTROLLER_TNT_v5"
-  data-previous-route-js-contract="AUDRALIA_G2_ROUTE_JS_PLANET_VIEW_MOISTURE_CLOUD_RENDERER_WITH_LATTICE_PROTECTION_TNT_v1"
-  data-runtime-contract="AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2"
-  data-datum-contract="AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1"
-  data-terrain-contract="AUDRALIA_G2_TRUE_RUNTIME_TERRAIN_ECOSYSTEM_FORCING_FIELD_CHILD_TNT_v1"
-  data-moisture-contract="AUDRALIA_G2_TRUE_RUNTIME_MOISTURE_FIELD_CHILD_TNT_v1"
-  data-surface-contract="AUDRALIA_G2_TRUE_RUNTIME_GRATITUDE_CONTINENT_SURFACE_RENDERER_CHILD_TNT_v1"
-  data-cloud-contract="AUDRALIA_G2_TRUE_RUNTIME_ORGANIC_MOISTURE_CLOUD_FLOW_CHILD_TNT_v2"
-  data-previous-cloud-contract="AUDRALIA_G2_TRUE_RUNTIME_4K_MOISTURE_CLOUD_CHILD_TNT_v1"
-  data-standard="AUDRALIA_G2_HTML_BASELINE_PRESERVING_PLANET_OBJECT_MERGE_SPEC_OPS_v1"
-  data-previous-standard="AUDRALIA_G2_HTML_ROUTE_JS_MOISTURE_CLOUD_CONSUMER_KEY_RENEWAL_STANDARD_v1"
-  data-role="audralia-public-shell-showroom-planet-object-loader"
+  data-page="audralia-mayday-control-recovery"
+  data-contract="AUDRALIA_MAYDAY_ROUTE_PAIR_RESET_DROPDOWN_AND_LATTICE_CONTROL_TNT_v1"
+  data-role="audralia-public-route-shell"
   data-generation="G2"
-  data-object-type="planet"
-  data-object-name="Audralia"
-  data-showroom-family="globe"
-  data-route-role="planet-object-inspection-route"
-  data-visible-subject="Audralia planet"
-  data-active-proof-target="Gratitude continent"
-  data-planetary-datum-required="true"
-  data-true-north-south-required="true"
-  data-surface-visibility-required="true"
-  data-clouds-above-surface-required="true"
-  data-globe-carrier="runtime-sphere"
-  data-spherical-projection-required="true"
-  data-flat-projection-blocked="true"
-  data-route-js-loader="classic-script"
-  data-module-importer-disabled="true"
-  data-runtime-family="/assets/audralia/clean/runtime/"
-  data-runtime-path="/assets/audralia/clean/runtime/audralia.true-globe.runtime.js"
-  data-datum-path="/assets/audralia/clean/runtime/audralia.true-globe.datum.js"
-  data-terrain-path="/assets/audralia/clean/runtime/audralia.true-globe.terrain-ecosystem.js"
-  data-moisture-path="/assets/audralia/clean/runtime/audralia.true-globe.moisture.js"
-  data-surface-path="/assets/audralia/clean/runtime/audralia.true-globe.surface.js"
-  data-cloud-path="/assets/audralia/clean/runtime/audralia.true-globe.clouds.js"
-  data-route-js-path="/showroom/globe/audralia/index.js"
-  data-radial-nodes="16"
-  data-fibonacci-bands="16"
-  data-lattice-states="256"
-  data-lattice-equation="16_RADIAL_NODES_X_16_FIBONACCI_BANDS_EQUALS_256_LATTICE_SEATS"
-  data-lattice-view-protected="true"
-  data-previous-planet-view-clouds-only="true"
-  data-planet-view-clouds-only="false"
-  data-planet-view-surface-and-clouds="true"
-  data-lattice-view-clouds-blocked="true"
-  data-lattice-view-surface-blocked="true"
-  data-visible-legacy-handoff="false"
-  data-generated-image="false"
-  data-graphic-box="false"
-  data-audralia-earth-crossover="false"
-  data-australia-naming-drift="false"
-  data-no-australia-naming-drift="true"
+  data-mode="lattice-control-recovery"
+  data-no-new-files="true"
+  data-lattice-first="true"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Audralia · Diamond Gate Bridge</title>
+  <title>Audralia · Runtime Globe Recovery</title>
   <meta
     name="description"
-    content="Audralia is a Showroom planet object with Planet View, Gratitude surface proof, protected Lattice View, datum authority, and hydrology-powered clouds above the visible surface."
+    content="Audralia is in runtime control recovery. Lattice View is the protected proof object for the spherical carrier."
   >
 
   <style>
@@ -74,13 +26,16 @@
       color-scheme: dark;
       --bg: #020711;
       --panel: rgba(7, 17, 34, 0.88);
+      --panel-2: rgba(3, 9, 20, 0.72);
       --line: rgba(244, 207, 131, 0.18);
+      --line-strong: rgba(244, 207, 131, 0.34);
       --text: rgba(238, 244, 255, 0.94);
       --muted: rgba(238, 244, 255, 0.68);
       --faint: rgba(238, 244, 255, 0.46);
       --gold: #f4cf83;
       --blue: #8dd8ff;
       --mint: #a7f3c6;
+      --danger: #ffb4a6;
       --shadow: 0 32px 110px rgba(0, 0, 0, 0.42);
       --max: 1120px;
     }
@@ -108,8 +63,8 @@
       -webkit-font-smoothing: antialiased;
       text-rendering: geometricPrecision;
       background:
-        linear-gradient(rgba(141, 216, 255, 0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(141, 216, 255, 0.035) 1px, transparent 1px);
+        linear-gradient(rgba(141, 216, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(141, 216, 255, 0.03) 1px, transparent 1px);
       background-size: 56px 56px;
     }
 
@@ -119,16 +74,24 @@
       inset: 0;
       z-index: 0;
       pointer-events: none;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.18) 0 1px, transparent 1.4px);
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.16) 0 1px, transparent 1.4px);
       background-size: 230px 250px;
-      opacity: 0.15;
-      mask-image: linear-gradient(180deg, rgba(0,0,0,0.92), rgba(0,0,0,0.48) 62%, rgba(0,0,0,0.14));
+      opacity: 0.14;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,0.9), rgba(0,0,0,0.46) 62%, rgba(0,0,0,0.12));
     }
 
-    a { color: inherit; text-decoration: none; }
+    a,
+    button,
+    summary {
+      color: inherit;
+      font: inherit;
+    }
+
+    a { text-decoration: none; }
 
     a:focus-visible,
-    button:focus-visible {
+    button:focus-visible,
+    summary:focus-visible {
       outline: 2px solid var(--gold);
       outline-offset: 4px;
     }
@@ -153,23 +116,24 @@
       z-index: 2;
       width: min(var(--max), calc(100% - 28px));
       margin: 0 auto;
-      padding: max(22px, env(safe-area-inset-top)) 0 max(54px, env(safe-area-inset-bottom));
+      padding: max(18px, env(safe-area-inset-top)) 0 max(54px, env(safe-area-inset-bottom));
     }
 
     .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
       gap: 16px;
-      padding: 12px 0 22px;
+      padding: 10px 0 20px;
     }
 
     .brand {
       display: inline-grid;
-      grid-template-columns: auto 1fr;
+      grid-template-columns: auto minmax(0, 1fr);
       align-items: center;
       gap: 11px;
       min-width: 0;
+      width: fit-content;
       color: var(--gold);
       font-weight: 950;
       letter-spacing: 0.04em;
@@ -210,48 +174,91 @@
       letter-spacing: 0.22em;
     }
 
-    .nav {
+    .dropdown-nav {
       display: flex;
       flex-wrap: wrap;
       justify-content: flex-end;
       gap: 8px;
     }
 
-    .nav a,
-    .button,
-    .lens-button {
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown summary {
       min-height: 38px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      gap: 8px;
       border: 1px solid rgba(255,255,255,0.11);
       border-radius: 999px;
       padding: 0 13px;
-      color: rgba(238, 244, 255, 0.82);
+      color: rgba(238, 244, 255, 0.84);
       background:
         radial-gradient(circle at 50% 0%, rgba(141,216,255,0.08), transparent 72%),
         rgba(255,255,255,0.035);
-      font: inherit;
       font-size: 0.82rem;
       font-weight: 850;
       letter-spacing: 0.02em;
       cursor: pointer;
-      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+      list-style: none;
     }
 
-    .nav a:hover,
-    .button:hover,
-    .lens-button:hover {
-      transform: translateY(-1px);
-      border-color: rgba(244,207,131,0.42);
+    .dropdown summary::-webkit-details-marker { display: none; }
+
+    .dropdown summary::after {
+      content: "⌄";
+      color: rgba(244,207,131,0.88);
+      font-size: 0.92rem;
+      line-height: 1;
     }
 
-    .nav a[aria-current="page"],
-    .button.primary,
-    .lens-button[aria-pressed="true"] {
+    .dropdown[open] summary {
       color: #06101c;
       background: linear-gradient(135deg, #fff0b8, var(--gold));
       border-color: rgba(244,207,131,0.72);
+    }
+
+    .dropdown-panel {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 8px);
+      z-index: 30;
+      min-width: 220px;
+      display: grid;
+      gap: 6px;
+      padding: 10px;
+      border: 1px solid rgba(244,207,131,0.22);
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(244,207,131,0.10), transparent 12rem),
+        rgba(2, 8, 20, 0.96);
+      box-shadow: 0 22px 70px rgba(0,0,0,0.48);
+      backdrop-filter: blur(12px);
+    }
+
+    .dropdown-panel a,
+    .dropdown-panel button {
+      width: 100%;
+      min-height: 36px;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 12px;
+      padding: 0 10px;
+      color: rgba(238,244,255,0.84);
+      background: rgba(255,255,255,0.035);
+      text-align: left;
+      font-size: 0.84rem;
+      font-weight: 820;
+      cursor: pointer;
+    }
+
+    .dropdown-panel a:hover,
+    .dropdown-panel button:hover,
+    .dropdown-panel button[aria-pressed="true"] {
+      color: #06101c;
+      background: linear-gradient(135deg, #fff0b8, var(--gold));
+      border-color: rgba(244,207,131,0.56);
     }
 
     .hero {
@@ -281,25 +288,40 @@
     h1 {
       max-width: 930px;
       margin: 0;
-      font-size: clamp(2.45rem, 8vw, 5.6rem);
-      line-height: 0.92;
+      font-size: clamp(2.35rem, 8vw, 5.25rem);
+      line-height: 0.94;
       letter-spacing: -0.075em;
       text-wrap: balance;
     }
 
     .lede {
-      max-width: 930px;
+      max-width: 920px;
       margin: 22px 0 0;
       color: var(--muted);
-      font-size: clamp(1.02rem, 2.6vw, 1.34rem);
+      font-size: clamp(1.02rem, 2.6vw, 1.26rem);
       line-height: 1.55;
     }
 
-    .actions {
+    .status-row {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 26px;
+      margin-top: 24px;
+    }
+
+    .status-pill {
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 999px;
+      padding: 0 12px;
+      color: rgba(238,244,255,0.76);
+      background: rgba(255,255,255,0.035);
+      font-size: 0.78rem;
+      font-weight: 850;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
     }
 
     .stage-shell {
@@ -334,6 +356,29 @@
       background: rgba(255,255,255,0.035);
     }
 
+    .lens-button {
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255,255,255,0.11);
+      border-radius: 999px;
+      padding: 0 13px;
+      color: rgba(238, 244, 255, 0.82);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(141,216,255,0.08), transparent 72%),
+        rgba(255,255,255,0.035);
+      font-size: 0.82rem;
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .lens-button[aria-pressed="true"] {
+      color: #06101c;
+      background: linear-gradient(135deg, #fff0b8, var(--gold));
+      border-color: rgba(244,207,131,0.72);
+    }
+
     .lens-copy {
       min-height: 104px;
       border: 1px solid rgba(244,207,131,0.18);
@@ -363,7 +408,7 @@
 
     .globe-stage {
       position: relative;
-      min-height: clamp(640px, 94vw, 840px);
+      min-height: clamp(620px, 92vw, 820px);
       overflow: hidden;
       border: 1px solid rgba(244,207,131,0.18);
       border-radius: 30px;
@@ -407,22 +452,57 @@
       pointer-events: none !important;
     }
 
-    .diagnostic-mount {
+    .stage-label {
+      position: absolute;
+      left: 50%;
+      bottom: clamp(128px, 21vw, 170px);
+      z-index: 8;
+      width: min(calc(100% - 44px), 780px);
+      transform: translateX(-50%);
+      color: rgba(238,244,255,0.76);
+      text-align: center;
+      font-weight: 950;
+      font-size: clamp(1.02rem, 4vw, 1.38rem);
+      letter-spacing: -0.03em;
+      line-height: 1.18;
+      text-shadow: 0 2px 16px rgba(0,0,0,0.72);
+      pointer-events: none;
+    }
+
+    .stage-label strong {
+      color: rgba(141,216,255,0.96);
+    }
+
+    .stage-instruction {
+      position: absolute;
+      left: clamp(16px, 4vw, 36px);
+      right: clamp(16px, 4vw, 36px);
+      bottom: clamp(16px, 4vw, 34px);
+      z-index: 8;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      padding: 14px 10px;
+      color: rgba(238,244,255,0.80);
+      background: rgba(3,8,18,0.42);
+      backdrop-filter: blur(8px);
+      font-weight: 850;
+      line-height: 1.35;
+      font-size: clamp(0.98rem, 3.5vw, 1.24rem);
+      pointer-events: none;
+    }
+
+    .diagnostic-panel {
+      display: none;
       position: absolute;
       left: clamp(18px, 4vw, 36px);
       right: clamp(18px, 4vw, 36px);
       top: clamp(18px, 4vw, 36px);
-      z-index: 7;
-      display: none;
+      z-index: 9;
       pointer-events: none;
     }
 
-    html[data-audralia-active-lens="diagnostic"] .diagnostic-mount {
+    html[data-audralia-active-lens="diagnostic"] .diagnostic-panel {
       display: block;
-    }
-
-    html[data-audralia-active-lens="diagnostic"] .globe-mount {
-      opacity: 0.28;
     }
 
     .diagnostic-card {
@@ -470,51 +550,8 @@
       text-transform: uppercase;
     }
 
-    .diagnostic-grid em {
-      color: rgba(238,244,255,0.72);
-      font-style: italic;
-    }
-
-    .stage-label {
-      position: absolute;
-      left: 50%;
-      bottom: clamp(148px, 23vw, 188px);
-      z-index: 8;
-      width: min(calc(100% - 44px), 780px);
-      transform: translateX(-50%);
-      color: rgba(238,244,255,0.76);
-      text-align: center;
-      font-weight: 950;
-      font-size: clamp(1.05rem, 4.3vw, 1.45rem);
-      letter-spacing: -0.03em;
-      line-height: 1.18;
-      text-shadow: 0 2px 16px rgba(0,0,0,0.72);
-      pointer-events: none;
-    }
-
-    .stage-label strong {
-      color: rgba(141,216,255,0.96);
-    }
-
-    .stage-instruction {
-      position: absolute;
-      left: clamp(16px, 4vw, 36px);
-      right: clamp(16px, 4vw, 36px);
-      bottom: clamp(16px, 4vw, 34px);
-      z-index: 8;
-      border-top: 1px solid rgba(255,255,255,0.12);
-      border-bottom: 1px solid rgba(255,255,255,0.12);
-      padding: 14px 10px;
-      color: rgba(238,244,255,0.80);
-      background: rgba(3,8,18,0.42);
-      backdrop-filter: blur(8px);
-      font-weight: 850;
-      line-height: 1.35;
-      font-size: clamp(0.98rem, 3.8vw, 1.32rem);
-      pointer-events: none;
-    }
-
-    .object-card {
+    .object-card,
+    .receipt-card {
       margin-top: 16px;
       border-left: 1px solid rgba(244,207,131,0.22);
       border-right: 1px solid rgba(244,207,131,0.12);
@@ -522,7 +559,8 @@
       background: rgba(7,15,31,0.62);
     }
 
-    .object-card .label {
+    .object-card .label,
+    .receipt-card .label {
       margin: 0 0 14px;
       color: var(--mint);
       font: 900 0.78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -530,68 +568,36 @@
       text-transform: uppercase;
     }
 
-    .object-card h2 {
+    .object-card h2,
+    .receipt-card h2 {
       margin: 0;
       color: rgba(238,244,255,0.94);
-      font-size: clamp(1.55rem, 5vw, 2.5rem);
-      line-height: 1.02;
+      font-size: clamp(1.48rem, 4.6vw, 2.34rem);
+      line-height: 1.04;
       letter-spacing: -0.06em;
     }
 
-    .object-card p {
+    .object-card p,
+    .receipt-card p {
       max-width: 900px;
-      margin: 16px 0 0;
+      margin: 14px 0 0;
       color: var(--muted);
-      font-size: clamp(1rem, 2.8vw, 1.22rem);
+      font-size: clamp(1rem, 2.8vw, 1.16rem);
       line-height: 1.55;
     }
 
-    .route-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 16px;
-    }
-
-    .route-card {
-      min-height: 138px;
-      display: grid;
-      align-content: end;
-      gap: 8px;
-      padding: 16px;
-      border: 1px solid rgba(255,255,255,0.11);
-      border-radius: 22px;
-      background:
-        radial-gradient(circle at 50% 20%, rgba(141,216,255,0.10), transparent 38%),
-        radial-gradient(circle at 16% 0%, rgba(244,207,131,0.10), transparent 58%),
-        rgba(255,255,255,0.035);
-      transition: transform 0.18s ease, border-color 0.18s ease, filter 0.18s ease;
-    }
-
-    .route-card:hover,
-    .route-card:focus-visible {
-      transform: translateY(-4px);
-      border-color: rgba(244,207,131,0.52);
-      filter: brightness(1.08);
-    }
-
-    .route-card b {
-      color: var(--gold);
-      font-size: 0.68rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    .route-card strong {
-      color: rgba(238,244,255,0.96);
-      font-size: 1.06rem;
-      line-height: 1.06;
-    }
-
-    .route-card span {
-      color: rgba(238,244,255,0.66);
-      font-size: 0.88rem;
-      line-height: 1.34;
+    .receipt-card code {
+      display: block;
+      margin-top: 14px;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 16px;
+      background: rgba(0,0,0,0.28);
+      color: rgba(238,244,255,0.72);
+      font-size: 0.78rem;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
     }
 
     .hidden-receipt,
@@ -625,12 +631,16 @@
 
     @media (max-width: 980px) {
       .topbar {
-        align-items: flex-start;
-        flex-direction: column;
+        grid-template-columns: 1fr;
       }
 
-      .nav {
+      .dropdown-nav {
         justify-content: flex-start;
+      }
+
+      .dropdown-panel {
+        left: 0;
+        right: auto;
       }
 
       .lens-toolbar {
@@ -642,10 +652,6 @@
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         border-radius: 22px;
-      }
-
-      .route-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
@@ -660,11 +666,25 @@
         border-radius: 24px;
       }
 
-      .globe-stage {
-        min-height: 700px;
+      .dropdown-nav {
+        display: grid;
+        grid-template-columns: 1fr;
       }
 
-      .route-grid,
+      .dropdown summary {
+        width: 100%;
+      }
+
+      .dropdown-panel {
+        position: static;
+        margin-top: 8px;
+        min-width: 0;
+      }
+
+      .globe-stage {
+        min-height: 680px;
+      }
+
       .diagnostic-grid {
         grid-template-columns: 1fr;
       }
@@ -696,35 +716,59 @@
         </span>
       </a>
 
-      <nav class="nav" aria-label="Primary">
-        <a href="/">Compass</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/">Globe</a>
-        <a href="/showroom/globe/audralia/" aria-current="page">Audralia</a>
-        <a href="/laws/">Laws</a>
-        <a href="/gauges/">Triple G</a>
+      <nav class="dropdown-nav" aria-label="Dropdown navigation">
+        <details class="dropdown">
+          <summary>Site Menu</summary>
+          <div class="dropdown-panel">
+            <a href="/">Compass</a>
+            <a href="/showroom/">Showroom</a>
+            <a href="/showroom/globe/">Globe</a>
+            <a href="/showroom/globe/audralia/" aria-current="page">Audralia</a>
+            <a href="/laws/">Laws</a>
+            <a href="/gauges/">Triple G</a>
+          </div>
+        </details>
+
+        <details class="dropdown">
+          <summary>Globe Lenses</summary>
+          <div class="dropdown-panel" role="group" aria-label="Choose Audralia lens">
+            <button type="button" data-audralia-lens-button="planet" aria-pressed="true">Planet View</button>
+            <button type="button" data-audralia-lens-button="lattice" aria-pressed="false">Lattice View</button>
+            <button type="button" data-audralia-lens-button="diagnostic" aria-pressed="false">Diagnostic Scope</button>
+          </div>
+        </details>
+
+        <details class="dropdown">
+          <summary>Audralia Runtime</summary>
+          <div class="dropdown-panel">
+            <a href="/showroom/globe/">Return to Globe</a>
+            <a href="/gauges/">Run Triple G</a>
+            <a href="/showroom/">Open Showroom</a>
+            <a href="#route-receipt-summary">Route Receipt</a>
+          </div>
+        </details>
       </nav>
     </header>
 
     <main id="audralia-main">
       <section class="hero">
-        <p class="kicker">Audralia Globe · Showroom Planet Object</p>
-        <h1>Audralia is now bound as a Showroom planet object.</h1>
+        <p class="kicker">Audralia · Runtime Globe Recovery</p>
+        <h1>Lattice control is the proof gate.</h1>
 
         <p class="lede">
-          Audralia keeps the protected spherical Lattice View while Planet View now requires the visible planet chain: Showroom owns the planet-object route, runtime carries the sphere, datum orients the world, surface proves Gratitude, and hydrology-powered clouds render above the visible planet.
+          Audralia is in control-recovery mode. Lattice View is the protected proof object for the spherical runtime carrier. Planet View remains secondary until lens switching and globe drag are smooth again.
         </p>
 
-        <div class="actions">
-          <a class="button primary" href="#audraliaGlobeStage">Inspect Audralia</a>
-          <a class="button" href="/showroom/globe/">Return to Globe</a>
-          <a class="button" href="/showroom/">Open Showroom</a>
-          <a class="button" href="/gauges/">Run Triple G</a>
+        <div class="status-row" aria-label="Current recovery posture">
+          <span class="status-pill">No new files</span>
+          <span class="status-pill">Dropdown route</span>
+          <span class="status-pill">Lattice first</span>
+          <span class="status-pill">Children held</span>
         </div>
       </section>
 
-      <section class="stage-shell" aria-label="Audralia runtime-driven true planet object stage shell">
-        <p class="section-title">Planet Object · Protected Lattice · Diagnostic Scope</p>
+      <section class="stage-shell" aria-label="Audralia runtime globe stage">
+        <p class="section-title">Planet · Protected Lattice · Diagnostic Scope</p>
 
         <div class="lens-toolbar" aria-label="Audralia lens controls">
           <div class="lens-toggle" role="group" aria-label="Choose Audralia lens">
@@ -742,7 +786,7 @@
           <article class="lens-copy" aria-live="polite">
             <b data-audralia-lens-title>Planet View</b>
             <p data-audralia-lens-copy>
-              Planet View renders Audralia as a planet object with Gratitude surface proof beneath hydrology-powered clouds. No lattice overlay. No beta patch field.
+              Planet View is held as a lightweight material lens. Surface, cloud, and continent maturity are not accepted until runtime control is smooth.
             </p>
           </article>
         </div>
@@ -752,463 +796,122 @@
           class="globe-stage"
           data-audralia-globe-stage
           data-audralia-stage
-          data-object-type="planet"
-          data-object-name="Audralia"
-          data-showroom-family="globe"
-          data-route-role="planet-object-inspection-route"
-          data-visible-subject="Audralia planet"
-          data-active-proof-target="Gratitude continent"
-          data-planetary-datum-required="true"
-          data-true-north-south-required="true"
-          data-surface-visibility-required="true"
-          data-clouds-above-surface-required="true"
-          data-globe-carrier="runtime-sphere"
-          data-spherical-projection-required="true"
-          data-flat-projection-blocked="true"
-          data-route-js-loader="classic-script"
-          data-route-js-contract="AUDRALIA_G2_ROUTE_JS_SHOWROOM_PLANET_OBJECT_GRANDPARENT_CONTROLLER_TNT_v5"
-          data-previous-route-js-contract="AUDRALIA_G2_ROUTE_JS_PLANET_VIEW_MOISTURE_CLOUD_RENDERER_WITH_LATTICE_PROTECTION_TNT_v1"
-          data-runtime-contract="AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2"
-          data-datum-contract="AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1"
-          data-terrain-contract="AUDRALIA_G2_TRUE_RUNTIME_TERRAIN_ECOSYSTEM_FORCING_FIELD_CHILD_TNT_v1"
-          data-moisture-contract="AUDRALIA_G2_TRUE_RUNTIME_MOISTURE_FIELD_CHILD_TNT_v1"
-          data-surface-contract="AUDRALIA_G2_TRUE_RUNTIME_GRATITUDE_CONTINENT_SURFACE_RENDERER_CHILD_TNT_v1"
-          data-cloud-contract="AUDRALIA_G2_TRUE_RUNTIME_ORGANIC_MOISTURE_CLOUD_FLOW_CHILD_TNT_v2"
-          data-previous-cloud-contract="AUDRALIA_G2_TRUE_RUNTIME_4K_MOISTURE_CLOUD_CHILD_TNT_v1"
-          data-generation="G2"
-          data-radial-nodes="16"
-          data-fibonacci-bands="16"
-          data-lattice-states="256"
-          data-lattice-equation="16_RADIAL_NODES_X_16_FIBONACCI_BANDS_EQUALS_256_LATTICE_SEATS"
-          data-lattice-view-protected="true"
-          data-previous-planet-view-clouds-only="true"
-          data-planet-view-clouds-only="false"
-          data-planet-view-surface-and-clouds="true"
-          data-lattice-view-clouds-blocked="true"
-          data-lattice-view-surface-blocked="true"
-          data-visible-legacy-handoff="false"
-          data-generated-image="false"
-          data-graphic-box="false"
-          aria-label="Audralia runtime-driven true planet object stage"
+          data-contract="AUDRALIA_MAYDAY_ROUTE_PAIR_RESET_DROPDOWN_AND_LATTICE_CONTROL_TNT_v1"
+          data-lattice-first="true"
+          data-child-math-held-during-lattice="true"
+          data-no-new-files="true"
+          aria-label="Audralia runtime-driven globe stage"
         >
           <div
             id="audraliaGlobeMount"
             class="globe-mount"
             data-audralia-globe-mount
             data-audralia-canvas-mount
-            data-audralia-clean-canvas-mount
-            data-audralia-canonical-visual-mount
-            data-object-type="planet"
-            data-object-name="Audralia"
-            data-visible-subject="Audralia planet"
-            data-active-proof-target="Gratitude continent"
-            data-globe-carrier="runtime-sphere"
-            data-spherical-projection-required="true"
-            data-flat-projection-blocked="true"
-            data-lattice-view-protected="true"
-            data-previous-planet-view-clouds-only="true"
-            data-planet-view-clouds-only="false"
-            data-planet-view-surface-and-clouds="true"
-            aria-label="Audralia canonical visual mount for runtime Planet View and protected Lattice View"
+            aria-label="Audralia canonical visual mount"
           ></div>
 
           <div
             id="audraliaDiagnosticMount"
-            class="diagnostic-mount"
+            class="diagnostic-panel"
             data-audralia-diagnostic-mount
-            aria-label="Audralia compact Diagnostic Scope"
+            aria-label="Audralia lightweight Diagnostic Scope"
           >
             <article class="diagnostic-card">
               <h3>Diagnostic Scope</h3>
-              <div class="diagnostic-grid" data-audralia-diagnostic-grid>
+              <div class="diagnostic-grid">
                 <span>
-                  <b>Route JS</b>
-                  <em data-audralia-diagnostic-route-js>classic loader pending</em>
+                  <b>Route</b>
+                  <em data-audralia-diagnostic-route>boot pending</em>
                 </span>
                 <span>
                   <b>Runtime</b>
-                  <em data-audralia-diagnostic-sphere>runtime v2 pending</em>
+                  <em data-audralia-diagnostic-runtime>runtime pending</em>
                 </span>
                 <span>
-                  <b>Planet Renderer</b>
-                  <em data-audralia-diagnostic-planet>pending planet-object surface and cloud consumer</em>
+                  <b>Lens</b>
+                  <em data-audralia-diagnostic-lens>planet</em>
                 </span>
                 <span>
-                  <b>Lattice Renderer</b>
-                  <em data-audralia-diagnostic-lattice>protected baseline pending</em>
+                  <b>Canvas</b>
+                  <em data-audralia-diagnostic-canvas>pending</em>
                 </span>
                 <span>
-                  <b>Seats</b>
-                  <em data-audralia-diagnostic-seats>16 × 16 / 256 expected</em>
+                  <b>Loop</b>
+                  <em data-audralia-diagnostic-loop>pending</em>
                 </span>
                 <span>
-                  <b>Loader</b>
-                  <em data-audralia-diagnostic-loader>planet-object route key preparing</em>
+                  <b>Children</b>
+                  <em data-audralia-diagnostic-children>held during lattice</em>
                 </span>
               </div>
             </article>
           </div>
 
           <div class="stage-label" data-audralia-stage-label>
-            <strong>Planet View</strong> → Audralia planet · Gratitude surface under hydrology-powered clouds
+            <strong>Planet View</strong> → lightweight material lens · control recovery held
           </div>
 
           <div class="stage-instruction">
-            Drag inside the globe stage to inspect Audralia. Use the lens controls to separate the planet object, the protected lattice, and the diagnostic scope.
+            Drag inside the globe stage to inspect Audralia. Use Lattice View to verify smooth spherical carrier control before further planet work.
           </div>
         </div>
 
         <article class="object-card">
-          <p class="label">Object truth</p>
-          <h2>Audralia planet object bound. Surface proof required. Clouds remain above the planet.</h2>
+          <p class="label">Recovery standard</p>
+          <h2>Control first. Lattice first. Children held.</h2>
           <p>
-            This shell preserves the working route structure while admitting Showroom grandparent authority. Audralia is the visible planet object; the Gratitude continent is the active proof target; runtime and child systems serve that object without moving their logic into HTML.
+            This route now starts from a clean HTML/JS pair. The page does not claim final surface, final clouds, final continent, 4K pass, or ground-level readiness. The acceptance gate is smooth Lattice View switching and smooth drag.
           </p>
         </article>
       </section>
 
-      <section class="stage-shell" aria-label="Audralia route paths">
-        <p class="section-title">Return paths</p>
-
-        <div class="route-grid">
-          <a class="route-card" href="/showroom/globe/">
-            <b>Center</b>
-            <strong>Return to Globe</strong>
-            <span>Go back to the world selector.</span>
-          </a>
-
-          <a class="route-card" href="/showroom/">
-            <b>Showroom</b>
-            <strong>Open Proof Objects</strong>
-            <span>Return to the public software-object room.</span>
-          </a>
-
-          <a class="route-card" href="/laws/">
-            <b>North</b>
-            <strong>Open Laws</strong>
-            <span>Read the proof and governing logic.</span>
-          </a>
-
-          <a class="route-card" href="/gauges/">
-            <b>Measurement</b>
-            <strong>Run Triple G</strong>
-            <span>Inspect route status and public-page presence.</span>
-          </a>
-        </div>
-
-        <template id="audralia-route-receipt" class="hidden-receipt">
-AUDRALIA_G2_HTML_BASELINE_PRESERVING_PLANET_OBJECT_GRANDPARENT_MERGE_TNT_v2
+      <section id="route-receipt-summary" class="receipt-card" aria-label="Audralia route receipt summary">
+        <p class="label">Route receipt</p>
+        <h2>Canonical family declared. Obsolete math authority held.</h2>
+        <p>
+          During the Mayday stretch, the public route keeps only the existing route pair and the canonical true-globe runtime family. Older Audralia math files are obsolete as authority unless explicitly mined and merged later.
+        </p>
+        <code>AUDRALIA_MAYDAY_ROUTE_PAIR_RESET_DROPDOWN_AND_LATTICE_CONTROL_TNT_v1
 route=/showroom/globe/audralia/
 html=/showroom/globe/audralia/index.html
-previous_html_contract=AUDRALIA_G2_HTML_ROUTE_JS_MOISTURE_CLOUD_CONSUMER_KEY_RENEWAL_TNT_v1
+js=/showroom/globe/audralia/index.js
+mode=lattice-control-recovery
+no_new_files=true
+top_dropdown_menu=true
+top_bubbles_removed=true
+lattice_first=true
+children_held_during_lattice=true
+visual_pass_claimed=false</code>
+
+        <template id="audralia-route-receipt" class="hidden-receipt">
+AUDRALIA_MAYDAY_ROUTE_PAIR_RESET_DROPDOWN_AND_LATTICE_CONTROL_TNT_v1
+route=/showroom/globe/audralia/
+html=/showroom/globe/audralia/index.html
 route_js=/showroom/globe/audralia/index.js
-route_js_contract=AUDRALIA_G2_ROUTE_JS_SHOWROOM_PLANET_OBJECT_GRANDPARENT_CONTROLLER_TNT_v5
-previous_route_js_contract=AUDRALIA_G2_ROUTE_JS_PLANET_VIEW_MOISTURE_CLOUD_RENDERER_WITH_LATTICE_PROTECTION_TNT_v1
-route_js_loader=classic_script
-module_importer_disabled=true
-runtime=/assets/audralia/clean/runtime/audralia.true-globe.runtime.js
-runtime_contract=AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2
-datum_child=/assets/audralia/clean/runtime/audralia.true-globe.datum.js
-datum_contract=AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1
-terrain_child=/assets/audralia/clean/runtime/audralia.true-globe.terrain-ecosystem.js
-terrain_contract=AUDRALIA_G2_TRUE_RUNTIME_TERRAIN_ECOSYSTEM_FORCING_FIELD_CHILD_TNT_v1
-moisture_child=/assets/audralia/clean/runtime/audralia.true-globe.moisture.js
-moisture_contract=AUDRALIA_G2_TRUE_RUNTIME_MOISTURE_FIELD_CHILD_TNT_v1
-surface_child=/assets/audralia/clean/runtime/audralia.true-globe.surface.js
-surface_contract=AUDRALIA_G2_TRUE_RUNTIME_GRATITUDE_CONTINENT_SURFACE_RENDERER_CHILD_TNT_v1
-cloud_child=/assets/audralia/clean/runtime/audralia.true-globe.clouds.js
-cloud_contract=AUDRALIA_G2_TRUE_RUNTIME_ORGANIC_MOISTURE_CLOUD_FLOW_CHILD_TNT_v2
-previous_cloud_contract=AUDRALIA_G2_TRUE_RUNTIME_4K_MOISTURE_CLOUD_CHILD_TNT_v1
-standard=AUDRALIA_G2_HTML_BASELINE_PRESERVING_PLANET_OBJECT_MERGE_SPEC_OPS_v1
-generation=G2
-showroom_grandparent_authority_active=true
-audralia_declared_as_planet_object=true
-object_type=planet
-object_name=Audralia
-showroom_family=globe
-route_role=planet_object_inspection_route
-visible_subject_audralia_planet=true
-active_proof_target_gratitude=true
-planetary_datum_required=true
-true_north_south_required=true
-surface_visibility_required=true
-clouds_above_surface_required=true
-planet_view_surface_and_clouds=true
-previous_planet_view_clouds_only=true
-globe_carrier=runtime_sphere
-spherical_projection_required=true
-flat_projection_blocked=true
-planet_equals_material_expression_on_runtime_spherical_carrier=true
-surface_renderer_expected=true
-surface_draws_before_clouds=true
-moisture_field_expected=true
-cloud_renderer_expected=true
-clouds_render_above_surface=true
-lattice_view_protected=true
-lattice_view_clouds_blocked=true
-lattice_view_surface_blocked=true
-diagnostic_equals_compact_state_return=true
-radial_nodes=16
-fibonacci_bands=16
-lattice_states=256
-html_owns=public_shell,lens_controls,canonical_mount,diagnostic_mount,hidden_receipt,classic_route_js_loader,showroom_planet_object_declaration
-html_does_not_own=spherical_math,datum_logic,terrain_logic,moisture_logic,surface_rendering,cloud_generation,render_loop,motion_engine,lattice_projection
-html_visual_rebuild=false
-baseline_layout_preserved=true
-topbar_nav_preserved=true
-au_brand_mark_preserved=true
-hero_structure_preserved=true
-stage_shell_preserved=true
-lens_toolbar_preserved=true
-globe_stage_preserved=true
-diagnostic_overlay_preserved=true
-route_grid_preserved=true
-inline_classic_loader_preserved=true
-mobile_breakpoints_preserved=true
-reduced_motion_preserved=true
-classic_route_js_loader_active=true
-visible_legacy_handoff=false
-duplicate_canvas=false
-generated_image=false
-graphic_box=false
-audralia_earth_crossover=false
-australia_naming_drift=false
-no_australia_naming_drift=true
+html_owns=public_shell,dropdown_navigation,lens_controls,mount,diagnostic_slots,hidden_receipt,single_route_js_loader
+html_does_not_own=runtime_math,datum_math,surface_math,cloud_math,terrain_math,continent_math,canvas_rendering,animation_loop
+js_owns=route_boot,single_canvas,single_raf_loop,single_pointer_path,lens_switching,runtime_consumer,lightweight_diagnostics
+js_does_not_own=second_runtime,second_motion_engine,datum_expansion,surface_generation,cloud_generation,terrain_generation,continent_generation
+lattice_view_bypasses_child_math=true
+runtime_only_lattice_motion=true
+route_fallback_disabled_in_lattice=true
+diagnostics_lightweight=true
+no_new_files=true
 visual_pass_claimed=false
         </template>
       </section>
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Audralia · Showroom planet object authority active · Gratitude surface proof required · Lattice View protected.
+      Diamond Gate Bridge · Audralia · runtime control recovery · Lattice View is the active proof gate.
     </footer>
   </div>
 
-  <script>
-    (function () {
-      "use strict";
-
-      var HTML_CONTRACT = "AUDRALIA_G2_HTML_BASELINE_PRESERVING_PLANET_OBJECT_GRANDPARENT_MERGE_TNT_v2";
-      var PREVIOUS_HTML_CONTRACT = "AUDRALIA_G2_HTML_ROUTE_JS_MOISTURE_CLOUD_CONSUMER_KEY_RENEWAL_TNT_v1";
-      var ROUTE_JS_CONTRACT = "AUDRALIA_G2_ROUTE_JS_SHOWROOM_PLANET_OBJECT_GRANDPARENT_CONTROLLER_TNT_v5";
-      var PREVIOUS_ROUTE_JS_CONTRACT = "AUDRALIA_G2_ROUTE_JS_PLANET_VIEW_MOISTURE_CLOUD_RENDERER_WITH_LATTICE_PROTECTION_TNT_v1";
-      var RUNTIME_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2";
-      var DATUM_CONTRACT = "AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1";
-      var TERRAIN_CONTRACT = "AUDRALIA_G2_TRUE_RUNTIME_TERRAIN_ECOSYSTEM_FORCING_FIELD_CHILD_TNT_v1";
-      var MOISTURE_CONTRACT = "AUDRALIA_G2_TRUE_RUNTIME_MOISTURE_FIELD_CHILD_TNT_v1";
-      var SURFACE_CONTRACT = "AUDRALIA_G2_TRUE_RUNTIME_GRATITUDE_CONTINENT_SURFACE_RENDERER_CHILD_TNT_v1";
-      var CLOUD_CONTRACT = "AUDRALIA_G2_TRUE_RUNTIME_ORGANIC_MOISTURE_CLOUD_FLOW_CHILD_TNT_v2";
-      var PREVIOUS_CLOUD_CONTRACT = "AUDRALIA_G2_TRUE_RUNTIME_4K_MOISTURE_CLOUD_CHILD_TNT_v1";
-      var ROUTE_JS_PATH = "/showroom/globe/audralia/index.js";
-
-      var SHOWROOM_OBJECT = {
-        objectType: "planet",
-        objectName: "Audralia",
-        showroomFamily: "globe",
-        routeRole: "planet-object-inspection-route",
-        visibleSubject: "Audralia planet",
-        activeProofTarget: "Gratitude continent",
-        planetaryDatumRequired: true,
-        trueNorthSouthRequired: true,
-        surfaceVisibilityRequired: true,
-        cloudsAboveSurfaceRequired: true,
-        planetViewSurfaceAndClouds: true,
-        previousPlanetViewCloudsOnly: true,
-        latticeViewProtected: true,
-        latticeViewCloudsBlocked: true,
-        latticeViewSurfaceBlocked: true,
-        noAustraliaNamingDrift: true
-      };
-
-      var LENS_COPY = {
-        planet: {
-          title: "Planet View",
-          label: "<strong>Planet View</strong> → Audralia planet · Gratitude surface under hydrology-powered clouds",
-          copy: "Planet View renders Audralia as a planet object with Gratitude surface proof beneath hydrology-powered clouds. No lattice overlay. No beta patch field."
-        },
-        lattice: {
-          title: "Lattice View",
-          label: "<strong>Lattice View</strong> → protected 16 × 16 / 256 spherical lattice baseline",
-          copy: "Lattice View is protected. It preserves the runtime-owned 16 radial nodes × 16 Fibonacci bands as a spherical 256-seat structure. No clouds. No surface material contamination."
-        },
-        diagnostic: {
-          title: "Diagnostic Scope",
-          label: "<strong>Diagnostic Scope</strong> → grandparent authority, runtime, datum, surface, cloud, and lattice status",
-          copy: "Diagnostic Scope reports Showroom planet-object authority, runtime v2, datum, surface requirement, cloud renderer, active lens, and protected lattice state without replacing the visual object."
-        }
-      };
-
-      var root = document.documentElement;
-      var buttons = Array.prototype.slice.call(document.querySelectorAll("[data-audralia-lens-button]"));
-      var title = document.querySelector("[data-audralia-lens-title]");
-      var copy = document.querySelector("[data-audralia-lens-copy]");
-      var label = document.querySelector("[data-audralia-stage-label]");
-      var routeDiagnostic = document.querySelector("[data-audralia-diagnostic-route-js]");
-      var loaderDiagnostic = document.querySelector("[data-audralia-diagnostic-loader]");
-
-      function setText(node, value) {
-        if (node) node.textContent = value;
-      }
-
-      function setLens(nextLens) {
-        var lens = Object.prototype.hasOwnProperty.call(LENS_COPY, nextLens) ? nextLens : "planet";
-
-        root.dataset.audraliaActiveLens = lens;
-
-        buttons.forEach(function (button) {
-          button.setAttribute("aria-pressed", button.dataset.audraliaLensButton === lens ? "true" : "false");
-        });
-
-        if (title) title.textContent = LENS_COPY[lens].title;
-        if (copy) copy.textContent = LENS_COPY[lens].copy;
-        if (label) label.innerHTML = LENS_COPY[lens].label;
-
-        window.AUDRALIA_G2_HTML_SHELL_STATE = {
-          contract: HTML_CONTRACT,
-          previousHtmlContract: PREVIOUS_HTML_CONTRACT,
-          routeJsContract: ROUTE_JS_CONTRACT,
-          previousRouteJsContract: PREVIOUS_ROUTE_JS_CONTRACT,
-          runtimeContract: RUNTIME_CONTRACT,
-          datumContract: DATUM_CONTRACT,
-          terrainContract: TERRAIN_CONTRACT,
-          moistureContract: MOISTURE_CONTRACT,
-          surfaceContract: SURFACE_CONTRACT,
-          cloudContract: CLOUD_CONTRACT,
-          previousCloudContract: PREVIOUS_CLOUD_CONTRACT,
-          showroomObject: SHOWROOM_OBJECT,
-          activeLens: lens,
-          routeJsLoader: "classic-script",
-          moduleImporterDisabled: true,
-          radialNodes: 16,
-          fibonacciBands: 16,
-          latticeStates: 256,
-          flatProjectionBlocked: true,
-          latticeViewProtected: true,
-          previousPlanetViewCloudsOnly: true,
-          planetViewCloudsOnly: false,
-          planetViewSurfaceAndClouds: true,
-          latticeViewCloudsBlocked: true,
-          latticeViewSurfaceBlocked: true,
-          surfaceVisibilityRequired: true,
-          cloudsAboveSurfaceRequired: true,
-          visibleLegacyHandoff: false,
-          generatedImage: false,
-          graphicBox: false,
-          visualPassClaim: false
-        };
-
-        window.dispatchEvent(new CustomEvent("audralia:lens", {
-          detail: window.AUDRALIA_G2_HTML_SHELL_STATE
-        }));
-      }
-
-      buttons.forEach(function (button) {
-        button.addEventListener("click", function () {
-          setLens(button.dataset.audraliaLensButton);
-        });
-      });
-
-      function loadRouteJs() {
-        var url = ROUTE_JS_PATH + "?v=" + encodeURIComponent(ROUTE_JS_CONTRACT);
-
-        root.dataset.audraliaHtmlContract = HTML_CONTRACT;
-        root.dataset.audraliaPreviousHtmlContract = PREVIOUS_HTML_CONTRACT;
-        root.dataset.audraliaRouteJsContractExpected = ROUTE_JS_CONTRACT;
-        root.dataset.audraliaPreviousRouteJsContract = PREVIOUS_ROUTE_JS_CONTRACT;
-        root.dataset.audraliaRuntimeContractExpected = RUNTIME_CONTRACT;
-        root.dataset.audraliaDatumContractExpected = DATUM_CONTRACT;
-        root.dataset.audraliaTerrainContractExpected = TERRAIN_CONTRACT;
-        root.dataset.audraliaMoistureContractExpected = MOISTURE_CONTRACT;
-        root.dataset.audraliaSurfaceContractExpected = SURFACE_CONTRACT;
-        root.dataset.audraliaCloudContractExpected = CLOUD_CONTRACT;
-        root.dataset.audraliaPreviousCloudContract = PREVIOUS_CLOUD_CONTRACT;
-        root.dataset.audraliaRouteJsPath = ROUTE_JS_PATH;
-        root.dataset.audraliaRouteJsLoader = "classic-script";
-        root.dataset.audraliaModuleImporterDisabled = "true";
-        root.dataset.audraliaObjectType = SHOWROOM_OBJECT.objectType;
-        root.dataset.audraliaObjectName = SHOWROOM_OBJECT.objectName;
-        root.dataset.audraliaShowroomFamily = SHOWROOM_OBJECT.showroomFamily;
-        root.dataset.audraliaVisibleSubject = SHOWROOM_OBJECT.visibleSubject;
-        root.dataset.audraliaActiveProofTarget = SHOWROOM_OBJECT.activeProofTarget;
-        root.dataset.audraliaPlanetaryDatumRequired = "true";
-        root.dataset.audraliaSurfaceVisibilityRequired = "true";
-        root.dataset.audraliaCloudsAboveSurfaceRequired = "true";
-        root.dataset.audraliaLatticeViewProtected = "true";
-        root.dataset.audraliaPreviousPlanetViewCloudsOnly = "true";
-        root.dataset.audraliaPlanetViewCloudsOnly = "false";
-        root.dataset.audraliaPlanetViewSurfaceAndClouds = "true";
-        root.dataset.audraliaLatticeViewCloudsBlocked = "true";
-        root.dataset.audraliaLatticeViewSurfaceBlocked = "true";
-        root.dataset.visibleLegacyHandoff = "false";
-        root.dataset.australiaNamingDrift = "false";
-
-        window.AUDRALIA_G2_HTML_SHELL_CONTRACT = HTML_CONTRACT;
-        window.AUDRALIA_G2_ROUTE_JS_CONTRACT_EXPECTED = ROUTE_JS_CONTRACT;
-        window.AUDRALIA_G2_RUNTIME_CONTRACT_EXPECTED = RUNTIME_CONTRACT;
-        window.AUDRALIA_G2_DATUM_CONTRACT_EXPECTED = DATUM_CONTRACT;
-        window.AUDRALIA_G2_TERRAIN_CONTRACT_EXPECTED = TERRAIN_CONTRACT;
-        window.AUDRALIA_G2_MOISTURE_CONTRACT_EXPECTED = MOISTURE_CONTRACT;
-        window.AUDRALIA_G2_SURFACE_CONTRACT_EXPECTED = SURFACE_CONTRACT;
-        window.AUDRALIA_G2_CLOUD_CONTRACT_EXPECTED = CLOUD_CONTRACT;
-        window.AUDRALIA_G2_SHOWROOM_OBJECT = SHOWROOM_OBJECT;
-
-        setText(routeDiagnostic, "classic loader active · planet-object route key");
-        setText(loaderDiagnostic, "loading " + ROUTE_JS_CONTRACT);
-
-        var existing = document.querySelector("script[data-audralia-route-js-loader='classic-runtime-consumer']");
-        if (existing) {
-          try { existing.remove(); } catch (_error) {}
-        }
-
-        var script = document.createElement("script");
-        script.src = url;
-        script.defer = true;
-        script.setAttribute("data-audralia-route-js-loader", "classic-runtime-consumer");
-        script.setAttribute("data-route-js-contract", ROUTE_JS_CONTRACT);
-        script.setAttribute("data-previous-route-js-contract", PREVIOUS_ROUTE_JS_CONTRACT);
-        script.setAttribute("data-runtime-contract", RUNTIME_CONTRACT);
-        script.setAttribute("data-datum-contract", DATUM_CONTRACT);
-        script.setAttribute("data-terrain-contract", TERRAIN_CONTRACT);
-        script.setAttribute("data-moisture-contract", MOISTURE_CONTRACT);
-        script.setAttribute("data-surface-contract", SURFACE_CONTRACT);
-        script.setAttribute("data-cloud-contract", CLOUD_CONTRACT);
-        script.setAttribute("data-previous-cloud-contract", PREVIOUS_CLOUD_CONTRACT);
-        script.setAttribute("data-html-contract", HTML_CONTRACT);
-        script.setAttribute("data-object-type", SHOWROOM_OBJECT.objectType);
-        script.setAttribute("data-object-name", SHOWROOM_OBJECT.objectName);
-        script.setAttribute("data-showroom-family", SHOWROOM_OBJECT.showroomFamily);
-        script.setAttribute("data-visible-subject", SHOWROOM_OBJECT.visibleSubject);
-        script.setAttribute("data-active-proof-target", SHOWROOM_OBJECT.activeProofTarget);
-        script.setAttribute("data-planetary-datum-required", "true");
-        script.setAttribute("data-surface-visibility-required", "true");
-        script.setAttribute("data-clouds-above-surface-required", "true");
-        script.setAttribute("data-lattice-view-protected", "true");
-        script.setAttribute("data-previous-planet-view-clouds-only", "true");
-        script.setAttribute("data-planet-view-clouds-only", "false");
-        script.setAttribute("data-planet-view-surface-and-clouds", "true");
-        script.setAttribute("data-lattice-view-clouds-blocked", "true");
-        script.setAttribute("data-lattice-view-surface-blocked", "true");
-
-        script.onload = function () {
-          root.dataset.audraliaRouteJsClassicLoadSucceeded = "true";
-          root.dataset.audraliaRouteJsClassicLoadUrl = url;
-          setText(loaderDiagnostic, "classic script loaded · planet-object route key");
-          setText(routeDiagnostic, "classic script loaded · waiting for planet-object route boot marker");
-        };
-
-        script.onerror = function () {
-          root.dataset.audraliaRouteJsClassicLoadSucceeded = "false";
-          root.dataset.audraliaRouteJsClassicLoadUrl = url;
-          setText(loaderDiagnostic, "classic script load failed");
-          setText(routeDiagnostic, "route JS load failed");
-        };
-
-        document.body.appendChild(script);
-      }
-
-      setLens("planet");
-      loadRouteJs();
-    })();
-  </script>
+  <script
+    src="/showroom/globe/audralia/index.js?v=AUDRALIA_MAYDAY_ROUTE_PAIR_RESET_DROPDOWN_AND_LATTICE_CONTROL_TNT_v1"
+    defer
+    data-audralia-route-js
+    data-contract="AUDRALIA_MAYDAY_ROUTE_PAIR_RESET_DROPDOWN_AND_LATTICE_CONTROL_TNT_v1"
+  ></script>
 </body>
 </html>

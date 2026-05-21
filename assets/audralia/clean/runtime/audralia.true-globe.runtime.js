@@ -1,39 +1,54 @@
 // /assets/audralia/clean/runtime/audralia.true-globe.runtime.js
 // TNT FULL-FILE REPLACEMENT
-// AUDRALIA_G2_TRUE_GLOBE_RUNTIME_MANIFEST_CONSUMER_HANDSHAKE_TNT_v4
+// AUDRALIA_G2_TRUE_GLOBE_RUNTIME_TERRAIN_ECOSYSTEM_MANIFEST_CONSUMER_TNT_v5
 //
 // Public runtime contract intentionally preserved for route JS compatibility:
 // AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2
 //
-// Capability marker preserved for route JS cache-key confirmation:
+// Existing route-confirmed capability marker preserved:
 // AUDRALIA_G2_TRUE_GLOBE_RUNTIME_ORGANIC_CLOUD_CHILD_KEY_RENEWAL_TNT_v3
+//
+// New internal capability marker:
+// AUDRALIA_G2_TRUE_GLOBE_RUNTIME_TERRAIN_ECOSYSTEM_MANIFEST_CONSUMER_TNT_v5
 //
 // Consumes manifest:
 // /assets/audralia/clean/runtime/audralia.true-globe.family.manifest.js
 //
 // Purpose:
-// - Stop parent/child leapfrog.
+// - Preserve runtime public compatibility.
+// - Preserve protected Lattice View.
 // - Load family manifest first.
-// - Use manifest for child public contract, cache key, and capability marker.
-// - Reject stale child globals when capability marker is missing.
-// - Preserve runtime public contract for route JS.
-// - Preserve Lattice View.
-// - Preserve Planet View-only clouds.
+// - Load terrain/ecosystem forcing child before moisture and clouds.
+// - Expose terrain/ecosystem field on runtime frame.
+// - Preserve moisture/cloud loading through parent-child handshake.
+// - Do not draw.
+// - Do not create canvas.
+// - Do not touch HTML.
+// - Do not touch route JS.
 // - No generated image. No GraphicBox. No flat projection.
 
 (function () {
   "use strict";
 
   var CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2";
-  var MANIFEST_CONSUMER_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_MANIFEST_CONSUMER_HANDSHAKE_TNT_v4";
   var CHILD_KEY_RENEWAL_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_ORGANIC_CLOUD_CHILD_KEY_RENEWAL_TNT_v3";
-  var PREVIOUS_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_FAMILY_SEPARATION_TNT_v1";
-  var STANDARD = "AUDRALIA_G2_PARENT_CHILD_CONTRACT_HANDSHAKE_AND_FAMILY_MANIFEST_STANDARD_v1";
+  var TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_TERRAIN_ECOSYSTEM_MANIFEST_CONSUMER_TNT_v5";
+  var PREVIOUS_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_MANIFEST_CONSUMER_HANDSHAKE_TNT_v4";
+  var STANDARD = "AUDRALIA_G2_TERRAIN_ECOSYSTEM_FORCING_FIELD_STANDARD_v1";
+  var FAMILY_STANDARD = "AUDRALIA_G2_PARENT_CHILD_CONTRACT_HANDSHAKE_AND_FAMILY_MANIFEST_STANDARD_v1";
   var FAMILY = "/assets/audralia/clean/runtime/";
   var FILE = "/assets/audralia/clean/runtime/audralia.true-globe.runtime.js";
 
   var MANIFEST_PATH = "/assets/audralia/clean/runtime/audralia.true-globe.family.manifest.js";
   var MANIFEST_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_FAMILY_MANIFEST_PARENT_CHILD_HANDSHAKE_TNT_v1";
+
+  var FALLBACK_TERRAIN_ECOSYSTEM = {
+    path: "/assets/audralia/clean/runtime/audralia.true-globe.terrain-ecosystem.js",
+    publicContract: "AUDRALIA_G2_TRUE_RUNTIME_TERRAIN_ECOSYSTEM_FORCING_FIELD_CHILD_TNT_v1",
+    cacheKey: "AUDRALIA_G2_TRUE_RUNTIME_TERRAIN_ECOSYSTEM_FORCING_FIELD_CHILD_TNT_v1",
+    capabilityField: "contract",
+    capabilityMarker: "AUDRALIA_G2_TRUE_RUNTIME_TERRAIN_ECOSYSTEM_FORCING_FIELD_CHILD_TNT_v1"
+  };
 
   var FALLBACK_MOISTURE = {
     path: "/assets/audralia/clean/runtime/audralia.true-globe.moisture.js",
@@ -108,6 +123,12 @@
     manifestLoading: false,
     manifestReady: false,
 
+    terrainEcosystemApi: null,
+    terrainEcosystemLoaded: false,
+    terrainEcosystemLoading: false,
+    terrainEcosystemField: null,
+    terrainEcosystemReady: false,
+
     moistureApi: null,
     cloudsApi: null,
     moistureLoaded: false,
@@ -132,6 +153,10 @@
     parentFetchesByCacheKey: true,
     parentVerifiesChildCapabilityMarker: true,
     staleGlobalRejectedIfCapabilityMissing: true,
+
+    terrainForcingDrivesMoisture: true,
+    moistureDrivesClouds: true,
+    terrainDirectCloudPaint: false,
 
     organicCloudChildRequested: false,
     runtimeCloudChildKeyCurrent: true,
@@ -168,6 +193,7 @@
 
   function getNestedValue(source, path) {
     if (!source || !path) return undefined;
+
     var parts = String(path).split(".");
     var cursor = source;
 
@@ -202,6 +228,12 @@
       null;
   }
 
+  function getTerrainEcosystemApi() {
+    return window.AUDRALIA_TRUE_GLOBE_TERRAIN_ECOSYSTEM ||
+      window.AUDRALIA_G2_TRUE_GLOBE_TERRAIN_ECOSYSTEM ||
+      null;
+  }
+
   function getMoistureApi() {
     return window.AUDRALIA_TRUE_GLOBE_MOISTURE ||
       window.AUDRALIA_G2_TRUE_GLOBE_MOISTURE ||
@@ -224,6 +256,7 @@
       } catch (_error) {}
     }
 
+    if (entryName === "terrainEcosystem") return FALLBACK_TERRAIN_ECOSYSTEM;
     if (entryName === "moisture") return FALLBACK_MOISTURE;
     if (entryName === "clouds") return FALLBACK_CLOUDS;
 
@@ -232,7 +265,7 @@
 
   function buildEntryUrl(entry) {
     if (!entry || !entry.path) return "";
-    var key = entry.cacheKey || entry.publicContract || MANIFEST_CONSUMER_CONTRACT;
+    var key = entry.cacheKey || entry.publicContract || TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT;
     return entry.path + "?v=" + encodeURIComponent(key);
   }
 
@@ -290,6 +323,7 @@
   }
 
   function getChildApi(entryName) {
+    if (entryName === "terrainEcosystem") return getTerrainEcosystemApi();
     if (entryName === "moisture") return getMoistureApi();
     if (entryName === "clouds") return getCloudsApi();
     return null;
@@ -368,7 +402,7 @@
       state.manifestLoading = true;
 
       loadScript(MANIFEST_PATH, MANIFEST_CONTRACT, {
-        "data-audralia-runtime-family-manifest": MANIFEST_CONSUMER_CONTRACT,
+        "data-audralia-runtime-family-manifest": TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT,
         "data-contract": MANIFEST_CONTRACT,
         "data-cache-key": MANIFEST_CONTRACT
       }).then(function () {
@@ -441,7 +475,7 @@
         "data-capability-field": entry.capabilityField,
         "data-capability-marker": entry.capabilityMarker,
         "data-manifest-contract": MANIFEST_CONTRACT,
-        "data-runtime-consumer-contract": MANIFEST_CONSUMER_CONTRACT
+        "data-runtime-consumer-contract": TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT
       }).then(function () {
         var api = getChildApi(entryName);
         var validation = validateApiAgainstEntry(entryName, api);
@@ -457,10 +491,28 @@
   }
 
   function ensureAtmosphereChildren() {
-    if (state.moistureLoading || state.cloudsLoading || state.manifestLoading) return;
+    if (
+      state.manifestLoading ||
+      state.terrainEcosystemLoading ||
+      state.moistureLoading ||
+      state.cloudsLoading
+    ) {
+      return;
+    }
 
     loadManifestOnce()
       .then(function () {
+        state.terrainEcosystemLoading = true;
+        return loadChildFromManifest("terrainEcosystem");
+      })
+      .then(function (terrainApi) {
+        state.terrainEcosystemApi = terrainApi;
+        state.terrainEcosystemLoaded = true;
+        state.terrainEcosystemReady = true;
+        state.terrainEcosystemLoading = false;
+
+        buildTerrainEcosystemFrameData();
+
         state.moistureLoading = true;
         return loadChildFromManifest("moisture");
       })
@@ -488,6 +540,7 @@
       })
       .catch(function (error) {
         state.manifestLoading = false;
+        state.terrainEcosystemLoading = false;
         state.moistureLoading = false;
         state.cloudsLoading = false;
         recordError("ensureAtmosphereChildren", error);
@@ -766,10 +819,11 @@
   function buildFrameBase() {
     return {
       contract: CONTRACT,
-      manifestConsumerContract: MANIFEST_CONSUMER_CONTRACT,
       childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
+      terrainEcosystemConsumerContract: TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       standard: STANDARD,
+      familyStandard: FAMILY_STANDARD,
       family: FAMILY,
       file: FILE,
 
@@ -814,6 +868,11 @@
 
       manifestLoaded: state.manifestLoaded,
       manifestReady: state.manifestReady,
+
+      terrainEcosystemLoaded: state.terrainEcosystemLoaded,
+      terrainEcosystemReady: state.terrainEcosystemReady,
+      terrainEcosystemField: state.terrainEcosystemField,
+
       moistureLoaded: state.moistureLoaded,
       cloudsLoaded: state.cloudsLoaded,
       moistureFieldReady: state.moistureFieldReady,
@@ -824,6 +883,10 @@
       parentVerifiesChildCapabilityMarker: true,
       staleGlobalRejectedIfCapabilityMissing: true,
 
+      terrainForcingDrivesMoisture: true,
+      moistureDrivesClouds: true,
+      terrainDirectCloudPaint: false,
+
       organicCloudChildRequested: state.organicCloudChildRequested,
       runtimeCloudChildKeyCurrent: state.runtimeCloudChildKeyCurrent,
 
@@ -832,15 +895,38 @@
     };
   }
 
+  function buildTerrainEcosystemFrameData() {
+    state.terrainEcosystemApi = state.terrainEcosystemApi || getTerrainEcosystemApi();
+    state.terrainEcosystemLoaded = childApiMatches("terrainEcosystem", state.terrainEcosystemApi);
+
+    if (state.terrainEcosystemLoaded && typeof state.terrainEcosystemApi.getField === "function") {
+      try {
+        state.terrainEcosystemField = state.terrainEcosystemApi.getField(buildFrameBase());
+        state.terrainEcosystemReady = Boolean(
+          state.terrainEcosystemField &&
+          state.terrainEcosystemField.forcingFieldReady
+        );
+      } catch (error) {
+        recordError("terrainEcosystemField", error);
+      }
+    }
+  }
+
   function buildAtmosphereFrameData() {
     var frame = buildFrameBase();
 
     state.manifestApi = state.manifestApi || getManifestApi();
+    state.terrainEcosystemApi = state.terrainEcosystemApi || getTerrainEcosystemApi();
     state.moistureApi = state.moistureApi || getMoistureApi();
     state.cloudsApi = state.cloudsApi || getCloudsApi();
 
     state.manifestLoaded = Boolean(state.manifestApi);
     state.manifestReady = Boolean(state.manifestApi);
+
+    buildTerrainEcosystemFrameData();
+
+    frame = buildFrameBase();
+    frame.terrainEcosystemField = state.terrainEcosystemField;
 
     state.moistureLoaded = childApiMatches("moisture", state.moistureApi);
     state.cloudsLoaded = childApiMatches("clouds", state.cloudsApi);
@@ -858,6 +944,7 @@
     if (state.cloudsLoaded && typeof state.cloudsApi.buildLayer === "function") {
       try {
         frame.moistureField = state.moistureField;
+        frame.terrainEcosystemField = state.terrainEcosystemField;
         state.cloudLayer = state.cloudsApi.buildLayer(frame);
         state.cloudRendererReady = Boolean(state.cloudLayer && state.cloudLayer.rendererReady);
       } catch (error) {
@@ -992,6 +1079,7 @@
     buildAtmosphereFrameData();
 
     var frame = buildFrameBase();
+    frame.terrainEcosystemField = state.terrainEcosystemField;
     frame.moistureField = state.moistureField;
     frame.cloudLayer = state.cloudLayer;
 
@@ -1010,6 +1098,11 @@
     };
   }
 
+  function getTerrainEcosystemField() {
+    buildTerrainEcosystemFrameData();
+    return state.terrainEcosystemField;
+  }
+
   function getMoistureField() {
     buildAtmosphereFrameData();
     return state.moistureField;
@@ -1021,8 +1114,13 @@
   }
 
   function status() {
+    var terrainEntry = getManifestEntry("terrainEcosystem") || FALLBACK_TERRAIN_ECOSYSTEM;
     var moistureEntry = getManifestEntry("moisture") || FALLBACK_MOISTURE;
     var cloudEntry = getManifestEntry("clouds") || FALLBACK_CLOUDS;
+
+    var terrainStatus = state.terrainEcosystemApi && typeof state.terrainEcosystemApi.status === "function"
+      ? state.terrainEcosystemApi.status()
+      : null;
 
     var moistureStatus = state.moistureApi && typeof state.moistureApi.status === "function"
       ? state.moistureApi.status()
@@ -1038,10 +1136,11 @@
 
     return {
       contract: CONTRACT,
-      manifestConsumerContract: MANIFEST_CONSUMER_CONTRACT,
       childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
+      terrainEcosystemConsumerContract: TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       standard: STANDARD,
+      familyStandard: FAMILY_STANDARD,
       family: FAMILY,
       file: FILE,
 
@@ -1070,6 +1169,16 @@
       manifestReady: state.manifestReady,
       manifestStatus: manifestStatus,
 
+      terrainEcosystemPath: terrainEntry.path,
+      terrainEcosystemPublicContract: terrainEntry.publicContract,
+      terrainEcosystemCacheKey: terrainEntry.cacheKey,
+      terrainEcosystemCapabilityField: terrainEntry.capabilityField,
+      terrainEcosystemCapabilityMarker: terrainEntry.capabilityMarker,
+      terrainEcosystemLoaded: state.terrainEcosystemLoaded,
+      terrainEcosystemReady: state.terrainEcosystemReady,
+      terrainEcosystemStatus: terrainStatus,
+      terrainEcosystemHandshake: validateApiAgainstEntry("terrainEcosystem", state.terrainEcosystemApi),
+
       moisturePath: moistureEntry.path,
       moisturePublicContract: moistureEntry.publicContract,
       moistureCacheKey: moistureEntry.cacheKey,
@@ -1094,6 +1203,10 @@
       parentFetchesByCacheKey: true,
       parentVerifiesChildCapabilityMarker: true,
       staleGlobalRejectedIfCapabilityMissing: true,
+
+      terrainForcingDrivesMoisture: true,
+      moistureDrivesClouds: true,
+      terrainDirectCloudPaint: false,
 
       runtimeCloudChildKeyCurrent: state.runtimeCloudChildKeyCurrent,
       organicCloudChildRequested: state.organicCloudChildRequested,
@@ -1122,10 +1235,11 @@
   function publish() {
     var api = {
       contract: CONTRACT,
-      manifestConsumerContract: MANIFEST_CONSUMER_CONTRACT,
       childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
+      terrainEcosystemConsumerContract: TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       standard: STANDARD,
+      familyStandard: FAMILY_STANDARD,
       family: FAMILY,
       file: FILE,
 
@@ -1140,6 +1254,7 @@
       getFrame: getFrame,
       getSeats: getSeats,
       getLinks: getLinks,
+      getTerrainEcosystemField: getTerrainEcosystemField,
       getMoistureField: getMoistureField,
       getCloudLayer: getCloudLayer,
       ensureAtmosphereChildren: ensureAtmosphereChildren,
@@ -1165,8 +1280,8 @@
 
     window.AUDRALIA_TRUE_GLOBE_RUNTIME_ERROR = {
       contract: CONTRACT,
-      manifestConsumerContract: MANIFEST_CONSUMER_CONTRACT,
       childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
+      terrainEcosystemConsumerContract: TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT,
       scope: scope,
       message: message,
       errors: state.errors.slice()
@@ -1212,10 +1327,11 @@
 
   window.AUDRALIA_TRUE_GLOBE_RUNTIME_BOOT = {
     contract: CONTRACT,
-    manifestConsumerContract: MANIFEST_CONSUMER_CONTRACT,
     childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
+    terrainEcosystemConsumerContract: TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
     standard: STANDARD,
+    familyStandard: FAMILY_STANDARD,
     family: FAMILY,
     file: FILE,
     manifestPath: MANIFEST_PATH,
@@ -1224,8 +1340,13 @@
     parentFetchesByCacheKey: true,
     parentVerifiesChildCapabilityMarker: true,
     staleGlobalRejectedIfCapabilityMissing: true,
+    terrainEcosystemLoadsBeforeMoisture: true,
+    terrainEcosystemLoadsBeforeClouds: true,
+    terrainForcingDrivesMoisture: true,
+    moistureDrivesClouds: true,
+    terrainDirectCloudPaint: false,
     bootedAt: new Date().toISOString(),
-    meaning: "Runtime evaluated as manifest consumer. Child files now require public contract plus capability marker, fetched by manifest cache key."
+    meaning: "Runtime evaluated with terrain/ecosystem manifest consumer. Terrain forcing is loaded before moisture and clouds and exposed on frame.terrainEcosystemField."
   };
 
   publish();

@@ -3,832 +3,1105 @@
   lang="en"
   data-route="/showroom/globe/audralia/"
   data-page="audralia"
-  data-contract="AUDRALIA_G2_11A_HTML_MIRRORLAND_GATEWAY_STABLE_SHELL_TNT_v1"
-  data-pair-contract="AUDRALIA_G2_11_HTML_JS_MIRRORLAND_GATEWAY_MICRO_ORCHESTRATOR_STANDARD_v1"
-  data-previous-contract="AUDRALIA_G2_10A_HTML_HANDOFF_PANEL_DOM_CONTRACT_AND_SELECTABLE_RECEIPT_TNT_v1"
-  data-route-bridge-path="/showroom/globe/audralia/index.js"
-  data-runtime-path="/assets/audralia/audralia.runtime.v3.js"
-  data-parent-path="/assets/audralia/clean/engine/audralia.engine.js"
-  data-continents-path="/assets/audralia/clean/engine/audralia/engine/continents.js"
-  data-route-bridge-must-reuse-existing-panel="true"
-  data-route-bridge-may-create-status-panel="false"
-  data-route-bridge-may-hide-legacy-panel="false"
-  data-route-bridge-may-scan-broad-dom="false"
-  data-canvas-shell-status-insertion-forbidden="true"
-  data-selectable-receipt-panel="true"
-  data-mirrorland-gateway="true"
+  data-contract="AUDRALIA_G2_13A_PUBLIC_MIRRORLAND_GLOBE_PAGE_TNT_v1"
+  data-pair-contract="AUDRALIA_G2_13_PUBLIC_PAGE_STANDARD_RELEASE_FROM_HANDOFF_LEGACY_v1"
+  data-role="audralia-public-mirrorland-globe-route"
+  data-public-page-standard="compass-showroom"
+  data-story-first="true"
+  data-object-stage="audralia-globe"
+  data-static-page-usable-without-js="true"
+  data-public-receipts-visible="false"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-visual-pass-claimed="false"
 >
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#020713" />
-    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="pragma" content="no-cache" />
-    <meta http-equiv="expires" content="0" />
-    <title>Audralia · Shadows Never Shatter in Mirrorland</title>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-    <style>
-      :root {
-        color-scheme: dark;
-        --bg: #01040d;
-        --panel: rgba(3, 13, 30, 0.74);
-        --panel-strong: rgba(3, 11, 26, 0.96);
-        --line: rgba(133, 217, 255, 0.22);
-        --line-strong: rgba(133, 217, 255, 0.42);
-        --text: rgba(239, 248, 255, 0.96);
-        --muted: rgba(190, 217, 232, 0.76);
-        --dim: rgba(142, 171, 190, 0.62);
-        --accent: #7de8ff;
-        --good: rgba(191, 255, 225, 0.34);
-        --held: rgba(255, 226, 166, 0.36);
-        --bad: rgba(255, 179, 179, 0.36);
-      }
+  <title>Audralia · Shadows Never Shatter in Mirrorland</title>
+  <meta
+    name="description"
+    content="Audralia is the possibility and preparation world inside Mirrorland: a live globe stage, story gateway, law path, community path, and measurement route."
+  >
 
-      * {
-        box-sizing: border-box;
-      }
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #02040b;
+      --ink: #fff4d8;
+      --text: rgba(239,248,255,.94);
+      --muted: rgba(230,238,255,.72);
+      --faint: rgba(230,238,255,.46);
+      --gold: #f3c86f;
+      --gold2: #ffe8a3;
+      --blue: #7de8ff;
+      --green: #8ff0c3;
+      --violet: #c6a6ff;
+      --panel: rgba(9,15,31,.88);
+      --line: rgba(184,205,255,.18);
+      --line-gold: rgba(243,200,111,.26);
+      --shadow: 0 32px 110px rgba(0,0,0,.48);
+      --max: 1180px;
+      --gem: polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
+    }
 
-      html {
-        min-height: 100%;
-        background: var(--bg);
-      }
+    * { box-sizing: border-box; }
 
-      body {
-        margin: 0;
-        min-height: 100%;
-        background:
-          radial-gradient(circle at 18% 10%, rgba(34, 105, 165, 0.18), transparent 32rem),
-          radial-gradient(circle at 85% 24%, rgba(125, 232, 255, 0.12), transparent 28rem),
-          linear-gradient(180deg, #020713 0%, #01040d 72%, #00030a 100%);
-        color: var(--text);
-        font-family:
-          Inter,
-          ui-sans-serif,
-          system-ui,
-          -apple-system,
-          BlinkMacSystemFont,
-          "Segoe UI",
-          sans-serif;
-        overflow-x: hidden;
-      }
+    html {
+      min-width: 320px;
+      min-height: 100%;
+      background: var(--bg);
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
 
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 50% -8%, rgba(125,232,255,.18), transparent 30rem),
+        radial-gradient(circle at 12% 18%, rgba(36,120,255,.20), transparent 28rem),
+        radial-gradient(circle at 88% 30%, rgba(198,166,255,.12), transparent 30rem),
+        radial-gradient(circle at 50% 78%, rgba(143,240,195,.10), transparent 34rem),
+        linear-gradient(180deg, #080c17 0%, #030713 58%, #010207 100%);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
 
-      a:focus-visible,
-      summary:focus-visible,
-      button:focus-visible {
-        outline: 2px solid var(--accent);
-        outline-offset: 3px;
-      }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.18) 0 1px, transparent 1.5px),
+        linear-gradient(rgba(125,232,255,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(125,232,255,.045) 1px, transparent 1px);
+      background-size: 220px 260px, 54px 54px, 54px 54px;
+      opacity: .20;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,.92), rgba(0,0,0,.52) 64%, rgba(0,0,0,.24));
+    }
 
-      code {
-        color: rgba(222, 246, 255, 0.95);
-      }
+    a { color: inherit; text-decoration: none; }
 
-      .skip-link {
-        position: absolute;
-        left: 1rem;
-        top: 1rem;
-        z-index: 20;
-        transform: translateY(-180%);
-        padding: 0.7rem 1rem;
-        border: 1px solid var(--line-strong);
-        border-radius: 999px;
-        background: #021127;
-        color: var(--text);
-        font-weight: 800;
-      }
+    a:focus-visible,
+    summary:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 4px;
+    }
 
-      .skip-link:focus {
-        transform: translateY(0);
-      }
+    .skip {
+      position: absolute;
+      left: -999px;
+      top: 8px;
+      z-index: 50;
+      padding: .75rem 1rem;
+      border-radius: 999px;
+      color: #05070d;
+      background: var(--gold);
+      font-weight: 950;
+    }
 
-      .page {
-        width: min(100%, 1120px);
-        margin: 0 auto;
-        padding: 1.1rem clamp(1rem, 3vw, 2rem) 3rem;
-      }
+    .skip:focus { left: 8px; }
 
-      .topbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-        padding: 0.95rem 0;
-      }
+    .shell {
+      position: relative;
+      z-index: 2;
+      width: min(var(--max), calc(100% - 28px));
+      margin: 0 auto;
+      padding: max(22px, env(safe-area-inset-top)) 0 max(46px, env(safe-area-inset-bottom));
+    }
 
-      .brand {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        min-width: 0;
-        font-weight: 900;
-        letter-spacing: 0.01em;
-      }
+    .topbar {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: start;
+      gap: 18px;
+      padding: 12px 0 18px;
+    }
 
-      .brand-mark {
-        display: grid;
-        place-items: center;
-        width: 2.1rem;
-        height: 2.1rem;
-        border: 1px solid var(--line-strong);
-        border-radius: 999px;
-        background: rgba(125, 232, 255, 0.08);
-        color: var(--accent);
-        font-weight: 900;
-      }
+    .brand {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: .9rem;
+      min-width: 260px;
+    }
 
-      .brand span {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
+    .brand-mark {
+      width: 4.2rem;
+      height: 4.2rem;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(243,200,111,.44);
+      transform: rotate(45deg);
+      clip-path: var(--gem);
+      background:
+        linear-gradient(35deg, transparent 0 20%, rgba(255,255,255,.26) 21% 23%, transparent 24%),
+        conic-gradient(from 45deg at 50% 50%, rgba(255,255,255,.28), rgba(36,120,255,.20), rgba(1,15,60,.58), rgba(243,200,111,.18), rgba(255,255,255,.28)),
+        radial-gradient(circle at 48% 22%, rgba(255,255,255,.30), transparent 42%),
+        linear-gradient(145deg, rgba(9,44,112,.95), rgba(5,8,20,.98));
+      box-shadow:
+        0 0 2rem rgba(36,120,255,.28),
+        0 1.2rem 2.8rem rgba(0,0,0,.46),
+        inset 0 1px 0 rgba(255,255,255,.16);
+    }
 
-      .return-link {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 2.25rem;
-        padding: 0.55rem 0.8rem;
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        background: rgba(8, 24, 50, 0.72);
-        color: var(--muted);
-        font-weight: 800;
-        white-space: nowrap;
-      }
+    .brand-mark span {
+      transform: rotate(-45deg);
+      font-weight: 950;
+      letter-spacing: .04em;
+      color: rgba(255,244,216,.98);
+      text-shadow: 0 2px 10px rgba(0,0,0,.85);
+    }
 
-      .nav-groups {
-        display: grid;
-        gap: 0.85rem;
-        margin: 0.4rem 0 1rem;
-      }
+    .brand-copy {
+      display: grid;
+      gap: .18rem;
+    }
 
-      .nav-group {
-        display: grid;
-        gap: 0.45rem;
-        padding: 0.85rem;
-        border: 1px solid rgba(133, 217, 255, 0.16);
-        border-radius: 1.25rem;
-        background: rgba(3, 13, 30, 0.6);
-      }
+    .brand-copy strong {
+      color: var(--ink);
+      font-size: clamp(1.08rem, 3vw, 1.7rem);
+      line-height: 1;
+      letter-spacing: -.045em;
+    }
 
-      .nav-title {
-        color: var(--dim);
-        font-size: 0.82rem;
-        font-weight: 900;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
+    .brand-copy span {
+      color: var(--muted);
+      font-size: .74rem;
+      font-weight: 950;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
 
-      .nav-links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.45rem;
-      }
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: .6rem;
+    }
 
-      .nav-links a {
-        min-height: 2rem;
-        padding: 0.46rem 0.7rem;
-        border: 1px solid rgba(133, 217, 255, 0.18);
-        border-radius: 999px;
-        background: rgba(8, 24, 50, 0.66);
-        color: rgba(229, 244, 255, 0.88);
-        font-weight: 800;
-        font-size: 0.92rem;
-      }
+    .route-menu {
+      position: relative;
+      min-width: min(17rem, 100%);
+    }
+
+    .route-menu summary {
+      list-style: none;
+      cursor: pointer;
+      min-height: 2.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .75rem;
+      border: 1px solid rgba(243,200,111,.28);
+      border-radius: 999px;
+      padding: .62rem .85rem;
+      color: rgba(241,246,255,.90);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(243,200,111,.14), transparent 70%),
+        rgba(255,255,255,.045);
+      font-size: .72rem;
+      font-weight: 950;
+      letter-spacing: .075em;
+      text-transform: uppercase;
+      box-shadow: 0 0 1.15rem rgba(243,200,111,.08), inset 0 1px 0 rgba(255,255,255,.08);
+      backdrop-filter: blur(7px);
+    }
+
+    .route-menu[open] summary {
+      border-color: rgba(243,200,111,.70);
+      color: rgba(255,244,216,.98);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(243,200,111,.25), transparent 72%),
+        radial-gradient(circle at 86% 50%, rgba(36,120,255,.18), transparent 70%),
+        linear-gradient(180deg, rgba(20,18,45,.84), rgba(4,9,20,.88));
+      box-shadow: 0 0 1.8rem rgba(243,200,111,.20), 0 0 3.2rem rgba(36,120,255,.14), inset 0 1px 0 rgba(255,255,255,.12);
+    }
+
+    .route-menu summary::-webkit-details-marker { display: none; }
+
+    .route-menu summary::after {
+      content: "";
+      width: .55rem;
+      height: .55rem;
+      border-right: 2px solid rgba(230,238,255,.82);
+      border-bottom: 2px solid rgba(230,238,255,.82);
+      transform: rotate(45deg) translateY(-.12rem);
+    }
+
+    .route-menu[open] summary::after {
+      transform: rotate(225deg) translateY(-.08rem);
+      border-color: rgba(243,200,111,.95);
+    }
+
+    .route-menu-panel {
+      position: absolute;
+      right: 0;
+      top: calc(100% + .55rem);
+      z-index: 40;
+      width: min(38rem, calc(100vw - 2rem));
+      padding: .82rem;
+      border: 1px solid rgba(243,200,111,.30);
+      border-radius: 1.1rem;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(243,200,111,.20), transparent 15rem),
+        radial-gradient(circle at 96% 25%, rgba(125,232,255,.12), transparent 15rem),
+        linear-gradient(180deg, rgba(11,13,38,.97), rgba(3,7,18,.98));
+      box-shadow: 0 0 2.8rem rgba(243,200,111,.14), 0 1.4rem 3.4rem rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.09);
+    }
+
+    .cardinal-map {
+      display: grid;
+      gap: .72rem;
+    }
+
+    .cardinal-group {
+      display: grid;
+      gap: .46rem;
+      padding: .62rem;
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: .95rem;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(125,232,255,.07), transparent 12rem),
+        rgba(255,255,255,.025);
+    }
+
+    .cardinal-heading {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: .35rem;
+      color: var(--gold);
+      font-size: .66rem;
+      font-weight: 950;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    .cardinal-heading span {
+      color: rgba(230,238,255,.58);
+      font-size: .58rem;
+      letter-spacing: .09em;
+    }
+
+    .route-menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: .48rem;
+    }
+
+    .route-menu-link {
+      min-height: 2.35rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(184,205,255,.18);
+      border-radius: .86rem;
+      padding: .5rem .62rem;
+      color: rgba(236,242,255,.88);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(125,232,255,.10), transparent 72%),
+        linear-gradient(180deg, rgba(255,255,255,.048), rgba(255,255,255,.020));
+      font-size: .64rem;
+      font-weight: 950;
+      letter-spacing: .06em;
+      text-align: center;
+      text-transform: uppercase;
+      box-shadow: 0 0 .85rem rgba(36,120,255,.08), inset 0 1px 0 rgba(255,255,255,.07);
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .route-menu-link:hover,
+    .route-menu-link:focus-visible {
+      transform: translateY(-2px);
+      border-color: rgba(243,200,111,.56);
+      color: rgba(255,244,216,.98);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(243,200,111,.16), transparent 72%),
+        linear-gradient(180deg, rgba(36,120,255,.085), rgba(255,255,255,.028));
+      outline: none;
+    }
+
+    .route-menu-link[aria-current="page"] {
+      color: #041009;
+      border-color: rgba(243,200,111,.86);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(125,232,255,.24), transparent 70%),
+        linear-gradient(135deg, #fff2a8, #f3c86f);
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: clamp(1.35rem, 5vw, 2.35rem);
+      background:
+        radial-gradient(circle at 14% 0%, rgba(125,232,255,.10), transparent 28rem),
+        radial-gradient(circle at 86% 18%, rgba(36,120,255,.14), transparent 28rem),
+        linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.022)),
+        var(--panel);
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,.08);
+      overflow: hidden;
+    }
+
+    .hero {
+      position: relative;
+      min-height: clamp(31rem, 58vw, 43rem);
+      display: grid;
+      align-content: center;
+      gap: 1rem;
+      padding: clamp(1.45rem, 5vw, 3.4rem);
+      margin-top: .6rem;
+      isolation: isolate;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      right: clamp(1rem, 6vw, 5.5rem);
+      top: 50%;
+      z-index: 0;
+      width: clamp(11rem, 28vw, 21rem);
+      height: clamp(11rem, 28vw, 21rem);
+      border: 1px solid rgba(125,232,255,.18);
+      border-radius: 50%;
+      transform: translateY(-50%);
+      background:
+        radial-gradient(circle at 34% 28%, rgba(255,255,255,.20), transparent 14%),
+        radial-gradient(circle at 42% 44%, rgba(125,232,255,.22), transparent 38%),
+        radial-gradient(circle at 56% 60%, rgba(1,38,96,.58), transparent 66%),
+        linear-gradient(145deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
+      box-shadow:
+        0 0 4rem rgba(125,232,255,.16),
+        inset -1.2rem -1.5rem 3rem rgba(0,0,0,.26),
+        inset .9rem .6rem 1.8rem rgba(255,255,255,.06);
+      pointer-events: none;
+      opacity: .62;
+    }
+
+    .kicker {
+      width: fit-content;
+      display: inline-flex;
+      align-items: center;
+      gap: .58rem;
+      padding: .58rem .95rem;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 999px;
+      color: rgba(230,238,255,.86);
+      background: rgba(255,255,255,.04);
+      font-size: .72rem;
+      font-weight: 950;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 2;
+    }
+
+    .kicker::before {
+      content: "";
+      width: .72rem;
+      height: .72rem;
+      border-radius: .18rem;
+      transform: rotate(45deg);
+      background: linear-gradient(135deg, var(--gold2), var(--gold));
+      box-shadow: 0 0 1.1rem rgba(243,200,111,.46);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 980px;
+      font-size: clamp(3.4rem, 11.8vw, 7.6rem);
+      line-height: .82;
+      letter-spacing: -.105em;
+      text-wrap: balance;
+      position: relative;
+      z-index: 2;
+    }
+
+    h2 {
+      margin: 0;
+      color: var(--gold);
+      font-size: clamp(1.45rem, 4.7vw, 2.75rem);
+      line-height: .98;
+      letter-spacing: -.07em;
+      text-wrap: balance;
+      position: relative;
+      z-index: 2;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(.98rem, 2.7vw, 1.16rem);
+      line-height: 1.55;
+    }
+
+    .lead {
+      max-width: 940px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .quote {
+      max-width: 900px;
+      padding: 1rem 1.1rem;
+      border: 1px solid rgba(243,200,111,.22);
+      border-radius: 1.2rem;
+      color: rgba(255,244,216,.92);
+      background: rgba(243,200,111,.065);
+      font-size: clamp(1rem, 2.7vw, 1.18rem);
+      font-weight: 850;
+      position: relative;
+      z-index: 2;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .62rem;
+      margin-top: .2rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .button {
+      min-height: 2.65rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 999px;
+      padding: .65rem 1rem;
+      background: rgba(255,255,255,.045);
+      color: rgba(241,246,255,.88);
+      font-size: .76rem;
+      font-weight: 950;
+      letter-spacing: .055em;
+      text-transform: uppercase;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.07);
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      transform: translateY(-2px);
+      border-color: rgba(243,200,111,.62);
+      outline: none;
+    }
+
+    .button.gold {
+      border-color: rgba(243,200,111,.9);
+      color: #060811;
+      background: linear-gradient(135deg, #fff2a8, #f3c86f);
+      box-shadow: 0 .8rem 1.8rem rgba(243,200,111,.13);
+    }
+
+    .button.green {
+      border-color: rgba(143,240,195,.42);
+      color: var(--green);
+      background: rgba(143,240,195,.07);
+    }
+
+    .section {
+      margin-top: 1.15rem;
+      padding: clamp(1rem, 3vw, 1.45rem);
+      display: grid;
+      gap: 1.05rem;
+    }
+
+    .world-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: .85rem;
+    }
+
+    .world-card {
+      display: grid;
+      gap: .65rem;
+      min-height: 14rem;
+      padding: 1.05rem;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 1.35rem;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(36,120,255,.10), transparent 60%),
+        rgba(255,255,255,.035);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .world-card::after {
+      content: "";
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+      width: 4.5rem;
+      height: 3.3rem;
+      clip-path: var(--gem);
+      opacity: .42;
+      background:
+        linear-gradient(35deg, transparent 0 20%, rgba(255,255,255,.26) 21% 23%, transparent 24%),
+        conic-gradient(from 45deg at 50% 50%, rgba(255,255,255,.24), rgba(36,120,255,.38), rgba(20,10,62,.70), rgba(243,200,111,.16), rgba(255,255,255,.22)),
+        radial-gradient(circle at 50% 26%, rgba(255,255,255,.30), transparent 44%);
+      filter: drop-shadow(0 .8rem 1rem rgba(0,0,0,.28)) drop-shadow(0 0 .8rem rgba(36,120,255,.18));
+      pointer-events: none;
+    }
+
+    .world-card b {
+      color: var(--gold);
+      font-size: .68rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 2;
+    }
+
+    .world-card strong {
+      color: rgba(255,244,216,.98);
+      font-size: 1.35rem;
+      line-height: 1.05;
+      position: relative;
+      z-index: 2;
+    }
+
+    .world-card span {
+      color: var(--muted);
+      font-size: .96rem;
+      line-height: 1.44;
+      position: relative;
+      z-index: 2;
+    }
+
+    .globe-shell {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .object-stage {
+      position: relative;
+      min-height: clamp(560px, 82vw, 800px);
+      border: 1px solid rgba(125,232,255,.18);
+      border-radius: clamp(1.35rem, 5vw, 2.35rem);
+      overflow: hidden;
+      isolation: isolate;
+      background:
+        radial-gradient(circle at 50% 58%, rgba(143,240,195,.08), transparent 24%),
+        radial-gradient(circle at 50% 26%, rgba(92,132,172,.16), transparent 42%),
+        linear-gradient(180deg, rgba(4,11,24,.92), rgba(2,7,16,.96));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .object-mount {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      overflow: hidden;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .object-fallback {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 45%, rgba(125,232,255,.075), transparent 20rem),
+        linear-gradient(180deg, rgba(1,5,16,.20), rgba(1,5,16,.78));
+      transition: opacity .25s ease;
+    }
+
+    [data-audralia-object-enhanced="true"] .object-fallback {
+      opacity: .18;
+    }
+
+    .fallback-planet {
+      width: min(66vw, 33rem);
+      height: min(66vw, 33rem);
+      max-width: calc(100% - 3rem);
+      max-height: calc(100% - 4rem);
+      border: 1px solid rgba(190,226,255,.26);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 32% 27%, rgba(255,255,255,.34), transparent 10%),
+        radial-gradient(circle at 38% 42%, rgba(90,210,232,.42), transparent 28%),
+        radial-gradient(circle at 56% 60%, rgba(4,72,135,.72), transparent 64%),
+        linear-gradient(135deg, #092b56, #020a23 78%);
+      box-shadow:
+        0 0 3.5rem rgba(125,232,255,.14),
+        0 0 6.5rem rgba(143,240,195,.08),
+        inset -1.6rem -1.8rem 4rem rgba(0,0,0,.38),
+        inset .9rem .7rem 2rem rgba(255,255,255,.07);
+    }
+
+    .fallback-planet::before {
+      content: "";
+      position: absolute;
+      inset: 13%;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 50%;
+      transform: rotate(-22deg);
+    }
+
+    .object-route {
+      position: absolute;
+      left: 50%;
+      bottom: clamp(108px, 20vw, 148px);
+      z-index: 5;
+      transform: translateX(-50%);
+      width: min(calc(100% - 44px), 760px);
+      text-align: center;
+      color: rgba(239,248,255,.68);
+      font-weight: 900;
+      letter-spacing: .02em;
+      line-height: 1.25;
+      text-shadow: 0 2px 14px rgba(0,0,0,.70);
+      pointer-events: none;
+    }
+
+    .object-instruction {
+      position: absolute;
+      left: clamp(16px, 4vw, 36px);
+      right: clamp(16px, 4vw, 36px);
+      bottom: clamp(16px, 4vw, 34px);
+      z-index: 5;
+      border-top: 1px solid rgba(255,255,255,.12);
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      padding: 14px 10px;
+      color: rgba(239,248,255,.80);
+      font-weight: 850;
+      line-height: 1.35;
+      font-size: clamp(.98rem, 3.8vw, 1.32rem);
+      background: rgba(3,8,18,.42);
+      backdrop-filter: blur(8px);
+      pointer-events: none;
+    }
+
+    .object-card {
+      border-left: 1px solid rgba(125,232,255,.22);
+      border-right: 1px solid rgba(125,232,255,.12);
+      padding: 22px 18px;
+      background: rgba(7,15,31,.62);
+    }
+
+    .object-card .label {
+      margin: 0 0 14px;
+      color: var(--green);
+      font: 900 .78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+    }
+
+    .object-card h2 {
+      color: rgba(238,244,255,.94);
+    }
+
+    .object-card p {
+      max-width: 880px;
+      margin: 16px 0 0;
+    }
+
+    .path-grid {
+      display: grid;
+      gap: .85rem;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .path-card {
+      position: relative;
+      display: grid;
+      gap: .75rem;
+      min-height: 16rem;
+      padding: 1.05rem;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 1.35rem;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(36,120,255,.10), transparent 60%),
+        rgba(255,255,255,.035);
+      overflow: hidden;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .path-card::after {
+      content: "";
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+      width: 4rem;
+      height: 3rem;
+      clip-path: var(--gem);
+      opacity: .44;
+      background:
+        linear-gradient(35deg, transparent 0 20%, rgba(255,255,255,.26) 21% 23%, transparent 24%),
+        conic-gradient(from 45deg at 50% 50%, rgba(255,255,255,.24), rgba(36,120,255,.38), rgba(20,10,62,.70), rgba(243,200,111,.16), rgba(255,255,255,.22)),
+        radial-gradient(circle at 50% 26%, rgba(255,255,255,.30), transparent 44%);
+      filter: drop-shadow(0 .8rem 1rem rgba(0,0,0,.28)) drop-shadow(0 0 .8rem rgba(36,120,255,.18));
+      pointer-events: none;
+    }
+
+    .path-card:hover,
+    .path-card:focus-visible {
+      transform: translateY(-3px);
+      border-color: rgba(243,200,111,.46);
+      outline: none;
+    }
+
+    .path-card b {
+      color: var(--gold);
+      font-size: .68rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 2;
+    }
+
+    .path-card strong {
+      color: rgba(255,244,216,.98);
+      font-size: 1.12rem;
+      line-height: 1.05;
+      position: relative;
+      z-index: 2;
+    }
+
+    .path-card span {
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.38;
+      position: relative;
+      z-index: 2;
+    }
+
+    .open-path {
+      margin-top: auto;
+      color: rgba(230,238,255,.88);
+      font-size: .72rem;
+      font-weight: 950;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hidden-receipt {
+      display: none !important;
+      visibility: hidden !important;
+    }
+
+    footer {
+      padding: 1.35rem 0 .5rem;
+      color: var(--faint);
+      text-align: center;
+      font-size: .76rem;
+    }
+
+    @media (max-width: 1080px) {
+      .path-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .path-card:last-child { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 980px) {
+      .topbar { grid-template-columns: 1fr; align-items: start; }
+      .nav { justify-content: flex-start; }
+      .route-menu-panel { left: 0; right: auto; }
+      .world-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .shell { width: min(100% - 22px, var(--max)); }
+
+      h1 { font-size: clamp(3.3rem, 17vw, 6rem); }
 
       .hero {
-        display: grid;
-        gap: 1rem;
-        margin-top: 1rem;
-        padding: clamp(1.1rem, 4vw, 2rem);
-        border: 1px solid rgba(133, 217, 255, 0.18);
-        border-radius: 2rem;
-        background:
-          linear-gradient(180deg, rgba(15, 45, 85, 0.72), rgba(3, 13, 30, 0.82)),
-          radial-gradient(circle at 22% 18%, rgba(125, 232, 255, 0.16), transparent 24rem);
-        box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.38);
+        min-height: 33rem;
+        padding: 1rem;
       }
 
-      .eyebrow {
-        color: var(--accent);
-        font-size: 0.82rem;
-        font-weight: 950;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
+      .actions { display: grid; }
+
+      .button { width: 100%; }
+
+      .route-menu { width: 100%; }
+
+      .route-menu-panel {
+        position: static;
+        margin-top: .45rem;
+        width: 100%;
       }
 
-      h1 {
-        margin: 0;
-        max-width: 18ch;
-        font-size: clamp(2.05rem, 7.2vw, 4.8rem);
-        line-height: 0.94;
-        letter-spacing: -0.06em;
+      .route-menu-grid { grid-template-columns: 1fr; }
+
+      .object-stage {
+        min-height: 600px;
       }
 
-      .lead {
-        max-width: 72ch;
-        margin: 0;
-        color: var(--muted);
-        font-size: clamp(1rem, 2.4vw, 1.2rem);
-        line-height: 1.6;
+      .path-grid {
+        grid-template-columns: 1fr;
       }
 
-      .gateway-grid {
-        display: grid;
-        gap: 0.8rem;
-        margin: 0.35rem 0;
+      .path-card:last-child {
+        grid-column: auto;
       }
+    }
 
-      details.gateway-card {
-        border: 1px solid rgba(133, 217, 255, 0.18);
-        border-radius: 1.25rem;
-        background: rgba(2, 10, 24, 0.58);
-        overflow: hidden;
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
       }
+    }
+  </style>
+</head>
 
-      details.gateway-card summary {
-        cursor: pointer;
-        min-height: 3rem;
-        padding: 0.9rem 1rem;
-        color: rgba(239, 248, 255, 0.95);
-        font-weight: 950;
-        list-style-position: inside;
-      }
+<body>
+  <a class="skip" href="#main">Skip to Audralia</a>
 
-      .gateway-card-body {
-        display: grid;
-        gap: 0.75rem;
-        padding: 0 1rem 1rem;
-        color: rgba(220, 239, 250, 0.86);
-        line-height: 1.55;
-      }
+  <div class="shell">
+    <header class="topbar" aria-label="Audralia header">
+      <a class="brand" href="/showroom/globe/audralia/" aria-current="page">
+        <span class="brand-mark" aria-hidden="true"><span>AU</span></span>
+        <span class="brand-copy">
+          <span>Diamond Gate Bridge</span>
+          <strong>Audralia</strong>
+        </span>
+      </a>
 
-      .gateway-card-body p {
-        margin: 0;
-      }
+      <nav class="nav" aria-label="Cardinal dropdown navigation">
+        <details class="route-menu">
+          <summary>Route Map</summary>
+          <div class="route-menu-panel">
+            <div class="cardinal-map">
+              <div class="cardinal-group">
+                <div class="cardinal-heading">Center <span>Core entry and return</span></div>
+                <div class="route-menu-grid">
+                  <a class="route-menu-link" href="/">Compass</a>
+                  <a class="route-menu-link" href="/showroom/globe/">Globe</a>
+                  <a class="route-menu-link" href="/showroom/globe/audralia/" aria-current="page">Audralia</a>
+                </div>
+              </div>
 
-      .path-row {
-        display: grid;
-        gap: 0.55rem;
-      }
+              <div class="cardinal-group">
+                <div class="cardinal-heading">Story <span>Mirrorland and character path</span></div>
+                <div class="route-menu-grid">
+                  <a class="route-menu-link" href="/characters/">Characters</a>
+                  <a class="route-menu-link" href="/showroom/globe/">Worlds</a>
+                  <a class="route-menu-link" href="/showroom/">Showroom</a>
+                </div>
+              </div>
 
-      .path-pill {
-        padding: 0.75rem 0.85rem;
-        border: 1px solid rgba(133, 217, 255, 0.15);
-        border-radius: 1rem;
-        background: rgba(8, 24, 50, 0.58);
-      }
+              <div class="cardinal-group">
+                <div class="cardinal-heading">Proof <span>Law and measurement</span></div>
+                <div class="route-menu-grid">
+                  <a class="route-menu-link" href="/laws/">Laws</a>
+                  <a class="route-menu-link" href="/gauges/">Gauges</a>
+                </div>
+              </div>
 
-      .path-pill strong {
-        display: block;
-        margin-bottom: 0.22rem;
-      }
-
-      .expression-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-      }
-
-      .expression-actions button {
-        min-height: 2.2rem;
-        padding: 0.52rem 0.75rem;
-        border: 1px solid rgba(125, 232, 255, 0.28);
-        border-radius: 999px;
-        background: rgba(125, 232, 255, 0.08);
-        color: var(--text);
-        font: inherit;
-        font-weight: 850;
-        cursor: pointer;
-      }
-
-      .contract-line {
-        margin: 0;
-        color: var(--dim);
-        font-family:
-          ui-monospace,
-          SFMono-Regular,
-          Menlo,
-          Monaco,
-          Consolas,
-          "Liberation Mono",
-          monospace;
-        font-size: 0.84rem;
-        line-height: 1.45;
-        word-break: break-word;
-        overflow-wrap: anywhere;
-      }
-
-      .stage-card {
-        overflow: hidden;
-        border: 1px solid var(--line);
-        border-radius: 2rem;
-        background: rgba(4, 15, 34, 0.82);
-        box-shadow:
-          0 2rem 5rem rgba(0, 0, 0, 0.42),
-          inset 0 1px 0 rgba(255, 255, 255, 0.04);
-      }
-
-      .stage-head {
-        padding: clamp(1rem, 3vw, 1.55rem);
-        border-bottom: 1px solid var(--line);
-        background:
-          linear-gradient(180deg, rgba(15, 52, 96, 0.88), rgba(8, 28, 57, 0.84)),
-          repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.02) 1px, transparent 1px, transparent 4px);
-      }
-
-      .stage-head h2 {
-        margin: 0;
-        font-size: clamp(1.25rem, 4vw, 1.8rem);
-        letter-spacing: -0.03em;
-      }
-
-      .stage-head p {
-        margin: 0.35rem 0 0;
-        color: var(--muted);
-        font-size: 1rem;
-      }
-
-      .bridge-badge {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: fit-content;
-        margin-top: 1rem;
-        padding: 0.65rem 1rem;
-        border: 1px solid rgba(125, 232, 255, 0.38);
-        border-radius: 999px;
-        background: rgba(125, 232, 255, 0.08);
-        color: var(--accent);
-        font-weight: 950;
-        letter-spacing: 0.09em;
-        text-transform: uppercase;
-      }
-
-      .canvas-shell {
-        position: relative;
-        min-height: clamp(420px, 72vw, 660px);
-        overflow: hidden;
-        border-bottom: 1px solid var(--line);
-        background: #010713;
-      }
-
-      .canvas-mount {
-        position: absolute;
-        inset: 0;
-        overflow: hidden;
-        border-radius: 0;
-        touch-action: none;
-        user-select: none;
-        -webkit-user-select: none;
-        -webkit-touch-callout: none;
-      }
-
-      .handoff-panel {
-        position: relative;
-        z-index: 5;
-        display: grid;
-        gap: 0.8rem;
-        max-width: 100%;
-        overflow-x: hidden;
-        overflow-wrap: anywhere;
-        padding: clamp(1rem, 3vw, 1.55rem);
-        border-top: 1px solid rgba(133, 217, 255, 0.14);
-        background: var(--panel-strong);
-        pointer-events: auto;
-        touch-action: pan-y;
-        user-select: text;
-        -webkit-user-select: text;
-        -webkit-touch-callout: default;
-      }
-
-      .handoff-panel,
-      .handoff-panel * {
-        user-select: text;
-        -webkit-user-select: text;
-        -webkit-touch-callout: default;
-      }
-
-      .handoff-panel[data-audralia-handoff-state="visible"] {
-        border-color: var(--good);
-      }
-
-      .handoff-panel[data-audralia-handoff-state="hold"] {
-        border-color: var(--held);
-      }
-
-      .handoff-panel[data-audralia-handoff-state="failed"] {
-        border-color: var(--bad);
-      }
-
-      .handoff-panel h3 {
-        margin: 0;
-        font-size: clamp(1.1rem, 3vw, 1.45rem);
-      }
-
-      .handoff-status {
-        margin: 0;
-        color: var(--text);
-        font-size: clamp(1rem, 2.5vw, 1.24rem);
-        font-weight: 850;
-        line-height: 1.35;
-      }
-
-      .handoff-list {
-        margin: 0;
-        padding-left: 1.35rem;
-        color: rgba(229, 244, 255, 0.92);
-        font-size: clamp(0.92rem, 2.1vw, 1.06rem);
-        line-height: 1.55;
-      }
-
-      .handoff-list strong {
-        font-weight: 950;
-      }
-
-      .handoff-receipt,
-      .bridge-script {
-        margin: 0;
-        max-width: 100%;
-        overflow-x: hidden;
-        overflow-wrap: anywhere;
-        word-break: break-word;
-        color: var(--dim);
-        font-family:
-          ui-monospace,
-          SFMono-Regular,
-          Menlo,
-          Monaco,
-          Consolas,
-          "Liberation Mono",
-          monospace;
-        font-size: 0.82rem;
-        line-height: 1.45;
-        white-space: normal;
-      }
-
-      dialog {
-        width: min(92vw, 560px);
-        border: 1px solid var(--line-strong);
-        border-radius: 1.35rem;
-        background: #041126;
-        color: var(--text);
-        box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.56);
-      }
-
-      dialog::backdrop {
-        background: rgba(0, 3, 10, 0.72);
-      }
-
-      .dialog-body {
-        display: grid;
-        gap: 0.75rem;
-      }
-
-      .dialog-body h3 {
-        margin: 0;
-      }
-
-      .dialog-body p {
-        margin: 0;
-        color: var(--muted);
-        line-height: 1.55;
-      }
-
-      .dialog-body button {
-        justify-self: end;
-        min-height: 2.1rem;
-        padding: 0.45rem 0.8rem;
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        background: rgba(125, 232, 255, 0.08);
-        color: var(--text);
-        font: inherit;
-        font-weight: 850;
-        cursor: pointer;
-      }
-
-      @media (min-width: 760px) {
-        .nav-groups,
-        .gateway-grid {
-          grid-template-columns: repeat(3, 1fr);
-        }
-
-        .path-row {
-          grid-template-columns: repeat(3, 1fr);
-        }
-      }
-    </style>
-  </head>
-
-  <body>
-    <a class="skip-link" href="#main">Skip to Audralia</a>
-
-    <div class="page">
-      <header class="topbar" aria-label="Audralia header">
-        <a class="brand" href="/showroom/globe/audralia/" aria-label="Diamond Gate Bridge Audralia">
-          <span class="brand-mark">AU</span>
-          <span>Diamond Gate Bridge · <strong>Audralia</strong></span>
-        </a>
-
-        <a class="return-link" href="/showroom/globe/">Center · Return to Globe</a>
-      </header>
-
-      <nav class="nav-groups" aria-label="Audralia route navigation">
-        <section class="nav-group" aria-label="Primary showroom routes">
-          <div class="nav-title">Center · Return</div>
-          <div class="nav-links">
-            <a href="/showroom/globe/">Globe</a>
-            <a href="/showroom/globe/audralia/">Audralia</a>
-            <a href="/showroom/">Showroom</a>
+              <div class="cardinal-group">
+                <div class="cardinal-heading">Community <span>Public application</span></div>
+                <div class="route-menu-grid">
+                  <a class="route-menu-link" href="/products/">Products</a>
+                  <a class="route-menu-link" href="/explore/frontier/">Frontier</a>
+                  <a class="route-menu-link" href="/meet-sean-mansfield/">Meet Sean</a>
+                </div>
+              </div>
+            </div>
           </div>
-        </section>
-
-        <section class="nav-group" aria-label="World future paths">
-          <div class="nav-title">Worlds · Future Paths</div>
-          <div class="nav-links">
-            <a href="/showroom/globe/earth/">ZIONTS</a>
-            <a href="/showroom/globe/h-earth/">H-Earth</a>
-            <a href="/showroom/globe/audralia/">Audralia</a>
-          </div>
-        </section>
-
-        <section class="nav-group" aria-label="Story and proof routes">
-          <div class="nav-title">Story · Proof</div>
-          <div class="nav-links">
-            <a href="/characters/">Characters</a>
-            <a href="/laws/">Laws</a>
-            <a href="/products/">Products</a>
-            <a href="/gauges/">Gauges</a>
-          </div>
-        </section>
+        </details>
       </nav>
+    </header>
 
-      <main id="main" class="hero">
-        <div class="eyebrow">Mirrorland Gateway · Audralia</div>
-        <h1>Shadows Never Shatter in Mirrorland.</h1>
+    <main id="main">
+      <section class="panel hero" aria-labelledby="page-title">
+        <div class="kicker">Mirrorland · Audralia</div>
+
+        <h1 id="page-title">Shadows Never Shatter in Mirrorland.</h1>
 
         <p class="lead">
-          Audralia is the preparation field inside Mirrorland. The globe below is the live visual object;
-          the dropdowns carry the public meaning so the route bridge can stay small, stable, and quiet.
+          Audralia is the possibility and preparation world inside Mirrorland. This route opens the story first, then presents the live globe as the inspection object.
         </p>
 
-        <section class="gateway-grid" aria-label="Mirrorland gateway dropdowns">
-          <details class="gateway-card" open>
-            <summary>What this doorway means</summary>
-            <div class="gateway-card-body">
-              <p>
-                Mirrorland is the future-shadow condition becoming reachable. The page does not need to explain
-                the entire universe. It gives the visitor a readable gateway and then lets the globe speak.
-              </p>
-            </div>
-          </details>
+        <div class="quote">
+          “Change Mirrorland’s direction through preparation, and Earth’s direction can change with it before the clock hardens the outcome.”
+        </div>
 
-          <details class="gateway-card">
-            <summary>ZIONTS · H-Earth · Audralia</summary>
-            <div class="gateway-card-body">
-              <div class="path-row">
-                <div class="path-pill">
-                  <strong>ZIONTS</strong>
-                  Consequence and warning path.
-                </div>
-                <div class="path-pill">
-                  <strong>H-Earth</strong>
-                  Survival and condition path.
-                </div>
-                <div class="path-pill">
-                  <strong>Audralia</strong>
-                  Possibility and preparation field.
-                </div>
-              </div>
-            </div>
-          </details>
+        <div class="actions">
+          <a class="button gold" href="#audralia-object">Inspect Audralia</a>
+          <a class="button" href="/characters/">Meet the Characters</a>
+          <a class="button" href="/laws/">Jump to Laws</a>
+          <a class="button green" href="/products/">Open Products</a>
+          <a class="button" href="/showroom/">Open Showroom</a>
+          <a class="button" href="/gauges/">Run Triple G</a>
+        </div>
+      </section>
 
-          <details class="gateway-card">
-            <summary>Routes from this globe</summary>
-            <div class="gateway-card-body">
-              <p>
-                Use Characters for the roster/dossier layer, Laws for the science/truth layer, and Showroom for
-                the visible software-object pathway.
-              </p>
-              <div class="expression-actions" aria-label="Mirrorland expression popups">
-                <button type="button" data-audralia-popup-open="mirrorland">Mirrorland</button>
-                <button type="button" data-audralia-popup-open="audralia">Audralia</button>
-                <button type="button" data-audralia-popup-open="handoff">Handoff</button>
-              </div>
-            </div>
-          </details>
-        </section>
+      <section class="panel section" aria-labelledby="world-title">
+        <div class="kicker">Three-world pressure path</div>
+        <h2 id="world-title">The route separates consequence, survival, and possibility.</h2>
 
-        <p class="contract-line">
-          AUDRALIA_G2_11_HTML_JS_MIRRORLAND_GATEWAY_MICRO_ORCHESTRATOR_STANDARD_v1 · HTML carries the gateway; JS conducts the handoff; the parent delivers the globe.
-        </p>
+        <div class="world-grid">
+          <article class="world-card">
+            <b>ZIONTS</b>
+            <strong>Consequence path</strong>
+            <span>ZIONTS carries the warning line: what happens when the future is read too late.</span>
+          </article>
 
-        <section class="stage-card" aria-label="Audralia clean canvas inspection">
-          <div class="stage-head">
-            <h2>Audralia globe delivery</h2>
-            <p>Clean-canvas form mount target. Runtime and parent may mount here only.</p>
-            <div class="bridge-badge">Micro-orchestrator bridge active</div>
+          <article class="world-card">
+            <b>H-Earth</b>
+            <strong>Survival path</strong>
+            <span>H-Earth carries the pressured condition line: survival remains possible, but constrained.</span>
+          </article>
+
+          <article class="world-card">
+            <b>Audralia</b>
+            <strong>Possibility path</strong>
+            <span>Audralia carries the preparation line: a clean-slate field where direction can still be built.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel section globe-shell" aria-labelledby="object-title">
+        <div class="kicker">Audralia globe · public software object</div>
+        <h2 id="object-title">The page carries the story. The stage carries the globe.</h2>
+
+        <div
+          id="audralia-object"
+          class="object-stage"
+          data-audralia-object-stage="true"
+          data-audralia-stage="true"
+          data-audralia-world="audralia"
+          data-renderer="parent-globe-object"
+          data-public-page-standard="compass-showroom"
+          data-generated-image="false"
+          data-graphic-box="false"
+          data-visual-pass-claimed="false"
+          aria-label="Audralia globe inspection stage"
+        >
+          <div class="object-fallback" aria-hidden="true">
+            <div class="fallback-planet"></div>
           </div>
 
-          <div class="canvas-shell" data-audralia-canvas-shell data-audralia-status-insertion-forbidden="true">
-            <div
-              id="audraliaCanvasMount"
-              class="canvas-mount"
-              data-audralia-canvas-mount
-              data-audralia-clean-canvas-mount
-              data-audralia-status-insertion-forbidden="true"
-              aria-label="Audralia clean canvas mount"
-            ></div>
+          <div
+            id="audralia-object-mount"
+            class="object-mount"
+            data-audralia-object-mount="true"
+            data-audralia-form-mount="true"
+            data-audralia-mount="true"
+            aria-label="Audralia globe mount"
+          ></div>
+
+          <div class="object-route">
+            Audralia · possibility and preparation field inside Mirrorland
           </div>
 
-          <section
-            id="audraliaHandoffPanel"
-            class="handoff-panel"
-            data-audralia-handoff-panel
-            data-audralia-handoff-state="pending"
-            data-audralia-route-bridge-status-target="true"
-            data-audralia-existing-handoff-panel="true"
-            data-audralia-nondestructive-bridge-target="true"
-            data-audralia-selectable-receipt-panel="true"
-            aria-live="polite"
-          >
-            <h3
-              id="audraliaHandoffTitle"
-              data-audralia-handoff-title
-              data-audralia-bridge-title-target="true"
-            >
-              Clean-canvas handoff pending
-            </h3>
+          <div class="object-instruction">
+            Drag inside the globe stage to inspect Audralia when the live object is mounted. The route remains readable before the object finishes loading.
+          </div>
+        </div>
 
-            <p
-              id="audraliaHandoffStatus"
-              class="handoff-status"
-              data-audralia-handoff-status
-              data-audralia-bridge-status-target="true"
-            >
-              HTML_READY · route bridge loading
-            </p>
+        <article class="object-card">
+          <p class="label">Object truth</p>
+          <h2>Audralia is a world surface, not a status surface.</h2>
+          <p>
+            The public page presents Mirrorland, Audralia, route choice, and the object stage. The globe engine supports the object inside the stage. Measurement belongs to Gauges, not to the visitor-facing page.
+          </p>
+        </article>
+      </section>
 
-            <ul
-              id="audraliaHandoffList"
-              class="handoff-list"
-              data-audralia-handoff-list
-              data-audralia-bridge-list-target="true"
-            >
-              <li><strong>ROUTE_VALID</strong> · /showroom/globe/audralia/</li>
-              <li><strong>MOUNT_TARGET_FOUND</strong> · #audraliaCanvasMount</li>
-              <li><strong>HTML_GATEWAY_READY</strong> · Mirrorland dropdowns available before JS handoff</li>
-            </ul>
+      <section class="panel section" aria-labelledby="paths-title">
+        <div class="kicker">Launchpad · story · laws · community</div>
+        <h2 id="paths-title">Choose the next route from Audralia.</h2>
 
-            <p
-              id="audraliaHandoffReceipt"
-              class="handoff-receipt"
-              data-audralia-handoff-receipt
-              data-audralia-bridge-receipt-target="true"
-            >
-              AUDRALIA_G2_11A_HTML_MIRRORLAND_GATEWAY_STABLE_SHELL_TNT_v1
-            </p>
+        <div class="path-grid">
+          <a class="path-card" href="/characters/">
+            <b>Story / Game</b>
+            <strong>Meet the Characters</strong>
+            <span>Enter the roster and playable narrative path behind Shadows Never Shatter in Mirrorland.</span>
+            <span class="open-path">Open Characters</span>
+          </a>
 
-            <p
-              id="audraliaBridgeScript"
-              class="bridge-script"
-              data-audralia-bridge-script
-              data-audralia-bridge-script-target="true"
-            >
-              Route bridge script: dynamic bootstrap pending
-            </p>
-          </section>
-        </section>
-      </main>
-    </div>
+          <a class="path-card" href="/laws/">
+            <b>Science / Truth</b>
+            <strong>Jump to the Laws page and lock in.</strong>
+            <span>View the governing logic, proof path, timing pressure, and consequence law.</span>
+            <span class="open-path">Open Laws</span>
+          </a>
 
-    <dialog id="mirrorlandDialog" data-audralia-popup="mirrorland">
-      <div class="dialog-body">
-        <h3>Mirrorland</h3>
-        <p>Mirrorland is not a decoration. It is the future-shadow condition becoming readable.</p>
-        <button type="button" data-audralia-popup-close>Close</button>
-      </div>
-    </dialog>
+          <a class="path-card" href="/products/">
+            <b>Community Line</b>
+            <strong>Open Products</strong>
+            <span>Products are the tools, games, offerings, and systems built to serve the community.</span>
+            <span class="open-path">Open Products</span>
+          </a>
 
-    <dialog id="audraliaDialog" data-audralia-popup="audralia">
-      <div class="dialog-body">
-        <h3>Audralia</h3>
-        <p>Audralia is the possibility field: the preparation world where the live globe gives the visitor a visible object to inspect.</p>
-        <button type="button" data-audralia-popup-close>Close</button>
-      </div>
-    </dialog>
+          <a class="path-card" href="/showroom/">
+            <b>Visible Objects</b>
+            <strong>Return to Showroom</strong>
+            <span>Inspect the public software-object surface and the Diamond proof object.</span>
+            <span class="open-path">Open Showroom</span>
+          </a>
 
-    <dialog id="handoffDialog" data-audralia-popup="handoff">
-      <div class="dialog-body">
-        <h3>Handoff</h3>
-        <p>The route bridge should remain small. It loads runtime once, hands off to the parent once, updates this page’s existing panel, and stops.</p>
-        <button type="button" data-audralia-popup-close>Close</button>
-      </div>
-    </dialog>
+          <a class="path-card" href="/gauges/">
+            <b>Measurement</b>
+            <strong>Run Triple G</strong>
+            <span>Check what is present, measurable, routed, and live across the public build.</span>
+            <span class="open-path">Open Gauges</span>
+          </a>
+        </div>
 
-    <script type="module">
-      const HTML_CONTRACT = "AUDRALIA_G2_11A_HTML_MIRRORLAND_GATEWAY_STABLE_SHELL_TNT_v1";
-      const PAIR_CONTRACT = "AUDRALIA_G2_11_HTML_JS_MIRRORLAND_GATEWAY_MICRO_ORCHESTRATOR_STANDARD_v1";
-      const ROUTE_BRIDGE_PATH = "/showroom/globe/audralia/index.js";
-      const ROOT = document.documentElement;
-      const now = Date.now();
-      const random = Math.random().toString(36).slice(2, 8);
-      const query = new URLSearchParams(window.location.search);
+        <template id="audralia-route-receipt" class="hidden-receipt">
+AUDRALIA_G2_13A_PUBLIC_MIRRORLAND_GLOBE_PAGE_TNT_v1
+pair=AUDRALIA_G2_13_PUBLIC_PAGE_STANDARD_RELEASE_FROM_HANDOFF_LEGACY_v1
+route=/showroom/globe/audralia/
+html=/showroom/globe/audralia/index.html
+js=/showroom/globe/audralia/index.js
+js_cache_key=AUDRALIA_G2_13B_PUBLIC_GLOBE_OBJECT_CONTROLLER_TNT_v1
+standard=compass_showroom_public_route
+story_first=true
+public_surface_first=true
+interactive_object_stage_second=true
+hidden_receipt_only=true
+visible_diagnostics=false
+status_panel=false
+route_bridge_bootstrap=false
+dynamic_route_bootstrap=false
+public_receipts_visible=false
+object_stage=#audralia-object
+object_mount=#audralia-object-mount
+html_owns=public_route,navigation,story_copy,world_cards,object_stage,launchpad,hidden_receipt
+js_owns=object_controller,parent_mount_support,gauges_markers
+parent_owns=globe_rendering,globe_motion,canvas_expression
+generated_image=false
+graphic_box=false
+visual_pass_claimed=false
+        </template>
+      </section>
+    </main>
 
-      const externalCacheKey =
-        query.get("audraliaCache") ||
-        query.get("cache") ||
-        query.get("v") ||
-        "";
+    <footer>
+      Audralia · Shadows Never Shatter in Mirrorland · Public page standard · Globe object stage.
+    </footer>
+  </div>
 
-      const dynamicCacheKey =
-        externalCacheKey ||
-        `${HTML_CONTRACT}__${now}__${random}`;
-
-      const bridgeUrl = `${ROUTE_BRIDGE_PATH}?v=${encodeURIComponent(dynamicCacheKey)}`;
-
-      ROOT.setAttribute("data-audralia-html-contract", HTML_CONTRACT);
-      ROOT.setAttribute("data-audralia-pair-contract", PAIR_CONTRACT);
-      ROOT.setAttribute("data-audralia-route-bridge-bootstrap", "dynamic-nonblocking");
-      ROOT.setAttribute("data-audralia-route-bridge-path", ROUTE_BRIDGE_PATH);
-      ROOT.setAttribute("data-audralia-route-bridge-cache-key", dynamicCacheKey);
-      ROOT.setAttribute("data-audralia-route-bridge-url", bridgeUrl);
-      ROOT.setAttribute("data-audralia-route-bridge-must-reuse-existing-panel", "true");
-      ROOT.setAttribute("data-audralia-route-bridge-may-create-status-panel", "false");
-      ROOT.setAttribute("data-audralia-route-bridge-may-hide-legacy-panel", "false");
-      ROOT.setAttribute("data-audralia-route-bridge-may-scan-broad-dom", "false");
-      ROOT.setAttribute("data-audralia-canvas-shell-status-insertion-forbidden", "true");
-      ROOT.setAttribute("data-audralia-selectable-receipt-panel", "true");
-
-      window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT = {
-        contract: HTML_CONTRACT,
-        pairContract: PAIR_CONTRACT,
-        routeBridgePath: ROUTE_BRIDGE_PATH,
-        routeBridgeUrl: bridgeUrl,
-        dynamicCacheKey,
-        externalCacheKey: Boolean(externalCacheKey),
-        mirrorlandGateway: true,
-        existingHandoffPanelRequired: true,
-        routeBridgeMustReuseExistingPanel: true,
-        routeBridgeMayCreateStatusPanel: false,
-        routeBridgeMayHideLegacyPanel: false,
-        routeBridgeMayScanBroadDom: false,
-        canvasShellStatusInsertionForbidden: true,
-        selectableReceiptPanel: true,
-        handoffPanelTargets: {
-          panel: "#audraliaHandoffPanel",
-          title: "#audraliaHandoffTitle",
-          status: "#audraliaHandoffStatus",
-          list: "#audraliaHandoffList",
-          receipt: "#audraliaHandoffReceipt",
-          script: "#audraliaBridgeScript",
-          mount: "#audraliaCanvasMount"
-        },
-        runtimeRewrite: false,
-        parentRewrite: false,
-        continentsRewrite: false,
-        generatedImage: false,
-        graphicBox: false,
-        visualPassClaim: false
-      };
-
-      const bridgeScript = document.querySelector("#audraliaBridgeScript");
-      if (bridgeScript) bridgeScript.textContent = `Route bridge script: ${bridgeUrl}`;
-
-      const loadBridge = () => {
-        import(bridgeUrl)
-          .then(() => {
-            window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.routeBridgeImportSucceeded = true;
-            ROOT.setAttribute("data-audralia-route-bridge-import-succeeded", "true");
-          })
-          .catch((error) => {
-            const message = error && error.message ? error.message : String(error);
-            window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.routeBridgeImportSucceeded = false;
-            window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.error = message;
-            ROOT.setAttribute("data-audralia-route-bridge-import-succeeded", "false");
-            ROOT.setAttribute("data-audralia-route-bridge-import-error", message);
-
-            const panel = document.querySelector("#audraliaHandoffPanel");
-            const title = document.querySelector("#audraliaHandoffTitle");
-            const status = document.querySelector("#audraliaHandoffStatus");
-
-            if (panel) panel.setAttribute("data-audralia-handoff-state", "hold");
-            if (title) title.textContent = "Clean-canvas handoff held";
-            if (status) status.textContent = "ROUTE_BRIDGE_IMPORT_FAILED · HTML shell preserved";
-          });
-      };
-
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", () => setTimeout(loadBridge, 0), { once: true });
-      } else {
-        setTimeout(loadBridge, 0);
-      }
-    </script>
-  </body>
+  <script>
+    window.DGB_AUDRALIA_HTML_CACHE_KEY = "AUDRALIA_G2_13A_PUBLIC_MIRRORLAND_GLOBE_PAGE_TNT_v1";
+    window.DGB_AUDRALIA_JS_CACHE_KEY = "AUDRALIA_G2_13B_PUBLIC_GLOBE_OBJECT_CONTROLLER_TNT_v1";
+  </script>
+  <script
+    type="module"
+    src="/showroom/globe/audralia/index.js?v=AUDRALIA_G2_13B_PUBLIC_GLOBE_OBJECT_CONTROLLER_TNT_v1"
+  ></script>
+</body>
 </html>

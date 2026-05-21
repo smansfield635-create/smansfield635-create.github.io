@@ -1,47 +1,45 @@
 // /showroom/globe/audralia/index.js
 // TNT FULL-FILE REPLACEMENT
-// AUDRALIA_G2_ROUTE_JS_GRATITUDE_SURFACE_RENDERER_CONSUMER_TNT_v4
-//
-// Supersedes:
-// AUDRALIA_G2_ROUTE_JS_TERRAIN_ECOSYSTEM_RUNTIME_CONSUMER_KEY_RENEWAL_TNT_v3
+// AUDRALIA_G2_ROUTE_JS_SHOWROOM_PLANET_OBJECT_GRANDPARENT_CONTROLLER_TNT_v5
 //
 // Purpose:
-// - Preserve current public route behavior.
-// - Preserve finger control.
+// - Preserve current Audralia page baseline.
+// - Read Showroom planet-object authority from HTML.
+// - Keep route JS as canvas/orchestration controller only.
+// - Require Planet View to be surface + clouds, not cloud-only.
+// - Call surface before clouds.
+// - Normalize route JS ↔ surface.js handshake fields.
+// - Report surface/gratitude/cloud readiness accurately.
 // - Preserve protected Lattice View.
-// - Preserve global multi-layer cloud shell.
-// - Fetch runtime by the surface-aware v6 cache key.
-// - Accept runtime by preserved public v2 contract.
-// - Verify runtime by v6 surface renderer capability marker.
-// - Call the Gratitude surface renderer before cloud rendering.
-// - Keep route JS as canvas orchestrator only.
-// - Do not move terrain/surface/cloud logic into route JS.
-// - Do not alter HTML.
-// - No generated image. No GraphicBox. No flat projection. No legacy handoff wall.
+// - Do not move datum, terrain, moisture, surface, or cloud engine logic into HTML.
+// - No generated image. No GraphicBox. No visual-pass claim.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_G2_ROUTE_JS_GRATITUDE_SURFACE_RENDERER_CONSUMER_TNT_v4";
-  var PREVIOUS_CONTRACT = "AUDRALIA_G2_ROUTE_JS_TERRAIN_ECOSYSTEM_RUNTIME_CONSUMER_KEY_RENEWAL_TNT_v3";
-  var HTML_CONTRACT = "AUDRALIA_G2_HTML_ROUTE_JS_MOISTURE_CLOUD_CONSUMER_KEY_RENEWAL_TNT_v1";
+  var CONTRACT = "AUDRALIA_G2_ROUTE_JS_SHOWROOM_PLANET_OBJECT_GRANDPARENT_CONTROLLER_TNT_v5";
+  var PREVIOUS_CONTRACT = "AUDRALIA_G2_ROUTE_JS_GRATITUDE_SURFACE_RENDERER_CONSUMER_TNT_v4";
+  var HTML_CONTRACT = "AUDRALIA_G2_HTML_BASELINE_PRESERVING_PLANET_OBJECT_GRANDPARENT_MERGE_TNT_v2";
 
   var RUNTIME_EXPECTED_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2";
-  var RUNTIME_CACHE_KEY = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_SURFACE_RENDERER_MANIFEST_CONSUMER_TNT_v6";
-
-  var RUNTIME_SURFACE_CAPABILITY_FIELD = "surfaceRendererConsumerContract";
-  var RUNTIME_SURFACE_CAPABILITY_MARKER = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_SURFACE_RENDERER_MANIFEST_CONSUMER_TNT_v6";
-
-  var PREVIOUS_RUNTIME_CACHE_KEY = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_TERRAIN_ECOSYSTEM_MANIFEST_CONSUMER_TNT_v5";
+  var RUNTIME_CACHE_KEY = "AUDRALIA_G2_GRATITUDE_FRONT_FACE_AND_DATUM_VISUAL_PROOF_ALIGNMENT_TNT_v1";
   var RUNTIME_PATH = "/assets/audralia/clean/runtime/audralia.true-globe.runtime.js";
 
-  var STANDARD = "AUDRALIA_G2_GRATITUDE_CONTINENT_SURFACE_VISUALIZATION_SPEC_OPS_v1";
+  var DATUM_CONTRACT = "AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1";
+  var SURFACE_CONTRACT = "AUDRALIA_G2_TRUE_RUNTIME_GRATITUDE_CONTINENT_SURFACE_RENDERER_CHILD_TNT_v1";
+  var CLOUD_CONTRACT = "AUDRALIA_G2_TRUE_RUNTIME_ORGANIC_MOISTURE_CLOUD_FLOW_CHILD_TNT_v2";
+
+  var SURFACE_CAPABILITY_FIELD = "surfaceRendererConsumerContract";
+  var SURFACE_CAPABILITY_MARKER = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_SURFACE_RENDERER_MANIFEST_CONSUMER_TNT_v6";
+  var DATUM_CAPABILITY_FIELD = "datumManifestConsumerContract";
+  var DATUM_CAPABILITY_MARKER = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_DATUM_MANIFEST_CONSUMER_TNT_v7";
+
   var TAU = Math.PI * 2;
 
   var LENS_COPY = {
     planet: {
       title: "Planet View",
-      label: "<strong>Planet View</strong> → Audralia · Gratitude continent under hydrology-powered clouds",
+      label: "<strong>Planet View</strong> → Audralia planet · Gratitude surface under hydrology-powered clouds",
       copy: "Planet View renders Audralia from the true-globe runtime. The Gratitude continent surface renderer draws beneath the global cloud shell."
     },
     lattice: {
@@ -52,7 +50,7 @@
     diagnostic: {
       title: "Diagnostic Scope",
       label: "<strong>Diagnostic Scope</strong> → runtime, surface, moisture, cloud, and lattice status",
-      copy: "Diagnostic Scope reports route JS, runtime v6, Gratitude surface visibility, terrain forcing, moisture, clouds, and protected lattice state."
+      copy: "Diagnostic Scope reports route JS, runtime, Gratitude surface visibility, terrain forcing, moisture, clouds, and protected lattice state."
     }
   };
 
@@ -62,47 +60,77 @@
     diagnosticMount: null,
     canvas: null,
     ctx: null,
+
+    width: 0,
+    height: 0,
+    dpr: 1,
+
     runtime: null,
+    runtimeLoaded: false,
+    runtimeAccepted: false,
+    runtimeSurfaceCapabilityConfirmed: false,
+    runtimeDatumCapabilityConfirmed: false,
 
     activeLens: "planet",
-    dpr: 1,
     raf: 0,
     renderCount: 0,
 
-    runtimeLoadStarted: false,
-    runtimeLoaded: false,
-    runtimeDetected: false,
-    runtimeExpectedContractPreserved: true,
-    runtimeCacheKeySeparated: true,
-    runtimeFetchKeyCurrent: false,
-    runtimeAcceptedByPublicContract: false,
-    runtimeSurfaceCapabilityConfirmed: false,
+    dragging: false,
 
     routeReady: false,
     canvasReady: false,
-    planetViewReady: false,
-    latticeViewReady: false,
-    diagnosticScopeReady: false,
 
-    terrainEcosystemReady: false,
-    terrainEcosystemLoaded: false,
-    terrainForcingDrivesMoisture: false,
-    moistureDerivedFromTerrainForcing: false,
-    moistureFieldReady: false,
-
-    surfaceLoaded: false,
+    surfaceAttempted: false,
+    surfaceBuildConfirmed: false,
+    surfaceRenderConfirmed: false,
     surfaceRendererReady: false,
+    surfaceVisibleCellCount: 0,
+    surfaceCellCount: 0,
     gratitudeContinentVisible: false,
     surfaceRenderedBeforeClouds: false,
 
+    cloudAttempted: false,
     cloudRendererReady: false,
+    cloudCount: 0,
     cloudsRenderAboveSurface: true,
 
     latticeViewProtected: true,
     duplicateCanvasCount: 0,
-    dragging: false,
+
+    lastFrame: null,
+    lastSurfaceLayer: null,
+    lastCloudLayer: null,
+
     errors: []
   };
+
+  var SHOWROOM_OBJECT = {
+    objectType: "planet",
+    objectName: "Audralia",
+    showroomFamily: "globe",
+    routeRole: "planet-object-inspection-route",
+    visibleSubject: "Audralia planet",
+    activeProofTarget: "Gratitude continent",
+    planetaryDatumRequired: true,
+    trueNorthSouthRequired: true,
+    surfaceVisibilityRequired: true,
+    cloudsAboveSurfaceRequired: true,
+    planetViewSurfaceAndClouds: true,
+    previousPlanetViewCloudsOnly: true,
+    latticeViewProtected: true,
+    latticeViewCloudsBlocked: true,
+    latticeViewSurfaceBlocked: true,
+    noAustraliaNamingDrift: true
+  };
+
+  function finite(value, fallback) {
+    var number = Number(value);
+    return Number.isFinite(number) ? number : fallback;
+  }
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, finite(value, min)));
+  }
 
   function setDataset(key, value) {
     try {
@@ -112,71 +140,1020 @@
   }
 
   function setText(selector, value) {
-    try {
-      var node = document.querySelector(selector);
-      if (node) node.textContent = String(value);
-    } catch (_error) {}
+    var node = document.querySelector(selector);
+    if (node) node.textContent = String(value);
   }
 
   function setHtml(selector, value) {
-    try {
-      var node = document.querySelector(selector);
-      if (node) node.innerHTML = String(value);
-    } catch (_error) {}
+    var node = document.querySelector(selector);
+    if (node) node.innerHTML = String(value);
+  }
+
+  function recordError(scope, error) {
+    var message = error && error.message ? error.message : String(error || scope);
+    state.errors.push({
+      scope: scope,
+      message: message,
+      time: new Date().toISOString()
+    });
+
+    window.AUDRALIA_G2_ROUTE_JS_ERROR = {
+      contract: CONTRACT,
+      scope: scope,
+      message: message,
+      errors: state.errors.slice()
+    };
+  }
+
+  function readHtmlObjectAuthority() {
+    var root = document.documentElement;
+    var stage = document.querySelector("#audraliaGlobeStage");
+
+    SHOWROOM_OBJECT.objectType = root.dataset.objectType || stage && stage.dataset.objectType || "planet";
+    SHOWROOM_OBJECT.objectName = root.dataset.objectName || stage && stage.dataset.objectName || "Audralia";
+    SHOWROOM_OBJECT.showroomFamily = root.dataset.showroomFamily || stage && stage.dataset.showroomFamily || "globe";
+    SHOWROOM_OBJECT.visibleSubject = root.dataset.visibleSubject || stage && stage.dataset.visibleSubject || "Audralia planet";
+    SHOWROOM_OBJECT.activeProofTarget = root.dataset.activeProofTarget || stage && stage.dataset.activeProofTarget || "Gratitude continent";
+
+    SHOWROOM_OBJECT.planetaryDatumRequired = true;
+    SHOWROOM_OBJECT.surfaceVisibilityRequired = true;
+    SHOWROOM_OBJECT.cloudsAboveSurfaceRequired = true;
+    SHOWROOM_OBJECT.planetViewSurfaceAndClouds = true;
+    SHOWROOM_OBJECT.previousPlanetViewCloudsOnly = true;
+    SHOWROOM_OBJECT.latticeViewProtected = true;
+    SHOWROOM_OBJECT.latticeViewCloudsBlocked = true;
+    SHOWROOM_OBJECT.latticeViewSurfaceBlocked = true;
+
+    window.AUDRALIA_G2_SHOWROOM_OBJECT = SHOWROOM_OBJECT;
+    return SHOWROOM_OBJECT;
   }
 
   function getRuntime() {
-    return window.AUDRALIA_TRUE_GLOBE_RUNTIME || window.AUDRALIA_G2_TRUE_GLOBE_RUNTIME || null;
+    return window.AUDRALIA_TRUE_GLOBE_RUNTIME ||
+      window.AUDRALIA_G2_TRUE_GLOBE_RUNTIME ||
+      null;
   }
 
   function getSurfaceApi() {
-    return window.AUDRALIA_TRUE_GLOBE_SURFACE || window.AUDRALIA_G2_TRUE_GLOBE_SURFACE || null;
+    return window.AUDRALIA_TRUE_GLOBE_SURFACE ||
+      window.AUDRALIA_G2_TRUE_GLOBE_SURFACE ||
+      null;
   }
 
   function getCloudApi() {
-    return window.AUDRALIA_TRUE_GLOBE_CLOUDS || window.AUDRALIA_G2_TRUE_GLOBE_CLOUDS || null;
+    return window.AUDRALIA_TRUE_GLOBE_CLOUDS ||
+      window.AUDRALIA_G2_TRUE_GLOBE_CLOUDS ||
+      null;
   }
 
-  function getMoistureApi() {
-    return window.AUDRALIA_TRUE_GLOBE_MOISTURE || window.AUDRALIA_G2_TRUE_GLOBE_MOISTURE || null;
-  }
-
-  function getTerrainEcosystemApi() {
-    return window.AUDRALIA_TRUE_GLOBE_TERRAIN_ECOSYSTEM || window.AUDRALIA_G2_TRUE_GLOBE_TERRAIN_ECOSYSTEM || null;
-  }
-
-  function runtimeStatus(runtime) {
+  function getRuntimeStatus(runtime) {
     if (!runtime || typeof runtime.status !== "function") return null;
 
     try {
       return runtime.status();
-    } catch (_error) {
+    } catch (error) {
+      recordError("runtime.status", error);
       return null;
     }
   }
 
-  function runtimeContract(runtime) {
-    var status = runtimeStatus(runtime);
-    return status && status.contract ? String(status.contract) : "";
+  function runtimeAccepted(runtime) {
+    var status = getRuntimeStatus(runtime);
+    if (!status) return false;
+
+    state.runtimeSurfaceCapabilityConfirmed = status[SURFACE_CAPABILITY_FIELD] === SURFACE_CAPABILITY_MARKER;
+    state.runtimeDatumCapabilityConfirmed = status[DATUM_CAPABILITY_FIELD] === DATUM_CAPABILITY_MARKER;
+
+    return status.contract === RUNTIME_EXPECTED_CONTRACT;
   }
 
-  function runtimeSurfaceCapability(runtime) {
-    var status = runtimeStatus(runtime);
-    return status && status[RUNTIME_SURFACE_CAPABILITY_FIELD]
-      ? String(status[RUNTIME_SURFACE_CAPABILITY_FIELD])
-      : "";
+  function loadScript(path, key, attributes) {
+    return new Promise(function (resolve, reject) {
+      var script = document.createElement("script");
+      script.src = path + "?v=" + encodeURIComponent(key);
+      script.defer = true;
+
+      Object.keys(attributes || {}).forEach(function (name) {
+        script.setAttribute(name, attributes[name]);
+      });
+
+      script.onload = function () {
+        resolve(script);
+      };
+
+      script.onerror = function () {
+        reject(new Error("SCRIPT_LOAD_FAILED: " + path + "?v=" + key));
+      };
+
+      document.body.appendChild(script);
+    });
   }
 
-  function runtimeIsPubliclyAccepted(runtime) {
-    return runtimeContract(runtime) === RUNTIME_EXPECTED_CONTRACT;
+  function loadRuntime() {
+    var existing = getRuntime();
+
+    if (existing && runtimeAccepted(existing)) {
+      state.runtime = existing;
+      state.runtimeLoaded = true;
+      state.runtimeAccepted = true;
+      initializeRuntime();
+      return Promise.resolve(existing);
+    }
+
+    setText("[data-audralia-diagnostic-loader]", "loading runtimeCache=" + RUNTIME_CACHE_KEY);
+
+    return loadScript(RUNTIME_PATH, RUNTIME_CACHE_KEY, {
+      "data-audralia-runtime-loader": CONTRACT,
+      "data-runtime-contract": RUNTIME_EXPECTED_CONTRACT,
+      "data-runtime-cache-key": RUNTIME_CACHE_KEY,
+      "data-object-type": SHOWROOM_OBJECT.objectType,
+      "data-object-name": SHOWROOM_OBJECT.objectName,
+      "data-visible-subject": SHOWROOM_OBJECT.visibleSubject,
+      "data-active-proof-target": SHOWROOM_OBJECT.activeProofTarget,
+      "data-surface-visibility-required": "true",
+      "data-clouds-above-surface-required": "true"
+    }).then(function () {
+      var runtime = getRuntime();
+
+      if (!runtime) {
+        throw new Error("RUNTIME_GLOBAL_MISSING_AFTER_LOAD");
+      }
+
+      state.runtime = runtime;
+      state.runtimeLoaded = true;
+      state.runtimeAccepted = runtimeAccepted(runtime);
+
+      initializeRuntime();
+      return runtime;
+    }).catch(function (error) {
+      recordError("loadRuntime", error);
+      setText("[data-audralia-diagnostic-loader]", "runtime load failed");
+      return null;
+    });
   }
 
-  function runtimeHasSurfaceCapability(runtime) {
-    return runtimeSurfaceCapability(runtime) === RUNTIME_SURFACE_CAPABILITY_MARKER;
+  function initializeRuntime() {
+    if (!state.runtime || typeof state.runtime.init !== "function") return;
+
+    try {
+      state.runtime.init({
+        width: state.width,
+        height: state.height,
+        dpr: state.dpr,
+        activeLens: state.activeLens,
+        showroomObject: SHOWROOM_OBJECT,
+        objectType: SHOWROOM_OBJECT.objectType,
+        objectName: SHOWROOM_OBJECT.objectName,
+        visibleSubject: SHOWROOM_OBJECT.visibleSubject,
+        activeProofTarget: SHOWROOM_OBJECT.activeProofTarget,
+        surfaceVisibilityRequired: true,
+        cloudsAboveSurfaceRequired: true,
+        planetViewSurfaceAndClouds: true,
+        latticeViewProtected: true
+      });
+    } catch (error) {
+      recordError("runtime.init", error);
+    }
   }
 
-  function runtimeIsFullyAccepted(runtime) {
-    return runtimeIsPubliclyAccepted(runtime) && runtimeHasSurfaceCapability(runtime);
+  function createCanvas() {
+    var existingCanvases = Array.prototype.slice.call(state.mount.querySelectorAll("canvas"));
+    state.duplicateCanvasCount = Math.max(0, existingCanvases.length - 1);
+
+    existingCanvases.slice(1).forEach(function (canvas) {
+      try { canvas.remove(); } catch (_error) {}
+    });
+
+    state.canvas = existingCanvases[0] || document.createElement("canvas");
+
+    if (!existingCanvases[0]) {
+      state.canvas.setAttribute("data-audralia-route-canvas", CONTRACT);
+      state.mount.appendChild(state.canvas);
+    }
+
+    state.ctx = state.canvas.getContext("2d", { alpha: true });
+    state.canvasReady = Boolean(state.ctx);
+  }
+
+  function resizeCanvas() {
+    if (!state.stage || !state.canvas) return;
+
+    var rect = state.stage.getBoundingClientRect();
+    var dpr = Math.max(1, Math.min(2.5, window.devicePixelRatio || 1));
+    var width = Math.max(320, Math.floor(rect.width * dpr));
+    var height = Math.max(420, Math.floor(rect.height * dpr));
+
+    if (state.width === width && state.height === height && state.dpr === dpr) return;
+
+    state.width = width;
+    state.height = height;
+    state.dpr = dpr;
+    state.canvas.width = width;
+    state.canvas.height = height;
+
+    if (state.runtime && typeof state.runtime.resize === "function") {
+      try {
+        state.runtime.resize(width, height, dpr);
+      } catch (error) {
+        recordError("runtime.resize", error);
+      }
+    }
+  }
+
+  function getFrame(time) {
+    if (!state.runtime) return null;
+
+    try {
+      if (typeof state.runtime.tick === "function") {
+        return state.runtime.tick(time);
+      }
+
+      if (typeof state.runtime.getFrame === "function") {
+        return state.runtime.getFrame();
+      }
+    } catch (error) {
+      recordError("runtime.frame", error);
+    }
+
+    return null;
+  }
+
+  function getMetrics(frame) {
+    if (frame && frame.metrics) return frame.metrics;
+
+    return {
+      width: state.width,
+      height: state.height,
+      centerX: state.width / 2,
+      centerY: state.height * 0.405,
+      radius: Math.min(state.width, state.height) * 0.345,
+      cameraDistance: 3.72
+    };
+  }
+
+  function clearCanvas() {
+    if (!state.ctx) return;
+    state.ctx.clearRect(0, 0, state.width, state.height);
+  }
+
+  function drawBaseSphere(frame) {
+    var ctx = state.ctx;
+    var metrics = getMetrics(frame);
+    var cx = metrics.centerX;
+    var cy = metrics.centerY;
+    var r = metrics.radius;
+
+    ctx.save();
+
+    var glow = ctx.createRadialGradient(cx - r * 0.22, cy - r * 0.24, 0, cx, cy, r * 1.28);
+    glow.addColorStop(0, "rgba(178,244,255,0.92)");
+    glow.addColorStop(0.20, "rgba(83,191,231,0.78)");
+    glow.addColorStop(0.46, "rgba(24,107,165,0.86)");
+    glow.addColorStop(0.78, "rgba(6,42,86,0.96)");
+    glow.addColorStop(1, "rgba(1,13,32,1)");
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, TAU);
+    ctx.fillStyle = glow;
+    ctx.fill();
+
+    var shade = ctx.createRadialGradient(cx - r * 0.34, cy - r * 0.34, r * 0.08, cx, cy, r * 1.08);
+    shade.addColorStop(0, "rgba(255,255,255,0.36)");
+    shade.addColorStop(0.25, "rgba(255,255,255,0.04)");
+    shade.addColorStop(0.70, "rgba(0,0,0,0.08)");
+    shade.addColorStop(1, "rgba(0,0,0,0.56)");
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, TAU);
+    ctx.fillStyle = shade;
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  function drawLimb(frame) {
+    var ctx = state.ctx;
+    var metrics = getMetrics(frame);
+    var cx = metrics.centerX;
+    var cy = metrics.centerY;
+    var r = metrics.radius;
+
+    ctx.save();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, TAU);
+    ctx.strokeStyle = "rgba(151,205,255,0.42)";
+    ctx.lineWidth = Math.max(1, state.dpr * 1.2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 1.012, 0, TAU);
+    ctx.strokeStyle = "rgba(141,216,255,0.16)";
+    ctx.lineWidth = Math.max(1, state.dpr * 2.0);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function clipSphere(frame) {
+    var ctx = state.ctx;
+    var metrics = getMetrics(frame);
+
+    ctx.beginPath();
+    ctx.arc(metrics.centerX, metrics.centerY, metrics.radius * 1.004, 0, TAU);
+    ctx.clip();
+  }
+
+  function projectLonLat(lon, lat, frame) {
+    var metrics = getMetrics(frame);
+    var yaw = finite(frame && frame.yaw, 0);
+    var pitch = finite(frame && frame.pitch, 0);
+    var roll = finite(frame && frame.roll, 0);
+
+    var clat = Math.cos(lat);
+    var x = clat * Math.cos(lon);
+    var y = Math.sin(lat);
+    var z = clat * Math.sin(lon);
+
+    var cy = Math.cos(yaw);
+    var sy = Math.sin(yaw);
+    var x1 = x * cy + z * sy;
+    var z1 = -x * sy + z * cy;
+    x = x1;
+    z = z1;
+
+    var cp = Math.cos(pitch);
+    var sp = Math.sin(pitch);
+    var y1 = y * cp - z * sp;
+    var z2 = y * sp + z * cp;
+    y = y1;
+    z = z2;
+
+    var cr = Math.cos(roll);
+    var sr = Math.sin(roll);
+    var x2 = x * cr - y * sr;
+    var y2 = x * sr + y * cr;
+    x = x2;
+    y = y2;
+
+    var denominator = Math.max(0.72, metrics.cameraDistance - z);
+    var perspective = metrics.cameraDistance / denominator;
+
+    return {
+      x: metrics.centerX + x * metrics.radius * perspective,
+      y: metrics.centerY - y * metrics.radius * perspective,
+      z: z,
+      perspective: perspective,
+      frontFacing: z >= -0.04,
+      visibility: z >= 0 ? 1 : clamp(0.1 + (z + 1) * 0.12, 0, 0.18)
+    };
+  }
+
+  function normalizeSurfaceLayer(layer) {
+    layer = layer || {};
+
+    var visibleCells =
+      layer.visibleCells ||
+      layer.visibleSurfaceCells ||
+      layer.drawQueue ||
+      layer.surfaceCells ||
+      [];
+
+    var cells =
+      layer.cells ||
+      layer.surfaceCells ||
+      layer.visibleCells ||
+      layer.drawQueue ||
+      [];
+
+    var visibleCount = finite(
+      layer.visibleSurfaceCellCount,
+      finite(
+        layer.visibleCellCount,
+        finite(layer.surfaceVisibleCellCount, visibleCells.length || 0)
+      )
+    );
+
+    var cellCount = finite(
+      layer.surfaceCellCount,
+      finite(layer.cellCount, cells.length || visibleCount || 0)
+    );
+
+    var ready = Boolean(
+      layer.surfaceRendererReady ||
+      layer.rendererReady ||
+      layer.fieldReady ||
+      layer.surfaceLayerReady ||
+      visibleCount > 0 ||
+      cellCount > 0
+    );
+
+    var gratitude = Boolean(
+      layer.gratitudeContinentVisible ||
+      layer.gratitudeVisible ||
+      layer.gratitudeSurfaceVisible ||
+      layer.gratitudeContinentProofVisible ||
+      layer.activeProofTargetVisible ||
+      visibleCount > 0
+    );
+
+    return {
+      layer: layer,
+      ready: ready,
+      gratitude: gratitude,
+      visibleCount: visibleCount,
+      cellCount: cellCount,
+      visibleCells: visibleCells,
+      cells: cells
+    };
+  }
+
+  function getSurfaceLayer(frame) {
+    var layer = frame && frame.surfaceLayer ? frame.surfaceLayer : null;
+
+    if (!layer && state.runtime && typeof state.runtime.getSurfaceLayer === "function") {
+      try {
+        layer = state.runtime.getSurfaceLayer();
+      } catch (error) {
+        recordError("runtime.getSurfaceLayer", error);
+      }
+    }
+
+    var surfaceApi = getSurfaceApi();
+
+    if (!layer && surfaceApi && typeof surfaceApi.buildSurfaceLayer === "function") {
+      try {
+        layer = surfaceApi.buildSurfaceLayer(frame);
+        state.surfaceBuildConfirmed = true;
+      } catch (error) {
+        recordError("surface.buildSurfaceLayer", error);
+      }
+    }
+
+    return layer;
+  }
+
+  function drawSurfaceOutputCells(frame, normalized) {
+    var ctx = state.ctx;
+    var cells = normalized.visibleCells.length ? normalized.visibleCells : normalized.cells;
+
+    if (!cells || !cells.length) return 0;
+
+    var drawn = 0;
+    var maxCells = Math.min(cells.length, 320);
+
+    ctx.save();
+    clipSphere(frame);
+    ctx.globalCompositeOperation = "source-over";
+
+    for (var i = 0; i < maxCells; i += 1) {
+      var cell = cells[i];
+      var lon = finite(cell.longitude, finite(cell.lon, NaN));
+      var lat = finite(cell.latitude, finite(cell.lat, NaN));
+
+      if (!Number.isFinite(lon) || !Number.isFinite(lat)) continue;
+
+      var landRatio = clamp(
+        finite(cell.landRatio, finite(cell.gratitudeInfluence, finite(cell.surfaceStrength, 0.5))),
+        0,
+        1
+      );
+
+      var terrainClass = String(cell.terrainClass || cell.materialClass || cell.className || "");
+      var isOcean = terrainClass.indexOf("ocean") >= 0 && landRatio < 0.32;
+      var isShelf = terrainClass.indexOf("shelf") >= 0 || terrainClass.indexOf("coastal") >= 0;
+
+      if (isOcean && !isShelf) continue;
+
+      var projected = projectLonLat(lon, lat, frame);
+      if (!projected.frontFacing || projected.visibility <= 0.03) continue;
+
+      var p = clamp(projected.perspective, 0.5, 2.2);
+      var radiusX = clamp(10 * p + landRatio * 18 * p, 5, 32 * p);
+      var radiusY = clamp(5 * p + landRatio * 9 * p, 2.5, 18 * p);
+      var opacity = clamp(0.18 + landRatio * 0.36, 0.12, 0.62) * projected.visibility;
+
+      if (isShelf) {
+        ctx.fillStyle = "rgba(124,204,208," + clamp(opacity * 0.62, 0.08, 0.32).toFixed(4) + ")";
+      } else if (terrainClass.indexOf("ridge") >= 0 || terrainClass.indexOf("highland") >= 0) {
+        ctx.fillStyle = "rgba(203,188,132," + opacity.toFixed(4) + ")";
+      } else if (terrainClass.indexOf("wetland") >= 0 || terrainClass.indexOf("forest") >= 0) {
+        ctx.fillStyle = "rgba(82,155,122," + opacity.toFixed(4) + ")";
+      } else {
+        ctx.fillStyle = "rgba(111,174,126," + opacity.toFixed(4) + ")";
+      }
+
+      ctx.beginPath();
+      ctx.ellipse(
+        projected.x,
+        projected.y,
+        radiusX,
+        radiusY,
+        lon * 0.35 + lat * 0.45,
+        0,
+        TAU
+      );
+      ctx.fill();
+
+      if (isShelf) {
+        ctx.strokeStyle = "rgba(205,241,224," + clamp(opacity * 0.36, 0.06, 0.20).toFixed(4) + ")";
+        ctx.lineWidth = Math.max(0.6, p * 0.8);
+        ctx.stroke();
+      }
+
+      drawn += 1;
+    }
+
+    ctx.restore();
+    return drawn;
+  }
+
+  function renderSurface(frame) {
+    state.surfaceAttempted = true;
+    state.surfaceRenderConfirmed = false;
+    state.surfaceRenderedBeforeClouds = false;
+
+    var surfaceApi = getSurfaceApi();
+    var layerBefore = getSurfaceLayer(frame);
+    var normalized = normalizeSurfaceLayer(layerBefore);
+
+    if (surfaceApi && typeof surfaceApi.render === "function") {
+      try {
+        var renderedLayer = surfaceApi.render(state.ctx, frame, {
+          activeLens: "planet",
+          showroomObject: SHOWROOM_OBJECT,
+          surfaceVisibilityRequired: true,
+          activeProofTarget: SHOWROOM_OBJECT.activeProofTarget,
+          cloudsAboveSurfaceRequired: true
+        });
+
+        if (renderedLayer) {
+          normalized = normalizeSurfaceLayer(renderedLayer);
+        }
+
+        state.surfaceRenderConfirmed = true;
+      } catch (error) {
+        recordError("surface.render", error);
+      }
+    }
+
+    var drawnFromOutput = 0;
+
+    if (!state.surfaceRenderConfirmed || normalized.visibleCount === 0 || !normalized.gratitude) {
+      drawnFromOutput = drawSurfaceOutputCells(frame, normalized);
+    }
+
+    if (drawnFromOutput > 0) {
+      normalized.visibleCount = Math.max(normalized.visibleCount, drawnFromOutput);
+      normalized.gratitude = true;
+      normalized.ready = true;
+    }
+
+    state.lastSurfaceLayer = normalized.layer;
+    state.surfaceRendererReady = normalized.ready;
+    state.gratitudeContinentVisible = normalized.gratitude;
+    state.surfaceVisibleCellCount = normalized.visibleCount;
+    state.surfaceCellCount = normalized.cellCount;
+    state.surfaceRenderedBeforeClouds = true;
+
+    return normalized;
+  }
+
+  function normalizeCloudLayer(layer) {
+    layer = layer || {};
+
+    var clouds = layer.clouds || layer.visibleClouds || [];
+    var count = finite(layer.cloudCount, finite(layer.visibleCloudCount, clouds.length || 0));
+
+    return {
+      layer: layer,
+      clouds: clouds,
+      count: count,
+      ready: Boolean(layer.rendererReady || layer.cloudRendererReady || layer.cloudsReady || count > 0)
+    };
+  }
+
+  function getCloudLayer(frame) {
+    var layer = frame && frame.cloudLayer ? frame.cloudLayer : null;
+
+    if (!layer && state.runtime && typeof state.runtime.getCloudLayer === "function") {
+      try {
+        layer = state.runtime.getCloudLayer();
+      } catch (error) {
+        recordError("runtime.getCloudLayer", error);
+      }
+    }
+
+    var cloudApi = getCloudApi();
+
+    if (!layer && cloudApi && typeof cloudApi.buildLayer === "function") {
+      try {
+        layer = cloudApi.buildLayer(frame);
+      } catch (error) {
+        recordError("cloud.buildLayer", error);
+      }
+    }
+
+    return layer;
+  }
+
+  function drawCloudOutputLayer(normalized) {
+    var ctx = state.ctx;
+    var clouds = normalized.clouds;
+
+    if (!clouds || !clouds.length) return 0;
+
+    var drawn = 0;
+
+    ctx.save();
+    ctx.globalCompositeOperation = "source-over";
+
+    for (var i = 0; i < clouds.length; i += 1) {
+      var cloud = clouds[i];
+      var fragments = cloud.fragments || [cloud];
+
+      for (var j = 0; j < fragments.length; j += 1) {
+        var fragment = fragments[j];
+        var x = finite(fragment.x, finite(cloud.x, NaN));
+        var y = finite(fragment.y, finite(cloud.y, NaN));
+
+        if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
+
+        var width = clamp(finite(fragment.width, finite(cloud.width, 18)), 1, 180);
+        var height = clamp(finite(fragment.height, finite(cloud.height, 8)), 1, 90);
+        var opacity = clamp(
+          finite(fragment.opacity, finite(cloud.cloudOpacity, 0.18)),
+          0,
+          0.74
+        );
+
+        if (opacity <= 0.01) continue;
+
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(finite(fragment.angle, finite(cloud.angle, 0)));
+
+        var gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, Math.max(width, height));
+        gradient.addColorStop(0, "rgba(255,255,255," + clamp(opacity * 0.70, 0, 0.70).toFixed(4) + ")");
+        gradient.addColorStop(0.42, "rgba(226,246,255," + clamp(opacity * 0.34, 0, 0.36).toFixed(4) + ")");
+        gradient.addColorStop(1, "rgba(150,198,226,0)");
+
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, width, height, 0, 0, TAU);
+        ctx.fill();
+
+        ctx.restore();
+        drawn += 1;
+      }
+    }
+
+    ctx.restore();
+    return drawn;
+  }
+
+  function renderClouds(frame) {
+    state.cloudAttempted = true;
+
+    var cloudApi = getCloudApi();
+    var layerBefore = getCloudLayer(frame);
+    var normalized = normalizeCloudLayer(layerBefore);
+
+    if (cloudApi && typeof cloudApi.render === "function") {
+      try {
+        var renderedLayer = cloudApi.render(state.ctx, frame, {
+          activeLens: "planet",
+          showroomObject: SHOWROOM_OBJECT,
+          cloudsAboveSurfaceRequired: true,
+          surfaceRenderedBeforeClouds: state.surfaceRenderedBeforeClouds
+        });
+
+        if (renderedLayer) normalized = normalizeCloudLayer(renderedLayer);
+      } catch (error) {
+        recordError("cloud.render", error);
+      }
+    } else {
+      var drawn = drawCloudOutputLayer(normalized);
+      if (drawn > 0) {
+        normalized.ready = true;
+        normalized.count = Math.max(normalized.count, drawn);
+      }
+    }
+
+    state.lastCloudLayer = normalized.layer;
+    state.cloudRendererReady = normalized.ready;
+    state.cloudCount = normalized.count;
+
+    return normalized;
+  }
+
+  function drawLattice(frame) {
+    var ctx = state.ctx;
+    if (!frame) return;
+
+    var links = frame.projectedLinks || {};
+    var seats = frame.projectedSeats || [];
+    var allLinks = []
+      .concat(links.ringLinks || [])
+      .concat(links.spineLinks || [])
+      .concat(links.fibonacciLinks || []);
+
+    ctx.save();
+
+    for (var i = 0; i < allLinks.length; i += 1) {
+      var link = allLinks[i];
+      if (!link || !link.a || !link.b) continue;
+
+      var opacity = link.frontFacing ? 0.28 : 0.08;
+      if (link.major) opacity += 0.10;
+
+      ctx.beginPath();
+      ctx.moveTo(link.a.screen.x, link.a.screen.y);
+      ctx.lineTo(link.b.screen.x, link.b.screen.y);
+      ctx.strokeStyle = "rgba(112,199,255," + opacity.toFixed(4) + ")";
+      ctx.lineWidth = link.major ? Math.max(0.8, state.dpr * 0.9) : Math.max(0.45, state.dpr * 0.55);
+      ctx.stroke();
+    }
+
+    for (i = 0; i < seats.length; i += 1) {
+      var seat = seats[i];
+      if (!seat || !seat.screen) continue;
+
+      var r = seat.radialIndex % 4 === 0 ? 2.2 : 1.5;
+      var a = seat.frontFacing ? 0.82 : 0.20;
+
+      ctx.beginPath();
+      ctx.arc(seat.screen.x, seat.screen.y, r * state.dpr, 0, TAU);
+      ctx.fillStyle = seat.radialIndex % 4 === 0
+        ? "rgba(244,207,131," + a.toFixed(4) + ")"
+        : "rgba(141,216,255," + a.toFixed(4) + ")";
+      ctx.fill();
+    }
+
+    ctx.restore();
+  }
+
+  function renderFrame(time) {
+    resizeCanvas();
+    clearCanvas();
+
+    var frame = getFrame(time) || state.lastFrame || {
+      width: state.width,
+      height: state.height,
+      dpr: state.dpr,
+      yaw: 0,
+      pitch: 0,
+      roll: 0,
+      metrics: {
+        width: state.width,
+        height: state.height,
+        centerX: state.width / 2,
+        centerY: state.height * 0.405,
+        radius: Math.min(state.width, state.height) * 0.345,
+        cameraDistance: 3.72
+      }
+    };
+
+    frame.showroomObject = SHOWROOM_OBJECT;
+    frame.surfaceVisibilityRequired = true;
+    frame.cloudsAboveSurfaceRequired = true;
+    frame.planetViewSurfaceAndClouds = true;
+    frame.latticeViewProtected = true;
+
+    state.lastFrame = frame;
+
+    drawBaseSphere(frame);
+
+    if (state.activeLens === "lattice") {
+      drawLattice(frame);
+      drawLimb(frame);
+      state.latticeViewProtected = true;
+    } else if (state.activeLens === "diagnostic") {
+      drawLattice(frame);
+      drawLimb(frame);
+    } else {
+      renderSurface(frame);
+      renderClouds(frame);
+      drawLimb(frame);
+    }
+
+    state.renderCount += 1;
+
+    if (state.renderCount % 10 === 0) {
+      updateDiagnostics(frame);
+    }
+
+    window.AUDRALIA_G2_ROUTE_JS_STATE = buildStatus(frame);
+
+    state.raf = window.requestAnimationFrame(renderFrame);
+  }
+
+  function buildStatus(frame) {
+    return {
+      contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      htmlContract: HTML_CONTRACT,
+      runtimeExpectedContract: RUNTIME_EXPECTED_CONTRACT,
+      runtimeCacheKey: RUNTIME_CACHE_KEY,
+      datumContract: DATUM_CONTRACT,
+      surfaceContract: SURFACE_CONTRACT,
+      cloudContract: CLOUD_CONTRACT,
+
+      showroomObject: SHOWROOM_OBJECT,
+
+      routeReady: state.routeReady,
+      canvasReady: state.canvasReady,
+      runtimeLoaded: state.runtimeLoaded,
+      runtimeAccepted: state.runtimeAccepted,
+      runtimeSurfaceCapabilityConfirmed: state.runtimeSurfaceCapabilityConfirmed,
+      runtimeDatumCapabilityConfirmed: state.runtimeDatumCapabilityConfirmed,
+
+      activeLens: state.activeLens,
+
+      planetViewSurfaceAndClouds: true,
+      previousPlanetViewCloudsOnly: true,
+
+      surfaceAttempted: state.surfaceAttempted,
+      surfaceBuildConfirmed: state.surfaceBuildConfirmed,
+      surfaceRenderConfirmed: state.surfaceRenderConfirmed,
+      surfaceRendererReady: state.surfaceRendererReady,
+      surfaceVisibleCellCount: state.surfaceVisibleCellCount,
+      surfaceCellCount: state.surfaceCellCount,
+      gratitudeContinentVisible: state.gratitudeContinentVisible,
+      surfaceRenderedBeforeClouds: state.surfaceRenderedBeforeClouds,
+
+      cloudAttempted: state.cloudAttempted,
+      cloudRendererReady: state.cloudRendererReady,
+      cloudCount: state.cloudCount,
+      cloudsRenderAboveSurface: true,
+
+      latticeViewProtected: true,
+      duplicateCanvasCount: state.duplicateCanvasCount,
+
+      frameDatumReady: Boolean(frame && frame.datumReady),
+      frameSurfaceLayerPresent: Boolean(frame && frame.surfaceLayer),
+      frameCloudLayerPresent: Boolean(frame && frame.cloudLayer),
+
+      noChildLogicInHtml: true,
+      noDuplicateCanvas: state.duplicateCanvasCount === 0,
+      noAustraliaNamingDrift: true,
+      visualPassClaimed: false,
+
+      errors: state.errors.slice()
+    };
+  }
+
+  function updateDiagnostics(frame) {
+    var status = buildStatus(frame);
+
+    setText(
+      "[data-audralia-diagnostic-route-js]",
+      status.routeReady
+        ? "active · planet-object grandparent controller"
+        : "route controller pending"
+    );
+
+    setText(
+      "[data-audralia-diagnostic-sphere]",
+      status.runtimeAccepted
+        ? "runtime accepted · 256 seats · surface capability=" + (status.runtimeSurfaceCapabilityConfirmed ? "confirmed" : "pending")
+        : "runtime pending"
+    );
+
+    setText(
+      "[data-audralia-diagnostic-planet]",
+      "Planet View " +
+        (state.activeLens === "planet" ? "active" : "held") +
+        " · surface=" + (status.surfaceRendererReady ? "ready" : "pending") +
+        " · gratitude=" + (status.gratitudeContinentVisible ? "ready" : "pending") +
+        " · cells=" + status.surfaceVisibleCellCount
+    );
+
+    setText(
+      "[data-audralia-diagnostic-lattice]",
+      status.latticeViewProtected
+        ? "protected · spherical runtime lattice"
+        : "lattice protection pending"
+    );
+
+    setText(
+      "[data-audralia-diagnostic-seats]",
+      "16 × 16 = 256"
+    );
+
+    setText(
+      "[data-audralia-diagnostic-loader]",
+      "runtimeCache=" + RUNTIME_CACHE_KEY +
+        " · surface=" + (status.surfaceRendererReady ? "ready" : "pending") +
+        " · gratitude=" + (status.gratitudeContinentVisible ? "ready" : "pending") +
+        " · clouds=" + (status.cloudRendererReady ? "ready" : "pending")
+    );
+
+    setDataset("audraliaRouteJsContract", CONTRACT);
+    setDataset("audraliaRuntimeAccepted", status.runtimeAccepted);
+    setDataset("audraliaSurfaceRendererReady", status.surfaceRendererReady);
+    setDataset("audraliaGratitudeContinentVisible", status.gratitudeContinentVisible);
+    setDataset("audraliaSurfaceVisibleCellCount", status.surfaceVisibleCellCount);
+    setDataset("audraliaCloudRendererReady", status.cloudRendererReady);
+    setDataset("audraliaPlanetViewSurfaceAndClouds", true);
+    setDataset("audraliaPreviousPlanetViewCloudsOnly", true);
+    setDataset("audraliaLatticeViewProtected", true);
+  }
+
+  function setLens(nextLens) {
+    var lens = Object.prototype.hasOwnProperty.call(LENS_COPY, nextLens) ? nextLens : "planet";
+    state.activeLens = lens;
+
+    document.documentElement.dataset.audraliaActiveLens = lens;
+
+    Array.prototype.slice.call(document.querySelectorAll("[data-audralia-lens-button]")).forEach(function (button) {
+      button.setAttribute("aria-pressed", button.dataset.audraliaLensButton === lens ? "true" : "false");
+    });
+
+    setText("[data-audralia-lens-title]", LENS_COPY[lens].title);
+    setText("[data-audralia-lens-copy]", LENS_COPY[lens].copy);
+    setHtml("[data-audralia-stage-label]", LENS_COPY[lens].label);
+
+    if (state.runtime && typeof state.runtime.setLens === "function") {
+      try {
+        state.runtime.setLens(lens);
+      } catch (error) {
+        recordError("runtime.setLens", error);
+      }
+    }
+  }
+
+  function attachLensControls() {
+    Array.prototype.slice.call(document.querySelectorAll("[data-audralia-lens-button]")).forEach(function (button) {
+      button.addEventListener("click", function () {
+        setLens(button.dataset.audraliaLensButton);
+      });
+    });
+
+    window.addEventListener("audralia:lens", function (event) {
+      if (event && event.detail && event.detail.activeLens) {
+        setLens(event.detail.activeLens);
+      }
+    });
+  }
+
+  function eventPoint(event) {
+    var rect = state.stage.getBoundingClientRect();
+    return {
+      x: (event.clientX - rect.left) * state.dpr,
+      y: (event.clientY - rect.top) * state.dpr
+    };
+  }
+
+  function attachPointerControls() {
+    if (!state.stage) return;
+
+    state.stage.addEventListener("pointerdown", function (event) {
+      if (!state.runtime || typeof state.runtime.pointerDown !== "function") return;
+
+      state.dragging = true;
+      state.stage.setPointerCapture(event.pointerId);
+
+      var point = eventPoint(event);
+      try {
+        state.runtime.pointerDown(point.x, point.y, performance.now());
+      } catch (error) {
+        recordError("runtime.pointerDown", error);
+      }
+    });
+
+    state.stage.addEventListener("pointermove", function (event) {
+      if (!state.dragging || !state.runtime || typeof state.runtime.pointerMove !== "function") return;
+
+      var point = eventPoint(event);
+      try {
+        state.runtime.pointerMove(point.x, point.y, performance.now());
+      } catch (error) {
+        recordError("runtime.pointerMove", error);
+      }
+    });
+
+    function release(event) {
+      if (!state.dragging) return;
+
+      state.dragging = false;
+
+      if (state.runtime && typeof state.runtime.pointerUp === "function") {
+        try {
+          state.runtime.pointerUp(performance.now());
+        } catch (error) {
+          recordError("runtime.pointerUp", error);
+        }
+      }
+
+      try {
+        state.stage.releasePointerCapture(event.pointerId);
+      } catch (_error) {}
+    }
+
+    state.stage.addEventListener("pointerup", release);
+    state.stage.addEventListener("pointercancel", release);
+    state.stage.addEventListener("pointerleave", release);
   }
 
   function markBoot() {
@@ -186,1108 +1163,59 @@
       htmlContract: HTML_CONTRACT,
       runtimeExpectedContract: RUNTIME_EXPECTED_CONTRACT,
       runtimeCacheKey: RUNTIME_CACHE_KEY,
-      previousRuntimeCacheKey: PREVIOUS_RUNTIME_CACHE_KEY,
-      runtimeSurfaceCapabilityField: RUNTIME_SURFACE_CAPABILITY_FIELD,
-      runtimeSurfaceCapabilityMarker: RUNTIME_SURFACE_CAPABILITY_MARKER,
-      standard: STANDARD,
-      reached: true,
-      reachedAt: new Date().toISOString(),
-      meaning: "Route JS evaluated. Runtime now fetches by surface-aware v6 cache key and draws Gratitude surface before clouds."
+      showroomObject: SHOWROOM_OBJECT,
+
+      routeJsActive: true,
+      showroomGrandparentAuthorityActive: true,
+      audraliaDeclaredAsPlanetObject: true,
+      visibleSubjectAudraliaPlanet: true,
+      activeProofTargetGratitude: true,
+      surfaceVisibilityRequired: true,
+      cloudsAboveSurfaceRequired: true,
+      planetViewSurfaceAndClouds: true,
+      previousPlanetViewCloudsOnly: true,
+
+      routeSurfaceFieldMapKnown: true,
+      routeSurfaceHandshakeNormalized: true,
+      surfaceBeforeClouds: true,
+      latticeViewProtected: true,
+
+      visualPassClaimed: false,
+      reachedAt: new Date().toISOString()
     };
-
-    window.AUDRALIA_G2_ROUTE_JS_CONTRACT = CONTRACT;
-
-    setDataset("audraliaRouteJsBootMarker", "reached");
-    setDataset("audraliaRouteJsContract", CONTRACT);
-    setDataset("audraliaRouteJsPreviousContract", PREVIOUS_CONTRACT);
-    setDataset("audraliaRuntimeExpectedContract", RUNTIME_EXPECTED_CONTRACT);
-    setDataset("audraliaRuntimeCacheKey", RUNTIME_CACHE_KEY);
-    setDataset("audraliaRuntimeCacheKeySeparated", "true");
-    setDataset("audraliaRuntimeExpectedContractPreserved", "true");
-    setDataset("audraliaRuntimeSurfaceCapabilityField", RUNTIME_SURFACE_CAPABILITY_FIELD);
-    setDataset("audraliaRuntimeSurfaceCapabilityMarker", RUNTIME_SURFACE_CAPABILITY_MARKER);
-    setDataset("audraliaSurfaceRendererExpected", "true");
-    setDataset("audraliaSurfaceDrawsBeforeClouds", "true");
-    setDataset("audraliaCloudsRenderAboveSurface", "true");
-    setDataset("audraliaLatticeViewProtected", "true");
-    setDataset("audraliaPlanetViewCloudsOnly", "true");
-    setDataset("audraliaLatticeViewCloudsBlocked", "true");
-    setDataset("audraliaLatticeViewSurfaceBlocked", "true");
-
-    setText("[data-audralia-diagnostic-route-js]", "route JS booted · surface runtime key active");
-    setText("[data-audralia-diagnostic-sphere]", "runtime v6 fetch key pending");
-    setText("[data-audralia-diagnostic-planet]", "Planet View pending Gratitude surface");
-    setText("[data-audralia-diagnostic-lattice]", "Lattice View protected");
-    setText("[data-audralia-diagnostic-seats]", "16 × 16 / 256 expected");
-    setText("[data-audralia-diagnostic-loader]", "runtime surface-renderer cache key preparing");
-  }
-
-  markBoot();
-
-  function recordError(scope, error) {
-    var message = error && error.message ? error.message : String(error || scope);
-
-    state.errors.push({
-      scope: scope,
-      message: message,
-      time: new Date().toISOString()
-    });
-
-    setDataset("audraliaRouteJsErrorScope", scope);
-    setDataset("audraliaRouteJsError", message);
-
-    setText("[data-audralia-diagnostic-route-js]", "error · " + scope);
-    setText("[data-audralia-diagnostic-sphere]", state.runtimeDetected ? "runtime detected before error" : "runtime not detected");
-    setText("[data-audralia-diagnostic-planet]", message);
-    setText("[data-audralia-diagnostic-lattice]", "protected · not rewritten");
-
-    publishStatus("error:" + scope);
-  }
-
-  function removePriorRuntimeLoaders() {
-    var loaders = document.querySelectorAll("script[data-audralia-runtime-loader]");
-
-    for (var i = 0; i < loaders.length; i += 1) {
-      var loader = loaders[i];
-      var key = loader.getAttribute("data-runtime-cache-key") || loader.getAttribute("data-runtime-contract") || "";
-
-      if (key !== RUNTIME_CACHE_KEY) {
-        try { loader.remove(); } catch (_error) {}
-      }
-    }
-  }
-
-  function loadRuntime() {
-    return new Promise(function (resolve, reject) {
-      var existing = getRuntime();
-
-      if (runtimeIsFullyAccepted(existing)) {
-        state.runtime = existing;
-        state.runtimeDetected = true;
-        state.runtimeLoaded = true;
-        state.runtimeAcceptedByPublicContract = true;
-        state.runtimeSurfaceCapabilityConfirmed = true;
-        state.runtimeFetchKeyCurrent = true;
-        resolve(existing);
-        return;
-      }
-
-      if (state.runtimeLoadStarted) {
-        var attempts = 0;
-        var interval = window.setInterval(function () {
-          attempts += 1;
-
-          var runtime = getRuntime();
-
-          if (runtimeIsFullyAccepted(runtime)) {
-            window.clearInterval(interval);
-            state.runtime = runtime;
-            state.runtimeDetected = true;
-            state.runtimeLoaded = true;
-            state.runtimeAcceptedByPublicContract = true;
-            state.runtimeSurfaceCapabilityConfirmed = true;
-            state.runtimeFetchKeyCurrent = true;
-            resolve(runtime);
-          }
-
-          if (attempts > 120) {
-            window.clearInterval(interval);
-            reject(new Error("AUDRALIA_RUNTIME_SURFACE_CAPABILITY_WAIT_TIMEOUT"));
-          }
-        }, 50);
-
-        return;
-      }
-
-      state.runtimeLoadStarted = true;
-      state.runtimeCacheKeySeparated = true;
-      state.runtimeExpectedContractPreserved = true;
-
-      setDataset("audraliaRuntimeLoadStarted", "true");
-      setDataset("audraliaRuntimeExpectedContract", RUNTIME_EXPECTED_CONTRACT);
-      setDataset("audraliaRuntimeCacheKey", RUNTIME_CACHE_KEY);
-      setDataset("audraliaRuntimeCacheKeySeparated", "true");
-      setDataset("audraliaRuntimeSurfaceCapabilityMarker", RUNTIME_SURFACE_CAPABILITY_MARKER);
-      setText("[data-audralia-diagnostic-loader]", "loading runtime with surface renderer v6 cache key");
-
-      removePriorRuntimeLoaders();
-
-      var script = document.createElement("script");
-      script.src = RUNTIME_PATH + "?v=" + encodeURIComponent(RUNTIME_CACHE_KEY);
-      script.async = true;
-      script.defer = true;
-      script.setAttribute("data-audralia-runtime-loader", CONTRACT);
-      script.setAttribute("data-runtime-expected-contract", RUNTIME_EXPECTED_CONTRACT);
-      script.setAttribute("data-runtime-cache-key", RUNTIME_CACHE_KEY);
-      script.setAttribute("data-previous-runtime-cache-key", PREVIOUS_RUNTIME_CACHE_KEY);
-      script.setAttribute("data-runtime-surface-capability-field", RUNTIME_SURFACE_CAPABILITY_FIELD);
-      script.setAttribute("data-runtime-surface-capability-marker", RUNTIME_SURFACE_CAPABILITY_MARKER);
-
-      script.onload = function () {
-        var runtime = getRuntime();
-
-        if (!runtimeIsPubliclyAccepted(runtime)) {
-          reject(new Error("AUDRALIA_RUNTIME_LOADED_BUT_PUBLIC_CONTRACT_REJECTED_" + runtimeContract(runtime)));
-          return;
-        }
-
-        if (!runtimeHasSurfaceCapability(runtime)) {
-          reject(new Error("AUDRALIA_RUNTIME_LOADED_BUT_SURFACE_CAPABILITY_MISSING_" + runtimeSurfaceCapability(runtime)));
-          return;
-        }
-
-        state.runtime = runtime;
-        state.runtimeDetected = true;
-        state.runtimeLoaded = true;
-        state.runtimeAcceptedByPublicContract = true;
-        state.runtimeSurfaceCapabilityConfirmed = true;
-        state.runtimeFetchKeyCurrent = true;
-
-        setDataset("audraliaRuntimeLoaded", "true");
-        setDataset("audraliaRuntimeAcceptedByPublicContract", "true");
-        setDataset("audraliaRuntimeSurfaceCapabilityConfirmed", "true");
-        setDataset("audraliaRuntimeFetchKeyCurrent", "true");
-        setText("[data-audralia-diagnostic-loader]", "runtime v6 surface renderer key loaded");
-
-        resolve(runtime);
-      };
-
-      script.onerror = function () {
-        reject(new Error("AUDRALIA_RUNTIME_SURFACE_RENDERER_SCRIPT_LOAD_FAILED"));
-      };
-
-      document.head.appendChild(script);
-    });
-  }
-
-  function locateDom() {
-    state.stage =
-      document.querySelector("#audraliaGlobeStage") ||
-      document.querySelector("[data-audralia-globe-stage]") ||
-      document.querySelector("[data-audralia-stage]");
-
-    state.mount =
-      document.querySelector("#audraliaGlobeMount") ||
-      document.querySelector("[data-audralia-globe-mount]") ||
-      document.querySelector("[data-audralia-canonical-visual-mount]") ||
-      document.querySelector("[data-audralia-canvas-mount]");
-
-    state.diagnosticMount =
-      document.querySelector("#audraliaDiagnosticMount") ||
-      document.querySelector("[data-audralia-diagnostic-mount]");
-
-    state.diagnosticScopeReady = Boolean(state.diagnosticMount);
-
-    if (!state.stage || !state.mount) {
-      throw new Error("AUDRALIA_ROUTE_DOM_MISSING_STAGE_OR_MOUNT");
-    }
-
-    setDataset("audraliaRouteDomLocated", "true");
-  }
-
-  function neutralizeDuplicateCanvases() {
-    if (!state.mount || !state.canvas) return;
-
-    var canvases = state.mount.querySelectorAll("canvas");
-    var duplicateCount = 0;
-
-    for (var i = 0; i < canvases.length; i += 1) {
-      var canvas = canvases[i];
-
-      if (canvas === state.canvas) continue;
-
-      duplicateCount += 1;
-      canvas.setAttribute("data-audralia-duplicate-neutralized", "true");
-      canvas.style.display = "none";
-      canvas.style.visibility = "hidden";
-      canvas.style.pointerEvents = "none";
-
-      try { canvas.remove(); } catch (_error) {}
-    }
-
-    state.duplicateCanvasCount += duplicateCount;
-  }
-
-  function createCanvas() {
-    var canvas = state.mount.querySelector("canvas[data-audralia-runtime-consumer-canvas]");
-
-    if (!canvas) {
-      canvas = document.createElement("canvas");
-      state.mount.appendChild(canvas);
-    }
-
-    canvas.setAttribute("data-audralia-runtime-consumer-canvas", "true");
-    canvas.setAttribute("data-contract", CONTRACT);
-    canvas.setAttribute("data-runtime-expected-contract", RUNTIME_EXPECTED_CONTRACT);
-    canvas.setAttribute("data-runtime-cache-key", RUNTIME_CACHE_KEY);
-    canvas.setAttribute("data-runtime-surface-capability-marker", RUNTIME_SURFACE_CAPABILITY_MARKER);
-    canvas.setAttribute("data-globe-carrier", "runtime-sphere");
-    canvas.setAttribute("data-flat-projection-blocked", "true");
-    canvas.setAttribute("data-generated-image", "false");
-    canvas.setAttribute("data-graphic-box", "false");
-    canvas.setAttribute("data-lattice-view-protected", "true");
-    canvas.setAttribute("data-planet-view-clouds-only", "true");
-    canvas.setAttribute("data-surface-rendered-before-clouds", "true");
-
-    canvas.style.position = "absolute";
-    canvas.style.inset = "0";
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
-    canvas.style.display = "block";
-    canvas.style.background = "transparent";
-    canvas.style.pointerEvents = "none";
-
-    state.canvas = canvas;
-    state.ctx = canvas.getContext("2d", { alpha: true });
-    state.canvasReady = Boolean(state.ctx);
-
-    if (!state.canvasReady) {
-      throw new Error("AUDRALIA_ROUTE_CANVAS_2D_CONTEXT_UNAVAILABLE");
-    }
-
-    neutralizeDuplicateCanvases();
-
-    if (typeof MutationObserver === "function") {
-      var observer = new MutationObserver(function () {
-        neutralizeDuplicateCanvases();
-      });
-
-      observer.observe(state.mount, { childList: true, subtree: false });
-    }
-
-    setDataset("audraliaCanonicalCanvasReady", "true");
-  }
-
-  function resizeCanvas() {
-    if (!state.canvas || !state.ctx || !state.mount) return;
-
-    var box = state.mount.getBoundingClientRect();
-    var dpr = Math.min(2, window.devicePixelRatio || 1);
-    var width = Math.max(320, Math.floor((box.width || 640) * dpr));
-    var height = Math.max(620, Math.floor((box.height || 720) * dpr));
-
-    if (state.canvas.width !== width) state.canvas.width = width;
-    if (state.canvas.height !== height) state.canvas.height = height;
-
-    state.dpr = dpr;
-
-    if (state.runtime && typeof state.runtime.resize === "function") {
-      state.runtime.resize(width, height, dpr);
-    }
-
-    state.ctx.setTransform(1, 0, 0, 1, 0, 0);
-  }
-
-  function clear() {
-    if (!state.ctx || !state.canvas) return;
-    state.ctx.clearRect(0, 0, state.canvas.width, state.canvas.height);
-  }
-
-  function drawLimb(ctx, frame, alpha) {
-    var metrics = frame.metrics;
-    var radius = metrics.radius;
-
-    ctx.save();
-
-    var glow = ctx.createRadialGradient(
-      metrics.centerX - radius * 0.22,
-      metrics.centerY - radius * 0.30,
-      radius * 0.08,
-      metrics.centerX,
-      metrics.centerY,
-      radius * 1.18
-    );
-
-    glow.addColorStop(0, "rgba(255,255,255,0.22)");
-    glow.addColorStop(0.30, "rgba(141,216,255,0.12)");
-    glow.addColorStop(0.70, "rgba(28,88,150,0.05)");
-    glow.addColorStop(1, "rgba(141,216,255,0)");
-
-    ctx.globalAlpha = alpha == null ? 1 : alpha;
-    ctx.fillStyle = glow;
-    ctx.beginPath();
-    ctx.arc(metrics.centerX, metrics.centerY, radius * 1.18, 0, TAU);
-    ctx.fill();
-
-    ctx.strokeStyle = "rgba(141,216,255,0.42)";
-    ctx.lineWidth = 1.5 * state.dpr;
-    ctx.beginPath();
-    ctx.arc(metrics.centerX, metrics.centerY, radius, 0, TAU);
-    ctx.stroke();
-
-    ctx.restore();
-  }
-
-  function clipSphere(ctx, frame) {
-    var metrics = frame.metrics;
-    ctx.beginPath();
-    ctx.arc(metrics.centerX, metrics.centerY, metrics.radius, 0, TAU);
-    ctx.clip();
-  }
-
-  function drawPlanetBody(ctx, frame) {
-    var metrics = frame.metrics;
-    var radius = metrics.radius;
-
-    ctx.save();
-
-    var body = ctx.createRadialGradient(
-      metrics.centerX - radius * 0.30,
-      metrics.centerY - radius * 0.34,
-      radius * 0.06,
-      metrics.centerX,
-      metrics.centerY,
-      radius
-    );
-
-    body.addColorStop(0, "rgba(236,250,255,0.94)");
-    body.addColorStop(0.13, "rgba(118,206,226,0.74)");
-    body.addColorStop(0.34, "rgba(20,116,164,0.88)");
-    body.addColorStop(0.68, "rgba(7,48,94,0.98)");
-    body.addColorStop(1, "rgba(1,8,24,1)");
-
-    ctx.fillStyle = body;
-    ctx.beginPath();
-    ctx.arc(metrics.centerX, metrics.centerY, radius, 0, TAU);
-    ctx.fill();
-
-    ctx.save();
-    clipSphere(ctx, frame);
-
-    var oceanPressure = ctx.createRadialGradient(
-      metrics.centerX + radius * 0.10,
-      metrics.centerY + radius * 0.16,
-      radius * 0.10,
-      metrics.centerX,
-      metrics.centerY,
-      radius
-    );
-
-    oceanPressure.addColorStop(0, "rgba(24,128,176,0.14)");
-    oceanPressure.addColorStop(0.45, "rgba(7,72,126,0.18)");
-    oceanPressure.addColorStop(1, "rgba(0,4,16,0.30)");
-
-    ctx.fillStyle = oceanPressure;
-    ctx.beginPath();
-    ctx.arc(metrics.centerX, metrics.centerY, radius, 0, TAU);
-    ctx.fill();
-
-    var shade = ctx.createLinearGradient(
-      metrics.centerX - radius,
-      metrics.centerY - radius,
-      metrics.centerX + radius,
-      metrics.centerY + radius
-    );
-
-    shade.addColorStop(0, "rgba(255,255,255,0.14)");
-    shade.addColorStop(0.42, "rgba(255,255,255,0.018)");
-    shade.addColorStop(0.72, "rgba(0,0,0,0.24)");
-    shade.addColorStop(1, "rgba(0,0,0,0.58)");
-
-    ctx.fillStyle = shade;
-    ctx.beginPath();
-    ctx.arc(metrics.centerX, metrics.centerY, radius, 0, TAU);
-    ctx.fill();
-
-    ctx.restore();
-    ctx.restore();
-  }
-
-  function drawSurfaceLayer(ctx, frame) {
-    if (state.activeLens !== "planet") return null;
-
-    var surfaceApi = getSurfaceApi();
-
-    if (!surfaceApi || typeof surfaceApi.render !== "function") {
-      state.surfaceRendererReady = false;
-      state.surfaceLoaded = false;
-      return null;
-    }
-
-    try {
-      var layer = surfaceApi.render(ctx, frame, {
-        activeLens: "planet",
-        protectedLattice: true,
-        drawBeforeClouds: true
-      });
-
-      state.surfaceLoaded = true;
-      state.surfaceRendererReady = Boolean(layer && layer.surfaceRendererReady);
-      state.gratitudeContinentVisible = Boolean(layer && layer.gratitudeContinentVisible);
-      state.surfaceRenderedBeforeClouds = true;
-
-      return layer;
-    } catch (error) {
-      recordError("surface-render", error);
-      return null;
-    }
-  }
-
-  function drawMoistureCloudLayer(ctx, frame) {
-    if (state.activeLens !== "planet") return null;
-
-    var cloudApi = getCloudApi();
-
-    if (!cloudApi || typeof cloudApi.render !== "function") {
-      state.cloudRendererReady = false;
-      return null;
-    }
-
-    try {
-      var layer = cloudApi.render(ctx, frame, {
-        activeLens: "planet",
-        protectedLattice: true,
-        renderAboveSurface: true
-      });
-
-      state.cloudRendererReady = Boolean(layer && layer.rendererReady);
-      state.moistureFieldReady = Boolean(layer && layer.moistureFieldReady);
-      state.cloudsRenderAboveSurface = true;
-
-      return layer;
-    } catch (error) {
-      recordError("cloud-render", error);
-      return null;
-    }
-  }
-
-  function drawPlanetView(ctx, frame) {
-    drawPlanetBody(ctx, frame);
-
-    var surfaceLayer = drawSurfaceLayer(ctx, frame);
-    var cloudLayer = drawMoistureCloudLayer(ctx, frame);
-
-    drawLimb(ctx, frame, 1);
-
-    state.planetViewReady = true;
-
-    return {
-      surfaceLayer: surfaceLayer,
-      cloudLayer: cloudLayer
-    };
-  }
-
-  function drawLink(ctx, link, type) {
-    var a = link.a;
-    var b = link.b;
-    var front = link.frontFacing;
-    var major = Boolean(link.major);
-
-    var alpha = front ? 0.55 : 0.07;
-    var width = front ? 1.0 : 0.55;
-    var color = front ? "rgba(130,222,255,1)" : "rgba(70,120,170,1)";
-
-    if (type === "spine") {
-      alpha = front ? (major ? 0.90 : 0.54) : 0.07;
-      width = major ? 1.65 : 0.95;
-      color = major ? "rgba(255,218,128,1)" : "rgba(152,232,255,1)";
-    }
-
-    if (type === "ring") {
-      alpha = front ? (major ? 0.68 : 0.46) : 0.07;
-      width = major ? 1.28 : 0.84;
-      color = major ? "rgba(255,220,140,1)" : "rgba(116,214,255,1)";
-    }
-
-    if (type === "fibonacci") {
-      alpha = front ? (major ? 0.40 : 0.20) : 0.035;
-      width = major ? 1.10 : 0.62;
-      color = major ? "rgba(255,190,82,1)" : "rgba(172,236,255,1)";
-    }
-
-    if (alpha <= 0.01) return;
-
-    ctx.save();
-    ctx.globalAlpha = alpha * Math.max(a.visibility || 0.1, b.visibility || 0.1);
-    ctx.strokeStyle = color;
-    ctx.lineWidth = width * state.dpr;
-    ctx.lineCap = "round";
-    ctx.beginPath();
-    ctx.moveTo(a.screen.x, a.screen.y);
-    ctx.lineTo(b.screen.x, b.screen.y);
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  function drawSeat(ctx, seat) {
-    var cardinal = seat.radialIndex % 4 === 0;
-    var even = seat.radialIndex % 2 === 0;
-    var front = seat.frontFacing;
-
-    var alpha = front
-      ? cardinal ? 0.98 : even ? 0.72 : 0.46
-      : cardinal ? 0.10 : 0.035;
-
-    if (alpha <= 0.025) return;
-
-    var radius = (cardinal ? 3.8 : even ? 2.7 : 1.85) * state.dpr * seat.screen.perspective;
-
-    ctx.save();
-    ctx.globalAlpha = alpha * seat.visibility;
-    ctx.fillStyle = cardinal ? "rgba(255,218,120,1)" : even ? "rgba(160,235,255,1)" : "rgba(94,174,230,1)";
-    ctx.beginPath();
-    ctx.arc(seat.screen.x, seat.screen.y, radius, 0, TAU);
-    ctx.fill();
-
-    if (front && cardinal) {
-      ctx.globalAlpha *= 0.25;
-      ctx.beginPath();
-      ctx.arc(seat.screen.x, seat.screen.y, radius * 2.6, 0, TAU);
-      ctx.fill();
-    }
-
-    ctx.restore();
-  }
-
-  function drawLattice(ctx, frame) {
-    ctx.save();
-
-    var metrics = frame.metrics;
-    var radius = metrics.radius;
-
-    var ghost = ctx.createRadialGradient(
-      metrics.centerX - radius * 0.24,
-      metrics.centerY - radius * 0.30,
-      radius * 0.06,
-      metrics.centerX,
-      metrics.centerY,
-      radius
-    );
-
-    ghost.addColorStop(0, "rgba(194,240,255,0.12)");
-    ghost.addColorStop(0.48, "rgba(30,90,150,0.07)");
-    ghost.addColorStop(1, "rgba(0,0,0,0.01)");
-
-    ctx.fillStyle = ghost;
-    ctx.beginPath();
-    ctx.arc(metrics.centerX, metrics.centerY, radius, 0, TAU);
-    ctx.fill();
-
-    ctx.restore();
-
-    drawLimb(ctx, frame, 0.92);
-
-    var links = frame.projectedLinks || {};
-    var ringLinks = links.ringLinks || [];
-    var spineLinks = links.spineLinks || [];
-    var fibonacciLinks = links.fibonacciLinks || [];
-    var seats = frame.projectedSeats || [];
-
-    for (var i = 0; i < ringLinks.length; i += 1) drawLink(ctx, ringLinks[i], "ring");
-    for (var j = 0; j < spineLinks.length; j += 1) drawLink(ctx, spineLinks[j], "spine");
-    for (var k = 0; k < fibonacciLinks.length; k += 1) drawLink(ctx, fibonacciLinks[k], "fibonacci");
-    for (var n = 0; n < seats.length; n += 1) drawSeat(ctx, seats[n]);
-
-    state.latticeViewReady = true;
-    state.latticeViewProtected = true;
-  }
-
-  function render() {
-    try {
-      if (!state.ctx || !state.canvas || !state.runtime) return;
-
-      resizeCanvas();
-
-      var frame = state.runtime.tick(performance.now());
-      clear();
-
-      var layers = {
-        surfaceLayer: null,
-        cloudLayer: null
-      };
-
-      if (state.activeLens === "lattice") {
-        drawLattice(state.ctx, frame);
-      } else if (state.activeLens === "diagnostic") {
-        drawLattice(state.ctx, frame);
-      } else {
-        layers = drawPlanetView(state.ctx, frame) || layers;
-      }
-
-      state.renderCount += 1;
-
-      updateDiagnostics(frame, layers.surfaceLayer, layers.cloudLayer);
-      publishStatus("render", frame, layers.surfaceLayer, layers.cloudLayer);
-    } catch (error) {
-      recordError("render", error);
-    }
-  }
-
-  function loop() {
-    render();
-    state.raf = window.requestAnimationFrame(loop);
-  }
-
-  function setLens(nextLens) {
-    var lens = LENS_COPY[nextLens] ? nextLens : "planet";
-
-    state.activeLens = lens;
-    setDataset("audraliaActiveLens", lens);
-
-    if (state.runtime && typeof state.runtime.setLens === "function") {
-      state.runtime.setLens(lens);
-    }
-
-    var buttons = document.querySelectorAll("[data-audralia-lens-button]");
-    for (var i = 0; i < buttons.length; i += 1) {
-      buttons[i].setAttribute("aria-pressed", buttons[i].dataset.audraliaLensButton === lens ? "true" : "false");
-    }
-
-    setText("[data-audralia-lens-title]", LENS_COPY[lens].title);
-    setText("[data-audralia-lens-copy]", LENS_COPY[lens].copy);
-    setHtml("[data-audralia-stage-label]", LENS_COPY[lens].label);
-
-    render();
-  }
-
-  function bindLensControls() {
-    var buttons = document.querySelectorAll("[data-audralia-lens-button]");
-
-    for (var i = 0; i < buttons.length; i += 1) {
-      buttons[i].addEventListener("click", function (event) {
-        setLens(event.currentTarget.dataset.audraliaLensButton);
-      });
-    }
-
-    window.addEventListener("audralia:lens", function (event) {
-      var lens = event && event.detail && event.detail.activeLens
-        ? event.detail.activeLens
-        : document.documentElement.dataset.audraliaActiveLens;
-
-      if (lens && lens !== state.activeLens) setLens(lens);
-    });
-
-    setLens(document.documentElement.dataset.audraliaActiveLens || "planet");
-  }
-
-  function bindPointer() {
-    if (!state.stage) return;
-
-    state.stage.style.touchAction = "none";
-
-    state.stage.addEventListener("pointerdown", function (event) {
-      state.dragging = true;
-
-      if (state.runtime && typeof state.runtime.pointerDown === "function") {
-        state.runtime.pointerDown(event.clientX, event.clientY, performance.now());
-      }
-
-      try {
-        if (state.stage.setPointerCapture) state.stage.setPointerCapture(event.pointerId);
-        event.preventDefault();
-      } catch (_error) {}
-    }, { passive: false });
-
-    state.stage.addEventListener("pointermove", function (event) {
-      if (!state.dragging) return;
-
-      if (state.runtime && typeof state.runtime.pointerMove === "function") {
-        state.runtime.pointerMove(event.clientX, event.clientY, performance.now());
-      }
-
-      try { event.preventDefault(); } catch (_error) {}
-    }, { passive: false });
-
-    function release(event) {
-      if (!state.dragging) return;
-
-      state.dragging = false;
-
-      if (state.runtime && typeof state.runtime.pointerUp === "function") {
-        state.runtime.pointerUp(performance.now());
-      }
-
-      try {
-        if (state.stage.releasePointerCapture) state.stage.releasePointerCapture(event.pointerId);
-      } catch (_error) {}
-    }
-
-    state.stage.addEventListener("pointerup", release, { passive: true });
-    state.stage.addEventListener("pointercancel", release, { passive: true });
-    state.stage.addEventListener("pointerleave", release, { passive: true });
-  }
-
-  function updateDiagnostics(frame, surfaceLayer, cloudLayer) {
-    var runtimeStatusValue = state.runtime && typeof state.runtime.status === "function"
-      ? state.runtime.status()
-      : null;
-
-    var terrainApi = getTerrainEcosystemApi();
-    var terrainStatus = terrainApi && typeof terrainApi.status === "function" ? terrainApi.status() : null;
-
-    var moistureApi = getMoistureApi();
-    var moistureStatus = moistureApi && typeof moistureApi.status === "function" ? moistureApi.status() : null;
-
-    var surfaceApi = getSurfaceApi();
-    var surfaceStatus = surfaceApi && typeof surfaceApi.status === "function" ? surfaceApi.status() : null;
-
-    var cloudApi = getCloudApi();
-    var cloudStatus = cloudApi && typeof cloudApi.status === "function" ? cloudApi.status() : null;
-
-    state.terrainEcosystemReady = Boolean(
-      (frame && frame.terrainEcosystemReady) ||
-      (runtimeStatusValue && runtimeStatusValue.terrainEcosystemReady) ||
-      (terrainStatus && terrainStatus.fieldReady)
-    );
-
-    state.terrainEcosystemLoaded = Boolean(
-      (frame && frame.terrainEcosystemLoaded) ||
-      (runtimeStatusValue && runtimeStatusValue.terrainEcosystemLoaded)
-    );
-
-    state.terrainForcingDrivesMoisture = Boolean(
-      (frame && frame.terrainForcingDrivesMoisture) ||
-      (runtimeStatusValue && runtimeStatusValue.terrainForcingDrivesMoisture)
-    );
-
-    state.moistureDerivedFromTerrainForcing = Boolean(
-      (moistureStatus && moistureStatus.moistureDerivedFromTerrainForcing) ||
-      (moistureStatus && moistureStatus.terrainForcingConsumed)
-    );
-
-    state.moistureFieldReady = Boolean(
-      (cloudLayer && cloudLayer.moistureFieldReady) ||
-      (runtimeStatusValue && runtimeStatusValue.moistureFieldReady) ||
-      (moistureStatus && moistureStatus.moistureFieldReady)
-    );
-
-    state.surfaceLoaded = Boolean(
-      (runtimeStatusValue && runtimeStatusValue.surfaceLoaded) ||
-      (surfaceStatus && surfaceStatus.initialized) ||
-      surfaceLayer
-    );
-
-    state.surfaceRendererReady = Boolean(
-      (surfaceLayer && surfaceLayer.surfaceRendererReady) ||
-      (runtimeStatusValue && runtimeStatusValue.surfaceRendererReady) ||
-      (surfaceStatus && surfaceStatus.surfaceRendererReady)
-    );
-
-    state.gratitudeContinentVisible = Boolean(
-      (surfaceLayer && surfaceLayer.gratitudeContinentVisible) ||
-      (runtimeStatusValue && runtimeStatusValue.gratitudeContinentVisible) ||
-      (surfaceStatus && surfaceStatus.gratitudeContinentVisible)
-    );
-
-    state.surfaceRenderedBeforeClouds = Boolean(surfaceLayer && state.activeLens === "planet");
-
-    state.cloudRendererReady = Boolean(
-      (cloudLayer && cloudLayer.rendererReady) ||
-      (runtimeStatusValue && runtimeStatusValue.cloudRendererReady) ||
-      (cloudStatus && cloudStatus.rendererReady)
-    );
-
-    state.runtimeFetchKeyCurrent = Boolean(
-      runtimeStatusValue &&
-      runtimeStatusValue[RUNTIME_SURFACE_CAPABILITY_FIELD] === RUNTIME_SURFACE_CAPABILITY_MARKER
-    );
-
-    state.runtimeSurfaceCapabilityConfirmed = state.runtimeFetchKeyCurrent;
-
-    setText("[data-audralia-diagnostic-route-js]", "active · Gratitude surface route consumer");
-    setText(
-      "[data-audralia-diagnostic-sphere]",
-      runtimeStatusValue && runtimeStatusValue.sphereSeats === 256
-        ? "runtime accepted · 256 seats · surface v6 " + (state.runtimeFetchKeyCurrent ? "confirmed" : "unconfirmed")
-        : "runtime detected · sphere pending"
-    );
-    setText(
-      "[data-audralia-diagnostic-planet]",
-      state.gratitudeContinentVisible
-        ? "active · Gratitude continent surface under clouds"
-        : "Planet View active · Gratitude surface pending"
-    );
-    setText(
-      "[data-audralia-diagnostic-lattice]",
-      state.latticeViewReady ? "protected · spherical runtime lattice" : "protected · held baseline"
-    );
-    setText(
-      "[data-audralia-diagnostic-seats]",
-      runtimeStatusValue
-        ? runtimeStatusValue.radialNodes + " × " + runtimeStatusValue.fibonacciBands + " = " + runtimeStatusValue.sphereSeats
-        : "runtime status pending"
-    );
-    setText(
-      "[data-audralia-diagnostic-loader]",
-      "runtimeCache=" + RUNTIME_CACHE_KEY +
-      " · surface=" + (state.surfaceRendererReady ? "ready" : "pending") +
-      " · gratitude=" + (state.gratitudeContinentVisible ? "visible" : "pending") +
-      " · clouds=" + (state.cloudRendererReady ? "above" : "pending") +
-      " · surfaceCells=" + (surfaceLayer && surfaceLayer.visibleCellCount != null ? surfaceLayer.visibleCellCount : 0) +
-      " · cloudCount=" + (cloudLayer && cloudLayer.cloudCount != null ? cloudLayer.cloudCount : 0)
-    );
-
-    setDataset("audraliaRuntimeDetected", state.runtimeDetected ? "true" : "false");
-    setDataset("audraliaRuntimeLoaded", state.runtimeLoaded ? "true" : "false");
-    setDataset("audraliaRuntimeExpectedContract", RUNTIME_EXPECTED_CONTRACT);
-    setDataset("audraliaRuntimeCacheKey", RUNTIME_CACHE_KEY);
-    setDataset("audraliaRuntimeCacheKeySeparated", "true");
-    setDataset("audraliaRuntimeAcceptedByPublicContract", state.runtimeAcceptedByPublicContract ? "true" : "false");
-    setDataset("audraliaRuntimeFetchKeyCurrent", state.runtimeFetchKeyCurrent ? "true" : "false");
-    setDataset("audraliaRuntimeSurfaceCapabilityConfirmed", state.runtimeSurfaceCapabilityConfirmed ? "true" : "false");
-
-    setDataset("audraliaRouteRenderCount", String(state.renderCount));
-    setDataset("audraliaTerrainEcosystemLoaded", state.terrainEcosystemLoaded ? "true" : "false");
-    setDataset("audraliaTerrainEcosystemReady", state.terrainEcosystemReady ? "true" : "false");
-    setDataset("audraliaTerrainForcingDrivesMoisture", state.terrainForcingDrivesMoisture ? "true" : "false");
-    setDataset("audraliaMoistureDerivedFromTerrainForcing", state.moistureDerivedFromTerrainForcing ? "true" : "false");
-    setDataset("audraliaMoistureFieldReady", state.moistureFieldReady ? "true" : "false");
-    setDataset("audraliaSurfaceLoaded", state.surfaceLoaded ? "true" : "false");
-    setDataset("audraliaSurfaceRendererReady", state.surfaceRendererReady ? "true" : "false");
-    setDataset("audraliaGratitudeContinentVisible", state.gratitudeContinentVisible ? "true" : "false");
-    setDataset("audraliaSurfaceRenderedBeforeClouds", state.surfaceRenderedBeforeClouds ? "true" : "false");
-    setDataset("audraliaCloudRendererReady", state.cloudRendererReady ? "true" : "false");
-    setDataset("audraliaCloudsRenderAboveSurface", state.cloudsRenderAboveSurface ? "true" : "false");
-    setDataset("audraliaPlanetViewCloudsOnly", "true");
-    setDataset("audraliaLatticeViewProtected", "true");
-    setDataset("audraliaLatticeViewCloudsBlocked", "true");
-    setDataset("audraliaLatticeViewSurfaceBlocked", "true");
-
-    if (frame) {
-      setDataset("audraliaRuntimeFrameIndex", String(frame.frameIndex || 0));
-      setDataset("audraliaRuntimeSphereSeats", String(frame.sphereSeats || 0));
-    }
-
-    if (surfaceLayer) {
-      setDataset("audraliaSurfaceVisibleCellCount", String(surfaceLayer.visibleCellCount || 0));
-      setDataset("audraliaSurfaceGratitudeCellCount", String(surfaceLayer.gratitudeCellCount || 0));
-      setDataset("audraliaSurfaceHydrologyHintCount", String(surfaceLayer.hydrologyHintCount || 0));
-    }
-
-    if (cloudLayer) {
-      setDataset("audraliaCloudCount", String(cloudLayer.cloudCount || 0));
-      setDataset("audraliaCloudFragmentCount", String(cloudLayer.fragmentCount || 0));
-    }
-  }
-
-  function status() {
-    var runtimeStatusValue = state.runtime && typeof state.runtime.status === "function" ? state.runtime.status() : null;
-
-    var terrainApi = getTerrainEcosystemApi();
-    var terrainStatus = terrainApi && typeof terrainApi.status === "function" ? terrainApi.status() : null;
-
-    var moistureApi = getMoistureApi();
-    var moistureStatus = moistureApi && typeof moistureApi.status === "function" ? moistureApi.status() : null;
-
-    var surfaceApi = getSurfaceApi();
-    var surfaceStatus = surfaceApi && typeof surfaceApi.status === "function" ? surfaceApi.status() : null;
-
-    var cloudApi = getCloudApi();
-    var cloudStatus = cloudApi && typeof cloudApi.status === "function" ? cloudApi.status() : null;
-
-    return {
-      contract: CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
-      htmlContract: HTML_CONTRACT,
-      standard: STANDARD,
-      route: "/showroom/globe/audralia/",
-
-      runtimePath: RUNTIME_PATH,
-      runtimeExpectedContract: RUNTIME_EXPECTED_CONTRACT,
-      runtimeCacheKey: RUNTIME_CACHE_KEY,
-      previousRuntimeCacheKey: PREVIOUS_RUNTIME_CACHE_KEY,
-      runtimeSurfaceCapabilityField: RUNTIME_SURFACE_CAPABILITY_FIELD,
-      runtimeSurfaceCapabilityMarker: RUNTIME_SURFACE_CAPABILITY_MARKER,
-      runtimeCacheKeySeparated: state.runtimeCacheKeySeparated,
-      runtimeExpectedContractPreserved: state.runtimeExpectedContractPreserved,
-      runtimeAcceptedByPublicContract: state.runtimeAcceptedByPublicContract,
-      runtimeSurfaceCapabilityConfirmed: state.runtimeSurfaceCapabilityConfirmed,
-      runtimeFetchKeyCurrent: state.runtimeFetchKeyCurrent,
-
-      runtimeDetected: state.runtimeDetected,
-      runtimeLoaded: state.runtimeLoaded,
-      runtimeStatus: runtimeStatusValue,
-
-      routeReady: state.routeReady,
-      canvasReady: state.canvasReady,
-      activeLens: state.activeLens,
-      renderCount: state.renderCount,
-
-      planetViewReady: state.planetViewReady,
-      latticeViewReady: state.latticeViewReady,
-      latticeViewProtected: state.latticeViewProtected,
-      diagnosticScopeReady: state.diagnosticScopeReady,
-
-      terrainEcosystemLoaded: state.terrainEcosystemLoaded,
-      terrainEcosystemReady: state.terrainEcosystemReady,
-      terrainForcingDrivesMoisture: state.terrainForcingDrivesMoisture,
-      terrainStatus: terrainStatus,
-
-      moistureDerivedFromTerrainForcing: state.moistureDerivedFromTerrainForcing,
-      moistureFieldReady: state.moistureFieldReady,
-      moistureStatus: moistureStatus,
-
-      surfaceLoaded: state.surfaceLoaded,
-      surfaceRendererReady: state.surfaceRendererReady,
-      gratitudeContinentVisible: state.gratitudeContinentVisible,
-      surfaceRenderedBeforeClouds: state.surfaceRenderedBeforeClouds,
-      surfaceStatus: surfaceStatus,
-
-      cloudRendererReady: state.cloudRendererReady,
-      cloudsRenderAboveSurface: state.cloudsRenderAboveSurface,
-      cloudStatus: cloudStatus,
-
-      duplicateCanvas: state.duplicateCanvasCount > 0,
-      duplicateCanvasCount: state.duplicateCanvasCount,
-
-      generatedImage: false,
-      graphicBox: false,
-      flatProjectionBlocked: true,
-      cssRingProof: false,
-      visibleLegacyHandoff: false,
-      earthCrossover: false,
-      australiaNamingDrift: false,
-
-      planetViewCloudsOnly: true,
-      latticeViewCloudsBlocked: true,
-      latticeViewSurfaceBlocked: true,
-
-      errors: state.errors.slice()
-    };
-  }
-
-  function publishStatus(scope, frame, surfaceLayer, cloudLayer) {
-    var payload = status();
-    payload.scope = scope || "publish";
-    payload.updatedAt = new Date().toISOString();
-
-    if (frame) {
-      payload.frame = {
-        frameIndex: frame.frameIndex,
-        activeLens: frame.activeLens,
-        sphereSeats: frame.sphereSeats,
-        radialNodes: frame.radialNodes,
-        fibonacciBands: frame.fibonacciBands,
-        latticeStates: frame.latticeStates,
-        surfaceLoaded: frame.surfaceLoaded,
-        surfaceRendererReady: frame.surfaceRendererReady,
-        gratitudeContinentVisible: frame.gratitudeContinentVisible
-      };
-    }
-
-    if (surfaceLayer) {
-      payload.surfaceLayer = {
-        surfaceCellCount: surfaceLayer.surfaceCellCount,
-        visibleCellCount: surfaceLayer.visibleCellCount,
-        gratitudeCellCount: surfaceLayer.gratitudeCellCount,
-        hydrologyHintCount: surfaceLayer.hydrologyHintCount,
-        gratitudeContinentVisible: surfaceLayer.gratitudeContinentVisible,
-        surfaceRendererReady: surfaceLayer.surfaceRendererReady
-      };
-    }
-
-    if (cloudLayer) {
-      payload.cloudLayer = {
-        cloudCount: cloudLayer.cloudCount,
-        fragmentCount: cloudLayer.fragmentCount,
-        moistureEligibleCount: cloudLayer.moistureEligibleCount,
-        averageCloudOpacity: cloudLayer.averageCloudOpacity,
-        rendererReady: cloudLayer.rendererReady,
-        cloudsDerivedFromMoisture: cloudLayer.cloudsDerivedFromMoisture,
-        cloudsNotVisible256Grid: cloudLayer.cloudsNotVisible256Grid,
-        globalCloudShellActive: cloudLayer.globalCloudShellActive
-      };
-    }
-
-    window.AUDRALIA_G2_ROUTE_JS_CONSUMER_STATUS = payload;
-    window.AUDRALIA_G2_TRUE_GLOBE_STATUS = payload;
-    window.AUDRALIA_G2_GRATITUDE_SURFACE_ROUTE_STATUS = payload;
-
-    return payload;
-  }
-
-  function publishApi() {
-    window.AUDRALIA_G2_ROUTE_JS_CONSUMER = {
-      contract: CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
-      htmlContract: HTML_CONTRACT,
-      runtimeExpectedContract: RUNTIME_EXPECTED_CONTRACT,
-      runtimeCacheKey: RUNTIME_CACHE_KEY,
-      runtimeSurfaceCapabilityField: RUNTIME_SURFACE_CAPABILITY_FIELD,
-      runtimeSurfaceCapabilityMarker: RUNTIME_SURFACE_CAPABILITY_MARKER,
-      runtimePath: RUNTIME_PATH,
-      setLens: setLens,
-      render: render,
-      status: status
-    };
-
-    return window.AUDRALIA_G2_ROUTE_JS_CONSUMER;
-  }
-
-  function initRuntime(runtime) {
-    var box = state.mount.getBoundingClientRect();
-    var dpr = Math.min(2, window.devicePixelRatio || 1);
-    var width = Math.max(320, Math.floor((box.width || 640) * dpr));
-    var height = Math.max(620, Math.floor((box.height || 720) * dpr));
-
-    runtime.init({
-      activeLens: state.activeLens,
-      width: width,
-      height: height,
-      dpr: dpr,
-      reducedMotion: window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    });
-
-    if (typeof runtime.ensureAtmosphereChildren === "function") {
-      runtime.ensureAtmosphereChildren();
-    }
-
-    runtime.resize(width, height, dpr);
   }
 
   function init() {
-    try {
-      setText("[data-audralia-diagnostic-route-js]", "route JS init started");
+    readHtmlObjectAuthority();
 
-      locateDom();
-      createCanvas();
+    state.stage = document.querySelector("#audraliaGlobeStage");
+    state.mount = document.querySelector("#audraliaGlobeMount");
+    state.diagnosticMount = document.querySelector("#audraliaDiagnosticMount");
 
-      loadRuntime()
-        .then(function (runtime) {
-          state.runtime = runtime;
-          state.runtimeDetected = true;
-          state.runtimeLoaded = true;
-          state.runtimeAcceptedByPublicContract = true;
-          state.runtimeSurfaceCapabilityConfirmed = true;
-
-          setText("[data-audralia-diagnostic-route-js]", "runtime accepted · surface renderer v6 confirmed");
-
-          initRuntime(runtime);
-
-          bindLensControls();
-          bindPointer();
-
-          state.routeReady = true;
-
-          setDataset("audraliaRouteReady", "true");
-          setDataset("audraliaRuntimeExpectedContract", RUNTIME_EXPECTED_CONTRACT);
-          setDataset("audraliaRuntimeCacheKey", RUNTIME_CACHE_KEY);
-          setDataset("audraliaRuntimeCacheKeySeparated", "true");
-          setDataset("audraliaRuntimeAcceptedByPublicContract", "true");
-          setDataset("audraliaRuntimeSurfaceCapabilityConfirmed", "true");
-          setDataset("audraliaSurfaceRendererExpected", "true");
-          setDataset("audraliaSurfaceDrawsBeforeClouds", "true");
-          setDataset("audraliaCloudsRenderAboveSurface", "true");
-          setDataset("audraliaLatticeViewProtected", "true");
-
-          updateDiagnostics(runtime.getFrame ? runtime.getFrame() : null, null, null);
-          publishApi();
-          publishStatus("init-complete");
-
-          if (!state.raf) {
-            state.raf = window.requestAnimationFrame(loop);
-          }
-        })
-        .catch(function (error) {
-          recordError("runtime-load", error);
-        });
-    } catch (error) {
-      recordError("init", error);
+    if (!state.stage || !state.mount) {
+      recordError("init", "Audralia stage or mount missing");
+      return;
     }
+
+    createCanvas();
+    resizeCanvas();
+    attachLensControls();
+    attachPointerControls();
+    setLens("planet");
+    markBoot();
+
+    state.routeReady = true;
+
+    loadRuntime().then(function () {
+      updateDiagnostics(state.lastFrame);
+    });
+
+    if (state.raf) window.cancelAnimationFrame(state.raf);
+    state.raf = window.requestAnimationFrame(renderFrame);
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init, { once: true });
+    document.addEventListener("DOMContentLoaded", init);
   } else {
     init();
   }

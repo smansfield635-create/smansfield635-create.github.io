@@ -1,22 +1,27 @@
 // /showroom/index.js
 // TNT FULL-FILE REPLACEMENT
+// SHOWROOM_DIAMOND_G2_CRYSTAL_LATTICE_SEPARATION_MONOCHROME_REFINEMENT_JS_TNT_v1
+//
+// Preserves recovered baselines:
 // SHOWROOM_DIAMOND_G2_CONSUMPTION_FINGERPRINT_AUDIT_JS_TNT_v1
+// SHOWROOM_DIAMOND_G2_CRYSTALLINE_FIBONACCI_BEAUTY_REFINEMENT_JS_TNT_v1
 //
-// Governing proof-object contract preserved as active runtime contract:
-// SHOWROOM_DIAMOND_G2_FIBONACCI_16_NODE_256_LATTICE_PROOF_OBJECT_RENEWAL_JS_TNT_v1
+// Governing standard:
+// SHOWROOM_DIAMOND_G2_FIBONACCI_16_NODE_256_LATTICE_PROOF_OBJECT_STANDARD_v1
 //
-// Scope: /showroom/ diamond proof-object consumption audit + renderer ownership.
+// Scope: /showroom/ diamond proof-object renderer only.
 // Purpose:
-// - Prove whether the live route is consuming the G2 diamond JS.
-// - Preserve the G2 Fibonacci 16-node 256-lattice proof-object standard.
-// - Bind to one canonical canvas only.
-// - Remove/neutralize duplicate legacy diamond canvases inside the stage.
-// - Publish hidden status API with renderCount, contract, generation, and latticeNodeCount.
-// - Continue rendering the G2 diamond object so consumption has a visible consequence.
-// - No visible diagnostics. No Audralia inheritance. No planet-template inheritance. No generated image. No GraphicBox.
+// - Separate Crystal Form from Lattice Structure.
+// - Crystal Form renders the Diamond as a clean monochrome diamond-crystal object.
+// - Crystal Form does not draw lattice lines, node dots, Fibonacci graph links, or gold/yellow body bands.
+// - Lattice Structure preserves the visible 16-node × 16 Fibonacci-band / 256-seat network.
+// - Preserve canonical canvas consumption, duplicate-canvas neutralization, hidden fingerprint API,
+//   finger drag, momentum, double-tap reset, Crystal Form, and Lattice Structure.
+// - No HTML rewrite. No generated image. No GraphicBox. No Audralia inheritance. No planet-template inheritance.
 
-const CONSUMPTION_AUDIT_CONTRACT = "SHOWROOM_DIAMOND_G2_CONSUMPTION_FINGERPRINT_AUDIT_JS_TNT_v1";
-const ACTIVE_PROOF_OBJECT_CONTRACT = "SHOWROOM_DIAMOND_G2_FIBONACCI_16_NODE_256_LATTICE_PROOF_OBJECT_RENEWAL_JS_TNT_v1";
+const MONOCHROME_REFINEMENT_CONTRACT = "SHOWROOM_DIAMOND_G2_CRYSTAL_LATTICE_SEPARATION_MONOCHROME_REFINEMENT_JS_TNT_v1";
+const PREVIOUS_BEAUTY_REFINEMENT_CONTRACT = "SHOWROOM_DIAMOND_G2_CRYSTALLINE_FIBONACCI_BEAUTY_REFINEMENT_JS_TNT_v1";
+const PREVIOUS_CONSUMPTION_AUDIT_CONTRACT = "SHOWROOM_DIAMOND_G2_CONSUMPTION_FINGERPRINT_AUDIT_JS_TNT_v1";
 const ACTIVE_STANDARD = "SHOWROOM_DIAMOND_G2_FIBONACCI_16_NODE_256_LATTICE_PROOF_OBJECT_STANDARD_v1";
 const PAIRED_HTML_CONTRACT = "SHOWROOM_DIAMOND_G2_FIBONACCI_16_NODE_256_LATTICE_HTML_STAGE_BINDING_TNT_v1";
 
@@ -31,8 +36,9 @@ const FIBONACCI_SEQUENCE = Object.freeze([
 ]);
 
 const SHOWROOM_DIAMOND_STATE = Object.freeze({
-  contract: ACTIVE_PROOF_OBJECT_CONTRACT,
-  auditContract: CONSUMPTION_AUDIT_CONTRACT,
+  contract: MONOCHROME_REFINEMENT_CONTRACT,
+  previousContract: PREVIOUS_BEAUTY_REFINEMENT_CONTRACT,
+  previousConsumptionAuditContract: PREVIOUS_CONSUMPTION_AUDIT_CONTRACT,
   pairedHtmlContract: PAIRED_HTML_CONTRACT,
   standard: ACTIVE_STANDARD,
   route: "/showroom/",
@@ -41,10 +47,13 @@ const SHOWROOM_DIAMOND_STATE = Object.freeze({
   diamondLock: "CROWN_CUT_256_LATTICE_FIXED_FORM",
   renderer: "native-webgl",
   renderModel: "single-canonical-canvas-deterministic-fibonacci-lattice-webgl",
+  refinement: "crystal-lattice-separation-monochrome-diamond-pass",
   radialNodes: RADIAL_NODES,
   fibonacciBands: FIBONACCI_BANDS,
   latticeStates: LATTICE_STATES,
   latticeEquation: "16_RADIAL_NODES_X_16_FIBONACCI_BANDS_EQUALS_256_LATTICE_SEATS",
+  crystalFormRule: "diamond-is-diamond-no-lattice-overlay",
+  latticeStructureRule: "lattice-is-structure-lens-only",
   touchGlide: true,
   doubleTapReset: true,
   generatedImage: false,
@@ -57,15 +66,15 @@ const SHOWROOM_DIAMOND_STATE = Object.freeze({
 const LENS_COPY = Object.freeze({
   crystal: {
     title: "Crystal Form",
-    route: "Crystal Form → Generation 2 Crown Cut Diamond · Fibonacci 16-node proof object",
+    route: "Crystal Form → G2 Crown Cut Diamond · clean diamond-crystal body",
     copy:
-      "This view renews the Diamond as a deterministic Crown Cut proof object: table, crown, girdle, pavilion, culet, sharp facets, finger drag, and release momentum. The object is generated from the same 16-node × 16 Fibonacci-band lattice that governs the structural view."
+      "This view presents the Diamond as the Diamond: one clean Crown Cut crystal object using icy white, silver, and pale blue diamond tones. The lattice, node seats, and Fibonacci graph remain hidden in this lens so the proof object reads as a finished crystal."
   },
   lattice: {
     title: "Lattice Structure",
     route: "Lattice Structure → 16 radial nodes × 16 Fibonacci bands = 256 lattice seats",
     copy:
-      "This view exposes the Diamond’s computable structure. Sixteen radial nodes are multiplied through sixteen Fibonacci-governed bands to produce 256 addressable lattice seats. The lens changes. The Diamond does not."
+      "This view exposes the computable structure beneath the Diamond. Sixteen radial nodes move through sixteen Fibonacci-governed bands to produce 256 addressable seats, with Fibonacci offset links using 1, 2, 3, 5, 8, and 13."
   }
 });
 
@@ -91,12 +100,14 @@ const state = {
   seats: [],
   triangles: [],
   crystalEdges: [],
+  crystallineFacetLines: [],
   latticeLines: [],
+  fibonacciHighlightLines: [],
   crystalPoints: [],
   latticePoints: [],
 
   yaw: -0.62,
-  pitch: -0.24,
+  pitch: -0.22,
   roll: 0.015,
   velocityYaw: 0,
   velocityPitch: 0,
@@ -176,7 +187,29 @@ function pointFromSeat(seat) {
   return { x: seat.x, y: seat.y, z: seat.z };
 }
 
-function roleColor(role, alpha = 1) {
+function crystalRoleColor(role, band, alpha = 1) {
+  const depth = band / Math.max(1, FIBONACCI_BANDS - 1);
+
+  if (role === "table") {
+    return mixColor([0.94, 0.985, 1.0, 0.92 * alpha], [0.78, 0.92, 1.0, 0.82 * alpha], depth * 0.20);
+  }
+
+  if (role === "crown") {
+    return mixColor([0.82, 0.94, 1.0, 0.84 * alpha], [0.56, 0.78, 0.96, 0.78 * alpha], depth * 0.28);
+  }
+
+  if (role === "girdle") {
+    return [0.74, 0.88, 0.98, 0.80 * alpha];
+  }
+
+  if (role === "pavilion") {
+    return mixColor([0.50, 0.74, 0.96, 0.82 * alpha], [0.20, 0.42, 0.78, 0.84 * alpha], depth * 0.58);
+  }
+
+  return [0.34, 0.58, 0.86, 0.72 * alpha];
+}
+
+function latticeRoleColor(role, alpha = 1) {
   if (role === "table") return [0.95, 0.99, 1.00, 0.88 * alpha];
   if (role === "crown") return [0.70, 0.91, 1.00, 0.78 * alpha];
   if (role === "girdle") return [1.00, 0.84, 0.38, 0.72 * alpha];
@@ -186,26 +219,28 @@ function roleColor(role, alpha = 1) {
 
 function createSeat(band, radial) {
   const radiusProfile = [
-    0.050, 0.200, 0.335, 0.490,
-    0.650, 0.835, 1.035, 1.115,
-    1.040, 0.810, 0.640, 0.495,
-    0.355, 0.225, 0.110, 0.030
+    0.245, 0.330, 0.420, 0.545,
+    0.700, 0.875, 1.055, 1.145,
+    1.085, 0.900, 0.710, 0.535,
+    0.380, 0.235, 0.115, 0.032
   ];
 
   const heightProfile = [
-    0.730, 0.655, 0.570, 0.445,
-    0.300, 0.150, 0.020, -0.080,
-    -0.220, -0.385, -0.535, -0.675,
-    -0.805, -0.920, -1.020, -1.100
+    0.620, 0.575, 0.520, 0.425,
+    0.305, 0.175, 0.060, -0.025,
+    -0.110, -0.230, -0.365, -0.500,
+    -0.625, -0.725, -0.800, -0.845
   ];
 
   const fib = FIBONACCI_SEQUENCE[band];
   const fibNorm = fibonacciWeight(band);
   const angle = (radial / RADIAL_NODES) * TAU;
-  const compassCut = radial % 2 === 0 ? 1.0 : 0.94;
-  const cardinalBoost = radial % 4 === 0 ? 1.055 : 1.0;
-  const fibonacciBreath = 1 + (fibNorm - 0.5) * 0.075;
-  const radius = radiusProfile[band] * compassCut * cardinalBoost * fibonacciBreath;
+
+  const compassCut = radial % 2 === 0 ? 1.0 : 0.942;
+  const cardinalBoost = radial % 4 === 0 ? 1.065 : 1.0;
+  const nodalFacetCut = radial % 4 === 2 ? 0.982 : 1.0;
+  const fibonacciBreath = 1 + (fibNorm - 0.5) * 0.052;
+  const radius = radiusProfile[band] * compassCut * cardinalBoost * nodalFacetCut * fibonacciBreath;
   const height = heightProfile[band];
 
   const role =
@@ -226,10 +261,10 @@ function createSeat(band, radial) {
     height,
     x: Math.cos(angle) * radius,
     y: height,
-    z: Math.sin(angle) * radius * 0.72,
+    z: Math.sin(angle) * radius * 0.68,
     role,
-    visibilityPriority: radial % 4 === 0 ? 1 : radial % 2 === 0 ? 0.78 : 0.58,
-    connectionPriority: radial % 4 === 0 ? 1 : radial % 2 === 0 ? 0.72 : 0.52
+    visibilityPriority: radial % 4 === 0 ? 1 : radial % 2 === 0 ? 0.80 : 0.58,
+    connectionPriority: radial % 4 === 0 ? 1 : radial % 2 === 0 ? 0.74 : 0.54
   });
 }
 
@@ -248,7 +283,9 @@ function buildGeometry() {
 
   const triangles = [];
   const crystalEdges = [];
+  const crystallineFacetLines = [];
   const latticeLines = [];
+  const fibonacciHighlightLines = [];
   const crystalPoints = [];
   const latticePoints = [];
 
@@ -256,23 +293,33 @@ function buildGeometry() {
     return rings[band][((radial % RADIAL_NODES) + RADIAL_NODES) % RADIAL_NODES];
   }
 
-  function addTriangle(a, b, c, color) {
+  function addTriangle(a, b, c, color, latticeColor, family = "crystal-facet") {
     triangles.push({
       a,
       b,
       c,
       normal: faceNormal(pointFromSeat(a), pointFromSeat(b), pointFromSeat(c)),
       color,
-      role: a.role
+      latticeColor,
+      role: a.role,
+      family
     });
   }
 
-  function addCrystalEdge(a, b, color, weight = 1) {
-    crystalEdges.push({ a, b, color, weight, family: "crystal-edge" });
+  function addCrystalEdge(a, b, color, weight = 1, family = "crystal-edge") {
+    crystalEdges.push({ a, b, color, weight, family });
+  }
+
+  function addFacetLine(a, b, color, weight = 1, family = "crystalline-facet-line") {
+    crystallineFacetLines.push({ a, b, color, weight, family });
   }
 
   function addLatticeLine(a, b, color, weight = 1, family = "lattice-line") {
     latticeLines.push({ a, b, color, weight, family });
+  }
+
+  function addFibonacciHighlight(a, b, color, weight = 1, family = "fibonacci-highlight") {
+    fibonacciHighlightLines.push({ a, b, color, weight, family });
   }
 
   for (let band = 0; band < FIBONACCI_BANDS - 1; band += 1) {
@@ -284,12 +331,39 @@ function buildGeometry() {
       const c = seat(band + 1, next);
       const d = seat(band + 1, radial);
 
-      const base = roleColor(a.role, 1);
-      const fibTint = [1.0, 0.80, 0.35, 0.74];
-      const color = mixColor(base, fibTint, Math.min(0.26, a.fibonacciWeight * 0.40));
+      const crystalBase = crystalRoleColor(a.role, a.band, 1);
+      const crystalIce = [0.92, 0.985, 1.0, crystalBase[3]];
+      const crystalDepth = [0.34, 0.60, 0.90, crystalBase[3]];
+      const crystalMix = a.role === "pavilion" ? 0.22 : a.role === "girdle" ? 0.12 : 0.08;
+      const crystalColor = mixColor(mixColor(crystalBase, crystalIce, 0.10), crystalDepth, crystalMix);
 
-      addTriangle(a, d, c, color);
-      addTriangle(a, c, b, color);
+      const latticeBase = latticeRoleColor(a.role, 1);
+      const latticeGold = [1.0, 0.82, 0.36, 0.76];
+      const latticeIce = [0.88, 0.98, 1.0, 0.90];
+      const fibMix = Math.min(0.22, a.fibonacciWeight * 0.34);
+      const roleMix = a.role === "girdle" ? 0.26 : a.role === "table" ? 0.16 : 0.10;
+      const latticeColor = mixColor(mixColor(latticeBase, latticeGold, fibMix), latticeIce, roleMix);
+
+      addTriangle(a, d, c, crystalColor, latticeColor);
+      addTriangle(a, c, b, crystalColor, latticeColor);
+
+      if (radial % 2 === 0) {
+        addFacetLine(
+          a,
+          c,
+          radial % 4 === 0 ? [0.78, 0.94, 1.0, 0.28] : [0.72, 0.90, 1.0, 0.18],
+          radial % 4 === 0 ? 1.0 : 0.72,
+          "crystal-internal-facet-seam"
+        );
+      } else {
+        addFacetLine(
+          b,
+          d,
+          [0.62, 0.84, 1.0, 0.14],
+          0.62,
+          "crystal-counter-facet-seam"
+        );
+      }
     }
   }
 
@@ -299,19 +373,21 @@ function buildGeometry() {
       const b = seat(band, radial + 1);
       const major = radial % 4 === 0;
       const even = radial % 2 === 0;
+      const girdle = band === 6 || band === 7 || band === 8;
 
       addCrystalEdge(
         a,
         b,
-        major ? [1.0, 0.88, 0.44, 0.86] : [0.82, 0.96, 1.0, 0.50],
-        major ? 1.85 : even ? 1.35 : 1.0
+        major || girdle ? [0.86, 0.97, 1.0, 0.34] : [0.74, 0.90, 1.0, 0.22],
+        major ? 1.0 : girdle ? 0.86 : even ? 0.66 : 0.50,
+        girdle ? "subtle-crystal-girdle-seam" : "subtle-crystal-band-seam"
       );
 
       addLatticeLine(
         a,
         b,
-        major ? [1.0, 0.84, 0.36, 0.90] : [0.50, 0.86, 1.0, 0.62],
-        major ? 1.75 : 1.0,
+        major ? [1.0, 0.84, 0.34, 0.94] : [0.48, 0.86, 1.0, 0.66],
+        major ? 1.90 : 1.05,
         "fibonacci-band-ring"
       );
     }
@@ -322,20 +398,22 @@ function buildGeometry() {
       const a = seat(band, radial);
       const b = seat(band + 1, radial);
       const major = radial % 4 === 0;
+      const even = radial % 2 === 0;
 
       addCrystalEdge(
         a,
         b,
-        major ? [1.0, 0.92, 0.54, 0.82] : [0.88, 0.98, 1.0, 0.48],
-        major ? 1.75 : 1.05
+        major ? [0.88, 0.98, 1.0, 0.30] : even ? [0.76, 0.92, 1.0, 0.18] : [0.66, 0.84, 1.0, 0.12],
+        major ? 0.82 : even ? 0.58 : 0.42,
+        major ? "subtle-cardinal-crystal-seam" : "subtle-radial-crystal-seam"
       );
 
       addLatticeLine(
         a,
         b,
-        major ? [1.0, 0.88, 0.44, 0.90] : [0.56, 0.88, 1.0, 0.62],
-        major ? 1.85 : 1.0,
-        "radial-node-spine"
+        major ? [1.0, 0.88, 0.44, 0.94] : [0.56, 0.88, 1.0, 0.66],
+        major ? 2.0 : 1.05,
+        major ? "cardinal-radial-node-spine" : "radial-node-spine"
       );
     }
   }
@@ -354,17 +432,25 @@ function buildGeometry() {
       addLatticeLine(
         a,
         b,
-        priority ? [1.0, 0.76, 0.28, 0.56] : [0.42, 0.76, 1.0, 0.30],
-        priority ? 1.10 : 0.72,
+        priority ? [1.0, 0.76, 0.28, 0.58] : [0.42, 0.76, 1.0, 0.32],
+        priority ? 1.14 : 0.74,
         "fibonacci-forward-link"
+      );
+
+      addFibonacciHighlight(
+        a,
+        b,
+        priority ? [1.0, 0.86, 0.38, 0.78] : [0.72, 0.92, 1.0, 0.40],
+        priority ? 1.26 : 0.84,
+        `fibonacci-offset-${offset}`
       );
 
       if (band % 2 === 0) {
         addLatticeLine(
           a,
           c,
-          priority ? [0.92, 0.98, 1.0, 0.42] : [0.44, 0.70, 1.0, 0.24],
-          priority ? 0.92 : 0.62,
+          priority ? [0.92, 0.98, 1.0, 0.44] : [0.44, 0.70, 1.0, 0.26],
+          priority ? 0.96 : 0.64,
           "fibonacci-return-link"
         );
       }
@@ -376,20 +462,21 @@ function buildGeometry() {
       const s = seat(band, radial);
       const major = radial % 4 === 0;
       const even = radial % 2 === 0;
+      const girdle = band === 6 || band === 7 || band === 8;
 
       latticePoints.push({
         seat: s,
-        color: major ? [1.0, 0.84, 0.34, 0.96] : even ? [0.68, 0.94, 1.0, 0.76] : [0.50, 0.78, 1.0, 0.56],
-        size: major ? 8.0 : even ? 5.8 : 4.4,
+        color: major ? [1.0, 0.84, 0.34, 0.98] : even ? [0.68, 0.94, 1.0, 0.80] : [0.50, 0.78, 1.0, 0.58],
+        size: major ? 8.4 : girdle ? 6.5 : even ? 5.9 : 4.5,
         family: "256-seat"
       });
 
-      if (band === 0 || band === 2 || band === 6 || band === 8 || band === 14 || major) {
+      if (band === 0 || band === 2 || band === 6 || band === 7 || band === 8 || band === 14 || major) {
         crystalPoints.push({
           seat: s,
-          color: major ? [1.0, 0.88, 0.44, 0.84] : [0.86, 0.98, 1.0, 0.64],
-          size: major ? 5.8 : 4.2,
-          family: "crystal-anchor"
+          color: major ? [0.86, 0.98, 1.0, 0.34] : girdle ? [0.76, 0.92, 1.0, 0.24] : [0.82, 0.96, 1.0, 0.20],
+          size: major ? 4.2 : girdle ? 3.4 : 2.8,
+          family: "hidden-in-crystal-visible-in-status"
         });
       }
     }
@@ -398,7 +485,9 @@ function buildGeometry() {
   state.seats = rings.flat();
   state.triangles = triangles;
   state.crystalEdges = crystalEdges;
+  state.crystallineFacetLines = crystallineFacetLines;
   state.latticeLines = latticeLines;
+  state.fibonacciHighlightLines = fibonacciHighlightLines;
   state.crystalPoints = crystalPoints;
   state.latticePoints = latticePoints;
 
@@ -443,8 +532,8 @@ function stageFit() {
   const aspect = width / Math.max(1, height);
 
   return {
-    scale: mobile ? 0.64 : 0.70,
-    offsetY: mobile ? 0.25 : 0.23,
+    scale: mobile ? 0.70 : 0.76,
+    offsetY: mobile ? 0.225 : 0.205,
     aspectFit: aspect > 1 ? 1 / aspect : 1,
     cameraDistance: 4.65
   };
@@ -477,21 +566,23 @@ function triangleDepth(triangle) {
 
 function lightingForTriangle(triangle) {
   const normal = rotatePoint(triangle.normal);
-  const key = normalize3({ x: -0.45, y: 0.72, z: 0.84 });
-  const rim = normalize3({ x: 0.74, y: 0.24, z: 0.55 });
+  const key = normalize3({ x: -0.42, y: 0.72, z: 0.86 });
+  const rim = normalize3({ x: 0.74, y: 0.22, z: 0.58 });
+  const under = normalize3({ x: -0.16, y: -0.68, z: 0.42 });
 
   const keyDot = Math.max(0, normal.x * key.x + normal.y * key.y + normal.z * key.z);
   const rimDot = Math.max(0, normal.x * rim.x + normal.y * rim.y + normal.z * rim.z);
-  const pulse = 0.5 + 0.5 * Math.sin(state.time * 1.7 + triangle.a.band * 0.45 + triangle.a.radial * 0.22);
+  const underDot = Math.max(0, normal.x * under.x + normal.y * under.y + normal.z * under.z);
+  const pulse = 0.5 + 0.5 * Math.sin(state.time * 1.9 + triangle.a.band * 0.45 + triangle.a.radial * 0.24);
 
-  return clamp(0.52 + keyDot * 0.56 + rimDot * 0.24 + pulse * 0.08, 0.38, 1.20);
+  return clamp(0.50 + keyDot * 0.58 + rimDot * 0.30 + underDot * 0.12 + pulse * 0.085, 0.36, 1.24);
 }
 
 function shadedColor(color, light, alphaScale = 1) {
   return [
-    clamp(color[0] * light + 0.05, 0, 1),
-    clamp(color[1] * light + 0.05, 0, 1),
-    clamp(color[2] * light + 0.05, 0, 1),
+    clamp(color[0] * light + 0.052, 0, 1),
+    clamp(color[1] * light + 0.052, 0, 1),
+    clamp(color[2] * light + 0.060, 0, 1),
     clamp(color[3] * alphaScale, 0, 1)
   ];
 }
@@ -605,9 +696,10 @@ function initPrograms(gl) {
       if (d > 0.5) discard;
 
       float core = smoothstep(0.5, 0.08, d);
-      float rim = smoothstep(0.5, 0.34, d) * 0.30;
+      float rim = smoothstep(0.5, 0.32, d) * 0.34;
+      float shine = smoothstep(0.18, 0.0, length(coord - vec2(-0.13, -0.14))) * 0.24;
 
-      gl_FragColor = vec4(vColor.rgb, vColor.a * (core + rim));
+      gl_FragColor = vec4(vColor.rgb + shine, vColor.a * (core + rim));
     }
   `;
 
@@ -628,7 +720,7 @@ function resizeCanvas() {
   if (!state.canvas || !state.gl) return;
 
   const rect = state.canvas.getBoundingClientRect();
-  const dpr = Math.min(1.8, window.devicePixelRatio || 1);
+  const dpr = Math.min(1.85, window.devicePixelRatio || 1);
   const width = Math.max(320, Math.floor((rect.width || 640) * dpr));
   const height = Math.max(520, Math.floor((rect.height || 720) * dpr));
 
@@ -637,6 +729,11 @@ function resizeCanvas() {
 
   state.dpr = dpr;
   state.gl.viewport(0, 0, width, height);
+}
+
+function triangleColorForLens(triangle, light, alphaScale = 1) {
+  const base = state.lens === "lattice" ? triangle.latticeColor : triangle.color;
+  return shadedColor(base, light, alphaScale);
 }
 
 function drawTriangles(gl, triangles, alphaScale = 1) {
@@ -649,7 +746,7 @@ function drawTriangles(gl, triangles, alphaScale = 1) {
     const b = projectedSeat(triangle.b);
     const c = projectedSeat(triangle.c);
     const light = lightingForTriangle(triangle);
-    const color = shadedColor(triangle.color, light, alphaScale);
+    const color = triangleColorForLens(triangle, light, alphaScale);
 
     positions.push(a.x, a.y, b.x, b.y, c.x, c.y);
     colors.push(...color, ...color, ...color);
@@ -674,9 +771,9 @@ function drawLines(gl, lines, alphaScale = 1) {
   for (const line of lines) {
     const a = projectedSeat(line.a);
     const b = projectedSeat(line.b);
-    const depth = clamp(0.82 + ((a.z + b.z) / 2) * 0.08, 0.60, 1.12);
+    const depth = clamp(0.84 + ((a.z + b.z) / 2) * 0.09, 0.58, 1.16);
     const pulse = line.family && line.family.includes("fibonacci")
-      ? 0.88 + Math.sin(state.time * 1.6 + line.a.band * 0.45 + line.a.radial * 0.18) * 0.12
+      ? 0.88 + Math.sin(state.time * 1.72 + line.a.band * 0.45 + line.a.radial * 0.18) * 0.12
       : 1;
 
     const color = [
@@ -709,8 +806,8 @@ function drawPoints(gl, points, alphaScale = 1) {
 
   for (const point of points) {
     const projected = projectedSeat(point.seat);
-    const pulse = 0.88 + Math.sin(state.time * 2.1 + point.seat.band * 0.42 + point.seat.radial * 0.31) * 0.12;
-    const depth = clamp(0.86 + projected.z * 0.10, 0.66, 1.18);
+    const pulse = 0.88 + Math.sin(state.time * 2.15 + point.seat.band * 0.42 + point.seat.radial * 0.31) * 0.12;
+    const depth = clamp(0.86 + projected.z * 0.11, 0.64, 1.20);
 
     const color = [
       clamp(point.color[0] * depth, 0, 1),
@@ -753,12 +850,11 @@ function renderWebGL() {
 
   if (state.lens === "crystal") {
     drawTriangles(gl, state.triangles, 1.0);
-    drawLines(gl, state.crystalEdges, 0.84);
-    drawPoints(gl, state.crystalPoints, 0.96);
   } else {
-    drawTriangles(gl, state.triangles, 0.16);
-    drawLines(gl, state.latticeLines, 0.94);
-    drawLines(gl, state.crystalEdges, 0.32);
+    drawTriangles(gl, state.triangles, 0.10);
+    drawLines(gl, state.latticeLines, 0.92);
+    drawLines(gl, state.fibonacciHighlightLines, 0.98);
+    drawLines(gl, state.crystalEdges, 0.22);
     drawPoints(gl, state.latticePoints, 0.98);
   }
 
@@ -787,8 +883,8 @@ function step(timestamp) {
     }
   }
 
-  state.pitch = clamp(state.pitch, -0.98, 0.78);
-  state.roll = Math.sin(state.time * 0.18) * 0.014;
+  state.pitch = clamp(state.pitch, -0.94, 0.74);
+  state.roll = Math.sin(state.time * 0.18) * 0.013;
 
   renderWebGL();
 
@@ -797,7 +893,7 @@ function step(timestamp) {
 
 function resetDiamond() {
   state.yaw = -0.62;
-  state.pitch = -0.24;
+  state.pitch = -0.22;
   state.roll = 0.015;
   state.velocityYaw = 0;
   state.velocityPitch = 0;
@@ -838,7 +934,7 @@ function bindPointer(stage) {
     state.pointerY = event.clientY;
 
     state.yaw += dx * 0.0085;
-    state.pitch = clamp(state.pitch + dy * 0.0058, -0.98, 0.78);
+    state.pitch = clamp(state.pitch + dy * 0.0058, -0.94, 0.74);
 
     state.velocityYaw = clamp(dx * 0.0024, -0.052, 0.052);
     state.velocityPitch = clamp(dy * 0.0016, -0.040, 0.040);
@@ -923,7 +1019,6 @@ function neutralizeDuplicateCanvases(stage, canonicalCanvas) {
     if (canvas === canonicalCanvas) continue;
 
     duplicates += 1;
-
     canvas.setAttribute("data-showroom-diamond-legacy-neutralized", "true");
     canvas.style.display = "none";
     canvas.style.visibility = "hidden";
@@ -953,12 +1048,15 @@ function enforceCanonicalCanvas(stage, canvas) {
   });
 
   canvas.setAttribute("data-showroom-diamond-canonical-canvas", "true");
-  canvas.setAttribute("data-showroom-diamond-consumption-audit-contract", CONSUMPTION_AUDIT_CONTRACT);
-  canvas.setAttribute("data-showroom-diamond-contract", ACTIVE_PROOF_OBJECT_CONTRACT);
+  canvas.setAttribute("data-showroom-diamond-contract", MONOCHROME_REFINEMENT_CONTRACT);
+  canvas.setAttribute("data-showroom-diamond-previous-contract", PREVIOUS_BEAUTY_REFINEMENT_CONTRACT);
+  canvas.setAttribute("data-showroom-diamond-previous-consumption-audit-contract", PREVIOUS_CONSUMPTION_AUDIT_CONTRACT);
   canvas.setAttribute("data-generation", "G2");
   canvas.setAttribute("data-radial-nodes", String(RADIAL_NODES));
   canvas.setAttribute("data-fibonacci-bands", String(FIBONACCI_BANDS));
   canvas.setAttribute("data-lattice-states", String(LATTICE_STATES));
+  canvas.setAttribute("data-crystal-form-rule", "diamond-is-diamond-no-lattice-overlay");
+  canvas.setAttribute("data-lattice-structure-rule", "lattice-is-structure-lens-only");
   canvas.setAttribute("data-generated-image", "false");
   canvas.setAttribute("data-graphic-box", "false");
 
@@ -975,13 +1073,14 @@ function enforceCanonicalCanvas(stage, canvas) {
 
 function markRoute() {
   const markers = {
-    showroomContract: ACTIVE_PROOF_OBJECT_CONTRACT,
-    showroomConsumptionAuditContract: CONSUMPTION_AUDIT_CONTRACT,
+    showroomContract: MONOCHROME_REFINEMENT_CONTRACT,
+    showroomPreviousContract: PREVIOUS_BEAUTY_REFINEMENT_CONTRACT,
+    showroomPreviousConsumptionAuditContract: PREVIOUS_CONSUMPTION_AUDIT_CONTRACT,
     showroomStandard: ACTIVE_STANDARD,
     showroomPairedHtmlContract: PAIRED_HTML_CONTRACT,
     showroomGeneration: "G2",
     showroomGenerationOneStatus: "lost-overwritten",
-    showroomStatus: "g2-consumption-fingerprint-audit-active",
+    showroomStatus: "g2-crystal-lattice-separation-monochrome-refinement-active",
     diamondLock: "CROWN_CUT_256_LATTICE_FIXED_FORM",
     renderer: "native-webgl",
     renderModel: "single-canonical-canvas-deterministic-fibonacci-lattice-webgl",
@@ -989,6 +1088,8 @@ function markRoute() {
     fibonacciBands: String(FIBONACCI_BANDS),
     latticeStates: String(LATTICE_STATES),
     latticeEquation: "16_RADIAL_NODES_X_16_FIBONACCI_BANDS_EQUALS_256_LATTICE_SEATS",
+    crystalFormRule: "diamond-is-diamond-no-lattice-overlay",
+    latticeStructureRule: "lattice-is-structure-lens-only",
     defaultLens: "crystal-form",
     secondaryLens: "lattice-structure",
     touchGlideDiamond: "true",
@@ -1005,8 +1106,8 @@ function markRoute() {
     if (document.body) document.body.dataset[key] = value;
   });
 
-  window.DGB_SHOWROOM_JS_CACHE_KEY = ACTIVE_PROOF_OBJECT_CONTRACT;
-  window.DGB_SHOWROOM_CONSUMPTION_AUDIT_CONTRACT = CONSUMPTION_AUDIT_CONTRACT;
+  window.DGB_SHOWROOM_JS_CACHE_KEY = MONOCHROME_REFINEMENT_CONTRACT;
+  window.DGB_SHOWROOM_DIAMOND_REFINEMENT_CONTRACT = MONOCHROME_REFINEMENT_CONTRACT;
 }
 
 function recordError(scope, error) {
@@ -1025,8 +1126,9 @@ function recordError(scope, error) {
 function publishFingerprint(scope = "publish") {
   const payload = Object.freeze({
     scope,
-    contract: ACTIVE_PROOF_OBJECT_CONTRACT,
-    auditContract: CONSUMPTION_AUDIT_CONTRACT,
+    contract: MONOCHROME_REFINEMENT_CONTRACT,
+    previousContract: PREVIOUS_BEAUTY_REFINEMENT_CONTRACT,
+    previousConsumptionAuditContract: PREVIOUS_CONSUMPTION_AUDIT_CONTRACT,
     pairedHtmlContract: PAIRED_HTML_CONTRACT,
     standard: ACTIVE_STANDARD,
     generation: "G2",
@@ -1044,6 +1146,12 @@ function publishFingerprint(scope = "publish") {
     geometryBuilt: state.geometryBuilt,
     crystalMeshReady: state.crystalMeshReady,
     latticeMeshReady: state.latticeMeshReady,
+    crystallineFacetLineCount: state.crystallineFacetLines.length,
+    fibonacciHighlightLineCount: state.fibonacciHighlightLines.length,
+    crystalFormDrawsLattice: false,
+    crystalFormDrawsNodes: false,
+    crystalFormPalette: "monochrome-diamond-crystal-icy-white-silver-pale-blue",
+    latticeStructureVisible: true,
     touchReady: state.touchReady,
     canvasReady: state.canvasReady,
     glReady: state.glReady,
@@ -1061,12 +1169,15 @@ function publishFingerprint(scope = "publish") {
 
   window.DGB_SHOWROOM_DIAMOND_CONSUMPTION_FINGERPRINT = payload;
   window.DGBShowroomDiamondConsumptionFingerprint = payload;
+  window.DGB_SHOWROOM_DIAMOND_MONOCHROME_REFINEMENT_FINGERPRINT = payload;
 
   document.documentElement.dataset.showroomDiamondRenderCount = String(state.renderCount);
   document.documentElement.dataset.showroomDiamondLatticeNodeCount = String(state.latticePoints.length);
   document.documentElement.dataset.showroomDiamondGeometryBuilt = state.geometryBuilt ? "true" : "false";
   document.documentElement.dataset.showroomDiamondCanvasReady = state.canvasReady ? "true" : "false";
   document.documentElement.dataset.showroomDiamondGlReady = state.glReady ? "true" : "false";
+  document.documentElement.dataset.showroomDiamondCrystalFormDrawsLattice = "false";
+  document.documentElement.dataset.showroomDiamondCrystalFormPalette = "monochrome-diamond-crystal";
 
   return payload;
 }
@@ -1156,8 +1267,9 @@ if (document.readyState === "loading") {
 
 export {
   SHOWROOM_DIAMOND_STATE,
-  CONSUMPTION_AUDIT_CONTRACT,
-  ACTIVE_PROOF_OBJECT_CONTRACT,
+  MONOCHROME_REFINEMENT_CONTRACT,
+  PREVIOUS_BEAUTY_REFINEMENT_CONTRACT,
+  PREVIOUS_CONSUMPTION_AUDIT_CONTRACT,
   initShowroomDiamond,
   setLens,
   resetDiamond

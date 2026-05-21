@@ -1,41 +1,47 @@
 // /showroom/globe/audralia/index.js
 // TNT FULL-FILE REPLACEMENT
-// AUDRALIA_G2_ROUTE_JS_RUNTIME_CACHE_KEY_SEPARATION_TNT_v2
+// AUDRALIA_G2_ROUTE_JS_TERRAIN_ECOSYSTEM_RUNTIME_CONSUMER_KEY_RENEWAL_TNT_v3
 //
 // Supersedes:
-// AUDRALIA_G2_ROUTE_JS_PLANET_VIEW_MOISTURE_CLOUD_RENDERER_WITH_LATTICE_PROTECTION_TNT_v1
+// AUDRALIA_G2_ROUTE_JS_RUNTIME_CACHE_KEY_SEPARATION_TNT_v2
 //
 // Purpose:
-// - Preserve current route JS compatibility behavior.
+// - Preserve current route JS public behavior.
 // - Preserve protected Lattice View.
-// - Separate runtime acceptance contract from runtime fetch/cache key.
-// - Force browser/CDN to fetch the renewed runtime file.
-// - Still accept the runtime by its outward public v2 contract.
-// - Do not move cloud logic into route JS.
+// - Preserve finger control.
+// - Preserve Planet View cloud rendering.
+// - Separate runtime public contract from runtime fetch/cache key.
+// - Force browser/CDN to fetch the terrain/ecosystem-aware runtime v5.
+// - Accept runtime by preserved public v2 contract.
+// - Verify runtime by v5 terrain/ecosystem capability marker.
+// - Expose terrain/ecosystem diagnostics.
+// - Do not move terrain, moisture, or cloud logic into route JS.
 // - Do not alter HTML.
 // - No generated image. No GraphicBox. No flat projection. No legacy handoff wall.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_G2_ROUTE_JS_RUNTIME_CACHE_KEY_SEPARATION_TNT_v2";
-  var PREVIOUS_CONTRACT = "AUDRALIA_G2_ROUTE_JS_PLANET_VIEW_MOISTURE_CLOUD_RENDERER_WITH_LATTICE_PROTECTION_TNT_v1";
+  var CONTRACT = "AUDRALIA_G2_ROUTE_JS_TERRAIN_ECOSYSTEM_RUNTIME_CONSUMER_KEY_RENEWAL_TNT_v3";
+  var PREVIOUS_CONTRACT = "AUDRALIA_G2_ROUTE_JS_RUNTIME_CACHE_KEY_SEPARATION_TNT_v2";
   var HTML_CONTRACT = "AUDRALIA_G2_HTML_ROUTE_JS_MOISTURE_CLOUD_CONSUMER_KEY_RENEWAL_TNT_v1";
 
   var RUNTIME_EXPECTED_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2";
-  var RUNTIME_CACHE_KEY = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_ORGANIC_CLOUD_CHILD_KEY_RENEWAL_TNT_v3";
-  var PREVIOUS_RUNTIME_CACHE_KEY = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2";
+  var RUNTIME_CACHE_KEY = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_TERRAIN_ECOSYSTEM_MANIFEST_CONSUMER_TNT_v5";
+  var RUNTIME_TERRAIN_CAPABILITY_FIELD = "terrainEcosystemConsumerContract";
+  var RUNTIME_TERRAIN_CAPABILITY_MARKER = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_TERRAIN_ECOSYSTEM_MANIFEST_CONSUMER_TNT_v5";
+  var PREVIOUS_RUNTIME_CACHE_KEY = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_ORGANIC_CLOUD_CHILD_KEY_RENEWAL_TNT_v3";
 
   var RUNTIME_PATH = "/assets/audralia/clean/runtime/audralia.true-globe.runtime.js";
-  var STANDARD = "AUDRALIA_G2_ROUTE_JS_RUNTIME_CACHE_KEY_SEPARATION_STANDARD_v1";
+  var STANDARD = "AUDRALIA_G2_ROUTE_JS_TERRAIN_ECOSYSTEM_RUNTIME_CONSUMER_KEY_RENEWAL_STANDARD_v1";
 
   var TAU = Math.PI * 2;
 
   var LENS_COPY = {
     planet: {
       title: "Planet View",
-      label: "<strong>Planet View</strong> → Audralia · moisture-driven atmospheric globe",
-      copy: "Planet View renders Audralia from the true-globe runtime and adds the moisture-driven cloud layer. No lattice overlay. No beta patch field."
+      label: "<strong>Planet View</strong> → Audralia · terrain-forced moisture atmosphere",
+      copy: "Planet View renders Audralia from the true-globe runtime. Terrain and ecosystem forcing now feed moisture, and moisture feeds clouds. No lattice overlay."
     },
     lattice: {
       title: "Lattice View",
@@ -44,8 +50,8 @@
     },
     diagnostic: {
       title: "Diagnostic Scope",
-      label: "<strong>Diagnostic Scope</strong> → runtime, moisture, cloud, canvas, and lattice status",
-      copy: "Diagnostic Scope reports route JS, runtime v2, runtime cache-key separation, moisture field, cloud renderer, active lens, and the protected lattice state without replacing the visual object."
+      label: "<strong>Diagnostic Scope</strong> → runtime, terrain, moisture, cloud, canvas, and lattice status",
+      copy: "Diagnostic Scope reports route JS, terrain/ecosystem runtime capability, terrain forcing, moisture forcing, cloud rendering, active lens, and protected lattice state."
     }
   };
 
@@ -70,14 +76,21 @@
     runtimeCacheKeySeparated: true,
     runtimeFetchKeyCurrent: false,
     runtimeAcceptedByPublicContract: false,
+    runtimeTerrainCapabilityConfirmed: false,
 
     routeReady: false,
     canvasReady: false,
     planetViewReady: false,
     latticeViewReady: false,
     diagnosticScopeReady: false,
+
+    terrainEcosystemReady: false,
+    terrainEcosystemLoaded: false,
+    terrainForcingDrivesMoisture: false,
+    moistureDerivedFromTerrainForcing: false,
     moistureFieldReady: false,
     cloudRendererReady: false,
+
     latticeViewProtected: true,
     duplicateCanvasCount: 0,
 
@@ -114,22 +127,46 @@
     return window.AUDRALIA_TRUE_GLOBE_MOISTURE || window.AUDRALIA_G2_TRUE_GLOBE_MOISTURE || null;
   }
 
+  function getTerrainEcosystemApi() {
+    return window.AUDRALIA_TRUE_GLOBE_TERRAIN_ECOSYSTEM || window.AUDRALIA_G2_TRUE_GLOBE_TERRAIN_ECOSYSTEM || null;
+  }
+
   function getRuntime() {
     return window.AUDRALIA_TRUE_GLOBE_RUNTIME || window.AUDRALIA_G2_TRUE_GLOBE_RUNTIME || null;
   }
 
-  function runtimeContract(runtime) {
-    if (!runtime || typeof runtime.status !== "function") return "";
+  function runtimeStatus(runtime) {
+    if (!runtime || typeof runtime.status !== "function") return null;
 
     try {
-      return String(runtime.status().contract || "");
+      return runtime.status();
     } catch (_error) {
-      return "";
+      return null;
     }
   }
 
-  function runtimeIsAccepted(runtime) {
+  function runtimeContract(runtime) {
+    var status = runtimeStatus(runtime);
+    return status && status.contract ? String(status.contract) : "";
+  }
+
+  function runtimeTerrainCapability(runtime) {
+    var status = runtimeStatus(runtime);
+    return status && status[RUNTIME_TERRAIN_CAPABILITY_FIELD]
+      ? String(status[RUNTIME_TERRAIN_CAPABILITY_FIELD])
+      : "";
+  }
+
+  function runtimeIsPubliclyAccepted(runtime) {
     return runtimeContract(runtime) === RUNTIME_EXPECTED_CONTRACT;
+  }
+
+  function runtimeHasTerrainCapability(runtime) {
+    return runtimeTerrainCapability(runtime) === RUNTIME_TERRAIN_CAPABILITY_MARKER;
+  }
+
+  function runtimeIsFullyAccepted(runtime) {
+    return runtimeIsPubliclyAccepted(runtime) && runtimeHasTerrainCapability(runtime);
   }
 
   function markBoot() {
@@ -140,10 +177,12 @@
       runtimeExpectedContract: RUNTIME_EXPECTED_CONTRACT,
       runtimeCacheKey: RUNTIME_CACHE_KEY,
       previousRuntimeCacheKey: PREVIOUS_RUNTIME_CACHE_KEY,
+      runtimeTerrainCapabilityField: RUNTIME_TERRAIN_CAPABILITY_FIELD,
+      runtimeTerrainCapabilityMarker: RUNTIME_TERRAIN_CAPABILITY_MARKER,
       standard: STANDARD,
       reached: true,
       reachedAt: new Date().toISOString(),
-      meaning: "Route JS evaluated. Runtime acceptance contract and runtime fetch/cache key are now separated."
+      meaning: "Route JS evaluated. Runtime now fetches by terrain/ecosystem v5 cache key while accepting public v2 contract."
     };
 
     window.AUDRALIA_G2_ROUTE_JS_CONTRACT = CONTRACT;
@@ -156,17 +195,19 @@
     setDataset("audraliaRuntimeCacheKey", RUNTIME_CACHE_KEY);
     setDataset("audraliaRuntimeCacheKeySeparated", "true");
     setDataset("audraliaRuntimeExpectedContractPreserved", "true");
+    setDataset("audraliaRuntimeTerrainCapabilityField", RUNTIME_TERRAIN_CAPABILITY_FIELD);
+    setDataset("audraliaRuntimeTerrainCapabilityMarker", RUNTIME_TERRAIN_CAPABILITY_MARKER);
 
     setDataset("audraliaLatticeViewProtected", "true");
     setDataset("audraliaPlanetViewCloudsOnly", "true");
     setDataset("audraliaLatticeViewCloudsBlocked", "true");
 
-    setText("[data-audralia-diagnostic-route-js]", "route JS booted · runtime cache-key separated");
-    setText("[data-audralia-diagnostic-sphere]", "runtime fetch key pending");
-    setText("[data-audralia-diagnostic-planet]", "Planet View pending");
+    setText("[data-audralia-diagnostic-route-js]", "route JS booted · terrain runtime key active");
+    setText("[data-audralia-diagnostic-sphere]", "runtime v5 fetch key pending");
+    setText("[data-audralia-diagnostic-planet]", "Planet View pending terrain-forced moisture");
     setText("[data-audralia-diagnostic-lattice]", "Lattice View protected");
     setText("[data-audralia-diagnostic-seats]", "16 × 16 / 256 expected");
-    setText("[data-audralia-diagnostic-loader]", "runtime cache key preparing");
+    setText("[data-audralia-diagnostic-loader]", "runtime terrain/ecosystem cache key preparing");
   }
 
   markBoot();
@@ -209,20 +250,15 @@
     return new Promise(function (resolve, reject) {
       var existing = getRuntime();
 
-      if (runtimeIsAccepted(existing)) {
+      if (runtimeIsFullyAccepted(existing)) {
         state.runtime = existing;
         state.runtimeDetected = true;
         state.runtimeLoaded = true;
         state.runtimeAcceptedByPublicContract = true;
-
-        var existingStatus = existing.status ? existing.status() : {};
-        state.runtimeFetchKeyCurrent = existingStatus &&
-          existingStatus.childKeyRenewalContract === RUNTIME_CACHE_KEY;
-
-        if (state.runtimeFetchKeyCurrent) {
-          resolve(existing);
-          return;
-        }
+        state.runtimeTerrainCapabilityConfirmed = true;
+        state.runtimeFetchKeyCurrent = true;
+        resolve(existing);
+        return;
       }
 
       if (state.runtimeLoadStarted) {
@@ -232,24 +268,20 @@
 
           var runtime = getRuntime();
 
-          if (runtimeIsAccepted(runtime)) {
-            var status = runtime.status ? runtime.status() : {};
-            var keyCurrent = status && status.childKeyRenewalContract === RUNTIME_CACHE_KEY;
-
-            if (keyCurrent) {
-              window.clearInterval(interval);
-              state.runtime = runtime;
-              state.runtimeDetected = true;
-              state.runtimeLoaded = true;
-              state.runtimeAcceptedByPublicContract = true;
-              state.runtimeFetchKeyCurrent = true;
-              resolve(runtime);
-            }
+          if (runtimeIsFullyAccepted(runtime)) {
+            window.clearInterval(interval);
+            state.runtime = runtime;
+            state.runtimeDetected = true;
+            state.runtimeLoaded = true;
+            state.runtimeAcceptedByPublicContract = true;
+            state.runtimeTerrainCapabilityConfirmed = true;
+            state.runtimeFetchKeyCurrent = true;
+            resolve(runtime);
           }
 
-          if (attempts > 100) {
+          if (attempts > 120) {
             window.clearInterval(interval);
-            reject(new Error("AUDRALIA_RUNTIME_CACHE_KEY_SEPARATION_WAIT_TIMEOUT"));
+            reject(new Error("AUDRALIA_RUNTIME_TERRAIN_CAPABILITY_WAIT_TIMEOUT"));
           }
         }, 50);
 
@@ -264,7 +296,8 @@
       setDataset("audraliaRuntimeExpectedContract", RUNTIME_EXPECTED_CONTRACT);
       setDataset("audraliaRuntimeCacheKey", RUNTIME_CACHE_KEY);
       setDataset("audraliaRuntimeCacheKeySeparated", "true");
-      setText("[data-audralia-diagnostic-loader]", "loading runtime with separated cache key");
+      setDataset("audraliaRuntimeTerrainCapabilityMarker", RUNTIME_TERRAIN_CAPABILITY_MARKER);
+      setText("[data-audralia-diagnostic-loader]", "loading runtime with terrain/ecosystem v5 cache key");
 
       removePriorRuntimeLoaders();
 
@@ -276,34 +309,40 @@
       script.setAttribute("data-runtime-expected-contract", RUNTIME_EXPECTED_CONTRACT);
       script.setAttribute("data-runtime-cache-key", RUNTIME_CACHE_KEY);
       script.setAttribute("data-previous-runtime-cache-key", PREVIOUS_RUNTIME_CACHE_KEY);
+      script.setAttribute("data-runtime-terrain-capability-field", RUNTIME_TERRAIN_CAPABILITY_FIELD);
+      script.setAttribute("data-runtime-terrain-capability-marker", RUNTIME_TERRAIN_CAPABILITY_MARKER);
 
       script.onload = function () {
         var runtime = getRuntime();
 
-        if (!runtimeIsAccepted(runtime)) {
+        if (!runtimeIsPubliclyAccepted(runtime)) {
           reject(new Error("AUDRALIA_RUNTIME_LOADED_BUT_PUBLIC_CONTRACT_REJECTED_" + runtimeContract(runtime)));
           return;
         }
 
-        var status = runtime.status ? runtime.status() : {};
-        var keyCurrent = status && status.childKeyRenewalContract === RUNTIME_CACHE_KEY;
+        if (!runtimeHasTerrainCapability(runtime)) {
+          reject(new Error("AUDRALIA_RUNTIME_LOADED_BUT_TERRAIN_CAPABILITY_MISSING_" + runtimeTerrainCapability(runtime)));
+          return;
+        }
 
         state.runtime = runtime;
         state.runtimeDetected = true;
         state.runtimeLoaded = true;
         state.runtimeAcceptedByPublicContract = true;
-        state.runtimeFetchKeyCurrent = Boolean(keyCurrent);
+        state.runtimeTerrainCapabilityConfirmed = true;
+        state.runtimeFetchKeyCurrent = true;
 
         setDataset("audraliaRuntimeLoaded", "true");
         setDataset("audraliaRuntimeAcceptedByPublicContract", "true");
-        setDataset("audraliaRuntimeFetchKeyCurrent", state.runtimeFetchKeyCurrent ? "true" : "false");
-        setText("[data-audralia-diagnostic-loader]", state.runtimeFetchKeyCurrent ? "runtime cache key current" : "runtime loaded · cache key marker not confirmed");
+        setDataset("audraliaRuntimeTerrainCapabilityConfirmed", "true");
+        setDataset("audraliaRuntimeFetchKeyCurrent", "true");
+        setText("[data-audralia-diagnostic-loader]", "runtime v5 terrain/ecosystem key loaded");
 
         resolve(runtime);
       };
 
       script.onerror = function () {
-        reject(new Error("AUDRALIA_RUNTIME_CACHE_KEY_SCRIPT_LOAD_FAILED"));
+        reject(new Error("AUDRALIA_RUNTIME_TERRAIN_ECOSYSTEM_SCRIPT_LOAD_FAILED"));
       };
 
       document.head.appendChild(script);
@@ -372,6 +411,7 @@
     canvas.setAttribute("data-contract", CONTRACT);
     canvas.setAttribute("data-runtime-expected-contract", RUNTIME_EXPECTED_CONTRACT);
     canvas.setAttribute("data-runtime-cache-key", RUNTIME_CACHE_KEY);
+    canvas.setAttribute("data-runtime-terrain-capability-marker", RUNTIME_TERRAIN_CAPABILITY_MARKER);
     canvas.setAttribute("data-globe-carrier", "runtime-sphere");
     canvas.setAttribute("data-flat-projection-blocked", "true");
     canvas.setAttribute("data-generated-image", "false");
@@ -481,6 +521,12 @@
 
     ctx.save();
 
+    var terrainField = frame.terrainEcosystemField;
+    var summary = terrainField && terrainField.summary ? terrainField.summary : null;
+
+    var landInfluence = summary && typeof summary.landRatioAverage === "number" ? summary.landRatioAverage : 0.42;
+    var forcingInfluence = summary && typeof summary.forcingStrengthAverage === "number" ? summary.forcingStrengthAverage : 0.32;
+
     var body = ctx.createRadialGradient(
       metrics.centerX - radius * 0.30,
       metrics.centerY - radius * 0.34,
@@ -492,8 +538,8 @@
 
     body.addColorStop(0, "rgba(236,250,255,0.94)");
     body.addColorStop(0.13, "rgba(118,206,226,0.74)");
-    body.addColorStop(0.36, "rgba(20,116,164,0.88)");
-    body.addColorStop(0.67, "rgba(7,48,94,0.98)");
+    body.addColorStop(0.34, "rgba(20,116,164,0.88)");
+    body.addColorStop(0.68, "rgba(7,48,94,0.98)");
     body.addColorStop(1, "rgba(1,8,24,1)");
 
     ctx.fillStyle = body;
@@ -513,8 +559,8 @@
       radius
     );
 
-    oceanPressure.addColorStop(0, "rgba(24,128,176,0.12)");
-    oceanPressure.addColorStop(0.45, "rgba(7,72,126,0.16)");
+    oceanPressure.addColorStop(0, "rgba(24,128,176," + (0.13 + forcingInfluence * 0.04).toFixed(3) + ")");
+    oceanPressure.addColorStop(0.45, "rgba(7,72,126," + (0.16 + landInfluence * 0.03).toFixed(3) + ")");
     oceanPressure.addColorStop(1, "rgba(0,4,16,0.30)");
 
     ctx.fillStyle = oceanPressure;
@@ -831,48 +877,76 @@
   }
 
   function updateDiagnostics(frame, cloudLayer) {
-    var runtimeStatus = state.runtime && typeof state.runtime.status === "function"
+    var runtimeStatusValue = state.runtime && typeof state.runtime.status === "function"
       ? state.runtime.status()
       : null;
 
-    var moistureApi = getMoistureApi();
-    var cloudApi = getCloudApi();
+    var terrainApi = getTerrainEcosystemApi();
+    var terrainStatus = terrainApi && typeof terrainApi.status === "function"
+      ? terrainApi.status()
+      : null;
 
+    var moistureApi = getMoistureApi();
     var moistureStatus = moistureApi && typeof moistureApi.status === "function"
       ? moistureApi.status()
       : null;
 
+    var cloudApi = getCloudApi();
     var cloudStatus = cloudApi && typeof cloudApi.status === "function"
       ? cloudApi.status()
       : null;
 
+    state.terrainEcosystemReady = Boolean(
+      (frame && frame.terrainEcosystemReady) ||
+      (runtimeStatusValue && runtimeStatusValue.terrainEcosystemReady) ||
+      (terrainStatus && terrainStatus.fieldReady)
+    );
+
+    state.terrainEcosystemLoaded = Boolean(
+      (frame && frame.terrainEcosystemLoaded) ||
+      (runtimeStatusValue && runtimeStatusValue.terrainEcosystemLoaded)
+    );
+
+    state.terrainForcingDrivesMoisture = Boolean(
+      (frame && frame.terrainForcingDrivesMoisture) ||
+      (runtimeStatusValue && runtimeStatusValue.terrainForcingDrivesMoisture)
+    );
+
+    state.moistureDerivedFromTerrainForcing = Boolean(
+      (moistureStatus && moistureStatus.moistureDerivedFromTerrainForcing) ||
+      (moistureStatus && moistureStatus.terrainForcingConsumed)
+    );
+
     state.moistureFieldReady = Boolean(
       (cloudLayer && cloudLayer.moistureFieldReady) ||
-      (runtimeStatus && runtimeStatus.moistureFieldReady) ||
+      (runtimeStatusValue && runtimeStatusValue.moistureFieldReady) ||
       (moistureStatus && moistureStatus.moistureFieldReady)
     );
 
     state.cloudRendererReady = Boolean(
       (cloudLayer && cloudLayer.rendererReady) ||
-      (runtimeStatus && runtimeStatus.cloudRendererReady) ||
+      (runtimeStatusValue && runtimeStatusValue.cloudRendererReady) ||
       (cloudStatus && cloudStatus.rendererReady)
     );
 
     state.runtimeFetchKeyCurrent = Boolean(
-      runtimeStatus && runtimeStatus.childKeyRenewalContract === RUNTIME_CACHE_KEY
+      runtimeStatusValue &&
+      runtimeStatusValue[RUNTIME_TERRAIN_CAPABILITY_FIELD] === RUNTIME_TERRAIN_CAPABILITY_MARKER
     );
 
-    setText("[data-audralia-diagnostic-route-js]", "active · runtime cache-key separated");
+    state.runtimeTerrainCapabilityConfirmed = state.runtimeFetchKeyCurrent;
+
+    setText("[data-audralia-diagnostic-route-js]", "active · terrain/ecosystem runtime key");
     setText(
       "[data-audralia-diagnostic-sphere]",
-      runtimeStatus && runtimeStatus.sphereSeats === 256
-        ? "runtime accepted · 256 seats · cache key " + (state.runtimeFetchKeyCurrent ? "current" : "unconfirmed")
+      runtimeStatusValue && runtimeStatusValue.sphereSeats === 256
+        ? "runtime accepted · 256 seats · terrain v5 " + (state.runtimeFetchKeyCurrent ? "confirmed" : "unconfirmed")
         : "runtime detected · sphere pending"
     );
     setText(
       "[data-audralia-diagnostic-planet]",
       state.planetViewReady
-        ? "active · moisture-cloud Planet View"
+        ? "active · terrain-forced moisture Planet View"
         : "ready · awaiting Planet View"
     );
     setText(
@@ -883,17 +957,17 @@
     );
     setText(
       "[data-audralia-diagnostic-seats]",
-      runtimeStatus
-        ? runtimeStatus.radialNodes + " × " + runtimeStatus.fibonacciBands + " = " + runtimeStatus.sphereSeats
+      runtimeStatusValue
+        ? runtimeStatusValue.radialNodes + " × " + runtimeStatusValue.fibonacciBands + " = " + runtimeStatusValue.sphereSeats
         : "runtime status pending"
     );
     setText(
       "[data-audralia-diagnostic-loader]",
-      "expected=" + RUNTIME_EXPECTED_CONTRACT +
-      " · cache=" + RUNTIME_CACHE_KEY +
+      "runtimeCache=" + RUNTIME_CACHE_KEY +
+      " · terrain=" + (state.terrainEcosystemReady ? "ready" : "pending") +
+      " · moistureTerrain=" + (state.moistureDerivedFromTerrainForcing ? "active" : "pending") +
       " · clouds=" + (state.cloudRendererReady ? "active" : "pending") +
-      " · count=" + (cloudLayer && cloudLayer.cloudCount != null ? cloudLayer.cloudCount : 0) +
-      " · fragments=" + (cloudLayer && cloudLayer.fragmentCount != null ? cloudLayer.fragmentCount : 0)
+      " · count=" + (cloudLayer && cloudLayer.cloudCount != null ? cloudLayer.cloudCount : 0)
     );
 
     setDataset("audraliaRuntimeDetected", state.runtimeDetected ? "true" : "false");
@@ -903,7 +977,13 @@
     setDataset("audraliaRuntimeCacheKeySeparated", "true");
     setDataset("audraliaRuntimeAcceptedByPublicContract", state.runtimeAcceptedByPublicContract ? "true" : "false");
     setDataset("audraliaRuntimeFetchKeyCurrent", state.runtimeFetchKeyCurrent ? "true" : "false");
+    setDataset("audraliaRuntimeTerrainCapabilityConfirmed", state.runtimeTerrainCapabilityConfirmed ? "true" : "false");
+
     setDataset("audraliaRouteRenderCount", String(state.renderCount));
+    setDataset("audraliaTerrainEcosystemLoaded", state.terrainEcosystemLoaded ? "true" : "false");
+    setDataset("audraliaTerrainEcosystemReady", state.terrainEcosystemReady ? "true" : "false");
+    setDataset("audraliaTerrainForcingDrivesMoisture", state.terrainForcingDrivesMoisture ? "true" : "false");
+    setDataset("audraliaMoistureDerivedFromTerrainForcing", state.moistureDerivedFromTerrainForcing ? "true" : "false");
     setDataset("audraliaMoistureFieldReady", state.moistureFieldReady ? "true" : "false");
     setDataset("audraliaCloudRendererReady", state.cloudRendererReady ? "true" : "false");
     setDataset("audraliaCloudsDerivedFromMoisture", state.cloudRendererReady ? "true" : "false");
@@ -924,8 +1004,13 @@
   }
 
   function status() {
-    var runtimeStatus = state.runtime && typeof state.runtime.status === "function"
+    var runtimeStatusValue = state.runtime && typeof state.runtime.status === "function"
       ? state.runtime.status()
+      : null;
+
+    var terrainApi = getTerrainEcosystemApi();
+    var terrainStatus = terrainApi && typeof terrainApi.status === "function"
+      ? terrainApi.status()
       : null;
 
     var cloudApi = getCloudApi();
@@ -949,14 +1034,17 @@
       runtimeExpectedContract: RUNTIME_EXPECTED_CONTRACT,
       runtimeCacheKey: RUNTIME_CACHE_KEY,
       previousRuntimeCacheKey: PREVIOUS_RUNTIME_CACHE_KEY,
+      runtimeTerrainCapabilityField: RUNTIME_TERRAIN_CAPABILITY_FIELD,
+      runtimeTerrainCapabilityMarker: RUNTIME_TERRAIN_CAPABILITY_MARKER,
       runtimeCacheKeySeparated: state.runtimeCacheKeySeparated,
       runtimeExpectedContractPreserved: state.runtimeExpectedContractPreserved,
       runtimeAcceptedByPublicContract: state.runtimeAcceptedByPublicContract,
+      runtimeTerrainCapabilityConfirmed: state.runtimeTerrainCapabilityConfirmed,
       runtimeFetchKeyCurrent: state.runtimeFetchKeyCurrent,
 
       runtimeDetected: state.runtimeDetected,
       runtimeLoaded: state.runtimeLoaded,
-      runtimeStatus: runtimeStatus,
+      runtimeStatus: runtimeStatusValue,
 
       routeReady: state.routeReady,
       canvasReady: state.canvasReady,
@@ -968,6 +1056,12 @@
       latticeViewProtected: state.latticeViewProtected,
       diagnosticScopeReady: state.diagnosticScopeReady,
 
+      terrainEcosystemLoaded: state.terrainEcosystemLoaded,
+      terrainEcosystemReady: state.terrainEcosystemReady,
+      terrainForcingDrivesMoisture: state.terrainForcingDrivesMoisture,
+      terrainStatus: terrainStatus,
+
+      moistureDerivedFromTerrainForcing: state.moistureDerivedFromTerrainForcing,
       moistureFieldReady: state.moistureFieldReady,
       cloudRendererReady: state.cloudRendererReady,
       moistureStatus: moistureStatus,
@@ -1005,7 +1099,10 @@
         sphereSeats: frame.sphereSeats,
         radialNodes: frame.radialNodes,
         fibonacciBands: frame.fibonacciBands,
-        latticeStates: frame.latticeStates
+        latticeStates: frame.latticeStates,
+        terrainEcosystemLoaded: frame.terrainEcosystemLoaded,
+        terrainEcosystemReady: frame.terrainEcosystemReady,
+        terrainForcingDrivesMoisture: frame.terrainForcingDrivesMoisture
       };
     }
 
@@ -1027,7 +1124,7 @@
 
     window.AUDRALIA_G2_ROUTE_JS_CONSUMER_STATUS = payload;
     window.AUDRALIA_G2_TRUE_GLOBE_STATUS = payload;
-    window.AUDRALIA_G2_RUNTIME_CACHE_KEY_SEPARATION_STATUS = payload;
+    window.AUDRALIA_G2_TERRAIN_ECOSYSTEM_ROUTE_STATUS = payload;
 
     return payload;
   }
@@ -1039,6 +1136,8 @@
       htmlContract: HTML_CONTRACT,
       runtimeExpectedContract: RUNTIME_EXPECTED_CONTRACT,
       runtimeCacheKey: RUNTIME_CACHE_KEY,
+      runtimeTerrainCapabilityField: RUNTIME_TERRAIN_CAPABILITY_FIELD,
+      runtimeTerrainCapabilityMarker: RUNTIME_TERRAIN_CAPABILITY_MARKER,
       runtimePath: RUNTIME_PATH,
       setLens: setLens,
       render: render,
@@ -1082,8 +1181,9 @@
           state.runtimeDetected = true;
           state.runtimeLoaded = true;
           state.runtimeAcceptedByPublicContract = true;
+          state.runtimeTerrainCapabilityConfirmed = true;
 
-          setText("[data-audralia-diagnostic-route-js]", "runtime accepted · cache-key separated");
+          setText("[data-audralia-diagnostic-route-js]", "runtime accepted · terrain/ecosystem v5 confirmed");
 
           initRuntime(runtime);
 
@@ -1097,6 +1197,7 @@
           setDataset("audraliaRuntimeCacheKey", RUNTIME_CACHE_KEY);
           setDataset("audraliaRuntimeCacheKeySeparated", "true");
           setDataset("audraliaRuntimeAcceptedByPublicContract", "true");
+          setDataset("audraliaRuntimeTerrainCapabilityConfirmed", "true");
           setDataset("audraliaLatticeViewProtected", "true");
 
           updateDiagnostics(runtime.getFrame ? runtime.getFrame() : null, null);

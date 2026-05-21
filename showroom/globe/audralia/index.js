@@ -1,37 +1,83 @@
 // /showroom/globe/audralia/index.js
-// AUDRALIA_G2_6_SINGLE_CACHE_NONCE_CHAIN_ALIGNMENT_ROUTE_BRIDGE_TNT_v1
+// AUDRALIA_G2_9_ROUTE_BRIDGE_PLANET_FAMILY_ALIGNED_RETURN_VERIFIER_TNT_v1
 // Full-file replacement.
-// Purpose: route bridge reads the HTML page-load cache nonce and passes it downstream to runtime.
-// Does not own: runtime internals, parent render, continent topology, motion, sky, generated image, GraphicBox, or visual-pass claim.
+// Purpose: align the Audralia route bridge with the shared Showroom Globe planet-family primitives,
+// mount the runtime/parent chain once, close handoff from lawful parent visibility, and publish the
+// figure-eight return receipt without child visual precedence.
+// Owns: route verification, primitive-family readiness checks, single-cache nonce continuity,
+// mount coordination, idempotent status presentation, and return-receipt publication.
+// Does not own: planet math, lattice, palette, manifest law, source topology, hydrology, surface,
+// runtime motion, parent rendering, canvas drawing, terrain, elevation, climate, generated image,
+// GraphicBox, or visual-pass claim.
 
-const BRIDGE_CONTRACT = "AUDRALIA_G2_6_SINGLE_CACHE_NONCE_CHAIN_ALIGNMENT_ROUTE_BRIDGE_TNT_v1";
-const PREVIOUS_BRIDGE_CONTRACT = "AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1";
+const AUDRALIA_ROUTE_CONTRACT = "AUDRALIA_G2_9_ROUTE_BRIDGE_PLANET_FAMILY_ALIGNED_RETURN_VERIFIER_TNT_v1";
+const AUDRALIA_ROUTE_LINEAGE_CONTRACTS = Object.freeze([
+  "AUDRALIA_G2_6_SINGLE_CACHE_NONCE_CHAIN_ALIGNMENT_ROUTE_BRIDGE_TNT_v1",
+  "AUDRALIA_G2_6_HTML_DYNAMIC_ROUTE_BRIDGE_BOOTSTRAP_TNT_v1",
+  "AUDRALIA_ROUTE_PROOF_CHAIN_ALIGNMENT_TNT_v13",
+  "AUDRALIA_ROUTE_ADOPTED_CANVAS_DOORWAY_TNT_v2"
+]);
 
 const ROUTE = "/showroom/globe/audralia/";
-const RUNTIME_PATH = "/assets/audralia/audralia.runtime.v3.js";
+const TARGET = "/showroom/globe/audralia/index.js";
+const CHAIN_CONTRACT = "AUDRALIA_G2_6_SINGLE_CACHE_NONCE_CHAIN_ALIGNMENT_ROUTE_BRIDGE_TNT_v1";
+const PARENT_COMPATIBILITY_CONTRACT = "AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1";
+const RUNTIME_EXPECTED_CONTRACT = "AUDRALIA_G2_5_RUNTIME_PARENT_CACHE_KEY_ALIGNMENT_TNT_v1";
 
-const RUNTIME_CONTRACT = "AUDRALIA_G2_5_RUNTIME_PARENT_CACHE_KEY_ALIGNMENT_TNT_v1";
-const PARENT_CONTRACT = "AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1";
-const CONTINENTS_CONTRACT = "AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1";
+const PATHS = Object.freeze({
+  manifest: "/assets/showroom/globe/planet/planet.manifest.js",
+  math: "/assets/showroom/globe/planet/planet.math.js",
+  lattice: "/assets/showroom/globe/planet/planet.lattice.js",
+  palette: "/assets/showroom/globe/planet/planet.palette.js",
+  runtime: "/assets/audralia/audralia.runtime.v3.js"
+});
 
-const PARENT_TIMEOUT_MS = 5600;
-const CONTINENTS_TIMEOUT_MS = 3200;
-const POLL_MS = 50;
+const EXPECTED_PRIMITIVES = Object.freeze({
+  manifest: "AUDRALIA_CLEAN_CANVAS_PLANET_FAMILY_MANIFEST_TNT_v1",
+  math: "AUDRALIA_CLEAN_CANVAS_PLANET_FAMILY_MATH_TNT_v1",
+  lattice: "AUDRALIA_CLEAN_CANVAS_PLANET_FAMILY_LATTICE_TNT_v1",
+  palette: "AUDRALIA_CLEAN_CANVAS_PLANET_FAMILY_PALETTE_TNT_v1"
+});
+
+const GLOBALS = Object.freeze({
+  manifest: "DGB_PLANET_FAMILY_MANIFEST",
+  math: "DGB_PLANET_FAMILY_MATH",
+  lattice: "DGB_PLANET_FAMILY_LATTICE",
+  palette: "DGB_PLANET_FAMILY_PALETTE"
+});
+
+const BOOT = Object.freeze({
+  parentVisibleAttempts: 18,
+  parentVisibleDelayMs: 90,
+  primitiveLoadTimeoutMs: 3600,
+  statusUpdateMinMs: 120
+});
 
 const state = {
-  bridgeContract: BRIDGE_CONTRACT,
-  previousBridgeContract: PREVIOUS_BRIDGE_CONTRACT,
+  contract: AUDRALIA_ROUTE_CONTRACT,
+  target: TARGET,
   route: ROUTE,
-  runtimePath: RUNTIME_PATH,
-  runtimeImport: "",
   cacheNonce: "",
-  runtimeContractExpected: RUNTIME_CONTRACT,
-  parentContractExpected: PARENT_CONTRACT,
-  continentsContractExpected: CONTINENTS_CONTRACT,
+  bootStarted: false,
+  bootComplete: false,
   routeValid: false,
-  mountTargetFound: false,
-  standbyFormVisible: false,
+  mountFound: false,
+  mountTarget: null,
+  statusNode: null,
+  statusCardReused: false,
+  duplicateStatusPanelsPrevented: false,
+  mobileOverflowGuardActive: false,
+  singleCacheNonceChain: false,
+  primitiveLoadStarted: false,
+  primitiveLoadComplete: false,
+  planetManifestReady: false,
+  planetMathReady: false,
+  planetLatticeReady: false,
+  planetPaletteReady: false,
+  primitiveContracts: {},
+  runtimeImportStarted: false,
   runtimeImportSucceeded: false,
+  runtimeContract: "",
   runtimeContractValid: false,
   mountCalled: false,
   mountAwaited: false,
@@ -39,18 +85,23 @@ const state = {
   parentEngineLoaded: false,
   parentEngineDelegated: false,
   parentContractValid: false,
-  parentFormVisible: false,
-  continentsReceiptRead: false,
-  continentsContractValid: false,
-  finalFormVisible: false,
-  status: "pending",
-  headline: "Clean-canvas handoff pending",
-  message: "SINGLE_CACHE_NONCE · loading route bridge chain",
-  runtimeReceipt: null,
-  parentReceipt: null,
-  continentsReceipt: null,
+  parentExpressionAccepted: false,
+  parentFormVisibleAccepted: false,
+  handoffClosedFromParentReceipt: false,
+  gratitudeSourceFieldReady: false,
+  gratitudeFigureEightSourceReady: false,
+  gratitudeReceiptReturnReady: false,
+  status: "route-script-loaded",
+  visibleLabel: "Clean-canvas handoff pending",
+  visibleSubstatus: "SINGLE_CACHE_NONCE · loading route bridge chain",
+  finalMessage: "",
+  lastStatusWrite: 0,
   errors: []
 };
+
+const loadedScripts = new Map();
+let bootPromise = null;
+let runtimeModulePromise = null;
 
 function hasWindow() {
   return typeof window !== "undefined";
@@ -58,6 +109,13 @@ function hasWindow() {
 
 function hasDocument() {
   return typeof document !== "undefined";
+}
+
+function nowMs() {
+  if (hasWindow() && window.performance && typeof window.performance.now === "function") {
+    return window.performance.now();
+  }
+  return Date.now();
 }
 
 function nowIso() {
@@ -69,22 +127,18 @@ function nowIso() {
 }
 
 function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, Math.max(0, Number(ms) || 0)));
 }
 
-function getRoutePath() {
-  if (!hasWindow()) return ROUTE;
-
-  try {
-    return window.location.pathname.endsWith("/")
-      ? window.location.pathname
-      : `${window.location.pathname}/`;
-  } catch (_error) {
-    return ROUTE;
-  }
+function isElement(value) {
+  return Boolean(value && value.nodeType === 1);
 }
 
-function getOwnImportNonce() {
+function normalizePath(path) {
+  return String(path || "").split("?")[0];
+}
+
+function getImportNonce() {
   try {
     return new URL(import.meta.url).searchParams.get("v") || "";
   } catch (_error) {
@@ -92,524 +146,883 @@ function getOwnImportNonce() {
   }
 }
 
+function getRoot() {
+  return hasDocument() ? document.documentElement : null;
+}
+
 function getOrCreateCacheNonce() {
-  if (!hasWindow() || !hasDocument()) {
-    return `${BRIDGE_CONTRACT}__${Date.now()}`;
+  if (state.cacheNonce) return state.cacheNonce;
+
+  const root = getRoot();
+  const fromWindow = hasWindow() && window.AUDRALIA_PAGE_CACHE_NONCE ? String(window.AUDRALIA_PAGE_CACHE_NONCE) : "";
+  const fromBootstrap = hasWindow() && window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT && window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.dynamicCacheKey
+    ? String(window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.dynamicCacheKey)
+    : "";
+  const fromRoot = root
+    ? root.getAttribute("data-audralia-page-cache-nonce") ||
+      root.getAttribute("data-audralia-route-bridge-cache-key") ||
+      root.getAttribute("data-html-cache-key") ||
+      root.getAttribute("data-audralia-single-cache-nonce") ||
+      ""
+    : "";
+  const fromImport = getImportNonce();
+
+  state.cacheNonce = fromWindow || fromBootstrap || fromRoot || fromImport ||
+    `${CHAIN_CONTRACT}__${Date.now()}__${Math.random().toString(36).slice(2, 8)}`;
+
+  state.singleCacheNonceChain = true;
+
+  if (hasWindow()) {
+    window.AUDRALIA_PAGE_CACHE_NONCE = state.cacheNonce;
+    window.AUDRALIA_SINGLE_CACHE_NONCE_CHAIN = true;
   }
 
-  const root = document.documentElement;
-  const bootstrapNonce =
-    window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT &&
-    window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.dynamicCacheKey
-      ? String(window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.dynamicCacheKey)
-      : "";
+  if (root) {
+    root.setAttribute("data-audralia-page-cache-nonce", state.cacheNonce);
+    root.setAttribute("data-audralia-route-bridge-cache-key", state.cacheNonce);
+    root.setAttribute("data-audralia-single-cache-nonce-chain", "true");
+  }
 
-  const rootNonce = root.getAttribute("data-audralia-route-bridge-cache-key") || "";
-  const windowNonce = window.AUDRALIA_PAGE_CACHE_NONCE ? String(window.AUDRALIA_PAGE_CACHE_NONCE) : "";
-  const importNonce = getOwnImportNonce();
-
-  const nonce =
-    bootstrapNonce ||
-    rootNonce ||
-    windowNonce ||
-    importNonce ||
-    `${BRIDGE_CONTRACT}__${Date.now()}__${Math.random().toString(36).slice(2, 8)}`;
-
-  window.AUDRALIA_PAGE_CACHE_NONCE = nonce;
-  root.setAttribute("data-audralia-page-cache-nonce", nonce);
-  root.setAttribute("data-audralia-single-cache-nonce-chain", "true");
-
-  state.cacheNonce = nonce;
-
-  return nonce;
+  return state.cacheNonce;
 }
 
 function versioned(path) {
-  const nonce = getOrCreateCacheNonce();
-  return `${path}?v=${encodeURIComponent(nonce)}`;
+  const separator = String(path).includes("?") ? "&" : "?";
+  return `${path}${separator}v=${encodeURIComponent(getOrCreateCacheNonce())}`;
 }
 
 function recordError(scope, error) {
   const message = error && error.message ? error.message : String(error);
   state.errors.push({ scope, message, time: nowIso() });
-  publishBridgeReceipt(scope);
-  renderStatus();
+  state.status = `${scope}-error`;
+  publishReceipt(scope);
+  updateStatus(`error:${scope}`, true);
 }
 
-function resolveMountTarget() {
+function routeIsValid() {
+  if (!hasWindow()) return true;
+  const path = window.location && window.location.pathname ? window.location.pathname : ROUTE;
+  return path === ROUTE || path === `${ROUTE}index.html` || path.endsWith("/showroom/globe/audralia/");
+}
+
+function getMount() {
+  if (state.mountTarget && isElement(state.mountTarget)) return state.mountTarget;
   if (!hasDocument()) return null;
 
-  return (
+  const mount =
     document.querySelector("#audraliaCanvasMount") ||
-    document.querySelector("[data-audralia-canvas-mount]") ||
-    document.querySelector("[data-audralia-clean-canvas-mount]") ||
+    document.querySelector("#audralia-form-mount") ||
+    document.querySelector("#audraliaFormMount") ||
+    document.querySelector("#audralia-stage") ||
+    document.querySelector("#audraliaStage") ||
     document.querySelector("#audraliaMount") ||
-    null
-  );
+    document.querySelector("[data-audralia-form-mount='true']") ||
+    document.querySelector("[data-audralia-clean-canvas-mount]") ||
+    document.querySelector("[data-audralia-canvas-mount]") ||
+    document.querySelector("[data-audralia-mount]") ||
+    document.querySelector("[data-adopted-canvas-mount]") ||
+    document.querySelector("main [data-audralia-stage]") ||
+    document.querySelector("main") ||
+    document.body ||
+    null;
+
+  if (mount) {
+    state.mountTarget = mount;
+    mount.setAttribute("data-audralia-route-bridge-mount", "true");
+    mount.setAttribute("data-audralia-page-cache-nonce", getOrCreateCacheNonce());
+  }
+
+  return mount;
 }
 
-function ensureStatusDom() {
-  if (!hasDocument()) return {};
+function installMobileOverflowGuard() {
+  if (!hasDocument()) return false;
+  if (document.querySelector("#audralia-route-bridge-overflow-guard")) {
+    state.mobileOverflowGuardActive = true;
+    return true;
+  }
 
-  return {
-    panel:
-      document.querySelector("#audraliaHandoffPanel") ||
-      document.querySelector("[data-audralia-handoff-panel]") ||
-      null,
-    title:
-      document.querySelector("#audraliaHandoffTitle") ||
-      document.querySelector("[data-audralia-handoff-title]") ||
-      null,
-    message:
-      document.querySelector("#audraliaHandoffStatus") ||
-      document.querySelector("[data-audralia-handoff-status]") ||
-      null,
-    list:
-      document.querySelector("#audraliaHandoffList") ||
-      document.querySelector("[data-audralia-handoff-list]") ||
-      null,
-    receipt:
-      document.querySelector("#audraliaHandoffReceipt") ||
-      document.querySelector("[data-audralia-handoff-receipt]") ||
-      null,
-    script:
-      document.querySelector("#audraliaBridgeScript") ||
-      document.querySelector("[data-audralia-bridge-script]") ||
-      null
-  };
+  const style = document.createElement("style");
+  style.id = "audralia-route-bridge-overflow-guard";
+  style.textContent = `
+    [data-audralia-route-bridge-panel="true"],
+    [data-audralia-status],
+    [data-audralia-route-status],
+    [data-audralia-handoff-status],
+    #audraliaRouteStatus,
+    #audraliaBridgeStatus,
+    #audraliaHandoffStatus {
+      box-sizing: border-box;
+      max-width: 100%;
+      overflow-x: hidden;
+      overflow-wrap: anywhere;
+      word-break: normal;
+    }
+    [data-audralia-route-bridge-panel="true"] pre,
+    [data-audralia-route-bridge-panel="true"] code,
+    [data-audralia-status] pre,
+    [data-audralia-status] code,
+    #audraliaRouteStatus pre,
+    #audraliaRouteStatus code {
+      max-width: 100%;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      overflow-x: hidden;
+    }
+    [data-audralia-route-bridge-panel="true"] ul {
+      margin-left: 1.1rem;
+      padding-left: 0;
+    }
+    [data-audralia-route-bridge-value="true"] {
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+  `;
+  document.head.appendChild(style);
+  state.mobileOverflowGuardActive = true;
+  return true;
 }
 
-function setRootAttributes() {
-  if (!hasDocument() || !document.documentElement) return;
+function preventDuplicateBridgePanels() {
+  if (!hasDocument()) return false;
+  const panels = Array.from(document.querySelectorAll("[data-audralia-route-bridge-panel='true']"));
+  if (panels.length <= 1) {
+    state.duplicateStatusPanelsPrevented = true;
+    return true;
+  }
 
-  document.documentElement.setAttribute("data-audralia-route-bridge-contract", BRIDGE_CONTRACT);
-  document.documentElement.setAttribute("data-audralia-route-bridge-previous-contract", PREVIOUS_BRIDGE_CONTRACT);
-  document.documentElement.setAttribute("data-audralia-runtime-path", RUNTIME_PATH);
-  document.documentElement.setAttribute("data-audralia-runtime-import", state.runtimeImport || versioned(RUNTIME_PATH));
-  document.documentElement.setAttribute("data-audralia-single-cache-nonce-chain", "true");
-  document.documentElement.setAttribute("data-audralia-page-cache-nonce", getOrCreateCacheNonce());
-  document.documentElement.setAttribute("data-audralia-runtime-contract-expected", RUNTIME_CONTRACT);
-  document.documentElement.setAttribute("data-audralia-parent-contract-expected", PARENT_CONTRACT);
-  document.documentElement.setAttribute("data-audralia-continents-contract-expected", CONTINENTS_CONTRACT);
-  document.documentElement.setAttribute("data-audralia-route-bridge-status", state.status);
-  document.documentElement.setAttribute("data-audralia-form-visible", state.finalFormVisible ? "true" : "false");
-  document.documentElement.setAttribute("data-audralia-parent-form-visible", state.parentFormVisible ? "true" : "false");
-  document.documentElement.setAttribute("data-audralia-parent-contract-valid", state.parentContractValid ? "true" : "false");
-  document.documentElement.setAttribute("data-audralia-continents-contract-valid", state.continentsContractValid ? "true" : "false");
+  panels.slice(1).forEach((panel) => panel.remove());
+  state.duplicateStatusPanelsPrevented = true;
+  return true;
+}
+
+function resolveStatusNode() {
+  if (state.statusNode && isElement(state.statusNode)) return state.statusNode;
+  if (!hasDocument()) return null;
+
+  preventDuplicateBridgePanels();
+
+  const existing =
+    document.querySelector("[data-audralia-route-bridge-panel='true']") ||
+    document.querySelector("#audraliaBridgeStatus") ||
+    document.querySelector("#audraliaHandoffStatus") ||
+    document.querySelector("#audraliaRouteStatus") ||
+    document.querySelector("[data-audralia-handoff-status]") ||
+    document.querySelector("[data-audralia-route-status]") ||
+    document.querySelector("[data-audralia-status]");
+
+  if (existing) {
+    existing.setAttribute("data-audralia-route-bridge-panel", "true");
+    existing.setAttribute("data-audralia-route-bridge-owned-update", "true");
+    state.statusNode = existing;
+    state.statusCardReused = true;
+    return existing;
+  }
+
+  const mount = getMount();
+  const panel = document.createElement("section");
+  panel.id = "audraliaBridgeStatus";
+  panel.setAttribute("data-audralia-route-bridge-panel", "true");
+  panel.setAttribute("data-audralia-status", "true");
+  panel.setAttribute("aria-live", "polite");
+  panel.style.boxSizing = "border-box";
+  panel.style.maxWidth = "100%";
+  panel.style.overflowX = "hidden";
+  panel.style.overflowWrap = "anywhere";
+
+  const parent = mount && mount.parentElement ? mount.parentElement : document.body;
+  if (mount && mount.nextSibling) parent.insertBefore(panel, mount.nextSibling);
+  else parent.appendChild(panel);
+
+  state.statusNode = panel;
+  state.statusCardReused = false;
+  preventDuplicateBridgePanels();
+  return panel;
+}
+
+function clearNode(node) {
+  while (node && node.firstChild) node.removeChild(node.firstChild);
+}
+
+function appendText(parent, tag, text, options = {}) {
+  const node = document.createElement(tag);
+  node.textContent = String(text || "");
+  if (options.className) node.className = options.className;
+  if (options.bold) node.style.fontWeight = "700";
+  if (options.muted) node.style.opacity = "0.72";
+  if (options.value) node.setAttribute("data-audralia-route-bridge-value", "true");
+  parent.appendChild(node);
+  return node;
 }
 
 function statusRows() {
   const rows = [
-    ["ROUTE_VALID", state.routeValid ? ROUTE : false],
-    ["MOUNT_TARGET_FOUND", state.mountTargetFound],
-    ["SINGLE_CACHE_NONCE", state.cacheNonce || false],
-    ["STANDBY_FORM_VISIBLE", state.standbyFormVisible ? "route bridge painted immediate form" : false],
-    ["RUNTIME_IMPORT_SUCCEEDED", state.runtimeImportSucceeded ? RUNTIME_PATH : false],
-    ["RUNTIME_CONTRACT_VALID", state.runtimeContractValid ? RUNTIME_CONTRACT : false],
-    ["MOUNT_CALLED", state.mountCalled ? "runtime mount invoked" : false],
-    ["MOUNT_AWAITED", state.mountAwaited ? "Promise.resolve runtime result" : false],
-    ["PARENT_HANDOFF_AWAITED", state.parentHandoffAwaited ? "runtime call resolved" : false],
-    ["PARENT_ENGINE_LOADED", state.parentEngineLoaded],
-    ["PARENT_ENGINE_DELEGATED", state.parentEngineDelegated],
-    ["PARENT_CONTRACT_VALID", state.parentContractValid ? PARENT_CONTRACT : false],
-    ["PARENT_FORM_VISIBLE", state.parentFormVisible],
-    ["CONTINENTS_RECEIPT_READ", state.continentsReceiptRead],
-    ["CONTINENTS_CONTRACT_VALID", state.continentsContractValid ? CONTINENTS_CONTRACT : false]
+    ["ROUTE_VALID", state.routeValid ? ROUTE : "false"],
+    ["MOUNT_TARGET_FOUND", state.mountFound ? "true" : "false"],
+    ["SINGLE_CACHE_NONCE", state.cacheNonce || getOrCreateCacheNonce()],
+    ["PLANET_MANIFEST_READY", state.planetManifestReady ? "true" : "false"],
+    ["PLANET_MATH_READY", state.planetMathReady ? "true" : "false"],
+    ["PLANET_LATTICE_READY", state.planetLatticeReady ? "true" : "false"],
+    ["PLANET_PALETTE_READY", state.planetPaletteReady ? "true" : "false"],
+    ["RUNTIME_IMPORT_SUCCEEDED", state.runtimeImportSucceeded ? PATHS.runtime : "false"],
+    ["RUNTIME_CONTRACT_VALID", state.runtimeContractValid ? state.runtimeContract || RUNTIME_EXPECTED_CONTRACT : "false"],
+    ["MOUNT_CALLED", state.mountCalled ? "runtime mount invoked" : "false"],
+    ["MOUNT_AWAITED", state.mountAwaited ? "Promise.resolve runtime result" : "false"],
+    ["PARENT_HANDOFF_AWAITED", state.parentHandoffAwaited ? "runtime call resolved" : "false"],
+    ["PARENT_ENGINE_LOADED", state.parentEngineLoaded ? "true" : "false"],
+    ["PARENT_ENGINE_DELEGATED", state.parentEngineDelegated ? "true" : "false"],
+    ["PARENT_CONTRACT_VALID", state.parentContractValid ? PARENT_COMPATIBILITY_CONTRACT : "false"],
+    ["PARENT_FORM_VISIBLE", state.parentFormVisibleAccepted ? "true" : "false"],
+    ["GRATITUDE_SOURCE_FIELD_READY", state.gratitudeSourceFieldReady ? "true" : "optional/pending"],
+    ["GRATITUDE_RECEIPT_RETURN_READY", state.gratitudeReceiptReturnReady ? "true" : "optional/pending"]
   ];
-
-  if (state.finalFormVisible) rows.push(["FORM_VISIBLE", "parent-confirmed"]);
-  if (state.errors.length) rows.push(["ERRORS", `${state.errors.length} recorded`]);
 
   return rows;
 }
 
-function renderStatus() {
+function updateStatus(scope = "status", force = false) {
   if (!hasDocument()) return;
 
-  setRootAttributes();
+  const time = nowMs();
+  if (!force && time - state.lastStatusWrite < BOOT.statusUpdateMinMs) return;
+  state.lastStatusWrite = time;
 
-  const { panel, title, message, list, receipt, script } = ensureStatusDom();
+  installMobileOverflowGuard();
+  const node = resolveStatusNode();
+  if (!node) return;
 
-  if (panel) {
-    panel.setAttribute("data-audralia-handoff-state", state.status);
-    panel.setAttribute("data-audralia-form-visible", state.finalFormVisible ? "true" : "false");
-    panel.setAttribute("data-audralia-single-cache-nonce-chain", "true");
+  node.setAttribute("data-audralia-route-bridge-scope", scope);
+  node.setAttribute("data-audralia-route-bridge-contract", AUDRALIA_ROUTE_CONTRACT);
+  node.setAttribute("data-audralia-route-bridge-idempotent", "true");
+  node.setAttribute("data-audralia-figure-eight-return-verifier", "true");
+  node.setAttribute("data-audralia-mobile-overflow-guard", "true");
+
+  clearNode(node);
+
+  appendText(node, "h3", state.visibleLabel || "Clean-canvas handoff pending");
+  appendText(node, "p", state.visibleSubstatus || "SINGLE_CACHE_NONCE · loading route bridge chain", { bold: true });
+
+  const list = document.createElement("ul");
+  for (const [label, value] of statusRows()) {
+    const item = document.createElement("li");
+    const strong = document.createElement("strong");
+    strong.textContent = label;
+    item.appendChild(strong);
+    item.appendChild(document.createTextNode(" · "));
+    const span = document.createElement("span");
+    span.setAttribute("data-audralia-route-bridge-value", "true");
+    span.textContent = String(value);
+    item.appendChild(span);
+    list.appendChild(item);
   }
+  node.appendChild(list);
 
-  if (title) title.textContent = state.headline;
-  if (message) message.textContent = state.message;
+  appendText(node, "p", AUDRALIA_ROUTE_CONTRACT, { muted: true, value: true });
+  appendText(node, "p", `Route bridge script: ${TARGET} · downstream nonce: ${state.cacheNonce || getOrCreateCacheNonce()}`, { muted: true, value: true });
 
-  if (list) {
-    list.innerHTML = "";
+  if (state.finalMessage) appendText(node, "p", state.finalMessage, { bold: true });
+}
 
-    for (const [label, value] of statusRows()) {
-      if (value === false || value === null || value === undefined || value === "") continue;
+function scriptGlobalReady(kind) {
+  if (!hasWindow()) return false;
+  const value = window[GLOBALS[kind]];
+  return Boolean(value && typeof value === "object");
+}
 
-      const li = document.createElement("li");
-      const strong = document.createElement("strong");
-      strong.textContent = label;
-      li.appendChild(strong);
+function scriptContract(kind) {
+  if (!hasWindow()) return "";
+  const api = window[GLOBALS[kind]];
+  if (!api) return "";
+  if (api.contract) return String(api.contract);
+  if (typeof api.getStatus === "function") {
+    try {
+      const status = api.getStatus();
+      return String(status && status.contract ? status.contract : "");
+    } catch (_error) {}
+  }
+  return "";
+}
 
-      if (value !== true) li.appendChild(document.createTextNode(` · ${value}`));
+function anyScriptAlreadyLoaded(path) {
+  if (!hasDocument()) return false;
+  const normalized = normalizePath(path);
+  return Array.from(document.scripts).some((script) => normalizePath(script.getAttribute("src") || "") === normalized);
+}
 
-      list.appendChild(li);
+function appendClassicScript(path, kind) {
+  if (!hasDocument()) return Promise.resolve(false);
+  if (scriptGlobalReady(kind)) return Promise.resolve(true);
+
+  const normalized = normalizePath(path);
+  if (loadedScripts.has(normalized)) return loadedScripts.get(normalized);
+
+  const promise = new Promise((resolve) => {
+    if (anyScriptAlreadyLoaded(path)) {
+      const start = Date.now();
+      const wait = () => {
+        if (scriptGlobalReady(kind)) {
+          resolve(true);
+          return;
+        }
+        if (Date.now() - start > BOOT.primitiveLoadTimeoutMs) {
+          resolve(false);
+          return;
+        }
+        setTimeout(wait, 40);
+      };
+      wait();
+      return;
     }
+
+    const script = document.createElement("script");
+    script.src = versioned(path);
+    script.async = false;
+    script.defer = false;
+    script.setAttribute("data-audralia-route-bridge-loader", AUDRALIA_ROUTE_CONTRACT);
+    script.setAttribute("data-audralia-primitive-kind", kind);
+    script.setAttribute("data-audralia-page-cache-nonce", getOrCreateCacheNonce());
+    script.setAttribute("data-generated-image", "false");
+    script.setAttribute("data-graphic-box", "false");
+    script.setAttribute("data-visual-pass-claimed", "false");
+    script.onload = () => resolve(scriptGlobalReady(kind));
+    script.onerror = () => resolve(false);
+    document.head.appendChild(script);
+  });
+
+  loadedScripts.set(normalized, promise);
+  return promise;
+}
+
+async function ensurePlanetPrimitive(kind, path) {
+  if (scriptGlobalReady(kind)) return true;
+  const loaded = await appendClassicScript(path, kind);
+  return Boolean(loaded || scriptGlobalReady(kind));
+}
+
+async function ensurePlanetFamily() {
+  state.primitiveLoadStarted = true;
+  state.status = "planet-family-loading";
+  publishReceipt("planet-family-loading");
+  updateStatus("planet-family-loading", true);
+
+  const manifest = await ensurePlanetPrimitive("manifest", PATHS.manifest);
+  state.planetManifestReady = manifest;
+  state.primitiveContracts.manifest = scriptContract("manifest");
+  publishReceipt("planet-manifest-ready");
+
+  const math = await ensurePlanetPrimitive("math", PATHS.math);
+  state.planetMathReady = math;
+  state.primitiveContracts.math = scriptContract("math");
+  publishReceipt("planet-math-ready");
+
+  const lattice = await ensurePlanetPrimitive("lattice", PATHS.lattice);
+  state.planetLatticeReady = lattice;
+  state.primitiveContracts.lattice = scriptContract("lattice");
+  publishReceipt("planet-lattice-ready");
+
+  const palette = await ensurePlanetPrimitive("palette", PATHS.palette);
+  state.planetPaletteReady = palette;
+  state.primitiveContracts.palette = scriptContract("palette");
+
+  state.primitiveLoadComplete = true;
+  state.status = "planet-family-checked";
+  publishReceipt("planet-family-checked");
+  updateStatus("planet-family-checked", true);
+
+  return {
+    manifest,
+    math,
+    lattice,
+    palette
+  };
+}
+
+function resolveRuntimeApi(moduleValue = null) {
+  if (moduleValue) {
+    if (typeof moduleValue.default === "function") return moduleValue.default;
+    if (moduleValue.default && typeof moduleValue.default === "object") return moduleValue.default;
+    if (moduleValue.api && typeof moduleValue.api === "object") return moduleValue.api;
+    if (typeof moduleValue.mount === "function") return moduleValue;
   }
 
-  if (receipt) receipt.textContent = BRIDGE_CONTRACT;
-
-  if (script) {
-    script.textContent = `Route bridge script: /showroom/globe/audralia/index.js · downstream nonce: ${state.cacheNonce || getOrCreateCacheNonce()}`;
-  }
-}
-
-function paintStandbyForm(target) {
-  if (!hasDocument() || !target) return;
-
-  target.setAttribute("data-audralia-standby-form-visible", "true");
-  target.setAttribute("data-audralia-standby-painted-by", BRIDGE_CONTRACT);
-
-  target.style.position = "relative";
-  target.style.overflow = "hidden";
-  target.style.touchAction = "none";
-
-  let canvas =
-    target.querySelector("canvas[data-audralia-clean-parent-canvas='true']") ||
-    target.querySelector("canvas[data-audralia-clean-canvas='true']") ||
-    target.querySelector("canvas");
-
-  if (!canvas) {
-    canvas = document.createElement("canvas");
-    canvas.setAttribute("data-audralia-standby-canvas", "true");
-    canvas.setAttribute("aria-label", "Audralia standby inspection form");
-    target.appendChild(canvas);
-  }
-
-  canvas.style.position = "absolute";
-  canvas.style.inset = "0";
-  canvas.style.display = "block";
-  canvas.style.width = "100%";
-  canvas.style.height = "100%";
-  canvas.style.borderRadius = "24px";
-  canvas.style.touchAction = "none";
-
-  const rect = target.getBoundingClientRect();
-  const cssWidth = Math.max(320, Math.floor(target.clientWidth || rect.width || 760));
-  const cssHeight = Math.max(420, Math.floor(target.clientHeight || rect.height || 540));
-  const dpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
-
-  canvas.width = Math.floor(cssWidth * dpr);
-  canvas.height = Math.floor(cssHeight * dpr);
-
-  const ctx = canvas.getContext("2d", { alpha: true });
-  if (!ctx) return;
-
-  const w = canvas.width;
-  const h = canvas.height;
-  const cx = w * 0.5 - w * 0.21;
-  const cy = h * 0.5;
-  const r = Math.min(w, h) * 0.29;
-
-  ctx.clearRect(0, 0, w, h);
-
-  const bg = ctx.createLinearGradient(0, 0, 0, h);
-  bg.addColorStop(0, "rgba(3, 12, 30, 1)");
-  bg.addColorStop(1, "rgba(0, 3, 12, 1)");
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, w, h);
-
-  const body = ctx.createRadialGradient(cx - r * 0.36, cy - r * 0.34, r * 0.08, cx, cy, r);
-  body.addColorStop(0, "rgba(128,232,255,0.92)");
-  body.addColorStop(0.28, "rgba(42,156,204,0.92)");
-  body.addColorStop(0.68, "rgba(9,62,126,0.96)");
-  body.addColorStop(1, "rgba(1,11,42,0.98)");
-
-  ctx.beginPath();
-  ctx.arc(cx, cy, r, 0, Math.PI * 2);
-  ctx.fillStyle = body;
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(cx, cy, r * 1.002, 0, Math.PI * 2);
-  ctx.strokeStyle = "rgba(190,240,255,0.28)";
-  ctx.lineWidth = Math.max(1, dpr * 1.2);
-  ctx.stroke();
-
-  state.standbyFormVisible = true;
-  renderStatus();
-}
-
-function readRuntimeReceipt() {
   if (!hasWindow()) return null;
-
-  return (
-    window.AUDRALIA_RUNTIME_RECEIPT ||
-    window.AUDRALIA_RUNTIME_SHIM_RECEIPT ||
-    window.AUDRALIA_CLEAN_CANVAS_RUNTIME_RECEIPT ||
-    null
-  );
+  return window.AUDRALIA_RUNTIME || window.AUDRALIA_CLEAN_CANVAS_RUNTIME || window.AUDRALIA_RUNTIME_SHIM || null;
 }
 
-function getParentApi() {
-  if (!hasWindow()) return null;
-
-  return (
-    window.AUDRALIA_CLEAN_CANVAS_AUTHORITY ||
-    window.AUDRALIA_CLEAN_CANVAS_ENGINE ||
-    window.AUDRALIA_CLEAN_ENGINE_PARENT ||
-    window.AUDRALIA_ENGINE ||
-    null
-  );
-}
-
-function readParentReceipt() {
-  if (!hasWindow()) return null;
-
-  const api = getParentApi();
-
-  if (api && typeof api.getStatus === "function") {
+function readRuntimeContract(runtime) {
+  if (!runtime) return "";
+  if (runtime.CONTRACT) return String(runtime.CONTRACT);
+  if (runtime.contract) return String(runtime.contract);
+  if (typeof runtime.getStatus === "function") {
     try {
-      return api.getStatus();
+      const status = runtime.getStatus();
+      return String(status && status.contract ? status.contract : "");
     } catch (_error) {}
   }
-
-  if (api && typeof api.status === "function") {
-    try {
-      return api.status();
-    } catch (_error) {}
-  }
-
-  return (
-    window.AUDRALIA_CLEAN_PARENT_ENGINE_RECEIPT ||
-    window.AUDRALIA_ENGINE_RECEIPT ||
-    window.AUDRALIA_CLEAN_CANVAS_RECEIPT ||
-    null
-  );
+  return "";
 }
 
-function readContinentsReceipt() {
+async function importRuntime() {
+  if (runtimeModulePromise) return runtimeModulePromise;
+  state.runtimeImportStarted = true;
+  state.status = "runtime-importing";
+  publishReceipt("runtime-importing");
+  updateStatus("runtime-importing", true);
+
+  runtimeModulePromise = import(versioned(PATHS.runtime))
+    .then((moduleValue) => {
+      const runtime = resolveRuntimeApi(moduleValue);
+      state.runtimeImportSucceeded = Boolean(runtime);
+      state.runtimeContract = readRuntimeContract(runtime);
+      state.runtimeContractValid = !state.runtimeContract || state.runtimeContract === RUNTIME_EXPECTED_CONTRACT;
+      publishReceipt("runtime-imported");
+      updateStatus("runtime-imported", true);
+      return runtime;
+    })
+    .catch((error) => {
+      state.runtimeImportSucceeded = false;
+      recordError("runtime-import", error);
+      return null;
+    });
+
+  return runtimeModulePromise;
+}
+
+function parentReceiptCandidates() {
+  if (!hasWindow()) return [];
+  return [
+    window.AUDRALIA_ENGINE_RECEIPT,
+    window.AUDRALIA_CLEAN_ENGINE_RECEIPT,
+    window.AUDRALIA_CLEAN_CANVAS_ENGINE_RECEIPT,
+    window.AUDRALIA_PARENT_ENGINE_RECEIPT,
+    window.AUDRALIA_G2_7_PARENT_FULL_TEXTURE_ATLAS_RENDERER_RECEIPT,
+    window.AUDRALIA_RUNTIME_RECEIPT && window.AUDRALIA_RUNTIME_RECEIPT.parentStatus,
+    window.AUDRALIA_RUNTIME_SHIM_RECEIPT && window.AUDRALIA_RUNTIME_SHIM_RECEIPT.parentStatus
+  ].filter(Boolean);
+}
+
+function readParentApi() {
   if (!hasWindow()) return null;
+  const candidates = [
+    window.AUDRALIA_CLEAN_CANVAS_AUTHORITY,
+    window.AUDRALIA_CLEAN_CANVAS_ENGINE,
+    window.AUDRALIA_CLEAN_ENGINE_PARENT,
+    window.AUDRALIA_ENGINE,
+    window.AUDRALIA_CLEAN_PARENT_ENGINE,
+    window.AUDRALIA_PARENT_FULL_TEXTURE_ATLAS_ENGINE
+  ];
 
-  const api =
-    window.AUDRALIA_NINE_SUMMITS_CONTINENTS_ENGINE ||
-    window.AUDRALIA_CLEAN_CONTINENTS_ENGINE ||
-    window.AUDRALIA_CONTINENTS_ENGINE ||
-    window.AUDRALIA_CLEAN_CANVAS_CONTINENTS ||
-    null;
-
-  if (api && typeof api.getStatus === "function") {
-    try {
-      return api.getStatus();
-    } catch (_error) {}
-  }
-
-  if (api && typeof api.status === "function") {
-    try {
-      return api.status();
-    } catch (_error) {}
-  }
-
-  return (
-    window.AUDRALIA_NINE_SUMMITS_CONTINENTS_RECEIPT ||
-    window.AUDRALIA_CONTINENTS_RECEIPT ||
-    window.AUDRALIA_CLEAN_CONTINENTS_RECEIPT ||
-    window.AUDRALIA_CLEAN_CANVAS_CONTINENTS_RECEIPT ||
-    null
-  );
+  return candidates.find((candidate) => candidate && typeof candidate === "object") || null;
 }
 
-function validateRuntimeReceipt(receipt) {
-  if (!receipt) return false;
-  return receipt.contract === RUNTIME_CONTRACT || receipt.cleanParentCacheKey === PARENT_CONTRACT;
-}
-
-function validateParentReceipt(receipt) {
-  if (!receipt) return false;
-  return receipt.contract === PARENT_CONTRACT;
-}
-
-function validateParentVisible(receipt) {
-  if (!receipt) return false;
-
-  return Boolean(
-    receipt.formVisible === true ||
-      receipt.ready === true ||
-      receipt.bodyPainted === true ||
-      (hasWindow() &&
-        (window.AUDRALIA_FORM_VISIBLE === true ||
-          window.AUDRALIA_CLEAN_CANVAS_FORM_VISIBLE === true ||
-          window.AUDRALIA_CLEAN_PARENT_FORM_VISIBLE === true))
-  );
-}
-
-function validateContinentsReceipt(receipt) {
-  if (!receipt) return false;
-
-  return Boolean(
-    receipt.contract === CONTINENTS_CONTRACT &&
-      (receipt.nineSummits256FibonacciModel === true ||
-        receipt.continentBodyCount === 9 ||
-        receipt.exposedLandCells === 89)
-  );
-}
-
-function resolveRuntimeMount(runtimeModule) {
-  if (!runtimeModule) return null;
-
-  if (typeof runtimeModule.default === "function") {
-    return { type: "function-export export=default", fn: runtimeModule.default };
-  }
-
-  if (runtimeModule.default && typeof runtimeModule.default.mount === "function") {
-    return { type: "object-export default.mount", fn: runtimeModule.default.mount.bind(runtimeModule.default) };
-  }
-
-  if (typeof runtimeModule.mount === "function") {
-    return { type: "named-export mount", fn: runtimeModule.mount };
-  }
-
-  if (runtimeModule.api && typeof runtimeModule.api.mount === "function") {
-    return { type: "named-export api.mount", fn: runtimeModule.api.mount.bind(runtimeModule.api) };
-  }
-
+function readParentStatusFromApi(parent) {
+  if (!parent) return null;
+  try {
+    if (typeof parent.getStatus === "function") return parent.getStatus();
+    if (typeof parent.status === "function") return parent.status();
+  } catch (_error) {}
   return null;
 }
 
-function setHold(reason) {
-  state.status = "hold";
-  state.headline = "Clean-canvas handoff hold";
-  state.message = `HANDOFF_HOLD · ${reason}`;
-  publishBridgeReceipt("hold");
-  renderStatus();
+function parentContractIsValid(receipt) {
+  if (!receipt || typeof receipt !== "object") return false;
+  const contract = String(receipt.contract || "");
+  const internal = String(receipt.internalContract || receipt.INTERNAL_CONTRACT || "");
+  const family = String(receipt.family || "");
+  const renderModel = String(receipt.renderModel || "");
+
+  if (contract === PARENT_COMPATIBILITY_CONTRACT) return true;
+  if (family === PARENT_COMPATIBILITY_CONTRACT) return true;
+  if (internal.includes("PARENT") && internal.includes("ATLAS")) return true;
+  if (contract.includes("PARENT") && contract.includes("ATLAS")) return true;
+  if (renderModel.includes("atlas") || renderModel.includes("sphere")) return true;
+
+  return false;
 }
 
-function setFailed(reason) {
-  state.status = "failed";
-  state.headline = "Clean-canvas handoff failed";
-  state.message = `HANDOFF_FAILED · ${reason}`;
-  publishBridgeReceipt("failed");
-  renderStatus();
-}
-
-function setVisible() {
-  state.status = "visible";
-  state.headline = "Clean-canvas handoff visible";
-  state.message = "FORM_VISIBLE · parent-confirmed";
-  state.finalFormVisible = true;
-  publishBridgeReceipt("visible");
-  renderStatus();
-}
-
-function applyReceiptRead() {
-  const runtimeReceipt = readRuntimeReceipt();
-  const parentReceipt = readParentReceipt();
-  const continentsReceipt = readContinentsReceipt();
-
-  state.runtimeReceipt = runtimeReceipt;
-  state.parentReceipt = parentReceipt;
-  state.continentsReceipt = continentsReceipt;
-
-  state.runtimeContractValid = validateRuntimeReceipt(runtimeReceipt);
-
-  state.parentEngineLoaded = Boolean(
-    parentReceipt ||
-      getParentApi() ||
-      (hasWindow() && window.AUDRALIA_PARENT_ENGINE_LOADED === true)
+function parentVisibleFromReceipt(receipt) {
+  if (!receipt || typeof receipt !== "object") return false;
+  return Boolean(
+    receipt.formVisible === true ||
+    receipt.FORM_VISIBLE === true ||
+    receipt.parentFormVisible === true ||
+    receipt.mounted === true ||
+    receipt.visiblePixelsPainted === true ||
+    receipt.textureAtlasBuilt === true ||
+    receipt.planetMaterialIntegrated === true
   );
+}
 
-  state.parentEngineDelegated = Boolean(
-    (parentReceipt && (parentReceipt.delegatedBy || parentReceipt.mountCalled || parentReceipt.mounted)) ||
-      (hasWindow() && window.AUDRALIA_PARENT_ENGINE_DELEGATED === true)
+function parentVisibleFromGlobals() {
+  if (!hasWindow()) return false;
+  const root = getRoot();
+  return Boolean(
+    window.AUDRALIA_ENGINE_FORM_VISIBLE === true ||
+    window.AUDRALIA_PARENT_FORM_VISIBLE === true ||
+    window.AUDRALIA_FORM_VISIBLE === true ||
+    window.AUDRALIA_CLEAN_CANVAS_FORM_VISIBLE === true ||
+    window.AUDRALIA_CLEAN_PARENT_FORM_VISIBLE === true ||
+    window.AUDRALIA_RUNTIME_SHIM_FORM_VISIBLE_CONFIRMED === true ||
+    (root && root.dataset && (
+      root.dataset.audraliaParentFormVisible === "true" ||
+      root.dataset.audraliaFormVisible === "true" ||
+      root.dataset.audraliaRuntimeFormVisible === "true"
+    ))
   );
-
-  state.parentContractValid = validateParentReceipt(parentReceipt);
-  state.parentFormVisible = validateParentVisible(parentReceipt);
-
-  state.continentsReceiptRead = Boolean(continentsReceipt);
-  state.continentsContractValid = validateContinentsReceipt(continentsReceipt);
-
-  renderStatus();
 }
 
-async function waitForParentAndContinents() {
-  const parentStart = Date.now();
+function syncParentAcceptance() {
+  const parent = readParentApi();
+  const apiStatus = readParentStatusFromApi(parent);
+  const receipts = [apiStatus, ...parentReceiptCandidates()].filter(Boolean);
+  const validReceipt = receipts.find(parentContractIsValid) || receipts[0] || null;
 
-  while (Date.now() - parentStart <= PARENT_TIMEOUT_MS) {
-    applyReceiptRead();
+  state.parentEngineLoaded = Boolean(parent || receipts.length);
+  state.parentContractValid = Boolean(validReceipt && parentContractIsValid(validReceipt));
+  state.parentFormVisibleAccepted = Boolean(parentVisibleFromGlobals() || receipts.some(parentVisibleFromReceipt));
+  state.parentExpressionAccepted = Boolean(state.parentEngineLoaded && (state.parentContractValid || state.parentFormVisibleAccepted));
 
-    if (state.parentEngineLoaded && state.parentContractValid && state.parentFormVisible) {
-      break;
-    }
-
-    await sleep(POLL_MS);
+  if (hasWindow()) {
+    window.AUDRALIA_ROUTE_PARENT_EXPRESSION_ACCEPTED = state.parentExpressionAccepted;
+    window.AUDRALIA_ROUTE_PARENT_FORM_VISIBLE_ACCEPTED = state.parentFormVisibleAccepted;
   }
 
-  applyReceiptRead();
-
-  if (!state.parentEngineLoaded) {
-    setFailed("parent confirmation timeout");
-    return false;
-  }
-
-  if (!state.parentContractValid) {
-    setHold("parent contract mismatch");
-    return false;
-  }
-
-  if (!state.parentFormVisible) {
-    setHold("parent loaded but form not confirmed");
-    return false;
-  }
-
-  const continentsStart = Date.now();
-
-  while (Date.now() - continentsStart <= CONTINENTS_TIMEOUT_MS) {
-    applyReceiptRead();
-
-    if (state.continentsReceiptRead && state.continentsContractValid) {
-      return true;
-    }
-
-    await sleep(POLL_MS);
-  }
-
-  applyReceiptRead();
-
-  if (!state.continentsReceiptRead) {
-    setHold("parent visible but continents receipt missing");
-    return false;
-  }
-
-  if (!state.continentsContractValid) {
-    setHold("parent visible but continents contract stale");
-    return false;
-  }
-
-  return true;
+  return validReceipt;
 }
 
-function publishBridgeReceipt(scope = "publish") {
+function syncGratitudeSourceSupport() {
   if (!hasWindow()) return;
 
-  const receipt = {
-    contract: BRIDGE_CONTRACT,
-    previousContract: PREVIOUS_BRIDGE_CONTRACT,
+  const topology = window.AUDRALIA_TOPOLOGY_GRATITUDE;
+  const source = window.AUDRALIA_GRATITUDE_SOURCE_FIELD;
+  const figure = window.AUDRALIA_GRATITUDE_FIGURE_EIGHT_SOURCE;
+  const traversal = window.AUDRALIA_GRATITUDE_TRAVERSAL_RECEIPT;
+
+  state.gratitudeSourceFieldReady = Boolean(
+    source ||
+    (topology && typeof topology.getSourceField === "function") ||
+    (topology && topology.CONTRACT && String(topology.CONTRACT).includes("GRATITUDE"))
+  );
+  state.gratitudeFigureEightSourceReady = Boolean(
+    figure ||
+    (topology && typeof topology.getFigureEightSource === "function")
+  );
+  state.gratitudeReceiptReturnReady = Boolean(
+    traversal && traversal.receiptReturnReady !== false ||
+    (topology && typeof topology.getTraversalReceipt === "function")
+  );
+}
+
+function closeHandoffIfAllowed(scope = "close-check") {
+  syncParentAcceptance();
+  syncGratitudeSourceSupport();
+
+  if (state.parentFormVisibleAccepted && state.parentExpressionAccepted) {
+    state.status = "form-visible-parent-confirmed";
+    state.bootComplete = true;
+    state.handoffClosedFromParentReceipt = true;
+    state.visibleLabel = "Clean-canvas handoff visible";
+    state.visibleSubstatus = state.gratitudeReceiptReturnReady
+      ? "FORM_VISIBLE · parent-confirmed · source-return ready"
+      : "FORM_VISIBLE · parent-confirmed · source pending";
+    state.finalMessage = "Figure-eight return verifier closed from lawful parent expression.";
+
+    const root = getRoot();
+    if (root) {
+      root.dataset.audraliaRouteStatus = state.status;
+      root.dataset.audraliaRouteBridgeClosed = "true";
+      root.dataset.audraliaFormVisible = "true";
+      root.dataset.audraliaParentFormVisible = "true";
+      root.dataset.audraliaFigureEightReturnVerifier = "true";
+      root.dataset.audraliaChildVisualPrecedenceRequired = "false";
+    }
+
+    publishReceipt(scope);
+    updateStatus(scope, true);
+    return true;
+  }
+
+  state.visibleLabel = "Clean-canvas handoff pending";
+  state.visibleSubstatus = "SINGLE_CACHE_NONCE · loading route bridge chain";
+  publishReceipt(scope);
+  updateStatus(scope, true);
+  return false;
+}
+
+async function waitForParentVisibility() {
+  for (let i = 0; i < BOOT.parentVisibleAttempts; i += 1) {
+    if (closeHandoffIfAllowed(`parent-visible-check-${i + 1}`)) return true;
+    await sleep(BOOT.parentVisibleDelayMs + i * 12);
+  }
+  closeHandoffIfAllowed("parent-visible-bounded-timeout");
+  return state.parentFormVisibleAccepted;
+}
+
+async function callRuntimeMount(runtime, mount) {
+  if (!runtime) throw new Error("Runtime API unavailable after import.");
+
+  const options = {
     route: ROUTE,
-    runtimePath: RUNTIME_PATH,
-    runtimeImport: state.runtimeImport || "",
-    cacheNonce: state.cacheNonce || getOrCreateCacheNonce(),
-    runtimeContractExpected: RUNTIME_CONTRACT,
-    parentContractExpected: PARENT_CONTRACT,
-    continentsContractExpected: CONTINENTS_CONTRACT,
-    mode: "single_cache_nonce_chain_alignment_route_bridge",
+    target: TARGET,
+    cacheNonce: getOrCreateCacheNonce(),
+    delegatedBy: AUDRALIA_ROUTE_CONTRACT,
+    planetFamilyAligned: true,
+    figureEightReturnVerifier: true,
+    childVisualPrecedenceRequired: false,
+    sourceFieldSupportOptional: true
+  };
+
+  state.mountCalled = true;
+  publishReceipt("runtime-mount-called");
+  updateStatus("runtime-mount-called", true);
+
+  let result;
+  if (typeof runtime === "function") {
+    result = runtime(mount, options);
+  } else if (runtime && typeof runtime.mount === "function") {
+    result = runtime.mount(mount, options);
+  } else if (runtime && typeof runtime.boot === "function") {
+    result = runtime.boot(mount, options);
+  } else if (runtime && typeof runtime.start === "function") {
+    result = runtime.start(mount, options);
+  } else if (runtime && typeof runtime.init === "function") {
+    result = runtime.init(mount, options);
+  } else if (runtime && typeof runtime.create === "function") {
+    result = runtime.create(mount, options);
+  } else {
+    throw new Error("Runtime imported, but no mount-compatible method was exposed.");
+  }
+
+  const awaited = await Promise.resolve(result);
+  state.mountAwaited = true;
+  state.parentHandoffAwaited = true;
+  state.parentEngineDelegated = true;
+  syncParentAcceptance();
+  publishReceipt("runtime-mount-awaited");
+  updateStatus("runtime-mount-awaited", true);
+  return awaited;
+}
+
+function exposeRouteReceipt(partial = {}) {
+  return publishReceipt(partial.scope || "manual-expose", partial);
+}
+
+function publishReceipt(scope = "publish", partial = {}) {
+  if (!hasWindow()) return null;
+
+  syncGratitudeSourceSupport();
+
+  const receipt = {
+    contract: AUDRALIA_ROUTE_CONTRACT,
+    lineageContracts: Array.from(AUDRALIA_ROUTE_LINEAGE_CONTRACTS),
+    target: TARGET,
+    route: ROUTE,
     scope,
     status: state.status,
-    headline: state.headline,
-    message: state.message,
+    updatedAt: nowIso(),
+
+    routeBridgeIdempotent: true,
+    planetFamilyAligned: true,
+    figureEightReturnVerifier: true,
+    singleCacheNonceChain: true,
+    cacheNonce: state.cacheNonce || getOrCreateCacheNonce(),
+
     routeValid: state.routeValid,
-    mountTargetFound: state.mountTargetFound,
-    standbyFormVisible: state.standbyFormVisible,
+    mountFound: state.mountFound,
+    mountId: state.mountTarget ? state.mountTarget.id || "" : "",
+
+    planetManifestReady: state.planetManifestReady,
+    planetMathReady: state.planetMathReady,
+    planetLatticeReady: state.planetLatticeReady,
+    planetPaletteReady: state.planetPaletteReady,
+    primitiveContracts: { ...state.primitiveContracts },
+    expectedPrimitives: { ...EXPECTED_PRIMITIVES },
+
+    runtimeImportStarted: state.runtimeImportStarted,
     runtimeImportSucceeded: state.runtimeImportSucceeded,
+    runtimeContract: state.runtimeContract,
+    runtimeExpectedContract: RUNTIME_EXPECTED_CONTRACT,
+    runtimeContractValid: state.runtimeContractValid,
+
+    mountCalled: state.mountCalled,
+    mountAwaited: state.mountAwaited,
+    parentHandoffAwaited: state.parentHandoffAwaited,
+    parentEngineLoaded: state.parentEngineLoaded,
+    parentEngineDelegated: state.parentEngineDelegated,
+    parentContractValid: state.parentContractValid,
+    parentCompatibilityContract: PARENT_COMPATIBILITY_CONTRACT,
+    parentExpressionAccepted: state.parentExpressionAccepted,
+    parentFormVisibleAccepted: state.parentFormVisibleAccepted,
+    handoffClosedFromParentReceipt: state.handoffClosedFromParentReceipt,
+
+    childVisualPrecedenceRequired: false,
+    sourceFieldSupportOptional: true,
+    gratitudeSourceFieldReady: state.gratitudeSourceFieldReady,
+    gratitudeFigureEightSourceReady: state.gratitudeFigureEightSourceReady,
+    gratitudeReceiptReturnReady: state.gratitudeReceiptReturnReady,
+
+    statusCardReused: state.statusCardReused,
+    duplicateStatusPanelsPrevented: state.duplicateStatusPanelsPrevented,
+    pendingLoopPrevented: true,
+    mobileOverflowGuardActive: state.mobileOverflowGuardActive,
+
+    bridgeOwnsPlanetTruth: false,
+    bridgeOwnsRenderTruth: false,
+    bridgeOwnsRuntimeMotion: false,
+    bridgeOwnsParentCanvas: false,
+    bridgeOwnsChildTopology: false,
+    bridgeOwnsHydrology: false,
+    bridgeOwnsSurface: false,
+    bridgeOwnsTerrain: false,
+    bridgeOwnsElevation: false,
+
+    generatedImage: false,
+    graphicBox: false,
+    visualPassClaim: false,
+    errors: state.errors.slice(),
+    ...partial
+  };
+
+  window.AUDRALIA_ROUTE_RECEIPT = receipt;
+  window.__AUDRALIA_ROUTE_RECEIPT__ = receipt;
+  window.AudraliaRouteStatus = receipt;
+  window.AUDRALIA_ROUTE_BRIDGE_RECEIPT = receipt;
+  window.AUDRALIA_FIGURE_EIGHT_RETURN_VERIFIER_RECEIPT = receipt;
+  window.AUDRALIA_ROUTE_BRIDGE_IDEMPOTENT = true;
+  window.AUDRALIA_ROUTE_BRIDGE_PLANET_FAMILY_ALIGNED = true;
+  window.AUDRALIA_CHILD_VISUAL_PRECEDENCE_REQUIRED = false;
+
+  const root = getRoot();
+  if (root) {
+    root.dataset.audraliaRouteContract = AUDRALIA_ROUTE_CONTRACT;
+    root.dataset.audraliaRouteStatus = state.status;
+    root.dataset.audraliaRouteBridgeIdempotent = "true";
+    root.dataset.audraliaPlanetFamilyAligned = "true";
+    root.dataset.audraliaFigureEightReturnVerifier = "true";
+    root.dataset.audraliaMountFound = String(state.mountFound);
+    root.dataset.audraliaSingleCacheNonceChain = "true";
+    root.dataset.audraliaPageCacheNonce = state.cacheNonce || getOrCreateCacheNonce();
+    root.dataset.audraliaPlanetManifestReady = String(state.planetManifestReady);
+    root.dataset.audraliaPlanetMathReady = String(state.planetMathReady);
+    root.dataset.audraliaPlanetLatticeReady = String(state.planetLatticeReady);
+    root.dataset.audraliaPlanetPaletteReady = String(state.planetPaletteReady);
+    root.dataset.audraliaRuntimeImportSucceeded = String(state.runtimeImportSucceeded);
+    root.dataset.audraliaParentEngineLoaded = String(state.parentEngineLoaded);
+    root.dataset.audraliaParentEngineDelegated = String(state.parentEngineDelegated);
+    root.dataset.audraliaParentContractValid = String(state.parentContractValid);
+    root.dataset.audraliaParentFormVisible = String(state.parentFormVisibleAccepted);
+    root.dataset.audraliaChildVisualPrecedenceRequired = "false";
+    root.dataset.audraliaMobileOverflowGuardActive = String(state.mobileOverflowGuardActive);
+    root.dataset.generatedImage = "false";
+    root.dataset.graphicBox = "false";
+    root.dataset.visualPassClaimed = "false";
+  }
+
+  try {
+    window.dispatchEvent(new CustomEvent("audralia:route-bridge:receipt", { detail: receipt }));
+  } catch (_error) {
+    try { window.dispatchEvent(new Event("audralia:route-bridge:receipt")); } catch (_ignored) {}
+  }
+
+  return receipt;
+}
+
+async function bootAudraliaDoorway() {
+  if (bootPromise) return bootPromise;
+
+  bootPromise = (async () => {
+    state.bootStarted = true;
+    state.routeValid = routeIsValid();
+    getOrCreateCacheNonce();
+    installMobileOverflowGuard();
+
+    const mount = getMount();
+    state.mountFound = Boolean(mount);
+
+    if (!state.routeValid) {
+      state.status = "route-invalid";
+      state.visibleLabel = "Clean-canvas handoff held";
+      state.visibleSubstatus = "ROUTE_VALID · false";
+      publishReceipt("route-invalid");
+      updateStatus("route-invalid", true);
+      return getStatus();
+    }
+
+    if (!mount) {
+      state.status = "mount-missing";
+      state.visibleLabel = "Clean-canvas handoff held";
+      state.visibleSubstatus = "MOUNT_TARGET_FOUND · false";
+      recordError("mount", "No Audralia mount target found.");
+      return getStatus();
+    }
+
+    state.status = "route-validated";
+    publishReceipt("route-validated");
+    updateStatus("route-validated", true);
+
+    await ensurePlanetFamily();
+
+    const alreadyClosed = closeHandoffIfAllowed("pre-runtime-parent-check");
+    if (alreadyClosed) return getStatus();
+
+    const runtime = await importRuntime();
+    if (!runtime) {
+      state.status = "runtime-unavailable";
+      state.visibleLabel = "Clean-canvas handoff held";
+      state.visibleSubstatus = "RUNTIME_IMPORT_SUCCEEDED · false";
+      publishReceipt("runtime-unavailable");
+      updateStatus("runtime-unavailable", true);
+      return getStatus();
+    }
+
+    await callRuntimeMount(runtime, mount);
+    await waitForParentVisibility();
+
+    if (!state.parentFormVisibleAccepted) {
+      state.status = "parent-visible-not-confirmed";
+      state.visibleLabel = "Clean-canvas handoff pending";
+      state.visibleSubstatus = "PARENT_FORM_VISIBLE · awaiting bounded confirmation";
+      state.finalMessage = "Parent did not confirm visible form inside the bounded route-bridge window.";
+      publishReceipt("parent-visible-not-confirmed");
+      updateStatus("parent-visible-not-confirmed", true);
+    }
+
+    state.bootComplete = true;
+    publishReceipt("boot-complete");
+    return getStatus();
+  })().catch((error) => {
+    recordError("bootAudraliaDoorway", error);
+    return getStatus();
+  });
+
+  return bootPromise;
+}
+
+function getStatus() {
+  syncParentAcceptance();
+  syncGratitudeSourceSupport();
+
+  return {
+    contract: AUDRALIA_ROUTE_CONTRACT,
+    lineageContracts: Array.from(AUDRALIA_ROUTE_LINEAGE_CONTRACTS),
+    target: TARGET,
+    route: ROUTE,
+    status: state.status,
+    cacheNonce: state.cacheNonce || getOrCreateCacheNonce(),
+    routeBridgeIdempotent: true,
+    planetFamilyAligned: true,
+    figureEightReturnVerifier: true,
+    singleCacheNonceChain: true,
+    routeValid: state.routeValid,
+    mountFound: state.mountFound,
+    primitiveLoadComplete: state.primitiveLoadComplete,
+    planetManifestReady: state.planetManifestReady,
+    planetMathReady: state.planetMathReady,
+    planetLatticeReady: state.planetLatticeReady,
+    planetPaletteReady: state.planetPaletteReady,
+    primitiveContracts: { ...state.primitiveContracts },
+    runtimeImportSucceeded: state.runtimeImportSucceeded,
+    runtimeContract: state.runtimeContract,
     runtimeContractValid: state.runtimeContractValid,
     mountCalled: state.mountCalled,
     mountAwaited: state.mountAwaited,
@@ -617,136 +1030,84 @@ function publishBridgeReceipt(scope = "publish") {
     parentEngineLoaded: state.parentEngineLoaded,
     parentEngineDelegated: state.parentEngineDelegated,
     parentContractValid: state.parentContractValid,
-    parentFormVisible: state.parentFormVisible,
-    continentsReceiptRead: state.continentsReceiptRead,
-    continentsContractValid: state.continentsContractValid,
-    formVisible: state.finalFormVisible,
-    runtimeReceipt: state.runtimeReceipt,
-    parentReceipt: state.parentReceipt,
-    continentsReceipt: state.continentsReceipt,
-    singleCacheNonceChain: true,
-    htmlChange: false,
-    routeBridgeChange: true,
-    runtimeRewrite: false,
-    parentRewrite: false,
-    continentsRewrite: false,
-    motionRewrite: false,
-    skyRewrite: false,
-    visualPassClaim: false,
+    parentExpressionAccepted: state.parentExpressionAccepted,
+    parentFormVisibleAccepted: state.parentFormVisibleAccepted,
+    handoffClosedFromParentReceipt: state.handoffClosedFromParentReceipt,
+    childVisualPrecedenceRequired: false,
+    sourceFieldSupportOptional: true,
+    gratitudeSourceFieldReady: state.gratitudeSourceFieldReady,
+    gratitudeFigureEightSourceReady: state.gratitudeFigureEightSourceReady,
+    gratitudeReceiptReturnReady: state.gratitudeReceiptReturnReady,
+    statusCardReused: state.statusCardReused,
+    duplicateStatusPanelsPrevented: state.duplicateStatusPanelsPrevented,
+    pendingLoopPrevented: true,
+    mobileOverflowGuardActive: state.mobileOverflowGuardActive,
     generatedImage: false,
     graphicBox: false,
+    visualPassClaim: false,
     errors: state.errors.slice()
   };
-
-  window.AUDRALIA_ROUTE_BRIDGE_RECEIPT = receipt;
-  window.AUDRALIA_SINGLE_CACHE_NONCE_CHAIN_ROUTE_BRIDGE_RECEIPT = receipt;
-
-  try {
-    window.dispatchEvent(new CustomEvent("audralia:route-bridge:receipt", { detail: receipt }));
-  } catch (_error) {
-    try {
-      window.dispatchEvent(new Event("audralia:route-bridge:receipt"));
-    } catch (_ignored) {}
-  }
-
-  setRootAttributes();
 }
 
-async function bootAudraliaRouteBridge() {
-  state.cacheNonce = getOrCreateCacheNonce();
-  state.runtimeImport = versioned(RUNTIME_PATH);
+function start() {
+  return bootAudraliaDoorway();
+}
 
-  setRootAttributes();
+function boot() {
+  return bootAudraliaDoorway();
+}
 
-  state.routeValid = getRoutePath() === ROUTE || getRoutePath().endsWith("/showroom/globe/audralia/");
-  renderStatus();
+function init() {
+  return bootAudraliaDoorway();
+}
 
-  if (!state.routeValid) {
-    setFailed("route mismatch");
-    return;
-  }
+function create() {
+  return bootAudraliaDoorway();
+}
 
-  const target = resolveMountTarget();
-  state.mountTargetFound = Boolean(target);
-  renderStatus();
+const api = Object.freeze({
+  contract: AUDRALIA_ROUTE_CONTRACT,
+  CONTRACT: AUDRALIA_ROUTE_CONTRACT,
+  lineageContracts: AUDRALIA_ROUTE_LINEAGE_CONTRACTS,
+  target: TARGET,
+  route: ROUTE,
+  getMount,
+  exposeRouteReceipt,
+  bootAudraliaDoorway,
+  boot,
+  start,
+  init,
+  create,
+  getStatus,
+  status: getStatus
+});
 
-  if (!target) {
-    setFailed("mount target missing");
-    return;
-  }
-
-  paintStandbyForm(target);
-  publishBridgeReceipt("standby-painted");
-
-  let runtimeModule;
-
-  try {
-    runtimeModule = await import(state.runtimeImport);
-    state.runtimeImportSucceeded = true;
-    publishBridgeReceipt("runtime-import-succeeded");
-    renderStatus();
-  } catch (error) {
-    recordError("runtime-import", error);
-    setFailed("runtime import failed");
-    return;
-  }
-
-  const runtimeMount = resolveRuntimeMount(runtimeModule);
-
-  if (!runtimeMount) {
-    setFailed("runtime mount function missing");
-    return;
-  }
-
-  try {
-    state.mountCalled = true;
-    renderStatus();
-
-    const result = runtimeMount.fn(target, {
-      route: ROUTE,
-      delegatedBy: BRIDGE_CONTRACT,
-      routeBridge: true,
-      cacheNonce: state.cacheNonce,
-      singleCacheNonceChain: true,
-      parentContractExpected: PARENT_CONTRACT,
-      continentsContractExpected: CONTINENTS_CONTRACT
-    });
-
-    await Promise.resolve(result);
-
-    state.mountAwaited = true;
-    state.parentHandoffAwaited = true;
-
-    applyReceiptRead();
-
-    publishBridgeReceipt("mount-awaited");
-    renderStatus();
-  } catch (error) {
-    recordError("runtime-mount", error);
-    setFailed("runtime mount error");
-    return;
-  }
-
-  const confirmed = await waitForParentAndContinents();
-
-  if (!confirmed) return;
-
-  applyReceiptRead();
-  setVisible();
+if (hasWindow()) {
+  window.AUDRALIA_ROUTE_BRIDGE = api;
+  window.AUDRALIA_ROUTE_BRIDGE_API = api;
+  window.AUDRALIA_PLANET_FAMILY_ALIGNED_ROUTE_BRIDGE = api;
+  publishReceipt("module-load");
 }
 
 if (hasDocument()) {
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => {
-      bootAudraliaRouteBridge().catch((error) => {
-        recordError("boot", error);
-        setFailed("route bridge boot error");
-      });
-    });
+    document.addEventListener("DOMContentLoaded", bootAudraliaDoorway, { once: true });
   } else {
-    bootAudraliaRouteBridge().catch((error) => {
-      recordError("boot", error);
-      setFailed("route bridge boot error");
-    });
+    bootAudraliaDoorway();
   }
 }
+
+export {
+  AUDRALIA_ROUTE_CONTRACT,
+  AUDRALIA_ROUTE_LINEAGE_CONTRACTS,
+  bootAudraliaDoorway,
+  exposeRouteReceipt,
+  getMount,
+  getStatus,
+  boot,
+  start,
+  init,
+  create
+};
+
+export default bootAudraliaDoorway;

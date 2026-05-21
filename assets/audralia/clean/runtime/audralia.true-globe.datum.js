@@ -1,15 +1,16 @@
 // /assets/audralia/clean/runtime/audralia.true-globe.datum.js
 // TNT FULL-FILE REPLACEMENT
-// AUDRALIA_G2_DATUM_CHILD_TRUE_POLE_AXIS_CYCLE_AUTHORITY_TNT_v1
+// AUDRALIA_G2_DATUM_FIBONACCI_16_COMPASS_CHRONOLOGY_TNT_v1
 //
 // Public compatibility contract preserved:
 // AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1
 //
 // Purpose:
-// - Give Audralia definitive datum authority.
-// - Define true north, true south, equator, prime meridian, axis tilt, hemisphere law, and circulation signs.
-// - Provide datum math to terrain, moisture, surface, clouds, runtime, and route consumers.
-// - Bind every downstream child to world-space longitude / latitude / pole authority.
+// - Define Audralia's true datum authority.
+// - Bind Fibonacci as chronology, not decorative numbering.
+// - Define the 16-based compass as ordered sequence authority.
+// - Give every node predecessor, successor, phase, direction, cycle role, hemisphere relation, and material consequence.
+// - Provide downstream children with pole, axis, equator, hemisphere, Coriolis, circulation, latitude band, longitude lane, and 256-state address law.
 // - Do not draw.
 // - Do not create canvas.
 // - Do not own clouds.
@@ -22,8 +23,8 @@
   "use strict";
 
   var CONTRACT = "AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1";
-  var EXECUTION_CONTRACT = "AUDRALIA_G2_DATUM_CHILD_TRUE_POLE_AXIS_CYCLE_AUTHORITY_TNT_v1";
-  var STANDARD = "AUDRALIA_G2_DATUM_TRUE_POLE_AXIS_HEMISPHERE_CIRCULATION_STANDARD_v1";
+  var EXECUTION_CONTRACT = "AUDRALIA_G2_DATUM_FIBONACCI_16_COMPASS_CHRONOLOGY_TNT_v1";
+  var STANDARD = "AUDRALIA_G2_DATUM_FIBONACCI_16_COMPASS_CHRONOLOGY_STANDARD_v1";
   var FAMILY = "/assets/audralia/clean/runtime/";
   var FILE = "/assets/audralia/clean/runtime/audralia.true-globe.datum.js";
 
@@ -39,6 +40,32 @@
   var AXIAL_TILT_RADIANS = 0.41015237421866746;
   var PRIME_MERIDIAN_LONGITUDE = 0;
   var EQUATOR_LATITUDE = 0;
+
+  var FIBONACCI_WEIGHTS_16 = [
+    1, 1, 2, 3,
+    5, 8, 13, 21,
+    34, 55, 89, 144,
+    233, 377, 610, 987
+  ];
+
+  var COMPASS_16_BASE = [
+    ["N", "North", "origin-axis-lock", "polar compression", "seed / axis"],
+    ["NNE", "North-Northeast", "north-to-east-transition", "upper return current", "first release"],
+    ["NE", "Northeast", "diagonal-lift", "rising pressure", "lift"],
+    ["ENE", "East-Northeast", "east-formation-approach", "formation wind", "pre-formation"],
+    ["E", "East", "formation-gate", "equatorial expression", "formation"],
+    ["ESE", "East-Southeast", "east-to-south-descent", "humid descent", "material descent"],
+    ["SE", "Southeast", "diagonal-hydration", "warm moisture return", "hydration"],
+    ["SSE", "South-Southeast", "south-stability-approach", "basin settling", "pre-stability"],
+    ["S", "South", "south-stability-lock", "polar mirror compression", "stability"],
+    ["SSW", "South-Southwest", "south-to-west-pressure", "lower return current", "retention"],
+    ["SW", "Southwest", "diagonal-fracture-test", "terrain pressure", "pressure test"],
+    ["WSW", "West-Southwest", "west-fracture-approach", "drying shear", "pre-fracture"],
+    ["W", "West", "fracture-gate", "counterflow expression", "fracture"],
+    ["WNW", "West-Northwest", "west-to-north-recovery", "cooling return", "recovery"],
+    ["NW", "Northwest", "diagonal-compression", "upper compression", "compression"],
+    ["NNW", "North-Northwest", "north-return-approach", "final return current", "return"]
+  ];
 
   var state = {
     initialized: false,
@@ -68,6 +95,14 @@
     return value - Math.floor(value);
   }
 
+  function degrees(radians) {
+    return radians * 180 / Math.PI;
+  }
+
+  function radians(deg) {
+    return deg * Math.PI / 180;
+  }
+
   function wrapLongitude(lon) {
     var value = finite(lon, 0);
 
@@ -81,12 +116,14 @@
     return clamp(lat, -HALF_PI, HALF_PI);
   }
 
-  function degrees(radians) {
-    return radians * 180 / Math.PI;
+  function modulo(index, count) {
+    return ((index % count) + count) % count;
   }
 
-  function radians(deg) {
-    return deg * Math.PI / 180;
+  function sum(values) {
+    return values.reduce(function (total, value) {
+      return total + value;
+    }, 0);
   }
 
   function hash3(a, b, c) {
@@ -126,6 +163,120 @@
       longitude: wrapLongitude(Math.atan2(point.z, point.x)),
       latitude: clampLatitude(Math.asin(clamp(point.y, -1, 1)))
     };
+  }
+
+  function buildCompassChronology() {
+    var totalWeight = sum(FIBONACCI_WEIGHTS_16);
+    var cumulative = 0;
+
+    return COMPASS_16_BASE.map(function (row, index) {
+      var weight = FIBONACCI_WEIGHTS_16[index];
+      var previousIndex = modulo(index - 1, RADIAL_NODES);
+      var nextIndex = modulo(index + 1, RADIAL_NODES);
+      var oppositeIndex = modulo(index + 8, RADIAL_NODES);
+      var angularStep = TAU / RADIAL_NODES;
+      var longitudeCenter = wrapLongitude(PRIME_MERIDIAN_LONGITUDE + index * angularStep);
+      var longitudeStart = wrapLongitude(longitudeCenter - angularStep / 2);
+      var longitudeEnd = wrapLongitude(longitudeCenter + angularStep / 2);
+      var fibonacciStart = cumulative / totalWeight;
+
+      cumulative += weight;
+
+      var fibonacciEnd = cumulative / totalWeight;
+      var cardinalGroup =
+        index % 4 === 0 ? "cardinal" :
+        index % 2 === 0 ? "ordinal" :
+        "intercardinal";
+
+      var masterQuadrant =
+        index >= 0 && index <= 3 ? "North-to-East" :
+        index >= 4 && index <= 7 ? "East-to-South" :
+        index >= 8 && index <= 11 ? "South-to-West" :
+        "West-to-North";
+
+      var masterDirection =
+        index >= 0 && index <= 3 ? "north-east arc" :
+        index >= 4 && index <= 7 ? "east-south arc" :
+        index >= 8 && index <= 11 ? "south-west arc" :
+        "west-north arc";
+
+      return {
+        compassIndex: index,
+        chronologyIndex: index,
+        sequenceIndex: index + 1,
+        key: row[0],
+        name: row[1],
+        nodeRole: row[2],
+        circulationRole: row[3],
+        cycleRole: row[4],
+
+        predecessorIndex: previousIndex,
+        successorIndex: nextIndex,
+        oppositeIndex: oppositeIndex,
+
+        angularStep: angularStep,
+        longitudeCenter: longitudeCenter,
+        longitudeStart: longitudeStart,
+        longitudeEnd: longitudeEnd,
+        bearingRadians: index * angularStep,
+        bearingDegrees: degrees(index * angularStep),
+
+        fibonacciWeight: weight,
+        fibonacciStart: fibonacciStart,
+        fibonacciEnd: fibonacciEnd,
+        fibonacciMidpoint: (fibonacciStart + fibonacciEnd) / 2,
+        fibonacciPhase: fract(index / GOLDEN_RATIO),
+        goldenAnglePhase: fract((index * GOLDEN_ANGLE) / TAU),
+
+        cardinalGroup: cardinalGroup,
+        masterQuadrant: masterQuadrant,
+        masterDirection: masterDirection,
+
+        chronologyReady: true,
+        nodeDefinedBySequence: true,
+        nodeDefinedByCompass: true
+      };
+    });
+  }
+
+  var COMPASS_CHRONOLOGY = buildCompassChronology();
+
+  function compassNodeByIndex(index) {
+    return COMPASS_CHRONOLOGY[modulo(Math.round(finite(index, 0)), RADIAL_NODES)];
+  }
+
+  function compassIndexForLongitude(lon) {
+    var step = TAU / RADIAL_NODES;
+    var delta = wrapLongitude(lon - PRIME_MERIDIAN_LONGITUDE);
+    return modulo(Math.round(delta / step), RADIAL_NODES);
+  }
+
+  function compassNodeForLongitude(lon) {
+    return compassNodeByIndex(compassIndexForLongitude(lon));
+  }
+
+  function chronologyForLongitude(lon) {
+    var node = compassNodeForLongitude(lon);
+    return enrichNode(node);
+  }
+
+  function enrichNode(node) {
+    var previous = compassNodeByIndex(node.predecessorIndex);
+    var next = compassNodeByIndex(node.successorIndex);
+    var opposite = compassNodeByIndex(node.oppositeIndex);
+
+    return Object.assign({}, node, {
+      predecessorKey: previous.key,
+      predecessorName: previous.name,
+      successorKey: next.key,
+      successorName: next.name,
+      oppositeKey: opposite.key,
+      oppositeName: opposite.name,
+
+      chronologicalContinuity: previous.key + " → " + node.key + " → " + next.key,
+      compassChronologyLaw: "node meaning derives from sequence, predecessor, successor, quadrant, Fibonacci phase, and planetary cycle role",
+      fibonacciChronologyReady: true
+    });
   }
 
   function getAxis() {
@@ -176,7 +327,8 @@
       equatorAuthority: true,
       hemisphereAuthority: true,
       polarAuthority: true,
-      circulationAuthority: true
+      circulationAuthority: true,
+      fibonacciCompassChronologyAuthority: true
     };
   }
 
@@ -215,21 +367,10 @@
     var absLat = Math.abs(lat);
     var hemi = hemisphereFor(lat);
 
-    if (absLat >= radians(72)) {
-      return hemi.sign >= 0 ? "northPolarCap" : "southPolarCap";
-    }
-
-    if (absLat >= radians(58)) {
-      return hemi.sign >= 0 ? "northPolarReturnBand" : "southPolarReturnBand";
-    }
-
-    if (absLat >= radians(34)) {
-      return hemi.sign >= 0 ? "northJetBand" : "southJetBand";
-    }
-
-    if (absLat >= radians(14)) {
-      return hemi.sign >= 0 ? "northTemperateBand" : "southTemperateBand";
-    }
+    if (absLat >= radians(72)) return hemi.sign >= 0 ? "northPolarCap" : "southPolarCap";
+    if (absLat >= radians(58)) return hemi.sign >= 0 ? "northPolarReturnBand" : "southPolarReturnBand";
+    if (absLat >= radians(34)) return hemi.sign >= 0 ? "northJetBand" : "southJetBand";
+    if (absLat >= radians(14)) return hemi.sign >= 0 ? "northTemperateBand" : "southTemperateBand";
 
     return "equatorialMoistureBand";
   }
@@ -250,11 +391,6 @@
     };
   }
 
-  function radialIndexFor(lon) {
-    var normalized = (wrapLongitude(lon) + Math.PI) / TAU;
-    return Math.floor(clamp(normalized * RADIAL_NODES, 0, RADIAL_NODES - 0.000001));
-  }
-
   function bandIndexFor(lat) {
     var y = Math.sin(clampLatitude(lat));
     var equalArea = (1 - y) / 2;
@@ -265,11 +401,12 @@
     lon = wrapLongitude(lon);
     lat = clampLatitude(lat);
 
-    var radialIndex = radialIndexFor(lon);
+    var node = chronologyForLongitude(lon);
+    var radialIndex = node.compassIndex;
     var bandIndex = bandIndexFor(lat);
     var stateIndex = bandIndex * RADIAL_NODES + radialIndex;
-    var fibonacciPhase = fract((bandIndex / GOLDEN_RATIO) + radialIndex / RADIAL_NODES);
-    var hexPhase = fract(stateIndex * GOLDEN_RATIO);
+    var bandWeight = FIBONACCI_WEIGHTS_16[bandIndex];
+    var radialWeight = FIBONACCI_WEIGHTS_16[radialIndex];
 
     return {
       radialIndex: radialIndex,
@@ -278,8 +415,25 @@
       latticeStates: LATTICE_STATES,
       radialNodes: RADIAL_NODES,
       fibonacciBands: FIBONACCI_BANDS,
-      fibonacciPhase: fibonacciPhase,
-      hexPhase: hexPhase,
+
+      compassKey: node.key,
+      compassName: node.name,
+      chronologyIndex: node.chronologyIndex,
+      sequenceIndex: node.sequenceIndex,
+      predecessorIndex: node.predecessorIndex,
+      successorIndex: node.successorIndex,
+      oppositeIndex: node.oppositeIndex,
+      predecessorKey: node.predecessorKey,
+      successorKey: node.successorKey,
+      oppositeKey: node.oppositeKey,
+
+      fibonacciWeight: radialWeight,
+      fibonacciBandWeight: bandWeight,
+      fibonacciPhase: node.fibonacciPhase,
+      fibonacciChronologyPhase: node.fibonacciMidpoint,
+      goldenAnglePhase: fract((stateIndex * GOLDEN_ANGLE) / TAU),
+      hexPhase: fract(stateIndex * GOLDEN_RATIO),
+
       cellId: "audralia:datum:" + bandIndex + ":" + radialIndex,
       hexAddress: "AU-HX-" + String(bandIndex).padStart(2, "0") + "-" + String(radialIndex).padStart(2, "0")
     };
@@ -338,11 +492,25 @@
     };
   }
 
+  function nodeCycleBias(node) {
+    var i = node.compassIndex;
+
+    return {
+      compressionBias: i === 0 || i === 14 || i === 15 ? 1 : i === 1 ? 0.55 : 0,
+      formationBias: i >= 2 && i <= 5 ? 1 - Math.abs(4 - i) / 3 : 0,
+      hydrationBias: i >= 5 && i <= 8 ? 1 - Math.abs(7 - i) / 3 : 0,
+      stabilityBias: i >= 7 && i <= 9 ? 1 - Math.abs(8 - i) / 2 : 0,
+      pressureBias: i >= 9 && i <= 12 ? 1 - Math.abs(11 - i) / 3 : 0,
+      recoveryBias: i >= 12 || i <= 1 ? i >= 12 ? (i - 11) / 4 : (2 - i) / 4 : 0
+    };
+  }
+
   function circulationFor(lon, lat, time) {
     lon = wrapLongitude(lon);
     lat = clampLatitude(lat);
     time = finite(time, 0);
 
+    var node = chronologyForLongitude(lon);
     var hemi = hemisphereFor(lat);
     var cor = coriolisFor(lat);
     var equatorInfluence = equatorInfluenceFor(lat);
@@ -351,40 +519,58 @@
     var polarInfluence = polarInfluenceFor(lat);
     var polarCurl = polarCurlFor(lat);
     var polarReturn = polarReturnFor(lat);
+    var cycle = nodeCycleBias(node);
 
-    var wave = Math.sin(lon * 3 + time * 0.035 + hemi.sign * 0.7);
-    var longitudinalPulse = Math.sin(lon * 5 - time * 0.018);
+    var wave = Math.sin(lon * 3 + time * 0.035 + hemi.sign * 0.7 + node.fibonacciPhase * TAU);
+    var longitudinalPulse = Math.sin(lon * 5 - time * 0.018 + node.goldenAnglePhase * TAU);
 
-    var equatorialFlow = equatorInfluence * (0.82 + wave * 0.08);
+    var equatorialFlow = equatorInfluence * (0.78 + cycle.formationBias * 0.12 + wave * 0.08);
     var jetFlow = jetInfluence * (hemi.sign >= 0 ? -0.62 : 0.62);
     var temperateCounterflow = temperateInfluence * (hemi.sign >= 0 ? -0.28 : 0.28);
-    var polarCurlFlow = polarCurl * (hemi.sign >= 0 ? 0.36 : -0.36);
-    var polarReturnFlow = polarReturn * (hemi.sign >= 0 ? -0.24 : 0.24);
+    var polarCurlFlow = polarCurl * (hemi.sign >= 0 ? 0.38 : -0.38);
+    var polarReturnFlow = polarReturn * (hemi.sign >= 0 ? -0.26 : 0.26);
 
-    var eastWestFlow = equatorialFlow + jetFlow + temperateCounterflow + polarCurlFlow + polarReturnFlow;
+    var chronologyFlow =
+      cycle.compressionBias * 0.12 -
+      cycle.pressureBias * 0.10 +
+      cycle.recoveryBias * 0.08 +
+      cycle.hydrationBias * 0.06;
+
+    var eastWestFlow = equatorialFlow + jetFlow + temperateCounterflow + polarCurlFlow + polarReturnFlow + chronologyFlow;
+
     var northSouthFlow =
       equatorInfluence * 0.04 * wave +
       temperateInfluence * -hemi.sign * 0.12 +
       jetInfluence * hemi.sign * 0.08 +
       polarReturn * -hemi.sign * 0.34 +
-      polarCurl * hemi.sign * 0.10 * longitudinalPulse;
+      polarCurl * hemi.sign * 0.10 * longitudinalPulse +
+      cycle.hydrationBias * 0.05 -
+      cycle.compressionBias * 0.04;
 
     var vorticity =
       cor.force * 0.28 +
       jetInfluence * cor.sign * 0.22 +
       polarCurl * cor.sign * 0.62 +
-      equatorInfluence * longitudinalPulse * 0.06;
+      equatorInfluence * longitudinalPulse * 0.06 +
+      node.fibonacciPhase * 0.04;
 
     return {
       circulationReady: true,
       hemisphere: hemi.name,
       hemisphereSign: hemi.sign,
 
+      compassKey: node.key,
+      compassName: node.name,
+      chronologyIndex: node.chronologyIndex,
+      cycleRole: node.cycleRole,
+      circulationRole: node.circulationRole,
+
       equatorialFlow: equatorialFlow,
       jetFlow: jetFlow,
       temperateCounterflow: temperateCounterflow,
       polarCurlFlow: polarCurlFlow,
       polarReturnFlow: polarReturnFlow,
+      chronologyFlow: chronologyFlow,
 
       eastWestFlow: eastWestFlow,
       northSouthFlow: northSouthFlow,
@@ -404,7 +590,9 @@
       poleAnchor: hemi.sign > 0 ? "north" : hemi.sign < 0 ? "south" : "equatorial-balance",
 
       longitudinalPulse: longitudinalPulse,
-      circulationWave: wave
+      circulationWave: wave,
+      fibonacciChronologyApplied: true,
+      compassChronologyApplied: true
     };
   }
 
@@ -413,18 +601,23 @@
     lat = clampLatitude(lat);
     time = finite(time, 0);
 
-    var seasonalPhase = Math.sin(time * 0.003 + lon * 0.25);
+    var node = chronologyForLongitude(lon);
+    var seasonalPhase = Math.sin(time * 0.003 + lon * 0.25 + node.fibonacciPhase * TAU);
     var tiltBias = Math.sin(lat) * Math.sin(AXIAL_TILT_RADIANS);
-    var sunwardPressure = clamp(0.50 + seasonalPhase * 0.18 + tiltBias * 0.32, 0, 1);
+    var sequenceBias = (node.fibonacciMidpoint - 0.5) * 0.14;
+
+    var sunwardPressure = clamp(0.50 + seasonalPhase * 0.18 + tiltBias * 0.32 + sequenceBias, 0, 1);
     var shadowPressure = 1 - sunwardPressure;
 
     return {
       seasonalPressureReady: true,
       seasonalPhase: seasonalPhase,
       tiltBias: tiltBias,
+      sequenceBias: sequenceBias,
       sunwardPressure: sunwardPressure,
       shadowPressure: shadowPressure,
-      axialSeasonalityPresent: true
+      axialSeasonalityPresent: true,
+      fibonacciChronologyApplied: true
     };
   }
 
@@ -438,6 +631,7 @@
     var hemi = hemisphereFor(lat);
     var zone = latitudeZoneFor(lat);
     var address = addressFor(lon, lat);
+    var node = chronologyForLongitude(lon);
     var cor = coriolisFor(lat);
     var circulation = circulationFor(lon, lat, time);
     var season = seasonalPressureFor(lon, lat, time);
@@ -449,30 +643,36 @@
     var temperateInfluence = temperateInfluenceFor(lat);
     var jetInfluence = jetInfluenceFor(lat);
     var polarReturn = polarReturnFor(lat);
+    var cycle = nodeCycleBias(node);
 
     var altitudeBias =
       equatorInfluence * 0.16 +
       jetInfluence * 0.22 +
       polarReturn * 0.18 +
-      polarCurl * 0.10;
+      polarCurl * 0.10 +
+      cycle.compressionBias * 0.06;
 
     var moistureDatumBias =
       equatorInfluence * 0.42 +
       temperateInfluence * 0.24 +
       polarReturn * 0.16 -
-      polarInfluence * 0.08;
+      polarInfluence * 0.08 +
+      cycle.hydrationBias * 0.16;
 
     var surfaceDatumBias =
       temperateInfluence * 0.24 +
       equatorInfluence * 0.10 +
       season.sunwardPressure * 0.12 -
-      polarInfluence * 0.10;
+      polarInfluence * 0.10 +
+      cycle.formationBias * 0.08 +
+      cycle.stabilityBias * 0.06;
 
     var cloudDatumBias =
       equatorInfluence * 0.34 +
       jetInfluence * 0.32 +
       polarCurl * 0.24 +
-      polarReturn * 0.18;
+      polarReturn * 0.18 +
+      cycle.hydrationBias * 0.12;
 
     var resolved = {
       contract: CONTRACT,
@@ -487,12 +687,12 @@
       hemisphereAuthorityReady: true,
       equatorAuthorityReady: true,
       circulationAuthorityReady: true,
+      fibonacciCompassChronologyReady: true,
 
       longitude: lon,
       latitude: lat,
       longitudeDegrees: degrees(lon),
       latitudeDegrees: degrees(lat),
-
       sphere: sphere,
 
       axis: axis,
@@ -504,6 +704,31 @@
       axisTiltDegrees: degrees(AXIAL_TILT_RADIANS),
       primeMeridianLongitude: PRIME_MERIDIAN_LONGITUDE,
       equatorLatitude: EQUATOR_LATITUDE,
+
+      compassNode: node,
+      compassKey: node.key,
+      compassName: node.name,
+      compassIndex: node.compassIndex,
+      chronologyIndex: node.chronologyIndex,
+      sequenceIndex: node.sequenceIndex,
+      predecessorKey: node.predecessorKey,
+      successorKey: node.successorKey,
+      oppositeKey: node.oppositeKey,
+      chronologicalContinuity: node.chronologicalContinuity,
+      cycleRole: node.cycleRole,
+      nodeRole: node.nodeRole,
+      circulationRole: node.circulationRole,
+      masterQuadrant: node.masterQuadrant,
+      cardinalGroup: node.cardinalGroup,
+
+      fibonacciWeight: node.fibonacciWeight,
+      fibonacciStart: node.fibonacciStart,
+      fibonacciEnd: node.fibonacciEnd,
+      fibonacciMidpoint: node.fibonacciMidpoint,
+      fibonacciPhase: node.fibonacciPhase,
+      goldenAnglePhase: node.goldenAnglePhase,
+      fibonacciChronologyApplied: true,
+      nodeDefinedBySequence: true,
 
       hemisphere: hemi.name,
       hemisphereDisplay: hemi.display,
@@ -518,7 +743,6 @@
       latticeStates: LATTICE_STATES,
       hexAddress: address.hexAddress,
       cellId: address.cellId,
-      fibonacciPhase: address.fibonacciPhase,
       hexPhase: address.hexPhase,
 
       equatorInfluence: equatorInfluence,
@@ -556,6 +780,14 @@
       sunwardPressure: season.sunwardPressure,
       shadowPressure: season.shadowPressure,
 
+      cycleBias: cycle,
+      compressionBias: cycle.compressionBias,
+      formationBias: cycle.formationBias,
+      hydrationBias: cycle.hydrationBias,
+      stabilityBias: cycle.stabilityBias,
+      pressureBias: cycle.pressureBias,
+      recoveryBias: cycle.recoveryBias,
+
       altitudeBias: clamp(altitudeBias, 0, 1),
       moistureDatumBias: clamp(moistureDatumBias, 0, 1),
       surfaceDatumBias: clamp(surfaceDatumBias, 0, 1),
@@ -565,7 +797,11 @@
         cloudDatumReady: true,
         latitudeBand: zone.latitudeBand,
         hemisphere: hemi.name,
+        compassKey: node.key,
+        chronologyIndex: node.chronologyIndex,
         bandRole: zone.latitudeBand,
+        cycleRole: node.cycleRole,
+        circulationRole: node.circulationRole,
         altitudeBias: clamp(altitudeBias, 0, 1),
         polarInfluence: polarInfluence,
         polarCurlInfluence: polarCurl,
@@ -576,29 +812,52 @@
         flowAngle: circulation.flowAngle,
         flowMagnitude: circulation.flowMagnitude,
         northPoleAnchorActive: circulation.northPoleAnchorActive,
-        southPoleAnchorActive: circulation.southPoleAnchorActive
+        southPoleAnchorActive: circulation.southPoleAnchorActive,
+        fibonacciChronologyApplied: true
       },
 
       moistureGuidance: {
         moistureDatumReady: true,
+        compassKey: node.key,
+        chronologyIndex: node.chronologyIndex,
         equatorialUplift: equatorInfluence,
         hemisphereCounterflow: circulation.hemisphereCounterflowActive ? Math.abs(circulation.eastWestFlow) : 0,
         polarReturnStrength: polarReturn,
         jetStreamEligibility: jetInfluence,
         wetDryLatitudePressure: clamp(moistureDatumBias, 0, 1),
-        coriolisForce: cor.force
+        coriolisForce: cor.force,
+        fibonacciChronologyApplied: true
       },
 
       surfaceGuidance: {
         surfaceDatumReady: true,
         latitudeBand: zone.latitudeBand,
         hemisphere: hemi.name,
+        compassKey: node.key,
+        chronologyIndex: node.chronologyIndex,
+        cycleRole: node.cycleRole,
         surfaceDatumBias: clamp(surfaceDatumBias, 0, 1),
         polarMaterialSuppression: polarInfluence,
         equatorialMaterialBoost: equatorInfluence * 0.18,
         temperateMaterialBoost: temperateInfluence * 0.26,
+        formationMaterialBoost: cycle.formationBias * 0.12,
+        stabilityMaterialBoost: cycle.stabilityBias * 0.10,
         hexAddress: address.hexAddress,
-        stateIndex: address.stateIndex
+        stateIndex: address.stateIndex,
+        fibonacciChronologyApplied: true
+      },
+
+      terrainGuidance: {
+        terrainDatumReady: true,
+        compassKey: node.key,
+        chronologyIndex: node.chronologyIndex,
+        cycleRole: node.cycleRole,
+        ridgeBias: cycle.compressionBias * 0.18 + cycle.pressureBias * 0.22,
+        basinBias: cycle.stabilityBias * 0.24 + cycle.hydrationBias * 0.18,
+        coastalShelfBias: equatorInfluence * 0.08 + temperateInfluence * 0.14,
+        orographicBias: jetInfluence * 0.12 + cycle.pressureBias * 0.16,
+        hexAddress: address.hexAddress,
+        fibonacciChronologyApplied: true
       },
 
       noCanvasCreation: true,
@@ -606,6 +865,8 @@
       ownsCloudDrawing: false,
       ownsSurfaceDrawing: false,
       ownsTerrainTruth: false,
+      ownsHtml: false,
+      ownsRouteJs: false,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false
@@ -631,10 +892,10 @@
       var bandSeats = [];
       var v = (band + 0.5) / FIBONACCI_BANDS;
       var lat = Math.asin(clamp(1 - 2 * v, -1, 1));
-      var stagger = fract(band / GOLDEN_RATIO) * TAU / RADIAL_NODES;
 
       for (var r = 0; r < RADIAL_NODES; r += 1) {
-        var lon = wrapLongitude((r / RADIAL_NODES) * TAU - Math.PI + stagger);
+        var node = compassNodeByIndex(r);
+        var lon = node.longitudeCenter;
         var datum = sample(lon, lat, time, { source: "buildDatumField" });
 
         datum.stateIndex = index;
@@ -657,10 +918,14 @@
       contract: CONTRACT,
       executionContract: EXECUTION_CONTRACT,
       standard: STANDARD,
+
       datumFieldReady: true,
+      fibonacciCompassChronologyReady: true,
       radialNodes: RADIAL_NODES,
       fibonacciBands: FIBONACCI_BANDS,
       latticeStates: LATTICE_STATES,
+
+      compassChronology: COMPASS_CHRONOLOGY.map(enrichNode),
       seats: seats,
       bands: bands,
       radial: radial,
@@ -700,6 +965,7 @@
       hemisphereAuthorityReady: true,
       equatorAuthorityReady: true,
       circulationAuthorityReady: true,
+      fibonacciCompassChronologyReady: true,
 
       radialNodes: RADIAL_NODES,
       fibonacciBands: FIBONACCI_BANDS,
@@ -715,6 +981,11 @@
       tiltedNorthAxis: getAxis().tiltedNorthAxis,
       tiltedSouthAxis: getAxis().tiltedSouthAxis,
 
+      compassChronology: COMPASS_CHRONOLOGY.map(enrichNode),
+      compassChronologyCount: COMPASS_CHRONOLOGY.length,
+      fibonacciWeights: FIBONACCI_WEIGHTS_16.slice(),
+      fibonacciChronologyApplied: true,
+
       supportsLongitudeLatitude: true,
       supportsHemisphereResolver: true,
       supportsCoriolisResolver: true,
@@ -724,6 +995,7 @@
       supportsLongitudeBands: true,
       supportsHexAddressing: true,
       supportsDatumFieldBuild: true,
+      supportsCompassChronology: true,
 
       northPoleAnchorActive: true,
       southPoleAnchorActive: true,
@@ -785,6 +1057,7 @@
       getAxis: getAxis,
       getPoles: function () {
         var axis = getAxis();
+
         return {
           northPole: axis.northPole,
           southPole: axis.southPole,
@@ -795,6 +1068,24 @@
         };
       },
 
+      compassChronology: function () {
+        return COMPASS_CHRONOLOGY.map(enrichNode);
+      },
+
+      getCompassChronology: function () {
+        return COMPASS_CHRONOLOGY.map(enrichNode);
+      },
+
+      compassNodeByIndex: function (index) {
+        return enrichNode(compassNodeByIndex(index));
+      },
+
+      compassNodeForLongitude: function (lon) {
+        return chronologyForLongitude(lon);
+      },
+
+      chronologyForLongitude: chronologyForLongitude,
+
       sphereFromLonLat: sphereFromLonLat,
       lonLatFromSphere: lonLatFromSphere,
       wrapLongitude: wrapLongitude,
@@ -803,7 +1094,6 @@
       hemisphereFor: hemisphereFor,
       latitudeBandFor: latitudeBandFor,
       latitudeZoneFor: latitudeZoneFor,
-      radialIndexFor: radialIndexFor,
       bandIndexFor: bandIndexFor,
       addressFor: addressFor,
 
@@ -849,12 +1139,14 @@
       equatorAuthority: true,
       hemisphereCounterflowAuthority: true,
       polarCurlAuthority: true,
+      fibonacciCompassChronologyReady: true,
+      compassChronologyCount: COMPASS_CHRONOLOGY.length,
       hexDatumCompatible: true,
       noCanvasCreation: true,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false,
-      meaning: "Audralia datum child evaluated. True pole, axis, hemisphere, equator, Coriolis, and circulation authority are available to downstream children."
+      meaning: "Audralia datum child evaluated. Fibonacci chronology, 16-compass sequence authority, pole, axis, hemisphere, equator, Coriolis, and circulation authority are available to downstream children."
     };
 
     return api;
@@ -867,6 +1159,7 @@
 
       publish();
       sample(0, 0, 0, { source: "init" });
+      buildDatumField(0);
 
       return status();
     } catch (error) {

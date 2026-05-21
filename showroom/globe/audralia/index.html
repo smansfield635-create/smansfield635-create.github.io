@@ -3,24 +3,20 @@
   lang="en"
   data-route="/showroom/globe/audralia/"
   data-page="audralia"
-  data-contract="AUDRALIA_G2_10A_HTML_HANDOFF_PANEL_DOM_CONTRACT_AND_SELECTABLE_RECEIPT_TNT_v1"
-  data-previous-contract="AUDRALIA_G2_6_HTML_DYNAMIC_ROUTE_BRIDGE_BOOTSTRAP_TNT_v1"
-  data-grandparent-contract="AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_HTML_CACHE_READY_TNT_v1"
-  data-html-cache-strategy="dynamic-route-bridge-bootstrap"
-  data-handoff-panel-dom-contract="true"
-  data-route-bridge-must-reuse-existing-panel="true"
-  data-route-bridge-may-create-status-panel="false"
-  data-route-bridge-may-hide-legacy-panel="false"
-  data-route-bridge-may-scan-broad-dom="false"
-  data-selectable-receipt-panel="true"
-  data-canvas-shell-status-insertion-forbidden="true"
+  data-contract="AUDRALIA_G2_11A_HTML_MIRRORLAND_GATEWAY_STABLE_SHELL_TNT_v1"
+  data-pair-contract="AUDRALIA_G2_11_HTML_JS_MIRRORLAND_GATEWAY_MICRO_ORCHESTRATOR_STANDARD_v1"
+  data-previous-contract="AUDRALIA_G2_10A_HTML_HANDOFF_PANEL_DOM_CONTRACT_AND_SELECTABLE_RECEIPT_TNT_v1"
   data-route-bridge-path="/showroom/globe/audralia/index.js"
   data-runtime-path="/assets/audralia/audralia.runtime.v3.js"
   data-parent-path="/assets/audralia/clean/engine/audralia.engine.js"
   data-continents-path="/assets/audralia/clean/engine/audralia/engine/continents.js"
-  data-runtime-contract-expected="AUDRALIA_G2_5_RUNTIME_PARENT_CACHE_KEY_ALIGNMENT_TNT_v1"
-  data-parent-contract-expected="AUDRALIA_G2_6_PARENT_VISIBLE_BODY_FIRST_FAILSAFE_TNT_v1"
-  data-continents-contract-expected="AUDRALIA_G2_6_NINE_SUMMITS_256_FIBONACCI_CONTINENT_BASELINE_TNT_v1"
+  data-route-bridge-must-reuse-existing-panel="true"
+  data-route-bridge-may-create-status-panel="false"
+  data-route-bridge-may-hide-legacy-panel="false"
+  data-route-bridge-may-scan-broad-dom="false"
+  data-canvas-shell-status-insertion-forbidden="true"
+  data-selectable-receipt-panel="true"
+  data-mirrorland-gateway="true"
 >
   <head>
     <meta charset="utf-8" />
@@ -29,18 +25,23 @@
     <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="pragma" content="no-cache" />
     <meta http-equiv="expires" content="0" />
-    <title>Audralia · Clean Canvas Route Bridge</title>
+    <title>Audralia · Shadows Never Shatter in Mirrorland</title>
 
     <style>
       :root {
         color-scheme: dark;
         --bg: #01040d;
+        --panel: rgba(3, 13, 30, 0.74);
+        --panel-strong: rgba(3, 11, 26, 0.96);
         --line: rgba(133, 217, 255, 0.22);
         --line-strong: rgba(133, 217, 255, 0.42);
         --text: rgba(239, 248, 255, 0.96);
         --muted: rgba(190, 217, 232, 0.76);
         --dim: rgba(142, 171, 190, 0.62);
         --accent: #7de8ff;
+        --good: rgba(191, 255, 225, 0.34);
+        --held: rgba(255, 226, 166, 0.36);
+        --bad: rgba(255, 179, 179, 0.36);
       }
 
       * {
@@ -55,6 +56,11 @@
       body {
         margin: 0;
         min-height: 100%;
+        background:
+          radial-gradient(circle at 18% 10%, rgba(34, 105, 165, 0.18), transparent 32rem),
+          radial-gradient(circle at 85% 24%, rgba(125, 232, 255, 0.12), transparent 28rem),
+          linear-gradient(180deg, #020713 0%, #01040d 72%, #00030a 100%);
+        color: var(--text);
         font-family:
           Inter,
           ui-sans-serif,
@@ -63,11 +69,7 @@
           BlinkMacSystemFont,
           "Segoe UI",
           sans-serif;
-        background:
-          radial-gradient(circle at 18% 10%, rgba(34, 105, 165, 0.18), transparent 32rem),
-          radial-gradient(circle at 85% 24%, rgba(125, 232, 255, 0.12), transparent 28rem),
-          linear-gradient(180deg, #020713 0%, #01040d 72%, #00030a 100%);
-        color: var(--text);
+        overflow-x: hidden;
       }
 
       a {
@@ -75,7 +77,9 @@
         text-decoration: none;
       }
 
-      a:focus-visible {
+      a:focus-visible,
+      summary:focus-visible,
+      button:focus-visible {
         outline: 2px solid var(--accent);
         outline-offset: 3px;
       }
@@ -221,17 +225,86 @@
       h1 {
         margin: 0;
         max-width: 18ch;
-        font-size: clamp(2.1rem, 8vw, 5rem);
-        line-height: 0.92;
+        font-size: clamp(2.05rem, 7.2vw, 4.8rem);
+        line-height: 0.94;
         letter-spacing: -0.06em;
       }
 
       .lead {
-        max-width: 68ch;
+        max-width: 72ch;
         margin: 0;
         color: var(--muted);
-        font-size: clamp(1rem, 2.4vw, 1.24rem);
+        font-size: clamp(1rem, 2.4vw, 1.2rem);
         line-height: 1.6;
+      }
+
+      .gateway-grid {
+        display: grid;
+        gap: 0.8rem;
+        margin: 0.35rem 0;
+      }
+
+      details.gateway-card {
+        border: 1px solid rgba(133, 217, 255, 0.18);
+        border-radius: 1.25rem;
+        background: rgba(2, 10, 24, 0.58);
+        overflow: hidden;
+      }
+
+      details.gateway-card summary {
+        cursor: pointer;
+        min-height: 3rem;
+        padding: 0.9rem 1rem;
+        color: rgba(239, 248, 255, 0.95);
+        font-weight: 950;
+        list-style-position: inside;
+      }
+
+      .gateway-card-body {
+        display: grid;
+        gap: 0.75rem;
+        padding: 0 1rem 1rem;
+        color: rgba(220, 239, 250, 0.86);
+        line-height: 1.55;
+      }
+
+      .gateway-card-body p {
+        margin: 0;
+      }
+
+      .path-row {
+        display: grid;
+        gap: 0.55rem;
+      }
+
+      .path-pill {
+        padding: 0.75rem 0.85rem;
+        border: 1px solid rgba(133, 217, 255, 0.15);
+        border-radius: 1rem;
+        background: rgba(8, 24, 50, 0.58);
+      }
+
+      .path-pill strong {
+        display: block;
+        margin-bottom: 0.22rem;
+      }
+
+      .expression-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .expression-actions button {
+        min-height: 2.2rem;
+        padding: 0.52rem 0.75rem;
+        border: 1px solid rgba(125, 232, 255, 0.28);
+        border-radius: 999px;
+        background: rgba(125, 232, 255, 0.08);
+        color: var(--text);
+        font: inherit;
+        font-weight: 850;
+        cursor: pointer;
       }
 
       .contract-line {
@@ -245,33 +318,10 @@
           Consolas,
           "Liberation Mono",
           monospace;
-        font-size: 0.86rem;
+        font-size: 0.84rem;
         line-height: 1.45;
         word-break: break-word;
         overflow-wrap: anywhere;
-      }
-
-      .chain {
-        display: grid;
-        gap: 0.7rem;
-        margin: 1rem 0;
-        padding: 1rem;
-        border: 1px solid rgba(133, 217, 255, 0.16);
-        border-radius: 1.4rem;
-        background: rgba(2, 10, 24, 0.62);
-      }
-
-      .chain p {
-        margin: 0;
-        color: var(--muted);
-        line-height: 1.5;
-      }
-
-      .chain ul {
-        margin: 0;
-        padding-left: 1.1rem;
-        color: rgba(225, 242, 253, 0.9);
-        line-height: 1.55;
       }
 
       .stage-card {
@@ -349,7 +399,7 @@
         overflow-wrap: anywhere;
         padding: clamp(1rem, 3vw, 1.55rem);
         border-top: 1px solid rgba(133, 217, 255, 0.14);
-        background: rgba(3, 11, 26, 0.96);
+        background: var(--panel-strong);
         pointer-events: auto;
         touch-action: pan-y;
         user-select: text;
@@ -365,15 +415,15 @@
       }
 
       .handoff-panel[data-audralia-handoff-state="visible"] {
-        border-color: rgba(191, 255, 225, 0.32);
+        border-color: var(--good);
       }
 
       .handoff-panel[data-audralia-handoff-state="hold"] {
-        border-color: rgba(255, 226, 166, 0.34);
+        border-color: var(--held);
       }
 
       .handoff-panel[data-audralia-handoff-state="failed"] {
-        border-color: rgba(255, 179, 179, 0.34);
+        border-color: var(--bad);
       }
 
       .handoff-panel h3 {
@@ -384,7 +434,7 @@
       .handoff-status {
         margin: 0;
         color: var(--text);
-        font-size: clamp(1rem, 2.5vw, 1.28rem);
+        font-size: clamp(1rem, 2.5vw, 1.24rem);
         font-weight: 850;
         line-height: 1.35;
       }
@@ -393,7 +443,7 @@
         margin: 0;
         padding-left: 1.35rem;
         color: rgba(229, 244, 255, 0.92);
-        font-size: clamp(0.95rem, 2.35vw, 1.15rem);
+        font-size: clamp(0.92rem, 2.1vw, 1.06rem);
         line-height: 1.55;
       }
 
@@ -422,17 +472,54 @@
         white-space: normal;
       }
 
-      [data-audralia-bridge-receipt-target="true"],
-      [data-audralia-bridge-script-target="true"],
-      [data-audralia-bridge-list-target="true"] {
-        max-width: 100%;
-        overflow-x: hidden;
-        overflow-wrap: anywhere;
-        word-break: break-word;
+      dialog {
+        width: min(92vw, 560px);
+        border: 1px solid var(--line-strong);
+        border-radius: 1.35rem;
+        background: #041126;
+        color: var(--text);
+        box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.56);
+      }
+
+      dialog::backdrop {
+        background: rgba(0, 3, 10, 0.72);
+      }
+
+      .dialog-body {
+        display: grid;
+        gap: 0.75rem;
+      }
+
+      .dialog-body h3 {
+        margin: 0;
+      }
+
+      .dialog-body p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .dialog-body button {
+        justify-self: end;
+        min-height: 2.1rem;
+        padding: 0.45rem 0.8rem;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(125, 232, 255, 0.08);
+        color: var(--text);
+        font: inherit;
+        font-weight: 850;
+        cursor: pointer;
       }
 
       @media (min-width: 760px) {
-        .nav-groups {
+        .nav-groups,
+        .gateway-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+
+        .path-row {
           grid-template-columns: repeat(3, 1fr);
         }
       }
@@ -475,8 +562,6 @@
           <div class="nav-title">Story · Proof</div>
           <div class="nav-links">
             <a href="/characters/">Characters</a>
-            <a href="/explore/">Manor / Explore</a>
-            <a href="/frontier/">Frontier</a>
             <a href="/laws/">Laws</a>
             <a href="/products/">Products</a>
             <a href="/gauges/">Gauges</a>
@@ -485,35 +570,70 @@
       </nav>
 
       <main id="main" class="hero">
-        <div class="eyebrow">Clean Canvas Route Bridge</div>
-        <h1>Audralia form mount.</h1>
+        <div class="eyebrow">Mirrorland Gateway · Audralia</div>
+        <h1>Shadows Never Shatter in Mirrorland.</h1>
 
         <p class="lead">
-          This page is the Audralia child route shell. The HTML owns navigation, copy, mount target,
-          selectable handoff panel, and permanent dynamic bridge bootstrap only. The route bridge must
-          reuse the existing handoff panel and may not create or hide competing status panels.
+          Audralia is the preparation field inside Mirrorland. The globe below is the live visual object;
+          the dropdowns carry the public meaning so the route bridge can stay small, stable, and quiet.
         </p>
 
-        <section class="chain" aria-label="Authority chain">
-          <p><strong>Authority chain handoff</strong></p>
-          <ul>
-            <li><strong>HTML shell:</strong> keeps navigation, copy, mount target, selectable handoff panel, and permanent bridge bootstrap.</li>
-            <li><strong>Route bridge:</strong> dynamically loads <code>/showroom/globe/audralia/index.js</code> and updates the existing handoff panel only.</li>
-            <li><strong>Runtime shim:</strong> loads <code>/assets/audralia/audralia.runtime.v3.js</code>.</li>
-            <li><strong>Clean parent:</strong> mounts <code>/assets/audralia/clean/engine/audralia.engine.js</code>.</li>
-            <li><strong>Continents child:</strong> loads <code>/assets/audralia/clean/engine/audralia/engine/continents.js</code>.</li>
-          </ul>
+        <section class="gateway-grid" aria-label="Mirrorland gateway dropdowns">
+          <details class="gateway-card" open>
+            <summary>What this doorway means</summary>
+            <div class="gateway-card-body">
+              <p>
+                Mirrorland is the future-shadow condition becoming reachable. The page does not need to explain
+                the entire universe. It gives the visitor a readable gateway and then lets the globe speak.
+              </p>
+            </div>
+          </details>
+
+          <details class="gateway-card">
+            <summary>ZIONTS · H-Earth · Audralia</summary>
+            <div class="gateway-card-body">
+              <div class="path-row">
+                <div class="path-pill">
+                  <strong>ZIONTS</strong>
+                  Consequence and warning path.
+                </div>
+                <div class="path-pill">
+                  <strong>H-Earth</strong>
+                  Survival and condition path.
+                </div>
+                <div class="path-pill">
+                  <strong>Audralia</strong>
+                  Possibility and preparation field.
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <details class="gateway-card">
+            <summary>Routes from this globe</summary>
+            <div class="gateway-card-body">
+              <p>
+                Use Characters for the roster/dossier layer, Laws for the science/truth layer, and Showroom for
+                the visible software-object pathway.
+              </p>
+              <div class="expression-actions" aria-label="Mirrorland expression popups">
+                <button type="button" data-audralia-popup-open="mirrorland">Mirrorland</button>
+                <button type="button" data-audralia-popup-open="audralia">Audralia</button>
+                <button type="button" data-audralia-popup-open="handoff">Handoff</button>
+              </div>
+            </div>
+          </details>
         </section>
 
         <p class="contract-line">
-          AUDRALIA_G2_10A_HTML_HANDOFF_PANEL_DOM_CONTRACT_AND_SELECTABLE_RECEIPT_TNT_v1 · HTML shell active · existing handoff panel is the lawful route-bridge status target · no duplicate bridge panel authorized.
+          AUDRALIA_G2_11_HTML_JS_MIRRORLAND_GATEWAY_MICRO_ORCHESTRATOR_STANDARD_v1 · HTML carries the gateway; JS conducts the handoff; the parent delivers the globe.
         </p>
 
         <section class="stage-card" aria-label="Audralia clean canvas inspection">
           <div class="stage-head">
-            <h2>Authority chain handoff</h2>
-            <p>Clean-canvas form mount target.</p>
-            <div class="bridge-badge">Dynamic bridge bootstrap active</div>
+            <h2>Audralia globe delivery</h2>
+            <p>Clean-canvas form mount target. Runtime and parent may mount here only.</p>
+            <div class="bridge-badge">Micro-orchestrator bridge active</div>
           </div>
 
           <div class="canvas-shell" data-audralia-canvas-shell data-audralia-status-insertion-forbidden="true">
@@ -552,7 +672,7 @@
               data-audralia-handoff-status
               data-audralia-bridge-status-target="true"
             >
-              DYNAMIC_BOOTSTRAP · loading route bridge
+              HTML_READY · route bridge loading
             </p>
 
             <ul
@@ -562,8 +682,8 @@
               data-audralia-bridge-list-target="true"
             >
               <li><strong>ROUTE_VALID</strong> · /showroom/globe/audralia/</li>
-              <li><strong>MOUNT_TARGET_FOUND</strong></li>
-              <li><strong>DYNAMIC_BOOTSTRAP</strong> · route bridge cache key generated at page load</li>
+              <li><strong>MOUNT_TARGET_FOUND</strong> · #audraliaCanvasMount</li>
+              <li><strong>HTML_GATEWAY_READY</strong> · Mirrorland dropdowns available before JS handoff</li>
             </ul>
 
             <p
@@ -572,7 +692,7 @@
               data-audralia-handoff-receipt
               data-audralia-bridge-receipt-target="true"
             >
-              AUDRALIA_G2_10A_HTML_HANDOFF_PANEL_DOM_CONTRACT_AND_SELECTABLE_RECEIPT_TNT_v1
+              AUDRALIA_G2_11A_HTML_MIRRORLAND_GATEWAY_STABLE_SHELL_TNT_v1
             </p>
 
             <p
@@ -588,9 +708,33 @@
       </main>
     </div>
 
+    <dialog id="mirrorlandDialog" data-audralia-popup="mirrorland">
+      <div class="dialog-body">
+        <h3>Mirrorland</h3>
+        <p>Mirrorland is not a decoration. It is the future-shadow condition becoming readable.</p>
+        <button type="button" data-audralia-popup-close>Close</button>
+      </div>
+    </dialog>
+
+    <dialog id="audraliaDialog" data-audralia-popup="audralia">
+      <div class="dialog-body">
+        <h3>Audralia</h3>
+        <p>Audralia is the possibility field: the preparation world where the live globe gives the visitor a visible object to inspect.</p>
+        <button type="button" data-audralia-popup-close>Close</button>
+      </div>
+    </dialog>
+
+    <dialog id="handoffDialog" data-audralia-popup="handoff">
+      <div class="dialog-body">
+        <h3>Handoff</h3>
+        <p>The route bridge should remain small. It loads runtime once, hands off to the parent once, updates this page’s existing panel, and stops.</p>
+        <button type="button" data-audralia-popup-close>Close</button>
+      </div>
+    </dialog>
+
     <script type="module">
-      const HTML_CONTRACT = "AUDRALIA_G2_10A_HTML_HANDOFF_PANEL_DOM_CONTRACT_AND_SELECTABLE_RECEIPT_TNT_v1";
-      const PREVIOUS_HTML_CONTRACT = "AUDRALIA_G2_6_HTML_DYNAMIC_ROUTE_BRIDGE_BOOTSTRAP_TNT_v1";
+      const HTML_CONTRACT = "AUDRALIA_G2_11A_HTML_MIRRORLAND_GATEWAY_STABLE_SHELL_TNT_v1";
+      const PAIR_CONTRACT = "AUDRALIA_G2_11_HTML_JS_MIRRORLAND_GATEWAY_MICRO_ORCHESTRATOR_STANDARD_v1";
       const ROUTE_BRIDGE_PATH = "/showroom/globe/audralia/index.js";
       const ROOT = document.documentElement;
       const now = Date.now();
@@ -610,108 +754,80 @@
       const bridgeUrl = `${ROUTE_BRIDGE_PATH}?v=${encodeURIComponent(dynamicCacheKey)}`;
 
       ROOT.setAttribute("data-audralia-html-contract", HTML_CONTRACT);
-      ROOT.setAttribute("data-audralia-html-previous-contract", PREVIOUS_HTML_CONTRACT);
-      ROOT.setAttribute("data-audralia-route-bridge-bootstrap", "dynamic");
+      ROOT.setAttribute("data-audralia-pair-contract", PAIR_CONTRACT);
+      ROOT.setAttribute("data-audralia-route-bridge-bootstrap", "dynamic-nonblocking");
       ROOT.setAttribute("data-audralia-route-bridge-path", ROUTE_BRIDGE_PATH);
       ROOT.setAttribute("data-audralia-route-bridge-cache-key", dynamicCacheKey);
       ROOT.setAttribute("data-audralia-route-bridge-url", bridgeUrl);
-      ROOT.setAttribute("data-audralia-handoff-panel-dom-contract", "true");
       ROOT.setAttribute("data-audralia-route-bridge-must-reuse-existing-panel", "true");
       ROOT.setAttribute("data-audralia-route-bridge-may-create-status-panel", "false");
       ROOT.setAttribute("data-audralia-route-bridge-may-hide-legacy-panel", "false");
       ROOT.setAttribute("data-audralia-route-bridge-may-scan-broad-dom", "false");
-      ROOT.setAttribute("data-audralia-selectable-receipt-panel", "true");
       ROOT.setAttribute("data-audralia-canvas-shell-status-insertion-forbidden", "true");
+      ROOT.setAttribute("data-audralia-selectable-receipt-panel", "true");
 
       window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT = {
         contract: HTML_CONTRACT,
-        previousContract: PREVIOUS_HTML_CONTRACT,
+        pairContract: PAIR_CONTRACT,
         routeBridgePath: ROUTE_BRIDGE_PATH,
         routeBridgeUrl: bridgeUrl,
         dynamicCacheKey,
         externalCacheKey: Boolean(externalCacheKey),
-
-        handoffPanelDomContract: true,
+        mirrorlandGateway: true,
         existingHandoffPanelRequired: true,
         routeBridgeMustReuseExistingPanel: true,
         routeBridgeMayCreateStatusPanel: false,
         routeBridgeMayHideLegacyPanel: false,
         routeBridgeMayScanBroadDom: false,
-        selectableReceiptPanel: true,
         canvasShellStatusInsertionForbidden: true,
-
+        selectableReceiptPanel: true,
         handoffPanelTargets: {
           panel: "#audraliaHandoffPanel",
           title: "#audraliaHandoffTitle",
           status: "#audraliaHandoffStatus",
           list: "#audraliaHandoffList",
           receipt: "#audraliaHandoffReceipt",
-          script: "#audraliaBridgeScript"
+          script: "#audraliaBridgeScript",
+          mount: "#audraliaCanvasMount"
         },
-
-        noRecurringHtmlCacheKeyEditsRequired: true,
         runtimeRewrite: false,
         parentRewrite: false,
         continentsRewrite: false,
-        visualPassClaim: false,
         generatedImage: false,
-        graphicBox: false
+        graphicBox: false,
+        visualPassClaim: false
       };
 
-      const panel = document.querySelector("#audraliaHandoffPanel");
-      const scriptLine = document.querySelector("#audraliaBridgeScript");
-      const title = document.querySelector("#audraliaHandoffTitle");
-      const status = document.querySelector("#audraliaHandoffStatus");
-      const receipt = document.querySelector("#audraliaHandoffReceipt");
+      const bridgeScript = document.querySelector("#audraliaBridgeScript");
+      if (bridgeScript) bridgeScript.textContent = `Route bridge script: ${bridgeUrl}`;
 
-      if (panel) {
-        panel.setAttribute("data-audralia-handoff-state", "pending");
-        panel.setAttribute("data-audralia-html-dynamic-bootstrap", "true");
-        panel.setAttribute("data-audralia-route-bridge-status-target", "true");
-        panel.setAttribute("data-audralia-existing-handoff-panel", "true");
-        panel.setAttribute("data-audralia-nondestructive-bridge-target", "true");
-        panel.setAttribute("data-audralia-selectable-receipt-panel", "true");
-      }
+      const loadBridge = () => {
+        import(bridgeUrl)
+          .then(() => {
+            window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.routeBridgeImportSucceeded = true;
+            ROOT.setAttribute("data-audralia-route-bridge-import-succeeded", "true");
+          })
+          .catch((error) => {
+            const message = error && error.message ? error.message : String(error);
+            window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.routeBridgeImportSucceeded = false;
+            window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.error = message;
+            ROOT.setAttribute("data-audralia-route-bridge-import-succeeded", "false");
+            ROOT.setAttribute("data-audralia-route-bridge-import-error", message);
 
-      if (scriptLine) {
-        scriptLine.textContent = `Route bridge script: ${bridgeUrl}`;
-      }
+            const panel = document.querySelector("#audraliaHandoffPanel");
+            const title = document.querySelector("#audraliaHandoffTitle");
+            const status = document.querySelector("#audraliaHandoffStatus");
 
-      if (title) {
-        title.textContent = "Clean-canvas handoff pending";
-      }
+            if (panel) panel.setAttribute("data-audralia-handoff-state", "hold");
+            if (title) title.textContent = "Clean-canvas handoff held";
+            if (status) status.textContent = "ROUTE_BRIDGE_IMPORT_FAILED · HTML shell preserved";
+          });
+      };
 
-      if (status) {
-        status.textContent = "DYNAMIC_BOOTSTRAP · loading route bridge";
-      }
-
-      if (receipt) {
-        receipt.textContent = HTML_CONTRACT;
-      }
-
-      try {
-        await import(bridgeUrl);
-
-        window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.routeBridgeImportSucceeded = true;
-        ROOT.setAttribute("data-audralia-route-bridge-import-succeeded", "true");
-      } catch (error) {
-        window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.routeBridgeImportSucceeded = false;
-        window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.error = error && error.message ? error.message : String(error);
-
-        ROOT.setAttribute("data-audralia-route-bridge-import-succeeded", "false");
-        ROOT.setAttribute("data-audralia-route-bridge-import-error", window.AUDRALIA_HTML_BOOTSTRAP_RECEIPT.error);
-
-        if (title) {
-          title.textContent = "Clean-canvas handoff failed";
-        }
-
-        if (status) {
-          status.textContent = "HANDOFF_FAILED · dynamic route bridge import failed";
-        }
-
-        if (panel) {
-          panel.setAttribute("data-audralia-handoff-state", "failed");
-        }
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", () => setTimeout(loadBridge, 0), { once: true });
+      } else {
+        setTimeout(loadBridge, 0);
       }
     </script>
   </body>

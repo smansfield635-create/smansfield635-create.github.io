@@ -1,28 +1,24 @@
 // /assets/audralia/clean/runtime/audralia.true-globe.clouds.js
 // TNT FULL-FILE REPLACEMENT
+// AUDRALIA_G2_TRUE_RUNTIME_CLOUD_READABILITY_SCALE_CALIBRATION_CHILD_TNT_v4
+//
+// Public cloud contract intentionally preserved for runtime/manifest compatibility:
+// AUDRALIA_G2_TRUE_RUNTIME_ORGANIC_MOISTURE_CLOUD_FLOW_CHILD_TNT_v2
+//
+// Manifest-required lifecycle capability marker preserved:
 // AUDRALIA_G2_TRUE_RUNTIME_CLOUD_LIFECYCLE_CONSERVATION_CHILD_TNT_v3
 //
-// Public cloud contract intentionally preserved for runtime compatibility:
-// AUDRALIA_G2_TRUE_RUNTIME_ORGANIC_MOISTURE_CLOUD_FLOW_CHILD_TNT_v2
-//
-// Supersedes internally:
-// AUDRALIA_G2_TRUE_RUNTIME_ORGANIC_MOISTURE_CLOUD_FLOW_CHILD_TNT_v2
-//
-// Family:
-// /assets/audralia/clean/runtime/
-//
-// Depends on:
-// /assets/audralia/clean/runtime/audralia.true-globe.moisture.js
-// window.AUDRALIA_TRUE_GLOBE_MOISTURE
+// Internal calibration marker added:
+// AUDRALIA_G2_TRUE_RUNTIME_CLOUD_READABILITY_SCALE_CALIBRATION_CHILD_TNT_v4
 //
 // Purpose:
 // - Preserve moisture-driven cloud authority.
-// - Preserve runtime compatibility.
-// - Add natural-time cloud lifecycle conservation.
-// - Prevent time-lapse growth.
-// - Prevent indefinite cloud inflation.
-// - Preserve organic swirl flow.
-// - Keep clouds Planet View only.
+// - Preserve runtime and manifest compatibility.
+// - Preserve lifecycle conservation.
+// - Increase visible cloud readability.
+// - Convert tiny specks into fewer, larger bounded weather systems.
+// - Preserve natural-time behavior.
+// - Preserve Planet View-only cloud rendering.
 // - Do not create canvas.
 // - Do not modify HTML.
 // - Do not own route JS.
@@ -34,9 +30,10 @@
 
   var CONTRACT = "AUDRALIA_G2_TRUE_RUNTIME_ORGANIC_MOISTURE_CLOUD_FLOW_CHILD_TNT_v2";
   var LIFECYCLE_CONSERVATION_CONTRACT = "AUDRALIA_G2_TRUE_RUNTIME_CLOUD_LIFECYCLE_CONSERVATION_CHILD_TNT_v3";
+  var READABILITY_SCALE_CALIBRATION_CONTRACT = "AUDRALIA_G2_TRUE_RUNTIME_CLOUD_READABILITY_SCALE_CALIBRATION_CHILD_TNT_v4";
   var PREVIOUS_CONTRACT = "AUDRALIA_G2_TRUE_RUNTIME_4K_MOISTURE_CLOUD_CHILD_TNT_v1";
   var MOISTURE_CONTRACT = "AUDRALIA_G2_TRUE_RUNTIME_MOISTURE_FIELD_CHILD_TNT_v1";
-  var STANDARD = "AUDRALIA_G2_CLOUD_LIFECYCLE_CONSERVATION_AND_NATURAL_TIME_STANDARD_v1";
+  var STANDARD = "AUDRALIA_G2_CLOUD_READABILITY_SCALE_AND_WEATHER_SYSTEM_CALIBRATION_STANDARD_v1";
   var FAMILY = "/assets/audralia/clean/runtime/";
   var FILE = "/assets/audralia/clean/runtime/audralia.true-globe.clouds.js";
 
@@ -45,21 +42,21 @@
   var LATTICE_STATES = 256;
   var TAU = Math.PI * 2;
 
-  var MAX_CLOUD_WIDTH_BASE = 58;
-  var MAX_CLOUD_HEIGHT_BASE = 28;
-  var MAX_FRAGMENT_WIDTH_BASE = 24;
-  var MAX_FRAGMENT_HEIGHT_BASE = 14;
-  var MAX_OPACITY = 0.64;
+  var MAX_CLOUD_WIDTH_BASE = 104;
+  var MAX_CLOUD_HEIGHT_BASE = 48;
+  var MAX_FRAGMENT_WIDTH_BASE = 44;
+  var MAX_FRAGMENT_HEIGHT_BASE = 26;
+  var MAX_OPACITY = 0.72;
 
   var DEFAULT_OPTIONS = {
-    cloudOpacityScale: 0.84,
-    cloudSizeScale: 0.92,
-    cloudSoftnessScale: 1.10,
+    cloudOpacityScale: 1.05,
+    cloudSizeScale: 1.24,
+    cloudSoftnessScale: 1.18,
 
     organicColumns: 56,
     organicRows: 28,
-    maxCloudsPerFrame: 160,
-    microFragmentCount: 7,
+    maxCloudsPerFrame: 110,
+    microFragmentCount: 8,
 
     weatherAdvectionTimeScale: 0.012,
     swirlTimeScale: 0.009,
@@ -79,9 +76,9 @@
 
     massCap: 1.0,
     opacityCap: MAX_OPACITY,
-    densityCap: 0.86,
+    densityCap: 0.92,
 
-    proceduralResolution: "4k-ready-organic-flow-conserved",
+    proceduralResolution: "4k-ready-weather-system-scale-conserved",
     materialClass: "cool-white-blue-gray-moisture-cloud",
 
     generatedImage: false,
@@ -120,9 +117,9 @@
     lastMaxCloudWidth: 0,
     lastMaxCloudHeight: 0,
 
-    layerVersion: LIFECYCLE_CONSERVATION_CONTRACT,
+    layerVersion: READABILITY_SCALE_CALIBRATION_CONTRACT,
     publicContract: CONTRACT,
-    layerKind: "organic-high-density-moisture-cloud-flow-with-lifecycle-conservation",
+    layerKind: "organic-weather-system-scale-moisture-cloud-flow-with-lifecycle-conservation",
     renderMode: "canvas-2d-runtime-consumer-planet-view-only",
 
     naturalTimeActive: true,
@@ -136,6 +133,11 @@
     organicSwirlFlowActive: true,
     highDensityCloudFieldActive: true,
     cloudsNotVisible256Grid: true,
+
+    cloudReadabilityScaleActive: true,
+    weatherSystemScaleActive: true,
+    cloudSpeckReductionActive: true,
+    cloudSystemReadabilityActive: true,
 
     errors: []
   };
@@ -478,8 +480,8 @@
     var maxCloudWidth = MAX_CLOUD_WIDTH_BASE * perspective;
     var maxCloudHeight = MAX_CLOUD_HEIGHT_BASE * perspective;
 
-    cloud.width = clamp(cloud.width, 4.0 * perspective, maxCloudWidth);
-    cloud.height = clamp(cloud.height, 2.2 * perspective, maxCloudHeight);
+    cloud.width = clamp(cloud.width, 7.0 * perspective, maxCloudWidth);
+    cloud.height = clamp(cloud.height, 3.8 * perspective, maxCloudHeight);
     cloud.cloudOpacity = clamp(cloud.cloudOpacity, 0, state.options.opacityCap);
     cloud.cloudDensity = clamp(cloud.cloudDensity, 0, state.options.densityCap);
 
@@ -502,6 +504,10 @@
 
     cloud.cloudGrowthClamped = true;
     cloud.cloudMassConservationActive = true;
+    cloud.cloudReadabilityScaleActive = true;
+    cloud.weatherSystemScaleActive = true;
+    cloud.cloudSpeckReductionActive = true;
+    cloud.cloudSystemReadabilityActive = true;
 
     return cloud;
   }
@@ -530,7 +536,7 @@
       lifecycle.densityEnvelope * 0.06;
 
     var threshold =
-      0.57 +
+      0.585 +
       smoothstep(0.75, 1.0, projection.limbFactor) * 0.07 -
       samplePoint.swirl.strength * 0.026;
 
@@ -544,12 +550,12 @@
     var perspective = clamp(projection.perspective, 0.44, 2.25);
     var limbFade = 1 - smoothstep(0.88, 1.08, projection.limbFactor);
 
-    var baseSize = (5.2 + density * 14.0) * perspective * state.options.cloudSizeScale;
+    var baseSize = (8.4 + density * 22.0) * perspective * state.options.cloudSizeScale;
     var shear =
-      1.05 +
-      moisture.circulation * 0.82 +
-      samplePoint.swirl.strength * 1.05 +
-      Math.abs(Math.sin(samplePoint.latitude)) * 0.16;
+      1.08 +
+      moisture.circulation * 0.92 +
+      samplePoint.swirl.strength * 1.16 +
+      Math.abs(Math.sin(samplePoint.latitude)) * 0.18;
 
     var width =
       baseSize *
@@ -559,12 +565,12 @@
 
     var height =
       baseSize *
-      (0.32 + moisture.cloudSoftness * 0.36) *
+      (0.36 + moisture.cloudSoftness * 0.40) *
       lifecycle.sizeEnvelope *
       lerp(1.0, 0.58, projection.limbFactor);
 
     var opacity =
-      (0.16 + density * 0.48 + moisture.condensation * 0.13) *
+      (0.18 + density * 0.54 + moisture.condensation * 0.16) *
       state.options.cloudOpacityScale *
       projection.visibility *
       limbFade *
@@ -606,8 +612,8 @@
       cloudDensity: density,
       cloudOpacity: opacity,
 
-      denseCloudEligible: probability > 0.78,
-      stormEligible: probability > 0.90,
+      denseCloudEligible: probability > 0.79,
+      stormEligible: probability > 0.91,
 
       width: width,
       height: height,
@@ -629,7 +635,7 @@
       nonMonotonicDissipationActive: lifecycle.nonMonotonic,
 
       materialClass: state.options.materialClass,
-      source: "organic-moisture-flow-field-with-lifecycle-conservation",
+      source: "organic-weather-system-scale-moisture-flow-with-lifecycle-conservation",
       cloudsDerivedFromMoisture: true,
       cloudsNotRandomPatches: true,
       cloudsNotVisible256Grid: true,
@@ -638,6 +644,10 @@
       lifecycleEnvelopeActive: true,
       timeLapseBlocked: true,
       naturalTimeActive: true,
+      cloudReadabilityScaleActive: true,
+      weatherSystemScaleActive: true,
+      cloudSpeckReductionActive: true,
+      cloudSystemReadabilityActive: true,
       randomPatchClouds: false,
       flatProjection: false
     };
@@ -648,13 +658,13 @@
   function buildFragments(cloud) {
     var fragments = [];
     var count = Math.max(
-      3,
+      4,
       Math.min(
-        10,
+        11,
         Math.round(
           state.options.microFragmentCount +
-          cloud.cloudDensity * 3 +
-          cloud.flowStrength * 2
+          cloud.cloudDensity * 2.6 +
+          cloud.flowStrength * 1.7
         )
       )
     );
@@ -674,20 +684,21 @@
       var offsetX = Math.cos(flowAngle) * offsetRadius;
       var offsetY = Math.sin(flowAngle) * offsetRadius * 0.42;
 
-      var fragmentWidth = cloud.width * (0.15 + seed * 0.24);
-      var fragmentHeight = cloud.height * (0.20 + seedC * 0.28);
+      var fragmentWidth = cloud.width * (0.18 + seed * 0.30);
+      var fragmentHeight = cloud.height * (0.24 + seedC * 0.34);
 
       fragments.push({
         x: cloud.x + offsetX,
         y: cloud.y + offsetY,
-        width: clamp(fragmentWidth, 1.0 * cloud.perspective, maxFragmentWidth),
-        height: clamp(fragmentHeight, 0.8 * cloud.perspective, maxFragmentHeight),
+        width: clamp(fragmentWidth, 2.2 * cloud.perspective, maxFragmentWidth),
+        height: clamp(fragmentHeight, 1.4 * cloud.perspective, maxFragmentHeight),
         angle: flowAngle,
-        opacity: clamp(cloud.cloudOpacity * (0.26 + seedB * 0.36), 0, MAX_OPACITY),
+        opacity: clamp(cloud.cloudOpacity * (0.30 + seedB * 0.42), 0, MAX_OPACITY),
         softness: cloud.softness,
         shade: seedC,
         flowStrength: cloud.flowStrength,
-        cloudGrowthClamped: true
+        cloudGrowthClamped: true,
+        cloudReadabilityScaleActive: true
       });
     }
 
@@ -708,6 +719,7 @@
       return {
         contract: CONTRACT,
         lifecycleConservationContract: LIFECYCLE_CONSERVATION_CONTRACT,
+        readabilityScaleCalibrationContract: READABILITY_SCALE_CALIBRATION_CONTRACT,
         previousContract: PREVIOUS_CONTRACT,
         standard: STANDARD,
         family: FAMILY,
@@ -733,7 +745,7 @@
 
     var cols = Math.max(24, Math.min(96, state.options.organicColumns));
     var rows = Math.max(12, Math.min(48, state.options.organicRows));
-    var limit = Math.max(32, Math.min(220, state.options.maxCloudsPerFrame));
+    var limit = Math.max(32, Math.min(180, state.options.maxCloudsPerFrame));
 
     var clouds = [];
     var cloudOpacitySum = 0;
@@ -781,6 +793,7 @@
     var layer = {
       contract: CONTRACT,
       lifecycleConservationContract: LIFECYCLE_CONSERVATION_CONTRACT,
+      readabilityScaleCalibrationContract: READABILITY_SCALE_CALIBRATION_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       standard: STANDARD,
       family: FAMILY,
@@ -845,6 +858,11 @@
       nonMonotonicDissipationActive: true,
       cloudCountStableRange: true,
 
+      cloudReadabilityScaleActive: true,
+      weatherSystemScaleActive: true,
+      cloudSpeckReductionActive: true,
+      cloudSystemReadabilityActive: true,
+
       organicSwirlFlowActive: true,
       highDensityCloudFieldActive: true,
 
@@ -880,9 +898,9 @@
     var radius = Math.max(w, h);
     var gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, radius);
 
-    gradient.addColorStop(0, "rgba(255,255,255," + (0.70 * opacity).toFixed(4) + ")");
-    gradient.addColorStop(0.28, "rgba(238,249,255," + (0.50 * opacity).toFixed(4) + ")");
-    gradient.addColorStop(0.60, "rgba(186,218,238," + (0.22 * opacity).toFixed(4) + ")");
+    gradient.addColorStop(0, "rgba(255,255,255," + (0.76 * opacity).toFixed(4) + ")");
+    gradient.addColorStop(0.28, "rgba(238,249,255," + (0.56 * opacity).toFixed(4) + ")");
+    gradient.addColorStop(0.60, "rgba(186,218,238," + (0.26 * opacity).toFixed(4) + ")");
     gradient.addColorStop(1, "rgba(120,160,196,0)");
 
     ctx.fillStyle = gradient;
@@ -891,11 +909,11 @@
     ctx.fill();
 
     if (fragment.flowStrength > 0.20) {
-      ctx.globalAlpha = opacity * 0.08;
+      ctx.globalAlpha = opacity * 0.10;
       ctx.strokeStyle = "rgba(245,252,255,0.70)";
-      ctx.lineWidth = Math.max(0.7, radius * 0.026);
+      ctx.lineWidth = Math.max(0.7, radius * 0.028);
       ctx.beginPath();
-      ctx.ellipse(0, 0, w * 0.64, h * 0.50, 0, -0.72, 0.72);
+      ctx.ellipse(0, 0, w * 0.66, h * 0.52, 0, -0.72, 0.72);
       ctx.stroke();
     }
 
@@ -916,14 +934,14 @@
     }
 
     if (cloud.denseCloudEligible) {
-      ctx.globalAlpha = clamp(baseOpacity * 0.08, 0, 0.11);
-      ctx.fillStyle = "rgba(255,255,255,0.62)";
+      ctx.globalAlpha = clamp(baseOpacity * 0.11, 0, 0.15);
+      ctx.fillStyle = "rgba(255,255,255,0.66)";
       ctx.beginPath();
       ctx.ellipse(
         cloud.x,
         cloud.y,
-        cloud.width * 0.24,
-        cloud.height * 0.18,
+        cloud.width * 0.28,
+        cloud.height * 0.22,
         cloud.angle,
         0,
         TAU
@@ -994,6 +1012,7 @@
     return {
       contract: CONTRACT,
       lifecycleConservationContract: LIFECYCLE_CONSERVATION_CONTRACT,
+      readabilityScaleCalibrationContract: READABILITY_SCALE_CALIBRATION_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       standard: STANDARD,
       family: FAMILY,
@@ -1030,6 +1049,11 @@
       maxFragmentWidthBase: MAX_FRAGMENT_WIDTH_BASE,
       maxFragmentHeightBase: MAX_FRAGMENT_HEIGHT_BASE,
       maxOpacity: MAX_OPACITY,
+
+      cloudReadabilityScaleActive: true,
+      weatherSystemScaleActive: true,
+      cloudSpeckReductionActive: true,
+      cloudSystemReadabilityActive: true,
 
       lastFrameIndex: state.lastFrameIndex,
       lastRenderTime: state.lastRenderTime,
@@ -1087,6 +1111,7 @@
     window.AUDRALIA_TRUE_GLOBE_CLOUD_ERROR = {
       contract: CONTRACT,
       lifecycleConservationContract: LIFECYCLE_CONSERVATION_CONTRACT,
+      readabilityScaleCalibrationContract: READABILITY_SCALE_CALIBRATION_CONTRACT,
       scope: scope,
       message: message,
       errors: state.errors.slice()
@@ -1099,6 +1124,7 @@
     var api = {
       contract: CONTRACT,
       lifecycleConservationContract: LIFECYCLE_CONSERVATION_CONTRACT,
+      readabilityScaleCalibrationContract: READABILITY_SCALE_CALIBRATION_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       standard: STANDARD,
       family: FAMILY,
@@ -1132,6 +1158,7 @@
       window.AUDRALIA_TRUE_GLOBE_CLOUDS_BOOT = {
         contract: CONTRACT,
         lifecycleConservationContract: LIFECYCLE_CONSERVATION_CONTRACT,
+        readabilityScaleCalibrationContract: READABILITY_SCALE_CALIBRATION_CONTRACT,
         previousContract: PREVIOUS_CONTRACT,
         standard: STANDARD,
         family: FAMILY,
@@ -1148,8 +1175,12 @@
         organicSwirlFlowActive: true,
         highDensityCloudFieldActive: true,
         cloudsNotVisible256Grid: true,
+        cloudReadabilityScaleActive: true,
+        weatherSystemScaleActive: true,
+        cloudSpeckReductionActive: true,
+        cloudSystemReadabilityActive: true,
         bootedAt: new Date().toISOString(),
-        meaning: "Cloud lifecycle conservation child evaluated. Public v2 contract preserved for runtime compatibility; v3 lifecycle conservation active."
+        meaning: "Cloud readability calibration child evaluated. Public v2 contract and lifecycle v3 marker preserved; v4 readability calibration active."
       };
 
       return status();

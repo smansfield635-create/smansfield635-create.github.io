@@ -1,15 +1,15 @@
 // /assets/audralia/clean/runtime/audralia.true-globe.runtime.js
 // TNT FULL-FILE REPLACEMENT
-// AUDRALIA_G2_TRUE_GLOBE_RUNTIME_TERRAIN_ECOSYSTEM_MANIFEST_CONSUMER_TNT_v5
+// AUDRALIA_G2_TRUE_GLOBE_RUNTIME_SURFACE_RENDERER_MANIFEST_CONSUMER_TNT_v6
 //
 // Public runtime contract intentionally preserved for route JS compatibility:
 // AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2
 //
 // Existing route-confirmed capability marker preserved:
-// AUDRALIA_G2_TRUE_GLOBE_RUNTIME_ORGANIC_CLOUD_CHILD_KEY_RENEWAL_TNT_v3
+// AUDRALIA_G2_TRUE_GLOBE_RUNTIME_TERRAIN_ECOSYSTEM_MANIFEST_CONSUMER_TNT_v5
 //
 // New internal capability marker:
-// AUDRALIA_G2_TRUE_GLOBE_RUNTIME_TERRAIN_ECOSYSTEM_MANIFEST_CONSUMER_TNT_v5
+// AUDRALIA_G2_TRUE_GLOBE_RUNTIME_SURFACE_RENDERER_MANIFEST_CONSUMER_TNT_v6
 //
 // Consumes manifest:
 // /assets/audralia/clean/runtime/audralia.true-globe.family.manifest.js
@@ -18,9 +18,12 @@
 // - Preserve runtime public compatibility.
 // - Preserve protected Lattice View.
 // - Load family manifest first.
-// - Load terrain/ecosystem forcing child before moisture and clouds.
-// - Expose terrain/ecosystem field on runtime frame.
-// - Preserve moisture/cloud loading through parent-child handshake.
+// - Load terrain/ecosystem forcing child.
+// - Load moisture child.
+// - Load Gratitude surface renderer child.
+// - Load cloud child after surface availability.
+// - Expose surface layer on runtime frame.
+// - Preserve cloud-over-surface draw order authority.
 // - Do not draw.
 // - Do not create canvas.
 // - Do not touch HTML.
@@ -33,8 +36,9 @@
   var CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2";
   var CHILD_KEY_RENEWAL_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_ORGANIC_CLOUD_CHILD_KEY_RENEWAL_TNT_v3";
   var TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_TERRAIN_ECOSYSTEM_MANIFEST_CONSUMER_TNT_v5";
-  var PREVIOUS_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_MANIFEST_CONSUMER_HANDSHAKE_TNT_v4";
-  var STANDARD = "AUDRALIA_G2_TERRAIN_ECOSYSTEM_FORCING_FIELD_STANDARD_v1";
+  var SURFACE_RENDERER_CONSUMER_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_SURFACE_RENDERER_MANIFEST_CONSUMER_TNT_v6";
+  var PREVIOUS_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_TERRAIN_ECOSYSTEM_MANIFEST_CONSUMER_TNT_v5";
+  var STANDARD = "AUDRALIA_G2_GRATITUDE_CONTINENT_SURFACE_VISUALIZATION_SPEC_OPS_v1";
   var FAMILY_STANDARD = "AUDRALIA_G2_PARENT_CHILD_CONTRACT_HANDSHAKE_AND_FAMILY_MANIFEST_STANDARD_v1";
   var FAMILY = "/assets/audralia/clean/runtime/";
   var FILE = "/assets/audralia/clean/runtime/audralia.true-globe.runtime.js";
@@ -53,15 +57,23 @@
   var FALLBACK_MOISTURE = {
     path: "/assets/audralia/clean/runtime/audralia.true-globe.moisture.js",
     publicContract: "AUDRALIA_G2_TRUE_RUNTIME_MOISTURE_FIELD_CHILD_TNT_v1",
-    cacheKey: "AUDRALIA_G2_TRUE_RUNTIME_MOISTURE_FIELD_CHILD_TNT_v1",
+    cacheKey: "AUDRALIA_G2_TRUE_RUNTIME_MOISTURE_TERRAIN_FORCING_CONSUMER_TNT_v2",
     capabilityField: "contract",
     capabilityMarker: "AUDRALIA_G2_TRUE_RUNTIME_MOISTURE_FIELD_CHILD_TNT_v1"
+  };
+
+  var FALLBACK_SURFACE = {
+    path: "/assets/audralia/clean/runtime/audralia.true-globe.surface.js",
+    publicContract: "AUDRALIA_G2_TRUE_RUNTIME_GRATITUDE_CONTINENT_SURFACE_RENDERER_CHILD_TNT_v1",
+    cacheKey: "AUDRALIA_G2_TRUE_RUNTIME_GRATITUDE_CONTINENT_SURFACE_RENDERER_CHILD_TNT_v1",
+    capabilityField: "contract",
+    capabilityMarker: "AUDRALIA_G2_TRUE_RUNTIME_GRATITUDE_CONTINENT_SURFACE_RENDERER_CHILD_TNT_v1"
   };
 
   var FALLBACK_CLOUDS = {
     path: "/assets/audralia/clean/runtime/audralia.true-globe.clouds.js",
     publicContract: "AUDRALIA_G2_TRUE_RUNTIME_ORGANIC_MOISTURE_CLOUD_FLOW_CHILD_TNT_v2",
-    cacheKey: "AUDRALIA_G2_TRUE_RUNTIME_CLOUD_LIFECYCLE_CONSERVATION_CHILD_TNT_v3",
+    cacheKey: "AUDRALIA_G2_TRUE_RUNTIME_GLOBAL_MULTI_LAYER_CLOUD_SHELL_CHILD_TNT_v5",
     capabilityField: "lifecycleConservationContract",
     capabilityMarker: "AUDRALIA_G2_TRUE_RUNTIME_CLOUD_LIFECYCLE_CONSERVATION_CHILD_TNT_v3"
   };
@@ -130,13 +142,23 @@
     terrainEcosystemReady: false,
 
     moistureApi: null,
-    cloudsApi: null,
     moistureLoaded: false,
-    cloudsLoaded: false,
     moistureLoading: false,
-    cloudsLoading: false,
     moistureField: null,
+    moistureFieldReady: false,
+
+    surfaceApi: null,
+    surfaceLoaded: false,
+    surfaceLoading: false,
+    surfaceLayer: null,
+    surfaceRendererReady: false,
+    gratitudeContinentVisible: false,
+
+    cloudsApi: null,
+    cloudsLoaded: false,
+    cloudsLoading: false,
     cloudLayer: null,
+    cloudRendererReady: false,
 
     sphericalProjection: true,
     flatProjectionBlocked: true,
@@ -146,8 +168,6 @@
     motionStateReady: false,
     diagnosticStateReady: false,
     sphereCarrierReady: false,
-    moistureFieldReady: false,
-    cloudRendererReady: false,
 
     parentAcceptsByPublicContract: true,
     parentFetchesByCacheKey: true,
@@ -156,6 +176,8 @@
 
     terrainForcingDrivesMoisture: true,
     moistureDrivesClouds: true,
+    surfaceDrawsBeforeClouds: true,
+    cloudsRenderAboveSurface: true,
     terrainDirectCloudPaint: false,
 
     organicCloudChildRequested: false,
@@ -240,6 +262,12 @@
       null;
   }
 
+  function getSurfaceApi() {
+    return window.AUDRALIA_TRUE_GLOBE_SURFACE ||
+      window.AUDRALIA_G2_TRUE_GLOBE_SURFACE ||
+      null;
+  }
+
   function getCloudsApi() {
     return window.AUDRALIA_TRUE_GLOBE_CLOUDS ||
       window.AUDRALIA_G2_TRUE_GLOBE_CLOUDS ||
@@ -258,6 +286,7 @@
 
     if (entryName === "terrainEcosystem") return FALLBACK_TERRAIN_ECOSYSTEM;
     if (entryName === "moisture") return FALLBACK_MOISTURE;
+    if (entryName === "surface") return FALLBACK_SURFACE;
     if (entryName === "clouds") return FALLBACK_CLOUDS;
 
     return null;
@@ -265,7 +294,7 @@
 
   function buildEntryUrl(entry) {
     if (!entry || !entry.path) return "";
-    var key = entry.cacheKey || entry.publicContract || TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT;
+    var key = entry.cacheKey || entry.publicContract || SURFACE_RENDERER_CONSUMER_CONTRACT;
     return entry.path + "?v=" + encodeURIComponent(key);
   }
 
@@ -325,6 +354,7 @@
   function getChildApi(entryName) {
     if (entryName === "terrainEcosystem") return getTerrainEcosystemApi();
     if (entryName === "moisture") return getMoistureApi();
+    if (entryName === "surface") return getSurfaceApi();
     if (entryName === "clouds") return getCloudsApi();
     return null;
   }
@@ -402,7 +432,7 @@
       state.manifestLoading = true;
 
       loadScript(MANIFEST_PATH, MANIFEST_CONTRACT, {
-        "data-audralia-runtime-family-manifest": TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT,
+        "data-audralia-runtime-family-manifest": SURFACE_RENDERER_CONSUMER_CONTRACT,
         "data-contract": MANIFEST_CONTRACT,
         "data-cache-key": MANIFEST_CONTRACT
       }).then(function () {
@@ -475,7 +505,7 @@
         "data-capability-field": entry.capabilityField,
         "data-capability-marker": entry.capabilityMarker,
         "data-manifest-contract": MANIFEST_CONTRACT,
-        "data-runtime-consumer-contract": TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT
+        "data-runtime-consumer-contract": SURFACE_RENDERER_CONSUMER_CONTRACT
       }).then(function () {
         var api = getChildApi(entryName);
         var validation = validateApiAgainstEntry(entryName, api);
@@ -495,6 +525,7 @@
       state.manifestLoading ||
       state.terrainEcosystemLoading ||
       state.moistureLoading ||
+      state.surfaceLoading ||
       state.cloudsLoading
     ) {
       return;
@@ -522,6 +553,19 @@
         state.moistureFieldReady = true;
         state.moistureLoading = false;
 
+        buildAtmosphereFrameData();
+
+        state.surfaceLoading = true;
+        return loadChildFromManifest("surface");
+      })
+      .then(function (surfaceApi) {
+        state.surfaceApi = surfaceApi;
+        state.surfaceLoaded = true;
+        state.surfaceLoading = false;
+        state.surfaceRendererReady = true;
+
+        buildSurfaceFrameData();
+
         state.cloudsLoading = true;
         state.organicCloudChildRequested = true;
 
@@ -542,6 +586,7 @@
         state.manifestLoading = false;
         state.terrainEcosystemLoading = false;
         state.moistureLoading = false;
+        state.surfaceLoading = false;
         state.cloudsLoading = false;
         recordError("ensureAtmosphereChildren", error);
         publish();
@@ -821,6 +866,7 @@
       contract: CONTRACT,
       childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
       terrainEcosystemConsumerContract: TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT,
+      surfaceRendererConsumerContract: SURFACE_RENDERER_CONSUMER_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       standard: STANDARD,
       familyStandard: FAMILY_STANDARD,
@@ -874,9 +920,17 @@
       terrainEcosystemField: state.terrainEcosystemField,
 
       moistureLoaded: state.moistureLoaded,
-      cloudsLoaded: state.cloudsLoaded,
       moistureFieldReady: state.moistureFieldReady,
+      moistureField: state.moistureField,
+
+      surfaceLoaded: state.surfaceLoaded,
+      surfaceRendererReady: state.surfaceRendererReady,
+      surfaceLayer: state.surfaceLayer,
+      gratitudeContinentVisible: state.gratitudeContinentVisible,
+
+      cloudsLoaded: state.cloudsLoaded,
       cloudRendererReady: state.cloudRendererReady,
+      cloudLayer: state.cloudLayer,
 
       parentAcceptsByPublicContract: true,
       parentFetchesByCacheKey: true,
@@ -885,13 +939,12 @@
 
       terrainForcingDrivesMoisture: true,
       moistureDrivesClouds: true,
+      surfaceDrawsBeforeClouds: true,
+      cloudsRenderAboveSurface: true,
       terrainDirectCloudPaint: false,
 
       organicCloudChildRequested: state.organicCloudChildRequested,
-      runtimeCloudChildKeyCurrent: state.runtimeCloudChildKeyCurrent,
-
-      moistureField: state.moistureField,
-      cloudLayer: state.cloudLayer
+      runtimeCloudChildKeyCurrent: state.runtimeCloudChildKeyCurrent
     };
   }
 
@@ -912,25 +965,12 @@
     }
   }
 
-  function buildAtmosphereFrameData() {
+  function buildMoistureFrameData() {
     var frame = buildFrameBase();
-
-    state.manifestApi = state.manifestApi || getManifestApi();
-    state.terrainEcosystemApi = state.terrainEcosystemApi || getTerrainEcosystemApi();
-    state.moistureApi = state.moistureApi || getMoistureApi();
-    state.cloudsApi = state.cloudsApi || getCloudsApi();
-
-    state.manifestLoaded = Boolean(state.manifestApi);
-    state.manifestReady = Boolean(state.manifestApi);
-
-    buildTerrainEcosystemFrameData();
-
-    frame = buildFrameBase();
     frame.terrainEcosystemField = state.terrainEcosystemField;
 
+    state.moistureApi = state.moistureApi || getMoistureApi();
     state.moistureLoaded = childApiMatches("moisture", state.moistureApi);
-    state.cloudsLoaded = childApiMatches("clouds", state.cloudsApi);
-    state.runtimeCloudChildKeyCurrent = state.cloudsLoaded;
 
     if (state.moistureLoaded && typeof state.moistureApi.getField === "function") {
       try {
@@ -940,17 +980,67 @@
         recordError("moistureField", error);
       }
     }
+  }
+
+  function buildSurfaceFrameData() {
+    var frame = buildFrameBase();
+    frame.terrainEcosystemField = state.terrainEcosystemField;
+    frame.moistureField = state.moistureField;
+
+    state.surfaceApi = state.surfaceApi || getSurfaceApi();
+    state.surfaceLoaded = childApiMatches("surface", state.surfaceApi);
+
+    if (state.surfaceLoaded && typeof state.surfaceApi.buildSurfaceLayer === "function") {
+      try {
+        state.surfaceLayer = state.surfaceApi.buildSurfaceLayer(frame);
+        state.surfaceRendererReady = Boolean(
+          state.surfaceLayer &&
+          state.surfaceLayer.surfaceRendererReady
+        );
+        state.gratitudeContinentVisible = Boolean(
+          state.surfaceLayer &&
+          state.surfaceLayer.gratitudeContinentVisible
+        );
+      } catch (error) {
+        recordError("surfaceLayer", error);
+      }
+    }
+  }
+
+  function buildCloudFrameData() {
+    var frame = buildFrameBase();
+    frame.terrainEcosystemField = state.terrainEcosystemField;
+    frame.moistureField = state.moistureField;
+    frame.surfaceLayer = state.surfaceLayer;
+
+    state.cloudsApi = state.cloudsApi || getCloudsApi();
+    state.cloudsLoaded = childApiMatches("clouds", state.cloudsApi);
+    state.runtimeCloudChildKeyCurrent = state.cloudsLoaded;
 
     if (state.cloudsLoaded && typeof state.cloudsApi.buildLayer === "function") {
       try {
-        frame.moistureField = state.moistureField;
-        frame.terrainEcosystemField = state.terrainEcosystemField;
         state.cloudLayer = state.cloudsApi.buildLayer(frame);
         state.cloudRendererReady = Boolean(state.cloudLayer && state.cloudLayer.rendererReady);
       } catch (error) {
         recordError("cloudLayer", error);
       }
     }
+  }
+
+  function buildAtmosphereFrameData() {
+    state.manifestApi = state.manifestApi || getManifestApi();
+    state.manifestLoaded = Boolean(state.manifestApi);
+    state.manifestReady = Boolean(state.manifestApi);
+
+    state.terrainEcosystemApi = state.terrainEcosystemApi || getTerrainEcosystemApi();
+    state.moistureApi = state.moistureApi || getMoistureApi();
+    state.surfaceApi = state.surfaceApi || getSurfaceApi();
+    state.cloudsApi = state.cloudsApi || getCloudsApi();
+
+    buildTerrainEcosystemFrameData();
+    buildMoistureFrameData();
+    buildSurfaceFrameData();
+    buildCloudFrameData();
   }
 
   function detectReducedMotion() {
@@ -1081,6 +1171,7 @@
     var frame = buildFrameBase();
     frame.terrainEcosystemField = state.terrainEcosystemField;
     frame.moistureField = state.moistureField;
+    frame.surfaceLayer = state.surfaceLayer;
     frame.cloudLayer = state.cloudLayer;
 
     return frame;
@@ -1108,6 +1199,11 @@
     return state.moistureField;
   }
 
+  function getSurfaceLayer() {
+    buildAtmosphereFrameData();
+    return state.surfaceLayer;
+  }
+
   function getCloudLayer() {
     buildAtmosphereFrameData();
     return state.cloudLayer;
@@ -1116,6 +1212,7 @@
   function status() {
     var terrainEntry = getManifestEntry("terrainEcosystem") || FALLBACK_TERRAIN_ECOSYSTEM;
     var moistureEntry = getManifestEntry("moisture") || FALLBACK_MOISTURE;
+    var surfaceEntry = getManifestEntry("surface") || FALLBACK_SURFACE;
     var cloudEntry = getManifestEntry("clouds") || FALLBACK_CLOUDS;
 
     var terrainStatus = state.terrainEcosystemApi && typeof state.terrainEcosystemApi.status === "function"
@@ -1124,6 +1221,10 @@
 
     var moistureStatus = state.moistureApi && typeof state.moistureApi.status === "function"
       ? state.moistureApi.status()
+      : null;
+
+    var surfaceStatus = state.surfaceApi && typeof state.surfaceApi.status === "function"
+      ? state.surfaceApi.status()
       : null;
 
     var cloudStatus = state.cloudsApi && typeof state.cloudsApi.status === "function"
@@ -1138,6 +1239,7 @@
       contract: CONTRACT,
       childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
       terrainEcosystemConsumerContract: TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT,
+      surfaceRendererConsumerContract: SURFACE_RENDERER_CONSUMER_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       standard: STANDARD,
       familyStandard: FAMILY_STANDARD,
@@ -1172,8 +1274,6 @@
       terrainEcosystemPath: terrainEntry.path,
       terrainEcosystemPublicContract: terrainEntry.publicContract,
       terrainEcosystemCacheKey: terrainEntry.cacheKey,
-      terrainEcosystemCapabilityField: terrainEntry.capabilityField,
-      terrainEcosystemCapabilityMarker: terrainEntry.capabilityMarker,
       terrainEcosystemLoaded: state.terrainEcosystemLoaded,
       terrainEcosystemReady: state.terrainEcosystemReady,
       terrainEcosystemStatus: terrainStatus,
@@ -1182,18 +1282,23 @@
       moisturePath: moistureEntry.path,
       moisturePublicContract: moistureEntry.publicContract,
       moistureCacheKey: moistureEntry.cacheKey,
-      moistureCapabilityField: moistureEntry.capabilityField,
-      moistureCapabilityMarker: moistureEntry.capabilityMarker,
       moistureLoaded: state.moistureLoaded,
       moistureFieldReady: state.moistureFieldReady,
       moistureStatus: moistureStatus,
       moistureHandshake: validateApiAgainstEntry("moisture", state.moistureApi),
 
+      surfacePath: surfaceEntry.path,
+      surfacePublicContract: surfaceEntry.publicContract,
+      surfaceCacheKey: surfaceEntry.cacheKey,
+      surfaceLoaded: state.surfaceLoaded,
+      surfaceRendererReady: state.surfaceRendererReady,
+      gratitudeContinentVisible: state.gratitudeContinentVisible,
+      surfaceStatus: surfaceStatus,
+      surfaceHandshake: validateApiAgainstEntry("surface", state.surfaceApi),
+
       cloudsPath: cloudEntry.path,
       cloudsPublicContract: cloudEntry.publicContract,
       cloudsCacheKey: cloudEntry.cacheKey,
-      cloudsCapabilityField: cloudEntry.capabilityField,
-      cloudsCapabilityMarker: cloudEntry.capabilityMarker,
       cloudsLoaded: state.cloudsLoaded,
       cloudRendererReady: state.cloudRendererReady,
       cloudStatus: cloudStatus,
@@ -1206,6 +1311,8 @@
 
       terrainForcingDrivesMoisture: true,
       moistureDrivesClouds: true,
+      surfaceDrawsBeforeClouds: true,
+      cloudsRenderAboveSurface: true,
       terrainDirectCloudPaint: false,
 
       runtimeCloudChildKeyCurrent: state.runtimeCloudChildKeyCurrent,
@@ -1237,6 +1344,7 @@
       contract: CONTRACT,
       childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
       terrainEcosystemConsumerContract: TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT,
+      surfaceRendererConsumerContract: SURFACE_RENDERER_CONSUMER_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       standard: STANDARD,
       familyStandard: FAMILY_STANDARD,
@@ -1256,6 +1364,7 @@
       getLinks: getLinks,
       getTerrainEcosystemField: getTerrainEcosystemField,
       getMoistureField: getMoistureField,
+      getSurfaceLayer: getSurfaceLayer,
       getCloudLayer: getCloudLayer,
       ensureAtmosphereChildren: ensureAtmosphereChildren,
       status: status
@@ -1282,6 +1391,7 @@
       contract: CONTRACT,
       childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
       terrainEcosystemConsumerContract: TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT,
+      surfaceRendererConsumerContract: SURFACE_RENDERER_CONSUMER_CONTRACT,
       scope: scope,
       message: message,
       errors: state.errors.slice()
@@ -1329,6 +1439,7 @@
     contract: CONTRACT,
     childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
     terrainEcosystemConsumerContract: TERRAIN_ECOSYSTEM_CONSUMER_CONTRACT,
+    surfaceRendererConsumerContract: SURFACE_RENDERER_CONSUMER_CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
     standard: STANDARD,
     familyStandard: FAMILY_STANDARD,
@@ -1341,12 +1452,15 @@
     parentVerifiesChildCapabilityMarker: true,
     staleGlobalRejectedIfCapabilityMissing: true,
     terrainEcosystemLoadsBeforeMoisture: true,
-    terrainEcosystemLoadsBeforeClouds: true,
+    moistureLoadsBeforeSurface: true,
+    surfaceLoadsBeforeClouds: true,
     terrainForcingDrivesMoisture: true,
     moistureDrivesClouds: true,
+    surfaceDrawsBeforeClouds: true,
+    cloudsRenderAboveSurface: true,
     terrainDirectCloudPaint: false,
     bootedAt: new Date().toISOString(),
-    meaning: "Runtime evaluated with terrain/ecosystem manifest consumer. Terrain forcing is loaded before moisture and clouds and exposed on frame.terrainEcosystemField."
+    meaning: "Runtime evaluated with Gratitude surface renderer manifest consumer. Surface layer is loaded after moisture and before clouds and exposed on frame.surfaceLayer."
   };
 
   publish();

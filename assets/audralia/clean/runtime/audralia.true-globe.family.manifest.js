@@ -1,42 +1,48 @@
 // /assets/audralia/clean/runtime/audralia.true-globe.family.manifest.js
 // TNT FULL-FILE REPLACEMENT
-// AUDRALIA_G2_TRUE_GLOBE_FAMILY_MANIFEST_SURFACE_RENDERER_CHILD_REGISTRATION_TNT_v3
+// AUDRALIA_G2_TRUE_GLOBE_FAMILY_MANIFEST_DATUM_CHILD_REGISTRATION_TNT_v4
 //
 // Public manifest contract intentionally preserved for runtime compatibility:
 // AUDRALIA_G2_TRUE_GLOBE_FAMILY_MANIFEST_PARENT_CHILD_HANDSHAKE_TNT_v1
 //
 // Purpose:
 // - Preserve parent-child manifest authority.
-// - Preserve terrain/ecosystem child registration.
-// - Register the Gratitude continent surface renderer child.
-// - Preserve runtime, moisture, and cloud entries.
-// - Prepare runtime to discover surface renderer before route JS calls it.
-// - Preserve public contract / cache key / capability marker separation.
+// - Register the planetary datum child before terrain/ecosystem.
+// - Preserve terrain/ecosystem, moisture, surface, and cloud child registrations.
+// - Preserve runtime, route, public contract, cache key, and capability marker separation.
+// - Admit true North / true South / equator / climate belt authority into the parent chain.
 // - Do not create canvas.
 // - Do not draw.
 // - Do not touch HTML.
 // - Do not touch route JS.
+// - Do not touch runtime in this phase.
 // - No generated image. No GraphicBox. No flat projection.
 
 (function () {
   "use strict";
 
   var CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_FAMILY_MANIFEST_PARENT_CHILD_HANDSHAKE_TNT_v1";
-  var SURFACE_REGISTRATION_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_FAMILY_MANIFEST_SURFACE_RENDERER_CHILD_REGISTRATION_TNT_v3";
-  var PREVIOUS_REGISTRATION_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_FAMILY_MANIFEST_TERRAIN_ECOSYSTEM_CHILD_REGISTRATION_TNT_v2";
+  var DATUM_REGISTRATION_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_FAMILY_MANIFEST_DATUM_CHILD_REGISTRATION_TNT_v4";
+  var PREVIOUS_REGISTRATION_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_FAMILY_MANIFEST_SURFACE_RENDERER_CHILD_REGISTRATION_TNT_v3";
+
   var STANDARD = "AUDRALIA_G2_PARENT_CHILD_CONTRACT_HANDSHAKE_AND_FAMILY_MANIFEST_STANDARD_v1";
+  var DATUM_STANDARD = "AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_SPEC_OPS_v1";
   var TERRAIN_STANDARD = "AUDRALIA_G2_TERRAIN_ECOSYSTEM_FORCING_FIELD_STANDARD_v1";
   var SURFACE_STANDARD = "AUDRALIA_G2_GRATITUDE_CONTINENT_SURFACE_VISUALIZATION_SPEC_OPS_v1";
+
   var FAMILY = "/assets/audralia/clean/runtime/";
   var FILE = "/assets/audralia/clean/runtime/audralia.true-globe.family.manifest.js";
 
   var MANIFEST = {
     contract: CONTRACT,
-    surfaceRendererRegistrationContract: SURFACE_REGISTRATION_CONTRACT,
+    datumRegistrationContract: DATUM_REGISTRATION_CONTRACT,
     previousRegistrationContract: PREVIOUS_REGISTRATION_CONTRACT,
+
     standard: STANDARD,
+    datumStandard: DATUM_STANDARD,
     terrainStandard: TERRAIN_STANDARD,
     surfaceStandard: SURFACE_STANDARD,
+
     family: FAMILY,
     file: FILE,
     generatedAt: new Date().toISOString(),
@@ -47,9 +53,9 @@
       routeJsPath: "/showroom/globe/audralia/index.js",
 
       htmlPublicContract: "AUDRALIA_G2_HTML_ROUTE_JS_MOISTURE_CLOUD_CONSUMER_KEY_RENEWAL_TNT_v1",
-      routeJsPublicContract: "AUDRALIA_G2_ROUTE_JS_TERRAIN_ECOSYSTEM_RUNTIME_CONSUMER_KEY_RENEWAL_TNT_v3",
-      routeJsCacheKey: "AUDRALIA_G2_ROUTE_JS_TERRAIN_ECOSYSTEM_RUNTIME_CONSUMER_KEY_RENEWAL_TNT_v3",
-      nextExpectedRouteConsumer: "AUDRALIA_G2_ROUTE_JS_GRATITUDE_SURFACE_RENDERER_CONSUMER_TNT_v4",
+      routeJsPublicContract: "AUDRALIA_G2_ROUTE_JS_GRATITUDE_SURFACE_RENDERER_CONSUMER_TNT_v4",
+      routeJsCacheKey: "AUDRALIA_G2_ROUTE_JS_GRATITUDE_SURFACE_RENDERER_CONSUMER_TNT_v4",
+      nextExpectedRouteConsumer: "AUDRALIA_G2_ROUTE_JS_DATUM_RUNTIME_CONSUMER_KEY_RENEWAL_TNT_v5",
 
       moduleImporterDisabled: true,
       classicScriptLoader: true
@@ -59,17 +65,91 @@
       path: "/assets/audralia/clean/runtime/audralia.true-globe.runtime.js",
 
       publicContract: "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2",
-      cacheKey: "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_TERRAIN_ECOSYSTEM_MANIFEST_CONSUMER_TNT_v5",
-      capabilityField: "terrainEcosystemConsumerContract",
-      capabilityMarker: "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_TERRAIN_ECOSYSTEM_MANIFEST_CONSUMER_TNT_v5",
+      cacheKey: "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_SURFACE_RENDERER_MANIFEST_CONSUMER_TNT_v6",
+      capabilityField: "surfaceRendererConsumerContract",
+      capabilityMarker: "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_SURFACE_RENDERER_MANIFEST_CONSUMER_TNT_v6",
 
-      nextRequiredRuntimeConsumer: "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_SURFACE_RENDERER_MANIFEST_CONSUMER_TNT_v6",
+      nextRequiredRuntimeConsumer: "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_DATUM_MANIFEST_CONSUMER_TNT_v7",
 
       previousPublicContract: "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2",
 
       acceptsByPublicContract: true,
       fetchesByCacheKey: true,
       verifiesCapabilityMarker: true
+    },
+
+    datum: {
+      path: "/assets/audralia/clean/runtime/audralia.true-globe.datum.js",
+
+      publicContract: "AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1",
+      cacheKey: "AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1",
+      capabilityField: "contract",
+      capabilityMarker: "AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1",
+
+      standard: "AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_SPEC_OPS_v1",
+
+      role: "planetary-orientation-parent",
+      loadsBeforeTerrainEcosystem: true,
+      loadsBeforeMoisture: true,
+      loadsBeforeSurface: true,
+      loadsBeforeClouds: true,
+
+      outputs: [
+        "sample(longitude, latitude, time)",
+        "getDatum(frame)",
+        "status()"
+      ],
+
+      authorityFields: [
+        "trueNorthPole",
+        "trueSouthPole",
+        "equatorPlane",
+        "primeMeridian",
+        "antiMeridian",
+        "hemisphere",
+        "latitudeBand",
+        "longitudeBand",
+        "axialTilt",
+        "rotationAxis",
+        "seasonalAngle",
+        "solarDeclination",
+        "coriolisDirection",
+        "coriolisStrength",
+        "northPolarVortex",
+        "southPolarVortex",
+        "equatorialConvectionBelt",
+        "northTradeWindBand",
+        "southTradeWindBand",
+        "northTemperateJetBand",
+        "southTemperateJetBand",
+        "northPolarJetBand",
+        "southPolarJetBand",
+        "climateBelt",
+        "stormTrackLatitudeBias",
+        "polarResonanceStrength",
+        "equatorMoistureBias",
+        "hemisphereSeasonBias",
+        "groundLevelDatumReadiness"
+      ],
+
+      planetaryDatumExpected: true,
+      trueNorthAuthorityExpected: true,
+      trueSouthAuthorityExpected: true,
+      equatorAuthorityExpected: true,
+      climateBeltAuthorityExpected: true,
+      polarResonanceAuthorityExpected: true,
+
+      noCanvasCreated: true,
+      noDrawAuthority: true,
+      noRouteJsAuthority: true,
+      noHtmlAuthority: true,
+      noRuntimeMotionAuthority: true,
+      latticeViewProtected: true,
+
+      acceptsByPublicContract: true,
+      fetchesByCacheKey: true,
+      verifiesCapabilityMarker: true,
+      staleGlobalRejectedIfCapabilityMissing: true
     },
 
     terrainEcosystem: {
@@ -84,9 +164,12 @@
       prewrite: "AUDRALIA_G2_TERRAIN_ECOSYSTEM_FORCING_FIELD_STRATEGIC_CODE_PREWRITE_v1",
 
       role: "planetary-forcing-parent",
+      loadsAfterDatum: true,
+      readsDatumLater: true,
       loadsBeforeMoisture: true,
       loadsBeforeSurface: true,
       loadsBeforeClouds: true,
+
       directCloudPaint: false,
       noCanvasCreated: true,
       noRouteJsAuthority: true,
@@ -115,7 +198,11 @@
       terrainForcingConsumerField: "terrainForcingConsumerContract",
       terrainForcingConsumerMarker: "AUDRALIA_G2_TRUE_RUNTIME_MOISTURE_TERRAIN_FORCING_CONSUMER_TNT_v2",
 
+      nextExpectedDatumConsumer: "AUDRALIA_G2_TRUE_RUNTIME_MOISTURE_DATUM_CONSUMER_TNT_v3",
+
+      readsDatumLater: true,
       readsTerrainEcosystem: true,
+      loadsAfterDatum: true,
       loadsAfterTerrainEcosystem: true,
       loadsBeforeSurface: true,
       loadsBeforeClouds: true,
@@ -134,11 +221,15 @@
       capabilityMarker: "AUDRALIA_G2_TRUE_RUNTIME_GRATITUDE_CONTINENT_SURFACE_RENDERER_CHILD_TNT_v1",
 
       standard: "AUDRALIA_G2_GRATITUDE_CONTINENT_SURFACE_VISUALIZATION_SPEC_OPS_v1",
+      nextExpectedDatumConsumer: "AUDRALIA_G2_TRUE_RUNTIME_SURFACE_DATUM_CLIMATE_GROUND_BRIDGE_TNT_v2",
 
       role: "planet-view-visible-surface-material-renderer",
       gratitudeContinentOnly: true,
       visibleSurfaceAuthority: true,
       drawsBeforeClouds: true,
+
+      readsDatumLater: true,
+      loadsAfterDatum: true,
       loadsAfterTerrainEcosystem: true,
       loadsAfterMoisture: true,
       loadsBeforeClouds: true,
@@ -198,8 +289,12 @@
       globalMultiLayerCloudShellField: "globalMultiLayerCloudShellContract",
       globalMultiLayerCloudShellMarker: "AUDRALIA_G2_TRUE_RUNTIME_GLOBAL_MULTI_LAYER_CLOUD_SHELL_CHILD_TNT_v5",
 
+      nextExpectedDatumConsumer: "AUDRALIA_G2_TRUE_RUNTIME_CLOUD_DATUM_POLAR_RESONANCE_CHILD_TNT_v6",
+
       previousPublicContract: "AUDRALIA_G2_TRUE_RUNTIME_4K_MOISTURE_CLOUD_CHILD_TNT_v1",
 
+      readsDatumLater: true,
+      loadsAfterDatum: true,
       loadsAfterTerrainEcosystem: true,
       loadsAfterMoisture: true,
       loadsAfterSurface: true,
@@ -219,15 +314,31 @@
       latticeViewProtected: true,
       latticeViewCloudsBlocked: true,
       latticeViewSurfaceBlocked: true,
+      latticeViewDatumVisualsBlocked: true,
+      datumMayUse256SeatSummary: true,
+      datumMayNotExposeVisibleGrid: true,
       terrainEcosystemMayUse256SeatSummary: true,
       terrainEcosystemMayNotExposeVisibleGrid: true,
       surfaceMayNotExposeVisibleGrid: true
     },
 
     planet: {
+      planetaryDatumExpected: true,
+      trueNorthAuthorityExpected: true,
+      trueSouthAuthorityExpected: true,
+      equatorAuthorityExpected: true,
+      climateBeltAuthorityExpected: true,
+      polarResonanceAuthorityExpected: true,
+
       planetViewCloudsOnly: true,
       planetViewSurfaceAllowed: true,
       gratitudeContinentSurfaceExpected: true,
+
+      datumDrivesTerrainClimatePlacement: true,
+      datumDrivesMoistureCirculationLater: true,
+      datumDrivesCloudPolarResonanceLater: true,
+      datumDrivesSurfaceGroundBridgeLater: true,
+
       terrainEcosystemForcingExpected: true,
       terrainForcingDrivesMoisture: true,
       moistureDrivesClouds: true,
@@ -247,11 +358,20 @@
         "route-js-consumer",
         "runtime",
         "family-manifest",
+        "datum-child",
         "terrain-ecosystem-child",
         "moisture-child",
         "surface-renderer-child",
         "cloud-child",
         "planet-view-renderer"
+      ],
+
+      childLoadOrder: [
+        "datum",
+        "terrainEcosystem",
+        "moisture",
+        "surface",
+        "clouds"
       ],
 
       planetViewDrawOrder: [
@@ -261,7 +381,16 @@
         "route-js-draws-limb-rim"
       ],
 
+      correctDatumCausalChain: [
+        "planetary datum / axis",
+        "terrain climate placement",
+        "moisture circulation",
+        "surface climate-ground bridge",
+        "cloud polar resonance"
+      ],
+
       correctCloudCoverCausalChain: [
+        "planetary datum / axis",
         "terrain/ecosystem forcing",
         "moisture eligibility",
         "cloud lifecycle",
@@ -269,6 +398,7 @@
       ],
 
       correctSurfaceCausalChain: [
+        "planetary datum / axis",
         "terrain/ecosystem forcing",
         "surface material classification",
         "visible Gratitude continent",
@@ -291,11 +421,23 @@
       australiaNamingDrift: false,
       routeJsChildInternals: false,
       htmlChildInternals: false,
+
+      datumDrawsVisuals: false,
+      datumCreatesCanvas: false,
+      datumPaintsClouds: false,
+      datumPaintsTerrain: false,
+      datumOwnsRuntimeMotion: false,
+      datumOwnsRouteJs: false,
+      datumOwnsHtml: false,
+      datumVisibleGrid: false,
+
       terrainDirectCloudPaint: false,
       terrainCanvasCreation: false,
       terrainRouteMutation: false,
       terrainHtmlMutation: false,
+
       visible256GridInPlanetView: false,
+
       surfaceDrawsClouds: false,
       surfaceCreatesCanvas: false,
       surfaceOwnsRouteJs: false,
@@ -407,6 +549,15 @@
           : "CAPABILITY_MARKER_MISSING_OR_STALE"
     };
 
+    if (entryName === "datum") {
+      result.planetaryDatumChildReady = Boolean(status.planetaryDatumChildReady);
+      result.trueNorthDefined = Boolean(status.trueNorthDefined);
+      result.trueSouthDefined = Boolean(status.trueSouthDefined);
+      result.equatorDefined = Boolean(status.equatorDefined);
+      result.climateBeltClassificationActive = Boolean(status.climateBeltClassificationActive);
+      result.polarResonanceActive = Boolean(status.polarResonanceActive);
+    }
+
     if (entryName === "moisture") {
       var terrainMoistureValue = getNestedValue(status, entry.terrainForcingConsumerField);
       result.expectedTerrainForcingConsumerField = entry.terrainForcingConsumerField;
@@ -449,6 +600,7 @@
 
   function getLoadOrder() {
     return [
+      clone(MANIFEST.datum),
       clone(MANIFEST.terrainEcosystem),
       clone(MANIFEST.moisture),
       clone(MANIFEST.surface),
@@ -459,16 +611,33 @@
   function status() {
     return {
       contract: CONTRACT,
-      surfaceRendererRegistrationContract: SURFACE_REGISTRATION_CONTRACT,
+      datumRegistrationContract: DATUM_REGISTRATION_CONTRACT,
       previousRegistrationContract: PREVIOUS_REGISTRATION_CONTRACT,
+
       standard: STANDARD,
+      datumStandard: DATUM_STANDARD,
       terrainStandard: TERRAIN_STANDARD,
       surfaceStandard: SURFACE_STANDARD,
+
       family: FAMILY,
       file: FILE,
 
       manifestReady: true,
       familyManifestAuthorityReady: true,
+
+      datumChildRegistered: true,
+      datumLoadsBeforeTerrainEcosystem: true,
+      datumLoadsBeforeMoisture: true,
+      datumLoadsBeforeSurface: true,
+      datumLoadsBeforeClouds: true,
+
+      planetaryDatumExpected: true,
+      trueNorthAuthorityExpected: true,
+      trueSouthAuthorityExpected: true,
+      equatorAuthorityExpected: true,
+      climateBeltAuthorityExpected: true,
+      polarResonanceAuthorityExpected: true,
+
       terrainEcosystemChildRegistered: true,
       surfaceRendererChildRegistered: true,
 
@@ -486,11 +655,19 @@
       runtimeCapabilityMarker: MANIFEST.runtime.capabilityMarker,
       nextRequiredRuntimeConsumer: MANIFEST.runtime.nextRequiredRuntimeConsumer,
 
+      datumPath: MANIFEST.datum.path,
+      datumPublicContract: MANIFEST.datum.publicContract,
+      datumCacheKey: MANIFEST.datum.cacheKey,
+      datumCapabilityField: MANIFEST.datum.capabilityField,
+      datumCapabilityMarker: MANIFEST.datum.capabilityMarker,
+      datumRole: MANIFEST.datum.role,
+
       terrainEcosystemPath: MANIFEST.terrainEcosystem.path,
       terrainEcosystemPublicContract: MANIFEST.terrainEcosystem.publicContract,
       terrainEcosystemCacheKey: MANIFEST.terrainEcosystem.cacheKey,
       terrainEcosystemCapabilityField: MANIFEST.terrainEcosystem.capabilityField,
       terrainEcosystemCapabilityMarker: MANIFEST.terrainEcosystem.capabilityMarker,
+      terrainEcosystemLoadsAfterDatum: true,
       terrainEcosystemLoadsBeforeMoisture: true,
       terrainEcosystemLoadsBeforeSurface: true,
       terrainEcosystemLoadsBeforeClouds: true,
@@ -501,6 +678,7 @@
       moistureCapabilityMarker: MANIFEST.moisture.capabilityMarker,
       moistureTerrainForcingConsumerField: MANIFEST.moisture.terrainForcingConsumerField,
       moistureTerrainForcingConsumerMarker: MANIFEST.moisture.terrainForcingConsumerMarker,
+      moistureLoadsAfterDatum: true,
 
       surfacePath: MANIFEST.surface.path,
       surfacePublicContract: MANIFEST.surface.publicContract,
@@ -511,6 +689,7 @@
       surfaceRendererExpected: true,
       gratitudeContinentOnly: true,
       surfaceDrawsBeforeClouds: true,
+      surfaceLoadsAfterDatum: true,
 
       cloudPublicContract: MANIFEST.clouds.publicContract,
       cloudCacheKey: MANIFEST.clouds.cacheKey,
@@ -520,13 +699,18 @@
       cloudReadabilityScaleCalibrationMarker: MANIFEST.clouds.readabilityScaleCalibrationMarker,
       cloudGlobalMultiLayerCloudShellField: MANIFEST.clouds.globalMultiLayerCloudShellField,
       cloudGlobalMultiLayerCloudShellMarker: MANIFEST.clouds.globalMultiLayerCloudShellMarker,
+      cloudLoadsAfterDatum: true,
+
+      childLoadOrder: MANIFEST.chain.childLoadOrder.slice(),
 
       latticeViewProtected: true,
       planetViewSurfaceAllowed: true,
       planetViewCloudsOnly: true,
       latticeViewCloudsBlocked: true,
       latticeViewSurfaceBlocked: true,
+      latticeViewDatumVisualsBlocked: true,
 
+      datumDrivesTerrainClimatePlacement: true,
       terrainForcingDrivesMoisture: true,
       moistureDrivesClouds: true,
       terrainDirectCloudPaint: false,
@@ -536,6 +720,11 @@
       radialNodes: 16,
       fibonacciBands: 16,
       latticeStates: 256,
+
+      noDrawAuthority: true,
+      noRouteJsChange: true,
+      noHtmlChange: true,
+      noRuntimeChangeInThisPhase: true,
 
       generatedImage: false,
       graphicBox: false,
@@ -550,11 +739,14 @@
   function publish() {
     var api = {
       contract: CONTRACT,
-      surfaceRendererRegistrationContract: SURFACE_REGISTRATION_CONTRACT,
+      datumRegistrationContract: DATUM_REGISTRATION_CONTRACT,
       previousRegistrationContract: PREVIOUS_REGISTRATION_CONTRACT,
+
       standard: STANDARD,
+      datumStandard: DATUM_STANDARD,
       terrainStandard: TERRAIN_STANDARD,
       surfaceStandard: SURFACE_STANDARD,
+
       family: FAMILY,
       file: FILE,
 
@@ -574,15 +766,16 @@
 
     window.AUDRALIA_TRUE_GLOBE_FAMILY_MANIFEST_BOOT = {
       contract: CONTRACT,
-      surfaceRendererRegistrationContract: SURFACE_REGISTRATION_CONTRACT,
+      datumRegistrationContract: DATUM_REGISTRATION_CONTRACT,
       previousRegistrationContract: PREVIOUS_REGISTRATION_CONTRACT,
       standard: STANDARD,
-      terrainStandard: TERRAIN_STANDARD,
-      surfaceStandard: SURFACE_STANDARD,
+      datumStandard: DATUM_STANDARD,
       family: FAMILY,
       file: FILE,
+      datumChildRegistered: true,
+      childLoadOrder: MANIFEST.chain.childLoadOrder.slice(),
       bootedAt: new Date().toISOString(),
-      meaning: "Audralia runtime family manifest evaluated with Gratitude surface renderer child registered."
+      meaning: "Audralia runtime family manifest evaluated with planetary datum child registered before terrain/ecosystem."
     };
 
     return api;

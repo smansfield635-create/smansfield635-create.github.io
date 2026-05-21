@@ -1,35 +1,28 @@
 // /assets/audralia/clean/runtime/audralia.true-globe.runtime.js
 // TNT FULL-FILE REPLACEMENT
+// AUDRALIA_G2_TRUE_GLOBE_RUNTIME_ORGANIC_CLOUD_CHILD_KEY_RENEWAL_TNT_v3
+//
+// Public runtime contract intentionally preserved for route JS compatibility:
 // AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2
-//
-// Supersedes:
-// AUDRALIA_G2_TRUE_GLOBE_RUNTIME_FAMILY_SEPARATION_TNT_v1
-//
-// Family:
-// /assets/audralia/clean/runtime/
-//
-// Consumes children:
-// /assets/audralia/clean/runtime/audralia.true-globe.moisture.js
-// /assets/audralia/clean/runtime/audralia.true-globe.clouds.js
 //
 // Purpose:
 // - Preserve true-globe runtime authority.
-// - Own time, motion, lens state, spherical carrier state, Fibonacci 16×16 / 256 lattice state,
-//   projection state, front/back visibility, and diagnostic state.
-// - Load and consume the moisture child.
-// - Load and consume the cloud child.
-// - Publish moisture/cloud state inside runtime frame/status.
-// - Do not draw the page.
-// - Do not create canvas.
-// - Do not own public HTML.
-// - No generated image. No GraphicBox. No flat projection. No Earth/Audralia crossover. No Australia drift.
+// - Preserve route JS compatibility.
+// - Renew the cloud child cache key to the organic v2 cloud-flow child.
+// - Request:
+//   AUDRALIA_G2_TRUE_RUNTIME_ORGANIC_MOISTURE_CLOUD_FLOW_CHILD_TNT_v2
+// - Do not touch HTML.
+// - Do not touch route JS.
+// - Do not touch Lattice View.
+// - No generated image. No GraphicBox. No flat projection.
 
 (function () {
   "use strict";
 
   var CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2";
+  var CHILD_KEY_RENEWAL_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_ORGANIC_CLOUD_CHILD_KEY_RENEWAL_TNT_v3";
   var PREVIOUS_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_FAMILY_SEPARATION_TNT_v1";
-  var STANDARD = "AUDRALIA_TRUE_RUNTIME_CLOUD_RENEWAL_STANDARD_v1";
+  var STANDARD = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_ORGANIC_CLOUD_CHILD_KEY_RENEWAL_STANDARD_v1";
   var FAMILY = "/assets/audralia/clean/runtime/";
   var FILE = "/assets/audralia/clean/runtime/audralia.true-globe.runtime.js";
 
@@ -37,7 +30,8 @@
   var MOISTURE_CONTRACT = "AUDRALIA_G2_TRUE_RUNTIME_MOISTURE_FIELD_CHILD_TNT_v1";
 
   var CLOUDS_PATH = "/assets/audralia/clean/runtime/audralia.true-globe.clouds.js";
-  var CLOUDS_CONTRACT = "AUDRALIA_G2_TRUE_RUNTIME_4K_MOISTURE_CLOUD_CHILD_TNT_v1";
+  var CLOUDS_CONTRACT = "AUDRALIA_G2_TRUE_RUNTIME_ORGANIC_MOISTURE_CLOUD_FLOW_CHILD_TNT_v2";
+  var PREVIOUS_CLOUDS_CONTRACT = "AUDRALIA_G2_TRUE_RUNTIME_4K_MOISTURE_CLOUD_CHILD_TNT_v1";
 
   var RADIAL_NODES = 16;
   var FIBONACCI_BANDS = 16;
@@ -114,6 +108,8 @@
     sphereCarrierReady: false,
     moistureFieldReady: false,
     cloudRendererReady: false,
+    organicCloudChildRequested: false,
+    runtimeCloudChildKeyCurrent: false,
 
     planetViewReady: false,
     latticeViewReady: false,
@@ -401,32 +397,81 @@
     return window.AUDRALIA_TRUE_GLOBE_CLOUDS || window.AUDRALIA_G2_TRUE_GLOBE_CLOUDS || null;
   }
 
+  function apiContract(api) {
+    if (!api) return "";
+
+    if (typeof api.contract === "string") return api.contract;
+
+    if (typeof api.status === "function") {
+      try {
+        return String(api.status().contract || "");
+      } catch (_error) {
+        return "";
+      }
+    }
+
+    return "";
+  }
+
+  function childApiMatches(key, api) {
+    var contract = apiContract(api);
+
+    if (key === "moisture") return contract === MOISTURE_CONTRACT;
+    if (key === "clouds") return contract === CLOUDS_CONTRACT;
+
+    return false;
+  }
+
+  function getChildApi(key) {
+    if (key === "moisture") return getMoistureApi();
+    if (key === "clouds") return getCloudsApi();
+    return null;
+  }
+
+  function removeWrongChildScripts(key, expectedContract) {
+    var scripts = document.querySelectorAll("script[data-audralia-runtime-child='" + key + "']");
+    var i;
+
+    for (i = 0; i < scripts.length; i += 1) {
+      var script = scripts[i];
+      var contract = script.getAttribute("data-contract") || "";
+
+      if (contract && contract !== expectedContract) {
+        try { script.remove(); } catch (_error) {}
+      }
+    }
+  }
+
   function loadScriptOnce(path, contract, key) {
     return new Promise(function (resolve, reject) {
-      var existingApi = key === "moisture" ? getMoistureApi() : getCloudsApi();
+      var existingApi = getChildApi(key);
 
-      if (existingApi) {
+      if (childApiMatches(key, existingApi)) {
         resolve(existingApi);
         return;
       }
 
-      var existingScript = document.querySelector("script[data-audralia-runtime-child='" + key + "']");
+      removeWrongChildScripts(key, contract);
+
+      var existingScript = document.querySelector(
+        "script[data-audralia-runtime-child='" + key + "'][data-contract='" + contract + "']"
+      );
 
       if (existingScript) {
         var attempts = 0;
         var interval = window.setInterval(function () {
           attempts += 1;
 
-          var api = key === "moisture" ? getMoistureApi() : getCloudsApi();
+          var api = getChildApi(key);
 
-          if (api) {
+          if (childApiMatches(key, api)) {
             window.clearInterval(interval);
             resolve(api);
           }
 
           if (attempts > 80) {
             window.clearInterval(interval);
-            reject(new Error("AUDRALIA_RUNTIME_CHILD_WAIT_TIMEOUT_" + key));
+            reject(new Error("AUDRALIA_RUNTIME_CHILD_WAIT_TIMEOUT_" + key + "_" + contract));
           }
         }, 50);
 
@@ -439,19 +484,20 @@
       script.defer = true;
       script.setAttribute("data-audralia-runtime-child", key);
       script.setAttribute("data-contract", contract);
+      script.setAttribute("data-child-key-renewal-contract", CHILD_KEY_RENEWAL_CONTRACT);
 
       script.onload = function () {
-        var api = key === "moisture" ? getMoistureApi() : getCloudsApi();
+        var api = getChildApi(key);
 
-        if (api) {
+        if (childApiMatches(key, api)) {
           resolve(api);
         } else {
-          reject(new Error("AUDRALIA_RUNTIME_CHILD_LOADED_GLOBAL_MISSING_" + key));
+          reject(new Error("AUDRALIA_RUNTIME_CHILD_LOADED_GLOBAL_CONTRACT_MISMATCH_" + key + "_" + apiContract(api)));
         }
       };
 
       script.onerror = function () {
-        reject(new Error("AUDRALIA_RUNTIME_CHILD_LOAD_FAILED_" + key));
+        reject(new Error("AUDRALIA_RUNTIME_CHILD_LOAD_FAILED_" + key + "_" + contract));
       };
 
       document.head.appendChild(script);
@@ -462,13 +508,15 @@
     if (state.moistureLoading || state.cloudsLoading) return;
 
     state.moistureLoading = true;
+    state.organicCloudChildRequested = true;
+    state.runtimeCloudChildKeyCurrent = CLOUDS_CONTRACT === "AUDRALIA_G2_TRUE_RUNTIME_ORGANIC_MOISTURE_CLOUD_FLOW_CHILD_TNT_v2";
 
     loadScriptOnce(MOISTURE_PATH, MOISTURE_CONTRACT, "moisture")
       .then(function (moistureApi) {
         state.moistureApi = moistureApi;
         state.moistureLoaded = true;
         state.moistureFieldReady = Boolean(moistureApi);
-
+        state.moistureLoading = false;
         state.cloudsLoading = true;
 
         return loadScriptOnce(CLOUDS_PATH, CLOUDS_CONTRACT, "clouds");
@@ -476,12 +524,17 @@
       .then(function (cloudsApi) {
         state.cloudsApi = cloudsApi;
         state.cloudsLoaded = true;
+        state.cloudsLoading = false;
         state.cloudRendererReady = Boolean(cloudsApi);
         state.diagnosticStateReady = true;
+        state.organicCloudChildRequested = true;
+        state.runtimeCloudChildKeyCurrent = true;
         buildAtmosphereFrameData();
         publish();
       })
       .catch(function (error) {
+        state.moistureLoading = false;
+        state.cloudsLoading = false;
         recordError("ensureAtmosphereChildren", error);
         publish();
       });
@@ -528,6 +581,7 @@
   function buildFrameBase() {
     return {
       contract: CONTRACT,
+      childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       standard: STANDARD,
       family: FAMILY,
@@ -577,6 +631,9 @@
       cloudsLoaded: state.cloudsLoaded,
       moistureFieldReady: state.moistureFieldReady,
       cloudRendererReady: state.cloudRendererReady,
+      organicCloudChildRequested: state.organicCloudChildRequested,
+      runtimeCloudChildKeyCurrent: state.runtimeCloudChildKeyCurrent,
+
       moistureField: state.moistureField,
       cloudLayer: state.cloudLayer
     };
@@ -588,10 +645,11 @@
     state.moistureApi = state.moistureApi || getMoistureApi();
     state.cloudsApi = state.cloudsApi || getCloudsApi();
 
-    state.moistureLoaded = Boolean(state.moistureApi);
-    state.cloudsLoaded = Boolean(state.cloudsApi);
+    state.moistureLoaded = childApiMatches("moisture", state.moistureApi);
+    state.cloudsLoaded = childApiMatches("clouds", state.cloudsApi);
+    state.runtimeCloudChildKeyCurrent = state.cloudsLoaded && apiContract(state.cloudsApi) === CLOUDS_CONTRACT;
 
-    if (state.moistureApi && typeof state.moistureApi.getField === "function") {
+    if (state.moistureLoaded && typeof state.moistureApi.getField === "function") {
       try {
         state.moistureField = state.moistureApi.getField(frame);
         state.moistureFieldReady = Boolean(state.moistureField && state.moistureField.moistureFieldReady);
@@ -600,7 +658,7 @@
       }
     }
 
-    if (state.cloudsApi && typeof state.cloudsApi.buildLayer === "function") {
+    if (state.cloudsLoaded && typeof state.cloudsApi.buildLayer === "function") {
       try {
         frame.moistureField = state.moistureField;
         state.cloudLayer = state.cloudsApi.buildLayer(frame);
@@ -780,6 +838,7 @@
 
     return {
       contract: CONTRACT,
+      childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       standard: STANDARD,
       family: FAMILY,
@@ -813,9 +872,13 @@
 
       cloudsPath: CLOUDS_PATH,
       cloudsContract: CLOUDS_CONTRACT,
+      previousCloudsContract: PREVIOUS_CLOUDS_CONTRACT,
       cloudsLoaded: state.cloudsLoaded,
       cloudRendererReady: state.cloudRendererReady,
       cloudStatus: cloudStatus,
+
+      runtimeCloudChildKeyCurrent: state.runtimeCloudChildKeyCurrent,
+      organicCloudChildRequested: state.organicCloudChildRequested,
 
       planetViewReady: state.planetViewReady,
       latticeViewReady: state.latticeViewReady,
@@ -841,6 +904,7 @@
   function publish() {
     var api = {
       contract: CONTRACT,
+      childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       standard: STANDARD,
       family: FAMILY,
@@ -882,6 +946,7 @@
 
     window.AUDRALIA_TRUE_GLOBE_RUNTIME_ERROR = {
       contract: CONTRACT,
+      childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
       scope: scope,
       message: message,
       errors: state.errors.slice()
@@ -927,14 +992,20 @@
 
   window.AUDRALIA_TRUE_GLOBE_RUNTIME_BOOT = {
     contract: CONTRACT,
+    childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
     standard: STANDARD,
     family: FAMILY,
     file: FILE,
     moisturePath: MOISTURE_PATH,
+    moistureContract: MOISTURE_CONTRACT,
     cloudPath: CLOUDS_PATH,
+    cloudsContract: CLOUDS_CONTRACT,
+    previousCloudsContract: PREVIOUS_CLOUDS_CONTRACT,
+    runtimeCloudChildKeyCurrent: true,
+    organicCloudChildRequested: true,
     bootedAt: new Date().toISOString(),
-    meaning: "Runtime file evaluated. Runtime now loads moisture/cloud children and exposes cloud layer data for the route renderer."
+    meaning: "Runtime evaluated with preserved outward v2 contract and renewed organic cloud child key v2."
   };
 
   publish();

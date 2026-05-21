@@ -1,57 +1,58 @@
 // /showroom/globe/audralia/index.js
 // TNT FULL-FILE REPLACEMENT
-// AUDRALIA_G2_ROUTE_JS_TERRAIN_ECOSYSTEM_RUNTIME_CONSUMER_KEY_RENEWAL_TNT_v3
+// AUDRALIA_G2_ROUTE_JS_GRATITUDE_SURFACE_RENDERER_CONSUMER_TNT_v4
 //
 // Supersedes:
-// AUDRALIA_G2_ROUTE_JS_RUNTIME_CACHE_KEY_SEPARATION_TNT_v2
+// AUDRALIA_G2_ROUTE_JS_TERRAIN_ECOSYSTEM_RUNTIME_CONSUMER_KEY_RENEWAL_TNT_v3
 //
 // Purpose:
-// - Preserve current route JS public behavior.
-// - Preserve protected Lattice View.
+// - Preserve current public route behavior.
 // - Preserve finger control.
-// - Preserve Planet View cloud rendering.
-// - Separate runtime public contract from runtime fetch/cache key.
-// - Force browser/CDN to fetch the terrain/ecosystem-aware runtime v5.
+// - Preserve protected Lattice View.
+// - Preserve global multi-layer cloud shell.
+// - Fetch runtime by the surface-aware v6 cache key.
 // - Accept runtime by preserved public v2 contract.
-// - Verify runtime by v5 terrain/ecosystem capability marker.
-// - Expose terrain/ecosystem diagnostics.
-// - Do not move terrain, moisture, or cloud logic into route JS.
+// - Verify runtime by v6 surface renderer capability marker.
+// - Call the Gratitude surface renderer before cloud rendering.
+// - Keep route JS as canvas orchestrator only.
+// - Do not move terrain/surface/cloud logic into route JS.
 // - Do not alter HTML.
 // - No generated image. No GraphicBox. No flat projection. No legacy handoff wall.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_G2_ROUTE_JS_TERRAIN_ECOSYSTEM_RUNTIME_CONSUMER_KEY_RENEWAL_TNT_v3";
-  var PREVIOUS_CONTRACT = "AUDRALIA_G2_ROUTE_JS_RUNTIME_CACHE_KEY_SEPARATION_TNT_v2";
+  var CONTRACT = "AUDRALIA_G2_ROUTE_JS_GRATITUDE_SURFACE_RENDERER_CONSUMER_TNT_v4";
+  var PREVIOUS_CONTRACT = "AUDRALIA_G2_ROUTE_JS_TERRAIN_ECOSYSTEM_RUNTIME_CONSUMER_KEY_RENEWAL_TNT_v3";
   var HTML_CONTRACT = "AUDRALIA_G2_HTML_ROUTE_JS_MOISTURE_CLOUD_CONSUMER_KEY_RENEWAL_TNT_v1";
 
   var RUNTIME_EXPECTED_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2";
-  var RUNTIME_CACHE_KEY = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_TERRAIN_ECOSYSTEM_MANIFEST_CONSUMER_TNT_v5";
-  var RUNTIME_TERRAIN_CAPABILITY_FIELD = "terrainEcosystemConsumerContract";
-  var RUNTIME_TERRAIN_CAPABILITY_MARKER = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_TERRAIN_ECOSYSTEM_MANIFEST_CONSUMER_TNT_v5";
-  var PREVIOUS_RUNTIME_CACHE_KEY = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_ORGANIC_CLOUD_CHILD_KEY_RENEWAL_TNT_v3";
+  var RUNTIME_CACHE_KEY = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_SURFACE_RENDERER_MANIFEST_CONSUMER_TNT_v6";
 
+  var RUNTIME_SURFACE_CAPABILITY_FIELD = "surfaceRendererConsumerContract";
+  var RUNTIME_SURFACE_CAPABILITY_MARKER = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_SURFACE_RENDERER_MANIFEST_CONSUMER_TNT_v6";
+
+  var PREVIOUS_RUNTIME_CACHE_KEY = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_TERRAIN_ECOSYSTEM_MANIFEST_CONSUMER_TNT_v5";
   var RUNTIME_PATH = "/assets/audralia/clean/runtime/audralia.true-globe.runtime.js";
-  var STANDARD = "AUDRALIA_G2_ROUTE_JS_TERRAIN_ECOSYSTEM_RUNTIME_CONSUMER_KEY_RENEWAL_STANDARD_v1";
 
+  var STANDARD = "AUDRALIA_G2_GRATITUDE_CONTINENT_SURFACE_VISUALIZATION_SPEC_OPS_v1";
   var TAU = Math.PI * 2;
 
   var LENS_COPY = {
     planet: {
       title: "Planet View",
-      label: "<strong>Planet View</strong> → Audralia · terrain-forced moisture atmosphere",
-      copy: "Planet View renders Audralia from the true-globe runtime. Terrain and ecosystem forcing now feed moisture, and moisture feeds clouds. No lattice overlay."
+      label: "<strong>Planet View</strong> → Audralia · Gratitude continent under hydrology-powered clouds",
+      copy: "Planet View renders Audralia from the true-globe runtime. The Gratitude continent surface renderer draws beneath the global cloud shell."
     },
     lattice: {
       title: "Lattice View",
       label: "<strong>Lattice View</strong> → protected 16 × 16 / 256 spherical lattice baseline",
-      copy: "Lattice View is protected. It preserves the runtime-owned 16 radial nodes × 16 Fibonacci bands as a spherical 256-seat structure with front/back visibility."
+      copy: "Lattice View is protected. Surface, terrain, and clouds are blocked from this lens."
     },
     diagnostic: {
       title: "Diagnostic Scope",
-      label: "<strong>Diagnostic Scope</strong> → runtime, terrain, moisture, cloud, canvas, and lattice status",
-      copy: "Diagnostic Scope reports route JS, terrain/ecosystem runtime capability, terrain forcing, moisture forcing, cloud rendering, active lens, and protected lattice state."
+      label: "<strong>Diagnostic Scope</strong> → runtime, surface, moisture, cloud, and lattice status",
+      copy: "Diagnostic Scope reports route JS, runtime v6, Gratitude surface visibility, terrain forcing, moisture, clouds, and protected lattice state."
     }
   };
 
@@ -64,7 +65,6 @@
     runtime: null,
 
     activeLens: "planet",
-
     dpr: 1,
     raf: 0,
     renderCount: 0,
@@ -76,7 +76,7 @@
     runtimeCacheKeySeparated: true,
     runtimeFetchKeyCurrent: false,
     runtimeAcceptedByPublicContract: false,
-    runtimeTerrainCapabilityConfirmed: false,
+    runtimeSurfaceCapabilityConfirmed: false,
 
     routeReady: false,
     canvasReady: false,
@@ -89,11 +89,17 @@
     terrainForcingDrivesMoisture: false,
     moistureDerivedFromTerrainForcing: false,
     moistureFieldReady: false,
+
+    surfaceLoaded: false,
+    surfaceRendererReady: false,
+    gratitudeContinentVisible: false,
+    surfaceRenderedBeforeClouds: false,
+
     cloudRendererReady: false,
+    cloudsRenderAboveSurface: true,
 
     latticeViewProtected: true,
     duplicateCanvasCount: 0,
-
     dragging: false,
     errors: []
   };
@@ -119,6 +125,14 @@
     } catch (_error) {}
   }
 
+  function getRuntime() {
+    return window.AUDRALIA_TRUE_GLOBE_RUNTIME || window.AUDRALIA_G2_TRUE_GLOBE_RUNTIME || null;
+  }
+
+  function getSurfaceApi() {
+    return window.AUDRALIA_TRUE_GLOBE_SURFACE || window.AUDRALIA_G2_TRUE_GLOBE_SURFACE || null;
+  }
+
   function getCloudApi() {
     return window.AUDRALIA_TRUE_GLOBE_CLOUDS || window.AUDRALIA_G2_TRUE_GLOBE_CLOUDS || null;
   }
@@ -129,10 +143,6 @@
 
   function getTerrainEcosystemApi() {
     return window.AUDRALIA_TRUE_GLOBE_TERRAIN_ECOSYSTEM || window.AUDRALIA_G2_TRUE_GLOBE_TERRAIN_ECOSYSTEM || null;
-  }
-
-  function getRuntime() {
-    return window.AUDRALIA_TRUE_GLOBE_RUNTIME || window.AUDRALIA_G2_TRUE_GLOBE_RUNTIME || null;
   }
 
   function runtimeStatus(runtime) {
@@ -150,10 +160,10 @@
     return status && status.contract ? String(status.contract) : "";
   }
 
-  function runtimeTerrainCapability(runtime) {
+  function runtimeSurfaceCapability(runtime) {
     var status = runtimeStatus(runtime);
-    return status && status[RUNTIME_TERRAIN_CAPABILITY_FIELD]
-      ? String(status[RUNTIME_TERRAIN_CAPABILITY_FIELD])
+    return status && status[RUNTIME_SURFACE_CAPABILITY_FIELD]
+      ? String(status[RUNTIME_SURFACE_CAPABILITY_FIELD])
       : "";
   }
 
@@ -161,12 +171,12 @@
     return runtimeContract(runtime) === RUNTIME_EXPECTED_CONTRACT;
   }
 
-  function runtimeHasTerrainCapability(runtime) {
-    return runtimeTerrainCapability(runtime) === RUNTIME_TERRAIN_CAPABILITY_MARKER;
+  function runtimeHasSurfaceCapability(runtime) {
+    return runtimeSurfaceCapability(runtime) === RUNTIME_SURFACE_CAPABILITY_MARKER;
   }
 
   function runtimeIsFullyAccepted(runtime) {
-    return runtimeIsPubliclyAccepted(runtime) && runtimeHasTerrainCapability(runtime);
+    return runtimeIsPubliclyAccepted(runtime) && runtimeHasSurfaceCapability(runtime);
   }
 
   function markBoot() {
@@ -177,12 +187,12 @@
       runtimeExpectedContract: RUNTIME_EXPECTED_CONTRACT,
       runtimeCacheKey: RUNTIME_CACHE_KEY,
       previousRuntimeCacheKey: PREVIOUS_RUNTIME_CACHE_KEY,
-      runtimeTerrainCapabilityField: RUNTIME_TERRAIN_CAPABILITY_FIELD,
-      runtimeTerrainCapabilityMarker: RUNTIME_TERRAIN_CAPABILITY_MARKER,
+      runtimeSurfaceCapabilityField: RUNTIME_SURFACE_CAPABILITY_FIELD,
+      runtimeSurfaceCapabilityMarker: RUNTIME_SURFACE_CAPABILITY_MARKER,
       standard: STANDARD,
       reached: true,
       reachedAt: new Date().toISOString(),
-      meaning: "Route JS evaluated. Runtime now fetches by terrain/ecosystem v5 cache key while accepting public v2 contract."
+      meaning: "Route JS evaluated. Runtime now fetches by surface-aware v6 cache key and draws Gratitude surface before clouds."
     };
 
     window.AUDRALIA_G2_ROUTE_JS_CONTRACT = CONTRACT;
@@ -190,24 +200,26 @@
     setDataset("audraliaRouteJsBootMarker", "reached");
     setDataset("audraliaRouteJsContract", CONTRACT);
     setDataset("audraliaRouteJsPreviousContract", PREVIOUS_CONTRACT);
-
     setDataset("audraliaRuntimeExpectedContract", RUNTIME_EXPECTED_CONTRACT);
     setDataset("audraliaRuntimeCacheKey", RUNTIME_CACHE_KEY);
     setDataset("audraliaRuntimeCacheKeySeparated", "true");
     setDataset("audraliaRuntimeExpectedContractPreserved", "true");
-    setDataset("audraliaRuntimeTerrainCapabilityField", RUNTIME_TERRAIN_CAPABILITY_FIELD);
-    setDataset("audraliaRuntimeTerrainCapabilityMarker", RUNTIME_TERRAIN_CAPABILITY_MARKER);
-
+    setDataset("audraliaRuntimeSurfaceCapabilityField", RUNTIME_SURFACE_CAPABILITY_FIELD);
+    setDataset("audraliaRuntimeSurfaceCapabilityMarker", RUNTIME_SURFACE_CAPABILITY_MARKER);
+    setDataset("audraliaSurfaceRendererExpected", "true");
+    setDataset("audraliaSurfaceDrawsBeforeClouds", "true");
+    setDataset("audraliaCloudsRenderAboveSurface", "true");
     setDataset("audraliaLatticeViewProtected", "true");
     setDataset("audraliaPlanetViewCloudsOnly", "true");
     setDataset("audraliaLatticeViewCloudsBlocked", "true");
+    setDataset("audraliaLatticeViewSurfaceBlocked", "true");
 
-    setText("[data-audralia-diagnostic-route-js]", "route JS booted · terrain runtime key active");
-    setText("[data-audralia-diagnostic-sphere]", "runtime v5 fetch key pending");
-    setText("[data-audralia-diagnostic-planet]", "Planet View pending terrain-forced moisture");
+    setText("[data-audralia-diagnostic-route-js]", "route JS booted · surface runtime key active");
+    setText("[data-audralia-diagnostic-sphere]", "runtime v6 fetch key pending");
+    setText("[data-audralia-diagnostic-planet]", "Planet View pending Gratitude surface");
     setText("[data-audralia-diagnostic-lattice]", "Lattice View protected");
     setText("[data-audralia-diagnostic-seats]", "16 × 16 / 256 expected");
-    setText("[data-audralia-diagnostic-loader]", "runtime terrain/ecosystem cache key preparing");
+    setText("[data-audralia-diagnostic-loader]", "runtime surface-renderer cache key preparing");
   }
 
   markBoot();
@@ -234,9 +246,8 @@
 
   function removePriorRuntimeLoaders() {
     var loaders = document.querySelectorAll("script[data-audralia-runtime-loader]");
-    var i;
 
-    for (i = 0; i < loaders.length; i += 1) {
+    for (var i = 0; i < loaders.length; i += 1) {
       var loader = loaders[i];
       var key = loader.getAttribute("data-runtime-cache-key") || loader.getAttribute("data-runtime-contract") || "";
 
@@ -255,7 +266,7 @@
         state.runtimeDetected = true;
         state.runtimeLoaded = true;
         state.runtimeAcceptedByPublicContract = true;
-        state.runtimeTerrainCapabilityConfirmed = true;
+        state.runtimeSurfaceCapabilityConfirmed = true;
         state.runtimeFetchKeyCurrent = true;
         resolve(existing);
         return;
@@ -274,14 +285,14 @@
             state.runtimeDetected = true;
             state.runtimeLoaded = true;
             state.runtimeAcceptedByPublicContract = true;
-            state.runtimeTerrainCapabilityConfirmed = true;
+            state.runtimeSurfaceCapabilityConfirmed = true;
             state.runtimeFetchKeyCurrent = true;
             resolve(runtime);
           }
 
           if (attempts > 120) {
             window.clearInterval(interval);
-            reject(new Error("AUDRALIA_RUNTIME_TERRAIN_CAPABILITY_WAIT_TIMEOUT"));
+            reject(new Error("AUDRALIA_RUNTIME_SURFACE_CAPABILITY_WAIT_TIMEOUT"));
           }
         }, 50);
 
@@ -296,8 +307,8 @@
       setDataset("audraliaRuntimeExpectedContract", RUNTIME_EXPECTED_CONTRACT);
       setDataset("audraliaRuntimeCacheKey", RUNTIME_CACHE_KEY);
       setDataset("audraliaRuntimeCacheKeySeparated", "true");
-      setDataset("audraliaRuntimeTerrainCapabilityMarker", RUNTIME_TERRAIN_CAPABILITY_MARKER);
-      setText("[data-audralia-diagnostic-loader]", "loading runtime with terrain/ecosystem v5 cache key");
+      setDataset("audraliaRuntimeSurfaceCapabilityMarker", RUNTIME_SURFACE_CAPABILITY_MARKER);
+      setText("[data-audralia-diagnostic-loader]", "loading runtime with surface renderer v6 cache key");
 
       removePriorRuntimeLoaders();
 
@@ -309,8 +320,8 @@
       script.setAttribute("data-runtime-expected-contract", RUNTIME_EXPECTED_CONTRACT);
       script.setAttribute("data-runtime-cache-key", RUNTIME_CACHE_KEY);
       script.setAttribute("data-previous-runtime-cache-key", PREVIOUS_RUNTIME_CACHE_KEY);
-      script.setAttribute("data-runtime-terrain-capability-field", RUNTIME_TERRAIN_CAPABILITY_FIELD);
-      script.setAttribute("data-runtime-terrain-capability-marker", RUNTIME_TERRAIN_CAPABILITY_MARKER);
+      script.setAttribute("data-runtime-surface-capability-field", RUNTIME_SURFACE_CAPABILITY_FIELD);
+      script.setAttribute("data-runtime-surface-capability-marker", RUNTIME_SURFACE_CAPABILITY_MARKER);
 
       script.onload = function () {
         var runtime = getRuntime();
@@ -320,8 +331,8 @@
           return;
         }
 
-        if (!runtimeHasTerrainCapability(runtime)) {
-          reject(new Error("AUDRALIA_RUNTIME_LOADED_BUT_TERRAIN_CAPABILITY_MISSING_" + runtimeTerrainCapability(runtime)));
+        if (!runtimeHasSurfaceCapability(runtime)) {
+          reject(new Error("AUDRALIA_RUNTIME_LOADED_BUT_SURFACE_CAPABILITY_MISSING_" + runtimeSurfaceCapability(runtime)));
           return;
         }
 
@@ -329,20 +340,20 @@
         state.runtimeDetected = true;
         state.runtimeLoaded = true;
         state.runtimeAcceptedByPublicContract = true;
-        state.runtimeTerrainCapabilityConfirmed = true;
+        state.runtimeSurfaceCapabilityConfirmed = true;
         state.runtimeFetchKeyCurrent = true;
 
         setDataset("audraliaRuntimeLoaded", "true");
         setDataset("audraliaRuntimeAcceptedByPublicContract", "true");
-        setDataset("audraliaRuntimeTerrainCapabilityConfirmed", "true");
+        setDataset("audraliaRuntimeSurfaceCapabilityConfirmed", "true");
         setDataset("audraliaRuntimeFetchKeyCurrent", "true");
-        setText("[data-audralia-diagnostic-loader]", "runtime v5 terrain/ecosystem key loaded");
+        setText("[data-audralia-diagnostic-loader]", "runtime v6 surface renderer key loaded");
 
         resolve(runtime);
       };
 
       script.onerror = function () {
-        reject(new Error("AUDRALIA_RUNTIME_TERRAIN_ECOSYSTEM_SCRIPT_LOAD_FAILED"));
+        reject(new Error("AUDRALIA_RUNTIME_SURFACE_RENDERER_SCRIPT_LOAD_FAILED"));
       };
 
       document.head.appendChild(script);
@@ -391,9 +402,7 @@
       canvas.style.visibility = "hidden";
       canvas.style.pointerEvents = "none";
 
-      try {
-        canvas.remove();
-      } catch (_error) {}
+      try { canvas.remove(); } catch (_error) {}
     }
 
     state.duplicateCanvasCount += duplicateCount;
@@ -411,13 +420,14 @@
     canvas.setAttribute("data-contract", CONTRACT);
     canvas.setAttribute("data-runtime-expected-contract", RUNTIME_EXPECTED_CONTRACT);
     canvas.setAttribute("data-runtime-cache-key", RUNTIME_CACHE_KEY);
-    canvas.setAttribute("data-runtime-terrain-capability-marker", RUNTIME_TERRAIN_CAPABILITY_MARKER);
+    canvas.setAttribute("data-runtime-surface-capability-marker", RUNTIME_SURFACE_CAPABILITY_MARKER);
     canvas.setAttribute("data-globe-carrier", "runtime-sphere");
     canvas.setAttribute("data-flat-projection-blocked", "true");
     canvas.setAttribute("data-generated-image", "false");
     canvas.setAttribute("data-graphic-box", "false");
     canvas.setAttribute("data-lattice-view-protected", "true");
     canvas.setAttribute("data-planet-view-clouds-only", "true");
+    canvas.setAttribute("data-surface-rendered-before-clouds", "true");
 
     canvas.style.position = "absolute";
     canvas.style.inset = "0";
@@ -521,12 +531,6 @@
 
     ctx.save();
 
-    var terrainField = frame.terrainEcosystemField;
-    var summary = terrainField && terrainField.summary ? terrainField.summary : null;
-
-    var landInfluence = summary && typeof summary.landRatioAverage === "number" ? summary.landRatioAverage : 0.42;
-    var forcingInfluence = summary && typeof summary.forcingStrengthAverage === "number" ? summary.forcingStrengthAverage : 0.32;
-
     var body = ctx.createRadialGradient(
       metrics.centerX - radius * 0.30,
       metrics.centerY - radius * 0.34,
@@ -559,8 +563,8 @@
       radius
     );
 
-    oceanPressure.addColorStop(0, "rgba(24,128,176," + (0.13 + forcingInfluence * 0.04).toFixed(3) + ")");
-    oceanPressure.addColorStop(0.45, "rgba(7,72,126," + (0.16 + landInfluence * 0.03).toFixed(3) + ")");
+    oceanPressure.addColorStop(0, "rgba(24,128,176,0.14)");
+    oceanPressure.addColorStop(0.45, "rgba(7,72,126,0.18)");
     oceanPressure.addColorStop(1, "rgba(0,4,16,0.30)");
 
     ctx.fillStyle = oceanPressure;
@@ -589,6 +593,36 @@
     ctx.restore();
   }
 
+  function drawSurfaceLayer(ctx, frame) {
+    if (state.activeLens !== "planet") return null;
+
+    var surfaceApi = getSurfaceApi();
+
+    if (!surfaceApi || typeof surfaceApi.render !== "function") {
+      state.surfaceRendererReady = false;
+      state.surfaceLoaded = false;
+      return null;
+    }
+
+    try {
+      var layer = surfaceApi.render(ctx, frame, {
+        activeLens: "planet",
+        protectedLattice: true,
+        drawBeforeClouds: true
+      });
+
+      state.surfaceLoaded = true;
+      state.surfaceRendererReady = Boolean(layer && layer.surfaceRendererReady);
+      state.gratitudeContinentVisible = Boolean(layer && layer.gratitudeContinentVisible);
+      state.surfaceRenderedBeforeClouds = true;
+
+      return layer;
+    } catch (error) {
+      recordError("surface-render", error);
+      return null;
+    }
+  }
+
   function drawMoistureCloudLayer(ctx, frame) {
     if (state.activeLens !== "planet") return null;
 
@@ -602,11 +636,14 @@
     try {
       var layer = cloudApi.render(ctx, frame, {
         activeLens: "planet",
-        protectedLattice: true
+        protectedLattice: true,
+        renderAboveSurface: true
       });
 
       state.cloudRendererReady = Boolean(layer && layer.rendererReady);
       state.moistureFieldReady = Boolean(layer && layer.moistureFieldReady);
+      state.cloudsRenderAboveSurface = true;
+
       return layer;
     } catch (error) {
       recordError("cloud-render", error);
@@ -616,12 +653,18 @@
 
   function drawPlanetView(ctx, frame) {
     drawPlanetBody(ctx, frame);
+
+    var surfaceLayer = drawSurfaceLayer(ctx, frame);
     var cloudLayer = drawMoistureCloudLayer(ctx, frame);
+
     drawLimb(ctx, frame, 1);
 
     state.planetViewReady = true;
 
-    return cloudLayer;
+    return {
+      surfaceLayer: surfaceLayer,
+      cloudLayer: cloudLayer
+    };
   }
 
   function drawLink(ctx, link, type) {
@@ -730,21 +773,10 @@
     var fibonacciLinks = links.fibonacciLinks || [];
     var seats = frame.projectedSeats || [];
 
-    for (var i = 0; i < ringLinks.length; i += 1) {
-      drawLink(ctx, ringLinks[i], "ring");
-    }
-
-    for (var j = 0; j < spineLinks.length; j += 1) {
-      drawLink(ctx, spineLinks[j], "spine");
-    }
-
-    for (var k = 0; k < fibonacciLinks.length; k += 1) {
-      drawLink(ctx, fibonacciLinks[k], "fibonacci");
-    }
-
-    for (var n = 0; n < seats.length; n += 1) {
-      drawSeat(ctx, seats[n]);
-    }
+    for (var i = 0; i < ringLinks.length; i += 1) drawLink(ctx, ringLinks[i], "ring");
+    for (var j = 0; j < spineLinks.length; j += 1) drawLink(ctx, spineLinks[j], "spine");
+    for (var k = 0; k < fibonacciLinks.length; k += 1) drawLink(ctx, fibonacciLinks[k], "fibonacci");
+    for (var n = 0; n < seats.length; n += 1) drawSeat(ctx, seats[n]);
 
     state.latticeViewReady = true;
     state.latticeViewProtected = true;
@@ -759,20 +791,23 @@
       var frame = state.runtime.tick(performance.now());
       clear();
 
-      var cloudLayer = null;
+      var layers = {
+        surfaceLayer: null,
+        cloudLayer: null
+      };
 
       if (state.activeLens === "lattice") {
         drawLattice(state.ctx, frame);
       } else if (state.activeLens === "diagnostic") {
         drawLattice(state.ctx, frame);
       } else {
-        cloudLayer = drawPlanetView(state.ctx, frame);
+        layers = drawPlanetView(state.ctx, frame) || layers;
       }
 
       state.renderCount += 1;
 
-      updateDiagnostics(frame, cloudLayer);
-      publishStatus("render", frame, cloudLayer);
+      updateDiagnostics(frame, layers.surfaceLayer, layers.cloudLayer);
+      publishStatus("render", frame, layers.surfaceLayer, layers.cloudLayer);
     } catch (error) {
       recordError("render", error);
     }
@@ -819,9 +854,7 @@
         ? event.detail.activeLens
         : document.documentElement.dataset.audraliaActiveLens;
 
-      if (lens && lens !== state.activeLens) {
-        setLens(lens);
-      }
+      if (lens && lens !== state.activeLens) setLens(lens);
     });
 
     setLens(document.documentElement.dataset.audraliaActiveLens || "planet");
@@ -852,9 +885,7 @@
         state.runtime.pointerMove(event.clientX, event.clientY, performance.now());
       }
 
-      try {
-        event.preventDefault();
-      } catch (_error) {}
+      try { event.preventDefault(); } catch (_error) {}
     }, { passive: false });
 
     function release(event) {
@@ -876,25 +907,22 @@
     state.stage.addEventListener("pointerleave", release, { passive: true });
   }
 
-  function updateDiagnostics(frame, cloudLayer) {
+  function updateDiagnostics(frame, surfaceLayer, cloudLayer) {
     var runtimeStatusValue = state.runtime && typeof state.runtime.status === "function"
       ? state.runtime.status()
       : null;
 
     var terrainApi = getTerrainEcosystemApi();
-    var terrainStatus = terrainApi && typeof terrainApi.status === "function"
-      ? terrainApi.status()
-      : null;
+    var terrainStatus = terrainApi && typeof terrainApi.status === "function" ? terrainApi.status() : null;
 
     var moistureApi = getMoistureApi();
-    var moistureStatus = moistureApi && typeof moistureApi.status === "function"
-      ? moistureApi.status()
-      : null;
+    var moistureStatus = moistureApi && typeof moistureApi.status === "function" ? moistureApi.status() : null;
+
+    var surfaceApi = getSurfaceApi();
+    var surfaceStatus = surfaceApi && typeof surfaceApi.status === "function" ? surfaceApi.status() : null;
 
     var cloudApi = getCloudApi();
-    var cloudStatus = cloudApi && typeof cloudApi.status === "function"
-      ? cloudApi.status()
-      : null;
+    var cloudStatus = cloudApi && typeof cloudApi.status === "function" ? cloudApi.status() : null;
 
     state.terrainEcosystemReady = Boolean(
       (frame && frame.terrainEcosystemReady) ||
@@ -923,6 +951,26 @@
       (moistureStatus && moistureStatus.moistureFieldReady)
     );
 
+    state.surfaceLoaded = Boolean(
+      (runtimeStatusValue && runtimeStatusValue.surfaceLoaded) ||
+      (surfaceStatus && surfaceStatus.initialized) ||
+      surfaceLayer
+    );
+
+    state.surfaceRendererReady = Boolean(
+      (surfaceLayer && surfaceLayer.surfaceRendererReady) ||
+      (runtimeStatusValue && runtimeStatusValue.surfaceRendererReady) ||
+      (surfaceStatus && surfaceStatus.surfaceRendererReady)
+    );
+
+    state.gratitudeContinentVisible = Boolean(
+      (surfaceLayer && surfaceLayer.gratitudeContinentVisible) ||
+      (runtimeStatusValue && runtimeStatusValue.gratitudeContinentVisible) ||
+      (surfaceStatus && surfaceStatus.gratitudeContinentVisible)
+    );
+
+    state.surfaceRenderedBeforeClouds = Boolean(surfaceLayer && state.activeLens === "planet");
+
     state.cloudRendererReady = Boolean(
       (cloudLayer && cloudLayer.rendererReady) ||
       (runtimeStatusValue && runtimeStatusValue.cloudRendererReady) ||
@@ -931,29 +979,27 @@
 
     state.runtimeFetchKeyCurrent = Boolean(
       runtimeStatusValue &&
-      runtimeStatusValue[RUNTIME_TERRAIN_CAPABILITY_FIELD] === RUNTIME_TERRAIN_CAPABILITY_MARKER
+      runtimeStatusValue[RUNTIME_SURFACE_CAPABILITY_FIELD] === RUNTIME_SURFACE_CAPABILITY_MARKER
     );
 
-    state.runtimeTerrainCapabilityConfirmed = state.runtimeFetchKeyCurrent;
+    state.runtimeSurfaceCapabilityConfirmed = state.runtimeFetchKeyCurrent;
 
-    setText("[data-audralia-diagnostic-route-js]", "active · terrain/ecosystem runtime key");
+    setText("[data-audralia-diagnostic-route-js]", "active · Gratitude surface route consumer");
     setText(
       "[data-audralia-diagnostic-sphere]",
       runtimeStatusValue && runtimeStatusValue.sphereSeats === 256
-        ? "runtime accepted · 256 seats · terrain v5 " + (state.runtimeFetchKeyCurrent ? "confirmed" : "unconfirmed")
+        ? "runtime accepted · 256 seats · surface v6 " + (state.runtimeFetchKeyCurrent ? "confirmed" : "unconfirmed")
         : "runtime detected · sphere pending"
     );
     setText(
       "[data-audralia-diagnostic-planet]",
-      state.planetViewReady
-        ? "active · terrain-forced moisture Planet View"
-        : "ready · awaiting Planet View"
+      state.gratitudeContinentVisible
+        ? "active · Gratitude continent surface under clouds"
+        : "Planet View active · Gratitude surface pending"
     );
     setText(
       "[data-audralia-diagnostic-lattice]",
-      state.latticeViewReady
-        ? "protected · spherical runtime lattice"
-        : "protected · held baseline"
+      state.latticeViewReady ? "protected · spherical runtime lattice" : "protected · held baseline"
     );
     setText(
       "[data-audralia-diagnostic-seats]",
@@ -964,10 +1010,11 @@
     setText(
       "[data-audralia-diagnostic-loader]",
       "runtimeCache=" + RUNTIME_CACHE_KEY +
-      " · terrain=" + (state.terrainEcosystemReady ? "ready" : "pending") +
-      " · moistureTerrain=" + (state.moistureDerivedFromTerrainForcing ? "active" : "pending") +
-      " · clouds=" + (state.cloudRendererReady ? "active" : "pending") +
-      " · count=" + (cloudLayer && cloudLayer.cloudCount != null ? cloudLayer.cloudCount : 0)
+      " · surface=" + (state.surfaceRendererReady ? "ready" : "pending") +
+      " · gratitude=" + (state.gratitudeContinentVisible ? "visible" : "pending") +
+      " · clouds=" + (state.cloudRendererReady ? "above" : "pending") +
+      " · surfaceCells=" + (surfaceLayer && surfaceLayer.visibleCellCount != null ? surfaceLayer.visibleCellCount : 0) +
+      " · cloudCount=" + (cloudLayer && cloudLayer.cloudCount != null ? cloudLayer.cloudCount : 0)
     );
 
     setDataset("audraliaRuntimeDetected", state.runtimeDetected ? "true" : "false");
@@ -977,7 +1024,7 @@
     setDataset("audraliaRuntimeCacheKeySeparated", "true");
     setDataset("audraliaRuntimeAcceptedByPublicContract", state.runtimeAcceptedByPublicContract ? "true" : "false");
     setDataset("audraliaRuntimeFetchKeyCurrent", state.runtimeFetchKeyCurrent ? "true" : "false");
-    setDataset("audraliaRuntimeTerrainCapabilityConfirmed", state.runtimeTerrainCapabilityConfirmed ? "true" : "false");
+    setDataset("audraliaRuntimeSurfaceCapabilityConfirmed", state.runtimeSurfaceCapabilityConfirmed ? "true" : "false");
 
     setDataset("audraliaRouteRenderCount", String(state.renderCount));
     setDataset("audraliaTerrainEcosystemLoaded", state.terrainEcosystemLoaded ? "true" : "false");
@@ -985,16 +1032,26 @@
     setDataset("audraliaTerrainForcingDrivesMoisture", state.terrainForcingDrivesMoisture ? "true" : "false");
     setDataset("audraliaMoistureDerivedFromTerrainForcing", state.moistureDerivedFromTerrainForcing ? "true" : "false");
     setDataset("audraliaMoistureFieldReady", state.moistureFieldReady ? "true" : "false");
+    setDataset("audraliaSurfaceLoaded", state.surfaceLoaded ? "true" : "false");
+    setDataset("audraliaSurfaceRendererReady", state.surfaceRendererReady ? "true" : "false");
+    setDataset("audraliaGratitudeContinentVisible", state.gratitudeContinentVisible ? "true" : "false");
+    setDataset("audraliaSurfaceRenderedBeforeClouds", state.surfaceRenderedBeforeClouds ? "true" : "false");
     setDataset("audraliaCloudRendererReady", state.cloudRendererReady ? "true" : "false");
-    setDataset("audraliaCloudsDerivedFromMoisture", state.cloudRendererReady ? "true" : "false");
-    setDataset("audraliaCloudsNotRandomPatches", state.cloudRendererReady ? "true" : "false");
+    setDataset("audraliaCloudsRenderAboveSurface", state.cloudsRenderAboveSurface ? "true" : "false");
     setDataset("audraliaPlanetViewCloudsOnly", "true");
     setDataset("audraliaLatticeViewProtected", "true");
     setDataset("audraliaLatticeViewCloudsBlocked", "true");
+    setDataset("audraliaLatticeViewSurfaceBlocked", "true");
 
     if (frame) {
       setDataset("audraliaRuntimeFrameIndex", String(frame.frameIndex || 0));
       setDataset("audraliaRuntimeSphereSeats", String(frame.sphereSeats || 0));
+    }
+
+    if (surfaceLayer) {
+      setDataset("audraliaSurfaceVisibleCellCount", String(surfaceLayer.visibleCellCount || 0));
+      setDataset("audraliaSurfaceGratitudeCellCount", String(surfaceLayer.gratitudeCellCount || 0));
+      setDataset("audraliaSurfaceHydrologyHintCount", String(surfaceLayer.hydrologyHintCount || 0));
     }
 
     if (cloudLayer) {
@@ -1004,24 +1061,19 @@
   }
 
   function status() {
-    var runtimeStatusValue = state.runtime && typeof state.runtime.status === "function"
-      ? state.runtime.status()
-      : null;
+    var runtimeStatusValue = state.runtime && typeof state.runtime.status === "function" ? state.runtime.status() : null;
 
     var terrainApi = getTerrainEcosystemApi();
-    var terrainStatus = terrainApi && typeof terrainApi.status === "function"
-      ? terrainApi.status()
-      : null;
-
-    var cloudApi = getCloudApi();
-    var cloudStatus = cloudApi && typeof cloudApi.status === "function"
-      ? cloudApi.status()
-      : null;
+    var terrainStatus = terrainApi && typeof terrainApi.status === "function" ? terrainApi.status() : null;
 
     var moistureApi = getMoistureApi();
-    var moistureStatus = moistureApi && typeof moistureApi.status === "function"
-      ? moistureApi.status()
-      : null;
+    var moistureStatus = moistureApi && typeof moistureApi.status === "function" ? moistureApi.status() : null;
+
+    var surfaceApi = getSurfaceApi();
+    var surfaceStatus = surfaceApi && typeof surfaceApi.status === "function" ? surfaceApi.status() : null;
+
+    var cloudApi = getCloudApi();
+    var cloudStatus = cloudApi && typeof cloudApi.status === "function" ? cloudApi.status() : null;
 
     return {
       contract: CONTRACT,
@@ -1034,12 +1086,12 @@
       runtimeExpectedContract: RUNTIME_EXPECTED_CONTRACT,
       runtimeCacheKey: RUNTIME_CACHE_KEY,
       previousRuntimeCacheKey: PREVIOUS_RUNTIME_CACHE_KEY,
-      runtimeTerrainCapabilityField: RUNTIME_TERRAIN_CAPABILITY_FIELD,
-      runtimeTerrainCapabilityMarker: RUNTIME_TERRAIN_CAPABILITY_MARKER,
+      runtimeSurfaceCapabilityField: RUNTIME_SURFACE_CAPABILITY_FIELD,
+      runtimeSurfaceCapabilityMarker: RUNTIME_SURFACE_CAPABILITY_MARKER,
       runtimeCacheKeySeparated: state.runtimeCacheKeySeparated,
       runtimeExpectedContractPreserved: state.runtimeExpectedContractPreserved,
       runtimeAcceptedByPublicContract: state.runtimeAcceptedByPublicContract,
-      runtimeTerrainCapabilityConfirmed: state.runtimeTerrainCapabilityConfirmed,
+      runtimeSurfaceCapabilityConfirmed: state.runtimeSurfaceCapabilityConfirmed,
       runtimeFetchKeyCurrent: state.runtimeFetchKeyCurrent,
 
       runtimeDetected: state.runtimeDetected,
@@ -1063,8 +1115,16 @@
 
       moistureDerivedFromTerrainForcing: state.moistureDerivedFromTerrainForcing,
       moistureFieldReady: state.moistureFieldReady,
-      cloudRendererReady: state.cloudRendererReady,
       moistureStatus: moistureStatus,
+
+      surfaceLoaded: state.surfaceLoaded,
+      surfaceRendererReady: state.surfaceRendererReady,
+      gratitudeContinentVisible: state.gratitudeContinentVisible,
+      surfaceRenderedBeforeClouds: state.surfaceRenderedBeforeClouds,
+      surfaceStatus: surfaceStatus,
+
+      cloudRendererReady: state.cloudRendererReady,
+      cloudsRenderAboveSurface: state.cloudsRenderAboveSurface,
       cloudStatus: cloudStatus,
 
       duplicateCanvas: state.duplicateCanvasCount > 0,
@@ -1080,14 +1140,13 @@
 
       planetViewCloudsOnly: true,
       latticeViewCloudsBlocked: true,
-      cloudsDerivedFromMoisture: state.cloudRendererReady,
-      cloudsNotRandomPatches: state.cloudRendererReady,
+      latticeViewSurfaceBlocked: true,
 
       errors: state.errors.slice()
     };
   }
 
-  function publishStatus(scope, frame, cloudLayer) {
+  function publishStatus(scope, frame, surfaceLayer, cloudLayer) {
     var payload = status();
     payload.scope = scope || "publish";
     payload.updatedAt = new Date().toISOString();
@@ -1100,9 +1159,20 @@
         radialNodes: frame.radialNodes,
         fibonacciBands: frame.fibonacciBands,
         latticeStates: frame.latticeStates,
-        terrainEcosystemLoaded: frame.terrainEcosystemLoaded,
-        terrainEcosystemReady: frame.terrainEcosystemReady,
-        terrainForcingDrivesMoisture: frame.terrainForcingDrivesMoisture
+        surfaceLoaded: frame.surfaceLoaded,
+        surfaceRendererReady: frame.surfaceRendererReady,
+        gratitudeContinentVisible: frame.gratitudeContinentVisible
+      };
+    }
+
+    if (surfaceLayer) {
+      payload.surfaceLayer = {
+        surfaceCellCount: surfaceLayer.surfaceCellCount,
+        visibleCellCount: surfaceLayer.visibleCellCount,
+        gratitudeCellCount: surfaceLayer.gratitudeCellCount,
+        hydrologyHintCount: surfaceLayer.hydrologyHintCount,
+        gratitudeContinentVisible: surfaceLayer.gratitudeContinentVisible,
+        surfaceRendererReady: surfaceLayer.surfaceRendererReady
       };
     }
 
@@ -1111,20 +1181,17 @@
         cloudCount: cloudLayer.cloudCount,
         fragmentCount: cloudLayer.fragmentCount,
         moistureEligibleCount: cloudLayer.moistureEligibleCount,
-        averageMoisture: cloudLayer.averageMoisture,
-        averageCondensation: cloudLayer.averageCondensation,
         averageCloudOpacity: cloudLayer.averageCloudOpacity,
         rendererReady: cloudLayer.rendererReady,
         cloudsDerivedFromMoisture: cloudLayer.cloudsDerivedFromMoisture,
         cloudsNotVisible256Grid: cloudLayer.cloudsNotVisible256Grid,
-        organicSwirlFlowActive: cloudLayer.organicSwirlFlowActive,
-        cloudSpeedReduced: cloudLayer.cloudSpeedReduced
+        globalCloudShellActive: cloudLayer.globalCloudShellActive
       };
     }
 
     window.AUDRALIA_G2_ROUTE_JS_CONSUMER_STATUS = payload;
     window.AUDRALIA_G2_TRUE_GLOBE_STATUS = payload;
-    window.AUDRALIA_G2_TERRAIN_ECOSYSTEM_ROUTE_STATUS = payload;
+    window.AUDRALIA_G2_GRATITUDE_SURFACE_ROUTE_STATUS = payload;
 
     return payload;
   }
@@ -1136,8 +1203,8 @@
       htmlContract: HTML_CONTRACT,
       runtimeExpectedContract: RUNTIME_EXPECTED_CONTRACT,
       runtimeCacheKey: RUNTIME_CACHE_KEY,
-      runtimeTerrainCapabilityField: RUNTIME_TERRAIN_CAPABILITY_FIELD,
-      runtimeTerrainCapabilityMarker: RUNTIME_TERRAIN_CAPABILITY_MARKER,
+      runtimeSurfaceCapabilityField: RUNTIME_SURFACE_CAPABILITY_FIELD,
+      runtimeSurfaceCapabilityMarker: RUNTIME_SURFACE_CAPABILITY_MARKER,
       runtimePath: RUNTIME_PATH,
       setLens: setLens,
       render: render,
@@ -1181,9 +1248,9 @@
           state.runtimeDetected = true;
           state.runtimeLoaded = true;
           state.runtimeAcceptedByPublicContract = true;
-          state.runtimeTerrainCapabilityConfirmed = true;
+          state.runtimeSurfaceCapabilityConfirmed = true;
 
-          setText("[data-audralia-diagnostic-route-js]", "runtime accepted · terrain/ecosystem v5 confirmed");
+          setText("[data-audralia-diagnostic-route-js]", "runtime accepted · surface renderer v6 confirmed");
 
           initRuntime(runtime);
 
@@ -1197,10 +1264,13 @@
           setDataset("audraliaRuntimeCacheKey", RUNTIME_CACHE_KEY);
           setDataset("audraliaRuntimeCacheKeySeparated", "true");
           setDataset("audraliaRuntimeAcceptedByPublicContract", "true");
-          setDataset("audraliaRuntimeTerrainCapabilityConfirmed", "true");
+          setDataset("audraliaRuntimeSurfaceCapabilityConfirmed", "true");
+          setDataset("audraliaSurfaceRendererExpected", "true");
+          setDataset("audraliaSurfaceDrawsBeforeClouds", "true");
+          setDataset("audraliaCloudsRenderAboveSurface", "true");
           setDataset("audraliaLatticeViewProtected", "true");
 
-          updateDiagnostics(runtime.getFrame ? runtime.getFrame() : null, null);
+          updateDiagnostics(runtime.getFrame ? runtime.getFrame() : null, null, null);
           publishApi();
           publishStatus("init-complete");
 

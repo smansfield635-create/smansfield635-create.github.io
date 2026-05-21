@@ -1,41 +1,33 @@
 // /showroom/globe/audralia/index.js
 // TNT FULL-FILE REPLACEMENT
-// AUDRALIA_G2_ROUTE_JS_PLANET_VIEW_MOISTURE_CLOUD_RENDERER_WITH_LATTICE_PROTECTION_TNT_v1
+// AUDRALIA_G2_ROUTE_JS_RUNTIME_CACHE_KEY_SEPARATION_TNT_v2
 //
 // Supersedes:
-// AUDRALIA_G2_TRUE_GLOBE_ROUTE_JS_RUNTIME_CONSUMER_AND_RENDERER_TNT_v1
-//
-// Consumes runtime:
-// /assets/audralia/clean/runtime/audralia.true-globe.runtime.js
-//
-// Runtime contract:
-// AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2
-//
-// Runtime children:
-// /assets/audralia/clean/runtime/audralia.true-globe.moisture.js
-// /assets/audralia/clean/runtime/audralia.true-globe.clouds.js
-//
-// Paired HTML:
-// AUDRALIA_G2_HTML_ROUTE_JS_RUNTIME_CONSUMER_IMPORT_KEY_RENEWAL_TNT_v1
+// AUDRALIA_G2_ROUTE_JS_PLANET_VIEW_MOISTURE_CLOUD_RENDERER_WITH_LATTICE_PROTECTION_TNT_v1
 //
 // Purpose:
-// - Preserve the current working Lattice View baseline.
-// - Update route JS to consume runtime v2.
-// - Render moisture-driven cloud layer in Planet View only.
-// - Block clouds from Lattice View.
-// - Preserve finger control, runtime sphere, 16 × 16 / 256 lattice, and compact diagnostics.
+// - Preserve current route JS compatibility behavior.
+// - Preserve protected Lattice View.
+// - Separate runtime acceptance contract from runtime fetch/cache key.
+// - Force browser/CDN to fetch the renewed runtime file.
+// - Still accept the runtime by its outward public v2 contract.
+// - Do not move cloud logic into route JS.
+// - Do not alter HTML.
 // - No generated image. No GraphicBox. No flat projection. No legacy handoff wall.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_G2_ROUTE_JS_PLANET_VIEW_MOISTURE_CLOUD_RENDERER_WITH_LATTICE_PROTECTION_TNT_v1";
-  var PREVIOUS_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_ROUTE_JS_RUNTIME_CONSUMER_AND_RENDERER_TNT_v1";
-  var HTML_CONTRACT = "AUDRALIA_G2_HTML_ROUTE_JS_RUNTIME_CONSUMER_IMPORT_KEY_RENEWAL_TNT_v1";
-  var RUNTIME_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2";
-  var PREVIOUS_RUNTIME_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_FAMILY_SEPARATION_TNT_v1";
+  var CONTRACT = "AUDRALIA_G2_ROUTE_JS_RUNTIME_CACHE_KEY_SEPARATION_TNT_v2";
+  var PREVIOUS_CONTRACT = "AUDRALIA_G2_ROUTE_JS_PLANET_VIEW_MOISTURE_CLOUD_RENDERER_WITH_LATTICE_PROTECTION_TNT_v1";
+  var HTML_CONTRACT = "AUDRALIA_G2_HTML_ROUTE_JS_MOISTURE_CLOUD_CONSUMER_KEY_RENEWAL_TNT_v1";
+
+  var RUNTIME_EXPECTED_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2";
+  var RUNTIME_CACHE_KEY = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_ORGANIC_CLOUD_CHILD_KEY_RENEWAL_TNT_v3";
+  var PREVIOUS_RUNTIME_CACHE_KEY = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2";
+
   var RUNTIME_PATH = "/assets/audralia/clean/runtime/audralia.true-globe.runtime.js";
-  var STANDARD = "AUDRALIA_G2_PLANET_VIEW_MOISTURE_CLOUD_INTEGRATION_WITH_LATTICE_PROTECTION_STANDARD_v1";
+  var STANDARD = "AUDRALIA_G2_ROUTE_JS_RUNTIME_CACHE_KEY_SEPARATION_STANDARD_v1";
 
   var TAU = Math.PI * 2;
 
@@ -53,7 +45,7 @@
     diagnostic: {
       title: "Diagnostic Scope",
       label: "<strong>Diagnostic Scope</strong> → runtime, moisture, cloud, canvas, and lattice status",
-      copy: "Diagnostic Scope reports route JS, runtime v2, moisture field, cloud renderer, active lens, and the protected lattice state without replacing the visual object."
+      copy: "Diagnostic Scope reports route JS, runtime v2, runtime cache-key separation, moisture field, cloud renderer, active lens, and the protected lattice state without replacing the visual object."
     }
   };
 
@@ -74,7 +66,10 @@
     runtimeLoadStarted: false,
     runtimeLoaded: false,
     runtimeDetected: false,
-    runtimeV2Consumed: false,
+    runtimeExpectedContractPreserved: true,
+    runtimeCacheKeySeparated: true,
+    runtimeFetchKeyCurrent: false,
+    runtimeAcceptedByPublicContract: false,
 
     routeReady: false,
     canvasReady: false,
@@ -125,6 +120,7 @@
 
   function runtimeContract(runtime) {
     if (!runtime || typeof runtime.status !== "function") return "";
+
     try {
       return String(runtime.status().contract || "");
     } catch (_error) {
@@ -132,21 +128,22 @@
     }
   }
 
-  function runtimeIsV2(runtime) {
-    return runtimeContract(runtime) === RUNTIME_CONTRACT;
+  function runtimeIsAccepted(runtime) {
+    return runtimeContract(runtime) === RUNTIME_EXPECTED_CONTRACT;
   }
 
   function markBoot() {
     window.AUDRALIA_G2_ROUTE_JS_BOOT_MARKER = {
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
-      runtimeContract: RUNTIME_CONTRACT,
-      previousRuntimeContract: PREVIOUS_RUNTIME_CONTRACT,
       htmlContract: HTML_CONTRACT,
+      runtimeExpectedContract: RUNTIME_EXPECTED_CONTRACT,
+      runtimeCacheKey: RUNTIME_CACHE_KEY,
+      previousRuntimeCacheKey: PREVIOUS_RUNTIME_CACHE_KEY,
       standard: STANDARD,
       reached: true,
       reachedAt: new Date().toISOString(),
-      meaning: "Route JS evaluated. Planet View may now consume runtime v2 moisture/cloud children while Lattice View remains protected."
+      meaning: "Route JS evaluated. Runtime acceptance contract and runtime fetch/cache key are now separated."
     };
 
     window.AUDRALIA_G2_ROUTE_JS_CONTRACT = CONTRACT;
@@ -154,17 +151,22 @@
     setDataset("audraliaRouteJsBootMarker", "reached");
     setDataset("audraliaRouteJsContract", CONTRACT);
     setDataset("audraliaRouteJsPreviousContract", PREVIOUS_CONTRACT);
-    setDataset("audraliaRuntimeContractExpected", RUNTIME_CONTRACT);
+
+    setDataset("audraliaRuntimeExpectedContract", RUNTIME_EXPECTED_CONTRACT);
+    setDataset("audraliaRuntimeCacheKey", RUNTIME_CACHE_KEY);
+    setDataset("audraliaRuntimeCacheKeySeparated", "true");
+    setDataset("audraliaRuntimeExpectedContractPreserved", "true");
+
     setDataset("audraliaLatticeViewProtected", "true");
     setDataset("audraliaPlanetViewCloudsOnly", "true");
     setDataset("audraliaLatticeViewCloudsBlocked", "true");
 
-    setText("[data-audralia-diagnostic-route-js]", "route JS booted · loading runtime v2");
-    setText("[data-audralia-diagnostic-sphere]", "runtime v2 pending");
+    setText("[data-audralia-diagnostic-route-js]", "route JS booted · runtime cache-key separated");
+    setText("[data-audralia-diagnostic-sphere]", "runtime fetch key pending");
     setText("[data-audralia-diagnostic-planet]", "Planet View pending");
     setText("[data-audralia-diagnostic-lattice]", "Lattice View protected");
     setText("[data-audralia-diagnostic-seats]", "16 × 16 / 256 expected");
-    setText("[data-audralia-diagnostic-loader]", "route JS active");
+    setText("[data-audralia-diagnostic-loader]", "runtime cache key preparing");
   }
 
   markBoot();
@@ -189,17 +191,38 @@
     publishStatus("error:" + scope);
   }
 
+  function removePriorRuntimeLoaders() {
+    var loaders = document.querySelectorAll("script[data-audralia-runtime-loader]");
+    var i;
+
+    for (i = 0; i < loaders.length; i += 1) {
+      var loader = loaders[i];
+      var key = loader.getAttribute("data-runtime-cache-key") || loader.getAttribute("data-runtime-contract") || "";
+
+      if (key !== RUNTIME_CACHE_KEY) {
+        try { loader.remove(); } catch (_error) {}
+      }
+    }
+  }
+
   function loadRuntime() {
     return new Promise(function (resolve, reject) {
       var existing = getRuntime();
 
-      if (runtimeIsV2(existing)) {
+      if (runtimeIsAccepted(existing)) {
         state.runtime = existing;
         state.runtimeDetected = true;
         state.runtimeLoaded = true;
-        state.runtimeV2Consumed = true;
-        resolve(existing);
-        return;
+        state.runtimeAcceptedByPublicContract = true;
+
+        var existingStatus = existing.status ? existing.status() : {};
+        state.runtimeFetchKeyCurrent = existingStatus &&
+          existingStatus.childKeyRenewalContract === RUNTIME_CACHE_KEY;
+
+        if (state.runtimeFetchKeyCurrent) {
+          resolve(existing);
+          return;
+        }
       }
 
       if (state.runtimeLoadStarted) {
@@ -209,18 +232,24 @@
 
           var runtime = getRuntime();
 
-          if (runtimeIsV2(runtime)) {
-            window.clearInterval(interval);
-            state.runtime = runtime;
-            state.runtimeDetected = true;
-            state.runtimeLoaded = true;
-            state.runtimeV2Consumed = true;
-            resolve(runtime);
+          if (runtimeIsAccepted(runtime)) {
+            var status = runtime.status ? runtime.status() : {};
+            var keyCurrent = status && status.childKeyRenewalContract === RUNTIME_CACHE_KEY;
+
+            if (keyCurrent) {
+              window.clearInterval(interval);
+              state.runtime = runtime;
+              state.runtimeDetected = true;
+              state.runtimeLoaded = true;
+              state.runtimeAcceptedByPublicContract = true;
+              state.runtimeFetchKeyCurrent = true;
+              resolve(runtime);
+            }
           }
 
           if (attempts > 100) {
             window.clearInterval(interval);
-            reject(new Error("AUDRALIA_RUNTIME_V2_WAIT_TIMEOUT"));
+            reject(new Error("AUDRALIA_RUNTIME_CACHE_KEY_SEPARATION_WAIT_TIMEOUT"));
           }
         }, 50);
 
@@ -228,42 +257,53 @@
       }
 
       state.runtimeLoadStarted = true;
-      setDataset("audraliaRuntimeLoadStarted", "true");
-      setDataset("audraliaRuntimeContractRequested", RUNTIME_CONTRACT);
-      setText("[data-audralia-diagnostic-loader]", "loading runtime v2");
+      state.runtimeCacheKeySeparated = true;
+      state.runtimeExpectedContractPreserved = true;
 
-      var oldLoader = document.querySelector("script[data-audralia-runtime-loader='" + PREVIOUS_CONTRACT + "']");
-      if (oldLoader) {
-        try { oldLoader.remove(); } catch (_error) {}
-      }
+      setDataset("audraliaRuntimeLoadStarted", "true");
+      setDataset("audraliaRuntimeExpectedContract", RUNTIME_EXPECTED_CONTRACT);
+      setDataset("audraliaRuntimeCacheKey", RUNTIME_CACHE_KEY);
+      setDataset("audraliaRuntimeCacheKeySeparated", "true");
+      setText("[data-audralia-diagnostic-loader]", "loading runtime with separated cache key");
+
+      removePriorRuntimeLoaders();
 
       var script = document.createElement("script");
-      script.src = RUNTIME_PATH + "?v=" + encodeURIComponent(RUNTIME_CONTRACT);
+      script.src = RUNTIME_PATH + "?v=" + encodeURIComponent(RUNTIME_CACHE_KEY);
       script.async = true;
       script.defer = true;
       script.setAttribute("data-audralia-runtime-loader", CONTRACT);
-      script.setAttribute("data-runtime-contract", RUNTIME_CONTRACT);
-      script.setAttribute("data-previous-runtime-contract", PREVIOUS_RUNTIME_CONTRACT);
+      script.setAttribute("data-runtime-expected-contract", RUNTIME_EXPECTED_CONTRACT);
+      script.setAttribute("data-runtime-cache-key", RUNTIME_CACHE_KEY);
+      script.setAttribute("data-previous-runtime-cache-key", PREVIOUS_RUNTIME_CACHE_KEY);
 
       script.onload = function () {
         var runtime = getRuntime();
 
-        if (runtimeIsV2(runtime)) {
-          state.runtime = runtime;
-          state.runtimeDetected = true;
-          state.runtimeLoaded = true;
-          state.runtimeV2Consumed = true;
-          setDataset("audraliaRuntimeLoaded", "true");
-          setDataset("audraliaRuntimeV2Consumed", "true");
-          setText("[data-audralia-diagnostic-loader]", "runtime v2 loaded");
-          resolve(runtime);
-        } else {
-          reject(new Error("AUDRALIA_RUNTIME_SCRIPT_LOADED_BUT_V2_GLOBAL_MISSING"));
+        if (!runtimeIsAccepted(runtime)) {
+          reject(new Error("AUDRALIA_RUNTIME_LOADED_BUT_PUBLIC_CONTRACT_REJECTED_" + runtimeContract(runtime)));
+          return;
         }
+
+        var status = runtime.status ? runtime.status() : {};
+        var keyCurrent = status && status.childKeyRenewalContract === RUNTIME_CACHE_KEY;
+
+        state.runtime = runtime;
+        state.runtimeDetected = true;
+        state.runtimeLoaded = true;
+        state.runtimeAcceptedByPublicContract = true;
+        state.runtimeFetchKeyCurrent = Boolean(keyCurrent);
+
+        setDataset("audraliaRuntimeLoaded", "true");
+        setDataset("audraliaRuntimeAcceptedByPublicContract", "true");
+        setDataset("audraliaRuntimeFetchKeyCurrent", state.runtimeFetchKeyCurrent ? "true" : "false");
+        setText("[data-audralia-diagnostic-loader]", state.runtimeFetchKeyCurrent ? "runtime cache key current" : "runtime loaded · cache key marker not confirmed");
+
+        resolve(runtime);
       };
 
       script.onerror = function () {
-        reject(new Error("AUDRALIA_RUNTIME_V2_SCRIPT_LOAD_FAILED"));
+        reject(new Error("AUDRALIA_RUNTIME_CACHE_KEY_SCRIPT_LOAD_FAILED"));
       };
 
       document.head.appendChild(script);
@@ -330,7 +370,8 @@
 
     canvas.setAttribute("data-audralia-runtime-consumer-canvas", "true");
     canvas.setAttribute("data-contract", CONTRACT);
-    canvas.setAttribute("data-runtime-contract", RUNTIME_CONTRACT);
+    canvas.setAttribute("data-runtime-expected-contract", RUNTIME_EXPECTED_CONTRACT);
+    canvas.setAttribute("data-runtime-cache-key", RUNTIME_CACHE_KEY);
     canvas.setAttribute("data-globe-carrier", "runtime-sphere");
     canvas.setAttribute("data-flat-projection-blocked", "true");
     canvas.setAttribute("data-generated-image", "false");
@@ -806,22 +847,26 @@
       : null;
 
     state.moistureFieldReady = Boolean(
-      cloudLayer && cloudLayer.moistureFieldReady ||
-      runtimeStatus && runtimeStatus.moistureFieldReady ||
-      moistureStatus && moistureStatus.moistureFieldReady
+      (cloudLayer && cloudLayer.moistureFieldReady) ||
+      (runtimeStatus && runtimeStatus.moistureFieldReady) ||
+      (moistureStatus && moistureStatus.moistureFieldReady)
     );
 
     state.cloudRendererReady = Boolean(
-      cloudLayer && cloudLayer.rendererReady ||
-      runtimeStatus && runtimeStatus.cloudRendererReady ||
-      cloudStatus && cloudStatus.rendererReady
+      (cloudLayer && cloudLayer.rendererReady) ||
+      (runtimeStatus && runtimeStatus.cloudRendererReady) ||
+      (cloudStatus && cloudStatus.rendererReady)
     );
 
-    setText("[data-audralia-diagnostic-route-js]", "active · Planet View cloud consumer");
+    state.runtimeFetchKeyCurrent = Boolean(
+      runtimeStatus && runtimeStatus.childKeyRenewalContract === RUNTIME_CACHE_KEY
+    );
+
+    setText("[data-audralia-diagnostic-route-js]", "active · runtime cache-key separated");
     setText(
       "[data-audralia-diagnostic-sphere]",
       runtimeStatus && runtimeStatus.sphereSeats === 256
-        ? "runtime v2 active · 256 seats"
+        ? "runtime accepted · 256 seats · cache key " + (state.runtimeFetchKeyCurrent ? "current" : "unconfirmed")
         : "runtime detected · sphere pending"
     );
     setText(
@@ -844,7 +889,8 @@
     );
     setText(
       "[data-audralia-diagnostic-loader]",
-      "moisture=" + (state.moistureFieldReady ? "active" : "pending") +
+      "expected=" + RUNTIME_EXPECTED_CONTRACT +
+      " · cache=" + RUNTIME_CACHE_KEY +
       " · clouds=" + (state.cloudRendererReady ? "active" : "pending") +
       " · count=" + (cloudLayer && cloudLayer.cloudCount != null ? cloudLayer.cloudCount : 0) +
       " · fragments=" + (cloudLayer && cloudLayer.fragmentCount != null ? cloudLayer.fragmentCount : 0)
@@ -852,7 +898,11 @@
 
     setDataset("audraliaRuntimeDetected", state.runtimeDetected ? "true" : "false");
     setDataset("audraliaRuntimeLoaded", state.runtimeLoaded ? "true" : "false");
-    setDataset("audraliaRuntimeV2Consumed", state.runtimeV2Consumed ? "true" : "false");
+    setDataset("audraliaRuntimeExpectedContract", RUNTIME_EXPECTED_CONTRACT);
+    setDataset("audraliaRuntimeCacheKey", RUNTIME_CACHE_KEY);
+    setDataset("audraliaRuntimeCacheKeySeparated", "true");
+    setDataset("audraliaRuntimeAcceptedByPublicContract", state.runtimeAcceptedByPublicContract ? "true" : "false");
+    setDataset("audraliaRuntimeFetchKeyCurrent", state.runtimeFetchKeyCurrent ? "true" : "false");
     setDataset("audraliaRouteRenderCount", String(state.renderCount));
     setDataset("audraliaMoistureFieldReady", state.moistureFieldReady ? "true" : "false");
     setDataset("audraliaCloudRendererReady", state.cloudRendererReady ? "true" : "false");
@@ -892,15 +942,20 @@
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       htmlContract: HTML_CONTRACT,
-      runtimeContract: RUNTIME_CONTRACT,
-      previousRuntimeContract: PREVIOUS_RUNTIME_CONTRACT,
       standard: STANDARD,
       route: "/showroom/globe/audralia/",
 
       runtimePath: RUNTIME_PATH,
+      runtimeExpectedContract: RUNTIME_EXPECTED_CONTRACT,
+      runtimeCacheKey: RUNTIME_CACHE_KEY,
+      previousRuntimeCacheKey: PREVIOUS_RUNTIME_CACHE_KEY,
+      runtimeCacheKeySeparated: state.runtimeCacheKeySeparated,
+      runtimeExpectedContractPreserved: state.runtimeExpectedContractPreserved,
+      runtimeAcceptedByPublicContract: state.runtimeAcceptedByPublicContract,
+      runtimeFetchKeyCurrent: state.runtimeFetchKeyCurrent,
+
       runtimeDetected: state.runtimeDetected,
       runtimeLoaded: state.runtimeLoaded,
-      runtimeV2Consumed: state.runtimeV2Consumed,
       runtimeStatus: runtimeStatus,
 
       routeReady: state.routeReady,
@@ -961,14 +1016,18 @@
         moistureEligibleCount: cloudLayer.moistureEligibleCount,
         averageMoisture: cloudLayer.averageMoisture,
         averageCondensation: cloudLayer.averageCondensation,
+        averageCloudOpacity: cloudLayer.averageCloudOpacity,
         rendererReady: cloudLayer.rendererReady,
-        cloudsDerivedFromMoisture: cloudLayer.cloudsDerivedFromMoisture
+        cloudsDerivedFromMoisture: cloudLayer.cloudsDerivedFromMoisture,
+        cloudsNotVisible256Grid: cloudLayer.cloudsNotVisible256Grid,
+        organicSwirlFlowActive: cloudLayer.organicSwirlFlowActive,
+        cloudSpeedReduced: cloudLayer.cloudSpeedReduced
       };
     }
 
     window.AUDRALIA_G2_ROUTE_JS_CONSUMER_STATUS = payload;
     window.AUDRALIA_G2_TRUE_GLOBE_STATUS = payload;
-    window.AUDRALIA_G2_MOISTURE_CLOUD_ROUTE_STATUS = payload;
+    window.AUDRALIA_G2_RUNTIME_CACHE_KEY_SEPARATION_STATUS = payload;
 
     return payload;
   }
@@ -978,7 +1037,8 @@
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       htmlContract: HTML_CONTRACT,
-      runtimeContract: RUNTIME_CONTRACT,
+      runtimeExpectedContract: RUNTIME_EXPECTED_CONTRACT,
+      runtimeCacheKey: RUNTIME_CACHE_KEY,
       runtimePath: RUNTIME_PATH,
       setLens: setLens,
       render: render,
@@ -1021,9 +1081,9 @@
           state.runtime = runtime;
           state.runtimeDetected = true;
           state.runtimeLoaded = true;
-          state.runtimeV2Consumed = true;
+          state.runtimeAcceptedByPublicContract = true;
 
-          setText("[data-audralia-diagnostic-route-js]", "runtime v2 loaded · initializing");
+          setText("[data-audralia-diagnostic-route-js]", "runtime accepted · cache-key separated");
 
           initRuntime(runtime);
 
@@ -1033,7 +1093,10 @@
           state.routeReady = true;
 
           setDataset("audraliaRouteReady", "true");
-          setDataset("audraliaRuntimeV2Consumed", "true");
+          setDataset("audraliaRuntimeExpectedContract", RUNTIME_EXPECTED_CONTRACT);
+          setDataset("audraliaRuntimeCacheKey", RUNTIME_CACHE_KEY);
+          setDataset("audraliaRuntimeCacheKeySeparated", "true");
+          setDataset("audraliaRuntimeAcceptedByPublicContract", "true");
           setDataset("audraliaLatticeViewProtected", "true");
 
           updateDiagnostics(runtime.getFrame ? runtime.getFrame() : null, null);

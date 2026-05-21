@@ -1,37 +1,55 @@
 // /assets/audralia/clean/runtime/audralia.true-globe.runtime.js
 // TNT FULL-FILE REPLACEMENT
-// AUDRALIA_G2_TRUE_GLOBE_RUNTIME_ORGANIC_CLOUD_CHILD_KEY_RENEWAL_TNT_v3
+// AUDRALIA_G2_TRUE_GLOBE_RUNTIME_MANIFEST_CONSUMER_HANDSHAKE_TNT_v4
 //
 // Public runtime contract intentionally preserved for route JS compatibility:
 // AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2
 //
+// Capability marker preserved for route JS cache-key confirmation:
+// AUDRALIA_G2_TRUE_GLOBE_RUNTIME_ORGANIC_CLOUD_CHILD_KEY_RENEWAL_TNT_v3
+//
+// Consumes manifest:
+// /assets/audralia/clean/runtime/audralia.true-globe.family.manifest.js
+//
 // Purpose:
-// - Preserve true-globe runtime authority.
-// - Preserve route JS compatibility.
-// - Renew the cloud child cache key to the organic v2 cloud-flow child.
-// - Request:
-//   AUDRALIA_G2_TRUE_RUNTIME_ORGANIC_MOISTURE_CLOUD_FLOW_CHILD_TNT_v2
-// - Do not touch HTML.
-// - Do not touch route JS.
-// - Do not touch Lattice View.
+// - Stop parent/child leapfrog.
+// - Load family manifest first.
+// - Use manifest for child public contract, cache key, and capability marker.
+// - Reject stale child globals when capability marker is missing.
+// - Preserve runtime public contract for route JS.
+// - Preserve Lattice View.
+// - Preserve Planet View-only clouds.
 // - No generated image. No GraphicBox. No flat projection.
 
 (function () {
   "use strict";
 
   var CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_CONSUMES_MOISTURE_AND_CLOUD_CHILDREN_TNT_v2";
+  var MANIFEST_CONSUMER_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_MANIFEST_CONSUMER_HANDSHAKE_TNT_v4";
   var CHILD_KEY_RENEWAL_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_ORGANIC_CLOUD_CHILD_KEY_RENEWAL_TNT_v3";
   var PREVIOUS_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_FAMILY_SEPARATION_TNT_v1";
-  var STANDARD = "AUDRALIA_G2_TRUE_GLOBE_RUNTIME_ORGANIC_CLOUD_CHILD_KEY_RENEWAL_STANDARD_v1";
+  var STANDARD = "AUDRALIA_G2_PARENT_CHILD_CONTRACT_HANDSHAKE_AND_FAMILY_MANIFEST_STANDARD_v1";
   var FAMILY = "/assets/audralia/clean/runtime/";
   var FILE = "/assets/audralia/clean/runtime/audralia.true-globe.runtime.js";
 
-  var MOISTURE_PATH = "/assets/audralia/clean/runtime/audralia.true-globe.moisture.js";
-  var MOISTURE_CONTRACT = "AUDRALIA_G2_TRUE_RUNTIME_MOISTURE_FIELD_CHILD_TNT_v1";
+  var MANIFEST_PATH = "/assets/audralia/clean/runtime/audralia.true-globe.family.manifest.js";
+  var MANIFEST_CONTRACT = "AUDRALIA_G2_TRUE_GLOBE_FAMILY_MANIFEST_PARENT_CHILD_HANDSHAKE_TNT_v1";
 
-  var CLOUDS_PATH = "/assets/audralia/clean/runtime/audralia.true-globe.clouds.js";
-  var CLOUDS_CONTRACT = "AUDRALIA_G2_TRUE_RUNTIME_ORGANIC_MOISTURE_CLOUD_FLOW_CHILD_TNT_v2";
-  var PREVIOUS_CLOUDS_CONTRACT = "AUDRALIA_G2_TRUE_RUNTIME_4K_MOISTURE_CLOUD_CHILD_TNT_v1";
+  var FALLBACK_MOISTURE = {
+    path: "/assets/audralia/clean/runtime/audralia.true-globe.moisture.js",
+    publicContract: "AUDRALIA_G2_TRUE_RUNTIME_MOISTURE_FIELD_CHILD_TNT_v1",
+    cacheKey: "AUDRALIA_G2_TRUE_RUNTIME_MOISTURE_FIELD_CHILD_TNT_v1",
+    capabilityField: "contract",
+    capabilityMarker: "AUDRALIA_G2_TRUE_RUNTIME_MOISTURE_FIELD_CHILD_TNT_v1"
+  };
+
+  var FALLBACK_CLOUDS = {
+    path: "/assets/audralia/clean/runtime/audralia.true-globe.clouds.js",
+    publicContract: "AUDRALIA_G2_TRUE_RUNTIME_ORGANIC_MOISTURE_CLOUD_FLOW_CHILD_TNT_v2",
+    cacheKey: "AUDRALIA_G2_TRUE_RUNTIME_CLOUD_LIFECYCLE_CONSERVATION_CHILD_TNT_v3",
+    capabilityField: "lifecycleConservationContract",
+    capabilityMarker: "AUDRALIA_G2_TRUE_RUNTIME_CLOUD_LIFECYCLE_CONSERVATION_CHILD_TNT_v3"
+  };
 
   var RADIAL_NODES = 16;
   var FIBONACCI_BANDS = 16;
@@ -48,7 +66,6 @@
   var state = {
     initialized: false,
     runtimeReady: false,
-
     activeLens: "planet",
 
     width: 640,
@@ -64,7 +81,6 @@
     yaw: -0.56,
     pitch: -0.18,
     roll: 0.02,
-
     velocityYaw: 0,
     velocityPitch: 0,
 
@@ -73,7 +89,6 @@
     pointerY: 0,
     pointerTime: 0,
     lastTapTime: 0,
-
     reducedMotion: false,
 
     seats: [],
@@ -81,13 +96,17 @@
     ringLinks: [],
     spineLinks: [],
     fibonacciLinks: [],
-
     projectedSeats: [],
     projectedLinks: {
       ringLinks: [],
       spineLinks: [],
       fibonacciLinks: []
     },
+
+    manifestApi: null,
+    manifestLoaded: false,
+    manifestLoading: false,
+    manifestReady: false,
 
     moistureApi: null,
     cloudsApi: null,
@@ -108,8 +127,14 @@
     sphereCarrierReady: false,
     moistureFieldReady: false,
     cloudRendererReady: false,
+
+    parentAcceptsByPublicContract: true,
+    parentFetchesByCacheKey: true,
+    parentVerifiesChildCapabilityMarker: true,
+    staleGlobalRejectedIfCapabilityMissing: true,
+
     organicCloudChildRequested: false,
-    runtimeCloudChildKeyCurrent: false,
+    runtimeCloudChildKeyCurrent: true,
 
     planetViewReady: false,
     latticeViewReady: false,
@@ -132,21 +157,342 @@
     return Math.max(min, Math.min(max, finite(value, min)));
   }
 
+  function clonePoint(point) {
+    return { x: point.x, y: point.y, z: point.z };
+  }
+
   function normalize3(point) {
     var length = Math.hypot(point.x, point.y, point.z) || 1;
+    return { x: point.x / length, y: point.y / length, z: point.z / length };
+  }
+
+  function getNestedValue(source, path) {
+    if (!source || !path) return undefined;
+    var parts = String(path).split(".");
+    var cursor = source;
+
+    for (var i = 0; i < parts.length; i += 1) {
+      if (cursor == null) return undefined;
+      cursor = cursor[parts[i]];
+    }
+
+    return cursor;
+  }
+
+  function apiStatus(api) {
+    if (!api) return null;
+
+    if (typeof api.status === "function") {
+      try {
+        return api.status();
+      } catch (error) {
+        return {
+          error: true,
+          message: error && error.message ? error.message : String(error)
+        };
+      }
+    }
+
+    return api;
+  }
+
+  function getManifestApi() {
+    return window.AUDRALIA_TRUE_GLOBE_FAMILY_MANIFEST ||
+      window.AUDRALIA_G2_TRUE_GLOBE_FAMILY_MANIFEST ||
+      null;
+  }
+
+  function getMoistureApi() {
+    return window.AUDRALIA_TRUE_GLOBE_MOISTURE ||
+      window.AUDRALIA_G2_TRUE_GLOBE_MOISTURE ||
+      null;
+  }
+
+  function getCloudsApi() {
+    return window.AUDRALIA_TRUE_GLOBE_CLOUDS ||
+      window.AUDRALIA_G2_TRUE_GLOBE_CLOUDS ||
+      null;
+  }
+
+  function getManifestEntry(entryName) {
+    var manifest = state.manifestApi || getManifestApi();
+
+    if (manifest && typeof manifest.getEntry === "function") {
+      try {
+        var entry = manifest.getEntry(entryName);
+        if (entry) return entry;
+      } catch (_error) {}
+    }
+
+    if (entryName === "moisture") return FALLBACK_MOISTURE;
+    if (entryName === "clouds") return FALLBACK_CLOUDS;
+
+    return null;
+  }
+
+  function buildEntryUrl(entry) {
+    if (!entry || !entry.path) return "";
+    var key = entry.cacheKey || entry.publicContract || MANIFEST_CONSUMER_CONTRACT;
+    return entry.path + "?v=" + encodeURIComponent(key);
+  }
+
+  function validateApiAgainstEntry(entryName, api) {
+    var entry = getManifestEntry(entryName);
+    var status = apiStatus(api);
+
+    if (!entry) {
+      return {
+        ok: false,
+        entryName: entryName,
+        reason: "ENTRY_MISSING"
+      };
+    }
+
+    if (!status) {
+      return {
+        ok: false,
+        entryName: entryName,
+        reason: "STATUS_MISSING",
+        expectedPublicContract: entry.publicContract,
+        expectedCapabilityField: entry.capabilityField,
+        expectedCapabilityMarker: entry.capabilityMarker
+      };
+    }
+
+    var publicContract = status.contract || "";
+    var capabilityValue = getNestedValue(status, entry.capabilityField);
+
+    var publicOk = publicContract === entry.publicContract;
+    var capabilityOk = capabilityValue === entry.capabilityMarker;
+
     return {
-      x: point.x / length,
-      y: point.y / length,
-      z: point.z / length
+      ok: Boolean(publicOk && capabilityOk),
+      entryName: entryName,
+      publicContractOk: publicOk,
+      capabilityOk: capabilityOk,
+      expectedPublicContract: entry.publicContract,
+      actualPublicContract: publicContract,
+      expectedCapabilityField: entry.capabilityField,
+      expectedCapabilityMarker: entry.capabilityMarker,
+      actualCapabilityMarker: capabilityValue || "",
+      cacheKey: entry.cacheKey,
+      fetchUrl: buildEntryUrl(entry),
+      reason: publicOk && capabilityOk
+        ? "PASS"
+        : !publicOk
+          ? "PUBLIC_CONTRACT_MISMATCH"
+          : "CAPABILITY_MARKER_MISSING_OR_STALE"
     };
   }
 
-  function clonePoint(point) {
-    return {
-      x: point.x,
-      y: point.y,
-      z: point.z
-    };
+  function childApiMatches(entryName, api) {
+    return validateApiAgainstEntry(entryName, api).ok;
+  }
+
+  function getChildApi(entryName) {
+    if (entryName === "moisture") return getMoistureApi();
+    if (entryName === "clouds") return getCloudsApi();
+    return null;
+  }
+
+  function removeWrongChildScripts(entryName, entry) {
+    var scripts = document.querySelectorAll("script[data-audralia-runtime-child='" + entryName + "']");
+    var i;
+
+    for (i = 0; i < scripts.length; i += 1) {
+      var script = scripts[i];
+      var key = script.getAttribute("data-cache-key") || script.getAttribute("data-contract") || "";
+
+      if (key && key !== entry.cacheKey) {
+        try { script.remove(); } catch (_error) {}
+      }
+    }
+  }
+
+  function loadScript(path, cacheKey, attrs) {
+    return new Promise(function (resolve, reject) {
+      var script = document.createElement("script");
+      script.src = path + "?v=" + encodeURIComponent(cacheKey);
+      script.async = true;
+      script.defer = true;
+
+      attrs = attrs || {};
+      Object.keys(attrs).forEach(function (key) {
+        script.setAttribute(key, attrs[key]);
+      });
+
+      script.onload = function () { resolve(script); };
+      script.onerror = function () {
+        reject(new Error("AUDRALIA_SCRIPT_LOAD_FAILED_" + path + "_" + cacheKey));
+      };
+
+      document.head.appendChild(script);
+    });
+  }
+
+  function loadManifestOnce() {
+    return new Promise(function (resolve, reject) {
+      var existing = getManifestApi();
+
+      if (existing && typeof existing.status === "function") {
+        state.manifestApi = existing;
+        state.manifestLoaded = true;
+        state.manifestReady = true;
+        resolve(existing);
+        return;
+      }
+
+      if (state.manifestLoading) {
+        var attempts = 0;
+        var interval = window.setInterval(function () {
+          attempts += 1;
+          var api = getManifestApi();
+
+          if (api && typeof api.status === "function") {
+            window.clearInterval(interval);
+            state.manifestApi = api;
+            state.manifestLoaded = true;
+            state.manifestReady = true;
+            resolve(api);
+          }
+
+          if (attempts > 80) {
+            window.clearInterval(interval);
+            reject(new Error("AUDRALIA_FAMILY_MANIFEST_WAIT_TIMEOUT"));
+          }
+        }, 50);
+
+        return;
+      }
+
+      state.manifestLoading = true;
+
+      loadScript(MANIFEST_PATH, MANIFEST_CONTRACT, {
+        "data-audralia-runtime-family-manifest": MANIFEST_CONSUMER_CONTRACT,
+        "data-contract": MANIFEST_CONTRACT,
+        "data-cache-key": MANIFEST_CONTRACT
+      }).then(function () {
+        var api = getManifestApi();
+
+        if (!api || typeof api.status !== "function") {
+          reject(new Error("AUDRALIA_FAMILY_MANIFEST_LOADED_GLOBAL_MISSING"));
+          return;
+        }
+
+        state.manifestApi = api;
+        state.manifestLoaded = true;
+        state.manifestReady = true;
+        state.manifestLoading = false;
+        resolve(api);
+      }).catch(function (error) {
+        state.manifestLoading = false;
+        reject(error);
+      });
+    });
+  }
+
+  function loadChildFromManifest(entryName) {
+    return new Promise(function (resolve, reject) {
+      var entry = getManifestEntry(entryName);
+
+      if (!entry) {
+        reject(new Error("AUDRALIA_CHILD_ENTRY_MISSING_" + entryName));
+        return;
+      }
+
+      var existing = getChildApi(entryName);
+      var existingValidation = validateApiAgainstEntry(entryName, existing);
+
+      if (existingValidation.ok) {
+        resolve(existing);
+        return;
+      }
+
+      removeWrongChildScripts(entryName, entry);
+
+      var existingScript = document.querySelector(
+        "script[data-audralia-runtime-child='" + entryName + "'][data-cache-key='" + entry.cacheKey + "']"
+      );
+
+      if (existingScript) {
+        var attempts = 0;
+        var interval = window.setInterval(function () {
+          attempts += 1;
+          var api = getChildApi(entryName);
+
+          if (childApiMatches(entryName, api)) {
+            window.clearInterval(interval);
+            resolve(api);
+          }
+
+          if (attempts > 80) {
+            window.clearInterval(interval);
+            reject(new Error("AUDRALIA_CHILD_WAIT_TIMEOUT_" + entryName + "_" + entry.cacheKey));
+          }
+        }, 50);
+
+        return;
+      }
+
+      loadScript(entry.path, entry.cacheKey, {
+        "data-audralia-runtime-child": entryName,
+        "data-public-contract": entry.publicContract,
+        "data-cache-key": entry.cacheKey,
+        "data-capability-field": entry.capabilityField,
+        "data-capability-marker": entry.capabilityMarker,
+        "data-manifest-contract": MANIFEST_CONTRACT,
+        "data-runtime-consumer-contract": MANIFEST_CONSUMER_CONTRACT
+      }).then(function () {
+        var api = getChildApi(entryName);
+        var validation = validateApiAgainstEntry(entryName, api);
+
+        if (!validation.ok) {
+          reject(new Error("AUDRALIA_CHILD_LOADED_BUT_HANDSHAKE_FAILED_" + entryName + "_" + validation.reason));
+          return;
+        }
+
+        resolve(api);
+      }).catch(reject);
+    });
+  }
+
+  function ensureAtmosphereChildren() {
+    if (state.moistureLoading || state.cloudsLoading || state.manifestLoading) return;
+
+    loadManifestOnce()
+      .then(function () {
+        state.moistureLoading = true;
+        return loadChildFromManifest("moisture");
+      })
+      .then(function (moistureApi) {
+        state.moistureApi = moistureApi;
+        state.moistureLoaded = true;
+        state.moistureFieldReady = true;
+        state.moistureLoading = false;
+
+        state.cloudsLoading = true;
+        state.organicCloudChildRequested = true;
+
+        return loadChildFromManifest("clouds");
+      })
+      .then(function (cloudsApi) {
+        state.cloudsApi = cloudsApi;
+        state.cloudsLoaded = true;
+        state.cloudsLoading = false;
+        state.cloudRendererReady = true;
+        state.runtimeCloudChildKeyCurrent = true;
+        state.diagnosticStateReady = true;
+
+        buildAtmosphereFrameData();
+        publish();
+      })
+      .catch(function (error) {
+        state.manifestLoading = false;
+        state.moistureLoading = false;
+        state.cloudsLoading = false;
+        recordError("ensureAtmosphereChildren", error);
+        publish();
+      });
   }
 
   function rotatePoint(point) {
@@ -173,11 +519,7 @@
     var x2 = x * cr - y * sr;
     var y2 = x * sr + y * cr;
 
-    return {
-      x: x2,
-      y: y2,
-      z: z
-    };
+    return { x: x2, y: y2, z: z };
   }
 
   function getMetrics() {
@@ -239,14 +581,8 @@
       fibonacci: fibonacci,
       fibonacciWeight: fibonacciWeight,
       frontFacing: true,
-      renderPriority:
-        radialIndex % 4 === 0 ? 1 :
-        radialIndex % 2 === 0 ? 0.74 :
-        0.54,
-      connectionPriority:
-        radialIndex % 4 === 0 ? 1 :
-        radialIndex % 2 === 0 ? 0.70 :
-        0.48,
+      renderPriority: radialIndex % 4 === 0 ? 1 : radialIndex % 2 === 0 ? 0.74 : 0.54,
+      connectionPriority: radialIndex % 4 === 0 ? 1 : radialIndex % 2 === 0 ? 0.70 : 0.48,
       futureMaterialClass: "pending-audralia-material",
       futureDiagnosticState: "carrier-seat-ready"
     };
@@ -389,160 +725,9 @@
     };
   }
 
-  function getMoistureApi() {
-    return window.AUDRALIA_TRUE_GLOBE_MOISTURE || window.AUDRALIA_G2_TRUE_GLOBE_MOISTURE || null;
-  }
-
-  function getCloudsApi() {
-    return window.AUDRALIA_TRUE_GLOBE_CLOUDS || window.AUDRALIA_G2_TRUE_GLOBE_CLOUDS || null;
-  }
-
-  function apiContract(api) {
-    if (!api) return "";
-
-    if (typeof api.contract === "string") return api.contract;
-
-    if (typeof api.status === "function") {
-      try {
-        return String(api.status().contract || "");
-      } catch (_error) {
-        return "";
-      }
-    }
-
-    return "";
-  }
-
-  function childApiMatches(key, api) {
-    var contract = apiContract(api);
-
-    if (key === "moisture") return contract === MOISTURE_CONTRACT;
-    if (key === "clouds") return contract === CLOUDS_CONTRACT;
-
-    return false;
-  }
-
-  function getChildApi(key) {
-    if (key === "moisture") return getMoistureApi();
-    if (key === "clouds") return getCloudsApi();
-    return null;
-  }
-
-  function removeWrongChildScripts(key, expectedContract) {
-    var scripts = document.querySelectorAll("script[data-audralia-runtime-child='" + key + "']");
-    var i;
-
-    for (i = 0; i < scripts.length; i += 1) {
-      var script = scripts[i];
-      var contract = script.getAttribute("data-contract") || "";
-
-      if (contract && contract !== expectedContract) {
-        try { script.remove(); } catch (_error) {}
-      }
-    }
-  }
-
-  function loadScriptOnce(path, contract, key) {
-    return new Promise(function (resolve, reject) {
-      var existingApi = getChildApi(key);
-
-      if (childApiMatches(key, existingApi)) {
-        resolve(existingApi);
-        return;
-      }
-
-      removeWrongChildScripts(key, contract);
-
-      var existingScript = document.querySelector(
-        "script[data-audralia-runtime-child='" + key + "'][data-contract='" + contract + "']"
-      );
-
-      if (existingScript) {
-        var attempts = 0;
-        var interval = window.setInterval(function () {
-          attempts += 1;
-
-          var api = getChildApi(key);
-
-          if (childApiMatches(key, api)) {
-            window.clearInterval(interval);
-            resolve(api);
-          }
-
-          if (attempts > 80) {
-            window.clearInterval(interval);
-            reject(new Error("AUDRALIA_RUNTIME_CHILD_WAIT_TIMEOUT_" + key + "_" + contract));
-          }
-        }, 50);
-
-        return;
-      }
-
-      var script = document.createElement("script");
-      script.src = path + "?v=" + encodeURIComponent(contract);
-      script.async = true;
-      script.defer = true;
-      script.setAttribute("data-audralia-runtime-child", key);
-      script.setAttribute("data-contract", contract);
-      script.setAttribute("data-child-key-renewal-contract", CHILD_KEY_RENEWAL_CONTRACT);
-
-      script.onload = function () {
-        var api = getChildApi(key);
-
-        if (childApiMatches(key, api)) {
-          resolve(api);
-        } else {
-          reject(new Error("AUDRALIA_RUNTIME_CHILD_LOADED_GLOBAL_CONTRACT_MISMATCH_" + key + "_" + apiContract(api)));
-        }
-      };
-
-      script.onerror = function () {
-        reject(new Error("AUDRALIA_RUNTIME_CHILD_LOAD_FAILED_" + key + "_" + contract));
-      };
-
-      document.head.appendChild(script);
-    });
-  }
-
-  function ensureAtmosphereChildren() {
-    if (state.moistureLoading || state.cloudsLoading) return;
-
-    state.moistureLoading = true;
-    state.organicCloudChildRequested = true;
-    state.runtimeCloudChildKeyCurrent = CLOUDS_CONTRACT === "AUDRALIA_G2_TRUE_RUNTIME_ORGANIC_MOISTURE_CLOUD_FLOW_CHILD_TNT_v2";
-
-    loadScriptOnce(MOISTURE_PATH, MOISTURE_CONTRACT, "moisture")
-      .then(function (moistureApi) {
-        state.moistureApi = moistureApi;
-        state.moistureLoaded = true;
-        state.moistureFieldReady = Boolean(moistureApi);
-        state.moistureLoading = false;
-        state.cloudsLoading = true;
-
-        return loadScriptOnce(CLOUDS_PATH, CLOUDS_CONTRACT, "clouds");
-      })
-      .then(function (cloudsApi) {
-        state.cloudsApi = cloudsApi;
-        state.cloudsLoaded = true;
-        state.cloudsLoading = false;
-        state.cloudRendererReady = Boolean(cloudsApi);
-        state.diagnosticStateReady = true;
-        state.organicCloudChildRequested = true;
-        state.runtimeCloudChildKeyCurrent = true;
-        buildAtmosphereFrameData();
-        publish();
-      })
-      .catch(function (error) {
-        state.moistureLoading = false;
-        state.cloudsLoading = false;
-        recordError("ensureAtmosphereChildren", error);
-        publish();
-      });
-  }
-
   function buildProjectedFrame() {
-    var projectedSeats = [];
     var i;
+    var projectedSeats = [];
 
     for (i = 0; i < state.seats.length; i += 1) {
       projectedSeats.push(projectSeat(state.seats[i]));
@@ -581,6 +766,7 @@
   function buildFrameBase() {
     return {
       contract: CONTRACT,
+      manifestConsumerContract: MANIFEST_CONSUMER_CONTRACT,
       childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       standard: STANDARD,
@@ -603,7 +789,6 @@
 
       seats: state.seats,
       projectedSeats: state.projectedSeats,
-
       ringLinks: state.ringLinks,
       spineLinks: state.spineLinks,
       fibonacciLinks: state.fibonacciLinks,
@@ -620,17 +805,25 @@
       flatProjectionBlocked: state.flatProjectionBlocked,
       rotationAppliedBeforeProjection: state.rotationAppliedBeforeProjection,
 
-      planetViewReady: state.planetViewReady,
-      latticeViewReady: state.latticeViewReady,
-      diagnosticScopeReady: state.diagnosticScopeReady,
       runtimeReady: state.runtimeReady,
       motionStateReady: state.motionStateReady,
       diagnosticStateReady: state.diagnosticStateReady,
+      planetViewReady: state.planetViewReady,
+      latticeViewReady: state.latticeViewReady,
+      diagnosticScopeReady: state.diagnosticScopeReady,
 
+      manifestLoaded: state.manifestLoaded,
+      manifestReady: state.manifestReady,
       moistureLoaded: state.moistureLoaded,
       cloudsLoaded: state.cloudsLoaded,
       moistureFieldReady: state.moistureFieldReady,
       cloudRendererReady: state.cloudRendererReady,
+
+      parentAcceptsByPublicContract: true,
+      parentFetchesByCacheKey: true,
+      parentVerifiesChildCapabilityMarker: true,
+      staleGlobalRejectedIfCapabilityMissing: true,
+
       organicCloudChildRequested: state.organicCloudChildRequested,
       runtimeCloudChildKeyCurrent: state.runtimeCloudChildKeyCurrent,
 
@@ -642,12 +835,16 @@
   function buildAtmosphereFrameData() {
     var frame = buildFrameBase();
 
+    state.manifestApi = state.manifestApi || getManifestApi();
     state.moistureApi = state.moistureApi || getMoistureApi();
     state.cloudsApi = state.cloudsApi || getCloudsApi();
 
+    state.manifestLoaded = Boolean(state.manifestApi);
+    state.manifestReady = Boolean(state.manifestApi);
+
     state.moistureLoaded = childApiMatches("moisture", state.moistureApi);
     state.cloudsLoaded = childApiMatches("clouds", state.cloudsApi);
-    state.runtimeCloudChildKeyCurrent = state.cloudsLoaded && apiContract(state.cloudsApi) === CLOUDS_CONTRACT;
+    state.runtimeCloudChildKeyCurrent = state.cloudsLoaded;
 
     if (state.moistureLoaded && typeof state.moistureApi.getField === "function") {
       try {
@@ -730,14 +927,12 @@
 
     var nextX = finite(x, state.pointerX);
     var nextY = finite(y, state.pointerY);
-    var t = finite(time, now());
-
     var dx = nextX - state.pointerX;
     var dy = nextY - state.pointerY;
 
     state.pointerX = nextX;
     state.pointerY = nextY;
-    state.pointerTime = t;
+    state.pointerTime = finite(time, now());
 
     state.yaw += dx * 0.008;
     state.pitch = clamp(state.pitch + dy * 0.0054, -1.05, 1.05);
@@ -786,12 +981,10 @@
 
     state.pitch = clamp(state.pitch, -1.05, 1.05);
     state.roll = Math.sin(state.renderTime * 0.16) * 0.015;
-
     state.frameIndex += 1;
     state.motionStateReady = true;
 
     buildProjectedFrame();
-
     return getFrame();
   }
 
@@ -828,6 +1021,9 @@
   }
 
   function status() {
+    var moistureEntry = getManifestEntry("moisture") || FALLBACK_MOISTURE;
+    var cloudEntry = getManifestEntry("clouds") || FALLBACK_CLOUDS;
+
     var moistureStatus = state.moistureApi && typeof state.moistureApi.status === "function"
       ? state.moistureApi.status()
       : null;
@@ -836,8 +1032,13 @@
       ? state.cloudsApi.status()
       : null;
 
+    var manifestStatus = state.manifestApi && typeof state.manifestApi.status === "function"
+      ? state.manifestApi.status()
+      : null;
+
     return {
       contract: CONTRACT,
+      manifestConsumerContract: MANIFEST_CONSUMER_CONTRACT,
       childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       standard: STANDARD,
@@ -846,7 +1047,6 @@
 
       runtimeReady: state.runtimeReady,
       initialized: state.initialized,
-
       activeLens: state.activeLens,
 
       radialNodes: RADIAL_NODES,
@@ -864,18 +1064,36 @@
       diagnosticStateReady: state.diagnosticStateReady,
       sphereCarrierReady: state.sphereCarrierReady,
 
-      moisturePath: MOISTURE_PATH,
-      moistureContract: MOISTURE_CONTRACT,
+      manifestPath: MANIFEST_PATH,
+      manifestContract: MANIFEST_CONTRACT,
+      manifestLoaded: state.manifestLoaded,
+      manifestReady: state.manifestReady,
+      manifestStatus: manifestStatus,
+
+      moisturePath: moistureEntry.path,
+      moisturePublicContract: moistureEntry.publicContract,
+      moistureCacheKey: moistureEntry.cacheKey,
+      moistureCapabilityField: moistureEntry.capabilityField,
+      moistureCapabilityMarker: moistureEntry.capabilityMarker,
       moistureLoaded: state.moistureLoaded,
       moistureFieldReady: state.moistureFieldReady,
       moistureStatus: moistureStatus,
+      moistureHandshake: validateApiAgainstEntry("moisture", state.moistureApi),
 
-      cloudsPath: CLOUDS_PATH,
-      cloudsContract: CLOUDS_CONTRACT,
-      previousCloudsContract: PREVIOUS_CLOUDS_CONTRACT,
+      cloudsPath: cloudEntry.path,
+      cloudsPublicContract: cloudEntry.publicContract,
+      cloudsCacheKey: cloudEntry.cacheKey,
+      cloudsCapabilityField: cloudEntry.capabilityField,
+      cloudsCapabilityMarker: cloudEntry.capabilityMarker,
       cloudsLoaded: state.cloudsLoaded,
       cloudRendererReady: state.cloudRendererReady,
       cloudStatus: cloudStatus,
+      cloudHandshake: validateApiAgainstEntry("clouds", state.cloudsApi),
+
+      parentAcceptsByPublicContract: true,
+      parentFetchesByCacheKey: true,
+      parentVerifiesChildCapabilityMarker: true,
+      staleGlobalRejectedIfCapabilityMissing: true,
 
       runtimeCloudChildKeyCurrent: state.runtimeCloudChildKeyCurrent,
       organicCloudChildRequested: state.organicCloudChildRequested,
@@ -904,6 +1122,7 @@
   function publish() {
     var api = {
       contract: CONTRACT,
+      manifestConsumerContract: MANIFEST_CONSUMER_CONTRACT,
       childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       standard: STANDARD,
@@ -946,6 +1165,7 @@
 
     window.AUDRALIA_TRUE_GLOBE_RUNTIME_ERROR = {
       contract: CONTRACT,
+      manifestConsumerContract: MANIFEST_CONSUMER_CONTRACT,
       childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
       scope: scope,
       message: message,
@@ -992,20 +1212,20 @@
 
   window.AUDRALIA_TRUE_GLOBE_RUNTIME_BOOT = {
     contract: CONTRACT,
+    manifestConsumerContract: MANIFEST_CONSUMER_CONTRACT,
     childKeyRenewalContract: CHILD_KEY_RENEWAL_CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
     standard: STANDARD,
     family: FAMILY,
     file: FILE,
-    moisturePath: MOISTURE_PATH,
-    moistureContract: MOISTURE_CONTRACT,
-    cloudPath: CLOUDS_PATH,
-    cloudsContract: CLOUDS_CONTRACT,
-    previousCloudsContract: PREVIOUS_CLOUDS_CONTRACT,
-    runtimeCloudChildKeyCurrent: true,
-    organicCloudChildRequested: true,
+    manifestPath: MANIFEST_PATH,
+    manifestContract: MANIFEST_CONTRACT,
+    parentAcceptsByPublicContract: true,
+    parentFetchesByCacheKey: true,
+    parentVerifiesChildCapabilityMarker: true,
+    staleGlobalRejectedIfCapabilityMissing: true,
     bootedAt: new Date().toISOString(),
-    meaning: "Runtime evaluated with preserved outward v2 contract and renewed organic cloud child key v2."
+    meaning: "Runtime evaluated as manifest consumer. Child files now require public contract plus capability marker, fetched by manifest cache key."
   };
 
   publish();

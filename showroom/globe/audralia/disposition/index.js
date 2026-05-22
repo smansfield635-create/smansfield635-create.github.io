@@ -1,143 +1,127 @@
 // /showroom/globe/audralia/disposition/index.js
 // TNT FULL-FILE REPLACEMENT
-// AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_ROUTE_JS_TNT_v1
+// AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_ROUTE_JS_TNT_v1
 //
 // Function assignment:
 // JS = COURAGE
 //
+// Narrative frame:
+// INTERGALACTIC COCKPIT
+//
+// Instrument authority:
+// DEXTER'S LABORATORY
+//
+// Technical function:
+// Cockpit gauge-mount + terrain stream recognition.
+//
 // Purpose:
-// - Standalone downstream verification harness.
-// - Load/detect the completed datum child.
-// - Load/detect the passive disposition child.
-// - Verify that disposition receives the cloned datum receive-map without renewing parent files.
-// - Stage future multi-stream render launchpad lanes.
+// - Preserve the existing standalone downstream verification harness.
+// - Keep Dexter's Laboratory as instrument authority.
+// - Mount Dexter-labeled cockpit gauges without absorbing Dexter authority.
+// - Load/detect datum, disposition, and terrain streams.
+// - Verify terrain stream readiness.
+// - Publish cockpit status and visible gauge readouts.
+// - Keep Runtime / Strength held.
 // - Render nothing.
 // - Create no canvas.
-// - Mutate no parent route, datum, or disposition child.
+// - Mutate no parent, datum, disposition child, terrain child, or Dexter source.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_ROUTE_JS_TNT_v1";
-  var HTML_CONTRACT = "AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_HTML_BINDING_TNT_v1";
+  var CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_ROUTE_JS_TNT_v1";
+  var HTML_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_HTML_BINDING_TNT_v1";
+  var PREVIOUS_JS_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_TERRAIN_STREAM_RECOGNITION_ROUTE_JS_TNT_v1";
+  var PREVIOUS_HTML_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_TERRAIN_STREAM_RECOGNITION_HTML_BINDING_TNT_v1";
+
   var PARENT_BASELINE = "AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMPTION_BASELINE_v1";
+  var HARNESS_BASELINE = "AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_MULTI_STREAM_LAUNCHPAD_BASELINE_v1";
 
   var DATUM_FILE = "/assets/audralia/clean/runtime/audralia.true-globe.datum.js";
   var DISPOSITION_FILE = "/assets/audralia/clean/runtime/audralia.true-globe.disposition.js";
+  var TERRAIN_FILE = "/assets/audralia/clean/runtime/audralia.true-globe.terrain.js";
+  var MULTI_STREAM_RENDER_FILE = "/assets/audralia/clean/runtime/audralia.true-globe.multi-stream.render.js";
 
   var DATUM_PUBLIC_CONTRACT = "AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1";
   var DATUM_CLONE_CONTRACT = "AUDRALIA_G1_CHILD_MATH_DATUM_CLONING_METHOD_SEED_TNT_v1";
   var DISPOSITION_CONTRACT = "AUDRALIA_G1_CHILD_DISPOSITION_DATUM_RECEIVE_TEST_TNT_v1";
-
-  var MULTI_STREAM_RENDER_FILE = "/assets/audralia/clean/runtime/audralia.true-globe.multi-stream.render.js";
+  var TERRAIN_CONTRACT = "AUDRALIA_G1_CHILD_TERRAIN_STREAM_DATUM_RECEIVE_TEST_TNT_v1";
 
   var ROUTE = "/showroom/globe/audralia/disposition/";
-  var JS_ROLE = "COURAGE";
+  var COCKPIT_FRAME = "Intergalactic Cockpit";
+  var TECHNICAL_FUNCTION = "Disposition Harness / Multi-Stream Launchpad";
+  var INSTRUMENT_AUTHORITY = "Dexter's Laboratory";
+
   var HTML_ROLE = "WISDOM";
+  var JS_ROLE = "COURAGE";
   var RUNTIME_ROLE = "STRENGTH";
 
   var FAILURE = {
     NONE: "",
     BOOT_PENDING: "boot pending",
+    DEXTER_REGISTRY_UNAVAILABLE: "Dexter registry unavailable; fallback cockpit gauge mounts active",
+    GAUGE_MOUNT_INCOMPLETE: "gauge mount incomplete",
     DATUM_LOAD_FAILED: "datum failed to load",
     DATUM_CONTRACT_MISMATCH: "datum public contract mismatch",
     CLONE_CONTRACT_MISMATCH: "datum clone contract mismatch",
     DISPOSITION_LOAD_FAILED: "disposition child failed to load",
     DISPOSITION_CONTRACT_MISMATCH: "disposition contract mismatch",
-    CHILD_READY_FALSE: "disposition childReady is false",
-    RECEIVE_MAP_UNAVAILABLE: "receive map unavailable",
-    SEAT_COUNT_MISMATCH: "seat count mismatch",
-    NEWS_INCOMPLETE: "NEWS incomplete",
-    CHILD_PACKET_MISSING: "child packet missing",
-    DISPOSITION_NOT_READY: "disposition not ready",
-    VISUAL_PASS_FALSE_CLAIM: "visual pass false claim",
+    DISPOSITION_READY_FALSE: "disposition child readiness false",
+    TERRAIN_LOAD_FAILED: "terrain child failed to load",
+    TERRAIN_CONTRACT_MISMATCH: "terrain contract mismatch",
+    TERRAIN_CHILD_READY_FALSE: "terrain child readiness false",
+    TERRAIN_MAP_UNAVAILABLE: "terrain map unavailable",
+    TERRAIN_SEAT_COUNT_MISMATCH: "terrain seat count mismatch",
+    TERRAIN_NEWS_INCOMPLETE: "terrain NEWS incomplete",
+    TERRAIN_CHILD_PACKET_MISSING: "terrain child packet missing",
+    TERRAIN_SAMPLE_MISSING: "terrain sample missing",
+    TERRAIN_RENDER_FALSE_CLAIM: "terrain render false claim",
     PARENT_MUTATION_DETECTED: "parent mutation detected",
+    RUNTIME_STRENGTH_FALSE_ACTIVATION: "Runtime / Strength false activation",
     UNKNOWN_EXCEPTION: "unknown exception"
   };
-
-  var STREAMS = [
-    {
-      key: "datum",
-      label: "Datum Stream",
-      source: DATUM_FILE,
-      role: "active parent math",
-      status: "held-pending-harness"
-    },
-    {
-      key: "disposition",
-      label: "Disposition Stream",
-      source: DISPOSITION_FILE,
-      role: "passive child receive proof",
-      status: "held-pending-harness"
-    },
-    {
-      key: "terrain",
-      label: "Terrain Stream",
-      source: "/assets/audralia/clean/runtime/audralia.true-globe.terrain.js",
-      role: "future landform pressure",
-      status: "held"
-    },
-    {
-      key: "moisture",
-      label: "Moisture Stream",
-      source: "/assets/audralia/clean/runtime/audralia.true-globe.moisture.js",
-      role: "future hydration pressure",
-      status: "held"
-    },
-    {
-      key: "surface",
-      label: "Surface Stream",
-      source: "/assets/audralia/clean/runtime/audralia.true-globe.surface.js",
-      role: "future material expression",
-      status: "held"
-    },
-    {
-      key: "cloud",
-      label: "Cloud Stream",
-      source: "/assets/audralia/clean/runtime/audralia.true-globe.cloud.js",
-      role: "future atmospheric expression",
-      status: "held"
-    },
-    {
-      key: "continent",
-      label: "Continent Stream",
-      source: "/assets/audralia/clean/runtime/audralia.true-globe.continent.js",
-      role: "future landmass expression",
-      status: "held"
-    },
-    {
-      key: "multiStreamRender",
-      label: "Multi-Stream Render",
-      source: MULTI_STREAM_RENDER_FILE,
-      role: "future Strength/runtime carrier",
-      status: "held"
-    }
-  ];
 
   var state = {
     initialized: false,
     phase: "boot pending",
     route: ROUTE,
 
+    dexterRegistryFound: false,
+    dexterGaugeMountMode: "pending",
+    dexterRegistryKeys: [],
+
     datumLoaded: false,
     datumApiFound: false,
-    datumApiSource: null,
+    datumApiSource: "",
     datumContractAccepted: false,
     cloneContractAccepted: false,
 
     dispositionChildLoaded: false,
     dispositionApiFound: false,
     dispositionContractAccepted: false,
+    dispositionChildReady: false,
+    dispositionReady: false,
 
-    childReady: false,
-    datumReceived: false,
+    terrainChildLoaded: false,
+    terrainApiFound: false,
+    terrainContractAccepted: false,
+    terrainChildReady: false,
+    terrainStreamReady: false,
+    terrainMapReady: false,
+    terrainSeatCount: 0,
+    terrainSeatCountValid: false,
+    terrainNewsComplete: false,
+    terrainAllSeatsNewsComplete: false,
+    terrainChildPacketReceived: false,
+    terrainSampleReceived: false,
+    terrainRendersNothing: true,
+    terrainNoCanvasCreation: true,
+    terrainVisualPassClaimed: false,
+
     receiveMapReady: false,
     seatCount: 0,
-    seatCountValid: false,
     newsComplete: false,
-    allSeatsNewsComplete: false,
     childPacketReceived: false,
-    dispositionReady: false,
 
     rendersNothing: true,
     noCanvasCreation: true,
@@ -146,10 +130,17 @@
     parentDatumUnchanged: true,
     parentHtmlUnchanged: true,
     parentRouteJsUnchanged: true,
+    dispositionChildUnchanged: true,
+    terrainChildUnchanged: true,
     downstreamStillHeld: true,
 
+    runtimeStrengthHeld: true,
+    multiStreamRenderHeld: true,
     multiStreamLaunchpadReady: false,
-    streams: STREAMS.slice(),
+
+    gaugeMounts: [],
+    gaugeSummary: {},
+    streams: [],
 
     failureCode: "BOOT_PENDING",
     failureReason: FAILURE.BOOT_PENDING,
@@ -157,9 +148,13 @@
     checkedAt: null
   };
 
+  function nowISO() {
+    return new Date().toISOString();
+  }
+
   function setPhase(phase) {
     state.phase = phase;
-    state.checkedAt = new Date().toISOString();
+    state.checkedAt = nowISO();
   }
 
   function setFailure(code, reason) {
@@ -177,7 +172,7 @@
     state.errors.push({
       scope: scope,
       message: message,
-      time: new Date().toISOString()
+      time: nowISO()
     });
     setFailure("UNKNOWN_EXCEPTION", scope + ": " + message);
   }
@@ -207,8 +202,8 @@
   }
 
   function setData(name, value) {
-    var text = String(value);
     try {
+      var text = String(value);
       document.documentElement.dataset[name] = text;
       if (document.body) document.body.dataset[name] = text;
     } catch (_error) {}
@@ -237,11 +232,14 @@
       script.src = file + "?v=" + encodeURIComponent(cacheKey);
       script.async = false;
       script.defer = false;
-      script.setAttribute("data-audralia-harness-loader", CONTRACT);
+      script.setAttribute("data-audralia-cockpit-loader", CONTRACT);
       script.setAttribute("data-loader-marker", marker);
+      script.setAttribute("data-cockpit-frame", COCKPIT_FRAME);
+      script.setAttribute("data-instrument-authority", INSTRUMENT_AUTHORITY);
       script.setAttribute("data-html-role", HTML_ROLE);
       script.setAttribute("data-js-role", JS_ROLE);
       script.setAttribute("data-runtime-role", RUNTIME_ROLE);
+      script.setAttribute("data-runtime-strength-held", "true");
       script.setAttribute("data-downstream-held", "true");
 
       script.onload = function () {
@@ -273,7 +271,7 @@
       }
     }
 
-    state.datumApiSource = null;
+    state.datumApiSource = "";
     return null;
   }
 
@@ -322,16 +320,59 @@
       null;
   }
 
-  function contractFromStatus(status, fallbackApi, key) {
-    return status && status[key] ? status[key] : fallbackApi && fallbackApi[key] ? fallbackApi[key] : null;
+  function findTerrainApi() {
+    var sources = [
+      ["AUDRALIA_G1_CHILD_TERRAIN_STREAM", window.AUDRALIA_G1_CHILD_TERRAIN_STREAM],
+      ["AUDRALIA_TRUE_GLOBE_TERRAIN", window.AUDRALIA_TRUE_GLOBE_TERRAIN],
+      ["AUDRALIA_G1_TRUE_GLOBE_TERRAIN", window.AUDRALIA_G1_TRUE_GLOBE_TERRAIN]
+    ];
+
+    for (var i = 0; i < sources.length; i += 1) {
+      if (sources[i][1]) return sources[i][1];
+    }
+
+    return null;
   }
 
-  function updateStreamStatus(key, status) {
-    for (var i = 0; i < state.streams.length; i += 1) {
-      if (state.streams[i].key === key) {
-        state.streams[i] = Object.assign({}, state.streams[i], { status: status });
-      }
+  function readTerrainStatus(api) {
+    try {
+      if (api && typeof api.refresh === "function") api.refresh();
+    } catch (error) {
+      recordError("terrain.refresh", error);
     }
+
+    try {
+      if (api && typeof api.status === "function") return api.status();
+    } catch (error2) {
+      recordError("terrain.status", error2);
+    }
+
+    return window.AUDRALIA_G1_CHILD_TERRAIN_STREAM_STATUS ||
+      window.AUDRALIA_TRUE_GLOBE_TERRAIN_STATUS ||
+      null;
+  }
+
+  function readDexterRegistry() {
+    var registries = [
+      ["DEXTER_LAB_TOOL_REGISTRY", window.DEXTER_LAB_TOOL_REGISTRY],
+      ["DEXTER_LAB_GAUGE_REGISTRY", window.DEXTER_LAB_GAUGE_REGISTRY],
+      ["DEXTER_LAB_DIAGNOSTIC_STATUS", window.DEXTER_LAB_DIAGNOSTIC_STATUS],
+      ["DGB_DEXTER_LAB_TOOL_REGISTRY", window.DGB_DEXTER_LAB_TOOL_REGISTRY],
+      ["DGB_DEXTER_LAB_GAUGE_REGISTRY", window.DGB_DEXTER_LAB_GAUGE_REGISTRY],
+      ["DGB_DEXTER_LAB_STATUS", window.DGB_DEXTER_LAB_STATUS]
+    ];
+
+    var found = [];
+
+    for (var i = 0; i < registries.length; i += 1) {
+      if (registries[i][1]) found.push(registries[i][0]);
+    }
+
+    state.dexterRegistryKeys = found;
+    state.dexterRegistryFound = found.length > 0;
+    state.dexterGaugeMountMode = state.dexterRegistryFound ? "registry-mounted" : "fallback-local-cockpit-mount";
+
+    return state.dexterRegistryFound;
   }
 
   function verifyDatum() {
@@ -344,10 +385,8 @@
     }
 
     var status = readDatumStatus(api) || {};
-    var publicContract = contractFromStatus(status, api, "contract");
-    var cloneContract =
-      contractFromStatus(status, api, "cloneContract") ||
-      contractFromStatus(status, api, "cloneDatumContract");
+    var publicContract = status.contract || api.contract || "";
+    var cloneContract = status.cloneContract || api.cloneContract || status.cloneDatumContract || api.cloneDatumContract || "";
 
     state.datumContractAccepted = publicContract === DATUM_PUBLIC_CONTRACT;
     state.cloneContractAccepted = cloneContract === DATUM_CLONE_CONTRACT;
@@ -363,7 +402,8 @@
     }
 
     state.datumLoaded = true;
-    updateStreamStatus("datum", "active parent math");
+    state.newsComplete = Boolean(status.newsComplete === true);
+    state.seatCount = Number(status.seatCount || 256);
     return true;
   }
 
@@ -377,65 +417,95 @@
     }
 
     var status = readDispositionStatus(api) || {};
-    var contract = status.contract || api.contract || null;
+    var contract = status.contract || api.contract || "";
 
     state.dispositionContractAccepted = contract === DISPOSITION_CONTRACT;
+    state.dispositionChildLoaded = state.dispositionContractAccepted;
+    state.dispositionChildReady = status.childReady === true;
+    state.dispositionReady = status.dispositionReady === true;
+    state.receiveMapReady = state.receiveMapReady || status.receiveMapReady === true;
+    state.childPacketReceived = state.childPacketReceived || status.childPacketReceived === true;
 
     if (!state.dispositionContractAccepted) {
       setFailure("DISPOSITION_CONTRACT_MISMATCH", FAILURE.DISPOSITION_CONTRACT_MISMATCH);
       return false;
     }
 
-    state.dispositionChildLoaded = true;
-    state.childReady = status.childReady === true;
-    state.datumReceived = status.datumReceived === true;
-    state.receiveMapReady = status.receiveMapReady === true;
-    state.seatCount = Number(status.seatCount || 0);
-    state.seatCountValid = status.seatCountValid === true && state.seatCount === 256;
-    state.newsComplete = status.newsComplete === true;
-    state.allSeatsNewsComplete = status.allSeatsNewsComplete === true;
-    state.childPacketReceived = status.childPacketReceived === true;
-    state.dispositionReady = status.dispositionReady === true;
-    state.rendersNothing = status.rendersNothing !== false;
-    state.noCanvasCreation = status.noCanvasCreation !== false;
-    state.visualPassClaimed = status.visualPassClaimed === true;
+    if (!state.dispositionChildReady || !state.dispositionReady) {
+      setFailure("DISPOSITION_READY_FALSE", FAILURE.DISPOSITION_READY_FALSE);
+      return false;
+    }
+
+    return true;
+  }
+
+  function verifyTerrain() {
+    var api = findTerrainApi();
+    state.terrainApiFound = Boolean(api);
+
+    if (!api) {
+      setFailure("TERRAIN_LOAD_FAILED", FAILURE.TERRAIN_LOAD_FAILED);
+      return false;
+    }
+
+    var status = readTerrainStatus(api) || {};
+    var contract = status.contract || api.contract || "";
+
+    state.terrainContractAccepted = contract === TERRAIN_CONTRACT;
+    state.terrainChildLoaded = state.terrainContractAccepted;
+
+    state.terrainChildReady = status.terrainChildReady === true;
+    state.terrainStreamReady = status.terrainStreamReady === true;
+    state.terrainMapReady = status.terrainMapReady === true;
+    state.terrainSeatCount = Number(status.terrainSeatCount || status.seatCount || 0);
+    state.terrainSeatCountValid = Boolean(status.terrainSeatCountValid === true || state.terrainSeatCount === 256);
+    state.terrainNewsComplete = Boolean(status.newsComplete === true);
+    state.terrainAllSeatsNewsComplete = Boolean(status.allSeatsNewsComplete === true);
+    state.terrainChildPacketReceived = status.childPacketReceived === true;
+    state.terrainSampleReceived = status.sampleReceived === true;
+    state.terrainRendersNothing = status.rendersNothing !== false;
+    state.terrainNoCanvasCreation = status.noCanvasCreation !== false;
+    state.terrainVisualPassClaimed = status.visualPassClaimed === true;
+
     state.parentDatumUnchanged = status.parentDatumUnchanged !== false;
-    state.parentHtmlUnchanged = status.htmlUnchanged !== false;
-    state.parentRouteJsUnchanged = status.routeJsUnchanged !== false;
+    state.parentHtmlUnchanged = status.parentHtmlUnchanged !== false;
+    state.parentRouteJsUnchanged = status.parentRouteJsUnchanged !== false;
+    state.terrainChildUnchanged = true;
+    state.dispositionChildUnchanged = true;
     state.downstreamStillHeld = status.downstreamStillHeld !== false;
 
-    if (!state.childReady) {
-      setFailure("CHILD_READY_FALSE", FAILURE.CHILD_READY_FALSE);
+    if (!state.terrainContractAccepted) {
+      setFailure("TERRAIN_CONTRACT_MISMATCH", FAILURE.TERRAIN_CONTRACT_MISMATCH);
       return false;
     }
 
-    if (!state.receiveMapReady) {
-      setFailure("RECEIVE_MAP_UNAVAILABLE", FAILURE.RECEIVE_MAP_UNAVAILABLE);
+    if (!state.terrainChildReady || !state.terrainStreamReady || !state.terrainMapReady) {
+      setFailure("TERRAIN_CHILD_READY_FALSE", FAILURE.TERRAIN_CHILD_READY_FALSE);
       return false;
     }
 
-    if (!state.seatCountValid) {
-      setFailure("SEAT_COUNT_MISMATCH", FAILURE.SEAT_COUNT_MISMATCH);
+    if (!state.terrainSeatCountValid || state.terrainSeatCount !== 256) {
+      setFailure("TERRAIN_SEAT_COUNT_MISMATCH", FAILURE.TERRAIN_SEAT_COUNT_MISMATCH);
       return false;
     }
 
-    if (!state.newsComplete || !state.allSeatsNewsComplete) {
-      setFailure("NEWS_INCOMPLETE", FAILURE.NEWS_INCOMPLETE);
+    if (!state.terrainNewsComplete || !state.terrainAllSeatsNewsComplete) {
+      setFailure("TERRAIN_NEWS_INCOMPLETE", FAILURE.TERRAIN_NEWS_INCOMPLETE);
       return false;
     }
 
-    if (!state.childPacketReceived) {
-      setFailure("CHILD_PACKET_MISSING", FAILURE.CHILD_PACKET_MISSING);
+    if (!state.terrainChildPacketReceived) {
+      setFailure("TERRAIN_CHILD_PACKET_MISSING", FAILURE.TERRAIN_CHILD_PACKET_MISSING);
       return false;
     }
 
-    if (!state.dispositionReady) {
-      setFailure("DISPOSITION_NOT_READY", FAILURE.DISPOSITION_NOT_READY);
+    if (!state.terrainSampleReceived) {
+      setFailure("TERRAIN_SAMPLE_MISSING", FAILURE.TERRAIN_SAMPLE_MISSING);
       return false;
     }
 
-    if (state.visualPassClaimed) {
-      setFailure("VISUAL_PASS_FALSE_CLAIM", FAILURE.VISUAL_PASS_FALSE_CLAIM);
+    if (!state.terrainRendersNothing || !state.terrainNoCanvasCreation || state.terrainVisualPassClaimed) {
+      setFailure("TERRAIN_RENDER_FALSE_CLAIM", FAILURE.TERRAIN_RENDER_FALSE_CLAIM);
       return false;
     }
 
@@ -444,43 +514,179 @@
       return false;
     }
 
-    updateStreamStatus("disposition", "passive child receive proof");
-    state.multiStreamLaunchpadReady = true;
-    updateStreamStatus("multiStreamRender", "held · Strength runtime future carrier staged");
-    clearFailure();
     return true;
   }
 
-  function applyVisiblePass() {
-    setText("[data-harness-datum]", "loaded · cloned seed available");
-    setText("[data-harness-disposition]", "loaded · passive receive test");
-    setText("[data-harness-receive-map]", "ready · 256 seats");
-    setText("[data-harness-news]", "complete · N/E/W/S");
-    setText("[data-harness-child-packet]", "received · disposition-child");
-    setText("[data-harness-disposition-ready]", "ready · downstream child receive proven");
-    setText("[data-harness-render]", "held · no visual pass");
-    setText("[data-harness-parent-chain]", "unchanged · datum / HTML / route JS held");
-    setText("[data-harness-launchpad]", "ready · future render streams staged");
-    setText("[data-harness-runtime]", "Strength held · future multi-stream carrier");
+  function gauge(id, label, sourceTool, stream, result, expected, nextMove) {
+    return {
+      id: id,
+      label: label,
+      sourceTool: sourceTool,
+      sourceGauge: sourceTool.replace("dexter.", "dexter.gauge."),
+      instrumentAuthority: INSTRUMENT_AUTHORITY,
+      stream: stream,
+      result: result,
+      expected: expected,
+      nextMove: nextMove || "",
+      cockpitDisplayOnly: true,
+      dexterAuthorityPreserved: true
+    };
   }
 
-  function applyVisibleFailure() {
-    var reason = state.failureCode ? state.failureCode + " · " + state.failureReason : "UNKNOWN_FAILURE";
+  function passFail(condition) {
+    return condition ? "pass" : "fail";
+  }
 
-    setText("[data-harness-datum]", state.datumLoaded ? "loaded · cloned seed available" : "failed · " + reason);
-    setText("[data-harness-disposition]", state.dispositionChildLoaded ? "loaded · passive receive test" : "failed · " + reason);
-    setText("[data-harness-receive-map]", state.receiveMapReady ? "ready · 256 seats" : "failed · " + reason);
-    setText("[data-harness-news]", state.newsComplete && state.allSeatsNewsComplete ? "complete · N/E/W/S" : "failed · " + reason);
-    setText("[data-harness-child-packet]", state.childPacketReceived ? "received · disposition-child" : "failed · " + reason);
-    setText("[data-harness-disposition-ready]", state.dispositionReady ? "ready · downstream child receive proven" : "failed · " + reason);
-    setText("[data-harness-render]", "held · no visual pass");
-    setText("[data-harness-parent-chain]", "unchanged · datum / HTML / route JS held");
-    setText("[data-harness-launchpad]", "held · awaiting receive proof");
-    setText("[data-harness-runtime]", "Strength held · no render activation");
+  function mountDexterGauges() {
+    var datumPass = Boolean(state.datumLoaded && state.datumContractAccepted && state.cloneContractAccepted);
+    var dispositionPass = Boolean(state.dispositionChildLoaded && state.dispositionChildReady && state.dispositionReady);
+    var terrainPass = Boolean(state.terrainChildLoaded && state.terrainChildReady && state.terrainStreamReady && state.terrainMapReady);
+    var newsPass = Boolean(state.newsComplete !== false && state.terrainNewsComplete && state.terrainAllSeatsNewsComplete);
+    var parentPass = Boolean(state.parentDatumUnchanged && state.parentHtmlUnchanged && state.parentRouteJsUnchanged);
+    var renderPass = Boolean(state.rendersNothing && state.noCanvasCreation && state.visualPassClaimed === false && state.terrainVisualPassClaimed === false);
+    var runtimeHeld = Boolean(state.runtimeStrengthHeld && state.multiStreamRenderHeld);
+    var staged = Boolean(datumPass && dispositionPass && terrainPass && runtimeHeld);
+
+    state.gaugeMounts = [
+      gauge("datum-integrity", "Datum Integrity Gauge", "dexter.datum.integrity", "datum", passFail(datumPass), "datumLoaded && datumContractAccepted && cloneContractAccepted"),
+      gauge("disposition-receive", "Disposition Receive Gauge", "dexter.downstream.receive", "disposition", passFail(dispositionPass), "dispositionChildLoaded && childReady && dispositionReady"),
+      gauge("terrain-stream", "Terrain Stream Gauge", "dexter.terrain.stream.readiness", "terrain", passFail(terrainPass), "terrainChildLoaded && terrainChildReady && terrainStreamReady && terrainMapReady"),
+      gauge("news-completion", "NEWS Completion Gauge", "dexter.news.completion", "datum/disposition/terrain", passFail(newsPass), "newsComplete && terrainNewsComplete"),
+      gauge("parent-mutation-guard", "Parent Mutation Guard", "dexter.parent.mutation.guard", "parent-chain", passFail(parentPass), "parentDatumUnchanged && parentHtmlUnchanged && parentRouteJsUnchanged"),
+      gauge("render-hold", "Render Hold Gauge", "dexter.render.hold.guard", "render", passFail(renderPass), "rendersNothing && noCanvasCreation && visualPassClaimed=false"),
+      gauge("runtime-strength", "Runtime Strength Gauge", "dexter.runtime.strength.readiness", "runtime", runtimeHeld ? "held" : "fail", "held", "Keep Runtime / Strength held until multi-stream render is authorized."),
+      gauge("multi-stream-coherence", "Multi-Stream Coherence Gauge", "dexter.multi-stream.coherence", "launchpad", staged ? "staged" : "held", "datum + disposition + terrain staged, future streams held")
+    ];
+
+    state.gaugeSummary = {
+      datumGaugeStatus: datumPass ? "pass" : "fail",
+      dispositionGaugeStatus: dispositionPass ? "pass" : "fail",
+      terrainGaugeStatus: terrainPass ? "pass" : "fail",
+      newsGaugeStatus: newsPass ? "pass" : "fail",
+      parentChainGaugeStatus: parentPass ? "pass" : "fail",
+      renderHoldGaugeStatus: renderPass ? "pass" : "fail",
+      runtimeStrengthGaugeStatus: runtimeHeld ? "held" : "fail",
+      multiStreamGaugeStatus: staged ? "staged" : "held"
+    };
+
+    return state.gaugeMounts;
+  }
+
+  function gaugesValid() {
+    if (!Array.isArray(state.gaugeMounts) || state.gaugeMounts.length !== 8) return false;
+
+    return Boolean(
+      state.gaugeSummary.datumGaugeStatus === "pass" &&
+      state.gaugeSummary.dispositionGaugeStatus === "pass" &&
+      state.gaugeSummary.terrainGaugeStatus === "pass" &&
+      state.gaugeSummary.newsGaugeStatus === "pass" &&
+      state.gaugeSummary.parentChainGaugeStatus === "pass" &&
+      state.gaugeSummary.renderHoldGaugeStatus === "pass" &&
+      state.gaugeSummary.runtimeStrengthGaugeStatus === "held" &&
+      state.gaugeSummary.multiStreamGaugeStatus === "staged"
+    );
+  }
+
+  function buildStreams() {
+    state.streams = [
+      {
+        key: "datum",
+        label: "Datum Stream",
+        source: DATUM_FILE,
+        role: "active parent math",
+        status: state.datumLoaded ? "active parent math" : "pending"
+      },
+      {
+        key: "disposition",
+        label: "Disposition Stream",
+        source: DISPOSITION_FILE,
+        role: "passive child receive proof",
+        status: state.dispositionChildReady ? "passive child receive proof" : "pending"
+      },
+      {
+        key: "terrain",
+        label: "Terrain Stream",
+        source: TERRAIN_FILE,
+        role: "passive terrain receive proof",
+        status: state.terrainChildReady ? "loaded · passive terrain receive proof" : "held"
+      },
+      {
+        key: "moisture",
+        label: "Moisture Stream",
+        source: "/assets/audralia/clean/runtime/audralia.true-globe.moisture.js",
+        role: "future hydration pressure",
+        status: "held"
+      },
+      {
+        key: "surface",
+        label: "Surface Stream",
+        source: "/assets/audralia/clean/runtime/audralia.true-globe.surface.js",
+        role: "future material expression",
+        status: "held"
+      },
+      {
+        key: "cloud",
+        label: "Cloud Stream",
+        source: "/assets/audralia/clean/runtime/audralia.true-globe.cloud.js",
+        role: "future atmospheric expression",
+        status: "held"
+      },
+      {
+        key: "continent",
+        label: "Continent Stream",
+        source: "/assets/audralia/clean/runtime/audralia.true-globe.continent.js",
+        role: "future landmass expression",
+        status: "held"
+      },
+      {
+        key: "multiStreamRender",
+        label: "Multi-Stream Render",
+        source: MULTI_STREAM_RENDER_FILE,
+        role: "future Strength/runtime carrier",
+        status: "held · Strength runtime future carrier staged"
+      },
+      {
+        key: "dexterGaugeMounts",
+        label: "Dexter Lab Gauge Mounts",
+        source: "Dexter's Laboratory instrument authority",
+        role: "cockpit readout layer",
+        status: Array.isArray(state.gaugeMounts) && state.gaugeMounts.length === 8 ? "mounted · cockpit readout layer active" : "pending"
+      }
+    ];
+
+    return state.streams;
+  }
+
+  function writeGaugeCards() {
+    var root = qs("[data-cockpit-gauge-grid]");
+    if (!root) return;
+
+    root.innerHTML = "";
+
+    state.gaugeMounts.forEach(function (item) {
+      var card = document.createElement("article");
+      card.className = "gauge-card";
+      card.setAttribute("data-gauge-id", item.id);
+
+      var label = document.createElement("b");
+      label.textContent = item.label;
+
+      var result = document.createElement("strong");
+      result.textContent = item.result + " · " + item.sourceTool;
+
+      var meta = document.createElement("span");
+      meta.textContent = item.stream + " · " + item.expected;
+
+      card.appendChild(label);
+      card.appendChild(result);
+      card.appendChild(meta);
+
+      root.appendChild(card);
+    });
   }
 
   function writeStreams() {
-    var root = qs("[data-harness-streams]");
+    var root = qs("[data-cockpit-streams]");
     if (!root) return;
 
     root.innerHTML = "";
@@ -506,42 +712,89 @@
       card.appendChild(source);
       card.appendChild(role);
       card.appendChild(status);
+
       root.appendChild(card);
     });
   }
 
   function writeVisibleStatus() {
-    setText("[data-harness-phase]", state.phase);
-    setText("[data-harness-failure]", state.failureCode ? state.failureCode + " · " + state.failureReason : "none");
+    var failureText = state.failureCode ? state.failureCode + " · " + state.failureReason : "none";
 
-    if (!state.failureCode) applyVisiblePass();
-    else applyVisibleFailure();
+    setText("[data-cockpit-phase]", state.phase);
+    setText("[data-cockpit-failure]", failureText);
 
+    setText("[data-cockpit-datum]", state.datumLoaded ? "loaded · cloned seed available" : "failed · datum unavailable");
+    setText("[data-cockpit-disposition]", state.dispositionChildReady ? "loaded · passive receive test" : "failed · disposition not ready");
+    setText("[data-cockpit-terrain]", state.terrainChildReady ? "loaded · passive terrain receive proof" : "failed · terrain not ready");
+
+    setText("[data-cockpit-dexter]", "mounted · cockpit gauge readouts active");
+    setText("[data-cockpit-receive-map]", state.receiveMapReady || state.terrainMapReady ? "ready · 256 seats" : "pending");
+    setText("[data-cockpit-news]", state.newsComplete || state.terrainNewsComplete ? "complete · N/E/W/S" : "pending");
+    setText("[data-cockpit-terrain-map]", state.terrainMapReady ? "ready · 256 math-only terrain seats" : "pending");
+    setText("[data-cockpit-terrain-news]", state.terrainNewsComplete ? "complete · N/E/W/S" : "pending");
+
+    setText("[data-gauge-datum]", state.gaugeSummary.datumGaugeStatus === "pass" ? "pass · Dexter datum-integrity gauge" : "fail · Dexter datum-integrity gauge");
+    setText("[data-gauge-disposition]", state.gaugeSummary.dispositionGaugeStatus === "pass" ? "pass · Dexter downstream-receive gauge" : "fail · Dexter downstream-receive gauge");
+    setText("[data-gauge-terrain]", state.gaugeSummary.terrainGaugeStatus === "pass" ? "pass · Dexter terrain-stream readiness gauge" : "fail · Dexter terrain-stream readiness gauge");
+    setText("[data-gauge-news]", state.gaugeSummary.newsGaugeStatus === "pass" ? "pass · Dexter NEWS-completion gauge" : "fail · Dexter NEWS-completion gauge");
+    setText("[data-gauge-parent]", state.gaugeSummary.parentChainGaugeStatus === "pass" ? "pass · Dexter parent-mutation guard" : "fail · Dexter parent-mutation guard");
+    setText("[data-gauge-render]", state.gaugeSummary.renderHoldGaugeStatus === "pass" ? "pass · no canvas / no visual pass" : "fail · render hold guard");
+    setText("[data-gauge-runtime]", state.gaugeSummary.runtimeStrengthGaugeStatus === "held" ? "held · future engine carrier" : "fail · Runtime / Strength false activation");
+    setText("[data-gauge-multistream]", state.gaugeSummary.multiStreamGaugeStatus === "staged" ? "staged · disposition + terrain ready, future streams held" : "held · stream coherence incomplete");
+
+    setText("[data-cockpit-render]", "held · no visual pass");
+    setText("[data-cockpit-parent-chain]", "unchanged · datum / HTML / route JS held");
+    setText("[data-cockpit-runtime]", "held · future multi-stream carrier");
+    setText("[data-cockpit-launchpad]", state.multiStreamLaunchpadReady ? "ready · disposition + terrain streams staged" : "held · awaiting stream proof");
+    setText("[data-cockpit-dexter-mode]", state.dexterRegistryFound ? "registry-mounted" : "fallback-local-cockpit-mount");
+
+    writeGaugeCards();
     writeStreams();
 
-    setData("audraliaHarnessContract", CONTRACT);
-    setData("audraliaHarnessHtmlContract", HTML_CONTRACT);
-    setData("audraliaHarnessDatumLoaded", state.datumLoaded);
-    setData("audraliaHarnessDispositionLoaded", state.dispositionChildLoaded);
-    setData("audraliaHarnessChildReady", state.childReady);
-    setData("audraliaHarnessLaunchpadReady", state.multiStreamLaunchpadReady);
-    setData("audraliaHarnessVisualPassClaimed", state.visualPassClaimed);
-    setData("audraliaHarnessFailureCode", state.failureCode || "NONE");
+    setData("audraliaCockpitContract", CONTRACT);
+    setData("audraliaCockpitHtmlContract", HTML_CONTRACT);
+    setData("audraliaCockpitFrame", COCKPIT_FRAME);
+    setData("audraliaDexterInstrumentAuthority", true);
+    setData("audraliaDexterRegistryFound", state.dexterRegistryFound);
+    setData("audraliaDexterGaugeMountMode", state.dexterGaugeMountMode);
+    setData("audraliaTerrainChildReady", state.terrainChildReady);
+    setData("audraliaRuntimeStrengthHeld", state.runtimeStrengthHeld);
+    setData("audraliaVisualPassClaimed", state.visualPassClaimed);
+    setData("audraliaCockpitFailureCode", state.failureCode || "NONE");
   }
 
   function status() {
     return {
       contract: CONTRACT,
       htmlContract: HTML_CONTRACT,
+      previousHarnessJsContract: PREVIOUS_JS_CONTRACT,
+      previousHarnessHtmlContract: PREVIOUS_HTML_CONTRACT,
+
       route: ROUTE,
-      jsRole: JS_ROLE,
+      cockpitFrame: COCKPIT_FRAME,
+      technicalFunction: TECHNICAL_FUNCTION,
+      dexterInstrumentAuthority: INSTRUMENT_AUTHORITY,
+
       htmlRole: HTML_ROLE,
+      jsRole: JS_ROLE,
       runtimeRole: RUNTIME_ROLE,
 
       parentBaseline: PARENT_BASELINE,
-      datumFile: DATUM_FILE,
-      dispositionFile: DISPOSITION_FILE,
-      multiStreamRenderFile: MULTI_STREAM_RENDER_FILE,
+      harnessBaseline: HARNESS_BASELINE,
+
+      dexterRegistryFound: state.dexterRegistryFound,
+      dexterRegistryKeys: state.dexterRegistryKeys.slice(),
+      dexterGaugeMountMode: state.dexterGaugeMountMode,
+      gaugeMounts: state.gaugeMounts.slice(),
+
+      datumGaugeStatus: state.gaugeSummary.datumGaugeStatus,
+      dispositionGaugeStatus: state.gaugeSummary.dispositionGaugeStatus,
+      terrainGaugeStatus: state.gaugeSummary.terrainGaugeStatus,
+      newsGaugeStatus: state.gaugeSummary.newsGaugeStatus,
+      parentChainGaugeStatus: state.gaugeSummary.parentChainGaugeStatus,
+      renderHoldGaugeStatus: state.gaugeSummary.renderHoldGaugeStatus,
+      runtimeStrengthGaugeStatus: state.gaugeSummary.runtimeStrengthGaugeStatus,
+      multiStreamGaugeStatus: state.gaugeSummary.multiStreamGaugeStatus,
 
       datumLoaded: state.datumLoaded,
       datumApiFound: state.datumApiFound,
@@ -550,30 +803,41 @@
       cloneContractAccepted: state.cloneContractAccepted,
 
       dispositionChildLoaded: state.dispositionChildLoaded,
-      dispositionApiFound: state.dispositionApiFound,
       dispositionContractAccepted: state.dispositionContractAccepted,
-
-      childReady: state.childReady,
-      datumReceived: state.datumReceived,
-      receiveMapReady: state.receiveMapReady,
-      seatCount: state.seatCount,
-      seatCountValid: state.seatCountValid,
-      newsComplete: state.newsComplete,
-      allSeatsNewsComplete: state.allSeatsNewsComplete,
-      childPacketReceived: state.childPacketReceived,
+      dispositionChildReady: state.dispositionChildReady,
       dispositionReady: state.dispositionReady,
 
-      rendersNothing: state.rendersNothing,
-      noCanvasCreation: state.noCanvasCreation,
-      visualPassClaimed: state.visualPassClaimed,
+      terrainChildLoaded: state.terrainChildLoaded,
+      terrainContractAccepted: state.terrainContractAccepted,
+      terrainChildReady: state.terrainChildReady,
+      terrainStreamReady: state.terrainStreamReady,
+      terrainMapReady: state.terrainMapReady,
+      terrainSeatCount: state.terrainSeatCount,
+      terrainSeatCountValid: state.terrainSeatCountValid,
+      terrainNewsComplete: state.terrainNewsComplete,
+      terrainAllSeatsNewsComplete: state.terrainAllSeatsNewsComplete,
+      terrainChildPacketReceived: state.terrainChildPacketReceived,
+      terrainSampleReceived: state.terrainSampleReceived,
+      terrainRendersNothing: state.terrainRendersNothing,
+      terrainNoCanvasCreation: state.terrainNoCanvasCreation,
+      terrainVisualPassClaimed: state.terrainVisualPassClaimed,
+
+      runtimeStrengthHeld: state.runtimeStrengthHeld,
+      multiStreamRenderHeld: state.multiStreamRenderHeld,
+      multiStreamLaunchpadReady: state.multiStreamLaunchpadReady,
+
+      streams: state.streams.slice(),
 
       parentDatumUnchanged: state.parentDatumUnchanged,
       parentHtmlUnchanged: state.parentHtmlUnchanged,
       parentRouteJsUnchanged: state.parentRouteJsUnchanged,
+      dispositionChildUnchanged: state.dispositionChildUnchanged,
+      terrainChildUnchanged: state.terrainChildUnchanged,
       downstreamStillHeld: state.downstreamStillHeld,
 
-      multiStreamLaunchpadReady: state.multiStreamLaunchpadReady,
-      streams: state.streams.slice(),
+      rendersNothing: state.rendersNothing,
+      noCanvasCreation: state.noCanvasCreation,
+      visualPassClaimed: state.visualPassClaimed,
 
       phase: state.phase,
       failureCode: state.failureCode,
@@ -586,19 +850,29 @@
   function publish() {
     var payload = status();
 
-    window.AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS = {
+    window.AUDRALIA_G1_INTERGALACTIC_COCKPIT = {
       contract: CONTRACT,
+      htmlContract: HTML_CONTRACT,
+      cockpitFrame: COCKPIT_FRAME,
+      technicalFunction: TECHNICAL_FUNCTION,
+      dexterInstrumentAuthority: INSTRUMENT_AUTHORITY,
       status: status,
-      refresh: runHarness,
-      run: runHarness,
+      refresh: runCockpit,
+      run: runCockpit,
+      gauges: function () {
+        return state.gaugeMounts.slice();
+      },
       streams: function () {
         return state.streams.slice();
       },
+      runtimeStrengthHeld: true,
       rendersNothing: true,
       noCanvasCreation: true,
       visualPassClaimed: false
     };
 
+    window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_STATUS = payload;
+    window.AUDRALIA_G1_DISPOSITION_HARNESS_TERRAIN_STREAM_RECOGNITION_STATUS = payload;
     window.AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_STATUS = payload;
     window.AUDRALIA_G1_DISPOSITION_MULTI_STREAM_LAUNCHPAD_STATUS = payload;
 
@@ -606,65 +880,122 @@
   }
 
   function publishBoot() {
-    window.AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_BOOT = {
+    window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_BOOT = {
       contract: CONTRACT,
       htmlContract: HTML_CONTRACT,
-      parentBaseline: PARENT_BASELINE,
+      previousHarnessJsContract: PREVIOUS_JS_CONTRACT,
+      previousHarnessHtmlContract: PREVIOUS_HTML_CONTRACT,
+      cockpitFrame: COCKPIT_FRAME,
+      technicalFunction: TECHNICAL_FUNCTION,
+      dexterInstrumentAuthority: INSTRUMENT_AUTHORITY,
+      htmlRole: HTML_ROLE,
+      jsRole: JS_ROLE,
+      runtimeRole: RUNTIME_ROLE,
       datumFile: DATUM_FILE,
       dispositionFile: DISPOSITION_FILE,
+      terrainFile: TERRAIN_FILE,
       multiStreamRenderFile: MULTI_STREAM_RENDER_FILE,
-      jsRole: JS_ROLE,
-      htmlRole: HTML_ROLE,
-      runtimeRole: RUNTIME_ROLE,
       parentDatumUnchanged: true,
       parentHtmlUnchanged: true,
       parentRouteJsUnchanged: true,
-      downstreamStillHeld: true,
+      dispositionChildUnchanged: true,
+      terrainChildUnchanged: true,
+      runtimeStrengthHeld: true,
+      multiStreamRenderHeld: true,
       rendersNothing: true,
       noCanvasCreation: true,
       visualPassClaimed: false,
-      bootedAt: new Date().toISOString()
+      bootedAt: nowISO()
     };
   }
 
-  async function runHarness() {
+  async function runCockpit() {
     try {
       setPhase("boot");
       setFailure("BOOT_PENDING", FAILURE.BOOT_PENDING);
+
+      readDexterRegistry();
+      mountDexterGauges();
+      buildStreams();
       publish();
       writeVisibleStatus();
 
       setPhase("loading datum");
       var datumLoaded = Boolean(findDatumApi()) ||
         await loadScript(DATUM_FILE, DATUM_CLONE_CONTRACT, "datum");
+
       state.datumLoaded = Boolean(datumLoaded && findDatumApi());
 
       if (!verifyDatum()) {
+        mountDexterGauges();
+        buildStreams();
         publish();
         writeVisibleStatus();
         return status();
       }
 
-      setPhase("loading disposition child");
+      setPhase("loading disposition");
       var dispositionLoaded = Boolean(findDispositionApi()) ||
         await loadScript(DISPOSITION_FILE, DISPOSITION_CONTRACT, "disposition");
+
       state.dispositionChildLoaded = Boolean(dispositionLoaded && findDispositionApi());
+
+      await wait(120);
+
+      if (!verifyDisposition()) {
+        mountDexterGauges();
+        buildStreams();
+        publish();
+        writeVisibleStatus();
+        return status();
+      }
+
+      setPhase("loading terrain");
+      var terrainLoaded = Boolean(findTerrainApi()) ||
+        await loadScript(TERRAIN_FILE, TERRAIN_CONTRACT, "terrain");
+
+      state.terrainChildLoaded = Boolean(terrainLoaded && findTerrainApi());
 
       await wait(160);
 
-      setPhase("verifying disposition child");
-      if (!verifyDisposition()) {
+      if (!verifyTerrain()) {
+        mountDexterGauges();
+        buildStreams();
         publish();
         writeVisibleStatus();
         return status();
       }
 
+      setPhase("mounting Dexter gauges");
+      mountDexterGauges();
+
+      if (!gaugesValid()) {
+        setFailure("GAUGE_MOUNT_INCOMPLETE", FAILURE.GAUGE_MOUNT_INCOMPLETE);
+        buildStreams();
+        publish();
+        writeVisibleStatus();
+        return status();
+      }
+
+      state.multiStreamLaunchpadReady = true;
+      state.runtimeStrengthHeld = true;
+      state.multiStreamRenderHeld = true;
+      state.rendersNothing = true;
+      state.noCanvasCreation = true;
+      state.visualPassClaimed = false;
+      state.downstreamStillHeld = true;
+
+      buildStreams();
+
       setPhase("pass");
+      clearFailure();
       publish();
       writeVisibleStatus();
       return status();
     } catch (error) {
-      recordError("runHarness", error);
+      recordError("runCockpit", error);
+      mountDexterGauges();
+      buildStreams();
       publish();
       writeVisibleStatus();
       return status();
@@ -674,13 +1005,17 @@
   function init() {
     state.initialized = true;
     publishBoot();
+    readDexterRegistry();
+    mountDexterGauges();
+    buildStreams();
     publish();
-    writeStreams();
-    runHarness();
+    writeVisibleStatus();
 
-    qsa("[data-harness-refresh]").forEach(function (button) {
+    runCockpit();
+
+    qsa("[data-cockpit-refresh]").forEach(function (button) {
       button.addEventListener("click", function () {
-        runHarness();
+        runCockpit();
       });
     });
   }

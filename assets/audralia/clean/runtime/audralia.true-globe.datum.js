@@ -1,33 +1,47 @@
 // /assets/audralia/clean/runtime/audralia.true-globe.datum.js
 // TNT FULL-FILE REPLACEMENT
+// AUDRALIA_G1_CHILD_MATH_DATUM_CLONING_METHOD_SEED_TNT_v1
+//
+// Public parent-compatible contract preserved:
 // AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1
 //
-// Template source:
-// AUDRALIA_G2_DATUM_CHRONOLOGY_PERFORMANCE_CONTAINMENT_TNT_v1
+// Process:
+// CLONING METHOD
 //
-// Protected parent baseline:
-// AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1
+// Classification:
+// adoption-compatible technical birth
+//
+// Public frame:
+// adopted packet
+//
+// Technical reality:
+// new seed birth under same identity
 //
 // Purpose:
-// - Convert the datum child into the G1 child receive-map authority.
-// - Give downstream children the shared carrier, chronology, relationship, and NEWS-complete seat math.
-// - Preserve passive datum posture, compact status, verbose-on-request behavior, and no-render discipline.
-// - Build and cache the 256 receive map once so children can inherit consistent math.
-// - Do not draw.
-// - Do not create canvas.
-// - Do not mutate parent HTML or route JS.
-// - Do not own runtime motion, terrain truth, moisture truth, surface truth, cloud truth, continent truth, or visual pass.
+// - Birth a clean cloned datum seed under the same filename.
+// - Preserve the parent-facing adoption-compatible interface.
+// - Publish the same globals, same API shape, and same receive-map expectation.
+// - Build and cache one 16 × 16 / 256-seat NEWS-complete receive map.
+// - Provide child receive packets.
+// - Render nothing.
+// - Create no canvas.
+// - Own no HTML, route JS, runtime motion, terrain, moisture, surface, clouds, continents, or visual pass.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1";
+  var PUBLIC_CONTRACT = "AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1";
+  var CLONE_CONTRACT = "AUDRALIA_G1_CHILD_MATH_DATUM_CLONING_METHOD_SEED_TNT_v1";
   var TEMPLATE_SOURCE_CONTRACT = "AUDRALIA_G2_DATUM_CHRONOLOGY_PERFORMANCE_CONTAINMENT_TNT_v1";
   var PUBLIC_COMPATIBILITY_CONTRACT = "AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1";
   var PARENT_BASELINE = "AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1";
-  var STANDARD = "AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_STANDARD_v1";
+  var STANDARD = "AUDRALIA_G1_CHILD_MATH_DATUM_CLONING_METHOD_SEED_STANDARD_v1";
   var FAMILY = "/assets/audralia/clean/runtime/";
   var FILE = "/assets/audralia/clean/runtime/audralia.true-globe.datum.js";
+
+  var PROCESS = "cloning_method";
+  var PUBLIC_FRAME = "adopted_packet";
+  var TECHNICAL_REALITY = "new_seed_birth";
 
   var RADIAL_NODES = 16;
   var FIBONACCI_BANDS = 16;
@@ -74,6 +88,10 @@
     initialized: false,
     datumReady: false,
     childReceiveMapReady: false,
+    cloneMethodActive: true,
+    publicAdoptionCompatible: true,
+    technicalBirthComplete: false,
+    parentInterfaceUnchanged: true,
     newsProtocolActive: true,
     newsComplete: false,
     chronologyComplete: false,
@@ -115,8 +133,10 @@
 
   function wrapLongitude(lon) {
     var value = finite(lon, 0);
+
     while (value < -Math.PI) value += TAU;
     while (value > Math.PI) value -= TAU;
+
     return value;
   }
 
@@ -125,17 +145,22 @@
   }
 
   function smoothstep(edge0, edge1, value) {
-    var t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
+    var denominator = edge1 - edge0 || 1;
+    var t = clamp((value - edge0) / denominator, 0, 1);
     return t * t * (3 - 2 * t);
   }
 
-  function deepClone(value) {
+  function safeClone(value) {
     return JSON.parse(JSON.stringify(value));
   }
 
   function sum(values) {
     var total = 0;
-    for (var i = 0; i < values.length; i += 1) total += values[i];
+
+    for (var i = 0; i < values.length; i += 1) {
+      total += values[i];
+    }
+
     return total;
   }
 
@@ -175,9 +200,13 @@
   }
 
   var AXIS_CACHE = Object.freeze({
-    datumReady: true,
-    contract: CONTRACT,
+    contract: PUBLIC_CONTRACT,
+    cloneContract: CLONE_CONTRACT,
+    process: PROCESS,
+    publicFrame: PUBLIC_FRAME,
+    technicalReality: TECHNICAL_REALITY,
     parentBaseline: PARENT_BASELINE,
+    datumReady: true,
     axisTiltRadians: AXIAL_TILT_RADIANS,
     axisTiltDegrees: degrees(AXIAL_TILT_RADIANS),
     localNorthPole: Object.freeze({ x: 0, y: 1, z: 0 }),
@@ -236,6 +265,8 @@
       var fibonacciEnd = cumulative / totalWeight;
 
       out.push(Object.freeze({
+        contract: PUBLIC_CONTRACT,
+        cloneContract: CLONE_CONTRACT,
         compassIndex: index,
         chronologyIndex: index,
         sequenceIndex: index + 1,
@@ -293,6 +324,9 @@
     var opposite = compassNodeByIndex(node.oppositeIndex);
 
     return {
+      contract: PUBLIC_CONTRACT,
+      cloneContract: CLONE_CONTRACT,
+      process: PROCESS,
       compassIndex: node.compassIndex,
       chronologyIndex: node.chronologyIndex,
       sequenceIndex: node.sequenceIndex,
@@ -377,6 +411,7 @@
 
   function latitudeBandFor(lat) {
     lat = clampLatitude(lat);
+
     var absLat = Math.abs(lat);
     var hemi = hemisphereFor(lat);
 
@@ -384,11 +419,13 @@
     if (absLat >= radians(58)) return hemi.sign >= 0 ? "northPolarReturnBand" : "southPolarReturnBand";
     if (absLat >= radians(34)) return hemi.sign >= 0 ? "northJetBand" : "southJetBand";
     if (absLat >= radians(14)) return hemi.sign >= 0 ? "northTemperateBand" : "southTemperateBand";
+
     return "equatorialMoistureBand";
   }
 
   function latitudeZoneFor(lat) {
     lat = clampLatitude(lat);
+
     var absLat = Math.abs(lat);
 
     return {
@@ -449,7 +486,8 @@
       predecessorSeatIndex: northPredecessorSeatIndex,
       boundary: band === 0 ? "north-pole-boundary" : null,
       upstreamLineage: band === 0 ? "north-pole-boundary" : "previous-fibonacci-band",
-      admissibilitySource: PARENT_BASELINE
+      admissibilitySource: PARENT_BASELINE,
+      cloneSeedSource: CLONE_CONTRACT
     };
 
     var east = {
@@ -511,6 +549,8 @@
 
     return {
       protocol: "NEWS",
+      contract: PUBLIC_CONTRACT,
+      cloneContract: CLONE_CONTRACT,
       north: north,
       east: east,
       west: west,
@@ -539,7 +579,12 @@
     var news = makeNewsForSeat(band, radial, seatIndex, poleRelation);
 
     return {
-      contract: CONTRACT,
+      contract: PUBLIC_CONTRACT,
+      cloneContract: CLONE_CONTRACT,
+      process: PROCESS,
+      publicFrame: PUBLIC_FRAME,
+      technicalReality: TECHNICAL_REALITY,
+      parentInterfaceUnchanged: true,
       parentBaseline: PARENT_BASELINE,
       seatIndex: seatIndex,
       band: band,
@@ -584,6 +629,8 @@
       successorSeatIndex: news.south.successorSeatIndex,
       fibonacciForwardSeatIndex: null,
       fibonacciReturnSeatIndex: null,
+      fibonacciForwardSeat: null,
+      fibonacciReturnSeat: null,
       news: news,
       north: news.north,
       east: news.east,
@@ -601,7 +648,8 @@
       cloudReady: false,
       continentReady: false,
       visualPassReady: false,
-      groundLevelReady: false
+      groundLevelReady: false,
+      visualPassClaimed: false
     };
   }
 
@@ -619,6 +667,7 @@
 
       for (radial = 0; radial < RADIAL_NODES; radial += 1) {
         var seat = makeSeat(band, radial);
+
         seats.push(seat);
         ring.push(seat);
         radialLanes[radial].push(seat);
@@ -644,17 +693,37 @@
     }
 
     var allNewsComplete = seats.every(function (seat) {
-      return seat.newsComplete === true;
+      return Boolean(
+        seat.newsComplete === true &&
+        seat.childReceiveEligible === true &&
+        seat.renderEligible === true &&
+        seat.north &&
+        seat.north.defined === true &&
+        seat.east &&
+        seat.east.defined === true &&
+        seat.west &&
+        seat.west.defined === true &&
+        seat.south &&
+        seat.south.defined === true
+      );
     });
 
     var map = {
-      contract: CONTRACT,
+      contract: PUBLIC_CONTRACT,
+      cloneContract: CLONE_CONTRACT,
       templateSourceContract: TEMPLATE_SOURCE_CONTRACT,
       publicCompatibilityContract: PUBLIC_COMPATIBILITY_CONTRACT,
       parentBaseline: PARENT_BASELINE,
       standard: STANDARD,
       family: FAMILY,
       file: FILE,
+      process: PROCESS,
+      publicFrame: PUBLIC_FRAME,
+      technicalReality: TECHNICAL_REALITY,
+      cloneMethodActive: true,
+      publicAdoptionCompatible: true,
+      technicalBirthComplete: true,
+      parentInterfaceUnchanged: true,
       carrierRole: "observable-organic-carrier",
       latticeRole: "scientific-discovery-rule-layer",
       datumReady: true,
@@ -673,6 +742,9 @@
       seats: seats,
       rings: rings,
       radialLanes: radialLanes,
+      seatCount: seats.length,
+      ringCount: rings.length,
+      radialLaneCount: radialLanes.length,
       terrainReady: false,
       moistureReady: false,
       surfaceReady: false,
@@ -681,15 +753,23 @@
       visualPassReady: false,
       groundLevelReady: false,
       rendersNothing: true,
-      ownsNoRuntimeMotion: true,
-      ownsNoSurfaceTruth: true,
-      ownsNoCloudTruth: true,
-      ownsNoTerrainTruth: true,
-      ownsNoMoistureTruth: true,
-      ownsNoContinentTruth: true,
-      ownsNoHtml: true,
-      ownsNoRouteJs: true,
       noCanvasCreation: true,
+      ownsRuntimeMotion: false,
+      ownsNoRuntimeMotion: true,
+      ownsHtml: false,
+      ownsNoHtml: true,
+      ownsRouteJs: false,
+      ownsNoRouteJs: true,
+      ownsSurfaceTruth: false,
+      ownsNoSurfaceTruth: true,
+      ownsCloudTruth: false,
+      ownsNoCloudTruth: true,
+      ownsTerrainTruth: false,
+      ownsNoTerrainTruth: true,
+      ownsMoistureTruth: false,
+      ownsNoMoistureTruth: true,
+      ownsContinentTruth: false,
+      ownsNoContinentTruth: true,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false,
@@ -702,6 +782,7 @@
     state.newsComplete = allNewsComplete;
     state.chronologyComplete = true;
     state.relationshipMapReady = true;
+    state.technicalBirthComplete = true;
 
     return map;
   }
@@ -715,19 +796,27 @@
     var map = ensureReceiveMap();
 
     return {
-      contract: map.contract,
-      parentBaseline: map.parentBaseline,
+      contract: PUBLIC_CONTRACT,
+      cloneContract: CLONE_CONTRACT,
+      process: PROCESS,
+      publicFrame: PUBLIC_FRAME,
+      technicalReality: TECHNICAL_REALITY,
+      parentBaseline: PARENT_BASELINE,
       carrierRole: map.carrierRole,
       latticeRole: map.latticeRole,
-      datumReady: map.datumReady,
-      childReceiveMapReady: map.childReceiveMapReady,
-      newsProtocolActive: map.newsProtocolActive,
+      datumReady: true,
+      childReceiveMapReady: true,
+      cloneMethodActive: true,
+      publicAdoptionCompatible: true,
+      technicalBirthComplete: true,
+      parentInterfaceUnchanged: true,
+      newsProtocolActive: true,
       newsComplete: map.newsComplete,
       chronologyComplete: map.chronologyComplete,
       relationshipMapReady: map.relationshipMapReady,
-      radialNodes: map.radialNodes,
-      fibonacciBands: map.fibonacciBands,
-      latticeStates: map.latticeStates,
+      radialNodes: RADIAL_NODES,
+      fibonacciBands: FIBONACCI_BANDS,
+      latticeStates: LATTICE_STATES,
       seatCount: map.seats.length,
       ringCount: map.rings.length,
       radialLaneCount: map.radialLanes.length,
@@ -739,11 +828,10 @@
       visualPassReady: false,
       groundLevelReady: false,
       rendersNothing: true,
-      ownsNoRuntimeMotion: true,
-      ownsNoSurfaceTruth: true,
-      ownsNoCloudTruth: true,
-      ownsNoTerrainTruth: true,
-      ownsNoContinentTruth: true,
+      noCanvasCreation: true,
+      ownsRuntimeMotion: false,
+      ownsHtml: false,
+      ownsRouteJs: false,
       visualPassClaimed: false
     };
   }
@@ -753,7 +841,7 @@
     var index = Math.floor(clamp(seatIndex, 0, LATTICE_STATES - 1));
     var seat = map.seats[index];
 
-    return options && options.reference === true ? seat : deepClone(seat);
+    return options && options.reference === true ? seat : safeClone(seat);
   }
 
   function getSeatByBandRadial(band, radial, options) {
@@ -765,7 +853,7 @@
     var index = Math.floor(clamp(band, 0, FIBONACCI_BANDS - 1));
     var ring = map.rings[index];
 
-    return options && options.reference === true ? ring : deepClone(ring);
+    return options && options.reference === true ? ring : safeClone(ring);
   }
 
   function getRadialLane(radial, options) {
@@ -773,7 +861,7 @@
     var index = modulo(Math.round(finite(radial, 0)), RADIAL_NODES);
     var lane = map.radialLanes[index];
 
-    return options && options.reference === true ? lane : deepClone(lane);
+    return options && options.reference === true ? lane : safeClone(lane);
   }
 
   function getOppositeSeat(seatIndex, options) {
@@ -783,29 +871,35 @@
 
   function getFibonacciForwardSeat(seatIndex, options) {
     var seat = getSeat(seatIndex, { reference: true });
+
     if (seat.fibonacciForwardSeatIndex === null) return null;
+
     return getSeat(seat.fibonacciForwardSeatIndex, options);
   }
 
   function getFibonacciReturnSeat(seatIndex, options) {
     var seat = getSeat(seatIndex, { reference: true });
+
     if (seat.fibonacciReturnSeatIndex === null) return null;
+
     return getSeat(seat.fibonacciReturnSeatIndex, options);
   }
 
   function getNews(seatIndex, options) {
     var seat = getSeat(seatIndex, { reference: true });
-    return options && options.reference === true ? seat.news : deepClone(seat.news);
+
+    return options && options.reference === true ? seat.news : safeClone(seat.news);
   }
 
   function receive(options) {
     options = options || {};
+
     var map = ensureReceiveMap();
 
     if (options.compact === true) return compactReceiveMap();
     if (options.reference === true) return map;
 
-    return deepClone(map);
+    return safeClone(map);
   }
 
   function normalizeChildName(childName) {
@@ -818,26 +912,34 @@
 
     var map = ensureReceiveMap();
     var name = normalizeChildName(childName);
-    var seats = map.seats.filter(function (seat) {
-      return seat.childReceiveEligible === true && seat.newsComplete === true;
+    var eligibleSeats = map.seats.filter(function (seat) {
+      return seat.childReceiveEligible === true &&
+        seat.newsComplete === true &&
+        seat.renderEligible === true;
     });
 
     var packet = {
-      contract: CONTRACT,
+      contract: PUBLIC_CONTRACT,
+      cloneContract: CLONE_CONTRACT,
+      process: PROCESS,
+      publicFrame: PUBLIC_FRAME,
+      technicalReality: TECHNICAL_REALITY,
+      parentInterfaceUnchanged: true,
       parentBaseline: PARENT_BASELINE,
       templateSourceContract: TEMPLATE_SOURCE_CONTRACT,
       childName: name,
       carrierRole: map.carrierRole,
       latticeRole: map.latticeRole,
       datumReady: true,
-      childReceivePacketReady: true,
+      childReceivePacketReady: eligibleSeats.length === LATTICE_STATES,
       childReceiveMapReady: true,
+      seatCount: eligibleSeats.length,
       radialNodes: RADIAL_NODES,
       fibonacciBands: FIBONACCI_BANDS,
       latticeStates: LATTICE_STATES,
       fibonacciSequence: FIBONACCI_SEQUENCE.slice(),
       fibonacciOffsets: FIBONACCI_OFFSETS.slice(),
-      seats: seats,
+      seats: eligibleSeats,
       rings: map.rings,
       radialLanes: map.radialLanes,
       newsProtocolActive: true,
@@ -853,14 +955,10 @@
       visualPassReady: false,
       groundLevelReady: false,
       rendersNothing: true,
-      ownsNoRuntimeMotion: true,
-      ownsNoSurfaceTruth: true,
-      ownsNoCloudTruth: true,
-      ownsNoTerrainTruth: true,
-      ownsNoMoistureTruth: true,
-      ownsNoContinentTruth: true,
-      ownsNoHtml: true,
-      ownsNoRouteJs: true,
+      noCanvasCreation: true,
+      ownsRuntimeMotion: false,
+      ownsHtml: false,
+      ownsRouteJs: false,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false,
@@ -871,18 +969,24 @@
     state.lastChildPacket = {
       childName: name,
       issuedAt: packet.issuedAt,
-      seatCount: seats.length
+      seatCount: packet.seatCount,
+      childReceivePacketReady: packet.childReceivePacketReady
     };
 
     if (options.compact === true) {
       return {
-        contract: packet.contract,
-        parentBaseline: packet.parentBaseline,
-        childName: packet.childName,
+        contract: PUBLIC_CONTRACT,
+        cloneContract: CLONE_CONTRACT,
+        process: PROCESS,
+        publicFrame: PUBLIC_FRAME,
+        technicalReality: TECHNICAL_REALITY,
+        parentInterfaceUnchanged: true,
+        parentBaseline: PARENT_BASELINE,
+        childName: name,
         datumReady: true,
-        childReceivePacketReady: true,
+        childReceivePacketReady: packet.childReceivePacketReady,
         childReceiveMapReady: true,
-        seatCount: seats.length,
+        seatCount: packet.seatCount,
         radialNodes: RADIAL_NODES,
         fibonacciBands: FIBONACCI_BANDS,
         latticeStates: LATTICE_STATES,
@@ -890,17 +994,19 @@
         newsComplete: map.newsComplete,
         chronologyComplete: map.chronologyComplete,
         relationshipMapReady: map.relationshipMapReady,
+        carrierBound: true,
         terrainReady: false,
         moistureReady: false,
         surfaceReady: false,
         cloudReady: false,
         continentReady: false,
         visualPassReady: false,
-        groundLevelReady: false
+        groundLevelReady: false,
+        visualPassClaimed: false
       };
     }
 
-    return options.reference === true ? packet : deepClone(packet);
+    return options.reference === true ? packet : safeClone(packet);
   }
 
   function addressFor(lon, lat, options) {
@@ -916,6 +1022,9 @@
     var seat = getSeat(stateIndex, { reference: true });
 
     var result = {
+      contract: PUBLIC_CONTRACT,
+      cloneContract: CLONE_CONTRACT,
+      process: PROCESS,
       radialIndex: radialIndex,
       bandIndex: bandIndex,
       stateIndex: stateIndex,
@@ -1063,6 +1172,8 @@
       node.fibonacciPhase * 0.04;
 
     return {
+      contract: PUBLIC_CONTRACT,
+      cloneContract: CLONE_CONTRACT,
       circulationReady: true,
       hemisphere: hemi.name,
       hemisphereSign: hemi.sign,
@@ -1099,6 +1210,8 @@
     var sunwardPressure = clamp(0.50 + seasonalPhase * 0.18 + tiltBias * 0.32 + sequenceBias, 0, 1);
 
     return {
+      contract: PUBLIC_CONTRACT,
+      cloneContract: CLONE_CONTRACT,
       seasonalPressureReady: true,
       seasonalPhase: seasonalPhase,
       tiltBias: tiltBias,
@@ -1171,12 +1284,20 @@
     );
 
     return {
-      contract: CONTRACT,
+      contract: PUBLIC_CONTRACT,
+      cloneContract: CLONE_CONTRACT,
+      process: PROCESS,
+      publicFrame: PUBLIC_FRAME,
+      technicalReality: TECHNICAL_REALITY,
+      parentInterfaceUnchanged: true,
       templateSourceContract: TEMPLATE_SOURCE_CONTRACT,
       publicCompatibilityContract: PUBLIC_COMPATIBILITY_CONTRACT,
       parentBaseline: PARENT_BASELINE,
       datumReady: true,
       childReceiveMapReady: true,
+      cloneMethodActive: true,
+      publicAdoptionCompatible: true,
+      technicalBirthComplete: true,
       compact: true,
       longitude: lon,
       latitude: lat,
@@ -1360,7 +1481,10 @@
 
     state.lastSample = output;
 
-    window.AUDRALIA_TRUE_GLOBE_DATUM_LAST_SAMPLE = output.compact ? output : compactSample(lon, lat, time);
+    window.AUDRALIA_TRUE_GLOBE_DATUM_LAST_SAMPLE = output.compact
+      ? output
+      : compactSample(lon, lat, time);
+
     window.AUDRALIA_G1_TRUE_GLOBE_DATUM_LAST_SAMPLE = window.AUDRALIA_TRUE_GLOBE_DATUM_LAST_SAMPLE;
     window.AUDRALIA_G2_TRUE_GLOBE_DATUM_LAST_SAMPLE = window.AUDRALIA_TRUE_GLOBE_DATUM_LAST_SAMPLE;
 
@@ -1374,16 +1498,24 @@
     var verbose = options.verbose === true;
 
     var compactStatus = {
-      contract: CONTRACT,
+      contract: PUBLIC_CONTRACT,
+      cloneContract: CLONE_CONTRACT,
       templateSourceContract: TEMPLATE_SOURCE_CONTRACT,
       publicCompatibilityContract: PUBLIC_COMPATIBILITY_CONTRACT,
       parentBaseline: PARENT_BASELINE,
       standard: STANDARD,
       family: FAMILY,
       file: FILE,
+      process: PROCESS,
+      publicFrame: PUBLIC_FRAME,
+      technicalReality: TECHNICAL_REALITY,
       initialized: state.initialized,
       datumReady: state.datumReady,
       childReceiveMapReady: state.childReceiveMapReady,
+      cloneMethodActive: true,
+      publicAdoptionCompatible: true,
+      technicalBirthComplete: state.technicalBirthComplete,
+      parentInterfaceUnchanged: true,
       newsProtocolActive: true,
       newsComplete: map.newsComplete,
       chronologyComplete: map.chronologyComplete,
@@ -1417,6 +1549,8 @@
       sampleCount: state.sampleCount,
       verboseSampleCount: state.verboseSampleCount,
       childPacketCount: state.childPacketCount,
+      statusCompactByDefault: !verbose,
+      verboseOnRequest: true,
       terrainReady: false,
       moistureReady: false,
       surfaceReady: false,
@@ -1464,8 +1598,9 @@
     });
 
     window.AUDRALIA_TRUE_GLOBE_DATUM_ERROR = {
-      contract: CONTRACT,
-      templateSourceContract: TEMPLATE_SOURCE_CONTRACT,
+      contract: PUBLIC_CONTRACT,
+      cloneContract: CLONE_CONTRACT,
+      process: PROCESS,
       scope: scope,
       message: message,
       errors: state.errors.slice()
@@ -1476,13 +1611,21 @@
 
   function publish() {
     var api = {
-      contract: CONTRACT,
+      contract: PUBLIC_CONTRACT,
+      cloneContract: CLONE_CONTRACT,
       templateSourceContract: TEMPLATE_SOURCE_CONTRACT,
       publicCompatibilityContract: PUBLIC_COMPATIBILITY_CONTRACT,
       parentBaseline: PARENT_BASELINE,
       standard: STANDARD,
       family: FAMILY,
       file: FILE,
+      process: PROCESS,
+      publicFrame: PUBLIC_FRAME,
+      technicalReality: TECHNICAL_REALITY,
+      cloneMethodActive: true,
+      publicAdoptionCompatible: true,
+      technicalBirthComplete: true,
+      parentInterfaceUnchanged: true,
 
       status: status,
 
@@ -1572,16 +1715,25 @@
     window.AUDRALIA_G2_TRUE_GLOBE_DATUM_STATUS = window.AUDRALIA_TRUE_GLOBE_DATUM_STATUS;
 
     window.AUDRALIA_TRUE_GLOBE_DATUM_BOOT = {
-      contract: CONTRACT,
+      contract: PUBLIC_CONTRACT,
+      cloneContract: CLONE_CONTRACT,
       templateSourceContract: TEMPLATE_SOURCE_CONTRACT,
       publicCompatibilityContract: PUBLIC_COMPATIBILITY_CONTRACT,
       parentBaseline: PARENT_BASELINE,
       standard: STANDARD,
       family: FAMILY,
       file: FILE,
+      process: PROCESS,
+      publicFrame: PUBLIC_FRAME,
+      technicalReality: TECHNICAL_REALITY,
       bootedAt: new Date().toISOString(),
+      initialized: state.initialized,
       datumReady: true,
       childReceiveMapReady: true,
+      cloneMethodActive: true,
+      publicAdoptionCompatible: true,
+      technicalBirthComplete: true,
+      parentInterfaceUnchanged: true,
       newsProtocolActive: true,
       newsComplete: state.newsComplete,
       chronologyComplete: state.chronologyComplete,
@@ -1589,6 +1741,7 @@
       radialNodes: RADIAL_NODES,
       fibonacciBands: FIBONACCI_BANDS,
       latticeStates: LATTICE_STATES,
+      seatCount: ensureReceiveMap().seats.length,
       terrainReady: false,
       moistureReady: false,
       surfaceReady: false,
@@ -1598,15 +1751,17 @@
       groundLevelReady: false,
       rendersNothing: true,
       noCanvasCreation: true,
-      ownsNoRuntimeMotion: true,
-      ownsNoSurfaceTruth: true,
-      ownsNoCloudTruth: true,
-      ownsNoTerrainTruth: true,
-      ownsNoContinentTruth: true,
+      ownsRuntimeMotion: false,
+      ownsSurfaceTruth: false,
+      ownsCloudTruth: false,
+      ownsTerrainTruth: false,
+      ownsContinentTruth: false,
+      ownsHtml: false,
+      ownsRouteJs: false,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false,
-      meaning: "Audralia datum child evaluated as the G1 child receive-map authority. All 256 seats carry Fibonacci chronology, relationship mapping, and NEWS-complete child receive eligibility without rendering or activating downstream children."
+      meaning: "Audralia datum child evaluated as a cloning-method seed: a technical birth under the same file identity, preserving the parent-facing adoption-compatible receive-map contract and API shape."
     };
 
     return api;
@@ -1617,6 +1772,7 @@
       state.initialized = true;
       state.datumReady = true;
       ensureReceiveMap();
+      state.technicalBirthComplete = true;
       publish();
       return status();
     } catch (error) {

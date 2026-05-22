@@ -1,15 +1,16 @@
 // /assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
-// AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_TNT_v1
+// AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_MATERIAL_REFINEMENT_JS_TNT_v1
 // Full-file replacement.
-// Female carrier first: this JS defines the route-local canvas carrier.
-// Male selector second: HTML chooses this JS and provides the stage/mount.
-// JS must not inject controls, chips, readouts, or jargon into the planet stage.
+// Scope: JS-only material refinement for the clean Audralia planet inspection carrier.
+// HTML is protected and must remain untouched.
+// Runtime / Strength remains held. No final visual pass claim.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_TNT_v1";
-  var SPEC_OPS = "AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_SPEC_OPS_v1";
+  var CONTRACT = "AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_MATERIAL_REFINEMENT_JS_TNT_v1";
+  var PREVIOUS_CONTRACT = "AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_TNT_v1";
+  var SPEC_OPS = "AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_MATERIAL_REFINEMENT_JS_SPEC_OPS_v1";
   var DONOR_CONTRACT = "AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1";
   var ROUTE = "/showroom/globe/audralia/planet/";
   var FILE = "/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js";
@@ -31,56 +32,124 @@
     body: {
       title: "Body View",
       anchor: "North · Datum Body",
-      copy: "Clean planet-body inspection. The canvas carrier is active; Runtime / Strength remains held."
+      copy: "Clean planet-body inspection. Audralia is shown as a larger, deeper canvas body; Runtime / Strength remains held."
     },
     surface: {
       title: "Surface View",
       anchor: "Northeast / East · Terrain + Material",
-      copy: "Surface view emphasizes land mass, mineral pressure, and terrain structure without replacing the planet."
+      copy: "Surface view emphasizes terrain pressure, mineral grain, and irregular coast formation without replacing the planet."
     },
     hydration: {
       title: "Hydration View",
       anchor: "Southeast / South · Ocean + Coast",
-      copy: "Hydration view emphasizes ocean depth, basin pressure, shelf edges, and coast logic."
+      copy: "Hydration view emphasizes deeper basins, coast shelves, bays, channels, and ocean-edge pressure."
     },
     lattice: {
       title: "Lattice View",
       anchor: "West · 16 × 16 / 256",
-      copy: "Lattice view reveals the 256 inspection field through Engineering only. It does not replace the planet."
+      copy: "Lattice view reveals the 256 inspection field through Engineering only. Body View keeps the lattice suppressed."
     },
     receipt: {
       title: "Receipt View",
       anchor: "Northwest · Inspection Receipt",
-      copy: "Receipt view confirms the paired file law: JS carrier first, HTML selector second, clean stage protected."
+      copy: "Receipt view confirms JS-only material refinement, HTML untouched, clean inspection preserved, and Runtime / Strength held."
     }
   });
 
   var SURFACE_POLYGONS = Object.freeze([
     {
-      fill: "rgba(109,128,104,0.88)",
-      shelf: "rgba(167,243,198,0.22)",
-      points: [[-132, 29], [-116, 45], [-87, 52], [-55, 43], [-38, 24], [-51, 4], [-82, -11], [-115, -5], [-138, 12]]
+      name: "far-west craton shelf",
+      fill: "rgba(88,105,83,0.72)",
+      edge: "rgba(181,205,166,0.22)",
+      points: [
+        [-146, 26], [-138, 34], [-124, 43], [-106, 49], [-87, 47],
+        [-72, 41], [-57, 33], [-43, 22], [-39, 10], [-48, -1],
+        [-65, -9], [-88, -13], [-111, -8], [-132, 3], [-148, 16]
+      ]
     },
     {
-      fill: "rgba(143,139,113,0.82)",
-      shelf: "rgba(167,243,198,0.18)",
-      points: [[6, 54], [35, 67], [73, 58], [99, 38], [91, 17], [57, 6], [22, 17], [3, 35]]
+      name: "north crown highland",
+      fill: "rgba(116,118,96,0.66)",
+      edge: "rgba(211,206,156,0.18)",
+      points: [
+        [-10, 54], [4, 62], [22, 68], [43, 67], [63, 62],
+        [82, 54], [99, 42], [105, 29], [98, 17], [78, 9],
+        [54, 8], [31, 14], [12, 24], [-1, 38]
+      ]
     },
     {
-      fill: "rgba(74,100,86,0.86)",
-      shelf: "rgba(167,243,198,0.22)",
-      points: [[-12, 15], [18, 34], [54, 27], [84, 8], [102, -18], [80, -44], [39, -56], [-5, -45], [-32, -19]]
+      name: "central basin continent",
+      fill: "rgba(67,91,75,0.70)",
+      edge: "rgba(165,217,178,0.24)",
+      points: [
+        [-24, 16], [-10, 28], [12, 36], [37, 35], [61, 27],
+        [82, 14], [101, -3], [111, -20], [104, -34], [84, -45],
+        [58, -53], [31, -55], [7, -49], [-14, -38], [-29, -23],
+        [-34, -5]
+      ]
     },
     {
-      fill: "rgba(102,96,82,0.80)",
-      shelf: "rgba(167,243,198,0.16)",
-      points: [[-93, -28], [-62, -16], [-30, -26], [-18, -50], [-46, -69], [-81, -63], [-109, -47]]
+      name: "southwest pressure shelf",
+      fill: "rgba(81,76,65,0.64)",
+      edge: "rgba(196,171,130,0.16)",
+      points: [
+        [-116, -32], [-99, -23], [-80, -18], [-61, -20], [-43, -29],
+        [-31, -43], [-28, -57], [-43, -67], [-64, -70], [-86, -63],
+        [-105, -51], [-119, -42]
+      ]
     },
     {
-      fill: "rgba(128,134,111,0.76)",
-      shelf: "rgba(167,243,198,0.14)",
-      points: [[118, 17], [145, 7], [158, -18], [143, -43], [111, -40], [95, -13]]
+      name: "southeast arc mass",
+      fill: "rgba(95,103,82,0.62)",
+      edge: "rgba(165,217,178,0.15)",
+      points: [
+        [102, 15], [119, 19], [137, 13], [151, 2], [159, -14],
+        [154, -30], [138, -42], [116, -43], [98, -32], [90, -15],
+        [93, 2]
+      ]
+    },
+    {
+      name: "near-polar fractured cap",
+      fill: "rgba(118,126,111,0.46)",
+      edge: "rgba(207,229,209,0.10)",
+      points: [
+        [-172, 70], [-138, 76], [-94, 78], [-45, 75], [1, 72],
+        [38, 68], [8, 61], [-38, 58], [-88, 60], [-135, 64]
+      ]
     }
+  ]);
+
+  var ISLAND_CHAINS = Object.freeze([
+    [[-154, -3], [-148, -6], [-141, -8], [-134, -11]],
+    [[-20, -58], [-9, -61], [3, -63], [15, -62]],
+    [[118, -49], [130, -53], [143, -55], [155, -51]],
+    [[84, 38], [96, 42], [109, 40], [121, 35]],
+    [[-74, 8], [-64, 3], [-55, 0], [-46, -4]]
+  ]);
+
+  var COAST_SHELVES = Object.freeze([
+    [[-149, 15], [-132, 3], [-111, -8], [-88, -13], [-65, -9], [-48, -1], [-39, 10]],
+    [[-1, 38], [12, 24], [31, 14], [54, 8], [78, 9], [98, 17], [105, 29]],
+    [[-34, -5], [-29, -23], [-14, -38], [7, -49], [31, -55], [58, -53], [84, -45], [104, -34]],
+    [[-119, -42], [-105, -51], [-86, -63], [-64, -70], [-43, -67], [-28, -57]],
+    [[90, -15], [98, -32], [116, -43], [138, -42], [154, -30], [159, -14]]
+  ]);
+
+  var MINERAL_STROKES = Object.freeze([
+    [[-128, 34], [-103, 41], [-79, 39], [-58, 29]],
+    [[-96, 12], [-72, 5], [-48, 10], [-29, 20]],
+    [[8, 25], [32, 20], [58, 9], [82, -8]],
+    [[12, -38], [34, -43], [59, -39], [82, -28]],
+    [[-91, -33], [-70, -42], [-47, -49]],
+    [[29, 56], [51, 51], [77, 39]],
+    [[112, 7], [136, -6], [146, -24]]
+  ]);
+
+  var BASIN_BANDS = Object.freeze([
+    [[-160, -18], [-126, -21], [-92, -24], [-58, -23], [-24, -18]],
+    [[-38, 4], [-5, 0], [29, -5], [62, -14], [96, -26]],
+    [[-154, 48], [-119, 52], [-82, 53], [-44, 49], [-8, 41]],
+    [[38, 47], [70, 39], [99, 25], [124, 8], [146, -12]]
   ]);
 
   var state = {
@@ -373,12 +442,13 @@
     var width = state.width || 640;
     var height = state.height || 720;
     var minSide = Math.min(width, height);
+    var cssWidth = width / Math.max(1, state.dpr);
 
     return {
       centerX: width / 2,
-      centerY: height * 0.43,
-      radius: minSide * (width / Math.max(1, state.dpr) < 680 ? 0.365 : 0.395),
-      cameraDistance: 3.9
+      centerY: height * 0.395,
+      radius: minSide * (cssWidth < 680 ? 0.405 : 0.435),
+      cameraDistance: 3.92
     };
   }
 
@@ -429,12 +499,12 @@
 
     ctx.save();
 
-    var ocean = ctx.createRadialGradient(cx - r * 0.30, cy - r * 0.36, 0, cx, cy, r * 1.18);
-    ocean.addColorStop(0.00, "rgba(190,246,255,0.96)");
-    ocean.addColorStop(0.14, "rgba(70,174,219,0.90)");
-    ocean.addColorStop(0.40, "rgba(18,90,160,0.96)");
-    ocean.addColorStop(0.70, "rgba(4,35,96,1)");
-    ocean.addColorStop(1.00, "rgba(1,8,28,1)");
+    var ocean = ctx.createRadialGradient(cx - r * 0.34, cy - r * 0.38, 0, cx, cy, r * 1.22);
+    ocean.addColorStop(0.00, "rgba(171,235,246,0.92)");
+    ocean.addColorStop(0.12, "rgba(55,145,196,0.88)");
+    ocean.addColorStop(0.34, "rgba(13,75,143,0.98)");
+    ocean.addColorStop(0.66, "rgba(4,30,88,1)");
+    ocean.addColorStop(1.00, "rgba(1,7,25,1)");
 
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, TAU);
@@ -444,42 +514,52 @@
     ctx.save();
     clipSphere();
 
+    var basin = ctx.createLinearGradient(cx - r, cy + r * 0.2, cx + r, cy - r * 0.1);
+    basin.addColorStop(0.00, "rgba(0,12,38,0.34)");
+    basin.addColorStop(0.30, "rgba(0,25,73,0.08)");
+    basin.addColorStop(0.52, "rgba(34,149,198,0.05)");
+    basin.addColorStop(0.76, "rgba(0,18,58,0.16)");
+    basin.addColorStop(1.00, "rgba(0,7,22,0.40)");
+
+    ctx.fillStyle = basin;
+    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+
     var directional = ctx.createLinearGradient(cx - r, cy - r, cx + r, cy + r);
-    directional.addColorStop(0.00, "rgba(255,255,255,0.055)");
-    directional.addColorStop(0.36, "rgba(255,255,255,0.000)");
-    directional.addColorStop(0.63, "rgba(0,0,0,0.12)");
-    directional.addColorStop(1.00, "rgba(0,0,0,0.30)");
+    directional.addColorStop(0.00, "rgba(255,255,255,0.040)");
+    directional.addColorStop(0.26, "rgba(255,255,255,0.010)");
+    directional.addColorStop(0.56, "rgba(0,0,0,0.11)");
+    directional.addColorStop(1.00, "rgba(0,0,0,0.34)");
 
     ctx.fillStyle = directional;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
     ctx.restore();
 
-    var depth = ctx.createRadialGradient(cx + r * 0.36, cy + r * 0.32, r * 0.10, cx, cy, r * 1.08);
+    var depth = ctx.createRadialGradient(cx + r * 0.36, cy + r * 0.33, r * 0.08, cx, cy, r * 1.10);
     depth.addColorStop(0.00, "rgba(0,0,0,0)");
-    depth.addColorStop(0.50, "rgba(0,0,0,0.10)");
-    depth.addColorStop(0.82, "rgba(0,0,0,0.40)");
-    depth.addColorStop(1.00, "rgba(0,0,0,0.72)");
+    depth.addColorStop(0.48, "rgba(0,0,0,0.12)");
+    depth.addColorStop(0.80, "rgba(0,0,0,0.42)");
+    depth.addColorStop(1.00, "rgba(0,0,0,0.76)");
 
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, TAU);
     ctx.fillStyle = depth;
     ctx.fill();
 
-    var glow = ctx.createRadialGradient(cx, cy, r * 0.86, cx, cy, r * 1.20);
-    glow.addColorStop(0.00, "rgba(141,216,255,0)");
-    glow.addColorStop(0.72, "rgba(141,216,255,0.08)");
-    glow.addColorStop(0.92, "rgba(141,216,255,0.18)");
-    glow.addColorStop(1.00, "rgba(141,216,255,0)");
+    var atmosphere = ctx.createRadialGradient(cx, cy, r * 0.94, cx, cy, r * 1.075);
+    atmosphere.addColorStop(0.00, "rgba(141,216,255,0)");
+    atmosphere.addColorStop(0.72, "rgba(141,216,255,0.025)");
+    atmosphere.addColorStop(0.92, "rgba(141,216,255,0.105)");
+    atmosphere.addColorStop(1.00, "rgba(141,216,255,0)");
 
     ctx.beginPath();
-    ctx.arc(cx, cy, r * 1.16, 0, TAU);
-    ctx.fillStyle = glow;
+    ctx.arc(cx, cy, r * 1.08, 0, TAU);
+    ctx.fillStyle = atmosphere;
     ctx.fill();
 
     ctx.beginPath();
-    ctx.arc(cx, cy, r * 1.003, 0, TAU);
-    ctx.strokeStyle = "rgba(170,226,255,0.18)";
-    ctx.lineWidth = Math.max(0.8, state.dpr * 0.8);
+    ctx.arc(cx, cy, r * 1.001, 0, TAU);
+    ctx.strokeStyle = "rgba(170,226,255,0.125)";
+    ctx.lineWidth = Math.max(0.65, state.dpr * 0.62);
     ctx.stroke();
 
     ctx.restore();
@@ -503,6 +583,9 @@
     var result = polygonProjection(poly.points);
     if (result.front < 2) return;
 
+    var surfaceBoost = state.activeLens === "surface";
+    var hydrationBoost = state.activeLens === "hydration";
+
     ctx.save();
     clipSphere();
 
@@ -517,12 +600,12 @@
     ctx.closePath();
 
     ctx.fillStyle = poly.fill;
-    ctx.globalAlpha = state.activeLens === "surface" ? 0.98 : 0.82;
+    ctx.globalAlpha = surfaceBoost ? 0.92 : 0.66;
     ctx.fill();
 
-    ctx.strokeStyle = state.activeLens === "hydration" ? "rgba(167,243,198,0.44)" : poly.shelf;
-    ctx.lineWidth = Math.max(1, state.dpr * (state.activeLens === "hydration" ? 1.8 : 1.05));
-    ctx.globalAlpha = state.activeLens === "hydration" ? 0.76 : 0.48;
+    ctx.strokeStyle = hydrationBoost ? "rgba(167,243,198,0.40)" : poly.edge;
+    ctx.lineWidth = Math.max(0.85, state.dpr * (hydrationBoost ? 1.45 : 0.82));
+    ctx.globalAlpha = hydrationBoost ? 0.68 : surfaceBoost ? 0.46 : 0.28;
     ctx.stroke();
 
     ctx.restore();
@@ -554,44 +637,71 @@
     ctx.restore();
   }
 
+  function drawIslandChain(points, alpha) {
+    var ctx = state.ctx;
+
+    ctx.save();
+    clipSphere();
+
+    for (var i = 0; i < points.length; i += 1) {
+      var p = projectPoint(lonLatPoint(points[i][0], points[i][1]));
+      if (!p.frontFacing) continue;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, Math.max(0.8, state.dpr * 1.6 * p.perspective), 0, TAU);
+      ctx.fillStyle = "rgba(130,137,105," + alpha.toFixed(3) + ")";
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, Math.max(1.2, state.dpr * 2.5 * p.perspective), 0, TAU);
+      ctx.strokeStyle = "rgba(167,243,198," + (alpha * 0.45).toFixed(3) + ")";
+      ctx.lineWidth = Math.max(0.5, state.dpr * 0.5);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
   function drawAudraliaSurface() {
     var i;
+    var hydration = state.activeLens === "hydration";
+    var surface = state.activeLens === "surface";
+    var body = state.activeLens === "body";
 
     for (i = 0; i < SURFACE_POLYGONS.length; i += 1) {
       drawSurfacePolygon(SURFACE_POLYGONS[i]);
     }
 
-    var hydration = state.activeLens === "hydration";
-    var surface = state.activeLens === "surface";
-
-    [
-      [[-136, 7], [-111, -5], [-80, -10], [-52, 6], [-40, 22]],
-      [[5, 31], [23, 16], [57, 7], [91, 18], [96, 39]],
-      [[-31, -20], [-4, -45], [39, -55], [81, -43], [102, -18]],
-      [[-108, -47], [-80, -63], [-45, -68], [-19, -49]]
-    ].forEach(function (path) {
+    for (i = 0; i < COAST_SHELVES.length; i += 1) {
       drawProjectedPath(
-        path,
-        hydration ? "rgba(167,243,198,0.46)" : "rgba(167,243,198,0.16)",
-        Math.max(1, state.dpr * (hydration ? 2.2 : 1.1)),
-        hydration ? 0.84 : 0.46
+        COAST_SHELVES[i],
+        hydration ? "rgba(167,243,198,0.42)" : "rgba(167,243,198,0.15)",
+        Math.max(0.75, state.dpr * (hydration ? 1.75 : 0.85)),
+        hydration ? 0.78 : body ? 0.20 : 0.38
       );
-    });
+    }
 
-    [
-      [[-120, 33], [-94, 42], [-64, 39], [-48, 22]],
-      [[16, 51], [42, 55], [76, 42], [90, 24]],
-      [[-5, 9], [30, 18], [66, 5], [92, -24]],
-      [[-78, -31], [-54, -41], [-30, -55]],
-      [[35, -35], [58, -45], [88, -36]]
-    ].forEach(function (path) {
+    for (i = 0; i < BASIN_BANDS.length; i += 1) {
       drawProjectedPath(
-        path,
-        surface ? "rgba(255,244,216,0.32)" : "rgba(255,244,216,0.13)",
-        Math.max(1.1, state.dpr * (surface ? 1.8 : 1.0)),
-        surface ? 0.80 : 0.42
+        BASIN_BANDS[i],
+        hydration ? "rgba(95,202,236,0.28)" : "rgba(95,202,236,0.10)",
+        Math.max(0.65, state.dpr * (hydration ? 1.25 : 0.65)),
+        hydration ? 0.64 : body ? 0.10 : 0.22
       );
-    });
+    }
+
+    for (i = 0; i < MINERAL_STROKES.length; i += 1) {
+      drawProjectedPath(
+        MINERAL_STROKES[i],
+        surface ? "rgba(255,244,216,0.24)" : "rgba(255,244,216,0.075)",
+        Math.max(0.75, state.dpr * (surface ? 1.25 : 0.65)),
+        surface ? 0.70 : body ? 0.12 : 0.28
+      );
+    }
+
+    for (i = 0; i < ISLAND_CHAINS.length; i += 1) {
+      drawIslandChain(ISLAND_CHAINS[i], hydration ? 0.48 : surface ? 0.38 : 0.22);
+    }
   }
 
   function drawReferenceLines() {
@@ -628,9 +738,9 @@
 
     ctx.save();
     clipSphere();
-    ctx.globalAlpha = state.activeLens === "body" ? 0.42 : 0.70;
-    strokeLine(equator, "rgba(244,207,131,0.24)", Math.max(0.55, state.dpr * 0.50));
-    strokeLine(meridian, "rgba(141,216,255,0.14)", Math.max(0.45, state.dpr * 0.42));
+    ctx.globalAlpha = state.activeLens === "body" ? 0.12 : 0.48;
+    strokeLine(equator, "rgba(244,207,131,0.16)", Math.max(0.45, state.dpr * 0.38));
+    strokeLine(meridian, "rgba(141,216,255,0.09)", Math.max(0.38, state.dpr * 0.32));
     ctx.restore();
   }
 
@@ -676,7 +786,7 @@
       ctx.moveTo(a.x, a.y);
       ctx.lineTo(b.x, b.y);
       ctx.strokeStyle = linkColor(link, a, b);
-      ctx.lineWidth = link.major ? Math.max(0.75, state.dpr * 0.76) : Math.max(0.42, state.dpr * 0.46);
+      ctx.lineWidth = link.major ? Math.max(0.65, state.dpr * 0.66) : Math.max(0.34, state.dpr * 0.36);
       ctx.stroke();
     }
   }
@@ -690,11 +800,11 @@
       if (reduced && !seat.major) continue;
 
       var p = projectPoint(seat);
-      var alpha = p.frontFacing ? (seat.major ? 0.82 : 0.54) : (seat.major ? 0.16 : 0.06);
-      var radius = seat.major ? 2.2 : seat.secondary ? 1.5 : 1.1;
+      var alpha = p.frontFacing ? (seat.major ? 0.74 : 0.46) : (seat.major ? 0.12 : 0.04);
+      var radius = seat.major ? 1.85 : seat.secondary ? 1.25 : 0.95;
 
       ctx.beginPath();
-      ctx.arc(p.x, p.y, Math.max(1, radius * state.dpr * p.perspective), 0, TAU);
+      ctx.arc(p.x, p.y, Math.max(0.8, radius * state.dpr * p.perspective), 0, TAU);
       ctx.fillStyle = seat.major
         ? "rgba(244,207,131," + alpha.toFixed(3) + ")"
         : "rgba(141,216,255," + alpha.toFixed(3) + ")";
@@ -719,31 +829,31 @@
 
     var ctx = state.ctx;
     var m = metrics();
-    var w = Math.min(state.width * 0.62, m.radius * 1.62);
-    var h = Math.min(state.height * 0.24, m.radius * 0.62);
+    var w = Math.min(state.width * 0.62, m.radius * 1.58);
+    var h = Math.min(state.height * 0.23, m.radius * 0.58);
     var x = m.centerX - w / 2;
     var y = m.centerY - h / 2;
 
     ctx.save();
-    ctx.fillStyle = "rgba(2,8,20,0.62)";
-    ctx.strokeStyle = "rgba(244,207,131,0.38)";
+    ctx.fillStyle = "rgba(2,8,20,0.58)";
+    ctx.strokeStyle = "rgba(244,207,131,0.34)";
     ctx.lineWidth = Math.max(1, state.dpr);
-    roundedRect(ctx, x, y, w, h, 24 * state.dpr);
+    roundedRect(ctx, x, y, w, h, 22 * state.dpr);
     ctx.fill();
     ctx.stroke();
 
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.font = "900 " + Math.max(15, 17 * state.dpr) + "px ui-monospace, monospace";
+    ctx.font = "900 " + Math.max(14, 16 * state.dpr) + "px ui-monospace, monospace";
     ctx.fillStyle = "rgba(244,207,131,0.92)";
-    ctx.fillText("JS FEMALE CARRIER FIRST", m.centerX, y + h * 0.32);
+    ctx.fillText("MATERIAL REFINEMENT", m.centerX, y + h * 0.32);
 
-    ctx.font = "900 " + Math.max(11, 12 * state.dpr) + "px ui-monospace, monospace";
+    ctx.font = "900 " + Math.max(10, 11 * state.dpr) + "px ui-monospace, monospace";
     ctx.fillStyle = "rgba(238,244,255,0.82)";
-    ctx.fillText("HTML MALE SELECTOR SECOND", m.centerX, y + h * 0.56);
+    ctx.fillText("HTML UNTOUCHED · JS ONLY", m.centerX, y + h * 0.56);
 
     ctx.fillStyle = "rgba(141,216,255,0.82)";
-    ctx.fillText("NO STAGE UI INJECTION", m.centerX, y + h * 0.76);
+    ctx.fillText("NO FINAL VISUAL PASS", m.centerX, y + h * 0.76);
     ctx.restore();
   }
 
@@ -779,12 +889,17 @@
       drawDiagnosticLattice(state.pointerActive);
     } else if (state.activeLens === "receipt") {
       state.ctx.save();
-      state.ctx.globalAlpha = 0.14;
+      state.ctx.globalAlpha = 0.075;
+      drawDiagnosticLattice(true);
+      state.ctx.restore();
+    } else if (state.activeLens === "surface" || state.activeLens === "hydration") {
+      state.ctx.save();
+      state.ctx.globalAlpha = 0.025;
       drawDiagnosticLattice(true);
       state.ctx.restore();
     } else {
       state.ctx.save();
-      state.ctx.globalAlpha = 0.06;
+      state.ctx.globalAlpha = 0.008;
       drawDiagnosticLattice(true);
       state.ctx.restore();
     }
@@ -822,12 +937,12 @@
     setText("[data-audralia-planet-lens-anchor]", LENSES[lens].anchor);
     setText("[data-audralia-planet-lens-title]", LENSES[lens].title);
     setText("[data-audralia-planet-lens-copy]", LENSES[lens].copy);
-    setText("[data-audralia-planet-carrier-status]", "JS female carrier · " + LENSES[lens].title);
-    setText("[data-audralia-planet-carrier-proof]", "one canvas · no injected stage controls · HTML selector bound · Runtime / Strength held");
+    setText("[data-audralia-planet-carrier-status]", "JS material carrier · " + LENSES[lens].title);
+    setText("[data-audralia-planet-carrier-proof]", "JS-only material refinement · HTML untouched · lattice suppressed in Body View · Runtime / Strength held");
 
     setDataset("audraliaPlanetActiveLens", lens);
     publishStatus(true);
-    requestRender(lens === "body" ? 8 : 14);
+    requestRender(lens === "body" ? 10 : 16);
   }
 
   function bindExistingEngineeringControls() {
@@ -952,10 +1067,11 @@
     });
 
     state.canvas = selected;
-    state.canvas.setAttribute("data-audralia-g2-js-female-canvas-carrier", CONTRACT);
-    state.canvas.setAttribute("data-js-female-first", "true");
-    state.canvas.setAttribute("data-html-male-second", "true");
-    state.canvas.setAttribute("data-no-injected-stage-controls", "true");
+    state.canvas.setAttribute("data-audralia-g2-material-refinement-js", CONTRACT);
+    state.canvas.setAttribute("data-previous-contract", PREVIOUS_CONTRACT);
+    state.canvas.setAttribute("data-material-refinement-js-only", "true");
+    state.canvas.setAttribute("data-html-untouched", "true");
+    state.canvas.setAttribute("data-clean-inspection-preserved", "true");
     state.canvas.setAttribute("data-runtime-strength-held", "true");
     state.canvas.setAttribute("data-final-visual-pass-claim", "false");
 
@@ -1039,58 +1155,70 @@
   function receipt() {
     return {
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       specOps: SPEC_OPS,
       donorContract: DONOR_CONTRACT,
       route: ROUTE,
       target: FILE,
-      jsFemaleFirst: true,
-      htmlMaleSecond: true,
-      femaleCarrierPresentBeforeSelection: true,
-      maleHtmlChoosesJs: true,
+
+      materialRefinementJsOnly: true,
+      htmlUntouched: true,
+      cleanInspectionPreserved: true,
+
+      planetScaleRefined: true,
+      planetCenterRefined: true,
+      oceanDepthRefined: true,
+      landOpacityReduced: true,
+      coastlineDetailIncreased: true,
+      islandDetailAdded: true,
+      atmosphereRimThinned: true,
+      bodyLatticeSuppressed: true,
+
+      engineeringLensesPreserved: true,
       oneCanvas: state.oneCanvas,
-      cleanInspectionDefault: true,
-      engineeringOptional: true,
-      noInjectedStageControls: true,
-      noControlsOverPlanet: true,
-      svgCartoonCarrierRetired: true,
-      stateDeckBelowPlanet: true,
-      receiptBelowPlanet: true,
       dragRotation: state.onePointerPath,
       activeLens: state.activeLens,
       latticeStates: LATTICE_STATES,
       geometryBuilt: state.geometryBuilt,
+
       runtimeStrengthHeld: true,
       finalVisualPassClaim: false,
       generatedImage: false,
       graphicBox: false,
       earthSubstitution: false,
       australiaNameDrift: false,
+
       renderCount: state.renderCount,
       duplicateCanvasRemoved: state.duplicateCanvasRemoved,
       errors: state.errors.slice(),
-      deployMarker: "AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_DEPLOY_MARKER_v1"
+      deployMarker: "AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_MATERIAL_REFINEMENT_JS_DEPLOY_MARKER_v1"
     };
   }
 
   function publishStatus(force) {
     var payload = receipt();
 
+    window.AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_MATERIAL_REFINEMENT_JS_STATUS = payload;
     window.AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_STATUS = payload;
     window.AUDRALIA_G2_JS_FEMALE_CANVAS_CARRIER_STATUS = payload;
 
-    setDataset("audraliaPlanetJsFemaleFirst", true);
-    setDataset("audraliaPlanetHtmlMaleSecond", true);
-    setDataset("audraliaPlanetOneCanvas", state.oneCanvas);
-    setDataset("audraliaPlanetNoInjectedStageControls", true);
-    setDataset("audraliaPlanetCleanInspectionDefault", true);
-    setDataset("audraliaPlanetEngineeringOptional", true);
+    setDataset("audraliaPlanetMaterialRefinementJsOnly", true);
+    setDataset("audraliaPlanetHtmlUntouched", true);
+    setDataset("audraliaPlanetCleanInspectionPreserved", true);
+    setDataset("audraliaPlanetScaleRefined", true);
+    setDataset("audraliaPlanetCenterRefined", true);
+    setDataset("audraliaPlanetOceanDepthRefined", true);
+    setDataset("audraliaPlanetLandOpacityReduced", true);
+    setDataset("audraliaPlanetCoastlineDetailIncreased", true);
+    setDataset("audraliaPlanetAtmosphereRimThinned", true);
+    setDataset("audraliaPlanetBodyLatticeSuppressed", true);
     setDataset("audraliaPlanetRuntimeStrengthHeld", true);
     setDataset("audraliaPlanetFinalVisualPassClaim", false);
     setDataset("audraliaPlanetActiveLens", state.activeLens);
 
     if (force) {
-      setText("[data-audralia-planet-carrier-status]", "JS female carrier · " + LENSES[state.activeLens].title);
-      setText("[data-audralia-planet-carrier-proof]", "one canvas · no injected stage controls · HTML selector bound · Runtime / Strength held");
+      setText("[data-audralia-planet-carrier-status]", "JS material carrier · " + LENSES[state.activeLens].title);
+      setText("[data-audralia-planet-carrier-proof]", "JS-only material refinement · HTML untouched · lattice suppressed in Body View · Runtime / Strength held");
     }
 
     return payload;
@@ -1128,7 +1256,7 @@
     state.details = Array.prototype.slice.call(document.querySelectorAll("details"));
 
     if (!state.stage || !state.mount) {
-      recordError("init", "Female JS carrier is present, but male HTML selector has not provided stage/mount yet.");
+      recordError("init", "JS material carrier is present, but HTML stage/mount is unavailable.");
       publishStatus(true);
       return;
     }
@@ -1147,6 +1275,7 @@
     stop: stop,
     state: state,
     contract: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
     specOps: SPEC_OPS,
     donorContract: DONOR_CONTRACT,
     receipt: receipt,

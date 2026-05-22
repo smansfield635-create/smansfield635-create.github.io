@@ -1,19 +1,23 @@
 // /assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
-// AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_TNT_v1
+// AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_JS_ONLY_TNT_v1
 // Full-file replacement.
-// Scope: carrier consumes Gratitude terrain child after HTML loads child before carrier.
-// Carrier does not invent terrain. Gratitude child owns land-first terrain and valley-fill hydration.
+// Scope: boot-align the Audralia clean planet carrier so it detects and consumes the Gratitude terrain child.
+// Protected: HTML, Gratitude child, hybrid core child.
+// Rule: carrier consumes child data only; carrier does not invent terrain.
 // Runtime / Strength remains held. No final visual pass claim.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_TNT_v1";
-  var PREVIOUS_CONTRACT = "AUDRALIA_G2_PLANET_BODY_HYDROSPHERE_CARRIER_TERRAIN_HELD_JS_TNT_v1";
-  var SPEC_OPS = "AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_SPEC_OPS_v1";
+  var CONTRACT = "AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_JS_ONLY_TNT_v1";
+  var PREVIOUS_CONTRACT = "AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_TNT_v1";
+  var HTML_COLLABORATIVE_CONTRACT = "AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_TNT_v1";
+  var SPEC_OPS = "AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_JS_ONLY_SPEC_OPS_v1";
+
   var ROUTE = "/showroom/globe/audralia/planet/";
   var FILE = "/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js";
   var GRATITUDE_CHILD_FILE = "/assets/audralia/clean/terrain/audralia.gratitude.continent.child.js";
+  var CORE_CHILD_FILE = "/assets/audralia/clean/core/audralia.planet-core.child.js";
 
   var RADIAL_NODES = 16;
   var FIBONACCI_BANDS = 16;
@@ -32,12 +36,12 @@
     body: {
       title: "Body View",
       anchor: "North · Hydrosphere Body",
-      copy: "Clean body view keeps Audralia hydrosphere-first. Gratitude child terrain is held back for Surface and Hydration views."
+      copy: "Clean body view keeps Audralia hydrosphere-first. Gratitude child terrain remains faint unless Surface or Hydration is selected."
     },
     surface: {
       title: "Surface View",
       anchor: "East · Gratitude Surface",
-      copy: "Surface view renders the Continent of Gratitude from the child terrain packet. The carrier does not invent land."
+      copy: "Surface view renders the Continent of Gratitude from the validated child terrain packet. The carrier does not invent terrain."
     },
     hydration: {
       title: "Hydration View",
@@ -47,29 +51,29 @@
     lattice: {
       title: "Lattice View",
       anchor: "West · 16 × 16 / 256",
-      copy: "Lattice view reveals the 256 inspection field through Engineering while preserving child-authority boundaries."
+      copy: "Lattice view reveals the 256 inspection field while preserving the child-authority boundary."
     },
     receipt: {
       title: "Receipt View",
-      anchor: "Northwest · Collaboration Receipt",
-      copy: "Receipt view confirms inline tray active, Gratitude child detected, carrier consumption active, and Runtime / Strength held."
+      anchor: "Northwest · Boot Alignment Receipt",
+      copy: "Receipt view proves carrier boot alignment, Gratitude child detection, packet validation, and no local terrain invention."
     }
   });
 
   var HYDRO_CURRENT_ARCS = Object.freeze([
-    [[-170, 18], [-136, 12], [-101, 8], [-66, 10], [-31, 18], [4, 23]],
-    [[-150, -22], [-116, -29], [-82, -31], [-47, -25], [-10, -15], [26, -7]],
-    [[22, 42], [58, 38], [94, 28], [128, 14], [156, -3]],
-    [[-32, 56], [5, 51], [44, 43], [81, 30], [111, 12]],
-    [[42, -48], [75, -43], [106, -34], [135, -20], [158, -4]],
-    [[-178, 62], [-135, 66], [-92, 65], [-49, 60], [-8, 52], [31, 42]]
+    Object.freeze([[-170, 18], [-136, 12], [-101, 8], [-66, 10], [-31, 18], [4, 23]]),
+    Object.freeze([[-150, -22], [-116, -29], [-82, -31], [-47, -25], [-10, -15], [26, -7]]),
+    Object.freeze([[22, 42], [58, 38], [94, 28], [128, 14], [156, -3]]),
+    Object.freeze([[-32, 56], [5, 51], [44, 43], [81, 30], [111, 12]]),
+    Object.freeze([[42, -48], [75, -43], [106, -34], [135, -20], [158, -4]]),
+    Object.freeze([[-178, 62], [-135, 66], [-92, 65], [-49, 60], [-8, 52], [31, 42]])
   ]);
 
   var HYDRO_DEPTH_BANDS = Object.freeze([
-    [[-180, -52], [-135, -56], [-90, -55], [-45, -49], [0, -40], [45, -31], [90, -26], [135, -30], [180, -39]],
-    [[-180, -10], [-138, -16], [-96, -18], [-54, -14], [-12, -7], [30, -2], [72, -5], [114, -12], [156, -16], [180, -13]],
-    [[-180, 24], [-140, 30], [-99, 34], [-58, 32], [-17, 25], [24, 18], [65, 15], [106, 18], [147, 25], [180, 30]],
-    [[-180, 48], [-130, 53], [-80, 54], [-30, 50], [20, 43], [70, 38], [120, 40], [170, 47]]
+    Object.freeze([[-180, -52], [-135, -56], [-90, -55], [-45, -49], [0, -40], [45, -31], [90, -26], [135, -30], [180, -39]]),
+    Object.freeze([[-180, -10], [-138, -16], [-96, -18], [-54, -14], [-12, -7], [30, -2], [72, -5], [114, -12], [156, -16], [180, -13]]),
+    Object.freeze([[-180, 24], [-140, 30], [-99, 34], [-58, 32], [-17, 25], [24, 18], [65, 15], [106, 18], [147, 25], [180, 30]]),
+    Object.freeze([[-180, 48], [-130, 53], [-80, 54], [-30, 50], [20, 43], [70, 38], [120, 40], [170, 47]])
   ]);
 
   var state = {
@@ -112,20 +116,30 @@
     oneCanvas: false,
     onePointerPath: false,
     duplicateCanvasRemoved: 0,
+    visibleReadoutUpdated: false,
+    staleHydrosphereHeldReceiptRemoved: true,
+
     datasetCache: {},
     errors: [],
 
     gratitude: {
       api: null,
       detected: false,
+      apiComplete: false,
       packetReady: false,
       validated: false,
       packet: null,
+      status: null,
+      continentMap: null,
+      elevationMap: null,
+      hydrationMap: null,
+      summitMap: null,
       continentSeats: [],
       hydrationSeats: [],
-      summitMap: null,
-      status: null,
-      failureReason: "child not checked"
+      summits: [],
+      failureReason: "Gratitude child not checked",
+      attempts: 0,
+      checkedAt: null
     }
   };
 
@@ -133,7 +147,9 @@
     window.__AUDRALIA_G2_PLANET_BODY_CLEAN_PAIR_CONTROLLER__ &&
     typeof window.__AUDRALIA_G2_PLANET_BODY_CLEAN_PAIR_CONTROLLER__.stop === "function"
   ) {
-    try { window.__AUDRALIA_G2_PLANET_BODY_CLEAN_PAIR_CONTROLLER__.stop(); } catch (_error) {}
+    try {
+      window.__AUDRALIA_G2_PLANET_BODY_CLEAN_PAIR_CONTROLLER__.stop();
+    } catch (_stopError) {}
   }
 
   var abortController = typeof AbortController !== "undefined" ? new AbortController() : null;
@@ -152,8 +168,10 @@
 
   function routeAllowed() {
     if (!hasDOM()) return false;
+
     var htmlRoute = normalizeRoute(document.documentElement.getAttribute("data-route") || "");
     var path = normalizeRoute(window.location ? window.location.pathname : "");
+
     return htmlRoute === ROUTE || path === ROUTE;
   }
 
@@ -171,19 +189,27 @@
   }
 
   function query(selector) {
-    try { return document.querySelector(selector); } catch (_error) { return null; }
+    try {
+      return document.querySelector(selector);
+    } catch (_error) {
+      return null;
+    }
   }
 
   function setText(selector, value) {
     var node = query(selector);
     var text = String(value);
+
     if (node && node.textContent !== text) node.textContent = text;
+
     return Boolean(node);
   }
 
   function setDataset(key, value) {
     var text = String(value);
+
     if (state.datasetCache[key] === text) return;
+
     state.datasetCache[key] = text;
 
     try {
@@ -194,13 +220,20 @@
 
   function closeMenus() {
     for (var i = 0; i < state.details.length; i += 1) {
-      try { state.details[i].open = false; } catch (_error) {}
+      try {
+        state.details[i].open = false;
+      } catch (_error) {}
     }
   }
 
   function recordError(scope, error) {
     var message = error && error.message ? error.message : String(error || "unknown");
-    state.errors.push({ scope: scope, message: message, time: new Date().toISOString() });
+
+    state.errors.push({
+      scope: scope,
+      message: message,
+      time: new Date().toISOString()
+    });
   }
 
   function lonLatPoint(lonDeg, latDeg) {
@@ -218,19 +251,21 @@
   }
 
   function terrainSeatToLonLat(x, y) {
-    var lon = -142 + (x / 15) * 108;
-    var lat = 56 - (y / 15) * 112;
-    return { lon: lon, lat: lat };
+    return {
+      lon: -142 + (x / 15) * 108,
+      lat: 56 - (y / 15) * 112
+    };
   }
 
   function makeTerrainCellPoints(seat) {
-    var west = terrainSeatToLonLat(seat.x - 0.46, seat.y - 0.46);
-    var east = terrainSeatToLonLat(seat.x + 0.46, seat.y + 0.46);
+    var westNorth = terrainSeatToLonLat(seat.x - 0.46, seat.y - 0.46);
+    var eastSouth = terrainSeatToLonLat(seat.x + 0.46, seat.y + 0.46);
+
     return [
-      [west.lon, west.lat],
-      [east.lon, west.lat],
-      [east.lon, east.lat],
-      [west.lon, east.lat]
+      [westNorth.lon, westNorth.lat],
+      [eastSouth.lon, westNorth.lat],
+      [eastSouth.lon, eastSouth.lat],
+      [westNorth.lon, eastSouth.lat]
     ];
   }
 
@@ -266,7 +301,11 @@
 
     for (band = 0; band < FIBONACCI_BANDS; band += 1) {
       var ring = [];
-      for (radial = 0; radial < RADIAL_NODES; radial += 1) ring.push(makeSeat(band, radial));
+
+      for (radial = 0; radial < RADIAL_NODES; radial += 1) {
+        ring.push(makeSeat(band, radial));
+      }
+
       rings.push(Object.freeze(ring));
     }
 
@@ -275,7 +314,14 @@
     }
 
     function link(a, b, family, major, secondary) {
-      return Object.freeze({ a: a, b: b, family: family, major: Boolean(major), secondary: Boolean(secondary), renderEligible: true });
+      return Object.freeze({
+        a: a,
+        b: b,
+        family: family,
+        major: Boolean(major),
+        secondary: Boolean(secondary),
+        renderEligible: true
+      });
     }
 
     var ringLinks = [];
@@ -285,13 +331,25 @@
 
     for (band = 0; band < FIBONACCI_BANDS; band += 1) {
       for (radial = 0; radial < RADIAL_NODES; radial += 1) {
-        ringLinks.push(link(seat(band, radial), seat(band, radial + 1), "ring", band % 4 === 0 || radial % 4 === 0, band % 2 === 0 || radial % 2 === 0));
+        ringLinks.push(link(
+          seat(band, radial),
+          seat(band, radial + 1),
+          "ring",
+          band % 4 === 0 || radial % 4 === 0,
+          band % 2 === 0 || radial % 2 === 0
+        ));
       }
     }
 
     for (radial = 0; radial < RADIAL_NODES; radial += 1) {
       for (band = 0; band < FIBONACCI_BANDS - 1; band += 1) {
-        spineLinks.push(link(seat(band, radial), seat(band + 1, radial), "spine", radial % 4 === 0, radial % 2 === 0));
+        spineLinks.push(link(
+          seat(band, radial),
+          seat(band + 1, radial),
+          "spine",
+          radial % 4 === 0,
+          radial % 2 === 0
+        ));
       }
     }
 
@@ -301,15 +359,29 @@
       for (radial = 0; radial < RADIAL_NODES; radial += 1) {
         var priority = radial % 4 === 0 || band % 4 === 0;
 
-        fibonacciLinks.push(link(seat(band, radial), seat(band + 1, radial + offset), "fibonacci-forward", priority, radial % 2 === 0 || band % 2 === 0));
+        fibonacciLinks.push(link(
+          seat(band, radial),
+          seat(band + 1, radial + offset),
+          "fibonacci-forward",
+          priority,
+          radial % 2 === 0 || band % 2 === 0
+        ));
 
         if (band % 2 === 0) {
-          fibonacciReturnLinks.push(link(seat(band, radial), seat(band + 1, radial - offset), "fibonacci-return", priority, radial % 2 === 0 || band % 2 === 0));
+          fibonacciReturnLinks.push(link(
+            seat(band, radial),
+            seat(band + 1, radial - offset),
+            "fibonacci-return",
+            priority,
+            radial % 2 === 0 || band % 2 === 0
+          ));
         }
       }
     }
 
-    state.seats = rings.reduce(function (all, ring) { return all.concat(ring); }, []);
+    state.seats = rings.reduce(function (all, ring) {
+      return all.concat(ring);
+    }, []);
     state.ringLinks = ringLinks;
     state.spineLinks = spineLinks;
     state.fibonacciLinks = fibonacciLinks;
@@ -380,6 +452,7 @@
   function clipSphere() {
     var ctx = state.ctx;
     var m = metrics();
+
     ctx.beginPath();
     ctx.arc(m.centerX, m.centerY, m.radius * 1.003, 0, TAU);
     ctx.clip();
@@ -387,6 +460,7 @@
 
   function roundedRect(ctx, x, y, width, height, radius) {
     var r = Math.min(radius, width / 2, height / 2);
+
     ctx.beginPath();
     ctx.moveTo(x + r, y);
     ctx.arcTo(x + width, y, x + width, y + height, r);
@@ -398,7 +472,9 @@
 
   function drawProjectedPath(points, stroke, width, alpha) {
     var ctx = state.ctx;
-    var projected = points.map(function (pair) { return projectPoint(lonLatPoint(pair[0], pair[1])); });
+    var projected = points.map(function (pair) {
+      return projectPoint(lonLatPoint(pair[0], pair[1]));
+    });
 
     if (projected.filter(function (p) { return p.frontFacing; }).length < 2) return;
 
@@ -460,6 +536,7 @@
     directional.addColorStop(1.00, "rgba(0,0,0,0.35)");
     ctx.fillStyle = directional;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+
     ctx.restore();
 
     var depth = ctx.createRadialGradient(cx + r * 0.36, cy + r * 0.33, r * 0.08, cx, cy, r * 1.10);
@@ -501,49 +578,90 @@
     var currentAlpha = hydration ? 0.52 : body ? 0.13 : 0.20;
 
     for (var i = 0; i < HYDRO_DEPTH_BANDS.length; i += 1) {
-      drawProjectedPath(HYDRO_DEPTH_BANDS[i], "rgba(85,201,236,0.34)", Math.max(0.65, state.dpr * (hydration ? 1.18 : 0.58)), bandAlpha);
+      drawProjectedPath(
+        HYDRO_DEPTH_BANDS[i],
+        "rgba(85,201,236,0.34)",
+        Math.max(0.65, state.dpr * (hydration ? 1.18 : 0.58)),
+        bandAlpha
+      );
     }
 
     for (var j = 0; j < HYDRO_CURRENT_ARCS.length; j += 1) {
-      drawProjectedPath(HYDRO_CURRENT_ARCS[j], "rgba(182,245,255,0.26)", Math.max(0.62, state.dpr * (hydration ? 1.08 : 0.50)), currentAlpha);
+      drawProjectedPath(
+        HYDRO_CURRENT_ARCS[j],
+        "rgba(182,245,255,0.26)",
+        Math.max(0.62, state.dpr * (hydration ? 1.08 : 0.50)),
+        currentAlpha
+      );
     }
   }
 
-  function findGratitudeChild() {
+  function validateGratitudeChild() {
+    state.gratitude.attempts += 1;
+    state.gratitude.checkedAt = new Date().toISOString();
+
     var api = window.AUDRALIA_G2_GRATITUDE_CONTINENT_CHILD || null;
+
     state.gratitude.api = api;
     state.gratitude.detected = Boolean(api);
+    state.gratitude.apiComplete = false;
+    state.gratitude.packetReady = false;
+    state.gratitude.validated = false;
+    state.gratitude.packet = null;
+    state.gratitude.status = null;
+    state.gratitude.continentMap = null;
+    state.gratitude.elevationMap = null;
+    state.gratitude.hydrationMap = null;
+    state.gratitude.summitMap = null;
+    state.gratitude.continentSeats = [];
+    state.gratitude.hydrationSeats = [];
+    state.gratitude.summits = [];
 
     if (!api) {
-      state.gratitude.failureReason = "Gratitude child global missing";
+      state.gratitude.failureReason = "Gratitude child missing / invalid · terrain render held";
+      updateVisibleReadout(true);
+      publishStatus(true);
+      requestRender(8);
       return false;
     }
 
-    if (
-      typeof api.status !== "function" ||
-      typeof api.getChildReceivePacket !== "function" ||
-      typeof api.getContinentMap !== "function" ||
-      typeof api.getHydrationMap !== "function" ||
-      typeof api.getSummitMap !== "function"
-    ) {
-      state.gratitude.failureReason = "Gratitude child API incomplete";
+    state.gratitude.apiComplete = Boolean(
+      typeof api.status === "function" &&
+      typeof api.getChildReceivePacket === "function" &&
+      typeof api.getContinentMap === "function" &&
+      typeof api.getHydrationMap === "function" &&
+      typeof api.getSummitMap === "function"
+    );
+
+    if (!state.gratitude.apiComplete) {
+      state.gratitude.failureReason = "Gratitude child API incomplete · terrain render held";
+      updateVisibleReadout(true);
+      publishStatus(true);
+      requestRender(8);
       return false;
     }
 
     try {
-      var packet = api.getChildReceivePacket("audralia-clean-planet-carrier", { compact: false });
       var status = api.status();
-      var continent = api.getContinentMap({ compact: false });
-      var hydration = api.getHydrationMap({ compact: false });
-      var summit = api.getSummitMap({ compact: false });
+      var packet = api.getChildReceivePacket("audralia-clean-planet-carrier-boot-alignment", { compact: false });
+      var continentMap = api.getContinentMap({ compact: false });
+      var elevationMap = typeof api.getElevationMap === "function" ? api.getElevationMap({ compact: false }) : null;
+      var hydrationMap = api.getHydrationMap({ compact: false });
+      var summitMap = api.getSummitMap({ compact: false });
 
-      state.gratitude.packet = packet;
       state.gratitude.status = status;
-      state.gratitude.summitMap = summit;
-      state.gratitude.continentSeats = continent && Array.isArray(continent.seats) ? continent.seats : [];
-      state.gratitude.hydrationSeats = hydration && Array.isArray(hydration.seats) ? hydration.seats : [];
+      state.gratitude.packet = packet;
+      state.gratitude.continentMap = continentMap;
+      state.gratitude.elevationMap = elevationMap;
+      state.gratitude.hydrationMap = hydrationMap;
+      state.gratitude.summitMap = summitMap;
+
+      state.gratitude.continentSeats = continentMap && Array.isArray(continentMap.seats) ? continentMap.seats : [];
+      state.gratitude.hydrationSeats = hydrationMap && Array.isArray(hydrationMap.seats) ? hydrationMap.seats : [];
+      state.gratitude.summits = summitMap && Array.isArray(summitMap.summits) ? summitMap.summits : [];
 
       state.gratitude.packetReady = Boolean(packet && packet.childReceivePacketReady === true);
+
       state.gratitude.validated = Boolean(
         state.gratitude.packetReady &&
         packet.landFirst === true &&
@@ -553,11 +671,21 @@
         packet.finalVisualPassClaim === false
       );
 
-      state.gratitude.failureReason = state.gratitude.validated ? "" : "Gratitude child validation failed";
+      state.gratitude.failureReason = state.gratitude.validated
+        ? ""
+        : "Gratitude child validation failed · terrain render held";
+
+      updateVisibleReadout(true);
+      publishStatus(true);
+      requestRender(12);
+
       return state.gratitude.validated;
     } catch (error) {
-      recordError("findGratitudeChild", error);
-      state.gratitude.failureReason = error && error.message ? error.message : "child packet exception";
+      recordError("validateGratitudeChild", error);
+      state.gratitude.failureReason = "Gratitude child packet exception · terrain render held";
+      updateVisibleReadout(true);
+      publishStatus(true);
+      requestRender(8);
       return false;
     }
   }
@@ -575,7 +703,7 @@
     return { projected: projected, front: front };
   }
 
-  function drawTerrainCell(seat) {
+  function drawTerrainCell(seat, mode) {
     if (!seat || !seat.continentMembership) return;
 
     var ctx = state.ctx;
@@ -583,7 +711,10 @@
     if (result.front < 2) return;
 
     var elevation = clamp(seat.elevation, 0, 1);
-    var alpha = state.activeLens === "surface" ? 0.64 : 0.22;
+    var isHydration = mode === "hydration";
+    var isBody = mode === "body";
+    var alpha = isHydration ? 0.44 : isBody ? 0.12 : 0.66;
+
     var warm = Math.floor(76 + elevation * 54);
     var green = Math.floor(96 + elevation * 74);
     var blue = Math.floor(76 + elevation * 34);
@@ -612,10 +743,10 @@
     ctx.fillStyle = "rgba(" + warm + "," + green + "," + blue + "," + alpha.toFixed(3) + ")";
     ctx.fill();
 
-    if (seat.ridgeStatus || seat.continentCore) {
+    if (!isBody && (seat.ridgeStatus || seat.continentCore)) {
       ctx.strokeStyle = "rgba(255,244,216,0.18)";
       ctx.lineWidth = Math.max(0.3, state.dpr * 0.32);
-      ctx.globalAlpha = state.activeLens === "surface" ? 0.58 : 0.18;
+      ctx.globalAlpha = mode === "surface" ? 0.58 : 0.22;
       ctx.stroke();
     }
 
@@ -654,16 +785,16 @@
   function drawSummitMarkers() {
     if (!state.gratitude.validated || state.activeLens !== "surface") return;
 
-    var summitMap = state.gratitude.summitMap;
-    var summits = summitMap && Array.isArray(summitMap.summits) ? summitMap.summits : [];
     var ctx = state.ctx;
 
     ctx.save();
     clipSphere();
 
-    for (var i = 0; i < summits.length; i += 1) {
-      var seat = terrainSeatToLonLat(summits[i].x, summits[i].y);
-      var p = projectPoint(lonLatPoint(seat.lon, seat.lat));
+    for (var i = 0; i < state.gratitude.summits.length; i += 1) {
+      var summit = state.gratitude.summits[i];
+      var location = terrainSeatToLonLat(summit.x, summit.y);
+      var p = projectPoint(lonLatPoint(location.lon, location.lat));
+
       if (!p.frontFacing) continue;
 
       ctx.beginPath();
@@ -684,30 +815,30 @@
   function drawGratitudeChildTerrain() {
     if (!state.gratitude.validated) return;
 
+    var i;
+
     if (state.activeLens === "surface") {
-      for (var i = 0; i < state.gratitude.continentSeats.length; i += 1) {
-        drawTerrainCell(state.gratitude.continentSeats[i]);
+      for (i = 0; i < state.gratitude.continentSeats.length; i += 1) {
+        drawTerrainCell(state.gratitude.continentSeats[i], "surface");
       }
+
       drawSummitMarkers();
     }
 
     if (state.activeLens === "hydration") {
-      for (var j = 0; j < state.gratitude.continentSeats.length; j += 1) {
-        if (state.gratitude.continentSeats[j].continentMembership) drawTerrainCell(state.gratitude.continentSeats[j]);
+      for (i = 0; i < state.gratitude.continentSeats.length; i += 1) {
+        drawTerrainCell(state.gratitude.continentSeats[i], "hydration");
       }
 
-      for (var k = 0; k < state.gratitude.hydrationSeats.length; k += 1) {
-        drawHydrationCell(state.gratitude.hydrationSeats[k]);
+      for (i = 0; i < state.gratitude.hydrationSeats.length; i += 1) {
+        drawHydrationCell(state.gratitude.hydrationSeats[i]);
       }
     }
 
     if (state.activeLens === "body") {
-      state.ctx.save();
-      state.ctx.globalAlpha = 0.10;
-      for (var b = 0; b < state.gratitude.continentSeats.length; b += 1) {
-        drawTerrainCell(state.gratitude.continentSeats[b]);
+      for (i = 0; i < state.gratitude.continentSeats.length; i += 1) {
+        drawTerrainCell(state.gratitude.continentSeats[i], "body");
       }
-      state.ctx.restore();
     }
   }
 
@@ -731,11 +862,13 @@
 
     function strokeLine(points, stroke, width) {
       ctx.beginPath();
+
       for (var j = 0; j < points.length; j += 1) {
         var p = projectPoint(points[j]);
         if (j === 0) ctx.moveTo(p.x, p.y);
         else ctx.lineTo(p.x, p.y);
       }
+
       ctx.strokeStyle = stroke;
       ctx.lineWidth = width;
       ctx.stroke();
@@ -754,18 +887,26 @@
     var z = (a.z + b.z) / 2;
 
     if (link.family === "fibonacci-forward") {
-      return front ? "rgba(244,207,131," + clamp(0.42 + z * 0.12, 0.24, 0.70).toFixed(3) + ")" : "rgba(244,207,131,0.08)";
+      return front
+        ? "rgba(244,207,131," + clamp(0.42 + z * 0.12, 0.24, 0.70).toFixed(3) + ")"
+        : "rgba(244,207,131,0.08)";
     }
 
     if (link.family === "fibonacci-return") {
-      return front ? "rgba(184,238,255," + clamp(0.17 + z * 0.08, 0.10, 0.32).toFixed(3) + ")" : "rgba(184,238,255,0.05)";
+      return front
+        ? "rgba(184,238,255," + clamp(0.17 + z * 0.08, 0.10, 0.32).toFixed(3) + ")"
+        : "rgba(184,238,255,0.05)";
     }
 
     if (link.major) {
-      return front ? "rgba(244,207,131," + clamp(0.40 + z * 0.10, 0.22, 0.64).toFixed(3) + ")" : "rgba(244,207,131,0.08)";
+      return front
+        ? "rgba(244,207,131," + clamp(0.40 + z * 0.10, 0.22, 0.64).toFixed(3) + ")"
+        : "rgba(244,207,131,0.08)";
     }
 
-    return front ? "rgba(112,199,255," + clamp(0.20 + z * 0.08, 0.10, 0.36).toFixed(3) + ")" : "rgba(112,199,255,0.045)";
+    return front
+      ? "rgba(112,199,255," + clamp(0.20 + z * 0.08, 0.10, 0.36).toFixed(3) + ")"
+      : "rgba(112,199,255,0.045)";
   }
 
   function drawLinks(links, reduced) {
@@ -773,6 +914,7 @@
 
     for (var i = 0; i < links.length; i += 1) {
       var link = links[i];
+
       if (reduced && !link.major && link.family.indexOf("fibonacci") >= 0) continue;
 
       var a = projectPoint(link.a);
@@ -792,6 +934,7 @@
 
     for (var i = 0; i < state.seats.length; i += 1) {
       var seat = state.seats[i];
+
       if (reduced && !seat.major) continue;
 
       var p = projectPoint(seat);
@@ -800,7 +943,9 @@
 
       ctx.beginPath();
       ctx.arc(p.x, p.y, Math.max(0.8, radius * state.dpr * p.perspective), 0, TAU);
-      ctx.fillStyle = seat.major ? "rgba(244,207,131," + alpha.toFixed(3) + ")" : "rgba(141,216,255," + alpha.toFixed(3) + ")";
+      ctx.fillStyle = seat.major
+        ? "rgba(244,207,131," + alpha.toFixed(3) + ")"
+        : "rgba(141,216,255," + alpha.toFixed(3) + ")";
       ctx.fill();
     }
   }
@@ -823,14 +968,14 @@
 
     var ctx = state.ctx;
     var m = metrics();
-    var w = Math.min(state.width * 0.72, m.radius * 1.88);
-    var h = Math.min(state.height * 0.28, m.radius * 0.74);
+    var w = Math.min(state.width * 0.74, m.radius * 1.92);
+    var h = Math.min(state.height * 0.30, m.radius * 0.76);
     var x = m.centerX - w / 2;
     var y = m.centerY - h / 2;
 
     ctx.save();
-    ctx.fillStyle = "rgba(2,8,20,0.62)";
-    ctx.strokeStyle = "rgba(244,207,131,0.34)";
+    ctx.fillStyle = "rgba(2,8,20,0.64)";
+    ctx.strokeStyle = state.gratitude.validated ? "rgba(167,243,198,0.38)" : "rgba(244,207,131,0.34)";
     ctx.lineWidth = Math.max(1, state.dpr);
     roundedRect(ctx, x, y, w, h, 22 * state.dpr);
     ctx.fill();
@@ -839,18 +984,22 @@
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.font = "900 " + Math.max(13, 15 * state.dpr) + "px ui-monospace, monospace";
-    ctx.fillStyle = "rgba(244,207,131,0.92)";
-    ctx.fillText("GRATITUDE CHILD LIVE", m.centerX, y + h * 0.24);
+    ctx.fillStyle = state.gratitude.validated ? "rgba(167,243,198,0.92)" : "rgba(244,207,131,0.92)";
+    ctx.fillText(state.gratitude.validated ? "GRATITUDE CHILD LIVE" : "GRATITUDE CHILD HELD", m.centerX, y + h * 0.24);
 
     ctx.font = "900 " + Math.max(9, 10 * state.dpr) + "px ui-monospace, monospace";
     ctx.fillStyle = "rgba(238,244,255,0.84)";
-    ctx.fillText(state.gratitude.validated ? "CHILD DETECTED · PACKET READY" : "CHILD HELD / NOT VALIDATED", m.centerX, y + h * 0.46);
+    ctx.fillText(
+      state.gratitude.validated ? "CHILD DETECTED · PACKET READY" : "CHILD MISSING / INVALID · TERRAIN RENDER HELD",
+      m.centerX,
+      y + h * 0.46
+    );
 
     ctx.fillStyle = "rgba(141,216,255,0.82)";
     ctx.fillText("CARRIER CONSUMES · DOES NOT INVENT TERRAIN", m.centerX, y + h * 0.64);
 
-    ctx.fillStyle = "rgba(167,243,198,0.80)";
-    ctx.fillText("RUNTIME HELD · NO FINAL VISUAL PASS", m.centerX, y + h * 0.82);
+    ctx.fillStyle = "rgba(244,207,131,0.80)";
+    ctx.fillText("BOOT ALIGNMENT JS ONLY · NO FINAL VISUAL PASS", m.centerX, y + h * 0.82);
 
     ctx.restore();
   }
@@ -925,6 +1074,28 @@
     if (!state.raf && !state.stopped) state.raf = window.requestAnimationFrame(drawFrame);
   }
 
+  function updateVisibleReadout(force) {
+    var statusText = state.gratitude.validated
+      ? "Gratitude child live · carrier consuming"
+      : "Gratitude child missing / invalid · terrain render held";
+
+    var proofText = state.gratitude.validated
+      ? "child packet ready · land-first terrain · valley-fill hydration · carrier invents terrain false"
+      : state.gratitude.failureReason || "bounded failure · terrain render held";
+
+    var wroteStatus = setText("[data-audralia-planet-carrier-status]", statusText);
+    var wroteProof = setText("[data-audralia-planet-carrier-proof]", proofText);
+
+    state.visibleReadoutUpdated = Boolean(wroteStatus || wroteProof || force);
+
+    setText("[data-audralia-planet-stage-label]", state.gratitude.validated
+      ? "Gratitude child live → Surface and Hydration read from child data"
+      : "Clean Inspection → Gratitude child not validated"
+    );
+
+    return state.visibleReadoutUpdated;
+  }
+
   function setLens(nextLens) {
     var lens = Object.prototype.hasOwnProperty.call(LENSES, nextLens) ? nextLens : "body";
     state.activeLens = lens;
@@ -937,17 +1108,13 @@
     setText("[data-audralia-planet-lens-title]", LENSES[lens].title);
     setText("[data-audralia-planet-lens-copy]", LENSES[lens].copy);
 
-    setText("[data-audralia-planet-carrier-status]", state.gratitude.validated ? "Gratitude child live · carrier consuming" : "Hydrosphere carrier · Gratitude child not validated");
-    setText("[data-audralia-planet-carrier-proof]", state.gratitude.validated
-      ? "child packet ready · land-first terrain · valley-fill hydration · carrier invents terrain false"
-      : "carrier active · child missing or invalid · terrain render held");
-
+    updateVisibleReadout(true);
     setDataset("audraliaPlanetActiveLens", lens);
     publishStatus(true);
     requestRender(lens === "body" ? 10 : 16);
   }
 
-  function bindExistingEngineeringControls() {
+  function bindLensControls() {
     Array.prototype.slice.call(document.querySelectorAll("[data-audralia-planet-lens]")).forEach(function (button) {
       button.addEventListener("click", function () {
         setLens(button.dataset.audraliaPlanetLens);
@@ -957,7 +1124,10 @@
 
   function pointerPoint(event) {
     var rect = state.rect || state.stage.getBoundingClientRect();
-    return { x: event.clientX - rect.left, y: event.clientY - rect.top };
+    return {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top
+    };
   }
 
   function resetCarrier() {
@@ -988,7 +1158,9 @@
       state.velocityYaw = 0;
       state.velocityPitch = 0;
 
-      try { state.stage.setPointerCapture(event.pointerId); } catch (_error) {}
+      try {
+        state.stage.setPointerCapture(event.pointerId);
+      } catch (_error) {}
 
       requestRender(4);
       event.preventDefault();
@@ -1026,7 +1198,9 @@
       publishStatus(true);
       requestRender(16);
 
-      try { event.preventDefault(); } catch (_error2) {}
+      try {
+        event.preventDefault();
+      } catch (_error2) {}
     }
 
     state.stage.addEventListener("pointerup", release, signal ? { signal: signal, passive: false } : { passive: false });
@@ -1053,6 +1227,7 @@
 
     canvases.forEach(function (canvas) {
       if (canvas === selected) return;
+
       try {
         canvas.remove();
         state.duplicateCanvasRemoved += 1;
@@ -1060,11 +1235,13 @@
     });
 
     state.canvas = selected;
-    state.canvas.setAttribute("data-audralia-g2-gratitude-child-live-carrier", CONTRACT);
+    state.canvas.setAttribute("data-audralia-g2-carrier-boot-alignment", CONTRACT);
+    state.canvas.setAttribute("data-active-contract", CONTRACT);
     state.canvas.setAttribute("data-previous-contract", PREVIOUS_CONTRACT);
-    state.canvas.setAttribute("data-inline-lens-tray-active", "true");
+    state.canvas.setAttribute("data-html-collaborative-contract", HTML_COLLABORATIVE_CONTRACT);
     state.canvas.setAttribute("data-carrier-consumes-child", "true");
     state.canvas.setAttribute("data-carrier-invents-terrain", "false");
+    state.canvas.setAttribute("data-stale-hydrosphere-held-receipt-removed", "true");
     state.canvas.setAttribute("data-runtime-strength-held", "true");
     state.canvas.setAttribute("data-final-visual-pass-claim", "false");
 
@@ -1087,7 +1264,12 @@
     var width = Math.max(320, Math.floor(rect.width * dpr));
     var height = Math.max(600, Math.floor(rect.height * dpr));
 
-    state.rect = { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
+    state.rect = {
+      left: rect.left,
+      top: rect.top,
+      width: rect.width,
+      height: rect.height
+    };
 
     if (state.width === width && state.height === height && state.dpr === dpr) return false;
 
@@ -1113,10 +1295,18 @@
       resizeObserver = new ResizeObserver(function (entries) {
         var box = state.stage.getBoundingClientRect();
         var content = entries && entries[0] ? entries[0].contentRect : box;
-        updateDimensions({ left: box.left, top: box.top, width: content.width, height: content.height });
+
+        updateDimensions({
+          left: box.left,
+          top: box.top,
+          width: content.width,
+          height: content.height
+        });
       });
 
-      try { resizeObserver.observe(state.stage); } catch (_error) {}
+      try {
+        resizeObserver.observe(state.stage);
+      } catch (_error) {}
     }
 
     window.addEventListener("resize", function () {
@@ -1134,22 +1324,29 @@
 
   function receipt() {
     return {
+      activeContract: CONTRACT,
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
+      htmlCollaborativeContract: HTML_COLLABORATIVE_CONTRACT,
       specOps: SPEC_OPS,
       route: ROUTE,
       target: FILE,
       gratitudeChildFile: GRATITUDE_CHILD_FILE,
+      coreChildFile: CORE_CHILD_FILE,
 
-      inlineLensTrayActive: true,
-      gratitudeChildScriptLoadedBeforeCarrier: true,
       gratitudeChildDetected: state.gratitude.detected,
+      gratitudeChildApiComplete: state.gratitude.apiComplete,
       gratitudeChildPacketReady: state.gratitude.packetReady,
       gratitudeChildValidated: state.gratitude.validated,
       gratitudeChildFailureReason: state.gratitude.failureReason,
+      gratitudeChildAttempts: state.gratitude.attempts,
+      gratitudeChildCheckedAt: state.gratitude.checkedAt,
 
       carrierConsumesChild: true,
       carrierInventsTerrain: false,
+      visibleReadoutUpdated: state.visibleReadoutUpdated,
+      staleHydrosphereHeldReceiptRemoved: true,
+
       landFirstChildAuthority: Boolean(state.gratitude.packet && state.gratitude.packet.landFirst === true),
       nineSummitsEmbedded: Boolean(state.gratitude.packet && state.gratitude.packet.nineSummitsEmbedded === true),
       hydrationDerivedFromValleys: Boolean(state.gratitude.packet && state.gratitude.packet.waterFillDerivedFromValleys === true),
@@ -1157,48 +1354,54 @@
       bodyViewClean: true,
       surfaceViewChildTerrain: true,
       hydrationViewChildValleyFill: true,
-      engineeringReadoutBelow: true,
+      latticeViewPreserved: true,
+      receiptViewBootAligned: true,
 
       oneCanvas: state.oneCanvas,
       dragRotationActive: state.onePointerPath,
       activeLens: state.activeLens,
       renderCount: state.renderCount,
+
+      htmlUntouched: true,
+      gratitudeChildUntouched: true,
+      coreChildUntouched: true,
       runtimeStrengthHeld: true,
       finalVisualPassClaim: false,
       generatedImage: false,
       graphicBox: false,
+      localTerrainArraysRestored: false,
       earthSubstitution: false,
       australiaNameDrift: false,
+
       errors: state.errors.slice(),
-      deployMarker: "AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_DEPLOY_MARKER_v1"
+      deployMarker: "AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_JS_ONLY_DEPLOY_MARKER_v1"
     };
   }
 
   function publishStatus(force) {
     var payload = receipt();
 
+    window.AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_JS_ONLY_STATUS = payload;
     window.AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_STATUS = payload;
     window.AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_STATUS = payload;
     window.AUDRALIA_G2_JS_FEMALE_CANVAS_CARRIER_STATUS = payload;
 
-    setDataset("audraliaInlineLensTrayActive", true);
+    setDataset("audraliaCarrierActiveContract", CONTRACT);
+    setDataset("audraliaHtmlCollaborativeContract", HTML_COLLABORATIVE_CONTRACT);
     setDataset("audraliaGratitudeChildDetected", state.gratitude.detected);
     setDataset("audraliaGratitudeChildPacketReady", state.gratitude.packetReady);
     setDataset("audraliaGratitudeChildValidated", state.gratitude.validated);
     setDataset("audraliaCarrierConsumesChild", true);
     setDataset("audraliaCarrierInventsTerrain", false);
+    setDataset("audraliaVisibleReadoutUpdated", state.visibleReadoutUpdated);
+    setDataset("audraliaStaleHydrosphereHeldReceiptRemoved", true);
     setDataset("audraliaSurfaceViewChildTerrain", true);
     setDataset("audraliaHydrationViewChildValleyFill", true);
     setDataset("audraliaRuntimeStrengthHeld", true);
     setDataset("audraliaFinalVisualPassClaim", false);
     setDataset("audraliaPlanetActiveLens", state.activeLens);
 
-    if (force) {
-      setText("[data-audralia-planet-carrier-status]", state.gratitude.validated ? "Gratitude child live · carrier consuming" : "Hydrosphere carrier · Gratitude child not validated");
-      setText("[data-audralia-planet-carrier-proof]", state.gratitude.validated
-        ? "child packet ready · land-first terrain · valley-fill hydration · carrier invents terrain false"
-        : "carrier active · child missing or invalid · terrain render held");
-    }
+    if (force) updateVisibleReadout(true);
 
     return payload;
   }
@@ -1207,18 +1410,36 @@
     state.stopped = true;
 
     if (state.raf) {
-      try { window.cancelAnimationFrame(state.raf); } catch (_error) {}
+      try {
+        window.cancelAnimationFrame(state.raf);
+      } catch (_error) {}
     }
 
     state.raf = 0;
 
     if (resizeObserver) {
-      try { resizeObserver.disconnect(); } catch (_error2) {}
+      try {
+        resizeObserver.disconnect();
+      } catch (_error2) {}
     }
 
     if (abortController) {
-      try { abortController.abort(); } catch (_error3) {}
+      try {
+        abortController.abort();
+      } catch (_error3) {}
     }
+  }
+
+  function retryChildDetection() {
+    validateGratitudeChild();
+
+    setTimeout(function () {
+      if (!state.gratitude.validated && !state.stopped) validateGratitudeChild();
+    }, 180);
+
+    setTimeout(function () {
+      if (!state.gratitude.validated && !state.stopped) validateGratitudeChild();
+    }, 640);
   }
 
   function init() {
@@ -1229,17 +1450,20 @@
     state.details = Array.prototype.slice.call(document.querySelectorAll("details"));
 
     if (!state.stage || !state.mount) {
-      recordError("init", "Carrier is present, but HTML stage/mount is unavailable.");
+      recordError("init", "Carrier boot alignment is present, but HTML stage/mount is unavailable.");
       publishStatus(true);
       return;
     }
 
     enforceOneCanvas();
     buildLocalDiagnosticGeometry();
-    findGratitudeChild();
     setupResize();
-    bindExistingEngineeringControls();
+    bindLensControls();
     bindPointer();
+
+    updateVisibleReadout(true);
+    retryChildDetection();
+
     setLens("body");
     publishStatus(true);
     requestRender(14);
@@ -1249,11 +1473,13 @@
     stop: stop,
     state: state,
     contract: CONTRACT,
+    activeContract: CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
+    htmlCollaborativeContract: HTML_COLLABORATIVE_CONTRACT,
     specOps: SPEC_OPS,
     receipt: receipt,
     status: publishStatus,
-    detectGratitudeChild: findGratitudeChild
+    validateGratitudeChild: validateGratitudeChild
   };
 
   if (hasDOM()) {

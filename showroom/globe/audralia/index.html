@@ -1,835 +1,903 @@
 <!doctype html>
-<html
-  lang="en"
-  data-route="/showroom/globe/audralia/"
-  data-page="audralia-g2-planet-body-multi-state-surface-expression-html-binding"
-  data-contract="AUDRALIA_G2_PLANET_BODY_MULTI_STATE_SURFACE_EXPRESSION_HTML_BINDING_TNT_v1"
-  data-spec-ops-contract="AUDRALIA_G2_PLANET_BODY_MULTI_STATE_SURFACE_EXPRESSION_HTML_BINDING_SPEC_OPS_v1"
-  data-previous-html-contract="AUDRALIA_G1_DATUM_DIAGNOSTIC_REPORTING_HTML_BINDING_TNT_v1"
-  data-render-authority-contract="AUDRALIA_G2_PLANET_BODY_MULTI_STATE_SURFACE_EXPRESSION_TNT_v1"
-  data-render-authority-file="/assets/audralia/clean/runtime/audralia.true-globe.multi-state.planet.render.js"
-  data-preserved-diagnostic-js-contract="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1"
-  data-datum-file="/assets/audralia/clean/runtime/audralia.true-globe.datum.js"
-  data-public-subject="planet-body-multi-state-surface-expression"
-  data-html-function="wisdom"
-  data-js-function="courage"
-  data-runtime-function="strength"
-  data-runtime-strength-held="true"
-  data-cockpit-route="/showroom/globe/audralia/disposition/"
-  data-diagnostic-proof-preserved="compact-receipt-only"
-  data-generated-image="false"
-  data-graphic-box="false"
-  data-final-visual-pass-claim="false"
-  data-no-runtime-activation="true"
-  data-no-earth-substitution="true"
-  data-no-australia-drift="true"
->
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Audralia · Planet Body · Multi-State Surface Expression</title>
-  <meta
-    name="description"
-    content="Audralia G2 Planet Body page receives the multi-state planet render authority so Audralia can express through datum body, terrain mass, mineral surface, hydration, coast edge, atmosphere rim, light response, and inspection receipt while Runtime Strength remains held."
-  >
+<html  
+  lang="en"  
+  data-route="/showroom/globe/audralia/"  
+  data-page="audralia-g1-datum-diagnostic-reporting-html-binding"  
+  data-contract="AUDRALIA_G1_DATUM_DIAGNOSTIC_REPORTING_HTML_BINDING_TNT_v1"  
+  data-previous-html-contract="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_HTML_BINDING_TNT_v1"  
+  data-protected-parent-baseline="AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1"  
+  data-bound-js-contract="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1"  
+  data-previous-js-contract="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_TNT_v1"  
+  data-datum-file="/assets/audralia/clean/runtime/audralia.true-globe.datum.js"  
+  data-public-datum-contract="AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1"  
+  data-clone-datum-contract="AUDRALIA_G1_CHILD_MATH_DATUM_CLONING_METHOD_SEED_TNT_v1"  
+  data-process="diagnostic-reporting-html-binding"  
+  data-html-role="public-binding-shell"  
+  data-js-role="diagnostic-reporting-consumer"  
+  data-datum-role="cloned-seed-source"  
+  data-html-binds-to-diagnostic-reporting-js="true"  
+  data-html-does-not-consume-datum-directly="true"  
+  data-datum-file-held="true"  
+  data-js-file-selected="true"  
+  data-downstream-held="true"  
+  data-no-visual-pass-claim="true"  
+>  
+<head>  
+  <meta charset="utf-8">  
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">    <title>Audralia · Diagnostic Reporting Binding</title>  
+  <meta  
+    name="description"  
+    content="Audralia binds the public HTML shell to the diagnostic-reporting JS so cloned-seed consumption can be visibly reported while downstream remains held."  
+  >    <style>  
+    :root {  
+      color-scheme: dark;  
+      --bg: #020711;  
+      --line: rgba(244, 207, 131, 0.18);  
+      --text: rgba(238, 244, 255, 0.94);  
+      --muted: rgba(238, 244, 255, 0.68);  
+      --faint: rgba(238, 244, 255, 0.46);  
+      --gold: #f4cf83;  
+      --mint: #a7f3c6;  
+      --max: 1120px;  
+      --shadow: 0 32px 110px rgba(0, 0, 0, 0.42);  
+    }  
+  
+    * { box-sizing: border-box; }  
+  
+    html {  
+      min-height: 100%;  
+      scroll-behavior: smooth;  
+      background:  
+        radial-gradient(circle at 50% -12%, rgba(78,119,171,0.24), transparent 36rem),  
+        radial-gradient(circle at 10% 18%, rgba(244,207,131,0.09), transparent 28rem),  
+        radial-gradient(circle at 90% 28%, rgba(141,216,255,0.11), transparent 28rem),  
+        linear-gradient(180deg, #061020 0%, var(--bg) 55%, #01040a 100%);  
+    }  
+  
+    body {  
+      margin: 0;  
+      min-width: 320px;  
+      min-height: 100vh;  
+      overflow-x: hidden;  
+      color: var(--text);  
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;  
+      letter-spacing: -0.015em;  
+      -webkit-font-smoothing: antialiased;  
+      background:  
+        linear-gradient(rgba(141,216,255,0.03) 1px, transparent 1px),  
+        linear-gradient(90deg, rgba(141,216,255,0.03) 1px, transparent 1px);  
+      background-size: 56px 56px;  
+    }  
+  
+    body::before {  
+      content: "";  
+      position: fixed;  
+      inset: 0;  
+      z-index: 0;  
+      pointer-events: none;  
+      background: radial-gradient(circle, rgba(255,255,255,0.16) 0 1px, transparent 1.4px);  
+      background-size: 230px 250px;  
+      opacity: 0.14;  
+      mask-image: linear-gradient(180deg, rgba(0,0,0,0.9), rgba(0,0,0,0.46) 62%, rgba(0,0,0,0.12));  
+    }  
+  
+    a, button, summary { color: inherit; font: inherit; }  
+    a { text-decoration: none; }  
+  
+    a:focus-visible,  
+    button:focus-visible,  
+    summary:focus-visible {  
+      outline: 2px solid var(--gold);  
+      outline-offset: 4px;  
+    }  
+  
+    .skip {  
+      position: absolute;  
+      left: 12px;  
+      top: 12px;  
+      z-index: 50;  
+      transform: translateY(-160%);  
+      padding: 10px 14px;  
+      border-radius: 999px;  
+      background: var(--mint);  
+      color: #06101c;  
+      font-weight: 950;  
+    }  
+  
+    .skip:focus { transform: translateY(0); }  
+  
+    .page {  
+      position: relative;  
+      z-index: 2;  
+      width: min(var(--max), calc(100% - 28px));  
+      margin: 0 auto;  
+      padding: max(18px, env(safe-area-inset-top)) 0 max(54px, env(safe-area-inset-bottom));  
+    }  
+  
+    .topbar {  
+      display: grid;  
+      grid-template-columns: minmax(0, 1fr) auto;  
+      align-items: start;  
+      gap: 16px;  
+      padding: 10px 0 20px;  
+    }  
+  
+    .brand {  
+      display: inline-grid;  
+      grid-template-columns: auto minmax(0, 1fr);  
+      align-items: center;  
+      gap: 11px;  
+      min-width: 0;  
+      width: fit-content;  
+      color: var(--gold);  
+      font-weight: 950;  
+      letter-spacing: 0.04em;  
+      text-transform: uppercase;  
+    }  
+  
+    .brand-mark {  
+      display: grid;  
+      place-items: center;  
+      width: 38px;  
+      height: 38px;  
+      border: 1px solid rgba(244,207,131,0.44);  
+      border-radius: 12px;  
+      background: linear-gradient(135deg, rgba(255,255,255,0.18), transparent 36%), rgba(244,207,131,0.08);  
+      box-shadow: 0 0 22px rgba(244,207,131,0.14);  
+    }  
+  
+    .brand-copy { display: grid; gap: 2px; min-width: 0; }  
+  
+    .brand-copy strong {  
+      color: rgba(255,244,216,0.96);  
+      font-size: clamp(1rem, 2.6vw, 1.45rem);  
+      line-height: 1;  
+      white-space: nowrap;  
+      overflow: hidden;  
+      text-overflow: ellipsis;  
+    }  
+  
+    .brand-copy span {  
+      color: rgba(141,216,255,0.82);  
+      font-size: 0.68rem;  
+      letter-spacing: 0.22em;  
+    }  
+  
+    .dropdown-nav {  
+      display: flex;  
+      flex-wrap: wrap;  
+      justify-content: flex-end;  
+      gap: 8px;  
+    }  
+  
+    .dropdown { position: relative; }  
+  
+    .dropdown summary {  
+      min-height: 38px;  
+      display: inline-flex;  
+      align-items: center;  
+      justify-content: center;  
+      gap: 8px;  
+      border: 1px solid rgba(255,255,255,0.11);  
+      border-radius: 999px;  
+      padding: 0 13px;  
+      color: rgba(238,244,255,0.84);  
+      background: radial-gradient(circle at 50% 0%, rgba(141,216,255,0.08), transparent 72%), rgba(255,255,255,0.035);  
+      font-size: 0.82rem;  
+      font-weight: 850;  
+      letter-spacing: 0.02em;  
+      cursor: pointer;  
+      list-style: none;  
+    }  
+  
+    .dropdown summary::-webkit-details-marker { display: none; }  
+    .dropdown summary::after { content: "⌄"; color: rgba(244,207,131,0.88); font-size: 0.92rem; }  
+  
+    .dropdown[open] summary {  
+      color: #06101c;  
+      background: linear-gradient(135deg, #fff0b8, var(--gold));  
+      border-color: rgba(244,207,131,0.72);  
+    }  
+  
+    .dropdown-panel {  
+      position: absolute;  
+      right: 0;  
+      top: calc(100% + 8px);  
+      z-index: 30;  
+      min-width: 230px;  
+      display: grid;  
+      gap: 6px;  
+      padding: 10px;  
+      border: 1px solid rgba(244,207,131,0.22);  
+      border-radius: 18px;  
+      background: radial-gradient(circle at 12% 0%, rgba(244,207,131,0.10), transparent 12rem), rgba(2,8,20,0.96);  
+      box-shadow: 0 22px 70px rgba(0,0,0,0.48);  
+      backdrop-filter: blur(12px);  
+    }  
+  
+    .dropdown-panel a,  
+    .dropdown-panel button {  
+      width: 100%;  
+      min-height: 36px;  
+      border: 1px solid rgba(255,255,255,0.09);  
+      border-radius: 12px;  
+      padding: 0 10px;  
+      color: rgba(238,244,255,0.84);  
+      background: rgba(255,255,255,0.035);  
+      text-align: left;  
+      font-size: 0.84rem;  
+      font-weight: 820;  
+      cursor: pointer;  
+    }  
+  
+    .dropdown-panel a:hover,  
+    .dropdown-panel button:hover,  
+    .dropdown-panel button[aria-pressed="true"] {  
+      color: #06101c;  
+      background: linear-gradient(135deg, #fff0b8, var(--gold));  
+      border-color: rgba(244,207,131,0.56);  
+    }  
+  
+    .hero,  
+    .stage-shell {  
+      border: 1px solid var(--line);  
+      background:  
+        radial-gradient(circle at 76% 28%, rgba(139,200,255,0.13), transparent 32%),  
+        radial-gradient(circle at 18% 20%, rgba(244,207,131,0.12), transparent 30%),  
+        linear-gradient(180deg, rgba(8,17,34,0.94), rgba(4,9,20,0.94));  
+      box-shadow: var(--shadow);  
+    }  
+  
+    .hero {  
+      position: relative;  
+      isolation: isolate;  
+      overflow: hidden;  
+      border-radius: 34px;  
+      padding: clamp(24px, 5vw, 46px);  
+    }  
+  
+    .kicker,  
+    .section-title,  
+    .label {  
+      margin: 0 0 14px;  
+      color: var(--gold);  
+      font: 900 0.78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;  
+      letter-spacing: 0.20em;  
+      text-transform: uppercase;  
+    }  
+  
+    h1 {  
+      max-width: 940px;  
+      margin: 0;  
+      font-size: clamp(2.35rem, 8vw, 5.25rem);  
+      line-height: 0.94;  
+      letter-spacing: -0.075em;  
+      text-wrap: balance;  
+    }  
+  
+    .lede {  
+      max-width: 930px;  
+      margin: 22px 0 0;  
+      color: var(--muted);  
+      font-size: clamp(1.02rem, 2.6vw, 1.26rem);  
+      line-height: 1.55;  
+    }  
+  
+    .status-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }  
+  
+    .status-pill {  
+      min-height: 34px;  
+      display: inline-flex;  
+      align-items: center;  
+      border: 1px solid rgba(255,255,255,0.10);  
+      border-radius: 999px;  
+      padding: 0 12px;  
+      color: rgba(238,244,255,0.76);  
+      background: rgba(255,255,255,0.035);  
+      font-size: 0.78rem;  
+      font-weight: 850;  
+      letter-spacing: 0.04em;  
+      text-transform: uppercase;  
+    }  
+  
+    .stage-shell {  
+      margin-top: 16px;  
+      border-radius: 34px;  
+      padding: clamp(18px, 3.8vw, 32px);  
+      overflow: hidden;  
+    }  
+  
+    .lens-toolbar {  
+      display: grid;  
+      grid-template-columns: auto 1fr;  
+      gap: 14px;  
+      align-items: stretch;  
+      margin: 0 0 16px;  
+    }  
+  
+    .lens-toggle {  
+      display: inline-flex;  
+      align-items: center;  
+      gap: 8px;  
+      width: fit-content;  
+      align-self: start;  
+      padding: 8px;  
+      border: 1px solid rgba(255,255,255,0.12);  
+      border-radius: 999px;  
+      background: rgba(255,255,255,0.035);  
+    }  
+  
+    .lens-button {  
+      min-height: 38px;  
+      display: inline-flex;  
+      align-items: center;  
+      justify-content: center;  
+      border: 1px solid rgba(255,255,255,0.11);  
+      border-radius: 999px;  
+      padding: 0 13px;  
+      color: rgba(238,244,255,0.82);  
+      background: radial-gradient(circle at 50% 0%, rgba(141,216,255,0.08), transparent 72%), rgba(255,255,255,0.035);  
+      font-size: 0.82rem;  
+      font-weight: 850;  
+      cursor: pointer;  
+    }  
+  
+    .lens-button[aria-pressed="true"] {  
+      color: #06101c;  
+      background: linear-gradient(135deg, #fff0b8, var(--gold));  
+      border-color: rgba(244,207,131,0.72);  
+    }  
+  
+    .lens-copy {  
+      min-height: 104px;  
+      border: 1px solid rgba(244,207,131,0.18);  
+      border-radius: 22px;  
+      padding: 16px;  
+      background: radial-gradient(circle at 12% 0%, rgba(244,207,131,0.10), transparent 56%), rgba(3,8,18,0.46);  
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.055);  
+    }  
+  
+    .lens-copy b {  
+      display: block;  
+      margin-bottom: 8px;  
+      color: var(--gold);  
+      font-size: 0.72rem;  
+      letter-spacing: 0.14em;  
+      text-transform: uppercase;  
+    }  
+  
+    .lens-copy p {  
+      margin: 0;  
+      color: rgba(238,244,255,0.74);  
+      font-size: 0.98rem;  
+      line-height: 1.48;  
+    }  
+  
+    .globe-stage {  
+      position: relative;  
+      min-height: clamp(620px, 92vw, 820px);  
+      overflow: hidden;  
+      border: 1px solid rgba(244,207,131,0.18);  
+      border-radius: 30px;  
+      background:  
+        radial-gradient(circle at 50% 52%, rgba(141,216,255,0.12), transparent 26%),  
+        radial-gradient(circle at 48% 34%, rgba(9,46,86,0.42), transparent 34%),  
+        radial-gradient(circle at 50% 16%, rgba(255,255,255,0.06), transparent 22%),  
+        linear-gradient(180deg, rgba(4,11,24,0.92), rgba(2,7,16,0.96));  
+      touch-action: none;  
+      user-select: none;  
+      -webkit-user-select: none;  
+    }  
+  
+    .globe-stage::before {  
+      content: "";  
+      position: absolute;  
+      inset: 0;  
+      z-index: 0;  
+      pointer-events: none;  
+      background:  
+        radial-gradient(circle at 50% 46%, rgba(141,216,255,0.10), transparent 29rem),  
+        radial-gradient(circle at 50% 70%, rgba(244,207,131,0.055), transparent 28rem),  
+        linear-gradient(180deg, transparent, rgba(0,0,0,0.14));  
+    }  
+  
+    .globe-mount {  
+      position: absolute;  
+      inset: 0;  
+      z-index: 3;  
+      overflow: hidden;  
+      touch-action: none;  
+    }  
+  
+    .globe-mount canvas {  
+      position: absolute !important;  
+      inset: 0 !important;  
+      width: 100% !important;  
+      height: 100% !important;  
+      display: block !important;  
+      background: transparent !important;  
+      pointer-events: none !important;  
+    }  
+  
+    .stage-label {  
+      position: absolute;  
+      left: 50%;  
+      bottom: clamp(128px, 21vw, 170px);  
+      z-index: 8;  
+      width: min(calc(100% - 44px), 790px);  
+      transform: translateX(-50%);  
+      color: rgba(238,244,255,0.76);  
+      text-align: center;  
+      font-weight: 950;  
+      font-size: clamp(1.02rem, 4vw, 1.38rem);  
+      letter-spacing: -0.03em;  
+      line-height: 1.18;  
+      text-shadow: 0 2px 16px rgba(0,0,0,0.72);  
+      pointer-events: none;  
+    }  
+  
+    .stage-label strong { color: rgba(141,216,255,0.96); }  
+  
+    .stage-instruction {  
+      position: absolute;  
+      left: clamp(16px, 4vw, 36px);  
+      right: clamp(16px, 4vw, 36px);  
+      bottom: clamp(16px, 4vw, 34px);  
+      z-index: 8;  
+      border-top: 1px solid rgba(255,255,255,0.12);  
+      border-bottom: 1px solid rgba(255,255,255,0.12);  
+      padding: 14px 10px;  
+      color: rgba(238,244,255,0.80);  
+      background: rgba(3,8,18,0.42);  
+      backdrop-filter: blur(8px);  
+      font-weight: 850;  
+      line-height: 1.35;  
+      font-size: clamp(0.98rem, 3.5vw, 1.24rem);  
+      pointer-events: none;  
+    }  
+  
+    .diagnostic-panel {  
+      display: none;  
+      position: absolute;  
+      left: clamp(18px, 4vw, 36px);  
+      right: clamp(18px, 4vw, 36px);  
+      top: clamp(18px, 4vw, 36px);  
+      z-index: 9;  
+      pointer-events: none;  
+    }  
+  
+    html[data-audralia-active-lens="diagnostic"] .diagnostic-panel { display: block; }  
+  
+    .diagnostic-card {  
+      display: grid;  
+      gap: 12px;  
+      padding: 18px;  
+      border: 1px solid rgba(244,207,131,0.22);  
+      border-radius: 22px;  
+      background: radial-gradient(circle at 12% 0%, rgba(244,207,131,0.08), transparent 16rem), rgba(2,8,20,0.78);  
+      backdrop-filter: blur(10px);  
+    }  
+  
+    .diagnostic-card h3 {  
+      margin: 0;  
+      color: rgba(255,244,216,0.96);  
+      font-size: 1.05rem;  
+      line-height: 1.1;  
+    }  
+  
+    .diagnostic-grid {  
+      display: grid;  
+      grid-template-columns: repeat(2, minmax(0, 1fr));  
+      gap: 8px;  
+    }  
+  
+    .diagnostic-grid span {  
+      display: grid;  
+      gap: 3px;  
+      min-height: 54px;  
+      padding: 10px;  
+      border: 1px solid rgba(255,255,255,0.09);  
+      border-radius: 14px;  
+      background: rgba(255,255,255,0.035);  
+      color: rgba(238,244,255,0.72);  
+      font-size: 0.76rem;  
+      line-height: 1.25;  
+    }  
+  
+    .diagnostic-grid b {  
+      color: var(--mint);  
+      font-size: 0.66rem;  
+      letter-spacing: 0.12em;  
+      text-transform: uppercase;  
+    }  
+  
+    .diagnostic-grid em { font-style: normal; }  
+  
+    .object-card,  
+    .receipt-card {  
+      margin-top: 16px;  
+      border-left: 1px solid rgba(244,207,131,0.22);  
+      border-right: 1px solid rgba(244,207,131,0.12);  
+      padding: 22px 18px;  
+      background: rgba(7,15,31,0.62);  
+    }  
+  
+    .object-card h2,  
+    .receipt-card h2 {  
+      margin: 0;  
+      color: rgba(238,244,255,0.94);  
+      font-size: clamp(1.48rem, 4.6vw, 2.34rem);  
+      line-height: 1.04;  
+      letter-spacing: -0.06em;  
+    }  
+  
+    .object-card p,  
+    .receipt-card p {  
+      max-width: 900px;  
+      margin: 14px 0 0;  
+      color: var(--muted);  
+      font-size: clamp(1rem, 2.8vw, 1.16rem);  
+      line-height: 1.55;  
+    }  
+  
+    .standard-grid {  
+      display: grid;  
+      grid-template-columns: repeat(4, minmax(0, 1fr));  
+      gap: 10px;  
+      margin-top: 16px;  
+    }  
+  
+    .standard-cell {  
+      min-height: 118px;  
+      display: grid;  
+      align-content: start;  
+      gap: 8px;  
+      border: 1px solid rgba(255,255,255,0.09);  
+      border-radius: 18px;  
+      padding: 14px;  
+      background: radial-gradient(circle at 20% 0%, rgba(244,207,131,0.08), transparent 8rem), rgba(255,255,255,0.028);  
+    }  
+  
+    .standard-cell b {  
+      color: var(--gold);  
+      font-size: 0.72rem;  
+      letter-spacing: 0.15em;  
+      text-transform: uppercase;  
+    }  
+  
+    .standard-cell span {  
+      color: rgba(238,244,255,0.70);  
+      font-size: 0.88rem;  
+      line-height: 1.36;  
+    }  
+  
+    .receipt-card code {  
+      display: block;  
+      margin-top: 14px;  
+      padding: 14px;  
+      border: 1px solid rgba(255,255,255,0.09);  
+      border-radius: 16px;  
+      background: rgba(0,0,0,0.28);  
+      color: rgba(238,244,255,0.72);  
+      font-size: 0.78rem;  
+      line-height: 1.45;  
+      white-space: pre-wrap;  
+      overflow-wrap: anywhere;  
+    }  
+  
+    .hidden-receipt,  
+    [data-route-receipt],  
+    [data-debug-receipt],  
+    [data-contract-receipt] {  
+      display: none !important;  
+      visibility: hidden !important;  
+      width: 0 !important;  
+      height: 0 !important;  
+      max-width: 0 !important;  
+      max-height: 0 !important;  
+      overflow: hidden !important;  
+      opacity: 0 !important;  
+      pointer-events: none !important;  
+      position: absolute !important;  
+      clip-path: inset(50%) !important;  
+    }  
+  
+    .footer {  
+      margin-top: 20px;  
+      padding: 20px 0 0;  
+      color: var(--faint);  
+      font-size: 0.82rem;  
+      text-align: center;  
+    }  
+  
+    @media (max-width: 980px) {  
+      .topbar { grid-template-columns: 1fr; }  
+      .dropdown-nav { justify-content: flex-start; }  
+      .dropdown-panel { left: 0; right: auto; }  
+      .lens-toolbar { grid-template-columns: 1fr; }  
+      .lens-toggle {  
+        width: 100%;  
+        display: grid;  
+        grid-template-columns: repeat(3, minmax(0, 1fr));  
+        border-radius: 22px;  
+      }  
+      .standard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }  
+    }  
+  
+    @media (max-width: 620px) {  
+      .page { width: min(100% - 18px, var(--max)); }  
+      .hero, .stage-shell, .globe-stage { border-radius: 24px; }  
+      .dropdown-nav { display: grid; grid-template-columns: 1fr; }  
+      .dropdown summary { width: 100%; }  
+      .dropdown-panel {  
+        position: static;  
+        margin-top: 8px;  
+        min-width: 0;  
+      }  
+      .globe-stage { min-height: 680px; }  
+      .diagnostic-grid, .standard-grid { grid-template-columns: 1fr; }  
+    }  
+  
+    @media (prefers-reduced-motion: reduce) {  
+      *, *::before, *::after {  
+        scroll-behavior: auto !important;  
+        animation-duration: 0.01ms !important;  
+        animation-iteration-count: 1 !important;  
+        transition-duration: 0.01ms !important;  
+      }  
+    }  
+  </style>  </head>  <body>  
+  <a class="skip" href="#audralia-main">Skip to Audralia</a>    <div class="page">  
+    <header class="topbar" aria-label="Audralia navigation">  
+      <a class="brand" href="/showroom/globe/audralia/" aria-current="page">  
+        <span class="brand-mark" aria-hidden="true">AU</span>  
+        <span class="brand-copy">  
+          <span>Diamond Gate Bridge</span>  
+          <strong>Audralia</strong>  
+        </span>  
+      </a>  <nav class="dropdown-nav" aria-label="Dropdown navigation">  
+    <details class="dropdown">  
+      <summary>Site Menu</summary>  
+      <div class="dropdown-panel">  
+        <a href="/">Compass</a>  
+        <a href="/showroom/">Showroom</a>  
+        <a href="/showroom/globe/">Globe</a>  
+        <a href="/showroom/globe/audralia/" aria-current="page">Audralia</a>  
+        <a href="/laws/">Laws</a>  
+        <a href="/gauges/">Triple G</a>  
+      </div>  
+    </details>  
+
+    <details class="dropdown">  
+      <summary>Globe Lenses</summary>  
+      <div class="dropdown-panel" role="group" aria-label="Choose Audralia lens">  
+        <button type="button" data-audralia-lens-button="planet" aria-pressed="true">Planet View</button>  
+        <button type="button" data-audralia-lens-button="lattice" aria-pressed="false">Lattice View</button>  
+        <button type="button" data-audralia-lens-button="diagnostic" aria-pressed="false">Diagnostic Scope</button>  
+      </div>  
+    </details>  
+
+    <details class="dropdown">  
+      <summary>Audralia Runtime</summary>  
+      <div class="dropdown-panel">  
+        <a href="/showroom/globe/">Return to Globe</a>  
+        <a href="/gauges/">Run Triple G</a>  
+        <a href="/showroom/">Open Showroom</a>  
+        <a href="#route-receipt-summary">Route Receipt</a>  
+      </div>  
+    </details>  
+  </nav>  
+</header>  
+
+<main id="audralia-main">  
+  <section class="hero">  
+    <p class="kicker">Audralia · Diagnostic Reporting Binding</p>  
+    <h1>The public shell now selects the diagnostic-reporting consumer.</h1>  
+
+    <p class="lede">  
+      The HTML binding now points to the diagnostic-reporting JavaScript contract. That JS must visibly prove cloned-seed consumption, receive-map readiness, NEWS completion, child-packet availability, and downstream hold.  
+    </p>  
+
+    <div class="status-row" aria-label="Current binding posture">  
+      <span class="status-pill">Diagnostic reporting</span>  
+      <span class="status-pill">Latest JS selected</span>  
+      <span class="status-pill">Datum file held</span>  
+      <span class="status-pill">Downstream held</span>  
+    </div>  
+  </section>  
+
+  <section class="stage-shell" aria-label="Audralia runtime globe stage">  
+    <p class="section-title">Observable Globe · Diagnostic Lattice · Diagnostic Reporting Consumer</p>  
+
+    <div class="lens-toolbar" aria-label="Audralia lens controls">  
+      <div class="lens-toggle" role="group" aria-label="Choose Audralia lens">  
+        <button class="lens-button" type="button" data-audralia-lens-button="planet" aria-pressed="true">Planet View</button>  
+        <button class="lens-button" type="button" data-audralia-lens-button="lattice" aria-pressed="false">Lattice View</button>  
+        <button class="lens-button" type="button" data-audralia-lens-button="diagnostic" aria-pressed="false">Diagnostic Scope</button>  
+      </div>  
+
+      <article class="lens-copy" aria-live="polite">  
+        <b data-audralia-lens-title>Planet View</b>  
+        <p data-audralia-lens-copy>  
+          Planet View preserves the observable globe carrier. Diagnostic reporting runs under the hood without replacing the planet body.  
+        </p>  
+      </article>  
+    </div>  
+
+    <div  
+      id="audraliaGlobeStage"  
+      class="globe-stage"  
+      data-audralia-globe-stage  
+      data-audralia-stage  
+      data-contract="AUDRALIA_G1_DATUM_DIAGNOSTIC_REPORTING_HTML_BINDING_TNT_v1"  
+      data-previous-html-contract="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_HTML_BINDING_TNT_v1"  
+      data-protected-parent-baseline="AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1"  
+      data-bound-js-contract="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1"  
+      data-previous-js-contract="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_TNT_v1"  
+      data-datum-file="/assets/audralia/clean/runtime/audralia.true-globe.datum.js"  
+      data-public-datum-contract="AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1"  
+      data-clone-datum-contract="AUDRALIA_G1_CHILD_MATH_DATUM_CLONING_METHOD_SEED_TNT_v1"  
+      data-html-binds-to-diagnostic-reporting-js="true"  
+      data-html-does-not-consume-datum-directly="true"  
+      data-datum-file-held="true"  
+      data-downstream-held="true"  
+      aria-label="Audralia G1 diagnostic-reporting binding stage"  
+    >  
+      <div  
+        id="audraliaGlobeMount"  
+        class="globe-mount"  
+        data-audralia-globe-mount  
+        data-audralia-canvas-mount  
+        aria-label="Audralia canonical visual mount"  
+      ></div>  
+
+      <div  
+        id="audraliaDiagnosticMount"  
+        class="diagnostic-panel"  
+        data-audralia-diagnostic-mount  
+        aria-label="Audralia lightweight Diagnostic Scope"  
+      >  
+        <article class="diagnostic-card">  
+          <h3>Diagnostic Scope</h3>  
+          <div class="diagnostic-grid">  
+            <span><b>Route</b><em data-audralia-diagnostic-route>HTML bound to diagnostic-reporting JS</em></span>  
+            <span><b>Carrier</b><em data-audralia-diagnostic-carrier>pending JS report</em></span>  
+            <span><b>Lens</b><em data-audralia-diagnostic-lens>planet</em></span>  
+            <span><b>Canvas</b><em data-audralia-diagnostic-canvas>pending JS report</em></span>  
+            <span><b>Loop</b><em data-audralia-diagnostic-loop>pending JS report</em></span>  
+            <span><b>Children</b><em data-audralia-diagnostic-children>downstream held</em></span>  
+            <span><b>NEWS</b><em data-audralia-diagnostic-news>pending diagnostic-reporting JS</em></span>  
+            <span><b>360 Scope</b><em data-audralia-diagnostic-scope>pending diagnostic-reporting JS</em></span>  
+            <span><b>Datum Child</b><em data-audralia-diagnostic-datum-child>pending diagnostic-reporting JS</em></span>  
+            <span><b>Receive Map</b><em data-audralia-diagnostic-receive-map>pending diagnostic-reporting JS</em></span>  
+            <span><b>NEWS Map</b><em data-audralia-diagnostic-news-map>pending diagnostic-reporting JS</em></span>  
+            <span><b>Child Packet</b><em data-audralia-diagnostic-child-packet>pending diagnostic-reporting JS</em></span>  
+            <span><b>Seat Count</b><em data-audralia-diagnostic-seat-count>pending diagnostic-reporting JS</em></span>  
+            <span><b>Downstream</b><em data-audralia-diagnostic-downstream>held · no child activation</em></span>  
+          </div>  
+        </article>  
+      </div>  
+
+      <div class="stage-label" data-audralia-stage-label>  
+        <strong>Planet View</strong> → spherical carrier · diagnostic reporting active  
+      </div>  
+
+      <div class="stage-instruction">  
+        Drag inside the globe stage to inspect Audralia. Diagnostic Scope reports whether the latest JS proves cloned-seed consumption and 256-seat NEWS completion.  
+      </div>  
+    </div>  
+
+    <article class="object-card">  
+      <p class="label">Diagnostic reporting law</p>  
+      <h2>The page now demands visible proof, not merely a selected consumer.</h2>  
+      <p>  
+        The script loader now targets the diagnostic-reporting JS. If cloned-seed consumption succeeds, the Diagnostic Scope must report the live proof. If it fails, the JS must write a bounded failure reason.  
+      </p>  
+    </article>  
+
+    <article class="object-card">  
+      <p class="label">Binding law</p>  
+      <h2>HTML selects the latest JS. JS proves or fails the seed.</h2>  
+      <p>  
+        HTML does not consume the datum file directly. It selects the diagnostic-reporting consumer. Datum remains held. Downstream remains held.  
+      </p>  
+    </article>  
+
+    <article class="object-card">  
+      <p class="label">NEWS protocol</p>  
+      <h2>A cell is not complete unless it completes all four directions.</h2>  
+      <p>  
+        North defines origin and pole authority. East defines formation and successor expression. West defines correction and memory. South defines grounding, stability, and render eligibility.  
+      </p>  
+
+      <div class="standard-grid" aria-label="NEWS cell standard">  
+        <div class="standard-cell"><b>North</b><span>Origin, pole, axis, predecessor authority, upstream lineage, and admissibility source.</span></div>  
+        <div class="standard-cell"><b>East</b><span>Formation, successor relation, active phase, forward expression, and continuity.</span></div>  
+        <div class="standard-cell"><b>West</b><span>Correction, memory, opposite relation, counterweight, and rollback admissibility.</span></div>  
+        <div class="standard-cell"><b>South</b><span>Completion, grounding, stabilization, render eligibility, and downstream readiness.</span></div>  
+      </div>  
+    </article>  
+  </section>  
+
+  <section id="route-receipt-summary" class="receipt-card" aria-label="Audralia route receipt summary">  
+    <p class="label">Route receipt</p>  
+    <h2>HTML binding aligned to diagnostic-reporting JS.</h2>  
+    <p>  
+      HTML is the public binding shell. JS is the diagnostic-reporting consumer. The datum child remains the cloned seed source under the same file identity. Downstream remains held.  
+    </p>  
+
+    <code>AUDRALIA_G1_DATUM_DIAGNOSTIC_REPORTING_HTML_BINDING_TNT_v1
 
-  <style>
-    :root{
-      color-scheme:dark;
-      --bg:#020711;
-      --deep:#030814;
-      --panel:rgba(5,15,32,.86);
-      --panel2:rgba(3,9,20,.78);
-      --text:rgba(239,247,255,.96);
-      --muted:rgba(239,247,255,.70);
-      --faint:rgba(239,247,255,.48);
-      --gold:#f4cf83;
-      --gold2:#ffe8a3;
-      --blue:#8dd8ff;
-      --mint:#a7f3c6;
-      --violet:#ad8cff;
-      --line:rgba(244,207,131,.18);
-      --max:1420px;
-      --shadow:0 34px 120px rgba(0,0,0,.50);
-    }
-
-    *{box-sizing:border-box}
-
-    html{
-      min-height:100%;
-      scroll-behavior:smooth;
-      background:
-        radial-gradient(circle at 50% -12%,rgba(78,119,171,.26),transparent 38rem),
-        radial-gradient(circle at 10% 18%,rgba(244,207,131,.09),transparent 30rem),
-        radial-gradient(circle at 90% 28%,rgba(141,216,255,.12),transparent 30rem),
-        linear-gradient(180deg,#061020 0%,var(--bg) 56%,#01040a 100%);
-    }
-
-    body{
-      margin:0;
-      min-width:320px;
-      min-height:100vh;
-      overflow-x:hidden;
-      color:var(--text);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      letter-spacing:-.015em;
-      -webkit-font-smoothing:antialiased;
-      background:
-        linear-gradient(rgba(141,216,255,.030) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(141,216,255,.030) 1px,transparent 1px);
-      background-size:56px 56px;
-    }
-
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      background:radial-gradient(circle,rgba(255,255,255,.15) 0 1px,transparent 1.4px);
-      background-size:230px 250px;
-      opacity:.14;
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.9),rgba(0,0,0,.46) 62%,rgba(0,0,0,.12));
-    }
-
-    a,button,summary{color:inherit;font:inherit}
-    a{text-decoration:none}
-    button,summary{cursor:pointer}
-
-    a:focus-visible,
-    button:focus-visible,
-    summary:focus-visible{
-      outline:2px solid var(--gold);
-      outline-offset:4px;
-    }
-
-    .skip{
-      position:absolute;
-      left:12px;
-      top:12px;
-      z-index:50;
-      transform:translateY(-160%);
-      padding:10px 14px;
-      border-radius:999px;
-      background:var(--mint);
-      color:#06101c;
-      font-weight:950;
-    }
-
-    .skip:focus{transform:translateY(0)}
-
-    .page{
-      position:relative;
-      z-index:2;
-      width:min(var(--max),calc(100% - 28px));
-      margin:0 auto;
-      padding:max(18px,env(safe-area-inset-top)) 0 max(54px,env(safe-area-inset-bottom));
-    }
-
-    .topbar{
-      display:grid;
-      grid-template-columns:minmax(0,1fr) auto;
-      align-items:start;
-      gap:16px;
-      padding:10px 0 20px;
-    }
-
-    .brand{
-      display:inline-grid;
-      grid-template-columns:auto minmax(0,1fr);
-      align-items:center;
-      gap:11px;
-      min-width:0;
-      width:fit-content;
-      color:var(--gold);
-      font-weight:950;
-      letter-spacing:.04em;
-      text-transform:uppercase;
-    }
-
-    .brand-mark{
-      display:grid;
-      place-items:center;
-      width:42px;
-      height:42px;
-      border:1px solid rgba(244,207,131,.48);
-      border-radius:14px;
-      background:
-        linear-gradient(135deg,rgba(255,255,255,.20),transparent 38%),
-        conic-gradient(from 45deg,rgba(255,255,255,.22),rgba(141,216,255,.18),rgba(7,19,52,.94),rgba(244,207,131,.16),rgba(255,255,255,.18));
-      box-shadow:0 0 22px rgba(244,207,131,.14),0 0 24px rgba(141,216,255,.10);
-    }
-
-    .brand-copy{
-      display:grid;
-      gap:2px;
-      min-width:0;
-    }
-
-    .brand-copy strong{
-      color:rgba(255,244,216,.96);
-      font-size:clamp(1rem,2.6vw,1.45rem);
-      line-height:1;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .brand-copy span{
-      color:rgba(141,216,255,.82);
-      font-size:.68rem;
-      letter-spacing:.22em;
-    }
-
-    .dropdown-nav{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      gap:8px;
-    }
-
-    .dropdown{position:relative}
-
-    .dropdown summary{
-      min-height:38px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      border:1px solid rgba(255,255,255,.11);
-      border-radius:999px;
-      padding:0 13px;
-      color:rgba(238,244,255,.84);
-      background:radial-gradient(circle at 50% 0%,rgba(141,216,255,.08),transparent 72%),rgba(255,255,255,.035);
-      font-size:.82rem;
-      font-weight:850;
-      letter-spacing:.02em;
-      list-style:none;
-    }
-
-    .dropdown summary::-webkit-details-marker{display:none}
-    .dropdown summary::after{
-      content:"⌄";
-      color:rgba(244,207,131,.88);
-      font-size:.92rem;
-    }
-
-    .dropdown[open] summary{
-      color:#06101c;
-      background:linear-gradient(135deg,#fff0b8,var(--gold));
-      border-color:rgba(244,207,131,.72);
-    }
-
-    .dropdown-panel{
-      position:absolute;
-      right:0;
-      top:calc(100% + 8px);
-      z-index:30;
-      min-width:250px;
-      display:grid;
-      gap:6px;
-      padding:10px;
-      border:1px solid rgba(244,207,131,.22);
-      border-radius:18px;
-      background:radial-gradient(circle at 12% 0%,rgba(244,207,131,.10),transparent 12rem),rgba(2,8,20,.96);
-      box-shadow:0 22px 70px rgba(0,0,0,.48);
-      backdrop-filter:blur(12px);
-    }
-
-    .dropdown-panel a{
-      width:100%;
-      min-height:36px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      border:1px solid rgba(255,255,255,.09);
-      border-radius:12px;
-      padding:0 10px;
-      color:rgba(238,244,255,.84);
-      background:rgba(255,255,255,.035);
-      text-align:left;
-      font-size:.84rem;
-      font-weight:820;
-    }
-
-    .dropdown-panel a:hover{
-      color:#06101c;
-      background:linear-gradient(135deg,#fff0b8,var(--gold));
-      border-color:rgba(244,207,131,.56);
-    }
-
-    .hero,
-    .receiver-shell,
-    .state-shell,
-    .handoff-shell,
-    .receipt-shell{
-      border:1px solid var(--line);
-      background:
-        radial-gradient(circle at 76% 28%,rgba(139,200,255,.13),transparent 32%),
-        radial-gradient(circle at 18% 20%,rgba(244,207,131,.12),transparent 30%),
-        linear-gradient(180deg,rgba(8,17,34,.94),rgba(4,9,20,.94));
-      box-shadow:var(--shadow);
-    }
-
-    .hero{
-      position:relative;
-      isolation:isolate;
-      overflow:hidden;
-      border-radius:34px;
-      padding:clamp(24px,5vw,50px);
-    }
-
-    .hero::before{
-      content:"";
-      position:absolute;
-      inset:auto -8% -42% 42%;
-      z-index:-1;
-      width:520px;
-      aspect-ratio:1/1;
-      border-radius:50%;
-      background:radial-gradient(circle,rgba(141,216,255,.18),transparent 66%);
-      opacity:.82;
-    }
-
-    .kicker,
-    .section-title,
-    .label{
-      margin:0 0 14px;
-      color:var(--gold);
-      font:900 .78rem/1.4 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-      letter-spacing:.20em;
-      text-transform:uppercase;
-    }
-
-    h1{
-      max-width:990px;
-      margin:0;
-      font-size:clamp(2.35rem,8vw,5.7rem);
-      line-height:.92;
-      letter-spacing:-.075em;
-      text-wrap:balance;
-    }
-
-    .lede{
-      max-width:1020px;
-      margin:22px 0 0;
-      color:var(--muted);
-      font-size:clamp(1.02rem,2.6vw,1.26rem);
-      line-height:1.55;
-    }
-
-    .status-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:24px;
-    }
-
-    .status-pill{
-      min-height:34px;
-      display:inline-flex;
-      align-items:center;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:999px;
-      padding:0 12px;
-      color:rgba(238,244,255,.76);
-      background:rgba(255,255,255,.035);
-      font-size:.78rem;
-      font-weight:850;
-      letter-spacing:.04em;
-      text-transform:uppercase;
-    }
-
-    .receiver-shell,
-    .state-shell,
-    .handoff-shell,
-    .receipt-shell{
-      margin-top:16px;
-      border-radius:34px;
-      padding:clamp(18px,3.8vw,32px);
-      overflow:hidden;
-    }
-
-    .receiver-head,
-    .state-head,
-    .handoff-head,
-    .receipt-head{
-      max-width:980px;
-      margin-bottom:16px;
-    }
-
-    .receiver-head h2,
-    .state-head h2,
-    .handoff-head h2,
-    .receipt-head h2{
-      margin:0;
-      color:rgba(255,244,216,.96);
-      font-size:clamp(1.55rem,4.6vw,2.6rem);
-      line-height:1.02;
-      letter-spacing:-.06em;
-      text-wrap:balance;
-    }
-
-    .receiver-head p,
-    .state-head p,
-    .handoff-head p,
-    .receipt-head p{
-      margin:12px 0 0;
-      color:var(--muted);
-      font-size:clamp(1rem,2.4vw,1.13rem);
-      line-height:1.55;
-    }
-
-    .planet-receiver{
-      min-height:520px;
-      border:1px solid rgba(244,207,131,.16);
-      border-radius:30px;
-      background:
-        radial-gradient(circle at 50% 42%,rgba(141,216,255,.10),transparent 28rem),
-        radial-gradient(circle at 50% 74%,rgba(244,207,131,.055),transparent 28rem),
-        linear-gradient(180deg,rgba(4,11,24,.92),rgba(2,7,16,.96));
-      overflow:hidden;
-    }
-
-    .state-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:10px;
-      margin-top:16px;
-    }
-
-    .state-card,
-    .receipt-card,
-    .handoff-card{
-      min-height:126px;
-      display:grid;
-      align-content:start;
-      gap:8px;
-      border:1px solid rgba(255,255,255,.09);
-      border-radius:18px;
-      padding:14px;
-      background:radial-gradient(circle at 20% 0%,rgba(244,207,131,.08),transparent 8rem),rgba(255,255,255,.028);
-    }
-
-    .state-card b,
-    .receipt-card b,
-    .handoff-card b{
-      color:var(--gold);
-      font-size:.72rem;
-      letter-spacing:.15em;
-      text-transform:uppercase;
-    }
-
-    .state-card strong,
-    .receipt-card strong,
-    .handoff-card strong{
-      color:rgba(255,244,216,.96);
-      font-size:1rem;
-      line-height:1.16;
-    }
-
-    .state-card span,
-    .receipt-card span,
-    .handoff-card span{
-      color:rgba(238,244,255,.70);
-      font-size:.88rem;
-      line-height:1.36;
-    }
-
-    .handoff-grid{
-      display:grid;
-      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-      gap:12px;
-      margin-top:16px;
-    }
-
-    .action-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:18px;
-    }
-
-    .action{
-      min-height:40px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(244,207,131,.36);
-      border-radius:999px;
-      padding:0 15px;
-      color:#06101c;
-      background:linear-gradient(135deg,#fff0b8,var(--gold));
-      font-size:.80rem;
-      font-weight:950;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    .action.secondary{
-      color:rgba(238,244,255,.84);
-      background:rgba(255,255,255,.035);
-      border-color:rgba(255,255,255,.12);
-    }
-
-    .receipt-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:10px;
-      margin-top:16px;
-    }
-
-    .receipt-code{
-      display:block;
-      margin-top:16px;
-      padding:14px;
-      border:1px solid rgba(255,255,255,.09);
-      border-radius:16px;
-      background:rgba(0,0,0,.28);
-      color:rgba(238,244,255,.72);
-      font-size:.78rem;
-      line-height:1.45;
-      white-space:pre-wrap;
-      overflow-wrap:anywhere;
-    }
-
-    .hidden-receipt,
-    [data-route-receipt],
-    [data-debug-receipt],
-    [data-contract-receipt]{
-      display:none!important;
-      visibility:hidden!important;
-      width:0!important;
-      height:0!important;
-      max-width:0!important;
-      max-height:0!important;
-      overflow:hidden!important;
-      opacity:0!important;
-      pointer-events:none!important;
-      position:absolute!important;
-      clip-path:inset(50%)!important;
-    }
-
-    .footer{
-      margin-top:20px;
-      padding:20px 0 0;
-      color:var(--faint);
-      font-size:.82rem;
-      text-align:center;
-    }
-
-    @media (max-width:1040px){
-      .topbar{grid-template-columns:1fr}
-      .dropdown-nav{justify-content:flex-start}
-      .dropdown-panel{left:0;right:auto}
-      .state-grid,
-      .receipt-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-    }
-
-    @media (max-width:760px){
-      .page{width:min(100% - 18px,var(--max))}
-      .hero,
-      .receiver-shell,
-      .state-shell,
-      .handoff-shell,
-      .receipt-shell{border-radius:24px}
-      .dropdown-nav{display:grid;grid-template-columns:1fr}
-      .dropdown summary{width:100%}
-      .dropdown-panel{
-        position:static;
-        margin-top:8px;
-        min-width:0;
-      }
-      .planet-receiver{min-height:640px}
-      .state-grid,
-      .receipt-grid,
-      .handoff-grid{grid-template-columns:1fr}
-    }
-
-    @media (prefers-reduced-motion:reduce){
-      *,*::before,*::after{
-        scroll-behavior:auto!important;
-        animation-duration:.01ms!important;
-        animation-iteration-count:1!important;
-        transition-duration:.01ms!important;
-      }
-    }
-  </style>
-</head>
-
-<body>
-  <a class="skip" href="#audralia-main">Skip to Audralia</a>
-
-  <div class="page">
-    <header class="topbar" aria-label="Audralia navigation">
-      <a class="brand" href="/showroom/globe/audralia/" aria-current="page">
-        <span class="brand-mark" aria-hidden="true">AU</span>
-        <span class="brand-copy">
-          <span>Diamond Gate Bridge</span>
-          <strong>Audralia</strong>
-        </span>
-      </a>
-
-      <nav class="dropdown-nav" aria-label="Dropdown navigation">
-        <details class="dropdown">
-          <summary>Site Menu</summary>
-          <div class="dropdown-panel">
-            <a href="/">Compass <span>Home</span></a>
-            <a href="/showroom/">Showroom <span>Route</span></a>
-            <a href="/showroom/globe/">Globe <span>Route</span></a>
-            <a href="/showroom/globe/audralia/" aria-current="page">Audralia <span>Current</span></a>
-            <a href="/showroom/globe/audralia/disposition/">Cockpit Inspection <span>Deck</span></a>
-            <a href="/gauges/">Triple G <span>Audit</span></a>
-          </div>
-        </details>
-
-        <details class="dropdown">
-          <summary>Planet Modes</summary>
-          <div class="dropdown-panel">
-            <a href="#planet-body-receiver">Planet Body <span>G2</span></a>
-            <a href="#surface-states">Surface States <span>8</span></a>
-            <a href="#cockpit-handoff">Inspection Receipt <span>Cockpit</span></a>
-            <a href="#route-receipt-summary">Diagnostic Fallback <span>Receipt</span></a>
-          </div>
-        </details>
-
-        <details class="dropdown">
-          <summary>Audralia Runtime</summary>
-          <div class="dropdown-panel">
-            <a href="/showroom/globe/audralia/disposition/">Open Cockpit Inspection <span>Held</span></a>
-            <a href="/showroom/globe/">Return to Globe <span>Back</span></a>
-            <a href="/gauges/">Run Triple G <span>Audit</span></a>
-            <a href="#route-receipt-summary">Route Receipt <span>Proof</span></a>
-          </div>
-        </details>
-      </nav>
-    </header>
-
-    <main id="audralia-main">
-      <section class="hero" aria-labelledby="page-title">
-        <p class="kicker">Audralia · Planet Body · Multi-State Surface Expression</p>
-        <h1 id="page-title">Audralia is ready to express as a planet body.</h1>
-
-        <p class="lede">
-          The datum has been defined. The path of expression has been defined. This page now receives the multi-state planet render so Audralia can appear through body mass, terrain pressure, mineral surface, ocean system, coast edge, atmosphere rim, light response, and inspection receipt.
-        </p>
-
-        <div class="status-row" aria-label="Current binding posture">
-          <span class="status-pill">JS / Courage render authority</span>
-          <span class="status-pill">HTML / Wisdom receiver</span>
-          <span class="status-pill">Runtime / Strength held</span>
-          <span class="status-pill">8 planet states</span>
-          <span class="status-pill">No final visual pass claim</span>
-        </div>
-      </section>
-
-      <section id="planet-body-receiver" class="receiver-shell" aria-label="Audralia planet body receiver">
-        <div class="receiver-head">
-          <p class="section-title">Planet Body Receiver</p>
-          <h2>The page receives the G2 render authority.</h2>
-          <p>
-            This is the public planet route. The cockpit remains the inspection deck. This page receives the planet-body expression and keeps Runtime / Strength held.
-          </p>
-        </div>
-
-        <section
-          class="planet-receiver"
-          data-audralia-planet-body-mount
-          data-audralia-multi-state-planet-render
-          data-render-authority-contract="AUDRALIA_G2_PLANET_BODY_MULTI_STATE_SURFACE_EXPRESSION_TNT_v1"
-          data-html-binding-contract="AUDRALIA_G2_PLANET_BODY_MULTI_STATE_SURFACE_EXPRESSION_HTML_BINDING_TNT_v1"
-          data-runtime-strength-held="true"
-          data-final-visual-pass-claim="false"
-          aria-label="Audralia G2 planet body multi-state render mount"
-        ></section>
-      </section>
-
-      <section id="surface-states" class="state-shell" aria-label="Audralia surface state path">
-        <div class="state-head">
-          <p class="section-title">Surface State Path</p>
-          <h2>The planet expresses through eight visible states.</h2>
-          <p>
-            These are the public-facing states the render authority expresses. They describe the planet’s body without claiming weather, life, city systems, full runtime, or final visual completion.
-          </p>
-        </div>
-
-        <div class="state-grid">
-          <article class="state-card"><b>North</b><strong>Datum Body</strong><span>Audralia begins as one coherent planet body rooted in datum authority.</span></article>
-          <article class="state-card"><b>Northeast</b><strong>Terrain Mass</strong><span>Land begins as ancient pressure and eroded mass, not random island scatter.</span></article>
-          <article class="state-card"><b>East</b><strong>Material Surface</strong><span>Diamond, opal, granite, and slate influence the mineral read without becoming decoration.</span></article>
-          <article class="state-card"><b>Southeast</b><strong>Hydration / Ocean</strong><span>Water reads as basin, depth, shelf, and system rather than blue paint.</span></article>
-          <article class="state-card"><b>South</b><strong>Coast / Edge Pressure</strong><span>Land and ocean meet through shelf pressure and eroded boundaries.</span></article>
-          <article class="state-card"><b>Southwest</b><strong>Atmosphere Rim</strong><span>A thin limb glow gives the planet presence without claiming weather completion.</span></article>
-          <article class="state-card"><b>West</b><strong>Light Response</strong><span>Directional light gives the body depth without claiming full orbital simulation.</span></article>
-          <article class="state-card"><b>Northwest</b><strong>Inspection Receipt</strong><span>The planet reports what is expressed and what remains held.</span></article>
-        </div>
-      </section>
-
-      <section id="cockpit-handoff" class="handoff-shell" aria-label="Audralia cockpit handoff">
-        <div class="handoff-head">
-          <p class="section-title">Cockpit Handoff</p>
-          <h2>The planet is seen here. The cockpit inspects the proof.</h2>
-          <p>
-            The Audralia page is now the planet-expression page. The Intergalactic Cockpit remains the place to inspect gauges, engineering proof, receipts, and held Runtime / Strength boundaries.
-          </p>
-        </div>
-
-        <div class="handoff-grid">
-          <article class="handoff-card">
-            <b>Planet Route</b>
-            <strong>Expression</strong>
-            <span>Receives the G2 multi-state render and presents Audralia as a planet body.</span>
-          </article>
-          <article class="handoff-card">
-            <b>Cockpit Route</b>
-            <strong>Inspection</strong>
-            <span>Reads proof, instruments, engineering panels, receipts, and held-system boundaries.</span>
-          </article>
-        </div>
-
-        <div class="action-row">
-          <a class="action" href="/showroom/globe/audralia/disposition/">Open Cockpit Inspection</a>
-          <a class="action secondary" href="/showroom/globe/">Return to Globe</a>
-          <a class="action secondary" href="/gauges/">Run Triple G</a>
-        </div>
-      </section>
-
-      <section id="route-receipt-summary" class="receipt-shell" aria-label="Audralia route receipt summary">
-        <div class="receipt-head">
-          <p class="section-title">Compact Route Receipt</p>
-          <h2>G1 diagnostic proof is preserved as memory. G2 planet expression now leads.</h2>
-          <p>
-            The old diagnostic-reporting shell is not deleted. It is preserved as compact receipt history. The controlling public subject is now Audralia’s G2 planet-body expression.
-          </p>
-        </div>
-
-        <div class="receipt-grid">
-          <article class="receipt-card"><b>New HTML</b><strong>G2 receiver</strong><span>AUDRALIA_G2_PLANET_BODY_MULTI_STATE_SURFACE_EXPRESSION_HTML_BINDING_TNT_v1</span></article>
-          <article class="receipt-card"><b>Render JS</b><strong>G2 authority</strong><span>AUDRALIA_G2_PLANET_BODY_MULTI_STATE_SURFACE_EXPRESSION_TNT_v1</span></article>
-          <article class="receipt-card"><b>Old HTML</b><strong>G1 memory</strong><span>AUDRALIA_G1_DATUM_DIAGNOSTIC_REPORTING_HTML_BINDING_TNT_v1</span></article>
-          <article class="receipt-card"><b>Old Diagnostic JS</b><strong>Fallback memory</strong><span>AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1</span></article>
-          <article class="receipt-card"><b>Datum</b><strong>Held source</strong><span>/assets/audralia/clean/runtime/audralia.true-globe.datum.js</span></article>
-          <article class="receipt-card"><b>Runtime</b><strong>Strength held</strong><span>No full motion engine, no drag endurance, no sustained runtime activation.</span></article>
-          <article class="receipt-card"><b>Visual Claim</b><strong>Bounded</strong><span>No final visual pass, no generated image, no GraphicBox, no Earth substitution.</span></article>
-          <article class="receipt-card"><b>Cockpit</b><strong>Preserved</strong><span>/showroom/globe/audralia/disposition/ remains the inspection deck.</span></article>
-        </div>
-
-        <code class="receipt-code">AUDRALIA_G2_PLANET_BODY_MULTI_STATE_SURFACE_EXPRESSION_HTML_BINDING_TNT_v1
 route=/showroom/globe/audralia/
 html=/showroom/globe/audralia/index.html
-spec_ops=AUDRALIA_G2_PLANET_BODY_MULTI_STATE_SURFACE_EXPRESSION_HTML_BINDING_SPEC_OPS_v1
-previous_html_contract=AUDRALIA_G1_DATUM_DIAGNOSTIC_REPORTING_HTML_BINDING_TNT_v1
-render_authority_contract=AUDRALIA_G2_PLANET_BODY_MULTI_STATE_SURFACE_EXPRESSION_TNT_v1
-render_authority_file=/assets/audralia/clean/runtime/audralia.true-globe.multi-state.planet.render.js
-script_cache_key=AUDRALIA_G2_PLANET_BODY_MULTI_STATE_SURFACE_EXPRESSION_TNT_v1
-preserved_diagnostic_js_contract=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1
+previous_html_contract=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_HTML_BINDING_TNT_v1
+protected_parent_baseline=AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1
+bound_js_contract=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1
+previous_js_contract=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_TNT_v1
+script_cache_key=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1
 datum_file=/assets/audralia/clean/runtime/audralia.true-globe.datum.js
-public_subject=planet_body_multi_state_surface_expression
-html_function=wisdom
-js_function=courage
-runtime_function=strength
-runtime_strength_held=true
-cockpit_route=/showroom/globe/audralia/disposition/
-diagnostic_proof_preserved=compact_receipt_only
-generated_image=false
-graphic_box=false
-final_visual_pass_claim=false
-earth_substitution=false
-australia_name_drift=false
-deploy_marker=AUDRALIA_G2_PLANET_BODY_MULTI_STATE_SURFACE_EXPRESSION_HTML_BINDING_DEPLOY_MARKER_v1</code>
+public_datum_contract=AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1
+clone_datum_contract=AUDRALIA_G1_CHILD_MATH_DATUM_CLONING_METHOD_SEED_TNT_v1
+html_binds_to_diagnostic_reporting_js=true
+html_does_not_consume_datum_directly=true
+datum_file_held=true
+js_diagnostic_reporting_selected=true
+diagnostic_slots_preserved=true
+downstream_held=true
+no_visual_pass_claim=true</code>
 
-        <template id="audralia-route-receipt" class="hidden-receipt" data-route-receipt>
-AUDRALIA_G2_PLANET_BODY_MULTI_STATE_SURFACE_EXPRESSION_HTML_BINDING_TNT_v1
+<template id="audralia-route-receipt" class="hidden-receipt">
+
+AUDRALIA_G1_DATUM_DIAGNOSTIC_REPORTING_HTML_BINDING_TNT_v1
 target=/showroom/globe/audralia/index.html
-previous_html_contract=AUDRALIA_G1_DATUM_DIAGNOSTIC_REPORTING_HTML_BINDING_TNT_v1
-render_authority_contract=AUDRALIA_G2_PLANET_BODY_MULTI_STATE_SURFACE_EXPRESSION_TNT_v1
-render_authority_file=/assets/audralia/clean/runtime/audralia.true-globe.multi-state.planet.render.js
-script_src=/assets/audralia/clean/runtime/audralia.true-globe.multi-state.planet.render.js?v=AUDRALIA_G2_PLANET_BODY_MULTI_STATE_SURFACE_EXPRESSION_TNT_v1
-preserved_diagnostic_js_contract=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1
+previous_html_contract=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_HTML_BINDING_TNT_v1
+protected_parent_baseline=AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1
+bound_js_contract=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1
+previous_js_contract=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_TNT_v1
+script_src=/showroom/globe/audralia/index.js?v=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1
 datum_file=/assets/audralia/clean/runtime/audralia.true-globe.datum.js
-html_role=wisdom_public_receiver
-js_role=courage_planet_render_authority
-runtime_role=strength_held
-planet_body_mount_present=true
-surface_states_present=true
-cockpit_handoff_present=true
-diagnostic_receipt_preserved=true
-runtime_strength_held=true
-no_runtime_activation=true
-no_final_visual_pass_claim=true
-no_generated_image=true
-no_graphic_box=true
-no_earth_substitution=true
-no_australia_drift=true
-        </template>
-      </section>
-    </main>
+public_datum_contract=AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1
+clone_datum_contract=AUDRALIA_G1_CHILD_MATH_DATUM_CLONING_METHOD_SEED_TNT_v1
+html_role=public_binding_shell
+js_role=diagnostic_reporting_consumer
+datum_role=cloned_seed_source
+html_binds_to_diagnostic_reporting_js=true
+html_does_not_consume_datum_directly=true
+datum_file_changed=false
+datum_file_held=true
+diagnostic_slots_preserved=true
+downstream_held=true
+no_runtime_rewrite=true
+no_canvas_change=true
+no_globe_math_change=true
+no_drag_math_change=true
+no_terrain_activation=true
+no_surface_activation=true
+no_cloud_activation=true
+no_continent_activation=true
+no_visual_pass_claim=true
+</template>
+</section>
+</main>
 
-    <footer class="footer">
-      Diamond Gate Bridge · Audralia · G2 Planet Body · Multi-State Surface Expression · Runtime / Strength held.
-    </footer>
-  </div>
+<footer class="footer">  
+  Diamond Gate Bridge · Audralia · G1 diagnostic-reporting binding · downstream held.  
+</footer>
 
-  <script
-    src="/assets/audralia/clean/runtime/audralia.true-globe.multi-state.planet.render.js?v=AUDRALIA_G2_PLANET_BODY_MULTI_STATE_SURFACE_EXPRESSION_TNT_v1"
-    defer
-    data-audralia-planet-render-js
-    data-contract="AUDRALIA_G2_PLANET_BODY_MULTI_STATE_SURFACE_EXPRESSION_TNT_v1"
-    data-html-binding-contract="AUDRALIA_G2_PLANET_BODY_MULTI_STATE_SURFACE_EXPRESSION_HTML_BINDING_TNT_v1"
-    data-spec-ops-contract="AUDRALIA_G2_PLANET_BODY_MULTI_STATE_SURFACE_EXPRESSION_HTML_BINDING_SPEC_OPS_v1"
-    data-route="/showroom/globe/audralia/"
-    data-authority="js-courage"
-    data-html-function="wisdom"
-    data-runtime-function="strength"
-    data-runtime-strength-held="true"
-    data-final-visual-pass-claim="false"
-  ></script>
-
-  <script>
-    (() => {
-      "use strict";
-
-      const CONTRACT = "AUDRALIA_G2_PLANET_BODY_MULTI_STATE_SURFACE_EXPRESSION_HTML_BINDING_TNT_v1";
-      const RENDER_CONTRACT = "AUDRALIA_G2_PLANET_BODY_MULTI_STATE_SURFACE_EXPRESSION_TNT_v1";
-
-      const receipt = Object.freeze({
-        contract: CONTRACT,
-        route: "/showroom/globe/audralia/",
-        html: "/showroom/globe/audralia/index.html",
-        previousHtmlContract: "AUDRALIA_G1_DATUM_DIAGNOSTIC_REPORTING_HTML_BINDING_TNT_v1",
-        renderAuthorityContract: RENDER_CONTRACT,
-        renderAuthorityFile: "/assets/audralia/clean/runtime/audralia.true-globe.multi-state.planet.render.js",
-        subject: "Audralia planet body multi-state surface expression",
-        htmlFunction: "wisdom public receiver",
-        jsFunction: "courage render authority",
-        runtimeFunction: "strength held",
-        cockpitRoute: "/showroom/globe/audralia/disposition/",
-        diagnosticProofPreserved: "compact receipt only",
-        planetBodyMountPresent: Boolean(document.querySelector("[data-audralia-planet-body-mount]")),
-        runtimeStrengthHeld: true,
-        finalVisualPassClaim: false,
-        generatedImage: false,
-        graphicBox: false,
-        earthSubstitution: false,
-        australiaNameDrift: false,
-        deployMarker: "AUDRALIA_G2_PLANET_BODY_MULTI_STATE_SURFACE_EXPRESSION_HTML_BINDING_DEPLOY_MARKER_v1"
-      });
-
-      document.documentElement.dataset.audraliaHtmlBindingContract = CONTRACT;
-      document.documentElement.dataset.audraliaRenderAuthorityContract = RENDER_CONTRACT;
-      document.documentElement.dataset.audraliaPublicSubject = "planet-body-multi-state-surface-expression";
-      document.documentElement.dataset.audraliaRuntimeStrength = "held";
-      document.documentElement.dataset.audraliaFinalVisualPassClaim = "false";
-      document.documentElement.dataset.audraliaHtmlBindingReceipt = JSON.stringify(receipt);
-
-      window.AUDRALIA_G2_PLANET_BODY_MULTI_STATE_SURFACE_EXPRESSION_HTML_BINDING_RECEIPT = receipt;
-
-      window.dispatchEvent(new CustomEvent("audralia:html-binding:ready", {
-        detail: receipt
-      }));
-    })();
-  </script>
-</body>
-</html>
+  </div>    <script  
+    src="/showroom/globe/audralia/index.js?v=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1"  
+    defer  
+    data-audralia-route-js  
+    data-contract="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1"  
+    data-previous-js-contract="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_TNT_v1"  
+    data-html-binding-contract="AUDRALIA_G1_DATUM_DIAGNOSTIC_REPORTING_HTML_BINDING_TNT_v1"  
+    data-protected-parent-baseline="AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1"  
+    data-datum-file="/assets/audralia/clean/runtime/audralia.true-globe.datum.js"  
+    data-public-datum-contract="AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1"  
+    data-clone-datum-contract="AUDRALIA_G1_CHILD_MATH_DATUM_CLONING_METHOD_SEED_TNT_v1"  
+    data-html-binds-to-diagnostic-reporting-js="true"  
+    data-html-does-not-consume-datum-directly="true"  
+    data-downstream-held="true"  
+  ></script>  </body>  
+</html>  

@@ -1,29 +1,31 @@
 // /assets/audralia/clean/runtime/audralia.true-globe.datum.js
 // TNT FULL-FILE REPLACEMENT
+// AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1
+//
+// Template source:
 // AUDRALIA_G2_DATUM_CHRONOLOGY_PERFORMANCE_CONTAINMENT_TNT_v1
 //
-// Public compatibility contract preserved:
-// AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1
+// Protected parent baseline:
+// AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1
 //
 // Purpose:
-// - Preserve Fibonacci 16-compass chronology.
-// - Preserve true pole / axis / equator / hemisphere / Coriolis / circulation authority.
-// - Contain datum performance cost for mobile runtime and lattice drag.
-// - Make datum passive, cached, compact by default, and verbose only on request.
-// - Do not build the 256 datum field during boot.
-// - Do not return huge nested objects from status() or sample() by default.
+// - Convert the datum child into the G1 child receive-map authority.
+// - Give downstream children the shared carrier, chronology, relationship, and NEWS-complete seat math.
+// - Preserve passive datum posture, compact status, verbose-on-request behavior, and no-render discipline.
+// - Build and cache the 256 receive map once so children can inherit consistent math.
 // - Do not draw.
 // - Do not create canvas.
-// - Do not own runtime motion, clouds, surface, terrain, HTML, or route JS.
-// - No generated image. No GraphicBox. No visual-pass claim.
+// - Do not mutate parent HTML or route JS.
+// - Do not own runtime motion, terrain truth, moisture truth, surface truth, cloud truth, continent truth, or visual pass.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1";
-  var EXECUTION_CONTRACT = "AUDRALIA_G2_DATUM_CHRONOLOGY_PERFORMANCE_CONTAINMENT_TNT_v1";
-  var PREVIOUS_EXECUTION_CONTRACT = "AUDRALIA_G2_DATUM_FIBONACCI_16_COMPASS_CHRONOLOGY_TNT_v1";
-  var STANDARD = "AUDRALIA_G2_DATUM_CHRONOLOGY_PERFORMANCE_CONTAINMENT_STANDARD_v1";
+  var CONTRACT = "AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1";
+  var TEMPLATE_SOURCE_CONTRACT = "AUDRALIA_G2_DATUM_CHRONOLOGY_PERFORMANCE_CONTAINMENT_TNT_v1";
+  var PUBLIC_COMPATIBILITY_CONTRACT = "AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1";
+  var PARENT_BASELINE = "AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1";
+  var STANDARD = "AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_STANDARD_v1";
   var FAMILY = "/assets/audralia/clean/runtime/";
   var FILE = "/assets/audralia/clean/runtime/audralia.true-globe.datum.js";
 
@@ -40,14 +42,16 @@
   var PRIME_MERIDIAN_LONGITUDE = 0;
   var EQUATOR_LATITUDE = 0;
 
-  var FIBONACCI_WEIGHTS_16 = [
+  var FIBONACCI_SEQUENCE = Object.freeze([
     1, 1, 2, 3,
     5, 8, 13, 21,
     34, 55, 89, 144,
     233, 377, 610, 987
-  ];
+  ]);
 
-  var COMPASS_16_BASE = [
+  var FIBONACCI_OFFSETS = Object.freeze([1, 2, 3, 5, 8, 13]);
+
+  var COMPASS_16_BASE = Object.freeze([
     ["N", "North", "origin-axis-lock", "polar compression", "seed / axis"],
     ["NNE", "North-Northeast", "north-to-east-transition", "upper return current", "first release"],
     ["NE", "Northeast", "diagonal-lift", "rising pressure", "lift"],
@@ -64,17 +68,23 @@
     ["WNW", "West-Northwest", "west-to-north-recovery", "cooling return", "recovery"],
     ["NW", "Northwest", "diagonal-compression", "upper compression", "compression"],
     ["NNW", "North-Northwest", "north-return-approach", "final return current", "return"]
-  ];
+  ]);
 
   var state = {
     initialized: false,
     datumReady: false,
-    buildCount: 0,
+    childReceiveMapReady: false,
+    newsProtocolActive: true,
+    newsComplete: false,
+    chronologyComplete: false,
+    relationshipMapReady: false,
+    receiveBuildCount: 0,
     sampleCount: 0,
     verboseSampleCount: 0,
+    childPacketCount: 0,
     lastSample: null,
-    lastCompactSample: null,
-    lastField: null,
+    lastChildPacket: null,
+    receiveMap: null,
     errors: []
   };
 
@@ -85,11 +95,6 @@
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, finite(value, min)));
-  }
-
-  function smoothstep(edge0, edge1, value) {
-    var t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
-    return t * t * (3 - 2 * t);
   }
 
   function fract(value) {
@@ -104,6 +109,10 @@
     return deg * Math.PI / 180;
   }
 
+  function modulo(index, count) {
+    return ((index % count) + count) % count;
+  }
+
   function wrapLongitude(lon) {
     var value = finite(lon, 0);
     while (value < -Math.PI) value += TAU;
@@ -115,8 +124,13 @@
     return clamp(lat, -HALF_PI, HALF_PI);
   }
 
-  function modulo(index, count) {
-    return ((index % count) + count) % count;
+  function smoothstep(edge0, edge1, value) {
+    var t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
+    return t * t * (3 - 2 * t);
+  }
+
+  function deepClone(value) {
+    return JSON.parse(JSON.stringify(value));
   }
 
   function sum(values) {
@@ -130,12 +144,18 @@
     var y = finite(vector && vector.y, 0);
     var z = finite(vector && vector.z, 0);
     var length = Math.sqrt(x * x + y * y + z * z) || 1;
-    return { x: x / length, y: y / length, z: z / length };
+
+    return {
+      x: x / length,
+      y: y / length,
+      z: z / length
+    };
   }
 
   function sphereFromLonLat(lon, lat) {
     lon = wrapLongitude(lon);
     lat = clampLatitude(lat);
+
     var clat = Math.cos(lat);
 
     return {
@@ -147,72 +167,75 @@
 
   function lonLatFromSphere(vector) {
     var point = unit(vector);
+
     return {
       longitude: wrapLongitude(Math.atan2(point.z, point.x)),
       latitude: clampLatitude(Math.asin(clamp(point.y, -1, 1)))
     };
   }
 
-  var AXIS_CACHE = {
+  var AXIS_CACHE = Object.freeze({
     datumReady: true,
     contract: CONTRACT,
-    executionContract: EXECUTION_CONTRACT,
+    parentBaseline: PARENT_BASELINE,
     axisTiltRadians: AXIAL_TILT_RADIANS,
     axisTiltDegrees: degrees(AXIAL_TILT_RADIANS),
-    localNorthPole: { x: 0, y: 1, z: 0 },
-    localSouthPole: { x: 0, y: -1, z: 0 },
-    northPole: { x: 0, y: 1, z: 0 },
-    southPole: { x: 0, y: -1, z: 0 },
-    tiltedNorthAxis: unit({
+    localNorthPole: Object.freeze({ x: 0, y: 1, z: 0 }),
+    localSouthPole: Object.freeze({ x: 0, y: -1, z: 0 }),
+    northPole: Object.freeze({ x: 0, y: 1, z: 0 }),
+    southPole: Object.freeze({ x: 0, y: -1, z: 0 }),
+    tiltedNorthAxis: Object.freeze(unit({
       x: 0,
       y: Math.cos(AXIAL_TILT_RADIANS),
       z: Math.sin(AXIAL_TILT_RADIANS)
-    }),
-    tiltedSouthAxis: unit({
+    })),
+    tiltedSouthAxis: Object.freeze(unit({
       x: 0,
       y: -Math.cos(AXIAL_TILT_RADIANS),
       z: -Math.sin(AXIAL_TILT_RADIANS)
-    }),
+    })),
     equatorLatitude: EQUATOR_LATITUDE,
-    equatorPlane: {
-      normal: { x: 0, y: 1, z: 0 },
+    equatorPlane: Object.freeze({
+      normal: Object.freeze({ x: 0, y: 1, z: 0 }),
       latitude: EQUATOR_LATITUDE
-    },
+    }),
     primeMeridianLongitude: PRIME_MERIDIAN_LONGITUDE,
-    primeMeridianPlane: {
+    primeMeridianPlane: Object.freeze({
       longitude: PRIME_MERIDIAN_LONGITUDE,
-      normal: { x: 0, y: 0, z: 1 }
-    },
+      normal: Object.freeze({ x: 0, y: 0, z: 1 })
+    }),
     northSouthAuthority: true,
     equatorAuthority: true,
     hemisphereAuthority: true,
     polarAuthority: true,
     circulationAuthority: true,
     fibonacciCompassChronologyAuthority: true
-  };
+  });
 
   function getAxis() {
     return AXIS_CACHE;
   }
 
-  function buildCompassChronologyCompact() {
-    var totalWeight = sum(FIBONACCI_WEIGHTS_16);
+  function buildCompassChronology() {
+    var totalWeight = sum(FIBONACCI_SEQUENCE);
     var cumulative = 0;
     var out = [];
 
     for (var index = 0; index < COMPASS_16_BASE.length; index += 1) {
       var row = COMPASS_16_BASE[index];
-      var weight = FIBONACCI_WEIGHTS_16[index];
-      var previousIndex = modulo(index - 1, RADIAL_NODES);
-      var nextIndex = modulo(index + 1, RADIAL_NODES);
+      var weight = FIBONACCI_SEQUENCE[index];
+      var predecessorIndex = modulo(index - 1, RADIAL_NODES);
+      var successorIndex = modulo(index + 1, RADIAL_NODES);
       var oppositeIndex = modulo(index + 8, RADIAL_NODES);
       var angularStep = TAU / RADIAL_NODES;
       var longitudeCenter = wrapLongitude(PRIME_MERIDIAN_LONGITUDE + index * angularStep);
       var fibonacciStart = cumulative / totalWeight;
+
       cumulative += weight;
+
       var fibonacciEnd = cumulative / totalWeight;
 
-      out.push({
+      out.push(Object.freeze({
         compassIndex: index,
         chronologyIndex: index,
         sequenceIndex: index + 1,
@@ -221,8 +244,8 @@
         nodeRole: row[2],
         circulationRole: row[3],
         cycleRole: row[4],
-        predecessorIndex: previousIndex,
-        successorIndex: nextIndex,
+        predecessorIndex: predecessorIndex,
+        successorIndex: successorIndex,
         oppositeIndex: oppositeIndex,
         longitudeCenter: longitudeCenter,
         bearingRadians: index * angularStep,
@@ -242,13 +265,13 @@
         chronologyReady: true,
         nodeDefinedBySequence: true,
         nodeDefinedByCompass: true
-      });
+      }));
     }
 
-    return out;
+    return Object.freeze(out);
   }
 
-  var COMPASS_CHRONOLOGY = buildCompassChronologyCompact();
+  var COMPASS_CHRONOLOGY = buildCompassChronology();
 
   function compassNodeByIndex(index) {
     return COMPASS_CHRONOLOGY[modulo(Math.round(finite(index, 0)), RADIAL_NODES)];
@@ -313,14 +336,43 @@
     lat = clampLatitude(lat);
 
     if (lat > radians(3.5)) {
-      return { name: "north", sign: 1, display: "Northern Hemisphere", pole: "north" };
+      return {
+        name: "north",
+        sign: 1,
+        display: "Northern Hemisphere",
+        pole: "north"
+      };
     }
 
     if (lat < radians(-3.5)) {
-      return { name: "south", sign: -1, display: "Southern Hemisphere", pole: "south" };
+      return {
+        name: "south",
+        sign: -1,
+        display: "Southern Hemisphere",
+        pole: "south"
+      };
     }
 
-    return { name: "equatorial", sign: 0, display: "Equatorial Belt", pole: "balanced" };
+    return {
+      name: "equatorial",
+      sign: 0,
+      display: "Equatorial Belt",
+      pole: "balanced"
+    };
+  }
+
+  function poleRelationForBand(band) {
+    if (band <= 1) return "north-pole-field";
+    if (band >= 14) return "south-pole-field";
+    return "middle-field";
+  }
+
+  function equatorRelationForLatitude(lat) {
+    var absLat = Math.abs(clampLatitude(lat));
+
+    if (absLat < radians(3.5)) return "equator";
+    if (absLat < radians(14)) return "near-equator";
+    return "off-equator";
   }
 
   function latitudeBandFor(lat) {
@@ -356,14 +408,512 @@
     return Math.floor(clamp(equalArea * FIBONACCI_BANDS, 0, FIBONACCI_BANDS - 0.000001));
   }
 
-  function addressFor(lon, lat, verbose) {
+  function radialRoleFor(radial) {
+    if (radial % 4 === 0) return "cardinal";
+    if (radial % 2 === 0) return "ordinal";
+    return "intercardinal";
+  }
+
+  function isMajorSeat(band, radial) {
+    return band % 4 === 0 || radial % 4 === 0;
+  }
+
+  function isSecondarySeat(band, radial) {
+    return band % 2 === 0 || radial % 2 === 0;
+  }
+
+  function seatIndexFor(band, radial) {
+    return modulo(band, FIBONACCI_BANDS) * RADIAL_NODES + modulo(radial, RADIAL_NODES);
+  }
+
+  function hexAddressFor(band, radial) {
+    return "AU-HX-" + String(band).padStart(2, "0") + "-" + String(radial).padStart(2, "0");
+  }
+
+  function makeNewsForSeat(band, radial, seatIndex, poleRelation) {
+    var eastRadial = modulo(radial + 1, RADIAL_NODES);
+    var westRadial = modulo(radial - 1, RADIAL_NODES);
+    var oppositeRadial = modulo(radial + RADIAL_NODES / 2, RADIAL_NODES);
+
+    var northPredecessorSeatIndex = band > 0 ? seatIndexFor(band - 1, radial) : null;
+    var southSuccessorSeatIndex = band < FIBONACCI_BANDS - 1 ? seatIndexFor(band + 1, radial) : null;
+
+    var north = {
+      defined: true,
+      protocol: "NORTH",
+      role: "origin-pole-axis-predecessor-authority",
+      originAuthority: true,
+      poleRelation: poleRelation,
+      axisRelation: true,
+      predecessorBand: band > 0 ? band - 1 : null,
+      predecessorSeatIndex: northPredecessorSeatIndex,
+      boundary: band === 0 ? "north-pole-boundary" : null,
+      upstreamLineage: band === 0 ? "north-pole-boundary" : "previous-fibonacci-band",
+      admissibilitySource: PARENT_BASELINE
+    };
+
+    var east = {
+      defined: true,
+      protocol: "EAST",
+      role: "formation-successor-expression",
+      successorRadial: eastRadial,
+      successorSeatIndex: seatIndexFor(band, eastRadial),
+      activePhase: true,
+      forwardExpression: true,
+      forwardContinuity: true,
+      clockwiseDiagnosticMovement: true,
+      wrapsAtBoundary: radial === RADIAL_NODES - 1
+    };
+
+    var west = {
+      defined: true,
+      protocol: "WEST",
+      role: "correction-memory-opposite-relation",
+      previousRadial: westRadial,
+      previousSeatIndex: seatIndexFor(band, westRadial),
+      oppositeRadial: oppositeRadial,
+      oppositeSeatIndex: seatIndexFor(band, oppositeRadial),
+      correctionRelation: true,
+      memoryRelation: true,
+      counterweight: true,
+      rollbackEligible: true,
+      reverseDiagnosticMovement: true,
+      wrapsAtBoundary: radial === 0
+    };
+
+    var south = {
+      defined: true,
+      protocol: "SOUTH",
+      role: "completion-grounding-render-eligibility",
+      successorBand: band < FIBONACCI_BANDS - 1 ? band + 1 : null,
+      successorSeatIndex: southSuccessorSeatIndex,
+      boundary: band === FIBONACCI_BANDS - 1 ? "south-pole-boundary" : null,
+      grounding: true,
+      stabilization: true,
+      renderEligible: true,
+      childReceiveEligible: true,
+      downstreamReadiness: "math-ready-only"
+    };
+
+    var newsComplete = Boolean(
+      north.defined &&
+      east.defined &&
+      west.defined &&
+      south.defined &&
+      (north.predecessorSeatIndex !== null || north.boundary === "north-pole-boundary") &&
+      Number.isInteger(east.successorSeatIndex) &&
+      Number.isInteger(west.previousSeatIndex) &&
+      Number.isInteger(west.oppositeSeatIndex) &&
+      (south.successorSeatIndex !== null || south.boundary === "south-pole-boundary") &&
+      south.renderEligible &&
+      south.childReceiveEligible
+    );
+
+    return {
+      protocol: "NEWS",
+      north: north,
+      east: east,
+      west: west,
+      south: south,
+      newsComplete: newsComplete,
+      chronologyComplete: true,
+      relationshipComplete: true,
+      carrierBound: true,
+      renderEligible: newsComplete,
+      childReceiveEligible: newsComplete
+    };
+  }
+
+  function makeSeat(band, radial) {
+    var v = (band + 0.5) / FIBONACCI_BANDS;
+    var latitude = Math.asin(clamp(1 - 2 * v, -1, 1));
+    var node = compassNodeByIndex(radial);
+    var longitude = node.longitudeCenter;
+    var cartesian = sphereFromLonLat(longitude, latitude);
+    var hemisphere = hemisphereFor(latitude);
+    var poleRelation = poleRelationForBand(band);
+    var equatorRelation = equatorRelationForLatitude(latitude);
+    var seatIndex = seatIndexFor(band, radial);
+    var fibonacci = FIBONACCI_SEQUENCE[band];
+    var fibonacciPhase = fibonacci / FIBONACCI_SEQUENCE[FIBONACCI_SEQUENCE.length - 1];
+    var news = makeNewsForSeat(band, radial, seatIndex, poleRelation);
+
+    return {
+      contract: CONTRACT,
+      parentBaseline: PARENT_BASELINE,
+      seatIndex: seatIndex,
+      band: band,
+      radial: radial,
+      radialLane: radial,
+      fibonacciBand: band,
+      fibonacci: fibonacci,
+      fibonacciPhase: fibonacciPhase,
+      fibonacciSequenceIndex: band,
+      longitude: longitude,
+      latitude: latitude,
+      longitudeDegrees: degrees(longitude),
+      latitudeDegrees: degrees(latitude),
+      cartesian: cartesian,
+      compassKey: node.key,
+      compassName: node.name,
+      compassIndex: node.compassIndex,
+      chronologyIndex: node.chronologyIndex,
+      sequenceIndex: node.sequenceIndex,
+      nodeRole: node.nodeRole,
+      circulationRole: node.circulationRole,
+      cycleRole: node.cycleRole,
+      radialRole: radialRoleFor(radial),
+      cardinalGroup: node.cardinalGroup,
+      masterQuadrant: node.masterQuadrant,
+      hemisphere: hemisphere.name,
+      hemisphereSign: hemisphere.sign,
+      hemisphereDisplay: hemisphere.display,
+      poleRelation: poleRelation,
+      equatorRelation: equatorRelation,
+      latitudeBand: latitudeBandFor(latitude),
+      major: isMajorSeat(band, radial),
+      secondary: isSecondarySeat(band, radial),
+      cellId: "audralia:datum:" + band + ":" + radial,
+      hexAddress: hexAddressFor(band, radial),
+      northSeatIndex: news.north.predecessorSeatIndex,
+      southSeatIndex: news.south.successorSeatIndex,
+      eastSeatIndex: news.east.successorSeatIndex,
+      westSeatIndex: news.west.previousSeatIndex,
+      oppositeSeatIndex: news.west.oppositeSeatIndex,
+      predecessorSeatIndex: news.north.predecessorSeatIndex,
+      successorSeatIndex: news.south.successorSeatIndex,
+      fibonacciForwardSeatIndex: null,
+      fibonacciReturnSeatIndex: null,
+      news: news,
+      north: news.north,
+      east: news.east,
+      west: news.west,
+      south: news.south,
+      newsComplete: news.newsComplete,
+      chronologyComplete: news.chronologyComplete,
+      relationshipComplete: news.relationshipComplete,
+      carrierBound: news.carrierBound,
+      renderEligible: news.renderEligible,
+      childReceiveEligible: news.childReceiveEligible,
+      terrainReady: false,
+      moistureReady: false,
+      surfaceReady: false,
+      cloudReady: false,
+      continentReady: false,
+      visualPassReady: false,
+      groundLevelReady: false
+    };
+  }
+
+  function buildReceiveMap() {
+    var seats = [];
+    var rings = [];
+    var radialLanes = [];
+
+    for (var radial = 0; radial < RADIAL_NODES; radial += 1) {
+      radialLanes.push([]);
+    }
+
+    for (var band = 0; band < FIBONACCI_BANDS; band += 1) {
+      var ring = [];
+
+      for (radial = 0; radial < RADIAL_NODES; radial += 1) {
+        var seat = makeSeat(band, radial);
+        seats.push(seat);
+        ring.push(seat);
+        radialLanes[radial].push(seat);
+      }
+
+      rings.push(ring);
+    }
+
+    for (var i = 0; i < seats.length; i += 1) {
+      var current = seats[i];
+      var offset = FIBONACCI_OFFSETS[current.band % FIBONACCI_OFFSETS.length];
+
+      current.fibonacciForwardSeatIndex = current.band < FIBONACCI_BANDS - 1
+        ? seatIndexFor(current.band + 1, current.radial + offset)
+        : null;
+
+      current.fibonacciReturnSeatIndex = current.band > 0
+        ? seatIndexFor(current.band - 1, current.radial - offset)
+        : null;
+
+      current.fibonacciForwardSeat = current.fibonacciForwardSeatIndex;
+      current.fibonacciReturnSeat = current.fibonacciReturnSeatIndex;
+    }
+
+    var allNewsComplete = seats.every(function (seat) {
+      return seat.newsComplete === true;
+    });
+
+    var map = {
+      contract: CONTRACT,
+      templateSourceContract: TEMPLATE_SOURCE_CONTRACT,
+      publicCompatibilityContract: PUBLIC_COMPATIBILITY_CONTRACT,
+      parentBaseline: PARENT_BASELINE,
+      standard: STANDARD,
+      family: FAMILY,
+      file: FILE,
+      carrierRole: "observable-organic-carrier",
+      latticeRole: "scientific-discovery-rule-layer",
+      datumReady: true,
+      childReceiveMapReady: true,
+      newsProtocolActive: true,
+      newsComplete: allNewsComplete,
+      chronologyComplete: true,
+      relationshipMapReady: true,
+      carrierBound: true,
+      radialNodes: RADIAL_NODES,
+      fibonacciBands: FIBONACCI_BANDS,
+      latticeStates: LATTICE_STATES,
+      fibonacciSequence: FIBONACCI_SEQUENCE.slice(),
+      fibonacciOffsets: FIBONACCI_OFFSETS.slice(),
+      compassChronology: COMPASS_CHRONOLOGY.map(enrichNode),
+      seats: seats,
+      rings: rings,
+      radialLanes: radialLanes,
+      terrainReady: false,
+      moistureReady: false,
+      surfaceReady: false,
+      cloudReady: false,
+      continentReady: false,
+      visualPassReady: false,
+      groundLevelReady: false,
+      rendersNothing: true,
+      ownsNoRuntimeMotion: true,
+      ownsNoSurfaceTruth: true,
+      ownsNoCloudTruth: true,
+      ownsNoTerrainTruth: true,
+      ownsNoMoistureTruth: true,
+      ownsNoContinentTruth: true,
+      ownsNoHtml: true,
+      ownsNoRouteJs: true,
+      noCanvasCreation: true,
+      generatedImage: false,
+      graphicBox: false,
+      visualPassClaimed: false,
+      builtAt: new Date().toISOString()
+    };
+
+    state.receiveBuildCount += 1;
+    state.receiveMap = map;
+    state.childReceiveMapReady = true;
+    state.newsComplete = allNewsComplete;
+    state.chronologyComplete = true;
+    state.relationshipMapReady = true;
+
+    return map;
+  }
+
+  function ensureReceiveMap() {
+    if (!state.receiveMap) return buildReceiveMap();
+    return state.receiveMap;
+  }
+
+  function compactReceiveMap() {
+    var map = ensureReceiveMap();
+
+    return {
+      contract: map.contract,
+      parentBaseline: map.parentBaseline,
+      carrierRole: map.carrierRole,
+      latticeRole: map.latticeRole,
+      datumReady: map.datumReady,
+      childReceiveMapReady: map.childReceiveMapReady,
+      newsProtocolActive: map.newsProtocolActive,
+      newsComplete: map.newsComplete,
+      chronologyComplete: map.chronologyComplete,
+      relationshipMapReady: map.relationshipMapReady,
+      radialNodes: map.radialNodes,
+      fibonacciBands: map.fibonacciBands,
+      latticeStates: map.latticeStates,
+      seatCount: map.seats.length,
+      ringCount: map.rings.length,
+      radialLaneCount: map.radialLanes.length,
+      terrainReady: false,
+      moistureReady: false,
+      surfaceReady: false,
+      cloudReady: false,
+      continentReady: false,
+      visualPassReady: false,
+      groundLevelReady: false,
+      rendersNothing: true,
+      ownsNoRuntimeMotion: true,
+      ownsNoSurfaceTruth: true,
+      ownsNoCloudTruth: true,
+      ownsNoTerrainTruth: true,
+      ownsNoContinentTruth: true,
+      visualPassClaimed: false
+    };
+  }
+
+  function getSeat(seatIndex, options) {
+    var map = ensureReceiveMap();
+    var index = Math.floor(clamp(seatIndex, 0, LATTICE_STATES - 1));
+    var seat = map.seats[index];
+
+    return options && options.reference === true ? seat : deepClone(seat);
+  }
+
+  function getSeatByBandRadial(band, radial, options) {
+    return getSeat(seatIndexFor(band, radial), options);
+  }
+
+  function getRing(band, options) {
+    var map = ensureReceiveMap();
+    var index = Math.floor(clamp(band, 0, FIBONACCI_BANDS - 1));
+    var ring = map.rings[index];
+
+    return options && options.reference === true ? ring : deepClone(ring);
+  }
+
+  function getRadialLane(radial, options) {
+    var map = ensureReceiveMap();
+    var index = modulo(Math.round(finite(radial, 0)), RADIAL_NODES);
+    var lane = map.radialLanes[index];
+
+    return options && options.reference === true ? lane : deepClone(lane);
+  }
+
+  function getOppositeSeat(seatIndex, options) {
+    var seat = getSeat(seatIndex, { reference: true });
+    return getSeat(seat.oppositeSeatIndex, options);
+  }
+
+  function getFibonacciForwardSeat(seatIndex, options) {
+    var seat = getSeat(seatIndex, { reference: true });
+    if (seat.fibonacciForwardSeatIndex === null) return null;
+    return getSeat(seat.fibonacciForwardSeatIndex, options);
+  }
+
+  function getFibonacciReturnSeat(seatIndex, options) {
+    var seat = getSeat(seatIndex, { reference: true });
+    if (seat.fibonacciReturnSeatIndex === null) return null;
+    return getSeat(seat.fibonacciReturnSeatIndex, options);
+  }
+
+  function getNews(seatIndex, options) {
+    var seat = getSeat(seatIndex, { reference: true });
+    return options && options.reference === true ? seat.news : deepClone(seat.news);
+  }
+
+  function receive(options) {
+    options = options || {};
+    var map = ensureReceiveMap();
+
+    if (options.compact === true) return compactReceiveMap();
+    if (options.reference === true) return map;
+
+    return deepClone(map);
+  }
+
+  function normalizeChildName(childName) {
+    var value = String(childName || "unspecified-child").trim();
+    return value || "unspecified-child";
+  }
+
+  function getChildReceivePacket(childName, options) {
+    options = options || {};
+
+    var map = ensureReceiveMap();
+    var name = normalizeChildName(childName);
+    var seats = map.seats.filter(function (seat) {
+      return seat.childReceiveEligible === true && seat.newsComplete === true;
+    });
+
+    var packet = {
+      contract: CONTRACT,
+      parentBaseline: PARENT_BASELINE,
+      templateSourceContract: TEMPLATE_SOURCE_CONTRACT,
+      childName: name,
+      carrierRole: map.carrierRole,
+      latticeRole: map.latticeRole,
+      datumReady: true,
+      childReceivePacketReady: true,
+      childReceiveMapReady: true,
+      radialNodes: RADIAL_NODES,
+      fibonacciBands: FIBONACCI_BANDS,
+      latticeStates: LATTICE_STATES,
+      fibonacciSequence: FIBONACCI_SEQUENCE.slice(),
+      fibonacciOffsets: FIBONACCI_OFFSETS.slice(),
+      seats: seats,
+      rings: map.rings,
+      radialLanes: map.radialLanes,
+      newsProtocolActive: true,
+      newsComplete: map.newsComplete,
+      chronologyComplete: map.chronologyComplete,
+      relationshipMapReady: map.relationshipMapReady,
+      carrierBound: true,
+      terrainReady: false,
+      moistureReady: false,
+      surfaceReady: false,
+      cloudReady: false,
+      continentReady: false,
+      visualPassReady: false,
+      groundLevelReady: false,
+      rendersNothing: true,
+      ownsNoRuntimeMotion: true,
+      ownsNoSurfaceTruth: true,
+      ownsNoCloudTruth: true,
+      ownsNoTerrainTruth: true,
+      ownsNoMoistureTruth: true,
+      ownsNoContinentTruth: true,
+      ownsNoHtml: true,
+      ownsNoRouteJs: true,
+      generatedImage: false,
+      graphicBox: false,
+      visualPassClaimed: false,
+      issuedAt: new Date().toISOString()
+    };
+
+    state.childPacketCount += 1;
+    state.lastChildPacket = {
+      childName: name,
+      issuedAt: packet.issuedAt,
+      seatCount: seats.length
+    };
+
+    if (options.compact === true) {
+      return {
+        contract: packet.contract,
+        parentBaseline: packet.parentBaseline,
+        childName: packet.childName,
+        datumReady: true,
+        childReceivePacketReady: true,
+        childReceiveMapReady: true,
+        seatCount: seats.length,
+        radialNodes: RADIAL_NODES,
+        fibonacciBands: FIBONACCI_BANDS,
+        latticeStates: LATTICE_STATES,
+        newsProtocolActive: true,
+        newsComplete: map.newsComplete,
+        chronologyComplete: map.chronologyComplete,
+        relationshipMapReady: map.relationshipMapReady,
+        terrainReady: false,
+        moistureReady: false,
+        surfaceReady: false,
+        cloudReady: false,
+        continentReady: false,
+        visualPassReady: false,
+        groundLevelReady: false
+      };
+    }
+
+    return options.reference === true ? packet : deepClone(packet);
+  }
+
+  function addressFor(lon, lat, options) {
+    options = options || {};
+
     lon = wrapLongitude(lon);
     lat = clampLatitude(lat);
 
-    var node = chronologyForLongitude(lon, verbose);
+    var node = chronologyForLongitude(lon, Boolean(options.verbose));
     var radialIndex = node.compassIndex;
     var bandIndex = bandIndexFor(lat);
-    var stateIndex = bandIndex * RADIAL_NODES + radialIndex;
+    var stateIndex = seatIndexFor(bandIndex, radialIndex);
+    var seat = getSeat(stateIndex, { reference: true });
 
     var result = {
       radialIndex: radialIndex,
@@ -384,11 +934,14 @@
       fibonacciChronologyPhase: node.fibonacciMidpoint,
       goldenAnglePhase: fract((stateIndex * GOLDEN_ANGLE) / TAU),
       hexPhase: fract(stateIndex * GOLDEN_RATIO),
-      cellId: "audralia:datum:" + bandIndex + ":" + radialIndex,
-      hexAddress: "AU-HX-" + String(bandIndex).padStart(2, "0") + "-" + String(radialIndex).padStart(2, "0")
+      cellId: seat.cellId,
+      hexAddress: seat.hexAddress,
+      newsComplete: seat.newsComplete,
+      childReceiveEligible: seat.childReceiveEligible,
+      renderEligible: seat.renderEligible
     };
 
-    if (verbose) {
+    if (options.verbose) {
       result.predecessorKey = node.predecessorKey;
       result.successorKey = node.successorKey;
       result.oppositeKey = node.oppositeKey;
@@ -398,6 +951,7 @@
       result.masterQuadrant = node.masterQuadrant;
       result.cardinalGroup = node.cardinalGroup;
       result.chronologicalContinuity = node.chronologicalContinuity;
+      result.news = getNews(stateIndex);
     }
 
     return result;
@@ -434,6 +988,7 @@
 
   function coriolisFor(lat) {
     lat = clampLatitude(lat);
+
     var hemi = hemisphereFor(lat);
     var magnitude = smoothstep(0.02, 0.95, Math.abs(Math.sin(lat)));
 
@@ -562,7 +1117,7 @@
 
     var node = chronologyForLongitude(lon, false);
     var hemi = hemisphereFor(lat);
-    var address = addressFor(lon, lat, false);
+    var address = addressFor(lon, lat, { verbose: false });
     var cor = coriolisFor(lat);
     var circ = circulationFor(lon, lat, time);
     var season = seasonalPressureFor(lon, lat, time);
@@ -617,8 +1172,11 @@
 
     return {
       contract: CONTRACT,
-      executionContract: EXECUTION_CONTRACT,
+      templateSourceContract: TEMPLATE_SOURCE_CONTRACT,
+      publicCompatibilityContract: PUBLIC_COMPATIBILITY_CONTRACT,
+      parentBaseline: PARENT_BASELINE,
       datumReady: true,
+      childReceiveMapReady: true,
       compact: true,
       longitude: lon,
       latitude: lat,
@@ -642,6 +1200,9 @@
       bandIndex: address.bandIndex,
       stateIndex: address.stateIndex,
       hexAddress: address.hexAddress,
+      newsComplete: address.newsComplete,
+      childReceiveEligible: address.childReceiveEligible,
+      renderEligible: address.renderEligible,
       equatorInfluence: equatorInfluence,
       temperateInfluence: temperateInfluence,
       jetInfluence: jetInfluence,
@@ -669,7 +1230,15 @@
       surfaceDatumBias: surfaceDatumBias,
       cloudDatumBias: cloudDatumBias,
       fibonacciChronologyApplied: true,
+      terrainReady: false,
+      moistureReady: false,
+      surfaceReady: false,
+      cloudReady: false,
+      continentReady: false,
+      visualPassReady: false,
+      groundLevelReady: false,
       noCanvasCreation: true,
+      rendersNothing: true,
       visualPassClaimed: false
     };
   }
@@ -686,7 +1255,6 @@
       standard: STANDARD,
       family: FAMILY,
       file: FILE,
-      previousExecutionContract: PREVIOUS_EXECUTION_CONTRACT,
       longitudeDegrees: degrees(compact.longitude),
       latitudeDegrees: degrees(compact.latitude),
       sphere: sphereFromLonLat(compact.longitude, compact.latitude),
@@ -702,18 +1270,18 @@
       cardinalGroup: node.cardinalGroup,
       hemisphereDisplay: hemisphereFor(lat).display,
       latitudeZone: zone,
+      news: getNews(compact.stateIndex),
+      childReceivePacketCompact: getChildReceivePacket("sample-consumer", { compact: true }),
       circulation: circulationFor(lon, lat, time),
       seasonalPressure: seasonalPressureFor(lon, lat, time),
       cycleBias: cycle,
       cloudGuidance: {
         cloudDatumReady: true,
+        cloudReady: false,
         latitudeBand: compact.latitudeBand,
         hemisphere: compact.hemisphere,
         compassKey: compact.compassKey,
         chronologyIndex: compact.chronologyIndex,
-        bandRole: compact.latitudeBand,
-        cycleRole: compact.cycleRole,
-        circulationRole: compact.circulationRole,
         altitudeBias: compact.altitudeBias,
         polarInfluence: compact.polarInfluence,
         polarCurlInfluence: compact.polarCurlInfluence,
@@ -723,12 +1291,11 @@
         vorticity: compact.vorticity,
         flowAngle: compact.flowAngle,
         flowMagnitude: compact.flowMagnitude,
-        northPoleAnchorActive: compact.northPoleAnchorActive,
-        southPoleAnchorActive: compact.southPoleAnchorActive,
         fibonacciChronologyApplied: true
       },
       moistureGuidance: {
         moistureDatumReady: true,
+        moistureReady: false,
         compassKey: compact.compassKey,
         chronologyIndex: compact.chronologyIndex,
         equatorialUplift: compact.equatorInfluence,
@@ -741,6 +1308,7 @@
       },
       surfaceGuidance: {
         surfaceDatumReady: true,
+        surfaceReady: false,
         latitudeBand: compact.latitudeBand,
         hemisphere: compact.hemisphere,
         compassKey: compact.compassKey,
@@ -758,6 +1326,7 @@
       },
       terrainGuidance: {
         terrainDatumReady: true,
+        terrainReady: false,
         compassKey: compact.compassKey,
         chronologyIndex: compact.chronologyIndex,
         cycleRole: compact.cycleRole,
@@ -781,6 +1350,7 @@
 
   function sample(lon, lat, time, options) {
     options = options || {};
+
     var output = options.verbose === true
       ? verboseSample(lon, lat, time)
       : compactSample(lon, lat, time);
@@ -789,140 +1359,80 @@
     if (options.verbose === true) state.verboseSampleCount += 1;
 
     state.lastSample = output;
-    state.lastCompactSample = output.compact ? output : compactSample(lon, lat, time);
 
-    window.AUDRALIA_TRUE_GLOBE_DATUM_LAST_SAMPLE = state.lastCompactSample;
-    window.AUDRALIA_G2_TRUE_GLOBE_DATUM_LAST_SAMPLE = state.lastCompactSample;
+    window.AUDRALIA_TRUE_GLOBE_DATUM_LAST_SAMPLE = output.compact ? output : compactSample(lon, lat, time);
+    window.AUDRALIA_G1_TRUE_GLOBE_DATUM_LAST_SAMPLE = window.AUDRALIA_TRUE_GLOBE_DATUM_LAST_SAMPLE;
+    window.AUDRALIA_G2_TRUE_GLOBE_DATUM_LAST_SAMPLE = window.AUDRALIA_TRUE_GLOBE_DATUM_LAST_SAMPLE;
 
     return output;
   }
 
-  function buildDatumField(time, options) {
-    options = options || {};
-    time = finite(time, 0);
-
-    var seats = [];
-    var bands = [];
-    var radial = [];
-    var index = 0;
-    var verbose = options.verbose === true;
-
-    for (var band = 0; band < FIBONACCI_BANDS; band += 1) {
-      var bandSeats = [];
-      var v = (band + 0.5) / FIBONACCI_BANDS;
-      var lat = Math.asin(clamp(1 - 2 * v, -1, 1));
-
-      for (var r = 0; r < RADIAL_NODES; r += 1) {
-        var node = compassNodeByIndex(r);
-        var lon = node.longitudeCenter;
-        var datum = sample(lon, lat, time, { verbose: verbose });
-
-        datum.stateIndex = index;
-        datum.radialIndex = r;
-        datum.bandIndex = band;
-        datum.cellId = "audralia:datum:" + band + ":" + r;
-        datum.hexAddress = "AU-HX-" + String(band).padStart(2, "0") + "-" + String(r).padStart(2, "0");
-
-        seats.push(datum);
-        bandSeats.push(datum);
-        radial[r] = radial[r] || [];
-        radial[r].push(datum);
-        index += 1;
-      }
-
-      bands.push(bandSeats);
-    }
-
-    var field = {
-      contract: CONTRACT,
-      executionContract: EXECUTION_CONTRACT,
-      standard: STANDARD,
-      datumFieldReady: true,
-      lazyBuild: true,
-      verbose: verbose,
-      radialNodes: RADIAL_NODES,
-      fibonacciBands: FIBONACCI_BANDS,
-      latticeStates: LATTICE_STATES,
-      seats: seats,
-      bands: bands,
-      radial: radial,
-      time: time,
-      builtAt: new Date().toISOString(),
-      northPoleAnchorActive: true,
-      southPoleAnchorActive: true,
-      equatorAuthority: true,
-      hemisphereCounterflowAuthority: true,
-      polarCurlAuthority: true,
-      hexDatumCompatible: true,
-      visualPassClaimed: false
-    };
-
-    if (verbose) field.compassChronology = COMPASS_CHRONOLOGY.map(enrichNode);
-
-    state.buildCount += 1;
-    state.lastField = field;
-
-    window.AUDRALIA_TRUE_GLOBE_DATUM_FIELD = field;
-    window.AUDRALIA_G2_TRUE_GLOBE_DATUM_FIELD = field;
-
-    return field;
-  }
-
   function status(options) {
     options = options || {};
+
+    var map = ensureReceiveMap();
     var verbose = options.verbose === true;
 
     var compactStatus = {
       contract: CONTRACT,
-      executionContract: EXECUTION_CONTRACT,
-      previousExecutionContract: PREVIOUS_EXECUTION_CONTRACT,
+      templateSourceContract: TEMPLATE_SOURCE_CONTRACT,
+      publicCompatibilityContract: PUBLIC_COMPATIBILITY_CONTRACT,
+      parentBaseline: PARENT_BASELINE,
       standard: STANDARD,
       family: FAMILY,
       file: FILE,
       initialized: state.initialized,
       datumReady: state.datumReady,
+      childReceiveMapReady: state.childReceiveMapReady,
+      newsProtocolActive: true,
+      newsComplete: map.newsComplete,
+      chronologyComplete: map.chronologyComplete,
+      relationshipMapReady: map.relationshipMapReady,
+      carrierBound: true,
+      carrierRole: map.carrierRole,
+      latticeRole: map.latticeRole,
+      radialNodes: RADIAL_NODES,
+      fibonacciBands: FIBONACCI_BANDS,
+      latticeStates: LATTICE_STATES,
+      seatCount: map.seats.length,
+      ringCount: map.rings.length,
+      radialLaneCount: map.radialLanes.length,
       axisReady: true,
       poleAuthorityReady: true,
       hemisphereAuthorityReady: true,
       equatorAuthorityReady: true,
       circulationAuthorityReady: true,
       fibonacciCompassChronologyReady: true,
-      radialNodes: RADIAL_NODES,
-      fibonacciBands: FIBONACCI_BANDS,
-      latticeStates: LATTICE_STATES,
-      axisTiltRadians: AXIAL_TILT_RADIANS,
-      axisTiltDegrees: degrees(AXIAL_TILT_RADIANS),
-      primeMeridianLongitude: PRIME_MERIDIAN_LONGITUDE,
-      equatorLatitude: EQUATOR_LATITUDE,
-      compassChronologyCount: COMPASS_CHRONOLOGY.length,
-      fibonacciChronologyApplied: true,
+      supportsReceive: true,
+      supportsChildReceivePacket: true,
+      supportsSeatLookup: true,
+      supportsRingLookup: true,
+      supportsRadialLaneLookup: true,
+      supportsNewsLookup: true,
       supportsLongitudeLatitude: true,
       supportsHemisphereResolver: true,
       supportsCoriolisResolver: true,
-      supportsPolarInfluence: true,
-      supportsEquatorInfluence: true,
-      supportsLatitudeBands: true,
       supportsHexAddressing: true,
-      supportsDatumFieldBuild: true,
-      supportsCompassChronology: true,
-      buildDatumFieldLazy: true,
-      noBuildFieldOnInit: true,
-      statusCompact: !verbose,
-      sampleCompactByDefault: true,
-      verboseSampleAvailable: true,
-      northPoleAnchorActive: true,
-      southPoleAnchorActive: true,
-      equatorialBandActive: true,
-      hemisphereCounterflowActive: true,
-      polarCurlAuthority: true,
-      buildCount: state.buildCount,
+      receiveBuildCount: state.receiveBuildCount,
       sampleCount: state.sampleCount,
       verboseSampleCount: state.verboseSampleCount,
+      childPacketCount: state.childPacketCount,
+      terrainReady: false,
+      moistureReady: false,
+      surfaceReady: false,
+      cloudReady: false,
+      continentReady: false,
+      visualPassReady: false,
+      groundLevelReady: false,
+      rendersNothing: true,
       noCanvasCreation: true,
       ownsRuntimeMotion: false,
       ownsCloudDrawing: false,
       ownsSurfaceDrawing: false,
       ownsTerrainTruth: false,
+      ownsMoistureTruth: false,
+      ownsCloudTruth: false,
+      ownsContinentTruth: false,
       ownsHtml: false,
       ownsRouteJs: false,
       generatedImage: false,
@@ -934,14 +1444,13 @@
     if (!verbose) return compactStatus;
 
     return Object.assign({}, compactStatus, {
-      northPole: AXIS_CACHE.northPole,
-      southPole: AXIS_CACHE.southPole,
-      tiltedNorthAxis: AXIS_CACHE.tiltedNorthAxis,
-      tiltedSouthAxis: AXIS_CACHE.tiltedSouthAxis,
-      fibonacciWeights: FIBONACCI_WEIGHTS_16.slice(),
+      axis: AXIS_CACHE,
+      fibonacciSequence: FIBONACCI_SEQUENCE.slice(),
+      fibonacciOffsets: FIBONACCI_OFFSETS.slice(),
       compassChronology: COMPASS_CHRONOLOGY.map(enrichNode),
+      receiveMap: receive({ reference: true }),
       lastSample: state.lastSample,
-      lastFieldAvailable: Boolean(state.lastField)
+      lastChildPacket: state.lastChildPacket
     });
   }
 
@@ -956,7 +1465,7 @@
 
     window.AUDRALIA_TRUE_GLOBE_DATUM_ERROR = {
       contract: CONTRACT,
-      executionContract: EXECUTION_CONTRACT,
+      templateSourceContract: TEMPLATE_SOURCE_CONTRACT,
       scope: scope,
       message: message,
       errors: state.errors.slice()
@@ -968,13 +1477,28 @@
   function publish() {
     var api = {
       contract: CONTRACT,
-      executionContract: EXECUTION_CONTRACT,
-      previousExecutionContract: PREVIOUS_EXECUTION_CONTRACT,
+      templateSourceContract: TEMPLATE_SOURCE_CONTRACT,
+      publicCompatibilityContract: PUBLIC_COMPATIBILITY_CONTRACT,
+      parentBaseline: PARENT_BASELINE,
       standard: STANDARD,
       family: FAMILY,
       file: FILE,
 
       status: status,
+
+      receive: receive,
+      getReceiveMap: receive,
+      childReceiveMap: receive,
+
+      getSeat: getSeat,
+      getSeatByBandRadial: getSeatByBandRadial,
+      getRing: getRing,
+      getRadialLane: getRadialLane,
+      getOppositeSeat: getOppositeSeat,
+      getFibonacciForwardSeat: getFibonacciForwardSeat,
+      getFibonacciReturnSeat: getFibonacciReturnSeat,
+      getNews: getNews,
+      getChildReceivePacket: getChildReceivePacket,
 
       axis: getAxis,
       getAxis: getAxis,
@@ -992,19 +1516,15 @@
       compassChronology: function () {
         return COMPASS_CHRONOLOGY.map(enrichNode);
       },
-
       getCompassChronology: function () {
         return COMPASS_CHRONOLOGY.map(enrichNode);
       },
-
       compassNodeByIndex: function (index) {
         return enrichNode(compassNodeByIndex(index));
       },
-
       compassNodeForLongitude: function (lon) {
         return chronologyForLongitude(lon, true);
       },
-
       chronologyForLongitude: function (lon) {
         return chronologyForLongitude(lon, true);
       },
@@ -1018,9 +1538,7 @@
       latitudeBandFor: latitudeBandFor,
       latitudeZoneFor: latitudeZoneFor,
       bandIndexFor: bandIndexFor,
-      addressFor: function (lon, lat, options) {
-        return addressFor(lon, lat, Boolean(options && options.verbose));
-      },
+      addressFor: addressFor,
 
       coriolisFor: coriolisFor,
       polarInfluenceFor: polarInfluenceFor,
@@ -1029,7 +1547,6 @@
       temperateInfluenceFor: temperateInfluenceFor,
       jetInfluenceFor: jetInfluenceFor,
       polarReturnFor: polarReturnFor,
-
       circulationFor: circulationFor,
       seasonalPressureFor: seasonalPressureFor,
 
@@ -1037,47 +1554,59 @@
       resolve: sample,
       datumAt: sample,
       coordinateAt: sample,
-      sampleDatum: sample,
-
-      buildDatumField: buildDatumField,
-      buildField: buildDatumField
+      sampleDatum: sample
     };
 
     window.AUDRALIA_TRUE_GLOBE_DATUM = api;
+    window.AUDRALIA_G1_TRUE_GLOBE_DATUM = api;
     window.AUDRALIA_G2_TRUE_GLOBE_DATUM = api;
     window.AUDRALIA_TRUE_PLANETARY_DATUM = api;
+    window.AUDRALIA_G1_TRUE_PLANETARY_DATUM = api;
     window.AUDRALIA_G2_TRUE_PLANETARY_DATUM = api;
 
+    window.AUDRALIA_TRUE_GLOBE_DATUM_RECEIVE_MAP = receive({ reference: true });
+    window.AUDRALIA_G1_TRUE_GLOBE_DATUM_RECEIVE_MAP = window.AUDRALIA_TRUE_GLOBE_DATUM_RECEIVE_MAP;
+
     window.AUDRALIA_TRUE_GLOBE_DATUM_STATUS = status();
-    window.AUDRALIA_G2_TRUE_GLOBE_DATUM_STATUS = status();
+    window.AUDRALIA_G1_TRUE_GLOBE_DATUM_STATUS = window.AUDRALIA_TRUE_GLOBE_DATUM_STATUS;
+    window.AUDRALIA_G2_TRUE_GLOBE_DATUM_STATUS = window.AUDRALIA_TRUE_GLOBE_DATUM_STATUS;
 
     window.AUDRALIA_TRUE_GLOBE_DATUM_BOOT = {
       contract: CONTRACT,
-      executionContract: EXECUTION_CONTRACT,
-      previousExecutionContract: PREVIOUS_EXECUTION_CONTRACT,
+      templateSourceContract: TEMPLATE_SOURCE_CONTRACT,
+      publicCompatibilityContract: PUBLIC_COMPATIBILITY_CONTRACT,
+      parentBaseline: PARENT_BASELINE,
       standard: STANDARD,
       family: FAMILY,
       file: FILE,
       bootedAt: new Date().toISOString(),
       datumReady: true,
-      fibonacciCompassChronologyReady: true,
-      compassChronologyCount: COMPASS_CHRONOLOGY.length,
-      buildDatumFieldLazy: true,
-      noBuildFieldOnInit: true,
-      statusCompact: true,
-      sampleCompactByDefault: true,
-      verboseSampleAvailable: true,
-      northPoleAnchorActive: true,
-      southPoleAnchorActive: true,
-      equatorAuthority: true,
-      hemisphereCounterflowAuthority: true,
-      polarCurlAuthority: true,
-      hexDatumCompatible: true,
+      childReceiveMapReady: true,
+      newsProtocolActive: true,
+      newsComplete: state.newsComplete,
+      chronologyComplete: state.chronologyComplete,
+      relationshipMapReady: state.relationshipMapReady,
+      radialNodes: RADIAL_NODES,
+      fibonacciBands: FIBONACCI_BANDS,
+      latticeStates: LATTICE_STATES,
+      terrainReady: false,
+      moistureReady: false,
+      surfaceReady: false,
+      cloudReady: false,
+      continentReady: false,
+      visualPassReady: false,
+      groundLevelReady: false,
+      rendersNothing: true,
       noCanvasCreation: true,
+      ownsNoRuntimeMotion: true,
+      ownsNoSurfaceTruth: true,
+      ownsNoCloudTruth: true,
+      ownsNoTerrainTruth: true,
+      ownsNoContinentTruth: true,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false,
-      meaning: "Audralia datum child evaluated. Fibonacci chronology and 16-compass authority are preserved, but heavy 256-field construction is lazy/manual and sample/status are compact by default."
+      meaning: "Audralia datum child evaluated as the G1 child receive-map authority. All 256 seats carry Fibonacci chronology, relationship mapping, and NEWS-complete child receive eligibility without rendering or activating downstream children."
     };
 
     return api;
@@ -1087,6 +1616,7 @@
     try {
       state.initialized = true;
       state.datumReady = true;
+      ensureReceiveMap();
       publish();
       return status();
     } catch (error) {

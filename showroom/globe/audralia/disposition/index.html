@@ -2,20 +2,18 @@
 <html
   lang="en"
   data-route="/showroom/globe/audralia/disposition/"
-  data-page="audralia-intergalactic-cockpit-dexterions-lab-dual-donor"
-  data-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DUAL_DONOR_CIRCUIT_TOUCH_GEM_INSTRUMENT_HTML_BINDING_TNT_v1"
-  data-bound-js-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DUAL_DONOR_CIRCUIT_TOUCH_GEM_INSTRUMENT_ROUTE_JS_TNT_v1"
-  data-previous-html-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTERIONS_LAB_GEM_GAUGE_COCKPIT_HTML_BINDING_TNT_v1"
-  data-previous-js-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTERIONS_LAB_GEM_GAUGE_COCKPIT_ROUTE_JS_TNT_v1"
-  data-donor-a-contract="FRONTIER_ENERGY_CARDINAL_DROPDOWN_ELECTRICAL_ENERGY_CIRCUIT_FIELD_TNT_v24"
-  data-donor-b-contract="FRONTIER_URBAN_SVG_ORGANIC_DIGITAL_GEM_ORBIT_DONOR_INTEGRATION_TNT_v13"
+  data-page="audralia-intergalactic-cockpit-360-lattice-gems"
+  data-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_360_LATTICE_GEM_HTML_BINDING_TNT_v1"
+  data-bound-js-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_360_LATTICE_GEM_ROUTE_JS_TNT_v1"
+  data-previous-html-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DUAL_DONOR_CIRCUIT_TOUCH_GEM_INSTRUMENT_HTML_BINDING_TNT_v1"
+  data-previous-js-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DUAL_DONOR_CIRCUIT_TOUCH_GEM_INSTRUMENT_ROUTE_JS_TNT_v1"
   data-parent-baseline="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMPTION_BASELINE_v1"
   data-harness-baseline="AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_MULTI_STREAM_LAUNCHPAD_BASELINE_v1"
   data-cockpit-frame="intergalactic-cockpit"
   data-instrument-authority="dexterions-lab"
-  data-dual-donor-strategy-active="true"
-  data-energy-circuit-grammar-imported-as-cockpit-native="true"
-  data-urban-touch-grammar-imported-as-cockpit-native="true"
+  data-gem-model="360-degree-circumferential-lattice-gems"
+  data-circumference-law="360-circumference-delegated-by-inconsistent-cut-gem-edges"
+  data-independent-lattice-per-gem="true"
   data-datum-file="/assets/audralia/clean/runtime/audralia.true-globe.datum.js"
   data-disposition-file="/assets/audralia/clean/runtime/audralia.true-globe.disposition.js"
   data-terrain-file="/assets/audralia/clean/runtime/audralia.true-globe.terrain.js"
@@ -39,10 +37,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Audralia · Intergalactic Cockpit · Dexterion’s Lab</title>
+  <title>Audralia · Intergalactic Cockpit · 360 Lattice Gems</title>
   <meta
     name="description"
-    content="Audralia Intergalactic Cockpit with Dexterion’s Lab gem instruments, gauge board, cockpit circuit animation, touch-control cells, and held Runtime Strength."
+    content="Audralia Intergalactic Cockpit with Dexterion’s Lab 360-degree lattice gems, independent diagnostic lattices, irregular cut-gem circumference, gauge board, stream deck, and Runtime Strength held."
   >
 
   <style>
@@ -52,9 +50,6 @@
       --deep:#040914;
       --panel:rgba(7,17,34,.88);
       --panel2:rgba(3,9,20,.76);
-      --glass:rgba(125,187,255,.08);
-      --line:rgba(244,207,131,.18);
-      --line2:rgba(141,216,255,.18);
       --text:rgba(238,244,255,.94);
       --muted:rgba(238,244,255,.68);
       --faint:rgba(238,244,255,.48);
@@ -63,16 +58,11 @@
       --blue:#8dd8ff;
       --mint:#a7f3c6;
       --violet:#ad8cff;
-      --electric-cyan:rgba(121,235,255,.74);
-      --electric-blue:rgba(37,128,255,.56);
-      --electric-white:rgba(246,253,255,.94);
-      --electric-violet:rgba(153,92,255,.44);
       --warn:#ffb36d;
       --fail:#ff6b6b;
       --max:1240px;
       --shadow:0 34px 120px rgba(0,0,0,.48);
       --gem-breathe-duration:8.8s;
-      --gem-float-duration:7.2s;
     }
 
     *{box-sizing:border-box}
@@ -253,7 +243,7 @@
 
     .cockpit-viewport{
       position:relative;
-      min-height:clamp(420px,54vw,640px);
+      min-height:clamp(420px,54vw,650px);
       display:grid;
       align-content:stretch;
       padding:clamp(18px,3vw,30px);
@@ -685,10 +675,9 @@
     .panel-head{
       display:grid;
       gap:8px;
-      max-width:900px;
+      max-width:920px;
     }
 
-    .instrument-grid,
     .gauge-grid,
     .stream-grid,
     .proof-grid,
@@ -698,13 +687,11 @@
       margin-top:18px;
     }
 
-    .instrument-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
     .gauge-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
     .stream-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
     .proof-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
     .control-board{grid-template-columns:repeat(3,minmax(0,1fr))}
 
-    .gem-instrument,
     .gauge-dial,
     .stream-card,
     .proof-card,
@@ -724,7 +711,6 @@
       min-height:132px;
     }
 
-    .gem-instrument::before,
     .gauge-dial::before,
     .stream-card::before,
     .proof-card::before,
@@ -739,137 +725,6 @@
       opacity:.78;
     }
 
-    .instrument-charge-flash{
-      position:absolute;
-      inset:-10%;
-      z-index:1;
-      pointer-events:none;
-      border-radius:44% 56% 52% 48% / 46% 42% 58% 54%;
-      opacity:0;
-      background:
-        radial-gradient(ellipse at 50% 50%,rgba(246,253,255,.50) 0 10%,rgba(121,235,255,.28) 24%,rgba(37,128,255,.16) 44%,transparent 68%),
-        linear-gradient(92deg,transparent 0 36%,rgba(246,253,255,.54) 46%,rgba(121,235,255,.42) 51%,transparent 64%);
-      box-shadow:0 0 .55rem rgba(246,253,255,.28),0 0 1.1rem rgba(121,235,255,.22),0 0 1.8rem rgba(37,128,255,.12);
-      animation:instrumentChargeFlash 11.4s steps(1,end) infinite;
-    }
-
-    @keyframes instrumentChargeFlash{
-      0%,100%{opacity:0}
-      11%{opacity:.58}
-      12%{opacity:.18}
-      13%{opacity:.40}
-      15%,99%{opacity:0}
-    }
-
-    .instrument-sparks{
-      position:absolute;
-      inset:-18%;
-      z-index:2;
-      pointer-events:none;
-      border-radius:42% 58% 55% 45% / 49% 43% 57% 51%;
-      background:
-        linear-gradient(98deg,transparent 0 38%,rgba(246,253,255,.88) 45%,rgba(121,235,255,.66) 50%,transparent 59%),
-        linear-gradient(22deg,transparent 0 36%,rgba(121,235,255,.72) 46%,rgba(246,253,255,.78) 50%,transparent 60%),
-        linear-gradient(151deg,transparent 0 41%,rgba(153,92,255,.58) 48%,rgba(121,235,255,.54) 53%,transparent 62%),
-        radial-gradient(circle at 20% 42%,rgba(246,253,255,.82) 0 .08rem,transparent .12rem),
-        radial-gradient(circle at 82% 46%,rgba(121,235,255,.76) 0 .08rem,transparent .12rem);
-      background-repeat:no-repeat;
-      background-size:2.2rem .16rem,1.8rem .13rem,1.7rem .12rem,100% 100%,100% 100%;
-      background-position:12% 42%,88% 47%,71% 20%,50% 50%,50% 50%;
-      opacity:.30;
-      animation:instrumentSparkLife 4.8s steps(1,end) infinite;
-    }
-
-    @keyframes instrumentSparkLife{
-      0%,100%{opacity:.20;transform:scale(.99) rotate(0)}
-      18%{opacity:.56;transform:scale(1.01) rotate(.4deg)}
-      23%{opacity:.26;transform:scale(1) rotate(0)}
-      54%{opacity:.48;transform:scale(1.008) rotate(-.35deg)}
-      60%{opacity:.24;transform:scale(1) rotate(0)}
-      82%{opacity:.36;transform:scale(1.006) rotate(.25deg)}
-    }
-
-    .gem-orb{
-      position:relative;
-      z-index:3;
-      width:54px;
-      height:54px;
-      display:block;
-      border:1px solid rgba(244,207,131,.38);
-      border-radius:16px;
-      transform:rotate(45deg);
-      background:
-        radial-gradient(circle at 28% 20%,rgba(255,255,255,.36),transparent 38%),
-        conic-gradient(from 45deg,rgba(255,255,255,.24),rgba(141,216,255,.23),rgba(4,16,44,.94),rgba(244,207,131,.18),rgba(255,255,255,.20));
-      box-shadow:0 0 18px rgba(141,216,255,.14);
-      animation:cockpitGemBreathe var(--gem-breathe-duration) ease-in-out infinite;
-    }
-
-    .gem-orb::before{
-      content:"";
-      position:absolute;
-      inset:-12%;
-      border-radius:18px;
-      background:
-        linear-gradient(96deg,transparent 0 38%,rgba(246,253,255,.42) 45%,rgba(121,235,255,.30) 49%,transparent 60%),
-        linear-gradient(12deg,transparent 0 34%,rgba(121,235,255,.25) 45%,rgba(153,92,255,.20) 51%,transparent 63%);
-      background-repeat:no-repeat;
-      background-size:82% 7%,74% 6%;
-      background-position:50% 43%,50% 55%;
-      opacity:.48;
-      animation:cockpitInternalScan 12s linear infinite;
-    }
-
-    .gem-orb::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius:16px;
-      background:linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.52) 21% 23%,transparent 24%);
-      opacity:.35;
-      animation:cockpitGemGlint 8.5s ease-in-out infinite;
-    }
-
-    @keyframes cockpitGemBreathe{
-      0%,100%{transform:rotate(45deg) translateY(0) scale(1);filter:brightness(1)}
-      50%{transform:rotate(45deg) translateY(-.16rem) scale(1.04);filter:brightness(1.14)}
-    }
-
-    @keyframes cockpitGemGlint{
-      0%,100%{opacity:.10;transform:translateX(-20px)}
-      48%,55%{opacity:.56;transform:translateX(20px)}
-    }
-
-    @keyframes cockpitInternalScan{
-      to{transform:rotate(360deg)}
-    }
-
-    .gem-instrument[data-state="pass"] .gem-orb,
-    .gem-instrument[data-gem-state="pass"] .gem-orb{
-      box-shadow:0 0 24px rgba(167,243,198,.24),0 0 14px rgba(244,207,131,.13);
-      border-color:rgba(167,243,198,.48);
-    }
-
-    .gem-instrument[data-state="held"] .gem-orb,
-    .gem-instrument[data-gem-state="held"] .gem-orb{
-      box-shadow:0 0 20px rgba(141,216,255,.20);
-      border-color:rgba(141,216,255,.42);
-      opacity:.72;
-    }
-
-    .gem-instrument[data-state="staged"] .gem-orb,
-    .gem-instrument[data-gem-state="staged"] .gem-orb{
-      box-shadow:0 0 24px rgba(173,140,255,.25),0 0 14px rgba(244,207,131,.12);
-      border-color:rgba(173,140,255,.48);
-    }
-
-    .gem-instrument[data-state="fail"] .gem-orb,
-    .gem-instrument[data-gem-state="fail"] .gem-orb{
-      box-shadow:0 0 24px rgba(255,107,107,.25);
-      border-color:rgba(255,107,107,.48);
-    }
-
-    .gem-instrument b,
     .gauge-dial b,
     .stream-card b,
     .proof-card b,
@@ -883,7 +738,6 @@
       text-transform:uppercase;
     }
 
-    .gem-instrument strong,
     .gauge-dial strong,
     .stream-card strong,
     .proof-card strong,
@@ -896,7 +750,6 @@
       overflow-wrap:anywhere;
     }
 
-    .gem-instrument span,
     .gauge-dial span,
     .stream-card span,
     .proof-card span,
@@ -964,22 +817,6 @@
       border-radius:999px;
       background:rgba(255,244,216,.88);
       box-shadow:0 0 10px rgba(244,207,131,.45);
-    }
-
-    .gauge-dial[data-state="held"] .gauge-needle,
-    .gauge-dial[data-gauge-state="held"] .gauge-needle{
-      transform:translate(-50%,-94%) rotate(-18deg);
-    }
-
-    .gauge-dial[data-state="staged"] .gauge-needle,
-    .gauge-dial[data-gauge-state="staged"] .gauge-needle{
-      transform:translate(-50%,-94%) rotate(18deg);
-    }
-
-    .gauge-dial[data-state="fail"] .gauge-needle,
-    .gauge-dial[data-gauge-state="fail"] .gauge-needle{
-      transform:translate(-50%,-94%) rotate(-58deg);
-      background:rgba(255,150,150,.92);
     }
 
     .cockpit-control-instrument{
@@ -1119,7 +956,6 @@
 
     @media (max-width:1080px){
       .viewport-content{grid-template-columns:1fr}
-      .instrument-grid,
       .gauge-grid,
       .proof-grid,
       .control-board{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -1134,7 +970,6 @@
       .nav button{flex:1 1 100%}
       .cockpit-viewport{min-height:auto}
       .console-readouts,
-      .instrument-grid,
       .gauge-grid,
       .stream-grid,
       .proof-grid,
@@ -1163,23 +998,13 @@
       .stream-loss-bleed,
       .cockpit-audit-return,
       .cockpit-discharge,
-      .instrument-charge-flash,
-      .instrument-sparks,
-      .gem-orb,
-      .gem-orb::before,
-      .gem-orb::after,
       .gauge-face,
       .dexterion-master-instrument{
         animation:none!important;
       }
 
-      .cockpit-discharge,
-      .instrument-charge-flash{
+      .cockpit-discharge{
         opacity:0!important;
-      }
-
-      .instrument-sparks{
-        opacity:.18!important;
       }
     }
   </style>
@@ -1233,17 +1058,17 @@
 
         <div class="viewport-content">
           <div class="viewport-copy">
-            <p class="kicker">Dexterion’s Lab Instrument Deck · Dual Donor Circuit + Touch Grammar</p>
-            <h1 id="page-title">Dexterion’s Lab now operates as the cockpit instrument authority.</h1>
+            <p class="kicker">Dexterion’s Lab · 360 Lattice Gem Cockpit</p>
+            <h1 id="page-title">Each cockpit gem now owns its own lattice.</h1>
             <p>
-              Energy contributes cockpit-native current motion. Urban contributes cockpit-native touch control and programmed rhythm. Datum, disposition, and terrain remain proof streams. Runtime / Strength remains held.
+              The cockpit no longer treats gems as flat indicators. Each gem is a native cut-gem instrument with a projected 360-degree circumference, inconsistent faceted edges, visible lattice seats, cardinal axis, and stream receipt.
             </p>
 
             <div class="status-strip">
               <span class="status-pill">HTML / Wisdom</span>
               <span class="status-pill">JS / Courage</span>
               <span class="status-pill">Runtime / Strength held</span>
-              <span class="status-pill">Dual donor active</span>
+              <span class="status-pill">Independent lattice per gem</span>
               <span class="status-pill">No canvas</span>
               <span class="status-pill">No visual pass</span>
             </div>
@@ -1258,9 +1083,9 @@
               <article class="mini-readout"><b>Phase</b><span data-cockpit-phase>boot pending</span></article>
               <article class="mini-readout"><b>Failure</b><span data-cockpit-failure>BOOT_PENDING · boot pending</span></article>
               <article class="mini-readout"><b>Authority</b><span data-public-instrument-authority>Dexterion’s Lab</span></article>
-              <article class="mini-readout"><b>Mode</b><span data-cockpit-dexterion-mode>pending</span></article>
-              <article class="mini-readout"><b>Donor Status</b><span data-cockpit-dual-donor-status>pending dual-donor JS</span></article>
-              <article class="mini-readout"><b>Control Cells</b><span data-control-cell-status>pending control-cell board</span></article>
+              <article class="mini-readout"><b>Mode</b><span data-cockpit-dexterion-mode>360 lattice gem cockpit</span></article>
+              <article class="mini-readout"><b>Donor Status</b><span data-cockpit-dual-donor-status>pending 360 lattice JS</span></article>
+              <article class="mini-readout"><b>Control Cells</b><span data-control-cell-status>pending lattice-seat board</span></article>
             </div>
           </aside>
         </div>
@@ -1277,7 +1102,7 @@
           <article class="proof-card"><b>Datum System</b><span data-cockpit-datum>pending cockpit JS</span></article>
           <article class="proof-card"><b>Disposition System</b><span data-cockpit-disposition>pending cockpit JS</span></article>
           <article class="proof-card"><b>Terrain System</b><span data-cockpit-terrain>pending cockpit JS</span></article>
-          <article class="proof-card"><b>Dexterion’s Lab Instruments</b><span data-cockpit-dexterion>pending gauge mount</span></article>
+          <article class="proof-card"><b>Dexterion’s Lab Instruments</b><span data-cockpit-dexterion>pending lattice-gem mount</span></article>
 
           <article class="proof-card"><b>Receive Map</b><span data-cockpit-receive-map>pending cockpit JS</span></article>
           <article class="proof-card"><b>NEWS</b><span data-cockpit-news>pending cockpit JS</span></article>
@@ -1285,29 +1110,49 @@
           <article class="proof-card"><b>Terrain NEWS</b><span data-cockpit-terrain-news>pending cockpit JS</span></article>
 
           <article class="proof-card"><b>Circuit Field</b><span data-cockpit-circuit-status>present · awaiting JS audit</span></article>
-          <article class="proof-card"><b>Control Board</b><span data-cockpit-control-status>pending control-cell board</span></article>
+          <article class="proof-card"><b>Control Board</b><span data-cockpit-control-status>pending lattice-seat board</span></article>
           <article class="proof-card"><b>Parent Chain</b><span data-cockpit-parent-chain>unchanged · datum / HTML / route JS held</span></article>
-          <article class="proof-card"><b>Render</b><span data-cockpit-render>held · no visual pass</span></article>
+          <article class="proof-card"><b>Render</b><span data-cockpit-render>held · no canvas · no WebGL · no visual pass</span></article>
         </div>
       </section>
 
-      <section class="cockpit-panel" aria-label="Gem instrument console">
+      <section class="cockpit-panel" id="lattice-gem-foundry" aria-label="Lattice Gem Foundry">
         <div class="panel-head">
-          <p class="section-title">Gem Instrument Console</p>
-          <h2>Gems operate as stream-status conductors.</h2>
-          <p>Pass, held, and staged states are cockpit readings. They are not render activation.</p>
+          <p class="section-title">Lattice Gem Foundry</p>
+          <h2>Native cockpit gems now carry independent lattice authority.</h2>
+          <p>
+            Each gem keeps a full 360-degree circumference while refusing a smooth perfect circle. The circumference is delegated through inconsistent cut-gem edges, and each gem owns its own 16 × 16 / 256-seat diagnostic lattice.
+          </p>
+        </div>
+      </section>
+
+      <section class="cockpit-panel" id="lattice-gem-console" aria-label="360 Lattice Gem Console">
+        <div class="panel-head">
+          <p class="section-title">360 Lattice Gem Console</p>
+          <h2>Each cockpit gem owns its own 360-degree lattice.</h2>
+          <p>
+            The JS mounts the full lattice-gem registry here. Every gem receives its own circumference map, irregular edge segments, visible seats, cardinal axis, state response, and receipt.
+          </p>
         </div>
 
-        <div class="instrument-grid" data-gem-console>
-          <article class="gem-instrument cockpit-gem-instrument" data-gem-instrument="datum-gem" data-gem-stream="datum" data-gem-state="held" data-state="held">
-            <span class="instrument-charge-flash" aria-hidden="true"></span>
-            <span class="instrument-sparks" aria-hidden="true"></span>
-            <span class="gem-orb cockpit-gem-orb" aria-hidden="true"></span>
-            <b>Datum Gem</b>
-            <strong>pending</strong>
-            <span>origin map / cloned seed availability</span>
-          </article>
+        <div
+          class="lattice-gem-grid"
+          data-lattice-gem-console
+          data-gem-authority="Dexterion’s Lab"
+          data-circumference-law="360_irregular_cut_edge"
+          data-seat-count="256"
+          data-visible-sample="4x4"
+        ></div>
+      </section>
+
+      <section class="cockpit-panel" id="lattice-receipts" aria-label="Lattice receipts">
+        <div class="panel-head">
+          <p class="section-title">Lattice Receipts</p>
+          <h2>Every gem publishes its own lattice receipt.</h2>
+          <p>The Dexterion Master Lattice Gem coordinates the cockpit, but it does not absorb child lattice authority.</p>
         </div>
+
+        <div class="lattice-receipt-grid" data-lattice-receipt-grid></div>
       </section>
 
       <section class="cockpit-panel" aria-label="Dexterion gauge arc board">
@@ -1328,26 +1173,18 @@
           <article class="proof-card"><b>Multi-Stream Gauge</b><span data-gauge-multistream>pending</span></article>
         </div>
 
-        <div class="gauge-grid" data-gauge-board aria-label="Generated Dexterion gauge records">
-          <article class="gauge-dial cockpit-gauge-dial" data-gauge-id="datum-integrity" data-gauge-state="held" data-state="held">
-            <span class="instrument-sparks gauge-sparks" aria-hidden="true"></span>
-            <span class="gauge-face" aria-hidden="true"><span class="gauge-arc"></span><span class="gauge-needle"></span></span>
-            <b>Datum Integrity Gauge</b>
-            <strong>pending cockpit JS</strong>
-            <span>Dexterion datum-integrity gauge</span>
-          </article>
-        </div>
+        <div class="gauge-grid" data-gauge-board aria-label="Generated Dexterion gauge records"></div>
       </section>
 
       <section class="cockpit-panel" aria-label="Control-cell diagnostic board">
         <div class="panel-head">
-          <p class="section-title">Control-Cell Diagnostic Board</p>
-          <h2>Local cells can be touched without activating Runtime.</h2>
-          <p>Urban’s touch grammar is imported as cockpit-native control behavior. Each instrument carries a visible 4 × 4 sample of a 16 × 16 / 256-seat diagnostic concept.</p>
+          <p class="section-title">Lattice Seat Inspector</p>
+          <h2>Touching one lattice seat affects only that gem.</h2>
+          <p>Seat inspection is visual and session-only. It does not activate Runtime, canvas, WebGL, or multi-stream render.</p>
         </div>
 
         <div class="proof-grid">
-          <article class="proof-card"><b>Touch Status</b><span data-cockpit-control-status>pending control-cell board</span></article>
+          <article class="proof-card"><b>Touch Status</b><span data-cockpit-control-status>pending lattice-seat board</span></article>
           <article class="proof-card"><b>Last Touch</b><span data-control-last-touch>none</span></article>
           <article class="proof-card"><b>Manual Override</b><span>session-only visual state</span></article>
           <article class="proof-card"><b>Runtime Lock</b><span>touch cannot activate Strength</span></article>
@@ -1369,14 +1206,10 @@
         <div class="panel-head">
           <p class="section-title">Stream Deck</p>
           <h2>Disposition and terrain are staged. Future streams remain held.</h2>
-          <p>Moisture, surface, cloud, continent, and multi-stream render do not activate in this pass.</p>
+          <p>Datum, disposition, and terrain are proof streams. Moisture, surface, cloud, continent, and multi-stream render remain future held streams.</p>
         </div>
 
-        <div class="stream-grid" data-cockpit-streams>
-          <article class="stream-card"><b>Datum Stream</b><span>/assets/audralia/clean/runtime/audralia.true-globe.datum.js</span><em>origin map / cloned seed</em><strong>pending</strong></article>
-          <article class="stream-card"><b>Disposition Stream</b><span>/assets/audralia/clean/runtime/audralia.true-globe.disposition.js</span><em>navigation readiness / receive proof</em><strong>pending</strong></article>
-          <article class="stream-card"><b>Terrain Stream</b><span>/assets/audralia/clean/runtime/audralia.true-globe.terrain.js</span><em>planetary surface-readiness instrument</em><strong>pending</strong></article>
-        </div>
+        <div class="stream-grid" data-cockpit-streams></div>
       </section>
 
       <section class="cockpit-panel" aria-label="Runtime strength hold panel">
@@ -1408,16 +1241,17 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-AUDRALIA_G1_INTERGALACTIC_COCKPIT_DUAL_DONOR_CIRCUIT_TOUCH_GEM_INSTRUMENT_HTML_BINDING_TNT_v1
+AUDRALIA_G1_INTERGALACTIC_COCKPIT_360_LATTICE_GEM_HTML_BINDING_TNT_v1
 route=/showroom/globe/audralia/disposition/
 html=/showroom/globe/audralia/disposition/index.html
-bound_js_contract=AUDRALIA_G1_INTERGALACTIC_COCKPIT_DUAL_DONOR_CIRCUIT_TOUCH_GEM_INSTRUMENT_ROUTE_JS_TNT_v1
-previous_html_contract=AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTERIONS_LAB_GEM_GAUGE_COCKPIT_HTML_BINDING_TNT_v1
-previous_js_contract=AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTERIONS_LAB_GEM_GAUGE_COCKPIT_ROUTE_JS_TNT_v1
-donor_a_contract=FRONTIER_ENERGY_CARDINAL_DROPDOWN_ELECTRICAL_ENERGY_CIRCUIT_FIELD_TNT_v24
-donor_b_contract=FRONTIER_URBAN_SVG_ORGANIC_DIGITAL_GEM_ORBIT_DONOR_INTEGRATION_TNT_v13
+bound_js_contract=AUDRALIA_G1_INTERGALACTIC_COCKPIT_360_LATTICE_GEM_ROUTE_JS_TNT_v1
+previous_html_contract=AUDRALIA_G1_INTERGALACTIC_COCKPIT_DUAL_DONOR_CIRCUIT_TOUCH_GEM_INSTRUMENT_HTML_BINDING_TNT_v1
+previous_js_contract=AUDRALIA_G1_INTERGALACTIC_COCKPIT_DUAL_DONOR_CIRCUIT_TOUCH_GEM_INSTRUMENT_ROUTE_JS_TNT_v1
 cockpit_frame=Intergalactic_Cockpit
 instrument_authority=Dexterions_Lab
+gem_model=360_degree_circumferential_lattice_gems
+circumference_law=360_circumference_delegated_by_inconsistent_cut_gem_edges
+independent_lattice_per_gem=true
 technical_function=Disposition_Harness_Multi_Stream_Launchpad
 parent_baseline=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMPTION_BASELINE_v1
 harness_baseline=AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_MULTI_STREAM_LAUNCHPAD_BASELINE_v1
@@ -1429,26 +1263,16 @@ html_function=wisdom
 js_function=courage
 runtime_function=strength
 runtime_strength_held=true
-dual_donor_strategy_active=true
-energy_circuit_grammar_imported_as_cockpit_native=true
-urban_touch_grammar_imported_as_cockpit_native=true
-cockpit_circuit_field_present=true
-cockpit_bus_lines_present=true
-cockpit_audit_return_present=true
-bounded_discharge_present=true
-instrument_sparks_present=true
-instrument_charge_flash_present=true
-gem_motion_present=true
-gauge_motion_present=true
-control_cell_board_present=true
-manual_override_session_state_supported=true
-programmed_instrument_rhythm_supported=true
-dexterions_lab_public_name_active=true
+lattice_gem_foundry_present=true
+lattice_gem_console_present=true
+lattice_receipts_present=true
+lattice_seat_inspector_present=true
+gauge_board_present=true
+stream_deck_present=true
+runtime_hold_panel_present=true
 parent_datum_held=true
 parent_html_held=true
 parent_route_js_held=true
-disposition_child_held=true
-terrain_child_held=true
 renders_nothing=true
 no_canvas_creation=true
 no_webgl=true
@@ -1456,28 +1280,28 @@ generated_image=false
 graphic_box=false
 downstream_held=true
 no_visual_pass_claim=true
-deploy_marker=AUDRALIA_G1_INTERGALACTIC_COCKPIT_DUAL_DONOR_CIRCUIT_TOUCH_GEM_INSTRUMENT_DEPLOY_MARKER_v1
+deploy_marker=AUDRALIA_G1_INTERGALACTIC_COCKPIT_360_LATTICE_GEM_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Audralia · Intergalactic Cockpit · Dexterion’s Lab · Dual Donor Circuit + Touch Grammar · Runtime / Strength held.
+      Diamond Gate Bridge · Audralia · Intergalactic Cockpit · Dexterion’s Lab · 360 Lattice Gems · Runtime / Strength held.
     </footer>
   </div>
 
   <script
-    src="/showroom/globe/audralia/disposition/index.js?v=AUDRALIA_G1_INTERGALACTIC_COCKPIT_DUAL_DONOR_CIRCUIT_TOUCH_GEM_INSTRUMENT_ROUTE_JS_TNT_v1"
+    src="/showroom/globe/audralia/disposition/index.js?v=AUDRALIA_G1_INTERGALACTIC_COCKPIT_360_LATTICE_GEM_ROUTE_JS_TNT_v1"
     defer
     data-audralia-cockpit-js
-    data-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DUAL_DONOR_CIRCUIT_TOUCH_GEM_INSTRUMENT_ROUTE_JS_TNT_v1"
-    data-html-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DUAL_DONOR_CIRCUIT_TOUCH_GEM_INSTRUMENT_HTML_BINDING_TNT_v1"
-    data-previous-js-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTERIONS_LAB_GEM_GAUGE_COCKPIT_ROUTE_JS_TNT_v1"
-    data-donor-a-contract="FRONTIER_ENERGY_CARDINAL_DROPDOWN_ELECTRICAL_ENERGY_CIRCUIT_FIELD_TNT_v24"
-    data-donor-b-contract="FRONTIER_URBAN_SVG_ORGANIC_DIGITAL_GEM_ORBIT_DONOR_INTEGRATION_TNT_v13"
+    data-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_360_LATTICE_GEM_ROUTE_JS_TNT_v1"
+    data-html-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_360_LATTICE_GEM_HTML_BINDING_TNT_v1"
+    data-previous-js-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DUAL_DONOR_CIRCUIT_TOUCH_GEM_INSTRUMENT_ROUTE_JS_TNT_v1"
     data-parent-baseline="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMPTION_BASELINE_v1"
     data-harness-baseline="AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_MULTI_STREAM_LAUNCHPAD_BASELINE_v1"
     data-cockpit-frame="intergalactic-cockpit"
     data-instrument-authority="dexterions-lab"
+    data-gem-model="360-degree-circumferential-lattice-gems"
+    data-circumference-law="360-circumference-delegated-by-inconsistent-cut-gem-edges"
     data-html-function="wisdom"
     data-js-function="courage"
     data-runtime-function="strength"

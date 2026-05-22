@@ -1,16 +1,17 @@
 // /assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
-// AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_MATERIAL_REFINEMENT_JS_TNT_v1
+// AUDRALIA_G2_PLANET_BODY_HYDROSPHERE_CARRIER_TERRAIN_HELD_JS_TNT_v1
 // Full-file replacement.
-// Scope: JS-only material refinement for the clean Audralia planet inspection carrier.
-// HTML is protected and must remain untouched.
+// Scope: hydrosphere/body carrier only.
+// Terrain, land, coastline, islands, mineral seams, and landmap authority are held for a future child file.
+// HTML remains untouched.
 // Runtime / Strength remains held. No final visual pass claim.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_MATERIAL_REFINEMENT_JS_TNT_v1";
-  var PREVIOUS_CONTRACT = "AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_TNT_v1";
-  var SPEC_OPS = "AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_MATERIAL_REFINEMENT_JS_SPEC_OPS_v1";
+  var CONTRACT = "AUDRALIA_G2_PLANET_BODY_HYDROSPHERE_CARRIER_TERRAIN_HELD_JS_TNT_v1";
+  var PREVIOUS_CONTRACT = "AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_MATERIAL_REFINEMENT_JS_TNT_v1";
+  var SPEC_OPS = "AUDRALIA_G2_PLANET_BODY_HYDROSPHERE_CARRIER_TERRAIN_HELD_JS_SPEC_OPS_v1";
   var DONOR_CONTRACT = "AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1";
   var ROUTE = "/showroom/globe/audralia/planet/";
   var FILE = "/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js";
@@ -20,6 +21,8 @@
   var LATTICE_STATES = 256;
   var TAU = Math.PI * 2;
   var HALF_PI = Math.PI / 2;
+
+  var TERRAIN_CHILD_CANDIDATE = "/assets/audralia/clean/terrain/audralia.terrain.child.js";
 
   var FIBONACCI_SEQUENCE = Object.freeze([
     1, 1, 2, 3, 5, 8, 13, 21,
@@ -31,18 +34,18 @@
   var LENSES = Object.freeze({
     body: {
       title: "Body View",
-      anchor: "North · Datum Body",
-      copy: "Clean planet-body inspection. Audralia is shown as a larger, deeper canvas body; Runtime / Strength remains held."
+      anchor: "North · Hydrosphere Body",
+      copy: "Clean hydrosphere inspection. Audralia is held as ocean body, light response, atmosphere rim, and drag-ready carrier. Terrain remains held."
     },
     surface: {
       title: "Surface View",
-      anchor: "Northeast / East · Terrain + Material",
-      copy: "Surface view emphasizes terrain pressure, mineral grain, and irregular coast formation without replacing the planet."
+      anchor: "East · Surface Terrain Held",
+      copy: "Surface terrain is not drawn by this carrier. Land, coast, islands, mountains, and mineral seams require a future terrain child file."
     },
     hydration: {
       title: "Hydration View",
-      anchor: "Southeast / South · Ocean + Coast",
-      copy: "Hydration view emphasizes deeper basins, coast shelves, bays, channels, and ocean-edge pressure."
+      anchor: "Southeast / South · Ocean Depth",
+      copy: "Hydration view emphasizes water depth, basin pressure, fluid bands, and hydrosphere motion. No land authority is claimed."
     },
     lattice: {
       title: "Lattice View",
@@ -51,105 +54,34 @@
     },
     receipt: {
       title: "Receipt View",
-      anchor: "Northwest · Inspection Receipt",
-      copy: "Receipt view confirms JS-only material refinement, HTML untouched, clean inspection preserved, and Runtime / Strength held."
+      anchor: "Northwest · Terrain Held Receipt",
+      copy: "Receipt view confirms hydrosphere carrier active, hardcoded terrain removed, terrain child held, and Runtime / Strength held."
     }
   });
 
-  var SURFACE_POLYGONS = Object.freeze([
-    {
-      name: "far-west craton shelf",
-      fill: "rgba(88,105,83,0.72)",
-      edge: "rgba(181,205,166,0.22)",
-      points: [
-        [-146, 26], [-138, 34], [-124, 43], [-106, 49], [-87, 47],
-        [-72, 41], [-57, 33], [-43, 22], [-39, 10], [-48, -1],
-        [-65, -9], [-88, -13], [-111, -8], [-132, 3], [-148, 16]
-      ]
-    },
-    {
-      name: "north crown highland",
-      fill: "rgba(116,118,96,0.66)",
-      edge: "rgba(211,206,156,0.18)",
-      points: [
-        [-10, 54], [4, 62], [22, 68], [43, 67], [63, 62],
-        [82, 54], [99, 42], [105, 29], [98, 17], [78, 9],
-        [54, 8], [31, 14], [12, 24], [-1, 38]
-      ]
-    },
-    {
-      name: "central basin continent",
-      fill: "rgba(67,91,75,0.70)",
-      edge: "rgba(165,217,178,0.24)",
-      points: [
-        [-24, 16], [-10, 28], [12, 36], [37, 35], [61, 27],
-        [82, 14], [101, -3], [111, -20], [104, -34], [84, -45],
-        [58, -53], [31, -55], [7, -49], [-14, -38], [-29, -23],
-        [-34, -5]
-      ]
-    },
-    {
-      name: "southwest pressure shelf",
-      fill: "rgba(81,76,65,0.64)",
-      edge: "rgba(196,171,130,0.16)",
-      points: [
-        [-116, -32], [-99, -23], [-80, -18], [-61, -20], [-43, -29],
-        [-31, -43], [-28, -57], [-43, -67], [-64, -70], [-86, -63],
-        [-105, -51], [-119, -42]
-      ]
-    },
-    {
-      name: "southeast arc mass",
-      fill: "rgba(95,103,82,0.62)",
-      edge: "rgba(165,217,178,0.15)",
-      points: [
-        [102, 15], [119, 19], [137, 13], [151, 2], [159, -14],
-        [154, -30], [138, -42], [116, -43], [98, -32], [90, -15],
-        [93, 2]
-      ]
-    },
-    {
-      name: "near-polar fractured cap",
-      fill: "rgba(118,126,111,0.46)",
-      edge: "rgba(207,229,209,0.10)",
-      points: [
-        [-172, 70], [-138, 76], [-94, 78], [-45, 75], [1, 72],
-        [38, 68], [8, 61], [-38, 58], [-88, 60], [-135, 64]
-      ]
-    }
+  var HYDRO_CURRENT_ARCS = Object.freeze([
+    [[-170, 18], [-136, 12], [-101, 8], [-66, 10], [-31, 18], [4, 23]],
+    [[-150, -22], [-116, -29], [-82, -31], [-47, -25], [-10, -15], [26, -7]],
+    [[22, 42], [58, 38], [94, 28], [128, 14], [156, -3]],
+    [[-32, 56], [5, 51], [44, 43], [81, 30], [111, 12]],
+    [[42, -48], [75, -43], [106, -34], [135, -20], [158, -4]],
+    [[-178, 62], [-135, 66], [-92, 65], [-49, 60], [-8, 52], [31, 42]]
   ]);
 
-  var ISLAND_CHAINS = Object.freeze([
-    [[-154, -3], [-148, -6], [-141, -8], [-134, -11]],
-    [[-20, -58], [-9, -61], [3, -63], [15, -62]],
-    [[118, -49], [130, -53], [143, -55], [155, -51]],
-    [[84, 38], [96, 42], [109, 40], [121, 35]],
-    [[-74, 8], [-64, 3], [-55, 0], [-46, -4]]
+  var HYDRO_DEPTH_BANDS = Object.freeze([
+    [[-180, -52], [-135, -56], [-90, -55], [-45, -49], [0, -40], [45, -31], [90, -26], [135, -30], [180, -39]],
+    [[-180, -10], [-138, -16], [-96, -18], [-54, -14], [-12, -7], [30, -2], [72, -5], [114, -12], [156, -16], [180, -13]],
+    [[-180, 24], [-140, 30], [-99, 34], [-58, 32], [-17, 25], [24, 18], [65, 15], [106, 18], [147, 25], [180, 30]],
+    [[-180, 48], [-130, 53], [-80, 54], [-30, 50], [20, 43], [70, 38], [120, 40], [170, 47]]
   ]);
 
-  var COAST_SHELVES = Object.freeze([
-    [[-149, 15], [-132, 3], [-111, -8], [-88, -13], [-65, -9], [-48, -1], [-39, 10]],
-    [[-1, 38], [12, 24], [31, 14], [54, 8], [78, 9], [98, 17], [105, 29]],
-    [[-34, -5], [-29, -23], [-14, -38], [7, -49], [31, -55], [58, -53], [84, -45], [104, -34]],
-    [[-119, -42], [-105, -51], [-86, -63], [-64, -70], [-43, -67], [-28, -57]],
-    [[90, -15], [98, -32], [116, -43], [138, -42], [154, -30], [159, -14]]
-  ]);
-
-  var MINERAL_STROKES = Object.freeze([
-    [[-128, 34], [-103, 41], [-79, 39], [-58, 29]],
-    [[-96, 12], [-72, 5], [-48, 10], [-29, 20]],
-    [[8, 25], [32, 20], [58, 9], [82, -8]],
-    [[12, -38], [34, -43], [59, -39], [82, -28]],
-    [[-91, -33], [-70, -42], [-47, -49]],
-    [[29, 56], [51, 51], [77, 39]],
-    [[112, 7], [136, -6], [146, -24]]
-  ]);
-
-  var BASIN_BANDS = Object.freeze([
-    [[-160, -18], [-126, -21], [-92, -24], [-58, -23], [-24, -18]],
-    [[-38, 4], [-5, 0], [29, -5], [62, -14], [96, -26]],
-    [[-154, 48], [-119, 52], [-82, 53], [-44, 49], [-8, 41]],
-    [[38, 47], [70, 39], [99, 25], [124, 8], [146, -12]]
+  var HYDRO_PRESSURE_RINGS = Object.freeze([
+    { lon: -118, lat: 18, radius: 8 },
+    { lon: -64, lat: -28, radius: 11 },
+    { lon: 12, lat: 36, radius: 9 },
+    { lon: 76, lat: -14, radius: 13 },
+    { lon: 134, lat: 22, radius: 7 },
+    { lon: 158, lat: -44, radius: 10 }
   ]);
 
   var state = {
@@ -158,6 +90,7 @@
     canvas: null,
     ctx: null,
     details: [],
+
     width: 0,
     height: 0,
     dpr: 1,
@@ -187,6 +120,7 @@
     settleFrames: 0,
     renderCount: 0,
     stopped: false,
+
     oneCanvas: false,
     onePointerPath: false,
     duplicateCanvasRemoved: 0,
@@ -274,6 +208,7 @@
 
   function recordError(scope, error) {
     var message = error && error.message ? error.message : String(error || "unknown");
+
     state.errors.push({
       scope: scope,
       message: message,
@@ -327,9 +262,11 @@
 
     for (band = 0; band < FIBONACCI_BANDS; band += 1) {
       var ring = [];
+
       for (radial = 0; radial < RADIAL_NODES; radial += 1) {
         ring.push(makeSeat(band, radial));
       }
+
       rings.push(Object.freeze(ring));
     }
 
@@ -403,7 +340,9 @@
       }
     }
 
-    state.seats = rings.reduce(function (all, ring) { return all.concat(ring); }, []);
+    state.seats = rings.reduce(function (all, ring) {
+      return all.concat(ring);
+    }, []);
     state.ringLinks = ringLinks;
     state.spineLinks = spineLinks;
     state.fibonacciLinks = fibonacciLinks;
@@ -474,6 +413,7 @@
   function clipSphere() {
     var ctx = state.ctx;
     var m = metrics();
+
     ctx.beginPath();
     ctx.arc(m.centerX, m.centerY, m.radius * 1.003, 0, TAU);
     ctx.clip();
@@ -481,6 +421,7 @@
 
   function roundedRect(ctx, x, y, width, height, radius) {
     var r = Math.min(radius, width / 2, height / 2);
+
     ctx.beginPath();
     ctx.moveTo(x + r, y);
     ctx.arcTo(x + width, y, x + width, y + height, r);
@@ -488,6 +429,47 @@
     ctx.arcTo(x, y + height, x, y, r);
     ctx.arcTo(x, y, x + width, y, r);
     ctx.closePath();
+  }
+
+  function drawProjectedPath(points, stroke, width, alpha) {
+    var ctx = state.ctx;
+    var projected = points.map(function (pair) {
+      return projectPoint(lonLatPoint(pair[0], pair[1]));
+    });
+
+    if (projected.filter(function (p) { return p.frontFacing; }).length < 2) return;
+
+    ctx.save();
+    clipSphere();
+    ctx.beginPath();
+
+    for (var i = 0; i < projected.length; i += 1) {
+      if (i === 0) ctx.moveTo(projected[i].x, projected[i].y);
+      else ctx.lineTo(projected[i].x, projected[i].y);
+    }
+
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = width;
+    ctx.globalAlpha = alpha;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawPressureRing(center, alpha, width) {
+    var points = [];
+    var steps = 52;
+    var i;
+
+    for (i = 0; i <= steps; i += 1) {
+      var t = (i / steps) * TAU;
+      var lon = center.lon + Math.cos(t) * center.radius;
+      var lat = center.lat + Math.sin(t) * center.radius * 0.62;
+      points.push([lon, lat]);
+    }
+
+    drawProjectedPath(points, "rgba(116,218,242,0.30)", width, alpha);
   }
 
   function drawCarrier() {
@@ -517,18 +499,28 @@
     var basin = ctx.createLinearGradient(cx - r, cy + r * 0.2, cx + r, cy - r * 0.1);
     basin.addColorStop(0.00, "rgba(0,12,38,0.34)");
     basin.addColorStop(0.30, "rgba(0,25,73,0.08)");
-    basin.addColorStop(0.52, "rgba(34,149,198,0.05)");
+    basin.addColorStop(0.52, "rgba(34,149,198,0.055)");
     basin.addColorStop(0.76, "rgba(0,18,58,0.16)");
-    basin.addColorStop(1.00, "rgba(0,7,22,0.40)");
+    basin.addColorStop(1.00, "rgba(0,7,22,0.42)");
 
     ctx.fillStyle = basin;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
+    var equatorialDepth = ctx.createLinearGradient(cx - r, cy - r * 0.25, cx + r, cy + r * 0.18);
+    equatorialDepth.addColorStop(0.00, "rgba(46,178,223,0.04)");
+    equatorialDepth.addColorStop(0.34, "rgba(46,178,223,0.10)");
+    equatorialDepth.addColorStop(0.50, "rgba(255,255,255,0.020)");
+    equatorialDepth.addColorStop(0.72, "rgba(2,43,113,0.12)");
+    equatorialDepth.addColorStop(1.00, "rgba(0,10,38,0.22)");
+
+    ctx.fillStyle = equatorialDepth;
+    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+
     var directional = ctx.createLinearGradient(cx - r, cy - r, cx + r, cy + r);
-    directional.addColorStop(0.00, "rgba(255,255,255,0.040)");
+    directional.addColorStop(0.00, "rgba(255,255,255,0.038)");
     directional.addColorStop(0.26, "rgba(255,255,255,0.010)");
-    directional.addColorStop(0.56, "rgba(0,0,0,0.11)");
-    directional.addColorStop(1.00, "rgba(0,0,0,0.34)");
+    directional.addColorStop(0.56, "rgba(0,0,0,0.12)");
+    directional.addColorStop(1.00, "rgba(0,0,0,0.35)");
 
     ctx.fillStyle = directional;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
@@ -565,142 +557,42 @@
     ctx.restore();
   }
 
-  function polygonProjection(points) {
-    var projected = [];
-    var front = 0;
-
-    for (var i = 0; i < points.length; i += 1) {
-      var p = projectPoint(lonLatPoint(points[i][0], points[i][1]));
-      projected.push(p);
-      if (p.frontFacing) front += 1;
-    }
-
-    return { projected: projected, front: front };
-  }
-
-  function drawSurfacePolygon(poly) {
-    var ctx = state.ctx;
-    var result = polygonProjection(poly.points);
-    if (result.front < 2) return;
-
-    var surfaceBoost = state.activeLens === "surface";
-    var hydrationBoost = state.activeLens === "hydration";
-
-    ctx.save();
-    clipSphere();
-
-    ctx.beginPath();
-
-    for (var i = 0; i < result.projected.length; i += 1) {
-      var p = result.projected[i];
-      if (i === 0) ctx.moveTo(p.x, p.y);
-      else ctx.lineTo(p.x, p.y);
-    }
-
-    ctx.closePath();
-
-    ctx.fillStyle = poly.fill;
-    ctx.globalAlpha = surfaceBoost ? 0.92 : 0.66;
-    ctx.fill();
-
-    ctx.strokeStyle = hydrationBoost ? "rgba(167,243,198,0.40)" : poly.edge;
-    ctx.lineWidth = Math.max(0.85, state.dpr * (hydrationBoost ? 1.45 : 0.82));
-    ctx.globalAlpha = hydrationBoost ? 0.68 : surfaceBoost ? 0.46 : 0.28;
-    ctx.stroke();
-
-    ctx.restore();
-  }
-
-  function drawProjectedPath(points, stroke, width, alpha) {
-    var ctx = state.ctx;
-    var projected = points.map(function (pair) {
-      return projectPoint(lonLatPoint(pair[0], pair[1]));
-    });
-
-    if (projected.filter(function (p) { return p.frontFacing; }).length < 2) return;
-
-    ctx.save();
-    clipSphere();
-    ctx.beginPath();
-
-    for (var i = 0; i < projected.length; i += 1) {
-      if (i === 0) ctx.moveTo(projected[i].x, projected[i].y);
-      else ctx.lineTo(projected[i].x, projected[i].y);
-    }
-
-    ctx.strokeStyle = stroke;
-    ctx.lineWidth = width;
-    ctx.globalAlpha = alpha;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  function drawIslandChain(points, alpha) {
-    var ctx = state.ctx;
-
-    ctx.save();
-    clipSphere();
-
-    for (var i = 0; i < points.length; i += 1) {
-      var p = projectPoint(lonLatPoint(points[i][0], points[i][1]));
-      if (!p.frontFacing) continue;
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, Math.max(0.8, state.dpr * 1.6 * p.perspective), 0, TAU);
-      ctx.fillStyle = "rgba(130,137,105," + alpha.toFixed(3) + ")";
-      ctx.fill();
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, Math.max(1.2, state.dpr * 2.5 * p.perspective), 0, TAU);
-      ctx.strokeStyle = "rgba(167,243,198," + (alpha * 0.45).toFixed(3) + ")";
-      ctx.lineWidth = Math.max(0.5, state.dpr * 0.5);
-      ctx.stroke();
-    }
-
-    ctx.restore();
-  }
-
-  function drawAudraliaSurface() {
-    var i;
+  function drawHydrosphereBody() {
     var hydration = state.activeLens === "hydration";
     var surface = state.activeLens === "surface";
     var body = state.activeLens === "body";
+    var receipt = state.activeLens === "receipt";
 
-    for (i = 0; i < SURFACE_POLYGONS.length; i += 1) {
-      drawSurfacePolygon(SURFACE_POLYGONS[i]);
-    }
+    var bandAlpha = hydration ? 0.54 : surface ? 0.24 : body ? 0.16 : receipt ? 0.12 : 0.22;
+    var currentAlpha = hydration ? 0.62 : surface ? 0.30 : body ? 0.18 : receipt ? 0.12 : 0.25;
+    var ringAlpha = hydration ? 0.52 : surface ? 0.24 : body ? 0.12 : receipt ? 0.10 : 0.20;
 
-    for (i = 0; i < COAST_SHELVES.length; i += 1) {
+    var i;
+
+    for (i = 0; i < HYDRO_DEPTH_BANDS.length; i += 1) {
       drawProjectedPath(
-        COAST_SHELVES[i],
-        hydration ? "rgba(167,243,198,0.42)" : "rgba(167,243,198,0.15)",
-        Math.max(0.75, state.dpr * (hydration ? 1.75 : 0.85)),
-        hydration ? 0.78 : body ? 0.20 : 0.38
+        HYDRO_DEPTH_BANDS[i],
+        "rgba(85,201,236,0.34)",
+        Math.max(0.65, state.dpr * (hydration ? 1.18 : 0.68)),
+        bandAlpha
       );
     }
 
-    for (i = 0; i < BASIN_BANDS.length; i += 1) {
+    for (i = 0; i < HYDRO_CURRENT_ARCS.length; i += 1) {
       drawProjectedPath(
-        BASIN_BANDS[i],
-        hydration ? "rgba(95,202,236,0.28)" : "rgba(95,202,236,0.10)",
-        Math.max(0.65, state.dpr * (hydration ? 1.25 : 0.65)),
-        hydration ? 0.64 : body ? 0.10 : 0.22
+        HYDRO_CURRENT_ARCS[i],
+        "rgba(182,245,255,0.26)",
+        Math.max(0.62, state.dpr * (hydration ? 1.08 : 0.58)),
+        currentAlpha
       );
     }
 
-    for (i = 0; i < MINERAL_STROKES.length; i += 1) {
-      drawProjectedPath(
-        MINERAL_STROKES[i],
-        surface ? "rgba(255,244,216,0.24)" : "rgba(255,244,216,0.075)",
-        Math.max(0.75, state.dpr * (surface ? 1.25 : 0.65)),
-        surface ? 0.70 : body ? 0.12 : 0.28
+    for (i = 0; i < HYDRO_PRESSURE_RINGS.length; i += 1) {
+      drawPressureRing(
+        HYDRO_PRESSURE_RINGS[i],
+        ringAlpha,
+        Math.max(0.55, state.dpr * (hydration ? 0.90 : 0.48))
       );
-    }
-
-    for (i = 0; i < ISLAND_CHAINS.length; i += 1) {
-      drawIslandChain(ISLAND_CHAINS[i], hydration ? 0.48 : surface ? 0.38 : 0.22);
     }
   }
 
@@ -738,9 +630,9 @@
 
     ctx.save();
     clipSphere();
-    ctx.globalAlpha = state.activeLens === "body" ? 0.12 : 0.48;
-    strokeLine(equator, "rgba(244,207,131,0.16)", Math.max(0.45, state.dpr * 0.38));
-    strokeLine(meridian, "rgba(141,216,255,0.09)", Math.max(0.38, state.dpr * 0.32));
+    ctx.globalAlpha = state.activeLens === "body" ? 0.08 : 0.42;
+    strokeLine(equator, "rgba(244,207,131,0.13)", Math.max(0.42, state.dpr * 0.34));
+    strokeLine(meridian, "rgba(141,216,255,0.075)", Math.max(0.34, state.dpr * 0.28));
     ctx.restore();
   }
 
@@ -814,6 +706,7 @@
 
   function drawDiagnosticLattice(reduced) {
     var ctx = state.ctx;
+
     ctx.save();
     clipSphere();
     drawLinks(state.ringLinks, reduced);
@@ -829,13 +722,13 @@
 
     var ctx = state.ctx;
     var m = metrics();
-    var w = Math.min(state.width * 0.62, m.radius * 1.58);
-    var h = Math.min(state.height * 0.23, m.radius * 0.58);
+    var w = Math.min(state.width * 0.66, m.radius * 1.70);
+    var h = Math.min(state.height * 0.25, m.radius * 0.62);
     var x = m.centerX - w / 2;
     var y = m.centerY - h / 2;
 
     ctx.save();
-    ctx.fillStyle = "rgba(2,8,20,0.58)";
+    ctx.fillStyle = "rgba(2,8,20,0.60)";
     ctx.strokeStyle = "rgba(244,207,131,0.34)";
     ctx.lineWidth = Math.max(1, state.dpr);
     roundedRect(ctx, x, y, w, h, 22 * state.dpr);
@@ -846,14 +739,18 @@
     ctx.textBaseline = "middle";
     ctx.font = "900 " + Math.max(14, 16 * state.dpr) + "px ui-monospace, monospace";
     ctx.fillStyle = "rgba(244,207,131,0.92)";
-    ctx.fillText("MATERIAL REFINEMENT", m.centerX, y + h * 0.32);
+    ctx.fillText("HYDROSPHERE CARRIER", m.centerX, y + h * 0.28);
 
     ctx.font = "900 " + Math.max(10, 11 * state.dpr) + "px ui-monospace, monospace";
-    ctx.fillStyle = "rgba(238,244,255,0.82)";
-    ctx.fillText("HTML UNTOUCHED · JS ONLY", m.centerX, y + h * 0.56);
+    ctx.fillStyle = "rgba(238,244,255,0.84)";
+    ctx.fillText("TERRAIN CHILD HELD", m.centerX, y + h * 0.50);
 
     ctx.fillStyle = "rgba(141,216,255,0.82)";
-    ctx.fillText("NO FINAL VISUAL PASS", m.centerX, y + h * 0.76);
+    ctx.fillText("LAND / COAST / ISLAND DRAW DISABLED", m.centerX, y + h * 0.68);
+
+    ctx.fillStyle = "rgba(167,243,198,0.80)";
+    ctx.fillText("NO FINAL VISUAL PASS", m.centerX, y + h * 0.84);
+
     ctx.restore();
   }
 
@@ -882,24 +779,24 @@
 
     clearCanvas();
     drawCarrier();
-    drawAudraliaSurface();
+    drawHydrosphereBody();
     drawReferenceLines();
 
     if (state.activeLens === "lattice") {
       drawDiagnosticLattice(state.pointerActive);
     } else if (state.activeLens === "receipt") {
       state.ctx.save();
-      state.ctx.globalAlpha = 0.075;
+      state.ctx.globalAlpha = 0.070;
       drawDiagnosticLattice(true);
       state.ctx.restore();
-    } else if (state.activeLens === "surface" || state.activeLens === "hydration") {
+    } else if (state.activeLens === "hydration") {
       state.ctx.save();
-      state.ctx.globalAlpha = 0.025;
+      state.ctx.globalAlpha = 0.018;
       drawDiagnosticLattice(true);
       state.ctx.restore();
     } else {
       state.ctx.save();
-      state.ctx.globalAlpha = 0.008;
+      state.ctx.globalAlpha = 0.004;
       drawDiagnosticLattice(true);
       state.ctx.restore();
     }
@@ -937,8 +834,8 @@
     setText("[data-audralia-planet-lens-anchor]", LENSES[lens].anchor);
     setText("[data-audralia-planet-lens-title]", LENSES[lens].title);
     setText("[data-audralia-planet-lens-copy]", LENSES[lens].copy);
-    setText("[data-audralia-planet-carrier-status]", "JS material carrier · " + LENSES[lens].title);
-    setText("[data-audralia-planet-carrier-proof]", "JS-only material refinement · HTML untouched · lattice suppressed in Body View · Runtime / Strength held");
+    setText("[data-audralia-planet-carrier-status]", "Hydrosphere carrier · terrain held");
+    setText("[data-audralia-planet-carrier-proof]", "hardcoded terrain removed · land/coast/islands disabled · future terrain child required · Runtime / Strength held");
 
     setDataset("audraliaPlanetActiveLens", lens);
     publishStatus(true);
@@ -1067,11 +964,15 @@
     });
 
     state.canvas = selected;
-    state.canvas.setAttribute("data-audralia-g2-material-refinement-js", CONTRACT);
+    state.canvas.setAttribute("data-audralia-g2-hydrosphere-carrier", CONTRACT);
     state.canvas.setAttribute("data-previous-contract", PREVIOUS_CONTRACT);
-    state.canvas.setAttribute("data-material-refinement-js-only", "true");
-    state.canvas.setAttribute("data-html-untouched", "true");
-    state.canvas.setAttribute("data-clean-inspection-preserved", "true");
+    state.canvas.setAttribute("data-hydrosphere-carrier-active", "true");
+    state.canvas.setAttribute("data-terrain-authority-held", "true");
+    state.canvas.setAttribute("data-terrain-authority-connected", "false");
+    state.canvas.setAttribute("data-terrain-draw-authorized", "false");
+    state.canvas.setAttribute("data-landmap-authority-connected", "false");
+    state.canvas.setAttribute("data-hardcoded-terrain-removed", "true");
+    state.canvas.setAttribute("data-carrier-does-not-own-land", "true");
     state.canvas.setAttribute("data-runtime-strength-held", "true");
     state.canvas.setAttribute("data-final-visual-pass-claim", "false");
 
@@ -1161,22 +1062,26 @@
       route: ROUTE,
       target: FILE,
 
-      materialRefinementJsOnly: true,
-      htmlUntouched: true,
+      hydrosphereCarrierActive: true,
+      terrainAuthorityHeld: true,
+      terrainChildStatus: "held",
+      terrainChildCandidate: TERRAIN_CHILD_CANDIDATE,
+      terrainAuthorityConnected: false,
+      terrainDrawAuthorized: false,
+      landmapAuthorityConnected: false,
+      coastlineRenderAuthorized: false,
+      landmassRenderAuthorized: false,
+      hardcodedTerrainRemoved: true,
+      carrierDoesNotOwnLand: true,
+
+      oceanBodyActive: true,
+      atmosphereActive: true,
       cleanInspectionPreserved: true,
-
-      planetScaleRefined: true,
-      planetCenterRefined: true,
-      oceanDepthRefined: true,
-      landOpacityReduced: true,
-      coastlineDetailIncreased: true,
-      islandDetailAdded: true,
-      atmosphereRimThinned: true,
-      bodyLatticeSuppressed: true,
-
       engineeringLensesPreserved: true,
+      htmlUntouched: true,
+
       oneCanvas: state.oneCanvas,
-      dragRotation: state.onePointerPath,
+      dragRotationActive: state.onePointerPath,
       activeLens: state.activeLens,
       latticeStates: LATTICE_STATES,
       geometryBuilt: state.geometryBuilt,
@@ -1191,34 +1096,37 @@
       renderCount: state.renderCount,
       duplicateCanvasRemoved: state.duplicateCanvasRemoved,
       errors: state.errors.slice(),
-      deployMarker: "AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_MATERIAL_REFINEMENT_JS_DEPLOY_MARKER_v1"
+      deployMarker: "AUDRALIA_G2_PLANET_BODY_HYDROSPHERE_CARRIER_TERRAIN_HELD_JS_DEPLOY_MARKER_v1"
     };
   }
 
   function publishStatus(force) {
     var payload = receipt();
 
-    window.AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_MATERIAL_REFINEMENT_JS_STATUS = payload;
+    window.AUDRALIA_G2_PLANET_BODY_HYDROSPHERE_CARRIER_TERRAIN_HELD_JS_STATUS = payload;
     window.AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_STATUS = payload;
     window.AUDRALIA_G2_JS_FEMALE_CANVAS_CARRIER_STATUS = payload;
 
-    setDataset("audraliaPlanetMaterialRefinementJsOnly", true);
-    setDataset("audraliaPlanetHtmlUntouched", true);
-    setDataset("audraliaPlanetCleanInspectionPreserved", true);
-    setDataset("audraliaPlanetScaleRefined", true);
-    setDataset("audraliaPlanetCenterRefined", true);
-    setDataset("audraliaPlanetOceanDepthRefined", true);
-    setDataset("audraliaPlanetLandOpacityReduced", true);
-    setDataset("audraliaPlanetCoastlineDetailIncreased", true);
-    setDataset("audraliaPlanetAtmosphereRimThinned", true);
-    setDataset("audraliaPlanetBodyLatticeSuppressed", true);
-    setDataset("audraliaPlanetRuntimeStrengthHeld", true);
-    setDataset("audraliaPlanetFinalVisualPassClaim", false);
+    setDataset("audraliaHydrosphereCarrierActive", true);
+    setDataset("audraliaTerrainAuthorityHeld", true);
+    setDataset("audraliaTerrainChildStatus", "held");
+    setDataset("audraliaTerrainAuthorityConnected", false);
+    setDataset("audraliaTerrainDrawAuthorized", false);
+    setDataset("audraliaLandmapAuthorityConnected", false);
+    setDataset("audraliaHardcodedTerrainRemoved", true);
+    setDataset("audraliaCarrierDoesNotOwnLand", true);
+    setDataset("audraliaOceanBodyActive", true);
+    setDataset("audraliaAtmosphereActive", true);
+    setDataset("audraliaCleanInspectionPreserved", true);
+    setDataset("audraliaEngineeringLensesPreserved", true);
+    setDataset("audraliaHtmlUntouched", true);
+    setDataset("audraliaRuntimeStrengthHeld", true);
+    setDataset("audraliaFinalVisualPassClaim", false);
     setDataset("audraliaPlanetActiveLens", state.activeLens);
 
     if (force) {
-      setText("[data-audralia-planet-carrier-status]", "JS material carrier · " + LENSES[state.activeLens].title);
-      setText("[data-audralia-planet-carrier-proof]", "JS-only material refinement · HTML untouched · lattice suppressed in Body View · Runtime / Strength held");
+      setText("[data-audralia-planet-carrier-status]", "Hydrosphere carrier · terrain held");
+      setText("[data-audralia-planet-carrier-proof]", "hardcoded terrain removed · land/coast/islands disabled · future terrain child required · Runtime / Strength held");
     }
 
     return payload;
@@ -1256,7 +1164,7 @@
     state.details = Array.prototype.slice.call(document.querySelectorAll("details"));
 
     if (!state.stage || !state.mount) {
-      recordError("init", "JS material carrier is present, but HTML stage/mount is unavailable.");
+      recordError("init", "Hydrosphere carrier is present, but HTML stage/mount is unavailable.");
       publishStatus(true);
       return;
     }

@@ -2,17 +2,15 @@
 <html
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
-  data-page="audralia-g2-clean-canvas-pair-js-female-first-html-male-second"
-  data-contract="AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_TNT_v1"
-  data-spec-ops-contract="AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_SPEC_OPS_v1"
-  data-js-female-first="true"
-  data-html-male-second="true"
-  data-female-carrier-present-before-selection="true"
-  data-male-html-chooses-js="true"
+  data-page="audralia-g2-inline-lens-tray-gratitude-child-live"
+  data-contract="AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_TNT_v1"
+  data-spec-ops-contract="AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_SPEC_OPS_v1"
+  data-inline-lens-tray-active="true"
+  data-gratitude-child-loaded-before-carrier="true"
+  data-carrier-consumes-child="true"
+  data-carrier-invents-terrain="false"
   data-clean-inspection-default="true"
-  data-engineering-optional="true"
-  data-no-injected-stage-controls="true"
-  data-no-controls-over-planet="true"
+  data-engineering-readout-below="true"
   data-runtime-strength-held="true"
   data-final-visual-pass-claim="false"
 >
@@ -23,7 +21,7 @@
   <title>Audralia · Clean Planet Inspection</title>
   <meta
     name="description"
-    content="Audralia clean planet inspection. JS is the female canvas carrier first; HTML is the male selector second. Clean inspection is default and Engineering remains optional below the planet."
+    content="Audralia clean planet inspection with inline lens controls and live Gratitude terrain child consumption."
   >
 
   <style>
@@ -335,7 +333,7 @@
 
     .inspection-stage{
       position:relative;
-      min-height:clamp(700px,90vw,940px);
+      min-height:clamp(760px,96vw,980px);
       overflow:hidden;
       border:1px solid rgba(244,207,131,.18);
       border-radius:30px;
@@ -385,20 +383,58 @@
     .stage-label{
       position:absolute;
       left:50%;
-      bottom:clamp(70px,10vw,98px);
+      bottom:clamp(182px,23vw,216px);
       z-index:5;
       width:min(calc(100% - 44px),820px);
       transform:translateX(-50%);
       text-align:center;
       color:rgba(239,247,255,.76);
       font-weight:950;
-      font-size:clamp(1rem,3.5vw,1.3rem);
+      font-size:clamp(.96rem,3vw,1.18rem);
       line-height:1.18;
       text-shadow:0 2px 16px rgba(0,0,0,.72);
       pointer-events:none;
     }
 
     .stage-label strong{color:rgba(141,216,255,.96)}
+
+    .inline-lens-tray{
+      position:absolute;
+      left:clamp(16px,4vw,36px);
+      right:clamp(16px,4vw,36px);
+      bottom:clamp(88px,13vw,126px);
+      z-index:7;
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:8px;
+      padding:10px;
+      border:1px solid rgba(244,207,131,.18);
+      border-radius:24px;
+      background:rgba(3,8,18,.58);
+      backdrop-filter:blur(10px);
+      box-shadow:0 18px 48px rgba(0,0,0,.34);
+      touch-action:manipulation;
+    }
+
+    .inline-lens-button{
+      min-height:42px;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:999px;
+      padding:0 10px;
+      color:rgba(239,247,255,.82);
+      background:rgba(255,255,255,.035);
+      font-size:clamp(.66rem,2vw,.82rem);
+      font-weight:950;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+    }
+
+    .inline-lens-button[aria-pressed="true"]{
+      color:#06101c;
+      background:linear-gradient(135deg,#fff0b8,var(--gold));
+      border-color:rgba(244,207,131,.72);
+    }
 
     .stage-instruction{
       position:absolute;
@@ -414,7 +450,7 @@
       backdrop-filter:blur(8px);
       font-weight:850;
       line-height:1.35;
-      font-size:clamp(.98rem,3.5vw,1.16rem);
+      font-size:clamp(.88rem,3vw,1.06rem);
       text-align:center;
       pointer-events:none;
     }
@@ -571,6 +607,11 @@
       .receipt-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
+    @media (max-width:760px){
+      .inline-lens-tray{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .inline-lens-button:last-child{grid-column:1 / -1}
+    }
+
     @media (max-width:700px){
       .page{width:min(100% - 18px,var(--max))}
       .hero,
@@ -586,7 +627,7 @@
         margin-top:8px;
         min-width:0;
       }
-      .inspection-stage{min-height:760px}
+      .inspection-stage{min-height:820px}
       .readout-grid,
       .state-grid,
       .receipt-grid{grid-template-columns:1fr}
@@ -642,18 +683,18 @@
     <main id="planet-main">
       <section class="hero" aria-labelledby="page-title">
         <p class="kicker">Audralia · Clean Planet Inspection</p>
-        <h1 id="page-title">Inspect the planet first. Open the technical readout only when needed.</h1>
+        <h1 id="page-title">Inspect the planet first. Use the lens tray without leaving the globe.</h1>
 
         <p class="lede">
-          The female JS carrier is present first. This male HTML selector chooses it, provides the mount, and keeps the clean inspection chamber free of jargon.
+          The Gratitude terrain child loads before the carrier. The carrier consumes the child, renders from its packet, and keeps Engineering readouts below the chamber.
         </p>
 
         <div class="status-row">
-          <span class="status-pill">JS female first</span>
-          <span class="status-pill">HTML male second</span>
-          <span class="status-pill">Clean inspection default</span>
-          <span class="status-pill">Engineering optional</span>
-          <span class="status-pill">No controls over planet</span>
+          <span class="status-pill">Inline lens tray</span>
+          <span class="status-pill">Gratitude child live</span>
+          <span class="status-pill">Carrier consumes child</span>
+          <span class="status-pill">No fake terrain</span>
+          <span class="status-pill">Runtime held</span>
         </div>
       </section>
 
@@ -662,7 +703,7 @@
           <p class="section-title">Clean Inspection Chamber</p>
           <h2>Audralia gets the screen.</h2>
           <p>
-            Drag the planet directly. Engineering controls and technical readouts are below this chamber.
+            Drag the planet directly. Use the tray under the globe to switch views while watching the planet change.
           </p>
         </div>
 
@@ -671,9 +712,10 @@
           class="inspection-stage"
           data-audralia-planet-inspection-stage
           data-clean-inspection-stage="true"
+          data-inline-lens-tray-active="true"
           data-no-controls-over-planet="true"
           data-route-local-render="true"
-          data-contract="AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_TNT_v1"
+          data-contract="AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_TNT_v1"
           data-runtime-strength-held="true"
           data-final-visual-pass-claim="false"
           aria-label="Clean Audralia planet body inspection stage"
@@ -690,8 +732,16 @@
             <strong>Clean Inspection</strong> → drag Audralia directly
           </div>
 
+          <div class="inline-lens-tray" role="group" aria-label="Quick planet lens controls">
+            <button class="inline-lens-button" type="button" data-audralia-planet-lens="body" aria-pressed="true">Body</button>
+            <button class="inline-lens-button" type="button" data-audralia-planet-lens="surface" aria-pressed="false">Surface</button>
+            <button class="inline-lens-button" type="button" data-audralia-planet-lens="hydration" aria-pressed="false">Hydration</button>
+            <button class="inline-lens-button" type="button" data-audralia-planet-lens="lattice" aria-pressed="false">Lattice</button>
+            <button class="inline-lens-button" type="button" data-audralia-planet-lens="receipt" aria-pressed="false">Receipt</button>
+          </div>
+
           <div class="stage-instruction">
-            Drag the planet to inspect it. Technical lenses and readouts are below this chamber.
+            Drag the planet to inspect it. Toggle the tray to view body, terrain, hydration, lattice, or receipt without scrolling.
           </div>
         </div>
       </section>
@@ -705,7 +755,7 @@
               <p class="section-title">Engineering Lens</p>
               <h2>Jargon lives here, not over the planet.</h2>
               <p>
-                These controls change the technical read of the same planet carrier. They stay below the inspection chamber.
+                The tray controls the visual view above. This section explains the active read below the chamber.
               </p>
             </div>
 
@@ -719,15 +769,15 @@
 
             <div class="readout-grid">
               <article class="readout-card">
-                <b data-audralia-planet-lens-anchor>North · Datum Body</b>
+                <b data-audralia-planet-lens-anchor>North · Hydrosphere Body</b>
                 <strong data-audralia-planet-lens-title>Body View</strong>
-                <span data-audralia-planet-lens-copy>Clean planet-body inspection. The canvas carrier is active; Runtime / Strength remains held.</span>
+                <span data-audralia-planet-lens-copy>Clean hydrosphere inspection. Gratitude child is available for Surface and Hydration views.</span>
               </article>
 
               <article class="readout-card">
                 <b>Carrier Receipt</b>
-                <strong data-audralia-planet-carrier-status>male selector ready · waiting for female carrier receipt</strong>
-                <span data-audralia-planet-carrier-proof>HTML selected the JS carrier and exposed the stage, mount, controls, and slots.</span>
+                <strong data-audralia-planet-carrier-status>Collaboration pending boot</strong>
+                <span data-audralia-planet-carrier-proof>Gratitude child loads before the carrier; carrier consumes child data only after validation.</span>
               </article>
             </div>
           </div>
@@ -737,94 +787,97 @@
       <section id="state-lens-deck" class="state-shell" aria-label="Audralia state lens deck">
         <div class="section-head">
           <p class="section-title">State Lens Deck</p>
-          <h2>States stay below the planet.</h2>
+          <h2>Gratitude becomes live through child authority.</h2>
           <p>
-            The state system explains the inspection path, but it is not allowed to cover the planet body.
+            The continent is not hardcoded inside the carrier. Surface and Hydration views render from the Gratitude child packet.
           </p>
         </div>
 
         <div class="state-grid">
-          <article class="state-card"><b>North</b><strong>Datum Body</strong><span>One coherent planet body rooted in datum authority.</span></article>
-          <article class="state-card"><b>Northeast</b><strong>Terrain Mass</strong><span>Land rises through pressure, structure, and erosion memory.</span></article>
-          <article class="state-card"><b>East</b><strong>Material Surface</strong><span>Mineral pressure shapes the surface read without decoration.</span></article>
-          <article class="state-card"><b>Southeast</b><strong>Hydration / Ocean</strong><span>Water appears as basin, depth, shelf, and system.</span></article>
-          <article class="state-card"><b>South</b><strong>Coast / Edge Pressure</strong><span>Land and water meet through shelf pressure and eroded boundaries.</span></article>
-          <article class="state-card"><b>Southwest</b><strong>Atmosphere Rim</strong><span>A thin presence layer without weather completion.</span></article>
-          <article class="state-card"><b>West</b><strong>Light Response</strong><span>Directional light gives the body spatial depth.</span></article>
-          <article class="state-card"><b>Northwest</b><strong>Inspection Receipt</strong><span>Reports what is active and what remains held.</span></article>
+          <article class="state-card"><b>North</b><strong>Hydrosphere Body</strong><span>Ocean body, atmosphere, light response, drag inspection.</span></article>
+          <article class="state-card"><b>East</b><strong>Gratitude Surface</strong><span>Land-first child terrain becomes visible after validation.</span></article>
+          <article class="state-card"><b>South</b><strong>Valley-Fill Hydration</strong><span>Water follows the child’s valleys and basins.</span></article>
+          <article class="state-card"><b>West</b><strong>Lattice Proof</strong><span>16 × 16 / 256 inspection remains available as Engineering view.</span></article>
         </div>
       </section>
 
       <section id="route-receipt" class="receipt-shell" aria-label="Clean inspection route receipt">
         <div class="section-head">
           <p class="section-title">Route Receipt</p>
-          <h2>JS female carrier first. HTML male selector second.</h2>
+          <h2>Inline tray active. Gratitude child loaded before carrier.</h2>
           <p>
-            The HTML chooses the already-present JS carrier and supplies the stage, mount, Engineering controls, state deck, and receipt.
+            HTML arranges the collaboration. Gratitude child owns terrain. Carrier consumes and renders from the child packet.
           </p>
         </div>
 
         <div class="receipt-grid">
-          <article class="receipt-card"><b>JS</b><strong>female first</strong><span>Route-local canvas carrier exists before selection.</span></article>
-          <article class="receipt-card"><b>HTML</b><strong>male second</strong><span>Route shell selects the carrier and exposes the mount.</span></article>
-          <article class="receipt-card"><b>Clean View</b><strong>default</strong><span>The planet is not covered by tabs, chips, or technical cards.</span></article>
+          <article class="receipt-card"><b>HTML</b><strong>inline tray</strong><span>Controls sit below the globe and above the drag instruction.</span></article>
+          <article class="receipt-card"><b>Child</b><strong>Gratitude</strong><span>Terrain authority loads before carrier.</span></article>
+          <article class="receipt-card"><b>Carrier</b><strong>consumer</strong><span>Renders child data without inventing terrain.</span></article>
           <article class="receipt-card"><b>Runtime</b><strong>held</strong><span>No Runtime / Strength activation and no final visual pass claim.</span></article>
         </div>
 
-        <code class="receipt-code">AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_TNT_v1
+        <code class="receipt-code">AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_TNT_v1
 route=/showroom/globe/audralia/planet/
 html=/showroom/globe/audralia/planet/index.html
-js=/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
-js_female_first=true
-html_male_second=true
-female_carrier_present_before_selection=true
-male_html_chooses_js=true
-clean_inspection_default=true
-engineering_optional=true
-no_injected_stage_controls=true
-no_controls_over_planet=true
-state_deck_below_planet=true
-receipt_below_planet=true
+gratitude_child=/assets/audralia/clean/terrain/audralia.gratitude.continent.child.js
+carrier=/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
+inline_lens_tray_active=true
+gratitude_child_script_loaded_before_carrier=true
+gratitude_child_detected=pending_carrier_boot
+gratitude_child_packet_ready=pending_carrier_boot
+carrier_consumes_child=true
+carrier_invents_terrain=false
+land_first_child_authority=true
+nine_summits_embedded=true
+hydration_derived_from_valleys=true
+body_view_clean=true
+surface_view_child_terrain=true
+hydration_view_child_valley_fill=true
+engineering_readout_below=true
+runtime_strength_held=true
+final_visual_pass_claim=false</code>
+
+        <template id="audralia-inline-tray-gratitude-live-receipt" class="hidden-receipt" data-route-receipt>
+AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_TNT_v1
+inline_lens_tray_active=true
+gratitude_child_script_loaded_before_carrier=true
+carrier_consumes_child=true
+carrier_invents_terrain=false
 runtime_strength_held=true
 final_visual_pass_claim=false
-generated_image=false
-graphic_box=false
-earth_substitution=false
-australia_name_drift=false
-deploy_marker=AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_DEPLOY_MARKER_v1</code>
-
-        <template id="audralia-clean-pair-js-first-receipt" class="hidden-receipt" data-route-receipt>
-AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_TNT_v1
-target=/showroom/globe/audralia/planet/index.html
-js=/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
-js_female_first=true
-html_male_second=true
-female_carrier_present_before_selection=true
-male_html_chooses_js=true
-clean_inspection_default=true
-engineering_optional=true
-no_injected_stage_controls=true
-runtime_strength_held=true
-no_final_visual_pass_claim=true
         </template>
       </section>
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Audralia · Clean Planet Inspection · JS female first · HTML male second.
+      Diamond Gate Bridge · Audralia · Inline Lens Tray · Gratitude child live · Runtime held.
     </footer>
   </div>
 
   <script
-    src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?v=AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_TNT_v1"
+    src="/assets/audralia/clean/terrain/audralia.gratitude.continent.child.js?v=AUDRALIA_G2_GRATITUDE_CONTINENT_LAND_FIRST_VALLEY_FILL_TERRAIN_CHILD_TNT_v1"
+    defer
+    data-audralia-gratitude-continent-child
+    data-contract="AUDRALIA_G2_GRATITUDE_CONTINENT_LAND_FIRST_VALLEY_FILL_TERRAIN_CHILD_TNT_v1"
+    data-load-order="before-carrier"
+    data-land-first="true"
+    data-nine-summits-embedded="true"
+    data-hydration-derived-from-valleys="true"
+  ></script>
+
+  <script
+    src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?v=AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_TNT_v1"
     defer
     data-audralia-planet-inspection-js
-    data-contract="AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_TNT_v1"
+    data-contract="AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_TNT_v1"
+    data-previous-contract="AUDRALIA_G2_PLANET_BODY_HYDROSPHERE_CARRIER_TERRAIN_HELD_JS_TNT_v1"
     data-route="/showroom/globe/audralia/planet/"
-    data-js-female-first="true"
-    data-html-male-second="true"
-    data-clean-inspection-default="true"
-    data-engineering-optional="true"
+    data-gratitude-child-required="true"
+    data-carrier-consumes-child="true"
+    data-carrier-invents-terrain="false"
+    data-inline-lens-tray-active="true"
+    data-engineering-readout-below="true"
     data-runtime-strength-held="true"
     data-final-visual-pass-claim="false"
   ></script>

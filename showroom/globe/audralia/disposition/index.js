@@ -1,38 +1,37 @@
 // /showroom/globe/audralia/disposition/index.js
 // TNT FULL-FILE REPLACEMENT
-// AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_ROUTE_JS_TNT_v1
+// AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTERIONS_LAB_GEM_GAUGE_COCKPIT_ROUTE_JS_TNT_v1
 //
-// Function assignment:
 // JS = COURAGE
 //
 // Narrative frame:
 // INTERGALACTIC COCKPIT
 //
 // Instrument authority:
-// DEXTER'S LABORATORY
+// DEXTERION'S LAB
 //
 // Technical function:
-// Cockpit gauge-mount + terrain stream recognition.
+// Preserve verified datum / disposition / terrain proof while publishing Dexterion-facing
+// gem instruments, gauge instruments, cockpit status, and held Runtime / Strength state.
 //
-// Purpose:
-// - Preserve the existing standalone downstream verification harness.
-// - Keep Dexter's Laboratory as instrument authority.
-// - Mount Dexter-labeled cockpit gauges without absorbing Dexter authority.
-// - Load/detect datum, disposition, and terrain streams.
-// - Verify terrain stream readiness.
-// - Publish cockpit status and visible gauge readouts.
-// - Keep Runtime / Strength held.
-// - Render nothing.
-// - Create no canvas.
-// - Mutate no parent, datum, disposition child, terrain child, or Dexter source.
+// Does not:
+// - mutate parent Audralia route
+// - mutate datum
+// - mutate disposition child
+// - mutate terrain child
+// - activate Runtime / Strength
+// - activate multi-stream render
+// - create canvas
+// - claim visual pass
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_ROUTE_JS_TNT_v1";
-  var HTML_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_HTML_BINDING_TNT_v1";
-  var PREVIOUS_JS_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_TERRAIN_STREAM_RECOGNITION_ROUTE_JS_TNT_v1";
-  var PREVIOUS_HTML_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_TERRAIN_STREAM_RECOGNITION_HTML_BINDING_TNT_v1";
+  var CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTERIONS_LAB_GEM_GAUGE_COCKPIT_ROUTE_JS_TNT_v1";
+  var HTML_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTERIONS_LAB_GEM_GAUGE_COCKPIT_HTML_BINDING_TNT_v1";
+
+  var PREVIOUS_JS_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_ROUTE_JS_TNT_v1";
+  var PREVIOUS_HTML_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_HTML_BINDING_TNT_v1";
 
   var PARENT_BASELINE = "AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMPTION_BASELINE_v1";
   var HARNESS_BASELINE = "AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_MULTI_STREAM_LAUNCHPAD_BASELINE_v1";
@@ -50,7 +49,7 @@
   var ROUTE = "/showroom/globe/audralia/disposition/";
   var COCKPIT_FRAME = "Intergalactic Cockpit";
   var TECHNICAL_FUNCTION = "Disposition Harness / Multi-Stream Launchpad";
-  var INSTRUMENT_AUTHORITY = "Dexter's Laboratory";
+  var INSTRUMENT_AUTHORITY = "Dexterion's Lab";
 
   var HTML_ROLE = "WISDOM";
   var JS_ROLE = "COURAGE";
@@ -59,8 +58,10 @@
   var FAILURE = {
     NONE: "",
     BOOT_PENDING: "boot pending",
-    DEXTER_REGISTRY_UNAVAILABLE: "Dexter registry unavailable; fallback cockpit gauge mounts active",
-    GAUGE_MOUNT_INCOMPLETE: "gauge mount incomplete",
+    DEXTERION_RENAME_INCOMPLETE: "Dexterion narrative rename incomplete",
+    GEM_CONSOLE_MISSING: "gem instrument console missing",
+    GAUGE_BOARD_MISSING: "gauge arc board missing",
+    COCKPIT_LAYOUT_NOT_RENEWED: "cockpit layout not renewed",
     DATUM_LOAD_FAILED: "datum failed to load",
     DATUM_CONTRACT_MISMATCH: "datum public contract mismatch",
     CLONE_CONTRACT_MISMATCH: "datum clone contract mismatch",
@@ -75,20 +76,21 @@
     TERRAIN_NEWS_INCOMPLETE: "terrain NEWS incomplete",
     TERRAIN_CHILD_PACKET_MISSING: "terrain child packet missing",
     TERRAIN_SAMPLE_MISSING: "terrain sample missing",
-    TERRAIN_RENDER_FALSE_CLAIM: "terrain render false claim",
+    GEM_STATE_INCOMPLETE: "gem state incomplete",
+    GAUGE_STATE_INCOMPLETE: "gauge state incomplete",
     PARENT_MUTATION_DETECTED: "parent mutation detected",
+    CHILD_MUTATION_DETECTED: "child mutation detected",
     RUNTIME_STRENGTH_FALSE_ACTIVATION: "Runtime / Strength false activation",
+    CANVAS_CREATION_ATTEMPTED: "canvas creation attempted",
+    GENERATED_IMAGE_USED: "generated image used",
+    GRAPHIC_BOX_USED: "GraphicBox used",
+    VISUAL_PASS_FALSE_CLAIM: "visual pass false claim",
     UNKNOWN_EXCEPTION: "unknown exception"
   };
 
   var state = {
     initialized: false,
     phase: "boot pending",
-    route: ROUTE,
-
-    dexterRegistryFound: false,
-    dexterGaugeMountMode: "pending",
-    dexterRegistryKeys: [],
 
     datumLoaded: false,
     datumApiFound: false,
@@ -123,10 +125,6 @@
     newsComplete: false,
     childPacketReceived: false,
 
-    rendersNothing: true,
-    noCanvasCreation: true,
-    visualPassClaimed: false,
-
     parentDatumUnchanged: true,
     parentHtmlUnchanged: true,
     parentRouteJsUnchanged: true,
@@ -138,8 +136,19 @@
     multiStreamRenderHeld: true,
     multiStreamLaunchpadReady: false,
 
+    rendersNothing: true,
+    noCanvasCreation: true,
+    visualPassClaimed: false,
+    generatedImage: false,
+    graphicBox: false,
+
+    dexterionRegistryFound: false,
+    dexterionGaugeMountMode: "fallback-local-cockpit-mount",
+    dexterionRegistryKeys: [],
+
+    gemInstruments: [],
     gaugeMounts: [],
-    gaugeSummary: {},
+    cockpitInstrumentSummary: {},
     streams: [],
 
     failureCode: "BOOT_PENDING",
@@ -152,8 +161,8 @@
     return new Date().toISOString();
   }
 
-  function setPhase(phase) {
-    state.phase = phase;
+  function setPhase(value) {
+    state.phase = value;
     state.checkedAt = nowISO();
   }
 
@@ -169,11 +178,7 @@
 
   function recordError(scope, error) {
     var message = error && error.message ? error.message : String(error || "unknown");
-    state.errors.push({
-      scope: scope,
-      message: message,
-      time: nowISO()
-    });
+    state.errors.push({ scope: scope, message: message, time: nowISO() });
     setFailure("UNKNOWN_EXCEPTION", scope + ": " + message);
   }
 
@@ -196,9 +201,14 @@
   function setText(selector, text) {
     var node = qs(selector);
     if (!node) return false;
-    var value = String(text);
-    if (node.textContent !== value) node.textContent = value;
+    node.textContent = String(text);
     return true;
+  }
+
+  function setAllText(selector, text) {
+    qsa(selector).forEach(function (node) {
+      node.textContent = String(text);
+    });
   }
 
   function setData(name, value) {
@@ -222,9 +232,7 @@
   function loadScript(file, cacheKey, marker) {
     return new Promise(function (resolve) {
       if (scriptAlreadyPresent(file)) {
-        wait(120).then(function () {
-          resolve(true);
-        });
+        wait(120).then(function () { resolve(true); });
         return;
       }
 
@@ -240,12 +248,10 @@
       script.setAttribute("data-js-role", JS_ROLE);
       script.setAttribute("data-runtime-role", RUNTIME_ROLE);
       script.setAttribute("data-runtime-strength-held", "true");
-      script.setAttribute("data-downstream-held", "true");
+      script.setAttribute("data-no-visual-pass-claim", "true");
 
       script.onload = function () {
-        wait(120).then(function () {
-          resolve(true);
-        });
+        wait(120).then(function () { resolve(true); });
       };
 
       script.onerror = function () {
@@ -352,8 +358,16 @@
       null;
   }
 
-  function readDexterRegistry() {
-    var registries = [
+  function readDexterionRegistry() {
+    var sources = [
+      ["DEXTERION_LAB_TOOL_REGISTRY", window.DEXTERION_LAB_TOOL_REGISTRY],
+      ["DEXTERION_LAB_GAUGE_REGISTRY", window.DEXTERION_LAB_GAUGE_REGISTRY],
+      ["DEXTERION_LAB_DIAGNOSTIC_STATUS", window.DEXTERION_LAB_DIAGNOSTIC_STATUS],
+      ["DGB_DEXTERION_LAB_TOOL_REGISTRY", window.DGB_DEXTERION_LAB_TOOL_REGISTRY],
+      ["DGB_DEXTERION_LAB_GAUGE_REGISTRY", window.DGB_DEXTERION_LAB_GAUGE_REGISTRY],
+      ["DGB_DEXTERION_LAB_STATUS", window.DGB_DEXTERION_LAB_STATUS],
+
+      // Legacy-compatible reads. Public copy remains Dexterion-facing.
       ["DEXTER_LAB_TOOL_REGISTRY", window.DEXTER_LAB_TOOL_REGISTRY],
       ["DEXTER_LAB_GAUGE_REGISTRY", window.DEXTER_LAB_GAUGE_REGISTRY],
       ["DEXTER_LAB_DIAGNOSTIC_STATUS", window.DEXTER_LAB_DIAGNOSTIC_STATUS],
@@ -364,15 +378,15 @@
 
     var found = [];
 
-    for (var i = 0; i < registries.length; i += 1) {
-      if (registries[i][1]) found.push(registries[i][0]);
+    for (var i = 0; i < sources.length; i += 1) {
+      if (sources[i][1]) found.push(sources[i][0]);
     }
 
-    state.dexterRegistryKeys = found;
-    state.dexterRegistryFound = found.length > 0;
-    state.dexterGaugeMountMode = state.dexterRegistryFound ? "registry-mounted" : "fallback-local-cockpit-mount";
+    state.dexterionRegistryKeys = found;
+    state.dexterionRegistryFound = found.length > 0;
+    state.dexterionGaugeMountMode = state.dexterionRegistryFound ? "registry-mounted" : "fallback-local-cockpit-mount";
 
-    return state.dexterRegistryFound;
+    return state.dexterionRegistryFound;
   }
 
   function verifyDatum() {
@@ -404,6 +418,8 @@
     state.datumLoaded = true;
     state.newsComplete = Boolean(status.newsComplete === true);
     state.seatCount = Number(status.seatCount || 256);
+    state.receiveMapReady = status.childReceiveMapReady === true || state.receiveMapReady;
+
     return true;
   }
 
@@ -467,6 +483,9 @@
     state.terrainNoCanvasCreation = status.noCanvasCreation !== false;
     state.terrainVisualPassClaimed = status.visualPassClaimed === true;
 
+    state.receiveMapReady = state.receiveMapReady || status.receiveMapReady === true;
+    state.childPacketReceived = state.childPacketReceived || state.terrainChildPacketReceived;
+
     state.parentDatumUnchanged = status.parentDatumUnchanged !== false;
     state.parentHtmlUnchanged = status.parentHtmlUnchanged !== false;
     state.parentRouteJsUnchanged = status.parentRouteJsUnchanged !== false;
@@ -517,48 +536,94 @@
     return true;
   }
 
-  function gauge(id, label, sourceTool, stream, result, expected, nextMove) {
+  function result(condition) {
+    return condition ? "pass" : "fail";
+  }
+
+  function makeGem(id, label, stream, stateValue, sourceTool, meaning) {
+    return {
+      id: id,
+      label: label,
+      stream: stream,
+      state: stateValue,
+      sourceTool: sourceTool,
+      instrumentAuthority: INSTRUMENT_AUTHORITY,
+      meaning: meaning,
+      cockpitControl: true,
+      visualActivation: false
+    };
+  }
+
+  function makeGauge(id, label, sourceTool, stream, resultValue, expected, nextMove) {
     return {
       id: id,
       label: label,
       sourceTool: sourceTool,
-      sourceGauge: sourceTool.replace("dexter.", "dexter.gauge."),
+      sourceGauge: sourceTool.replace("dexterion.", "dexterion.gauge."),
       instrumentAuthority: INSTRUMENT_AUTHORITY,
       stream: stream,
-      result: result,
+      result: resultValue,
       expected: expected,
       nextMove: nextMove || "",
       cockpitDisplayOnly: true,
-      dexterAuthorityPreserved: true
+      dexterionAuthorityPreserved: true,
+      visualActivation: false
     };
   }
 
-  function passFail(condition) {
-    return condition ? "pass" : "fail";
-  }
+  function buildGemInstruments() {
+    var datumPass = state.datumLoaded && state.datumContractAccepted && state.cloneContractAccepted;
+    var dispositionPass = state.dispositionChildLoaded && state.dispositionChildReady && state.dispositionReady;
+    var terrainPass = state.terrainChildLoaded && state.terrainChildReady && state.terrainStreamReady && state.terrainMapReady;
+    var newsPass = (state.newsComplete || state.terrainNewsComplete) && state.terrainAllSeatsNewsComplete;
+    var parentPass = state.parentDatumUnchanged && state.parentHtmlUnchanged && state.parentRouteJsUnchanged;
+    var renderPass = state.rendersNothing && state.noCanvasCreation && state.visualPassClaimed === false && state.terrainVisualPassClaimed === false;
 
-  function mountDexterGauges() {
-    var datumPass = Boolean(state.datumLoaded && state.datumContractAccepted && state.cloneContractAccepted);
-    var dispositionPass = Boolean(state.dispositionChildLoaded && state.dispositionChildReady && state.dispositionReady);
-    var terrainPass = Boolean(state.terrainChildLoaded && state.terrainChildReady && state.terrainStreamReady && state.terrainMapReady);
-    var newsPass = Boolean(state.newsComplete !== false && state.terrainNewsComplete && state.terrainAllSeatsNewsComplete);
-    var parentPass = Boolean(state.parentDatumUnchanged && state.parentHtmlUnchanged && state.parentRouteJsUnchanged);
-    var renderPass = Boolean(state.rendersNothing && state.noCanvasCreation && state.visualPassClaimed === false && state.terrainVisualPassClaimed === false);
-    var runtimeHeld = Boolean(state.runtimeStrengthHeld && state.multiStreamRenderHeld);
-    var staged = Boolean(datumPass && dispositionPass && terrainPass && runtimeHeld);
-
-    state.gaugeMounts = [
-      gauge("datum-integrity", "Datum Integrity Gauge", "dexter.datum.integrity", "datum", passFail(datumPass), "datumLoaded && datumContractAccepted && cloneContractAccepted"),
-      gauge("disposition-receive", "Disposition Receive Gauge", "dexter.downstream.receive", "disposition", passFail(dispositionPass), "dispositionChildLoaded && childReady && dispositionReady"),
-      gauge("terrain-stream", "Terrain Stream Gauge", "dexter.terrain.stream.readiness", "terrain", passFail(terrainPass), "terrainChildLoaded && terrainChildReady && terrainStreamReady && terrainMapReady"),
-      gauge("news-completion", "NEWS Completion Gauge", "dexter.news.completion", "datum/disposition/terrain", passFail(newsPass), "newsComplete && terrainNewsComplete"),
-      gauge("parent-mutation-guard", "Parent Mutation Guard", "dexter.parent.mutation.guard", "parent-chain", passFail(parentPass), "parentDatumUnchanged && parentHtmlUnchanged && parentRouteJsUnchanged"),
-      gauge("render-hold", "Render Hold Gauge", "dexter.render.hold.guard", "render", passFail(renderPass), "rendersNothing && noCanvasCreation && visualPassClaimed=false"),
-      gauge("runtime-strength", "Runtime Strength Gauge", "dexter.runtime.strength.readiness", "runtime", runtimeHeld ? "held" : "fail", "held", "Keep Runtime / Strength held until multi-stream render is authorized."),
-      gauge("multi-stream-coherence", "Multi-Stream Coherence Gauge", "dexter.multi-stream.coherence", "launchpad", staged ? "staged" : "held", "datum + disposition + terrain staged, future streams held")
+    state.gemInstruments = [
+      makeGem("datum-gem", "Datum Gem", "datum", datumPass ? "pass" : "fail", "dexterion.datum.integrity", "origin map / cloned seed available"),
+      makeGem("disposition-gem", "Disposition Gem", "disposition", dispositionPass ? "pass" : "fail", "dexterion.downstream.receive", "downstream receive alignment"),
+      makeGem("terrain-gem", "Terrain Gem", "terrain", terrainPass ? "pass" : "fail", "dexterion.terrain.stream.readiness", "passive terrain receive proof"),
+      makeGem("news-gem", "NEWS Gem", "navigation", newsPass ? "pass" : "fail", "dexterion.news.navigation", "N/E/W/S complete"),
+      makeGem("parent-chain-gem", "Parent Chain Gem", "parent-chain", parentPass ? "pass" : "fail", "dexterion.parent.mutation.guard", "datum / HTML / route JS held"),
+      makeGem("render-hold-gem", "Render Hold Gem", "render", renderPass ? "pass" : "fail", "dexterion.render.hold.guard", "no canvas / no visual pass"),
+      makeGem("runtime-strength-gem", "Runtime Strength Gem", "runtime", state.runtimeStrengthHeld ? "held" : "fail", "dexterion.runtime.strength.readiness", "future engine carrier held"),
+      makeGem("multi-stream-gem", "Multi-Stream Gem", "launchpad", terrainPass && dispositionPass && state.multiStreamRenderHeld ? "staged" : "held", "dexterion.multi-stream.coherence", "disposition + terrain ready, future streams held")
     ];
 
-    state.gaugeSummary = {
+    return state.gemInstruments;
+  }
+
+  function buildGaugeMounts() {
+    var datumPass = state.datumLoaded && state.datumContractAccepted && state.cloneContractAccepted;
+    var dispositionPass = state.dispositionChildLoaded && state.dispositionChildReady && state.dispositionReady;
+    var terrainPass = state.terrainChildLoaded && state.terrainChildReady && state.terrainStreamReady && state.terrainMapReady;
+    var newsPass = (state.newsComplete || state.terrainNewsComplete) && state.terrainAllSeatsNewsComplete;
+    var parentPass = state.parentDatumUnchanged && state.parentHtmlUnchanged && state.parentRouteJsUnchanged;
+    var renderPass = state.rendersNothing && state.noCanvasCreation && state.visualPassClaimed === false && state.terrainVisualPassClaimed === false;
+    var runtimeHeld = state.runtimeStrengthHeld && state.multiStreamRenderHeld;
+    var staged = datumPass && dispositionPass && terrainPass && runtimeHeld;
+
+    state.gaugeMounts = [
+      makeGauge("datum-integrity", "Datum Integrity Gauge", "dexterion.datum.integrity", "datum", result(datumPass), "datumLoaded && datumContractAccepted && cloneContractAccepted"),
+      makeGauge("disposition-receive", "Disposition Receive Gauge", "dexterion.downstream.receive", "disposition", result(dispositionPass), "dispositionChildLoaded && childReady && dispositionReady"),
+      makeGauge("terrain-stream", "Terrain Stream Gauge", "dexterion.terrain.stream.readiness", "terrain", result(terrainPass), "terrainChildLoaded && terrainChildReady && terrainStreamReady && terrainMapReady"),
+      makeGauge("news-navigation", "NEWS Navigation Gauge", "dexterion.news.navigation", "datum/disposition/terrain", result(newsPass), "newsComplete && terrainNewsComplete"),
+      makeGauge("parent-chain-guard", "Parent Chain Guard", "dexterion.parent.mutation.guard", "parent-chain", result(parentPass), "parentDatumUnchanged && parentHtmlUnchanged && parentRouteJsUnchanged"),
+      makeGauge("render-hold", "Render Hold Gauge", "dexterion.render.hold.guard", "render", result(renderPass), "rendersNothing && noCanvasCreation && visualPassClaimed=false"),
+      makeGauge("runtime-strength", "Runtime Strength Gauge", "dexterion.runtime.strength.readiness", "runtime", runtimeHeld ? "held" : "fail", "held", "Keep Runtime / Strength held until explicitly authorized."),
+      makeGauge("multi-stream-coherence", "Multi-Stream Coherence Gauge", "dexterion.multi-stream.coherence", "launchpad", staged ? "staged" : "held", "datum + disposition + terrain staged, future streams held")
+    ];
+
+    state.cockpitInstrumentSummary = {
+      datumGemStatus: state.gemInstruments[0] ? state.gemInstruments[0].state : "fail",
+      dispositionGemStatus: state.gemInstruments[1] ? state.gemInstruments[1].state : "fail",
+      terrainGemStatus: state.gemInstruments[2] ? state.gemInstruments[2].state : "fail",
+      newsGemStatus: state.gemInstruments[3] ? state.gemInstruments[3].state : "fail",
+      parentChainGemStatus: state.gemInstruments[4] ? state.gemInstruments[4].state : "fail",
+      renderHoldGemStatus: state.gemInstruments[5] ? state.gemInstruments[5].state : "fail",
+      runtimeStrengthGemStatus: state.gemInstruments[6] ? state.gemInstruments[6].state : "fail",
+      multiStreamGemStatus: state.gemInstruments[7] ? state.gemInstruments[7].state : "fail",
+
       datumGaugeStatus: datumPass ? "pass" : "fail",
       dispositionGaugeStatus: dispositionPass ? "pass" : "fail",
       terrainGaugeStatus: terrainPass ? "pass" : "fail",
@@ -572,18 +637,28 @@
     return state.gaugeMounts;
   }
 
-  function gaugesValid() {
-    if (!Array.isArray(state.gaugeMounts) || state.gaugeMounts.length !== 8) return false;
+  function instrumentsValid() {
+    var s = state.cockpitInstrumentSummary;
 
     return Boolean(
-      state.gaugeSummary.datumGaugeStatus === "pass" &&
-      state.gaugeSummary.dispositionGaugeStatus === "pass" &&
-      state.gaugeSummary.terrainGaugeStatus === "pass" &&
-      state.gaugeSummary.newsGaugeStatus === "pass" &&
-      state.gaugeSummary.parentChainGaugeStatus === "pass" &&
-      state.gaugeSummary.renderHoldGaugeStatus === "pass" &&
-      state.gaugeSummary.runtimeStrengthGaugeStatus === "held" &&
-      state.gaugeSummary.multiStreamGaugeStatus === "staged"
+      state.gemInstruments.length === 8 &&
+      state.gaugeMounts.length === 8 &&
+      s.datumGemStatus === "pass" &&
+      s.dispositionGemStatus === "pass" &&
+      s.terrainGemStatus === "pass" &&
+      s.newsGemStatus === "pass" &&
+      s.parentChainGemStatus === "pass" &&
+      s.renderHoldGemStatus === "pass" &&
+      s.runtimeStrengthGemStatus === "held" &&
+      s.multiStreamGemStatus === "staged" &&
+      s.datumGaugeStatus === "pass" &&
+      s.dispositionGaugeStatus === "pass" &&
+      s.terrainGaugeStatus === "pass" &&
+      s.newsGaugeStatus === "pass" &&
+      s.parentChainGaugeStatus === "pass" &&
+      s.renderHoldGaugeStatus === "pass" &&
+      s.runtimeStrengthGaugeStatus === "held" &&
+      s.multiStreamGaugeStatus === "staged"
     );
   }
 
@@ -593,21 +668,21 @@
         key: "datum",
         label: "Datum Stream",
         source: DATUM_FILE,
-        role: "active parent math",
+        role: "origin map / cloned seed",
         status: state.datumLoaded ? "active parent math" : "pending"
       },
       {
         key: "disposition",
         label: "Disposition Stream",
         source: DISPOSITION_FILE,
-        role: "passive child receive proof",
+        role: "navigation readiness / receive proof",
         status: state.dispositionChildReady ? "passive child receive proof" : "pending"
       },
       {
         key: "terrain",
         label: "Terrain Stream",
         source: TERRAIN_FILE,
-        role: "passive terrain receive proof",
+        role: "planetary surface-readiness instrument",
         status: state.terrainChildReady ? "loaded · passive terrain receive proof" : "held"
       },
       {
@@ -646,41 +721,100 @@
         status: "held · Strength runtime future carrier staged"
       },
       {
-        key: "dexterGaugeMounts",
-        label: "Dexter Lab Gauge Mounts",
-        source: "Dexter's Laboratory instrument authority",
-        role: "cockpit readout layer",
-        status: Array.isArray(state.gaugeMounts) && state.gaugeMounts.length === 8 ? "mounted · cockpit readout layer active" : "pending"
+        key: "dexterionInstruments",
+        label: "Dexterion's Lab Instruments",
+        source: "Dexterion laboratory authority",
+        role: "cockpit gem/gauge readout layer",
+        status: state.gaugeMounts.length === 8 && state.gemInstruments.length === 8 ? "mounted · cockpit gauge readouts active" : "pending"
       }
     ];
 
     return state.streams;
   }
 
-  function writeGaugeCards() {
-    var root = qs("[data-cockpit-gauge-grid]");
+  function setInstrumentData(selector, stateValue) {
+    qsa(selector).forEach(function (node) {
+      node.setAttribute("data-state", stateValue);
+      node.setAttribute("data-gem-state", stateValue);
+      node.setAttribute("data-gauge-state", stateValue);
+    });
+  }
+
+  function writeGemInstruments() {
+    var root = qs("[data-gem-console]");
     if (!root) return;
 
     root.innerHTML = "";
 
-    state.gaugeMounts.forEach(function (item) {
+    state.gemInstruments.forEach(function (gem) {
       var card = document.createElement("article");
-      card.className = "gauge-card";
-      card.setAttribute("data-gauge-id", item.id);
+      card.className = "gem-instrument";
+      card.setAttribute("data-gem-instrument", gem.id);
+      card.setAttribute("data-gem-stream", gem.stream);
+      card.setAttribute("data-gem-state", gem.state);
+      card.setAttribute("data-state", gem.state);
+      card.setAttribute("data-dexterion-source-tool", gem.sourceTool);
+
+      var orb = document.createElement("span");
+      orb.className = "gem-orb";
+      orb.setAttribute("aria-hidden", "true");
 
       var label = document.createElement("b");
-      label.textContent = item.label;
+      label.textContent = gem.label;
 
-      var result = document.createElement("strong");
-      result.textContent = item.result + " · " + item.sourceTool;
+      var status = document.createElement("strong");
+      status.textContent = gem.state.toUpperCase();
 
-      var meta = document.createElement("span");
-      meta.textContent = item.stream + " · " + item.expected;
+      var copy = document.createElement("span");
+      copy.textContent = gem.meaning;
 
+      card.appendChild(orb);
       card.appendChild(label);
-      card.appendChild(result);
-      card.appendChild(meta);
+      card.appendChild(status);
+      card.appendChild(copy);
+      root.appendChild(card);
+    });
+  }
 
+  function writeGaugeBoard() {
+    var root = qs("[data-gauge-board]");
+    if (!root) return;
+
+    root.innerHTML = "";
+
+    state.gaugeMounts.forEach(function (gauge) {
+      var card = document.createElement("article");
+      card.className = "gauge-dial";
+      card.setAttribute("data-gauge-id", gauge.id);
+      card.setAttribute("data-gauge-state", gauge.result);
+      card.setAttribute("data-state", gauge.result);
+      card.setAttribute("data-dexterion-source-tool", gauge.sourceTool);
+
+      var face = document.createElement("span");
+      face.className = "gauge-face";
+      face.setAttribute("aria-hidden", "true");
+
+      var arc = document.createElement("span");
+      arc.className = "gauge-arc";
+      face.appendChild(arc);
+
+      var needle = document.createElement("span");
+      needle.className = "gauge-needle";
+      face.appendChild(needle);
+
+      var label = document.createElement("b");
+      label.textContent = gauge.label;
+
+      var status = document.createElement("strong");
+      status.textContent = gauge.result + " · " + gauge.sourceTool;
+
+      var copy = document.createElement("span");
+      copy.textContent = gauge.stream + " · " + gauge.expected;
+
+      card.appendChild(face);
+      card.appendChild(label);
+      card.appendChild(status);
+      card.appendChild(copy);
       root.appendChild(card);
     });
   }
@@ -712,12 +846,12 @@
       card.appendChild(source);
       card.appendChild(role);
       card.appendChild(status);
-
       root.appendChild(card);
     });
   }
 
   function writeVisibleStatus() {
+    var s = state.cockpitInstrumentSummary;
     var failureText = state.failureCode ? state.failureCode + " · " + state.failureReason : "none";
 
     setText("[data-cockpit-phase]", state.phase);
@@ -728,38 +862,60 @@
     setText("[data-cockpit-terrain]", state.terrainChildReady ? "loaded · passive terrain receive proof" : "failed · terrain not ready");
 
     setText("[data-cockpit-dexter]", "mounted · cockpit gauge readouts active");
+    setText("[data-cockpit-dexterion]", "mounted · cockpit gauge readouts active");
+    setText("[data-cockpit-dexter-mode]", state.dexterionGaugeMountMode);
+    setText("[data-cockpit-dexterion-mode]", state.dexterionGaugeMountMode);
+
     setText("[data-cockpit-receive-map]", state.receiveMapReady || state.terrainMapReady ? "ready · 256 seats" : "pending");
     setText("[data-cockpit-news]", state.newsComplete || state.terrainNewsComplete ? "complete · N/E/W/S" : "pending");
     setText("[data-cockpit-terrain-map]", state.terrainMapReady ? "ready · 256 math-only terrain seats" : "pending");
     setText("[data-cockpit-terrain-news]", state.terrainNewsComplete ? "complete · N/E/W/S" : "pending");
 
-    setText("[data-gauge-datum]", state.gaugeSummary.datumGaugeStatus === "pass" ? "pass · Dexter datum-integrity gauge" : "fail · Dexter datum-integrity gauge");
-    setText("[data-gauge-disposition]", state.gaugeSummary.dispositionGaugeStatus === "pass" ? "pass · Dexter downstream-receive gauge" : "fail · Dexter downstream-receive gauge");
-    setText("[data-gauge-terrain]", state.gaugeSummary.terrainGaugeStatus === "pass" ? "pass · Dexter terrain-stream readiness gauge" : "fail · Dexter terrain-stream readiness gauge");
-    setText("[data-gauge-news]", state.gaugeSummary.newsGaugeStatus === "pass" ? "pass · Dexter NEWS-completion gauge" : "fail · Dexter NEWS-completion gauge");
-    setText("[data-gauge-parent]", state.gaugeSummary.parentChainGaugeStatus === "pass" ? "pass · Dexter parent-mutation guard" : "fail · Dexter parent-mutation guard");
-    setText("[data-gauge-render]", state.gaugeSummary.renderHoldGaugeStatus === "pass" ? "pass · no canvas / no visual pass" : "fail · render hold guard");
-    setText("[data-gauge-runtime]", state.gaugeSummary.runtimeStrengthGaugeStatus === "held" ? "held · future engine carrier" : "fail · Runtime / Strength false activation");
-    setText("[data-gauge-multistream]", state.gaugeSummary.multiStreamGaugeStatus === "staged" ? "staged · disposition + terrain ready, future streams held" : "held · stream coherence incomplete");
+    setText("[data-cockpit-gem-console-status]", "active · datum / disposition / terrain / NEWS gauges online");
+    setText("[data-cockpit-gauge-board-status]", "mounted · Dexterion instrument authority");
+
+    setText("[data-gauge-datum]", s.datumGaugeStatus === "pass" ? "pass · Dexterion datum-integrity gauge" : "fail · Dexterion datum-integrity gauge");
+    setText("[data-gauge-disposition]", s.dispositionGaugeStatus === "pass" ? "pass · Dexterion downstream-receive gauge" : "fail · Dexterion downstream-receive gauge");
+    setText("[data-gauge-terrain]", s.terrainGaugeStatus === "pass" ? "pass · Dexterion terrain-stream readiness gauge" : "fail · Dexterion terrain-stream readiness gauge");
+    setText("[data-gauge-news]", s.newsGaugeStatus === "pass" ? "pass · Dexterion NEWS-navigation gauge" : "fail · Dexterion NEWS-navigation gauge");
+    setText("[data-gauge-parent]", s.parentChainGaugeStatus === "pass" ? "pass · Dexterion parent-mutation guard" : "fail · Dexterion parent-mutation guard");
+    setText("[data-gauge-render]", s.renderHoldGaugeStatus === "pass" ? "pass · no canvas / no visual pass" : "fail · render hold guard");
+    setText("[data-gauge-runtime]", s.runtimeStrengthGaugeStatus === "held" ? "held · future engine carrier" : "fail · Runtime / Strength false activation");
+    setText("[data-gauge-multistream]", s.multiStreamGaugeStatus === "staged" ? "staged · disposition + terrain ready, future streams held" : "held · stream coherence incomplete");
 
     setText("[data-cockpit-render]", "held · no visual pass");
     setText("[data-cockpit-parent-chain]", "unchanged · datum / HTML / route JS held");
     setText("[data-cockpit-runtime]", "held · future multi-stream carrier");
-    setText("[data-cockpit-launchpad]", state.multiStreamLaunchpadReady ? "ready · disposition + terrain streams staged" : "held · awaiting stream proof");
-    setText("[data-cockpit-dexter-mode]", state.dexterRegistryFound ? "registry-mounted" : "fallback-local-cockpit-mount");
+    setText("[data-cockpit-launchpad]", state.multiStreamLaunchpadReady ? "staged · disposition + terrain ready, future streams held" : "held · awaiting stream proof");
 
-    writeGaugeCards();
+    setInstrumentData('[data-gem-instrument="datum-gem"], [data-gem-stream="datum"]', s.datumGemStatus || "fail");
+    setInstrumentData('[data-gem-instrument="disposition-gem"], [data-gem-stream="disposition"]', s.dispositionGemStatus || "fail");
+    setInstrumentData('[data-gem-instrument="terrain-gem"], [data-gem-stream="terrain"]', s.terrainGemStatus || "fail");
+    setInstrumentData('[data-gem-instrument="news-gem"], [data-gem-stream="navigation"]', s.newsGemStatus || "fail");
+    setInstrumentData('[data-gem-instrument="parent-chain-gem"], [data-gem-stream="parent-chain"]', s.parentChainGemStatus || "fail");
+    setInstrumentData('[data-gem-instrument="render-hold-gem"], [data-gem-stream="render"]', s.renderHoldGemStatus || "fail");
+    setInstrumentData('[data-gem-instrument="runtime-strength-gem"], [data-gem-stream="runtime"]', s.runtimeStrengthGemStatus || "held");
+    setInstrumentData('[data-gem-instrument="multi-stream-gem"], [data-gem-stream="launchpad"]', s.multiStreamGemStatus || "held");
+
+    writeGemInstruments();
+    writeGaugeBoard();
     writeStreams();
+
+    setAllText("[data-public-instrument-authority]", INSTRUMENT_AUTHORITY);
+    setAllText("[data-public-cockpit-frame]", COCKPIT_FRAME);
 
     setData("audraliaCockpitContract", CONTRACT);
     setData("audraliaCockpitHtmlContract", HTML_CONTRACT);
     setData("audraliaCockpitFrame", COCKPIT_FRAME);
-    setData("audraliaDexterInstrumentAuthority", true);
-    setData("audraliaDexterRegistryFound", state.dexterRegistryFound);
-    setData("audraliaDexterGaugeMountMode", state.dexterGaugeMountMode);
+    setData("audraliaDexterionInstrumentAuthority", true);
+    setData("audraliaDexterionGaugeMountMode", state.dexterionGaugeMountMode);
+    setData("audraliaGemConsoleActive", state.gemInstruments.length === 8);
+    setData("audraliaGaugeBoardActive", state.gaugeMounts.length === 8);
     setData("audraliaTerrainChildReady", state.terrainChildReady);
     setData("audraliaRuntimeStrengthHeld", state.runtimeStrengthHeld);
     setData("audraliaVisualPassClaimed", state.visualPassClaimed);
+    setData("audraliaGeneratedImage", false);
+    setData("audraliaGraphicBox", false);
     setData("audraliaCockpitFailureCode", state.failureCode || "NONE");
   }
 
@@ -767,34 +923,26 @@
     return {
       contract: CONTRACT,
       htmlContract: HTML_CONTRACT,
-      previousHarnessJsContract: PREVIOUS_JS_CONTRACT,
-      previousHarnessHtmlContract: PREVIOUS_HTML_CONTRACT,
+      previousJsContract: PREVIOUS_JS_CONTRACT,
+      previousHtmlContract: PREVIOUS_HTML_CONTRACT,
 
       route: ROUTE,
       cockpitFrame: COCKPIT_FRAME,
+      instrumentAuthority: INSTRUMENT_AUTHORITY,
       technicalFunction: TECHNICAL_FUNCTION,
-      dexterInstrumentAuthority: INSTRUMENT_AUTHORITY,
 
       htmlRole: HTML_ROLE,
       jsRole: JS_ROLE,
       runtimeRole: RUNTIME_ROLE,
+      runtimeStrengthHeld: state.runtimeStrengthHeld,
 
       parentBaseline: PARENT_BASELINE,
       harnessBaseline: HARNESS_BASELINE,
 
-      dexterRegistryFound: state.dexterRegistryFound,
-      dexterRegistryKeys: state.dexterRegistryKeys.slice(),
-      dexterGaugeMountMode: state.dexterGaugeMountMode,
-      gaugeMounts: state.gaugeMounts.slice(),
-
-      datumGaugeStatus: state.gaugeSummary.datumGaugeStatus,
-      dispositionGaugeStatus: state.gaugeSummary.dispositionGaugeStatus,
-      terrainGaugeStatus: state.gaugeSummary.terrainGaugeStatus,
-      newsGaugeStatus: state.gaugeSummary.newsGaugeStatus,
-      parentChainGaugeStatus: state.gaugeSummary.parentChainGaugeStatus,
-      renderHoldGaugeStatus: state.gaugeSummary.renderHoldGaugeStatus,
-      runtimeStrengthGaugeStatus: state.gaugeSummary.runtimeStrengthGaugeStatus,
-      multiStreamGaugeStatus: state.gaugeSummary.multiStreamGaugeStatus,
+      datumFile: DATUM_FILE,
+      dispositionFile: DISPOSITION_FILE,
+      terrainFile: TERRAIN_FILE,
+      multiStreamRenderFile: MULTI_STREAM_RENDER_FILE,
 
       datumLoaded: state.datumLoaded,
       datumApiFound: state.datumApiFound,
@@ -818,15 +966,41 @@
       terrainAllSeatsNewsComplete: state.terrainAllSeatsNewsComplete,
       terrainChildPacketReceived: state.terrainChildPacketReceived,
       terrainSampleReceived: state.terrainSampleReceived,
-      terrainRendersNothing: state.terrainRendersNothing,
-      terrainNoCanvasCreation: state.terrainNoCanvasCreation,
-      terrainVisualPassClaimed: state.terrainVisualPassClaimed,
 
-      runtimeStrengthHeld: state.runtimeStrengthHeld,
+      receiveMapReady: state.receiveMapReady,
+      seatCount: state.seatCount,
+      newsComplete: state.newsComplete,
+      childPacketReceived: state.childPacketReceived,
+
+      dexterionRegistryFound: state.dexterionRegistryFound,
+      dexterionRegistryKeys: state.dexterionRegistryKeys.slice(),
+      dexterionGaugeMountMode: state.dexterionGaugeMountMode,
+
+      gemInstruments: state.gemInstruments.slice(),
+      gaugeMounts: state.gaugeMounts.slice(),
+      cockpitInstrumentSummary: Object.assign({}, state.cockpitInstrumentSummary),
+      streams: state.streams.slice(),
+
+      datumGemStatus: state.cockpitInstrumentSummary.datumGemStatus,
+      dispositionGemStatus: state.cockpitInstrumentSummary.dispositionGemStatus,
+      terrainGemStatus: state.cockpitInstrumentSummary.terrainGemStatus,
+      newsGemStatus: state.cockpitInstrumentSummary.newsGemStatus,
+      parentChainGemStatus: state.cockpitInstrumentSummary.parentChainGemStatus,
+      renderHoldGemStatus: state.cockpitInstrumentSummary.renderHoldGemStatus,
+      runtimeStrengthGemStatus: state.cockpitInstrumentSummary.runtimeStrengthGemStatus,
+      multiStreamGemStatus: state.cockpitInstrumentSummary.multiStreamGemStatus,
+
+      datumGaugeStatus: state.cockpitInstrumentSummary.datumGaugeStatus,
+      dispositionGaugeStatus: state.cockpitInstrumentSummary.dispositionGaugeStatus,
+      terrainGaugeStatus: state.cockpitInstrumentSummary.terrainGaugeStatus,
+      newsGaugeStatus: state.cockpitInstrumentSummary.newsGaugeStatus,
+      parentChainGaugeStatus: state.cockpitInstrumentSummary.parentChainGaugeStatus,
+      renderHoldGaugeStatus: state.cockpitInstrumentSummary.renderHoldGaugeStatus,
+      runtimeStrengthGaugeStatus: state.cockpitInstrumentSummary.runtimeStrengthGaugeStatus,
+      multiStreamGaugeStatus: state.cockpitInstrumentSummary.multiStreamGaugeStatus,
+
       multiStreamRenderHeld: state.multiStreamRenderHeld,
       multiStreamLaunchpadReady: state.multiStreamLaunchpadReady,
-
-      streams: state.streams.slice(),
 
       parentDatumUnchanged: state.parentDatumUnchanged,
       parentHtmlUnchanged: state.parentHtmlUnchanged,
@@ -837,7 +1011,9 @@
 
       rendersNothing: state.rendersNothing,
       noCanvasCreation: state.noCanvasCreation,
-      visualPassClaimed: state.visualPassClaimed,
+      generatedImage: false,
+      graphicBox: false,
+      visualPassClaimed: false,
 
       phase: state.phase,
       failureCode: state.failureCode,
@@ -850,44 +1026,47 @@
   function publish() {
     var payload = status();
 
-    window.AUDRALIA_G1_INTERGALACTIC_COCKPIT = {
+    var api = {
       contract: CONTRACT,
       htmlContract: HTML_CONTRACT,
       cockpitFrame: COCKPIT_FRAME,
+      instrumentAuthority: INSTRUMENT_AUTHORITY,
       technicalFunction: TECHNICAL_FUNCTION,
-      dexterInstrumentAuthority: INSTRUMENT_AUTHORITY,
       status: status,
       refresh: runCockpit,
       run: runCockpit,
-      gauges: function () {
-        return state.gaugeMounts.slice();
-      },
-      streams: function () {
-        return state.streams.slice();
-      },
+      gems: function () { return state.gemInstruments.slice(); },
+      gauges: function () { return state.gaugeMounts.slice(); },
+      streams: function () { return state.streams.slice(); },
       runtimeStrengthHeld: true,
       rendersNothing: true,
       noCanvasCreation: true,
+      generatedImage: false,
+      graphicBox: false,
       visualPassClaimed: false
     };
 
+    window.AUDRALIA_G1_INTERGALACTIC_COCKPIT = api;
+    window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTERIONS_LAB_GEM_GAUGE_COCKPIT = api;
+
+    window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_STATUS = payload;
+    window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTERIONS_LAB_GEM_GAUGE_COCKPIT_STATUS = payload;
+
+    // Compatibility alias. Public page copy should use Dexterion’s Lab.
     window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_STATUS = payload;
-    window.AUDRALIA_G1_DISPOSITION_HARNESS_TERRAIN_STREAM_RECOGNITION_STATUS = payload;
-    window.AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_STATUS = payload;
-    window.AUDRALIA_G1_DISPOSITION_MULTI_STREAM_LAUNCHPAD_STATUS = payload;
 
     return payload;
   }
 
   function publishBoot() {
-    window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_BOOT = {
+    window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTERIONS_LAB_GEM_GAUGE_COCKPIT_BOOT = {
       contract: CONTRACT,
       htmlContract: HTML_CONTRACT,
-      previousHarnessJsContract: PREVIOUS_JS_CONTRACT,
-      previousHarnessHtmlContract: PREVIOUS_HTML_CONTRACT,
+      previousJsContract: PREVIOUS_JS_CONTRACT,
+      previousHtmlContract: PREVIOUS_HTML_CONTRACT,
       cockpitFrame: COCKPIT_FRAME,
+      instrumentAuthority: INSTRUMENT_AUTHORITY,
       technicalFunction: TECHNICAL_FUNCTION,
-      dexterInstrumentAuthority: INSTRUMENT_AUTHORITY,
       htmlRole: HTML_ROLE,
       jsRole: JS_ROLE,
       runtimeRole: RUNTIME_ROLE,
@@ -904,6 +1083,8 @@
       multiStreamRenderHeld: true,
       rendersNothing: true,
       noCanvasCreation: true,
+      generatedImage: false,
+      graphicBox: false,
       visualPassClaimed: false,
       bootedAt: nowISO()
     };
@@ -914,20 +1095,22 @@
       setPhase("boot");
       setFailure("BOOT_PENDING", FAILURE.BOOT_PENDING);
 
-      readDexterRegistry();
-      mountDexterGauges();
+      readDexterionRegistry();
+      buildGemInstruments();
+      buildGaugeMounts();
       buildStreams();
       publish();
       writeVisibleStatus();
 
       setPhase("loading datum");
-      var datumLoaded = Boolean(findDatumApi()) ||
+      state.datumLoaded = Boolean(findDatumApi()) ||
         await loadScript(DATUM_FILE, DATUM_CLONE_CONTRACT, "datum");
 
-      state.datumLoaded = Boolean(datumLoaded && findDatumApi());
+      state.datumLoaded = Boolean(state.datumLoaded && findDatumApi());
 
       if (!verifyDatum()) {
-        mountDexterGauges();
+        buildGemInstruments();
+        buildGaugeMounts();
         buildStreams();
         publish();
         writeVisibleStatus();
@@ -935,15 +1118,16 @@
       }
 
       setPhase("loading disposition");
-      var dispositionLoaded = Boolean(findDispositionApi()) ||
+      state.dispositionChildLoaded = Boolean(findDispositionApi()) ||
         await loadScript(DISPOSITION_FILE, DISPOSITION_CONTRACT, "disposition");
 
-      state.dispositionChildLoaded = Boolean(dispositionLoaded && findDispositionApi());
+      state.dispositionChildLoaded = Boolean(state.dispositionChildLoaded && findDispositionApi());
 
-      await wait(120);
+      await wait(140);
 
       if (!verifyDisposition()) {
-        mountDexterGauges();
+        buildGemInstruments();
+        buildGaugeMounts();
         buildStreams();
         publish();
         writeVisibleStatus();
@@ -951,37 +1135,43 @@
       }
 
       setPhase("loading terrain");
-      var terrainLoaded = Boolean(findTerrainApi()) ||
+      state.terrainChildLoaded = Boolean(findTerrainApi()) ||
         await loadScript(TERRAIN_FILE, TERRAIN_CONTRACT, "terrain");
 
-      state.terrainChildLoaded = Boolean(terrainLoaded && findTerrainApi());
+      state.terrainChildLoaded = Boolean(state.terrainChildLoaded && findTerrainApi());
 
-      await wait(160);
+      await wait(180);
 
       if (!verifyTerrain()) {
-        mountDexterGauges();
+        buildGemInstruments();
+        buildGaugeMounts();
         buildStreams();
         publish();
         writeVisibleStatus();
         return status();
       }
 
-      setPhase("mounting Dexter gauges");
-      mountDexterGauges();
+      setPhase("mounting gem instruments");
+      buildGemInstruments();
 
-      if (!gaugesValid()) {
-        setFailure("GAUGE_MOUNT_INCOMPLETE", FAILURE.GAUGE_MOUNT_INCOMPLETE);
+      setPhase("mounting Dexterion gauges");
+      buildGaugeMounts();
+
+      if (!instrumentsValid()) {
+        setFailure("GAUGE_STATE_INCOMPLETE", FAILURE.GAUGE_STATE_INCOMPLETE);
         buildStreams();
         publish();
         writeVisibleStatus();
         return status();
       }
 
-      state.multiStreamLaunchpadReady = true;
       state.runtimeStrengthHeld = true;
       state.multiStreamRenderHeld = true;
+      state.multiStreamLaunchpadReady = true;
       state.rendersNothing = true;
       state.noCanvasCreation = true;
+      state.generatedImage = false;
+      state.graphicBox = false;
       state.visualPassClaimed = false;
       state.downstreamStillHeld = true;
 
@@ -994,7 +1184,8 @@
       return status();
     } catch (error) {
       recordError("runCockpit", error);
-      mountDexterGauges();
+      buildGemInstruments();
+      buildGaugeMounts();
       buildStreams();
       publish();
       writeVisibleStatus();
@@ -1004,9 +1195,11 @@
 
   function init() {
     state.initialized = true;
+
     publishBoot();
-    readDexterRegistry();
-    mountDexterGauges();
+    readDexterionRegistry();
+    buildGemInstruments();
+    buildGaugeMounts();
     buildStreams();
     publish();
     writeVisibleStatus();

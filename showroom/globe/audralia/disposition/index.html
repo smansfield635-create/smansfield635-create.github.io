@@ -2,15 +2,15 @@
 <html
   lang="en"
   data-route="/showroom/globe/audralia/disposition/"
-  data-page="audralia-intergalactic-cockpit-dexter-gauge-mount"
-  data-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_HTML_BINDING_TNT_v1"
-  data-bound-js-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_ROUTE_JS_TNT_v1"
-  data-previous-html-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_TERRAIN_STREAM_RECOGNITION_HTML_BINDING_TNT_v1"
-  data-previous-js-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_TERRAIN_STREAM_RECOGNITION_ROUTE_JS_TNT_v1"
+  data-page="audralia-intergalactic-cockpit-dexterions-lab"
+  data-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTERIONS_LAB_GEM_GAUGE_COCKPIT_HTML_BINDING_TNT_v1"
+  data-bound-js-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTERIONS_LAB_GEM_GAUGE_COCKPIT_ROUTE_JS_TNT_v1"
+  data-previous-html-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_HTML_BINDING_TNT_v1"
+  data-previous-js-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_ROUTE_JS_TNT_v1"
   data-parent-baseline="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMPTION_BASELINE_v1"
   data-harness-baseline="AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_MULTI_STREAM_LAUNCHPAD_BASELINE_v1"
   data-cockpit-frame="intergalactic-cockpit"
-  data-instrument-authority="dexters-laboratory"
+  data-instrument-authority="dexterions-lab"
   data-datum-file="/assets/audralia/clean/runtime/audralia.true-globe.datum.js"
   data-disposition-file="/assets/audralia/clean/runtime/audralia.true-globe.disposition.js"
   data-terrain-file="/assets/audralia/clean/runtime/audralia.true-globe.terrain.js"
@@ -23,6 +23,9 @@
   data-parent-html-held="true"
   data-parent-route-js-held="true"
   data-downstream-held="true"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-no-canvas-creation="true"
   data-no-visual-pass-claim="true"
 >
 <head>
@@ -32,23 +35,31 @@
   <title>Audralia · Intergalactic Cockpit</title>
   <meta
     name="description"
-    content="Audralia Intergalactic Cockpit with Dexter Lab gauge mounts, terrain stream recognition, and held Runtime Strength."
+    content="Audralia Intergalactic Cockpit with Dexterion’s Lab gem instruments, gauge board, terrain stream recognition, and held Runtime Strength."
   >
 
   <style>
     :root {
       color-scheme: dark;
       --bg: #020711;
+      --deep: #040914;
       --panel: rgba(7, 17, 34, 0.88);
+      --panel2: rgba(3, 9, 20, 0.76);
+      --glass: rgba(125, 187, 255, 0.08);
       --line: rgba(244, 207, 131, 0.18);
+      --line2: rgba(141, 216, 255, 0.18);
       --text: rgba(238, 244, 255, 0.94);
       --muted: rgba(238, 244, 255, 0.68);
       --faint: rgba(238, 244, 255, 0.48);
       --gold: #f4cf83;
+      --gold2: #ffe8a3;
       --blue: #8dd8ff;
       --mint: #a7f3c6;
-      --max: 1120px;
-      --shadow: 0 32px 110px rgba(0, 0, 0, 0.42);
+      --violet: #ad8cff;
+      --warn: #ffb36d;
+      --fail: #ff6b6b;
+      --max: 1240px;
+      --shadow: 0 34px 120px rgba(0, 0, 0, 0.48);
     }
 
     * { box-sizing: border-box; }
@@ -56,11 +67,7 @@
     html {
       min-height: 100%;
       scroll-behavior: smooth;
-      background:
-        radial-gradient(circle at 50% -12%, rgba(78,119,171,0.24), transparent 36rem),
-        radial-gradient(circle at 12% 20%, rgba(244,207,131,0.09), transparent 28rem),
-        radial-gradient(circle at 88% 30%, rgba(141,216,255,0.11), transparent 28rem),
-        linear-gradient(180deg, #061020 0%, var(--bg) 55%, #01040a 100%);
+      background: var(--bg);
     }
 
     body {
@@ -73,9 +80,11 @@
       letter-spacing: -0.015em;
       -webkit-font-smoothing: antialiased;
       background:
-        linear-gradient(rgba(141,216,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(141,216,255,0.03) 1px, transparent 1px);
-      background-size: 56px 56px;
+        radial-gradient(circle at 50% -12%, rgba(78,119,171,0.27), transparent 36rem),
+        radial-gradient(circle at 12% 20%, rgba(244,207,131,0.10), transparent 28rem),
+        radial-gradient(circle at 88% 30%, rgba(141,216,255,0.13), transparent 28rem),
+        radial-gradient(circle at 50% 95%, rgba(173,140,255,0.10), transparent 40rem),
+        linear-gradient(180deg, #061020 0%, var(--bg) 58%, #01040a 100%);
     }
 
     body::before {
@@ -84,18 +93,16 @@
       inset: 0;
       z-index: 0;
       pointer-events: none;
-      background: radial-gradient(circle, rgba(255,255,255,0.14) 0 1px, transparent 1.4px);
-      background-size: 230px 250px;
-      opacity: 0.14;
-      mask-image: linear-gradient(180deg, rgba(0,0,0,0.9), rgba(0,0,0,0.46) 62%, rgba(0,0,0,0.12));
+      background:
+        linear-gradient(rgba(141,216,255,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(141,216,255,0.035) 1px, transparent 1px),
+        radial-gradient(circle, rgba(255,255,255,0.14) 0 1px, transparent 1.4px);
+      background-size: 56px 56px, 56px 56px, 230px 250px;
+      opacity: 0.20;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,0.92), rgba(0,0,0,0.50) 64%, rgba(0,0,0,0.16));
     }
 
-    a,
-    button {
-      color: inherit;
-      font: inherit;
-    }
-
+    a, button { color: inherit; font: inherit; }
     a { text-decoration: none; }
 
     a:focus-visible,
@@ -119,7 +126,7 @@
 
     .skip:focus { transform: translateY(0); }
 
-    .page {
+    .cockpit-shell {
       position: relative;
       z-index: 2;
       width: min(var(--max), calc(100% - 28px));
@@ -127,19 +134,19 @@
       padding: max(18px, env(safe-area-inset-top)) 0 max(54px, env(safe-area-inset-bottom));
     }
 
-    .topbar {
-      display: flex;
+    .command-rail {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
-      justify-content: space-between;
       gap: 16px;
-      padding: 10px 0 20px;
+      padding: 10px 0 18px;
     }
 
     .brand {
       display: inline-grid;
       grid-template-columns: auto minmax(0, 1fr);
       align-items: center;
-      gap: 11px;
+      gap: 12px;
       min-width: 0;
       color: var(--gold);
       font-weight: 950;
@@ -150,14 +157,21 @@
     .brand-mark {
       display: grid;
       place-items: center;
-      width: 38px;
-      height: 38px;
-      border: 1px solid rgba(244,207,131,0.44);
-      border-radius: 12px;
+      width: 44px;
+      height: 44px;
+      border: 1px solid rgba(244,207,131,0.48);
+      border-radius: 14px;
+      transform: rotate(45deg);
       background:
-        linear-gradient(135deg, rgba(255,255,255,0.18), transparent 36%),
-        rgba(244,207,131,0.08);
-      box-shadow: 0 0 22px rgba(244,207,131,0.14);
+        linear-gradient(135deg, rgba(255,255,255,0.20), transparent 38%),
+        conic-gradient(from 45deg, rgba(255,255,255,0.28), rgba(141,216,255,0.22), rgba(7,19,52,0.9), rgba(244,207,131,0.18), rgba(255,255,255,0.22));
+      box-shadow: 0 0 24px rgba(141,216,255,0.18), 0 0 18px rgba(244,207,131,0.13);
+    }
+
+    .brand-mark span {
+      transform: rotate(-45deg);
+      color: rgba(255,244,216,0.98);
+      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
     }
 
     .brand-copy {
@@ -174,7 +188,7 @@
 
     .brand-copy strong {
       color: rgba(255,244,216,0.96);
-      font-size: clamp(1rem, 2.6vw, 1.45rem);
+      font-size: clamp(1rem, 2.6vw, 1.48rem);
       line-height: 1;
       white-space: nowrap;
       overflow: hidden;
@@ -211,60 +225,123 @@
       border-color: rgba(244,207,131,0.56);
     }
 
-    .hero,
-    .panel,
-    .receipt {
-      border: 1px solid var(--line);
+    .cockpit-frame {
+      border: 1px solid rgba(244,207,131,0.20);
+      border-radius: clamp(24px, 4vw, 44px);
       background:
-        radial-gradient(circle at 76% 28%, rgba(139,200,255,0.13), transparent 32%),
-        radial-gradient(circle at 18% 20%, rgba(244,207,131,0.12), transparent 30%),
-        linear-gradient(180deg, rgba(8,17,34,0.94), rgba(4,9,20,0.94));
-      box-shadow: var(--shadow);
+        radial-gradient(circle at 50% 0%, rgba(141,216,255,0.10), transparent 28rem),
+        radial-gradient(circle at 12% 18%, rgba(244,207,131,0.08), transparent 24rem),
+        linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.016)),
+        rgba(3, 8, 18, 0.88);
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.08);
+      overflow: hidden;
     }
 
-    .hero {
-      border-radius: 34px;
-      padding: clamp(24px, 5vw, 46px);
+    .cockpit-viewport {
+      position: relative;
+      min-height: clamp(390px, 52vw, 610px);
+      display: grid;
+      align-content: stretch;
+      padding: clamp(18px, 3vw, 30px);
+      isolation: isolate;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 50% 12%, rgba(141,216,255,0.16), transparent 28rem),
+        radial-gradient(ellipse at 50% 80%, rgba(244,207,131,0.09), transparent 32rem),
+        linear-gradient(180deg, rgba(8,16,34,0.88), rgba(1,5,14,0.94));
     }
 
-    .panel {
-      margin-top: 16px;
-      border-radius: 34px;
-      padding: clamp(18px, 3.8vw, 32px);
+    .cockpit-viewport::before {
+      content: "";
+      position: absolute;
+      inset: 7%;
+      border: 1px solid rgba(141,216,255,0.18);
+      border-radius: 46% 46% 28% 28% / 28% 28% 18% 18%;
+      background:
+        radial-gradient(ellipse at 50% 32%, rgba(141,216,255,0.12), transparent 52%),
+        radial-gradient(circle at 18% 32%, rgba(244,207,131,0.08), transparent 18rem),
+        radial-gradient(circle at 82% 38%, rgba(173,140,255,0.10), transparent 18rem);
+      box-shadow:
+        inset 0 0 55px rgba(141,216,255,0.08),
+        0 0 70px rgba(141,216,255,0.06);
+      pointer-events: none;
+    }
+
+    .cockpit-viewport::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 45%;
+      width: min(70vw, 620px);
+      height: min(70vw, 620px);
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 1px solid rgba(244,207,131,0.10);
+      background:
+        linear-gradient(rgba(141,216,255,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(141,216,255,0.08) 1px, transparent 1px);
+      background-size: 42px 42px;
+      opacity: 0.16;
+      mask-image: radial-gradient(circle, rgba(0,0,0,0.86), transparent 68%);
+      pointer-events: none;
+    }
+
+    .viewport-content {
+      position: relative;
+      z-index: 3;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.9fr);
+      gap: clamp(16px, 3vw, 28px);
+      align-items: center;
+      min-height: 100%;
+    }
+
+    .viewport-copy {
+      display: grid;
+      gap: 16px;
+      max-width: 780px;
     }
 
     .kicker,
     .section-title,
     .label {
-      margin: 0 0 14px;
+      margin: 0;
       color: var(--gold);
-      font: 900 0.78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font: 900 0.75rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       letter-spacing: 0.20em;
       text-transform: uppercase;
     }
 
     h1 {
-      max-width: 980px;
+      max-width: 900px;
       margin: 0;
-      font-size: clamp(2.25rem, 8vw, 5rem);
-      line-height: 0.94;
-      letter-spacing: -0.075em;
+      font-size: clamp(2.55rem, 8vw, 6.35rem);
+      line-height: 0.88;
+      letter-spacing: -0.082em;
       text-wrap: balance;
     }
 
-    .lede {
-      max-width: 940px;
-      margin: 22px 0 0;
+    h2 {
+      margin: 0;
+      color: rgba(255,244,216,0.96);
+      font-size: clamp(1.48rem, 4.6vw, 2.6rem);
+      line-height: 1;
+      letter-spacing: -0.06em;
+      text-wrap: balance;
+    }
+
+    p {
+      margin: 0;
       color: var(--muted);
-      font-size: clamp(1.02rem, 2.6vw, 1.24rem);
+      font-size: clamp(0.98rem, 2.5vw, 1.15rem);
       line-height: 1.55;
     }
 
-    .status-row {
+    .status-strip {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 24px;
+      gap: 8px;
+      margin-top: 4px;
     }
 
     .status-pill {
@@ -276,177 +353,419 @@
       padding: 0 12px;
       color: rgba(238,244,255,0.76);
       background: rgba(255,255,255,0.035);
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 850;
       letter-spacing: 0.04em;
       text-transform: uppercase;
     }
 
-    .grid-3,
-    .grid-4 {
+    .viewport-console {
+      position: relative;
       display: grid;
       gap: 12px;
-      margin-top: 16px;
+      padding: 16px;
+      border: 1px solid rgba(141,216,255,0.18);
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(141,216,255,0.13), transparent 16rem),
+        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.020)),
+        rgba(2, 8, 20, 0.76);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 18px 60px rgba(0,0,0,0.28);
     }
 
-    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .radar-ring {
+      position: relative;
+      min-height: 250px;
+      border-radius: 50%;
+      border: 1px solid rgba(244,207,131,0.22);
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle, rgba(244,207,131,0.10) 0 2px, transparent 3px),
+        radial-gradient(circle, transparent 0 28%, rgba(141,216,255,0.10) 29% 30%, transparent 31% 44%, rgba(244,207,131,0.10) 45% 46%, transparent 47% 61%, rgba(141,216,255,0.08) 62% 63%, transparent 64%),
+        conic-gradient(from -35deg, rgba(141,216,255,0.18), transparent 26%, rgba(244,207,131,0.13), transparent 62%, rgba(173,140,255,0.12), transparent);
+      overflow: hidden;
+    }
 
+    .radar-ring::before,
+    .radar-ring::after {
+      content: "";
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: 50%;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(244,207,131,0.72), transparent);
+      transform-origin: 0 0;
+      opacity: 0.55;
+    }
+
+    .radar-ring::before { transform: rotate(22deg); }
+    .radar-ring::after { transform: rotate(146deg); }
+
+    .radar-core {
+      width: 84px;
+      height: 84px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(244,207,131,0.40);
+      border-radius: 26px;
+      transform: rotate(45deg);
+      background:
+        radial-gradient(circle at 35% 20%, rgba(255,255,255,0.28), transparent 42%),
+        conic-gradient(from 45deg, rgba(255,255,255,0.25), rgba(141,216,255,0.18), rgba(7,19,52,0.98), rgba(244,207,131,0.20));
+      box-shadow: 0 0 26px rgba(141,216,255,0.20), 0 0 20px rgba(244,207,131,0.13);
+    }
+
+    .radar-core span {
+      transform: rotate(-45deg);
+      font-size: 0.70rem;
+      font-weight: 950;
+      letter-spacing: 0.13em;
+      color: rgba(255,244,216,0.96);
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .console-readouts {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .mini-readout {
+      display: grid;
+      gap: 4px;
+      padding: 10px;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.025);
+    }
+
+    .mini-readout b {
+      color: var(--gold);
+      font-size: 0.64rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .mini-readout span {
+      color: rgba(238,244,255,0.74);
+      font-size: 0.78rem;
+      line-height: 1.25;
+    }
+
+    .cockpit-panel {
+      margin-top: 16px;
+      border: 1px solid rgba(244,207,131,0.16);
+      border-radius: 30px;
+      padding: clamp(16px, 3vw, 26px);
+      background:
+        radial-gradient(circle at 12% 0%, rgba(244,207,131,0.08), transparent 20rem),
+        radial-gradient(circle at 92% 12%, rgba(141,216,255,0.10), transparent 20rem),
+        linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.018)),
+        rgba(4, 10, 23, 0.82);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    .panel-head {
+      display: grid;
+      gap: 8px;
+      max-width: 880px;
+    }
+
+    .instrument-grid,
+    .gauge-grid,
+    .stream-grid,
+    .proof-grid {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .instrument-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .gauge-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .stream-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .proof-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .gem-instrument,
+    .gauge-dial,
+    .stream-card,
     .proof-card,
-    .function-card,
-    .gauge-card,
-    .stream-card {
+    .engine-card {
+      position: relative;
       display: grid;
       align-content: start;
       gap: 8px;
       border: 1px solid rgba(255,255,255,0.10);
       border-radius: 20px;
-      padding: 16px;
+      padding: 15px;
       background:
         radial-gradient(circle at 20% 0%, rgba(244,207,131,0.08), transparent 9rem),
-        rgba(255,255,255,0.03);
+        rgba(255,255,255,0.030);
       overflow: hidden;
+      min-height: 132px;
     }
 
-    .proof-card { min-height: 124px; }
-    .function-card { min-height: 162px; }
-    .gauge-card { min-height: 132px; }
-    .stream-card { min-height: 142px; }
+    .gem-instrument::before,
+    .gauge-dial::before,
+    .stream-card::before,
+    .proof-card::before,
+    .engine-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      background: linear-gradient(135deg, rgba(255,255,255,0.07), transparent 35%, rgba(141,216,255,0.04));
+      opacity: 0.78;
+    }
 
+    .gem-orb {
+      width: 54px;
+      height: 54px;
+      display: block;
+      border: 1px solid rgba(244,207,131,0.38);
+      border-radius: 16px;
+      transform: rotate(45deg);
+      background:
+        radial-gradient(circle at 28% 20%, rgba(255,255,255,0.36), transparent 38%),
+        conic-gradient(from 45deg, rgba(255,255,255,0.24), rgba(141,216,255,0.23), rgba(4,16,44,0.94), rgba(244,207,131,0.18), rgba(255,255,255,0.20));
+      box-shadow: 0 0 18px rgba(141,216,255,0.14);
+    }
+
+    .gem-instrument[data-state="pass"] .gem-orb,
+    .gem-instrument[data-gem-state="pass"] .gem-orb {
+      box-shadow: 0 0 24px rgba(167,243,198,0.24), 0 0 14px rgba(244,207,131,0.13);
+      border-color: rgba(167,243,198,0.48);
+    }
+
+    .gem-instrument[data-state="held"] .gem-orb,
+    .gem-instrument[data-gem-state="held"] .gem-orb {
+      box-shadow: 0 0 20px rgba(141,216,255,0.20);
+      border-color: rgba(141,216,255,0.42);
+      opacity: 0.72;
+    }
+
+    .gem-instrument[data-state="staged"] .gem-orb,
+    .gem-instrument[data-gem-state="staged"] .gem-orb {
+      box-shadow: 0 0 24px rgba(173,140,255,0.25), 0 0 14px rgba(244,207,131,0.12);
+      border-color: rgba(173,140,255,0.48);
+    }
+
+    .gem-instrument[data-state="fail"] .gem-orb,
+    .gem-instrument[data-gem-state="fail"] .gem-orb {
+      box-shadow: 0 0 24px rgba(255,107,107,0.25);
+      border-color: rgba(255,107,107,0.48);
+    }
+
+    .gem-instrument b,
+    .gauge-dial b,
+    .stream-card b,
     .proof-card b,
-    .function-card b,
-    .gauge-card b,
-    .stream-card b {
-      color: var(--mint);
+    .engine-card b {
+      position: relative;
+      z-index: 2;
+      color: var(--gold);
       font-size: 0.70rem;
       letter-spacing: 0.14em;
       text-transform: uppercase;
     }
 
-    .function-card b,
-    .stream-card b {
-      color: var(--gold);
-    }
-
-    .proof-card span,
-    .gauge-card span,
-    .stream-card span,
-    .function-card span {
-      color: rgba(238,244,255,0.72);
-      font-size: 0.92rem;
-      line-height: 1.36;
-      overflow-wrap: anywhere;
-    }
-
+    .gem-instrument strong,
+    .gauge-dial strong,
+    .stream-card strong,
     .proof-card strong,
-    .function-card strong,
-    .gauge-card strong,
-    .stream-card strong {
+    .engine-card strong {
+      position: relative;
+      z-index: 2;
       color: rgba(255,244,216,0.96);
-      font-size: 1rem;
-      line-height: 1.18;
+      font-size: 0.95rem;
+      line-height: 1.2;
       overflow-wrap: anywhere;
     }
 
+    .gem-instrument span,
+    .gauge-dial span,
+    .stream-card span,
+    .proof-card span,
+    .engine-card span,
     .stream-card em {
-      color: rgba(141,216,255,0.78);
-      font-size: 0.84rem;
-      line-height: 1.28;
+      position: relative;
+      z-index: 2;
+      color: rgba(238,244,255,0.70);
+      font-size: 0.82rem;
+      line-height: 1.32;
+      overflow-wrap: anywhere;
       font-style: normal;
     }
 
-    .receipt {
-      margin-top: 16px;
-      border-radius: 28px;
-      padding: 22px 18px;
-    }
-
-    .receipt h2 {
-      margin: 0;
-      color: rgba(238,244,255,0.94);
-      font-size: clamp(1.48rem, 4.6vw, 2.34rem);
-      line-height: 1.04;
-      letter-spacing: -0.06em;
-    }
-
-    .receipt p {
-      max-width: 900px;
-      margin: 14px 0 0;
-      color: var(--muted);
-      font-size: clamp(1rem, 2.8vw, 1.16rem);
-      line-height: 1.55;
-    }
-
-    .receipt code {
+    .gauge-face {
+      position: relative;
+      width: 74px;
+      height: 74px;
+      border-radius: 50%;
       display: block;
-      margin-top: 14px;
-      padding: 14px;
-      border: 1px solid rgba(255,255,255,0.09);
-      border-radius: 16px;
-      background: rgba(0,0,0,0.28);
-      color: rgba(238,244,255,0.72);
-      font-size: 0.78rem;
-      line-height: 1.45;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
+      border: 1px solid rgba(244,207,131,0.25);
+      background:
+        radial-gradient(circle at 50% 52%, rgba(2,7,18,0.92) 0 36%, transparent 37%),
+        conic-gradient(from -130deg, rgba(167,243,198,0.78) 0 70%, rgba(255,255,255,0.08) 71% 100%);
+      box-shadow: inset 0 0 18px rgba(0,0,0,0.54), 0 0 18px rgba(141,216,255,0.10);
+    }
+
+    .gauge-dial[data-state="held"] .gauge-face,
+    .gauge-dial[data-gauge-state="held"] .gauge-face {
+      background:
+        radial-gradient(circle at 50% 52%, rgba(2,7,18,0.92) 0 36%, transparent 37%),
+        conic-gradient(from -130deg, rgba(141,216,255,0.72) 0 45%, rgba(255,255,255,0.08) 46% 100%);
+    }
+
+    .gauge-dial[data-state="staged"] .gauge-face,
+    .gauge-dial[data-gauge-state="staged"] .gauge-face {
+      background:
+        radial-gradient(circle at 50% 52%, rgba(2,7,18,0.92) 0 36%, transparent 37%),
+        conic-gradient(from -130deg, rgba(173,140,255,0.76) 0 58%, rgba(244,207,131,0.42) 59% 76%, rgba(255,255,255,0.08) 77% 100%);
+    }
+
+    .gauge-dial[data-state="fail"] .gauge-face,
+    .gauge-dial[data-gauge-state="fail"] .gauge-face {
+      background:
+        radial-gradient(circle at 50% 52%, rgba(2,7,18,0.92) 0 36%, transparent 37%),
+        conic-gradient(from -130deg, rgba(255,107,107,0.76) 0 62%, rgba(255,255,255,0.08) 63% 100%);
+    }
+
+    .gauge-needle {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 2px;
+      height: 28px;
+      transform-origin: 50% 95%;
+      transform: translate(-50%, -94%) rotate(42deg);
+      border-radius: 999px;
+      background: rgba(255,244,216,0.88);
+      box-shadow: 0 0 10px rgba(244,207,131,0.45);
+    }
+
+    .gauge-dial[data-state="held"] .gauge-needle,
+    .gauge-dial[data-gauge-state="held"] .gauge-needle {
+      transform: translate(-50%, -94%) rotate(-18deg);
+    }
+
+    .gauge-dial[data-state="staged"] .gauge-needle,
+    .gauge-dial[data-gauge-state="staged"] .gauge-needle {
+      transform: translate(-50%, -94%) rotate(18deg);
+    }
+
+    .gauge-dial[data-state="fail"] .gauge-needle,
+    .gauge-dial[data-gauge-state="fail"] .gauge-needle {
+      transform: translate(-50%, -94%) rotate(-58deg);
+      background: rgba(255,150,150,0.92);
+    }
+
+    .engine-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .engine-card {
+      min-height: 160px;
+      border-color: rgba(141,216,255,0.17);
+      background:
+        radial-gradient(circle at 16% 0%, rgba(141,216,255,0.10), transparent 12rem),
+        rgba(255,255,255,0.025);
+    }
+
+    .engine-bars {
+      display: flex;
+      align-items: end;
+      gap: 7px;
+      height: 54px;
+      margin-top: 8px;
+    }
+
+    .engine-bars i {
+      display: block;
+      width: 16px;
+      border-radius: 999px 999px 4px 4px;
+      background: linear-gradient(180deg, rgba(141,216,255,0.72), rgba(244,207,131,0.24));
+      opacity: 0.62;
+    }
+
+    .engine-bars i:nth-child(1) { height: 30%; }
+    .engine-bars i:nth-child(2) { height: 48%; }
+    .engine-bars i:nth-child(3) { height: 62%; }
+    .engine-bars i:nth-child(4) { height: 38%; }
+    .engine-bars i:nth-child(5) { height: 74%; }
+
+    .warning-strip {
+      margin-top: 18px;
+      border: 1px solid rgba(244,207,131,0.16);
+      border-radius: 18px;
+      padding: 13px 14px;
+      color: rgba(255,244,216,0.86);
+      background:
+        repeating-linear-gradient(135deg, rgba(244,207,131,0.05) 0 8px, transparent 8px 16px),
+        rgba(255,255,255,0.025);
+      font-size: 0.84rem;
+      font-weight: 820;
+      letter-spacing: 0.03em;
+    }
+
+    .receipt,
+    [data-route-receipt] {
+      display: none !important;
+      visibility: hidden !important;
+      overflow: hidden !important;
+      width: 0 !important;
+      height: 0 !important;
+      max-width: 0 !important;
+      max-height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: 0 !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      position: absolute !important;
+      clip-path: inset(50%) !important;
+      white-space: nowrap !important;
     }
 
     .footer {
-      margin-top: 20px;
-      padding: 20px 0 0;
+      margin-top: 18px;
+      padding: 18px 0 0;
       color: var(--faint);
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       text-align: center;
     }
 
-    @media (max-width: 980px) {
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .nav {
-        justify-content: flex-start;
-      }
-
-      .grid-3,
-      .grid-4 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+    @media (max-width: 1080px) {
+      .viewport-content { grid-template-columns: 1fr; }
+      .instrument-grid,
+      .gauge-grid,
+      .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .stream-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
-    @media (max-width: 620px) {
-      .page {
-        width: min(100% - 18px, var(--max));
-      }
-
-      .hero,
-      .panel,
-      .receipt {
-        border-radius: 24px;
-      }
-
-      .nav {
-        display: grid;
-        grid-template-columns: 1fr;
-        width: 100%;
-      }
-
+    @media (max-width: 760px) {
+      .cockpit-shell { width: min(100% - 18px, var(--max)); }
+      .command-rail { grid-template-columns: 1fr; }
+      .nav { justify-content: flex-start; }
       .nav a,
-      .nav button {
-        width: 100%;
-      }
-
-      .grid-3,
-      .grid-4 {
-        grid-template-columns: 1fr;
-      }
+      .nav button { flex: 1 1 100%; }
+      .cockpit-viewport { min-height: auto; }
+      .console-readouts,
+      .instrument-grid,
+      .gauge-grid,
+      .stream-grid,
+      .proof-grid,
+      .engine-row { grid-template-columns: 1fr; }
+      h1 { font-size: clamp(2.4rem, 14vw, 4.2rem); }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
+      *, *::before, *::after {
         scroll-behavior: auto !important;
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
@@ -459,10 +778,10 @@
 <body>
   <a class="skip" href="#cockpit-main">Skip to cockpit</a>
 
-  <div class="page">
-    <header class="topbar">
+  <div class="cockpit-shell">
+    <header class="command-rail" aria-label="Intergalactic Cockpit command rail">
       <a class="brand" href="/showroom/globe/audralia/disposition/" aria-current="page">
-        <span class="brand-mark" aria-hidden="true">AU</span>
+        <span class="brand-mark" aria-hidden="true"><span>AU</span></span>
         <span class="brand-copy">
           <span>Audralia</span>
           <strong>Intergalactic Cockpit</strong>
@@ -470,85 +789,119 @@
       </a>
 
       <nav class="nav" aria-label="Cockpit navigation">
-        <a href="/showroom/globe/audralia/">Return to Audralia</a>
-        <a href="/showroom/globe/">Return to Globe</a>
+        <a href="/">Compass</a>
+        <a href="/showroom/globe/audralia/">Audralia</a>
+        <a href="/showroom/globe/">Globe</a>
         <a href="/gauges/">Triple G</a>
         <button type="button" data-cockpit-refresh>Run Cockpit</button>
       </nav>
     </header>
 
-    <main id="cockpit-main">
-      <section class="hero">
-        <p class="kicker">Audralia · Intergalactic Cockpit</p>
-        <h1>Dexter Lab gauges mounted to the stream-control deck.</h1>
+    <main id="cockpit-main" class="cockpit-frame">
+      <section class="cockpit-viewport" aria-labelledby="page-title">
+        <div class="viewport-content">
+          <div class="viewport-copy">
+            <p class="kicker">Dexterion’s Lab Instrument Deck · Gem Gauges · Terrain Stream Recognition</p>
+            <h1 id="page-title">Dexterion’s Lab instruments are mounted to the cockpit deck.</h1>
+            <p>
+              The cockpit reads Audralia’s downstream streams through gem instruments and gauges. Datum, disposition, and terrain are online. Runtime / Strength remains held until the multi-stream render carrier is authorized.
+            </p>
 
-        <p class="lede">
-          This cockpit remains the standalone downstream verification harness and multi-stream launchpad. Dexter’s Laboratory supplies instrument authority. The cockpit mounts the gauges, verifies the terrain stream, and keeps Runtime / Strength held for future multi-stream render.
-        </p>
+            <div class="status-strip">
+              <span class="status-pill">HTML / Wisdom</span>
+              <span class="status-pill">JS / Courage</span>
+              <span class="status-pill">Runtime / Strength held</span>
+              <span class="status-pill">No canvas</span>
+              <span class="status-pill">No visual pass</span>
+            </div>
+          </div>
 
-        <div class="status-row">
-          <span class="status-pill">Wisdom HTML</span>
-          <span class="status-pill">Courage JS</span>
-          <span class="status-pill">Dexter Lab instruments</span>
-          <span class="status-pill">Strength held</span>
-          <span class="status-pill">No visual pass</span>
+          <aside class="viewport-console" aria-label="Cockpit forward instrument glass">
+            <div class="radar-ring" aria-hidden="true">
+              <span class="radar-core"><span>Dexterion<br>Lab</span></span>
+            </div>
+
+            <div class="console-readouts">
+              <article class="mini-readout"><b>Phase</b><span data-cockpit-phase>boot pending</span></article>
+              <article class="mini-readout"><b>Failure</b><span data-cockpit-failure>BOOT_PENDING · boot pending</span></article>
+              <article class="mini-readout"><b>Authority</b><span data-public-instrument-authority>Dexterion’s Lab</span></article>
+              <article class="mini-readout"><b>Mode</b><span data-cockpit-dexterion-mode>pending</span></article>
+            </div>
+          </aside>
         </div>
       </section>
 
-      <section class="panel" aria-label="Primary functions">
-        <p class="section-title">Primary functions</p>
-
-        <div class="grid-3">
-          <article class="function-card">
-            <b>HTML</b>
-            <strong>Wisdom</strong>
-            <span>Cockpit glass, labels, controls, route receipt, public proof surface, and visible gauge deck.</span>
-          </article>
-
-          <article class="function-card">
-            <b>JS</b>
-            <strong>Courage</strong>
-            <span>Pilot layer: loads streams, mounts gauges, verifies pass/fail, and reports the cockpit state.</span>
-          </article>
-
-          <article class="function-card">
-            <b>Runtime</b>
-            <strong>Strength</strong>
-            <span>Future engine carrier for motion, endurance, loops, drag, and multi-stream render stability. Held in this pass.</span>
-          </article>
+      <section class="cockpit-panel" aria-label="Cockpit proof systems">
+        <div class="panel-head">
+          <p class="section-title">Systems glass · current proof</p>
+          <h2>Stream state remains proof-first.</h2>
+          <p>These panels report the same verified chain through cockpit language. They do not activate render or Runtime / Strength.</p>
         </div>
-      </section>
 
-      <section class="panel" aria-label="Cockpit proof">
-        <p class="section-title">Cockpit verification</p>
-
-        <div class="grid-3">
-          <article class="proof-card"><b>Phase</b><span data-cockpit-phase>boot pending</span></article>
-          <article class="proof-card"><b>Failure</b><span data-cockpit-failure>BOOT_PENDING · boot pending</span></article>
-          <article class="proof-card"><b>Dexter Mode</b><span data-cockpit-dexter-mode>pending</span></article>
-
+        <div class="proof-grid">
           <article class="proof-card"><b>Datum System</b><span data-cockpit-datum>pending cockpit JS</span></article>
           <article class="proof-card"><b>Disposition System</b><span data-cockpit-disposition>pending cockpit JS</span></article>
           <article class="proof-card"><b>Terrain System</b><span data-cockpit-terrain>pending cockpit JS</span></article>
+          <article class="proof-card"><b>Dexterion’s Lab Instruments</b><span data-cockpit-dexterion>pending gauge mount</span></article>
 
-          <article class="proof-card"><b>Dexter Lab Instruments</b><span data-cockpit-dexter>pending gauge mount</span></article>
           <article class="proof-card"><b>Receive Map</b><span data-cockpit-receive-map>pending cockpit JS</span></article>
           <article class="proof-card"><b>NEWS</b><span data-cockpit-news>pending cockpit JS</span></article>
-
           <article class="proof-card"><b>Terrain Map</b><span data-cockpit-terrain-map>pending cockpit JS</span></article>
           <article class="proof-card"><b>Terrain NEWS</b><span data-cockpit-terrain-news>pending cockpit JS</span></article>
-          <article class="proof-card"><b>Render</b><span data-cockpit-render>held · no visual pass</span></article>
 
+          <article class="proof-card"><b>Gem Console</b><span data-cockpit-gem-console-status>pending cockpit JS</span></article>
+          <article class="proof-card"><b>Gauge Board</b><span data-cockpit-gauge-board-status>pending cockpit JS</span></article>
           <article class="proof-card"><b>Parent Chain</b><span data-cockpit-parent-chain>unchanged · datum / HTML / route JS held</span></article>
-          <article class="proof-card"><b>Multi-Stream Cockpit</b><span data-cockpit-launchpad>held · awaiting stream proof</span></article>
-          <article class="proof-card"><b>Runtime / Strength</b><span data-cockpit-runtime>held · future multi-stream carrier</span></article>
+          <article class="proof-card"><b>Render</b><span data-cockpit-render>held · no visual pass</span></article>
         </div>
       </section>
 
-      <section class="panel" aria-label="Dexter Lab gauge panels">
-        <p class="section-title">Dexter Lab gauge mounts</p>
+      <section class="cockpit-panel" aria-label="Gem instrument console">
+        <div class="panel-head">
+          <p class="section-title">Gem Instrument Console</p>
+          <h2>Gems operate as stream-status instruments.</h2>
+          <p>Pass, held, and staged states are cockpit readings. They are not visual-render activation.</p>
+        </div>
 
-        <div class="grid-4">
+        <div class="instrument-grid" data-gem-console>
+          <article class="gem-instrument" data-gem-instrument="datum-gem" data-gem-stream="datum" data-gem-state="pass" data-state="pass" data-dexterion-source-tool="dexterion.datum.integrity">
+            <span class="gem-orb" aria-hidden="true"></span>
+            <b>Datum Gem</b>
+            <strong>PASS</strong>
+            <span>origin map / cloned seed available</span>
+          </article>
+
+          <article class="gem-instrument" data-gem-instrument="disposition-gem" data-gem-stream="disposition" data-gem-state="pass" data-state="pass" data-dexterion-source-tool="dexterion.downstream.receive">
+            <span class="gem-orb" aria-hidden="true"></span>
+            <b>Disposition Gem</b>
+            <strong>PASS</strong>
+            <span>downstream receive alignment</span>
+          </article>
+
+          <article class="gem-instrument" data-gem-instrument="terrain-gem" data-gem-stream="terrain" data-gem-state="pass" data-state="pass" data-dexterion-source-tool="dexterion.terrain.stream.readiness">
+            <span class="gem-orb" aria-hidden="true"></span>
+            <b>Terrain Gem</b>
+            <strong>PASS</strong>
+            <span>passive terrain receive proof</span>
+          </article>
+
+          <article class="gem-instrument" data-gem-instrument="runtime-strength-gem" data-gem-stream="runtime" data-gem-state="held" data-state="held" data-dexterion-source-tool="dexterion.runtime.strength.readiness">
+            <span class="gem-orb" aria-hidden="true"></span>
+            <b>Runtime Strength Gem</b>
+            <strong>HELD</strong>
+            <span>future engine carrier held</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="cockpit-panel" aria-label="Dexterion gauge arc board">
+        <div class="panel-head">
+          <p class="section-title">Gauge Arc Board</p>
+          <h2>Dexterion’s Lab supplies the instruments.</h2>
+          <p>The cockpit mounts and reads the gauges. Dexterion’s Lab remains the measurement authority.</p>
+        </div>
+
+        <div class="proof-grid">
           <article class="proof-card"><b>Datum Gauge</b><span data-gauge-datum>pending</span></article>
           <article class="proof-card"><b>Disposition Gauge</b><span data-gauge-disposition>pending</span></article>
           <article class="proof-card"><b>Terrain Gauge</b><span data-gauge-terrain>pending</span></article>
@@ -559,44 +912,76 @@
           <article class="proof-card"><b>Multi-Stream Gauge</b><span data-gauge-multistream>pending</span></article>
         </div>
 
-        <div class="grid-4" data-cockpit-gauge-grid aria-label="Generated Dexter gauge mount records">
-          <article class="gauge-card"><b>Gauge Mounts</b><strong>pending cockpit JS</strong><span>Dexter-labeled readouts mount here.</span></article>
+        <div class="gauge-grid" data-gauge-board aria-label="Generated Dexterion gauge records">
+          <article class="gauge-dial" data-gauge-id="datum-integrity" data-gauge-state="pass" data-state="pass">
+            <span class="gauge-face" aria-hidden="true"><span class="gauge-arc"></span><span class="gauge-needle"></span></span>
+            <b>Datum Integrity Gauge</b>
+            <strong>pending cockpit JS</strong>
+            <span>Dexterion datum-integrity gauge</span>
+          </article>
         </div>
       </section>
 
-      <section class="panel" aria-label="Stream deck">
-        <p class="section-title">Stream deck</p>
+      <section class="cockpit-panel" aria-label="Stream deck">
+        <div class="panel-head">
+          <p class="section-title">Stream Deck</p>
+          <h2>Disposition and terrain are staged. Future streams remain held.</h2>
+          <p>Moisture, surface, cloud, continent, and multi-stream render do not activate in this pass.</p>
+        </div>
 
-        <div class="grid-4" data-cockpit-streams>
-          <article class="stream-card"><b>Datum Stream</b><span>/assets/audralia/clean/runtime/audralia.true-globe.datum.js</span><em>active parent math</em><strong>pending</strong></article>
-          <article class="stream-card"><b>Disposition Stream</b><span>/assets/audralia/clean/runtime/audralia.true-globe.disposition.js</span><em>passive child receive proof</em><strong>pending</strong></article>
-          <article class="stream-card"><b>Terrain Stream</b><span>/assets/audralia/clean/runtime/audralia.true-globe.terrain.js</span><em>passive terrain receive proof</em><strong>pending</strong></article>
+        <div class="stream-grid" data-cockpit-streams>
+          <article class="stream-card"><b>Datum Stream</b><span>/assets/audralia/clean/runtime/audralia.true-globe.datum.js</span><em>origin map / cloned seed</em><strong>pending</strong></article>
+          <article class="stream-card"><b>Disposition Stream</b><span>/assets/audralia/clean/runtime/audralia.true-globe.disposition.js</span><em>navigation readiness / receive proof</em><strong>pending</strong></article>
+          <article class="stream-card"><b>Terrain Stream</b><span>/assets/audralia/clean/runtime/audralia.true-globe.terrain.js</span><em>planetary surface-readiness instrument</em><strong>pending</strong></article>
           <article class="stream-card"><b>Moisture Stream</b><span>future child</span><em>future hydration pressure</em><strong>held</strong></article>
           <article class="stream-card"><b>Surface Stream</b><span>future child</span><em>future material expression</em><strong>held</strong></article>
           <article class="stream-card"><b>Cloud Stream</b><span>future child</span><em>future atmospheric expression</em><strong>held</strong></article>
           <article class="stream-card"><b>Continent Stream</b><span>future child</span><em>future landmass expression</em><strong>held</strong></article>
           <article class="stream-card"><b>Multi-Stream Render</b><span>/assets/audralia/clean/runtime/audralia.true-globe.multi-stream.render.js</span><em>future Strength/runtime carrier</em><strong>held</strong></article>
-          <article class="stream-card"><b>Dexter Lab Gauge Mounts</b><span>Dexter's Laboratory instrument authority</span><em>cockpit readout layer</em><strong>pending</strong></article>
+          <article class="stream-card"><b>Dexterion’s Lab Instruments</b><span>Dexterion laboratory authority</span><em>cockpit gem/gauge readout layer</em><strong>pending</strong></article>
         </div>
       </section>
 
-      <section class="receipt" aria-label="Cockpit route receipt">
-        <p class="label">Route receipt</p>
-        <h2>Intergalactic Cockpit. Dexter Lab instruments mounted. Runtime / Strength held.</h2>
-        <p>
-          The cockpit mounts Dexter-labeled gauges, recognizes the passive terrain stream, preserves the launchpad, and leaves parent and child source files untouched. Dexter’s Laboratory remains the instrument authority.
-        </p>
+      <section class="cockpit-panel" aria-label="Runtime strength hold panel">
+        <div class="panel-head">
+          <p class="section-title">Engine bay · Runtime / Strength</p>
+          <h2>Strength remains held.</h2>
+          <p>The future engine carrier is staged for motion, sustained loops, drag endurance, and multi-stream render stability. It is not active yet.</p>
+        </div>
 
-        <code>AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_HTML_BINDING_TNT_v1
+        <div class="engine-row">
+          <article class="engine-card">
+            <b>Runtime / Strength</b>
+            <strong data-cockpit-runtime>held · future multi-stream carrier</strong>
+            <span>Motion, endurance, drag, and sustained render loops remain offline.</span>
+            <span class="engine-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+          </article>
+
+          <article class="engine-card">
+            <b>Multi-Stream Cockpit</b>
+            <strong data-cockpit-launchpad>held · awaiting stream proof</strong>
+            <span>Disposition + terrain may stage the launchpad. Future streams remain held.</span>
+            <span class="engine-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+          </article>
+        </div>
+
+        <div class="warning-strip">
+          Render remains held. No canvas. No generated image. No GraphicBox. No visual pass claim.
+        </div>
+      </section>
+
+      <template id="route-receipt" data-route-receipt>
+AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTERIONS_LAB_GEM_GAUGE_COCKPIT_HTML_BINDING_TNT_v1
 route=/showroom/globe/audralia/disposition/
 html=/showroom/globe/audralia/disposition/index.html
-bound_js_contract=AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_ROUTE_JS_TNT_v1
-previous_html_contract=AUDRALIA_G1_INTERGALACTIC_COCKPIT_TERRAIN_STREAM_RECOGNITION_HTML_BINDING_TNT_v1
-previous_js_contract=AUDRALIA_G1_INTERGALACTIC_COCKPIT_TERRAIN_STREAM_RECOGNITION_ROUTE_JS_TNT_v1
+bound_js_contract=AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTERIONS_LAB_GEM_GAUGE_COCKPIT_ROUTE_JS_TNT_v1
+previous_html_contract=AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_HTML_BINDING_TNT_v1
+previous_js_contract=AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_ROUTE_JS_TNT_v1
+cockpit_frame=Intergalactic_Cockpit
+instrument_authority=Dexterions_Lab
+technical_function=Disposition_Harness_Multi_Stream_Launchpad
 parent_baseline=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMPTION_BASELINE_v1
 harness_baseline=AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_MULTI_STREAM_LAUNCHPAD_BASELINE_v1
-cockpit_frame=intergalactic_cockpit
-instrument_authority=dexters_laboratory
 datum_file=/assets/audralia/clean/runtime/audralia.true-globe.datum.js
 disposition_file=/assets/audralia/clean/runtime/audralia.true-globe.disposition.js
 terrain_file=/assets/audralia/clean/runtime/audralia.true-globe.terrain.js
@@ -605,8 +990,11 @@ html_function=wisdom
 js_function=courage
 runtime_function=strength
 runtime_strength_held=true
-dexter_gauge_mounts=true
-terrain_stream_recognition=true
+gem_instrument_console_present=true
+gauge_arc_board_present=true
+stream_deck_present=true
+cockpit_look_renewed=true
+dexterions_lab_public_name_active=true
 parent_datum_held=true
 parent_html_held=true
 parent_route_js_held=true
@@ -614,32 +1002,36 @@ disposition_child_held=true
 terrain_child_held=true
 renders_nothing=true
 no_canvas_creation=true
+generated_image=false
+graphic_box=false
 downstream_held=true
-no_visual_pass_claim=true</code>
-      </section>
+no_visual_pass_claim=true
+deploy_marker=AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTERIONS_LAB_GEM_GAUGE_COCKPIT_DEPLOY_MARKER_v1
+      </template>
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Audralia · Intergalactic Cockpit · Dexter Lab Gauge Mounts · Wisdom / Courage / Strength · downstream held.
+      Diamond Gate Bridge · Audralia · Intergalactic Cockpit · Dexterion’s Lab · Gem Instruments · Gauge Board · Runtime / Strength held.
     </footer>
   </div>
 
   <script
-    src="/showroom/globe/audralia/disposition/index.js?v=AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_ROUTE_JS_TNT_v1"
+    src="/showroom/globe/audralia/disposition/index.js?v=AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTERIONS_LAB_GEM_GAUGE_COCKPIT_ROUTE_JS_TNT_v1"
     defer
     data-audralia-cockpit-js
-    data-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_ROUTE_JS_TNT_v1"
-    data-html-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_HTML_BINDING_TNT_v1"
-    data-previous-js-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_TERRAIN_STREAM_RECOGNITION_ROUTE_JS_TNT_v1"
+    data-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTERIONS_LAB_GEM_GAUGE_COCKPIT_ROUTE_JS_TNT_v1"
+    data-html-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTERIONS_LAB_GEM_GAUGE_COCKPIT_HTML_BINDING_TNT_v1"
+    data-previous-js-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_ROUTE_JS_TNT_v1"
     data-parent-baseline="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMPTION_BASELINE_v1"
     data-harness-baseline="AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_MULTI_STREAM_LAUNCHPAD_BASELINE_v1"
     data-cockpit-frame="intergalactic-cockpit"
-    data-instrument-authority="dexters-laboratory"
+    data-instrument-authority="dexterions-lab"
     data-html-function="wisdom"
     data-js-function="courage"
     data-runtime-function="strength"
     data-runtime-strength-held="true"
-    data-downstream-held="true"
+    data-no-canvas-creation="true"
+    data-no-visual-pass-claim="true"
   ></script>
 </body>
 </html>

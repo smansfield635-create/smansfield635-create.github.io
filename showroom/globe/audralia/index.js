@@ -1,20 +1,33 @@
 // /showroom/globe/audralia/index.js
 // TNT FULL-FILE REPLACEMENT
+// AUDRALIA_G1_DATUM_CHILD_RECOGNITION_ROUTE_JS_TNT_v1
+//
+// Previous protected route baseline:
 // AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1
 //
+// Paired HTML diagnostic surface:
+// AUDRALIA_G1_DATUM_CHILD_RECOGNITION_HTML_DIAGNOSTIC_TNT_v1
+//
 // Purpose:
-// - Restore Audralia's Generation One observable spherical globe baseline.
-// - Keep the globe as the observable organic carrier.
-// - Keep the diamond lattice as scientific discovery / diagnostic rule layer.
-// - Preserve NEWS protocol: North, East, West, South.
-// - Deliver a 360-degree diagnostic scope without downstream child math.
-// - No runtime rewrite. No child files. No continents. No clouds. No surface maturity claim. No visual-pass claim.
+// - Preserve the locked G1 360 Diagnostic Scope baseline.
+// - Preserve smooth drag, one canvas, one pointer path, and dirty RAF piston rendering.
+// - Recognize the datum child receive-map if available.
+// - Load the existing datum child if missing.
+// - Populate the served HTML datum-recognition diagnostic slots.
+// - Do not use datum seats to replace the visual lattice yet.
+// - Do not activate terrain, moisture, surface, clouds, continents, or downstream visual work.
+// - No generated image. No GraphicBox. No visual-pass claim.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1";
-  var PREVIOUS_CONTRACT = "AUDRALIA_HTML_JS_PAIR_NEWS_DIAMOND_LATTICE_RUNTIME_ALIGNMENT_TNT_v1";
+  var CONTRACT = "AUDRALIA_G1_DATUM_CHILD_RECOGNITION_ROUTE_JS_TNT_v1";
+  var PREVIOUS_CONTRACT = "AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1";
+  var HTML_DIAGNOSTIC_CONTRACT = "AUDRALIA_G1_DATUM_CHILD_RECOGNITION_HTML_DIAGNOSTIC_TNT_v1";
+
+  var DATUM_CHILD_CONTRACT = "AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1";
+  var DATUM_CHILD_PATH = "/assets/audralia/clean/runtime/audralia.true-globe.datum.js";
+  var DATUM_CHILD_CACHE_KEY = "AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1";
 
   var RADIAL_NODES = 16;
   var FIBONACCI_BANDS = 16;
@@ -42,8 +55,8 @@
     },
     diagnostic: {
       title: "Diagnostic Scope",
-      label: "<strong>Diagnostic Scope</strong> → G1 carrier, NEWS, 256 seats, downstream held",
-      copy: "Diagnostic Scope reports the baseline proof: spherical carrier, 360 lattice, NEWS completion duties, child math held, and downstream blocked."
+      label: "<strong>Diagnostic Scope</strong> → G1 carrier, NEWS, datum-recognition receipt, downstream held",
+      copy: "Diagnostic Scope reports the baseline proof and now checks whether the datum child receive-map is recognized without activating downstream children."
     }
   });
 
@@ -93,7 +106,38 @@
     lastDiagnosticAt: 0,
     duplicateCanvasRemoved: 0,
     errorCount: 0,
-    lastError: ""
+    lastError: "",
+
+    datumRecognition: {
+      attempted: false,
+      loading: false,
+      loaded: false,
+      recognized: false,
+      failed: false,
+      failureReason: "pending-js",
+      datumContract: null,
+      datumStatusReady: false,
+      datumApiReady: false,
+      receiveMapReady: false,
+      seatCount: null,
+      seatCountValid: false,
+      newsComplete: false,
+      childPacketAvailable: false,
+      childPacketSeatCount: null,
+      childPacketSeatCountValid: false,
+      downstreamHeld: true,
+      terrainReady: false,
+      moistureReady: false,
+      surfaceReady: false,
+      cloudReady: false,
+      continentReady: false,
+      visualPassClaimed: false,
+      lastCheckedAt: null,
+      loadAttempted: false,
+      loadSucceeded: false,
+      loadFailed: false,
+      errors: []
+    }
   };
 
   if (
@@ -150,12 +194,35 @@
     state.errorCount += 1;
     state.lastError = scope + ": " + (error && error.message ? error.message : String(error || "unknown"));
 
-    window.AUDRALIA_G1_360_DIAGNOSTIC_ERROR = {
+    window.AUDRALIA_G1_DATUM_RECOGNITION_ROUTE_JS_ERROR = {
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      htmlDiagnosticContract: HTML_DIAGNOSTIC_CONTRACT,
       scope: scope,
       message: state.lastError,
       errorCount: state.errorCount,
       time: new Date().toISOString()
+    };
+  }
+
+  function recordDatumError(scope, error) {
+    var message = scope + ": " + (error && error.message ? error.message : String(error || "unknown"));
+
+    state.datumRecognition.errors.push({
+      scope: scope,
+      message: message,
+      time: new Date().toISOString()
+    });
+
+    state.datumRecognition.failed = true;
+    state.datumRecognition.failureReason = message;
+
+    window.AUDRALIA_G1_DATUM_CHILD_RECOGNITION_ERROR = {
+      contract: CONTRACT,
+      datumChildContract: DATUM_CHILD_CONTRACT,
+      scope: scope,
+      message: message,
+      errors: state.datumRecognition.errors.slice()
     };
   }
 
@@ -235,8 +302,8 @@
       rings.push(Object.freeze(ring));
     }
 
-    function seat(band, radial) {
-      return rings[band][((radial % RADIAL_NODES) + RADIAL_NODES) % RADIAL_NODES];
+    function seat(bandIndex, radialIndex) {
+      return rings[bandIndex][((radialIndex % RADIAL_NODES) + RADIAL_NODES) % RADIAL_NODES];
     }
 
     var ringLinks = [];
@@ -615,7 +682,7 @@
 
     if (state.settleFrames > 0) state.settleFrames -= 1;
 
-    window.AUDRALIA_G1_360_DIAGNOSTIC_STATE = compactStatus();
+    window.AUDRALIA_G1_DATUM_CHILD_RECOGNITION_ROUTE_JS_STATE = compactStatus();
 
     if (
       state.pointerActive ||
@@ -650,6 +717,7 @@
     setHtml("[data-audralia-stage-label]", LENS_COPY[lens].label);
 
     updateDiagnostics(true);
+    writeDatumRecognitionDiagnostics();
     requestRender("lens-switch", lens === "planet" ? 4 : 10);
   }
 
@@ -729,6 +797,7 @@
       state.pointerId = null;
 
       updateDiagnostics(true);
+      writeDatumRecognitionDiagnostics();
       requestRender("pointer-release", 16);
       event.preventDefault();
     }
@@ -757,7 +826,8 @@
 
     if (!selected) {
       selected = canvases.find(function (canvas) {
-        return canvas.getAttribute("data-audralia-g1-diagnostic-canvas") === CONTRACT;
+        return canvas.getAttribute("data-audralia-g1-diagnostic-canvas") === CONTRACT ||
+          canvas.getAttribute("data-audralia-g1-diagnostic-canvas") === PREVIOUS_CONTRACT;
       }) || canvases[0] || document.createElement("canvas");
     }
 
@@ -780,9 +850,12 @@
 
     state.canvas = selected;
     state.canvas.setAttribute("data-audralia-g1-diagnostic-canvas", CONTRACT);
+    state.canvas.setAttribute("data-previous-contract", PREVIOUS_CONTRACT);
+    state.canvas.setAttribute("data-html-diagnostic-contract", HTML_DIAGNOSTIC_CONTRACT);
     state.canvas.setAttribute("data-globe-role", "observable-organic-carrier");
     state.canvas.setAttribute("data-diamond-lattice-role", "scientific-discovery-rule-layer");
     state.canvas.setAttribute("data-news-protocol-active", "true");
+    state.canvas.setAttribute("data-datum-recognition-route-js", "active");
 
     state.canvas.style.position = "absolute";
     state.canvas.style.inset = "0";
@@ -863,13 +936,376 @@
     }, signal ? { signal: signal, passive: true } : { passive: true });
   }
 
+  function findDatumApi() {
+    return window.AUDRALIA_TRUE_GLOBE_DATUM ||
+      window.AUDRALIA_G1_TRUE_GLOBE_DATUM ||
+      window.AUDRALIA_TRUE_PLANETARY_DATUM ||
+      window.AUDRALIA_G1_TRUE_PLANETARY_DATUM ||
+      null;
+  }
+
+  function findDatumStatus(api) {
+    if (api && typeof api.status === "function") {
+      try {
+        return api.status();
+      } catch (error) {
+        recordDatumError("datum.status", error);
+      }
+    }
+
+    return window.AUDRALIA_TRUE_GLOBE_DATUM_STATUS ||
+      window.AUDRALIA_G1_TRUE_GLOBE_DATUM_STATUS ||
+      null;
+  }
+
+  function contractRecognized(contract) {
+    return contract === DATUM_CHILD_CONTRACT ||
+      contract === "AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1" ||
+      contract === "AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1";
+  }
+
+  function findDatumReceiveMap(api) {
+    if (api && typeof api.receive === "function") {
+      try {
+        return api.receive({ reference: true });
+      } catch (error) {
+        recordDatumError("datum.receive", error);
+      }
+    }
+
+    if (api && typeof api.getReceiveMap === "function") {
+      try {
+        return api.getReceiveMap({ reference: true });
+      } catch (error2) {
+        recordDatumError("datum.getReceiveMap", error2);
+      }
+    }
+
+    return window.AUDRALIA_TRUE_GLOBE_DATUM_RECEIVE_MAP ||
+      window.AUDRALIA_G1_TRUE_GLOBE_DATUM_RECEIVE_MAP ||
+      null;
+  }
+
+  function findDatumChildPacket(api) {
+    if (!api || typeof api.getChildReceivePacket !== "function") return null;
+
+    try {
+      return api.getChildReceivePacket("route-diagnostic", { compact: true });
+    } catch (error) {
+      recordDatumError("datum.getChildReceivePacket", error);
+      return null;
+    }
+  }
+
+  function evaluateDatumRecognition() {
+    var recognition = state.datumRecognition;
+
+    recognition.attempted = true;
+    recognition.lastCheckedAt = new Date().toISOString();
+    recognition.failed = false;
+    recognition.recognized = false;
+    recognition.failureReason = "pending";
+    recognition.datumApiReady = false;
+    recognition.datumStatusReady = false;
+    recognition.receiveMapReady = false;
+    recognition.seatCount = null;
+    recognition.seatCountValid = false;
+    recognition.newsComplete = false;
+    recognition.childPacketAvailable = false;
+    recognition.childPacketSeatCount = null;
+    recognition.childPacketSeatCountValid = false;
+    recognition.terrainReady = false;
+    recognition.moistureReady = false;
+    recognition.surfaceReady = false;
+    recognition.cloudReady = false;
+    recognition.continentReady = false;
+    recognition.visualPassClaimed = false;
+
+    var api = findDatumApi();
+
+    if (!api) {
+      recognition.failureReason = recognition.loading ? "loading datum child" : "datum global missing";
+      window.AUDRALIA_G1_DATUM_CHILD_RECOGNITION_STATUS = recognitionStatusPayload();
+      writeDatumRecognitionDiagnostics();
+      return recognition;
+    }
+
+    recognition.datumApiReady = true;
+
+    var status = findDatumStatus(api);
+    recognition.datumStatusReady = Boolean(status);
+    recognition.datumContract = (status && status.contract) || api.contract || null;
+
+    if (!contractRecognized(recognition.datumContract)) {
+      recognition.failed = true;
+      recognition.failureReason = "contract mismatch";
+      window.AUDRALIA_G1_DATUM_CHILD_RECOGNITION_STATUS = recognitionStatusPayload();
+      writeDatumRecognitionDiagnostics();
+      return recognition;
+    }
+
+    var map = findDatumReceiveMap(api);
+
+    if (!map) {
+      recognition.failed = true;
+      recognition.failureReason = "receive map unavailable";
+      window.AUDRALIA_G1_DATUM_CHILD_RECOGNITION_STATUS = recognitionStatusPayload();
+      writeDatumRecognitionDiagnostics();
+      return recognition;
+    }
+
+    var seats = Array.isArray(map.seats) ? map.seats : [];
+    var seatCount = seats.length;
+    var seatCountValid = seatCount === LATTICE_STATES &&
+      finite(map.radialNodes, RADIAL_NODES) === RADIAL_NODES &&
+      finite(map.fibonacciBands, FIBONACCI_BANDS) === FIBONACCI_BANDS &&
+      finite(map.latticeStates, LATTICE_STATES) === LATTICE_STATES;
+
+    var allSeatsNewsComplete = seats.length === LATTICE_STATES
+      ? seats.every(function (seat) {
+        return Boolean(
+          seat &&
+          seat.newsComplete === true &&
+          seat.childReceiveEligible === true &&
+          seat.renderEligible === true &&
+          seat.north &&
+          seat.north.defined === true &&
+          seat.east &&
+          seat.east.defined === true &&
+          seat.west &&
+          seat.west.defined === true &&
+          seat.south &&
+          seat.south.defined === true
+        );
+      })
+      : false;
+
+    var newsComplete = map.newsProtocolActive === true &&
+      map.newsComplete === true &&
+      allSeatsNewsComplete === true;
+
+    var packet = findDatumChildPacket(api);
+    var packetSeatCount = packet && Number.isFinite(Number(packet.seatCount)) ? Number(packet.seatCount) : null;
+    var packetAvailable = Boolean(packet && packet.childReceivePacketReady === true);
+    var packetSeatCountValid = packetSeatCount === LATTICE_STATES;
+
+    recognition.receiveMapReady = map.childReceiveMapReady === true || status && status.childReceiveMapReady === true;
+    recognition.seatCount = seatCount;
+    recognition.seatCountValid = seatCountValid;
+    recognition.newsComplete = newsComplete;
+    recognition.childPacketAvailable = packetAvailable;
+    recognition.childPacketSeatCount = packetSeatCount;
+    recognition.childPacketSeatCountValid = packetSeatCountValid;
+    recognition.downstreamHeld = true;
+    recognition.terrainReady = map.terrainReady === true || packet && packet.terrainReady === true;
+    recognition.moistureReady = map.moistureReady === true || packet && packet.moistureReady === true;
+    recognition.surfaceReady = map.surfaceReady === true || packet && packet.surfaceReady === true;
+    recognition.cloudReady = map.cloudReady === true || packet && packet.cloudReady === true;
+    recognition.continentReady = map.continentReady === true || packet && packet.continentReady === true;
+    recognition.visualPassClaimed = map.visualPassClaimed === true || packet && packet.visualPassClaimed === true;
+
+    if (!recognition.receiveMapReady) {
+      recognition.failed = true;
+      recognition.failureReason = "receive map not ready";
+    } else if (!seatCountValid) {
+      recognition.failed = true;
+      recognition.failureReason = "seat-count mismatch";
+    } else if (!newsComplete) {
+      recognition.failed = true;
+      recognition.failureReason = "NEWS incomplete";
+    } else if (!packetAvailable || !packetSeatCountValid) {
+      recognition.failed = true;
+      recognition.failureReason = "child packet unavailable";
+    } else if (
+      recognition.terrainReady ||
+      recognition.moistureReady ||
+      recognition.surfaceReady ||
+      recognition.cloudReady ||
+      recognition.continentReady ||
+      recognition.visualPassClaimed
+    ) {
+      recognition.failed = true;
+      recognition.failureReason = "downstream false-ready claim";
+    } else {
+      recognition.recognized = true;
+      recognition.failed = false;
+      recognition.failureReason = "";
+    }
+
+    window.AUDRALIA_G1_DATUM_CHILD_RECOGNITION_STATUS = recognitionStatusPayload();
+    writeDatumRecognitionDiagnostics();
+
+    return recognition;
+  }
+
+  function recognitionStatusPayload() {
+    return {
+      contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      htmlDiagnosticContract: HTML_DIAGNOSTIC_CONTRACT,
+      parentBaseline: PREVIOUS_CONTRACT,
+      datumChildPath: DATUM_CHILD_PATH,
+      datumChildContract: DATUM_CHILD_CONTRACT,
+      datumRecognitionAttempted: state.datumRecognition.attempted,
+      datumRecognized: state.datumRecognition.recognized,
+      datumLoaded: state.datumRecognition.loaded,
+      datumLoading: state.datumRecognition.loading,
+      datumLoadAttempted: state.datumRecognition.loadAttempted,
+      datumLoadSucceeded: state.datumRecognition.loadSucceeded,
+      datumLoadFailed: state.datumRecognition.loadFailed,
+      datumContract: state.datumRecognition.datumContract,
+      datumStatusReady: state.datumRecognition.datumStatusReady,
+      datumApiReady: state.datumRecognition.datumApiReady,
+      receiveMapReady: state.datumRecognition.receiveMapReady,
+      seatCount: state.datumRecognition.seatCount,
+      seatCountValid: state.datumRecognition.seatCountValid,
+      newsComplete: state.datumRecognition.newsComplete,
+      childPacketAvailable: state.datumRecognition.childPacketAvailable,
+      childPacketSeatCount: state.datumRecognition.childPacketSeatCount,
+      childPacketSeatCountValid: state.datumRecognition.childPacketSeatCountValid,
+      downstreamHeld: true,
+      terrainReady: false,
+      moistureReady: false,
+      surfaceReady: false,
+      cloudReady: false,
+      continentReady: false,
+      visualPassClaimed: false,
+      failureReason: state.datumRecognition.failureReason,
+      errors: state.datumRecognition.errors.slice(),
+      checkedAt: state.datumRecognition.lastCheckedAt
+    };
+  }
+
+  function writeDatumRecognitionDiagnostics() {
+    var r = state.datumRecognition;
+
+    if (!r.attempted) {
+      setText("[data-audralia-diagnostic-datum-child]", "pending JS recognition");
+      setText("[data-audralia-diagnostic-receive-map]", "pending JS recognition");
+      setText("[data-audralia-diagnostic-news-map]", "pending JS recognition");
+      setText("[data-audralia-diagnostic-child-packet]", "pending JS recognition");
+      setText("[data-audralia-diagnostic-seat-count]", "pending JS recognition");
+      setText("[data-audralia-diagnostic-downstream]", "held · HTML does not activate children");
+      return;
+    }
+
+    if (r.loading) {
+      setText("[data-audralia-diagnostic-datum-child]", "pending · loading datum child");
+      setText("[data-audralia-diagnostic-receive-map]", "pending");
+      setText("[data-audralia-diagnostic-news-map]", "pending");
+      setText("[data-audralia-diagnostic-child-packet]", "pending");
+      setText("[data-audralia-diagnostic-seat-count]", "pending");
+      setText("[data-audralia-diagnostic-downstream]", "held · no child activation");
+      return;
+    }
+
+    if (r.recognized) {
+      setText("[data-audralia-diagnostic-datum-child]", "recognized · G1 receive-map authority");
+      setText("[data-audralia-diagnostic-receive-map]", "recognized · 256 seats");
+      setText("[data-audralia-diagnostic-news-map]", "complete · N/E/W/S");
+      setText("[data-audralia-diagnostic-child-packet]", "available · route-diagnostic");
+      setText("[data-audralia-diagnostic-seat-count]", "256 / 16 × 16");
+      setText("[data-audralia-diagnostic-downstream]", "held · no child activation");
+    } else {
+      setText("[data-audralia-diagnostic-datum-child]", "failed · " + (r.failureReason || "datum unavailable"));
+      setText("[data-audralia-diagnostic-receive-map]", r.receiveMapReady ? "recognized · checking constraints" : "failed · receive map unavailable");
+      setText("[data-audralia-diagnostic-news-map]", r.newsComplete ? "complete · N/E/W/S" : "failed · NEWS incomplete");
+      setText("[data-audralia-diagnostic-child-packet]", r.childPacketAvailable ? "available · checking seat count" : "failed · child packet unavailable");
+      setText("[data-audralia-diagnostic-seat-count]", r.seatCountValid ? "256 / 16 × 16" : "failed · expected 256");
+      setText("[data-audralia-diagnostic-downstream]", "held · no activation");
+    }
+
+    setDataset("audraliaDatumRecognitionAttempted", r.attempted);
+    setDataset("audraliaDatumRecognized", r.recognized);
+    setDataset("audraliaDatumLoaded", r.loaded);
+    setDataset("audraliaDatumReceiveMapReady", r.receiveMapReady);
+    setDataset("audraliaDatumSeatCountValid", r.seatCountValid);
+    setDataset("audraliaDatumNewsComplete", r.newsComplete);
+    setDataset("audraliaDatumChildPacketAvailable", r.childPacketAvailable);
+    setDataset("audraliaDatumDownstreamHeld", true);
+  }
+
+  function loadDatumChildIfMissing() {
+    return new Promise(function (resolve) {
+      if (findDatumApi()) {
+        state.datumRecognition.loaded = true;
+        state.datumRecognition.loadSucceeded = true;
+        resolve(findDatumApi());
+        return;
+      }
+
+      var existing = document.querySelector("script[data-audralia-datum-child-loader='" + CONTRACT + "']") ||
+        document.querySelector("script[src*='audralia.true-globe.datum.js']");
+
+      state.datumRecognition.loadAttempted = true;
+      state.datumRecognition.loading = true;
+      writeDatumRecognitionDiagnostics();
+
+      if (existing) {
+        setTimeout(function () {
+          state.datumRecognition.loading = false;
+          state.datumRecognition.loaded = Boolean(findDatumApi());
+          state.datumRecognition.loadSucceeded = Boolean(findDatumApi());
+          state.datumRecognition.loadFailed = !findDatumApi();
+          resolve(findDatumApi());
+        }, 120);
+        return;
+      }
+
+      var script = document.createElement("script");
+      script.src = DATUM_CHILD_PATH + "?v=" + encodeURIComponent(DATUM_CHILD_CACHE_KEY);
+      script.defer = true;
+      script.async = true;
+      script.setAttribute("data-audralia-datum-child-loader", CONTRACT);
+      script.setAttribute("data-datum-child-contract", DATUM_CHILD_CONTRACT);
+      script.setAttribute("data-purpose", "recognition-only");
+      script.setAttribute("data-downstream-activation", "false");
+
+      script.onload = function () {
+        state.datumRecognition.loading = false;
+        state.datumRecognition.loaded = Boolean(findDatumApi());
+        state.datumRecognition.loadSucceeded = Boolean(findDatumApi());
+        state.datumRecognition.loadFailed = !findDatumApi();
+
+        if (!findDatumApi()) {
+          recordDatumError("datum.load", "script loaded but datum global missing");
+        }
+
+        resolve(findDatumApi());
+      };
+
+      script.onerror = function () {
+        state.datumRecognition.loading = false;
+        state.datumRecognition.loaded = false;
+        state.datumRecognition.loadSucceeded = false;
+        state.datumRecognition.loadFailed = true;
+        recordDatumError("datum.load", "script load failed");
+        resolve(null);
+      };
+
+      document.body.appendChild(script);
+    });
+  }
+
+  function runDatumRecognitionCycle() {
+    evaluateDatumRecognition();
+
+    if (!state.datumRecognition.recognized && !findDatumApi()) {
+      loadDatumChildIfMissing().then(function () {
+        evaluateDatumRecognition();
+        updateDiagnostics(true);
+      });
+    }
+  }
+
   function compactStatus() {
     return {
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
+      htmlDiagnosticContract: HTML_DIAGNOSTIC_CONTRACT,
       activeLens: state.activeLens,
-      htmlOwns: "public-visual-expression",
-      jsOwns: "under-hood-mathematics-and-construct-delivery",
+      htmlOwns: "public-visual-expression-diagnostic-surface",
+      jsOwns: "under-hood-mathematics-and-construct-delivery-plus-datum-recognition",
       globeRole: "observable-organic-carrier",
       diamondLatticeRole: "scientific-discovery-rule-layer",
       diamondLatticeIsPlanetBody: false,
@@ -888,8 +1324,9 @@
       oneLoop: state.oneLoop,
       pointerBound: state.pointerBound,
       pointerActive: state.pointerActive,
+      datumRecognition: recognitionStatusPayload(),
       downstreamHeld: true,
-      noChildMath: true,
+      noChildMathActivated: true,
       noVisualPassClaim: true,
       renderCount: state.renderCount,
       errorCount: state.errorCount
@@ -906,16 +1343,20 @@
 
     var status = compactStatus();
 
-    setText("[data-audralia-diagnostic-route]", "HTML public expression · JS construct delivery");
+    setText("[data-audralia-diagnostic-route]", "HTML public expression · JS construct delivery + datum recognition");
     setText("[data-audralia-diagnostic-carrier]", "spherical carrier active · lattice is discovery layer");
     setText("[data-audralia-diagnostic-lens]", status.activeLens);
     setText("[data-audralia-diagnostic-canvas]", status.oneCanvas ? "one canvas" : "canvas pending");
     setText("[data-audralia-diagnostic-loop]", status.oneLoop ? "dirty RAF · piston controlled" : "loop pending");
-    setText("[data-audralia-diagnostic-children]", "downstream held · no child math");
+    setText("[data-audralia-diagnostic-children]", "downstream held · no child activation");
     setText("[data-audralia-diagnostic-news]", "NEWS active · N/E/W/S complete");
     setText("[data-audralia-diagnostic-scope]", "360 scope · 16 × 16 / 256 seats");
 
+    writeDatumRecognitionDiagnostics();
+
     setDataset("audraliaG1DiagnosticContract", CONTRACT);
+    setDataset("audraliaPreviousRouteJsContract", PREVIOUS_CONTRACT);
+    setDataset("audraliaHtmlDiagnosticContract", HTML_DIAGNOSTIC_CONTRACT);
     setDataset("audraliaGlobeRole", "observable-organic-carrier");
     setDataset("audraliaDiamondLatticeRole", "scientific-discovery-rule-layer");
     setDataset("audraliaDiamondLatticeIsPlanetBody", false);
@@ -923,18 +1364,21 @@
     setDataset("audraliaDiagnosticScope360Degrees", true);
     setDataset("audraliaDownstreamHeld", true);
 
-    window.AUDRALIA_G1_360_DIAGNOSTIC_STATUS = status;
+    window.AUDRALIA_G1_DATUM_CHILD_RECOGNITION_ROUTE_JS_STATUS = status;
   }
 
   function publishBoot() {
-    window.AUDRALIA_G1_360_DIAGNOSTIC_BOOT = {
+    window.AUDRALIA_G1_DATUM_CHILD_RECOGNITION_ROUTE_JS_BOOT = {
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
+      htmlDiagnosticContract: HTML_DIAGNOSTIC_CONTRACT,
       route: "/showroom/globe/audralia/",
       html: "/showroom/globe/audralia/index.html",
       js: "/showroom/globe/audralia/index.js",
-      htmlOwns: "public-visual-expression",
-      jsOwns: "under-hood-mathematics-and-construct-delivery",
+      datumChildPath: DATUM_CHILD_PATH,
+      datumChildContract: DATUM_CHILD_CONTRACT,
+      htmlOwns: "public-visual-expression-diagnostic-surface",
+      jsOwns: "under-hood-mathematics-and-construct-delivery-plus-datum-recognition",
       globeRole: "observable-organic-carrier",
       diamondLatticeRole: "scientific-discovery-rule-layer",
       diamondLatticeIsPlanetBody: false,
@@ -947,8 +1391,9 @@
       radialNodes: RADIAL_NODES,
       fibonacciBands: FIBONACCI_BANDS,
       latticeStates: LATTICE_STATES,
+      datumRecognitionRequired: true,
       downstreamHeld: true,
-      noChildMath: true,
+      noChildMathActivated: true,
       noRuntimeRewrite: true,
       noVisualPassClaim: true,
       bootedAt: new Date().toISOString()
@@ -982,7 +1427,12 @@
   window.__AUDRALIA_G1_360_DIAGNOSTIC_CONTROLLER__ = {
     stop: stop,
     state: state,
-    contract: CONTRACT
+    contract: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
+    htmlDiagnosticContract: HTML_DIAGNOSTIC_CONTRACT,
+    datumRecognition: function () {
+      return recognitionStatusPayload();
+    }
   };
 
   function init() {
@@ -1004,6 +1454,7 @@
     publishBoot();
     updateDiagnostics(true);
     requestRender("boot", 8);
+    runDatumRecognitionCycle();
   }
 
   if (document.readyState === "loading") {

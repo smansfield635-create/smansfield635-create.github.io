@@ -1,20 +1,22 @@
 // /assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
-// AUDRALIA_G2_PLANET_SIXTH_SENSE_COLLABORATIVE_EXPRESSION_CARRIER_TNT_v1
+// AUDRALIA_G2_PLANET_MULTI_SCOPE_CHRONOLOGICAL_COMPOSITOR_CARRIER_TNT_v1
 // Full-file replacement.
-// Scope: Audralia clean planet carrier expression state machine.
-// Purpose: add The Sixth Sense as the sixth lens, consume Gratitude terrain and hydration-edge child packets,
-// and render collaborative terrain + hydration + edge expression without inventing terrain, hydration, or edge truth.
-// Does not own: HTML, script tags, Gratitude terrain truth, hydration truth, hydration-edge truth, planet core,
-// climate, atmosphere, ecology, settlement, Runtime / Strength activation, final terrain pass,
+// Scope: Audralia clean planet carrier runtime.
+// Purpose: renew the carrier from a single 256 collaboration-plane renderer into a multi-scope chronological compositor.
+// Owns: canvas mount, lens controls, drag inspection, scope reading, chronological compositing, visible receipt/status.
+// Does not own: HTML, script tags, Gratitude terrain child, hydration child, hydration-edge child, temperature child,
+// atmosphere child, climate child, ecology activation, settlement activation, urban activation, final terrain pass,
 // final hydration pass, or final visual pass.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_G2_PLANET_SIXTH_SENSE_COLLABORATIVE_EXPRESSION_CARRIER_TNT_v1";
-  var PREVIOUS_CONTRACT = "AUDRALIA_PLANET_CARRIER_LAND_WATER_CONSTRUCT_VISIBILITY_ADAPTER_TNT_v1";
-  var HTML_COLLABORATIVE_CONTRACT = "AUDRALIA_G2_PLANET_SIXTH_SENSE_COLLABORATIVE_EXPRESSION_HTML_JS_TNT_v1";
-  var SPEC_OPS = "AUDRALIA_G2_PLANET_SIXTH_SENSE_COLLABORATIVE_EXPRESSION_SPEC_OPS_v1";
+  var CONTRACT = "AUDRALIA_G2_PLANET_MULTI_SCOPE_CHRONOLOGICAL_COMPOSITOR_CARRIER_TNT_v1";
+  var PREVIOUS_CONTRACT = "AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_JS_ONLY_TNT_v1";
+  var HTML_COLLABORATIVE_CONTRACT = "AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_CACHE_KEY_HTML_ONLY_TNT_v1";
+  var SPEC_OPS = "AUDRALIA_G2_PLANET_MULTI_SCOPE_CHRONOLOGICAL_COMPOSITOR_CARRIER_SPEC_OPS_v1";
+  var NEWS = "AUDRALIA_G2_PLANET_MULTI_SCOPE_CHRONOLOGICAL_COMPOSITOR_CARRIER_NEWS_v1";
+  var CCR = "AUDRALIA_G2_PLANET_MULTI_SCOPE_CHRONOLOGICAL_COMPOSITOR_CARRIER_CCR_v1";
 
   var ROUTE = "/showroom/globe/audralia/planet/";
   var FILE = "/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js";
@@ -28,13 +30,6 @@
   var TAU = Math.PI * 2;
   var HALF_PI = Math.PI / 2;
 
-  var SEA_LEVEL_BASELINE_ACHIEVED = true;
-  var FINAL_TERRAIN_PASS_CLAIM = false;
-  var FINAL_HYDRATION_PASS_CLAIM = false;
-  var FINAL_EDGE_PASS_CLAIM = false;
-  var FINAL_VISUAL_PASS_CLAIM = false;
-  var RUNTIME_STRENGTH_HELD = true;
-
   var FIBONACCI_SEQUENCE = Object.freeze([
     1, 1, 2, 3, 5, 8, 13, 21,
     34, 55, 89, 144, 233, 377, 610, 987
@@ -43,36 +38,50 @@
   var FIBONACCI_OFFSETS = Object.freeze([1, 2, 3, 5, 8, 13]);
 
   var LENSES = Object.freeze({
-    body: {
+    body: Object.freeze({
       title: "Body View",
       anchor: "North · Hydrosphere Body",
-      copy: "Clean body view keeps Audralia hydrosphere-first. Land and water constructs remain faint."
-    },
-    surface: {
+      copy: "Body view preserves the sea-level hydrosphere baseline. Terrain, hydration, and edge systems remain faint unless their own lens is selected."
+    }),
+    surface: Object.freeze({
       title: "Surface View",
-      anchor: "East · Land Formation Visibility",
-      copy: "Surface view separates ridges, basins, valleys, dry zones, and coast from the achieved sea-level body."
-    },
-    hydration: {
+      anchor: "East · Terrain Scope 256",
+      copy: "Surface view reads terrainScope256 only: land mass, ridges, basins, valleys, coast, elevation, and surface units."
+    }),
+    hydration: Object.freeze({
       title: "Hydration View",
-      anchor: "South · Water Construct Visibility",
-      copy: "Hydration view separates pools, rivers, streams, gullies, wetlands, marshes, and waterfall candidates."
-    },
-    "sixth-sense": {
+      anchor: "South · Hydration Scope 256",
+      copy: "Hydration view reads hydrationScope256 only: bloodstream water behavior, pools, rivers, streams, gullies, valley-fill, and basin-fill."
+    }),
+    sixth: Object.freeze({
       title: "The Sixth Sense",
-      anchor: "Sixth Sense · Collaborative Living Expression",
-      copy: "Terrain, hydration, and water-edge children render together without transferring authority to the carrier."
-    },
-    lattice: {
+      anchor: "Center · Chronological Composite",
+      copy: "The Sixth Sense composites terrainScope256, hydrationScope256, and hydrationEdgeScope256 without flattening them into one source."
+    }),
+    lattice: Object.freeze({
       title: "Lattice View",
-      anchor: "West · 16 × 16 / 256",
-      copy: "Lattice view preserves the diagnostic 256 inspection field."
-    },
-    receipt: {
+      anchor: "West · 16 × 16 / Multi-Scope Proof",
+      copy: "Lattice view preserves the 256 inspection field while reporting the independent scope structure below the render layer."
+    }),
+    receipt: Object.freeze({
       title: "Receipt View",
-      anchor: "Northwest · Sixth Sense Receipt",
-      copy: "Receipt view proves collaborative expression, child consumption, and final-pass holds."
-    }
+      anchor: "Northwest · Multi-Scope Receipt",
+      copy: "Receipt view proves terrain, hydration, hydration-edge, temperature, atmosphere, and climate as separate 256 scopes."
+    })
+  });
+
+  var LENS_ALIASES = Object.freeze({
+    body: "body",
+    surface: "surface",
+    hydration: "hydration",
+    lattice: "lattice",
+    receipt: "receipt",
+    sixth: "sixth",
+    "sixth-sense": "sixth",
+    "the-sixth-sense": "sixth",
+    sixthsense: "sixth",
+    sixthSense: "sixth",
+    composite: "sixth"
   });
 
   var HYDRO_CURRENT_ARCS = Object.freeze([
@@ -89,6 +98,17 @@
     Object.freeze([[-180, -10], [-138, -16], [-96, -18], [-54, -14], [-12, -7], [30, -2], [72, -5], [114, -12], [156, -16], [180, -13]]),
     Object.freeze([[-180, 24], [-140, 30], [-99, 34], [-58, 32], [-17, 25], [24, 18], [65, 15], [106, 18], [147, 25], [180, 30]]),
     Object.freeze([[-180, 48], [-130, 53], [-80, 54], [-30, 50], [20, 43], [70, 38], [120, 40], [170, 47]])
+  ]);
+
+  var CHRONOLOGY = Object.freeze([
+    "body_baseline",
+    "terrainScope256",
+    "hydrationScope256",
+    "hydrationEdgeScope256",
+    "temperatureScope256Held",
+    "atmosphereScope256Held",
+    "climateScope256Held",
+    "sixthSenseComposite"
   ]);
 
   var state = {
@@ -132,6 +152,7 @@
     onePointerPath: false,
     duplicateCanvasRemoved: 0,
     visibleReadoutUpdated: false,
+    singleScopeFlatteningCorrected: false,
 
     datasetCache: {},
     errors: [],
@@ -144,68 +165,32 @@
       validated: false,
       packet: null,
       status: null,
+      surfaceMap: null,
       continentMap: null,
+      elevationMap: null,
       hydrationMap: null,
       summitMap: null,
-      terrainDatumPacket: null,
+      datumPacket: null,
       streamRegistry: null,
-
-      terrainNodes: [],
-      surfaceUnits: [],
-      hydrationSeats: [],
-      terrainDatumNodes: [],
-      summits: [],
-
-      organicTerrainMass: null,
-      surfaceBlendUnits: [],
-      hydrationFlowGraph: null,
-
-      ridgeSpineVisibility: [],
-      basinDepressionVisibility: [],
-      valleyCorridorVisibility: [],
-      dryZoneVisibility: [],
-      poolVisibilityRegistry: [],
-      riverVisibilityRegistry: [],
-      streamVisibilityRegistry: [],
-      gullyVisibilityRegistry: [],
-      waterfallVisibilityRegistry: [],
-      coastHull: [],
-
-      visualExpressionReady: false,
-      landWaterConstructVisibilityReady: false,
-      consumedShape: "none",
       failureReason: "Gratitude child not checked",
       attempts: 0,
       checkedAt: null
     },
 
-    edge: {
+    edgeChild: {
       api: null,
       detected: false,
       apiComplete: false,
       packetReady: false,
       validated: false,
-      packet: null,
+      map: null,
       status: null,
-      edgeMap: null,
-      beachMap: null,
-      cliffMap: null,
-      waterfallEdgeMap: null,
-      marshWetlandEdgeMap: null,
-      shelfEdgeMap: null,
-      downstreamRegistry: null,
-
-      edges: [],
-      beaches: [],
-      cliffs: [],
-      waterfalls: [],
-      marshWetlandEdges: [],
-      shelfEdges: [],
-
-      failureReason: "Hydration-edge child not checked",
+      failureReason: "Hydration edge child not checked",
       attempts: 0,
       checkedAt: null
-    }
+    },
+
+    scopes: createInitialScopes()
   };
 
   if (
@@ -283,7 +268,6 @@
     var text = String(value);
     if (state.datasetCache[key] === text) return;
     state.datasetCache[key] = text;
-
     try {
       document.documentElement.dataset[key] = text;
       if (document.body) document.body.dataset[key] = text;
@@ -299,24 +283,88 @@
   }
 
   function recordError(scope, error) {
+    var message = error && error.message ? error.message : String(error || "unknown");
     state.errors.push({
       scope: scope,
-      message: error && error.message ? error.message : String(error || "unknown"),
+      message: message,
       time: new Date().toISOString()
     });
   }
 
-  function distance2D(ax, ay, bx, by) {
-    var dx = ax - bx;
-    var dy = ay - by;
-    return Math.sqrt(dx * dx + dy * dy);
+  function normalizeLensName(value) {
+    var raw = String(value || "body");
+    var compact = raw.replace(/[^a-zA-Z0-9-]/g, "");
+    var lower = compact.toLowerCase();
+    return LENS_ALIASES[raw] || LENS_ALIASES[compact] || LENS_ALIASES[lower] || "body";
+  }
+
+  function createScope(scopeId, source, authority) {
+    return {
+      scopeId: scopeId,
+      source: source,
+      authority: authority,
+      ready: false,
+      held: true,
+      addressSpaceCount: LATTICE_STATES,
+      nodeCount: LATTICE_STATES,
+      activeNodeCount: 0,
+      drawPacket: null,
+      chronologyState: "not_initialized",
+      pressureMapReady: false,
+      renderEligibilityMapReady: false,
+      receiptMapReady: false,
+      receipt: {
+        scopeId: scopeId,
+        source: source,
+        authority: authority,
+        ready: false,
+        held: true,
+        addressSpaceCount: LATTICE_STATES,
+        activeNodeCount: 0,
+        finalPassClaim: false
+      }
+    };
+  }
+
+  function createInitialScopes() {
+    return {
+      terrainScope256: createScope("terrainScope256", "gratitude_terrain_child", "child_read_only"),
+      hydrationScope256: createScope("hydrationScope256", "gratitude_hydration_packet", "child_read_only"),
+      hydrationEdgeScope256: createScope("hydrationEdgeScope256", "hydration_edge_child_optional", "child_read_only_held_when_missing"),
+      temperatureScope256Held: createScope("temperatureScope256Held", "future_temperature_child", "held_socket_only"),
+      atmosphereScope256Held: createScope("atmosphereScope256Held", "future_atmosphere_child", "held_socket_only"),
+      climateScope256Held: createScope("climateScope256Held", "future_climate_child", "held_socket_only")
+    };
+  }
+
+  function makeHeldScope(scopeId, source, authority, reason) {
+    var scope = createScope(scopeId, source, authority);
+    scope.ready = false;
+    scope.held = true;
+    scope.chronologyState = "held";
+    scope.pressureMapReady = false;
+    scope.renderEligibilityMapReady = false;
+    scope.receiptMapReady = true;
+    scope.drawPacket = { ready: false, held: true, items: [], reason: reason || "held" };
+    scope.receipt = {
+      scopeId: scopeId,
+      source: source,
+      authority: authority,
+      ready: false,
+      held: true,
+      status: reason || "held",
+      addressSpaceCount: LATTICE_STATES,
+      nodeCount: LATTICE_STATES,
+      activeNodeCount: 0,
+      finalPassClaim: false
+    };
+    return scope;
   }
 
   function lonLatPoint(lonDeg, latDeg) {
     var lon = lonDeg * Math.PI / 180;
     var lat = latDeg * Math.PI / 180;
     var clat = Math.cos(lat);
-
     return {
       x: clat * Math.cos(lon),
       y: Math.sin(lat),
@@ -333,9 +381,16 @@
     };
   }
 
-  function gridPointToSpherePoint(item) {
-    var ll = terrainSeatToLonLat(finite(item.x, 0), finite(item.y, 0));
-    return lonLatPoint(ll.lon, ll.lat);
+  function makeTerrainCellPoints(seat, scale) {
+    var s = finite(scale, 0.46);
+    var westNorth = terrainSeatToLonLat(finite(seat.x, 0) - s, finite(seat.y, 0) - s);
+    var eastSouth = terrainSeatToLonLat(finite(seat.x, 0) + s, finite(seat.y, 0) + s);
+    return [
+      [westNorth.lon, westNorth.lat],
+      [eastSouth.lon, westNorth.lat],
+      [eastSouth.lon, eastSouth.lat],
+      [westNorth.lon, eastSouth.lat]
+    ];
   }
 
   function makeSeat(band, radial) {
@@ -370,9 +425,7 @@
 
     for (band = 0; band < FIBONACCI_BANDS; band += 1) {
       var ring = [];
-      for (radial = 0; radial < RADIAL_NODES; radial += 1) {
-        ring.push(makeSeat(band, radial));
-      }
+      for (radial = 0; radial < RADIAL_NODES; radial += 1) ring.push(makeSeat(band, radial));
       rings.push(Object.freeze(ring));
     }
 
@@ -398,13 +451,7 @@
 
     for (band = 0; band < FIBONACCI_BANDS; band += 1) {
       for (radial = 0; radial < RADIAL_NODES; radial += 1) {
-        ringLinks.push(link(
-          seat(band, radial),
-          seat(band, radial + 1),
-          "ring",
-          band % 4 === 0 || radial % 4 === 0,
-          band % 2 === 0 || radial % 2 === 0
-        ));
+        ringLinks.push(link(seat(band, radial), seat(band, radial + 1), "ring", band % 4 === 0 || radial % 4 === 0, band % 2 === 0 || radial % 2 === 0));
       }
     }
 
@@ -418,29 +465,14 @@
       var offset = FIBONACCI_OFFSETS[band % FIBONACCI_OFFSETS.length];
       for (radial = 0; radial < RADIAL_NODES; radial += 1) {
         var priority = radial % 4 === 0 || band % 4 === 0;
-        fibonacciLinks.push(link(
-          seat(band, radial),
-          seat(band + 1, radial + offset),
-          "fibonacci-forward",
-          priority,
-          radial % 2 === 0 || band % 2 === 0
-        ));
-
+        fibonacciLinks.push(link(seat(band, radial), seat(band + 1, radial + offset), "fibonacci-forward", priority, radial % 2 === 0 || band % 2 === 0));
         if (band % 2 === 0) {
-          fibonacciReturnLinks.push(link(
-            seat(band, radial),
-            seat(band + 1, radial - offset),
-            "fibonacci-return",
-            priority,
-            radial % 2 === 0 || band % 2 === 0
-          ));
+          fibonacciReturnLinks.push(link(seat(band, radial), seat(band + 1, radial - offset), "fibonacci-return", priority, radial % 2 === 0 || band % 2 === 0));
         }
       }
     }
 
-    state.seats = rings.reduce(function (all, ring) {
-      return all.concat(ring);
-    }, []);
+    state.seats = rings.reduce(function (all, ring) { return all.concat(ring); }, []);
     state.ringLinks = ringLinks;
     state.spineLinks = spineLinks;
     state.fibonacciLinks = fibonacciLinks;
@@ -480,7 +512,6 @@
     var height = state.height || 720;
     var minSide = Math.min(width, height);
     var cssWidth = width / Math.max(1, state.dpr);
-
     return {
       centerX: width / 2,
       centerY: height * 0.365,
@@ -493,7 +524,6 @@
     var m = metrics();
     var rotated = rotatePoint(point);
     var perspective = m.cameraDistance / Math.max(0.72, m.cameraDistance - rotated.z);
-
     return {
       x: m.centerX + rotated.x * m.radius * perspective,
       y: m.centerY - rotated.y * m.radius * perspective,
@@ -504,8 +534,7 @@
   }
 
   function clearCanvas() {
-    if (!state.ctx) return;
-    state.ctx.clearRect(0, 0, state.width, state.height);
+    if (state.ctx) state.ctx.clearRect(0, 0, state.width, state.height);
   }
 
   function clipSphere() {
@@ -527,6 +556,27 @@
     ctx.closePath();
   }
 
+  function drawProjectedPath(points, stroke, width, alpha) {
+    var ctx = state.ctx;
+    var projected = points.map(function (pair) { return projectPoint(lonLatPoint(pair[0], pair[1])); });
+    if (projected.filter(function (p) { return p.frontFacing; }).length < 2) return;
+
+    ctx.save();
+    clipSphere();
+    ctx.beginPath();
+    for (var i = 0; i < projected.length; i += 1) {
+      if (i === 0) ctx.moveTo(projected[i].x, projected[i].y);
+      else ctx.lineTo(projected[i].x, projected[i].y);
+    }
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = width;
+    ctx.globalAlpha = alpha;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.stroke();
+    ctx.restore();
+  }
+
   function drawCarrier() {
     var ctx = state.ctx;
     var m = metrics();
@@ -535,7 +585,6 @@
     var r = m.radius;
 
     ctx.save();
-
     var ocean = ctx.createRadialGradient(cx - r * 0.34, cy - r * 0.38, 0, cx, cy, r * 1.22);
     ocean.addColorStop(0.00, "rgba(171,235,246,0.92)");
     ocean.addColorStop(0.12, "rgba(55,145,196,0.88)");
@@ -550,7 +599,6 @@
 
     ctx.save();
     clipSphere();
-
     var basin = ctx.createLinearGradient(cx - r, cy + r * 0.2, cx + r, cy - r * 0.1);
     basin.addColorStop(0.00, "rgba(0,12,38,0.34)");
     basin.addColorStop(0.30, "rgba(0,25,73,0.08)");
@@ -567,7 +615,6 @@
     directional.addColorStop(1.00, "rgba(0,0,0,0.35)");
     ctx.fillStyle = directional;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
-
     ctx.restore();
 
     var depth = ctx.createRadialGradient(cx + r * 0.36, cy + r * 0.33, r * 0.08, cx, cy, r * 1.10);
@@ -586,7 +633,6 @@
     atmosphere.addColorStop(0.72, "rgba(141,216,255,0.025)");
     atmosphere.addColorStop(0.92, "rgba(141,216,255,0.105)");
     atmosphere.addColorStop(1.00, "rgba(141,216,255,0)");
-
     ctx.beginPath();
     ctx.arc(cx, cy, r * 1.08, 0, TAU);
     ctx.fillStyle = atmosphere;
@@ -597,693 +643,584 @@
     ctx.strokeStyle = "rgba(170,226,255,0.125)";
     ctx.lineWidth = Math.max(0.65, state.dpr * 0.62);
     ctx.stroke();
-
     ctx.restore();
   }
 
-  function drawProjectedPath(points, stroke, width, alpha) {
-    var ctx = state.ctx;
-    var projected = points.map(function (pair) {
-      return projectPoint(lonLatPoint(pair[0], pair[1]));
-    });
+  function drawHydrosphereBody() {
+    var hydration = state.activeLens === "hydration";
+    var body = state.activeLens === "body";
+    var sixth = state.activeLens === "sixth";
+    var bandAlpha = hydration ? 0.38 : sixth ? 0.18 : body ? 0.10 : 0.14;
+    var currentAlpha = hydration ? 0.46 : sixth ? 0.24 : body ? 0.12 : 0.18;
 
+    for (var i = 0; i < HYDRO_DEPTH_BANDS.length; i += 1) {
+      drawProjectedPath(HYDRO_DEPTH_BANDS[i], "rgba(85,201,236,0.34)", Math.max(0.65, state.dpr * (hydration ? 1.12 : 0.56)), bandAlpha);
+    }
+
+    for (var j = 0; j < HYDRO_CURRENT_ARCS.length; j += 1) {
+      drawProjectedPath(HYDRO_CURRENT_ARCS[j], "rgba(182,245,255,0.26)", Math.max(0.62, state.dpr * (hydration ? 1.02 : 0.48)), currentAlpha);
+    }
+  }
+
+  function normalizeArray(value) {
+    return Array.isArray(value) ? value : [];
+  }
+
+  function normalizeTerrainSeats(map) {
+    if (!map) return [];
+    if (Array.isArray(map.seats)) return map.seats;
+    if (Array.isArray(map.nodes)) return map.nodes;
+    return [];
+  }
+
+  function normalizeSurfaceUnits(map) {
+    if (!map) return [];
+    if (Array.isArray(map.surfaceUnits)) return map.surfaceUnits;
+    if (Array.isArray(map.units)) return map.units;
+    return [];
+  }
+
+  function normalizeHydrationSeats(map) {
+    if (!map) return [];
+    if (Array.isArray(map.seats)) return map.seats;
+    if (Array.isArray(map.nodes)) return map.nodes;
+    return [];
+  }
+
+  function normalizeSummits(map) {
+    if (!map) return [];
+    if (Array.isArray(map.summits)) return map.summits;
+    if (Array.isArray(map.summitNodes)) return map.summitNodes;
+    return [];
+  }
+
+  function normalizeStreamList(registry) {
+    if (!registry) return [];
+    if (Array.isArray(registry.streams)) return registry.streams;
+    if (registry.streamRegistry && Array.isArray(registry.streamRegistry.streams)) return registry.streamRegistry.streams;
+    return [];
+  }
+
+  function isLandSeat(seat) {
+    return Boolean(seat && (seat.continentMembership === true || seat.land === true || seat.continentId === "gratitude"));
+  }
+
+  function seatHasHydration(seat) {
+    if (!seat) return false;
+    if (seat.waterFillEligible === true) return true;
+    if (finite(seat.hydrationDepth, 0) > 0.015) return true;
+    if (finite(seat.hydrationPressure, 0) > 0.30) return true;
+    var h = String(seat.hydrationClass || "");
+    return h.indexOf("lake") >= 0 || h.indexOf("fill") >= 0 || h.indexOf("wetland") >= 0 || h.indexOf("marsh") >= 0 || h.indexOf("coastal") >= 0;
+  }
+
+  function cellProjected(points) {
+    var projected = [];
+    var front = 0;
+    for (var i = 0; i < points.length; i += 1) {
+      var p = projectPoint(lonLatPoint(points[i][0], points[i][1]));
+      projected.push(p);
+      if (p.frontFacing) front += 1;
+    }
+    return { projected: projected, front: front };
+  }
+
+  function drawOrganicLandSpot(item, alpha, radiusScale) {
+    if (!item) return;
+    var ctx = state.ctx;
+    var loc = terrainSeatToLonLat(finite(item.x, item.centerX || 0), finite(item.y, item.centerY || 0));
+    var p = projectPoint(lonLatPoint(loc.lon, loc.lat));
+    if (!p.frontFacing) return;
+
+    var elevation = clamp(item.elevation || item.surfaceExpressionDatum || 0.48, 0, 1);
+    var r = Math.max(1.2, state.dpr * finite(radiusScale, 8.2) * p.perspective);
+    var warm = Math.floor(65 + elevation * 58);
+    var green = Math.floor(92 + elevation * 66);
+    var blue = Math.floor(74 + elevation * 32);
+
+    ctx.save();
+    clipSphere();
+    var g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r * 1.45);
+    g.addColorStop(0.00, "rgba(" + warm + "," + green + "," + blue + "," + (alpha * 0.60).toFixed(3) + ")");
+    g.addColorStop(0.55, "rgba(" + warm + "," + green + "," + blue + "," + (alpha * 0.28).toFixed(3) + ")");
+    g.addColorStop(1.00, "rgba(" + warm + "," + green + "," + blue + ",0)");
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.ellipse(p.x, p.y, r * 1.36, r * 0.72, (finite(item.x, 0) + finite(item.y, 0)) * 0.08, 0, TAU);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawTerrainCell(seat, alpha, strokeAlpha) {
+    if (!seat || !isLandSeat(seat)) return;
+    var ctx = state.ctx;
+    var result = cellProjected(makeTerrainCellPoints(seat, 0.46));
+    if (result.front < 2) return;
+
+    var elevation = clamp(seat.elevation || seat.surfaceExpressionDatum || 0.48, 0, 1);
+    var warm = Math.floor(72 + elevation * 52);
+    var green = Math.floor(100 + elevation * 70);
+    var blue = Math.floor(78 + elevation * 34);
+
+    if (seat.ridgeStatus || seat.mountainRangeReserved) {
+      warm += 18;
+      green += 12;
+    }
+    if (seat.basinStatus || seat.valleyStatus) {
+      green += 10;
+      blue += 12;
+    }
+    if (seat.desertLandReserved) {
+      warm += 26;
+      green += 16;
+      blue -= 10;
+    }
+
+    ctx.save();
+    clipSphere();
+    ctx.beginPath();
+    for (var i = 0; i < result.projected.length; i += 1) {
+      var p = result.projected[i];
+      if (i === 0) ctx.moveTo(p.x, p.y);
+      else ctx.lineTo(p.x, p.y);
+    }
+    ctx.closePath();
+    ctx.fillStyle = "rgba(" + warm + "," + green + "," + blue + "," + alpha.toFixed(3) + ")";
+    ctx.fill();
+
+    if (strokeAlpha > 0) {
+      ctx.strokeStyle = "rgba(255,244,216," + strokeAlpha.toFixed(3) + ")";
+      ctx.lineWidth = Math.max(0.26, state.dpr * 0.30);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function drawWaterSpot(seat, alpha, scale) {
+    if (!seat || !seatHasHydration(seat)) return;
+    var ctx = state.ctx;
+    var loc = terrainSeatToLonLat(finite(seat.x, 0), finite(seat.y, 0));
+    var p = projectPoint(lonLatPoint(loc.lon, loc.lat));
+    if (!p.frontFacing) return;
+
+    var depth = clamp(seat.hydrationDepth || seat.hydrationPressure || 0.18, 0, 1);
+    var r = Math.max(1.2, state.dpr * finite(scale, 7.5) * (0.72 + depth) * p.perspective);
+
+    ctx.save();
+    clipSphere();
+    var g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r * 1.5);
+    g.addColorStop(0.00, "rgba(137,232,255," + (alpha * 0.72).toFixed(3) + ")");
+    g.addColorStop(0.52, "rgba(77,197,238," + (alpha * 0.34).toFixed(3) + ")");
+    g.addColorStop(1.00, "rgba(77,197,238,0)");
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.ellipse(p.x, p.y, r * 1.18, r * 0.70, finite(seat.x, 0) * 0.21, 0, TAU);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawWaterCell(seat, alpha) {
+    if (!seat || !seatHasHydration(seat)) return;
+    var ctx = state.ctx;
+    var result = cellProjected(makeTerrainCellPoints(seat, 0.40));
+    if (result.front < 2) return;
+    var depth = clamp(seat.hydrationDepth || seat.hydrationPressure || 0.16, 0, 1);
+
+    ctx.save();
+    clipSphere();
+    ctx.beginPath();
+    for (var i = 0; i < result.projected.length; i += 1) {
+      var p = result.projected[i];
+      if (i === 0) ctx.moveTo(p.x, p.y);
+      else ctx.lineTo(p.x, p.y);
+    }
+    ctx.closePath();
+    ctx.fillStyle = "rgba(95,202,236," + (alpha * (0.50 + depth * 0.50)).toFixed(3) + ")";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(182,245,255," + (alpha * 0.32).toFixed(3) + ")";
+    ctx.lineWidth = Math.max(0.34, state.dpr * 0.34);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawFlowLine(flow, alpha, widthBoost) {
+    if (!flow || !Array.isArray(flow.points) || flow.points.length < 2) return;
+    var ctx = state.ctx;
+    var projected = flow.points.map(function (point) {
+      var loc = terrainSeatToLonLat(point.x, point.y);
+      return projectPoint(lonLatPoint(loc.lon, loc.lat));
+    });
     if (projected.filter(function (p) { return p.frontFacing; }).length < 2) return;
 
     ctx.save();
     clipSphere();
     ctx.beginPath();
-
     for (var i = 0; i < projected.length; i += 1) {
       if (i === 0) ctx.moveTo(projected[i].x, projected[i].y);
-      else ctx.lineTo(projected[i].x, projected[i].y);
+      else {
+        var prev = projected[i - 1];
+        var cur = projected[i];
+        var mx = (prev.x + cur.x) / 2;
+        var my = (prev.y + cur.y) / 2;
+        ctx.quadraticCurveTo(mx, my, cur.x, cur.y);
+      }
     }
-
-    ctx.strokeStyle = stroke;
-    ctx.lineWidth = width;
-    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = "rgba(147,236,255," + alpha.toFixed(3) + ")";
+    ctx.lineWidth = Math.max(0.56, state.dpr * finite(widthBoost, 1.0) * (flow.major ? 1.38 : 0.82));
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
+    ctx.shadowColor = "rgba(122,224,255,0.45)";
+    ctx.shadowBlur = Math.max(2, state.dpr * 4.4);
     ctx.stroke();
     ctx.restore();
   }
 
-  function drawHydrosphereBody() {
-    var hydration = state.activeLens === "hydration" || state.activeLens === "sixth-sense";
-    var body = state.activeLens === "body";
-
-    var bandAlpha = hydration ? 0.30 : body ? 0.10 : 0.12;
-    var currentAlpha = hydration ? 0.30 : body ? 0.12 : 0.16;
-
-    for (var i = 0; i < HYDRO_DEPTH_BANDS.length; i += 1) {
-      drawProjectedPath(
-        HYDRO_DEPTH_BANDS[i],
-        "rgba(85,201,236,0.34)",
-        Math.max(0.65, state.dpr * (hydration ? 0.90 : 0.54)),
-        bandAlpha
-      );
-    }
-
-    for (var j = 0; j < HYDRO_CURRENT_ARCS.length; j += 1) {
-      drawProjectedPath(
-        HYDRO_CURRENT_ARCS[j],
-        "rgba(182,245,255,0.26)",
-        Math.max(0.62, state.dpr * (hydration ? 0.82 : 0.48)),
-        currentAlpha
-      );
-    }
+  function drawEdgeItem(item, alpha) {
+    if (!item || !item.points || item.points.length < 2) return;
+    drawProjectedPath(item.points, item.stroke || "rgba(244,207,131,0.58)", Math.max(0.56, state.dpr * 0.76), alpha);
   }
 
-  function getGratitudeAPI() {
-    return window.AUDRALIA_G2_GRATITUDE_CONTINENT_CHILD ||
-      window.AUDRALIA_GRATITUDE_CONTINENT_CHILD ||
-      null;
+  function summarizeHydrationType(seat) {
+    var h = String(seat.hydrationClass || "");
+    if (h.indexOf("lake") >= 0 || seat.basinStatus) return "pool";
+    if (h.indexOf("fill") >= 0 || seat.valleyStatus) return "stream";
+    if (h.indexOf("wetland") >= 0) return "wetland";
+    if (h.indexOf("marsh") >= 0) return "marsh";
+    if (finite(seat.hydrationDepth, 0) > 0.22) return "river";
+    return "gully";
   }
 
-  function getEdgeAPI() {
-    return window.AUDRALIA_GRATITUDE_HYDRATION_EDGE_CHILD || null;
-  }
-
-  function normalizeTerrainNode(raw, fallbackIndex) {
-    raw = raw || {};
-    var seatIndex = finite(raw.seatIndex, finite(raw.nodeIndex, fallbackIndex || 0));
-    var x = finite(raw.x, finite(raw.centerX, seatIndex % 16));
-    var y = finite(raw.y, finite(raw.centerY, Math.floor(seatIndex / 16)));
-    var terrainDatum = raw.terrainDatum || {};
-    var terrainDatumClass = String(terrainDatum.terrainDatumClass || raw.terrainDatumClass || "");
-
-    var land = Boolean(
-      raw.continentMembership === true ||
-      raw.land === true ||
-      raw.continentId === "gratitude" ||
-      raw.aboveSeaLevelMass === true ||
-      terrainDatum.aboveSeaLevelMass === true
-    );
-
-    var elevation = finite(
-      raw.elevation,
-      finite(raw.surfaceExpressionDatum, finite(terrainDatum.surfaceExpressionDatum, land ? 0.48 : 0))
-    );
-
-    var terrainClass = String(raw.terrainClass || terrainDatumClass || "surface_expression_datum");
-    var hydrationClass = String(raw.hydrationClass || "dry_land");
-    var primaryCategory = String(raw.primaryCategory || raw.category || "surface");
-
-    var ridgePressure = finite(raw.ridgePressure, terrainClass.indexOf("ridge") >= 0 || terrainDatumClass.indexOf("ridge") >= 0 ? 0.72 : 0);
-    var basinPressure = finite(raw.basinPressure, terrainClass.indexOf("basin") >= 0 || terrainDatumClass.indexOf("basin") >= 0 ? 0.72 : 0);
-    var valleyPressure = finite(raw.valleyPressure, terrainClass.indexOf("valley") >= 0 || terrainDatumClass.indexOf("valley") >= 0 ? 0.72 : 0);
-    var coastPressure = finite(raw.coastPressure, terrainClass.indexOf("coast") >= 0 || terrainDatumClass.indexOf("coast") >= 0 ? 0.72 : 0);
-    var summitPressure = finite(raw.summitPressure, terrainClass.indexOf("summit") >= 0 ? 0.74 : 0);
-    var marshPressure = finite(raw.marshPressure, terrainClass.indexOf("marsh") >= 0 || hydrationClass.indexOf("marsh") >= 0 ? 0.70 : 0);
-    var wetlandPressure = finite(raw.wetlandPressure, terrainClass.indexOf("wetland") >= 0 || hydrationClass.indexOf("wetland") >= 0 ? 0.70 : 0);
-    var hydrationDepth = finite(raw.hydrationDepth, finite(raw.waterDepth, finite(raw.hydrationPressure, 0)));
-    var desertPressure = finite(raw.desertReservationPressure, terrainDatum.desertReservationDatum || 0);
-    var rainShadowPressure = finite(raw.rainShadowPressure, terrainDatum.rainShadowReservationDatum || 0);
-    var waterTable = finite(raw.waterTableDatumHeld, finite(terrainDatum.waterTableDatumHeld, 0));
-
-    return {
-      source: raw,
-      nodeId: String(raw.nodeId || raw.sourceNodeId || raw.seatKey || ("carrier-node-" + (fallbackIndex || 0))),
-      seatIndex: seatIndex,
-      seatKey: String(raw.seatKey || ("G-" + String(Math.floor(y)).padStart(2, "0") + "-" + String(Math.floor(x)).padStart(2, "0"))),
-      x: x,
-      y: y,
-      land: land,
-      continentMembership: land,
-      terrainClass: terrainClass,
-      hydrationClass: hydrationClass,
-      primaryCategory: primaryCategory,
-      terrainDatumClass: terrainDatumClass,
-      elevation: clamp(elevation, 0, 1),
-      baseElevation: clamp(finite(raw.baseElevation, elevation), 0, 1),
-      hydrationDepth: clamp(hydrationDepth, 0, 1),
-      waterFillEligible: Boolean(raw.waterFillEligible === true || hydrationDepth > 0.035 || hydrationClass.indexOf("lake") >= 0 || hydrationClass.indexOf("wet") >= 0 || hydrationClass.indexOf("marsh") >= 0),
-      ridgePressure: clamp(ridgePressure, 0, 1),
-      basinPressure: clamp(basinPressure, 0, 1),
-      valleyPressure: clamp(valleyPressure, 0, 1),
-      coastPressure: clamp(coastPressure, 0, 1),
-      shelfPressure: clamp(finite(raw.shelfPressure, 0), 0, 1),
-      summitPressure: clamp(summitPressure, 0, 1),
-      marshPressure: clamp(marshPressure, 0, 1),
-      wetlandPressure: clamp(wetlandPressure, 0, 1),
-      hydrationPressure: clamp(finite(raw.hydrationPressure, hydrationDepth), 0, 1),
-      drainagePressure: clamp(finite(raw.drainagePressure, valleyPressure), 0, 1),
-      runoffPressure: clamp(finite(raw.runoffPressure, 0), 0, 1),
-      texturePressure: clamp(finite(raw.texturePressure, 0.36), 0, 1),
-      soilPressure: clamp(finite(raw.soilPressure, 0.34), 0, 1),
-      mineralPressure: clamp(finite(raw.mineralPressure, 0.12), 0, 1),
-      desertReservationPressure: clamp(desertPressure, 0, 1),
-      rainShadowPressure: clamp(rainShadowPressure, 0, 1),
-      waterTableDatumHeld: clamp(waterTable, 0, 1),
-      ridgeStatus: Boolean(raw.ridgeStatus === true || ridgePressure > 0.54),
-      basinStatus: Boolean(raw.basinStatus === true || basinPressure > 0.44),
-      valleyStatus: Boolean(raw.valleyStatus === true || valleyPressure > 0.46),
-      coastEligible: Boolean(raw.coastEligible === true || coastPressure > 0.50),
-      mountainRangeReserved: Boolean(raw.mountainRangeReserved === true || terrainDatum.mountainRangeReserved === true || summitPressure > 0.52 || ridgePressure > 0.56),
-      desertLandReserved: Boolean(raw.desertLandReserved === true || terrainDatum.desertLandReserved === true || desertPressure > 0.46 || rainShadowPressure > 0.50),
-      dryBasinReserved: Boolean(raw.dryBasinReserved === true || terrainDatum.dryBasinReserved === true || (basinPressure > 0.38 && hydrationDepth < 0.05)),
-      terrainDatum: terrainDatum
-    };
-  }
-
-  function normalizeSurfaceUnit(raw, fallbackIndex) {
-    raw = raw || {};
-    var channels = raw.textureChannels || {};
-    var elevation = clamp(finite(raw.elevation, 0.44), 0, 1);
-    var hydrationDepth = clamp(finite(raw.hydrationDepth, 0), 0, 1);
-
-    return {
-      source: raw,
-      tileId: String(raw.tileId || raw.terrainUnitId || ("surface-unit-" + (fallbackIndex || 0))),
-      parentNodeId: String(raw.parentNodeId || ""),
-      x: finite(raw.x, 0),
-      y: finite(raw.y, 0),
-      rx: clamp(finite(raw.rx, 0.13), 0.04, 0.28),
-      ry: clamp(finite(raw.ry, 0.11), 0.04, 0.26),
-      elevation: elevation,
-      hydrationDepth: hydrationDepth,
-      terrainClass: String(raw.terrainClass || "surface_expression"),
-      hydrationClass: String(raw.hydrationClass || "dry_land"),
-      waterFillEligible: Boolean(raw.waterFillEligible === true || hydrationDepth > 0.04),
-      rock: clamp(finite(channels.rock, elevation * 0.42), 0, 1),
-      soil: clamp(finite(channels.soil, 0.44), 0, 1),
-      mineral: clamp(finite(channels.mineral, 0.18), 0, 1),
-      wetland: clamp(finite(channels.wetland, hydrationDepth), 0, 1),
-      ridge: clamp(finite(channels.ridge, raw.ridgePressure || 0), 0, 1),
-      basin: clamp(finite(channels.basin, raw.basinPressure || 0), 0, 1),
-      coast: clamp(finite(channels.coast, raw.coastPressure || 0), 0, 1),
-      texturePressure: clamp(finite(raw.texturePressure, 0.18 + elevation * 0.10), 0, 1)
-    };
-  }
-
-  function normalizeDatumNode(raw, fallbackIndex) {
-    raw = raw || {};
-    return {
-      source: raw,
-      datumNodeId: String(raw.datumNodeId || raw.sourceNodeId || ("datum-" + (fallbackIndex || 0))),
-      sourceNodeId: String(raw.sourceNodeId || ""),
-      x: finite(raw.x, (fallbackIndex || 0) % 16),
-      y: finite(raw.y, Math.floor((fallbackIndex || 0) / 16)),
-      terrainDatumClass: String(raw.terrainDatumClass || "surface_expression_datum"),
-      seaLevelDatum: clamp(finite(raw.seaLevelDatum, 0.32), 0, 1),
-      aboveSeaLevelMass: Boolean(raw.aboveSeaLevelMass),
-      surfaceExpressionDatum: clamp(finite(raw.surfaceExpressionDatum, 0.44), 0, 1),
-      ridgeCrestDatum: clamp(finite(raw.ridgeCrestDatum, 0.50), 0, 1),
-      valleyFloorDatum: clamp(finite(raw.valleyFloorDatum, 0.36), 0, 1),
-      basinFloorDatum: clamp(finite(raw.basinFloorDatum, 0.34), 0, 1),
-      basinRimDatum: clamp(finite(raw.basinRimDatum, 0.45), 0, 1),
-      coastDatum: clamp(finite(raw.coastDatum, 0.32), 0, 1),
-      waterTableDatumHeld: clamp(finite(raw.waterTableDatumHeld, 0.30), 0, 1),
-      mountainRangeReserved: Boolean(raw.mountainRangeReserved),
-      desertLandReserved: Boolean(raw.desertLandReserved),
-      dryBasinReserved: Boolean(raw.dryBasinReserved),
-      rainShadowZoneReserved: Boolean(raw.rainShadowZoneReserved)
-    };
-  }
-
-  function normalizeSummit(raw, fallbackIndex) {
-    raw = raw || {};
-    return {
-      source: raw,
-      id: String(raw.id || raw.summitId || ("summit-" + (fallbackIndex || 0))),
-      name: String(raw.name || ("Summit " + ((fallbackIndex || 0) + 1))),
-      x: finite(raw.x, 8),
-      y: finite(raw.y, 8),
-      elevationPressure: clamp(finite(raw.elevationPressure, 0.8), 0, 1.3)
-    };
-  }
-
-  function normalizeEdge(raw, fallbackIndex, fallbackKind) {
-    raw = raw || {};
-    return {
-      source: raw,
-      edgeId: String(raw.edgeId || raw.sourceNodeId || ("edge-" + (fallbackIndex || 0))),
-      sourceNodeId: String(raw.sourceNodeId || raw.nodeId || ""),
-      seatKey: String(raw.seatKey || ""),
-      x: finite(raw.x, (fallbackIndex || 0) % 16),
-      y: finite(raw.y, Math.floor((fallbackIndex || 0) / 16)),
-      edgeKind: String(raw.edgeKind || fallbackKind || "edge"),
-      confidence: clamp(finite(raw.confidence, 0.50), 0, 1),
-      beachPressure: clamp(finite(raw.beachPressure, fallbackKind === "beach_edge" ? 0.60 : 0), 0, 1),
-      cliffPressure: clamp(finite(raw.cliffPressure, fallbackKind === "cliff_edge" ? 0.60 : 0), 0, 1),
-      waterfallPressure: clamp(finite(raw.waterfallPressure, fallbackKind === "waterfall_edge" ? 0.60 : 0), 0, 1),
-      marshEdgePressure: clamp(finite(raw.marshEdgePressure, fallbackKind === "marsh_wetland_edge" ? 0.60 : 0), 0, 1),
-      shelfEdgePressure: clamp(finite(raw.shelfEdgePressure, fallbackKind === "coastal_shelf_edge" ? 0.60 : 0), 0, 1),
-      elevation: clamp(finite(raw.elevation, 0.44), 0, 1),
-      seaLevelDatum: clamp(finite(raw.seaLevelDatum, 0.32), 0, 1),
-      hydrationDepth: clamp(finite(raw.hydrationDepth, 0), 0, 1),
-      hydrationClass: String(raw.hydrationClass || ""),
-      terrainClass: String(raw.terrainClass || ""),
-      terrainDatumClass: String(raw.terrainDatumClass || "")
-    };
-  }
-
-  function resolveGratitudeNodes(continentMap, packet) {
-    var nodes = [];
-
-    if (continentMap) {
-      if (Array.isArray(continentMap.nodes)) nodes = nodes.concat(continentMap.nodes);
-      if (Array.isArray(continentMap.seats)) nodes = nodes.concat(continentMap.seats);
-    }
-
-    if (!nodes.length && packet && packet.surfaceMap) {
-      if (Array.isArray(packet.surfaceMap.nodes)) nodes = nodes.concat(packet.surfaceMap.nodes);
-      if (Array.isArray(packet.surfaceMap.seats)) nodes = nodes.concat(packet.surfaceMap.seats);
-    }
-
-    return nodes.map(normalizeTerrainNode).filter(function (node) {
-      return node.land || node.continentMembership;
-    });
-  }
-
-  function resolveSurfaceUnits(continentMap, packet) {
-    var units = [];
-    if (continentMap && Array.isArray(continentMap.surfaceUnits)) units = units.concat(continentMap.surfaceUnits);
-
-    if (!units.length && packet && packet.surfaceMap && Array.isArray(packet.surfaceMap.surfaceUnits)) {
-      units = units.concat(packet.surfaceMap.surfaceUnits);
-    }
-
-    return units.map(normalizeSurfaceUnit);
-  }
-
-  function resolveHydrationSeats(hydrationMap, terrainNodes, packet) {
-    var raw = [];
-
-    if (hydrationMap) {
-      if (Array.isArray(hydrationMap.seats)) raw = raw.concat(hydrationMap.seats);
-      if (Array.isArray(hydrationMap.nodes)) raw = raw.concat(hydrationMap.nodes);
-    }
-
-    if (!raw.length && packet && packet.hydrationMap) {
-      if (Array.isArray(packet.hydrationMap.seats)) raw = raw.concat(packet.hydrationMap.seats);
-      if (Array.isArray(packet.hydrationMap.nodes)) raw = raw.concat(packet.hydrationMap.nodes);
-    }
-
-    var normalized = raw.map(normalizeTerrainNode).filter(function (node) {
-      return node.land && (
-        node.waterFillEligible ||
-        node.hydrationDepth > 0.018 ||
-        node.basinStatus ||
-        node.valleyStatus ||
-        node.marshPressure > 0.36 ||
-        node.wetlandPressure > 0.36
-      );
+  function buildFlowPackets(hydrationSeats) {
+    var active = hydrationSeats.filter(seatHasHydration).slice();
+    active.sort(function (a, b) {
+      var ay = finite(a.y, 0);
+      var by = finite(b.y, 0);
+      if (ay !== by) return ay - by;
+      return finite(a.x, 0) - finite(b.x, 0);
     });
 
-    if (!normalized.length) {
-      normalized = terrainNodes.filter(function (node) {
-        return node.waterFillEligible || node.hydrationDepth > 0.025 || node.basinPressure > 0.36 || node.valleyPressure > 0.42;
+    var flows = [];
+    var valley = active.filter(function (seat) {
+      return seat.valleyStatus || String(seat.hydrationClass || "").indexOf("fill") >= 0;
+    });
+    var basins = active.filter(function (seat) {
+      return seat.basinStatus || String(seat.hydrationClass || "").indexOf("lake") >= 0;
+    });
+
+    if (valley.length >= 2) {
+      flows.push({
+        flowId: "hydrationScope256-major-bloodstream-01",
+        kind: "river",
+        major: true,
+        points: valley.slice(0, Math.min(10, valley.length)).map(function (seat) { return { x: finite(seat.x, 0), y: finite(seat.y, 0) }; })
       });
     }
 
-    var seen = {};
-    var deduped = [];
+    if (basins.length && valley.length) {
+      for (var i = 0; i < Math.min(6, basins.length); i += 1) {
+        var basin = basins[i];
+        var nearest = nearestSeat(basin, valley);
+        if (nearest) {
+          flows.push({
+            flowId: "hydrationScope256-basin-feed-" + String(i + 1).padStart(2, "0"),
+            kind: "stream",
+            major: false,
+            points: [
+              { x: finite(nearest.x, 0), y: finite(nearest.y, 0) },
+              { x: (finite(nearest.x, 0) + finite(basin.x, 0)) / 2, y: (finite(nearest.y, 0) + finite(basin.y, 0)) / 2 + 0.15 },
+              { x: finite(basin.x, 0), y: finite(basin.y, 0) }
+            ]
+          });
+        }
+      }
+    }
 
-    normalized.forEach(function (node) {
-      var key = node.seatKey || node.nodeId;
-      if (seen[key]) return;
-      seen[key] = true;
-      deduped.push(node);
-    });
+    if (flows.length === 0 && active.length >= 2) {
+      flows.push({
+        flowId: "hydrationScope256-minimal-gully-chain",
+        kind: "gully",
+        major: false,
+        points: active.slice(0, Math.min(8, active.length)).map(function (seat) { return { x: finite(seat.x, 0), y: finite(seat.y, 0) }; })
+      });
+    }
 
-    return deduped;
+    return flows;
   }
 
-  function resolveTerrainDatumNodes(api, packet) {
-    var datum = null;
+  function nearestSeat(origin, candidates) {
+    var winner = null;
+    var best = Infinity;
+    for (var i = 0; i < candidates.length; i += 1) {
+      var c = candidates[i];
+      var dx = finite(origin.x, 0) - finite(c.x, 0);
+      var dy = finite(origin.y, 0) - finite(c.y, 0);
+      var d = dx * dx + dy * dy;
+      if (d < best && d > 0) {
+        best = d;
+        winner = c;
+      }
+    }
+    return winner;
+  }
+
+  function buildTerrainScope() {
+    var surfaceMap = state.gratitude.surfaceMap || state.gratitude.continentMap;
+    var seats = normalizeTerrainSeats(surfaceMap);
+    var landSeats = seats.filter(isLandSeat);
+    var surfaceUnits = normalizeSurfaceUnits(surfaceMap);
+    var summits = normalizeSummits(state.gratitude.summitMap);
+    var streams = normalizeStreamList(state.gratitude.streamRegistry);
+
+    var scope = createScope("terrainScope256", "window.AUDRALIA_G2_GRATITUDE_CONTINENT_CHILD", "child_read_only");
+    scope.ready = state.gratitude.validated && landSeats.length > 0;
+    scope.held = !scope.ready;
+    scope.activeNodeCount = landSeats.length;
+    scope.chronologyState = scope.ready ? "body_baseline_then_terrain" : "held_until_gratitude_child_validates";
+    scope.pressureMapReady = scope.ready;
+    scope.renderEligibilityMapReady = scope.ready;
+    scope.receiptMapReady = true;
+    scope.drawPacket = {
+      ready: scope.ready,
+      held: !scope.ready,
+      landSeats: landSeats,
+      surfaceUnits: surfaceUnits,
+      summits: summits,
+      streams: streams,
+      landNodeCount: landSeats.length,
+      surfaceUnitCount: surfaceUnits.length,
+      ridgeCount: landSeats.filter(function (seat) { return seat.ridgeStatus || seat.mountainRangeReserved; }).length,
+      basinCount: landSeats.filter(function (seat) { return seat.basinStatus; }).length,
+      valleyCount: landSeats.filter(function (seat) { return seat.valleyStatus; }).length,
+      coastCount: landSeats.filter(function (seat) { return seat.coastEligible || String(seat.terrainClass || "").indexOf("coast") >= 0; }).length,
+      renderSource: "terrain_scope_child_packet"
+    };
+    scope.receipt = {
+      scopeId: scope.scopeId,
+      source: scope.source,
+      authority: scope.authority,
+      ready: scope.ready,
+      held: scope.held,
+      addressSpaceCount: LATTICE_STATES,
+      nodeCount: LATTICE_STATES,
+      activeNodeCount: landSeats.length,
+      landNodeCount: landSeats.length,
+      surfaceUnitCount: surfaceUnits.length,
+      ridgeCount: scope.drawPacket.ridgeCount,
+      basinCount: scope.drawPacket.basinCount,
+      valleyCount: scope.drawPacket.valleyCount,
+      coastCount: scope.drawPacket.coastCount,
+      carrierInventsTerrain: false,
+      finalTerrainPassClaim: false,
+      finalVisualPassClaim: false
+    };
+    return scope;
+  }
+
+  function buildHydrationScope() {
+    var hydrationMap = state.gratitude.hydrationMap;
+    var seats = normalizeHydrationSeats(hydrationMap);
+    var hydrationSeats = seats.filter(function (seat) { return isLandSeat(seat) || seatHasHydration(seat); });
+    var active = hydrationSeats.filter(seatHasHydration);
+    var flows = buildFlowPackets(active);
+    var typeCounts = { pools: 0, rivers: 0, streams: 0, gullies: 0, wetlands: 0, marshes: 0 };
+
+    for (var i = 0; i < active.length; i += 1) {
+      var type = summarizeHydrationType(active[i]);
+      if (type === "pool") typeCounts.pools += 1;
+      else if (type === "river") typeCounts.rivers += 1;
+      else if (type === "stream") typeCounts.streams += 1;
+      else if (type === "wetland") typeCounts.wetlands += 1;
+      else if (type === "marsh") typeCounts.marshes += 1;
+      else typeCounts.gullies += 1;
+    }
+
+    typeCounts.rivers = Math.max(typeCounts.rivers, flows.filter(function (flow) { return flow.kind === "river"; }).length);
+    typeCounts.streams = Math.max(typeCounts.streams, flows.filter(function (flow) { return flow.kind === "stream"; }).length);
+    typeCounts.gullies = Math.max(typeCounts.gullies, Math.max(0, active.length - typeCounts.pools - typeCounts.rivers - typeCounts.streams - typeCounts.wetlands - typeCounts.marshes));
+
+    var scope = createScope("hydrationScope256", "window.AUDRALIA_G2_GRATITUDE_CONTINENT_CHILD.getHydrationMap", "child_read_only");
+    scope.ready = state.gratitude.validated && active.length > 0;
+    scope.held = !scope.ready;
+    scope.activeNodeCount = active.length;
+    scope.chronologyState = scope.ready ? "terrain_after_then_hydration_bloodstream" : "held_until_hydration_packet_validates";
+    scope.pressureMapReady = scope.ready;
+    scope.renderEligibilityMapReady = scope.ready;
+    scope.receiptMapReady = true;
+    scope.drawPacket = {
+      ready: scope.ready,
+      held: !scope.ready,
+      hydrationSeats: hydrationSeats,
+      activeHydrationSeats: active,
+      flows: flows,
+      pools: typeCounts.pools,
+      rivers: typeCounts.rivers,
+      streams: typeCounts.streams,
+      gullies: typeCounts.gullies,
+      wetlands: typeCounts.wetlands,
+      marshes: typeCounts.marshes,
+      hydrationNodeCount: active.length,
+      renderSource: "hydration_scope_child_packet"
+    };
+    scope.receipt = {
+      scopeId: scope.scopeId,
+      source: scope.source,
+      authority: scope.authority,
+      ready: scope.ready,
+      held: scope.held,
+      addressSpaceCount: LATTICE_STATES,
+      nodeCount: LATTICE_STATES,
+      activeNodeCount: active.length,
+      hydrationNodeCount: active.length,
+      pools: typeCounts.pools,
+      rivers: typeCounts.rivers,
+      streams: typeCounts.streams,
+      gullies: typeCounts.gullies,
+      wetlands: typeCounts.wetlands,
+      marshes: typeCounts.marshes,
+      carrierInventsHydration: false,
+      finalHydrationPassClaim: false,
+      finalVisualPassClaim: false
+    };
+    return scope;
+  }
+
+  function detectHydrationEdgeChild() {
+    state.edgeChild.attempts += 1;
+    state.edgeChild.checkedAt = new Date().toISOString();
+
+    var api = window.AUDRALIA_GRATITUDE_HYDRATION_EDGE_CHILD ||
+      window.AUDRALIA_GRATITUDE_HYDRATION_EDGE_SCOPE_CHILD ||
+      window.AUDRALIA_G2_GRATITUDE_HYDRATION_EDGE_CHILD ||
+      null;
+
+    state.edgeChild.api = api;
+    state.edgeChild.detected = Boolean(api);
+    state.edgeChild.apiComplete = false;
+    state.edgeChild.packetReady = false;
+    state.edgeChild.validated = false;
+    state.edgeChild.map = null;
+    state.edgeChild.status = null;
+
+    if (!api) {
+      state.edgeChild.failureReason = "Hydration edge child not loaded · edge scope held";
+      return false;
+    }
+
+    state.edgeChild.apiComplete = Boolean(
+      typeof api.status === "function" ||
+      typeof api.getHydrationEdgeMap === "function" ||
+      typeof api.getEdgeMap === "function" ||
+      typeof api.getChildReceivePacket === "function"
+    );
+
+    if (!state.edgeChild.apiComplete) {
+      state.edgeChild.failureReason = "Hydration edge child API incomplete · edge scope held";
+      return false;
+    }
 
     try {
-      if (api && typeof api.getTerrainDatumPacket === "function") {
-        datum = api.getTerrainDatumPacket("audralia-carrier-sixth-sense", { compact: false });
-      }
+      var status = typeof api.status === "function" ? api.status() : null;
+      var map = null;
+      if (typeof api.getHydrationEdgeMap === "function") map = api.getHydrationEdgeMap({ compact: false });
+      else if (typeof api.getEdgeMap === "function") map = api.getEdgeMap({ compact: false });
+      else if (typeof api.getChildReceivePacket === "function") map = api.getChildReceivePacket("audralia-multi-scope-carrier", { compact: false });
+
+      state.edgeChild.status = status;
+      state.edgeChild.map = map;
+      state.edgeChild.packetReady = Boolean(map);
+      state.edgeChild.validated = Boolean(map && (Array.isArray(map.edges) || Array.isArray(map.nodes) || Array.isArray(map.edgeNodes) || map.childReceivePacketReady === true));
+      state.edgeChild.failureReason = state.edgeChild.validated ? "" : "Hydration edge child packet unavailable · edge scope held";
+      return state.edgeChild.validated;
     } catch (error) {
-      recordError("getTerrainDatumPacket", error);
+      recordError("detectHydrationEdgeChild", error);
+      state.edgeChild.failureReason = "Hydration edge child exception · edge scope held";
+      return false;
     }
-
-    if (!datum && packet && packet.terrainDatumPacket) datum = packet.terrainDatumPacket;
-    var nodes = datum && Array.isArray(datum.datumNodes) ? datum.datumNodes : [];
-
-    state.gratitude.terrainDatumPacket = datum;
-    return nodes.map(normalizeDatumNode);
   }
 
-  function resolveSummits(summitMap, packet) {
-    var summits = [];
+  function normalizeEdgeItems(map) {
+    if (!map) return [];
+    var raw = [];
+    if (Array.isArray(map.edges)) raw = map.edges;
+    else if (Array.isArray(map.edgeNodes)) raw = map.edgeNodes;
+    else if (Array.isArray(map.nodes)) raw = map.nodes;
 
-    if (summitMap && Array.isArray(summitMap.summits)) summits = summits.concat(summitMap.summits);
-
-    if (!summits.length && packet && packet.summitMap && Array.isArray(packet.summitMap.summits)) {
-      summits = summits.concat(packet.summitMap.summits);
-    }
-
-    return summits.map(normalizeSummit);
-  }
-
-  function convexHull(points) {
-    if (points.length <= 3) return points.slice();
-
-    var sorted = points.slice().sort(function (a, b) {
-      return a.x === b.x ? a.y - b.y : a.x - b.x;
-    });
-
-    function cross(o, a, b) {
-      return (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
-    }
-
-    var lower = [];
-    var i;
-
-    for (i = 0; i < sorted.length; i += 1) {
-      while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], sorted[i]) <= 0) {
-        lower.pop();
-      }
-      lower.push(sorted[i]);
-    }
-
-    var upper = [];
-    for (i = sorted.length - 1; i >= 0; i -= 1) {
-      while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], sorted[i]) <= 0) {
-        upper.pop();
-      }
-      upper.push(sorted[i]);
-    }
-
-    upper.pop();
-    lower.pop();
-    return lower.concat(upper);
-  }
-
-  function buildOrganicTerrainMass(nodes) {
-    if (!nodes.length) return null;
-
-    var totalX = 0;
-    var totalY = 0;
-    var minX = Infinity;
-    var maxX = -Infinity;
-    var minY = Infinity;
-    var maxY = -Infinity;
-    var elevationTotal = 0;
-
-    nodes.forEach(function (node) {
-      totalX += node.x;
-      totalY += node.y;
-      minX = Math.min(minX, node.x);
-      maxX = Math.max(maxX, node.x);
-      minY = Math.min(minY, node.y);
-      maxY = Math.max(maxY, node.y);
-      elevationTotal += node.elevation;
-    });
-
-    return {
-      ready: true,
-      nodeCount: nodes.length,
-      centroid: { x: totalX / nodes.length, y: totalY / nodes.length },
-      bounds: { minX: minX, maxX: maxX, minY: minY, maxY: maxY },
-      averageElevation: elevationTotal / nodes.length,
-      hull: convexHull(nodes.map(function (node) { return { x: node.x, y: node.y }; })),
-      organicRadiusX: Math.max(0.62, (maxX - minX) / 10),
-      organicRadiusY: Math.max(0.42, (maxY - minY) / 10)
-    };
-  }
-
-  function buildSurfaceBlendUnits(surfaceUnits) {
-    var maxUnits = 320;
-    var step = surfaceUnits.length > maxUnits ? Math.ceil(surfaceUnits.length / maxUnits) : 1;
-    var result = [];
-
-    for (var i = 0; i < surfaceUnits.length; i += step) {
-      var unit = surfaceUnits[i];
-      var wet = unit.hydrationDepth > 0.05 || unit.wetland > 0.22;
-      var ridge = unit.ridge > 0.30 || unit.terrainClass.indexOf("ridge") >= 0;
-      var basin = unit.basin > 0.25 || unit.terrainClass.indexOf("basin") >= 0;
-      var textureAlpha = clamp(0.08 + unit.texturePressure * 0.14 + unit.soil * 0.06, 0.08, 0.23);
-
-      result.push({
-        x: unit.x,
-        y: unit.y,
-        rx: unit.rx,
-        ry: unit.ry,
-        elevation: unit.elevation,
-        hydrationDepth: unit.hydrationDepth,
-        wet: wet,
-        ridge: ridge,
-        basin: basin,
-        coast: unit.coast > 0.28,
-        textureAlpha: textureAlpha,
-        terrainClass: unit.terrainClass
-      });
-    }
-
-    return result;
-  }
-
-  function rankPoolCandidate(node) {
-    var hClass = String(node.hydrationClass || "");
-    var dClass = String(node.terrainDatumClass || "");
-    var lowland = clamp(1 - node.elevation, 0, 1);
-    var waterTableSupport = node.waterTableDatumHeld > 0 ? clamp(node.waterTableDatumHeld + lowland * 0.22, 0, 1) : 0;
-    var datumSupport = dClass.indexOf("basin") >= 0 || dClass.indexOf("valley") >= 0 ? 0.28 : 0;
-    var classSupport = hClass.indexOf("lake") >= 0 ? 0.40 : hClass.indexOf("marsh") >= 0 || hClass.indexOf("wetland") >= 0 ? 0.34 : 0;
-
-    return clamp(
-      node.basinPressure * 0.36 +
-      node.valleyPressure * 0.14 +
-      node.hydrationDepth * 0.28 +
-      node.hydrationPressure * 0.18 +
-      node.marshPressure * 0.24 +
-      node.wetlandPressure * 0.24 +
-      waterTableSupport * 0.16 +
-      datumSupport +
-      classSupport +
-      lowland * 0.06,
-      0,
-      1.5
-    );
-  }
-
-  function nearestLowerHydrationCandidate(node, candidates) {
-    var best = null;
-    var bestScore = Infinity;
-
-    for (var i = 0; i < candidates.length; i += 1) {
-      var other = candidates[i];
-      if (other.nodeId === node.nodeId) continue;
-
-      var d = distance2D(node.x, node.y, other.x, other.y);
-      if (d < 0.1 || d > 3.45) continue;
-
-      var lowerBias = other.elevation <= node.elevation + 0.06 ? 0 : 0.95;
-      var valleyBias = other.valleyPressure > 0.34 || other.basinPressure > 0.34 ? -0.42 : 0.18;
-      var depthBias = -other.hydrationDepth * 0.48;
-      var poolBias = -rankPoolCandidate(other) * 0.38;
-      var score = d + lowerBias + valleyBias + depthBias + poolBias;
-
-      if (score < bestScore) {
-        best = other;
-        bestScore = score;
-      }
-    }
-
-    return best;
-  }
-
-  function buildHydrationFlowGraph(hydrationNodes, terrainNodes) {
-    var candidates = hydrationNodes.length ? hydrationNodes.slice() : terrainNodes.filter(function (node) {
-      return node.waterFillEligible || node.valleyPressure > 0.42 || node.basinPressure > 0.34 || node.marshPressure > 0.32 || node.wetlandPressure > 0.32;
-    });
-
-    candidates.sort(function (a, b) {
-      return b.elevation - a.elevation;
-    });
-
-    var poolCandidates = terrainNodes.map(function (node) {
-      return { node: node, score: rankPoolCandidate(node) };
-    }).filter(function (entry) {
-      return entry.score > 0.34 ||
-        entry.node.basinPressure > 0.36 ||
-        entry.node.marshPressure > 0.34 ||
-        entry.node.wetlandPressure > 0.34 ||
-        entry.node.hydrationClass.indexOf("lake") >= 0 ||
-        entry.node.hydrationClass.indexOf("wetland") >= 0 ||
-        entry.node.hydrationClass.indexOf("marsh") >= 0 ||
-        entry.node.terrainDatumClass.indexOf("basin") >= 0 ||
-        entry.node.terrainDatumClass.indexOf("valley") >= 0;
-    }).sort(function (a, b) {
-      return b.score - a.score;
-    });
-
-    var pools = [];
-    var poolSeen = {};
-
-    poolCandidates.slice(0, 22).forEach(function (entry) {
-      var node = entry.node;
-      var key = node.seatKey || node.nodeId;
-      if (poolSeen[key]) return;
-      poolSeen[key] = true;
-
-      var kind = node.hydrationClass.indexOf("marsh") >= 0 || node.marshPressure > 0.48
-        ? "marsh_pool"
-        : node.hydrationClass.indexOf("wetland") >= 0 || node.wetlandPressure > 0.48
-          ? "wetland_pool"
-          : node.basinPressure > 0.42 || node.terrainDatumClass.indexOf("basin") >= 0
-            ? "basin_lake_pool"
-            : "lowland_pool";
-
-      pools.push({
-        node: node,
-        score: entry.score,
-        radius: clamp(0.28 + entry.score * 0.52 + node.basinPressure * 0.22, 0.26, 0.96),
-        kind: kind
-      });
-    });
-
-    var edges = [];
-    var rivers = [];
-    var streams = [];
-    var gullies = [];
-    var waterfalls = [];
-    var seenEdges = {};
-
-    candidates.forEach(function (node) {
-      var next = nearestLowerHydrationCandidate(node, candidates);
-      if (!next) return;
-
-      var key = node.nodeId < next.nodeId ? node.nodeId + "::" + next.nodeId : next.nodeId + "::" + node.nodeId;
-      if (seenEdges[key]) return;
-      seenEdges[key] = true;
-
-      var drop = node.elevation - next.elevation;
-      var pressure = clamp(
-        node.hydrationDepth * 0.34 +
-        node.valleyPressure * 0.28 +
-        node.basinPressure * 0.14 +
-        next.basinPressure * 0.18 +
-        rankPoolCandidate(next) * 0.15 +
-        Math.max(0, drop) * 0.46,
-        0,
-        1
-      );
-
-      var edge = {
-        from: node,
-        to: next,
-        drop: drop,
-        pressure: pressure,
-        width: clamp(0.52 + pressure * 2.35, 0.48, 3.10),
-        major: pressure > 0.42 || node.basinPressure > 0.46 || next.basinPressure > 0.46,
-        kind: pressure > 0.46 ? "river" : pressure > 0.24 ? "stream" : "gully"
+    return raw.map(function (item, index) {
+      if (Array.isArray(item.points)) return item;
+      var x = finite(item.x, finite(item.centerX, 0));
+      var y = finite(item.y, finite(item.centerY, 0));
+      var locA = terrainSeatToLonLat(x - 0.30, y);
+      var locB = terrainSeatToLonLat(x + 0.30, y);
+      return {
+        edgeId: item.edgeId || item.nodeId || "hydration-edge-" + String(index + 1).padStart(2, "0"),
+        edgeType: item.edgeType || item.primaryCategory || item.edgeClass || "edge",
+        points: [[locA.lon, locA.lat], [locB.lon, locB.lat]],
+        stroke: String(item.edgeType || item.edgeClass || "").indexOf("waterfall") >= 0 ? "rgba(160,242,255,0.70)" : "rgba(244,207,131,0.52)"
       };
-
-      edges.push(edge);
-      if (edge.kind === "river") rivers.push(edge);
-      else if (edge.kind === "stream") streams.push(edge);
-      else gullies.push(edge);
-
-      if (drop > 0.12 && (node.ridgePressure > 0.28 || node.summitPressure > 0.30) && next.valleyPressure > 0.22) {
-        waterfalls.push({
-          from: node,
-          to: next,
-          drop: drop,
-          pressure: pressure,
-          kind: "waterfall_candidate"
-        });
-      }
     });
+  }
 
-    return {
-      ready: true,
-      candidateCount: candidates.length,
-      edges: edges,
-      pools: pools,
-      rivers: rivers,
-      streams: streams,
-      gullies: gullies,
-      waterfalls: waterfalls
+  function buildHydrationEdgeScope() {
+    var validated = detectHydrationEdgeChild();
+    if (!validated) {
+      return makeHeldScope("hydrationEdgeScope256", "hydration_edge_child_optional", "child_read_only_held_when_missing", "held_child_not_loaded");
+    }
+
+    var edgeItems = normalizeEdgeItems(state.edgeChild.map);
+    var beachCount = edgeItems.filter(function (item) { return String(item.edgeType || "").indexOf("beach") >= 0; }).length;
+    var cliffCount = edgeItems.filter(function (item) { return String(item.edgeType || "").indexOf("cliff") >= 0; }).length;
+    var waterfallCount = edgeItems.filter(function (item) { return String(item.edgeType || "").indexOf("waterfall") >= 0; }).length;
+
+    var scope = createScope("hydrationEdgeScope256", "window.AUDRALIA_GRATITUDE_HYDRATION_EDGE_CHILD", "child_read_only");
+    scope.ready = edgeItems.length > 0;
+    scope.held = !scope.ready;
+    scope.activeNodeCount = edgeItems.length;
+    scope.chronologyState = scope.ready ? "terrain_and_hydration_then_edge_collision" : "held_until_edge_child_publishes";
+    scope.pressureMapReady = scope.ready;
+    scope.renderEligibilityMapReady = scope.ready;
+    scope.receiptMapReady = true;
+    scope.drawPacket = {
+      ready: scope.ready,
+      held: !scope.ready,
+      edgeItems: edgeItems,
+      beachCount: beachCount,
+      cliffCount: cliffCount,
+      waterfallCount: waterfallCount,
+      renderSource: "hydration_edge_child_packet"
     };
-  }
-
-  function buildTerrainHints(nodes) {
-    var mountains = [];
-    var deserts = [];
-    var valleys = [];
-    var basins = [];
-
-    nodes.forEach(function (node) {
-      if (node.mountainRangeReserved || node.ridgePressure > 0.50 || node.summitPressure > 0.46) {
-        mountains.push({
-          node: node,
-          pressure: clamp(node.ridgePressure * 0.48 + node.summitPressure * 0.50 + node.elevation * 0.16, 0, 1)
-        });
-      }
-
-      if (node.desertLandReserved || node.desertReservationPressure > 0.42 || node.rainShadowPressure > 0.44 || node.dryBasinReserved) {
-        deserts.push({
-          node: node,
-          pressure: clamp(node.desertReservationPressure * 0.55 + node.rainShadowPressure * 0.35 + (1 - node.hydrationDepth) * 0.15, 0, 1)
-        });
-      }
-
-      if (node.valleyStatus || node.valleyPressure > 0.40 || node.terrainDatumClass.indexOf("valley") >= 0) {
-        valleys.push({
-          node: node,
-          pressure: clamp(node.valleyPressure * 0.72 + node.drainagePressure * 0.20 + (1 - node.elevation) * 0.08, 0, 1)
-        });
-      }
-
-      if (node.basinStatus || node.basinPressure > 0.34 || node.terrainDatumClass.indexOf("basin") >= 0) {
-        basins.push({
-          node: node,
-          pressure: clamp(node.basinPressure * 0.74 + rankPoolCandidate(node) * 0.18 + (1 - node.elevation) * 0.08, 0, 1)
-        });
-      }
-    });
-
-    return {
-      mountains: mountains.sort(function (a, b) { return b.pressure - a.pressure; }).slice(0, 34),
-      deserts: deserts.sort(function (a, b) { return b.pressure - a.pressure; }).slice(0, 28),
-      valleys: valleys.sort(function (a, b) { return b.pressure - a.pressure; }).slice(0, 34),
-      basins: basins.sort(function (a, b) { return b.pressure - a.pressure; }).slice(0, 28)
+    scope.receipt = {
+      scopeId: scope.scopeId,
+      source: scope.source,
+      authority: scope.authority,
+      ready: scope.ready,
+      held: scope.held,
+      addressSpaceCount: LATTICE_STATES,
+      nodeCount: LATTICE_STATES,
+      activeNodeCount: edgeItems.length,
+      beachCount: beachCount,
+      cliffCount: cliffCount,
+      waterfallCount: waterfallCount,
+      carrierInventsEdge: false,
+      finalVisualPassClaim: false
     };
+    return scope;
   }
 
-  function buildOrganicVisualExpression() {
-    var nodes = state.gratitude.terrainNodes;
-    var units = state.gratitude.surfaceUnits;
-    var hydration = state.gratitude.hydrationSeats;
-
-    state.gratitude.organicTerrainMass = buildOrganicTerrainMass(nodes);
-    state.gratitude.surfaceBlendUnits = buildSurfaceBlendUnits(units);
-    state.gratitude.hydrationFlowGraph = buildHydrationFlowGraph(hydration, nodes);
-
-    state.gratitude.poolVisibilityRegistry = state.gratitude.hydrationFlowGraph.pools;
-    state.gratitude.riverVisibilityRegistry = state.gratitude.hydrationFlowGraph.rivers;
-    state.gratitude.streamVisibilityRegistry = state.gratitude.hydrationFlowGraph.streams;
-    state.gratitude.gullyVisibilityRegistry = state.gratitude.hydrationFlowGraph.gullies;
-    state.gratitude.waterfallVisibilityRegistry = state.gratitude.hydrationFlowGraph.waterfalls;
-
-    var hints = buildTerrainHints(nodes);
-    state.gratitude.ridgeSpineVisibility = hints.mountains;
-    state.gratitude.dryZoneVisibility = hints.deserts;
-    state.gratitude.valleyCorridorVisibility = hints.valleys;
-    state.gratitude.basinDepressionVisibility = hints.basins;
-    state.gratitude.coastHull = state.gratitude.organicTerrainMass ? state.gratitude.organicTerrainMass.hull : [];
-    state.gratitude.visualExpressionReady = Boolean(nodes.length && state.gratitude.organicTerrainMass && state.gratitude.hydrationFlowGraph.ready);
-    state.gratitude.landWaterConstructVisibilityReady = state.gratitude.visualExpressionReady;
-  }
-
-  function resolveEdgeMapEdges(map, kind) {
-    if (!map || !Array.isArray(map.edges)) return [];
-    return map.edges.map(function (edge, index) {
-      return normalizeEdge(edge, index, kind);
-    });
+  function rebuildScopes() {
+    state.scopes.terrainScope256 = buildTerrainScope();
+    state.scopes.hydrationScope256 = buildHydrationScope();
+    state.scopes.hydrationEdgeScope256 = buildHydrationEdgeScope();
+    state.scopes.temperatureScope256Held = makeHeldScope("temperatureScope256Held", "future_temperature_child", "held_socket_only", "temperature_child_not_loaded");
+    state.scopes.atmosphereScope256Held = makeHeldScope("atmosphereScope256Held", "future_atmosphere_child", "held_socket_only", "atmosphere_child_not_loaded");
+    state.scopes.climateScope256Held = makeHeldScope("climateScope256Held", "future_climate_child", "held_socket_only", "climate_child_not_loaded");
+    state.singleScopeFlatteningCorrected = true;
   }
 
   function validateGratitudeChild() {
     state.gratitude.attempts += 1;
     state.gratitude.checkedAt = new Date().toISOString();
 
-    var api = getGratitudeAPI();
-
+    var api = window.AUDRALIA_G2_GRATITUDE_CONTINENT_CHILD || null;
     state.gratitude.api = api;
     state.gratitude.detected = Boolean(api);
     state.gratitude.apiComplete = false;
@@ -1291,19 +1228,17 @@
     state.gratitude.validated = false;
     state.gratitude.packet = null;
     state.gratitude.status = null;
+    state.gratitude.surfaceMap = null;
     state.gratitude.continentMap = null;
+    state.gratitude.elevationMap = null;
     state.gratitude.hydrationMap = null;
     state.gratitude.summitMap = null;
-    state.gratitude.terrainNodes = [];
-    state.gratitude.surfaceUnits = [];
-    state.gratitude.hydrationSeats = [];
-    state.gratitude.terrainDatumNodes = [];
-    state.gratitude.summits = [];
-    state.gratitude.visualExpressionReady = false;
-    state.gratitude.landWaterConstructVisibilityReady = false;
+    state.gratitude.datumPacket = null;
+    state.gratitude.streamRegistry = null;
 
     if (!api) {
-      state.gratitude.failureReason = "Gratitude child missing / invalid · Sixth Sense terrain held";
+      state.gratitude.failureReason = "Gratitude child missing / invalid · scopes held";
+      rebuildScopes();
       updateVisibleReadout(true);
       publishStatus(true);
       requestRender(8);
@@ -1313,13 +1248,14 @@
     state.gratitude.apiComplete = Boolean(
       typeof api.status === "function" &&
       typeof api.getChildReceivePacket === "function" &&
-      typeof api.getContinentMap === "function" &&
+      (typeof api.getSurfaceMap === "function" || typeof api.getContinentMap === "function") &&
       typeof api.getHydrationMap === "function" &&
       typeof api.getSummitMap === "function"
     );
 
     if (!state.gratitude.apiComplete) {
-      state.gratitude.failureReason = "Gratitude child API incomplete · Sixth Sense terrain held";
+      state.gratitude.failureReason = "Gratitude child API incomplete · scopes held";
+      rebuildScopes();
       updateVisibleReadout(true);
       publishStatus(true);
       requestRender(8);
@@ -1328,22 +1264,28 @@
 
     try {
       var status = api.status();
-      var packet = api.getChildReceivePacket("audralia-sixth-sense-collaborative-carrier", { compact: false });
-      var continentMap = api.getContinentMap({ compact: false });
+      var packet = api.getChildReceivePacket("audralia-multi-scope-chronological-compositor-carrier", { compact: false });
+      var surfaceMap = typeof api.getSurfaceMap === "function" ? api.getSurfaceMap({ compact: false }) : null;
+      var continentMap = typeof api.getContinentMap === "function" ? api.getContinentMap({ compact: false }) : surfaceMap;
+      var elevationMap = typeof api.getElevationMap === "function" ? api.getElevationMap({ compact: false }) : null;
       var hydrationMap = api.getHydrationMap({ compact: false });
       var summitMap = api.getSummitMap({ compact: false });
+      var datumPacket = typeof api.getTerrainDatumPacket === "function" ? api.getTerrainDatumPacket("audralia-multi-scope-carrier", { compact: false }) : null;
+      var streamRegistry = typeof api.getStreamRegistry === "function" ? api.getStreamRegistry({ compact: false }) : null;
 
       state.gratitude.status = status;
       state.gratitude.packet = packet;
-      state.gratitude.continentMap = continentMap;
+      state.gratitude.surfaceMap = surfaceMap || continentMap;
+      state.gratitude.continentMap = continentMap || surfaceMap;
+      state.gratitude.elevationMap = elevationMap;
       state.gratitude.hydrationMap = hydrationMap;
       state.gratitude.summitMap = summitMap;
+      state.gratitude.datumPacket = datumPacket;
+      state.gratitude.streamRegistry = streamRegistry;
       state.gratitude.packetReady = Boolean(packet && packet.childReceivePacketReady === true);
-      state.gratitude.terrainNodes = resolveGratitudeNodes(continentMap, packet);
-      state.gratitude.surfaceUnits = resolveSurfaceUnits(continentMap, packet);
-      state.gratitude.hydrationSeats = resolveHydrationSeats(hydrationMap, state.gratitude.terrainNodes, packet);
-      state.gratitude.terrainDatumNodes = resolveTerrainDatumNodes(api, packet);
-      state.gratitude.summits = resolveSummits(summitMap, packet);
+
+      var terrainSeats = normalizeTerrainSeats(surfaceMap || continentMap).filter(isLandSeat);
+      var hydrationSeats = normalizeHydrationSeats(hydrationMap).filter(seatHasHydration);
 
       state.gratitude.validated = Boolean(
         state.gratitude.packetReady &&
@@ -1352,23 +1294,20 @@
         packet.hydrationIsConsequence === true &&
         packet.waterFillDerivedFromValleys === true &&
         packet.finalVisualPassClaim === false &&
-        state.gratitude.terrainNodes.length > 0
+        terrainSeats.length > 0 &&
+        hydrationSeats.length > 0
       );
 
-      if (state.gratitude.validated) buildOrganicVisualExpression();
-
-      state.gratitude.failureReason = state.gratitude.validated
-        ? ""
-        : "Gratitude child packet validation failed · Sixth Sense terrain held";
-
+      state.gratitude.failureReason = state.gratitude.validated ? "" : "Gratitude child validation failed · scopes held";
+      rebuildScopes();
       updateVisibleReadout(true);
       publishStatus(true);
       requestRender(12);
-
       return state.gratitude.validated;
     } catch (error) {
       recordError("validateGratitudeChild", error);
-      state.gratitude.failureReason = "Gratitude child packet exception · Sixth Sense terrain held";
+      state.gratitude.failureReason = "Gratitude child packet exception · scopes held";
+      rebuildScopes();
       updateVisibleReadout(true);
       publishStatus(true);
       requestRender(8);
@@ -1376,701 +1315,124 @@
     }
   }
 
-  function validateHydrationEdgeChild() {
-    state.edge.attempts += 1;
-    state.edge.checkedAt = new Date().toISOString();
+  function drawTerrainScope(mode) {
+    var scope = state.scopes.terrainScope256;
+    if (!scope || !scope.ready || !scope.drawPacket) return;
 
-    var api = getEdgeAPI();
+    var packet = scope.drawPacket;
+    var isBody = mode === "body";
+    var isSixth = mode === "sixth";
+    var alpha = isBody ? 0.045 : isSixth ? 0.30 : 0.48;
+    var strokeAlpha = isBody ? 0 : isSixth ? 0.055 : 0.10;
 
-    state.edge.api = api;
-    state.edge.detected = Boolean(api);
-    state.edge.apiComplete = false;
-    state.edge.packetReady = false;
-    state.edge.validated = false;
-    state.edge.packet = null;
-    state.edge.status = null;
-    state.edge.edgeMap = null;
-    state.edge.beachMap = null;
-    state.edge.cliffMap = null;
-    state.edge.waterfallEdgeMap = null;
-    state.edge.marshWetlandEdgeMap = null;
-    state.edge.shelfEdgeMap = null;
-    state.edge.downstreamRegistry = null;
-    state.edge.edges = [];
-    state.edge.beaches = [];
-    state.edge.cliffs = [];
-    state.edge.waterfalls = [];
-    state.edge.marshWetlandEdges = [];
-    state.edge.shelfEdges = [];
-
-    if (!api) {
-      state.edge.failureReason = "Hydration-edge child missing · Sixth Sense edge overlays held";
-      updateVisibleReadout(true);
-      publishStatus(true);
-      requestRender(8);
-      return false;
-    }
-
-    state.edge.apiComplete = Boolean(
-      typeof api.status === "function" &&
-      typeof api.getChildReceivePacket === "function" &&
-      typeof api.getEdgeMap === "function" &&
-      typeof api.getBeachMap === "function" &&
-      typeof api.getCliffMap === "function" &&
-      typeof api.getWaterfallEdgeMap === "function"
-    );
-
-    if (!state.edge.apiComplete) {
-      state.edge.failureReason = "Hydration-edge child API incomplete · Sixth Sense edge overlays held";
-      updateVisibleReadout(true);
-      publishStatus(true);
-      requestRender(8);
-      return false;
-    }
-
-    try {
-      var status = api.status();
-      var packet = api.getChildReceivePacket("audralia-sixth-sense-collaborative-carrier", { compact: false });
-      var edgeMap = api.getEdgeMap({ compact: false });
-      var beachMap = api.getBeachMap({ compact: false });
-      var cliffMap = api.getCliffMap({ compact: false });
-      var waterfallEdgeMap = api.getWaterfallEdgeMap({ compact: false });
-      var marshWetlandEdgeMap = typeof api.getMarshWetlandEdgeMap === "function" ? api.getMarshWetlandEdgeMap({ compact: false }) : null;
-      var shelfEdgeMap = typeof api.getShelfEdgeMap === "function" ? api.getShelfEdgeMap({ compact: false }) : null;
-      var downstreamRegistry = typeof api.getDownstreamRegistry === "function" ? api.getDownstreamRegistry() : null;
-
-      state.edge.status = status;
-      state.edge.packet = packet;
-      state.edge.edgeMap = edgeMap;
-      state.edge.beachMap = beachMap;
-      state.edge.cliffMap = cliffMap;
-      state.edge.waterfallEdgeMap = waterfallEdgeMap;
-      state.edge.marshWetlandEdgeMap = marshWetlandEdgeMap;
-      state.edge.shelfEdgeMap = shelfEdgeMap;
-      state.edge.downstreamRegistry = downstreamRegistry;
-
-      state.edge.packetReady = Boolean(packet && packet.childReceivePacketReady === true);
-      state.edge.beaches = resolveEdgeMapEdges(beachMap, "beach_edge");
-      state.edge.cliffs = resolveEdgeMapEdges(cliffMap, "cliff_edge");
-      state.edge.waterfalls = resolveEdgeMapEdges(waterfallEdgeMap, "waterfall_edge");
-      state.edge.marshWetlandEdges = resolveEdgeMapEdges(marshWetlandEdgeMap, "marsh_wetland_edge");
-      state.edge.shelfEdges = resolveEdgeMapEdges(shelfEdgeMap, "coastal_shelf_edge");
-      state.edge.edges = resolveEdgeMapEdges(edgeMap, "edge");
-
-      state.edge.validated = Boolean(
-        state.edge.packetReady &&
-        packet.downstreamFromHydration === true &&
-        packet.beachCliffWaterfallEdgeClassifier === true &&
-        packet.waterEdgeCanBeBeachCliffOrWaterfall === true &&
-        packet.finalVisualPassClaim === false
-      );
-
-      state.edge.failureReason = state.edge.validated
-        ? ""
-        : "Hydration-edge child validation failed · Sixth Sense edge overlays held";
-
-      updateVisibleReadout(true);
-      publishStatus(true);
-      requestRender(12);
-
-      return state.edge.validated;
-    } catch (error) {
-      recordError("validateHydrationEdgeChild", error);
-      state.edge.failureReason = "Hydration-edge child packet exception · Sixth Sense edge overlays held";
-      updateVisibleReadout(true);
-      publishStatus(true);
-      requestRender(8);
-      return false;
-    }
-  }
-
-  function drawOrganicBlob(item, options) {
-    var ctx = state.ctx;
-    var p = projectPoint(gridPointToSpherePoint(item));
-    if (!p.frontFacing) return;
-
-    var m = metrics();
-    var radius = m.radius * clamp(options.radius || 0.075, 0.012, 0.22) * p.perspective;
-    var rx = radius * clamp(options.rxScale || 1.0, 0.5, 3.2);
-    var ry = radius * clamp(options.ryScale || 0.82, 0.30, 2.4);
-    var alpha = clamp(options.alpha || 0.25, 0, 1);
-    var rotation = finite(options.rotation, state.roll * 0.8);
-
-    var gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, Math.max(rx, ry));
-    gradient.addColorStop(0.00, options.center || "rgba(126,157,94,0.60)");
-    gradient.addColorStop(0.58, options.mid || "rgba(103,139,82,0.34)");
-    gradient.addColorStop(1.00, options.edge || "rgba(103,139,82,0)");
-
-    ctx.save();
-    clipSphere();
-    ctx.globalAlpha = alpha;
-    ctx.beginPath();
-
-    try {
-      ctx.ellipse(p.x, p.y, rx, ry, rotation, 0, TAU);
-    } catch (_ellipseError) {
-      ctx.arc(p.x, p.y, Math.max(rx, ry), 0, TAU);
-    }
-
-    ctx.fillStyle = gradient;
-    ctx.fill();
-    ctx.restore();
-  }
-
-  function drawOrganicTerrainMass(mode) {
-    if (!state.gratitude.visualExpressionReady) return;
-
-    var nodes = state.gratitude.terrainNodes;
-    var bodyMode = mode === "body";
-    var sixth = mode === "sixth-sense";
-    var hydrationMode = mode === "hydration";
-    var baseAlpha = bodyMode ? 0.070 : hydrationMode ? 0.14 : sixth ? 0.30 : 0.34;
-    var radius = bodyMode ? 0.054 : hydrationMode ? 0.064 : sixth ? 0.076 : 0.080;
-
-    for (var i = 0; i < nodes.length; i += 1) {
-      var node = nodes[i];
-      var elevation = node.elevation;
-      var wet = node.hydrationDepth > 0.055 || node.wetlandPressure > 0.42;
-      var dry = node.desertLandReserved || node.desertReservationPressure > 0.44;
-      var ridge = node.ridgePressure > 0.50 || node.summitPressure > 0.50;
-      var basin = node.basinPressure > 0.40;
-
-      var center = dry
-        ? "rgba(166,134,78,0.62)"
-        : ridge
-          ? "rgba(154,147,101,0.62)"
-          : basin
-            ? "rgba(84,124,88,0.60)"
-            : wet
-              ? "rgba(96,149,105,0.62)"
-              : "rgba(" +
-                Math.floor(86 + elevation * 54) + "," +
-                Math.floor(116 + elevation * 48) + "," +
-                Math.floor(72 + elevation * 26) + ",0.62)";
-
-      var mid = dry
-        ? "rgba(138,114,70,0.34)"
-        : ridge
-          ? "rgba(135,132,94,0.32)"
-          : basin
-            ? "rgba(74,111,82,0.32)"
-            : wet
-              ? "rgba(84,132,95,0.34)"
-              : "rgba(96,132,79,0.32)";
-
-      drawOrganicBlob(node, {
-        radius: radius + node.coastPressure * 0.010,
-        rxScale: 1.22 + node.coastPressure * 0.20,
-        ryScale: 0.84 + node.basinPressure * 0.12,
-        alpha: baseAlpha + node.texturePressure * 0.035,
-        center: center,
-        mid: mid,
-        edge: "rgba(86,120,75,0)"
-      });
-    }
-  }
-
-  function drawSurfaceBlendUnits(sixthSense) {
-    if (!state.gratitude.visualExpressionReady) return;
-    if (!sixthSense && state.activeLens !== "surface") return;
-
-    var units = state.gratitude.surfaceBlendUnits;
-
-    for (var i = 0; i < units.length; i += 1) {
-      var unit = units[i];
-      var colorCenter = unit.ridge
-        ? "rgba(193,174,118,0.46)"
-        : unit.basin
-          ? "rgba(73,103,76,0.38)"
-          : unit.wet
-            ? "rgba(82,144,110,0.38)"
-            : "rgba(116,148,86,0.35)";
-
-      drawOrganicBlob(unit, {
-        radius: sixthSense ? 0.020 + unit.elevation * 0.010 : 0.022 + unit.elevation * 0.012,
-        rxScale: 1.18,
-        ryScale: 0.74,
-        alpha: sixthSense ? unit.textureAlpha * 0.78 : unit.textureAlpha,
-        center: colorCenter,
-        mid: "rgba(105,137,86,0.12)",
-        edge: "rgba(105,137,86,0)"
-      });
-    }
-  }
-
-  function drawOrganicCoastSoftEdge(alphaBoost) {
-    if (!state.gratitude.coastHull || state.gratitude.coastHull.length < 3) return;
-
-    var ctx = state.ctx;
-    var projected = state.gratitude.coastHull.map(function (point) {
-      return projectPoint(gridPointToSpherePoint(point));
-    });
-
-    if (projected.filter(function (p) { return p.frontFacing; }).length < 3) return;
-
-    ctx.save();
-    clipSphere();
-    ctx.beginPath();
-
-    for (var i = 0; i < projected.length; i += 1) {
-      var p = projected[i];
-
-      if (i === 0) ctx.moveTo(p.x, p.y);
-      else {
-        var prev = projected[i - 1];
-        var mx = (prev.x + p.x) / 2;
-        var my = (prev.y + p.y) / 2;
-        ctx.quadraticCurveTo(prev.x, prev.y, mx, my);
+    var units = normalizeArray(packet.surfaceUnits);
+    if (units.length > 0) {
+      for (var u = 0; u < units.length; u += 1) {
+        if (u % (isBody ? 5 : isSixth ? 2 : 1) === 0) drawOrganicLandSpot(units[u], isBody ? 0.040 : isSixth ? 0.12 : 0.17, isBody ? 4.4 : 5.6);
       }
     }
 
-    ctx.closePath();
-    ctx.strokeStyle = "rgba(223,232,169,0.24)";
-    ctx.lineWidth = Math.max(0.80, state.dpr * 1.02);
-    ctx.globalAlpha = clamp(alphaBoost || 0.70, 0, 1);
-    ctx.stroke();
-
-    ctx.strokeStyle = "rgba(141,216,255,0.15)";
-    ctx.lineWidth = Math.max(1.4, state.dpr * 1.75);
-    ctx.globalAlpha = clamp((alphaBoost || 0.70) * 0.48, 0, 1);
-    ctx.stroke();
-
-    ctx.restore();
-  }
-
-  function gridPathSamples(a, b, count, curveScale) {
-    var samples = [];
-    var dx = b.x - a.x;
-    var dy = b.y - a.y;
-    var curve = Math.sin((a.x + b.y) * 0.9) * finite(curveScale, 0.18);
-
-    for (var i = 0; i <= count; i += 1) {
-      var t = i / count;
-      var bend = Math.sin(Math.PI * t) * curve;
-      samples.push({
-        x: a.x + dx * t + bend,
-        y: a.y + dy * t - bend * 0.55
-      });
+    for (var i = 0; i < packet.landSeats.length; i += 1) {
+      drawTerrainCell(packet.landSeats[i], alpha, strokeAlpha);
     }
 
-    return samples;
+    if (!isBody) drawSummitMarkers(isSixth ? 0.46 : 0.72);
   }
 
-  function drawGridPath(samples, options) {
-    var ctx = state.ctx;
-    var projected = samples.map(function (sample) {
-      return projectPoint(gridPointToSpherePoint(sample));
-    });
+  function drawHydrationScope(mode) {
+    var scope = state.scopes.hydrationScope256;
+    if (!scope || !scope.ready || !scope.drawPacket) return;
 
-    if (projected.filter(function (p) { return p.frontFacing; }).length < 2) return;
+    var packet = scope.drawPacket;
+    var isSixth = mode === "sixth";
+    var isHydration = mode === "hydration";
+    var waterAlpha = isHydration ? 0.54 : isSixth ? 0.38 : 0.12;
+    var flowAlpha = isHydration ? 0.76 : isSixth ? 0.58 : 0.18;
 
-    ctx.save();
-    clipSphere();
-    ctx.beginPath();
-
-    for (var i = 0; i < projected.length; i += 1) {
-      var p = projected[i];
-      if (i === 0) ctx.moveTo(p.x, p.y);
-      else ctx.lineTo(p.x, p.y);
+    var active = normalizeArray(packet.activeHydrationSeats);
+    for (var i = 0; i < active.length; i += 1) {
+      if (isHydration) drawWaterCell(active[i], waterAlpha);
+      drawWaterSpot(active[i], waterAlpha, isHydration ? 6.4 : 5.2);
     }
 
-    ctx.strokeStyle = options.stroke;
-    ctx.lineWidth = Math.max(0.32, state.dpr * finite(options.width, 1));
-    ctx.globalAlpha = clamp(finite(options.alpha, 0.5), 0, 1);
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.stroke();
-
-    if (options.glow) {
-      ctx.strokeStyle = options.glow;
-      ctx.lineWidth = Math.max(0.62, state.dpr * finite(options.width, 1) * 2.5);
-      ctx.globalAlpha = clamp(finite(options.alpha, 0.5) * 0.16, 0, 1);
-      ctx.stroke();
-    }
-
-    ctx.restore();
-  }
-
-  function drawRidgeSpineVisibility(alphaScale) {
-    var ctx = state.ctx;
-    var hints = state.gratitude.ridgeSpineVisibility;
-
-    for (var i = 0; i < hints.length; i += 1) {
-      var hint = hints[i];
-      var node = hint.node;
-      var p = projectPoint(gridPointToSpherePoint(node));
-      if (!p.frontFacing) continue;
-
-      var size = Math.max(1.5, state.dpr * (1.8 + hint.pressure * 2.8) * p.perspective);
-
-      ctx.save();
-      clipSphere();
-
-      ctx.beginPath();
-      ctx.moveTo(p.x, p.y - size * 1.05);
-      ctx.lineTo(p.x + size * 0.80, p.y + size * 0.62);
-      ctx.lineTo(p.x - size * 0.80, p.y + size * 0.62);
-      ctx.closePath();
-      ctx.fillStyle = "rgba(245,220,158," + (0.20 * alphaScale).toFixed(3) + ")";
-      ctx.fill();
-
-      ctx.beginPath();
-      ctx.moveTo(p.x - size * 1.55, p.y + size * 0.38);
-      ctx.lineTo(p.x + size * 1.55, p.y - size * 0.12);
-      ctx.strokeStyle = "rgba(255,244,216," + (0.20 * alphaScale).toFixed(3) + ")";
-      ctx.lineWidth = Math.max(0.38, state.dpr * 0.48);
-      ctx.stroke();
-
-      ctx.restore();
+    var flows = normalizeArray(packet.flows);
+    for (var f = 0; f < flows.length; f += 1) {
+      drawFlowLine(flows[f], flowAlpha, flows[f].major ? 1.5 : 0.95);
     }
   }
 
-  function drawBasinDepressionVisibility(alphaScale) {
-    var hints = state.gratitude.basinDepressionVisibility;
+  function drawHydrationEdgeScope(mode) {
+    var scope = state.scopes.hydrationEdgeScope256;
+    if (!scope || !scope.ready || !scope.drawPacket) return;
+    if (mode !== "sixth" && mode !== "hydration" && mode !== "surface") return;
 
-    for (var i = 0; i < hints.length; i += 1) {
-      drawOrganicBlob(hints[i].node, {
-        radius: 0.050 + hints[i].pressure * 0.018,
-        rxScale: 1.42,
-        ryScale: 0.78,
-        alpha: (0.20 + hints[i].pressure * 0.10) * alphaScale,
-        center: "rgba(49,76,62,0.42)",
-        mid: "rgba(35,55,48,0.22)",
-        edge: "rgba(35,55,48,0)"
-      });
-    }
+    var alpha = mode === "sixth" ? 0.54 : 0.28;
+    var items = normalizeArray(scope.drawPacket.edgeItems);
+    for (var i = 0; i < items.length; i += 1) drawEdgeItem(items[i], alpha);
   }
 
-  function drawValleyCorridorVisibility(alphaScale) {
-    var valleys = state.gratitude.valleyCorridorVisibility;
-    var sorted = valleys.slice().sort(function (a, b) {
-      return a.node.y === b.node.y ? a.node.x - b.node.x : a.node.y - b.node.y;
-    });
-
-    for (var i = 0; i < sorted.length - 1; i += 1) {
-      var a = sorted[i].node;
-      var b = sorted[i + 1].node;
-      if (distance2D(a.x, a.y, b.x, b.y) > 2.4) continue;
-
-      drawGridPath(gridPathSamples(a, b, 10, 0.11), {
-        stroke: "rgba(62,91,68,0.42)",
-        glow: "rgba(83,128,91,0.22)",
-        width: 1.2 + Math.max(sorted[i].pressure, sorted[i + 1].pressure) * 1.2,
-        alpha: 0.42 * alphaScale
-      });
-    }
-  }
-
-  function drawDryZoneVisibility(alphaScale) {
-    var hints = state.gratitude.dryZoneVisibility;
-
-    for (var i = 0; i < hints.length; i += 1) {
-      drawOrganicBlob(hints[i].node, {
-        radius: 0.046 + hints[i].pressure * 0.014,
-        rxScale: 1.38,
-        ryScale: 0.70,
-        alpha: (0.18 + hints[i].pressure * 0.14) * alphaScale,
-        center: "rgba(204,164,91,0.38)",
-        mid: "rgba(170,132,74,0.18)",
-        edge: "rgba(170,132,74,0)"
-      });
-    }
-  }
-
-  function drawFlowEdge(edge, options) {
-    drawGridPath(gridPathSamples(edge.from, edge.to, 14, 0.18), {
-      stroke: options.stroke,
-      glow: options.glow,
-      width: edge.width * options.widthScale,
-      alpha: options.alpha
-    });
-  }
-
-  function drawPoolVisibilityRegistry(alphaScale) {
-    var pools = state.gratitude.poolVisibilityRegistry;
-
-    for (var i = 0; i < pools.length; i += 1) {
-      var pool = pools[i];
-      var node = pool.node;
-      var color = pool.kind === "marsh_pool"
-        ? "rgba(86,190,151,0.58)"
-        : pool.kind === "wetland_pool"
-          ? "rgba(105,207,178,0.54)"
-          : "rgba(101,219,246,0.62)";
-
-      drawOrganicBlob(node, {
-        radius: 0.036 + pool.radius * 0.040,
-        rxScale: 1.55,
-        ryScale: 0.76,
-        alpha: 0.68 * alphaScale,
-        center: color,
-        mid: "rgba(74,197,228,0.24)",
-        edge: "rgba(74,197,228,0)"
-      });
-    }
-  }
-
-  function drawRiverStreamVisibility(alphaScale) {
-    var rivers = state.gratitude.riverVisibilityRegistry;
-    var streams = state.gratitude.streamVisibilityRegistry;
-
-    for (var i = 0; i < rivers.length; i += 1) {
-      drawFlowEdge(rivers[i], {
-        stroke: "rgba(118,232,251,0.84)",
-        glow: "rgba(118,232,251,0.58)",
-        widthScale: 1.20,
-        alpha: 0.86 * alphaScale
-      });
-    }
-
-    for (var j = 0; j < streams.length; j += 1) {
-      drawFlowEdge(streams[j], {
-        stroke: "rgba(156,239,255,0.68)",
-        glow: "rgba(156,239,255,0.42)",
-        widthScale: 0.86,
-        alpha: 0.70 * alphaScale
-      });
-    }
-  }
-
-  function drawGullyWaterfallVisibility(alphaScale) {
-    var gullies = state.gratitude.gullyVisibilityRegistry;
-    var waterfalls = state.gratitude.waterfallVisibilityRegistry;
-
-    for (var i = 0; i < gullies.length; i += 1) {
-      drawFlowEdge(gullies[i], {
-        stroke: "rgba(191,246,255,0.44)",
-        glow: "rgba(191,246,255,0.26)",
-        widthScale: 0.58,
-        alpha: 0.50 * alphaScale
-      });
-    }
+  function drawSummitMarkers(alpha) {
+    var scope = state.scopes.terrainScope256;
+    if (!scope || !scope.ready || !scope.drawPacket) return;
+    var summits = normalizeArray(scope.drawPacket.summits);
+    if (!summits.length) return;
 
     var ctx = state.ctx;
     ctx.save();
     clipSphere();
 
-    for (var k = 0; k < waterfalls.length; k += 1) {
-      var hint = waterfalls[k];
-      var mid = { x: (hint.from.x + hint.to.x) / 2, y: (hint.from.y + hint.to.y) / 2 };
-      var p = projectPoint(gridPointToSpherePoint(mid));
-      if (!p.frontFacing) continue;
-
-      var len = Math.max(2, state.dpr * (2.6 + hint.drop * 9) * p.perspective);
-      ctx.beginPath();
-      ctx.moveTo(p.x, p.y - len * 0.55);
-      ctx.lineTo(p.x, p.y + len * 0.55);
-      ctx.strokeStyle = "rgba(226,252,255," + (0.58 * alphaScale).toFixed(3) + ")";
-      ctx.lineWidth = Math.max(0.45, state.dpr * 0.52);
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y + len * 0.66, Math.max(0.75, state.dpr * 1.05), 0, TAU);
-      ctx.fillStyle = "rgba(226,252,255," + (0.36 * alphaScale).toFixed(3) + ")";
-      ctx.fill();
-    }
-
-    ctx.restore();
-  }
-
-  function drawEdgeMarker(edge, type, alphaScale) {
-    var ctx = state.ctx;
-    var p = projectPoint(gridPointToSpherePoint(edge));
-    if (!p.frontFacing) return;
-
-    var confidence = clamp(edge.confidence || 0.5, 0.2, 1);
-    var size = Math.max(1.4, state.dpr * (2.1 + confidence * 4.0) * p.perspective);
-    var alpha = clamp(0.18 + confidence * 0.54, 0.18, 0.82) * alphaScale;
-
-    ctx.save();
-    clipSphere();
-
-    if (type === "beach") {
-      ctx.beginPath();
-      try {
-        ctx.ellipse(p.x, p.y, size * 1.75, size * 0.62, state.roll, 0, TAU);
-      } catch (_ellipse) {
-        ctx.arc(p.x, p.y, size, 0, TAU);
-      }
-      ctx.fillStyle = "rgba(238,202,126," + alpha.toFixed(3) + ")";
-      ctx.fill();
-      ctx.restore();
-      return;
-    }
-
-    if (type === "cliff") {
-      ctx.beginPath();
-      ctx.moveTo(p.x - size * 1.4, p.y - size * 0.3);
-      ctx.lineTo(p.x + size * 1.4, p.y + size * 0.18);
-      ctx.strokeStyle = "rgba(240,231,199," + alpha.toFixed(3) + ")";
-      ctx.lineWidth = Math.max(0.55, state.dpr * 0.78);
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.moveTo(p.x + size * 0.36, p.y + size * 0.12);
-      ctx.lineTo(p.x + size * 0.78, p.y + size * 1.10);
-      ctx.strokeStyle = "rgba(65,45,34," + (alpha * 0.55).toFixed(3) + ")";
-      ctx.lineWidth = Math.max(0.42, state.dpr * 0.52);
-      ctx.stroke();
-      ctx.restore();
-      return;
-    }
-
-    if (type === "waterfall") {
-      ctx.beginPath();
-      ctx.moveTo(p.x, p.y - size * 1.05);
-      ctx.lineTo(p.x, p.y + size * 1.10);
-      ctx.strokeStyle = "rgba(231,255,255," + alpha.toFixed(3) + ")";
-      ctx.lineWidth = Math.max(0.70, state.dpr * 0.80);
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y + size * 1.16, Math.max(0.95, size * 0.28), 0, TAU);
-      ctx.fillStyle = "rgba(181,246,255," + (alpha * 0.45).toFixed(3) + ")";
-      ctx.fill();
-      ctx.restore();
-      return;
-    }
-
-    if (type === "marsh") {
-      ctx.beginPath();
-      try {
-        ctx.ellipse(p.x, p.y, size * 1.55, size * 0.72, -state.roll, 0, TAU);
-      } catch (_ellipse2) {
-        ctx.arc(p.x, p.y, size, 0, TAU);
-      }
-      ctx.fillStyle = "rgba(98,204,153," + (alpha * 0.54).toFixed(3) + ")";
-      ctx.fill();
-      ctx.restore();
-      return;
-    }
-
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, size * 0.55, 0, TAU);
-    ctx.strokeStyle = "rgba(141,216,255," + (alpha * 0.42).toFixed(3) + ")";
-    ctx.lineWidth = Math.max(0.40, state.dpr * 0.45);
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  function drawHydrationEdgeOverlays(alphaScale) {
-    if (!state.edge.validated) return;
-
-    state.edge.shelfEdges.forEach(function (edge) {
-      drawEdgeMarker(edge, "shelf", alphaScale * 0.78);
-    });
-
-    state.edge.beaches.forEach(function (edge) {
-      drawEdgeMarker(edge, "beach", alphaScale);
-    });
-
-    state.edge.cliffs.forEach(function (edge) {
-      drawEdgeMarker(edge, "cliff", alphaScale);
-    });
-
-    state.edge.marshWetlandEdges.forEach(function (edge) {
-      drawEdgeMarker(edge, "marsh", alphaScale);
-    });
-
-    state.edge.waterfalls.forEach(function (edge) {
-      drawEdgeMarker(edge, "waterfall", alphaScale);
-    });
-  }
-
-  function drawSummitMarkers(alphaScale) {
-    if (!state.gratitude.validated) return;
-
-    var ctx = state.ctx;
-    ctx.save();
-    clipSphere();
-
-    for (var i = 0; i < state.gratitude.summits.length; i += 1) {
-      var summit = state.gratitude.summits[i];
-      var p = projectPoint(gridPointToSpherePoint(summit));
+    for (var i = 0; i < summits.length; i += 1) {
+      var summit = summits[i];
+      var location = terrainSeatToLonLat(finite(summit.x, 0), finite(summit.y, 0));
+      var p = projectPoint(lonLatPoint(location.lon, location.lat));
       if (!p.frontFacing) continue;
 
       ctx.beginPath();
-      ctx.arc(p.x, p.y, Math.max(0.8, state.dpr * 1.45 * p.perspective), 0, TAU);
-      ctx.fillStyle = "rgba(244,207,131," + (0.54 * alphaScale).toFixed(3) + ")";
+      ctx.arc(p.x, p.y, Math.max(1.0, state.dpr * 1.9 * p.perspective), 0, TAU);
+      ctx.fillStyle = "rgba(244,207,131," + finite(alpha, 0.7).toFixed(3) + ")";
       ctx.fill();
 
       ctx.beginPath();
-      ctx.arc(p.x, p.y, Math.max(1.8, state.dpr * 3.1 * p.perspective), 0, TAU);
-      ctx.strokeStyle = "rgba(244,207,131," + (0.20 * alphaScale).toFixed(3) + ")";
-      ctx.lineWidth = Math.max(0.35, state.dpr * 0.42);
+      ctx.arc(p.x, p.y, Math.max(2.0, state.dpr * 3.8 * p.perspective), 0, TAU);
+      ctx.strokeStyle = "rgba(244,207,131," + (finite(alpha, 0.7) * 0.32).toFixed(3) + ")";
+      ctx.lineWidth = Math.max(0.4, state.dpr * 0.5);
       ctx.stroke();
     }
 
     ctx.restore();
   }
 
-  function drawSurfaceStack(sixthSense) {
-    var alphaScale = sixthSense ? 0.82 : 1.0;
-
-    drawOrganicTerrainMass(sixthSense ? "sixth-sense" : "surface");
-    drawBasinDepressionVisibility(alphaScale);
-    drawValleyCorridorVisibility(alphaScale);
-    drawDryZoneVisibility(alphaScale);
-    drawOrganicCoastSoftEdge(sixthSense ? 0.52 : 0.82);
-    drawSurfaceBlendUnits(sixthSense);
-    drawRidgeSpineVisibility(alphaScale);
-    drawSummitMarkers(alphaScale);
+  function drawChronologicalComposite() {
+    drawTerrainScope("sixth");
+    drawHydrationScope("sixth");
+    drawHydrationEdgeScope("sixth");
   }
 
-  function drawHydrationStack(sixthSense) {
-    var alphaScale = sixthSense ? 0.74 : 1.0;
-
-    if (!sixthSense) {
-      drawOrganicTerrainMass("hydration");
-      drawOrganicCoastSoftEdge(0.38);
-    }
-
-    drawPoolVisibilityRegistry(alphaScale);
-    drawRiverStreamVisibility(alphaScale);
-    drawGullyWaterfallVisibility(alphaScale);
-  }
-
-  function drawSixthSenseCollaborativeExpression() {
-    drawOrganicTerrainMass("sixth-sense");
-    drawBasinDepressionVisibility(0.66);
-    drawValleyCorridorVisibility(0.62);
-    drawDryZoneVisibility(0.54);
-    drawOrganicCoastSoftEdge(0.58);
-    drawSurfaceBlendUnits(true);
-    drawRidgeSpineVisibility(0.64);
-    drawPoolVisibilityRegistry(0.74);
-    drawRiverStreamVisibility(0.82);
-    drawGullyWaterfallVisibility(0.70);
-    drawHydrationEdgeOverlays(0.86);
-    drawSummitMarkers(0.58);
-  }
-
-  function drawGratitudeExpression() {
-    if (!state.gratitude.validated || !state.gratitude.visualExpressionReady) return;
-
+  function drawScopeExpression() {
     if (state.activeLens === "body") {
-      drawOrganicTerrainMass("body");
+      drawTerrainScope("body");
       return;
     }
 
     if (state.activeLens === "surface") {
-      drawSurfaceStack(false);
+      drawTerrainScope("surface");
+      drawHydrationEdgeScope("surface");
       return;
     }
 
     if (state.activeLens === "hydration") {
-      drawHydrationStack(false);
-      drawHydrationEdgeOverlays(0.52);
+      drawHydrationScope("hydration");
+      drawHydrationEdgeScope("hydration");
       return;
     }
 
-    if (state.activeLens === "sixth-sense") {
-      drawSixthSenseCollaborativeExpression();
+    if (state.activeLens === "sixth") {
+      drawChronologicalComposite();
     }
   }
 
   function drawReferenceLines() {
-    if (state.activeLens === "receipt" || state.activeLens === "surface" || state.activeLens === "sixth-sense") return;
+    if (state.activeLens === "receipt") return;
 
     var ctx = state.ctx;
     var equator = [];
@@ -2101,7 +1463,7 @@
 
     ctx.save();
     clipSphere();
-    ctx.globalAlpha = state.activeLens === "body" ? 0.05 : 0.14;
+    ctx.globalAlpha = state.activeLens === "body" ? 0.045 : 0.18;
     strokeLine(equator, "rgba(244,207,131,0.13)", Math.max(0.42, state.dpr * 0.34));
     strokeLine(meridian, "rgba(141,216,255,0.075)", Math.max(0.34, state.dpr * 0.28));
     ctx.restore();
@@ -2112,38 +1474,24 @@
     var z = (a.z + b.z) / 2;
 
     if (link.family === "fibonacci-forward") {
-      return front
-        ? "rgba(244,207,131," + clamp(0.42 + z * 0.12, 0.24, 0.70).toFixed(3) + ")"
-        : "rgba(244,207,131,0.08)";
+      return front ? "rgba(244,207,131," + clamp(0.42 + z * 0.12, 0.24, 0.70).toFixed(3) + ")" : "rgba(244,207,131,0.08)";
     }
-
     if (link.family === "fibonacci-return") {
-      return front
-        ? "rgba(184,238,255," + clamp(0.17 + z * 0.08, 0.10, 0.32).toFixed(3) + ")"
-        : "rgba(184,238,255,0.05)";
+      return front ? "rgba(184,238,255," + clamp(0.17 + z * 0.08, 0.10, 0.32).toFixed(3) + ")" : "rgba(184,238,255,0.05)";
     }
-
     if (link.major) {
-      return front
-        ? "rgba(244,207,131," + clamp(0.40 + z * 0.10, 0.22, 0.64).toFixed(3) + ")"
-        : "rgba(244,207,131,0.08)";
+      return front ? "rgba(244,207,131," + clamp(0.40 + z * 0.10, 0.22, 0.64).toFixed(3) + ")" : "rgba(244,207,131,0.08)";
     }
-
-    return front
-      ? "rgba(112,199,255," + clamp(0.20 + z * 0.08, 0.10, 0.36).toFixed(3) + ")"
-      : "rgba(112,199,255,0.045)";
+    return front ? "rgba(112,199,255," + clamp(0.20 + z * 0.08, 0.10, 0.36).toFixed(3) + ")" : "rgba(112,199,255,0.045)";
   }
 
   function drawLinks(links, reduced) {
     var ctx = state.ctx;
-
     for (var i = 0; i < links.length; i += 1) {
       var link = links[i];
       if (reduced && !link.major && link.family.indexOf("fibonacci") >= 0) continue;
-
       var a = projectPoint(link.a);
       var b = projectPoint(link.b);
-
       ctx.beginPath();
       ctx.moveTo(a.x, a.y);
       ctx.lineTo(b.x, b.y);
@@ -2155,20 +1503,15 @@
 
   function drawSeats(reduced) {
     var ctx = state.ctx;
-
     for (var i = 0; i < state.seats.length; i += 1) {
       var seat = state.seats[i];
       if (reduced && !seat.major) continue;
-
       var p = projectPoint(seat);
       var alpha = p.frontFacing ? (seat.major ? 0.74 : 0.46) : (seat.major ? 0.12 : 0.04);
       var radius = seat.major ? 1.85 : seat.secondary ? 1.25 : 0.95;
-
       ctx.beginPath();
       ctx.arc(p.x, p.y, Math.max(0.8, radius * state.dpr * p.perspective), 0, TAU);
-      ctx.fillStyle = seat.major
-        ? "rgba(244,207,131," + alpha.toFixed(3) + ")"
-        : "rgba(141,216,255," + alpha.toFixed(3) + ")";
+      ctx.fillStyle = seat.major ? "rgba(244,207,131," + alpha.toFixed(3) + ")" : "rgba(141,216,255," + alpha.toFixed(3) + ")";
       ctx.fill();
     }
   }
@@ -2185,35 +1528,33 @@
     ctx.restore();
   }
 
+  function receiptLines() {
+    var terrain = state.scopes.terrainScope256.receipt;
+    var hydration = state.scopes.hydrationScope256.receipt;
+    var edge = state.scopes.hydrationEdgeScope256.receipt;
+    return {
+      headline: state.gratitude.validated ? "MULTI-SCOPE COMPOSITOR ACTIVE" : "MULTI-SCOPE COMPOSITOR HELD",
+      line1: "TERRAIN " + (terrain.activeNodeCount || 0) + " · SURFACE " + (terrain.surfaceUnitCount || 0) + " · HYDRATION " + (hydration.activeNodeCount || 0),
+      line2: "EDGE " + (edge.activeNodeCount || 0) + " · EDGE HELD " + Boolean(state.scopes.hydrationEdgeScope256.held).toString().toUpperCase() + " · DATUM 256",
+      line3: "CHRONOLOGY BODY → TERRAIN → HYDRATION → EDGE → HELD SKY",
+      line4: "SINGLE-SCOPE FLATTENING CORRECTED · FINAL VISUAL PASS FALSE"
+    };
+  }
+
   function drawReceiptOverlay() {
     if (state.activeLens !== "receipt") return;
 
     var ctx = state.ctx;
     var m = metrics();
-    var w = Math.min(state.width * 0.84, m.radius * 2.18);
-    var h = Math.min(state.height * 0.42, m.radius * 1.08);
+    var lines = receiptLines();
+    var w = Math.min(state.width * 0.78, m.radius * 2.06);
+    var h = Math.min(state.height * 0.34, m.radius * 0.86);
     var x = m.centerX - w / 2;
     var y = m.centerY - h / 2;
 
-    var collaborativeReady = state.gratitude.landWaterConstructVisibilityReady && state.edge.validated;
-    var lineOne = collaborativeReady ? "SIXTH SENSE READY" : "SIXTH SENSE PARTIAL";
-    var lineTwo = "TERRAIN " + state.gratitude.terrainNodes.length +
-      " · SURFACE " + state.gratitude.surfaceUnits.length +
-      " · HYDRATION " + state.gratitude.hydrationSeats.length;
-    var lineThree = "POOLS " + state.gratitude.poolVisibilityRegistry.length +
-      " · RIVERS " + state.gratitude.riverVisibilityRegistry.length +
-      " · STREAMS " + state.gratitude.streamVisibilityRegistry.length +
-      " · GULLIES " + state.gratitude.gullyVisibilityRegistry.length;
-    var lineFour = "BEACHES " + state.edge.beaches.length +
-      " · CLIFFS " + state.edge.cliffs.length +
-      " · WATERFALLS " + state.edge.waterfalls.length;
-    var lineFive = "EDGE CHILD " + (state.edge.validated ? "VALIDATED" : "HELD") +
-      " · TERRAIN CHILD " + (state.gratitude.validated ? "VALIDATED" : "HELD");
-    var lineSix = "CARRIER INVENTS NONE · FINAL VISUAL PASS FALSE";
-
     ctx.save();
-    ctx.fillStyle = "rgba(2,8,20,0.70)";
-    ctx.strokeStyle = collaborativeReady ? "rgba(167,243,198,0.42)" : "rgba(244,207,131,0.34)";
+    ctx.fillStyle = "rgba(2,8,20,0.66)";
+    ctx.strokeStyle = state.gratitude.validated ? "rgba(167,243,198,0.40)" : "rgba(244,207,131,0.34)";
     ctx.lineWidth = Math.max(1, state.dpr);
     roundedRect(ctx, x, y, w, h, 22 * state.dpr);
     ctx.fill();
@@ -2221,32 +1562,24 @@
 
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.font = "900 " + Math.max(11, 12.8 * state.dpr) + "px ui-monospace, monospace";
-    ctx.fillStyle = collaborativeReady ? "rgba(167,243,198,0.94)" : "rgba(244,207,131,0.92)";
-    ctx.fillText(lineOne, m.centerX, y + h * 0.13);
+    ctx.font = "900 " + Math.max(12, 14 * state.dpr) + "px ui-monospace, monospace";
+    ctx.fillStyle = state.gratitude.validated ? "rgba(167,243,198,0.94)" : "rgba(244,207,131,0.92)";
+    ctx.fillText(lines.headline, m.centerX, y + h * 0.20);
 
-    ctx.font = "900 " + Math.max(7.5, 8.2 * state.dpr) + "px ui-monospace, monospace";
-    ctx.fillStyle = "rgba(238,244,255,0.86)";
-    ctx.fillText(lineTwo, m.centerX, y + h * 0.28);
-
-    ctx.fillStyle = "rgba(141,216,255,0.86)";
-    ctx.fillText(lineThree, m.centerX, y + h * 0.43);
-
-    ctx.fillStyle = "rgba(244,207,131,0.84)";
-    ctx.fillText(lineFour, m.centerX, y + h * 0.58);
-
-    ctx.fillStyle = "rgba(167,243,198,0.82)";
-    ctx.fillText(lineFive, m.centerX, y + h * 0.73);
-
-    ctx.fillStyle = "rgba(238,244,255,0.76)";
-    ctx.fillText(lineSix, m.centerX, y + h * 0.88);
-
+    ctx.font = "900 " + Math.max(8, 9.2 * state.dpr) + "px ui-monospace, monospace";
+    ctx.fillStyle = "rgba(238,244,255,0.84)";
+    ctx.fillText(lines.line1, m.centerX, y + h * 0.38);
+    ctx.fillStyle = "rgba(141,216,255,0.82)";
+    ctx.fillText(lines.line2, m.centerX, y + h * 0.54);
+    ctx.fillStyle = "rgba(244,207,131,0.80)";
+    ctx.fillText(lines.line3, m.centerX, y + h * 0.70);
+    ctx.fillStyle = "rgba(167,243,198,0.84)";
+    ctx.fillText(lines.line4, m.centerX, y + h * 0.86);
     ctx.restore();
   }
 
   function drawFrame(timestamp) {
     if (state.stopped || !state.ctx || !state.geometryBuilt) return;
-
     state.raf = 0;
 
     var dt = state.lastFrameTime ? clamp((timestamp - state.lastFrameTime) / 1000, 0, 0.05) : 0;
@@ -2255,11 +1588,9 @@
     if (!state.pointerActive) {
       state.yaw += state.velocityYaw;
       state.pitch += state.velocityPitch;
-
       var damping = Math.pow(0.938, dt * 60);
       state.velocityYaw *= damping;
       state.velocityPitch *= damping;
-
       if (Math.abs(state.velocityYaw) < 0.00008) state.velocityYaw = 0;
       if (Math.abs(state.velocityPitch) < 0.00008) state.velocityPitch = 0;
     }
@@ -2270,7 +1601,7 @@
     clearCanvas();
     drawCarrier();
     drawHydrosphereBody();
-    drawGratitudeExpression();
+    drawScopeExpression();
     drawReferenceLines();
 
     if (state.activeLens === "lattice") {
@@ -2280,36 +1611,24 @@
       state.ctx.globalAlpha = 0.070;
       drawDiagnosticLattice(true);
       state.ctx.restore();
-    } else if (state.activeLens === "sixth-sense") {
+    } else if (state.activeLens === "hydration" || state.activeLens === "sixth") {
       state.ctx.save();
       state.ctx.globalAlpha = 0.018;
       drawDiagnosticLattice(true);
       state.ctx.restore();
-    } else if (state.activeLens === "hydration") {
-      state.ctx.save();
-      state.ctx.globalAlpha = 0.004;
-      drawDiagnosticLattice(true);
-      state.ctx.restore();
     } else {
       state.ctx.save();
-      state.ctx.globalAlpha = 0.0012;
+      state.ctx.globalAlpha = 0.004;
       drawDiagnosticLattice(true);
       state.ctx.restore();
     }
 
     drawReceiptOverlay();
-
     state.renderCount += 1;
     publishStatus(false);
 
     if (state.settleFrames > 0) state.settleFrames -= 1;
-
-    if (
-      state.pointerActive ||
-      state.settleFrames > 0 ||
-      Math.abs(state.velocityYaw) > 0 ||
-      Math.abs(state.velocityPitch) > 0
-    ) {
+    if (state.pointerActive || state.settleFrames > 0 || Math.abs(state.velocityYaw) > 0 || Math.abs(state.velocityPitch) > 0) {
       state.raf = window.requestAnimationFrame(drawFrame);
     }
   }
@@ -2320,39 +1639,37 @@
   }
 
   function updateVisibleReadout(force) {
-    var collaborativeReady = state.gratitude.landWaterConstructVisibilityReady && state.edge.validated;
+    var terrainReady = state.scopes.terrainScope256.ready;
+    var hydrationReady = state.scopes.hydrationScope256.ready;
+    var sixthReady = terrainReady && hydrationReady;
 
-    var statusText = collaborativeReady
-      ? "The Sixth Sense ready · terrain hydration edge expression collaborative"
-      : state.gratitude.landWaterConstructVisibilityReady
-        ? "Terrain and hydration ready · hydration-edge child pending"
-        : state.gratitude.validated
-          ? "Terrain packet adapted · expression pending"
-          : "Gratitude child missing / invalid · Sixth Sense held";
+    var statusText = sixthReady
+      ? "Multi-scope compositor active · terrain and hydration scopes separate"
+      : "Multi-scope compositor held · child scope validation pending";
 
-    var proofText = collaborativeReady
-      ? "terrain + hydration + beach cliff waterfall edge consumed · carrier invents none · final visual pass false"
-      : state.edge.failureReason || state.gratitude.failureReason || "bounded failure · Sixth Sense held";
+    var proofText = sixthReady
+      ? "terrainScope256 ready · hydrationScope256 ready · edge scope held/read-only · single-scope flattening corrected"
+      : state.gratitude.failureReason || "bounded hold · scopes not ready";
 
     var wroteStatus = setText("[data-audralia-planet-carrier-status]", statusText);
     var wroteProof = setText("[data-audralia-planet-carrier-proof]", proofText);
 
     state.visibleReadoutUpdated = Boolean(wroteStatus || wroteProof || force);
 
-    setText("[data-audralia-planet-stage-label]", collaborativeReady
-      ? "The Sixth Sense → terrain, hydration, and edge expression together"
-      : "Clean Inspection → collaborative expression still validating"
-    );
+    var label = sixthReady
+      ? "Multi-Scope Inspection → Surface inspects terrain. Hydration inspects water. The Sixth Sense composites both."
+      : "Clean Inspection → Multi-scope child validation pending";
 
+    setText("[data-audralia-planet-stage-label]", label);
     return state.visibleReadoutUpdated;
   }
 
   function setLens(nextLens) {
-    var lens = Object.prototype.hasOwnProperty.call(LENSES, nextLens) ? nextLens : "body";
+    var lens = normalizeLensName(nextLens);
     state.activeLens = lens;
 
     Array.prototype.slice.call(document.querySelectorAll("[data-audralia-planet-lens]")).forEach(function (button) {
-      button.setAttribute("aria-pressed", button.dataset.audraliaPlanetLens === lens ? "true" : "false");
+      button.setAttribute("aria-pressed", normalizeLensName(button.dataset.audraliaPlanetLens) === lens ? "true" : "false");
     });
 
     setText("[data-audralia-planet-lens-anchor]", LENSES[lens].anchor);
@@ -2361,7 +1678,6 @@
 
     updateVisibleReadout(true);
     setDataset("audraliaPlanetActiveLens", lens);
-    setDataset("audraliaSixthSenseSelected", lens === "sixth-sense");
     publishStatus(true);
     requestRender(lens === "body" ? 10 : 16);
   }
@@ -2393,62 +1709,46 @@
 
     state.stage.addEventListener("pointerdown", function (event) {
       closeMenus();
-
       var t = now();
       if (t - state.lastTap < 320) resetCarrier();
       state.lastTap = t;
-
       state.pointerActive = true;
       state.pointerId = event.pointerId;
-
       var p = pointerPoint(event);
       state.pointerX = p.x;
       state.pointerY = p.y;
       state.velocityYaw = 0;
       state.velocityPitch = 0;
-
-      try {
-        state.stage.setPointerCapture(event.pointerId);
-      } catch (_error) {}
-
+      try { state.stage.setPointerCapture(event.pointerId); } catch (_error) {}
       requestRender(4);
       event.preventDefault();
     }, signal ? { signal: signal, passive: false } : { passive: false });
 
     state.stage.addEventListener("pointermove", function (event) {
       if (!state.pointerActive) return;
-
       var p = pointerPoint(event);
       var dx = p.x - state.pointerX;
       var dy = p.y - state.pointerY;
-
       state.pointerX = p.x;
       state.pointerY = p.y;
       state.yaw += dx * 0.0082;
       state.pitch = clamp(state.pitch + dy * 0.0054, -1.16, 1.16);
       state.velocityYaw = clamp(dx * 0.0022, -0.048, 0.048);
       state.velocityPitch = clamp(dy * 0.0014, -0.038, 0.038);
-
       requestRender(2);
       event.preventDefault();
     }, signal ? { signal: signal, passive: false } : { passive: false });
 
     function release(event) {
       if (!state.pointerActive) return;
-
       state.pointerActive = false;
-
       try {
         if (state.pointerId !== null) state.stage.releasePointerCapture(state.pointerId);
       } catch (_error) {}
-
       state.pointerId = null;
       publishStatus(true);
       requestRender(16);
-
-      try {
-        event.preventDefault();
-      } catch (_error2) {}
+      try { event.preventDefault(); } catch (_error2) {}
     }
 
     state.stage.addEventListener("pointerup", release, signal ? { signal: signal, passive: false } : { passive: false });
@@ -2459,10 +1759,8 @@
 
   function enforceOneCanvas() {
     if (!state.mount) return;
-
     var canvases = Array.prototype.slice.call(state.mount.querySelectorAll("canvas"));
     var selected = state.canvas && state.mount.contains(state.canvas) ? state.canvas : null;
-
     if (!selected) selected = canvases[0] || document.createElement("canvas");
 
     if (!state.mount.contains(selected)) {
@@ -2480,16 +1778,16 @@
     });
 
     state.canvas = selected;
-    state.canvas.setAttribute("data-audralia-carrier-sixth-sense-collaborative-expression", CONTRACT);
+    state.canvas.setAttribute("data-audralia-g2-multi-scope-chronological-compositor", CONTRACT);
     state.canvas.setAttribute("data-active-contract", CONTRACT);
     state.canvas.setAttribute("data-previous-contract", PREVIOUS_CONTRACT);
     state.canvas.setAttribute("data-html-collaborative-contract", HTML_COLLABORATIVE_CONTRACT);
+    state.canvas.setAttribute("data-multi-scope-compositor-active", "true");
+    state.canvas.setAttribute("data-single-scope-flattening-corrected", "true");
     state.canvas.setAttribute("data-carrier-consumes-child", "true");
     state.canvas.setAttribute("data-carrier-invents-terrain", "false");
     state.canvas.setAttribute("data-carrier-invents-hydration", "false");
-    state.canvas.setAttribute("data-carrier-invents-edge-truth", "false");
-    state.canvas.setAttribute("data-sixth-sense-lens-available", "true");
-    state.canvas.setAttribute("data-sea-level-baseline-preserved", "true");
+    state.canvas.setAttribute("data-carrier-invents-edge", "false");
     state.canvas.setAttribute("data-runtime-strength-held", "true");
     state.canvas.setAttribute("data-final-visual-pass-claim", "false");
 
@@ -2507,13 +1805,11 @@
 
   function updateDimensions(rect) {
     if (!rect || !state.canvas || !state.ctx) return false;
-
     var dpr = Math.max(1, Math.min(1.85, window.devicePixelRatio || 1));
     var width = Math.max(320, Math.floor(rect.width * dpr));
     var height = Math.max(600, Math.floor(rect.height * dpr));
 
     state.rect = { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
-
     if (state.width === width && state.height === height && state.dpr === dpr) return false;
 
     state.width = width;
@@ -2521,7 +1817,6 @@
     state.dpr = dpr;
     state.canvas.width = width;
     state.canvas.height = height;
-
     requestRender(10);
     return true;
   }
@@ -2533,17 +1828,13 @@
 
   function setupResize() {
     measureStage();
-
     if (typeof ResizeObserver !== "undefined" && state.stage) {
       resizeObserver = new ResizeObserver(function (entries) {
         var box = state.stage.getBoundingClientRect();
         var content = entries && entries[0] ? entries[0].contentRect : box;
         updateDimensions({ left: box.left, top: box.top, width: content.width, height: content.height });
       });
-
-      try {
-        resizeObserver.observe(state.stage);
-      } catch (_error) {}
+      try { resizeObserver.observe(state.stage); } catch (_error) {}
     }
 
     window.addEventListener("resize", function () {
@@ -2559,8 +1850,32 @@
     }, signal ? { signal: signal, passive: true } : { passive: true });
   }
 
+  function sixthSenseReady() {
+    return Boolean(state.scopes.terrainScope256.ready && state.scopes.hydrationScope256.ready);
+  }
+
+  function compactScope(scope) {
+    return {
+      scopeId: scope.scopeId,
+      source: scope.source,
+      authority: scope.authority,
+      ready: scope.ready,
+      held: scope.held,
+      addressSpaceCount: scope.addressSpaceCount,
+      nodeCount: scope.nodeCount,
+      activeNodeCount: scope.activeNodeCount,
+      chronologyState: scope.chronologyState,
+      pressureMapReady: scope.pressureMapReady,
+      renderEligibilityMapReady: scope.renderEligibilityMapReady,
+      receiptMapReady: scope.receiptMapReady,
+      receipt: deepClone(scope.receipt)
+    };
+  }
+
   function receipt() {
-    var collaborativeReady = Boolean(state.gratitude.landWaterConstructVisibilityReady && state.edge.validated);
+    var terrainScope = state.scopes.terrainScope256;
+    var hydrationScope = state.scopes.hydrationScope256;
+    var edgeScope = state.scopes.hydrationEdgeScope256;
 
     return {
       activeContract: CONTRACT,
@@ -2568,17 +1883,18 @@
       previousContract: PREVIOUS_CONTRACT,
       htmlCollaborativeContract: HTML_COLLABORATIVE_CONTRACT,
       specOps: SPEC_OPS,
+      news: NEWS,
+      ccr: CCR,
       route: ROUTE,
       target: FILE,
       gratitudeChildFile: GRATITUDE_CHILD_FILE,
       hydrationEdgeChildFile: HYDRATION_EDGE_CHILD_FILE,
       coreChildFile: CORE_CHILD_FILE,
 
-      sixthSenseLensAvailable: true,
-      collaborativeExpressionActive: state.activeLens === "sixth-sense",
-      collaborativeExpressionReady: collaborativeReady,
-      seaLevelBaselineAchieved: SEA_LEVEL_BASELINE_ACHIEVED,
-      seaLevelBaselinePreserved: true,
+      multiScopeCompositorActive: true,
+      singleScopeFlatteningCorrected: state.singleScopeFlatteningCorrected,
+      chronologicalCompositeActive: true,
+      chronology: CHRONOLOGY.slice(),
 
       gratitudeChildDetected: state.gratitude.detected,
       gratitudeChildApiComplete: state.gratitude.apiComplete,
@@ -2588,111 +1904,107 @@
       gratitudeChildAttempts: state.gratitude.attempts,
       gratitudeChildCheckedAt: state.gratitude.checkedAt,
 
-      hydrationEdgeChildDetected: state.edge.detected,
-      hydrationEdgeChildApiComplete: state.edge.apiComplete,
-      hydrationEdgeChildPacketReady: state.edge.packetReady,
-      hydrationEdgeChildValidated: state.edge.validated,
-      hydrationEdgeChildFailureReason: state.edge.failureReason,
-      hydrationEdgeChildAttempts: state.edge.attempts,
-      hydrationEdgeChildCheckedAt: state.edge.checkedAt,
+      hydrationEdgeChildDetected: state.edgeChild.detected,
+      hydrationEdgeChildApiComplete: state.edgeChild.apiComplete,
+      hydrationEdgeChildPacketReady: state.edgeChild.packetReady,
+      hydrationEdgeChildValidated: state.edgeChild.validated,
+      hydrationEdgeChildFailureReason: state.edgeChild.failureReason,
 
-      consumedTerrainNodeCount: state.gratitude.terrainNodes.length,
-      consumedSurfaceUnitCount: state.gratitude.surfaceUnits.length,
-      consumedHydrationSeatCount: state.gratitude.hydrationSeats.length,
-      consumedTerrainDatumNodeCount: state.gratitude.terrainDatumNodes.length,
+      terrainScope256Ready: terrainScope.ready,
+      hydrationScope256Ready: hydrationScope.ready,
+      hydrationEdgeScope256Ready: edgeScope.ready,
+      hydrationEdgeScope256Held: edgeScope.held,
+      temperatureScope256Held: state.scopes.temperatureScope256Held.held,
+      atmosphereScope256Held: state.scopes.atmosphereScope256Held.held,
+      climateScope256Held: state.scopes.climateScope256Held.held,
+      sixthSenseCompositeReady: sixthSenseReady(),
 
-      poolVisibilityCount: state.gratitude.poolVisibilityRegistry.length,
-      riverVisibilityCount: state.gratitude.riverVisibilityRegistry.length,
-      streamVisibilityCount: state.gratitude.streamVisibilityRegistry.length,
-      gullyVisibilityCount: state.gratitude.gullyVisibilityRegistry.length,
-      waterfallVisibilityCount: state.gratitude.waterfallVisibilityRegistry.length,
-
-      beachCount: state.edge.beaches.length,
-      cliffCount: state.edge.cliffs.length,
-      waterfallEdgeCount: state.edge.waterfalls.length,
-      marshWetlandEdgeCount: state.edge.marshWetlandEdges.length,
-      shelfEdgeCount: state.edge.shelfEdges.length,
-
-      bodyViewClean: true,
-      surfaceViewChildTerrain: true,
-      hydrationViewChildValleyFill: true,
-      sixthSenseViewCollaborativeExpression: true,
-      latticeViewPreserved: true,
-      receiptViewProofOnly: true,
+      terrainScope256: compactScope(terrainScope),
+      hydrationScope256: compactScope(hydrationScope),
+      hydrationEdgeScope256: compactScope(edgeScope),
+      temperatureScope256: compactScope(state.scopes.temperatureScope256Held),
+      atmosphereScope256: compactScope(state.scopes.atmosphereScope256Held),
+      climateScope256: compactScope(state.scopes.climateScope256Held),
 
       carrierConsumesChild: true,
       carrierInventsTerrain: false,
       carrierInventsHydration: false,
-      carrierInventsEdgeTruth: false,
-      terrainTruthInvented: false,
-      hydrationTruthInvented: false,
-      edgeTruthInvented: false,
-      childAuthorityPreserved: true,
+      carrierInventsEdge: false,
+      climateAuthoritySeized: false,
+      atmosphereAuthoritySeized: false,
+      temperatureAuthoritySeized: false,
+      ecologyAuthoritySeized: false,
+      settlementAuthoritySeized: false,
+      urbanAuthoritySeized: false,
+
+      bodyViewClean: true,
+      surfaceViewTerrainScopeOnly: true,
+      hydrationViewHydrationScopeOnly: true,
+      sixthSenseChronologicalComposite: true,
+      latticeViewPreserved: true,
+      receiptViewMultiScopeProof: true,
 
       oneCanvas: state.oneCanvas,
       dragRotationActive: state.onePointerPath,
       activeLens: state.activeLens,
       renderCount: state.renderCount,
+      visibleReadoutUpdated: state.visibleReadoutUpdated,
 
       htmlUntouched: true,
       gratitudeChildUntouched: true,
+      hydrationChildUntouched: true,
       hydrationEdgeChildUntouched: true,
       coreChildUntouched: true,
-      runtimeStrengthHeld: RUNTIME_STRENGTH_HELD,
-      finalTerrainPassClaim: FINAL_TERRAIN_PASS_CLAIM,
-      finalHydrationPassClaim: FINAL_HYDRATION_PASS_CLAIM,
-      finalEdgePassClaim: FINAL_EDGE_PASS_CLAIM,
-      finalVisualPassClaim: FINAL_VISUAL_PASS_CLAIM,
+      runtimeStrengthHeld: true,
+      finalTerrainPassClaim: false,
+      finalHydrationPassClaim: false,
+      finalEdgePassClaim: false,
+      finalVisualPassClaim: false,
       generatedImage: false,
       graphicBox: false,
-      localTerrainTruthCreated: false,
-      localHydrationTruthCreated: false,
-      localEdgeTruthCreated: false,
+      localTerrainArraysRestored: false,
       earthSubstitution: false,
       australiaNameDrift: false,
 
       errors: state.errors.slice(),
-      deployMarker: "AUDRALIA_G2_PLANET_SIXTH_SENSE_COLLABORATIVE_EXPRESSION_CARRIER_DEPLOY_MARKER_v1"
+      deployMarker: "AUDRALIA_G2_PLANET_MULTI_SCOPE_CHRONOLOGICAL_COMPOSITOR_CARRIER_DEPLOY_MARKER_v1"
     };
   }
 
   function publishStatus(force) {
     var payload = receipt();
 
-    window.AUDRALIA_G2_PLANET_SIXTH_SENSE_COLLABORATIVE_EXPRESSION_CARRIER_STATUS = payload;
-    window.AUDRALIA_PLANET_CARRIER_LAND_WATER_CONSTRUCT_VISIBILITY_ADAPTER_STATUS = payload;
-    window.AUDRALIA_PLANET_CARRIER_TERRAIN_HYDRATION_ORGANIC_EXPRESSION_ADAPTER_STATUS = payload;
+    window.AUDRALIA_G2_PLANET_MULTI_SCOPE_CHRONOLOGICAL_COMPOSITOR_STATUS = payload;
     window.AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_JS_ONLY_STATUS = payload;
     window.AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_STATUS = payload;
     window.AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_STATUS = payload;
     window.AUDRALIA_G2_JS_FEMALE_CANVAS_CARRIER_STATUS = payload;
 
     setDataset("audraliaCarrierActiveContract", CONTRACT);
-    setDataset("audraliaCarrierPreviousContract", PREVIOUS_CONTRACT);
     setDataset("audraliaHtmlCollaborativeContract", HTML_COLLABORATIVE_CONTRACT);
-    setDataset("audraliaSixthSenseLensAvailable", true);
-    setDataset("audraliaSixthSenseSelected", state.activeLens === "sixth-sense");
-    setDataset("audraliaCollaborativeExpressionReady", payload.collaborativeExpressionReady);
-    setDataset("audraliaSeaLevelBaselineAchieved", true);
-    setDataset("audraliaSeaLevelBaselinePreserved", true);
+    setDataset("audraliaMultiScopeCompositorActive", true);
+    setDataset("audraliaSingleScopeFlatteningCorrected", state.singleScopeFlatteningCorrected);
+    setDataset("audraliaChronologicalCompositeActive", true);
     setDataset("audraliaGratitudeChildDetected", state.gratitude.detected);
     setDataset("audraliaGratitudeChildPacketReady", state.gratitude.packetReady);
     setDataset("audraliaGratitudeChildValidated", state.gratitude.validated);
-    setDataset("audraliaHydrationEdgeChildDetected", state.edge.detected);
-    setDataset("audraliaHydrationEdgeChildPacketReady", state.edge.packetReady);
-    setDataset("audraliaHydrationEdgeChildValidated", state.edge.validated);
-    setDataset("audraliaBeachCount", state.edge.beaches.length);
-    setDataset("audraliaCliffCount", state.edge.cliffs.length);
-    setDataset("audraliaWaterfallEdgeCount", state.edge.waterfalls.length);
+    setDataset("audraliaTerrainScope256Ready", state.scopes.terrainScope256.ready);
+    setDataset("audraliaHydrationScope256Ready", state.scopes.hydrationScope256.ready);
+    setDataset("audraliaHydrationEdgeScope256Ready", state.scopes.hydrationEdgeScope256.ready);
+    setDataset("audraliaHydrationEdgeScope256Held", state.scopes.hydrationEdgeScope256.held);
+    setDataset("audraliaTemperatureScope256Held", true);
+    setDataset("audraliaAtmosphereScope256Held", true);
+    setDataset("audraliaClimateScope256Held", true);
+    setDataset("audraliaSixthSenseCompositeReady", sixthSenseReady());
     setDataset("audraliaCarrierConsumesChild", true);
     setDataset("audraliaCarrierInventsTerrain", false);
     setDataset("audraliaCarrierInventsHydration", false);
-    setDataset("audraliaCarrierInventsEdgeTruth", false);
-    setDataset("audraliaChildAuthorityPreserved", true);
+    setDataset("audraliaCarrierInventsEdge", false);
+    setDataset("audraliaVisibleReadoutUpdated", state.visibleReadoutUpdated);
+    setDataset("audraliaSurfaceViewTerrainScopeOnly", true);
+    setDataset("audraliaHydrationViewHydrationScopeOnly", true);
+    setDataset("audraliaSixthSenseChronologicalComposite", true);
     setDataset("audraliaRuntimeStrengthHeld", true);
-    setDataset("audraliaFinalTerrainPassClaim", false);
-    setDataset("audraliaFinalHydrationPassClaim", false);
-    setDataset("audraliaFinalEdgePassClaim", false);
     setDataset("audraliaFinalVisualPassClaim", false);
     setDataset("audraliaPlanetActiveLens", state.activeLens);
 
@@ -2702,44 +2014,25 @@
 
   function stop() {
     state.stopped = true;
-
     if (state.raf) {
-      try {
-        window.cancelAnimationFrame(state.raf);
-      } catch (_error) {}
+      try { window.cancelAnimationFrame(state.raf); } catch (_error) {}
     }
-
     state.raf = 0;
-
     if (resizeObserver) {
-      try {
-        resizeObserver.disconnect();
-      } catch (_error2) {}
+      try { resizeObserver.disconnect(); } catch (_error2) {}
     }
-
     if (abortController) {
-      try {
-        abortController.abort();
-      } catch (_error3) {}
+      try { abortController.abort(); } catch (_error3) {}
     }
   }
 
   function retryChildDetection() {
     validateGratitudeChild();
-    validateHydrationEdgeChild();
-
     setTimeout(function () {
-      if ((!state.gratitude.validated || !state.edge.validated) && !state.stopped) {
-        validateGratitudeChild();
-        validateHydrationEdgeChild();
-      }
+      if (!state.gratitude.validated && !state.stopped) validateGratitudeChild();
     }, 180);
-
     setTimeout(function () {
-      if ((!state.gratitude.validated || !state.edge.validated) && !state.stopped) {
-        validateGratitudeChild();
-        validateHydrationEdgeChild();
-      }
+      if (!state.gratitude.validated && !state.stopped) validateGratitudeChild();
     }, 640);
   }
 
@@ -2751,7 +2044,7 @@
     state.details = Array.prototype.slice.call(document.querySelectorAll("details"));
 
     if (!state.stage || !state.mount) {
-      recordError("init", "Sixth Sense carrier is present, but HTML stage/mount is unavailable.");
+      recordError("init", "Multi-scope carrier is present, but HTML stage/mount is unavailable.");
       publishStatus(true);
       return;
     }
@@ -2777,11 +2070,13 @@
     previousContract: PREVIOUS_CONTRACT,
     htmlCollaborativeContract: HTML_COLLABORATIVE_CONTRACT,
     specOps: SPEC_OPS,
+    news: NEWS,
+    ccr: CCR,
     receipt: receipt,
     status: publishStatus,
     validateGratitudeChild: validateGratitudeChild,
-    validateHydrationEdgeChild: validateHydrationEdgeChild,
-    buildOrganicVisualExpression: buildOrganicVisualExpression
+    rebuildScopes: rebuildScopes,
+    setLens: setLens
   };
 
   if (hasDOM()) {

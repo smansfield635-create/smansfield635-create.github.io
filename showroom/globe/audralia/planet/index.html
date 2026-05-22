@@ -2,24 +2,20 @@
 <html
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
-  data-page="audralia-g2-planet-body-alternate-route"
-  data-contract="AUDRALIA_G2_PLANET_BODY_ALTERNATE_ROUTE_TNT_v1"
-  data-spec-ops-contract="AUDRALIA_G2_PLANET_BODY_ALTERNATE_ROUTE_SPEC_OPS_v1"
-  data-parent-route="/showroom/globe/audralia/"
+  data-page="audralia-g2-planet-body-globe-logic-inspection-carrier"
+  data-contract="AUDRALIA_G2_PLANET_BODY_GLOBE_LOGIC_INSPECTION_CARRIER_TNT_v1"
+  data-spec-ops-contract="AUDRALIA_G2_PLANET_BODY_GLOBE_LOGIC_INSPECTION_CARRIER_SPEC_OPS_v1"
+  data-render-file="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js"
+  data-parent-template-plate="/showroom/globe/audralia/"
   data-cockpit-route="/showroom/globe/audralia/disposition/"
-  data-render-file="/assets/audralia/clean/runtime/audralia.planet-body.expression.render.js"
-  data-route-law="branch-not-replace"
-  data-parent-audralia-route-preserved="true"
-  data-cockpit-route-preserved="true"
-  data-html-function="wisdom"
-  data-js-function="courage"
-  data-runtime-function="strength"
+  data-globe-route="/showroom/globe/"
+  data-route-local-render="true"
+  data-globe-logic-adopted="true"
+  data-cartoon-carrier-retired="true"
   data-runtime-strength-held="true"
   data-final-visual-pass-claim="false"
   data-generated-image="false"
   data-graphic-box="false"
-  data-canvas="false"
-  data-webgl="false"
   data-earth-substitution="false"
   data-australia-name-drift="false"
 >
@@ -27,24 +23,27 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Audralia · Planet Body</title>
+  <title>Audralia · Planet Body Inspection</title>
   <meta
     name="description"
-    content="Audralia G2 Planet Body alternate route. This route expresses Audralia as a planet body while preserving the parent Audralia diagnostic carrier and the cockpit inspection route."
+    content="Audralia Planet Body Inspection route. The planet body is now a globe-logic inspection carrier with drag rotation, compact lenses, state readouts, and route-local proof while Runtime Strength remains held."
   >
 
   <style>
     :root{
       color-scheme:dark;
       --bg:#020711;
+      --panel:rgba(5,15,32,.86);
+      --panel2:rgba(3,9,20,.76);
       --text:rgba(239,247,255,.96);
       --muted:rgba(239,247,255,.70);
       --faint:rgba(239,247,255,.48);
       --gold:#f4cf83;
+      --gold2:#ffe8a3;
       --blue:#8dd8ff;
       --mint:#a7f3c6;
       --line:rgba(244,207,131,.18);
-      --max:1420px;
+      --max:1280px;
       --shadow:0 34px 120px rgba(0,0,0,.50);
     }
 
@@ -54,9 +53,9 @@
       min-height:100%;
       scroll-behavior:smooth;
       background:
-        radial-gradient(circle at 50% -12%,rgba(78,119,171,.26),transparent 38rem),
-        radial-gradient(circle at 12% 18%,rgba(244,207,131,.09),transparent 30rem),
-        radial-gradient(circle at 90% 28%,rgba(141,216,255,.12),transparent 30rem),
+        radial-gradient(circle at 50% -12%,rgba(78,119,171,.27),transparent 39rem),
+        radial-gradient(circle at 10% 18%,rgba(244,207,131,.10),transparent 30rem),
+        radial-gradient(circle at 90% 28%,rgba(141,216,255,.12),transparent 31rem),
         linear-gradient(180deg,#061020 0%,var(--bg) 56%,#01040a 100%);
     }
 
@@ -70,8 +69,8 @@
       letter-spacing:-.015em;
       -webkit-font-smoothing:antialiased;
       background:
-        linear-gradient(rgba(141,216,255,.030) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(141,216,255,.030) 1px,transparent 1px);
+        linear-gradient(rgba(141,216,255,.03) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.03) 1px,transparent 1px);
       background-size:56px 56px;
     }
 
@@ -84,14 +83,15 @@
       background:radial-gradient(circle,rgba(255,255,255,.15) 0 1px,transparent 1.4px);
       background-size:230px 250px;
       opacity:.14;
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.9),rgba(0,0,0,.46) 62%,rgba(0,0,0,.12));
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.90),rgba(0,0,0,.46) 62%,rgba(0,0,0,.12));
     }
 
-    a,summary{color:inherit;font:inherit}
+    a,button,summary{color:inherit;font:inherit}
     a{text-decoration:none}
-    summary{cursor:pointer}
+    button,summary{cursor:pointer}
 
     a:focus-visible,
+    button:focus-visible,
     summary:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
@@ -154,11 +154,7 @@
       box-shadow:0 0 22px rgba(244,207,131,.14),0 0 24px rgba(141,216,255,.10);
     }
 
-    .brand-copy{
-      display:grid;
-      gap:2px;
-      min-width:0;
-    }
+    .brand-copy{display:grid;gap:2px;min-width:0}
 
     .brand-copy strong{
       color:rgba(255,244,216,.96);
@@ -202,11 +198,7 @@
     }
 
     .dropdown summary::-webkit-details-marker{display:none}
-    .dropdown summary::after{
-      content:"⌄";
-      color:rgba(244,207,131,.88);
-      font-size:.92rem;
-    }
+    .dropdown summary::after{content:"⌄";color:rgba(244,207,131,.88);font-size:.92rem}
 
     .dropdown[open] summary{
       color:#06101c;
@@ -219,7 +211,7 @@
       right:0;
       top:calc(100% + 8px);
       z-index:30;
-      min-width:270px;
+      min-width:265px;
       display:grid;
       gap:6px;
       padding:10px;
@@ -231,7 +223,6 @@
     }
 
     .dropdown-panel a{
-      width:100%;
       min-height:36px;
       display:flex;
       align-items:center;
@@ -242,7 +233,6 @@
       padding:0 10px;
       color:rgba(238,244,255,.84);
       background:rgba(255,255,255,.035);
-      text-align:left;
       font-size:.84rem;
       font-weight:820;
     }
@@ -254,9 +244,9 @@
     }
 
     .hero,
-    .planet-shell,
+    .inspection-shell,
     .state-shell,
-    .handoff-shell,
+    .proof-shell,
     .receipt-shell{
       border:1px solid var(--line);
       border-radius:34px;
@@ -297,28 +287,23 @@
     }
 
     h1{
-      max-width:990px;
+      max-width:980px;
       margin:0;
-      font-size:clamp(2.35rem,8vw,5.7rem);
+      font-size:clamp(2.35rem,8vw,5.6rem);
       line-height:.92;
       letter-spacing:-.075em;
       text-wrap:balance;
     }
 
     .lede{
-      max-width:1020px;
+      max-width:980px;
       margin:22px 0 0;
       color:var(--muted);
-      font-size:clamp(1.02rem,2.6vw,1.26rem);
+      font-size:clamp(1.02rem,2.6vw,1.25rem);
       line-height:1.55;
     }
 
-    .status-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:24px;
-    }
+    .status-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
 
     .status-pill{
       min-height:34px;
@@ -335,18 +320,15 @@
       text-transform:uppercase;
     }
 
-    .planet-shell,
+    .inspection-shell,
     .state-shell,
-    .handoff-shell,
+    .proof-shell,
     .receipt-shell{
       margin-top:16px;
       padding:clamp(18px,3.8vw,32px);
     }
 
-    .section-head{
-      max-width:980px;
-      margin-bottom:16px;
-    }
+    .section-head{max-width:960px;margin-bottom:16px}
 
     .section-head h2{
       margin:0;
@@ -364,12 +346,12 @@
       line-height:1.55;
     }
 
-    .planet-mount-shell{
-      min-height:520px;
+    .inspection-mount{
+      min-height:clamp(640px,84vw,880px);
     }
 
     .state-grid,
-    .handoff-grid,
+    .proof-grid,
     .receipt-grid{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
@@ -377,12 +359,12 @@
       margin-top:16px;
     }
 
-    .handoff-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .proof-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
 
     .state-card,
-    .receipt-card,
-    .handoff-card{
-      min-height:126px;
+    .proof-card,
+    .receipt-card{
+      min-height:116px;
       display:grid;
       align-content:start;
       gap:8px;
@@ -393,8 +375,8 @@
     }
 
     .state-card b,
-    .receipt-card b,
-    .handoff-card b{
+    .proof-card b,
+    .receipt-card b{
       color:var(--gold);
       font-size:.72rem;
       letter-spacing:.15em;
@@ -402,16 +384,16 @@
     }
 
     .state-card strong,
-    .receipt-card strong,
-    .handoff-card strong{
+    .proof-card strong,
+    .receipt-card strong{
       color:rgba(255,244,216,.96);
       font-size:1rem;
       line-height:1.16;
     }
 
     .state-card span,
-    .receipt-card span,
-    .handoff-card span{
+    .proof-card span,
+    .receipt-card span{
       color:rgba(238,244,255,.70);
       font-size:.88rem;
       line-height:1.36;
@@ -488,16 +470,16 @@
       .dropdown-nav{justify-content:flex-start}
       .dropdown-panel{left:0;right:auto}
       .state-grid,
-      .receipt-grid,
-      .handoff-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .proof-grid,
+      .receipt-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
-    @media (max-width:760px){
+    @media (max-width:700px){
       .page{width:min(100% - 18px,var(--max))}
       .hero,
-      .planet-shell,
+      .inspection-shell,
       .state-shell,
-      .handoff-shell,
+      .proof-shell,
       .receipt-shell{border-radius:24px}
       .dropdown-nav{display:grid;grid-template-columns:1fr}
       .dropdown summary{width:100%}
@@ -506,10 +488,10 @@
         margin-top:8px;
         min-width:0;
       }
-      .planet-mount-shell{min-height:640px}
+      .inspection-mount{min-height:740px}
       .state-grid,
-      .receipt-grid,
-      .handoff-grid{grid-template-columns:1fr}
+      .proof-grid,
+      .receipt-grid{grid-template-columns:1fr}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -524,193 +506,178 @@
 </head>
 
 <body>
-  <a class="skip" href="#audralia-planet-main">Skip to Audralia planet body</a>
+  <a class="skip" href="#planet-main">Skip to Audralia planet inspection</a>
 
   <div class="page">
-    <header class="topbar" aria-label="Audralia planet navigation">
+    <header class="topbar" aria-label="Audralia planet body navigation">
       <a class="brand" href="/showroom/globe/audralia/planet/" aria-current="page">
         <span class="brand-mark" aria-hidden="true">AU</span>
         <span class="brand-copy">
           <span>Audralia</span>
-          <strong>Planet Body</strong>
+          <strong>Planet Body Inspection</strong>
         </span>
       </a>
 
-      <nav class="dropdown-nav" aria-label="Dropdown navigation">
+      <nav class="dropdown-nav" aria-label="Planet inspection navigation">
         <details class="dropdown">
           <summary>Route Menu</summary>
           <div class="dropdown-panel">
-            <a href="/showroom/globe/audralia/">Audralia Diagnostic Carrier <span>Parent</span></a>
+            <a href="/showroom/globe/audralia/">Template Plate <span>Parent</span></a>
             <a href="/showroom/globe/audralia/disposition/">Cockpit Inspection <span>Proof</span></a>
-            <a href="/showroom/globe/">Return to Globe <span>Back</span></a>
+            <a href="/showroom/globe/">Globe <span>Back</span></a>
             <a href="/gauges/">Triple G <span>Audit</span></a>
           </div>
         </details>
 
         <details class="dropdown">
-          <summary>Planet Sections</summary>
+          <summary>Inspection Path</summary>
           <div class="dropdown-panel">
-            <a href="#planet-expression-chamber">Planet Chamber <span>View</span></a>
-            <a href="#surface-state-path">Surface States <span>8</span></a>
-            <a href="#route-split">Route Split <span>Law</span></a>
+            <a href="#inspection-carrier">Inspect Planet Body <span>Carrier</span></a>
+            <a href="#state-lens-deck">State Lens Deck <span>8</span></a>
+            <a href="#proof-split">Proof Split <span>Routes</span></a>
             <a href="#route-receipt">Route Receipt <span>Proof</span></a>
           </div>
         </details>
       </nav>
     </header>
 
-    <main id="audralia-planet-main">
+    <main id="planet-main">
       <section class="hero" aria-labelledby="page-title">
-        <p class="kicker">Audralia · Planet Body · Alternate Route</p>
-        <h1 id="page-title">Audralia begins expressing as a planet body.</h1>
+        <p class="kicker">Audralia · Planet Body Inspection</p>
+        <h1 id="page-title">Inspect Audralia as a planet body.</h1>
 
         <p class="lede">
-          The restored Audralia route remains the observable globe and diagnostic carrier. This new route receives the planet-body expression so Audralia can be viewed as terrain mass, mineral surface, ocean system, coast edge, atmosphere rim, light response, and inspection receipt.
+          The planetary template has defined the path. This route now places Audralia inside an inspectable planet carrier so the body itself can be rotated, read, and tested through surface states.
         </p>
 
         <div class="status-row">
-          <span class="status-pill">Branch, not replace</span>
-          <span class="status-pill">Planet expression route</span>
+          <span class="status-pill">Inspectable carrier</span>
+          <span class="status-pill">Globe logic adopted</span>
+          <span class="status-pill">Planet body active</span>
           <span class="status-pill">Runtime / Strength held</span>
           <span class="status-pill">No final visual pass claim</span>
-          <span class="status-pill">Parent preserved</span>
         </div>
       </section>
 
-      <section id="planet-expression-chamber" class="planet-shell" aria-label="Audralia planet expression chamber">
+      <section id="inspection-carrier" class="inspection-shell" aria-label="Audralia inspectable planet body carrier">
         <div class="section-head">
-          <p class="section-title">Planet Expression Chamber</p>
-          <h2>The planet is the visual subject.</h2>
+          <p class="section-title">Inspection Chamber</p>
+          <h2>The planet is the object of inspection.</h2>
           <p>
-            This chamber avoids cockpit dominance and diagnostic-lattice dominance. The render is local to this route and mounts only inside the planet-expression chamber.
+            Drag the body directly. Lenses and states read the planet; they do not replace it or cover it.
           </p>
         </div>
 
         <div
-          class="planet-mount-shell"
-          data-audralia-planet-expression-mount
-          data-render-file="/assets/audralia/clean/runtime/audralia.planet-body.expression.render.js"
+          class="inspection-mount"
+          data-audralia-planet-inspection-mount
           data-route-local-render="true"
-          data-parent-route-preserved="true"
-          data-cockpit-route-preserved="true"
+          data-contract="AUDRALIA_G2_PLANET_BODY_GLOBE_LOGIC_INSPECTION_CARRIER_TNT_v1"
           data-runtime-strength-held="true"
           data-final-visual-pass-claim="false"
-          aria-label="Audralia planet body expression render mount"
+          aria-label="Audralia globe-logic planet body inspection mount"
         ></div>
       </section>
 
-      <section id="surface-state-path" class="state-shell" aria-label="Audralia surface state path">
+      <section id="state-lens-deck" class="state-shell" aria-label="Audralia state lens deck">
         <div class="section-head">
-          <p class="section-title">Surface State Path</p>
-          <h2>Audralia expresses through eight restrained states.</h2>
+          <p class="section-title">State Lens Deck</p>
+          <h2>Eight states support inspection without covering the planet.</h2>
           <p>
-            These states describe the visual path without claiming weather completion, life systems, city systems, full runtime, or final visual readiness.
+            The state system remains active, but it now functions as compact lens/readout support below the inspection chamber.
           </p>
         </div>
 
         <div class="state-grid">
-          <article class="state-card"><b>North</b><strong>Datum Body</strong><span>The planet begins as one coherent body rooted in datum authority.</span></article>
-          <article class="state-card"><b>Northeast</b><strong>Terrain Mass</strong><span>Land rises as ancient pressure and eroded mass.</span></article>
-          <article class="state-card"><b>East</b><strong>Material Surface</strong><span>Diamond, opal, granite, and slate influence the surface read without decoration.</span></article>
+          <article class="state-card"><b>North</b><strong>Datum Body</strong><span>One coherent planet body rooted in datum authority.</span></article>
+          <article class="state-card"><b>Northeast</b><strong>Terrain Mass</strong><span>Land rises through pressure, structure, and erosion memory.</span></article>
+          <article class="state-card"><b>East</b><strong>Material Surface</strong><span>Mineral pressure shapes the surface read without decoration.</span></article>
           <article class="state-card"><b>Southeast</b><strong>Hydration / Ocean</strong><span>Water appears as basin, depth, shelf, and system.</span></article>
           <article class="state-card"><b>South</b><strong>Coast / Edge Pressure</strong><span>Land and water meet through shelf pressure and eroded boundaries.</span></article>
-          <article class="state-card"><b>Southwest</b><strong>Atmosphere Rim</strong><span>A thin limb glow gives the planet presence without weather completion.</span></article>
+          <article class="state-card"><b>Southwest</b><strong>Atmosphere Rim</strong><span>A thin presence layer without weather completion.</span></article>
           <article class="state-card"><b>West</b><strong>Light Response</strong><span>Directional light gives the body spatial depth.</span></article>
-          <article class="state-card"><b>Northwest</b><strong>Inspection Receipt</strong><span>The planet reports what is expressed and what remains held.</span></article>
+          <article class="state-card"><b>Northwest</b><strong>Inspection Receipt</strong><span>Reports what is active and what remains held.</span></article>
         </div>
       </section>
 
-      <section id="route-split" class="handoff-shell" aria-label="Audralia route split">
+      <section id="proof-split" class="proof-shell" aria-label="Audralia route proof split">
         <div class="section-head">
-          <p class="section-title">Route Split</p>
-          <h2>Three rooms, three jobs.</h2>
+          <p class="section-title">Proof Split</p>
+          <h2>Template, planet, cockpit, and audit keep separate jobs.</h2>
           <p>
-            This separation prevents the restored diagnostic route from being forced to carry the planet-expression job.
+            This renewal only changes the planet route into an inspection carrier.
           </p>
         </div>
 
-        <div class="handoff-grid">
-          <article class="handoff-card">
-            <b>Parent Audralia</b>
-            <strong>Diagnostic Carrier</strong>
-            <span>Observable globe, lattice view, diagnostic scope, cloned-seed reporting, and datum/path proof.</span>
-          </article>
-          <article class="handoff-card">
-            <b>Cockpit</b>
-            <strong>Inspection Deck</strong>
-            <span>Gauges, engineering lenses, proof panels, receipts, and Runtime / Strength boundary checks.</span>
-          </article>
-          <article class="handoff-card">
-            <b>Planet Route</b>
-            <strong>Planet Expression</strong>
-            <span>Audralia itself as a planet body: land, water, mineral surface, rim, light, and receipt.</span>
-          </article>
+        <div class="proof-grid">
+          <article class="proof-card"><b>Template Plate</b><strong>Development path</strong><span>The parent route remains the planetary template construct and diagnostic carrier.</span></article>
+          <article class="proof-card"><b>Planet Body</b><strong>Inspection carrier</strong><span>This route owns the inspectable Audralia planet body.</span></article>
+          <article class="proof-card"><b>Cockpit</b><strong>Engineering proof</strong><span>The cockpit remains the gauge, lens, and receipt inspection deck.</span></article>
+          <article class="proof-card"><b>Triple G</b><strong>Route audit</strong><span>Route health and external gap checks remain separate.</span></article>
         </div>
 
         <div class="action-row">
-          <a class="action" href="/showroom/globe/audralia/">Return to Diagnostic Carrier</a>
-          <a class="action secondary" href="/showroom/globe/audralia/disposition/">Open Cockpit Inspection</a>
-          <a class="action secondary" href="/showroom/globe/">Return to Globe</a>
+          <a class="action" href="/showroom/globe/audralia/">Template Plate</a>
+          <a class="action secondary" href="/showroom/globe/audralia/disposition/">Cockpit Inspection</a>
           <a class="action secondary" href="/gauges/">Run Triple G</a>
         </div>
       </section>
 
-      <section id="route-receipt" class="receipt-shell" aria-label="Audralia planet route receipt">
+      <section id="route-receipt" class="receipt-shell" aria-label="Audralia planet inspection carrier receipt">
         <div class="section-head">
-          <p class="section-title">Route-Separation Receipt</p>
-          <h2>The new planet route branches without replacing the restored carrier.</h2>
+          <p class="section-title">Route Receipt</p>
+          <h2>Cartoon carrier retired. Globe-logic inspection carrier installed.</h2>
           <p>
-            This receipt records the split: parent route preserved, cockpit route preserved, new planet route created, Runtime / Strength held, and no final visual pass claimed.
+            The planet route now centers inspection: large body, route-local drag, compact lenses, state readouts, and proof below.
           </p>
         </div>
 
         <div class="receipt-grid">
-          <article class="receipt-card"><b>New Route</b><strong>/planet/</strong><span>/showroom/globe/audralia/planet/</span></article>
-          <article class="receipt-card"><b>New HTML</b><strong>created</strong><span>/showroom/globe/audralia/planet/index.html</span></article>
-          <article class="receipt-card"><b>Render File</b><strong>route-local</strong><span>/assets/audralia/clean/runtime/audralia.planet-body.expression.render.js</span></article>
-          <article class="receipt-card"><b>Parent Route</b><strong>preserved</strong><span>/showroom/globe/audralia/ remains diagnostic carrier.</span></article>
-          <article class="receipt-card"><b>Cockpit Route</b><strong>preserved</strong><span>/showroom/globe/audralia/disposition/ remains inspection deck.</span></article>
+          <article class="receipt-card"><b>Route</b><strong>renewed</strong><span>/showroom/globe/audralia/planet/</span></article>
+          <article class="receipt-card"><b>Mount</b><strong>installed</strong><span>data-audralia-planet-inspection-mount</span></article>
+          <article class="receipt-card"><b>Carrier</b><strong>inspectable</strong><span>Drag rotation and lens readouts are route-local.</span></article>
+          <article class="receipt-card"><b>Cartoon State</b><strong>retired</strong><span>State wall no longer covers the object.</span></article>
+          <article class="receipt-card"><b>Template</b><strong>untouched</strong><span>/showroom/globe/audralia/ remains preserved.</span></article>
+          <article class="receipt-card"><b>Cockpit</b><strong>untouched</strong><span>/showroom/globe/audralia/disposition/ remains preserved.</span></article>
           <article class="receipt-card"><b>Runtime</b><strong>held</strong><span>No Runtime / Strength activation.</span></article>
-          <article class="receipt-card"><b>Visual Claim</b><strong>bounded</strong><span>No final visual pass, generated image, GraphicBox, canvas, or WebGL claim.</span></article>
-          <article class="receipt-card"><b>Name Boundary</b><strong>clean</strong><span>Audralia only. No Earth substitution. No Australia drift.</span></article>
+          <article class="receipt-card"><b>Visual Claim</b><strong>bounded</strong><span>No final visual pass, generated image, GraphicBox, Earth substitution, or Australia drift.</span></article>
         </div>
 
-        <code class="receipt-code">AUDRALIA_G2_PLANET_BODY_ALTERNATE_ROUTE_TNT_v1
+        <code class="receipt-code">AUDRALIA_G2_PLANET_BODY_GLOBE_LOGIC_INSPECTION_CARRIER_TNT_v1
 route=/showroom/globe/audralia/planet/
 html=/showroom/globe/audralia/planet/index.html
-render_file=/assets/audralia/clean/runtime/audralia.planet-body.expression.render.js
-spec_ops=AUDRALIA_G2_PLANET_BODY_ALTERNATE_ROUTE_SPEC_OPS_v1
-route_law=branch_not_replace
-parent_route=/showroom/globe/audralia/
-parent_route_preserved=true
-cockpit_route=/showroom/globe/audralia/disposition/
-cockpit_route_preserved=true
-mount=data-audralia-planet-expression-mount
+js=/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
+spec_ops=AUDRALIA_G2_PLANET_BODY_GLOBE_LOGIC_INSPECTION_CARRIER_SPEC_OPS_v1
+mount=data-audralia-planet-inspection-mount
+globe_logic_adopted=true
+inspection_carrier_installed=true
+cartoon_carrier_retired=true
+state_wall_retired=true
+template_plate_untouched=true
+cockpit_untouched=true
+globe_selector_untouched=true
 runtime_strength_held=true
 final_visual_pass_claim=false
 generated_image=false
 graphic_box=false
-canvas=false
-webgl=false
 earth_substitution=false
 australia_name_drift=false
-deploy_marker=AUDRALIA_G2_PLANET_BODY_ALTERNATE_ROUTE_DEPLOY_MARKER_v1</code>
+deploy_marker=AUDRALIA_G2_PLANET_BODY_GLOBE_LOGIC_INSPECTION_CARRIER_DEPLOY_MARKER_v1</code>
 
-        <template id="audralia-planet-route-receipt" class="hidden-receipt" data-route-receipt>
-AUDRALIA_G2_PLANET_BODY_ALTERNATE_ROUTE_TNT_v1
+        <template id="audralia-planet-inspection-receipt" class="hidden-receipt" data-route-receipt>
+AUDRALIA_G2_PLANET_BODY_GLOBE_LOGIC_INSPECTION_CARRIER_TNT_v1
 target=/showroom/globe/audralia/planet/index.html
-render=/assets/audralia/clean/runtime/audralia.planet-body.expression.render.js
-parent=/showroom/globe/audralia/
-parent_preserved=true
-cockpit=/showroom/globe/audralia/disposition/
-cockpit_preserved=true
-branch_not_replace=true
+js=/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
+route_guard=/showroom/globe/audralia/planet/
+mount=data-audralia-planet-inspection-mount
+inspection_carrier=true
+drag_rotation=true
+lens_readouts=true
+state_wall_retired=true
 runtime_strength_held=true
 no_final_visual_pass_claim=true
 no_generated_image=true
 no_graphic_box=true
-no_canvas=true
-no_webgl=true
 no_earth_substitution=true
 no_australia_drift=true
         </template>
@@ -718,55 +685,19 @@ no_australia_drift=true
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Audralia · Planet Body Alternate Route · Runtime / Strength held.
+      Diamond Gate Bridge · Audralia · Planet Body Inspection · Runtime / Strength held.
     </footer>
   </div>
 
   <script
-    src="/assets/audralia/clean/runtime/audralia.planet-body.expression.render.js?v=AUDRALIA_G2_PLANET_BODY_ALTERNATE_ROUTE_TNT_v1"
+    src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?v=AUDRALIA_G2_PLANET_BODY_GLOBE_LOGIC_INSPECTION_CARRIER_TNT_v1"
     defer
-    data-audralia-planet-expression-js
-    data-contract="AUDRALIA_G2_PLANET_BODY_ALTERNATE_ROUTE_TNT_v1"
+    data-audralia-planet-inspection-js
+    data-contract="AUDRALIA_G2_PLANET_BODY_GLOBE_LOGIC_INSPECTION_CARRIER_TNT_v1"
     data-route="/showroom/globe/audralia/planet/"
-    data-parent-route="/showroom/globe/audralia/"
-    data-cockpit-route="/showroom/globe/audralia/disposition/"
     data-route-local-render="true"
     data-runtime-strength-held="true"
     data-final-visual-pass-claim="false"
   ></script>
-
-  <script>
-    (() => {
-      "use strict";
-
-      const CONTRACT = "AUDRALIA_G2_PLANET_BODY_ALTERNATE_ROUTE_TNT_v1";
-
-      const receipt = Object.freeze({
-        contract: CONTRACT,
-        route: "/showroom/globe/audralia/planet/",
-        html: "/showroom/globe/audralia/planet/index.html",
-        render: "/assets/audralia/clean/runtime/audralia.planet-body.expression.render.js",
-        routeLaw: "branch-not-replace",
-        parentRoutePreserved: true,
-        cockpitRoutePreserved: true,
-        runtimeStrengthHeld: true,
-        finalVisualPassClaim: false,
-        generatedImage: false,
-        graphicBox: false,
-        canvas: false,
-        webgl: false,
-        earthSubstitution: false,
-        australiaNameDrift: false,
-        deployMarker: "AUDRALIA_G2_PLANET_BODY_ALTERNATE_ROUTE_DEPLOY_MARKER_v1"
-      });
-
-      document.documentElement.dataset.audraliaPlanetAlternateRouteReceipt = JSON.stringify(receipt);
-      window.AUDRALIA_G2_PLANET_BODY_ALTERNATE_ROUTE_HTML_RECEIPT = receipt;
-
-      window.dispatchEvent(new CustomEvent("audralia:planet-alternate-route:html-ready", {
-        detail: receipt
-      }));
-    })();
-  </script>
 </body>
 </html>

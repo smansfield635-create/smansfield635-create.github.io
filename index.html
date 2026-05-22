@@ -4,9 +4,9 @@
   lang="en"
   data-route="/"
   data-page="compass"
-  data-version="G2-V5"
-  data-contract="COMPASS_CARDINAL_NORTH_LAWS_FRONTIER_DROPDOWN_SEVEN_GEM_SYMMETRY_TNT_v2"
-  data-previous-contract="COMPASS_CARDINAL_DROPDOWN_AND_GEM_SYMMETRY_TNT_v1"
+  data-version="G2-V6"
+  data-contract="COMPASS_INTERGALACTIC_COCKPIT_ACCESS_HATCH_TNT_v1"
+  data-previous-contract="COMPASS_CARDINAL_NORTH_LAWS_FRONTIER_DROPDOWN_SEVEN_GEM_SYMMETRY_TNT_v2"
   data-role="root-compass"
   data-root-is-compass="true"
   data-proof-path="/laws/"
@@ -16,9 +16,15 @@
   data-frontier-visible-dropdown="true"
   data-cardinal-dropdown="active"
   data-active-bubble-registry="active"
-  data-active-bubbles="Compass,Door,Home,Products,Laws,Interactive Narrative,Showroom,Gauges,Meet Sean,Frontier"
+  data-active-bubbles="Compass,Door,Home,Products,Laws,Interactive Narrative,Showroom,Gauges,Meet Sean,Frontier,Intergalactic Cockpit"
   data-cardinal-north="laws"
-  data-diamond-symmetry="seven-gem-field-renewed"
+  data-diamond-symmetry="seven-gem-field-preserved"
+  data-cockpit-access-hatch="active"
+  data-cockpit-route="/showroom/globe/audralia/disposition/"
+  data-cockpit-label="Intergalactic Cockpit"
+  data-cockpit-role="audralia-downstream-stream-deck"
+  data-dexter-gauge-mount-route="true"
+  data-runtime-strength-held="true"
   data-static-page-usable-without-js="true"
   data-runtime-public-message="false"
   data-generated-image="false"
@@ -33,7 +39,7 @@
   <title>Compass · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge begins at the Compass: choose laws, person, interactive narrative, showroom, community, frontier, or gauges."
+    content="Diamond Gate Bridge begins at the Compass: choose laws, person, interactive narrative, showroom, community, frontier, gauges, or the Intergalactic Cockpit access hatch."
   >
 
   <style>
@@ -1105,6 +1111,13 @@
               </div>
 
               <div class="cardinal-group">
+                <div class="cardinal-heading">Systems Hatch <span>Cockpit and operations deck</span></div>
+                <div class="route-menu-grid">
+                  <a class="route-menu-link" href="/showroom/globe/audralia/disposition/">Intergalactic Cockpit</a>
+                </div>
+              </div>
+
+              <div class="cardinal-group">
                 <div class="cardinal-heading">North <span>Laws, proof, and measurement</span></div>
                 <div class="route-menu-grid">
                   <a class="route-menu-link" href="/laws/">Laws</a>
@@ -1161,6 +1174,7 @@
           <a class="button green" href="/showroom/">Open Showroom</a>
           <a class="button" href="/explore/frontier/">Open Frontier</a>
           <a class="button" href="/gauges/">Check Gauges</a>
+          <a class="button" href="/showroom/globe/audralia/disposition/">Open Cockpit</a>
         </div>
       </section>
 
@@ -1268,9 +1282,27 @@
         </div>
       </section>
 
+      <section class="panel section" aria-labelledby="cockpit-hatch-title">
+        <div class="kicker">Systems hatch · Operations deck</div>
+        <h2 id="cockpit-hatch-title">Enter the Intergalactic Cockpit without disturbing the Compass field.</h2>
+
+        <p>
+          The cockpit opens Audralia’s downstream stream deck, Dexter Lab gauge mounts, terrain stream recognition, and held Runtime / Strength status. It is an operations hatch, not a replacement for the public paths.
+        </p>
+
+        <div class="path-grid">
+          <a class="path-card" href="/showroom/globe/audralia/disposition/">
+            <b>Systems Hatch · Cockpit</b>
+            <strong>Intergalactic Cockpit</strong>
+            <span>Audralia downstream stream deck · Dexter Lab gauge mounts · terrain stream recognition.</span>
+            <span class="open-path">Enter Cockpit</span>
+          </a>
+        </div>
+      </section>
+
       <template id="route-receipt" data-route-receipt>
-COMPASS_CARDINAL_NORTH_LAWS_FRONTIER_DROPDOWN_SEVEN_GEM_SYMMETRY_TNT_v2
-previous=COMPASS_CARDINAL_DROPDOWN_AND_GEM_SYMMETRY_TNT_v1
+COMPASS_INTERGALACTIC_COCKPIT_ACCESS_HATCH_TNT_v1
+previous=COMPASS_CARDINAL_NORTH_LAWS_FRONTIER_DROPDOWN_SEVEN_GEM_SYMMETRY_TNT_v2
 route=/
 page=compass
 html=/index.html
@@ -1278,9 +1310,10 @@ role=root_compass
 context_alignment=true
 cardinal_dropdown=active
 legacy_top_bubble_stack_replaced=true
-active_bubble_registry=Compass,Door,Home,Products,Laws,Interactive_Narrative,Showroom,Gauges,Meet_Sean,Frontier
+active_bubble_registry=Compass,Door,Home,Products,Laws,Interactive_Narrative,Showroom,Gauges,Meet_Sean,Frontier,Intergalactic_Cockpit
 cardinal_north_anchor=Laws
 cardinal_center=Compass,Door,Home
+cardinal_systems_hatch=Intergalactic_Cockpit
 cardinal_north=Laws,Gauges
 cardinal_east=Interactive_Narrative,Showroom
 cardinal_south=Frontier
@@ -1298,25 +1331,40 @@ showroom_route=/showroom/
 products_role=community_path
 products_route=/products/
 person_route=/meet-sean-mansfield/
+cockpit_access_hatch=active
+cockpit_route=/showroom/globe/audralia/disposition/
+cockpit_label=Intergalactic_Cockpit
+cockpit_role=audralia_downstream_stream_deck
+dexter_gauge_mount_route=true
+runtime_strength_held=true
+access_type=systems_hatch
 public_paths=Laws,Meet_Sean,Interactive_Narrative,Showroom,Products,Gauges
-gem_field_updated=true
+systems_hatch_paths=Intergalactic_Cockpit
+dropdown_access_added=true
+hero_button_added=true
+systems_hatch_section_added=true
+compass_expression_preserved=true
+gem_field_updated=false
 gem_field_symmetry=center_compass_six_point_outer_ring
+seven_gem_symmetry_preserved=true
+outer_gems_unchanged=true
 center_gem=Compass
 outer_gems=Laws,Interactive_Narrative,Showroom,Gauges,Products,Meet_Sean
 meet_sean_position=upper_left_symmetric
 gauges_position=bottom_center_symmetric
-route_owns=compass_root,top_navigation,primary_entry_language,compass_gem_field,root_path_cards
-route_does_not_own=door_page,showroom_page,products_page,laws_page,gauges_logic,sitewide_rebuild,heavy_runtime
+path_cards_preserved=true
+route_owns=compass_root,top_navigation,primary_entry_language,compass_gem_field,root_path_cards,cockpit_access_hatch
+route_does_not_own=door_page,showroom_page,products_page,laws_page,gauges_logic,cockpit_logic,audralia_parent_route,datum,disposition_child,terrain_child,dexter_lab,runtime_strength,multi_stream_render,sitewide_rebuild,heavy_runtime
 generated_image=false
 graphic_box=false
 streaming=false
 visual_pass_claimed=false
-deploy_marker=COMPASS_CARDINAL_NORTH_LAWS_FRONTIER_DROPDOWN_SEVEN_GEM_SYMMETRY_DEPLOY_MARKER_v2
+deploy_marker=COMPASS_INTERGALACTIC_COCKPIT_ACCESS_HATCH_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer>
-      COMPASS_CARDINAL_NORTH_LAWS_FRONTIER_DROPDOWN_SEVEN_GEM_SYMMETRY_TNT_v2 · Compass · North is Laws · Frontier in dropdown · Seven-gem symmetry.
+      COMPASS_INTERGALACTIC_COCKPIT_ACCESS_HATCH_TNT_v1 · Compass · North is Laws · Frontier in dropdown · Seven-gem symmetry preserved · Cockpit access hatch active.
     </footer>
   </div>
 </body>

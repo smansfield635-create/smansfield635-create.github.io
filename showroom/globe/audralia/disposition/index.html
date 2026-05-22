@@ -2,16 +2,23 @@
 <html
   lang="en"
   data-route="/showroom/globe/audralia/disposition/"
-  data-page="audralia-disposition-verification-harness"
-  data-contract="AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_HTML_BINDING_TNT_v1"
-  data-bound-js-contract="AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_ROUTE_JS_TNT_v1"
+  data-page="audralia-intergalactic-cockpit-dexter-gauge-mount"
+  data-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_HTML_BINDING_TNT_v1"
+  data-bound-js-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_ROUTE_JS_TNT_v1"
+  data-previous-html-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_TERRAIN_STREAM_RECOGNITION_HTML_BINDING_TNT_v1"
+  data-previous-js-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_TERRAIN_STREAM_RECOGNITION_ROUTE_JS_TNT_v1"
   data-parent-baseline="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMPTION_BASELINE_v1"
+  data-harness-baseline="AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_MULTI_STREAM_LAUNCHPAD_BASELINE_v1"
+  data-cockpit-frame="intergalactic-cockpit"
+  data-instrument-authority="dexters-laboratory"
   data-datum-file="/assets/audralia/clean/runtime/audralia.true-globe.datum.js"
   data-disposition-file="/assets/audralia/clean/runtime/audralia.true-globe.disposition.js"
+  data-terrain-file="/assets/audralia/clean/runtime/audralia.true-globe.terrain.js"
   data-multi-stream-render-file="/assets/audralia/clean/runtime/audralia.true-globe.multi-stream.render.js"
   data-html-function="wisdom"
   data-js-function="courage"
   data-runtime-function="strength"
+  data-runtime-strength-held="true"
   data-parent-datum-held="true"
   data-parent-html-held="true"
   data-parent-route-js-held="true"
@@ -21,10 +28,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Audralia · Disposition Harness</title>
+
+  <title>Audralia · Intergalactic Cockpit</title>
   <meta
     name="description"
-    content="Standalone Audralia downstream verification harness proving disposition child receive readiness and staging future multi-stream render launchpad."
+    content="Audralia Intergalactic Cockpit with Dexter Lab gauge mounts, terrain stream recognition, and held Runtime Strength."
   >
 
   <style>
@@ -32,7 +40,6 @@
       color-scheme: dark;
       --bg: #020711;
       --panel: rgba(7, 17, 34, 0.88);
-      --panel2: rgba(3, 9, 20, 0.72);
       --line: rgba(244, 207, 131, 0.18);
       --text: rgba(238, 244, 255, 0.94);
       --muted: rgba(238, 244, 255, 0.68);
@@ -83,7 +90,12 @@
       mask-image: linear-gradient(180deg, rgba(0,0,0,0.9), rgba(0,0,0,0.46) 62%, rgba(0,0,0,0.12));
     }
 
-    a, button { color: inherit; font: inherit; }
+    a,
+    button {
+      color: inherit;
+      font: inherit;
+    }
+
     a { text-decoration: none; }
 
     a:focus-visible,
@@ -148,7 +160,17 @@
       box-shadow: 0 0 22px rgba(244,207,131,0.14);
     }
 
-    .brand-copy { display: grid; gap: 2px; min-width: 0; }
+    .brand-copy {
+      display: grid;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .brand-copy span {
+      color: rgba(141,216,255,0.82);
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+    }
 
     .brand-copy strong {
       color: rgba(255,244,216,0.96);
@@ -157,12 +179,6 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-    }
-
-    .brand-copy span {
-      color: rgba(141,216,255,0.82);
-      font-size: 0.68rem;
-      letter-spacing: 0.22em;
     }
 
     .nav {
@@ -209,6 +225,12 @@
     .hero {
       border-radius: 34px;
       padding: clamp(24px, 5vw, 46px);
+    }
+
+    .panel {
+      margin-top: 16px;
+      border-radius: 34px;
+      padding: clamp(18px, 3.8vw, 32px);
     }
 
     .kicker,
@@ -260,21 +282,20 @@
       text-transform: uppercase;
     }
 
-    .panel {
-      margin-top: 16px;
-      border-radius: 34px;
-      padding: clamp(18px, 3.8vw, 32px);
-    }
-
-    .proof-grid {
+    .grid-3,
+    .grid-4 {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
       margin-top: 16px;
     }
 
-    .proof-card {
-      min-height: 128px;
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .proof-card,
+    .function-card,
+    .gauge-card,
+    .stream-card {
       display: grid;
       align-content: start;
       gap: 8px;
@@ -284,89 +305,46 @@
       background:
         radial-gradient(circle at 20% 0%, rgba(244,207,131,0.08), transparent 9rem),
         rgba(255,255,255,0.03);
+      overflow: hidden;
     }
 
-    .proof-card b {
+    .proof-card { min-height: 124px; }
+    .function-card { min-height: 162px; }
+    .gauge-card { min-height: 132px; }
+    .stream-card { min-height: 142px; }
+
+    .proof-card b,
+    .function-card b,
+    .gauge-card b,
+    .stream-card b {
       color: var(--mint);
       font-size: 0.70rem;
       letter-spacing: 0.14em;
       text-transform: uppercase;
     }
 
-    .proof-card span {
-      color: rgba(238,244,255,0.78);
-      font-size: 0.98rem;
-      line-height: 1.35;
-      font-weight: 820;
-    }
-
-    .function-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 16px;
-    }
-
-    .function-card {
-      min-height: 164px;
-      display: grid;
-      align-content: start;
-      gap: 10px;
-      border: 1px solid rgba(244,207,131,0.16);
-      border-radius: 22px;
-      padding: 18px;
-      background: rgba(255,255,255,0.03);
-    }
-
-    .function-card b {
-      color: var(--gold);
-      font-size: 0.78rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
-
-    .function-card strong {
-      color: rgba(255,244,216,0.96);
-      font-size: 1.24rem;
-      line-height: 1.05;
-    }
-
-    .function-card span {
-      color: var(--muted);
-      font-size: 0.95rem;
-      line-height: 1.42;
-    }
-
-    .stream-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .stream-card {
-      min-height: 142px;
-      display: grid;
-      align-content: start;
-      gap: 7px;
-      border: 1px solid rgba(255,255,255,0.09);
-      border-radius: 18px;
-      padding: 14px;
-      background: rgba(255,255,255,0.026);
-      overflow: hidden;
-    }
-
+    .function-card b,
     .stream-card b {
       color: var(--gold);
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
     }
 
-    .stream-card span {
-      color: rgba(238,244,255,0.52);
-      font-size: 0.72rem;
-      line-height: 1.24;
+    .proof-card span,
+    .gauge-card span,
+    .stream-card span,
+    .function-card span {
+      color: rgba(238,244,255,0.72);
+      font-size: 0.92rem;
+      line-height: 1.36;
+      overflow-wrap: anywhere;
+    }
+
+    .proof-card strong,
+    .function-card strong,
+    .gauge-card strong,
+    .stream-card strong {
+      color: rgba(255,244,216,0.96);
+      font-size: 1rem;
+      line-height: 1.18;
       overflow-wrap: anywhere;
     }
 
@@ -375,12 +353,6 @@
       font-size: 0.84rem;
       line-height: 1.28;
       font-style: normal;
-    }
-
-    .stream-card strong {
-      color: rgba(167,243,198,0.92);
-      font-size: 0.84rem;
-      line-height: 1.28;
     }
 
     .receipt {
@@ -428,26 +400,53 @@
     }
 
     @media (max-width: 980px) {
-      .topbar { align-items: flex-start; flex-direction: column; }
-      .nav { justify-content: flex-start; }
-      .proof-grid,
-      .function-grid { grid-template-columns: 1fr; }
-      .stream-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .grid-3,
+      .grid-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
 
     @media (max-width: 620px) {
-      .page { width: min(100% - 18px, var(--max)); }
+      .page {
+        width: min(100% - 18px, var(--max));
+      }
+
       .hero,
       .panel,
-      .receipt { border-radius: 24px; }
-      .nav { display: grid; grid-template-columns: 1fr; width: 100%; }
+      .receipt {
+        border-radius: 24px;
+      }
+
+      .nav {
+        display: grid;
+        grid-template-columns: 1fr;
+        width: 100%;
+      }
+
       .nav a,
-      .nav button { width: 100%; }
-      .stream-grid { grid-template-columns: 1fr; }
+      .nav button {
+        width: 100%;
+      }
+
+      .grid-3,
+      .grid-4 {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
+      *,
+      *::before,
+      *::after {
         scroll-behavior: auto !important;
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
@@ -458,7 +457,7 @@
 </head>
 
 <body>
-  <a class="skip" href="#harness-main">Skip to harness</a>
+  <a class="skip" href="#cockpit-main">Skip to cockpit</a>
 
   <div class="page">
     <header class="topbar">
@@ -466,113 +465,153 @@
         <span class="brand-mark" aria-hidden="true">AU</span>
         <span class="brand-copy">
           <span>Audralia</span>
-          <strong>Disposition Harness</strong>
+          <strong>Intergalactic Cockpit</strong>
         </span>
       </a>
 
-      <nav class="nav" aria-label="Harness navigation">
+      <nav class="nav" aria-label="Cockpit navigation">
         <a href="/showroom/globe/audralia/">Return to Audralia</a>
         <a href="/showroom/globe/">Return to Globe</a>
         <a href="/gauges/">Triple G</a>
-        <button type="button" data-harness-refresh>Run Harness</button>
+        <button type="button" data-cockpit-refresh>Run Cockpit</button>
       </nav>
     </header>
 
-    <main id="harness-main">
+    <main id="cockpit-main">
       <section class="hero">
-        <p class="kicker">Audralia · Disposition Verification Harness</p>
-        <h1>Downstream receive proof without parent renewal.</h1>
+        <p class="kicker">Audralia · Intergalactic Cockpit</p>
+        <h1>Dexter Lab gauges mounted to the stream-control deck.</h1>
 
         <p class="lede">
-          This standalone route tests whether the first passive downstream child can receive the completed cloned datum receive-map while datum, parent HTML, and parent route JS remain held. It also stages the future multi-stream render launchpad without activating visual render.
+          This cockpit remains the standalone downstream verification harness and multi-stream launchpad. Dexter’s Laboratory supplies instrument authority. The cockpit mounts the gauges, verifies the terrain stream, and keeps Runtime / Strength held for future multi-stream render.
         </p>
 
         <div class="status-row">
           <span class="status-pill">Wisdom HTML</span>
           <span class="status-pill">Courage JS</span>
-          <span class="status-pill">Strength runtime held</span>
+          <span class="status-pill">Dexter Lab instruments</span>
+          <span class="status-pill">Strength held</span>
           <span class="status-pill">No visual pass</span>
         </div>
       </section>
 
-      <section class="panel" aria-label="Function assignment">
+      <section class="panel" aria-label="Primary functions">
         <p class="section-title">Primary functions</p>
 
-        <div class="function-grid">
+        <div class="grid-3">
           <article class="function-card">
             <b>HTML</b>
             <strong>Wisdom</strong>
-            <span>Chooses, names, binds, frames, declares authority, and provides the public proof surface.</span>
+            <span>Cockpit glass, labels, controls, route receipt, public proof surface, and visible gauge deck.</span>
           </article>
 
           <article class="function-card">
             <b>JS</b>
             <strong>Courage</strong>
-            <span>Acts, loads, verifies, enters uncertainty, reports pass/fail, and connects child to parent.</span>
+            <span>Pilot layer: loads streams, mounts gauges, verifies pass/fail, and reports the cockpit state.</span>
           </article>
 
           <article class="function-card">
             <b>Runtime</b>
             <strong>Strength</strong>
-            <span>Carries motion later. For this harness, Strength remains held as the future multi-stream endurance carrier.</span>
+            <span>Future engine carrier for motion, endurance, loops, drag, and multi-stream render stability. Held in this pass.</span>
           </article>
         </div>
       </section>
 
-      <section class="panel" aria-label="Harness proof">
-        <p class="section-title">Verification result</p>
+      <section class="panel" aria-label="Cockpit proof">
+        <p class="section-title">Cockpit verification</p>
 
-        <div class="proof-grid">
-          <article class="proof-card"><b>Phase</b><span data-harness-phase>boot pending</span></article>
-          <article class="proof-card"><b>Failure</b><span data-harness-failure>BOOT_PENDING · boot pending</span></article>
-          <article class="proof-card"><b>Datum</b><span data-harness-datum>pending harness JS</span></article>
-          <article class="proof-card"><b>Disposition Child</b><span data-harness-disposition>pending harness JS</span></article>
-          <article class="proof-card"><b>Receive Map</b><span data-harness-receive-map>pending harness JS</span></article>
-          <article class="proof-card"><b>NEWS</b><span data-harness-news>pending harness JS</span></article>
-          <article class="proof-card"><b>Child Packet</b><span data-harness-child-packet>pending harness JS</span></article>
-          <article class="proof-card"><b>Disposition</b><span data-harness-disposition-ready>pending harness JS</span></article>
-          <article class="proof-card"><b>Render</b><span data-harness-render>held · no visual pass</span></article>
-          <article class="proof-card"><b>Parent Chain</b><span data-harness-parent-chain>unchanged · datum / HTML / route JS held</span></article>
-          <article class="proof-card"><b>Multi-Stream Launchpad</b><span data-harness-launchpad>held · awaiting receive proof</span></article>
-          <article class="proof-card"><b>Runtime / Strength</b><span data-harness-runtime>Strength held · no render activation</span></article>
+        <div class="grid-3">
+          <article class="proof-card"><b>Phase</b><span data-cockpit-phase>boot pending</span></article>
+          <article class="proof-card"><b>Failure</b><span data-cockpit-failure>BOOT_PENDING · boot pending</span></article>
+          <article class="proof-card"><b>Dexter Mode</b><span data-cockpit-dexter-mode>pending</span></article>
+
+          <article class="proof-card"><b>Datum System</b><span data-cockpit-datum>pending cockpit JS</span></article>
+          <article class="proof-card"><b>Disposition System</b><span data-cockpit-disposition>pending cockpit JS</span></article>
+          <article class="proof-card"><b>Terrain System</b><span data-cockpit-terrain>pending cockpit JS</span></article>
+
+          <article class="proof-card"><b>Dexter Lab Instruments</b><span data-cockpit-dexter>pending gauge mount</span></article>
+          <article class="proof-card"><b>Receive Map</b><span data-cockpit-receive-map>pending cockpit JS</span></article>
+          <article class="proof-card"><b>NEWS</b><span data-cockpit-news>pending cockpit JS</span></article>
+
+          <article class="proof-card"><b>Terrain Map</b><span data-cockpit-terrain-map>pending cockpit JS</span></article>
+          <article class="proof-card"><b>Terrain NEWS</b><span data-cockpit-terrain-news>pending cockpit JS</span></article>
+          <article class="proof-card"><b>Render</b><span data-cockpit-render>held · no visual pass</span></article>
+
+          <article class="proof-card"><b>Parent Chain</b><span data-cockpit-parent-chain>unchanged · datum / HTML / route JS held</span></article>
+          <article class="proof-card"><b>Multi-Stream Cockpit</b><span data-cockpit-launchpad>held · awaiting stream proof</span></article>
+          <article class="proof-card"><b>Runtime / Strength</b><span data-cockpit-runtime>held · future multi-stream carrier</span></article>
         </div>
       </section>
 
-      <section class="panel" aria-label="Multi-stream launchpad">
-        <p class="section-title">Multi-stream launchpad</p>
-        <div class="stream-grid" data-harness-streams>
+      <section class="panel" aria-label="Dexter Lab gauge panels">
+        <p class="section-title">Dexter Lab gauge mounts</p>
+
+        <div class="grid-4">
+          <article class="proof-card"><b>Datum Gauge</b><span data-gauge-datum>pending</span></article>
+          <article class="proof-card"><b>Disposition Gauge</b><span data-gauge-disposition>pending</span></article>
+          <article class="proof-card"><b>Terrain Gauge</b><span data-gauge-terrain>pending</span></article>
+          <article class="proof-card"><b>NEWS Gauge</b><span data-gauge-news>pending</span></article>
+          <article class="proof-card"><b>Parent Chain Gauge</b><span data-gauge-parent>pending</span></article>
+          <article class="proof-card"><b>Render Hold Gauge</b><span data-gauge-render>pending</span></article>
+          <article class="proof-card"><b>Runtime / Strength Gauge</b><span data-gauge-runtime>held · future engine carrier</span></article>
+          <article class="proof-card"><b>Multi-Stream Gauge</b><span data-gauge-multistream>pending</span></article>
+        </div>
+
+        <div class="grid-4" data-cockpit-gauge-grid aria-label="Generated Dexter gauge mount records">
+          <article class="gauge-card"><b>Gauge Mounts</b><strong>pending cockpit JS</strong><span>Dexter-labeled readouts mount here.</span></article>
+        </div>
+      </section>
+
+      <section class="panel" aria-label="Stream deck">
+        <p class="section-title">Stream deck</p>
+
+        <div class="grid-4" data-cockpit-streams>
           <article class="stream-card"><b>Datum Stream</b><span>/assets/audralia/clean/runtime/audralia.true-globe.datum.js</span><em>active parent math</em><strong>pending</strong></article>
           <article class="stream-card"><b>Disposition Stream</b><span>/assets/audralia/clean/runtime/audralia.true-globe.disposition.js</span><em>passive child receive proof</em><strong>pending</strong></article>
-          <article class="stream-card"><b>Terrain Stream</b><span>future child</span><em>future landform pressure</em><strong>held</strong></article>
+          <article class="stream-card"><b>Terrain Stream</b><span>/assets/audralia/clean/runtime/audralia.true-globe.terrain.js</span><em>passive terrain receive proof</em><strong>pending</strong></article>
           <article class="stream-card"><b>Moisture Stream</b><span>future child</span><em>future hydration pressure</em><strong>held</strong></article>
           <article class="stream-card"><b>Surface Stream</b><span>future child</span><em>future material expression</em><strong>held</strong></article>
           <article class="stream-card"><b>Cloud Stream</b><span>future child</span><em>future atmospheric expression</em><strong>held</strong></article>
           <article class="stream-card"><b>Continent Stream</b><span>future child</span><em>future landmass expression</em><strong>held</strong></article>
           <article class="stream-card"><b>Multi-Stream Render</b><span>/assets/audralia/clean/runtime/audralia.true-globe.multi-stream.render.js</span><em>future Strength/runtime carrier</em><strong>held</strong></article>
+          <article class="stream-card"><b>Dexter Lab Gauge Mounts</b><span>Dexter's Laboratory instrument authority</span><em>cockpit readout layer</em><strong>pending</strong></article>
         </div>
       </section>
 
-      <section class="receipt" aria-label="Harness route receipt">
+      <section class="receipt" aria-label="Cockpit route receipt">
         <p class="label">Route receipt</p>
-        <h2>Standalone harness route. Parent chain held.</h2>
+        <h2>Intergalactic Cockpit. Dexter Lab instruments mounted. Runtime / Strength held.</h2>
         <p>
-          The route tests downstream receive without renewing the completed Audralia parent route. The harness may load datum and disposition child assets, then report pass/fail. Multi-stream render remains staged only.
+          The cockpit mounts Dexter-labeled gauges, recognizes the passive terrain stream, preserves the launchpad, and leaves parent and child source files untouched. Dexter’s Laboratory remains the instrument authority.
         </p>
 
-        <code>AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_HTML_BINDING_TNT_v1
+        <code>AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_HTML_BINDING_TNT_v1
 route=/showroom/globe/audralia/disposition/
 html=/showroom/globe/audralia/disposition/index.html
-bound_js_contract=AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_ROUTE_JS_TNT_v1
+bound_js_contract=AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_ROUTE_JS_TNT_v1
+previous_html_contract=AUDRALIA_G1_INTERGALACTIC_COCKPIT_TERRAIN_STREAM_RECOGNITION_HTML_BINDING_TNT_v1
+previous_js_contract=AUDRALIA_G1_INTERGALACTIC_COCKPIT_TERRAIN_STREAM_RECOGNITION_ROUTE_JS_TNT_v1
 parent_baseline=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMPTION_BASELINE_v1
+harness_baseline=AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_MULTI_STREAM_LAUNCHPAD_BASELINE_v1
+cockpit_frame=intergalactic_cockpit
+instrument_authority=dexters_laboratory
 datum_file=/assets/audralia/clean/runtime/audralia.true-globe.datum.js
 disposition_file=/assets/audralia/clean/runtime/audralia.true-globe.disposition.js
+terrain_file=/assets/audralia/clean/runtime/audralia.true-globe.terrain.js
 multi_stream_render_file=/assets/audralia/clean/runtime/audralia.true-globe.multi-stream.render.js
 html_function=wisdom
 js_function=courage
 runtime_function=strength
+runtime_strength_held=true
+dexter_gauge_mounts=true
+terrain_stream_recognition=true
 parent_datum_held=true
 parent_html_held=true
 parent_route_js_held=true
+disposition_child_held=true
+terrain_child_held=true
 renders_nothing=true
 no_canvas_creation=true
 downstream_held=true
@@ -581,20 +620,25 @@ no_visual_pass_claim=true</code>
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Audralia · Disposition Harness · Wisdom / Courage / Strength · downstream held.
+      Diamond Gate Bridge · Audralia · Intergalactic Cockpit · Dexter Lab Gauge Mounts · Wisdom / Courage / Strength · downstream held.
     </footer>
   </div>
 
   <script
-    src="/showroom/globe/audralia/disposition/index.js?v=AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_ROUTE_JS_TNT_v1"
+    src="/showroom/globe/audralia/disposition/index.js?v=AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_ROUTE_JS_TNT_v1"
     defer
-    data-audralia-harness-js
-    data-contract="AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_ROUTE_JS_TNT_v1"
-    data-html-contract="AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_HTML_BINDING_TNT_v1"
+    data-audralia-cockpit-js
+    data-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_ROUTE_JS_TNT_v1"
+    data-html-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DEXTER_LAB_GAUGE_MOUNT_TERRAIN_STREAM_RECOGNITION_HTML_BINDING_TNT_v1"
+    data-previous-js-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_TERRAIN_STREAM_RECOGNITION_ROUTE_JS_TNT_v1"
     data-parent-baseline="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMPTION_BASELINE_v1"
+    data-harness-baseline="AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_MULTI_STREAM_LAUNCHPAD_BASELINE_v1"
+    data-cockpit-frame="intergalactic-cockpit"
+    data-instrument-authority="dexters-laboratory"
     data-html-function="wisdom"
     data-js-function="courage"
     data-runtime-function="strength"
+    data-runtime-strength-held="true"
     data-downstream-held="true"
   ></script>
 </body>

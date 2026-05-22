@@ -1,33 +1,40 @@
 // /showroom/globe/audralia/index.js
 // TNT FULL-FILE REPLACEMENT
-// AUDRALIA_G1_DATUM_CHILD_RECOGNITION_ROUTE_JS_TNT_v1
+// AUDRALIA_G1_DATUM_ADOPTION_ROUTE_JS_TNT_v1
 //
-// Previous protected route baseline:
+// Process:
+// ADOPTION, NOT BIRTH.
+//
+// Adoption file held:
+// /assets/audralia/clean/runtime/audralia.true-globe.datum.js
+//
+// Adoption file contract:
+// AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1
+//
+// Protected parent baseline:
 // AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1
 //
-// Paired HTML diagnostic surface:
-// AUDRALIA_G1_DATUM_CHILD_RECOGNITION_HTML_DIAGNOSTIC_TNT_v1
-//
 // Purpose:
-// - Preserve the locked G1 360 Diagnostic Scope baseline.
-// - Preserve smooth drag, one canvas, one pointer path, and dirty RAF piston rendering.
-// - Recognize the datum child receive-map if available.
-// - Load the existing datum child if missing.
-// - Populate the served HTML datum-recognition diagnostic slots.
-// - Do not use datum seats to replace the visual lattice yet.
-// - Do not activate terrain, moisture, surface, clouds, continents, or downstream visual work.
-// - No generated image. No GraphicBox. No visual-pass claim.
+// - Preserve the locked G1 360 Diagnostic Scope globe baseline.
+// - Adopt the existing datum child file as-is.
+// - Do not rewrite, renew, replace, or duplicate datum authority.
+// - Verify datum API, receive map, NEWS map, 256 seats, and child packet.
+// - Publish adoption status even if HTML diagnostic slots are absent.
+// - Populate HTML diagnostic slots only if they already exist.
+// - Do not replace the visual lattice with datum seats yet.
+// - Do not activate terrain, moisture, surface, cloud, continent, or visual-pass work.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_G1_DATUM_CHILD_RECOGNITION_ROUTE_JS_TNT_v1";
-  var PREVIOUS_CONTRACT = "AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1";
+  var CONTRACT = "AUDRALIA_G1_DATUM_ADOPTION_ROUTE_JS_TNT_v1";
+  var PREVIOUS_BASELINE = "AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1";
   var HTML_DIAGNOSTIC_CONTRACT = "AUDRALIA_G1_DATUM_CHILD_RECOGNITION_HTML_DIAGNOSTIC_TNT_v1";
 
-  var DATUM_CHILD_CONTRACT = "AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1";
-  var DATUM_CHILD_PATH = "/assets/audralia/clean/runtime/audralia.true-globe.datum.js";
-  var DATUM_CHILD_CACHE_KEY = "AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1";
+  var ADOPTION_PROCESS = "adoption-not-birth";
+  var ADOPTION_FILE = "/assets/audralia/clean/runtime/audralia.true-globe.datum.js";
+  var ADOPTION_FILE_CONTRACT = "AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1";
+  var ADOPTION_CACHE_KEY = "AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1";
 
   var RADIAL_NODES = 16;
   var FIBONACCI_BANDS = 16;
@@ -46,17 +53,17 @@
     planet: {
       title: "Planet View",
       label: "<strong>Planet View</strong> → spherical carrier · diagnostic lattice held as discovery layer",
-      copy: "Planet View restores the observable globe carrier. The diamond lattice remains under the surface as a rule and discovery layer, not as the body shape."
+      copy: "Planet View preserves the observable globe carrier. The diagnostic lattice remains a rule layer, not the planet body."
     },
     lattice: {
       title: "Lattice View",
-      label: "<strong>Lattice View</strong> → 360 diagnostic scope · diamond lattice as rule layer",
-      copy: "Lattice View wraps the spherical carrier with a diagnostic scope. It reveals the NEWS and Fibonacci rule system without replacing the globe."
+      label: "<strong>Lattice View</strong> → 360 diagnostic scope · 16 × 16 / 256 seats",
+      copy: "Lattice View wraps the spherical carrier with the protected 360 diagnostic scope while datum adoption is checked under the hood."
     },
     diagnostic: {
       title: "Diagnostic Scope",
-      label: "<strong>Diagnostic Scope</strong> → G1 carrier, NEWS, datum-recognition receipt, downstream held",
-      copy: "Diagnostic Scope reports the baseline proof and now checks whether the datum child receive-map is recognized without activating downstream children."
+      label: "<strong>Diagnostic Scope</strong> → parent baseline protected · datum adoption checked · downstream held",
+      copy: "Diagnostic Scope reports the G1 carrier baseline and whether the existing datum child has been adopted without activating downstream children."
     }
   });
 
@@ -65,12 +72,12 @@
     mount: null,
     canvas: null,
     ctx: null,
-    cachedDetails: [],
+    details: [],
 
     width: 0,
     height: 0,
     dpr: 1,
-    stageRect: null,
+    rect: null,
 
     activeLens: "planet",
     seats: [],
@@ -78,12 +85,7 @@
     spineLinks: [],
     fibonacciLinks: [],
     fibonacciReturnLinks: [],
-    allLinks: [],
-
     geometryBuilt: false,
-    oneCanvas: false,
-    oneLoop: false,
-    pointerBound: false,
 
     yaw: -0.54,
     pitch: -0.18,
@@ -102,26 +104,34 @@
     renderCount: 0,
     stopped: false,
 
-    datasetCache: {},
-    lastDiagnosticAt: 0,
+    oneCanvas: false,
+    onePointerPath: false,
+    oneLoop: false,
     duplicateCanvasRemoved: 0,
-    errorCount: 0,
-    lastError: "",
 
-    datumRecognition: {
+    lastDiagnosticWrite: 0,
+    datasetCache: {},
+    errors: [],
+
+    adoption: {
+      process: ADOPTION_PROCESS,
       attempted: false,
       loading: false,
-      loaded: false,
-      recognized: false,
-      failed: false,
-      failureReason: "pending-js",
+      loadAttempted: false,
+      loadSucceeded: false,
+      loadFailed: false,
+      apiFound: false,
+      apiSource: null,
+      statusReady: false,
+      datumLoaded: false,
+      datumAdopted: false,
       datumContract: null,
-      datumStatusReady: false,
-      datumApiReady: false,
+      contractValid: false,
       receiveMapReady: false,
       seatCount: null,
       seatCountValid: false,
       newsComplete: false,
+      allSeatsNewsComplete: false,
       childPacketAvailable: false,
       childPacketSeatCount: null,
       childPacketSeatCountValid: false,
@@ -132,10 +142,8 @@
       cloudReady: false,
       continentReady: false,
       visualPassClaimed: false,
-      lastCheckedAt: null,
-      loadAttempted: false,
-      loadSucceeded: false,
-      loadFailed: false,
+      failureReason: "pending-adoption",
+      checkedAt: null,
       errors: []
     }
   };
@@ -155,7 +163,7 @@
 
   function finite(value, fallback) {
     var number = Number(value);
-    return Number.isFinite(number) ? number : (fallback || 0);
+    return Number.isFinite(number) ? number : fallback;
   }
 
   function clamp(value, min, max) {
@@ -168,101 +176,75 @@
 
   function setText(selector, value) {
     var node = document.querySelector(selector);
-    var next = String(value);
-    if (node && node.textContent !== next) node.textContent = next;
+    var text = String(value);
+    if (node && node.textContent !== text) node.textContent = text;
   }
 
   function setHtml(selector, value) {
     var node = document.querySelector(selector);
-    var next = String(value);
-    if (node && node.innerHTML !== next) node.innerHTML = next;
+    var html = String(value);
+    if (node && node.innerHTML !== html) node.innerHTML = html;
   }
 
   function setDataset(key, value) {
-    var next = String(value);
-    if (state.datasetCache[key] === next) return;
+    var text = String(value);
+    if (state.datasetCache[key] === text) return;
 
-    state.datasetCache[key] = next;
+    state.datasetCache[key] = text;
 
     try {
-      document.documentElement.dataset[key] = next;
-      if (document.body) document.body.dataset[key] = next;
+      document.documentElement.dataset[key] = text;
+      if (document.body) document.body.dataset[key] = text;
     } catch (_error) {}
   }
 
-  function recordError(scope, error) {
-    state.errorCount += 1;
-    state.lastError = scope + ": " + (error && error.message ? error.message : String(error || "unknown"));
-
-    window.AUDRALIA_G1_DATUM_RECOGNITION_ROUTE_JS_ERROR = {
-      contract: CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
-      htmlDiagnosticContract: HTML_DIAGNOSTIC_CONTRACT,
-      scope: scope,
-      message: state.lastError,
-      errorCount: state.errorCount,
-      time: new Date().toISOString()
-    };
+  function closeMenus() {
+    for (var i = 0; i < state.details.length; i += 1) {
+      try {
+        state.details[i].open = false;
+      } catch (_error) {}
+    }
   }
 
-  function recordDatumError(scope, error) {
-    var message = scope + ": " + (error && error.message ? error.message : String(error || "unknown"));
+  function recordError(scope, error) {
+    var message = error && error.message ? error.message : String(error || "unknown");
 
-    state.datumRecognition.errors.push({
+    state.errors.push({
       scope: scope,
       message: message,
       time: new Date().toISOString()
     });
 
-    state.datumRecognition.failed = true;
-    state.datumRecognition.failureReason = message;
-
-    window.AUDRALIA_G1_DATUM_CHILD_RECOGNITION_ERROR = {
+    window.AUDRALIA_G1_DATUM_ADOPTION_ROUTE_JS_ERROR = {
       contract: CONTRACT,
-      datumChildContract: DATUM_CHILD_CONTRACT,
       scope: scope,
       message: message,
-      errors: state.datumRecognition.errors.slice()
+      errors: state.errors.slice()
     };
   }
 
-  function closeCachedMenus() {
-    for (var i = 0; i < state.cachedDetails.length; i += 1) {
-      try {
-        state.cachedDetails[i].open = false;
-      } catch (_error) {}
-    }
-  }
+  function recordAdoptionError(scope, error) {
+    var message = error && error.message ? error.message : String(error || "unknown");
 
-  function newsForSeat(band, radial) {
-    return {
-      north: {
-        defined: true,
-        role: "origin/pole/axis/predecessor-authority",
-        predecessorBand: band > 0 ? band - 1 : "north-pole-boundary"
-      },
-      east: {
-        defined: true,
-        role: "formation/successor-expression",
-        successorRadial: (radial + 1) % RADIAL_NODES
-      },
-      west: {
-        defined: true,
-        role: "correction/memory/opposite-relation",
-        oppositeRadial: (radial + RADIAL_NODES / 2) % RADIAL_NODES
-      },
-      south: {
-        defined: true,
-        role: "completion/grounding/render-eligibility",
-        successorBand: band < FIBONACCI_BANDS - 1 ? band + 1 : "south-pole-boundary"
-      },
-      complete: true,
-      renderEligible: true,
-      routeOwnsFinalNewsMath: false
+    state.adoption.errors.push({
+      scope: scope,
+      message: message,
+      time: new Date().toISOString()
+    });
+
+    state.adoption.failureReason = scope + ": " + message;
+
+    window.AUDRALIA_G1_DATUM_ADOPTION_ERROR = {
+      contract: CONTRACT,
+      adoptionFile: ADOPTION_FILE,
+      adoptionFileContract: ADOPTION_FILE_CONTRACT,
+      scope: scope,
+      message: message,
+      errors: state.adoption.errors.slice()
     };
   }
 
-  function createSeat(band, radial) {
+  function makeSeat(band, radial) {
     var v = (band + 0.5) / FIBONACCI_BANDS;
     var lat = Math.asin(1 - 2 * v);
     var lon = (radial / RADIAL_NODES) * TAU - Math.PI;
@@ -282,21 +264,22 @@
       z: clat * Math.sin(lon),
       major: radial % 4 === 0 || band % 4 === 0,
       secondary: radial % 2 === 0 || band % 2 === 0,
-      poleRelation: band < 2 ? "north" : band > 13 ? "south" : "field",
-      hemisphere: lat >= 0 ? "north" : "south",
-      equatorRelation: Math.abs(lat) < 0.16 ? "equator" : "off-equator",
-      news: newsForSeat(band, radial)
+      newsComplete: true,
+      childReceiveEligible: true,
+      renderEligible: true
     });
   }
 
-  function buildGeometry() {
+  function buildLocalDiagnosticGeometry() {
     var rings = [];
+    var band;
+    var radial;
 
-    for (var band = 0; band < FIBONACCI_BANDS; band += 1) {
+    for (band = 0; band < FIBONACCI_BANDS; band += 1) {
       var ring = [];
 
-      for (var radial = 0; radial < RADIAL_NODES; radial += 1) {
-        ring.push(createSeat(band, radial));
+      for (radial = 0; radial < RADIAL_NODES; radial += 1) {
+        ring.push(makeSeat(band, radial));
       }
 
       rings.push(Object.freeze(ring));
@@ -306,31 +289,27 @@
       return rings[bandIndex][((radialIndex % RADIAL_NODES) + RADIAL_NODES) % RADIAL_NODES];
     }
 
-    var ringLinks = [];
-    var spineLinks = [];
-    var fibonacciLinks = [];
-    var fibonacciReturnLinks = [];
-
-    function makeLink(a, b, family, major, secondary) {
-      return {
+    function link(a, b, family, major, secondary) {
+      return Object.freeze({
         a: a,
         b: b,
         family: family,
         major: Boolean(major),
         secondary: Boolean(secondary),
-        newsContinuity: true,
         renderEligible: true
-      };
+      });
     }
+
+    var ringLinks = [];
+    var spineLinks = [];
+    var fibonacciLinks = [];
+    var fibonacciReturnLinks = [];
 
     for (band = 0; band < FIBONACCI_BANDS; band += 1) {
       for (radial = 0; radial < RADIAL_NODES; radial += 1) {
-        var a = seat(band, radial);
-        var b = seat(band, radial + 1);
-
-        ringLinks.push(makeLink(
-          a,
-          b,
+        ringLinks.push(link(
+          seat(band, radial),
+          seat(band, radial + 1),
           "ring",
           band % 4 === 0 || radial % 4 === 0,
           band % 2 === 0 || radial % 2 === 0
@@ -340,12 +319,9 @@
 
     for (radial = 0; radial < RADIAL_NODES; radial += 1) {
       for (band = 0; band < FIBONACCI_BANDS - 1; band += 1) {
-        a = seat(band, radial);
-        b = seat(band + 1, radial);
-
-        spineLinks.push(makeLink(
-          a,
-          b,
+        spineLinks.push(link(
+          seat(band, radial),
+          seat(band + 1, radial),
           "spine",
           radial % 4 === 0,
           radial % 2 === 0
@@ -357,27 +333,35 @@
       var offset = FIBONACCI_OFFSETS[band % FIBONACCI_OFFSETS.length];
 
       for (radial = 0; radial < RADIAL_NODES; radial += 1) {
-        a = seat(band, radial);
-        b = seat(band + 1, radial + offset);
-        var c = seat(band + 1, radial - offset);
         var priority = radial % 4 === 0 || band % 4 === 0;
 
-        fibonacciLinks.push(makeLink(a, b, "fibonacci-forward", priority, radial % 2 === 0 || band % 2 === 0));
+        fibonacciLinks.push(link(
+          seat(band, radial),
+          seat(band + 1, radial + offset),
+          "fibonacci-forward",
+          priority,
+          radial % 2 === 0 || band % 2 === 0
+        ));
 
         if (band % 2 === 0) {
-          fibonacciReturnLinks.push(makeLink(a, c, "fibonacci-return", priority, radial % 2 === 0 || band % 2 === 0));
+          fibonacciReturnLinks.push(link(
+            seat(band, radial),
+            seat(band + 1, radial - offset),
+            "fibonacci-return",
+            priority,
+            radial % 2 === 0 || band % 2 === 0
+          ));
         }
       }
     }
 
-    state.seats = rings.reduce(function (out, ring) {
-      return out.concat(ring);
+    state.seats = rings.reduce(function (all, ring) {
+      return all.concat(ring);
     }, []);
     state.ringLinks = ringLinks;
     state.spineLinks = spineLinks;
     state.fibonacciLinks = fibonacciLinks;
     state.fibonacciReturnLinks = fibonacciReturnLinks;
-    state.allLinks = ringLinks.concat(spineLinks, fibonacciReturnLinks, fibonacciLinks);
     state.geometryBuilt = state.seats.length === LATTICE_STATES;
   }
 
@@ -414,8 +398,6 @@
     var minSide = Math.min(width, height);
 
     return {
-      width: width,
-      height: height,
       centerX: width / 2,
       centerY: height * 0.42,
       radius: minSide * (width / Math.max(1, state.dpr) < 680 ? 0.345 : 0.365),
@@ -423,9 +405,9 @@
     };
   }
 
-  function projectSeat(seat) {
+  function projectPoint(point) {
     var m = metrics();
-    var rotated = rotatePoint(seat);
+    var rotated = rotatePoint(point);
     var perspective = m.cameraDistance / Math.max(0.72, m.cameraDistance - rotated.z);
 
     return {
@@ -433,12 +415,12 @@
       y: m.centerY - rotated.y * m.radius * perspective,
       z: rotated.z,
       perspective: perspective,
-      frontFacing: rotated.z >= -0.05,
-      seat: seat
+      frontFacing: rotated.z >= -0.05
     };
   }
 
-  function clear() {
+  function clearCanvas() {
+    if (!state.ctx) return;
     state.ctx.clearRect(0, 0, state.width, state.height);
   }
 
@@ -447,7 +429,7 @@
     var m = metrics();
 
     ctx.beginPath();
-    ctx.arc(m.centerX, m.centerY, m.radius * 1.002, 0, TAU);
+    ctx.arc(m.centerX, m.centerY, m.radius * 1.003, 0, TAU);
     ctx.clip();
   }
 
@@ -503,31 +485,13 @@
     ctx.restore();
   }
 
-  function drawAxisAndEquator() {
+  function drawReferenceLines() {
     var ctx = state.ctx;
-    var m = metrics();
-
-    function drawPolyline(points, stroke, width, alpha) {
-      ctx.save();
-      ctx.globalAlpha = alpha;
-      ctx.strokeStyle = stroke;
-      ctx.lineWidth = width;
-      ctx.beginPath();
-
-      for (var i = 0; i < points.length; i += 1) {
-        var p = projectSeat(points[i]);
-        if (i === 0) ctx.moveTo(p.x, p.y);
-        else ctx.lineTo(p.x, p.y);
-      }
-
-      ctx.stroke();
-      ctx.restore();
-    }
-
     var equator = [];
     var meridian = [];
+    var i;
 
-    for (var i = 0; i <= 96; i += 1) {
+    for (i = 0; i <= 96; i += 1) {
       var lon = -Math.PI + (i / 96) * TAU;
       equator.push({ x: Math.cos(lon), y: 0, z: Math.sin(lon) });
     }
@@ -537,14 +501,29 @@
       meridian.push({ x: Math.cos(lat), y: Math.sin(lat), z: 0 });
     }
 
+    function strokeLine(points, stroke, width) {
+      ctx.beginPath();
+
+      for (var j = 0; j < points.length; j += 1) {
+        var p = projectPoint(points[j]);
+        if (j === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+      }
+
+      ctx.strokeStyle = stroke;
+      ctx.lineWidth = width;
+      ctx.stroke();
+    }
+
     ctx.save();
     clipSphere();
-    drawPolyline(equator, "rgba(244,207,131,0.44)", Math.max(0.8, state.dpr * 0.75), 1);
-    drawPolyline(meridian, "rgba(141,216,255,0.24)", Math.max(0.65, state.dpr * 0.55), 1);
+    strokeLine(equator, "rgba(244,207,131,0.44)", Math.max(0.8, state.dpr * 0.75));
+    strokeLine(meridian, "rgba(141,216,255,0.24)", Math.max(0.65, state.dpr * 0.55));
     ctx.restore();
 
-    var north = projectSeat({ x: 0, y: 1, z: 0 });
-    var south = projectSeat({ x: 0, y: -1, z: 0 });
+    var m = metrics();
+    var north = projectPoint({ x: 0, y: 1, z: 0 });
+    var south = projectPoint({ x: 0, y: -1, z: 0 });
 
     ctx.save();
     ctx.textAlign = "center";
@@ -556,9 +535,9 @@
     ctx.restore();
   }
 
-  function linkColor(link, projectedA, projectedB) {
-    var front = projectedA.frontFacing || projectedB.frontFacing;
-    var z = (projectedA.z + projectedB.z) / 2;
+  function linkColor(link, a, b) {
+    var front = a.frontFacing || b.frontFacing;
+    var z = (a.z + b.z) / 2;
 
     if (link.family === "fibonacci-forward") {
       return front
@@ -583,7 +562,7 @@
       : "rgba(112,199,255,0.055)";
   }
 
-  function drawLinkSet(links, reduced) {
+  function drawLinks(links, reduced) {
     var ctx = state.ctx;
 
     for (var i = 0; i < links.length; i += 1) {
@@ -591,8 +570,8 @@
 
       if (reduced && !link.major && link.family.indexOf("fibonacci") >= 0) continue;
 
-      var a = projectSeat(link.a);
-      var b = projectSeat(link.b);
+      var a = projectPoint(link.a);
+      var b = projectPoint(link.b);
 
       ctx.beginPath();
       ctx.moveTo(a.x, a.y);
@@ -611,14 +590,13 @@
 
       if (reduced && !seat.major) continue;
 
-      var p = projectSeat(seat);
-      var major = seat.major;
-      var alpha = p.frontFacing ? (major ? 0.84 : 0.58) : (major ? 0.18 : 0.08);
-      var radius = major ? 2.35 : seat.secondary ? 1.55 : 1.18;
+      var p = projectPoint(seat);
+      var alpha = p.frontFacing ? (seat.major ? 0.84 : 0.58) : (seat.major ? 0.18 : 0.08);
+      var radius = seat.major ? 2.35 : seat.secondary ? 1.55 : 1.18;
 
       ctx.beginPath();
       ctx.arc(p.x, p.y, Math.max(1, radius * state.dpr * p.perspective), 0, TAU);
-      ctx.fillStyle = major
+      ctx.fillStyle = seat.major
         ? "rgba(244,207,131," + alpha.toFixed(3) + ")"
         : "rgba(141,216,255," + alpha.toFixed(3) + ")";
       ctx.fill();
@@ -630,13 +608,11 @@
 
     ctx.save();
     clipSphere();
-
-    drawLinkSet(state.ringLinks, reduced);
-    drawLinkSet(state.spineLinks, reduced);
-    if (!reduced) drawLinkSet(state.fibonacciReturnLinks, false);
-    drawLinkSet(state.fibonacciLinks, reduced);
+    drawLinks(state.ringLinks, reduced);
+    drawLinks(state.spineLinks, reduced);
+    if (!reduced) drawLinks(state.fibonacciReturnLinks, false);
+    drawLinks(state.fibonacciLinks, reduced);
     drawSeats(reduced);
-
     ctx.restore();
   }
 
@@ -663,26 +639,24 @@
     state.pitch = clamp(state.pitch, -1.16, 1.16);
     state.roll = Math.sin(timestamp * 0.00018) * 0.010;
 
-    clear();
+    clearCanvas();
     drawCarrier();
-    drawAxisAndEquator();
+    drawReferenceLines();
 
     if (state.activeLens === "lattice" || state.activeLens === "diagnostic") {
       drawDiagnosticLattice(state.pointerActive);
     } else {
-      var ctx = state.ctx;
-      ctx.save();
-      ctx.globalAlpha = 0.18;
+      state.ctx.save();
+      state.ctx.globalAlpha = 0.18;
       drawDiagnosticLattice(true);
-      ctx.restore();
+      state.ctx.restore();
     }
 
     state.renderCount += 1;
     state.oneLoop = true;
-
     if (state.settleFrames > 0) state.settleFrames -= 1;
 
-    window.AUDRALIA_G1_DATUM_CHILD_RECOGNITION_ROUTE_JS_STATE = compactStatus();
+    publishRouteStatus();
 
     if (
       state.pointerActive ||
@@ -694,18 +668,16 @@
     }
   }
 
-  function requestRender(reason, settleFrames) {
+  function requestRender(settleFrames) {
     if (settleFrames) state.settleFrames = Math.max(state.settleFrames, settleFrames);
-    if (!state.raf && !state.stopped) {
-      state.raf = window.requestAnimationFrame(renderFrame);
-    }
+    if (!state.raf && !state.stopped) state.raf = window.requestAnimationFrame(renderFrame);
   }
 
   function setLens(nextLens) {
     var lens = Object.prototype.hasOwnProperty.call(LENS_COPY, nextLens) ? nextLens : "planet";
-    closeCachedMenus();
-    state.activeLens = lens;
+    closeMenus();
 
+    state.activeLens = lens;
     document.documentElement.dataset.audraliaActiveLens = lens;
 
     Array.prototype.slice.call(document.querySelectorAll("[data-audralia-lens-button]")).forEach(function (button) {
@@ -716,9 +688,8 @@
     setText("[data-audralia-lens-copy]", LENS_COPY[lens].copy);
     setHtml("[data-audralia-stage-label]", LENS_COPY[lens].label);
 
-    updateDiagnostics(true);
-    writeDatumRecognitionDiagnostics();
-    requestRender("lens-switch", lens === "planet" ? 4 : 10);
+    writeDiagnostics(true);
+    requestRender(lens === "planet" ? 4 : 10);
   }
 
   function bindLensControls() {
@@ -730,8 +701,7 @@
   }
 
   function pointerPoint(event) {
-    var rect = state.stageRect;
-    if (!rect) return { x: event.clientX, y: event.clientY };
+    var rect = state.rect || state.stage.getBoundingClientRect();
 
     return {
       x: event.clientX - rect.left,
@@ -739,16 +709,25 @@
     };
   }
 
+  function resetCarrier() {
+    state.yaw = -0.54;
+    state.pitch = -0.18;
+    state.roll = 0;
+    state.velocityYaw = 0;
+    state.velocityPitch = 0;
+    requestRender(8);
+  }
+
   function bindPointer() {
     if (!state.stage) return;
 
     state.stage.addEventListener("pointerdown", function (event) {
-      closeCachedMenus();
+      closeMenus();
 
       var t = now();
       if (t - state.lastTap < 320) resetCarrier();
-
       state.lastTap = t;
+
       state.pointerActive = true;
       state.pointerId = event.pointerId;
 
@@ -762,7 +741,7 @@
         state.stage.setPointerCapture(event.pointerId);
       } catch (_error) {}
 
-      requestRender("pointer-down", 4);
+      requestRender(4);
       event.preventDefault();
     }, signal ? { signal: signal, passive: false } : { passive: false });
 
@@ -781,7 +760,7 @@
       state.velocityYaw = clamp(dx * 0.0022, -0.048, 0.048);
       state.velocityPitch = clamp(dy * 0.0014, -0.038, 0.038);
 
-      requestRender("pointer-move", 2);
+      requestRender(2);
       event.preventDefault();
     }, signal ? { signal: signal, passive: false } : { passive: false });
 
@@ -795,10 +774,8 @@
       } catch (_error) {}
 
       state.pointerId = null;
-
-      updateDiagnostics(true);
-      writeDatumRecognitionDiagnostics();
-      requestRender("pointer-release", 16);
+      writeDiagnostics(true);
+      requestRender(16);
       event.preventDefault();
     }
 
@@ -806,33 +783,20 @@
     state.stage.addEventListener("pointercancel", release, signal ? { signal: signal, passive: false } : { passive: false });
     state.stage.addEventListener("lostpointercapture", release, signal ? { signal: signal, passive: false } : { passive: false });
 
-    state.pointerBound = true;
+    state.onePointerPath = true;
   }
 
-  function resetCarrier() {
-    state.yaw = -0.54;
-    state.pitch = -0.18;
-    state.roll = 0;
-    state.velocityYaw = 0;
-    state.velocityPitch = 0;
-    requestRender("reset", 8);
-  }
-
-  function enforceOneCanvas(reason) {
+  function enforceOneCanvas() {
     if (!state.mount) return;
 
     var canvases = Array.prototype.slice.call(state.mount.querySelectorAll("canvas"));
     var selected = state.canvas && state.mount.contains(state.canvas) ? state.canvas : null;
 
     if (!selected) {
-      selected = canvases.find(function (canvas) {
-        return canvas.getAttribute("data-audralia-g1-diagnostic-canvas") === CONTRACT ||
-          canvas.getAttribute("data-audralia-g1-diagnostic-canvas") === PREVIOUS_CONTRACT;
-      }) || canvases[0] || document.createElement("canvas");
+      selected = canvases[0] || document.createElement("canvas");
     }
 
     if (!state.mount.contains(selected)) {
-      selected.setAttribute("data-audralia-g1-diagnostic-canvas", CONTRACT);
       selected.setAttribute("aria-hidden", "true");
       state.mount.appendChild(selected);
     }
@@ -850,12 +814,11 @@
 
     state.canvas = selected;
     state.canvas.setAttribute("data-audralia-g1-diagnostic-canvas", CONTRACT);
-    state.canvas.setAttribute("data-previous-contract", PREVIOUS_CONTRACT);
-    state.canvas.setAttribute("data-html-diagnostic-contract", HTML_DIAGNOSTIC_CONTRACT);
-    state.canvas.setAttribute("data-globe-role", "observable-organic-carrier");
-    state.canvas.setAttribute("data-diamond-lattice-role", "scientific-discovery-rule-layer");
-    state.canvas.setAttribute("data-news-protocol-active", "true");
-    state.canvas.setAttribute("data-datum-recognition-route-js", "active");
+    state.canvas.setAttribute("data-previous-baseline", PREVIOUS_BASELINE);
+    state.canvas.setAttribute("data-adoption-process", ADOPTION_PROCESS);
+    state.canvas.setAttribute("data-adoption-file", ADOPTION_FILE);
+    state.canvas.setAttribute("data-adoption-file-contract", ADOPTION_FILE_CONTRACT);
+    state.canvas.setAttribute("data-downstream-held", "true");
 
     state.canvas.style.position = "absolute";
     state.canvas.style.inset = "0";
@@ -869,14 +832,14 @@
     state.oneCanvas = Boolean(state.ctx);
   }
 
-  function updateDimensionsFromRect(rect) {
+  function updateDimensions(rect) {
     if (!rect || !state.canvas || !state.ctx) return false;
 
     var dpr = Math.max(1, Math.min(1.85, window.devicePixelRatio || 1));
     var width = Math.max(320, Math.floor(rect.width * dpr));
     var height = Math.max(520, Math.floor(rect.height * dpr));
 
-    state.stageRect = {
+    state.rect = {
       left: rect.left,
       top: rect.top,
       width: rect.width,
@@ -891,26 +854,24 @@
     state.canvas.width = width;
     state.canvas.height = height;
 
-    requestRender("dimension-update", 6);
+    requestRender(6);
     return true;
   }
 
-  function measureStageOnce() {
+  function measureStage() {
     if (!state.stage) return false;
-    return updateDimensionsFromRect(state.stage.getBoundingClientRect());
+    return updateDimensions(state.stage.getBoundingClientRect());
   }
 
-  function setupResizeHandling() {
-    measureStageOnce();
+  function setupResize() {
+    measureStage();
 
     if (typeof ResizeObserver !== "undefined" && state.stage) {
       resizeObserver = new ResizeObserver(function (entries) {
-        if (!entries || !entries[0]) return;
-
-        var content = entries[0].contentRect;
         var box = state.stage.getBoundingClientRect();
+        var content = entries && entries[0] ? entries[0].contentRect : box;
 
-        updateDimensionsFromRect({
+        updateDimensions({
           left: box.left,
           top: box.top,
           width: content.width,
@@ -924,52 +885,60 @@
     }
 
     window.addEventListener("resize", function () {
-      measureStageOnce();
-      requestRender("window-resize", 6);
+      measureStage();
+      requestRender(6);
     }, signal ? { signal: signal, passive: true } : { passive: true });
 
     window.addEventListener("orientationchange", function () {
       setTimeout(function () {
-        measureStageOnce();
-        requestRender("orientationchange", 6);
+        measureStage();
+        requestRender(6);
       }, 120);
     }, signal ? { signal: signal, passive: true } : { passive: true });
   }
 
-  function findDatumApi() {
-    return window.AUDRALIA_TRUE_GLOBE_DATUM ||
-      window.AUDRALIA_G1_TRUE_GLOBE_DATUM ||
-      window.AUDRALIA_TRUE_PLANETARY_DATUM ||
-      window.AUDRALIA_G1_TRUE_PLANETARY_DATUM ||
-      null;
+  function findDatumAdoptionApi() {
+    var sources = [
+      ["AUDRALIA_TRUE_GLOBE_DATUM", window.AUDRALIA_TRUE_GLOBE_DATUM],
+      ["AUDRALIA_G1_TRUE_GLOBE_DATUM", window.AUDRALIA_G1_TRUE_GLOBE_DATUM],
+      ["AUDRALIA_TRUE_PLANETARY_DATUM", window.AUDRALIA_TRUE_PLANETARY_DATUM],
+      ["AUDRALIA_G1_TRUE_PLANETARY_DATUM", window.AUDRALIA_G1_TRUE_PLANETARY_DATUM],
+      ["AUDRALIA_G2_TRUE_GLOBE_DATUM", window.AUDRALIA_G2_TRUE_GLOBE_DATUM],
+      ["AUDRALIA_G2_TRUE_PLANETARY_DATUM", window.AUDRALIA_G2_TRUE_PLANETARY_DATUM]
+    ];
+
+    for (var i = 0; i < sources.length; i += 1) {
+      if (sources[i][1]) {
+        state.adoption.apiSource = sources[i][0];
+        return sources[i][1];
+      }
+    }
+
+    state.adoption.apiSource = null;
+    return null;
   }
 
-  function findDatumStatus(api) {
+  function getDatumStatus(api) {
     if (api && typeof api.status === "function") {
       try {
         return api.status();
       } catch (error) {
-        recordDatumError("datum.status", error);
+        recordAdoptionError("datum.status", error);
       }
     }
 
     return window.AUDRALIA_TRUE_GLOBE_DATUM_STATUS ||
       window.AUDRALIA_G1_TRUE_GLOBE_DATUM_STATUS ||
+      window.AUDRALIA_G2_TRUE_GLOBE_DATUM_STATUS ||
       null;
   }
 
-  function contractRecognized(contract) {
-    return contract === DATUM_CHILD_CONTRACT ||
-      contract === "AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1" ||
-      contract === "AUDRALIA_G2_TRUE_PLANETARY_DATUM_AND_AXIS_CHILD_TNT_v1";
-  }
-
-  function findDatumReceiveMap(api) {
+  function getReceiveMap(api) {
     if (api && typeof api.receive === "function") {
       try {
         return api.receive({ reference: true });
       } catch (error) {
-        recordDatumError("datum.receive", error);
+        recordAdoptionError("datum.receive", error);
       }
     }
 
@@ -977,7 +946,15 @@
       try {
         return api.getReceiveMap({ reference: true });
       } catch (error2) {
-        recordDatumError("datum.getReceiveMap", error2);
+        recordAdoptionError("datum.getReceiveMap", error2);
+      }
+    }
+
+    if (api && typeof api.childReceiveMap === "function") {
+      try {
+        return api.childReceiveMap({ reference: true });
+      } catch (error3) {
+        recordAdoptionError("datum.childReceiveMap", error3);
       }
     }
 
@@ -986,300 +963,204 @@
       null;
   }
 
-  function findDatumChildPacket(api) {
+  function getChildPacket(api) {
     if (!api || typeof api.getChildReceivePacket !== "function") return null;
 
     try {
       return api.getChildReceivePacket("route-diagnostic", { compact: true });
     } catch (error) {
-      recordDatumError("datum.getChildReceivePacket", error);
+      recordAdoptionError("datum.getChildReceivePacket", error);
       return null;
     }
   }
 
-  function evaluateDatumRecognition() {
-    var recognition = state.datumRecognition;
+  function contractValid(contract) {
+    return contract === ADOPTION_FILE_CONTRACT;
+  }
 
-    recognition.attempted = true;
-    recognition.lastCheckedAt = new Date().toISOString();
-    recognition.failed = false;
-    recognition.recognized = false;
-    recognition.failureReason = "pending";
-    recognition.datumApiReady = false;
-    recognition.datumStatusReady = false;
-    recognition.receiveMapReady = false;
-    recognition.seatCount = null;
-    recognition.seatCountValid = false;
-    recognition.newsComplete = false;
-    recognition.childPacketAvailable = false;
-    recognition.childPacketSeatCount = null;
-    recognition.childPacketSeatCountValid = false;
-    recognition.terrainReady = false;
-    recognition.moistureReady = false;
-    recognition.surfaceReady = false;
-    recognition.cloudReady = false;
-    recognition.continentReady = false;
-    recognition.visualPassClaimed = false;
+  function verifyAllSeatsNEWSComplete(seats) {
+    if (!Array.isArray(seats) || seats.length !== LATTICE_STATES) return false;
 
-    var api = findDatumApi();
+    return seats.every(function (seat) {
+      return Boolean(
+        seat &&
+        seat.newsComplete === true &&
+        seat.childReceiveEligible === true &&
+        seat.renderEligible === true &&
+        seat.north &&
+        seat.north.defined === true &&
+        seat.east &&
+        seat.east.defined === true &&
+        seat.west &&
+        seat.west.defined === true &&
+        seat.south &&
+        seat.south.defined === true
+      );
+    });
+  }
+
+  function evaluateDatumAdoption() {
+    var adoption = state.adoption;
+
+    adoption.attempted = true;
+    adoption.checkedAt = new Date().toISOString();
+    adoption.datumAdopted = false;
+    adoption.failureReason = "pending-adoption";
+    adoption.apiFound = false;
+    adoption.statusReady = false;
+    adoption.datumLoaded = false;
+    adoption.datumContract = null;
+    adoption.contractValid = false;
+    adoption.receiveMapReady = false;
+    adoption.seatCount = null;
+    adoption.seatCountValid = false;
+    adoption.newsComplete = false;
+    adoption.allSeatsNewsComplete = false;
+    adoption.childPacketAvailable = false;
+    adoption.childPacketSeatCount = null;
+    adoption.childPacketSeatCountValid = false;
+    adoption.terrainReady = false;
+    adoption.moistureReady = false;
+    adoption.surfaceReady = false;
+    adoption.cloudReady = false;
+    adoption.continentReady = false;
+    adoption.visualPassClaimed = false;
+
+    var api = findDatumAdoptionApi();
 
     if (!api) {
-      recognition.failureReason = recognition.loading ? "loading datum child" : "datum global missing";
-      window.AUDRALIA_G1_DATUM_CHILD_RECOGNITION_STATUS = recognitionStatusPayload();
-      writeDatumRecognitionDiagnostics();
-      return recognition;
+      adoption.failureReason = adoption.loading ? "loading adoption file" : "datum adoption global missing";
+      publishRouteStatus();
+      writeDiagnostics(true);
+      return adoption;
     }
 
-    recognition.datumApiReady = true;
+    adoption.apiFound = true;
+    adoption.datumLoaded = true;
 
-    var status = findDatumStatus(api);
-    recognition.datumStatusReady = Boolean(status);
-    recognition.datumContract = (status && status.contract) || api.contract || null;
+    var status = getDatumStatus(api);
+    adoption.statusReady = Boolean(status);
+    adoption.datumContract = (status && status.contract) || api.contract || null;
+    adoption.contractValid = contractValid(adoption.datumContract);
 
-    if (!contractRecognized(recognition.datumContract)) {
-      recognition.failed = true;
-      recognition.failureReason = "contract mismatch";
-      window.AUDRALIA_G1_DATUM_CHILD_RECOGNITION_STATUS = recognitionStatusPayload();
-      writeDatumRecognitionDiagnostics();
-      return recognition;
+    if (!adoption.contractValid) {
+      adoption.failureReason = "contract mismatch";
+      publishRouteStatus();
+      writeDiagnostics(true);
+      return adoption;
     }
 
-    var map = findDatumReceiveMap(api);
+    var map = getReceiveMap(api);
 
     if (!map) {
-      recognition.failed = true;
-      recognition.failureReason = "receive map unavailable";
-      window.AUDRALIA_G1_DATUM_CHILD_RECOGNITION_STATUS = recognitionStatusPayload();
-      writeDatumRecognitionDiagnostics();
-      return recognition;
+      adoption.failureReason = "receive map unavailable";
+      publishRouteStatus();
+      writeDiagnostics(true);
+      return adoption;
     }
 
     var seats = Array.isArray(map.seats) ? map.seats : [];
-    var seatCount = seats.length;
-    var seatCountValid = seatCount === LATTICE_STATES &&
-      finite(map.radialNodes, RADIAL_NODES) === RADIAL_NODES &&
-      finite(map.fibonacciBands, FIBONACCI_BANDS) === FIBONACCI_BANDS &&
-      finite(map.latticeStates, LATTICE_STATES) === LATTICE_STATES;
+    adoption.receiveMapReady = map.childReceiveMapReady === true || (status && status.childReceiveMapReady === true);
+    adoption.seatCount = seats.length;
+    adoption.seatCountValid =
+      seats.length === LATTICE_STATES &&
+      Number(map.radialNodes) === RADIAL_NODES &&
+      Number(map.fibonacciBands) === FIBONACCI_BANDS &&
+      Number(map.latticeStates) === LATTICE_STATES;
 
-    var allSeatsNewsComplete = seats.length === LATTICE_STATES
-      ? seats.every(function (seat) {
-        return Boolean(
-          seat &&
-          seat.newsComplete === true &&
-          seat.childReceiveEligible === true &&
-          seat.renderEligible === true &&
-          seat.north &&
-          seat.north.defined === true &&
-          seat.east &&
-          seat.east.defined === true &&
-          seat.west &&
-          seat.west.defined === true &&
-          seat.south &&
-          seat.south.defined === true
-        );
-      })
-      : false;
+    adoption.newsComplete = map.newsProtocolActive === true && map.newsComplete === true;
+    adoption.allSeatsNewsComplete = verifyAllSeatsNEWSComplete(seats);
 
-    var newsComplete = map.newsProtocolActive === true &&
-      map.newsComplete === true &&
-      allSeatsNewsComplete === true;
+    var packet = getChildPacket(api);
+    adoption.childPacketAvailable = Boolean(packet && packet.childReceivePacketReady === true);
+    adoption.childPacketSeatCount = packet && Number.isFinite(Number(packet.seatCount)) ? Number(packet.seatCount) : null;
+    adoption.childPacketSeatCountValid = adoption.childPacketSeatCount === LATTICE_STATES;
 
-    var packet = findDatumChildPacket(api);
-    var packetSeatCount = packet && Number.isFinite(Number(packet.seatCount)) ? Number(packet.seatCount) : null;
-    var packetAvailable = Boolean(packet && packet.childReceivePacketReady === true);
-    var packetSeatCountValid = packetSeatCount === LATTICE_STATES;
+    adoption.terrainReady = map.terrainReady === true || (packet && packet.terrainReady === true);
+    adoption.moistureReady = map.moistureReady === true || (packet && packet.moistureReady === true);
+    adoption.surfaceReady = map.surfaceReady === true || (packet && packet.surfaceReady === true);
+    adoption.cloudReady = map.cloudReady === true || (packet && packet.cloudReady === true);
+    adoption.continentReady = map.continentReady === true || (packet && packet.continentReady === true);
+    adoption.visualPassClaimed = map.visualPassClaimed === true || (packet && packet.visualPassClaimed === true);
 
-    recognition.receiveMapReady = map.childReceiveMapReady === true || status && status.childReceiveMapReady === true;
-    recognition.seatCount = seatCount;
-    recognition.seatCountValid = seatCountValid;
-    recognition.newsComplete = newsComplete;
-    recognition.childPacketAvailable = packetAvailable;
-    recognition.childPacketSeatCount = packetSeatCount;
-    recognition.childPacketSeatCountValid = packetSeatCountValid;
-    recognition.downstreamHeld = true;
-    recognition.terrainReady = map.terrainReady === true || packet && packet.terrainReady === true;
-    recognition.moistureReady = map.moistureReady === true || packet && packet.moistureReady === true;
-    recognition.surfaceReady = map.surfaceReady === true || packet && packet.surfaceReady === true;
-    recognition.cloudReady = map.cloudReady === true || packet && packet.cloudReady === true;
-    recognition.continentReady = map.continentReady === true || packet && packet.continentReady === true;
-    recognition.visualPassClaimed = map.visualPassClaimed === true || packet && packet.visualPassClaimed === true;
-
-    if (!recognition.receiveMapReady) {
-      recognition.failed = true;
-      recognition.failureReason = "receive map not ready";
-    } else if (!seatCountValid) {
-      recognition.failed = true;
-      recognition.failureReason = "seat-count mismatch";
-    } else if (!newsComplete) {
-      recognition.failed = true;
-      recognition.failureReason = "NEWS incomplete";
-    } else if (!packetAvailable || !packetSeatCountValid) {
-      recognition.failed = true;
-      recognition.failureReason = "child packet unavailable";
+    if (!adoption.receiveMapReady) {
+      adoption.failureReason = "receive map not ready";
+    } else if (!adoption.seatCountValid) {
+      adoption.failureReason = "seat-count mismatch";
+    } else if (!adoption.newsComplete || !adoption.allSeatsNewsComplete) {
+      adoption.failureReason = "NEWS incomplete";
+    } else if (!adoption.childPacketAvailable || !adoption.childPacketSeatCountValid) {
+      adoption.failureReason = "child packet unavailable";
     } else if (
-      recognition.terrainReady ||
-      recognition.moistureReady ||
-      recognition.surfaceReady ||
-      recognition.cloudReady ||
-      recognition.continentReady ||
-      recognition.visualPassClaimed
+      adoption.terrainReady ||
+      adoption.moistureReady ||
+      adoption.surfaceReady ||
+      adoption.cloudReady ||
+      adoption.continentReady ||
+      adoption.visualPassClaimed
     ) {
-      recognition.failed = true;
-      recognition.failureReason = "downstream false-ready claim";
+      adoption.failureReason = "downstream false-ready claim";
     } else {
-      recognition.recognized = true;
-      recognition.failed = false;
-      recognition.failureReason = "";
+      adoption.datumAdopted = true;
+      adoption.failureReason = "";
     }
 
-    window.AUDRALIA_G1_DATUM_CHILD_RECOGNITION_STATUS = recognitionStatusPayload();
-    writeDatumRecognitionDiagnostics();
-
-    return recognition;
+    publishRouteStatus();
+    writeDiagnostics(true);
+    return adoption;
   }
 
-  function recognitionStatusPayload() {
-    return {
-      contract: CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
-      htmlDiagnosticContract: HTML_DIAGNOSTIC_CONTRACT,
-      parentBaseline: PREVIOUS_CONTRACT,
-      datumChildPath: DATUM_CHILD_PATH,
-      datumChildContract: DATUM_CHILD_CONTRACT,
-      datumRecognitionAttempted: state.datumRecognition.attempted,
-      datumRecognized: state.datumRecognition.recognized,
-      datumLoaded: state.datumRecognition.loaded,
-      datumLoading: state.datumRecognition.loading,
-      datumLoadAttempted: state.datumRecognition.loadAttempted,
-      datumLoadSucceeded: state.datumRecognition.loadSucceeded,
-      datumLoadFailed: state.datumRecognition.loadFailed,
-      datumContract: state.datumRecognition.datumContract,
-      datumStatusReady: state.datumRecognition.datumStatusReady,
-      datumApiReady: state.datumRecognition.datumApiReady,
-      receiveMapReady: state.datumRecognition.receiveMapReady,
-      seatCount: state.datumRecognition.seatCount,
-      seatCountValid: state.datumRecognition.seatCountValid,
-      newsComplete: state.datumRecognition.newsComplete,
-      childPacketAvailable: state.datumRecognition.childPacketAvailable,
-      childPacketSeatCount: state.datumRecognition.childPacketSeatCount,
-      childPacketSeatCountValid: state.datumRecognition.childPacketSeatCountValid,
-      downstreamHeld: true,
-      terrainReady: false,
-      moistureReady: false,
-      surfaceReady: false,
-      cloudReady: false,
-      continentReady: false,
-      visualPassClaimed: false,
-      failureReason: state.datumRecognition.failureReason,
-      errors: state.datumRecognition.errors.slice(),
-      checkedAt: state.datumRecognition.lastCheckedAt
-    };
-  }
-
-  function writeDatumRecognitionDiagnostics() {
-    var r = state.datumRecognition;
-
-    if (!r.attempted) {
-      setText("[data-audralia-diagnostic-datum-child]", "pending JS recognition");
-      setText("[data-audralia-diagnostic-receive-map]", "pending JS recognition");
-      setText("[data-audralia-diagnostic-news-map]", "pending JS recognition");
-      setText("[data-audralia-diagnostic-child-packet]", "pending JS recognition");
-      setText("[data-audralia-diagnostic-seat-count]", "pending JS recognition");
-      setText("[data-audralia-diagnostic-downstream]", "held · HTML does not activate children");
-      return;
-    }
-
-    if (r.loading) {
-      setText("[data-audralia-diagnostic-datum-child]", "pending · loading datum child");
-      setText("[data-audralia-diagnostic-receive-map]", "pending");
-      setText("[data-audralia-diagnostic-news-map]", "pending");
-      setText("[data-audralia-diagnostic-child-packet]", "pending");
-      setText("[data-audralia-diagnostic-seat-count]", "pending");
-      setText("[data-audralia-diagnostic-downstream]", "held · no child activation");
-      return;
-    }
-
-    if (r.recognized) {
-      setText("[data-audralia-diagnostic-datum-child]", "recognized · G1 receive-map authority");
-      setText("[data-audralia-diagnostic-receive-map]", "recognized · 256 seats");
-      setText("[data-audralia-diagnostic-news-map]", "complete · N/E/W/S");
-      setText("[data-audralia-diagnostic-child-packet]", "available · route-diagnostic");
-      setText("[data-audralia-diagnostic-seat-count]", "256 / 16 × 16");
-      setText("[data-audralia-diagnostic-downstream]", "held · no child activation");
-    } else {
-      setText("[data-audralia-diagnostic-datum-child]", "failed · " + (r.failureReason || "datum unavailable"));
-      setText("[data-audralia-diagnostic-receive-map]", r.receiveMapReady ? "recognized · checking constraints" : "failed · receive map unavailable");
-      setText("[data-audralia-diagnostic-news-map]", r.newsComplete ? "complete · N/E/W/S" : "failed · NEWS incomplete");
-      setText("[data-audralia-diagnostic-child-packet]", r.childPacketAvailable ? "available · checking seat count" : "failed · child packet unavailable");
-      setText("[data-audralia-diagnostic-seat-count]", r.seatCountValid ? "256 / 16 × 16" : "failed · expected 256");
-      setText("[data-audralia-diagnostic-downstream]", "held · no activation");
-    }
-
-    setDataset("audraliaDatumRecognitionAttempted", r.attempted);
-    setDataset("audraliaDatumRecognized", r.recognized);
-    setDataset("audraliaDatumLoaded", r.loaded);
-    setDataset("audraliaDatumReceiveMapReady", r.receiveMapReady);
-    setDataset("audraliaDatumSeatCountValid", r.seatCountValid);
-    setDataset("audraliaDatumNewsComplete", r.newsComplete);
-    setDataset("audraliaDatumChildPacketAvailable", r.childPacketAvailable);
-    setDataset("audraliaDatumDownstreamHeld", true);
-  }
-
-  function loadDatumChildIfMissing() {
+  function loadDatumAdoptionFileIfMissing() {
     return new Promise(function (resolve) {
-      if (findDatumApi()) {
-        state.datumRecognition.loaded = true;
-        state.datumRecognition.loadSucceeded = true;
-        resolve(findDatumApi());
+      if (findDatumAdoptionApi()) {
+        state.adoption.loadSucceeded = true;
+        state.adoption.datumLoaded = true;
+        resolve(findDatumAdoptionApi());
         return;
       }
 
-      var existing = document.querySelector("script[data-audralia-datum-child-loader='" + CONTRACT + "']") ||
-        document.querySelector("script[src*='audralia.true-globe.datum.js']");
+      state.adoption.loadAttempted = true;
+      state.adoption.loading = true;
+      writeDiagnostics(true);
 
-      state.datumRecognition.loadAttempted = true;
-      state.datumRecognition.loading = true;
-      writeDatumRecognitionDiagnostics();
+      var existing = document.querySelector("script[src*='audralia.true-globe.datum.js']");
 
       if (existing) {
         setTimeout(function () {
-          state.datumRecognition.loading = false;
-          state.datumRecognition.loaded = Boolean(findDatumApi());
-          state.datumRecognition.loadSucceeded = Boolean(findDatumApi());
-          state.datumRecognition.loadFailed = !findDatumApi();
-          resolve(findDatumApi());
-        }, 120);
+          state.adoption.loading = false;
+          state.adoption.loadSucceeded = Boolean(findDatumAdoptionApi());
+          state.adoption.loadFailed = !state.adoption.loadSucceeded;
+          resolve(findDatumAdoptionApi());
+        }, 160);
         return;
       }
 
       var script = document.createElement("script");
-      script.src = DATUM_CHILD_PATH + "?v=" + encodeURIComponent(DATUM_CHILD_CACHE_KEY);
+      script.src = ADOPTION_FILE + "?v=" + encodeURIComponent(ADOPTION_CACHE_KEY);
       script.defer = true;
       script.async = true;
-      script.setAttribute("data-audralia-datum-child-loader", CONTRACT);
-      script.setAttribute("data-datum-child-contract", DATUM_CHILD_CONTRACT);
-      script.setAttribute("data-purpose", "recognition-only");
+      script.setAttribute("data-audralia-datum-adoption-loader", CONTRACT);
+      script.setAttribute("data-adoption-process", ADOPTION_PROCESS);
+      script.setAttribute("data-adoption-file-contract", ADOPTION_FILE_CONTRACT);
       script.setAttribute("data-downstream-activation", "false");
 
       script.onload = function () {
-        state.datumRecognition.loading = false;
-        state.datumRecognition.loaded = Boolean(findDatumApi());
-        state.datumRecognition.loadSucceeded = Boolean(findDatumApi());
-        state.datumRecognition.loadFailed = !findDatumApi();
+        state.adoption.loading = false;
+        state.adoption.loadSucceeded = Boolean(findDatumAdoptionApi());
+        state.adoption.loadFailed = !state.adoption.loadSucceeded;
 
-        if (!findDatumApi()) {
-          recordDatumError("datum.load", "script loaded but datum global missing");
+        if (!state.adoption.loadSucceeded) {
+          recordAdoptionError("load-adoption-file", "script loaded but datum global was not published");
         }
 
-        resolve(findDatumApi());
+        resolve(findDatumAdoptionApi());
       };
 
       script.onerror = function () {
-        state.datumRecognition.loading = false;
-        state.datumRecognition.loaded = false;
-        state.datumRecognition.loadSucceeded = false;
-        state.datumRecognition.loadFailed = true;
-        recordDatumError("datum.load", "script load failed");
+        state.adoption.loading = false;
+        state.adoption.loadSucceeded = false;
+        state.adoption.loadFailed = true;
+        recordAdoptionError("load-adoption-file", "script load failed");
         resolve(null);
       };
 
@@ -1287,115 +1168,173 @@
     });
   }
 
-  function runDatumRecognitionCycle() {
-    evaluateDatumRecognition();
+  function runAdoptionCycle() {
+    evaluateDatumAdoption();
 
-    if (!state.datumRecognition.recognized && !findDatumApi()) {
-      loadDatumChildIfMissing().then(function () {
-        evaluateDatumRecognition();
-        updateDiagnostics(true);
+    if (!state.adoption.datumAdopted && !findDatumAdoptionApi()) {
+      loadDatumAdoptionFileIfMissing().then(function () {
+        evaluateDatumAdoption();
       });
     }
   }
 
-  function compactStatus() {
+  function adoptionStatusPayload() {
     return {
       contract: CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
+      previousBaseline: PREVIOUS_BASELINE,
+      adoptionProcess: ADOPTION_PROCESS,
+      adoptionFile: ADOPTION_FILE,
+      adoptionFileContract: ADOPTION_FILE_CONTRACT,
+      datumApiFound: state.adoption.apiFound,
+      apiSource: state.adoption.apiSource,
+      datumLoaded: state.adoption.datumLoaded,
+      datumLoadAttempted: state.adoption.loadAttempted,
+      datumLoadSucceeded: state.adoption.loadSucceeded,
+      datumLoadFailed: state.adoption.loadFailed,
+      datumAdopted: state.adoption.datumAdopted,
+      datumContract: state.adoption.datumContract,
+      contractValid: state.adoption.contractValid,
+      statusReady: state.adoption.statusReady,
+      receiveMapReady: state.adoption.receiveMapReady,
+      seatCount: state.adoption.seatCount,
+      seatCountValid: state.adoption.seatCountValid,
+      newsComplete: state.adoption.newsComplete,
+      allSeatsNewsComplete: state.adoption.allSeatsNewsComplete,
+      childPacketAvailable: state.adoption.childPacketAvailable,
+      childPacketSeatCount: state.adoption.childPacketSeatCount,
+      childPacketSeatCountValid: state.adoption.childPacketSeatCountValid,
+      downstreamHeld: true,
+      terrainReady: false,
+      moistureReady: false,
+      surfaceReady: false,
+      cloudReady: false,
+      continentReady: false,
+      visualPassClaimed: false,
+      failureReason: state.adoption.failureReason,
+      checkedAt: state.adoption.checkedAt,
+      errors: state.adoption.errors.slice()
+    };
+  }
+
+  function publishRouteStatus() {
+    var payload = {
+      contract: CONTRACT,
+      previousBaseline: PREVIOUS_BASELINE,
       htmlDiagnosticContract: HTML_DIAGNOSTIC_CONTRACT,
-      activeLens: state.activeLens,
-      htmlOwns: "public-visual-expression-diagnostic-surface",
-      jsOwns: "under-hood-mathematics-and-construct-delivery-plus-datum-recognition",
+      route: "/showroom/globe/audralia/",
+      adoption: adoptionStatusPayload(),
+      parentBaselineProtected: true,
       globeRole: "observable-organic-carrier",
       diamondLatticeRole: "scientific-discovery-rule-layer",
       diamondLatticeIsPlanetBody: false,
+      visualLatticeSource: "protected-local-g1-diagnostic-geometry",
+      datumSeatsUsedForVisualLattice: false,
       newsProtocolActive: true,
-      northDefined: true,
-      eastDefined: true,
-      westDefined: true,
-      southDefined: true,
-      cellRenderEligibilityDefined: true,
-      diagnosticScope360Degrees: true,
       radialNodes: RADIAL_NODES,
       fibonacciBands: FIBONACCI_BANDS,
       latticeStates: LATTICE_STATES,
       geometryBuilt: state.geometryBuilt,
+      activeLens: state.activeLens,
       oneCanvas: state.oneCanvas,
+      onePointerPath: state.onePointerPath,
       oneLoop: state.oneLoop,
-      pointerBound: state.pointerBound,
-      pointerActive: state.pointerActive,
-      datumRecognition: recognitionStatusPayload(),
+      smoothDragProtected: true,
       downstreamHeld: true,
-      noChildMathActivated: true,
-      noVisualPassClaim: true,
+      terrainActivated: false,
+      moistureActivated: false,
+      surfaceActivated: false,
+      cloudActivated: false,
+      continentActivated: false,
+      visualPassClaimed: false,
       renderCount: state.renderCount,
-      errorCount: state.errorCount
+      duplicateCanvasRemoved: state.duplicateCanvasRemoved,
+      errors: state.errors.slice()
     };
+
+    window.AUDRALIA_G1_DATUM_ADOPTION_ROUTE_JS_STATUS = payload;
+    window.AUDRALIA_G1_DATUM_ADOPTION_STATUS = payload.adoption;
+
+    return payload;
   }
 
-  function updateDiagnostics(force) {
-    var time = now();
+  function writeDiagnostics(force) {
+    var t = now();
+    if (!force && t - state.lastDiagnosticWrite < 1000) return;
+    state.lastDiagnosticWrite = t;
 
-    if (state.pointerActive && !force) return;
-    if (!force && time - state.lastDiagnosticAt < 1000) return;
+    var a = state.adoption;
 
-    state.lastDiagnosticAt = time;
-
-    var status = compactStatus();
-
-    setText("[data-audralia-diagnostic-route]", "HTML public expression · JS construct delivery + datum recognition");
-    setText("[data-audralia-diagnostic-carrier]", "spherical carrier active · lattice is discovery layer");
-    setText("[data-audralia-diagnostic-lens]", status.activeLens);
-    setText("[data-audralia-diagnostic-canvas]", status.oneCanvas ? "one canvas" : "canvas pending");
-    setText("[data-audralia-diagnostic-loop]", status.oneLoop ? "dirty RAF · piston controlled" : "loop pending");
-    setText("[data-audralia-diagnostic-children]", "downstream held · no child activation");
-    setText("[data-audralia-diagnostic-news]", "NEWS active · N/E/W/S complete");
+    setText("[data-audralia-diagnostic-route]", "JS adoption construct · parent baseline protected");
+    setText("[data-audralia-diagnostic-carrier]", "spherical carrier active · lattice remains discovery layer");
+    setText("[data-audralia-diagnostic-lens]", state.activeLens);
+    setText("[data-audralia-diagnostic-canvas]", state.oneCanvas ? "one canvas" : "canvas pending");
+    setText("[data-audralia-diagnostic-loop]", state.oneLoop ? "dirty RAF · piston controlled" : "loop pending");
+    setText("[data-audralia-diagnostic-children]", "downstream held · adoption only");
+    setText("[data-audralia-diagnostic-news]", "NEWS active · parent route protected");
     setText("[data-audralia-diagnostic-scope]", "360 scope · 16 × 16 / 256 seats");
 
-    writeDatumRecognitionDiagnostics();
+    if (!a.attempted) {
+      setText("[data-audralia-diagnostic-datum-child]", "pending adoption");
+      setText("[data-audralia-diagnostic-receive-map]", "pending adoption");
+      setText("[data-audralia-diagnostic-news-map]", "pending adoption");
+      setText("[data-audralia-diagnostic-child-packet]", "pending adoption");
+      setText("[data-audralia-diagnostic-seat-count]", "pending adoption");
+      setText("[data-audralia-diagnostic-downstream]", "held · no child activation");
+    } else if (a.loading) {
+      setText("[data-audralia-diagnostic-datum-child]", "loading adoption file");
+      setText("[data-audralia-diagnostic-receive-map]", "pending");
+      setText("[data-audralia-diagnostic-news-map]", "pending");
+      setText("[data-audralia-diagnostic-child-packet]", "pending");
+      setText("[data-audralia-diagnostic-seat-count]", "pending");
+      setText("[data-audralia-diagnostic-downstream]", "held · no child activation");
+    } else if (a.datumAdopted) {
+      setText("[data-audralia-diagnostic-datum-child]", "adopted · G1 receive-map authority");
+      setText("[data-audralia-diagnostic-receive-map]", "adopted · 256 seats");
+      setText("[data-audralia-diagnostic-news-map]", "complete · N/E/W/S");
+      setText("[data-audralia-diagnostic-child-packet]", "available · route-diagnostic");
+      setText("[data-audralia-diagnostic-seat-count]", "256 / 16 × 16");
+      setText("[data-audralia-diagnostic-downstream]", "held · no child activation");
+    } else {
+      setText("[data-audralia-diagnostic-datum-child]", "failed · " + (a.failureReason || "adoption unavailable"));
+      setText("[data-audralia-diagnostic-receive-map]", a.receiveMapReady ? "available · constrained" : "failed · unavailable");
+      setText("[data-audralia-diagnostic-news-map]", a.newsComplete && a.allSeatsNewsComplete ? "complete · N/E/W/S" : "failed · NEWS incomplete");
+      setText("[data-audralia-diagnostic-child-packet]", a.childPacketAvailable ? "available · constrained" : "failed · unavailable");
+      setText("[data-audralia-diagnostic-seat-count]", a.seatCountValid ? "256 / 16 × 16" : "failed · expected 256");
+      setText("[data-audralia-diagnostic-downstream]", "held · no activation");
+    }
 
-    setDataset("audraliaG1DiagnosticContract", CONTRACT);
-    setDataset("audraliaPreviousRouteJsContract", PREVIOUS_CONTRACT);
-    setDataset("audraliaHtmlDiagnosticContract", HTML_DIAGNOSTIC_CONTRACT);
-    setDataset("audraliaGlobeRole", "observable-organic-carrier");
-    setDataset("audraliaDiamondLatticeRole", "scientific-discovery-rule-layer");
-    setDataset("audraliaDiamondLatticeIsPlanetBody", false);
-    setDataset("audraliaNewsProtocolActive", true);
-    setDataset("audraliaDiagnosticScope360Degrees", true);
+    setDataset("audraliaRouteJsContract", CONTRACT);
+    setDataset("audraliaPreviousBaseline", PREVIOUS_BASELINE);
+    setDataset("audraliaAdoptionProcess", ADOPTION_PROCESS);
+    setDataset("audraliaAdoptionFileContract", ADOPTION_FILE_CONTRACT);
+    setDataset("audraliaDatumAdopted", a.datumAdopted);
+    setDataset("audraliaDatumApiFound", a.apiFound);
+    setDataset("audraliaDatumReceiveMapReady", a.receiveMapReady);
+    setDataset("audraliaDatumSeatCountValid", a.seatCountValid);
+    setDataset("audraliaDatumNewsComplete", a.newsComplete && a.allSeatsNewsComplete);
+    setDataset("audraliaDatumChildPacketAvailable", a.childPacketAvailable);
     setDataset("audraliaDownstreamHeld", true);
-
-    window.AUDRALIA_G1_DATUM_CHILD_RECOGNITION_ROUTE_JS_STATUS = status;
   }
 
   function publishBoot() {
-    window.AUDRALIA_G1_DATUM_CHILD_RECOGNITION_ROUTE_JS_BOOT = {
+    window.AUDRALIA_G1_DATUM_ADOPTION_ROUTE_JS_BOOT = {
       contract: CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
-      htmlDiagnosticContract: HTML_DIAGNOSTIC_CONTRACT,
+      previousBaseline: PREVIOUS_BASELINE,
+      adoptionProcess: ADOPTION_PROCESS,
+      adoptionFile: ADOPTION_FILE,
+      adoptionFileContract: ADOPTION_FILE_CONTRACT,
       route: "/showroom/globe/audralia/",
-      html: "/showroom/globe/audralia/index.html",
-      js: "/showroom/globe/audralia/index.js",
-      datumChildPath: DATUM_CHILD_PATH,
-      datumChildContract: DATUM_CHILD_CONTRACT,
-      htmlOwns: "public-visual-expression-diagnostic-surface",
-      jsOwns: "under-hood-mathematics-and-construct-delivery-plus-datum-recognition",
-      globeRole: "observable-organic-carrier",
-      diamondLatticeRole: "scientific-discovery-rule-layer",
-      diamondLatticeIsPlanetBody: false,
-      newsProtocolActive: true,
-      northDefined: true,
-      eastDefined: true,
-      westDefined: true,
-      southDefined: true,
-      diagnosticScope360Degrees: true,
-      radialNodes: RADIAL_NODES,
-      fibonacciBands: FIBONACCI_BANDS,
-      latticeStates: LATTICE_STATES,
-      datumRecognitionRequired: true,
+      target: "/showroom/globe/audralia/index.js",
+      parentBaselineProtected: true,
+      datumFileChanged: false,
+      datumFileRenewed: false,
+      visualLatticeReplacement: false,
       downstreamHeld: true,
-      noChildMathActivated: true,
-      noRuntimeRewrite: true,
-      noVisualPassClaim: true,
+      terrainActivated: false,
+      surfaceActivated: false,
+      cloudActivated: false,
+      continentActivated: false,
+      visualPassClaimed: false,
       bootedAt: new Date().toISOString()
     };
   }
@@ -1414,13 +1353,13 @@
     if (resizeObserver) {
       try {
         resizeObserver.disconnect();
-      } catch (_error) {}
+      } catch (_error2) {}
     }
 
     if (abortController) {
       try {
         abortController.abort();
-      } catch (_error) {}
+      } catch (_error3) {}
     }
   }
 
@@ -1428,33 +1367,32 @@
     stop: stop,
     state: state,
     contract: CONTRACT,
-    previousContract: PREVIOUS_CONTRACT,
-    htmlDiagnosticContract: HTML_DIAGNOSTIC_CONTRACT,
-    datumRecognition: function () {
-      return recognitionStatusPayload();
-    }
+    previousBaseline: PREVIOUS_BASELINE,
+    adoptionStatus: adoptionStatusPayload,
+    routeStatus: publishRouteStatus
   };
 
   function init() {
     state.stage = document.querySelector("#audraliaGlobeStage");
     state.mount = document.querySelector("#audraliaGlobeMount");
-    state.cachedDetails = Array.prototype.slice.call(document.querySelectorAll("details"));
+    state.details = Array.prototype.slice.call(document.querySelectorAll("details"));
 
     if (!state.stage || !state.mount) {
       recordError("init", "Missing #audraliaGlobeStage or #audraliaGlobeMount");
       return;
     }
 
-    enforceOneCanvas("boot");
-    buildGeometry();
-    setupResizeHandling();
+    enforceOneCanvas();
+    buildLocalDiagnosticGeometry();
+    setupResize();
     bindLensControls();
     bindPointer();
     setLens("planet");
     publishBoot();
-    updateDiagnostics(true);
-    requestRender("boot", 8);
-    runDatumRecognitionCycle();
+    publishRouteStatus();
+    writeDiagnostics(true);
+    requestRender(8);
+    runAdoptionCycle();
   }
 
   if (document.readyState === "loading") {

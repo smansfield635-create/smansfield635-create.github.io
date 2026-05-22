@@ -2,16 +2,17 @@
 <html
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
-  data-page="audralia-g2-planet-body-globe-logic-inspection-carrier"
-  data-contract="AUDRALIA_G2_PLANET_BODY_GLOBE_LOGIC_INSPECTION_CARRIER_TNT_v1"
-  data-spec-ops-contract="AUDRALIA_G2_PLANET_BODY_GLOBE_LOGIC_INSPECTION_CARRIER_SPEC_OPS_v1"
+  data-page="audralia-g2-planet-body-true-canvas-globe-carrier"
+  data-contract="AUDRALIA_G2_PLANET_BODY_TRUE_CANVAS_GLOBE_CARRIER_ENGINEERING_LENS_TNT_v1"
+  data-spec-ops-contract="AUDRALIA_G2_PLANET_BODY_TRUE_CANVAS_GLOBE_CARRIER_ENGINEERING_LENS_SPEC_OPS_v1"
+  data-donor-js="/showroom/globe/audralia/index.js"
+  data-donor-contract="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1"
   data-render-file="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js"
-  data-parent-template-plate="/showroom/globe/audralia/"
-  data-cockpit-route="/showroom/globe/audralia/disposition/"
-  data-globe-route="/showroom/globe/"
   data-route-local-render="true"
-  data-globe-logic-adopted="true"
-  data-cartoon-carrier-retired="true"
+  data-true-canvas-carrier="true"
+  data-svg-cartoon-carrier-retired="true"
+  data-engineering-lens-controls="true"
+  data-engineering-controls-below-stage="true"
   data-runtime-strength-held="true"
   data-final-visual-pass-claim="false"
   data-generated-image="false"
@@ -26,7 +27,7 @@
   <title>Audralia · Planet Body Inspection</title>
   <meta
     name="description"
-    content="Audralia Planet Body Inspection route. The planet body is now a globe-logic inspection carrier with drag rotation, compact lenses, state readouts, and route-local proof while Runtime Strength remains held."
+    content="Audralia Planet Body Inspection route with a true canvas globe carrier, clean Platform view, Engineering Lens controls below the stage, route-local drag inspection, and Runtime Strength held."
   >
 
   <style>
@@ -34,14 +35,12 @@
       color-scheme:dark;
       --bg:#020711;
       --panel:rgba(5,15,32,.86);
-      --panel2:rgba(3,9,20,.76);
       --text:rgba(239,247,255,.96);
       --muted:rgba(239,247,255,.70);
       --faint:rgba(239,247,255,.48);
       --gold:#f4cf83;
-      --gold2:#ffe8a3;
-      --blue:#8dd8ff;
       --mint:#a7f3c6;
+      --blue:#8dd8ff;
       --line:rgba(244,207,131,.18);
       --max:1280px;
       --shadow:0 34px 120px rgba(0,0,0,.50);
@@ -69,8 +68,8 @@
       letter-spacing:-.015em;
       -webkit-font-smoothing:antialiased;
       background:
-        linear-gradient(rgba(141,216,255,.03) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(141,216,255,.03) 1px,transparent 1px);
+        linear-gradient(rgba(141,216,255,.030) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.030) 1px,transparent 1px);
       background-size:56px 56px;
     }
 
@@ -211,7 +210,7 @@
       right:0;
       top:calc(100% + 8px);
       z-index:30;
-      min-width:265px;
+      min-width:260px;
       display:grid;
       gap:6px;
       padding:10px;
@@ -245,6 +244,7 @@
 
     .hero,
     .inspection-shell,
+    .engineering-shell,
     .state-shell,
     .proof-shell,
     .receipt-shell{
@@ -321,6 +321,7 @@
     }
 
     .inspection-shell,
+    .engineering-shell,
     .state-shell,
     .proof-shell,
     .receipt-shell{
@@ -346,25 +347,161 @@
       line-height:1.55;
     }
 
-    .inspection-mount{
+    .inspection-stage{
+      position:relative;
       min-height:clamp(640px,84vw,880px);
+      overflow:hidden;
+      border:1px solid rgba(244,207,131,.18);
+      border-radius:30px;
+      background:
+        radial-gradient(circle at 50% 45%,rgba(141,216,255,.16),transparent 29rem),
+        radial-gradient(circle at 50% 78%,rgba(244,207,131,.07),transparent 31rem),
+        linear-gradient(180deg,rgba(4,11,24,.94),rgba(1,5,13,.98));
+      box-shadow:inset 0 0 80px rgba(141,216,255,.06),0 28px 90px rgba(0,0,0,.42);
+      touch-action:none;
+      user-select:none;
+      -webkit-user-select:none;
     }
 
-    .state-grid,
-    .proof-grid,
-    .receipt-grid{
+    .inspection-stage::before{
+      content:"";
+      position:absolute;
+      inset:-18%;
+      z-index:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 12% 22%,rgba(255,255,255,.34) 0 1px,transparent 1.7px),
+        radial-gradient(circle at 32% 68%,rgba(255,255,255,.22) 0 1px,transparent 1.5px),
+        radial-gradient(circle at 54% 14%,rgba(255,255,255,.28) 0 1px,transparent 1.6px),
+        radial-gradient(circle at 74% 74%,rgba(255,255,255,.20) 0 1px,transparent 1.4px),
+        radial-gradient(circle at 88% 36%,rgba(141,216,255,.28) 0 1px,transparent 1.7px);
+      opacity:.34;
+    }
+
+    .inspection-mount{
+      position:absolute;
+      inset:0;
+      z-index:2;
+      overflow:hidden;
+      touch-action:none;
+    }
+
+    .inspection-mount canvas{
+      position:absolute!important;
+      inset:0!important;
+      width:100%!important;
+      height:100%!important;
+      display:block!important;
+      background:transparent!important;
+      pointer-events:none!important;
+    }
+
+    .stage-label{
+      position:absolute;
+      left:50%;
+      bottom:clamp(70px,10vw,98px);
+      z-index:5;
+      width:min(calc(100% - 44px),820px);
+      transform:translateX(-50%);
+      text-align:center;
+      color:rgba(239,247,255,.76);
+      font-weight:950;
+      font-size:clamp(1rem,3.5vw,1.3rem);
+      line-height:1.18;
+      text-shadow:0 2px 16px rgba(0,0,0,.72);
+      pointer-events:none;
+    }
+
+    .stage-label strong{color:rgba(141,216,255,.96)}
+
+    .stage-instruction{
+      position:absolute;
+      left:clamp(16px,4vw,36px);
+      right:clamp(16px,4vw,36px);
+      bottom:clamp(16px,4vw,34px);
+      z-index:5;
+      border-top:1px solid rgba(255,255,255,.12);
+      border-bottom:1px solid rgba(255,255,255,.12);
+      padding:14px 10px;
+      color:rgba(238,244,255,.80);
+      background:rgba(3,8,18,.42);
+      backdrop-filter:blur(8px);
+      font-weight:850;
+      line-height:1.35;
+      font-size:clamp(.98rem,3.5vw,1.16rem);
+      text-align:center;
+      pointer-events:none;
+    }
+
+    .engineering-lens{
+      border:1px solid rgba(244,207,131,.18);
+      border-radius:24px;
+      background:rgba(255,255,255,.026);
+      overflow:hidden;
+    }
+
+    .engineering-lens summary{
+      min-height:54px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:0 18px;
+      color:rgba(255,244,216,.96);
+      font-weight:950;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      list-style:none;
+      background:radial-gradient(circle at 12% 0%,rgba(244,207,131,.10),transparent 16rem),rgba(2,8,20,.44);
+    }
+
+    .engineering-lens summary::-webkit-details-marker{display:none}
+    .engineering-lens summary::after{content:"Open";color:var(--gold);font-size:.78rem}
+    .engineering-lens[open] summary::after{content:"Close"}
+
+    .engineering-body{
       display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:10px;
-      margin-top:16px;
+      gap:14px;
+      padding:16px;
+      border-top:1px solid rgba(244,207,131,.12);
     }
 
-    .proof-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .lens-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
 
+    .lens-button{
+      min-height:38px;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:999px;
+      padding:0 13px;
+      color:rgba(239,247,255,.82);
+      background:rgba(255,255,255,.035);
+      font-size:.80rem;
+      font-weight:850;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+    }
+
+    .lens-button[aria-pressed="true"]{
+      color:#06101c;
+      background:linear-gradient(135deg,#fff0b8,var(--gold));
+      border-color:rgba(244,207,131,.72);
+    }
+
+    .engineering-readout{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(240px,.45fr);
+      gap:12px;
+    }
+
+    .readout-card,
     .state-card,
     .proof-card,
     .receipt-card{
-      min-height:116px;
+      min-height:112px;
       display:grid;
       align-content:start;
       gap:8px;
@@ -374,6 +511,7 @@
       background:radial-gradient(circle at 20% 0%,rgba(244,207,131,.08),transparent 8rem),rgba(255,255,255,.028);
     }
 
+    .readout-card b,
     .state-card b,
     .proof-card b,
     .receipt-card b{
@@ -383,6 +521,7 @@
       text-transform:uppercase;
     }
 
+    .readout-card strong,
     .state-card strong,
     .proof-card strong,
     .receipt-card strong{
@@ -391,12 +530,22 @@
       line-height:1.16;
     }
 
+    .readout-card span,
     .state-card span,
     .proof-card span,
     .receipt-card span{
       color:rgba(238,244,255,.70);
       font-size:.88rem;
       line-height:1.36;
+    }
+
+    .state-grid,
+    .proof-grid,
+    .receipt-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
+      margin-top:16px;
     }
 
     .action-row{
@@ -469,6 +618,7 @@
       .topbar{grid-template-columns:1fr}
       .dropdown-nav{justify-content:flex-start}
       .dropdown-panel{left:0;right:auto}
+      .engineering-readout,
       .state-grid,
       .proof-grid,
       .receipt-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -478,9 +628,11 @@
       .page{width:min(100% - 18px,var(--max))}
       .hero,
       .inspection-shell,
+      .engineering-shell,
       .state-shell,
       .proof-shell,
-      .receipt-shell{border-radius:24px}
+      .receipt-shell,
+      .inspection-stage{border-radius:24px}
       .dropdown-nav{display:grid;grid-template-columns:1fr}
       .dropdown summary{width:100%}
       .dropdown-panel{
@@ -488,7 +640,8 @@
         margin-top:8px;
         min-width:0;
       }
-      .inspection-mount{min-height:740px}
+      .inspection-stage{min-height:720px}
+      .engineering-readout,
       .state-grid,
       .proof-grid,
       .receipt-grid{grid-template-columns:1fr}
@@ -533,8 +686,8 @@
           <summary>Inspection Path</summary>
           <div class="dropdown-panel">
             <a href="#inspection-carrier">Inspect Planet Body <span>Carrier</span></a>
+            <a href="#engineering-lens">Engineering Lens <span>Controls</span></a>
             <a href="#state-lens-deck">State Lens Deck <span>8</span></a>
-            <a href="#proof-split">Proof Split <span>Routes</span></a>
             <a href="#route-receipt">Route Receipt <span>Proof</span></a>
           </div>
         </details>
@@ -547,36 +700,81 @@
         <h1 id="page-title">Inspect Audralia as a planet body.</h1>
 
         <p class="lede">
-          The planetary template has defined the path. This route now places Audralia inside an inspectable planet carrier so the body itself can be rotated, read, and tested through surface states.
+          The planetary template has defined the path. This route now uses a true canvas globe carrier so Audralia can be dragged, rotated, and inspected directly.
         </p>
 
         <div class="status-row">
-          <span class="status-pill">Inspectable carrier</span>
-          <span class="status-pill">Globe logic adopted</span>
-          <span class="status-pill">Planet body active</span>
+          <span class="status-pill">True canvas carrier</span>
+          <span class="status-pill">SVG cartoon retired</span>
+          <span class="status-pill">Engineering below stage</span>
           <span class="status-pill">Runtime / Strength held</span>
           <span class="status-pill">No final visual pass claim</span>
         </div>
       </section>
 
-      <section id="inspection-carrier" class="inspection-shell" aria-label="Audralia inspectable planet body carrier">
+      <section id="inspection-carrier" class="inspection-shell" aria-label="Audralia true canvas planet inspection carrier">
         <div class="section-head">
-          <p class="section-title">Inspection Chamber</p>
+          <p class="section-title">Platform Inspection Chamber</p>
           <h2>The planet is the object of inspection.</h2>
           <p>
-            Drag the body directly. Lenses and states read the planet; they do not replace it or cover it.
+            Drag Audralia directly. Engineering controls are below the chamber and do not cover the planet.
           </p>
         </div>
 
         <div
-          class="inspection-mount"
-          data-audralia-planet-inspection-mount
+          id="audraliaPlanetInspectionStage"
+          class="inspection-stage"
+          data-audralia-planet-inspection-stage
           data-route-local-render="true"
-          data-contract="AUDRALIA_G2_PLANET_BODY_GLOBE_LOGIC_INSPECTION_CARRIER_TNT_v1"
+          data-contract="AUDRALIA_G2_PLANET_BODY_TRUE_CANVAS_GLOBE_CARRIER_ENGINEERING_LENS_TNT_v1"
           data-runtime-strength-held="true"
           data-final-visual-pass-claim="false"
-          aria-label="Audralia globe-logic planet body inspection mount"
-        ></div>
+          aria-label="Audralia true canvas planet body inspection stage"
+        >
+          <div
+            id="audraliaPlanetInspectionMount"
+            class="inspection-mount"
+            data-audralia-planet-inspection-mount
+            aria-label="Audralia true canvas planet body mount"
+          ></div>
+
+          <div class="stage-label" data-audralia-planet-stage-label>
+            <strong>Platform View</strong> → true canvas Audralia carrier · drag to inspect
+          </div>
+
+          <div class="stage-instruction">
+            Drag Audralia to inspect the planet body. Open Engineering Lens below for surface, hydration, lattice, and receipt reads.
+          </div>
+        </div>
+      </section>
+
+      <section id="engineering-lens" class="engineering-shell" aria-label="Engineering lens controls">
+        <details class="engineering-lens">
+          <summary>Engineering Lens</summary>
+          <div class="engineering-body">
+            <div class="lens-row" role="group" aria-label="Engineering lens controls">
+              <button class="lens-button" type="button" data-audralia-planet-lens="body" aria-pressed="true">Body View</button>
+              <button class="lens-button" type="button" data-audralia-planet-lens="surface" aria-pressed="false">Surface View</button>
+              <button class="lens-button" type="button" data-audralia-planet-lens="hydration" aria-pressed="false">Hydration View</button>
+              <button class="lens-button" type="button" data-audralia-planet-lens="lattice" aria-pressed="false">Lattice View</button>
+              <button class="lens-button" type="button" data-audralia-planet-lens="receipt" aria-pressed="false">Receipt View</button>
+            </div>
+
+            <div class="engineering-readout">
+              <article class="readout-card">
+                <b data-audralia-planet-lens-anchor>North · Datum Body</b>
+                <strong data-audralia-planet-lens-title>Body View</strong>
+                <span data-audralia-planet-lens-copy>One coherent Audralia body under canvas inspection. Runtime / Strength remains held.</span>
+              </article>
+
+              <article class="readout-card">
+                <b>Carrier Receipt</b>
+                <strong data-audralia-planet-carrier-status>true canvas carrier pending boot</strong>
+                <span data-audralia-planet-carrier-proof>Waiting for route-local JS receipt.</span>
+              </article>
+            </div>
+          </div>
+        </details>
       </section>
 
       <section id="state-lens-deck" class="state-shell" aria-label="Audralia state lens deck">
@@ -584,7 +782,7 @@
           <p class="section-title">State Lens Deck</p>
           <h2>Eight states support inspection without covering the planet.</h2>
           <p>
-            The state system remains active, but it now functions as compact lens/readout support below the inspection chamber.
+            The state system remains available as readout support below the stage. It no longer dominates the inspection chamber.
           </p>
         </div>
 
@@ -605,15 +803,15 @@
           <p class="section-title">Proof Split</p>
           <h2>Template, planet, cockpit, and audit keep separate jobs.</h2>
           <p>
-            This renewal only changes the planet route into an inspection carrier.
+            This renewal only changes the planet route into a true canvas inspection carrier.
           </p>
         </div>
 
         <div class="proof-grid">
-          <article class="proof-card"><b>Template Plate</b><strong>Development path</strong><span>The parent route remains the planetary template construct and diagnostic carrier.</span></article>
-          <article class="proof-card"><b>Planet Body</b><strong>Inspection carrier</strong><span>This route owns the inspectable Audralia planet body.</span></article>
-          <article class="proof-card"><b>Cockpit</b><strong>Engineering proof</strong><span>The cockpit remains the gauge, lens, and receipt inspection deck.</span></article>
-          <article class="proof-card"><b>Triple G</b><strong>Route audit</strong><span>Route health and external gap checks remain separate.</span></article>
+          <article class="proof-card"><b>Template Plate</b><strong>Preserved</strong><span>The parent route remains the planetary template construct and diagnostic carrier.</span></article>
+          <article class="proof-card"><b>Planet Body</b><strong>True canvas carrier</strong><span>This route owns route-local Audralia planet body inspection.</span></article>
+          <article class="proof-card"><b>Cockpit</b><strong>Preserved</strong><span>The cockpit remains the gauge, lens, and receipt inspection deck.</span></article>
+          <article class="proof-card"><b>Triple G</b><strong>Audit</strong><span>Route health and external gap checks remain separate.</span></article>
         </div>
 
         <div class="action-row">
@@ -623,57 +821,65 @@
         </div>
       </section>
 
-      <section id="route-receipt" class="receipt-shell" aria-label="Audralia planet inspection carrier receipt">
+      <section id="route-receipt" class="receipt-shell" aria-label="Audralia true canvas carrier receipt">
         <div class="section-head">
           <p class="section-title">Route Receipt</p>
-          <h2>Cartoon carrier retired. Globe-logic inspection carrier installed.</h2>
+          <h2>SVG cartoon retired. True canvas globe carrier installed.</h2>
           <p>
-            The planet route now centers inspection: large body, route-local drag, compact lenses, state readouts, and proof below.
+            The planet route now centers inspection: canvas body, route-local drag, Engineering controls below stage, optional lattice/receipt views, and proof below.
           </p>
         </div>
 
         <div class="receipt-grid">
           <article class="receipt-card"><b>Route</b><strong>renewed</strong><span>/showroom/globe/audralia/planet/</span></article>
-          <article class="receipt-card"><b>Mount</b><strong>installed</strong><span>data-audralia-planet-inspection-mount</span></article>
-          <article class="receipt-card"><b>Carrier</b><strong>inspectable</strong><span>Drag rotation and lens readouts are route-local.</span></article>
-          <article class="receipt-card"><b>Cartoon State</b><strong>retired</strong><span>State wall no longer covers the object.</span></article>
+          <article class="receipt-card"><b>Canvas</b><strong>true carrier</strong><span>One route-local canvas owns the planet body.</span></article>
+          <article class="receipt-card"><b>Engineering</b><strong>below stage</strong><span>Technical lens controls no longer cover the planet.</span></article>
+          <article class="receipt-card"><b>SVG</b><strong>retired</strong><span>No SVG/cartoon planet carrier remains.</span></article>
           <article class="receipt-card"><b>Template</b><strong>untouched</strong><span>/showroom/globe/audralia/ remains preserved.</span></article>
           <article class="receipt-card"><b>Cockpit</b><strong>untouched</strong><span>/showroom/globe/audralia/disposition/ remains preserved.</span></article>
           <article class="receipt-card"><b>Runtime</b><strong>held</strong><span>No Runtime / Strength activation.</span></article>
           <article class="receipt-card"><b>Visual Claim</b><strong>bounded</strong><span>No final visual pass, generated image, GraphicBox, Earth substitution, or Australia drift.</span></article>
         </div>
 
-        <code class="receipt-code">AUDRALIA_G2_PLANET_BODY_GLOBE_LOGIC_INSPECTION_CARRIER_TNT_v1
+        <code class="receipt-code">AUDRALIA_G2_PLANET_BODY_TRUE_CANVAS_GLOBE_CARRIER_ENGINEERING_LENS_TNT_v1
 route=/showroom/globe/audralia/planet/
 html=/showroom/globe/audralia/planet/index.html
 js=/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
-spec_ops=AUDRALIA_G2_PLANET_BODY_GLOBE_LOGIC_INSPECTION_CARRIER_SPEC_OPS_v1
+spec_ops=AUDRALIA_G2_PLANET_BODY_TRUE_CANVAS_GLOBE_CARRIER_ENGINEERING_LENS_SPEC_OPS_v1
+donor_js=/showroom/globe/audralia/index.js
+donor_contract=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1
 mount=data-audralia-planet-inspection-mount
-globe_logic_adopted=true
-inspection_carrier_installed=true
-cartoon_carrier_retired=true
+stage=data-audralia-planet-inspection-stage
+true_canvas_carrier=true
+one_canvas=true
+svg_cartoon_carrier_retired=true
+engineering_controls_below_stage=true
 state_wall_retired=true
 template_plate_untouched=true
 cockpit_untouched=true
-globe_selector_untouched=true
+root_globe_untouched=true
 runtime_strength_held=true
 final_visual_pass_claim=false
 generated_image=false
 graphic_box=false
 earth_substitution=false
 australia_name_drift=false
-deploy_marker=AUDRALIA_G2_PLANET_BODY_GLOBE_LOGIC_INSPECTION_CARRIER_DEPLOY_MARKER_v1</code>
+deploy_marker=AUDRALIA_G2_PLANET_BODY_TRUE_CANVAS_GLOBE_CARRIER_ENGINEERING_LENS_DEPLOY_MARKER_v1</code>
 
-        <template id="audralia-planet-inspection-receipt" class="hidden-receipt" data-route-receipt>
-AUDRALIA_G2_PLANET_BODY_GLOBE_LOGIC_INSPECTION_CARRIER_TNT_v1
+        <template id="audralia-planet-true-canvas-receipt" class="hidden-receipt" data-route-receipt>
+AUDRALIA_G2_PLANET_BODY_TRUE_CANVAS_GLOBE_CARRIER_ENGINEERING_LENS_TNT_v1
 target=/showroom/globe/audralia/planet/index.html
 js=/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
 route_guard=/showroom/globe/audralia/planet/
 mount=data-audralia-planet-inspection-mount
-inspection_carrier=true
+stage=data-audralia-planet-inspection-stage
+true_canvas_carrier=true
+one_canvas=true
+svg_cartoon_carrier_retired=true
+engineering_controls_below_stage=true
 drag_rotation=true
-lens_readouts=true
-state_wall_retired=true
+lattice_engineering_only=true
+receipt_engineering_only=true
 runtime_strength_held=true
 no_final_visual_pass_claim=true
 no_generated_image=true
@@ -685,15 +891,15 @@ no_australia_drift=true
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Audralia · Planet Body Inspection · Runtime / Strength held.
+      Diamond Gate Bridge · Audralia · True Canvas Planet Body Inspection · Runtime / Strength held.
     </footer>
   </div>
 
   <script
-    src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?v=AUDRALIA_G2_PLANET_BODY_GLOBE_LOGIC_INSPECTION_CARRIER_TNT_v1"
+    src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?v=AUDRALIA_G2_PLANET_BODY_TRUE_CANVAS_GLOBE_CARRIER_ENGINEERING_LENS_TNT_v1"
     defer
     data-audralia-planet-inspection-js
-    data-contract="AUDRALIA_G2_PLANET_BODY_GLOBE_LOGIC_INSPECTION_CARRIER_TNT_v1"
+    data-contract="AUDRALIA_G2_PLANET_BODY_TRUE_CANVAS_GLOBE_CARRIER_ENGINEERING_LENS_TNT_v1"
     data-route="/showroom/globe/audralia/planet/"
     data-route-local-render="true"
     data-runtime-strength-held="true"

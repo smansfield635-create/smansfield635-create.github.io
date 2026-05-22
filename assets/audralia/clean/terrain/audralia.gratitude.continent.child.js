@@ -1,26 +1,23 @@
 // /assets/audralia/clean/terrain/audralia.gratitude.continent.child.js
-// AUDRALIA_G2_GRATITUDE_CONTINENT_CHINA_SCALE_OBLONG_FOOTPRINT_CHILD_TNT_v1
+// AUDRALIA_GRATITUDE_TERRAIN_DEFINITION_ASSET_SYSTEM_TNT_v1
 // Full-file replacement.
-// Scope: downstream Gratitude terrain child authority only.
-// Purpose: shrink Gratitude from a hemispheric sheet into a compact China-scale oblong largest-authored landmass.
-// Owns: Gratitude footprint, Nine Summits anchors, land-first elevation, ridges, basins, valleys, and derived valley-fill hydration.
-// Does not own: carrier rendering, HTML, core physics, runtime strength, final terrain pass, or final visual pass.
+// Scope: Gratitude terrain-definition asset only.
+// Purpose: build Gratitude as a real terrain-definition asset system: oblong landmass,
+// smaller hex-rect terrain image-units, texture channels, hydration channels, and held future sockets.
+// Does not own: HTML, script tags, cache keys, carrier rendering, core physics, ecology activation,
+// settlement activation, Runtime / Strength, final terrain pass, or final visual pass.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_G2_GRATITUDE_CONTINENT_CHINA_SCALE_OBLONG_FOOTPRINT_CHILD_TNT_v1";
-  var PREVIOUS_CONTRACT = "AUDRALIA_G2_GRATITUDE_CONTINENT_LAND_FIRST_VALLEY_FILL_TERRAIN_CHILD_TNT_v1";
-  var SPEC_OPS = "AUDRALIA_G2_GRATITUDE_CONTINENT_CHINA_SCALE_OBLONG_FOOTPRINT_CHILD_SPEC_OPS_v1";
-
+  var CONTRACT = "AUDRALIA_GRATITUDE_TERRAIN_DEFINITION_ASSET_SYSTEM_TNT_v1";
+  var PREVIOUS_CONTRACT = "AUDRALIA_G2_GRATITUDE_CONTINENT_CHINA_SCALE_OBLONG_FOOTPRINT_CHILD_TNT_v1";
   var FILE = "/assets/audralia/clean/terrain/audralia.gratitude.continent.child.js";
-  var CARRIER_FILE = "/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js";
-  var CORE_FILE = "/assets/audralia/clean/core/audralia.planet-core.child.js";
 
   var CONTINENT_ID = "gratitude";
   var CONTINENT_NAME = "Continent of Gratitude";
-  var SCALE_CLASS = "china_scale_oblong_major_landmass";
-  var TARGET_LAND_RATIO = 0.0625;
+  var ASSET_CLASS = "terrain_definition_asset_system";
+  var SURFACE_UNIT_SHAPE = "hex_rect_terrain_image_unit";
 
   var RADIAL_NODES = 16;
   var FIBONACCI_BANDS = 16;
@@ -29,46 +26,6 @@
   var FIBONACCI_SEQUENCE = Object.freeze([
     1, 1, 2, 3, 5, 8, 13, 21,
     34, 55, 89, 144, 233, 377, 610, 987
-  ]);
-
-  var NEWS = Object.freeze(["north", "east", "west", "south"]);
-
-  /*
-    The footprint is intentionally small.
-
-    Previous child behavior read like a hemisphere-scale sheet.
-    This replacement treats Gratitude as the largest authored landmass so far,
-    but physically closer to a China-scale oblong body on the planet.
-
-    16 / 256 = 0.0625 of the child lattice.
-    This is roughly a 90%+ visual reduction from the prior broad land blanket.
-  */
-  var FOOTPRINT = Object.freeze([
-    Object.freeze([8, 6]), Object.freeze([9, 6]),
-
-    Object.freeze([7, 7]), Object.freeze([8, 7]),
-    Object.freeze([9, 7]), Object.freeze([10, 7]),
-
-    Object.freeze([7, 8]), Object.freeze([8, 8]),
-    Object.freeze([9, 8]), Object.freeze([10, 8]),
-    Object.freeze([11, 8]),
-
-    Object.freeze([8, 9]), Object.freeze([9, 9]),
-    Object.freeze([10, 9]),
-
-    Object.freeze([9, 10]), Object.freeze([10, 10])
-  ]);
-
-  var SUMMIT_BLUEPRINTS = Object.freeze([
-    Object.freeze(["summit_01", "First Summit of Gratitude", 8, 6, 0.92, "northwest_crown", "southward_runoff"]),
-    Object.freeze(["summit_02", "Second Summit of Gratitude", 9, 6, 1.00, "north_crown", "central_runoff"]),
-    Object.freeze(["summit_03", "Third Summit of Gratitude", 7, 7, 0.88, "west_shoulder", "eastward_runoff"]),
-    Object.freeze(["summit_04", "Fourth Summit of Gratitude", 10, 7, 0.90, "east_shoulder", "westward_runoff"]),
-    Object.freeze(["summit_05", "Fifth Summit of Gratitude", 8, 8, 1.08, "central_keystone", "radial_runoff"]),
-    Object.freeze(["summit_06", "Sixth Summit of Gratitude", 11, 8, 0.84, "east_crown", "westward_runoff"]),
-    Object.freeze(["summit_07", "Seventh Summit of Gratitude", 8, 9, 0.82, "southwest_shoulder", "northward_runoff"]),
-    Object.freeze(["summit_08", "Eighth Summit of Gratitude", 10, 9, 0.86, "southeast_shoulder", "northwest_runoff"]),
-    Object.freeze(["summit_09", "Ninth Summit of Gratitude", 9, 10, 0.88, "south_crown", "central_runoff"])
   ]);
 
   function clamp(value, min, max) {
@@ -84,515 +41,619 @@
     return JSON.parse(JSON.stringify(value));
   }
 
-  function distance(dx, dy) {
+  function distance(ax, ay, bx, by) {
+    var dx = ax - bx;
+    var dy = ay - by;
     return Math.sqrt(dx * dx + dy * dy);
   }
 
-  function key(x, y) {
-    return String(x) + "," + String(y);
+  function lineInfluence(px, py, ax, ay, bx, by, width, strength) {
+    var vx = bx - ax;
+    var vy = by - ay;
+    var wx = px - ax;
+    var wy = py - ay;
+    var len2 = vx * vx + vy * vy;
+
+    if (!len2) return 0;
+
+    var t = clamp((wx * vx + wy * vy) / len2, 0, 1);
+    var cx = ax + t * vx;
+    var cy = ay + t * vy;
+    var d = distance(px, py, cx, cy);
+
+    return strength * clamp(1 - d / width, 0, 1);
   }
 
-  function seatKey(x, y) {
+  function gaussian(px, py, cx, cy, rx, ry, strength) {
+    var dx = (px - cx) / rx;
+    var dy = (py - cy) / ry;
+    return strength * Math.exp(-(dx * dx + dy * dy));
+  }
+
+  function makeSeatKey(x, y) {
     return "G-" + String(y).padStart(2, "0") + "-" + String(x).padStart(2, "0");
   }
 
-  var FOOTPRINT_LOOKUP = FOOTPRINT.reduce(function (map, pair, index) {
-    map[key(pair[0], pair[1])] = index + 1;
-    return map;
-  }, Object.create(null));
-
-  function isFootprintSeat(x, y) {
-    return Boolean(FOOTPRINT_LOOKUP[key(x, y)]);
+  function makeTileId(index) {
+    return "GRATITUDE-TERRAIN-UNIT-" + String(index).padStart(4, "0");
   }
 
-  function footprintCenter() {
-    var totalX = 0;
-    var totalY = 0;
+  var MACRO_SHAPE = Object.freeze({
+    id: "gratitude_oblong_body",
+    continentId: CONTINENT_ID,
+    shape: "asymmetric_oblong",
+    centerX: 8.55,
+    centerY: 7.95,
+    radiusX: 4.15,
+    radiusY: 2.48,
+    rotationRadians: -0.18,
+    visibleIntent: "double_current_compact_landmass_without_returning_to_hemisphere_sheet",
+    scaleRead: "large_country_to_major_continent_seed",
+    notHemisphereSheet: true,
+    notRectangle: true,
+    notPlanetBlanket: true
+  });
 
-    for (var i = 0; i < FOOTPRINT.length; i += 1) {
-      totalX += FOOTPRINT[i][0];
-      totalY += FOOTPRINT[i][1];
-    }
+  var SUMMITS = Object.freeze([
+    Object.freeze({ id: "summit_01", name: "First Summit of Gratitude", x: 7.40, y: 5.45, elevationPressure: 0.92, ridgeBias: "northwest_crown", runoffBias: "central_south" }),
+    Object.freeze({ id: "summit_02", name: "Second Summit of Gratitude", x: 8.70, y: 5.25, elevationPressure: 1.00, ridgeBias: "north_crown", runoffBias: "central_south" }),
+    Object.freeze({ id: "summit_03", name: "Third Summit of Gratitude", x: 10.00, y: 5.65, elevationPressure: 0.90, ridgeBias: "northeast_crown", runoffBias: "southwest" }),
+
+    Object.freeze({ id: "summit_04", name: "Fourth Summit of Gratitude", x: 6.55, y: 7.45, elevationPressure: 0.84, ridgeBias: "west_shoulder", runoffBias: "east_lowland" }),
+    Object.freeze({ id: "summit_05", name: "Fifth Summit of Gratitude", x: 8.55, y: 7.65, elevationPressure: 1.08, ridgeBias: "central_keystone", runoffBias: "radial" }),
+    Object.freeze({ id: "summit_06", name: "Sixth Summit of Gratitude", x: 10.75, y: 7.75, elevationPressure: 0.86, ridgeBias: "east_shoulder", runoffBias: "west_lowland" }),
+
+    Object.freeze({ id: "summit_07", name: "Seventh Summit of Gratitude", x: 7.10, y: 9.70, elevationPressure: 0.80, ridgeBias: "southwest_shoulder", runoffBias: "northeast" }),
+    Object.freeze({ id: "summit_08", name: "Eighth Summit of Gratitude", x: 9.45, y: 9.95, elevationPressure: 0.86, ridgeBias: "south_crown", runoffBias: "central" }),
+    Object.freeze({ id: "summit_09", name: "Ninth Summit of Gratitude", x: 10.25, y: 10.90, elevationPressure: 0.88, ridgeBias: "southeast_tail", runoffBias: "northwest" })
+  ]);
+
+  var TERRAIN_REGIONS = Object.freeze([
+    Object.freeze({
+      id: "north_crown_highlands",
+      terrainClass: "summit_highland",
+      role: "primary highland arc holding the northern summit chain",
+      centerX: 8.55,
+      centerY: 5.55
+    }),
+    Object.freeze({
+      id: "central_gratitude_keystone",
+      terrainClass: "ridge_highland",
+      role: "central summit and ridge transfer node",
+      centerX: 8.55,
+      centerY: 7.65
+    }),
+    Object.freeze({
+      id: "western_upland_slope",
+      terrainClass: "upland_slope",
+      role: "western slope and runoff shoulder",
+      centerX: 6.65,
+      centerY: 7.95
+    }),
+    Object.freeze({
+      id: "eastern_lowland_shelf",
+      terrainClass: "interior_plain",
+      role: "eastern settlement-held plain candidate",
+      centerX: 10.70,
+      centerY: 8.20
+    }),
+    Object.freeze({
+      id: "central_basin_floor",
+      terrainClass: "basin_floor",
+      role: "basin capture and lake-candidate terrain",
+      centerX: 8.80,
+      centerY: 8.55
+    }),
+    Object.freeze({
+      id: "south_valley_corridor",
+      terrainClass: "valley_corridor",
+      role: "southward drainage and valley-fill corridor",
+      centerX: 9.20,
+      centerY: 10.10
+    }),
+    Object.freeze({
+      id: "coastal_edge_ring",
+      terrainClass: "coastal_edge",
+      role: "held coast pressure, not final coastline",
+      centerX: 8.55,
+      centerY: 7.95
+    }),
+    Object.freeze({
+      id: "lowland_wetland_candidate",
+      terrainClass: "lowland_wetland_candidate",
+      role: "hydration-ready future ecology zone, held",
+      centerX: 9.55,
+      centerY: 9.25
+    })
+  ]);
+
+  function rotateIntoMacroSpace(x, y) {
+    var dx = x - MACRO_SHAPE.centerX;
+    var dy = y - MACRO_SHAPE.centerY;
+    var c = Math.cos(MACRO_SHAPE.rotationRadians);
+    var s = Math.sin(MACRO_SHAPE.rotationRadians);
 
     return {
-      x: totalX / FOOTPRINT.length,
-      y: totalY / FOOTPRINT.length
+      x: dx * c - dy * s,
+      y: dx * s + dy * c
     };
   }
 
-  var CENTER = Object.freeze(footprintCenter());
+  function macroMaskScore(x, y) {
+    var p = rotateIntoMacroSpace(x, y);
+    var nx = p.x / MACRO_SHAPE.radiusX;
+    var ny = p.y / MACRO_SHAPE.radiusY;
 
-  function makeSummit(blueprint, index) {
-    return Object.freeze({
-      id: blueprint[0],
-      name: blueprint[1],
-      continentId: CONTINENT_ID,
-      x: blueprint[2],
-      y: blueprint[3],
-      seatIndex: blueprint[3] * RADIAL_NODES + blueprint[2],
-      seatKey: seatKey(blueprint[2], blueprint[3]),
-      elevationPressure: blueprint[4],
-      influenceRadius: 1.85,
-      ridgeBias: blueprint[5],
-      drainageBias: blueprint[6],
-      ordinal: index + 1,
-      role: "compressed_nine_summits_terrain_anchor",
-      labelIsDecorative: false,
-      shapesLandmass: true,
-      shapesRidges: true,
-      shapesBasins: true,
-      shapesValleys: true,
-      shapesHydration: true
-    });
+    var oblong = nx * nx + ny * ny;
+
+    var irregularEdge =
+      Math.sin((x + 1.3) * 1.71) * 0.045 +
+      Math.cos((y + 2.1) * 1.39) * 0.038 +
+      Math.sin((x * 0.73 + y * 1.09)) * 0.030;
+
+    return oblong - irregularEdge;
   }
 
-  var SUMMITS = Object.freeze(SUMMIT_BLUEPRINTS.map(makeSummit));
+  function insideMacroShape(x, y) {
+    return macroMaskScore(x, y) <= 1.0;
+  }
 
-  function nearestSummit(x, y) {
-    var best = null;
-    var bestDistance = Infinity;
+  function edgePressure(x, y) {
+    var score = macroMaskScore(x, y);
+    return clamp(1 - Math.abs(1 - score) / 0.32, 0, 1);
+  }
+
+  function summitInfluence(x, y) {
+    var total = 0;
+    var max = 0;
+    var nearest = null;
+    var nearestDistance = Infinity;
 
     for (var i = 0; i < SUMMITS.length; i += 1) {
       var summit = SUMMITS[i];
-      var d = distance(x - summit.x, y - summit.y);
+      var d = distance(x, y, summit.x, summit.y);
+      var influence = clamp(1 - d / 1.72, 0, 1) * summit.elevationPressure;
 
-      if (d < bestDistance) {
-        best = summit;
-        bestDistance = d;
+      total += influence;
+      max = Math.max(max, influence);
+
+      if (d < nearestDistance) {
+        nearestDistance = d;
+        nearest = summit;
       }
     }
 
     return {
-      summit: best,
-      distance: bestDistance
+      total: clamp(total / 2.15, 0, 1),
+      max: clamp(max, 0, 1),
+      nearest: nearest,
+      nearestDistance: nearestDistance
     };
   }
 
-  function summitInfluenceAt(x, y, summit) {
-    var d = distance(x - summit.x, y - summit.y);
-    return clamp(1 - d / summit.influenceRadius, 0, 1);
-  }
-
-  function oblongPressureAt(x, y) {
-    var dx = (x - CENTER.x) / 2.55;
-    var dy = (y - CENTER.y) / 1.62;
-
-    var oblong = 1 - (dx * dx + dy * dy);
-    var edgeIrregularity =
-      Math.sin((x + 0.7) * 1.91) * 0.045 +
-      Math.cos((y + 2.2) * 1.37) * 0.040 +
-      Math.sin((x + y) * 0.88) * 0.035;
-
-    var footprintBoost = isFootprintSeat(x, y) ? 0.64 : 0;
-
-    return oblong + edgeIrregularity + footprintBoost;
-  }
-
-  function ridgeInfluenceAt(x, y) {
-    function lineInfluence(ax, ay, bx, by, strength, width) {
-      var vx = bx - ax;
-      var vy = by - ay;
-      var wx = x - ax;
-      var wy = y - ay;
-      var len2 = vx * vx + vy * vy;
-
-      if (!len2) return 0;
-
-      var t = clamp((wx * vx + wy * vy) / len2, 0, 1);
-      var cx = ax + t * vx;
-      var cy = ay + t * vy;
-      var d = distance(x - cx, y - cy);
-
-      return strength * clamp(1 - d / width, 0, 1);
-    }
-
+  function ridgePressure(x, y) {
     var ridge = 0;
 
-    ridge += lineInfluence(8, 6, 9, 6, 0.28, 1.05);
-    ridge += lineInfluence(7, 7, 8, 8, 0.24, 1.00);
-    ridge += lineInfluence(9, 6, 10, 7, 0.25, 1.00);
-    ridge += lineInfluence(8, 8, 11, 8, 0.22, 1.10);
-    ridge += lineInfluence(8, 8, 9, 10, 0.24, 1.00);
-    ridge += lineInfluence(10, 7, 10, 9, 0.20, 0.95);
+    ridge += lineInfluence(x, y, 7.40, 5.45, 8.70, 5.25, 0.55, 0.35);
+    ridge += lineInfluence(x, y, 8.70, 5.25, 10.00, 5.65, 0.55, 0.32);
+    ridge += lineInfluence(x, y, 6.55, 7.45, 8.55, 7.65, 0.68, 0.28);
+    ridge += lineInfluence(x, y, 8.55, 7.65, 10.75, 7.75, 0.68, 0.28);
+    ridge += lineInfluence(x, y, 7.10, 9.70, 9.45, 9.95, 0.62, 0.24);
+    ridge += lineInfluence(x, y, 8.70, 5.25, 8.55, 7.65, 0.58, 0.30);
+    ridge += lineInfluence(x, y, 8.55, 7.65, 9.45, 9.95, 0.58, 0.27);
+    ridge += lineInfluence(x, y, 10.75, 7.75, 10.25, 10.90, 0.52, 0.20);
 
     return clamp(ridge, 0, 1);
   }
 
-  function basinInfluenceAt(x, y) {
-    var basins = [
-      { x: 8.7, y: 8.2, radius: 1.55, depth: 0.28, name: "central gratitude basin" },
-      { x: 9.8, y: 9.1, radius: 1.25, depth: 0.22, name: "southern receiving basin" },
-      { x: 7.7, y: 7.8, radius: 1.20, depth: 0.18, name: "western shoulder basin" }
-    ];
+  function basinPressure(x, y) {
+    var central = gaussian(x, y, 8.85, 8.55, 1.18, 0.82, 0.58);
+    var southern = gaussian(x, y, 9.35, 9.80, 1.28, 0.78, 0.48);
+    var western = gaussian(x, y, 7.10, 8.30, 0.90, 0.80, 0.36);
+    var eastern = gaussian(x, y, 10.35, 8.65, 0.92, 0.80, 0.34);
 
-    var best = 0;
-    var name = "none";
-
-    for (var i = 0; i < basins.length; i += 1) {
-      var basin = basins[i];
-      var d = distance((x - basin.x) / basin.radius, (y - basin.y) / basin.radius);
-      var influence = basin.depth * clamp(1 - d, 0, 1);
-
-      if (influence > best) {
-        best = influence;
-        name = basin.name;
-      }
-    }
-
-    return {
-      value: clamp(best, 0, 1),
-      name: name
-    };
+    return clamp(Math.max(central, southern, western, eastern), 0, 1);
   }
 
-  function valleyInfluenceAt(x, y) {
-    function valleyLine(ax, ay, bx, by, strength, width) {
-      var vx = bx - ax;
-      var vy = by - ay;
-      var wx = x - ax;
-      var wy = y - ay;
-      var len2 = vx * vx + vy * vy;
-
-      if (!len2) return 0;
-
-      var t = clamp((wx * vx + wy * vy) / len2, 0, 1);
-      var cx = ax + t * vx;
-      var cy = ay + t * vy;
-      var d = distance(x - cx, y - cy);
-
-      return strength * clamp(1 - d / width, 0, 1);
-    }
-
+  function valleyPressure(x, y) {
     var valley = 0;
 
-    valley += valleyLine(8, 6, 9, 10, 0.36, 0.72);
-    valley += valleyLine(7, 7, 10, 9, 0.26, 0.76);
-    valley += valleyLine(10, 7, 8, 9, 0.22, 0.70);
+    valley += lineInfluence(x, y, 8.70, 5.25, 8.85, 8.55, 0.50, 0.42);
+    valley += lineInfluence(x, y, 8.85, 8.55, 9.35, 10.45, 0.52, 0.48);
+    valley += lineInfluence(x, y, 6.55, 7.45, 8.85, 8.55, 0.42, 0.42);
+    valley += lineInfluence(x, y, 10.75, 7.75, 8.85, 8.55, 0.42, 0.42);
+    valley += lineInfluence(x, y, 7.10, 9.70, 9.35, 10.45, 0.35, 0.40);
+    valley += lineInfluence(x, y, 10.25, 10.90, 9.35, 10.45, 0.34, 0.35);
 
     return clamp(valley, 0, 1);
   }
 
-  function coastEligibilityAt(x, y, isLand) {
-    if (!isLand) return false;
-
-    var neighbors = [
-      [x - 1, y], [x + 1, y],
-      [x, y - 1], [x, y + 1]
-    ];
-
-    return neighbors.some(function (pair) {
-      return !isFootprintSeat(pair[0], pair[1]);
-    });
+  function coastPressure(x, y) {
+    return edgePressure(x, y);
   }
 
-  function makeTerrainSeat(x, y) {
-    var seatIndex = y * RADIAL_NODES + x;
-    var isLand = isFootprintSeat(x, y);
-    var oblongPressure = oblongPressureAt(x, y);
-    var nearest = nearestSummit(x, y);
+  function classifyTerrain(elevation, summit, ridge, basin, valley, coast, hydrationDepth) {
+    if (summit.max > 0.74 && elevation > 0.68) return "summit_highland";
+    if (ridge > 0.50 && elevation > 0.57) return "ridge_highland";
+    if (valley > 0.54 && hydrationDepth > 0.12) return "valley_corridor";
+    if (basin > 0.50 && elevation < 0.54) return "basin_floor";
+    if (coast > 0.62) return "coastal_edge";
+    if (hydrationDepth > 0.22) return "lowland_wetland_candidate";
+    if (elevation > 0.54) return "upland_slope";
+    return "interior_plain";
+  }
 
-    var summitTotal = 0;
-    var maxSummitInfluence = 0;
-    var summitInfluences = [];
+  function classifyHydration(elevation, basin, valley, coast, hydrationDepth) {
+    if (coast > 0.68) return "coastal_edge_held";
+    if (hydrationDepth >= 0.34) return "basin_lake_candidate";
+    if (hydrationDepth >= 0.20) return "wetland_candidate";
+    if (hydrationDepth > 0.04) return "seasonal_valley_fill";
+    if (elevation > 0.62) return "dry_highland";
+    return "dry_land";
+  }
 
-    for (var i = 0; i < SUMMITS.length; i += 1) {
-      var summit = SUMMITS[i];
-      var influence = isLand ? summitInfluenceAt(x, y, summit) : 0;
+  function futureBiomeClassHeld(terrainClass, hydrationClass) {
+    if (terrainClass === "summit_highland") return "alpine_or_highland_biome_held";
+    if (terrainClass === "ridge_highland") return "rocky_ridge_biome_held";
+    if (terrainClass === "coastal_edge") return "coastal_biome_held";
+    if (hydrationClass === "wetland_candidate") return "wetland_biome_held";
+    if (hydrationClass === "basin_lake_candidate") return "lake_basin_biome_held";
+    if (terrainClass === "interior_plain") return "temperate_plain_biome_held";
+    return "mixed_upland_biome_held";
+  }
 
-      if (influence > 0) {
-        summitInfluences.push({
-          summitId: summit.id,
-          summitName: summit.name,
-          influence: round(influence, 4)
-        });
-      }
+  function futureSettlementEligibilityHeld(terrainClass, elevation, hydrationDepth, ridge, coast) {
+    if (terrainClass === "summit_highland") return "held_no_settlement_highland";
+    if (ridge > 0.70) return "held_ridge_instability";
+    if (coast > 0.72) return "held_coast_definition_required";
+    if (hydrationDepth > 0.30) return "held_hydration_survey_required";
+    if (terrainClass === "interior_plain" && elevation >= 0.40 && elevation <= 0.58) return "held_candidate_plain";
+    if (terrainClass === "upland_slope" && elevation >= 0.46 && elevation <= 0.64) return "held_candidate_upland";
+    return "held_future_survey";
+  }
 
-      summitTotal += influence * summit.elevationPressure;
-      maxSummitInfluence = Math.max(maxSummitInfluence, influence);
-    }
+  function makeHexRectVertices(x, y, rx, ry) {
+    return Object.freeze([
+      Object.freeze({ x: round(x - rx, 4), y: round(y - ry * 0.45, 4) }),
+      Object.freeze({ x: round(x, 4), y: round(y - ry, 4) }),
+      Object.freeze({ x: round(x + rx, 4), y: round(y - ry * 0.45, 4) }),
+      Object.freeze({ x: round(x + rx, 4), y: round(y + ry * 0.45, 4) }),
+      Object.freeze({ x: round(x, 4), y: round(y + ry, 4) }),
+      Object.freeze({ x: round(x - rx, 4), y: round(y + ry * 0.45, 4) })
+    ]);
+  }
 
-    summitTotal = clamp(summitTotal / 1.85, 0, 1);
+  function makeSurfaceUnit(index, x, y) {
+    var summit = summitInfluence(x, y);
+    var ridge = ridgePressure(x, y);
+    var basin = basinPressure(x, y);
+    var valley = valleyPressure(x, y);
+    var coast = coastPressure(x, y);
 
-    var ridgeInfluence = isLand ? ridgeInfluenceAt(x, y) : 0;
-    var basin = isLand ? basinInfluenceAt(x, y) : { value: 0, name: "none" };
-    var valleyInfluence = isLand ? valleyInfluenceAt(x, y) : 0;
-
-    var baseElevation = isLand
-      ? clamp(0.40 + oblongPressure * 0.10, 0.34, 0.58)
-      : 0;
-
-    var elevation = isLand
-      ? clamp(
-        baseElevation +
-        summitTotal * 0.30 +
-        ridgeInfluence * 0.16 -
-        basin.value * 0.20 -
-        valleyInfluence * 0.14,
-        0.18,
-        0.94
-      )
-      : 0;
-
-    var summitSeat = Boolean(isLand && nearest.distance < 0.55);
-    var ridgeStatus = Boolean(isLand && ridgeInfluence > 0.18);
-    var basinStatus = Boolean(isLand && basin.value > 0.08);
-    var valleyStatus = Boolean(isLand && valleyInfluence > 0.18);
-    var continentCore = Boolean(isLand && !coastEligibilityAt(x, y, isLand) && elevation > 0.48);
-    var coastEligible = coastEligibilityAt(x, y, isLand);
-
-    var waterFillEligible = Boolean(
-      isLand &&
-      (basinStatus || valleyStatus) &&
-      elevation < 0.58 &&
-      !summitSeat
+    var baseElevation = clamp(0.43 + (1 - macroMaskScore(x, y)) * 0.08, 0.32, 0.60);
+    var elevation = clamp(
+      baseElevation +
+      summit.total * 0.30 +
+      ridge * 0.18 -
+      basin * 0.20 -
+      valley * 0.12 -
+      coast * 0.04,
+      0.18,
+      0.94
     );
 
-    var runoffPressure = isLand
-      ? clamp(summitTotal * 0.34 + ridgeInfluence * 0.18 + valleyInfluence * 0.30 + basin.value * 0.24, 0, 1)
-      : 0;
+    var runoffPressure = clamp(summit.total * 0.32 + ridge * 0.22 + valley * 0.32 + basin * 0.18, 0, 1);
+    var basinCapture = clamp(basin * 0.82 + valley * 0.18, 0, 1);
+    var valleyCapture = clamp(valley * 0.88 + basin * 0.12, 0, 1);
+    var coastDrainagePressure = clamp(coast * 0.70 + valley * 0.20, 0, 1);
 
+    var moisturePotential = clamp(
+      basinCapture * 0.28 +
+      valleyCapture * 0.30 +
+      runoffPressure * 0.22 +
+      coastDrainagePressure * 0.12 -
+      elevation * 0.10,
+      0,
+      1
+    );
+
+    var waterFillEligible = Boolean((basin > 0.42 || valley > 0.46) && elevation < 0.58 && summit.max < 0.74);
     var hydrationDepth = waterFillEligible
-      ? clamp((0.58 - elevation) * 1.50 + basin.value * 0.28 + valleyInfluence * 0.18, 0.04, 0.56)
+      ? clamp((0.58 - elevation) * 1.25 + basin * 0.20 + valley * 0.18 + moisturePotential * 0.12, 0.03, 0.58)
       : 0;
 
-    var hydrationClass = "outside_gratitude_continent";
-    if (isLand) hydrationClass = "dry_land";
-    if (isLand && coastEligible) hydrationClass = "coastal_edge_held";
-    if (isLand && ridgeStatus) hydrationClass = "highland_dry";
-    if (isLand && hydrationDepth > 0 && hydrationDepth < 0.22) hydrationClass = "seasonal_valley_fill";
-    if (isLand && hydrationDepth >= 0.22 && hydrationDepth < 0.42) hydrationClass = "basin_lake_fill";
-    if (isLand && hydrationDepth >= 0.42) hydrationClass = "deep_valley_fill";
+    var terrainClass = classifyTerrain(elevation, summit, ridge, basin, valley, coast, hydrationDepth);
+    var hydrationClass = classifyHydration(elevation, basin, valley, coast, hydrationDepth);
+
+    var rx = 0.155;
+    var ry = 0.125;
 
     return Object.freeze({
-      seatIndex: seatIndex,
-      seatKey: seatKey(x, y),
-      x: x,
-      y: y,
-      band: y,
-      radial: x,
-      fibonacci: FIBONACCI_SEQUENCE[y],
+      tileId: makeTileId(index),
+      terrainUnitId: makeTileId(index),
+      parentSeatIndex: Math.floor(y) * RADIAL_NODES + Math.floor(x),
+      parentSeatKey: makeSeatKey(Math.floor(x), Math.floor(y)),
+      continentId: CONTINENT_ID,
+      continentName: CONTINENT_NAME,
 
-      continentId: isLand ? CONTINENT_ID : null,
-      continentName: isLand ? CONTINENT_NAME : null,
-      continentMembership: isLand,
-      continentCore: continentCore,
-      gratitudeLargestContinent: true,
-      largestAuthoredLandmassSoFar: true,
-      chinaScaleOblongFootprint: true,
-      hemisphereSheetRemoved: true,
+      x: round(x, 4),
+      y: round(y, 4),
+      rx: rx,
+      ry: ry,
+      shape: SURFACE_UNIT_SHAPE,
+      imageReadyUnit: true,
+      finalImageAsset: false,
 
-      membershipPressure: round(oblongPressure, 4),
+      hexRectVertices: makeHexRectVertices(x, y, rx, ry),
+
       elevation: round(elevation, 4),
       baseElevation: round(baseElevation, 4),
-      summitInfluence: round(summitTotal, 4),
-      maxSummitInfluence: round(maxSummitInfluence, 4),
-      nearestSummitId: nearest.summit ? nearest.summit.id : null,
-      nearestSummitName: nearest.summit ? nearest.summit.name : null,
-      nearestSummitDistance: round(nearest.distance, 4),
-      summitInfluences: summitInfluences,
+      ridgePressure: round(ridge, 4),
+      basinPressure: round(basin, 4),
+      valleyPressure: round(valley, 4),
+      summitInfluence: round(summit.total, 4),
+      maxSummitInfluence: round(summit.max, 4),
+      nearestSummitId: summit.nearest ? summit.nearest.id : null,
+      nearestSummitName: summit.nearest ? summit.nearest.name : null,
+      coastPressure: round(coast, 4),
 
-      ridgeInfluence: round(ridgeInfluence, 4),
-      ridgeStatus: ridgeStatus,
-      basinInfluence: round(basin.value, 4),
-      basinName: basin.name,
-      basinStatus: basinStatus,
-      valleyInfluence: round(valleyInfluence, 4),
-      valleyStatus: valleyStatus,
-
-      coastEligible: coastEligible,
-      waterFillEligible: waterFillEligible,
       runoffPressure: round(runoffPressure, 4),
+      basinCapture: round(basinCapture, 4),
+      valleyCapture: round(valleyCapture, 4),
+      coastDrainagePressure: round(coastDrainagePressure, 4),
+      moisturePotential: round(moisturePotential, 4),
+      waterFillEligible: waterFillEligible,
       hydrationDepth: round(hydrationDepth, 4),
       hydrationClass: hydrationClass,
 
+      terrainClass: terrainClass,
+
+      textureChannels: Object.freeze({
+        rock: round(clamp(elevation * 0.42 + ridge * 0.36 + summit.max * 0.22, 0, 1), 4),
+        soil: round(clamp(0.40 + (1 - ridge) * 0.22 + basin * 0.18 - summit.max * 0.12, 0, 1), 4),
+        mineral: round(clamp(summit.total * 0.36 + ridge * 0.32 + elevation * 0.20, 0, 1), 4),
+        wetland: round(clamp(hydrationDepth * 0.80 + moisturePotential * 0.20, 0, 1), 4),
+        ridge: round(ridge, 4),
+        basin: round(basin, 4),
+        coast: round(coast, 4)
+      }),
+
+      futureBiomeClassHeld: futureBiomeClassHeld(terrainClass, hydrationClass),
+      futureSettlementEligibilityHeld: futureSettlementEligibilityHeld(terrainClass, elevation, hydrationDepth, ridge, coast),
+      futureEcologySocketHeld: true,
+      futureBiomeSocketHeld: true,
+      futureSettlementSocketHeld: true,
+      futureUrbanLayerSocketHeld: true,
+
+      renderEligible: true,
       landFirst: true,
       elevationComputedBeforeHydration: true,
       hydrationIsConsequence: true,
       waterFillDerivedFromValleys: true,
-
-      renderEligible: true,
-      carrierConsumptionAllowedAfterValidation: true,
       finalTerrainPassClaim: false,
-      finalVisualPassClaim: false,
-
-      newsComplete: true,
-      north: Object.freeze({
-        defined: true,
-        role: "oblong_land_origin",
-        continentAnchor: isLand,
-        scaleClass: SCALE_CLASS
-      }),
-      east: Object.freeze({
-        defined: true,
-        role: "compressed_surface_expression",
-        elevation: round(elevation, 4)
-      }),
-      west: Object.freeze({
-        defined: true,
-        role: "edge_correction_and_sheet_removal",
-        hemisphereSheetRemoved: true,
-        coastEligible: coastEligible
-      }),
-      south: Object.freeze({
-        defined: true,
-        role: "grounded_valley_fill_consequence",
-        waterFillEligible: waterFillEligible,
-        hydrationDepth: round(hydrationDepth, 4)
-      })
+      finalVisualPassClaim: false
     });
   }
 
-  function buildSeats() {
+  function buildSurfaceUnits() {
+    var units = [];
+    var index = 1;
+
+    var xMin = MACRO_SHAPE.centerX - MACRO_SHAPE.radiusX - 0.55;
+    var xMax = MACRO_SHAPE.centerX + MACRO_SHAPE.radiusX + 0.55;
+    var yMin = MACRO_SHAPE.centerY - MACRO_SHAPE.radiusY - 0.55;
+    var yMax = MACRO_SHAPE.centerY + MACRO_SHAPE.radiusY + 0.55;
+
+    var xStep = 0.34;
+    var yStep = 0.28;
+
+    for (var y = yMin; y <= yMax; y += yStep) {
+      var row = Math.round((y - yMin) / yStep);
+      var xOffset = row % 2 === 0 ? 0 : xStep * 0.50;
+
+      for (var x = xMin + xOffset; x <= xMax; x += xStep) {
+        if (insideMacroShape(x, y)) {
+          units.push(makeSurfaceUnit(index, x, y));
+          index += 1;
+        }
+      }
+    }
+
+    return Object.freeze(units);
+  }
+
+  var SURFACE_UNITS = buildSurfaceUnits();
+
+  function aggregateCoarseSeats() {
+    var map = Object.create(null);
+
+    for (var i = 0; i < SURFACE_UNITS.length; i += 1) {
+      var unit = SURFACE_UNITS[i];
+      var sx = clamp(Math.floor(unit.x), 0, RADIAL_NODES - 1);
+      var sy = clamp(Math.floor(unit.y), 0, FIBONACCI_BANDS - 1);
+      var k = sx + "," + sy;
+
+      if (!map[k]) {
+        map[k] = {
+          seatIndex: sy * RADIAL_NODES + sx,
+          seatKey: makeSeatKey(sx, sy),
+          x: sx,
+          y: sy,
+          tileCount: 0,
+          elevationTotal: 0,
+          hydrationTotal: 0,
+          ridgeTotal: 0,
+          basinTotal: 0,
+          valleyTotal: 0,
+          coastTotal: 0,
+          waterFillCount: 0
+        };
+      }
+
+      map[k].tileCount += 1;
+      map[k].elevationTotal += unit.elevation;
+      map[k].hydrationTotal += unit.hydrationDepth;
+      map[k].ridgeTotal += unit.ridgePressure;
+      map[k].basinTotal += unit.basinPressure;
+      map[k].valleyTotal += unit.valleyPressure;
+      map[k].coastTotal += unit.coastPressure;
+      if (unit.waterFillEligible) map[k].waterFillCount += 1;
+    }
+
     var seats = [];
 
     for (var y = 0; y < FIBONACCI_BANDS; y += 1) {
       for (var x = 0; x < RADIAL_NODES; x += 1) {
-        seats.push(makeTerrainSeat(x, y));
+        var k = x + "," + y;
+        var source = map[k];
+
+        if (!source) {
+          seats.push(Object.freeze({
+            seatIndex: y * RADIAL_NODES + x,
+            seatKey: makeSeatKey(x, y),
+            x: x,
+            y: y,
+            continentMembership: false,
+            continentId: null,
+            continentName: null,
+            tileCount: 0,
+            elevation: 0,
+            hydrationDepth: 0,
+            waterFillEligible: false,
+            terrainClass: "outside_gratitude_asset",
+            hydrationClass: "outside_gratitude_asset",
+            newsComplete: true
+          }));
+          continue;
+        }
+
+        var count = source.tileCount;
+
+        seats.push(Object.freeze({
+          seatIndex: source.seatIndex,
+          seatKey: source.seatKey,
+          x: source.x,
+          y: source.y,
+          continentMembership: true,
+          continentId: CONTINENT_ID,
+          continentName: CONTINENT_NAME,
+          tileCount: count,
+          elevation: round(source.elevationTotal / count, 4),
+          hydrationDepth: round(source.hydrationTotal / count, 4),
+          ridgePressure: round(source.ridgeTotal / count, 4),
+          basinPressure: round(source.basinTotal / count, 4),
+          valleyPressure: round(source.valleyTotal / count, 4),
+          coastPressure: round(source.coastTotal / count, 4),
+          waterFillEligible: source.waterFillCount > 0,
+          terrainClass: "coarse_parent_for_surface_units",
+          hydrationClass: source.waterFillCount > 0 ? "coarse_hydration_candidate" : "coarse_dry_land",
+          newsComplete: true
+        }));
       }
     }
 
     return Object.freeze(seats);
   }
 
-  var SEATS = buildSeats();
+  var COARSE_SEATS = aggregateCoarseSeats();
 
-  function countBy(predicate) {
+  function countBy(list, predicate) {
     var count = 0;
-
-    for (var i = 0; i < SEATS.length; i += 1) {
-      if (predicate(SEATS[i])) count += 1;
+    for (var i = 0; i < list.length; i += 1) {
+      if (predicate(list[i])) count += 1;
     }
-
     return count;
   }
 
-  function allSeatsNEWSComplete() {
-    return SEATS.every(function (seat) {
-      return Boolean(
-        seat &&
-        seat.newsComplete === true &&
-        seat.north && seat.north.defined === true &&
-        seat.east && seat.east.defined === true &&
-        seat.west && seat.west.defined === true &&
-        seat.south && seat.south.defined === true
-      );
-    });
+  var LAND_PARENT_SEAT_COUNT = countBy(COARSE_SEATS, function (seat) {
+    return seat.continentMembership;
+  });
+
+  var HYDRATION_UNIT_COUNT = countBy(SURFACE_UNITS, function (unit) {
+    return unit.waterFillEligible;
+  });
+
+  function terrainClassCounts() {
+    var counts = Object.create(null);
+
+    for (var i = 0; i < SURFACE_UNITS.length; i += 1) {
+      var cls = SURFACE_UNITS[i].terrainClass;
+      counts[cls] = (counts[cls] || 0) + 1;
+    }
+
+    return counts;
   }
 
-  var LAND_SEAT_COUNT = countBy(function (seat) { return seat.continentMembership; });
-  var CORE_SEAT_COUNT = countBy(function (seat) { return seat.continentCore; });
-  var RIDGE_SEAT_COUNT = countBy(function (seat) { return seat.ridgeStatus; });
-  var BASIN_SEAT_COUNT = countBy(function (seat) { return seat.basinStatus; });
-  var VALLEY_SEAT_COUNT = countBy(function (seat) { return seat.valleyStatus; });
-  var WATER_FILL_SEAT_COUNT = countBy(function (seat) { return seat.waterFillEligible; });
+  function hydrationClassCounts() {
+    var counts = Object.create(null);
+
+    for (var i = 0; i < SURFACE_UNITS.length; i += 1) {
+      var cls = SURFACE_UNITS[i].hydrationClass;
+      counts[cls] = (counts[cls] || 0) + 1;
+    }
+
+    return counts;
+  }
 
   function status() {
     return {
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
-      specOps: SPEC_OPS,
       target: FILE,
-      protectedCarrier: CARRIER_FILE,
-      protectedCore: CORE_FILE,
 
-      childType: "terrain_child",
+      childType: "terrain_definition_child",
       continentId: CONTINENT_ID,
       continentName: CONTINENT_NAME,
-      scaleClass: SCALE_CLASS,
+      assetClass: ASSET_CLASS,
 
-      gratitudeContinentChild: true,
-      largestContinent: true,
-      largestAuthoredLandmassSoFar: true,
-      largestLandmassRank: 1,
-      chinaScaleOblongFootprint: true,
-      oblongFootprint: true,
+      terrainDefinitionAssetSystem: true,
+      macroShapeDefined: true,
+      macroShape: deepClone(MACRO_SHAPE),
+
+      hexRectTerrainImageUnitsAvailable: true,
+      surfaceImageUnitShape: SURFACE_UNIT_SHAPE,
+      surfaceImageUnitCount: SURFACE_UNITS.length,
+      coarseParentSeatCount: LAND_PARENT_SEAT_COUNT,
+
+      doubledVisibleFootprintIntent: true,
+      largerThanPreviousCompactFootprint: true,
       hemisphereSheetRemoved: true,
-      ninetyPercentShrinkApplied: true,
 
       landFirst: true,
-      nineSummitsEmbedded: true,
-      nineSummitsCompressedIntoOblongLandmass: true,
       elevationComputedBeforeHydration: true,
-      ridgeFieldComputed: true,
-      basinFieldComputed: true,
-      valleyFieldComputed: true,
-      waterFillDerivedFromValleys: true,
       hydrationIsConsequence: true,
+      waterFillDerivedFromValleys: true,
 
-      radialNodes: RADIAL_NODES,
-      fibonacciBands: FIBONACCI_BANDS,
-      latticeStates: LATTICE_STATES,
-      seatCount: SEATS.length,
-      landSeatCount: LAND_SEAT_COUNT,
-      continentCoreSeatCount: CORE_SEAT_COUNT,
-      ridgeSeatCount: RIDGE_SEAT_COUNT,
-      basinSeatCount: BASIN_SEAT_COUNT,
-      valleySeatCount: VALLEY_SEAT_COUNT,
-      waterFillSeatCount: WATER_FILL_SEAT_COUNT,
-      landRatio: round(LAND_SEAT_COUNT / LATTICE_STATES, 4),
-      targetLandRatio: TARGET_LAND_RATIO,
-
+      nineSummitsEmbedded: true,
+      nineSummitsShapeTerrain: true,
+      nineSummitsCompressedInsideOblongLandmass: true,
       summitCount: SUMMITS.length,
-      summitConstruct: "nine_summits_compressed_inside_china_scale_oblong_landmass",
-      newsProtocolActive: true,
-      newsOrder: NEWS.slice(),
-      allSeatsNewsComplete: allSeatsNEWSComplete(),
+
+      terrainClassCounts: terrainClassCounts(),
+      hydrationClassCounts: hydrationClassCounts(),
+      hydrationUnitCount: HYDRATION_UNIT_COUNT,
+
+      futureBiomeSocketHeld: true,
+      futureEcologySocketHeld: true,
+      futureSettlementSocketHeld: true,
+      futureUrbanLayerSocketHeld: true,
+      futureWeatherSocketHeld: true,
 
       carrierConsumptionAllowedAfterValidation: true,
       carrierRenderAuthorized: false,
-      terrainRenderAuthorizedByChildPacketOnly: true,
-      hydrosphereCarrierUntouched: true,
       htmlUntouched: true,
+      carrierUntouched: true,
       coreChildUntouched: true,
       runtimeStrengthHeld: true,
       finalTerrainPassClaim: false,
       finalVisualPassClaim: false,
+
       generatedImage: false,
       graphicBox: false,
-      earthSubstitution: false,
-      australiaNameDrift: false,
+      scriptTagsIncluded: false,
+      cacheKeyScope: false,
 
-      deployMarker: "AUDRALIA_G2_GRATITUDE_CHINA_SCALE_OBLONG_FOOTPRINT_DEPLOY_MARKER_v1"
-    };
-  }
-
-  function compactSeat(seat) {
-    return {
-      seatIndex: seat.seatIndex,
-      seatKey: seat.seatKey,
-      x: seat.x,
-      y: seat.y,
-      continentMembership: seat.continentMembership,
-      elevation: seat.elevation,
-      continentCore: seat.continentCore,
-      nearestSummitId: seat.nearestSummitId,
-      hydrationDepth: seat.hydrationDepth,
-      hydrationClass: seat.hydrationClass
-    };
-  }
-
-  function publicSeat(seat) {
-    return {
-      seatIndex: seat.seatIndex,
-      seatKey: seat.seatKey,
-      x: seat.x,
-      y: seat.y,
-      continentMembership: seat.continentMembership,
-      continentCore: seat.continentCore,
-      elevation: seat.elevation,
-      baseElevation: seat.baseElevation,
-      nearestSummitId: seat.nearestSummitId,
-      nearestSummitName: seat.nearestSummitName,
-      ridgeStatus: seat.ridgeStatus,
-      basinStatus: seat.basinStatus,
-      valleyStatus: seat.valleyStatus,
-      coastEligible: seat.coastEligible,
-      waterFillEligible: seat.waterFillEligible,
-      hydrationDepth: seat.hydrationDepth,
-      hydrationClass: seat.hydrationClass,
-      chinaScaleOblongFootprint: seat.chinaScaleOblongFootprint,
-      hemisphereSheetRemoved: seat.hemisphereSheetRemoved,
-      newsComplete: seat.newsComplete
+      deployMarker: "AUDRALIA_GRATITUDE_TERRAIN_DEFINITION_ASSET_SYSTEM_DEPLOY_MARKER_v1"
     };
   }
 
@@ -601,27 +662,17 @@
 
     return {
       contract: CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
       continentId: CONTINENT_ID,
       continentName: CONTINENT_NAME,
-      scaleClass: SCALE_CLASS,
-      largestContinent: true,
-      largestAuthoredLandmassSoFar: true,
-      largestLandmassRank: 1,
-      chinaScaleOblongFootprint: true,
-      hemisphereSheetRemoved: true,
+      assetClass: ASSET_CLASS,
+      macroShape: deepClone(MACRO_SHAPE),
+      coarseParentSeatCount: LAND_PARENT_SEAT_COUNT,
+      surfaceImageUnitCount: SURFACE_UNITS.length,
       landFirst: true,
-      radialNodes: RADIAL_NODES,
-      fibonacciBands: FIBONACCI_BANDS,
-      latticeStates: LATTICE_STATES,
-      seatCount: SEATS.length,
-      landSeatCount: LAND_SEAT_COUNT,
-      continentCoreSeatCount: CORE_SEAT_COUNT,
-      landRatio: round(LAND_SEAT_COUNT / LATTICE_STATES, 4),
-      targetLandRatio: TARGET_LAND_RATIO,
+      hexRectTerrainImageUnitsAvailable: true,
       seats: compact
-        ? SEATS.filter(function (seat) { return seat.continentMembership; }).map(compactSeat)
-        : SEATS.map(publicSeat)
+        ? COARSE_SEATS.filter(function (seat) { return seat.continentMembership; })
+        : COARSE_SEATS.map(deepClone)
     };
   }
 
@@ -632,44 +683,18 @@
       contract: CONTRACT,
       continentId: CONTINENT_ID,
       elevationComputedBeforeHydration: true,
-      ridgeFieldComputed: true,
-      basinFieldComputed: true,
-      valleyFieldComputed: true,
-      chinaScaleOblongFootprint: true,
-      seats: SEATS.map(function (seat) {
-        if (compact) {
+      source: "hex_rect_terrain_image_units",
+      units: compact
+        ? SURFACE_UNITS.map(function (unit) {
           return {
-            seatIndex: seat.seatIndex,
-            x: seat.x,
-            y: seat.y,
-            land: seat.continentMembership,
-            elevation: seat.elevation,
-            ridge: seat.ridgeInfluence,
-            basin: seat.basinInfluence,
-            valley: seat.valleyInfluence
+            tileId: unit.tileId,
+            x: unit.x,
+            y: unit.y,
+            elevation: unit.elevation,
+            terrainClass: unit.terrainClass
           };
-        }
-
-        return {
-          seatIndex: seat.seatIndex,
-          seatKey: seat.seatKey,
-          x: seat.x,
-          y: seat.y,
-          continentMembership: seat.continentMembership,
-          baseElevation: seat.baseElevation,
-          elevation: seat.elevation,
-          summitInfluence: seat.summitInfluence,
-          ridgeInfluence: seat.ridgeInfluence,
-          basinInfluence: seat.basinInfluence,
-          basinName: seat.basinName,
-          valleyInfluence: seat.valleyInfluence,
-          ridgeStatus: seat.ridgeStatus,
-          basinStatus: seat.basinStatus,
-          valleyStatus: seat.valleyStatus,
-          nearestSummitId: seat.nearestSummitId,
-          nearestSummitName: seat.nearestSummitName
-        };
-      })
+        })
+        : SURFACE_UNITS.map(deepClone)
     };
   }
 
@@ -679,11 +704,8 @@
     return {
       contract: CONTRACT,
       continentId: CONTINENT_ID,
-      summitCount: SUMMITS.length,
       nineSummitsEmbedded: true,
-      nineSummitsCompressedIntoOblongLandmass: true,
-      summitsAreTerrainAnchors: true,
-      labelsAreNotDecorative: true,
+      nineSummitsShapeTerrain: true,
       summits: compact
         ? SUMMITS.map(function (summit) {
           return {
@@ -691,13 +713,10 @@
             name: summit.name,
             x: summit.x,
             y: summit.y,
-            seatIndex: summit.seatIndex,
             elevationPressure: summit.elevationPressure
           };
         })
-        : SUMMITS.map(function (summit) {
-          return deepClone(summit);
-        })
+        : SUMMITS.map(deepClone)
     };
   }
 
@@ -709,129 +728,260 @@
       continentId: CONTINENT_ID,
       hydrationIsConsequence: true,
       waterFillDerivedFromValleys: true,
-      waterFillSeatCount: WATER_FILL_SEAT_COUNT,
-      chinaScaleOblongFootprint: true,
-      hydrationRules: {
-        terrainMustExistFirst: true,
-        elevationPrecedesHydration: true,
-        valleyStatusRequired: true,
-        basinCaptureContributes: true,
-        summitRunoffContributes: true,
-        coastIsHeldForLaterRender: true
-      },
-      seats: SEATS.map(function (seat) {
-        if (compact) {
+      hydrationUnitCount: HYDRATION_UNIT_COUNT,
+      hydrationSequence: [
+        "land membership",
+        "elevation",
+        "ridge pressure",
+        "basin pressure",
+        "valley pressure",
+        "runoff pressure",
+        "hydration depth"
+      ],
+      seats: compact
+        ? SURFACE_UNITS.map(function (unit) {
           return {
-            seatIndex: seat.seatIndex,
-            x: seat.x,
-            y: seat.y,
-            land: seat.continentMembership,
-            waterFillEligible: seat.waterFillEligible,
-            hydrationDepth: seat.hydrationDepth,
-            hydrationClass: seat.hydrationClass
+            tileId: unit.tileId,
+            x: unit.x,
+            y: unit.y,
+            waterFillEligible: unit.waterFillEligible,
+            hydrationDepth: unit.hydrationDepth,
+            hydrationClass: unit.hydrationClass
           };
-        }
+        })
+        : SURFACE_UNITS.map(deepClone)
+    };
+  }
 
-        return {
-          seatIndex: seat.seatIndex,
-          seatKey: seat.seatKey,
-          x: seat.x,
-          y: seat.y,
-          continentMembership: seat.continentMembership,
-          elevation: seat.elevation,
-          basinStatus: seat.basinStatus,
-          basinName: seat.basinName,
-          valleyStatus: seat.valleyStatus,
-          waterFillEligible: seat.waterFillEligible,
-          runoffPressure: seat.runoffPressure,
-          hydrationDepth: seat.hydrationDepth,
-          hydrationClass: seat.hydrationClass,
-          hydrationIsConsequence: seat.hydrationIsConsequence,
-          waterFillDerivedFromValleys: seat.waterFillDerivedFromValleys
-        };
-      })
+  function getSurfaceTileMap(options) {
+    var compact = Boolean(options && options.compact);
+
+    return {
+      contract: CONTRACT,
+      continentId: CONTINENT_ID,
+      tileSystem: "terrain_image_unit_field",
+      surfaceUnitShape: SURFACE_UNIT_SHAPE,
+      imageReadyUnit: true,
+      finalImageAsset: false,
+      surfaceImageUnitCount: SURFACE_UNITS.length,
+      readyForMoreDefinition: true,
+      tiles: compact
+        ? SURFACE_UNITS.map(function (unit) {
+          return {
+            tileId: unit.tileId,
+            x: unit.x,
+            y: unit.y,
+            rx: unit.rx,
+            ry: unit.ry,
+            shape: unit.shape,
+            elevation: unit.elevation,
+            terrainClass: unit.terrainClass,
+            hydrationDepth: unit.hydrationDepth,
+            waterFillEligible: unit.waterFillEligible
+          };
+        })
+        : SURFACE_UNITS.map(deepClone)
+    };
+  }
+
+  function getTerrainAssetMap(options) {
+    var compact = Boolean(options && options.compact);
+
+    return {
+      contract: CONTRACT,
+      assetClass: ASSET_CLASS,
+      macroShape: deepClone(MACRO_SHAPE),
+      terrainRegions: TERRAIN_REGIONS.map(deepClone),
+      summits: compact ? SUMMITS.map(function (summit) {
+        return { id: summit.id, x: summit.x, y: summit.y };
+      }) : SUMMITS.map(deepClone),
+      surfaceImageUnits: compact ? SURFACE_UNITS.length : SURFACE_UNITS.map(deepClone),
+      terrainClassCounts: terrainClassCounts(),
+      hydrationClassCounts: hydrationClassCounts()
+    };
+  }
+
+  function getTextureChannelMap(options) {
+    var compact = Boolean(options && options.compact);
+
+    return {
+      contract: CONTRACT,
+      textureChannelsDefined: true,
+      channels: [
+        "rock",
+        "soil",
+        "mineral",
+        "wetland",
+        "ridge",
+        "basin",
+        "coast"
+      ],
+      units: compact
+        ? SURFACE_UNITS.map(function (unit) {
+          return {
+            tileId: unit.tileId,
+            x: unit.x,
+            y: unit.y,
+            textureChannels: unit.textureChannels
+          };
+        })
+        : SURFACE_UNITS.map(deepClone)
+    };
+  }
+
+  function getHydrationChannelMap(options) {
+    var compact = Boolean(options && options.compact);
+
+    return {
+      contract: CONTRACT,
+      hydrationChannelsDefined: true,
+      hydrationIsConsequence: true,
+      channels: [
+        "runoffPressure",
+        "basinCapture",
+        "valleyCapture",
+        "coastDrainagePressure",
+        "moisturePotential",
+        "hydrationDepth"
+      ],
+      units: compact
+        ? SURFACE_UNITS.map(function (unit) {
+          return {
+            tileId: unit.tileId,
+            x: unit.x,
+            y: unit.y,
+            runoffPressure: unit.runoffPressure,
+            basinCapture: unit.basinCapture,
+            valleyCapture: unit.valleyCapture,
+            coastDrainagePressure: unit.coastDrainagePressure,
+            moisturePotential: unit.moisturePotential,
+            hydrationDepth: unit.hydrationDepth,
+            hydrationClass: unit.hydrationClass
+          };
+        })
+        : SURFACE_UNITS.map(deepClone)
+    };
+  }
+
+  function getFutureSocketMap(options) {
+    var compact = Boolean(options && options.compact);
+
+    return {
+      contract: CONTRACT,
+      futureSocketsHeld: true,
+      biomeSocketHeld: true,
+      ecologySocketHeld: true,
+      settlementSocketHeld: true,
+      urbanLayerSocketHeld: true,
+      weatherSocketHeld: true,
+      activationAuthorized: false,
+      rules: {
+        ecologyRequiresHydrationChild: true,
+        settlementRequiresCoreAndHydration: true,
+        urbanRequiresCoreTectonicStability: true,
+        biomeRequiresTerrainAndHydrationDefinition: true
+      },
+      units: compact
+        ? SURFACE_UNITS.map(function (unit) {
+          return {
+            tileId: unit.tileId,
+            terrainClass: unit.terrainClass,
+            hydrationClass: unit.hydrationClass,
+            futureBiomeClassHeld: unit.futureBiomeClassHeld,
+            futureSettlementEligibilityHeld: unit.futureSettlementEligibilityHeld
+          };
+        })
+        : SURFACE_UNITS.map(deepClone)
     };
   }
 
   function getChildReceivePacket(target, options) {
     var compact = Boolean(options && options.compact);
-    var requestedTarget = target || "unassigned-downstream-consumer";
 
     return {
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
-      target: requestedTarget,
+      target: target || "unassigned-downstream-consumer",
       childReceivePacketReady: true,
-      childType: "terrain_child",
+      childType: "terrain_definition_child",
+
       continentId: CONTINENT_ID,
       continentName: CONTINENT_NAME,
-      scaleClass: SCALE_CLASS,
+      assetClass: ASSET_CLASS,
 
-      largestContinent: true,
-      largestAuthoredLandmassSoFar: true,
-      chinaScaleOblongFootprint: true,
-      oblongFootprint: true,
+      terrainDefinitionAssetSystem: true,
+      macroShapeDefined: true,
+      hexRectTerrainImageUnitsAvailable: true,
+      surfaceImageUnitShape: SURFACE_UNIT_SHAPE,
+      surfaceImageUnitCount: SURFACE_UNITS.length,
+      coarseParentSeatCount: LAND_PARENT_SEAT_COUNT,
+
+      doubledVisibleFootprintIntent: true,
+      largerThanPreviousCompactFootprint: true,
       hemisphereSheetRemoved: true,
-      ninetyPercentShrinkApplied: true,
 
       landFirst: true,
-      nineSummitsEmbedded: true,
-      nineSummitsCompressedIntoOblongLandmass: true,
       elevationComputedBeforeHydration: true,
-      waterFillDerivedFromValleys: true,
       hydrationIsConsequence: true,
+      waterFillDerivedFromValleys: true,
 
-      radialNodes: RADIAL_NODES,
-      fibonacciBands: FIBONACCI_BANDS,
-      latticeStates: LATTICE_STATES,
-      seatCount: SEATS.length,
-      landSeatCount: LAND_SEAT_COUNT,
-      landRatio: round(LAND_SEAT_COUNT / LATTICE_STATES, 4),
-      targetLandRatio: TARGET_LAND_RATIO,
-      summitCount: SUMMITS.length,
-      waterFillSeatCount: WATER_FILL_SEAT_COUNT,
+      nineSummitsEmbedded: true,
+      nineSummitsShapeTerrain: true,
+      nineSummitsCompressedInsideOblongLandmass: true,
 
-      newsProtocolActive: true,
-      newsComplete: allSeatsNEWSComplete(),
-      chronologyComplete: true,
+      futureBiomeSocketHeld: true,
+      futureEcologySocketHeld: true,
+      futureSettlementSocketHeld: true,
+      futureUrbanLayerSocketHeld: true,
+      futureWeatherSocketHeld: true,
+
       relationshipMapReady: true,
-      carrierBound: false,
       carrierConsumptionAllowedAfterValidation: true,
       carrierRenderAuthorized: false,
-      terrainRenderAuthorizedByChildPacketOnly: true,
-
-      hydrosphereCarrierUntouched: true,
       htmlUntouched: true,
+      carrierUntouched: true,
       coreChildUntouched: true,
       runtimeStrengthHeld: true,
       finalTerrainPassClaim: false,
       finalVisualPassClaim: false,
+      scriptTagsIncluded: false,
+      cacheKeyScope: false,
 
       status: status(),
       continentMap: getContinentMap({ compact: compact }),
       elevationMap: getElevationMap({ compact: compact }),
       summitMap: getSummitMap({ compact: compact }),
-      hydrationMap: getHydrationMap({ compact: compact })
+      hydrationMap: getHydrationMap({ compact: compact }),
+      surfaceTileMap: getSurfaceTileMap({ compact: compact }),
+      terrainAssetMap: getTerrainAssetMap({ compact: compact }),
+      textureChannelMap: getTextureChannelMap({ compact: compact }),
+      hydrationChannelMap: getHydrationChannelMap({ compact: compact }),
+      futureSocketMap: getFutureSocketMap({ compact: compact })
     };
   }
 
   var API = Object.freeze({
     contract: CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
-    specOps: SPEC_OPS,
     file: FILE,
     continentId: CONTINENT_ID,
     continentName: CONTINENT_NAME,
-    scaleClass: SCALE_CLASS,
+    assetClass: ASSET_CLASS,
+
     status: status,
     getContinentMap: getContinentMap,
     getElevationMap: getElevationMap,
     getSummitMap: getSummitMap,
     getHydrationMap: getHydrationMap,
+    getSurfaceTileMap: getSurfaceTileMap,
+    getTerrainAssetMap: getTerrainAssetMap,
+    getTextureChannelMap: getTextureChannelMap,
+    getHydrationChannelMap: getHydrationChannelMap,
+    getFutureSocketMap: getFutureSocketMap,
     getChildReceivePacket: getChildReceivePacket
   });
 
   window.AUDRALIA_G2_GRATITUDE_CONTINENT_CHILD = API;
   window.AUDRALIA_G2_GRATITUDE_CONTINENT_CHILD_STATUS = status();
-  window.AUDRALIA_G2_GRATITUDE_CONTINENT_CHILD_RECEIVE_PACKET = getChildReceivePacket("published-static-child", { compact: true });
+  window.AUDRALIA_G2_GRATITUDE_CONTINENT_CHILD_RECEIVE_PACKET = getChildReceivePacket("published-static-terrain-definition-asset", { compact: true });
 })();

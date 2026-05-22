@@ -1,0 +1,601 @@
+<!doctype html>
+<html
+  lang="en"
+  data-route="/showroom/globe/audralia/disposition/"
+  data-page="audralia-disposition-verification-harness"
+  data-contract="AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_HTML_BINDING_TNT_v1"
+  data-bound-js-contract="AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_ROUTE_JS_TNT_v1"
+  data-parent-baseline="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMPTION_BASELINE_v1"
+  data-datum-file="/assets/audralia/clean/runtime/audralia.true-globe.datum.js"
+  data-disposition-file="/assets/audralia/clean/runtime/audralia.true-globe.disposition.js"
+  data-multi-stream-render-file="/assets/audralia/clean/runtime/audralia.true-globe.multi-stream.render.js"
+  data-html-function="wisdom"
+  data-js-function="courage"
+  data-runtime-function="strength"
+  data-parent-datum-held="true"
+  data-parent-html-held="true"
+  data-parent-route-js-held="true"
+  data-downstream-held="true"
+  data-no-visual-pass-claim="true"
+>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Audralia · Disposition Harness</title>
+  <meta
+    name="description"
+    content="Standalone Audralia downstream verification harness proving disposition child receive readiness and staging future multi-stream render launchpad."
+  >
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #020711;
+      --panel: rgba(7, 17, 34, 0.88);
+      --panel2: rgba(3, 9, 20, 0.72);
+      --line: rgba(244, 207, 131, 0.18);
+      --text: rgba(238, 244, 255, 0.94);
+      --muted: rgba(238, 244, 255, 0.68);
+      --faint: rgba(238, 244, 255, 0.48);
+      --gold: #f4cf83;
+      --blue: #8dd8ff;
+      --mint: #a7f3c6;
+      --max: 1120px;
+      --shadow: 0 32px 110px rgba(0, 0, 0, 0.42);
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      min-height: 100%;
+      scroll-behavior: smooth;
+      background:
+        radial-gradient(circle at 50% -12%, rgba(78,119,171,0.24), transparent 36rem),
+        radial-gradient(circle at 12% 20%, rgba(244,207,131,0.09), transparent 28rem),
+        radial-gradient(circle at 88% 30%, rgba(141,216,255,0.11), transparent 28rem),
+        linear-gradient(180deg, #061020 0%, var(--bg) 55%, #01040a 100%);
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: -0.015em;
+      -webkit-font-smoothing: antialiased;
+      background:
+        linear-gradient(rgba(141,216,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(141,216,255,0.03) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background: radial-gradient(circle, rgba(255,255,255,0.14) 0 1px, transparent 1.4px);
+      background-size: 230px 250px;
+      opacity: 0.14;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,0.9), rgba(0,0,0,0.46) 62%, rgba(0,0,0,0.12));
+    }
+
+    a, button { color: inherit; font: inherit; }
+    a { text-decoration: none; }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 4px;
+    }
+
+    .skip {
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      z-index: 50;
+      transform: translateY(-160%);
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: var(--mint);
+      color: #06101c;
+      font-weight: 950;
+    }
+
+    .skip:focus { transform: translateY(0); }
+
+    .page {
+      position: relative;
+      z-index: 2;
+      width: min(var(--max), calc(100% - 28px));
+      margin: 0 auto;
+      padding: max(18px, env(safe-area-inset-top)) 0 max(54px, env(safe-area-inset-bottom));
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 0 20px;
+    }
+
+    .brand {
+      display: inline-grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: center;
+      gap: 11px;
+      min-width: 0;
+      color: var(--gold);
+      font-weight: 950;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(244,207,131,0.44);
+      border-radius: 12px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.18), transparent 36%),
+        rgba(244,207,131,0.08);
+      box-shadow: 0 0 22px rgba(244,207,131,0.14);
+    }
+
+    .brand-copy { display: grid; gap: 2px; min-width: 0; }
+
+    .brand-copy strong {
+      color: rgba(255,244,216,0.96);
+      font-size: clamp(1rem, 2.6vw, 1.45rem);
+      line-height: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .brand-copy span {
+      color: rgba(141,216,255,0.82);
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .nav a,
+    .nav button {
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255,255,255,0.11);
+      border-radius: 999px;
+      padding: 0 13px;
+      color: rgba(238,244,255,0.84);
+      background: rgba(255,255,255,0.035);
+      font-size: 0.82rem;
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .nav a:hover,
+    .nav button:hover {
+      color: #06101c;
+      background: linear-gradient(135deg, #fff0b8, var(--gold));
+      border-color: rgba(244,207,131,0.56);
+    }
+
+    .hero,
+    .panel,
+    .receipt {
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 76% 28%, rgba(139,200,255,0.13), transparent 32%),
+        radial-gradient(circle at 18% 20%, rgba(244,207,131,0.12), transparent 30%),
+        linear-gradient(180deg, rgba(8,17,34,0.94), rgba(4,9,20,0.94));
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      border-radius: 34px;
+      padding: clamp(24px, 5vw, 46px);
+    }
+
+    .kicker,
+    .section-title,
+    .label {
+      margin: 0 0 14px;
+      color: var(--gold);
+      font: 900 0.78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 980px;
+      margin: 0;
+      font-size: clamp(2.25rem, 8vw, 5rem);
+      line-height: 0.94;
+      letter-spacing: -0.075em;
+      text-wrap: balance;
+    }
+
+    .lede {
+      max-width: 940px;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.02rem, 2.6vw, 1.24rem);
+      line-height: 1.55;
+    }
+
+    .status-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .status-pill {
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 999px;
+      padding: 0 12px;
+      color: rgba(238,244,255,0.76);
+      background: rgba(255,255,255,0.035);
+      font-size: 0.78rem;
+      font-weight: 850;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .panel {
+      margin-top: 16px;
+      border-radius: 34px;
+      padding: clamp(18px, 3.8vw, 32px);
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .proof-card {
+      min-height: 128px;
+      display: grid;
+      align-content: start;
+      gap: 8px;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 20px;
+      padding: 16px;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(244,207,131,0.08), transparent 9rem),
+        rgba(255,255,255,0.03);
+    }
+
+    .proof-card b {
+      color: var(--mint);
+      font-size: 0.70rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .proof-card span {
+      color: rgba(238,244,255,0.78);
+      font-size: 0.98rem;
+      line-height: 1.35;
+      font-weight: 820;
+    }
+
+    .function-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .function-card {
+      min-height: 164px;
+      display: grid;
+      align-content: start;
+      gap: 10px;
+      border: 1px solid rgba(244,207,131,0.16);
+      border-radius: 22px;
+      padding: 18px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .function-card b {
+      color: var(--gold);
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .function-card strong {
+      color: rgba(255,244,216,0.96);
+      font-size: 1.24rem;
+      line-height: 1.05;
+    }
+
+    .function-card span {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.42;
+    }
+
+    .stream-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .stream-card {
+      min-height: 142px;
+      display: grid;
+      align-content: start;
+      gap: 7px;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255,255,255,0.026);
+      overflow: hidden;
+    }
+
+    .stream-card b {
+      color: var(--gold);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .stream-card span {
+      color: rgba(238,244,255,0.52);
+      font-size: 0.72rem;
+      line-height: 1.24;
+      overflow-wrap: anywhere;
+    }
+
+    .stream-card em {
+      color: rgba(141,216,255,0.78);
+      font-size: 0.84rem;
+      line-height: 1.28;
+      font-style: normal;
+    }
+
+    .stream-card strong {
+      color: rgba(167,243,198,0.92);
+      font-size: 0.84rem;
+      line-height: 1.28;
+    }
+
+    .receipt {
+      margin-top: 16px;
+      border-radius: 28px;
+      padding: 22px 18px;
+    }
+
+    .receipt h2 {
+      margin: 0;
+      color: rgba(238,244,255,0.94);
+      font-size: clamp(1.48rem, 4.6vw, 2.34rem);
+      line-height: 1.04;
+      letter-spacing: -0.06em;
+    }
+
+    .receipt p {
+      max-width: 900px;
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.8vw, 1.16rem);
+      line-height: 1.55;
+    }
+
+    .receipt code {
+      display: block;
+      margin-top: 14px;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 16px;
+      background: rgba(0,0,0,0.28);
+      color: rgba(238,244,255,0.72);
+      font-size: 0.78rem;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .footer {
+      margin-top: 20px;
+      padding: 20px 0 0;
+      color: var(--faint);
+      font-size: 0.82rem;
+      text-align: center;
+    }
+
+    @media (max-width: 980px) {
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .nav { justify-content: flex-start; }
+      .proof-grid,
+      .function-grid { grid-template-columns: 1fr; }
+      .stream-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 620px) {
+      .page { width: min(100% - 18px, var(--max)); }
+      .hero,
+      .panel,
+      .receipt { border-radius: 24px; }
+      .nav { display: grid; grid-template-columns: 1fr; width: 100%; }
+      .nav a,
+      .nav button { width: 100%; }
+      .stream-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip" href="#harness-main">Skip to harness</a>
+
+  <div class="page">
+    <header class="topbar">
+      <a class="brand" href="/showroom/globe/audralia/disposition/" aria-current="page">
+        <span class="brand-mark" aria-hidden="true">AU</span>
+        <span class="brand-copy">
+          <span>Audralia</span>
+          <strong>Disposition Harness</strong>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Harness navigation">
+        <a href="/showroom/globe/audralia/">Return to Audralia</a>
+        <a href="/showroom/globe/">Return to Globe</a>
+        <a href="/gauges/">Triple G</a>
+        <button type="button" data-harness-refresh>Run Harness</button>
+      </nav>
+    </header>
+
+    <main id="harness-main">
+      <section class="hero">
+        <p class="kicker">Audralia · Disposition Verification Harness</p>
+        <h1>Downstream receive proof without parent renewal.</h1>
+
+        <p class="lede">
+          This standalone route tests whether the first passive downstream child can receive the completed cloned datum receive-map while datum, parent HTML, and parent route JS remain held. It also stages the future multi-stream render launchpad without activating visual render.
+        </p>
+
+        <div class="status-row">
+          <span class="status-pill">Wisdom HTML</span>
+          <span class="status-pill">Courage JS</span>
+          <span class="status-pill">Strength runtime held</span>
+          <span class="status-pill">No visual pass</span>
+        </div>
+      </section>
+
+      <section class="panel" aria-label="Function assignment">
+        <p class="section-title">Primary functions</p>
+
+        <div class="function-grid">
+          <article class="function-card">
+            <b>HTML</b>
+            <strong>Wisdom</strong>
+            <span>Chooses, names, binds, frames, declares authority, and provides the public proof surface.</span>
+          </article>
+
+          <article class="function-card">
+            <b>JS</b>
+            <strong>Courage</strong>
+            <span>Acts, loads, verifies, enters uncertainty, reports pass/fail, and connects child to parent.</span>
+          </article>
+
+          <article class="function-card">
+            <b>Runtime</b>
+            <strong>Strength</strong>
+            <span>Carries motion later. For this harness, Strength remains held as the future multi-stream endurance carrier.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel" aria-label="Harness proof">
+        <p class="section-title">Verification result</p>
+
+        <div class="proof-grid">
+          <article class="proof-card"><b>Phase</b><span data-harness-phase>boot pending</span></article>
+          <article class="proof-card"><b>Failure</b><span data-harness-failure>BOOT_PENDING · boot pending</span></article>
+          <article class="proof-card"><b>Datum</b><span data-harness-datum>pending harness JS</span></article>
+          <article class="proof-card"><b>Disposition Child</b><span data-harness-disposition>pending harness JS</span></article>
+          <article class="proof-card"><b>Receive Map</b><span data-harness-receive-map>pending harness JS</span></article>
+          <article class="proof-card"><b>NEWS</b><span data-harness-news>pending harness JS</span></article>
+          <article class="proof-card"><b>Child Packet</b><span data-harness-child-packet>pending harness JS</span></article>
+          <article class="proof-card"><b>Disposition</b><span data-harness-disposition-ready>pending harness JS</span></article>
+          <article class="proof-card"><b>Render</b><span data-harness-render>held · no visual pass</span></article>
+          <article class="proof-card"><b>Parent Chain</b><span data-harness-parent-chain>unchanged · datum / HTML / route JS held</span></article>
+          <article class="proof-card"><b>Multi-Stream Launchpad</b><span data-harness-launchpad>held · awaiting receive proof</span></article>
+          <article class="proof-card"><b>Runtime / Strength</b><span data-harness-runtime>Strength held · no render activation</span></article>
+        </div>
+      </section>
+
+      <section class="panel" aria-label="Multi-stream launchpad">
+        <p class="section-title">Multi-stream launchpad</p>
+        <div class="stream-grid" data-harness-streams>
+          <article class="stream-card"><b>Datum Stream</b><span>/assets/audralia/clean/runtime/audralia.true-globe.datum.js</span><em>active parent math</em><strong>pending</strong></article>
+          <article class="stream-card"><b>Disposition Stream</b><span>/assets/audralia/clean/runtime/audralia.true-globe.disposition.js</span><em>passive child receive proof</em><strong>pending</strong></article>
+          <article class="stream-card"><b>Terrain Stream</b><span>future child</span><em>future landform pressure</em><strong>held</strong></article>
+          <article class="stream-card"><b>Moisture Stream</b><span>future child</span><em>future hydration pressure</em><strong>held</strong></article>
+          <article class="stream-card"><b>Surface Stream</b><span>future child</span><em>future material expression</em><strong>held</strong></article>
+          <article class="stream-card"><b>Cloud Stream</b><span>future child</span><em>future atmospheric expression</em><strong>held</strong></article>
+          <article class="stream-card"><b>Continent Stream</b><span>future child</span><em>future landmass expression</em><strong>held</strong></article>
+          <article class="stream-card"><b>Multi-Stream Render</b><span>/assets/audralia/clean/runtime/audralia.true-globe.multi-stream.render.js</span><em>future Strength/runtime carrier</em><strong>held</strong></article>
+        </div>
+      </section>
+
+      <section class="receipt" aria-label="Harness route receipt">
+        <p class="label">Route receipt</p>
+        <h2>Standalone harness route. Parent chain held.</h2>
+        <p>
+          The route tests downstream receive without renewing the completed Audralia parent route. The harness may load datum and disposition child assets, then report pass/fail. Multi-stream render remains staged only.
+        </p>
+
+        <code>AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_HTML_BINDING_TNT_v1
+route=/showroom/globe/audralia/disposition/
+html=/showroom/globe/audralia/disposition/index.html
+bound_js_contract=AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_ROUTE_JS_TNT_v1
+parent_baseline=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMPTION_BASELINE_v1
+datum_file=/assets/audralia/clean/runtime/audralia.true-globe.datum.js
+disposition_file=/assets/audralia/clean/runtime/audralia.true-globe.disposition.js
+multi_stream_render_file=/assets/audralia/clean/runtime/audralia.true-globe.multi-stream.render.js
+html_function=wisdom
+js_function=courage
+runtime_function=strength
+parent_datum_held=true
+parent_html_held=true
+parent_route_js_held=true
+renders_nothing=true
+no_canvas_creation=true
+downstream_held=true
+no_visual_pass_claim=true</code>
+      </section>
+    </main>
+
+    <footer class="footer">
+      Diamond Gate Bridge · Audralia · Disposition Harness · Wisdom / Courage / Strength · downstream held.
+    </footer>
+  </div>
+
+  <script
+    src="/showroom/globe/audralia/disposition/index.js?v=AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_ROUTE_JS_TNT_v1"
+    defer
+    data-audralia-harness-js
+    data-contract="AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_ROUTE_JS_TNT_v1"
+    data-html-contract="AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_HTML_BINDING_TNT_v1"
+    data-parent-baseline="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMPTION_BASELINE_v1"
+    data-html-function="wisdom"
+    data-js-function="courage"
+    data-runtime-function="strength"
+    data-downstream-held="true"
+  ></script>
+</body>
+</html>

@@ -1,15 +1,15 @@
 // /assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
-// AUDRALIA_G2_PLANET_BODY_TRUE_CANVAS_GLOBE_CARRIER_ENGINEERING_LENS_TNT_v1
+// AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_TNT_v1
 // Full-file replacement.
-// Purpose: route-local true canvas Audralia planet body inspection carrier.
-// Donor logic: /showroom/globe/audralia/index.js
-// Does not own: parent template plate, cockpit route, root Globe route, Runtime / Strength, final visual pass, generated image, GraphicBox, Earth substitution, or Australia drift.
+// Female carrier first: this JS defines the route-local canvas carrier.
+// Male selector second: HTML chooses this JS and provides the stage/mount.
+// JS must not inject controls, chips, readouts, or jargon into the planet stage.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_G2_PLANET_BODY_TRUE_CANVAS_GLOBE_CARRIER_ENGINEERING_LENS_TNT_v1";
-  var SPEC_OPS = "AUDRALIA_G2_PLANET_BODY_TRUE_CANVAS_GLOBE_CARRIER_ENGINEERING_LENS_SPEC_OPS_v1";
+  var CONTRACT = "AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_TNT_v1";
+  var SPEC_OPS = "AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_SPEC_OPS_v1";
   var DONOR_CONTRACT = "AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1";
   var ROUTE = "/showroom/globe/audralia/planet/";
   var FILE = "/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js";
@@ -29,67 +29,57 @@
 
   var LENSES = Object.freeze({
     body: {
-      key: "body",
       title: "Body View",
       anchor: "North · Datum Body",
-      copy: "One coherent Audralia body under true canvas inspection. Drag to inspect the carrier."
+      copy: "Clean planet-body inspection. The canvas carrier is active; Runtime / Strength remains held."
     },
     surface: {
-      key: "surface",
       title: "Surface View",
       anchor: "Northeast / East · Terrain + Material",
-      copy: "Terrain mass and mineral pressure are emphasized inside the same canvas body."
+      copy: "Surface view emphasizes land mass, mineral pressure, and terrain structure without replacing the planet."
     },
     hydration: {
-      key: "hydration",
       title: "Hydration View",
       anchor: "Southeast / South · Ocean + Coast",
-      copy: "Ocean depth, basin pressure, shelf edge, and coast logic are emphasized."
+      copy: "Hydration view emphasizes ocean depth, basin pressure, shelf edges, and coast logic."
     },
     lattice: {
-      key: "lattice",
       title: "Lattice View",
       anchor: "West · 16 × 16 / 256",
-      copy: "The 256 inspection lattice appears through Engineering only. It does not replace the planet."
+      copy: "Lattice view reveals the 256 inspection field through Engineering only. It does not replace the planet."
     },
     receipt: {
-      key: "receipt",
       title: "Receipt View",
       anchor: "Northwest · Inspection Receipt",
-      copy: "Route-local proof is shown while Runtime / Strength remains held."
+      copy: "Receipt view confirms the paired file law: JS carrier first, HTML selector second, clean stage protected."
     }
   });
 
   var SURFACE_POLYGONS = Object.freeze([
     {
-      family: "western-mass",
-      fill: "rgba(112,126,104,0.90)",
-      shelf: "rgba(167,243,198,0.28)",
-      points: [[-128, 28],[-112, 43],[-88, 50],[-57, 42],[-41, 25],[-51, 6],[-79, -10],[-111, -5],[-135, 11]]
+      fill: "rgba(109,128,104,0.88)",
+      shelf: "rgba(167,243,198,0.22)",
+      points: [[-132, 29], [-116, 45], [-87, 52], [-55, 43], [-38, 24], [-51, 4], [-82, -11], [-115, -5], [-138, 12]]
     },
     {
-      family: "northern-highland",
-      fill: "rgba(145,143,122,0.84)",
-      shelf: "rgba(167,243,198,0.20)",
-      points: [[8, 54],[34, 66],[72, 58],[96, 39],[91, 18],[57, 7],[23, 16],[4, 34]]
-    },
-    {
-      family: "central-continent",
-      fill: "rgba(76,99,84,0.88)",
-      shelf: "rgba(167,243,198,0.24)",
-      points: [[-12, 15],[18, 33],[54, 27],[83, 8],[102, -18],[81, -43],[39, -55],[-4, -45],[-31, -20]]
-    },
-    {
-      family: "southern-craton",
-      fill: "rgba(99,95,83,0.84)",
+      fill: "rgba(143,139,113,0.82)",
       shelf: "rgba(167,243,198,0.18)",
-      points: [[-92, -28],[-62, -16],[-31, -26],[-19, -49],[-45, -68],[-80, -63],[-108, -47]]
+      points: [[6, 54], [35, 67], [73, 58], [99, 38], [91, 17], [57, 6], [22, 17], [3, 35]]
     },
     {
-      family: "eastern-arc",
-      fill: "rgba(132,134,113,0.78)",
+      fill: "rgba(74,100,86,0.86)",
+      shelf: "rgba(167,243,198,0.22)",
+      points: [[-12, 15], [18, 34], [54, 27], [84, 8], [102, -18], [80, -44], [39, -56], [-5, -45], [-32, -19]]
+    },
+    {
+      fill: "rgba(102,96,82,0.80)",
       shelf: "rgba(167,243,198,0.16)",
-      points: [[118, 16],[144, 7],[157, -18],[142, -42],[111, -39],[96, -13]]
+      points: [[-93, -28], [-62, -16], [-30, -26], [-18, -50], [-46, -69], [-81, -63], [-109, -47]]
+    },
+    {
+      fill: "rgba(128,134,111,0.76)",
+      shelf: "rgba(167,243,198,0.14)",
+      points: [[118, 17], [145, 7], [158, -18], [143, -43], [111, -40], [95, -13]]
     }
   ]);
 
@@ -136,11 +126,11 @@
   };
 
   if (
-    window.__AUDRALIA_G2_TRUE_CANVAS_PLANET_BODY_CONTROLLER__ &&
-    typeof window.__AUDRALIA_G2_TRUE_CANVAS_PLANET_BODY_CONTROLLER__.stop === "function"
+    window.__AUDRALIA_G2_PLANET_BODY_CLEAN_PAIR_CONTROLLER__ &&
+    typeof window.__AUDRALIA_G2_PLANET_BODY_CLEAN_PAIR_CONTROLLER__.stop === "function"
   ) {
     try {
-      window.__AUDRALIA_G2_TRUE_CANVAS_PLANET_BODY_CONTROLLER__.stop();
+      window.__AUDRALIA_G2_PLANET_BODY_CLEAN_PAIR_CONTROLLER__.stop();
     } catch (_error) {}
   }
 
@@ -152,10 +142,16 @@
     return typeof window !== "undefined" && typeof document !== "undefined";
   }
 
+  function normalizeRoute(value) {
+    var text = String(value || "");
+    if (!text) return "";
+    return text.endsWith("/") ? text : text + "/";
+  }
+
   function routeAllowed() {
     if (!hasDOM()) return false;
-    var htmlRoute = document.documentElement.getAttribute("data-route") || "";
-    var path = window.location ? window.location.pathname : "";
+    var htmlRoute = normalizeRoute(document.documentElement.getAttribute("data-route") || "");
+    var path = normalizeRoute(window.location ? window.location.pathname : "");
     return htmlRoute === ROUTE || path === ROUTE;
   }
 
@@ -190,7 +186,9 @@
   function setDataset(key, value) {
     var text = String(value);
     if (state.datasetCache[key] === text) return;
+
     state.datasetCache[key] = text;
+
     try {
       document.documentElement.dataset[key] = text;
       if (document.body) document.body.dataset[key] = text;
@@ -207,13 +205,18 @@
 
   function recordError(scope, error) {
     var message = error && error.message ? error.message : String(error || "unknown");
-    state.errors.push({ scope: scope, message: message, time: new Date().toISOString() });
+    state.errors.push({
+      scope: scope,
+      message: message,
+      time: new Date().toISOString()
+    });
   }
 
   function lonLatPoint(lonDeg, latDeg) {
     var lon = lonDeg * Math.PI / 180;
     var lat = latDeg * Math.PI / 180;
     var clat = Math.cos(lat);
+
     return {
       x: clat * Math.cos(lon),
       y: Math.sin(lat),
@@ -295,7 +298,13 @@
 
     for (radial = 0; radial < RADIAL_NODES; radial += 1) {
       for (band = 0; band < FIBONACCI_BANDS - 1; band += 1) {
-        spineLinks.push(link(seat(band, radial), seat(band + 1, radial), "spine", radial % 4 === 0, radial % 2 === 0));
+        spineLinks.push(link(
+          seat(band, radial),
+          seat(band + 1, radial),
+          "spine",
+          radial % 4 === 0,
+          radial % 2 === 0
+        ));
       }
     }
 
@@ -305,10 +314,22 @@
       for (radial = 0; radial < RADIAL_NODES; radial += 1) {
         var priority = radial % 4 === 0 || band % 4 === 0;
 
-        fibonacciLinks.push(link(seat(band, radial), seat(band + 1, radial + offset), "fibonacci-forward", priority, radial % 2 === 0 || band % 2 === 0));
+        fibonacciLinks.push(link(
+          seat(band, radial),
+          seat(band + 1, radial + offset),
+          "fibonacci-forward",
+          priority,
+          radial % 2 === 0 || band % 2 === 0
+        ));
 
         if (band % 2 === 0) {
-          fibonacciReturnLinks.push(link(seat(band, radial), seat(band + 1, radial - offset), "fibonacci-return", priority, radial % 2 === 0 || band % 2 === 0));
+          fibonacciReturnLinks.push(link(
+            seat(band, radial),
+            seat(band + 1, radial - offset),
+            "fibonacci-return",
+            priority,
+            radial % 2 === 0 || band % 2 === 0
+          ));
         }
       }
     }
@@ -356,7 +377,7 @@
     return {
       centerX: width / 2,
       centerY: height * 0.43,
-      radius: minSide * (width / Math.max(1, state.dpr) < 680 ? 0.36 : 0.39),
+      radius: minSide * (width / Math.max(1, state.dpr) < 680 ? 0.365 : 0.395),
       cameraDistance: 3.9
     };
   }
@@ -388,6 +409,17 @@
     ctx.clip();
   }
 
+  function roundedRect(ctx, x, y, width, height, radius) {
+    var r = Math.min(radius, width / 2, height / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + width, y, x + width, y + height, r);
+    ctx.arcTo(x + width, y + height, x, y + height, r);
+    ctx.arcTo(x, y + height, x, y, r);
+    ctx.arcTo(x, y, x + width, y, r);
+    ctx.closePath();
+  }
+
   function drawCarrier() {
     var ctx = state.ctx;
     var m = metrics();
@@ -397,11 +429,11 @@
 
     ctx.save();
 
-    var ocean = ctx.createRadialGradient(cx - r * 0.28, cy - r * 0.34, 0, cx, cy, r * 1.18);
-    ocean.addColorStop(0.00, "rgba(188,244,255,0.96)");
-    ocean.addColorStop(0.16, "rgba(70,174,219,0.90)");
-    ocean.addColorStop(0.42, "rgba(18,91,162,0.96)");
-    ocean.addColorStop(0.70, "rgba(4,36,96,1)");
+    var ocean = ctx.createRadialGradient(cx - r * 0.30, cy - r * 0.36, 0, cx, cy, r * 1.18);
+    ocean.addColorStop(0.00, "rgba(190,246,255,0.96)");
+    ocean.addColorStop(0.14, "rgba(70,174,219,0.90)");
+    ocean.addColorStop(0.40, "rgba(18,90,160,0.96)");
+    ocean.addColorStop(0.70, "rgba(4,35,96,1)");
     ocean.addColorStop(1.00, "rgba(1,8,28,1)");
 
     ctx.beginPath();
@@ -412,22 +444,21 @@
     ctx.save();
     clipSphere();
 
-    var bandGradient = ctx.createLinearGradient(cx - r, cy - r, cx + r, cy + r);
-    bandGradient.addColorStop(0.00, "rgba(255,255,255,0.04)");
-    bandGradient.addColorStop(0.34, "rgba(255,255,255,0)");
-    bandGradient.addColorStop(0.58, "rgba(0,0,0,0.10)");
-    bandGradient.addColorStop(1.00, "rgba(0,0,0,0.28)");
+    var directional = ctx.createLinearGradient(cx - r, cy - r, cx + r, cy + r);
+    directional.addColorStop(0.00, "rgba(255,255,255,0.055)");
+    directional.addColorStop(0.36, "rgba(255,255,255,0.000)");
+    directional.addColorStop(0.63, "rgba(0,0,0,0.12)");
+    directional.addColorStop(1.00, "rgba(0,0,0,0.30)");
 
-    ctx.fillStyle = bandGradient;
+    ctx.fillStyle = directional;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
-
     ctx.restore();
 
-    var depth = ctx.createRadialGradient(cx + r * 0.35, cy + r * 0.32, r * 0.10, cx, cy, r * 1.08);
+    var depth = ctx.createRadialGradient(cx + r * 0.36, cy + r * 0.32, r * 0.10, cx, cy, r * 1.08);
     depth.addColorStop(0.00, "rgba(0,0,0,0)");
     depth.addColorStop(0.50, "rgba(0,0,0,0.10)");
-    depth.addColorStop(0.82, "rgba(0,0,0,0.38)");
-    depth.addColorStop(1.00, "rgba(0,0,0,0.70)");
+    depth.addColorStop(0.82, "rgba(0,0,0,0.40)");
+    depth.addColorStop(1.00, "rgba(0,0,0,0.72)");
 
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, TAU);
@@ -445,6 +476,12 @@
     ctx.fillStyle = glow;
     ctx.fill();
 
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 1.003, 0, TAU);
+    ctx.strokeStyle = "rgba(170,226,255,0.18)";
+    ctx.lineWidth = Math.max(0.8, state.dpr * 0.8);
+    ctx.stroke();
+
     ctx.restore();
   }
 
@@ -453,8 +490,7 @@
     var front = 0;
 
     for (var i = 0; i < points.length; i += 1) {
-      var point = lonLatPoint(points[i][0], points[i][1]);
-      var p = projectPoint(point);
+      var p = projectPoint(lonLatPoint(points[i][0], points[i][1]));
       projected.push(p);
       if (p.frontFacing) front += 1;
     }
@@ -462,7 +498,7 @@
     return { projected: projected, front: front };
   }
 
-  function drawSurfacePolygon(poly, mode) {
+  function drawSurfacePolygon(poly) {
     var ctx = state.ctx;
     var result = polygonProjection(poly.points);
     if (result.front < 2) return;
@@ -479,102 +515,87 @@
     }
 
     ctx.closePath();
+
     ctx.fillStyle = poly.fill;
-    ctx.globalAlpha = mode === "surface" ? 0.96 : 0.80;
+    ctx.globalAlpha = state.activeLens === "surface" ? 0.98 : 0.82;
     ctx.fill();
 
-    ctx.lineWidth = Math.max(1, state.dpr * 1.15);
-    ctx.strokeStyle = mode === "hydration" ? "rgba(167,243,198,0.42)" : poly.shelf;
-    ctx.globalAlpha = mode === "hydration" ? 0.78 : 0.48;
+    ctx.strokeStyle = state.activeLens === "hydration" ? "rgba(167,243,198,0.44)" : poly.shelf;
+    ctx.lineWidth = Math.max(1, state.dpr * (state.activeLens === "hydration" ? 1.8 : 1.05));
+    ctx.globalAlpha = state.activeLens === "hydration" ? 0.76 : 0.48;
     ctx.stroke();
 
     ctx.restore();
   }
 
-  function drawSurfaceStrokes(mode) {
+  function drawProjectedPath(points, stroke, width, alpha) {
     var ctx = state.ctx;
-    var paths = [
-      [[-120, 33],[-94, 42],[-64, 39],[-48, 22]],
-      [[16, 51],[42, 55],[76, 42],[90, 24]],
-      [[-5, 9],[30, 18],[66, 5],[92, -24]],
-      [[-78, -31],[-54, -41],[-30, -55]],
-      [[35, -35],[58, -45],[88, -36]]
-    ];
+    var projected = points.map(function (pair) {
+      return projectPoint(lonLatPoint(pair[0], pair[1]));
+    });
+
+    if (projected.filter(function (p) { return p.frontFacing; }).length < 2) return;
 
     ctx.save();
     clipSphere();
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
+    ctx.beginPath();
 
-    for (var i = 0; i < paths.length; i += 1) {
-      var projected = paths[i].map(function (pair) {
-        return projectPoint(lonLatPoint(pair[0], pair[1]));
-      });
-
-      if (projected.filter(function (p) { return p.frontFacing; }).length < 2) continue;
-
-      ctx.beginPath();
-      for (var j = 0; j < projected.length; j += 1) {
-        if (j === 0) ctx.moveTo(projected[j].x, projected[j].y);
-        else ctx.lineTo(projected[j].x, projected[j].y);
-      }
-
-      ctx.strokeStyle = mode === "surface" ? "rgba(255,244,216,0.30)" : "rgba(255,244,216,0.16)";
-      ctx.lineWidth = Math.max(1.2, state.dpr * (mode === "surface" ? 1.8 : 1.2));
-      ctx.stroke();
+    for (var i = 0; i < projected.length; i += 1) {
+      if (i === 0) ctx.moveTo(projected[i].x, projected[i].y);
+      else ctx.lineTo(projected[i].x, projected[i].y);
     }
 
-    ctx.restore();
-  }
-
-  function drawOceanShelves(mode) {
-    var ctx = state.ctx;
-    var arcs = [
-      [[-136, 7],[-111, -5],[-80, -10],[-52, 6],[-40, 22]],
-      [[5, 31],[23, 16],[57, 7],[91, 18],[96, 39]],
-      [[-31, -20],[-4, -45],[39, -55],[81, -43],[102, -18]],
-      [[-108, -47],[-80, -63],[-45, -68],[-19, -49]]
-    ];
-
-    ctx.save();
-    clipSphere();
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = width;
+    ctx.globalAlpha = alpha;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
-
-    for (var i = 0; i < arcs.length; i += 1) {
-      var points = arcs[i].map(function (pair) {
-        return projectPoint(lonLatPoint(pair[0], pair[1]));
-      });
-
-      if (points.filter(function (p) { return p.frontFacing; }).length < 2) continue;
-
-      ctx.beginPath();
-      for (var j = 0; j < points.length; j += 1) {
-        if (j === 0) ctx.moveTo(points[j].x, points[j].y);
-        else ctx.lineTo(points[j].x, points[j].y);
-      }
-
-      ctx.strokeStyle = mode === "hydration" ? "rgba(167,243,198,0.44)" : "rgba(167,243,198,0.18)";
-      ctx.lineWidth = Math.max(1, state.dpr * (mode === "hydration" ? 2.2 : 1.2));
-      ctx.stroke();
-    }
-
+    ctx.stroke();
     ctx.restore();
   }
 
   function drawAudraliaSurface() {
-    var lens = state.activeLens;
+    var i;
 
-    for (var i = 0; i < SURFACE_POLYGONS.length; i += 1) {
-      drawSurfacePolygon(SURFACE_POLYGONS[i], lens);
+    for (i = 0; i < SURFACE_POLYGONS.length; i += 1) {
+      drawSurfacePolygon(SURFACE_POLYGONS[i]);
     }
 
-    drawOceanShelves(lens);
-    drawSurfaceStrokes(lens);
+    var hydration = state.activeLens === "hydration";
+    var surface = state.activeLens === "surface";
+
+    [
+      [[-136, 7], [-111, -5], [-80, -10], [-52, 6], [-40, 22]],
+      [[5, 31], [23, 16], [57, 7], [91, 18], [96, 39]],
+      [[-31, -20], [-4, -45], [39, -55], [81, -43], [102, -18]],
+      [[-108, -47], [-80, -63], [-45, -68], [-19, -49]]
+    ].forEach(function (path) {
+      drawProjectedPath(
+        path,
+        hydration ? "rgba(167,243,198,0.46)" : "rgba(167,243,198,0.16)",
+        Math.max(1, state.dpr * (hydration ? 2.2 : 1.1)),
+        hydration ? 0.84 : 0.46
+      );
+    });
+
+    [
+      [[-120, 33], [-94, 42], [-64, 39], [-48, 22]],
+      [[16, 51], [42, 55], [76, 42], [90, 24]],
+      [[-5, 9], [30, 18], [66, 5], [92, -24]],
+      [[-78, -31], [-54, -41], [-30, -55]],
+      [[35, -35], [58, -45], [88, -36]]
+    ].forEach(function (path) {
+      drawProjectedPath(
+        path,
+        surface ? "rgba(255,244,216,0.32)" : "rgba(255,244,216,0.13)",
+        Math.max(1.1, state.dpr * (surface ? 1.8 : 1.0)),
+        surface ? 0.80 : 0.42
+      );
+    });
   }
 
   function drawReferenceLines() {
-    if (state.activeLens !== "body" && state.activeLens !== "surface" && state.activeLens !== "hydration") return;
+    if (state.activeLens === "receipt") return;
 
     var ctx = state.ctx;
     var equator = [];
@@ -607,8 +628,9 @@
 
     ctx.save();
     clipSphere();
-    strokeLine(equator, "rgba(244,207,131,0.22)", Math.max(0.6, state.dpr * 0.55));
-    strokeLine(meridian, "rgba(141,216,255,0.14)", Math.max(0.5, state.dpr * 0.45));
+    ctx.globalAlpha = state.activeLens === "body" ? 0.42 : 0.70;
+    strokeLine(equator, "rgba(244,207,131,0.24)", Math.max(0.55, state.dpr * 0.50));
+    strokeLine(meridian, "rgba(141,216,255,0.14)", Math.max(0.45, state.dpr * 0.42));
     ctx.restore();
   }
 
@@ -618,25 +640,25 @@
 
     if (link.family === "fibonacci-forward") {
       return front
-        ? "rgba(244,207,131," + clamp(0.44 + z * 0.12, 0.26, 0.72).toFixed(3) + ")"
-        : "rgba(244,207,131,0.10)";
+        ? "rgba(244,207,131," + clamp(0.42 + z * 0.12, 0.24, 0.70).toFixed(3) + ")"
+        : "rgba(244,207,131,0.08)";
     }
 
     if (link.family === "fibonacci-return") {
       return front
-        ? "rgba(184,238,255," + clamp(0.18 + z * 0.08, 0.10, 0.34).toFixed(3) + ")"
-        : "rgba(184,238,255,0.06)";
+        ? "rgba(184,238,255," + clamp(0.17 + z * 0.08, 0.10, 0.32).toFixed(3) + ")"
+        : "rgba(184,238,255,0.05)";
     }
 
     if (link.major) {
       return front
-        ? "rgba(244,207,131," + clamp(0.42 + z * 0.10, 0.24, 0.66).toFixed(3) + ")"
-        : "rgba(244,207,131,0.09)";
+        ? "rgba(244,207,131," + clamp(0.40 + z * 0.10, 0.22, 0.64).toFixed(3) + ")"
+        : "rgba(244,207,131,0.08)";
     }
 
     return front
-      ? "rgba(112,199,255," + clamp(0.22 + z * 0.08, 0.12, 0.38).toFixed(3) + ")"
-      : "rgba(112,199,255,0.055)";
+      ? "rgba(112,199,255," + clamp(0.20 + z * 0.08, 0.10, 0.36).toFixed(3) + ")"
+      : "rgba(112,199,255,0.045)";
   }
 
   function drawLinks(links, reduced) {
@@ -668,8 +690,8 @@
       if (reduced && !seat.major) continue;
 
       var p = projectPoint(seat);
-      var alpha = p.frontFacing ? (seat.major ? 0.84 : 0.58) : (seat.major ? 0.18 : 0.08);
-      var radius = seat.major ? 2.35 : seat.secondary ? 1.55 : 1.18;
+      var alpha = p.frontFacing ? (seat.major ? 0.82 : 0.54) : (seat.major ? 0.16 : 0.06);
+      var radius = seat.major ? 2.2 : seat.secondary ? 1.5 : 1.1;
 
       ctx.beginPath();
       ctx.arc(p.x, p.y, Math.max(1, radius * state.dpr * p.perspective), 0, TAU);
@@ -697,8 +719,8 @@
 
     var ctx = state.ctx;
     var m = metrics();
-    var w = Math.min(state.width * 0.62, m.radius * 1.58);
-    var h = Math.min(state.height * 0.25, m.radius * 0.62);
+    var w = Math.min(state.width * 0.62, m.radius * 1.62);
+    var h = Math.min(state.height * 0.24, m.radius * 0.62);
     var x = m.centerX - w / 2;
     var y = m.centerY - h / 2;
 
@@ -706,23 +728,22 @@
     ctx.fillStyle = "rgba(2,8,20,0.62)";
     ctx.strokeStyle = "rgba(244,207,131,0.38)";
     ctx.lineWidth = Math.max(1, state.dpr);
-    ctx.beginPath();
-    ctx.roundRect(x, y, w, h, 24 * state.dpr);
+    roundedRect(ctx, x, y, w, h, 24 * state.dpr);
     ctx.fill();
     ctx.stroke();
 
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.font = "900 " + Math.max(16, 18 * state.dpr) + "px ui-monospace, monospace";
+    ctx.font = "900 " + Math.max(15, 17 * state.dpr) + "px ui-monospace, monospace";
     ctx.fillStyle = "rgba(244,207,131,0.92)";
-    ctx.fillText("TRUE CANVAS CARRIER", m.centerX, y + h * 0.34);
+    ctx.fillText("JS FEMALE CARRIER FIRST", m.centerX, y + h * 0.32);
 
-    ctx.font = "900 " + Math.max(12, 13 * state.dpr) + "px ui-monospace, monospace";
+    ctx.font = "900 " + Math.max(11, 12 * state.dpr) + "px ui-monospace, monospace";
     ctx.fillStyle = "rgba(238,244,255,0.82)";
-    ctx.fillText("RUNTIME / STRENGTH HELD", m.centerX, y + h * 0.58);
+    ctx.fillText("HTML MALE SELECTOR SECOND", m.centerX, y + h * 0.56);
 
     ctx.fillStyle = "rgba(141,216,255,0.82)";
-    ctx.fillText("NO FINAL VISUAL PASS CLAIM", m.centerX, y + h * 0.75);
+    ctx.fillText("NO STAGE UI INJECTION", m.centerX, y + h * 0.76);
     ctx.restore();
   }
 
@@ -758,12 +779,12 @@
       drawDiagnosticLattice(state.pointerActive);
     } else if (state.activeLens === "receipt") {
       state.ctx.save();
-      state.ctx.globalAlpha = 0.16;
+      state.ctx.globalAlpha = 0.14;
       drawDiagnosticLattice(true);
       state.ctx.restore();
     } else {
       state.ctx.save();
-      state.ctx.globalAlpha = 0.08;
+      state.ctx.globalAlpha = 0.06;
       drawDiagnosticLattice(true);
       state.ctx.restore();
     }
@@ -771,7 +792,6 @@
     drawReceiptOverlay();
 
     state.renderCount += 1;
-
     publishStatus(false);
 
     if (state.settleFrames > 0) state.settleFrames -= 1;
@@ -802,15 +822,15 @@
     setText("[data-audralia-planet-lens-anchor]", LENSES[lens].anchor);
     setText("[data-audralia-planet-lens-title]", LENSES[lens].title);
     setText("[data-audralia-planet-lens-copy]", LENSES[lens].copy);
-    setText("[data-audralia-planet-carrier-status]", "true canvas carrier · " + LENSES[lens].title);
-    setText("[data-audralia-planet-carrier-proof]", "one canvas · donor mechanics adopted · SVG/cartoon carrier retired · Engineering controls below stage");
+    setText("[data-audralia-planet-carrier-status]", "JS female carrier · " + LENSES[lens].title);
+    setText("[data-audralia-planet-carrier-proof]", "one canvas · no injected stage controls · HTML selector bound · Runtime / Strength held");
 
     setDataset("audraliaPlanetActiveLens", lens);
     publishStatus(true);
-    requestRender(lens === "body" ? 6 : 12);
+    requestRender(lens === "body" ? 8 : 14);
   }
 
-  function bindLensControls() {
+  function bindExistingEngineeringControls() {
     Array.prototype.slice.call(document.querySelectorAll("[data-audralia-planet-lens]")).forEach(function (button) {
       button.addEventListener("click", function () {
         setLens(button.dataset.audraliaPlanetLens);
@@ -924,6 +944,7 @@
 
     canvases.forEach(function (canvas) {
       if (canvas === selected) return;
+
       try {
         canvas.remove();
         state.duplicateCanvasRemoved += 1;
@@ -931,10 +952,10 @@
     });
 
     state.canvas = selected;
-    state.canvas.setAttribute("data-audralia-g2-true-canvas-planet", CONTRACT);
-    state.canvas.setAttribute("data-donor-contract", DONOR_CONTRACT);
-    state.canvas.setAttribute("data-svg-cartoon-carrier-retired", "true");
-    state.canvas.setAttribute("data-engineering-controls-below-stage", "true");
+    state.canvas.setAttribute("data-audralia-g2-js-female-canvas-carrier", CONTRACT);
+    state.canvas.setAttribute("data-js-female-first", "true");
+    state.canvas.setAttribute("data-html-male-second", "true");
+    state.canvas.setAttribute("data-no-injected-stage-controls", "true");
     state.canvas.setAttribute("data-runtime-strength-held", "true");
     state.canvas.setAttribute("data-final-visual-pass-claim", "false");
 
@@ -955,7 +976,7 @@
 
     var dpr = Math.max(1, Math.min(1.85, window.devicePixelRatio || 1));
     var width = Math.max(320, Math.floor(rect.width * dpr));
-    var height = Math.max(520, Math.floor(rect.height * dpr));
+    var height = Math.max(560, Math.floor(rect.height * dpr));
 
     state.rect = {
       left: rect.left,
@@ -972,7 +993,7 @@
     state.canvas.width = width;
     state.canvas.height = height;
 
-    requestRender(8);
+    requestRender(10);
     return true;
   }
 
@@ -1004,13 +1025,13 @@
 
     window.addEventListener("resize", function () {
       measureStage();
-      requestRender(8);
+      requestRender(10);
     }, signal ? { signal: signal, passive: true } : { passive: true });
 
     window.addEventListener("orientationchange", function () {
       setTimeout(function () {
         measureStage();
-        requestRender(8);
+        requestRender(10);
       }, 120);
     }, signal ? { signal: signal, passive: true } : { passive: true });
   }
@@ -1022,17 +1043,22 @@
       donorContract: DONOR_CONTRACT,
       route: ROUTE,
       target: FILE,
-      trueCanvasCarrier: true,
+      jsFemaleFirst: true,
+      htmlMaleSecond: true,
+      femaleCarrierPresentBeforeSelection: true,
+      maleHtmlChoosesJs: true,
       oneCanvas: state.oneCanvas,
+      cleanInspectionDefault: true,
+      engineeringOptional: true,
+      noInjectedStageControls: true,
+      noControlsOverPlanet: true,
       svgCartoonCarrierRetired: true,
-      engineeringControlsBelowStage: true,
+      stateDeckBelowPlanet: true,
+      receiptBelowPlanet: true,
       dragRotation: state.onePointerPath,
       activeLens: state.activeLens,
       latticeStates: LATTICE_STATES,
       geometryBuilt: state.geometryBuilt,
-      templatePlateUntouched: true,
-      cockpitUntouched: true,
-      rootGlobeUntouched: true,
       runtimeStrengthHeld: true,
       finalVisualPassClaim: false,
       generatedImage: false,
@@ -1042,26 +1068,29 @@
       renderCount: state.renderCount,
       duplicateCanvasRemoved: state.duplicateCanvasRemoved,
       errors: state.errors.slice(),
-      deployMarker: "AUDRALIA_G2_PLANET_BODY_TRUE_CANVAS_GLOBE_CARRIER_ENGINEERING_LENS_DEPLOY_MARKER_v1"
+      deployMarker: "AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_DEPLOY_MARKER_v1"
     };
   }
 
   function publishStatus(force) {
     var payload = receipt();
 
-    window.AUDRALIA_G2_PLANET_BODY_TRUE_CANVAS_GLOBE_CARRIER_ENGINEERING_LENS_STATUS = payload;
-    window.AUDRALIA_G2_TRUE_CANVAS_PLANET_BODY_STATUS = payload;
+    window.AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_STATUS = payload;
+    window.AUDRALIA_G2_JS_FEMALE_CANVAS_CARRIER_STATUS = payload;
 
-    setDataset("audraliaPlanetTrueCanvasCarrier", true);
-    setDataset("audraliaPlanetSvgCartoonCarrierRetired", true);
-    setDataset("audraliaPlanetEngineeringControlsBelowStage", true);
+    setDataset("audraliaPlanetJsFemaleFirst", true);
+    setDataset("audraliaPlanetHtmlMaleSecond", true);
+    setDataset("audraliaPlanetOneCanvas", state.oneCanvas);
+    setDataset("audraliaPlanetNoInjectedStageControls", true);
+    setDataset("audraliaPlanetCleanInspectionDefault", true);
+    setDataset("audraliaPlanetEngineeringOptional", true);
     setDataset("audraliaPlanetRuntimeStrengthHeld", true);
     setDataset("audraliaPlanetFinalVisualPassClaim", false);
     setDataset("audraliaPlanetActiveLens", state.activeLens);
 
     if (force) {
-      setText("[data-audralia-planet-carrier-status]", "true canvas carrier · " + LENSES[state.activeLens].title);
-      setText("[data-audralia-planet-carrier-proof]", "one canvas · drag rotation · donor projection mechanics · Engineering below stage");
+      setText("[data-audralia-planet-carrier-status]", "JS female carrier · " + LENSES[state.activeLens].title);
+      setText("[data-audralia-planet-carrier-proof]", "one canvas · no injected stage controls · HTML selector bound · Runtime / Strength held");
     }
 
     return payload;
@@ -1099,32 +1128,36 @@
     state.details = Array.prototype.slice.call(document.querySelectorAll("details"));
 
     if (!state.stage || !state.mount) {
-      recordError("init", "Missing Audralia planet inspection stage or mount");
+      recordError("init", "Female JS carrier is present, but male HTML selector has not provided stage/mount yet.");
+      publishStatus(true);
       return;
     }
 
     enforceOneCanvas();
     buildLocalDiagnosticGeometry();
     setupResize();
-    bindLensControls();
+    bindExistingEngineeringControls();
     bindPointer();
     setLens("body");
     publishStatus(true);
-    requestRender(12);
+    requestRender(14);
   }
 
-  window.__AUDRALIA_G2_TRUE_CANVAS_PLANET_BODY_CONTROLLER__ = {
+  window.__AUDRALIA_G2_PLANET_BODY_CLEAN_PAIR_CONTROLLER__ = {
     stop: stop,
     state: state,
     contract: CONTRACT,
+    specOps: SPEC_OPS,
     donorContract: DONOR_CONTRACT,
     receipt: receipt,
     status: publishStatus
   };
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init, signal ? { signal: signal, once: true } : { once: true });
-  } else {
-    init();
+  if (hasDOM()) {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init, signal ? { signal: signal, once: true } : { once: true });
+    } else {
+      init();
+    }
   }
 })();

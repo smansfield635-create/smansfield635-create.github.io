@@ -1,12 +1,12 @@
 // /showroom/globe/audralia/index.js
 // TNT FULL-FILE REPLACEMENT
+// AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1
+//
+// Previous JS contract:
 // AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_TNT_v1
 //
-// Previous route JS contract:
-// AUDRALIA_G1_DATUM_ADOPTION_ROUTE_JS_TNT_v1
-//
-// Current HTML binding:
-// AUDRALIA_G1_DATUM_ADOPTION_HTML_BINDING_TNT_v1
+// HTML binding contract:
+// AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_HTML_BINDING_TNT_v1
 //
 // Protected parent baseline:
 // AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1
@@ -17,25 +17,27 @@
 // Public datum contract:
 // AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1
 //
-// Cloning-method datum contract:
+// Clone datum contract:
 // AUDRALIA_G1_CHILD_MATH_DATUM_CLONING_METHOD_SEED_TNT_v1
 //
 // Purpose:
-// - Preserve the locked G1 360 Diagnostic Scope globe baseline.
-// - Consume the cloned datum seed without rewriting it.
-// - Recognize both the public receive-map contract and the cloning-method seed contract.
-// - Verify datum API, receive map, NEWS map, 256 seats, and child packet.
-// - Write the visible diagnostic result into the HTML slots when present.
-// - Publish route status even if HTML slots are absent.
-// - Do not replace the visual lattice with datum seats yet.
-// - Do not activate terrain, moisture, surface, cloud, continent, ground-level, or visual-pass work.
+// - Preserve the G1 observable globe + 360 diagnostic lattice baseline.
+// - Consume the cloned datum seed if available.
+// - Load the datum child if globals are absent.
+// - Verify public contract, clone contract, cloning method, receive map, 256 seats, NEWS, and child packet.
+// - Write success or bounded failure into visible diagnostic slots.
+// - Publish a complete diagnostic-reporting route status global.
+// - Do not rewrite HTML.
+// - Do not rewrite datum.
+// - Do not activate downstream.
+// - Do not claim visual pass.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_TNT_v1";
-  var PREVIOUS_ROUTE_JS_CONTRACT = "AUDRALIA_G1_DATUM_ADOPTION_ROUTE_JS_TNT_v1";
-  var HTML_BINDING_CONTRACT = "AUDRALIA_G1_DATUM_ADOPTION_HTML_BINDING_TNT_v1";
+  var CONTRACT = "AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1";
+  var PREVIOUS_JS_CONTRACT = "AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_TNT_v1";
+  var HTML_BINDING_CONTRACT = "AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_HTML_BINDING_TNT_v1";
   var PROTECTED_PARENT_BASELINE = "AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1";
 
   var DATUM_FILE = "/assets/audralia/clean/runtime/audralia.true-globe.datum.js";
@@ -43,7 +45,7 @@
   var CLONE_DATUM_CONTRACT = "AUDRALIA_G1_CHILD_MATH_DATUM_CLONING_METHOD_SEED_TNT_v1";
   var DATUM_CACHE_KEY = "AUDRALIA_G1_CHILD_MATH_DATUM_CLONING_METHOD_SEED_TNT_v1";
 
-  var CLONING_METHOD = "cloning_method";
+  var PROCESS = "cloning_method";
   var PUBLIC_FRAME = "adopted_packet";
   var TECHNICAL_REALITY = "new_seed_birth";
 
@@ -63,19 +65,38 @@
   var LENS_COPY = Object.freeze({
     planet: {
       title: "Planet View",
-      label: "<strong>Planet View</strong> → spherical carrier · cloned datum consumed under the hood",
-      copy: "Planet View preserves the observable globe carrier. The cloned datum seed is consumed as math only; it does not replace the planet body."
+      label: "<strong>Planet View</strong> → spherical carrier · diagnostic reporting active",
+      copy: "Planet View preserves the observable globe carrier. Cloned datum consumption is reported under the hood without replacing the planet body."
     },
     lattice: {
       title: "Lattice View",
-      label: "<strong>Lattice View</strong> → 360 diagnostic scope · cloned seed verified",
-      copy: "Lattice View preserves the 16 × 16 / 256 diagnostic scope while the parent route verifies the cloned datum receive-map."
+      label: "<strong>Lattice View</strong> → 360 diagnostic lattice · NEWS proof layer",
+      copy: "Lattice View preserves the 16 × 16 / 256 diagnostic scope while the route verifies cloned-seed receive-map readiness."
     },
     diagnostic: {
       title: "Diagnostic Scope",
-      label: "<strong>Diagnostic Scope</strong> → cloning-method consumer · downstream held",
-      copy: "Diagnostic Scope reports whether the parent route consumed the cloned datum seed, verified NEWS completion, and kept downstream children held."
+      label: "<strong>Diagnostic Scope</strong> → cloned-seed consumption report · downstream held",
+      copy: "Diagnostic Scope reports cloned-seed consumption, receive-map readiness, NEWS completion, child-packet availability, and downstream hold."
     }
+  });
+
+  var FAILURE_TEXT = Object.freeze({
+    BOOT_PENDING: "boot pending",
+    DATUM_LOADING: "datum loading",
+    DATUM_MISSING: "datum global missing",
+    DATUM_LOAD_FAILED: "cloned datum script load failed",
+    API_MISSING: "datum API missing required method",
+    PUBLIC_CONTRACT_MISMATCH: "public datum contract mismatch",
+    CLONE_CONTRACT_MISMATCH: "clone datum contract mismatch",
+    PROCESS_MISMATCH: "process is not cloning_method",
+    RECEIVE_MAP_UNAVAILABLE: "receive map unavailable",
+    RECEIVE_MAP_INCOMPLETE: "receive map not ready",
+    SEAT_COUNT_MISMATCH: "expected 256 seats",
+    NEWS_INCOMPLETE: "one or more seats lacks NEWS completion",
+    CHILD_PACKET_UNAVAILABLE: "route-diagnostic child packet unavailable",
+    DOWNSTREAM_FALSE_READY: "datum or packet claims downstream readiness",
+    REPORTING_SLOT_MISSING: "HTML diagnostic slot unavailable",
+    UNKNOWN_EXCEPTION: "unexpected exception"
   });
 
   var state = {
@@ -120,23 +141,20 @@
     dirtyRafPiston: false,
     duplicateCanvasRemoved: 0,
 
+    diagnosticSlotsFound: false,
+    diagnosticSlotsWritten: false,
+    finalVisibleReportWritten: false,
     lastDiagnosticWrite: 0,
     datasetCache: {},
     errors: [],
 
-    consumer: {
-      attempted: false,
-      loading: false,
-      loadAttempted: false,
-      loadSucceeded: false,
-      loadFailed: false,
-
+    report: {
+      phase: "boot pending",
+      datumScriptLoadAttempted: false,
+      datumScriptLoaded: false,
       datumApiFound: false,
       datumApiSource: null,
-      datumLoaded: false,
-      datumConsumed: false,
 
-      statusReady: false,
       publicContractAccepted: false,
       cloneContractRecognized: false,
       cloningMethodRecognized: false,
@@ -144,30 +162,26 @@
       technicalBirthComplete: false,
       parentInterfaceUnchanged: false,
 
-      datumContract: null,
-      cloneContract: null,
-      process: null,
-      publicFrame: null,
-      technicalReality: null,
-
       receiveMapReady: false,
       seatCount: null,
       seatCountValid: false,
       newsComplete: false,
       allSeatsNewsComplete: false,
+
       childPacketAvailable: false,
       childPacketSeatCount: null,
       childPacketSeatCountValid: false,
 
+      diagnosticSlotsFound: false,
+      diagnosticSlotsWritten: false,
+      finalVisibleReportWritten: false,
+
       downstreamHeld: true,
-      terrainReady: false,
-      moistureReady: false,
-      surfaceReady: false,
-      cloudReady: false,
-      continentReady: false,
       visualPassClaimed: false,
 
-      failureReason: "pending-consumption",
+      failureCode: "BOOT_PENDING",
+      failureReason: FAILURE_TEXT.BOOT_PENDING,
+      attempts: 0,
       checkedAt: null,
       errors: []
     }
@@ -199,20 +213,39 @@
     return typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
   }
 
+  function query(selector) {
+    try {
+      return document.querySelector(selector);
+    } catch (_error) {
+      return null;
+    }
+  }
+
   function setText(selector, value) {
-    var node = document.querySelector(selector);
+    var node = query(selector);
     var text = String(value);
-    if (node && node.textContent !== text) node.textContent = text;
+
+    if (node && node.textContent !== text) {
+      node.textContent = text;
+    }
+
+    return Boolean(node);
   }
 
   function setHtml(selector, value) {
-    var node = document.querySelector(selector);
+    var node = query(selector);
     var html = String(value);
-    if (node && node.innerHTML !== html) node.innerHTML = html;
+
+    if (node && node.innerHTML !== html) {
+      node.innerHTML = html;
+    }
+
+    return Boolean(node);
   }
 
   function setDataset(key, value) {
     var text = String(value);
+
     if (state.datasetCache[key] === text) return;
 
     state.datasetCache[key] = text;
@@ -231,6 +264,16 @@
     }
   }
 
+  function setFailure(code, reason) {
+    state.report.failureCode = code;
+    state.report.failureReason = reason || FAILURE_TEXT[code] || String(code || "unknown failure");
+  }
+
+  function setPhase(phase) {
+    state.report.phase = phase;
+    state.report.checkedAt = new Date().toISOString();
+  }
+
   function recordError(scope, error) {
     var message = error && error.message ? error.message : String(error || "unknown");
 
@@ -240,7 +283,7 @@
       time: new Date().toISOString()
     });
 
-    window.AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_ERROR = {
+    window.AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_ERROR = {
       contract: CONTRACT,
       scope: scope,
       message: message,
@@ -248,26 +291,16 @@
     };
   }
 
-  function recordConsumerError(scope, error) {
+  function recordReportError(scope, error) {
     var message = error && error.message ? error.message : String(error || "unknown");
 
-    state.consumer.errors.push({
+    state.report.errors.push({
       scope: scope,
       message: message,
       time: new Date().toISOString()
     });
 
-    state.consumer.failureReason = scope + ": " + message;
-
-    window.AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ERROR = {
-      contract: CONTRACT,
-      datumFile: DATUM_FILE,
-      publicDatumContract: PUBLIC_DATUM_CONTRACT,
-      cloneDatumContract: CLONE_DATUM_CONTRACT,
-      scope: scope,
-      message: message,
-      errors: state.consumer.errors.slice()
-    };
+    setFailure("UNKNOWN_EXCEPTION", scope + ": " + message);
   }
 
   function makeSeat(band, radial) {
@@ -683,7 +716,7 @@
 
     if (state.settleFrames > 0) state.settleFrames -= 1;
 
-    publishRouteStatus();
+    publishStatus();
 
     if (
       state.pointerActive ||
@@ -715,7 +748,7 @@
     setText("[data-audralia-lens-copy]", LENS_COPY[lens].copy);
     setHtml("[data-audralia-stage-label]", LENS_COPY[lens].label);
 
-    writeDiagnostics(true);
+    writeVisibleReport(true);
     requestRender(lens === "planet" ? 4 : 10);
   }
 
@@ -801,9 +834,12 @@
       } catch (_error) {}
 
       state.pointerId = null;
-      writeDiagnostics(true);
+      writeVisibleReport(true);
       requestRender(16);
-      event.preventDefault();
+
+      try {
+        event.preventDefault();
+      } catch (_error2) {}
     }
 
     state.stage.addEventListener("pointerup", release, signal ? { signal: signal, passive: false } : { passive: false });
@@ -819,9 +855,7 @@
     var canvases = Array.prototype.slice.call(state.mount.querySelectorAll("canvas"));
     var selected = state.canvas && state.mount.contains(state.canvas) ? state.canvas : null;
 
-    if (!selected) {
-      selected = canvases[0] || document.createElement("canvas");
-    }
+    if (!selected) selected = canvases[0] || document.createElement("canvas");
 
     if (!state.mount.contains(selected)) {
       selected.setAttribute("aria-hidden", "true");
@@ -841,12 +875,12 @@
 
     state.canvas = selected;
     state.canvas.setAttribute("data-audralia-g1-diagnostic-canvas", CONTRACT);
-    state.canvas.setAttribute("data-previous-route-js-contract", PREVIOUS_ROUTE_JS_CONTRACT);
+    state.canvas.setAttribute("data-previous-js-contract", PREVIOUS_JS_CONTRACT);
     state.canvas.setAttribute("data-html-binding-contract", HTML_BINDING_CONTRACT);
     state.canvas.setAttribute("data-protected-parent-baseline", PROTECTED_PARENT_BASELINE);
     state.canvas.setAttribute("data-public-datum-contract", PUBLIC_DATUM_CONTRACT);
     state.canvas.setAttribute("data-clone-datum-contract", CLONE_DATUM_CONTRACT);
-    state.canvas.setAttribute("data-cloning-method-consumer", "true");
+    state.canvas.setAttribute("data-diagnostic-reporting", "true");
     state.canvas.setAttribute("data-downstream-held", "true");
 
     state.canvas.style.position = "absolute";
@@ -938,12 +972,12 @@
 
     for (var i = 0; i < sources.length; i += 1) {
       if (sources[i][1]) {
-        state.consumer.datumApiSource = sources[i][0];
+        state.report.datumApiSource = sources[i][0];
         return sources[i][1];
       }
     }
 
-    state.consumer.datumApiSource = null;
+    state.report.datumApiSource = null;
     return null;
   }
 
@@ -952,7 +986,7 @@
       try {
         return api.status();
       } catch (error) {
-        recordConsumerError("datum.status", error);
+        recordReportError("datum.status", error);
       }
     }
 
@@ -967,7 +1001,7 @@
       try {
         return api.receive({ reference: true });
       } catch (error) {
-        recordConsumerError("datum.receive", error);
+        recordReportError("datum.receive", error);
       }
     }
 
@@ -975,7 +1009,7 @@
       try {
         return api.getReceiveMap({ reference: true });
       } catch (error2) {
-        recordConsumerError("datum.getReceiveMap", error2);
+        recordReportError("datum.getReceiveMap", error2);
       }
     }
 
@@ -983,7 +1017,7 @@
       try {
         return api.childReceiveMap({ reference: true });
       } catch (error3) {
-        recordConsumerError("datum.childReceiveMap", error3);
+        recordReportError("datum.childReceiveMap", error3);
       }
     }
 
@@ -998,9 +1032,22 @@
     try {
       return api.getChildReceivePacket("route-diagnostic", { compact: true });
     } catch (error) {
-      recordConsumerError("datum.getChildReceivePacket", error);
+      recordReportError("datum.getChildReceivePacket", error);
       return null;
     }
+  }
+
+  function hasRequiredApi(api) {
+    return Boolean(
+      api &&
+      typeof api.status === "function" &&
+      (
+        typeof api.receive === "function" ||
+        typeof api.getReceiveMap === "function" ||
+        typeof api.childReceiveMap === "function"
+      ) &&
+      typeof api.getChildReceivePacket === "function"
+    );
   }
 
   function verifyAllSeatsNEWSComplete(seats) {
@@ -1024,340 +1071,484 @@
     });
   }
 
-  function publicContractAccepted(contract) {
-    return contract === PUBLIC_DATUM_CONTRACT;
+  function resetReportForEvaluation() {
+    state.report.attempts += 1;
+    state.report.checkedAt = new Date().toISOString();
+
+    state.report.datumApiFound = false;
+    state.report.publicContractAccepted = false;
+    state.report.cloneContractRecognized = false;
+    state.report.cloningMethodRecognized = false;
+    state.report.publicAdoptionCompatible = false;
+    state.report.technicalBirthComplete = false;
+    state.report.parentInterfaceUnchanged = false;
+
+    state.report.receiveMapReady = false;
+    state.report.seatCount = null;
+    state.report.seatCountValid = false;
+    state.report.newsComplete = false;
+    state.report.allSeatsNewsComplete = false;
+
+    state.report.childPacketAvailable = false;
+    state.report.childPacketSeatCount = null;
+    state.report.childPacketSeatCountValid = false;
+
+    state.report.diagnosticSlotsFound = checkDiagnosticSlots(false);
+    state.report.diagnosticSlotsWritten = false;
+    state.report.finalVisibleReportWritten = false;
+
+    state.report.downstreamHeld = true;
+    state.report.visualPassClaimed = false;
+
+    setFailure("DATUM_MISSING", FAILURE_TEXT.DATUM_MISSING);
   }
 
-  function cloneContractRecognized(cloneContract) {
-    return cloneContract === CLONE_DATUM_CONTRACT;
-  }
+  function evaluateDatumConsumption() {
+    resetReportForEvaluation();
+    setPhase("datum API discovery");
 
-  function processRecognized(process) {
-    return process === CLONING_METHOD;
-  }
-
-  function resetConsumerForCheck() {
-    var consumer = state.consumer;
-
-    consumer.attempted = true;
-    consumer.checkedAt = new Date().toISOString();
-
-    consumer.datumApiFound = false;
-    consumer.datumLoaded = false;
-    consumer.datumConsumed = false;
-
-    consumer.statusReady = false;
-    consumer.publicContractAccepted = false;
-    consumer.cloneContractRecognized = false;
-    consumer.cloningMethodRecognized = false;
-    consumer.publicAdoptionCompatible = false;
-    consumer.technicalBirthComplete = false;
-    consumer.parentInterfaceUnchanged = false;
-
-    consumer.datumContract = null;
-    consumer.cloneContract = null;
-    consumer.process = null;
-    consumer.publicFrame = null;
-    consumer.technicalReality = null;
-
-    consumer.receiveMapReady = false;
-    consumer.seatCount = null;
-    consumer.seatCountValid = false;
-    consumer.newsComplete = false;
-    consumer.allSeatsNewsComplete = false;
-    consumer.childPacketAvailable = false;
-    consumer.childPacketSeatCount = null;
-    consumer.childPacketSeatCountValid = false;
-
-    consumer.downstreamHeld = true;
-    consumer.terrainReady = false;
-    consumer.moistureReady = false;
-    consumer.surfaceReady = false;
-    consumer.cloudReady = false;
-    consumer.continentReady = false;
-    consumer.visualPassClaimed = false;
-
-    consumer.failureReason = "pending-consumption";
-  }
-
-  function evaluateCloneConsumer() {
-    resetConsumerForCheck();
-
-    var consumer = state.consumer;
     var api = findDatumApi();
 
     if (!api) {
-      consumer.failureReason = consumer.loading ? "loading cloned datum seed" : "datum global missing";
-      publishRouteStatus();
-      writeDiagnostics(true);
-      return consumer;
+      setFailure("DATUM_MISSING", FAILURE_TEXT.DATUM_MISSING);
+      publishStatus();
+      writeVisibleReport(true);
+      return false;
     }
 
-    consumer.datumApiFound = true;
-    consumer.datumLoaded = true;
+    state.report.datumApiFound = true;
 
-    var status = getDatumStatus(api);
-    consumer.statusReady = Boolean(status);
-
-    consumer.datumContract = (status && status.contract) || api.contract || null;
-    consumer.cloneContract = (status && status.cloneContract) || api.cloneContract || null;
-    consumer.process = (status && status.process) || api.process || null;
-    consumer.publicFrame = (status && status.publicFrame) || api.publicFrame || null;
-    consumer.technicalReality = (status && status.technicalReality) || api.technicalReality || null;
-
-    consumer.publicContractAccepted = publicContractAccepted(consumer.datumContract);
-    consumer.cloneContractRecognized = cloneContractRecognized(consumer.cloneContract);
-    consumer.cloningMethodRecognized = processRecognized(consumer.process);
-    consumer.publicAdoptionCompatible = Boolean((status && status.publicAdoptionCompatible) || api.publicAdoptionCompatible);
-    consumer.technicalBirthComplete = Boolean((status && status.technicalBirthComplete) || api.technicalBirthComplete);
-    consumer.parentInterfaceUnchanged = Boolean((status && status.parentInterfaceUnchanged) || api.parentInterfaceUnchanged);
-
-    if (!consumer.publicContractAccepted) {
-      consumer.failureReason = "public contract mismatch";
-      publishRouteStatus();
-      writeDiagnostics(true);
-      return consumer;
+    if (!hasRequiredApi(api)) {
+      setFailure("API_MISSING", FAILURE_TEXT.API_MISSING);
+      publishStatus();
+      writeVisibleReport(true);
+      return false;
     }
 
-    if (!consumer.cloneContractRecognized) {
-      consumer.failureReason = "clone contract mismatch";
-      publishRouteStatus();
-      writeDiagnostics(true);
-      return consumer;
+    setPhase("datum API found");
+
+    var status = getDatumStatus(api) || {};
+
+    var datumContract = status.contract || api.contract || null;
+    var cloneContract = status.cloneContract || api.cloneContract || null;
+    var process = status.process || api.process || null;
+    var publicFrame = status.publicFrame || api.publicFrame || null;
+    var technicalReality = status.technicalReality || api.technicalReality || null;
+
+    state.report.publicContractAccepted = datumContract === PUBLIC_DATUM_CONTRACT;
+    state.report.cloneContractRecognized = cloneContract === CLONE_DATUM_CONTRACT;
+    state.report.cloningMethodRecognized = process === PROCESS;
+    state.report.publicAdoptionCompatible = Boolean(status.publicAdoptionCompatible || api.publicAdoptionCompatible);
+    state.report.technicalBirthComplete = Boolean(status.technicalBirthComplete || api.technicalBirthComplete);
+    state.report.parentInterfaceUnchanged = Boolean(status.parentInterfaceUnchanged || api.parentInterfaceUnchanged);
+
+    state.report.datumContract = datumContract;
+    state.report.cloneContract = cloneContract;
+    state.report.process = process;
+    state.report.publicFrame = publicFrame;
+    state.report.technicalReality = technicalReality;
+
+    if (!state.report.publicContractAccepted) {
+      setFailure("PUBLIC_CONTRACT_MISMATCH", FAILURE_TEXT.PUBLIC_CONTRACT_MISMATCH);
+      publishStatus();
+      writeVisibleReport(true);
+      return false;
     }
 
-    if (!consumer.cloningMethodRecognized) {
-      consumer.failureReason = "process mismatch";
-      publishRouteStatus();
-      writeDiagnostics(true);
-      return consumer;
+    if (!state.report.cloneContractRecognized) {
+      setFailure("CLONE_CONTRACT_MISMATCH", FAILURE_TEXT.CLONE_CONTRACT_MISMATCH);
+      publishStatus();
+      writeVisibleReport(true);
+      return false;
     }
 
-    if (!consumer.publicAdoptionCompatible) {
-      consumer.failureReason = "public adoption compatibility missing";
-      publishRouteStatus();
-      writeDiagnostics(true);
-      return consumer;
+    if (!state.report.cloningMethodRecognized) {
+      setFailure("PROCESS_MISMATCH", FAILURE_TEXT.PROCESS_MISMATCH);
+      publishStatus();
+      writeVisibleReport(true);
+      return false;
     }
 
-    if (!consumer.technicalBirthComplete) {
-      consumer.failureReason = "technical birth incomplete";
-      publishRouteStatus();
-      writeDiagnostics(true);
-      return consumer;
+    if (
+      !state.report.publicAdoptionCompatible ||
+      !state.report.technicalBirthComplete ||
+      !state.report.parentInterfaceUnchanged
+    ) {
+      setFailure("PROCESS_MISMATCH", "cloning-method markers incomplete");
+      publishStatus();
+      writeVisibleReport(true);
+      return false;
     }
 
-    if (!consumer.parentInterfaceUnchanged) {
-      consumer.failureReason = "parent interface changed";
-      publishRouteStatus();
-      writeDiagnostics(true);
-      return consumer;
-    }
+    setPhase("contracts verified");
 
     var map = getReceiveMap(api);
 
     if (!map) {
-      consumer.failureReason = "receive map unavailable";
-      publishRouteStatus();
-      writeDiagnostics(true);
-      return consumer;
+      setFailure("RECEIVE_MAP_UNAVAILABLE", FAILURE_TEXT.RECEIVE_MAP_UNAVAILABLE);
+      publishStatus();
+      writeVisibleReport(true);
+      return false;
     }
 
     var seats = Array.isArray(map.seats) ? map.seats : [];
 
-    consumer.receiveMapReady = map.childReceiveMapReady === true || (status && status.childReceiveMapReady === true);
-    consumer.seatCount = seats.length;
-    consumer.seatCountValid =
+    state.report.receiveMapReady = Boolean(
+      map.childReceiveMapReady === true ||
+      map.receiveMapReady === true ||
+      status.childReceiveMapReady === true
+    );
+
+    state.report.seatCount = seats.length;
+    state.report.seatCountValid = Boolean(
       seats.length === LATTICE_STATES &&
       Number(map.radialNodes) === RADIAL_NODES &&
       Number(map.fibonacciBands) === FIBONACCI_BANDS &&
-      Number(map.latticeStates) === LATTICE_STATES;
+      Number(map.latticeStates) === LATTICE_STATES
+    );
 
-    consumer.newsComplete =
+    state.report.newsComplete = Boolean(
       map.newsProtocolActive === true &&
       map.newsComplete === true &&
       map.chronologyComplete === true &&
       map.relationshipMapReady === true &&
-      map.carrierBound === true;
+      map.carrierBound === true
+    );
 
-    consumer.allSeatsNewsComplete = verifyAllSeatsNEWSComplete(seats);
+    state.report.allSeatsNewsComplete = verifyAllSeatsNEWSComplete(seats);
+
+    if (!state.report.receiveMapReady) {
+      setFailure("RECEIVE_MAP_INCOMPLETE", FAILURE_TEXT.RECEIVE_MAP_INCOMPLETE);
+      publishStatus();
+      writeVisibleReport(true);
+      return false;
+    }
+
+    if (!state.report.seatCountValid) {
+      setFailure("SEAT_COUNT_MISMATCH", FAILURE_TEXT.SEAT_COUNT_MISMATCH);
+      publishStatus();
+      writeVisibleReport(true);
+      return false;
+    }
+
+    setPhase("receive map verified");
+
+    if (!state.report.newsComplete || !state.report.allSeatsNewsComplete) {
+      setFailure("NEWS_INCOMPLETE", FAILURE_TEXT.NEWS_INCOMPLETE);
+      publishStatus();
+      writeVisibleReport(true);
+      return false;
+    }
+
+    setPhase("NEWS verified");
 
     var packet = getChildPacket(api);
 
-    consumer.childPacketAvailable = Boolean(packet && packet.childReceivePacketReady === true);
-    consumer.childPacketSeatCount = packet && Number.isFinite(Number(packet.seatCount)) ? Number(packet.seatCount) : null;
-    consumer.childPacketSeatCountValid = consumer.childPacketSeatCount === LATTICE_STATES;
+    state.report.childPacketAvailable = Boolean(packet && packet.childReceivePacketReady === true);
+    state.report.childPacketSeatCount = packet && Number.isFinite(Number(packet.seatCount))
+      ? Number(packet.seatCount)
+      : null;
+    state.report.childPacketSeatCountValid = state.report.childPacketSeatCount === LATTICE_STATES;
 
-    consumer.terrainReady = map.terrainReady === true || (packet && packet.terrainReady === true);
-    consumer.moistureReady = map.moistureReady === true || (packet && packet.moistureReady === true);
-    consumer.surfaceReady = map.surfaceReady === true || (packet && packet.surfaceReady === true);
-    consumer.cloudReady = map.cloudReady === true || (packet && packet.cloudReady === true);
-    consumer.continentReady = map.continentReady === true || (packet && packet.continentReady === true);
-    consumer.visualPassClaimed = map.visualPassClaimed === true || (packet && packet.visualPassClaimed === true);
-
-    if (!consumer.receiveMapReady) {
-      consumer.failureReason = "receive map not ready";
-    } else if (!consumer.seatCountValid) {
-      consumer.failureReason = "seat-count mismatch";
-    } else if (!consumer.newsComplete || !consumer.allSeatsNewsComplete) {
-      consumer.failureReason = "NEWS incomplete";
-    } else if (!consumer.childPacketAvailable || !consumer.childPacketSeatCountValid) {
-      consumer.failureReason = "child packet unavailable";
-    } else if (
-      consumer.terrainReady ||
-      consumer.moistureReady ||
-      consumer.surfaceReady ||
-      consumer.cloudReady ||
-      consumer.continentReady ||
-      consumer.visualPassClaimed
-    ) {
-      consumer.failureReason = "downstream false-ready claim";
-    } else {
-      consumer.datumConsumed = true;
-      consumer.failureReason = "";
+    if (!state.report.childPacketAvailable || !state.report.childPacketSeatCountValid) {
+      setFailure("CHILD_PACKET_UNAVAILABLE", FAILURE_TEXT.CHILD_PACKET_UNAVAILABLE);
+      publishStatus();
+      writeVisibleReport(true);
+      return false;
     }
 
-    publishRouteStatus();
-    writeDiagnostics(true);
-    return consumer;
+    setPhase("child packet verified");
+
+    var downstreamFalseReady = Boolean(
+      map.terrainReady === true ||
+      map.moistureReady === true ||
+      map.surfaceReady === true ||
+      map.cloudReady === true ||
+      map.continentReady === true ||
+      map.visualPassClaimed === true ||
+      packet.terrainReady === true ||
+      packet.moistureReady === true ||
+      packet.surfaceReady === true ||
+      packet.cloudReady === true ||
+      packet.continentReady === true ||
+      packet.visualPassClaimed === true
+    );
+
+    if (downstreamFalseReady) {
+      setFailure("DOWNSTREAM_FALSE_READY", FAILURE_TEXT.DOWNSTREAM_FALSE_READY);
+      publishStatus();
+      writeVisibleReport(true);
+      return false;
+    }
+
+    state.report.downstreamHeld = true;
+    state.report.visualPassClaimed = false;
+    state.report.failureCode = "";
+    state.report.failureReason = "";
+    setPhase("success ready");
+
+    writeVisibleReport(true);
+    setPhase("success written");
+    publishStatus();
+
+    return true;
   }
 
-  function loadDatumFileIfMissing() {
+  function loadDatumFile() {
     return new Promise(function (resolve) {
       if (findDatumApi()) {
-        state.consumer.loadSucceeded = true;
-        state.consumer.datumLoaded = true;
-        resolve(findDatumApi());
+        state.report.datumScriptLoaded = true;
+        resolve(true);
         return;
       }
 
-      state.consumer.loadAttempted = true;
-      state.consumer.loading = true;
-      writeDiagnostics(true);
+      state.report.datumScriptLoadAttempted = true;
+      setPhase("datum loading");
+      setFailure("DATUM_LOADING", FAILURE_TEXT.DATUM_LOADING);
+      writeVisibleReport(true);
+      publishStatus();
 
       var existing = document.querySelector("script[src*='audralia.true-globe.datum.js']");
 
       if (existing) {
         setTimeout(function () {
-          state.consumer.loading = false;
-          state.consumer.loadSucceeded = Boolean(findDatumApi());
-          state.consumer.loadFailed = !state.consumer.loadSucceeded;
-          resolve(findDatumApi());
-        }, 180);
+          state.report.datumScriptLoaded = Boolean(findDatumApi());
+          if (!state.report.datumScriptLoaded) {
+            setFailure("DATUM_LOAD_FAILED", "existing datum script found but globals absent");
+          }
+          resolve(state.report.datumScriptLoaded);
+        }, 220);
         return;
       }
 
       var script = document.createElement("script");
       script.src = DATUM_FILE + "?v=" + encodeURIComponent(DATUM_CACHE_KEY);
-      script.defer = true;
       script.async = true;
-      script.setAttribute("data-audralia-datum-cloning-method-loader", CONTRACT);
+      script.defer = true;
+      script.setAttribute("data-audralia-datum-loader", CONTRACT);
       script.setAttribute("data-public-datum-contract", PUBLIC_DATUM_CONTRACT);
       script.setAttribute("data-clone-datum-contract", CLONE_DATUM_CONTRACT);
-      script.setAttribute("data-process", CLONING_METHOD);
-      script.setAttribute("data-downstream-activation", "false");
+      script.setAttribute("data-process", PROCESS);
+      script.setAttribute("data-downstream-held", "true");
 
       script.onload = function () {
-        state.consumer.loading = false;
-        state.consumer.loadSucceeded = Boolean(findDatumApi());
-        state.consumer.loadFailed = !state.consumer.loadSucceeded;
+        setTimeout(function () {
+          state.report.datumScriptLoaded = Boolean(findDatumApi());
 
-        if (!state.consumer.loadSucceeded) {
-          recordConsumerError("load-cloned-datum-seed", "script loaded but datum global was not published");
-        }
+          if (!state.report.datumScriptLoaded) {
+            setFailure("DATUM_LOAD_FAILED", "datum script loaded but globals were not published");
+          }
 
-        resolve(findDatumApi());
+          resolve(state.report.datumScriptLoaded);
+        }, 80);
       };
 
       script.onerror = function () {
-        state.consumer.loading = false;
-        state.consumer.loadSucceeded = false;
-        state.consumer.loadFailed = true;
-        recordConsumerError("load-cloned-datum-seed", "script load failed");
-        resolve(null);
+        state.report.datumScriptLoaded = false;
+        setFailure("DATUM_LOAD_FAILED", FAILURE_TEXT.DATUM_LOAD_FAILED);
+        resolve(false);
       };
 
       document.body.appendChild(script);
     });
   }
 
-  function runCloneConsumerCycle() {
-    evaluateCloneConsumer();
+  function runDiagnosticReportingCycle() {
+    setPhase("boot pending");
+    setFailure("BOOT_PENDING", FAILURE_TEXT.BOOT_PENDING);
+    writeVisibleReport(true);
+    publishStatus();
 
-    if (!state.consumer.datumConsumed && !findDatumApi()) {
-      loadDatumFileIfMissing().then(function () {
-        evaluateCloneConsumer();
+    var firstPass = evaluateDatumConsumption();
+    if (firstPass) return;
+
+    if (!state.report.datumApiFound) {
+      loadDatumFile().then(function () {
+        evaluateDatumConsumption();
+
+        setTimeout(function () {
+          evaluateDatumConsumption();
+        }, 240);
+
+        setTimeout(function () {
+          evaluateDatumConsumption();
+        }, 720);
       });
+      return;
     }
+
+    setTimeout(function () {
+      evaluateDatumConsumption();
+    }, 240);
+
+    setTimeout(function () {
+      evaluateDatumConsumption();
+    }, 720);
   }
 
-  function consumerStatusPayload() {
-    return {
-      contract: CONTRACT,
-      previousRouteJsContract: PREVIOUS_ROUTE_JS_CONTRACT,
-      htmlBindingContract: HTML_BINDING_CONTRACT,
-      protectedParentBaseline: PROTECTED_PARENT_BASELINE,
-      datumFile: DATUM_FILE,
-      publicDatumContract: PUBLIC_DATUM_CONTRACT,
-      cloneDatumContract: CLONE_DATUM_CONTRACT,
+  function checkDiagnosticSlots(updateReport) {
+    var required = [
+      "[data-audralia-diagnostic-route]",
+      "[data-audralia-diagnostic-carrier]",
+      "[data-audralia-diagnostic-lens]",
+      "[data-audralia-diagnostic-canvas]",
+      "[data-audralia-diagnostic-loop]",
+      "[data-audralia-diagnostic-children]",
+      "[data-audralia-diagnostic-news]",
+      "[data-audralia-diagnostic-scope]",
+      "[data-audralia-diagnostic-datum-child]",
+      "[data-audralia-diagnostic-receive-map]",
+      "[data-audralia-diagnostic-news-map]",
+      "[data-audralia-diagnostic-child-packet]",
+      "[data-audralia-diagnostic-seat-count]",
+      "[data-audralia-diagnostic-downstream]"
+    ];
 
-      attempted: state.consumer.attempted,
-      loading: state.consumer.loading,
-      loadAttempted: state.consumer.loadAttempted,
-      loadSucceeded: state.consumer.loadSucceeded,
-      loadFailed: state.consumer.loadFailed,
+    var found = required.every(function (selector) {
+      return Boolean(query(selector));
+    });
 
-      datumApiFound: state.consumer.datumApiFound,
-      datumApiSource: state.consumer.datumApiSource,
-      datumLoaded: state.consumer.datumLoaded,
-      datumConsumed: state.consumer.datumConsumed,
+    if (updateReport) {
+      state.report.diagnosticSlotsFound = found;
+    }
 
-      datumContract: state.consumer.datumContract,
-      cloneContract: state.consumer.cloneContract,
-      process: state.consumer.process,
-      publicFrame: state.consumer.publicFrame,
-      technicalReality: state.consumer.technicalReality,
-
-      publicContractAccepted: state.consumer.publicContractAccepted,
-      cloneContractRecognized: state.consumer.cloneContractRecognized,
-      cloningMethodRecognized: state.consumer.cloningMethodRecognized,
-      publicAdoptionCompatible: state.consumer.publicAdoptionCompatible,
-      technicalBirthComplete: state.consumer.technicalBirthComplete,
-      parentInterfaceUnchanged: state.consumer.parentInterfaceUnchanged,
-
-      receiveMapReady: state.consumer.receiveMapReady,
-      seatCount: state.consumer.seatCount,
-      seatCountValid: state.consumer.seatCountValid,
-      newsComplete: state.consumer.newsComplete,
-      allSeatsNewsComplete: state.consumer.allSeatsNewsComplete,
-      childPacketAvailable: state.consumer.childPacketAvailable,
-      childPacketSeatCount: state.consumer.childPacketSeatCount,
-      childPacketSeatCountValid: state.consumer.childPacketSeatCountValid,
-
-      downstreamHeld: true,
-      terrainReady: false,
-      moistureReady: false,
-      surfaceReady: false,
-      cloudReady: false,
-      continentReady: false,
-      visualPassClaimed: false,
-
-      failureReason: state.consumer.failureReason,
-      checkedAt: state.consumer.checkedAt,
-      errors: state.consumer.errors.slice()
-    };
+    return found;
   }
 
-  function publishRouteStatus() {
+  function reportSucceeded() {
+    return Boolean(
+      state.report.publicContractAccepted &&
+      state.report.cloneContractRecognized &&
+      state.report.cloningMethodRecognized &&
+      state.report.receiveMapReady &&
+      state.report.seatCountValid &&
+      state.report.newsComplete &&
+      state.report.allSeatsNewsComplete &&
+      state.report.childPacketAvailable &&
+      state.report.childPacketSeatCountValid &&
+      state.report.downstreamHeld &&
+      state.report.visualPassClaimed === false &&
+      !state.report.failureCode
+    );
+  }
+
+  function writeVisibleReport(force) {
+    var t = now();
+    if (!force && t - state.lastDiagnosticWrite < 750) return;
+
+    state.lastDiagnosticWrite = t;
+
+    var slotsFound = checkDiagnosticSlots(true);
+    state.diagnosticSlotsFound = slotsFound;
+
+    var written = true;
+
+    written = setText("[data-audralia-diagnostic-route]", "JS diagnostic-reporting consumer · cloned seed proof") && written;
+    written = setText("[data-audralia-diagnostic-carrier]", "spherical carrier active · G1 baseline protected") && written;
+    written = setText("[data-audralia-diagnostic-lens]", state.activeLens) && written;
+    written = setText("[data-audralia-diagnostic-canvas]", state.oneCanvas ? "one canvas" : "canvas pending") && written;
+    written = setText("[data-audralia-diagnostic-loop]", state.dirtyRafPiston ? "dirty RAF · piston controlled" : "loop pending") && written;
+    written = setText("[data-audralia-diagnostic-children]", "downstream held · cloned seed proof only") && written;
+    written = setText("[data-audralia-diagnostic-scope]", "360 scope · 16 × 16 / 256 seats") && written;
+
+    if (reportSucceeded()) {
+      written = setText("[data-audralia-diagnostic-news]", "NEWS complete · cloned seed verified") && written;
+      written = setText("[data-audralia-diagnostic-datum-child]", "cloned seed consumed · adoption-compatible") && written;
+      written = setText("[data-audralia-diagnostic-receive-map]", "ready · 256 seats") && written;
+      written = setText("[data-audralia-diagnostic-news-map]", "complete · N/E/W/S") && written;
+      written = setText("[data-audralia-diagnostic-child-packet]", "available · route-diagnostic") && written;
+      written = setText("[data-audralia-diagnostic-seat-count]", "256 / 16 × 16") && written;
+      written = setText("[data-audralia-diagnostic-downstream]", "held · no child activation") && written;
+      state.report.finalVisibleReportWritten = Boolean(written && slotsFound);
+    } else {
+      var reason = state.report.failureReason || "pending diagnostic proof";
+      written = setText("[data-audralia-diagnostic-news]", "pending/fail · " + reason) && written;
+      written = setText("[data-audralia-diagnostic-datum-child]", "failed · " + reason) && written;
+      written = setText("[data-audralia-diagnostic-receive-map]", state.report.receiveMapReady ? "available · constrained" : "failed · receive map unavailable") && written;
+      written = setText("[data-audralia-diagnostic-news-map]", state.report.newsComplete && state.report.allSeatsNewsComplete ? "complete · N/E/W/S" : "failed · NEWS incomplete") && written;
+      written = setText("[data-audralia-diagnostic-child-packet]", state.report.childPacketAvailable ? "available · constrained" : "failed · child packet unavailable") && written;
+      written = setText("[data-audralia-diagnostic-seat-count]", state.report.seatCountValid ? "256 / 16 × 16" : "failed · expected 256") && written;
+      written = setText("[data-audralia-diagnostic-downstream]", "held · no activation") && written;
+      state.report.finalVisibleReportWritten = false;
+    }
+
+    state.report.diagnosticSlotsWritten = Boolean(written && slotsFound);
+    state.diagnosticSlotsWritten = state.report.diagnosticSlotsWritten;
+    state.finalVisibleReportWritten = state.report.finalVisibleReportWritten;
+
+    if (!slotsFound) {
+      setFailure("REPORTING_SLOT_MISSING", FAILURE_TEXT.REPORTING_SLOT_MISSING);
+    }
+
+    setDataset("audraliaRouteJsContract", CONTRACT);
+    setDataset("audraliaPreviousJsContract", PREVIOUS_JS_CONTRACT);
+    setDataset("audraliaHtmlBindingContract", HTML_BINDING_CONTRACT);
+    setDataset("audraliaPublicDatumContract", PUBLIC_DATUM_CONTRACT);
+    setDataset("audraliaCloneDatumContract", CLONE_DATUM_CONTRACT);
+    setDataset("audraliaDiagnosticReporting", true);
+    setDataset("audraliaPhase", state.report.phase);
+    setDataset("audraliaDatumApiFound", state.report.datumApiFound);
+    setDataset("audraliaPublicContractAccepted", state.report.publicContractAccepted);
+    setDataset("audraliaCloneContractRecognized", state.report.cloneContractRecognized);
+    setDataset("audraliaCloningMethodRecognized", state.report.cloningMethodRecognized);
+    setDataset("audraliaReceiveMapReady", state.report.receiveMapReady);
+    setDataset("audraliaSeatCountValid", state.report.seatCountValid);
+    setDataset("audraliaNewsComplete", state.report.newsComplete && state.report.allSeatsNewsComplete);
+    setDataset("audraliaChildPacketAvailable", state.report.childPacketAvailable);
+    setDataset("audraliaFinalVisibleReportWritten", state.report.finalVisibleReportWritten);
+    setDataset("audraliaDownstreamHeld", true);
+    setDataset("audraliaFailureCode", state.report.failureCode || "NONE");
+
+    publishStatus();
+  }
+
+  function publishStatus() {
     var payload = {
       contract: CONTRACT,
-      previousRouteJsContract: PREVIOUS_ROUTE_JS_CONTRACT,
+      previousJsContract: PREVIOUS_JS_CONTRACT,
       htmlBindingContract: HTML_BINDING_CONTRACT,
       protectedParentBaseline: PROTECTED_PARENT_BASELINE,
       route: "/showroom/globe/audralia/",
       target: "/showroom/globe/audralia/index.js",
 
-      consumer: consumerStatusPayload(),
+      datumFile: DATUM_FILE,
+      publicDatumContract: PUBLIC_DATUM_CONTRACT,
+      cloneDatumContract: CLONE_DATUM_CONTRACT,
+
+      phase: state.report.phase,
+      datumScriptLoadAttempted: state.report.datumScriptLoadAttempted,
+      datumScriptLoaded: state.report.datumScriptLoaded,
+      datumApiFound: state.report.datumApiFound,
+      datumApiSource: state.report.datumApiSource,
+
+      publicContractAccepted: state.report.publicContractAccepted,
+      cloneContractRecognized: state.report.cloneContractRecognized,
+      cloningMethodRecognized: state.report.cloningMethodRecognized,
+      publicAdoptionCompatible: state.report.publicAdoptionCompatible,
+      technicalBirthComplete: state.report.technicalBirthComplete,
+      parentInterfaceUnchanged: state.report.parentInterfaceUnchanged,
+
+      receiveMapReady: state.report.receiveMapReady,
+      seatCount: state.report.seatCount,
+      seatCountValid: state.report.seatCountValid,
+      newsComplete: state.report.newsComplete,
+      allSeatsNewsComplete: state.report.allSeatsNewsComplete,
+      childPacketAvailable: state.report.childPacketAvailable,
+      childPacketSeatCount: state.report.childPacketSeatCount,
+      childPacketSeatCountValid: state.report.childPacketSeatCountValid,
+
+      diagnosticSlotsFound: state.report.diagnosticSlotsFound,
+      diagnosticSlotsWritten: state.report.diagnosticSlotsWritten,
+      finalVisibleReportWritten: state.report.finalVisibleReportWritten,
+
+      downstreamHeld: true,
+      visualPassClaimed: false,
+
+      failureCode: state.report.failureCode,
+      failureReason: state.report.failureReason,
+      attempts: state.report.attempts,
+      checkedAt: state.report.checkedAt,
+      errors: state.report.errors.slice(),
 
       parentBaselineProtected: true,
       globeRole: "observable-organic-carrier",
@@ -1366,7 +1557,6 @@
       visualLatticeSource: "protected-local-g1-diagnostic-geometry",
       datumSeatsUsedForVisualLattice: false,
 
-      newsProtocolActive: true,
       radialNodes: RADIAL_NODES,
       fibonacciBands: FIBONACCI_BANDS,
       latticeStates: LATTICE_STATES,
@@ -1377,93 +1567,28 @@
       dirtyRafPiston: state.dirtyRafPiston,
       smoothDragProtected: true,
 
-      downstreamHeld: true,
       terrainActivated: false,
       moistureActivated: false,
       surfaceActivated: false,
       cloudActivated: false,
       continentActivated: false,
-      visualPassClaimed: false,
 
       renderCount: state.renderCount,
       duplicateCanvasRemoved: state.duplicateCanvasRemoved,
-      errors: state.errors.slice()
+      routeErrors: state.errors.slice()
     };
 
+    window.AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_STATUS = payload;
     window.AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_STATUS = payload;
-    window.AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_STATUS = payload.consumer;
+    window.AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_STATUS = payload;
 
     return payload;
   }
 
-  function writeDiagnostics(force) {
-    var t = now();
-    if (!force && t - state.lastDiagnosticWrite < 1000) return;
-    state.lastDiagnosticWrite = t;
-
-    var c = state.consumer;
-
-    setText("[data-audralia-diagnostic-route]", "JS cloning-method consumer · parent baseline protected");
-    setText("[data-audralia-diagnostic-carrier]", "spherical carrier active · visual lattice remains protected");
-    setText("[data-audralia-diagnostic-lens]", state.activeLens);
-    setText("[data-audralia-diagnostic-canvas]", state.oneCanvas ? "one canvas" : "canvas pending");
-    setText("[data-audralia-diagnostic-loop]", state.dirtyRafPiston ? "dirty RAF · piston controlled" : "loop pending");
-    setText("[data-audralia-diagnostic-children]", "downstream held · cloned seed consumption only");
-    setText("[data-audralia-diagnostic-news]", c.datumConsumed ? "NEWS complete · cloned seed verified" : "NEWS pending · cloned seed check");
-    setText("[data-audralia-diagnostic-scope]", "360 scope · 16 × 16 / 256 seats");
-
-    if (!c.attempted) {
-      setText("[data-audralia-diagnostic-datum-child]", "pending cloned-seed consumption");
-      setText("[data-audralia-diagnostic-receive-map]", "pending cloned-seed consumption");
-      setText("[data-audralia-diagnostic-news-map]", "pending cloned-seed consumption");
-      setText("[data-audralia-diagnostic-child-packet]", "pending cloned-seed consumption");
-      setText("[data-audralia-diagnostic-seat-count]", "pending cloned-seed consumption");
-      setText("[data-audralia-diagnostic-downstream]", "held · no child activation");
-    } else if (c.loading) {
-      setText("[data-audralia-diagnostic-datum-child]", "loading cloned datum seed");
-      setText("[data-audralia-diagnostic-receive-map]", "pending");
-      setText("[data-audralia-diagnostic-news-map]", "pending");
-      setText("[data-audralia-diagnostic-child-packet]", "pending");
-      setText("[data-audralia-diagnostic-seat-count]", "pending");
-      setText("[data-audralia-diagnostic-downstream]", "held · no child activation");
-    } else if (c.datumConsumed) {
-      setText("[data-audralia-diagnostic-datum-child]", "cloned seed consumed · adoption-compatible");
-      setText("[data-audralia-diagnostic-receive-map]", "ready · 256 seats");
-      setText("[data-audralia-diagnostic-news-map]", "complete · N/E/W/S");
-      setText("[data-audralia-diagnostic-child-packet]", "available · route-diagnostic");
-      setText("[data-audralia-diagnostic-seat-count]", "256 / 16 × 16");
-      setText("[data-audralia-diagnostic-downstream]", "held · no child activation");
-    } else {
-      setText("[data-audralia-diagnostic-datum-child]", "failed · " + (c.failureReason || "cloned seed unavailable"));
-      setText("[data-audralia-diagnostic-receive-map]", c.receiveMapReady ? "available · constrained" : "failed · receive map unavailable");
-      setText("[data-audralia-diagnostic-news-map]", c.newsComplete && c.allSeatsNewsComplete ? "complete · N/E/W/S" : "failed · NEWS incomplete");
-      setText("[data-audralia-diagnostic-child-packet]", c.childPacketAvailable ? "available · constrained" : "failed · child packet unavailable");
-      setText("[data-audralia-diagnostic-seat-count]", c.seatCountValid ? "256 / 16 × 16" : "failed · expected 256");
-      setText("[data-audralia-diagnostic-downstream]", "held · no activation");
-    }
-
-    setDataset("audraliaRouteJsContract", CONTRACT);
-    setDataset("audraliaPreviousRouteJsContract", PREVIOUS_ROUTE_JS_CONTRACT);
-    setDataset("audraliaHtmlBindingContract", HTML_BINDING_CONTRACT);
-    setDataset("audraliaProtectedParentBaseline", PROTECTED_PARENT_BASELINE);
-    setDataset("audraliaPublicDatumContract", PUBLIC_DATUM_CONTRACT);
-    setDataset("audraliaCloneDatumContract", CLONE_DATUM_CONTRACT);
-    setDataset("audraliaCloneMethodConsumer", true);
-    setDataset("audraliaDatumConsumed", c.datumConsumed);
-    setDataset("audraliaCloneContractRecognized", c.cloneContractRecognized);
-    setDataset("audraliaPublicContractAccepted", c.publicContractAccepted);
-    setDataset("audraliaTechnicalBirthComplete", c.technicalBirthComplete);
-    setDataset("audraliaReceiveMapReady", c.receiveMapReady);
-    setDataset("audraliaSeatCountValid", c.seatCountValid);
-    setDataset("audraliaNewsComplete", c.newsComplete && c.allSeatsNewsComplete);
-    setDataset("audraliaChildPacketAvailable", c.childPacketAvailable);
-    setDataset("audraliaDownstreamHeld", true);
-  }
-
   function publishBoot() {
-    window.AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_BOOT = {
+    window.AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_BOOT = {
       contract: CONTRACT,
-      previousRouteJsContract: PREVIOUS_ROUTE_JS_CONTRACT,
+      previousJsContract: PREVIOUS_JS_CONTRACT,
       htmlBindingContract: HTML_BINDING_CONTRACT,
       protectedParentBaseline: PROTECTED_PARENT_BASELINE,
       datumFile: DATUM_FILE,
@@ -1514,11 +1639,11 @@
     stop: stop,
     state: state,
     contract: CONTRACT,
-    previousRouteJsContract: PREVIOUS_ROUTE_JS_CONTRACT,
+    previousJsContract: PREVIOUS_JS_CONTRACT,
     htmlBindingContract: HTML_BINDING_CONTRACT,
     protectedParentBaseline: PROTECTED_PARENT_BASELINE,
-    consumerStatus: consumerStatusPayload,
-    routeStatus: publishRouteStatus
+    diagnosticStatus: publishStatus,
+    runDiagnosticReportingCycle: runDiagnosticReportingCycle
   };
 
   function init() {
@@ -1538,10 +1663,10 @@
     bindPointer();
     setLens("planet");
     publishBoot();
-    publishRouteStatus();
-    writeDiagnostics(true);
+    publishStatus();
+    writeVisibleReport(true);
     requestRender(8);
-    runCloneConsumerCycle();
+    runDiagnosticReportingCycle();
   }
 
   if (document.readyState === "loading") {

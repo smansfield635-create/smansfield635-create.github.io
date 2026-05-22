@@ -1,40 +1,51 @@
 // /showroom/globe/audralia/index.js
 // TNT FULL-FILE REPLACEMENT
+// AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_TNT_v1
+//
+// Previous route JS contract:
 // AUDRALIA_G1_DATUM_ADOPTION_ROUTE_JS_TNT_v1
 //
-// Process:
-// ADOPTION, NOT BIRTH.
-//
-// Adoption file held:
-// /assets/audralia/clean/runtime/audralia.true-globe.datum.js
-//
-// Adoption file contract:
-// AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1
+// Current HTML binding:
+// AUDRALIA_G1_DATUM_ADOPTION_HTML_BINDING_TNT_v1
 //
 // Protected parent baseline:
 // AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1
 //
+// Datum child file held:
+// /assets/audralia/clean/runtime/audralia.true-globe.datum.js
+//
+// Public datum contract:
+// AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1
+//
+// Cloning-method datum contract:
+// AUDRALIA_G1_CHILD_MATH_DATUM_CLONING_METHOD_SEED_TNT_v1
+//
 // Purpose:
 // - Preserve the locked G1 360 Diagnostic Scope globe baseline.
-// - Adopt the existing datum child file as-is.
-// - Do not rewrite, renew, replace, or duplicate datum authority.
+// - Consume the cloned datum seed without rewriting it.
+// - Recognize both the public receive-map contract and the cloning-method seed contract.
 // - Verify datum API, receive map, NEWS map, 256 seats, and child packet.
-// - Publish adoption status even if HTML diagnostic slots are absent.
-// - Populate HTML diagnostic slots only if they already exist.
+// - Write the visible diagnostic result into the HTML slots when present.
+// - Publish route status even if HTML slots are absent.
 // - Do not replace the visual lattice with datum seats yet.
-// - Do not activate terrain, moisture, surface, cloud, continent, or visual-pass work.
+// - Do not activate terrain, moisture, surface, cloud, continent, ground-level, or visual-pass work.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_G1_DATUM_ADOPTION_ROUTE_JS_TNT_v1";
-  var PREVIOUS_BASELINE = "AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1";
-  var HTML_DIAGNOSTIC_CONTRACT = "AUDRALIA_G1_DATUM_CHILD_RECOGNITION_HTML_DIAGNOSTIC_TNT_v1";
+  var CONTRACT = "AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_TNT_v1";
+  var PREVIOUS_ROUTE_JS_CONTRACT = "AUDRALIA_G1_DATUM_ADOPTION_ROUTE_JS_TNT_v1";
+  var HTML_BINDING_CONTRACT = "AUDRALIA_G1_DATUM_ADOPTION_HTML_BINDING_TNT_v1";
+  var PROTECTED_PARENT_BASELINE = "AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1";
 
-  var ADOPTION_PROCESS = "adoption-not-birth";
-  var ADOPTION_FILE = "/assets/audralia/clean/runtime/audralia.true-globe.datum.js";
-  var ADOPTION_FILE_CONTRACT = "AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1";
-  var ADOPTION_CACHE_KEY = "AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1";
+  var DATUM_FILE = "/assets/audralia/clean/runtime/audralia.true-globe.datum.js";
+  var PUBLIC_DATUM_CONTRACT = "AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1";
+  var CLONE_DATUM_CONTRACT = "AUDRALIA_G1_CHILD_MATH_DATUM_CLONING_METHOD_SEED_TNT_v1";
+  var DATUM_CACHE_KEY = "AUDRALIA_G1_CHILD_MATH_DATUM_CLONING_METHOD_SEED_TNT_v1";
+
+  var CLONING_METHOD = "cloning_method";
+  var PUBLIC_FRAME = "adopted_packet";
+  var TECHNICAL_REALITY = "new_seed_birth";
 
   var RADIAL_NODES = 16;
   var FIBONACCI_BANDS = 16;
@@ -52,18 +63,18 @@
   var LENS_COPY = Object.freeze({
     planet: {
       title: "Planet View",
-      label: "<strong>Planet View</strong> → spherical carrier · diagnostic lattice held as discovery layer",
-      copy: "Planet View preserves the observable globe carrier. The diagnostic lattice remains a rule layer, not the planet body."
+      label: "<strong>Planet View</strong> → spherical carrier · cloned datum consumed under the hood",
+      copy: "Planet View preserves the observable globe carrier. The cloned datum seed is consumed as math only; it does not replace the planet body."
     },
     lattice: {
       title: "Lattice View",
-      label: "<strong>Lattice View</strong> → 360 diagnostic scope · 16 × 16 / 256 seats",
-      copy: "Lattice View wraps the spherical carrier with the protected 360 diagnostic scope while datum adoption is checked under the hood."
+      label: "<strong>Lattice View</strong> → 360 diagnostic scope · cloned seed verified",
+      copy: "Lattice View preserves the 16 × 16 / 256 diagnostic scope while the parent route verifies the cloned datum receive-map."
     },
     diagnostic: {
       title: "Diagnostic Scope",
-      label: "<strong>Diagnostic Scope</strong> → parent baseline protected · datum adoption checked · downstream held",
-      copy: "Diagnostic Scope reports the G1 carrier baseline and whether the existing datum child has been adopted without activating downstream children."
+      label: "<strong>Diagnostic Scope</strong> → cloning-method consumer · downstream held",
+      copy: "Diagnostic Scope reports whether the parent route consumed the cloned datum seed, verified NEWS completion, and kept downstream children held."
     }
   });
 
@@ -106,27 +117,39 @@
 
     oneCanvas: false,
     onePointerPath: false,
-    oneLoop: false,
+    dirtyRafPiston: false,
     duplicateCanvasRemoved: 0,
 
     lastDiagnosticWrite: 0,
     datasetCache: {},
     errors: [],
 
-    adoption: {
-      process: ADOPTION_PROCESS,
+    consumer: {
       attempted: false,
       loading: false,
       loadAttempted: false,
       loadSucceeded: false,
       loadFailed: false,
-      apiFound: false,
-      apiSource: null,
-      statusReady: false,
+
+      datumApiFound: false,
+      datumApiSource: null,
       datumLoaded: false,
-      datumAdopted: false,
+      datumConsumed: false,
+
+      statusReady: false,
+      publicContractAccepted: false,
+      cloneContractRecognized: false,
+      cloningMethodRecognized: false,
+      publicAdoptionCompatible: false,
+      technicalBirthComplete: false,
+      parentInterfaceUnchanged: false,
+
       datumContract: null,
-      contractValid: false,
+      cloneContract: null,
+      process: null,
+      publicFrame: null,
+      technicalReality: null,
+
       receiveMapReady: false,
       seatCount: null,
       seatCountValid: false,
@@ -135,6 +158,7 @@
       childPacketAvailable: false,
       childPacketSeatCount: null,
       childPacketSeatCountValid: false,
+
       downstreamHeld: true,
       terrainReady: false,
       moistureReady: false,
@@ -142,7 +166,8 @@
       cloudReady: false,
       continentReady: false,
       visualPassClaimed: false,
-      failureReason: "pending-adoption",
+
+      failureReason: "pending-consumption",
       checkedAt: null,
       errors: []
     }
@@ -215,7 +240,7 @@
       time: new Date().toISOString()
     });
 
-    window.AUDRALIA_G1_DATUM_ADOPTION_ROUTE_JS_ERROR = {
+    window.AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_ERROR = {
       contract: CONTRACT,
       scope: scope,
       message: message,
@@ -223,24 +248,25 @@
     };
   }
 
-  function recordAdoptionError(scope, error) {
+  function recordConsumerError(scope, error) {
     var message = error && error.message ? error.message : String(error || "unknown");
 
-    state.adoption.errors.push({
+    state.consumer.errors.push({
       scope: scope,
       message: message,
       time: new Date().toISOString()
     });
 
-    state.adoption.failureReason = scope + ": " + message;
+    state.consumer.failureReason = scope + ": " + message;
 
-    window.AUDRALIA_G1_DATUM_ADOPTION_ERROR = {
+    window.AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ERROR = {
       contract: CONTRACT,
-      adoptionFile: ADOPTION_FILE,
-      adoptionFileContract: ADOPTION_FILE_CONTRACT,
+      datumFile: DATUM_FILE,
+      publicDatumContract: PUBLIC_DATUM_CONTRACT,
+      cloneDatumContract: CLONE_DATUM_CONTRACT,
       scope: scope,
       message: message,
-      errors: state.adoption.errors.slice()
+      errors: state.consumer.errors.slice()
     };
   }
 
@@ -653,7 +679,8 @@
     }
 
     state.renderCount += 1;
-    state.oneLoop = true;
+    state.dirtyRafPiston = true;
+
     if (state.settleFrames > 0) state.settleFrames -= 1;
 
     publishRouteStatus();
@@ -814,10 +841,12 @@
 
     state.canvas = selected;
     state.canvas.setAttribute("data-audralia-g1-diagnostic-canvas", CONTRACT);
-    state.canvas.setAttribute("data-previous-baseline", PREVIOUS_BASELINE);
-    state.canvas.setAttribute("data-adoption-process", ADOPTION_PROCESS);
-    state.canvas.setAttribute("data-adoption-file", ADOPTION_FILE);
-    state.canvas.setAttribute("data-adoption-file-contract", ADOPTION_FILE_CONTRACT);
+    state.canvas.setAttribute("data-previous-route-js-contract", PREVIOUS_ROUTE_JS_CONTRACT);
+    state.canvas.setAttribute("data-html-binding-contract", HTML_BINDING_CONTRACT);
+    state.canvas.setAttribute("data-protected-parent-baseline", PROTECTED_PARENT_BASELINE);
+    state.canvas.setAttribute("data-public-datum-contract", PUBLIC_DATUM_CONTRACT);
+    state.canvas.setAttribute("data-clone-datum-contract", CLONE_DATUM_CONTRACT);
+    state.canvas.setAttribute("data-cloning-method-consumer", "true");
     state.canvas.setAttribute("data-downstream-held", "true");
 
     state.canvas.style.position = "absolute";
@@ -897,24 +926,24 @@
     }, signal ? { signal: signal, passive: true } : { passive: true });
   }
 
-  function findDatumAdoptionApi() {
+  function findDatumApi() {
     var sources = [
       ["AUDRALIA_TRUE_GLOBE_DATUM", window.AUDRALIA_TRUE_GLOBE_DATUM],
       ["AUDRALIA_G1_TRUE_GLOBE_DATUM", window.AUDRALIA_G1_TRUE_GLOBE_DATUM],
+      ["AUDRALIA_G2_TRUE_GLOBE_DATUM", window.AUDRALIA_G2_TRUE_GLOBE_DATUM],
       ["AUDRALIA_TRUE_PLANETARY_DATUM", window.AUDRALIA_TRUE_PLANETARY_DATUM],
       ["AUDRALIA_G1_TRUE_PLANETARY_DATUM", window.AUDRALIA_G1_TRUE_PLANETARY_DATUM],
-      ["AUDRALIA_G2_TRUE_GLOBE_DATUM", window.AUDRALIA_G2_TRUE_GLOBE_DATUM],
       ["AUDRALIA_G2_TRUE_PLANETARY_DATUM", window.AUDRALIA_G2_TRUE_PLANETARY_DATUM]
     ];
 
     for (var i = 0; i < sources.length; i += 1) {
       if (sources[i][1]) {
-        state.adoption.apiSource = sources[i][0];
+        state.consumer.datumApiSource = sources[i][0];
         return sources[i][1];
       }
     }
 
-    state.adoption.apiSource = null;
+    state.consumer.datumApiSource = null;
     return null;
   }
 
@@ -923,7 +952,7 @@
       try {
         return api.status();
       } catch (error) {
-        recordAdoptionError("datum.status", error);
+        recordConsumerError("datum.status", error);
       }
     }
 
@@ -938,7 +967,7 @@
       try {
         return api.receive({ reference: true });
       } catch (error) {
-        recordAdoptionError("datum.receive", error);
+        recordConsumerError("datum.receive", error);
       }
     }
 
@@ -946,7 +975,7 @@
       try {
         return api.getReceiveMap({ reference: true });
       } catch (error2) {
-        recordAdoptionError("datum.getReceiveMap", error2);
+        recordConsumerError("datum.getReceiveMap", error2);
       }
     }
 
@@ -954,7 +983,7 @@
       try {
         return api.childReceiveMap({ reference: true });
       } catch (error3) {
-        recordAdoptionError("datum.childReceiveMap", error3);
+        recordConsumerError("datum.childReceiveMap", error3);
       }
     }
 
@@ -969,13 +998,9 @@
     try {
       return api.getChildReceivePacket("route-diagnostic", { compact: true });
     } catch (error) {
-      recordAdoptionError("datum.getChildReceivePacket", error);
+      recordConsumerError("datum.getChildReceivePacket", error);
       return null;
     }
-  }
-
-  function contractValid(contract) {
-    return contract === ADOPTION_FILE_CONTRACT;
   }
 
   function verifyAllSeatsNEWSComplete(seats) {
@@ -999,168 +1024,256 @@
     });
   }
 
-  function evaluateDatumAdoption() {
-    var adoption = state.adoption;
+  function publicContractAccepted(contract) {
+    return contract === PUBLIC_DATUM_CONTRACT;
+  }
 
-    adoption.attempted = true;
-    adoption.checkedAt = new Date().toISOString();
-    adoption.datumAdopted = false;
-    adoption.failureReason = "pending-adoption";
-    adoption.apiFound = false;
-    adoption.statusReady = false;
-    adoption.datumLoaded = false;
-    adoption.datumContract = null;
-    adoption.contractValid = false;
-    adoption.receiveMapReady = false;
-    adoption.seatCount = null;
-    adoption.seatCountValid = false;
-    adoption.newsComplete = false;
-    adoption.allSeatsNewsComplete = false;
-    adoption.childPacketAvailable = false;
-    adoption.childPacketSeatCount = null;
-    adoption.childPacketSeatCountValid = false;
-    adoption.terrainReady = false;
-    adoption.moistureReady = false;
-    adoption.surfaceReady = false;
-    adoption.cloudReady = false;
-    adoption.continentReady = false;
-    adoption.visualPassClaimed = false;
+  function cloneContractRecognized(cloneContract) {
+    return cloneContract === CLONE_DATUM_CONTRACT;
+  }
 
-    var api = findDatumAdoptionApi();
+  function processRecognized(process) {
+    return process === CLONING_METHOD;
+  }
+
+  function resetConsumerForCheck() {
+    var consumer = state.consumer;
+
+    consumer.attempted = true;
+    consumer.checkedAt = new Date().toISOString();
+
+    consumer.datumApiFound = false;
+    consumer.datumLoaded = false;
+    consumer.datumConsumed = false;
+
+    consumer.statusReady = false;
+    consumer.publicContractAccepted = false;
+    consumer.cloneContractRecognized = false;
+    consumer.cloningMethodRecognized = false;
+    consumer.publicAdoptionCompatible = false;
+    consumer.technicalBirthComplete = false;
+    consumer.parentInterfaceUnchanged = false;
+
+    consumer.datumContract = null;
+    consumer.cloneContract = null;
+    consumer.process = null;
+    consumer.publicFrame = null;
+    consumer.technicalReality = null;
+
+    consumer.receiveMapReady = false;
+    consumer.seatCount = null;
+    consumer.seatCountValid = false;
+    consumer.newsComplete = false;
+    consumer.allSeatsNewsComplete = false;
+    consumer.childPacketAvailable = false;
+    consumer.childPacketSeatCount = null;
+    consumer.childPacketSeatCountValid = false;
+
+    consumer.downstreamHeld = true;
+    consumer.terrainReady = false;
+    consumer.moistureReady = false;
+    consumer.surfaceReady = false;
+    consumer.cloudReady = false;
+    consumer.continentReady = false;
+    consumer.visualPassClaimed = false;
+
+    consumer.failureReason = "pending-consumption";
+  }
+
+  function evaluateCloneConsumer() {
+    resetConsumerForCheck();
+
+    var consumer = state.consumer;
+    var api = findDatumApi();
 
     if (!api) {
-      adoption.failureReason = adoption.loading ? "loading adoption file" : "datum adoption global missing";
+      consumer.failureReason = consumer.loading ? "loading cloned datum seed" : "datum global missing";
       publishRouteStatus();
       writeDiagnostics(true);
-      return adoption;
+      return consumer;
     }
 
-    adoption.apiFound = true;
-    adoption.datumLoaded = true;
+    consumer.datumApiFound = true;
+    consumer.datumLoaded = true;
 
     var status = getDatumStatus(api);
-    adoption.statusReady = Boolean(status);
-    adoption.datumContract = (status && status.contract) || api.contract || null;
-    adoption.contractValid = contractValid(adoption.datumContract);
+    consumer.statusReady = Boolean(status);
 
-    if (!adoption.contractValid) {
-      adoption.failureReason = "contract mismatch";
+    consumer.datumContract = (status && status.contract) || api.contract || null;
+    consumer.cloneContract = (status && status.cloneContract) || api.cloneContract || null;
+    consumer.process = (status && status.process) || api.process || null;
+    consumer.publicFrame = (status && status.publicFrame) || api.publicFrame || null;
+    consumer.technicalReality = (status && status.technicalReality) || api.technicalReality || null;
+
+    consumer.publicContractAccepted = publicContractAccepted(consumer.datumContract);
+    consumer.cloneContractRecognized = cloneContractRecognized(consumer.cloneContract);
+    consumer.cloningMethodRecognized = processRecognized(consumer.process);
+    consumer.publicAdoptionCompatible = Boolean((status && status.publicAdoptionCompatible) || api.publicAdoptionCompatible);
+    consumer.technicalBirthComplete = Boolean((status && status.technicalBirthComplete) || api.technicalBirthComplete);
+    consumer.parentInterfaceUnchanged = Boolean((status && status.parentInterfaceUnchanged) || api.parentInterfaceUnchanged);
+
+    if (!consumer.publicContractAccepted) {
+      consumer.failureReason = "public contract mismatch";
       publishRouteStatus();
       writeDiagnostics(true);
-      return adoption;
+      return consumer;
+    }
+
+    if (!consumer.cloneContractRecognized) {
+      consumer.failureReason = "clone contract mismatch";
+      publishRouteStatus();
+      writeDiagnostics(true);
+      return consumer;
+    }
+
+    if (!consumer.cloningMethodRecognized) {
+      consumer.failureReason = "process mismatch";
+      publishRouteStatus();
+      writeDiagnostics(true);
+      return consumer;
+    }
+
+    if (!consumer.publicAdoptionCompatible) {
+      consumer.failureReason = "public adoption compatibility missing";
+      publishRouteStatus();
+      writeDiagnostics(true);
+      return consumer;
+    }
+
+    if (!consumer.technicalBirthComplete) {
+      consumer.failureReason = "technical birth incomplete";
+      publishRouteStatus();
+      writeDiagnostics(true);
+      return consumer;
+    }
+
+    if (!consumer.parentInterfaceUnchanged) {
+      consumer.failureReason = "parent interface changed";
+      publishRouteStatus();
+      writeDiagnostics(true);
+      return consumer;
     }
 
     var map = getReceiveMap(api);
 
     if (!map) {
-      adoption.failureReason = "receive map unavailable";
+      consumer.failureReason = "receive map unavailable";
       publishRouteStatus();
       writeDiagnostics(true);
-      return adoption;
+      return consumer;
     }
 
     var seats = Array.isArray(map.seats) ? map.seats : [];
-    adoption.receiveMapReady = map.childReceiveMapReady === true || (status && status.childReceiveMapReady === true);
-    adoption.seatCount = seats.length;
-    adoption.seatCountValid =
+
+    consumer.receiveMapReady = map.childReceiveMapReady === true || (status && status.childReceiveMapReady === true);
+    consumer.seatCount = seats.length;
+    consumer.seatCountValid =
       seats.length === LATTICE_STATES &&
       Number(map.radialNodes) === RADIAL_NODES &&
       Number(map.fibonacciBands) === FIBONACCI_BANDS &&
       Number(map.latticeStates) === LATTICE_STATES;
 
-    adoption.newsComplete = map.newsProtocolActive === true && map.newsComplete === true;
-    adoption.allSeatsNewsComplete = verifyAllSeatsNEWSComplete(seats);
+    consumer.newsComplete =
+      map.newsProtocolActive === true &&
+      map.newsComplete === true &&
+      map.chronologyComplete === true &&
+      map.relationshipMapReady === true &&
+      map.carrierBound === true;
+
+    consumer.allSeatsNewsComplete = verifyAllSeatsNEWSComplete(seats);
 
     var packet = getChildPacket(api);
-    adoption.childPacketAvailable = Boolean(packet && packet.childReceivePacketReady === true);
-    adoption.childPacketSeatCount = packet && Number.isFinite(Number(packet.seatCount)) ? Number(packet.seatCount) : null;
-    adoption.childPacketSeatCountValid = adoption.childPacketSeatCount === LATTICE_STATES;
 
-    adoption.terrainReady = map.terrainReady === true || (packet && packet.terrainReady === true);
-    adoption.moistureReady = map.moistureReady === true || (packet && packet.moistureReady === true);
-    adoption.surfaceReady = map.surfaceReady === true || (packet && packet.surfaceReady === true);
-    adoption.cloudReady = map.cloudReady === true || (packet && packet.cloudReady === true);
-    adoption.continentReady = map.continentReady === true || (packet && packet.continentReady === true);
-    adoption.visualPassClaimed = map.visualPassClaimed === true || (packet && packet.visualPassClaimed === true);
+    consumer.childPacketAvailable = Boolean(packet && packet.childReceivePacketReady === true);
+    consumer.childPacketSeatCount = packet && Number.isFinite(Number(packet.seatCount)) ? Number(packet.seatCount) : null;
+    consumer.childPacketSeatCountValid = consumer.childPacketSeatCount === LATTICE_STATES;
 
-    if (!adoption.receiveMapReady) {
-      adoption.failureReason = "receive map not ready";
-    } else if (!adoption.seatCountValid) {
-      adoption.failureReason = "seat-count mismatch";
-    } else if (!adoption.newsComplete || !adoption.allSeatsNewsComplete) {
-      adoption.failureReason = "NEWS incomplete";
-    } else if (!adoption.childPacketAvailable || !adoption.childPacketSeatCountValid) {
-      adoption.failureReason = "child packet unavailable";
+    consumer.terrainReady = map.terrainReady === true || (packet && packet.terrainReady === true);
+    consumer.moistureReady = map.moistureReady === true || (packet && packet.moistureReady === true);
+    consumer.surfaceReady = map.surfaceReady === true || (packet && packet.surfaceReady === true);
+    consumer.cloudReady = map.cloudReady === true || (packet && packet.cloudReady === true);
+    consumer.continentReady = map.continentReady === true || (packet && packet.continentReady === true);
+    consumer.visualPassClaimed = map.visualPassClaimed === true || (packet && packet.visualPassClaimed === true);
+
+    if (!consumer.receiveMapReady) {
+      consumer.failureReason = "receive map not ready";
+    } else if (!consumer.seatCountValid) {
+      consumer.failureReason = "seat-count mismatch";
+    } else if (!consumer.newsComplete || !consumer.allSeatsNewsComplete) {
+      consumer.failureReason = "NEWS incomplete";
+    } else if (!consumer.childPacketAvailable || !consumer.childPacketSeatCountValid) {
+      consumer.failureReason = "child packet unavailable";
     } else if (
-      adoption.terrainReady ||
-      adoption.moistureReady ||
-      adoption.surfaceReady ||
-      adoption.cloudReady ||
-      adoption.continentReady ||
-      adoption.visualPassClaimed
+      consumer.terrainReady ||
+      consumer.moistureReady ||
+      consumer.surfaceReady ||
+      consumer.cloudReady ||
+      consumer.continentReady ||
+      consumer.visualPassClaimed
     ) {
-      adoption.failureReason = "downstream false-ready claim";
+      consumer.failureReason = "downstream false-ready claim";
     } else {
-      adoption.datumAdopted = true;
-      adoption.failureReason = "";
+      consumer.datumConsumed = true;
+      consumer.failureReason = "";
     }
 
     publishRouteStatus();
     writeDiagnostics(true);
-    return adoption;
+    return consumer;
   }
 
-  function loadDatumAdoptionFileIfMissing() {
+  function loadDatumFileIfMissing() {
     return new Promise(function (resolve) {
-      if (findDatumAdoptionApi()) {
-        state.adoption.loadSucceeded = true;
-        state.adoption.datumLoaded = true;
-        resolve(findDatumAdoptionApi());
+      if (findDatumApi()) {
+        state.consumer.loadSucceeded = true;
+        state.consumer.datumLoaded = true;
+        resolve(findDatumApi());
         return;
       }
 
-      state.adoption.loadAttempted = true;
-      state.adoption.loading = true;
+      state.consumer.loadAttempted = true;
+      state.consumer.loading = true;
       writeDiagnostics(true);
 
       var existing = document.querySelector("script[src*='audralia.true-globe.datum.js']");
 
       if (existing) {
         setTimeout(function () {
-          state.adoption.loading = false;
-          state.adoption.loadSucceeded = Boolean(findDatumAdoptionApi());
-          state.adoption.loadFailed = !state.adoption.loadSucceeded;
-          resolve(findDatumAdoptionApi());
-        }, 160);
+          state.consumer.loading = false;
+          state.consumer.loadSucceeded = Boolean(findDatumApi());
+          state.consumer.loadFailed = !state.consumer.loadSucceeded;
+          resolve(findDatumApi());
+        }, 180);
         return;
       }
 
       var script = document.createElement("script");
-      script.src = ADOPTION_FILE + "?v=" + encodeURIComponent(ADOPTION_CACHE_KEY);
+      script.src = DATUM_FILE + "?v=" + encodeURIComponent(DATUM_CACHE_KEY);
       script.defer = true;
       script.async = true;
-      script.setAttribute("data-audralia-datum-adoption-loader", CONTRACT);
-      script.setAttribute("data-adoption-process", ADOPTION_PROCESS);
-      script.setAttribute("data-adoption-file-contract", ADOPTION_FILE_CONTRACT);
+      script.setAttribute("data-audralia-datum-cloning-method-loader", CONTRACT);
+      script.setAttribute("data-public-datum-contract", PUBLIC_DATUM_CONTRACT);
+      script.setAttribute("data-clone-datum-contract", CLONE_DATUM_CONTRACT);
+      script.setAttribute("data-process", CLONING_METHOD);
       script.setAttribute("data-downstream-activation", "false");
 
       script.onload = function () {
-        state.adoption.loading = false;
-        state.adoption.loadSucceeded = Boolean(findDatumAdoptionApi());
-        state.adoption.loadFailed = !state.adoption.loadSucceeded;
+        state.consumer.loading = false;
+        state.consumer.loadSucceeded = Boolean(findDatumApi());
+        state.consumer.loadFailed = !state.consumer.loadSucceeded;
 
-        if (!state.adoption.loadSucceeded) {
-          recordAdoptionError("load-adoption-file", "script loaded but datum global was not published");
+        if (!state.consumer.loadSucceeded) {
+          recordConsumerError("load-cloned-datum-seed", "script loaded but datum global was not published");
         }
 
-        resolve(findDatumAdoptionApi());
+        resolve(findDatumApi());
       };
 
       script.onerror = function () {
-        state.adoption.loading = false;
-        state.adoption.loadSucceeded = false;
-        state.adoption.loadFailed = true;
-        recordAdoptionError("load-adoption-file", "script load failed");
+        state.consumer.loading = false;
+        state.consumer.loadSucceeded = false;
+        state.consumer.loadFailed = true;
+        recordConsumerError("load-cloned-datum-seed", "script load failed");
         resolve(null);
       };
 
@@ -1168,41 +1281,59 @@
     });
   }
 
-  function runAdoptionCycle() {
-    evaluateDatumAdoption();
+  function runCloneConsumerCycle() {
+    evaluateCloneConsumer();
 
-    if (!state.adoption.datumAdopted && !findDatumAdoptionApi()) {
-      loadDatumAdoptionFileIfMissing().then(function () {
-        evaluateDatumAdoption();
+    if (!state.consumer.datumConsumed && !findDatumApi()) {
+      loadDatumFileIfMissing().then(function () {
+        evaluateCloneConsumer();
       });
     }
   }
 
-  function adoptionStatusPayload() {
+  function consumerStatusPayload() {
     return {
       contract: CONTRACT,
-      previousBaseline: PREVIOUS_BASELINE,
-      adoptionProcess: ADOPTION_PROCESS,
-      adoptionFile: ADOPTION_FILE,
-      adoptionFileContract: ADOPTION_FILE_CONTRACT,
-      datumApiFound: state.adoption.apiFound,
-      apiSource: state.adoption.apiSource,
-      datumLoaded: state.adoption.datumLoaded,
-      datumLoadAttempted: state.adoption.loadAttempted,
-      datumLoadSucceeded: state.adoption.loadSucceeded,
-      datumLoadFailed: state.adoption.loadFailed,
-      datumAdopted: state.adoption.datumAdopted,
-      datumContract: state.adoption.datumContract,
-      contractValid: state.adoption.contractValid,
-      statusReady: state.adoption.statusReady,
-      receiveMapReady: state.adoption.receiveMapReady,
-      seatCount: state.adoption.seatCount,
-      seatCountValid: state.adoption.seatCountValid,
-      newsComplete: state.adoption.newsComplete,
-      allSeatsNewsComplete: state.adoption.allSeatsNewsComplete,
-      childPacketAvailable: state.adoption.childPacketAvailable,
-      childPacketSeatCount: state.adoption.childPacketSeatCount,
-      childPacketSeatCountValid: state.adoption.childPacketSeatCountValid,
+      previousRouteJsContract: PREVIOUS_ROUTE_JS_CONTRACT,
+      htmlBindingContract: HTML_BINDING_CONTRACT,
+      protectedParentBaseline: PROTECTED_PARENT_BASELINE,
+      datumFile: DATUM_FILE,
+      publicDatumContract: PUBLIC_DATUM_CONTRACT,
+      cloneDatumContract: CLONE_DATUM_CONTRACT,
+
+      attempted: state.consumer.attempted,
+      loading: state.consumer.loading,
+      loadAttempted: state.consumer.loadAttempted,
+      loadSucceeded: state.consumer.loadSucceeded,
+      loadFailed: state.consumer.loadFailed,
+
+      datumApiFound: state.consumer.datumApiFound,
+      datumApiSource: state.consumer.datumApiSource,
+      datumLoaded: state.consumer.datumLoaded,
+      datumConsumed: state.consumer.datumConsumed,
+
+      datumContract: state.consumer.datumContract,
+      cloneContract: state.consumer.cloneContract,
+      process: state.consumer.process,
+      publicFrame: state.consumer.publicFrame,
+      technicalReality: state.consumer.technicalReality,
+
+      publicContractAccepted: state.consumer.publicContractAccepted,
+      cloneContractRecognized: state.consumer.cloneContractRecognized,
+      cloningMethodRecognized: state.consumer.cloningMethodRecognized,
+      publicAdoptionCompatible: state.consumer.publicAdoptionCompatible,
+      technicalBirthComplete: state.consumer.technicalBirthComplete,
+      parentInterfaceUnchanged: state.consumer.parentInterfaceUnchanged,
+
+      receiveMapReady: state.consumer.receiveMapReady,
+      seatCount: state.consumer.seatCount,
+      seatCountValid: state.consumer.seatCountValid,
+      newsComplete: state.consumer.newsComplete,
+      allSeatsNewsComplete: state.consumer.allSeatsNewsComplete,
+      childPacketAvailable: state.consumer.childPacketAvailable,
+      childPacketSeatCount: state.consumer.childPacketSeatCount,
+      childPacketSeatCountValid: state.consumer.childPacketSeatCountValid,
+
       downstreamHeld: true,
       terrainReady: false,
       moistureReady: false,
@@ -1210,25 +1341,31 @@
       cloudReady: false,
       continentReady: false,
       visualPassClaimed: false,
-      failureReason: state.adoption.failureReason,
-      checkedAt: state.adoption.checkedAt,
-      errors: state.adoption.errors.slice()
+
+      failureReason: state.consumer.failureReason,
+      checkedAt: state.consumer.checkedAt,
+      errors: state.consumer.errors.slice()
     };
   }
 
   function publishRouteStatus() {
     var payload = {
       contract: CONTRACT,
-      previousBaseline: PREVIOUS_BASELINE,
-      htmlDiagnosticContract: HTML_DIAGNOSTIC_CONTRACT,
+      previousRouteJsContract: PREVIOUS_ROUTE_JS_CONTRACT,
+      htmlBindingContract: HTML_BINDING_CONTRACT,
+      protectedParentBaseline: PROTECTED_PARENT_BASELINE,
       route: "/showroom/globe/audralia/",
-      adoption: adoptionStatusPayload(),
+      target: "/showroom/globe/audralia/index.js",
+
+      consumer: consumerStatusPayload(),
+
       parentBaselineProtected: true,
       globeRole: "observable-organic-carrier",
       diamondLatticeRole: "scientific-discovery-rule-layer",
       diamondLatticeIsPlanetBody: false,
       visualLatticeSource: "protected-local-g1-diagnostic-geometry",
       datumSeatsUsedForVisualLattice: false,
+
       newsProtocolActive: true,
       radialNodes: RADIAL_NODES,
       fibonacciBands: FIBONACCI_BANDS,
@@ -1237,8 +1374,9 @@
       activeLens: state.activeLens,
       oneCanvas: state.oneCanvas,
       onePointerPath: state.onePointerPath,
-      oneLoop: state.oneLoop,
+      dirtyRafPiston: state.dirtyRafPiston,
       smoothDragProtected: true,
+
       downstreamHeld: true,
       terrainActivated: false,
       moistureActivated: false,
@@ -1246,13 +1384,14 @@
       cloudActivated: false,
       continentActivated: false,
       visualPassClaimed: false,
+
       renderCount: state.renderCount,
       duplicateCanvasRemoved: state.duplicateCanvasRemoved,
       errors: state.errors.slice()
     };
 
-    window.AUDRALIA_G1_DATUM_ADOPTION_ROUTE_JS_STATUS = payload;
-    window.AUDRALIA_G1_DATUM_ADOPTION_STATUS = payload.adoption;
+    window.AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_STATUS = payload;
+    window.AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_STATUS = payload.consumer;
 
     return payload;
   }
@@ -1262,75 +1401,83 @@
     if (!force && t - state.lastDiagnosticWrite < 1000) return;
     state.lastDiagnosticWrite = t;
 
-    var a = state.adoption;
+    var c = state.consumer;
 
-    setText("[data-audralia-diagnostic-route]", "JS adoption construct · parent baseline protected");
-    setText("[data-audralia-diagnostic-carrier]", "spherical carrier active · lattice remains discovery layer");
+    setText("[data-audralia-diagnostic-route]", "JS cloning-method consumer · parent baseline protected");
+    setText("[data-audralia-diagnostic-carrier]", "spherical carrier active · visual lattice remains protected");
     setText("[data-audralia-diagnostic-lens]", state.activeLens);
     setText("[data-audralia-diagnostic-canvas]", state.oneCanvas ? "one canvas" : "canvas pending");
-    setText("[data-audralia-diagnostic-loop]", state.oneLoop ? "dirty RAF · piston controlled" : "loop pending");
-    setText("[data-audralia-diagnostic-children]", "downstream held · adoption only");
-    setText("[data-audralia-diagnostic-news]", "NEWS active · parent route protected");
+    setText("[data-audralia-diagnostic-loop]", state.dirtyRafPiston ? "dirty RAF · piston controlled" : "loop pending");
+    setText("[data-audralia-diagnostic-children]", "downstream held · cloned seed consumption only");
+    setText("[data-audralia-diagnostic-news]", c.datumConsumed ? "NEWS complete · cloned seed verified" : "NEWS pending · cloned seed check");
     setText("[data-audralia-diagnostic-scope]", "360 scope · 16 × 16 / 256 seats");
 
-    if (!a.attempted) {
-      setText("[data-audralia-diagnostic-datum-child]", "pending adoption");
-      setText("[data-audralia-diagnostic-receive-map]", "pending adoption");
-      setText("[data-audralia-diagnostic-news-map]", "pending adoption");
-      setText("[data-audralia-diagnostic-child-packet]", "pending adoption");
-      setText("[data-audralia-diagnostic-seat-count]", "pending adoption");
+    if (!c.attempted) {
+      setText("[data-audralia-diagnostic-datum-child]", "pending cloned-seed consumption");
+      setText("[data-audralia-diagnostic-receive-map]", "pending cloned-seed consumption");
+      setText("[data-audralia-diagnostic-news-map]", "pending cloned-seed consumption");
+      setText("[data-audralia-diagnostic-child-packet]", "pending cloned-seed consumption");
+      setText("[data-audralia-diagnostic-seat-count]", "pending cloned-seed consumption");
       setText("[data-audralia-diagnostic-downstream]", "held · no child activation");
-    } else if (a.loading) {
-      setText("[data-audralia-diagnostic-datum-child]", "loading adoption file");
+    } else if (c.loading) {
+      setText("[data-audralia-diagnostic-datum-child]", "loading cloned datum seed");
       setText("[data-audralia-diagnostic-receive-map]", "pending");
       setText("[data-audralia-diagnostic-news-map]", "pending");
       setText("[data-audralia-diagnostic-child-packet]", "pending");
       setText("[data-audralia-diagnostic-seat-count]", "pending");
       setText("[data-audralia-diagnostic-downstream]", "held · no child activation");
-    } else if (a.datumAdopted) {
-      setText("[data-audralia-diagnostic-datum-child]", "adopted · G1 receive-map authority");
-      setText("[data-audralia-diagnostic-receive-map]", "adopted · 256 seats");
+    } else if (c.datumConsumed) {
+      setText("[data-audralia-diagnostic-datum-child]", "cloned seed consumed · adoption-compatible");
+      setText("[data-audralia-diagnostic-receive-map]", "ready · 256 seats");
       setText("[data-audralia-diagnostic-news-map]", "complete · N/E/W/S");
       setText("[data-audralia-diagnostic-child-packet]", "available · route-diagnostic");
       setText("[data-audralia-diagnostic-seat-count]", "256 / 16 × 16");
       setText("[data-audralia-diagnostic-downstream]", "held · no child activation");
     } else {
-      setText("[data-audralia-diagnostic-datum-child]", "failed · " + (a.failureReason || "adoption unavailable"));
-      setText("[data-audralia-diagnostic-receive-map]", a.receiveMapReady ? "available · constrained" : "failed · unavailable");
-      setText("[data-audralia-diagnostic-news-map]", a.newsComplete && a.allSeatsNewsComplete ? "complete · N/E/W/S" : "failed · NEWS incomplete");
-      setText("[data-audralia-diagnostic-child-packet]", a.childPacketAvailable ? "available · constrained" : "failed · unavailable");
-      setText("[data-audralia-diagnostic-seat-count]", a.seatCountValid ? "256 / 16 × 16" : "failed · expected 256");
+      setText("[data-audralia-diagnostic-datum-child]", "failed · " + (c.failureReason || "cloned seed unavailable"));
+      setText("[data-audralia-diagnostic-receive-map]", c.receiveMapReady ? "available · constrained" : "failed · receive map unavailable");
+      setText("[data-audralia-diagnostic-news-map]", c.newsComplete && c.allSeatsNewsComplete ? "complete · N/E/W/S" : "failed · NEWS incomplete");
+      setText("[data-audralia-diagnostic-child-packet]", c.childPacketAvailable ? "available · constrained" : "failed · child packet unavailable");
+      setText("[data-audralia-diagnostic-seat-count]", c.seatCountValid ? "256 / 16 × 16" : "failed · expected 256");
       setText("[data-audralia-diagnostic-downstream]", "held · no activation");
     }
 
     setDataset("audraliaRouteJsContract", CONTRACT);
-    setDataset("audraliaPreviousBaseline", PREVIOUS_BASELINE);
-    setDataset("audraliaAdoptionProcess", ADOPTION_PROCESS);
-    setDataset("audraliaAdoptionFileContract", ADOPTION_FILE_CONTRACT);
-    setDataset("audraliaDatumAdopted", a.datumAdopted);
-    setDataset("audraliaDatumApiFound", a.apiFound);
-    setDataset("audraliaDatumReceiveMapReady", a.receiveMapReady);
-    setDataset("audraliaDatumSeatCountValid", a.seatCountValid);
-    setDataset("audraliaDatumNewsComplete", a.newsComplete && a.allSeatsNewsComplete);
-    setDataset("audraliaDatumChildPacketAvailable", a.childPacketAvailable);
+    setDataset("audraliaPreviousRouteJsContract", PREVIOUS_ROUTE_JS_CONTRACT);
+    setDataset("audraliaHtmlBindingContract", HTML_BINDING_CONTRACT);
+    setDataset("audraliaProtectedParentBaseline", PROTECTED_PARENT_BASELINE);
+    setDataset("audraliaPublicDatumContract", PUBLIC_DATUM_CONTRACT);
+    setDataset("audraliaCloneDatumContract", CLONE_DATUM_CONTRACT);
+    setDataset("audraliaCloneMethodConsumer", true);
+    setDataset("audraliaDatumConsumed", c.datumConsumed);
+    setDataset("audraliaCloneContractRecognized", c.cloneContractRecognized);
+    setDataset("audraliaPublicContractAccepted", c.publicContractAccepted);
+    setDataset("audraliaTechnicalBirthComplete", c.technicalBirthComplete);
+    setDataset("audraliaReceiveMapReady", c.receiveMapReady);
+    setDataset("audraliaSeatCountValid", c.seatCountValid);
+    setDataset("audraliaNewsComplete", c.newsComplete && c.allSeatsNewsComplete);
+    setDataset("audraliaChildPacketAvailable", c.childPacketAvailable);
     setDataset("audraliaDownstreamHeld", true);
   }
 
   function publishBoot() {
-    window.AUDRALIA_G1_DATUM_ADOPTION_ROUTE_JS_BOOT = {
+    window.AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_BOOT = {
       contract: CONTRACT,
-      previousBaseline: PREVIOUS_BASELINE,
-      adoptionProcess: ADOPTION_PROCESS,
-      adoptionFile: ADOPTION_FILE,
-      adoptionFileContract: ADOPTION_FILE_CONTRACT,
+      previousRouteJsContract: PREVIOUS_ROUTE_JS_CONTRACT,
+      htmlBindingContract: HTML_BINDING_CONTRACT,
+      protectedParentBaseline: PROTECTED_PARENT_BASELINE,
+      datumFile: DATUM_FILE,
+      publicDatumContract: PUBLIC_DATUM_CONTRACT,
+      cloneDatumContract: CLONE_DATUM_CONTRACT,
       route: "/showroom/globe/audralia/",
       target: "/showroom/globe/audralia/index.js",
       parentBaselineProtected: true,
       datumFileChanged: false,
-      datumFileRenewed: false,
+      htmlFileChanged: false,
       visualLatticeReplacement: false,
       downstreamHeld: true,
       terrainActivated: false,
+      moistureActivated: false,
       surfaceActivated: false,
       cloudActivated: false,
       continentActivated: false,
@@ -1367,8 +1514,10 @@
     stop: stop,
     state: state,
     contract: CONTRACT,
-    previousBaseline: PREVIOUS_BASELINE,
-    adoptionStatus: adoptionStatusPayload,
+    previousRouteJsContract: PREVIOUS_ROUTE_JS_CONTRACT,
+    htmlBindingContract: HTML_BINDING_CONTRACT,
+    protectedParentBaseline: PROTECTED_PARENT_BASELINE,
+    consumerStatus: consumerStatusPayload,
     routeStatus: publishRouteStatus
   };
 
@@ -1392,7 +1541,7 @@
     publishRouteStatus();
     writeDiagnostics(true);
     requestRender(8);
-    runAdoptionCycle();
+    runCloneConsumerCycle();
   }
 
   if (document.readyState === "loading") {

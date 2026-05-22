@@ -1,17 +1,18 @@
 // /assets/audralia/clean/terrain/audralia.gratitude.continent.child.js
-// AUDRALIA_GRATITUDE_256_NEWS_COHERENCE_MULTISTREAM_RENDER_OPTIMIZATION_ENGINE_TNT_v1
+// AUDRALIA_GRATITUDE_TERRAIN_ENGINE_SURFACE_HABITABILITY_BLUEPRINT_REGISTRY_ALIGNMENT_TNT_v1
 // Full-file replacement.
 // Scope: Gratitude upstream continent classification and stream-routing engine.
-// Purpose: map the full 256-node Gratitude construct, classify basins/marshes/ridges/valleys/coast/hydration/texture/future sockets,
-// enforce NEWS and coherence constraints, publish multi-stream render packets, and expose runtime-readiness metrics.
-// Does not own: HTML, script tags, cache keys, carrier rendering, planet core, downstream category files,
-// Runtime / Strength activation, final terrain pass, or final visual pass.
+// Purpose: preserve the 256-node terrain engine while adding surface-habitability downstream registry,
+// reciprocal blueprint intake readiness, and terrain datum packets for sea-level/elevation/basin/valley/ridge/coast alignment.
+// Does not own: HTML, script tags, cache keys, carrier rendering, planet core, hydration child,
+// surface-habitability child, climate authority, atmosphere authority, ecology activation,
+// settlement activation, urban activation, Runtime / Strength activation, final terrain pass, or final visual pass.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_GRATITUDE_256_NEWS_COHERENCE_MULTISTREAM_RENDER_OPTIMIZATION_ENGINE_TNT_v1";
-  var PREVIOUS_CONTRACT = "AUDRALIA_GRATITUDE_TERRAIN_DEFINITION_ASSET_SYSTEM_TNT_v1";
+  var CONTRACT = "AUDRALIA_GRATITUDE_TERRAIN_ENGINE_SURFACE_HABITABILITY_BLUEPRINT_REGISTRY_ALIGNMENT_TNT_v1";
+  var PREVIOUS_CONTRACT = "AUDRALIA_GRATITUDE_256_NEWS_COHERENCE_MULTISTREAM_RENDER_OPTIMIZATION_ENGINE_TNT_v1";
   var FILE = "/assets/audralia/clean/terrain/audralia.gratitude.continent.child.js";
 
   var CONTINENT_ID = "gratitude";
@@ -23,7 +24,14 @@
   var NODE_COUNT = 256;
   var TAU = Math.PI * 2;
 
+  var SEA_LEVEL_DATUM = 0.32;
+  var COASTAL_DATUM_TOLERANCE = 0.055;
+  var WATER_TABLE_HELD_OFFSET = 0.035;
+
   var FINAL_TERRAIN_PASS_CLAIM = false;
+  var FINAL_HYDRATION_PASS_CLAIM = false;
+  var FINAL_ECOLOGY_PASS_CLAIM = false;
+  var FINAL_SETTLEMENT_PASS_CLAIM = false;
   var FINAL_VISUAL_PASS_CLAIM = false;
   var RUNTIME_STRENGTH_HELD = true;
 
@@ -52,6 +60,7 @@
     TEXTURE: "texture",
     MINERAL: "mineral",
     SOIL: "soil",
+    SURFACE_HABITABILITY: "surface_habitability_field_blueprint",
     BIOME_HELD: "biome_candidate_held",
     ECOLOGY_HELD: "ecology_candidate_held",
     SETTLEMENT_HELD: "settlement_candidate_held",
@@ -146,6 +155,7 @@
     texture: "/assets/audralia/clean/terrain/gratitude/gratitude.texture.child.js",
     minerals: "/assets/audralia/clean/terrain/gratitude/gratitude.minerals.child.js",
     soils: "/assets/audralia/clean/terrain/gratitude/gratitude.soils.child.js",
+    surfaceHabitability: "/assets/audralia/clean/terrain/gratitude/gratitude.surface-habitability.child.js",
     biomes: "/assets/audralia/clean/terrain/gratitude/gratitude.biomes.child.js",
     ecology: "/assets/audralia/clean/terrain/gratitude/gratitude.ecology.child.js",
     settlement: "/assets/audralia/clean/terrain/gratitude/gratitude.settlement.child.js",
@@ -169,10 +179,12 @@
     Object.freeze({ id: "textureStream", category: CATEGORY.TEXTURE, downstreamFile: DOWNSTREAM_FILES.texture, ownerStatus: "planned_downstream_held", mobilePriority: 13 }),
     Object.freeze({ id: "mineralStream", category: CATEGORY.MINERAL, downstreamFile: DOWNSTREAM_FILES.minerals, ownerStatus: "planned_downstream_held", mobilePriority: 14 }),
     Object.freeze({ id: "soilStream", category: CATEGORY.SOIL, downstreamFile: DOWNSTREAM_FILES.soils, ownerStatus: "planned_downstream_held", mobilePriority: 15 }),
-    Object.freeze({ id: "biomeStreamHeld", category: CATEGORY.BIOME_HELD, downstreamFile: DOWNSTREAM_FILES.biomes, ownerStatus: "future_socket_held", mobilePriority: 16 }),
-    Object.freeze({ id: "ecologyStreamHeld", category: CATEGORY.ECOLOGY_HELD, downstreamFile: DOWNSTREAM_FILES.ecology, ownerStatus: "future_socket_held", mobilePriority: 17 }),
-    Object.freeze({ id: "settlementStreamHeld", category: CATEGORY.SETTLEMENT_HELD, downstreamFile: DOWNSTREAM_FILES.settlement, ownerStatus: "future_socket_held", mobilePriority: 18 }),
-    Object.freeze({ id: "urbanStreamHeld", category: CATEGORY.URBAN_HELD, downstreamFile: DOWNSTREAM_FILES.urban, ownerStatus: "future_socket_held", mobilePriority: 19 })
+    Object.freeze({ id: "surfaceHabitabilityStream", category: CATEGORY.SURFACE_HABITABILITY, downstreamFile: DOWNSTREAM_FILES.surfaceHabitability, ownerStatus: "planned_downstream_held", mobilePriority: 16 }),
+    Object.freeze({ id: "fieldBlueprintStream", category: CATEGORY.SURFACE_HABITABILITY, downstreamFile: DOWNSTREAM_FILES.surfaceHabitability, ownerStatus: "planned_downstream_held", mobilePriority: 16 }),
+    Object.freeze({ id: "biomeStreamHeld", category: CATEGORY.BIOME_HELD, downstreamFile: DOWNSTREAM_FILES.biomes, ownerStatus: "future_socket_held", mobilePriority: 17 }),
+    Object.freeze({ id: "ecologyStreamHeld", category: CATEGORY.ECOLOGY_HELD, downstreamFile: DOWNSTREAM_FILES.ecology, ownerStatus: "future_socket_held", mobilePriority: 18 }),
+    Object.freeze({ id: "settlementStreamHeld", category: CATEGORY.SETTLEMENT_HELD, downstreamFile: DOWNSTREAM_FILES.settlement, ownerStatus: "future_socket_held", mobilePriority: 19 }),
+    Object.freeze({ id: "urbanStreamHeld", category: CATEGORY.URBAN_HELD, downstreamFile: DOWNSTREAM_FILES.urban, ownerStatus: "future_socket_held", mobilePriority: 20 })
   ]);
 
   function clamp(value, min, max) {
@@ -353,6 +365,15 @@
     return clamp(basin * 0.30 + valley * 0.24 + coast * 0.28 + shelf * 0.18, 0, 1);
   }
 
+  function rainShadowPressure(x, y, elevation, ridge, hydration, wetness, marsh, wetland) {
+    var easternDry = x >= 9.0 && ridge > 0.36 ? 0.20 : 0;
+    var highDry = elevation > 0.54 && wetness < 0.32 ? 0.20 : 0;
+    var interiorDry = y >= 8.0 && x >= 8.0 && hydration < 0.30 ? 0.14 : 0;
+    var wetPenalty = marsh * 0.25 + wetland * 0.23 + hydration * 0.18;
+
+    return clamp(easternDry + highDry + interiorDry + (1 - wetness) * 0.22 - wetPenalty, 0, 1);
+  }
+
   function classifyQuadrant(x, y) {
     if (x < 8 && y < 8) return "northwest";
     if (x >= 8 && y < 8) return "northeast";
@@ -409,7 +430,7 @@
       return strengths[b] - strengths[a];
     });
 
-    return result.slice(0, 7);
+    return result.slice(0, 8);
   }
 
   function terrainClass(primary, elevation, summit, ridge, basin, valley, marsh, wetland, coast, shelf) {
@@ -461,6 +482,87 @@
     if (nodeTerrainClass === "upland_slope" && elevation >= 0.46 && elevation <= 0.64) return "held_candidate_upland";
     if (nodeHydrationClass === "seasonal_valley_fill") return "held_hydration_survey_required";
     return "held_future_survey";
+  }
+
+  function terrainDatumClass(node) {
+    if (!node.continentMembership && node.primaryCategory === CATEGORY.SHELF) return "shelf_context_datum";
+    if (!node.continentMembership) return "outside_context_datum";
+    if (node.summitPressure > 0.64 || node.terrainClass === "summit_highland") return "mountain_source_datum";
+    if (node.ridgePressure > 0.60 || node.terrainClass === "ridge_highland") return "ridge_crest_datum";
+    if (node.basinPressure > 0.58 || node.terrainClass === "basin_floor") return "basin_floor_datum";
+    if (node.valleyPressure > 0.56 || node.terrainClass === "valley_corridor") return "valley_floor_datum";
+    if (node.coastPressure > 0.60 || node.terrainClass === "coastal_edge") return "coast_datum";
+    if (node.rainShadowPressure > 0.50 || node.desertReservationPressure > 0.54) return "desert_reservation_datum";
+    return "surface_expression_datum";
+  }
+
+  function buildTerrainDatumForNode(node) {
+    var ridgeCrestDatum = clamp(node.elevation + node.ridgePressure * 0.10 + node.summitPressure * 0.06, 0, 1);
+    var valleyFloorDatum = clamp(node.elevation - node.valleyPressure * 0.11 - node.hydrationPressure * 0.025, 0, 1);
+    var basinFloorDatum = clamp(node.elevation - node.basinPressure * 0.13 - node.hydrationPressure * 0.035, 0, 1);
+    var basinRimDatum = clamp(basinFloorDatum + node.basinPressure * 0.18 + node.ridgePressure * 0.05, 0, 1);
+    var coastDatum = clamp(SEA_LEVEL_DATUM + node.coastPressure * COASTAL_DATUM_TOLERANCE, 0, 1);
+    var shelfDatum = clamp(SEA_LEVEL_DATUM - node.shelfPressure * 0.09, 0, 1);
+    var waterTableDatumHeld = clamp(
+      Math.min(node.elevation - WATER_TABLE_HELD_OFFSET, SEA_LEVEL_DATUM + node.hydrationDepth * 0.58 + node.basinPressure * 0.025),
+      0,
+      1
+    );
+
+    var mountainReservation = clamp(node.summitPressure * 0.44 + node.ridgePressure * 0.34 + (node.elevation > 0.62 ? 0.16 : 0), 0, 1);
+    var desertReservation = clamp(node.desertReservationPressure, 0, 1);
+    var dryBasinReservation = clamp(node.basinPressure * 0.45 + (1 - node.hydrationPressure) * 0.26 + node.rainShadowPressure * 0.20, 0, 1);
+    var rainShadowReservation = clamp(node.rainShadowPressure, 0, 1);
+
+    return Object.freeze({
+      datumNodeId: "TERRAIN-DATUM-" + node.nodeId,
+      sourceNodeId: node.nodeId,
+      x: node.x,
+      y: node.y,
+      seatIndex: node.seatIndex,
+      seatKey: node.seatKey,
+
+      terrainDatumClass: terrainDatumClass(node),
+
+      seaLevelDatum: SEA_LEVEL_DATUM,
+      aboveSeaLevelMass: Boolean(node.continentMembership && node.elevation > SEA_LEVEL_DATUM),
+      aboveSeaLevelMassDepth: round(node.continentMembership ? clamp(node.elevation - SEA_LEVEL_DATUM, 0, 1) : 0, 4),
+
+      surfaceExpressionDatum: round(node.elevation, 4),
+      baseElevationDatum: round(node.baseElevation, 4),
+      ridgeCrestDatum: round(ridgeCrestDatum, 4),
+      valleyFloorDatum: round(valleyFloorDatum, 4),
+      basinFloorDatum: round(basinFloorDatum, 4),
+      basinRimDatum: round(basinRimDatum, 4),
+      coastDatum: round(coastDatum, 4),
+      shelfDatum: round(shelfDatum, 4),
+      waterTableDatumHeld: round(waterTableDatumHeld, 4),
+
+      mountainReservationDatum: round(mountainReservation, 4),
+      desertReservationDatum: round(desertReservation, 4),
+      dryBasinReservationDatum: round(dryBasinReservation, 4),
+      rainShadowReservationDatum: round(rainShadowReservation, 4),
+
+      mountainRangeReserved: mountainReservation >= 0.50,
+      desertLandReserved: desertReservation >= 0.50,
+      dryBasinReserved: dryBasinReservation >= 0.56,
+      rainShadowZoneReserved: rainShadowReservation >= 0.48,
+
+      basinRimRequired: node.basinPressure > 0.44,
+      valleyFloorRequired: node.valleyPressure > 0.42,
+      ridgeCrestRequired: node.ridgePressure > 0.48,
+      coastDatumRequired: node.coastPressure > 0.42 || node.shelfPressure > 0.42,
+
+      surfaceHabitabilityMayRead: true,
+      reciprocalBlueprintMayAdvise: true,
+      terrainAuthorityRetained: true,
+      climateAuthoritySeized: false,
+      atmosphereAuthoritySeized: false,
+      finalTerrainPassClaim: false,
+      finalHydrationPassClaim: false,
+      finalEcologyPassClaim: false,
+      finalVisualPassClaim: false
+    });
   }
 
   function constraintCheck(raw) {
@@ -534,7 +636,8 @@
         expressionType: raw.terrainClass,
         primaryCategory: raw.primary,
         secondaryCategories: raw.secondaryCategories.slice(),
-        categoryStrengths: deepClone(raw.categoryStrengths)
+        categoryStrengths: deepClone(raw.categoryStrengths),
+        datumExpressionReady: true
       }),
       west: Object.freeze({
         defined: true,
@@ -544,6 +647,9 @@
         failures: constraint.failures.slice(),
         warnings: constraint.warnings.slice(),
         antiSheetCorrection: true,
+        reciprocalBlueprintAdvisoryOnly: true,
+        climateAuthoritySeized: false,
+        atmosphereAuthoritySeized: false,
         finalVisualPassClaim: false
       }),
       south: Object.freeze({
@@ -553,6 +659,8 @@
         groundingType: raw.downstreamOwners.join(","),
         renderEligible: raw.renderEligible,
         dependencyState: raw.dependencyState,
+        surfaceHabitabilityDownstreamRegistered: true,
+        terrainDatumPacketReady: true,
         runtimeStrengthHeld: RUNTIME_STRENGTH_HELD
       })
     });
@@ -592,6 +700,7 @@
     var plain = inside ? clamp(0.54 - Math.abs(elevation - 0.48) + (1 - ridge) * 0.16 - basin * 0.10, 0, 1) : 0;
     var hydration = inside ? clamp(wetness * 0.40 + basin * 0.24 + valley * 0.24 + marsh * 0.12 + wetland * 0.12, 0, 1) : 0;
     var drainage = inside ? clamp(valley * 0.44 + runoff * 0.32 + basin * 0.14 + boundary * 0.10, 0, 1) : 0;
+    var rainShadow = inside ? rainShadowPressure(cx, cy, elevation, ridge, hydration, wetness, marsh, wetland) : 0;
 
     var soil = inside ? soilPressure(elevation, basin, valley, boundary, marsh, wetland) : 0;
     var mineral = inside ? mineralPressure(elevation, summit.total, ridge) : 0;
@@ -600,6 +709,23 @@
 
     var settlementPressure = inside ? clamp(plain * 0.32 + slope * 0.16 + (1 - ridge) * 0.16 + (1 - marsh) * 0.18 + (1 - wetland) * 0.10, 0, 1) : 0;
     var urbanPressure = inside ? clamp(settlementPressure * 0.50 + plain * 0.24 + (1 - hydration) * 0.10, 0, 1) : 0;
+    var surfaceHabitabilityPressure = inside
+      ? clamp(
+        texture * 0.18 +
+        hydration * 0.16 +
+        soil * 0.16 +
+        (1 - rainShadow) * 0.12 +
+        (1 - ridge * 0.45) * 0.10 +
+        settlementPressure * 0.10 +
+        boundary * 0.05,
+        0,
+        1
+      )
+      : shelf > 0.40 ? 0.30 : 0;
+
+    var desertReservationPressure = inside
+      ? clamp((1 - hydration) * 0.28 + (1 - wetness) * 0.24 + rainShadow * 0.30 + (basin > 0.38 && hydration < 0.30 ? 0.16 : 0), 0, 1)
+      : 0;
 
     var strengths = {};
     strengths[CATEGORY.SURFACE] = inside ? 0.88 : 0;
@@ -618,6 +744,7 @@
     strengths[CATEGORY.TEXTURE] = texture;
     strengths[CATEGORY.MINERAL] = mineral;
     strengths[CATEGORY.SOIL] = soil;
+    strengths[CATEGORY.SURFACE_HABITABILITY] = surfaceHabitabilityPressure;
     strengths[CATEGORY.BIOME_HELD] = inside ? clamp(texture * 0.26 + hydration * 0.22 + elevation * 0.14, 0, 1) : 0;
     strengths[CATEGORY.ECOLOGY_HELD] = inside ? clamp(hydration * 0.34 + soil * 0.24 + wetland * 0.20, 0, 1) : 0;
     strengths[CATEGORY.SETTLEMENT_HELD] = settlementPressure;
@@ -661,7 +788,7 @@
     var surfaceUnitCount = inside ? 9 : primary === CATEGORY.SHELF ? 2 : 0;
     var renderTier = nodeRenderTier(primary, inside, constraint.coherenceScore, surfaceUnitCount);
 
-    return Object.freeze({
+    var node = {
       nodeId: nodeId(x, y),
       nodeIndex: index,
       seatIndex: index,
@@ -707,6 +834,9 @@
       drainagePressure: round(drainage, 4),
       runoffPressure: round(runoff, 4),
       wetnessPressure: round(wetness, 4),
+      rainShadowPressure: round(rainShadow, 4),
+      desertReservationPressure: round(desertReservationPressure, 4),
+      surfaceHabitabilityPressure: round(surfaceHabitabilityPressure, 4),
 
       soilPressure: round(soil, 4),
       mineralPressure: round(mineral, 4),
@@ -719,6 +849,11 @@
       coastEligible: boundary > 0.62,
       waterFillEligible: inside && hydration > 0.38 && elevation < 0.62 && summit.max < 0.72,
       hydrationDepth: round(inside ? clamp((0.62 - elevation) * 0.70 + hydration * 0.34, 0, 0.62) : 0, 4),
+
+      mountainRangeReserved: inside && (summit.max > 0.58 || ridge > 0.60 || elevation > 0.66),
+      desertLandReserved: inside && desertReservationPressure > 0.52,
+      dryBasinReserved: inside && basin > 0.42 && hydration < 0.30,
+      rainShadowZoneReserved: inside && rainShadow > 0.48,
 
       futureBiomeClassHeld: futureBiomeClass(tClass, hClass),
       futureSettlementEligibilityHeld: futureSettlementEligibility(tClass, hClass, elevation, ridge, marsh, wetland, boundary, constraint.coherenceScore),
@@ -749,10 +884,20 @@
       surfaceUnitCount: surfaceUnitCount,
       carrierConsumptionAllowedAfterValidation: true,
       carrierRenderAuthorized: false,
+      surfaceHabitabilityDownstreamRegistered: true,
+      terrainDatumPacketReady: true,
+      reciprocalBlueprintIntakeReady: true,
       runtimeStrengthHeld: true,
       finalTerrainPassClaim: false,
+      finalHydrationPassClaim: false,
+      finalEcologyPassClaim: false,
+      finalSettlementPassClaim: false,
       finalVisualPassClaim: false
-    });
+    };
+
+    node.terrainDatum = buildTerrainDatumForNode(node);
+
+    return Object.freeze(node);
   }
 
   function freezeStrengths(strengths) {
@@ -771,6 +916,7 @@
     if (primary === CATEGORY.COAST || primary === CATEGORY.SHELF) return ["gratitude.coast.child.js"];
     if (primary === CATEGORY.HYDRATION || primary === CATEGORY.DRAINAGE) return ["gratitude.hydration.child.js"];
     if (primary === CATEGORY.TEXTURE || primary === CATEGORY.MINERAL || primary === CATEGORY.SOIL) return ["gratitude.texture.child.js"];
+    if (primary === CATEGORY.SURFACE_HABITABILITY) return ["gratitude.surface-habitability.child.js"];
     if (primary === CATEGORY.SETTLEMENT_HELD) return ["gratitude.settlement.child.js"];
     if (primary === CATEGORY.URBAN_HELD) return ["gratitude.urban.child.js"];
     if (primary === CATEGORY.OUTSIDE) return ["none"];
@@ -782,6 +928,7 @@
     if (primary === CATEGORY.SHELF) return "coast_child_required_later";
     if (primary === CATEGORY.MARSH || primary === CATEGORY.WETLAND) return "marsh_child_required_later";
     if (primary === CATEGORY.HYDRATION || primary === CATEGORY.DRAINAGE) return "hydration_child_required_later";
+    if (primary === CATEGORY.SURFACE_HABITABILITY) return "surface_habitability_child_required_later";
     if (primary === CATEGORY.SETTLEMENT_HELD) return "core_hydration_ecology_required";
     if (primary === CATEGORY.URBAN_HELD) return "core_hydration_ecology_settlement_required";
     return "upstream_defined_downstream_detail_held";
@@ -918,14 +1065,6 @@
     return count;
   }
 
-  function countUnits(predicate) {
-    var count = 0;
-    for (var i = 0; i < SURFACE_UNITS.length; i += 1) {
-      if (predicate(SURFACE_UNITS[i])) count += 1;
-    }
-    return count;
-  }
-
   function averageNodes(getter) {
     var total = 0;
     for (var i = 0; i < NODES.length; i += 1) {
@@ -1003,12 +1142,16 @@
   function streamNodeMatch(stream, node) {
     if (stream.category === "elevation") return node.continentMembership;
     if (stream.category === CATEGORY.SURFACE) return node.continentMembership;
+    if (stream.category === CATEGORY.SURFACE_HABITABILITY) {
+      return node.continentMembership || node.primaryCategory === CATEGORY.SHELF || node.coastPressure > 0.35;
+    }
     return (node.categoryStrengths[stream.category] || 0) >= 0.30 || node.primaryCategory === stream.category;
   }
 
   function streamPressure(stream, node) {
     if (stream.category === "elevation") return node.elevation;
     if (stream.category === CATEGORY.SURFACE) return node.continentMembership ? 0.88 : 0;
+    if (stream.category === CATEGORY.SURFACE_HABITABILITY) return node.surfaceHabitabilityPressure || 0;
     return node.categoryStrengths[stream.category] || 0;
   }
 
@@ -1071,8 +1214,9 @@
     if (streamId === "elevationStream") return ["surfaceStream", "summitStream", "ridgeStream", "basinStream", "valleyStream"];
     if (streamId === "hydrationStream") return ["elevationStream", "basinStream", "valleyStream", "coastStream"];
     if (streamId === "marshStream" || streamId === "wetlandStream") return ["hydrationStream", "basinStream", "valleyStream"];
-    if (streamId === "biomeStreamHeld" || streamId === "ecologyStreamHeld") return ["surfaceStream", "hydrationStream", "future_downstream_authorization"];
-    if (streamId === "settlementStreamHeld" || streamId === "urbanStreamHeld") return ["planet_core_child", "hydrationStream", "ecologyStreamHeld", "future_downstream_authorization"];
+    if (streamId === "surfaceHabitabilityStream" || streamId === "fieldBlueprintStream") return ["terrainDatumPacket", "hydrationStream", "surfaceStream", "elevationStream"];
+    if (streamId === "biomeStreamHeld" || streamId === "ecologyStreamHeld") return ["surfaceStream", "hydrationStream", "surfaceHabitabilityStream", "future_downstream_authorization"];
+    if (streamId === "settlementStreamHeld" || streamId === "urbanStreamHeld") return ["planet_core_child", "hydrationStream", "surfaceHabitabilityStream", "ecologyStreamHeld", "future_downstream_authorization"];
     return ["node_map", "category_map"];
   }
 
@@ -1085,7 +1229,8 @@
       terrainClass: node.terrainClass,
       hydrationClass: node.hydrationClass,
       coherenceScore: node.coherenceScore,
-      renderEligible: node.renderEligible
+      renderEligible: node.renderEligible,
+      terrainDatumClass: node.terrainDatum ? node.terrainDatum.terrainDatumClass : null
     };
   }
 
@@ -1155,6 +1300,8 @@
         "basinStream",
         "valleyStream",
         "hydrationStream",
+        "surfaceHabitabilityStream",
+        "fieldBlueprintStream",
         "marshStream",
         "wetlandStream",
         "textureStream",
@@ -1162,7 +1309,11 @@
         "ecologyStreamHeld",
         "settlementStreamHeld",
         "urbanStreamHeld"
-      ]
+      ],
+
+      surfaceHabitabilityDownstreamRegistered: true,
+      terrainDatumPacketReady: true,
+      reciprocalBlueprintIntakeReady: true
     };
   }
 
@@ -1182,7 +1333,9 @@
       elevation: node.elevation,
       coherenceScore: node.coherenceScore,
       hardFail: node.hardFail,
-      renderEligible: node.renderEligible
+      renderEligible: node.renderEligible,
+      terrainDatumClass: node.terrainDatum ? node.terrainDatum.terrainDatumClass : null,
+      surfaceHabitabilityPressure: node.surfaceHabitabilityPressure
     };
   }
 
@@ -1208,6 +1361,10 @@
       hydrationDepth: node.hydrationDepth,
       hydrationClass: node.hydrationClass,
       terrainClass: node.terrainClass,
+      terrainDatumClass: node.terrainDatum ? node.terrainDatum.terrainDatumClass : null,
+      seaLevelDatum: SEA_LEVEL_DATUM,
+      aboveSeaLevelMass: node.terrainDatum ? node.terrainDatum.aboveSeaLevelMass : false,
+      surfaceExpressionDatum: node.terrainDatum ? node.terrainDatum.surfaceExpressionDatum : node.elevation,
       newsComplete: node.newsComplete,
       coherenceScore: node.coherenceScore
     };
@@ -1241,6 +1398,27 @@
       streamRegistryReady: true,
       runtimeMetricsReady: true,
       downstreamRegistryReady: true,
+
+      surfaceHabitabilityDownstreamRegistered: true,
+      surfaceHabitabilityDownstreamFile: DOWNSTREAM_FILES.surfaceHabitability,
+      fieldBlueprintStreamRegistered: true,
+      terrainDatumPacketReady: true,
+      reciprocalBlueprintIntakeReady: true,
+
+      seaLevelDatumMapped: true,
+      aboveSeaLevelMassMapped: true,
+      basinRimDatumMapped: true,
+      valleyFloorDatumMapped: true,
+      ridgeCrestDatumMapped: true,
+      coastDatumMapped: true,
+      shelfDatumMapped: true,
+      waterTableDatumHeld: true,
+      surfaceExpressionDatumMapped: true,
+
+      mountainRangesReserved: true,
+      desertLandReserved: true,
+      dryBasinsReserved: true,
+      rainShadowZonesReserved: true,
 
       basinsMapped: true,
       marshesMapped: true,
@@ -1277,17 +1455,24 @@
       htmlUntouched: true,
       carrierUntouched: true,
       coreChildUntouched: true,
+      hydrationChildUntouched: true,
+      surfaceHabitabilityChildUntouched: true,
       runtimeStrengthHeld: true,
       finalTerrainPassClaim: false,
+      finalHydrationPassClaim: false,
+      finalEcologyPassClaim: false,
+      finalSettlementPassClaim: false,
       finalVisualPassClaim: false,
 
+      climateAuthoritySeized: false,
+      atmosphereAuthoritySeized: false,
       generatedImage: false,
       graphicBox: false,
       scriptTagsIncluded: false,
       cacheKeyScope: false,
 
       runtimeMetrics: deepClone(RUNTIME_METRICS),
-      deployMarker: "AUDRALIA_GRATITUDE_256_NEWS_COHERENCE_MULTISTREAM_RENDER_OPTIMIZATION_ENGINE_DEPLOY_MARKER_v1"
+      deployMarker: "AUDRALIA_GRATITUDE_TERRAIN_ENGINE_SURFACE_HABITABILITY_BLUEPRINT_REGISTRY_ALIGNMENT_DEPLOY_MARKER_v1"
     };
   }
 
@@ -1317,7 +1502,9 @@
             east: node.east.defined,
             west: node.west.defined,
             south: node.south.defined,
-            primaryCategory: node.primaryCategory
+            primaryCategory: node.primaryCategory,
+            terrainDatumPacketReady: node.terrainDatumPacketReady,
+            reciprocalBlueprintIntakeReady: node.reciprocalBlueprintIntakeReady
           };
         }
 
@@ -1349,7 +1536,8 @@
           secondaryCategories: node.secondaryCategories,
           categoryStrengths: node.categoryStrengths,
           terrainClass: node.terrainClass,
-          hydrationClass: node.hydrationClass
+          hydrationClass: node.hydrationClass,
+          surfaceHabitabilityPressure: node.surfaceHabitabilityPressure
         };
       })
     };
@@ -1369,6 +1557,7 @@
         "marsh_requires_wetness_or_lowland_support",
         "coast_requires_boundary_adjacency",
         "hydration_primary_requires_terrain_permission",
+        "surface_habitability_is_downstream_advisory_only",
         "settlement_and_urban_remain_held",
         "final_visual_pass_forbidden"
       ],
@@ -1402,6 +1591,8 @@
       contract: CONTRACT,
       streamRegistryReady: true,
       streamCount: streamIds.length,
+      surfaceHabitabilityDownstreamRegistered: true,
+      terrainDatumPacketReady: true,
       streams: streamIds.map(function (streamId) {
         var stream = STREAM_REGISTRY[streamId];
         if (compact) {
@@ -1493,6 +1684,7 @@
       contract: CONTRACT,
       elevationMapReady: true,
       elevationComputedBeforeHydration: true,
+      seaLevelDatum: SEA_LEVEL_DATUM,
       nodes: compact ? NODES.map(function (node) {
         return { nodeId: node.nodeId, x: node.x, y: node.y, elevation: node.elevation };
       }) : NODES.map(function (node) {
@@ -1501,6 +1693,9 @@
           x: node.x,
           y: node.y,
           elevation: node.elevation,
+          baseElevation: node.baseElevation,
+          seaLevelDatum: SEA_LEVEL_DATUM,
+          aboveSeaLevelMass: node.terrainDatum ? node.terrainDatum.aboveSeaLevelMass : false,
           summitPressure: node.summitPressure,
           ridgePressure: node.ridgePressure,
           basinPressure: node.basinPressure,
@@ -1518,6 +1713,7 @@
       nineSummitsEmbedded: true,
       nineSummitsShapeTerrain: true,
       nineSummitsCompressedInsideOblongLandmass: true,
+      mountainRangesReserved: true,
       summitCount: SUMMITS.length,
       summits: compact ? SUMMITS.map(function (summit) {
         return { id: summit.id, name: summit.name, x: summit.x, y: summit.y, elevationPressure: summit.elevationPressure };
@@ -1555,6 +1751,7 @@
       coastMapReady: true,
       coastMapped: true,
       shelfMapped: true,
+      coastDatumMapped: true,
       nodes: NODES.filter(function (node) {
         return node.primaryCategory === CATEGORY.COAST ||
           node.primaryCategory === CATEGORY.SHELF ||
@@ -1583,9 +1780,11 @@
       hydrationMapReady: true,
       hydrationIsConsequence: true,
       waterFillDerivedFromValleys: true,
+      waterTableDatumHeld: true,
       hydrationSequence: [
         "land membership",
         "elevation",
+        "sea level datum",
         "ridge pressure",
         "basin pressure",
         "valley pressure",
@@ -1618,7 +1817,8 @@
           basinPressure: node.basinPressure,
           valleyPressure: node.valleyPressure,
           marshPressure: node.marshPressure,
-          wetlandPressure: node.wetlandPressure
+          wetlandPressure: node.wetlandPressure,
+          waterTableDatumHeld: node.terrainDatum ? node.terrainDatum.waterTableDatumHeld : null
         };
       })
     };
@@ -1660,10 +1860,13 @@
       settlementSocketHeld: true,
       urbanLayerSocketHeld: true,
       weatherSocketHeld: true,
+      surfaceHabitabilityDownstreamRegistered: true,
       activationAuthorized: false,
       rules: {
         ecologyRequiresHydrationChild: true,
+        ecologyRequiresSurfaceHabitabilityChild: true,
         settlementRequiresCoreAndHydration: true,
+        settlementRequiresSurfaceHabitability: true,
         urbanRequiresCoreTectonicStability: true,
         biomeRequiresTerrainAndHydrationDefinition: true,
         downstreamFilesRequiredBeforeActivation: true
@@ -1677,6 +1880,137 @@
           futureSettlementEligibilityHeld: node.futureSettlementEligibilityHeld
         };
       }) : NODES.map(deepClone)
+    };
+  }
+
+  function getTerrainDatumPacket(target, options) {
+    var compact = Boolean(options && options.compact);
+    var datumNodes = NODES.map(function (node) {
+      return compact ? {
+        datumNodeId: node.terrainDatum.datumNodeId,
+        sourceNodeId: node.nodeId,
+        x: node.x,
+        y: node.y,
+        terrainDatumClass: node.terrainDatum.terrainDatumClass,
+        seaLevelDatum: node.terrainDatum.seaLevelDatum,
+        aboveSeaLevelMass: node.terrainDatum.aboveSeaLevelMass,
+        surfaceExpressionDatum: node.terrainDatum.surfaceExpressionDatum,
+        ridgeCrestDatum: node.terrainDatum.ridgeCrestDatum,
+        valleyFloorDatum: node.terrainDatum.valleyFloorDatum,
+        basinFloorDatum: node.terrainDatum.basinFloorDatum,
+        basinRimDatum: node.terrainDatum.basinRimDatum,
+        coastDatum: node.terrainDatum.coastDatum,
+        waterTableDatumHeld: node.terrainDatum.waterTableDatumHeld,
+        mountainRangeReserved: node.terrainDatum.mountainRangeReserved,
+        desertLandReserved: node.terrainDatum.desertLandReserved,
+        dryBasinReserved: node.terrainDatum.dryBasinReserved,
+        rainShadowZoneReserved: node.terrainDatum.rainShadowZoneReserved
+      } : deepClone(node.terrainDatum);
+    });
+
+    return {
+      contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      target: target || "unassigned-terrain-datum-consumer",
+      terrainDatumPacketReady: true,
+      reciprocalBlueprintIntakeReady: true,
+      advisoryPressureOnly: true,
+      terrainAuthorityRetained: true,
+
+      seaLevelDatum: SEA_LEVEL_DATUM,
+      coastalDatumTolerance: COASTAL_DATUM_TOLERANCE,
+      aboveSeaLevelMassMapped: true,
+      basinRimDatumMapped: true,
+      valleyFloorDatumMapped: true,
+      ridgeCrestDatumMapped: true,
+      coastDatumMapped: true,
+      shelfDatumMapped: true,
+      waterTableDatumHeld: true,
+      surfaceExpressionDatumMapped: true,
+
+      mountainRangesReserved: true,
+      desertLandReserved: true,
+      dryBasinsReserved: true,
+      rainShadowZonesReserved: true,
+
+      climateAuthoritySeized: false,
+      atmosphereAuthoritySeized: false,
+      ecologyAuthoritySeized: false,
+      settlementAuthoritySeized: false,
+      urbanAuthoritySeized: false,
+
+      finalTerrainPassClaim: false,
+      finalHydrationPassClaim: false,
+      finalEcologyPassClaim: false,
+      finalSettlementPassClaim: false,
+      finalVisualPassClaim: false,
+
+      datumNodes: datumNodes
+    };
+  }
+
+  function getReciprocalBlueprintIntakeStatus(options) {
+    var compact = Boolean(options && options.compact);
+
+    return {
+      contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      reciprocalBlueprintIntakeReady: true,
+      surfaceHabitabilityDownstreamRegistered: true,
+      surfaceHabitabilityDownstreamFile: DOWNSTREAM_FILES.surfaceHabitability,
+      acceptedAdvisorySource: "AUDRALIA_GRATITUDE_SURFACE_HABITABILITY_FIELD_BLUEPRINT_ALIGNMENT_TNT_v1",
+      acceptedAdvisoryGlobal: "window.AUDRALIA_GRATITUDE_SURFACE_HABITABILITY_CHILD",
+      acceptedBlueprintPacket: "getSurfaceHabitabilityBlueprintPacket(target, options)",
+
+      terrainMayReceiveAdvisoryPressure: true,
+      terrainAuthorityRetained: true,
+      hydrationAuthorityRetainedByHydrationChild: true,
+      climateAuthorityRetainedBySurfaceHabitabilityChild: true,
+      atmosphereAuthorityRetainedBySurfaceHabitabilityChild: true,
+      ecologyAuthorityHeld: true,
+      settlementAuthorityHeld: true,
+      urbanAuthorityHeld: true,
+
+      acceptableBlueprintFields: [
+        "requiredElevationBands",
+        "requiredSlopeBands",
+        "requiredTemperatureBands",
+        "requiredPressureBands",
+        "requiredBarometricPressureBands",
+        "requiredHumidityBands",
+        "requiredAirDensityBands",
+        "requiredOxygenIndexBands",
+        "requiredCarbonIndexBands",
+        "requiredAirQualityBands",
+        "requiredWindCorridors",
+        "requiredFrontalBoundaries",
+        "requiredAtmosphericStabilityZones",
+        "requiredEvaporationZones",
+        "requiredCondensationZones",
+        "requiredRainfallRoutingZones",
+        "requiredSnowpackZones",
+        "requiredFrostLineZones",
+        "requiredStormSurgeZones",
+        "requiredBreathabilityZones",
+        "requiredDesertHeatZones",
+        "requiredMarshHumidityZones",
+        "requiredLakeRetentionZones",
+        "requiredAquiferRechargeZones",
+        "requiredEcologyReadinessHeldZones",
+        "requiredSettlementHeldZones"
+      ],
+
+      currentTerrainDatumPacket: compact ? {
+        seaLevelDatum: SEA_LEVEL_DATUM,
+        terrainDatumPacketReady: true,
+        nodeCount: NODE_COUNT
+      } : getTerrainDatumPacket("reciprocal-blueprint-intake-status", { compact: true }),
+
+      finalTerrainPassClaim: false,
+      finalHydrationPassClaim: false,
+      finalEcologyPassClaim: false,
+      finalSettlementPassClaim: false,
+      finalVisualPassClaim: false
     };
   }
 
@@ -1747,6 +2081,27 @@
       runtimeMetricsReady: true,
       downstreamRegistryReady: true,
 
+      surfaceHabitabilityDownstreamRegistered: true,
+      surfaceHabitabilityDownstreamFile: DOWNSTREAM_FILES.surfaceHabitability,
+      fieldBlueprintStreamRegistered: true,
+      terrainDatumPacketReady: true,
+      reciprocalBlueprintIntakeReady: true,
+
+      seaLevelDatumMapped: true,
+      aboveSeaLevelMassMapped: true,
+      basinRimDatumMapped: true,
+      valleyFloorDatumMapped: true,
+      ridgeCrestDatumMapped: true,
+      coastDatumMapped: true,
+      shelfDatumMapped: true,
+      waterTableDatumHeld: true,
+      surfaceExpressionDatumMapped: true,
+
+      mountainRangesReserved: true,
+      desertLandReserved: true,
+      dryBasinsReserved: true,
+      rainShadowZonesReserved: true,
+
       basinsMapped: true,
       marshesMapped: true,
       ridgesMapped: true,
@@ -1773,9 +2128,17 @@
       htmlUntouched: true,
       carrierUntouched: true,
       coreChildUntouched: true,
+      hydrationChildUntouched: true,
+      surfaceHabitabilityChildUntouched: true,
       runtimeStrengthHeld: true,
       finalTerrainPassClaim: false,
+      finalHydrationPassClaim: false,
+      finalEcologyPassClaim: false,
+      finalSettlementPassClaim: false,
       finalVisualPassClaim: false,
+
+      climateAuthoritySeized: false,
+      atmosphereAuthoritySeized: false,
 
       status: status(),
       runtimeMetrics: getRuntimeMetrics(),
@@ -1784,6 +2147,8 @@
       categoryMap: getCategoryMap({ compact: compact }),
       coherenceMap: getCoherenceMap({ compact: compact }),
       streamRegistry: getStreamRegistry({ compact: compact }),
+      terrainDatumPacket: getTerrainDatumPacket(target || "child-receive-packet", { compact: compact }),
+      reciprocalBlueprintIntakeStatus: getReciprocalBlueprintIntakeStatus({ compact: compact }),
       surfaceMap: getSurfaceMap({ compact: compact }),
       elevationMap: getElevationMap({ compact: compact }),
       summitMap: getSummitMap({ compact: compact }),
@@ -1825,6 +2190,8 @@
     getHydrationMap: getHydrationMap,
     getTextureMap: getTextureMap,
     getFutureSocketMap: getFutureSocketMap,
+    getTerrainDatumPacket: getTerrainDatumPacket,
+    getReciprocalBlueprintIntakeStatus: getReciprocalBlueprintIntakeStatus,
 
     // Backward-compatible carrier-facing APIs.
     getContinentMap: getSurfaceMap,
@@ -1833,7 +2200,9 @@
 
   window.AUDRALIA_G2_GRATITUDE_CONTINENT_CHILD = API;
   window.AUDRALIA_G2_GRATITUDE_CONTINENT_CHILD_STATUS = status();
-  window.AUDRALIA_G2_GRATITUDE_CONTINENT_CHILD_RECEIVE_PACKET = getChildReceivePacket("published-static-gratitude-multistream-engine", { compact: true });
+  window.AUDRALIA_G2_GRATITUDE_CONTINENT_CHILD_RECEIVE_PACKET = getChildReceivePacket("published-static-gratitude-terrain-engine-blueprint-registry-alignment", { compact: true });
   window.AUDRALIA_GRATITUDE_STREAM_REGISTRY = getStreamRegistry({ compact: true });
   window.AUDRALIA_GRATITUDE_RUNTIME_METRICS = getRuntimeMetrics();
+  window.AUDRALIA_GRATITUDE_TERRAIN_DATUM_PACKET = getTerrainDatumPacket("published-static-terrain-datum", { compact: true });
+  window.AUDRALIA_GRATITUDE_RECIPROCAL_BLUEPRINT_INTAKE_STATUS = getReciprocalBlueprintIntakeStatus({ compact: true });
 })();

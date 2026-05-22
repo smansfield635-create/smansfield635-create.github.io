@@ -2,13 +2,16 @@
 <html
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
-  data-page="audralia-g2-planet-body-clean-inspection-engineering-option"
-  data-contract="AUDRALIA_G2_PLANET_BODY_CLEAN_INSPECTION_ENGINEERING_OPTION_HTML_TNT_v1"
-  data-previous-contract="AUDRALIA_G2_PLANET_BODY_TRUE_CANVAS_GLOBE_CARRIER_ENGINEERING_LENS_TNT_v1"
-  data-render-file="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js"
+  data-page="audralia-g2-clean-canvas-pair-js-female-first-html-male-second"
+  data-contract="AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_TNT_v1"
+  data-spec-ops-contract="AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_SPEC_OPS_v1"
+  data-js-female-first="true"
+  data-html-male-second="true"
+  data-female-carrier-present-before-selection="true"
+  data-male-html-chooses-js="true"
   data-clean-inspection-default="true"
-  data-engineering-jargon-optional="true"
-  data-engineering-controls-below-stage="true"
+  data-engineering-optional="true"
+  data-no-injected-stage-controls="true"
   data-no-controls-over-planet="true"
   data-runtime-strength-held="true"
   data-final-visual-pass-claim="false"
@@ -20,693 +23,581 @@
   <title>Audralia · Clean Planet Inspection</title>
   <meta
     name="description"
-    content="Inspect Audralia cleanly as a planet body, with Engineering and technical readouts available separately below the inspection stage."
+    content="Audralia clean planet inspection. JS is the female canvas carrier first; HTML is the male selector second. Clean inspection is default and Engineering remains optional below the planet."
   >
 
   <style>
-    :root {
-      color-scheme: dark;
-      --bg: #020711;
-      --text: rgba(239,247,255,.96);
-      --muted: rgba(239,247,255,.70);
-      --faint: rgba(239,247,255,.48);
-      --gold: #f4cf83;
-      --blue: #8dd8ff;
-      --mint: #a7f3c6;
-      --line: rgba(244,207,131,.18);
-      --max: 1280px;
-      --shadow: 0 34px 120px rgba(0,0,0,.50);
+    :root{
+      color-scheme:dark;
+      --bg:#020711;
+      --text:rgba(239,247,255,.96);
+      --muted:rgba(239,247,255,.70);
+      --faint:rgba(239,247,255,.48);
+      --gold:#f4cf83;
+      --blue:#8dd8ff;
+      --mint:#a7f3c6;
+      --line:rgba(244,207,131,.18);
+      --max:1280px;
+      --shadow:0 34px 120px rgba(0,0,0,.50);
     }
 
-    * { box-sizing: border-box; }
+    *{box-sizing:border-box}
 
-    html {
-      min-height: 100%;
-      scroll-behavior: smooth;
+    html{
+      min-height:100%;
+      scroll-behavior:smooth;
       background:
-        radial-gradient(circle at 50% -12%, rgba(78,119,171,.27), transparent 39rem),
-        radial-gradient(circle at 12% 18%, rgba(244,207,131,.10), transparent 30rem),
-        radial-gradient(circle at 88% 28%, rgba(141,216,255,.12), transparent 31rem),
-        linear-gradient(180deg, #061020 0%, var(--bg) 56%, #01040a 100%);
+        radial-gradient(circle at 50% -12%,rgba(78,119,171,.27),transparent 39rem),
+        radial-gradient(circle at 12% 18%,rgba(244,207,131,.10),transparent 30rem),
+        radial-gradient(circle at 88% 28%,rgba(141,216,255,.12),transparent 31rem),
+        linear-gradient(180deg,#061020 0%,var(--bg) 56%,#01040a 100%);
     }
 
-    body {
-      margin: 0;
-      min-width: 320px;
-      min-height: 100vh;
-      overflow-x: hidden;
-      color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      letter-spacing: -.015em;
-      -webkit-font-smoothing: antialiased;
+    body{
+      margin:0;
+      min-width:320px;
+      min-height:100vh;
+      overflow-x:hidden;
+      color:var(--text);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      letter-spacing:-.015em;
+      -webkit-font-smoothing:antialiased;
       background:
-        linear-gradient(rgba(141,216,255,.030) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(141,216,255,.030) 1px, transparent 1px);
-      background-size: 56px 56px;
+        linear-gradient(rgba(141,216,255,.030) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.030) 1px,transparent 1px);
+      background-size:56px 56px;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      background: radial-gradient(circle, rgba(255,255,255,.15) 0 1px, transparent 1.4px);
-      background-size: 230px 250px;
-      opacity: .14;
-      mask-image: linear-gradient(180deg, rgba(0,0,0,.90), rgba(0,0,0,.46) 62%, rgba(0,0,0,.12));
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      background:radial-gradient(circle,rgba(255,255,255,.15) 0 1px,transparent 1.4px);
+      background-size:230px 250px;
+      opacity:.14;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.90),rgba(0,0,0,.46) 62%,rgba(0,0,0,.12));
     }
 
-    a, button, summary { color: inherit; font: inherit; }
-    a { text-decoration: none; }
-    button, summary { cursor: pointer; }
+    a,button,summary{color:inherit;font:inherit}
+    a{text-decoration:none}
+    button,summary{cursor:pointer}
 
     a:focus-visible,
     button:focus-visible,
-    summary:focus-visible {
-      outline: 2px solid var(--gold);
-      outline-offset: 4px;
+    summary:focus-visible{
+      outline:2px solid var(--gold);
+      outline-offset:4px;
     }
 
-    .skip {
-      position: absolute;
-      left: 12px;
-      top: 12px;
-      z-index: 50;
-      transform: translateY(-160%);
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: var(--mint);
-      color: #06101c;
-      font-weight: 950;
+    .skip{
+      position:absolute;
+      left:12px;
+      top:12px;
+      z-index:50;
+      transform:translateY(-160%);
+      padding:10px 14px;
+      border-radius:999px;
+      background:var(--mint);
+      color:#06101c;
+      font-weight:950;
     }
 
-    .skip:focus { transform: translateY(0); }
+    .skip:focus{transform:translateY(0)}
 
-    .page {
-      position: relative;
-      z-index: 2;
-      width: min(var(--max), calc(100% - 28px));
-      margin: 0 auto;
-      padding: max(18px, env(safe-area-inset-top)) 0 max(54px, env(safe-area-inset-bottom));
+    .page{
+      position:relative;
+      z-index:2;
+      width:min(var(--max),calc(100% - 28px));
+      margin:0 auto;
+      padding:max(18px,env(safe-area-inset-top)) 0 max(54px,env(safe-area-inset-bottom));
     }
 
-    .topbar {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      align-items: start;
-      gap: 16px;
-      padding: 10px 0 20px;
+    .topbar{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      align-items:start;
+      gap:16px;
+      padding:10px 0 20px;
     }
 
-    .brand {
-      display: inline-grid;
-      grid-template-columns: auto minmax(0, 1fr);
-      align-items: center;
-      gap: 11px;
-      min-width: 0;
-      width: fit-content;
-      color: var(--gold);
-      font-weight: 950;
-      letter-spacing: .04em;
-      text-transform: uppercase;
+    .brand{
+      display:inline-grid;
+      grid-template-columns:auto minmax(0,1fr);
+      align-items:center;
+      gap:11px;
+      min-width:0;
+      width:fit-content;
+      color:var(--gold);
+      font-weight:950;
+      letter-spacing:.04em;
+      text-transform:uppercase;
     }
 
-    .brand-mark {
-      display: grid;
-      place-items: center;
-      width: 42px;
-      height: 42px;
-      border: 1px solid rgba(244,207,131,.48);
-      border-radius: 14px;
+    .brand-mark{
+      display:grid;
+      place-items:center;
+      width:42px;
+      height:42px;
+      border:1px solid rgba(244,207,131,.48);
+      border-radius:14px;
       background:
-        linear-gradient(135deg, rgba(255,255,255,.20), transparent 38%),
-        conic-gradient(from 45deg, rgba(255,255,255,.22), rgba(141,216,255,.18), rgba(7,19,52,.94), rgba(244,207,131,.16), rgba(255,255,255,.18));
-      box-shadow: 0 0 22px rgba(244,207,131,.14), 0 0 24px rgba(141,216,255,.10);
+        linear-gradient(135deg,rgba(255,255,255,.20),transparent 38%),
+        conic-gradient(from 45deg,rgba(255,255,255,.22),rgba(141,216,255,.18),rgba(7,19,52,.94),rgba(244,207,131,.16),rgba(255,255,255,.18));
+      box-shadow:0 0 22px rgba(244,207,131,.14),0 0 24px rgba(141,216,255,.10);
     }
 
-    .brand-copy { display: grid; gap: 2px; min-width: 0; }
+    .brand-copy{display:grid;gap:2px;min-width:0}
 
-    .brand-copy span {
-      color: rgba(141,216,255,.82);
-      font-size: .68rem;
-      letter-spacing: .22em;
+    .brand-copy span{
+      color:rgba(141,216,255,.82);
+      font-size:.68rem;
+      letter-spacing:.22em;
     }
 
-    .brand-copy strong {
-      color: rgba(255,244,216,.96);
-      font-size: clamp(1rem, 2.6vw, 1.45rem);
-      line-height: 1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .brand-copy strong{
+      color:rgba(255,244,216,.96);
+      font-size:clamp(1rem,2.6vw,1.45rem);
+      line-height:1;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
-    .dropdown-nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 8px;
+    .dropdown-nav{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:8px;
     }
 
-    .dropdown { position: relative; }
+    .dropdown{position:relative}
 
-    .dropdown summary {
-      min-height: 38px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      border: 1px solid rgba(255,255,255,.11);
-      border-radius: 999px;
-      padding: 0 13px;
-      color: rgba(238,244,255,.84);
-      background: radial-gradient(circle at 50% 0%, rgba(141,216,255,.08), transparent 72%), rgba(255,255,255,.035);
-      font-size: .82rem;
-      font-weight: 850;
-      letter-spacing: .02em;
-      list-style: none;
+    .dropdown summary{
+      min-height:38px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:999px;
+      padding:0 13px;
+      color:rgba(238,244,255,.84);
+      background:radial-gradient(circle at 50% 0%,rgba(141,216,255,.08),transparent 72%),rgba(255,255,255,.035);
+      font-size:.82rem;
+      font-weight:850;
+      letter-spacing:.02em;
+      list-style:none;
     }
 
-    .dropdown summary::-webkit-details-marker { display: none; }
-    .dropdown summary::after { content: "⌄"; color: rgba(244,207,131,.88); font-size: .92rem; }
+    .dropdown summary::-webkit-details-marker{display:none}
+    .dropdown summary::after{content:"⌄";color:rgba(244,207,131,.88);font-size:.92rem}
 
-    .dropdown[open] summary {
-      color: #06101c;
-      background: linear-gradient(135deg, #fff0b8, var(--gold));
-      border-color: rgba(244,207,131,.72);
+    .dropdown[open] summary{
+      color:#06101c;
+      background:linear-gradient(135deg,#fff0b8,var(--gold));
+      border-color:rgba(244,207,131,.72);
     }
 
-    .dropdown-panel {
-      position: absolute;
-      right: 0;
-      top: calc(100% + 8px);
-      z-index: 30;
-      min-width: 260px;
-      display: grid;
-      gap: 6px;
-      padding: 10px;
-      border: 1px solid rgba(244,207,131,.22);
-      border-radius: 18px;
-      background: radial-gradient(circle at 12% 0%, rgba(244,207,131,.10), transparent 12rem), rgba(2,8,20,.96);
-      box-shadow: 0 22px 70px rgba(0,0,0,.48);
-      backdrop-filter: blur(12px);
+    .dropdown-panel{
+      position:absolute;
+      right:0;
+      top:calc(100% + 8px);
+      z-index:30;
+      min-width:260px;
+      display:grid;
+      gap:6px;
+      padding:10px;
+      border:1px solid rgba(244,207,131,.22);
+      border-radius:18px;
+      background:radial-gradient(circle at 12% 0%,rgba(244,207,131,.10),transparent 12rem),rgba(2,8,20,.96);
+      box-shadow:0 22px 70px rgba(0,0,0,.48);
+      backdrop-filter:blur(12px);
     }
 
-    .dropdown-panel a {
-      min-height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      border: 1px solid rgba(255,255,255,.09);
-      border-radius: 12px;
-      padding: 0 10px;
-      color: rgba(238,244,255,.84);
-      background: rgba(255,255,255,.035);
-      font-size: .84rem;
-      font-weight: 820;
+    .dropdown-panel a{
+      min-height:36px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:12px;
+      padding:0 10px;
+      color:rgba(238,244,255,.84);
+      background:rgba(255,255,255,.035);
+      font-size:.84rem;
+      font-weight:820;
     }
 
-    .dropdown-panel a:hover {
-      color: #06101c;
-      background: linear-gradient(135deg, #fff0b8, var(--gold));
-      border-color: rgba(244,207,131,.56);
+    .dropdown-panel a:hover{
+      color:#06101c;
+      background:linear-gradient(135deg,#fff0b8,var(--gold));
+      border-color:rgba(244,207,131,.56);
     }
 
     .hero,
     .inspection-shell,
-    .mode-shell,
     .engineering-shell,
     .state-shell,
-    .receipt-shell {
-      border: 1px solid var(--line);
-      border-radius: 34px;
+    .receipt-shell{
+      border:1px solid var(--line);
+      border-radius:34px;
       background:
-        radial-gradient(circle at 76% 28%, rgba(139,200,255,.13), transparent 32%),
-        radial-gradient(circle at 18% 20%, rgba(244,207,131,.12), transparent 30%),
-        linear-gradient(180deg, rgba(8,17,34,.94), rgba(4,9,20,.94));
-      box-shadow: var(--shadow);
-      overflow: hidden;
+        radial-gradient(circle at 76% 28%,rgba(139,200,255,.13),transparent 32%),
+        radial-gradient(circle at 18% 20%,rgba(244,207,131,.12),transparent 30%),
+        linear-gradient(180deg,rgba(8,17,34,.94),rgba(4,9,20,.94));
+      box-shadow:var(--shadow);
+      overflow:hidden;
     }
 
-    .hero {
-      position: relative;
-      isolation: isolate;
-      padding: clamp(24px, 5vw, 50px);
+    .hero{
+      position:relative;
+      isolation:isolate;
+      padding:clamp(24px,5vw,50px);
     }
 
     .kicker,
     .section-title,
-    .label {
-      margin: 0 0 14px;
-      color: var(--gold);
-      font: 900 .78rem/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      letter-spacing: .20em;
-      text-transform: uppercase;
+    .label{
+      margin:0 0 14px;
+      color:var(--gold);
+      font:900 .78rem/1.4 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      letter-spacing:.20em;
+      text-transform:uppercase;
     }
 
-    h1 {
-      max-width: 980px;
-      margin: 0;
-      font-size: clamp(2.35rem, 8vw, 5.6rem);
-      line-height: .92;
-      letter-spacing: -.075em;
-      text-wrap: balance;
+    h1{
+      max-width:980px;
+      margin:0;
+      font-size:clamp(2.35rem,8vw,5.6rem);
+      line-height:.92;
+      letter-spacing:-.075em;
+      text-wrap:balance;
     }
 
-    .lede {
-      max-width: 980px;
-      margin: 22px 0 0;
-      color: var(--muted);
-      font-size: clamp(1.02rem, 2.6vw, 1.25rem);
-      line-height: 1.55;
+    .lede{
+      max-width:980px;
+      margin:22px 0 0;
+      color:var(--muted);
+      font-size:clamp(1.02rem,2.6vw,1.25rem);
+      line-height:1.55;
     }
 
-    .status-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 24px;
+    .status-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:24px;
     }
 
-    .status-pill {
-      min-height: 34px;
-      display: inline-flex;
-      align-items: center;
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 999px;
-      padding: 0 12px;
-      color: rgba(238,244,255,.76);
-      background: rgba(255,255,255,.035);
-      font-size: .78rem;
-      font-weight: 850;
-      letter-spacing: .04em;
-      text-transform: uppercase;
+    .status-pill{
+      min-height:34px;
+      display:inline-flex;
+      align-items:center;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:999px;
+      padding:0 12px;
+      color:rgba(238,244,255,.76);
+      background:rgba(255,255,255,.035);
+      font-size:.78rem;
+      font-weight:850;
+      letter-spacing:.04em;
+      text-transform:uppercase;
     }
 
     .inspection-shell,
-    .mode-shell,
     .engineering-shell,
     .state-shell,
-    .receipt-shell {
-      margin-top: 16px;
-      padding: clamp(18px, 3.8vw, 32px);
+    .receipt-shell{
+      margin-top:16px;
+      padding:clamp(18px,3.8vw,32px);
     }
 
-    .section-head { max-width: 960px; margin-bottom: 16px; }
+    .section-head{max-width:960px;margin-bottom:16px}
 
-    .section-head h2 {
-      margin: 0;
-      color: rgba(255,244,216,.96);
-      font-size: clamp(1.55rem, 4.6vw, 2.6rem);
-      line-height: 1.02;
-      letter-spacing: -.06em;
-      text-wrap: balance;
+    .section-head h2{
+      margin:0;
+      color:rgba(255,244,216,.96);
+      font-size:clamp(1.55rem,4.6vw,2.6rem);
+      line-height:1.02;
+      letter-spacing:-.06em;
+      text-wrap:balance;
     }
 
-    .section-head p {
-      margin: 12px 0 0;
-      color: var(--muted);
-      font-size: clamp(1rem, 2.4vw, 1.13rem);
-      line-height: 1.55;
+    .section-head p{
+      margin:12px 0 0;
+      color:var(--muted);
+      font-size:clamp(1rem,2.4vw,1.13rem);
+      line-height:1.55;
     }
 
-    .mode-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .mode-card {
-      display: grid;
-      gap: 8px;
-      min-height: 120px;
-      border: 1px solid rgba(255,255,255,.09);
-      border-radius: 20px;
-      padding: 16px;
-      background: rgba(255,255,255,.028);
-    }
-
-    .mode-card.clean {
-      border-color: rgba(244,207,131,.34);
-      background: radial-gradient(circle at 15% 0%, rgba(244,207,131,.14), transparent 12rem), rgba(255,255,255,.035);
-    }
-
-    .mode-card b {
-      color: var(--gold);
-      font-size: .74rem;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-    }
-
-    .mode-card strong {
-      color: rgba(255,244,216,.96);
-      font-size: clamp(1.05rem, 2.2vw, 1.25rem);
-      line-height: 1.1;
-    }
-
-    .mode-card span {
-      color: rgba(238,244,255,.72);
-      line-height: 1.42;
-    }
-
-    .mode-card a {
-      width: fit-content;
-      min-height: 36px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(244,207,131,.36);
-      border-radius: 999px;
-      padding: 0 13px;
-      color: #06101c;
-      background: linear-gradient(135deg, #fff0b8, var(--gold));
-      font-size: .78rem;
-      font-weight: 950;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-
-    .mode-card.jargon a {
-      color: rgba(238,244,255,.84);
-      background: rgba(255,255,255,.035);
-      border-color: rgba(255,255,255,.12);
-    }
-
-    .inspection-stage {
-      position: relative;
-      min-height: clamp(680px, 90vw, 940px);
-      overflow: hidden;
-      border: 1px solid rgba(244,207,131,.18);
-      border-radius: 30px;
+    .inspection-stage{
+      position:relative;
+      min-height:clamp(700px,90vw,940px);
+      overflow:hidden;
+      border:1px solid rgba(244,207,131,.18);
+      border-radius:30px;
       background:
-        radial-gradient(circle at 50% 45%, rgba(141,216,255,.16), transparent 29rem),
-        radial-gradient(circle at 50% 78%, rgba(244,207,131,.07), transparent 31rem),
-        linear-gradient(180deg, rgba(4,11,24,.94), rgba(1,5,13,.98));
-      box-shadow: inset 0 0 80px rgba(141,216,255,.06), 0 28px 90px rgba(0,0,0,.42);
-      touch-action: none;
-      user-select: none;
-      -webkit-user-select: none;
+        radial-gradient(circle at 50% 45%,rgba(141,216,255,.16),transparent 29rem),
+        radial-gradient(circle at 50% 78%,rgba(244,207,131,.07),transparent 31rem),
+        linear-gradient(180deg,rgba(4,11,24,.94),rgba(1,5,13,.98));
+      box-shadow:inset 0 0 80px rgba(141,216,255,.06),0 28px 90px rgba(0,0,0,.42);
+      touch-action:none;
+      user-select:none;
+      -webkit-user-select:none;
     }
 
-    .inspection-stage::before {
-      content: "";
-      position: absolute;
-      inset: -18%;
-      z-index: 0;
-      pointer-events: none;
+    .inspection-stage::before{
+      content:"";
+      position:absolute;
+      inset:-18%;
+      z-index:0;
+      pointer-events:none;
       background:
-        radial-gradient(circle at 12% 22%, rgba(255,255,255,.34) 0 1px, transparent 1.7px),
-        radial-gradient(circle at 32% 68%, rgba(255,255,255,.22) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 54% 14%, rgba(255,255,255,.28) 0 1px, transparent 1.6px),
-        radial-gradient(circle at 74% 74%, rgba(255,255,255,.20) 0 1px, transparent 1.4px),
-        radial-gradient(circle at 88% 36%, rgba(141,216,255,.28) 0 1px, transparent 1.7px);
-      opacity: .34;
+        radial-gradient(circle at 12% 22%,rgba(255,255,255,.34) 0 1px,transparent 1.7px),
+        radial-gradient(circle at 32% 68%,rgba(255,255,255,.22) 0 1px,transparent 1.5px),
+        radial-gradient(circle at 54% 14%,rgba(255,255,255,.28) 0 1px,transparent 1.6px),
+        radial-gradient(circle at 74% 74%,rgba(255,255,255,.20) 0 1px,transparent 1.4px),
+        radial-gradient(circle at 88% 36%,rgba(141,216,255,.28) 0 1px,transparent 1.7px);
+      opacity:.34;
     }
 
-    .inspection-mount {
-      position: absolute;
-      inset: 0;
-      z-index: 2;
-      overflow: hidden;
-      touch-action: none;
+    .inspection-mount{
+      position:absolute;
+      inset:0;
+      z-index:2;
+      overflow:hidden;
+      touch-action:none;
     }
 
-    .inspection-mount canvas {
-      position: absolute !important;
-      inset: 0 !important;
-      width: 100% !important;
-      height: 100% !important;
-      display: block !important;
-      background: transparent !important;
-      pointer-events: none !important;
+    .inspection-mount canvas{
+      position:absolute!important;
+      inset:0!important;
+      width:100%!important;
+      height:100%!important;
+      display:block!important;
+      background:transparent!important;
+      pointer-events:none!important;
     }
 
-    .clean-stage-label {
-      position: absolute;
-      left: 50%;
-      bottom: clamp(70px, 10vw, 98px);
-      z-index: 5;
-      width: min(calc(100% - 44px), 820px);
-      transform: translateX(-50%);
-      text-align: center;
-      color: rgba(239,247,255,.76);
-      font-weight: 950;
-      font-size: clamp(1rem, 3.5vw, 1.3rem);
-      line-height: 1.18;
-      text-shadow: 0 2px 16px rgba(0,0,0,.72);
-      pointer-events: none;
+    .stage-label{
+      position:absolute;
+      left:50%;
+      bottom:clamp(70px,10vw,98px);
+      z-index:5;
+      width:min(calc(100% - 44px),820px);
+      transform:translateX(-50%);
+      text-align:center;
+      color:rgba(239,247,255,.76);
+      font-weight:950;
+      font-size:clamp(1rem,3.5vw,1.3rem);
+      line-height:1.18;
+      text-shadow:0 2px 16px rgba(0,0,0,.72);
+      pointer-events:none;
     }
 
-    .clean-stage-label strong { color: rgba(141,216,255,.96); }
+    .stage-label strong{color:rgba(141,216,255,.96)}
 
-    .clean-instruction {
-      position: absolute;
-      left: clamp(16px, 4vw, 36px);
-      right: clamp(16px, 4vw, 36px);
-      bottom: clamp(16px, 4vw, 34px);
-      z-index: 5;
-      border-top: 1px solid rgba(255,255,255,.12);
-      border-bottom: 1px solid rgba(255,255,255,.12);
-      padding: 14px 10px;
-      color: rgba(238,244,255,.82);
-      background: rgba(3,8,18,.42);
-      backdrop-filter: blur(8px);
-      font-weight: 850;
-      line-height: 1.35;
-      font-size: clamp(.98rem, 3.5vw, 1.16rem);
-      text-align: center;
-      pointer-events: none;
+    .stage-instruction{
+      position:absolute;
+      left:clamp(16px,4vw,36px);
+      right:clamp(16px,4vw,36px);
+      bottom:clamp(16px,4vw,34px);
+      z-index:5;
+      border-top:1px solid rgba(255,255,255,.12);
+      border-bottom:1px solid rgba(255,255,255,.12);
+      padding:14px 10px;
+      color:rgba(238,244,255,.82);
+      background:rgba(3,8,18,.42);
+      backdrop-filter:blur(8px);
+      font-weight:850;
+      line-height:1.35;
+      font-size:clamp(.98rem,3.5vw,1.16rem);
+      text-align:center;
+      pointer-events:none;
     }
 
-    /*
-      HARD QUARANTINE:
-      If an older JS bundle injects its own tabs/readout into the stage,
-      these legacy controls are hidden so the planet remains inspectable.
-    */
-    #inspection-carrier .apic-toolbar,
-    #inspection-carrier .apic-readout,
-    #inspection-carrier .apic-state-strip,
-    #inspection-carrier .apic-copy,
-    #inspection-carrier [data-apic-copy],
-    #inspection-carrier [data-apic-states] {
-      display: none !important;
-      visibility: hidden !important;
-      pointer-events: none !important;
-      opacity: 0 !important;
-      max-height: 0 !important;
-      overflow: hidden !important;
+    .engineering-lens{
+      border:1px solid rgba(244,207,131,.18);
+      border-radius:24px;
+      background:rgba(255,255,255,.026);
+      overflow:hidden;
     }
 
-    #inspection-carrier .apic-shell {
-      min-height: 100% !important;
-      border: 0 !important;
-      background: transparent !important;
-      box-shadow: none !important;
+    .engineering-lens summary{
+      min-height:58px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:0 18px;
+      color:rgba(255,244,216,.96);
+      font-weight:950;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      list-style:none;
+      background:radial-gradient(circle at 12% 0%,rgba(244,207,131,.10),transparent 16rem),rgba(2,8,20,.44);
     }
 
-    #inspection-carrier .apic-stage {
-      inset: 0 !important;
-      padding: 0 !important;
-      place-items: center !important;
+    .engineering-lens summary::-webkit-details-marker{display:none}
+    .engineering-lens summary::after{content:"Open Technical Readout";color:var(--gold);font-size:.78rem}
+    .engineering-lens[open] summary::after{content:"Close Technical Readout"}
+
+    .engineering-body{
+      display:grid;
+      gap:14px;
+      padding:16px;
+      border-top:1px solid rgba(244,207,131,.12);
     }
 
-    #inspection-carrier .apic-planet {
-      width: min(96vw, 760px) !important;
-      margin: 0 !important;
+    .lens-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
     }
 
-    .engineering-lens {
-      border: 1px solid rgba(244,207,131,.18);
-      border-radius: 24px;
-      background: rgba(255,255,255,.026);
-      overflow: hidden;
+    .lens-button{
+      min-height:38px;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:999px;
+      padding:0 13px;
+      color:rgba(239,247,255,.82);
+      background:rgba(255,255,255,.035);
+      font-size:.80rem;
+      font-weight:850;
+      letter-spacing:.05em;
+      text-transform:uppercase;
     }
 
-    .engineering-lens summary {
-      min-height: 58px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 0 18px;
-      color: rgba(255,244,216,.96);
-      font-weight: 950;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-      list-style: none;
-      background: radial-gradient(circle at 12% 0%, rgba(244,207,131,.10), transparent 16rem), rgba(2,8,20,.44);
-    }
-
-    .engineering-lens summary::-webkit-details-marker { display: none; }
-    .engineering-lens summary::after { content: "Open Technical Readout"; color: var(--gold); font-size: .78rem; }
-    .engineering-lens[open] summary::after { content: "Close Technical Readout"; }
-
-    .engineering-body {
-      display: grid;
-      gap: 14px;
-      padding: 16px;
-      border-top: 1px solid rgba(244,207,131,.12);
-    }
-
-    .lens-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .lens-button {
-      min-height: 38px;
-      border: 1px solid rgba(255,255,255,.11);
-      border-radius: 999px;
-      padding: 0 13px;
-      color: rgba(239,247,255,.82);
-      background: rgba(255,255,255,.035);
-      font-size: .80rem;
-      font-weight: 850;
-      letter-spacing: .05em;
-      text-transform: uppercase;
-    }
-
-    .lens-button[aria-pressed="true"] {
-      color: #06101c;
-      background: linear-gradient(135deg, #fff0b8, var(--gold));
-      border-color: rgba(244,207,131,.72);
+    .lens-button[aria-pressed="true"]{
+      color:#06101c;
+      background:linear-gradient(135deg,#fff0b8,var(--gold));
+      border-color:rgba(244,207,131,.72);
     }
 
     .readout-grid,
     .state-grid,
-    .receipt-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
+    .receipt-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
     }
 
-    .readout-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .readout-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 
     .readout-card,
     .state-card,
-    .receipt-card {
-      min-height: 112px;
-      display: grid;
-      align-content: start;
-      gap: 8px;
-      border: 1px solid rgba(255,255,255,.09);
-      border-radius: 18px;
-      padding: 14px;
-      background: radial-gradient(circle at 20% 0%, rgba(244,207,131,.08), transparent 8rem), rgba(255,255,255,.028);
+    .receipt-card{
+      min-height:112px;
+      display:grid;
+      align-content:start;
+      gap:8px;
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:18px;
+      padding:14px;
+      background:radial-gradient(circle at 20% 0%,rgba(244,207,131,.08),transparent 8rem),rgba(255,255,255,.028);
     }
 
     .readout-card b,
     .state-card b,
-    .receipt-card b {
-      color: var(--gold);
-      font-size: .72rem;
-      letter-spacing: .15em;
-      text-transform: uppercase;
+    .receipt-card b{
+      color:var(--gold);
+      font-size:.72rem;
+      letter-spacing:.15em;
+      text-transform:uppercase;
     }
 
     .readout-card strong,
     .state-card strong,
-    .receipt-card strong {
-      color: rgba(255,244,216,.96);
-      font-size: 1rem;
-      line-height: 1.16;
+    .receipt-card strong{
+      color:rgba(255,244,216,.96);
+      font-size:1rem;
+      line-height:1.16;
     }
 
     .readout-card span,
     .state-card span,
-    .receipt-card span {
-      color: rgba(238,244,255,.70);
-      font-size: .88rem;
-      line-height: 1.36;
+    .receipt-card span{
+      color:rgba(238,244,255,.70);
+      font-size:.88rem;
+      line-height:1.36;
     }
 
-    .receipt-code {
-      display: block;
-      margin-top: 16px;
-      padding: 14px;
-      border: 1px solid rgba(255,255,255,.09);
-      border-radius: 16px;
-      background: rgba(0,0,0,.28);
-      color: rgba(238,244,255,.72);
-      font-size: .78rem;
-      line-height: 1.45;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
+    .receipt-code{
+      display:block;
+      margin-top:16px;
+      padding:14px;
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:16px;
+      background:rgba(0,0,0,.28);
+      color:rgba(238,244,255,.72);
+      font-size:.78rem;
+      line-height:1.45;
+      white-space:pre-wrap;
+      overflow-wrap:anywhere;
     }
 
     .hidden-receipt,
-    [data-route-receipt] {
-      display: none !important;
-      visibility: hidden !important;
-      width: 0 !important;
-      height: 0 !important;
-      max-width: 0 !important;
-      max-height: 0 !important;
-      overflow: hidden !important;
-      opacity: 0 !important;
-      pointer-events: none !important;
-      position: absolute !important;
-      clip-path: inset(50%) !important;
+    [data-route-receipt]{
+      display:none!important;
+      visibility:hidden!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      overflow:hidden!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      position:absolute!important;
+      clip-path:inset(50%)!important;
     }
 
-    .footer {
-      margin-top: 20px;
-      padding: 20px 0 0;
-      color: var(--faint);
-      font-size: .82rem;
-      text-align: center;
+    .footer{
+      margin-top:20px;
+      padding:20px 0 0;
+      color:var(--faint);
+      font-size:.82rem;
+      text-align:center;
     }
 
-    @media (max-width: 1040px) {
-      .topbar { grid-template-columns: 1fr; }
-      .dropdown-nav { justify-content: flex-start; }
-      .dropdown-panel { left: 0; right: auto; }
-      .mode-grid,
+    @media (max-width:1040px){
+      .topbar{grid-template-columns:1fr}
+      .dropdown-nav{justify-content:flex-start}
+      .dropdown-panel{left:0;right:auto}
       .readout-grid,
       .state-grid,
-      .receipt-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .receipt-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
-    @media (max-width: 700px) {
-      .page { width: min(100% - 18px, var(--max)); }
-
+    @media (max-width:700px){
+      .page{width:min(100% - 18px,var(--max))}
       .hero,
       .inspection-shell,
-      .mode-shell,
       .engineering-shell,
       .state-shell,
       .receipt-shell,
-      .inspection-stage {
-        border-radius: 24px;
+      .inspection-stage{border-radius:24px}
+      .dropdown-nav{display:grid;grid-template-columns:1fr}
+      .dropdown summary{width:100%}
+      .dropdown-panel{
+        position:static;
+        margin-top:8px;
+        min-width:0;
       }
-
-      .dropdown-nav { display: grid; grid-template-columns: 1fr; }
-      .dropdown summary { width: 100%; }
-      .dropdown-panel {
-        position: static;
-        margin-top: 8px;
-        min-width: 0;
-      }
-
-      .inspection-stage { min-height: 760px; }
-
-      .mode-grid,
+      .inspection-stage{min-height:760px}
       .readout-grid,
       .state-grid,
-      .receipt-grid {
-        grid-template-columns: 1fr;
-      }
+      .receipt-grid{grid-template-columns:1fr}
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        scroll-behavior: auto !important;
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: .01ms !important;
+    @media (prefers-reduced-motion:reduce){
+      *,*::before,*::after{
+        scroll-behavior:auto!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
       }
     }
   </style>
@@ -740,7 +631,7 @@
           <summary>Inspection Options</summary>
           <div class="dropdown-panel">
             <a href="#inspection-carrier">Clean Inspection <span>Default</span></a>
-            <a href="#engineering-lens">Engineering / Jargon <span>Optional</span></a>
+            <a href="#engineering-lens">Engineering Readout <span>Optional</span></a>
             <a href="#state-lens-deck">State Deck <span>Below</span></a>
             <a href="#route-receipt">Route Receipt <span>Proof</span></a>
           </div>
@@ -754,41 +645,15 @@
         <h1 id="page-title">Inspect the planet first. Open the technical readout only when needed.</h1>
 
         <p class="lede">
-          This route now separates the visitor experience from the engineering layer. Clean Inspection gives the planet the screen. Engineering holds the jargon below the stage.
+          The female JS carrier is present first. This male HTML selector chooses it, provides the mount, and keeps the clean inspection chamber free of jargon.
         </p>
 
         <div class="status-row">
+          <span class="status-pill">JS female first</span>
+          <span class="status-pill">HTML male second</span>
           <span class="status-pill">Clean inspection default</span>
-          <span class="status-pill">Jargon optional</span>
-          <span class="status-pill">Controls below stage</span>
-          <span class="status-pill">Planet unobstructed</span>
-          <span class="status-pill">Runtime / Strength held</span>
-        </div>
-      </section>
-
-      <section class="mode-shell" aria-label="Inspection mode selector">
-        <div class="section-head">
-          <p class="section-title">Inspection Modes</p>
-          <h2>Two paths: clean planet view or engineering readout.</h2>
-          <p>
-            Clean Inspection is the default. Engineering is available, but it does not cover the planet.
-          </p>
-        </div>
-
-        <div class="mode-grid">
-          <article class="mode-card clean">
-            <b>Default</b>
-            <strong>Clean Inspection</strong>
-            <span>Inspect Audralia without tabs, chips, state walls, or technical readout cards covering the body.</span>
-            <a href="#inspection-carrier">Inspect Planet</a>
-          </article>
-
-          <article class="mode-card jargon">
-            <b>Optional</b>
-            <strong>Engineering / Technical Readout</strong>
-            <span>Open the engineering layer below the planet when you want lenses, states, receipts, and proof.</span>
-            <a href="#engineering-lens">Open Engineering</a>
-          </article>
+          <span class="status-pill">Engineering optional</span>
+          <span class="status-pill">No controls over planet</span>
         </div>
       </section>
 
@@ -797,7 +662,7 @@
           <p class="section-title">Clean Inspection Chamber</p>
           <h2>Audralia gets the screen.</h2>
           <p>
-            Drag the planet directly. No engineering tabs or readout cards are allowed inside this chamber.
+            Drag the planet directly. Engineering controls and technical readouts are below this chamber.
           </p>
         </div>
 
@@ -808,7 +673,7 @@
           data-clean-inspection-stage="true"
           data-no-controls-over-planet="true"
           data-route-local-render="true"
-          data-contract="AUDRALIA_G2_PLANET_BODY_CLEAN_INSPECTION_ENGINEERING_OPTION_HTML_TNT_v1"
+          data-contract="AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_TNT_v1"
           data-runtime-strength-held="true"
           data-final-visual-pass-claim="false"
           aria-label="Clean Audralia planet body inspection stage"
@@ -821,11 +686,11 @@
             aria-label="Clean Audralia planet body mount"
           ></div>
 
-          <div class="clean-stage-label" data-audralia-planet-stage-label>
+          <div class="stage-label" data-audralia-planet-stage-label>
             <strong>Clean Inspection</strong> → drag Audralia directly
           </div>
 
-          <div class="clean-instruction">
+          <div class="stage-instruction">
             Drag the planet to inspect it. Technical lenses and readouts are below this chamber.
           </div>
         </div>
@@ -856,13 +721,13 @@
               <article class="readout-card">
                 <b data-audralia-planet-lens-anchor>North · Datum Body</b>
                 <strong data-audralia-planet-lens-title>Body View</strong>
-                <span data-audralia-planet-lens-copy>One coherent Audralia body under canvas inspection. Runtime / Strength remains held.</span>
+                <span data-audralia-planet-lens-copy>Clean planet-body inspection. The canvas carrier is active; Runtime / Strength remains held.</span>
               </article>
 
               <article class="readout-card">
                 <b>Carrier Receipt</b>
-                <strong data-audralia-planet-carrier-status>clean inspection carrier pending boot</strong>
-                <span data-audralia-planet-carrier-proof>Waiting for route-local JS receipt.</span>
+                <strong data-audralia-planet-carrier-status>male selector ready · waiting for female carrier receipt</strong>
+                <span data-audralia-planet-carrier-proof>HTML selected the JS carrier and exposed the stage, mount, controls, and slots.</span>
               </article>
             </div>
           </div>
@@ -893,46 +758,52 @@
       <section id="route-receipt" class="receipt-shell" aria-label="Clean inspection route receipt">
         <div class="section-head">
           <p class="section-title">Route Receipt</p>
-          <h2>Clean inspection and engineering are now separated.</h2>
+          <h2>JS female carrier first. HTML male selector second.</h2>
           <p>
-            The planet is inspected in a clean chamber. Engineering controls and jargon are optional and below the stage.
+            The HTML chooses the already-present JS carrier and supplies the stage, mount, Engineering controls, state deck, and receipt.
           </p>
         </div>
 
         <div class="receipt-grid">
-          <article class="receipt-card"><b>Clean View</b><strong>default</strong><span>Planet stage is not covered by tabs, chips, or technical cards.</span></article>
-          <article class="receipt-card"><b>Engineering</b><strong>optional</strong><span>Jargon lives below the planet inside the Engineering drawer.</span></article>
-          <article class="receipt-card"><b>Overlay</b><strong>blocked</strong><span>Legacy injected toolbar/readout overlays are quarantined by CSS.</span></article>
+          <article class="receipt-card"><b>JS</b><strong>female first</strong><span>Route-local canvas carrier exists before selection.</span></article>
+          <article class="receipt-card"><b>HTML</b><strong>male second</strong><span>Route shell selects the carrier and exposes the mount.</span></article>
+          <article class="receipt-card"><b>Clean View</b><strong>default</strong><span>The planet is not covered by tabs, chips, or technical cards.</span></article>
           <article class="receipt-card"><b>Runtime</b><strong>held</strong><span>No Runtime / Strength activation and no final visual pass claim.</span></article>
         </div>
 
-        <code class="receipt-code">AUDRALIA_G2_PLANET_BODY_CLEAN_INSPECTION_ENGINEERING_OPTION_HTML_TNT_v1
+        <code class="receipt-code">AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_TNT_v1
 route=/showroom/globe/audralia/planet/
 html=/showroom/globe/audralia/planet/index.html
-render_file=/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
+js=/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
+js_female_first=true
+html_male_second=true
+female_carrier_present_before_selection=true
+male_html_chooses_js=true
 clean_inspection_default=true
-engineering_jargon_optional=true
-engineering_controls_below_stage=true
+engineering_optional=true
+no_injected_stage_controls=true
 no_controls_over_planet=true
-legacy_overlay_quarantine=true
-state_wall_below_planet=true
+state_deck_below_planet=true
+receipt_below_planet=true
 runtime_strength_held=true
 final_visual_pass_claim=false
 generated_image=false
 graphic_box=false
 earth_substitution=false
 australia_name_drift=false
-deploy_marker=AUDRALIA_G2_PLANET_BODY_CLEAN_INSPECTION_ENGINEERING_OPTION_DEPLOY_MARKER_v1</code>
+deploy_marker=AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_DEPLOY_MARKER_v1</code>
 
-        <template id="audralia-clean-inspection-receipt" class="hidden-receipt" data-route-receipt>
-AUDRALIA_G2_PLANET_BODY_CLEAN_INSPECTION_ENGINEERING_OPTION_HTML_TNT_v1
+        <template id="audralia-clean-pair-js-first-receipt" class="hidden-receipt" data-route-receipt>
+AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_TNT_v1
 target=/showroom/globe/audralia/planet/index.html
+js=/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
+js_female_first=true
+html_male_second=true
+female_carrier_present_before_selection=true
+male_html_chooses_js=true
 clean_inspection_default=true
-engineering_jargon_optional=true
-engineering_controls_below_stage=true
-no_controls_over_planet=true
-legacy_overlay_quarantine=true
-state_wall_below_planet=true
+engineering_optional=true
+no_injected_stage_controls=true
 runtime_strength_held=true
 no_final_visual_pass_claim=true
         </template>
@@ -940,18 +811,20 @@ no_final_visual_pass_claim=true
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Audralia · Clean Planet Inspection · Engineering optional · Runtime / Strength held.
+      Diamond Gate Bridge · Audralia · Clean Planet Inspection · JS female first · HTML male second.
     </footer>
   </div>
 
   <script
-    src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?v=AUDRALIA_G2_PLANET_BODY_CLEAN_INSPECTION_ENGINEERING_OPTION_HTML_TNT_v1"
+    src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?v=AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_TNT_v1"
     defer
     data-audralia-planet-inspection-js
-    data-contract="AUDRALIA_G2_PLANET_BODY_CLEAN_INSPECTION_ENGINEERING_OPTION_HTML_TNT_v1"
+    data-contract="AUDRALIA_G2_PLANET_BODY_CLEAN_CANVAS_TEMPLATE_PAIR_JS_FEMALE_FIRST_HTML_MALE_SECOND_TNT_v1"
     data-route="/showroom/globe/audralia/planet/"
+    data-js-female-first="true"
+    data-html-male-second="true"
     data-clean-inspection-default="true"
-    data-engineering-jargon-optional="true"
+    data-engineering-optional="true"
     data-runtime-strength-held="true"
     data-final-visual-pass-claim="false"
   ></script>

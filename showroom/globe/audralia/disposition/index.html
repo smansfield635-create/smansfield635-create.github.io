@@ -2,15 +2,16 @@
 <html
   lang="en"
   data-route="/showroom/globe/audralia/disposition/"
-  data-page="audralia-intergalactic-cockpit-readable-viewport-asymmetric-gauge-system"
-  data-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_READABLE_VIEWPORT_ASYMMETRIC_GAUGE_SYSTEM_TNT_v1"
-  data-spec-ops-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_READABLE_VIEWPORT_ASYMMETRIC_GAUGE_SYSTEM_SPEC_OPS_v1"
-  data-previous-html-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_SPACESHIP_VIEWPORT_256_GAUGE_SYSTEM_TNT_v1"
+  data-page="audralia-intergalactic-cockpit-engineering-lens-technical-expression"
+  data-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_ENGINEERING_LENS_TECHNICAL_EXPRESSION_TNT_v1"
+  data-spec-ops-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_ENGINEERING_LENS_TECHNICAL_EXPRESSION_SPEC_OPS_v1"
+  data-previous-html-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_READABLE_VIEWPORT_ASYMMETRIC_GAUGE_SYSTEM_TNT_v1"
   data-bound-js-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_360_LATTICE_GEM_ROUTE_JS_TNT_v1"
   data-parent-matching-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_PARENT_MATCHING_CONTRACT_TNT_v1"
   data-news-protocol="north-east-west-south-chronological-256-fibonacci-sequence"
   data-ccr="coherence-pass-constraint-pass-runtime-held"
   data-visible-interface="first-person-spaceship-cockpit-asymmetric-instrument-wings"
+  data-engineering-lens="cockpit-native-technical-service-layer"
   data-distant-body="Audralia"
   data-distant-body-claim="viewport-expression-only-not-planet-render-pass"
   data-hidden-coherence-geometry="diamond-gem-logic-under-the-hood"
@@ -30,10 +31,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Audralia · Intergalactic Cockpit · Command Glass</title>
+  <title>Audralia · Intergalactic Cockpit · Engineering Lens</title>
   <meta
     name="description"
-    content="Audralia Intergalactic Cockpit with first-person command glass, distant Audralia viewport expression, asymmetric 16-point compass instruments, compact Cockpit Menu, dropdown chambers, Platform and Engineering lenses, and Runtime Strength held."
+    content="Audralia Intergalactic Cockpit with first-person command glass, distant Audralia viewport expression, asymmetric 16-point compass instruments, cockpit-native Engineering Lens panels, compact Cockpit Menu, Platform and Engineering lenses, and Runtime Strength held."
   >
 
   <style>
@@ -1133,12 +1134,13 @@
     .card-grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
 
     .proof-card,
-    .engine-card{
+    .engine-card,
+    .readout-cell{
       position:relative;
       display:grid;
       align-content:start;
       gap:7px;
-      min-height:112px;
+      min-height:104px;
       border:1px solid rgba(255,255,255,.10);
       border-radius:18px;
       padding:13px;
@@ -1149,7 +1151,8 @@
     }
 
     .proof-card b,
-    .engine-card b{
+    .engine-card b,
+    .readout-cell b{
       position:relative;
       z-index:2;
       color:var(--gold);
@@ -1160,7 +1163,8 @@
     }
 
     .proof-card strong,
-    .engine-card strong{
+    .engine-card strong,
+    .readout-cell strong{
       position:relative;
       z-index:2;
       color:rgba(255,244,216,.96);
@@ -1170,7 +1174,8 @@
     }
 
     .proof-card span,
-    .engine-card span{
+    .engine-card span,
+    .readout-cell span{
       position:relative;
       z-index:2;
       color:rgba(239,247,255,.70);
@@ -1179,15 +1184,517 @@
       overflow-wrap:anywhere;
     }
 
-    .lattice-gem-grid,
-    .lattice-receipt-grid,
-    .gauge-grid,
-    .control-board,
-    .stream-grid{
+    .engineering-panel{
+      display:grid;
+      gap:14px;
+      border:1px solid rgba(141,216,255,.14);
+      border-radius:24px;
+      padding:14px;
+      background:
+        radial-gradient(circle at 8% 0%,rgba(141,216,255,.09),transparent 18rem),
+        radial-gradient(circle at 92% 16%,rgba(244,207,131,.06),transparent 18rem),
+        linear-gradient(180deg,rgba(255,255,255,.040),rgba(255,255,255,.014)),
+        rgba(2,8,20,.72);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .engineering-panel-head{
+      display:grid;
+      gap:6px;
+      max-width:900px;
+    }
+
+    .engineering-panel-head b{
+      color:var(--gold);
+      font:900 .70rem/1.3 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+
+    .engineering-panel-head strong{
+      color:rgba(255,244,216,.96);
+      font-size:clamp(1.05rem,2vw,1.36rem);
+      letter-spacing:-.025em;
+    }
+
+    .engineering-panel-head span{
+      color:rgba(239,247,255,.70);
+      font-size:.92rem;
+      line-height:1.45;
+    }
+
+    .tech-schematic{
+      position:relative;
+      min-height:220px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:22px;
+      padding:14px;
+      background:
+        linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px),
+        rgba(0,0,0,.18);
+      background-size:18px 18px;
+      overflow:hidden;
+    }
+
+    .tech-schematic::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(141,216,255,.12),transparent 16rem),
+        linear-gradient(180deg,rgba(255,255,255,.035),transparent 35%,rgba(244,207,131,.025));
+      opacity:.78;
+    }
+
+    .scan-diagnostic{
+      display:grid;
+      align-content:end;
+      gap:10px;
+    }
+
+    .scan-band-stack{
+      position:relative;
+      z-index:2;
+      display:grid;
+      gap:4px;
+    }
+
+    .scan-band-stack i{
+      display:block;
+      height:8px;
+      border-radius:999px;
+      border:1px solid rgba(167,243,198,.16);
+      background:linear-gradient(90deg,rgba(167,243,198,.08),rgba(141,216,255,.12),transparent);
+      overflow:hidden;
+    }
+
+    .scan-band-stack i::before{
+      content:"";
+      display:block;
+      width:34%;
+      height:100%;
+      border-radius:999px;
+      background:linear-gradient(90deg,transparent,rgba(167,243,198,.82),transparent);
+      animation:systemsScan 8s ease-in-out infinite;
+      animation-delay:var(--d,0s);
+    }
+
+    .scan-band-stack i:nth-child(2){--d:-.6s}
+    .scan-band-stack i:nth-child(3){--d:-1.2s}
+    .scan-band-stack i:nth-child(4){--d:-1.8s}
+    .scan-band-stack i:nth-child(5){--d:-2.4s}
+    .scan-band-stack i:nth-child(6){--d:-3s}
+    .scan-band-stack i:nth-child(7){--d:-3.6s}
+    .scan-band-stack i:nth-child(8){--d:-4.2s}
+
+    .status-rail{
+      position:relative;
+      z-index:3;
+      display:grid;
+      grid-template-columns:repeat(8,minmax(0,1fr));
+      gap:7px;
+    }
+
+    .status-rail i{
+      height:28px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:999px;
+      background:rgba(255,255,255,.035);
+    }
+
+    .status-rail i:nth-child(1),
+    .status-rail i:nth-child(3),
+    .status-rail i:nth-child(5){
+      background:rgba(167,243,198,.14);
+      border-color:rgba(167,243,198,.24);
+      box-shadow:0 0 12px rgba(167,243,198,.10);
+    }
+
+    .status-rail i:nth-child(7){
+      background:rgba(244,207,131,.13);
+      border-color:rgba(244,207,131,.24);
+    }
+
+    .nav-schematic{
+      display:grid;
+      grid-template-columns:auto minmax(0,1fr);
+      gap:14px;
+      align-items:center;
+    }
+
+    .nav-scope-large{
+      position:relative;
+      z-index:2;
+      width:min(240px,100%);
+      aspect-ratio:1/1;
+      border-radius:50%;
+      border:1px solid rgba(141,216,255,.26);
+      background:
+        radial-gradient(circle,transparent 0 20%,rgba(141,216,255,.07) 21% 22%,transparent 23% 40%,rgba(141,216,255,.07) 41% 42%,transparent 43% 60%,rgba(141,216,255,.07) 61% 62%,transparent 63%),
+        linear-gradient(0deg,transparent 49%,rgba(141,216,255,.18) 50%,transparent 51%),
+        linear-gradient(90deg,transparent 49%,rgba(141,216,255,.18) 50%,transparent 51%),
+        repeating-conic-gradient(from 0deg,rgba(255,255,255,.12) 0 1deg,transparent 1.8deg 22.5deg),
+        rgba(141,216,255,.035);
+      box-shadow:0 0 24px rgba(141,216,255,.14),inset 0 0 28px rgba(0,0,0,.54);
+    }
+
+    .nav-scope-large::before{
+      content:"";
+      position:absolute;
+      inset:50% auto auto 50%;
+      width:48%;
+      height:2px;
+      transform-origin:0 50%;
+      background:linear-gradient(90deg,rgba(141,216,255,.92),transparent);
+      animation:radarSweep 13s linear infinite;
+    }
+
+    .nav-scope-large::after{
+      content:"NEWS · NE/ENE";
+      position:absolute;
+      left:50%;
+      bottom:12px;
+      transform:translateX(-50%);
+      color:rgba(244,207,131,.86);
+      font:900 .58rem/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      letter-spacing:.12em;
+    }
+
+    .coordinate-lock{
+      position:relative;
+      z-index:2;
+      display:grid;
+      gap:8px;
+    }
+
+    .coordinate-lock i{
+      display:block;
+      height:10px;
+      border-radius:999px;
+      border:1px solid rgba(141,216,255,.18);
+      background:linear-gradient(90deg,rgba(141,216,255,.16),transparent 70%);
+    }
+
+    .signal-board{
+      display:grid;
+      gap:10px;
+      align-content:center;
+    }
+
+    .signal-lane{
+      position:relative;
+      z-index:2;
+      min-height:34px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:999px;
+      background:rgba(255,255,255,.028);
+      overflow:hidden;
+    }
+
+    .signal-lane::before{
+      content:"";
+      position:absolute;
+      top:50%;
+      left:-24%;
+      width:44%;
+      height:3px;
+      transform:translateY(-50%);
+      border-radius:999px;
+      background:linear-gradient(90deg,transparent,var(--lane-color),transparent);
+      animation:laneRun var(--lane-time,8s) linear infinite;
+    }
+
+    .signal-lane::after{
+      content:attr(data-label);
+      position:absolute;
+      left:12px;
+      top:50%;
+      transform:translateY(-50%);
+      color:rgba(239,247,255,.72);
+      font:900 .62rem/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .signal-lane[data-state="held"]::before{
+      left:auto;
+      right:8px;
+      width:20%;
+      background:linear-gradient(90deg,transparent,rgba(244,207,131,.62),transparent);
+      animation:none;
+    }
+
+    .signal-lane[data-state="held"]{
+      border-color:rgba(244,207,131,.18);
+    }
+
+    @keyframes laneRun{
+      0%{left:-32%;opacity:.25}
+      50%{opacity:1}
+      100%{left:92%;opacity:.25}
+    }
+
+    .grid-board-256{
+      position:relative;
+      z-index:2;
+      display:grid;
+      grid-template-columns:repeat(16,1fr);
+      gap:3px;
+      max-width:520px;
+    }
+
+    .grid-board-256 i{
+      aspect-ratio:1/1;
+      border:1px solid rgba(167,243,198,.16);
+      border-radius:4px;
+      background:rgba(167,243,198,.038);
+    }
+
+    .grid-board-256 i:nth-child(17n),
+    .grid-board-256 i:nth-child(31n){
+      background:rgba(244,207,131,.12);
+      border-color:rgba(244,207,131,.24);
+      box-shadow:0 0 8px rgba(244,207,131,.10);
+    }
+
+    .grid-board-256 i:nth-child(19n){
+      background:rgba(173,140,255,.12);
+      border-color:rgba(173,140,255,.22);
+    }
+
+    .containment-schematic{
+      display:grid;
+      grid-template-columns:auto minmax(0,1fr);
+      gap:16px;
+      align-items:center;
+    }
+
+    .containment-core-large{
+      position:relative;
+      z-index:2;
+      width:min(230px,100%);
+      aspect-ratio:1/1;
+      border-radius:50%;
+      border:1px solid rgba(173,140,255,.28);
+      background:
+        radial-gradient(circle,rgba(173,140,255,.20) 0 18%,rgba(0,0,0,.64) 19% 35%,transparent 36%),
+        repeating-conic-gradient(from 0deg,rgba(244,207,131,.20) 0 5deg,transparent 5deg 22.5deg),
+        rgba(173,140,255,.035);
+      box-shadow:0 0 24px rgba(173,140,255,.16),inset 0 0 34px rgba(0,0,0,.62);
+      animation:containmentLock 13s ease-in-out infinite;
+    }
+
+    .containment-core-large::before{
+      content:"";
+      position:absolute;
+      inset:13%;
+      border-radius:50%;
+      border:1px dashed rgba(244,207,131,.24);
+      animation:containmentReverse 21s linear infinite reverse;
+    }
+
+    .containment-core-large::after{
+      content:"RUNTIME HELD";
+      position:absolute;
+      inset:auto 0 18px;
+      text-align:center;
+      color:var(--gold);
+      font:900 .62rem/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      letter-spacing:.14em;
+    }
+
+    .lock-stack{
+      position:relative;
+      z-index:2;
+      display:grid;
+      gap:8px;
+    }
+
+    .lock-stack i{
+      height:16px;
+      border:1px solid rgba(244,207,131,.18);
+      border-radius:999px;
+      background:linear-gradient(90deg,rgba(244,207,131,.16),transparent);
+    }
+
+    .calibration-board{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .cal-dial{
+      position:relative;
+      z-index:2;
+      min-height:150px;
+      display:grid;
+      gap:8px;
+      justify-items:center;
+      align-content:center;
+      border:1px solid rgba(255,179,109,.14);
+      border-radius:18px;
+      background:rgba(255,179,109,.025);
+    }
+
+    .cal-dial i{
+      position:relative;
+      display:block;
+      width:74px;
+      aspect-ratio:1/1;
+      border-radius:50%;
+      border:1px solid rgba(255,179,109,.25);
+      background:
+        radial-gradient(circle at 50% 55%,rgba(2,7,18,.96) 0 36%,transparent 37%),
+        conic-gradient(from -130deg,rgba(255,179,109,.72) 0 var(--arc,55%),rgba(255,255,255,.08) var(--arc,56%) 100%);
+      box-shadow:inset 0 0 16px rgba(0,0,0,.64);
+    }
+
+    .cal-dial i::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:2px;
+      height:38%;
+      transform-origin:50% 92%;
+      transform:translate(-50%,-92%) rotate(var(--needle,34deg));
+      border-radius:999px;
+      background:rgba(255,244,216,.90);
+      animation:dialSweep var(--t,5s) ease-in-out infinite;
+    }
+
+    .cal-dial b{
+      color:var(--gold);
+      font:900 .58rem/1.1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      text-align:center;
+    }
+
+    .packet-board{
+      display:grid;
+      gap:9px;
+      align-content:center;
+    }
+
+    .packet-slot{
+      position:relative;
+      z-index:2;
+      min-height:38px;
+      border:1px solid rgba(244,207,131,.18);
+      border-radius:999px;
+      background:rgba(244,207,131,.035);
+      overflow:hidden;
+    }
+
+    .packet-slot::before{
+      content:"";
+      position:absolute;
+      inset:5px auto 5px 0;
+      width:28%;
+      border-radius:999px;
+      background:linear-gradient(90deg,rgba(244,207,131,.80),rgba(255,255,255,.42));
+      animation:packetDock 13s steps(4,end) infinite;
+      animation-delay:var(--d,0s);
+    }
+
+    .packet-slot::after{
+      content:attr(data-label);
+      position:absolute;
+      left:14px;
+      top:50%;
+      transform:translateY(-50%);
+      color:rgba(255,244,216,.80);
+      font:900 .62rem/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .packet-slot[data-state="held"]::before{
+      left:auto;
+      right:8px;
+      width:18%;
+      background:linear-gradient(90deg,transparent,rgba(244,207,131,.68));
+      animation:none;
+    }
+
+    .seal-board{
+      display:grid;
+      gap:9px;
+      align-content:center;
+    }
+
+    .seal-line{
+      position:relative;
+      z-index:2;
+      min-height:42px;
+      border:1px solid rgba(255,232,163,.18);
+      border-radius:16px;
+      background:rgba(255,232,163,.030);
+      overflow:hidden;
+    }
+
+    .seal-line::before{
+      content:attr(data-label);
+      position:absolute;
+      left:12px;
+      top:50%;
+      transform:translateY(-50%);
+      color:rgba(255,244,216,.82);
+      font:900 .62rem/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .seal-line::after{
+      content:"";
+      position:absolute;
+      right:12px;
+      top:50%;
+      width:72px;
+      height:4px;
+      border-radius:999px;
+      transform:translateY(-50%);
+      background:linear-gradient(90deg,transparent,rgba(255,232,163,.84),transparent);
+      animation:sealStamp 13s ease-in-out infinite;
+      animation-delay:var(--d,0s);
+    }
+
+    .tech-readout-grid{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
       gap:10px;
-      margin-top:4px;
+    }
+
+    .engineering-content .lattice-gem-grid,
+    .engineering-content .lattice-receipt-grid,
+    .engineering-content .gauge-grid,
+    .engineering-content .control-board,
+    .engineering-content .stream-grid{
+      max-height:240px;
+      overflow:auto;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:10px;
+      background:rgba(0,0,0,.18);
+      grid-template-columns:repeat(4,minmax(0,1fr));
+    }
+
+    .engineering-content .lattice-gem-grid > *,
+    .engineering-content .lattice-receipt-grid > *,
+    .engineering-content .gauge-grid > *,
+    .engineering-content .control-board > *,
+    .engineering-content .stream-grid > *{
+      min-height:70px!important;
+      max-height:120px;
+      overflow:hidden;
+      border-radius:14px!important;
+      border:1px solid rgba(141,216,255,.12)!important;
+      background:rgba(255,255,255,.026)!important;
+      box-shadow:none!important;
+      font-size:.75rem!important;
     }
 
     .return-row{
@@ -1287,12 +1794,19 @@
       .card-grid,
       .card-grid.three,
       .card-grid.two,
-      .lattice-gem-grid,
-      .lattice-receipt-grid,
-      .gauge-grid,
-      .control-board,
-      .stream-grid{
+      .tech-readout-grid,
+      .calibration-board,
+      .engineering-content .lattice-gem-grid,
+      .engineering-content .lattice-receipt-grid,
+      .engineering-content .gauge-grid,
+      .engineering-content .control-board,
+      .engineering-content .stream-grid{
         grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .nav-schematic,
+      .containment-schematic{
+        grid-template-columns:1fr;
       }
     }
 
@@ -1347,12 +1861,18 @@
       .card-grid,
       .card-grid.three,
       .card-grid.two,
-      .lattice-gem-grid,
-      .lattice-receipt-grid,
-      .gauge-grid,
-      .control-board,
-      .stream-grid{
+      .tech-readout-grid,
+      .calibration-board,
+      .engineering-content .lattice-gem-grid,
+      .engineering-content .lattice-receipt-grid,
+      .engineering-content .gauge-grid,
+      .engineering-content .control-board,
+      .engineering-content .stream-grid{
         grid-template-columns:1fr;
+      }
+
+      .grid-board-256{
+        grid-template-columns:repeat(8,1fr);
       }
 
       .chamber summary{
@@ -1384,7 +1904,15 @@
       .dial::after,
       .containment-core,
       .containment-core::before,
-      .contract-plate::after{
+      .contract-plate::after,
+      .scan-band-stack i::before,
+      .nav-scope-large::before,
+      .signal-lane::before,
+      .containment-core-large,
+      .containment-core-large::before,
+      .cal-dial i::after,
+      .packet-slot::before,
+      .seal-line::after{
         animation:none!important;
       }
     }
@@ -1467,7 +1995,7 @@
             <div class="viewport-beam" aria-hidden="true"></div>
 
             <div class="cockpit-title-card">
-              <p class="kicker">Dexterion’s Lab · Command Glass · NEWS aligned</p>
+              <p class="kicker">Dexterion’s Lab · Command Glass · Engineering Lens renewed</p>
               <h1 id="page-title">Inside the cockpit, Audralia is visible in the distance.</h1>
               <p>
                 You are at the command glass. Audralia is ahead. Open a gauge to inspect what is loaded, what is held, and what is safe to touch.
@@ -1475,7 +2003,7 @@
               <div class="viewport-status">
                 <span class="status-pill">Runtime / Strength held</span>
                 <span class="status-pill">Existing JS preserved</span>
-                <span class="status-pill">Viewport expression only</span>
+                <span class="status-pill">Engineering Lens cockpit-native</span>
                 <span class="status-pill">No canvas</span>
                 <span class="status-pill">No WebGL</span>
               </div>
@@ -1539,15 +2067,30 @@
                 </div>
               </div>
               <div class="lens-content engineering-content">
-                <div class="card-grid">
-                  <article class="proof-card"><b>Phase</b><span data-cockpit-phase>boot pending</span></article>
-                  <article class="proof-card"><b>Failure</b><span data-cockpit-failure>BOOT_PENDING · boot pending</span></article>
-                  <article class="proof-card"><b>Authority</b><span data-public-instrument-authority>Dexterion’s Lab</span></article>
-                  <article class="proof-card"><b>Mode</b><span data-cockpit-dexterion-mode>readable viewport · asymmetric gauges</span></article>
-                  <article class="proof-card"><b>Parent Match</b><span data-cockpit-parent-match>active · parent-only renewal</span></article>
-                  <article class="proof-card"><b>Donor Status</b><span data-cockpit-dual-donor-status>pending preserved JS</span></article>
-                  <article class="proof-card"><b>Control Cells</b><span data-control-cell-status>pending lattice-seat board</span></article>
-                  <article class="proof-card"><b>Child Renewal</b><span data-cockpit-child-renewal>forbidden · existing child structure preserved</span></article>
+                <div class="engineering-panel">
+                  <div class="engineering-panel-head">
+                    <b>Systems Glass Engineering · N / NNE</b>
+                    <strong>Scan diagnostic panel</strong>
+                    <span>This scan reads phase, failure, authority, mode, parent match, donor status, control cells, and child preservation. The cockpit is safe to inspect only inside the current hold boundaries.</span>
+                  </div>
+                  <div class="tech-schematic scan-diagnostic">
+                    <div class="scan-band-stack" aria-hidden="true">
+                      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                    </div>
+                    <div class="status-rail" aria-hidden="true">
+                      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                    </div>
+                  </div>
+                  <div class="tech-readout-grid">
+                    <article class="readout-cell"><b>Phase</b><span data-cockpit-phase>boot pending</span></article>
+                    <article class="readout-cell"><b>Failure</b><span data-cockpit-failure>BOOT_PENDING · boot pending</span></article>
+                    <article class="readout-cell"><b>Authority</b><span data-public-instrument-authority>Dexterion’s Lab</span></article>
+                    <article class="readout-cell"><b>Mode</b><span data-cockpit-dexterion-mode>engineering lens technical expression</span></article>
+                    <article class="readout-cell"><b>Parent Match</b><span data-cockpit-parent-match>active · parent-only renewal</span></article>
+                    <article class="readout-cell"><b>Donor Status</b><span data-cockpit-dual-donor-status>pending preserved JS</span></article>
+                    <article class="readout-cell"><b>Control Cells</b><span data-control-cell-status>pending lattice-seat board</span></article>
+                    <article class="readout-cell"><b>Child Renewal</b><span data-cockpit-child-renewal>forbidden · existing child structure preserved</span></article>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1583,17 +2126,36 @@
                 </div>
               </div>
               <div class="lens-content engineering-content">
-                <div
-                  class="lattice-gem-grid"
-                  data-lattice-gem-console
-                  data-gem-authority="Dexterion’s Lab"
-                  data-parent-matching-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_PARENT_MATCHING_CONTRACT_TNT_v1"
-                  data-animation-engine="LATTICE_CONSOLE_NAV_SCOPE_ENGINE_256"
-                  data-compass-primary="NE"
-                  data-compass-secondary="ENE"
-                  data-seat-count="256"
-                  data-visible-sample="4x4"
-                ></div>
+                <div class="engineering-panel">
+                  <div class="engineering-panel-head">
+                    <b>Lattice Console Engineering · NE / ENE</b>
+                    <strong>Navigation scope diagnostic</strong>
+                    <span>This scope preserves the cockpit’s 16 × 16 address field. It confirms where systems belong without absorbing child authority or becoming the planet renderer.</span>
+                  </div>
+                  <div class="tech-schematic nav-schematic">
+                    <div class="nav-scope-large" aria-hidden="true"></div>
+                    <div class="coordinate-lock" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                  </div>
+                  <div class="tech-readout-grid">
+                    <article class="readout-cell"><b>Scope</b><span>active · navigation diagnostic</span></article>
+                    <article class="readout-cell"><b>Address Field</b><span>16 radial spokes × 16 orbit ticks</span></article>
+                    <article class="readout-cell"><b>Parent Match</b><span>AUDRALIA_G1_INTERGALACTIC_COCKPIT_PARENT_MATCHING_CONTRACT_TNT_v1</span></article>
+                    <article class="readout-cell"><b>Preserved JS</b><span>AUDRALIA_G1_INTERGALACTIC_COCKPIT_360_LATTICE_GEM_ROUTE_JS_TNT_v1</span></article>
+                    <article class="readout-cell"><b>Child Authority</b><span>not absorbed</span></article>
+                    <article class="readout-cell"><b>Planet Render</b><span>not claimed</span></article>
+                  </div>
+                  <div
+                    class="lattice-gem-grid"
+                    data-lattice-gem-console
+                    data-gem-authority="Dexterion’s Lab"
+                    data-parent-matching-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_PARENT_MATCHING_CONTRACT_TNT_v1"
+                    data-animation-engine="LATTICE_CONSOLE_NAV_SCOPE_ENGINE_256"
+                    data-compass-primary="NE"
+                    data-compass-secondary="ENE"
+                    data-seat-count="256"
+                    data-visible-sample="4x4"
+                  ></div>
+                </div>
               </div>
             </div>
             <div class="return-row">
@@ -1629,12 +2191,29 @@
                 </div>
               </div>
               <div class="lens-content engineering-content">
-                <div class="stream-grid" data-cockpit-streams></div>
-                <div class="card-grid">
-                  <article class="proof-card"><b>Datum System</b><span data-cockpit-datum>pending cockpit JS</span></article>
-                  <article class="proof-card"><b>Disposition System</b><span data-cockpit-disposition>pending cockpit JS</span></article>
-                  <article class="proof-card"><b>Terrain System</b><span data-cockpit-terrain>pending cockpit JS</span></article>
-                  <article class="proof-card"><b>Multi-Stream</b><span data-cockpit-launchpad>held · awaiting stream proof</span></article>
+                <div class="engineering-panel">
+                  <div class="engineering-panel-head">
+                    <b>Stream Deck Engineering · E / ESE</b>
+                    <strong>Oscilloscope proof-lane diagnostic</strong>
+                    <span>These lanes read datum, disposition, and terrain. Future lanes are gated and cannot trigger render in this pass.</span>
+                  </div>
+                  <div class="tech-schematic signal-board">
+                    <div class="signal-lane" data-label="Datum · loaded/pending" style="--lane-color:rgba(244,207,131,.86);--lane-time:8s"></div>
+                    <div class="signal-lane" data-label="Disposition · receive pulse" style="--lane-color:rgba(141,216,255,.88);--lane-time:5s"></div>
+                    <div class="signal-lane" data-label="Terrain · weighted signal" style="--lane-color:rgba(167,243,198,.78);--lane-time:13s"></div>
+                    <div class="signal-lane" data-label="Future streams · gated" data-state="held"></div>
+                  </div>
+                  <div class="tech-readout-grid">
+                    <article class="readout-cell"><b>Datum System</b><span data-cockpit-datum>pending cockpit JS</span></article>
+                    <article class="readout-cell"><b>Disposition System</b><span data-cockpit-disposition>pending cockpit JS</span></article>
+                    <article class="readout-cell"><b>Terrain System</b><span data-cockpit-terrain>pending cockpit JS</span></article>
+                    <article class="readout-cell"><b>Moisture</b><span>held</span></article>
+                    <article class="readout-cell"><b>Surface</b><span>held</span></article>
+                    <article class="readout-cell"><b>Cloud</b><span>held</span></article>
+                    <article class="readout-cell"><b>Continent</b><span>held</span></article>
+                    <article class="readout-cell"><b>Multi-Stream</b><span data-cockpit-launchpad>held · awaiting stream proof</span></article>
+                  </div>
+                  <div class="stream-grid" data-cockpit-streams></div>
                 </div>
               </div>
             </div>
@@ -1670,22 +2249,45 @@
                 </div>
               </div>
               <div class="lens-content engineering-content">
-                <div class="card-grid">
-                  <article class="proof-card"><b>Touch Status</b><span data-cockpit-control-status>pending lattice-seat board</span></article>
-                  <article class="proof-card"><b>Last Touch</b><span data-control-last-touch>none</span></article>
-                  <article class="proof-card"><b>Manual Override</b><span>session-only visual state</span></article>
-                  <article class="proof-card"><b>Runtime Lock</b><span>touch cannot activate Strength</span></article>
+                <div class="engineering-panel">
+                  <div class="engineering-panel-head">
+                    <b>Seat Inspector Engineering · SE / SSE</b>
+                    <strong>Full 16 × 16 local inspection board</strong>
+                    <span>This board tests one local seat at a time. A touch can inspect a seat, but it cannot wake the cockpit, persist state, activate render, or turn on Runtime / Strength.</span>
+                  </div>
+                  <div class="tech-schematic">
+                    <div class="grid-board-256" aria-label="16 by 16 local inspection board">
+                      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                    </div>
+                  </div>
+                  <div class="tech-readout-grid">
+                    <article class="readout-cell"><b>Local Scope</b><span>16 × 16</span></article>
+                    <article class="readout-cell"><b>Address Count</b><span>256</span></article>
+                    <article class="readout-cell"><b>Visible Sample</b><span>4 × 4 / expandable local proof</span></article>
+                    <article class="readout-cell"><b>Touch Behavior</b><span>session manual override</span></article>
+                    <article class="readout-cell"><b>Manual Override</b><span>session-only visual state</span></article>
+                    <article class="readout-cell"><b>Render Activation</b><span>false</span></article>
+                    <article class="readout-cell"><b>Runtime Lock</b><span>touch cannot activate Strength</span></article>
+                    <article class="readout-cell"><b>Session</b><span>no persistence required</span></article>
+                  </div>
+                  <div
+                    class="control-board"
+                    data-cockpit-control-board
+                    data-local-scope="16x16"
+                    data-local-addresses="256"
+                    data-visible-sample="4x4"
+                    data-touch-behavior="session-manual-override"
+                    data-render-activation="false"
+                    aria-label="Cockpit local diagnostic control cells"
+                  ></div>
                 </div>
-                <div
-                  class="control-board"
-                  data-cockpit-control-board
-                  data-local-scope="16x16"
-                  data-local-addresses="256"
-                  data-visible-sample="4x4"
-                  data-touch-behavior="session-manual-override"
-                  data-render-activation="false"
-                  aria-label="Cockpit local diagnostic control cells"
-                ></div>
               </div>
             </div>
             <div class="return-row">
@@ -1720,15 +2322,26 @@
                 </div>
               </div>
               <div class="lens-content engineering-content">
-                <div class="card-grid">
-                  <article class="proof-card"><b>Runtime / Strength</b><span data-cockpit-runtime>held · future multi-stream carrier</span></article>
-                  <article class="proof-card"><b>Motion</b><span>offline</span></article>
-                  <article class="proof-card"><b>Drag Endurance</b><span>staged · not active</span></article>
-                  <article class="proof-card"><b>Sustained Loops</b><span>not active</span></article>
-                  <article class="proof-card"><b>Canvas</b><span>false</span></article>
-                  <article class="proof-card"><b>WebGL</b><span>false</span></article>
-                  <article class="proof-card"><b>Visual Pass</b><span>not claimed</span></article>
-                  <article class="proof-card"><b>Runtime Lock</b><span data-cockpit-runtime-lock>held · future engine carrier only</span></article>
+                <div class="engineering-panel">
+                  <div class="engineering-panel-head">
+                    <b>Runtime Containment Engineering · S / SSW</b>
+                    <strong>Locked power-core schematic</strong>
+                    <span>Runtime / Strength remains held. Motion, drag endurance, sustained loops, canvas, WebGL, and visual pass remain offline.</span>
+                  </div>
+                  <div class="tech-schematic containment-schematic">
+                    <div class="containment-core-large" aria-hidden="true"></div>
+                    <div class="lock-stack" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                  </div>
+                  <div class="tech-readout-grid">
+                    <article class="readout-cell"><b>Runtime / Strength</b><span data-cockpit-runtime>held · future multi-stream carrier</span></article>
+                    <article class="readout-cell"><b>Motion</b><span>offline</span></article>
+                    <article class="readout-cell"><b>Drag Endurance</b><span>staged · not active</span></article>
+                    <article class="readout-cell"><b>Sustained Loops</b><span>not active</span></article>
+                    <article class="readout-cell"><b>Canvas</b><span>false</span></article>
+                    <article class="readout-cell"><b>WebGL</b><span>false</span></article>
+                    <article class="readout-cell"><b>Visual Pass</b><span>not claimed</span></article>
+                    <article class="readout-cell"><b>Runtime Lock</b><span data-cockpit-runtime-lock>held · future engine carrier only</span></article>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1765,18 +2378,35 @@
                 </div>
               </div>
               <div class="lens-content engineering-content">
-                <div class="card-grid">
-                  <article class="proof-card"><b>Datum Gauge</b><span data-gauge-datum>pending</span></article>
-                  <article class="proof-card"><b>Disposition Gauge</b><span data-gauge-disposition>pending</span></article>
-                  <article class="proof-card"><b>Terrain Gauge</b><span data-gauge-terrain>pending</span></article>
-                  <article class="proof-card"><b>NEWS Gauge</b><span data-gauge-news>pending</span></article>
-                  <article class="proof-card"><b>Parent Match Gauge</b><span data-gauge-parent-match>active · parent-only renewal</span></article>
-                  <article class="proof-card"><b>Parent Chain Gauge</b><span data-gauge-parent>pending</span></article>
-                  <article class="proof-card"><b>Render Hold Gauge</b><span data-gauge-render>pending</span></article>
-                  <article class="proof-card"><b>Runtime / Strength Gauge</b><span data-gauge-runtime>held · future engine carrier</span></article>
-                  <article class="proof-card"><b>Multi-Stream Gauge</b><span data-gauge-multistream>pending</span></article>
+                <div class="engineering-panel">
+                  <div class="engineering-panel-head">
+                    <b>Dexterion Gauge Board Engineering · SW / WSW</b>
+                    <strong>Analog/digital calibration board</strong>
+                    <span>This calibration board measures what is loaded, pending, matched, held, and forbidden. Measurement does not execute the system.</span>
+                  </div>
+                  <div class="tech-schematic calibration-board">
+                    <div class="cal-dial" style="--arc:62%;--needle:34deg;--t:5s"><i></i><b>Datum</b></div>
+                    <div class="cal-dial" style="--arc:48%;--needle:58deg;--t:8s"><i></i><b>Disposition</b></div>
+                    <div class="cal-dial" style="--arc:55%;--needle:-20deg;--t:13s"><i></i><b>Terrain</b></div>
+                    <div class="cal-dial" style="--arc:72%;--needle:72deg;--t:21s"><i></i><b>NEWS</b></div>
+                    <div class="cal-dial" style="--arc:66%;--needle:8deg;--t:8s"><i></i><b>Parent</b></div>
+                    <div class="cal-dial" style="--arc:34%;--needle:-48deg;--t:13s"><i></i><b>Runtime</b></div>
+                    <div class="cal-dial" style="--arc:42%;--needle:-28deg;--t:21s"><i></i><b>Render Hold</b></div>
+                    <div class="cal-dial" style="--arc:29%;--needle:-58deg;--t:13s"><i></i><b>Multi</b></div>
+                  </div>
+                  <div class="tech-readout-grid">
+                    <article class="readout-cell"><b>Datum Gauge</b><span data-gauge-datum>pending</span></article>
+                    <article class="readout-cell"><b>Disposition Gauge</b><span data-gauge-disposition>pending</span></article>
+                    <article class="readout-cell"><b>Terrain Gauge</b><span data-gauge-terrain>pending</span></article>
+                    <article class="readout-cell"><b>NEWS Gauge</b><span data-gauge-news>pending</span></article>
+                    <article class="readout-cell"><b>Parent Match</b><span data-gauge-parent-match>active · parent-only renewal</span></article>
+                    <article class="readout-cell"><b>Parent Chain</b><span data-gauge-parent>pending</span></article>
+                    <article class="readout-cell"><b>Render Hold</b><span data-gauge-render>pending</span></article>
+                    <article class="readout-cell"><b>Runtime / Strength</b><span data-gauge-runtime>held · future engine carrier</span></article>
+                    <article class="readout-cell"><b>Multi-Stream</b><span data-gauge-multistream>pending</span></article>
+                  </div>
+                  <div class="gauge-grid" data-gauge-board aria-label="Generated Dexterion gauge records"></div>
                 </div>
-                <div class="gauge-grid" data-gauge-board aria-label="Generated Dexterion gauge records"></div>
               </div>
             </div>
             <div class="return-row">
@@ -1811,12 +2441,29 @@
                 </div>
               </div>
               <div class="lens-content engineering-content">
-                <div class="lattice-receipt-grid" data-lattice-receipt-grid></div>
-                <div class="card-grid">
-                  <article class="proof-card"><b>Receipt Present</b><span>stamp flare</span></article>
-                  <article class="proof-card"><b>Receipt Pending</b><span>slow lane travel</span></article>
-                  <article class="proof-card"><b>Receipt Held</b><span>packet parked behind gold boundary</span></article>
-                  <article class="proof-card"><b>Deploy Marker</b><span>single final seal pulse</span></article>
+                <div class="engineering-panel">
+                  <div class="engineering-panel-head">
+                    <b>Receipt Dock Engineering · W / WNW</b>
+                    <strong>Proof packet loading bay</strong>
+                    <span>This proof bay confirms what has reported back. A docked packet proves arrival, not visual maturity.</span>
+                  </div>
+                  <div class="tech-schematic packet-board">
+                    <div class="packet-slot" data-label="Receipt present" style="--d:0s"></div>
+                    <div class="packet-slot" data-label="Receipt pending" style="--d:-2s"></div>
+                    <div class="packet-slot" data-label="Receipt held" data-state="held"></div>
+                    <div class="packet-slot" data-label="Deploy marker" style="--d:-5s"></div>
+                  </div>
+                  <div class="tech-readout-grid">
+                    <article class="readout-cell"><b>Receipt Present</b><span>stamp flare</span></article>
+                    <article class="readout-cell"><b>Receipt Pending</b><span>slow lane travel</span></article>
+                    <article class="readout-cell"><b>Receipt Held</b><span>packet parked behind gold boundary</span></article>
+                    <article class="readout-cell"><b>Receipt Forbidden</b><span>blocked if boundary fails</span></article>
+                    <article class="readout-cell"><b>Deploy Marker</b><span>single final seal pulse</span></article>
+                    <article class="readout-cell"><b>Boundary Lock</b><span>active</span></article>
+                    <article class="readout-cell"><b>Render Claim</b><span>not claimed</span></article>
+                    <article class="readout-cell"><b>Proof State</b><span>settled when docked</span></article>
+                  </div>
+                  <div class="lattice-receipt-grid" data-lattice-receipt-grid></div>
                 </div>
               </div>
             </div>
@@ -1852,14 +2499,33 @@
                 </div>
               </div>
               <div class="lens-content engineering-content">
-                <div class="card-grid two">
-                  <article class="proof-card"><b>Active TNT</b><span>AUDRALIA_G1_INTERGALACTIC_COCKPIT_READABLE_VIEWPORT_ASYMMETRIC_GAUGE_SYSTEM_TNT_v1</span></article>
-                  <article class="proof-card"><b>Spec + Ops</b><span>AUDRALIA_G1_INTERGALACTIC_COCKPIT_READABLE_VIEWPORT_ASYMMETRIC_GAUGE_SYSTEM_SPEC_OPS_v1</span></article>
-                  <article class="proof-card"><b>Preserved JS</b><span>AUDRALIA_G1_INTERGALACTIC_COCKPIT_360_LATTICE_GEM_ROUTE_JS_TNT_v1</span></article>
-                  <article class="proof-card"><b>Deploy Marker</b><span>AUDRALIA_G1_INTERGALACTIC_COCKPIT_READABLE_VIEWPORT_ASYMMETRIC_GAUGE_SYSTEM_DEPLOY_MARKER_v1</span></article>
-                </div>
-                <div class="warning-strip">
-                  Parent HTML renewed. Existing route JS preserved. Children preserved. Runtime / Strength held. No canvas. No WebGL. No generated image. No GraphicBox. No visual-pass claim. Audralia remains viewport expression only.
+                <div class="engineering-panel">
+                  <div class="engineering-panel-head">
+                    <b>Contract Seal Engineering · NW / NNW</b>
+                    <strong>Authorization plate</strong>
+                    <span>This authorization plate confirms what this parent HTML renewal changed, what it preserved, and what remains held.</span>
+                  </div>
+                  <div class="tech-schematic seal-board">
+                    <div class="seal-line" data-label="Active TNT" style="--d:0s"></div>
+                    <div class="seal-line" data-label="Spec + Ops" style="--d:-1s"></div>
+                    <div class="seal-line" data-label="Preserved JS" style="--d:-2s"></div>
+                    <div class="seal-line" data-label="Runtime held" style="--d:-3s"></div>
+                    <div class="seal-line" data-label="Deploy marker" style="--d:-4s"></div>
+                  </div>
+                  <div class="tech-readout-grid">
+                    <article class="readout-cell"><b>Active TNT</b><span>AUDRALIA_G1_INTERGALACTIC_COCKPIT_ENGINEERING_LENS_TECHNICAL_EXPRESSION_TNT_v1</span></article>
+                    <article class="readout-cell"><b>Spec + Ops</b><span>AUDRALIA_G1_INTERGALACTIC_COCKPIT_ENGINEERING_LENS_TECHNICAL_EXPRESSION_SPEC_OPS_v1</span></article>
+                    <article class="readout-cell"><b>Preserved JS</b><span>AUDRALIA_G1_INTERGALACTIC_COCKPIT_360_LATTICE_GEM_ROUTE_JS_TNT_v1</span></article>
+                    <article class="readout-cell"><b>Parent Match</b><span>AUDRALIA_G1_INTERGALACTIC_COCKPIT_PARENT_MATCHING_CONTRACT_TNT_v1</span></article>
+                    <article class="readout-cell"><b>Child Preservation</b><span>true</span></article>
+                    <article class="readout-cell"><b>Runtime Held</b><span>true</span></article>
+                    <article class="readout-cell"><b>No Canvas / WebGL</b><span>true</span></article>
+                    <article class="readout-cell"><b>Visual Pass</b><span>not claimed</span></article>
+                    <article class="readout-cell"><b>Deploy Marker</b><span>AUDRALIA_G1_INTERGALACTIC_COCKPIT_ENGINEERING_LENS_TECHNICAL_EXPRESSION_DEPLOY_MARKER_v1</span></article>
+                  </div>
+                  <div class="warning-strip">
+                    Parent HTML/CSS renewed. Exterior cockpit preserved. Engineering Lens translated into cockpit-native technical panels. Existing route JS preserved. Children preserved. Runtime / Strength held. No canvas. No WebGL. No generated image. No GraphicBox. No visual-pass claim.
+                  </div>
                 </div>
               </div>
             </div>
@@ -1872,26 +2538,27 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-AUDRALIA_G1_INTERGALACTIC_COCKPIT_READABLE_VIEWPORT_ASYMMETRIC_GAUGE_SYSTEM_TNT_v1
+AUDRALIA_G1_INTERGALACTIC_COCKPIT_ENGINEERING_LENS_TECHNICAL_EXPRESSION_TNT_v1
 route=/showroom/globe/audralia/disposition/
 html=/showroom/globe/audralia/disposition/index.html
-spec_ops=AUDRALIA_G1_INTERGALACTIC_COCKPIT_READABLE_VIEWPORT_ASYMMETRIC_GAUGE_SYSTEM_SPEC_OPS_v1
-previous_html_contract=AUDRALIA_G1_INTERGALACTIC_COCKPIT_SPACESHIP_VIEWPORT_256_GAUGE_SYSTEM_TNT_v1
+spec_ops=AUDRALIA_G1_INTERGALACTIC_COCKPIT_ENGINEERING_LENS_TECHNICAL_EXPRESSION_SPEC_OPS_v1
+previous_html_contract=AUDRALIA_G1_INTERGALACTIC_COCKPIT_READABLE_VIEWPORT_ASYMMETRIC_GAUGE_SYSTEM_TNT_v1
 bound_js_contract=AUDRALIA_G1_INTERGALACTIC_COCKPIT_360_LATTICE_GEM_ROUTE_JS_TNT_v1
 parent_matching_contract=AUDRALIA_G1_INTERGALACTIC_COCKPIT_PARENT_MATCHING_CONTRACT_TNT_v1
 visible_interface=first_person_spaceship_cockpit_asymmetric_instrument_wings
+engineering_lens=technical_service_layer_of_same_cockpit
+engineering_visual_rule=cockpit_native_schematic_before_compact_proof
 headline=Inside_the_cockpit_Audralia_is_visible_in_the_distance
-copy_rule=operator_language_not_abstract_third_person
 distant_body=Audralia
 distant_body_claim=viewport_expression_only_not_visual_planet_render_pass
-systems_anchor=N_NNE
-lattice_anchor=NE_ENE
-stream_anchor=E_ESE
-seat_anchor=SE_SSE
-runtime_anchor=S_SSW
-gauge_anchor=SW_WSW
-receipt_anchor=W_WNW
-contract_anchor=NW_NNW
+systems_engineering=scan_diagnostic_panel
+lattice_engineering=navigation_scope_diagnostic
+stream_engineering=oscilloscope_proof_lane_diagnostic
+seat_engineering=full_16x16_local_inspection_board
+runtime_engineering=locked_power_core_schematic
+gauge_engineering=analog_digital_calibration_board
+receipt_engineering=proof_packet_loading_bay
+contract_engineering=authorization_plate
 news_protocol=North_East_West_South_chronological_256_scope_Fibonacci_sequence
 ccr=Coherence_PASS_Constraint_PASS_Runtime_HELD
 html_function=wisdom
@@ -1911,12 +2578,12 @@ downstream_held=true
 no_visual_pass_claim=true
 return_target=#cockpit-orbit
 return_label=Return_to_Cockpit_Orbit
-deploy_marker=AUDRALIA_G1_INTERGALACTIC_COCKPIT_READABLE_VIEWPORT_ASYMMETRIC_GAUGE_SYSTEM_DEPLOY_MARKER_v1
+deploy_marker=AUDRALIA_G1_INTERGALACTIC_COCKPIT_ENGINEERING_LENS_TECHNICAL_EXPRESSION_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Audralia · Intergalactic Cockpit · Asymmetric 16-Point Gauge System · Runtime / Strength held.
+      Diamond Gate Bridge · Audralia · Intergalactic Cockpit · Engineering Lens Technical Expression · Runtime / Strength held.
     </footer>
   </div>
 
@@ -1925,15 +2592,15 @@ deploy_marker=AUDRALIA_G1_INTERGALACTIC_COCKPIT_READABLE_VIEWPORT_ASYMMETRIC_GAU
     defer
     data-audralia-cockpit-js
     data-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_360_LATTICE_GEM_ROUTE_JS_TNT_v1"
-    data-html-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_READABLE_VIEWPORT_ASYMMETRIC_GAUGE_SYSTEM_TNT_v1"
-    data-spec-ops-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_READABLE_VIEWPORT_ASYMMETRIC_GAUGE_SYSTEM_SPEC_OPS_v1"
+    data-html-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_ENGINEERING_LENS_TECHNICAL_EXPRESSION_TNT_v1"
+    data-spec-ops-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_ENGINEERING_LENS_TECHNICAL_EXPRESSION_SPEC_OPS_v1"
     data-parent-matching-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_PARENT_MATCHING_CONTRACT_TNT_v1"
     data-previous-js-contract="AUDRALIA_G1_INTERGALACTIC_COCKPIT_DUAL_DONOR_CIRCUIT_TOUCH_GEM_INSTRUMENT_ROUTE_JS_TNT_v1"
     data-parent-baseline="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMPTION_BASELINE_v1"
     data-harness-baseline="AUDRALIA_G1_DISPOSITION_VERIFICATION_HARNESS_MULTI_STREAM_LAUNCHPAD_BASELINE_v1"
     data-cockpit-frame="intergalactic-cockpit"
     data-instrument-authority="dexterions-lab"
-    data-visible-interface="readable-viewport-asymmetric-gauge-system"
+    data-visible-interface="engineering-lens-technical-expression"
     data-html-function="wisdom"
     data-js-function="courage"
     data-runtime-function="strength"
@@ -1948,13 +2615,14 @@ deploy_marker=AUDRALIA_G1_INTERGALACTIC_COCKPIT_READABLE_VIEWPORT_ASYMMETRIC_GAU
     (() => {
       "use strict";
 
-      const CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_READABLE_VIEWPORT_ASYMMETRIC_GAUGE_SYSTEM_TNT_v1";
+      const CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_ENGINEERING_LENS_TECHNICAL_EXPRESSION_TNT_v1";
       const ORBIT_ID = "cockpit-orbit";
 
       const receipt = Object.freeze({
         contract: CONTRACT,
         route: "/showroom/globe/audralia/disposition/",
-        scope: "parent-html-only",
+        scope: "parent-html-css-only",
+        engineeringLens: "cockpit-native technical service layer",
         visibleInterface: "first-person spaceship cockpit with asymmetric instrument wings",
         distantBody: "Audralia",
         distantBodyClaim: "viewport expression only, not planet render pass",
@@ -1971,7 +2639,7 @@ deploy_marker=AUDRALIA_G1_INTERGALACTIC_COCKPIT_READABLE_VIEWPORT_ASYMMETRIC_GAU
 
       document.documentElement.dataset.activeCockpitTnt = CONTRACT;
       document.documentElement.dataset.cockpitReceipt = JSON.stringify(receipt);
-      window.AUDRALIA_INTERGALACTIC_COCKPIT_READABLE_VIEWPORT_RECEIPT = receipt;
+      window.AUDRALIA_INTERGALACTIC_COCKPIT_ENGINEERING_LENS_RECEIPT = receipt;
 
       const instruments = Array.from(document.querySelectorAll(".instrument[data-target]"));
       const chambers = Array.from(document.querySelectorAll("details.chamber[id]"));

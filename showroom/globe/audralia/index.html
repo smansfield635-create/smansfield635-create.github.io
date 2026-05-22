@@ -2,23 +2,23 @@
 <html
   lang="en"
   data-route="/showroom/globe/audralia/"
-  data-page="audralia-g1-datum-cloning-method-consumer-html-binding"
-  data-contract="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_HTML_BINDING_TNT_v1"
-  data-previous-html-contract="AUDRALIA_G1_DATUM_ADOPTION_HTML_BINDING_TNT_v1"
+  data-page="audralia-g1-datum-diagnostic-reporting-html-binding"
+  data-contract="AUDRALIA_G1_DATUM_DIAGNOSTIC_REPORTING_HTML_BINDING_TNT_v1"
+  data-previous-html-contract="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_HTML_BINDING_TNT_v1"
   data-protected-parent-baseline="AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1"
-  data-bound-js-contract="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_TNT_v1"
-  data-previous-js-contract="AUDRALIA_G1_DATUM_ADOPTION_ROUTE_JS_TNT_v1"
+  data-bound-js-contract="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1"
+  data-previous-js-contract="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_TNT_v1"
   data-datum-file="/assets/audralia/clean/runtime/audralia.true-globe.datum.js"
   data-public-datum-contract="AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1"
   data-clone-datum-contract="AUDRALIA_G1_CHILD_MATH_DATUM_CLONING_METHOD_SEED_TNT_v1"
-  data-process="cloning-method-consumer-binding"
+  data-process="diagnostic-reporting-html-binding"
   data-html-role="public-binding-shell"
-  data-js-role="cloning-method-consumer"
+  data-js-role="diagnostic-reporting-consumer"
   data-datum-role="cloned-seed-source"
-  data-html-binds-to-cloning-method-consumer="true"
+  data-html-binds-to-diagnostic-reporting-js="true"
   data-html-does-not-consume-datum-directly="true"
   data-datum-file-held="true"
-  data-js-file-held="true"
+  data-js-file-selected="true"
   data-downstream-held="true"
   data-no-visual-pass-claim="true"
 >
@@ -26,23 +26,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Audralia · Cloning Method Consumer Binding</title>
+  <title>Audralia · Diagnostic Reporting Binding</title>
   <meta
     name="description"
-    content="Audralia binds the public HTML shell to the cloning-method consumer JS while preserving the G1 360 Diagnostic Scope baseline and keeping downstream held."
+    content="Audralia binds the public HTML shell to the diagnostic-reporting JS so cloned-seed consumption can be visibly reported while downstream remains held."
   >
 
   <style>
     :root {
       color-scheme: dark;
       --bg: #020711;
-      --panel: rgba(7, 17, 34, 0.88);
       --line: rgba(244, 207, 131, 0.18);
       --text: rgba(238, 244, 255, 0.94);
       --muted: rgba(238, 244, 255, 0.68);
       --faint: rgba(238, 244, 255, 0.46);
       --gold: #f4cf83;
-      --blue: #8dd8ff;
       --mint: #a7f3c6;
       --max: 1120px;
       --shadow: 0 32px 110px rgba(0, 0, 0, 0.42);
@@ -69,7 +67,6 @@
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       letter-spacing: -0.015em;
       -webkit-font-smoothing: antialiased;
-      text-rendering: geometricPrecision;
       background:
         linear-gradient(rgba(141,216,255,0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(141,216,255,0.03) 1px, transparent 1px);
@@ -88,13 +85,7 @@
       mask-image: linear-gradient(180deg, rgba(0,0,0,0.9), rgba(0,0,0,0.46) 62%, rgba(0,0,0,0.12));
     }
 
-    a,
-    button,
-    summary {
-      color: inherit;
-      font: inherit;
-    }
-
+    a, button, summary { color: inherit; font: inherit; }
     a { text-decoration: none; }
 
     a:focus-visible,
@@ -155,17 +146,11 @@
       height: 38px;
       border: 1px solid rgba(244,207,131,0.44);
       border-radius: 12px;
-      background:
-        linear-gradient(135deg, rgba(255,255,255,0.18), transparent 36%),
-        rgba(244,207,131,0.08);
+      background: linear-gradient(135deg, rgba(255,255,255,0.18), transparent 36%), rgba(244,207,131,0.08);
       box-shadow: 0 0 22px rgba(244,207,131,0.14);
     }
 
-    .brand-copy {
-      display: grid;
-      gap: 2px;
-      min-width: 0;
-    }
+    .brand-copy { display: grid; gap: 2px; min-width: 0; }
 
     .brand-copy strong {
       color: rgba(255,244,216,0.96);
@@ -201,9 +186,7 @@
       border-radius: 999px;
       padding: 0 13px;
       color: rgba(238,244,255,0.84);
-      background:
-        radial-gradient(circle at 50% 0%, rgba(141,216,255,0.08), transparent 72%),
-        rgba(255,255,255,0.035);
+      background: radial-gradient(circle at 50% 0%, rgba(141,216,255,0.08), transparent 72%), rgba(255,255,255,0.035);
       font-size: 0.82rem;
       font-weight: 850;
       letter-spacing: 0.02em;
@@ -212,12 +195,7 @@
     }
 
     .dropdown summary::-webkit-details-marker { display: none; }
-
-    .dropdown summary::after {
-      content: "⌄";
-      color: rgba(244,207,131,0.88);
-      font-size: 0.92rem;
-    }
+    .dropdown summary::after { content: "⌄"; color: rgba(244,207,131,0.88); font-size: 0.92rem; }
 
     .dropdown[open] summary {
       color: #06101c;
@@ -236,9 +214,7 @@
       padding: 10px;
       border: 1px solid rgba(244,207,131,0.22);
       border-radius: 18px;
-      background:
-        radial-gradient(circle at 12% 0%, rgba(244,207,131,0.10), transparent 12rem),
-        rgba(2,8,20,0.96);
+      background: radial-gradient(circle at 12% 0%, rgba(244,207,131,0.10), transparent 12rem), rgba(2,8,20,0.96);
       box-shadow: 0 22px 70px rgba(0,0,0,0.48);
       backdrop-filter: blur(12px);
     }
@@ -311,12 +287,7 @@
       line-height: 1.55;
     }
 
-    .status-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 24px;
-    }
+    .status-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
 
     .status-pill {
       min-height: 34px;
@@ -369,9 +340,7 @@
       border-radius: 999px;
       padding: 0 13px;
       color: rgba(238,244,255,0.82);
-      background:
-        radial-gradient(circle at 50% 0%, rgba(141,216,255,0.08), transparent 72%),
-        rgba(255,255,255,0.035);
+      background: radial-gradient(circle at 50% 0%, rgba(141,216,255,0.08), transparent 72%), rgba(255,255,255,0.035);
       font-size: 0.82rem;
       font-weight: 850;
       cursor: pointer;
@@ -388,9 +357,7 @@
       border: 1px solid rgba(244,207,131,0.18);
       border-radius: 22px;
       padding: 16px;
-      background:
-        radial-gradient(circle at 12% 0%, rgba(244,207,131,0.10), transparent 56%),
-        rgba(3,8,18,0.46);
+      background: radial-gradient(circle at 12% 0%, rgba(244,207,131,0.10), transparent 56%), rgba(3,8,18,0.46);
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.055);
     }
 
@@ -503,9 +470,7 @@
       pointer-events: none;
     }
 
-    html[data-audralia-active-lens="diagnostic"] .diagnostic-panel {
-      display: block;
-    }
+    html[data-audralia-active-lens="diagnostic"] .diagnostic-panel { display: block; }
 
     .diagnostic-card {
       display: grid;
@@ -513,9 +478,7 @@
       padding: 18px;
       border: 1px solid rgba(244,207,131,0.22);
       border-radius: 22px;
-      background:
-        radial-gradient(circle at 12% 0%, rgba(244,207,131,0.08), transparent 16rem),
-        rgba(2,8,20,0.78);
+      background: radial-gradient(circle at 12% 0%, rgba(244,207,131,0.08), transparent 16rem), rgba(2,8,20,0.78);
       backdrop-filter: blur(10px);
     }
 
@@ -552,9 +515,7 @@
       text-transform: uppercase;
     }
 
-    .diagnostic-grid em {
-      font-style: normal;
-    }
+    .diagnostic-grid em { font-style: normal; }
 
     .object-card,
     .receipt-card {
@@ -598,9 +559,7 @@
       border: 1px solid rgba(255,255,255,0.09);
       border-radius: 18px;
       padding: 14px;
-      background:
-        radial-gradient(circle at 20% 0%, rgba(244,207,131,0.08), transparent 8rem),
-        rgba(255,255,255,0.028);
+      background: radial-gradient(circle at 20% 0%, rgba(244,207,131,0.08), transparent 8rem), rgba(255,255,255,0.028);
     }
 
     .standard-cell b {
@@ -671,13 +630,8 @@
 
     @media (max-width: 620px) {
       .page { width: min(100% - 18px, var(--max)); }
-      .hero,
-      .stage-shell,
-      .globe-stage { border-radius: 24px; }
-      .dropdown-nav {
-        display: grid;
-        grid-template-columns: 1fr;
-      }
+      .hero, .stage-shell, .globe-stage { border-radius: 24px; }
+      .dropdown-nav { display: grid; grid-template-columns: 1fr; }
       .dropdown summary { width: 100%; }
       .dropdown-panel {
         position: static;
@@ -685,14 +639,11 @@
         min-width: 0;
       }
       .globe-stage { min-height: 680px; }
-      .diagnostic-grid,
-      .standard-grid { grid-template-columns: 1fr; }
+      .diagnostic-grid, .standard-grid { grid-template-columns: 1fr; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
+      *, *::before, *::after {
         scroll-behavior: auto !important;
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
@@ -751,23 +702,23 @@
 
     <main id="audralia-main">
       <section class="hero">
-        <p class="kicker">Audralia · Cloning Method Consumer Binding</p>
-        <h1>The public shell now chooses the cloning-method consumer.</h1>
+        <p class="kicker">Audralia · Diagnostic Reporting Binding</p>
+        <h1>The public shell now selects the diagnostic-reporting consumer.</h1>
 
         <p class="lede">
-          The datum child is a cloned seed under the same file identity. It keeps the public receive-map contract adoption-compatible. The parent JavaScript consumes that cloned seed, and this HTML shell now binds to the cloning-method consumer contract through the script loader.
+          The HTML binding now points to the diagnostic-reporting JavaScript contract. That JS must visibly prove cloned-seed consumption, receive-map readiness, NEWS completion, child-packet availability, and downstream hold.
         </p>
 
         <div class="status-row" aria-label="Current binding posture">
-          <span class="status-pill">Cloning method</span>
-          <span class="status-pill">Consumer JS selected</span>
+          <span class="status-pill">Diagnostic reporting</span>
+          <span class="status-pill">Latest JS selected</span>
           <span class="status-pill">Datum file held</span>
           <span class="status-pill">Downstream held</span>
         </div>
       </section>
 
       <section class="stage-shell" aria-label="Audralia runtime globe stage">
-        <p class="section-title">Observable Globe · Diagnostic Lattice · Cloning-Method Consumer</p>
+        <p class="section-title">Observable Globe · Diagnostic Lattice · Diagnostic Reporting Consumer</p>
 
         <div class="lens-toolbar" aria-label="Audralia lens controls">
           <div class="lens-toggle" role="group" aria-label="Choose Audralia lens">
@@ -779,7 +730,7 @@
           <article class="lens-copy" aria-live="polite">
             <b data-audralia-lens-title>Planet View</b>
             <p data-audralia-lens-copy>
-              Planet View preserves the observable globe carrier. The cloned datum seed is consumed as math only; it does not replace the planet body.
+              Planet View preserves the observable globe carrier. Diagnostic reporting runs under the hood without replacing the planet body.
             </p>
           </article>
         </div>
@@ -789,19 +740,19 @@
           class="globe-stage"
           data-audralia-globe-stage
           data-audralia-stage
-          data-contract="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_HTML_BINDING_TNT_v1"
-          data-previous-html-contract="AUDRALIA_G1_DATUM_ADOPTION_HTML_BINDING_TNT_v1"
+          data-contract="AUDRALIA_G1_DATUM_DIAGNOSTIC_REPORTING_HTML_BINDING_TNT_v1"
+          data-previous-html-contract="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_HTML_BINDING_TNT_v1"
           data-protected-parent-baseline="AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1"
-          data-bound-js-contract="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_TNT_v1"
-          data-previous-js-contract="AUDRALIA_G1_DATUM_ADOPTION_ROUTE_JS_TNT_v1"
+          data-bound-js-contract="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1"
+          data-previous-js-contract="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_TNT_v1"
           data-datum-file="/assets/audralia/clean/runtime/audralia.true-globe.datum.js"
           data-public-datum-contract="AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1"
           data-clone-datum-contract="AUDRALIA_G1_CHILD_MATH_DATUM_CLONING_METHOD_SEED_TNT_v1"
-          data-html-binds-to-cloning-method-consumer="true"
+          data-html-binds-to-diagnostic-reporting-js="true"
           data-html-does-not-consume-datum-directly="true"
           data-datum-file-held="true"
           data-downstream-held="true"
-          aria-label="Audralia G1 cloning-method consumer binding stage"
+          aria-label="Audralia G1 diagnostic-reporting binding stage"
         >
           <div
             id="audraliaGlobeMount"
@@ -820,47 +771,46 @@
             <article class="diagnostic-card">
               <h3>Diagnostic Scope</h3>
               <div class="diagnostic-grid">
-                <span><b>Route</b><em data-audralia-diagnostic-route>HTML bound to cloning-method consumer JS</em></span>
+                <span><b>Route</b><em data-audralia-diagnostic-route>HTML bound to diagnostic-reporting JS</em></span>
                 <span><b>Carrier</b><em data-audralia-diagnostic-carrier>pending JS report</em></span>
                 <span><b>Lens</b><em data-audralia-diagnostic-lens>planet</em></span>
                 <span><b>Canvas</b><em data-audralia-diagnostic-canvas>pending JS report</em></span>
                 <span><b>Loop</b><em data-audralia-diagnostic-loop>pending JS report</em></span>
                 <span><b>Children</b><em data-audralia-diagnostic-children>downstream held</em></span>
-                <span><b>NEWS</b><em data-audralia-diagnostic-news>pending cloning-method consumer report</em></span>
-                <span><b>360 Scope</b><em data-audralia-diagnostic-scope>pending cloning-method consumer report</em></span>
-
-                <span><b>Datum Child</b><em data-audralia-diagnostic-datum-child>pending cloning-method consumer report</em></span>
-                <span><b>Receive Map</b><em data-audralia-diagnostic-receive-map>pending cloning-method consumer report</em></span>
-                <span><b>NEWS Map</b><em data-audralia-diagnostic-news-map>pending cloning-method consumer report</em></span>
-                <span><b>Child Packet</b><em data-audralia-diagnostic-child-packet>pending cloning-method consumer report</em></span>
-                <span><b>Seat Count</b><em data-audralia-diagnostic-seat-count>pending cloning-method consumer report</em></span>
+                <span><b>NEWS</b><em data-audralia-diagnostic-news>pending diagnostic-reporting JS</em></span>
+                <span><b>360 Scope</b><em data-audralia-diagnostic-scope>pending diagnostic-reporting JS</em></span>
+                <span><b>Datum Child</b><em data-audralia-diagnostic-datum-child>pending diagnostic-reporting JS</em></span>
+                <span><b>Receive Map</b><em data-audralia-diagnostic-receive-map>pending diagnostic-reporting JS</em></span>
+                <span><b>NEWS Map</b><em data-audralia-diagnostic-news-map>pending diagnostic-reporting JS</em></span>
+                <span><b>Child Packet</b><em data-audralia-diagnostic-child-packet>pending diagnostic-reporting JS</em></span>
+                <span><b>Seat Count</b><em data-audralia-diagnostic-seat-count>pending diagnostic-reporting JS</em></span>
                 <span><b>Downstream</b><em data-audralia-diagnostic-downstream>held · no child activation</em></span>
               </div>
             </article>
           </div>
 
           <div class="stage-label" data-audralia-stage-label>
-            <strong>Planet View</strong> → spherical carrier · cloned datum consumed under the hood
+            <strong>Planet View</strong> → spherical carrier · diagnostic reporting active
           </div>
 
           <div class="stage-instruction">
-            Drag inside the globe stage to inspect Audralia. Diagnostic Scope reports whether the cloning-method consumer JS has consumed the cloned datum seed and verified the 256-seat NEWS map.
+            Drag inside the globe stage to inspect Audralia. Diagnostic Scope reports whether the latest JS proves cloned-seed consumption and 256-seat NEWS completion.
           </div>
         </div>
 
         <article class="object-card">
-          <p class="label">Cloning method law</p>
-          <h2>The child keeps the same identity while the seed is renewed.</h2>
+          <p class="label">Diagnostic reporting law</p>
+          <h2>The page now demands visible proof, not merely a selected consumer.</h2>
           <p>
-            The datum file remains at the same path and keeps the public receive-map contract. Internally, it is a cloned seed. The parent JavaScript consumes it through the same interface while also recognizing the cloning-method contract.
+            The script loader now targets the diagnostic-reporting JS. If cloned-seed consumption succeeds, the Diagnostic Scope must report the live proof. If it fails, the JS must write a bounded failure reason.
           </p>
         </article>
 
         <article class="object-card">
           <p class="label">Binding law</p>
-          <h2>HTML chooses the consumer. JS consumes the seed.</h2>
+          <h2>HTML selects the latest JS. JS proves or fails the seed.</h2>
           <p>
-            HTML does not consume the datum file directly. The binding act is the script-loader contract. This page now points to the cloning-method consumer JS so the diagnostic chambers can receive the live cloned-seed result.
+            HTML does not consume the datum file directly. It selects the diagnostic-reporting consumer. Datum remains held. Downstream remains held.
           </p>
         </article>
 
@@ -882,45 +832,45 @@
 
       <section id="route-receipt-summary" class="receipt-card" aria-label="Audralia route receipt summary">
         <p class="label">Route receipt</p>
-        <h2>HTML binding corrected. Cloning-method consumer selected.</h2>
+        <h2>HTML binding aligned to diagnostic-reporting JS.</h2>
         <p>
-          HTML is the public binding shell. JS is the cloning-method consumer. The datum child is the cloned seed source under the same file identity. Downstream work remains held until explicitly authorized.
+          HTML is the public binding shell. JS is the diagnostic-reporting consumer. The datum child remains the cloned seed source under the same file identity. Downstream remains held.
         </p>
 
-        <code>AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_HTML_BINDING_TNT_v1
+        <code>AUDRALIA_G1_DATUM_DIAGNOSTIC_REPORTING_HTML_BINDING_TNT_v1
 route=/showroom/globe/audralia/
 html=/showroom/globe/audralia/index.html
-previous_html_contract=AUDRALIA_G1_DATUM_ADOPTION_HTML_BINDING_TNT_v1
+previous_html_contract=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_HTML_BINDING_TNT_v1
 protected_parent_baseline=AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1
-bound_js_contract=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_TNT_v1
-previous_js_contract=AUDRALIA_G1_DATUM_ADOPTION_ROUTE_JS_TNT_v1
-script_cache_key=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_TNT_v1
+bound_js_contract=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1
+previous_js_contract=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_TNT_v1
+script_cache_key=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1
 datum_file=/assets/audralia/clean/runtime/audralia.true-globe.datum.js
 public_datum_contract=AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1
 clone_datum_contract=AUDRALIA_G1_CHILD_MATH_DATUM_CLONING_METHOD_SEED_TNT_v1
-html_binds_to_cloning_method_consumer=true
+html_binds_to_diagnostic_reporting_js=true
 html_does_not_consume_datum_directly=true
 datum_file_held=true
-js_consumer_selected=true
+js_diagnostic_reporting_selected=true
 diagnostic_slots_preserved=true
 downstream_held=true
 no_visual_pass_claim=true</code>
 
         <template id="audralia-route-receipt" class="hidden-receipt">
-AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_HTML_BINDING_TNT_v1
+AUDRALIA_G1_DATUM_DIAGNOSTIC_REPORTING_HTML_BINDING_TNT_v1
 target=/showroom/globe/audralia/index.html
-previous_html_contract=AUDRALIA_G1_DATUM_ADOPTION_HTML_BINDING_TNT_v1
+previous_html_contract=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_HTML_BINDING_TNT_v1
 protected_parent_baseline=AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1
-bound_js_contract=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_TNT_v1
-previous_js_contract=AUDRALIA_G1_DATUM_ADOPTION_ROUTE_JS_TNT_v1
-script_src=/showroom/globe/audralia/index.js?v=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_TNT_v1
+bound_js_contract=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1
+previous_js_contract=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_TNT_v1
+script_src=/showroom/globe/audralia/index.js?v=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1
 datum_file=/assets/audralia/clean/runtime/audralia.true-globe.datum.js
 public_datum_contract=AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1
 clone_datum_contract=AUDRALIA_G1_CHILD_MATH_DATUM_CLONING_METHOD_SEED_TNT_v1
 html_role=public_binding_shell
-js_role=cloning_method_consumer
+js_role=diagnostic_reporting_consumer
 datum_role=cloned_seed_source
-html_binds_to_cloning_method_consumer=true
+html_binds_to_diagnostic_reporting_js=true
 html_does_not_consume_datum_directly=true
 datum_file_changed=false
 datum_file_held=true
@@ -940,22 +890,22 @@ no_visual_pass_claim=true
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Audralia · G1 cloning-method consumer binding · downstream held.
+      Diamond Gate Bridge · Audralia · G1 diagnostic-reporting binding · downstream held.
     </footer>
   </div>
 
   <script
-    src="/showroom/globe/audralia/index.js?v=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_TNT_v1"
+    src="/showroom/globe/audralia/index.js?v=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1"
     defer
     data-audralia-route-js
-    data-contract="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_TNT_v1"
-    data-previous-route-js-contract="AUDRALIA_G1_DATUM_ADOPTION_ROUTE_JS_TNT_v1"
-    data-html-binding-contract="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_HTML_BINDING_TNT_v1"
+    data-contract="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1"
+    data-previous-js-contract="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_TNT_v1"
+    data-html-binding-contract="AUDRALIA_G1_DATUM_DIAGNOSTIC_REPORTING_HTML_BINDING_TNT_v1"
     data-protected-parent-baseline="AUDRALIA_G1_BASELINE_360_DIAGNOSTIC_SCOPE_PAIR_TNT_v1"
     data-datum-file="/assets/audralia/clean/runtime/audralia.true-globe.datum.js"
     data-public-datum-contract="AUDRALIA_G1_CHILD_MATH_DATUM_RECEIVE_MAP_TNT_v1"
     data-clone-datum-contract="AUDRALIA_G1_CHILD_MATH_DATUM_CLONING_METHOD_SEED_TNT_v1"
-    data-html-binds-to-cloning-method-consumer="true"
+    data-html-binds-to-diagnostic-reporting-js="true"
     data-html-does-not-consume-datum-directly="true"
     data-downstream-held="true"
   ></script>

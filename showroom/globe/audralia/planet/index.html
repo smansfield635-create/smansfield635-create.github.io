@@ -1,12 +1,15 @@
-<!doctype html>
+  <!doctype html>
 <html
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
-  data-page="audralia-g2-inline-lens-tray-gratitude-child-live"
-  data-contract="AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_TNT_v1"
-  data-spec-ops-contract="AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_SPEC_OPS_v1"
+  data-page="audralia-g2-carrier-boot-alignment-cache-key-html-only"
+  data-contract="AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_CACHE_KEY_HTML_ONLY_TNT_v1"
+  data-previous-contract="AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_TNT_v1"
+  data-spec-ops-contract="AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_CACHE_KEY_HTML_ONLY_SPEC_OPS_v1"
   data-inline-lens-tray-active="true"
   data-gratitude-child-loaded-before-carrier="true"
+  data-carrier-cache-key-aligned="true"
+  data-carrier-requested-contract="AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_JS_ONLY_TNT_v1"
   data-carrier-consumes-child="true"
   data-carrier-invents-terrain="false"
   data-clean-inspection-default="true"
@@ -686,13 +689,13 @@
         <h1 id="page-title">Inspect the planet first. Use the lens tray without leaving the globe.</h1>
 
         <p class="lede">
-          The Gratitude terrain child loads before the carrier. The carrier consumes the child, renders from its packet, and keeps Engineering readouts below the chamber.
+          The Gratitude terrain child loads before the carrier. The carrier now requests the boot-aligned JS contract, consumes the child from its packet, and keeps Engineering readouts below the chamber.
         </p>
 
         <div class="status-row">
           <span class="status-pill">Inline lens tray</span>
           <span class="status-pill">Gratitude child live</span>
-          <span class="status-pill">Carrier consumes child</span>
+          <span class="status-pill">Carrier cache aligned</span>
           <span class="status-pill">No fake terrain</span>
           <span class="status-pill">Runtime held</span>
         </div>
@@ -715,7 +718,8 @@
           data-inline-lens-tray-active="true"
           data-no-controls-over-planet="true"
           data-route-local-render="true"
-          data-contract="AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_TNT_v1"
+          data-contract="AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_CACHE_KEY_HTML_ONLY_TNT_v1"
+          data-carrier-requested-contract="AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_JS_ONLY_TNT_v1"
           data-runtime-strength-held="true"
           data-final-visual-pass-claim="false"
           aria-label="Clean Audralia planet body inspection stage"
@@ -776,8 +780,8 @@
 
               <article class="readout-card">
                 <b>Carrier Receipt</b>
-                <strong data-audralia-planet-carrier-status>Collaboration pending boot</strong>
-                <span data-audralia-planet-carrier-proof>Gratitude child loads before the carrier; carrier consumes child data only after validation.</span>
+                <strong data-audralia-planet-carrier-status>Boot-aligned carrier pending load</strong>
+                <span data-audralia-planet-carrier-proof>Carrier script cache key is aligned to the boot-alignment JS contract.</span>
               </article>
             </div>
           </div>
@@ -804,46 +808,49 @@
       <section id="route-receipt" class="receipt-shell" aria-label="Clean inspection route receipt">
         <div class="section-head">
           <p class="section-title">Route Receipt</p>
-          <h2>Inline tray active. Gratitude child loaded before carrier.</h2>
+          <h2>Carrier cache key aligned to boot-alignment JS.</h2>
           <p>
-            HTML arranges the collaboration. Gratitude child owns terrain. Carrier consumes and renders from the child packet.
+            HTML arranges the collaboration. Gratitude child owns terrain. Carrier is requested under the current boot-alignment contract.
           </p>
         </div>
 
         <div class="receipt-grid">
-          <article class="receipt-card"><b>HTML</b><strong>inline tray</strong><span>Controls sit below the globe and above the drag instruction.</span></article>
-          <article class="receipt-card"><b>Child</b><strong>Gratitude</strong><span>Terrain authority loads before carrier.</span></article>
-          <article class="receipt-card"><b>Carrier</b><strong>consumer</strong><span>Renders child data without inventing terrain.</span></article>
+          <article class="receipt-card"><b>HTML</b><strong>cache aligned</strong><span>Carrier script now requests the boot-alignment JS contract.</span></article>
+          <article class="receipt-card"><b>Child</b><strong>Gratitude</strong><span>Terrain authority still loads before carrier.</span></article>
+          <article class="receipt-card"><b>Carrier</b><strong>requested</strong><span>JS file untouched; query key now points to the current carrier contract.</span></article>
           <article class="receipt-card"><b>Runtime</b><strong>held</strong><span>No Runtime / Strength activation and no final visual pass claim.</span></article>
         </div>
 
-        <code class="receipt-code">AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_TNT_v1
+        <code class="receipt-code">AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_CACHE_KEY_HTML_ONLY_TNT_v1
 route=/showroom/globe/audralia/planet/
 html=/showroom/globe/audralia/planet/index.html
+previous_html_contract=AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_TNT_v1
 gratitude_child=/assets/audralia/clean/terrain/audralia.gratitude.continent.child.js
 carrier=/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
-inline_lens_tray_active=true
+carrier_cache_key_aligned=true
+carrier_requested_contract=AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_JS_ONLY_TNT_v1
+carrier_script_src_cache_key=AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_JS_ONLY_TNT_v1
+html_only_cache_key_correction=true
 gratitude_child_script_loaded_before_carrier=true
-gratitude_child_detected=pending_carrier_boot
-gratitude_child_packet_ready=pending_carrier_boot
+inline_lens_tray_active=true
 carrier_consumes_child=true
 carrier_invents_terrain=false
-land_first_child_authority=true
-nine_summits_embedded=true
-hydration_derived_from_valleys=true
-body_view_clean=true
-surface_view_child_terrain=true
-hydration_view_child_valley_fill=true
+carrier_js_untouched=true
+gratitude_child_untouched=true
+core_child_untouched=true
 engineering_readout_below=true
 runtime_strength_held=true
 final_visual_pass_claim=false</code>
 
-        <template id="audralia-inline-tray-gratitude-live-receipt" class="hidden-receipt" data-route-receipt>
-AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_TNT_v1
-inline_lens_tray_active=true
-gratitude_child_script_loaded_before_carrier=true
-carrier_consumes_child=true
-carrier_invents_terrain=false
+        <template id="audralia-carrier-cache-key-alignment-receipt" class="hidden-receipt" data-route-receipt>
+AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_CACHE_KEY_HTML_ONLY_TNT_v1
+carrier_cache_key_aligned=true
+carrier_requested_contract=AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_JS_ONLY_TNT_v1
+carrier_script_src_cache_key=AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_JS_ONLY_TNT_v1
+html_only_cache_key_correction=true
+carrier_js_untouched=true
+gratitude_child_untouched=true
+core_child_untouched=true
 runtime_strength_held=true
 final_visual_pass_claim=false
         </template>
@@ -851,7 +858,7 @@ final_visual_pass_claim=false
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Audralia · Inline Lens Tray · Gratitude child live · Runtime held.
+      Diamond Gate Bridge · Audralia · Carrier cache key aligned · Gratitude child before carrier · Runtime held.
     </footer>
   </div>
 
@@ -867,13 +874,15 @@ final_visual_pass_claim=false
   ></script>
 
   <script
-    src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?v=AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_TNT_v1"
+    src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?v=AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_JS_ONLY_TNT_v1"
     defer
     data-audralia-planet-inspection-js
-    data-contract="AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_TNT_v1"
-    data-previous-contract="AUDRALIA_G2_PLANET_BODY_HYDROSPHERE_CARRIER_TERRAIN_HELD_JS_TNT_v1"
+    data-contract="AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_JS_ONLY_TNT_v1"
+    data-previous-contract="AUDRALIA_G2_PLANET_HTML_INLINE_LENS_TRAY_GRATITUDE_CHILD_LIVE_TNT_v1"
+    data-cache-key-correction-contract="AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_CACHE_KEY_HTML_ONLY_TNT_v1"
     data-route="/showroom/globe/audralia/planet/"
     data-gratitude-child-required="true"
+    data-carrier-cache-key-aligned="true"
     data-carrier-consumes-child="true"
     data-carrier-invents-terrain="false"
     data-inline-lens-tray-active="true"

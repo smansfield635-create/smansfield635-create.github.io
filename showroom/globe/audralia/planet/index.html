@@ -3,8 +3,8 @@
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
   data-page="audralia-planet-body"
-  data-contract="AUDRALIA_PLANET_SHOWROOM_STAGE_RECT_OVAL_FIX_HTML_TNT_v1"
-  data-previous-contract="AUDRALIA_PLANET_SHOWROOM_BEACH_CHILD_LOAD_ORDER_HTML_TNT_v1"
+  data-contract="AUDRALIA_PLANET_SHOWROOM_TRIANGULAR_MESH_CHILD_LOAD_ORDER_HTML_TNT_v1"
+  data-previous-contract="AUDRALIA_PLANET_SHOWROOM_STAGE_RECT_OVAL_FIX_HTML_TNT_v1"
   data-correct-spelling="Audralia"
   data-same-shell="true"
   data-shell-preserved="true"
@@ -12,13 +12,20 @@
   data-stage-selector-on-render-viewport="true"
   data-stage-selector-on-outer-card="false"
   data-beach-child-loaded="true"
+  data-triangular-mesh-child-loaded="true"
+  data-triangular-mesh-child-load-order-after-beach-child="true"
+  data-triangular-mesh-child-load-order-before-carrier="true"
   data-beach-child-load-order-after-landform-systems="true"
-  data-beach-child-load-order-before-carrier="true"
+  data-beach-child-load-order-before-triangular-mesh="true"
   data-runtime-carrier-contract="AUDRALIA_CARRIER_VISUAL_WEIGHTING_TERRAIN_RELIEF_READABILITY_RENEWAL_TNT_v1"
   data-beach-child-contract="AUDRALIA_BEACH_COASTAL_READINESS_CHILD_TNT_v1"
+  data-triangular-mesh-child-contract="AUDRALIA_TRIANGULAR_TERRAIN_MESH_CHILD_TNT_v1"
+  data-carrier-consumes-triangular-mesh="false"
+  data-triangular-mesh-packet-live-target="true"
   data-hydration-held="true"
   data-active-hydration="false"
   data-active-water="false"
+  data-final-terrain-pass-claim="false"
   data-final-beach-pass-claim="false"
   data-final-coastline-pass-claim="false"
   data-final-hydration-pass-claim="false"
@@ -27,10 +34,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Audralia · Planet Stage Rect Fix</title>
+  <title>Audralia · Triangular Mesh Child Loaded</title>
   <meta
     name="description"
-    content="Audralia planet body inspection route with corrected render-stage geometry, dry terrain, elevation, relief, landforms, beach/coastal readiness, and held hydration."
+    content="Audralia planet body inspection route with corrected render-stage geometry, dry terrain, elevation, relief, landforms, beach/coastal readiness, triangular terrain mesh packet loading, and held hydration."
   />
 
   <style>
@@ -322,7 +329,7 @@
       left: 50%;
       bottom: 1rem;
       transform: translateX(-50%);
-      width: min(92%, 720px);
+      width: min(92%, 760px);
       padding: 0.75rem 0.9rem;
       border: 1px solid rgba(141,216,255,0.16);
       border-radius: 999px;
@@ -341,7 +348,7 @@
 
     .steps {
       display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-template-columns: repeat(7, minmax(0, 1fr));
       gap: 0.7rem;
       margin-top: 1rem;
     }
@@ -374,6 +381,12 @@
       overflow-wrap: anywhere;
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       font-size: 0.78em;
+    }
+
+    @media (max-width: 1060px) {
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
 
     @media (max-width: 900px) {
@@ -441,6 +454,10 @@
   ></script>
   <script
     defer
+    src="/assets/audralia/clean/terrain/audralia.triangular-terrain-mesh.child.js?AUDRALIA_TRIANGULAR_TERRAIN_MESH_CHILD_TNT_v1"
+  ></script>
+  <script
+    defer
     src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?AUDRALIA_CARRIER_VISUAL_WEIGHTING_TERRAIN_RELIEF_READABILITY_RENEWAL_TNT_v1"
   ></script>
 </head>
@@ -465,12 +482,12 @@
 
     <section class="hero" aria-label="Audralia planet overview">
       <article class="panel">
-        <p class="eyebrow">Audralia · Planet Stage Geometry Renewal</p>
-        <h1>The render stage now owns the measurement rectangle.</h1>
+        <p class="eyebrow">Audralia · Triangular Mesh Child Load Order</p>
+        <h1>The triangle mesh packet now loads before the carrier.</h1>
         <p>
-          This route keeps the Audralia planet shell, beach child load order, and same carrier file intact. The stage
-          selector now sits on the actual render viewport instead of the outer card, preventing the canvas from being
-          measured against one rectangle and displayed inside another.
+          This route keeps the same planet shell, corrected render-stage rectangle, beach/coastal-readiness child, and
+          runtime carrier. The new triangular terrain mesh child now loads after beach readiness and before the carrier,
+          giving the family a live triangle-facet packet before any future water activation.
         </p>
 
         <div class="badges" aria-label="Route status badges">
@@ -483,8 +500,8 @@
             <span>Carrier measures the render viewport.</span>
           </div>
           <div class="badge">
-            <strong>Beach child loaded</strong>
-            <span>After landforms, before carrier.</span>
+            <strong>Triangle packet loaded</strong>
+            <span>After beach readiness, before carrier.</span>
           </div>
           <div class="badge">
             <strong>Hydration held</strong>
@@ -497,8 +514,8 @@
         <p class="eyebrow">Load Order Deck</p>
         <h2>Family chain preserved</h2>
         <p>
-          The beach/coastal-readiness child remains loaded after landform systems and before the carrier. This HTML
-          renewal only corrects the render-stage measurement target.
+          The triangular mesh child is packet authority only. The carrier remains display-only and has not yet been
+          renewed to draw the triangle facets. This step only activates the mesh packet in the showroom page.
         </p>
 
         <div class="grid">
@@ -529,8 +546,13 @@
           </div>
           <div class="step">
             <em>06</em>
+            <strong>Triangle mesh</strong>
+            <span>Facet packet and future hydration boundary packet.</span>
+          </div>
+          <div class="step">
+            <em>07</em>
             <strong>Carrier display</strong>
-            <span>Same runtime carrier, display-only packet consumption.</span>
+            <span>Same runtime carrier; triangle rendering not yet claimed.</span>
           </div>
         </div>
       </aside>
@@ -567,31 +589,31 @@
           aria-hidden="true"
         ></div>
         <div class="hint">
-          Drag to rotate. Pinch or wheel to zoom. Stage rectangle corrected; active hydration remains held.
+          Drag to rotate. Pinch or wheel to zoom. Triangle mesh packet is loaded; carrier triangle rendering remains held.
         </div>
       </div>
     </section>
 
     <section class="receipt" aria-label="Route receipt">
       <p class="eyebrow">Route Receipt</p>
-      <h2>Stage rectangle oval fix applied.</h2>
+      <h2>Triangular mesh child added to page load order.</h2>
       <p>
-        The stage selector has been moved to the actual render viewport. The outer card remains layout only. The mount
-        remains inside the render stage. The beach child load order and carrier cache key are preserved.
+        The new mesh child loads after beach/coastal readiness and before the carrier. This activates the packet family
+        without rewriting the carrier or activating hydration.
       </p>
 
       <div class="receipt-grid">
         <div class="receipt-row">
           <strong>HTML contract</strong>
-          <span><code>AUDRALIA_PLANET_SHOWROOM_STAGE_RECT_OVAL_FIX_HTML_TNT_v1</code></span>
+          <span><code>AUDRALIA_PLANET_SHOWROOM_TRIANGULAR_MESH_CHILD_LOAD_ORDER_HTML_TNT_v1</code></span>
         </div>
         <div class="receipt-row">
-          <strong>Stage selector</strong>
-          <span>Inner render viewport, not outer card.</span>
+          <strong>Triangle mesh child</strong>
+          <span><code>AUDRALIA_TRIANGULAR_TERRAIN_MESH_CHILD_TNT_v1</code></span>
         </div>
         <div class="receipt-row">
-          <strong>Beach child</strong>
-          <span><code>AUDRALIA_BEACH_COASTAL_READINESS_CHILD_TNT_v1</code></span>
+          <strong>Carrier status</strong>
+          <span>Same carrier · not yet triangle-rendering.</span>
         </div>
         <div class="receipt-row">
           <strong>Water status</strong>
@@ -601,7 +623,7 @@
 
       <p>
         <code>
-          AUDRALIA_PLANET_SHOWROOM_STAGE_RECT_OVAL_FIX_HTML_TNT_v1
+          AUDRALIA_PLANET_SHOWROOM_TRIANGULAR_MESH_CHILD_LOAD_ORDER_HTML_TNT_v1
           route=/showroom/globe/audralia/planet/
           same_shell=true
           shell_preserved=true
@@ -613,19 +635,24 @@
           beach_child_loaded=true
           beach_child=/assets/audralia/clean/terrain/audralia.beach-coastal-readiness.child.js
           beach_child_contract=AUDRALIA_BEACH_COASTAL_READINESS_CHILD_TNT_v1
-          load_order=dry-terrain→elevation-track→relief-expression→landform-systems→beach-coastal-readiness→carrier
-          beach_child_after_landform_systems=true
-          beach_child_before_carrier=true
+          triangular_mesh_child_loaded=true
+          triangular_mesh_child=/assets/audralia/clean/terrain/audralia.triangular-terrain-mesh.child.js
+          triangular_mesh_child_contract=AUDRALIA_TRIANGULAR_TERRAIN_MESH_CHILD_TNT_v1
+          load_order=dry-terrain→elevation-track→relief-expression→landform-systems→beach-coastal-readiness→triangular-terrain-mesh→carrier
+          triangular_mesh_child_after_beach_child=true
+          triangular_mesh_child_before_carrier=true
           carrier_file=/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
           carrier_contract=AUDRALIA_CARRIER_VISUAL_WEIGHTING_TERRAIN_RELIEF_READABILITY_RENEWAL_TNT_v1
+          carrier_consumes_triangular_mesh=false
           hydration_held=true
           active_hydration=false
           active_water=false
+          final_terrain_pass_claim=false
           final_beach_pass_claim=false
           final_coastline_pass_claim=false
           final_hydration_pass_claim=false
           final_visual_pass_claim=false
-          deploy_marker=AUDRALIA_PLANET_SHOWROOM_STAGE_RECT_OVAL_FIX_HTML_DEPLOY_MARKER_v1
+          deploy_marker=AUDRALIA_PLANET_SHOWROOM_TRIANGULAR_MESH_CHILD_LOAD_ORDER_HTML_DEPLOY_MARKER_v1
         </code>
       </p>
     </section>

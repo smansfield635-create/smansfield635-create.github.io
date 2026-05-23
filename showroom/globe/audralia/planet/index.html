@@ -2,62 +2,49 @@
 <html
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
-  data-page="audralia-planet-body"
-  data-contract="AUDRALIA_PLANET_HTML_METADATA_ONLY_RELIEF_LANDFORM_ACTIVATION_TNT_v1"
-  data-previous-contract="AUDRALIA_PLANET_HTML_RELIEF_LANDFORM_PSYCHOLOGY_CHILD_ACTIVATION_TNT_v1"
-  data-correct-spelling="Audralia"
-  data-same-shell="true"
-  data-shell-preserved="true"
-  data-carrier-file-path-unchanged="true"
-  data-route-cache-key-renewed="true"
-  data-metadata-only-restoration-active="true"
-  data-source-geometry-preserved="true"
-  data-synthetic-terrain-generated="false"
-  data-fallback-terrain-generated="false"
-  data-replacement-landmass-generated="false"
-  data-relief-child-activation="true"
-  data-landform-child-activation="true"
-  data-planet-psychology-child-activation="true"
-  data-triangle-mesh-carrier-activation="true"
-  data-triangular-mesh-child-loaded="true"
-  data-triangular-mesh-child-load-order-before-carrier="true"
-  data-relief-child-contract="AUDRALIA_ELEVATION_RELIEF_METADATA_ONLY_RESTORATION_TNT_v1"
-  data-landform-child-contract="AUDRALIA_LANDFORM_SYSTEMS_METADATA_ONLY_RESTORATION_TNT_v1"
-  data-runtime-carrier-contract="AUDRALIA_CARRIER_TRIANGULAR_MESH_DISPLAY_CONSUMPTION_TNT_v1"
-  data-carrier-script-cache-key="AUDRALIA_CARRIER_TRIANGULAR_MESH_DISPLAY_CONSUMPTION_TNT_v1"
-  data-carrier-load-order-last="true"
-  data-oval-regression-guard="true"
-  data-carrier-owns-projection="true"
-  data-html-owns-projection="false"
-  data-hydration-held="true"
+  data-page="audralia-planet"
+  data-version="G2-PLANET-CHAIN-INTEGRATION-V1"
+  data-contract="AUDRALIA_PLANET_HTML_ROUTE_CHAIN_INTEGRATION_TNT_v1"
+  data-spec-ops="AUDRALIA_PLANET_HTML_ROUTE_CHAIN_INTEGRATION_SPEC_OPS_v1"
+  data-news="AUDRALIA_PLANET_HTML_ROUTE_CHAIN_INTEGRATION_NEWS_v1"
+  data-ccr="AUDRALIA_PLANET_HTML_ROUTE_CHAIN_INTEGRATION_CCR_v1"
+  data-shell-authority="true"
+  data-child-chain-authority="downstream"
+  data-runtime-carrier-authority="display-only"
   data-active-hydration="false"
-  data-active-water="false"
-  data-final-terrain-pass-claim="false"
-  data-final-hydration-pass-claim="false"
+  data-hydration-held="true"
   data-final-visual-pass-claim="false"
+  data-carrier-generates-terrain="false"
+  data-carrier-owns-triangulation="false"
+  data-html-owns-terrain-truth="false"
 >
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Audralia · Metadata-Only Relief and Landform Activation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#050b18" />
   <meta
     name="description"
-    content="Audralia planet body inspection route with metadata-only relief and landform restoration activated. Source landmass is preserved. Hydration remains held."
+    content="Audralia planet inspection route. Minimum physical form active, downstream expression enabled, hydration held, final visual pass false."
   />
+  <title>Audralia Planet · Minimum Physical Form Inspection</title>
 
   <style>
     :root {
-      color-scheme: dark;
-      --bg: #020816;
-      --panel: rgba(5, 14, 32, 0.78);
-      --panel2: rgba(9, 24, 48, 0.68);
-      --line: rgba(141, 216, 255, 0.24);
+      --bg: #050b18;
+      --panel: rgba(8, 17, 35, 0.84);
+      --panel-strong: rgba(4, 10, 24, 0.94);
+      --line: rgba(244, 207, 131, 0.24);
+      --line-blue: rgba(141, 216, 255, 0.22);
       --gold: #f4cf83;
+      --gold-soft: rgba(244, 207, 131, 0.76);
       --blue: #8dd8ff;
+      --blue-soft: rgba(141, 216, 255, 0.78);
       --green: #a7f3c6;
       --text: #eef4ff;
-      --muted: rgba(238, 244, 255, 0.72);
-      --faint: rgba(238, 244, 255, 0.54);
+      --muted: rgba(238, 244, 255, 0.68);
+      --shadow: rgba(0, 0, 0, 0.42);
+      --radius: 24px;
+      --max: 1220px;
     }
 
     * {
@@ -66,14 +53,7 @@
 
     html {
       min-height: 100%;
-      background:
-        radial-gradient(circle at 22% 8%, rgba(141, 216, 255, 0.13), transparent 30%),
-        radial-gradient(circle at 78% 18%, rgba(244, 207, 131, 0.10), transparent 34%),
-        linear-gradient(180deg, #020816 0%, #030a18 52%, #01040c 100%);
-      color: var(--text);
-      font-family:
-        Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", sans-serif;
+      background: var(--bg);
       scroll-behavior: smooth;
     }
 
@@ -81,7 +61,18 @@
       min-height: 100%;
       margin: 0;
       color: var(--text);
-      overflow-x: hidden;
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(33, 79, 119, 0.20), transparent 34rem),
+        radial-gradient(circle at 12% 18%, rgba(244, 207, 131, 0.09), transparent 30rem),
+        linear-gradient(180deg, #050b18 0%, #071225 46%, #030711 100%);
     }
 
     a {
@@ -90,333 +81,385 @@
     }
 
     a:hover,
-    a:focus {
+    a:focus-visible {
       color: var(--gold);
     }
 
-    .skip {
-      position: absolute;
+    .skip-link {
+      position: fixed;
       left: 1rem;
-      top: -5rem;
-      z-index: 10;
-      padding: 0.7rem 1rem;
+      top: 1rem;
+      z-index: 50;
+      transform: translateY(-180%);
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: #06152c;
+      padding: 0.7rem 1rem;
+      background: var(--panel-strong);
       color: var(--text);
-      font-weight: 800;
+      box-shadow: 0 16px 36px var(--shadow);
     }
 
-    .skip:focus {
-      top: 1rem;
+    .skip-link:focus {
+      transform: translateY(0);
+      outline: 2px solid var(--gold);
+      outline-offset: 3px;
     }
 
-    .shell {
-      width: min(1180px, calc(100% - 28px));
+    .page-shell {
+      width: min(var(--max), calc(100% - 2rem));
       margin: 0 auto;
-      padding: 22px 0 42px;
-    }
-
-    .topbar,
-    .panel,
-    .receipt {
-      border: 1px solid var(--line);
-      background: var(--panel);
-      box-shadow: 0 22px 72px rgba(0, 0, 0, 0.34);
-      backdrop-filter: blur(14px);
+      padding: 1rem 0 4rem;
     }
 
     .topbar {
-      position: sticky;
-      top: 10px;
-      z-index: 4;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
-      padding: 0.85rem 1rem;
-      border-radius: 22px;
+      padding: 0.95rem 0;
     }
 
     .brand {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 0.7rem;
-      font-weight: 950;
-      letter-spacing: 0.02em;
+      min-width: 0;
     }
 
-    .mark {
+    .brand-mark {
       display: grid;
-      width: 42px;
-      height: 42px;
+      width: 2.4rem;
+      height: 2.4rem;
       place-items: center;
-      border: 1px solid rgba(244, 207, 131, 0.44);
-      border-radius: 50%;
+      border: 1px solid var(--line);
+      border-radius: 999px;
       background:
-        radial-gradient(circle at 30% 22%, rgba(255,255,255,0.48), transparent 24%),
-        radial-gradient(circle at 60% 70%, rgba(141,216,255,0.34), transparent 42%),
-        #071428;
+        radial-gradient(circle at 35% 25%, rgba(244, 207, 131, 0.44), transparent 40%),
+        rgba(10, 22, 45, 0.88);
       color: var(--gold);
-      font-size: 0.78rem;
-      font-weight: 950;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.24);
+      flex: 0 0 auto;
+    }
+
+    .brand-text {
+      min-width: 0;
+    }
+
+    .brand-kicker {
+      color: var(--blue-soft);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .brand-title {
+      margin-top: 0.15rem;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-weight: 850;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .nav {
       display: flex;
       flex-wrap: wrap;
       justify-content: flex-end;
-      gap: 0.5rem;
+      gap: 0.45rem;
     }
 
-    .nav a,
-    .lens button {
-      border: 1px solid rgba(141, 216, 255, 0.22);
+    .nav a {
+      border: 1px solid rgba(141, 216, 255, 0.16);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.045);
+      padding: 0.52rem 0.72rem;
+      background: rgba(5, 14, 31, 0.72);
       color: var(--muted);
-      cursor: pointer;
-      font: inherit;
       font-size: 0.78rem;
-      font-weight: 850;
-      padding: 0.55rem 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
     }
 
-    .nav a:hover,
-    .nav a:focus,
-    .lens button:hover,
-    .lens button:focus,
-    .lens button[aria-pressed="true"] {
-      border-color: rgba(244, 207, 131, 0.58);
-      background: rgba(244, 207, 131, 0.12);
+    .nav a[aria-current="page"] {
+      border-color: rgba(244, 207, 131, 0.36);
       color: var(--gold);
+      background: rgba(244, 207, 131, 0.08);
     }
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(320px, 0.72fr);
+      grid-template-columns: minmax(0, 1.02fr) minmax(280px, 0.58fr);
       gap: 1rem;
-      padding: 1rem 0;
+      align-items: stretch;
+      margin-top: 1rem;
     }
 
-    .panel {
-      border-radius: 28px;
-      padding: clamp(1rem, 2vw, 1.5rem);
+    .hero-copy,
+    .status-panel,
+    .receipt-panel,
+    .stage-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent 34%),
+        var(--panel);
+      box-shadow: 0 22px 54px rgba(0, 0, 0, 0.30);
+    }
+
+    .hero-copy {
+      padding: clamp(1.15rem, 3vw, 2rem);
     }
 
     .eyebrow {
-      margin: 0 0 0.65rem;
-      color: var(--gold);
-      font-size: 0.78rem;
-      font-weight: 950;
-      letter-spacing: 0.16em;
+      margin: 0 0 0.8rem;
+      color: var(--green);
+      font-size: 0.77rem;
+      font-weight: 900;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
     }
 
-    h1,
-    h2,
-    h3,
-    p {
-      margin-top: 0;
-    }
-
     h1 {
-      max-width: 860px;
-      margin-bottom: 0.75rem;
-      font-size: clamp(2.05rem, 6vw, 4.8rem);
+      max-width: 14ch;
+      margin: 0;
+      color: var(--text);
+      font-size: clamp(2rem, 5.2vw, 4.8rem);
       line-height: 0.95;
       letter-spacing: -0.07em;
     }
 
-    h2 {
-      margin-bottom: 0.6rem;
-      font-size: clamp(1.25rem, 3vw, 2rem);
-      letter-spacing: -0.035em;
-    }
-
-    p {
+    .lede {
+      max-width: 66ch;
+      margin: 1rem 0 0;
       color: var(--muted);
+      font-size: clamp(1rem, 1.6vw, 1.18rem);
       line-height: 1.65;
     }
 
-    .badges,
-    .grid {
+    .status-panel {
       display: grid;
       gap: 0.7rem;
+      align-content: start;
+      padding: clamp(1rem, 2vw, 1.35rem);
     }
 
-    .badges {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      margin-top: 1rem;
-    }
-
-    .badge,
-    .step,
-    .receipt-row {
-      border: 1px solid rgba(141, 216, 255, 0.16);
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.045);
-      padding: 0.78rem;
-    }
-
-    .badge strong,
-    .step strong,
-    .receipt-row strong {
-      display: block;
-      color: var(--text);
-      font-size: 0.85rem;
-    }
-
-    .badge span,
-    .step span,
-    .receipt-row span {
-      color: var(--faint);
-      font-size: 0.76rem;
-      line-height: 1.45;
-    }
-
-    .stage-card {
-      overflow: hidden;
-      border-radius: 30px;
-      min-height: 680px;
-      padding: 0;
-    }
-
-    .stage-head {
+    .status-chip {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 1rem;
-      padding: 1rem;
-      border-bottom: 1px solid rgba(141, 216, 255, 0.16);
-      background: rgba(3, 10, 24, 0.62);
+      gap: 0.8rem;
+      border: 1px solid rgba(141, 216, 255, 0.15);
+      border-radius: 16px;
+      padding: 0.78rem 0.85rem;
+      background: rgba(3, 9, 21, 0.58);
     }
 
-    .stage-label {
+    .status-chip span:first-child {
       color: var(--muted);
-      font-size: 0.88rem;
-      line-height: 1.4;
-    }
-
-    .stage-label strong {
-      color: var(--green);
-    }
-
-    .lens {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 0.45rem;
-    }
-
-    .stage {
-      position: relative;
-      min-height: 620px;
-      overflow: hidden;
-      touch-action: none;
-      background:
-        radial-gradient(circle at 50% 32%, rgba(141,216,255,0.12), transparent 32%),
-        radial-gradient(circle at 50% 40%, rgba(244,207,131,0.08), transparent 44%),
-        linear-gradient(180deg, rgba(2,8,20,0.1), rgba(2,8,20,0.76));
-      transform: none;
-      contain: layout paint;
-    }
-
-    .mount {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      display: block;
-      transform: none;
-      overflow: hidden;
-    }
-
-    .mount canvas {
-      position: absolute;
-      inset: 0;
-      display: block;
-      width: 100%;
-      height: 100%;
-      max-width: none;
-      max-height: none;
-      transform: none;
-      object-fit: fill;
-    }
-
-    .hint {
-      position: absolute;
-      left: 50%;
-      bottom: 1rem;
-      transform: translateX(-50%);
-      width: min(92%, 820px);
-      padding: 0.75rem 0.9rem;
-      border: 1px solid rgba(141,216,255,0.16);
-      border-radius: 999px;
-      background: rgba(2,8,20,0.62);
-      color: var(--faint);
-      font-size: 0.78rem;
-      font-weight: 800;
-      text-align: center;
-      pointer-events: none;
-    }
-
-    .grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      margin-top: 1rem;
-    }
-
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(7, minmax(0, 1fr));
-      gap: 0.7rem;
-      margin-top: 1rem;
-    }
-
-    .step em {
-      display: block;
-      color: var(--gold);
-      font-style: normal;
-      font-size: 0.72rem;
-      font-weight: 950;
-      letter-spacing: 0.1em;
+      font-size: 0.75rem;
+      font-weight: 850;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    .receipt {
+    .status-chip span:last-child {
+      color: var(--gold);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.75rem;
+      font-weight: 900;
+      text-align: right;
+    }
+
+    .inspection {
       margin-top: 1rem;
-      border-radius: 28px;
-      padding: clamp(1rem, 2vw, 1.35rem);
+    }
+
+    .lensbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.8rem;
+      border: 1px solid rgba(141, 216, 255, 0.14);
+      border-radius: 20px;
+      padding: 0.65rem;
+      background: rgba(2, 7, 17, 0.54);
+    }
+
+    .lensbar button {
+      appearance: none;
+      border: 1px solid rgba(141, 216, 255, 0.18);
+      border-radius: 999px;
+      padding: 0.65rem 0.86rem;
+      background: rgba(8, 20, 42, 0.82);
+      color: var(--muted);
+      font: inherit;
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+    }
+
+    .lensbar button:hover,
+    .lensbar button:focus-visible {
+      border-color: rgba(244, 207, 131, 0.46);
+      color: var(--gold);
+      outline: none;
+    }
+
+    .lensbar button[aria-pressed="true"] {
+      border-color: rgba(244, 207, 131, 0.60);
+      background: rgba(244, 207, 131, 0.12);
+      color: var(--gold);
+      box-shadow: inset 0 0 0 1px rgba(244, 207, 131, 0.08);
+    }
+
+    .stage-card {
+      padding: 0.75rem;
+    }
+
+    .stage-frame {
+      position: relative;
+      min-height: clamp(560px, 72vh, 860px);
+      overflow: hidden;
+      border: 1px solid rgba(141, 216, 255, 0.18);
+      border-radius: calc(var(--radius) - 8px);
+      background:
+        radial-gradient(circle at 50% 36%, rgba(141, 216, 255, 0.08), transparent 30rem),
+        radial-gradient(circle at 50% 50%, rgba(244, 207, 131, 0.045), transparent 26rem),
+        #020814;
+      touch-action: none;
+      user-select: none;
+    }
+
+    .stage-label {
+      position: absolute;
+      left: 50%;
+      top: 0.8rem;
+      z-index: 2;
+      width: min(92%, 760px);
+      transform: translateX(-50%);
+      border: 1px solid rgba(244, 207, 131, 0.18);
+      border-radius: 999px;
+      padding: 0.62rem 0.85rem;
+      background: rgba(2, 8, 20, 0.66);
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.35;
+      text-align: center;
+      pointer-events: none;
+      backdrop-filter: blur(8px);
+    }
+
+    .stage-label strong {
+      color: var(--gold);
+    }
+
+    .inspection-mount {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+
+    .inspection-mount canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+
+    .stage-foot {
+      position: absolute;
+      left: 50%;
+      bottom: 0.8rem;
+      z-index: 2;
+      width: min(92%, 820px);
+      transform: translateX(-50%);
+      border: 1px solid rgba(141, 216, 255, 0.14);
+      border-radius: 18px;
+      padding: 0.65rem 0.8rem;
+      background: rgba(2, 8, 20, 0.58);
+      color: rgba(238, 244, 255, 0.58);
+      font-size: 0.76rem;
+      line-height: 1.45;
+      text-align: center;
+      pointer-events: none;
+      backdrop-filter: blur(8px);
     }
 
     .receipt-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.7rem;
-      margin-top: 0.9rem;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
     }
 
-    code {
+    .receipt-panel {
+      padding: 1rem;
+    }
+
+    .receipt-panel h2 {
+      margin: 0 0 0.75rem;
       color: var(--gold);
-      overflow-wrap: anywhere;
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .receipt-list {
+      display: grid;
+      gap: 0.42rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .receipt-list li {
+      display: grid;
+      grid-template-columns: minmax(10rem, 0.7fr) minmax(0, 1fr);
+      gap: 0.8rem;
+      border-top: 1px solid rgba(141, 216, 255, 0.10);
+      padding-top: 0.42rem;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+
+    .receipt-list li:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .receipt-list b {
+      color: var(--text);
+      font-weight: 850;
+    }
+
+    .receipt-list code {
+      color: var(--green);
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.78em;
+      font-size: 0.78rem;
+      white-space: normal;
+      overflow-wrap: anywhere;
     }
 
-    @media (max-width: 1060px) {
-      .steps {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+    .route-note {
+      margin: 1rem 0 0;
+      border: 1px solid rgba(244, 207, 131, 0.18);
+      border-radius: 18px;
+      padding: 0.9rem 1rem;
+      background: rgba(244, 207, 131, 0.055);
+      color: rgba(238, 244, 255, 0.72);
+      font-size: 0.88rem;
+      line-height: 1.6;
     }
 
-    @media (max-width: 900px) {
-      .topbar,
-      .hero {
-        grid-template-columns: 1fr;
-      }
-
+    @media (max-width: 860px) {
       .topbar {
-        position: static;
         align-items: flex-start;
         flex-direction: column;
       }
@@ -425,169 +468,132 @@
         justify-content: flex-start;
       }
 
-      .hero,
-      .grid,
-      .steps,
-      .receipt-grid,
-      .badges {
+      .hero {
         grid-template-columns: 1fr;
       }
 
+      .receipt-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stage-frame {
+        min-height: 620px;
+      }
+
+      .receipt-list li {
+        grid-template-columns: 1fr;
+        gap: 0.2rem;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .page-shell {
+        width: min(100% - 1rem, var(--max));
+      }
+
+      .hero-copy,
+      .status-panel,
+      .receipt-panel,
       .stage-card {
-        min-height: 640px;
+        border-radius: 18px;
       }
 
-      .stage {
+      .stage-frame {
         min-height: 590px;
+        border-radius: 14px;
       }
 
-      .stage-head {
-        align-items: flex-start;
-        flex-direction: column;
+      .stage-label {
+        top: 0.55rem;
+        border-radius: 16px;
       }
 
-      .lens {
+      .stage-foot {
+        bottom: 0.55rem;
+      }
+
+      .lensbar {
         justify-content: flex-start;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+      }
+
+      .lensbar button {
+        flex: 0 0 auto;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
       }
     }
   </style>
-
-  <script
-    defer
-    src="/assets/audralia/clean/terrain/audralia.dry-revealed-physical-terrain.child.js?v=AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_CHILD_TNT_v1"
-  ></script>
-  <script
-    defer
-    src="/assets/audralia/clean/terrain/audralia.elevation-track.child.js?v=AUDRALIA_ELEVATION_TRACK_CHILD_TNT_v1"
-  ></script>
-  <script
-    defer
-    src="/assets/audralia/clean/terrain/audralia.elevation-relief-expression.child.js?v=AUDRALIA_ELEVATION_RELIEF_METADATA_ONLY_RESTORATION_TNT_v1"
-  ></script>
-  <script
-    defer
-    src="/assets/audralia/clean/terrain/audralia.landform-systems.child.js?v=AUDRALIA_LANDFORM_SYSTEMS_METADATA_ONLY_RESTORATION_TNT_v1"
-  ></script>
-  <script
-    defer
-    src="/assets/audralia/clean/terrain/audralia.beach-coastal-readiness.child.js?v=AUDRALIA_BEACH_COASTAL_READINESS_CHILD_TNT_v1"
-  ></script>
-  <script
-    defer
-    src="/assets/audralia/clean/terrain/audralia.triangular-terrain-mesh.child.js?v=AUDRALIA_TRIANGULAR_TERRAIN_MESH_CHILD_TNT_v1"
-  ></script>
-  <script
-    defer
-    src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?v=AUDRALIA_CARRIER_TRIANGULAR_MESH_DISPLAY_CONSUMPTION_TNT_v1"
-  ></script>
 </head>
 
 <body>
-  <a class="skip" href="#audraliaPlanetInspectionStage">Skip to planet inspection</a>
+  <a class="skip-link" href="#audraliaPlanetInspectionStage">Skip to planet inspection</a>
 
-  <main class="shell" id="audralia-planet-main">
-    <header class="topbar" aria-label="Audralia planet route navigation">
-      <a class="brand" href="/showroom/globe/audralia/planet/" aria-label="Audralia planet body">
-        <span class="mark">AU</span>
-        <span>Audralia Planet Inspection</span>
+  <div class="page-shell">
+    <header class="topbar" aria-label="Audralia planet route header">
+      <a class="brand" href="/showroom/globe/audralia/" aria-label="Audralia globe home">
+        <span class="brand-mark" aria-hidden="true">AU</span>
+        <span class="brand-text">
+          <span class="brand-kicker">Audralia</span>
+          <span class="brand-title">Planet · Minimum Physical Form</span>
+        </span>
       </a>
 
-      <nav class="nav" aria-label="Route menu">
-        <a href="/showroom/globe/audralia/">Audralia</a>
-        <a href="/showroom/globe/audralia/disposition/">Cockpit</a>
+      <nav class="nav" aria-label="Route navigation">
+        <a href="/">Compass</a>
         <a href="/showroom/globe/">Globe</a>
+        <a href="/showroom/globe/audralia/">Audralia</a>
+        <a href="/showroom/globe/audralia/planet/" aria-current="page">Planet</a>
         <a href="/gauges/">Triple G</a>
       </nav>
     </header>
 
-    <section class="hero" aria-label="Audralia planet overview">
-      <article class="panel">
-        <p class="eyebrow">Audralia · Metadata-Only Restoration</p>
-        <h1>The relief and landform children are reactivated without replacing the landmass.</h1>
-        <p>
-          This renewal keeps the same planet shell, the same carrier file, and the same triangular mesh carrier. It
-          updates the route cache keys for the metadata-only relief and landform children so they attach meaning to the
-          existing source terrain instead of generating substitute terrain.
-        </p>
-
-        <div class="badges" aria-label="Route status badges">
-          <div class="badge">
-            <strong>Source preserved</strong>
-            <span>Existing landmass remains the geometry authority.</span>
-          </div>
-          <div class="badge">
-            <strong>Metadata only</strong>
-            <span>Relief and landforms may annotate, not replace.</span>
-          </div>
-          <div class="badge">
-            <strong>Triangle preserved</strong>
-            <span>Mesh carrier remains active and unchanged.</span>
-          </div>
-          <div class="badge">
-            <strong>Hydration held</strong>
-            <span>No active water or final visual pass.</span>
-          </div>
-        </div>
-      </article>
-
-      <aside class="panel">
-        <p class="eyebrow">Load Order</p>
-        <h2>Restoration children load before triangle and carrier.</h2>
-        <p>
-          The relief and landform children now use metadata-only restoration cache keys. The carrier remains the final
-          display endpoint and must not receive synthetic fallback terrain.
-        </p>
-
-        <div class="grid">
-          <div class="step">
-            <em>01</em>
-            <strong>Dry terrain</strong>
-            <span>Source geometry and preserved landmass authority.</span>
-          </div>
-          <div class="step">
-            <em>02</em>
-            <strong>Elevation track</strong>
-            <span>Dry elevation structure without water activation.</span>
-          </div>
-          <div class="step">
-            <em>03</em>
-            <strong>Relief metadata</strong>
-            <span>Psychology attaches only to source nodes.</span>
-          </div>
-          <div class="step">
-            <em>04</em>
-            <strong>Landform metadata</strong>
-            <span>Landform meaning without replacement geometry.</span>
-          </div>
-          <div class="step">
-            <em>05</em>
-            <strong>Beach readiness</strong>
-            <span>Limited transition readiness remains pre-hydration.</span>
-          </div>
-          <div class="step">
-            <em>06</em>
-            <strong>Triangle mesh</strong>
-            <span>Facet packet loads before carrier.</span>
-          </div>
-          <div class="step">
-            <em>07</em>
-            <strong>Carrier</strong>
-            <span>Display endpoint consumes validated handoffs.</span>
-          </div>
-        </div>
-      </aside>
-    </section>
-
-    <section
-      class="panel stage-card"
-      aria-label="Audralia planet inspection stage"
-    >
-      <div class="stage-head">
-        <div class="stage-label" data-audralia-planet-stage-label>
-          <strong>Body</strong> → preserved source landmass with metadata-only relief and landform handoffs
+    <main id="cockpit-main">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Route-shell integration · render checkpoint</p>
+          <h1 id="page-title">Audralia planet inspection.</h1>
+          <p class="lede">
+            Minimum physical form is active. Downstream expression is enabled. Hydration remains held.
+            This page is the shell that loads the aligned child chain and lets the runtime carrier render the current planet body.
+          </p>
+          <p class="route-note">
+            The HTML shell owns route structure, load order, mount points, controls, and receipts only.
+            Terrain, elevation, relief, landform, beach/coastal readiness, triangulation, and carrier drawing remain downstream authorities.
+          </p>
         </div>
 
-        <div class="lens" aria-label="Planet inspection lenses">
+        <aside class="status-panel" aria-label="Current route status">
+          <div class="status-chip">
+            <span>Physical form</span>
+            <span>minimum active</span>
+          </div>
+          <div class="status-chip">
+            <span>Downstream files</span>
+            <span>enabled</span>
+          </div>
+          <div class="status-chip">
+            <span>Hydration</span>
+            <span>held</span>
+          </div>
+          <div class="status-chip">
+            <span>Runtime carrier</span>
+            <span>display endpoint</span>
+          </div>
+          <div class="status-chip">
+            <span>Final visual pass</span>
+            <span>false</span>
+          </div>
+        </aside>
+      </section>
+
+      <section class="inspection" aria-label="Audralia planet inspection controls and stage">
+        <div class="lensbar" role="toolbar" aria-label="Audralia planet inspection lenses">
           <button type="button" data-audralia-planet-lens="body" aria-pressed="true">Body</button>
           <button type="button" data-audralia-planet-lens="surface" aria-pressed="false">Surface</button>
           <button type="button" data-audralia-planet-lens="hydration" aria-pressed="false">Hydration</button>
@@ -595,92 +601,145 @@
           <button type="button" data-audralia-planet-lens="lattice" aria-pressed="false">Lattice</button>
           <button type="button" data-audralia-planet-lens="receipt" aria-pressed="false">Receipt</button>
         </div>
-      </div>
 
-      <div
-        class="stage"
-        id="audraliaPlanetInspectionStage"
-        data-audralia-planet-inspection-stage
-        data-oval-regression-guard="true"
-      >
-        <div
-          class="mount"
-          id="audraliaPlanetInspectionMount"
-          data-audralia-planet-inspection-mount
-          aria-hidden="true"
-        ></div>
-        <div class="hint">
-          Drag to rotate. Pinch or wheel to zoom. Metadata-only relief and landform restoration cache keys are active.
-        </div>
-      </div>
-    </section>
+        <div class="stage-card">
+          <section
+            id="audraliaPlanetInspectionStage"
+            class="stage-frame"
+            data-audralia-planet-inspection-stage
+            aria-label="Interactive Audralia planet inspection stage"
+          >
+            <div class="stage-label" data-audralia-planet-stage-label>
+              <strong>Body</strong> → minimum physical form, land/void separation protected, hydration held
+            </div>
 
-    <section class="receipt" aria-label="Route receipt">
-      <p class="eyebrow">Route Receipt</p>
-      <h2>Metadata-only children activated; replacement terrain blocked.</h2>
-      <p>
-        This page now activates
-        <code>AUDRALIA_ELEVATION_RELIEF_METADATA_ONLY_RESTORATION_TNT_v1</code>
-        and
-        <code>AUDRALIA_LANDFORM_SYSTEMS_METADATA_ONLY_RESTORATION_TNT_v1</code>.
-        The route keeps the triangular carrier unchanged and preserves source geometry. Hydration remains held and no
-        final visual pass is claimed.
-      </p>
+            <div
+              id="audraliaPlanetInspectionMount"
+              class="inspection-mount"
+              data-audralia-planet-inspection-mount
+              aria-label="Runtime carrier canvas mount"
+            ></div>
 
-      <div class="receipt-grid">
-        <div class="receipt-row">
-          <strong>HTML contract</strong>
-          <span><code>AUDRALIA_PLANET_HTML_METADATA_ONLY_RELIEF_LANDFORM_ACTIVATION_TNT_v1</code></span>
+            <div class="stage-foot">
+              Drag to rotate. Pinch or wheel to zoom. Double tap or press 0 to reset. The shell does not generate terrain or hydration.
+            </div>
+          </section>
         </div>
-        <div class="receipt-row">
-          <strong>Relief child</strong>
-          <span><code>AUDRALIA_ELEVATION_RELIEF_METADATA_ONLY_RESTORATION_TNT_v1</code></span>
-        </div>
-        <div class="receipt-row">
-          <strong>Landform child</strong>
-          <span><code>AUDRALIA_LANDFORM_SYSTEMS_METADATA_ONLY_RESTORATION_TNT_v1</code></span>
-        </div>
-        <div class="receipt-row">
-          <strong>Water status</strong>
-          <span>Hydration held · active water false.</span>
-        </div>
-      </div>
+      </section>
 
-      <p>
-        <code>
-          AUDRALIA_PLANET_HTML_METADATA_ONLY_RELIEF_LANDFORM_ACTIVATION_TNT_v1
-          route=/showroom/globe/audralia/planet/
-          same_shell=true
-          shell_preserved=true
-          source_geometry_preserved=true
-          metadata_only_restoration_active=true
-          relief_child_cache_key=AUDRALIA_ELEVATION_RELIEF_METADATA_ONLY_RESTORATION_TNT_v1
-          landform_child_cache_key=AUDRALIA_LANDFORM_SYSTEMS_METADATA_ONLY_RESTORATION_TNT_v1
-          planet_psychology_child_activation=true
-          synthetic_terrain_generated=false
-          fallback_terrain_generated=false
-          replacement_landmass_generated=false
-          triangle_mesh_child_before_carrier=true
-          carrier_file_path_unchanged=true
-          carrier_cache_key=AUDRALIA_CARRIER_TRIANGULAR_MESH_DISPLAY_CONSUMPTION_TNT_v1
-          carrier_contract_target=AUDRALIA_CARRIER_TRIANGULAR_MESH_DISPLAY_CONSUMPTION_TNT_v1
-          carrier_load_order_last=true
-          duplicate_carrier_imports=false
-          mount_selector=#audraliaPlanetInspectionMount
-          stage_selector=#audraliaPlanetInspectionStage
-          oval_regression_guard=true
-          html_owns_projection=false
-          carrier_owns_projection=true
-          active_hydration=false
-          active_water=false
-          hydration_held=true
-          final_terrain_pass_claim=false
-          final_hydration_pass_claim=false
-          final_visual_pass_claim=false
-          deploy_marker=AUDRALIA_PLANET_HTML_METADATA_ONLY_RELIEF_LANDFORM_ACTIVATION_DEPLOY_MARKER_v1
-        </code>
-      </p>
-    </section>
-  </main>
+      <section class="receipt-grid" aria-label="Route receipts">
+        <article class="receipt-panel">
+          <h2>Child chain receipt</h2>
+          <ul class="receipt-list">
+            <li><b>Dry terrain atlas</b><code>loaded first</code></li>
+            <li><b>Elevation track</b><code>downstream child</code></li>
+            <li><b>Relief expression</b><code>metadata only</code></li>
+            <li><b>Landform systems</b><code>metadata only</code></li>
+            <li><b>Beach/coastal readiness</b><code>held / readiness only</code></li>
+            <li><b>Triangular mesh</b><code>readability adapter</code></li>
+            <li><b>Runtime carrier</b><code>display endpoint</code></li>
+          </ul>
+        </article>
+
+        <article class="receipt-panel">
+          <h2>Route authority receipt</h2>
+          <ul class="receipt-list">
+            <li><b>HTML shell</b><code>route, load order, mount, controls</code></li>
+            <li><b>HTML owns terrain truth</b><code>false</code></li>
+            <li><b>Carrier generates terrain</b><code>false</code></li>
+            <li><b>Carrier owns triangulation</b><code>false</code></li>
+            <li><b>Hydration</b><code>held</code></li>
+            <li><b>Active water</b><code>false</code></li>
+            <li><b>Final visual pass</b><code>false</code></li>
+          </ul>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="/assets/audralia/clean/terrain/audralia.dry-revealed-physical-terrain.child.js?v=AUDRALIA_PLANET_HTML_ROUTE_CHAIN_INTEGRATION_TNT_v1"></script>
+  <script src="/assets/audralia/clean/terrain/audralia.elevation-track.child.js?v=AUDRALIA_PLANET_HTML_ROUTE_CHAIN_INTEGRATION_TNT_v1"></script>
+  <script src="/assets/audralia/clean/terrain/audralia.elevation-relief-expression.child.js?v=AUDRALIA_PLANET_HTML_ROUTE_CHAIN_INTEGRATION_TNT_v1"></script>
+  <script src="/assets/audralia/clean/terrain/audralia.landform-systems.child.js?v=AUDRALIA_PLANET_HTML_ROUTE_CHAIN_INTEGRATION_TNT_v1"></script>
+  <script src="/assets/audralia/clean/terrain/audralia.beach-coastal-readiness.child.js?v=AUDRALIA_PLANET_HTML_ROUTE_CHAIN_INTEGRATION_TNT_v1"></script>
+  <script src="/assets/audralia/clean/terrain/audralia.triangular-terrain-mesh.child.js?v=AUDRALIA_PLANET_HTML_ROUTE_CHAIN_INTEGRATION_TNT_v1"></script>
+  <script src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?v=AUDRALIA_PLANET_HTML_ROUTE_CHAIN_INTEGRATION_TNT_v1"></script>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var CONTRACT = "AUDRALIA_PLANET_HTML_ROUTE_CHAIN_INTEGRATION_TNT_v1";
+      var ROUTE = "/showroom/globe/audralia/planet/";
+      var FILE = "/showroom/globe/audralia/planet/index.html";
+
+      var payload = {
+        contract: CONTRACT,
+        file: FILE,
+        route: ROUTE,
+        shellAuthority: true,
+        childChainAuthority: "downstream",
+        runtimeCarrierAuthority: "display-only",
+        loadOrderAuthority: true,
+        htmlOwnsTerrainTruth: false,
+        htmlOwnsElevationTruth: false,
+        htmlOwnsReliefTruth: false,
+        htmlOwnsLandformTruth: false,
+        htmlOwnsBeachCoastalTruth: false,
+        htmlOwnsTriangulationTruth: false,
+        htmlOwnsHydrationTruth: false,
+        htmlOwnsRuntimeMotion: false,
+        carrierGeneratesTerrain: false,
+        carrierOwnsTriangulation: false,
+        activeHydration: false,
+        activeWater: false,
+        hydrationHeld: true,
+        minimumPhysicalFormActive: true,
+        downstreamExpressionEnabled: true,
+        finalTerrainPassClaim: false,
+        finalHydrationPassClaim: false,
+        finalVisualPassClaim: false,
+        requiredMountIds: [
+          "audraliaPlanetInspectionStage",
+          "audraliaPlanetInspectionMount"
+        ],
+        requiredLensControls: [
+          "body",
+          "surface",
+          "hydration",
+          "sixth-sense",
+          "lattice",
+          "receipt"
+        ],
+        scriptOrder: [
+          "audralia.dry-revealed-physical-terrain.child.js",
+          "audralia.elevation-track.child.js",
+          "audralia.elevation-relief-expression.child.js",
+          "audralia.landform-systems.child.js",
+          "audralia.beach-coastal-readiness.child.js",
+          "audralia.triangular-terrain-mesh.child.js",
+          "audralia.planet-body.inspection-carrier.js"
+        ],
+        deployMarker: "AUDRALIA_PLANET_HTML_ROUTE_CHAIN_INTEGRATION_DEPLOY_MARKER_v1"
+      };
+
+      window.AUDRALIA_PLANET_HTML_ROUTE_CHAIN_INTEGRATION_STATUS = payload;
+
+      try {
+        document.documentElement.dataset.audraliaPlanetHtmlRouteContract = CONTRACT;
+        document.documentElement.dataset.audraliaPlanetHtmlShellAuthority = "true";
+        document.documentElement.dataset.audraliaPlanetHtmlOwnsTerrainTruth = "false";
+        document.documentElement.dataset.audraliaPlanetHtmlOwnsHydrationTruth = "false";
+        document.documentElement.dataset.audraliaMinimumPhysicalFormActive = "true";
+        document.documentElement.dataset.audraliaDownstreamExpressionEnabled = "true";
+        document.documentElement.dataset.audraliaHydrationHeld = "true";
+        document.documentElement.dataset.audraliaActiveHydration = "false";
+        document.documentElement.dataset.audraliaActiveWater = "false";
+        document.documentElement.dataset.audraliaFinalTerrainPassClaim = "false";
+        document.documentElement.dataset.audraliaFinalHydrationPassClaim = "false";
+        document.documentElement.dataset.audraliaFinalVisualPassClaim = "false";
+      } catch (_error) {}
+    })();
+  </script>
 </body>
 </html>

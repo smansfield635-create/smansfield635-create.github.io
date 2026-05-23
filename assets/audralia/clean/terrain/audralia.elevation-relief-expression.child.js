@@ -1,21 +1,21 @@
 // /assets/audralia/clean/terrain/audralia.elevation-relief-expression.child.js
-// AUDRALIA_ELEVATION_RELIEF_PLANET_PSYCHOLOGY_HANDOFF_RENEWAL_TNT_v1
+// AUDRALIA_ELEVATION_RELIEF_METADATA_ONLY_RESTORATION_TNT_v1
 // Full-file replacement.
-// Family: AUDRALIA_RELIEF_LANDFORM_PLANET_PSYCHOLOGY_HANDOFF_RENEWAL_TNT_v1
+// Family: AUDRALIA_RELIEF_LANDFORM_METADATA_ONLY_RESTORATION_TNT_v1
 // Scope: relief expression child only.
-// Purpose: expose carrier-valid relief packet and embed planet psychology as narrative metadata.
-// Does not own: terrain truth, landform truth, triangle mesh truth, hydration truth, carrier rendering, HTML shell, or final visual pass.
+// Purpose: restore realistic landmass authority by attaching relief + planet psychology metadata only to existing source terrain.
+// Does not own: terrain truth, replacement geometry, landform truth, triangle mesh truth, hydration truth, carrier rendering, HTML shell, or final visual pass.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_ELEVATION_RELIEF_PLANET_PSYCHOLOGY_HANDOFF_RENEWAL_TNT_v1";
-  var FAMILY = "AUDRALIA_RELIEF_LANDFORM_PLANET_PSYCHOLOGY_HANDOFF_RENEWAL_TNT_v1";
+  var CONTRACT = "AUDRALIA_ELEVATION_RELIEF_METADATA_ONLY_RESTORATION_TNT_v1";
+  var PREVIOUS_CONTRACT = "AUDRALIA_ELEVATION_RELIEF_PLANET_PSYCHOLOGY_HANDOFF_RENEWAL_TNT_v1";
+  var FAMILY = "AUDRALIA_RELIEF_LANDFORM_METADATA_ONLY_RESTORATION_TNT_v1";
   var FILE = "/assets/audralia/clean/terrain/audralia.elevation-relief-expression.child.js";
 
   var RADIAL_NODES = 16;
   var FIBONACCI_BANDS = 16;
-  var SOURCE_SEAT_COUNT = 256;
 
   var DRY_TERRAIN_GLOBALS = Object.freeze([
     "AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_CHILD",
@@ -27,72 +27,72 @@
   var PSYCHOLOGY_MAP = Object.freeze({
     ridge: Object.freeze({
       psychologicalRole: "discipline_direction_resistance",
-      narrativeFunction: "gives terrain a directional spine and visible resistance",
+      narrativeFunction: "directional terrain pressure already present in the source landmass",
       ethicalPressure: "discipline",
-      futureExpression: "supports routes, mountain chains, and boundary structure",
-      audraliaMeaning: "Audralia learns direction by carrying pressure without scattering"
+      futureExpression: "route spine, watershed hint, and boundary support",
+      audraliaMeaning: "Audralia carries pressure without scattering its form"
     }),
     basin: Object.freeze({
       psychologicalRole: "receptivity_memory_future_fill",
-      narrativeFunction: "holds received pressure and remembers where future water may return",
+      narrativeFunction: "receiving terrain pressure already present in the source landmass",
       ethicalPressure: "receptivity",
-      futureExpression: "future hydration bowl and ecological receiving field",
-      audraliaMeaning: "Audralia keeps memory in low places before water is restored"
+      futureExpression: "future hydration bowl without active water",
+      audraliaMeaning: "Audralia remembers water capacity before water returns"
     }),
     valley: Object.freeze({
       psychologicalRole: "passage_humility_repair",
-      narrativeFunction: "opens movement through terrain without forcing the summit",
+      narrativeFunction: "movement corridor implied by existing terrain pressure",
       ethicalPressure: "humility",
-      futureExpression: "future corridor for flow, migration, and repair",
-      audraliaMeaning: "Audralia allows movement through humility rather than domination"
+      futureExpression: "future flow path, migration path, and repair route",
+      audraliaMeaning: "Audralia allows passage through received terrain rather than invented terrain"
     }),
     summit: Object.freeze({
       psychologicalRole: "clarity_aspiration_signal",
-      narrativeFunction: "marks the high signal where terrain becomes orientation",
+      narrativeFunction: "high-signal pressure implied by existing elevation",
       ethicalPressure: "clarity",
-      futureExpression: "navigation, atmosphere-readiness, and highland identity",
-      audraliaMeaning: "Audralia raises signal without claiming final perfection"
+      futureExpression: "navigation, long-view signal, and highland identity",
+      audraliaMeaning: "Audralia raises signal without claiming final visual pass"
     }),
     shelf: Object.freeze({
       psychologicalRole: "patience_time_depth_transition",
-      narrativeFunction: "stabilizes gradual transition between elevation states",
+      narrativeFunction: "gradual transition already implied by source terrain",
       ethicalPressure: "patience",
-      futureExpression: "coastal readiness, terrace formation, and slow settlement logic",
-      audraliaMeaning: "Audralia forms usable ground through time-depth"
+      futureExpression: "coastal shelf readiness and terrace continuity",
+      audraliaMeaning: "Audralia forms transition through time-depth"
     }),
     trench: Object.freeze({
       psychologicalRole: "restraint_contained_force",
-      narrativeFunction: "contains force below the surface without letting it spill randomly",
+      narrativeFunction: "contained terrain force already present in source pressure",
       ethicalPressure: "restraint",
-      futureExpression: "future channel, boundary, and controlled-energy corridor",
-      audraliaMeaning: "Audralia disciplines force before it becomes motion"
+      futureExpression: "controlled corridor, channel, or boundary pressure",
+      audraliaMeaning: "Audralia contains force before motion"
     }),
     gap: Object.freeze({
       psychologicalRole: "forgiveness_release_reentry",
-      narrativeFunction: "creates lawful re-entry where blocked pressure can release",
+      narrativeFunction: "release aperture implied by existing terrain structure",
       ethicalPressure: "forgiveness",
-      futureExpression: "repair seam, watershed aperture, and passage reset",
-      audraliaMeaning: "Audralia does not erase breaks; it gives them a return path"
+      futureExpression: "repair seam, passage reset, and watershed opening",
+      audraliaMeaning: "Audralia gives broken pressure a lawful return path"
     }),
     highland: Object.freeze({
       psychologicalRole: "discernment_perspective_atmosphere_readiness",
-      narrativeFunction: "supports clear view, pressure reading, and atmospheric threshold",
+      narrativeFunction: "upper terrain perspective already present in source geometry",
       ethicalPressure: "discernment",
-      futureExpression: "future climate observation and long-range signal field",
+      futureExpression: "climate observation and atmosphere-readiness",
       audraliaMeaning: "Audralia gains perspective where elevation meets breath"
     }),
     lowland: Object.freeze({
       psychologicalRole: "humility_receiving_ground_future_water_memory",
-      narrativeFunction: "receives pressure, sediment, and future hydration memory",
+      narrativeFunction: "receiving ground already present in source geometry",
       ethicalPressure: "humility",
-      futureExpression: "future wetland, basin, and life-receiving ground",
+      futureExpression: "future wetland, basin, or life-receiving ground",
       audraliaMeaning: "Audralia begins life-readiness in receiving ground"
     }),
     futureFill: Object.freeze({
       psychologicalRole: "remembered_capacity_for_later_hydration",
-      narrativeFunction: "marks water capacity without activating water",
+      narrativeFunction: "capacity marker only; no active water",
       ethicalPressure: "restraint",
-      futureExpression: "future hydration candidate, not current ocean, river, or lake",
+      futureExpression: "future hydration candidate, not present water",
       audraliaMeaning: "Audralia remembers water without pretending water has returned"
     })
   });
@@ -101,6 +101,9 @@
     dryTerrainApi: null,
     dryTerrainDetected: false,
     dryTerrainValidated: false,
+    sourcePacketDetected: false,
+    sourceGeometryValid: false,
+    sourceFailureReason: "source terrain not checked",
     dryTerrainStatus: null,
     dryTerrainPacket: null,
     dryCarrierPacket: null,
@@ -114,6 +117,7 @@
     lowlandReliefExpressions: [],
     shelfReliefExpressions: [],
     futureFillReliefExpressions: [],
+    reliefMetadataSummary: null,
 
     built: false,
     buildCount: 0,
@@ -154,20 +158,16 @@
     }
   }
 
-  function terrainSeatToLonLat(x, y) {
-    return {
-      lon: -180 + ((x % RADIAL_NODES + RADIAL_NODES) % RADIAL_NODES) / RADIAL_NODES * 360,
-      lat: 80 - (clamp(y, 0, FIBONACCI_BANDS - 1) / (FIBONACCI_BANDS - 1)) * 160
-    };
-  }
+  function readPacketNodes(packet) {
+    if (!packet) return [];
 
-  function nodeId(node, index) {
-    return String(node.nodeId || node.seatKey || node.id || "source-" + index);
-  }
+    if (Array.isArray(packet.nodes)) return packet.nodes;
+    if (packet.planetPhysicalTerrainPacket && Array.isArray(packet.planetPhysicalTerrainPacket.nodes)) return packet.planetPhysicalTerrainPacket.nodes;
+    if (packet.dryRevealedTerrainPacket && Array.isArray(packet.dryRevealedTerrainPacket.nodes)) return packet.dryRevealedTerrainPacket.nodes;
+    if (packet.terrainPacket && Array.isArray(packet.terrainPacket.nodes)) return packet.terrainPacket.nodes;
+    if (packet.sourcePacket && Array.isArray(packet.sourcePacket.nodes)) return packet.sourcePacket.nodes;
 
-  function numeric(node, key, fallback) {
-    var value = Number(node && node[key]);
-    return Number.isFinite(value) ? value : fallback;
+    return [];
   }
 
   function detectDryTerrain() {
@@ -176,6 +176,9 @@
     state.dryTerrainApi = api;
     state.dryTerrainDetected = Boolean(api);
     state.dryTerrainValidated = false;
+    state.sourcePacketDetected = false;
+    state.sourceGeometryValid = false;
+    state.sourceFailureReason = "source terrain missing";
     state.dryTerrainStatus = null;
     state.dryTerrainPacket = null;
     state.dryCarrierPacket = null;
@@ -183,9 +186,14 @@
     if (!api) return false;
 
     state.dryTerrainStatus = safeCall("dryTerrain", api, "status");
-    state.dryCarrierPacket = safeCall("dryTerrain", api, "getCarrierTerrainPacket", "audralia-relief-expression-child", { compact: false });
-    state.dryTerrainPacket = safeCall("dryTerrain", api, "getDryRevealedTerrainPacket", "audralia-relief-expression-child", { compact: false });
+    state.dryCarrierPacket = safeCall("dryTerrain", api, "getCarrierTerrainPacket", "audralia-relief-metadata-only-child", { compact: false });
+    state.dryTerrainPacket = safeCall("dryTerrain", api, "getDryRevealedTerrainPacket", "audralia-relief-metadata-only-child", { compact: false });
 
+    var directNodes = readPacketNodes(state.dryTerrainPacket);
+    var carrierNodes = readPacketNodes(state.dryCarrierPacket);
+    var nodes = directNodes.length ? directNodes : carrierNodes;
+
+    state.sourcePacketDetected = Boolean(nodes.length);
     state.dryTerrainValidated = Boolean(
       state.dryTerrainStatus &&
       state.dryTerrainStatus.audraliaLevelTerrainAuthority === true &&
@@ -201,48 +209,84 @@
       );
     }
 
-    return state.dryTerrainValidated;
-  }
+    state.sourceGeometryValid = Boolean(nodes.length && nodes.some(function (node, index) {
+      return Boolean(getNodePosition(node, index));
+    }));
 
-  function dryPacket() {
-    return state.dryTerrainPacket ||
-      (state.dryCarrierPacket && state.dryCarrierPacket.planetPhysicalTerrainPacket) ||
-      null;
+    state.sourceFailureReason = state.sourceGeometryValid ? "" : "valid source terrain nodes missing or unmappable";
+
+    return state.sourceGeometryValid;
   }
 
   function dryNodes() {
-    var packet = dryPacket();
-    if (packet && Array.isArray(packet.nodes) && packet.nodes.length) return packet.nodes;
+    var directNodes = readPacketNodes(state.dryTerrainPacket);
+    var carrierNodes = readPacketNodes(state.dryCarrierPacket);
+    return directNodes.length ? directNodes : carrierNodes;
+  }
 
-    var fallback = [];
-    for (var y = 0; y < FIBONACCI_BANDS; y += 1) {
-      for (var x = 0; x < RADIAL_NODES; x += 1) {
-        var index = y * RADIAL_NODES + x;
-        fallback.push({
-          nodeId: "fallback-source-" + index,
-          seatKey: "fallback-seat-" + index,
-          seatIndex: index,
-          nodeIndex: index,
-          x: x,
-          y: y,
-          dryElevation: 0.46 + Math.sin(x * 1.618) * 0.08 + Math.cos(y * 0.86) * 0.09,
-          ridgePressure: Math.max(0, Math.sin((x + y) * 0.72) * 0.55),
-          basinPressure: Math.max(0, Math.cos((x - y) * 0.48) * 0.50),
-          valleyPressure: Math.max(0, Math.sin(y * 0.92) * 0.44),
-          summitPressure: Math.max(0, Math.cos(x * 0.72 + y * 0.18) * 0.42),
-          shelfPressure: Math.max(0, Math.sin(y * 0.35) * 0.38),
-          trenchPressure: Math.max(0, Math.cos((x + 3) * 0.64) * 0.30),
-          gapPressure: Math.max(0, Math.sin((x - y) * 0.38) * 0.34),
-          formerHydrosphereCarvingValue: Math.max(0, Math.cos((x + y) * 0.30) * 0.42),
-          futureFillEligible: y > 8
-        });
-      }
+  function getNodeId(node, index) {
+    if (!node) return null;
+
+    var id = node.nodeId || node.seatKey || node.id || node.key || node.sourceNodeId;
+    if (id !== undefined && id !== null && String(id).trim()) return String(id);
+
+    if (node.seatIndex !== undefined || node.nodeIndex !== undefined) {
+      return "seat-" + String(node.seatIndex !== undefined ? node.seatIndex : node.nodeIndex);
+    }
+
+    return "source-index-" + String(index);
+  }
+
+  function getNodePosition(node, index) {
+    if (!node) return null;
+
+    var x = Number(node.x);
+    var y = Number(node.y);
+
+    if (!Number.isFinite(x) && Number.isFinite(Number(node.radial))) x = Number(node.radial);
+    if (!Number.isFinite(y) && Number.isFinite(Number(node.band))) y = Number(node.band);
+
+    if ((!Number.isFinite(x) || !Number.isFinite(y)) && Number.isFinite(Number(node.seatIndex))) {
+      var seat = Number(node.seatIndex);
+      x = seat % RADIAL_NODES;
+      y = Math.floor(seat / RADIAL_NODES);
+    }
+
+    if ((!Number.isFinite(x) || !Number.isFinite(y)) && Number.isFinite(Number(node.nodeIndex))) {
+      var nodeIndex = Number(node.nodeIndex);
+      x = nodeIndex % RADIAL_NODES;
+      y = Math.floor(nodeIndex / RADIAL_NODES);
+    }
+
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+
+    return {
+      x: clamp(x, 0, RADIAL_NODES - 1),
+      y: clamp(y, 0, FIBONACCI_BANDS - 1),
+      sourceIndex: index
+    };
+  }
+
+  function terrainSeatToLonLat(x, y) {
+    return {
+      lon: -180 + ((x % RADIAL_NODES + RADIAL_NODES) % RADIAL_NODES) / RADIAL_NODES * 360,
+      lat: 80 - (clamp(y, 0, FIBONACCI_BANDS - 1) / (FIBONACCI_BANDS - 1)) * 160
+    };
+  }
+
+  function numeric(node, keys, fallback) {
+    var list = Array.isArray(keys) ? keys : [keys];
+
+    for (var i = 0; i < list.length; i += 1) {
+      var value = Number(node && node[list[i]]);
+      if (Number.isFinite(value)) return value;
     }
 
     return fallback;
   }
 
   function terrainRoleForNode(node) {
+    var elevation = numeric(node, ["dryElevation", "elevation", "height"], 0.5);
     var ridge = numeric(node, "ridgePressure", 0);
     var basin = numeric(node, "basinPressure", 0);
     var valley = numeric(node, "valleyPressure", 0);
@@ -251,8 +295,8 @@
     var trench = numeric(node, "trenchPressure", 0);
     var gap = numeric(node, "gapPressure", 0);
 
-    var best = "lowland";
-    var value = -Infinity;
+    var role = "lowland";
+    var best = -Infinity;
     var scores = {
       ridge: ridge,
       basin: basin,
@@ -264,16 +308,16 @@
     };
 
     Object.keys(scores).forEach(function (key) {
-      if (scores[key] > value) {
-        best = key;
-        value = scores[key];
+      if (scores[key] > best) {
+        best = scores[key];
+        role = key;
       }
     });
 
-    if (numeric(node, "dryElevation", numeric(node, "elevation", 0.5)) > 0.68 && summit < 0.28) best = "highland";
-    if (numeric(node, "dryElevation", numeric(node, "elevation", 0.5)) < 0.38 && basin < 0.28) best = "lowland";
+    if (best <= 0.02 && elevation > 0.64) role = "highland";
+    if (best <= 0.02 && elevation < 0.40) role = "lowland";
 
-    return best;
+    return role;
   }
 
   function psychologyForRole(role) {
@@ -281,13 +325,15 @@
     return PSYCHOLOGY_MAP[role] || PSYCHOLOGY_MAP.lowland;
   }
 
-  function withPsychology(target, role) {
-    var p = psychologyForRole(role);
-    target.psychologicalRole = p.psychologicalRole;
-    target.narrativeFunction = p.narrativeFunction;
-    target.ethicalPressure = p.ethicalPressure;
-    target.futureExpression = p.futureExpression;
-    target.audraliaMeaning = p.audraliaMeaning;
+  function attachPsychology(target, role) {
+    var psychology = psychologyForRole(role);
+
+    target.psychologicalRole = psychology.psychologicalRole;
+    target.narrativeFunction = psychology.narrativeFunction;
+    target.ethicalPressure = psychology.ethicalPressure;
+    target.futureExpression = psychology.futureExpression;
+    target.audraliaMeaning = psychology.audraliaMeaning;
+
     target.planetPsychologyActive = true;
     target.planetPsychologyNarrativeClear = true;
     target.psychologyOwnsNarrativeMeaningOnly = true;
@@ -297,15 +343,20 @@
     target.psychologyDoesNotOwnLandformTruth = true;
     target.psychologyDoesNotOwnHydrationTruth = true;
     target.psychologyDoesNotOwnVisualPass = true;
+
     return target;
   }
 
-  function buildReliefSamples(nodes) {
-    return nodes.map(function (node, index) {
-      var x = numeric(node, "x", numeric(node, "radial", index % RADIAL_NODES));
-      var y = numeric(node, "y", numeric(node, "band", Math.floor(index / RADIAL_NODES)));
-      var ll = terrainSeatToLonLat(x, y);
-      var elevation = clamp(numeric(node, "dryElevation", numeric(node, "elevation", 0.5)), 0, 1);
+  function buildReliefSamplesFromSource(nodes) {
+    var samples = [];
+
+    nodes.forEach(function (node, index) {
+      var position = getNodePosition(node, index);
+      if (!position) return;
+
+      var sourceNodeId = getNodeId(node, index);
+      var ll = terrainSeatToLonLat(position.x, position.y);
+      var elevation = clamp(numeric(node, ["dryElevation", "elevation", "height"], 0.5), 0, 1);
       var ridge = clamp(numeric(node, "ridgePressure", 0), 0, 1);
       var basin = clamp(numeric(node, "basinPressure", 0), 0, 1);
       var valley = clamp(numeric(node, "valleyPressure", 0), 0, 1);
@@ -314,204 +365,175 @@
       var trench = clamp(numeric(node, "trenchPressure", 0), 0, 1);
       var gap = clamp(numeric(node, "gapPressure", 0), 0, 1);
       var carving = clamp(numeric(node, "formerHydrosphereCarvingValue", 0), 0, 1);
-      var futureFill = Boolean(node.futureFillEligible) || basin + gap + carving > 1.06;
       var role = terrainRoleForNode(node);
 
       var reliefIntensity = clamp(
-        ridge * 0.22 +
-        basin * 0.16 +
-        valley * 0.13 +
-        summit * 0.20 +
-        shelf * 0.10 +
-        trench * 0.12 +
+        ridge * 0.18 +
+        basin * 0.13 +
+        valley * 0.10 +
+        summit * 0.16 +
+        shelf * 0.08 +
+        trench * 0.10 +
         gap * 0.07 +
-        Math.abs(elevation - 0.5) * 0.28,
+        Math.abs(elevation - 0.5) * 0.16,
         0,
         1
       );
 
-      return Object.freeze(withPsychology({
-        reliefSampleId: "AUDRALIA-RELIEF-SAMPLE-" + String(index).padStart(3, "0"),
-        parentNodeId: nodeId(node, index),
-        nodeId: node.nodeId || "source-" + index,
-        seatKey: node.seatKey || "seat-" + index,
-        sourceSeatIndex: Number(node.seatIndex || node.nodeIndex || index),
-        x: round(x, 4),
-        y: round(y, 4),
+      var futureFillPressure = clamp(
+        basin * 0.30 +
+        gap * 0.22 +
+        carving * 0.20 +
+        (node.futureFillEligible ? 0.16 : 0),
+        0,
+        1
+      );
+
+      samples.push(Object.freeze(attachPsychology({
+        reliefSampleId: "AUDRALIA-RELIEF-METADATA-" + String(samples.length).padStart(3, "0"),
+        parentNodeId: sourceNodeId,
+        nodeId: sourceNodeId,
+        seatKey: node.seatKey || sourceNodeId,
+        sourceSeatIndex: Number.isFinite(Number(node.seatIndex)) ? Number(node.seatIndex) : position.sourceIndex,
+
+        x: round(position.x, 4),
+        y: round(position.y, 4),
         lon: round(ll.lon, 4),
         lat: round(ll.lat, 4),
+
         elevation: round(elevation, 4),
         reliefIntensity: round(reliefIntensity, 4),
-        ridgeHighlight: round(clamp(ridge * 0.75 + summit * 0.20, 0, 1), 4),
-        basinShadow: round(clamp(basin * 0.72 + gap * 0.22 + carving * 0.14, 0, 1), 4),
-        valleyFlowPotential: round(clamp(valley * 0.68 + gap * 0.18 + carving * 0.22, 0, 1), 4),
-        summitEmphasis: round(clamp(summit * 0.82 + elevation * 0.18, 0, 1), 4),
-        shelfTransition: round(clamp(shelf * 0.78 + carving * 0.12, 0, 1), 4),
-        trenchContainment: round(clamp(trench * 0.88 + ridge * 0.08, 0, 1), 4),
-        gapRelease: round(clamp(gap * 0.82 + valley * 0.12, 0, 1), 4),
-        futureFillPressure: round(futureFill ? clamp(basin * 0.42 + gap * 0.30 + carving * 0.28, 0.18, 1) : 0, 4),
+        ridgeHighlight: round(clamp(ridge * 0.42 + summit * 0.10, 0, 1), 4),
+        basinShadow: round(clamp(basin * 0.36 + gap * 0.12 + carving * 0.08, 0, 1), 4),
+        valleyFlowPotential: round(clamp(valley * 0.34 + gap * 0.10 + carving * 0.10, 0, 1), 4),
+        summitEmphasis: round(clamp(summit * 0.44 + elevation * 0.08, 0, 1), 4),
+        shelfTransition: round(clamp(shelf * 0.36 + carving * 0.08, 0, 1), 4),
+        trenchContainment: round(clamp(trench * 0.38 + ridge * 0.06, 0, 1), 4),
+        gapRelease: round(clamp(gap * 0.38 + valley * 0.06, 0, 1), 4),
+        futureFillPressure: round(futureFillPressure, 4),
+
         carrierVisualRole: role,
         reliefRole: role,
+        metadataOnly: true,
+        sourceGeometryPreserved: true,
+        sourceDerivedNodeId: sourceNodeId,
+        syntheticTerrainGenerated: false,
+        fallbackTerrainGenerated: false,
+        replacementLandmassGenerated: false,
+
         childDrawsVisuals: false,
         hydrationHeld: true,
         activeHydration: false,
+        activeWater: false,
         finalVisualPassClaim: false
-      }, role));
+      }, role)));
+    });
+
+    return Object.freeze(samples);
+  }
+
+  function buildMetadataSummary(samples) {
+    var counts = {};
+    var futureFillCount = 0;
+
+    samples.forEach(function (sample) {
+      var role = sample.reliefRole || "unassigned";
+      counts[role] = (counts[role] || 0) + 1;
+      if (Number(sample.futureFillPressure || 0) > 0.24) futureFillCount += 1;
+    });
+
+    return Object.freeze({
+      metadataOnly: true,
+      sourceGeometryPreserved: true,
+      sourceSampleCount: samples.length,
+      roleCounts: counts,
+      futureFillCandidateCount: futureFillCount,
+      syntheticTerrainGenerated: false,
+      fallbackTerrainGenerated: false,
+      replacementLandmassGenerated: false,
+      childDrawsVisuals: false,
+      finalVisualPassClaim: false
     });
   }
 
-  function groupSequentialSamples(samples, predicate, groupSize, prefix, role, strengthKey) {
-    var groups = [];
-    var current = [];
-
-    samples.forEach(function (sample) {
-      if (predicate(sample)) {
-        current.push(sample);
-        if (current.length >= groupSize) {
-          groups.push(current);
-          current = [];
-        }
-      } else if (current.length >= 2) {
-        groups.push(current);
-        current = [];
-      } else {
-        current = [];
-      }
-    });
-
-    if (current.length >= 2) groups.push(current);
-
-    return groups.slice(0, 48).map(function (items, index) {
-      var nodeIds = items.map(function (sample) { return sample.parentNodeId; });
-      var avg = items.reduce(function (sum, sample) {
-        return sum + Number(sample[strengthKey] || sample.reliefIntensity || 0);
-      }, 0) / Math.max(1, items.length);
-
-      return Object.freeze(withPsychology({
-        expressionId: prefix + "-" + String(index).padStart(3, "0"),
-        nodeIds: nodeIds,
-        sampleCount: items.length,
-        reliefExpressionReady: true,
-        carrierMayConsume: true,
-        reliefExpressionRole: role,
-        ridgeReliefStrength: role === "ridge" ? round(avg, 4) : undefined,
-        basinDepthStrength: role === "basin" ? round(avg, 4) : undefined,
-        valleyFlowStrength: role === "valley" ? round(avg, 4) : undefined,
-        summitReliefStrength: role === "summit" ? round(avg, 4) : undefined,
-        shelfReliefStrength: role === "shelf" ? round(avg, 4) : undefined,
-        futureFillReliefStrength: role === "future_fill" ? round(avg, 4) : undefined,
-        averageReliefIntensity: round(avg, 4),
-        childDrawsVisuals: false,
-        hydrationHeld: true,
-        activeHydration: false,
-        finalVisualPassClaim: false
-      }, role));
-    });
+  function buildEmptyExpressionArrays() {
+    state.ridgeReliefExpressions = Object.freeze([]);
+    state.basinDepthExpressions = Object.freeze([]);
+    state.valleyFlowExpressions = Object.freeze([]);
+    state.summitReliefExpressions = Object.freeze([]);
+    state.highlandReliefExpressions = Object.freeze([]);
+    state.lowlandReliefExpressions = Object.freeze([]);
+    state.shelfReliefExpressions = Object.freeze([]);
+    state.futureFillReliefExpressions = Object.freeze([]);
   }
 
   function buildReliefPacket() {
     detectDryTerrain();
 
     var nodes = dryNodes();
-    var samples = buildReliefSamples(nodes);
 
-    state.reliefSamples = Object.freeze(samples);
+    if (!state.sourceGeometryValid || !nodes.length) {
+      state.reliefSamples = Object.freeze([]);
+      buildEmptyExpressionArrays();
+      state.reliefMetadataSummary = Object.freeze({
+        metadataOnly: true,
+        sourceGeometryPreserved: false,
+        sourceSampleCount: 0,
+        held: true,
+        heldReason: state.sourceFailureReason,
+        syntheticTerrainGenerated: false,
+        fallbackTerrainGenerated: false,
+        replacementLandmassGenerated: false,
+        childDrawsVisuals: false,
+        finalVisualPassClaim: false
+      });
 
-    state.ridgeReliefExpressions = Object.freeze(groupSequentialSamples(
-      samples,
-      function (sample) { return Number(sample.ridgeHighlight || 0) > 0.26; },
-      5,
-      "AUDRALIA-RIDGE-RELIEF",
-      "ridge",
-      "ridgeHighlight"
-    ));
+      state.built = true;
+      state.buildCount += 1;
+      state.lastBuiltAt = new Date().toISOString();
+      return false;
+    }
 
-    state.basinDepthExpressions = Object.freeze(groupSequentialSamples(
-      samples,
-      function (sample) { return Number(sample.basinShadow || 0) > 0.24; },
-      6,
-      "AUDRALIA-BASIN-DEPTH",
-      "basin",
-      "basinShadow"
-    ));
-
-    state.valleyFlowExpressions = Object.freeze(groupSequentialSamples(
-      samples,
-      function (sample) { return Number(sample.valleyFlowPotential || 0) > 0.24; },
-      6,
-      "AUDRALIA-VALLEY-FLOW",
-      "valley",
-      "valleyFlowPotential"
-    ));
-
-    state.summitReliefExpressions = Object.freeze(groupSequentialSamples(
-      samples,
-      function (sample) { return Number(sample.summitEmphasis || 0) > 0.46; },
-      3,
-      "AUDRALIA-SUMMIT-RELIEF",
-      "summit",
-      "summitEmphasis"
-    ));
-
-    state.highlandReliefExpressions = Object.freeze(groupSequentialSamples(
-      samples,
-      function (sample) { return Number(sample.elevation || 0) > 0.64; },
-      5,
-      "AUDRALIA-HIGHLAND-RELIEF",
-      "highland",
-      "reliefIntensity"
-    ));
-
-    state.lowlandReliefExpressions = Object.freeze(groupSequentialSamples(
-      samples,
-      function (sample) { return Number(sample.elevation || 0) < 0.42; },
-      5,
-      "AUDRALIA-LOWLAND-RELIEF",
-      "lowland",
-      "basinShadow"
-    ));
-
-    state.shelfReliefExpressions = Object.freeze(groupSequentialSamples(
-      samples,
-      function (sample) { return Number(sample.shelfTransition || 0) > 0.20; },
-      6,
-      "AUDRALIA-SHELF-RELIEF",
-      "shelf",
-      "shelfTransition"
-    ));
-
-    state.futureFillReliefExpressions = Object.freeze(groupSequentialSamples(
-      samples,
-      function (sample) { return Number(sample.futureFillPressure || 0) > 0.18; },
-      5,
-      "AUDRALIA-FUTURE-FILL-RELIEF",
-      "future_fill",
-      "futureFillPressure"
-    ));
+    state.reliefSamples = buildReliefSamplesFromSource(nodes);
+    buildEmptyExpressionArrays();
+    state.reliefMetadataSummary = buildMetadataSummary(state.reliefSamples);
 
     state.built = true;
     state.buildCount += 1;
     state.lastBuiltAt = new Date().toISOString();
 
-    return true;
+    return state.reliefSamples.length > 0;
   }
 
-  function status() {
+  function ready() {
+    return Boolean(state.sourceGeometryValid && state.reliefSamples.length);
+  }
+
+  function baseStatus() {
     if (!state.built) buildReliefPacket();
+
+    var isReady = ready();
 
     return {
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       family: FAMILY,
       file: FILE,
 
-      reliefExpressionReady: true,
-      carrierMayConsume: true,
+      reliefExpressionReady: isReady,
+      carrierMayConsume: isReady,
       carrierShouldNotOwnReliefTruth: true,
       carrierShouldNotOwnElevationTruth: true,
       childDrawsVisuals: false,
 
+      metadataOnly: true,
+      sourceGeometryPreserved: isReady,
+      sourcePacketDetected: state.sourcePacketDetected,
+      sourceGeometryValid: state.sourceGeometryValid,
+      sourceFailureReason: state.sourceFailureReason,
       dryTerrainDetected: state.dryTerrainDetected,
       dryTerrainValidated: state.dryTerrainValidated,
+
       reliefSampleCount: state.reliefSamples.length,
       ridgeReliefExpressionCount: state.ridgeReliefExpressions.length,
       basinDepthExpressionCount: state.basinDepthExpressions.length,
@@ -522,8 +544,8 @@
       shelfReliefExpressionCount: state.shelfReliefExpressions.length,
       futureFillReliefExpressionCount: state.futureFillReliefExpressions.length,
 
-      planetPsychologyActive: true,
-      planetPsychologyNarrativeClear: true,
+      planetPsychologyActive: isReady,
+      planetPsychologyNarrativeClear: isReady,
       psychologyOwnsNarrativeMeaningOnly: true,
       psychologyDoesNotOwnTerrainTruth: true,
       psychologyDoesNotOwnElevationTruth: true,
@@ -531,6 +553,10 @@
       psychologyDoesNotOwnLandformTruth: true,
       psychologyDoesNotOwnHydrationTruth: true,
       psychologyDoesNotOwnVisualPass: true,
+
+      syntheticTerrainGenerated: false,
+      fallbackTerrainGenerated: false,
+      replacementLandmassGenerated: false,
 
       hydrationHeld: true,
       activeHydration: false,
@@ -542,21 +568,28 @@
       buildCount: state.buildCount,
       lastBuiltAt: state.lastBuiltAt,
       errors: state.errors.slice(),
-      deployMarker: "AUDRALIA_ELEVATION_RELIEF_PLANET_PSYCHOLOGY_HANDOFF_RENEWAL_DEPLOY_MARKER_v1"
+      deployMarker: "AUDRALIA_ELEVATION_RELIEF_METADATA_ONLY_RESTORATION_DEPLOY_MARKER_v1"
     };
+  }
+
+  function status() {
+    return baseStatus();
   }
 
   function getCarrierReliefPacket(requester, options) {
     if (!state.built || options && options.refresh === true) buildReliefPacket();
 
+    var isReady = ready();
+
     return {
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       family: FAMILY,
-      packetType: "carrier_relief_expression_packet_with_planet_psychology",
+      packetType: "carrier_relief_expression_metadata_only_restoration_packet",
       requester: requester || "unknown",
 
-      reliefExpressionReady: true,
-      carrierMayConsume: true,
+      reliefExpressionReady: isReady,
+      carrierMayConsume: isReady,
       carrierShouldNotOwnReliefTruth: true,
       carrierShouldNotOwnElevationTruth: true,
       childDrawsVisuals: false,
@@ -570,9 +603,10 @@
       lowlandReliefExpressions: state.lowlandReliefExpressions,
       shelfReliefExpressions: state.shelfReliefExpressions,
       futureFillReliefExpressions: state.futureFillReliefExpressions,
+      reliefMetadataSummary: state.reliefMetadataSummary,
 
-      planetPsychologyActive: true,
-      planetPsychologyNarrativeClear: true,
+      planetPsychologyActive: isReady,
+      planetPsychologyNarrativeClear: isReady,
       psychologyOwnsNarrativeMeaningOnly: true,
       psychologyDoesNotOwnTerrainTruth: true,
       psychologyDoesNotOwnElevationTruth: true,
@@ -582,9 +616,20 @@
       psychologyDoesNotOwnVisualPass: true,
       psychologyMap: PSYCHOLOGY_MAP,
 
-      terrainTruthSource: "dry terrain child",
+      metadataOnly: true,
+      sourceGeometryPreserved: isReady,
+      sourcePacketDetected: state.sourcePacketDetected,
+      sourceGeometryValid: state.sourceGeometryValid,
+      sourceFailureReason: state.sourceFailureReason,
+
+      syntheticTerrainGenerated: false,
+      fallbackTerrainGenerated: false,
+      replacementLandmassGenerated: false,
+
+      terrainTruthSource: "existing dry terrain child only",
       reliefTruthChild: true,
       carrierDisplaysOnly: true,
+
       hydrationHeld: true,
       activeHydration: false,
       activeWater: false,
@@ -602,6 +647,7 @@
 
   var api = {
     contract: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
     family: FAMILY,
     status: status,
     getCarrierReliefPacket: getCarrierReliefPacket,

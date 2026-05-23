@@ -1,16 +1,20 @@
 // /assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
-// AUDRALIA_CARRIER_NARROW_RELIEF_LANDFORM_DEFINITION_CONSUMPTION_TNT_v1
+// AUDRALIA_CARRIER_BASELINE_RESTORED_PACKET_HANDOFF_DRAW_RENEWAL_TNT_v1
 // Full-file replacement.
 // Scope: runtime carrier only.
-// Purpose: preserve the existing land-body compositor while narrowly consuming relief-expression and landform-systems packets for sharper visible definition.
-// Preserves: dry terrain fallback, zoom, drag, pinch, wheel, lens controls, lattice, receipt, hydration hold, no-final-pass posture.
-// Does not own: source terrain truth, elevation truth, relief truth, landform truth, hydration truth, edge material finalization, climate, ecology, settlement, or final visual pass.
+// Purpose: restore the stronger packet-handoff draw baseline, preserve the land-body compositor, and correct authority posture without stripping the working connections.
+// Recovery base: AUDRALIA_CARRIER_NARROW_RELIEF_LANDFORM_DEFINITION_CONSUMPTION_TNT_v1
+// Preserves: dry terrain fallback, ethical bump field, land influence field, continuous land-body compositor, relief/landform overlay drawing, zoom, drag, pinch, wheel, lenses, lattice, receipt, hydration hold.
+// Adds: renderable fallback node-point mapping so landform IDs can draw even when they do not exactly match relief sample parent IDs.
+// Does not own: terrain truth, elevation truth, relief truth, landform truth, hydration truth, climate, ecology, settlement, or final visual pass.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_CARRIER_NARROW_RELIEF_LANDFORM_DEFINITION_CONSUMPTION_TNT_v1";
-  var PREVIOUS_CONTRACT = "AUDRALIA_PLANET_RUNTIME_EXISTING_NODE_LAND_BODY_COMPOSITOR_TNT_v1";
+  var CONTRACT = "AUDRALIA_CARRIER_BASELINE_RESTORED_PACKET_HANDOFF_DRAW_RENEWAL_TNT_v1";
+  var PREVIOUS_CONTRACT = "AUDRALIA_CARRIER_NARROW_RELIEF_LANDFORM_DEFINITION_CONSUMPTION_TNT_v1";
+  var RECOVERY_BASELINE = "AUDRALIA_CARRIER_NARROW_RELIEF_LANDFORM_DEFINITION_CONSUMPTION_TNT_v1";
+  var STRIPPED_HELD_CONTRACT = "AUDRALIA_PLANET_BODY_INSPECTION_CARRIER_HANDOFF_ONLY_RENEWAL_TNT_v1";
   var FILE = "/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js";
   var ROUTE = "/showroom/globe/audralia/planet/";
 
@@ -121,7 +125,12 @@
     definitionConsumptionReady: false,
     definitionField: null,
     definitionFieldReady: false,
+
     reliefSampleByNodeId: {},
+    definitionNodePointById: {},
+    definitionNodePointFallbackActive: false,
+    definitionNodePointFallbackHits: 0,
+    definitionNodePointExactHits: 0,
 
     ethicalProfiles: [],
     ethicalBumpAnchors: [],
@@ -496,6 +505,7 @@
     detectReliefExpression();
     detectLandformSystems();
     rebuildDefinitionField();
+    rebuildDefinitionNodePointIndex();
     publishStatus();
     requestRender();
   }
@@ -1248,7 +1258,8 @@
     return Object.freeze({
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
-      packetType: "runtime_derived_visible_land_body_packet_with_definition_consumption",
+      recoveryBaseline: RECOVERY_BASELINE,
+      packetType: "runtime_derived_visible_land_body_packet_with_packet_handoff_draw",
       sourceSeatCount: SOURCE_SEAT_COUNT,
       ethicalBumpAnchorCount: state.ethicalBumpAnchors.length,
       fieldSampleCount: samples.length,
@@ -1260,9 +1271,12 @@
       nodesHiddenFromSurface: true,
       surfaceRenderIsDerived: true,
       carrierInventsTerrain: false,
+      carrierConsumesPacketsForDisplayOnly: true,
+      carrierDrawsPacketHandoffs: true,
       carrierConsumesReliefPacket: state.carrierConsumesReliefPacket,
       carrierConsumesLandformPacket: state.carrierConsumesLandformPacket,
       definitionFieldReady: state.definitionFieldReady,
+      definitionNodePointFallbackActive: state.definitionNodePointFallbackActive,
       raw256VisibleOnlyInLattice: true,
       finalVisualPassClaim: false
     });
@@ -1283,6 +1297,7 @@
       state.landFieldIndex = [];
       state.visibleLandBodyPacket = null;
       state.landBodyCompositorReady = false;
+      rebuildDefinitionNodePointIndex();
       return;
     }
 
@@ -1295,6 +1310,8 @@
     state.landInfluenceField = buildLandInfluenceField();
     state.visibleLandBodyPacket = buildVisibleLandBodyPacket();
     state.landBodyCompositorReady = Boolean(state.visibleLandBodyPacket && state.landInfluenceField.length);
+
+    rebuildDefinitionNodePointIndex();
   }
 
   function rebuildDefinitionField() {
@@ -1343,13 +1360,245 @@
       )
     );
 
+    rebuildDefinitionNodePointIndex();
+
     return state.definitionFieldReady;
+  }
+
+  function indexDefinitionPoint(index, key, point) {
+    if (!key || !point) return;
+    index[String(key)] = point;
+  }
+
+  function nodePointFromReliefSample(sample) {
+    if (!sample) return null;
+
+    var x = Number(sample.x || 0);
+    var y = Number(sample.y || 0);
+    var ll = terrainSeatToLonLat(x, y);
+
+    return {
+      source: "relief-sample",
+      sourcePriority: 1,
+      nodeId: sample.parentNodeId || sample.nodeId || sample.seatKey || "",
+      x: round(x, 4),
+      y: round(y, 4),
+      lon: round(ll.lon, 4),
+      lat: round(ll.lat, 4),
+      point: lonLatPoint(ll.lon, ll.lat),
+      continentId: sample.continentId || "unassigned",
+      continentName: sample.continentName || "Unassigned",
+      elevation: Number(sample.elevation || 0.5),
+      reliefIntensity: Number(sample.reliefIntensity || 0),
+      ridgeHighlight: Number(sample.ridgeHighlight || 0),
+      basinShadow: Number(sample.basinShadow || 0),
+      summitEmphasis: Number(sample.summitEmphasis || 0),
+      futureFillPressure: Number(sample.futureFillPressure || 0),
+      carrierVisualRole: sample.carrierVisualRole || "relief"
+    };
+  }
+
+  function nodePointFromDryNode(node, index) {
+    if (!node) return null;
+
+    var x = Number(node.x || node.radial || (index % RADIAL_NODES));
+    var y = Number(node.y || node.band || Math.floor(index / RADIAL_NODES));
+    var ll = terrainSeatToLonLat(x, y);
+
+    return {
+      source: "dry-terrain-node",
+      sourcePriority: 2,
+      nodeId: node.nodeId || node.seatKey || "source-" + index,
+      x: round(x, 4),
+      y: round(y, 4),
+      lon: round(ll.lon, 4),
+      lat: round(ll.lat, 4),
+      point: lonLatPoint(ll.lon, ll.lat),
+      continentId: node.regionSeed || node.continentId || "unassigned",
+      continentName: node.regionName || node.continentName || "Unassigned",
+      elevation: Number(node.dryElevation || node.elevation || 0.5),
+      reliefIntensity: Number(node.ridgePressure || node.mountainPressure || node.summitPressure || node.basinPressure || 0),
+      ridgeHighlight: Number(node.ridgePressure || node.mountainPressure || 0),
+      basinShadow: Number(node.basinPressure || node.gapPressure || 0),
+      summitEmphasis: Number(node.summitPressure || 0),
+      futureFillPressure: Number(node.gapPressure || node.basinPressure || 0),
+      carrierVisualRole: node.primaryTerrainRole || node.terrainClass || "dry-terrain"
+    };
+  }
+
+  function nodePointFromBumpAnchor(anchor) {
+    if (!anchor) return null;
+
+    return {
+      source: "ethical-bump-anchor",
+      sourcePriority: 3,
+      nodeId: anchor.sourceNodeId || anchor.bumpId,
+      x: Number(anchor.x || 0),
+      y: Number(anchor.y || 0),
+      lon: Number(anchor.lon || 0),
+      lat: Number(anchor.lat || 0),
+      point: anchor.point || lonLatPoint(anchor.lon || 0, anchor.lat || 0),
+      continentId: anchor.continentId || "unassigned",
+      continentName: anchor.continentName || "Unassigned",
+      elevation: Number(anchor.height || 0.5),
+      reliefIntensity: Number(anchor.height || 0),
+      ridgeHighlight: anchor.sizeClass === "STRUCTURAL" || anchor.sizeClass === "ANCHOR" ? Number(anchor.height || 0) : 0,
+      basinShadow: anchor.height < 0.42 ? 1 - Number(anchor.height || 0.5) : 0,
+      summitEmphasis: anchor.sizeClass === "ANCHOR" ? Number(anchor.height || 0) : 0,
+      futureFillPressure: anchor.futureFillEligible ? 1 : 0,
+      carrierVisualRole: anchor.terrainRole || "bump-anchor"
+    };
+  }
+
+  function nodePointFromLandInfluenceSample(sample) {
+    if (!sample) return null;
+
+    return {
+      source: "land-influence-sample",
+      sourcePriority: 4,
+      nodeId: sample.sampleId,
+      x: Number(sample.gridX || sample.x || 0),
+      y: Number(sample.gridY || sample.y || 0),
+      lon: Number(sample.lon || 0),
+      lat: Number(sample.lat || 0),
+      point: sample.point || lonLatPoint(sample.lon || 0, sample.lat || 0),
+      continentId: sample.continentId || "unassigned",
+      continentName: sample.continentName || "Unassigned",
+      elevation: Number(sample.height || 0.5),
+      reliefIntensity: Number(sample.relief || 0),
+      ridgeHighlight: Number(sample.relief || 0),
+      basinShadow: Number(sample.futureFillPressure || 0),
+      summitEmphasis: Number(sample.height > 0.72 ? sample.height : 0),
+      futureFillPressure: Number(sample.futureFillPressure || 0),
+      carrierVisualRole: sample.sizeClassInfluence || "land-field"
+    };
+  }
+
+  function rebuildDefinitionNodePointIndex() {
+    var index = {};
+
+    if (state.reliefValidated && state.reliefCarrierPacket && Array.isArray(state.reliefCarrierPacket.reliefSamples)) {
+      state.reliefCarrierPacket.reliefSamples.forEach(function (sample, i) {
+        var point = nodePointFromReliefSample(sample);
+        if (!point) return;
+
+        indexDefinitionPoint(index, sample.parentNodeId, point);
+        indexDefinitionPoint(index, sample.nodeId, point);
+        indexDefinitionPoint(index, sample.seatKey, point);
+        indexDefinitionPoint(index, "relief-" + i, point);
+        indexDefinitionPoint(index, "source-" + i, point);
+      });
+    }
+
+    dryNodes().forEach(function (node, i) {
+      var point = nodePointFromDryNode(node, i);
+      if (!point) return;
+
+      indexDefinitionPoint(index, node.nodeId, point);
+      indexDefinitionPoint(index, node.seatKey, point);
+      indexDefinitionPoint(index, node.id, point);
+      indexDefinitionPoint(index, node.nodeIndex, point);
+      indexDefinitionPoint(index, node.seatIndex, point);
+      indexDefinitionPoint(index, "node-" + i, point);
+      indexDefinitionPoint(index, "source-" + i, point);
+      indexDefinitionPoint(index, String(i), point);
+    });
+
+    state.ethicalBumpAnchors.forEach(function (anchor) {
+      var point = nodePointFromBumpAnchor(anchor);
+      if (!point) return;
+
+      indexDefinitionPoint(index, anchor.sourceNodeId, point);
+      indexDefinitionPoint(index, anchor.bumpId, point);
+      indexDefinitionPoint(index, "source-" + anchor.sourceSeatIndex, point);
+      indexDefinitionPoint(index, anchor.sourceSeatIndex, point);
+    });
+
+    state.landInfluenceField.forEach(function (sample) {
+      var point = nodePointFromLandInfluenceSample(sample);
+      if (!point) return;
+
+      indexDefinitionPoint(index, sample.sampleId, point);
+      indexDefinitionPoint(index, "land-" + sample.y + "-" + sample.x, point);
+    });
+
+    state.definitionNodePointById = index;
+    state.definitionNodePointFallbackActive = true;
+
+    return index;
+  }
+
+  function numericTokenFromNodeId(nodeId) {
+    var match = String(nodeId || "").match(/(\d+)(?!.*\d)/);
+    if (!match) return null;
+
+    var value = Number(match[1]);
+    return Number.isFinite(value) ? value : null;
+  }
+
+  function fallbackRenderablePointFromNumericNodeId(nodeId) {
+    var value = numericTokenFromNodeId(nodeId);
+    if (value === null) return null;
+
+    var nodes = dryNodes();
+    if (nodes.length) {
+      var dryIndex = ((value % nodes.length) + nodes.length) % nodes.length;
+      var dryPoint = nodePointFromDryNode(nodes[dryIndex], dryIndex);
+      if (dryPoint) {
+        dryPoint.source = "fallback-dry-node";
+        return dryPoint;
+      }
+    }
+
+    if (state.landInfluenceField.length) {
+      var fieldIndex = ((value % state.landInfluenceField.length) + state.landInfluenceField.length) % state.landInfluenceField.length;
+      var fieldPoint = nodePointFromLandInfluenceSample(state.landInfluenceField[fieldIndex]);
+      if (fieldPoint) {
+        fieldPoint.source = "fallback-land-influence";
+        return fieldPoint;
+      }
+    }
+
+    return null;
+  }
+
+  function nodeIdToRenderablePoint(nodeId) {
+    if (nodeId === undefined || nodeId === null) return null;
+
+    var key = String(nodeId);
+    var exact = state.definitionNodePointById[key];
+
+    if (exact) {
+      state.definitionNodePointExactHits += 1;
+      return exact;
+    }
+
+    var fallback = fallbackRenderablePointFromNumericNodeId(key);
+
+    if (fallback) {
+      state.definitionNodePointFallbackHits += 1;
+      return fallback;
+    }
+
+    return null;
+  }
+
+  function nodeIdsToRenderablePoints(nodeIds, limit) {
+    var points = [];
+
+    (Array.isArray(nodeIds) ? nodeIds : []).slice(0, limit || 24).forEach(function (nodeId) {
+      var point = nodeIdToRenderablePoint(nodeId);
+      if (point) points.push(point);
+    });
+
+    return points;
   }
 
   function getEthicalBumpFieldReceipt() {
     return {
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
+      recoveryBaseline: RECOVERY_BASELINE,
       nineContinentEthicalFieldActive: state.ethicalBumpFieldReady,
       nineContinentCount: state.ethicalProfiles.length,
       bumpAnchorCount: state.ethicalBumpAnchors.length,
@@ -1371,6 +1620,7 @@
     return {
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
+      recoveryBaseline: RECOVERY_BASELINE,
       landBodyCompositorActive: state.landBodyCompositorReady,
       existingNodesUsedAsLandMappingScaffold: true,
       nodesHiddenFromSurface: true,
@@ -1381,6 +1631,8 @@
       nineContinentFieldActive: state.ethicalBumpFieldReady,
       surfaceRenderIsDerived: true,
       raw256VisibleOnlyInLattice: true,
+      carrierConsumesPacketsForDisplayOnly: true,
+      carrierDrawsPacketHandoffs: true,
       carrierInventsTerrain: false,
       hydrationHeld: true,
       finalVisualPassClaim: false
@@ -1391,6 +1643,7 @@
     return {
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
+      recoveryBaseline: RECOVERY_BASELINE,
       reliefExpressionDetected: state.reliefDetected,
       reliefExpressionValidated: state.reliefValidated,
       reliefFailureReason: state.reliefFailureReason,
@@ -1399,8 +1652,19 @@
       landformFailureReason: state.landformFailureReason,
       carrierConsumesReliefPacket: state.carrierConsumesReliefPacket,
       carrierConsumesLandformPacket: state.carrierConsumesLandformPacket,
+      carrierConsumesPacketsForDisplayOnly: true,
+      carrierDrawsPacketHandoffs: true,
       definitionConsumptionReady: state.definitionConsumptionReady,
       definitionFieldReady: state.definitionFieldReady,
+      definitionNodePointFallbackActive: state.definitionNodePointFallbackActive,
+      definitionNodePointIndexCount: Object.keys(state.definitionNodePointById || {}).length,
+      definitionNodePointExactHits: state.definitionNodePointExactHits,
+      definitionNodePointFallbackHits: state.definitionNodePointFallbackHits,
+      carrierDoesNotOwnTerrainTruth: true,
+      carrierDoesNotOwnElevationTruth: true,
+      carrierDoesNotOwnReliefTruth: true,
+      carrierDoesNotOwnLandformTruth: true,
+      carrierDoesNotMutateUpstreamMeaning: true,
       carrierShouldNotOwnElevationTruth: true,
       carrierShouldNotOwnReliefTruth: true,
       carrierShouldNotOwnLandformTruth: true,
@@ -1651,34 +1915,23 @@
     state.ctx.restore();
   }
 
-  function nodeIdToSample(nodeId) {
-    return state.reliefSampleByNodeId[nodeId] || null;
+  function projectedRenderablePoint(renderablePoint) {
+    return renderablePoint && renderablePoint.point ? project(renderablePoint.point) : null;
   }
 
-  function sampleToPoint(sample) {
-    if (!sample) return null;
-    var ll = terrainSeatToLonLat(Number(sample.x || 0), Number(sample.y || 0));
-    return lonLatPoint(ll.lon, ll.lat);
-  }
+  function drawDefinitionNode(renderablePoint, alpha, radiusScale, rgb, stroke) {
+    if (!renderablePoint) return;
 
-  function projectedSample(sample) {
-    var point = sampleToPoint(sample);
-    return point ? project(point) : null;
-  }
-
-  function drawDefinitionNode(sample, alpha, radiusScale, rgb, stroke) {
-    if (!sample) return;
-
-    var p = projectedSample(sample);
+    var p = projectedRenderablePoint(renderablePoint);
     if (!p || !p.front) return;
 
     var ctx = state.ctx;
     var m = metrics();
     var intensity = clamp(
-      Number(sample.reliefIntensity || 0) +
-      Number(sample.ridgeHighlight || 0) * 0.42 +
-      Number(sample.basinShadow || 0) * 0.36 +
-      Number(sample.summitEmphasis || 0) * 0.30,
+      Number(renderablePoint.reliefIntensity || 0) +
+      Number(renderablePoint.ridgeHighlight || 0) * 0.42 +
+      Number(renderablePoint.basinShadow || 0) * 0.36 +
+      Number(renderablePoint.summitEmphasis || 0) * 0.30,
       0,
       1.35
     );
@@ -1703,13 +1956,9 @@
 
     var ctx = state.ctx;
     var m = metrics();
-    var points = [];
-    var capped = nodeIds.slice(0, maxNodes || 16);
-
-    capped.forEach(function (nodeId) {
-      var sample = nodeIdToSample(nodeId);
-      var p = sample ? projectedSample(sample) : null;
-      if (p && p.front) points.push(p);
+    var renderablePoints = nodeIdsToRenderablePoints(nodeIds, maxNodes || 16);
+    var points = renderablePoints.map(projectedRenderablePoint).filter(function (p) {
+      return p && p.front;
     });
 
     if (points.length < 2) return;
@@ -1759,7 +2008,7 @@
       drawDefinitionLineFromNodeIds(range.nodeIds, alpha, 0.0029, { r: 244, g: 207, b: 131 }, 20);
 
       (range.summitNodeIds || []).slice(0, 4).forEach(function (nodeId) {
-        drawDefinitionNode(nodeIdToSample(nodeId), alpha * 0.70, 0.007, { r: 255, g: 226, b: 159 }, false);
+        drawDefinitionNode(nodeIdToRenderablePoint(nodeId), alpha * 0.70, 0.007, { r: 255, g: 226, b: 159 }, false);
       });
     });
   }
@@ -1773,7 +2022,7 @@
       var alpha = strength * clamp(Number(basin.basinDepthStrength || basin.basinShadow || 0.40), 0.20, 1);
 
       (basin.nodeIds || []).slice(0, 14).forEach(function (nodeId) {
-        drawDefinitionNode(nodeIdToSample(nodeId), alpha, 0.010, { r: 28, g: 46, b: 43 }, false);
+        drawDefinitionNode(nodeIdToRenderablePoint(nodeId), alpha, 0.010, { r: 28, g: 46, b: 43 }, false);
       });
     });
 
@@ -1781,7 +2030,7 @@
       var alpha = strength * clamp(Number(basin.basinDepthStrength || basin.futureFillPriority || 0.36), 0.18, 1);
 
       (basin.nodeIds || []).slice(0, 10).forEach(function (nodeId) {
-        drawDefinitionNode(nodeIdToSample(nodeId), alpha * 0.82, 0.011, { r: 48, g: 70, b: 66 }, false);
+        drawDefinitionNode(nodeIdToRenderablePoint(nodeId), alpha * 0.82, 0.011, { r: 48, g: 70, b: 66 }, false);
       });
     });
   }
@@ -1807,7 +2056,7 @@
       var alpha = strength * clamp(Number(plateau.surfaceContinuity || plateau.slopeStability || 0.42), 0.22, 1);
 
       (plateau.nodeIds || []).slice(0, 14).forEach(function (nodeId) {
-        drawDefinitionNode(nodeIdToSample(nodeId), alpha, 0.0095, { r: 159, g: 139, b: 91 }, false);
+        drawDefinitionNode(nodeIdToRenderablePoint(nodeId), alpha, 0.0095, { r: 159, g: 139, b: 91 }, false);
       });
     });
   }
@@ -1818,11 +2067,11 @@
     var strength = mode === "surface" ? 0.38 : mode === "sixth-sense" ? 0.72 : 0.18;
 
     (state.definitionField.landmarks || []).slice(0, 80).forEach(function (landmark) {
-      var sample = nodeIdToSample(landmark.anchorNodeId);
+      var renderablePoint = nodeIdToRenderablePoint(landmark.anchorNodeId);
       var alpha = strength * clamp(Number(landmark.landmarkStrength || 0.45), 0.22, 1);
 
-      drawDefinitionNode(sample, alpha, 0.006, { r: 250, g: 231, b: 177 }, false);
-      drawDefinitionNode(sample, alpha * 0.42, 0.014, { r: 250, g: 231, b: 177 }, true);
+      drawDefinitionNode(renderablePoint, alpha, 0.006, { r: 250, g: 231, b: 177 }, false);
+      drawDefinitionNode(renderablePoint, alpha * 0.42, 0.014, { r: 250, g: 231, b: 177 }, true);
     });
   }
 
@@ -1835,7 +2084,7 @@
       var alpha = strength * clamp(Number(fill.futureFillReliefStrength || fill.futureFillPriority || 0.42), 0.20, 1);
 
       (fill.nodeIds || []).slice(0, 12).forEach(function (nodeId) {
-        drawDefinitionNode(nodeIdToSample(nodeId), alpha, 0.008, { r: 88, g: 129, b: 143 }, false);
+        drawDefinitionNode(nodeIdToRenderablePoint(nodeId), alpha, 0.008, { r: 88, g: 129, b: 143 }, false);
       });
     });
   }
@@ -1993,8 +2242,8 @@
     var ethicalReceipt = getEthicalBumpFieldReceipt();
     var landReceipt = getLandBodyCompositorReceipt();
     var definitionReceipt = getDefinitionConsumptionReceipt();
-    var w = Math.min(state.width * 0.88, m.baseRadius * 2.56);
-    var h = Math.min(state.height * 0.56, m.baseRadius * 1.46);
+    var w = Math.min(state.width * 0.88, m.baseRadius * 2.60);
+    var h = Math.min(state.height * 0.58, m.baseRadius * 1.52);
     var x = m.cx - w / 2;
     var y = m.cy - h / 2;
 
@@ -2011,29 +2260,29 @@
     ctx.textBaseline = "middle";
     ctx.font = "900 " + Math.max(12, 14 * state.dpr) + "px ui-monospace, monospace";
     ctx.fillStyle = state.definitionFieldReady ? "rgba(167,243,198,.94)" : "rgba(244,207,131,.92)";
-    ctx.fillText(state.definitionFieldReady ? "DEFINITION CONSUMPTION LIVE" : "DEFINITION CONSUMPTION FALLBACK", m.cx, y + h * 0.09);
+    ctx.fillText("BASELINE RESTORED · PACKET HANDOFF DRAW", m.cx, y + h * 0.08);
 
     ctx.font = "900 " + Math.max(8, 9.2 * state.dpr) + "px ui-monospace, monospace";
     ctx.fillStyle = "rgba(238,244,255,.84)";
-    ctx.fillText("DRY TERRAIN " + String(state.dryTerrainValidated).toUpperCase() + " · LAND FIELD " + landReceipt.fieldSampleCount, m.cx, y + h * 0.22);
+    ctx.fillText("DRY " + String(state.dryTerrainValidated).toUpperCase() + " · LAND FIELD " + landReceipt.fieldSampleCount, m.cx, y + h * 0.20);
 
     ctx.fillStyle = "rgba(141,216,255,.84)";
-    ctx.fillText("RELIEF DETECTED " + String(definitionReceipt.reliefExpressionDetected).toUpperCase() + " · VALIDATED " + String(definitionReceipt.reliefExpressionValidated).toUpperCase(), m.cx, y + h * 0.35);
-
-    ctx.fillStyle = "rgba(141,216,255,.84)";
-    ctx.fillText("LANDFORM DETECTED " + String(definitionReceipt.landformSystemsDetected).toUpperCase() + " · VALIDATED " + String(definitionReceipt.landformSystemsValidated).toUpperCase(), m.cx, y + h * 0.47);
+    ctx.fillText("RELIEF " + String(definitionReceipt.reliefExpressionValidated).toUpperCase() + " · LANDFORM " + String(definitionReceipt.landformSystemsValidated).toUpperCase(), m.cx, y + h * 0.32);
 
     ctx.fillStyle = "rgba(244,207,131,.86)";
-    ctx.fillText("RIDGES · MOUNTAINS · BASINS · CLIFFS · PLATEAUS · LANDMARKS", m.cx, y + h * 0.59);
+    ctx.fillText("CARRIER DRAWS PACKET HANDOFFS · DOES NOT OWN TRUTH", m.cx, y + h * 0.44);
+
+    ctx.fillStyle = "rgba(167,243,198,.84)";
+    ctx.fillText("NODE FALLBACK " + String(definitionReceipt.definitionNodePointFallbackActive).toUpperCase() + " · INDEX " + definitionReceipt.definitionNodePointIndexCount, m.cx, y + h * 0.56);
 
     ctx.fillStyle = "rgba(182,245,255,.76)";
-    ctx.fillText("CARRIER OWNS DISPLAY ONLY · DOES NOT OWN LANDFORM TRUTH", m.cx, y + h * 0.71);
+    ctx.fillText("RIDGES · MOUNTAINS · BASINS · CLIFFS · PLATEAUS · LANDMARKS", m.cx, y + h * 0.68);
 
     ctx.fillStyle = "rgba(182,245,255,.76)";
-    ctx.fillText("HYDRATION HELD · ACTIVE WATER FALSE", m.cx, y + h * 0.83);
+    ctx.fillText("HYDRATION HELD · ACTIVE WATER FALSE", m.cx, y + h * 0.80);
 
     ctx.fillStyle = "rgba(238,244,255,.72)";
-    ctx.fillText("FINAL VISUAL PASS: FALSE · BUMPS " + ethicalReceipt.bumpAnchorCount, m.cx, y + h * 0.94);
+    ctx.fillText("FINAL VISUAL PASS: FALSE · BUMPS " + ethicalReceipt.bumpAnchorCount, m.cx, y + h * 0.92);
 
     ctx.restore();
   }
@@ -2134,17 +2383,17 @@
     var label = document.querySelector("[data-audralia-planet-stage-label]");
     if (label) {
       if (lens === "surface") {
-        label.innerHTML = "<strong>Surface</strong> → relief and landform definition consumed";
+        label.innerHTML = "<strong>Surface</strong> → restored compositor + packet-handoff definition draw";
       } else if (lens === "hydration") {
         label.innerHTML = "<strong>Hydration</strong> → held / dry future-fill readiness only";
       } else if (lens === "sixth-sense") {
-        label.innerHTML = "<strong>Sixth Sense</strong> → scaffold plus packet-derived landform structure";
+        label.innerHTML = "<strong>Sixth Sense</strong> → scaffold plus packet-derived handoff structure";
       } else if (lens === "lattice") {
         label.innerHTML = "<strong>Lattice</strong> → full-globe raw 256 inspection";
       } else if (lens === "receipt") {
-        label.innerHTML = "<strong>Receipt</strong> → definition-consumption proof";
+        label.innerHTML = "<strong>Receipt</strong> → restored packet-handoff draw proof";
       } else {
-        label.innerHTML = "<strong>Body</strong> → preserved carrier with narrow definition adapter";
+        label.innerHTML = "<strong>Body</strong> → restored baseline with fallback node mapping";
       }
     }
 
@@ -2272,10 +2521,15 @@
     var payload = {
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
+      recoveryBaseline: RECOVERY_BASELINE,
+      heldNonGoverningContract: STRIPPED_HELD_CONTRACT,
       target: FILE,
       route: ROUTE,
 
+      sameFileRenewal: true,
+      shellPreserved: true,
       carrierIsRuntime: true,
+      carrierIsDisplayEndpoint: true,
       directCarrierConsumption: true,
 
       dryRevealedTerrainDetected: state.dryTerrainDetected,
@@ -2283,10 +2537,12 @@
       dryRevealedTerrainValidated: state.dryTerrainValidated,
       dryRevealedTerrainFailureReason: state.dryFailureReason,
 
-      carrierConsumes: "dry terrain + relief-expression packet + landform-systems packet",
+      carrierConsumes: "dry terrain + relief-expression packet + landform-systems packet as display handoffs",
       carrierConsumesDryTerrainAtlas: state.dryTerrainValidated,
       carrierConsumesReliefPacket: definitionReceipt.carrierConsumesReliefPacket,
       carrierConsumesLandformPacket: definitionReceipt.carrierConsumesLandformPacket,
+      carrierConsumesPacketsForDisplayOnly: true,
+      carrierDrawsPacketHandoffs: true,
 
       reliefExpressionDetected: definitionReceipt.reliefExpressionDetected,
       reliefExpressionValidated: definitionReceipt.reliefExpressionValidated,
@@ -2298,9 +2554,18 @@
 
       definitionConsumptionReady: definitionReceipt.definitionConsumptionReady,
       definitionFieldReady: definitionReceipt.definitionFieldReady,
+      definitionNodePointFallbackActive: definitionReceipt.definitionNodePointFallbackActive,
+      definitionNodePointIndexCount: definitionReceipt.definitionNodePointIndexCount,
+      definitionNodePointExactHits: definitionReceipt.definitionNodePointExactHits,
+      definitionNodePointFallbackHits: definitionReceipt.definitionNodePointFallbackHits,
 
       carrierInventsTerrain: false,
       terrainAtlasRemainsSource: true,
+      carrierDoesNotOwnTerrainTruth: true,
+      carrierDoesNotOwnElevationTruth: true,
+      carrierDoesNotOwnReliefTruth: true,
+      carrierDoesNotOwnLandformTruth: true,
+      carrierDoesNotMutateUpstreamMeaning: true,
       carrierShouldNotOwnElevationTruth: true,
       carrierShouldNotOwnReliefTruth: true,
       carrierShouldNotOwnLandformTruth: true,
@@ -2365,9 +2630,10 @@
       finalVisualPassClaim: false,
 
       errors: state.errors.slice(),
-      deployMarker: "AUDRALIA_CARRIER_NARROW_RELIEF_LANDFORM_DEFINITION_CONSUMPTION_DEPLOY_MARKER_v1"
+      deployMarker: "AUDRALIA_CARRIER_BASELINE_RESTORED_PACKET_HANDOFF_DRAW_RENEWAL_DEPLOY_MARKER_v1"
     };
 
+    window.AUDRALIA_CARRIER_BASELINE_RESTORED_PACKET_HANDOFF_DRAW_RENEWAL_STATUS = payload;
     window.AUDRALIA_CARRIER_NARROW_RELIEF_LANDFORM_DEFINITION_CONSUMPTION_STATUS = payload;
     window.AUDRALIA_PLANET_RUNTIME_EXISTING_NODE_LAND_BODY_COMPOSITOR_STATUS = payload;
     window.AUDRALIA_PLANET_RUNTIME_NINE_CONTINENT_ETHICAL_METRIC_BUMP_FIELD_STATUS = payload;
@@ -2377,12 +2643,21 @@
 
     try {
       document.documentElement.dataset.audraliaRuntimeContract = CONTRACT;
+      document.documentElement.dataset.audraliaRuntimePreviousContract = PREVIOUS_CONTRACT;
+      document.documentElement.dataset.audraliaSameFileRenewal = "true";
+      document.documentElement.dataset.audraliaShellPreserved = "true";
+      document.documentElement.dataset.audraliaCarrierConsumesPacketsForDisplayOnly = "true";
+      document.documentElement.dataset.audraliaCarrierDrawsPacketHandoffs = "true";
       document.documentElement.dataset.audraliaCarrierConsumesReliefPacket = String(state.carrierConsumesReliefPacket);
       document.documentElement.dataset.audraliaCarrierConsumesLandformPacket = String(state.carrierConsumesLandformPacket);
       document.documentElement.dataset.audraliaDefinitionConsumptionReady = String(state.definitionConsumptionReady);
       document.documentElement.dataset.audraliaDefinitionFieldReady = String(state.definitionFieldReady);
-      document.documentElement.dataset.audraliaCarrierShouldNotOwnReliefTruth = "true";
-      document.documentElement.dataset.audraliaCarrierShouldNotOwnLandformTruth = "true";
+      document.documentElement.dataset.audraliaDefinitionNodePointFallbackActive = String(state.definitionNodePointFallbackActive);
+      document.documentElement.dataset.audraliaCarrierDoesNotOwnTerrainTruth = "true";
+      document.documentElement.dataset.audraliaCarrierDoesNotOwnElevationTruth = "true";
+      document.documentElement.dataset.audraliaCarrierDoesNotOwnReliefTruth = "true";
+      document.documentElement.dataset.audraliaCarrierDoesNotOwnLandformTruth = "true";
+      document.documentElement.dataset.audraliaCarrierDoesNotMutateUpstreamMeaning = "true";
       document.documentElement.dataset.audraliaCarrierInventsTerrain = "false";
       document.documentElement.dataset.audraliaHydrationHeld = "true";
       document.documentElement.dataset.audraliaActiveHydration = "false";
@@ -2411,12 +2686,20 @@
     state.canvas = document.createElement("canvas");
     state.canvas.setAttribute("data-contract", CONTRACT);
     state.canvas.setAttribute("data-previous-contract", PREVIOUS_CONTRACT);
+    state.canvas.setAttribute("data-recovery-baseline", RECOVERY_BASELINE);
+    state.canvas.setAttribute("data-same-file-renewal", "true");
+    state.canvas.setAttribute("data-shell-preserved", "true");
     state.canvas.setAttribute("data-land-body-compositor-active", "true");
-    state.canvas.setAttribute("data-definition-consumption-adapter", "true");
-    state.canvas.setAttribute("data-carrier-owns-display-only", "true");
+    state.canvas.setAttribute("data-packet-handoff-draw-layer", "true");
+    state.canvas.setAttribute("data-definition-node-point-fallback-active", "true");
+    state.canvas.setAttribute("data-carrier-consumes-packets-for-display-only", "true");
+    state.canvas.setAttribute("data-carrier-draws-packet-handoffs", "true");
+    state.canvas.setAttribute("data-carrier-does-not-own-terrain-truth", "true");
+    state.canvas.setAttribute("data-carrier-does-not-own-elevation-truth", "true");
+    state.canvas.setAttribute("data-carrier-does-not-own-relief-truth", "true");
+    state.canvas.setAttribute("data-carrier-does-not-own-landform-truth", "true");
+    state.canvas.setAttribute("data-carrier-does-not-mutate-upstream-meaning", "true");
     state.canvas.setAttribute("data-carrier-invents-terrain", "false");
-    state.canvas.setAttribute("data-carrier-should-not-own-relief-truth", "true");
-    state.canvas.setAttribute("data-carrier-should-not-own-landform-truth", "true");
     state.canvas.setAttribute("data-hydration-held", "true");
     state.canvas.setAttribute("data-active-hydration", "false");
     state.canvas.setAttribute("data-final-visual-pass-claim", "false");
@@ -2447,11 +2730,14 @@
     state: state,
     contract: CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
+    recoveryBaseline: RECOVERY_BASELINE,
     status: publishStatus,
     detectDryTerrain: detectDryTerrain,
     detectReliefExpression: detectReliefExpression,
     detectLandformSystems: detectLandformSystems,
     refreshDownstreamPackets: refreshDownstreamPackets,
+    rebuildDefinitionNodePointIndex: rebuildDefinitionNodePointIndex,
+    nodeIdToRenderablePoint: nodeIdToRenderablePoint,
     setZoom: setZoom,
     resetCamera: resetCamera,
     getEthicalBumpFieldReceipt: getEthicalBumpFieldReceipt,

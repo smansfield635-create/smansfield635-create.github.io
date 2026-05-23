@@ -1,18 +1,19 @@
 // /assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
-// AUDRALIA_CARRIER_TRIANGULAR_MESH_DISPLAY_CONSUMPTION_TNT_v1
+// AUDRALIA_CARRIER_TRIANGULAR_READABILITY_ADAPTER_PRESERVATION_TNT_v1
 // Full-file replacement.
-// Scope: runtime carrier only.
-// Purpose: preserve the restored visual-weighted packet-handoff carrier while consuming the triangular terrain mesh packet as display-only facet geometry.
+// Previous: AUDRALIA_CARRIER_TRIANGULAR_MESH_DISPLAY_CONSUMPTION_TNT_v1
 // Recovery base: AUDRALIA_CARRIER_VISUAL_WEIGHTING_TERRAIN_RELIEF_READABILITY_RENEWAL_TNT_v1
-// Preserves: dry terrain fallback, ethical bump field, land influence field, continuous land-body compositor, relief/landform overlay drawing, fallback node mapping, zoom, drag, pinch, wheel, lenses, lattice, receipt, hydration hold.
-// Renews: triangular mesh detection, validation, display-only facet rendering, triangle edge-break display, rectangular-grid/dot dominance reduction.
+// Scope: runtime carrier only.
+// Purpose: preserve the existing Audralia derivative expression while using triangular logic only as a readability adapter.
+// Preserves: dry terrain fallback, ethical bump field, land influence field, continuous land-body compositor, relief/landform overlays, fallback node mapping, zoom, drag, pinch, wheel, lenses, lattice, receipt, hydration hold, smooth motion.
+// Renews: triangle consumption posture, hydrosphere-memory lens gate, future-fill surface suppression, triangle color/material authority lock, conservative triangle support, sourceSeatIndexes resolution, direct x/y/z vertex support.
 // Does not own: terrain truth, elevation truth, relief truth, landform truth, beach truth, triangulation authority, hydration truth, climate, ecology, settlement, or final visual pass.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_CARRIER_TRIANGULAR_MESH_DISPLAY_CONSUMPTION_TNT_v1";
-  var PREVIOUS_CONTRACT = "AUDRALIA_CARRIER_VISUAL_WEIGHTING_TERRAIN_RELIEF_READABILITY_RENEWAL_TNT_v1";
+  var CONTRACT = "AUDRALIA_CARRIER_TRIANGULAR_READABILITY_ADAPTER_PRESERVATION_TNT_v1";
+  var PREVIOUS_CONTRACT = "AUDRALIA_CARRIER_TRIANGULAR_MESH_DISPLAY_CONSUMPTION_TNT_v1";
   var RECOVERY_BASELINE = "AUDRALIA_CARRIER_VISUAL_WEIGHTING_TERRAIN_RELIEF_READABILITY_RENEWAL_TNT_v1";
   var FILE = "/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js";
   var ROUTE = "/showroom/globe/audralia/planet/";
@@ -34,7 +35,7 @@
 
   var VISUAL_WEIGHTS = Object.freeze({
     body: Object.freeze({
-      landAlpha: 0.080,
+      landAlpha: 0.092,
       underAlphaScale: 0.34,
       reliefAlphaScale: 0.18,
       landRadius: 0.044,
@@ -45,13 +46,13 @@
       definitionLineAlpha: 0.42,
       definitionLineWidth: 0.82,
       scaffoldAlpha: 0.00,
-      legacyLandScaleWhenMesh: 0.48,
-      triangleFacetAlpha: 0.155,
-      triangleEdgeAlpha: 0.085,
-      triangleBoundaryAlpha: 0.080
+      legacyLandScaleWhenMesh: 0.98,
+      triangleFacetAlpha: 0.000,
+      triangleEdgeAlpha: 0.060,
+      triangleBoundaryAlpha: 0.000
     }),
     surface: Object.freeze({
-      landAlpha: 0.220,
+      landAlpha: 0.245,
       underAlphaScale: 0.30,
       reliefAlphaScale: 0.62,
       landRadius: 0.032,
@@ -59,16 +60,16 @@
       reliefRadius: 0.016,
       definitionNodeAlpha: 0.20,
       definitionStrokeAlpha: 0.24,
-      definitionLineAlpha: 1.18,
-      definitionLineWidth: 1.12,
+      definitionLineAlpha: 1.08,
+      definitionLineWidth: 1.06,
       scaffoldAlpha: 0.00,
-      legacyLandScaleWhenMesh: 0.30,
-      triangleFacetAlpha: 0.355,
-      triangleEdgeAlpha: 0.260,
-      triangleBoundaryAlpha: 0.225
+      legacyLandScaleWhenMesh: 0.92,
+      triangleFacetAlpha: 0.000,
+      triangleEdgeAlpha: 0.135,
+      triangleBoundaryAlpha: 0.000
     }),
     hydration: Object.freeze({
-      landAlpha: 0.105,
+      landAlpha: 0.112,
       underAlphaScale: 0.28,
       reliefAlphaScale: 0.28,
       landRadius: 0.040,
@@ -79,10 +80,10 @@
       definitionLineAlpha: 0.52,
       definitionLineWidth: 0.92,
       scaffoldAlpha: 0.00,
-      legacyLandScaleWhenMesh: 0.42,
-      triangleFacetAlpha: 0.165,
-      triangleEdgeAlpha: 0.160,
-      triangleBoundaryAlpha: 0.255
+      legacyLandScaleWhenMesh: 0.96,
+      triangleFacetAlpha: 0.000,
+      triangleEdgeAlpha: 0.100,
+      triangleBoundaryAlpha: 0.105
     }),
     "sixth-sense": Object.freeze({
       landAlpha: 0.155,
@@ -96,13 +97,13 @@
       definitionLineAlpha: 1.08,
       definitionLineWidth: 1.00,
       scaffoldAlpha: 0.58,
-      legacyLandScaleWhenMesh: 0.58,
-      triangleFacetAlpha: 0.260,
-      triangleEdgeAlpha: 0.420,
-      triangleBoundaryAlpha: 0.310
+      legacyLandScaleWhenMesh: 0.94,
+      triangleFacetAlpha: 0.050,
+      triangleEdgeAlpha: 0.305,
+      triangleBoundaryAlpha: 0.155
     }),
     lattice: Object.freeze({
-      landAlpha: 0.070,
+      landAlpha: 0.074,
       underAlphaScale: 0.24,
       reliefAlphaScale: 0.16,
       landRadius: 0.036,
@@ -113,13 +114,13 @@
       definitionLineAlpha: 0.35,
       definitionLineWidth: 0.80,
       scaffoldAlpha: 0.00,
-      legacyLandScaleWhenMesh: 0.50,
-      triangleFacetAlpha: 0.115,
-      triangleEdgeAlpha: 0.145,
-      triangleBoundaryAlpha: 0.115
+      legacyLandScaleWhenMesh: 0.96,
+      triangleFacetAlpha: 0.000,
+      triangleEdgeAlpha: 0.095,
+      triangleBoundaryAlpha: 0.000
     }),
     receipt: Object.freeze({
-      landAlpha: 0.070,
+      landAlpha: 0.072,
       underAlphaScale: 0.24,
       reliefAlphaScale: 0.16,
       landRadius: 0.038,
@@ -130,10 +131,10 @@
       definitionLineAlpha: 0.36,
       definitionLineWidth: 0.80,
       scaffoldAlpha: 0.00,
-      legacyLandScaleWhenMesh: 0.50,
-      triangleFacetAlpha: 0.110,
-      triangleEdgeAlpha: 0.095,
-      triangleBoundaryAlpha: 0.090
+      legacyLandScaleWhenMesh: 0.96,
+      triangleFacetAlpha: 0.000,
+      triangleEdgeAlpha: 0.075,
+      triangleBoundaryAlpha: 0.000
     })
   });
 
@@ -177,6 +178,65 @@
     STRUCTURAL: Object.freeze({ key: "STRUCTURAL", name: "Structural Node", invariantRadius: 1.18, jurisdiction: "landform_system" }),
     ANCHOR: Object.freeze({ key: "ANCHOR", name: "Anchor Node", invariantRadius: 1.76, jurisdiction: "major_terrain_authority" })
   });
+
+  var MATERIAL_LEAK_TERMS = Object.freeze([
+    "coast",
+    "coastal",
+    "coastline",
+    "shore",
+    "shoreline",
+    "beach",
+    "water",
+    "ocean",
+    "lake",
+    "river",
+    "hydro",
+    "hydration",
+    "future_fill",
+    "future-fill",
+    "future fill",
+    "future shore",
+    "future shoreline",
+    "receiving shore",
+    "active water"
+  ]);
+
+  var FORBIDDEN_SURFACE_TERMS = Object.freeze([
+    "water",
+    "ocean",
+    "lake",
+    "river",
+    "hydro",
+    "hydration",
+    "shore",
+    "shoreline",
+    "coast",
+    "coastline",
+    "beach",
+    "future_fill",
+    "future-fill",
+    "future fill",
+    "future shore",
+    "future shoreline",
+    "receiving shore",
+    "void"
+  ]);
+
+  var LAND_SUPPORT_TERMS = Object.freeze([
+    "land",
+    "ridge",
+    "mountain",
+    "plateau",
+    "basin",
+    "valley",
+    "stable",
+    "midland",
+    "lowland",
+    "highland",
+    "summit",
+    "cliff",
+    "escarpment"
+  ]);
 
   var state = {
     stage: null,
@@ -332,6 +392,14 @@
     }
   }
 
+  function hasTextTerm(text, terms) {
+    var value = String(text || "").toLowerCase();
+    for (var i = 0; i < terms.length; i += 1) {
+      if (value.indexOf(terms[i]) >= 0) return true;
+    }
+    return false;
+  }
+
   function lonLatPoint(lonDeg, latDeg) {
     var lon = lonDeg * Math.PI / 180;
     var lat = latDeg * Math.PI / 180;
@@ -472,6 +540,17 @@
     return Math.sqrt(dx * dx + dy * dy);
   }
 
+  function dryPacket() {
+    return state.dryTerrainPacket ||
+      (state.dryCarrierPacket && state.dryCarrierPacket.planetPhysicalTerrainPacket) ||
+      null;
+  }
+
+  function dryNodes() {
+    var packet = dryPacket();
+    return packet && Array.isArray(packet.nodes) ? packet.nodes : [];
+  }
+
   function detectDryTerrain() {
     var api = firstGlobal(DRY_TERRAIN_GLOBALS);
 
@@ -540,6 +619,7 @@
 
     if (!api) {
       state.reliefFailureReason = "relief expression child missing";
+      state.carrierConsumesReliefPacket = false;
       rebuildDefinitionField();
       publishStatus();
       requestRender();
@@ -548,6 +628,7 @@
 
     if (typeof api.status !== "function" || typeof api.getCarrierReliefPacket !== "function") {
       state.reliefFailureReason = "relief expression API incomplete";
+      state.carrierConsumesReliefPacket = false;
       rebuildDefinitionField();
       publishStatus();
       requestRender();
@@ -590,6 +671,7 @@
 
     if (!api) {
       state.landformFailureReason = "landform systems child missing";
+      state.carrierConsumesLandformPacket = false;
       rebuildDefinitionField();
       publishStatus();
       requestRender();
@@ -598,6 +680,7 @@
 
     if (typeof api.status !== "function" || typeof api.getCarrierLandformPacket !== "function") {
       state.landformFailureReason = "landform systems API incomplete";
+      state.carrierConsumesLandformPacket = false;
       rebuildDefinitionField();
       publishStatus();
       requestRender();
@@ -630,18 +713,106 @@
     return state.landformValidated;
   }
 
+  function normalizeTriangleFaces(packet) {
+    if (!packet) return [];
+
+    if (Array.isArray(packet.meshFaces)) return packet.meshFaces;
+    if (Array.isArray(packet.triangleFaces)) return packet.triangleFaces;
+    if (Array.isArray(packet.triangleFacets)) return packet.triangleFacets;
+
+    if (Array.isArray(packet.landFacets) || Array.isArray(packet.edgeFacets) || Array.isArray(packet.transitionFacets)) {
+      return []
+        .concat(Array.isArray(packet.landFacets) ? packet.landFacets : [])
+        .concat(Array.isArray(packet.edgeFacets) ? packet.edgeFacets : [])
+        .concat(Array.isArray(packet.transitionFacets) ? packet.transitionFacets : []);
+    }
+
+    return [];
+  }
+
+  function normalizeTriangleVertices(packet) {
+    if (!packet) return [];
+    if (Array.isArray(packet.meshVertices)) return packet.meshVertices;
+    if (Array.isArray(packet.vertices)) return packet.vertices;
+    if (Array.isArray(packet.triangleVertices)) return packet.triangleVertices;
+    return [];
+  }
+
+  function normalizeTriangleEdges(packet) {
+    if (!packet) return [];
+    if (Array.isArray(packet.meshEdgeBreaks)) return packet.meshEdgeBreaks;
+    if (Array.isArray(packet.triangleEdgeBreaks)) return packet.triangleEdgeBreaks;
+    if (Array.isArray(packet.edgeBreaks)) return packet.edgeBreaks;
+    if (Array.isArray(packet.triangleAdjacency)) return packet.triangleAdjacency;
+    return [];
+  }
+
+  function packetFlagFalseOrAbsent(packet, key) {
+    if (!packet) return true;
+    return packet[key] !== true;
+  }
+
+  function packetFlagTrueOrAbsent(packet, key) {
+    if (!packet) return true;
+    return packet[key] !== false;
+  }
+
+  function trianglePacketOwnershipSafe(packet) {
+    if (!packet) return false;
+
+    return Boolean(
+      packetFlagFalseOrAbsent(packet, "activeHydration") &&
+      packetFlagFalseOrAbsent(packet, "activeWater") &&
+      packetFlagFalseOrAbsent(packet, "finalVisualPassClaim") &&
+      packetFlagFalseOrAbsent(packet, "carrierOwnsTriangulation") &&
+      packetFlagFalseOrAbsent(packet, "carrierGeneratesMesh") &&
+      packetFlagFalseOrAbsent(packet, "triangleLogicIsMaterialAuthority") &&
+      packetFlagFalseOrAbsent(packet, "sourceTerrainMutated") &&
+      packetFlagFalseOrAbsent(packet, "elevationTruthMutated") &&
+      packetFlagFalseOrAbsent(packet, "reliefTruthMutated") &&
+      packetFlagFalseOrAbsent(packet, "landformTruthMutated") &&
+      packetFlagFalseOrAbsent(packet, "beachTruthMutated") &&
+      packetFlagFalseOrAbsent(packet, "hydrationTruthMutated") &&
+      packetFlagTrueOrAbsent(packet, "carrierMayConsume") &&
+      packetFlagTrueOrAbsent(packet, "carrierShouldDisplayOnly") &&
+      packetFlagTrueOrAbsent(packet, "carrierShouldNotOwnTerrainTruth") &&
+      packetFlagTrueOrAbsent(packet, "carrierShouldNotOwnTriangulation")
+    );
+  }
+
   function rebuildTriangleMeshVertexIndex() {
     var index = {};
     var packet = state.triangularMeshCarrierPacket || {};
-    var vertices = Array.isArray(packet.meshVertices) ? packet.meshVertices : [];
+    var vertices = normalizeTriangleVertices(packet);
 
-    vertices.forEach(function (vertex) {
-      if (vertex && vertex.vertexId) index[String(vertex.vertexId)] = vertex;
+    vertices.forEach(function (vertex, i) {
+      if (!vertex) return;
+
+      if (vertex.vertexId) index[String(vertex.vertexId)] = vertex;
+      if (vertex.id) index[String(vertex.id)] = vertex;
+      if (vertex.nodeId) index[String(vertex.nodeId)] = vertex;
+      if (vertex.seatIndex !== undefined && vertex.seatIndex !== null) index[String(vertex.seatIndex)] = vertex;
+      if (vertex.sourceSeatIndex !== undefined && vertex.sourceSeatIndex !== null) index["source-seat-" + String(vertex.sourceSeatIndex)] = vertex;
+      index["vertex-" + i] = vertex;
+      index[String(i)] = vertex;
     });
 
     state.triangleMeshVertexById = index;
     state.triangleMeshVertexCount = vertices.length;
     return index;
+  }
+
+  function faceHasResolvableReferences(face) {
+    if (!face) return false;
+
+    if (Array.isArray(face.vertices) && face.vertices.length >= 3) return true;
+    if (Array.isArray(face.vertexIds) && face.vertexIds.length >= 3) return true;
+    if (Array.isArray(face.sourceNodeIds) && face.sourceNodeIds.length >= 3) return true;
+    if (Array.isArray(face.sourceSeatIndexes) && face.sourceSeatIndexes.length >= 3) return true;
+    if (Array.isArray(face.sourceIndexes) && face.sourceIndexes.length >= 3) return true;
+    if (Array.isArray(face.nodeIds) && face.nodeIds.length >= 3) return true;
+
+    return false;
   }
 
   function detectTriangularMesh() {
@@ -671,6 +842,8 @@
       packet = safeCall("triangularMesh", api, "getCarrierTriangleMeshPacket", "audralia-runtime-carrier", { compact: false });
     } else if (typeof api.getTriangularTerrainMeshPacket === "function") {
       packet = safeCall("triangularMesh", api, "getTriangularTerrainMeshPacket", "audralia-runtime-carrier", { compact: false });
+    } else if (typeof api.getTriangleMeshPacket === "function") {
+      packet = safeCall("triangularMesh", api, "getTriangleMeshPacket", "audralia-runtime-carrier", { compact: false });
     } else {
       state.triangleMeshFailureReason = "triangular terrain mesh API incomplete";
       publishStatus();
@@ -680,38 +853,51 @@
 
     state.triangularMeshCarrierPacket = packet;
 
-    var hasVertices = Boolean(packet && Array.isArray(packet.meshVertices) && packet.meshVertices.length > 0);
-    var hasFaces = Boolean(packet && Array.isArray(packet.meshFaces) && packet.meshFaces.length > 0);
-    var hydrationHeld = Boolean(packet && packet.activeHydration === false && packet.activeWater === false);
-    var finalPassFalse = Boolean(packet && packet.finalVisualPassClaim === false);
-    var meshReady = Boolean(packet && packet.triangularTerrainMeshReady === true);
-    var mayConsume = Boolean(!packet || packet.carrierMayConsume === undefined || packet.carrierMayConsume === true);
-    var displayOnly = Boolean(!packet || packet.carrierShouldDisplayOnly === undefined || packet.carrierShouldDisplayOnly === true);
-    var noTriangulationOwnership = Boolean(!packet || packet.carrierShouldNotOwnTriangulation === undefined || packet.carrierShouldNotOwnTriangulation === true);
-    var noTerrainOwnership = Boolean(!packet || packet.carrierShouldNotOwnTerrainTruth === undefined || packet.carrierShouldNotOwnTerrainTruth === true);
+    var faces = normalizeTriangleFaces(packet);
+    var vertices = normalizeTriangleVertices(packet);
+    var edges = normalizeTriangleEdges(packet);
+    var ownershipSafe = trianglePacketOwnershipSafe(packet);
+    var meshReady = Boolean(
+      packet &&
+      (
+        packet.triangularTerrainMeshReady === true ||
+        packet.triangleMeshReady === true ||
+        packet.triangularMeshValidated === true ||
+        packet.triangleMeshDisplayReady === true ||
+        faces.length
+      )
+    );
+
+    var hasDisplayableFaceData = Boolean(
+      faces.length &&
+      (
+        vertices.length ||
+        faces.some(faceHasResolvableReferences)
+      )
+    );
 
     state.triangularMeshValidated = Boolean(
       packet &&
       meshReady &&
-      hasVertices &&
-      hasFaces &&
-      hydrationHeld &&
-      finalPassFalse &&
-      mayConsume &&
-      displayOnly &&
-      noTriangulationOwnership &&
-      noTerrainOwnership
+      hasDisplayableFaceData &&
+      ownershipSafe
     );
 
     if (state.triangularMeshValidated) {
       rebuildTriangleMeshVertexIndex();
-      state.triangleMeshFaceCount = packet.meshFaces.length;
-      state.triangleMeshEdgeBreakCount = Array.isArray(packet.meshEdgeBreaks) ? packet.meshEdgeBreaks.length : 0;
+      state.triangleMeshFaceCount = faces.length;
+      state.triangleMeshEdgeBreakCount = edges.length;
       state.triangleMeshFailureReason = "";
       state.carrierConsumesTriangularMesh = true;
       state.triangleMeshDisplayReady = true;
     } else {
-      state.triangleMeshFailureReason = "triangular mesh packet validation failed";
+      if (!ownershipSafe) {
+        state.triangleMeshFailureReason = "triangular mesh packet violates display-only/no-ownership posture";
+      } else if (!hasDisplayableFaceData) {
+        state.triangleMeshFailureReason = "triangular mesh packet has no displayable face references";
+      } else {
+        state.triangleMeshFailureReason = "triangular mesh packet validation failed";
+      }
     }
 
     publishStatus();
@@ -729,17 +915,6 @@
     rebuildDefinitionNodePointIndex();
     publishStatus();
     requestRender();
-  }
-
-  function dryPacket() {
-    return state.dryTerrainPacket ||
-      (state.dryCarrierPacket && state.dryCarrierPacket.planetPhysicalTerrainPacket) ||
-      null;
-  }
-
-  function dryNodes() {
-    var packet = dryPacket();
-    return packet && Array.isArray(packet.nodes) ? packet.nodes : [];
   }
 
   function buildNineContinentEthicalProfiles() {
@@ -1480,7 +1655,7 @@
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       recoveryBaseline: RECOVERY_BASELINE,
-      packetType: "runtime_derived_visible_land_body_packet_with_triangular_mesh_display_consumption",
+      packetType: "runtime_derived_visible_land_body_packet_with_triangular_readability_adapter",
       sourceSeatCount: SOURCE_SEAT_COUNT,
       ethicalBumpAnchorCount: state.ethicalBumpAnchors.length,
       fieldSampleCount: samples.length,
@@ -1495,19 +1670,33 @@
       carrierConsumesPacketsForDisplayOnly: true,
       carrierDrawsPacketHandoffs: true,
       carrierConsumesTriangularMesh: state.carrierConsumesTriangularMesh,
-      carrierDisplaysMeshOnly: true,
-      carrierGeneratesMesh: false,
-      carrierOwnsTriangulation: false,
-      triangularMeshChildOwnsTriangulation: true,
+      triangularReadabilityAdapterActive: true,
+      triangularMeshDisplayConsumptionDeprecated: true,
+      triangleLogicIsAdapter: true,
+      triangleLogicIsMaterialAuthority: false,
+      carrierMayUseTrianglesForReadability: true,
+      carrierMayUseTriangleColor: false,
+      carrierMayTintSurfaceFromTriangles: false,
+      carrierMayColorVoidFromTriangles: false,
+      carrierMayDrawTriangleFacetFillAsMaterial: false,
+      carrierMayDrawHydrationFromTriangles: false,
+      carrierMayDrawBeachFromTriangles: false,
+      carrierMayDrawCoastlineFromTriangles: false,
+      carrierMayDrawFutureFillAsWater: false,
+      carrierMayBlendLandAndVoidFromTriangles: false,
+      carrierMayReplaceLandCompositorWithTriangles: false,
+      existingLandCompositorPrimary: true,
+      triangleReadabilitySecondary: true,
+      carrierPreservesDerivativeExpression: true,
+      landVoidSeparationProtected: true,
+      voidRemainsVoid: true,
       triangularMeshDisplayReady: state.triangleMeshDisplayReady,
       triangleMeshVertexCount: state.triangleMeshVertexCount,
       triangleMeshFaceCount: state.triangleMeshFaceCount,
       triangleMeshEdgeBreakCount: state.triangleMeshEdgeBreakCount,
       visualWeightingRenewalActive: true,
-      triangularMeshDisplayConsumptionActive: true,
       bodyDiagnosticScaffoldReduced: true,
       surfaceTerrainReliefReadable: true,
-      surfaceTriangleFacetReadActive: state.triangleMeshDisplayReady,
       sixthSenseDiagnosticScaffoldPreserved: true,
       terrainReliefDrawWeightingActive: true,
       carrierConsumesReliefPacket: state.carrierConsumesReliefPacket,
@@ -1515,6 +1704,8 @@
       definitionFieldReady: state.definitionFieldReady,
       definitionNodePointFallbackActive: state.definitionNodePointFallbackActive,
       raw256VisibleOnlyInLattice: true,
+      activeHydration: false,
+      activeWater: false,
       finalVisualPassClaim: false
     });
   }
@@ -1603,7 +1794,7 @@
   }
 
   function indexDefinitionPoint(index, key, point) {
-    if (!key || !point) return;
+    if (key === undefined || key === null || !point) return;
     index[String(key)] = point;
   }
 
@@ -1722,8 +1913,10 @@
         indexDefinitionPoint(index, sample.parentNodeId, point);
         indexDefinitionPoint(index, sample.nodeId, point);
         indexDefinitionPoint(index, sample.seatKey, point);
+        indexDefinitionPoint(index, sample.seatIndex, point);
         indexDefinitionPoint(index, "relief-" + i, point);
         indexDefinitionPoint(index, "source-" + i, point);
+        indexDefinitionPoint(index, String(i), point);
       });
     }
 
@@ -1738,6 +1931,7 @@
       indexDefinitionPoint(index, node.seatIndex, point);
       indexDefinitionPoint(index, "node-" + i, point);
       indexDefinitionPoint(index, "source-" + i, point);
+      indexDefinitionPoint(index, "source-seat-" + i, point);
       indexDefinitionPoint(index, String(i), point);
     });
 
@@ -1748,6 +1942,7 @@
       indexDefinitionPoint(index, anchor.sourceNodeId, point);
       indexDefinitionPoint(index, anchor.bumpId, point);
       indexDefinitionPoint(index, "source-" + anchor.sourceSeatIndex, point);
+      indexDefinitionPoint(index, "source-seat-" + anchor.sourceSeatIndex, point);
       indexDefinitionPoint(index, anchor.sourceSeatIndex, point);
     });
 
@@ -1848,8 +2043,13 @@
       technologySeedOnly: true,
       raw256VisibleOnlyInLattice: true,
       visualWeightingRenewalActive: true,
-      triangularMeshDisplayConsumptionActive: state.triangleMeshDisplayReady,
+      triangularReadabilityAdapterActive: true,
+      triangularMeshDisplayConsumptionDeprecated: true,
+      triangleLogicIsAdapter: true,
+      triangleLogicIsMaterialAuthority: false,
       hydrationHeld: true,
+      activeHydration: false,
+      activeWater: false,
       carrierInventsTerrain: false,
       carrierGeneratesMesh: false,
       carrierOwnsTriangulation: false,
@@ -1877,17 +2077,27 @@
       carrierConsumesTriangularMesh: state.carrierConsumesTriangularMesh,
       triangleMeshDisplayReady: state.triangleMeshDisplayReady,
       visualWeightingRenewalActive: true,
-      triangularMeshDisplayConsumptionActive: state.triangleMeshDisplayReady,
+      triangularReadabilityAdapterActive: true,
+      triangularMeshDisplayConsumptionDeprecated: true,
       bodyDiagnosticScaffoldReduced: true,
       surfaceTerrainReliefReadable: true,
-      surfaceTriangleFacetReadActive: state.triangleMeshDisplayReady,
+      existingLandCompositorPrimary: true,
+      triangleReadabilitySecondary: true,
+      carrierPreservesDerivativeExpression: true,
+      landVoidSeparationProtected: true,
+      voidRemainsVoid: true,
       sixthSenseDiagnosticScaffoldPreserved: true,
       carrierInventsTerrain: false,
       carrierGeneratesMesh: false,
       carrierOwnsTriangulation: false,
-      carrierDisplaysMeshOnly: true,
-      triangularMeshChildOwnsTriangulation: true,
+      carrierMayUseTriangleColor: false,
+      carrierMayTintSurfaceFromTriangles: false,
+      carrierMayColorVoidFromTriangles: false,
+      carrierMayDrawTriangleFacetFillAsMaterial: false,
+      carrierMayReplaceLandCompositorWithTriangles: false,
       hydrationHeld: true,
+      activeHydration: false,
+      activeWater: false,
       finalVisualPassClaim: false
     };
   }
@@ -1916,7 +2126,21 @@
       carrierConsumesPacketsForDisplayOnly: true,
       carrierDrawsPacketHandoffs: true,
       visualWeightingRenewalActive: true,
-      triangularMeshDisplayConsumptionActive: state.triangleMeshDisplayReady,
+      triangularReadabilityAdapterActive: true,
+      triangularMeshDisplayConsumptionDeprecated: true,
+      triangleLogicIsAdapter: true,
+      triangleLogicIsMaterialAuthority: false,
+      carrierMayUseTrianglesForReadability: true,
+      carrierMayUseTriangleColor: false,
+      carrierMayTintSurfaceFromTriangles: false,
+      carrierMayColorVoidFromTriangles: false,
+      carrierMayDrawTriangleFacetFillAsMaterial: false,
+      carrierMayDrawHydrationFromTriangles: false,
+      carrierMayDrawBeachFromTriangles: false,
+      carrierMayDrawCoastlineFromTriangles: false,
+      carrierMayDrawFutureFillAsWater: false,
+      carrierMayBlendLandAndVoidFromTriangles: false,
+      carrierMayReplaceLandCompositorWithTriangles: false,
       bodyDiagnosticScaffoldReduced: true,
       surfaceTerrainReliefReadable: true,
       sixthSenseDiagnosticScaffoldPreserved: true,
@@ -1939,8 +2163,16 @@
       carrierShouldNotOwnLandformTruth: true,
       carrierOwnsTriangulation: false,
       carrierGeneratesMesh: false,
-      carrierDisplaysMeshOnly: true,
-      triangularMeshChildOwnsTriangulation: true,
+      carrierPreservesDerivativeExpression: true,
+      existingLandCompositorPrimary: true,
+      triangleReadabilitySecondary: true,
+      landVoidSeparationProtected: true,
+      voidRemainsVoid: true,
+      hydrosphereMemoryLensGated: true,
+      hydrosphereMemorySuppressedInBody: true,
+      hydrosphereMemorySuppressedInSurface: true,
+      futureFillSuppressedInSurface: true,
+      futureFillHydrationLensOnly: true,
       hydrationHeld: true,
       activeHydration: false,
       activeWater: false,
@@ -2032,19 +2264,21 @@
     ctx.restore();
   }
 
-  function drawHydrosphereMemoryUnderlayer() {
+  function drawHydrosphereMemoryUnderlayer(mode) {
+    if (mode !== "hydration" && mode !== "sixth-sense" && mode !== "receipt") return;
+
     var ctx = state.ctx;
     var m = metrics();
-    var reduced = state.definitionConsumptionReady ? 0.62 : 1;
+    var diagnosticScale = mode === "hydration" ? 0.72 : mode === "sixth-sense" ? 0.46 : 0.30;
 
     ctx.save();
     clipSphere();
 
     var memory = ctx.createRadialGradient(m.cx - m.r * 0.34, m.cy - m.r * 0.28, 0, m.cx, m.cy, m.r * 1.08);
-    memory.addColorStop(0.00, "rgba(105,184,212," + (0.19 * reduced).toFixed(3) + ")");
-    memory.addColorStop(0.28, "rgba(37,101,148," + (0.145 * reduced).toFixed(3) + ")");
-    memory.addColorStop(0.58, "rgba(8,42,91," + (0.115 * reduced).toFixed(3) + ")");
-    memory.addColorStop(1.00, "rgba(0,12,38," + (0.155 * reduced).toFixed(3) + ")");
+    memory.addColorStop(0.00, "rgba(105,184,212," + (0.095 * diagnosticScale).toFixed(3) + ")");
+    memory.addColorStop(0.28, "rgba(37,101,148," + (0.070 * diagnosticScale).toFixed(3) + ")");
+    memory.addColorStop(0.58, "rgba(8,42,91," + (0.058 * diagnosticScale).toFixed(3) + ")");
+    memory.addColorStop(1.00, "rgba(0,12,38," + (0.070 * diagnosticScale).toFixed(3) + ")");
 
     ctx.beginPath();
     ctx.arc(m.cx, m.cy, m.r * 0.995, 0, TAU);
@@ -2103,10 +2337,11 @@
 
     color = mixColor(color, height > 0.58 ? high : low, height > 0.58 ? (height - 0.58) * 0.58 : (0.58 - height) * 0.44);
     color = mixColor(color, edge, boundary * 0.22);
-    color = mixColor(color, { r: 16, g: 26, b: 30 }, futureFill * 0.26);
 
     if (pass === "relief") {
       color = mixColor(color, high, clamp(relief * 0.58, 0, 0.44));
+    } else if (state.activeLens === "hydration" || state.activeLens === "sixth-sense") {
+      color = mixColor(color, { r: 16, g: 26, b: 30 }, futureFill * 0.16);
     }
 
     return color;
@@ -2136,7 +2371,7 @@
     var radius = Math.max(3.2, baseRadius * p.scale * (0.84 + presence * 0.34 + height * 0.10));
 
     var alphaBase = visual.landAlpha;
-    var alpha = clamp(alphaBase * (0.54 + presence * 0.70 + height * 0.16), 0.020, 0.42);
+    var alpha = clamp(alphaBase * (0.54 + presence * 0.70 + height * 0.16), 0.020, 0.48);
 
     if (state.triangleMeshDisplayReady && (mode === "body" || mode === "surface" || mode === "hydration" || mode === "lattice" || mode === "receipt")) {
       alpha *= visual.legacyLandScaleWhenMesh;
@@ -2154,9 +2389,9 @@
       radius
     );
 
-    if (futureFill > 0.38 && pass !== "relief") {
-      gradient.addColorStop(0.00, rgba(color, alpha * 0.82));
-      gradient.addColorStop(0.42, "rgba(17,28,30," + clamp(alpha * 0.88, 0, 0.32).toFixed(3) + ")");
+    if ((mode === "hydration" || mode === "sixth-sense") && futureFill > 0.38 && pass !== "relief") {
+      gradient.addColorStop(0.00, rgba(color, alpha * 0.78));
+      gradient.addColorStop(0.42, "rgba(17,28,30," + clamp(alpha * 0.66, 0, 0.24).toFixed(3) + ")");
       gradient.addColorStop(1.00, "rgba(17,28,30,0.000)");
     } else {
       gradient.addColorStop(0.00, rgba(color, alpha));
@@ -2186,8 +2421,10 @@
       drawLandBlob(samples[j], mode, "main");
     }
 
-    if ((mode === "surface" || mode === "sixth-sense") && !state.triangleMeshDisplayReady) {
-      for (var k = 0; k < samples.length; k += 1) {
+    if (mode === "surface" || mode === "sixth-sense") {
+      var stride = mode === "surface" && state.triangleMeshDisplayReady ? 2 : 1;
+
+      for (var k = 0; k < samples.length; k += stride) {
         var sample = samples[k];
         if (sample.relief > 0.15 || sample.height > 0.60 || sample.boundaryPressure > 0.44) {
           drawLandBlob(sample, mode, "relief");
@@ -2195,16 +2432,19 @@
       }
     }
 
-    if (mode === "sixth-sense" && state.triangleMeshDisplayReady) {
-      for (var q = 0; q < samples.length; q += 7) {
-        var diagnosticSample = samples[q];
-        if (diagnosticSample.relief > 0.18 || diagnosticSample.height > 0.62 || diagnosticSample.boundaryPressure > 0.46) {
-          drawLandBlob(diagnosticSample, mode, "relief");
-        }
-      }
-    }
-
     state.ctx.restore();
+  }
+
+  function plausibleSphereCoordinate(vertex) {
+    var x = Number(vertex && vertex.x);
+    var y = Number(vertex && vertex.y);
+    var z = Number(vertex && vertex.z);
+
+    if (!Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(z)) return false;
+    if (Math.abs(x) > 1.35 || Math.abs(y) > 1.35 || Math.abs(z) > 1.35) return false;
+
+    var length = Math.sqrt(x * x + y * y + z * z);
+    return length > 0.45 && length < 1.55;
   }
 
   function triangleVertexPoint(vertex) {
@@ -2223,11 +2463,24 @@
       };
     }
 
+    if (plausibleSphereCoordinate(vertex)) {
+      var x = Number(vertex.x);
+      var y = Number(vertex.y);
+      var z = Number(vertex.z);
+      var length = Math.sqrt(x * x + y * y + z * z) || 1;
+
+      return {
+        x: x / length,
+        y: y / length,
+        z: z / length
+      };
+    }
+
     if (Number.isFinite(Number(vertex.lon)) && Number.isFinite(Number(vertex.lat))) {
       return lonLatPoint(Number(vertex.lon), Number(vertex.lat));
     }
 
-    if (Number.isFinite(Number(vertex.x)) && Number.isFinite(Number(vertex.y))) {
+    if (Number.isFinite(Number(vertex.x)) && Number.isFinite(Number(vertex.y)) && !Number.isFinite(Number(vertex.z))) {
       var ll = terrainSeatToLonLat(Number(vertex.x), Number(vertex.y));
       return lonLatPoint(ll.lon, ll.lat);
     }
@@ -2235,57 +2488,186 @@
     return null;
   }
 
-  function triangleFaceVertices(face) {
-    if (!face || !Array.isArray(face.vertexIds)) return [];
+  function sourceIndexToVertex(sourceIndex) {
+    var nodes = dryNodes();
+    var index = Number(sourceIndex);
 
-    var vertices = [];
-    face.vertexIds.slice(0, 3).forEach(function (vertexId) {
-      var vertex = state.triangleMeshVertexById[String(vertexId)];
-      if (vertex) vertices.push(vertex);
-    });
+    if (!Number.isFinite(index) || !nodes.length) return null;
 
-    return vertices.length === 3 ? vertices : [];
+    index = ((Math.round(index) % nodes.length) + nodes.length) % nodes.length;
+
+    var point = nodePointFromDryNode(nodes[index], index);
+    if (!point) return null;
+
+    return {
+      lon: point.lon,
+      lat: point.lat,
+      point: point.point,
+      nodeId: point.nodeId,
+      sourceIndex: index
+    };
   }
 
-  function triangleTerrainBaseColor(face) {
-    var terrainClass = String(face.terrainClass || face.landformClass || "");
-    var coastalClass = String(face.coastalClass || "");
-    var base = { r: 108, g: 122, b: 82 };
+  function triangleFaceVertices(face) {
+    if (!face) return [];
 
-    if (terrainClass.indexOf("mountain") >= 0) base = { r: 174, g: 151, b: 105 };
-    else if (terrainClass.indexOf("ridge") >= 0) base = { r: 153, g: 136, b: 93 };
-    else if (terrainClass.indexOf("plateau") >= 0) base = { r: 138, g: 130, b: 86 };
-    else if (terrainClass.indexOf("cliff") >= 0) base = { r: 88, g: 69, b: 50 };
-    else if (terrainClass.indexOf("basin") >= 0) base = { r: 55, g: 75, b: 62 };
-    else if (terrainClass.indexOf("valley") >= 0) base = { r: 67, g: 91, b: 67 };
-    else if (terrainClass.indexOf("coastal_shelf") >= 0 || coastalClass.indexOf("coastal") >= 0) base = { r: 72, g: 106, b: 102 };
-    else if (terrainClass.indexOf("beach") >= 0 || coastalClass.indexOf("beach") >= 0) base = { r: 166, g: 139, b: 89 };
-    else if (terrainClass.indexOf("future_fill") >= 0 || coastalClass.indexOf("future_fill") >= 0) base = { r: 58, g: 88, b: 96 };
-    else if (terrainClass.indexOf("lowland") >= 0) base = { r: 48, g: 70, b: 52 };
-    else if (terrainClass.indexOf("midland") >= 0) base = { r: 93, g: 111, b: 72 };
-    else if (terrainClass.indexOf("stable") >= 0) base = { r: 105, g: 121, b: 79 };
+    if (Array.isArray(face.vertices) && face.vertices.length >= 3) {
+      var direct = [];
 
-    var elevation = Number(face.averageElevation || 0.5);
-    var shade = Number(face.shadeWeight || 0.35);
-    var relief = Number(face.reliefIntensity || 0);
-    var cliff = Number(face.cliffPressure || 0);
-    var futureFill = Number(face.futureFillScore || 0);
-    var coastal = Number(face.coastalReadinessScore || 0);
-    var beach = Number(face.beachEligibilityScore || 0);
+      face.vertices.slice(0, 3).forEach(function (entry) {
+        if (entry && typeof entry === "object") {
+          direct.push(entry);
+        } else {
+          var vertex = state.triangleMeshVertexById[String(entry)];
+          if (vertex) direct.push(vertex);
+        }
+      });
 
-    base = mixColor(base, { r: 208, g: 178, b: 116 }, clamp((elevation - 0.52) * 0.42 + shade * 0.12, 0, 0.32));
-    base = mixColor(base, { r: 20, g: 31, b: 31 }, clamp((0.54 - elevation) * 0.32 + futureFill * 0.12, 0, 0.30));
-    base = mixColor(base, { r: 78, g: 58, b: 43 }, clamp(cliff * 0.28 + relief * 0.08, 0, 0.34));
-    base = mixColor(base, { r: 92, g: 124, b: 121 }, clamp(coastal * 0.16, 0, 0.18));
-    base = mixColor(base, { r: 185, g: 154, b: 94 }, clamp(beach * 0.18, 0, 0.18));
+      return direct.length === 3 ? direct : [];
+    }
 
-    return base;
+    if (Array.isArray(face.vertexIds)) {
+      var vertices = [];
+      face.vertexIds.slice(0, 3).forEach(function (vertexId) {
+        var vertex = state.triangleMeshVertexById[String(vertexId)];
+        if (vertex) vertices.push(vertex);
+      });
+
+      return vertices.length === 3 ? vertices : [];
+    }
+
+    if (Array.isArray(face.sourceNodeIds) || Array.isArray(face.nodeIds)) {
+      var ids = Array.isArray(face.sourceNodeIds) ? face.sourceNodeIds : face.nodeIds;
+      var points = nodeIdsToRenderablePoints(ids, 3);
+
+      return points.length === 3 ? points.map(function (point) {
+        return {
+          lon: point.lon,
+          lat: point.lat,
+          point: point.point,
+          nodeId: point.nodeId
+        };
+      }) : [];
+    }
+
+    if (Array.isArray(face.sourceSeatIndexes)) {
+      var seatVertices = [];
+
+      face.sourceSeatIndexes.slice(0, 3).forEach(function (sourceIndex) {
+        var vertex = sourceIndexToVertex(sourceIndex);
+        if (vertex) seatVertices.push(vertex);
+      });
+
+      return seatVertices.length === 3 ? seatVertices : [];
+    }
+
+    if (Array.isArray(face.sourceIndexes)) {
+      var sourceVertices = [];
+
+      face.sourceIndexes.slice(0, 3).forEach(function (sourceIndex) {
+        var vertex = sourceIndexToVertex(sourceIndex);
+        if (vertex) sourceVertices.push(vertex);
+      });
+
+      return sourceVertices.length === 3 ? sourceVertices : [];
+    }
+
+    return [];
+  }
+
+  function triangleFaceLabel(face) {
+    return String(
+      (face && (
+        face.classification ||
+        face.terrainClass ||
+        face.landformClass ||
+        face.coastalClass ||
+        face.zoneType ||
+        face.faceClass ||
+        face.role ||
+        face.kind ||
+        ""
+      )) || ""
+    ).toLowerCase();
+  }
+
+  function faceVerticesLandSupported(face) {
+    var vertices = triangleFaceVertices(face);
+    if (vertices.length !== 3) return false;
+
+    var totalLand = 0;
+    var checked = 0;
+
+    vertices.forEach(function (vertex) {
+      var point = triangleVertexPoint(vertex);
+      if (!point) return;
+
+      var lon = Number(vertex.lon);
+      var lat = Number(vertex.lat);
+
+      if (!Number.isFinite(lon) || !Number.isFinite(lat)) {
+        if (Number.isFinite(Number(vertex.x)) && Number.isFinite(Number(vertex.y)) && !Number.isFinite(Number(vertex.z))) {
+          var ll = terrainSeatToLonLat(Number(vertex.x), Number(vertex.y));
+          lon = ll.lon;
+          lat = ll.lat;
+        } else {
+          return;
+        }
+      }
+
+      var fx = ((lon + 180) / 360) * LAND_FIELD_COLS;
+      var fy = ((82 - lat) / 164) * (LAND_FIELD_ROWS - 1);
+      var sample = sampleNearestLandField(fx, fy);
+
+      if (sample) {
+        totalLand += Number(sample.landPresence || 0);
+        checked += 1;
+      }
+    });
+
+    return checked >= 2 && totalLand / checked > 0.16;
+  }
+
+  function triangleFacetSupportedByLand(face) {
+    if (!face) return false;
+
+    var label = triangleFaceLabel(face);
+
+    if (hasTextTerm(label, FORBIDDEN_SURFACE_TERMS)) return false;
+
+    if (Number.isFinite(Number(face.landPresence))) return Number(face.landPresence) > 0.42;
+    if (Number.isFinite(Number(face.voidPresence))) return Number(face.voidPresence) < 0.35;
+    if (Number.isFinite(Number(face.averageElevation))) return Number(face.averageElevation) > 0.22;
+    if (Number.isFinite(Number(face.elevation))) return Number(face.elevation) > 0.22;
+    if (hasTextTerm(label, LAND_SUPPORT_TERMS)) return true;
+
+    if (faceVerticesLandSupported(face)) return true;
+
+    return false;
+  }
+
+  function triangleReadabilityColor(mode) {
+    if (mode === "sixth-sense") return { r: 141, g: 216, b: 255 };
+    if (mode === "hydration") return { r: 112, g: 156, b: 164 };
+    if (mode === "lattice") return { r: 141, g: 216, b: 255 };
+    return { r: 236, g: 204, b: 132 };
   }
 
   function drawTriangleFacet(face, mode) {
     if (!state.triangleMeshDisplayReady || !face) return;
 
-    if (mode === "hydration" && face.hydrationBoundaryEligible !== true) return;
+    if (mode === "body" || mode === "surface" || mode === "lattice" || mode === "receipt") {
+      if (!triangleFacetSupportedByLand(face)) return;
+    }
+
+    if (mode === "hydration") {
+      var label = triangleFaceLabel(face);
+      var diagnosticEligible = face.hydrationBoundaryEligible === true ||
+        Number(face.futureFillScore || 0) > 0.55 ||
+        hasTextTerm(label, ["future", "basin", "hydro", "shore", "coast", "receiving"]);
+
+      if (!diagnosticEligible) return;
+    }
 
     var vertices = triangleFaceVertices(face);
     if (vertices.length !== 3) return;
@@ -2309,24 +2691,21 @@
     if (maxDx > m.r * 0.78 || maxDy > m.r * 0.78) return;
 
     var visual = lensWeights(mode);
-    var shadeWeight = Number(face.shadeWeight || 0.35);
-    var edgeBreak = Number(face.edgeBreakWeight || 0);
-    var relief = Number(face.reliefIntensity || 0);
-    var alpha = visual.triangleFacetAlpha * clamp(0.46 + shadeWeight * 0.44 + relief * 0.20 + edgeBreak * 0.12, 0.30, 1.20);
+    var relief = Number(face.reliefIntensity || face.slopeHint || face.edgePresence || 0);
+    var edge = Number(face.edgeBreakWeight || face.edgePresence || 0);
+    var alpha = visual.triangleEdgeAlpha * clamp(0.28 + relief * 0.24 + edge * 0.34, 0.12, 0.82);
 
-    if (mode === "body") alpha *= 0.82;
-    if (mode === "surface") alpha *= 1.02;
-    if (mode === "sixth-sense") alpha *= 0.92;
-    if (mode === "lattice") alpha *= 0.58;
-    if (mode === "receipt") alpha *= 0.54;
-    if (mode === "hydration") {
-      alpha = visual.triangleBoundaryAlpha * clamp(0.38 + Number(face.futureFillScore || 0) * 0.36 + Number(face.coastalReadinessScore || 0) * 0.32, 0.20, 1);
-    }
+    if (mode === "body") alpha *= 0.55;
+    if (mode === "surface") alpha *= 0.82;
+    if (mode === "sixth-sense") alpha *= 1.05;
+    if (mode === "hydration") alpha *= 0.64;
+    if (mode === "lattice") alpha *= 0.64;
+    if (mode === "receipt") alpha *= 0.48;
 
     if (alpha <= 0.012) return;
 
-    var color = triangleTerrainBaseColor(face);
     var ctx = state.ctx;
+    var color = triangleReadabilityColor(mode);
 
     ctx.beginPath();
     ctx.moveTo(projected[0].x, projected[0].y);
@@ -2334,20 +2713,22 @@
     ctx.lineTo(projected[2].x, projected[2].y);
     ctx.closePath();
 
-    ctx.fillStyle = rgba(color, alpha);
-    ctx.fill();
-
-    if (mode === "surface" && (edgeBreak > 0.50 || face.hydrationBoundaryEligible === true)) {
-      ctx.strokeStyle = rgba(mixColor(color, { r: 236, g: 204, b: 132 }, 0.18), clamp(alpha * 0.38, 0, 0.16));
-      ctx.lineWidth = Math.max(0.35, state.dpr * 0.28);
-      ctx.stroke();
+    if (mode === "sixth-sense" && visual.triangleFacetAlpha > 0) {
+      ctx.fillStyle = rgba(color, visual.triangleFacetAlpha * 0.16);
+      ctx.fill();
     }
+
+    ctx.strokeStyle = rgba(color, alpha);
+    ctx.lineWidth = Math.max(0.30, m.r * 0.00082 * (0.68 + relief * 0.40));
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.stroke();
   }
 
   function drawTriangleMeshFacetLayer(mode) {
     if (!state.triangleMeshDisplayReady || !state.triangularMeshCarrierPacket) return;
 
-    var faces = Array.isArray(state.triangularMeshCarrierPacket.meshFaces) ? state.triangularMeshCarrierPacket.meshFaces : [];
+    var faces = normalizeTriangleFaces(state.triangularMeshCarrierPacket);
     if (!faces.length) return;
 
     state.ctx.save();
@@ -2360,32 +2741,54 @@
     state.ctx.restore();
   }
 
-  function triangleEdgeColor(edge, mode) {
-    var breakClass = String(edge.breakClass || "");
+  function triangleEdgeIsMaterialLeak(edge) {
+    var text = String(edge && (
+      edge.breakClass ||
+      edge.classification ||
+      edge.zoneType ||
+      edge.role ||
+      edge.kind ||
+      edge.label ||
+      edge.edgeClass ||
+      ""
+    ) || "").toLowerCase();
 
-    if (breakClass.indexOf("cliff") >= 0) return { r: 82, g: 58, b: 42 };
+    return hasTextTerm(text, MATERIAL_LEAK_TERMS);
+  }
+
+  function triangleEdgeColor(edge, mode) {
+    var breakClass = String(edge && (edge.breakClass || edge.classification || edge.edgeClass || "") || "").toLowerCase();
+
+    if (mode === "hydration") return { r: 112, g: 156, b: 164 };
+    if (mode === "sixth-sense") return { r: 141, g: 216, b: 255 };
+
+    if (breakClass.indexOf("cliff") >= 0) return { r: 92, g: 70, b: 52 };
     if (breakClass.indexOf("ridge") >= 0) return { r: 226, g: 197, b: 134 };
-    if (breakClass.indexOf("coastal") >= 0) return { r: 108, g: 158, b: 158 };
-    if (breakClass.indexOf("future_fill") >= 0) return { r: 88, g: 129, b: 143 };
     if (breakClass.indexOf("relief") >= 0) return { r: 170, g: 145, b: 94 };
 
-    return mode === "sixth-sense" ? { r: 141, g: 216, b: 255 } : { r: 130, g: 116, b: 82 };
+    return { r: 160, g: 139, b: 91 };
   }
 
   function drawTriangleEdgeBreak(edge, mode) {
-    if (!state.triangleMeshDisplayReady || !edge || !Array.isArray(edge.vertexIds) || edge.vertexIds.length < 2) return;
+    if (!state.triangleMeshDisplayReady || !edge) return;
+
+    if (triangleEdgeIsMaterialLeak(edge) && mode !== "hydration" && mode !== "sixth-sense" && mode !== "receipt") {
+      return;
+    }
+
+    var vertexIds = Array.isArray(edge.vertexIds) ? edge.vertexIds : [];
+    if (vertexIds.length < 2) return;
 
     var visual = lensWeights(mode);
-    var weight = Number(edge.edgeBreakWeight || 0);
-    var hydrationEligible = edge.hydrationBoundaryEligible === true;
+    var weight = Number(edge.edgeBreakWeight || edge.edgePresence || edge.weight || 0);
 
-    if (mode === "body" && weight < 0.64 && !hydrationEligible) return;
-    if (mode === "surface" && weight < 0.34 && !hydrationEligible) return;
-    if (mode === "hydration" && !hydrationEligible) return;
+    if (mode === "body" && weight < 0.64) return;
+    if (mode === "surface" && weight < 0.30) return;
+    if (mode === "hydration" && !triangleEdgeIsMaterialLeak(edge)) return;
     if (mode === "receipt" && weight < 0.64) return;
 
-    var a = state.triangleMeshVertexById[String(edge.vertexIds[0])];
-    var b = state.triangleMeshVertexById[String(edge.vertexIds[1])];
+    var a = state.triangleMeshVertexById[String(vertexIds[0])];
+    var b = state.triangleMeshVertexById[String(vertexIds[1])];
 
     if (!a || !b) return;
 
@@ -2405,12 +2808,13 @@
     if (dx > m.r * 0.60 || dy > m.r * 0.60) return;
 
     var alpha = visual.triangleEdgeAlpha * clamp(0.22 + weight * 0.74, 0.14, 1);
-    if (hydrationEligible) alpha = Math.max(alpha, visual.triangleBoundaryAlpha * clamp(0.20 + Number(edge.coastalReadinessScore || 0) * 0.45 + Number(edge.futureFillScore || 0) * 0.30, 0.18, 0.86));
 
-    if (mode === "body") alpha *= 0.72;
+    if (mode === "body") alpha *= 0.55;
+    if (mode === "surface") alpha *= 0.74;
     if (mode === "sixth-sense") alpha *= 1.08;
     if (mode === "lattice") alpha *= 0.58;
     if (mode === "receipt") alpha *= 0.52;
+    if (mode === "hydration") alpha = Math.min(alpha, 0.115);
 
     if (alpha <= 0.012) return;
 
@@ -2421,7 +2825,7 @@
     ctx.moveTo(p1.x, p1.y);
     ctx.lineTo(p2.x, p2.y);
     ctx.strokeStyle = rgba(color, alpha);
-    ctx.lineWidth = Math.max(0.42, m.r * (hydrationEligible ? 0.0020 : 0.00155) * (0.65 + weight * 0.50));
+    ctx.lineWidth = Math.max(0.36, m.r * 0.00125 * (0.65 + weight * 0.50));
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.stroke();
@@ -2430,7 +2834,7 @@
   function drawTriangleMeshEdgeBreakLayer(mode) {
     if (!state.triangleMeshDisplayReady || !state.triangularMeshCarrierPacket) return;
 
-    var edges = Array.isArray(state.triangularMeshCarrierPacket.meshEdgeBreaks) ? state.triangularMeshCarrierPacket.meshEdgeBreaks : [];
+    var edges = normalizeTriangleEdges(state.triangularMeshCarrierPacket);
     if (!edges.length) return;
 
     state.ctx.save();
@@ -2468,7 +2872,7 @@
     var weightedAlpha = alpha * (stroke ? visual.definitionStrokeAlpha : visual.definitionNodeAlpha);
 
     if (state.triangleMeshDisplayReady && (state.activeLens === "body" || state.activeLens === "surface")) {
-      weightedAlpha *= state.activeLens === "body" ? 0.45 : 0.64;
+      weightedAlpha *= state.activeLens === "body" ? 0.74 : 0.88;
     }
 
     if (weightedAlpha <= 0.010) return;
@@ -2497,7 +2901,7 @@
     var weightedAlpha = alpha * visual.definitionLineAlpha;
 
     if (state.triangleMeshDisplayReady && (state.activeLens === "body" || state.activeLens === "surface")) {
-      weightedAlpha *= state.activeLens === "body" ? 0.72 : 0.84;
+      weightedAlpha *= state.activeLens === "body" ? 0.84 : 0.92;
     }
 
     if (weightedAlpha <= 0.012) return;
@@ -2622,9 +3026,9 @@
   }
 
   function drawFutureFillReliefLayer(mode) {
-    if (!state.definitionFieldReady || !state.definitionField || (mode !== "hydration" && mode !== "surface" && mode !== "sixth-sense")) return;
+    if (!state.definitionFieldReady || !state.definitionField || (mode !== "hydration" && mode !== "sixth-sense")) return;
 
-    var strength = mode === "hydration" ? 0.30 : mode === "surface" ? 0.13 : 0.17;
+    var strength = mode === "hydration" ? 0.26 : 0.13;
 
     (state.definitionField.futureFillReliefExpressions || []).forEach(function (fill) {
       var alpha = strength * clamp(Number(fill.futureFillReliefStrength || fill.futureFillPriority || 0.42), 0.20, 1);
@@ -2653,7 +3057,7 @@
   }
 
   function drawFutureFillDepressions(mode) {
-    if (!state.landBodyCompositorReady || mode === "body") return;
+    if (!state.landBodyCompositorReady || (mode !== "hydration" && mode !== "sixth-sense")) return;
 
     var ctx = state.ctx;
 
@@ -2667,7 +3071,7 @@
       if (!p.front) return;
 
       var radius = Math.max(1.8, metrics().r * 0.0105 * p.scale);
-      var alpha = mode === "hydration" ? 0.18 : 0.075;
+      var alpha = mode === "hydration" ? 0.145 : 0.060;
 
       ctx.beginPath();
       ctx.arc(p.x, p.y, radius, 0, TAU);
@@ -2792,14 +3196,14 @@
     var ethicalReceipt = getEthicalBumpFieldReceipt();
     var landReceipt = getLandBodyCompositorReceipt();
     var definitionReceipt = getDefinitionConsumptionReceipt();
-    var w = Math.min(state.width * 0.90, m.baseRadius * 2.72);
-    var h = Math.min(state.height * 0.64, m.baseRadius * 1.70);
+    var w = Math.min(state.width * 0.91, m.baseRadius * 2.76);
+    var h = Math.min(state.height * 0.66, m.baseRadius * 1.76);
     var x = m.cx - w / 2;
     var y = m.cy - h / 2;
 
     ctx.save();
-    ctx.fillStyle = "rgba(2,8,20,.82)";
-    ctx.strokeStyle = state.triangleMeshDisplayReady ? "rgba(167,243,198,.54)" : state.definitionFieldReady ? "rgba(244,207,131,.40)" : "rgba(244,207,131,.30)";
+    ctx.fillStyle = "rgba(2,8,20,.84)";
+    ctx.strokeStyle = "rgba(167,243,198,.54)";
     ctx.lineWidth = Math.max(1, state.dpr);
 
     roundedRect(ctx, x, y, w, h, 22 * state.dpr);
@@ -2808,40 +3212,43 @@
 
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.font = "900 " + Math.max(11, 13.2 * state.dpr) + "px ui-monospace, monospace";
-    ctx.fillStyle = state.triangleMeshDisplayReady ? "rgba(167,243,198,.94)" : "rgba(244,207,131,.92)";
-    ctx.fillText(state.triangleMeshDisplayReady ? "TRIANGULAR MESH DISPLAY CONSUMPTION LIVE" : "TRIANGULAR MESH DISPLAY FALLBACK", m.cx, y + h * 0.065);
+    ctx.font = "900 " + Math.max(10, 12.6 * state.dpr) + "px ui-monospace, monospace";
+    ctx.fillStyle = "rgba(167,243,198,.94)";
+    ctx.fillText("TRIANGULAR READABILITY ADAPTER · PRESERVATION", m.cx, y + h * 0.060);
 
-    ctx.font = "900 " + Math.max(8, 8.8 * state.dpr) + "px ui-monospace, monospace";
+    ctx.font = "900 " + Math.max(7, 8.3 * state.dpr) + "px ui-monospace, monospace";
     ctx.fillStyle = "rgba(238,244,255,.84)";
-    ctx.fillText("DRY " + String(state.dryTerrainValidated).toUpperCase() + " · LAND FIELD " + landReceipt.fieldSampleCount, m.cx, y + h * 0.155);
+    ctx.fillText("DRY " + String(state.dryTerrainValidated).toUpperCase() + " · LAND FIELD " + landReceipt.fieldSampleCount, m.cx, y + h * 0.145);
 
     ctx.fillStyle = "rgba(141,216,255,.84)";
-    ctx.fillText("RELIEF " + String(definitionReceipt.reliefExpressionValidated).toUpperCase() + " · LANDFORM " + String(definitionReceipt.landformSystemsValidated).toUpperCase(), m.cx, y + h * 0.245);
+    ctx.fillText("RELIEF " + String(definitionReceipt.reliefExpressionValidated).toUpperCase() + " · LANDFORM " + String(definitionReceipt.landformSystemsValidated).toUpperCase(), m.cx, y + h * 0.225);
 
     ctx.fillStyle = "rgba(167,243,198,.84)";
-    ctx.fillText("TRIANGLE DETECTED " + String(state.triangularMeshDetected).toUpperCase() + " · VALIDATED " + String(state.triangularMeshValidated).toUpperCase(), m.cx, y + h * 0.335);
+    ctx.fillText("TRIANGLE DETECTED " + String(state.triangularMeshDetected).toUpperCase() + " · VALIDATED " + String(state.triangularMeshValidated).toUpperCase(), m.cx, y + h * 0.305);
 
     ctx.fillStyle = "rgba(167,243,198,.84)";
-    ctx.fillText("VERTICES " + state.triangleMeshVertexCount + " · FACES " + state.triangleMeshFaceCount + " · EDGES " + state.triangleMeshEdgeBreakCount, m.cx, y + h * 0.425);
+    ctx.fillText("VERTICES " + state.triangleMeshVertexCount + " · FACES " + state.triangleMeshFaceCount + " · EDGES " + state.triangleMeshEdgeBreakCount, m.cx, y + h * 0.385);
 
     ctx.fillStyle = "rgba(244,207,131,.86)";
-    ctx.fillText("BODY SCAFFOLD REDUCED · SURFACE TRIANGLE FACETS ACTIVE", m.cx, y + h * 0.515);
+    ctx.fillText("LAND COMPOSITOR PRIMARY · TRIANGLE READABILITY SECONDARY", m.cx, y + h * 0.465);
 
-    ctx.fillStyle = "rgba(182,245,255,.76)";
-    ctx.fillText("CARRIER DISPLAYS MESH ONLY · DOES NOT GENERATE MESH", m.cx, y + h * 0.605);
+    ctx.fillStyle = "rgba(182,245,255,.78)";
+    ctx.fillText("TRIANGLE COLOR AUTHORITY FALSE · MATERIAL FILL FALSE", m.cx, y + h * 0.545);
 
-    ctx.fillStyle = "rgba(182,245,255,.76)";
-    ctx.fillText("TRIANGULATION CHILD OWNS PACKET · SOURCE TRUTH UNMUTATED", m.cx, y + h * 0.695);
+    ctx.fillStyle = "rgba(182,245,255,.78)";
+    ctx.fillText("BODY/SURFACE HYDROSPHERE MEMORY SUPPRESSED", m.cx, y + h * 0.625);
 
-    ctx.fillStyle = "rgba(182,245,255,.76)";
-    ctx.fillText("HYDRATION HELD · ACTIVE WATER FALSE", m.cx, y + h * 0.785);
+    ctx.fillStyle = "rgba(182,245,255,.78)";
+    ctx.fillText("FUTURE-FILL SURFACE SUPPRESSED · HYDRATION HELD", m.cx, y + h * 0.705);
+
+    ctx.fillStyle = "rgba(182,245,255,.78)";
+    ctx.fillText("VOID REMAINS VOID · LAND/VOID SEPARATION PROTECTED", m.cx, y + h * 0.785);
 
     ctx.fillStyle = "rgba(238,244,255,.72)";
-    ctx.fillText("FINAL VISUAL PASS: FALSE · BUMPS " + ethicalReceipt.bumpAnchorCount, m.cx, y + h * 0.875);
+    ctx.fillText("FINAL VISUAL PASS: FALSE · BUMPS " + ethicalReceipt.bumpAnchorCount, m.cx, y + h * 0.870);
 
     ctx.fillStyle = "rgba(238,244,255,.54)";
-    ctx.fillText("FAILURE: " + (state.triangleMeshFailureReason || "none"), m.cx, y + h * 0.955);
+    ctx.fillText("TRIANGLE FAILURE: " + (state.triangleMeshFailureReason || "none"), m.cx, y + h * 0.950);
 
     ctx.restore();
   }
@@ -2859,13 +3266,13 @@
     ctx.textBaseline = "middle";
     ctx.font = "900 " + Math.max(10, 12 * state.dpr) + "px ui-monospace, monospace";
     ctx.fillStyle = "rgba(182,245,255,0.76)";
-    ctx.fillText("HYDRATION HELD · TRIANGLE BOUNDARIES ARE FUTURE HANDOFF ONLY", m.cx, m.cy + m.r * 0.74);
+    ctx.fillText("HYDRATION HELD · FUTURE-FILL / TRIANGLE BOUNDARIES ARE DIAGNOSTIC ONLY", m.cx, m.cy + m.r * 0.74);
     ctx.restore();
   }
 
-  function drawMaterialStackBase() {
+  function drawMaterialStackBase(mode) {
     drawPlanetShadowBody();
-    drawHydrosphereMemoryUnderlayer();
+    drawHydrosphereMemoryUnderlayer(mode);
   }
 
   function frame() {
@@ -2884,7 +3291,7 @@
 
     state.ctx.clearRect(0, 0, state.width, state.height);
 
-    drawMaterialStackBase();
+    drawMaterialStackBase(state.activeLens);
 
     if (state.activeLens === "lattice") {
       drawLatticeLayer("back");
@@ -2903,7 +3310,6 @@
       drawTriangleMeshFacetLayer("surface");
       drawTriangleMeshEdgeBreakLayer("surface");
       drawDefinitionOverlay("surface");
-      drawFutureFillDepressions("surface");
     } else if (state.activeLens === "hydration") {
       drawContinuousLandBodySurface("hydration");
       drawTriangleMeshFacetLayer("hydration");
@@ -2915,6 +3321,7 @@
       drawTriangleMeshFacetLayer("sixth-sense");
       drawTriangleMeshEdgeBreakLayer("sixth-sense");
       drawDefinitionOverlay("sixth-sense");
+      drawFutureFillDepressions("sixth-sense");
       drawSixthSenseNodeScaffold("sixth-sense");
     } else if (state.activeLens === "receipt") {
       drawContinuousLandBodySurface("receipt");
@@ -2954,17 +3361,17 @@
     var label = document.querySelector("[data-audralia-planet-stage-label]");
     if (label) {
       if (lens === "surface") {
-        label.innerHTML = "<strong>Surface</strong> → triangular terrain facets from packet handoff";
+        label.innerHTML = "<strong>Surface</strong> → existing land expression primary, triangles only clarify readability";
       } else if (lens === "hydration") {
-        label.innerHTML = "<strong>Hydration</strong> → held / future triangle-boundary handoff only";
+        label.innerHTML = "<strong>Hydration</strong> → held / future-fill diagnostic only";
       } else if (lens === "sixth-sense") {
-        label.innerHTML = "<strong>Sixth Sense</strong> → triangle mesh plus diagnostic scaffold";
+        label.innerHTML = "<strong>Sixth Sense</strong> → diagnostic triangle readability with scaffold";
       } else if (lens === "lattice") {
         label.innerHTML = "<strong>Lattice</strong> → raw 256 inspection with faint triangle context";
       } else if (lens === "receipt") {
-        label.innerHTML = "<strong>Receipt</strong> → triangular mesh display-consumption proof";
+        label.innerHTML = "<strong>Receipt</strong> → adapter posture proof";
       } else {
-        label.innerHTML = "<strong>Body</strong> → softened triangular terrain read, hydration held";
+        label.innerHTML = "<strong>Body</strong> → land/void separation protected, hydrosphere memory suppressed";
       }
     }
 
@@ -3107,7 +3514,7 @@
       dryRevealedTerrainValidated: state.dryTerrainValidated,
       dryRevealedTerrainFailureReason: state.dryFailureReason,
 
-      carrierConsumes: "dry terrain + relief-expression packet + landform-systems packet + triangular terrain mesh packet as display handoffs",
+      carrierConsumes: "dry terrain + relief-expression packet + landform-systems packet + triangular terrain mesh packet as readability handoffs",
       carrierConsumesDryTerrainAtlas: state.dryTerrainValidated,
       carrierConsumesReliefPacket: definitionReceipt.carrierConsumesReliefPacket,
       carrierConsumesLandformPacket: definitionReceipt.carrierConsumesLandformPacket,
@@ -3131,30 +3538,30 @@
       triangleMeshFaceCount: state.triangleMeshFaceCount,
       triangleMeshEdgeBreakCount: state.triangleMeshEdgeBreakCount,
 
+      triangularReadabilityAdapterActive: true,
+      triangularMeshDisplayConsumptionDeprecated: true,
+      triangleLogicIsAdapter: true,
+      triangleLogicIsMaterialAuthority: false,
+      carrierMayUseTrianglesForReadability: true,
+      carrierMayUseTriangleColor: false,
+      carrierMayTintSurfaceFromTriangles: false,
+      carrierMayColorVoidFromTriangles: false,
+      carrierMayDrawTriangleFacetFillAsMaterial: false,
+      carrierMayDrawHydrationFromTriangles: false,
+      carrierMayDrawBeachFromTriangles: false,
+      carrierMayDrawCoastlineFromTriangles: false,
+      carrierMayDrawFutureFillAsWater: false,
+      carrierMayBlendLandAndVoidFromTriangles: false,
+      carrierMayReplaceLandCompositorWithTriangles: false,
+
+      carrierPreservesDerivativeExpression: true,
+      existingLandCompositorPrimary: true,
+      triangleReadabilitySecondary: true,
+      landVoidSeparationProtected: true,
+      voidRemainsVoid: true,
+
       carrierOwnsTriangulation: false,
       carrierGeneratesMesh: false,
-      carrierDisplaysMeshOnly: true,
-      triangularMeshChildOwnsTriangulation: true,
-      squaresConvertedToTriangles: true,
-      rectangularGridReadReduced: state.triangleMeshDisplayReady,
-
-      definitionConsumptionReady: definitionReceipt.definitionConsumptionReady,
-      definitionFieldReady: definitionReceipt.definitionFieldReady,
-      definitionNodePointFallbackActive: definitionReceipt.definitionNodePointFallbackActive,
-      definitionNodePointIndexCount: definitionReceipt.definitionNodePointIndexCount,
-      definitionNodePointExactHits: definitionReceipt.definitionNodePointExactHits,
-      definitionNodePointFallbackHits: definitionReceipt.definitionNodePointFallbackHits,
-
-      visualWeightingRenewalActive: true,
-      triangularMeshDisplayConsumptionActive: state.triangleMeshDisplayReady,
-      bodyDiagnosticScaffoldReduced: true,
-      surfaceTerrainReliefReadable: true,
-      surfaceTriangleFacetReadActive: state.triangleMeshDisplayReady,
-      sixthSenseDiagnosticScaffoldPreserved: true,
-      terrainReliefDrawWeightingActive: true,
-
-      carrierInventsTerrain: false,
-      terrainAtlasRemainsSource: true,
       carrierDoesNotOwnTerrainTruth: true,
       carrierDoesNotOwnElevationTruth: true,
       carrierDoesNotOwnReliefTruth: true,
@@ -3171,6 +3578,20 @@
       reliefTruthMutated: false,
       landformTruthMutated: false,
       beachTruthMutated: false,
+      hydrationTruthMutated: false,
+
+      definitionConsumptionReady: definitionReceipt.definitionConsumptionReady,
+      definitionFieldReady: definitionReceipt.definitionFieldReady,
+      definitionNodePointFallbackActive: definitionReceipt.definitionNodePointFallbackActive,
+      definitionNodePointIndexCount: definitionReceipt.definitionNodePointIndexCount,
+      definitionNodePointExactHits: definitionReceipt.definitionNodePointExactHits,
+      definitionNodePointFallbackHits: definitionReceipt.definitionNodePointFallbackHits,
+
+      visualWeightingRenewalActive: true,
+      bodyDiagnosticScaffoldReduced: true,
+      surfaceTerrainReliefReadable: true,
+      sixthSenseDiagnosticScaffoldPreserved: true,
+      terrainReliefDrawWeightingActive: true,
 
       nineContinentEthicalFieldActive: ethicalReceipt.nineContinentEthicalFieldActive,
       nineContinentCount: ethicalReceipt.nineContinentCount,
@@ -3195,9 +3616,14 @@
       surfaceRenderIsDerived: true,
       raw256VisibleOnlyInLattice: true,
 
+      hydrosphereMemoryLensGated: true,
+      hydrosphereMemorySuppressedInBody: true,
+      hydrosphereMemorySuppressedInSurface: true,
+      futureFillSuppressedInSurface: true,
+      futureFillHydrationLensOnly: true,
+
       atmosphereSeparatedFromHydrosphere: true,
       hydrosphereMemoryIsUnderlayer: true,
-      hydrosphereWashReducedWhenDefinitionReady: state.definitionConsumptionReady,
       dryCrustAboveHydrosphereMemory: true,
 
       zoomInspectionActive: true,
@@ -3214,15 +3640,15 @@
       gratitudeIsIsland: false,
       gratitudeIslandRead: false,
 
+      hydrationHeld: true,
       activeHydration: false,
       activeWater: false,
-      hydrationHeld: true,
       futureFillOnly: true,
       edgeDetailsHeld: true,
 
       surfaceUsesContinuousLandBodySkin: state.landBodyCompositorReady,
       surfaceUsesPacketDefinitionOverlay: state.definitionFieldReady,
-      surfaceUsesTriangularFacetMesh: state.triangleMeshDisplayReady,
+      surfaceUsesTriangleReadabilityAdapter: state.triangleMeshDisplayReady,
       sixthSenseExposesNodeScaffold: true,
       latticeRaw256InspectionPreserved: true,
 
@@ -3234,9 +3660,10 @@
       finalVisualPassClaim: false,
 
       errors: state.errors.slice(),
-      deployMarker: "AUDRALIA_CARRIER_TRIANGULAR_MESH_DISPLAY_CONSUMPTION_DEPLOY_MARKER_v1"
+      deployMarker: "AUDRALIA_CARRIER_TRIANGULAR_READABILITY_ADAPTER_PRESERVATION_DEPLOY_MARKER_v1"
     };
 
+    window.AUDRALIA_CARRIER_TRIANGULAR_READABILITY_ADAPTER_PRESERVATION_STATUS = payload;
     window.AUDRALIA_CARRIER_TRIANGULAR_MESH_DISPLAY_CONSUMPTION_STATUS = payload;
     window.AUDRALIA_CARRIER_VISUAL_WEIGHTING_TERRAIN_RELIEF_READABILITY_RENEWAL_STATUS = payload;
     window.AUDRALIA_CARRIER_BASELINE_RESTORED_PACKET_HANDOFF_DRAW_RENEWAL_STATUS = payload;
@@ -3252,6 +3679,29 @@
       document.documentElement.dataset.audraliaRuntimePreviousContract = PREVIOUS_CONTRACT;
       document.documentElement.dataset.audraliaSameFileRenewal = "true";
       document.documentElement.dataset.audraliaShellPreserved = "true";
+
+      document.documentElement.dataset.audraliaTriangularReadabilityAdapterActive = "true";
+      document.documentElement.dataset.audraliaTriangularMeshDisplayConsumptionDeprecated = "true";
+      document.documentElement.dataset.audraliaTriangleLogicIsAdapter = "true";
+      document.documentElement.dataset.audraliaTriangleLogicIsMaterialAuthority = "false";
+      document.documentElement.dataset.audraliaCarrierMayUseTrianglesForReadability = "true";
+      document.documentElement.dataset.audraliaCarrierMayUseTriangleColor = "false";
+      document.documentElement.dataset.audraliaCarrierMayTintSurfaceFromTriangles = "false";
+      document.documentElement.dataset.audraliaCarrierMayColorVoidFromTriangles = "false";
+      document.documentElement.dataset.audraliaCarrierMayDrawTriangleFacetFillAsMaterial = "false";
+      document.documentElement.dataset.audraliaCarrierMayDrawHydrationFromTriangles = "false";
+      document.documentElement.dataset.audraliaCarrierMayDrawBeachFromTriangles = "false";
+      document.documentElement.dataset.audraliaCarrierMayDrawCoastlineFromTriangles = "false";
+      document.documentElement.dataset.audraliaCarrierMayDrawFutureFillAsWater = "false";
+      document.documentElement.dataset.audraliaCarrierMayBlendLandAndVoidFromTriangles = "false";
+      document.documentElement.dataset.audraliaCarrierMayReplaceLandCompositorWithTriangles = "false";
+
+      document.documentElement.dataset.audraliaCarrierPreservesDerivativeExpression = "true";
+      document.documentElement.dataset.audraliaExistingLandCompositorPrimary = "true";
+      document.documentElement.dataset.audraliaTriangleReadabilitySecondary = "true";
+      document.documentElement.dataset.audraliaLandVoidSeparationProtected = "true";
+      document.documentElement.dataset.audraliaVoidRemainsVoid = "true";
+
       document.documentElement.dataset.audraliaCarrierConsumesPacketsForDisplayOnly = "true";
       document.documentElement.dataset.audraliaCarrierDrawsPacketHandoffs = "true";
       document.documentElement.dataset.audraliaCarrierConsumesReliefPacket = String(state.carrierConsumesReliefPacket);
@@ -3263,22 +3713,9 @@
       document.documentElement.dataset.audraliaTriangleMeshVertexCount = String(state.triangleMeshVertexCount);
       document.documentElement.dataset.audraliaTriangleMeshFaceCount = String(state.triangleMeshFaceCount);
       document.documentElement.dataset.audraliaTriangleMeshEdgeBreakCount = String(state.triangleMeshEdgeBreakCount);
+
       document.documentElement.dataset.audraliaCarrierOwnsTriangulation = "false";
       document.documentElement.dataset.audraliaCarrierGeneratesMesh = "false";
-      document.documentElement.dataset.audraliaCarrierDisplaysMeshOnly = "true";
-      document.documentElement.dataset.audraliaTriangularMeshChildOwnsTriangulation = "true";
-      document.documentElement.dataset.audraliaSquaresConvertedToTriangles = "true";
-      document.documentElement.dataset.audraliaRectangularGridReadReduced = String(state.triangleMeshDisplayReady);
-      document.documentElement.dataset.audraliaDefinitionConsumptionReady = String(state.definitionConsumptionReady);
-      document.documentElement.dataset.audraliaDefinitionFieldReady = String(state.definitionFieldReady);
-      document.documentElement.dataset.audraliaDefinitionNodePointFallbackActive = String(state.definitionNodePointFallbackActive);
-      document.documentElement.dataset.audraliaVisualWeightingRenewalActive = "true";
-      document.documentElement.dataset.audraliaTriangularMeshDisplayConsumptionActive = String(state.triangleMeshDisplayReady);
-      document.documentElement.dataset.audraliaBodyDiagnosticScaffoldReduced = "true";
-      document.documentElement.dataset.audraliaSurfaceTerrainReliefReadable = "true";
-      document.documentElement.dataset.audraliaSurfaceTriangleFacetReadActive = String(state.triangleMeshDisplayReady);
-      document.documentElement.dataset.audraliaSixthSenseDiagnosticScaffoldPreserved = "true";
-      document.documentElement.dataset.audraliaTerrainReliefDrawWeightingActive = "true";
       document.documentElement.dataset.audraliaCarrierDoesNotOwnTerrainTruth = "true";
       document.documentElement.dataset.audraliaCarrierDoesNotOwnElevationTruth = "true";
       document.documentElement.dataset.audraliaCarrierDoesNotOwnReliefTruth = "true";
@@ -3286,11 +3723,30 @@
       document.documentElement.dataset.audraliaCarrierDoesNotOwnBeachTruth = "true";
       document.documentElement.dataset.audraliaCarrierDoesNotOwnHydrationTruth = "true";
       document.documentElement.dataset.audraliaCarrierDoesNotMutateUpstreamMeaning = "true";
+
       document.documentElement.dataset.audraliaSourceTerrainMutated = "false";
       document.documentElement.dataset.audraliaElevationTruthMutated = "false";
       document.documentElement.dataset.audraliaReliefTruthMutated = "false";
       document.documentElement.dataset.audraliaLandformTruthMutated = "false";
       document.documentElement.dataset.audraliaBeachTruthMutated = "false";
+      document.documentElement.dataset.audraliaHydrationTruthMutated = "false";
+
+      document.documentElement.dataset.audraliaDefinitionConsumptionReady = String(state.definitionConsumptionReady);
+      document.documentElement.dataset.audraliaDefinitionFieldReady = String(state.definitionFieldReady);
+      document.documentElement.dataset.audraliaDefinitionNodePointFallbackActive = String(state.definitionNodePointFallbackActive);
+
+      document.documentElement.dataset.audraliaHydrosphereMemoryLensGated = "true";
+      document.documentElement.dataset.audraliaHydrosphereMemorySuppressedInBody = "true";
+      document.documentElement.dataset.audraliaHydrosphereMemorySuppressedInSurface = "true";
+      document.documentElement.dataset.audraliaFutureFillSuppressedInSurface = "true";
+      document.documentElement.dataset.audraliaFutureFillHydrationLensOnly = "true";
+
+      document.documentElement.dataset.audraliaVisualWeightingRenewalActive = "true";
+      document.documentElement.dataset.audraliaBodyDiagnosticScaffoldReduced = "true";
+      document.documentElement.dataset.audraliaSurfaceTerrainReliefReadable = "true";
+      document.documentElement.dataset.audraliaSixthSenseDiagnosticScaffoldPreserved = "true";
+      document.documentElement.dataset.audraliaTerrainReliefDrawWeightingActive = "true";
+
       document.documentElement.dataset.audraliaCarrierInventsTerrain = "false";
       document.documentElement.dataset.audraliaHydrationHeld = "true";
       document.documentElement.dataset.audraliaActiveHydration = "false";
@@ -3328,21 +3784,41 @@
     state.canvas.setAttribute("data-land-body-compositor-active", "true");
     state.canvas.setAttribute("data-packet-handoff-draw-layer", "true");
     state.canvas.setAttribute("data-definition-node-point-fallback-active", "true");
+
+    state.canvas.setAttribute("data-triangular-readability-adapter-active", "true");
+    state.canvas.setAttribute("data-triangular-mesh-display-consumption-deprecated", "true");
+    state.canvas.setAttribute("data-triangle-logic-is-adapter", "true");
+    state.canvas.setAttribute("data-triangle-logic-is-material-authority", "false");
+    state.canvas.setAttribute("data-carrier-may-use-triangles-for-readability", "true");
+    state.canvas.setAttribute("data-carrier-may-use-triangle-color", "false");
+    state.canvas.setAttribute("data-carrier-may-tint-surface-from-triangles", "false");
+    state.canvas.setAttribute("data-carrier-may-color-void-from-triangles", "false");
+    state.canvas.setAttribute("data-carrier-may-draw-triangle-facet-fill-as-material", "false");
+    state.canvas.setAttribute("data-carrier-may-draw-hydration-from-triangles", "false");
+    state.canvas.setAttribute("data-carrier-may-draw-beach-from-triangles", "false");
+    state.canvas.setAttribute("data-carrier-may-draw-coastline-from-triangles", "false");
+    state.canvas.setAttribute("data-carrier-may-draw-future-fill-as-water", "false");
+    state.canvas.setAttribute("data-carrier-may-blend-land-and-void-from-triangles", "false");
+    state.canvas.setAttribute("data-carrier-may-replace-land-compositor-with-triangles", "false");
+
+    state.canvas.setAttribute("data-carrier-preserves-derivative-expression", "true");
+    state.canvas.setAttribute("data-existing-land-compositor-primary", "true");
+    state.canvas.setAttribute("data-triangle-readability-secondary", "true");
+    state.canvas.setAttribute("data-land-void-separation-protected", "true");
+    state.canvas.setAttribute("data-void-remains-void", "true");
+
     state.canvas.setAttribute("data-carrier-consumes-packets-for-display-only", "true");
     state.canvas.setAttribute("data-carrier-draws-packet-handoffs", "true");
     state.canvas.setAttribute("data-carrier-consumes-triangular-mesh", "pending");
-    state.canvas.setAttribute("data-carrier-displays-mesh-only", "true");
     state.canvas.setAttribute("data-carrier-generates-mesh", "false");
     state.canvas.setAttribute("data-carrier-owns-triangulation", "false");
-    state.canvas.setAttribute("data-triangular-mesh-child-owns-triangulation", "true");
-    state.canvas.setAttribute("data-squares-converted-to-triangles", "true");
-    state.canvas.setAttribute("data-rectangular-grid-read-reduced", "pending");
-    state.canvas.setAttribute("data-visual-weighting-renewal-active", "true");
-    state.canvas.setAttribute("data-triangular-mesh-display-consumption-active", "pending");
-    state.canvas.setAttribute("data-body-diagnostic-scaffold-reduced", "true");
-    state.canvas.setAttribute("data-surface-terrain-relief-readable", "true");
-    state.canvas.setAttribute("data-sixth-sense-diagnostic-scaffold-preserved", "true");
-    state.canvas.setAttribute("data-terrain-relief-draw-weighting-active", "true");
+
+    state.canvas.setAttribute("data-hydrosphere-memory-lens-gated", "true");
+    state.canvas.setAttribute("data-hydrosphere-memory-suppressed-in-body", "true");
+    state.canvas.setAttribute("data-hydrosphere-memory-suppressed-in-surface", "true");
+    state.canvas.setAttribute("data-future-fill-suppressed-in-surface", "true");
+    state.canvas.setAttribute("data-future-fill-hydration-lens-only", "true");
+
     state.canvas.setAttribute("data-carrier-does-not-own-terrain-truth", "true");
     state.canvas.setAttribute("data-carrier-does-not-own-elevation-truth", "true");
     state.canvas.setAttribute("data-carrier-does-not-own-relief-truth", "true");
@@ -3350,11 +3826,14 @@
     state.canvas.setAttribute("data-carrier-does-not-own-beach-truth", "true");
     state.canvas.setAttribute("data-carrier-does-not-own-hydration-truth", "true");
     state.canvas.setAttribute("data-carrier-does-not-mutate-upstream-meaning", "true");
+
     state.canvas.setAttribute("data-source-terrain-mutated", "false");
     state.canvas.setAttribute("data-elevation-truth-mutated", "false");
     state.canvas.setAttribute("data-relief-truth-mutated", "false");
     state.canvas.setAttribute("data-landform-truth-mutated", "false");
     state.canvas.setAttribute("data-beach-truth-mutated", "false");
+    state.canvas.setAttribute("data-hydration-truth-mutated", "false");
+
     state.canvas.setAttribute("data-carrier-invents-terrain", "false");
     state.canvas.setAttribute("data-hydration-held", "true");
     state.canvas.setAttribute("data-active-hydration", "false");

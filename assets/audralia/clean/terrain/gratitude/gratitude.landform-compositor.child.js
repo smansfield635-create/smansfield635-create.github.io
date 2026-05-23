@@ -1,66 +1,70 @@
 // /assets/audralia/clean/terrain/gratitude/gratitude.landform-compositor.child.js
-// AUDRALIA_GRATITUDE_LANDFORM_COMPOSITOR_THREE_CHILD_CONSUMPTION_TNT_v1
+// AUDRALIA_GRATITUDE_LANDFORM_COMPOSITOR_SURFACE_SOURCE_BINDING_TNT_v1
 // Full-file replacement.
 // Scope: Gratitude child 4 of 4.
-// Purpose: consume exactly three upstream Gratitude children—surface-habitability, hydration, hydration-edge—and publish one unified packet to the runtime carrier.
-// Does not consume the legacy broad /assets/audralia/clean/terrain/audralia.gratitude.continent.child.js as active authority.
+// Purpose: consume child 1 surface-habitability, child 2 hydration, and child 3 hydration-edge; publish unified packets to runtime carrier.
+// Does not consume legacy broad /assets/audralia/clean/terrain/audralia.gratitude.continent.child.js as active land authority.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_GRATITUDE_LANDFORM_COMPOSITOR_THREE_CHILD_CONSUMPTION_TNT_v1";
-  var PREVIOUS_CONTRACT = "AUDRALIA_GRATITUDE_UNIFIED_LANDFORM_COMPOSITOR_CHILD_TNT_v1";
+  var CONTRACT = "AUDRALIA_GRATITUDE_LANDFORM_COMPOSITOR_SURFACE_SOURCE_BINDING_TNT_v1";
+  var PREVIOUS_CONTRACT = "AUDRALIA_GRATITUDE_LANDFORM_COMPOSITOR_THREE_CHILD_CONSUMPTION_TNT_v1";
   var FILE = "/assets/audralia/clean/terrain/gratitude/gratitude.landform-compositor.child.js";
-  var CHILD_TYPE = "gratitude_landform_compositor_child_4_of_4";
 
+  var CHILD_TYPE = "gratitude_landform_compositor_child_4_of_4";
   var RADIAL_NODES = 16;
   var FIBONACCI_BANDS = 16;
   var NODE_COUNT = 256;
   var SEA_LEVEL_DATUM = 0.32;
 
-  var SURFACE_GLOBALS = [
-    "AUDRALIA_GRATITUDE_SURFACE_HABITABILITY_CHILD",
-    "AUDRALIA_G2_GRATITUDE_SURFACE_HABITABILITY_CHILD",
-    "AUDRALIA_GRATITUDE_SURFACE_HABITABILITY_FIELD_BLUEPRINT_CHILD"
-  ];
-
-  var HYDRATION_GLOBALS = [
-    "AUDRALIA_GRATITUDE_HYDRATION_CHILD",
-    "AUDRALIA_G2_GRATITUDE_HYDRATION_CHILD",
-    "AUDRALIA_GRATITUDE_HYDRATION_SCOPE_CHILD"
-  ];
-
-  var EDGE_GLOBALS = [
-    "AUDRALIA_GRATITUDE_HYDRATION_EDGE_CHILD",
-    "AUDRALIA_GRATITUDE_HYDRATION_EDGE_SCOPE_CHILD",
-    "AUDRALIA_G2_GRATITUDE_HYDRATION_EDGE_CHILD"
-  ];
+  var SOURCE_ALIASES = Object.freeze({
+    surface: Object.freeze([
+      "AUDRALIA_GRATITUDE_SURFACE_HABITABILITY_CHILD",
+      "AUDRALIA_G2_GRATITUDE_SURFACE_HABITABILITY_CHILD",
+      "AUDRALIA_GRATITUDE_SURFACE_HABITABILITY_FIELD_BLUEPRINT_CHILD"
+    ]),
+    hydration: Object.freeze([
+      "AUDRALIA_GRATITUDE_HYDRATION_CHILD",
+      "AUDRALIA_G2_GRATITUDE_HYDRATION_CHILD",
+      "AUDRALIA_GRATITUDE_HYDRATION_SCOPE_CHILD"
+    ]),
+    edge: Object.freeze([
+      "AUDRALIA_GRATITUDE_HYDRATION_EDGE_CHILD",
+      "AUDRALIA_GRATITUDE_HYDRATION_EDGE_SCOPE_CHILD",
+      "AUDRALIA_G2_GRATITUDE_HYDRATION_EDGE_CHILD"
+    ])
+  });
 
   var runtime = {
-    surface: sourceState("surface-habitability", SURFACE_GLOBALS),
-    hydration: sourceState("hydration", HYDRATION_GLOBALS),
-    edge: sourceState("hydration-edge", EDGE_GLOBALS),
+    refreshedAt: null,
+    refreshCount: 0,
+    warnings: [],
+    failures: [],
+    sources: {
+      surface: blankSource("surface-habitability", SOURCE_ALIASES.surface),
+      hydration: blankSource("hydration", SOURCE_ALIASES.hydration),
+      edge: blankSource("hydration-edge", SOURCE_ALIASES.edge)
+    },
     nodes: [],
     landNodes: [],
     boundaryNodes: [],
     hydrationNodes: [],
     edgeNodes: [],
+    summitNodes: [],
     coastlinePath: null,
     hydrationFlowField: null,
-    edgeRelationshipField: null,
-    failures: [],
-    warnings: [],
-    refreshedAt: null,
-    refreshCount: 0
+    edgeRelationshipField: null
   };
 
-  function sourceState(name, globals) {
+  function blankSource(name, aliases) {
     return {
       name: name,
-      globals: globals,
+      aliases: aliases.slice(),
       api: null,
       detected: false,
       apiComplete: false,
+      valid: false,
       status: null,
       receivePacket: null,
       maps: {},
@@ -79,7 +83,7 @@
     return Math.round((Number(value) || 0) * scale) / scale;
   }
 
-  function deepClone(value) {
+  function clone(value) {
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
@@ -87,32 +91,32 @@
     }
   }
 
-  function firstGlobal(names) {
+  function firstGlobal(aliases) {
     if (typeof window === "undefined") return null;
 
-    for (var i = 0; i < names.length; i += 1) {
-      if (window[names[i]]) return window[names[i]];
+    for (var i = 0; i < aliases.length; i += 1) {
+      if (window[aliases[i]]) return window[aliases[i]];
     }
 
     return null;
   }
 
-  function safeCall(api, method, fallback) {
-    if (!api || typeof api[method] !== "function") return fallback || null;
+  function safeCall(source, method) {
+    if (!source.api || typeof source.api[method] !== "function") return null;
 
     try {
-      return api[method].apply(api, Array.prototype.slice.call(arguments, 3));
+      return source.api[method].apply(source.api, Array.prototype.slice.call(arguments, 2));
     } catch (error) {
-      runtime.warnings.push(method + "_exception:" + (error && error.message ? error.message : String(error)));
-      return fallback || null;
+      runtime.warnings.push(source.name + "." + method + ":" + (error && error.message ? error.message : String(error)));
+      return null;
     }
   }
 
-  function collect(value, keys) {
-    if (!value) return [];
+  function collect(payload, keys) {
+    if (!payload) return [];
 
     for (var i = 0; i < keys.length; i += 1) {
-      if (Array.isArray(value[keys[i]])) return value[keys[i]];
+      if (Array.isArray(payload[keys[i]])) return payload[keys[i]];
     }
 
     return [];
@@ -154,6 +158,25 @@
     return Boolean(fallback);
   }
 
+  function sourceNodeId(x, y) {
+    return "GRATITUDE-COMPOSITOR-SOURCE-" + String(y).padStart(2, "0") + "-" + String(x).padStart(2, "0");
+  }
+
+  function compositeNodeId(x, y) {
+    return "GRATITUDE-COMPOSITE-" + String(y).padStart(2, "0") + "-" + String(x).padStart(2, "0");
+  }
+
+  function seatKey(x, y) {
+    return "G-" + String(y).padStart(2, "0") + "-" + String(x).padStart(2, "0");
+  }
+
+  function lonLat(x, y) {
+    return {
+      lon: round(-142 + (x / 15) * 108, 4),
+      lat: round(56 - (y / 15) * 112, 4)
+    };
+  }
+
   function seatIndexOf(item) {
     var index = valueOf(item, ["seatIndex", "nodeIndex", "index"], null);
     if (Number.isFinite(index)) return clamp(Math.round(index), 0, NODE_COUNT - 1);
@@ -173,35 +196,6 @@
     return null;
   }
 
-  function mergeList(base, list) {
-    if (!Array.isArray(list)) return;
-
-    list.forEach(function (item) {
-      var index = seatIndexOf(item);
-      if (!Number.isFinite(index) || !base[index]) return;
-      Object.assign(base[index], item);
-    });
-  }
-
-  function sourceNodeId(x, y) {
-    return "GRATITUDE-NODE-" + String(y).padStart(2, "0") + "-" + String(x).padStart(2, "0");
-  }
-
-  function compositeNodeId(x, y) {
-    return "GRATITUDE-COMPOSITE-" + String(y).padStart(2, "0") + "-" + String(x).padStart(2, "0");
-  }
-
-  function seatKey(x, y) {
-    return "G-" + String(y).padStart(2, "0") + "-" + String(x).padStart(2, "0");
-  }
-
-  function lonLat(x, y) {
-    return {
-      lon: round(-142 + (x / 15) * 108, 4),
-      lat: round(56 - (y / 15) * 112, 4)
-    };
-  }
-
   function blankNodes() {
     var nodes = [];
 
@@ -212,6 +206,7 @@
         nodes.push({
           sourceNodeId: sourceNodeId(x, y),
           compositeNodeId: compositeNodeId(x, y),
+          nodeId: compositeNodeId(x, y),
           seatIndex: index,
           nodeIndex: index,
           seatKey: seatKey(x, y),
@@ -220,8 +215,11 @@
           continentMembership: false,
           terrainClass: "outside_context",
           hydrationClass: "outside_context",
+          primaryCategory: "outside_context",
           elevation: 0,
-          seaLevelDatum: SEA_LEVEL_DATUM
+          unifiedElevation: 0,
+          seaLevelDatum: SEA_LEVEL_DATUM,
+          aboveSeaLevelMass: false
         });
       }
     }
@@ -229,108 +227,149 @@
     return nodes;
   }
 
-  function readSource(state, requiredMethods, mapPlan) {
-    state.api = firstGlobal(state.globals);
-    state.detected = Boolean(state.api);
-    state.apiComplete = false;
-    state.status = null;
-    state.receivePacket = null;
-    state.maps = {};
+  function mergeList(base, list) {
+    if (!Array.isArray(list)) return;
 
-    if (!state.api) {
-      state.failureReason = state.name + " child missing";
-      return false;
-    }
-
-    state.apiComplete = requiredMethods.every(function (method) {
-      return typeof state.api[method] === "function";
+    list.forEach(function (item) {
+      var index = seatIndexOf(item);
+      if (!Number.isFinite(index) || !base[index]) return;
+      Object.assign(base[index], item);
     });
-
-    if (!state.apiComplete) {
-      state.failureReason = state.name + " child API incomplete";
-      return false;
-    }
-
-    state.status = safeCall(state.api, "status", null);
-    state.receivePacket = safeCall(state.api, "getChildReceivePacket", null, "landform-compositor", { compact: false });
-
-    mapPlan.forEach(function (entry) {
-      state.maps[entry.key] = safeCall(state.api, entry.method, null, { compact: false });
-    });
-
-    state.failureReason = "";
-    return true;
   }
 
-  function readAllSources() {
+  function readSurface() {
+    var source = runtime.sources.surface;
+
+    source.api = firstGlobal(source.aliases);
+    source.detected = Boolean(source.api);
+    source.apiComplete = false;
+    source.valid = false;
+    source.status = null;
+    source.receivePacket = null;
+    source.maps = {};
+
+    if (!source.detected) {
+      source.failureReason = "surface-habitability child missing";
+      runtime.failures.push(source.failureReason);
+      return;
+    }
+
+    source.apiComplete = Boolean(
+      typeof source.api.status === "function" &&
+      typeof source.api.getChildReceivePacket === "function" &&
+      typeof source.api.getSurfaceMap === "function" &&
+      typeof source.api.getElevationField === "function" &&
+      typeof source.api.getSummitInfluenceField === "function" &&
+      typeof source.api.getNodeMap === "function" &&
+      typeof source.api.getSurfaceHabitabilityBlueprintPacket === "function"
+    );
+
+    source.status = safeCall(source, "status");
+    source.receivePacket = safeCall(source, "getChildReceivePacket", "landform-compositor", { compact: false });
+    source.maps.surfaceMap = safeCall(source, "getSurfaceMap", { compact: false });
+    source.maps.elevationField = safeCall(source, "getElevationField", { compact: false });
+    source.maps.summitField = safeCall(source, "getSummitInfluenceField", { compact: false });
+    source.maps.nodeMap = safeCall(source, "getNodeMap", { compact: false });
+    source.maps.blueprintPacket = safeCall(source, "getSurfaceHabitabilityBlueprintPacket", "landform-compositor", { compact: false });
+
+    source.valid = Boolean(
+      source.apiComplete &&
+      source.status &&
+      source.status.gratitudeChildNumber === "1-of-4" &&
+      source.status.surfaceHabitabilityAuthorityActive === true &&
+      source.status.landAuthorityActive === true &&
+      source.status.elevationAuthorityActive === true &&
+      source.status.aboveSeaLevelAuthorityActive === true &&
+      source.status.finalVisualPassClaim === false &&
+      source.receivePacket &&
+      source.receivePacket.childReceivePacketReady === true
+    );
+
+    source.failureReason = source.valid ? "" : "surface-habitability validation failed";
+    if (!source.valid) runtime.failures.push(source.failureReason);
+  }
+
+  function readFlexibleSource(key, requiredName) {
+    var source = runtime.sources[key];
+
+    source.api = firstGlobal(source.aliases);
+    source.detected = Boolean(source.api);
+    source.apiComplete = false;
+    source.valid = false;
+    source.status = null;
+    source.receivePacket = null;
+    source.maps = {};
+
+    if (!source.detected) {
+      source.failureReason = requiredName + " child missing";
+      runtime.failures.push(source.failureReason);
+      return;
+    }
+
+    source.apiComplete = typeof source.api.status === "function";
+    source.status = safeCall(source, "status");
+
+    if (typeof source.api.getChildReceivePacket === "function") {
+      source.receivePacket = safeCall(source, "getChildReceivePacket", "landform-compositor", { compact: false });
+    }
+
+    [
+      "getHydrationMap",
+      "getHydrationFlowField",
+      "getWaterBehaviorPacket",
+      "getRiverStreamMap",
+      "getMarshWetlandMap",
+      "getHydrationEdgeMap",
+      "getMaterialEdgeMap",
+      "getBeachMap",
+      "getCliffMap",
+      "getWaterfallMap",
+      "getSedimentMap",
+      "getRockMap"
+    ].forEach(function (method) {
+      if (typeof source.api[method] === "function") {
+        source.maps[method] = safeCall(source, method, method.indexOf("Packet") >= 0 ? "landform-compositor" : { compact: false }, { compact: false });
+      }
+    });
+
+    source.valid = Boolean(
+      source.apiComplete &&
+      source.status &&
+      source.status.finalVisualPassClaim !== true
+    );
+
+    source.failureReason = source.valid ? "" : requiredName + " validation failed";
+    if (!source.valid) runtime.failures.push(source.failureReason);
+  }
+
+  function readSources() {
     runtime.failures = [];
     runtime.warnings = [];
 
-    var surfaceOk = readSource(
-      runtime.surface,
-      ["status"],
-      [
-        { key: "surfaceMap", method: "getSurfaceMap" },
-        { key: "elevationField", method: "getElevationField" },
-        { key: "summitField", method: "getSummitInfluenceField" },
-        { key: "nodeMap", method: "getNodeMap" },
-        { key: "packet", method: "getSurfaceHabitabilityBlueprintPacket" }
-      ]
-    );
-
-    var hydrationOk = readSource(
-      runtime.hydration,
-      ["status"],
-      [
-        { key: "hydrationMap", method: "getHydrationMap" },
-        { key: "waterPacket", method: "getWaterBehaviorPacket" },
-        { key: "flowField", method: "getHydrationFlowField" },
-        { key: "riverStreamMap", method: "getRiverStreamMap" },
-        { key: "marshWetlandMap", method: "getMarshWetlandMap" }
-      ]
-    );
-
-    var edgeOk = readSource(
-      runtime.edge,
-      ["status"],
-      [
-        { key: "edgeMap", method: "getHydrationEdgeMap" },
-        { key: "waterPacket", method: "getWaterBehaviorPacket" },
-        { key: "materialMap", method: "getMaterialEdgeMap" },
-        { key: "beachMap", method: "getBeachMap" },
-        { key: "cliffMap", method: "getCliffMap" },
-        { key: "waterfallMap", method: "getWaterfallMap" }
-      ]
-    );
-
-    if (!surfaceOk) runtime.failures.push(runtime.surface.failureReason);
-    if (!hydrationOk) runtime.failures.push(runtime.hydration.failureReason);
-    if (!edgeOk) runtime.failures.push(runtime.edge.failureReason);
-
-    return surfaceOk && hydrationOk && edgeOk;
+    readSurface();
+    readFlexibleSource("hydration", "hydration");
+    readFlexibleSource("edge", "hydration-edge");
   }
 
   function mergeSourceData() {
     var nodes = blankNodes();
+    var surface = runtime.sources.surface.maps;
+    var hydration = runtime.sources.hydration.maps;
+    var edge = runtime.sources.edge.maps;
 
-    mergeList(nodes, collect(runtime.surface.maps.surfaceMap, ["nodes", "seats"]));
-    mergeList(nodes, collect(runtime.surface.maps.elevationField, ["nodes", "seats"]));
-    mergeList(nodes, collect(runtime.surface.maps.summitField, ["nodes", "seats"]));
-    mergeList(nodes, collect(runtime.surface.maps.nodeMap, ["nodes", "seats"]));
-    mergeList(nodes, collect(runtime.surface.maps.packet, ["nodes", "seats", "datumNodes"]));
+    mergeList(nodes, collect(surface.nodeMap, ["nodes", "seats"]));
+    mergeList(nodes, collect(surface.surfaceMap, ["nodes", "seats", "landNodes"]));
+    mergeList(nodes, collect(surface.elevationField, ["nodes", "seats"]));
+    mergeList(nodes, collect(surface.summitField, ["nodes", "seats"]));
+    mergeList(nodes, collect(surface.blueprintPacket, ["nodes", "seats", "landNodes"]));
 
-    mergeList(nodes, collect(runtime.hydration.maps.hydrationMap, ["nodes", "seats"]));
-    mergeList(nodes, collect(runtime.hydration.maps.waterPacket, ["nodes", "waterNodes", "seats"]));
-    mergeList(nodes, collect(runtime.hydration.maps.flowField, ["nodes", "flowNodes", "seats"]));
-    mergeList(nodes, collect(runtime.hydration.maps.riverStreamMap, ["nodes", "seats"]));
-    mergeList(nodes, collect(runtime.hydration.maps.marshWetlandMap, ["nodes", "seats"]));
+    Object.keys(hydration).forEach(function (key) {
+      mergeList(nodes, collect(hydration[key], ["nodes", "seats", "waterNodes", "flowNodes"]));
+    });
 
-    mergeList(nodes, collect(runtime.edge.maps.edgeMap, ["nodes", "edgeNodes", "edges"]));
-    mergeList(nodes, collect(runtime.edge.maps.waterPacket, ["nodes", "waterNodes"]));
-    mergeList(nodes, collect(runtime.edge.maps.materialMap, ["nodes", "materialNodes"]));
-    mergeList(nodes, collect(runtime.edge.maps.beachMap, ["nodes"]));
-    mergeList(nodes, collect(runtime.edge.maps.cliffMap, ["nodes"]));
-    mergeList(nodes, collect(runtime.edge.maps.waterfallMap, ["nodes"]));
+    Object.keys(edge).forEach(function (key) {
+      mergeList(nodes, collect(edge[key], ["nodes", "seats", "edgeNodes", "edges", "materialNodes"]));
+    });
 
     return nodes;
   }
@@ -338,105 +377,111 @@
   function neighbors(index) {
     var x = index % RADIAL_NODES;
     var y = Math.floor(index / RADIAL_NODES);
-    var result = [];
+    var out = [];
 
     for (var dy = -1; dy <= 1; dy += 1) {
       for (var dx = -1; dx <= 1; dx += 1) {
         if (dx === 0 && dy === 0) continue;
+
         var nx = x + dx;
         var ny = y + dy;
+
         if (nx >= 0 && nx < RADIAL_NODES && ny >= 0 && ny < FIBONACCI_BANDS) {
-          result.push(ny * RADIAL_NODES + nx);
+          out.push(ny * RADIAL_NODES + nx);
         }
       }
     }
 
-    return result;
+    return out;
   }
 
-  function landValue(node) {
-    var terrainClass = textOf(node, ["terrainClass"], "");
-    var primaryCategory = textOf(node, ["primaryCategory"], "");
-    var elevation = valueOf(node, ["unifiedElevation", "smoothedElevation", "surfaceExpressionDatum", "elevation"], 0);
+  function isLand(node) {
+    var terrain = textOf(node, ["terrainClass"], "");
+    var category = textOf(node, ["primaryCategory"], "");
+    var elevation = valueOf(node, ["unifiedElevation", "surfaceExpressionDatum", "elevation"], 0);
 
     return Boolean(
       node.continentMembership === true ||
       node.land === true ||
       node.aboveSeaLevelMass === true ||
-      node.mergedLandformMembership === true ||
       node.continentId === "gratitude" ||
-      elevation > SEA_LEVEL_DATUM ||
-      (terrainClass && terrainClass.indexOf("outside") < 0 && primaryCategory !== "outside_continent")
+      elevation >= SEA_LEVEL_DATUM ||
+      (terrain && terrain.indexOf("outside") < 0 && category !== "outside_context" && category !== "outside_continent")
     );
   }
 
+  function composeNode(node, index) {
+    var x = index % RADIAL_NODES;
+    var y = Math.floor(index / RADIAL_NODES);
+    var land = isLand(node);
+    var elevation = valueOf(node, ["unifiedElevation", "surfaceExpressionDatum", "elevation"], land ? 0.44 : 0);
+    var hydration = valueOf(node, ["hydrationInfluence", "hydrationPressure", "hydrationDepth", "waterRetentionPermission"], 0);
+    var edge = valueOf(node, ["edgeInfluence", "edgePressure", "beachPermission", "cliffPermission", "waterfallPermission"], 0);
+    var summit = valueOf(node, ["summitInfluence", "summitPressure", "summitMaxInfluence"], 0);
+    var ridge = valueOf(node, ["ridgeInfluence", "ridgePressure"], 0);
+    var basin = valueOf(node, ["basinInfluence", "basinPressure"], 0);
+    var valley = valueOf(node, ["valleyInfluence", "valleyPressure"], 0);
+    var coast = valueOf(node, ["coastInfluence", "coastPressure", "shelfPressure"], 0);
+    var material = Math.max(
+      valueOf(node, ["materialInfluence"], 0),
+      valueOf(node, ["sedimentPressure"], 0),
+      valueOf(node, ["rockPressure"], 0),
+      valueOf(node, ["sandPressure"], 0),
+      valueOf(node, ["soilPressure"], 0)
+    );
+
+    return {
+      compositeNodeId: compositeNodeId(x, y),
+      sourceNodeId: textOf(node, ["sourceNodeId", "nodeId"], sourceNodeId(x, y)),
+      nodeId: compositeNodeId(x, y),
+      seatIndex: index,
+      nodeIndex: index,
+      seatKey: textOf(node, ["seatKey"], seatKey(x, y)),
+      x: x,
+      y: y,
+
+      continentMembership: land,
+      terrainClass: textOf(node, ["terrainClass"], land ? "surface_land" : "outside_context"),
+      hydrationClass: textOf(node, ["hydrationClass"], land ? "hydration_defined_downstream" : "outside_context"),
+      primaryCategory: textOf(node, ["primaryCategory"], land ? "surface" : "outside_context"),
+
+      elevation: round(elevation, 4),
+      unifiedElevation: round(elevation, 4),
+      seaLevelDatum: SEA_LEVEL_DATUM,
+      aboveSeaLevelMass: Boolean(land && elevation >= SEA_LEVEL_DATUM),
+
+      summitInfluence: round(summit, 4),
+      ridgeInfluence: round(ridge, 4),
+      basinInfluence: round(basin, 4),
+      valleyInfluence: round(valley, 4),
+      coastInfluence: round(coast, 4),
+      hydrationInfluence: round(hydration, 4),
+      edgeInfluence: round(edge, 4),
+      materialInfluence: round(material, 4),
+
+      edgeBehavior: textOf(node, ["edgeBehavior"], "held_future_socket"),
+      waterBehavior: textOf(node, ["waterBehavior"], "held_future_socket"),
+      materialBehavior: textOf(node, ["materialBehavior"], "held_future_socket"),
+      primaryBehavior: textOf(node, ["primaryBehavior"], "held_future_socket"),
+
+      massContinuityWeight: 0,
+      mergedLandformMembership: false,
+      boundaryParcel: false,
+      coastlineParcel: false,
+      interiorParcel: false,
+      hydrationFlowParcel: false,
+      edgeRelationshipParcel: false,
+      summitAnchorParcel: false,
+
+      renderAsRawParcel: false,
+      renderAsUnifiedMass: true,
+      carrierMayConsume: true,
+      finalVisualPassClaim: false
+    };
+  }
+
   function composeNodes(raw) {
-    var nodes = raw.map(function (node, index) {
-      var x = index % RADIAL_NODES;
-      var y = Math.floor(index / RADIAL_NODES);
-      var elevation = valueOf(node, ["unifiedElevation", "smoothedElevation", "surfaceExpressionDatum", "elevation"], landValue(node) ? 0.45 : 0);
-      var hydration = valueOf(node, ["hydrationInfluence", "hydrationPressure", "hydrationDepth", "waterRetentionPermission"], 0);
-      var edge = valueOf(node, ["edgeInfluence", "edgePressure", "beachPermission", "cliffPermission", "waterfallPermission"], 0);
-      var summit = valueOf(node, ["summitInfluence", "summitPressure", "summitMaxInfluence"], 0);
-      var ridge = valueOf(node, ["ridgeInfluence", "ridgePressure"], 0);
-      var basin = valueOf(node, ["basinInfluence", "basinPressure"], 0);
-      var valley = valueOf(node, ["valleyInfluence", "valleyPressure"], 0);
-      var coast = valueOf(node, ["coastInfluence", "coastPressure", "shelfPressure"], 0);
-      var material = Math.max(
-        valueOf(node, ["materialInfluence"], 0),
-        valueOf(node, ["sedimentPressure"], 0),
-        valueOf(node, ["rockPressure"], 0),
-        valueOf(node, ["sandPressure"], 0)
-      );
-
-      return {
-        compositeNodeId: compositeNodeId(x, y),
-        sourceNodeId: textOf(node, ["sourceNodeId", "nodeId"], sourceNodeId(x, y)),
-        seatIndex: index,
-        nodeIndex: index,
-        seatKey: textOf(node, ["seatKey"], seatKey(x, y)),
-        x: x,
-        y: y,
-
-        continentMembership: landValue(node),
-        terrainClass: textOf(node, ["terrainClass"], landValue(node) ? "surface_land" : "outside_context"),
-        hydrationClass: textOf(node, ["hydrationClass"], "held_or_dry"),
-        primaryCategory: textOf(node, ["primaryCategory"], landValue(node) ? "surface" : "outside_context"),
-
-        elevation: round(elevation, 4),
-        unifiedElevation: round(elevation, 4),
-        seaLevelDatum: SEA_LEVEL_DATUM,
-        aboveSeaLevelMass: elevation >= SEA_LEVEL_DATUM,
-
-        summitInfluence: round(summit, 4),
-        ridgeInfluence: round(ridge, 4),
-        basinInfluence: round(basin, 4),
-        valleyInfluence: round(valley, 4),
-        coastInfluence: round(coast, 4),
-        hydrationInfluence: round(hydration, 4),
-        edgeInfluence: round(edge, 4),
-        materialInfluence: round(material, 4),
-
-        edgeBehavior: textOf(node, ["edgeBehavior"], "held_future_socket"),
-        waterBehavior: textOf(node, ["waterBehavior"], "held_future_socket"),
-        materialBehavior: textOf(node, ["materialBehavior"], "held_future_socket"),
-        primaryBehavior: textOf(node, ["primaryBehavior"], "held_future_socket"),
-
-        massContinuityWeight: 0,
-        mergedLandformMembership: false,
-        boundaryParcel: false,
-        coastlineParcel: false,
-        interiorParcel: false,
-        hydrationFlowParcel: false,
-        edgeRelationshipParcel: false,
-        summitAnchorParcel: false,
-
-        renderAsRawParcel: false,
-        renderAsUnifiedMass: true,
-        carrierMayConsume: true,
-        finalVisualPassClaim: false
-      };
-    });
+    var nodes = raw.map(composeNode);
 
     nodes.forEach(function (node, index) {
       var ns = neighbors(index);
@@ -453,18 +498,48 @@
       });
 
       node.massContinuityWeight = round(ns.length ? landNeighbors / ns.length : 0, 4);
-      node.unifiedElevation = round(clamp((elevationTotal / elevationCount) * 0.76 + node.elevation * 0.24, 0, 1), 4);
-      node.mergedLandformMembership = Boolean(node.continentMembership && (node.massContinuityWeight > 0.16 || node.aboveSeaLevelMass));
-      node.boundaryParcel = Boolean(node.mergedLandformMembership && (node.massContinuityWeight < 0.88 || node.coastInfluence > 0.24 || node.edgeInfluence > 0.30));
-      node.coastlineParcel = Boolean(node.boundaryParcel && (node.coastInfluence > 0.18 || node.massContinuityWeight < 0.72 || node.edgeInfluence > 0.36));
+      node.unifiedElevation = round(clamp((elevationTotal / elevationCount) * 0.70 + node.elevation * 0.30, 0, 1), 4);
+      node.mergedLandformMembership = Boolean(node.continentMembership && (node.aboveSeaLevelMass || node.massContinuityWeight > 0.14));
+      node.boundaryParcel = Boolean(node.mergedLandformMembership && (node.massContinuityWeight < 0.88 || node.coastInfluence > 0.22 || node.edgeInfluence > 0.30));
+      node.coastlineParcel = Boolean(node.boundaryParcel && (node.massContinuityWeight < 0.76 || node.coastInfluence > 0.30 || node.edgeInfluence > 0.34));
       node.interiorParcel = Boolean(node.mergedLandformMembership && !node.coastlineParcel);
-      node.hydrationFlowParcel = Boolean(node.hydrationInfluence > 0.18 || /river|stream|gully|pool|marsh|wetland|waterfall/.test(node.waterBehavior + node.edgeBehavior));
-      node.edgeRelationshipParcel = Boolean(node.coastlineParcel || /beach|cliff|waterfall|shelf|delta|sediment|rock/.test(node.edgeBehavior + node.primaryBehavior));
-      node.summitAnchorParcel = Boolean(node.summitInfluence > 0.30);
+      node.hydrationFlowParcel = Boolean(node.hydrationInfluence > 0.16 || /river|stream|gully|pool|marsh|wetland|waterfall/.test(node.waterBehavior + node.edgeBehavior));
+      node.edgeRelationshipParcel = Boolean(node.coastlineParcel || /beach|cliff|waterfall|shelf|delta|sediment|rock|sand/.test(node.edgeBehavior + node.primaryBehavior + node.materialBehavior));
+      node.summitAnchorParcel = Boolean(node.summitInfluence > 0.28);
       Object.freeze(node);
     });
 
-    return nodes;
+    return Object.freeze(nodes);
+  }
+
+  function compactNode(node) {
+    return {
+      compositeNodeId: node.compositeNodeId,
+      sourceNodeId: node.sourceNodeId,
+      seatIndex: node.seatIndex,
+      seatKey: node.seatKey,
+      x: node.x,
+      y: node.y,
+      terrainClass: node.terrainClass,
+      hydrationClass: node.hydrationClass,
+      elevation: node.elevation,
+      unifiedElevation: node.unifiedElevation,
+      continentMembership: node.continentMembership,
+      mergedLandformMembership: node.mergedLandformMembership,
+      coastlineParcel: node.coastlineParcel,
+      boundaryParcel: node.boundaryParcel,
+      interiorParcel: node.interiorParcel,
+      hydrationFlowParcel: node.hydrationFlowParcel,
+      edgeRelationshipParcel: node.edgeRelationshipParcel,
+      summitAnchorParcel: node.summitAnchorParcel,
+      edgeBehavior: node.edgeBehavior,
+      waterBehavior: node.waterBehavior,
+      materialBehavior: node.materialBehavior,
+      renderAsRawParcel: false,
+      renderAsUnifiedMass: true,
+      carrierMayConsume: true,
+      finalVisualPassClaim: false
+    };
   }
 
   function buildCoastline(nodes) {
@@ -499,8 +574,10 @@
 
     var points = boundary.map(function (node) {
       var p = lonLat(node.x + 0.5, node.y + 0.5);
+
       return {
         nodeId: node.compositeNodeId,
+        sourceNodeId: node.sourceNodeId,
         x: node.x,
         y: node.y,
         lon: p.lon,
@@ -511,7 +588,7 @@
       };
     });
 
-    if (points.length) points.push(deepClone(points[0]));
+    if (points.length) points.push(clone(points[0]));
 
     return Object.freeze({
       pathId: "GRATITUDE-UNIFIED-COASTLINE-PATH-01",
@@ -519,6 +596,7 @@
       pointCount: points.length,
       points: Object.freeze(points),
       coastlineIsUnified: true,
+      surfaceHabitabilityIsSource: true,
       carrierMayConsume: true,
       finalVisualPassClaim: false
     });
@@ -529,6 +607,7 @@
     runtime.boundaryNodes = Object.freeze(runtime.nodes.filter(function (node) { return node.boundaryParcel; }));
     runtime.hydrationNodes = Object.freeze(runtime.nodes.filter(function (node) { return node.hydrationFlowParcel; }));
     runtime.edgeNodes = Object.freeze(runtime.nodes.filter(function (node) { return node.edgeRelationshipParcel; }));
+    runtime.summitNodes = Object.freeze(runtime.nodes.filter(function (node) { return node.summitAnchorParcel; }));
     runtime.coastlinePath = buildCoastline(runtime.nodes);
 
     runtime.hydrationFlowField = Object.freeze({
@@ -561,56 +640,38 @@
     });
   }
 
-  function compactNode(node) {
+  function sourceReceipt(source) {
     return {
-      compositeNodeId: node.compositeNodeId,
-      sourceNodeId: node.sourceNodeId,
-      seatIndex: node.seatIndex,
-      seatKey: node.seatKey,
-      x: node.x,
-      y: node.y,
-      terrainClass: node.terrainClass,
-      hydrationClass: node.hydrationClass,
-      elevation: node.elevation,
-      unifiedElevation: node.unifiedElevation,
-      continentMembership: node.continentMembership,
-      mergedLandformMembership: node.mergedLandformMembership,
-      coastlineParcel: node.coastlineParcel,
-      boundaryParcel: node.boundaryParcel,
-      interiorParcel: node.interiorParcel,
-      hydrationFlowParcel: node.hydrationFlowParcel,
-      edgeRelationshipParcel: node.edgeRelationshipParcel,
-      summitAnchorParcel: node.summitAnchorParcel,
-      edgeBehavior: node.edgeBehavior,
-      waterBehavior: node.waterBehavior,
-      materialBehavior: node.materialBehavior,
-      renderAsRawParcel: false,
-      renderAsUnifiedMass: true,
-      carrierMayConsume: true,
-      finalVisualPassClaim: false
+      name: source.name,
+      detected: source.detected,
+      apiComplete: source.apiComplete,
+      valid: source.valid,
+      failureReason: source.failureReason,
+      aliases: source.aliases.slice()
     };
+  }
+
+  function compositorPass() {
+    return Boolean(
+      runtime.sources.surface.valid &&
+      runtime.sources.hydration.valid &&
+      runtime.sources.edge.valid &&
+      runtime.landNodes.length > 0 &&
+      runtime.coastlinePath &&
+      runtime.coastlinePath.pathReady === true
+    );
   }
 
   function refresh() {
     runtime.refreshCount += 1;
     runtime.refreshedAt = new Date().toISOString();
 
-    readAllSources();
-    runtime.nodes = Object.freeze(composeNodes(mergeSourceData()));
+    readSources();
+    runtime.nodes = composeNodes(mergeSourceData());
     buildFields();
     publishGlobals();
 
     return runtime;
-  }
-
-  function sourceReceipt(state) {
-    return {
-      name: state.name,
-      detected: state.detected,
-      apiComplete: state.apiComplete,
-      failureReason: state.failureReason,
-      globals: state.globals.slice()
-    };
   }
 
   function status() {
@@ -632,9 +693,20 @@
       consumesHydrationEdge: true,
       consumesLegacyBroadContinentChild: false,
 
-      surfaceHabitability: sourceReceipt(runtime.surface),
-      hydration: sourceReceipt(runtime.hydration),
-      hydrationEdge: sourceReceipt(runtime.edge),
+      surfaceHabitability: sourceReceipt(runtime.sources.surface),
+      hydration: sourceReceipt(runtime.sources.hydration),
+      hydrationEdge: sourceReceipt(runtime.sources.edge),
+
+      surfaceHabitabilityDetected: runtime.sources.surface.detected,
+      surfaceHabitabilityValidated: runtime.sources.surface.valid,
+      hydrationValidated: runtime.sources.hydration.valid,
+      hydrationEdgeValidated: runtime.sources.edge.valid,
+      compositorValidated: compositorPass(),
+
+      terrainPass: runtime.sources.surface.valid,
+      hydrationPass: runtime.sources.hydration.valid,
+      edgePass: runtime.sources.edge.valid,
+      compositorPass: compositorPass(),
 
       unifiedLandformScope256Active: true,
       nodeCount: NODE_COUNT,
@@ -642,6 +714,7 @@
       boundaryNodeCount: runtime.boundaryNodes.length,
       hydrationFlowCount: runtime.hydrationNodes.length,
       edgeRelationshipCount: runtime.edgeNodes.length,
+      summitNodeCount: runtime.summitNodes.length,
       coastlinePathReady: Boolean(runtime.coastlinePath && runtime.coastlinePath.pathReady),
       coastlinePointCount: runtime.coastlinePath && runtime.coastlinePath.points ? runtime.coastlinePath.points.length : 0,
 
@@ -661,7 +734,7 @@
       warnings: runtime.warnings.slice(),
       refreshedAt: runtime.refreshedAt,
       refreshCount: runtime.refreshCount,
-      deployMarker: "AUDRALIA_GRATITUDE_LANDFORM_COMPOSITOR_THREE_CHILD_CONSUMPTION_DEPLOY_MARKER_v1"
+      deployMarker: "AUDRALIA_GRATITUDE_LANDFORM_COMPOSITOR_SURFACE_SOURCE_BINDING_DEPLOY_MARKER_v1"
     };
   }
 
@@ -672,8 +745,8 @@
     return {
       contract: CONTRACT,
       maskReady: runtime.landNodes.length > 0,
-      maskType: "four_child_unified_continent_mask",
-      nodes: compact ? runtime.nodes.map(compactNode) : runtime.nodes.map(deepClone),
+      maskType: "surface_habitability_source_unified_continent_mask",
+      nodes: compact ? runtime.nodes.map(compactNode) : runtime.nodes.map(clone),
       rawParcelVisibilityHeld: true,
       renderAsUnifiedMass: true,
       carrierMayConsume: true,
@@ -683,7 +756,7 @@
 
   function getCoastlinePath() {
     refresh();
-    return deepClone(runtime.coastlinePath);
+    return clone(runtime.coastlinePath);
   }
 
   function getElevationField(options) {
@@ -693,20 +766,34 @@
     return {
       contract: CONTRACT,
       elevationFieldReady: runtime.landNodes.length > 0,
-      nodes: compact ? runtime.landNodes.map(compactNode) : runtime.landNodes.map(deepClone),
       surfaceHabitabilityIsSource: true,
+      nodes: compact ? runtime.landNodes.map(compactNode) : runtime.landNodes.map(clone),
       finalVisualPassClaim: false
     };
   }
 
-  function getHydrationFlowField(options) {
+  function getSummitInfluenceField(options) {
     refresh();
-    return deepClone(runtime.hydrationFlowField);
+    var compact = Boolean(options && options.compact);
+
+    return {
+      contract: CONTRACT,
+      summitInfluenceFieldReady: runtime.summitNodes.length > 0,
+      summitsAreElevationAnchors: true,
+      summitsAreNotIslands: true,
+      nodes: compact ? runtime.summitNodes.map(compactNode) : runtime.summitNodes.map(clone),
+      finalVisualPassClaim: false
+    };
   }
 
-  function getEdgeRelationshipField(options) {
+  function getHydrationFlowField() {
     refresh();
-    return deepClone(runtime.edgeRelationshipField);
+    return clone(runtime.hydrationFlowField);
+  }
+
+  function getEdgeRelationshipField() {
+    refresh();
+    return clone(runtime.edgeRelationshipField);
   }
 
   function getUnifiedLandformPacket(target, options) {
@@ -716,24 +803,25 @@
     return {
       contract: CONTRACT,
       target: target || "unassigned-unified-landform-consumer",
-      packetType: "four_child_unified_landform_packet",
-      unifiedLandformPacketReady: runtime.landNodes.length > 0,
+      packetType: "surface_source_bound_unified_landform_packet",
+      unifiedLandformPacketReady: compositorPass(),
 
       gratitudeChildCount: 4,
       carrierIsRuntime: true,
       legacyBroadContinentChildActive: false,
 
-      surfaceHabitabilityConsumed: runtime.surface.detected,
-      hydrationConsumed: runtime.hydration.detected,
-      hydrationEdgeConsumed: runtime.edge.detected,
+      surfaceHabitabilityConsumed: runtime.sources.surface.valid,
+      hydrationConsumed: runtime.sources.hydration.valid,
+      hydrationEdgeConsumed: runtime.sources.edge.valid,
 
       continentMask: getContinentMask({ compact: true }),
-      coastlinePath: getCoastlinePath({ compact: true }),
+      coastlinePath: getCoastlinePath(),
       elevationField: getElevationField({ compact: true }),
+      summitInfluenceField: getSummitInfluenceField({ compact: true }),
       hydrationFlowField: getHydrationFlowField({ compact: true }),
       edgeRelationshipField: getEdgeRelationshipField({ compact: true }),
 
-      nodes: compact ? runtime.nodes.map(compactNode) : runtime.nodes.map(deepClone),
+      nodes: compact ? runtime.nodes.map(compactNode) : runtime.nodes.map(clone),
 
       carrierMayConsume: true,
       carrierInventsLandform: false,
@@ -743,15 +831,19 @@
 
   function getSurfaceCompositePacket(target, options) {
     refresh();
+    var compact = Boolean(options && options.compact);
+
     return {
       contract: CONTRACT,
       target: target || "surface-composite-consumer",
       packetType: "surface_from_child_1_through_compositor",
-      surfaceCompositeReady: runtime.landNodes.length > 0,
+      surfaceCompositeReady: runtime.sources.surface.valid && runtime.landNodes.length > 0,
+      surfaceHabitabilityIsSource: true,
       continentMask: getContinentMask({ compact: true }),
       coastlinePath: getCoastlinePath(),
       elevationField: getElevationField({ compact: true }),
-      nodes: Boolean(options && options.compact) ? runtime.landNodes.map(compactNode) : runtime.landNodes.map(deepClone),
+      summitInfluenceField: getSummitInfluenceField({ compact: true }),
+      nodes: compact ? runtime.landNodes.map(compactNode) : runtime.landNodes.map(clone),
       rawParcelVisibilityHeld: true,
       carrierMayConsume: true,
       finalVisualPassClaim: false
@@ -760,15 +852,17 @@
 
   function getHydrationCompositePacket(target, options) {
     refresh();
+    var compact = Boolean(options && options.compact);
+
     return {
       contract: CONTRACT,
       target: target || "hydration-composite-consumer",
       packetType: "hydration_from_child_2_through_compositor",
-      hydrationCompositeReady: runtime.hydrationNodes.length > 0,
+      hydrationCompositeReady: runtime.sources.hydration.valid,
       continentMask: getContinentMask({ compact: true }),
       hydrationFlowField: getHydrationFlowField({ compact: true }),
       edgeRelationshipField: getEdgeRelationshipField({ compact: true }),
-      nodes: Boolean(options && options.compact) ? runtime.hydrationNodes.map(compactNode) : runtime.hydrationNodes.map(deepClone),
+      nodes: compact ? runtime.hydrationNodes.map(compactNode) : runtime.hydrationNodes.map(clone),
       carrierMayConsume: true,
       finalVisualPassClaim: false
     };
@@ -776,14 +870,16 @@
 
   function getSixthSenseCompositePacket(target, options) {
     refresh();
+    var compact = Boolean(options && options.compact);
+
     return {
       contract: CONTRACT,
       target: target || "sixth-sense-consumer",
-      packetType: "sixth_sense_four_child_relationship_packet",
-      sixthSenseCompositeReady: runtime.landNodes.length > 0,
+      packetType: "sixth_sense_surface_hydration_edge_relationship_packet",
+      sixthSenseCompositeReady: compositorPass(),
       relationshipFormula: "surface-habitability + hydration + hydration-edge = unified landform expression",
       unifiedLandformPacket: getUnifiedLandformPacket(target || "sixth-sense-unified", { compact: true }),
-      nodes: Boolean(options && options.compact) ? runtime.nodes.map(compactNode) : runtime.nodes.map(deepClone),
+      nodes: compact ? runtime.nodes.map(compactNode) : runtime.nodes.map(clone),
       carrierMayConsume: true,
       finalVisualPassClaim: false
     };
@@ -795,12 +891,17 @@
     return {
       contract: CONTRACT,
       target: target || "audralia-runtime-carrier",
-      packetType: "four_child_compositor_to_runtime_carrier_packet",
-      carrierReceivePacketReady: runtime.landNodes.length > 0,
+      packetType: "surface_source_bound_compositor_to_runtime_carrier_packet",
+      carrierReceivePacketReady: compositorPass(),
 
       gratitudeChildCount: 4,
       carrierIsRuntime: true,
       legacyBroadContinentChildActive: false,
+
+      terrainPass: runtime.sources.surface.valid,
+      hydrationPass: runtime.sources.hydration.valid,
+      edgePass: runtime.sources.edge.valid,
+      compositorPass: compositorPass(),
 
       requiredCarrierPosture: "compositor_first_runtime_expression",
       surfaceCompositePacket: getSurfaceCompositePacket(target || "carrier-surface", { compact: true }),
@@ -812,6 +913,9 @@
       carrierMayConsume: true,
       carrierMayRender: true,
       carrierInventsLandform: false,
+      carrierInventsTerrain: false,
+      carrierInventsHydration: false,
+      carrierInventsEdge: false,
       finalVisualPassClaim: false
     };
   }
@@ -837,6 +941,10 @@
       gratitudeChildCount: 4,
       carrierIsRuntime: true,
       legacyBroadContinentChildActive: false,
+      terrainPass: runtime.sources.surface.valid,
+      hydrationPass: runtime.sources.hydration.valid,
+      edgePass: runtime.sources.edge.valid,
+      compositorPass: compositorPass(),
       landNodeCount: runtime.landNodes.length,
       coastlinePointCount: runtime.coastlinePath && runtime.coastlinePath.points ? runtime.coastlinePath.points.length : 0,
       finalVisualPassClaim: false
@@ -844,7 +952,7 @@
 
     window.AUDRALIA_GRATITUDE_UNIFIED_LANDFORM_PACKET = {
       contract: CONTRACT,
-      unifiedLandformPacketReady: runtime.landNodes.length > 0,
+      unifiedLandformPacketReady: compositorPass(),
       gratitudeChildCount: 4,
       carrierIsRuntime: true,
       legacyBroadContinentChildActive: false,
@@ -866,6 +974,7 @@
     getUnifiedLandformPacket: getUnifiedLandformPacket,
     getContinentMask: getContinentMask,
     getElevationField: getElevationField,
+    getSummitInfluenceField: getSummitInfluenceField,
     getCoastlinePath: getCoastlinePath,
     getHydrationFlowField: getHydrationFlowField,
     getEdgeRelationshipField: getEdgeRelationshipField,

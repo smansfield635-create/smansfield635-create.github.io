@@ -1,27 +1,27 @@
 // /assets/audralia/clean/runtime/audralia.terrain-expression.canvas.child.js
-// AUDRALIA_TERRAIN_EXPRESSION_CANVAS_CHILD_TNT_v1
-// Full-file creation.
-// Scope: transparent node-registered terrain illumination canvas only.
-// Purpose: reveal what has already been written by the dry terrain / elevation / relief / landform / readiness / triangle / carrier stack.
-// Owns: expression canvas, terrain illumination, organic land mask, Surface grid suppression, lens-aware visual definition.
-// Does not own: terrain truth, elevation truth, relief truth, landform truth, beach truth, triangulation truth, hydration truth, controls, carrier runtime, parent HTML, or final visual pass.
+// AUDRALIA_TERRAIN_EXPRESSION_LENS_AUTHORITY_SPLIT_TNT_v1
+// Full-file replacement.
+// Scope: terrain-expression canvas only.
+// Purpose: split visual authority into Surface, Hydration, Boundary, Lattice, and Full.
+// Governing lock: this file does not own terrain truth; it owns terrain visibility.
+// Does not own: terrain truth, elevation truth, relief truth, landform truth, beach truth, triangulation truth, hydration truth, carrier runtime, controls, HTML, or final visual pass.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_TERRAIN_EXPRESSION_CANVAS_CHILD_TNT_v1";
+  var CONTRACT = "AUDRALIA_TERRAIN_EXPRESSION_LENS_AUTHORITY_SPLIT_TNT_v1";
+  var PREVIOUS_CONTRACT = "AUDRALIA_TERRAIN_EXPRESSION_CANVAS_CHILD_TNT_v1";
   var FILE = "/assets/audralia/clean/runtime/audralia.terrain-expression.canvas.child.js";
   var ROUTE = "/showroom/globe/audralia/planet/";
   var CARRIER_GLOBAL = "__AUDRALIA_G2_PLANET_BODY_CLEAN_PAIR_CONTROLLER__";
-  var DEPLOY_MARKER = "AUDRALIA_TERRAIN_EXPRESSION_CANVAS_CHILD_DEPLOY_MARKER_v1";
+  var DEPLOY_MARKER = "AUDRALIA_TERRAIN_EXPRESSION_LENS_AUTHORITY_SPLIT_DEPLOY_MARKER_v1";
 
   var TAU = Math.PI * 2;
   var RADIAL_NODES = 16;
   var FIBONACCI_BANDS = 16;
+  var MAX_CACHE_SAMPLES = 2600;
 
-  var MAX_CACHE_SAMPLES = 2400;
-
-  var DRY_TERRAIN_GLOBALS = Object.freeze([
+  var DRY_GLOBALS = Object.freeze([
     "AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_CHILD",
     "AUDRALIA_PLANET_PHYSICAL_TERRAIN_CHILD",
     "AUDRALIA_G2_DRY_REVEALED_PHYSICAL_TERRAIN_CHILD",
@@ -59,53 +59,60 @@
   ]);
 
   var LENS_RULES = Object.freeze({
-    body: Object.freeze({
-      alpha: 0.135,
-      detailAlpha: 0.060,
-      radiusScale: 1.10,
-      threshold: 0.120,
-      futureFillSuppression: 0.92,
-      budget: 720
-    }),
     surface: Object.freeze({
-      alpha: 0.315,
-      detailAlpha: 0.150,
-      radiusScale: 0.96,
-      threshold: 0.070,
-      futureFillSuppression: 0.96,
-      budget: 1750
+      name: "Surface",
+      authority: "land_visibility",
+      budget: 1800,
+      surfaceThreshold: 0.115,
+      hydrationThreshold: 9,
+      boundaryThreshold: 9,
+      alpha: 0.38,
+      detailAlpha: 0.18,
+      radiusScale: 1.05
     }),
     hydration: Object.freeze({
-      alpha: 0.080,
-      detailAlpha: 0.060,
-      radiusScale: 0.88,
-      threshold: 0.095,
-      futureFillSuppression: 0.40,
-      budget: 950
+      name: "Hydration",
+      authority: "future_water_placement_visibility",
+      budget: 1550,
+      surfaceThreshold: 9,
+      hydrationThreshold: 0.175,
+      boundaryThreshold: 9,
+      alpha: 0.24,
+      detailAlpha: 0.13,
+      radiusScale: 0.96
     }),
-    "sixth-sense": Object.freeze({
-      alpha: 0.235,
-      detailAlpha: 0.190,
-      radiusScale: 0.92,
-      threshold: 0.045,
-      futureFillSuppression: 0.55,
-      budget: 1900
+    boundary: Object.freeze({
+      name: "Boundary",
+      authority: "land_water_interface_visibility",
+      budget: 1450,
+      surfaceThreshold: 9,
+      hydrationThreshold: 9,
+      boundaryThreshold: 0.155,
+      alpha: 0.30,
+      detailAlpha: 0.25,
+      radiusScale: 0.72
     }),
     lattice: Object.freeze({
-      alpha: 0.045,
-      detailAlpha: 0.030,
-      radiusScale: 0.82,
-      threshold: 0.140,
-      futureFillSuppression: 0.96,
-      budget: 460
+      name: "Lattice",
+      authority: "diagnostic_structure_visibility",
+      budget: 2200,
+      surfaceThreshold: 9,
+      hydrationThreshold: 9,
+      boundaryThreshold: 9,
+      alpha: 0.20,
+      detailAlpha: 0.16,
+      radiusScale: 0.58
     }),
-    receipt: Object.freeze({
-      alpha: 0.050,
-      detailAlpha: 0.030,
-      radiusScale: 0.82,
-      threshold: 0.140,
-      futureFillSuppression: 0.96,
-      budget: 460
+    full: Object.freeze({
+      name: "Full",
+      authority: "composite_preview",
+      budget: 2400,
+      surfaceThreshold: 0.105,
+      hydrationThreshold: 0.195,
+      boundaryThreshold: 0.160,
+      alpha: 0.30,
+      detailAlpha: 0.16,
+      radiusScale: 0.94
     })
   });
 
@@ -163,6 +170,14 @@
 
     terrainExpressionSamples: [],
     terrainExpressionActive: false,
+
+    lensAuthoritySplitActive: true,
+    surfaceLandMaskActive: false,
+    hydrationFutureFillMaskActive: false,
+    boundaryInterfaceMaskActive: false,
+    latticeDiagnosticMaskActive: false,
+    fullCompositeMaskActive: false,
+
     organicLandMaskActive: false,
     nodeRegisteredExpressionActive: false,
     terrainIlluminationCanvasActive: false,
@@ -187,7 +202,7 @@
     finalHydrationPassClaim: false,
     finalVisualPassClaim: false,
 
-    activeLens: "body",
+    activeLens: "surface",
     renderCount: 0,
     cacheBuildCount: 0,
     lastCacheReason: "not built",
@@ -200,9 +215,7 @@
     window.__AUDRALIA_TERRAIN_EXPRESSION_CANVAS_CHILD_CONTROLLER__ &&
     typeof window.__AUDRALIA_TERRAIN_EXPRESSION_CANVAS_CHILD_CONTROLLER__.stop === "function"
   ) {
-    try {
-      window.__AUDRALIA_TERRAIN_EXPRESSION_CANVAS_CHILD_CONTROLLER__.stop();
-    } catch (_error) {}
+    try { window.__AUDRALIA_TERRAIN_EXPRESSION_CANVAS_CHILD_CONTROLLER__.stop(); } catch (_error) {}
   }
 
   function clamp(value, min, max) {
@@ -225,6 +238,16 @@
     var htmlRoute = normalizeRoute(document.documentElement.getAttribute("data-route") || "");
     var path = normalizeRoute(window.location ? window.location.pathname : "");
     return htmlRoute === ROUTE || path === ROUTE;
+  }
+
+  function normalizeLens(value) {
+    var lens = String(value || "surface").toLowerCase();
+
+    if (lens === "body") return "surface";
+    if (lens === "sixth-sense" || lens === "sixthsense" || lens === "sixth_sense") return "lattice";
+    if (lens === "receipt") return "full";
+
+    return LENS_RULES[lens] ? lens : "surface";
   }
 
   function firstGlobal(names) {
@@ -260,8 +283,7 @@
 
   function currentLens() {
     var cs = carrierState();
-    var lens = cs && cs.activeLens ? String(cs.activeLens) : state.activeLens || "body";
-    return LENS_RULES[lens] ? lens : "body";
+    return normalizeLens(cs && cs.activeLens ? cs.activeLens : state.activeLens);
   }
 
   function lonLatPoint(lonDeg, latDeg) {
@@ -375,7 +397,7 @@
   }
 
   function readDryTerrain() {
-    var api = firstGlobal(DRY_TERRAIN_GLOBALS);
+    var api = firstGlobal(DRY_GLOBALS);
 
     state.dryApi = api;
     state.dryStatus = null;
@@ -389,13 +411,13 @@
     state.dryStatus = typeof api.status === "function" ? safeCall("dryTerrain", api, "status") : null;
 
     if (typeof api.getCarrierTerrainPacket === "function") {
-      state.dryCarrierPacket = safeCall("dryTerrain", api, "getCarrierTerrainPacket", "audralia-terrain-expression-canvas-child", { compact: false });
+      state.dryCarrierPacket = safeCall("dryTerrain", api, "getCarrierTerrainPacket", "audralia-terrain-expression-lens-authority-split", { compact: false });
     }
 
     if (typeof api.getDryRevealedTerrainPacket === "function") {
-      state.dryPacket = safeCall("dryTerrain", api, "getDryRevealedTerrainPacket", "audralia-terrain-expression-canvas-child", { compact: false });
+      state.dryPacket = safeCall("dryTerrain", api, "getDryRevealedTerrainPacket", "audralia-terrain-expression-lens-authority-split", { compact: false });
     } else if (typeof api.getPlanetPhysicalTerrainPacket === "function") {
-      state.dryPacket = safeCall("dryTerrain", api, "getPlanetPhysicalTerrainPacket", "audralia-terrain-expression-canvas-child", { compact: false });
+      state.dryPacket = safeCall("dryTerrain", api, "getPlanetPhysicalTerrainPacket", "audralia-terrain-expression-lens-authority-split", { compact: false });
     }
 
     if (!state.dryPacket && state.dryCarrierPacket && state.dryCarrierPacket.planetPhysicalTerrainPacket) {
@@ -403,14 +425,7 @@
     }
 
     state.dryNodes = readPacketNodes(state.dryPacket).length ? readPacketNodes(state.dryPacket) : readPacketNodes(state.dryCarrierPacket);
-
-    state.readsDryTerrain = Boolean(
-      state.dryNodes.length &&
-      (
-        !state.dryStatus ||
-        state.dryStatus.activeHydration !== true
-      )
-    );
+    state.readsDryTerrain = state.dryNodes.length > 0;
 
     return state.readsDryTerrain;
   }
@@ -428,16 +443,12 @@
     state.elevationStatus = typeof api.status === "function" ? safeCall("elevationTrack", api, "status") : null;
 
     if (typeof api.getCarrierElevationPacket === "function") {
-      state.elevationPacket = safeCall("elevationTrack", api, "getCarrierElevationPacket", "audralia-terrain-expression-canvas-child", { compact: false });
+      state.elevationPacket = safeCall("elevationTrack", api, "getCarrierElevationPacket", "audralia-terrain-expression-lens-authority-split", { compact: false });
     } else if (typeof api.getElevationTrackPacket === "function") {
-      state.elevationPacket = safeCall("elevationTrack", api, "getElevationTrackPacket", "audralia-terrain-expression-canvas-child", { compact: false });
+      state.elevationPacket = safeCall("elevationTrack", api, "getElevationTrackPacket", "audralia-terrain-expression-lens-authority-split", { compact: false });
     }
 
-    state.readsElevationTrack = Boolean(
-      state.elevationPacket ||
-      (state.elevationStatus && state.elevationStatus.elevationTrackReady === true)
-    );
-
+    state.readsElevationTrack = Boolean(state.elevationPacket || state.elevationStatus);
     return state.readsElevationTrack;
   }
 
@@ -454,15 +465,10 @@
     state.reliefStatus = typeof api.status === "function" ? safeCall("reliefMetadata", api, "status") : null;
 
     if (typeof api.getCarrierReliefPacket === "function") {
-      state.reliefPacket = safeCall("reliefMetadata", api, "getCarrierReliefPacket", "audralia-terrain-expression-canvas-child", { compact: false });
+      state.reliefPacket = safeCall("reliefMetadata", api, "getCarrierReliefPacket", "audralia-terrain-expression-lens-authority-split", { compact: false });
     }
 
-    state.readsReliefMetadata = Boolean(
-      state.reliefPacket &&
-      state.reliefPacket.activeHydration !== true &&
-      state.reliefPacket.finalVisualPassClaim !== true
-    );
-
+    state.readsReliefMetadata = Boolean(state.reliefPacket);
     return state.readsReliefMetadata;
   }
 
@@ -479,15 +485,10 @@
     state.landformStatus = typeof api.status === "function" ? safeCall("landformMetadata", api, "status") : null;
 
     if (typeof api.getCarrierLandformPacket === "function") {
-      state.landformPacket = safeCall("landformMetadata", api, "getCarrierLandformPacket", "audralia-terrain-expression-canvas-child", { compact: false });
+      state.landformPacket = safeCall("landformMetadata", api, "getCarrierLandformPacket", "audralia-terrain-expression-lens-authority-split", { compact: false });
     }
 
-    state.readsLandformMetadata = Boolean(
-      state.landformPacket &&
-      state.landformPacket.activeHydration !== true &&
-      state.landformPacket.finalVisualPassClaim !== true
-    );
-
+    state.readsLandformMetadata = Boolean(state.landformPacket);
     return state.readsLandformMetadata;
   }
 
@@ -504,16 +505,12 @@
     state.beachStatus = typeof api.status === "function" ? safeCall("beachReadiness", api, "status") : null;
 
     if (typeof api.getCarrierBeachPacket === "function") {
-      state.beachPacket = safeCall("beachReadiness", api, "getCarrierBeachPacket", "audralia-terrain-expression-canvas-child", { compact: false });
+      state.beachPacket = safeCall("beachReadiness", api, "getCarrierBeachPacket", "audralia-terrain-expression-lens-authority-split", { compact: false });
     } else if (typeof api.getBeachCoastalReadinessPacket === "function") {
-      state.beachPacket = safeCall("beachReadiness", api, "getBeachCoastalReadinessPacket", "audralia-terrain-expression-canvas-child", { compact: false });
+      state.beachPacket = safeCall("beachReadiness", api, "getBeachCoastalReadinessPacket", "audralia-terrain-expression-lens-authority-split", { compact: false });
     }
 
-    state.readsBeachReadiness = Boolean(
-      state.beachPacket ||
-      (state.beachStatus && state.beachStatus.activeWater !== true)
-    );
-
+    state.readsBeachReadiness = Boolean(state.beachPacket || state.beachStatus);
     return state.readsBeachReadiness;
   }
 
@@ -530,29 +527,20 @@
     state.triangleStatus = typeof api.status === "function" ? safeCall("triangularMesh", api, "status") : null;
 
     if (typeof api.getCarrierTriangleMeshPacket === "function") {
-      state.trianglePacket = safeCall("triangularMesh", api, "getCarrierTriangleMeshPacket", "audralia-terrain-expression-canvas-child", { compact: true });
+      state.trianglePacket = safeCall("triangularMesh", api, "getCarrierTriangleMeshPacket", "audralia-terrain-expression-lens-authority-split", { compact: true });
     } else if (typeof api.getTriangularTerrainMeshPacket === "function") {
-      state.trianglePacket = safeCall("triangularMesh", api, "getTriangularTerrainMeshPacket", "audralia-terrain-expression-canvas-child", { compact: true });
+      state.trianglePacket = safeCall("triangularMesh", api, "getTriangularTerrainMeshPacket", "audralia-terrain-expression-lens-authority-split", { compact: true });
     }
 
-    state.readsTriangularMesh = Boolean(
-      state.trianglePacket &&
-      state.trianglePacket.activeHydration !== true &&
-      state.trianglePacket.finalVisualPassClaim !== true &&
-      state.trianglePacket.carrierOwnsTriangulation !== true
-    );
-
+    state.readsTriangularMesh = Boolean(state.trianglePacket || state.triangleStatus);
     return state.readsTriangularMesh;
   }
 
   function refreshReads() {
+    var cs = carrierState();
+
     state.parentCarrierDetected = Boolean(carrier());
-    state.parentCarrierValidated = Boolean(
-      state.parentCarrierDetected &&
-      carrierState() &&
-      carrierState().mount &&
-      carrierState().canvas
-    );
+    state.parentCarrierValidated = Boolean(state.parentCarrierDetected && cs && cs.mount && cs.canvas);
     state.readsCarrierState = state.parentCarrierValidated;
 
     readDryTerrain();
@@ -582,11 +570,7 @@
       Number.isFinite(Number(sample.point.y)) &&
       Number.isFinite(Number(sample.point.z))
     ) {
-      return {
-        x: Number(sample.point.x),
-        y: Number(sample.point.y),
-        z: Number(sample.point.z)
-      };
+      return { x: Number(sample.point.x), y: Number(sample.point.y), z: Number(sample.point.z) };
     }
 
     if (sample && Number.isFinite(Number(sample.lon)) && Number.isFinite(Number(sample.lat))) {
@@ -610,11 +594,7 @@
     var raw = sample && sample.color ? sample.color : null;
 
     if (raw && Number.isFinite(Number(raw.r)) && Number.isFinite(Number(raw.g)) && Number.isFinite(Number(raw.b))) {
-      return {
-        r: Number(raw.r),
-        g: Number(raw.g),
-        b: Number(raw.b)
-      };
+      return { r: Number(raw.r), g: Number(raw.g), b: Number(raw.b) };
     }
 
     return { r: 126, g: 143, b: 94 };
@@ -624,34 +604,60 @@
     var point = normalizePointFromSample(sample);
     if (!point) return null;
 
-    var landPresence = clamp(Number(sample.landPresence || 0), 0, 1);
+    var land = clamp(Number(sample.landPresence || 0), 0, 1);
     var height = clamp(Number(sample.height || 0.5), 0, 1);
     var relief = clamp(Number(sample.relief || sample.slope || 0), 0, 1);
     var slope = clamp(Number(sample.slope || 0), 0, 1);
     var boundary = clamp(Number(sample.boundaryPressure || 0), 0, 1);
-    var futureFill = clamp(Number(sample.futureFillPressure || 0), 0, 1);
-    var voidPressure = clamp((1 - landPresence) * 0.52 + futureFill * 0.42, 0, 1);
-    var expressionStrength = clamp(
-      landPresence * 0.70 +
-      height * 0.08 +
+    var future = clamp(Number(sample.futureFillPressure || 0), 0, 1);
+
+    var surfaceScore = clamp(
+      land * 0.86 +
       relief * 0.12 +
-      boundary * 0.05 -
-      futureFill * 0.30,
+      height * 0.08 -
+      future * 0.78,
       0,
       1
     );
 
-    var renderPriority = clamp(
-      expressionStrength * 0.66 +
-      relief * 0.18 +
-      boundary * 0.10 +
-      height * 0.06,
+    var hydrationScore = clamp(
+      future * 0.76 +
+      (1 - height) * 0.10 +
+      slope * 0.08 +
+      boundary * 0.06,
+      0,
+      1
+    );
+
+    var boundaryScore = clamp(
+      boundary * 0.44 +
+      future * land * 0.36 +
+      relief * 0.12 +
+      slope * 0.08,
+      0,
+      1
+    );
+
+    var latticeScore = clamp(
+      land * 0.34 +
+      future * 0.24 +
+      relief * 0.20 +
+      boundary * 0.22,
+      0,
+      1
+    );
+
+    var fullScore = clamp(
+      surfaceScore * 0.46 +
+      hydrationScore * 0.20 +
+      boundaryScore * 0.22 +
+      latticeScore * 0.12,
       0,
       1
     );
 
     return Object.freeze({
-      sampleId: sample.sampleId || "AUDRALIA-TERRAIN-EXPRESSION-CARRIER-SAMPLE-" + String(index).padStart(4, "0"),
+      sampleId: sample.sampleId || "AUDRALIA-LENS-SAMPLE-" + String(index).padStart(4, "0"),
       source: "carrier-land-influence-field",
       x: Number(sample.gridX || sample.x || 0),
       y: Number(sample.gridY || sample.y || 0),
@@ -659,31 +665,23 @@
       lat: Number(sample.lat || 0),
       point: point,
 
-      landPresence: round(landPresence, 4),
-      expressionStrength: round(expressionStrength, 4),
+      landPresence: round(land, 4),
       elevation: round(height, 4),
-      elevationBand: sample.elevationBand || "carrier_expression",
       reliefStrength: round(relief, 4),
-      ridgeStrength: round(clamp(relief * 0.52 + slope * 0.34, 0, 1), 4),
-      basinStrength: round(clamp(futureFill * 0.46 + (1 - height) * 0.18, 0, 1), 4),
       slopeStrength: round(slope, 4),
-      futureFillPressure: round(futureFill, 4),
-      voidPressure: round(voidPressure, 4),
       boundaryPressure: round(boundary, 4),
+      futureFillPressure: round(future, 4),
+      voidPressure: round(clamp((1 - land) * 0.50 + future * 0.42, 0, 1), 4),
+
+      surfaceScore: round(surfaceScore, 4),
+      hydrationScore: round(hydrationScore, 4),
+      boundaryScore: round(boundaryScore, 4),
+      latticeScore: round(latticeScore, 4),
+      fullScore: round(fullScore, 4),
 
       continentId: sample.continentId || "unassigned",
       continentName: sample.continentName || "Unassigned",
       colorHint: sampleColorHint(sample),
-
-      opacityHint: round(clamp(expressionStrength * 0.90 + relief * 0.16, 0, 1), 4),
-      radiusHint: round(clamp(0.010 + landPresence * 0.010 + boundary * 0.003, 0.007, 0.024), 4),
-      renderPriority: round(renderPriority, 4),
-
-      renderInBody: landPresence > 0.13 && futureFill < 0.72,
-      renderInSurface: landPresence > 0.065 && futureFill < 0.82,
-      renderInHydration: futureFill > 0.20 || landPresence > 0.22,
-      renderInSixthSense: landPresence > 0.040 || relief > 0.18,
-      renderInLattice: landPresence > 0.18 && futureFill < 0.68,
 
       terrainTruthMutated: false,
       activeHydration: false,
@@ -695,7 +693,7 @@
   function expressionSampleFromDryNode(node, index, offsetIndex) {
     if (!node) return null;
 
-    var ox = [0, -0.23, 0.25][offsetIndex || 0] || 0;
+    var ox = [0, -0.24, 0.25][offsetIndex || 0] || 0;
     var oy = [0, 0.18, -0.16][offsetIndex || 0] || 0;
 
     var x = Number(node.x !== undefined ? node.x : node.radial !== undefined ? node.radial : index % RADIAL_NODES) + ox;
@@ -716,51 +714,26 @@
     var shelf = clamp(Number(node.shelfPressure || 0), 0, 1);
     var summit = clamp(Number(node.summitPressure || 0), 0, 1);
     var gap = clamp(Number(node.gapPressure || 0), 0, 1);
-    var futureFill = node.futureFillEligible ? clamp(0.42 + basin * 0.22 + valley * 0.12 + gap * 0.18, 0, 1) : clamp(gap * 0.34, 0, 1);
 
-    var role = String(node.primaryTerrainRole || node.terrainClass || "");
-    var solidRoleBonus = /mountain|ridge|plateau|highland|stable|summit|escarpment|shelf|valley|basin/.test(role) ? 0.18 : 0;
-    var landPresence = clamp(
-      elevation * 0.44 +
-      ridge * 0.14 +
-      mountain * 0.15 +
-      shelf * 0.10 +
-      summit * 0.12 +
-      solidRoleBonus -
-      futureFill * 0.38,
-      0,
-      1
-    );
+    var future = node.futureFillEligible ? clamp(0.48 + basin * 0.20 + valley * 0.12 + gap * 0.16, 0, 1) : clamp(gap * 0.34, 0, 1);
+    var land = clamp(elevation * 0.52 + ridge * 0.13 + mountain * 0.16 + summit * 0.12 + shelf * 0.08 - future * 0.48, 0, 1);
+    var relief = clamp(ridge * 0.26 + mountain * 0.24 + summit * 0.20 + trench * 0.14 + shelf * 0.08 + Math.abs(elevation - 0.5) * 0.16, 0, 1);
+    var boundary = clamp(shelf * 0.34 + trench * 0.18 + future * land * 0.34 + ridge * 0.10, 0, 1);
+    var reduction = offsetIndex ? 0.72 : 1;
 
-    var relief = clamp(
-      ridge * 0.26 +
-      mountain * 0.24 +
-      summit * 0.20 +
-      trench * 0.12 +
-      shelf * 0.08 +
-      Math.abs(elevation - 0.5) * 0.16,
-      0,
-      1
-    );
-
-    var expressionStrength = clamp(
-      landPresence * 0.72 +
-      relief * 0.16 +
-      elevation * 0.10 -
-      futureFill * 0.26,
-      0,
-      1
-    );
+    var surfaceScore = clamp((land * 0.84 + relief * 0.12 - future * 0.76) * reduction, 0, 1);
+    var hydrationScore = clamp((future * 0.72 + basin * 0.16 + valley * 0.10 + trench * 0.08) * reduction, 0, 1);
+    var boundaryScore = clamp((boundary * 0.50 + future * land * 0.36 + relief * 0.08) * reduction, 0, 1);
+    var latticeScore = clamp((land * 0.32 + future * 0.24 + relief * 0.24 + boundary * 0.20) * reduction, 0, 1);
+    var fullScore = clamp(surfaceScore * 0.46 + hydrationScore * 0.20 + boundaryScore * 0.22 + latticeScore * 0.12, 0, 1);
 
     var color = { r: 124, g: 142, b: 92 };
     if (elevation > 0.66 || summit > 0.34) color = { r: 178, g: 160, b: 106 };
-    if (basin > 0.42 || futureFill > 0.50) color = { r: 72, g: 92, b: 74 };
+    if (basin > 0.42 || future > 0.50) color = { r: 72, g: 92, b: 74 };
     if (ridge > 0.42 || mountain > 0.42) color = { r: 152, g: 129, b: 82 };
 
-    var reduction = offsetIndex ? 0.74 : 1;
-
     return Object.freeze({
-      sampleId: "AUDRALIA-TERRAIN-EXPRESSION-DRY-NODE-" + String(index).padStart(3, "0") + "-" + String(offsetIndex || 0),
+      sampleId: "AUDRALIA-LENS-DRY-NODE-" + String(index).padStart(3, "0") + "-" + String(offsetIndex || 0),
       source: "dry-terrain-node",
       x: round(x, 4),
       y: round(y, 4),
@@ -768,31 +741,23 @@
       lat: round(ll.lat, 4),
       point: point,
 
-      landPresence: round(landPresence * reduction, 4),
-      expressionStrength: round(expressionStrength * reduction, 4),
+      landPresence: round(land * reduction, 4),
       elevation: round(elevation, 4),
-      elevationBand: node.terrainClass || "dry_terrain",
       reliefStrength: round(relief, 4),
-      ridgeStrength: round(clamp(ridge + mountain * 0.38 + summit * 0.28, 0, 1), 4),
-      basinStrength: round(clamp(basin + valley * 0.28 + gap * 0.22, 0, 1), 4),
-      slopeStrength: round(clamp(trench * 0.24 + ridge * 0.18 + shelf * 0.12, 0, 1), 4),
-      futureFillPressure: round(futureFill, 4),
-      voidPressure: round(clamp((1 - landPresence) * 0.40 + futureFill * 0.44, 0, 1), 4),
-      boundaryPressure: round(clamp(shelf * 0.30 + ridge * 0.18 + trench * 0.16, 0, 1), 4),
+      slopeStrength: round(clamp(trench * 0.22 + ridge * 0.18 + shelf * 0.12, 0, 1), 4),
+      boundaryPressure: round(boundary, 4),
+      futureFillPressure: round(future, 4),
+      voidPressure: round(clamp((1 - land) * 0.42 + future * 0.44, 0, 1), 4),
+
+      surfaceScore: round(surfaceScore, 4),
+      hydrationScore: round(hydrationScore, 4),
+      boundaryScore: round(boundaryScore, 4),
+      latticeScore: round(latticeScore, 4),
+      fullScore: round(fullScore, 4),
 
       continentId: node.regionSeed || node.continentId || "unassigned",
       continentName: node.regionSeedName || node.continentName || "Unassigned",
       colorHint: color,
-
-      opacityHint: round(clamp(expressionStrength * reduction, 0, 1), 4),
-      radiusHint: round(clamp(0.026 * reduction, 0.012, 0.028), 4),
-      renderPriority: round(clamp(expressionStrength + relief * 0.18, 0, 1), 4),
-
-      renderInBody: landPresence > 0.18 && futureFill < 0.72,
-      renderInSurface: landPresence > 0.10 && futureFill < 0.82,
-      renderInHydration: futureFill > 0.20 || landPresence > 0.24,
-      renderInSixthSense: landPresence > 0.070 || relief > 0.16,
-      renderInLattice: landPresence > 0.20 && futureFill < 0.68,
 
       terrainTruthMutated: false,
       activeHydration: false,
@@ -801,20 +766,19 @@
     });
   }
 
-  function shouldIncludeCarrierSample(sample, index, totalLength) {
-    var presence = Number(sample.landPresence || 0);
+  function shouldIncludeCarrierSample(sample, index, total) {
+    var land = Number(sample.landPresence || 0);
     var relief = Number(sample.relief || sample.slope || 0);
-    var futureFill = Number(sample.futureFillPressure || 0);
+    var future = Number(sample.futureFillPressure || 0);
     var boundary = Number(sample.boundaryPressure || 0);
 
-    if (presence > 0.20) return true;
-    if (presence > 0.08 && (index % 2 === 0)) return true;
-    if (relief > 0.30 && presence > 0.06) return true;
-    if (boundary > 0.50 && presence > 0.05 && index % 3 === 0) return true;
-    if (futureFill > 0.44 && presence > 0.10 && index % 5 === 0) return true;
+    if (land > 0.18) return true;
+    if (future > 0.24 && land > 0.055) return true;
+    if (boundary > 0.30 && land > 0.045) return true;
+    if (relief > 0.28 && land > 0.050) return true;
 
-    var stride = Math.max(1, Math.ceil(totalLength / 1200));
-    return presence > 0.055 && index % stride === 0;
+    var stride = Math.max(1, Math.ceil(total / 1200));
+    return index % stride === 0 && (land > 0.045 || future > 0.18 || boundary > 0.18);
   }
 
   function buildCacheFromCarrierField() {
@@ -823,7 +787,6 @@
 
     for (var i = 0; i < field.length; i += 1) {
       if (!shouldIncludeCarrierSample(field[i], i, field.length)) continue;
-
       var sample = expressionSampleFromCarrierSample(field[i], i);
       if (sample) samples.push(sample);
     }
@@ -837,7 +800,7 @@
     state.dryNodes.forEach(function (node, index) {
       for (var offset = 0; offset < 3; offset += 1) {
         var sample = expressionSampleFromDryNode(node, index, offset);
-        if (sample && (sample.landPresence > 0.08 || sample.renderInHydration || sample.renderInSixthSense)) {
+        if (sample && (sample.surfaceScore > 0.05 || sample.hydrationScore > 0.12 || sample.boundaryScore > 0.10 || sample.latticeScore > 0.12)) {
           samples.push(sample);
         }
       }
@@ -858,11 +821,11 @@
     samples = samples.filter(function (sample) {
       if (!sample) return false;
       if (sample.activeWater === true || sample.activeHydration === true || sample.finalVisualPassClaim === true) return false;
-      return sample.landPresence > 0.035 || sample.futureFillPressure > 0.22 || sample.reliefStrength > 0.14;
+      return sample.surfaceScore > 0.035 || sample.hydrationScore > 0.090 || sample.boundaryScore > 0.080 || sample.latticeScore > 0.090;
     });
 
     samples.sort(function (a, b) {
-      return Number(b.renderPriority || 0) - Number(a.renderPriority || 0);
+      return Number(b.fullScore || 0) - Number(a.fullScore || 0);
     });
 
     if (samples.length > MAX_CACHE_SAMPLES) {
@@ -871,131 +834,145 @@
 
     state.terrainExpressionSamples = Object.freeze(samples);
     state.terrainExpressionActive = samples.length > 0;
-    state.organicLandMaskActive = samples.length > 0;
+
+    state.surfaceLandMaskActive = samples.some(function (sample) { return sample.surfaceScore > 0.115; });
+    state.hydrationFutureFillMaskActive = samples.some(function (sample) { return sample.hydrationScore > 0.175; });
+    state.boundaryInterfaceMaskActive = samples.some(function (sample) { return sample.boundaryScore > 0.155; });
+    state.latticeDiagnosticMaskActive = samples.some(function (sample) { return sample.latticeScore > 0.120; });
+    state.fullCompositeMaskActive = samples.length > 0;
+
+    state.organicLandMaskActive = state.surfaceLandMaskActive;
     state.nodeRegisteredExpressionActive = samples.length > 0;
     state.terrainIlluminationCanvasActive = samples.length > 0;
-    state.surfaceGridSuppressionActive = samples.length > 0;
+    state.surfaceGridSuppressionActive = state.surfaceLandMaskActive;
+
     state.cacheBuildCount += 1;
     state.lastCacheReason = reason || "manual";
 
     publishStatus();
-
     return state.terrainExpressionSamples;
   }
 
   function lensRule() {
     var lens = currentLens();
-    return LENS_RULES[lens] || LENS_RULES.body;
+    return LENS_RULES[lens] || LENS_RULES.surface;
   }
 
-  function sampleAllowedInLens(sample, lens, rule) {
+  function sampleScore(sample, lens) {
+    if (lens === "surface") return Number(sample.surfaceScore || 0);
+    if (lens === "hydration") return Number(sample.hydrationScore || 0);
+    if (lens === "boundary") return Number(sample.boundaryScore || 0);
+    if (lens === "lattice") return Number(sample.latticeScore || 0);
+    if (lens === "full") return Number(sample.fullScore || 0);
+    return 0;
+  }
+
+  function sampleAllowed(sample, lens, rule) {
     if (!sample) return false;
 
-    var land = Number(sample.landPresence || 0);
-    var future = Number(sample.futureFillPressure || 0);
-    var voidPressure = Number(sample.voidPressure || 0);
-
-    if (lens === "body") {
-      return sample.renderInBody && land >= rule.threshold && future < 0.74 && voidPressure < 0.74;
-    }
-
     if (lens === "surface") {
-      return sample.renderInSurface && land >= rule.threshold && future < 0.82 && voidPressure < 0.82;
+      return sample.surfaceScore >= rule.surfaceThreshold &&
+        sample.futureFillPressure < 0.58 &&
+        sample.voidPressure < 0.72;
     }
 
     if (lens === "hydration") {
-      return sample.renderInHydration && (future > 0.22 || land > 0.20);
+      return sample.hydrationScore >= rule.hydrationThreshold &&
+        sample.futureFillPressure > 0.14;
     }
 
-    if (lens === "sixth-sense") {
-      return sample.renderInSixthSense;
+    if (lens === "boundary") {
+      return sample.boundaryScore >= rule.boundaryThreshold &&
+        sample.landPresence > 0.035 &&
+        sample.futureFillPressure > 0.060;
     }
 
     if (lens === "lattice") {
-      return sample.renderInLattice && land >= rule.threshold && future < 0.70;
+      return sample.latticeScore > 0.100;
     }
 
-    if (lens === "receipt") {
-      return sample.renderInBody && land >= rule.threshold && future < 0.70;
+    if (lens === "full") {
+      return sample.fullScore > 0.090;
     }
 
-    return land >= rule.threshold;
+    return false;
   }
 
-  function colorForSample(sample, lens, pass) {
+  function colorFor(sample, lens, pass) {
     var base = sample.colorHint || { r: 126, g: 143, b: 94 };
+    var high = { r: 216, g: 190, b: 124 };
+    var low = { r: 48, g: 66, b: 52 };
+    var waterMemory = { r: 70, g: 136, b: 160 };
+    var edge = { r: 231, g: 199, b: 132 };
+    var diagnostic = { r: 142, g: 216, b: 255 };
+
     var elevation = Number(sample.elevation || 0.5);
     var relief = Number(sample.reliefStrength || 0);
     var future = Number(sample.futureFillPressure || 0);
-    var basin = Number(sample.basinStrength || 0);
-
-    var high = { r: 214, g: 190, b: 124 };
-    var low = { r: 52, g: 70, b: 54 };
-    var shadow = { r: 18, g: 25, b: 22 };
-    var diagnostic = { r: 126, g: 170, b: 178 };
+    var boundary = Number(sample.boundaryScore || 0);
 
     var color = base;
 
-    if (elevation > 0.58) color = mixColor(color, high, clamp((elevation - 0.58) * 0.70 + relief * 0.12, 0, 0.44));
-    if (elevation < 0.42) color = mixColor(color, low, clamp((0.42 - elevation) * 0.72 + basin * 0.10, 0, 0.42));
-
-    if (pass === "definition") {
-      color = mixColor(color, high, clamp(relief * 0.32, 0, 0.34));
+    if (lens === "surface") {
+      if (elevation > 0.58) color = mixColor(color, high, clamp((elevation - 0.58) * 0.76 + relief * 0.12, 0, 0.42));
+      if (elevation < 0.42) color = mixColor(color, low, clamp((0.42 - elevation) * 0.62, 0, 0.35));
+    } else if (lens === "hydration") {
+      color = mixColor(low, waterMemory, clamp(0.48 + future * 0.36, 0, 0.82));
+    } else if (lens === "boundary") {
+      color = mixColor(edge, waterMemory, clamp(future * 0.20, 0, 0.24));
+    } else if (lens === "lattice") {
+      color = diagnostic;
+    } else if (lens === "full") {
+      color = mixColor(base, waterMemory, clamp(future * 0.16, 0, 0.18));
+      color = mixColor(color, edge, clamp(boundary * 0.18, 0, 0.20));
     }
 
-    if (pass === "shadow") {
-      color = mixColor(color, shadow, 0.48);
-    }
-
-    if (lens === "hydration" || lens === "sixth-sense") {
-      color = mixColor(color, diagnostic, clamp(future * 0.22, 0, 0.22));
-    }
+    if (pass === "shadow") color = mixColor(color, { r: 10, g: 16, b: 18 }, 0.44);
+    if (pass === "definition") color = mixColor(color, high, clamp(relief * 0.26, 0, 0.28));
 
     return color;
   }
 
-  function alphaForSample(sample, lens, rule, pass) {
-    var expression = Number(sample.expressionStrength || 0);
-    var land = Number(sample.landPresence || 0);
+  function alphaFor(sample, lens, rule, pass) {
+    var score = sampleScore(sample, lens);
     var relief = Number(sample.reliefStrength || 0);
+    var boundary = Number(sample.boundaryScore || 0);
     var future = Number(sample.futureFillPressure || 0);
-    var voidPressure = Number(sample.voidPressure || 0);
 
-    var alpha = rule.alpha * clamp(expression * 0.72 + land * 0.34 + relief * 0.12, 0, 1);
+    var alpha = rule.alpha * clamp(score * 0.86 + relief * 0.10 + boundary * 0.08, 0, 1);
 
-    if (pass === "definition") alpha = rule.detailAlpha * clamp(relief * 0.58 + land * 0.34, 0, 1);
-    if (pass === "shadow") alpha = rule.detailAlpha * clamp(voidPressure * 0.22 + relief * 0.18, 0, 0.52);
+    if (pass === "shadow") alpha *= 0.42;
+    if (pass === "definition") alpha = rule.detailAlpha * clamp(score * 0.42 + relief * 0.36 + boundary * 0.22, 0, 1);
 
-    if (lens === "body") alpha *= 0.72;
-    if (lens === "surface") alpha *= 1.0;
-    if (lens === "hydration") alpha *= future > 0.20 ? 0.58 : 0.28;
-    if (lens === "sixth-sense") alpha *= 0.92;
-    if (lens === "lattice" || lens === "receipt") alpha *= 0.50;
+    if (lens === "surface") alpha *= clamp(1 - future * 0.88, 0, 1);
+    if (lens === "hydration") alpha *= 0.72;
+    if (lens === "boundary") alpha *= 0.92;
+    if (lens === "lattice") alpha *= 0.82;
+    if (lens === "full") alpha *= 0.74;
 
-    if (lens === "body" || lens === "surface" || lens === "lattice" || lens === "receipt") {
-      alpha *= clamp(1 - future * rule.futureFillSuppression, 0, 1);
-    }
-
-    return clamp(alpha, 0, 0.42);
+    return clamp(alpha, 0, 0.48);
   }
 
-  function drawExpressionSample(sample, lens, rule, pass) {
+  function drawBlob(sample, lens, rule, pass) {
     var p = project(sample.point);
     if (!p.front) return false;
 
-    var alpha = alphaForSample(sample, lens, rule, pass);
+    var alpha = alphaFor(sample, lens, rule, pass);
     if (alpha <= 0.006) return false;
 
     var ctx = state.ctx;
     var m = carrierMetrics();
-    var color = colorForSample(sample, lens, pass);
-    var baseRadius = m.r * Number(sample.radiusHint || 0.014) * rule.radiusScale;
-    var radius = Math.max(2.2, baseRadius * p.scale);
+    var color = colorFor(sample, lens, pass);
+    var score = sampleScore(sample, lens);
+    var baseRadius = m.r * (0.011 + score * 0.010) * rule.radiusScale;
+    var radius = Math.max(2.0, baseRadius * p.scale);
 
-    if (pass === "definition") radius *= 0.48;
-    if (pass === "shadow") radius *= 0.74;
-    if (lens === "surface") radius *= 1.04;
-    if (lens === "body") radius *= 1.18;
+    if (lens === "surface") radius *= 1.08;
+    if (lens === "hydration") radius *= 0.94;
+    if (lens === "boundary") radius *= 0.50;
+    if (lens === "lattice") radius *= 0.42;
+    if (pass === "definition") radius *= 0.42;
+    if (pass === "shadow") radius *= 0.88;
 
     var gradient = ctx.createRadialGradient(
       p.x - radius * 0.18,
@@ -1006,15 +983,9 @@
       radius
     );
 
-    if (pass === "shadow") {
-      gradient.addColorStop(0.00, rgba(color, alpha * 0.64));
-      gradient.addColorStop(0.58, rgba(color, alpha * 0.26));
-      gradient.addColorStop(1.00, rgba(color, 0));
-    } else {
-      gradient.addColorStop(0.00, rgba(color, alpha));
-      gradient.addColorStop(0.45, rgba(color, alpha * 0.44));
-      gradient.addColorStop(1.00, rgba(color, 0));
-    }
+    gradient.addColorStop(0.00, rgba(color, alpha));
+    gradient.addColorStop(0.48, rgba(color, alpha * 0.42));
+    gradient.addColorStop(1.00, rgba(color, 0));
 
     ctx.beginPath();
     ctx.arc(p.x, p.y, radius, 0, TAU);
@@ -1024,42 +995,57 @@
     return true;
   }
 
-  function drawDefinitionStroke(sample, lens, rule) {
-    if (lens !== "surface" && lens !== "sixth-sense") return false;
-
-    var relief = Number(sample.reliefStrength || 0);
-    var ridge = Number(sample.ridgeStrength || 0);
-    var boundary = Number(sample.boundaryPressure || 0);
-
-    if (relief < 0.22 && ridge < 0.24 && boundary < 0.34) return false;
+  function drawBoundaryStroke(sample, lens, rule) {
+    if (lens !== "boundary" && lens !== "full") return false;
+    if (sample.boundaryScore < 0.155) return false;
 
     var p = project(sample.point);
     if (!p.front) return false;
 
     var ctx = state.ctx;
     var m = carrierMetrics();
-    var color = colorForSample(sample, lens, "definition");
-    var alpha = rule.detailAlpha * clamp(relief * 0.44 + ridge * 0.30 + boundary * 0.18, 0, 1);
+    var color = colorFor(sample, "boundary", "definition");
+    var alpha = rule.detailAlpha * clamp(Number(sample.boundaryScore || 0), 0, 1);
 
-    if (lens === "surface") alpha *= 0.72;
-    if (lens === "sixth-sense") alpha *= 1.08;
+    if (lens === "full") alpha *= 0.58;
 
     if (alpha <= 0.010) return false;
 
-    var length = Math.max(2.4, m.r * 0.010 * p.scale * (0.72 + relief));
-    var tilt = (Number(sample.x || 0) * 0.41 + Number(sample.y || 0) * 0.77) % TAU;
+    var length = Math.max(2.2, m.r * 0.010 * p.scale * (0.70 + sample.boundaryScore));
+    var tilt = (Number(sample.x || 0) * 0.53 + Number(sample.y || 0) * 0.31) % TAU;
 
     ctx.save();
     ctx.translate(p.x, p.y);
     ctx.rotate(tilt);
     ctx.beginPath();
-    ctx.moveTo(-length * 0.48, 0);
-    ctx.quadraticCurveTo(0, -length * 0.16, length * 0.48, 0);
+    ctx.moveTo(-length * 0.52, 0);
+    ctx.quadraticCurveTo(0, -length * 0.22, length * 0.52, 0);
     ctx.strokeStyle = rgba(color, alpha);
-    ctx.lineWidth = Math.max(0.34, m.r * 0.00072 * p.scale);
+    ctx.lineWidth = Math.max(0.38, m.r * 0.00092 * p.scale);
     ctx.lineCap = "round";
     ctx.stroke();
     ctx.restore();
+
+    return true;
+  }
+
+  function drawLatticePoint(sample, lens, rule) {
+    if (lens !== "lattice" && lens !== "full") return false;
+    if (lens === "full" && sample.latticeScore < 0.34) return false;
+
+    var p = project(sample.point);
+    if (!p.front) return false;
+
+    var ctx = state.ctx;
+    var m = carrierMetrics();
+    var color = colorFor(sample, "lattice", "definition");
+    var alpha = lens === "lattice" ? 0.20 : 0.070;
+    var radius = Math.max(0.72, m.r * 0.0026 * p.scale);
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, radius, 0, TAU);
+    ctx.fillStyle = rgba(color, alpha);
+    ctx.fill();
 
     return true;
   }
@@ -1072,35 +1058,43 @@
     var samples = state.terrainExpressionSamples;
     var drawn = 0;
     var detailDrawn = 0;
-    var budget = rule.budget;
+    var latticeDrawn = 0;
 
     state.ctx.save();
     clipSphere();
 
-    for (var i = 0; i < samples.length && drawn < budget; i += 1) {
-      var sample = samples[i];
-      if (!sampleAllowedInLens(sample, lens, rule)) continue;
-
-      if (drawExpressionSample(sample, lens, rule, "shadow")) drawn += 1;
+    for (var i = 0; i < samples.length && drawn < rule.budget; i += 1) {
+      if (!sampleAllowed(samples[i], lens, rule)) continue;
+      if (lens === "boundary") continue;
+      if (drawBlob(samples[i], lens, rule, "shadow")) drawn += 1;
     }
 
     drawn = 0;
 
-    for (var j = 0; j < samples.length && drawn < budget; j += 1) {
-      var sample2 = samples[j];
-      if (!sampleAllowedInLens(sample2, lens, rule)) continue;
+    for (var j = 0; j < samples.length && drawn < rule.budget; j += 1) {
+      if (!sampleAllowed(samples[j], lens, rule)) continue;
 
-      if (drawExpressionSample(sample2, lens, rule, "illumination")) drawn += 1;
+      if (lens === "boundary") {
+        if (drawBoundaryStroke(samples[j], lens, rule)) drawn += 1;
+      } else {
+        if (drawBlob(samples[j], lens, rule, "illumination")) drawn += 1;
+      }
     }
 
-    var detailBudget = lens === "surface" ? 360 : lens === "sixth-sense" ? 520 : lens === "hydration" ? 160 : 80;
+    var detailBudget = lens === "surface" ? 420 : lens === "hydration" ? 220 : lens === "boundary" ? 560 : lens === "lattice" ? 900 : 520;
 
     for (var k = 0; k < samples.length && detailDrawn < detailBudget; k += 1) {
-      var sample3 = samples[k];
-      if (!sampleAllowedInLens(sample3, lens, rule)) continue;
+      if (!sampleAllowed(samples[k], lens, rule)) continue;
 
-      if (drawExpressionSample(sample3, lens, rule, "definition")) detailDrawn += 1;
-      drawDefinitionStroke(sample3, lens, rule);
+      if (lens === "lattice") {
+        if (drawLatticePoint(samples[k], lens, rule)) detailDrawn += 1;
+      } else if (lens === "full") {
+        drawBoundaryStroke(samples[k], lens, rule);
+        if (drawLatticePoint(samples[k], lens, rule)) latticeDrawn += 1;
+        if (drawBlob(samples[k], lens, rule, "definition")) detailDrawn += 1;
+      } else {
+        if (drawBlob(samples[k], lens, rule, "definition")) detailDrawn += 1;
+      }
     }
 
     state.ctx.restore();
@@ -1151,13 +1145,18 @@
     if (!state.canvas) {
       state.canvas = document.createElement("canvas");
       state.canvas.setAttribute("data-contract", CONTRACT);
+      state.canvas.setAttribute("data-previous-contract", PREVIOUS_CONTRACT);
       state.canvas.setAttribute("data-file", FILE);
       state.canvas.setAttribute("data-audralia-terrain-expression-canvas", "true");
-      state.canvas.setAttribute("data-terrain-illumination-canvas-active", "true");
-      state.canvas.setAttribute("data-node-registered-expression-active", "true");
+      state.canvas.setAttribute("data-lens-authority-split-active", "true");
+      state.canvas.setAttribute("data-surface-land-mask-active", "true");
+      state.canvas.setAttribute("data-hydration-future-fill-mask-active", "true");
+      state.canvas.setAttribute("data-boundary-interface-mask-active", "true");
+      state.canvas.setAttribute("data-lattice-diagnostic-mask-active", "true");
+      state.canvas.setAttribute("data-full-composite-mask-active", "true");
+      state.canvas.setAttribute("data-pointer-events-none", "true");
       state.canvas.setAttribute("data-carrier-preserved", "true");
       state.canvas.setAttribute("data-carrier-rewritten", "false");
-      state.canvas.setAttribute("data-pointer-events-none", "true");
       state.canvas.setAttribute("data-hydration-held", "true");
       state.canvas.setAttribute("data-active-water", "false");
       state.canvas.setAttribute("data-final-visual-pass-claim", "false");
@@ -1197,7 +1196,6 @@
     rebuildExpressionCache("mount");
 
     publishStatus();
-
     return state.expressionCanvasMounted;
   }
 
@@ -1215,13 +1213,8 @@
       mount();
     }
 
-    var dimensionChanged = syncCanvasSize();
-
+    syncCanvasSize();
     state.activeLens = currentLens();
-
-    if (dimensionChanged && state.terrainExpressionSamples.length === 0) {
-      rebuildExpressionCache("dimension-change");
-    }
 
     clearCanvas();
 
@@ -1231,9 +1224,7 @@
 
     state.renderCount += 1;
 
-    if (state.renderCount % 12 === 0) {
-      publishStatus();
-    }
+    if (state.renderCount % 12 === 0) publishStatus();
 
     requestFrame();
   }
@@ -1254,9 +1245,7 @@
 
   function unmount() {
     if (state.canvas && state.canvas.parentNode) {
-      try {
-        state.canvas.parentNode.removeChild(state.canvas);
-      } catch (_error) {}
+      try { state.canvas.parentNode.removeChild(state.canvas); } catch (_error) {}
     }
 
     state.expressionCanvasMounted = false;
@@ -1268,17 +1257,16 @@
     state.stopped = true;
 
     if (state.raf) {
-      try {
-        window.cancelAnimationFrame(state.raf);
-      } catch (_error) {}
+      try { window.cancelAnimationFrame(state.raf); } catch (_error) {}
     }
 
     state.raf = 0;
   }
 
   function status() {
-    var payload = {
+    return {
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       file: FILE,
       route: ROUTE,
 
@@ -1299,14 +1287,28 @@
       readsBeachReadiness: state.readsBeachReadiness,
       readsTriangularMesh: state.readsTriangularMesh,
 
+      lensAuthoritySplitActive: true,
+      surfaceLensAuthority: "land_visibility",
+      hydrationLensAuthority: "future_water_placement_visibility",
+      boundaryLensAuthority: "land_water_interface_visibility",
+      latticeLensAuthority: "diagnostic_structure_visibility",
+      fullLensAuthority: "composite_preview",
+
       terrainExpressionActive: state.terrainExpressionActive,
       terrainExpressionSampleCount: state.terrainExpressionSamples.length,
+
+      surfaceLandMaskActive: state.surfaceLandMaskActive,
+      hydrationFutureFillMaskActive: state.hydrationFutureFillMaskActive,
+      boundaryInterfaceMaskActive: state.boundaryInterfaceMaskActive,
+      latticeDiagnosticMaskActive: state.latticeDiagnosticMaskActive,
+      fullCompositeMaskActive: state.fullCompositeMaskActive,
+
       organicLandMaskActive: state.organicLandMaskActive,
       nodeRegisteredExpressionActive: state.nodeRegisteredExpressionActive,
       terrainIlluminationCanvasActive: state.terrainIlluminationCanvasActive,
       surfaceGridSuppressionActive: state.surfaceGridSuppressionActive,
-      voidTransparencyActive: state.voidTransparencyActive,
-      futureFillTransparencyActive: state.futureFillTransparencyActive,
+      voidTransparencyActive: true,
+      futureFillTransparencyActive: true,
 
       hydrationHeld: true,
       activeHydration: false,
@@ -1337,17 +1339,29 @@
       errors: state.errors.slice(),
       deployMarker: DEPLOY_MARKER
     };
-
-    return payload;
   }
 
   function publishStatus() {
     var payload = status();
 
     window.AUDRALIA_TERRAIN_EXPRESSION_CANVAS_CHILD_STATUS = payload;
+    window.AUDRALIA_TERRAIN_EXPRESSION_LENS_AUTHORITY_SPLIT_STATUS = payload;
 
     try {
       document.documentElement.dataset.audraliaTerrainExpressionCanvasChild = CONTRACT;
+      document.documentElement.dataset.audraliaLensAuthoritySplitActive = "true";
+      document.documentElement.dataset.audraliaSurfaceLensAuthority = "land_visibility";
+      document.documentElement.dataset.audraliaHydrationLensAuthority = "future_water_placement_visibility";
+      document.documentElement.dataset.audraliaBoundaryLensAuthority = "land_water_interface_visibility";
+      document.documentElement.dataset.audraliaLatticeLensAuthority = "diagnostic_structure_visibility";
+      document.documentElement.dataset.audraliaFullLensAuthority = "composite_preview";
+
+      document.documentElement.dataset.audraliaSurfaceLandMaskActive = String(state.surfaceLandMaskActive);
+      document.documentElement.dataset.audraliaHydrationFutureFillMaskActive = String(state.hydrationFutureFillMaskActive);
+      document.documentElement.dataset.audraliaBoundaryInterfaceMaskActive = String(state.boundaryInterfaceMaskActive);
+      document.documentElement.dataset.audraliaLatticeDiagnosticMaskActive = String(state.latticeDiagnosticMaskActive);
+      document.documentElement.dataset.audraliaFullCompositeMaskActive = String(state.fullCompositeMaskActive);
+
       document.documentElement.dataset.audraliaTerrainExpressionCanvasActive = String(state.expressionCanvasMounted);
       document.documentElement.dataset.audraliaTerrainIlluminationCanvasActive = String(state.terrainIlluminationCanvasActive);
       document.documentElement.dataset.audraliaNodeRegisteredExpressionActive = String(state.nodeRegisteredExpressionActive);
@@ -1355,6 +1369,7 @@
       document.documentElement.dataset.audraliaOrganicLandMaskActive = String(state.organicLandMaskActive);
       document.documentElement.dataset.audraliaExpressionCanvasAfterCarrier = String(state.expressionCanvasAboveCarrier);
       document.documentElement.dataset.audraliaTerrainExpressionSampleCount = String(state.terrainExpressionSamples.length);
+
       document.documentElement.dataset.audraliaCarrierPreserved = "true";
       document.documentElement.dataset.audraliaCarrierRewritten = "false";
       document.documentElement.dataset.audraliaHydrationHeld = "true";
@@ -1390,6 +1405,7 @@
 
   var API = Object.freeze({
     contract: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
     file: FILE,
     status: status,
     refresh: refresh,

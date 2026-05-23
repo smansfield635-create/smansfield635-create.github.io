@@ -2,26 +2,29 @@
 <html
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
-  data-page="audralia-four-gratitude-children-runtime-carrier"
-  data-contract="AUDRALIA_PLANET_HTML_FOUR_GRATITUDE_CHILDREN_THEN_RUNTIME_CARRIER_TNT_v1"
-  data-previous-contract="AUDRALIA_PLANET_HTML_LOAD_ORDER_COMPOSITOR_CHILDREN_BEFORE_CARRIER_TNT_v1"
-  data-four-gratitude-children="true"
+  data-page="audralia-dry-revealed-terrain-direct-consumption"
+  data-contract="AUDRALIA_PLANET_HTML_DRY_REVEALED_TERRAIN_BEFORE_RUNTIME_CARRIER_TNT_v1"
+  data-previous-contract="AUDRALIA_PLANET_HTML_FOUR_GRATITUDE_CHILDREN_THEN_RUNTIME_CARRIER_TNT_v1"
+  data-dry-revealed-terrain-loaded-before-carrier="true"
+  data-direct-carrier-consumption="true"
+  data-hydration-held="true"
+  data-gratitude-island-read="false"
   data-carrier-is-runtime="true"
-  data-legacy-broad-continent-child-active="false"
-  data-load-order="surface-habitability→hydration→hydration-edge→landform-compositor→runtime-carrier"
   data-final-visual-pass-claim="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Audralia · Four-Child Planet Inspection</title>
-  <meta name="description" content="Audralia planet inspection with four Gratitude children and one runtime carrier.">
+  <title>Audralia · Dry Revealed Terrain</title>
+  <meta
+    name="description"
+    content="Audralia planet inspection with dry revealed physical terrain atlas loaded before the runtime carrier."
+  >
 
   <style>
     :root{
       color-scheme:dark;
       --bg:#020711;
-      --panel:#061020;
       --text:rgba(239,247,255,.96);
       --muted:rgba(239,247,255,.70);
       --gold:#f4cf83;
@@ -35,12 +38,12 @@
 
     html{
       min-height:100%;
+      scroll-behavior:smooth;
       background:
         radial-gradient(circle at 50% -12%,rgba(78,119,171,.28),transparent 38rem),
         radial-gradient(circle at 12% 18%,rgba(244,207,131,.10),transparent 30rem),
         radial-gradient(circle at 88% 28%,rgba(141,216,255,.12),transparent 31rem),
         linear-gradient(180deg,#061020 0%,var(--bg) 56%,#01040a 100%);
-      scroll-behavior:smooth;
     }
 
     body{
@@ -58,9 +61,15 @@
       background-size:56px 56px;
     }
 
-    a,button,summary{color:inherit;font:inherit}
+    a,button{color:inherit;font:inherit}
     a{text-decoration:none}
     button{cursor:pointer}
+
+    a:focus-visible,
+    button:focus-visible{
+      outline:2px solid var(--gold);
+      outline-offset:4px;
+    }
 
     .skip{
       position:absolute;
@@ -139,7 +148,7 @@
       font-weight:850;
     }
 
-    .hero,.inspection-shell,.engineering-shell,.state-shell,.receipt-shell{
+    .hero,.inspection-shell,.state-shell,.receipt-shell{
       border:1px solid var(--line);
       border-radius:34px;
       background:
@@ -161,7 +170,7 @@
     }
 
     h1{
-      max-width:1000px;
+      max-width:1040px;
       margin:0;
       font-size:clamp(2.35rem,8vw,5.6rem);
       line-height:.92;
@@ -199,7 +208,7 @@
       text-transform:uppercase;
     }
 
-    .inspection-shell,.engineering-shell,.state-shell,.receipt-shell{
+    .inspection-shell,.state-shell,.receipt-shell{
       margin-top:16px;
       padding:clamp(18px,3.8vw,32px);
     }
@@ -246,7 +255,7 @@
       left:50%;
       bottom:clamp(194px,24vw,228px);
       z-index:5;
-      width:min(calc(100% - 44px),860px);
+      width:min(calc(100% - 44px),880px);
       transform:translateX(-50%);
       text-align:center;
       color:rgba(239,247,255,.76);
@@ -359,7 +368,7 @@
 
     @media (max-width:700px){
       .page{width:min(100% - 18px,var(--max))}
-      .hero,.inspection-shell,.engineering-shell,.state-shell,.receipt-shell,.inspection-stage{border-radius:24px}
+      .hero,.inspection-shell,.state-shell,.receipt-shell,.inspection-stage{border-radius:24px}
       .inspection-stage{min-height:850px}
       .inline-lens-tray{grid-template-columns:repeat(2,minmax(0,1fr))}
       .grid{grid-template-columns:1fr}
@@ -376,7 +385,7 @@
         <span class="brand-mark" aria-hidden="true">AU</span>
         <span class="brand-copy">
           <span>Audralia</span>
-          <strong>Four-Child Inspection</strong>
+          <strong>Dry Revealed Terrain</strong>
         </span>
       </a>
 
@@ -390,17 +399,17 @@
 
     <main id="planet-main">
       <section class="hero">
-        <p class="kicker">Audralia · Four Children + Runtime Carrier</p>
-        <h1>Four Gratitude authorities. One runtime carrier.</h1>
+        <p class="kicker">Audralia · Dry Revealed Physical Terrain</p>
+        <h1>The water is held back. The carved planet is revealed.</h1>
         <p class="lede">
-          Surface-habitability, hydration, and hydration-edge feed the landform compositor. The carrier is runtime only: it consumes the compositor and draws the inspection lenses.
+          The dry revealed terrain atlas loads before the runtime carrier. Surface now reads the full planet as exposed physical mass, while Hydration remains held for future fill.
         </p>
 
         <div class="status-row">
-          <span class="status-pill">4 Gratitude children</span>
-          <span class="status-pill">Carrier = runtime</span>
-          <span class="status-pill">Legacy broad child inactive</span>
-          <span class="status-pill">Compositor first</span>
+          <span class="status-pill">Dry terrain atlas first</span>
+          <span class="status-pill">Direct carrier consumption</span>
+          <span class="status-pill">Hydration held</span>
+          <span class="status-pill">Gratitude not island</span>
           <span class="status-pill">Final visual pass false</span>
         </div>
       </section>
@@ -408,18 +417,22 @@
       <section id="inspection-carrier" class="inspection-shell">
         <div class="section-head">
           <p class="section-title">Inspection Chamber</p>
-          <h2>The runtime draws from the compositor.</h2>
-          <p>Surface, Hydration, and Sixth Sense use compositor packets. Lattice keeps the raw 256 inspection.</p>
+          <h2>Surface draws the dry revealed planet body.</h2>
+          <p>
+            The runtime carrier consumes the Audralia-level terrain atlas directly. The gaps are mapped first; water returns later.
+          </p>
         </div>
 
         <div
           id="audraliaPlanetInspectionStage"
           class="inspection-stage"
           data-audralia-planet-inspection-stage
-          data-contract="AUDRALIA_PLANET_HTML_FOUR_GRATITUDE_CHILDREN_THEN_RUNTIME_CARRIER_TNT_v1"
-          data-four-gratitude-children="true"
+          data-contract="AUDRALIA_PLANET_HTML_DRY_REVEALED_TERRAIN_BEFORE_RUNTIME_CARRIER_TNT_v1"
+          data-dry-revealed-terrain-loaded-before-carrier="true"
+          data-direct-carrier-consumption="true"
+          data-hydration-held="true"
+          data-gratitude-island-read="false"
           data-carrier-is-runtime="true"
-          data-legacy-broad-continent-child-active="false"
           data-final-visual-pass-claim="false"
         >
           <div
@@ -429,7 +442,7 @@
           ></div>
 
           <div class="stage-label" data-audralia-planet-stage-label>
-            <strong>Runtime Carrier</strong> → compositor-first expression
+            <strong>Dry Revealed Terrain</strong> → planet-wide physical mass
           </div>
 
           <div class="inline-lens-tray" role="group" aria-label="Planet lenses">
@@ -442,68 +455,79 @@
           </div>
 
           <div class="stage-instruction">
-            Drag the planet. Surface-habitability + hydration + hydration-edge → compositor → carrier runtime.
+            Drag the planet. Surface shows dry revealed physical terrain. Hydration is held until the mapped gaps are ready to fill.
           </div>
         </div>
       </section>
 
       <section class="state-shell">
         <div class="section-head">
-          <p class="section-title">Authority Deck</p>
-          <h2>Four files, four jobs.</h2>
+          <p class="section-title">Direct Consumption Deck</p>
+          <h2>The atlas is the source. The carrier is runtime.</h2>
         </div>
 
         <div class="grid">
-          <article class="card"><b>1</b><strong>Surface-habitability</strong><span>Land, elevation, summit anchors, above-sea-level terrain readiness.</span></article>
-          <article class="card"><b>2</b><strong>Hydration</strong><span>Internal water movement, rivers, streams, pools, gullies, marshes, wetlands.</span></article>
-          <article class="card"><b>3</b><strong>Hydration-edge</strong><span>Beaches, cliffs, waterfalls, shelves, sediment, rock, sand.</span></article>
-          <article class="card"><b>4</b><strong>Landform-compositor</strong><span>Combines the first three into one carrier-consumable continent packet.</span></article>
-          <article class="card"><b>Runtime</b><strong>Carrier</strong><span>Canvas, drag, lens switching, drawing, receipt, Lattice inspection.</span></article>
-          <article class="card"><b>Legacy</b><strong>Broad child inactive</strong><span>The old broad continent child is not active as a fifth authority here.</span></article>
+          <article class="card"><b>Source</b><strong>Dry terrain atlas</strong><span>Planet-wide exposed physical mass, formerly carved by hydrosphere.</span></article>
+          <article class="card"><b>Surface</b><strong>Dry revealed terrain</strong><span>Draws mass, elevation, ridges, basins, trenches, shelves, and future-fill gaps.</span></article>
+          <article class="card"><b>Hydration</b><strong>Held</strong><span>No oceans, rivers, lakes, wetlands, waterfalls, or active flow in this pass.</span></article>
+          <article class="card"><b>Runtime</b><strong>Carrier</strong><span>Consumes getCarrierTerrainPacket() and draws without inventing terrain.</span></article>
         </div>
       </section>
 
       <section id="route-receipt" class="receipt-shell">
         <div class="section-head">
           <p class="section-title">Route Receipt</p>
-          <h2>Four children load before the runtime carrier.</h2>
+          <h2>Dry terrain atlas loads before runtime carrier.</h2>
         </div>
 
-        <code class="receipt-code">AUDRALIA_PLANET_HTML_FOUR_GRATITUDE_CHILDREN_THEN_RUNTIME_CARRIER_TNT_v1
+        <code class="receipt-code">AUDRALIA_PLANET_HTML_DRY_REVEALED_TERRAIN_BEFORE_RUNTIME_CARRIER_TNT_v1
 route=/showroom/globe/audralia/planet/
-load_order=surface-habitability→hydration→hydration-edge→landform-compositor→runtime-carrier
-gratitude_child_count=4
-carrier_is_runtime=true
-legacy_broad_continent_child_active=false
-surface_habitability_child=/assets/audralia/clean/terrain/gratitude/gratitude.surface-habitability.child.js
-hydration_child=/assets/audralia/clean/terrain/gratitude/gratitude.hydration.child.js
-hydration_edge_child=/assets/audralia/clean/terrain/gratitude/gratitude.hydration-edge.child.js
-landform_compositor_child=/assets/audralia/clean/terrain/gratitude/gratitude.landform-compositor.child.js
+dry_revealed_terrain=/assets/audralia/clean/terrain/audralia.dry-revealed-physical-terrain.child.js
 runtime_carrier=/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
+load_order=dry-revealed-terrain→gratitude-context-children→runtime-carrier
+dry_revealed_terrain_loaded_before_carrier=true
+direct_carrier_consumption=true
+carrier_consumes=getCarrierTerrainPacket("audralia-runtime-carrier",{compact:false})
+hydration_held=true
+gratitude_island_read=false
+carrier_is_runtime=true
 final_visual_pass_claim=false</code>
 
-        <template id="audralia-four-child-runtime-carrier-receipt" class="hidden-receipt" data-route-receipt>
-AUDRALIA_PLANET_HTML_FOUR_GRATITUDE_CHILDREN_THEN_RUNTIME_CARRIER_TNT_v1
-gratitude_child_count=4
-carrier_is_runtime=true
-legacy_broad_continent_child_active=false
+        <template id="audralia-dry-revealed-direct-consumption-receipt" class="hidden-receipt" data-route-receipt>
+AUDRALIA_PLANET_HTML_DRY_REVEALED_TERRAIN_BEFORE_RUNTIME_CARRIER_TNT_v1
+dry_revealed_terrain_loaded_before_carrier=true
+direct_carrier_consumption=true
+hydration_held=true
+gratitude_island_read=false
 final_visual_pass_claim=false
         </template>
       </section>
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Audralia · Four Gratitude children → compositor → runtime carrier.
+      Diamond Gate Bridge · Audralia · Dry revealed terrain atlas → runtime carrier · Hydration held.
     </footer>
   </div>
 
   <script
-    src="/assets/audralia/clean/terrain/gratitude/gratitude.surface-habitability.child.js?v=AUDRALIA_GRATITUDE_SURFACE_HABITABILITY_CHILD_TNT_v1"
+    src="/assets/audralia/clean/terrain/audralia.dry-revealed-physical-terrain.child.js?v=AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_ATLAS_CHILD_TNT_v1"
+    defer
+    data-audralia-dry-revealed-physical-terrain-child
+    data-contract="AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_ATLAS_CHILD_TNT_v1"
+    data-load-order="01-dry-revealed-terrain-before-runtime-carrier"
+    data-audralia-level-terrain-authority="true"
+    data-hydration-held="true"
+    data-gratitude-island-read="false"
+    data-final-visual-pass-claim="false"
+  ></script>
+
+  <script
+    src="/assets/audralia/clean/terrain/gratitude/gratitude.surface-habitability.child.js?v=AUDRALIA_GRATITUDE_SURFACE_HABITABILITY_CHILD_ONE_PUBLICATION_BINDING_TNT_v1"
     defer
     data-audralia-gratitude-surface-habitability-child
-    data-contract="AUDRALIA_GRATITUDE_SURFACE_HABITABILITY_CHILD_TNT_v1"
-    data-load-order="01-surface-habitability"
-    data-gratitude-child-authority="1-of-4"
+    data-contract="AUDRALIA_GRATITUDE_SURFACE_HABITABILITY_CHILD_ONE_PUBLICATION_BINDING_TNT_v1"
+    data-load-order="02-gratitude-context-surface"
+    data-gratitude-context-only="true"
     data-final-visual-pass-claim="false"
   ></script>
 
@@ -512,8 +536,8 @@ final_visual_pass_claim=false
     defer
     data-audralia-gratitude-hydration-child
     data-contract="AUDRALIA_GRATITUDE_HYDRATION_CHILD_TNT_v1"
-    data-load-order="02-hydration"
-    data-gratitude-child-authority="2-of-4"
+    data-load-order="03-gratitude-context-hydration-held"
+    data-hydration-held="true"
     data-final-visual-pass-claim="false"
   ></script>
 
@@ -522,34 +546,31 @@ final_visual_pass_claim=false
     defer
     data-audralia-gratitude-hydration-edge-child
     data-contract="AUDRALIA_GRATITUDE_HYDRATION_EDGE_WATER_BEHAVIOR_CHILD_TNT_v1"
-    data-load-order="03-hydration-edge"
-    data-gratitude-child-authority="3-of-4"
+    data-load-order="04-gratitude-context-edge-held"
+    data-hydration-held="true"
     data-final-visual-pass-claim="false"
   ></script>
 
   <script
-    src="/assets/audralia/clean/terrain/gratitude/gratitude.landform-compositor.child.js?v=AUDRALIA_GRATITUDE_LANDFORM_COMPOSITOR_THREE_CHILD_CONSUMPTION_TNT_v1"
+    src="/assets/audralia/clean/terrain/gratitude/gratitude.landform-compositor.child.js?v=AUDRALIA_GRATITUDE_LANDFORM_COMPOSITOR_SURFACE_SOURCE_BINDING_TNT_v1"
     defer
     data-audralia-gratitude-landform-compositor-child
-    data-contract="AUDRALIA_GRATITUDE_LANDFORM_COMPOSITOR_THREE_CHILD_CONSUMPTION_TNT_v1"
-    data-load-order="04-landform-compositor"
-    data-gratitude-child-authority="4-of-4"
-    data-consumes-surface-habitability="true"
-    data-consumes-hydration="true"
-    data-consumes-hydration-edge="true"
+    data-contract="AUDRALIA_GRATITUDE_LANDFORM_COMPOSITOR_SURFACE_SOURCE_BINDING_TNT_v1"
+    data-load-order="05-gratitude-context-compositor"
+    data-gratitude-context-only="true"
     data-final-visual-pass-claim="false"
   ></script>
 
   <script
-    src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?v=AUDRALIA_PLANET_RUNTIME_CARRIER_FOUR_CHILD_RECEIPT_COMPOSITOR_FIRST_TNT_v1"
+    src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?v=AUDRALIA_PLANET_RUNTIME_CARRIER_DIRECT_DRY_TERRAIN_CONSUMPTION_TNT_v1"
     defer
     data-audralia-planet-inspection-js
-    data-contract="AUDRALIA_PLANET_RUNTIME_CARRIER_FOUR_CHILD_RECEIPT_COMPOSITOR_FIRST_TNT_v1"
-    data-load-order="05-runtime-carrier"
+    data-contract="AUDRALIA_PLANET_RUNTIME_CARRIER_DIRECT_DRY_TERRAIN_CONSUMPTION_TNT_v1"
+    data-load-order="06-runtime-carrier-after-dry-terrain"
     data-carrier-is-runtime="true"
-    data-gratitude-child-count="4"
-    data-compositor-first="true"
-    data-legacy-broad-continent-child-active="false"
+    data-direct-carrier-consumption="true"
+    data-hydration-held="true"
+    data-gratitude-island-read="false"
     data-final-visual-pass-claim="false"
   ></script>
 </body>

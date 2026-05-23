@@ -2,22 +2,26 @@
 <html
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
-  data-page="audralia-g2-planet-sixth-sense-collaborative-expression"
-  data-contract="AUDRALIA_G2_PLANET_SIXTH_SENSE_COLLABORATIVE_EXPRESSION_HTML_JS_TNT_v1"
-  data-previous-contract="AUDRALIA_PLANET_HTML_CARRIER_ADAPTER_CACHE_KEY_AND_CHILD_CONTRACT_ALIGNMENT_TNT_v1"
-  data-spec-ops-contract="AUDRALIA_G2_PLANET_SIXTH_SENSE_COLLABORATIVE_EXPRESSION_SPEC_OPS_v1"
-  data-inline-lens-tray-active="true"
-  data-sixth-sense-lens-active="true"
-  data-collaborative-expression-available="true"
+  data-page="audralia-planet-compositor-load-order"
+  data-contract="AUDRALIA_PLANET_HTML_LOAD_ORDER_COMPOSITOR_CHILDREN_BEFORE_CARRIER_TNT_v1"
+  data-previous-contract="AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_CACHE_KEY_HTML_ONLY_TNT_v1"
+  data-spec-ops-contract="AUDRALIA_PLANET_HTML_LOAD_ORDER_AND_CARRIER_COMPOSITOR_CONSUMPTION_SPEC_OPS_v1"
+  data-news-contract="AUDRALIA_PLANET_HTML_LOAD_ORDER_AND_CARRIER_COMPOSITOR_CONSUMPTION_NEWS_v1"
+  data-ccr-contract="AUDRALIA_PLANET_HTML_LOAD_ORDER_AND_CARRIER_COMPOSITOR_CONSUMPTION_CCR_v1"
   data-gratitude-child-loaded-before-carrier="true"
   data-hydration-edge-child-loaded-before-carrier="true"
-  data-carrier-requested-contract="AUDRALIA_G2_PLANET_SIXTH_SENSE_COLLABORATIVE_EXPRESSION_CARRIER_TNT_v1"
+  data-landform-compositor-loaded-before-carrier="true"
+  data-carrier-consumes-compositor="true"
+  data-raw-parcels-lattice-only="true"
+  data-sixth-sense-compositor-ready="true"
+  data-carrier-requested-contract="AUDRALIA_PLANET_CARRIER_COMPOSITOR_CONSUMPTION_SURFACE_HYDRATION_SIXTH_SENSE_TNT_v1"
   data-carrier-consumes-child="true"
+  data-carrier-consumes-hydration-edge="true"
+  data-carrier-consumes-landform-compositor="true"
   data-carrier-invents-terrain="false"
   data-carrier-invents-hydration="false"
-  data-carrier-invents-edge-truth="false"
-  data-clean-inspection-default="true"
-  data-engineering-readout-below="true"
+  data-carrier-invents-edge="false"
+  data-carrier-invents-landform="false"
   data-runtime-strength-held="true"
   data-final-visual-pass-claim="false"
 >
@@ -25,16 +29,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Audralia · The Sixth Sense</title>
+  <title>Audralia · Clean Planet Inspection</title>
   <meta
     name="description"
-    content="Audralia clean planet inspection with The Sixth Sense collaborative expression lens for terrain, hydration, and water-edge children."
+    content="Audralia clean planet inspection with terrain, hydration-edge, unified landform compositor, and carrier expression loaded in lawful order."
   >
 
   <style>
     :root{
       color-scheme:dark;
       --bg:#020711;
+      --panel:#061020;
+      --panel2:#040914;
       --text:rgba(239,247,255,.96);
       --muted:rgba(239,247,255,.70);
       --faint:rgba(239,247,255,.48);
@@ -274,7 +280,7 @@
     }
 
     h1{
-      max-width:980px;
+      max-width:1000px;
       margin:0;
       font-size:clamp(2.35rem,8vw,5.6rem);
       line-height:.92;
@@ -340,7 +346,7 @@
 
     .inspection-stage{
       position:relative;
-      min-height:clamp(760px,96vw,980px);
+      min-height:clamp(780px,96vw,1000px);
       overflow:hidden;
       border:1px solid rgba(244,207,131,.18);
       border-radius:30px;
@@ -390,7 +396,7 @@
     .stage-label{
       position:absolute;
       left:50%;
-      bottom:clamp(194px,24vw,232px);
+      bottom:clamp(194px,24vw,228px);
       z-index:5;
       width:min(calc(100% - 44px),860px);
       transform:translateX(-50%);
@@ -423,23 +429,23 @@
       touch-action:manipulation;
     }
 
-    .inline-lens-button{
+    .inline-lens-button,
+    .lens-button{
       min-height:42px;
       border:1px solid rgba(255,255,255,.11);
       border-radius:999px;
       padding:0 10px;
       color:rgba(239,247,255,.82);
       background:rgba(255,255,255,.035);
-      font-size:clamp(.62rem,1.7vw,.80rem);
+      font-size:clamp(.64rem,1.8vw,.82rem);
       font-weight:950;
-      letter-spacing:.035em;
+      letter-spacing:.05em;
       text-transform:uppercase;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
-      white-space:normal;
-      line-height:1.05;
     }
 
-    .inline-lens-button[aria-pressed="true"]{
+    .inline-lens-button[aria-pressed="true"],
+    .lens-button[aria-pressed="true"]{
       color:#06101c;
       background:linear-gradient(135deg,#fff0b8,var(--gold));
       border-color:rgba(244,207,131,.72);
@@ -501,25 +507,6 @@
       display:flex;
       flex-wrap:wrap;
       gap:8px;
-    }
-
-    .lens-button{
-      min-height:38px;
-      border:1px solid rgba(255,255,255,.11);
-      border-radius:999px;
-      padding:0 13px;
-      color:rgba(239,247,255,.82);
-      background:rgba(255,255,255,.035);
-      font-size:.80rem;
-      font-weight:850;
-      letter-spacing:.05em;
-      text-transform:uppercase;
-    }
-
-    .lens-button[aria-pressed="true"]{
-      color:#06101c;
-      background:linear-gradient(135deg,#fff0b8,var(--gold));
-      border-color:rgba(244,207,131,.72);
     }
 
     .readout-grid,
@@ -617,11 +604,6 @@
       .inline-lens-tray{grid-template-columns:repeat(3,minmax(0,1fr))}
     }
 
-    @media (max-width:760px){
-      .inline-lens-tray{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .inline-lens-button{min-height:44px;font-size:.68rem}
-    }
-
     @media (max-width:700px){
       .page{width:min(100% - 18px,var(--max))}
       .hero,
@@ -637,7 +619,8 @@
         margin-top:8px;
         min-width:0;
       }
-      .inspection-stage{min-height:840px}
+      .inspection-stage{min-height:850px}
+      .inline-lens-tray{grid-template-columns:repeat(2,minmax(0,1fr))}
       .readout-grid,
       .state-grid,
       .receipt-grid{grid-template-columns:1fr}
@@ -663,7 +646,7 @@
         <span class="brand-mark" aria-hidden="true">AU</span>
         <span class="brand-copy">
           <span>Audralia</span>
-          <strong>The Sixth Sense</strong>
+          <strong>Clean Planet Inspection</strong>
         </span>
       </a>
 
@@ -692,18 +675,19 @@
 
     <main id="planet-main">
       <section class="hero" aria-labelledby="page-title">
-        <p class="kicker">Audralia · The Sixth Sense</p>
-        <h1 id="page-title">One lens for the living collaboration.</h1>
+        <p class="kicker">Audralia · Unified Landform Boot Chain</p>
+        <h1 id="page-title">Inspect the planet as one body, not a stack of parcels.</h1>
 
         <p class="lede">
-          Body, Surface, Hydration, Lattice, and Receipt remain separate inspection states. The Sixth Sense renders the collaborative expression: terrain, hydration, and water-edge children together without transferring authority to the carrier.
+          The live route now boots terrain, hydration-edge behavior, unified landform composition, and then the carrier. Surface, Hydration, and The Sixth Sense are bound to compositor packets. Lattice keeps raw 256 inspection.
         </p>
 
         <div class="status-row">
-          <span class="status-pill">Sixth Sense lens</span>
-          <span class="status-pill">Collaborative expression</span>
-          <span class="status-pill">Hydration-edge child</span>
-          <span class="status-pill">Carrier consumes only</span>
+          <span class="status-pill">Terrain child first</span>
+          <span class="status-pill">Hydration-edge second</span>
+          <span class="status-pill">Compositor third</span>
+          <span class="status-pill">Carrier fourth</span>
+          <span class="status-pill">Raw parcels lattice only</span>
           <span class="status-pill">Runtime held</span>
         </div>
       </section>
@@ -711,9 +695,9 @@
       <section id="inspection-carrier" class="inspection-shell" aria-label="Clean Audralia planet inspection">
         <div class="section-head">
           <p class="section-title">Clean Inspection Chamber</p>
-          <h2>Audralia gets the screen.</h2>
+          <h2>One Gratitude landform, six inspection lenses.</h2>
           <p>
-            Drag the planet directly. Use The Sixth Sense to view terrain, hydration, and water-edge expression together.
+            Surface and Hydration now request the unified landform compositor. The Sixth Sense shows the collaborative terrain-water-edge relationship.
           </p>
         </div>
 
@@ -723,11 +707,13 @@
           data-audralia-planet-inspection-stage
           data-clean-inspection-stage="true"
           data-inline-lens-tray-active="true"
-          data-sixth-sense-lens-active="true"
           data-no-controls-over-planet="true"
           data-route-local-render="true"
-          data-contract="AUDRALIA_G2_PLANET_SIXTH_SENSE_COLLABORATIVE_EXPRESSION_HTML_JS_TNT_v1"
-          data-carrier-requested-contract="AUDRALIA_G2_PLANET_SIXTH_SENSE_COLLABORATIVE_EXPRESSION_CARRIER_TNT_v1"
+          data-contract="AUDRALIA_PLANET_HTML_LOAD_ORDER_COMPOSITOR_CHILDREN_BEFORE_CARRIER_TNT_v1"
+          data-carrier-requested-contract="AUDRALIA_PLANET_CARRIER_COMPOSITOR_CONSUMPTION_SURFACE_HYDRATION_SIXTH_SENSE_TNT_v1"
+          data-carrier-consumes-compositor="true"
+          data-raw-parcels-lattice-only="true"
+          data-sixth-sense-compositor-ready="true"
           data-runtime-strength-held="true"
           data-final-visual-pass-claim="false"
           aria-label="Clean Audralia planet body inspection stage"
@@ -741,20 +727,20 @@
           ></div>
 
           <div class="stage-label" data-audralia-planet-stage-label>
-            <strong>Clean Inspection</strong> → drag Audralia directly
+            <strong>Unified Inspection</strong> → drag Audralia directly
           </div>
 
           <div class="inline-lens-tray" role="group" aria-label="Quick planet lens controls">
             <button class="inline-lens-button" type="button" data-audralia-planet-lens="body" aria-pressed="true">Body</button>
             <button class="inline-lens-button" type="button" data-audralia-planet-lens="surface" aria-pressed="false">Surface</button>
             <button class="inline-lens-button" type="button" data-audralia-planet-lens="hydration" aria-pressed="false">Hydration</button>
-            <button class="inline-lens-button" type="button" data-audralia-planet-lens="sixth-sense" aria-pressed="false">The Sixth Sense</button>
+            <button class="inline-lens-button" type="button" data-audralia-planet-lens="sixth-sense" aria-pressed="false">Sixth Sense</button>
             <button class="inline-lens-button" type="button" data-audralia-planet-lens="lattice" aria-pressed="false">Lattice</button>
             <button class="inline-lens-button" type="button" data-audralia-planet-lens="receipt" aria-pressed="false">Receipt</button>
           </div>
 
           <div class="stage-instruction">
-            Body inspects the carrier. Surface inspects land. Hydration inspects water. The Sixth Sense combines terrain, hydration, and edge expression.
+            Drag the planet. Surface uses the unified mass. Hydration uses flow through that mass. The Sixth Sense combines terrain, water, edge, material, and summit influence.
           </div>
         </div>
       </section>
@@ -766,9 +752,9 @@
           <div class="engineering-body">
             <div class="section-head">
               <p class="section-title">Engineering Lens</p>
-              <h2>Jargon lives here, not over the planet.</h2>
+              <h2>Raw construction stays inspectable without becoming the surface.</h2>
               <p>
-                The tray controls the visual view above. This section explains the active read below the chamber.
+                Surface, Hydration, and The Sixth Sense consume the compositor. Lattice preserves the 16 × 16 raw inspection.
               </p>
             </div>
 
@@ -785,13 +771,13 @@
               <article class="readout-card">
                 <b data-audralia-planet-lens-anchor>North · Hydrosphere Body</b>
                 <strong data-audralia-planet-lens-title>Body View</strong>
-                <span data-audralia-planet-lens-copy>Clean hydrosphere inspection. Gratitude child is available for Surface, Hydration, and The Sixth Sense views.</span>
+                <span data-audralia-planet-lens-copy>Clean hydrosphere inspection. Unified landform may appear faintly while the body remains primary.</span>
               </article>
 
               <article class="readout-card">
                 <b>Carrier Receipt</b>
-                <strong data-audralia-planet-carrier-status>Sixth Sense carrier pending load</strong>
-                <span data-audralia-planet-carrier-proof>Carrier script cache key is aligned to the Sixth Sense collaborative expression contract.</span>
+                <strong data-audralia-planet-carrier-status>Compositor-aware carrier pending load</strong>
+                <span data-audralia-planet-carrier-proof>Terrain → hydration-edge → compositor → carrier.</span>
               </article>
             </div>
           </div>
@@ -801,71 +787,74 @@
       <section id="state-lens-deck" class="state-shell" aria-label="Audralia state lens deck">
         <div class="section-head">
           <p class="section-title">State Lens Deck</p>
-          <h2>The Sixth Sense sees the stack at once.</h2>
+          <h2>Each lens has a bounded source.</h2>
           <p>
-            Individual inspection states remain available. The Sixth Sense is the collaborative state for terrain, hydration, and hydration-edge expression.
+            The carrier draws, but it does not invent the landform. Terrain defines, hydration-edge behaves, compositor merges, carrier expresses.
           </p>
         </div>
 
         <div class="state-grid">
-          <article class="state-card"><b>North</b><strong>Hydrosphere Body</strong><span>Ocean body, atmosphere, light response, drag inspection.</span></article>
-          <article class="state-card"><b>East</b><strong>Gratitude Surface</strong><span>Land-first child terrain becomes visible after validation.</span></article>
-          <article class="state-card"><b>South</b><strong>Valley-Fill Hydration</strong><span>Water follows the child’s valleys and basins.</span></article>
-          <article class="state-card"><b>Center</b><strong>The Sixth Sense</strong><span>Terrain, hydration, and edge classifications render together.</span></article>
-          <article class="state-card"><b>Edge</b><strong>Beach · Cliff · Waterfall</strong><span>The hydration-edge child classifies the water boundary downstream from hydration.</span></article>
-          <article class="state-card"><b>West</b><strong>Lattice Proof</strong><span>16 × 16 / 256 inspection remains available as Engineering view.</span></article>
+          <article class="state-card"><b>Body</b><strong>Hydrosphere Carrier</strong><span>Ocean body, atmosphere glow, light response, direct drag inspection.</span></article>
+          <article class="state-card"><b>Surface</b><strong>Unified Landform</strong><span>One Gratitude mass, coastline, elevation field, summit influence.</span></article>
+          <article class="state-card"><b>Hydration</b><strong>Flow Through Mass</strong><span>Water follows unified terrain, edge relationship, basins, valleys, and flow cuts.</span></article>
+          <article class="state-card"><b>Sixth Sense</b><strong>Relationship Layer</strong><span>Terrain + hydration + edge + material + summit influence.</span></article>
+          <article class="state-card"><b>Lattice</b><strong>Raw 256 Inspection</strong><span>Raw parcels remain visible here only.</span></article>
+          <article class="state-card"><b>Receipt</b><strong>Boot Chain Proof</strong><span>Reports child detection, compositor validation, and final visual pass false.</span></article>
         </div>
       </section>
 
       <section id="route-receipt" class="receipt-shell" aria-label="Clean inspection route receipt">
         <div class="section-head">
           <p class="section-title">Route Receipt</p>
-          <h2>Sixth Sense collaborative expression is available.</h2>
+          <h2>Boot chain aligned to compositor-first expression.</h2>
           <p>
-            HTML arranges the collaboration. Gratitude owns terrain. Hydration-edge owns edge classification. Carrier consumes and renders without inventing truth.
+            HTML loads the two new children before the carrier. Carrier is requested under the compositor-consumption contract.
           </p>
         </div>
 
         <div class="receipt-grid">
-          <article class="receipt-card"><b>HTML</b><strong>six lenses</strong><span>The tray now includes The Sixth Sense.</span></article>
-          <article class="receipt-card"><b>Child</b><strong>Gratitude</strong><span>Terrain authority loads before downstream edge and carrier.</span></article>
-          <article class="receipt-card"><b>Edge Child</b><strong>hydration edge</strong><span>Beach, cliff, and waterfall classification loads before carrier.</span></article>
-          <article class="receipt-card"><b>Carrier</b><strong>collaborative</strong><span>Carrier renders combined expression but invents no terrain, hydration, or edge truth.</span></article>
+          <article class="receipt-card"><b>1</b><strong>Terrain child</strong><span>Gratitude terrain authority loads first.</span></article>
+          <article class="receipt-card"><b>2</b><strong>Hydration-edge</strong><span>Water behavior loads second.</span></article>
+          <article class="receipt-card"><b>3</b><strong>Compositor</strong><span>Unified landform loads third.</span></article>
+          <article class="receipt-card"><b>4</b><strong>Carrier</strong><span>Carrier loads last and consumes compositor.</span></article>
         </div>
 
-        <code class="receipt-code">AUDRALIA_G2_PLANET_SIXTH_SENSE_COLLABORATIVE_EXPRESSION_HTML_JS_TNT_v1
+        <code class="receipt-code">AUDRALIA_PLANET_HTML_LOAD_ORDER_COMPOSITOR_CHILDREN_BEFORE_CARRIER_TNT_v1
 route=/showroom/globe/audralia/planet/
 html=/showroom/globe/audralia/planet/index.html
-carrier=/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
 terrain_child=/assets/audralia/clean/terrain/audralia.gratitude.continent.child.js
 hydration_edge_child=/assets/audralia/clean/terrain/gratitude/gratitude.hydration-edge.child.js
-sixth_sense_lens_active=true
-collaborative_expression_available=true
-gratitude_child_loaded_before_carrier=true
+landform_compositor_child=/assets/audralia/clean/terrain/gratitude/gratitude.landform-compositor.child.js
+carrier=/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
+load_order=terrain_child→hydration_edge_child→landform_compositor_child→carrier
 hydration_edge_child_loaded_before_carrier=true
-carrier_consumes_child=true
+landform_compositor_loaded_before_carrier=true
+carrier_requested_contract=AUDRALIA_PLANET_CARRIER_COMPOSITOR_CONSUMPTION_SURFACE_HYDRATION_SIXTH_SENSE_TNT_v1
+carrier_consumes_compositor=true
+raw_parcels_lattice_only=true
+sixth_sense_compositor_ready=true
+carrier_invents_landform=false
 carrier_invents_terrain=false
 carrier_invents_hydration=false
-carrier_invents_edge_truth=false
+carrier_invents_edge=false
 runtime_strength_held=true
 final_visual_pass_claim=false</code>
 
-        <template id="audralia-sixth-sense-collaborative-expression-receipt" class="hidden-receipt" data-route-receipt>
-AUDRALIA_G2_PLANET_SIXTH_SENSE_COLLABORATIVE_EXPRESSION_HTML_JS_TNT_v1
-sixth_sense_lens_active=true
+        <template id="audralia-compositor-load-order-receipt" class="hidden-receipt" data-route-receipt>
+AUDRALIA_PLANET_HTML_LOAD_ORDER_COMPOSITOR_CHILDREN_BEFORE_CARRIER_TNT_v1
+load_order=terrain_child→hydration_edge_child→landform_compositor_child→carrier
 hydration_edge_child_loaded_before_carrier=true
-collaborative_expression_available=true
-carrier_invents_terrain=false
-carrier_invents_hydration=false
-carrier_invents_edge_truth=false
-runtime_strength_held=true
+landform_compositor_loaded_before_carrier=true
+carrier_consumes_compositor=true
+raw_parcels_lattice_only=true
+sixth_sense_compositor_ready=true
 final_visual_pass_claim=false
         </template>
       </section>
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Audralia · The Sixth Sense · Collaborative expression · Runtime held.
+      Diamond Gate Bridge · Audralia · Terrain → Hydration Edge → Unified Landform → Carrier · Runtime held.
     </footer>
   </div>
 
@@ -874,40 +863,56 @@ final_visual_pass_claim=false
     defer
     data-audralia-gratitude-continent-child
     data-contract="AUDRALIA_GRATITUDE_TERRAIN_ENGINE_SURFACE_HABITABILITY_BLUEPRINT_REGISTRY_ALIGNMENT_TNT_v1"
-    data-load-order="first-before-edge-and-carrier"
+    data-load-order="01-before-hydration-edge-before-compositor-before-carrier"
     data-land-first="true"
     data-nine-summits-embedded="true"
     data-hydration-derived-from-valleys="true"
-  ></script>
-
-  <script
-    src="/assets/audralia/clean/terrain/gratitude/gratitude.hydration-edge.child.js?v=AUDRALIA_GRATITUDE_HYDRATION_EDGE_BEACH_CLIFF_WATERFALL_CHILD_TNT_v1"
-    defer
-    data-audralia-gratitude-hydration-edge-child
-    data-contract="AUDRALIA_GRATITUDE_HYDRATION_EDGE_BEACH_CLIFF_WATERFALL_CHILD_TNT_v1"
-    data-load-order="second-before-carrier"
-    data-downstream-from-hydration="true"
-    data-beach-cliff-waterfall-edge-classifier="true"
     data-final-visual-pass-claim="false"
   ></script>
 
   <script
-    src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?v=AUDRALIA_G2_PLANET_SIXTH_SENSE_COLLABORATIVE_EXPRESSION_CARRIER_TNT_v1"
+    src="/assets/audralia/clean/terrain/gratitude/gratitude.hydration-edge.child.js?v=AUDRALIA_GRATITUDE_HYDRATION_EDGE_WATER_BEHAVIOR_CHILD_TNT_v1"
+    defer
+    data-audralia-gratitude-hydration-edge-child
+    data-contract="AUDRALIA_GRATITUDE_HYDRATION_EDGE_WATER_BEHAVIOR_CHILD_TNT_v1"
+    data-load-order="02-after-terrain-before-compositor-before-carrier"
+    data-water-behavior-authority-active="true"
+    data-carrier-invents-water-behavior="false"
+    data-final-visual-pass-claim="false"
+  ></script>
+
+  <script
+    src="/assets/audralia/clean/terrain/gratitude/gratitude.landform-compositor.child.js?v=AUDRALIA_GRATITUDE_UNIFIED_LANDFORM_COMPOSITOR_CHILD_TNT_v1"
+    defer
+    data-audralia-gratitude-landform-compositor-child
+    data-contract="AUDRALIA_GRATITUDE_UNIFIED_LANDFORM_COMPOSITOR_CHILD_TNT_v1"
+    data-load-order="03-after-terrain-after-hydration-edge-before-carrier"
+    data-unified-landform-scope-256-active="true"
+    data-raw-parcel-visibility-held="true"
+    data-summits-are-not-islands="true"
+    data-carrier-invents-landform="false"
+    data-final-visual-pass-claim="false"
+  ></script>
+
+  <script
+    src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?v=AUDRALIA_PLANET_CARRIER_COMPOSITOR_CONSUMPTION_SURFACE_HYDRATION_SIXTH_SENSE_TNT_v1"
     defer
     data-audralia-planet-inspection-js
-    data-contract="AUDRALIA_G2_PLANET_SIXTH_SENSE_COLLABORATIVE_EXPRESSION_CARRIER_TNT_v1"
-    data-previous-contract="AUDRALIA_PLANET_CARRIER_LAND_WATER_CONSTRUCT_VISIBILITY_ADAPTER_TNT_v1"
+    data-contract="AUDRALIA_PLANET_CARRIER_COMPOSITOR_CONSUMPTION_SURFACE_HYDRATION_SIXTH_SENSE_TNT_v1"
+    data-previous-contract="AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_JS_ONLY_TNT_v1"
+    data-html-load-order-contract="AUDRALIA_PLANET_HTML_LOAD_ORDER_COMPOSITOR_CHILDREN_BEFORE_CARRIER_TNT_v1"
     data-route="/showroom/globe/audralia/planet/"
+    data-load-order="04-after-terrain-after-hydration-edge-after-compositor"
     data-gratitude-child-required="true"
     data-hydration-edge-child-required="true"
-    data-sixth-sense-lens-active="true"
-    data-collaborative-expression-available="true"
-    data-carrier-consumes-child="true"
+    data-landform-compositor-child-required="true"
+    data-carrier-consumes-compositor="true"
+    data-raw-parcels-lattice-only="true"
+    data-sixth-sense-compositor-ready="true"
     data-carrier-invents-terrain="false"
     data-carrier-invents-hydration="false"
-    data-carrier-invents-edge-truth="false"
-    data-inline-lens-tray-active="true"
-    data-engineering-readout-below="true"
+    data-carrier-invents-edge="false"
+    data-carrier-invents-landform="false"
     data-runtime-strength-held="true"
     data-final-visual-pass-claim="false"
   ></script>

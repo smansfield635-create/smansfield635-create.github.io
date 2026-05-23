@@ -2,66 +2,45 @@
 <html
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
-  data-page="audralia-planet-compositor-load-order"
-  data-contract="AUDRALIA_PLANET_HTML_LOAD_ORDER_COMPOSITOR_CHILDREN_BEFORE_CARRIER_TNT_v1"
-  data-previous-contract="AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_CACHE_KEY_HTML_ONLY_TNT_v1"
-  data-spec-ops-contract="AUDRALIA_PLANET_HTML_LOAD_ORDER_AND_CARRIER_COMPOSITOR_CONSUMPTION_SPEC_OPS_v1"
-  data-news-contract="AUDRALIA_PLANET_HTML_LOAD_ORDER_AND_CARRIER_COMPOSITOR_CONSUMPTION_NEWS_v1"
-  data-ccr-contract="AUDRALIA_PLANET_HTML_LOAD_ORDER_AND_CARRIER_COMPOSITOR_CONSUMPTION_CCR_v1"
-  data-gratitude-child-loaded-before-carrier="true"
-  data-hydration-edge-child-loaded-before-carrier="true"
-  data-landform-compositor-loaded-before-carrier="true"
-  data-carrier-consumes-compositor="true"
-  data-raw-parcels-lattice-only="true"
-  data-sixth-sense-compositor-ready="true"
-  data-carrier-requested-contract="AUDRALIA_PLANET_CARRIER_COMPOSITOR_CONSUMPTION_SURFACE_HYDRATION_SIXTH_SENSE_TNT_v1"
-  data-carrier-consumes-child="true"
-  data-carrier-consumes-hydration-edge="true"
-  data-carrier-consumes-landform-compositor="true"
-  data-carrier-invents-terrain="false"
-  data-carrier-invents-hydration="false"
-  data-carrier-invents-edge="false"
-  data-carrier-invents-landform="false"
-  data-runtime-strength-held="true"
+  data-page="audralia-four-gratitude-children-runtime-carrier"
+  data-contract="AUDRALIA_PLANET_HTML_FOUR_GRATITUDE_CHILDREN_THEN_RUNTIME_CARRIER_TNT_v1"
+  data-previous-contract="AUDRALIA_PLANET_HTML_LOAD_ORDER_COMPOSITOR_CHILDREN_BEFORE_CARRIER_TNT_v1"
+  data-four-gratitude-children="true"
+  data-carrier-is-runtime="true"
+  data-legacy-broad-continent-child-active="false"
+  data-load-order="surface-habitability→hydration→hydration-edge→landform-compositor→runtime-carrier"
   data-final-visual-pass-claim="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-
-  <title>Audralia · Clean Planet Inspection</title>
-  <meta
-    name="description"
-    content="Audralia clean planet inspection with terrain, hydration-edge, unified landform compositor, and carrier expression loaded in lawful order."
-  >
+  <title>Audralia · Four-Child Planet Inspection</title>
+  <meta name="description" content="Audralia planet inspection with four Gratitude children and one runtime carrier.">
 
   <style>
     :root{
       color-scheme:dark;
       --bg:#020711;
       --panel:#061020;
-      --panel2:#040914;
       --text:rgba(239,247,255,.96);
       --muted:rgba(239,247,255,.70);
-      --faint:rgba(239,247,255,.48);
       --gold:#f4cf83;
       --blue:#8dd8ff;
       --mint:#a7f3c6;
       --line:rgba(244,207,131,.18);
       --max:1280px;
-      --shadow:0 34px 120px rgba(0,0,0,.50);
     }
 
     *{box-sizing:border-box}
 
     html{
       min-height:100%;
-      scroll-behavior:smooth;
       background:
-        radial-gradient(circle at 50% -12%,rgba(78,119,171,.27),transparent 39rem),
+        radial-gradient(circle at 50% -12%,rgba(78,119,171,.28),transparent 38rem),
         radial-gradient(circle at 12% 18%,rgba(244,207,131,.10),transparent 30rem),
         radial-gradient(circle at 88% 28%,rgba(141,216,255,.12),transparent 31rem),
         linear-gradient(180deg,#061020 0%,var(--bg) 56%,#01040a 100%);
+      scroll-behavior:smooth;
     }
 
     body{
@@ -79,28 +58,9 @@
       background-size:56px 56px;
     }
 
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      background:radial-gradient(circle,rgba(255,255,255,.15) 0 1px,transparent 1.4px);
-      background-size:230px 250px;
-      opacity:.14;
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.90),rgba(0,0,0,.46) 62%,rgba(0,0,0,.12));
-    }
-
     a,button,summary{color:inherit;font:inherit}
     a{text-decoration:none}
-    button,summary{cursor:pointer}
-
-    a:focus-visible,
-    button:focus-visible,
-    summary:focus-visible{
-      outline:2px solid var(--gold);
-      outline-offset:4px;
-    }
+    button{cursor:pointer}
 
     .skip{
       position:absolute;
@@ -126,11 +86,12 @@
     }
 
     .topbar{
-      display:grid;
-      grid-template-columns:minmax(0,1fr) auto;
-      align-items:start;
-      gap:16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
       padding:10px 0 20px;
+      flex-wrap:wrap;
     }
 
     .brand{
@@ -138,12 +99,9 @@
       grid-template-columns:auto minmax(0,1fr);
       align-items:center;
       gap:11px;
-      min-width:0;
-      width:fit-content;
-      color:var(--gold);
       font-weight:950;
-      letter-spacing:.04em;
       text-transform:uppercase;
+      color:var(--gold);
     }
 
     .brand-mark{
@@ -156,122 +114,45 @@
       background:
         linear-gradient(135deg,rgba(255,255,255,.20),transparent 38%),
         conic-gradient(from 45deg,rgba(255,255,255,.22),rgba(141,216,255,.18),rgba(7,19,52,.94),rgba(244,207,131,.16),rgba(255,255,255,.18));
-      box-shadow:0 0 22px rgba(244,207,131,.14),0 0 24px rgba(141,216,255,.10);
     }
 
-    .brand-copy{display:grid;gap:2px;min-width:0}
+    .brand-copy{display:grid;gap:2px}
+    .brand-copy span{font-size:.68rem;letter-spacing:.22em;color:rgba(141,216,255,.82)}
+    .brand-copy strong{font-size:clamp(1rem,2.6vw,1.45rem);line-height:1;color:rgba(255,244,216,.96)}
 
-    .brand-copy span{
-      color:rgba(141,216,255,.82);
-      font-size:.68rem;
-      letter-spacing:.22em;
-    }
-
-    .brand-copy strong{
-      color:rgba(255,244,216,.96);
-      font-size:clamp(1rem,2.6vw,1.45rem);
-      line-height:1;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .dropdown-nav{
+    .navlinks{
       display:flex;
       flex-wrap:wrap;
-      justify-content:flex-end;
       gap:8px;
     }
 
-    .dropdown{position:relative}
-
-    .dropdown summary{
+    .navlinks a{
       min-height:38px;
       display:inline-flex;
       align-items:center;
-      justify-content:center;
-      gap:8px;
       border:1px solid rgba(255,255,255,.11);
       border-radius:999px;
       padding:0 13px;
+      background:rgba(255,255,255,.035);
       color:rgba(238,244,255,.84);
-      background:radial-gradient(circle at 50% 0%,rgba(141,216,255,.08),transparent 72%),rgba(255,255,255,.035);
       font-size:.82rem;
       font-weight:850;
-      letter-spacing:.02em;
-      list-style:none;
     }
 
-    .dropdown summary::-webkit-details-marker{display:none}
-    .dropdown summary::after{content:"⌄";color:rgba(244,207,131,.88);font-size:.92rem}
-
-    .dropdown[open] summary{
-      color:#06101c;
-      background:linear-gradient(135deg,#fff0b8,var(--gold));
-      border-color:rgba(244,207,131,.72);
-    }
-
-    .dropdown-panel{
-      position:absolute;
-      right:0;
-      top:calc(100% + 8px);
-      z-index:30;
-      min-width:260px;
-      display:grid;
-      gap:6px;
-      padding:10px;
-      border:1px solid rgba(244,207,131,.22);
-      border-radius:18px;
-      background:radial-gradient(circle at 12% 0%,rgba(244,207,131,.10),transparent 12rem),rgba(2,8,20,.96);
-      box-shadow:0 22px 70px rgba(0,0,0,.48);
-      backdrop-filter:blur(12px);
-    }
-
-    .dropdown-panel a{
-      min-height:36px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      border:1px solid rgba(255,255,255,.09);
-      border-radius:12px;
-      padding:0 10px;
-      color:rgba(238,244,255,.84);
-      background:rgba(255,255,255,.035);
-      font-size:.84rem;
-      font-weight:820;
-    }
-
-    .dropdown-panel a:hover{
-      color:#06101c;
-      background:linear-gradient(135deg,#fff0b8,var(--gold));
-      border-color:rgba(244,207,131,.56);
-    }
-
-    .hero,
-    .inspection-shell,
-    .engineering-shell,
-    .state-shell,
-    .receipt-shell{
+    .hero,.inspection-shell,.engineering-shell,.state-shell,.receipt-shell{
       border:1px solid var(--line);
       border-radius:34px;
       background:
         radial-gradient(circle at 76% 28%,rgba(139,200,255,.13),transparent 32%),
         radial-gradient(circle at 18% 20%,rgba(244,207,131,.12),transparent 30%),
         linear-gradient(180deg,rgba(8,17,34,.94),rgba(4,9,20,.94));
-      box-shadow:var(--shadow);
+      box-shadow:0 34px 120px rgba(0,0,0,.50);
       overflow:hidden;
     }
 
-    .hero{
-      position:relative;
-      isolation:isolate;
-      padding:clamp(24px,5vw,50px);
-    }
+    .hero{padding:clamp(24px,5vw,50px)}
 
-    .kicker,
-    .section-title,
-    .label{
+    .kicker,.section-title{
       margin:0 0 14px;
       color:var(--gold);
       font:900 .78rem/1.4 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
@@ -318,31 +199,14 @@
       text-transform:uppercase;
     }
 
-    .inspection-shell,
-    .engineering-shell,
-    .state-shell,
-    .receipt-shell{
+    .inspection-shell,.engineering-shell,.state-shell,.receipt-shell{
       margin-top:16px;
       padding:clamp(18px,3.8vw,32px);
     }
 
     .section-head{max-width:960px;margin-bottom:16px}
-
-    .section-head h2{
-      margin:0;
-      color:rgba(255,244,216,.96);
-      font-size:clamp(1.55rem,4.6vw,2.6rem);
-      line-height:1.02;
-      letter-spacing:-.06em;
-      text-wrap:balance;
-    }
-
-    .section-head p{
-      margin:12px 0 0;
-      color:var(--muted);
-      font-size:clamp(1rem,2.4vw,1.13rem);
-      line-height:1.55;
-    }
+    .section-head h2{margin:0;color:rgba(255,244,216,.96);font-size:clamp(1.55rem,4.6vw,2.6rem);line-height:1.02;letter-spacing:-.06em}
+    .section-head p{margin:12px 0 0;color:var(--muted);font-size:clamp(1rem,2.4vw,1.13rem);line-height:1.55}
 
     .inspection-stage{
       position:relative;
@@ -357,22 +221,6 @@
       box-shadow:inset 0 0 80px rgba(141,216,255,.06),0 28px 90px rgba(0,0,0,.42);
       touch-action:none;
       user-select:none;
-      -webkit-user-select:none;
-    }
-
-    .inspection-stage::before{
-      content:"";
-      position:absolute;
-      inset:-18%;
-      z-index:0;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 12% 22%,rgba(255,255,255,.34) 0 1px,transparent 1.7px),
-        radial-gradient(circle at 32% 68%,rgba(255,255,255,.22) 0 1px,transparent 1.5px),
-        radial-gradient(circle at 54% 14%,rgba(255,255,255,.28) 0 1px,transparent 1.6px),
-        radial-gradient(circle at 74% 74%,rgba(255,255,255,.20) 0 1px,transparent 1.4px),
-        radial-gradient(circle at 88% 36%,rgba(141,216,255,.28) 0 1px,transparent 1.7px);
-      opacity:.34;
     }
 
     .inspection-mount{
@@ -425,11 +273,9 @@
       border-radius:24px;
       background:rgba(3,8,18,.58);
       backdrop-filter:blur(10px);
-      box-shadow:0 18px 48px rgba(0,0,0,.34);
       touch-action:manipulation;
     }
 
-    .inline-lens-button,
     .lens-button{
       min-height:42px;
       border:1px solid rgba(255,255,255,.11);
@@ -441,10 +287,8 @@
       font-weight:950;
       letter-spacing:.05em;
       text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
     }
 
-    .inline-lens-button[aria-pressed="true"],
     .lens-button[aria-pressed="true"]{
       color:#06101c;
       background:linear-gradient(135deg,#fff0b8,var(--gold));
@@ -470,58 +314,13 @@
       pointer-events:none;
     }
 
-    .engineering-lens{
-      border:1px solid rgba(244,207,131,.18);
-      border-radius:24px;
-      background:rgba(255,255,255,.026);
-      overflow:hidden;
-    }
-
-    .engineering-lens summary{
-      min-height:58px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding:0 18px;
-      color:rgba(255,244,216,.96);
-      font-weight:950;
-      letter-spacing:.04em;
-      text-transform:uppercase;
-      list-style:none;
-      background:radial-gradient(circle at 12% 0%,rgba(244,207,131,.10),transparent 16rem),rgba(2,8,20,.44);
-    }
-
-    .engineering-lens summary::-webkit-details-marker{display:none}
-    .engineering-lens summary::after{content:"Open Technical Readout";color:var(--gold);font-size:.78rem}
-    .engineering-lens[open] summary::after{content:"Close Technical Readout"}
-
-    .engineering-body{
-      display:grid;
-      gap:14px;
-      padding:16px;
-      border-top:1px solid rgba(244,207,131,.12);
-    }
-
-    .lens-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-    }
-
-    .readout-grid,
-    .state-grid,
-    .receipt-grid{
+    .grid{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
       gap:10px;
     }
 
-    .readout-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-
-    .readout-card,
-    .state-card,
-    .receipt-card{
+    .card{
       min-height:112px;
       display:grid;
       align-content:start;
@@ -532,30 +331,9 @@
       background:radial-gradient(circle at 20% 0%,rgba(244,207,131,.08),transparent 8rem),rgba(255,255,255,.028);
     }
 
-    .readout-card b,
-    .state-card b,
-    .receipt-card b{
-      color:var(--gold);
-      font-size:.72rem;
-      letter-spacing:.15em;
-      text-transform:uppercase;
-    }
-
-    .readout-card strong,
-    .state-card strong,
-    .receipt-card strong{
-      color:rgba(255,244,216,.96);
-      font-size:1rem;
-      line-height:1.16;
-    }
-
-    .readout-card span,
-    .state-card span,
-    .receipt-card span{
-      color:rgba(238,244,255,.70);
-      font-size:.88rem;
-      line-height:1.36;
-    }
+    .card b{color:var(--gold);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase}
+    .card strong{color:rgba(255,244,216,.96);font-size:1rem;line-height:1.16}
+    .card span{color:rgba(238,244,255,.70);font-size:.88rem;line-height:1.36}
 
     .receipt-code{
       display:block;
@@ -571,302 +349,171 @@
       overflow-wrap:anywhere;
     }
 
-    .hidden-receipt,
-    [data-route-receipt]{
-      display:none!important;
-      visibility:hidden!important;
-      width:0!important;
-      height:0!important;
-      max-width:0!important;
-      max-height:0!important;
-      overflow:hidden!important;
-      opacity:0!important;
-      pointer-events:none!important;
-      position:absolute!important;
-      clip-path:inset(50%)!important;
-    }
-
-    .footer{
-      margin-top:20px;
-      padding:20px 0 0;
-      color:var(--faint);
-      font-size:.82rem;
-      text-align:center;
-    }
+    .hidden-receipt,[data-route-receipt]{display:none!important}
+    .footer{margin-top:20px;padding:20px 0 0;color:rgba(239,247,255,.48);font-size:.82rem;text-align:center}
 
     @media (max-width:1040px){
-      .topbar{grid-template-columns:1fr}
-      .dropdown-nav{justify-content:flex-start}
-      .dropdown-panel{left:0;right:auto}
-      .readout-grid,
-      .state-grid,
-      .receipt-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
       .inline-lens-tray{grid-template-columns:repeat(3,minmax(0,1fr))}
     }
 
     @media (max-width:700px){
       .page{width:min(100% - 18px,var(--max))}
-      .hero,
-      .inspection-shell,
-      .engineering-shell,
-      .state-shell,
-      .receipt-shell,
-      .inspection-stage{border-radius:24px}
-      .dropdown-nav{display:grid;grid-template-columns:1fr}
-      .dropdown summary{width:100%}
-      .dropdown-panel{
-        position:static;
-        margin-top:8px;
-        min-width:0;
-      }
+      .hero,.inspection-shell,.engineering-shell,.state-shell,.receipt-shell,.inspection-stage{border-radius:24px}
       .inspection-stage{min-height:850px}
       .inline-lens-tray{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .readout-grid,
-      .state-grid,
-      .receipt-grid{grid-template-columns:1fr}
-    }
-
-    @media (prefers-reduced-motion:reduce){
-      *,*::before,*::after{
-        scroll-behavior:auto!important;
-        animation-duration:.01ms!important;
-        animation-iteration-count:1!important;
-        transition-duration:.01ms!important;
-      }
+      .grid{grid-template-columns:1fr}
     }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="#inspection-carrier">Skip to clean planet inspection</a>
+  <a class="skip" href="#inspection-carrier">Skip to planet inspection</a>
 
   <div class="page">
-    <header class="topbar" aria-label="Audralia planet body navigation">
+    <header class="topbar">
       <a class="brand" href="/showroom/globe/audralia/planet/" aria-current="page">
         <span class="brand-mark" aria-hidden="true">AU</span>
         <span class="brand-copy">
           <span>Audralia</span>
-          <strong>Clean Planet Inspection</strong>
+          <strong>Four-Child Inspection</strong>
         </span>
       </a>
 
-      <nav class="dropdown-nav" aria-label="Planet inspection navigation">
-        <details class="dropdown">
-          <summary>Route Menu</summary>
-          <div class="dropdown-panel">
-            <a href="/showroom/globe/audralia/">Template Plate <span>Parent</span></a>
-            <a href="/showroom/globe/audralia/disposition/">Cockpit Inspection <span>Proof</span></a>
-            <a href="/showroom/globe/">Globe <span>Back</span></a>
-            <a href="/gauges/">Triple G <span>Audit</span></a>
-          </div>
-        </details>
-
-        <details class="dropdown">
-          <summary>Inspection Options</summary>
-          <div class="dropdown-panel">
-            <a href="#inspection-carrier">Clean Inspection <span>Default</span></a>
-            <a href="#engineering-lens">Engineering Readout <span>Optional</span></a>
-            <a href="#state-lens-deck">State Deck <span>Below</span></a>
-            <a href="#route-receipt">Route Receipt <span>Proof</span></a>
-          </div>
-        </details>
+      <nav class="navlinks" aria-label="Route links">
+        <a href="/showroom/globe/audralia/">Audralia</a>
+        <a href="/showroom/globe/audralia/disposition/">Cockpit</a>
+        <a href="/showroom/globe/">Globe</a>
+        <a href="/gauges/">Triple G</a>
       </nav>
     </header>
 
     <main id="planet-main">
-      <section class="hero" aria-labelledby="page-title">
-        <p class="kicker">Audralia · Unified Landform Boot Chain</p>
-        <h1 id="page-title">Inspect the planet as one body, not a stack of parcels.</h1>
-
+      <section class="hero">
+        <p class="kicker">Audralia · Four Children + Runtime Carrier</p>
+        <h1>Four Gratitude authorities. One runtime carrier.</h1>
         <p class="lede">
-          The live route now boots terrain, hydration-edge behavior, unified landform composition, and then the carrier. Surface, Hydration, and The Sixth Sense are bound to compositor packets. Lattice keeps raw 256 inspection.
+          Surface-habitability, hydration, and hydration-edge feed the landform compositor. The carrier is runtime only: it consumes the compositor and draws the inspection lenses.
         </p>
 
         <div class="status-row">
-          <span class="status-pill">Terrain child first</span>
-          <span class="status-pill">Hydration-edge second</span>
-          <span class="status-pill">Compositor third</span>
-          <span class="status-pill">Carrier fourth</span>
-          <span class="status-pill">Raw parcels lattice only</span>
-          <span class="status-pill">Runtime held</span>
+          <span class="status-pill">4 Gratitude children</span>
+          <span class="status-pill">Carrier = runtime</span>
+          <span class="status-pill">Legacy broad child inactive</span>
+          <span class="status-pill">Compositor first</span>
+          <span class="status-pill">Final visual pass false</span>
         </div>
       </section>
 
-      <section id="inspection-carrier" class="inspection-shell" aria-label="Clean Audralia planet inspection">
+      <section id="inspection-carrier" class="inspection-shell">
         <div class="section-head">
-          <p class="section-title">Clean Inspection Chamber</p>
-          <h2>One Gratitude landform, six inspection lenses.</h2>
-          <p>
-            Surface and Hydration now request the unified landform compositor. The Sixth Sense shows the collaborative terrain-water-edge relationship.
-          </p>
+          <p class="section-title">Inspection Chamber</p>
+          <h2>The runtime draws from the compositor.</h2>
+          <p>Surface, Hydration, and Sixth Sense use compositor packets. Lattice keeps the raw 256 inspection.</p>
         </div>
 
         <div
           id="audraliaPlanetInspectionStage"
           class="inspection-stage"
           data-audralia-planet-inspection-stage
-          data-clean-inspection-stage="true"
-          data-inline-lens-tray-active="true"
-          data-no-controls-over-planet="true"
-          data-route-local-render="true"
-          data-contract="AUDRALIA_PLANET_HTML_LOAD_ORDER_COMPOSITOR_CHILDREN_BEFORE_CARRIER_TNT_v1"
-          data-carrier-requested-contract="AUDRALIA_PLANET_CARRIER_COMPOSITOR_CONSUMPTION_SURFACE_HYDRATION_SIXTH_SENSE_TNT_v1"
-          data-carrier-consumes-compositor="true"
-          data-raw-parcels-lattice-only="true"
-          data-sixth-sense-compositor-ready="true"
-          data-runtime-strength-held="true"
+          data-contract="AUDRALIA_PLANET_HTML_FOUR_GRATITUDE_CHILDREN_THEN_RUNTIME_CARRIER_TNT_v1"
+          data-four-gratitude-children="true"
+          data-carrier-is-runtime="true"
+          data-legacy-broad-continent-child-active="false"
           data-final-visual-pass-claim="false"
-          aria-label="Clean Audralia planet body inspection stage"
         >
           <div
             id="audraliaPlanetInspectionMount"
             class="inspection-mount"
             data-audralia-planet-inspection-mount
-            data-clean-inspection-mount="true"
-            aria-label="Clean Audralia planet body mount"
           ></div>
 
           <div class="stage-label" data-audralia-planet-stage-label>
-            <strong>Unified Inspection</strong> → drag Audralia directly
+            <strong>Runtime Carrier</strong> → compositor-first expression
           </div>
 
-          <div class="inline-lens-tray" role="group" aria-label="Quick planet lens controls">
-            <button class="inline-lens-button" type="button" data-audralia-planet-lens="body" aria-pressed="true">Body</button>
-            <button class="inline-lens-button" type="button" data-audralia-planet-lens="surface" aria-pressed="false">Surface</button>
-            <button class="inline-lens-button" type="button" data-audralia-planet-lens="hydration" aria-pressed="false">Hydration</button>
-            <button class="inline-lens-button" type="button" data-audralia-planet-lens="sixth-sense" aria-pressed="false">Sixth Sense</button>
-            <button class="inline-lens-button" type="button" data-audralia-planet-lens="lattice" aria-pressed="false">Lattice</button>
-            <button class="inline-lens-button" type="button" data-audralia-planet-lens="receipt" aria-pressed="false">Receipt</button>
+          <div class="inline-lens-tray" role="group" aria-label="Planet lenses">
+            <button class="lens-button" type="button" data-audralia-planet-lens="body" aria-pressed="true">Body</button>
+            <button class="lens-button" type="button" data-audralia-planet-lens="surface" aria-pressed="false">Surface</button>
+            <button class="lens-button" type="button" data-audralia-planet-lens="hydration" aria-pressed="false">Hydration</button>
+            <button class="lens-button" type="button" data-audralia-planet-lens="sixth-sense" aria-pressed="false">Sixth Sense</button>
+            <button class="lens-button" type="button" data-audralia-planet-lens="lattice" aria-pressed="false">Lattice</button>
+            <button class="lens-button" type="button" data-audralia-planet-lens="receipt" aria-pressed="false">Receipt</button>
           </div>
 
           <div class="stage-instruction">
-            Drag the planet. Surface uses the unified mass. Hydration uses flow through that mass. The Sixth Sense combines terrain, water, edge, material, and summit influence.
+            Drag the planet. Surface-habitability + hydration + hydration-edge → compositor → carrier runtime.
           </div>
         </div>
       </section>
 
-      <section id="engineering-lens" class="engineering-shell" aria-label="Engineering and technical readout">
-        <details class="engineering-lens">
-          <summary>Engineering / Technical Readout</summary>
-
-          <div class="engineering-body">
-            <div class="section-head">
-              <p class="section-title">Engineering Lens</p>
-              <h2>Raw construction stays inspectable without becoming the surface.</h2>
-              <p>
-                Surface, Hydration, and The Sixth Sense consume the compositor. Lattice preserves the 16 × 16 raw inspection.
-              </p>
-            </div>
-
-            <div class="lens-row" role="group" aria-label="Engineering lens controls">
-              <button class="lens-button" type="button" data-audralia-planet-lens="body" aria-pressed="true">Body View</button>
-              <button class="lens-button" type="button" data-audralia-planet-lens="surface" aria-pressed="false">Surface View</button>
-              <button class="lens-button" type="button" data-audralia-planet-lens="hydration" aria-pressed="false">Hydration View</button>
-              <button class="lens-button" type="button" data-audralia-planet-lens="sixth-sense" aria-pressed="false">The Sixth Sense</button>
-              <button class="lens-button" type="button" data-audralia-planet-lens="lattice" aria-pressed="false">Lattice View</button>
-              <button class="lens-button" type="button" data-audralia-planet-lens="receipt" aria-pressed="false">Receipt View</button>
-            </div>
-
-            <div class="readout-grid">
-              <article class="readout-card">
-                <b data-audralia-planet-lens-anchor>North · Hydrosphere Body</b>
-                <strong data-audralia-planet-lens-title>Body View</strong>
-                <span data-audralia-planet-lens-copy>Clean hydrosphere inspection. Unified landform may appear faintly while the body remains primary.</span>
-              </article>
-
-              <article class="readout-card">
-                <b>Carrier Receipt</b>
-                <strong data-audralia-planet-carrier-status>Compositor-aware carrier pending load</strong>
-                <span data-audralia-planet-carrier-proof>Terrain → hydration-edge → compositor → carrier.</span>
-              </article>
-            </div>
-          </div>
-        </details>
-      </section>
-
-      <section id="state-lens-deck" class="state-shell" aria-label="Audralia state lens deck">
+      <section class="state-shell">
         <div class="section-head">
-          <p class="section-title">State Lens Deck</p>
-          <h2>Each lens has a bounded source.</h2>
-          <p>
-            The carrier draws, but it does not invent the landform. Terrain defines, hydration-edge behaves, compositor merges, carrier expresses.
-          </p>
+          <p class="section-title">Authority Deck</p>
+          <h2>Four files, four jobs.</h2>
         </div>
 
-        <div class="state-grid">
-          <article class="state-card"><b>Body</b><strong>Hydrosphere Carrier</strong><span>Ocean body, atmosphere glow, light response, direct drag inspection.</span></article>
-          <article class="state-card"><b>Surface</b><strong>Unified Landform</strong><span>One Gratitude mass, coastline, elevation field, summit influence.</span></article>
-          <article class="state-card"><b>Hydration</b><strong>Flow Through Mass</strong><span>Water follows unified terrain, edge relationship, basins, valleys, and flow cuts.</span></article>
-          <article class="state-card"><b>Sixth Sense</b><strong>Relationship Layer</strong><span>Terrain + hydration + edge + material + summit influence.</span></article>
-          <article class="state-card"><b>Lattice</b><strong>Raw 256 Inspection</strong><span>Raw parcels remain visible here only.</span></article>
-          <article class="state-card"><b>Receipt</b><strong>Boot Chain Proof</strong><span>Reports child detection, compositor validation, and final visual pass false.</span></article>
+        <div class="grid">
+          <article class="card"><b>1</b><strong>Surface-habitability</strong><span>Land, elevation, summit anchors, above-sea-level terrain readiness.</span></article>
+          <article class="card"><b>2</b><strong>Hydration</strong><span>Internal water movement, rivers, streams, pools, gullies, marshes, wetlands.</span></article>
+          <article class="card"><b>3</b><strong>Hydration-edge</strong><span>Beaches, cliffs, waterfalls, shelves, sediment, rock, sand.</span></article>
+          <article class="card"><b>4</b><strong>Landform-compositor</strong><span>Combines the first three into one carrier-consumable continent packet.</span></article>
+          <article class="card"><b>Runtime</b><strong>Carrier</strong><span>Canvas, drag, lens switching, drawing, receipt, Lattice inspection.</span></article>
+          <article class="card"><b>Legacy</b><strong>Broad child inactive</strong><span>The old broad continent child is not active as a fifth authority here.</span></article>
         </div>
       </section>
 
-      <section id="route-receipt" class="receipt-shell" aria-label="Clean inspection route receipt">
+      <section id="route-receipt" class="receipt-shell">
         <div class="section-head">
           <p class="section-title">Route Receipt</p>
-          <h2>Boot chain aligned to compositor-first expression.</h2>
-          <p>
-            HTML loads the two new children before the carrier. Carrier is requested under the compositor-consumption contract.
-          </p>
+          <h2>Four children load before the runtime carrier.</h2>
         </div>
 
-        <div class="receipt-grid">
-          <article class="receipt-card"><b>1</b><strong>Terrain child</strong><span>Gratitude terrain authority loads first.</span></article>
-          <article class="receipt-card"><b>2</b><strong>Hydration-edge</strong><span>Water behavior loads second.</span></article>
-          <article class="receipt-card"><b>3</b><strong>Compositor</strong><span>Unified landform loads third.</span></article>
-          <article class="receipt-card"><b>4</b><strong>Carrier</strong><span>Carrier loads last and consumes compositor.</span></article>
-        </div>
-
-        <code class="receipt-code">AUDRALIA_PLANET_HTML_LOAD_ORDER_COMPOSITOR_CHILDREN_BEFORE_CARRIER_TNT_v1
+        <code class="receipt-code">AUDRALIA_PLANET_HTML_FOUR_GRATITUDE_CHILDREN_THEN_RUNTIME_CARRIER_TNT_v1
 route=/showroom/globe/audralia/planet/
-html=/showroom/globe/audralia/planet/index.html
-terrain_child=/assets/audralia/clean/terrain/audralia.gratitude.continent.child.js
+load_order=surface-habitability→hydration→hydration-edge→landform-compositor→runtime-carrier
+gratitude_child_count=4
+carrier_is_runtime=true
+legacy_broad_continent_child_active=false
+surface_habitability_child=/assets/audralia/clean/terrain/gratitude/gratitude.surface-habitability.child.js
+hydration_child=/assets/audralia/clean/terrain/gratitude/gratitude.hydration.child.js
 hydration_edge_child=/assets/audralia/clean/terrain/gratitude/gratitude.hydration-edge.child.js
 landform_compositor_child=/assets/audralia/clean/terrain/gratitude/gratitude.landform-compositor.child.js
-carrier=/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
-load_order=terrain_child→hydration_edge_child→landform_compositor_child→carrier
-hydration_edge_child_loaded_before_carrier=true
-landform_compositor_loaded_before_carrier=true
-carrier_requested_contract=AUDRALIA_PLANET_CARRIER_COMPOSITOR_CONSUMPTION_SURFACE_HYDRATION_SIXTH_SENSE_TNT_v1
-carrier_consumes_compositor=true
-raw_parcels_lattice_only=true
-sixth_sense_compositor_ready=true
-carrier_invents_landform=false
-carrier_invents_terrain=false
-carrier_invents_hydration=false
-carrier_invents_edge=false
-runtime_strength_held=true
+runtime_carrier=/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
 final_visual_pass_claim=false</code>
 
-        <template id="audralia-compositor-load-order-receipt" class="hidden-receipt" data-route-receipt>
-AUDRALIA_PLANET_HTML_LOAD_ORDER_COMPOSITOR_CHILDREN_BEFORE_CARRIER_TNT_v1
-load_order=terrain_child→hydration_edge_child→landform_compositor_child→carrier
-hydration_edge_child_loaded_before_carrier=true
-landform_compositor_loaded_before_carrier=true
-carrier_consumes_compositor=true
-raw_parcels_lattice_only=true
-sixth_sense_compositor_ready=true
+        <template id="audralia-four-child-runtime-carrier-receipt" class="hidden-receipt" data-route-receipt>
+AUDRALIA_PLANET_HTML_FOUR_GRATITUDE_CHILDREN_THEN_RUNTIME_CARRIER_TNT_v1
+gratitude_child_count=4
+carrier_is_runtime=true
+legacy_broad_continent_child_active=false
 final_visual_pass_claim=false
         </template>
       </section>
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Audralia · Terrain → Hydration Edge → Unified Landform → Carrier · Runtime held.
+      Diamond Gate Bridge · Audralia · Four Gratitude children → compositor → runtime carrier.
     </footer>
   </div>
 
   <script
-    src="/assets/audralia/clean/terrain/audralia.gratitude.continent.child.js?v=AUDRALIA_GRATITUDE_TERRAIN_ENGINE_SURFACE_HABITABILITY_BLUEPRINT_REGISTRY_ALIGNMENT_TNT_v1"
+    src="/assets/audralia/clean/terrain/gratitude/gratitude.surface-habitability.child.js?v=AUDRALIA_GRATITUDE_SURFACE_HABITABILITY_CHILD_TNT_v1"
     defer
-    data-audralia-gratitude-continent-child
-    data-contract="AUDRALIA_GRATITUDE_TERRAIN_ENGINE_SURFACE_HABITABILITY_BLUEPRINT_REGISTRY_ALIGNMENT_TNT_v1"
-    data-load-order="01-before-hydration-edge-before-compositor-before-carrier"
-    data-land-first="true"
-    data-nine-summits-embedded="true"
-    data-hydration-derived-from-valleys="true"
+    data-audralia-gratitude-surface-habitability-child
+    data-contract="AUDRALIA_GRATITUDE_SURFACE_HABITABILITY_CHILD_TNT_v1"
+    data-load-order="01-surface-habitability"
+    data-gratitude-child-authority="1-of-4"
+    data-final-visual-pass-claim="false"
+  ></script>
+
+  <script
+    src="/assets/audralia/clean/terrain/gratitude/gratitude.hydration.child.js?v=AUDRALIA_GRATITUDE_HYDRATION_CHILD_TNT_v1"
+    defer
+    data-audralia-gratitude-hydration-child
+    data-contract="AUDRALIA_GRATITUDE_HYDRATION_CHILD_TNT_v1"
+    data-load-order="02-hydration"
+    data-gratitude-child-authority="2-of-4"
     data-final-visual-pass-claim="false"
   ></script>
 
@@ -875,45 +522,34 @@ final_visual_pass_claim=false
     defer
     data-audralia-gratitude-hydration-edge-child
     data-contract="AUDRALIA_GRATITUDE_HYDRATION_EDGE_WATER_BEHAVIOR_CHILD_TNT_v1"
-    data-load-order="02-after-terrain-before-compositor-before-carrier"
-    data-water-behavior-authority-active="true"
-    data-carrier-invents-water-behavior="false"
+    data-load-order="03-hydration-edge"
+    data-gratitude-child-authority="3-of-4"
     data-final-visual-pass-claim="false"
   ></script>
 
   <script
-    src="/assets/audralia/clean/terrain/gratitude/gratitude.landform-compositor.child.js?v=AUDRALIA_GRATITUDE_UNIFIED_LANDFORM_COMPOSITOR_CHILD_TNT_v1"
+    src="/assets/audralia/clean/terrain/gratitude/gratitude.landform-compositor.child.js?v=AUDRALIA_GRATITUDE_LANDFORM_COMPOSITOR_THREE_CHILD_CONSUMPTION_TNT_v1"
     defer
     data-audralia-gratitude-landform-compositor-child
-    data-contract="AUDRALIA_GRATITUDE_UNIFIED_LANDFORM_COMPOSITOR_CHILD_TNT_v1"
-    data-load-order="03-after-terrain-after-hydration-edge-before-carrier"
-    data-unified-landform-scope-256-active="true"
-    data-raw-parcel-visibility-held="true"
-    data-summits-are-not-islands="true"
-    data-carrier-invents-landform="false"
+    data-contract="AUDRALIA_GRATITUDE_LANDFORM_COMPOSITOR_THREE_CHILD_CONSUMPTION_TNT_v1"
+    data-load-order="04-landform-compositor"
+    data-gratitude-child-authority="4-of-4"
+    data-consumes-surface-habitability="true"
+    data-consumes-hydration="true"
+    data-consumes-hydration-edge="true"
     data-final-visual-pass-claim="false"
   ></script>
 
   <script
-    src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?v=AUDRALIA_PLANET_CARRIER_COMPOSITOR_CONSUMPTION_SURFACE_HYDRATION_SIXTH_SENSE_TNT_v1"
+    src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?v=AUDRALIA_PLANET_RUNTIME_CARRIER_FOUR_CHILD_RECEIPT_COMPOSITOR_FIRST_TNT_v1"
     defer
     data-audralia-planet-inspection-js
-    data-contract="AUDRALIA_PLANET_CARRIER_COMPOSITOR_CONSUMPTION_SURFACE_HYDRATION_SIXTH_SENSE_TNT_v1"
-    data-previous-contract="AUDRALIA_G2_PLANET_CARRIER_BOOT_ALIGNMENT_JS_ONLY_TNT_v1"
-    data-html-load-order-contract="AUDRALIA_PLANET_HTML_LOAD_ORDER_COMPOSITOR_CHILDREN_BEFORE_CARRIER_TNT_v1"
-    data-route="/showroom/globe/audralia/planet/"
-    data-load-order="04-after-terrain-after-hydration-edge-after-compositor"
-    data-gratitude-child-required="true"
-    data-hydration-edge-child-required="true"
-    data-landform-compositor-child-required="true"
-    data-carrier-consumes-compositor="true"
-    data-raw-parcels-lattice-only="true"
-    data-sixth-sense-compositor-ready="true"
-    data-carrier-invents-terrain="false"
-    data-carrier-invents-hydration="false"
-    data-carrier-invents-edge="false"
-    data-carrier-invents-landform="false"
-    data-runtime-strength-held="true"
+    data-contract="AUDRALIA_PLANET_RUNTIME_CARRIER_FOUR_CHILD_RECEIPT_COMPOSITOR_FIRST_TNT_v1"
+    data-load-order="05-runtime-carrier"
+    data-carrier-is-runtime="true"
+    data-gratitude-child-count="4"
+    data-compositor-first="true"
+    data-legacy-broad-continent-child-active="false"
     data-final-visual-pass-claim="false"
   ></script>
 </body>

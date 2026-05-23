@@ -1,16 +1,17 @@
 // /assets/audralia/clean/terrain/audralia.landform-systems.child.js
-// AUDRALIA_LANDFORM_SYSTEMS_PLANET_PSYCHOLOGY_HANDOFF_RENEWAL_TNT_v1
+// AUDRALIA_LANDFORM_SYSTEMS_METADATA_ONLY_RESTORATION_TNT_v1
 // Full-file replacement.
-// Family: AUDRALIA_RELIEF_LANDFORM_PLANET_PSYCHOLOGY_HANDOFF_RENEWAL_TNT_v1
+// Family: AUDRALIA_RELIEF_LANDFORM_METADATA_ONLY_RESTORATION_TNT_v1
 // Scope: landform systems child only.
-// Purpose: expose carrier-valid landform packet and embed planet psychology as formed-system narrative metadata.
-// Does not own: terrain truth, elevation truth, relief truth, triangle mesh truth, hydration truth, carrier rendering, HTML shell, or final visual pass.
+// Purpose: restore realistic landmass authority by attaching landform + planet psychology metadata only to existing source terrain.
+// Does not own: terrain truth, replacement geometry, elevation truth, relief truth, triangle mesh truth, hydration truth, carrier rendering, HTML shell, or final visual pass.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_LANDFORM_SYSTEMS_PLANET_PSYCHOLOGY_HANDOFF_RENEWAL_TNT_v1";
-  var FAMILY = "AUDRALIA_RELIEF_LANDFORM_PLANET_PSYCHOLOGY_HANDOFF_RENEWAL_TNT_v1";
+  var CONTRACT = "AUDRALIA_LANDFORM_SYSTEMS_METADATA_ONLY_RESTORATION_TNT_v1";
+  var PREVIOUS_CONTRACT = "AUDRALIA_LANDFORM_SYSTEMS_PLANET_PSYCHOLOGY_HANDOFF_RENEWAL_TNT_v1";
+  var FAMILY = "AUDRALIA_RELIEF_LANDFORM_METADATA_ONLY_RESTORATION_TNT_v1";
   var FILE = "/assets/audralia/clean/terrain/audralia.landform-systems.child.js";
 
   var RADIAL_NODES = 16;
@@ -32,67 +33,67 @@
   var PSYCHOLOGY_MAP = Object.freeze({
     mountainRange: Object.freeze({
       psychologicalRole: "long_form_conviction_backbone_sustained_direction",
-      narrativeFunction: "forms the durable directional backbone of a continent",
+      narrativeFunction: "metadata describing existing high-pressure terrain continuity",
       ethicalPressure: "conviction",
-      futureExpression: "supports routes, watershed edges, and settlement orientation",
-      audraliaMeaning: "Audralia learns to stand by forming backbones before borders",
-      terrainSystemMeaning: "continuous high-relief structure"
+      futureExpression: "route backbone and watershed implication",
+      audraliaMeaning: "Audralia stands by preserving its original landmass backbone",
+      terrainSystemMeaning: "source-derived high-relief metadata only"
     }),
     plateau: Object.freeze({
       psychologicalRole: "stability_sustained_readiness_durable_ground",
-      narrativeFunction: "provides usable high ground that does not collapse into drama",
+      narrativeFunction: "metadata describing existing stable terrain fields",
       ethicalPressure: "stability",
-      futureExpression: "future settlement, observation, and infrastructure shelf",
-      audraliaMeaning: "Audralia makes readiness durable instead of spectacular",
-      terrainSystemMeaning: "broad stable elevated surface"
+      futureExpression: "future settlement or inspection shelf",
+      audraliaMeaning: "Audralia keeps durable ground without inventing new ground",
+      terrainSystemMeaning: "source-derived stable elevated metadata only"
     }),
     landmark: Object.freeze({
       psychologicalRole: "memory_anchor_recognizable_identity_point",
-      narrativeFunction: "gives the planet remembered points that can be found again",
+      narrativeFunction: "metadata describing remembered source points",
       ethicalPressure: "memory",
-      futureExpression: "navigation, story identity, and cultural mapping",
-      audraliaMeaning: "Audralia becomes knowable by giving memory a place",
-      terrainSystemMeaning: "recognizable anchor feature"
+      futureExpression: "navigation and identity marker",
+      audraliaMeaning: "Audralia becomes recognizable through preserved source anchors",
+      terrainSystemMeaning: "source-derived memory anchor metadata only"
     }),
     basin: Object.freeze({
       psychologicalRole: "receptive_center_future_hydration_bowl",
-      narrativeFunction: "holds future water capacity without activating water",
+      narrativeFunction: "metadata describing existing receiving terrain",
       ethicalPressure: "receptivity",
-      futureExpression: "future lake, marsh, wetland, or aquifer candidate",
-      audraliaMeaning: "Audralia stores future life in receiving centers",
-      terrainSystemMeaning: "bowl, depression, or receiving basin"
+      futureExpression: "future hydration bowl without active water",
+      audraliaMeaning: "Audralia stores future life in preserved receiving centers",
+      terrainSystemMeaning: "source-derived basin metadata only"
     }),
     cliff: Object.freeze({
       psychologicalRole: "consequence_edge_boundary_visibility",
-      narrativeFunction: "makes limits visible instead of letting boundaries blur",
+      narrativeFunction: "metadata describing existing boundary pressure",
       ethicalPressure: "accountability",
-      futureExpression: "edge control, hazard marking, and route discipline",
-      audraliaMeaning: "Audralia gives consequence an edge so movement can respect it",
-      terrainSystemMeaning: "steep boundary or relief break"
+      futureExpression: "hazard and boundary readability",
+      audraliaMeaning: "Audralia gives consequence an edge without inventing one",
+      terrainSystemMeaning: "source-derived relief-break metadata only"
     }),
     coastalShelf: Object.freeze({
       psychologicalRole: "transition_readiness_dry_to_water_threshold",
-      narrativeFunction: "prepares a dry threshold where future water may meet land",
+      narrativeFunction: "metadata describing future dry-to-water transition readiness",
       ethicalPressure: "transition",
-      futureExpression: "future coastline logic without current ocean activation",
+      futureExpression: "future coastline logic without current water",
       audraliaMeaning: "Audralia prepares thresholds before opening water",
-      terrainSystemMeaning: "coastal shelf readiness"
+      terrainSystemMeaning: "source-derived coastal readiness metadata only"
     }),
     beachReadiness: Object.freeze({
       psychologicalRole: "limited_special_transition_field_not_default_coastline",
-      narrativeFunction: "marks rare, intentional access points between dry truth and future water",
+      narrativeFunction: "metadata describing rare future beach candidates",
       ethicalPressure: "restraint",
-      futureExpression: "future beach candidate, not default coastline",
+      futureExpression: "limited beach candidate, not default coastline",
       audraliaMeaning: "Audralia treats beaches as special invitations, not automatic edges",
-      terrainSystemMeaning: "limited beach transition readiness"
+      terrainSystemMeaning: "source-derived beach-readiness metadata only"
     }),
     continentProfile: Object.freeze({
       psychologicalRole: "large_scale_psychological_geography",
-      narrativeFunction: "binds landform systems into continent-level meaning",
+      narrativeFunction: "metadata summarizing existing continent-scale terrain posture",
       ethicalPressure: "integration",
       futureExpression: "future climate, ecology, settlement, and route personality",
-      audraliaMeaning: "Audralia lets continent shape carry psychological geography",
-      terrainSystemMeaning: "continent-wide system profile"
+      audraliaMeaning: "Audralia lets existing continent shape carry psychological geography",
+      terrainSystemMeaning: "source-derived continent metadata only"
     })
   });
 
@@ -101,6 +102,10 @@
     reliefApi: null,
     dryTerrainDetected: false,
     reliefDetected: false,
+    reliefValidated: false,
+    sourcePacketDetected: false,
+    sourceGeometryValid: false,
+    sourceFailureReason: "source terrain not checked",
     dryTerrainPacket: null,
     dryCarrierPacket: null,
     reliefCarrierPacket: null,
@@ -113,6 +118,7 @@
     coastalShelves: [],
     beachReadinessSystems: [],
     continentLandformProfiles: [],
+    landformMetadataSummary: null,
 
     built: false,
     buildCount: 0,
@@ -153,32 +159,16 @@
     }
   }
 
-  function nodeId(node, index) {
-    return String(node.nodeId || node.seatKey || node.id || "source-" + index);
-  }
+  function readPacketNodes(packet) {
+    if (!packet) return [];
 
-  function numeric(node, key, fallback) {
-    var value = Number(node && node[key]);
-    return Number.isFinite(value) ? value : fallback;
-  }
+    if (Array.isArray(packet.nodes)) return packet.nodes;
+    if (packet.planetPhysicalTerrainPacket && Array.isArray(packet.planetPhysicalTerrainPacket.nodes)) return packet.planetPhysicalTerrainPacket.nodes;
+    if (packet.dryRevealedTerrainPacket && Array.isArray(packet.dryRevealedTerrainPacket.nodes)) return packet.dryRevealedTerrainPacket.nodes;
+    if (packet.terrainPacket && Array.isArray(packet.terrainPacket.nodes)) return packet.terrainPacket.nodes;
+    if (packet.sourcePacket && Array.isArray(packet.sourcePacket.nodes)) return packet.sourcePacket.nodes;
 
-  function withPsychology(target, role) {
-    var p = PSYCHOLOGY_MAP[role] || PSYCHOLOGY_MAP.continentProfile;
-    target.psychologicalRole = p.psychologicalRole;
-    target.narrativeFunction = p.narrativeFunction;
-    target.ethicalPressure = p.ethicalPressure;
-    target.futureExpression = p.futureExpression;
-    target.audraliaMeaning = p.audraliaMeaning;
-    target.terrainSystemMeaning = p.terrainSystemMeaning;
-    target.planetPsychologyActive = true;
-    target.planetPsychologyNarrativeClear = true;
-    target.psychologyOwnsNarrativeMeaningOnly = true;
-    target.psychologyDoesNotOwnTerrainTruth = true;
-    target.psychologyDoesNotOwnElevationTruth = true;
-    target.psychologyDoesNotOwnReliefTruth = true;
-    target.psychologyDoesNotOwnHydrationTruth = true;
-    target.psychologyDoesNotOwnVisualPass = true;
-    return target;
+    return [];
   }
 
   function detectParents() {
@@ -189,376 +179,235 @@
     state.reliefApi = reliefApi;
     state.dryTerrainDetected = Boolean(dryApi);
     state.reliefDetected = Boolean(reliefApi);
-
+    state.reliefValidated = false;
+    state.sourcePacketDetected = false;
+    state.sourceGeometryValid = false;
+    state.sourceFailureReason = "source terrain missing";
     state.dryTerrainPacket = null;
     state.dryCarrierPacket = null;
     state.reliefCarrierPacket = null;
 
     if (dryApi) {
-      state.dryCarrierPacket = safeCall("dryTerrain", dryApi, "getCarrierTerrainPacket", "audralia-landform-systems-child", { compact: false });
-      state.dryTerrainPacket = safeCall("dryTerrain", dryApi, "getDryRevealedTerrainPacket", "audralia-landform-systems-child", { compact: false });
+      state.dryCarrierPacket = safeCall("dryTerrain", dryApi, "getCarrierTerrainPacket", "audralia-landform-metadata-only-child", { compact: false });
+      state.dryTerrainPacket = safeCall("dryTerrain", dryApi, "getDryRevealedTerrainPacket", "audralia-landform-metadata-only-child", { compact: false });
     }
 
     if (reliefApi) {
-      state.reliefCarrierPacket = safeCall("reliefExpression", reliefApi, "getCarrierReliefPacket", "audralia-landform-systems-child", { compact: false });
+      state.reliefCarrierPacket = safeCall("reliefExpression", reliefApi, "getCarrierReliefPacket", "audralia-landform-metadata-only-child", { compact: false });
+      state.reliefValidated = Boolean(
+        state.reliefCarrierPacket &&
+        state.reliefCarrierPacket.reliefExpressionReady === true &&
+        state.reliefCarrierPacket.carrierMayConsume === true &&
+        state.reliefCarrierPacket.metadataOnly === true &&
+        state.reliefCarrierPacket.syntheticTerrainGenerated === false &&
+        state.reliefCarrierPacket.replacementLandmassGenerated === false
+      );
     }
-  }
 
-  function dryPacket() {
-    return state.dryTerrainPacket ||
-      (state.dryCarrierPacket && state.dryCarrierPacket.planetPhysicalTerrainPacket) ||
-      null;
+    var directNodes = readPacketNodes(state.dryTerrainPacket);
+    var carrierNodes = readPacketNodes(state.dryCarrierPacket);
+    var nodes = directNodes.length ? directNodes : carrierNodes;
+
+    state.sourcePacketDetected = Boolean(nodes.length);
+    state.sourceGeometryValid = Boolean(nodes.length && nodes.some(function (node, index) {
+      return Boolean(getNodePosition(node, index));
+    }));
+
+    state.sourceFailureReason = state.sourceGeometryValid ? "" : "valid source terrain nodes missing or unmappable";
+
+    return state.sourceGeometryValid;
   }
 
   function dryNodes() {
-    var packet = dryPacket();
-    if (packet && Array.isArray(packet.nodes) && packet.nodes.length) return packet.nodes;
+    var directNodes = readPacketNodes(state.dryTerrainPacket);
+    var carrierNodes = readPacketNodes(state.dryCarrierPacket);
+    return directNodes.length ? directNodes : carrierNodes;
+  }
 
-    var fallback = [];
-    for (var y = 0; y < FIBONACCI_BANDS; y += 1) {
-      for (var x = 0; x < RADIAL_NODES; x += 1) {
-        var index = y * RADIAL_NODES + x;
-        fallback.push({
-          nodeId: "fallback-source-" + index,
-          seatKey: "fallback-seat-" + index,
-          seatIndex: index,
-          nodeIndex: index,
-          x: x,
-          y: y,
-          dryElevation: 0.46 + Math.sin(x * 1.618) * 0.08 + Math.cos(y * 0.86) * 0.09,
-          ridgePressure: Math.max(0, Math.sin((x + y) * 0.72) * 0.55),
-          basinPressure: Math.max(0, Math.cos((x - y) * 0.48) * 0.50),
-          valleyPressure: Math.max(0, Math.sin(y * 0.92) * 0.44),
-          summitPressure: Math.max(0, Math.cos(x * 0.72 + y * 0.18) * 0.42),
-          shelfPressure: Math.max(0, Math.sin(y * 0.35) * 0.38),
-          trenchPressure: Math.max(0, Math.cos((x + 3) * 0.64) * 0.30),
-          gapPressure: Math.max(0, Math.sin((x - y) * 0.38) * 0.34),
-          formerHydrosphereCarvingValue: Math.max(0, Math.cos((x + y) * 0.30) * 0.42),
-          futureFillEligible: y > 8
-        });
-      }
+  function getNodeId(node, index) {
+    if (!node) return null;
+
+    var id = node.nodeId || node.seatKey || node.id || node.key || node.sourceNodeId;
+    if (id !== undefined && id !== null && String(id).trim()) return String(id);
+
+    if (node.seatIndex !== undefined || node.nodeIndex !== undefined) {
+      return "seat-" + String(node.seatIndex !== undefined ? node.seatIndex : node.nodeIndex);
+    }
+
+    return "source-index-" + String(index);
+  }
+
+  function getNodePosition(node, index) {
+    if (!node) return null;
+
+    var x = Number(node.x);
+    var y = Number(node.y);
+
+    if (!Number.isFinite(x) && Number.isFinite(Number(node.radial))) x = Number(node.radial);
+    if (!Number.isFinite(y) && Number.isFinite(Number(node.band))) y = Number(node.band);
+
+    if ((!Number.isFinite(x) || !Number.isFinite(y)) && Number.isFinite(Number(node.seatIndex))) {
+      var seat = Number(node.seatIndex);
+      x = seat % RADIAL_NODES;
+      y = Math.floor(seat / RADIAL_NODES);
+    }
+
+    if ((!Number.isFinite(x) || !Number.isFinite(y)) && Number.isFinite(Number(node.nodeIndex))) {
+      var nodeIndex = Number(node.nodeIndex);
+      x = nodeIndex % RADIAL_NODES;
+      y = Math.floor(nodeIndex / RADIAL_NODES);
+    }
+
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+
+    return {
+      x: clamp(x, 0, RADIAL_NODES - 1),
+      y: clamp(y, 0, FIBONACCI_BANDS - 1),
+      sourceIndex: index
+    };
+  }
+
+  function numeric(node, keys, fallback) {
+    var list = Array.isArray(keys) ? keys : [keys];
+
+    for (var i = 0; i < list.length; i += 1) {
+      var value = Number(node && node[list[i]]);
+      if (Number.isFinite(value)) return value;
     }
 
     return fallback;
   }
 
-  function reliefSamples() {
-    return state.reliefCarrierPacket && Array.isArray(state.reliefCarrierPacket.reliefSamples)
-      ? state.reliefCarrierPacket.reliefSamples
-      : [];
+  function attachPsychology(target, role) {
+    var psychology = PSYCHOLOGY_MAP[role] || PSYCHOLOGY_MAP.continentProfile;
+
+    target.psychologicalRole = psychology.psychologicalRole;
+    target.narrativeFunction = psychology.narrativeFunction;
+    target.ethicalPressure = psychology.ethicalPressure;
+    target.futureExpression = psychology.futureExpression;
+    target.audraliaMeaning = psychology.audraliaMeaning;
+    target.terrainSystemMeaning = psychology.terrainSystemMeaning;
+
+    target.planetPsychologyActive = true;
+    target.planetPsychologyNarrativeClear = true;
+    target.psychologyOwnsNarrativeMeaningOnly = true;
+    target.psychologyDoesNotOwnTerrainTruth = true;
+    target.psychologyDoesNotOwnElevationTruth = true;
+    target.psychologyDoesNotOwnReliefTruth = true;
+    target.psychologyDoesNotOwnHydrationTruth = true;
+    target.psychologyDoesNotOwnVisualPass = true;
+
+    return target;
   }
 
-  function reliefSampleByNodeId() {
-    var index = {};
-    reliefSamples().forEach(function (sample) {
-      if (sample && sample.parentNodeId) index[sample.parentNodeId] = sample;
-    });
-    return index;
+  function classifyMetadataRole(node) {
+    var elevation = numeric(node, ["dryElevation", "elevation", "height"], 0.5);
+    var ridge = numeric(node, "ridgePressure", 0);
+    var basin = numeric(node, "basinPressure", 0);
+    var summit = numeric(node, "summitPressure", 0);
+    var shelf = numeric(node, "shelfPressure", 0);
+    var trench = numeric(node, "trenchPressure", 0);
+    var gap = numeric(node, "gapPressure", 0);
+
+    if (ridge + summit > 0.52 || elevation > 0.68) return "mountainRange";
+    if (elevation > 0.48 && elevation < 0.68 && ridge < 0.42 && basin < 0.42) return "plateau";
+    if (basin + gap > 0.48 || node.futureFillEligible) return "basin";
+    if (trench + ridge > 0.56) return "cliff";
+    if (shelf > 0.34) return "coastalShelf";
+
+    return "continentProfile";
   }
 
-  function averageFromNodes(nodes, key, fallback) {
-    if (!nodes.length) return fallback || 0;
-    return nodes.reduce(function (sum, node) {
-      return sum + Number(node[key] || 0);
-    }, 0) / nodes.length;
-  }
-
-  function chunkByPredicate(nodes, predicate, size, limit) {
-    var groups = [];
-    var current = [];
+  function buildSourceMetadata(nodes) {
+    var items = [];
+    var roleCounts = {};
 
     nodes.forEach(function (node, index) {
-      if (predicate(node, index)) {
-        current.push({ node: node, index: index });
-        if (current.length >= size) {
-          groups.push(current);
-          current = [];
-        }
-      } else if (current.length >= 2) {
-        groups.push(current);
-        current = [];
-      } else {
-        current = [];
-      }
-    });
+      if (!getNodePosition(node, index)) return;
 
-    if (current.length >= 2) groups.push(current);
+      var id = getNodeId(node, index);
+      var role = classifyMetadataRole(node);
 
-    return groups.slice(0, limit || 24);
-  }
+      roleCounts[role] = (roleCounts[role] || 0) + 1;
 
-  function nodeIds(items) {
-    return items.map(function (item) {
-      return nodeId(item.node, item.index);
-    });
-  }
-
-  function buildMountainRanges(nodes) {
-    return chunkByPredicate(
-      nodes,
-      function (node) {
-        return numeric(node, "ridgePressure", 0) > 0.32 || numeric(node, "mountainPressure", 0) > 0.28 || numeric(node, "summitPressure", 0) > 0.34;
-      },
-      6,
-      22
-    ).map(function (items, index) {
-      var itemNodes = items.map(function (item) { return item.node; });
-      var ids = nodeIds(items);
-      var avgRelief = averageFromNodes(itemNodes, "ridgePressure", 0) * 0.46 +
-        averageFromNodes(itemNodes, "summitPressure", 0) * 0.34 +
-        averageFromNodes(itemNodes, "dryElevation", 0.5) * 0.20;
-
-      return Object.freeze(withPsychology({
-        landformId: "AUDRALIA-MOUNTAIN-RANGE-" + String(index).padStart(3, "0"),
-        landformType: "mountain_range",
-        nodeIds: ids,
-        summitNodeIds: ids.slice(0, 4),
-        averageReliefIntensity: round(clamp(avgRelief, 0, 1), 4),
-        watershedAuthority: round(clamp(avgRelief * 0.88 + 0.08, 0, 1), 4),
-        carrierMayConsume: true,
-        childDrawsVisuals: false,
-        hydrationHeld: true,
-        activeHydration: false,
-        finalVisualPassClaim: false
-      }, "mountainRange"));
-    });
-  }
-
-  function buildPlateaus(nodes) {
-    return chunkByPredicate(
-      nodes,
-      function (node) {
-        var elevation = numeric(node, "dryElevation", numeric(node, "elevation", 0.5));
-        var ridge = numeric(node, "ridgePressure", 0);
-        var basin = numeric(node, "basinPressure", 0);
-        return elevation > 0.48 && elevation < 0.70 && ridge < 0.46 && basin < 0.44;
-      },
-      8,
-      20
-    ).map(function (items, index) {
-      var itemNodes = items.map(function (item) { return item.node; });
-      var elevation = averageFromNodes(itemNodes, "dryElevation", 0.5);
-      var stability = 1 - Math.abs(elevation - 0.58);
-
-      return Object.freeze(withPsychology({
-        landformId: "AUDRALIA-PLATEAU-" + String(index).padStart(3, "0"),
-        landformType: "plateau",
-        nodeIds: nodeIds(items),
-        averageElevation: round(elevation, 4),
-        surfaceContinuity: round(clamp(stability, 0, 1), 4),
-        slopeStability: round(clamp(stability * 0.86 + 0.08, 0, 1), 4),
-        carrierMayConsume: true,
-        childDrawsVisuals: false,
-        hydrationHeld: true,
-        activeHydration: false,
-        finalVisualPassClaim: false
-      }, "plateau"));
-    });
-  }
-
-  function buildBasins(nodes) {
-    return chunkByPredicate(
-      nodes,
-      function (node) {
-        return numeric(node, "basinPressure", 0) > 0.28 || numeric(node, "gapPressure", 0) > 0.42 || Boolean(node.futureFillEligible);
-      },
-      7,
-      24
-    ).map(function (items, index) {
-      var itemNodes = items.map(function (item) { return item.node; });
-      var basin = averageFromNodes(itemNodes, "basinPressure", 0);
-      var gap = averageFromNodes(itemNodes, "gapPressure", 0);
-      var carving = averageFromNodes(itemNodes, "formerHydrosphereCarvingValue", 0);
-      var strength = clamp(basin * 0.52 + gap * 0.24 + carving * 0.24, 0, 1);
-
-      return Object.freeze(withPsychology({
-        landformId: "AUDRALIA-LANDFORM-BASIN-" + String(index).padStart(3, "0"),
-        landformType: "landform_basin",
-        nodeIds: nodeIds(items),
-        basinDepthStrength: round(strength, 4),
-        futureFillPriority: round(clamp(strength * 0.82 + 0.10, 0, 1), 4),
-        hydrationBoundaryEligible: true,
-        carrierMayConsume: true,
+      items.push(Object.freeze(attachPsychology({
+        metadataId: "AUDRALIA-LANDFORM-METADATA-" + String(items.length).padStart(3, "0"),
+        sourceNodeId: id,
+        nodeIds: [id],
+        landformMetadataRole: role,
+        sourceDerived: true,
+        metadataOnly: true,
+        sourceGeometryPreserved: true,
+        syntheticTerrainGenerated: false,
+        fallbackTerrainGenerated: false,
+        replacementLandmassGenerated: false,
         childDrawsVisuals: false,
         hydrationHeld: true,
         activeHydration: false,
         activeWater: false,
         finalVisualPassClaim: false
-      }, "basin"));
+      }, role)));
     });
+
+    return {
+      items: Object.freeze(items),
+      roleCounts: roleCounts
+    };
   }
 
-  function buildCliffs(nodes) {
-    return chunkByPredicate(
-      nodes,
-      function (node) {
-        return numeric(node, "escarpmentPressure", 0) > 0.24 ||
-          numeric(node, "ridgePressure", 0) + numeric(node, "trenchPressure", 0) > 0.70;
-      },
-      5,
-      22
-    ).map(function (items, index) {
-      var itemNodes = items.map(function (item) { return item.node; });
-      var ridge = averageFromNodes(itemNodes, "ridgePressure", 0);
-      var trench = averageFromNodes(itemNodes, "trenchPressure", 0);
-      var escarpment = averageFromNodes(itemNodes, "escarpmentPressure", 0);
-      var strength = clamp(ridge * 0.36 + trench * 0.34 + escarpment * 0.30, 0.18, 1);
+  function buildContinentProfiles(nodes, sourceMetadata) {
+    var buckets = {};
 
-      return Object.freeze(withPsychology({
-        landformId: "AUDRALIA-CLIFF-SYSTEM-" + String(index).padStart(3, "0"),
-        landformType: "cliff_system",
-        nodeIds: nodeIds(items),
-        reliefBreakStrength: round(strength, 4),
-        consequenceEdge: true,
-        boundaryVisibility: round(clamp(strength * 0.92, 0, 1), 4),
-        carrierMayConsume: true,
-        childDrawsVisuals: false,
-        hydrationHeld: true,
-        activeHydration: false,
-        finalVisualPassClaim: false
-      }, "cliff"));
-    });
-  }
-
-  function buildLandmarks(nodes) {
-    var reliefById = reliefSampleByNodeId();
-    var scored = nodes.map(function (node, index) {
-      var id = nodeId(node, index);
-      var relief = reliefById[id] || {};
-      var elevation = numeric(node, "dryElevation", numeric(node, "elevation", 0.5));
-      var score =
-        numeric(node, "summitPressure", 0) * 0.30 +
-        numeric(node, "ridgePressure", 0) * 0.22 +
-        numeric(node, "basinPressure", 0) * 0.18 +
-        numeric(node, "gapPressure", 0) * 0.10 +
-        Number(relief.reliefIntensity || 0) * 0.20 +
-        Math.abs(elevation - 0.5) * 0.18;
-
-      return { node: node, index: index, id: id, score: score };
-    }).sort(function (a, b) { return b.score - a.score; });
-
-    return scored.slice(0, 64).map(function (item, index) {
-      return Object.freeze(withPsychology({
-        landformId: "AUDRALIA-LANDMARK-" + String(index).padStart(3, "0"),
-        landformType: "landmark",
-        anchorNodeId: item.id,
-        nodeIds: [item.id],
-        landmarkStrength: round(clamp(item.score, 0, 1), 4),
-        recognizableIdentityPoint: true,
-        carrierMayConsume: true,
-        childDrawsVisuals: false,
-        hydrationHeld: true,
-        activeHydration: false,
-        finalVisualPassClaim: false
-      }, "landmark"));
-    });
-  }
-
-  function buildCoastalShelves(nodes) {
-    return chunkByPredicate(
-      nodes,
-      function (node) {
-        return numeric(node, "shelfPressure", 0) > 0.24 || numeric(node, "formerHydrosphereCarvingValue", 0) > 0.44;
-      },
-      7,
-      18
-    ).map(function (items, index) {
-      var itemNodes = items.map(function (item) { return item.node; });
-      var shelf = averageFromNodes(itemNodes, "shelfPressure", 0);
-      var carving = averageFromNodes(itemNodes, "formerHydrosphereCarvingValue", 0);
-      var readiness = clamp(shelf * 0.58 + carving * 0.42, 0, 1);
-
-      return Object.freeze(withPsychology({
-        landformId: "AUDRALIA-COASTAL-SHELF-" + String(index).padStart(3, "0"),
-        landformType: "coastal_shelf_readiness",
-        nodeIds: nodeIds(items),
-        coastalReadinessScore: round(readiness, 4),
-        dryToWaterThreshold: true,
-        futureWaterOnly: true,
-        carrierMayConsume: true,
-        childDrawsVisuals: false,
-        hydrationHeld: true,
-        activeHydration: false,
-        activeWater: false,
-        finalVisualPassClaim: false
-      }, "coastalShelf"));
-    });
-  }
-
-  function buildBeachReadiness(nodes) {
-    return chunkByPredicate(
-      nodes,
-      function (node) {
-        var shelf = numeric(node, "shelfPressure", 0);
-        var basin = numeric(node, "basinPressure", 0);
-        var gap = numeric(node, "gapPressure", 0);
-        var elevation = numeric(node, "dryElevation", numeric(node, "elevation", 0.5));
-        return shelf > 0.30 && basin > 0.18 && gap < 0.62 && elevation > 0.34 && elevation < 0.62;
-      },
-      4,
-      12
-    ).map(function (items, index) {
-      var itemNodes = items.map(function (item) { return item.node; });
-      var beach = clamp(
-        averageFromNodes(itemNodes, "shelfPressure", 0) * 0.42 +
-        averageFromNodes(itemNodes, "basinPressure", 0) * 0.24 +
-        (1 - Math.abs(averageFromNodes(itemNodes, "dryElevation", 0.5) - 0.48)) * 0.18,
-        0,
-        1
-      );
-
-      return Object.freeze(withPsychology({
-        landformId: "AUDRALIA-BEACH-READINESS-" + String(index).padStart(3, "0"),
-        landformType: "beach_readiness",
-        nodeIds: nodeIds(items),
-        beachEligibilityScore: round(beach, 4),
-        limitedSpecialTransitionField: true,
-        defaultCoastline: false,
-        futureWaterOnly: true,
-        carrierMayConsume: true,
-        childDrawsVisuals: false,
-        hydrationHeld: true,
-        activeHydration: false,
-        activeWater: false,
-        finalVisualPassClaim: false
-      }, "beachReadiness"));
-    });
-  }
-
-  function buildContinentProfiles(nodes) {
-    var continentBuckets = {};
-
-    nodes.forEach(function (node, index) {
-      var key = String(node.regionSeed || node.continentId || "audralia-general");
-      if (!continentBuckets[key]) continentBuckets[key] = [];
-      continentBuckets[key].push({ node: node, index: index });
+    sourceMetadata.items.forEach(function (item) {
+      var key = "audralia-preserved-landmass";
+      buckets[key] = buckets[key] || [];
+      buckets[key].push(item);
     });
 
-    return Object.keys(continentBuckets).map(function (key, index) {
-      var items = continentBuckets[key];
-      var itemNodes = items.map(function (item) { return item.node; });
-      var elevation = averageFromNodes(itemNodes, "dryElevation", 0.5);
-      var ridge = averageFromNodes(itemNodes, "ridgePressure", 0);
-      var basin = averageFromNodes(itemNodes, "basinPressure", 0);
-      var shelf = averageFromNodes(itemNodes, "shelfPressure", 0);
+    return Object.freeze(Object.keys(buckets).map(function (key, index) {
+      var items = buckets[key];
+      var roleCounts = {};
 
-      return Object.freeze(withPsychology({
-        continentProfileId: "AUDRALIA-CONTINENT-LANDFORM-PROFILE-" + String(index).padStart(2, "0"),
+      items.forEach(function (item) {
+        var role = item.landformMetadataRole || "continentProfile";
+        roleCounts[role] = (roleCounts[role] || 0) + 1;
+      });
+
+      return Object.freeze(attachPsychology({
+        continentProfileId: "AUDRALIA-CONTINENT-LANDFORM-METADATA-PROFILE-" + String(index).padStart(2, "0"),
         continentId: key,
-        continentName: key.replace(/-/g, " ").replace(/\b\w/g, function (letter) { return letter.toUpperCase(); }),
-        nodeIds: nodeIds(items).slice(0, 48),
+        continentName: "Audralia Preserved Landmass",
+        nodeIds: items.map(function (item) { return item.sourceNodeId; }).slice(0, 96),
         nodeCount: items.length,
-        averageElevation: round(elevation, 4),
-        ridgeContinuity: round(ridge, 4),
-        basinReceptivity: round(basin, 4),
-        shelfTransitionReadiness: round(shelf, 4),
+        roleCounts: roleCounts,
         largeScalePsychologicalGeography: true,
-        carrierMayConsume: true,
+        metadataOnly: true,
+        sourceGeometryPreserved: true,
+        sourceDerived: true,
+        syntheticTerrainGenerated: false,
+        fallbackTerrainGenerated: false,
+        replacementLandmassGenerated: false,
         childDrawsVisuals: false,
         hydrationHeld: true,
         activeHydration: false,
+        activeWater: false,
         finalVisualPassClaim: false
       }, "continentProfile"));
+    }));
+  }
+
+  function buildHeldSummary(reason) {
+    return Object.freeze({
+      metadataOnly: true,
+      sourceGeometryPreserved: false,
+      sourceSampleCount: 0,
+      held: true,
+      heldReason: reason,
+      syntheticTerrainGenerated: false,
+      fallbackTerrainGenerated: false,
+      replacementLandmassGenerated: false,
+      childDrawsVisuals: false,
+      finalVisualPassClaim: false
     });
   }
 
@@ -567,39 +416,77 @@
 
     var nodes = dryNodes();
 
-    state.mountainRanges = Object.freeze(buildMountainRanges(nodes));
-    state.plateaus = Object.freeze(buildPlateaus(nodes));
-    state.landformBasins = Object.freeze(buildBasins(nodes));
-    state.cliffSystems = Object.freeze(buildCliffs(nodes));
-    state.landmarks = Object.freeze(buildLandmarks(nodes));
-    state.coastalShelves = Object.freeze(buildCoastalShelves(nodes));
-    state.beachReadinessSystems = Object.freeze(buildBeachReadiness(nodes));
-    state.continentLandformProfiles = Object.freeze(buildContinentProfiles(nodes));
+    state.mountainRanges = Object.freeze([]);
+    state.landmarks = Object.freeze([]);
+    state.plateaus = Object.freeze([]);
+    state.landformBasins = Object.freeze([]);
+    state.cliffSystems = Object.freeze([]);
+    state.coastalShelves = Object.freeze([]);
+    state.beachReadinessSystems = Object.freeze([]);
+    state.continentLandformProfiles = Object.freeze([]);
+
+    if (!state.sourceGeometryValid || !nodes.length) {
+      state.landformMetadataSummary = buildHeldSummary(state.sourceFailureReason);
+      state.built = true;
+      state.buildCount += 1;
+      state.lastBuiltAt = new Date().toISOString();
+      return false;
+    }
+
+    var metadata = buildSourceMetadata(nodes);
+
+    state.continentLandformProfiles = buildContinentProfiles(nodes, metadata);
+    state.landformMetadataSummary = Object.freeze({
+      metadataOnly: true,
+      sourceGeometryPreserved: true,
+      sourceSampleCount: metadata.items.length,
+      roleCounts: metadata.roleCounts,
+      carrierVisibleGeometrySuppressed: true,
+      visualArraysHeldToPreserveLandmass: true,
+      syntheticTerrainGenerated: false,
+      fallbackTerrainGenerated: false,
+      replacementLandmassGenerated: false,
+      childDrawsVisuals: false,
+      finalVisualPassClaim: false
+    });
 
     state.built = true;
     state.buildCount += 1;
     state.lastBuiltAt = new Date().toISOString();
 
-    return true;
+    return metadata.items.length > 0;
+  }
+
+  function ready() {
+    return Boolean(state.sourceGeometryValid && state.continentLandformProfiles.length);
   }
 
   function status() {
     if (!state.built) buildLandformPacket();
 
+    var isReady = ready();
+
     return {
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       family: FAMILY,
       file: FILE,
 
-      landformSystemsReady: true,
-      carrierMayConsume: true,
+      landformSystemsReady: isReady,
+      carrierMayConsume: isReady,
       carrierShouldNotOwnLandformTruth: true,
       carrierShouldNotOwnReliefTruth: true,
       carrierShouldNotOwnElevationTruth: true,
       childDrawsVisuals: false,
 
+      metadataOnly: true,
+      sourceGeometryPreserved: isReady,
+      sourcePacketDetected: state.sourcePacketDetected,
+      sourceGeometryValid: state.sourceGeometryValid,
+      sourceFailureReason: state.sourceFailureReason,
       dryTerrainDetected: state.dryTerrainDetected,
       reliefDetected: state.reliefDetected,
+      reliefValidated: state.reliefValidated,
 
       mountainRangeCount: state.mountainRanges.length,
       landmarkCount: state.landmarks.length,
@@ -610,14 +497,21 @@
       beachReadinessSystemCount: state.beachReadinessSystems.length,
       continentLandformProfileCount: state.continentLandformProfiles.length,
 
-      planetPsychologyActive: true,
-      planetPsychologyNarrativeClear: true,
+      carrierVisibleGeometrySuppressed: true,
+      visualArraysHeldToPreserveLandmass: true,
+
+      planetPsychologyActive: isReady,
+      planetPsychologyNarrativeClear: isReady,
       psychologyOwnsNarrativeMeaningOnly: true,
       psychologyDoesNotOwnTerrainTruth: true,
       psychologyDoesNotOwnElevationTruth: true,
       psychologyDoesNotOwnReliefTruth: true,
       psychologyDoesNotOwnHydrationTruth: true,
       psychologyDoesNotOwnVisualPass: true,
+
+      syntheticTerrainGenerated: false,
+      fallbackTerrainGenerated: false,
+      replacementLandmassGenerated: false,
 
       hydrationHeld: true,
       activeHydration: false,
@@ -629,21 +523,24 @@
       buildCount: state.buildCount,
       lastBuiltAt: state.lastBuiltAt,
       errors: state.errors.slice(),
-      deployMarker: "AUDRALIA_LANDFORM_SYSTEMS_PLANET_PSYCHOLOGY_HANDOFF_RENEWAL_DEPLOY_MARKER_v1"
+      deployMarker: "AUDRALIA_LANDFORM_SYSTEMS_METADATA_ONLY_RESTORATION_DEPLOY_MARKER_v1"
     };
   }
 
   function getCarrierLandformPacket(requester, options) {
     if (!state.built || options && options.refresh === true) buildLandformPacket();
 
+    var isReady = ready();
+
     return {
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       family: FAMILY,
-      packetType: "carrier_landform_systems_packet_with_planet_psychology",
+      packetType: "carrier_landform_systems_metadata_only_restoration_packet",
       requester: requester || "unknown",
 
-      landformSystemsReady: true,
-      carrierMayConsume: true,
+      landformSystemsReady: isReady,
+      carrierMayConsume: isReady,
       carrierShouldNotOwnLandformTruth: true,
       carrierShouldNotOwnReliefTruth: true,
       carrierShouldNotOwnElevationTruth: true,
@@ -657,9 +554,10 @@
       coastalShelves: state.coastalShelves,
       beachReadinessSystems: state.beachReadinessSystems,
       continentLandformProfiles: state.continentLandformProfiles,
+      landformMetadataSummary: state.landformMetadataSummary,
 
-      planetPsychologyActive: true,
-      planetPsychologyNarrativeClear: true,
+      planetPsychologyActive: isReady,
+      planetPsychologyNarrativeClear: isReady,
       psychologyOwnsNarrativeMeaningOnly: true,
       psychologyDoesNotOwnTerrainTruth: true,
       psychologyDoesNotOwnElevationTruth: true,
@@ -668,10 +566,24 @@
       psychologyDoesNotOwnVisualPass: true,
       psychologyMap: PSYCHOLOGY_MAP,
 
-      terrainTruthSource: "dry terrain child",
-      reliefTruthSource: "relief expression child when available",
+      metadataOnly: true,
+      sourceGeometryPreserved: isReady,
+      sourcePacketDetected: state.sourcePacketDetected,
+      sourceGeometryValid: state.sourceGeometryValid,
+      sourceFailureReason: state.sourceFailureReason,
+
+      carrierVisibleGeometrySuppressed: true,
+      visualArraysHeldToPreserveLandmass: true,
+
+      syntheticTerrainGenerated: false,
+      fallbackTerrainGenerated: false,
+      replacementLandmassGenerated: false,
+
+      terrainTruthSource: "existing dry terrain child only",
+      reliefTruthSource: state.reliefValidated ? "metadata-only relief child" : "held or unavailable",
       landformSystemTruthChild: true,
       carrierDisplaysOnly: true,
+
       hydrationHeld: true,
       activeHydration: false,
       activeWater: false,
@@ -689,6 +601,7 @@
 
   var api = {
     contract: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
     family: FAMILY,
     status: status,
     getCarrierLandformPacket: getCarrierLandformPacket,

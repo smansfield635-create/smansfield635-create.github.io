@@ -1,16 +1,16 @@
 // /assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
-// AUDRALIA_PLANET_RUNTIME_EXISTING_NODE_LAND_BODY_COMPOSITOR_TNT_v1
+// AUDRALIA_CARRIER_NARROW_RELIEF_LANDFORM_DEFINITION_CONSUMPTION_TNT_v1
 // Full-file replacement.
 // Scope: runtime carrier only.
-// Purpose: use existing nodes as hidden land-mapping controls and draw continuous land bodies over them.
-// Preserves: dry terrain atlas source truth, nine-continent ethical bump field, material layer separation, zoom, full-globe lattice, hydration hold.
-// Does not own: source terrain truth, hydration truth, edge truth, HTML, climate engine, ecology engine, technology engine, settlement, or final visual pass.
+// Purpose: preserve the existing land-body compositor while narrowly consuming relief-expression and landform-systems packets for sharper visible definition.
+// Preserves: dry terrain fallback, zoom, drag, pinch, wheel, lens controls, lattice, receipt, hydration hold, no-final-pass posture.
+// Does not own: source terrain truth, elevation truth, relief truth, landform truth, hydration truth, edge material finalization, climate, ecology, settlement, or final visual pass.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_PLANET_RUNTIME_EXISTING_NODE_LAND_BODY_COMPOSITOR_TNT_v1";
-  var PREVIOUS_CONTRACT = "AUDRALIA_PLANET_RUNTIME_NINE_CONTINENT_ETHICAL_METRIC_BUMP_FIELD_TNT_v1";
+  var CONTRACT = "AUDRALIA_CARRIER_NARROW_RELIEF_LANDFORM_DEFINITION_CONSUMPTION_TNT_v1";
+  var PREVIOUS_CONTRACT = "AUDRALIA_PLANET_RUNTIME_EXISTING_NODE_LAND_BODY_COMPOSITOR_TNT_v1";
   var FILE = "/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js";
   var ROUTE = "/showroom/globe/audralia/planet/";
 
@@ -19,8 +19,9 @@
   var FIBONACCI_BANDS = 16;
   var SOURCE_SEAT_COUNT = 256;
   var MIN_BUMP_ANCHOR_COUNT = 768;
-  var LAND_FIELD_COLS = 72;
-  var LAND_FIELD_ROWS = 36;
+
+  var LAND_FIELD_COLS = 120;
+  var LAND_FIELD_ROWS = 60;
 
   var ZOOM = Object.freeze({
     min: 0.72,
@@ -33,6 +34,18 @@
     "AUDRALIA_PLANET_PHYSICAL_TERRAIN_CHILD",
     "AUDRALIA_G2_DRY_REVEALED_PHYSICAL_TERRAIN_CHILD",
     "AUDRALIA_PLANET_TERRAIN_ATLAS_CHILD"
+  ]);
+
+  var RELIEF_GLOBALS = Object.freeze([
+    "AUDRALIA_ELEVATION_RELIEF_EXPRESSION_CHILD",
+    "AUDRALIA_PLANET_ELEVATION_RELIEF_EXPRESSION_CHILD",
+    "AUDRALIA_G2_ELEVATION_RELIEF_EXPRESSION_CHILD"
+  ]);
+
+  var LANDFORM_GLOBALS = Object.freeze([
+    "AUDRALIA_LANDFORM_SYSTEMS_CHILD",
+    "AUDRALIA_PLANET_LANDFORM_SYSTEMS_CHILD",
+    "AUDRALIA_G2_LANDFORM_SYSTEMS_CHILD"
   ]);
 
   var LENSES = Object.freeze({
@@ -88,6 +101,27 @@
     dryCarrierPacket: null,
     dryTerrainPacket: null,
     dryFailureReason: "dry terrain not checked",
+
+    reliefApi: null,
+    reliefDetected: false,
+    reliefValidated: false,
+    reliefStatus: null,
+    reliefCarrierPacket: null,
+    reliefFailureReason: "relief expression not checked",
+
+    landformApi: null,
+    landformDetected: false,
+    landformValidated: false,
+    landformStatus: null,
+    landformCarrierPacket: null,
+    landformFailureReason: "landform systems not checked",
+
+    carrierConsumesReliefPacket: false,
+    carrierConsumesLandformPacket: false,
+    definitionConsumptionReady: false,
+    definitionField: null,
+    definitionFieldReady: false,
+    reliefSampleByNodeId: {},
 
     ethicalProfiles: [],
     ethicalBumpAnchors: [],
@@ -256,7 +290,7 @@
     if (!state.stage || !state.canvas) return;
 
     var rect = state.stage.getBoundingClientRect();
-    var dpr = Math.max(1, Math.min(1.85, window.devicePixelRatio || 1));
+    var dpr = Math.max(1, Math.min(2.25, window.devicePixelRatio || 1));
 
     state.dpr = dpr;
     state.width = Math.max(320, Math.floor(rect.width * dpr));
@@ -289,6 +323,13 @@
     var dx = points[0].x - points[1].x;
     var dy = points[0].y - points[1].y;
 
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  function gridDistance(ax, ay, bx, by) {
+    var dx = Math.abs(Number(ax) - Number(bx));
+    dx = Math.min(dx, RADIAL_NODES - dx);
+    var dy = Number(ay) - Number(by);
     return Math.sqrt(dx * dx + dy * dy);
   }
 
@@ -349,6 +390,116 @@
     return state.dryTerrainValidated;
   }
 
+  function detectReliefExpression() {
+    var api = firstGlobal(RELIEF_GLOBALS);
+
+    state.reliefApi = api;
+    state.reliefDetected = Boolean(api);
+    state.reliefStatus = null;
+    state.reliefCarrierPacket = null;
+    state.reliefValidated = false;
+
+    if (!api) {
+      state.reliefFailureReason = "relief expression child missing";
+      rebuildDefinitionField();
+      publishStatus();
+      requestRender();
+      return false;
+    }
+
+    if (typeof api.status !== "function" || typeof api.getCarrierReliefPacket !== "function") {
+      state.reliefFailureReason = "relief expression API incomplete";
+      rebuildDefinitionField();
+      publishStatus();
+      requestRender();
+      return false;
+    }
+
+    state.reliefStatus = safeCall("reliefExpression", api, "status");
+    state.reliefCarrierPacket = safeCall("reliefExpression", api, "getCarrierReliefPacket", "audralia-runtime-carrier", { compact: false });
+
+    state.reliefValidated = Boolean(
+      state.reliefCarrierPacket &&
+      state.reliefCarrierPacket.reliefExpressionReady === true &&
+      state.reliefCarrierPacket.carrierMayConsume === true &&
+      state.reliefCarrierPacket.carrierShouldNotOwnReliefTruth === true &&
+      state.reliefCarrierPacket.carrierShouldNotOwnElevationTruth === true &&
+      state.reliefCarrierPacket.childDrawsVisuals === false &&
+      state.reliefCarrierPacket.hydrationHeld === true &&
+      state.reliefCarrierPacket.activeHydration === false &&
+      state.reliefCarrierPacket.finalVisualPassClaim === false
+    );
+
+    state.reliefFailureReason = state.reliefValidated ? "" : "relief expression packet validation failed";
+    state.carrierConsumesReliefPacket = state.reliefValidated;
+
+    rebuildDefinitionField();
+    publishStatus();
+    requestRender();
+
+    return state.reliefValidated;
+  }
+
+  function detectLandformSystems() {
+    var api = firstGlobal(LANDFORM_GLOBALS);
+
+    state.landformApi = api;
+    state.landformDetected = Boolean(api);
+    state.landformStatus = null;
+    state.landformCarrierPacket = null;
+    state.landformValidated = false;
+
+    if (!api) {
+      state.landformFailureReason = "landform systems child missing";
+      rebuildDefinitionField();
+      publishStatus();
+      requestRender();
+      return false;
+    }
+
+    if (typeof api.status !== "function" || typeof api.getCarrierLandformPacket !== "function") {
+      state.landformFailureReason = "landform systems API incomplete";
+      rebuildDefinitionField();
+      publishStatus();
+      requestRender();
+      return false;
+    }
+
+    state.landformStatus = safeCall("landformSystems", api, "status");
+    state.landformCarrierPacket = safeCall("landformSystems", api, "getCarrierLandformPacket", "audralia-runtime-carrier", { compact: false });
+
+    state.landformValidated = Boolean(
+      state.landformCarrierPacket &&
+      state.landformCarrierPacket.landformSystemsReady === true &&
+      state.landformCarrierPacket.carrierMayConsume === true &&
+      state.landformCarrierPacket.carrierShouldNotOwnLandformTruth === true &&
+      state.landformCarrierPacket.carrierShouldNotOwnReliefTruth === true &&
+      state.landformCarrierPacket.carrierShouldNotOwnElevationTruth === true &&
+      state.landformCarrierPacket.childDrawsVisuals === false &&
+      state.landformCarrierPacket.hydrationHeld === true &&
+      state.landformCarrierPacket.activeHydration === false &&
+      state.landformCarrierPacket.finalVisualPassClaim === false
+    );
+
+    state.landformFailureReason = state.landformValidated ? "" : "landform systems packet validation failed";
+    state.carrierConsumesLandformPacket = state.landformValidated;
+
+    rebuildDefinitionField();
+    publishStatus();
+    requestRender();
+
+    return state.landformValidated;
+  }
+
+  function refreshDownstreamPackets() {
+    detectDryTerrain();
+    detectReliefExpression();
+    detectLandformSystems();
+    rebuildDefinitionField();
+    publishStatus();
+    requestRender();
+  }
+
   function dryPacket() {
     return state.dryTerrainPacket ||
       (state.dryCarrierPacket && state.dryCarrierPacket.planetPhysicalTerrainPacket) ||
@@ -358,18 +509,6 @@
   function dryNodes() {
     var packet = dryPacket();
     return packet && Array.isArray(packet.nodes) ? packet.nodes : [];
-  }
-
-  function numeric(node, key, fallback) {
-    var value = Number(node && node[key]);
-    return Number.isFinite(value) ? value : fallback;
-  }
-
-  function gridDistance(ax, ay, bx, by) {
-    var dx = Math.abs(ax - bx);
-    dx = Math.min(dx, RADIAL_NODES - dx);
-    var dy = ay - by;
-    return Math.sqrt(dx * dx + dy * dy);
   }
 
   function buildNineContinentEthicalProfiles() {
@@ -505,7 +644,7 @@
     var best = null;
     var bestValue = -Infinity;
 
-    Object.keys(obj).forEach(function (key) {
+    Object.keys(obj || {}).forEach(function (key) {
       if (obj[key] > bestValue) {
         best = key;
         bestValue = obj[key];
@@ -927,11 +1066,11 @@
 
     state.ethicalBumpAnchors.forEach(function (bump) {
       var d = gridDistance(xf, yf, Number(bump.x || 0), Number(bump.y || 0));
-      if (d > 4.35) return;
+      if (d > 3.65) return;
 
       var radius = Number(bump.invariantRadius || 1);
       var heightValue = Number(bump.height || 0.5);
-      var weight = Math.pow(radius, 0.92) / Math.pow(0.46 + d, 2.18);
+      var weight = Math.pow(radius, 0.92) / Math.pow(0.46 + d, 2.28);
 
       weight *= 0.86 + Number(bump.ethicalCoherenceScore || 0.5) * 0.32;
       weight *= 0.90 + heightValue * 0.18;
@@ -972,7 +1111,7 @@
     var boundaryPressure = first ? clamp(second / first, 0, 1) : 0;
 
     return {
-      landPresence: round(clamp(total / 2.15, 0, 1), 4),
+      landPresence: round(clamp(total / 1.88, 0, 1), 4),
       height: round(height / total, 4),
       ethicalCoherenceScore: round(coherence / total, 4),
       continentId: continentId,
@@ -985,7 +1124,7 @@
     };
   }
 
-  function buildLandInfluenceField(bumps, wovenNodes) {
+  function buildLandInfluenceField() {
     var samples = [];
     var index = [];
 
@@ -999,14 +1138,14 @@
         var ll = landFieldToLonLat(x + 0.5, y + 0.5);
 
         var landPresence = clamp(
-          sample.landPresence * (0.92 - sample.boundaryPressure * 0.18) +
-          sample.ethicalCoherenceScore * 0.12,
+          sample.landPresence * (0.94 - sample.boundaryPressure * 0.16) +
+          sample.ethicalCoherenceScore * 0.13,
           0,
           1
         );
 
         var item = {
-          sampleId: "LAND-BODY-SAMPLE-" + String(y).padStart(2, "0") + "-" + String(x).padStart(2, "0"),
+          sampleId: "LAND-BODY-SAMPLE-" + String(y).padStart(2, "0") + "-" + String(x).padStart(3, "0"),
           x: x,
           y: y,
           gridX: round(gx, 4),
@@ -1051,10 +1190,11 @@
         var dx = Number(right.height || 0) - Number(left.height || 0);
         var dy = Number(down.height || 0) - Number(up.height || 0);
         current.slope = round(clamp(Math.sqrt(dx * dx + dy * dy), 0, 1), 4);
-        current.relief = round(clamp(current.slope * 0.84 + Number(current.height || 0.5) * 0.16, 0, 1), 4);
+        current.relief = round(clamp(current.slope * 0.86 + Number(current.height || 0.5) * 0.14, 0, 1), 4);
       }
     }
 
+    state.landFieldIndex = index;
     return Object.freeze(samples);
   }
 
@@ -1107,7 +1247,8 @@
 
     return Object.freeze({
       contract: CONTRACT,
-      packetType: "runtime_derived_visible_land_body_packet",
+      previousContract: PREVIOUS_CONTRACT,
+      packetType: "runtime_derived_visible_land_body_packet_with_definition_consumption",
       sourceSeatCount: SOURCE_SEAT_COUNT,
       ethicalBumpAnchorCount: state.ethicalBumpAnchors.length,
       fieldSampleCount: samples.length,
@@ -1119,6 +1260,9 @@
       nodesHiddenFromSurface: true,
       surfaceRenderIsDerived: true,
       carrierInventsTerrain: false,
+      carrierConsumesReliefPacket: state.carrierConsumesReliefPacket,
+      carrierConsumesLandformPacket: state.carrierConsumesLandformPacket,
+      definitionFieldReady: state.definitionFieldReady,
       raw256VisibleOnlyInLattice: true,
       finalVisualPassClaim: false
     });
@@ -1148,22 +1292,64 @@
     state.ethicalBumpFieldReady = state.ethicalBumpAnchors.length >= MIN_BUMP_ANCHOR_COUNT;
 
     state.dynamicSurfaceRows = buildDynamicSurfaceRows();
-    state.landInfluenceField = buildLandInfluenceField(state.ethicalBumpAnchors, state.dynamicSurfaceRows);
-
-    var index = [];
-    state.landInfluenceField.forEach(function (sample) {
-      if (!index[sample.y]) index[sample.y] = [];
-      index[sample.y][sample.x] = sample;
-    });
-
-    state.landFieldIndex = index;
+    state.landInfluenceField = buildLandInfluenceField();
     state.visibleLandBodyPacket = buildVisibleLandBodyPacket();
     state.landBodyCompositorReady = Boolean(state.visibleLandBodyPacket && state.landInfluenceField.length);
+  }
+
+  function rebuildDefinitionField() {
+    var relief = state.reliefValidated ? state.reliefCarrierPacket : null;
+    var landform = state.landformValidated ? state.landformCarrierPacket : null;
+
+    state.reliefSampleByNodeId = {};
+
+    if (relief && Array.isArray(relief.reliefSamples)) {
+      relief.reliefSamples.forEach(function (sample) {
+        if (sample && sample.parentNodeId) {
+          state.reliefSampleByNodeId[sample.parentNodeId] = sample;
+        }
+      });
+    }
+
+    state.definitionField = {
+      reliefSamples: relief && Array.isArray(relief.reliefSamples) ? relief.reliefSamples : [],
+      ridgeReliefExpressions: relief && Array.isArray(relief.ridgeReliefExpressions) ? relief.ridgeReliefExpressions : [],
+      basinDepthExpressions: relief && Array.isArray(relief.basinDepthExpressions) ? relief.basinDepthExpressions : [],
+      valleyFlowExpressions: relief && Array.isArray(relief.valleyFlowExpressions) ? relief.valleyFlowExpressions : [],
+      summitReliefExpressions: relief && Array.isArray(relief.summitReliefExpressions) ? relief.summitReliefExpressions : [],
+      highlandReliefExpressions: relief && Array.isArray(relief.highlandReliefExpressions) ? relief.highlandReliefExpressions : [],
+      lowlandReliefExpressions: relief && Array.isArray(relief.lowlandReliefExpressions) ? relief.lowlandReliefExpressions : [],
+      shelfReliefExpressions: relief && Array.isArray(relief.shelfReliefExpressions) ? relief.shelfReliefExpressions : [],
+      futureFillReliefExpressions: relief && Array.isArray(relief.futureFillReliefExpressions) ? relief.futureFillReliefExpressions : [],
+
+      mountainRanges: landform && Array.isArray(landform.mountainRanges) ? landform.mountainRanges : [],
+      landmarks: landform && Array.isArray(landform.landmarks) ? landform.landmarks : [],
+      plateaus: landform && Array.isArray(landform.plateaus) ? landform.plateaus : [],
+      landformBasins: landform && Array.isArray(landform.landformBasins) ? landform.landformBasins : [],
+      cliffSystems: landform && Array.isArray(landform.cliffSystems) ? landform.cliffSystems : [],
+      continentLandformProfiles: landform && Array.isArray(landform.continentLandformProfiles) ? landform.continentLandformProfiles : []
+    };
+
+    state.definitionConsumptionReady = Boolean(state.reliefValidated || state.landformValidated);
+    state.definitionFieldReady = Boolean(
+      state.definitionField &&
+      (
+        state.definitionField.ridgeReliefExpressions.length ||
+        state.definitionField.basinDepthExpressions.length ||
+        state.definitionField.mountainRanges.length ||
+        state.definitionField.cliffSystems.length ||
+        state.definitionField.plateaus.length ||
+        state.definitionField.landmarks.length
+      )
+    );
+
+    return state.definitionFieldReady;
   }
 
   function getEthicalBumpFieldReceipt() {
     return {
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       nineContinentEthicalFieldActive: state.ethicalBumpFieldReady,
       nineContinentCount: state.ethicalProfiles.length,
       bumpAnchorCount: state.ethicalBumpAnchors.length,
@@ -1184,6 +1370,7 @@
   function getLandBodyCompositorReceipt() {
     return {
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       landBodyCompositorActive: state.landBodyCompositorReady,
       existingNodesUsedAsLandMappingScaffold: true,
       nodesHiddenFromSurface: true,
@@ -1196,6 +1383,29 @@
       raw256VisibleOnlyInLattice: true,
       carrierInventsTerrain: false,
       hydrationHeld: true,
+      finalVisualPassClaim: false
+    };
+  }
+
+  function getDefinitionConsumptionReceipt() {
+    return {
+      contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      reliefExpressionDetected: state.reliefDetected,
+      reliefExpressionValidated: state.reliefValidated,
+      reliefFailureReason: state.reliefFailureReason,
+      landformSystemsDetected: state.landformDetected,
+      landformSystemsValidated: state.landformValidated,
+      landformFailureReason: state.landformFailureReason,
+      carrierConsumesReliefPacket: state.carrierConsumesReliefPacket,
+      carrierConsumesLandformPacket: state.carrierConsumesLandformPacket,
+      definitionConsumptionReady: state.definitionConsumptionReady,
+      definitionFieldReady: state.definitionFieldReady,
+      carrierShouldNotOwnElevationTruth: true,
+      carrierShouldNotOwnReliefTruth: true,
+      carrierShouldNotOwnLandformTruth: true,
+      hydrationHeld: true,
+      activeHydration: false,
       finalVisualPassClaim: false
     };
   }
@@ -1272,10 +1482,10 @@
     clipSphere();
 
     var directional = ctx.createLinearGradient(m.cx - m.r, m.cy - m.r, m.cx + m.r, m.cy + m.r);
-    directional.addColorStop(0.00, "rgba(255,255,255,0.050)");
-    directional.addColorStop(0.36, "rgba(255,255,255,0.012)");
-    directional.addColorStop(0.72, "rgba(0,0,0,0.26)");
-    directional.addColorStop(1.00, "rgba(0,0,0,0.54)");
+    directional.addColorStop(0.00, "rgba(255,255,255,0.052)");
+    directional.addColorStop(0.34, "rgba(255,255,255,0.014)");
+    directional.addColorStop(0.70, "rgba(0,0,0,0.28)");
+    directional.addColorStop(1.00, "rgba(0,0,0,0.56)");
     ctx.fillStyle = directional;
     ctx.fillRect(m.cx - m.r, m.cy - m.r, m.r * 2, m.r * 2);
 
@@ -1285,15 +1495,16 @@
   function drawHydrosphereMemoryUnderlayer() {
     var ctx = state.ctx;
     var m = metrics();
+    var reduced = state.definitionConsumptionReady ? 0.62 : 1;
 
     ctx.save();
     clipSphere();
 
     var memory = ctx.createRadialGradient(m.cx - m.r * 0.34, m.cy - m.r * 0.28, 0, m.cx, m.cy, m.r * 1.08);
-    memory.addColorStop(0.00, "rgba(105,184,212,0.26)");
-    memory.addColorStop(0.28, "rgba(37,101,148,0.20)");
-    memory.addColorStop(0.58, "rgba(8,42,91,0.16)");
-    memory.addColorStop(1.00, "rgba(0,12,38,0.22)");
+    memory.addColorStop(0.00, "rgba(105,184,212," + (0.19 * reduced).toFixed(3) + ")");
+    memory.addColorStop(0.28, "rgba(37,101,148," + (0.145 * reduced).toFixed(3) + ")");
+    memory.addColorStop(0.58, "rgba(8,42,91," + (0.115 * reduced).toFixed(3) + ")");
+    memory.addColorStop(1.00, "rgba(0,12,38," + (0.155 * reduced).toFixed(3) + ")");
 
     ctx.beginPath();
     ctx.arc(m.cx, m.cy, m.r * 0.995, 0, TAU);
@@ -1306,11 +1517,12 @@
   function drawAtmosphereRim() {
     var ctx = state.ctx;
     var m = metrics();
+    var wash = state.definitionConsumptionReady ? 0.78 : 1;
 
     var rim = ctx.createRadialGradient(m.cx, m.cy, m.r * 0.93, m.cx, m.cy, m.r * 1.105);
     rim.addColorStop(0.00, "rgba(141,216,255,0.000)");
-    rim.addColorStop(0.62, "rgba(141,216,255,0.018)");
-    rim.addColorStop(0.84, "rgba(141,216,255,0.115)");
+    rim.addColorStop(0.62, "rgba(141,216,255," + (0.018 * wash).toFixed(3) + ")");
+    rim.addColorStop(0.84, "rgba(141,216,255," + (0.115 * wash).toFixed(3) + ")");
     rim.addColorStop(1.00, "rgba(141,216,255,0.000)");
 
     ctx.beginPath();
@@ -1320,8 +1532,8 @@
 
     ctx.beginPath();
     ctx.arc(m.cx, m.cy, m.r * 1.002, 0, TAU);
-    ctx.strokeStyle = "rgba(190,232,255,0.22)";
-    ctx.lineWidth = Math.max(0.75, state.dpr * 0.78);
+    ctx.strokeStyle = "rgba(190,232,255,0.20)";
+    ctx.lineWidth = Math.max(0.75, state.dpr * 0.72);
     ctx.stroke();
   }
 
@@ -1344,18 +1556,17 @@
     var futureFill = Number(sample.futureFillPressure || 0);
     var boundary = Number(sample.boundaryPressure || 0);
 
-    var high = { r: 208, g: 178, b: 116 };
+    var high = { r: 210, g: 183, b: 121 };
     var low = { r: 42, g: 61, b: 48 };
     var edge = { r: 92, g: 74, b: 54 };
-
     var color = base;
 
-    color = mixColor(color, height > 0.58 ? high : low, height > 0.58 ? (height - 0.58) * 0.52 : (0.58 - height) * 0.38);
-    color = mixColor(color, edge, boundary * 0.22);
-    color = mixColor(color, { r: 16, g: 26, b: 30 }, futureFill * 0.30);
+    color = mixColor(color, height > 0.58 ? high : low, height > 0.58 ? (height - 0.58) * 0.56 : (0.58 - height) * 0.42);
+    color = mixColor(color, edge, boundary * 0.24);
+    color = mixColor(color, { r: 16, g: 26, b: 30 }, futureFill * 0.28);
 
     if (pass === "relief") {
-      color = mixColor(color, high, clamp(relief * 0.52, 0, 0.38));
+      color = mixColor(color, high, clamp(relief * 0.56, 0, 0.42));
     }
 
     return color;
@@ -1369,7 +1580,7 @@
 
     var m = metrics();
     var presence = Number(sample.landPresence || 0);
-    if (presence <= 0.035) return;
+    if (presence <= 0.030) return;
 
     var height = Number(sample.height || 0.5);
     var slope = Number(sample.slope || 0);
@@ -1378,13 +1589,14 @@
     var relief = Number(sample.relief || 0);
 
     var color = landSampleColor(sample, pass);
-    var baseRadius = m.r * (pass === "under" ? 0.070 : pass === "relief" ? 0.042 : 0.058);
-    var radius = Math.max(6.5, baseRadius * p.scale * (0.84 + presence * 0.46 + height * 0.16));
-    var alphaBase = mode === "body" ? 0.075 : mode === "sixth-sense" ? 0.20 : 0.235;
-    var alpha = clamp(alphaBase * (0.52 + presence * 0.72 + height * 0.20), 0.025, 0.42);
+    var definitionTighten = state.definitionConsumptionReady ? 0.84 : 1;
+    var baseRadius = m.r * (pass === "under" ? 0.054 : pass === "relief" ? 0.024 : 0.041) * definitionTighten;
+    var radius = Math.max(4.2, baseRadius * p.scale * (0.86 + presence * 0.38 + height * 0.12));
+    var alphaBase = mode === "body" ? 0.092 : mode === "sixth-sense" ? 0.235 : 0.295;
+    var alpha = clamp(alphaBase * (0.56 + presence * 0.74 + height * 0.18), 0.030, 0.52);
 
-    if (pass === "under") alpha *= 0.48;
-    if (pass === "relief") alpha *= clamp(0.32 + relief * 1.4 + slope * 1.2, 0.16, 0.72);
+    if (pass === "under") alpha *= 0.40;
+    if (pass === "relief") alpha *= clamp(0.34 + relief * 1.55 + slope * 1.28 + boundary * 0.34, 0.18, 0.86);
 
     var gradient = ctx.createRadialGradient(
       p.x - radius * 0.22,
@@ -1396,12 +1608,12 @@
     );
 
     if (futureFill > 0.38 && pass !== "relief") {
-      gradient.addColorStop(0.00, rgba(color, alpha * 0.82));
-      gradient.addColorStop(0.48, "rgba(17,28,30," + clamp(alpha * 0.92, 0, 0.34).toFixed(3) + ")");
+      gradient.addColorStop(0.00, rgba(color, alpha * 0.84));
+      gradient.addColorStop(0.42, "rgba(17,28,30," + clamp(alpha * 0.96, 0, 0.40).toFixed(3) + ")");
       gradient.addColorStop(1.00, "rgba(17,28,30,0.000)");
     } else {
       gradient.addColorStop(0.00, rgba(color, alpha));
-      gradient.addColorStop(0.54, rgba(color, alpha * (0.48 + boundary * 0.12)));
+      gradient.addColorStop(0.50, rgba(color, alpha * (0.44 + boundary * 0.12)));
       gradient.addColorStop(1.00, rgba(color, 0.000));
     }
 
@@ -1414,10 +1626,9 @@
   function drawContinuousLandBodySurface(mode) {
     if (!state.landBodyCompositorReady) return;
 
-    var ctx = state.ctx;
     var samples = state.landInfluenceField;
 
-    ctx.save();
+    state.ctx.save();
     clipSphere();
 
     for (var i = 0; i < samples.length; i += 1) {
@@ -1431,13 +1642,219 @@
     if (mode === "surface" || mode === "sixth-sense") {
       for (var k = 0; k < samples.length; k += 1) {
         var sample = samples[k];
-        if (sample.relief > 0.17 || sample.height > 0.62 || sample.boundaryPressure > 0.48) {
+        if (sample.relief > 0.15 || sample.height > 0.60 || sample.boundaryPressure > 0.44) {
           drawLandBlob(sample, mode, "relief");
         }
       }
     }
 
-    ctx.restore();
+    state.ctx.restore();
+  }
+
+  function nodeIdToSample(nodeId) {
+    return state.reliefSampleByNodeId[nodeId] || null;
+  }
+
+  function sampleToPoint(sample) {
+    if (!sample) return null;
+    var ll = terrainSeatToLonLat(Number(sample.x || 0), Number(sample.y || 0));
+    return lonLatPoint(ll.lon, ll.lat);
+  }
+
+  function projectedSample(sample) {
+    var point = sampleToPoint(sample);
+    return point ? project(point) : null;
+  }
+
+  function drawDefinitionNode(sample, alpha, radiusScale, rgb, stroke) {
+    if (!sample) return;
+
+    var p = projectedSample(sample);
+    if (!p || !p.front) return;
+
+    var ctx = state.ctx;
+    var m = metrics();
+    var intensity = clamp(
+      Number(sample.reliefIntensity || 0) +
+      Number(sample.ridgeHighlight || 0) * 0.42 +
+      Number(sample.basinShadow || 0) * 0.36 +
+      Number(sample.summitEmphasis || 0) * 0.30,
+      0,
+      1.35
+    );
+
+    var radius = Math.max(0.9, m.r * radiusScale * p.scale * (0.72 + intensity * 0.42));
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, radius, 0, TAU);
+
+    if (stroke) {
+      ctx.strokeStyle = rgba(rgb, alpha);
+      ctx.lineWidth = Math.max(0.55, state.dpr * radiusScale * 40);
+      ctx.stroke();
+    } else {
+      ctx.fillStyle = rgba(rgb, alpha);
+      ctx.fill();
+    }
+  }
+
+  function drawDefinitionLineFromNodeIds(nodeIds, alpha, widthScale, rgb, maxNodes) {
+    if (!Array.isArray(nodeIds) || nodeIds.length < 2) return;
+
+    var ctx = state.ctx;
+    var m = metrics();
+    var points = [];
+    var capped = nodeIds.slice(0, maxNodes || 16);
+
+    capped.forEach(function (nodeId) {
+      var sample = nodeIdToSample(nodeId);
+      var p = sample ? projectedSample(sample) : null;
+      if (p && p.front) points.push(p);
+    });
+
+    if (points.length < 2) return;
+
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+
+    for (var i = 1; i < points.length; i += 1) {
+      var prev = points[i - 1];
+      var next = points[i];
+      var dx = Math.abs(next.x - prev.x);
+      var dy = Math.abs(next.y - prev.y);
+
+      if (dx > m.r * 0.42 || dy > m.r * 0.42) {
+        ctx.moveTo(next.x, next.y);
+      } else {
+        ctx.lineTo(next.x, next.y);
+      }
+    }
+
+    ctx.strokeStyle = rgba(rgb, alpha);
+    ctx.lineWidth = Math.max(0.65, m.r * widthScale);
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.stroke();
+  }
+
+  function drawRidgeDefinitionLayer(mode) {
+    if (!state.definitionFieldReady || !state.definitionField) return;
+
+    var strength = mode === "body" ? 0.20 : mode === "surface" ? 0.42 : mode === "sixth-sense" ? 0.52 : 0.28;
+    var width = mode === "sixth-sense" ? 0.0035 : 0.0025;
+
+    (state.definitionField.ridgeReliefExpressions || []).forEach(function (ridge) {
+      var ridgeAlpha = strength * clamp(Number(ridge.ridgeReliefStrength || ridge.ridgeHighlight || 0.45), 0.22, 1);
+      drawDefinitionLineFromNodeIds(ridge.nodeIds, ridgeAlpha, width, { r: 226, g: 197, b: 134 }, 18);
+    });
+  }
+
+  function drawMountainRangeDefinitionLayer(mode) {
+    if (!state.definitionFieldReady || !state.definitionField) return;
+
+    var strength = mode === "body" ? 0.18 : mode === "surface" ? 0.40 : mode === "sixth-sense" ? 0.58 : 0.25;
+
+    (state.definitionField.mountainRanges || []).forEach(function (range) {
+      var alpha = strength * clamp(Number(range.watershedAuthority || range.averageReliefIntensity || 0.45), 0.24, 1);
+      drawDefinitionLineFromNodeIds(range.nodeIds, alpha, 0.0029, { r: 244, g: 207, b: 131 }, 20);
+
+      (range.summitNodeIds || []).slice(0, 4).forEach(function (nodeId) {
+        drawDefinitionNode(nodeIdToSample(nodeId), alpha * 0.70, 0.007, { r: 255, g: 226, b: 159 }, false);
+      });
+    });
+  }
+
+  function drawBasinDefinitionLayer(mode) {
+    if (!state.definitionFieldReady || !state.definitionField) return;
+
+    var strength = mode === "body" ? 0.13 : mode === "surface" ? 0.32 : mode === "hydration" ? 0.38 : mode === "sixth-sense" ? 0.42 : 0.20;
+
+    (state.definitionField.basinDepthExpressions || []).forEach(function (basin) {
+      var alpha = strength * clamp(Number(basin.basinDepthStrength || basin.basinShadow || 0.40), 0.20, 1);
+
+      (basin.nodeIds || []).slice(0, 14).forEach(function (nodeId) {
+        drawDefinitionNode(nodeIdToSample(nodeId), alpha, 0.010, { r: 28, g: 46, b: 43 }, false);
+      });
+    });
+
+    (state.definitionField.landformBasins || []).forEach(function (basin) {
+      var alpha = strength * clamp(Number(basin.basinDepthStrength || basin.futureFillPriority || 0.36), 0.18, 1);
+
+      (basin.nodeIds || []).slice(0, 10).forEach(function (nodeId) {
+        drawDefinitionNode(nodeIdToSample(nodeId), alpha * 0.82, 0.011, { r: 48, g: 70, b: 66 }, false);
+      });
+    });
+  }
+
+  function drawCliffDefinitionLayer(mode) {
+    if (!state.definitionFieldReady || !state.definitionField) return;
+
+    var strength = mode === "body" ? 0.12 : mode === "surface" ? 0.48 : mode === "sixth-sense" ? 0.58 : 0.18;
+
+    (state.definitionField.cliffSystems || []).forEach(function (cliff) {
+      var alpha = strength * clamp(Number(cliff.reliefBreakStrength || 0.45), 0.22, 1);
+      drawDefinitionLineFromNodeIds(cliff.nodeIds, alpha, 0.0038, { r: 81, g: 58, b: 42 }, 18);
+      drawDefinitionLineFromNodeIds(cliff.nodeIds, alpha * 0.40, 0.0062, { r: 12, g: 18, b: 20 }, 18);
+    });
+  }
+
+  function drawPlateauDefinitionLayer(mode) {
+    if (!state.definitionFieldReady || !state.definitionField) return;
+
+    var strength = mode === "body" ? 0.07 : mode === "surface" ? 0.22 : mode === "sixth-sense" ? 0.30 : 0.12;
+
+    (state.definitionField.plateaus || []).forEach(function (plateau) {
+      var alpha = strength * clamp(Number(plateau.surfaceContinuity || plateau.slopeStability || 0.42), 0.22, 1);
+
+      (plateau.nodeIds || []).slice(0, 14).forEach(function (nodeId) {
+        drawDefinitionNode(nodeIdToSample(nodeId), alpha, 0.0095, { r: 159, g: 139, b: 91 }, false);
+      });
+    });
+  }
+
+  function drawLandmarkDefinitionLayer(mode) {
+    if (!state.definitionFieldReady || !state.definitionField || mode === "body") return;
+
+    var strength = mode === "surface" ? 0.38 : mode === "sixth-sense" ? 0.72 : 0.18;
+
+    (state.definitionField.landmarks || []).slice(0, 80).forEach(function (landmark) {
+      var sample = nodeIdToSample(landmark.anchorNodeId);
+      var alpha = strength * clamp(Number(landmark.landmarkStrength || 0.45), 0.22, 1);
+
+      drawDefinitionNode(sample, alpha, 0.006, { r: 250, g: 231, b: 177 }, false);
+      drawDefinitionNode(sample, alpha * 0.42, 0.014, { r: 250, g: 231, b: 177 }, true);
+    });
+  }
+
+  function drawFutureFillReliefLayer(mode) {
+    if (!state.definitionFieldReady || !state.definitionField || (mode !== "hydration" && mode !== "surface" && mode !== "sixth-sense")) return;
+
+    var strength = mode === "hydration" ? 0.34 : mode === "surface" ? 0.16 : 0.22;
+
+    (state.definitionField.futureFillReliefExpressions || []).forEach(function (fill) {
+      var alpha = strength * clamp(Number(fill.futureFillReliefStrength || fill.futureFillPriority || 0.42), 0.20, 1);
+
+      (fill.nodeIds || []).slice(0, 12).forEach(function (nodeId) {
+        drawDefinitionNode(nodeIdToSample(nodeId), alpha, 0.008, { r: 88, g: 129, b: 143 }, false);
+      });
+    });
+  }
+
+  function drawDefinitionOverlay(mode) {
+    if (!state.definitionFieldReady) return;
+
+    state.ctx.save();
+    clipSphere();
+
+    drawBasinDefinitionLayer(mode);
+    drawPlateauDefinitionLayer(mode);
+    drawFutureFillReliefLayer(mode);
+    drawRidgeDefinitionLayer(mode);
+    drawMountainRangeDefinitionLayer(mode);
+    drawCliffDefinitionLayer(mode);
+    drawLandmarkDefinitionLayer(mode);
+
+    state.ctx.restore();
   }
 
   function drawFutureFillDepressions(mode) {
@@ -1454,8 +1871,8 @@
       var p = project(sample.point);
       if (!p.front) return;
 
-      var radius = Math.max(2.5, metrics().r * 0.016 * p.scale);
-      var alpha = mode === "hydration" ? 0.22 : 0.12;
+      var radius = Math.max(2.2, metrics().r * 0.0125 * p.scale);
+      var alpha = mode === "hydration" ? 0.20 : 0.10;
 
       ctx.beginPath();
       ctx.arc(p.x, p.y, radius, 0, TAU);
@@ -1477,16 +1894,16 @@
     clipSphere();
 
     state.ethicalBumpAnchors.forEach(function (bump, index) {
-      if (index % 5 !== 0 && bump.sizeClass !== "ANCHOR") return;
-      if (drawn > 240) return;
+      if (index % 7 !== 0 && bump.sizeClass !== "ANCHOR") return;
+      if (drawn > 210) return;
 
       var p = project(bump.point);
       if (!p.front) return;
 
       var profile = findProfile(bump.continentId);
       var color = profile ? profile.color : { r: 180, g: 210, b: 180 };
-      var radius = Math.max(1.0, m.r * 0.0055 * Number(bump.invariantRadius || 1) * p.scale);
-      var alpha = bump.sizeClass === "ANCHOR" ? 0.34 : bump.sizeClass === "STRUCTURAL" ? 0.22 : 0.12;
+      var radius = Math.max(0.9, m.r * 0.0044 * Number(bump.invariantRadius || 1) * p.scale);
+      var alpha = bump.sizeClass === "ANCHOR" ? 0.30 : bump.sizeClass === "STRUCTURAL" ? 0.16 : 0.08;
 
       ctx.beginPath();
       ctx.arc(p.x, p.y, radius, 0, TAU);
@@ -1496,7 +1913,7 @@
       if (bump.sizeClass === "ANCHOR") {
         ctx.beginPath();
         ctx.arc(p.x, p.y, radius * 2.4, 0, TAU);
-        ctx.strokeStyle = rgba(color, 0.16);
+        ctx.strokeStyle = rgba(color, 0.12);
         ctx.lineWidth = Math.max(0.4, state.dpr * 0.42);
         ctx.stroke();
       }
@@ -1575,14 +1992,15 @@
     var m = metrics();
     var ethicalReceipt = getEthicalBumpFieldReceipt();
     var landReceipt = getLandBodyCompositorReceipt();
-    var w = Math.min(state.width * 0.86, m.baseRadius * 2.38);
-    var h = Math.min(state.height * 0.50, m.baseRadius * 1.30);
+    var definitionReceipt = getDefinitionConsumptionReceipt();
+    var w = Math.min(state.width * 0.88, m.baseRadius * 2.56);
+    var h = Math.min(state.height * 0.56, m.baseRadius * 1.46);
     var x = m.cx - w / 2;
     var y = m.cy - h / 2;
 
     ctx.save();
-    ctx.fillStyle = "rgba(2,8,20,.78)";
-    ctx.strokeStyle = state.landBodyCompositorReady ? "rgba(167,243,198,.42)" : "rgba(244,207,131,.34)";
+    ctx.fillStyle = "rgba(2,8,20,.80)";
+    ctx.strokeStyle = state.definitionFieldReady ? "rgba(167,243,198,.48)" : "rgba(244,207,131,.34)";
     ctx.lineWidth = Math.max(1, state.dpr);
 
     roundedRect(ctx, x, y, w, h, 22 * state.dpr);
@@ -1592,27 +2010,30 @@
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.font = "900 " + Math.max(12, 14 * state.dpr) + "px ui-monospace, monospace";
-    ctx.fillStyle = state.landBodyCompositorReady ? "rgba(167,243,198,.94)" : "rgba(244,207,131,.92)";
-    ctx.fillText(state.landBodyCompositorReady ? "LAND-BODY COMPOSITOR LIVE" : "LAND-BODY COMPOSITOR HELD", m.cx, y + h * 0.10);
+    ctx.fillStyle = state.definitionFieldReady ? "rgba(167,243,198,.94)" : "rgba(244,207,131,.92)";
+    ctx.fillText(state.definitionFieldReady ? "DEFINITION CONSUMPTION LIVE" : "DEFINITION CONSUMPTION FALLBACK", m.cx, y + h * 0.09);
 
-    ctx.font = "900 " + Math.max(8, 9.4 * state.dpr) + "px ui-monospace, monospace";
+    ctx.font = "900 " + Math.max(8, 9.2 * state.dpr) + "px ui-monospace, monospace";
     ctx.fillStyle = "rgba(238,244,255,.84)";
-    ctx.fillText("EXISTING NODES MAP LAND · SURFACE HIDES NODES", m.cx, y + h * 0.24);
+    ctx.fillText("DRY TERRAIN " + String(state.dryTerrainValidated).toUpperCase() + " · LAND FIELD " + landReceipt.fieldSampleCount, m.cx, y + h * 0.22);
 
     ctx.fillStyle = "rgba(141,216,255,.84)";
-    ctx.fillText("FIELD SAMPLES " + landReceipt.fieldSampleCount + " · BUMPS " + ethicalReceipt.bumpAnchorCount + " · CONTINENTS " + ethicalReceipt.nineContinentCount, m.cx, y + h * 0.38);
+    ctx.fillText("RELIEF DETECTED " + String(definitionReceipt.reliefExpressionDetected).toUpperCase() + " · VALIDATED " + String(definitionReceipt.reliefExpressionValidated).toUpperCase(), m.cx, y + h * 0.35);
 
-    ctx.fillStyle = "rgba(244,207,131,.84)";
-    ctx.fillText("HEIGHT = RELIEF / SLOPE / SHADING · SIZE ≠ HEIGHT", m.cx, y + h * 0.52);
+    ctx.fillStyle = "rgba(141,216,255,.84)";
+    ctx.fillText("LANDFORM DETECTED " + String(definitionReceipt.landformSystemsDetected).toUpperCase() + " · VALIDATED " + String(definitionReceipt.landformSystemsValidated).toUpperCase(), m.cx, y + h * 0.47);
+
+    ctx.fillStyle = "rgba(244,207,131,.86)";
+    ctx.fillText("RIDGES · MOUNTAINS · BASINS · CLIFFS · PLATEAUS · LANDMARKS", m.cx, y + h * 0.59);
 
     ctx.fillStyle = "rgba(182,245,255,.76)";
-    ctx.fillText("SIXTH SENSE SHOWS SCAFFOLD · LATTICE SHOWS RAW 256", m.cx, y + h * 0.66);
+    ctx.fillText("CARRIER OWNS DISPLAY ONLY · DOES NOT OWN LANDFORM TRUTH", m.cx, y + h * 0.71);
 
     ctx.fillStyle = "rgba(182,245,255,.76)";
-    ctx.fillText("HYDRATION HELD · EDGE DETAILS HELD", m.cx, y + h * 0.80);
+    ctx.fillText("HYDRATION HELD · ACTIVE WATER FALSE", m.cx, y + h * 0.83);
 
     ctx.fillStyle = "rgba(238,244,255,.72)";
-    ctx.fillText("FINAL VISUAL PASS: FALSE", m.cx, y + h * 0.93);
+    ctx.fillText("FINAL VISUAL PASS: FALSE · BUMPS " + ethicalReceipt.bumpAnchorCount, m.cx, y + h * 0.94);
 
     ctx.restore();
   }
@@ -1630,7 +2051,7 @@
     ctx.textBaseline = "middle";
     ctx.font = "900 " + Math.max(10, 12 * state.dpr) + "px ui-monospace, monospace";
     ctx.fillStyle = "rgba(182,245,255,0.76)";
-    ctx.fillText("HYDRATION HELD · FUTURE FILL ONLY", m.cx, m.cy + m.r * 0.74);
+    ctx.fillText("HYDRATION HELD · DRY FUTURE-FILL READINESS ONLY", m.cx, m.cy + m.r * 0.74);
     ctx.restore();
   }
 
@@ -1660,20 +2081,26 @@
     if (state.activeLens === "lattice") {
       drawLatticeLayer("back");
       drawContinuousLandBodySurface("body");
+      drawDefinitionOverlay("lattice");
       drawLatticeLayer("front");
     } else if (state.activeLens === "body") {
       drawContinuousLandBodySurface("body");
+      drawDefinitionOverlay("body");
     } else if (state.activeLens === "surface") {
       drawContinuousLandBodySurface("surface");
+      drawDefinitionOverlay("surface");
       drawFutureFillDepressions("surface");
     } else if (state.activeLens === "hydration") {
       drawContinuousLandBodySurface("body");
+      drawDefinitionOverlay("hydration");
       drawHydrationHeld();
     } else if (state.activeLens === "sixth-sense") {
       drawContinuousLandBodySurface("sixth-sense");
+      drawDefinitionOverlay("sixth-sense");
       drawSixthSenseNodeScaffold("sixth-sense");
     } else if (state.activeLens === "receipt") {
       drawContinuousLandBodySurface("body");
+      drawDefinitionOverlay("body");
       drawReceipt();
     }
 
@@ -1707,17 +2134,17 @@
     var label = document.querySelector("[data-audralia-planet-stage-label]");
     if (label) {
       if (lens === "surface") {
-        label.innerHTML = "<strong>Surface</strong> → continuous land bodies from hidden nodes";
+        label.innerHTML = "<strong>Surface</strong> → relief and landform definition consumed";
       } else if (lens === "hydration") {
-        label.innerHTML = "<strong>Hydration</strong> → held / future fill depressions only";
+        label.innerHTML = "<strong>Hydration</strong> → held / dry future-fill readiness only";
       } else if (lens === "sixth-sense") {
-        label.innerHTML = "<strong>Sixth Sense</strong> → node scaffold inspection";
+        label.innerHTML = "<strong>Sixth Sense</strong> → scaffold plus packet-derived landform structure";
       } else if (lens === "lattice") {
         label.innerHTML = "<strong>Lattice</strong> → full-globe raw 256 inspection";
       } else if (lens === "receipt") {
-        label.innerHTML = "<strong>Receipt</strong> → land-body compositor proof";
+        label.innerHTML = "<strong>Receipt</strong> → definition-consumption proof";
       } else {
-        label.innerHTML = "<strong>Body</strong> → material stack with faint land-body skin";
+        label.innerHTML = "<strong>Body</strong> → preserved carrier with narrow definition adapter";
       }
     }
 
@@ -1840,6 +2267,7 @@
   function publishStatus() {
     var ethicalReceipt = getEthicalBumpFieldReceipt();
     var landReceipt = getLandBodyCompositorReceipt();
+    var definitionReceipt = getDefinitionConsumptionReceipt();
 
     var payload = {
       contract: CONTRACT,
@@ -1855,10 +2283,27 @@
       dryRevealedTerrainValidated: state.dryTerrainValidated,
       dryRevealedTerrainFailureReason: state.dryFailureReason,
 
-      carrierConsumes: "getCarrierTerrainPacket(\"audralia-runtime-carrier\", { compact:false })",
+      carrierConsumes: "dry terrain + relief-expression packet + landform-systems packet",
       carrierConsumesDryTerrainAtlas: state.dryTerrainValidated,
+      carrierConsumesReliefPacket: definitionReceipt.carrierConsumesReliefPacket,
+      carrierConsumesLandformPacket: definitionReceipt.carrierConsumesLandformPacket,
+
+      reliefExpressionDetected: definitionReceipt.reliefExpressionDetected,
+      reliefExpressionValidated: definitionReceipt.reliefExpressionValidated,
+      reliefFailureReason: definitionReceipt.reliefFailureReason,
+
+      landformSystemsDetected: definitionReceipt.landformSystemsDetected,
+      landformSystemsValidated: definitionReceipt.landformSystemsValidated,
+      landformFailureReason: definitionReceipt.landformFailureReason,
+
+      definitionConsumptionReady: definitionReceipt.definitionConsumptionReady,
+      definitionFieldReady: definitionReceipt.definitionFieldReady,
+
       carrierInventsTerrain: false,
       terrainAtlasRemainsSource: true,
+      carrierShouldNotOwnElevationTruth: true,
+      carrierShouldNotOwnReliefTruth: true,
+      carrierShouldNotOwnLandformTruth: true,
 
       nineContinentEthicalFieldActive: ethicalReceipt.nineContinentEthicalFieldActive,
       nineContinentCount: ethicalReceipt.nineContinentCount,
@@ -1872,6 +2317,8 @@
       nodesHiddenFromSurface: true,
       visibleLandBodyPacketReady: landReceipt.visibleLandBodyPacketReady,
       fieldSampleCount: landReceipt.fieldSampleCount,
+      landFieldCols: LAND_FIELD_COLS,
+      landFieldRows: LAND_FIELD_ROWS,
 
       climateSeedOnly: true,
       ecologySeedOnly: true,
@@ -1883,6 +2330,7 @@
 
       atmosphereSeparatedFromHydrosphere: true,
       hydrosphereMemoryIsUnderlayer: true,
+      hydrosphereWashReducedWhenDefinitionReady: state.definitionConsumptionReady,
       dryCrustAboveHydrosphereMemory: true,
 
       zoomInspectionActive: true,
@@ -1905,6 +2353,7 @@
       edgeDetailsHeld: true,
 
       surfaceUsesContinuousLandBodySkin: state.landBodyCompositorReady,
+      surfaceUsesPacketDefinitionOverlay: state.definitionFieldReady,
       sixthSenseExposesNodeScaffold: true,
       latticeRaw256InspectionPreserved: true,
 
@@ -1916,9 +2365,10 @@
       finalVisualPassClaim: false,
 
       errors: state.errors.slice(),
-      deployMarker: "AUDRALIA_PLANET_RUNTIME_EXISTING_NODE_LAND_BODY_COMPOSITOR_DEPLOY_MARKER_v1"
+      deployMarker: "AUDRALIA_CARRIER_NARROW_RELIEF_LANDFORM_DEFINITION_CONSUMPTION_DEPLOY_MARKER_v1"
     };
 
+    window.AUDRALIA_CARRIER_NARROW_RELIEF_LANDFORM_DEFINITION_CONSUMPTION_STATUS = payload;
     window.AUDRALIA_PLANET_RUNTIME_EXISTING_NODE_LAND_BODY_COMPOSITOR_STATUS = payload;
     window.AUDRALIA_PLANET_RUNTIME_NINE_CONTINENT_ETHICAL_METRIC_BUMP_FIELD_STATUS = payload;
     window.AUDRALIA_PLANET_RUNTIME_DYNAMIC_ROW_OVERLAP_WEAVE_SURFACE_RENDER_STATUS = payload;
@@ -1926,12 +2376,16 @@
     window.AUDRALIA_PLANET_RUNTIME_CARRIER_DIRECT_DRY_TERRAIN_CONSUMPTION_STATUS = payload;
 
     try {
-      document.documentElement.dataset.audraliaLandBodyCompositorActive = String(state.landBodyCompositorReady);
-      document.documentElement.dataset.audraliaExistingNodesUsedAsLandMappingScaffold = "true";
-      document.documentElement.dataset.audraliaNodesHiddenFromSurface = "true";
-      document.documentElement.dataset.audraliaSurfaceRenderIsDerived = "true";
+      document.documentElement.dataset.audraliaRuntimeContract = CONTRACT;
+      document.documentElement.dataset.audraliaCarrierConsumesReliefPacket = String(state.carrierConsumesReliefPacket);
+      document.documentElement.dataset.audraliaCarrierConsumesLandformPacket = String(state.carrierConsumesLandformPacket);
+      document.documentElement.dataset.audraliaDefinitionConsumptionReady = String(state.definitionConsumptionReady);
+      document.documentElement.dataset.audraliaDefinitionFieldReady = String(state.definitionFieldReady);
+      document.documentElement.dataset.audraliaCarrierShouldNotOwnReliefTruth = "true";
+      document.documentElement.dataset.audraliaCarrierShouldNotOwnLandformTruth = "true";
       document.documentElement.dataset.audraliaCarrierInventsTerrain = "false";
       document.documentElement.dataset.audraliaHydrationHeld = "true";
+      document.documentElement.dataset.audraliaActiveHydration = "false";
       document.documentElement.dataset.audraliaFinalVisualPassClaim = "false";
     } catch (_error) {}
 
@@ -1956,11 +2410,15 @@
 
     state.canvas = document.createElement("canvas");
     state.canvas.setAttribute("data-contract", CONTRACT);
+    state.canvas.setAttribute("data-previous-contract", PREVIOUS_CONTRACT);
     state.canvas.setAttribute("data-land-body-compositor-active", "true");
-    state.canvas.setAttribute("data-existing-nodes-used-as-land-mapping-scaffold", "true");
-    state.canvas.setAttribute("data-nodes-hidden-from-surface", "true");
-    state.canvas.setAttribute("data-surface-render-is-derived", "true");
+    state.canvas.setAttribute("data-definition-consumption-adapter", "true");
+    state.canvas.setAttribute("data-carrier-owns-display-only", "true");
+    state.canvas.setAttribute("data-carrier-invents-terrain", "false");
+    state.canvas.setAttribute("data-carrier-should-not-own-relief-truth", "true");
+    state.canvas.setAttribute("data-carrier-should-not-own-landform-truth", "true");
     state.canvas.setAttribute("data-hydration-held", "true");
+    state.canvas.setAttribute("data-active-hydration", "false");
     state.canvas.setAttribute("data-final-visual-pass-claim", "false");
 
     state.mount.innerHTML = "";
@@ -1970,11 +2428,12 @@
     buildLatticeGeometry();
     resize();
     bindControls();
-    detectDryTerrain();
+    refreshDownstreamPackets();
 
-    setTimeout(detectDryTerrain, 180);
-    setTimeout(detectDryTerrain, 640);
-    setTimeout(detectDryTerrain, 1200);
+    setTimeout(refreshDownstreamPackets, 180);
+    setTimeout(refreshDownstreamPackets, 640);
+    setTimeout(refreshDownstreamPackets, 1200);
+    setTimeout(refreshDownstreamPackets, 1800);
 
     window.addEventListener("resize", resize, { passive: true });
 
@@ -1987,12 +2446,17 @@
     stop: stop,
     state: state,
     contract: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
     status: publishStatus,
     detectDryTerrain: detectDryTerrain,
+    detectReliefExpression: detectReliefExpression,
+    detectLandformSystems: detectLandformSystems,
+    refreshDownstreamPackets: refreshDownstreamPackets,
     setZoom: setZoom,
     resetCamera: resetCamera,
     getEthicalBumpFieldReceipt: getEthicalBumpFieldReceipt,
     getLandBodyCompositorReceipt: getLandBodyCompositorReceipt,
+    getDefinitionConsumptionReceipt: getDefinitionConsumptionReceipt,
     sampleLandPresenceAt: sampleLandPresenceAt,
     sampleContinentInfluenceAt: sampleContinentInfluenceAt,
     sampleHeightDisplacementAt: sampleHeightDisplacementAt,

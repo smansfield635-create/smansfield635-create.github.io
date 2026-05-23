@@ -3,16 +3,19 @@
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
   data-page="audralia-planet-inspection"
-  data-version="G2-SINGULAR-CENTERED-PLANET"
-  data-contract="AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_TNT_v1"
-  data-previous-contract="AUDRALIA_PLANET_INDEX_HTML_MODERN_INSTRUMENT_UI_RENEWAL_TNT_v1"
-  data-reference-compass="COMPASS_INTERGALACTIC_COCKPIT_ACCESS_HATCH_TNT_v1"
-  data-reference-urban="FRONTIER_URBAN_SVG_ORGANIC_DIGITAL_GEM_ORBIT_DONOR_INTEGRATION_TNT_v13"
+  data-version="G2-CARRIER-LENS-REGISTRY-ALIGNMENT"
+  data-contract="AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_TNT_v1"
+  data-previous-contract="AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_TNT_v1"
   data-html-only="true"
   data-singular-planetary-model="true"
   data-single-logic-admissibility="true"
   data-visible-renderer-count="1"
   data-primary-visible-renderer="carrier"
+  data-carrier-lens-registry-aligned="true"
+  data-carrier-lenses="body,surface,hydration,sixth-sense,lattice,receipt"
+  data-unsupported-lens-buttons-removed="true"
+  data-boundary-lens-button-removed="true"
+  data-full-lens-button-removed="true"
   data-terrain-expression-canvas-held="true"
   data-terrain-expression-canvas-loaded="false"
   data-secondary-visible-canvas-allowed="false"
@@ -22,9 +25,6 @@
   data-different-planet-read-blocked="true"
   data-ghost-viewport-suppressed="true"
   data-dual-viewport-not-claimed="true"
-  data-close-inspection-reserved="true"
-  data-close-inspection-visually-active="false"
-  data-close-inspection-runtime-required="true"
   data-primary-stage-centered="true"
   data-full-planet-visible-target="true"
   data-stage-orbit-rings-visible="false"
@@ -40,13 +40,37 @@
   data-visual-pass-claimed="false"
 >
 <head>
+  <!--
+    TNT FULL-FILE REPLACEMENT
+    AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_TNT_v1
+
+    Target:
+    /showroom/globe/audralia/planet/index.html
+
+    Purpose:
+    - Preserve the singular centered carrier page.
+    - Align visible lens rail to the carrier runtime registry:
+      body, surface, hydration, sixth-sense, lattice, receipt.
+    - Remove unsupported Boundary / Full buttons.
+    - Keep one visible renderer.
+    - Keep terrain-expression canvas held.
+    - Keep carrier, expression canvas, terrain children, hydration, and final visual pass untouched.
+
+    Scope:
+    HTML shell only.
+
+    Does not own:
+    carrier projection, terrain truth, elevation truth, relief truth, landform truth,
+    beach truth, triangulation truth, hydration truth, runtime math, or final visual pass.
+  -->
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Audralia Planet Inspection · Singular Centered Planet</title>
+  <title>Audralia Planet Inspection · Carrier Lens Registry</title>
   <meta
     name="description"
-    content="Audralia Planet Inspection restores one centered visible planet, one visible rendering authority, and one admissible logic path while holding hydration and final visual pass."
+    content="Audralia Planet Inspection aligns the visible page controls to the carrier runtime lens registry while preserving one centered carrier-rendered planet and holding hydration."
   >
 
   <style>
@@ -887,10 +911,16 @@
 
   <script>
     window.AUDRALIA_PLANET_VISIBLE_LOGIC_POLICY = Object.freeze({
-      contract: "AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_TNT_v1",
+      contract: "AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_TNT_v1",
+      previousContract: "AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_TNT_v1",
       route: "/showroom/globe/audralia/planet/",
       visibleRendererCount: 1,
       primaryVisibleRenderer: "carrier",
+      carrierLensRegistryAligned: true,
+      carrierLensRegistry: ["body", "surface", "hydration", "sixth-sense", "lattice", "receipt"],
+      unsupportedLensButtonsRemoved: true,
+      boundaryLensButtonRemoved: true,
+      fullLensButtonRemoved: true,
       terrainExpressionCanvasHeld: true,
       terrainExpressionCanvasLoaded: false,
       sameMathCheckpoint: true,
@@ -901,6 +931,9 @@
       dualViewportNotClaimed: true,
       fullPlanetVisibleTarget: true,
       centeredStageTarget: true,
+      carrierRewritten: false,
+      expressionCanvasRewritten: false,
+      terrainChildRewritten: false,
       activeHydration: false,
       activeWater: false,
       finalVisualPassClaim: false
@@ -983,23 +1016,23 @@
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Singular planet · Same-math checkpoint · Hydration held</div>
+        <div class="kicker">Carrier lens registry · Same-math checkpoint · Hydration held</div>
 
-        <h1 id="page-title">One planet. One visible logic.</h1>
+        <h1 id="page-title">One planet. One carrier. One matching lens rail.</h1>
 
         <p class="lead">
-          Audralia Planet Inspection now admits only one visible rendering authority into the stage. Any layer with different math, a different projection, a different planet read, or a different narrative is held before it can become visible.
+          Audralia Planet Inspection now exposes only the lens controls that the carrier runtime actually recognizes: Body, Surface, Hydration, Sixth Sense, Lattice, and Receipt.
         </p>
 
         <div class="quote">
-          The carrier remains the primary visible renderer. The terrain-expression canvas is held at the page-invitation layer until it can enter through the same-math, same-story, same-planet checkpoint.
+          Boundary and Full are removed from the visible rail because they are not carrier runtime lens keys. The page no longer invites a button the carrier cannot lawfully answer.
         </div>
 
         <div class="status-strip" aria-label="Audralia Planet status">
           <article class="status-chip"><span>Visible planet</span><strong>single</strong></article>
           <article class="status-chip"><span>Stage target</span><strong>centered</strong></article>
           <article class="status-chip"><span>Renderer</span><strong>carrier only</strong></article>
-          <article class="status-chip"><span>Second canvas</span><strong>held</strong></article>
+          <article class="status-chip"><span>Lens registry</span><strong>aligned</strong></article>
           <article class="status-chip"><span>Hydration</span><strong>held</strong></article>
           <article class="status-chip"><span>Final visual</span><strong>false</strong></article>
         </div>
@@ -1012,23 +1045,24 @@
           <div>
             <h2 id="instrument-title">Centered full-body inspection.</h2>
             <p>
-              The stage is restored to one dominant visible planet. Decorative orbit rings and secondary visual canvas entry are suppressed so the planet can return to a singular readable body.
+              The stage admits one dominant visible planet and one carrier-compatible control vocabulary. Unsupported lens names are blocked at the HTML rail before they can create a false runtime expectation.
             </p>
           </div>
-          <span class="stage-badge">single logic gate</span>
+          <span class="stage-badge">carrier registry aligned</span>
         </div>
 
         <section class="lens-rail" aria-label="Audralia planet lens controls">
           <p class="audralia-planet-stage-label" data-audralia-planet-stage-label>
-            <strong>Surface</strong> → land-only development / carrier-visible planet logic
+            <strong>Body</strong> → minimum physical form, grid reduced, hydrosphere memory suppressed
           </p>
 
-          <div class="audralia-planet-lens-row" role="group" aria-label="Audralia planet development lenses">
-            <button type="button" data-audralia-planet-lens="surface" aria-pressed="true">Surface</button>
+          <div class="audralia-planet-lens-row" role="group" aria-label="Audralia carrier runtime lenses">
+            <button type="button" data-audralia-planet-lens="body" aria-pressed="true">Body</button>
+            <button type="button" data-audralia-planet-lens="surface" aria-pressed="false">Surface</button>
             <button type="button" data-audralia-planet-lens="hydration" aria-pressed="false">Hydration</button>
-            <button type="button" data-audralia-planet-lens="boundary" aria-pressed="false">Boundary</button>
+            <button type="button" data-audralia-planet-lens="sixth-sense" aria-pressed="false">Sixth Sense</button>
             <button type="button" data-audralia-planet-lens="lattice" aria-pressed="false">Lattice</button>
-            <button type="button" data-audralia-planet-lens="full" aria-pressed="false">Full</button>
+            <button type="button" data-audralia-planet-lens="receipt" aria-pressed="false">Receipt</button>
           </div>
         </section>
 
@@ -1041,6 +1075,7 @@
               data-primary-visible-renderer="carrier"
               data-secondary-visible-canvas-allowed="false"
               data-stage-orbit-rings-visible="false"
+              data-carrier-lens-registry-aligned="true"
               aria-label="Audralia primary centered planet inspection stage"
             >
               <div
@@ -1060,60 +1095,65 @@
           </section>
 
           <aside class="read-key" aria-label="Audralia planet read key">
-            <strong>Admissibility Read Key</strong>
+            <strong>Carrier Lens Read Key</strong>
 
             <ul class="read-list">
               <li>
                 <span class="key-mark" style="--key-color:var(--gold)"></span>
-                <span><b>Surface</b> uses the accepted visible planet logic only.</span>
+                <span><b>Body</b> shows minimum physical form with the normal grid reduced.</span>
+              </li>
+
+              <li>
+                <span class="key-mark" style="--key-color:rgba(160,210,130,.95)"></span>
+                <span><b>Surface</b> shows continuous dry land expression through the accepted carrier.</span>
               </li>
 
               <li>
                 <span class="key-mark" style="--key-color:var(--blue)"></span>
-                <span><b>Hydration</b> remains a held diagnostic. Active water remains false.</span>
+                <span><b>Hydration</b> remains held and diagnostic. Active water remains false.</span>
               </li>
 
               <li>
                 <span class="key-mark" style="--key-color:var(--aqua)"></span>
-                <span><b>Boundary</b> may only enter if it shares the same planet math and story.</span>
+                <span><b>Sixth Sense</b> preserves diagnostic scaffold readability without becoming material truth.</span>
               </li>
 
               <li>
                 <span class="key-mark" style="--key-color:rgba(184,205,255,.78)"></span>
-                <span><b>Lattice</b> inspects structure without becoming a second planet.</span>
+                <span><b>Lattice</b> inspects the 256 structure without becoming a second planet.</span>
               </li>
 
               <li>
                 <span class="key-mark" style="--key-color:rgba(255,244,216,.86)"></span>
-                <span><b>Full</b> means one composite read, not multiple competing bodies.</span>
+                <span><b>Receipt</b> proves the carrier posture, packet handoff, and held boundaries.</span>
               </li>
             </ul>
 
             <div class="held-note">
-              Checkpoint rule: same math may support the visible planet. Different math, different story, or different planet read is blocked before stage entry.
+              Checkpoint rule: the visible rail may only expose carrier-recognized lens keys. Unsupported buttons are not rendered.
             </div>
           </aside>
         </div>
       </section>
 
       <section class="authority-band" aria-labelledby="authority-title">
-        <div class="kicker">Authority map · Page gate only</div>
+        <div class="kicker">Authority map · HTML gate only</div>
 
-        <strong id="authority-title">The page now gates visible logic. It does not rewrite the runtime.</strong>
+        <strong id="authority-title">This file aligns the visible invitation layer. It does not rewrite the runtime.</strong>
 
         <p>
-          This TNT changes the HTML invitation layer. The carrier remains the only visible planet renderer. The expression canvas and all child files remain untouched.
+          The carrier remains the only visible planet renderer. The expression canvas and all child files remain untouched. The page now stops offering Boundary and Full because the current carrier runtime does not own those lens keys.
         </p>
 
         <div class="authority-grid">
           <article class="authority-card">
             <b>Accepted visible logic</b>
-            <span>One carrier-rendered planet, centered on the primary stage, with no secondary globe admitted.</span>
+            <span>One carrier-rendered planet, centered on the primary stage, with carrier-compatible lens controls only.</span>
           </article>
 
           <article class="authority-card">
-            <b>Blocked at checkpoint</b>
-            <span>Different projection math, different land read, different story, ghost viewport, or duplicate visual canvas.</span>
+            <b>Removed mismatch</b>
+            <span>Boundary and Full buttons are removed from the visible rail because they do not match the carrier lens registry.</span>
           </article>
 
           <article class="authority-card">
@@ -1124,8 +1164,8 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_TNT_v1
-previous_contract=AUDRALIA_PLANET_INDEX_HTML_MODERN_INSTRUMENT_UI_RENEWAL_TNT_v1
+AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_TNT_v1
+previous_contract=AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_TNT_v1
 target=/showroom/globe/audralia/planet/index.html
 route=/showroom/globe/audralia/planet/
 page=audralia_planet_inspection
@@ -1150,15 +1190,14 @@ stage_orbit_rings_visible=false
 decorative_orbit_rings_suppressed=true
 ghost_viewport_suppressed=true
 dual_viewport_not_claimed=true
-close_inspection_reserved=true
-close_inspection_visually_active=false
-close_inspection_runtime_required=true
-route_owns=html_shell,route_navigation,lens_rail_markup,primary_stage_layout,mount_structure,visible_read_key,hidden_receipt,script_invitation_gate
-route_does_not_own=carrier_projection,terrain_truth,elevation_truth,relief_truth,landform_truth,beach_truth,triangulation_truth,hydration_truth,final_visual_pass
-accepted_stage_logic=carrier_visible_planet_logic_only
-blocked_stage_logic=different_projection,different_math,different_story,different_planet_read,secondary_canvas,ghost_viewport
-visible_lenses=Surface,Hydration,Boundary,Lattice,Full
-default_lens=Surface
+carrier_lens_registry_aligned=true
+carrier_lens_registry=body,surface,hydration,sixth-sense,lattice,receipt
+visible_lenses=Body,Surface,Hydration,Sixth Sense,Lattice,Receipt
+default_lens=body
+unsupported_lens_buttons_removed=true
+boundary_lens_button_removed=true
+full_lens_button_removed=true
+blocked_unsupported_lenses=boundary,full
 primary_stage_id=audraliaPlanetInspectionStage
 primary_mount_id=audraliaPlanetInspectionMount
 script_order_preserved_for_children=true
@@ -1184,30 +1223,31 @@ final_visual_pass_claim=false
 visual_pass_claimed=false
 generated_image=false
 graphic_box=false
-deploy_marker=AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_DEPLOY_MARKER_v1
+deploy_marker=AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer>
-      AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_TNT_v1 · One visible planet · Carrier only · Same-math checkpoint · Hydration held · Final visual pass false.
+      AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_TNT_v1 · One visible planet · Carrier only · Lens registry aligned · Hydration held · Final visual pass false.
     </footer>
   </div>
 
-  <script defer src="/assets/audralia/clean/terrain/audralia.dry-revealed-physical-terrain.child.js?v=AUDRALIA_PLANET_SINGLE_LOGIC_GATE_HTML_v1"></script>
-  <script defer src="/assets/audralia/clean/terrain/audralia.elevation-track.child.js?v=AUDRALIA_PLANET_SINGLE_LOGIC_GATE_HTML_v1"></script>
-  <script defer src="/assets/audralia/clean/terrain/audralia.elevation-relief-expression.child.js?v=AUDRALIA_PLANET_SINGLE_LOGIC_GATE_HTML_v1"></script>
-  <script defer src="/assets/audralia/clean/terrain/audralia.landform-systems.child.js?v=AUDRALIA_PLANET_SINGLE_LOGIC_GATE_HTML_v1"></script>
-  <script defer src="/assets/audralia/clean/terrain/audralia.beach-coastal-readiness.child.js?v=AUDRALIA_PLANET_SINGLE_LOGIC_GATE_HTML_v1"></script>
-  <script defer src="/assets/audralia/clean/terrain/audralia.triangular-terrain-mesh.child.js?v=AUDRALIA_PLANET_SINGLE_LOGIC_GATE_HTML_v1"></script>
-  <script defer src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?v=AUDRALIA_PLANET_SINGLE_LOGIC_GATE_HTML_v1"></script>
+  <script defer src="/assets/audralia/clean/terrain/audralia.dry-revealed-physical-terrain.child.js?v=AUDRALIA_PLANET_CARRIER_LENS_REGISTRY_ALIGNMENT_v1"></script>
+  <script defer src="/assets/audralia/clean/terrain/audralia.elevation-track.child.js?v=AUDRALIA_PLANET_CARRIER_LENS_REGISTRY_ALIGNMENT_v1"></script>
+  <script defer src="/assets/audralia/clean/terrain/audralia.elevation-relief-expression.child.js?v=AUDRALIA_PLANET_CARRIER_LENS_REGISTRY_ALIGNMENT_v1"></script>
+  <script defer src="/assets/audralia/clean/terrain/audralia.landform-systems.child.js?v=AUDRALIA_PLANET_CARRIER_LENS_REGISTRY_ALIGNMENT_v1"></script>
+  <script defer src="/assets/audralia/clean/terrain/audralia.beach-coastal-readiness.child.js?v=AUDRALIA_PLANET_CARRIER_LENS_REGISTRY_ALIGNMENT_v1"></script>
+  <script defer src="/assets/audralia/clean/terrain/audralia.triangular-terrain-mesh.child.js?v=AUDRALIA_PLANET_CARRIER_LENS_REGISTRY_ALIGNMENT_v1"></script>
+  <script defer src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?v=AUDRALIA_PLANET_CARRIER_LENS_REGISTRY_ALIGNMENT_v1"></script>
 
   <script>
     (() => {
       "use strict";
 
-      const CONTRACT = "AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_TNT_v1";
+      const CONTRACT = "AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_TNT_v1";
       const MOUNT_ID = "audraliaPlanetInspectionMount";
       const STAGE_ID = "audraliaPlanetInspectionStage";
+      const CARRIER_LENSES = Object.freeze(["body", "surface", "hydration", "sixth-sense", "lattice", "receipt"]);
 
       const markDocument = () => {
         document.documentElement.dataset.audraliaPlanetHtmlContract = CONTRACT;
@@ -1225,8 +1265,25 @@ deploy_marker=AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_
         document.documentElement.dataset.audraliaDualViewportNotClaimed = "true";
         document.documentElement.dataset.audraliaStageOrbitRingsVisible = "false";
         document.documentElement.dataset.audraliaFullPlanetVisibleTarget = "true";
+        document.documentElement.dataset.audraliaCarrierLensRegistryAligned = "true";
+        document.documentElement.dataset.audraliaCarrierLensRegistry = CARRIER_LENSES.join(",");
+        document.documentElement.dataset.audraliaUnsupportedLensButtonsRemoved = "true";
+        document.documentElement.dataset.audraliaBoundaryLensButtonRemoved = "true";
+        document.documentElement.dataset.audraliaFullLensButtonRemoved = "true";
         document.documentElement.dataset.audraliaActiveWater = "false";
         document.documentElement.dataset.audraliaFinalVisualPassClaim = "false";
+      };
+
+      const removeUnsupportedLensButtons = () => {
+        document.querySelectorAll("[data-audralia-planet-lens]").forEach((button) => {
+          const lens = button.getAttribute("data-audralia-planet-lens") || "";
+
+          if (!CARRIER_LENSES.includes(lens)) {
+            button.dataset.audraliaAdmissibilityHeld = "true";
+            button.dataset.audraliaHeldReason = "unsupported-carrier-lens-key";
+            button.remove();
+          }
+        });
       };
 
       const applySingularCanvasGate = () => {
@@ -1270,13 +1327,25 @@ deploy_marker=AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_
       };
 
       const publishStatus = () => {
-        window.AUDRALIA_PLANET_SINGLE_LOGIC_ADMISSIBILITY_STATUS = {
+        const mount = document.getElementById(MOUNT_ID);
+        const stage = document.getElementById(STAGE_ID);
+        const visibleCanvases = mount
+          ? Array.from(mount.querySelectorAll("canvas")).filter((canvas) => canvas.dataset.audraliaAdmissibilityHeld !== "true").length
+          : 0;
+
+        window.AUDRALIA_PLANET_CARRIER_LENS_REGISTRY_ALIGNMENT_STATUS = {
           contract: CONTRACT,
           htmlOnly: true,
+          route: "/showroom/globe/audralia/planet/",
           singularPlanetaryModel: true,
           sameMathCheckpoint: "active",
-          visibleRendererCount: 1,
+          visibleRendererCount: Math.min(visibleCanvases, 1),
           primaryVisibleRenderer: "carrier",
+          carrierLensRegistryAligned: true,
+          carrierLensRegistry: CARRIER_LENSES.slice(),
+          unsupportedLensButtonsRemoved: true,
+          boundaryLensButtonRemoved: true,
+          fullLensButtonRemoved: true,
           terrainExpressionCanvasHeld: true,
           terrainExpressionCanvasLoaded: false,
           differentMathBlocked: true,
@@ -1286,6 +1355,8 @@ deploy_marker=AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_
           dualViewportNotClaimed: true,
           fullPlanetVisibleTarget: true,
           centeredStageTarget: true,
+          stagePresent: Boolean(stage),
+          mountPresent: Boolean(mount),
           carrierRewritten: false,
           expressionCanvasRewritten: false,
           terrainChildRewritten: false,
@@ -1293,21 +1364,22 @@ deploy_marker=AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_
           activeHydration: false,
           activeWater: false,
           finalVisualPassClaim: false,
-          deployMarker: "AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_DEPLOY_MARKER_v1"
+          deployMarker: "AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_DEPLOY_MARKER_v1"
         };
       };
 
       const init = () => {
         markDocument();
+        removeUnsupportedLensButtons();
         applySingularCanvasGate();
-        resetCarrierCameraForFullPlanet();
         publishStatus();
 
         const mount = document.getElementById(MOUNT_ID);
+
         if (mount) {
           const observer = new MutationObserver(() => {
+            removeUnsupportedLensButtons();
             applySingularCanvasGate();
-            resetCarrierCameraForFullPlanet();
             publishStatus();
           });
 
@@ -1315,20 +1387,22 @@ deploy_marker=AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_
         }
 
         window.setTimeout(() => {
+          removeUnsupportedLensButtons();
           applySingularCanvasGate();
           resetCarrierCameraForFullPlanet();
           publishStatus();
         }, 180);
 
         window.setTimeout(() => {
+          removeUnsupportedLensButtons();
           applySingularCanvasGate();
           resetCarrierCameraForFullPlanet();
           publishStatus();
         }, 640);
 
         window.setTimeout(() => {
+          removeUnsupportedLensButtons();
           applySingularCanvasGate();
-          resetCarrierCameraForFullPlanet();
           publishStatus();
         }, 1200);
       };

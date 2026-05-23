@@ -3,41 +3,38 @@
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
   data-page="audralia-planet-body"
-  data-contract="AUDRALIA_PLANET_SHOWROOM_TRIANGULAR_MESH_CHILD_LOAD_ORDER_HTML_TNT_v1"
-  data-previous-contract="AUDRALIA_PLANET_SHOWROOM_STAGE_RECT_OVAL_FIX_HTML_TNT_v1"
+  data-contract="AUDRALIA_PLANET_HTML_TRIANGULAR_MESH_CARRIER_ACTIVATION_RENEWAL_TNT_v1"
+  data-previous-contract="AUDRALIA_PLANET_SHOWROOM_TRIANGULAR_MESH_CHILD_LOAD_ORDER_HTML_TNT_v1"
   data-correct-spelling="Audralia"
   data-same-shell="true"
   data-shell-preserved="true"
-  data-stage-rect-oval-fix="true"
-  data-stage-selector-on-render-viewport="true"
-  data-stage-selector-on-outer-card="false"
-  data-beach-child-loaded="true"
+  data-carrier-file-path-unchanged="true"
+  data-route-cache-key-renewed="true"
+  data-triangle-mesh-carrier-activation="true"
   data-triangular-mesh-child-loaded="true"
-  data-triangular-mesh-child-load-order-after-beach-child="true"
   data-triangular-mesh-child-load-order-before-carrier="true"
-  data-beach-child-load-order-after-landform-systems="true"
-  data-beach-child-load-order-before-triangular-mesh="true"
-  data-runtime-carrier-contract="AUDRALIA_CARRIER_VISUAL_WEIGHTING_TERRAIN_RELIEF_READABILITY_RENEWAL_TNT_v1"
-  data-beach-child-contract="AUDRALIA_BEACH_COASTAL_READINESS_CHILD_TNT_v1"
+  data-carrier-load-order-last="true"
+  data-runtime-carrier-contract="AUDRALIA_CARRIER_TRIANGULAR_MESH_DISPLAY_CONSUMPTION_TNT_v1"
+  data-carrier-script-cache-key="AUDRALIA_CARRIER_TRIANGULAR_MESH_DISPLAY_CONSUMPTION_TNT_v1"
   data-triangular-mesh-child-contract="AUDRALIA_TRIANGULAR_TERRAIN_MESH_CHILD_TNT_v1"
-  data-carrier-consumes-triangular-mesh="false"
-  data-triangular-mesh-packet-live-target="true"
+  data-beach-child-contract="AUDRALIA_BEACH_COASTAL_READINESS_CHILD_TNT_v1"
+  data-oval-regression-guard="true"
+  data-carrier-owns-projection="true"
+  data-html-owns-projection="false"
   data-hydration-held="true"
   data-active-hydration="false"
   data-active-water="false"
   data-final-terrain-pass-claim="false"
-  data-final-beach-pass-claim="false"
-  data-final-coastline-pass-claim="false"
   data-final-hydration-pass-claim="false"
   data-final-visual-pass-claim="false"
 >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Audralia · Triangular Mesh Child Loaded</title>
+  <title>Audralia · Triangle Carrier Activation</title>
   <meta
     name="description"
-    content="Audralia planet body inspection route with corrected render-stage geometry, dry terrain, elevation, relief, landforms, beach/coastal readiness, triangular terrain mesh packet loading, and held hydration."
+    content="Audralia planet body inspection route with renewed cache-key activation for the triangular mesh display-consumption carrier. Hydration remains held."
   />
 
   <style>
@@ -53,7 +50,6 @@
       --text: #eef4ff;
       --muted: rgba(238, 244, 255, 0.72);
       --faint: rgba(238, 244, 255, 0.54);
-      --danger: #fca5a5;
     }
 
     * {
@@ -77,6 +73,7 @@
       min-height: 100%;
       margin: 0;
       color: var(--text);
+      overflow-x: hidden;
     }
 
     a {
@@ -313,15 +310,30 @@
         radial-gradient(circle at 50% 32%, rgba(141,216,255,0.12), transparent 32%),
         radial-gradient(circle at 50% 40%, rgba(244,207,131,0.08), transparent 44%),
         linear-gradient(180deg, rgba(2,8,20,0.1), rgba(2,8,20,0.76));
+      transform: none;
+      contain: layout paint;
     }
 
-    .mount,
-    .mount canvas {
+    .mount {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
       display: block;
+      transform: none;
+      overflow: hidden;
+    }
+
+    .mount canvas {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      max-width: none;
+      max-height: none;
+      transform: none;
+      object-fit: fill;
     }
 
     .hint {
@@ -329,7 +341,7 @@
       left: 50%;
       bottom: 1rem;
       transform: translateX(-50%);
-      width: min(92%, 760px);
+      width: min(92%, 780px);
       padding: 0.75rem 0.9rem;
       border: 1px solid rgba(141,216,255,0.16);
       border-radius: 999px;
@@ -434,31 +446,31 @@
 
   <script
     defer
-    src="/assets/audralia/clean/terrain/audralia.dry-revealed-physical-terrain.child.js?AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_CHILD_TNT_v1"
+    src="/assets/audralia/clean/terrain/audralia.dry-revealed-physical-terrain.child.js?v=AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_CHILD_TNT_v1"
   ></script>
   <script
     defer
-    src="/assets/audralia/clean/terrain/audralia.elevation-track.child.js?AUDRALIA_ELEVATION_TRACK_CHILD_TNT_v1"
+    src="/assets/audralia/clean/terrain/audralia.elevation-track.child.js?v=AUDRALIA_ELEVATION_TRACK_CHILD_TNT_v1"
   ></script>
   <script
     defer
-    src="/assets/audralia/clean/terrain/audralia.elevation-relief-expression.child.js?AUDRALIA_ELEVATION_RELIEF_EXPRESSION_CHILD_TNT_v1"
+    src="/assets/audralia/clean/terrain/audralia.elevation-relief-expression.child.js?v=AUDRALIA_ELEVATION_RELIEF_EXPRESSION_CHILD_TNT_v1"
   ></script>
   <script
     defer
-    src="/assets/audralia/clean/terrain/audralia.landform-systems.child.js?AUDRALIA_LANDFORM_SYSTEMS_CHILD_TNT_v1"
+    src="/assets/audralia/clean/terrain/audralia.landform-systems.child.js?v=AUDRALIA_LANDFORM_SYSTEMS_CHILD_TNT_v1"
   ></script>
   <script
     defer
-    src="/assets/audralia/clean/terrain/audralia.beach-coastal-readiness.child.js?AUDRALIA_BEACH_COASTAL_READINESS_CHILD_TNT_v1"
+    src="/assets/audralia/clean/terrain/audralia.beach-coastal-readiness.child.js?v=AUDRALIA_BEACH_COASTAL_READINESS_CHILD_TNT_v1"
   ></script>
   <script
     defer
-    src="/assets/audralia/clean/terrain/audralia.triangular-terrain-mesh.child.js?AUDRALIA_TRIANGULAR_TERRAIN_MESH_CHILD_TNT_v1"
+    src="/assets/audralia/clean/terrain/audralia.triangular-terrain-mesh.child.js?v=AUDRALIA_TRIANGULAR_TERRAIN_MESH_CHILD_TNT_v1"
   ></script>
   <script
     defer
-    src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?AUDRALIA_CARRIER_VISUAL_WEIGHTING_TERRAIN_RELIEF_READABILITY_RENEWAL_TNT_v1"
+    src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?v=AUDRALIA_CARRIER_TRIANGULAR_MESH_DISPLAY_CONSUMPTION_TNT_v1"
   ></script>
 </head>
 
@@ -469,7 +481,7 @@
     <header class="topbar" aria-label="Audralia planet route navigation">
       <a class="brand" href="/showroom/globe/audralia/planet/" aria-label="Audralia planet body">
         <span class="mark">AU</span>
-        <span>Audralia Dry Revealed Terrain</span>
+        <span>Audralia Planet Inspection</span>
       </a>
 
       <nav class="nav" aria-label="Route menu">
@@ -482,26 +494,26 @@
 
     <section class="hero" aria-label="Audralia planet overview">
       <article class="panel">
-        <p class="eyebrow">Audralia · Triangular Mesh Child Load Order</p>
-        <h1>The triangle mesh packet now loads before the carrier.</h1>
+        <p class="eyebrow">Audralia · Triangle Carrier Activation</p>
+        <h1>The planet shell now points at the triangular carrier.</h1>
         <p>
-          This route keeps the same planet shell, corrected render-stage rectangle, beach/coastal-readiness child, and
-          runtime carrier. The new triangular terrain mesh child now loads after beach readiness and before the carrier,
-          giving the family a live triangle-facet packet before any future water activation.
+          This renewal keeps the same route, same mount points, same carrier file name, and same downstream handoff
+          family. The route cache key now activates the triangular mesh display-consumption carrier instead of the prior
+          visual-weighting carrier.
         </p>
 
         <div class="badges" aria-label="Route status badges">
           <div class="badge">
             <strong>Same shell</strong>
-            <span>Planet inspection route preserved.</span>
+            <span>Planet inspection structure preserved.</span>
           </div>
           <div class="badge">
-            <strong>Stage rect fixed</strong>
-            <span>Carrier measures the render viewport.</span>
+            <strong>Carrier name locked</strong>
+            <span>Only the cache key changed.</span>
           </div>
           <div class="badge">
-            <strong>Triangle packet loaded</strong>
-            <span>After beach readiness, before carrier.</span>
+            <strong>Triangle carrier targeted</strong>
+            <span>Carrier activation renewed.</span>
           </div>
           <div class="badge">
             <strong>Hydration held</strong>
@@ -511,11 +523,11 @@
       </article>
 
       <aside class="panel">
-        <p class="eyebrow">Load Order Deck</p>
-        <h2>Family chain preserved</h2>
+        <p class="eyebrow">Load Order</p>
+        <h2>Carrier runs after all handoff children.</h2>
         <p>
-          The triangular mesh child is packet authority only. The carrier remains display-only and has not yet been
-          renewed to draw the triangle facets. This step only activates the mesh packet in the showroom page.
+          The triangular terrain mesh child loads before the runtime carrier. The carrier remains display-only and
+          must prove activation through its own status object after deploy.
         </p>
 
         <div class="grid">
@@ -542,17 +554,17 @@
           <div class="step">
             <em>05</em>
             <strong>Beach readiness</strong>
-            <span>Limited beaches, coastal shelves, hydration handoff zones.</span>
+            <span>Coastal transition readiness remains pre-hydration.</span>
           </div>
           <div class="step">
             <em>06</em>
             <strong>Triangle mesh</strong>
-            <span>Facet packet and future hydration boundary packet.</span>
+            <span>Facet packet loads before carrier.</span>
           </div>
           <div class="step">
             <em>07</em>
-            <strong>Carrier display</strong>
-            <span>Same runtime carrier; triangle rendering not yet claimed.</span>
+            <strong>Carrier</strong>
+            <span>Triangular display-consumption cache key active.</span>
           </div>
         </div>
       </aside>
@@ -564,7 +576,7 @@
     >
       <div class="stage-head">
         <div class="stage-label" data-audralia-planet-stage-label>
-          <strong>Body</strong> → diagnostic scaffold reduced for natural planet read
+          <strong>Body</strong> → preserved planet carrier with triangular handoff readiness
         </div>
 
         <div class="lens" aria-label="Planet inspection lenses">
@@ -581,6 +593,7 @@
         class="stage"
         id="audraliaPlanetInspectionStage"
         data-audralia-planet-inspection-stage
+        data-oval-regression-guard="true"
       >
         <div
           class="mount"
@@ -589,31 +602,32 @@
           aria-hidden="true"
         ></div>
         <div class="hint">
-          Drag to rotate. Pinch or wheel to zoom. Triangle mesh packet is loaded; carrier triangle rendering remains held.
+          Drag to rotate. Pinch or wheel to zoom. Carrier cache key renewed for triangular mesh display consumption.
         </div>
       </div>
     </section>
 
     <section class="receipt" aria-label="Route receipt">
       <p class="eyebrow">Route Receipt</p>
-      <h2>Triangular mesh child added to page load order.</h2>
+      <h2>HTML activation renewed; carrier file name preserved.</h2>
       <p>
-        The new mesh child loads after beach/coastal readiness and before the carrier. This activates the packet family
-        without rewriting the carrier or activating hydration.
+        This page now targets <code>AUDRALIA_CARRIER_TRIANGULAR_MESH_DISPLAY_CONSUMPTION_TNT_v1</code> through the
+        existing carrier file path. The triangle child loads before the carrier. Hydration remains held and no final
+        visual pass is claimed.
       </p>
 
       <div class="receipt-grid">
         <div class="receipt-row">
           <strong>HTML contract</strong>
-          <span><code>AUDRALIA_PLANET_SHOWROOM_TRIANGULAR_MESH_CHILD_LOAD_ORDER_HTML_TNT_v1</code></span>
+          <span><code>AUDRALIA_PLANET_HTML_TRIANGULAR_MESH_CARRIER_ACTIVATION_RENEWAL_TNT_v1</code></span>
         </div>
         <div class="receipt-row">
-          <strong>Triangle mesh child</strong>
-          <span><code>AUDRALIA_TRIANGULAR_TERRAIN_MESH_CHILD_TNT_v1</code></span>
+          <strong>Carrier target</strong>
+          <span><code>AUDRALIA_CARRIER_TRIANGULAR_MESH_DISPLAY_CONSUMPTION_TNT_v1</code></span>
         </div>
         <div class="receipt-row">
-          <strong>Carrier status</strong>
-          <span>Same carrier · not yet triangle-rendering.</span>
+          <strong>Carrier file</strong>
+          <span>Path unchanged; cache key renewed.</span>
         </div>
         <div class="receipt-row">
           <strong>Water status</strong>
@@ -623,36 +637,30 @@
 
       <p>
         <code>
-          AUDRALIA_PLANET_SHOWROOM_TRIANGULAR_MESH_CHILD_LOAD_ORDER_HTML_TNT_v1
+          AUDRALIA_PLANET_HTML_TRIANGULAR_MESH_CARRIER_ACTIVATION_RENEWAL_TNT_v1
           route=/showroom/globe/audralia/planet/
           same_shell=true
           shell_preserved=true
-          stage_rect_oval_fix=true
-          stage_selector_on_outer_card=false
-          stage_selector_on_render_viewport=true
-          stage_selector=#audraliaPlanetInspectionStage
-          mount_selector=#audraliaPlanetInspectionMount
-          beach_child_loaded=true
-          beach_child=/assets/audralia/clean/terrain/audralia.beach-coastal-readiness.child.js
-          beach_child_contract=AUDRALIA_BEACH_COASTAL_READINESS_CHILD_TNT_v1
-          triangular_mesh_child_loaded=true
-          triangular_mesh_child=/assets/audralia/clean/terrain/audralia.triangular-terrain-mesh.child.js
-          triangular_mesh_child_contract=AUDRALIA_TRIANGULAR_TERRAIN_MESH_CHILD_TNT_v1
-          load_order=dry-terrain→elevation-track→relief-expression→landform-systems→beach-coastal-readiness→triangular-terrain-mesh→carrier
-          triangular_mesh_child_after_beach_child=true
-          triangular_mesh_child_before_carrier=true
+          carrier_file_path_unchanged=true
           carrier_file=/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
-          carrier_contract=AUDRALIA_CARRIER_VISUAL_WEIGHTING_TERRAIN_RELIEF_READABILITY_RENEWAL_TNT_v1
-          carrier_consumes_triangular_mesh=false
-          hydration_held=true
+          carrier_cache_key=AUDRALIA_CARRIER_TRIANGULAR_MESH_DISPLAY_CONSUMPTION_TNT_v1
+          carrier_contract_target=AUDRALIA_CARRIER_TRIANGULAR_MESH_DISPLAY_CONSUMPTION_TNT_v1
+          triangle_mesh_child=/assets/audralia/clean/terrain/audralia.triangular-terrain-mesh.child.js
+          triangle_mesh_child_before_carrier=true
+          carrier_load_order_last=true
+          duplicate_carrier_imports=false
+          mount_selector=#audraliaPlanetInspectionMount
+          stage_selector=#audraliaPlanetInspectionStage
+          oval_regression_guard=true
+          html_owns_projection=false
+          carrier_owns_projection=true
           active_hydration=false
           active_water=false
+          hydration_held=true
           final_terrain_pass_claim=false
-          final_beach_pass_claim=false
-          final_coastline_pass_claim=false
           final_hydration_pass_claim=false
           final_visual_pass_claim=false
-          deploy_marker=AUDRALIA_PLANET_SHOWROOM_TRIANGULAR_MESH_CHILD_LOAD_ORDER_HTML_DEPLOY_MARKER_v1
+          deploy_marker=AUDRALIA_PLANET_HTML_TRIANGULAR_MESH_CARRIER_ACTIVATION_RENEWAL_DEPLOY_MARKER_v1
         </code>
       </p>
     </section>

@@ -1,16 +1,17 @@
 // /assets/audralia/clean/terrain/audralia.elevation-track.child.js
-// AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD_OPTIMAL_EXPRESSION_TNT_v1
+// AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD_OPTIMAL_EXPRESSION_TNT_v2
 // Full-file replacement.
+// Previous: AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD_OPTIMAL_EXPRESSION_TNT_v1
 // Scope: Audralia downstream elevation-track truth only.
-// Purpose: optimize the existing elevation-track child into coherent elevation systems.
+// Purpose: optimize the existing elevation-track child into coherent elevation systems while preserving source-terrain authority.
 // Owns: elevation bands, ridge systems, basin systems, valley corridors, watersheds, drainage gates, future-fill readiness, carrier-safe elevation packets.
-// Does not own: runtime carrier, HTML load order, active hydration, visual drawing, beaches, cliffs, climate, ecology, technology, settlement, or final visual pass.
+// Does not own: runtime carrier, HTML load order, active hydration, visual drawing, beaches, cliffs, climate, ecology, technology, settlement, triangle mesh authority, or final visual pass.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD_OPTIMAL_EXPRESSION_TNT_v1";
-  var PREVIOUS_CONTRACT = "AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD_TNT_v1";
+  var CONTRACT = "AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD_OPTIMAL_EXPRESSION_TNT_v2";
+  var PREVIOUS_CONTRACT = "AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD_OPTIMAL_EXPRESSION_TNT_v1";
   var FILE = "/assets/audralia/clean/terrain/audralia.elevation-track.child.js";
   var REQUESTER = "audralia-elevation-track-child";
 
@@ -68,6 +69,7 @@
 
     nodeById: {},
     elevationTrackReady: false,
+    buildCount: 0,
     lastBuiltAt: null,
     errors: []
   };
@@ -127,6 +129,13 @@
     };
   }
 
+  function average(values) {
+    if (!values || !values.length) return 0;
+    return values.reduce(function (sum, value) {
+      return sum + Number(value || 0);
+    }, 0) / values.length;
+  }
+
   function maxKey(obj) {
     var best = null;
     var bestValue = -Infinity;
@@ -141,24 +150,19 @@
     return best;
   }
 
-  function average(values) {
-    if (!values.length) return 0;
-    return values.reduce(function (a, b) { return a + Number(b || 0); }, 0) / values.length;
-  }
-
   function unique(values) {
     var seen = {};
-    var output = [];
+    var out = [];
 
-    values.forEach(function (value) {
+    (values || []).forEach(function (value) {
       if (value === undefined || value === null) return;
       var key = String(value);
       if (seen[key]) return;
       seen[key] = true;
-      output.push(value);
+      out.push(value);
     });
 
-    return output;
+    return out;
   }
 
   function getNineContinentProfiles() {
@@ -256,14 +260,15 @@
     state.sourceCarrierPacket = null;
     state.sourceTerrainPacket = null;
     state.sourceNodes = [];
+    state.sourceTerrainValid = false;
 
-    if (!api) {
-      state.sourceTerrainValid = false;
-      return false;
-    }
+    if (!api) return false;
 
     state.sourceStatus = safeCall("sourceTerrain", api, "status");
-    state.sourceCarrierPacket = safeCall("sourceTerrain", api, "getCarrierTerrainPacket", REQUESTER, { compact: false });
+
+    if (typeof api.getCarrierTerrainPacket === "function") {
+      state.sourceCarrierPacket = safeCall("sourceTerrain", api, "getCarrierTerrainPacket", REQUESTER, { compact: false });
+    }
 
     if (typeof api.getDryRevealedTerrainPacket === "function") {
       state.sourceTerrainPacket = safeCall("sourceTerrain", api, "getDryRevealedTerrainPacket", REQUESTER, { compact: false });
@@ -274,7 +279,18 @@
     }
 
     state.sourceNodes = extractSourceNodes(state.sourceCarrierPacket, state.sourceTerrainPacket);
-    state.sourceTerrainValid = state.sourceNodes.length > 0;
+
+    state.sourceTerrainValid = Boolean(
+      state.sourceNodes.length &&
+      (
+        !state.sourceStatus ||
+        state.sourceStatus.activeHydration !== true
+      ) &&
+      (
+        !state.sourceCarrierPacket ||
+        state.sourceCarrierPacket.carrierInventsTerrain !== true
+      )
+    );
 
     return state.sourceTerrainValid;
   }
@@ -306,6 +322,7 @@
       node.x !== undefined ? node.x :
       node.column !== undefined ? node.column :
       node.radial !== undefined ? node.radial :
+      node.seatIndex !== undefined ? Number(node.seatIndex) % RADIAL_NODES :
       index % RADIAL_NODES
     );
 
@@ -313,6 +330,7 @@
       node.y !== undefined ? node.y :
       node.row !== undefined ? node.row :
       node.band !== undefined ? node.band :
+      node.seatIndex !== undefined ? Math.floor(Number(node.seatIndex) / RADIAL_NODES) :
       Math.floor(index / RADIAL_NODES)
     );
 
@@ -320,12 +338,12 @@
 
     return {
       source: node,
-      sourceSeatIndex: Number(node.seatIndex || node.nodeIndex || index),
-      sourceNodeId: node.nodeId || node.seatKey || "source-node-" + index,
+      sourceSeatIndex: Number.isFinite(Number(node.seatIndex)) ? Number(node.seatIndex) : Number.isFinite(Number(node.nodeIndex)) ? Number(node.nodeIndex) : index,
+      sourceNodeId: node.nodeId || node.seatKey || node.id || "source-node-" + index,
       x: round(x, 4),
       y: round(y, 4),
-      lon: ll.lon,
-      lat: ll.lat,
+      lon: round(ll.lon, 4),
+      lat: round(ll.lat, 4),
 
       baseDryElevation: clamp(Number(node.dryElevation || node.elevation || node.height || 0.5), 0, 1),
       relativeRelief: clamp(Number(node.relativeRelief || 0), 0, 1),
@@ -509,6 +527,7 @@
     for (var i = 0; i < ELEVATION_BANDS.length; i += 1) {
       if (ELEVATION_BANDS[i].id === bandId) return ELEVATION_BANDS[i].rank;
     }
+
     return 4;
   }
 
@@ -571,9 +590,13 @@
         drainageGateId: null,
 
         carrierMayConsume: true,
+        sourceTerrainMutated: false,
+        elevationTruthChild: true,
+        childDrawsVisuals: false,
         hydrationHeld: true,
         hydrationActive: false,
         activeHydration: false,
+        activeWater: false,
         finalVisualPassClaim: false
       });
     });
@@ -785,7 +808,7 @@
         continentId: bounds.highest.continentId,
         continentName: bounds.highest.continentName,
         ridgeType: inferRidgeType(group),
-        nodeIds: nodeIds,
+        nodeIds: Object.freeze(nodeIds),
         startNodeId: bounds.start.nodeId,
         endNodeId: bounds.end.nodeId,
         highestNodeId: bounds.highest.nodeId,
@@ -816,6 +839,24 @@
     return "dry_lowland_bowl";
   }
 
+  function findRimNodeIds(group, allNodes) {
+    var groupMap = {};
+    group.forEach(function (node) { groupMap[node.nodeId] = true; });
+
+    var rim = [];
+
+    group.forEach(function (node) {
+      getNeighbors(node, allNodes, 1.55).forEach(function (neighbor) {
+        if (groupMap[neighbor.nodeId]) return;
+        if (neighbor.elevation > node.elevation + 0.045 || neighbor.ridgePressure > 0.34) {
+          rim.push(neighbor.nodeId);
+        }
+      });
+    });
+
+    return unique(rim).slice(0, 12);
+  }
+
   function buildBasinFloors(elevationNodes) {
     var groups = connectedGroups(elevationNodes, function (node) {
       return node.elevationBand === "future_fill_basin" ||
@@ -837,37 +878,19 @@
         continentId: bounds.lowest.continentId,
         continentName: bounds.lowest.continentName,
         basinType: inferBasinType(group),
-        nodeIds: nodeIds,
+        nodeIds: Object.freeze(nodeIds),
         lowestNodeId: bounds.lowest.nodeId,
         averageElevation: round(avgElevation, 4),
         futureFillPriority: round(priority, 4),
         receivingStrength: round(receiving, 4),
-        rimNodeIds: findRimNodeIds(group, elevationNodes),
-        drainageGateIds: [],
+        rimNodeIds: Object.freeze(findRimNodeIds(group, elevationNodes)),
+        drainageGateIds: Object.freeze([]),
         carrierMayConsume: true,
         hydrationHeld: true,
         activeHydration: false,
         finalVisualPassClaim: false
       });
     });
-  }
-
-  function findRimNodeIds(group, allNodes) {
-    var groupMap = {};
-    group.forEach(function (node) { groupMap[node.nodeId] = true; });
-
-    var rim = [];
-
-    group.forEach(function (node) {
-      getNeighbors(node, allNodes, 1.55).forEach(function (neighbor) {
-        if (groupMap[neighbor.nodeId]) return;
-        if (neighbor.elevation > node.elevation + 0.045 || neighbor.ridgePressure > 0.34) {
-          rim.push(neighbor.nodeId);
-        }
-      });
-    });
-
-    return unique(rim).slice(0, 12);
   }
 
   function inferValleyType(group) {
@@ -906,14 +929,14 @@
         continentId: bounds.lowest.continentId,
         continentName: bounds.lowest.continentName,
         corridorType: inferValleyType(group),
-        nodeIds: nodeIds,
+        nodeIds: Object.freeze(nodeIds),
         fromHighNodeId: bounds.highest.nodeId,
         toLowNodeId: bounds.lowest.nodeId,
         flowDirection: flowDirection,
         averageSlope: round(avgSlope, 4),
         continuity: round(continuity, 4),
         futureRiverCandidate: futurePriority > 0.42,
-        drainageGateIds: [],
+        drainageGateIds: Object.freeze([]),
         carrierMayConsume: true,
         hydrationHeld: true,
         activeHydration: false,
@@ -925,7 +948,7 @@
   function dominantDirection(nodes) {
     var scores = {};
 
-    nodes.forEach(function (node) {
+    (nodes || []).forEach(function (node) {
       var direction = node.slopeVector && node.slopeVector.direction ? node.slopeVector.direction : "flat";
       scores[direction] = (scores[direction] || 0) + (node.slopeMagnitude || 0.1);
     });
@@ -938,7 +961,8 @@
     var bestDistance = Infinity;
 
     collection.forEach(function (system) {
-      var ids = system.nodeIds || [system.nodeId];
+      var ids = system.nodeIds || (system.nodeId ? [system.nodeId] : []);
+
       ids.forEach(function (id) {
         var candidate = state.nodeById[id];
         if (!candidate) return;
@@ -964,7 +988,7 @@
   }
 
   function buildDrainageGates(elevationNodes, basinFloors, valleyCorridors) {
-    var gates = elevationNodes.filter(function (node) {
+    return elevationNodes.filter(function (node) {
       return node.futureFillPriority > 0.40 &&
         node.slopeMagnitude > 0.030 &&
         node.elevationBand !== "summit" &&
@@ -997,70 +1021,43 @@
         finalVisualPassClaim: false
       });
     });
-
-    return gates;
   }
 
   function attachGateIdsToSystems(basinFloors, valleyCorridors, drainageGates) {
-    basinFloors.forEach(function (basin) {
-      basin.drainageGateIds = drainageGates.filter(function (gate) {
-        return gate.toSystemId === basin.basinFloorId;
-      }).map(function (gate) {
-        return gate.drainageGateId;
-      });
+    var basinGateMap = {};
+    var valleyGateMap = {};
+
+    drainageGates.forEach(function (gate) {
+      if (gate.toSystemId) {
+        if (!basinGateMap[gate.toSystemId]) basinGateMap[gate.toSystemId] = [];
+        basinGateMap[gate.toSystemId].push(gate.drainageGateId);
+      }
+
+      if (gate.fromSystemId) {
+        if (!valleyGateMap[gate.fromSystemId]) valleyGateMap[gate.fromSystemId] = [];
+        valleyGateMap[gate.fromSystemId].push(gate.drainageGateId);
+      }
     });
 
-    valleyCorridors.forEach(function (corridor) {
-      corridor.drainageGateIds = drainageGates.filter(function (gate) {
-        return gate.fromSystemId === corridor.valleyCorridorId;
-      }).map(function (gate) {
-        return gate.drainageGateId;
-      });
-    });
-  }
+    return {
+      basinFloors: basinFloors.map(function (basin) {
+        var clone = Object.assign({}, basin, {
+          nodeIds: Object.freeze((basin.nodeIds || []).slice()),
+          rimNodeIds: Object.freeze((basin.rimNodeIds || []).slice()),
+          drainageGateIds: Object.freeze(unique(basinGateMap[basin.basinFloorId] || []))
+        });
 
-  function inferWatershedType(ridge, basins, valleys) {
-    if (ridge.ridgeType === "summit_spine") return "summit_to_basin";
-    if (ridge.ridgeType === "continent_boundary_ridge") return "continent_boundary_watershed";
-    if (ridge.ridgeType === "protective_basin_rim") return "basin_internal";
-    if (basins.length && valleys.length) return "ridge_to_lowland";
-    if (ridge.ridgeType === "escarpment_edge") return "plateau_to_shelf";
-    return "dry_hydrosphere_memory_watershed";
-  }
+        return Object.freeze(clone);
+      }),
+      valleyCorridors: valleyCorridors.map(function (corridor) {
+        var clone = Object.assign({}, corridor, {
+          nodeIds: Object.freeze((corridor.nodeIds || []).slice()),
+          drainageGateIds: Object.freeze(unique(valleyGateMap[corridor.valleyCorridorId] || []))
+        });
 
-  function buildWatershedBoundaries(elevationNodes, ridgeLines, basinFloors, valleyCorridors, drainageGates) {
-    return ridgeLines.map(function (ridge, index) {
-      var ridgeNodes = ridge.nodeIds.map(function (id) { return state.nodeById[id]; }).filter(Boolean);
-      var relatedBasins = nearestSystemsToNodeIds(ridge.nodeIds, basinFloors, "basinFloorId", 3);
-      var relatedValleys = nearestSystemsToNodeIds(ridge.nodeIds, valleyCorridors, "valleyCorridorId", 4);
-      var relatedGates = nearestGatesToNodeIds(ridge.nodeIds, drainageGates, 5);
-      var sourceNodeIds = ridgeNodes.filter(function (node) {
-        return node.elevationBand === "summit" || node.watershedRole === "source_peak";
-      }).map(function (node) {
-        return node.nodeId;
-      });
-
-      return Object.freeze({
-        watershedId: "AUDRALIA-WATERSHED-SYSTEM-" + String(index).padStart(3, "0"),
-        continentId: ridge.continentId,
-        continentName: ridge.continentName,
-        watershedType: inferWatershedType(ridge, relatedBasins, relatedValleys),
-        ridgeBoundaryNodeIds: ridge.nodeIds.slice(),
-        sourceNodeIds: sourceNodeIds.length ? sourceNodeIds : [ridge.highestNodeId].filter(Boolean),
-        basinReceiverNodeIds: flattenSystemsNodeIds(relatedBasins, basinFloors, "basinFloorId").slice(0, 12),
-        valleyCorridorIds: relatedValleys,
-        drainageGateIds: relatedGates,
-        dominantFlowDirection: dominantDirection(ridgeNodes),
-        watershedStrength: ridge.watershedDivideStrength,
-        futureFillPriority: round(average(relatedBasins.map(function (id) {
-          var system = findById(basinFloors, "basinFloorId", id);
-          return system ? system.futureFillPriority : 0;
-        })), 4),
-        hydrationHeld: true,
-        activeHydration: false,
-        finalVisualPassClaim: false
-      });
-    });
+        return Object.freeze(clone);
+      })
+    };
   }
 
   function nearestSystemsToNodeIds(nodeIds, systems, idField, limit) {
@@ -1110,6 +1107,14 @@
     });
   }
 
+  function findById(collection, idField, id) {
+    for (var i = 0; i < collection.length; i += 1) {
+      if (collection[i][idField] === id) return collection[i];
+    }
+
+    return null;
+  }
+
   function flattenSystemsNodeIds(systemIds, systems, idField) {
     var ids = [];
 
@@ -1121,11 +1126,48 @@
     return unique(ids);
   }
 
-  function findById(collection, idField, id) {
-    for (var i = 0; i < collection.length; i += 1) {
-      if (collection[i][idField] === id) return collection[i];
-    }
-    return null;
+  function inferWatershedType(ridge, basins, valleys) {
+    if (ridge.ridgeType === "summit_spine") return "summit_to_basin";
+    if (ridge.ridgeType === "continent_boundary_ridge") return "continent_boundary_watershed";
+    if (ridge.ridgeType === "protective_basin_rim") return "basin_internal";
+    if (basins.length && valleys.length) return "ridge_to_lowland";
+    if (ridge.ridgeType === "escarpment_edge") return "plateau_to_shelf";
+    return "dry_hydrosphere_memory_watershed";
+  }
+
+  function buildWatershedBoundaries(elevationNodes, ridgeLines, basinFloors, valleyCorridors, drainageGates) {
+    return ridgeLines.map(function (ridge, index) {
+      var ridgeNodes = ridge.nodeIds.map(function (id) { return state.nodeById[id]; }).filter(Boolean);
+      var relatedBasins = nearestSystemsToNodeIds(ridge.nodeIds, basinFloors, "basinFloorId", 3);
+      var relatedValleys = nearestSystemsToNodeIds(ridge.nodeIds, valleyCorridors, "valleyCorridorId", 4);
+      var relatedGates = nearestGatesToNodeIds(ridge.nodeIds, drainageGates, 5);
+      var sourceNodeIds = ridgeNodes.filter(function (node) {
+        return node.elevationBand === "summit" || node.watershedRole === "source_peak";
+      }).map(function (node) {
+        return node.nodeId;
+      });
+
+      return Object.freeze({
+        watershedId: "AUDRALIA-WATERSHED-SYSTEM-" + String(index).padStart(3, "0"),
+        continentId: ridge.continentId,
+        continentName: ridge.continentName,
+        watershedType: inferWatershedType(ridge, relatedBasins, relatedValleys),
+        ridgeBoundaryNodeIds: Object.freeze(ridge.nodeIds.slice()),
+        sourceNodeIds: Object.freeze(sourceNodeIds.length ? sourceNodeIds : [ridge.highestNodeId].filter(Boolean)),
+        basinReceiverNodeIds: Object.freeze(flattenSystemsNodeIds(relatedBasins, basinFloors, "basinFloorId").slice(0, 12)),
+        valleyCorridorIds: Object.freeze(relatedValleys),
+        drainageGateIds: Object.freeze(relatedGates),
+        dominantFlowDirection: dominantDirection(ridgeNodes),
+        watershedStrength: ridge.watershedDivideStrength,
+        futureFillPriority: round(average(relatedBasins.map(function (id) {
+          var system = findById(basinFloors, "basinFloorId", id);
+          return system ? system.futureFillPriority : 0;
+        })), 4),
+        hydrationHeld: true,
+        activeHydration: false,
+        finalVisualPassClaim: false
+      });
+    });
   }
 
   function inferFutureFillType(group, basinType) {
@@ -1156,12 +1198,12 @@
         continentId: basin.continentId,
         continentName: basin.continentName,
         depressionType: basin.basinType,
-        nodeIds: basin.nodeIds.slice(),
+        nodeIds: Object.freeze(basin.nodeIds.slice()),
         lowestNodeId: basin.lowestNodeId,
         averageElevation: basin.averageElevation,
         futureFillPriority: basin.futureFillPriority,
         receivingStrength: basin.receivingStrength,
-        connectedDrainageGateIds: connectedGates,
+        connectedDrainageGateIds: Object.freeze(unique(connectedGates)),
         candidateHydrationType: inferFutureFillType(group, basin.basinType),
         hydrationHeld: true,
         activeHydration: false,
@@ -1179,12 +1221,12 @@
         continentId: node.continentId,
         continentName: node.continentName,
         depressionType: "isolated_future_fill_lowland",
-        nodeIds: [node.nodeId],
+        nodeIds: Object.freeze([node.nodeId]),
         lowestNodeId: node.nodeId,
         averageElevation: node.elevation,
         futureFillPriority: node.futureFillPriority,
         receivingStrength: node.futureFillPriority,
-        connectedDrainageGateIds: node.drainageGateId ? [node.drainageGateId] : [],
+        connectedDrainageGateIds: Object.freeze(node.drainageGateId ? [node.drainageGateId] : []),
         candidateHydrationType: "future_groundwater_recharge_zone",
         hydrationHeld: true,
         activeHydration: false,
@@ -1193,7 +1235,7 @@
       }));
     });
 
-    return depressions;
+    return Object.freeze(depressions);
   }
 
   function buildShelfTransitions(elevationNodes) {
@@ -1210,7 +1252,7 @@
         shelfTransitionId: "AUDRALIA-SHELF-TRANSITION-" + String(index).padStart(3, "0"),
         continentId: bounds.lowest.continentId,
         continentName: bounds.lowest.continentName,
-        nodeIds: group.map(function (node) { return node.nodeId; }),
+        nodeIds: Object.freeze(group.map(function (node) { return node.nodeId; })),
         averageElevation: round(average(group.map(function (node) { return node.elevation; })), 4),
         shelfPressure: round(avgShelf, 4),
         futureBeachCandidate: avgFuture > 0.32,
@@ -1220,6 +1262,16 @@
         finalVisualPassClaim: false
       });
     });
+  }
+
+  function dominantBand(nodes) {
+    var scores = {};
+
+    (nodes || []).forEach(function (node) {
+      scores[node.elevationBand] = (scores[node.elevationBand] || 0) + 1;
+    });
+
+    return maxKey(scores) || "midland";
   }
 
   function buildLowlandSystems(elevationNodes) {
@@ -1236,7 +1288,7 @@
         lowlandSystemId: "AUDRALIA-LOWLAND-SYSTEM-" + String(index).padStart(3, "0"),
         continentId: bounds.lowest.continentId,
         continentName: bounds.lowest.continentName,
-        nodeIds: group.map(function (node) { return node.nodeId; }),
+        nodeIds: Object.freeze(group.map(function (node) { return node.nodeId; })),
         lowestNodeId: bounds.lowest.nodeId,
         averageElevation: round(average(group.map(function (node) { return node.elevation; })), 4),
         dominantElevationBand: dominantBand(group),
@@ -1246,16 +1298,6 @@
         finalVisualPassClaim: false
       });
     });
-  }
-
-  function dominantBand(nodes) {
-    var scores = {};
-
-    nodes.forEach(function (node) {
-      scores[node.elevationBand] = (scores[node.elevationBand] || 0) + 1;
-    });
-
-    return maxKey(scores) || "midland";
   }
 
   function buildHighlandZones(elevationNodes) {
@@ -1272,7 +1314,7 @@
         highlandZoneId: "AUDRALIA-HIGHLAND-ZONE-" + String(index).padStart(3, "0"),
         continentId: bounds.highest.continentId,
         continentName: bounds.highest.continentName,
-        nodeIds: group.map(function (node) { return node.nodeId; }),
+        nodeIds: Object.freeze(group.map(function (node) { return node.nodeId; })),
         highestNodeId: bounds.highest.nodeId,
         averageElevation: round(average(group.map(function (node) { return node.elevation; })), 4),
         dominantElevationBand: dominantBand(group),
@@ -1338,19 +1380,15 @@
         distribution[node.elevationBand] = (distribution[node.elevationBand] || 0) + 1;
       });
 
-      var avgElevation = average(nodes.map(function (node) { return node.elevation; }));
-      var avgSlope = average(nodes.map(function (node) { return node.slopeMagnitude; }));
-      var futurePriority = average(nodes.map(function (node) { return node.futureFillPriority; }));
-
       return Object.freeze({
         continentId: profile.continentId,
         continentName: profile.continentName,
         elevationTendency: profile.elevationTendency,
         watershedStyle: profile.watershedStyle,
         nodeCount: nodes.length,
-        averageElevation: round(avgElevation, 4),
-        averageSlopeMagnitude: round(avgSlope, 4),
-        futureFillPriority: round(futurePriority, 4),
+        averageElevation: round(average(nodes.map(function (node) { return node.elevation; })), 4),
+        averageSlopeMagnitude: round(average(nodes.map(function (node) { return node.slopeMagnitude; })), 4),
+        futureFillPriority: round(average(nodes.map(function (node) { return node.futureFillPriority; })), 4),
         dominantElevationBand: dominantBand(nodes),
         elevationBandDistribution: Object.freeze(distribution),
         summitNodeCount: nodes.filter(function (node) { return node.elevationBand === "summit"; }).length,
@@ -1374,7 +1412,7 @@
         return Object.freeze({
           hintId: idPrefix + "-" + String(index).padStart(3, "0"),
           sourceSystemId: item[idField],
-          nodeIds: nodeIds.slice(0, 16),
+          nodeIds: Object.freeze(nodeIds.slice(0, 16)),
           continentId: item.continentId,
           continentName: item.continentName,
           elevationBand: item.dominantElevationBand || item.elevationBand || "mixed",
@@ -1392,6 +1430,7 @@
 
     return Object.freeze({
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       packetType: "carrier_visual_hint_packet",
       childDrawsVisuals: false,
       carrierMayConsume: true,
@@ -1399,14 +1438,14 @@
       activeHydration: false,
       finalVisualPassClaim: false,
 
-      summitHints: makeHint("SUMMIT-HINT", state.summitZones, "summitZoneId", "summit_highlight", "elevation"),
-      highlandHints: makeHint("HIGHLAND-HINT", state.highlandZones, "highlandZoneId", "highland_body", "averageElevation"),
-      ridgeHints: makeHint("RIDGE-HINT", state.ridgeLines, "ridgeLineId", "ridge_relief", "watershedDivideStrength"),
-      basinHints: makeHint("BASIN-HINT", state.basinFloors, "basinFloorId", "basin_depth", "receivingStrength"),
-      valleyHints: makeHint("VALLEY-HINT", state.valleyCorridors, "valleyCorridorId", "valley_direction", "averageSlope"),
-      futureFillHints: makeHint("FUTURE-FILL-HINT", state.futureFillDepressions, "futureFillDepressionId", "future_fill_depression", "futureFillPriority"),
-      shelfHints: makeHint("SHELF-HINT", state.shelfTransitions, "shelfTransitionId", "shelf_transition", "shelfPressure"),
-      lowlandHints: makeHint("LOWLAND-HINT", state.lowlandSystems, "lowlandSystemId", "lowland_depth", "futureFillPriority")
+      summitHints: Object.freeze(makeHint("SUMMIT-HINT", state.summitZones, "summitZoneId", "summit_highlight", "elevation")),
+      highlandHints: Object.freeze(makeHint("HIGHLAND-HINT", state.highlandZones, "highlandZoneId", "highland_body", "averageElevation")),
+      ridgeHints: Object.freeze(makeHint("RIDGE-HINT", state.ridgeLines, "ridgeLineId", "ridge_relief", "watershedDivideStrength")),
+      basinHints: Object.freeze(makeHint("BASIN-HINT", state.basinFloors, "basinFloorId", "basin_depth", "receivingStrength")),
+      valleyHints: Object.freeze(makeHint("VALLEY-HINT", state.valleyCorridors, "valleyCorridorId", "valley_direction", "averageSlope")),
+      futureFillHints: Object.freeze(makeHint("FUTURE-FILL-HINT", state.futureFillDepressions, "futureFillDepressionId", "future_fill_depression", "futureFillPriority")),
+      shelfHints: Object.freeze(makeHint("SHELF-HINT", state.shelfTransitions, "shelfTransitionId", "shelf_transition", "shelfPressure")),
+      lowlandHints: Object.freeze(makeHint("LOWLAND-HINT", state.lowlandSystems, "lowlandSystemId", "lowland_depth", "futureFillPriority"))
     });
   }
 
@@ -1429,32 +1468,35 @@
       return false;
     }
 
-    state.elevationNodes = buildElevationNodes(state.sourceNodes);
+    state.elevationNodes = Object.freeze(buildElevationNodes(state.sourceNodes));
     state.elevationGrid = buildGrid(state.elevationNodes);
     state.elevationBands = ELEVATION_BANDS.slice();
 
-    state.summitZones = buildSummitZones(state.elevationNodes);
-    state.highlandZones = buildHighlandZones(state.elevationNodes);
-    state.ridgeLines = buildRidgeLines(state.elevationNodes);
-    state.basinFloors = buildBasinFloors(state.elevationNodes);
-    state.valleyCorridors = buildValleyCorridors(state.elevationNodes);
-    state.drainageGates = buildDrainageGates(state.elevationNodes, state.basinFloors, state.valleyCorridors);
+    state.summitZones = Object.freeze(buildSummitZones(state.elevationNodes));
+    state.highlandZones = Object.freeze(buildHighlandZones(state.elevationNodes));
+    state.ridgeLines = Object.freeze(buildRidgeLines(state.elevationNodes));
 
-    attachGateIdsToSystems(state.basinFloors, state.valleyCorridors, state.drainageGates);
+    var initialBasins = buildBasinFloors(state.elevationNodes);
+    var initialValleys = buildValleyCorridors(state.elevationNodes);
+    state.drainageGates = Object.freeze(buildDrainageGates(state.elevationNodes, initialBasins, initialValleys));
 
-    state.watershedBoundaries = buildWatershedBoundaries(
+    var attached = attachGateIdsToSystems(initialBasins, initialValleys, state.drainageGates);
+    state.basinFloors = Object.freeze(attached.basinFloors);
+    state.valleyCorridors = Object.freeze(attached.valleyCorridors);
+
+    state.watershedBoundaries = Object.freeze(buildWatershedBoundaries(
       state.elevationNodes,
       state.ridgeLines,
       state.basinFloors,
       state.valleyCorridors,
       state.drainageGates
-    );
+    ));
 
-    state.futureFillDepressions = buildFutureFillDepressions(state.elevationNodes, state.basinFloors, state.drainageGates);
-    state.shelfTransitions = buildShelfTransitions(state.elevationNodes);
-    state.lowlandSystems = buildLowlandSystems(state.elevationNodes);
+    state.futureFillDepressions = Object.freeze(buildFutureFillDepressions(state.elevationNodes, state.basinFloors, state.drainageGates));
+    state.shelfTransitions = Object.freeze(buildShelfTransitions(state.elevationNodes));
+    state.lowlandSystems = Object.freeze(buildLowlandSystems(state.elevationNodes));
 
-    state.slopeVectors = state.elevationNodes.map(function (node) {
+    state.slopeVectors = Object.freeze(state.elevationNodes.map(function (node) {
       return Object.freeze({
         nodeId: node.nodeId,
         x: node.x,
@@ -1472,14 +1514,15 @@
         activeHydration: false,
         finalVisualPassClaim: false
       });
-    });
+    }));
 
     state.elevationBandDistribution = buildElevationBandDistribution(state.elevationNodes);
-    state.continentElevationProfiles = buildContinentElevationProfiles(state.elevationNodes);
+    state.continentElevationProfiles = Object.freeze(buildContinentElevationProfiles(state.elevationNodes));
     state.futureHydrationReadinessScore = calculateFutureHydrationReadinessScore();
     state.carrierVisualHintPacket = buildCarrierVisualHintPacket();
 
     state.elevationTrackReady = state.elevationNodes.length > 0;
+    state.buildCount += 1;
     state.lastBuiltAt = new Date().toISOString();
 
     publishStatus();
@@ -1506,6 +1549,7 @@
     state.carrierVisualHintPacket = null;
     state.futureHydrationReadinessScore = 0;
     state.elevationTrackReady = false;
+    state.buildCount += 1;
     state.lastBuiltAt = new Date().toISOString();
   }
 
@@ -1611,8 +1655,11 @@
     return {
       nodeId: node.nodeId,
       sourceSeatIndex: node.sourceSeatIndex,
+      sourceNodeId: node.sourceNodeId,
       x: node.x,
       y: node.y,
+      lon: node.lon,
+      lat: node.lat,
       continentId: node.continentId,
       continentName: node.continentName,
       regionRole: node.regionRole,
@@ -1652,33 +1699,45 @@
 
       carrierMayConsume: true,
       carrierShouldNotOwnElevationTruth: true,
+      carrierShouldNotOwnTerrainTruth: true,
+      carrierShouldNotOwnReliefTruth: true,
+      carrierShouldNotOwnLandformTruth: true,
+      carrierShouldNotOwnBeachTruth: true,
+      carrierShouldNotOwnHydrationTruth: true,
       childDrawsVisuals: false,
 
       hydrationHeld: true,
       hydrationActive: false,
       activeHydration: false,
+      activeWater: false,
       futureFillOnly: true,
+      finalTerrainPassClaim: false,
+      finalHydrationPassClaim: false,
       finalVisualPassClaim: false,
 
-      elevationNodes: compact ? state.elevationNodes.map(cloneLeanNode) : state.elevationNodes.slice(),
-      elevationBands: state.elevationBands.slice(),
-      summitZones: state.summitZones.slice(),
-      highlandZones: state.highlandZones.slice(),
-      ridgeLines: state.ridgeLines.slice(),
-      basinFloors: state.basinFloors.slice(),
-      valleyCorridors: state.valleyCorridors.slice(),
-      slopeVectors: state.slopeVectors.slice(),
-      watershedBoundaries: state.watershedBoundaries.slice(),
-      drainageGates: state.drainageGates.slice(),
-      futureFillDepressions: state.futureFillDepressions.slice(),
-      shelfTransitions: state.shelfTransitions.slice(),
-      lowlandSystems: state.lowlandSystems.slice(),
+      elevationNodes: Object.freeze(compact ? state.elevationNodes.map(cloneLeanNode) : state.elevationNodes.slice()),
+      elevationBands: Object.freeze(state.elevationBands.slice()),
+      summitZones: Object.freeze(state.summitZones.slice()),
+      highlandZones: Object.freeze(state.highlandZones.slice()),
+      ridgeLines: Object.freeze(state.ridgeLines.slice()),
+      basinFloors: Object.freeze(state.basinFloors.slice()),
+      valleyCorridors: Object.freeze(state.valleyCorridors.slice()),
+      slopeVectors: Object.freeze(state.slopeVectors.slice()),
+      watershedBoundaries: Object.freeze(state.watershedBoundaries.slice()),
+      drainageGates: Object.freeze(state.drainageGates.slice()),
+      futureFillDepressions: Object.freeze(state.futureFillDepressions.slice()),
+      shelfTransitions: Object.freeze(state.shelfTransitions.slice()),
+      lowlandSystems: Object.freeze(state.lowlandSystems.slice()),
 
-      continentElevationProfiles: state.continentElevationProfiles.slice(),
-      elevationBandDistribution: Object.assign({}, state.elevationBandDistribution),
+      continentElevationProfiles: Object.freeze(state.continentElevationProfiles.slice()),
+      elevationBandDistribution: Object.freeze(Object.assign({}, state.elevationBandDistribution)),
       watershedSystemCount: state.watershedBoundaries.length,
       futureHydrationReadinessScore: state.futureHydrationReadinessScore,
       carrierVisualHintPacket: state.carrierVisualHintPacket,
+
+      sourceTerrainMutated: false,
+      elevationTruthMutated: false,
+      finalVisualPassClaim: false,
 
       receipt: status()
     });
@@ -1698,25 +1757,28 @@
       hydrationHeld: true,
       hydrationActive: false,
       activeHydration: false,
+      activeWater: false,
       futureFillOnly: true,
       childDrawsVisuals: false,
+      finalTerrainPassClaim: false,
+      finalHydrationPassClaim: false,
       finalVisualPassClaim: false,
 
-      elevationNodes: state.elevationNodes.slice(),
-      elevationBands: state.elevationBands.slice(),
-      summitZones: state.summitZones.slice(),
-      highlandZones: state.highlandZones.slice(),
-      ridgeLines: state.ridgeLines.slice(),
-      basinFloors: state.basinFloors.slice(),
-      valleyCorridors: state.valleyCorridors.slice(),
-      slopeVectors: state.slopeVectors.slice(),
-      watershedBoundaries: state.watershedBoundaries.slice(),
-      drainageGates: state.drainageGates.slice(),
-      futureFillDepressions: state.futureFillDepressions.slice(),
-      shelfTransitions: state.shelfTransitions.slice(),
-      lowlandSystems: state.lowlandSystems.slice(),
-      continentElevationProfiles: state.continentElevationProfiles.slice(),
-      elevationBandDistribution: Object.assign({}, state.elevationBandDistribution),
+      elevationNodes: Object.freeze(state.elevationNodes.slice()),
+      elevationBands: Object.freeze(state.elevationBands.slice()),
+      summitZones: Object.freeze(state.summitZones.slice()),
+      highlandZones: Object.freeze(state.highlandZones.slice()),
+      ridgeLines: Object.freeze(state.ridgeLines.slice()),
+      basinFloors: Object.freeze(state.basinFloors.slice()),
+      valleyCorridors: Object.freeze(state.valleyCorridors.slice()),
+      slopeVectors: Object.freeze(state.slopeVectors.slice()),
+      watershedBoundaries: Object.freeze(state.watershedBoundaries.slice()),
+      drainageGates: Object.freeze(state.drainageGates.slice()),
+      futureFillDepressions: Object.freeze(state.futureFillDepressions.slice()),
+      shelfTransitions: Object.freeze(state.shelfTransitions.slice()),
+      lowlandSystems: Object.freeze(state.lowlandSystems.slice()),
+      continentElevationProfiles: Object.freeze(state.continentElevationProfiles.slice()),
+      elevationBandDistribution: Object.freeze(Object.assign({}, state.elevationBandDistribution)),
       futureHydrationReadinessScore: state.futureHydrationReadinessScore,
       carrierVisualHintPacket: state.carrierVisualHintPacket,
 
@@ -1729,18 +1791,19 @@
     return buildCarrierElevationPacket(requester || "unknown", options || {});
   }
 
-  function getWatershedPacket(requester, options) {
+  function getWatershedPacket(requester) {
     return Object.freeze({
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       packetType: "optimized_dry_watershed_packet",
       requester: requester || "unknown",
 
-      watershedBoundaries: state.watershedBoundaries.slice(),
-      ridgeLines: state.ridgeLines.slice(),
-      basinFloors: state.basinFloors.slice(),
-      valleyCorridors: state.valleyCorridors.slice(),
-      drainageGates: state.drainageGates.slice(),
-      slopeVectors: state.slopeVectors.slice(),
+      watershedBoundaries: Object.freeze(state.watershedBoundaries.slice()),
+      ridgeLines: Object.freeze(state.ridgeLines.slice()),
+      basinFloors: Object.freeze(state.basinFloors.slice()),
+      valleyCorridors: Object.freeze(state.valleyCorridors.slice()),
+      drainageGates: Object.freeze(state.drainageGates.slice()),
+      slopeVectors: Object.freeze(state.slopeVectors.slice()),
 
       watershedSystemCount: state.watershedBoundaries.length,
       futureHydrationReadinessScore: state.futureHydrationReadinessScore,
@@ -1751,17 +1814,18 @@
     });
   }
 
-  function getFutureFillPacket(requester, options) {
+  function getFutureFillPacket(requester) {
     return Object.freeze({
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       packetType: "optimized_dry_future_fill_packet",
       requester: requester || "unknown",
 
-      futureFillDepressions: state.futureFillDepressions.slice(),
-      basinFloors: state.basinFloors.slice(),
-      lowlandSystems: state.lowlandSystems.slice(),
-      drainageGates: state.drainageGates.slice(),
-      shelfTransitions: state.shelfTransitions.slice(),
+      futureFillDepressions: Object.freeze(state.futureFillDepressions.slice()),
+      basinFloors: Object.freeze(state.basinFloors.slice()),
+      lowlandSystems: Object.freeze(state.lowlandSystems.slice()),
+      drainageGates: Object.freeze(state.drainageGates.slice()),
+      shelfTransitions: Object.freeze(state.shelfTransitions.slice()),
 
       futureHydrationReadinessScore: state.futureHydrationReadinessScore,
       futureFillOnly: true,
@@ -1803,19 +1867,31 @@
       carrierVisualHintPacketReady: Boolean(state.carrierVisualHintPacket),
       futureHydrationReadinessScore: state.futureHydrationReadinessScore,
 
+      sourceTerrainMutated: false,
+      elevationTruthMutated: false,
+
       hydrationHeld: true,
       hydrationActive: false,
       activeHydration: false,
+      activeWater: false,
       futureFillOnly: true,
 
       carrierMayConsume: true,
       carrierShouldNotOwnElevationTruth: true,
+      carrierShouldNotOwnTerrainTruth: true,
+      carrierShouldNotOwnReliefTruth: true,
+      carrierShouldNotOwnLandformTruth: true,
+      carrierShouldNotOwnBeachTruth: true,
+      carrierShouldNotOwnHydrationTruth: true,
       childDrawsVisuals: false,
+      finalTerrainPassClaim: false,
+      finalHydrationPassClaim: false,
       finalVisualPassClaim: false,
 
+      buildCount: state.buildCount,
       lastBuiltAt: state.lastBuiltAt,
       errors: state.errors.slice(),
-      deployMarker: "AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD_OPTIMAL_EXPRESSION_DEPLOY_MARKER_v1"
+      deployMarker: "AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD_OPTIMAL_EXPRESSION_DEPLOY_MARKER_v2"
     });
   }
 
@@ -1823,18 +1899,24 @@
     var payload = status();
 
     window.AUDRALIA_ELEVATION_TRACK_CHILD_STATUS = payload;
+    window.AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD_OPTIMAL_EXPRESSION_STATUS = payload;
 
     try {
       document.documentElement.dataset.audraliaElevationTrackChild = CONTRACT;
+      document.documentElement.dataset.audraliaElevationTrackPreviousContract = PREVIOUS_CONTRACT;
       document.documentElement.dataset.audraliaElevationTrackReady = String(state.elevationTrackReady);
       document.documentElement.dataset.audraliaElevationNodeCount = String(state.elevationNodes.length);
       document.documentElement.dataset.audraliaElevationRidgeLineCount = String(state.ridgeLines.length);
       document.documentElement.dataset.audraliaElevationBasinFloorCount = String(state.basinFloors.length);
       document.documentElement.dataset.audraliaElevationWatershedBoundaryCount = String(state.watershedBoundaries.length);
+      document.documentElement.dataset.audraliaElevationDrainageGateCount = String(state.drainageGates.length);
       document.documentElement.dataset.audraliaCarrierVisualHintPacketReady = String(Boolean(state.carrierVisualHintPacket));
       document.documentElement.dataset.audraliaElevationHydrationHeld = "true";
       document.documentElement.dataset.audraliaElevationActiveHydration = "false";
+      document.documentElement.dataset.audraliaElevationActiveWater = "false";
       document.documentElement.dataset.audraliaElevationChildDrawsVisuals = "false";
+      document.documentElement.dataset.audraliaElevationFinalTerrainPassClaim = "false";
+      document.documentElement.dataset.audraliaElevationFinalHydrationPassClaim = "false";
       document.documentElement.dataset.audraliaElevationFinalVisualPassClaim = "false";
     } catch (_error) {}
 
@@ -1852,7 +1934,10 @@
   var API = Object.freeze({
     contract: CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
+    file: FILE,
     status: status,
+    refresh: rebuildElevationTrack,
+    rebuild: rebuildElevationTrack,
     rebuildElevationTrack: rebuildElevationTrack,
     getElevationTrackPacket: getElevationTrackPacket,
     getCarrierElevationPacket: getCarrierElevationPacket,
@@ -1864,6 +1949,8 @@
   window.AUDRALIA_ELEVATION_TRACK_CHILD = API;
   window.AUDRALIA_PLANET_ELEVATION_TRACK_CHILD = API;
   window.AUDRALIA_G2_ELEVATION_TRACK_CHILD = API;
+  window.AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD = API;
+  window.AUDRALIA_PLANET_ELEVATION_TRACK_DOWNSTREAM_CHILD = API;
 
   init();
 })();

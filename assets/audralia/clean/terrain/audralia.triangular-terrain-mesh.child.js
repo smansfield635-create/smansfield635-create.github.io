@@ -1,22 +1,24 @@
 // /assets/audralia/clean/terrain/audralia.triangular-terrain-mesh.child.js
-// AUDRALIA_TRIANGULAR_TERRAIN_MESH_CHILD_TNT_v1
+// AUDRALIA_TRIANGULAR_TERRAIN_MESH_CHILD_READABILITY_ADAPTER_SPLIT_TNT_v2
 // Full-file replacement.
+// Previous: AUDRALIA_TRIANGULAR_TERRAIN_MESH_CHILD_TNT_v1
 // Scope: downstream terrain geometry child only.
-// Purpose: convert inherited dry terrain/elevation/relief/landform/beach-coastal samples into deterministic triangular terrain facets.
+// Purpose: convert inherited dry terrain/elevation/relief/landform/beach-coastal samples into deterministic triangular terrain facets while keeping triangle logic as readability adapter only.
 // Position: dry terrain atlas → elevation track → relief expression → landform systems → beach/coastal readiness → triangular terrain mesh → future hydration baseline → carrier display consumption.
-// Does not own: source terrain truth, elevation truth, relief truth, landform truth, beach/coastal truth, active hydration, water rendering, carrier rendering, final terrain pass, final hydration pass, or final visual pass.
+// Critical renewal: split dry triangular mesh readiness from future hydration-boundary readiness.
+// Does not own: source terrain truth, elevation truth, relief truth, landform truth, beach/coastal truth, active hydration, water rendering, carrier rendering, material color authority, final terrain pass, final hydration pass, or final visual pass.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_TRIANGULAR_TERRAIN_MESH_CHILD_TNT_v1";
+  var CONTRACT = "AUDRALIA_TRIANGULAR_TERRAIN_MESH_CHILD_READABILITY_ADAPTER_SPLIT_TNT_v2";
+  var PREVIOUS_CONTRACT = "AUDRALIA_TRIANGULAR_TERRAIN_MESH_CHILD_TNT_v1";
   var FILE = "/assets/audralia/clean/terrain/audralia.triangular-terrain-mesh.child.js";
-  var FAMILY_POSITION = "dry-terrain→elevation-track→relief-expression→landform-systems→beach-coastal-readiness→triangular-terrain-mesh→hydration-baseline";
+  var FAMILY_POSITION = "dry-terrain→elevation-track→relief-expression→landform-systems→beach-coastal-readiness→triangular-terrain-mesh-readability-adapter→hydration-baseline";
 
   var RADIAL_NODES = 16;
   var FIBONACCI_BANDS = 16;
   var SOURCE_SEAT_COUNT = 256;
-  var TAU = Math.PI * 2;
 
   var DRY_TERRAIN_GLOBALS = Object.freeze([
     "AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_CHILD",
@@ -218,6 +220,31 @@
 
   function regionName(regionSeed) {
     return REGION_NAMES[regionSeed] || REGION_NAMES.unassigned;
+  }
+
+  function adapterLocks() {
+    return {
+      triangularReadabilityAdapterActive: true,
+      triangularMeshDisplayConsumptionDeprecated: true,
+      triangleLogicIsAdapter: true,
+      triangleLogicIsMaterialAuthority: false,
+      triangleReadabilityOnly: true,
+      carrierMayUseTrianglesForReadability: true,
+      carrierMayUseTriangleColor: false,
+      carrierMayTintSurfaceFromTriangles: false,
+      carrierMayColorVoidFromTriangles: false,
+      carrierMayDrawTriangleFacetFillAsMaterial: false,
+      carrierMayDrawHydrationFromTriangles: false,
+      carrierMayDrawBeachFromTriangles: false,
+      carrierMayDrawCoastlineFromTriangles: false,
+      carrierMayDrawFutureFillAsWater: false,
+      carrierMayBlendLandAndVoidFromTriangles: false,
+      carrierMayReplaceLandCompositorWithTriangles: false,
+      landVoidSeparationProtected: true,
+      voidRemainsVoid: true,
+      existingLandCompositorPrimary: true,
+      triangleReadabilitySecondary: true
+    };
   }
 
   function dryPacket() {
@@ -471,7 +498,13 @@
       if (!Array.isArray(list)) return;
 
       list.forEach(function (zone, i) {
-        var normalized = Object.assign({}, zone, { sourceType: sourceType });
+        var normalized = Object.assign({}, zone, {
+          sourceType: sourceType,
+          activeHydration: false,
+          activeWater: false,
+          finalVisualPassClaim: false
+        });
+
         indexSample(index, zone.nodeId, normalized);
         indexSample(index, zone.sourceSeatIndex, normalized);
         indexSample(index, "source-" + zone.sourceIndex, normalized);
@@ -993,6 +1026,11 @@
       edgeBreakWeight: round(edgeBreakWeight, 4),
       hydrationBoundaryEligible: hydrationBoundaryEligible,
 
+      triangularReadabilityAdapterActive: true,
+      triangleLogicIsAdapter: true,
+      triangleLogicIsMaterialAuthority: false,
+      carrierMayDrawTriangleFacetFillAsMaterial: false,
+
       squaresConvertedToTriangles: true,
       rectangularGridReadReduced: true,
       activeHydration: false,
@@ -1015,6 +1053,9 @@
     state.meshFaces = [];
     state.meshEdgeBreaks = [];
     state.terrainFacetBands = [];
+    state.carrierTriangleMeshPacketReady = false;
+    state.hydrationTriangleBoundaryPacketReady = false;
+    state.triangularTerrainMeshReady = false;
 
     if (!state.sourceRecords.length) return false;
 
@@ -1074,17 +1115,22 @@
     buildMeshEdgeBreaks();
     buildTerrainFacetBands();
 
-    state.carrierTriangleMeshPacketReady = state.meshFaces.length > 0;
-    state.hydrationTriangleBoundaryPacketReady = state.meshFaces.some(function (face) {
-      return face.hydrationBoundaryEligible;
-    });
+    state.carrierTriangleMeshPacketReady = Boolean(state.meshFaces.length > 0 && state.meshVertices.length > 0);
+
+    state.hydrationTriangleBoundaryPacketReady = Boolean(
+      state.meshFaces.some(function (face) {
+        return face.hydrationBoundaryEligible;
+      }) ||
+      state.meshEdgeBreaks.some(function (edge) {
+        return edge.hydrationBoundaryEligible;
+      })
+    );
 
     state.triangularTerrainMeshReady = Boolean(
       state.sourceTerrainValidated &&
       state.meshVertices.length &&
       state.meshFaces.length &&
-      state.carrierTriangleMeshPacketReady &&
-      state.hydrationTriangleBoundaryPacketReady
+      state.carrierTriangleMeshPacketReady
     );
 
     return state.triangularTerrainMeshReady;
@@ -1152,6 +1198,9 @@
         breakClass: breakClass,
         breakSource: edge.breakSource,
         hydrationBoundaryEligible: breakClass === "coastal_transition_edge" || breakClass === "future_fill_boundary_edge",
+        triangularReadabilityAdapterActive: true,
+        triangleLogicIsAdapter: true,
+        triangleLogicIsMaterialAuthority: false,
         activeHydration: false,
         activeWater: false,
         finalVisualPassClaim: false
@@ -1204,6 +1253,9 @@
         averageShadeWeight: round(group.averageShadeWeight / count, 4),
         averageEdgeBreakWeight: round(group.averageEdgeBreakWeight / count, 4),
         hydrationBoundaryFaceCount: group.hydrationBoundaryFaceCount,
+        triangularReadabilityAdapterActive: true,
+        triangleLogicIsAdapter: true,
+        triangleLogicIsMaterialAuthority: false,
         activeHydration: false,
         activeWater: false,
         finalVisualPassClaim: false
@@ -1229,7 +1281,9 @@
       cliffPressure: vertex.cliffPressure,
       basinPressure: vertex.basinPressure,
       futureFillScore: vertex.futureFillScore,
-      sourceTruthMutated: false
+      sourceTruthMutated: false,
+      activeHydration: false,
+      activeWater: false
     };
   }
 
@@ -1251,6 +1305,9 @@
       shadeWeight: face.shadeWeight,
       edgeBreakWeight: face.edgeBreakWeight,
       hydrationBoundaryEligible: face.hydrationBoundaryEligible,
+      triangularReadabilityAdapterActive: true,
+      triangleLogicIsAdapter: true,
+      triangleLogicIsMaterialAuthority: false,
       activeHydration: false,
       activeWater: false,
       finalVisualPassClaim: false
@@ -1259,12 +1316,14 @@
 
   function triangularTerrainMeshPacket(options) {
     var compact = Boolean(options && options.compact);
+    var locks = adapterLocks();
 
-    return {
+    return Object.assign({
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       file: FILE,
       familyPosition: FAMILY_POSITION,
-      packetType: "audralia_triangular_terrain_mesh_packet",
+      packetType: "audralia_triangular_terrain_mesh_readability_adapter_packet",
 
       sourceTerrainDetected: state.sourceTerrainDetected,
       sourceTerrainValidated: state.sourceTerrainValidated,
@@ -1278,6 +1337,9 @@
       beachCoastalReadinessValidated: state.beachCoastalReadinessValidated,
 
       triangularTerrainMeshReady: state.triangularTerrainMeshReady,
+      meshReadinessSplitFromHydrationBoundaryReadiness: true,
+      hydrationBoundaryReadinessDoesNotGateDryMesh: true,
+
       meshVertexCount: state.meshVertices.length,
       meshFaceCount: state.meshFaces.length,
       meshEdgeBreakCount: state.meshEdgeBreaks.length,
@@ -1305,23 +1367,28 @@
 
       activeHydration: false,
       activeWater: false,
+      hydrationHeld: true,
       finalTerrainPassClaim: false,
       finalHydrationPassClaim: false,
       finalVisualPassClaim: false
-    };
+    }, locks);
   }
 
   function carrierTriangleMeshPacket(options) {
     var compact = options && options.compact !== undefined ? Boolean(options.compact) : true;
+    var locks = adapterLocks();
     var faces = compact ? state.meshFaces.map(compactFace) : stableClone(state.meshFaces);
     var vertices = compact ? state.meshVertices.map(compactVertex) : stableClone(state.meshVertices);
 
-    return {
+    return Object.assign({
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       file: FILE,
-      packetType: "carrier_triangle_mesh_display_handoff_packet",
+      packetType: "carrier_triangle_mesh_readability_adapter_handoff_packet",
+
       carrierMayConsume: true,
       carrierShouldDisplayOnly: true,
+      carrierShouldUseAsReadabilityAdapterOnly: true,
       carrierShouldNotOwnTriangulation: true,
       carrierShouldNotOwnTerrainTruth: true,
       carrierShouldNotOwnElevationTruth: true,
@@ -1331,6 +1398,9 @@
       carrierShouldNotOwnHydrationTruth: true,
 
       triangularTerrainMeshReady: state.triangularTerrainMeshReady,
+      meshReadinessSplitFromHydrationBoundaryReadiness: true,
+      hydrationBoundaryReadinessDoesNotGateDryMesh: true,
+
       meshVertexCount: state.meshVertices.length,
       meshFaceCount: state.meshFaces.length,
       meshEdgeBreakCount: state.meshEdgeBreaks.length,
@@ -1348,14 +1418,16 @@
 
       activeHydration: false,
       activeWater: false,
+      hydrationHeld: true,
       finalTerrainPassClaim: false,
       finalHydrationPassClaim: false,
       finalVisualPassClaim: false
-    };
+    }, locks);
   }
 
   function hydrationTriangleBoundaryPacket(options) {
     var compact = options && options.compact !== undefined ? Boolean(options.compact) : true;
+    var locks = adapterLocks();
 
     var boundaryFaces = state.meshFaces.filter(function (face) {
       return face.hydrationBoundaryEligible;
@@ -1365,16 +1437,21 @@
       return edge.hydrationBoundaryEligible;
     });
 
-    return {
+    return Object.assign({
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       file: FILE,
       packetType: "future_hydration_triangle_boundary_handoff_packet",
+
       hydrationMayReadLater: true,
       hydrationMayActivateNow: false,
       activeHydration: false,
       activeWater: false,
+      hydrationHeld: true,
 
       triangularTerrainMeshReady: state.triangularTerrainMeshReady,
+      meshReadinessSplitFromHydrationBoundaryReadiness: true,
+      hydrationBoundaryReadinessDoesNotGateDryMesh: true,
       hydrationTriangleBoundaryPacketReady: state.hydrationTriangleBoundaryPacketReady,
       boundaryFaceCount: boundaryFaces.length,
       boundaryEdgeCount: boundaryEdges.length,
@@ -1413,12 +1490,15 @@
       finalTerrainPassClaim: false,
       finalHydrationPassClaim: false,
       finalVisualPassClaim: false
-    };
+    }, locks);
   }
 
   function publishStatus() {
-    var payload = {
+    var locks = adapterLocks();
+
+    var payload = Object.assign({
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       file: FILE,
       familyPosition: FAMILY_POSITION,
 
@@ -1443,6 +1523,9 @@
       beachCoastalReadinessFailureReason: state.beachFailureReason,
 
       triangularTerrainMeshReady: state.triangularTerrainMeshReady,
+      meshReadinessSplitFromHydrationBoundaryReadiness: true,
+      hydrationBoundaryReadinessDoesNotGateDryMesh: true,
+
       meshVertexCount: state.meshVertices.length,
       meshFaceCount: state.meshFaces.length,
       meshEdgeBreakCount: state.meshEdgeBreaks.length,
@@ -1465,20 +1548,25 @@
 
       activeHydration: false,
       activeWater: false,
+      hydrationHeld: true,
       finalTerrainPassClaim: false,
       finalHydrationPassClaim: false,
       finalVisualPassClaim: false,
 
       buildCount: state.buildCount,
       errors: state.errors.slice(),
-      deployMarker: "AUDRALIA_TRIANGULAR_TERRAIN_MESH_CHILD_DEPLOY_MARKER_v1"
-    };
+      deployMarker: "AUDRALIA_TRIANGULAR_TERRAIN_MESH_CHILD_READABILITY_ADAPTER_SPLIT_DEPLOY_MARKER_v2"
+    }, locks);
 
     window.AUDRALIA_TRIANGULAR_TERRAIN_MESH_CHILD_STATUS = payload;
+    window.AUDRALIA_TRIANGULAR_TERRAIN_MESH_CHILD_READABILITY_ADAPTER_SPLIT_STATUS = payload;
 
     try {
       document.documentElement.dataset.audraliaTriangularTerrainMeshContract = CONTRACT;
+      document.documentElement.dataset.audraliaTriangularTerrainMeshPreviousContract = PREVIOUS_CONTRACT;
       document.documentElement.dataset.audraliaTriangularTerrainMeshReady = String(state.triangularTerrainMeshReady);
+      document.documentElement.dataset.audraliaMeshReadinessSplitFromHydrationBoundaryReadiness = "true";
+      document.documentElement.dataset.audraliaHydrationBoundaryReadinessDoesNotGateDryMesh = "true";
       document.documentElement.dataset.audraliaMeshVertexCount = String(state.meshVertices.length);
       document.documentElement.dataset.audraliaMeshFaceCount = String(state.meshFaces.length);
       document.documentElement.dataset.audraliaMeshEdgeBreakCount = String(state.meshEdgeBreaks.length);
@@ -1487,8 +1575,21 @@
       document.documentElement.dataset.audraliaRectangularGridReadReduced = "true";
       document.documentElement.dataset.audraliaCarrierOwnsTriangulation = "false";
       document.documentElement.dataset.audraliaChildOwnsTriangulationPacket = "true";
+      document.documentElement.dataset.audraliaTriangularReadabilityAdapterActive = "true";
+      document.documentElement.dataset.audraliaTriangleLogicIsAdapter = "true";
+      document.documentElement.dataset.audraliaTriangleLogicIsMaterialAuthority = "false";
+      document.documentElement.dataset.audraliaTriangleReadabilityOnly = "true";
+      document.documentElement.dataset.audraliaCarrierMayUseTrianglesForReadability = "true";
+      document.documentElement.dataset.audraliaCarrierMayUseTriangleColor = "false";
+      document.documentElement.dataset.audraliaCarrierMayTintSurfaceFromTriangles = "false";
+      document.documentElement.dataset.audraliaCarrierMayColorVoidFromTriangles = "false";
+      document.documentElement.dataset.audraliaCarrierMayDrawTriangleFacetFillAsMaterial = "false";
+      document.documentElement.dataset.audraliaCarrierMayReplaceLandCompositorWithTriangles = "false";
+      document.documentElement.dataset.audraliaLandVoidSeparationProtected = "true";
+      document.documentElement.dataset.audraliaVoidRemainsVoid = "true";
       document.documentElement.dataset.audraliaActiveHydration = "false";
       document.documentElement.dataset.audraliaActiveWater = "false";
+      document.documentElement.dataset.audraliaHydrationHeld = "true";
       document.documentElement.dataset.audraliaFinalTerrainPassClaim = "false";
       document.documentElement.dataset.audraliaFinalHydrationPassClaim = "false";
       document.documentElement.dataset.audraliaFinalVisualPassClaim = "false";
@@ -1544,6 +1645,7 @@
   function api() {
     return Object.freeze({
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       file: FILE,
       status: status,
       refresh: refresh,
@@ -1567,6 +1669,7 @@
   window.AUDRALIA_TRIANGULAR_TERRAIN_MESH_CHILD = exported;
   window.AUDRALIA_PLANET_TRIANGULAR_TERRAIN_MESH_CHILD = exported;
   window.AUDRALIA_G2_TRIANGULAR_TERRAIN_MESH_CHILD = exported;
+  window.AUDRALIA_TRIANGULAR_TERRAIN_MESH_CHILD_READABILITY_ADAPTER_SPLIT = exported;
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", boot, { once: true });

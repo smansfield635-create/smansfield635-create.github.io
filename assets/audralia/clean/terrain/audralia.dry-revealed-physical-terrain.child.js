@@ -1,15 +1,17 @@
 // /assets/audralia/clean/terrain/audralia.dry-revealed-physical-terrain.child.js
-// AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_ATLAS_CHILD_TNT_v1
-// Full-file creation.
+// AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_ATLAS_SEAM_SAFE_PARENT_RENEWAL_TNT_v2
+// Full-file replacement.
+// Previous: AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_ATLAS_CHILD_TNT_v1
 // Scope: Audralia-level dry revealed physical terrain atlas.
-// Purpose: map the full exposed solid terrain body as if Audralia began hydrosphere-first, was carved by water, then dried/receded enough to reveal all terrain.
+// Purpose: preserve the upstream dry revealed physical terrain parent while renewing seam-safe radial geometry and carrier-safe packet posture.
 // Owns: dry physical terrain atlas, dry elevation, former hydrosphere carving memory, future-fill gaps, terrain classes, carrier terrain packet.
-// Does not own: active hydration, rivers, lakes, oceans, marshes, wetlands, waterfalls, wet beaches, runtime drawing, HTML, Gratitude trunk, climate, ecology, settlement, or final visual pass.
+// Does not own: active hydration, active water, rivers, lakes, oceans, marshes, wetlands, waterfalls, wet beaches, runtime drawing, HTML, Gratitude trunk, climate, ecology, settlement, relief expression, landform systems, triangular mesh, or final visual pass.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_ATLAS_CHILD_TNT_v1";
+  var CONTRACT = "AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_ATLAS_SEAM_SAFE_PARENT_RENEWAL_TNT_v2";
+  var PREVIOUS_CONTRACT = "AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_ATLAS_CHILD_TNT_v1";
   var SPEC_OPS = "AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_ATLAS_SPEC_OPS_v1";
   var NEWS = "AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_ATLAS_NEWS_v1";
   var CCR = "AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_ATLAS_CCR_v1";
@@ -22,6 +24,22 @@
   var NODE_COUNT = 256;
   var FORMER_SEA_LEVEL_DATUM = 0.48;
   var TAU = Math.PI * 2;
+
+  var TERRAIN_CLASSES = Object.freeze([
+    "summit_pressure_zone",
+    "mountain_belt",
+    "ridge_chain",
+    "trench_corridor",
+    "dry_basin_floor",
+    "valley_corridor",
+    "shelf_terrace",
+    "escarpment_rim",
+    "planetary_highland",
+    "upland_plateau",
+    "former_seabed",
+    "lowland_gap",
+    "stable_craton"
+  ]);
 
   var REGION_SEEDS = Object.freeze([
     Object.freeze({ id: "gratitude", name: "Gratitude Region Candidate", x: 5.0, y: 4.6, summit: "Gratitude", pressure: 1.00 }),
@@ -50,6 +68,27 @@
     return JSON.parse(JSON.stringify(value));
   }
 
+  function normalizeRadialX(value) {
+    var number = Number(value);
+    if (!Number.isFinite(number)) number = 0;
+    return ((number % RADIAL_NODES) + RADIAL_NODES) % RADIAL_NODES;
+  }
+
+  function normalizeBandY(value) {
+    return clamp(Number(value), 0, FIBONACCI_BANDS - 1);
+  }
+
+  function radialDelta(ax, bx) {
+    var dx = Math.abs(normalizeRadialX(ax) - normalizeRadialX(bx));
+    return Math.min(dx, RADIAL_NODES - dx);
+  }
+
+  function wrappedDistance(ax, ay, bx, by) {
+    var dx = radialDelta(ax, bx);
+    var dy = Number(ay) - Number(by);
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
   function nodeId(x, y) {
     return "AUDRALIA-DRY-TERRAIN-" + String(y).padStart(2, "0") + "-" + String(x).padStart(2, "0");
   }
@@ -60,36 +99,45 @@
 
   function lonLat(x, y) {
     return {
-      lon: round(-180 + (x / 15) * 360, 4),
-      lat: round(80 - (y / 15) * 160, 4)
+      lon: round(-180 + (normalizeRadialX(x) / RADIAL_NODES) * 360, 4),
+      lat: round(80 - (normalizeBandY(y) / (FIBONACCI_BANDS - 1)) * 160, 4)
     };
   }
 
-  function distance(ax, ay, bx, by) {
-    var dx = ax - bx;
-    var dy = ay - by;
-    return Math.sqrt(dx * dx + dy * dy);
-  }
-
   function linePressure(px, py, ax, ay, bx, by, width, strength) {
-    var vx = bx - ax;
-    var vy = by - ay;
-    var wx = px - ax;
-    var wy = py - ay;
-    var len2 = vx * vx + vy * vy;
+    var candidates = [
+      { ax: ax, bx: bx },
+      { ax: ax - RADIAL_NODES, bx: bx - RADIAL_NODES },
+      { ax: ax + RADIAL_NODES, bx: bx + RADIAL_NODES }
+    ];
 
-    if (!len2) return 0;
+    var bestDistance = Infinity;
 
-    var t = clamp((wx * vx + wy * vy) / len2, 0, 1);
-    var cx = ax + t * vx;
-    var cy = ay + t * vy;
-    var d = distance(px, py, cx, cy);
+    candidates.forEach(function (candidate) {
+      var vx = candidate.bx - candidate.ax;
+      var vy = by - ay;
+      var wx = px - candidate.ax;
+      var wy = py - ay;
+      var len2 = vx * vx + vy * vy;
 
-    return strength * clamp(1 - d / width, 0, 1);
+      if (!len2) return;
+
+      var t = clamp((wx * vx + wy * vy) / len2, 0, 1);
+      var cx = candidate.ax + t * vx;
+      var cy = ay + t * vy;
+      var dx = Math.abs(px - cx);
+      dx = Math.min(dx, RADIAL_NODES - dx);
+      var dy = py - cy;
+      var d = Math.sqrt(dx * dx + dy * dy);
+
+      bestDistance = Math.min(bestDistance, d);
+    });
+
+    return strength * clamp(1 - bestDistance / width, 0, 1);
   }
 
   function gaussian(px, py, cx, cy, rx, ry, strength) {
-    var dx = (px - cx) / rx;
+    var dx = radialDelta(px, cx) / rx;
     var dy = (py - cy) / ry;
     return strength * Math.exp(-(dx * dx + dy * dy));
   }
@@ -100,7 +148,7 @@
 
     for (var i = 0; i < REGION_SEEDS.length; i += 1) {
       var seed = REGION_SEEDS[i];
-      var d = distance(x, y, seed.x, seed.y);
+      var d = wrappedDistance(x, y, seed.x, seed.y);
 
       if (d < bestDistance) {
         best = seed;
@@ -123,7 +171,7 @@
 
     for (var i = 0; i < REGION_SEEDS.length; i += 1) {
       var seed = REGION_SEEDS[i];
-      var d = distance(x, y, seed.x, seed.y);
+      var d = wrappedDistance(x, y, seed.x, seed.y);
       var pressure = clamp(1 - d / 2.35, 0, 1) * seed.pressure;
       total += pressure;
       max = Math.max(max, pressure);
@@ -195,8 +243,8 @@
   }
 
   function shelfPressure(x, y) {
-    var edgeX = Math.min(x, 15 - x) / 7.5;
-    var edgeY = Math.min(y, 15 - y) / 7.5;
+    var edgeX = Math.min(normalizeRadialX(x), RADIAL_NODES - normalizeRadialX(x)) / (RADIAL_NODES / 2);
+    var edgeY = Math.min(normalizeBandY(y), FIBONACCI_BANDS - 1 - normalizeBandY(y)) / ((FIBONACCI_BANDS - 1) / 2);
     var edge = clamp(1 - Math.min(edgeX, edgeY), 0, 1);
 
     var terraces =
@@ -334,6 +382,7 @@
       recededHydrosphereReveal: true,
       formerWaterCarvingActive: true,
       activeHydration: false,
+      activeWater: false,
       hydrationHeld: true,
 
       aboveFormerSeaLevel: aboveFormerSeaLevel,
@@ -369,6 +418,10 @@
       summitRegionCandidate: region.pressure > 0.12,
       gratitudeRegionCandidate: region.id === "gratitude",
 
+      seamSafeRadialGeometry: true,
+      falsePrimeMeridianAvoided: true,
+      radialWrapActive: true,
+
       renderAsRawParcel: false,
       renderAsDryPhysicalMass: true,
       carrierMayConsume: true,
@@ -394,11 +447,26 @@
   var NODES = buildNodes();
 
   var MASS_NODES = Object.freeze(NODES.filter(function (node) { return node.planetMassMembership; }));
-  var HIGHLAND_NODES = Object.freeze(NODES.filter(function (node) { return node.primaryTerrainRole === "highland" || node.primaryTerrainRole === "plateau" || node.primaryTerrainRole === "summit_anchor"; }));
-  var BASIN_NODES = Object.freeze(NODES.filter(function (node) { return node.primaryTerrainRole === "basin" || node.primaryTerrainRole === "former_seabed"; }));
-  var TRENCH_NODES = Object.freeze(NODES.filter(function (node) { return node.primaryTerrainRole === "trench"; }));
-  var RIDGE_NODES = Object.freeze(NODES.filter(function (node) { return node.primaryTerrainRole === "ridge" || node.primaryTerrainRole === "mountain"; }));
-  var SHELF_NODES = Object.freeze(NODES.filter(function (node) { return node.primaryTerrainRole === "shelf" || node.primaryTerrainRole === "escarpment"; }));
+  var HIGHLAND_NODES = Object.freeze(NODES.filter(function (node) {
+    return node.primaryTerrainRole === "highland" ||
+      node.primaryTerrainRole === "plateau" ||
+      node.primaryTerrainRole === "summit_anchor";
+  }));
+  var BASIN_NODES = Object.freeze(NODES.filter(function (node) {
+    return node.primaryTerrainRole === "basin" ||
+      node.primaryTerrainRole === "former_seabed";
+  }));
+  var TRENCH_NODES = Object.freeze(NODES.filter(function (node) {
+    return node.primaryTerrainRole === "trench";
+  }));
+  var RIDGE_NODES = Object.freeze(NODES.filter(function (node) {
+    return node.primaryTerrainRole === "ridge" ||
+      node.primaryTerrainRole === "mountain";
+  }));
+  var SHELF_NODES = Object.freeze(NODES.filter(function (node) {
+    return node.primaryTerrainRole === "shelf" ||
+      node.primaryTerrainRole === "escarpment";
+  }));
   var GAP_NODES = Object.freeze(NODES.filter(function (node) { return node.futureFillEligible; }));
   var GRATITUDE_NODES = Object.freeze(NODES.filter(function (node) { return node.gratitudeRegionCandidate; }));
 
@@ -438,6 +506,13 @@
 
       regionSeed: node.regionSeed,
       gratitudeRegionCandidate: node.gratitudeRegionCandidate,
+
+      seamSafeRadialGeometry: true,
+      falsePrimeMeridianAvoided: true,
+      radialWrapActive: true,
+
+      activeHydration: false,
+      activeWater: false,
       hydrationHeld: true,
       carrierMayConsume: true,
       finalVisualPassClaim: false
@@ -449,25 +524,28 @@
   }
 
   function field(name, nodes, options, extra) {
-    var payload = Object.assign({
+    return Object.assign({
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       fieldType: name,
       nodeCount: nodes.length,
       nodes: maybeCompact(nodes, options),
       hydrosphereOrigin: true,
       recededHydrosphereReveal: true,
       activeHydration: false,
+      activeWater: false,
       hydrationHeld: true,
       carrierMayConsume: true,
+      childDrawsVisuals: false,
+      carrierDisplaysOnly: true,
       finalVisualPassClaim: false
     }, extra || {});
-
-    return payload;
   }
 
   function status() {
     return {
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       specOps: SPEC_OPS,
       news: NEWS,
       ccr: CCR,
@@ -479,10 +557,17 @@
       gratitudeIsIsland: false,
       gratitudeRegionCandidateOnly: true,
 
+      seamSafeRadialGeometry: true,
+      falsePrimeMeridianAvoided: true,
+      radialWrapActive: true,
+      longitudeUsesRadialNodeCount: true,
+      longitudeUsesTerminalDivisor15: false,
+
       hydrosphereOrigin: true,
       recededHydrosphereReveal: true,
       formerWaterCarvingActive: true,
       activeHydration: false,
+      activeWater: false,
       hydrationHeld: true,
 
       planetMassFieldReady: true,
@@ -494,6 +579,8 @@
       shelfEscarpmentFieldReady: true,
       futureFillGapFieldReady: true,
       carrierTerrainPacketReady: true,
+
+      terrainClasses: TERRAIN_CLASSES.slice(),
 
       nodeCount: NODE_COUNT,
       planetMassNodeCount: MASS_NODES.length,
@@ -509,12 +596,23 @@
 
       carrierMayConsume: true,
       carrierInventsTerrain: false,
+      carrierMayDisplayPacket: true,
+      carrierDisplaysOnly: true,
+      childDrawsVisuals: false,
+
+      sourceTerrainMutated: false,
+      elevationTruthMutated: false,
+      reliefTruthMutated: false,
+      landformTruthMutated: false,
+      beachTruthMutated: false,
+      triangulationTruthMutated: false,
+      hydrationTruthMutated: false,
 
       finalTerrainPassClaim: false,
       finalHydrationPassClaim: false,
       finalVisualPassClaim: false,
 
-      deployMarker: "AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_ATLAS_CHILD_DEPLOY_MARKER_v1"
+      deployMarker: "AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_ATLAS_SEAM_SAFE_PARENT_RENEWAL_DEPLOY_MARKER_v2"
     };
   }
 
@@ -545,24 +643,7 @@
   function getTerrainClassField(options) {
     return field("terrain_class_field", NODES, options, {
       terrainClassFieldReady: true,
-      classes: [
-        "planetary_highland",
-        "mountain_belt",
-        "ridge_chain",
-        "summit_pressure_zone",
-        "upland_plateau",
-        "escarpment_rim",
-        "shelf_terrace",
-        "dry_basin_floor",
-        "former_seabed",
-        "dry_channel",
-        "valley_corridor",
-        "trench_corridor",
-        "lowland_gap",
-        "transition_slope",
-        "stable_craton",
-        "outer_mass_edge"
-      ]
+      classes: TERRAIN_CLASSES.slice()
     });
   }
 
@@ -597,7 +678,8 @@
       futureFillGapFieldReady: true,
       mapTheGapsFirst: true,
       fillTheGapsLater: true,
-      activeHydration: false
+      activeHydration: false,
+      activeWater: false
     });
   }
 
@@ -617,6 +699,7 @@
 
     return {
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       target: target || "unassigned-dry-revealed-terrain-consumer",
       packetType: "audralia_dry_revealed_physical_terrain_packet",
       dryRevealedTerrainPacketReady: true,
@@ -626,10 +709,17 @@
       gratitudeIsIsland: false,
       gratitudeRegionCandidateOnly: true,
 
+      seamSafeRadialGeometry: true,
+      falsePrimeMeridianAvoided: true,
+      radialWrapActive: true,
+      longitudeUsesRadialNodeCount: true,
+      longitudeUsesTerminalDivisor15: false,
+
       hydrosphereOrigin: true,
       recededHydrosphereReveal: true,
       formerWaterCarvingActive: true,
       activeHydration: false,
+      activeWater: false,
       hydrationHeld: true,
 
       governingPhrase: "Map the gaps first. Fill the gaps later.",
@@ -639,6 +729,8 @@
       planetMassNodeCount: MASS_NODES.length,
       futureFillGapCount: GAP_NODES.length,
       gratitudeCandidateNodeCount: GRATITUDE_NODES.length,
+
+      terrainClasses: TERRAIN_CLASSES.slice(),
 
       planetMassField: getPlanetMassField({ compact: true }),
       dryElevationField: getDryElevationField({ compact: true }),
@@ -654,6 +746,18 @@
 
       carrierMayConsume: true,
       carrierInventsTerrain: false,
+      carrierMayDisplayPacket: true,
+      carrierDisplaysOnly: true,
+      childDrawsVisuals: false,
+
+      sourceTerrainMutated: false,
+      elevationTruthMutated: false,
+      reliefTruthMutated: false,
+      landformTruthMutated: false,
+      beachTruthMutated: false,
+      triangulationTruthMutated: false,
+      hydrationTruthMutated: false,
+
       finalTerrainPassClaim: false,
       finalHydrationPassClaim: false,
       finalVisualPassClaim: false
@@ -667,22 +771,33 @@
   function getCarrierTerrainPacket(target, options) {
     return {
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       target: target || "audralia-runtime-carrier",
       packetType: "audralia_dry_revealed_terrain_carrier_packet",
       carrierTerrainPacketReady: true,
 
       drawPosture: "dry_revealed_physical_mass_first",
+      displayPosture: "carrier_may_display_packet_without_owning_or_inventing_terrain",
+
+      seamSafeRadialGeometry: true,
+      falsePrimeMeridianAvoided: true,
+      radialWrapActive: true,
+
       activeHydration: false,
+      activeWater: false,
       hydrationHeld: true,
+
       carrierMayConsume: true,
-      carrierMayRender: true,
+      carrierMayDisplayPacket: true,
+      carrierDisplaysOnly: true,
+      childDrawsVisuals: false,
       carrierInventsTerrain: false,
 
       planetPhysicalTerrainPacket: getPlanetPhysicalTerrainPacket(target || "carrier-physical-terrain", options || { compact: true }),
 
       preferredLensUse: {
-        body: "may show faint dry mass beneath hydrosphere-origin shell",
-        surface: "show dry exposed physical terrain mass",
+        body: "may show faint dry mass beneath shell without inventing terrain",
+        surface: "may display dry exposed physical terrain packet",
         hydration: "held until future fill",
         lattice: "raw 256 inspection only",
         receipt: "report dry revealed atlas status"
@@ -697,6 +812,7 @@
   function getChildReceivePacket(target, options) {
     return {
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       specOps: SPEC_OPS,
       news: NEWS,
       ccr: CCR,
@@ -707,13 +823,17 @@
       dryRevealedTerrainPacket: getDryRevealedTerrainPacket(target || "child-receive-dry-terrain", options || { compact: true }),
       carrierTerrainPacket: getCarrierTerrainPacket(target || "child-receive-carrier", options || { compact: true }),
       activeHydration: false,
+      activeWater: false,
       hydrationHeld: true,
+      childDrawsVisuals: false,
+      carrierDisplaysOnly: true,
       finalVisualPassClaim: false
     };
   }
 
   var API = Object.freeze({
     contract: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
     specOps: SPEC_OPS,
     news: NEWS,
     ccr: CCR,

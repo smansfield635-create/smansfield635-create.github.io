@@ -1,17 +1,19 @@
 // /assets/audralia/clean/terrain/audralia.beach-coastal-readiness.child.js
-// AUDRALIA_BEACH_COASTAL_READINESS_CHILD_TNT_v1
+// AUDRALIA_BEACH_COASTAL_READINESS_METADATA_ONLY_HOLD_TNT_v1
 // Full-file replacement.
-// Scope: downstream terrain/coastal-readiness child only.
-// Purpose: define limited beach eligibility, coastal shelves, cliff-blocked coasts, future shore receiving zones, and hydration handoff zones before active water.
-// Position: dry terrain atlas → elevation track → relief expression → landform systems → beach/coastal readiness child → future hydration baseline child → carrier display consumption.
-// Does not own: source terrain truth, elevation truth, relief truth, landform truth, active hydration, water rendering, final coastline, final beaches, final shoreline, climate, ecology, settlement, or final visual pass.
+// Previous: AUDRALIA_BEACH_COASTAL_READINESS_CHILD_TNT_v1
+// Scope: downstream beach/coastal-readiness child only.
+// Purpose: preserve beach/coastal readiness calculations while demoting all beach, shore, coastal, and hydration-handoff outputs to metadata-only / receipt-only inspection.
+// Position: dry terrain atlas → elevation track → relief expression → landform systems → beach/coastal readiness metadata hold → future hydration baseline child.
+// Does not own: source terrain truth, elevation truth, relief truth, landform truth, active hydration, water rendering, surface tint, void color, final coastline, final beaches, final shoreline, climate, ecology, settlement, carrier composition, or final visual pass.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_BEACH_COASTAL_READINESS_CHILD_TNT_v1";
+  var CONTRACT = "AUDRALIA_BEACH_COASTAL_READINESS_METADATA_ONLY_HOLD_TNT_v1";
+  var PREVIOUS_CONTRACT = "AUDRALIA_BEACH_COASTAL_READINESS_CHILD_TNT_v1";
   var FILE = "/assets/audralia/clean/terrain/audralia.beach-coastal-readiness.child.js";
-  var FAMILY_POSITION = "dry-terrain→elevation-track→relief-expression→landform-systems→beach-coastal-readiness→hydration-baseline";
+  var FAMILY_POSITION = "dry-terrain→elevation-track→relief-expression→landform-systems→beach-coastal-readiness-metadata-hold→hydration-baseline";
 
   var RADIAL_NODES = 16;
   var FIBONACCI_BANDS = 16;
@@ -70,6 +72,55 @@
     unassigned: "Unassigned"
   });
 
+  var READINESS_LOCK = Object.freeze({
+    metadataOnly: true,
+    readinessOnly: true,
+    receiptOnlyUntilHydrationAuthorized: true,
+
+    carrierMayConsume: true,
+    carrierMayInspect: true,
+    carrierMayReport: true,
+    carrierMayDisplay: false,
+    carrierShouldDisplayOnly: false,
+    carrierShouldNotDisplay: true,
+
+    carrierMayTintSurface: false,
+    carrierMayColorVoid: false,
+    carrierMayDraw: false,
+    carrierMayDrawBeach: false,
+    carrierMayDrawCoastline: false,
+    carrierMayDrawShoreline: false,
+    carrierMayDrawFutureShore: false,
+    carrierMayDrawHydrationHandoff: false,
+    carrierMayDrawWaterMemory: false,
+
+    sourceTerrainMutated: false,
+    elevationTruthMutated: false,
+    reliefTruthMutated: false,
+    landformTruthMutated: false,
+
+    surfaceColorAuthority: false,
+    voidColorAuthority: false,
+    hydrationColorAuthority: false,
+    triangleColorAuthority: false,
+
+    beachReadinessOnly: true,
+    coastalBoundaryReadinessOnly: true,
+    hydrationHandoffReadinessOnly: true,
+    futureShoreReadinessOnly: true,
+
+    beachIsFinal: false,
+    coastlineIsFinal: false,
+    shorelineIsFinal: false,
+    activeHydration: false,
+    activeWater: false,
+    finalBeachPassClaim: false,
+    finalCoastlinePassClaim: false,
+    finalShorelinePassClaim: false,
+    finalHydrationPassClaim: false,
+    finalVisualPassClaim: false
+  });
+
   var state = {
     dryTerrainApi: null,
     dryTerrainDetected: false,
@@ -106,19 +157,20 @@
     elevationSampleByNodeId: {},
     landformIndex: null,
 
-    coastalShelfZones: [],
-    beachEligibilityZones: [],
-    authorizedBeachCandidates: [],
-    cliffBlockedCoasts: [],
-    basinToShoreCorridors: [],
-    futureShoreReceivingZones: [],
-    namedBeachHooks: [],
+    coastalShelfMetadataZones: [],
+    beachEligibilityMetadataZones: [],
+    authorizedBeachCandidateMetadata: [],
+    cliffBlockedCoastMetadataZones: [],
+    basinToFutureShoreReadinessCorridors: [],
+    futureShoreReadinessMetadataZones: [],
+    namedBeachMetadataHooks: [],
     climateStandardBeachPlaceholder: null,
-    hydrationHandoffZones: [],
+    hydrationHandoffReadinessMetadataZones: [],
 
     beachCoastalReadinessReady: false,
     buildCount: 0,
-    errors: []
+    errors: [],
+    lastBuiltAt: null
   };
 
   function clamp(value, min, max) {
@@ -163,6 +215,11 @@
     return String(value);
   }
 
+  function numeric(value, fallback) {
+    var number = Number(value);
+    return Number.isFinite(number) ? number : fallback;
+  }
+
   function terrainSeatToLonLat(x, y) {
     return {
       lon: -180 + ((x % RADIAL_NODES + RADIAL_NODES) % RADIAL_NODES) / RADIAL_NODES * 360,
@@ -177,9 +234,15 @@
     return Math.sqrt(dx * dx + dy * dy);
   }
 
-  function numeric(value, fallback) {
-    var number = Number(value);
-    return Number.isFinite(number) ? number : fallback;
+  function applyReadinessLock(target) {
+    Object.keys(READINESS_LOCK).forEach(function (key) {
+      target[key] = READINESS_LOCK[key];
+    });
+    return target;
+  }
+
+  function freezeLocked(target) {
+    return Object.freeze(applyReadinessLock(target));
   }
 
   function dryPacket() {
@@ -216,11 +279,11 @@
     state.dryTerrainStatus = safeCall("dryTerrain", api, "status");
 
     if (typeof api.getCarrierTerrainPacket === "function") {
-      state.dryCarrierPacket = safeCall("dryTerrain", api, "getCarrierTerrainPacket", "audralia-beach-coastal-readiness-child", { compact: false });
+      state.dryCarrierPacket = safeCall("dryTerrain", api, "getCarrierTerrainPacket", "audralia-beach-coastal-metadata-hold-child", { compact: false });
     }
 
     if (typeof api.getDryRevealedTerrainPacket === "function") {
-      state.dryTerrainPacket = safeCall("dryTerrain", api, "getDryRevealedTerrainPacket", "audralia-beach-coastal-readiness-child", { compact: false });
+      state.dryTerrainPacket = safeCall("dryTerrain", api, "getDryRevealedTerrainPacket", "audralia-beach-coastal-metadata-hold-child", { compact: false });
     }
 
     state.dryTerrainValidated = Boolean(
@@ -252,11 +315,11 @@
     state.elevationStatus = typeof api.status === "function" ? safeCall("elevationTrack", api, "status") : null;
 
     if (typeof api.getCarrierElevationPacket === "function") {
-      state.elevationCarrierPacket = safeCall("elevationTrack", api, "getCarrierElevationPacket", "audralia-beach-coastal-readiness-child", { compact: false });
+      state.elevationCarrierPacket = safeCall("elevationTrack", api, "getCarrierElevationPacket", "audralia-beach-coastal-metadata-hold-child", { compact: false });
     } else if (typeof api.getElevationTrackPacket === "function") {
-      state.elevationCarrierPacket = safeCall("elevationTrack", api, "getElevationTrackPacket", "audralia-beach-coastal-readiness-child", { compact: false });
+      state.elevationCarrierPacket = safeCall("elevationTrack", api, "getElevationTrackPacket", "audralia-beach-coastal-metadata-hold-child", { compact: false });
     } else if (typeof api.getElevationPacket === "function") {
-      state.elevationCarrierPacket = safeCall("elevationTrack", api, "getElevationPacket", "audralia-beach-coastal-readiness-child", { compact: false });
+      state.elevationCarrierPacket = safeCall("elevationTrack", api, "getElevationPacket", "audralia-beach-coastal-metadata-hold-child", { compact: false });
     }
 
     state.elevationTrackValidated = Boolean(
@@ -288,7 +351,7 @@
     }
 
     state.reliefStatus = safeCall("reliefExpression", api, "status");
-    state.reliefCarrierPacket = safeCall("reliefExpression", api, "getCarrierReliefPacket", "audralia-beach-coastal-readiness-child", { compact: false });
+    state.reliefCarrierPacket = safeCall("reliefExpression", api, "getCarrierReliefPacket", "audralia-beach-coastal-metadata-hold-child", { compact: false });
 
     state.reliefExpressionValidated = Boolean(
       state.reliefCarrierPacket &&
@@ -323,7 +386,7 @@
     }
 
     state.landformStatus = safeCall("landformSystems", api, "status");
-    state.landformCarrierPacket = safeCall("landformSystems", api, "getCarrierLandformPacket", "audralia-beach-coastal-readiness-child", { compact: false });
+    state.landformCarrierPacket = safeCall("landformSystems", api, "getCarrierLandformPacket", "audralia-beach-coastal-metadata-hold-child", { compact: false });
 
     state.landformSystemsValidated = Boolean(
       state.landformCarrierPacket &&
@@ -579,6 +642,7 @@
       var futureFillScore = clamp(gapPressure * 0.50 + basinPressure * 0.28 + valleyPressure * 0.12 + Boolean(node.futureFillEligible) * 0.20, 0, 1);
       var hardTerrainExclusion = clamp(cliffPressure * 0.42 + ridgePressure * 0.20 + mountainPressure * 0.22 + mountainFromLandform * 0.20 + summitFromLandform * 0.16, 0, 1);
       var protectedScore = clamp(basinPressure * 0.24 + valleyPressure * 0.20 + shelfScore * 0.22 + (1 - cliffPressure) * 0.20 + gentleSlopeScore * 0.14, 0, 1);
+
       var beachEligibilityScore = clamp(
         lowElevationScore * 0.22 +
         gentleSlopeScore * 0.20 +
@@ -630,7 +694,7 @@
 
       var regionSeed = String(node.regionSeed || node.continentId || relief.continentId || "unassigned").toLowerCase();
 
-      var record = {
+      var record = freezeLocked({
         nodeId: nodeId,
         sourceSeatIndex: numeric(node.seatIndex, numeric(node.nodeIndex, sourceIndex)),
         sourceIndex: sourceIndex,
@@ -674,17 +738,10 @@
           basin: Boolean(basinFromLandform),
           cliff: Boolean(cliffFromLandform),
           landmark: Boolean(landmarkFromLandform)
-        },
+        }
+      });
 
-        beachIsFinal: false,
-        coastlineIsFinal: false,
-        hydrationIsActive: false,
-        activeWater: false,
-        sourceTerrainMutated: false,
-        finalVisualPassClaim: false
-      };
-
-      records.push(Object.freeze(record));
+      records.push(record);
       byId[nodeId] = record;
     });
 
@@ -715,7 +772,7 @@
   }
 
   function zoneBase(record, zoneType, scoreKey) {
-    return Object.freeze({
+    return freezeLocked({
       zoneId: "AUDRALIA-" + zoneType.toUpperCase().replace(/[^A-Z0-9]+/g, "-") + "-" + String(record.sourceIndex).padStart(3, "0"),
       zoneType: zoneType,
       classification: record.classification,
@@ -747,26 +804,44 @@
         CLASSIFICATIONS.PROTECTED_SHORE,
         CLASSIFICATIONS.FUTURE_FILL_EDGE
       ]), 4),
-      score: round(record[scoreKey] || record.coastalReadinessScore || record.beachEligibilityScore || 0, 4),
-      beachIsFinal: false,
-      coastlineIsFinal: false,
-      activeHydration: false,
-      activeWater: false,
-      finalVisualPassClaim: false
+      score: round(record[scoreKey] || record.coastalReadinessScore || record.beachEligibilityScore || 0, 4)
+    });
+  }
+
+  function hydrationHandoffMetadata(record) {
+    return freezeLocked({
+      zoneId: "AUDRALIA-HYDRATION-HANDOFF-READINESS-" + String(record.sourceIndex).padStart(3, "0"),
+      zoneType: "hydration_handoff_readiness_metadata_zone",
+      nodeId: record.nodeId,
+      sourceSeatIndex: record.sourceSeatIndex,
+      sourceIndex: record.sourceIndex,
+      x: record.x,
+      y: record.y,
+      lon: record.lon,
+      lat: record.lat,
+      continentId: record.continentId,
+      continentName: record.continentName,
+      coastalReadinessScore: record.coastalReadinessScore,
+      beachEligibilityScore: record.beachEligibilityScore,
+      futureFillScore: record.futureFillScore,
+      cliffPressure: record.cliffPressure,
+      classification: record.classification,
+      hydrationMayReadLater: true,
+      hydrationMayActivateNow: false
     });
   }
 
   function buildCoastalOutputs() {
-    var coastalShelfZones = [];
-    var beachEligibilityZones = [];
-    var cliffBlockedCoasts = [];
-    var basinToShoreCorridors = [];
-    var futureShoreReceivingZones = [];
-    var hydrationHandoffZones = [];
+    var coastalShelfMetadataZones = [];
+    var beachEligibilityMetadataZones = [];
+    var cliffBlockedCoastMetadataZones = [];
+    var basinToFutureShoreReadinessCorridors = [];
+    var futureShoreReadinessMetadataZones = [];
+    var hydrationHandoffReadinessMetadataZones = [];
 
     state.nodeRecords.forEach(function (record) {
       if (record.classification === CLASSIFICATIONS.CLIFF_BLOCKED) {
-        cliffBlockedCoasts.push(zoneBase(record, "cliff_blocked_coast", "cliffPressure"));
+        cliffBlockedCoastMetadataZones.push(zoneBase(record, "cliff_blocked_coast_metadata_zone", "cliffPressure"));
       }
 
       if (
@@ -776,7 +851,7 @@
         record.classification === CLASSIFICATIONS.INLET_CANDIDATE ||
         record.classification === CLASSIFICATIONS.BAY_CANDIDATE
       ) {
-        coastalShelfZones.push(zoneBase(record, "coastal_shelf_zone", "shelfScore"));
+        coastalShelfMetadataZones.push(zoneBase(record, "coastal_shelf_metadata_zone", "shelfScore"));
       }
 
       if (
@@ -785,7 +860,7 @@
         record.classification === CLASSIFICATIONS.INLET_CANDIDATE ||
         record.classification === CLASSIFICATIONS.BAY_CANDIDATE
       ) {
-        beachEligibilityZones.push(zoneBase(record, "beach_eligibility_zone", "beachEligibilityScore"));
+        beachEligibilityMetadataZones.push(zoneBase(record, "beach_eligibility_metadata_zone", "beachEligibilityScore"));
       }
 
       if (
@@ -793,7 +868,7 @@
         record.classification === CLASSIFICATIONS.INLET_CANDIDATE ||
         (record.basinPressure > 0.42 && record.futureFillScore > 0.46 && record.cliffPressure < 0.56)
       ) {
-        basinToShoreCorridors.push(zoneBase(record, "basin_to_shore_corridor", "futureFillScore"));
+        basinToFutureShoreReadinessCorridors.push(zoneBase(record, "basin_to_future_shore_readiness_corridor", "futureFillScore"));
       }
 
       if (
@@ -801,7 +876,7 @@
         record.classification !== CLASSIFICATIONS.CLIFF_BLOCKED &&
         record.coastalReadinessScore > 0.42
       ) {
-        futureShoreReceivingZones.push(zoneBase(record, "future_shore_receiving_zone", "coastalReadinessScore"));
+        futureShoreReadinessMetadataZones.push(zoneBase(record, "future_shore_readiness_metadata_zone", "coastalReadinessScore"));
       }
 
       if (
@@ -809,46 +884,23 @@
         record.classification !== CLASSIFICATIONS.CLIFF_BLOCKED &&
         (record.futureFillScore > 0.42 || record.coastalReadinessScore > 0.50)
       ) {
-        hydrationHandoffZones.push(Object.freeze({
-          zoneId: "AUDRALIA-HYDRATION-HANDOFF-" + String(record.sourceIndex).padStart(3, "0"),
-          zoneType: "hydration_handoff_zone",
-          nodeId: record.nodeId,
-          sourceSeatIndex: record.sourceSeatIndex,
-          sourceIndex: record.sourceIndex,
-          x: record.x,
-          y: record.y,
-          lon: record.lon,
-          lat: record.lat,
-          continentId: record.continentId,
-          continentName: record.continentName,
-          coastalReadinessScore: record.coastalReadinessScore,
-          beachEligibilityScore: record.beachEligibilityScore,
-          futureFillScore: record.futureFillScore,
-          cliffPressure: record.cliffPressure,
-          classification: record.classification,
-          hydrationMayReadLater: true,
-          hydrationMayActivateNow: false,
-          activeHydration: false,
-          activeWater: false,
-          finalHydrationPassClaim: false,
-          finalVisualPassClaim: false
-        }));
+        hydrationHandoffReadinessMetadataZones.push(hydrationHandoffMetadata(record));
       }
     });
 
-    state.coastalShelfZones = Object.freeze(coastalShelfZones);
-    state.beachEligibilityZones = Object.freeze(beachEligibilityZones);
-    state.cliffBlockedCoasts = Object.freeze(cliffBlockedCoasts);
-    state.basinToShoreCorridors = Object.freeze(basinToShoreCorridors);
-    state.futureShoreReceivingZones = Object.freeze(futureShoreReceivingZones);
-    state.hydrationHandoffZones = Object.freeze(hydrationHandoffZones);
+    state.coastalShelfMetadataZones = Object.freeze(coastalShelfMetadataZones);
+    state.beachEligibilityMetadataZones = Object.freeze(beachEligibilityMetadataZones);
+    state.cliffBlockedCoastMetadataZones = Object.freeze(cliffBlockedCoastMetadataZones);
+    state.basinToFutureShoreReadinessCorridors = Object.freeze(basinToFutureShoreReadinessCorridors);
+    state.futureShoreReadinessMetadataZones = Object.freeze(futureShoreReadinessMetadataZones);
+    state.hydrationHandoffReadinessMetadataZones = Object.freeze(hydrationHandoffReadinessMetadataZones);
   }
 
-  function buildAuthorizedBeachCandidates() {
+  function buildAuthorizedBeachCandidateMetadata() {
     var byContinent = {};
     var candidates = [];
 
-    state.beachEligibilityZones.forEach(function (zone) {
+    state.beachEligibilityMetadataZones.forEach(function (zone) {
       if (!byContinent[zone.continentId]) byContinent[zone.continentId] = [];
       byContinent[zone.continentId].push(zone);
     });
@@ -860,9 +912,9 @@
       });
 
       sorted.slice(0, 2).forEach(function (zone, localIndex) {
-        candidates.push(Object.freeze({
-          candidateId: "AUDRALIA-AUTHORIZED-BEACH-CANDIDATE-" + continentId.toUpperCase().replace(/[^A-Z0-9]+/g, "-") + "-" + String(localIndex + 1).padStart(2, "0"),
-          candidateStatus: "candidate_only_not_final_beach",
+        candidates.push(freezeLocked({
+          candidateId: "AUDRALIA-AUTHORIZED-BEACH-CANDIDATE-METADATA-" + continentId.toUpperCase().replace(/[^A-Z0-9]+/g, "-") + "-" + String(localIndex + 1).padStart(2, "0"),
+          candidateStatus: "metadata_candidate_only_not_final_beach",
           nodeId: zone.nodeId,
           sourceSeatIndex: zone.sourceSeatIndex,
           sourceIndex: zone.sourceIndex,
@@ -880,12 +932,7 @@
           cliffPressure: zone.cliffPressure,
           namingStatus: "held",
           finalName: null,
-          beachIsLimitedSpecialNotDefault: true,
-          beachIsFinal: false,
-          activeHydration: false,
-          activeWater: false,
-          finalBeachPassClaim: false,
-          finalVisualPassClaim: false
+          beachIsLimitedSpecialNotDefault: true
         }));
       });
     });
@@ -894,41 +941,39 @@
       return b.beachEligibilityScore - a.beachEligibilityScore;
     });
 
-    state.authorizedBeachCandidates = Object.freeze(candidates.slice(0, 16));
+    state.authorizedBeachCandidateMetadata = Object.freeze(candidates.slice(0, 16));
   }
 
-  function buildNamedBeachHooks() {
+  function buildNamedBeachMetadataHooks() {
     var hooks = [];
 
     Object.keys(REGION_NAMES).forEach(function (continentId) {
       if (continentId === "unassigned") return;
 
-      hooks.push(Object.freeze({
-        hookId: "AUDRALIA-NAMED-BEACH-HOOK-" + continentId.toUpperCase().replace(/[^A-Z0-9]+/g, "-"),
+      hooks.push(freezeLocked({
+        hookId: "AUDRALIA-NAMED-BEACH-METADATA-HOOK-" + continentId.toUpperCase().replace(/[^A-Z0-9]+/g, "-"),
         continentId: continentId,
         continentName: REGION_NAMES[continentId],
         hookStatus: "held_for_future_authorized_name",
         finalName: null,
         nameInvented: false,
         namingRequiresUserAuthorization: true,
-        beachIsLimitedSpecialNotDefault: true,
-        finalBeachPassClaim: false
+        beachIsLimitedSpecialNotDefault: true
       }));
     });
 
-    hooks.push(Object.freeze({
-      hookId: "AUDRALIA-NAMED-BEACH-HOOK-CLIMATE-STANDARD",
+    hooks.push(freezeLocked({
+      hookId: "AUDRALIA-NAMED-BEACH-METADATA-HOOK-CLIMATE-STANDARD",
       hookStatus: "held_for_future_climate_standard_beach",
       finalName: null,
       nameInvented: false,
       namingRequiresUserAuthorization: true,
-      climateStandardBeachPlaceholderHeld: true,
-      finalBeachPassClaim: false
+      climateStandardBeachPlaceholderHeld: true
     }));
 
-    state.namedBeachHooks = Object.freeze(hooks);
+    state.namedBeachMetadataHooks = Object.freeze(hooks);
 
-    state.climateStandardBeachPlaceholder = Object.freeze({
+    state.climateStandardBeachPlaceholder = freezeLocked({
       placeholderId: "AUDRALIA-CLIMATE-STANDARD-BEACH-PLACEHOLDER",
       status: "held",
       finalName: null,
@@ -940,10 +985,7 @@
         futureHydrationHandoffRequired: true,
         climateStandardDataRequiredLater: true
       }),
-      climateStandardBeachPlaceholderHeld: true,
-      finalBeachPassClaim: false,
-      finalHydrationPassClaim: false,
-      finalVisualPassClaim: false
+      climateStandardBeachPlaceholderHeld: true
     });
   }
 
@@ -955,28 +997,29 @@
 
     buildNodeRecords();
     buildCoastalOutputs();
-    buildAuthorizedBeachCandidates();
-    buildNamedBeachHooks();
+    buildAuthorizedBeachCandidateMetadata();
+    buildNamedBeachMetadataHooks();
 
     state.beachCoastalReadinessReady = Boolean(
       state.dryTerrainValidated &&
       state.nodeRecords.length &&
       (
-        state.coastalShelfZones.length ||
-        state.beachEligibilityZones.length ||
-        state.futureShoreReceivingZones.length ||
-        state.hydrationHandoffZones.length
+        state.coastalShelfMetadataZones.length ||
+        state.beachEligibilityMetadataZones.length ||
+        state.futureShoreReadinessMetadataZones.length ||
+        state.hydrationHandoffReadinessMetadataZones.length
       )
     );
 
     state.buildCount += 1;
+    state.lastBuiltAt = new Date().toISOString();
     publishStatus();
 
     return state.beachCoastalReadinessReady;
   }
 
   function compactZone(zone) {
-    return {
+    return applyReadinessLock({
       zoneId: zone.zoneId,
       zoneType: zone.zoneType,
       classification: zone.classification,
@@ -991,21 +1034,25 @@
       score: zone.score,
       beachEligibilityScore: zone.beachEligibilityScore,
       coastalReadinessScore: zone.coastalReadinessScore,
-      cliffPressure: zone.cliffPressure,
-      activeHydration: false,
-      activeWater: false,
-      finalVisualPassClaim: false
-    };
+      cliffPressure: zone.cliffPressure
+    });
   }
 
-  function readinessPacket(options) {
+  function cloneList(list, compact) {
+    return compact ? list.map(compactZone) : stableClone(list);
+  }
+
+  function readinessPacket(requestor, options) {
     var compact = Boolean(options && options.compact);
 
-    return Object.freeze({
+    return Object.freeze(applyReadinessLock({
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       file: FILE,
       familyPosition: FAMILY_POSITION,
-      packetType: "audralia_beach_coastal_readiness_packet",
+      packetType: "audralia_beach_coastal_readiness_metadata_only_hold_packet",
+      requestor: requestor || "unknown",
+      requester: requestor || "unknown",
 
       sourceSeatCount: SOURCE_SEAT_COUNT,
       nodeRecordCount: state.nodeRecords.length,
@@ -1021,23 +1068,40 @@
 
       beachCoastalReadinessReady: state.beachCoastalReadinessReady,
 
-      coastalShelfZoneCount: state.coastalShelfZones.length,
-      beachEligibilityZoneCount: state.beachEligibilityZones.length,
-      authorizedBeachCandidateCount: state.authorizedBeachCandidates.length,
-      cliffBlockedCoastCount: state.cliffBlockedCoasts.length,
-      basinToShoreCorridorCount: state.basinToShoreCorridors.length,
-      futureShoreReceivingZoneCount: state.futureShoreReceivingZones.length,
-      hydrationHandoffZoneCount: state.hydrationHandoffZones.length,
+      coastalShelfMetadataZoneCount: state.coastalShelfMetadataZones.length,
+      beachEligibilityMetadataZoneCount: state.beachEligibilityMetadataZones.length,
+      authorizedBeachCandidateMetadataCount: state.authorizedBeachCandidateMetadata.length,
+      cliffBlockedCoastMetadataZoneCount: state.cliffBlockedCoastMetadataZones.length,
+      basinToFutureShoreReadinessCorridorCount: state.basinToFutureShoreReadinessCorridors.length,
+      futureShoreReadinessMetadataZoneCount: state.futureShoreReadinessMetadataZones.length,
+      hydrationHandoffReadinessMetadataZoneCount: state.hydrationHandoffReadinessMetadataZones.length,
 
-      coastalShelfZones: compact ? state.coastalShelfZones.map(compactZone) : stableClone(state.coastalShelfZones),
-      beachEligibilityZones: compact ? state.beachEligibilityZones.map(compactZone) : stableClone(state.beachEligibilityZones),
-      authorizedBeachCandidates: stableClone(state.authorizedBeachCandidates),
-      cliffBlockedCoasts: compact ? state.cliffBlockedCoasts.map(compactZone) : stableClone(state.cliffBlockedCoasts),
-      basinToShoreCorridors: compact ? state.basinToShoreCorridors.map(compactZone) : stableClone(state.basinToShoreCorridors),
-      futureShoreReceivingZones: compact ? state.futureShoreReceivingZones.map(compactZone) : stableClone(state.futureShoreReceivingZones),
-      namedBeachHooks: stableClone(state.namedBeachHooks),
+      coastalShelfMetadataZones: cloneList(state.coastalShelfMetadataZones, compact),
+      beachEligibilityMetadataZones: cloneList(state.beachEligibilityMetadataZones, compact),
+      authorizedBeachCandidateMetadata: stableClone(state.authorizedBeachCandidateMetadata),
+      cliffBlockedCoastMetadataZones: cloneList(state.cliffBlockedCoastMetadataZones, compact),
+      basinToFutureShoreReadinessCorridors: cloneList(state.basinToFutureShoreReadinessCorridors, compact),
+      futureShoreReadinessMetadataZones: cloneList(state.futureShoreReadinessMetadataZones, compact),
+      namedBeachMetadataHooks: stableClone(state.namedBeachMetadataHooks),
       climateStandardBeachPlaceholder: stableClone(state.climateStandardBeachPlaceholder),
-      hydrationHandoffZones: compact ? state.hydrationHandoffZones.map(compactZone) : stableClone(state.hydrationHandoffZones),
+      hydrationHandoffReadinessMetadataZones: cloneList(state.hydrationHandoffReadinessMetadataZones, compact),
+
+      coastalShelfZones: cloneList(state.coastalShelfMetadataZones, compact),
+      beachEligibilityZones: cloneList(state.beachEligibilityMetadataZones, compact),
+      authorizedBeachCandidates: stableClone(state.authorizedBeachCandidateMetadata),
+      cliffBlockedCoasts: cloneList(state.cliffBlockedCoastMetadataZones, compact),
+      basinToShoreCorridors: cloneList(state.basinToFutureShoreReadinessCorridors, compact),
+      futureShoreReceivingZones: cloneList(state.futureShoreReadinessMetadataZones, compact),
+      namedBeachHooks: stableClone(state.namedBeachMetadataHooks),
+      hydrationHandoffZones: cloneList(state.hydrationHandoffReadinessMetadataZones, compact),
+
+      coastalShelfZoneCount: state.coastalShelfMetadataZones.length,
+      beachEligibilityZoneCount: state.beachEligibilityMetadataZones.length,
+      authorizedBeachCandidateCount: state.authorizedBeachCandidateMetadata.length,
+      cliffBlockedCoastCount: state.cliffBlockedCoastMetadataZones.length,
+      basinToShoreCorridorCount: state.basinToFutureShoreReadinessCorridors.length,
+      futureShoreReceivingZoneCount: state.futureShoreReadinessMetadataZones.length,
+      hydrationHandoffZoneCount: state.hydrationHandoffReadinessMetadataZones.length,
 
       beachesAreLimitedSpecialNotDefault: true,
       coastlineDoesNotAutomaticallyMeanBeach: true,
@@ -1046,39 +1110,53 @@
 
       beachReadinessOnly: true,
       coastalBoundaryReadinessOnly: true,
+      hydrationHandoffOnly: false,
+      hydrationHandoffReadinessOnly: true,
       hydrationMayReadLater: true,
-      activeHydration: false,
-      activeWater: false,
-
-      sourceTerrainMutated: false,
-      elevationTruthMutated: false,
-      reliefTruthMutated: false,
-      landformTruthMutated: false,
-
-      finalBeachPassClaim: false,
-      finalCoastlinePassClaim: false,
-      finalShorelinePassClaim: false,
-      finalHydrationPassClaim: false,
-      finalVisualPassClaim: false
-    });
+      hydrationMayActivateNow: false
+    }));
   }
 
-  function carrierBeachPacket(options) {
-    var packet = readinessPacket(options || { compact: true });
+  function carrierBeachPacket(requestor, options) {
+    var packet = readinessPacket(requestor || "unknown", options || { compact: true });
 
-    return Object.freeze({
+    return Object.freeze(applyReadinessLock({
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       file: FILE,
-      packetType: "carrier_beach_coastal_readiness_handoff_packet",
+      packetType: "carrier_beach_coastal_readiness_metadata_hold_packet",
+      requestor: requestor || "unknown",
+      requester: requestor || "unknown",
 
       carrierMayConsume: true,
-      carrierShouldDisplayOnly: true,
+      carrierMayInspect: true,
+      carrierMayReport: true,
+      carrierMayDisplay: false,
+      carrierShouldDisplayOnly: false,
+      carrierShouldNotDisplay: true,
       carrierShouldNotOwnBeachTruth: true,
       carrierShouldNotOwnCoastlineTruth: true,
       carrierShouldNotOwnHydrationTruth: true,
       carrierShouldNotActivateWater: true,
+      carrierMayTintSurface: false,
+      carrierMayColorVoid: false,
+      carrierMayDrawBeach: false,
+      carrierMayDrawCoastline: false,
+      carrierMayDrawShoreline: false,
+      carrierMayDrawFutureShore: false,
+      carrierMayDrawHydrationHandoff: false,
+      carrierMayDrawWaterMemory: false,
 
       beachCoastalReadinessReady: packet.beachCoastalReadinessReady,
+
+      coastalShelfMetadataZones: packet.coastalShelfMetadataZones,
+      beachEligibilityMetadataZones: packet.beachEligibilityMetadataZones,
+      authorizedBeachCandidateMetadata: packet.authorizedBeachCandidateMetadata,
+      cliffBlockedCoastMetadataZones: packet.cliffBlockedCoastMetadataZones,
+      basinToFutureShoreReadinessCorridors: packet.basinToFutureShoreReadinessCorridors,
+      futureShoreReadinessMetadataZones: packet.futureShoreReadinessMetadataZones,
+      hydrationHandoffReadinessMetadataZones: packet.hydrationHandoffReadinessMetadataZones,
+
       coastalShelfZones: packet.coastalShelfZones,
       beachEligibilityZones: packet.beachEligibilityZones,
       authorizedBeachCandidates: packet.authorizedBeachCandidates,
@@ -1086,6 +1164,14 @@
       basinToShoreCorridors: packet.basinToShoreCorridors,
       futureShoreReceivingZones: packet.futureShoreReceivingZones,
       hydrationHandoffZones: packet.hydrationHandoffZones,
+
+      coastalShelfMetadataZoneCount: packet.coastalShelfMetadataZoneCount,
+      beachEligibilityMetadataZoneCount: packet.beachEligibilityMetadataZoneCount,
+      authorizedBeachCandidateMetadataCount: packet.authorizedBeachCandidateMetadataCount,
+      cliffBlockedCoastMetadataZoneCount: packet.cliffBlockedCoastMetadataZoneCount,
+      basinToFutureShoreReadinessCorridorCount: packet.basinToFutureShoreReadinessCorridorCount,
+      futureShoreReadinessMetadataZoneCount: packet.futureShoreReadinessMetadataZoneCount,
+      hydrationHandoffReadinessMetadataZoneCount: packet.hydrationHandoffReadinessMetadataZoneCount,
 
       coastalShelfZoneCount: packet.coastalShelfZoneCount,
       beachEligibilityZoneCount: packet.beachEligibilityZoneCount,
@@ -1096,18 +1182,14 @@
       hydrationHandoffZoneCount: packet.hydrationHandoffZoneCount,
 
       beachesAreLimitedSpecialNotDefault: true,
-      activeHydration: false,
-      activeWater: false,
-      finalBeachPassClaim: false,
-      finalCoastlinePassClaim: false,
-      finalHydrationPassClaim: false,
-      finalVisualPassClaim: false
-    });
+      receiptOnlyUntilHydrationAuthorized: true
+    }));
   }
 
-  function publishStatus() {
-    var payload = {
+  function statusPayload() {
+    return applyReadinessLock({
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       file: FILE,
       familyPosition: FAMILY_POSITION,
 
@@ -1130,55 +1212,59 @@
       beachCoastalReadinessReady: state.beachCoastalReadinessReady,
       nodeRecordCount: state.nodeRecords.length,
 
-      coastalShelfZoneCount: state.coastalShelfZones.length,
-      beachEligibilityZoneCount: state.beachEligibilityZones.length,
-      authorizedBeachCandidateCount: state.authorizedBeachCandidates.length,
-      cliffBlockedCoastCount: state.cliffBlockedCoasts.length,
-      basinToShoreCorridorCount: state.basinToShoreCorridors.length,
-      futureShoreReceivingZoneCount: state.futureShoreReceivingZones.length,
-      hydrationHandoffZoneCount: state.hydrationHandoffZones.length,
+      coastalShelfMetadataZoneCount: state.coastalShelfMetadataZones.length,
+      beachEligibilityMetadataZoneCount: state.beachEligibilityMetadataZones.length,
+      authorizedBeachCandidateMetadataCount: state.authorizedBeachCandidateMetadata.length,
+      cliffBlockedCoastMetadataZoneCount: state.cliffBlockedCoastMetadataZones.length,
+      basinToFutureShoreReadinessCorridorCount: state.basinToFutureShoreReadinessCorridors.length,
+      futureShoreReadinessMetadataZoneCount: state.futureShoreReadinessMetadataZones.length,
+      hydrationHandoffReadinessMetadataZoneCount: state.hydrationHandoffReadinessMetadataZones.length,
+
+      coastalShelfZoneCount: state.coastalShelfMetadataZones.length,
+      beachEligibilityZoneCount: state.beachEligibilityMetadataZones.length,
+      authorizedBeachCandidateCount: state.authorizedBeachCandidateMetadata.length,
+      cliffBlockedCoastCount: state.cliffBlockedCoastMetadataZones.length,
+      basinToShoreCorridorCount: state.basinToFutureShoreReadinessCorridors.length,
+      futureShoreReceivingZoneCount: state.futureShoreReadinessMetadataZones.length,
+      hydrationHandoffZoneCount: state.hydrationHandoffReadinessMetadataZones.length,
 
       climateStandardBeachPlaceholderHeld: Boolean(state.climateStandardBeachPlaceholder),
-      namedBeachHooksHeld: state.namedBeachHooks.length,
+      namedBeachMetadataHooksHeld: state.namedBeachMetadataHooks.length,
+      namedBeachHooksHeld: state.namedBeachMetadataHooks.length,
 
       beachesAreLimitedSpecialNotDefault: true,
       coastlineDoesNotAutomaticallyMeanBeach: true,
       shoreDoesNotAutomaticallyMeanBeach: true,
       waterBoundaryDoesNotAutomaticallyMeanBeach: true,
 
-      beachReadinessOnly: true,
-      coastalBoundaryReadinessOnly: true,
-      hydrationHandoffOnly: true,
-
-      sourceTerrainMutated: false,
-      elevationTruthMutated: false,
-      reliefTruthMutated: false,
-      landformTruthMutated: false,
-
-      activeHydration: false,
-      activeWater: false,
-
-      finalBeachPassClaim: false,
-      finalCoastlinePassClaim: false,
-      finalShorelinePassClaim: false,
-      finalHydrationPassClaim: false,
-      finalVisualPassClaim: false,
-
       buildCount: state.buildCount,
+      lastBuiltAt: state.lastBuiltAt,
       errors: state.errors.slice(),
-      deployMarker: "AUDRALIA_BEACH_COASTAL_READINESS_CHILD_DEPLOY_MARKER_v1"
-    };
+      deployMarker: "AUDRALIA_BEACH_COASTAL_READINESS_METADATA_ONLY_HOLD_DEPLOY_MARKER_v1"
+    });
+  }
 
+  function publishStatus() {
+    var payload = statusPayload();
+
+    window.AUDRALIA_BEACH_COASTAL_READINESS_METADATA_ONLY_HOLD_STATUS = payload;
     window.AUDRALIA_BEACH_COASTAL_READINESS_CHILD_STATUS = payload;
 
     try {
       document.documentElement.dataset.audraliaBeachCoastalReadinessContract = CONTRACT;
       document.documentElement.dataset.audraliaBeachCoastalReadinessReady = String(state.beachCoastalReadinessReady);
+      document.documentElement.dataset.audraliaBeachCoastalMetadataOnly = "true";
+      document.documentElement.dataset.audraliaBeachCoastalReceiptOnlyUntilHydrationAuthorized = "true";
+      document.documentElement.dataset.audraliaCarrierMayInspectBeachCoastal = "true";
+      document.documentElement.dataset.audraliaCarrierMayDisplayBeachCoastal = "false";
+      document.documentElement.dataset.audraliaCarrierMayTintSurfaceFromBeachCoastal = "false";
+      document.documentElement.dataset.audraliaCarrierMayColorVoidFromBeachCoastal = "false";
+      document.documentElement.dataset.audraliaCarrierMayDrawHydrationHandoff = "false";
       document.documentElement.dataset.audraliaBeachesAreLimitedSpecialNotDefault = "true";
       document.documentElement.dataset.audraliaClimateStandardBeachPlaceholderHeld = String(Boolean(state.climateStandardBeachPlaceholder));
-      document.documentElement.dataset.audraliaCoastalShelfZoneCount = String(state.coastalShelfZones.length);
-      document.documentElement.dataset.audraliaBeachEligibilityZoneCount = String(state.beachEligibilityZones.length);
-      document.documentElement.dataset.audraliaHydrationHandoffZoneCount = String(state.hydrationHandoffZones.length);
+      document.documentElement.dataset.audraliaCoastalShelfMetadataZoneCount = String(state.coastalShelfMetadataZones.length);
+      document.documentElement.dataset.audraliaBeachEligibilityMetadataZoneCount = String(state.beachEligibilityMetadataZones.length);
+      document.documentElement.dataset.audraliaHydrationHandoffReadinessMetadataZoneCount = String(state.hydrationHandoffReadinessMetadataZones.length);
       document.documentElement.dataset.audraliaActiveHydration = "false";
       document.documentElement.dataset.audraliaActiveWater = "false";
       document.documentElement.dataset.audraliaFinalBeachPassClaim = "false";
@@ -1199,9 +1285,7 @@
       buildBeachCoastalReadiness();
     }
 
-    var packet = readinessPacket(options || {});
-    packet.requestor = requestor || "unknown";
-    return packet;
+    return readinessPacket(requestor || "unknown", options || {});
   }
 
   function getCarrierBeachPacket(requestor, options) {
@@ -1209,19 +1293,23 @@
       buildBeachCoastalReadiness();
     }
 
-    var packet = carrierBeachPacket(options || { compact: true });
-    packet.requestor = requestor || "unknown";
-    return packet;
+    return carrierBeachPacket(requestor || "unknown", options || { compact: true });
+  }
+
+  function getBeachMetadataHoldPacket(requestor, options) {
+    return getBeachCoastalReadinessPacket(requestor || "unknown", options || {});
   }
 
   function api() {
     return Object.freeze({
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       file: FILE,
       status: status,
       refresh: buildBeachCoastalReadiness,
       getBeachCoastalReadinessPacket: getBeachCoastalReadinessPacket,
-      getCarrierBeachPacket: getCarrierBeachPacket
+      getCarrierBeachPacket: getCarrierBeachPacket,
+      getBeachMetadataHoldPacket: getBeachMetadataHoldPacket
     });
   }
 

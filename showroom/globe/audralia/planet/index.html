@@ -3,10 +3,18 @@
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
   data-page="audralia-planet-inspection"
-  data-contract="AUDRALIA_PLANET_HTML_FULL_SHELL_LENS_AUTHORITY_TNT_v1"
-  data-previous-contract="AUDRALIA_PLANET_HTML_LENS_AUTHORITY_SHELL_REFLECTION_TNT_v1"
+  data-contract="AUDRALIA_PLANET_DUAL_VIEWPORT_LENS_STAGE_TNT_v1"
+  data-previous-contract="AUDRALIA_PLANET_HTML_FULL_SHELL_LENS_AUTHORITY_TNT_v1"
   data-full-html-shell="true"
   data-fragment-output="false"
+  data-dual-viewport-stage-active="true"
+  data-primary-view="full_planet"
+  data-secondary-view="close_inspection"
+  data-side-inspection-mount="#audraliaPlanetSideInspectionMount"
+  data-side-view-is-ghost="false"
+  data-side-view-is-intentional-inspection="true"
+  data-primary-and-side-share-lens-state="true"
+  data-primary-and-side-share-rotation-state="true"
   data-lens-authority-split-active="true"
   data-active-lens-set="surface,hydration,boundary,lattice,full"
   data-hydration-held="true"
@@ -16,10 +24,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Audralia Planet Inspection · Lens Authority Split</title>
+  <title>Audralia Planet Inspection · Dual Viewport Lens Stage</title>
   <meta
     name="description"
-    content="Audralia planet inspection route shell for Surface, Hydration, Boundary, Lattice, and Full development lenses."
+    content="Audralia planet inspection route shell with synchronized main planet and close inspection viewports."
   />
 
   <style>
@@ -35,7 +43,6 @@
       --gold: #f4cf83;
       --green: #a7f3c6;
       --blue: #8dd8ff;
-      --danger: #ffb4a8;
       --radius: 22px;
       --shadow: 0 24px 90px rgba(0, 0, 0, 0.46);
     }
@@ -108,12 +115,13 @@
     .audralia-header {
       position: sticky;
       top: 0;
-      z-index: 50;
+      z-index: 80;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 14px;
       padding: 14px 0;
+      background: linear-gradient(180deg, rgba(2, 7, 19, 0.94), rgba(2, 7, 19, 0.70));
       backdrop-filter: blur(18px);
     }
 
@@ -137,7 +145,6 @@
         radial-gradient(circle at 35% 25%, rgba(244, 207, 131, 0.78), transparent 28%),
         radial-gradient(circle at 68% 70%, rgba(141, 216, 255, 0.42), transparent 38%),
         rgba(4, 12, 28, 0.92);
-      box-shadow: 0 0 28px rgba(141, 216, 255, 0.14);
       color: var(--gold);
       font-size: 0.78rem;
     }
@@ -171,7 +178,7 @@
     }
 
     .audralia-planet-hero {
-      margin: 18px 0 18px;
+      margin: 18px 0;
       padding: clamp(20px, 4vw, 42px);
       border: 1px solid var(--line);
       border-radius: calc(var(--radius) + 8px);
@@ -239,35 +246,30 @@
       line-height: 1.15;
     }
 
-    .audralia-stage-card {
-      margin: 18px 0;
-      padding: clamp(14px, 2.2vw, 24px);
-      border: 1px solid var(--line);
-      border-radius: calc(var(--radius) + 10px);
-      background:
-        linear-gradient(180deg, rgba(8, 17, 34, 0.78), rgba(3, 9, 22, 0.92)),
-        var(--panel-strong);
-      box-shadow: var(--shadow);
-    }
-
-    .audralia-stage-toolbar {
+    .audralia-lens-dock {
+      position: sticky;
+      top: 72px;
+      z-index: 70;
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 14px;
-      margin-bottom: 14px;
+      gap: 12px;
+      margin: 18px 0;
+      padding: 12px;
+      border: 1px solid rgba(182, 245, 255, 0.15);
+      border-radius: calc(var(--radius) + 6px);
+      background: rgba(4, 11, 24, 0.88);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 54px rgba(0, 0, 0, 0.28);
     }
 
-    .audralia-stage-toolbar h2 {
+    .audralia-lens-dock p {
       margin: 0;
-      font-size: clamp(1.2rem, 2.5vw, 1.8rem);
-      letter-spacing: -0.035em;
-    }
-
-    .audralia-stage-toolbar p {
-      margin: 6px 0 0;
-      color: var(--muted);
-      line-height: 1.5;
+      color: rgba(238, 244, 255, 0.70);
+      font-size: 0.92rem;
+      font-weight: 800;
+      line-height: 1.35;
     }
 
     .audralia-planet-lens-row {
@@ -297,6 +299,37 @@
         rgba(4, 14, 31, 0.92);
       color: var(--gold);
       box-shadow: 0 0 30px rgba(244, 207, 131, 0.10);
+    }
+
+    .audralia-stage-card {
+      margin: 18px 0;
+      padding: clamp(14px, 2.2vw, 24px);
+      border: 1px solid var(--line);
+      border-radius: calc(var(--radius) + 10px);
+      background:
+        linear-gradient(180deg, rgba(8, 17, 34, 0.78), rgba(3, 9, 22, 0.92)),
+        var(--panel-strong);
+      box-shadow: var(--shadow);
+    }
+
+    .audralia-stage-toolbar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .audralia-stage-toolbar h2 {
+      margin: 0;
+      font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+      letter-spacing: -0.035em;
+    }
+
+    .audralia-stage-toolbar p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      line-height: 1.5;
     }
 
     .audralia-planet-stage-label {
@@ -332,12 +365,71 @@
       min-height: 620px;
     }
 
+    .audralia-side-inspection {
+      position: absolute;
+      z-index: 36;
+      top: 18px;
+      left: 18px;
+      width: min(265px, 42%);
+      border: 1px solid rgba(244, 207, 131, 0.36);
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at 50% 40%, rgba(141, 216, 255, 0.12), transparent 70%),
+        rgba(2, 8, 20, 0.70);
+      box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.38),
+        inset 0 0 34px rgba(141, 216, 255, 0.07);
+      backdrop-filter: blur(10px);
+      pointer-events: none;
+    }
+
+    .audralia-side-inspection-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px 8px;
+      border-bottom: 1px solid rgba(182, 245, 255, 0.12);
+    }
+
+    .audralia-side-inspection-header strong {
+      color: var(--gold);
+      font-size: 0.86rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .audralia-side-inspection-header span {
+      color: rgba(238, 244, 255, 0.54);
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+
+    #audraliaPlanetSideInspectionMount {
+      position: relative;
+      overflow: hidden;
+      height: 176px;
+      border-radius: 0 0 21px 21px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(141, 216, 255, 0.13), transparent 70%),
+        rgba(0, 4, 12, 0.30);
+    }
+
+    .audralia-side-inspection-caption {
+      margin: 0;
+      padding: 0 12px 11px;
+      color: rgba(238, 244, 255, 0.60);
+      font-size: 0.72rem;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
     .audralia-stage-hint {
       position: absolute;
       left: 16px;
       right: 16px;
       bottom: 16px;
-      z-index: 20;
+      z-index: 30;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
@@ -350,7 +442,7 @@
       padding: 0.58rem 0.72rem;
       border: 1px solid rgba(182, 245, 255, 0.16);
       border-radius: 999px;
-      background: rgba(2, 8, 20, 0.58);
+      background: rgba(2, 8, 20, 0.64);
       color: rgba(238, 244, 255, 0.68);
       font-size: 0.78rem;
       font-weight: 850;
@@ -420,7 +512,8 @@
 
     @media (max-width: 900px) {
       .audralia-header,
-      .audralia-stage-toolbar {
+      .audralia-stage-toolbar,
+      .audralia-lens-dock {
         align-items: stretch;
         flex-direction: column;
       }
@@ -433,6 +526,10 @@
       .audralia-planet-status-grid,
       .audralia-receipt-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .audralia-lens-dock {
+        top: 118px;
       }
     }
 
@@ -447,7 +544,17 @@
       }
 
       #audraliaPlanetInspectionStage {
-        min-height: 640px;
+        min-height: 650px;
+      }
+
+      .audralia-side-inspection {
+        width: min(228px, 48%);
+        top: 14px;
+        left: 14px;
+      }
+
+      #audraliaPlanetSideInspectionMount {
+        height: 148px;
       }
 
       .audralia-planet-receipt li {
@@ -486,64 +593,85 @@
 
     <main id="audraliaPlanetMain">
       <section class="audralia-planet-hero" aria-labelledby="audraliaPlanetTitle">
-        <p class="audralia-planet-kicker">Route-shell integration · lens authority split</p>
+        <p class="audralia-planet-kicker">Route-shell integration · dual viewport lens stage</p>
 
         <h1 id="audraliaPlanetTitle">Audralia planet inspection.</h1>
 
         <p class="audralia-planet-lede">
-          The planet shell now separates development perspectives. Surface develops visible land.
-          Hydration develops future water placement. Boundary develops the land-water interface.
-          Lattice inspects structure. Full previews the authorized layers working together.
+          The stage now separates the full planet view from a synchronized close inspection view.
+          The second view is no longer a ghost. It is a framed instrument that follows the same
+          lens state, rotation state, and terrain-expression surface.
         </p>
 
         <p class="audralia-planet-lede">
-          The HTML shell owns route structure, load order, mount points, controls, and receipts only.
-          Terrain, elevation, relief, landform, beach readiness, triangulation, carrier projection,
-          and terrain visibility remain downstream authorities.
+          Surface develops visible land. Hydration develops future water placement. Boundary develops
+          the land-water interface. Lattice inspects structure. Full previews the authorized layers
+          working together. Hydration remains held and no final visual pass is claimed.
         </p>
 
         <div class="audralia-planet-status-grid" aria-label="Audralia planet status">
-          <article><span>Lens split</span><strong>active</strong></article>
-          <article><span>Surface</span><strong>land visibility</strong></article>
-          <article><span>Hydration</span><strong>future placement</strong></article>
-          <article><span>Boundary</span><strong>interface logic</strong></article>
+          <article><span>Dual viewport</span><strong>active</strong></article>
+          <article><span>Main view</span><strong>full planet</strong></article>
+          <article><span>Side view</span><strong>close inspection</strong></article>
+          <article><span>Lens state</span><strong>shared</strong></article>
           <article><span>Runtime carrier</span><strong>projection / controls</strong></article>
           <article><span>Final visual pass</span><strong>false</strong></article>
+        </div>
+      </section>
+
+      <section class="audralia-lens-dock" aria-label="Audralia lens controls">
+        <p data-audralia-planet-stage-label>
+          <strong>Surface</strong> → land-only development / visible terrain expression
+        </p>
+
+        <div class="audralia-planet-lens-row" role="group" aria-label="Audralia planet development lenses">
+          <button type="button" data-audralia-planet-lens="surface" aria-pressed="true">Surface</button>
+          <button type="button" data-audralia-planet-lens="hydration" aria-pressed="false">Hydration</button>
+          <button type="button" data-audralia-planet-lens="boundary" aria-pressed="false">Boundary</button>
+          <button type="button" data-audralia-planet-lens="lattice" aria-pressed="false">Lattice</button>
+          <button type="button" data-audralia-planet-lens="full" aria-pressed="false">Full</button>
         </div>
       </section>
 
       <section class="audralia-stage-card" aria-labelledby="audraliaStageTitle">
         <div class="audralia-stage-toolbar">
           <div>
-            <h2 id="audraliaStageTitle">Development lens stage</h2>
+            <h2 id="audraliaStageTitle">Main View + Close Inspection</h2>
             <p>
-              Select a lens to isolate land visibility, future hydration placement, boundary logic,
-              lattice structure, or the full composite preview.
+              Drag the full planet. The close inspection window mirrors the same state at a tighter scale.
             </p>
           </div>
-
-          <div class="audralia-planet-lens-row" role="group" aria-label="Audralia planet development lenses">
-            <button type="button" data-audralia-planet-lens="surface" aria-pressed="true">Surface</button>
-            <button type="button" data-audralia-planet-lens="hydration" aria-pressed="false">Hydration</button>
-            <button type="button" data-audralia-planet-lens="boundary" aria-pressed="false">Boundary</button>
-            <button type="button" data-audralia-planet-lens="lattice" aria-pressed="false">Lattice</button>
-            <button type="button" data-audralia-planet-lens="full" aria-pressed="false">Full</button>
-          </div>
         </div>
-
-        <p class="audralia-planet-stage-label" data-audralia-planet-stage-label>
-          <strong>Surface</strong> → land-only development / visible terrain expression
-        </p>
 
         <div
           id="audraliaPlanetInspectionStage"
           data-audralia-planet-inspection-stage
-          aria-label="Audralia planet inspection stage"
+          aria-label="Audralia dual viewport planet inspection stage"
         >
           <div
             id="audraliaPlanetInspectionMount"
             data-audralia-planet-inspection-mount
           ></div>
+
+          <aside
+            class="audralia-side-inspection"
+            aria-label="Close Inspection synchronized side viewport"
+            data-audralia-side-inspection-frame
+          >
+            <div class="audralia-side-inspection-header">
+              <strong>Close Inspection</strong>
+              <span>same lens · same rotation</span>
+            </div>
+
+            <div
+              id="audraliaPlanetSideInspectionMount"
+              data-audralia-planet-side-inspection-mount
+            ></div>
+
+            <p class="audralia-side-inspection-caption">
+              Intentional side view. Not a ghost. Not independent terrain truth.
+            </p>
+          </aside>
 
           <div class="audralia-stage-hint" aria-hidden="true">
             <span>Drag to rotate</span>
@@ -572,13 +700,12 @@
           <h2 id="audraliaRouteAuthorityTitle">Route authority receipt</h2>
           <ul>
             <li><strong>HTML shell</strong> <code>route, load order, mount, controls, receipt</code></li>
-            <li><strong>HTML owns terrain truth</strong> <code>false</code></li>
-            <li><strong>HTML owns projection</strong> <code>false</code></li>
+            <li><strong>Primary viewport</strong> <code>full planet</code></li>
+            <li><strong>Secondary viewport</strong> <code>close inspection / not ghost</code></li>
+            <li><strong>Shared state</strong> <code>lens + rotation</code></li>
             <li><strong>Carrier owns projection</strong> <code>true</code></li>
-            <li><strong>Expression canvas owns terrain visibility</strong> <code>true</code></li>
-            <li><strong>Expression canvas owns terrain truth</strong> <code>false</code></li>
+            <li><strong>Expression canvas owns visibility</strong> <code>true</code></li>
             <li><strong>Hydration</strong> <code>held</code></li>
-            <li><strong>Active water</strong> <code>false</code></li>
             <li><strong>Final visual pass</strong> <code>false</code></li>
           </ul>
         </section>
@@ -587,18 +714,26 @@
 
     <footer class="audralia-footer">
       <p>
-        AUDRALIA_PLANET_HTML_FULL_SHELL_LENS_AUTHORITY_TNT_v1 · route shell only · final visual pass false
+        AUDRALIA_PLANET_DUAL_VIEWPORT_LENS_STAGE_TNT_v1 · stage composition only · final visual pass false
       </p>
     </footer>
   </div>
 
   <div
     hidden
-    data-audralia-planet-html-contract="AUDRALIA_PLANET_HTML_FULL_SHELL_LENS_AUTHORITY_TNT_v1"
-    data-previous-html-contract="AUDRALIA_PLANET_HTML_LENS_AUTHORITY_SHELL_REFLECTION_TNT_v1"
+    data-audralia-planet-html-contract="AUDRALIA_PLANET_DUAL_VIEWPORT_LENS_STAGE_TNT_v1"
+    data-previous-html-contract="AUDRALIA_PLANET_HTML_FULL_SHELL_LENS_AUTHORITY_TNT_v1"
     data-route="/showroom/globe/audralia/planet/"
     data-full-html-shell="true"
     data-fragment-output="false"
+    data-dual-viewport-stage-active="true"
+    data-primary-view="full_planet"
+    data-secondary-view="close_inspection"
+    data-side-inspection-mount="#audraliaPlanetSideInspectionMount"
+    data-side-view-is-ghost="false"
+    data-side-view-is-intentional-inspection="true"
+    data-primary-and-side-share-lens-state="true"
+    data-primary-and-side-share-rotation-state="true"
     data-shell-reflects-lens-authority-split="true"
     data-lens-authority-split-active="true"
     data-active-lens-set="surface,hydration,boundary,lattice,full"
@@ -623,28 +758,17 @@
     data-carrier-preserved="true"
     data-carrier-rewritten="false"
     data-html-owns-terrain-truth="false"
-    data-html-owns-elevation-truth="false"
-    data-html-owns-relief-truth="false"
-    data-html-owns-landform-truth="false"
-    data-html-owns-beach-truth="false"
-    data-html-owns-triangulation-truth="false"
-    data-html-owns-hydration-truth="false"
     data-html-owns-projection="false"
     data-expression-canvas-owns-terrain-truth="false"
     data-expression-canvas-owns-terrain-visibility="true"
     data-expression-canvas-owns-hydration-truth="false"
-    data-surface-land-mask-active="true"
-    data-hydration-future-fill-mask-active="true"
-    data-boundary-interface-mask-active="true"
-    data-lattice-diagnostic-mask-active="true"
-    data-full-composite-mask-active="true"
     data-hydration-held="true"
     data-active-hydration="false"
     data-active-water="false"
     data-final-terrain-pass-claim="false"
     data-final-hydration-pass-claim="false"
     data-final-visual-pass-claim="false"
-    data-deploy-marker="AUDRALIA_PLANET_HTML_FULL_SHELL_LENS_AUTHORITY_DEPLOY_MARKER_v1"
+    data-deploy-marker="AUDRALIA_PLANET_DUAL_VIEWPORT_LENS_STAGE_DEPLOY_MARKER_v1"
   ></div>
 
   <script defer src="/assets/audralia/clean/terrain/audralia.dry-revealed-physical-terrain.child.js?v=AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_ATLAS_CHILD_TNT_v1"></script>

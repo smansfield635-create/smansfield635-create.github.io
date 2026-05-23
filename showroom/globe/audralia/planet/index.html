@@ -2,16 +2,24 @@
 <html
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
-  data-page="audralia-dry-revealed-terrain-elevation-child-load-order"
-  data-contract="AUDRALIA_PLANET_HTML_ELEVATION_TRACK_CHILD_LOAD_ORDER_TNT_v1"
-  data-previous-contract="AUDRALIA_PLANET_HTML_RUNTIME_CACHE_KEY_ALIGNMENT_FOR_NINE_CONTINENT_CARRIER_TNT_v1"
+  data-page="audralia-dry-revealed-terrain-relief-expression-load-order"
+  data-contract="AUDRALIA_ELEVATION_RELIEF_EXPRESSION_HTML_LOAD_ORDER_ACTIVATION_TNT_v1"
+  data-previous-contract="AUDRALIA_PLANET_HTML_ELEVATION_TRACK_CHILD_LOAD_ORDER_TNT_v1"
   data-runtime-carrier-contract="AUDRALIA_PLANET_RUNTIME_EXISTING_NODE_LAND_BODY_COMPOSITOR_TNT_v1"
-  data-elevation-track-contract="AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD_TNT_v1"
+  data-elevation-track-contract="AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD_OPTIMAL_EXPRESSION_TNT_v1"
+  data-elevation-relief-expression-contract="AUDRALIA_ELEVATION_RELIEF_EXPRESSION_DIRECT_DOWNSTREAM_CHILD_TNT_v1"
   data-dry-revealed-terrain-loaded-before-elevation-child="true"
   data-elevation-track-child-loaded="true"
-  data-elevation-track-loaded-before-runtime-carrier="true"
+  data-elevation-track-loaded-before-relief-expression="true"
+  data-elevation-relief-expression-child-loaded="true"
+  data-elevation-relief-expression-loaded-after-elevation-track="true"
+  data-elevation-relief-expression-loaded-before-runtime-carrier="true"
+  data-direct-downstream-from-elevation-track="true"
+  data-uses-elevation-track-as-primary-source="true"
+  data-uses-dry-terrain-as-primary-source="false"
   data-runtime-carrier-visual-behavior-preserved="true"
   data-carrier-elevation-consumption="false"
+  data-carrier-relief-consumption="false"
   data-hydration-held="true"
   data-active-hydration="false"
   data-gratitude-island-read="false"
@@ -24,7 +32,7 @@
   <title>Audralia · Dry Revealed Terrain</title>
   <meta
     name="description"
-    content="Audralia planet inspection with dry revealed terrain, passive elevation-track child load order, and preserved runtime carrier behavior."
+    content="Audralia planet inspection with dry revealed terrain, optimized elevation-track parent, direct downstream relief-expression child activation, and preserved runtime carrier behavior."
   >
 
   <style>
@@ -406,16 +414,17 @@
     <main id="planet-main">
       <section class="hero">
         <p class="kicker">Audralia · Dry Revealed Physical Terrain</p>
-        <h1>The water is held back. The carved planet is revealed.</h1>
+        <h1>The water is held back. Relief expression is activated downstream.</h1>
         <p class="lede">
-          The dry revealed terrain atlas loads first. The elevation-track child now loads passively before the runtime carrier, preserving the successful land-body compositor while preparing downstream elevation truth.
+          The dry revealed terrain atlas loads first. The optimized elevation-track child loads second. The direct downstream relief-expression child now loads third, before the preserved inspection carrier. No carrier relief consumption is activated in this pass.
         </p>
 
         <div class="status-row">
           <span class="status-pill">Dry terrain atlas first</span>
-          <span class="status-pill">Elevation child loaded</span>
+          <span class="status-pill">Optimized elevation-track parent</span>
+          <span class="status-pill">Relief-expression child loaded</span>
+          <span class="status-pill">Direct downstream</span>
           <span class="status-pill">Carrier preserved</span>
-          <span class="status-pill">No elevation consumption yet</span>
           <span class="status-pill">Hydration held</span>
           <span class="status-pill">Final visual pass false</span>
         </div>
@@ -424,9 +433,9 @@
       <section id="inspection-carrier" class="inspection-shell">
         <div class="section-head">
           <p class="section-title">Inspection Chamber</p>
-          <h2>Surface keeps the successful land-body carrier while elevation truth loads downstream.</h2>
+          <h2>Relief expression is active as a downstream packet source. The carrier remains preserved.</h2>
           <p>
-            This route now makes the elevation-track child available before the runtime carrier boots. The carrier visual behavior remains preserved; elevation consumption comes later with guarded fallback.
+            This route now loads the direct child of the optimized elevation-track file. Relief expression becomes available to the page, but the runtime carrier is not renewed and does not consume relief yet.
           </p>
         </div>
 
@@ -434,14 +443,22 @@
           id="audraliaPlanetInspectionStage"
           class="inspection-stage"
           data-audralia-planet-inspection-stage
-          data-contract="AUDRALIA_PLANET_HTML_ELEVATION_TRACK_CHILD_LOAD_ORDER_TNT_v1"
+          data-contract="AUDRALIA_ELEVATION_RELIEF_EXPRESSION_HTML_LOAD_ORDER_ACTIVATION_TNT_v1"
           data-runtime-carrier-contract="AUDRALIA_PLANET_RUNTIME_EXISTING_NODE_LAND_BODY_COMPOSITOR_TNT_v1"
-          data-elevation-track-contract="AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD_TNT_v1"
+          data-elevation-track-contract="AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD_OPTIMAL_EXPRESSION_TNT_v1"
+          data-elevation-relief-expression-contract="AUDRALIA_ELEVATION_RELIEF_EXPRESSION_DIRECT_DOWNSTREAM_CHILD_TNT_v1"
           data-dry-revealed-terrain-loaded-before-elevation-child="true"
           data-elevation-track-child-loaded="true"
-          data-elevation-track-loaded-before-runtime-carrier="true"
+          data-elevation-track-loaded-before-relief-expression="true"
+          data-elevation-relief-expression-child-loaded="true"
+          data-elevation-relief-expression-loaded-after-elevation-track="true"
+          data-elevation-relief-expression-loaded-before-runtime-carrier="true"
+          data-direct-downstream-from-elevation-track="true"
+          data-uses-elevation-track-as-primary-source="true"
+          data-uses-dry-terrain-as-primary-source="false"
           data-runtime-carrier-visual-behavior-preserved="true"
           data-carrier-elevation-consumption="false"
+          data-carrier-relief-consumption="false"
           data-hydration-held="true"
           data-active-hydration="false"
           data-gratitude-island-read="false"
@@ -455,7 +472,7 @@
           ></div>
 
           <div class="stage-label" data-audralia-planet-stage-label>
-            <strong>Dry Revealed Terrain</strong> → successful carrier preserved · elevation child loaded passively
+            <strong>Dry Revealed Terrain</strong> → optimized elevation parent · relief-expression child loaded · carrier preserved
           </div>
 
           <div class="inline-lens-tray" role="group" aria-label="Planet lenses">
@@ -468,7 +485,7 @@
           </div>
 
           <div class="stage-instruction">
-            Drag to rotate. Pinch or wheel to zoom. Elevation truth is loaded downstream; carrier visual behavior remains preserved.
+            Drag to rotate. Pinch or wheel to zoom. Relief expression is loaded downstream; carrier relief consumption remains held.
           </div>
         </div>
       </section>
@@ -476,54 +493,82 @@
       <section class="state-shell">
         <div class="section-head">
           <p class="section-title">Load Order Deck</p>
-          <h2>Dry terrain first. Elevation child second. Runtime carrier last.</h2>
+          <h2>Dry terrain → elevation-track → relief-expression → preserved carrier.</h2>
         </div>
 
         <div class="grid">
-          <article class="card"><b>01 Source</b><strong>Dry terrain atlas</strong><span>Planet-wide exposed physical mass and former hydrosphere carving source.</span></article>
-          <article class="card"><b>02 Elevation</b><strong>Downstream child</strong><span>Loads passively and publishes height, slope, ridge, basin, watershed, and future-fill packets.</span></article>
-          <article class="card"><b>03 Runtime</b><strong>Carrier preserved</strong><span>The successful existing land-body compositor remains untouched in this pass.</span></article>
-          <article class="card"><b>Hydration</b><strong>Held</strong><span>No oceans, rivers, lakes, wetlands, waterfalls, active beaches, or active flow.</span></article>
+          <article class="card">
+            <b>01 Source</b>
+            <strong>Dry terrain atlas</strong>
+            <span>Planet-wide exposed physical mass and former hydrosphere carving source.</span>
+          </article>
+
+          <article class="card">
+            <b>02 Parent</b>
+            <strong>Optimized elevation-track</strong>
+            <span>Owns elevation truth: ridges, basins, valleys, watersheds, drainage gates, and future-fill systems.</span>
+          </article>
+
+          <article class="card">
+            <b>03 Direct Child</b>
+            <strong>Relief expression</strong>
+            <span>Publishes relief-expression packets directly downstream from elevation-track truth.</span>
+          </article>
+
+          <article class="card">
+            <b>04 Runtime</b>
+            <strong>Carrier preserved</strong>
+            <span>The inspection carrier remains baseline infrastructure and does not consume relief yet.</span>
+          </article>
         </div>
       </section>
 
       <section id="route-receipt" class="receipt-shell">
         <div class="section-head">
           <p class="section-title">Route Receipt</p>
-          <h2>Elevation-track child loads before runtime carrier without visual carrier mutation.</h2>
+          <h2>Relief-expression child loads after elevation-track and before runtime carrier.</h2>
         </div>
 
-        <code class="receipt-code">AUDRALIA_PLANET_HTML_ELEVATION_TRACK_CHILD_LOAD_ORDER_TNT_v1
+        <code class="receipt-code">AUDRALIA_ELEVATION_RELIEF_EXPRESSION_HTML_LOAD_ORDER_ACTIVATION_TNT_v1
 route=/showroom/globe/audralia/planet/
 dry_revealed_terrain=/assets/audralia/clean/terrain/audralia.dry-revealed-physical-terrain.child.js
 dry_revealed_terrain_contract=AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_ATLAS_CHILD_TNT_v1
 elevation_track_child=/assets/audralia/clean/terrain/audralia.elevation-track.child.js
-elevation_track_contract=AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD_TNT_v1
+elevation_track_contract=AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD_OPTIMAL_EXPRESSION_TNT_v1
+elevation_relief_expression_child=/assets/audralia/clean/terrain/audralia.elevation-relief-expression.child.js
+elevation_relief_expression_contract=AUDRALIA_ELEVATION_RELIEF_EXPRESSION_DIRECT_DOWNSTREAM_CHILD_TNT_v1
 runtime_carrier=/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
 runtime_carrier_contract=AUDRALIA_PLANET_RUNTIME_EXISTING_NODE_LAND_BODY_COMPOSITOR_TNT_v1
-load_order=dry-revealed-terrain→elevation-track-child→gratitude-context-children→runtime-carrier
-dry_revealed_terrain_loaded_before_elevation_child=true
-elevation_track_child_loaded=true
-elevation_track_loaded_before_runtime_carrier=true
+load_order=dry-revealed-terrain→optimized-elevation-track→elevation-relief-expression→gratitude-context-children→runtime-carrier
+dry_revealed_terrain_loaded_before_elevation_track=true
+elevation_track_loaded_before_relief_expression=true
+elevation_relief_expression_child_loaded=true
+elevation_relief_expression_loaded_after_elevation_track=true
+elevation_relief_expression_loaded_before_runtime_carrier=true
+direct_downstream_from_elevation_track=true
+uses_elevation_track_as_primary_source=true
+uses_dry_terrain_as_primary_source=false
 runtime_carrier_visual_behavior_preserved=true
 carrier_elevation_consumption=false
-carrier_consumes_elevation_packet=false
+carrier_relief_consumption=false
 hydration_held=true
 active_hydration=false
 gratitude_island_read=false
 carrier_is_runtime=true
 final_visual_pass_claim=false</code>
 
-        <template id="audralia-elevation-track-child-load-order-receipt" class="hidden-receipt" data-route-receipt>
-AUDRALIA_PLANET_HTML_ELEVATION_TRACK_CHILD_LOAD_ORDER_TNT_v1
+        <template id="audralia-elevation-relief-expression-load-order-receipt" class="hidden-receipt" data-route-receipt>
+AUDRALIA_ELEVATION_RELIEF_EXPRESSION_HTML_LOAD_ORDER_ACTIVATION_TNT_v1
 route=/showroom/globe/audralia/planet/
-dry_revealed_terrain_loaded_before_elevation_child=true
-elevation_track_child_loaded=true
-elevation_track_contract=AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD_TNT_v1
-elevation_track_loaded_before_runtime_carrier=true
-runtime_carrier_contract=AUDRALIA_PLANET_RUNTIME_EXISTING_NODE_LAND_BODY_COMPOSITOR_TNT_v1
-runtime_carrier_visual_behavior_preserved=true
-carrier_elevation_consumption=false
+elevation_track_contract=AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD_OPTIMAL_EXPRESSION_TNT_v1
+elevation_relief_expression_child_loaded=true
+elevation_relief_expression_contract=AUDRALIA_ELEVATION_RELIEF_EXPRESSION_DIRECT_DOWNSTREAM_CHILD_TNT_v1
+elevation_relief_expression_loaded_after_elevation_track=true
+elevation_relief_expression_loaded_before_runtime_carrier=true
+direct_downstream_from_elevation_track=true
+uses_elevation_track_as_primary_source=true
+uses_dry_terrain_as_primary_source=false
+carrier_relief_consumption=false
 hydration_held=true
 active_hydration=false
 final_visual_pass_claim=false
@@ -532,7 +577,7 @@ final_visual_pass_claim=false
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Audralia · Dry terrain atlas → elevation-track child → preserved runtime carrier · Hydration held.
+      Diamond Gate Bridge · Audralia · Dry terrain atlas → optimized elevation-track → relief-expression child → preserved runtime carrier · Hydration held.
     </footer>
   </div>
 
@@ -541,7 +586,7 @@ final_visual_pass_claim=false
     defer
     data-audralia-dry-revealed-physical-terrain-child
     data-contract="AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_ATLAS_CHILD_TNT_v1"
-    data-load-order="01-dry-revealed-terrain-before-elevation-child"
+    data-load-order="01-dry-revealed-terrain-before-elevation-track"
     data-audralia-level-terrain-authority="true"
     data-hydration-held="true"
     data-active-hydration="false"
@@ -550,14 +595,30 @@ final_visual_pass_claim=false
   ></script>
 
   <script
-    src="/assets/audralia/clean/terrain/audralia.elevation-track.child.js?v=AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD_TNT_v1"
+    src="/assets/audralia/clean/terrain/audralia.elevation-track.child.js?v=AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD_OPTIMAL_EXPRESSION_TNT_v1"
     defer
     data-audralia-elevation-track-child
-    data-contract="AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD_TNT_v1"
-    data-load-order="02-elevation-track-child-after-dry-terrain-before-runtime-carrier"
+    data-contract="AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD_OPTIMAL_EXPRESSION_TNT_v1"
+    data-load-order="02-optimized-elevation-track-after-dry-terrain-before-relief-expression"
     data-source-dependency="AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_ATLAS_CHILD_TNT_v1"
     data-passive-integration="true"
     data-carrier-elevation-consumption="false"
+    data-hydration-held="true"
+    data-active-hydration="false"
+    data-final-visual-pass-claim="false"
+  ></script>
+
+  <script
+    src="/assets/audralia/clean/terrain/audralia.elevation-relief-expression.child.js?v=AUDRALIA_ELEVATION_RELIEF_EXPRESSION_DIRECT_DOWNSTREAM_CHILD_TNT_v1"
+    defer
+    data-audralia-elevation-relief-expression-child
+    data-contract="AUDRALIA_ELEVATION_RELIEF_EXPRESSION_DIRECT_DOWNSTREAM_CHILD_TNT_v1"
+    data-parent-contract="AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD_OPTIMAL_EXPRESSION_TNT_v1"
+    data-load-order="03-elevation-relief-expression-after-elevation-track-before-runtime-carrier"
+    data-direct-downstream-from-elevation-track="true"
+    data-uses-elevation-track-as-primary-source="true"
+    data-uses-dry-terrain-as-primary-source="false"
+    data-carrier-relief-consumption="false"
     data-hydration-held="true"
     data-active-hydration="false"
     data-final-visual-pass-claim="false"
@@ -568,7 +629,7 @@ final_visual_pass_claim=false
     defer
     data-audralia-gratitude-surface-habitability-child
     data-contract="AUDRALIA_GRATITUDE_SURFACE_HABITABILITY_CHILD_ONE_PUBLICATION_BINDING_TNT_v1"
-    data-load-order="03-gratitude-context-surface"
+    data-load-order="04-gratitude-context-surface"
     data-gratitude-context-only="true"
     data-final-visual-pass-claim="false"
   ></script>
@@ -578,7 +639,7 @@ final_visual_pass_claim=false
     defer
     data-audralia-gratitude-hydration-child
     data-contract="AUDRALIA_GRATITUDE_HYDRATION_CHILD_TNT_v1"
-    data-load-order="04-gratitude-context-hydration-held"
+    data-load-order="05-gratitude-context-hydration-held"
     data-hydration-held="true"
     data-active-hydration="false"
     data-final-visual-pass-claim="false"
@@ -589,7 +650,7 @@ final_visual_pass_claim=false
     defer
     data-audralia-gratitude-hydration-edge-child
     data-contract="AUDRALIA_GRATITUDE_HYDRATION_EDGE_WATER_BEHAVIOR_CHILD_TNT_v1"
-    data-load-order="05-gratitude-context-edge-held"
+    data-load-order="06-gratitude-context-edge-held"
     data-hydration-held="true"
     data-active-hydration="false"
     data-final-visual-pass-claim="false"
@@ -600,7 +661,7 @@ final_visual_pass_claim=false
     defer
     data-audralia-gratitude-landform-compositor-child
     data-contract="AUDRALIA_GRATITUDE_LANDFORM_COMPOSITOR_SURFACE_SOURCE_BINDING_TNT_v1"
-    data-load-order="06-gratitude-context-compositor"
+    data-load-order="07-gratitude-context-compositor"
     data-gratitude-context-only="true"
     data-final-visual-pass-claim="false"
   ></script>
@@ -610,12 +671,14 @@ final_visual_pass_claim=false
     defer
     data-audralia-planet-inspection-js
     data-contract="AUDRALIA_PLANET_RUNTIME_EXISTING_NODE_LAND_BODY_COMPOSITOR_TNT_v1"
-    data-load-order="07-runtime-carrier-after-dry-terrain-and-elevation-child"
+    data-load-order="08-runtime-carrier-after-dry-terrain-elevation-track-and-relief-expression"
     data-carrier-is-runtime="true"
     data-direct-carrier-consumption="true"
     data-runtime-carrier-visual-behavior-preserved="true"
     data-elevation-track-child-available-before-carrier="true"
+    data-elevation-relief-expression-child-available-before-carrier="true"
     data-carrier-elevation-consumption="false"
+    data-carrier-relief-consumption="false"
     data-hydration-held="true"
     data-active-hydration="false"
     data-gratitude-island-read="false"

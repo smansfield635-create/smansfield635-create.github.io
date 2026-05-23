@@ -3,26 +3,31 @@
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
   data-page="audralia-planet-inspection"
-  data-version="G2-MODERN-INSTRUMENT"
-  data-contract="AUDRALIA_PLANET_INDEX_HTML_MODERN_INSTRUMENT_UI_RENEWAL_TNT_v1"
-  data-previous-contract="AUDRALIA_PLANET_HTML_STAGE_LAYOUT_RECOVERY_TNT_v1"
+  data-version="G2-SINGULAR-CENTERED-PLANET"
+  data-contract="AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_TNT_v1"
+  data-previous-contract="AUDRALIA_PLANET_INDEX_HTML_MODERN_INSTRUMENT_UI_RENEWAL_TNT_v1"
   data-reference-compass="COMPASS_INTERGALACTIC_COCKPIT_ACCESS_HATCH_TNT_v1"
   data-reference-urban="FRONTIER_URBAN_SVG_ORGANIC_DIGITAL_GEM_ORBIT_DONOR_INTEGRATION_TNT_v13"
   data-html-only="true"
-  data-modern-instrument-ui="true"
-  data-nodal-compass-dropdowns="true"
-  data-sixteen-point-nodal-order="true"
-  data-chronological-route-segregation="true"
-  data-unique-dropdown-menus="true"
-  data-primary-stage-active="true"
-  data-primary-viewport-dominant="true"
-  data-lens-rail-visible="true"
-  data-lens-controls-overlay-stage="false"
+  data-singular-planetary-model="true"
+  data-single-logic-admissibility="true"
+  data-visible-renderer-count="1"
+  data-primary-visible-renderer="carrier"
+  data-terrain-expression-canvas-held="true"
+  data-terrain-expression-canvas-loaded="false"
+  data-secondary-visible-canvas-allowed="false"
+  data-same-math-checkpoint="active"
+  data-different-math-blocked="true"
+  data-different-narrative-blocked="true"
+  data-different-planet-read-blocked="true"
+  data-ghost-viewport-suppressed="true"
+  data-dual-viewport-not-claimed="true"
   data-close-inspection-reserved="true"
   data-close-inspection-visually-active="false"
   data-close-inspection-runtime-required="true"
-  data-ghost-viewport-suppressed="true"
-  data-dual-viewport-not-claimed="true"
+  data-primary-stage-centered="true"
+  data-full-planet-visible-target="true"
+  data-stage-orbit-rings-visible="false"
   data-carrier-rewritten="false"
   data-expression-canvas-rewritten="false"
   data-terrain-child-rewritten="false"
@@ -38,10 +43,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Audralia Planet Inspection · Modern Instrument UI</title>
+  <title>Audralia Planet Inspection · Singular Centered Planet</title>
   <meta
     name="description"
-    content="Audralia Planet Inspection is the modern instrument route for reading the current Audralia planet body, terrain-expression lenses, and held hydration boundary without claiming final visual pass."
+    content="Audralia Planet Inspection restores one centered visible planet, one visible rendering authority, and one admissible logic path while holding hydration and final visual pass."
   >
 
   <style>
@@ -57,9 +62,7 @@
       --green:#8ff0c3;
       --aqua:#39ff9f;
       --panel:rgba(9,15,31,.88);
-      --panel-strong:rgba(6,12,27,.94);
       --line:rgba(184,205,255,.18);
-      --line-strong:rgba(243,200,111,.32);
       --shadow:0 32px 110px rgba(0,0,0,.48);
       --max:1180px;
       --brand-gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
@@ -86,10 +89,10 @@
       line-height:1.5;
       overflow-x:hidden;
       background:
-        radial-gradient(circle at 50% -8%,rgba(243,200,111,.19),transparent 28rem),
-        radial-gradient(circle at 12% 18%,rgba(36,120,255,.20),transparent 28rem),
-        radial-gradient(circle at 88% 30%,rgba(141,216,255,.13),transparent 28rem),
-        radial-gradient(circle at 50% 78%,rgba(57,255,159,.10),transparent 34rem),
+        radial-gradient(circle at 50% -8%,rgba(243,200,111,.18),transparent 28rem),
+        radial-gradient(circle at 12% 18%,rgba(36,120,255,.18),transparent 28rem),
+        radial-gradient(circle at 88% 30%,rgba(141,216,255,.12),transparent 28rem),
+        radial-gradient(circle at 50% 78%,rgba(57,255,159,.08),transparent 34rem),
         linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
       -webkit-font-smoothing:antialiased;
       text-rendering:geometricPrecision;
@@ -102,11 +105,11 @@
       z-index:0;
       pointer-events:none;
       background-image:
-        radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
-        linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px);
+        radial-gradient(circle,rgba(255,255,255,.16) 0 1px,transparent 1.5px),
+        linear-gradient(rgba(141,216,255,.040) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.040) 1px,transparent 1px);
       background-size:220px 260px,54px 54px,54px 54px;
-      opacity:.20;
+      opacity:.18;
       mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
     }
 
@@ -365,34 +368,9 @@
       position:relative;
       display:grid;
       gap:1rem;
-      padding:clamp(1.45rem,5vw,3.4rem);
+      padding:clamp(1.35rem,4vw,2.5rem);
       margin-top:.6rem;
       isolation:isolate;
-    }
-
-    .hero::before{
-      content:"";
-      position:absolute;
-      right:clamp(1rem,6vw,5.5rem);
-      top:50%;
-      z-index:0;
-      width:clamp(9rem,24vw,18rem);
-      height:clamp(9rem,24vw,18rem);
-      border:1px solid rgba(243,200,111,.16);
-      border-radius:2.9rem;
-      transform:translateY(-50%) rotate(45deg);
-      background:
-        radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
-        radial-gradient(circle at 50% 72%,rgba(36,120,255,.16),transparent 62%),
-        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
-      animation:instrumentAnchorPulse 9s ease-in-out infinite;
-      pointer-events:none;
-      opacity:.48;
-    }
-
-    @keyframes instrumentAnchorPulse{
-      0%,100%{opacity:.38;filter:brightness(.95)}
-      50%{opacity:.58;filter:brightness(1.1)}
     }
 
     .kicker{
@@ -427,9 +405,9 @@
     h1{
       margin:0;
       max-width:1020px;
-      font-size:clamp(3.2rem,10vw,7.2rem);
-      line-height:.84;
-      letter-spacing:-.105em;
+      font-size:clamp(2.8rem,8vw,5.8rem);
+      line-height:.86;
+      letter-spacing:-.095em;
       text-wrap:balance;
       text-shadow:0 1.2rem 2.4rem rgba(0,0,0,.60);
       position:relative;
@@ -439,9 +417,9 @@
     h2{
       margin:0;
       color:var(--gold);
-      font-size:clamp(1.45rem,4.7vw,2.75rem);
-      line-height:.98;
-      letter-spacing:-.07em;
+      font-size:clamp(1.35rem,4vw,2.35rem);
+      line-height:1;
+      letter-spacing:-.065em;
       text-wrap:balance;
     }
 
@@ -456,7 +434,7 @@
     p{
       margin:0;
       color:var(--muted);
-      font-size:clamp(.98rem,2.7vw,1.16rem);
+      font-size:clamp(.96rem,2.4vw,1.12rem);
       line-height:1.55;
     }
 
@@ -468,12 +446,12 @@
 
     .quote{
       max-width:930px;
-      padding:1rem 1.1rem;
+      padding:.9rem 1rem;
       border:1px solid rgba(243,200,111,.22);
       border-radius:1.2rem;
       color:rgba(255,244,216,.92);
       background:rgba(5,9,24,.62);
-      font-size:clamp(1rem,2.7vw,1.18rem);
+      font-size:clamp(.96rem,2.4vw,1.08rem);
       font-weight:850;
       backdrop-filter:blur(7px);
       position:relative;
@@ -484,17 +462,17 @@
       display:grid;
       grid-template-columns:repeat(6,minmax(0,1fr));
       gap:.6rem;
-      margin-top:.45rem;
+      margin-top:.35rem;
       position:relative;
       z-index:2;
     }
 
     .status-chip{
-      min-height:4.8rem;
+      min-height:4.25rem;
       display:grid;
       align-content:center;
-      gap:.22rem;
-      padding:.72rem;
+      gap:.18rem;
+      padding:.66rem;
       border:1px solid rgba(184,205,255,.14);
       border-radius:1rem;
       background:
@@ -504,7 +482,7 @@
 
     .status-chip span{
       color:rgba(230,238,255,.56);
-      font-size:.62rem;
+      font-size:.60rem;
       font-weight:950;
       letter-spacing:.12em;
       text-transform:uppercase;
@@ -512,7 +490,7 @@
 
     .status-chip strong{
       color:rgba(255,244,216,.95);
-      font-size:.92rem;
+      font-size:.88rem;
       line-height:1.05;
     }
 
@@ -595,9 +573,9 @@
 
     .instrument-grid{
       display:grid;
-      grid-template-columns:minmax(0,1fr) minmax(16rem,23rem);
+      grid-template-columns:minmax(0,1fr) minmax(16rem,22rem);
       gap:1rem;
-      align-items:stretch;
+      align-items:start;
     }
 
     .stage-panel{
@@ -644,13 +622,13 @@
       position:relative;
       isolation:isolate;
       overflow:hidden;
-      min-height:clamp(34rem,74vw,52rem);
+      min-height:clamp(30rem,68vw,43rem);
       border:1px solid rgba(184,205,255,.15);
       border-radius:clamp(1.25rem,4vw,2rem);
       background:
-        radial-gradient(circle at 50% 38%,rgba(141,216,255,.12),transparent 18rem),
-        radial-gradient(circle at 50% 62%,rgba(36,120,255,.13),transparent 24rem),
-        radial-gradient(circle at 50% 77%,rgba(243,200,111,.070),transparent 28rem),
+        radial-gradient(circle at 50% 44%,rgba(141,216,255,.13),transparent 18rem),
+        radial-gradient(circle at 50% 58%,rgba(36,120,255,.12),transparent 24rem),
+        radial-gradient(circle at 50% 77%,rgba(243,200,111,.055),transparent 28rem),
         linear-gradient(180deg,rgba(1,5,16,.72),rgba(2,6,16,.96));
       box-shadow:
         inset 0 1px 0 rgba(255,255,255,.06),
@@ -661,40 +639,8 @@
 
     #audraliaPlanetInspectionStage::before,
     #audraliaPlanetInspectionStage::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:50%;
-      border-radius:50%;
-      transform:translate(-50%,-50%);
-      pointer-events:none;
-      z-index:1;
-    }
-
-    #audraliaPlanetInspectionStage::before{
-      width:min(88%,46rem);
-      height:min(62%,27rem);
-      border:1px solid rgba(243,200,111,.16);
-      box-shadow:0 0 3rem rgba(36,120,255,.12),inset 0 0 30px rgba(141,216,255,.045);
-      animation:planetInstrumentOrbit 44s linear infinite;
-    }
-
-    #audraliaPlanetInspectionStage::after{
-      width:min(64%,31rem);
-      height:min(42%,19rem);
-      border:1px solid rgba(57,255,159,.15);
-      box-shadow:0 0 3rem rgba(57,255,159,.08);
-      animation:planetInstrumentOrbitReverse 39s linear infinite;
-    }
-
-    @keyframes planetInstrumentOrbit{
-      from{transform:translate(-50%,-50%) rotate(-12deg)}
-      to{transform:translate(-50%,-50%) rotate(348deg)}
-    }
-
-    @keyframes planetInstrumentOrbitReverse{
-      from{transform:translate(-50%,-50%) rotate(24deg)}
-      to{transform:translate(-50%,-50%) rotate(-336deg)}
+      display:none!important;
+      content:none!important;
     }
 
     #audraliaPlanetInspectionMount{
@@ -702,6 +648,23 @@
       inset:0;
       z-index:4;
       min-height:100%;
+      display:block;
+      overflow:hidden;
+    }
+
+    #audraliaPlanetInspectionMount canvas{
+      display:block;
+      width:100%!important;
+      height:100%!important;
+      max-width:100%;
+      max-height:100%;
+    }
+
+    #audraliaPlanetInspectionMount canvas[data-audralia-admissibility-held="true"]{
+      display:none!important;
+      visibility:hidden!important;
+      opacity:0!important;
+      pointer-events:none!important;
     }
 
     .stage-hint{
@@ -713,7 +676,7 @@
       display:flex;
       flex-wrap:wrap;
       align-items:center;
-      justify-content:space-between;
+      justify-content:center;
       gap:.55rem;
       pointer-events:none;
     }
@@ -889,7 +852,7 @@
 
     @media (max-width:760px){
       .shell{width:min(100% - 22px,var(--max))}
-      h1{font-size:clamp(3rem,15vw,5.6rem)}
+      h1{font-size:clamp(2.7rem,14vw,5rem)}
       .hero{padding:1rem}
       .route-menu{width:100%}
       .route-menu-panel{position:static;margin-top:.45rem;width:100%}
@@ -898,7 +861,7 @@
       .status-strip{grid-template-columns:1fr}
       .audralia-planet-lens-row{display:grid;grid-template-columns:1fr 1fr}
       .audralia-planet-lens-row button{width:100%}
-      #audraliaPlanetInspectionStage{min-height:34rem}
+      #audraliaPlanetInspectionStage{min-height:32rem}
       .stage-copy{display:grid}
       .stage-badge{width:fit-content}
       .stage-hint{justify-content:center}
@@ -906,7 +869,7 @@
 
     @media (max-width:420px){
       .audralia-planet-lens-row{grid-template-columns:1fr}
-      #audraliaPlanetInspectionStage{min-height:31rem}
+      #audraliaPlanetInspectionStage{min-height:30rem}
       .stage-hint span{font-size:.58rem}
     }
 
@@ -919,14 +882,30 @@
         animation-iteration-count:1!important;
         transition-duration:.01ms!important;
       }
-
-      #audraliaPlanetInspectionStage::before,
-      #audraliaPlanetInspectionStage::after,
-      .hero::before{
-        animation:none!important;
-      }
     }
   </style>
+
+  <script>
+    window.AUDRALIA_PLANET_VISIBLE_LOGIC_POLICY = Object.freeze({
+      contract: "AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_TNT_v1",
+      route: "/showroom/globe/audralia/planet/",
+      visibleRendererCount: 1,
+      primaryVisibleRenderer: "carrier",
+      terrainExpressionCanvasHeld: true,
+      terrainExpressionCanvasLoaded: false,
+      sameMathCheckpoint: true,
+      differentMathBlocked: true,
+      differentNarrativeBlocked: true,
+      differentPlanetReadBlocked: true,
+      ghostViewportSuppressed: true,
+      dualViewportNotClaimed: true,
+      fullPlanetVisibleTarget: true,
+      centeredStageTarget: true,
+      activeHydration: false,
+      activeWater: false,
+      finalVisualPassClaim: false
+    });
+  </script>
 </head>
 
 <body>
@@ -1004,44 +983,44 @@
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Planet instrument · Modern shell · Hydration held</div>
+        <div class="kicker">Singular planet · Same-math checkpoint · Hydration held</div>
 
-        <h1 id="page-title">Read the planet before filling the world.</h1>
+        <h1 id="page-title">One planet. One visible logic.</h1>
 
         <p class="lead">
-          Audralia Planet Inspection is the instrument route for reading the current physical body, visible terrain expression, boundary candidates, and structural lattice posture without letting the shell claim terrain truth.
+          Audralia Planet Inspection now admits only one visible rendering authority into the stage. Any layer with different math, a different projection, a different planet read, or a different narrative is held before it can become visible.
         </p>
 
         <div class="quote">
-          The shell owns layout, navigation, lens controls, mount points, and hidden receipts. Downstream files own terrain, elevation, relief, landform, mesh, projection, and rendering behavior.
+          The carrier remains the primary visible renderer. The terrain-expression canvas is held at the page-invitation layer until it can enter through the same-math, same-story, same-planet checkpoint.
         </div>
 
         <div class="status-strip" aria-label="Audralia Planet status">
-          <article class="status-chip"><span>Planet stage</span><strong>active</strong></article>
-          <article class="status-chip"><span>Lens rail</span><strong>5 views</strong></article>
-          <article class="status-chip"><span>Runtime carrier</span><strong>unchanged</strong></article>
-          <article class="status-chip"><span>Close inspection</span><strong>held</strong></article>
+          <article class="status-chip"><span>Visible planet</span><strong>single</strong></article>
+          <article class="status-chip"><span>Stage target</span><strong>centered</strong></article>
+          <article class="status-chip"><span>Renderer</span><strong>carrier only</strong></article>
+          <article class="status-chip"><span>Second canvas</span><strong>held</strong></article>
           <article class="status-chip"><span>Hydration</span><strong>held</strong></article>
           <article class="status-chip"><span>Final visual</span><strong>false</strong></article>
         </div>
       </section>
 
       <section class="panel instrument-shell" aria-labelledby="instrument-title">
-        <div class="kicker">Audralia instrument field</div>
+        <div class="kicker">Primary planet instrument</div>
 
         <div class="stage-copy">
           <div>
-            <h2 id="instrument-title">One dominant planet stage.</h2>
+            <h2 id="instrument-title">Centered full-body inspection.</h2>
             <p>
-              The route now presents the planet as a modern instrument surface. The side-view idea remains reserved until runtime can lawfully synchronize it from the same globe state.
+              The stage is restored to one dominant visible planet. Decorative orbit rings and secondary visual canvas entry are suppressed so the planet can return to a singular readable body.
             </p>
           </div>
-          <span class="stage-badge">HTML-only renewal</span>
+          <span class="stage-badge">single logic gate</span>
         </div>
 
         <section class="lens-rail" aria-label="Audralia planet lens controls">
           <p class="audralia-planet-stage-label" data-audralia-planet-stage-label>
-            <strong>Surface</strong> → land-only development / visible terrain expression
+            <strong>Surface</strong> → land-only development / carrier-visible planet logic
           </p>
 
           <div class="audralia-planet-lens-row" role="group" aria-label="Audralia planet development lenses">
@@ -1058,126 +1037,131 @@
             <div
               id="audraliaPlanetInspectionStage"
               data-audralia-planet-inspection-stage
-              aria-label="Audralia primary planet inspection stage"
+              data-singular-visible-stage="true"
+              data-primary-visible-renderer="carrier"
+              data-secondary-visible-canvas-allowed="false"
+              data-stage-orbit-rings-visible="false"
+              aria-label="Audralia primary centered planet inspection stage"
             >
               <div
                 id="audraliaPlanetInspectionMount"
                 data-audralia-planet-inspection-mount
+                data-visible-renderer-count="1"
+                data-primary-visible-renderer="carrier"
               ></div>
 
               <div class="stage-hint" aria-hidden="true">
                 <span>Drag to rotate</span>
                 <span>Pinch or wheel to zoom</span>
-                <span>Hydration held</span>
+                <span>One visible planet</span>
                 <span>Active water false</span>
               </div>
             </div>
           </section>
 
           <aside class="read-key" aria-label="Audralia planet read key">
-            <strong>Instrument Read Key</strong>
+            <strong>Admissibility Read Key</strong>
 
             <ul class="read-list">
               <li>
                 <span class="key-mark" style="--key-color:var(--gold)"></span>
-                <span><b>Surface</b> develops land-only visible terrain expression.</span>
+                <span><b>Surface</b> uses the accepted visible planet logic only.</span>
               </li>
 
               <li>
                 <span class="key-mark" style="--key-color:var(--blue)"></span>
-                <span><b>Hydration</b> shows future water-placement diagnostics only. Active water remains false.</span>
+                <span><b>Hydration</b> remains a held diagnostic. Active water remains false.</span>
               </li>
 
               <li>
                 <span class="key-mark" style="--key-color:var(--aqua)"></span>
-                <span><b>Boundary</b> studies land-water interface candidates without final coastline.</span>
+                <span><b>Boundary</b> may only enter if it shares the same planet math and story.</span>
               </li>
 
               <li>
                 <span class="key-mark" style="--key-color:rgba(184,205,255,.78)"></span>
-                <span><b>Lattice</b> inspects structure, proof paths, and grid posture.</span>
+                <span><b>Lattice</b> inspects structure without becoming a second planet.</span>
               </li>
 
               <li>
                 <span class="key-mark" style="--key-color:rgba(255,244,216,.86)"></span>
-                <span><b>Full</b> previews authorized layers together without claiming final visual pass.</span>
+                <span><b>Full</b> means one composite read, not multiple competing bodies.</span>
               </li>
             </ul>
 
             <div class="held-note">
-              Close Inspection is reserved. It is not visually active until the runtime carrier can render a synchronized second view from the same planet state.
+              Checkpoint rule: same math may support the visible planet. Different math, different story, or different planet read is blocked before stage entry.
             </div>
           </aside>
         </div>
       </section>
 
       <section class="authority-band" aria-labelledby="authority-title">
-        <div class="kicker">Authority map · Route shell only</div>
+        <div class="kicker">Authority map · Page gate only</div>
 
-        <strong id="authority-title">The HTML route frames the instrument. It does not become the planet.</strong>
+        <strong id="authority-title">The page now gates visible logic. It does not rewrite the runtime.</strong>
 
         <p>
-          This renewal modernizes the interface around the live render chain. It does not rewrite the carrier, the expression canvas, or any terrain child.
+          This TNT changes the HTML invitation layer. The carrier remains the only visible planet renderer. The expression canvas and all child files remain untouched.
         </p>
 
         <div class="authority-grid">
           <article class="authority-card">
-            <b>Route owns</b>
-            <span>Navigation, shell, lens rail markup, stage layout, mount structure, read key, hidden receipt, and script order.</span>
+            <b>Accepted visible logic</b>
+            <span>One carrier-rendered planet, centered on the primary stage, with no secondary globe admitted.</span>
           </article>
 
           <article class="authority-card">
-            <b>Downstream owns</b>
-            <span>Terrain, elevation, relief, landforms, mesh, projection, runtime drawing, and expression behavior.</span>
+            <b>Blocked at checkpoint</b>
+            <span>Different projection math, different land read, different story, ghost viewport, or duplicate visual canvas.</span>
           </article>
 
           <article class="authority-card">
             <b>Held status</b>
-            <span>Hydration held. Active water false. Final terrain, hydration, and visual pass all remain false.</span>
+            <span>Terrain-expression canvas held. Hydration held. Active water false. Final visual pass false.</span>
           </article>
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-AUDRALIA_PLANET_INDEX_HTML_MODERN_INSTRUMENT_UI_RENEWAL_TNT_v1
-previous_contract=AUDRALIA_PLANET_HTML_STAGE_LAYOUT_RECOVERY_TNT_v1
+AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_TNT_v1
+previous_contract=AUDRALIA_PLANET_INDEX_HTML_MODERN_INSTRUMENT_UI_RENEWAL_TNT_v1
 target=/showroom/globe/audralia/planet/index.html
 route=/showroom/globe/audralia/planet/
 page=audralia_planet_inspection
-reference_compass=COMPASS_INTERGALACTIC_COCKPIT_ACCESS_HATCH_TNT_v1
-reference_urban=FRONTIER_URBAN_SVG_ORGANIC_DIGITAL_GEM_ORBIT_DONOR_INTEGRATION_TNT_v13
 html_only=true
-modern_instrument_ui=true
-nodal_compass_dropdowns=true
-sixteen_point_nodal_order=true
-chronological_route_segregation=true
-unique_dropdown_menus=true
-dropdown_1=Nodal_Compass
-dropdown_2=Audralia_Chain
-dropdown_3=Frontier_Continuation
-nodal_order=01_N_Compass,02_NNE_Door,03_NE_Home,04_ENE_Laws,05_E_Meet_Sean,06_ESE_Products,07_SE_Showroom,08_SSE_Globe,09_S_Audralia,10_SSW_Planet,11_SW_Cockpit,12_WSW_Gauges,13_W_Frontier,14_WNW_Energy_Water_Waste,15_NW_Lattice_Infrastructure,16_NNW_Return_Compass
-audralia_chain=01_Globe_Gateway,02_Audralia_Parent,03_Planet_Inspection,04_Cockpit_Disposition,05_Gratitude_Downstream,06_Triple_G_Gauges
-frontier_continuation=01_Frontier,02_Energy,03_Water,04_Waste,05_Lattice,06_Infrastructure,07_Closed_Loop,08_Manual,09_Shimmer,10_Trajectory,11_Vision
-route_owns=html_shell,route_navigation,lens_rail_markup,primary_stage_layout,mount_structure,visible_read_key,hidden_receipt,script_order
+singular_planetary_model=true
+single_logic_admissibility=true
+same_math_checkpoint=active
+different_math_blocked=true
+different_narrative_blocked=true
+different_planet_read_blocked=true
+primary_visible_renderer=carrier
+visible_renderer_count=1
+secondary_visible_canvas_allowed=false
+terrain_expression_canvas_held=true
+terrain_expression_canvas_loaded=false
+terrain_expression_canvas_rewritten=false
+carrier_rewritten=false
+terrain_child_rewritten=false
+primary_stage_centered=true
+full_planet_visible_target=true
+stage_orbit_rings_visible=false
+decorative_orbit_rings_suppressed=true
+ghost_viewport_suppressed=true
+dual_viewport_not_claimed=true
+close_inspection_reserved=true
+close_inspection_visually_active=false
+close_inspection_runtime_required=true
+route_owns=html_shell,route_navigation,lens_rail_markup,primary_stage_layout,mount_structure,visible_read_key,hidden_receipt,script_invitation_gate
 route_does_not_own=carrier_projection,terrain_truth,elevation_truth,relief_truth,landform_truth,beach_truth,triangulation_truth,hydration_truth,final_visual_pass
-primary_stage_active=true
-primary_viewport_dominant=true
-lens_rail_visible=true
-lens_controls_overlay_stage=false
+accepted_stage_logic=carrier_visible_planet_logic_only
+blocked_stage_logic=different_projection,different_math,different_story,different_planet_read,secondary_canvas,ghost_viewport
 visible_lenses=Surface,Hydration,Boundary,Lattice,Full
 default_lens=Surface
 primary_stage_id=audraliaPlanetInspectionStage
 primary_mount_id=audraliaPlanetInspectionMount
-close_inspection_reserved=true
-close_inspection_visually_active=false
-close_inspection_runtime_required=true
-ghost_viewport_suppressed=true
-dual_viewport_not_claimed=true
-carrier_rewritten=false
-expression_canvas_rewritten=false
-terrain_child_rewritten=false
-append_only_patch=false
-bridge_patch=false
+script_order_preserved_for_children=true
 dry_terrain_child_script=audralia.dry-revealed-physical-terrain.child.js
 elevation_track_script=audralia.elevation-track.child.js
 relief_expression_script=audralia.elevation-relief-expression.child.js
@@ -1185,8 +1169,7 @@ landform_systems_script=audralia.landform-systems.child.js
 beach_coastal_readiness_script=audralia.beach-coastal-readiness.child.js
 triangular_mesh_script=audralia.triangular-terrain-mesh.child.js
 carrier_script=audralia.planet-body.inspection-carrier.js
-terrain_expression_canvas_script=audralia.terrain-expression.canvas.child.js
-script_order_preserved=true
+terrain_expression_canvas_script=held_not_loaded
 script_mode=defer
 async_forbidden=true
 html_owns_terrain_truth=false
@@ -1201,22 +1184,161 @@ final_visual_pass_claim=false
 visual_pass_claimed=false
 generated_image=false
 graphic_box=false
-deploy_marker=AUDRALIA_PLANET_INDEX_HTML_MODERN_INSTRUMENT_UI_DEPLOY_MARKER_v1
+deploy_marker=AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer>
-      AUDRALIA_PLANET_INDEX_HTML_MODERN_INSTRUMENT_UI_RENEWAL_TNT_v1 · Modern instrument shell · 16-point nodal dropdowns · HTML-only · Hydration held · Final visual pass false.
+      AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_TNT_v1 · One visible planet · Carrier only · Same-math checkpoint · Hydration held · Final visual pass false.
     </footer>
   </div>
 
-  <script defer src="/assets/audralia/clean/terrain/audralia.dry-revealed-physical-terrain.child.js?v=AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_ATLAS_CHILD_TNT_v1"></script>
-  <script defer src="/assets/audralia/clean/terrain/audralia.elevation-track.child.js?v=AUDRALIA_ELEVATION_TRACK_DOWNSTREAM_CHILD_OPTIMAL_EXPRESSION_TNT_v1"></script>
-  <script defer src="/assets/audralia/clean/terrain/audralia.elevation-relief-expression.child.js?v=AUDRALIA_ELEVATION_RELIEF_METADATA_ONLY_RESTORATION_TNT_v1"></script>
-  <script defer src="/assets/audralia/clean/terrain/audralia.landform-systems.child.js?v=AUDRALIA_LANDFORM_SYSTEMS_METADATA_ONLY_RESTORATION_TNT_v1"></script>
-  <script defer src="/assets/audralia/clean/terrain/audralia.beach-coastal-readiness.child.js?v=AUDRALIA_BEACH_COASTAL_READINESS_CHILD_TNT_v1"></script>
-  <script defer src="/assets/audralia/clean/terrain/audralia.triangular-terrain-mesh.child.js?v=AUDRALIA_TRIANGULAR_TERRAIN_MESH_CHILD_TNT_v1"></script>
-  <script defer src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?v=AUDRALIA_CARRIER_LENS_AUTHORITY_SPLIT_TNT_v1"></script>
-  <script defer src="/assets/audralia/clean/runtime/audralia.terrain-expression.canvas.child.js?v=AUDRALIA_TERRAIN_EXPRESSION_LENS_AUTHORITY_SPLIT_TNT_v1"></script>
+  <script defer src="/assets/audralia/clean/terrain/audralia.dry-revealed-physical-terrain.child.js?v=AUDRALIA_PLANET_SINGLE_LOGIC_GATE_HTML_v1"></script>
+  <script defer src="/assets/audralia/clean/terrain/audralia.elevation-track.child.js?v=AUDRALIA_PLANET_SINGLE_LOGIC_GATE_HTML_v1"></script>
+  <script defer src="/assets/audralia/clean/terrain/audralia.elevation-relief-expression.child.js?v=AUDRALIA_PLANET_SINGLE_LOGIC_GATE_HTML_v1"></script>
+  <script defer src="/assets/audralia/clean/terrain/audralia.landform-systems.child.js?v=AUDRALIA_PLANET_SINGLE_LOGIC_GATE_HTML_v1"></script>
+  <script defer src="/assets/audralia/clean/terrain/audralia.beach-coastal-readiness.child.js?v=AUDRALIA_PLANET_SINGLE_LOGIC_GATE_HTML_v1"></script>
+  <script defer src="/assets/audralia/clean/terrain/audralia.triangular-terrain-mesh.child.js?v=AUDRALIA_PLANET_SINGLE_LOGIC_GATE_HTML_v1"></script>
+  <script defer src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?v=AUDRALIA_PLANET_SINGLE_LOGIC_GATE_HTML_v1"></script>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const CONTRACT = "AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_TNT_v1";
+      const MOUNT_ID = "audraliaPlanetInspectionMount";
+      const STAGE_ID = "audraliaPlanetInspectionStage";
+
+      const markDocument = () => {
+        document.documentElement.dataset.audraliaPlanetHtmlContract = CONTRACT;
+        document.documentElement.dataset.audraliaSingularPlanetaryModel = "true";
+        document.documentElement.dataset.audraliaSingleLogicAdmissibility = "true";
+        document.documentElement.dataset.audraliaSameMathCheckpoint = "active";
+        document.documentElement.dataset.audraliaDifferentMathBlocked = "true";
+        document.documentElement.dataset.audraliaDifferentNarrativeBlocked = "true";
+        document.documentElement.dataset.audraliaDifferentPlanetReadBlocked = "true";
+        document.documentElement.dataset.audraliaVisibleRendererCount = "1";
+        document.documentElement.dataset.audraliaPrimaryVisibleRenderer = "carrier";
+        document.documentElement.dataset.audraliaTerrainExpressionCanvasHeld = "true";
+        document.documentElement.dataset.audraliaTerrainExpressionCanvasLoaded = "false";
+        document.documentElement.dataset.audraliaGhostViewportSuppressed = "true";
+        document.documentElement.dataset.audraliaDualViewportNotClaimed = "true";
+        document.documentElement.dataset.audraliaStageOrbitRingsVisible = "false";
+        document.documentElement.dataset.audraliaFullPlanetVisibleTarget = "true";
+        document.documentElement.dataset.audraliaActiveWater = "false";
+        document.documentElement.dataset.audraliaFinalVisualPassClaim = "false";
+      };
+
+      const applySingularCanvasGate = () => {
+        const mount = document.getElementById(MOUNT_ID);
+        if (!mount) return;
+
+        const canvases = Array.from(mount.querySelectorAll("canvas"));
+
+        canvases.forEach((canvas, index) => {
+          if (index === 0) {
+            canvas.dataset.audraliaAdmissibilityAccepted = "true";
+            canvas.dataset.audraliaVisibleStageCanvas = "true";
+            canvas.dataset.audraliaPrimaryVisibleRenderer = "carrier";
+            canvas.removeAttribute("data-audralia-admissibility-held");
+            canvas.style.removeProperty("display");
+            canvas.style.removeProperty("visibility");
+            canvas.style.removeProperty("opacity");
+            canvas.style.removeProperty("pointer-events");
+          } else {
+            canvas.dataset.audraliaAdmissibilityHeld = "true";
+            canvas.dataset.audraliaHeldReason = "secondary-visible-canvas-blocked-by-single-logic-checkpoint";
+            canvas.style.display = "none";
+            canvas.style.visibility = "hidden";
+            canvas.style.opacity = "0";
+            canvas.style.pointerEvents = "none";
+          }
+        });
+
+        mount.dataset.audraliaVisibleCanvasCount = String(Math.min(canvases.length, 1));
+        mount.dataset.audraliaSecondaryCanvasBlocked = String(canvases.length > 1);
+      };
+
+      const resetCarrierCameraForFullPlanet = () => {
+        const controller = window.__AUDRALIA_G2_PLANET_BODY_CLEAN_PAIR_CONTROLLER__;
+        if (!controller) return;
+
+        try {
+          if (typeof controller.resetCamera === "function") controller.resetCamera();
+          if (typeof controller.setZoom === "function") controller.setZoom(1);
+        } catch (_error) {}
+      };
+
+      const publishStatus = () => {
+        window.AUDRALIA_PLANET_SINGLE_LOGIC_ADMISSIBILITY_STATUS = {
+          contract: CONTRACT,
+          htmlOnly: true,
+          singularPlanetaryModel: true,
+          sameMathCheckpoint: "active",
+          visibleRendererCount: 1,
+          primaryVisibleRenderer: "carrier",
+          terrainExpressionCanvasHeld: true,
+          terrainExpressionCanvasLoaded: false,
+          differentMathBlocked: true,
+          differentNarrativeBlocked: true,
+          differentPlanetReadBlocked: true,
+          ghostViewportSuppressed: true,
+          dualViewportNotClaimed: true,
+          fullPlanetVisibleTarget: true,
+          centeredStageTarget: true,
+          carrierRewritten: false,
+          expressionCanvasRewritten: false,
+          terrainChildRewritten: false,
+          hydrationHeld: true,
+          activeHydration: false,
+          activeWater: false,
+          finalVisualPassClaim: false,
+          deployMarker: "AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_DEPLOY_MARKER_v1"
+        };
+      };
+
+      const init = () => {
+        markDocument();
+        applySingularCanvasGate();
+        resetCarrierCameraForFullPlanet();
+        publishStatus();
+
+        const mount = document.getElementById(MOUNT_ID);
+        if (mount) {
+          const observer = new MutationObserver(() => {
+            applySingularCanvasGate();
+            resetCarrierCameraForFullPlanet();
+            publishStatus();
+          });
+
+          observer.observe(mount, { childList: true, subtree: true });
+        }
+
+        window.setTimeout(() => {
+          applySingularCanvasGate();
+          resetCarrierCameraForFullPlanet();
+          publishStatus();
+        }, 180);
+
+        window.setTimeout(() => {
+          applySingularCanvasGate();
+          resetCarrierCameraForFullPlanet();
+          publishStatus();
+        }, 640);
+
+        window.setTimeout(() => {
+          applySingularCanvasGate();
+          resetCarrierCameraForFullPlanet();
+          publishStatus();
+        }, 1200);
+      };
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init, { once: true });
+      } else {
+        init();
+      }
+    })();
+  </script>
 </body>
 </html>

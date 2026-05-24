@@ -2,1326 +2,851 @@
 <html
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
-  data-page="audralia-planet-inspection"
-  data-version="G2-CARRIER-CUTOVER"
-  data-contract="AUDRALIA_PLANET_INDEX_HTML_G2_CARRIER_CUTOVER_TNT_v1"
-  data-previous-contract="AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_TNT_v1"
-  data-g2-carrier-cutover="true"
-  data-g2-inspection-carrier-loaded="true"
-  data-g2-inspection-carrier-new-file-active="true"
-  data-old-carrier-loaded="false"
-  data-legacy-visual-children-held="true"
-  data-dry-parent-baseline-preserved="true"
-  data-visible-renderer-count="1"
-  data-primary-visible-renderer="g2-carrier"
-  data-terrain-expression-canvas-held="true"
-  data-terrain-expression-canvas-loaded="false"
-  data-secondary-visible-canvas-allowed="false"
-  data-close-inspection-reserved="true"
-  data-close-inspection-visually-active="false"
-  data-primary-stage-centered="true"
-  data-full-planet-visible-target="true"
-  data-stage-orbit-rings-visible="false"
-  data-html-cutover-claimed="true"
+  data-page="audralia-g2-planet"
+  data-contract="AUDRALIA_G2_ROUTE_CUTOVER_TNT_v1"
+  data-spec-ops="AUDRALIA_G2_ROUTE_CUTOVER_SPEC_OPS_v1"
+  data-news="AUDRALIA_G2_ROUTE_CUTOVER_NEWS_ALIGNMENT_v1"
+  data-ccr="AUDRALIA_G2_ROUTE_CUTOVER_CCR_v1"
+  data-stack="datum-terrain-surface-ptr"
+  data-renderer="AUDRALIA_G2_PLANET_TERRAIN_RENDERER_PTR_TNT_v1"
   data-hydration-held="true"
-  data-active-hydration="false"
   data-active-water="false"
-  data-final-terrain-pass-claim="false"
-  data-final-hydration-pass-claim="false"
   data-final-visual-pass-claim="false"
-  data-visual-pass-claimed="false"
+  data-route-cutover-candidate="true"
 >
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-
-  <title>Audralia Planet Inspection · G2 Carrier Cutover</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#050d1f" />
+  <title>Audralia G2 Planet · Packet-Derived Terrain Renderer</title>
   <meta
     name="description"
-    content="Audralia Planet Inspection cuts over to the G2 carrier while preserving the dry terrain parent baseline, holding legacy visual children, hydration, and final visual pass."
-  >
+    content="Audralia G2 planet route cutover: datum, physical terrain, surface material, and PTR renderer loaded in lawful order."
+  />
 
   <style>
-    :root{
-      color-scheme:dark;
-      --bg:#02040b;
-      --ink:#fff4d8;
-      --muted:rgba(230,238,255,.78);
-      --faint:rgba(230,238,255,.50);
-      --gold:#f3c86f;
-      --gold2:#ffe8a3;
-      --blue:#8dd8ff;
-      --green:#8ff0c3;
-      --aqua:#39ff9f;
-      --panel:rgba(9,15,31,.88);
-      --line:rgba(184,205,255,.18);
-      --shadow:0 32px 110px rgba(0,0,0,.48);
-      --max:1180px;
-      --brand-gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
-      --soft-radius:clamp(1.25rem,4vw,2.35rem);
+    :root {
+      --bg0: #01040c;
+      --bg1: #050d1f;
+      --bg2: #0b182a;
+      --panel: rgba(3, 10, 24, 0.76);
+      --panel-strong: rgba(3, 10, 24, 0.92);
+      --line: rgba(141, 216, 255, 0.24);
+      --line-strong: rgba(167, 243, 198, 0.46);
+      --text: rgba(238, 244, 255, 0.92);
+      --muted: rgba(188, 203, 218, 0.72);
+      --gold: rgba(244, 207, 131, 0.92);
+      --cyan: rgba(141, 216, 255, 0.88);
+      --green: rgba(167, 243, 198, 0.90);
+      --danger: rgba(255, 151, 151, 0.88);
+      --shadow: 0 30px 90px rgba(0, 0, 0, 0.46);
+      color-scheme: dark;
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
     }
 
-    *{box-sizing:border-box}
-
-    html{
-      min-width:320px;
-      min-height:100%;
-      background:var(--bg);
-      scroll-behavior:smooth;
-      overflow-x:hidden;
-      scroll-padding-top:1rem;
+    * {
+      box-sizing: border-box;
     }
 
-    body{
-      margin:0;
-      min-width:320px;
-      min-height:100vh;
-      color:var(--ink);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      line-height:1.5;
-      overflow-x:hidden;
+    html {
+      min-height: 100%;
+      background: var(--bg0);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--text);
       background:
-        radial-gradient(circle at 50% -8%,rgba(243,200,111,.18),transparent 28rem),
-        radial-gradient(circle at 12% 18%,rgba(36,120,255,.18),transparent 28rem),
-        radial-gradient(circle at 88% 30%,rgba(141,216,255,.12),transparent 28rem),
-        radial-gradient(circle at 50% 78%,rgba(57,255,159,.08),transparent 34rem),
-        linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
-      -webkit-font-smoothing:antialiased;
-      text-rendering:geometricPrecision;
+        radial-gradient(circle at 50% 18%, rgba(34, 65, 82, 0.80) 0, rgba(9, 20, 44, 0.82) 32%, rgba(2, 6, 16, 1) 72%),
+        linear-gradient(180deg, var(--bg1), var(--bg0));
+      overflow-x: hidden;
     }
 
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.48;
       background-image:
-        radial-gradient(circle,rgba(255,255,255,.16) 0 1px,transparent 1.5px),
-        linear-gradient(rgba(141,216,255,.040) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(141,216,255,.040) 1px,transparent 1px);
-      background-size:220px 260px,54px 54px,54px 54px;
-      opacity:.18;
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
+        radial-gradient(circle at 14% 22%, rgba(141, 216, 255, 0.20) 0 1px, transparent 2px),
+        radial-gradient(circle at 79% 16%, rgba(244, 207, 131, 0.14) 0 1px, transparent 2px),
+        radial-gradient(circle at 67% 76%, rgba(167, 243, 198, 0.13) 0 1px, transparent 2px),
+        radial-gradient(circle at 31% 64%, rgba(141, 216, 255, 0.10) 0 1px, transparent 2px);
+      background-size: 210px 210px, 270px 270px, 330px 330px, 180px 180px;
     }
 
-    a{color:inherit;text-decoration:none}
-
-    a:focus-visible,
-    button:focus-visible,
-    summary:focus-visible,
-    [tabindex]:focus-visible{
-      outline:2px solid var(--gold);
-      outline-offset:4px;
+    a {
+      color: inherit;
     }
 
-    .skip{
-      position:absolute;
-      left:-999px;
-      top:8px;
-      z-index:50;
-      padding:.75rem 1rem;
-      border-radius:999px;
-      color:#05070d;
-      background:var(--gold);
-      font-weight:950;
+    .skip-link {
+      position: absolute;
+      left: 1rem;
+      top: 1rem;
+      z-index: 50;
+      transform: translateY(-180%);
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      background: var(--panel-strong);
+      color: var(--green);
+      text-decoration: none;
+      font-weight: 800;
     }
 
-    .skip:focus{left:8px}
-
-    .shell{
-      position:relative;
-      z-index:2;
-      width:min(var(--max),calc(100% - 28px));
-      margin:0 auto;
-      padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
+    .skip-link:focus {
+      transform: translateY(0);
     }
 
-    .topbar{
-      display:grid;
-      grid-template-columns:auto 1fr;
-      align-items:start;
-      gap:18px;
-      padding:12px 0 18px;
+    .route-shell {
+      position: relative;
+      z-index: 2;
+      width: min(1180px, calc(100vw - 28px));
+      margin: 0 auto;
+      padding: 20px 0 44px;
     }
 
-    .brand{
-      display:grid;
-      grid-template-columns:auto 1fr;
-      align-items:center;
-      gap:.9rem;
-      min-width:260px;
+    .top-nav {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 0 18px;
     }
 
-    .brand-mark{
-      width:4.2rem;
-      height:4.2rem;
-      display:grid;
-      place-items:center;
-      border:1px solid rgba(243,200,111,.44);
-      transform:rotate(45deg);
-      clip-path:var(--brand-gem);
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(167, 243, 198, 0.42);
+      border-radius: 14px;
       background:
-        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.26) 21% 23%,transparent 24%),
-        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.28),rgba(57,255,159,.18),rgba(1,15,60,.58),rgba(243,200,111,.20),rgba(255,255,255,.28)),
-        radial-gradient(circle at 48% 22%,rgba(255,255,255,.30),transparent 42%),
-        linear-gradient(145deg,rgba(9,44,112,.95),rgba(5,8,20,.98));
-      box-shadow:
-        0 0 2rem rgba(36,120,255,.28),
-        0 0 1.2rem rgba(243,200,111,.12),
-        0 1.2rem 2.8rem rgba(0,0,0,.46),
-        inset 0 1px 0 rgba(255,255,255,.16);
+        linear-gradient(135deg, rgba(167, 243, 198, 0.20), transparent 42%),
+        radial-gradient(circle at 28% 22%, rgba(244, 207, 131, 0.24), transparent 44%),
+        rgba(4, 14, 28, 0.88);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
+      color: var(--gold);
+      font-weight: 950;
     }
 
-    .brand-mark span{
-      transform:rotate(-45deg);
-      font-weight:950;
-      letter-spacing:.04em;
-      color:rgba(255,244,216,.98);
-      text-shadow:0 2px 10px rgba(0,0,0,.85);
+    .brand-text {
+      display: grid;
+      gap: 1px;
     }
 
-    .brand-copy{
-      display:grid;
-      gap:.18rem;
+    .brand-kicker {
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
     }
 
-    .brand-copy strong{
-      font-size:clamp(1.08rem,3vw,1.7rem);
-      line-height:1;
-      letter-spacing:-.045em;
+    .brand-title {
+      color: var(--text);
+      font-size: 0.98rem;
+      font-weight: 900;
     }
 
-    .brand-copy span{
-      color:var(--muted);
-      font-size:.74rem;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
-    .nav{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      gap:.6rem;
+    .nav-links a {
+      padding: 0.62rem 0.82rem;
+      border: 1px solid rgba(141, 216, 255, 0.20);
+      border-radius: 999px;
+      background: rgba(2, 8, 20, 0.55);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.78rem;
+      font-weight: 800;
     }
 
-    .route-menu{
-      position:relative;
-      min-width:min(16.5rem,100%);
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 0.96fr) minmax(320px, 1.34fr);
+      gap: 18px;
+      align-items: stretch;
     }
 
-    .route-menu summary{
-      list-style:none;
-      cursor:pointer;
-      min-height:2.6rem;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:.75rem;
-      border:1px solid rgba(243,200,111,.25);
-      border-radius:999px;
-      padding:.62rem .85rem;
-      color:rgba(241,246,255,.90);
+    .hero-copy,
+    .planet-card,
+    .receipt-card {
+      border: 1px solid var(--line);
+      border-radius: 28px;
       background:
-        radial-gradient(circle at 50% 0%,rgba(243,200,111,.14),transparent 70%),
-        rgba(255,255,255,.045);
-      font-size:.72rem;
-      font-weight:950;
-      letter-spacing:.075em;
-      text-transform:uppercase;
-      box-shadow:0 0 1.15rem rgba(243,200,111,.08),inset 0 1px 0 rgba(255,255,255,.08);
-      backdrop-filter:blur(7px);
+        linear-gradient(180deg, rgba(8, 24, 44, 0.82), rgba(2, 8, 20, 0.82)),
+        rgba(2, 8, 20, 0.70);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
     }
 
-    .route-menu summary::-webkit-details-marker{display:none}
-
-    .route-menu summary::after{
-      content:"";
-      width:.55rem;
-      height:.55rem;
-      border-right:2px solid rgba(230,238,255,.82);
-      border-bottom:2px solid rgba(230,238,255,.82);
-      transform:rotate(45deg) translateY(-.12rem);
-      flex:0 0 auto;
+    .hero-copy {
+      display: flex;
+      min-height: 620px;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: clamp(22px, 3vw, 34px);
     }
 
-    .route-menu[open] summary{
-      border-color:rgba(243,200,111,.70);
-      color:rgba(255,244,216,.98);
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 8px;
+      padding: 0.46rem 0.68rem;
+      border: 1px solid rgba(167, 243, 198, 0.38);
+      border-radius: 999px;
+      background: rgba(5, 20, 28, 0.72);
+      color: var(--green);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 11ch;
+      margin: 18px 0 12px;
+      color: #f2f7ff;
+      font-size: clamp(2.4rem, 6.4vw, 5.8rem);
+      line-height: 0.91;
+      letter-spacing: -0.07em;
+    }
+
+    .lead {
+      max-width: 62ch;
+      margin: 0;
+      color: rgba(221, 232, 244, 0.78);
+      font-size: clamp(1rem, 1.6vw, 1.18rem);
+      line-height: 1.7;
+    }
+
+    .route-proof-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .proof-row {
+      display: grid;
+      grid-template-columns: 112px 1fr;
+      gap: 10px;
+      align-items: center;
+      padding: 11px 12px;
+      border: 1px solid rgba(141, 216, 255, 0.16);
+      border-radius: 18px;
+      background: rgba(1, 6, 16, 0.52);
+    }
+
+    .proof-row b {
+      color: var(--gold);
+      font-size: 0.72rem;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+    }
+
+    .proof-row span {
+      min-width: 0;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.72rem;
+      overflow-wrap: anywhere;
+    }
+
+    .planet-card {
+      min-height: 620px;
+      padding: clamp(12px, 2vw, 18px);
+    }
+
+    .planet-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 8px 14px;
+    }
+
+    .planet-toolbar h2 {
+      margin: 0;
+      color: var(--text);
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .planet-toolbar p {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.35;
+    }
+
+    .lens-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      justify-content: flex-end;
+    }
+
+    .lens-controls button {
+      min-height: 38px;
+      padding: 0.54rem 0.72rem;
+      border: 1px solid rgba(141, 216, 255, 0.24);
+      border-radius: 999px;
+      background: rgba(2, 8, 20, 0.72);
+      color: rgba(238, 244, 255, 0.80);
+      font: inherit;
+      font-size: 0.74rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .lens-controls button[aria-pressed="true"] {
+      border-color: rgba(167, 243, 198, 0.62);
       background:
-        radial-gradient(circle at 50% 0%,rgba(243,200,111,.25),transparent 72%),
-        radial-gradient(circle at 86% 50%,rgba(57,255,159,.13),transparent 70%),
-        linear-gradient(180deg,rgba(20,18,45,.84),rgba(4,9,20,.88));
-      box-shadow:0 0 1.8rem rgba(243,200,111,.20),0 0 3.2rem rgba(36,120,255,.14),inset 0 1px 0 rgba(255,255,255,.12);
+        radial-gradient(circle at 50% 0%, rgba(167, 243, 198, 0.22), transparent 70%),
+        rgba(2, 13, 24, 0.92);
+      color: var(--green);
     }
 
-    .route-menu[open] summary::after{
-      transform:rotate(225deg) translateY(-.08rem);
-      border-color:rgba(243,200,111,.95);
-    }
-
-    .route-menu-panel{
-      position:absolute;
-      right:0;
-      top:calc(100% + .55rem);
-      z-index:40;
-      width:min(46rem,calc(100vw - 2rem));
-      padding:.82rem;
-      border:1px solid rgba(243,200,111,.30);
-      border-radius:1.1rem;
+    .planet-stage {
+      position: relative;
+      min-height: clamp(520px, 72vh, 760px);
+      overflow: hidden;
+      border: 1px solid rgba(141, 216, 255, 0.18);
+      border-radius: 26px;
       background:
-        radial-gradient(circle at 12% 0%,rgba(243,200,111,.20),transparent 15rem),
-        radial-gradient(circle at 96% 25%,rgba(141,216,255,.12),transparent 15rem),
-        linear-gradient(180deg,rgba(11,13,38,.97),rgba(3,7,18,.98));
-      box-shadow:0 0 2.8rem rgba(243,200,111,.14),0 1.4rem 3.4rem rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.09);
+        radial-gradient(circle at 50% 36%, rgba(26, 54, 66, 0.62) 0, rgba(4, 11, 24, 0.92) 46%, rgba(1, 4, 12, 0.98) 100%);
+      touch-action: none;
     }
 
-    .nodal-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:.5rem;
-    }
-
-    .route-menu-grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:.5rem;
-    }
-
-    .route-menu-link{
-      min-height:2.45rem;
-      display:grid;
-      align-content:center;
-      gap:.08rem;
-      border:1px solid rgba(184,205,255,.18);
-      border-radius:.86rem;
-      padding:.52rem .62rem;
-      color:rgba(236,242,255,.88);
+    .planet-stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
       background:
-        radial-gradient(circle at 50% 0%,rgba(141,216,255,.10),transparent 72%),
-        linear-gradient(180deg,rgba(255,255,255,.048),rgba(255,255,255,.020));
-      font-size:.64rem;
-      font-weight:950;
-      letter-spacing:.06em;
-      text-align:center;
-      text-transform:uppercase;
-      box-shadow:0 0 .85rem rgba(36,120,255,.08),inset 0 1px 0 rgba(255,255,255,.07);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+        radial-gradient(circle at 50% 36%, transparent 0 36%, rgba(141, 216, 255, 0.035) 47%, transparent 64%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.028), transparent 36%, rgba(0, 0, 0, 0.18));
     }
 
-    .route-menu-link small{
-      display:block;
-      color:rgba(230,238,255,.54);
-      font-size:.52rem;
-      font-weight:950;
-      letter-spacing:.10em;
+    .planet-mount {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
     }
 
-    .route-menu-link:hover,
-    .route-menu-link:focus-visible{
-      transform:translateY(-2px);
-      border-color:rgba(243,200,111,.56);
-      color:rgba(255,244,216,.98);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(243,200,111,.16),transparent 72%),
-        linear-gradient(180deg,rgba(36,120,255,.085),rgba(255,255,255,.028));
-      outline:none;
+    .planet-mount canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
     }
 
-    .route-menu-link[aria-current="page"]{
-      color:#041009;
-      border-color:rgba(243,200,111,.86);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(57,255,159,.24),transparent 70%),
-        linear-gradient(135deg,#fff2a8,#f3c86f);
-      box-shadow:0 0 1.6rem rgba(57,255,159,.18),0 0 1rem rgba(243,200,111,.22);
+    .stage-label {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      z-index: 3;
+      padding: 12px 14px;
+      border: 1px solid rgba(167, 243, 198, 0.28);
+      border-radius: 18px;
+      background: rgba(2, 8, 20, 0.74);
+      color: rgba(221, 232, 244, 0.82);
+      font-size: 0.82rem;
+      line-height: 1.42;
+      backdrop-filter: blur(16px);
     }
 
-    .route-menu-link[aria-current="page"] small{
-      color:rgba(4,16,9,.64);
+    .stage-label strong {
+      color: var(--green);
     }
 
-    .panel{
-      border:1px solid var(--line);
-      border-radius:var(--soft-radius);
-      background:
-        radial-gradient(circle at 14% 0%,rgba(141,216,255,.10),transparent 28rem),
-        radial-gradient(circle at 86% 18%,rgba(36,120,255,.14),transparent 28rem),
-        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
-        var(--panel);
-      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
-      overflow:hidden;
+    .status-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
     }
 
-    .hero{
-      position:relative;
-      display:grid;
-      gap:1rem;
-      padding:clamp(1.35rem,4vw,2.5rem);
-      margin-top:.6rem;
-      isolation:isolate;
+    .status-pill {
+      min-width: 0;
+      padding: 12px;
+      border: 1px solid rgba(141, 216, 255, 0.16);
+      border-radius: 18px;
+      background: rgba(1, 6, 16, 0.48);
     }
 
-    .kicker{
-      width:fit-content;
-      display:inline-flex;
-      align-items:center;
-      gap:.58rem;
-      padding:.58rem .95rem;
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:999px;
-      color:rgba(230,238,255,.86);
-      background:rgba(3,6,18,.52);
-      font-size:.72rem;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      position:relative;
-      z-index:2;
-      backdrop-filter:blur(7px);
+    .status-pill b {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--gold);
+      font-size: 0.68rem;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
     }
 
-    .kicker::before{
-      content:"";
-      width:.72rem;
-      height:.72rem;
-      border-radius:.18rem;
-      transform:rotate(45deg);
-      background:linear-gradient(135deg,var(--gold2),var(--gold));
-      box-shadow:0 0 1.1rem rgba(243,200,111,.46);
+    .status-pill span {
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.76rem;
+      overflow-wrap: anywhere;
     }
 
-    h1{
-      margin:0;
-      max-width:1020px;
-      font-size:clamp(2.8rem,8vw,5.8rem);
-      line-height:.86;
-      letter-spacing:-.095em;
-      text-wrap:balance;
-      text-shadow:0 1.2rem 2.4rem rgba(0,0,0,.60);
-      position:relative;
-      z-index:2;
+    .receipt-card {
+      margin-top: 18px;
+      padding: clamp(18px, 3vw, 26px);
     }
 
-    h2{
-      margin:0;
-      color:var(--gold);
-      font-size:clamp(1.35rem,4vw,2.35rem);
-      line-height:1;
-      letter-spacing:-.065em;
-      text-wrap:balance;
+    .receipt-card h2 {
+      margin: 0 0 12px;
+      color: var(--text);
+      font-size: clamp(1.3rem, 3vw, 2.2rem);
+      letter-spacing: -0.04em;
     }
 
-    p{
-      margin:0;
-      color:var(--muted);
-      font-size:clamp(.96rem,2.4vw,1.12rem);
-      line-height:1.55;
+    .receipt-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
     }
 
-    .lead{
-      max-width:940px;
-      position:relative;
-      z-index:2;
+    .receipt-item {
+      padding: 13px;
+      border: 1px solid rgba(141, 216, 255, 0.15);
+      border-radius: 18px;
+      background: rgba(1, 6, 16, 0.46);
     }
 
-    .quote{
-      max-width:930px;
-      padding:.9rem 1rem;
-      border:1px solid rgba(243,200,111,.22);
-      border-radius:1.2rem;
-      color:rgba(255,244,216,.92);
-      background:rgba(5,9,24,.62);
-      font-size:clamp(.96rem,2.4vw,1.08rem);
-      font-weight:850;
-      backdrop-filter:blur(7px);
-      position:relative;
-      z-index:2;
+    .receipt-item b {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--cyan);
+      font-size: 0.72rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
     }
 
-    .status-strip{
-      display:grid;
-      grid-template-columns:repeat(6,minmax(0,1fr));
-      gap:.6rem;
-      margin-top:.35rem;
-      position:relative;
-      z-index:2;
+    .receipt-item span {
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.5;
     }
 
-    .status-chip{
-      min-height:4.25rem;
-      display:grid;
-      align-content:center;
-      gap:.18rem;
-      padding:.66rem;
-      border:1px solid rgba(184,205,255,.14);
-      border-radius:1rem;
-      background:
-        radial-gradient(circle at 50% 0%,rgba(141,216,255,.08),transparent 70%),
-        rgba(255,255,255,.035);
+    .route-log {
+      margin-top: 14px;
+      padding: 13px;
+      border: 1px solid rgba(167, 243, 198, 0.22);
+      border-radius: 18px;
+      background: rgba(1, 6, 16, 0.58);
+      color: rgba(221, 232, 244, 0.78);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.74rem;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
     }
 
-    .status-chip span{
-      color:rgba(230,238,255,.56);
-      font-size:.60rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
+    .pass {
+      color: var(--green) !important;
     }
 
-    .status-chip strong{
-      color:rgba(255,244,216,.95);
-      font-size:.88rem;
-      line-height:1.05;
+    .hold {
+      color: var(--gold) !important;
     }
 
-    .instrument-shell{
-      margin-top:1.15rem;
-      padding:clamp(1rem,3vw,1.45rem);
-      display:grid;
-      gap:1rem;
+    .fail {
+      color: var(--danger) !important;
     }
 
-    .stage-copy{
-      display:flex;
-      align-items:end;
-      justify-content:space-between;
-      gap:1rem;
-      flex-wrap:wrap;
+    @media (max-width: 980px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-copy,
+      .planet-card {
+        min-height: auto;
+      }
+
+      .status-strip,
+      .receipt-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
 
-    .stage-copy p{
-      max-width:780px;
-      font-size:.96rem;
-    }
+    @media (max-width: 620px) {
+      .route-shell {
+        width: min(100vw - 18px, 1180px);
+        padding-top: 10px;
+      }
 
-    .stage-badge{
-      min-height:2.35rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(57,255,159,.24);
-      border-radius:999px;
-      padding:.55rem .85rem;
-      color:rgba(232,255,241,.90);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(57,255,159,.13),transparent 70%),
-        rgba(255,255,255,.045);
-      font-size:.66rem;
-      font-weight:950;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      white-space:nowrap;
-      box-shadow:0 0 .9rem rgba(57,255,159,.08),inset 0 1px 0 rgba(255,255,255,.07);
-    }
+      .nav-links {
+        width: 100%;
+      }
 
-    .lens-rail{
-      position:relative;
-      z-index:5;
-      display:grid;
-      gap:.72rem;
-      padding:1rem;
-      border:1px solid rgba(243,200,111,.20);
-      border-radius:1.25rem;
-      background:
-        radial-gradient(circle at 12% 0%,rgba(243,200,111,.12),transparent 26rem),
-        radial-gradient(circle at 88% 20%,rgba(57,255,159,.07),transparent 24rem),
-        rgba(3,6,18,.58);
-      box-shadow:0 1rem 2.6rem rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.06);
-      backdrop-filter:blur(8px);
-    }
+      .nav-links a {
+        flex: 1 1 auto;
+        text-align: center;
+      }
 
-    .audralia-planet-stage-label{
-      margin:0;
-      color:rgba(230,238,255,.80);
-      font-size:.92rem;
-      font-weight:850;
-      line-height:1.45;
-    }
+      .planet-card {
+        padding: 10px;
+        border-radius: 22px;
+      }
 
-    .audralia-planet-stage-label strong{
-      color:var(--gold);
-    }
+      .planet-stage {
+        min-height: 570px;
+        border-radius: 22px;
+      }
 
-    .audralia-planet-lens-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.5rem;
-    }
+      .planet-toolbar {
+        align-items: flex-start;
+      }
 
-    .audralia-planet-lens-row button{
-      cursor:pointer;
-      min-height:2.45rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:999px;
-      padding:.6rem .92rem;
-      color:rgba(241,246,255,.84);
-      background:rgba(255,255,255,.04);
-      font:inherit;
-      font-size:.72rem;
-      font-weight:950;
-      letter-spacing:.07em;
-      text-transform:uppercase;
-      user-select:none;
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
-    }
+      .lens-controls {
+        width: 100%;
+        justify-content: flex-start;
+      }
 
-    .audralia-planet-lens-row button:hover,
-    .audralia-planet-lens-row button:focus-visible{
-      transform:translateY(-2px);
-      border-color:rgba(243,200,111,.46);
-      outline:none;
-    }
+      .lens-controls button {
+        flex: 1 1 auto;
+      }
 
-    .audralia-planet-lens-row button[aria-pressed="true"]{
-      border-color:rgba(243,200,111,.86);
-      color:#060811;
-      background:
-        radial-gradient(circle at 50% 0%,rgba(141,216,255,.24),transparent 70%),
-        linear-gradient(135deg,#fff2a8,#f3c86f);
-      box-shadow:0 0 1.35rem rgba(243,200,111,.18),0 0 1rem rgba(57,255,159,.10);
-    }
+      .status-strip,
+      .receipt-list {
+        grid-template-columns: 1fr;
+      }
 
-    .instrument-grid{
-      display:grid;
-      grid-template-columns:minmax(0,1fr) minmax(16rem,22rem);
-      gap:1rem;
-      align-items:start;
-    }
-
-    .stage-panel{
-      position:relative;
-      display:grid;
-      gap:.8rem;
-      min-width:0;
-    }
-
-    #audraliaPlanetInspectionStage{
-      position:relative;
-      isolation:isolate;
-      overflow:hidden;
-      min-height:clamp(30rem,68vw,43rem);
-      border:1px solid rgba(184,205,255,.15);
-      border-radius:clamp(1.25rem,4vw,2rem);
-      background:
-        radial-gradient(circle at 50% 44%,rgba(141,216,255,.13),transparent 18rem),
-        radial-gradient(circle at 50% 58%,rgba(36,120,255,.12),transparent 24rem),
-        radial-gradient(circle at 50% 77%,rgba(243,200,111,.055),transparent 28rem),
-        linear-gradient(180deg,rgba(1,5,16,.72),rgba(2,6,16,.96));
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.06),
-        inset 0 0 90px rgba(0,0,0,.30),
-        0 1.5rem 4rem rgba(0,0,0,.30);
-      touch-action:none;
-    }
-
-    #audraliaPlanetInspectionStage::before,
-    #audraliaPlanetInspectionStage::after{
-      display:none!important;
-      content:none!important;
-    }
-
-    #audraliaPlanetInspectionMount{
-      position:absolute;
-      inset:0;
-      z-index:4;
-      min-height:100%;
-      display:block;
-      overflow:hidden;
-    }
-
-    #audraliaPlanetInspectionMount canvas{
-      display:block;
-      width:100%!important;
-      height:100%!important;
-      max-width:100%;
-      max-height:100%;
-    }
-
-    #audraliaPlanetInspectionMount canvas[data-audralia-admissibility-held="true"]{
-      display:none!important;
-      visibility:hidden!important;
-      opacity:0!important;
-      pointer-events:none!important;
-    }
-
-    .stage-hint{
-      position:absolute;
-      left:1rem;
-      right:1rem;
-      bottom:1rem;
-      z-index:8;
-      display:flex;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:center;
-      gap:.55rem;
-      pointer-events:none;
-    }
-
-    .stage-hint span{
-      min-height:2.15rem;
-      display:inline-flex;
-      align-items:center;
-      border:1px solid rgba(184,205,255,.14);
-      border-radius:999px;
-      padding:.48rem .7rem;
-      color:rgba(230,238,255,.68);
-      background:rgba(3,6,18,.58);
-      font-size:.66rem;
-      font-weight:950;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      backdrop-filter:blur(7px);
-    }
-
-    .read-key{
-      display:grid;
-      align-content:start;
-      gap:.72rem;
-      padding:1rem;
-      border:1px solid rgba(57,255,159,.20);
-      border-radius:1.25rem;
-      background:
-        radial-gradient(circle at 16% 0%,rgba(57,255,159,.10),transparent 20rem),
-        rgba(3,6,18,.52);
-      box-shadow:0 0 1.5rem rgba(57,255,159,.08),inset 0 1px 0 rgba(255,255,255,.06);
-      backdrop-filter:blur(8px);
-    }
-
-    .read-key strong{
-      color:var(--gold);
-      font-size:.78rem;
-      font-weight:950;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-    }
-
-    .read-list{
-      display:grid;
-      gap:.5rem;
-      margin:0;
-      padding:0;
-      list-style:none;
-    }
-
-    .read-list li{
-      display:grid;
-      grid-template-columns:1.2rem 1fr;
-      gap:.56rem;
-      align-items:start;
-      color:var(--muted);
-      font-size:.86rem;
-      line-height:1.34;
-    }
-
-    .key-mark{
-      width:.95rem;
-      height:.95rem;
-      margin-top:.14rem;
-      border:1px solid rgba(255,255,255,.18);
-      border-radius:50%;
-      background:var(--key-color,var(--gold));
-      box-shadow:0 0 .78rem var(--key-color,var(--gold));
-    }
-
-    .held-note{
-      padding:.85rem .95rem;
-      border:1px solid rgba(243,200,111,.20);
-      border-radius:1rem;
-      color:rgba(255,244,216,.86);
-      background:rgba(243,200,111,.055);
-      font-size:.88rem;
-      font-weight:850;
-      line-height:1.42;
-    }
-
-    .authority-band{
-      margin-top:1.15rem;
-      padding:clamp(1rem,3vw,1.45rem);
-      display:grid;
-      gap:.85rem;
-      border:1px solid rgba(243,200,111,.24);
-      border-radius:1.55rem;
-      background:
-        radial-gradient(circle at 18% 0%,rgba(243,200,111,.10),transparent 32rem),
-        radial-gradient(circle at 88% 20%,rgba(57,255,159,.07),transparent 28rem),
-        linear-gradient(180deg,rgba(255,255,255,.060),rgba(255,255,255,.023));
-      box-shadow:0 1.3rem 3.4rem rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.08);
-    }
-
-    .authority-band strong{
-      color:rgba(255,244,216,.98);
-      font-size:clamp(1.16rem,3vw,1.58rem);
-      line-height:1.05;
-      letter-spacing:-.045em;
-    }
-
-    .authority-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:.72rem;
-    }
-
-    .authority-card{
-      display:grid;
-      gap:.38rem;
-      padding:.85rem;
-      border:1px solid rgba(184,205,255,.12);
-      border-radius:1rem;
-      background:rgba(255,255,255,.035);
-    }
-
-    .authority-card b{
-      color:var(--gold);
-      font-size:.68rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .authority-card span{
-      color:var(--muted);
-      font-size:.86rem;
-      line-height:1.36;
-    }
-
-    .route-receipt,
-    [data-route-receipt],
-    [data-contract-receipt],
-    [data-debug-receipt],
-    .receipt{
-      display:none!important;
-      visibility:hidden!important;
-      overflow:hidden!important;
-      width:0!important;
-      height:0!important;
-      max-width:0!important;
-      max-height:0!important;
-      margin:0!important;
-      padding:0!important;
-      border:0!important;
-      opacity:0!important;
-      pointer-events:none!important;
-      position:absolute!important;
-      inset:auto!important;
-      clip-path:inset(50%)!important;
-      white-space:nowrap!important;
-    }
-
-    footer{
-      padding:1.35rem 0 .5rem;
-      color:var(--faint);
-      text-align:center;
-      font-size:.76rem;
-    }
-
-    @media (max-width:1080px){
-      .status-strip{grid-template-columns:repeat(3,minmax(0,1fr))}
-      .instrument-grid{grid-template-columns:1fr}
-      .authority-grid{grid-template-columns:1fr}
-    }
-
-    @media (max-width:980px){
-      .topbar{grid-template-columns:1fr}
-      .nav{justify-content:flex-start}
-      .route-menu-panel{left:0;right:auto}
-      .nodal-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-    }
-
-    @media (max-width:760px){
-      .shell{width:min(100% - 22px,var(--max))}
-      h1{font-size:clamp(2.7rem,14vw,5rem)}
-      .hero{padding:1rem}
-      .route-menu{width:100%}
-      .route-menu-panel{position:static;margin-top:.45rem;width:100%}
-      .route-menu-grid,
-      .nodal-grid{grid-template-columns:1fr}
-      .status-strip{grid-template-columns:1fr}
-      .audralia-planet-lens-row{display:grid;grid-template-columns:1fr 1fr}
-      .audralia-planet-lens-row button{width:100%}
-      #audraliaPlanetInspectionStage{min-height:32rem}
-      .stage-copy{display:grid}
-      .stage-badge{width:fit-content}
-      .stage-hint{justify-content:center}
-    }
-
-    @media (max-width:420px){
-      .audralia-planet-lens-row{grid-template-columns:1fr}
-      #audraliaPlanetInspectionStage{min-height:30rem}
-      .stage-hint span{font-size:.58rem}
-    }
-
-    @media (prefers-reduced-motion:reduce){
-      *,
-      *::before,
-      *::after{
-        scroll-behavior:auto!important;
-        animation-duration:.01ms!important;
-        animation-iteration-count:1!important;
-        transition-duration:.01ms!important;
+      .proof-row {
+        grid-template-columns: 1fr;
       }
     }
   </style>
-
-  <script>
-    window.AUDRALIA_PLANET_G2_HTML_CUTOVER_POLICY = Object.freeze({
-      contract: "AUDRALIA_PLANET_INDEX_HTML_G2_CARRIER_CUTOVER_TNT_v1",
-      previousContract: "AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_TNT_v1",
-      route: "/showroom/globe/audralia/planet/",
-      htmlCutoverClaimed: true,
-      g2CarrierCutover: true,
-      g2InspectionCarrierNewFileActive: true,
-      g2InspectionCarrierPath: "/assets/audralia/clean/runtime/audralia.planet-body.g2.inspection-carrier.js",
-      oldCarrierLoaded: false,
-      dryParentBaselinePreserved: true,
-      legacyVisualChildrenHeld: true,
-      visibleRendererCount: 1,
-      primaryVisibleRenderer: "g2-carrier",
-      terrainExpressionCanvasHeld: true,
-      terrainExpressionCanvasLoaded: false,
-      activeHydration: false,
-      activeWater: false,
-      finalVisualPassClaim: false
-    });
-  </script>
 </head>
 
 <body>
-  <!--
-    /showroom/globe/audralia/planet/index.html
-    TNT FULL-FILE REPLACEMENT
-    AUDRALIA_PLANET_INDEX_HTML_G2_CARRIER_CUTOVER_TNT_v1
-  -->
+  <a class="skip-link" href="#cockpit-main">Skip to Audralia G2 planet</a>
 
-  <a class="skip" href="#audraliaPlanetInspectionStage">Skip to planet inspection</a>
-
-  <div class="shell">
-    <header class="topbar" aria-label="Audralia Planet header">
-      <a class="brand" href="/showroom/globe/audralia/">
-        <span class="brand-mark" aria-hidden="true"><span>AU</span></span>
-        <span class="brand-copy">
-          <span>Diamond Gate Bridge · Showroom Globe</span>
-          <strong>Audralia Planet</strong>
+  <main id="cockpit-main" class="route-shell" aria-label="Audralia G2 planet route cutover">
+    <nav class="top-nav" aria-label="Audralia route navigation">
+      <a class="brand" href="/showroom/globe/audralia/" aria-label="Audralia overview">
+        <span class="brand-mark">AU</span>
+        <span class="brand-text">
+          <span class="brand-kicker">Audralia</span>
+          <span class="brand-title">G2 Planet Route</span>
         </span>
       </a>
 
-      <nav class="nav" aria-label="Chronological route navigation">
-        <details class="route-menu">
-          <summary>Nodal Compass</summary>
-          <div class="route-menu-panel">
-            <div class="nodal-grid" aria-label="16-point nodal compass">
-              <a class="route-menu-link" href="/"><small>01 · N</small>Compass</a>
-              <a class="route-menu-link" href="/door/"><small>02 · NNE</small>Door</a>
-              <a class="route-menu-link" href="/home/"><small>03 · NE</small>Home</a>
-              <a class="route-menu-link" href="/laws/"><small>04 · ENE</small>Laws</a>
-              <a class="route-menu-link" href="/meet-sean-mansfield/"><small>05 · E</small>Meet Sean</a>
-              <a class="route-menu-link" href="/products/"><small>06 · ESE</small>Products</a>
-              <a class="route-menu-link" href="/showroom/"><small>07 · SE</small>Showroom</a>
-              <a class="route-menu-link" href="/showroom/globe/"><small>08 · SSE</small>Globe</a>
-              <a class="route-menu-link" href="/showroom/globe/audralia/"><small>09 · S</small>Audralia</a>
-              <a class="route-menu-link" href="/showroom/globe/audralia/planet/" aria-current="page"><small>10 · SSW</small>Planet</a>
-              <a class="route-menu-link" href="/showroom/globe/audralia/disposition/"><small>11 · SW</small>Cockpit</a>
-              <a class="route-menu-link" href="/gauges/"><small>12 · WSW</small>Gauges</a>
-              <a class="route-menu-link" href="/explore/frontier/"><small>13 · W</small>Frontier</a>
-              <a class="route-menu-link" href="/explore/frontier/energy/"><small>14 · WNW</small>Energy / Water / Waste</a>
-              <a class="route-menu-link" href="/explore/frontier/lattice/"><small>15 · NW</small>Lattice / Infrastructure</a>
-              <a class="route-menu-link" href="/"><small>16 · NNW</small>Return Compass</a>
-            </div>
-          </div>
-        </details>
+      <div class="nav-links" aria-label="Route links">
+        <a href="/showroom/globe/">Globe</a>
+        <a href="/showroom/globe/audralia/">Audralia</a>
+        <a href="/showroom/globe/audralia/planet/">Planet</a>
+        <a href="/gauges/">Gauges</a>
+      </div>
+    </nav>
 
-        <details class="route-menu">
-          <summary>Audralia Chain</summary>
-          <div class="route-menu-panel">
-            <div class="route-menu-grid" aria-label="Audralia route chain">
-              <a class="route-menu-link" href="/showroom/globe/"><small>01</small>Globe Gateway</a>
-              <a class="route-menu-link" href="/showroom/globe/audralia/"><small>02</small>Audralia Parent</a>
-              <a class="route-menu-link" href="/showroom/globe/audralia/planet/" aria-current="page"><small>03</small>Planet Inspection</a>
-              <a class="route-menu-link" href="/showroom/globe/audralia/disposition/"><small>04</small>Cockpit / Disposition</a>
-              <a class="route-menu-link" href="/showroom/globe/audralia/gratitude/"><small>05</small>Gratitude / Downstream</a>
-              <a class="route-menu-link" href="/gauges/"><small>06</small>Triple G / Gauges</a>
-            </div>
-          </div>
-        </details>
-
-        <details class="route-menu">
-          <summary>Frontier Continuation</summary>
-          <div class="route-menu-panel">
-            <div class="route-menu-grid" aria-label="Frontier continuation routes">
-              <a class="route-menu-link" href="/explore/frontier/"><small>01</small>Frontier</a>
-              <a class="route-menu-link" href="/explore/frontier/energy/"><small>02</small>Energy</a>
-              <a class="route-menu-link" href="/explore/frontier/water/"><small>03</small>Water</a>
-              <a class="route-menu-link" href="/explore/frontier/waste/"><small>04</small>Waste</a>
-              <a class="route-menu-link" href="/explore/frontier/lattice/"><small>05</small>Lattice</a>
-              <a class="route-menu-link" href="/explore/frontier/infrastructure/"><small>06</small>Infrastructure</a>
-              <a class="route-menu-link" href="/explore/frontier/closed-loop/"><small>07</small>Closed Loop</a>
-              <a class="route-menu-link" href="/explore/frontier/manual/"><small>08</small>Manual</a>
-              <a class="route-menu-link" href="/explore/frontier/shimmer/"><small>09</small>Shimmer</a>
-              <a class="route-menu-link" href="/explore/frontier/trajectory/"><small>10</small>Trajectory</a>
-              <a class="route-menu-link" href="/explore/frontier/vision/"><small>11</small>Vision</a>
-            </div>
-          </div>
-        </details>
-      </nav>
-    </header>
-
-    <main id="main">
-      <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">G2 carrier cutover · Dry parent baseline · Hydration held</div>
-
-        <h1 id="page-title">One planet. One G2 carrier.</h1>
-
-        <p class="lead">
-          Audralia Planet Inspection now cuts over from the old carrier stack to the new G2 inspection carrier. The dry revealed terrain parent remains the only loaded terrain baseline for this pass.
-        </p>
-
-        <div class="quote">
-          Legacy visual children are held at the HTML invitation layer until they are adapted to the G2 carrier contract. The page loads one parent baseline and one G2 visible runtime.
-        </div>
-
-        <div class="status-strip" aria-label="Audralia Planet G2 cutover status">
-          <article class="status-chip"><span>Visible planet</span><strong>single</strong></article>
-          <article class="status-chip"><span>Renderer</span><strong>G2 carrier</strong></article>
-          <article class="status-chip"><span>Dry parent</span><strong>preserved</strong></article>
-          <article class="status-chip"><span>Legacy children</span><strong>held</strong></article>
-          <article class="status-chip"><span>Hydration</span><strong>held</strong></article>
-          <article class="status-chip"><span>Final visual</span><strong>false</strong></article>
-        </div>
-      </section>
-
-      <section class="panel instrument-shell" aria-labelledby="instrument-title">
-        <div class="kicker">Primary planet instrument</div>
-
-        <div class="stage-copy">
-          <div>
-            <h2 id="instrument-title">G2 centered full-body inspection.</h2>
-            <p>
-              The visible stage is now reserved for the G2 carrier file. The old runtime carrier and the older visual child stack are not loaded by this page.
-            </p>
-          </div>
-          <span class="stage-badge">G2 carrier active</span>
-        </div>
-
-        <section class="lens-rail" aria-label="Audralia planet lens controls">
-          <p class="audralia-planet-stage-label" data-audralia-planet-stage-label>
-            <strong>Surface</strong> → G2 carrier dry-terrain form over preserved parent baseline
+    <section class="hero" aria-labelledby="audraliaG2Title">
+      <article class="hero-copy">
+        <div>
+          <span class="eyebrow">G2 Route Cutover · PTR Active</span>
+          <h1 id="audraliaG2Title">Audralia G2 Planet</h1>
+          <p class="lead">
+            This route loads the G2 datum, physical terrain child, surface/material child,
+            and planet terrain renderer in order. The route owns the shell and mount only.
+            PTR owns rendering. Datum, terrain, and surface truth remain downstream-owned.
           </p>
 
-          <div class="audralia-planet-lens-row" role="group" aria-label="Audralia planet development lenses">
+          <div class="route-proof-grid" aria-label="Route cutover proof">
+            <div class="proof-row">
+              <b>Stack</b>
+              <span>datum → terrain → surface → PTR</span>
+            </div>
+            <div class="proof-row">
+              <b>Renderer</b>
+              <span>AUDRALIA_G2_PLANET_TERRAIN_RENDERER_PTR_TNT_v1</span>
+            </div>
+            <div class="proof-row">
+              <b>Hydration</b>
+              <span>held · active water false · former hydrosphere memory dry only</span>
+            </div>
+            <div class="proof-row">
+              <b>Final Pass</b>
+              <span>false · route cutover baseline only</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="route-proof-grid" aria-label="Script order">
+          <div class="proof-row">
+            <b>1 Datum</b>
+            <span>/assets/audralia/clean/runtime/audralia.true-globe.datum.js</span>
+          </div>
+          <div class="proof-row">
+            <b>2 Terrain</b>
+            <span>/assets/audralia/clean/terrain/audralia.g2.physical-terrain.child.js</span>
+          </div>
+          <div class="proof-row">
+            <b>3 Surface</b>
+            <span>/assets/audralia/clean/surface/audralia.g2.surface-material.child.js</span>
+          </div>
+          <div class="proof-row">
+            <b>4 PTR</b>
+            <span>/assets/audralia/clean/runtime/audralia.g2.planet-terrain-renderer.js</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="planet-card" aria-label="Audralia G2 planet renderer">
+        <header class="planet-toolbar">
+          <div>
+            <h2>Packet-Derived Planet Renderer</h2>
+            <p>Drag to rotate. Pinch or wheel to zoom. Double tap or press 0 to reset.</p>
+          </div>
+
+          <div class="lens-controls" aria-label="Audralia G2 lenses">
             <button type="button" data-audralia-planet-lens="body" aria-pressed="false">Body</button>
             <button type="button" data-audralia-planet-lens="surface" aria-pressed="true">Surface</button>
-            <button type="button" data-audralia-planet-lens="hydration" aria-pressed="false">Hydration</button>
-            <button type="button" data-audralia-planet-lens="sixth-sense" aria-pressed="false">Sixth Sense</button>
+            <button type="button" data-audralia-planet-lens="terrain" aria-pressed="false">Terrain</button>
             <button type="button" data-audralia-planet-lens="lattice" aria-pressed="false">Lattice</button>
             <button type="button" data-audralia-planet-lens="receipt" aria-pressed="false">Receipt</button>
           </div>
+        </header>
+
+        <section
+          id="audraliaPlanetInspectionStage"
+          class="planet-stage"
+          data-audralia-planet-inspection-stage
+          aria-label="Audralia G2 planet inspection stage"
+        >
+          <div
+            id="audraliaPlanetInspectionMount"
+            class="planet-mount"
+            data-audralia-planet-inspection-mount
+            aria-label="PTR canvas mount"
+          ></div>
+
+          <div class="stage-label" data-audralia-planet-stage-label>
+            <strong>Surface</strong> → waiting for PTR to validate datum, terrain, and surface packets.
+          </div>
         </section>
 
-        <div class="instrument-grid">
-          <section class="stage-panel" aria-label="Audralia live planet stage">
-            <div
-              id="audraliaPlanetInspectionStage"
-              data-audralia-planet-inspection-stage
-              data-singular-visible-stage="true"
-              data-primary-visible-renderer="g2-carrier"
-              data-secondary-visible-canvas-allowed="false"
-              data-stage-orbit-rings-visible="false"
-              data-g2-carrier-cutover-stage="true"
-              aria-label="Audralia G2 primary centered planet inspection stage"
-            >
-              <div
-                id="audraliaPlanetInspectionMount"
-                data-audralia-planet-inspection-mount
-                data-visible-renderer-count="1"
-                data-primary-visible-renderer="g2-carrier"
-                data-g2-inspection-carrier-mount="true"
-              ></div>
-
-              <div class="stage-hint" aria-hidden="true">
-                <span>Drag to rotate</span>
-                <span>Pinch or wheel to zoom</span>
-                <span>G2 carrier</span>
-                <span>Active water false</span>
-              </div>
-            </div>
-          </section>
-
-          <aside class="read-key" aria-label="Audralia planet G2 read key">
-            <strong>G2 Cutover Read Key</strong>
-
-            <ul class="read-list">
-              <li>
-                <span class="key-mark" style="--key-color:var(--gold)"></span>
-                <span><b>Body</b> shows one G2 carrier body, not the old carrier-generation form.</span>
-              </li>
-
-              <li>
-                <span class="key-mark" style="--key-color:var(--green)"></span>
-                <span><b>Surface</b> reads the dry parent baseline through the G2 visible runtime.</span>
-              </li>
-
-              <li>
-                <span class="key-mark" style="--key-color:var(--blue)"></span>
-                <span><b>Hydration</b> remains held. Active water remains false.</span>
-              </li>
-
-              <li>
-                <span class="key-mark" style="--key-color:var(--aqua)"></span>
-                <span><b>Sixth Sense</b> remains diagnostic and does not become material truth.</span>
-              </li>
-
-              <li>
-                <span class="key-mark" style="--key-color:rgba(184,205,255,.78)"></span>
-                <span><b>Lattice</b> inspects structure without becoming a second planet.</span>
-              </li>
-
-              <li>
-                <span class="key-mark" style="--key-color:rgba(255,244,216,.86)"></span>
-                <span><b>Receipt</b> proves the cutover, parent baseline, and held-child posture.</span>
-              </li>
-            </ul>
-
-            <div class="held-note">
-              Cutover rule: load the dry parent baseline and the G2 carrier only. Legacy visual children are held until renewed for the G2 runtime contract.
-            </div>
-          </aside>
+        <div class="status-strip" aria-label="PTR quick status">
+          <div class="status-pill">
+            <b>Datum</b>
+            <span id="routeDatumStatus" class="hold">pending</span>
+          </div>
+          <div class="status-pill">
+            <b>Terrain</b>
+            <span id="routeTerrainStatus" class="hold">pending</span>
+          </div>
+          <div class="status-pill">
+            <b>Surface</b>
+            <span id="routeSurfaceStatus" class="hold">pending</span>
+          </div>
+          <div class="status-pill">
+            <b>Planet</b>
+            <span id="routePlanetStatus" class="hold">pending</span>
+          </div>
         </div>
-      </section>
+      </article>
+    </section>
 
-      <section class="authority-band" aria-labelledby="authority-title">
-        <div class="kicker">Authority map · G2 cutover only</div>
+    <section class="receipt-card" aria-labelledby="routeReceiptTitle">
+      <h2 id="routeReceiptTitle">Route Cutover Receipt</h2>
 
-        <strong id="authority-title">This file changes the route invitation layer. It does not rewrite terrain truth.</strong>
-
-        <p>
-          The dry terrain parent remains the baseline. The visible runtime changes to the G2 inspection carrier. The old carrier and obsolete visual children are not invited into this route pass.
-        </p>
-
-        <div class="authority-grid">
-          <article class="authority-card">
-            <b>Loaded now</b>
-            <span>Dry revealed physical terrain parent and G2 inspection carrier only.</span>
-          </article>
-
-          <article class="authority-card">
-            <b>Held now</b>
-            <span>Old carrier, elevation child, relief child, landform child, beach child, triangular mesh child, and terrain-expression canvas.</span>
-          </article>
-
-          <article class="authority-card">
-            <b>Preserved boundary</b>
-            <span>Hydration held. Active water false. Final terrain, hydration, and visual pass claims remain false.</span>
-          </article>
+      <div class="receipt-list">
+        <div class="receipt-item">
+          <b>Route Ownership</b>
+          <span>Shell, mount, controls, labels, script order, and receipts only.</span>
         </div>
-      </section>
+        <div class="receipt-item">
+          <b>Renderer Ownership</b>
+          <span>PTR owns canvas rendering and interaction controls only.</span>
+        </div>
+        <div class="receipt-item">
+          <b>Source Truth</b>
+          <span>Datum, terrain, and surface/material truth remain owned by their children.</span>
+        </div>
+        <div class="receipt-item">
+          <b>Water State</b>
+          <span>Hydration held. Active water false. No wet coastline activation.</span>
+        </div>
+        <div class="receipt-item">
+          <b>Visual State</b>
+          <span>Route cutover candidate. Final visual pass remains false.</span>
+        </div>
+        <div class="receipt-item">
+          <b>Next Gate</b>
+          <span>Visual inspection first, then Gauges audit.</span>
+        </div>
+      </div>
 
-      <template id="route-receipt" data-route-receipt>
-AUDRALIA_PLANET_INDEX_HTML_G2_CARRIER_CUTOVER_TNT_v1
-previous_contract=AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_TNT_v1
-target=/showroom/globe/audralia/planet/index.html
-route=/showroom/globe/audralia/planet/
-page=audralia_planet_inspection
-g2_carrier_cutover=true
-g2_inspection_carrier_new_file_active=true
-g2_inspection_carrier_script=/assets/audralia/clean/runtime/audralia.planet-body.g2.inspection-carrier.js
-old_carrier_loaded=false
-old_carrier_script_held=/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
-dry_parent_baseline_preserved=true
-dry_parent_script=/assets/audralia/clean/terrain/audralia.dry-revealed-physical-terrain.child.js
-legacy_visual_children_held=true
-held_elevation_track_script=/assets/audralia/clean/terrain/audralia.elevation-track.child.js
-held_relief_expression_script=/assets/audralia/clean/terrain/audralia.elevation-relief-expression.child.js
-held_landform_systems_script=/assets/audralia/clean/terrain/audralia.landform-systems.child.js
-held_beach_coastal_readiness_script=/assets/audralia/clean/terrain/audralia.beach-coastal-readiness.child.js
-held_triangular_mesh_script=/assets/audralia/clean/terrain/audralia.triangular-terrain-mesh.child.js
-terrain_expression_canvas_held=true
-terrain_expression_canvas_loaded=false
-primary_visible_renderer=g2-carrier
-visible_renderer_count=1
-secondary_visible_canvas_allowed=false
-primary_stage_id=audraliaPlanetInspectionStage
-primary_mount_id=audraliaPlanetInspectionMount
-visible_lenses=Body,Surface,Hydration,Sixth Sense,Lattice,Receipt
-default_lens=Surface
-script_mode=defer
-async_forbidden=true
-html_owns_terrain_truth=false
-html_owns_projection=false
-html_owns_hydration_truth=false
-hydration_held=true
-active_hydration=false
-active_water=false
-final_terrain_pass_claim=false
-final_hydration_pass_claim=false
-final_visual_pass_claim=false
-visual_pass_claimed=false
-generated_image=false
-graphic_box=false
-deploy_marker=AUDRALIA_PLANET_INDEX_HTML_G2_CARRIER_CUTOVER_DEPLOY_MARKER_v1
-      </template>
-    </main>
+      <div id="routeCutoverLog" class="route-log" aria-live="polite">Route monitor pending PTR status.</div>
+    </section>
+  </main>
 
-    <footer>
-      AUDRALIA_PLANET_INDEX_HTML_G2_CARRIER_CUTOVER_TNT_v1 · G2 carrier active · Dry parent baseline preserved · Legacy visual children held · Hydration held · Final visual pass false.
-    </footer>
-  </div>
-
-  <script defer src="/assets/audralia/clean/terrain/audralia.dry-revealed-physical-terrain.child.js?v=AUDRALIA_PLANET_G2_HTML_CUTOVER_v1"></script>
-  <script defer src="/assets/audralia/clean/runtime/audralia.planet-body.g2.inspection-carrier.js?v=AUDRALIA_PLANET_G2_HTML_CUTOVER_v1"></script>
+  <!-- G2 stack load order is intentional. Do not move PTR above datum, terrain, or surface. -->
+  <script src="/assets/audralia/clean/runtime/audralia.true-globe.datum.js?v=AUDRALIA_G2_ROUTE_CUTOVER_TNT_v1"></script>
+  <script src="/assets/audralia/clean/terrain/audralia.g2.physical-terrain.child.js?v=AUDRALIA_G2_ROUTE_CUTOVER_TNT_v1"></script>
+  <script src="/assets/audralia/clean/surface/audralia.g2.surface-material.child.js?v=AUDRALIA_G2_ROUTE_CUTOVER_TNT_v1"></script>
+  <script src="/assets/audralia/clean/runtime/audralia.g2.planet-terrain-renderer.js?v=AUDRALIA_G2_ROUTE_CUTOVER_TNT_v1"></script>
 
   <script>
-    (() => {
+    (function () {
       "use strict";
 
-      const CONTRACT = "AUDRALIA_PLANET_INDEX_HTML_G2_CARRIER_CUTOVER_TNT_v1";
-      const PREVIOUS_CONTRACT = "AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_TNT_v1";
-      const MOUNT_ID = "audraliaPlanetInspectionMount";
+      var CONTRACT = "AUDRALIA_G2_ROUTE_CUTOVER_TNT_v1";
+      var ROUTE = "/showroom/globe/audralia/planet/";
+      var CHECK_LIMIT = 24;
+      var checkCount = 0;
 
-      const markDocument = () => {
-        document.documentElement.dataset.audraliaPlanetHtmlContract = CONTRACT;
-        document.documentElement.dataset.audraliaPlanetHtmlPreviousContract = PREVIOUS_CONTRACT;
-        document.documentElement.dataset.audraliaHtmlCutoverClaimed = "true";
-        document.documentElement.dataset.audraliaG2CarrierCutover = "true";
-        document.documentElement.dataset.audraliaG2InspectionCarrierLoaded = "true";
-        document.documentElement.dataset.audraliaG2InspectionCarrierNewFileActive = "true";
-        document.documentElement.dataset.audraliaOldCarrierLoaded = "false";
-        document.documentElement.dataset.audraliaLegacyVisualChildrenHeld = "true";
-        document.documentElement.dataset.audraliaDryParentBaselinePreserved = "true";
-        document.documentElement.dataset.audraliaVisibleRendererCount = "1";
-        document.documentElement.dataset.audraliaPrimaryVisibleRenderer = "g2-carrier";
-        document.documentElement.dataset.audraliaTerrainExpressionCanvasHeld = "true";
-        document.documentElement.dataset.audraliaTerrainExpressionCanvasLoaded = "false";
-        document.documentElement.dataset.audraliaSecondaryVisibleCanvasAllowed = "false";
-        document.documentElement.dataset.audraliaHydrationHeld = "true";
-        document.documentElement.dataset.audraliaActiveHydration = "false";
-        document.documentElement.dataset.audraliaActiveWater = "false";
-        document.documentElement.dataset.audraliaFinalTerrainPassClaim = "false";
-        document.documentElement.dataset.audraliaFinalHydrationPassClaim = "false";
-        document.documentElement.dataset.audraliaFinalVisualPassClaim = "false";
-      };
+      function text(id, value, cls) {
+        var node = document.getElementById(id);
+        if (!node) return;
 
-      const applySingularCanvasGate = () => {
-        const mount = document.getElementById(MOUNT_ID);
-        if (!mount) return;
+        node.textContent = value;
+        node.classList.remove("pass", "hold", "fail");
+        node.classList.add(cls || "hold");
+      }
 
-        const canvases = Array.from(mount.querySelectorAll("canvas"));
+      function boolLabel(value) {
+        return value === true ? "PASS" : value === false ? "HOLD" : "PENDING";
+      }
 
-        canvases.forEach((canvas, index) => {
-          if (index === 0) {
-            canvas.dataset.audraliaAdmissibilityAccepted = "true";
-            canvas.dataset.audraliaVisibleStageCanvas = "true";
-            canvas.dataset.audraliaPrimaryVisibleRenderer = "g2-carrier";
-            canvas.dataset.audraliaG2InspectionCarrierCanvas = "true";
-            canvas.removeAttribute("data-audralia-admissibility-held");
-            canvas.style.removeProperty("display");
-            canvas.style.removeProperty("visibility");
-            canvas.style.removeProperty("opacity");
-            canvas.style.removeProperty("pointer-events");
-          } else {
-            canvas.dataset.audraliaAdmissibilityHeld = "true";
-            canvas.dataset.audraliaHeldReason = "secondary-visible-canvas-blocked-by-g2-cutover-checkpoint";
-            canvas.style.display = "none";
-            canvas.style.visibility = "hidden";
-            canvas.style.opacity = "0";
-            canvas.style.pointerEvents = "none";
-          }
-        });
+      function boolClass(value) {
+        return value === true ? "pass" : value === false ? "hold" : "hold";
+      }
 
-        mount.dataset.audraliaVisibleCanvasCount = String(Math.min(canvases.length, 1));
-        mount.dataset.audraliaSecondaryCanvasBlocked = String(canvases.length > 1);
-        mount.dataset.audraliaPrimaryVisibleRenderer = "g2-carrier";
-      };
+      function routeReceipt(status) {
+        var source = status && status.sourceValidationReceipt ? status.sourceValidationReceipt : {};
+        var render = status && status.renderReceipt ? status.renderReceipt : {};
+        var carrier = status && status.carrierConsumptionReceipt ? status.carrierConsumptionReceipt : {};
 
-      const publishStatus = () => {
-        const g2Status =
-          window.AUDRALIA_PLANET_BODY_G2_INSPECTION_CARRIER_STATUS ||
-          window.AUDRALIA_PLANET_BODY_CARRIER_G2_INSPECTION_STATUS ||
-          window.AUDRALIA_PLANET_BODY_G2_CARRIER_STATUS ||
-          null;
-
-        const dryStatus = window.AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_STATUS || null;
-
-        window.AUDRALIA_PLANET_INDEX_HTML_G2_CARRIER_CUTOVER_STATUS = {
+        return {
           contract: CONTRACT,
-          previousContract: PREVIOUS_CONTRACT,
-          target: "/showroom/globe/audralia/planet/index.html",
-          route: "/showroom/globe/audralia/planet/",
-          htmlCutoverClaimed: true,
-          g2CarrierCutover: true,
-          g2InspectionCarrierLoaded: true,
-          g2InspectionCarrierNewFileActive: true,
-          g2InspectionCarrierStatusDetected: Boolean(g2Status),
-          dryParentBaselinePreserved: true,
-          dryParentStatusDetected: Boolean(dryStatus),
-          oldCarrierLoaded: false,
-          legacyVisualChildrenHeld: true,
-          terrainExpressionCanvasHeld: true,
-          terrainExpressionCanvasLoaded: false,
-          visibleRendererCount: 1,
-          primaryVisibleRenderer: "g2-carrier",
-          secondaryVisibleCanvasAllowed: false,
+          route: ROUTE,
+          stack: "datum-terrain-surface-ptr",
+          renderer: "AUDRALIA_G2_PLANET_TERRAIN_RENDERER_PTR_TNT_v1",
+
+          datumLoaded: Boolean(window.AUDRALIA_TRUE_GLOBE_DATUM),
+          terrainLoaded: Boolean(window.AUDRALIA_G2_PHYSICAL_TERRAIN_CHILD),
+          surfaceLoaded: Boolean(window.AUDRALIA_G2_SURFACE_MATERIAL_CHILD),
+          ptrLoaded: Boolean(window.AUDRALIA_G2_PLANET_TERRAIN_RENDERER || window.AUDRALIA_G2_PTR),
+
+          datumValidated: status ? status.datumValidated : false,
+          terrainValidated: status ? status.terrainValidated : false,
+          surfaceValidated: status ? status.surfaceValidated : false,
+
+          datumSeatCount: source.datumSeatCount || status && status.sourceSeatCount || 0,
+          terrainSeatCount: source.terrainSeatCount || status && status.terrainSeatCount || 0,
+          surfaceSeatCount: source.surfaceSeatCount || status && status.surfaceSeatCount || 0,
+
+          oneCanvasMounted: render.oneCanvasMounted || status && status.oneCanvasMounted || false,
+          onePlanetRendered: render.onePlanetRendered || status && status.onePlanetRendered || false,
+          textureBuilt: render.textureBuilt || status && status.textureBuilt || false,
+          textureSeatCount: render.textureSeatCount || status && status.textureSeatCount || 0,
+
+          carrierConsumesPacketsForDisplayOnly: carrier.carrierConsumesPacketsForDisplayOnly === true,
+          carrierInventsTerrain: false,
+          carrierInventsSurface: false,
+          carrierOwnsTerrainTruth: false,
+          carrierOwnsSurfaceTruth: false,
+          carrierOwnsHydrationTruth: false,
+
           hydrationHeld: true,
           activeHydration: false,
           activeWater: false,
-          finalTerrainPassClaim: false,
-          finalHydrationPassClaim: false,
+          routeCutoverCandidate: true,
           finalVisualPassClaim: false,
-          deployMarker: "AUDRALIA_PLANET_INDEX_HTML_G2_CARRIER_CUTOVER_DEPLOY_MARKER_v1"
+
+          checkedAt: new Date().toISOString()
         };
-      };
+      }
 
-      const syncCarrier = () => {
-        const controller = window.__AUDRALIA_G2_PLANET_BODY_CLEAN_PAIR_CONTROLLER__;
+      function updateRouteMonitor() {
+        checkCount += 1;
 
-        if (controller && typeof controller.setLens === "function") {
-          try {
-            controller.setLens("surface");
-          } catch (_error) {}
+        var status = window.AUDRALIA_G2_PLANET_RENDERER_STATUS || null;
+        var receipt = routeReceipt(status);
+
+        text("routeDatumStatus", boolLabel(receipt.datumValidated), boolClass(receipt.datumValidated));
+        text("routeTerrainStatus", boolLabel(receipt.terrainValidated), boolClass(receipt.terrainValidated));
+        text("routeSurfaceStatus", boolLabel(receipt.surfaceValidated), boolClass(receipt.surfaceValidated));
+        text("routePlanetStatus", boolLabel(receipt.onePlanetRendered), boolClass(receipt.onePlanetRendered));
+
+        var log = document.getElementById("routeCutoverLog");
+        if (log) {
+          log.textContent = [
+            "CONTRACT " + CONTRACT,
+            "DATUM loaded=" + receipt.datumLoaded + " validated=" + receipt.datumValidated + " seats=" + receipt.datumSeatCount,
+            "TERRAIN loaded=" + receipt.terrainLoaded + " validated=" + receipt.terrainValidated + " seats=" + receipt.terrainSeatCount,
+            "SURFACE loaded=" + receipt.surfaceLoaded + " validated=" + receipt.surfaceValidated + " seats=" + receipt.surfaceSeatCount,
+            "PTR loaded=" + receipt.ptrLoaded + " canvas=" + receipt.oneCanvasMounted + " planet=" + receipt.onePlanetRendered,
+            "TEXTURE built=" + receipt.textureBuilt + " seats=" + receipt.textureSeatCount,
+            "HYDRATION held=true activeWater=false finalVisualPassClaim=false",
+            "NEXT visual inspection → Gauges audit"
+          ].join("\n");
         }
 
-        if (controller && typeof controller.status === "function") {
-          try {
-            controller.status();
-          } catch (_error) {}
+        document.documentElement.dataset.audraliaG2RouteCutoverMonitor = "active";
+        document.documentElement.dataset.audraliaG2RouteCutoverContract = CONTRACT;
+        document.documentElement.dataset.audraliaG2RouteDatumValidated = String(receipt.datumValidated);
+        document.documentElement.dataset.audraliaG2RouteTerrainValidated = String(receipt.terrainValidated);
+        document.documentElement.dataset.audraliaG2RouteSurfaceValidated = String(receipt.surfaceValidated);
+        document.documentElement.dataset.audraliaG2RouteOneCanvasMounted = String(receipt.oneCanvasMounted);
+        document.documentElement.dataset.audraliaG2RouteOnePlanetRendered = String(receipt.onePlanetRendered);
+        document.documentElement.dataset.audraliaG2RouteActiveWater = "false";
+        document.documentElement.dataset.audraliaG2RouteFinalVisualPassClaim = "false";
+
+        window.AUDRALIA_G2_ROUTE_CUTOVER_RECEIPT = receipt;
+        window.AUDRALIA_G2_ROUTE_CUTOVER_STATUS = {
+          contract: CONTRACT,
+          route: ROUTE,
+          receipt: receipt,
+          monitorCheckCount: checkCount,
+          finalVisualPassClaim: false
+        };
+
+        if (checkCount < CHECK_LIMIT && !receipt.onePlanetRendered) {
+          window.setTimeout(updateRouteMonitor, 250);
         }
-      };
-
-      const init = () => {
-        markDocument();
-        applySingularCanvasGate();
-        syncCarrier();
-        publishStatus();
-
-        const mount = document.getElementById(MOUNT_ID);
-        if (mount) {
-          const observer = new MutationObserver(() => {
-            applySingularCanvasGate();
-            publishStatus();
-          });
-
-          observer.observe(mount, { childList: true, subtree: true });
-        }
-
-        [180, 640, 1200, 1800, 2600].forEach((delay) => {
-          window.setTimeout(() => {
-            markDocument();
-            applySingularCanvasGate();
-            syncCarrier();
-            publishStatus();
-          }, delay);
-        });
-      };
+      }
 
       if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", init, { once: true });
+        document.addEventListener("DOMContentLoaded", updateRouteMonitor, { once: true });
       } else {
-        init();
+        updateRouteMonitor();
       }
+
+      window.setTimeout(updateRouteMonitor, 500);
+      window.setTimeout(updateRouteMonitor, 1200);
+      window.setTimeout(updateRouteMonitor, 2200);
     })();
   </script>
 </body>

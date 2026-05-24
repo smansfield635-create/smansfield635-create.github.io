@@ -3,34 +3,26 @@
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
   data-page="audralia-planet-inspection"
-  data-version="G2-CARRIER-LENS-REGISTRY-ALIGNMENT"
-  data-contract="AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_TNT_v1"
-  data-previous-contract="AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_TNT_v1"
-  data-html-only="true"
-  data-singular-planetary-model="true"
-  data-single-logic-admissibility="true"
+  data-version="G2-CARRIER-CUTOVER"
+  data-contract="AUDRALIA_PLANET_INDEX_HTML_G2_CARRIER_CUTOVER_TNT_v1"
+  data-previous-contract="AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_TNT_v1"
+  data-g2-carrier-cutover="true"
+  data-g2-inspection-carrier-loaded="true"
+  data-g2-inspection-carrier-new-file-active="true"
+  data-old-carrier-loaded="false"
+  data-legacy-visual-children-held="true"
+  data-dry-parent-baseline-preserved="true"
   data-visible-renderer-count="1"
-  data-primary-visible-renderer="carrier"
-  data-carrier-lens-registry-aligned="true"
-  data-carrier-lenses="body,surface,hydration,sixth-sense,lattice,receipt"
-  data-unsupported-lens-buttons-removed="true"
-  data-boundary-lens-button-removed="true"
-  data-full-lens-button-removed="true"
+  data-primary-visible-renderer="g2-carrier"
   data-terrain-expression-canvas-held="true"
   data-terrain-expression-canvas-loaded="false"
   data-secondary-visible-canvas-allowed="false"
-  data-same-math-checkpoint="active"
-  data-different-math-blocked="true"
-  data-different-narrative-blocked="true"
-  data-different-planet-read-blocked="true"
-  data-ghost-viewport-suppressed="true"
-  data-dual-viewport-not-claimed="true"
+  data-close-inspection-reserved="true"
+  data-close-inspection-visually-active="false"
   data-primary-stage-centered="true"
   data-full-planet-visible-target="true"
   data-stage-orbit-rings-visible="false"
-  data-carrier-rewritten="false"
-  data-expression-canvas-rewritten="false"
-  data-terrain-child-rewritten="false"
+  data-html-cutover-claimed="true"
   data-hydration-held="true"
   data-active-hydration="false"
   data-active-water="false"
@@ -40,37 +32,13 @@
   data-visual-pass-claimed="false"
 >
 <head>
-  <!--
-    TNT FULL-FILE REPLACEMENT
-    AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_TNT_v1
-
-    Target:
-    /showroom/globe/audralia/planet/index.html
-
-    Purpose:
-    - Preserve the singular centered carrier page.
-    - Align visible lens rail to the carrier runtime registry:
-      body, surface, hydration, sixth-sense, lattice, receipt.
-    - Remove unsupported Boundary / Full buttons.
-    - Keep one visible renderer.
-    - Keep terrain-expression canvas held.
-    - Keep carrier, expression canvas, terrain children, hydration, and final visual pass untouched.
-
-    Scope:
-    HTML shell only.
-
-    Does not own:
-    carrier projection, terrain truth, elevation truth, relief truth, landform truth,
-    beach truth, triangulation truth, hydration truth, runtime math, or final visual pass.
-  -->
-
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Audralia Planet Inspection · Carrier Lens Registry</title>
+  <title>Audralia Planet Inspection · G2 Carrier Cutover</title>
   <meta
     name="description"
-    content="Audralia Planet Inspection aligns the visible page controls to the carrier runtime lens registry while preserving one centered carrier-rendered planet and holding hydration."
+    content="Audralia Planet Inspection cuts over to the G2 carrier while preserving the dry terrain parent baseline, holding legacy visual children, hydration, and final visual pass."
   >
 
   <style>
@@ -267,16 +235,6 @@
       backdrop-filter:blur(7px);
     }
 
-    .route-menu[open] summary{
-      border-color:rgba(243,200,111,.70);
-      color:rgba(255,244,216,.98);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(243,200,111,.25),transparent 72%),
-        radial-gradient(circle at 86% 50%,rgba(57,255,159,.13),transparent 70%),
-        linear-gradient(180deg,rgba(20,18,45,.84),rgba(4,9,20,.88));
-      box-shadow:0 0 1.8rem rgba(243,200,111,.20),0 0 3.2rem rgba(36,120,255,.14),inset 0 1px 0 rgba(255,255,255,.12);
-    }
-
     .route-menu summary::-webkit-details-marker{display:none}
 
     .route-menu summary::after{
@@ -287,6 +245,16 @@
       border-bottom:2px solid rgba(230,238,255,.82);
       transform:rotate(45deg) translateY(-.12rem);
       flex:0 0 auto;
+    }
+
+    .route-menu[open] summary{
+      border-color:rgba(243,200,111,.70);
+      color:rgba(255,244,216,.98);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(243,200,111,.25),transparent 72%),
+        radial-gradient(circle at 86% 50%,rgba(57,255,159,.13),transparent 70%),
+        linear-gradient(180deg,rgba(20,18,45,.84),rgba(4,9,20,.88));
+      box-shadow:0 0 1.8rem rgba(243,200,111,.20),0 0 3.2rem rgba(36,120,255,.14),inset 0 1px 0 rgba(255,255,255,.12);
     }
 
     .route-menu[open] summary::after{
@@ -359,7 +327,6 @@
       background:
         radial-gradient(circle at 50% 0%,rgba(243,200,111,.16),transparent 72%),
         linear-gradient(180deg,rgba(36,120,255,.085),rgba(255,255,255,.028));
-      box-shadow:0 0 1.35rem rgba(243,200,111,.18),0 0 1.35rem rgba(36,120,255,.13),inset 0 1px 0 rgba(255,255,255,.10);
       outline:none;
     }
 
@@ -447,14 +414,6 @@
       text-wrap:balance;
     }
 
-    h3{
-      margin:0;
-      color:rgba(255,244,216,.98);
-      font-size:clamp(1.08rem,2.5vw,1.45rem);
-      line-height:1.05;
-      letter-spacing:-.045em;
-    }
-
     p{
       margin:0;
       color:var(--muted);
@@ -523,6 +482,39 @@
       padding:clamp(1rem,3vw,1.45rem);
       display:grid;
       gap:1rem;
+    }
+
+    .stage-copy{
+      display:flex;
+      align-items:end;
+      justify-content:space-between;
+      gap:1rem;
+      flex-wrap:wrap;
+    }
+
+    .stage-copy p{
+      max-width:780px;
+      font-size:.96rem;
+    }
+
+    .stage-badge{
+      min-height:2.35rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(57,255,159,.24);
+      border-radius:999px;
+      padding:.55rem .85rem;
+      color:rgba(232,255,241,.90);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(57,255,159,.13),transparent 70%),
+        rgba(255,255,255,.045);
+      font-size:.66rem;
+      font-weight:950;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      white-space:nowrap;
+      box-shadow:0 0 .9rem rgba(57,255,159,.08),inset 0 1px 0 rgba(255,255,255,.07);
     }
 
     .lens-rail{
@@ -607,39 +599,6 @@
       display:grid;
       gap:.8rem;
       min-width:0;
-    }
-
-    .stage-copy{
-      display:flex;
-      align-items:end;
-      justify-content:space-between;
-      gap:1rem;
-      flex-wrap:wrap;
-    }
-
-    .stage-copy p{
-      max-width:780px;
-      font-size:.96rem;
-    }
-
-    .stage-badge{
-      min-height:2.35rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(57,255,159,.24);
-      border-radius:999px;
-      padding:.55rem .85rem;
-      color:rgba(232,255,241,.90);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(57,255,159,.13),transparent 70%),
-        rgba(255,255,255,.045);
-      font-size:.66rem;
-      font-weight:950;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      white-space:nowrap;
-      box-shadow:0 0 .9rem rgba(57,255,159,.08),inset 0 1px 0 rgba(255,255,255,.07);
     }
 
     #audraliaPlanetInspectionStage{
@@ -910,30 +869,21 @@
   </style>
 
   <script>
-    window.AUDRALIA_PLANET_VISIBLE_LOGIC_POLICY = Object.freeze({
-      contract: "AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_TNT_v1",
-      previousContract: "AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_TNT_v1",
+    window.AUDRALIA_PLANET_G2_HTML_CUTOVER_POLICY = Object.freeze({
+      contract: "AUDRALIA_PLANET_INDEX_HTML_G2_CARRIER_CUTOVER_TNT_v1",
+      previousContract: "AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_TNT_v1",
       route: "/showroom/globe/audralia/planet/",
+      htmlCutoverClaimed: true,
+      g2CarrierCutover: true,
+      g2InspectionCarrierNewFileActive: true,
+      g2InspectionCarrierPath: "/assets/audralia/clean/runtime/audralia.planet-body.g2.inspection-carrier.js",
+      oldCarrierLoaded: false,
+      dryParentBaselinePreserved: true,
+      legacyVisualChildrenHeld: true,
       visibleRendererCount: 1,
-      primaryVisibleRenderer: "carrier",
-      carrierLensRegistryAligned: true,
-      carrierLensRegistry: ["body", "surface", "hydration", "sixth-sense", "lattice", "receipt"],
-      unsupportedLensButtonsRemoved: true,
-      boundaryLensButtonRemoved: true,
-      fullLensButtonRemoved: true,
+      primaryVisibleRenderer: "g2-carrier",
       terrainExpressionCanvasHeld: true,
       terrainExpressionCanvasLoaded: false,
-      sameMathCheckpoint: true,
-      differentMathBlocked: true,
-      differentNarrativeBlocked: true,
-      differentPlanetReadBlocked: true,
-      ghostViewportSuppressed: true,
-      dualViewportNotClaimed: true,
-      fullPlanetVisibleTarget: true,
-      centeredStageTarget: true,
-      carrierRewritten: false,
-      expressionCanvasRewritten: false,
-      terrainChildRewritten: false,
       activeHydration: false,
       activeWater: false,
       finalVisualPassClaim: false
@@ -942,6 +892,12 @@
 </head>
 
 <body>
+  <!--
+    /showroom/globe/audralia/planet/index.html
+    TNT FULL-FILE REPLACEMENT
+    AUDRALIA_PLANET_INDEX_HTML_G2_CARRIER_CUTOVER_TNT_v1
+  -->
+
   <a class="skip" href="#audraliaPlanetInspectionStage">Skip to planet inspection</a>
 
   <div class="shell">
@@ -1016,23 +972,23 @@
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Carrier lens registry · Same-math checkpoint · Hydration held</div>
+        <div class="kicker">G2 carrier cutover · Dry parent baseline · Hydration held</div>
 
-        <h1 id="page-title">One planet. One carrier. One matching lens rail.</h1>
+        <h1 id="page-title">One planet. One G2 carrier.</h1>
 
         <p class="lead">
-          Audralia Planet Inspection now exposes only the lens controls that the carrier runtime actually recognizes: Body, Surface, Hydration, Sixth Sense, Lattice, and Receipt.
+          Audralia Planet Inspection now cuts over from the old carrier stack to the new G2 inspection carrier. The dry revealed terrain parent remains the only loaded terrain baseline for this pass.
         </p>
 
         <div class="quote">
-          Boundary and Full are removed from the visible rail because they are not carrier runtime lens keys. The page no longer invites a button the carrier cannot lawfully answer.
+          Legacy visual children are held at the HTML invitation layer until they are adapted to the G2 carrier contract. The page loads one parent baseline and one G2 visible runtime.
         </div>
 
-        <div class="status-strip" aria-label="Audralia Planet status">
+        <div class="status-strip" aria-label="Audralia Planet G2 cutover status">
           <article class="status-chip"><span>Visible planet</span><strong>single</strong></article>
-          <article class="status-chip"><span>Stage target</span><strong>centered</strong></article>
-          <article class="status-chip"><span>Renderer</span><strong>carrier only</strong></article>
-          <article class="status-chip"><span>Lens registry</span><strong>aligned</strong></article>
+          <article class="status-chip"><span>Renderer</span><strong>G2 carrier</strong></article>
+          <article class="status-chip"><span>Dry parent</span><strong>preserved</strong></article>
+          <article class="status-chip"><span>Legacy children</span><strong>held</strong></article>
           <article class="status-chip"><span>Hydration</span><strong>held</strong></article>
           <article class="status-chip"><span>Final visual</span><strong>false</strong></article>
         </div>
@@ -1043,22 +999,22 @@
 
         <div class="stage-copy">
           <div>
-            <h2 id="instrument-title">Centered full-body inspection.</h2>
+            <h2 id="instrument-title">G2 centered full-body inspection.</h2>
             <p>
-              The stage admits one dominant visible planet and one carrier-compatible control vocabulary. Unsupported lens names are blocked at the HTML rail before they can create a false runtime expectation.
+              The visible stage is now reserved for the G2 carrier file. The old runtime carrier and the older visual child stack are not loaded by this page.
             </p>
           </div>
-          <span class="stage-badge">carrier registry aligned</span>
+          <span class="stage-badge">G2 carrier active</span>
         </div>
 
         <section class="lens-rail" aria-label="Audralia planet lens controls">
           <p class="audralia-planet-stage-label" data-audralia-planet-stage-label>
-            <strong>Body</strong> → minimum physical form, grid reduced, hydrosphere memory suppressed
+            <strong>Surface</strong> → G2 carrier dry-terrain form over preserved parent baseline
           </p>
 
-          <div class="audralia-planet-lens-row" role="group" aria-label="Audralia carrier runtime lenses">
-            <button type="button" data-audralia-planet-lens="body" aria-pressed="true">Body</button>
-            <button type="button" data-audralia-planet-lens="surface" aria-pressed="false">Surface</button>
+          <div class="audralia-planet-lens-row" role="group" aria-label="Audralia planet development lenses">
+            <button type="button" data-audralia-planet-lens="body" aria-pressed="false">Body</button>
+            <button type="button" data-audralia-planet-lens="surface" aria-pressed="true">Surface</button>
             <button type="button" data-audralia-planet-lens="hydration" aria-pressed="false">Hydration</button>
             <button type="button" data-audralia-planet-lens="sixth-sense" aria-pressed="false">Sixth Sense</button>
             <button type="button" data-audralia-planet-lens="lattice" aria-pressed="false">Lattice</button>
@@ -1072,143 +1028,126 @@
               id="audraliaPlanetInspectionStage"
               data-audralia-planet-inspection-stage
               data-singular-visible-stage="true"
-              data-primary-visible-renderer="carrier"
+              data-primary-visible-renderer="g2-carrier"
               data-secondary-visible-canvas-allowed="false"
               data-stage-orbit-rings-visible="false"
-              data-carrier-lens-registry-aligned="true"
-              aria-label="Audralia primary centered planet inspection stage"
+              data-g2-carrier-cutover-stage="true"
+              aria-label="Audralia G2 primary centered planet inspection stage"
             >
               <div
                 id="audraliaPlanetInspectionMount"
                 data-audralia-planet-inspection-mount
                 data-visible-renderer-count="1"
-                data-primary-visible-renderer="carrier"
+                data-primary-visible-renderer="g2-carrier"
+                data-g2-inspection-carrier-mount="true"
               ></div>
 
               <div class="stage-hint" aria-hidden="true">
                 <span>Drag to rotate</span>
                 <span>Pinch or wheel to zoom</span>
-                <span>One visible planet</span>
+                <span>G2 carrier</span>
                 <span>Active water false</span>
               </div>
             </div>
           </section>
 
-          <aside class="read-key" aria-label="Audralia planet read key">
-            <strong>Carrier Lens Read Key</strong>
+          <aside class="read-key" aria-label="Audralia planet G2 read key">
+            <strong>G2 Cutover Read Key</strong>
 
             <ul class="read-list">
               <li>
                 <span class="key-mark" style="--key-color:var(--gold)"></span>
-                <span><b>Body</b> shows minimum physical form with the normal grid reduced.</span>
+                <span><b>Body</b> shows one G2 carrier body, not the old carrier-generation form.</span>
               </li>
 
               <li>
-                <span class="key-mark" style="--key-color:rgba(160,210,130,.95)"></span>
-                <span><b>Surface</b> shows continuous dry land expression through the accepted carrier.</span>
+                <span class="key-mark" style="--key-color:var(--green)"></span>
+                <span><b>Surface</b> reads the dry parent baseline through the G2 visible runtime.</span>
               </li>
 
               <li>
                 <span class="key-mark" style="--key-color:var(--blue)"></span>
-                <span><b>Hydration</b> remains held and diagnostic. Active water remains false.</span>
+                <span><b>Hydration</b> remains held. Active water remains false.</span>
               </li>
 
               <li>
                 <span class="key-mark" style="--key-color:var(--aqua)"></span>
-                <span><b>Sixth Sense</b> preserves diagnostic scaffold readability without becoming material truth.</span>
+                <span><b>Sixth Sense</b> remains diagnostic and does not become material truth.</span>
               </li>
 
               <li>
                 <span class="key-mark" style="--key-color:rgba(184,205,255,.78)"></span>
-                <span><b>Lattice</b> inspects the 256 structure without becoming a second planet.</span>
+                <span><b>Lattice</b> inspects structure without becoming a second planet.</span>
               </li>
 
               <li>
                 <span class="key-mark" style="--key-color:rgba(255,244,216,.86)"></span>
-                <span><b>Receipt</b> proves the carrier posture, packet handoff, and held boundaries.</span>
+                <span><b>Receipt</b> proves the cutover, parent baseline, and held-child posture.</span>
               </li>
             </ul>
 
             <div class="held-note">
-              Checkpoint rule: the visible rail may only expose carrier-recognized lens keys. Unsupported buttons are not rendered.
+              Cutover rule: load the dry parent baseline and the G2 carrier only. Legacy visual children are held until renewed for the G2 runtime contract.
             </div>
           </aside>
         </div>
       </section>
 
       <section class="authority-band" aria-labelledby="authority-title">
-        <div class="kicker">Authority map · HTML gate only</div>
+        <div class="kicker">Authority map · G2 cutover only</div>
 
-        <strong id="authority-title">This file aligns the visible invitation layer. It does not rewrite the runtime.</strong>
+        <strong id="authority-title">This file changes the route invitation layer. It does not rewrite terrain truth.</strong>
 
         <p>
-          The carrier remains the only visible planet renderer. The expression canvas and all child files remain untouched. The page now stops offering Boundary and Full because the current carrier runtime does not own those lens keys.
+          The dry terrain parent remains the baseline. The visible runtime changes to the G2 inspection carrier. The old carrier and obsolete visual children are not invited into this route pass.
         </p>
 
         <div class="authority-grid">
           <article class="authority-card">
-            <b>Accepted visible logic</b>
-            <span>One carrier-rendered planet, centered on the primary stage, with carrier-compatible lens controls only.</span>
+            <b>Loaded now</b>
+            <span>Dry revealed physical terrain parent and G2 inspection carrier only.</span>
           </article>
 
           <article class="authority-card">
-            <b>Removed mismatch</b>
-            <span>Boundary and Full buttons are removed from the visible rail because they do not match the carrier lens registry.</span>
+            <b>Held now</b>
+            <span>Old carrier, elevation child, relief child, landform child, beach child, triangular mesh child, and terrain-expression canvas.</span>
           </article>
 
           <article class="authority-card">
-            <b>Held status</b>
-            <span>Terrain-expression canvas held. Hydration held. Active water false. Final visual pass false.</span>
+            <b>Preserved boundary</b>
+            <span>Hydration held. Active water false. Final terrain, hydration, and visual pass claims remain false.</span>
           </article>
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_TNT_v1
-previous_contract=AUDRALIA_PLANET_INDEX_HTML_SINGULAR_CENTERED_PLANET_MODEL_RESTORE_TNT_v1
+AUDRALIA_PLANET_INDEX_HTML_G2_CARRIER_CUTOVER_TNT_v1
+previous_contract=AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_TNT_v1
 target=/showroom/globe/audralia/planet/index.html
 route=/showroom/globe/audralia/planet/
 page=audralia_planet_inspection
-html_only=true
-singular_planetary_model=true
-single_logic_admissibility=true
-same_math_checkpoint=active
-different_math_blocked=true
-different_narrative_blocked=true
-different_planet_read_blocked=true
-primary_visible_renderer=carrier
-visible_renderer_count=1
-secondary_visible_canvas_allowed=false
+g2_carrier_cutover=true
+g2_inspection_carrier_new_file_active=true
+g2_inspection_carrier_script=/assets/audralia/clean/runtime/audralia.planet-body.g2.inspection-carrier.js
+old_carrier_loaded=false
+old_carrier_script_held=/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
+dry_parent_baseline_preserved=true
+dry_parent_script=/assets/audralia/clean/terrain/audralia.dry-revealed-physical-terrain.child.js
+legacy_visual_children_held=true
+held_elevation_track_script=/assets/audralia/clean/terrain/audralia.elevation-track.child.js
+held_relief_expression_script=/assets/audralia/clean/terrain/audralia.elevation-relief-expression.child.js
+held_landform_systems_script=/assets/audralia/clean/terrain/audralia.landform-systems.child.js
+held_beach_coastal_readiness_script=/assets/audralia/clean/terrain/audralia.beach-coastal-readiness.child.js
+held_triangular_mesh_script=/assets/audralia/clean/terrain/audralia.triangular-terrain-mesh.child.js
 terrain_expression_canvas_held=true
 terrain_expression_canvas_loaded=false
-terrain_expression_canvas_rewritten=false
-carrier_rewritten=false
-terrain_child_rewritten=false
-primary_stage_centered=true
-full_planet_visible_target=true
-stage_orbit_rings_visible=false
-decorative_orbit_rings_suppressed=true
-ghost_viewport_suppressed=true
-dual_viewport_not_claimed=true
-carrier_lens_registry_aligned=true
-carrier_lens_registry=body,surface,hydration,sixth-sense,lattice,receipt
-visible_lenses=Body,Surface,Hydration,Sixth Sense,Lattice,Receipt
-default_lens=body
-unsupported_lens_buttons_removed=true
-boundary_lens_button_removed=true
-full_lens_button_removed=true
-blocked_unsupported_lenses=boundary,full
+primary_visible_renderer=g2-carrier
+visible_renderer_count=1
+secondary_visible_canvas_allowed=false
 primary_stage_id=audraliaPlanetInspectionStage
 primary_mount_id=audraliaPlanetInspectionMount
-script_order_preserved_for_children=true
-dry_terrain_child_script=audralia.dry-revealed-physical-terrain.child.js
-elevation_track_script=audralia.elevation-track.child.js
-relief_expression_script=audralia.elevation-relief-expression.child.js
-landform_systems_script=audralia.landform-systems.child.js
-beach_coastal_readiness_script=audralia.beach-coastal-readiness.child.js
-triangular_mesh_script=audralia.triangular-terrain-mesh.child.js
-carrier_script=audralia.planet-body.inspection-carrier.js
-terrain_expression_canvas_script=held_not_loaded
+visible_lenses=Body,Surface,Hydration,Sixth Sense,Lattice,Receipt
+default_lens=Surface
 script_mode=defer
 async_forbidden=true
 html_owns_terrain_truth=false
@@ -1223,67 +1162,47 @@ final_visual_pass_claim=false
 visual_pass_claimed=false
 generated_image=false
 graphic_box=false
-deploy_marker=AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_DEPLOY_MARKER_v1
+deploy_marker=AUDRALIA_PLANET_INDEX_HTML_G2_CARRIER_CUTOVER_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer>
-      AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_TNT_v1 · One visible planet · Carrier only · Lens registry aligned · Hydration held · Final visual pass false.
+      AUDRALIA_PLANET_INDEX_HTML_G2_CARRIER_CUTOVER_TNT_v1 · G2 carrier active · Dry parent baseline preserved · Legacy visual children held · Hydration held · Final visual pass false.
     </footer>
   </div>
 
-  <script defer src="/assets/audralia/clean/terrain/audralia.dry-revealed-physical-terrain.child.js?v=AUDRALIA_PLANET_CARRIER_LENS_REGISTRY_ALIGNMENT_v1"></script>
-  <script defer src="/assets/audralia/clean/terrain/audralia.elevation-track.child.js?v=AUDRALIA_PLANET_CARRIER_LENS_REGISTRY_ALIGNMENT_v1"></script>
-  <script defer src="/assets/audralia/clean/terrain/audralia.elevation-relief-expression.child.js?v=AUDRALIA_PLANET_CARRIER_LENS_REGISTRY_ALIGNMENT_v1"></script>
-  <script defer src="/assets/audralia/clean/terrain/audralia.landform-systems.child.js?v=AUDRALIA_PLANET_CARRIER_LENS_REGISTRY_ALIGNMENT_v1"></script>
-  <script defer src="/assets/audralia/clean/terrain/audralia.beach-coastal-readiness.child.js?v=AUDRALIA_PLANET_CARRIER_LENS_REGISTRY_ALIGNMENT_v1"></script>
-  <script defer src="/assets/audralia/clean/terrain/audralia.triangular-terrain-mesh.child.js?v=AUDRALIA_PLANET_CARRIER_LENS_REGISTRY_ALIGNMENT_v1"></script>
-  <script defer src="/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js?v=AUDRALIA_PLANET_CARRIER_LENS_REGISTRY_ALIGNMENT_v1"></script>
+  <script defer src="/assets/audralia/clean/terrain/audralia.dry-revealed-physical-terrain.child.js?v=AUDRALIA_PLANET_G2_HTML_CUTOVER_v1"></script>
+  <script defer src="/assets/audralia/clean/runtime/audralia.planet-body.g2.inspection-carrier.js?v=AUDRALIA_PLANET_G2_HTML_CUTOVER_v1"></script>
 
   <script>
     (() => {
       "use strict";
 
-      const CONTRACT = "AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_TNT_v1";
+      const CONTRACT = "AUDRALIA_PLANET_INDEX_HTML_G2_CARRIER_CUTOVER_TNT_v1";
+      const PREVIOUS_CONTRACT = "AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_TNT_v1";
       const MOUNT_ID = "audraliaPlanetInspectionMount";
-      const STAGE_ID = "audraliaPlanetInspectionStage";
-      const CARRIER_LENSES = Object.freeze(["body", "surface", "hydration", "sixth-sense", "lattice", "receipt"]);
 
       const markDocument = () => {
         document.documentElement.dataset.audraliaPlanetHtmlContract = CONTRACT;
-        document.documentElement.dataset.audraliaSingularPlanetaryModel = "true";
-        document.documentElement.dataset.audraliaSingleLogicAdmissibility = "true";
-        document.documentElement.dataset.audraliaSameMathCheckpoint = "active";
-        document.documentElement.dataset.audraliaDifferentMathBlocked = "true";
-        document.documentElement.dataset.audraliaDifferentNarrativeBlocked = "true";
-        document.documentElement.dataset.audraliaDifferentPlanetReadBlocked = "true";
+        document.documentElement.dataset.audraliaPlanetHtmlPreviousContract = PREVIOUS_CONTRACT;
+        document.documentElement.dataset.audraliaHtmlCutoverClaimed = "true";
+        document.documentElement.dataset.audraliaG2CarrierCutover = "true";
+        document.documentElement.dataset.audraliaG2InspectionCarrierLoaded = "true";
+        document.documentElement.dataset.audraliaG2InspectionCarrierNewFileActive = "true";
+        document.documentElement.dataset.audraliaOldCarrierLoaded = "false";
+        document.documentElement.dataset.audraliaLegacyVisualChildrenHeld = "true";
+        document.documentElement.dataset.audraliaDryParentBaselinePreserved = "true";
         document.documentElement.dataset.audraliaVisibleRendererCount = "1";
-        document.documentElement.dataset.audraliaPrimaryVisibleRenderer = "carrier";
+        document.documentElement.dataset.audraliaPrimaryVisibleRenderer = "g2-carrier";
         document.documentElement.dataset.audraliaTerrainExpressionCanvasHeld = "true";
         document.documentElement.dataset.audraliaTerrainExpressionCanvasLoaded = "false";
-        document.documentElement.dataset.audraliaGhostViewportSuppressed = "true";
-        document.documentElement.dataset.audraliaDualViewportNotClaimed = "true";
-        document.documentElement.dataset.audraliaStageOrbitRingsVisible = "false";
-        document.documentElement.dataset.audraliaFullPlanetVisibleTarget = "true";
-        document.documentElement.dataset.audraliaCarrierLensRegistryAligned = "true";
-        document.documentElement.dataset.audraliaCarrierLensRegistry = CARRIER_LENSES.join(",");
-        document.documentElement.dataset.audraliaUnsupportedLensButtonsRemoved = "true";
-        document.documentElement.dataset.audraliaBoundaryLensButtonRemoved = "true";
-        document.documentElement.dataset.audraliaFullLensButtonRemoved = "true";
+        document.documentElement.dataset.audraliaSecondaryVisibleCanvasAllowed = "false";
+        document.documentElement.dataset.audraliaHydrationHeld = "true";
+        document.documentElement.dataset.audraliaActiveHydration = "false";
         document.documentElement.dataset.audraliaActiveWater = "false";
+        document.documentElement.dataset.audraliaFinalTerrainPassClaim = "false";
+        document.documentElement.dataset.audraliaFinalHydrationPassClaim = "false";
         document.documentElement.dataset.audraliaFinalVisualPassClaim = "false";
-      };
-
-      const removeUnsupportedLensButtons = () => {
-        document.querySelectorAll("[data-audralia-planet-lens]").forEach((button) => {
-          const lens = button.getAttribute("data-audralia-planet-lens") || "";
-
-          if (!CARRIER_LENSES.includes(lens)) {
-            button.dataset.audraliaAdmissibilityHeld = "true";
-            button.dataset.audraliaHeldReason = "unsupported-carrier-lens-key";
-            button.remove();
-          }
-        });
       };
 
       const applySingularCanvasGate = () => {
@@ -1296,7 +1215,8 @@ deploy_marker=AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_DEPLOY_
           if (index === 0) {
             canvas.dataset.audraliaAdmissibilityAccepted = "true";
             canvas.dataset.audraliaVisibleStageCanvas = "true";
-            canvas.dataset.audraliaPrimaryVisibleRenderer = "carrier";
+            canvas.dataset.audraliaPrimaryVisibleRenderer = "g2-carrier";
+            canvas.dataset.audraliaG2InspectionCarrierCanvas = "true";
             canvas.removeAttribute("data-audralia-admissibility-held");
             canvas.style.removeProperty("display");
             canvas.style.removeProperty("visibility");
@@ -1304,7 +1224,7 @@ deploy_marker=AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_DEPLOY_
             canvas.style.removeProperty("pointer-events");
           } else {
             canvas.dataset.audraliaAdmissibilityHeld = "true";
-            canvas.dataset.audraliaHeldReason = "secondary-visible-canvas-blocked-by-single-logic-checkpoint";
+            canvas.dataset.audraliaHeldReason = "secondary-visible-canvas-blocked-by-g2-cutover-checkpoint";
             canvas.style.display = "none";
             canvas.style.visibility = "hidden";
             canvas.style.opacity = "0";
@@ -1314,71 +1234,72 @@ deploy_marker=AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_DEPLOY_
 
         mount.dataset.audraliaVisibleCanvasCount = String(Math.min(canvases.length, 1));
         mount.dataset.audraliaSecondaryCanvasBlocked = String(canvases.length > 1);
-      };
-
-      const resetCarrierCameraForFullPlanet = () => {
-        const controller = window.__AUDRALIA_G2_PLANET_BODY_CLEAN_PAIR_CONTROLLER__;
-        if (!controller) return;
-
-        try {
-          if (typeof controller.resetCamera === "function") controller.resetCamera();
-          if (typeof controller.setZoom === "function") controller.setZoom(1);
-        } catch (_error) {}
+        mount.dataset.audraliaPrimaryVisibleRenderer = "g2-carrier";
       };
 
       const publishStatus = () => {
-        const mount = document.getElementById(MOUNT_ID);
-        const stage = document.getElementById(STAGE_ID);
-        const visibleCanvases = mount
-          ? Array.from(mount.querySelectorAll("canvas")).filter((canvas) => canvas.dataset.audraliaAdmissibilityHeld !== "true").length
-          : 0;
+        const g2Status =
+          window.AUDRALIA_PLANET_BODY_G2_INSPECTION_CARRIER_STATUS ||
+          window.AUDRALIA_PLANET_BODY_CARRIER_G2_INSPECTION_STATUS ||
+          window.AUDRALIA_PLANET_BODY_G2_CARRIER_STATUS ||
+          null;
 
-        window.AUDRALIA_PLANET_CARRIER_LENS_REGISTRY_ALIGNMENT_STATUS = {
+        const dryStatus = window.AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_STATUS || null;
+
+        window.AUDRALIA_PLANET_INDEX_HTML_G2_CARRIER_CUTOVER_STATUS = {
           contract: CONTRACT,
-          htmlOnly: true,
+          previousContract: PREVIOUS_CONTRACT,
+          target: "/showroom/globe/audralia/planet/index.html",
           route: "/showroom/globe/audralia/planet/",
-          singularPlanetaryModel: true,
-          sameMathCheckpoint: "active",
-          visibleRendererCount: Math.min(visibleCanvases, 1),
-          primaryVisibleRenderer: "carrier",
-          carrierLensRegistryAligned: true,
-          carrierLensRegistry: CARRIER_LENSES.slice(),
-          unsupportedLensButtonsRemoved: true,
-          boundaryLensButtonRemoved: true,
-          fullLensButtonRemoved: true,
+          htmlCutoverClaimed: true,
+          g2CarrierCutover: true,
+          g2InspectionCarrierLoaded: true,
+          g2InspectionCarrierNewFileActive: true,
+          g2InspectionCarrierStatusDetected: Boolean(g2Status),
+          dryParentBaselinePreserved: true,
+          dryParentStatusDetected: Boolean(dryStatus),
+          oldCarrierLoaded: false,
+          legacyVisualChildrenHeld: true,
           terrainExpressionCanvasHeld: true,
           terrainExpressionCanvasLoaded: false,
-          differentMathBlocked: true,
-          differentNarrativeBlocked: true,
-          differentPlanetReadBlocked: true,
-          ghostViewportSuppressed: true,
-          dualViewportNotClaimed: true,
-          fullPlanetVisibleTarget: true,
-          centeredStageTarget: true,
-          stagePresent: Boolean(stage),
-          mountPresent: Boolean(mount),
-          carrierRewritten: false,
-          expressionCanvasRewritten: false,
-          terrainChildRewritten: false,
+          visibleRendererCount: 1,
+          primaryVisibleRenderer: "g2-carrier",
+          secondaryVisibleCanvasAllowed: false,
           hydrationHeld: true,
           activeHydration: false,
           activeWater: false,
+          finalTerrainPassClaim: false,
+          finalHydrationPassClaim: false,
           finalVisualPassClaim: false,
-          deployMarker: "AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_DEPLOY_MARKER_v1"
+          deployMarker: "AUDRALIA_PLANET_INDEX_HTML_G2_CARRIER_CUTOVER_DEPLOY_MARKER_v1"
         };
+      };
+
+      const syncCarrier = () => {
+        const controller = window.__AUDRALIA_G2_PLANET_BODY_CLEAN_PAIR_CONTROLLER__;
+
+        if (controller && typeof controller.setLens === "function") {
+          try {
+            controller.setLens("surface");
+          } catch (_error) {}
+        }
+
+        if (controller && typeof controller.status === "function") {
+          try {
+            controller.status();
+          } catch (_error) {}
+        }
       };
 
       const init = () => {
         markDocument();
-        removeUnsupportedLensButtons();
         applySingularCanvasGate();
+        syncCarrier();
         publishStatus();
 
         const mount = document.getElementById(MOUNT_ID);
-
         if (mount) {
           const observer = new MutationObserver(() => {
-            removeUnsupportedLensButtons();
             applySingularCanvasGate();
             publishStatus();
           });
@@ -1386,25 +1307,14 @@ deploy_marker=AUDRALIA_PLANET_INDEX_HTML_CARRIER_LENS_REGISTRY_ALIGNMENT_DEPLOY_
           observer.observe(mount, { childList: true, subtree: true });
         }
 
-        window.setTimeout(() => {
-          removeUnsupportedLensButtons();
-          applySingularCanvasGate();
-          resetCarrierCameraForFullPlanet();
-          publishStatus();
-        }, 180);
-
-        window.setTimeout(() => {
-          removeUnsupportedLensButtons();
-          applySingularCanvasGate();
-          resetCarrierCameraForFullPlanet();
-          publishStatus();
-        }, 640);
-
-        window.setTimeout(() => {
-          removeUnsupportedLensButtons();
-          applySingularCanvasGate();
-          publishStatus();
-        }, 1200);
+        [180, 640, 1200, 1800, 2600].forEach((delay) => {
+          window.setTimeout(() => {
+            markDocument();
+            applySingularCanvasGate();
+            syncCarrier();
+            publishStatus();
+          }, delay);
+        });
       };
 
       if (document.readyState === "loading") {

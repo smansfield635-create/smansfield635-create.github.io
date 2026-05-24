@@ -3,20 +3,21 @@
 <html
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
-  data-page="audralia-g2-planet-site-alignment-tabbed-gem-first"
-  data-version="G2-SITE-ALIGNMENT-TABBED-GEM-FIRST"
-  data-contract="AUDRALIA_G2_PLANET_SITE_ALIGNMENT_TABBED_GEM_FIRST_HTML_TNT_v1"
-  data-bound-js-contract="AUDRALIA_G2_PLANET_SITE_ALIGNMENT_TABBED_GEM_FIRST_CONTROLLER_TNT_v1"
-  data-spec-ops="AUDRALIA_G2_PLANET_SITE_ALIGNMENT_AUDIT_BINDING_SPEC_OPS_v1"
-  data-news="AUDRALIA_G2_PLANET_SITE_ALIGNMENT_AUDIT_BINDING_NEWS_v1"
-  data-ccr="AUDRALIA_G2_PLANET_SITE_ALIGNMENT_AUDIT_BINDING_CCR_v1"
-  data-primary-object="protected-audralia-world-body"
-  data-secondary-object="gem-first-navigation"
-  data-platform-engineering-tabs="true"
-  data-metadata-compressed="true"
-  data-gems-are-navigation="true"
-  data-gems-are-planet="false"
-  data-planet-is-gem="false"
+  data-page="audralia-g2-three-file-tv-screen-canvas-feed-shell"
+  data-version="G2-TV-SCREEN-CANVAS-FEED-SHELL"
+  data-contract="AUDRALIA_G2_PLANET_THREE_FILE_TV_SCREEN_CANVAS_FEED_SHELL_TNT_v1"
+  data-canvas-contract="AUDRALIA_G2_PLANET_CLAY_GLOBE_TV_SCREEN_CANVAS_TNT_v1"
+  data-ui-contract="AUDRALIA_G2_PLANET_REMOTE_UI_GEM_TABS_TNT_v1"
+  data-spec-ops="AUDRALIA_G2_PLANET_THREE_FILE_TV_SCREEN_CANVAS_FEED_FULL_SPEC_OPS_v1"
+  data-news="AUDRALIA_G2_PLANET_THREE_FILE_TV_SCREEN_CANVAS_FEED_NEWS_ALIGNMENT_v1"
+  data-ccr="AUDRALIA_G2_PLANET_THREE_FILE_TV_SCREEN_CANVAS_FEED_CCR_v1"
+  data-shell-role="route-shell"
+  data-ui-role="remote-control"
+  data-canvas-role="tv-screen"
+  data-baseline-feed="clay-globe-baseline"
+  data-public-identity="Audralia"
+  data-template-source="Australia-template-hidden-scaffold"
+  data-lat-long-disposition="predestined"
   data-active-water="false"
   data-hydration-active="false"
   data-terrain-child-active="false"
@@ -31,10 +32,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#050d1f">
 
-  <title>Audralia · G2 Planet</title>
+  <title>Audralia · Clay Globe Baseline</title>
   <meta
     name="description"
-    content="Audralia G2 planet route with protected dry globe, gem-first navigation, Platform and Engineering tabs, compact coordinate metadata, and no final visual pass claim."
+    content="Audralia G2 three-file planet route: shell, remote UI, and TV screen canvas with a predestined clay-globe baseline feed."
   >
 
   <style>
@@ -81,6 +82,7 @@
         radial-gradient(circle at 50% -14%,rgba(78,119,171,.31),transparent 40rem),
         radial-gradient(circle at 10% 22%,rgba(244,207,131,.10),transparent 32rem),
         radial-gradient(circle at 90% 28%,rgba(141,216,255,.13),transparent 32rem),
+        radial-gradient(circle at 50% 96%,rgba(173,140,255,.10),transparent 44rem),
         linear-gradient(180deg,#061020 0%,var(--bg) 58%,#01040a 100%);
     }
 
@@ -196,7 +198,7 @@
 
     .planet-menu{
       position:relative;
-      z-index:60;
+      z-index:80;
     }
 
     .planet-menu summary{
@@ -389,7 +391,7 @@
 
     .planet-product{
       position:relative;
-      min-height:760px;
+      min-height:790px;
       display:grid;
       grid-template-rows:auto minmax(0,1fr) auto auto;
       padding:clamp(12px,2vw,18px);
@@ -413,7 +415,7 @@
     }
 
     .product-mark{
-      width:104px;
+      width:112px;
       min-height:42px;
       display:grid;
       place-items:center;
@@ -499,7 +501,7 @@
         radial-gradient(circle at 34% 24%,rgba(255,244,216,.25),transparent 0 18%,rgba(255,244,216,.10) 24%,transparent 34%),
         radial-gradient(circle at 46% 42%,rgba(156,143,91,.82),transparent 0 18%,rgba(83,112,76,.80) 31%,transparent 48%),
         radial-gradient(circle at 62% 58%,rgba(126,90,61,.76),transparent 0 16%,rgba(59,74,62,.76) 30%,transparent 52%),
-        linear-gradient(135deg,#63735b 0%,#8c805a 22%,#3b4b40 44%,#9b8459 64%,#263f43 100%);
+        linear-gradient(135deg,#8a7352 0%,#6c5a42 22%,#4b4739 44%,#947450 64%,#2e3834 100%);
       box-shadow:
         inset -4rem -3rem 5.5rem rgba(0,0,0,.60),
         inset 1.3rem 1rem 2.1rem rgba(255,244,216,.13),
@@ -507,8 +509,9 @@
         0 34px 90px rgba(0,0,0,.42);
     }
 
-    .planet-stage[data-renderer-state="active"] .fallback-planet{
-      opacity:.08;
+    .planet-stage[data-renderer-state="active"] .fallback-planet,
+    .planet-stage[data-canvas-role="tv-screen"] .fallback-planet{
+      opacity:.07;
     }
 
     .planet-canvas{
@@ -589,7 +592,7 @@
     .gem-field{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:18px 12px;
+      gap:20px 14px;
       justify-items:center;
       align-items:start;
     }
@@ -597,7 +600,7 @@
     .gem-anchor{
       position:relative;
       width:100%;
-      min-height:138px;
+      min-height:146px;
       display:grid;
       justify-items:center;
       align-content:start;
@@ -613,31 +616,40 @@
     .gem-anchor::before{
       content:"";
       position:absolute;
-      inset:12% 12% 30%;
+      inset:16% 8% 28%;
       border-radius:50%;
-      background:radial-gradient(ellipse,rgba(141,216,255,.16),transparent 72%);
-      filter:blur(6px);
-      opacity:.7;
-      transform:translateY(36px);
+      background:radial-gradient(ellipse,rgba(141,216,255,.18),transparent 72%);
+      filter:blur(7px);
+      opacity:.75;
+      transform:translateY(42px);
     }
 
     .gem-anchor:hover .gem-object,
-    .gem-anchor:focus-visible .gem-object{
+    .gem-anchor:focus-visible .gem-object,
+    .gem-anchor[data-active-gem] .gem-object{
       transform:translateY(-7px) rotateX(10deg) rotateY(-10deg);
       filter:brightness(1.14) saturate(1.12);
     }
 
+    .gem-anchor[data-active-gem] .gem-object{
+      box-shadow:
+        0 20px 38px rgba(0,0,0,.46),
+        0 0 36px rgba(244,207,131,.26),
+        0 0 28px rgba(141,216,255,.20),
+        inset 0 1px 0 rgba(255,255,255,.26);
+    }
+
     .gem-object{
       position:relative;
-      width:clamp(92px,10vw,142px);
-      height:clamp(72px,8vw,112px);
+      width:clamp(98px,10vw,148px);
+      height:clamp(76px,8vw,116px);
       display:grid;
       place-items:center;
       clip-path:var(--gem);
       transform:translateZ(0) rotateX(7deg);
-      transition:transform .18s ease,filter .18s ease;
+      transition:transform .18s ease,filter .18s ease,box-shadow .18s ease;
       background:
-        linear-gradient(32deg,transparent 0 22%,rgba(255,255,255,.48) 23% 25%,transparent 26%),
+        linear-gradient(32deg,transparent 0 22%,rgba(255,255,255,.50) 23% 25%,transparent 26%),
         conic-gradient(from 45deg,rgba(255,255,255,.42),rgba(141,216,255,.38),rgba(8,22,54,.98),rgba(244,207,131,.25),rgba(255,255,255,.30)),
         radial-gradient(circle at 35% 22%,rgba(255,255,255,.52),transparent 34%),
         linear-gradient(145deg,rgba(10,42,100,.98),rgba(4,8,19,.98));
@@ -687,7 +699,7 @@
       text-transform:uppercase;
     }
 
-    .gem-anchor span{
+    .gem-anchor span:not(.gem-object){
       position:relative;
       z-index:2;
       color:rgba(141,216,255,.76);
@@ -1040,11 +1052,11 @@
       .inspect-button{width:100%}
       .planet-menu-panel{left:0;right:auto;width:100%}
       .orbit-hero{padding:10px}
-      .planet-product{min-height:780px;padding:10px}
+      .planet-product{min-height:810px;padding:10px}
       .planet-stage{min-height:520px;border-radius:24px}
       .mode-controls{grid-template-columns:repeat(2,minmax(0,1fr))}
       .gem-field{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 8px}
-      .gem-anchor{min-height:128px}
+      .gem-anchor{min-height:132px}
       .metadata-strip{grid-template-columns:1fr}
       h1{font-size:clamp(2.4rem,13vw,4.1rem)}
       .chamber summary{grid-template-columns:1fr}
@@ -1053,9 +1065,9 @@
 
     @media (max-width:430px){
       .mode-controls{grid-template-columns:1fr}
-      .planet-product{min-height:850px}
+      .planet-product{min-height:890px}
       .planet-stage{min-height:560px}
-      .gem-object{width:108px;height:84px}
+      .gem-object{width:112px;height:86px}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -1080,7 +1092,7 @@
         <span class="brand-mark" aria-hidden="true"><span>AU</span></span>
         <span class="brand-copy">
           <span>Audralia</span>
-          <strong>G2 Planet</strong>
+          <strong>Clay Globe Baseline</strong>
         </span>
       </a>
 
@@ -1094,7 +1106,7 @@
           <a href="#terrain-deck">Terrain Deck <span>E/ESE</span></a>
           <a href="#lattice-scope">Lattice Scope <span>SE/SSE</span></a>
           <a href="#water-hold">Water Hold <span>S/SSW</span></a>
-          <a href="#renderer-mount">Renderer Mount <span>SW/WSW</span></a>
+          <a href="#canvas-screen">Canvas Screen <span>SW/WSW</span></a>
           <a href="#receipt-dock">Receipt Dock <span>W/WNW</span></a>
           <a href="#contract-seal">Contract Seal <span>NW/NNW</span></a>
           <a href="/showroom/globe/audralia/">Audralia <span>Route</span></a>
@@ -1103,40 +1115,44 @@
         </div>
       </details>
 
-      <button class="inspect-button" type="button" data-audralia-inspect-planet>Inspect Planet</button>
+      <button class="inspect-button" type="button" data-audralia-inspect-planet>Inspect Screen</button>
     </header>
 
     <main id="planet-main" class="planet-frame">
       <section id="planet-orbit" class="orbit-hero" aria-labelledby="page-title">
         <div class="orbit-layout">
           <article class="intro-panel">
-            <p class="kicker">Audralia G2 · site-aligned route</p>
-            <h1 id="page-title">A world body first. Gems take you deeper.</h1>
+            <p class="kicker">Audralia G2 · three-file authority</p>
+            <h1 id="page-title">The screen transmits the feed. Audralia begins as clay.</h1>
             <p>
-              Audralia is presented as a protected dry globe. The modes inspect the globe. The gems move you into chambers. Engineering proof stays available, but no longer dominates the first read.
+              The shell holds the route. The UI acts as the remote. The canvas behaves as the TV screen. Its baseline feed is a predestined clay globe ready for landform, sea level, subterranean, and above-sea-level terrain definition.
             </p>
             <div class="hero-actions">
-              <a class="hero-action primary" href="#planet-product">View Globe</a>
+              <a class="hero-action primary" href="#planet-product">View Screen</a>
               <a class="hero-action green" href="#gem-navigation">Open Gem Dock</a>
               <a class="hero-action" href="#proof-chambers">Inspect Chambers</a>
             </div>
           </article>
 
-          <section id="planet-product" class="planet-product" aria-label="Audralia protected planet product object">
+          <section id="planet-product" class="planet-product" aria-label="Audralia protected TV screen canvas">
             <div class="product-top">
-              <div class="product-mark" aria-hidden="true">GLOBE</div>
+              <div class="product-mark" aria-hidden="true">SCREEN</div>
               <div class="product-tag">
-                <b>Protected Audralia Body</b>
-                <span>modes inspect · gems navigate</span>
+                <b>Clay Globe Feed</b>
+                <span>canvas transmits · UI controls</span>
               </div>
             </div>
 
-            <div class="planet-stage" data-audralia-planet-stage aria-label="Audralia G2 protected dry globe renderer">
+            <div
+              class="planet-stage"
+              data-audralia-planet-stage
+              aria-label="Audralia G2 TV screen canvas displaying clay globe baseline feed"
+            >
               <div class="fallback-planet" data-audralia-planet-fallback aria-hidden="true"></div>
-              <canvas class="planet-canvas" data-audralia-planet-canvas aria-label="Audralia G2 dry planet canvas"></canvas>
+              <canvas class="planet-canvas" data-audralia-planet-canvas aria-label="Audralia clay globe baseline canvas"></canvas>
             </div>
 
-            <div class="mode-controls" aria-label="Audralia planet inspection modes">
+            <div class="mode-controls" aria-label="Audralia canvas feed inspection modes">
               <button class="mode-button" type="button" data-audralia-mode="body" aria-pressed="true">Body</button>
               <button class="mode-button" type="button" data-audralia-mode="surface" aria-pressed="false">Surface</button>
               <button class="mode-button" type="button" data-audralia-mode="terrain" aria-pressed="false">Terrain</button>
@@ -1144,7 +1160,7 @@
               <button class="mode-button" type="button" data-audralia-mode="receipt" aria-pressed="false">Receipt</button>
             </div>
 
-            <nav id="gem-navigation" class="gem-dock" aria-label="Gem-first navigation beneath Audralia">
+            <nav id="gem-navigation" class="gem-dock" aria-label="Gem-first navigation beneath Audralia screen">
               <div class="dock-title">
                 <b>Gem Navigation Dock</b>
                 <span>gems navigate · modes inspect</span>
@@ -1154,7 +1170,7 @@
                 <a class="gem-anchor" data-gem-anchor href="#body-glass">
                   <span class="gem-object"><b>N</b></span>
                   <strong>Body Glass</strong>
-                  <span>N/NNE · body</span>
+                  <span>N/NNE · clay body</span>
                 </a>
 
                 <a class="gem-anchor" data-gem-anchor href="#surface-console">
@@ -1181,10 +1197,10 @@
                   <span>S/SSW · held</span>
                 </a>
 
-                <a class="gem-anchor" data-gem-anchor href="#renderer-mount">
+                <a class="gem-anchor" data-gem-anchor href="#canvas-screen">
                   <span class="gem-object"><b>SW</b></span>
-                  <strong>Renderer Mount</strong>
-                  <span>SW/WSW · render</span>
+                  <strong>Canvas Screen</strong>
+                  <span>SW/WSW · screen</span>
                 </a>
 
                 <a class="gem-anchor" data-gem-anchor href="#receipt-dock">
@@ -1203,41 +1219,41 @@
           </section>
 
           <aside class="inspection-panel" aria-label="Audralia inspection summary">
-            <p class="kicker">Protected renderer · public first</p>
+            <p class="kicker">TV screen canvas · baseline feed</p>
 
             <div class="summary-meter">
-              <b>Renderer</b>
-              <span class="renderer-status" data-audralia-renderer-status>Fallback dry planet visible · renderer initializing</span>
+              <b>Screen</b>
+              <span class="renderer-status" data-audralia-renderer-status>Fallback clay globe visible · canvas screen initializing</span>
             </div>
 
             <div class="summary-meter">
-              <b>Object Class</b>
-              <span>Globe first. Gems navigate. The planet is not a gem.</span>
+              <b>Authority Split</b>
+              <span>Shell holds. UI controls. Canvas transmits the feed.</span>
             </div>
 
             <div class="summary-meter">
-              <b>Coordinate Law</b>
-              <span>16 coordinate identities × 16 version identities = 256 expression states.</span>
+              <b>Disposition</b>
+              <span>Predestined latitude / longitude from hidden Australia-template scaffold. Public identity remains Audralia.</span>
             </div>
 
             <div class="summary-meter">
               <b>Held State</b>
-              <span>Hydration, active water, child truth, and final visual pass remain false.</span>
+              <span>Active water, hydration, child truth, and final visual pass remain false.</span>
             </div>
 
             <div class="mode-panel" aria-live="polite">
               <div class="mode-head">
                 <b data-audralia-mode-title>Body</b>
-                <span data-audralia-mode-status>DRY PLANET · WORLD BODY</span>
+                <span data-audralia-mode-status>CLAY GLOBE · BASELINE FEED</span>
               </div>
               <div class="mode-copy">
                 <article>
                   <b>Platform</b>
-                  <span data-audralia-mode-platform>Audralia now reads as a world body first.</span>
+                  <span data-audralia-mode-platform>Audralia begins as a moldable clay globe.</span>
                 </article>
                 <article>
                   <b>Engineering</b>
-                  <span data-audralia-mode-engineering>Body mode preserves the renderer socket and child truth remains held.</span>
+                  <span data-audralia-mode-engineering>UI requests Body mode from the canvas API. Canvas displays the Clay Globe Baseline Feed.</span>
                 </article>
               </div>
             </div>
@@ -1248,15 +1264,15 @@
       <section id="proof-chambers" class="chamber-deck" aria-label="Audralia planet proof chambers">
         <div class="chamber-head">
           <p class="kicker">Proof chambers · tabbed inspection</p>
-          <h2>The chambers explain the route without turning into scaffolding.</h2>
+          <h2>The screen, the remote, and the shell are separated.</h2>
           <p>
-            Each chamber opens with a Platform Lens. Engineering Lens contains ownership, constraints, and compact coordinate metadata.
+            Each chamber opens with a Platform Lens. Engineering Lens contains source authority, constraints, held states, and compact coordinate metadata.
           </p>
         </div>
 
         <div class="chamber-grid">
           <details id="body-glass" class="chamber" data-audralia-chamber open>
-            <summary><span class="summary-copy"><b>Body Glass</b><span>N / NNE · dry spheroid route expression</span></span><span class="summary-action">Open chamber</span></summary>
+            <summary><span class="summary-copy"><b>Body Glass</b><span>N / NNE · clay globe baseline</span></span><span class="summary-action">Open chamber</span></summary>
             <div class="chamber-body">
               <div class="lens-tabs" role="tablist">
                 <button class="lens-tab" type="button" data-lens-tab="platform" aria-selected="true">Platform Lens</button>
@@ -1264,26 +1280,26 @@
               </div>
               <div class="lens-pane" data-lens-pane="platform">
                 <b>Platform Lens</b>
-                <strong>Audralia is the planet.</strong>
-                <p>The first read is a dry world body. The proof system supports it underneath instead of replacing it.</p>
+                <strong>Audralia starts as a moldable world body.</strong>
+                <p>The screen shows a clay globe baseline: not a finished map, not a gem, and not active water. It is ready to receive definition.</p>
               </div>
               <div class="lens-pane" data-lens-pane="engineering" hidden>
                 <b>Engineering Lens</b>
-                <strong>Route shell and renderer own this layer.</strong>
-                <p>Fallback planet and canvas renderer may express the body, but final planet truth is not claimed.</p>
+                <strong>Body mode is the default canvas feed.</strong>
+                <p>The canvas displays the Clay Globe Baseline Feed using predestined latitude / longitude disposition from the hidden scaffold.</p>
                 <div class="metadata-strip">
-                  <span><em>Coordinate</em>N / NNE</span>
-                  <span><em>Version</em>Body parent</span>
-                  <span><em>Duty</em>Dry spheroid read</span>
-                  <span><em>Handoff</em>Route shell / renderer</span>
+                  <span><em>Coordinate</em><span data-meta-coordinate>N / NNE</span></span>
+                  <span><em>Version</em><span data-meta-version>Clay globe baseline</span></span>
+                  <span><em>Duty</em><span data-meta-duty>World body first read</span></span>
+                  <span><em>Handoff</em><span data-meta-handoff>Canvas screen baseline feed</span></span>
                 </div>
               </div>
-              <div class="return-row"><span class="boundary-note">Body Glass confirms planet-first object class.</span><a class="return-orbit" href="#planet-orbit">Return to Orbit</a></div>
+              <div class="return-row"><span class="boundary-note">Body Glass confirms the baseline feed.</span><a class="return-orbit" href="#planet-orbit">Return to Orbit</a></div>
             </div>
           </details>
 
           <details id="surface-console" class="chamber" data-audralia-chamber>
-            <summary><span class="summary-copy"><b>Surface Console</b><span>NE / ENE · dry material readability</span></span><span class="summary-action">Open chamber</span></summary>
+            <summary><span class="summary-copy"><b>Surface Console</b><span>NE / ENE · dry surface preview</span></span><span class="summary-action">Open chamber</span></summary>
             <div class="chamber-body">
               <div class="lens-tabs" role="tablist">
                 <button class="lens-tab" type="button" data-lens-tab="platform" aria-selected="true">Platform Lens</button>
@@ -1291,26 +1307,26 @@
               </div>
               <div class="lens-pane" data-lens-pane="platform">
                 <b>Platform Lens</b>
-                <strong>The planet gets dry material presence.</strong>
-                <p>Surface mode helps the globe feel like world skin, not a polished gemstone.</p>
+                <strong>The clay body can be inspected as dry surface.</strong>
+                <p>Surface mode helps the globe feel like material planetary skin without activating a surface child or claiming final surface truth.</p>
               </div>
               <div class="lens-pane" data-lens-pane="engineering" hidden>
                 <b>Engineering Lens</b>
-                <strong>Surface child remains held.</strong>
-                <p>This route may preview dry material but does not activate canonical surface truth.</p>
+                <strong>Surface remains a preview state.</strong>
+                <p>UI requests Surface mode from the canvas. The canvas transmits a surface emphasis only.</p>
                 <div class="metadata-strip">
-                  <span><em>Coordinate</em>NE / ENE</span>
-                  <span><em>Version</em>Surface target</span>
-                  <span><em>Duty</em>Dry material readability</span>
-                  <span><em>Handoff</em>Future surface child</span>
+                  <span><em>Coordinate</em><span data-meta-coordinate>NE / ENE</span></span>
+                  <span><em>Version</em><span data-meta-version>Dry surface preview</span></span>
+                  <span><em>Duty</em><span data-meta-duty>Material readability</span></span>
+                  <span><em>Handoff</em><span data-meta-handoff>Future surface feed</span></span>
                 </div>
               </div>
-              <div class="return-row"><span class="boundary-note">Surface Console previews material only.</span><a class="return-orbit" href="#planet-orbit">Return to Orbit</a></div>
+              <div class="return-row"><span class="boundary-note">Surface Console does not activate surface child truth.</span><a class="return-orbit" href="#planet-orbit">Return to Orbit</a></div>
             </div>
           </details>
 
           <details id="terrain-deck" class="chamber" data-audralia-chamber>
-            <summary><span class="summary-copy"><b>Terrain Deck</b><span>E / ESE · relief pressure target</span></span><span class="summary-action">Open chamber</span></summary>
+            <summary><span class="summary-copy"><b>Terrain Deck</b><span>E / ESE · relief pressure preview</span></span><span class="summary-action">Open chamber</span></summary>
             <div class="chamber-body">
               <div class="lens-tabs" role="tablist">
                 <button class="lens-tab" type="button" data-lens-tab="platform" aria-selected="true">Platform Lens</button>
@@ -1318,18 +1334,18 @@
               </div>
               <div class="lens-pane" data-lens-pane="platform">
                 <b>Platform Lens</b>
-                <strong>The planet begins to feel carved.</strong>
-                <p>Terrain mode hints at ridges, basins, and pressure without claiming final physical terrain.</p>
+                <strong>The clay can later be molded into terrain.</strong>
+                <p>Terrain mode previews relief direction only: ridges, basins, plateaus, escarpments, and above-sea-level structure remain future feed authority.</p>
               </div>
               <div class="lens-pane" data-lens-pane="engineering" hidden>
                 <b>Engineering Lens</b>
                 <strong>Terrain child remains held.</strong>
-                <p>Renderer-level relief does not replace downstream physical terrain authority.</p>
+                <p>The UI sends a Terrain mode request. The canvas displays a preview state without owning final terrain.</p>
                 <div class="metadata-strip">
-                  <span><em>Coordinate</em>E / ESE</span>
-                  <span><em>Version</em>Terrain target</span>
-                  <span><em>Duty</em>Relief pressure</span>
-                  <span><em>Handoff</em>Future terrain child</span>
+                  <span><em>Coordinate</em><span data-meta-coordinate>E / ESE</span></span>
+                  <span><em>Version</em><span data-meta-version>Terrain pressure preview</span></span>
+                  <span><em>Duty</em><span data-meta-duty>Relief direction</span></span>
+                  <span><em>Handoff</em><span data-meta-handoff>Future above-sea-level terrain feed</span></span>
                 </div>
               </div>
               <div class="return-row"><span class="boundary-note">Terrain Deck does not finalize terrain truth.</span><a class="return-orbit" href="#planet-orbit">Return to Orbit</a></div>
@@ -1345,21 +1361,21 @@
               </div>
               <div class="lens-pane" data-lens-pane="platform">
                 <b>Platform Lens</b>
-                <strong>The structure becomes inspectable.</strong>
-                <p>Lattice mode reveals the proof field without replacing the planet.</p>
+                <strong>The globe carries an ordered coordinate field.</strong>
+                <p>Lattice mode reveals the proof field without replacing the planet. It remains an inspection overlay.</p>
               </div>
               <div class="lens-pane" data-lens-pane="engineering" hidden>
                 <b>Engineering Lens</b>
-                <strong>256 seats remain bound.</strong>
-                <p>Each state carries coordinate identity, version identity, expressive duty, and handoff.</p>
+                <strong>256 states remain addressable.</strong>
+                <p>The canvas can expose the 16 × 16 field while preserving the public Audralia identity.</p>
                 <div class="metadata-strip">
-                  <span><em>Coordinate</em>SE / SSE</span>
-                  <span><em>Version</em>Lattice proof</span>
-                  <span><em>Duty</em>Coordinate inspection</span>
-                  <span><em>Handoff</em>Datum / seat owners held</span>
+                  <span><em>Coordinate</em><span data-meta-coordinate>SE / SSE</span></span>
+                  <span><em>Version</em><span data-meta-version>16 × 16 inspection</span></span>
+                  <span><em>Duty</em><span data-meta-duty>Coordinate proof</span></span>
+                  <span><em>Handoff</em><span data-meta-handoff>Receipt / lattice feed</span></span>
                 </div>
               </div>
-              <div class="return-row"><span class="boundary-note">Lattice Scope preserves globe silhouette.</span><a class="return-orbit" href="#planet-orbit">Return to Orbit</a></div>
+              <div class="return-row"><span class="boundary-note">Lattice Scope proves structure without replacing the globe.</span><a class="return-orbit" href="#planet-orbit">Return to Orbit</a></div>
             </div>
           </details>
 
@@ -1372,26 +1388,26 @@
               </div>
               <div class="lens-pane" data-lens-pane="platform">
                 <b>Platform Lens</b>
-                <strong>The dry planet comes before water.</strong>
-                <p>Audralia may carry former hydrosphere memory, but water is not active.</p>
+                <strong>The baseline is dry clay, not active water.</strong>
+                <p>Water is intentionally held. Sea level becomes a future feed after landform definition.</p>
               </div>
               <div class="lens-pane" data-lens-pane="engineering" hidden>
                 <b>Engineering Lens</b>
-                <strong>Hydration cannot activate here.</strong>
-                <p>Blue accents may be atmosphere, glow, memory, or proof, not active water.</p>
+                <strong>Hydration remains inactive.</strong>
+                <p>Any blue light is screen atmosphere, proof, or interface glow. It is not active water.</p>
                 <div class="metadata-strip">
-                  <span><em>Coordinate</em>S / SSW</span>
-                  <span><em>Version</em>Water held</span>
-                  <span><em>Duty</em>Hydration false</span>
-                  <span><em>Handoff</em>Future hydration only</span>
+                  <span><em>Coordinate</em><span data-meta-coordinate>S / SSW</span></span>
+                  <span><em>Version</em><span data-meta-version>Water inactive</span></span>
+                  <span><em>Duty</em><span data-meta-duty>Block false hydration</span></span>
+                  <span><em>Handoff</em><span data-meta-handoff>Future sea-level feed</span></span>
                 </div>
               </div>
-              <div class="return-row"><span class="boundary-note">Water Hold blocks false water.</span><a class="return-orbit" href="#planet-orbit">Return to Orbit</a></div>
+              <div class="return-row"><span class="boundary-note">Water Hold blocks false water activation.</span><a class="return-orbit" href="#planet-orbit">Return to Orbit</a></div>
             </div>
           </details>
 
-          <details id="renderer-mount" class="chamber" data-audralia-chamber>
-            <summary><span class="summary-copy"><b>Renderer Mount</b><span>SW / WSW · protected renderer mount</span></span><span class="summary-action">Open chamber</span></summary>
+          <details id="canvas-screen" class="chamber" data-audralia-chamber>
+            <summary><span class="summary-copy"><b>Canvas Screen</b><span>SW / WSW · TV screen canvas</span></span><span class="summary-action">Open chamber</span></summary>
             <div class="chamber-body">
               <div class="lens-tabs" role="tablist">
                 <button class="lens-tab" type="button" data-lens-tab="platform" aria-selected="true">Platform Lens</button>
@@ -1399,21 +1415,21 @@
               </div>
               <div class="lens-pane" data-lens-pane="platform">
                 <b>Platform Lens</b>
-                <strong>The renderer is preserved.</strong>
-                <p>The page architecture now frames the achieved globe instead of rewriting the globe.</p>
+                <strong>The canvas behaves like a TV screen.</strong>
+                <p>It transmits whatever lawful feed it receives. Today, the default channel is the clay globe baseline.</p>
               </div>
               <div class="lens-pane" data-lens-pane="engineering" hidden>
                 <b>Engineering Lens</b>
-                <strong>Socket preserved.</strong>
-                <p>The renderer remains mounted through the same canvas and stage selectors.</p>
+                <strong>Canvas owns the screen, not the architecture.</strong>
+                <p>The canvas owns sizing, draw loop, drag inspection, and feed display. It does not create gems, tabs, chambers, or public narrative.</p>
                 <div class="metadata-strip">
-                  <span><em>Coordinate</em>SW / WSW</span>
-                  <span><em>Version</em>Renderer protected</span>
-                  <span><em>Duty</em>Visual continuity</span>
-                  <span><em>Handoff</em>Future renderer refinement only if needed</span>
+                  <span><em>Coordinate</em><span data-meta-coordinate>SW / WSW</span></span>
+                  <span><em>Version</em><span data-meta-version>TV screen canvas</span></span>
+                  <span><em>Duty</em><span data-meta-duty>Transmit lawful feed</span></span>
+                  <span><em>Handoff</em><span data-meta-handoff>Downstream feed packets</span></span>
                 </div>
               </div>
-              <div class="return-row"><span class="boundary-note">Renderer Mount is not final visual pass.</span><a class="return-orbit" href="#planet-orbit">Return to Orbit</a></div>
+              <div class="return-row"><span class="boundary-note">Canvas Screen replaces broad renderer authority.</span><a class="return-orbit" href="#planet-orbit">Return to Orbit</a></div>
             </div>
           </details>
 
@@ -1427,25 +1443,25 @@
               <div class="lens-pane" data-lens-pane="platform">
                 <b>Platform Lens</b>
                 <strong>The receipt explains what is ready.</strong>
-                <p>Receipt mode shows defined, held, pending, blocked, and confirmed states without burying the visitor in scaffolding.</p>
+                <p>The screen is ready. The clay globe baseline is ready. Future feeds remain downstream.</p>
               </div>
               <div class="lens-pane" data-lens-pane="engineering" hidden>
                 <b>Engineering Lens</b>
                 <strong>Receipt is proof, not completion.</strong>
-                <p>It preserves handoff state without claiming final planet truth.</p>
+                <p>Active water, hydration, terrain child, surface child, datum child, and final visual pass remain false.</p>
                 <div class="metadata-strip">
-                  <span><em>Coordinate</em>W / WNW</span>
-                  <span><em>Version</em>Receipt</span>
-                  <span><em>Duty</em>Handoff proof</span>
-                  <span><em>Handoff</em>Downstream authority map</span>
+                  <span><em>Coordinate</em><span data-meta-coordinate>W / WNW</span></span>
+                  <span><em>Version</em><span data-meta-version>Handoff proof</span></span>
+                  <span><em>Duty</em><span data-meta-duty>Receipt state</span></span>
+                  <span><em>Handoff</em><span data-meta-handoff>Audit / next protocol</span></span>
                 </div>
               </div>
-              <div class="return-row"><span class="boundary-note">Receipt Dock does not replace the planet.</span><a class="return-orbit" href="#planet-orbit">Return to Orbit</a></div>
+              <div class="return-row"><span class="boundary-note">Receipt Dock does not claim final visual pass.</span><a class="return-orbit" href="#planet-orbit">Return to Orbit</a></div>
             </div>
           </details>
 
           <details id="contract-seal" class="chamber" data-audralia-chamber>
-            <summary><span class="summary-copy"><b>Contract Seal</b><span>NW / NNW · site alignment restoration</span></span><span class="summary-action">Open chamber</span></summary>
+            <summary><span class="summary-copy"><b>Contract Seal</b><span>NW / NNW · three-file authority lock</span></span><span class="summary-action">Open chamber</span></summary>
             <div class="chamber-body">
               <div class="lens-tabs" role="tablist">
                 <button class="lens-tab" type="button" data-lens-tab="platform" aria-selected="true">Platform Lens</button>
@@ -1453,44 +1469,49 @@
               </div>
               <div class="lens-pane" data-lens-pane="platform">
                 <b>Platform Lens</b>
-                <strong>The globe is protected.</strong>
-                <p>The page architecture frames the planet instead of competing with it.</p>
+                <strong>The teeter-totter stops here.</strong>
+                <p>The shell, remote UI, and canvas screen now have separate jobs. The planet can remain visible while architecture improves around it.</p>
               </div>
               <div class="lens-pane" data-lens-pane="engineering" hidden>
                 <b>Engineering Lens</b>
-                <strong>Site alignment restored.</strong>
-                <p>Gem-first navigation, tabbed lenses, and compact metadata replace the over-scaffolded page state.</p>
+                <strong>Three-file authority separation is active.</strong>
+                <p>Canvas first. UI second. Shell third. Broad mixed index.js authority is deprecated.</p>
                 <div class="metadata-strip">
-                  <span><em>Coordinate</em>NW / NNW</span>
-                  <span><em>Version</em>Site alignment</span>
-                  <span><em>Duty</em>Boundary lock</span>
-                  <span><em>Handoff</em>Visual review / next protocol</span>
+                  <span><em>Coordinate</em><span data-meta-coordinate>NW / NNW</span></span>
+                  <span><em>Version</em><span data-meta-version>Three-file authority</span></span>
+                  <span><em>Duty</em><span data-meta-duty>Boundary lock</span></span>
+                  <span><em>Handoff</em><span data-meta-handoff>Execution review</span></span>
                 </div>
               </div>
-              <div class="return-row"><span class="boundary-note">Contract Seal blocks renderer drift and showroom detour.</span><a class="return-orbit" href="#planet-orbit">Return to Orbit</a></div>
+              <div class="return-row"><span class="boundary-note">Contract Seal blocks authority collapse.</span><a class="return-orbit" href="#planet-orbit">Return to Orbit</a></div>
             </div>
           </details>
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-AUDRALIA_G2_PLANET_SITE_ALIGNMENT_TABBED_GEM_FIRST_HTML_TNT_v1
+AUDRALIA_G2_PLANET_THREE_FILE_TV_SCREEN_CANVAS_FEED_SHELL_TNT_v1
 route=/showroom/globe/audralia/planet/
-html=/showroom/globe/audralia/planet/index.html
-js=/showroom/globe/audralia/planet/index.js
-js_contract=AUDRALIA_G2_PLANET_SITE_ALIGNMENT_TABBED_GEM_FIRST_CONTROLLER_TNT_v1
-spec_ops=AUDRALIA_G2_PLANET_SITE_ALIGNMENT_AUDIT_BINDING_SPEC_OPS_v1
-news=AUDRALIA_G2_PLANET_SITE_ALIGNMENT_AUDIT_BINDING_NEWS_v1
-ccr=AUDRALIA_G2_PLANET_SITE_ALIGNMENT_AUDIT_BINDING_CCR_v1
-primary_object=protected_audralia_world_body
-gem_first_navigation=true
+shell=/showroom/globe/audralia/planet/index.html
+canvas=/showroom/globe/audralia/planet/index.canvas.js
+ui=/showroom/globe/audralia/planet/index.ui.js
+canvas_contract=AUDRALIA_G2_PLANET_CLAY_GLOBE_TV_SCREEN_CANVAS_TNT_v1
+ui_contract=AUDRALIA_G2_PLANET_REMOTE_UI_GEM_TABS_TNT_v1
+spec_ops=AUDRALIA_G2_PLANET_THREE_FILE_TV_SCREEN_CANVAS_FEED_FULL_SPEC_OPS_v1
+news=AUDRALIA_G2_PLANET_THREE_FILE_TV_SCREEN_CANVAS_FEED_NEWS_ALIGNMENT_v1
+ccr=AUDRALIA_G2_PLANET_THREE_FILE_TV_SCREEN_CANVAS_FEED_CCR_v1
+shell_role=route_shell
+ui_role=remote_control
+canvas_role=tv_screen_canvas
+baseline_feed=clay_globe_baseline
+lat_long_disposition=predestined
+template_source=Australia-template_hidden_scaffold
+public_identity=Audralia
+gems_navigation=true
+mode_controls=body,surface,terrain,lattice,receipt
+required_gems=Body_Glass,Surface_Console,Terrain_Deck,Lattice_Scope,Water_Hold,Canvas_Screen,Receipt_Dock,Contract_Seal
 platform_engineering_tabs=true
 metadata_compressed=true
-mode_controls=body,surface,terrain,lattice,receipt
-gem_anchors=Body_Glass,Surface_Console,Terrain_Deck,Lattice_Scope,Water_Hold,Renderer_Mount,Receipt_Dock,Contract_Seal
-gems_are_navigation=true
-gems_are_planet=false
-planet_is_gem=false
 active_water=false
 hydration_active=false
 terrain_child_active=false
@@ -1499,23 +1520,36 @@ datum_child_active=false
 generated_image=false
 graphic_box=false
 final_visual_pass=false
-deploy_marker=AUDRALIA_G2_PLANET_SITE_ALIGNMENT_TABBED_GEM_FIRST_DEPLOY_MARKER_v1
+deploy_marker=AUDRALIA_G2_PLANET_THREE_FILE_TV_SCREEN_CANVAS_FEED_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer class="footer">
-      Audralia G2 · protected globe · gem-first navigation · tabbed Platform / Engineering lenses · final visual pass false.
+      Audralia G2 · shell + remote UI + TV screen canvas · clay globe baseline · final visual pass false.
     </footer>
   </div>
 
   <script
-    src="/showroom/globe/audralia/planet/index.js?v=AUDRALIA_G2_PLANET_SITE_ALIGNMENT_TABBED_GEM_FIRST_CONTROLLER_TNT_v1"
+    src="/showroom/globe/audralia/planet/index.canvas.js?v=AUDRALIA_G2_PLANET_CLAY_GLOBE_TV_SCREEN_CANVAS_TNT_v1"
     defer
-    data-audralia-planet-controller-js
-    data-contract="AUDRALIA_G2_PLANET_SITE_ALIGNMENT_TABBED_GEM_FIRST_CONTROLLER_TNT_v1"
-    data-html-contract="AUDRALIA_G2_PLANET_SITE_ALIGNMENT_TABBED_GEM_FIRST_HTML_TNT_v1"
+    data-audralia-planet-canvas-js
+    data-contract="AUDRALIA_G2_PLANET_CLAY_GLOBE_TV_SCREEN_CANVAS_TNT_v1"
+    data-shell-contract="AUDRALIA_G2_PLANET_THREE_FILE_TV_SCREEN_CANVAS_FEED_SHELL_TNT_v1"
+    data-role="tv-screen-canvas"
+    data-baseline-feed="clay-globe"
     data-active-water="false"
-    data-hydration-active="false"
+    data-final-visual-pass="false"
+  ></script>
+
+  <script
+    src="/showroom/globe/audralia/planet/index.ui.js?v=AUDRALIA_G2_PLANET_REMOTE_UI_GEM_TABS_TNT_v1"
+    defer
+    data-audralia-planet-ui-js
+    data-contract="AUDRALIA_G2_PLANET_REMOTE_UI_GEM_TABS_TNT_v1"
+    data-shell-contract="AUDRALIA_G2_PLANET_THREE_FILE_TV_SCREEN_CANVAS_FEED_SHELL_TNT_v1"
+    data-canvas-contract="AUDRALIA_G2_PLANET_CLAY_GLOBE_TV_SCREEN_CANVAS_TNT_v1"
+    data-role="remote-control-ui"
+    data-active-water="false"
     data-final-visual-pass="false"
   ></script>
 </body>

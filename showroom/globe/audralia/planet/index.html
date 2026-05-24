@@ -3,47 +3,38 @@
 <html
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
-  data-page="audralia-g2-planet-display-architecture-restoration"
-  data-version="G2-DISPLAY-ARCHITECTURE-RESTORATION"
-  data-contract="AUDRALIA_G2_PLANET_DISPLAY_ARCHITECTURE_RESTORATION_HTML_TNT_v1"
-  data-renderer-contract="AUDRALIA_G2_PLANET_NOT_GEM_VISUAL_FIRST_PARENT_ROUTE_RENDERER_TNT_v1"
-  data-previous-contract="AUDRALIA_G2_PLANET_NOT_GEM_VISUAL_FIRST_PARENT_ROUTE_HTML_TNT_v1"
-  data-spec-ops="AUDRALIA_G2_PLANET_DISPLAY_ARCHITECTURE_RESTORATION_SPEC_OPS_WITH_NEWS_MAP_v1"
-  data-news="AUDRALIA_G2_PLANET_DISPLAY_ARCHITECTURE_RESTORATION_NEWS_ALIGNMENT_v1"
-  data-ccr="AUDRALIA_G2_PLANET_DISPLAY_ARCHITECTURE_RESTORATION_CCR_v1"
-  data-primary-object="protected-continuous-dry-globe"
-  data-secondary-object="beneath-globe-3d-gem-navigation"
-  data-globe-object="protected"
-  data-display-architecture="restored"
-  data-renderer-rewrite="false"
-  data-js-touch-required="false"
+  data-page="audralia-g2-planet-site-alignment-tabbed-gem-first"
+  data-version="G2-SITE-ALIGNMENT-TABBED-GEM-FIRST"
+  data-contract="AUDRALIA_G2_PLANET_SITE_ALIGNMENT_TABBED_GEM_FIRST_HTML_TNT_v1"
+  data-bound-js-contract="AUDRALIA_G2_PLANET_SITE_ALIGNMENT_TABBED_GEM_FIRST_CONTROLLER_TNT_v1"
+  data-spec-ops="AUDRALIA_G2_PLANET_SITE_ALIGNMENT_AUDIT_BINDING_SPEC_OPS_v1"
+  data-news="AUDRALIA_G2_PLANET_SITE_ALIGNMENT_AUDIT_BINDING_NEWS_v1"
+  data-ccr="AUDRALIA_G2_PLANET_SITE_ALIGNMENT_AUDIT_BINDING_CCR_v1"
+  data-primary-object="protected-audralia-world-body"
+  data-secondary-object="gem-first-navigation"
+  data-platform-engineering-tabs="true"
+  data-metadata-compressed="true"
   data-gems-are-navigation="true"
   data-gems-are-planet="false"
   data-planet-is-gem="false"
-  data-mode-controls="body-surface-terrain-lattice-receipt"
-  data-coordinate-identities="16"
-  data-version-identities="16"
-  data-seat-count="256"
   data-active-water="false"
-  data-hydration-loaded="false"
-  data-terrain-child-loaded="false"
-  data-surface-child-loaded="false"
-  data-datum-child-loaded="false"
+  data-hydration-active="false"
+  data-terrain-child-active="false"
+  data-surface-child-active="false"
+  data-datum-child-active="false"
   data-generated-image="false"
   data-graphic-box="false"
   data-final-visual-pass="false"
-  data-visual-pass-claimed="false"
-  data-showroom-diamond-upgrade="deferred"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#050d1f">
 
-  <title>Audralia · Planet Display Architecture</title>
+  <title>Audralia · G2 Planet</title>
   <meta
     name="description"
-    content="Audralia G2 display architecture restoration: protected dry globe, clean mode controls, beneath-globe 3D gem navigation, proof chambers, and no final visual pass claim."
+    content="Audralia G2 planet route with protected dry globe, gem-first navigation, Platform and Engineering tabs, compact coordinate metadata, and no final visual pass claim."
   >
 
   <style>
@@ -53,7 +44,6 @@
       --deep:#030814;
       --panel:rgba(5,15,32,.88);
       --panel2:rgba(3,9,20,.78);
-      --glass:rgba(255,255,255,.045);
       --text:rgba(239,247,255,.96);
       --muted:rgba(239,247,255,.72);
       --faint:rgba(239,247,255,.50);
@@ -62,12 +52,11 @@
       --blue:#8dd8ff;
       --mint:#a7f3c6;
       --violet:#ad8cff;
-      --warn:#ffb36d;
       --line:rgba(255,255,255,.12);
       --line2:rgba(244,207,131,.24);
       --max:1480px;
       --shadow:0 34px 120px rgba(0,0,0,.54);
-      --gem:polygon(50% 0%,82% 10%,100% 40%,78% 100%,22% 100%,0% 40%,18% 10%);
+      --gem:polygon(50% 0%,84% 11%,100% 43%,77% 100%,23% 100%,0% 43%,16% 11%);
     }
 
     *{box-sizing:border-box}
@@ -92,7 +81,6 @@
         radial-gradient(circle at 50% -14%,rgba(78,119,171,.31),transparent 40rem),
         radial-gradient(circle at 10% 22%,rgba(244,207,131,.10),transparent 32rem),
         radial-gradient(circle at 90% 28%,rgba(141,216,255,.13),transparent 32rem),
-        radial-gradient(circle at 50% 96%,rgba(173,140,255,.11),transparent 44rem),
         linear-gradient(180deg,#061020 0%,var(--bg) 58%,#01040a 100%);
     }
 
@@ -268,12 +256,6 @@
       letter-spacing:.04em;
     }
 
-    .planet-menu-panel a:hover{
-      color:rgba(255,244,216,.98);
-      border-color:rgba(141,216,255,.22);
-      background:rgba(141,216,255,.075);
-    }
-
     .inspect-button{
       min-height:42px;
       border:1px solid rgba(255,255,255,.11);
@@ -310,28 +292,13 @@
         linear-gradient(180deg,rgba(8,16,34,.92),rgba(1,5,14,.96));
     }
 
-    .orbit-hero::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 12% 20%,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
-        radial-gradient(circle at 78% 18%,rgba(255,255,255,.16) 0 1px,transparent 1.5px),
-        radial-gradient(circle at 90% 68%,rgba(255,255,255,.14) 0 1px,transparent 1.5px),
-        radial-gradient(circle at 28% 80%,rgba(255,255,255,.13) 0 1px,transparent 1.5px);
-      opacity:.40;
-    }
-
     .orbit-layout{
       position:relative;
       z-index:2;
       display:grid;
-      grid-template-columns:minmax(260px,.70fr) minmax(480px,1.52fr) minmax(260px,.72fr);
+      grid-template-columns:minmax(260px,.70fr) minmax(500px,1.55fr) minmax(260px,.72fr);
       gap:16px;
       align-items:stretch;
-      min-height:min(880px,calc(100vh - 118px));
     }
 
     .intro-panel,
@@ -354,8 +321,7 @@
       padding:clamp(18px,3vw,30px);
     }
 
-    .kicker,
-    .scope-tag{
+    .kicker{
       margin:0;
       color:var(--gold);
       font:900 .74rem/1.4 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
@@ -423,7 +389,7 @@
 
     .planet-product{
       position:relative;
-      min-height:720px;
+      min-height:760px;
       display:grid;
       grid-template-rows:auto minmax(0,1fr) auto auto;
       padding:clamp(12px,2vw,18px);
@@ -433,37 +399,6 @@
         radial-gradient(circle at 50% 76%,rgba(244,207,131,.10),transparent 22rem),
         linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.014)),
         rgba(1,6,16,.88);
-    }
-
-    .planet-product::before,
-    .planet-product::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:42%;
-      z-index:0;
-      pointer-events:none;
-      border-radius:50%;
-      transform:translate(-50%,-50%);
-    }
-
-    .planet-product::before{
-      width:min(88%,38rem);
-      aspect-ratio:1;
-      border:1px dashed rgba(141,216,255,.17);
-      box-shadow:inset 0 0 44px rgba(141,216,255,.05);
-      animation:orbitTurn 34s linear infinite;
-    }
-
-    .planet-product::after{
-      width:min(66%,27rem);
-      aspect-ratio:1;
-      border:1px solid rgba(244,207,131,.13);
-      animation:orbitTurn 21s linear infinite reverse;
-    }
-
-    @keyframes orbitTurn{
-      to{transform:translate(-50%,-50%) rotate(360deg)}
     }
 
     .product-top{
@@ -528,6 +463,30 @@
       touch-action:none;
     }
 
+    .planet-stage::before,
+    .planet-stage::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:0;
+      border-radius:50%;
+      pointer-events:none;
+      transform:translate(-50%,-50%);
+    }
+
+    .planet-stage::before{
+      width:min(88%,38rem);
+      aspect-ratio:1;
+      border:1px dashed rgba(141,216,255,.17);
+    }
+
+    .planet-stage::after{
+      width:min(66%,27rem);
+      aspect-ratio:1;
+      border:1px solid rgba(244,207,131,.13);
+    }
+
     .fallback-planet{
       position:absolute;
       z-index:2;
@@ -540,31 +499,16 @@
         radial-gradient(circle at 34% 24%,rgba(255,244,216,.25),transparent 0 18%,rgba(255,244,216,.10) 24%,transparent 34%),
         radial-gradient(circle at 46% 42%,rgba(156,143,91,.82),transparent 0 18%,rgba(83,112,76,.80) 31%,transparent 48%),
         radial-gradient(circle at 62% 58%,rgba(126,90,61,.76),transparent 0 16%,rgba(59,74,62,.76) 30%,transparent 52%),
-        radial-gradient(circle at 38% 68%,rgba(48,66,65,.78),transparent 0 18%,rgba(119,118,81,.72) 35%,transparent 54%),
-        radial-gradient(circle at 50% 50%,rgba(141,216,255,.10),transparent 62%),
         linear-gradient(135deg,#63735b 0%,#8c805a 22%,#3b4b40 44%,#9b8459 64%,#263f43 100%);
       box-shadow:
         inset -4rem -3rem 5.5rem rgba(0,0,0,.60),
         inset 1.3rem 1rem 2.1rem rgba(255,244,216,.13),
         0 0 3.2rem rgba(141,216,255,.18),
         0 34px 90px rgba(0,0,0,.42);
-      transition:opacity .25s ease,filter .25s ease;
-    }
-
-    .fallback-planet::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 31% 22%,rgba(255,255,255,.22),transparent 0 14%,transparent 42%),
-        radial-gradient(circle at 70% 72%,rgba(0,0,0,.46),transparent 0 48%),
-        linear-gradient(125deg,rgba(255,255,255,.08),transparent 34%,rgba(0,0,0,.26) 72%);
     }
 
     .planet-stage[data-renderer-state="active"] .fallback-planet{
-      opacity:.12;
-      filter:saturate(.75) brightness(.72);
+      opacity:.08;
     }
 
     .planet-canvas{
@@ -611,12 +555,12 @@
       border-color:rgba(244,207,131,.52);
     }
 
-    .gem-orbit-dock{
+    .gem-dock{
       position:relative;
-      z-index:6;
+      z-index:7;
       display:grid;
-      gap:12px;
-      padding:16px 6px 8px;
+      gap:14px;
+      padding:18px 6px 8px;
     }
 
     .dock-title{
@@ -642,115 +586,113 @@
       text-transform:uppercase;
     }
 
-    .gem-orbit-rail{
+    .gem-field{
       display:grid;
-      grid-template-columns:repeat(8,minmax(0,1fr));
-      gap:9px;
-      align-items:stretch;
-    }
-
-    .nav-gem{
-      position:relative;
-      min-height:126px;
-      display:grid;
-      align-content:center;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:18px 12px;
       justify-items:center;
-      gap:7px;
-      padding:10px 7px;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:22px;
-      background:
-        radial-gradient(circle at 50% 0%,rgba(141,216,255,.10),transparent 6rem),
-        linear-gradient(180deg,rgba(255,255,255,.038),rgba(255,255,255,.012)),
-        rgba(255,255,255,.022);
-      transform-style:preserve-3d;
-      transition:transform .18s ease,border-color .18s ease,filter .18s ease,background .18s ease;
+      align-items:start;
     }
 
-    .nav-gem::before{
+    .gem-anchor{
+      position:relative;
+      width:100%;
+      min-height:138px;
+      display:grid;
+      justify-items:center;
+      align-content:start;
+      gap:8px;
+      padding:4px 2px;
+      background:transparent;
+      border:0;
+      border-radius:24px;
+      text-align:center;
+      transform-style:preserve-3d;
+    }
+
+    .gem-anchor::before{
       content:"";
       position:absolute;
-      inset:auto 14% 9px;
-      height:10px;
+      inset:12% 12% 30%;
       border-radius:50%;
-      background:radial-gradient(ellipse,rgba(141,216,255,.18),transparent 70%);
-      filter:blur(2px);
-      opacity:.75;
+      background:radial-gradient(ellipse,rgba(141,216,255,.16),transparent 72%);
+      filter:blur(6px);
+      opacity:.7;
+      transform:translateY(36px);
     }
 
-    .nav-gem:hover,
-    .nav-gem:focus-visible{
-      transform:translateY(-5px);
-      border-color:rgba(244,207,131,.44);
-      filter:brightness(1.12);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(244,207,131,.13),transparent 6rem),
-        linear-gradient(180deg,rgba(255,255,255,.050),rgba(255,255,255,.016)),
-        rgba(255,255,255,.030);
+    .gem-anchor:hover .gem-object,
+    .gem-anchor:focus-visible .gem-object{
+      transform:translateY(-7px) rotateX(10deg) rotateY(-10deg);
+      filter:brightness(1.14) saturate(1.12);
     }
 
-    .gem-body{
+    .gem-object{
       position:relative;
-      width:78px;
-      height:58px;
+      width:clamp(92px,10vw,142px);
+      height:clamp(72px,8vw,112px);
       display:grid;
       place-items:center;
       clip-path:var(--gem);
+      transform:translateZ(0) rotateX(7deg);
+      transition:transform .18s ease,filter .18s ease;
       background:
-        linear-gradient(32deg,transparent 0 22%,rgba(255,255,255,.46) 23% 25%,transparent 26%),
-        conic-gradient(from 45deg,rgba(255,255,255,.38),rgba(141,216,255,.34),rgba(8,22,54,.96),rgba(244,207,131,.24),rgba(255,255,255,.28)),
-        radial-gradient(circle at 36% 24%,rgba(255,255,255,.48),transparent 34%),
+        linear-gradient(32deg,transparent 0 22%,rgba(255,255,255,.48) 23% 25%,transparent 26%),
+        conic-gradient(from 45deg,rgba(255,255,255,.42),rgba(141,216,255,.38),rgba(8,22,54,.98),rgba(244,207,131,.25),rgba(255,255,255,.30)),
+        radial-gradient(circle at 35% 22%,rgba(255,255,255,.52),transparent 34%),
         linear-gradient(145deg,rgba(10,42,100,.98),rgba(4,8,19,.98));
       box-shadow:
-        0 14px 22px rgba(0,0,0,.36),
-        0 0 24px rgba(141,216,255,.16),
+        0 18px 34px rgba(0,0,0,.42),
+        0 0 30px rgba(141,216,255,.18),
         inset 0 1px 0 rgba(255,255,255,.24);
     }
 
-    .gem-body::before,
-    .gem-body::after{
+    .gem-object::before,
+    .gem-object::after{
       content:"";
       position:absolute;
       inset:0;
-      pointer-events:none;
       clip-path:inherit;
+      pointer-events:none;
     }
 
-    .gem-body::before{
+    .gem-object::before{
       background:
-        linear-gradient(90deg,transparent 0 30%,rgba(255,255,255,.20) 32%,transparent 35% 63%,rgba(244,207,131,.16) 65%,transparent 68%),
-        linear-gradient(180deg,rgba(255,255,255,.20),transparent 44%,rgba(0,0,0,.28));
+        linear-gradient(90deg,transparent 0 30%,rgba(255,255,255,.22) 32%,transparent 35% 63%,rgba(244,207,131,.16) 65%,transparent 68%),
+        linear-gradient(180deg,rgba(255,255,255,.22),transparent 44%,rgba(0,0,0,.30));
     }
 
-    .gem-body::after{
-      inset:12% 16%;
-      border:1px solid rgba(255,255,255,.16);
-      clip-path:polygon(50% 0%,88% 22%,72% 100%,28% 100%,12% 22%);
+    .gem-object::after{
+      inset:11% 15%;
+      border:1px solid rgba(255,255,255,.17);
+      clip-path:polygon(50% 0%,88% 24%,72% 100%,28% 100%,12% 24%);
     }
 
-    .gem-body b{
+    .gem-object b{
       position:relative;
       z-index:2;
-      color:rgba(255,244,216,.96);
-      text-shadow:0 2px 10px rgba(0,0,0,.90);
-      font-size:.72rem;
+      color:rgba(255,244,216,.98);
+      text-shadow:0 2px 12px rgba(0,0,0,.92);
+      font-size:clamp(.88rem,1.4vw,1.15rem);
       letter-spacing:.10em;
     }
 
-    .nav-gem strong{
+    .gem-anchor strong{
+      position:relative;
+      z-index:2;
       color:rgba(255,244,216,.96);
-      font-size:.64rem;
-      letter-spacing:.07em;
+      font-size:.70rem;
+      letter-spacing:.08em;
       line-height:1.05;
-      text-align:center;
       text-transform:uppercase;
     }
 
-    .nav-gem span{
+    .gem-anchor span{
+      position:relative;
+      z-index:2;
       color:rgba(141,216,255,.76);
-      font:850 .50rem/1.18 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      font:850 .52rem/1.18 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
       letter-spacing:.08em;
-      text-align:center;
       text-transform:uppercase;
     }
 
@@ -926,51 +868,94 @@
       padding:0 clamp(16px,3vw,24px) clamp(16px,3vw,24px);
     }
 
-    .lens-grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:12px;
+    .lens-tabs{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      padding-top:2px;
     }
 
-    .lens-card,
-    .readout-card{
-      display:grid;
-      gap:8px;
-      min-height:112px;
+    .lens-tab{
+      min-height:38px;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:999px;
+      padding:0 14px;
+      color:rgba(239,247,255,.82);
+      background:rgba(255,255,255,.035);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .lens-tab[aria-selected="true"],
+    .lens-tab[data-active]{
+      color:#06101c;
+      background:linear-gradient(135deg,#fff0b8,var(--gold));
+      border-color:rgba(244,207,131,.52);
+    }
+
+    .lens-pane{
       border:1px solid rgba(255,255,255,.10);
-      border-radius:18px;
-      padding:14px;
+      border-radius:20px;
+      padding:16px;
       background:
         radial-gradient(circle at 20% 0%,rgba(244,207,131,.07),transparent 9rem),
         rgba(255,255,255,.028);
     }
 
-    .lens-card b,
-    .readout-card b{
+    .lens-pane[hidden]{display:none!important}
+
+    .lens-pane b{
+      display:block;
       color:var(--gold);
-      font-size:.68rem;
-      letter-spacing:.13em;
+      font-size:.70rem;
+      letter-spacing:.14em;
       text-transform:uppercase;
+      margin-bottom:8px;
     }
 
-    .lens-card strong,
-    .readout-card strong{
+    .lens-pane strong{
+      display:block;
       color:rgba(255,244,216,.96);
-      font-size:1rem;
-      line-height:1.2;
+      font-size:1.12rem;
+      line-height:1.18;
+      margin-bottom:8px;
     }
 
-    .lens-card span,
-    .readout-card span{
-      color:rgba(239,247,255,.70);
-      font-size:.86rem;
-      line-height:1.38;
+    .lens-pane span,
+    .lens-pane p{
+      color:rgba(239,247,255,.72);
+      font-size:.96rem;
+      line-height:1.46;
     }
 
-    .readout-grid{
+    .metadata-strip{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:10px;
+      gap:8px;
+      margin-top:14px;
+    }
+
+    .metadata-strip span{
+      display:grid;
+      gap:4px;
+      min-height:64px;
+      border:1px solid rgba(141,216,255,.12);
+      border-radius:14px;
+      padding:10px;
+      background:rgba(255,255,255,.024);
+      color:rgba(239,247,255,.70);
+      font-size:.78rem;
+      line-height:1.25;
+    }
+
+    .metadata-strip em{
+      color:var(--gold);
+      font-style:normal;
+      font:900 .58rem/1.2 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      letter-spacing:.12em;
+      text-transform:uppercase;
     }
 
     .return-row{
@@ -1035,16 +1020,11 @@
     @media (max-width:1280px){
       .orbit-layout{
         grid-template-columns:1fr;
-        min-height:0;
       }
 
       .planet-product{order:1}
       .intro-panel{order:2}
       .inspection-panel{order:3}
-
-      .gem-orbit-rail{
-        grid-template-columns:repeat(4,minmax(0,1fr));
-      }
     }
 
     @media (max-width:980px){
@@ -1063,19 +1043,19 @@
       .planet-product{min-height:780px;padding:10px}
       .planet-stage{min-height:520px;border-radius:24px}
       .mode-controls{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .gem-orbit-rail{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .lens-grid,
-      .readout-grid{grid-template-columns:1fr}
+      .gem-field{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 8px}
+      .gem-anchor{min-height:128px}
+      .metadata-strip{grid-template-columns:1fr}
       h1{font-size:clamp(2.4rem,13vw,4.1rem)}
       .chamber summary{grid-template-columns:1fr}
       .summary-action{justify-content:center}
     }
 
     @media (max-width:430px){
-      .mode-controls,
-      .gem-orbit-rail{grid-template-columns:1fr}
-      .planet-product{min-height:860px}
+      .mode-controls{grid-template-columns:1fr}
+      .planet-product{min-height:850px}
       .planet-stage{min-height:560px}
+      .gem-object{width:108px;height:84px}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -1100,7 +1080,7 @@
         <span class="brand-mark" aria-hidden="true"><span>AU</span></span>
         <span class="brand-copy">
           <span>Audralia</span>
-          <strong>Planet Display Architecture</strong>
+          <strong>G2 Planet</strong>
         </span>
       </a>
 
@@ -1108,6 +1088,7 @@
         <summary>Planet Menu</summary>
         <div class="planet-menu-panel">
           <a href="#planet-orbit">Return to Orbit <span>Top</span></a>
+          <a href="#gem-navigation">Gem Dock <span>Navigation</span></a>
           <a href="#body-glass">Body Glass <span>N/NNE</span></a>
           <a href="#surface-console">Surface Console <span>NE/ENE</span></a>
           <a href="#terrain-deck">Terrain Deck <span>E/ESE</span></a>
@@ -1129,10 +1110,10 @@
       <section id="planet-orbit" class="orbit-hero" aria-labelledby="page-title">
         <div class="orbit-layout">
           <article class="intro-panel">
-            <p class="kicker">Audralia G2 · protected globe</p>
-            <h1 id="page-title">A world body first. Navigation gems beneath it.</h1>
+            <p class="kicker">Audralia G2 · site-aligned route</p>
+            <h1 id="page-title">A world body first. Gems take you deeper.</h1>
             <p>
-              The globe is now protected. This pass restores the display architecture around it: clean controls, dimensional gem navigation, and proof chambers that return to orbit.
+              Audralia is presented as a protected dry globe. The modes inspect the globe. The gems move you into chambers. Engineering proof stays available, but no longer dominates the first read.
             </p>
             <div class="hero-actions">
               <a class="hero-action primary" href="#planet-product">View Globe</a>
@@ -1146,7 +1127,7 @@
               <div class="product-mark" aria-hidden="true">GLOBE</div>
               <div class="product-tag">
                 <b>Protected Audralia Body</b>
-                <span>renderer preserved · display renewed</span>
+                <span>modes inspect · gems navigate</span>
               </div>
             </div>
 
@@ -1163,57 +1144,57 @@
               <button class="mode-button" type="button" data-audralia-mode="receipt" aria-pressed="false">Receipt</button>
             </div>
 
-            <nav id="gem-navigation" class="gem-orbit-dock" aria-label="Dimensional gem navigation dock beneath Audralia">
+            <nav id="gem-navigation" class="gem-dock" aria-label="Gem-first navigation beneath Audralia">
               <div class="dock-title">
-                <b>3D Gem Navigation Dock</b>
+                <b>Gem Navigation Dock</b>
                 <span>gems navigate · modes inspect</span>
               </div>
 
-              <div class="gem-orbit-rail">
-                <a class="nav-gem" data-gem-anchor href="#body-glass" data-coordinate="N/NNE" data-version="Body" data-duty="dry spheroid" data-handoff="route shell">
-                  <span class="gem-body"><b>N</b></span>
+              <div class="gem-field">
+                <a class="gem-anchor" data-gem-anchor href="#body-glass">
+                  <span class="gem-object"><b>N</b></span>
                   <strong>Body Glass</strong>
                   <span>N/NNE · body</span>
                 </a>
 
-                <a class="nav-gem" data-gem-anchor href="#surface-console" data-coordinate="NE/ENE" data-version="Surface" data-duty="dry material" data-handoff="surface child held">
-                  <span class="gem-body"><b>NE</b></span>
+                <a class="gem-anchor" data-gem-anchor href="#surface-console">
+                  <span class="gem-object"><b>NE</b></span>
                   <strong>Surface Console</strong>
                   <span>NE/ENE · surface</span>
                 </a>
 
-                <a class="nav-gem" data-gem-anchor href="#terrain-deck" data-coordinate="E/ESE" data-version="Terrain" data-duty="relief pressure" data-handoff="terrain child held">
-                  <span class="gem-body"><b>E</b></span>
+                <a class="gem-anchor" data-gem-anchor href="#terrain-deck">
+                  <span class="gem-object"><b>E</b></span>
                   <strong>Terrain Deck</strong>
                   <span>E/ESE · terrain</span>
                 </a>
 
-                <a class="nav-gem" data-gem-anchor href="#lattice-scope" data-coordinate="SE/SSE" data-version="Lattice" data-duty="coordinate proof" data-handoff="datum held">
-                  <span class="gem-body"><b>SE</b></span>
+                <a class="gem-anchor" data-gem-anchor href="#lattice-scope">
+                  <span class="gem-object"><b>SE</b></span>
                   <strong>Lattice Scope</strong>
                   <span>SE/SSE · 16×16</span>
                 </a>
 
-                <a class="nav-gem" data-gem-anchor href="#water-hold" data-coordinate="S/SSW" data-version="Water Held" data-duty="hydration false" data-handoff="future hydration">
-                  <span class="gem-body"><b>S</b></span>
+                <a class="gem-anchor" data-gem-anchor href="#water-hold">
+                  <span class="gem-object"><b>S</b></span>
                   <strong>Water Hold</strong>
                   <span>S/SSW · held</span>
                 </a>
 
-                <a class="nav-gem" data-gem-anchor href="#renderer-mount" data-coordinate="SW/WSW" data-version="Renderer" data-duty="visual enhancement" data-handoff="renderer">
-                  <span class="gem-body"><b>SW</b></span>
+                <a class="gem-anchor" data-gem-anchor href="#renderer-mount">
+                  <span class="gem-object"><b>SW</b></span>
                   <strong>Renderer Mount</strong>
                   <span>SW/WSW · render</span>
                 </a>
 
-                <a class="nav-gem" data-gem-anchor href="#receipt-dock" data-coordinate="W/WNW" data-version="Receipt" data-duty="handoff proof" data-handoff="receipt">
-                  <span class="gem-body"><b>W</b></span>
+                <a class="gem-anchor" data-gem-anchor href="#receipt-dock">
+                  <span class="gem-object"><b>W</b></span>
                   <strong>Receipt Dock</strong>
                   <span>W/WNW · proof</span>
                 </a>
 
-                <a class="nav-gem" data-gem-anchor href="#contract-seal" data-coordinate="NW/NNW" data-version="Contract" data-duty="boundary lock" data-handoff="next protocol">
-                  <span class="gem-body"><b>NW</b></span>
+                <a class="gem-anchor" data-gem-anchor href="#contract-seal">
+                  <span class="gem-object"><b>NW</b></span>
                   <strong>Contract Seal</strong>
                   <span>NW/NNW · seal</span>
                 </a>
@@ -1222,7 +1203,7 @@
           </section>
 
           <aside class="inspection-panel" aria-label="Audralia inspection summary">
-            <p class="kicker">Protected renderer · renewed display</p>
+            <p class="kicker">Protected renderer · public first</p>
 
             <div class="summary-meter">
               <b>Renderer</b>
@@ -1231,7 +1212,7 @@
 
             <div class="summary-meter">
               <b>Object Class</b>
-              <span>Globe is protected. Gems are navigation only. The planet is not a gem.</span>
+              <span>Globe first. Gems navigate. The planet is not a gem.</span>
             </div>
 
             <div class="summary-meter">
@@ -1247,16 +1228,16 @@
             <div class="mode-panel" aria-live="polite">
               <div class="mode-head">
                 <b data-audralia-mode-title>Body</b>
-                <span data-audralia-mode-status>DRY PLANET · CONTINUOUS WORLD BODY</span>
+                <span data-audralia-mode-status>DRY PLANET · WORLD BODY</span>
               </div>
               <div class="mode-copy">
                 <article>
                   <b>Platform</b>
-                  <span data-audralia-mode-platform>Audralia now reads as a dry planet first. The coordinate system still exists underneath, but the first object is a world body, not a gemstone.</span>
+                  <span data-audralia-mode-platform>Audralia now reads as a world body first.</span>
                 </article>
                 <article>
                   <b>Engineering</b>
-                  <span data-audralia-mode-engineering>Body mode suppresses lattice and gem styling. The renderer prioritizes spherical mass, dry material, soft limb shading, and fail-open continuity.</span>
+                  <span data-audralia-mode-engineering>Body mode preserves the renderer socket and child truth remains held.</span>
                 </article>
               </div>
             </div>
@@ -1266,145 +1247,225 @@
 
       <section id="proof-chambers" class="chamber-deck" aria-label="Audralia planet proof chambers">
         <div class="chamber-head">
-          <p class="kicker">Proof chambers · controlled inspection deck</p>
-          <h2>The gems launch the chambers. The chambers return to orbit.</h2>
+          <p class="kicker">Proof chambers · tabbed inspection</p>
+          <h2>The chambers explain the route without turning into scaffolding.</h2>
           <p>
-            Each chamber preserves coordinate identity, version identity, expressive duty, and handoff while keeping the achieved globe protected.
+            Each chamber opens with a Platform Lens. Engineering Lens contains ownership, constraints, and compact coordinate metadata.
           </p>
         </div>
 
         <div class="chamber-grid">
-          <details id="body-glass" class="chamber" open>
+          <details id="body-glass" class="chamber" data-audralia-chamber open>
             <summary><span class="summary-copy"><b>Body Glass</b><span>N / NNE · dry spheroid route expression</span></span><span class="summary-action">Open chamber</span></summary>
             <div class="chamber-body">
-              <div class="lens-grid">
-                <article class="lens-card"><b>Platform Lens</b><strong>Audralia is the planet.</strong><span>The first read is a dry world body. The proof system supports it underneath.</span></article>
-                <article class="lens-card"><b>Engineering Lens</b><strong>Route shell and renderer own this layer.</strong><span>Fallback planet and canvas renderer may express the body, but final planet truth is not claimed.</span></article>
+              <div class="lens-tabs" role="tablist">
+                <button class="lens-tab" type="button" data-lens-tab="platform" aria-selected="true">Platform Lens</button>
+                <button class="lens-tab" type="button" data-lens-tab="engineering" aria-selected="false">Engineering Lens</button>
               </div>
-              <div class="readout-grid">
-                <article class="readout-card"><b>Coordinate</b><span>N / NNE</span></article>
-                <article class="readout-card"><b>Version</b><span>Body parent</span></article>
-                <article class="readout-card"><b>Duty</b><span>dry spheroid read</span></article>
-                <article class="readout-card"><b>Handoff</b><span>route shell / renderer</span></article>
+              <div class="lens-pane" data-lens-pane="platform">
+                <b>Platform Lens</b>
+                <strong>Audralia is the planet.</strong>
+                <p>The first read is a dry world body. The proof system supports it underneath instead of replacing it.</p>
+              </div>
+              <div class="lens-pane" data-lens-pane="engineering" hidden>
+                <b>Engineering Lens</b>
+                <strong>Route shell and renderer own this layer.</strong>
+                <p>Fallback planet and canvas renderer may express the body, but final planet truth is not claimed.</p>
+                <div class="metadata-strip">
+                  <span><em>Coordinate</em>N / NNE</span>
+                  <span><em>Version</em>Body parent</span>
+                  <span><em>Duty</em>Dry spheroid read</span>
+                  <span><em>Handoff</em>Route shell / renderer</span>
+                </div>
               </div>
               <div class="return-row"><span class="boundary-note">Body Glass confirms planet-first object class.</span><a class="return-orbit" href="#planet-orbit">Return to Orbit</a></div>
             </div>
           </details>
 
-          <details id="surface-console" class="chamber">
+          <details id="surface-console" class="chamber" data-audralia-chamber>
             <summary><span class="summary-copy"><b>Surface Console</b><span>NE / ENE · dry material readability</span></span><span class="summary-action">Open chamber</span></summary>
             <div class="chamber-body">
-              <div class="lens-grid">
-                <article class="lens-card"><b>Platform Lens</b><strong>The planet gets dry material presence.</strong><span>Surface mode helps the body feel like world skin, not a polished gemstone.</span></article>
-                <article class="lens-card"><b>Engineering Lens</b><strong>Surface child remains held.</strong><span>This route may preview dry material but does not activate canonical surface truth.</span></article>
+              <div class="lens-tabs" role="tablist">
+                <button class="lens-tab" type="button" data-lens-tab="platform" aria-selected="true">Platform Lens</button>
+                <button class="lens-tab" type="button" data-lens-tab="engineering" aria-selected="false">Engineering Lens</button>
               </div>
-              <div class="readout-grid">
-                <article class="readout-card"><b>Coordinate</b><span>NE / ENE</span></article>
-                <article class="readout-card"><b>Version</b><span>Surface target</span></article>
-                <article class="readout-card"><b>Duty</b><span>dry material readability</span></article>
-                <article class="readout-card"><b>Handoff</b><span>future surface child</span></article>
+              <div class="lens-pane" data-lens-pane="platform">
+                <b>Platform Lens</b>
+                <strong>The planet gets dry material presence.</strong>
+                <p>Surface mode helps the globe feel like world skin, not a polished gemstone.</p>
+              </div>
+              <div class="lens-pane" data-lens-pane="engineering" hidden>
+                <b>Engineering Lens</b>
+                <strong>Surface child remains held.</strong>
+                <p>This route may preview dry material but does not activate canonical surface truth.</p>
+                <div class="metadata-strip">
+                  <span><em>Coordinate</em>NE / ENE</span>
+                  <span><em>Version</em>Surface target</span>
+                  <span><em>Duty</em>Dry material readability</span>
+                  <span><em>Handoff</em>Future surface child</span>
+                </div>
               </div>
               <div class="return-row"><span class="boundary-note">Surface Console previews material only.</span><a class="return-orbit" href="#planet-orbit">Return to Orbit</a></div>
             </div>
           </details>
 
-          <details id="terrain-deck" class="chamber">
-            <summary><span class="summary-copy"><b>Terrain Deck</b><span>E / ESE · relief and mass-definition target</span></span><span class="summary-action">Open chamber</span></summary>
+          <details id="terrain-deck" class="chamber" data-audralia-chamber>
+            <summary><span class="summary-copy"><b>Terrain Deck</b><span>E / ESE · relief pressure target</span></span><span class="summary-action">Open chamber</span></summary>
             <div class="chamber-body">
-              <div class="lens-grid">
-                <article class="lens-card"><b>Platform Lens</b><strong>The planet begins to feel carved.</strong><span>Terrain mode hints at ridges, basins, and pressure without claiming completion.</span></article>
-                <article class="lens-card"><b>Engineering Lens</b><strong>Terrain child remains held.</strong><span>Renderer-level relief does not replace downstream physical terrain authority.</span></article>
+              <div class="lens-tabs" role="tablist">
+                <button class="lens-tab" type="button" data-lens-tab="platform" aria-selected="true">Platform Lens</button>
+                <button class="lens-tab" type="button" data-lens-tab="engineering" aria-selected="false">Engineering Lens</button>
               </div>
-              <div class="readout-grid">
-                <article class="readout-card"><b>Coordinate</b><span>E / ESE</span></article>
-                <article class="readout-card"><b>Version</b><span>Terrain target</span></article>
-                <article class="readout-card"><b>Duty</b><span>relief pressure</span></article>
-                <article class="readout-card"><b>Handoff</b><span>future terrain child</span></article>
+              <div class="lens-pane" data-lens-pane="platform">
+                <b>Platform Lens</b>
+                <strong>The planet begins to feel carved.</strong>
+                <p>Terrain mode hints at ridges, basins, and pressure without claiming final physical terrain.</p>
+              </div>
+              <div class="lens-pane" data-lens-pane="engineering" hidden>
+                <b>Engineering Lens</b>
+                <strong>Terrain child remains held.</strong>
+                <p>Renderer-level relief does not replace downstream physical terrain authority.</p>
+                <div class="metadata-strip">
+                  <span><em>Coordinate</em>E / ESE</span>
+                  <span><em>Version</em>Terrain target</span>
+                  <span><em>Duty</em>Relief pressure</span>
+                  <span><em>Handoff</em>Future terrain child</span>
+                </div>
               </div>
               <div class="return-row"><span class="boundary-note">Terrain Deck does not finalize terrain truth.</span><a class="return-orbit" href="#planet-orbit">Return to Orbit</a></div>
             </div>
           </details>
 
-          <details id="lattice-scope" class="chamber">
+          <details id="lattice-scope" class="chamber" data-audralia-chamber>
             <summary><span class="summary-copy"><b>Lattice Scope</b><span>SE / SSE · 16 × 16 coordinate proof</span></span><span class="summary-action">Open chamber</span></summary>
             <div class="chamber-body">
-              <div class="lens-grid">
-                <article class="lens-card"><b>Platform Lens</b><strong>The structure becomes inspectable.</strong><span>Lattice mode reveals the proof field without replacing the planet.</span></article>
-                <article class="lens-card"><b>Engineering Lens</b><strong>256 seats remain bound.</strong><span>Each state carries coordinate identity, version identity, expressive duty, and handoff.</span></article>
+              <div class="lens-tabs" role="tablist">
+                <button class="lens-tab" type="button" data-lens-tab="platform" aria-selected="true">Platform Lens</button>
+                <button class="lens-tab" type="button" data-lens-tab="engineering" aria-selected="false">Engineering Lens</button>
               </div>
-              <div class="readout-grid">
-                <article class="readout-card"><b>Coordinate</b><span>SE / SSE</span></article>
-                <article class="readout-card"><b>Version</b><span>Lattice proof</span></article>
-                <article class="readout-card"><b>Duty</b><span>coordinate inspection</span></article>
-                <article class="readout-card"><b>Handoff</b><span>datum / seat owners held</span></article>
+              <div class="lens-pane" data-lens-pane="platform">
+                <b>Platform Lens</b>
+                <strong>The structure becomes inspectable.</strong>
+                <p>Lattice mode reveals the proof field without replacing the planet.</p>
+              </div>
+              <div class="lens-pane" data-lens-pane="engineering" hidden>
+                <b>Engineering Lens</b>
+                <strong>256 seats remain bound.</strong>
+                <p>Each state carries coordinate identity, version identity, expressive duty, and handoff.</p>
+                <div class="metadata-strip">
+                  <span><em>Coordinate</em>SE / SSE</span>
+                  <span><em>Version</em>Lattice proof</span>
+                  <span><em>Duty</em>Coordinate inspection</span>
+                  <span><em>Handoff</em>Datum / seat owners held</span>
+                </div>
               </div>
               <div class="return-row"><span class="boundary-note">Lattice Scope preserves globe silhouette.</span><a class="return-orbit" href="#planet-orbit">Return to Orbit</a></div>
             </div>
           </details>
 
-          <details id="water-hold" class="chamber">
+          <details id="water-hold" class="chamber" data-audralia-chamber>
             <summary><span class="summary-copy"><b>Water Hold</b><span>S / SSW · active water false</span></span><span class="summary-action">Open chamber</span></summary>
             <div class="chamber-body">
-              <div class="lens-grid">
-                <article class="lens-card"><b>Platform Lens</b><strong>The dry planet comes before water.</strong><span>Audralia may carry former hydrosphere memory, but water is not active.</span></article>
-                <article class="lens-card"><b>Engineering Lens</b><strong>Hydration cannot activate here.</strong><span>Blue accents may be atmosphere, glow, memory, or proof, not active water.</span></article>
+              <div class="lens-tabs" role="tablist">
+                <button class="lens-tab" type="button" data-lens-tab="platform" aria-selected="true">Platform Lens</button>
+                <button class="lens-tab" type="button" data-lens-tab="engineering" aria-selected="false">Engineering Lens</button>
               </div>
-              <div class="readout-grid">
-                <article class="readout-card"><b>Coordinate</b><span>S / SSW</span></article>
-                <article class="readout-card"><b>Version</b><span>Water held</span></article>
-                <article class="readout-card"><b>Duty</b><span>hydration false</span></article>
-                <article class="readout-card"><b>Handoff</b><span>future hydration only</span></article>
+              <div class="lens-pane" data-lens-pane="platform">
+                <b>Platform Lens</b>
+                <strong>The dry planet comes before water.</strong>
+                <p>Audralia may carry former hydrosphere memory, but water is not active.</p>
+              </div>
+              <div class="lens-pane" data-lens-pane="engineering" hidden>
+                <b>Engineering Lens</b>
+                <strong>Hydration cannot activate here.</strong>
+                <p>Blue accents may be atmosphere, glow, memory, or proof, not active water.</p>
+                <div class="metadata-strip">
+                  <span><em>Coordinate</em>S / SSW</span>
+                  <span><em>Version</em>Water held</span>
+                  <span><em>Duty</em>Hydration false</span>
+                  <span><em>Handoff</em>Future hydration only</span>
+                </div>
               </div>
               <div class="return-row"><span class="boundary-note">Water Hold blocks false water.</span><a class="return-orbit" href="#planet-orbit">Return to Orbit</a></div>
             </div>
           </details>
 
-          <details id="renderer-mount" class="chamber">
+          <details id="renderer-mount" class="chamber" data-audralia-chamber>
             <summary><span class="summary-copy"><b>Renderer Mount</b><span>SW / WSW · protected renderer mount</span></span><span class="summary-action">Open chamber</span></summary>
             <div class="chamber-body">
-              <div class="lens-grid">
-                <article class="lens-card"><b>Platform Lens</b><strong>The renderer is preserved.</strong><span>The next step restored architecture around the achieved globe instead of rewriting the globe.</span></article>
-                <article class="lens-card"><b>Engineering Lens</b><strong>Socket preserved.</strong><span>The existing renderer contract remains mounted through the same canvas and stage selectors.</span></article>
+              <div class="lens-tabs" role="tablist">
+                <button class="lens-tab" type="button" data-lens-tab="platform" aria-selected="true">Platform Lens</button>
+                <button class="lens-tab" type="button" data-lens-tab="engineering" aria-selected="false">Engineering Lens</button>
               </div>
-              <div class="readout-grid">
-                <article class="readout-card"><b>Coordinate</b><span>SW / WSW</span></article>
-                <article class="readout-card"><b>Version</b><span>Renderer protected</span></article>
-                <article class="readout-card"><b>Duty</b><span>visual continuity</span></article>
-                <article class="readout-card"><b>Handoff</b><span>future renderer refinement only if needed</span></article>
+              <div class="lens-pane" data-lens-pane="platform">
+                <b>Platform Lens</b>
+                <strong>The renderer is preserved.</strong>
+                <p>The page architecture now frames the achieved globe instead of rewriting the globe.</p>
+              </div>
+              <div class="lens-pane" data-lens-pane="engineering" hidden>
+                <b>Engineering Lens</b>
+                <strong>Socket preserved.</strong>
+                <p>The renderer remains mounted through the same canvas and stage selectors.</p>
+                <div class="metadata-strip">
+                  <span><em>Coordinate</em>SW / WSW</span>
+                  <span><em>Version</em>Renderer protected</span>
+                  <span><em>Duty</em>Visual continuity</span>
+                  <span><em>Handoff</em>Future renderer refinement only if needed</span>
+                </div>
               </div>
               <div class="return-row"><span class="boundary-note">Renderer Mount is not final visual pass.</span><a class="return-orbit" href="#planet-orbit">Return to Orbit</a></div>
             </div>
           </details>
 
-          <details id="receipt-dock" class="chamber">
+          <details id="receipt-dock" class="chamber" data-audralia-chamber>
             <summary><span class="summary-copy"><b>Receipt Dock</b><span>W / WNW · handoff state proof</span></span><span class="summary-action">Open chamber</span></summary>
             <div class="chamber-body">
-              <div class="lens-grid">
-                <article class="lens-card"><b>Platform Lens</b><strong>The receipt explains what is ready.</strong><span>Receipt mode shows defined, held, pending, blocked, and confirmed states.</span></article>
-                <article class="lens-card"><b>Engineering Lens</b><strong>Receipt is proof, not completion.</strong><span>It preserves handoff state without claiming final planet truth.</span></article>
+              <div class="lens-tabs" role="tablist">
+                <button class="lens-tab" type="button" data-lens-tab="platform" aria-selected="true">Platform Lens</button>
+                <button class="lens-tab" type="button" data-lens-tab="engineering" aria-selected="false">Engineering Lens</button>
               </div>
-              <div class="readout-grid">
-                <article class="readout-card"><b>Coordinate</b><span>W / WNW</span></article>
-                <article class="readout-card"><b>Version</b><span>Receipt</span></article>
-                <article class="readout-card"><b>Duty</b><span>handoff proof</span></article>
-                <article class="readout-card"><b>Handoff</b><span>downstream authority map</span></article>
+              <div class="lens-pane" data-lens-pane="platform">
+                <b>Platform Lens</b>
+                <strong>The receipt explains what is ready.</strong>
+                <p>Receipt mode shows defined, held, pending, blocked, and confirmed states without burying the visitor in scaffolding.</p>
+              </div>
+              <div class="lens-pane" data-lens-pane="engineering" hidden>
+                <b>Engineering Lens</b>
+                <strong>Receipt is proof, not completion.</strong>
+                <p>It preserves handoff state without claiming final planet truth.</p>
+                <div class="metadata-strip">
+                  <span><em>Coordinate</em>W / WNW</span>
+                  <span><em>Version</em>Receipt</span>
+                  <span><em>Duty</em>Handoff proof</span>
+                  <span><em>Handoff</em>Downstream authority map</span>
+                </div>
               </div>
               <div class="return-row"><span class="boundary-note">Receipt Dock does not replace the planet.</span><a class="return-orbit" href="#planet-orbit">Return to Orbit</a></div>
             </div>
           </details>
 
-          <details id="contract-seal" class="chamber">
-            <summary><span class="summary-copy"><b>Contract Seal</b><span>NW / NNW · display architecture restoration</span></span><span class="summary-action">Open chamber</span></summary>
+          <details id="contract-seal" class="chamber" data-audralia-chamber>
+            <summary><span class="summary-copy"><b>Contract Seal</b><span>NW / NNW · site alignment restoration</span></span><span class="summary-action">Open chamber</span></summary>
             <div class="chamber-body">
-              <div class="lens-grid">
-                <article class="lens-card"><b>Platform Lens</b><strong>The globe is protected.</strong><span>The page architecture now frames the planet instead of competing with it.</span></article>
-                <article class="lens-card"><b>Engineering Lens</b><strong>No JS rewrite required.</strong><span>HTML display architecture was renewed while the renderer contract stayed preserved.</span></article>
+              <div class="lens-tabs" role="tablist">
+                <button class="lens-tab" type="button" data-lens-tab="platform" aria-selected="true">Platform Lens</button>
+                <button class="lens-tab" type="button" data-lens-tab="engineering" aria-selected="false">Engineering Lens</button>
               </div>
-              <div class="readout-grid">
-                <article class="readout-card"><b>Coordinate</b><span>NW / NNW</span></article>
-                <article class="readout-card"><b>Version</b><span>Display restoration</span></article>
-                <article class="readout-card"><b>Duty</b><span>boundary lock</span></article>
-                <article class="readout-card"><b>Handoff</b><span>visual review / next protocol</span></article>
+              <div class="lens-pane" data-lens-pane="platform">
+                <b>Platform Lens</b>
+                <strong>The globe is protected.</strong>
+                <p>The page architecture frames the planet instead of competing with it.</p>
+              </div>
+              <div class="lens-pane" data-lens-pane="engineering" hidden>
+                <b>Engineering Lens</b>
+                <strong>Site alignment restored.</strong>
+                <p>Gem-first navigation, tabbed lenses, and compact metadata replace the over-scaffolded page state.</p>
+                <div class="metadata-strip">
+                  <span><em>Coordinate</em>NW / NNW</span>
+                  <span><em>Version</em>Site alignment</span>
+                  <span><em>Duty</em>Boundary lock</span>
+                  <span><em>Handoff</em>Visual review / next protocol</span>
+                </div>
               </div>
               <div class="return-row"><span class="boundary-note">Contract Seal blocks renderer drift and showroom detour.</span><a class="return-orbit" href="#planet-orbit">Return to Orbit</a></div>
             </div>
@@ -1413,57 +1474,48 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-AUDRALIA_G2_PLANET_DISPLAY_ARCHITECTURE_RESTORATION_HTML_TNT_v1
+AUDRALIA_G2_PLANET_SITE_ALIGNMENT_TABBED_GEM_FIRST_HTML_TNT_v1
 route=/showroom/globe/audralia/planet/
 html=/showroom/globe/audralia/planet/index.html
-renderer=/showroom/globe/audralia/planet/index.js
-renderer_contract=AUDRALIA_G2_PLANET_NOT_GEM_VISUAL_FIRST_PARENT_ROUTE_RENDERER_TNT_v1
-previous_contract=AUDRALIA_G2_PLANET_NOT_GEM_VISUAL_FIRST_PARENT_ROUTE_HTML_TNT_v1
-spec_ops=AUDRALIA_G2_PLANET_DISPLAY_ARCHITECTURE_RESTORATION_SPEC_OPS_WITH_NEWS_MAP_v1
-news=AUDRALIA_G2_PLANET_DISPLAY_ARCHITECTURE_RESTORATION_NEWS_ALIGNMENT_v1
-ccr=AUDRALIA_G2_PLANET_DISPLAY_ARCHITECTURE_RESTORATION_CCR_v1
-globe_object=protected
-renderer_rewrite=false
-js_touch_required=false
-display_architecture=restored
-primary_object=protected_continuous_dry_globe
-secondary_object=beneath_globe_3d_gem_navigation
-planet_is_gem=false
-gems_are_planet=false
-gems_are_navigation=true
+js=/showroom/globe/audralia/planet/index.js
+js_contract=AUDRALIA_G2_PLANET_SITE_ALIGNMENT_TABBED_GEM_FIRST_CONTROLLER_TNT_v1
+spec_ops=AUDRALIA_G2_PLANET_SITE_ALIGNMENT_AUDIT_BINDING_SPEC_OPS_v1
+news=AUDRALIA_G2_PLANET_SITE_ALIGNMENT_AUDIT_BINDING_NEWS_v1
+ccr=AUDRALIA_G2_PLANET_SITE_ALIGNMENT_AUDIT_BINDING_CCR_v1
+primary_object=protected_audralia_world_body
+gem_first_navigation=true
+platform_engineering_tabs=true
+metadata_compressed=true
 mode_controls=body,surface,terrain,lattice,receipt
 gem_anchors=Body_Glass,Surface_Console,Terrain_Deck,Lattice_Scope,Water_Hold,Renderer_Mount,Receipt_Dock,Contract_Seal
-return_to_orbit=true
-coordinate_identities=16
-version_identities=16
-seat_count=256
+gems_are_navigation=true
+gems_are_planet=false
+planet_is_gem=false
 active_water=false
-hydration_loaded=false
-terrain_child_loaded=false
-surface_child_loaded=false
-datum_child_loaded=false
+hydration_active=false
+terrain_child_active=false
+surface_child_active=false
+datum_child_active=false
 generated_image=false
 graphic_box=false
 final_visual_pass=false
-visual_pass_claimed=false
-showroom_diamond_upgrade=deferred
-deploy_marker=AUDRALIA_G2_PLANET_DISPLAY_ARCHITECTURE_RESTORATION_DEPLOY_MARKER_v1
+deploy_marker=AUDRALIA_G2_PLANET_SITE_ALIGNMENT_TABBED_GEM_FIRST_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer class="footer">
-      Audralia G2 · protected globe · display architecture restored · gems navigate · modes inspect · final visual pass false.
+      Audralia G2 · protected globe · gem-first navigation · tabbed Platform / Engineering lenses · final visual pass false.
     </footer>
   </div>
 
   <script
-    src="/showroom/globe/audralia/planet/index.js?v=AUDRALIA_G2_PLANET_NOT_GEM_VISUAL_FIRST_PARENT_ROUTE_RENDERER_TNT_v1"
+    src="/showroom/globe/audralia/planet/index.js?v=AUDRALIA_G2_PLANET_SITE_ALIGNMENT_TABBED_GEM_FIRST_CONTROLLER_TNT_v1"
     defer
-    data-audralia-planet-not-gem-renderer-js
-    data-contract="AUDRALIA_G2_PLANET_NOT_GEM_VISUAL_FIRST_PARENT_ROUTE_RENDERER_TNT_v1"
-    data-html-contract="AUDRALIA_G2_PLANET_DISPLAY_ARCHITECTURE_RESTORATION_HTML_TNT_v1"
+    data-audralia-planet-controller-js
+    data-contract="AUDRALIA_G2_PLANET_SITE_ALIGNMENT_TABBED_GEM_FIRST_CONTROLLER_TNT_v1"
+    data-html-contract="AUDRALIA_G2_PLANET_SITE_ALIGNMENT_TABBED_GEM_FIRST_HTML_TNT_v1"
     data-active-water="false"
-    data-hydration-loaded="false"
+    data-hydration-active="false"
     data-final-visual-pass="false"
   ></script>
 </body>

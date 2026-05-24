@@ -1,105 +1,155 @@
 // TARGET FILE: /showroom/globe/audralia/planet/index.canvas.js
 // TNT FULL-FILE REPLACEMENT
-// AUDRALIA_G2_PLANET_CLAY_GLOBE_TV_SCREEN_CANVAS_TNT_v1
+// AUDRALIA_G2_PLANET_OPERATION_A_DONOR_CANVAS_FEED_EVOLUTION_TNT_v1
 //
-// Role:
-// - TV screen / canvas surface.
-// - Displays the lawful active feed.
-// - Boots with Clay Globe Baseline Feed.
-// - Uses predestined latitude / longitude disposition from the hidden Australia-template scaffold.
+// Operation A:
+// - Canvas feed evolution only.
+// - Harvests the proven Audralia G1 globe mechanics: sphere projection, 360 drag, 16 × 16 lattice, Fibonacci links, one-canvas discipline.
+// - Strips datum loading, old diagnostic slots, old route reporting, and hydrosphere active-water read.
+// - Evolves the visible body into a dry clay-globe baseline feed with predestined latitude / longitude disposition.
 // - Public identity remains Audralia.
+// - Australia-template remains hidden scaffold only.
 //
-// Does not own:
-// - Shell architecture.
+// Does not touch:
+// - Shell.
+// - UI.
 // - Gems.
 // - Tabs.
 // - Chambers.
-// - Menus.
-// - Return to Orbit.
-// - Final terrain truth.
+// - Billboard/stat card.
 // - Active water.
 // - Final visual pass.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G2_PLANET_CLAY_GLOBE_TV_SCREEN_CANVAS_TNT_v1";
-  const API_NAME = "DGBAudraliaPlanetCanvas";
+  const CONTRACT = "AUDRALIA_G2_PLANET_OPERATION_A_DONOR_CANVAS_FEED_EVOLUTION_TNT_v1";
+  const PREVIOUS_CANVAS_CONTRACT = "AUDRALIA_G2_PLANET_CLAY_GLOBE_TV_SCREEN_CANVAS_TNT_v1";
+  const DONOR_CONTRACT = "AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1";
   const ROUTE = "/showroom/globe/audralia/planet/";
+  const TARGET = "/showroom/globe/audralia/planet/index.canvas.js";
+  const DONOR = "/showroom/globe/audralia/index.js";
+  const API_NAME = "DGBAudraliaPlanetCanvas";
+
+  const RADIAL_NODES = 16;
+  const FIBONACCI_BANDS = 16;
+  const LATTICE_STATES = 256;
   const TAU = Math.PI * 2;
+  const HALF_PI = Math.PI / 2;
+
+  const FIBONACCI_SEQUENCE = Object.freeze([
+    1, 1, 2, 3, 5, 8, 13, 21,
+    34, 55, 89, 144, 233, 377, 610, 987
+  ]);
+
+  const FIBONACCI_OFFSETS = Object.freeze([1, 2, 3, 5, 8, 13]);
 
   const MODES = Object.freeze(["body", "surface", "terrain", "lattice", "receipt"]);
 
   const BASELINE_FEED = Object.freeze({
     id: "CLAY_GLOBE_BASELINE_FEED",
+    role: "TV_SCREEN_CANVAS_FEED",
     publicIdentity: "Audralia",
-    screenRole: "TV_SCREEN_CANVAS",
-    material: "moldable dry clay globe",
-    disposition: "predestined latitude / longitude",
     templateSource: "AUSTRALIA_TEMPLATE_HIDDEN_SCAFFOLD",
+    latLongDisposition: "PREDESTINED",
+    material: "dry moldable clay",
     activeWater: false,
     hydrationActive: false,
-    finalTerrainTruth: false,
+    terrainChildActive: false,
+    surfaceChildActive: false,
+    datumChildActive: false,
     finalVisualPass: false
   });
+
+  const TEMPLATE = Object.freeze({
+    id: "AUSTRALIA_TEMPLATE_HIDDEN_SCAFFOLD",
+    publicIdentity: "AUDRALIA",
+    publicAustraliaIdentity: false,
+    latLongDisposition: "PREDESTINED",
+    orientation: Object.freeze({
+      yaw: -0.54,
+      pitch: -0.18,
+      roll: 0
+    }),
+    anchors: Object.freeze([
+      { id: "NW_MEMORY", lat: -15.0, lon: 121.0, mass: 0.78, pressure: 0.42, basin: 0.28 },
+      { id: "NORTH_MEMORY", lat: -12.5, lon: 133.0, mass: 0.70, pressure: 0.36, basin: 0.22 },
+      { id: "NE_MEMORY", lat: -16.5, lon: 145.0, mass: 0.76, pressure: 0.44, basin: 0.30 },
+      { id: "WEST_MEMORY", lat: -25.5, lon: 116.0, mass: 0.90, pressure: 0.58, basin: 0.46 },
+      { id: "CENTER_MEMORY", lat: -25.0, lon: 134.0, mass: 1.00, pressure: 0.70, basin: 0.54 },
+      { id: "EAST_MEMORY", lat: -27.8, lon: 146.5, mass: 0.86, pressure: 0.62, basin: 0.40 },
+      { id: "SW_MEMORY", lat: -33.5, lon: 117.5, mass: 0.76, pressure: 0.56, basin: 0.38 },
+      { id: "SOUTH_MEMORY", lat: -35.0, lon: 137.0, mass: 0.72, pressure: 0.52, basin: 0.34 },
+      { id: "SE_MEMORY", lat: -37.2, lon: 148.0, mass: 0.74, pressure: 0.58, basin: 0.42 }
+    ])
+  });
+
+  const CLAY_PALETTE_32 = Object.freeze([
+    "rgba(136,103,64,.26)", "rgba(170,130,76,.23)", "rgba(110,91,62,.24)", "rgba(193,153,88,.20)",
+    "rgba(82,101,76,.20)", "rgba(116,94,61,.25)", "rgba(146,117,74,.22)", "rgba(203,171,103,.18)",
+    "rgba(94,72,52,.27)", "rgba(158,119,70,.23)", "rgba(126,135,91,.18)", "rgba(181,143,86,.21)",
+    "rgba(73,82,68,.22)", "rgba(132,101,66,.25)", "rgba(212,181,111,.17)", "rgba(102,85,66,.23)",
+    "rgba(151,129,91,.20)", "rgba(121,83,58,.24)", "rgba(173,152,105,.18)", "rgba(89,109,83,.18)",
+    "rgba(139,92,63,.23)", "rgba(196,162,100,.18)", "rgba(111,118,84,.18)", "rgba(95,74,54,.25)",
+    "rgba(164,132,86,.21)", "rgba(118,96,71,.22)", "rgba(220,190,123,.15)", "rgba(78,88,72,.20)",
+    "rgba(144,112,72,.23)", "rgba(102,79,58,.25)", "rgba(181,138,78,.20)", "rgba(126,146,101,.16)"
+  ]);
 
   const state = {
     stage: null,
     canvas: null,
-    fallback: null,
     ctx: null,
+    resizeObserver: null,
+
+    width: 0,
+    height: 0,
+    dpr: 1,
+    rect: null,
 
     mode: "body",
     feed: BASELINE_FEED,
 
-    dpr: 1,
-    width: 1,
-    height: 1,
+    seats: [],
+    ringLinks: [],
+    spineLinks: [],
+    fibonacciLinks: [],
+    fibonacciReturnLinks: [],
+    dispositionCells: [],
+    contourLines: [],
+    ridgeLines: [],
+    geometryBuilt: false,
 
-    yaw: -0.44,
-    pitch: -0.04,
-    roll: 0,
+    yaw: TEMPLATE.orientation.yaw,
+    pitch: TEMPLATE.orientation.pitch,
+    roll: TEMPLATE.orientation.roll,
     velocityYaw: 0,
     velocityPitch: 0,
-    dragging: false,
+    pointerActive: false,
+    pointerId: null,
     pointerX: 0,
     pointerY: 0,
+    lastTap: 0,
 
-    time: 0,
-    lastFrame: 0,
     raf: 0,
-
-    clayPatches: [],
-    reliefLines: [],
-    latticeNodes: [],
+    lastFrameTime: 0,
+    renderCount: 0,
+    settleFrames: 0,
+    duplicateCanvasRemoved: 0,
 
     initialized: false,
     mounted: false,
+    stopped: false,
     errors: []
   };
 
-  const AUSTRALIA_TEMPLATE_DISPOSITION = Object.freeze({
-    identity: "AUSTRALIA_TEMPLATE_HIDDEN_SCAFFOLD",
-    publicIdentity: "AUDRALIA",
-    publicAustraliaIdentity: false,
-    latLongDisposition: "PREDESTINED",
-    orientation: {
-      primeYaw: -0.44,
-      axialPitch: -0.04,
-      inspectionRoll: 0
-    },
-    anchors: Object.freeze([
-      { id: "AUS_NW_MEMORY", lat: -15.0, lon: 121.0, mass: 0.86, pressure: 0.42 },
-      { id: "AUS_NORTH_MEMORY", lat: -12.5, lon: 133.0, mass: 0.74, pressure: 0.36 },
-      { id: "AUS_NE_MEMORY", lat: -16.5, lon: 145.0, mass: 0.80, pressure: 0.44 },
-      { id: "AUS_WEST_MEMORY", lat: -25.5, lon: 116.0, mass: 0.92, pressure: 0.58 },
-      { id: "AUS_CENTER_MEMORY", lat: -25.0, lon: 134.0, mass: 1.00, pressure: 0.68 },
-      { id: "AUS_EAST_MEMORY", lat: -27.8, lon: 146.5, mass: 0.88, pressure: 0.61 },
-      { id: "AUS_SW_MEMORY", lat: -33.5, lon: 117.5, mass: 0.76, pressure: 0.55 },
-      { id: "AUS_SOUTH_MEMORY", lat: -35.0, lon: 137.0, mass: 0.70, pressure: 0.50 },
-      { id: "AUS_SE_MEMORY", lat: -37.2, lon: 148.0, mass: 0.72, pressure: 0.57 }
-    ])
-  });
+  if (
+    window.__AUDRALIA_G2_PLANET_OPERATION_A_CANVAS_CONTROLLER__ &&
+    typeof window.__AUDRALIA_G2_PLANET_OPERATION_A_CANVAS_CONTROLLER__.stop === "function"
+  ) {
+    try {
+      window.__AUDRALIA_G2_PLANET_OPERATION_A_CANVAS_CONTROLLER__.stop();
+    } catch (_error) {}
+  }
 
   function finite(value, fallback = 0) {
     const number = Number(value);
@@ -110,431 +160,879 @@
     return Math.max(min, Math.min(max, finite(value, min)));
   }
 
-  function hash01(seed) {
-    const x = Math.sin(seed * 127.1 + 311.7) * 43758.5453123;
-    return x - Math.floor(x);
+  function now() {
+    return typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
   }
 
-  function toRadians(degrees) {
+  function toRad(degrees) {
     return (degrees / 180) * Math.PI;
   }
 
-  function $(selector, root = document) {
-    return root.querySelector(selector);
+  function hash01(seed) {
+    const value = Math.sin(seed * 127.1 + 311.7) * 43758.5453123;
+    return value - Math.floor(value);
+  }
+
+  function query(selector, root = document) {
+    try {
+      return root.querySelector(selector);
+    } catch (_error) {
+      return null;
+    }
   }
 
   function recordError(scope, error) {
-    const message = error && error.message ? error.message : String(error || scope);
+    const message = error && error.message ? error.message : String(error || "unknown");
+
     state.errors.push({
       scope,
       message,
       time: new Date().toISOString()
     });
+
     document.documentElement.dataset.audraliaCanvasError = message;
+    publishStatus("error:" + scope);
   }
 
-  function buildPredestinedClayFeed() {
-    const patches = [];
-    const relief = [];
-    const nodes = [];
+  function setDataset(key, value) {
+    const text = String(value);
 
-    AUSTRALIA_TEMPLATE_DISPOSITION.anchors.forEach((anchor, index) => {
-      const baseLat = toRadians(anchor.lat);
-      const baseLon = toRadians(anchor.lon - 134.5);
+    try {
+      document.documentElement.dataset[key] = text;
+      if (document.body) document.body.dataset[key] = text;
+    } catch (_error) {}
+  }
 
-      for (let i = 0; i < 7; i += 1) {
-        const spreadLat = (hash01(index * 17 + i + 1) - 0.5) * 0.26;
-        const spreadLon = (hash01(index * 23 + i + 5) - 0.5) * 0.42;
-        const tone = hash01(index * 31 + i + 9);
-        const scale = 0.048 + hash01(index * 43 + i + 13) * 0.104;
+  function makeSeat(band, radial) {
+    const v = (band + 0.5) / FIBONACCI_BANDS;
+    const latitude = Math.asin(1 - 2 * v);
+    const longitude = (radial / RADIAL_NODES) * TAU - Math.PI;
+    const clat = Math.cos(latitude);
+    const fibonacci = FIBONACCI_SEQUENCE[band];
 
-        patches.push({
-          lat: clamp(baseLat + spreadLat, -1.24, 0.44),
-          lon: baseLon + spreadLon,
-          size: scale * anchor.mass,
-          pressure: anchor.pressure,
-          tone,
-          family: anchor.id
-        });
+    return Object.freeze({
+      seatIndex: band * RADIAL_NODES + radial,
+      band,
+      radial,
+      fibonacci,
+      fibonacciPhase: fibonacci / FIBONACCI_SEQUENCE[FIBONACCI_SEQUENCE.length - 1],
+      latitude,
+      longitude,
+      x: clat * Math.cos(longitude),
+      y: Math.sin(latitude),
+      z: clat * Math.sin(longitude),
+      major: radial % 4 === 0 || band % 4 === 0,
+      secondary: radial % 2 === 0 || band % 2 === 0,
+      colorIndex: (band * 5 + radial * 3) % 32
+    });
+  }
+
+  function buildGeometry() {
+    const rings = [];
+
+    for (let band = 0; band < FIBONACCI_BANDS; band += 1) {
+      const ring = [];
+
+      for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
+        ring.push(makeSeat(band, radial));
       }
 
-      relief.push({
-        lat: baseLat,
-        lon: baseLon,
-        length: 0.32 + anchor.mass * 0.18,
-        bend: (hash01(index + 99) - 0.5) * 0.32,
-        pressure: anchor.pressure,
-        family: anchor.id
+      rings.push(Object.freeze(ring));
+    }
+
+    function seat(bandIndex, radialIndex) {
+      return rings[bandIndex][((radialIndex % RADIAL_NODES) + RADIAL_NODES) % RADIAL_NODES];
+    }
+
+    function link(a, b, family, major, secondary) {
+      return Object.freeze({
+        a,
+        b,
+        family,
+        major: Boolean(major),
+        secondary: Boolean(secondary)
+      });
+    }
+
+    const ringLinks = [];
+    const spineLinks = [];
+    const fibonacciLinks = [];
+    const fibonacciReturnLinks = [];
+
+    for (let band = 0; band < FIBONACCI_BANDS; band += 1) {
+      for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
+        ringLinks.push(link(
+          seat(band, radial),
+          seat(band, radial + 1),
+          "ring",
+          band % 4 === 0 || radial % 4 === 0,
+          band % 2 === 0 || radial % 2 === 0
+        ));
+      }
+    }
+
+    for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
+      for (let band = 0; band < FIBONACCI_BANDS - 1; band += 1) {
+        spineLinks.push(link(
+          seat(band, radial),
+          seat(band + 1, radial),
+          "spine",
+          radial % 4 === 0,
+          radial % 2 === 0
+        ));
+      }
+    }
+
+    for (let band = 0; band < FIBONACCI_BANDS - 1; band += 1) {
+      const offset = FIBONACCI_OFFSETS[band % FIBONACCI_OFFSETS.length];
+
+      for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
+        const priority = radial % 4 === 0 || band % 4 === 0;
+
+        fibonacciLinks.push(link(
+          seat(band, radial),
+          seat(band + 1, radial + offset),
+          "fibonacci-forward",
+          priority,
+          radial % 2 === 0 || band % 2 === 0
+        ));
+
+        if (band % 2 === 0) {
+          fibonacciReturnLinks.push(link(
+            seat(band, radial),
+            seat(band + 1, radial - offset),
+            "fibonacci-return",
+            priority,
+            radial % 2 === 0 || band % 2 === 0
+          ));
+        }
+      }
+    }
+
+    state.seats = rings.flat();
+    state.ringLinks = ringLinks;
+    state.spineLinks = spineLinks;
+    state.fibonacciLinks = fibonacciLinks;
+    state.fibonacciReturnLinks = fibonacciReturnLinks;
+    state.geometryBuilt = state.seats.length === LATTICE_STATES;
+
+    buildDisposition();
+  }
+
+  function centeredTemplateLon(lon) {
+    return toRad(lon - 134.5);
+  }
+
+  function angularDistance(latA, lonA, latB, lonB) {
+    const s1 = Math.sin(latA);
+    const s2 = Math.sin(latB);
+    const c1 = Math.cos(latA);
+    const c2 = Math.cos(latB);
+    const dLon = lonA - lonB;
+    return Math.acos(clamp(s1 * s2 + c1 * c2 * Math.cos(dLon), -1, 1));
+  }
+
+  function buildDisposition() {
+    const anchors = TEMPLATE.anchors.map((anchor) => ({
+      ...anchor,
+      latRad: toRad(anchor.lat),
+      lonRad: centeredTemplateLon(anchor.lon)
+    }));
+
+    const dispositionCells = state.seats.map((seat) => {
+      let mass = 0;
+      let pressure = 0;
+      let basin = 0;
+      let dominant = "BACKGROUND";
+
+      for (const anchor of anchors) {
+        const d = angularDistance(seat.latitude, seat.longitude, anchor.latRad, anchor.lonRad);
+        const spread = 0.36 + anchor.mass * 0.14;
+        const weight = Math.exp(-(d * d) / (spread * spread));
+
+        mass += weight * anchor.mass;
+        pressure += weight * anchor.pressure;
+        basin += weight * anchor.basin;
+
+        if (weight * anchor.mass > mass * 0.32) {
+          dominant = anchor.id;
+        }
+      }
+
+      const latitudePressure = 1 - Math.abs(Math.sin(seat.latitude)) * 0.22;
+      const fibonacciPressure = 0.78 + seat.fibonacciPhase * 0.38;
+      const noise = hash01(seat.seatIndex + 17) * 0.16;
+
+      const intensity = clamp((mass * latitudePressure * fibonacciPressure) + noise, 0, 1.35);
+      const normalized = clamp(intensity / 1.08, 0, 1);
+
+      return Object.freeze({
+        seat,
+        dominant,
+        mass: normalized,
+        pressure: clamp(pressure, 0, 1.2),
+        basin: clamp(basin, 0, 1.1),
+        colorIndex: (seat.colorIndex + Math.floor(normalized * 11)) % 32,
+        elevationHint: clamp((normalized * 0.64 + pressure * 0.22 - basin * 0.10), 0, 1),
+        shelfHint: clamp((basin * 0.54 + (1 - normalized) * 0.18), 0, 1)
       });
     });
 
-    for (let row = 0; row < 16; row += 1) {
-      for (let col = 0; col < 16; col += 1) {
-        const lat = ((row + 0.5) / 16 - 0.5) * Math.PI * 0.92;
-        const lon = ((col + 0.5) / 16) * TAU - Math.PI;
-        nodes.push({
-          row,
-          col,
-          lat,
-          lon,
-          state: row * 16 + col,
-          colorIndex: (row * 5 + col * 3) % 32
-        });
-      }
+    const contourLines = [];
+    const ridgeLines = [];
+
+    for (let i = 0; i < anchors.length; i += 1) {
+      const current = anchors[i];
+      const next = anchors[(i + 1) % anchors.length];
+
+      contourLines.push(Object.freeze({
+        aLat: current.latRad,
+        aLon: current.lonRad,
+        bLat: next.latRad,
+        bLon: next.lonRad,
+        pressure: (current.pressure + next.pressure) / 2,
+        basin: (current.basin + next.basin) / 2,
+        family: "template-contour"
+      }));
     }
 
-    state.clayPatches = patches;
-    state.reliefLines = relief;
-    state.latticeNodes = nodes;
-  }
+    const ridgePairs = [
+      [0, 4],
+      [1, 4],
+      [2, 4],
+      [3, 4],
+      [4, 5],
+      [4, 6],
+      [4, 7],
+      [4, 8],
+      [6, 8],
+      [3, 6],
+      [5, 8],
+      [0, 2]
+    ];
 
-  function ensureMounts() {
-    state.stage = $("[data-audralia-planet-stage]");
-    state.canvas = $("[data-audralia-planet-canvas]");
-    state.fallback = $("[data-audralia-planet-fallback]");
+    for (let i = 0; i < ridgePairs.length; i += 1) {
+      const a = anchors[ridgePairs[i][0]];
+      const b = anchors[ridgePairs[i][1]];
 
-    if (!state.stage || !state.canvas) {
-      state.mounted = false;
-      return false;
+      ridgeLines.push(Object.freeze({
+        aLat: a.latRad,
+        aLon: a.lonRad,
+        bLat: b.latRad,
+        bLon: b.lonRad,
+        pressure: (a.pressure + b.pressure) / 2,
+        bend: (hash01(i + 91) - 0.5) * 0.26,
+        family: "pressure-ridge"
+      }));
     }
 
-    state.ctx = state.canvas.getContext("2d", { alpha: true });
-    state.mounted = Boolean(state.ctx);
-
-    if (state.mounted) {
-      state.stage.dataset.canvasRole = "tv-screen";
-      state.stage.dataset.feed = "clay-globe";
-      state.stage.dataset.rendererState = "active";
-      state.canvas.dataset.audraliaCanvasContract = CONTRACT;
-      state.canvas.dataset.publicIdentity = "Audralia";
-      state.canvas.dataset.templateSource = "Australia-template hidden scaffold";
-      state.canvas.dataset.activeWater = "false";
-      state.canvas.dataset.finalVisualPass = "false";
-    }
-
-    return state.mounted;
+    state.dispositionCells = dispositionCells;
+    state.contourLines = contourLines;
+    state.ridgeLines = ridgeLines;
   }
 
-  function resizeCanvas() {
-    if (!state.stage || !state.canvas || !state.ctx) return;
+  function rotatePoint(point) {
+    let x = point.x;
+    let y = point.y;
+    let z = point.z;
 
-    const rect = state.stage.getBoundingClientRect();
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
-    const width = Math.max(320, Math.floor((rect.width || 640) * dpr));
-    const height = Math.max(420, Math.floor((rect.height || 620) * dpr));
-
-    if (state.canvas.width !== width) state.canvas.width = width;
-    if (state.canvas.height !== height) state.canvas.height = height;
-
-    state.dpr = dpr;
-    state.width = width;
-    state.height = height;
-  }
-
-  function project(lat, lon, radius, cx, cy) {
-    const adjustedLon = lon + state.yaw;
-    const cosLat = Math.cos(lat);
-
-    let x = Math.sin(adjustedLon) * cosLat;
-    let y = Math.sin(lat);
-    let z = Math.cos(adjustedLon) * cosLat;
+    const cy = Math.cos(state.yaw);
+    const sy = Math.sin(state.yaw);
+    const x1 = x * cy + z * sy;
+    const z1 = -x * sy + z * cy;
+    x = x1;
+    z = z1;
 
     const cp = Math.cos(state.pitch);
     const sp = Math.sin(state.pitch);
-    const yy = y * cp - z * sp;
-    const zz = y * sp + z * cp;
-    y = yy;
-    z = zz;
+    const y1 = y * cp - z * sp;
+    const z2 = y * sp + z * cp;
+    y = y1;
+    z = z2;
 
+    const cr = Math.cos(state.roll);
+    const sr = Math.sin(state.roll);
+    const x2 = x * cr - y * sr;
+    const y2 = x * sr + y * cr;
+
+    return { x: x2, y: y2, z };
+  }
+
+  function pointFromLatLon(latitude, longitude) {
+    const clat = Math.cos(latitude);
     return {
-      x: cx + x * radius,
-      y: cy - y * radius * 0.98,
-      z,
-      visible: z > -0.16,
-      scale: clamp(0.58 + z * 0.45, 0.20, 1.06)
+      x: clat * Math.cos(longitude),
+      y: Math.sin(latitude),
+      z: clat * Math.sin(longitude)
     };
   }
 
-  function drawScreenFrame(ctx, cx, cy, r) {
+  function metrics() {
+    const width = state.width || 640;
+    const height = state.height || 720;
+    const cssWidth = width / Math.max(1, state.dpr);
+    const minSide = Math.min(width, height);
+
+    return {
+      centerX: width / 2,
+      centerY: height * (cssWidth < 680 ? 0.47 : 0.45),
+      radius: minSide * (cssWidth < 680 ? 0.345 : 0.372),
+      cameraDistance: 3.9
+    };
+  }
+
+  function projectPoint(point) {
+    const m = metrics();
+    const rotated = rotatePoint(point);
+    const perspective = m.cameraDistance / Math.max(0.72, m.cameraDistance - rotated.z);
+
+    return {
+      x: m.centerX + rotated.x * m.radius * perspective,
+      y: m.centerY - rotated.y * m.radius * perspective,
+      z: rotated.z,
+      perspective,
+      frontFacing: rotated.z >= -0.05
+    };
+  }
+
+  function clearCanvas() {
+    if (!state.ctx) return;
+    state.ctx.clearRect(0, 0, state.width, state.height);
+  }
+
+  function clipSphere() {
+    const ctx = state.ctx;
+    const m = metrics();
+
+    ctx.beginPath();
+    ctx.arc(m.centerX, m.centerY, m.radius * 1.003, 0, TAU);
+    ctx.clip();
+  }
+
+  function drawCarrier() {
+    const ctx = state.ctx;
+    const m = metrics();
+    const cx = m.centerX;
+    const cy = m.centerY;
+    const r = m.radius;
+
     ctx.save();
 
-    ctx.strokeStyle = "rgba(141,216,255,.13)";
-    ctx.lineWidth = Math.max(1, state.dpr);
-    ctx.setLineDash([5 * state.dpr, 8 * state.dpr]);
+    const clay = ctx.createRadialGradient(cx - r * 0.30, cy - r * 0.35, r * 0.05, cx, cy, r * 1.18);
+    clay.addColorStop(0.00, "rgba(236,213,162,.98)");
+    clay.addColorStop(0.16, "rgba(184,145,87,.96)");
+    clay.addColorStop(0.38, "rgba(124,95,63,.98)");
+    clay.addColorStop(0.62, "rgba(82,73,56,.98)");
+    clay.addColorStop(0.82, "rgba(48,55,48,.99)");
+    clay.addColorStop(1.00, "rgba(16,18,18,1)");
+
     ctx.beginPath();
-    ctx.ellipse(cx, cy, r * 1.16, r * 1.02, 0.18, 0, TAU);
+    ctx.arc(cx, cy, r, 0, TAU);
+    ctx.fillStyle = clay;
+    ctx.fill();
+
+    const pressure = ctx.createRadialGradient(cx + r * 0.25, cy + r * 0.28, r * 0.08, cx, cy, r * 1.12);
+    pressure.addColorStop(0.00, "rgba(0,0,0,0)");
+    pressure.addColorStop(0.48, "rgba(0,0,0,0.08)");
+    pressure.addColorStop(0.78, "rgba(0,0,0,0.32)");
+    pressure.addColorStop(1.00, "rgba(0,0,0,0.70)");
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, TAU);
+    ctx.fillStyle = pressure;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 1.003, 0, TAU);
+    ctx.strokeStyle = "rgba(221,207,161,.28)";
+    ctx.lineWidth = Math.max(0.85, state.dpr * 0.82);
     ctx.stroke();
 
-    ctx.setLineDash([]);
-    ctx.strokeStyle = "rgba(244,207,131,.10)";
+    const screenGlow = ctx.createRadialGradient(cx, cy, r * 0.86, cx, cy, r * 1.22);
+    screenGlow.addColorStop(0.00, "rgba(141,216,255,0)");
+    screenGlow.addColorStop(0.74, "rgba(141,216,255,0.06)");
+    screenGlow.addColorStop(0.93, "rgba(141,216,255,0.18)");
+    screenGlow.addColorStop(1.00, "rgba(141,216,255,0)");
+
     ctx.beginPath();
-    ctx.ellipse(cx, cy, r * 0.96, r * 1.12, -0.14, 0, TAU);
-    ctx.stroke();
+    ctx.arc(cx, cy, r * 1.16, 0, TAU);
+    ctx.fillStyle = screenGlow;
+    ctx.fill();
 
     ctx.restore();
   }
 
-  function drawClaySphere(ctx, cx, cy, r) {
-    const light = ctx.createRadialGradient(cx - r * 0.36, cy - r * 0.40, r * 0.08, cx, cy, r * 1.12);
-    light.addColorStop(0.00, "rgba(238,218,166,0.98)");
-    light.addColorStop(0.22, "rgba(166,141,92,0.96)");
-    light.addColorStop(0.48, "rgba(103,88,64,0.96)");
-    light.addColorStop(0.72, "rgba(78,64,49,0.97)");
-    light.addColorStop(1.00, "rgba(16,18,19,0.99)");
+  function drawClayGrain() {
+    const ctx = state.ctx;
+    const m = metrics();
+    const cx = m.centerX;
+    const cy = m.centerY;
+    const r = m.radius;
 
     ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, TAU);
-    ctx.clip();
+    clipSphere();
 
-    ctx.fillStyle = light;
-    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+    ctx.globalAlpha = 0.10;
 
-    ctx.globalAlpha = 0.13;
-    for (let i = 0; i < 28; i += 1) {
-      const y = cy - r + (i / 27) * r * 2;
-      ctx.strokeStyle = i % 2 === 0 ? "rgba(255,232,163,.26)" : "rgba(55,45,35,.34)";
-      ctx.lineWidth = Math.max(0.8, state.dpr);
+    for (let i = 0; i < 34; i += 1) {
+      const y = cy - r + (i / 33) * r * 2;
+      const wave = Math.sin(i * 0.7 + state.yaw * 1.2) * r * 0.018;
+
       ctx.beginPath();
-      ctx.moveTo(cx - r, y);
+      ctx.moveTo(cx - r * 1.05, y + wave);
       ctx.bezierCurveTo(
-        cx - r * 0.38,
-        y + Math.sin(i * 0.7 + state.time) * r * 0.035,
-        cx + r * 0.36,
-        y - Math.cos(i * 0.5 + state.time) * r * 0.035,
-        cx + r,
-        y
+        cx - r * 0.35,
+        y + Math.sin(i * 0.41 + state.pitch) * r * 0.034,
+        cx + r * 0.38,
+        y - Math.cos(i * 0.51 + state.yaw) * r * 0.030,
+        cx + r * 1.05,
+        y - wave
       );
+
+      ctx.strokeStyle = i % 3 === 0 ? "rgba(255,232,163,.34)" : "rgba(41,34,28,.42)";
+      ctx.lineWidth = Math.max(0.55, state.dpr * 0.56);
       ctx.stroke();
     }
 
     ctx.restore();
   }
 
-  function drawClayDisposition(ctx, cx, cy, r) {
+  function cellSizeFor(cell, p, base) {
+    const modeBoost =
+      state.mode === "terrain" ? 1.18 :
+      state.mode === "surface" ? 1.08 :
+      state.mode === "receipt" ? 0.94 :
+      1;
+
+    const width = base * (0.62 + cell.mass * 0.86 + cell.pressure * 0.22) * p.perspective * modeBoost;
+    const height = base * (0.38 + cell.basin * 0.54 + cell.mass * 0.22) * p.perspective * modeBoost;
+
+    return { width, height };
+  }
+
+  function drawDispositionCells() {
+    const ctx = state.ctx;
+    const m = metrics();
+    const r = m.radius;
+    const base = r * 0.068;
+
+    const cells = state.dispositionCells
+      .map((cell) => ({
+        cell,
+        point: projectPoint(cell.seat)
+      }))
+      .filter((item) => item.point.frontFacing && item.cell.mass > 0.13)
+      .sort((a, b) => a.point.z - b.point.z);
+
     ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, TAU);
-    ctx.clip();
+    clipSphere();
 
-    for (const patch of state.clayPatches) {
-      const p = project(patch.lat, patch.lon, r, cx, cy);
-      if (!p.visible) continue;
+    for (const item of cells) {
+      const cell = item.cell;
+      const p = item.point;
+      const size = cellSizeFor(cell, p, base);
+      const alpha =
+        state.mode === "body" ? 0.54 :
+        state.mode === "surface" ? 0.68 :
+        state.mode === "terrain" ? 0.72 :
+        0.50;
 
-      const width = patch.size * r * (1.55 + patch.pressure * 0.58) * p.scale;
-      const height = patch.size * r * (0.82 + patch.pressure * 0.28) * p.scale;
+      ctx.save();
+      ctx.globalAlpha = clamp((0.22 + cell.mass * 0.56) * alpha, 0.08, 0.72);
+      ctx.fillStyle = CLAY_PALETTE_32[cell.colorIndex];
 
-      const clayTone =
-        patch.tone < 0.28 ? "rgba(92,73,50,.30)" :
-        patch.tone < 0.58 ? "rgba(160,124,76,.25)" :
-        patch.tone < 0.82 ? "rgba(88,98,74,.20)" :
-        "rgba(208,168,94,.18)";
-
-      ctx.fillStyle = clayTone;
       ctx.beginPath();
       ctx.ellipse(
         p.x,
         p.y,
-        width,
-        height,
-        patch.lon + state.yaw + patch.pressure,
+        size.width,
+        size.height,
+        cell.seat.longitude + state.yaw + cell.pressure * 0.42,
         0,
         TAU
       );
       ctx.fill();
-    }
 
-    if (state.mode === "surface" || state.mode === "terrain" || state.mode === "receipt") {
-      ctx.globalAlpha = state.mode === "surface" ? 0.16 : 0.24;
-      ctx.strokeStyle = "rgba(255,232,163,.48)";
-      ctx.lineWidth = Math.max(1, 1.05 * state.dpr);
-
-      for (const line of state.reliefLines) {
-        const a = project(line.lat, line.lon, r, cx, cy);
-        const b = project(line.lat + line.bend, line.lon + line.length, r, cx, cy);
-        if (!a.visible || !b.visible) continue;
-
+      if (cell.mass > 0.48 && (state.mode === "surface" || state.mode === "terrain")) {
+        ctx.globalAlpha = clamp(0.10 + cell.elevationHint * 0.18, 0.08, 0.30);
+        ctx.strokeStyle = "rgba(255,232,163,.46)";
+        ctx.lineWidth = Math.max(0.5, state.dpr * 0.55);
         ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.quadraticCurveTo(
-          (a.x + b.x) / 2,
-          (a.y + b.y) / 2 - r * 0.06 * line.pressure,
-          b.x,
-          b.y
+        ctx.ellipse(
+          p.x,
+          p.y,
+          size.width * 0.72,
+          size.height * 0.55,
+          cell.seat.longitude + state.yaw + 0.5,
+          0,
+          TAU
         );
         ctx.stroke();
       }
-    }
 
-    if (state.mode === "terrain") {
-      ctx.globalAlpha = 0.20;
-      ctx.strokeStyle = "rgba(66,41,28,.92)";
-      ctx.lineWidth = Math.max(1, 1.4 * state.dpr);
-
-      for (let i = 0; i < state.reliefLines.length; i += 1) {
-        const line = state.reliefLines[i];
-        const a = project(line.lat - 0.04, line.lon - 0.08, r, cx, cy);
-        const b = project(line.lat + 0.12, line.lon + line.length * 0.72, r, cx, cy);
-        if (!a.visible || !b.visible) continue;
-
-        ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
-        ctx.stroke();
-      }
+      ctx.restore();
     }
 
     ctx.restore();
   }
 
-  function drawLatticeFeed(ctx, cx, cy, r) {
+  function drawTemplateContourLines() {
+    if (state.mode === "body") return;
+
+    const ctx = state.ctx;
+    const m = metrics();
+    const r = m.radius;
+
+    ctx.save();
+    clipSphere();
+
+    ctx.globalAlpha =
+      state.mode === "surface" ? 0.22 :
+      state.mode === "terrain" ? 0.34 :
+      state.mode === "lattice" ? 0.18 :
+      0.20;
+
+    for (const line of state.contourLines) {
+      const a = projectPoint(pointFromLatLon(line.aLat, line.aLon));
+      const b = projectPoint(pointFromLatLon(line.bLat, line.bLon));
+
+      if (!a.frontFacing && !b.frontFacing) continue;
+
+      const midLat = (line.aLat + line.bLat) / 2 + (line.pressure - 0.5) * 0.12;
+      const midLon = (line.aLon + line.bLon) / 2 + (line.basin - 0.35) * 0.16;
+      const mid = projectPoint(pointFromLatLon(midLat, midLon));
+
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.quadraticCurveTo(mid.x, mid.y, b.x, b.y);
+      ctx.strokeStyle = "rgba(255,232,163,.58)";
+      ctx.lineWidth = Math.max(0.72, state.dpr * 0.80);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+
+    if (state.mode !== "terrain" && state.mode !== "receipt") return;
+
+    ctx.save();
+    clipSphere();
+    ctx.globalAlpha = state.mode === "terrain" ? 0.30 : 0.18;
+
+    for (const ridge of state.ridgeLines) {
+      const a = projectPoint(pointFromLatLon(ridge.aLat, ridge.aLon));
+      const b = projectPoint(pointFromLatLon(ridge.bLat, ridge.bLon));
+
+      if (!a.frontFacing && !b.frontFacing) continue;
+
+      const mid = projectPoint(pointFromLatLon(
+        (ridge.aLat + ridge.bLat) / 2 + ridge.bend,
+        (ridge.aLon + ridge.bLon) / 2
+      ));
+
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.quadraticCurveTo(mid.x, mid.y, b.x, b.y);
+      ctx.strokeStyle = "rgba(66,42,30,.82)";
+      ctx.lineWidth = Math.max(0.85, state.dpr * (0.84 + ridge.pressure * 0.75));
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
+  function drawLatLongInspectionGrid() {
+    if (state.mode !== "lattice" && state.mode !== "receipt") return;
+
+    const ctx = state.ctx;
+
+    function strokePath(points, stroke, width, alpha) {
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.beginPath();
+
+      let started = false;
+
+      for (let i = 0; i < points.length; i += 1) {
+        const p = projectPoint(points[i]);
+
+        if (!p.frontFacing && i !== 0) continue;
+
+        if (!started) {
+          ctx.moveTo(p.x, p.y);
+          started = true;
+        } else {
+          ctx.lineTo(p.x, p.y);
+        }
+      }
+
+      ctx.strokeStyle = stroke;
+      ctx.lineWidth = width;
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    ctx.save();
+    clipSphere();
+
+    for (let row = 1; row < 16; row += 1) {
+      const lat = -HALF_PI + (row / 16) * Math.PI;
+      const points = [];
+
+      for (let i = 0; i <= 96; i += 1) {
+        const lon = -Math.PI + (i / 96) * TAU;
+        points.push(pointFromLatLon(lat, lon));
+      }
+
+      strokePath(
+        points,
+        row % 4 === 0 ? "rgba(244,207,131,.38)" : "rgba(141,216,255,.22)",
+        row % 4 === 0 ? Math.max(0.75, state.dpr * 0.72) : Math.max(0.45, state.dpr * 0.48),
+        state.mode === "receipt" ? 0.34 : 0.52
+      );
+    }
+
+    for (let col = 0; col < 16; col += 1) {
+      const lon = -Math.PI + (col / 16) * TAU;
+      const points = [];
+
+      for (let i = 0; i <= 96; i += 1) {
+        const lat = -HALF_PI + (i / 96) * Math.PI;
+        points.push(pointFromLatLon(lat, lon));
+      }
+
+      strokePath(
+        points,
+        col % 4 === 0 ? "rgba(244,207,131,.32)" : "rgba(141,216,255,.18)",
+        col % 4 === 0 ? Math.max(0.70, state.dpr * 0.68) : Math.max(0.42, state.dpr * 0.44),
+        state.mode === "receipt" ? 0.28 : 0.44
+      );
+    }
+
+    ctx.restore();
+  }
+
+  function linkColor(link, a, b) {
+    const front = a.frontFacing || b.frontFacing;
+    const z = (a.z + b.z) / 2;
+
+    if (link.family === "fibonacci-forward") {
+      return front
+        ? "rgba(244,207,131," + clamp(0.38 + z * 0.12, 0.22, 0.68).toFixed(3) + ")"
+        : "rgba(244,207,131,0.08)";
+    }
+
+    if (link.family === "fibonacci-return") {
+      return front
+        ? "rgba(184,238,255," + clamp(0.15 + z * 0.08, 0.08, 0.30).toFixed(3) + ")"
+        : "rgba(184,238,255,0.045)";
+    }
+
+    if (link.major) {
+      return front
+        ? "rgba(244,207,131," + clamp(0.36 + z * 0.10, 0.20, 0.60).toFixed(3) + ")"
+        : "rgba(244,207,131,0.07)";
+    }
+
+    return front
+      ? "rgba(112,199,255," + clamp(0.18 + z * 0.08, 0.09, 0.34).toFixed(3) + ")"
+      : "rgba(112,199,255,0.040)";
+  }
+
+  function drawLinks(links, reduced) {
+    const ctx = state.ctx;
+
+    for (const link of links) {
+      if (reduced && !link.major && link.family.includes("fibonacci")) continue;
+
+      const a = projectPoint(link.a);
+      const b = projectPoint(link.b);
+
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.strokeStyle = linkColor(link, a, b);
+      ctx.lineWidth = link.major ? Math.max(0.72, state.dpr * 0.72) : Math.max(0.40, state.dpr * 0.42);
+      ctx.stroke();
+    }
+  }
+
+  function drawSeats(reduced) {
+    const ctx = state.ctx;
+
+    for (const seat of state.seats) {
+      if (reduced && !seat.major) continue;
+
+      const p = projectPoint(seat);
+      const alpha = p.frontFacing ? (seat.major ? 0.80 : 0.52) : (seat.major ? 0.15 : 0.06);
+      const radius = seat.major ? 2.2 : seat.secondary ? 1.45 : 1.08;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, Math.max(0.88, radius * state.dpr * p.perspective), 0, TAU);
+      ctx.fillStyle = seat.major
+        ? "rgba(244,207,131," + alpha.toFixed(3) + ")"
+        : "rgba(141,216,255," + alpha.toFixed(3) + ")";
+      ctx.fill();
+    }
+  }
+
+  function drawDiagnosticLattice(reduced) {
+    const ctx = state.ctx;
+
     if (state.mode !== "lattice" && state.mode !== "receipt") return;
 
     ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, TAU);
-    ctx.clip();
+    clipSphere();
 
-    const projected = state.latticeNodes
-      .map((node) => ({ node, point: project(node.lat, node.lon, r, cx, cy) }))
-      .filter((item) => item.point.visible);
+    drawLinks(state.ringLinks, reduced);
+    drawLinks(state.spineLinks, reduced);
 
-    ctx.globalAlpha = state.mode === "receipt" ? 0.24 : 0.32;
-    ctx.lineWidth = Math.max(0.65, 0.75 * state.dpr);
-
-    for (const item of projected) {
-      const right = projected.find((next) => next.node.row === item.node.row && next.node.col === item.node.col + 1);
-      const down = projected.find((next) => next.node.col === item.node.col && next.node.row === item.node.row + 1);
-
-      if (right) {
-        ctx.strokeStyle = "rgba(141,216,255,.34)";
-        ctx.beginPath();
-        ctx.moveTo(item.point.x, item.point.y);
-        ctx.lineTo(right.point.x, right.point.y);
-        ctx.stroke();
-      }
-
-      if (down) {
-        ctx.strokeStyle = "rgba(244,207,131,.23)";
-        ctx.beginPath();
-        ctx.moveTo(item.point.x, item.point.y);
-        ctx.lineTo(down.point.x, down.point.y);
-        ctx.stroke();
-      }
+    if (!reduced || state.mode === "receipt") {
+      drawLinks(state.fibonacciReturnLinks, false);
     }
 
-    for (const item of projected) {
-      const color =
-        item.node.colorIndex % 4 === 0 ? "rgba(244,207,131,.82)" :
-        item.node.colorIndex % 4 === 1 ? "rgba(141,216,255,.72)" :
-        item.node.colorIndex % 4 === 2 ? "rgba(167,243,198,.70)" :
-        "rgba(173,140,255,.68)";
-
-      ctx.fillStyle = color;
-      ctx.beginPath();
-      ctx.arc(
-        item.point.x,
-        item.point.y,
-        Math.max(1.15, 2.2 * state.dpr * item.point.scale),
-        0,
-        TAU
-      );
-      ctx.fill();
-    }
-
-    if (state.mode === "receipt") {
-      ctx.globalAlpha = 0.40;
-      ctx.strokeStyle = "rgba(244,207,131,.66)";
-      ctx.lineWidth = Math.max(1, 1.45 * state.dpr);
-
-      for (let i = 0; i < 8; i += 1) {
-        const a = projected[(i * 17) % projected.length];
-        const b = projected[(i * 31 + 11) % projected.length];
-        if (!a || !b) continue;
-
-        ctx.beginPath();
-        ctx.moveTo(a.point.x, a.point.y);
-        ctx.lineTo(b.point.x, b.point.y);
-        ctx.stroke();
-      }
-    }
+    drawLinks(state.fibonacciLinks, reduced);
+    drawSeats(reduced);
 
     ctx.restore();
   }
 
-  function drawScreenGlass(ctx, cx, cy, r) {
-    ctx.save();
-
-    const shade = ctx.createRadialGradient(cx - r * 0.35, cy - r * 0.42, r * 0.12, cx + r * 0.34, cy + r * 0.28, r * 1.18);
-    shade.addColorStop(0.00, "rgba(255,255,255,.20)");
-    shade.addColorStop(0.34, "rgba(255,255,255,0)");
-    shade.addColorStop(0.76, "rgba(0,0,0,.34)");
-    shade.addColorStop(1.00, "rgba(0,0,0,.70)");
-
-    ctx.fillStyle = shade;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, TAU);
-    ctx.fill();
-
-    ctx.strokeStyle = "rgba(190,232,255,.28)";
-    ctx.lineWidth = Math.max(1, 1.25 * state.dpr);
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, TAU);
-    ctx.stroke();
-
-    if (state.mode === "receipt") {
-      ctx.fillStyle = "rgba(244,207,131,.10)";
-      ctx.beginPath();
-      ctx.arc(cx, cy, r * 1.015, 0, TAU);
-      ctx.fill();
-    }
-
-    ctx.restore();
-  }
-
-  function render(timestamp = 0) {
-    if (!state.ctx || !state.canvas || !state.stage) return;
-
-    const dt = state.lastFrame ? clamp((timestamp - state.lastFrame) / 1000, 0, 0.045) : 0;
-    state.lastFrame = timestamp;
-    state.time += dt;
-
-    if (!state.dragging) {
-      state.yaw += state.velocityYaw * dt * 60;
-      state.pitch += state.velocityPitch * dt * 60;
-
-      state.velocityYaw *= Math.pow(0.935, dt * 60);
-      state.velocityPitch *= Math.pow(0.90, dt * 60);
-
-      if (Math.abs(state.velocityYaw) < 0.00012) {
-        state.velocityYaw = 0;
-        state.yaw += Math.sin(state.time * 0.18) * dt * 0.018;
-      }
-
-      if (Math.abs(state.velocityPitch) < 0.00012) state.velocityPitch = 0;
-    }
-
-    state.pitch = clamp(state.pitch, -0.28, 0.28);
-    state.roll = Math.sin(state.time * 0.12) * 0.008;
-
-    resizeCanvas();
+  function drawReceiptOverlay() {
+    if (state.mode !== "receipt") return;
 
     const ctx = state.ctx;
-    const w = state.width;
-    const h = state.height;
-    const cx = w / 2;
-    const cy = h * 0.48;
-    const radius = Math.min(w * 0.34, h * 0.355);
+    const m = metrics();
+    const cx = m.centerX;
+    const cy = m.centerY;
+    const r = m.radius;
 
-    ctx.clearRect(0, 0, w, h);
+    ctx.save();
 
-    drawScreenFrame(ctx, cx, cy, radius);
-    drawClaySphere(ctx, cx, cy, radius);
-    drawClayDisposition(ctx, cx, cy, radius);
-    drawLatticeFeed(ctx, cx, cy, radius);
-    drawScreenGlass(ctx, cx, cy, radius);
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 1.018, 0, TAU);
+    ctx.strokeStyle = "rgba(244,207,131,.46)";
+    ctx.lineWidth = Math.max(1, state.dpr * 1.15);
+    ctx.setLineDash([6 * state.dpr, 8 * state.dpr]);
+    ctx.stroke();
+    ctx.setLineDash([]);
 
-    state.raf = window.requestAnimationFrame(render);
+    ctx.globalAlpha = 0.18;
+    ctx.fillStyle = "rgba(244,207,131,.30)";
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 1.012, 0, TAU);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  function drawScreenGlass() {
+    const ctx = state.ctx;
+    const m = metrics();
+    const cx = m.centerX;
+    const cy = m.centerY;
+    const r = m.radius;
+
+    ctx.save();
+
+    const glass = ctx.createRadialGradient(cx - r * 0.36, cy - r * 0.42, r * 0.08, cx + r * 0.32, cy + r * 0.28, r * 1.16);
+    glass.addColorStop(0.00, "rgba(255,255,255,.20)");
+    glass.addColorStop(0.30, "rgba(255,255,255,.02)");
+    glass.addColorStop(0.74, "rgba(0,0,0,.24)");
+    glass.addColorStop(1.00, "rgba(0,0,0,.64)");
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, TAU);
+    ctx.fillStyle = glass;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 1.006, 0, TAU);
+    ctx.strokeStyle = "rgba(190,232,255,.23)";
+    ctx.lineWidth = Math.max(1, state.dpr * 1.05);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function renderFrame(timestamp) {
+    if (state.stopped || !state.ctx || !state.geometryBuilt) return;
+
+    state.raf = 0;
+
+    const dt = state.lastFrameTime ? clamp((timestamp - state.lastFrameTime) / 1000, 0, 0.05) : 0;
+    state.lastFrameTime = timestamp;
+
+    if (!state.pointerActive) {
+      state.yaw += state.velocityYaw;
+      state.pitch += state.velocityPitch;
+
+      const damping = Math.pow(0.938, dt * 60);
+      state.velocityYaw *= damping;
+      state.velocityPitch *= damping;
+
+      if (Math.abs(state.velocityYaw) < 0.00008) state.velocityYaw = 0;
+      if (Math.abs(state.velocityPitch) < 0.00008) state.velocityPitch = 0;
+
+      if (state.velocityYaw === 0 && state.velocityPitch === 0 && state.settleFrames > 0) {
+        state.yaw += Math.sin(timestamp * 0.00018) * dt * 0.012;
+      }
+    }
+
+    state.pitch = clamp(state.pitch, -1.12, 1.12);
+    state.roll = Math.sin(timestamp * 0.00018) * 0.010;
+
+    clearCanvas();
+
+    drawCarrier();
+    drawClayGrain();
+    drawDispositionCells();
+    drawTemplateContourLines();
+    drawLatLongInspectionGrid();
+    drawDiagnosticLattice(state.pointerActive || state.mode === "body");
+    drawReceiptOverlay();
+    drawScreenGlass();
+
+    state.renderCount += 1;
+
+    if (state.settleFrames > 0) state.settleFrames -= 1;
+
+    publishStatus("render");
+
+    if (
+      state.pointerActive ||
+      state.settleFrames > 0 ||
+      Math.abs(state.velocityYaw) > 0 ||
+      Math.abs(state.velocityPitch) > 0
+    ) {
+      state.raf = window.requestAnimationFrame(renderFrame);
+    }
+  }
+
+  function requestRender(settleFrames = 0) {
+    state.settleFrames = Math.max(state.settleFrames, settleFrames);
+
+    if (!state.raf && !state.stopped) {
+      state.raf = window.requestAnimationFrame(renderFrame);
+    }
+  }
+
+  function pointerPoint(event) {
+    const rect = state.rect || state.stage.getBoundingClientRect();
+
+    return {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top
+    };
+  }
+
+  function resetView() {
+    state.yaw = TEMPLATE.orientation.yaw;
+    state.pitch = TEMPLATE.orientation.pitch;
+    state.roll = TEMPLATE.orientation.roll;
+    state.velocityYaw = 0;
+    state.velocityPitch = 0;
+    requestRender(12);
+    publishStatus("reset-view");
+    return status();
   }
 
   function bindPointer() {
@@ -543,63 +1041,212 @@
     state.stage.style.touchAction = "none";
 
     state.stage.addEventListener("pointerdown", (event) => {
-      state.dragging = true;
-      state.pointerX = event.clientX;
-      state.pointerY = event.clientY;
+      const time = now();
+
+      if (time - state.lastTap < 320) {
+        resetView();
+      }
+
+      state.lastTap = time;
+      state.pointerActive = true;
+      state.pointerId = event.pointerId;
+
+      const p = pointerPoint(event);
+      state.pointerX = p.x;
+      state.pointerY = p.y;
       state.velocityYaw = 0;
       state.velocityPitch = 0;
 
       try {
-        state.stage.setPointerCapture?.(event.pointerId);
-        event.preventDefault();
+        state.stage.setPointerCapture(event.pointerId);
       } catch (_error) {}
+
+      requestRender(4);
+      event.preventDefault();
     }, { passive: false });
 
     state.stage.addEventListener("pointermove", (event) => {
-      if (!state.dragging) return;
+      if (!state.pointerActive) return;
 
-      const dx = event.clientX - state.pointerX;
-      const dy = event.clientY - state.pointerY;
+      const p = pointerPoint(event);
+      const dx = p.x - state.pointerX;
+      const dy = p.y - state.pointerY;
 
-      state.pointerX = event.clientX;
-      state.pointerY = event.clientY;
+      state.pointerX = p.x;
+      state.pointerY = p.y;
 
-      state.yaw += dx * 0.0065;
-      state.pitch = clamp(state.pitch + dy * 0.0021, -0.28, 0.28);
-      state.velocityYaw = clamp(dx * 0.0018, -0.034, 0.034);
-      state.velocityPitch = clamp(dy * 0.00065, -0.010, 0.010);
+      state.yaw += dx * 0.0082;
+      state.pitch = clamp(state.pitch + dy * 0.0054, -1.12, 1.12);
+      state.velocityYaw = clamp(dx * 0.0022, -0.048, 0.048);
+      state.velocityPitch = clamp(dy * 0.0014, -0.038, 0.038);
 
-      try {
-        event.preventDefault();
-      } catch (_error) {}
+      requestRender(2);
+      event.preventDefault();
     }, { passive: false });
 
     const release = (event) => {
-      state.dragging = false;
+      if (!state.pointerActive) return;
+
+      state.pointerActive = false;
+
       try {
-        state.stage.releasePointerCapture?.(event.pointerId);
+        if (state.pointerId !== null) state.stage.releasePointerCapture(state.pointerId);
       } catch (_error) {}
+
+      state.pointerId = null;
+      requestRender(18);
+
+      try {
+        event.preventDefault();
+      } catch (_error2) {}
     };
 
-    state.stage.addEventListener("pointerup", release, { passive: true });
-    state.stage.addEventListener("pointercancel", release, { passive: true });
-    state.stage.addEventListener("pointerleave", release, { passive: true });
+    state.stage.addEventListener("pointerup", release, { passive: false });
+    state.stage.addEventListener("pointercancel", release, { passive: false });
+    state.stage.addEventListener("lostpointercapture", release, { passive: false });
+  }
+
+  function enforceOneCanvas() {
+    if (!state.stage) return false;
+
+    let canvas = query("[data-audralia-planet-canvas]", state.stage);
+
+    if (!canvas) {
+      canvas = document.createElement("canvas");
+      canvas.className = "planet-canvas";
+      canvas.setAttribute("data-audralia-planet-canvas", "");
+      canvas.setAttribute("aria-label", "Audralia clay globe baseline canvas");
+      state.stage.appendChild(canvas);
+    }
+
+    const canvases = Array.from(state.stage.querySelectorAll("canvas"));
+
+    for (const item of canvases) {
+      if (item === canvas) continue;
+
+      try {
+        item.remove();
+        state.duplicateCanvasRemoved += 1;
+      } catch (_error) {}
+    }
+
+    canvas.style.position = "absolute";
+    canvas.style.inset = "0";
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    canvas.style.display = "block";
+    canvas.style.background = "transparent";
+    canvas.style.pointerEvents = "none";
+
+    canvas.setAttribute("data-audralia-canvas-contract", CONTRACT);
+    canvas.setAttribute("data-previous-canvas-contract", PREVIOUS_CANVAS_CONTRACT);
+    canvas.setAttribute("data-donor-contract", DONOR_CONTRACT);
+    canvas.setAttribute("data-canvas-role", "tv-screen-canvas");
+    canvas.setAttribute("data-baseline-feed", "clay-globe");
+    canvas.setAttribute("data-public-identity", "Audralia");
+    canvas.setAttribute("data-template-source", "Australia-template hidden scaffold");
+    canvas.setAttribute("data-lat-long-disposition", "predestined");
+    canvas.setAttribute("data-active-water", "false");
+    canvas.setAttribute("data-final-visual-pass", "false");
+
+    state.canvas = canvas;
+    state.ctx = canvas.getContext("2d", { alpha: true });
+    state.mounted = Boolean(state.ctx);
+
+    state.stage.dataset.canvasRole = "tv-screen";
+    state.stage.dataset.screenRole = "tv-screen-canvas";
+    state.stage.dataset.feed = "clay-globe";
+    state.stage.dataset.rendererState = "active";
+    state.stage.dataset.activeWater = "false";
+    state.stage.dataset.finalVisualPass = "false";
+
+    return state.mounted;
+  }
+
+  function updateDimensions(rect) {
+    if (!rect || !state.canvas || !state.ctx) return false;
+
+    const dpr = Math.max(1, Math.min(1.85, window.devicePixelRatio || 1));
+    const width = Math.max(320, Math.floor(rect.width * dpr));
+    const height = Math.max(520, Math.floor(rect.height * dpr));
+
+    state.rect = {
+      left: rect.left,
+      top: rect.top,
+      width: rect.width,
+      height: rect.height
+    };
+
+    if (state.width === width && state.height === height && state.dpr === dpr) return false;
+
+    state.width = width;
+    state.height = height;
+    state.dpr = dpr;
+    state.canvas.width = width;
+    state.canvas.height = height;
+
+    requestRender(8);
+    return true;
+  }
+
+  function measureStage() {
+    if (!state.stage) return false;
+    return updateDimensions(state.stage.getBoundingClientRect());
+  }
+
+  function setupResize() {
+    measureStage();
+
+    if (typeof ResizeObserver !== "undefined" && state.stage) {
+      state.resizeObserver = new ResizeObserver((entries) => {
+        const box = state.stage.getBoundingClientRect();
+        const content = entries && entries[0] ? entries[0].contentRect : box;
+
+        updateDimensions({
+          left: box.left,
+          top: box.top,
+          width: content.width,
+          height: content.height
+        });
+      });
+
+      try {
+        state.resizeObserver.observe(state.stage);
+      } catch (_error) {}
+    }
+
+    window.addEventListener("resize", () => {
+      measureStage();
+      requestRender(8);
+    }, { passive: true });
+
+    window.addEventListener("orientationchange", () => {
+      setTimeout(() => {
+        measureStage();
+        requestRender(8);
+      }, 120);
+    }, { passive: true });
   }
 
   function setMode(mode) {
     const next = MODES.includes(mode) ? mode : "body";
+
     state.mode = next;
 
-    document.documentElement.dataset.audraliaCanvasMode = next;
-    if (document.body) document.body.dataset.audraliaCanvasMode = next;
+    setDataset("audraliaCanvasMode", next);
+    setDataset("audraliaCanvasContract", CONTRACT);
+    setDataset("audraliaCanvasRole", "tv-screen-canvas");
 
+    requestRender(next === "body" ? 8 : 14);
     publishStatus("set-mode");
+
     return status();
   }
 
   function setFeed(feedPacket) {
     if (!feedPacket || typeof feedPacket !== "object") {
       state.feed = BASELINE_FEED;
+      requestRender(8);
       publishStatus("set-feed-baseline");
       return status();
     }
@@ -607,42 +1254,55 @@
     state.feed = Object.freeze({
       ...BASELINE_FEED,
       ...feedPacket,
+      id: feedPacket.id || BASELINE_FEED.id,
       publicIdentity: "Audralia",
-      templateSource: feedPacket.templateSource || "AUSTRALIA_TEMPLATE_HIDDEN_SCAFFOLD",
+      templateSource: "AUSTRALIA_TEMPLATE_HIDDEN_SCAFFOLD",
+      latLongDisposition: "PREDESTINED",
       activeWater: false,
+      hydrationActive: false,
+      terrainChildActive: false,
+      surfaceChildActive: false,
+      datumChildActive: false,
       finalVisualPass: false
     });
 
+    requestRender(8);
     publishStatus("set-feed");
-    return status();
-  }
 
-  function resetView() {
-    state.yaw = AUSTRALIA_TEMPLATE_DISPOSITION.orientation.primeYaw;
-    state.pitch = AUSTRALIA_TEMPLATE_DISPOSITION.orientation.axialPitch;
-    state.roll = AUSTRALIA_TEMPLATE_DISPOSITION.orientation.inspectionRoll;
-    state.velocityYaw = 0;
-    state.velocityPitch = 0;
-    publishStatus("reset-view");
     return status();
   }
 
   function status() {
     return Object.freeze({
       contract: CONTRACT,
+      previousCanvasContract: PREVIOUS_CANVAS_CONTRACT,
+      donorContract: DONOR_CONTRACT,
       route: ROUTE,
+      target: TARGET,
+      donor: DONOR,
       api: API_NAME,
+
       initialized: state.initialized,
       mounted: state.mounted,
       screenRole: "TV_SCREEN_CANVAS",
       currentMode: state.mode,
-      feed: state.feed.id || "CLAY_GLOBE_BASELINE_FEED",
+      feed: state.feed.id || BASELINE_FEED.id,
       baselineFeed: BASELINE_FEED.id,
+
       publicIdentity: "Audralia",
       templateSource: "AUSTRALIA_TEMPLATE_HIDDEN_SCAFFOLD",
       latLongDisposition: "PREDESTINED",
-      clayPatchCount: state.clayPatches.length,
-      latticeSeatCount: state.latticeNodes.length,
+      publicAustraliaIdentity: false,
+
+      radialNodes: RADIAL_NODES,
+      fibonacciBands: FIBONACCI_BANDS,
+      latticeStates: LATTICE_STATES,
+      seatCount: state.seats.length,
+      dispositionCellCount: state.dispositionCells.length,
+      contourLineCount: state.contourLines.length,
+      ridgeLineCount: state.ridgeLines.length,
+      geometryBuilt: state.geometryBuilt,
+
       activeWater: false,
       hydrationActive: false,
       terrainChildActive: false,
@@ -651,6 +1311,9 @@
       generatedImage: false,
       graphicBox: false,
       finalVisualPass: false,
+
+      renderCount: state.renderCount,
+      duplicateCanvasRemoved: state.duplicateCanvasRemoved,
       errors: state.errors.slice()
     });
   }
@@ -663,15 +1326,27 @@
     });
 
     window.AUDRALIA_G2_PLANET_CANVAS_RECEIPT = payload;
+    window.AUDRALIA_G2_PLANET_OPERATION_A_CANVAS_STATUS = payload;
+    window.AUDRALIA_G2_PLANET_OPERATION_A_DONOR_CANVAS_FEED_EVOLUTION_STATUS = payload;
 
-    document.documentElement.dataset.audraliaCanvasContract = CONTRACT;
-    document.documentElement.dataset.audraliaCanvasRole = "tv-screen";
-    document.documentElement.dataset.audraliaCanvasFeed = "clay-globe-baseline";
-    document.documentElement.dataset.audraliaCanvasPublicIdentity = "Audralia";
-    document.documentElement.dataset.audraliaCanvasTemplateSource = "Australia-template-hidden-scaffold";
-    document.documentElement.dataset.audraliaCanvasLatLongDisposition = "predestined";
-    document.documentElement.dataset.audraliaCanvasActiveWater = "false";
-    document.documentElement.dataset.audraliaCanvasFinalVisualPass = "false";
+    setDataset("audraliaCanvasContract", CONTRACT);
+    setDataset("audraliaCanvasPreviousContract", PREVIOUS_CANVAS_CONTRACT);
+    setDataset("audraliaCanvasDonorContract", DONOR_CONTRACT);
+    setDataset("audraliaCanvasRole", "tv-screen-canvas");
+    setDataset("audraliaCanvasFeed", "clay-globe-baseline");
+    setDataset("audraliaCanvasPublicIdentity", "Audralia");
+    setDataset("audraliaCanvasTemplateSource", "Australia-template-hidden-scaffold");
+    setDataset("audraliaCanvasLatLongDisposition", "predestined");
+    setDataset("audraliaCanvasActiveWater", "false");
+    setDataset("audraliaCanvasHydrationActive", "false");
+    setDataset("audraliaCanvasTerrainChildActive", "false");
+    setDataset("audraliaCanvasSurfaceChildActive", "false");
+    setDataset("audraliaCanvasDatumChildActive", "false");
+    setDataset("audraliaCanvasGeneratedImage", "false");
+    setDataset("audraliaCanvasGraphicBox", "false");
+    setDataset("audraliaCanvasFinalVisualPass", "false");
+    setDataset("audraliaCanvasRenderCount", state.renderCount);
+    setDataset("audraliaCanvasMounted", state.mounted ? "true" : "false");
 
     return payload;
   }
@@ -679,6 +1354,8 @@
   function exposeApi() {
     window[API_NAME] = Object.freeze({
       contract: CONTRACT,
+      previousCanvasContract: PREVIOUS_CANVAS_CONTRACT,
+      donorContract: DONOR_CONTRACT,
       baselineFeed: BASELINE_FEED,
       setFeed,
       setMode,
@@ -687,28 +1364,63 @@
     });
   }
 
+  function stop() {
+    state.stopped = true;
+
+    if (state.raf) {
+      try {
+        window.cancelAnimationFrame(state.raf);
+      } catch (_error) {}
+    }
+
+    state.raf = 0;
+
+    if (state.resizeObserver) {
+      try {
+        state.resizeObserver.disconnect();
+      } catch (_error) {}
+    }
+  }
+
+  window.__AUDRALIA_G2_PLANET_OPERATION_A_CANVAS_CONTROLLER__ = {
+    stop,
+    state,
+    contract: CONTRACT,
+    status,
+    setMode,
+    setFeed,
+    resetView
+  };
+
   function init() {
     try {
       exposeApi();
-      buildPredestinedClayFeed();
 
-      if (!ensureMounts()) {
+      state.stage = query("[data-audralia-planet-stage]");
+
+      if (!state.stage) {
+        recordError("init", "Missing [data-audralia-planet-stage]");
         state.initialized = true;
-        publishStatus("fallback-no-canvas-mount");
+        publishStatus("fallback-no-stage");
         return;
       }
 
+      if (!enforceOneCanvas()) {
+        recordError("init", "Canvas context unavailable");
+        state.initialized = true;
+        publishStatus("fallback-no-canvas-context");
+        return;
+      }
+
+      buildGeometry();
+      setupResize();
       bindPointer();
-      resizeCanvas();
 
       state.initialized = true;
+      state.mounted = true;
+
       publishStatus("init-complete");
-
-      window.addEventListener("resize", resizeCanvas, { passive: true });
-
-      if (!state.raf) {
-        state.raf = window.requestAnimationFrame(render);
-      }
+      requestRender(12);
     } catch (error) {
       recordError("init", error);
       state.initialized = true;

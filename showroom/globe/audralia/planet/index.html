@@ -3,28 +3,27 @@
 <html
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
-  data-page="audralia-g2-native-webgl-sphere-coordinate-handoff"
-  data-version="G2-NATIVE-SPHERE-COORDINATE-HANDOFF"
-  data-contract="AUDRALIA_G2_PLANET_COCKPIT_DONOR_NATIVE_WEBGL_SPHERE_COORDINATE_HANDOFF_HTML_TNT_v1"
-  data-renderer-contract="AUDRALIA_G2_PLANET_NATIVE_WEBGL_DRY_SPHERE_COORDINATE_HANDOFF_RENDERER_TNT_v1"
-  data-ccr="AUDRALIA_G2_PLANET_NATIVE_WEBGL_SPHERE_COORDINATE_HANDOFF_CCR_v1"
-  data-news="AUDRALIA_G2_PLANET_NATIVE_WEBGL_SPHERE_COORDINATE_HANDOFF_NEWS_ALIGNMENT_v1"
-  data-visible-interface="audralia-world-first-planet-inspection-room"
-  data-presentation-donor="intergalactic-cockpit-presentation-grammar-only"
-  data-rendering-method-donor="showroom-diamond-webgl-method-only"
-  data-cockpit-authority="false"
-  data-showroom-authority="false"
-  data-command-rail="active"
-  data-planet-menu="active"
-  data-instrument-wings="active"
-  data-chamber-deck="active"
-  data-platform-engineering-chambers="active"
-  data-native-webgl-renderer="authorized-fail-open"
-  data-coordinate-lanes="16"
-  data-version-families="16"
+  data-page="audralia-g2-visual-first-parent-route"
+  data-version="G2-VISUAL-FIRST-PARENT-ROUTE"
+  data-contract="AUDRALIA_G2_VISUAL_FIRST_PARENT_ROUTE_REWRITE_HTML_TNT_v1"
+  data-previous-contract="AUDRALIA_G2_PLANET_COCKPIT_DONOR_NATIVE_WEBGL_SPHERE_COORDINATE_HANDOFF_HTML_TNT_v1"
+  data-renderer-contract="AUDRALIA_G2_VISUAL_FIRST_PARENT_ROUTE_RENDERER_TNT_v1"
+  data-spec-ops="VISUAL_FIRST_PARENT_ROUTE_REWRITE_SPEC_OPS_v1"
+  data-news="VISUAL_FIRST_PARENT_ROUTE_REWRITE_NEWS_ALIGNMENT_v1"
+  data-ccr="VISUAL_FIRST_PARENT_ROUTE_REWRITE_CCR_v1"
+  data-renewal-type="visual-first-parent-route-rewrite"
+  data-parent-route-renewed="true"
+  data-visual-first="true"
+  data-product-gem="active"
+  data-planet-product-object="primary"
+  data-technical-proof="subordinate"
+  data-mode-controls="body-surface-terrain-lattice-receipt"
+  data-expression-anchors="body,surface,terrain,lattice,water,renderer,receipt,contract"
+  data-coordinate-identities="16"
+  data-version-identities="16"
   data-seat-count="256"
   data-seat-law="coordinate-identity-version-identity-expressive-duty-handoff"
-  data-color-law="16-lane-colors-plus-16-version-colors"
+  data-color-law="16-coordinate-colors-plus-16-version-colors"
   data-active-water="false"
   data-hydration-loaded="false"
   data-terrain-child-loaded="false"
@@ -40,10 +39,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#050d1f">
 
-  <title>Audralia G2 Planet · Native Sphere Coordinate Handoff</title>
+  <title>Audralia G2 Planet · Visual-First Parent Route</title>
   <meta
     name="description"
-    content="Audralia G2 Planet as a dry world in formation: cockpit-donor presentation, native WebGL sphere renderer, 16 compass lanes, 16 versions, 256 coordinate-version seats, 32-color identity, expressive duty, and handoff."
+    content="Audralia G2 Planet as a visual-first product-world route: visible dry planet first, mode controls second, expression anchors third, and technical proof chambers below."
   >
 
   <style>
@@ -51,12 +50,12 @@
       color-scheme:dark;
       --bg:#01050d;
       --deep:#030814;
-      --panel:rgba(5,15,32,.86);
+      --panel:rgba(5,15,32,.88);
       --panel2:rgba(3,9,20,.78);
       --glass:rgba(255,255,255,.045);
       --text:rgba(239,247,255,.96);
-      --muted:rgba(239,247,255,.70);
-      --faint:rgba(239,247,255,.48);
+      --muted:rgba(239,247,255,.72);
+      --faint:rgba(239,247,255,.50);
       --gold:#f4cf83;
       --gold2:#ffe8a3;
       --blue:#8dd8ff;
@@ -241,7 +240,7 @@
       position:absolute;
       right:0;
       top:calc(100% + 10px);
-      width:min(360px,calc(100vw - 28px));
+      width:min(380px,calc(100vw - 28px));
       display:grid;
       gap:8px;
       padding:12px;
@@ -308,77 +307,22 @@
       overflow:hidden;
     }
 
-    .viewport-deck{
+    .visual-hero{
       position:relative;
       isolation:isolate;
       overflow:hidden;
-      padding:clamp(14px,2vw,24px);
+      padding:clamp(14px,2.3vw,28px);
       background:
-        radial-gradient(ellipse at 50% 12%,rgba(141,216,255,.15),transparent 30rem),
-        radial-gradient(ellipse at 50% 80%,rgba(244,207,131,.09),transparent 34rem),
-        linear-gradient(180deg,rgba(8,16,34,.88),rgba(1,5,14,.94));
+        radial-gradient(ellipse at 50% 12%,rgba(141,216,255,.18),transparent 32rem),
+        radial-gradient(ellipse at 50% 84%,rgba(244,207,131,.11),transparent 34rem),
+        linear-gradient(180deg,rgba(8,16,34,.92),rgba(1,5,14,.96));
     }
 
-    .planet-layout{
-      display:grid;
-      grid-template-columns:minmax(250px,.82fr) minmax(430px,1.55fr) minmax(250px,.82fr);
-      gap:14px;
-      align-items:stretch;
-      min-height:min(900px,calc(100vh - 118px));
-    }
-
-    .planet-window{
-      position:relative;
-      min-height:620px;
-      border:1px solid rgba(141,216,255,.18);
-      border-radius:40px 40px 30px 30px;
-      overflow:hidden;
-      background:
-        radial-gradient(circle at 72% 34%,rgba(141,216,255,.18),transparent 9rem),
-        radial-gradient(circle at 23% 28%,rgba(255,255,255,.20) 0 1px,transparent 1.6px),
-        radial-gradient(circle at 78% 20%,rgba(255,255,255,.15) 0 1px,transparent 1.6px),
-        radial-gradient(circle at 32% 78%,rgba(255,255,255,.12) 0 1px,transparent 1.6px),
-        radial-gradient(circle at 62% 70%,rgba(255,255,255,.14) 0 1px,transparent 1.6px),
-        radial-gradient(circle at 12% 62%,rgba(255,255,255,.10) 0 1px,transparent 1.6px),
-        linear-gradient(180deg,#061328 0%,#030716 58%,#01030a 100%);
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.04),
-        inset 0 0 80px rgba(141,216,255,.07),
-        0 26px 88px rgba(0,0,0,.42);
-    }
-
-    .planet-window::before{
+    .visual-hero::before{
       content:"";
-      position:absolute;
-      inset:0;
-      z-index:5;
-      pointer-events:none;
-      background:
-        linear-gradient(90deg,rgba(255,255,255,.03),transparent 22%,transparent 72%,rgba(255,255,255,.025)),
-        linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),
-        radial-gradient(ellipse at 50% 12%,rgba(255,255,255,.10),transparent 34%);
-      background-size:100% 100%,100% 5px,100% 100%;
-      opacity:.76;
-      mix-blend-mode:screen;
-    }
-
-    .planet-window::after{
-      content:"";
-      position:absolute;
-      inset:5%;
-      z-index:6;
-      pointer-events:none;
-      border:1px solid rgba(141,216,255,.13);
-      border-radius:36px 36px 22px 22px;
-      box-shadow:
-        inset 0 0 46px rgba(141,216,255,.08),
-        0 0 50px rgba(141,216,255,.05);
-    }
-
-    .star-drift{
       position:absolute;
       inset:-20%;
-      z-index:1;
+      z-index:0;
       pointer-events:none;
       background:
         radial-gradient(circle at 10% 20%,rgba(255,255,255,.44) 0 1px,transparent 1.8px),
@@ -387,7 +331,7 @@
         radial-gradient(circle at 63% 74%,rgba(255,255,255,.24) 0 1px,transparent 1.5px),
         radial-gradient(circle at 86% 38%,rgba(255,255,255,.38) 0 1px,transparent 1.7px),
         radial-gradient(circle at 70% 12%,rgba(141,216,255,.34) 0 1px,transparent 1.8px);
-      opacity:.44;
+      opacity:.40;
       animation:starDrift 55s linear infinite;
     }
 
@@ -395,24 +339,245 @@
       to{transform:translate3d(-4%,3%,0)}
     }
 
-    .planet-stage{
+    .hero-grid{
+      position:relative;
+      z-index:2;
+      display:grid;
+      grid-template-columns:minmax(260px,.76fr) minmax(430px,1.38fr) minmax(240px,.66fr);
+      gap:16px;
+      align-items:stretch;
+      min-height:min(840px,calc(100vh - 118px));
+    }
+
+    .hero-copy,
+    .product-card,
+    .proof-summary{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:clamp(24px,4vw,34px);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(244,207,131,.07),transparent 20rem),
+        linear-gradient(180deg,rgba(255,255,255,.050),rgba(255,255,255,.016)),
+        rgba(2,8,20,.74);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 22px 70px rgba(0,0,0,.24);
+      overflow:hidden;
+    }
+
+    .hero-copy{
+      display:grid;
+      align-content:center;
+      gap:16px;
+      padding:clamp(18px,3vw,28px);
+    }
+
+    .kicker,
+    .section-title,
+    .scope-tag{
+      margin:0;
+      color:var(--gold);
+      font:900 .74rem/1.4 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      letter-spacing:.19em;
+      text-transform:uppercase;
+    }
+
+    h1{
+      max-width:900px;
+      margin:0;
+      font-size:clamp(2.6rem,6.6vw,5.8rem);
+      line-height:.86;
+      letter-spacing:-.08em;
+      text-wrap:balance;
+    }
+
+    h2{
+      margin:0;
+      color:rgba(255,244,216,.96);
+      font-size:clamp(1.42rem,3.6vw,2.4rem);
+      line-height:1;
+      letter-spacing:-.055em;
+      text-wrap:balance;
+    }
+
+    p{
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(.98rem,2.1vw,1.12rem);
+      line-height:1.55;
+    }
+
+    .hero-actions{
+      display:grid;
+      gap:10px;
+    }
+
+    .hero-action{
+      min-height:44px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:999px;
+      padding:0 14px;
+      color:rgba(239,247,255,.82);
+      background:rgba(255,255,255,.036);
+      font-size:.78rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .hero-action.primary{
+      color:#06101c;
+      background:linear-gradient(135deg,#fff0b8,var(--gold));
+      border-color:rgba(244,207,131,.52);
+    }
+
+    .hero-action.green{
+      color:var(--mint);
+      border-color:rgba(167,243,198,.26);
+      background:rgba(167,243,198,.05);
+    }
+
+    .product-card{
+      position:relative;
+      min-height:640px;
+      display:grid;
+      grid-template-rows:auto minmax(0,1fr) auto;
+      padding:clamp(12px,2vw,18px);
+      isolation:isolate;
+      background:
+        radial-gradient(circle at 50% 36%,rgba(141,216,255,.18),transparent 18rem),
+        radial-gradient(circle at 50% 74%,rgba(244,207,131,.10),transparent 20rem),
+        linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.014)),
+        rgba(1,6,16,.88);
+    }
+
+    .product-card::before,
+    .product-card::after{
+      content:"";
       position:absolute;
-      inset:0;
-      z-index:3;
+      left:50%;
+      top:50%;
+      z-index:0;
+      pointer-events:none;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+    }
+
+    .product-card::before{
+      width:min(86%,34rem);
+      aspect-ratio:1;
+      border:1px dashed rgba(141,216,255,.16);
+      box-shadow:inset 0 0 40px rgba(141,216,255,.05);
+      animation:hudRotate 34s linear infinite;
+    }
+
+    .product-card::after{
+      width:min(66%,25rem);
+      aspect-ratio:1;
+      border:1px solid rgba(244,207,131,.12);
+      animation:hudRotate 21s linear infinite reverse;
+    }
+
+    @keyframes hudRotate{
+      to{transform:translate(-50%,-50%) rotate(360deg)}
+    }
+
+    .product-top{
+      position:relative;
+      z-index:5;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      padding:6px;
+    }
+
+    .product-gem{
+      position:relative;
+      width:92px;
+      height:66px;
+      display:grid;
+      place-items:center;
+      clip-path:polygon(50% 0%,86% 14%,100% 48%,76% 100%,24% 100%,0% 48%,14% 14%);
+      border:1px solid rgba(244,207,131,.45);
+      background:
+        linear-gradient(36deg,transparent 0 22%,rgba(255,255,255,.42) 23%,transparent 25%),
+        conic-gradient(from 45deg,rgba(255,255,255,.38),rgba(141,216,255,.34),rgba(13,28,68,.92),rgba(244,207,131,.26),rgba(255,255,255,.30)),
+        radial-gradient(circle at 38% 24%,rgba(255,255,255,.48),transparent 36%),
+        linear-gradient(145deg,rgba(10,42,100,.96),rgba(4,8,19,.98));
+      box-shadow:
+        0 0 24px rgba(141,216,255,.20),
+        0 0 20px rgba(244,207,131,.10),
+        inset 0 1px 0 rgba(255,255,255,.22);
+    }
+
+    .product-gem span{
+      color:rgba(255,244,216,.98);
+      text-shadow:0 2px 10px rgba(0,0,0,.88);
+      font-weight:950;
+      letter-spacing:.10em;
+    }
+
+    .product-tag{
+      display:grid;
+      gap:2px;
+      text-align:right;
+    }
+
+    .product-tag b{
+      color:rgba(255,244,216,.96);
+      font-size:.82rem;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .product-tag span{
+      color:rgba(141,216,255,.78);
+      font:850 .62rem/1.3 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+
+    .planet-stage{
+      position:relative;
+      z-index:4;
+      min-height:clamp(430px,58vh,670px);
       display:grid;
       place-items:center;
       overflow:hidden;
+      border:1px solid rgba(141,216,255,.13);
+      border-radius:30px;
+      background:
+        radial-gradient(circle at 50% 38%,rgba(141,216,255,.16),transparent 18rem),
+        radial-gradient(circle at 50% 78%,rgba(244,207,131,.07),transparent 22rem),
+        linear-gradient(180deg,rgba(0,0,0,.12),rgba(0,0,0,.34));
+      box-shadow:inset 0 0 80px rgba(0,0,0,.28);
       touch-action:none;
+    }
+
+    .planet-stage::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:3;
+      pointer-events:none;
+      background:
+        linear-gradient(rgba(255,255,255,.020) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.020) 1px,transparent 1px);
+      background-size:22px 22px;
+      opacity:.42;
+      mask-image:radial-gradient(circle at 50% 50%,rgba(0,0,0,.82),transparent 70%);
     }
 
     .fallback-planet{
       position:absolute;
       z-index:2;
-      width:min(70%,31rem);
+      width:min(76%,33rem);
       aspect-ratio:1;
       border-radius:50%;
       pointer-events:none;
-      border:1px solid rgba(190,232,255,.22);
+      border:1px solid rgba(190,232,255,.24);
       background:
         radial-gradient(circle at 34% 24%,rgba(255,244,216,.25),transparent 0 18%,rgba(255,244,216,.10) 24%,transparent 34%),
         radial-gradient(circle at 46% 42%,rgba(156,143,91,.82),transparent 0 18%,rgba(83,112,76,.80) 31%,transparent 48%),
@@ -451,7 +616,7 @@
     }
 
     .planet-stage[data-renderer-state="active"] .fallback-planet{
-      opacity:.16;
+      opacity:.14;
       filter:saturate(.75) brightness(.72);
     }
 
@@ -465,149 +630,80 @@
       background:transparent;
     }
 
-    .hud-rings{
-      position:absolute;
-      z-index:4;
-      width:min(78%,36rem);
-      aspect-ratio:1;
-      border-radius:50%;
-      pointer-events:none;
-      border:1px dashed rgba(141,216,255,.18);
-      box-shadow:inset 0 0 38px rgba(141,216,255,.05);
-      animation:hudRotate 34s linear infinite;
-    }
-
-    .hud-rings::before,
-    .hud-rings::after{
-      content:"";
-      position:absolute;
-      inset:14%;
-      border-radius:50%;
-      border:1px solid rgba(244,207,131,.13);
-    }
-
-    .hud-rings::after{
-      inset:30%;
-      border-color:rgba(167,243,198,.12);
-      border-style:dashed;
-      animation:hudRotate 21s linear infinite reverse;
-    }
-
-    @keyframes hudRotate{to{transform:rotate(360deg)}}
-
-    .viewport-frame{
-      position:absolute;
-      inset:0;
-      z-index:7;
-      pointer-events:none;
-    }
-
-    .viewport-frame::before,
-    .viewport-frame::after{
-      content:"";
-      position:absolute;
-      top:0;
-      bottom:0;
-      width:clamp(30px,5vw,74px);
-      background:linear-gradient(90deg,rgba(3,9,20,.96),rgba(5,16,34,.58),transparent);
-    }
-
-    .viewport-frame::before{left:0}
-    .viewport-frame::after{right:0;transform:scaleX(-1)}
-
-    .planet-title-card{
-      position:absolute;
-      z-index:9;
-      left:clamp(18px,3vw,38px);
-      top:clamp(18px,3vw,38px);
-      width:min(690px,calc(100% - 36px));
+    .mode-controls{
+      position:relative;
+      z-index:5;
       display:grid;
-      gap:12px;
-      padding:clamp(16px,3vw,26px);
-      border:1px solid rgba(244,207,131,.18);
-      border-radius:28px;
-      background:
-        radial-gradient(circle at 0% 0%,rgba(244,207,131,.10),transparent 16rem),
-        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.020)),
-        rgba(2,8,20,.60);
-      backdrop-filter:blur(14px);
-      box-shadow:0 20px 70px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.08);
-    }
-
-    .kicker,
-    .section-title,
-    .scope-tag{
-      margin:0;
-      color:var(--gold);
-      font:900 .74rem/1.4 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-      letter-spacing:.19em;
-      text-transform:uppercase;
-    }
-
-    h1{
-      max-width:900px;
-      margin:0;
-      font-size:clamp(2.1rem,5.4vw,4.95rem);
-      line-height:.9;
-      letter-spacing:-.07em;
-      text-wrap:balance;
-    }
-
-    h2{
-      margin:0;
-      color:rgba(255,244,216,.96);
-      font-size:clamp(1.42rem,3.6vw,2.4rem);
-      line-height:1;
-      letter-spacing:-.055em;
-      text-wrap:balance;
-    }
-
-    p{
-      margin:0;
-      color:var(--muted);
-      font-size:clamp(.98rem,2.1vw,1.12rem);
-      line-height:1.55;
-    }
-
-    .viewport-status{
-      display:flex;
-      flex-wrap:wrap;
+      grid-template-columns:repeat(5,minmax(0,1fr));
       gap:8px;
-      margin-top:2px;
+      padding:12px 6px 6px;
     }
 
-    .status-pill{
-      min-height:32px;
-      display:inline-flex;
-      align-items:center;
+    .mode-button{
+      min-height:44px;
       border:1px solid rgba(255,255,255,.10);
       border-radius:999px;
-      padding:0 11px;
-      color:rgba(239,247,255,.76);
-      background:rgba(2,8,20,.58);
-      backdrop-filter:blur(10px);
-      font-size:.70rem;
-      font-weight:850;
-      letter-spacing:.04em;
+      color:rgba(239,247,255,.78);
+      background:rgba(255,255,255,.035);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.08em;
       text-transform:uppercase;
+    }
+
+    .mode-button:hover,
+    .mode-button[aria-pressed="true"],
+    .mode-button[data-active]{
+      color:#06101c;
+      background:linear-gradient(135deg,#fff0b8,var(--gold));
+      border-color:rgba(244,207,131,.52);
+    }
+
+    .proof-summary{
+      display:grid;
+      align-content:center;
+      gap:12px;
+      padding:clamp(16px,2.4vw,22px);
+    }
+
+    .summary-meter{
+      display:grid;
+      gap:9px;
+      padding:14px;
+      border:1px solid rgba(141,216,255,.14);
+      border-radius:22px;
+      background:rgba(255,255,255,.026);
+    }
+
+    .summary-meter b{
+      color:var(--gold);
+      font:900 .66rem/1.3 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      letter-spacing:.15em;
+      text-transform:uppercase;
+    }
+
+    .summary-meter span{
+      color:rgba(239,247,255,.68);
+      font-size:.86rem;
+      line-height:1.36;
+    }
+
+    .renderer-status{
+      color:var(--mint)!important;
+      font-weight:850;
     }
 
     .mode-panel{
-      position:absolute;
-      z-index:9;
-      left:clamp(18px,3vw,38px);
-      right:clamp(18px,3vw,38px);
-      bottom:clamp(18px,3vw,38px);
       display:grid;
-      gap:12px;
-      padding:clamp(14px,2vw,18px);
+      gap:10px;
+      margin-top:4px;
+      padding:14px;
       border:1px solid rgba(141,216,255,.16);
       border-radius:24px;
       background:
-        radial-gradient(circle at 100% 0%,rgba(141,216,255,.11),transparent 16rem),
-        rgba(2,8,20,.66);
-      backdrop-filter:blur(14px);
-      box-shadow:0 20px 70px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.07);
+        radial-gradient(circle at 100% 0%,rgba(141,216,255,.10),transparent 16rem),
+        rgba(2,8,20,.62);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
     }
 
     .mode-head{
@@ -659,24 +755,37 @@
       line-height:1.36;
     }
 
-    .instrument-wing{
+    .anchor-deck{
       display:grid;
-      grid-template-rows:repeat(4,minmax(0,1fr));
-      gap:10px;
-      min-height:620px;
+      gap:14px;
+      padding:clamp(16px,3vw,26px);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(244,207,131,.06),transparent 22rem),
+        rgba(0,0,0,.08);
     }
 
-    .instrument{
+    .anchor-head{
+      display:grid;
+      gap:8px;
+      max-width:980px;
+    }
+
+    .anchor-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .anchor-card{
       position:relative;
       display:grid;
-      align-content:start;
-      gap:8px;
-      min-height:142px;
+      gap:10px;
+      min-height:180px;
       border:1px solid rgba(255,255,255,.10);
       border-radius:24px;
-      padding:12px;
+      padding:14px;
       background:
-        radial-gradient(circle at 20% 0%,rgba(141,216,255,.08),transparent 9rem),
+        radial-gradient(circle at 18% 0%,rgba(141,216,255,.08),transparent 9rem),
         linear-gradient(180deg,rgba(255,255,255,.040),rgba(255,255,255,.014)),
         rgba(2,8,20,.72);
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
@@ -684,8 +793,8 @@
       transition:transform .2s ease,border-color .2s ease,filter .2s ease,background .2s ease;
     }
 
-    .instrument:hover,
-    .instrument:focus-visible{
+    .anchor-card:hover,
+    .anchor-card:focus-visible{
       transform:translateY(-3px);
       border-color:rgba(244,207,131,.34);
       filter:brightness(1.12);
@@ -695,55 +804,9 @@
         rgba(2,8,20,.82);
     }
 
-    .instrument-copy{
-      display:grid;
-      gap:2px;
-      z-index:4;
-    }
-
-    .instrument-copy strong{
-      color:rgba(255,244,216,.96);
-      font-size:.82rem;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      line-height:1.08;
-    }
-
-    .instrument-copy span{
-      color:rgba(141,216,255,.72);
-      font:800 .58rem/1.15 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    .compass-badge{
-      position:absolute;
-      right:10px;
-      top:10px;
-      z-index:5;
-      min-width:46px;
-      min-height:24px;
-      display:grid;
-      place-items:center;
-      border:1px solid rgba(244,207,131,.20);
-      border-radius:999px;
-      color:var(--gold);
-      background:rgba(2,8,20,.62);
-      font:900 .58rem/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-      letter-spacing:.08em;
-    }
-
-    .mini-sphere,
-    .mini-surface,
-    .mini-terrain,
-    .mini-lattice,
-    .mini-water,
-    .mini-renderer,
-    .mini-receipt,
-    .mini-seal{
+    .anchor-icon{
       position:relative;
-      z-index:2;
-      width:96px;
+      width:92px;
       aspect-ratio:1;
       border-radius:50%;
       border:1px solid rgba(141,216,255,.24);
@@ -754,28 +817,28 @@
       box-shadow:inset -18px -16px 30px rgba(0,0,0,.58),0 0 22px rgba(141,216,255,.12);
     }
 
-    .mini-surface{
+    .anchor-icon.surface{
       background:
         radial-gradient(circle at 22% 28%,rgba(255,232,163,.22),transparent 0 18%),
         repeating-linear-gradient(25deg,rgba(244,207,131,.10) 0 5px,rgba(141,216,255,.04) 6px 10px),
         linear-gradient(135deg,rgba(126,96,62,.92),rgba(56,78,53,.88));
     }
 
-    .mini-terrain{
+    .anchor-icon.terrain{
       background:
         radial-gradient(circle at 30% 20%,rgba(255,244,216,.20),transparent 0 12%),
         repeating-linear-gradient(130deg,rgba(255,179,109,.18) 0 4px,transparent 5px 12px),
         linear-gradient(135deg,rgba(104,76,52,.96),rgba(42,48,42,.92));
     }
 
-    .mini-lattice{
+    .anchor-icon.lattice{
       background:
         repeating-linear-gradient(0deg,transparent 0 8px,rgba(141,216,255,.18) 9px,transparent 10px),
         repeating-linear-gradient(90deg,transparent 0 8px,rgba(244,207,131,.14) 9px,transparent 10px),
         radial-gradient(circle at 50% 50%,rgba(141,216,255,.12),rgba(2,8,20,.92));
     }
 
-    .mini-water{
+    .anchor-icon.water{
       border-color:rgba(244,207,131,.25);
       background:
         radial-gradient(circle at 50% 50%,rgba(141,216,255,.16),transparent 50%),
@@ -783,7 +846,7 @@
         rgba(2,8,20,.82);
     }
 
-    .mini-water::after{
+    .anchor-icon.water::after{
       content:"HELD";
       position:absolute;
       inset:auto 0 12px;
@@ -793,26 +856,30 @@
       letter-spacing:.12em;
     }
 
-    .mini-renderer::before,
-    .mini-receipt::before,
-    .mini-seal::before{
+    .anchor-icon.renderer::before,
+    .anchor-icon.receipt::before,
+    .anchor-icon.contract::before{
       content:"";
       position:absolute;
       inset:22%;
       border-radius:50%;
       border:1px dashed rgba(244,207,131,.28);
-      animation:hudRotate 16s linear infinite;
+      animation:anchorSpin 16s linear infinite;
     }
 
-    .mini-receipt,
-    .mini-seal{
+    @keyframes anchorSpin{
+      to{transform:rotate(360deg)}
+    }
+
+    .anchor-icon.receipt,
+    .anchor-icon.contract{
       border-radius:18px;
       background:
         repeating-linear-gradient(0deg,rgba(244,207,131,.08) 0 8px,transparent 9px 15px),
         rgba(2,8,20,.82);
     }
 
-    .mini-seal::after{
+    .anchor-icon.contract::after{
       content:"SEAL";
       position:absolute;
       left:50%;
@@ -823,31 +890,24 @@
       letter-spacing:.12em;
     }
 
-    .mode-controls{
-      display:grid;
-      grid-template-columns:repeat(5,minmax(0,1fr));
-      gap:8px;
-      margin-top:12px;
-    }
-
-    .mode-button{
-      min-height:44px;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:999px;
-      color:rgba(239,247,255,.78);
-      background:rgba(255,255,255,.035);
-      font-size:.74rem;
-      font-weight:950;
-      letter-spacing:.08em;
+    .anchor-card strong{
+      color:rgba(255,244,216,.96);
+      font-size:1rem;
+      letter-spacing:.04em;
       text-transform:uppercase;
     }
 
-    .mode-button:hover,
-    .mode-button[aria-pressed="true"],
-    .mode-button[data-active]{
-      color:#06101c;
-      background:linear-gradient(135deg,#fff0b8,var(--gold));
-      border-color:rgba(244,207,131,.52);
+    .anchor-card span{
+      color:rgba(141,216,255,.76);
+      font:850 .64rem/1.3 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+
+    .anchor-card p{
+      font-size:.88rem;
+      line-height:1.42;
+      color:rgba(239,247,255,.68);
     }
 
     .chamber-deck{
@@ -855,8 +915,8 @@
       gap:14px;
       padding:clamp(16px,3vw,26px);
       background:
-        radial-gradient(circle at 50% 0%,rgba(244,207,131,.06),transparent 22rem),
-        rgba(0,0,0,.08);
+        radial-gradient(circle at 50% 0%,rgba(141,216,255,.06),transparent 22rem),
+        rgba(0,0,0,.10);
     }
 
     .chamber{
@@ -1152,19 +1212,26 @@
     }
 
     @media (max-width:1180px){
-      .planet-layout{
+      .hero-grid{
         grid-template-columns:1fr;
         min-height:0;
       }
 
-      .instrument-wing{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-        grid-template-rows:auto;
-        min-height:0;
+      .product-card{
+        min-height:620px;
+        order:1;
       }
 
-      .planet-window{
-        min-height:680px;
+      .hero-copy{
+        order:2;
+      }
+
+      .proof-summary{
+        order:3;
+      }
+
+      .anchor-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
       }
 
       .card-grid,
@@ -1186,41 +1253,44 @@
         width:100%;
       }
 
-      .planet-window{
-        min-height:760px;
-        border-radius:28px;
+      .visual-hero{
+        padding:10px;
       }
 
-      .planet-title-card{
-        left:12px;
-        top:12px;
-        width:calc(100% - 24px);
+      .product-card{
+        min-height:720px;
+        padding:10px;
       }
 
-      .mode-panel{
-        left:12px;
-        right:12px;
-        bottom:12px;
+      .planet-stage{
+        min-height:520px;
+        border-radius:24px;
       }
 
-      .mode-copy{
-        grid-template-columns:1fr;
+      .product-top{
+        align-items:flex-start;
+      }
+
+      .product-gem{
+        width:82px;
+        height:60px;
+      }
+
+      .product-tag{
+        max-width:56%;
       }
 
       .mode-controls{
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
 
-      h1{font-size:clamp(2.1rem,12vw,3.65rem)}
-
-      .instrument-wing{
+      .mode-copy{
         grid-template-columns:1fr;
       }
 
-      .instrument{
-        min-height:118px;
-      }
+      h1{font-size:clamp(2.4rem,13vw,4.1rem)}
 
+      .anchor-grid,
       .card-grid,
       .tech-readout-grid{
         grid-template-columns:1fr;
@@ -1237,6 +1307,14 @@
       .mode-controls{
         grid-template-columns:1fr;
       }
+
+      .product-card{
+        min-height:760px;
+      }
+
+      .planet-stage{
+        min-height:560px;
+      }
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -1249,12 +1327,12 @@
         transition-duration:.01ms!important;
       }
 
-      .star-drift,
-      .hud-rings,
-      .hud-rings::after,
-      .mini-renderer::before,
-      .mini-receipt::before,
-      .mini-seal::before{
+      .visual-hero::before,
+      .product-card::before,
+      .product-card::after,
+      .anchor-icon.renderer::before,
+      .anchor-icon.receipt::before,
+      .anchor-icon.contract::before{
         animation:none!important;
       }
     }
@@ -1277,18 +1355,14 @@
       <details class="planet-menu">
         <summary>Planet Menu</summary>
         <div class="planet-menu-panel">
-          <a href="#planet-orbit">Return to Planet Orbit <span>Origin</span></a>
-          <a href="#body-glass">Body Glass <span>N/NNE</span></a>
-          <a href="#surface-console">Surface Console <span>NE/ENE</span></a>
-          <a href="#terrain-deck">Terrain Deck <span>E/ESE</span></a>
-          <a href="#lattice-scope">Lattice Scope <span>SE/SSE</span></a>
-          <a href="#water-hold">Water Hold <span>S/SSW</span></a>
-          <a href="#renderer-mount">Renderer Mount <span>SW/WSW</span></a>
-          <a href="#receipt-dock">Receipt Dock <span>W/WNW</span></a>
-          <a href="#contract-seal">Contract Seal <span>NW/NNW</span></a>
-          <a href="/showroom/globe/audralia/">Audralia Route <span>Return</span></a>
+          <a href="/">Compass <span>Root</span></a>
           <a href="/showroom/globe/">Globe <span>Gateway</span></a>
-          <a href="/gauges/">Triple G <span>Audit</span></a>
+          <a href="/showroom/globe/audralia/">Audralia <span>Route</span></a>
+          <a href="/showroom/globe/audralia/planet/" aria-current="page">Planet <span>Current</span></a>
+          <a href="/gauges/">Gauges <span>Audit</span></a>
+          <a href="#planet-orbit">Product View <span>Visual</span></a>
+          <a href="#expression-anchors">Expression Anchors <span>Page</span></a>
+          <a href="#proof-chambers">Proof Chambers <span>Technical</span></a>
         </div>
       </details>
 
@@ -1296,129 +1370,168 @@
     </header>
 
     <main id="planet-main" class="planet-frame">
-      <section id="planet-orbit" class="viewport-deck" aria-labelledby="page-title">
-        <div class="planet-layout">
-          <nav class="instrument-wing left-wing" aria-label="Left Audralia planet instruments">
-            <a class="instrument" href="#body-glass">
-              <span class="compass-badge">N/NNE</span>
-              <span class="mini-sphere" aria-hidden="true"></span>
-              <span class="instrument-copy"><strong>Body Glass</strong><span>dry sphere · route/body</span></span>
-            </a>
-
-            <a class="instrument" href="#surface-console">
-              <span class="compass-badge">NE/ENE</span>
-              <span class="mini-surface" aria-hidden="true"></span>
-              <span class="instrument-copy"><strong>Surface Console</strong><span>material · surface held</span></span>
-            </a>
-
-            <a class="instrument" href="#terrain-deck">
-              <span class="compass-badge">E/ESE</span>
-              <span class="mini-terrain" aria-hidden="true"></span>
-              <span class="instrument-copy"><strong>Terrain Deck</strong><span>relief · terrain held</span></span>
-            </a>
-
-            <a class="instrument" href="#lattice-scope">
-              <span class="compass-badge">SE/SSE</span>
-              <span class="mini-lattice" aria-hidden="true"></span>
-              <span class="instrument-copy"><strong>Lattice Scope</strong><span>16×16 · 256 seats</span></span>
-            </a>
-          </nav>
+      <section id="planet-orbit" class="visual-hero" aria-labelledby="page-title">
+        <div class="hero-grid">
+          <article class="hero-copy">
+            <p class="kicker">Audralia G2 · visual-first parent route</p>
+            <h1 id="page-title">See the planet first. Then inspect the proof.</h1>
+            <p>
+              Audralia now presents as a product-world object before the technical scaffolding begins. The visible dry sphere leads; coordinate law and handoff proof support it underneath.
+            </p>
+            <div class="hero-actions">
+              <a class="hero-action primary" href="#planet-product">View Planet Product Object</a>
+              <a class="hero-action green" href="#expression-anchors">Open Expression Anchors</a>
+              <a class="hero-action" href="#proof-chambers">Read Technical Proof</a>
+            </div>
+          </article>
 
           <section
-            class="planet-window"
-            data-audralia-planet-stage
-            aria-label="Audralia G2 native WebGL dry sphere stage"
+            id="planet-product"
+            class="product-card"
+            aria-label="Audralia visual product object"
           >
-            <div class="star-drift" aria-hidden="true"></div>
-            <div class="hud-rings" aria-hidden="true"></div>
+            <div class="product-top">
+              <div class="product-gem" aria-hidden="true"><span>AU</span></div>
+              <div class="product-tag">
+                <b>Audralia Product Gem</b>
+                <span>dry planet · coordinate handoff</span>
+              </div>
+            </div>
 
-            <div class="planet-stage">
+            <div
+              class="planet-stage"
+              data-audralia-planet-stage
+              aria-label="Audralia G2 native dry sphere stage"
+            >
               <div class="fallback-planet" data-audralia-planet-fallback aria-hidden="true"></div>
               <canvas
                 class="planet-canvas"
                 data-audralia-planet-canvas
-                aria-label="Audralia G2 native WebGL dry sphere renderer canvas"
+                aria-label="Audralia G2 route-level dry sphere renderer canvas"
               ></canvas>
             </div>
 
-            <div class="viewport-frame" aria-hidden="true"></div>
+            <div class="mode-controls" aria-label="Audralia visual inspection modes">
+              <button class="mode-button" type="button" data-audralia-mode="body" aria-pressed="true">Body</button>
+              <button class="mode-button" type="button" data-audralia-mode="surface" aria-pressed="false">Surface</button>
+              <button class="mode-button" type="button" data-audralia-mode="terrain" aria-pressed="false">Terrain</button>
+              <button class="mode-button" type="button" data-audralia-mode="lattice" aria-pressed="false">Lattice</button>
+              <button class="mode-button" type="button" data-audralia-mode="receipt" aria-pressed="false">Receipt</button>
+            </div>
+          </section>
 
-            <div class="planet-title-card">
-              <p class="kicker">Audralia G2 · dry planet in formation · coordinate handoff active</p>
-              <h1 id="page-title">Audralia is visible before the water returns.</h1>
-              <p>
-                A true dry sphere is rendered through 16 compass lanes, 16 versions per lane, 256 unique seats, and a handoff-capable coordinate network.
-              </p>
-              <div class="viewport-status">
-                <span class="status-pill">Native WebGL sphere</span>
-                <span class="status-pill">16 lanes × 16 versions</span>
-                <span class="status-pill">256 seats</span>
-                <span class="status-pill">Water held</span>
-                <span class="status-pill">Final pass false</span>
-                <span class="status-pill" data-audralia-renderer-status>Renderer initializing</span>
-              </div>
+          <aside class="proof-summary" aria-label="Audralia product proof summary">
+            <p class="kicker">Product proof · kept below the object</p>
 
-              <div class="mode-controls" aria-label="Audralia planet renderer modes">
-                <button class="mode-button" type="button" data-audralia-mode="body" aria-pressed="true">Body</button>
-                <button class="mode-button" type="button" data-audralia-mode="surface" aria-pressed="false">Surface</button>
-                <button class="mode-button" type="button" data-audralia-mode="terrain" aria-pressed="false">Terrain</button>
-                <button class="mode-button" type="button" data-audralia-mode="lattice" aria-pressed="false">Lattice</button>
-                <button class="mode-button" type="button" data-audralia-mode="receipt" aria-pressed="false">Receipt</button>
-              </div>
+            <div class="summary-meter">
+              <b>Renderer</b>
+              <span class="renderer-status" data-audralia-renderer-status>Fallback dry planet visible · renderer initializing</span>
+            </div>
+
+            <div class="summary-meter">
+              <b>Coordinate Law</b>
+              <span>16 coordinate identities × 16 version identities = 256 addressable expression states.</span>
+            </div>
+
+            <div class="summary-meter">
+              <b>Held State</b>
+              <span>Hydration, active water, terrain child, surface child, datum child, and final visual pass remain held.</span>
             </div>
 
             <div class="mode-panel" aria-live="polite">
               <div class="mode-head">
-                <b data-audralia-mode-title>Body Glass</b>
-                <span data-audralia-mode-status>BODY · dry sphere · water held</span>
+                <b data-audralia-mode-title>Body</b>
+                <span data-audralia-mode-status>DRY SPHERE · PRODUCT VIEW</span>
               </div>
               <div class="mode-copy">
                 <article>
                   <b>Platform</b>
-                  <span data-audralia-mode-platform>The world reads as one coherent dry planet before any downstream child owns terrain, surface, or hydration.</span>
+                  <span data-audralia-mode-platform>Audralia reads first as a complete dry world object. The proof system exists underneath, but the planet carries the page.</span>
                 </article>
                 <article>
                   <b>Engineering</b>
-                  <span data-audralia-mode-engineering>Body mode restrains the 32-color system into lighting and material. It proves spherical presence without activating child truth.</span>
+                  <span data-audralia-mode-engineering>Body mode restrains coordinate color into lighting and material so the route opens with form clarity, not a debug lattice.</span>
                 </article>
               </div>
             </div>
-          </section>
-
-          <nav class="instrument-wing right-wing" aria-label="Right Audralia planet instruments">
-            <a class="instrument" href="#water-hold">
-              <span class="compass-badge">S/SSW</span>
-              <span class="mini-water" aria-hidden="true"></span>
-              <span class="instrument-copy"><strong>Water Hold</strong><span>hydration false</span></span>
-            </a>
-
-            <a class="instrument" href="#renderer-mount">
-              <span class="compass-badge">SW/WSW</span>
-              <span class="mini-renderer" aria-hidden="true"></span>
-              <span class="instrument-copy"><strong>Renderer Mount</strong><span>single canvas · fail-open</span></span>
-            </a>
-
-            <a class="instrument" href="#receipt-dock">
-              <span class="compass-badge">W/WNW</span>
-              <span class="mini-receipt" aria-hidden="true"></span>
-              <span class="instrument-copy"><strong>Receipt Dock</strong><span>handoff states</span></span>
-            </a>
-
-            <a class="instrument" href="#contract-seal">
-              <span class="compass-badge">NW/NNW</span>
-              <span class="mini-seal" aria-hidden="true"></span>
-              <span class="instrument-copy"><strong>Contract Seal</strong><span>authority · no false pass</span></span>
-            </a>
-          </nav>
+          </aside>
         </div>
       </section>
 
-      <section class="chamber-deck" aria-label="Audralia G2 planet chambers">
+      <section id="expression-anchors" class="anchor-deck" aria-labelledby="anchor-title">
+        <div class="anchor-head">
+          <p class="kicker">Expression anchors · page explanation, not mode controls</p>
+          <h2 id="anchor-title">The anchors explain what the visual object means.</h2>
+          <p>
+            The mode buttons control the planet. These anchors explain what the page is showing, what remains held, and where each layer hands off next.
+          </p>
+        </div>
+
+        <div class="anchor-grid">
+          <a class="anchor-card" href="#body-glass">
+            <span class="anchor-icon" aria-hidden="true"></span>
+            <strong>Body</strong>
+            <span>visible sphere</span>
+            <p>The dry world body is the first visible product object. It hands off to route shell and renderer.</p>
+          </a>
+
+          <a class="anchor-card" href="#surface-console">
+            <span class="anchor-icon surface" aria-hidden="true"></span>
+            <strong>Surface</strong>
+            <span>dry material</span>
+            <p>Surface expression is visible as route-level preview. The surface child remains held.</p>
+          </a>
+
+          <a class="anchor-card" href="#terrain-deck">
+            <span class="anchor-icon terrain" aria-hidden="true"></span>
+            <strong>Terrain</strong>
+            <span>relief pressure</span>
+            <p>Terrain appears as ridge, basin, and mass pressure. The physical terrain child remains held.</p>
+          </a>
+
+          <a class="anchor-card" href="#lattice-scope">
+            <span class="anchor-icon lattice" aria-hidden="true"></span>
+            <strong>Lattice</strong>
+            <span>16 × 16</span>
+            <p>The coordinate system stays underneath the visual product object until the viewer chooses to inspect it.</p>
+          </a>
+
+          <a class="anchor-card" href="#water-hold">
+            <span class="anchor-icon water" aria-hidden="true"></span>
+            <strong>Water</strong>
+            <span>held</span>
+            <p>Water is not active. Hydration waits for downstream terrain and surface readiness.</p>
+          </a>
+
+          <a class="anchor-card" href="#renderer-mount">
+            <span class="anchor-icon renderer" aria-hidden="true"></span>
+            <strong>Renderer</strong>
+            <span>enhancement</span>
+            <p>The renderer enhances the visible planet. It does not rescue the page or own final truth.</p>
+          </a>
+
+          <a class="anchor-card" href="#receipt-dock">
+            <span class="anchor-icon receipt" aria-hidden="true"></span>
+            <strong>Receipt</strong>
+            <span>handoff</span>
+            <p>Receipt mode reveals what is defined, held, pending, blocked, and confirmed.</p>
+          </a>
+
+          <a class="anchor-card" href="#contract-seal">
+            <span class="anchor-icon contract" aria-hidden="true"></span>
+            <strong>Contract</strong>
+            <span>boundary</span>
+            <p>The contract seal prevents donor collapse, active water drift, and final-pass overclaim.</p>
+          </a>
+        </div>
+      </section>
+
+      <section id="proof-chambers" class="chamber-deck" aria-label="Audralia visual-first proof chambers">
         <details id="body-glass" class="chamber" open>
           <summary>
             <span class="summary-copy">
               <b>Body Glass</b>
-              <span>N / NNE · dry sphere body · route shell + renderer proof</span>
+              <span>N / NNE · visible dry sphere · product object first</span>
             </span>
             <span class="summary-action">Open chamber</span>
           </summary>
@@ -1430,33 +1543,36 @@
                 <input id="body-engineering" name="lens-body" type="radio" value="engineering">
                 <label for="body-engineering">Engineering Lens</label>
               </div>
+
               <div class="lens-content platform-content">
-                <p>Audralia must first read as a dry world in formation. The body is visible before water returns.</p>
+                <p>The page now opens with a visible Audralia product-world object instead of asking the visitor to read the proof first.</p>
                 <div class="card-grid">
-                  <article class="engine-card"><b>What you see</b><strong>Dry sphere</strong><span>A dimensional planet body replaces the flat-plate read.</span></article>
-                  <article class="engine-card"><b>What it means</b><strong>World first</strong><span>The page presents Audralia before explaining the build.</span></article>
-                  <article class="engine-card"><b>What stays held</b><strong>Children</strong><span>Terrain, surface, datum, hydration, and final pass remain held.</span></article>
+                  <article class="engine-card"><b>What you see</b><strong>Dry sphere</strong><span>A planet object carries the first impression.</span></article>
+                  <article class="engine-card"><b>What it means</b><strong>Visual authority</strong><span>The proof stack supports the product object instead of replacing it.</span></article>
+                  <article class="engine-card"><b>What stays held</b><strong>Downstream truth</strong><span>Terrain, surface, datum, hydration, and final pass remain held.</span></article>
                 </div>
               </div>
+
               <div class="lens-content engineering-content">
                 <div class="engineering-panel">
                   <div class="engineering-panel-head">
                     <b>Body Glass Engineering</b>
-                    <strong>Route body + renderer body remain separate.</strong>
-                    <span>HTML owns the fallback and shell. JS owns the native WebGL sphere. Neither activates downstream child truth.</span>
+                    <strong>Parent route owns the visual-first shell.</strong>
+                    <span>The HTML owns fallback visibility and route presentation. The renderer enhances the stage if available. No downstream child truth is activated.</span>
                   </div>
                   <div class="tech-readout-grid">
-                    <article class="readout-cell"><b>HTML</b><span>/showroom/globe/audralia/planet/index.html</span></article>
-                    <article class="readout-cell"><b>JS</b><span>/showroom/globe/audralia/planet/index.js</span></article>
-                    <article class="readout-cell"><b>Handoff</b><span>route-shell · planet-renderer</span></article>
-                    <article class="readout-cell"><b>Water</b><span>false · held</span></article>
+                    <article class="readout-cell"><b>Parent File</b><span>/showroom/globe/audralia/planet/index.html</span></article>
+                    <article class="readout-cell"><b>Renderer File</b><span>/showroom/globe/audralia/planet/index.js</span></article>
+                    <article class="readout-cell"><b>Fallback</b><span>visible before JS</span></article>
+                    <article class="readout-cell"><b>Final Pass</b><span>false</span></article>
                   </div>
                 </div>
               </div>
             </div>
+
             <div class="return-row">
-              <span class="boundary-note">Body Glass proves spherical presence, not final visual completion.</span>
-              <a class="return-orbit" href="#planet-orbit">Return to Planet Orbit</a>
+              <span class="boundary-note">Body Glass proves visual-first order, not final planet completion.</span>
+              <a class="return-orbit" href="#planet-orbit">Return to Product View</a>
             </div>
           </div>
         </details>
@@ -1465,7 +1581,7 @@
           <summary>
             <span class="summary-copy">
               <b>Surface Console</b>
-              <span>NE / ENE · dry material expression · surface child held</span>
+              <span>NE / ENE · route-level dry material · surface child held</span>
             </span>
             <span class="summary-action">Open chamber</span>
           </summary>
@@ -1477,33 +1593,36 @@
                 <input id="surface-engineering" name="lens-surface" type="radio" value="engineering">
                 <label for="surface-engineering">Engineering Lens</label>
               </div>
+
               <div class="lens-content platform-content">
-                <p>The surface begins to express dry material character, but the final surface child is not active yet.</p>
+                <p>Surface expression gives the planet visible material presence while keeping canonical surface truth downstream.</p>
                 <div class="card-grid">
-                  <article class="engine-card"><b>What you see</b><strong>Dry material</strong><span>Color and mineral pressure appear without becoming a debug board.</span></article>
-                  <article class="engine-card"><b>What it means</b><strong>Surface pending</strong><span>The renderer previews expression while the child remains held.</span></article>
+                  <article class="engine-card"><b>What you see</b><strong>Dry material</strong><span>Subtle mineral and dry land variation.</span></article>
+                  <article class="engine-card"><b>What it means</b><strong>Preview only</strong><span>The page can show the idea without claiming final surface truth.</span></article>
                   <article class="engine-card"><b>Handoff</b><strong>Surface child</strong><span>/assets/audralia/clean/surface/audralia.g2.surface-material.child.js</span></article>
                 </div>
               </div>
+
               <div class="lens-content engineering-content">
                 <div class="engineering-panel">
                   <div class="engineering-panel-head">
                     <b>Surface Console Engineering</b>
-                    <strong>Renderer-local material expression only.</strong>
-                    <span>Surface mode may express material variation, but it may not load or claim the held surface child.</span>
+                    <strong>Surface child is named, not activated.</strong>
+                    <span>The parent route can expose a dry material preview. The canonical surface file remains held until a downstream definition pass.</span>
                   </div>
                   <div class="tech-readout-grid">
                     <article class="readout-cell"><b>Mode</b><span>surface</span></article>
-                    <article class="readout-cell"><b>Child</b><span>held</span></article>
-                    <article class="readout-cell"><b>Authority</b><span>renderer-local preview</span></article>
-                    <article class="readout-cell"><b>Final Surface</b><span>false</span></article>
+                    <article class="readout-cell"><b>Child Status</b><span>held</span></article>
+                    <article class="readout-cell"><b>Authority</b><span>route-level preview</span></article>
+                    <article class="readout-cell"><b>Claim</b><span>not final</span></article>
                   </div>
                 </div>
               </div>
             </div>
+
             <div class="return-row">
-              <span class="boundary-note">Surface Console previews. It does not activate surface truth.</span>
-              <a class="return-orbit" href="#planet-orbit">Return to Planet Orbit</a>
+              <span class="boundary-note">Surface Console previews material. It does not own surface truth.</span>
+              <a class="return-orbit" href="#planet-orbit">Return to Product View</a>
             </div>
           </div>
         </details>
@@ -1512,7 +1631,7 @@
           <summary>
             <span class="summary-copy">
               <b>Terrain Deck</b>
-              <span>E / ESE · relief pressure · terrain child held</span>
+              <span>E / ESE · ridge / basin pressure · terrain child held</span>
             </span>
             <span class="summary-action">Open chamber</span>
           </summary>
@@ -1524,33 +1643,36 @@
                 <input id="terrain-engineering" name="lens-terrain" type="radio" value="engineering">
                 <label for="terrain-engineering">Engineering Lens</label>
               </div>
+
               <div class="lens-content platform-content">
-                <p>The terrain begins to show relief pressure, ridges, basins, and dry hydrosphere memory.</p>
+                <p>Terrain mode makes the dry sphere feel carved into place without pretending the final terrain child is complete.</p>
                 <div class="card-grid">
-                  <article class="engine-card"><b>What you see</b><strong>Relief pressure</strong><span>The dry body gains mass and landform implication.</span></article>
-                  <article class="engine-card"><b>What it means</b><strong>Terrain pending</strong><span>The renderer previews pressure while final terrain remains downstream.</span></article>
+                  <article class="engine-card"><b>What you see</b><strong>Relief pressure</strong><span>Ridges, basins, and dry mass behavior.</span></article>
+                  <article class="engine-card"><b>What it means</b><strong>Physical direction</strong><span>The planet gains physical readability.</span></article>
                   <article class="engine-card"><b>Handoff</b><strong>Terrain child</strong><span>/assets/audralia/clean/terrain/audralia.g2.physical-terrain.child.js</span></article>
                 </div>
               </div>
+
               <div class="lens-content engineering-content">
                 <div class="engineering-panel">
                   <div class="engineering-panel-head">
                     <b>Terrain Deck Engineering</b>
-                    <strong>Preliminary relief without final terrain claim.</strong>
-                    <span>Terrain mode may use displacement and shading, but the held terrain child remains the future authority.</span>
+                    <strong>Terrain expression is route-level only.</strong>
+                    <span>The renderer may show relief pressure. The terrain child remains held and must receive a separate downstream definition pass.</span>
                   </div>
                   <div class="tech-readout-grid">
                     <article class="readout-cell"><b>Mode</b><span>terrain</span></article>
-                    <article class="readout-cell"><b>Child</b><span>held</span></article>
+                    <article class="readout-cell"><b>Child Status</b><span>held</span></article>
                     <article class="readout-cell"><b>Hydration</b><span>false</span></article>
-                    <article class="readout-cell"><b>Final Terrain</b><span>false</span></article>
+                    <article class="readout-cell"><b>Ground Level</b><span>held</span></article>
                   </div>
                 </div>
               </div>
             </div>
+
             <div class="return-row">
-              <span class="boundary-note">Terrain Deck previews relief. It does not finalize terrain truth.</span>
-              <a class="return-orbit" href="#planet-orbit">Return to Planet Orbit</a>
+              <span class="boundary-note">Terrain Deck shows physical direction. It does not finalize terrain truth.</span>
+              <a class="return-orbit" href="#planet-orbit">Return to Product View</a>
             </div>
           </div>
         </details>
@@ -1559,7 +1681,7 @@
           <summary>
             <span class="summary-copy">
               <b>Lattice Scope</b>
-              <span>SE / SSE · 16 compass lanes × 16 versions = 256 seats</span>
+              <span>SE / SSE · 16 coordinate identities × 16 version identities</span>
             </span>
             <span class="summary-action">Open chamber</span>
           </summary>
@@ -1571,33 +1693,36 @@
                 <input id="lattice-engineering" name="lens-lattice" type="radio" value="engineering">
                 <label for="lattice-engineering">Engineering Lens</label>
               </div>
+
               <div class="lens-content platform-content">
-                <p>The lattice is not a grid. It is a coordinate-version network where every anchor has identity, duty, and handoff.</p>
+                <p>The lattice is the proof system behind the planet. It should be inspectable without dominating the first impression.</p>
                 <div class="card-grid">
-                  <article class="engine-card"><b>Coordinates</b><strong>16 lanes</strong><span>N through NNW as named compass identities.</span></article>
-                  <article class="engine-card"><b>Versions</b><strong>16 versions</strong><span>V01 through V16 inside every coordinate lane.</span></article>
-                  <article class="engine-card"><b>Seats</b><strong>256 anchors</strong><span>Every anchor is identity-bearing and handoff-capable.</span></article>
+                  <article class="engine-card"><b>Coordinates</b><strong>16 identities</strong><span>N through NNW.</span></article>
+                  <article class="engine-card"><b>Versions</b><strong>16 identities</strong><span>V01 through V16.</span></article>
+                  <article class="engine-card"><b>Seats</b><strong>256 states</strong><span>Every state carries duty and handoff.</span></article>
                 </div>
               </div>
+
               <div class="lens-content engineering-content">
                 <div class="engineering-panel">
                   <div class="engineering-panel-head">
                     <b>Lattice Scope Engineering</b>
-                    <strong>Coordinate identity + version identity + expressive duty + handoff.</strong>
-                    <span>The renderer generates seats from stable coordinate and version tables. It does not manually improvise 256 cells.</span>
+                    <strong>Coordinate identity, version identity, expressive duty, and handoff remain bound.</strong>
+                    <span>16 × 16 is preserved as an addressable expression system, not generic decoration.</span>
                   </div>
                   <div class="tech-readout-grid">
                     <article class="readout-cell"><b>Formula</b><span>16 × 16 = 256</span></article>
                     <article class="readout-cell"><b>Address</b><span>AU-G2-[COORDINATE]-[VERSION]</span></article>
-                    <article class="readout-cell"><b>Colors</b><span>16 lane + 16 version</span></article>
-                    <article class="readout-cell"><b>Datum</b><span>held · future handoff</span></article>
+                    <article class="readout-cell"><b>Color</b><span>16 coordinate + 16 version</span></article>
+                    <article class="readout-cell"><b>Datum</b><span>held</span></article>
                   </div>
                 </div>
               </div>
             </div>
+
             <div class="return-row">
-              <span class="boundary-note">Lattice Scope exposes the network. It does not activate datum child authority.</span>
-              <a class="return-orbit" href="#planet-orbit">Return to Planet Orbit</a>
+              <span class="boundary-note">Lattice Scope reveals the understructure. It does not become the first read.</span>
+              <a class="return-orbit" href="#planet-orbit">Return to Product View</a>
             </div>
           </div>
         </details>
@@ -1606,7 +1731,7 @@
           <summary>
             <span class="summary-copy">
               <b>Water Hold</b>
-              <span>S / SSW · active water false · future hydration held</span>
+              <span>S / SSW · active water false · hydration held</span>
             </span>
             <span class="summary-action">Open chamber</span>
           </summary>
@@ -1618,33 +1743,36 @@
                 <input id="water-engineering" name="lens-water" type="radio" value="engineering">
                 <label for="water-engineering">Engineering Lens</label>
               </div>
+
               <div class="lens-content platform-content">
-                <p>Audralia is visible before the water returns. Blue may appear as atmosphere, shadow, lattice glow, or held memory only.</p>
+                <p>Audralia is visible before the water returns. The page may imply held memory, but it cannot activate water.</p>
                 <div class="card-grid">
                   <article class="engine-card"><b>Water</b><strong>Held</strong><span>No ocean, river, lake, or wet coastline.</span></article>
                   <article class="engine-card"><b>Hydration</b><strong>Future</strong><span>Hydration waits for terrain and surface readiness.</span></article>
                   <article class="engine-card"><b>Status</b><strong>False</strong><span>activeWater=false and hydrationLoaded=false.</span></article>
                 </div>
               </div>
+
               <div class="lens-content engineering-content">
                 <div class="engineering-panel">
                   <div class="engineering-panel-head">
                     <b>Water Hold Engineering</b>
-                    <strong>Hydration cannot activate in this TNT.</strong>
-                    <span>Water seats may hand off to water-held-layer or future-hydration-held only.</span>
+                    <strong>Hydration cannot activate from this parent route.</strong>
+                    <span>Blue may represent atmosphere, shadow, lattice glow, or dry hydrosphere memory only. It may not become active water.</span>
                   </div>
                   <div class="tech-readout-grid">
                     <article class="readout-cell"><b>Active Water</b><span>false</span></article>
                     <article class="readout-cell"><b>Hydration</b><span>not loaded</span></article>
-                    <article class="readout-cell"><b>Allowed Blue</b><span>atmosphere · shadow · lattice glow · held memory</span></article>
-                    <article class="readout-cell"><b>Forbidden</b><span>ocean · river · lake · wet coastline</span></article>
+                    <article class="readout-cell"><b>Allowed Blue</b><span>glow · shadow · memory</span></article>
+                    <article class="readout-cell"><b>Forbidden</b><span>ocean · river · lake</span></article>
                   </div>
                 </div>
               </div>
             </div>
+
             <div class="return-row">
-              <span class="boundary-note">Water Hold is binding. No active hydration in this pass.</span>
-              <a class="return-orbit" href="#planet-orbit">Return to Planet Orbit</a>
+              <span class="boundary-note">Water Hold is binding. No hydration in this pass.</span>
+              <a class="return-orbit" href="#planet-orbit">Return to Product View</a>
             </div>
           </div>
         </details>
@@ -1653,7 +1781,7 @@
           <summary>
             <span class="summary-copy">
               <b>Renderer Mount</b>
-              <span>SW / WSW · single canonical canvas · fail-open sphere renderer</span>
+              <span>SW / WSW · renderer enhances · fallback survives</span>
             </span>
             <span class="summary-action">Open chamber</span>
           </summary>
@@ -1665,33 +1793,36 @@
                 <input id="renderer-engineering" name="lens-renderer" type="radio" value="engineering">
                 <label for="renderer-engineering">Engineering Lens</label>
               </div>
+
               <div class="lens-content platform-content">
-                <p>The renderer gives Audralia real spherical depth while the page still survives if the renderer fails.</p>
+                <p>The renderer improves the visible planet, but the page already has a product object before the renderer loads.</p>
                 <div class="card-grid">
-                  <article class="engine-card"><b>What you see</b><strong>Sphere</strong><span>Dimensional dry planet with drag and momentum.</span></article>
-                  <article class="engine-card"><b>Failure path</b><strong>Fallback</strong><span>The CSS planet remains if WebGL is unavailable.</span></article>
-                  <article class="engine-card"><b>Boundary</b><strong>Isolated</strong><span>The renderer operates only inside the planet stage.</span></article>
+                  <article class="engine-card"><b>What it does</b><strong>Enhances</strong><span>Adds motion, modes, and coordinate visualization.</span></article>
+                  <article class="engine-card"><b>What survives</b><strong>Fallback</strong><span>The dry planet remains visible if renderer fails.</span></article>
+                  <article class="engine-card"><b>What it cannot do</b><strong>Overclaim</strong><span>No final visual pass or child activation.</span></article>
                 </div>
               </div>
+
               <div class="lens-content engineering-content">
                 <div class="engineering-panel">
                   <div class="engineering-panel-head">
                     <b>Renderer Mount Engineering</b>
-                    <strong>Audralia-specific WebGL method extraction.</strong>
-                    <span>Showroom provides method only. Audralia uses its own renderer contract, sphere geometry, coordinate map, and receipt.</span>
+                    <strong>Route-level renderer, not canonical planet truth.</strong>
+                    <span>The JS owns mode switching, canvas enhancement, drag/spin, and route receipt. It does not own child engines or final truth.</span>
                   </div>
                   <div class="tech-readout-grid">
                     <article class="readout-cell"><b>Canvas</b><span>single canonical</span></article>
-                    <article class="readout-cell"><b>WebGL</b><span>fail-open</span></article>
-                    <article class="readout-cell"><b>Controls</b><span>drag · momentum · double-tap reset</span></article>
-                    <article class="readout-cell"><b>Authority</b><span>Audralia renderer only</span></article>
+                    <article class="readout-cell"><b>Buttons</b><span>mode controls only</span></article>
+                    <article class="readout-cell"><b>Fallback</b><span>survives</span></article>
+                    <article class="readout-cell"><b>Children</b><span>held</span></article>
                   </div>
                 </div>
               </div>
             </div>
+
             <div class="return-row">
-              <span class="boundary-note">Renderer Mount draws. It does not activate downstream children.</span>
-              <a class="return-orbit" href="#planet-orbit">Return to Planet Orbit</a>
+              <span class="boundary-note">Renderer Mount improves the object. It does not rescue a blank route.</span>
+              <a class="return-orbit" href="#planet-orbit">Return to Product View</a>
             </div>
           </div>
         </details>
@@ -1700,7 +1831,7 @@
           <summary>
             <span class="summary-copy">
               <b>Receipt Dock</b>
-              <span>W / WNW · handoff states · defined / held / pending / blocked</span>
+              <span>W / WNW · defined / held / pending / blocked / confirmed</span>
             </span>
             <span class="summary-action">Open chamber</span>
           </summary>
@@ -1712,33 +1843,36 @@
                 <input id="receipt-engineering" name="lens-receipt" type="radio" value="engineering">
                 <label for="receipt-engineering">Engineering Lens</label>
               </div>
+
               <div class="lens-content platform-content">
-                <p>Receipt mode shows what is defined, what is held, and where every coordinate hands authority next.</p>
+                <p>Receipt mode shows where the system is ready, where it is held, and where authority must move next.</p>
                 <div class="card-grid">
-                  <article class="engine-card"><b>Defined</b><strong>Ready</strong><span>Route and renderer duties can complete locally.</span></article>
+                  <article class="engine-card"><b>Defined</b><strong>Local</strong><span>Route and renderer duties can complete here.</span></article>
                   <article class="engine-card"><b>Held</b><strong>Downstream</strong><span>Terrain, surface, datum, and hydration wait.</span></article>
-                  <article class="engine-card"><b>Blocked</b><strong>No water</strong><span>Hydration cannot activate from this page.</span></article>
+                  <article class="engine-card"><b>Blocked</b><strong>No false pass</strong><span>Water and final visual pass cannot activate.</span></article>
                 </div>
               </div>
+
               <div class="lens-content engineering-content">
                 <div class="engineering-panel">
                   <div class="engineering-panel-head">
                     <b>Receipt Dock Engineering</b>
-                    <strong>Every seat must publish handoff.</strong>
-                    <span>No coordinate seat is allowed to remain decorative-only. Missing handoff fails the renderer law.</span>
+                    <strong>Every coordinate/version state must carry handoff.</strong>
+                    <span>The receipt layer preserves coordinate identity, version identity, expressive duty, and handoff without turning the whole page into a diagnostic wall.</span>
                   </div>
                   <div class="tech-readout-grid">
-                    <article class="readout-cell"><b>Handoff</b><span>required for all seats</span></article>
-                    <article class="readout-cell"><b>Receipt</b><span>renderer receipt + hidden route receipt</span></article>
+                    <article class="readout-cell"><b>Handoff</b><span>required</span></article>
+                    <article class="readout-cell"><b>Seat Count</b><span>256</span></article>
                     <article class="readout-cell"><b>Gauges</b><span>later</span></article>
                     <article class="readout-cell"><b>Final Pass</b><span>false</span></article>
                   </div>
                 </div>
               </div>
             </div>
+
             <div class="return-row">
-              <span class="boundary-note">Receipt Dock reports. It does not claim final visual pass.</span>
-              <a class="return-orbit" href="#planet-orbit">Return to Planet Orbit</a>
+              <span class="boundary-note">Receipt Dock proves state. It does not replace the product object.</span>
+              <a class="return-orbit" href="#planet-orbit">Return to Product View</a>
             </div>
           </div>
         </details>
@@ -1747,7 +1881,7 @@
           <summary>
             <span class="summary-copy">
               <b>Contract Seal</b>
-              <span>NW / NNW · donor boundaries · active water false · final pass false</span>
+              <span>NW / NNW · visual-first route · no false downstream claim</span>
             </span>
             <span class="summary-action">Open chamber</span>
           </summary>
@@ -1759,62 +1893,63 @@
                 <input id="contract-engineering" name="lens-contract" type="radio" value="engineering">
                 <label for="contract-engineering">Engineering Lens</label>
               </div>
+
               <div class="lens-content platform-content">
-                <p>The page is allowed to be more beautiful and more technical without pretending to be final.</p>
+                <p>This renewal changes the order of the experience. It does not pretend the planet is finished.</p>
                 <div class="card-grid">
-                  <article class="engine-card"><b>Donor Use</b><strong>Bounded</strong><span>Cockpit gives presentation. Showroom gives method.</span></article>
-                  <article class="engine-card"><b>Audralia</b><strong>Own authority</strong><span>The planet route receives its own HTML and JS contracts.</span></article>
-                  <article class="engine-card"><b>Truth</b><strong>Held</strong><span>Water and final visual pass remain false.</span></article>
+                  <article class="engine-card"><b>Renewed</b><strong>Visual first</strong><span>The planet/product object leads.</span></article>
+                  <article class="engine-card"><b>Preserved</b><strong>Proof stack</strong><span>Technical chambers remain below the object.</span></article>
+                  <article class="engine-card"><b>Locked</b><strong>No false pass</strong><span>Active water and final visual pass remain false.</span></article>
                 </div>
               </div>
+
               <div class="lens-content engineering-content">
                 <div class="engineering-panel">
                   <div class="engineering-panel-head">
                     <b>Contract Seal Engineering</b>
-                    <strong>Two-file TNT authority.</strong>
-                    <span>HTML owns presentation. JS owns renderer. Donors are method/presentation only. Children remain held.</span>
+                    <strong>Full-pair visual-first parent route rewrite.</strong>
+                    <span>HTML owns visual hierarchy and fallback. JS owns route-level renderer enhancement. Downstream child engines remain held.</span>
                   </div>
                   <div class="tech-readout-grid">
-                    <article class="readout-cell"><b>HTML TNT</b><span>AUDRALIA_G2_PLANET_COCKPIT_DONOR_NATIVE_WEBGL_SPHERE_COORDINATE_HANDOFF_HTML_TNT_v1</span></article>
-                    <article class="readout-cell"><b>JS TNT</b><span>AUDRALIA_G2_PLANET_NATIVE_WEBGL_DRY_SPHERE_COORDINATE_HANDOFF_RENDERER_TNT_v1</span></article>
+                    <article class="readout-cell"><b>HTML TNT</b><span>AUDRALIA_G2_VISUAL_FIRST_PARENT_ROUTE_REWRITE_HTML_TNT_v1</span></article>
+                    <article class="readout-cell"><b>JS TNT</b><span>AUDRALIA_G2_VISUAL_FIRST_PARENT_ROUTE_RENDERER_TNT_v1</span></article>
                     <article class="readout-cell"><b>Active Water</b><span>false</span></article>
                     <article class="readout-cell"><b>Final Visual Pass</b><span>false</span></article>
                   </div>
                 </div>
               </div>
             </div>
+
             <div class="return-row">
-              <span class="boundary-note">Contract Seal verifies authority. It does not expand into final pass.</span>
-              <a class="return-orbit" href="#planet-orbit">Return to Planet Orbit</a>
+              <span class="boundary-note">Contract Seal verifies the route. It does not claim completion.</span>
+              <a class="return-orbit" href="#planet-orbit">Return to Product View</a>
             </div>
           </div>
         </details>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-AUDRALIA_G2_PLANET_COCKPIT_DONOR_NATIVE_WEBGL_SPHERE_COORDINATE_HANDOFF_HTML_TNT_v1
+AUDRALIA_G2_VISUAL_FIRST_PARENT_ROUTE_REWRITE_HTML_TNT_v1
 route=/showroom/globe/audralia/planet/
 html=/showroom/globe/audralia/planet/index.html
 renderer=/showroom/globe/audralia/planet/index.js
-renderer_contract=AUDRALIA_G2_PLANET_NATIVE_WEBGL_DRY_SPHERE_COORDINATE_HANDOFF_RENDERER_TNT_v1
-ccr=AUDRALIA_G2_PLANET_NATIVE_WEBGL_SPHERE_COORDINATE_HANDOFF_CCR_v1
-news=AUDRALIA_G2_PLANET_NATIVE_WEBGL_SPHERE_COORDINATE_HANDOFF_NEWS_ALIGNMENT_v1
-presentation_donor=intergalactic_cockpit_presentation_grammar_only
-rendering_method_donor=showroom_diamond_webgl_method_only
-cockpit_authority=false
-showroom_authority=false
-world_first=true
-headline=Audralia_is_visible_before_the_water_returns
-native_webgl_sphere=true
-fail_open=true
-fallback_dry_planet=true
-single_canonical_canvas=true
-coordinate_lanes=16
-version_families=16
+renderer_contract=AUDRALIA_G2_VISUAL_FIRST_PARENT_ROUTE_RENDERER_TNT_v1
+previous_contract=AUDRALIA_G2_PLANET_COCKPIT_DONOR_NATIVE_WEBGL_SPHERE_COORDINATE_HANDOFF_HTML_TNT_v1
+spec_ops=VISUAL_FIRST_PARENT_ROUTE_REWRITE_SPEC_OPS_v1
+news=VISUAL_FIRST_PARENT_ROUTE_REWRITE_NEWS_ALIGNMENT_v1
+ccr=VISUAL_FIRST_PARENT_ROUTE_REWRITE_CCR_v1
+visual_first=true
+product_object_first=true
+technical_proof_subordinate=true
+fallback_planet_visible=true
+renderer_enhances_not_rescues=true
+mode_controls=body,surface,terrain,lattice,receipt
+expression_anchors=body,surface,terrain,lattice,water,renderer,receipt,contract
+coordinate_identities=16
+version_identities=16
 seat_count=256
 seat_law=coordinate_identity+version_identity+expressive_duty+handoff
-color_law=16_lane_colors+16_version_colors
-view_modes=body,surface,terrain,lattice,receipt
+color_law=16_coordinate_colors+16_version_colors
 active_water=false
 hydration_loaded=false
 terrain_child_loaded=false
@@ -1827,21 +1962,21 @@ visual_pass_claimed=false
 held_datum=/assets/audralia/clean/runtime/audralia.true-globe.datum.js
 held_terrain=/assets/audralia/clean/terrain/audralia.g2.physical-terrain.child.js
 held_surface=/assets/audralia/clean/surface/audralia.g2.surface-material.child.js
-deploy_marker=AUDRALIA_G2_PLANET_NATIVE_WEBGL_SPHERE_COORDINATE_HANDOFF_DEPLOY_MARKER_v1
+deploy_marker=AUDRALIA_G2_VISUAL_FIRST_PARENT_ROUTE_REWRITE_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer class="footer">
-      Audralia G2 Planet · native dry sphere · 16 lanes × 16 versions · 256 coordinate handoff seats · active water false · final visual pass false.
+      Audralia G2 Planet · visual-first parent route · dry product-world object · coordinate handoff preserved · active water false · final visual pass false.
     </footer>
   </div>
 
   <script
-    src="/showroom/globe/audralia/planet/index.js?v=AUDRALIA_G2_PLANET_NATIVE_WEBGL_DRY_SPHERE_COORDINATE_HANDOFF_RENDERER_TNT_v1"
+    src="/showroom/globe/audralia/planet/index.js?v=AUDRALIA_G2_VISUAL_FIRST_PARENT_ROUTE_RENDERER_TNT_v1"
     defer
-    data-audralia-planet-renderer-js
-    data-contract="AUDRALIA_G2_PLANET_NATIVE_WEBGL_DRY_SPHERE_COORDINATE_HANDOFF_RENDERER_TNT_v1"
-    data-html-contract="AUDRALIA_G2_PLANET_COCKPIT_DONOR_NATIVE_WEBGL_SPHERE_COORDINATE_HANDOFF_HTML_TNT_v1"
+    data-audralia-visual-first-renderer-js
+    data-contract="AUDRALIA_G2_VISUAL_FIRST_PARENT_ROUTE_RENDERER_TNT_v1"
+    data-html-contract="AUDRALIA_G2_VISUAL_FIRST_PARENT_ROUTE_REWRITE_HTML_TNT_v1"
     data-active-water="false"
     data-hydration-loaded="false"
     data-final-visual-pass="false"

@@ -4,12 +4,13 @@
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
   data-page="audralia-g2-planet"
-  data-version="G2-ROUTE-ONLY-NATIVE-FIRST"
-  data-contract="AUDRALIA_G2_ROUTE_ONLY_NATIVE_FIRST_VISUAL_TNT_v1"
+  data-version="G2-CREATIVE-PLATFORM-ENGINEERING"
+  data-contract="AUDRALIA_G2_CREATIVE_TED_PLATFORM_ENGINEERING_EXPRESSION_TNT_v1"
   data-donor-contract="COMPASS_INTERGALACTIC_COCKPIT_ACCESS_HATCH_TNT_v1"
-  data-recovery-standard="route-only-native-first-visual"
+  data-recovery-standard="creative-platform-engineering-expression"
   data-static-page-usable-without-js="true"
   data-native-dropdown="true"
+  data-expression-diamonds="page-anchors"
   data-native-lens-controls="true"
   data-gem-visual-system="active"
   data-runtime-stack-held="true"
@@ -32,7 +33,7 @@
   <title>Audralia G2 Planet · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Audralia G2 Planet route-only native-first visual shell: native dropdown, faceted gem lenses, dry planet field, and runtime stack held for the next phase."
+    content="Audralia G2 Planet route-only platform and engineering expression: expression diamonds explain the page, planet options identify the layer definitions, and the runtime stack remains held."
   >
 
   <style>
@@ -117,20 +118,6 @@
       pointer-events:none;
     }
 
-    .lens-radio{
-      position:absolute;
-      width:1px;
-      height:1px;
-      margin:-1px;
-      padding:0;
-      border:0;
-      opacity:.001;
-      overflow:hidden;
-      clip:rect(0 0 0 0);
-      clip-path:inset(50%);
-      white-space:nowrap;
-    }
-
     .skip{
       position:absolute;
       left:-999px;
@@ -196,10 +183,7 @@
       text-shadow:0 2px 10px rgba(0,0,0,.85);
     }
 
-    .brand-copy{
-      display:grid;
-      gap:.18rem;
-    }
+    .brand-copy{display:grid;gap:.18rem}
 
     .brand-copy span{
       color:var(--muted);
@@ -305,10 +289,7 @@
       box-shadow:0 0 2.8rem rgba(243,200,111,.14),0 1.4rem 3.4rem rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.09);
     }
 
-    .cardinal-map{
-      display:grid;
-      gap:.72rem;
-    }
+    .cardinal-map{display:grid;gap:.72rem}
 
     .cardinal-group{
       display:grid;
@@ -401,14 +382,14 @@
 
     .hero{
       display:grid;
-      grid-template-columns:minmax(0,.82fr) minmax(320px,1.18fr);
+      grid-template-columns:minmax(0,.88fr) minmax(320px,1.12fr);
       gap:1.05rem;
       align-items:stretch;
       margin-top:.6rem;
     }
 
     .intro{
-      min-height:44rem;
+      min-height:42rem;
       display:flex;
       flex-direction:column;
       justify-content:space-between;
@@ -489,6 +470,14 @@
       text-wrap:balance;
     }
 
+    h3{
+      margin:0;
+      color:var(--text);
+      font-size:clamp(1.1rem,3vw,1.7rem);
+      line-height:1.05;
+      letter-spacing:-.045em;
+    }
+
     p{
       margin:0;
       color:var(--muted);
@@ -498,11 +487,7 @@
 
     .lead{max-width:60ch}
 
-    .route-proof-grid{
-      display:grid;
-      gap:.7rem;
-      margin-top:1.2rem;
-    }
+    .route-proof-grid{display:grid;gap:.7rem;margin-top:1.2rem}
 
     .proof-row{
       display:grid;
@@ -531,8 +516,45 @@
       overflow-wrap:anywhere;
     }
 
+    .expression-map{
+      min-height:42rem;
+      padding:clamp(1rem,3vw,1.45rem);
+      display:grid;
+      gap:1rem;
+      align-content:start;
+    }
+
+    .expression-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.82rem;
+    }
+
+    .expression-diamond{
+      position:relative;
+      min-height:6.15rem;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      color:rgba(255,244,216,.98);
+      isolation:isolate;
+      transition:transform .18s ease,filter .18s ease;
+    }
+
+    .expression-diamond:hover,
+    .expression-diamond:focus-visible{
+      transform:translateY(-2px) scale(1.02);
+      filter:brightness(1.12);
+      outline:none;
+    }
+
+    .expression-diamond .gem-core{inset:.2rem}
+
+    .expression-diamond .gem-label b{font-size:clamp(.56rem,1.55vw,.78rem)}
+    .expression-diamond .gem-label span{font-size:clamp(.34rem,.9vw,.52rem)}
+
     .planet-card{
-      min-height:44rem;
+      margin-top:1.15rem;
       padding:clamp(.8rem,2.2vw,1.1rem);
     }
 
@@ -567,6 +589,26 @@
       flex:0 0 auto;
     }
 
+    .planet-options{
+      position:relative;
+      display:grid;
+      gap:.8rem;
+    }
+
+    .lens-radio{
+      position:absolute;
+      width:1px;
+      height:1px;
+      margin:-1px;
+      padding:0;
+      border:0;
+      opacity:.001;
+      overflow:hidden;
+      clip:rect(0 0 0 0);
+      clip-path:inset(50%);
+      white-space:nowrap;
+    }
+
     .lens-controls{
       display:grid;
       grid-template-columns:repeat(5,minmax(0,1fr));
@@ -584,40 +626,38 @@
       transform:translateZ(0);
     }
 
-    .lens-gem .gem-core{
-      inset:.2rem;
-    }
+    .lens-gem .gem-core{inset:.2rem}
 
     .lens-gem:hover .gem-core{
       transform:translateY(-.18rem) scale(1.035);
     }
 
-    #lens-body:focus-visible ~ .shell label[for="lens-body"],
-    #lens-surface:focus-visible ~ .shell label[for="lens-surface"],
-    #lens-terrain:focus-visible ~ .shell label[for="lens-terrain"],
-    #lens-lattice:focus-visible ~ .shell label[for="lens-lattice"],
-    #lens-receipt:focus-visible ~ .shell label[for="lens-receipt"]{
+    #lens-body:focus-visible ~ .lens-controls label[for="lens-body"],
+    #lens-surface:focus-visible ~ .lens-controls label[for="lens-surface"],
+    #lens-terrain:focus-visible ~ .lens-controls label[for="lens-terrain"],
+    #lens-lattice:focus-visible ~ .lens-controls label[for="lens-lattice"],
+    #lens-receipt:focus-visible ~ .lens-controls label[for="lens-receipt"]{
       outline:2px solid var(--gold);
       outline-offset:4px;
       border-radius:1.25rem;
     }
 
-    #lens-body:checked ~ .shell label[for="lens-body"] .gem-svg,
-    #lens-surface:checked ~ .shell label[for="lens-surface"] .gem-svg,
-    #lens-terrain:checked ~ .shell label[for="lens-terrain"] .gem-svg,
-    #lens-lattice:checked ~ .shell label[for="lens-lattice"] .gem-svg,
-    #lens-receipt:checked ~ .shell label[for="lens-receipt"] .gem-svg{
+    #lens-body:checked ~ .lens-controls label[for="lens-body"] .gem-svg,
+    #lens-surface:checked ~ .lens-controls label[for="lens-surface"] .gem-svg,
+    #lens-terrain:checked ~ .lens-controls label[for="lens-terrain"] .gem-svg,
+    #lens-lattice:checked ~ .lens-controls label[for="lens-lattice"] .gem-svg,
+    #lens-receipt:checked ~ .lens-controls label[for="lens-receipt"] .gem-svg{
       filter:
         drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
         drop-shadow(0 0 1.5rem rgba(143,240,195,.30))
         drop-shadow(0 0 .9rem rgba(243,200,111,.20));
     }
 
-    #lens-body:checked ~ .shell label[for="lens-body"] .gem-label b,
-    #lens-surface:checked ~ .shell label[for="lens-surface"] .gem-label b,
-    #lens-terrain:checked ~ .shell label[for="lens-terrain"] .gem-label b,
-    #lens-lattice:checked ~ .shell label[for="lens-lattice"] .gem-label b,
-    #lens-receipt:checked ~ .shell label[for="lens-receipt"] .gem-label b{
+    #lens-body:checked ~ .lens-controls label[for="lens-body"] .gem-label b,
+    #lens-surface:checked ~ .lens-controls label[for="lens-surface"] .gem-label b,
+    #lens-terrain:checked ~ .lens-controls label[for="lens-terrain"] .gem-label b,
+    #lens-lattice:checked ~ .lens-controls label[for="lens-lattice"] .gem-label b,
+    #lens-receipt:checked ~ .lens-controls label[for="lens-receipt"] .gem-label b{
       color:var(--green);
     }
 
@@ -665,9 +705,7 @@
       48%,55%{opacity:.56;transform:translateX(34px)}
     }
 
-    @keyframes gemFacetTurn{
-      to{transform:rotate(360deg)}
-    }
+    @keyframes gemFacetTurn{to{transform:rotate(360deg)}}
 
     .gem-label{
       position:relative;
@@ -850,13 +888,13 @@
         linear-gradient(125deg,rgba(255,255,255,.08),transparent 34%,rgba(0,0,0,.24) 72%);
     }
 
-    #lens-body:checked ~ .shell .fallback-globe{filter:saturate(.82) brightness(.86);transform:scale(.985)}
-    #lens-surface:checked ~ .shell .fallback-globe{filter:saturate(1.06) brightness(1.05);transform:scale(1)}
-    #lens-terrain:checked ~ .shell .fallback-globe{filter:saturate(1.14) contrast(1.14) brightness(1.07);transform:scale(1.018)}
-    #lens-lattice:checked ~ .shell .fallback-globe{filter:saturate(.76) brightness(.76);transform:scale(.995)}
-    #lens-receipt:checked ~ .shell .fallback-globe{filter:saturate(.72) brightness(.74);transform:scale(.972)}
+    #lens-body:checked ~ .planet-stage .fallback-globe{filter:saturate(.82) brightness(.86);transform:scale(.985)}
+    #lens-surface:checked ~ .planet-stage .fallback-globe{filter:saturate(1.06) brightness(1.05);transform:scale(1)}
+    #lens-terrain:checked ~ .planet-stage .fallback-globe{filter:saturate(1.14) contrast(1.14) brightness(1.07);transform:scale(1.018)}
+    #lens-lattice:checked ~ .planet-stage .fallback-globe{filter:saturate(.76) brightness(.76);transform:scale(.995)}
+    #lens-receipt:checked ~ .planet-stage .fallback-globe{filter:saturate(.72) brightness(.74);transform:scale(.972)}
 
-    #lens-lattice:checked ~ .shell .fallback-globe::before{
+    #lens-lattice:checked ~ .planet-stage .fallback-globe::before{
       opacity:.88;
       background:
         linear-gradient(0deg,transparent 0 47%,rgba(141,216,255,.32) 48%,transparent 49% 100%),
@@ -866,54 +904,11 @@
       transform:none;
     }
 
-    #lens-receipt:checked ~ .shell .fallback-globe::before{
+    #lens-receipt:checked ~ .planet-stage .fallback-globe::before{
       opacity:.34;
       background:
         repeating-linear-gradient(0deg,transparent 0 .92rem,rgba(143,240,195,.15) .95rem 1rem),
         linear-gradient(95deg,transparent 0 9%,rgba(255,232,163,.10) 10%,transparent 13%);
-    }
-
-    .orbit-gems{
-      position:absolute;
-      inset:0;
-      z-index:3;
-      pointer-events:none;
-    }
-
-    .orbit-chip{
-      position:absolute;
-      display:grid;
-      place-items:center;
-      min-width:5.2rem;
-      min-height:2rem;
-      border:1px solid rgba(184,205,255,.16);
-      border-radius:999px;
-      padding:.42rem .58rem;
-      color:rgba(230,238,255,.80);
-      background:rgba(1,6,16,.50);
-      font-size:.58rem;
-      font-weight:950;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      box-shadow:0 0 .8rem rgba(36,120,255,.08),inset 0 1px 0 rgba(255,255,255,.06);
-      transition:border-color .2s ease,color .2s ease,box-shadow .2s ease;
-    }
-
-    .orbit-chip:nth-child(1){left:50%;top:9%;transform:translateX(-50%)}
-    .orbit-chip:nth-child(2){right:9%;top:30%}
-    .orbit-chip:nth-child(3){right:11%;bottom:25%}
-    .orbit-chip:nth-child(4){left:50%;bottom:9%;transform:translateX(-50%)}
-    .orbit-chip:nth-child(5){left:9%;bottom:25%}
-    .orbit-chip:nth-child(6){left:10%;top:30%}
-
-    #lens-body:checked ~ .shell .orbit-chip[data-lens-chip="body"],
-    #lens-surface:checked ~ .shell .orbit-chip[data-lens-chip="surface"],
-    #lens-terrain:checked ~ .shell .orbit-chip[data-lens-chip="terrain"],
-    #lens-lattice:checked ~ .shell .orbit-chip[data-lens-chip="lattice"],
-    #lens-receipt:checked ~ .shell .orbit-chip[data-lens-chip="receipt"]{
-      border-color:rgba(143,240,195,.52);
-      color:var(--green);
-      box-shadow:0 0 1.2rem rgba(143,240,195,.14),inset 0 1px 0 rgba(255,255,255,.10);
     }
 
     .planet-mount{
@@ -940,15 +935,65 @@
     }
 
     .stage-label strong{color:var(--green)}
-
     .lens-line{display:none}
 
-    #lens-body:checked ~ .shell .lens-line.body,
-    #lens-surface:checked ~ .shell .lens-line.surface,
-    #lens-terrain:checked ~ .shell .lens-line.terrain,
-    #lens-lattice:checked ~ .shell .lens-line.lattice,
-    #lens-receipt:checked ~ .shell .lens-line.receipt{
+    #lens-body:checked ~ .planet-stage .lens-line.body,
+    #lens-surface:checked ~ .planet-stage .lens-line.surface,
+    #lens-terrain:checked ~ .planet-stage .lens-line.terrain,
+    #lens-lattice:checked ~ .planet-stage .lens-line.lattice,
+    #lens-receipt:checked ~ .planet-stage .lens-line.receipt{
       display:block;
+    }
+
+    .definition-panels{
+      display:grid;
+      margin-top:.9rem;
+    }
+
+    .definition-card{
+      display:none;
+      gap:.86rem;
+      padding:1rem;
+      border:1px solid rgba(184,205,255,.14);
+      border-radius:1.2rem;
+      background:
+        radial-gradient(circle at 18% 0%,rgba(143,240,195,.08),transparent 18rem),
+        rgba(1,6,16,.54);
+    }
+
+    #lens-body:checked ~ .definition-panels .def-body,
+    #lens-surface:checked ~ .definition-panels .def-surface,
+    #lens-terrain:checked ~ .definition-panels .def-terrain,
+    #lens-lattice:checked ~ .definition-panels .def-lattice,
+    #lens-receipt:checked ~ .definition-panels .def-receipt{
+      display:grid;
+    }
+
+    .definition-card b{
+      color:var(--gold);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.11em;
+      text-transform:uppercase;
+    }
+
+    .definition-card strong{
+      color:var(--text);
+      font-size:1.12rem;
+      line-height:1.15;
+    }
+
+    .definition-card span{
+      color:var(--muted);
+      font-size:.94rem;
+      line-height:1.48;
+    }
+
+    .definition-card code{
+      color:rgba(143,216,255,.88);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:.78rem;
+      overflow-wrap:anywhere;
     }
 
     .section{
@@ -956,14 +1001,22 @@
       gap:1rem;
       margin-top:1.15rem;
       padding:clamp(1rem,3vw,1.45rem);
+      scroll-margin-top:1rem;
     }
 
-    .route-statement{
+    .section-head{
       display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:.85rem;
+      gap:.55rem;
+      max-width:860px;
     }
 
+    .pair-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.86rem;
+    }
+
+    .pair-card,
     .statement-card{
       min-height:10rem;
       padding:1rem;
@@ -974,6 +1027,7 @@
         rgba(255,255,255,.035);
     }
 
+    .pair-card b,
     .statement-card b{
       display:block;
       margin-bottom:.55rem;
@@ -984,10 +1038,24 @@
       text-transform:uppercase;
     }
 
+    .pair-card span,
     .statement-card span{
       color:var(--muted);
       font-size:.94rem;
       line-height:1.5;
+    }
+
+    .pair-card code{
+      color:rgba(143,216,255,.88);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:.78rem;
+      overflow-wrap:anywhere;
+    }
+
+    .route-statement{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.85rem;
     }
 
     .route-receipt,
@@ -1022,8 +1090,8 @@
 
     @media (max-width:1080px){
       .hero{grid-template-columns:1fr}
-      .intro,.planet-card{min-height:auto}
-      .route-statement{grid-template-columns:1fr}
+      .intro,.expression-map{min-height:auto}
+      .route-statement,.pair-grid{grid-template-columns:1fr}
     }
 
     @media (max-width:980px){
@@ -1042,6 +1110,7 @@
         margin-top:.45rem;
       }
       .route-menu-grid{grid-template-columns:1fr}
+      .expression-grid{grid-template-columns:1fr}
       .lens-controls{grid-template-columns:repeat(2,minmax(0,1fr))}
       .lens-gem{min-height:4.65rem}
       .planet-stage{min-height:36rem}
@@ -1051,21 +1120,12 @@
         height:6.9rem;
       }
       .proof-row{grid-template-columns:1fr}
-      .orbit-chip{
-        min-width:4.5rem;
-        font-size:.50rem;
-      }
-      .orbit-chip:nth-child(2),
-      .orbit-chip:nth-child(3){right:3%}
-      .orbit-chip:nth-child(5),
-      .orbit-chip:nth-child(6){left:3%}
     }
 
     @media (max-width:440px){
       .lens-controls{grid-template-columns:1fr}
       .fallback-orbit{width:min(88%,28rem)}
       .fallback-globe{width:min(86%,23rem)}
-      .orbit-chip{display:none}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -1182,12 +1242,6 @@
     </defs>
   </svg>
 
-  <input class="lens-radio" type="radio" name="audralia-lens" id="lens-body">
-  <input class="lens-radio" type="radio" name="audralia-lens" id="lens-surface" checked>
-  <input class="lens-radio" type="radio" name="audralia-lens" id="lens-terrain">
-  <input class="lens-radio" type="radio" name="audralia-lens" id="lens-lattice">
-  <input class="lens-radio" type="radio" name="audralia-lens" id="lens-receipt">
-
   <a class="skip" href="#main">Skip to Audralia G2 Planet</a>
 
   <div class="shell">
@@ -1263,97 +1317,149 @@
       <section class="hero" aria-labelledby="page-title">
         <article class="panel intro">
           <div>
-            <div class="kicker">G2 Planet · Native route shell</div>
-            <h1 id="page-title">Audralia G2 Planet</h1>
+            <div class="kicker">G2 Planet · Platform / Engineering expression</div>
+            <h1 id="page-title">First prove the route. Then return the renderer.</h1>
             <p class="lead">
-              Inspect the dry planet body through native views for body, surface, terrain, lattice, and receipt. The renderer is held for the next phase; the page itself must stand first.
+              Audralia is visible here as a dry planet route. The diamonds explain the page. The planet options identify which layer needs definition next.
             </p>
 
             <div class="route-proof-grid" aria-label="Route proof">
               <div class="proof-row">
-                <b>Native</b>
-                <span>dropdown and lens controls work without JavaScript</span>
+                <b>Story</b>
+                <span>the page stands before deeper engines drive it</span>
               </div>
               <div class="proof-row">
-                <b>Visual</b>
-                <span>faceted gems, dry planet field, orbit frame, stable text</span>
+                <b>Diamonds</b>
+                <span>page-expression anchors, not planet lens controls</span>
+              </div>
+              <div class="proof-row">
+                <b>Options</b>
+                <span>body, surface, terrain, lattice, receipt definition targets</span>
               </div>
               <div class="proof-row">
                 <b>Held</b>
-                <span>datum, terrain, surface, renderer, canvas, and runtime stack</span>
-              </div>
-              <div class="proof-row">
-                <b>Water</b>
-                <span>hydration held · active water false · final visual pass false</span>
+                <span>runtime stack, canvas, hydration, and final visual pass</span>
               </div>
             </div>
           </div>
 
           <div class="route-proof-grid" aria-label="Held stack">
             <div class="proof-row">
-              <b>Datum</b>
-              <span>held for compatibility inspection after route approval</span>
+              <b>Platform</b>
+              <span>what the visitor sees and why it matters</span>
             </div>
             <div class="proof-row">
-              <b>Terrain</b>
-              <span>held; no physical child file loaded in this route-only shell</span>
+              <b>Engineering</b>
+              <span>what owns the layer, what is held, and what comes next</span>
             </div>
             <div class="proof-row">
-              <b>Surface</b>
-              <span>held; no material child file loaded in this route-only shell</span>
+              <b>Water</b>
+              <span>visible world, active water false</span>
             </div>
             <div class="proof-row">
-              <b>Renderer</b>
-              <span>held; future mount socket present and inert</span>
+              <b>Next</b>
+              <span>fail-open renderer returns after route expression approval</span>
             </div>
           </div>
         </article>
 
-        <article class="panel planet-card" aria-label="Audralia G2 planet inspection">
-          <header class="planet-toolbar">
-            <div class="planet-toolbar-head">
-              <div>
-                <h2>Planet inspection field</h2>
-                <p>Choose a native lens. No JavaScript, runtime, child packets, or canvas are required for this page state.</p>
-              </div>
+        <article class="panel expression-map" aria-labelledby="expression-map-title">
+          <div class="kicker">Expression diamonds</div>
+          <h2 id="expression-map-title">The diamonds explain the page.</h2>
+          <p>Use these as page anchors. They do not control the planet view.</p>
 
-              <div class="planet-identity-gem" aria-hidden="true" style="--delay:-.2s;--tilt-a:-1.6deg;--tilt-b:2.4deg;">
-                <span class="gem-core">
-                  <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
-                    <use href="#audraliaOrganicGem"></use>
-                  </svg>
-                </span>
-                <span class="gem-label"><b>Audralia</b><span>G2 Planet</span></span>
-              </div>
+          <div class="expression-grid">
+            <a class="expression-diamond" href="#expression-audralia" style="--delay:-.2s;--tilt-a:-1.6deg;--tilt-b:2.4deg;">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
+              <span class="gem-label"><b>Audralia</b><span>Route</span></span>
+            </a>
+
+            <a class="expression-diamond" href="#expression-native" style="--delay:-.8s;--tilt-a:1.4deg;--tilt-b:-2.2deg;">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
+              <span class="gem-label"><b>Native</b><span>No JS</span></span>
+            </a>
+
+            <a class="expression-diamond" href="#expression-visual" style="--delay:-1.4s;--tilt-a:-1.5deg;--tilt-b:2.1deg;">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
+              <span class="gem-label"><b>Visual</b><span>Gem Field</span></span>
+            </a>
+
+            <a class="expression-diamond" href="#expression-held" style="--delay:-2s;--tilt-a:1.8deg;--tilt-b:-1.7deg;">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
+              <span class="gem-label"><b>Held Stack</b><span>Paused</span></span>
+            </a>
+
+            <a class="expression-diamond" href="#expression-dry" style="--delay:-2.6s;--tilt-a:-1.9deg;--tilt-b:2deg;">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
+              <span class="gem-label"><b>Dry Planet</b><span>Water Held</span></span>
+            </a>
+
+            <a class="expression-diamond" href="#expression-mount" style="--delay:-3.2s;--tilt-a:1.4deg;--tilt-b:-2.3deg;">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
+              <span class="gem-label"><b>Future Mount</b><span>PTR Socket</span></span>
+            </a>
+
+            <a class="expression-diamond" href="#expression-receipt" style="--delay:-3.8s;--tilt-a:-1.3deg;--tilt-b:2.2deg;">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
+              <span class="gem-label"><b>Receipt</b><span>Proof</span></span>
+            </a>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel planet-card" aria-label="Audralia G2 planet definition options">
+        <header class="planet-toolbar">
+          <div class="planet-toolbar-head">
+            <div>
+              <div class="kicker">Planet Definition Options</div>
+              <h2>Choose the layer that needs definition help.</h2>
+              <p>These controls are separate from the expression diamonds. They inspect the planet layer and name the file or definition target.</p>
             </div>
 
-            <div class="lens-controls" aria-label="Audralia G2 native lens controls">
-              <label class="lens-gem" for="lens-body" style="--delay:-.3s;--tilt-a:-1.8deg;--tilt-b:1.8deg;">
-                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
-                <span class="gem-label"><b>Body</b><span>Dry Mass</span></span>
-              </label>
-
-              <label class="lens-gem" for="lens-surface" style="--delay:-.9s;--tilt-a:1.3deg;--tilt-b:-2.2deg;">
-                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
-                <span class="gem-label"><b>Surface</b><span>Dry Terrain</span></span>
-              </label>
-
-              <label class="lens-gem" for="lens-terrain" style="--delay:-1.5s;--tilt-a:-1.4deg;--tilt-b:2.2deg;">
-                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
-                <span class="gem-label"><b>Terrain</b><span>Relief</span></span>
-              </label>
-
-              <label class="lens-gem" for="lens-lattice" style="--delay:-2.1s;--tilt-a:1.7deg;--tilt-b:-1.7deg;">
-                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
-                <span class="gem-label"><b>Lattice</b><span>256 Seat</span></span>
-              </label>
-
-              <label class="lens-gem" for="lens-receipt" style="--delay:-2.7s;--tilt-a:-2deg;--tilt-b:2deg;">
-                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
-                <span class="gem-label"><b>Receipt</b><span>Audit</span></span>
-              </label>
+            <div class="planet-identity-gem" aria-hidden="true" style="--delay:-.2s;--tilt-a:-1.6deg;--tilt-b:2.4deg;">
+              <span class="gem-core">
+                <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+                  <use href="#audraliaOrganicGem"></use>
+                </svg>
+              </span>
+              <span class="gem-label"><b>Audralia</b><span>G2 Planet</span></span>
             </div>
-          </header>
+          </div>
+        </header>
+
+        <div class="planet-options">
+          <input class="lens-radio" type="radio" name="audralia-lens" id="lens-body">
+          <input class="lens-radio" type="radio" name="audralia-lens" id="lens-surface" checked>
+          <input class="lens-radio" type="radio" name="audralia-lens" id="lens-terrain">
+          <input class="lens-radio" type="radio" name="audralia-lens" id="lens-lattice">
+          <input class="lens-radio" type="radio" name="audralia-lens" id="lens-receipt">
+
+          <div class="lens-controls" aria-label="Audralia G2 native planet definition controls">
+            <label class="lens-gem" for="lens-body" style="--delay:-.3s;--tilt-a:-1.8deg;--tilt-b:1.8deg;">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
+              <span class="gem-label"><b>Body</b><span>Route</span></span>
+            </label>
+
+            <label class="lens-gem" for="lens-surface" style="--delay:-.9s;--tilt-a:1.3deg;--tilt-b:-2.2deg;">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
+              <span class="gem-label"><b>Surface</b><span>Material</span></span>
+            </label>
+
+            <label class="lens-gem" for="lens-terrain" style="--delay:-1.5s;--tilt-a:-1.4deg;--tilt-b:2.2deg;">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
+              <span class="gem-label"><b>Terrain</b><span>Relief</span></span>
+            </label>
+
+            <label class="lens-gem" for="lens-lattice" style="--delay:-2.1s;--tilt-a:1.7deg;--tilt-b:-1.7deg;">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
+              <span class="gem-label"><b>Lattice</b><span>256 Seat</span></span>
+            </label>
+
+            <label class="lens-gem" for="lens-receipt" style="--delay:-2.7s;--tilt-a:-2deg;--tilt-b:2deg;">
+              <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
+              <span class="gem-label"><b>Receipt</b><span>Audit</span></span>
+            </label>
+          </div>
 
           <section
             id="audraliaPlanetInspectionStage"
@@ -1369,15 +1475,6 @@
               </div>
             </div>
 
-            <div class="orbit-gems" aria-hidden="true">
-              <span class="orbit-chip" data-lens-chip="body">Body</span>
-              <span class="orbit-chip" data-lens-chip="surface">Surface</span>
-              <span class="orbit-chip" data-lens-chip="terrain">Terrain</span>
-              <span class="orbit-chip">Held PTR</span>
-              <span class="orbit-chip" data-lens-chip="lattice">Lattice</span>
-              <span class="orbit-chip" data-lens-chip="receipt">Receipt</span>
-            </div>
-
             <div
               id="audraliaPlanetInspectionMount"
               class="planet-mount"
@@ -1386,42 +1483,188 @@
             ></div>
 
             <div class="stage-label" aria-live="polite">
-              <span class="lens-line body"><strong>Body</strong> → stable dry planetary body baseline. Runtime stack held.</span>
-              <span class="lens-line surface"><strong>Surface</strong> → visible dry terrain surface expression. Runtime stack held.</span>
-              <span class="lens-line terrain"><strong>Terrain</strong> → relief-oriented dry terrain preview. Runtime stack held.</span>
-              <span class="lens-line lattice"><strong>Lattice</strong> → 256-seat inspection posture. No second planet and no canvas.</span>
-              <span class="lens-line receipt"><strong>Receipt</strong> → route-only shell proof. Final visual pass remains false.</span>
+              <span class="lens-line body"><strong>Body</strong> → route-owned dry planetary body. The page shell must show a stable world before the renderer returns.</span>
+              <span class="lens-line surface"><strong>Surface</strong> → material definition target. Dry color, roughness, and readability need downstream definition.</span>
+              <span class="lens-line terrain"><strong>Terrain</strong> → relief definition target. Ridges, basins, elevation, and dry hydrosphere memory need downstream definition.</span>
+              <span class="lens-line lattice"><strong>Lattice</strong> → chronological datum target. The 16 × 16 / 256-seat map needs definition continuity.</span>
+              <span class="lens-line receipt"><strong>Receipt</strong> → audit target. Proof stays hidden and final visual pass remains false.</span>
             </div>
           </section>
-        </article>
+
+          <div class="definition-panels" aria-label="Layer definition panels">
+            <article class="definition-card def-body">
+              <b>Body</b>
+              <strong>Route-owned fallback body.</strong>
+              <span>Definition need: prove the page can show a stable dry planetary body before renderer return.</span>
+              <code>/showroom/globe/audralia/planet/index.html</code>
+            </article>
+
+            <article class="definition-card def-surface">
+              <b>Surface</b>
+              <strong>Surface material definition.</strong>
+              <span>Definition need: dry material families, color logic, roughness, surface readability, and former water memory as a material hint.</span>
+              <code>/assets/audralia/clean/surface/audralia.g2.surface-material.child.js</code>
+            </article>
+
+            <article class="definition-card def-terrain">
+              <b>Terrain</b>
+              <strong>Physical terrain definition.</strong>
+              <span>Definition need: relief, ridges, basins, elevation, dry hydrosphere memory, and landform categories.</span>
+              <code>/assets/audralia/clean/terrain/audralia.g2.physical-terrain.child.js</code>
+            </article>
+
+            <article class="definition-card def-lattice">
+              <b>Lattice</b>
+              <strong>Chronological compass / 256-seat datum.</strong>
+              <span>Definition need: 16 lanes × 16 versions, 256 unique chronological seats, color family, and ACK duties.</span>
+              <code>/assets/audralia/clean/runtime/audralia.true-globe.datum.js</code>
+            </article>
+
+            <article class="definition-card def-receipt">
+              <b>Receipt</b>
+              <strong>Audit and renderer handoff definition.</strong>
+              <span>Definition need: hidden receipt, no false pass claims, route-only proof, and later fail-open PTR handoff.</span>
+              <code>/showroom/globe/audralia/planet/index.html · /assets/audralia/clean/runtime/audralia.g2.planet-terrain-renderer.js</code>
+            </article>
+          </div>
+        </div>
       </section>
 
-      <section class="panel section" aria-labelledby="route-title">
-        <div class="kicker">Route-only proof</div>
-        <h2 id="route-title">The page proves its native shell before the renderer returns.</h2>
+      <section id="expression-audralia" class="panel section">
+        <div class="section-head">
+          <div class="kicker">Audralia</div>
+          <h2>The route proves the planet page before the engine returns.</h2>
+        </div>
 
-        <div class="route-statement">
-          <div class="statement-card">
-            <b>Native interaction</b>
-            <span>The dropdown is browser-native. The lens controls are radio inputs and labels. No JavaScript is required for this page state.</span>
-          </div>
+        <div class="pair-grid">
+          <article class="pair-card">
+            <b>Platform</b>
+            <span>This page gives the visitor a clear first read: Audralia is visible, dry, inspectable, and not pretending to be finished.</span>
+          </article>
+          <article class="pair-card">
+            <b>Engineering</b>
+            <span>The route owns the shell, page structure, native controls, fallback field, and hidden receipt. Child truth remains held.</span>
+          </article>
+        </div>
+      </section>
 
-          <div class="statement-card">
-            <b>Future mount</b>
-            <span>The PTR socket exists, but it is empty and inert here. No canvas is allowed in the route-only phase.</span>
-          </div>
+      <section id="expression-native" class="panel section">
+        <div class="section-head">
+          <div class="kicker">Native</div>
+          <h2>The page works before any engine loads.</h2>
+        </div>
 
-          <div class="statement-card">
-            <b>Dry planet rule</b>
-            <span>Blue may appear as atmosphere, lattice glow, or held memory. It is not active water.</span>
-          </div>
+        <div class="pair-grid">
+          <article class="pair-card">
+            <b>Platform</b>
+            <span>The dropdown opens, the page reads, the planet appears, and the visitor can inspect the layer options without waiting on runtime.</span>
+          </article>
+          <article class="pair-card">
+            <b>Engineering</b>
+            <span>Navigation uses real anchors. The dropdown is browser-native. Planet options use radio inputs and labels. No scripts are loaded.</span>
+          </article>
+        </div>
+      </section>
+
+      <section id="expression-visual" class="panel section">
+        <div class="section-head">
+          <div class="kicker">Visual</div>
+          <h2>The page belongs to the Diamond Gate Bridge visual family.</h2>
+        </div>
+
+        <div class="pair-grid">
+          <article class="pair-card">
+            <b>Platform</b>
+            <span>Faceted gems, soft orbit lines, and a dry planet field make the page feel like part of the same world instead of a debug shell.</span>
+          </article>
+          <article class="pair-card">
+            <b>Engineering</b>
+            <span>The Compass donor grammar is active: SVG gems, glints, object animation, stable text, hidden receipt, and mobile-safe layout.</span>
+          </article>
+        </div>
+      </section>
+
+      <section id="expression-held" class="panel section">
+        <div class="section-head">
+          <div class="kicker">Held Stack</div>
+          <h2>The deeper engines are intentionally paused.</h2>
+        </div>
+
+        <div class="pair-grid">
+          <article class="pair-card">
+            <b>Platform</b>
+            <span>The page is not broken because the engines are held. Holding them is the point: the visible route must stand first.</span>
+          </article>
+          <article class="pair-card">
+            <b>Engineering</b>
+            <span>Held resources: datum, terrain, surface, renderer, canvas, hydration, Gauges claim, and final visual pass.</span>
+          </article>
+        </div>
+      </section>
+
+      <section id="expression-dry" class="panel section">
+        <div class="section-head">
+          <div class="kicker">Dry Planet</div>
+          <h2>The world is visible, but water is not active.</h2>
+        </div>
+
+        <div class="pair-grid">
+          <article class="pair-card">
+            <b>Platform</b>
+            <span>Audralia can be seen as a dry planet body. The water story is held until the physical layers are ready.</span>
+          </article>
+          <article class="pair-card">
+            <b>Engineering</b>
+            <span>Blue may appear as atmosphere, lattice glow, or held memory. It must not read as active ocean, river, lake, or wet coastline.</span>
+          </article>
+        </div>
+      </section>
+
+      <section id="expression-mount" class="panel section">
+        <div class="section-head">
+          <div class="kicker">Future Mount</div>
+          <h2>The renderer has a socket, but it does not drive the page yet.</h2>
+        </div>
+
+        <div class="pair-grid">
+          <article class="pair-card">
+            <b>Platform</b>
+            <span>The page shows where the future renderer will return without letting that future renderer control the current experience.</span>
+          </article>
+          <article class="pair-card">
+            <b>Engineering</b>
+            <span><code>#audraliaPlanetInspectionMount</code> exists as an empty inert socket. No canvas is present in this route-only phase.</span>
+          </article>
+        </div>
+      </section>
+
+      <section id="expression-receipt" class="panel section">
+        <div class="section-head">
+          <div class="kicker">Receipt</div>
+          <h2>The page carries proof without becoming a debug wall.</h2>
+        </div>
+
+        <div class="pair-grid">
+          <article class="pair-card">
+            <b>Platform</b>
+            <span>The public page stays readable. The proof is present, but it does not dominate the visitor’s experience.</span>
+          </article>
+          <article class="pair-card">
+            <b>Engineering</b>
+            <span>The hidden receipt records route-only truth: no scripts, no canvas, runtime stack held, active water false, final visual pass false.</span>
+          </article>
         </div>
 
         <template id="route-receipt" data-route-receipt>
-AUDRALIA_G2_ROUTE_ONLY_NATIVE_FIRST_VISUAL_TNT_v1
+AUDRALIA_G2_CREATIVE_TED_PLATFORM_ENGINEERING_EXPRESSION_TNT_v1
 donor=COMPASS_INTERGALACTIC_COCKPIT_ACCESS_HATCH_TNT_v1
 route=/showroom/globe/audralia/planet/
 html=/showroom/globe/audralia/planet/index.html
+diamonds_explain_sections=true
+diamonds_do_not_control_planet_lens=true
+diamond_tap_does_not_target_hidden_radio=true
+planet_definition_options=body,surface,terrain,lattice,receipt
+platform_engineering_pairs=true
 native_dropdown=true
 native_lens_controls=true
 lens_control_method=radio_label_css
@@ -1445,13 +1688,13 @@ active_water=false
 visual_pass_claimed=false
 final_visual_pass_claim=false
 next_phase=PTR_FAIL_OPEN_SPEC_OPS_AFTER_SCREENSHOT_APPROVAL
-deploy_marker=AUDRALIA_G2_ROUTE_ONLY_NATIVE_FIRST_VISUAL_DEPLOY_MARKER_v1
+deploy_marker=AUDRALIA_G2_CREATIVE_TED_PLATFORM_ENGINEERING_EXPRESSION_DEPLOY_MARKER_v1
         </template>
       </section>
     </main>
 
     <footer>
-      AUDRALIA_G2_ROUTE_ONLY_NATIVE_FIRST_VISUAL_TNT_v1 · HTML + CSS only · native lenses · runtime stack held · active water false · final visual pass false.
+      AUDRALIA_G2_CREATIVE_TED_PLATFORM_ENGINEERING_EXPRESSION_TNT_v1 · diamonds explain page · planet options define layers · runtime stack held · active water false · final visual pass false.
     </footer>
   </div>
 </body>

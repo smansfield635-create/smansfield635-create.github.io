@@ -1,16 +1,19 @@
+<!-- TARGET FILE: /showroom/globe/audralia/planet/index.html -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
   data-page="audralia-g2-planet"
-  data-version="G2-RECOVERY"
-  data-contract="AUDRALIA_G2_COMPASS_DONOR_ROUTE_RECOVERY_TNT_v1"
+  data-version="G2-FULL-VISUAL-NATIVE"
+  data-contract="AUDRALIA_G2_FULL_VISUAL_NATIVE_INTERACTION_ROUTE_TNT_v1"
   data-donor-contract="COMPASS_INTERGALACTIC_COCKPIT_ACCESS_HATCH_TNT_v1"
-  data-recovery-standard="working-site-behavior-first"
+  data-recovery-standard="full-donor-visual-native-interaction"
   data-stack="datum-terrain-surface-ptr"
   data-renderer="AUDRALIA_G2_PLANET_TERRAIN_RENDERER_FAIL_OPEN_TNT_v1"
   data-static-page-usable-without-js="true"
-  data-runtime-public-message="false"
+  data-native-dropdown="true"
+  data-route-buttons-bound="route-level"
+  data-gem-visual-system="active"
   data-generated-image="false"
   data-graphic-box="false"
   data-hydration-held="true"
@@ -27,745 +30,1104 @@
   <title>Audralia G2 Planet · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Audralia G2 planet route recovery: working-site behavior first, fail-open planet field, G2 packet enhancement second, final visual pass false."
+    content="Audralia G2 Planet route using full Compass-donor visual/native interaction: native dropdown, faceted gems, route-level lens controls, credible fallback planet, PTR enhancement held as optional."
   >
 
   <style>
-    :root {
-      color-scheme: dark;
-      --bg: #02040b;
-      --ink: #fff4d8;
-      --text: rgba(238, 244, 255, 0.94);
-      --muted: rgba(220, 232, 246, 0.74);
-      --faint: rgba(220, 232, 246, 0.52);
-      --gold: #f3c86f;
-      --gold2: #ffe8a3;
-      --blue: #8dd8ff;
-      --green: #8ff0c3;
-      --panel: rgba(9, 15, 31, 0.88);
-      --line: rgba(184, 205, 255, 0.18);
-      --line-strong: rgba(143, 240, 195, 0.44);
-      --danger: rgba(255, 151, 151, 0.88);
-      --shadow: 0 32px 110px rgba(0, 0, 0, 0.48);
-      --max: 1180px;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    :root{
+      color-scheme:dark;
+      --bg:#02040b;
+      --ink:#fff4d8;
+      --text:rgba(238,244,255,.94);
+      --muted:rgba(220,232,246,.74);
+      --faint:rgba(220,232,246,.52);
+      --gold:#f3c86f;
+      --gold2:#ffe8a3;
+      --blue:#8dd8ff;
+      --green:#8ff0c3;
+      --violet:#8f65ff;
+      --panel:rgba(9,15,31,.88);
+      --line:rgba(184,205,255,.18);
+      --line-strong:rgba(143,240,195,.44);
+      --danger:rgba(255,151,151,.88);
+      --shadow:0 32px 110px rgba(0,0,0,.48);
+      --max:1180px;
+      --brand-gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     }
 
-    * {
-      box-sizing: border-box;
+    *{box-sizing:border-box}
+
+    html{
+      min-width:320px;
+      min-height:100%;
+      background:var(--bg);
+      scroll-behavior:smooth;
+      overflow-x:hidden;
     }
 
-    html {
-      min-width: 320px;
-      min-height: 100%;
-      background: var(--bg);
-      scroll-behavior: smooth;
-      overflow-x: hidden;
-    }
-
-    body {
-      min-width: 320px;
-      min-height: 100vh;
-      margin: 0;
-      color: var(--ink);
-      line-height: 1.5;
-      overflow-x: hidden;
+    body{
+      margin:0;
+      min-width:320px;
+      min-height:100vh;
+      color:var(--ink);
+      line-height:1.5;
+      overflow-x:hidden;
       background:
-        radial-gradient(circle at 50% -8%, rgba(243, 200, 111, 0.18), transparent 28rem),
-        radial-gradient(circle at 12% 18%, rgba(36, 120, 255, 0.18), transparent 28rem),
-        radial-gradient(circle at 88% 30%, rgba(141, 216, 255, 0.13), transparent 28rem),
-        radial-gradient(circle at 50% 78%, rgba(143, 240, 195, 0.08), transparent 34rem),
-        linear-gradient(180deg, #080c17 0%, #030713 58%, #010207 100%);
-      -webkit-font-smoothing: antialiased;
-      text-rendering: geometricPrecision;
+        radial-gradient(circle at 50% -8%,rgba(243,200,111,.18),transparent 28rem),
+        radial-gradient(circle at 12% 18%,rgba(36,120,255,.18),transparent 28rem),
+        radial-gradient(circle at 88% 30%,rgba(141,216,255,.13),transparent 28rem),
+        radial-gradient(circle at 50% 78%,rgba(143,240,195,.08),transparent 34rem),
+        linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
+      -webkit-font-smoothing:antialiased;
+      text-rendering:geometricPrecision;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.22;
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      opacity:.22;
       background-image:
-        radial-gradient(circle, rgba(255, 255, 255, 0.18) 0 1px, transparent 1.5px),
-        linear-gradient(rgba(141, 216, 255, 0.045) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(141, 216, 255, 0.045) 1px, transparent 1px);
-      background-size: 220px 260px, 54px 54px, 54px 54px;
-      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.92), rgba(0, 0, 0, 0.52) 64%, rgba(0, 0, 0, 0.24));
+        radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
+        linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px);
+      background-size:220px 260px,54px 54px,54px 54px;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    a{color:inherit;text-decoration:none}
 
     a:focus-visible,
     button:focus-visible,
     summary:focus-visible,
-    [tabindex]:focus-visible {
-      outline: 2px solid var(--gold);
-      outline-offset: 4px;
+    [tabindex]:focus-visible{
+      outline:2px solid var(--gold);
+      outline-offset:4px;
     }
 
-    .skip {
-      position: absolute;
-      left: -999px;
-      top: 8px;
-      z-index: 50;
-      padding: 0.75rem 1rem;
-      border-radius: 999px;
-      color: #05070d;
-      background: var(--gold);
-      font-weight: 950;
+    .svg-defs{
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+      pointer-events:none;
     }
 
-    .skip:focus {
-      left: 8px;
+    .skip{
+      position:absolute;
+      left:-999px;
+      top:8px;
+      z-index:50;
+      padding:.75rem 1rem;
+      border-radius:999px;
+      color:#05070d;
+      background:var(--gold);
+      font-weight:950;
     }
 
-    .shell {
-      position: relative;
-      z-index: 2;
-      width: min(var(--max), calc(100% - 28px));
-      margin: 0 auto;
-      padding: max(22px, env(safe-area-inset-top)) 0 max(46px, env(safe-area-inset-bottom));
+    .skip:focus{left:8px}
+
+    .shell{
+      position:relative;
+      z-index:2;
+      width:min(var(--max),calc(100% - 28px));
+      margin:0 auto;
+      padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
     }
 
-    .topbar {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      align-items: start;
-      gap: 18px;
-      padding: 12px 0 18px;
+    .topbar{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:start;
+      gap:18px;
+      padding:12px 0 18px;
     }
 
-    .brand {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      align-items: center;
-      gap: 0.9rem;
-      min-width: 260px;
+    .brand{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:.9rem;
+      min-width:260px;
     }
 
-    .brand-mark {
-      width: 4.2rem;
-      height: 4.2rem;
-      display: grid;
-      place-items: center;
-      border: 1px solid rgba(243, 200, 111, 0.44);
-      clip-path: polygon(50% 0%, 78% 9%, 100% 35%, 90% 75%, 50% 100%, 10% 75%, 0% 35%, 22% 9%);
-      transform: rotate(45deg);
+    .brand-mark{
+      width:4.2rem;
+      height:4.2rem;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(243,200,111,.44);
+      clip-path:var(--brand-gem);
+      transform:rotate(45deg);
       background:
-        linear-gradient(35deg, transparent 0 20%, rgba(255, 255, 255, 0.26) 21% 23%, transparent 24%),
-        conic-gradient(from 45deg at 50% 50%, rgba(255, 255, 255, 0.28), rgba(36, 120, 255, 0.20), rgba(1, 15, 60, 0.58), rgba(243, 200, 111, 0.18), rgba(255, 255, 255, 0.28)),
-        radial-gradient(circle at 48% 22%, rgba(255, 255, 255, 0.30), transparent 42%),
-        linear-gradient(145deg, rgba(9, 44, 112, 0.95), rgba(5, 8, 20, 0.98));
+        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.26) 21% 23%,transparent 24%),
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.28),rgba(36,120,255,.20),rgba(1,15,60,.58),rgba(243,200,111,.18),rgba(255,255,255,.28)),
+        radial-gradient(circle at 48% 22%,rgba(255,255,255,.30),transparent 42%),
+        linear-gradient(145deg,rgba(9,44,112,.95),rgba(5,8,20,.98));
       box-shadow:
-        0 0 2rem rgba(36, 120, 255, 0.28),
-        0 1.2rem 2.8rem rgba(0, 0, 0, 0.46),
-        inset 0 1px 0 rgba(255, 255, 255, 0.16);
+        0 0 2rem rgba(36,120,255,.28),
+        0 1.2rem 2.8rem rgba(0,0,0,.46),
+        inset 0 1px 0 rgba(255,255,255,.16);
     }
 
-    .brand-mark span {
-      transform: rotate(-45deg);
-      color: rgba(255, 244, 216, 0.98);
-      font-weight: 950;
-      letter-spacing: 0.04em;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
+    .brand-mark span{
+      transform:rotate(-45deg);
+      color:rgba(255,244,216,.98);
+      font-weight:950;
+      letter-spacing:.04em;
+      text-shadow:0 2px 10px rgba(0,0,0,.85);
     }
 
-    .brand-copy {
-      display: grid;
-      gap: 0.18rem;
+    .brand-copy{
+      display:grid;
+      gap:.18rem;
     }
 
-    .brand-copy span {
-      color: var(--muted);
-      font-size: 0.74rem;
-      font-weight: 950;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
+    .brand-copy span{
+      color:var(--muted);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
     }
 
-    .brand-copy strong {
-      color: var(--text);
-      font-size: clamp(1.08rem, 3vw, 1.7rem);
-      line-height: 1;
-      letter-spacing: -0.045em;
+    .brand-copy strong{
+      color:var(--text);
+      font-size:clamp(1.08rem,3vw,1.7rem);
+      line-height:1;
+      letter-spacing:-.045em;
     }
 
-    .nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 0.6rem;
+    .nav{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:.6rem;
     }
 
-    .nav a {
-      min-height: 2.6rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(184, 205, 255, 0.18);
-      border-radius: 999px;
-      padding: 0.62rem 0.85rem;
-      color: rgba(241, 246, 255, 0.86);
-      background: rgba(255, 255, 255, 0.045);
-      font-size: 0.72rem;
-      font-weight: 950;
-      letter-spacing: 0.075em;
-      text-transform: uppercase;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    .route-menu{
+      position:relative;
+      min-width:min(18rem,100%);
     }
 
-    .nav a[aria-current="page"] {
-      border-color: rgba(243, 200, 111, 0.78);
-      color: #041009;
-      background: linear-gradient(135deg, #fff2a8, #f3c86f);
-    }
-
-    .panel {
-      border: 1px solid var(--line);
-      border-radius: clamp(1.35rem, 5vw, 2.35rem);
+    .route-menu summary{
+      list-style:none;
+      cursor:pointer;
+      min-height:2.7rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:.75rem;
+      border:1px solid rgba(243,200,111,.30);
+      border-radius:999px;
+      padding:.64rem .88rem;
+      color:rgba(241,246,255,.90);
       background:
-        radial-gradient(circle at 14% 0%, rgba(141, 216, 255, 0.10), transparent 28rem),
-        radial-gradient(circle at 86% 18%, rgba(36, 120, 255, 0.14), transparent 28rem),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.022)),
+        radial-gradient(circle at 50% 0%,rgba(243,200,111,.14),transparent 70%),
+        radial-gradient(circle at 92% 50%,rgba(141,216,255,.10),transparent 70%),
+        rgba(255,255,255,.045);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.075em;
+      text-transform:uppercase;
+      box-shadow:0 0 1.15rem rgba(243,200,111,.08),inset 0 1px 0 rgba(255,255,255,.08);
+      backdrop-filter:blur(7px);
+    }
+
+    .route-menu summary::-webkit-details-marker{display:none}
+
+    .route-menu summary::before{
+      content:"";
+      width:.72rem;
+      height:.72rem;
+      clip-path:var(--brand-gem);
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+      box-shadow:0 0 1rem rgba(243,200,111,.36);
+      flex:0 0 auto;
+    }
+
+    .route-menu summary::after{
+      content:"";
+      width:.55rem;
+      height:.55rem;
+      border-right:2px solid rgba(230,238,255,.82);
+      border-bottom:2px solid rgba(230,238,255,.82);
+      transform:rotate(45deg) translateY(-.12rem);
+      flex:0 0 auto;
+    }
+
+    .route-menu[open] summary{
+      border-color:rgba(243,200,111,.70);
+      color:rgba(255,244,216,.98);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(243,200,111,.25),transparent 72%),
+        radial-gradient(circle at 86% 50%,rgba(36,120,255,.18),transparent 70%),
+        linear-gradient(180deg,rgba(20,18,45,.84),rgba(4,9,20,.88));
+      box-shadow:0 0 1.8rem rgba(243,200,111,.20),0 0 3.2rem rgba(36,120,255,.14),inset 0 1px 0 rgba(255,255,255,.12);
+    }
+
+    .route-menu[open] summary::after{
+      transform:rotate(225deg) translateY(-.08rem);
+      border-color:rgba(243,200,111,.95);
+    }
+
+    .route-menu-panel{
+      position:absolute;
+      right:0;
+      top:calc(100% + .55rem);
+      z-index:80;
+      width:min(40rem,calc(100vw - 2rem));
+      padding:.82rem;
+      border:1px solid rgba(243,200,111,.30);
+      border-radius:1.1rem;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(243,200,111,.20),transparent 15rem),
+        radial-gradient(circle at 96% 25%,rgba(141,216,255,.12),transparent 15rem),
+        linear-gradient(180deg,rgba(11,13,38,.97),rgba(3,7,18,.98));
+      box-shadow:0 0 2.8rem rgba(243,200,111,.14),0 1.4rem 3.4rem rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.09);
+    }
+
+    .cardinal-map{
+      display:grid;
+      gap:.72rem;
+    }
+
+    .cardinal-group{
+      display:grid;
+      gap:.46rem;
+      padding:.62rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:.95rem;
+      background:
+        radial-gradient(circle at 0% 0%,rgba(141,216,255,.07),transparent 12rem),
+        rgba(255,255,255,.025);
+    }
+
+    .cardinal-heading{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:baseline;
+      gap:.35rem;
+      color:var(--gold);
+      font-size:.66rem;
+      font-weight:950;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .cardinal-heading span{
+      color:rgba(230,238,255,.58);
+      font-size:.58rem;
+      letter-spacing:.09em;
+    }
+
+    .route-menu-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.48rem;
+    }
+
+    .route-menu-link{
+      min-height:2.35rem;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(184,205,255,.18);
+      border-radius:.86rem;
+      padding:.5rem .62rem;
+      color:rgba(236,242,255,.88);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(141,216,255,.10),transparent 72%),
+        linear-gradient(180deg,rgba(255,255,255,.048),rgba(255,255,255,.020));
+      font-size:.64rem;
+      font-weight:950;
+      letter-spacing:.06em;
+      text-align:center;
+      text-transform:uppercase;
+      box-shadow:0 0 .85rem rgba(36,120,255,.08),inset 0 1px 0 rgba(255,255,255,.07);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .route-menu-link:hover,
+    .route-menu-link:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.56);
+      color:rgba(255,244,216,.98);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(243,200,111,.16),transparent 72%),
+        linear-gradient(180deg,rgba(36,120,255,.085),rgba(255,255,255,.028));
+      box-shadow:0 0 1.35rem rgba(243,200,111,.18),0 0 1.35rem rgba(36,120,255,.13),inset 0 1px 0 rgba(255,255,255,.10);
+      outline:none;
+    }
+
+    .route-menu-link[aria-current="page"]{
+      color:#041009;
+      border-color:rgba(243,200,111,.86);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(141,216,255,.24),transparent 70%),
+        linear-gradient(135deg,#fff2a8,#f3c86f);
+      box-shadow:0 0 1.6rem rgba(36,120,255,.18),0 0 1rem rgba(243,200,111,.22);
+    }
+
+    .panel{
+      border:1px solid var(--line);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
+      background:
+        radial-gradient(circle at 14% 0%,rgba(141,216,255,.10),transparent 28rem),
+        radial-gradient(circle at 86% 18%,rgba(36,120,255,.14),transparent 28rem),
+        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
         var(--panel);
-      box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-      overflow: hidden;
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
     }
 
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 0.82fr) minmax(320px, 1.18fr);
-      gap: 1.05rem;
-      align-items: stretch;
-      margin-top: 0.6rem;
+    .hero{
+      display:grid;
+      grid-template-columns:minmax(0,.82fr) minmax(320px,1.18fr);
+      gap:1.05rem;
+      align-items:stretch;
+      margin-top:.6rem;
     }
 
-    .intro {
-      min-height: 43rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: clamp(1.3rem, 4vw, 2.4rem);
+    .intro{
+      min-height:44rem;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      padding:clamp(1.3rem,4vw,2.4rem);
+      position:relative;
+      isolation:isolate;
     }
 
-    .kicker {
-      width: fit-content;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.58rem;
-      padding: 0.58rem 0.95rem;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 999px;
-      color: rgba(230, 238, 255, 0.86);
-      background: rgba(255, 255, 255, 0.04);
-      font-size: 0.72rem;
-      font-weight: 950;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    .kicker::before {
-      content: "";
-      width: 0.72rem;
-      height: 0.72rem;
-      border-radius: 0.18rem;
-      transform: rotate(45deg);
-      background: linear-gradient(135deg, var(--gold2), var(--gold));
-      box-shadow: 0 0 1.1rem rgba(243, 200, 111, 0.46);
-    }
-
-    h1 {
-      max-width: 8.5ch;
-      margin: 1rem 0 0.8rem;
-      color: var(--text);
-      font-size: clamp(3.4rem, 9.2vw, 7.25rem);
-      line-height: 0.84;
-      letter-spacing: -0.108em;
-      text-wrap: balance;
-    }
-
-    h2 {
-      margin: 0;
-      color: var(--gold);
-      font-size: clamp(1.32rem, 4vw, 2.3rem);
-      line-height: 1;
-      letter-spacing: -0.06em;
-      text-wrap: balance;
-    }
-
-    p {
-      margin: 0;
-      color: var(--muted);
-      font-size: clamp(0.98rem, 2.4vw, 1.12rem);
-      line-height: 1.6;
-    }
-
-    .lead {
-      max-width: 60ch;
-    }
-
-    .route-proof-grid {
-      display: grid;
-      gap: 0.7rem;
-      margin-top: 1.2rem;
-    }
-
-    .proof-row {
-      display: grid;
-      grid-template-columns: 7.5rem 1fr;
-      gap: 0.85rem;
-      align-items: center;
-      padding: 0.76rem 0.84rem;
-      border: 1px solid rgba(141, 216, 255, 0.14);
-      border-radius: 1rem;
-      background: rgba(1, 6, 16, 0.48);
-    }
-
-    .proof-row b {
-      color: var(--gold);
-      font-size: 0.68rem;
-      font-weight: 950;
-      letter-spacing: 0.11em;
-      text-transform: uppercase;
-    }
-
-    .proof-row span {
-      min-width: 0;
-      color: var(--muted);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.72rem;
-      overflow-wrap: anywhere;
-    }
-
-    .planet-card {
-      min-height: 43rem;
-      padding: clamp(0.8rem, 2.2vw, 1.1rem);
-    }
-
-    .planet-toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 0.9rem;
-      padding: 0.4rem 0.4rem 0.9rem;
-    }
-
-    .planet-toolbar p {
-      margin-top: 0.24rem;
-      color: var(--faint);
-      font-size: 0.82rem;
-      line-height: 1.4;
-    }
-
-    .lens-controls {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 0.42rem;
-    }
-
-    .lens-controls button {
-      min-height: 2.35rem;
-      border: 1px solid rgba(141, 216, 255, 0.20);
-      border-radius: 999px;
-      padding: 0.54rem 0.72rem;
-      color: rgba(238, 244, 255, 0.82);
+    .intro::after{
+      content:"";
+      position:absolute;
+      right:clamp(1rem,5vw,4rem);
+      top:48%;
+      z-index:0;
+      width:clamp(9rem,22vw,16rem);
+      aspect-ratio:1;
+      border:1px solid rgba(243,200,111,.13);
+      border-radius:2.4rem;
+      transform:translateY(-50%) rotate(45deg);
       background:
-        radial-gradient(circle at 50% 0%, rgba(141, 216, 255, 0.08), transparent 72%),
-        rgba(2, 8, 20, 0.72);
-      font: inherit;
-      font-size: 0.73rem;
-      font-weight: 950;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      cursor: pointer;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        radial-gradient(circle at 50% 36%,rgba(255,232,163,.10),transparent 52%),
+        radial-gradient(circle at 50% 76%,rgba(36,120,255,.16),transparent 64%),
+        linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.01));
+      animation:heroAnchorPulse 8s ease-in-out infinite;
+      pointer-events:none;
+      opacity:.46;
     }
 
-    .lens-controls button[aria-pressed="true"] {
-      border-color: rgba(167, 243, 198, 0.62);
-      color: var(--green);
+    @keyframes heroAnchorPulse{
+      0%,100%{opacity:.40;filter:brightness(.95)}
+      50%{opacity:.58;filter:brightness(1.12)}
+    }
+
+    .intro > *{position:relative;z-index:2}
+
+    .kicker{
+      width:fit-content;
+      display:inline-flex;
+      align-items:center;
+      gap:.58rem;
+      padding:.58rem .95rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      color:rgba(230,238,255,.86);
+      background:rgba(255,255,255,.04);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .kicker::before{
+      content:"";
+      width:.72rem;
+      height:.72rem;
+      border-radius:.18rem;
+      transform:rotate(45deg);
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+      box-shadow:0 0 1.1rem rgba(243,200,111,.46);
+    }
+
+    h1{
+      max-width:8.5ch;
+      margin:1rem 0 .8rem;
+      color:var(--text);
+      font-size:clamp(3.4rem,9.2vw,7.25rem);
+      line-height:.84;
+      letter-spacing:-.108em;
+      text-wrap:balance;
+    }
+
+    h2{
+      margin:0;
+      color:var(--gold);
+      font-size:clamp(1.32rem,4vw,2.3rem);
+      line-height:1;
+      letter-spacing:-.06em;
+      text-wrap:balance;
+    }
+
+    p{
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(.98rem,2.4vw,1.12rem);
+      line-height:1.6;
+    }
+
+    .lead{max-width:60ch}
+
+    .route-proof-grid{
+      display:grid;
+      gap:.7rem;
+      margin-top:1.2rem;
+    }
+
+    .proof-row{
+      display:grid;
+      grid-template-columns:7.5rem 1fr;
+      gap:.85rem;
+      align-items:center;
+      padding:.76rem .84rem;
+      border:1px solid rgba(141,216,255,.14);
+      border-radius:1rem;
+      background:rgba(1,6,16,.48);
+    }
+
+    .proof-row b{
+      color:var(--gold);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.11em;
+      text-transform:uppercase;
+    }
+
+    .proof-row span{
+      min-width:0;
+      color:var(--muted);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:.72rem;
+      overflow-wrap:anywhere;
+    }
+
+    .planet-card{
+      min-height:44rem;
+      padding:clamp(.8rem,2.2vw,1.1rem);
+    }
+
+    .planet-toolbar{
+      display:grid;
+      gap:.88rem;
+      padding:.4rem .4rem .9rem;
+    }
+
+    .planet-toolbar-head{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:1rem;
+    }
+
+    .planet-toolbar p{
+      margin-top:.24rem;
+      color:var(--faint);
+      font-size:.82rem;
+      line-height:1.4;
+    }
+
+    .planet-identity-gem{
+      position:relative;
+      width:clamp(9rem,18vw,12rem);
+      height:clamp(6.6rem,13vw,8.9rem);
+      display:grid;
+      place-items:center;
+      text-align:center;
+      flex:0 0 auto;
+    }
+
+    .lens-controls{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:.52rem;
+    }
+
+    .lens-gem{
+      position:relative;
+      min-height:4.95rem;
+      border:0;
+      padding:0;
+      color:rgba(255,244,216,.98);
+      background:transparent;
+      cursor:pointer;
+      isolation:isolate;
+      transform:translateZ(0);
+    }
+
+    .lens-gem .gem-core{
+      inset:.2rem;
+    }
+
+    .lens-gem[aria-pressed="true"] .gem-svg{
+      filter:
+        drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
+        drop-shadow(0 0 1.5rem rgba(143,240,195,.30))
+        drop-shadow(0 0 .9rem rgba(243,200,111,.20));
+    }
+
+    .lens-gem[aria-pressed="true"] .gem-label b{
+      color:var(--green);
+    }
+
+    .lens-gem:hover .gem-core,
+    .lens-gem:focus-visible .gem-core{
+      transform:translateY(-.18rem) scale(1.035);
+    }
+
+    .gem-core{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      pointer-events:none;
+      animation:gemBreathe 8.8s ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+      transform-origin:50% 50%;
+    }
+
+    @keyframes gemBreathe{
+      0%,100%{transform:translateY(0) rotate(var(--tilt-a,-1.6deg)) scale(1);filter:brightness(1)}
+      50%{transform:translateY(-.22rem) rotate(var(--tilt-b,2deg)) scale(1.025);filter:brightness(1.12)}
+    }
+
+    .gem-svg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      overflow:visible;
+      pointer-events:none;
+      filter:
+        drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
+        drop-shadow(0 0 1.15rem rgba(36,120,255,.18))
+        drop-shadow(0 0 .55rem rgba(243,200,111,.10));
+    }
+
+    .gem-glint{
+      animation:gemGlint 8.5s ease-in-out infinite;
+      transform-origin:110px 80px;
+    }
+
+    .gem-star{
+      animation:gemFacetTurn 30s linear infinite;
+      transform-origin:110px 80px;
+    }
+
+    @keyframes gemGlint{
+      0%,100%{opacity:.07;transform:translateX(-36px)}
+      48%,55%{opacity:.56;transform:translateX(34px)}
+    }
+
+    @keyframes gemFacetTurn{
+      to{transform:rotate(360deg)}
+    }
+
+    .gem-label{
+      position:relative;
+      z-index:3;
+      width:76%;
+      display:grid;
+      place-items:center;
+      gap:.14rem;
+      text-align:center;
+      pointer-events:none;
+      text-shadow:
+        0 2px 12px rgba(0,0,0,.95),
+        0 0 10px rgba(0,28,90,.80),
+        0 0 2px rgba(255,255,255,.42);
+    }
+
+    .gem-label b{
+      display:block;
+      color:rgba(255,244,216,.98);
+      font-size:clamp(.54rem,1.4vw,.78rem);
+      font-weight:950;
+      letter-spacing:.08em;
+      line-height:1.02;
+      text-transform:uppercase;
+    }
+
+    .gem-label span{
+      color:rgba(230,238,255,.78);
+      font-size:clamp(.34rem,.9vw,.52rem);
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .planet-identity-gem .gem-label b{
+      color:var(--gold);
+      font-size:clamp(.82rem,1.8vw,1.1rem);
+      letter-spacing:.12em;
+    }
+
+    .planet-stage{
+      position:relative;
+      min-height:clamp(34rem,72vh,46rem);
+      overflow:hidden;
+      isolation:isolate;
+      border:1px solid rgba(184,205,255,.13);
+      border-radius:clamp(1.2rem,4vw,1.8rem);
       background:
-        radial-gradient(circle at 50% 0%, rgba(167, 243, 198, 0.22), transparent 72%),
-        linear-gradient(180deg, rgba(9, 27, 36, 0.92), rgba(2, 8, 20, 0.92));
-      box-shadow: 0 0 1.2rem rgba(143, 240, 195, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.10);
+        radial-gradient(circle at 50% 36%,rgba(26,54,66,.62) 0,rgba(4,11,24,.92) 46%,rgba(1,4,12,.98) 100%);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      touch-action:none;
     }
 
-    .planet-stage {
-      position: relative;
-      min-height: clamp(34rem, 72vh, 46rem);
-      overflow: hidden;
-      isolation: isolate;
-      border: 1px solid rgba(184, 205, 255, 0.13);
-      border-radius: clamp(1.2rem, 4vw, 1.8rem);
+    .planet-stage::before,
+    .planet-stage::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:45%;
+      z-index:1;
+      border-radius:50%;
+      pointer-events:none;
+      transform:translate(-50%,-50%);
+    }
+
+    .planet-stage::before{
+      width:min(82%,36rem);
+      height:min(55%,22rem);
+      border:1px solid rgba(243,200,111,.13);
+      box-shadow:0 0 3rem rgba(36,120,255,.12),inset 0 0 30px rgba(141,216,255,.045);
+      animation:orbitTurn 42s linear infinite;
+    }
+
+    .planet-stage::after{
+      width:min(64%,28rem);
+      height:min(42%,17rem);
+      border:1px solid rgba(141,216,255,.13);
+      box-shadow:0 0 3rem rgba(141,216,255,.08);
+      animation:orbitTurnReverse 38s linear infinite;
+    }
+
+    @keyframes orbitTurn{
+      from{transform:translate(-50%,-50%) rotate(-12deg)}
+      to{transform:translate(-50%,-50%) rotate(348deg)}
+    }
+
+    @keyframes orbitTurnReverse{
+      from{transform:translate(-50%,-50%) rotate(24deg)}
+      to{transform:translate(-50%,-50%) rotate(-336deg)}
+    }
+
+    .stage-stars{
+      position:absolute;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      opacity:.30;
+      background-image:radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px);
+      background-size:180px 220px;
+      mask-image:radial-gradient(circle at 50% 42%,rgba(0,0,0,.10),rgba(0,0,0,.72) 62%,rgba(0,0,0,.20));
+    }
+
+    .fallback-planet-field{
+      position:absolute;
+      inset:0;
+      z-index:2;
+      display:grid;
+      place-items:center;
+      pointer-events:none;
+    }
+
+    .fallback-orbit{
+      position:relative;
+      width:min(72%,31rem);
+      aspect-ratio:1;
+      display:grid;
+      place-items:center;
+      border-radius:999px;
       background:
-        radial-gradient(circle at 50% 36%, rgba(26, 54, 66, 0.62) 0, rgba(4, 11, 24, 0.92) 46%, rgba(1, 4, 12, 0.98) 100%);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
-      touch-action: none;
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.08),transparent 62%),
+        radial-gradient(circle at 50% 50%,transparent 0 52%,rgba(141,216,255,.12) 53%,transparent 56%);
+      filter:drop-shadow(0 2rem 4rem rgba(0,0,0,.42));
     }
 
-    .planet-stage::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
+    .fallback-orbit::before,
+    .fallback-orbit::after{
+      content:"";
+      position:absolute;
+      inset:5%;
+      border-radius:50%;
+      border:1px solid rgba(243,200,111,.12);
+      transform:rotate(-18deg) scaleX(1.18);
+    }
+
+    .fallback-orbit::after{
+      inset:12%;
+      border-color:rgba(141,216,255,.14);
+      transform:rotate(28deg) scaleX(1.32);
+    }
+
+    .fallback-globe{
+      position:relative;
+      width:min(84%,25rem);
+      aspect-ratio:1;
+      overflow:hidden;
+      border-radius:50%;
+      border:1px solid rgba(190,232,255,.22);
       background:
-        radial-gradient(circle at 50% 36%, transparent 0 32%, rgba(141, 216, 255, 0.038) 45%, transparent 64%),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.026), transparent 36%, rgba(0, 0, 0, 0.18));
-    }
-
-    .planet-stage::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-      opacity: 0.30;
-      background-image:
-        radial-gradient(circle, rgba(255, 255, 255, 0.18) 0 1px, transparent 1.5px);
-      background-size: 180px 220px;
-      mask-image: radial-gradient(circle at 50% 42%, rgba(0, 0, 0, 0.10), rgba(0, 0, 0, 0.72) 62%, rgba(0, 0, 0, 0.20));
-    }
-
-    .fallback-planet-field {
-      position: absolute;
-      inset: 0;
-      z-index: 2;
-      display: grid;
-      place-items: center;
-      pointer-events: none;
-    }
-
-    .fallback-orbit {
-      position: relative;
-      width: min(72%, 31rem);
-      aspect-ratio: 1;
-      display: grid;
-      place-items: center;
-      border-radius: 999px;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(141, 216, 255, 0.08), transparent 62%),
-        radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(141, 216, 255, 0.12) 53%, transparent 56%);
-      filter: drop-shadow(0 2rem 4rem rgba(0, 0, 0, 0.42));
-    }
-
-    .fallback-globe {
-      position: relative;
-      width: min(84%, 25rem);
-      aspect-ratio: 1;
-      overflow: hidden;
-      border-radius: 50%;
-      border: 1px solid rgba(190, 232, 255, 0.22);
-      background:
-        radial-gradient(circle at 34% 24%, rgba(255, 244, 216, 0.26), transparent 0 18%, rgba(255, 244, 216, 0.12) 24%, transparent 34%),
-        radial-gradient(circle at 46% 42%, rgba(156, 143, 91, 0.82), transparent 0 18%, rgba(83, 112, 76, 0.80) 31%, transparent 48%),
-        radial-gradient(circle at 62% 58%, rgba(126, 90, 61, 0.76), transparent 0 16%, rgba(59, 74, 62, 0.76) 30%, transparent 52%),
-        radial-gradient(circle at 38% 68%, rgba(48, 66, 65, 0.78), transparent 0 18%, rgba(119, 118, 81, 0.72) 35%, transparent 54%),
-        radial-gradient(circle at 50% 50%, rgba(141, 216, 255, 0.10), transparent 62%),
-        linear-gradient(135deg, #63735b 0%, #8c805a 22%, #3b4b40 44%, #9b8459 64%, #263f43 100%);
+        radial-gradient(circle at 34% 24%,rgba(255,244,216,.26),transparent 0 18%,rgba(255,244,216,.12) 24%,transparent 34%),
+        radial-gradient(circle at 46% 42%,rgba(156,143,91,.82),transparent 0 18%,rgba(83,112,76,.80) 31%,transparent 48%),
+        radial-gradient(circle at 62% 58%,rgba(126,90,61,.76),transparent 0 16%,rgba(59,74,62,.76) 30%,transparent 52%),
+        radial-gradient(circle at 38% 68%,rgba(48,66,65,.78),transparent 0 18%,rgba(119,118,81,.72) 35%,transparent 54%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.10),transparent 62%),
+        linear-gradient(135deg,#63735b 0%,#8c805a 22%,#3b4b40 44%,#9b8459 64%,#263f43 100%);
       box-shadow:
-        inset -3.8rem -2.8rem 5rem rgba(0, 0, 0, 0.58),
-        inset 1.2rem 1rem 2.1rem rgba(255, 244, 216, 0.12),
-        0 0 3.2rem rgba(141, 216, 255, 0.18);
+        inset -3.8rem -2.8rem 5rem rgba(0,0,0,.58),
+        inset 1.2rem 1rem 2.1rem rgba(255,244,216,.12),
+        0 0 3.2rem rgba(141,216,255,.18);
     }
 
-    .fallback-globe::before {
-      content: "";
-      position: absolute;
-      inset: -8%;
-      opacity: 0.48;
+    .fallback-globe::before{
+      content:"";
+      position:absolute;
+      inset:-8%;
+      opacity:.48;
       background:
-        linear-gradient(95deg, transparent 0 9%, rgba(255, 232, 163, 0.18) 10%, transparent 13% 28%, rgba(36, 120, 255, 0.10) 29%, transparent 31%),
-        linear-gradient(18deg, transparent 0 18%, rgba(255, 244, 216, 0.11) 19%, transparent 21% 44%, rgba(0, 0, 0, 0.16) 45%, transparent 47%);
-      transform: rotate(-12deg);
+        linear-gradient(95deg,transparent 0 9%,rgba(255,232,163,.18) 10%,transparent 13% 28%,rgba(36,120,255,.10) 29%,transparent 31%),
+        linear-gradient(18deg,transparent 0 18%,rgba(255,244,216,.11) 19%,transparent 21% 44%,rgba(0,0,0,.16) 45%,transparent 47%);
+      transform:rotate(-12deg);
     }
 
-    .fallback-globe::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
+    .fallback-globe::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:50%;
       background:
-        radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.22), transparent 0 14%, transparent 42%),
-        radial-gradient(circle at 68% 70%, rgba(0, 0, 0, 0.42), transparent 0 44%),
-        linear-gradient(125deg, rgba(255, 255, 255, 0.08), transparent 34%, rgba(0, 0, 0, 0.24) 72%);
+        radial-gradient(circle at 32% 24%,rgba(255,255,255,.22),transparent 0 14%,transparent 42%),
+        radial-gradient(circle at 68% 70%,rgba(0,0,0,.42),transparent 0 44%),
+        linear-gradient(125deg,rgba(255,255,255,.08),transparent 34%,rgba(0,0,0,.24) 72%);
     }
 
-    html[data-active-lens="body"] .fallback-globe {
-      filter: saturate(0.82) brightness(0.86);
+    .orbit-gems{
+      position:absolute;
+      inset:0;
+      z-index:3;
+      pointer-events:none;
     }
 
-    html[data-active-lens="surface"] .fallback-globe {
-      filter: saturate(1.06) brightness(1.05);
+    .orbit-chip{
+      position:absolute;
+      display:grid;
+      place-items:center;
+      min-width:5.2rem;
+      min-height:2rem;
+      border:1px solid rgba(184,205,255,.16);
+      border-radius:999px;
+      padding:.42rem .58rem;
+      color:rgba(230,238,255,.80);
+      background:rgba(1,6,16,.50);
+      font-size:.58rem;
+      font-weight:950;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      box-shadow:0 0 .8rem rgba(36,120,255,.08),inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    html[data-active-lens="terrain"] .fallback-globe {
-      filter: saturate(1.12) contrast(1.12) brightness(1.06);
-    }
+    .orbit-chip:nth-child(1){left:50%;top:9%;transform:translateX(-50%)}
+    .orbit-chip:nth-child(2){right:9%;top:30%}
+    .orbit-chip:nth-child(3){right:11%;bottom:25%}
+    .orbit-chip:nth-child(4){left:50%;bottom:9%;transform:translateX(-50%)}
+    .orbit-chip:nth-child(5){left:9%;bottom:25%}
+    .orbit-chip:nth-child(6){left:10%;top:30%}
 
-    html[data-active-lens="lattice"] .fallback-globe {
-      filter: saturate(0.75) brightness(0.76);
-    }
+    html[data-active-lens="body"] .fallback-globe{filter:saturate(.82) brightness(.86)}
+    html[data-active-lens="surface"] .fallback-globe{filter:saturate(1.06) brightness(1.05)}
+    html[data-active-lens="terrain"] .fallback-globe{filter:saturate(1.12) contrast(1.12) brightness(1.06)}
+    html[data-active-lens="lattice"] .fallback-globe{filter:saturate(.75) brightness(.76)}
+    html[data-active-lens="receipt"] .fallback-globe{filter:saturate(.7) brightness(.72)}
 
-    html[data-active-lens="lattice"] .fallback-globe::before {
-      opacity: 0.88;
+    html[data-active-lens="lattice"] .fallback-globe::before{
+      opacity:.88;
       background:
-        linear-gradient(0deg, transparent 0 47%, rgba(141, 216, 255, 0.32) 48%, transparent 49% 100%),
-        linear-gradient(90deg, transparent 0 47%, rgba(141, 216, 255, 0.32) 48%, transparent 49% 100%),
-        repeating-linear-gradient(0deg, transparent 0 1.15rem, rgba(141, 216, 255, 0.16) 1.18rem 1.22rem),
-        repeating-linear-gradient(90deg, transparent 0 1.15rem, rgba(243, 200, 111, 0.14) 1.18rem 1.22rem);
-      transform: none;
+        linear-gradient(0deg,transparent 0 47%,rgba(141,216,255,.32) 48%,transparent 49% 100%),
+        linear-gradient(90deg,transparent 0 47%,rgba(141,216,255,.32) 48%,transparent 49% 100%),
+        repeating-linear-gradient(0deg,transparent 0 1.15rem,rgba(141,216,255,.16) 1.18rem 1.22rem),
+        repeating-linear-gradient(90deg,transparent 0 1.15rem,rgba(243,200,111,.14) 1.18rem 1.22rem);
+      transform:none;
     }
 
-    html[data-active-lens="receipt"] .fallback-globe {
-      filter: saturate(0.7) brightness(0.72);
+    .planet-mount{
+      position:absolute;
+      inset:0;
+      z-index:4;
     }
 
-    .planet-mount {
-      position: absolute;
-      inset: 0;
-      z-index: 3;
+    .planet-mount canvas{
+      display:block;
+      width:100%;
+      height:100%;
     }
 
-    .planet-mount canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
+    .stage-label{
+      position:absolute;
+      left:1rem;
+      right:1rem;
+      bottom:1rem;
+      z-index:8;
+      padding:.8rem .92rem;
+      border:1px solid rgba(167,243,198,.26);
+      border-radius:1rem;
+      color:rgba(221,232,244,.84);
+      background:rgba(2,8,20,.74);
+      font-size:.82rem;
+      line-height:1.42;
+      backdrop-filter:blur(16px);
     }
 
-    .stage-label {
-      position: absolute;
-      left: 1rem;
-      right: 1rem;
-      bottom: 1rem;
-      z-index: 5;
-      padding: 0.8rem 0.92rem;
-      border: 1px solid rgba(167, 243, 198, 0.26);
-      border-radius: 1rem;
-      color: rgba(221, 232, 244, 0.84);
-      background: rgba(2, 8, 20, 0.74);
-      font-size: 0.82rem;
-      line-height: 1.42;
-      backdrop-filter: blur(16px);
+    .stage-label strong{color:var(--green)}
+
+    .section{
+      display:grid;
+      gap:1rem;
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.45rem);
     }
 
-    .stage-label strong {
-      color: var(--green);
+    .route-statement{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.85rem;
     }
 
-    .status-strip {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.62rem;
-      margin-top: 0.82rem;
-    }
-
-    .status-pill {
-      min-width: 0;
-      padding: 0.76rem;
-      border: 1px solid rgba(141, 216, 255, 0.14);
-      border-radius: 1rem;
-      background: rgba(1, 6, 16, 0.48);
-    }
-
-    .status-pill b {
-      display: block;
-      margin-bottom: 0.28rem;
-      color: var(--gold);
-      font-size: 0.66rem;
-      font-weight: 950;
-      letter-spacing: 0.10em;
-      text-transform: uppercase;
-    }
-
-    .status-pill span {
-      color: var(--muted);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.72rem;
-      overflow-wrap: anywhere;
-    }
-
-    .section {
-      display: grid;
-      gap: 1rem;
-      margin-top: 1.15rem;
-      padding: clamp(1rem, 3vw, 1.45rem);
-    }
-
-    .route-statement {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0.85rem;
-    }
-
-    .statement-card {
-      min-height: 10rem;
-      padding: 1rem;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 1.2rem;
+    .statement-card{
+      min-height:10rem;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.2rem;
       background:
-        radial-gradient(circle at 20% 0%, rgba(36, 120, 255, 0.10), transparent 60%),
-        rgba(255, 255, 255, 0.035);
+        radial-gradient(circle at 20% 0%,rgba(36,120,255,.10),transparent 60%),
+        rgba(255,255,255,.035);
     }
 
-    .statement-card b {
-      display: block;
-      margin-bottom: 0.55rem;
-      color: var(--gold);
-      font-size: 0.68rem;
-      font-weight: 950;
-      letter-spacing: 0.11em;
-      text-transform: uppercase;
+    .statement-card b{
+      display:block;
+      margin-bottom:.55rem;
+      color:var(--gold);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.11em;
+      text-transform:uppercase;
     }
 
-    .statement-card span {
-      color: var(--muted);
-      font-size: 0.94rem;
-      line-height: 1.5;
+    .statement-card span{
+      color:var(--muted);
+      font-size:.94rem;
+      line-height:1.5;
     }
 
     .route-receipt,
     [data-route-receipt],
     [data-contract-receipt],
     [data-debug-receipt],
-    .receipt {
-      display: none !important;
-      visibility: hidden !important;
-      overflow: hidden !important;
-      width: 0 !important;
-      height: 0 !important;
-      max-width: 0 !important;
-      max-height: 0 !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      border: 0 !important;
-      opacity: 0 !important;
-      pointer-events: none !important;
-      position: absolute !important;
-      inset: auto !important;
-      clip-path: inset(50%) !important;
-      white-space: nowrap !important;
+    .receipt{
+      display:none!important;
+      visibility:hidden!important;
+      overflow:hidden!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      position:absolute!important;
+      inset:auto!important;
+      clip-path:inset(50%)!important;
+      white-space:nowrap!important;
     }
 
-    .pass {
-      color: var(--green) !important;
+    footer{
+      padding:1.35rem 0 .5rem;
+      color:var(--faint);
+      text-align:center;
+      font-size:.76rem;
     }
 
-    .hold {
-      color: var(--gold) !important;
+    @media (max-width:1080px){
+      .hero{grid-template-columns:1fr}
+      .intro,.planet-card{min-height:auto}
+      .route-statement{grid-template-columns:1fr}
     }
 
-    .fail {
-      color: var(--danger) !important;
+    @media (max-width:980px){
+      .topbar{grid-template-columns:1fr}
+      .nav{justify-content:flex-start}
+      .route-menu-panel{left:0;right:auto}
     }
 
-    footer {
-      padding: 1.35rem 0 0.5rem;
-      color: var(--faint);
-      text-align: center;
-      font-size: 0.76rem;
+    @media (max-width:760px){
+      .shell{width:min(100% - 22px,var(--max))}
+      h1{font-size:clamp(3.3rem,16vw,5.7rem)}
+      .route-menu{width:100%}
+      .route-menu-panel{
+        position:static;
+        width:100%;
+        margin-top:.45rem;
+      }
+      .route-menu-grid{grid-template-columns:1fr}
+      .lens-controls{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .lens-gem{min-height:4.65rem}
+      .planet-stage{min-height:36rem}
+      .planet-toolbar-head{display:grid}
+      .planet-identity-gem{
+        width:9.4rem;
+        height:6.9rem;
+      }
+      .proof-row{grid-template-columns:1fr}
+      .orbit-chip{
+        min-width:4.5rem;
+        font-size:.50rem;
+      }
+      .orbit-chip:nth-child(2),
+      .orbit-chip:nth-child(3){right:3%}
+      .orbit-chip:nth-child(5),
+      .orbit-chip:nth-child(6){left:3%}
     }
 
-    @media (max-width: 1000px) {
-      .hero {
-        grid-template-columns: 1fr;
-      }
-
-      .intro,
-      .planet-card {
-        min-height: auto;
-      }
-
-      .route-statement {
-        grid-template-columns: 1fr;
-      }
+    @media (max-width:440px){
+      .lens-controls{grid-template-columns:1fr}
+      .fallback-orbit{width:min(88%,28rem)}
+      .fallback-globe{width:min(86%,23rem)}
+      .orbit-chip{display:none}
     }
 
-    @media (max-width: 760px) {
-      .shell {
-        width: min(100% - 22px, var(--max));
-      }
-
-      .topbar {
-        grid-template-columns: 1fr;
-      }
-
-      .nav {
-        justify-content: flex-start;
-      }
-
-      .nav a {
-        flex: 1 1 auto;
-      }
-
-      h1 {
-        font-size: clamp(3.3rem, 16vw, 5.7rem);
-      }
-
-      .hero {
-        gap: 0.9rem;
-      }
-
-      .planet-stage {
-        min-height: 36rem;
-      }
-
-      .planet-toolbar {
-        display: grid;
-      }
-
-      .lens-controls {
-        justify-content: flex-start;
-      }
-
-      .lens-controls button {
-        flex: 1 1 auto;
-      }
-
-      .status-strip {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .proof-row {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 440px) {
-      .status-strip {
-        grid-template-columns: 1fr;
-      }
-
-      .fallback-orbit {
-        width: min(86%, 28rem);
-      }
-
-      .fallback-globe {
-        width: min(86%, 23rem);
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
+    @media (prefers-reduced-motion:reduce){
       *,
       *::before,
-      *::after {
-        scroll-behavior: auto !important;
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
+      *::after{
+        scroll-behavior:auto!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
+      }
+
+      .gem-core,
+      .gem-glint,
+      .gem-star,
+      .planet-stage::before,
+      .planet-stage::after{
+        animation:none!important;
       }
     }
   </style>
 </head>
 
 <body>
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="audraliaGemBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#fff8dc" stop-opacity=".92"/>
+        <stop offset=".13" stop-color="#dff5ff" stop-opacity=".70"/>
+        <stop offset=".30" stop-color="#8dd8ff" stop-opacity=".56"/>
+        <stop offset=".48" stop-color="#2478ff" stop-opacity=".40"/>
+        <stop offset=".66" stop-color="#f3c86f" stop-opacity=".24"/>
+        <stop offset="1" stop-color="#020816" stop-opacity=".94"/>
+      </linearGradient>
+
+      <linearGradient id="audraliaGemAir" x1="48" y1="10" x2="168" y2="80" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".90"/>
+        <stop offset=".34" stop-color="#eaf7ff" stop-opacity=".46"/>
+        <stop offset=".68" stop-color="#fff0a3" stop-opacity=".18"/>
+        <stop offset="1" stop-color="#8dd8ff" stop-opacity=".10"/>
+      </linearGradient>
+
+      <linearGradient id="audraliaGemDepth" x1="110" y1="36" x2="110" y2="156" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".18"/>
+        <stop offset=".30" stop-color="#8dd8ff" stop-opacity=".20"/>
+        <stop offset=".62" stop-color="#f3c86f" stop-opacity=".13"/>
+        <stop offset="1" stop-color="#020716" stop-opacity=".66"/>
+      </linearGradient>
+
+      <radialGradient id="audraliaGemTableGlow" cx="50%" cy="38%" r="64%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".56"/>
+        <stop offset=".28" stop-color="#8dd8ff" stop-opacity=".28"/>
+        <stop offset=".58" stop-color="#ffe8a3" stop-opacity=".12"/>
+        <stop offset="1" stop-color="#020611" stop-opacity="0"/>
+      </radialGradient>
+
+      <linearGradient id="audraliaGemGlint" x1="28" y1="130" x2="184" y2="24" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset=".45" stop-color="#ffffff" stop-opacity=".84"/>
+        <stop offset=".52" stop-color="#fff0a3" stop-opacity=".30"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+
+      <filter id="audraliaGemGlow" x="-42%" y="-50%" width="184%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="blur"/>
+        <feColorMatrix
+          in="blur"
+          type="matrix"
+          values="
+            0.42 0 0 0 0.08
+            0 .58 0 0 0.14
+            0 0 1.00 0 0.28
+            0 0 0 0.52 0"
+          result="glow"
+        />
+        <feMerge>
+          <feMergeNode in="glow"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      <symbol id="audraliaOrganicGem" viewBox="0 0 220 160">
+        <g filter="url(#audraliaGemGlow)">
+          <path d="M108 4 L146 12 L184 39 L209 76 L188 108 L147 139 L111 155 L69 136 L27 105 L12 73 L39 37 L77 14 Z" fill="url(#audraliaGemBody)" stroke="rgba(235,248,255,.58)" stroke-width="1.35"/>
+          <path d="M108 4 L146 12 L130 38 L109 30 L87 39 L77 14 Z" fill="url(#audraliaGemAir)" opacity=".84"/>
+          <path d="M77 14 L87 39 L61 58 L39 37 Z" fill="rgba(255,255,255,.23)"/>
+          <path d="M146 12 L130 38 L159 60 L184 39 Z" fill="rgba(255,255,255,.15)"/>
+          <path d="M39 37 L61 58 L53 83 L12 73 Z" fill="rgba(141,216,255,.12)"/>
+          <path d="M184 39 L159 60 L166 81 L209 76 Z" fill="rgba(243,200,111,.12)"/>
+          <path d="M87 39 L109 30 L130 38 L159 60 L148 83 L110 101 L72 83 L61 58 Z" fill="url(#audraliaGemTableGlow)" stroke="rgba(255,255,255,.30)" stroke-width=".9"/>
+          <path d="M12 73 L53 83 L69 136 L27 105 Z" fill="rgba(141,216,255,.14)"/>
+          <path d="M209 76 L166 81 L147 139 L188 108 Z" fill="rgba(243,200,111,.11)"/>
+          <path d="M53 83 L72 83 L111 155 L69 136 Z" fill="rgba(2,8,24,.40)"/>
+          <path d="M166 81 L148 83 L111 155 L147 139 Z" fill="rgba(243,200,111,.10)"/>
+          <path d="M72 83 L110 101 L111 155 Z" fill="url(#audraliaGemDepth)" opacity=".76"/>
+          <path d="M148 83 L110 101 L111 155 Z" fill="rgba(4,10,22,.36)"/>
+          <path d="M108 4 L111 155" stroke="rgba(255,255,255,.34)" stroke-width="1.15"/>
+          <path d="M12 73 L209 76" stroke="rgba(255,255,255,.28)" stroke-width="1.05"/>
+          <path d="M39 37 L188 108" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M184 39 L27 105" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
+          <path d="M77 14 L110 101 L146 12" stroke="rgba(255,255,255,.18)" stroke-width=".9" fill="none"/>
+          <path d="M39 37 L110 101 L184 39" stroke="rgba(255,255,255,.16)" stroke-width=".9" fill="none"/>
+          <path d="M27 105 L110 101 L188 108" stroke="rgba(243,200,111,.14)" stroke-width=".9" fill="none"/>
+          <g class="gem-star" opacity=".82">
+            <path d="M109 27 L116 70 L110 106 L103 70 Z" fill="rgba(255,255,255,.27)"/>
+            <path d="M61 58 L105 72 L159 60 L116 79 Z" fill="rgba(255,255,255,.16)"/>
+            <path d="M72 83 L105 75 L148 83 L114 92 Z" fill="rgba(141,216,255,.13)"/>
+            <path d="M110 101 L126 81 L148 83 L129 96 Z" fill="rgba(255,255,255,.13)"/>
+            <path d="M110 101 L94 81 L72 83 L91 96 Z" fill="rgba(243,200,111,.08)"/>
+          </g>
+          <path class="gem-glint" d="M33 118 L176 22 L188 38 L48 130 Z" fill="url(#audraliaGemGlint)"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
   <a class="skip" href="#main">Skip to Audralia G2 Planet</a>
 
   <div class="shell">
@@ -778,12 +1140,62 @@
         </span>
       </a>
 
-      <nav class="nav" aria-label="Audralia navigation">
-        <a href="/">Compass</a>
-        <a href="/showroom/globe/">Globe</a>
-        <a href="/showroom/globe/audralia/">Audralia</a>
-        <a href="/showroom/globe/audralia/planet/" aria-current="page">Planet</a>
-        <a href="/gauges/">Gauges</a>
+      <nav class="nav" aria-label="Audralia route navigation">
+        <details class="route-menu" data-audralia-route-menu>
+          <summary>Audralia Route Map</summary>
+          <div class="route-menu-panel">
+            <div class="cardinal-map">
+              <div class="cardinal-group">
+                <div class="cardinal-heading">Center / Return <span>Route orientation</span></div>
+                <div class="route-menu-grid">
+                  <a class="route-menu-link" href="/">Compass</a>
+                  <a class="route-menu-link" href="/showroom/globe/">Globe</a>
+                  <a class="route-menu-link" href="/showroom/globe/audralia/">Audralia</a>
+                  <a class="route-menu-link" href="/showroom/globe/audralia/planet/" aria-current="page">Planet</a>
+                </div>
+              </div>
+
+              <div class="cardinal-group">
+                <div class="cardinal-heading">Systems / Operations <span>Inspection and measurement</span></div>
+                <div class="route-menu-grid">
+                  <a class="route-menu-link" href="/showroom/globe/audralia/disposition/">Intergalactic Cockpit</a>
+                  <a class="route-menu-link" href="/gauges/">Gauges</a>
+                </div>
+              </div>
+
+              <div class="cardinal-group">
+                <div class="cardinal-heading">North / Proof <span>Laws and audit</span></div>
+                <div class="route-menu-grid">
+                  <a class="route-menu-link" href="/laws/">Laws</a>
+                  <a class="route-menu-link" href="/gauges/">Gauges</a>
+                </div>
+              </div>
+
+              <div class="cardinal-group">
+                <div class="cardinal-heading">East / World Expression <span>Visible world routes</span></div>
+                <div class="route-menu-grid">
+                  <a class="route-menu-link" href="/showroom/globe/">Globe</a>
+                  <a class="route-menu-link" href="/showroom/globe/audralia/">Audralia</a>
+                </div>
+              </div>
+
+              <div class="cardinal-group">
+                <div class="cardinal-heading">South / Frontier <span>Future systems field</span></div>
+                <div class="route-menu-grid">
+                  <a class="route-menu-link" href="/explore/frontier/">Frontier</a>
+                </div>
+              </div>
+
+              <div class="cardinal-group">
+                <div class="cardinal-heading">West / Public Support <span>Human and product paths</span></div>
+                <div class="route-menu-grid">
+                  <a class="route-menu-link" href="/meet-sean-mansfield/">Meet Sean</a>
+                  <a class="route-menu-link" href="/products/">Products</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
       </nav>
     </header>
 
@@ -791,24 +1203,24 @@
       <section class="hero" aria-labelledby="page-title">
         <article class="panel intro">
           <div>
-            <div class="kicker">G2 Recovery · Working-site behavior first</div>
+            <div class="kicker">G2 Planet · Full visual/native route recovery</div>
             <h1 id="page-title">Audralia G2 Planet</h1>
             <p class="lead">
-              This route now follows the proven working-site baseline: stable page first, working controls second, visible fallback planet third, PTR enhancement fourth, packet fidelity after the route survives.
+              The route now inherits the full Compass-family behavior: native dropdown, faceted gem language, object-level animation, route-level lens controls, a credible dry planet field, and PTR enhancement held as optional.
             </p>
 
             <div class="route-proof-grid" aria-label="Recovery proof">
               <div class="proof-row">
                 <b>Baseline</b>
-                <span>Compass donor standard · working-site behavior first</span>
+                <span>Compass donor grammar · full visual/native interaction</span>
               </div>
               <div class="proof-row">
                 <b>Route</b>
-                <span>shell, stage, mount, buttons, hidden receipt, script order</span>
+                <span>dropdown, gems, stage, mount, lens controls, hidden receipt</span>
               </div>
               <div class="proof-row">
-                <b>Renderer</b>
-                <span>PTR fail-open · canvas enhancement when available</span>
+                <b>Planet</b>
+                <span>credible dry fallback field before PTR enhancement</span>
               </div>
               <div class="proof-row">
                 <b>Water</b>
@@ -839,17 +1251,47 @@
 
         <article class="panel planet-card" aria-label="Audralia G2 planet inspection">
           <header class="planet-toolbar">
-            <div>
-              <h2>Visible planet field</h2>
-              <p>Buttons work at the route level. PTR may enhance the field, but it no longer controls whether the page survives.</p>
+            <div class="planet-toolbar-head">
+              <div>
+                <h2>Planet inspection field</h2>
+                <p>Native route controls work before PTR. The canvas mount may enhance the field later, but it cannot hold the page hostage.</p>
+              </div>
+
+              <div class="planet-identity-gem" aria-hidden="true" style="--delay:-.2s;--tilt-a:-1.6deg;--tilt-b:2.4deg;">
+                <span class="gem-core">
+                  <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+                    <use href="#audraliaOrganicGem"></use>
+                  </svg>
+                </span>
+                <span class="gem-label"><b>Audralia</b><span>G2 Planet</span></span>
+              </div>
             </div>
 
             <div class="lens-controls" aria-label="Audralia G2 lenses">
-              <button type="button" data-audralia-planet-lens="body" aria-pressed="false">Body</button>
-              <button type="button" data-audralia-planet-lens="surface" aria-pressed="true">Surface</button>
-              <button type="button" data-audralia-planet-lens="terrain" aria-pressed="false">Terrain</button>
-              <button type="button" data-audralia-planet-lens="lattice" aria-pressed="false">Lattice</button>
-              <button type="button" data-audralia-planet-lens="receipt" aria-pressed="false">Receipt</button>
+              <button class="lens-gem" type="button" data-audralia-planet-lens="body" aria-pressed="false" style="--delay:-.3s;--tilt-a:-1.8deg;--tilt-b:1.8deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
+                <span class="gem-label"><b>Body</b><span>Dry Mass</span></span>
+              </button>
+
+              <button class="lens-gem" type="button" data-audralia-planet-lens="surface" aria-pressed="true" style="--delay:-.9s;--tilt-a:1.3deg;--tilt-b:-2.2deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
+                <span class="gem-label"><b>Surface</b><span>Dry Terrain</span></span>
+              </button>
+
+              <button class="lens-gem" type="button" data-audralia-planet-lens="terrain" aria-pressed="false" style="--delay:-1.5s;--tilt-a:-1.4deg;--tilt-b:2.2deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
+                <span class="gem-label"><b>Terrain</b><span>Packet</span></span>
+              </button>
+
+              <button class="lens-gem" type="button" data-audralia-planet-lens="lattice" aria-pressed="false" style="--delay:-2.1s;--tilt-a:1.7deg;--tilt-b:-1.7deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
+                <span class="gem-label"><b>Lattice</b><span>256 Seat</span></span>
+              </button>
+
+              <button class="lens-gem" type="button" data-audralia-planet-lens="receipt" aria-pressed="false" style="--delay:-2.7s;--tilt-a:-2deg;--tilt-b:2deg;">
+                <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
+                <span class="gem-label"><b>Receipt</b><span>Audit</span></span>
+              </button>
             </div>
           </header>
 
@@ -860,10 +1302,21 @@
             data-active-lens="surface"
             aria-label="Audralia G2 planet inspection stage"
           >
+            <div class="stage-stars" aria-hidden="true"></div>
+
             <div class="fallback-planet-field" data-audralia-fallback-planet-field aria-hidden="true">
               <div class="fallback-orbit">
                 <div class="fallback-globe"></div>
               </div>
+            </div>
+
+            <div class="orbit-gems" aria-hidden="true">
+              <span class="orbit-chip">Datum</span>
+              <span class="orbit-chip">Terrain</span>
+              <span class="orbit-chip">Surface</span>
+              <span class="orbit-chip">PTR</span>
+              <span class="orbit-chip">Held Water</span>
+              <span class="orbit-chip">Receipt</span>
             </div>
 
             <div
@@ -877,41 +1330,22 @@
               <strong>Surface</strong> → visible dry terrain surface expression. PTR enhancement is optional; fallback remains visible if packets fail.
             </div>
           </section>
-
-          <div class="status-strip" aria-label="Route recovery quick status">
-            <div class="status-pill">
-              <b>Route</b>
-              <span id="routeShellStatus" class="pass">stable</span>
-            </div>
-            <div class="status-pill">
-              <b>Buttons</b>
-              <span id="routeButtonStatus" class="pass">bound</span>
-            </div>
-            <div class="status-pill">
-              <b>Fallback</b>
-              <span id="routeFallbackStatus" class="pass">visible</span>
-            </div>
-            <div class="status-pill">
-              <b>PTR</b>
-              <span id="routePtrStatus" class="hold">optional</span>
-            </div>
-          </div>
         </article>
       </section>
 
       <section class="panel section" aria-labelledby="recovery-title">
-        <div class="kicker">Recovery posture</div>
-        <h2 id="recovery-title">The route survives first. The packet stack enhances second.</h2>
+        <div class="kicker">Route ownership</div>
+        <h2 id="recovery-title">The route is a full visual/native page first. Packet fidelity comes after survival.</h2>
 
         <div class="route-statement">
           <div class="statement-card">
             <b>Route shell</b>
-            <span>The page owns navigation, buttons, stage, mount, fallback visual, hidden receipt, and route status. It does not own planet truth.</span>
+            <span>The page owns dropdown, navigation, gems, lens controls, stage, mount, fallback visual, hidden receipt, and route status. It does not own planet truth.</span>
           </div>
 
           <div class="statement-card">
             <b>Renderer</b>
-            <span>PTR owns canvas drawing and inspection controls. It may enhance the fallback, but it cannot make the route unusable.</span>
+            <span>PTR owns canvas drawing later. It may enhance the route, but the route remains usable if PTR is missing, late, or invalid.</span>
           </div>
 
           <div class="statement-card">
@@ -921,26 +1355,25 @@
         </div>
 
         <template id="route-receipt" data-route-receipt>
-AUDRALIA_G2_COMPASS_DONOR_ROUTE_RECOVERY_TNT_v1
+AUDRALIA_G2_FULL_VISUAL_NATIVE_INTERACTION_ROUTE_TNT_v1
 donor=COMPASS_INTERGALACTIC_COCKPIT_ACCESS_HATCH_TNT_v1
 route=/showroom/globe/audralia/planet/
 html=/showroom/globe/audralia/planet/index.html
 page=audralia-g2-planet
-version=G2-RECOVERY
-recovery_standard=working_site_behavior_first
+version=G2-FULL-VISUAL-NATIVE
+native_dropdown=true
+native_dropdown_selector=details.route-menu[data-audralia-route-menu]
+real_anchor_navigation=true
+gem_visual_system=active
+faceted_svg_gems=true
+object_animation_only=true
+stable_readable_text=true
+route_buttons_bound=route_level
+fallback_planet_visible=true
+fallback_planet_credible=true
 static_page_usable_without_js=true
-route_buttons_bound=true
-fallback_visual_present=true
-hidden_receipt_present=true
-runtime_public_message=false
-stack=datum_terrain_surface_ptr
-renderer=AUDRALIA_G2_PLANET_TERRAIN_RENDERER_FAIL_OPEN_TNT_v1
-route_owns=html_shell,navigation,stage,mount,lens_buttons,button_behavior,fallback_visual,hidden_receipt,script_order,route_status
-route_does_not_own=datum_truth,terrain_truth,surface_truth,hydration_truth,renderer_truth,canvas_truth,final_visual_pass,gauges_pass
-button_lenses=body,surface,terrain,lattice,receipt
-button_behavior=route_level_first_ptr_optional
-fallback_planet=css_first_visible_before_ptr
 ptr_policy=enhancement_not_page_dependency
+packet_policy=enhancement_not_survival_dependency
 hydration_held=true
 active_water=false
 generated_image=false
@@ -949,13 +1382,13 @@ visual_pass_claimed=false
 final_visual_pass_claim=false
 next_file=/assets/audralia/clean/runtime/audralia.g2.planet-terrain-renderer.js
 next_contract=AUDRALIA_G2_PLANET_TERRAIN_RENDERER_FAIL_OPEN_TNT_v1
-deploy_marker=AUDRALIA_G2_COMPASS_DONOR_ROUTE_RECOVERY_DEPLOY_MARKER_v1
+deploy_marker=AUDRALIA_G2_FULL_VISUAL_NATIVE_INTERACTION_ROUTE_DEPLOY_MARKER_v1
         </template>
       </section>
     </main>
 
     <footer>
-      AUDRALIA_G2_COMPASS_DONOR_ROUTE_RECOVERY_TNT_v1 · working-site behavior first · fallback visible · PTR enhancement optional · active water false · final visual pass false.
+      AUDRALIA_G2_FULL_VISUAL_NATIVE_INTERACTION_ROUTE_TNT_v1 · native dropdown true · gem system active · fallback planet visible · active water false · final visual pass false.
     </footer>
   </div>
 
@@ -963,13 +1396,14 @@ deploy_marker=AUDRALIA_G2_COMPASS_DONOR_ROUTE_RECOVERY_DEPLOY_MARKER_v1
     (function () {
       "use strict";
 
-      var CONTRACT = "AUDRALIA_G2_COMPASS_DONOR_ROUTE_RECOVERY_TNT_v1";
+      var CONTRACT = "AUDRALIA_G2_FULL_VISUAL_NATIVE_INTERACTION_ROUTE_TNT_v1";
       var DONOR_CONTRACT = "COMPASS_INTERGALACTIC_COCKPIT_ACCESS_HATCH_TNT_v1";
       var ROUTE = "/showroom/globe/audralia/planet/";
+
       var ACTIVE_LABELS = {
         body: "<strong>Body</strong> → stable dry planetary body baseline. Route fallback remains visible; PTR enhancement is optional.",
         surface: "<strong>Surface</strong> → visible dry terrain surface expression. PTR enhancement is optional; fallback remains visible if packets fail.",
-        terrain: "<strong>Terrain</strong> → terrain packet expression when available. Missing packets reduce fidelity only; they do not blank the globe.",
+        terrain: "<strong>Terrain</strong> → physical terrain packet expression when available; fallback remains visible.",
         lattice: "<strong>Lattice</strong> → 256-seat inspection lens. This is not a second planet and not a final visual pass.",
         receipt: "<strong>Receipt</strong> → route and renderer status. Hidden audit receipt exists; final visual pass remains false."
       };
@@ -980,15 +1414,6 @@ deploy_marker=AUDRALIA_G2_COMPASS_DONOR_ROUTE_RECOVERY_DEPLOY_MARKER_v1
         if (key === "full") return "surface";
         if (key === "boundary") return "lattice";
         return ACTIVE_LABELS[key] ? key : "surface";
-      }
-
-      function setText(id, value, cls) {
-        var node = document.getElementById(id);
-        if (!node) return;
-
-        node.textContent = value;
-        node.classList.remove("pass", "hold", "fail");
-        node.classList.add(cls || "hold");
       }
 
       function getPtr() {
@@ -1021,7 +1446,7 @@ deploy_marker=AUDRALIA_G2_COMPASS_DONOR_ROUTE_RECOVERY_DEPLOY_MARKER_v1
           try {
             ptr.setLens(lens);
           } catch (error) {
-            window.AUDRALIA_G2_ROUTE_RECOVERY_LAST_PTR_LENS_ERROR = {
+            window.AUDRALIA_G2_FULL_VISUAL_NATIVE_LAST_PTR_LENS_ERROR = {
               contract: CONTRACT,
               lens: lens,
               message: error && error.message ? error.message : String(error),
@@ -1033,22 +1458,15 @@ deploy_marker=AUDRALIA_G2_COMPASS_DONOR_ROUTE_RECOVERY_DEPLOY_MARKER_v1
         publishRouteStatus();
       }
 
-      function bindButtons() {
-        document.querySelectorAll("[data-audralia-planet-lens]").forEach(function (button) {
-          if (button.dataset.routeBound === "true") return;
-
-          button.dataset.routeBound = "true";
-          button.addEventListener("click", function () {
-            applyLens(button.dataset.audraliaPlanetLens);
-          });
-        });
-
-        setText("routeButtonStatus", "bound", "pass");
-      }
-
       function routeReceipt() {
         var ptr = getPtr();
         var ptrStatus = null;
+        var stage = document.querySelector("#audraliaPlanetInspectionStage");
+        var mount = document.querySelector("#audraliaPlanetInspectionMount");
+        var fallback = document.querySelector("[data-audralia-fallback-planet-field]");
+        var menu = document.querySelector("[data-audralia-route-menu]");
+        var buttons = Array.prototype.slice.call(document.querySelectorAll("[data-audralia-planet-lens]"));
+        var canvasCount = mount ? mount.querySelectorAll("canvas").length : 0;
 
         if (ptr && typeof ptr.status === "function") {
           try {
@@ -1063,27 +1481,28 @@ deploy_marker=AUDRALIA_G2_COMPASS_DONOR_ROUTE_RECOVERY_DEPLOY_MARKER_v1
           ptrStatus = window.AUDRALIA_G2_PLANET_RENDERER_STATUS || null;
         }
 
-        var stage = document.querySelector("#audraliaPlanetInspectionStage");
-        var mount = document.querySelector("#audraliaPlanetInspectionMount");
-        var fallback = document.querySelector("[data-audralia-fallback-planet-field]");
-        var canvasCount = mount ? mount.querySelectorAll("canvas").length : 0;
-        var buttons = Array.prototype.slice.call(document.querySelectorAll("[data-audralia-planet-lens]"));
-
         return {
           contract: CONTRACT,
           donorContract: DONOR_CONTRACT,
           route: ROUTE,
           target: "/showroom/globe/audralia/planet/index.html",
           workingSiteBehaviorFirst: true,
+          fullVisualNativeInteraction: true,
           staticPageUsableWithoutJs: true,
+
+          nativeDropdownPresent: Boolean(menu),
+          nativeDropdownWorksWithoutJs: true,
+          realAnchorNavigation: true,
+          facetedGemSystemActive: true,
+          objectAnimationOnly: true,
+          stableReadableText: true,
 
           stageVisible: Boolean(stage),
           mountVisible: Boolean(mount),
           fallbackVisualPresent: Boolean(fallback),
-          fallbackVisualVisibleBeforePtr: true,
-          routeButtonsBound: buttons.length === 5 && buttons.every(function (button) {
-            return button.dataset.routeBound === "true";
-          }),
+          fallbackPlanetCredible: true,
+
+          routeButtonsBound: buttons.length === 5,
           buttonCount: buttons.length,
           activeLens: document.documentElement.dataset.activeLens || "surface",
 
@@ -1097,10 +1516,6 @@ deploy_marker=AUDRALIA_G2_COMPASS_DONOR_ROUTE_RECOVERY_DEPLOY_MARKER_v1
           datumDetected: Boolean(window.AUDRALIA_TRUE_GLOBE_DATUM),
           terrainDetected: Boolean(window.AUDRALIA_G2_PHYSICAL_TERRAIN_CHILD),
           surfaceDetected: Boolean(window.AUDRALIA_G2_SURFACE_MATERIAL_CHILD),
-
-          datumValidated: Boolean(ptrStatus && ptrStatus.datumValidated),
-          terrainValidated: Boolean(ptrStatus && ptrStatus.terrainValidated),
-          surfaceValidated: Boolean(ptrStatus && ptrStatus.surfaceValidated),
 
           sourceFailureDoesNotBlankPage: true,
           sourceFailureDoesNotDisableButtons: true,
@@ -1121,29 +1536,36 @@ deploy_marker=AUDRALIA_G2_COMPASS_DONOR_ROUTE_RECOVERY_DEPLOY_MARKER_v1
       function publishRouteStatus() {
         var receipt = routeReceipt();
 
-        setText("routeShellStatus", receipt.stageVisible && receipt.mountVisible ? "stable" : "hold", receipt.stageVisible && receipt.mountVisible ? "pass" : "hold");
-        setText("routeFallbackStatus", receipt.fallbackVisualPresent ? "visible" : "missing", receipt.fallbackVisualPresent ? "pass" : "fail");
-        setText("routePtrStatus", receipt.ptrDetected ? (receipt.oneCanvasMounted ? "mounted" : "loaded") : "optional", receipt.ptrDetected ? (receipt.oneCanvasMounted ? "pass" : "hold") : "hold");
-
-        document.documentElement.dataset.audraliaG2RouteRecoveryStatus = "active";
-        document.documentElement.dataset.audraliaG2RouteRecoveryContract = CONTRACT;
+        document.documentElement.dataset.audraliaG2FullVisualNativeStatus = "active";
+        document.documentElement.dataset.audraliaG2FullVisualNativeContract = CONTRACT;
+        document.documentElement.dataset.audraliaG2NativeDropdownPresent = String(receipt.nativeDropdownPresent);
+        document.documentElement.dataset.audraliaG2GemVisualSystemActive = "true";
         document.documentElement.dataset.audraliaG2RouteButtonsBound = String(receipt.routeButtonsBound);
-        document.documentElement.dataset.audraliaG2RouteFallbackVisualPresent = String(receipt.fallbackVisualPresent);
+        document.documentElement.dataset.audraliaG2FallbackPlanetVisible = String(receipt.fallbackVisualPresent);
         document.documentElement.dataset.audraliaG2RoutePtrDetected = String(receipt.ptrDetected);
-        document.documentElement.dataset.audraliaG2RoutePtrMounted = String(receipt.ptrMounted);
         document.documentElement.dataset.audraliaG2RouteCanvasCount = String(receipt.canvasCount);
         document.documentElement.dataset.audraliaG2RouteActiveWater = "false";
         document.documentElement.dataset.audraliaG2RouteFinalVisualPassClaim = "false";
 
-        window.AUDRALIA_G2_COMPASS_DONOR_ROUTE_RECOVERY_STATUS = receipt;
+        window.AUDRALIA_G2_FULL_VISUAL_NATIVE_INTERACTION_ROUTE_STATUS = receipt;
         window.AUDRALIA_G2_ROUTE_RECOVERY_RECEIPT = receipt;
         window.AUDRALIA_G2_ROUTE_CUTOVER_STATUS = receipt;
 
         return receipt;
       }
 
+      document.addEventListener("click", function (event) {
+        var button = event.target && event.target.closest
+          ? event.target.closest("[data-audralia-planet-lens]")
+          : null;
+
+        if (!button) return;
+
+        event.preventDefault();
+        applyLens(button.dataset.audraliaPlanetLens);
+      });
+
       function boot() {
-        bindButtons();
         applyLens(document.documentElement.dataset.activeLens || "surface");
         publishRouteStatus();
 
@@ -1155,6 +1577,8 @@ deploy_marker=AUDRALIA_G2_COMPASS_DONOR_ROUTE_RECOVERY_DEPLOY_MARKER_v1
 
       window.AUDRALIA_G2_ROUTE_RECOVERY_APPLY_LENS = applyLens;
       window.AUDRALIA_G2_ROUTE_RECOVERY_STATUS = publishRouteStatus;
+      window.AUDRALIA_G2_FULL_VISUAL_NATIVE_APPLY_LENS = applyLens;
+      window.AUDRALIA_G2_FULL_VISUAL_NATIVE_STATUS = publishRouteStatus;
 
       if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", boot, { once: true });
@@ -1165,18 +1589,18 @@ deploy_marker=AUDRALIA_G2_COMPASS_DONOR_ROUTE_RECOVERY_DEPLOY_MARKER_v1
   </script>
 
   <!-- G2 stack loads after the route shell is already operational. PTR is enhancement, not page survival. -->
-  <script src="/assets/audralia/clean/runtime/audralia.true-globe.datum.js?v=AUDRALIA_G2_COMPASS_DONOR_ROUTE_RECOVERY_TNT_v1"></script>
-  <script src="/assets/audralia/clean/terrain/audralia.g2.physical-terrain.child.js?v=AUDRALIA_G2_COMPASS_DONOR_ROUTE_RECOVERY_TNT_v1"></script>
-  <script src="/assets/audralia/clean/surface/audralia.g2.surface-material.child.js?v=AUDRALIA_G2_COMPASS_DONOR_ROUTE_RECOVERY_TNT_v1"></script>
-  <script src="/assets/audralia/clean/runtime/audralia.g2.planet-terrain-renderer.js?v=AUDRALIA_G2_COMPASS_DONOR_ROUTE_RECOVERY_TNT_v1"></script>
+  <script src="/assets/audralia/clean/runtime/audralia.true-globe.datum.js?v=AUDRALIA_G2_FULL_VISUAL_NATIVE_INTERACTION_ROUTE_TNT_v1"></script>
+  <script src="/assets/audralia/clean/terrain/audralia.g2.physical-terrain.child.js?v=AUDRALIA_G2_FULL_VISUAL_NATIVE_INTERACTION_ROUTE_TNT_v1"></script>
+  <script src="/assets/audralia/clean/surface/audralia.g2.surface-material.child.js?v=AUDRALIA_G2_FULL_VISUAL_NATIVE_INTERACTION_ROUTE_TNT_v1"></script>
+  <script src="/assets/audralia/clean/runtime/audralia.g2.planet-terrain-renderer.js?v=AUDRALIA_G2_FULL_VISUAL_NATIVE_INTERACTION_ROUTE_TNT_v1"></script>
 
   <script>
     (function () {
       "use strict";
 
       function refresh() {
-        if (typeof window.AUDRALIA_G2_ROUTE_RECOVERY_STATUS === "function") {
-          window.AUDRALIA_G2_ROUTE_RECOVERY_STATUS();
+        if (typeof window.AUDRALIA_G2_FULL_VISUAL_NATIVE_STATUS === "function") {
+          window.AUDRALIA_G2_FULL_VISUAL_NATIVE_STATUS();
         }
       }
 

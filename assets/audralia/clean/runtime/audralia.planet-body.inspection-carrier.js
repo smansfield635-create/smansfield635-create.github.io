@@ -1,19 +1,34 @@
 // /assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
+// TNT FULL-FILE REPLACEMENT
+// AUDRALIA_PLANET_BODY_CARRIER_DRY_TERRAIN_FORM_RENEWAL_TNT_v1
+//
+// Previous:
 // AUDRALIA_CARRIER_VISUAL_TUNING_SOCKET_EXTRACTION_TNT_v1
-// Full-file replacement.
-// Previous: AUDRALIA_CARRIER_TRIANGULAR_READABILITY_ADAPTER_PRESERVATION_TNT_v1
-// Recovery base: AUDRALIA_CARRIER_VISUAL_WEIGHTING_TERRAIN_RELIEF_READABILITY_RENEWAL_TNT_v1
-// Scope: runtime carrier only.
-// Purpose: preserve the accepted minimum physical form, reduce normal-lens grid dominance, and install an optional visual-tuning child socket.
-// Owns: runtime canvas, projection, controls, lens rendering, packet display consumption, visual fallback weights, optional tuning socket, receipt/status publishing.
-// Does not own: terrain truth, elevation truth, relief truth, landform truth, beach truth, triangulation truth, hydration truth, climate, ecology, settlement, route shell, or final visual pass.
+//
+// Recovery base:
+// AUDRALIA_CARRIER_VISUAL_WEIGHTING_TERRAIN_RELIEF_READABILITY_RENEWAL_TNT_v1
+//
+// GCR target:
+// AUDRALIA_PLANET_FORMLESS_RUNTIME_GCR_v1
+//
+// Purpose:
+// - Renew the carrier runtime as the visible dry-terrain form endpoint.
+// - Convert the existing dry terrain packet into a strong continuous visible planetary surface.
+// - Stop the formless-planet condition without touching HTML, route JS, or upstream terrain truth.
+// - Preserve one visible planet, carrier-only rendering, zoom/drag inspection, and carrier-compatible lenses.
+// - Keep hydration held and active water false.
+// - Keep raw 256 lattice visibility out of normal Body/Surface lenses.
+// - Keep triangle/relief/landform packets as display handoffs only.
+// - Claim no final visual pass.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_CARRIER_VISUAL_TUNING_SOCKET_EXTRACTION_TNT_v1";
-  var PREVIOUS_CONTRACT = "AUDRALIA_CARRIER_TRIANGULAR_READABILITY_ADAPTER_PRESERVATION_TNT_v1";
+  var CONTRACT = "AUDRALIA_PLANET_BODY_CARRIER_DRY_TERRAIN_FORM_RENEWAL_TNT_v1";
+  var PREVIOUS_CONTRACT = "AUDRALIA_CARRIER_VISUAL_TUNING_SOCKET_EXTRACTION_TNT_v1";
   var RECOVERY_BASELINE = "AUDRALIA_CARRIER_VISUAL_WEIGHTING_TERRAIN_RELIEF_READABILITY_RENEWAL_TNT_v1";
+  var GCR = "AUDRALIA_PLANET_FORMLESS_RUNTIME_GCR_v1";
+
   var FILE = "/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js";
   var ROUTE = "/showroom/globe/audralia/planet/";
 
@@ -21,138 +36,15 @@
   var RADIAL_NODES = 16;
   var FIBONACCI_BANDS = 16;
   var SOURCE_SEAT_COUNT = 256;
-  var MIN_BUMP_ANCHOR_COUNT = 768;
-  var LAND_FIELD_COLS = 120;
-  var LAND_FIELD_ROWS = 60;
-  var STATUS_THROTTLE_MS = 260;
+
+  var TEXTURE_WIDTH = 384;
+  var TEXTURE_HEIGHT = 192;
+  var STATUS_THROTTLE_MS = 240;
 
   var ZOOM = Object.freeze({
     min: 0.72,
     defaultValue: 1.0,
-    max: 2.45
-  });
-
-  var FALLBACK_VISUAL_WEIGHTS = Object.freeze({
-    body: Object.freeze({
-      landAlpha: 0.092,
-      underAlphaScale: 0.34,
-      reliefAlphaScale: 0.14,
-      landRadius: 0.044,
-      underRadius: 0.060,
-      reliefRadius: 0.017,
-      definitionNodeAlpha: 0.055,
-      definitionStrokeAlpha: 0.080,
-      definitionLineAlpha: 0.220,
-      definitionLineWidth: 0.76,
-      scaffoldAlpha: 0.000,
-      legacyLandScaleWhenMesh: 0.99,
-      triangleFacetAlpha: 0.000,
-      triangleEdgeAlpha: 0.018,
-      triangleBoundaryAlpha: 0.000
-    }),
-    surface: Object.freeze({
-      landAlpha: 0.268,
-      underAlphaScale: 0.30,
-      reliefAlphaScale: 0.68,
-      landRadius: 0.033,
-      underRadius: 0.046,
-      reliefRadius: 0.017,
-      definitionNodeAlpha: 0.155,
-      definitionStrokeAlpha: 0.160,
-      definitionLineAlpha: 0.520,
-      definitionLineWidth: 0.92,
-      scaffoldAlpha: 0.000,
-      legacyLandScaleWhenMesh: 0.96,
-      triangleFacetAlpha: 0.000,
-      triangleEdgeAlpha: 0.045,
-      triangleBoundaryAlpha: 0.000
-    }),
-    hydration: Object.freeze({
-      landAlpha: 0.116,
-      underAlphaScale: 0.28,
-      reliefAlphaScale: 0.28,
-      landRadius: 0.040,
-      underRadius: 0.052,
-      reliefRadius: 0.017,
-      definitionNodeAlpha: 0.150,
-      definitionStrokeAlpha: 0.160,
-      definitionLineAlpha: 0.420,
-      definitionLineWidth: 0.90,
-      scaffoldAlpha: 0.000,
-      legacyLandScaleWhenMesh: 0.98,
-      triangleFacetAlpha: 0.000,
-      triangleEdgeAlpha: 0.060,
-      triangleBoundaryAlpha: 0.090
-    }),
-    "sixth-sense": Object.freeze({
-      landAlpha: 0.155,
-      underAlphaScale: 0.26,
-      reliefAlphaScale: 0.58,
-      landRadius: 0.030,
-      underRadius: 0.040,
-      reliefRadius: 0.015,
-      definitionNodeAlpha: 0.84,
-      definitionStrokeAlpha: 0.78,
-      definitionLineAlpha: 1.08,
-      definitionLineWidth: 1.00,
-      scaffoldAlpha: 0.58,
-      legacyLandScaleWhenMesh: 0.94,
-      triangleFacetAlpha: 0.050,
-      triangleEdgeAlpha: 0.305,
-      triangleBoundaryAlpha: 0.155
-    }),
-    lattice: Object.freeze({
-      landAlpha: 0.074,
-      underAlphaScale: 0.24,
-      reliefAlphaScale: 0.16,
-      landRadius: 0.036,
-      underRadius: 0.048,
-      reliefRadius: 0.015,
-      definitionNodeAlpha: 0.10,
-      definitionStrokeAlpha: 0.12,
-      definitionLineAlpha: 0.35,
-      definitionLineWidth: 0.80,
-      scaffoldAlpha: 0.00,
-      legacyLandScaleWhenMesh: 0.96,
-      triangleFacetAlpha: 0.000,
-      triangleEdgeAlpha: 0.095,
-      triangleBoundaryAlpha: 0.000
-    }),
-    receipt: Object.freeze({
-      landAlpha: 0.072,
-      underAlphaScale: 0.24,
-      reliefAlphaScale: 0.16,
-      landRadius: 0.038,
-      underRadius: 0.050,
-      reliefRadius: 0.015,
-      definitionNodeAlpha: 0.10,
-      definitionStrokeAlpha: 0.12,
-      definitionLineAlpha: 0.34,
-      definitionLineWidth: 0.80,
-      scaffoldAlpha: 0.00,
-      legacyLandScaleWhenMesh: 0.98,
-      triangleFacetAlpha: 0.000,
-      triangleEdgeAlpha: 0.030,
-      triangleBoundaryAlpha: 0.000
-    })
-  });
-
-  var VISUAL_TUNING_LIMITS = Object.freeze({
-    landAlpha: [0, 0.48],
-    underAlphaScale: [0, 1],
-    reliefAlphaScale: [0, 1],
-    landRadius: [0.006, 0.080],
-    underRadius: [0.006, 0.090],
-    reliefRadius: [0.004, 0.045],
-    definitionNodeAlpha: [0, 1],
-    definitionStrokeAlpha: [0, 1],
-    definitionLineAlpha: [0, 1.25],
-    definitionLineWidth: [0.25, 2.0],
-    scaffoldAlpha: [0, 1],
-    legacyLandScaleWhenMesh: [0.45, 1.1],
-    triangleFacetAlpha: [0, 0.12],
-    triangleEdgeAlpha: [0, 0.36],
-    triangleBoundaryAlpha: [0, 0.22]
+    max: 2.65
   });
 
   var DRY_TERRAIN_GLOBALS = Object.freeze([
@@ -203,40 +95,60 @@
     receipt: "Receipt"
   });
 
-  var SIZE_CLASSES = Object.freeze({
-    MICRO: Object.freeze({ key: "MICRO", name: "Micro Node", invariantRadius: 0.42, jurisdiction: "surface_grain" }),
-    FIELD: Object.freeze({ key: "FIELD", name: "Field Node", invariantRadius: 0.74, jurisdiction: "local_continuity" }),
-    STRUCTURAL: Object.freeze({ key: "STRUCTURAL", name: "Structural Node", invariantRadius: 1.18, jurisdiction: "landform_system" }),
-    ANCHOR: Object.freeze({ key: "ANCHOR", name: "Anchor Node", invariantRadius: 1.76, jurisdiction: "major_terrain_authority" })
+  var LENS_ALIAS = Object.freeze({
+    full: "surface",
+    boundary: "lattice",
+    sixth: "sixth-sense",
+    sixthsense: "sixth-sense",
+    "sixth-sense": "sixth-sense",
+    body: "body",
+    surface: "surface",
+    hydration: "hydration",
+    lattice: "lattice",
+    receipt: "receipt"
   });
 
-  var MATERIAL_LEAK_TERMS = Object.freeze([
-    "coast", "coastal", "coastline", "shore", "shoreline", "beach", "water", "ocean",
-    "lake", "river", "hydro", "hydration", "future_fill", "future-fill", "future fill",
-    "future shore", "future shoreline", "receiving shore", "active water"
-  ]);
+  var CLASS_COLORS = Object.freeze({
+    summit_pressure_zone: Object.freeze({ r: 223, g: 195, b: 118 }),
+    mountain_belt: Object.freeze({ r: 180, g: 158, b: 104 }),
+    ridge_chain: Object.freeze({ r: 158, g: 143, b: 91 }),
+    trench_corridor: Object.freeze({ r: 59, g: 52, b: 46 }),
+    dry_basin_floor: Object.freeze({ r: 82, g: 92, b: 68 }),
+    valley_corridor: Object.freeze({ r: 92, g: 111, b: 72 }),
+    shelf_terrace: Object.freeze({ r: 119, g: 124, b: 82 }),
+    escarpment_rim: Object.freeze({ r: 126, g: 96, b: 68 }),
+    planetary_highland: Object.freeze({ r: 143, g: 135, b: 93 }),
+    upland_plateau: Object.freeze({ r: 112, g: 126, b: 78 }),
+    former_seabed: Object.freeze({ r: 48, g: 67, b: 67 }),
+    lowland_gap: Object.freeze({ r: 58, g: 74, b: 62 }),
+    stable_craton: Object.freeze({ r: 96, g: 120, b: 76 })
+  });
 
-  var FORBIDDEN_SURFACE_TERMS = Object.freeze([
-    "water", "ocean", "lake", "river", "hydro", "hydration", "shore", "shoreline",
-    "coast", "coastline", "beach", "future_fill", "future-fill", "future fill",
-    "future shore", "future shoreline", "receiving shore", "void"
-  ]);
-
-  var LAND_SUPPORT_TERMS = Object.freeze([
-    "land", "ridge", "mountain", "plateau", "basin", "valley", "stable", "midland",
-    "lowland", "highland", "summit", "cliff", "escarpment"
-  ]);
+  var REGION_TINTS = Object.freeze({
+    gratitude: Object.freeze({ r: 124, g: 153, b: 92 }),
+    generosity: Object.freeze({ r: 154, g: 146, b: 83 }),
+    dependability: Object.freeze({ r: 104, g: 126, b: 84 }),
+    accountability: Object.freeze({ r: 148, g: 121, b: 84 }),
+    forgiveness: Object.freeze({ r: 118, g: 142, b: 104 }),
+    humility: Object.freeze({ r: 91, g: 116, b: 91 }),
+    "self-control": Object.freeze({ r: 126, g: 113, b: 78 }),
+    patience: Object.freeze({ r: 151, g: 130, b: 91 }),
+    purity: Object.freeze({ r: 168, g: 159, b: 118 })
+  });
 
   var state = {
     stage: null,
     mount: null,
     canvas: null,
     ctx: null,
+    sphereCanvas: null,
+    sphereCtx: null,
+
     width: 0,
     height: 0,
     dpr: 1,
 
-    activeLens: "body",
+    activeLens: "surface",
     yaw: -0.62,
     pitch: -0.16,
     vx: 0,
@@ -256,14 +168,6 @@
     renderCount: 0,
     stopped: false,
 
-    visualTuningApi: null,
-    visualTuningDetected: false,
-    visualTuningValidated: false,
-    visualTuningStatus: null,
-    visualTuningPacket: null,
-    visualTuningFailureReason: "visual tuning child absent; using internal fallback weights",
-    effectiveVisualWeights: null,
-
     dryTerrainApi: null,
     dryTerrainDetected: false,
     dryTerrainApiComplete: false,
@@ -271,6 +175,8 @@
     dryTerrainStatus: null,
     dryCarrierPacket: null,
     dryTerrainPacket: null,
+    dryTerrainNodes: [],
+    dryNodeGrid: [],
     dryFailureReason: "dry terrain not checked",
 
     elevationApi: null,
@@ -298,35 +204,27 @@
     triangularMeshDetected: false,
     triangularMeshValidated: false,
     triangularMeshCarrierPacket: null,
-    triangleMeshFailureReason: "triangular mesh not checked",
-    carrierConsumesTriangularMesh: false,
-    triangleMeshDisplayReady: false,
+    triangularMeshFailureReason: "triangular mesh not checked",
     triangleMeshFaceCount: 0,
     triangleMeshVertexCount: 0,
     triangleMeshEdgeBreakCount: 0,
-    triangleMeshVertexById: {},
 
-    carrierConsumesReliefPacket: false,
-    carrierConsumesLandformPacket: false,
-    definitionConsumptionReady: false,
-    definitionField: null,
-    definitionFieldReady: false,
-    definitionNodePointById: {},
-    definitionNodePointFallbackActive: false,
-    definitionNodePointFallbackHits: 0,
-    definitionNodePointExactHits: 0,
+    visualTuningApi: null,
+    visualTuningDetected: false,
+    visualTuningValidated: false,
+    visualTuningStatus: null,
+    visualTuningPacket: null,
+    visualTuningFailureReason: "visual tuning child absent; using internal carrier weights",
 
-    ethicalProfiles: [],
-    ethicalBumpAnchors: [],
-    continentBumpGroups: {},
-    continentDisplacementFields: [],
-    ethicalBumpFieldReady: false,
-
-    dynamicSurfaceRows: [],
-    landInfluenceField: [],
-    landFieldIndex: [],
-    visibleLandBodyPacket: null,
-    landBodyCompositorReady: false,
+    textureCache: {},
+    textureBuilt: false,
+    textureBuildCount: 0,
+    lastTextureLens: "",
+    textureLandCoverageRatio: 0,
+    textureReliefCoverageRatio: 0,
+    textureFutureFillCoverageRatio: 0,
+    textureContrastAverage: 0,
+    dryTerrainFormStrength: 0,
 
     latticeSeats: [],
     latticeLinks: [],
@@ -341,7 +239,9 @@
     window.__AUDRALIA_G2_PLANET_BODY_CLEAN_PAIR_CONTROLLER__ &&
     typeof window.__AUDRALIA_G2_PLANET_BODY_CLEAN_PAIR_CONTROLLER__.stop === "function"
   ) {
-    try { window.__AUDRALIA_G2_PLANET_BODY_CLEAN_PAIR_CONTROLLER__.stop(); } catch (_error) {}
+    try {
+      window.__AUDRALIA_G2_PLANET_BODY_CLEAN_PAIR_CONTROLLER__.stop();
+    } catch (_error) {}
   }
 
   function normalizeRoute(value) {
@@ -355,10 +255,17 @@
     return htmlRoute === ROUTE || path === ROUTE;
   }
 
-  function clamp(value, min, max) {
+  function finite(value, fallback) {
     var number = Number(value);
-    if (!Number.isFinite(number)) number = min;
-    return Math.max(min, Math.min(max, number));
+    return Number.isFinite(number) ? number : fallback;
+  }
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, finite(value, min)));
+  }
+
+  function clamp01(value) {
+    return clamp(value, 0, 1);
   }
 
   function round(value, places) {
@@ -367,7 +274,86 @@
   }
 
   function clone(value) {
-    return JSON.parse(JSON.stringify(value || null));
+    try {
+      return JSON.parse(JSON.stringify(value || null));
+    } catch (_error) {
+      return value;
+    }
+  }
+
+  function mix(a, b, t) {
+    return a + (b - a) * clamp01(t);
+  }
+
+  function mixColor(a, b, t) {
+    var k = clamp01(t);
+    return {
+      r: Math.round(mix(a.r, b.r, k)),
+      g: Math.round(mix(a.g, b.g, k)),
+      b: Math.round(mix(a.b, b.b, k))
+    };
+  }
+
+  function rgba(rgb, alpha) {
+    return "rgba(" +
+      Math.round(clamp(rgb.r, 0, 255)) + "," +
+      Math.round(clamp(rgb.g, 0, 255)) + "," +
+      Math.round(clamp(rgb.b, 0, 255)) + "," +
+      clamp01(alpha).toFixed(3) + ")";
+  }
+
+  function shadeColor(color, amount) {
+    return {
+      r: Math.round(clamp(color.r + amount, 0, 255)),
+      g: Math.round(clamp(color.g + amount, 0, 255)),
+      b: Math.round(clamp(color.b + amount, 0, 255))
+    };
+  }
+
+  function fract(value) {
+    return value - Math.floor(value);
+  }
+
+  function hash2(x, y, seed) {
+    return fract(Math.sin(finite(x, 0) * 127.1 + finite(y, 0) * 311.7 + finite(seed, 0) * 74.7) * 43758.5453123);
+  }
+
+  function smoothstep(edge0, edge1, value) {
+    var t = clamp01((finite(value, 0) - finite(edge0, 0)) / Math.max(0.000001, finite(edge1, 1) - finite(edge0, 0)));
+    return t * t * (3 - 2 * t);
+  }
+
+  function noise2(x, y, seed) {
+    var ix = Math.floor(x);
+    var iy = Math.floor(y);
+    var fx = fract(x);
+    var fy = fract(y);
+
+    var a = hash2(ix, iy, seed);
+    var b = hash2(ix + 1, iy, seed);
+    var c = hash2(ix, iy + 1, seed);
+    var d = hash2(ix + 1, iy + 1, seed);
+
+    var ux = fx * fx * (3 - 2 * fx);
+    var uy = fy * fy * (3 - 2 * fy);
+
+    return mix(mix(a, b, ux), mix(c, d, ux), uy);
+  }
+
+  function fbm(x, y, seed, octaves) {
+    var total = 0;
+    var amp = 0.58;
+    var freq = 1;
+    var norm = 0;
+
+    for (var i = 0; i < (octaves || 4); i += 1) {
+      total += noise2(x * freq, y * freq, seed + i * 31.77) * amp;
+      norm += amp;
+      amp *= 0.52;
+      freq *= 1.618033988749895;
+    }
+
+    return total / Math.max(0.000001, norm);
   }
 
   function firstGlobal(names) {
@@ -392,114 +378,35 @@
     }
   }
 
-  function hasTextTerm(text, terms) {
-    var value = String(text || "").toLowerCase();
-    for (var i = 0; i < terms.length; i += 1) {
-      if (value.indexOf(terms[i]) >= 0) return true;
-    }
-    return false;
+  function normalizeLens(value) {
+    var key = String(value || "surface").toLowerCase().replace(/\s+/g, "-");
+    return LENS_ALIAS[key] || "surface";
   }
 
-  function cloneVisualWeights(base) {
-    var out = {};
-    Object.keys(base || FALLBACK_VISUAL_WEIGHTS).forEach(function (lens) {
-      out[lens] = Object.assign({}, base[lens]);
-    });
-    return out;
+  function pointerDistance() {
+    var points = Array.from(state.pointers.values());
+    if (points.length < 2) return 0;
+
+    var dx = points[0].x - points[1].x;
+    var dy = points[0].y - points[1].y;
+
+    return Math.sqrt(dx * dx + dy * dy);
   }
 
-  function validateVisualTuningPacket(packet) {
-    if (!packet) return false;
-
-    return Boolean(
-      packet.activeHydration !== true &&
-      packet.activeWater !== true &&
-      packet.finalVisualPassClaim !== true &&
-      packet.carrierInventsTerrain !== true &&
-      packet.carrierGeneratesMesh !== true &&
-      packet.carrierOwnsTriangulation !== true &&
-      packet.triangleLogicIsMaterialAuthority !== true &&
-      packet.tuningOwnsTerrainTruth !== true &&
-      packet.tuningOwnsElevationTruth !== true &&
-      packet.tuningOwnsReliefTruth !== true &&
-      packet.tuningOwnsLandformTruth !== true &&
-      packet.tuningOwnsHydrationTruth !== true &&
-      packet.tuningDrawsVisuals !== true
-    );
+  function resetCamera() {
+    state.yaw = -0.62;
+    state.pitch = -0.16;
+    state.vx = 0;
+    state.vy = 0;
+    state.zoom = ZOOM.defaultValue;
+    publishStatus({ force: true });
+    requestRender();
   }
 
-  function mergeSafeVisualWeights(packet) {
-    var weights = cloneVisualWeights(FALLBACK_VISUAL_WEIGHTS);
-    var incoming = packet && (packet.visualWeights || packet.weights || packet.lensWeights);
-
-    if (!incoming || typeof incoming !== "object") return Object.freeze(weights);
-
-    Object.keys(LENSES).forEach(function (lens) {
-      var next = incoming[lens];
-      if (!next || typeof next !== "object") return;
-
-      Object.keys(VISUAL_TUNING_LIMITS).forEach(function (key) {
-        if (next[key] === undefined || next[key] === null) return;
-
-        var bounds = VISUAL_TUNING_LIMITS[key];
-        weights[lens][key] = round(clamp(next[key], bounds[0], bounds[1]), 4);
-      });
-    });
-
-    Object.keys(weights).forEach(function (lens) {
-      Object.freeze(weights[lens]);
-    });
-
-    return Object.freeze(weights);
-  }
-
-  function detectVisualTuningChild() {
-    var api = firstGlobal(VISUAL_TUNING_GLOBALS);
-    var packet = null;
-
-    state.visualTuningApi = api;
-    state.visualTuningDetected = Boolean(api);
-    state.visualTuningValidated = false;
-    state.visualTuningStatus = null;
-    state.visualTuningPacket = null;
-
-    if (!api) {
-      state.visualTuningFailureReason = "visual tuning child absent; using internal fallback weights";
-      state.effectiveVisualWeights = mergeSafeVisualWeights(null);
-      return false;
-    }
-
-    state.visualTuningStatus = typeof api.status === "function" ? safeCall("visualTuning", api, "status") : null;
-
-    if (typeof api.getCarrierVisualTuningPacket === "function") {
-      packet = safeCall("visualTuning", api, "getCarrierVisualTuningPacket", "audralia-runtime-carrier", { compact: false });
-    } else if (typeof api.getVisualTuningPacket === "function") {
-      packet = safeCall("visualTuning", api, "getVisualTuningPacket", "audralia-runtime-carrier", { compact: false });
-    } else if (state.visualTuningStatus && (state.visualTuningStatus.visualWeights || state.visualTuningStatus.weights)) {
-      packet = state.visualTuningStatus;
-    }
-
-    state.visualTuningPacket = packet;
-    state.visualTuningValidated = validateVisualTuningPacket(packet);
-
-    if (state.visualTuningValidated) {
-      state.visualTuningFailureReason = "";
-      state.effectiveVisualWeights = mergeSafeVisualWeights(packet);
-    } else {
-      state.visualTuningFailureReason = packet ? "visual tuning child packet failed display-only validation" : "visual tuning child API incomplete";
-      state.effectiveVisualWeights = mergeSafeVisualWeights(null);
-    }
-
-    return state.visualTuningValidated;
-  }
-
-  function lensWeights(mode) {
-    if (!state.effectiveVisualWeights) state.effectiveVisualWeights = mergeSafeVisualWeights(null);
-    return state.effectiveVisualWeights[mode] || state.effectiveVisualWeights.body || FALLBACK_VISUAL_WEIGHTS.body;
-  }
-
-  function activeLensWeights() {
-    return lensWeights(state.activeLens);
+  function setZoom(nextZoom) {
+    state.zoom = clamp(nextZoom, ZOOM.min, ZOOM.max);
+    publishStatus({ force: true });
+    requestRender();
   }
 
   function lonLatPoint(lonDeg, latDeg) {
@@ -514,48 +421,32 @@
     };
   }
 
-  function terrainSeatToLonLat(x, y) {
-    return {
-      lon: -180 + ((x % RADIAL_NODES + RADIAL_NODES) % RADIAL_NODES) / RADIAL_NODES * 360,
-      lat: 80 - (clamp(y, 0, FIBONACCI_BANDS - 1) / (FIBONACCI_BANDS - 1)) * 160
-    };
-  }
-
-  function landFieldToLonLat(x, y) {
-    return {
-      lon: -180 + ((x % LAND_FIELD_COLS + LAND_FIELD_COLS) % LAND_FIELD_COLS) / LAND_FIELD_COLS * 360,
-      lat: 82 - (clamp(y, 0, LAND_FIELD_ROWS - 1) / (LAND_FIELD_ROWS - 1)) * 164
-    };
-  }
-
   function rotate(point) {
-    var x = point.x;
-    var y = point.y;
-    var z = point.z;
-
     var cy = Math.cos(state.yaw);
     var sy = Math.sin(state.yaw);
-    var x1 = x * cy + z * sy;
-    var z1 = -x * sy + z * cy;
+
+    var x1 = point.x * cy + point.z * sy;
+    var z1 = -point.x * sy + point.z * cy;
 
     var cp = Math.cos(state.pitch);
     var sp = Math.sin(state.pitch);
-    var y1 = y * cp - z1 * sp;
-    var z2 = y * sp + z1 * cp;
 
-    return { x: x1, y: y1, z: z2 };
+    return {
+      x: x1,
+      y: point.y * cp - z1 * sp,
+      z: point.y * sp + z1 * cp
+    };
   }
 
   function metrics() {
     var min = Math.min(state.width, state.height);
     var baseRadius = min * 0.405;
-    var radius = baseRadius * state.zoom;
 
     return {
       cx: state.width / 2,
       cy: state.height * 0.365,
-      r: radius,
       baseRadius: baseRadius,
+      r: baseRadius * state.zoom,
       camera: 3.92
     };
   }
@@ -569,7 +460,7 @@
       x: m.cx + p.x * m.r * scale,
       y: m.cy - p.y * m.r * scale,
       z: p.z,
-      front: p.z >= -0.06,
+      front: p.z >= -0.055,
       scale: scale
     };
   }
@@ -579,78 +470,44 @@
     var m = metrics();
 
     ctx.beginPath();
-    ctx.arc(m.cx, m.cy, m.r * 1.003, 0, TAU);
+    ctx.arc(m.cx, m.cy, m.r * 1.002, 0, TAU);
     ctx.clip();
   }
 
-  function roundedRect(ctx, x, y, width, height, radius) {
-    var r = Math.min(radius, width / 2, height / 2);
-
-    ctx.beginPath();
-    ctx.moveTo(x + r, y);
-    ctx.arcTo(x + width, y, x + width, y + height, r);
-    ctx.arcTo(x + width, y + height, x, y + height, r);
-    ctx.arcTo(x, y + height, x, y, r);
-    ctx.arcTo(x, y, x + width, y, r);
-    ctx.closePath();
-  }
-
-  function resize() {
-    if (!state.stage || !state.canvas) return;
-
-    var rect = state.stage.getBoundingClientRect();
-    var dpr = Math.max(1, Math.min(2.25, window.devicePixelRatio || 1));
-
-    state.dpr = dpr;
-    state.width = Math.max(320, Math.floor(rect.width * dpr));
-    state.height = Math.max(600, Math.floor(rect.height * dpr));
-    state.canvas.width = state.width;
-    state.canvas.height = state.height;
-
-    requestRender();
-  }
-
-  function setZoom(nextZoom) {
-    state.zoom = clamp(nextZoom, ZOOM.min, ZOOM.max);
-    requestRender();
-  }
-
-  function resetCamera() {
-    state.yaw = -0.62;
-    state.pitch = -0.16;
-    state.vx = 0;
-    state.vy = 0;
-    state.zoom = ZOOM.defaultValue;
-    publishStatus({ force: true });
-    requestRender();
-  }
-
-  function pointerDistance() {
-    var points = Array.from(state.pointers.values());
-    if (points.length < 2) return 0;
-
-    var dx = points[0].x - points[1].x;
-    var dy = points[0].y - points[1].y;
-
-    return Math.sqrt(dx * dx + dy * dy);
-  }
-
-  function gridDistance(ax, ay, bx, by) {
-    var dx = Math.abs(Number(ax) - Number(bx));
-    dx = Math.min(dx, RADIAL_NODES - dx);
-    var dy = Number(ay) - Number(by);
-    return Math.sqrt(dx * dx + dy * dy);
-  }
-
-  function dryPacket() {
+  function terrainPacket() {
     return state.dryTerrainPacket ||
       (state.dryCarrierPacket && state.dryCarrierPacket.planetPhysicalTerrainPacket) ||
       null;
   }
 
-  function dryNodes() {
-    var packet = dryPacket();
+  function terrainNodes() {
+    var packet = terrainPacket();
     return packet && Array.isArray(packet.nodes) ? packet.nodes : [];
+  }
+
+  function buildDryNodeGrid(nodes) {
+    var grid = [];
+
+    for (var y = 0; y < FIBONACCI_BANDS; y += 1) {
+      grid[y] = [];
+    }
+
+    nodes.forEach(function (node, index) {
+      var x = Math.round(clamp(finite(node.x, finite(node.radial, index % RADIAL_NODES)), 0, RADIAL_NODES - 1));
+      var y = Math.round(clamp(finite(node.y, finite(node.band, Math.floor(index / RADIAL_NODES))), 0, FIBONACCI_BANDS - 1));
+      grid[y][x] = node;
+    });
+
+    return grid;
+  }
+
+  function nodeAt(x, y) {
+    if (!state.dryNodeGrid.length) return null;
+
+    var xx = ((Math.round(x) % RADIAL_NODES) + RADIAL_NODES) % RADIAL_NODES;
+    var yy = Math.round(clamp(y, 0, FIBONACCI_BANDS - 1));
+
+    return state.dryNodeGrid[yy] ? state.dryNodeGrid[yy][xx] || null : null;
   }
 
   function detectDryTerrain() {
@@ -668,21 +525,25 @@
     state.dryTerrainStatus = null;
     state.dryCarrierPacket = null;
     state.dryTerrainPacket = null;
+    state.dryTerrainNodes = [];
+    state.dryNodeGrid = [];
     state.dryTerrainValidated = false;
 
     if (!state.dryTerrainDetected) {
-      state.dryFailureReason = "dry revealed terrain atlas missing";
+      state.dryFailureReason = "dry revealed physical terrain child missing";
       return false;
     }
 
     if (!state.dryTerrainApiComplete) {
-      state.dryFailureReason = "dry revealed terrain atlas API incomplete";
+      state.dryFailureReason = "dry revealed physical terrain child API incomplete";
       return false;
     }
 
     state.dryTerrainStatus = safeCall("dryTerrain", api, "status");
     state.dryCarrierPacket = safeCall("dryTerrain", api, "getCarrierTerrainPacket", "audralia-runtime-carrier", { compact: false });
     state.dryTerrainPacket = safeCall("dryTerrain", api, "getDryRevealedTerrainPacket", "audralia-runtime-carrier", { compact: false });
+    state.dryTerrainNodes = terrainNodes();
+    state.dryNodeGrid = buildDryNodeGrid(state.dryTerrainNodes);
 
     state.dryTerrainValidated = Boolean(
       state.dryTerrainStatus &&
@@ -693,11 +554,46 @@
       state.dryCarrierPacket.carrierTerrainPacketReady === true &&
       state.dryCarrierPacket.carrierInventsTerrain === false &&
       state.dryCarrierPacket.finalVisualPassClaim === false &&
-      dryNodes().length
+      state.dryTerrainNodes.length === SOURCE_SEAT_COUNT
     );
 
-    state.dryFailureReason = state.dryTerrainValidated ? "" : "dry terrain atlas validation failed";
+    state.dryFailureReason = state.dryTerrainValidated ? "" : "dry terrain validation failed or 256-node packet unavailable";
     return state.dryTerrainValidated;
+  }
+
+  function detectVisualTuningChild() {
+    var api = firstGlobal(VISUAL_TUNING_GLOBALS);
+
+    state.visualTuningApi = api;
+    state.visualTuningDetected = Boolean(api);
+    state.visualTuningValidated = false;
+    state.visualTuningStatus = null;
+    state.visualTuningPacket = null;
+
+    if (!api) {
+      state.visualTuningFailureReason = "visual tuning child absent; using internal carrier weights";
+      return false;
+    }
+
+    state.visualTuningStatus = typeof api.status === "function" ? safeCall("visualTuning", api, "status") : null;
+
+    if (typeof api.getCarrierVisualTuningPacket === "function") {
+      state.visualTuningPacket = safeCall("visualTuning", api, "getCarrierVisualTuningPacket", "audralia-runtime-carrier", { compact: false });
+    } else if (typeof api.getVisualTuningPacket === "function") {
+      state.visualTuningPacket = safeCall("visualTuning", api, "getVisualTuningPacket", "audralia-runtime-carrier", { compact: false });
+    }
+
+    state.visualTuningValidated = Boolean(
+      state.visualTuningPacket &&
+      state.visualTuningPacket.activeHydration !== true &&
+      state.visualTuningPacket.activeWater !== true &&
+      state.visualTuningPacket.finalVisualPassClaim !== true &&
+      state.visualTuningPacket.tuningOwnsTerrainTruth !== true &&
+      state.visualTuningPacket.tuningDrawsVisuals !== true
+    );
+
+    state.visualTuningFailureReason = state.visualTuningValidated ? "" : "visual tuning packet unavailable or unsafe";
+    return state.visualTuningValidated;
   }
 
   function detectElevationTrack() {
@@ -744,7 +640,6 @@
     state.reliefStatus = null;
     state.reliefCarrierPacket = null;
     state.reliefValidated = false;
-    state.carrierConsumesReliefPacket = false;
 
     if (!api) {
       state.reliefFailureReason = "relief expression child missing";
@@ -761,18 +656,13 @@
 
     state.reliefValidated = Boolean(
       state.reliefCarrierPacket &&
-      state.reliefCarrierPacket.reliefExpressionReady === true &&
       state.reliefCarrierPacket.carrierMayConsume === true &&
       state.reliefCarrierPacket.carrierShouldNotOwnReliefTruth === true &&
-      state.reliefCarrierPacket.carrierShouldNotOwnElevationTruth === true &&
-      state.reliefCarrierPacket.childDrawsVisuals === false &&
-      state.reliefCarrierPacket.hydrationHeld === true &&
       state.reliefCarrierPacket.activeHydration === false &&
       state.reliefCarrierPacket.finalVisualPassClaim === false
     );
 
     state.reliefFailureReason = state.reliefValidated ? "" : "relief expression packet validation failed";
-    state.carrierConsumesReliefPacket = state.reliefValidated;
     return state.reliefValidated;
   }
 
@@ -784,7 +674,6 @@
     state.landformStatus = null;
     state.landformCarrierPacket = null;
     state.landformValidated = false;
-    state.carrierConsumesLandformPacket = false;
 
     if (!api) {
       state.landformFailureReason = "landform systems child missing";
@@ -801,36 +690,27 @@
 
     state.landformValidated = Boolean(
       state.landformCarrierPacket &&
-      state.landformCarrierPacket.landformSystemsReady === true &&
       state.landformCarrierPacket.carrierMayConsume === true &&
       state.landformCarrierPacket.carrierShouldNotOwnLandformTruth === true &&
-      state.landformCarrierPacket.carrierShouldNotOwnReliefTruth === true &&
-      state.landformCarrierPacket.carrierShouldNotOwnElevationTruth === true &&
-      state.landformCarrierPacket.childDrawsVisuals === false &&
-      state.landformCarrierPacket.hydrationHeld === true &&
       state.landformCarrierPacket.activeHydration === false &&
       state.landformCarrierPacket.finalVisualPassClaim === false
     );
 
     state.landformFailureReason = state.landformValidated ? "" : "landform systems packet validation failed";
-    state.carrierConsumesLandformPacket = state.landformValidated;
     return state.landformValidated;
   }
 
   function normalizeTriangleFaces(packet) {
     if (!packet) return [];
-
     if (Array.isArray(packet.meshFaces)) return packet.meshFaces;
     if (Array.isArray(packet.triangleFaces)) return packet.triangleFaces;
     if (Array.isArray(packet.triangleFacets)) return packet.triangleFacets;
-
     if (Array.isArray(packet.landFacets) || Array.isArray(packet.edgeFacets) || Array.isArray(packet.transitionFacets)) {
       return []
         .concat(Array.isArray(packet.landFacets) ? packet.landFacets : [])
         .concat(Array.isArray(packet.edgeFacets) ? packet.edgeFacets : [])
         .concat(Array.isArray(packet.transitionFacets) ? packet.transitionFacets : []);
     }
-
     return [];
   }
 
@@ -851,74 +731,6 @@
     return [];
   }
 
-  function packetFlagFalseOrAbsent(packet, key) {
-    if (!packet) return true;
-    return packet[key] !== true;
-  }
-
-  function packetFlagTrueOrAbsent(packet, key) {
-    if (!packet) return true;
-    return packet[key] !== false;
-  }
-
-  function trianglePacketOwnershipSafe(packet) {
-    if (!packet) return false;
-
-    return Boolean(
-      packetFlagFalseOrAbsent(packet, "activeHydration") &&
-      packetFlagFalseOrAbsent(packet, "activeWater") &&
-      packetFlagFalseOrAbsent(packet, "finalVisualPassClaim") &&
-      packetFlagFalseOrAbsent(packet, "carrierOwnsTriangulation") &&
-      packetFlagFalseOrAbsent(packet, "carrierGeneratesMesh") &&
-      packetFlagFalseOrAbsent(packet, "triangleLogicIsMaterialAuthority") &&
-      packetFlagFalseOrAbsent(packet, "sourceTerrainMutated") &&
-      packetFlagFalseOrAbsent(packet, "elevationTruthMutated") &&
-      packetFlagFalseOrAbsent(packet, "reliefTruthMutated") &&
-      packetFlagFalseOrAbsent(packet, "landformTruthMutated") &&
-      packetFlagFalseOrAbsent(packet, "beachTruthMutated") &&
-      packetFlagFalseOrAbsent(packet, "hydrationTruthMutated") &&
-      packetFlagTrueOrAbsent(packet, "carrierMayConsume") &&
-      packetFlagTrueOrAbsent(packet, "carrierShouldDisplayOnly") &&
-      packetFlagTrueOrAbsent(packet, "carrierShouldNotOwnTerrainTruth") &&
-      packetFlagTrueOrAbsent(packet, "carrierShouldNotOwnTriangulation")
-    );
-  }
-
-  function rebuildTriangleMeshVertexIndex() {
-    var index = {};
-    var packet = state.triangularMeshCarrierPacket || {};
-    var vertices = normalizeTriangleVertices(packet);
-
-    vertices.forEach(function (vertex, i) {
-      if (!vertex) return;
-
-      if (vertex.vertexId) index[String(vertex.vertexId)] = vertex;
-      if (vertex.id) index[String(vertex.id)] = vertex;
-      if (vertex.nodeId) index[String(vertex.nodeId)] = vertex;
-      if (vertex.seatIndex !== undefined && vertex.seatIndex !== null) index[String(vertex.seatIndex)] = vertex;
-      if (vertex.sourceSeatIndex !== undefined && vertex.sourceSeatIndex !== null) index["source-seat-" + String(vertex.sourceSeatIndex)] = vertex;
-      index["vertex-" + i] = vertex;
-      index[String(i)] = vertex;
-    });
-
-    state.triangleMeshVertexById = index;
-    state.triangleMeshVertexCount = vertices.length;
-    return index;
-  }
-
-  function faceHasResolvableReferences(face) {
-    if (!face) return false;
-
-    return Boolean(
-      (Array.isArray(face.vertices) && face.vertices.length >= 3) ||
-      (Array.isArray(face.vertexIds) && face.vertexIds.length >= 3) ||
-      (Array.isArray(face.sourceNodeIds) && face.sourceNodeIds.length >= 3) ||
-      (Array.isArray(face.sourceSeatIndexes) && face.sourceSeatIndexes.length >= 3) ||
-      (Array.isArray(face.sourceIndexes) && face.sourceIndexes.length >= 3) ||
-      (Array.isArray(face.nodeIds) && face.nodeIds.length >= 3)
-    );
-  }
-
   function detectTriangularMesh() {
     var api = firstGlobal(TRIANGULAR_MESH_GLOBALS);
     var packet = null;
@@ -927,16 +739,13 @@
     state.triangularMeshDetected = Boolean(api);
     state.triangularMeshValidated = false;
     state.triangularMeshCarrierPacket = null;
-    state.triangleMeshFailureReason = "triangular mesh not checked";
-    state.carrierConsumesTriangularMesh = false;
-    state.triangleMeshDisplayReady = false;
+    state.triangularMeshFailureReason = "triangular mesh not checked";
     state.triangleMeshFaceCount = 0;
     state.triangleMeshVertexCount = 0;
     state.triangleMeshEdgeBreakCount = 0;
-    state.triangleMeshVertexById = {};
 
     if (!api) {
-      state.triangleMeshFailureReason = "triangular terrain mesh child missing";
+      state.triangularMeshFailureReason = "triangular mesh child missing";
       return false;
     }
 
@@ -947,7 +756,7 @@
     } else if (typeof api.getTriangleMeshPacket === "function") {
       packet = safeCall("triangularMesh", api, "getTriangleMeshPacket", "audralia-runtime-carrier", { compact: false });
     } else {
-      state.triangleMeshFailureReason = "triangular terrain mesh API incomplete";
+      state.triangularMeshFailureReason = "triangular mesh API incomplete";
       return false;
     }
 
@@ -956,1242 +765,442 @@
     var faces = normalizeTriangleFaces(packet);
     var vertices = normalizeTriangleVertices(packet);
     var edges = normalizeTriangleEdges(packet);
-    var ownershipSafe = trianglePacketOwnershipSafe(packet);
-    var meshReady = Boolean(
+
+    state.triangularMeshValidated = Boolean(
       packet &&
-      (
-        packet.triangularTerrainMeshReady === true ||
-        packet.triangleMeshReady === true ||
-        packet.triangularMeshValidated === true ||
-        packet.triangleMeshDisplayReady === true ||
-        faces.length
-      )
-    );
-
-    var hasDisplayableFaceData = Boolean(
       faces.length &&
-      (
-        vertices.length ||
-        faces.some(faceHasResolvableReferences)
-      )
+      packet.activeHydration !== true &&
+      packet.activeWater !== true &&
+      packet.finalVisualPassClaim !== true &&
+      packet.carrierOwnsTriangulation !== true &&
+      packet.carrierGeneratesMesh !== true &&
+      packet.triangleLogicIsMaterialAuthority !== true
     );
 
-    state.triangularMeshValidated = Boolean(packet && meshReady && hasDisplayableFaceData && ownershipSafe);
-
-    if (state.triangularMeshValidated) {
-      rebuildTriangleMeshVertexIndex();
-      state.triangleMeshFaceCount = faces.length;
-      state.triangleMeshEdgeBreakCount = edges.length;
-      state.triangleMeshFailureReason = "";
-      state.carrierConsumesTriangularMesh = true;
-      state.triangleMeshDisplayReady = true;
-    } else if (!ownershipSafe) {
-      state.triangleMeshFailureReason = "triangular mesh packet violates display-only/no-ownership posture";
-    } else if (!hasDisplayableFaceData) {
-      state.triangleMeshFailureReason = "triangular mesh packet has no displayable face references";
-    } else {
-      state.triangleMeshFailureReason = "triangular mesh packet validation failed";
-    }
+    state.triangleMeshFaceCount = faces.length;
+    state.triangleMeshVertexCount = vertices.length;
+    state.triangleMeshEdgeBreakCount = edges.length;
+    state.triangularMeshFailureReason = state.triangularMeshValidated ? "" : "triangular mesh packet unavailable or display-only validation failed";
 
     return state.triangularMeshValidated;
   }
 
-  function refreshDownstreamPackets() {
-    detectVisualTuningChild();
-    detectDryTerrain();
-    detectElevationTrack();
-    detectReliefExpression();
-    detectLandformSystems();
-    detectTriangularMesh();
-
-    rebuildDerivedFields();
-    rebuildDefinitionField();
-    rebuildDefinitionNodePointIndex();
-
-    publishStatus({ force: true });
-    requestRender();
-  }
-
-  function buildNineContinentEthicalProfiles() {
-    return Object.freeze([
-      Object.freeze({ continentId: "gratitude", continentName: "Gratitude", summitEthic: "receptivity_stabilizing_response", centerX: 4.65, centerY: 4.65, color: { r: 123, g: 152, b: 93 }, climateSeed: "temperate_receiving_basin", ecologySeed: "symbiotic_restoration_biome", technologySeed: "water_memory_storage_systems", terrainSignature: "receiving_basins_fertile_bowls_stable_shelves", metricWeights: { receptivity: 1.0, continuity: 0.72, repair: 0.42, clarity: 0.22, discipline: 0.22, restraint: 0.18, timeDepth: 0.36, expansion: 0.22 } }),
-      Object.freeze({ continentId: "generosity", continentName: "Generosity", summitEthic: "outward_flow_distribution", centerX: 10.9, centerY: 3.8, color: { r: 154, g: 146, b: 83 }, climateSeed: "wind_distribution_corridor", ecologySeed: "migratory_abundance_belt", technologySeed: "distribution_exchange_infrastructure", terrainSignature: "radial_ridges_branching_channels_outward_plateaus", metricWeights: { receptivity: 0.24, continuity: 0.48, repair: 0.20, clarity: 0.28, discipline: 0.32, restraint: 0.22, timeDepth: 0.28, expansion: 1.0 } }),
-      Object.freeze({ continentId: "dependability", continentName: "Dependability", summitEthic: "load_bearing_continuity", centerX: 2.9, centerY: 8.1, color: { r: 104, g: 126, b: 84 }, climateSeed: "stable_inland_plateau", ecologySeed: "resilient_grass_forest_matrix", technologySeed: "load_bearing_foundation_network", terrainSignature: "stable_cratons_durable_plateaus_long_mountain_bases", metricWeights: { receptivity: 0.28, continuity: 1.0, repair: 0.22, clarity: 0.38, discipline: 0.54, restraint: 0.34, timeDepth: 0.52, expansion: 0.22 } }),
-      Object.freeze({ continentId: "accountability", continentName: "Accountability", summitEthic: "boundary_clarity_consequence", centerX: 8.25, centerY: 7.35, color: { r: 148, g: 121, b: 84 }, climateSeed: "rain_shadow_boundary", ecologySeed: "edge_specialist_ecology", technologySeed: "governance_measurement_engineering", terrainSignature: "sharp_ridges_escarpments_fault_boundaries", metricWeights: { receptivity: 0.16, continuity: 0.44, repair: 0.18, clarity: 0.72, discipline: 1.0, restraint: 0.64, timeDepth: 0.30, expansion: 0.18 } }),
-      Object.freeze({ continentId: "forgiveness", continentName: "Forgiveness", summitEthic: "repair_release_restored_continuity", centerX: 12.3, centerY: 8.9, color: { r: 118, g: 142, b: 104 }, climateSeed: "recovery_monsoon_later", ecologySeed: "regeneration_successive_ecology", technologySeed: "remediation_recycling_systems", terrainSignature: "soft_valleys_repaired_fractures_sediment_basins", metricWeights: { receptivity: 0.50, continuity: 0.46, repair: 1.0, clarity: 0.24, discipline: 0.24, restraint: 0.36, timeDepth: 0.58, expansion: 0.30 } }),
-      Object.freeze({ continentId: "humility", continentName: "Humility", summitEthic: "lowland_wisdom_depth_without_collapse", centerX: 5.6, centerY: 12.0, color: { r: 91, g: 116, b: 91 }, climateSeed: "protected_lowland_microclimate", ecologySeed: "understory_root_network", technologySeed: "low_impact_subsurface_resilience", terrainSignature: "valleys_low_plateaus_sheltered_basins", metricWeights: { receptivity: 0.72, continuity: 0.48, repair: 0.62, clarity: 0.24, discipline: 0.18, restraint: 0.62, timeDepth: 0.72, expansion: 0.10 } }),
-      Object.freeze({ continentId: "self-control", continentName: "Self-Control", summitEthic: "restraint_channel_discipline", centerX: 10.25, centerY: 12.55, color: { r: 126, g: 113, b: 78 }, climateSeed: "regulated_dry_channel_climate", ecologySeed: "drought_adapted_precision_biome", technologySeed: "energy_flow_control_systems", terrainSignature: "controlled_channels_narrow_ridges_disciplined_trenches", metricWeights: { receptivity: 0.18, continuity: 0.40, repair: 0.24, clarity: 0.40, discipline: 0.72, restraint: 1.0, timeDepth: 0.38, expansion: 0.12 } }),
-      Object.freeze({ continentId: "patience", continentName: "Patience", summitEthic: "slow_formation_time_depth", centerX: 13.7, centerY: 5.6, color: { r: 151, g: 130, b: 91 }, climateSeed: "long_cycle_sedimentary_climate", ecologySeed: "ancient_layered_soil_ecology", technologySeed: "archives_seed_vault_temporal_systems", terrainSignature: "terraces_shelves_layered_basins_stratified_plains", metricWeights: { receptivity: 0.46, continuity: 0.64, repair: 0.54, clarity: 0.34, discipline: 0.40, restraint: 0.48, timeDepth: 1.0, expansion: 0.22 } }),
-      Object.freeze({ continentId: "purity", continentName: "Purity", summitEthic: "clarity_clean_signal_refinement", centerX: 7.9, centerY: 2.05, color: { r: 168, g: 159, b: 118 }, climateSeed: "clear_highland_atmospheric_flow", ecologySeed: "alpine_clarity_biome", technologySeed: "precision_optics_purification_standards", terrainSignature: "clear_highlands_bright_ridges_defined_basins", metricWeights: { receptivity: 0.18, continuity: 0.42, repair: 0.16, clarity: 1.0, discipline: 0.56, restraint: 0.44, timeDepth: 0.30, expansion: 0.18 } })
-    ]);
-  }
-
-  function findProfile(continentId) {
-    for (var i = 0; i < state.ethicalProfiles.length; i += 1) {
-      if (state.ethicalProfiles[i].continentId === continentId) return state.ethicalProfiles[i];
+  function blendNodeProperties(a, b, c, d, tx, ty) {
+    function value(node, key, fallback) {
+      return finite(node && node[key], fallback);
     }
-    return null;
-  }
 
-  function maxKey(obj) {
-    var best = null;
-    var bestValue = -Infinity;
+    function interp(key, fallback) {
+      var ab = mix(value(a, key, fallback), value(b, key, fallback), tx);
+      var cd = mix(value(c, key, fallback), value(d, key, fallback), tx);
+      return mix(ab, cd, ty);
+    }
 
-    Object.keys(obj || {}).forEach(function (key) {
-      if (obj[key] > bestValue) {
-        best = key;
-        bestValue = obj[key];
-      }
+    var weights = [
+      { node: a, weight: (1 - tx) * (1 - ty) },
+      { node: b, weight: tx * (1 - ty) },
+      { node: c, weight: (1 - tx) * ty },
+      { node: d, weight: tx * ty }
+    ].sort(function (x, y) {
+      return y.weight - x.weight;
     });
 
-    return best;
-  }
-
-  function localNeighborInfluence(node, allNodes) {
-    var x = Number(node.x || 0);
-    var y = Number(node.y || 0);
-    var total = 0;
-    var count = 0;
-
-    allNodes.forEach(function (other) {
-      var d = gridDistance(x, y, Number(other.x || 0), Number(other.y || 0));
-      if (d > 0 && d <= 2.25) {
-        total += Number(other.dryElevation || other.elevation || 0.5);
-        count += 1;
-      }
-    });
+    var main = weights[0].node || a || b || c || d || {};
 
     return {
-      neighborInfluence: count ? clamp(total / count, 0, 1) : 0.5,
-      neighborCount: count
+      terrainClass: main.terrainClass || "stable_craton",
+      primaryTerrainRole: main.primaryTerrainRole || "stable_core",
+      regionSeed: main.regionSeed || "gratitude",
+      dryElevation: interp("dryElevation", 0.5),
+      elevation: interp("elevation", 0.5),
+      relativeRelief: interp("relativeRelief", 0),
+      ridgePressure: interp("ridgePressure", 0),
+      mountainPressure: interp("mountainPressure", 0),
+      basinPressure: interp("basinPressure", 0),
+      valleyPressure: interp("valleyPressure", 0),
+      trenchPressure: interp("trenchPressure", 0),
+      shelfPressure: interp("shelfPressure", 0),
+      escarpmentPressure: interp("escarpmentPressure", 0),
+      summitPressure: interp("summitPressure", 0),
+      gapPressure: interp("gapPressure", 0),
+      formerHydrosphereCarvingValue: interp("formerHydrosphereCarvingValue", 0),
+      futureFillEligible:
+        Boolean((a && a.futureFillEligible) || (b && b.futureFillEligible) || (c && c.futureFillEligible) || (d && d.futureFillEligible)),
+      activeHydration: false,
+      activeWater: false,
+      finalVisualPassClaim: false
     };
   }
 
-  function assignContinentForTerrainPoint(point, node) {
-    var profiles = state.ethicalProfiles.length ? state.ethicalProfiles : buildNineContinentEthicalProfiles();
-    var best = profiles[0];
-    var bestScore = -Infinity;
-    var x = Number(point.x || node.x || 0);
-    var y = Number(point.y || node.y || 0);
+  function sampleTerrainAtLonLat(lon, lat) {
+    if (!state.dryTerrainValidated || !state.dryNodeGrid.length) {
+      return null;
+    }
 
-    profiles.forEach(function (profile) {
-      var d = gridDistance(x, y, profile.centerX, profile.centerY);
-      var closeness = 1 / (0.68 + d);
-      var regionBonus = String(node.regionSeed || "").toLowerCase() === profile.continentId ? 0.38 : 0;
-      var pressureBonus =
-        Number(node.summitPressure || 0) * profile.metricWeights.clarity * 0.08 +
-        Number(node.ridgePressure || 0) * profile.metricWeights.discipline * 0.06 +
-        Number(node.basinPressure || 0) * profile.metricWeights.receptivity * 0.07 +
-        Number(node.gapPressure || 0) * profile.metricWeights.repair * 0.05;
+    var gx = ((lon + 180) / 360) * RADIAL_NODES - 0.5;
+    var gy = ((80 - lat) / 160) * (FIBONACCI_BANDS - 1) - 0.5;
 
-      var score = closeness + regionBonus + pressureBonus;
+    gy = clamp(gy, 0, FIBONACCI_BANDS - 1);
 
-      if (score > bestScore) {
-        best = profile;
-        bestScore = score;
+    var x0 = Math.floor(gx);
+    var y0 = Math.floor(gy);
+    var x1 = x0 + 1;
+    var y1 = Math.min(FIBONACCI_BANDS - 1, y0 + 1);
+
+    var tx = gx - x0;
+    var ty = gy - y0;
+
+    var a = nodeAt(x0, y0);
+    var b = nodeAt(x1, y0);
+    var c = nodeAt(x0, y1);
+    var d = nodeAt(x1, y1);
+
+    if (!a && !b && !c && !d) return null;
+
+    return blendNodeProperties(a, b, c, d, tx, ty);
+  }
+
+  function colorForTerrain(sample, lens, grain, fracture) {
+    var base = CLASS_COLORS[sample.terrainClass] || CLASS_COLORS.stable_craton;
+    var region = REGION_TINTS[sample.regionSeed] || REGION_TINTS.gratitude;
+
+    var elevation = clamp01(sample.dryElevation);
+    var ridge = clamp01(sample.ridgePressure + sample.mountainPressure * 0.85 + sample.summitPressure * 0.70);
+    var basin = clamp01(sample.basinPressure + sample.valleyPressure * 0.54);
+    var trench = clamp01(sample.trenchPressure);
+    var shelf = clamp01(sample.shelfPressure);
+    var gap = clamp01(sample.gapPressure + (sample.futureFillEligible ? 0.28 : 0));
+    var carving = clamp01(sample.formerHydrosphereCarvingValue);
+    var escarpment = clamp01(sample.escarpmentPressure);
+
+    var color = mixColor(base, region, 0.18);
+    color = mixColor(color, { r: 226, g: 200, b: 126 }, ridge * 0.30);
+    color = mixColor(color, { r: 53, g: 61, b: 52 }, basin * 0.20);
+    color = mixColor(color, { r: 36, g: 31, b: 30 }, trench * 0.34);
+    color = mixColor(color, { r: 131, g: 126, b: 84 }, shelf * 0.18);
+    color = mixColor(color, { r: 73, g: 61, b: 45 }, escarpment * 0.20);
+    color = mixColor(color, { r: 36, g: 54, b: 58 }, gap * 0.28);
+    color = mixColor(color, { r: 55, g: 75, b: 75 }, carving * 0.10);
+
+    var heightShade = (elevation - 0.50) * 44;
+    var reliefShade = (ridge - basin - trench * 0.50) * 25;
+    var grainShade = (grain - 0.5) * 18 + (fracture - 0.5) * 14;
+
+    color = shadeColor(color, heightShade + reliefShade + grainShade);
+
+    if (lens === "body") {
+      color = mixColor(color, { r: 34, g: 43, b: 40 }, 0.15);
+    } else if (lens === "surface") {
+      color = shadeColor(color, 14);
+      color = mixColor(color, { r: 235, g: 214, b: 145 }, ridge * 0.10);
+    } else if (lens === "hydration") {
+      color = mixColor(color, { r: 45, g: 83, b: 96 }, clamp(gap * 0.40 + carving * 0.18, 0, 0.46));
+      color = mixColor(color, { r: 20, g: 29, b: 31 }, 0.12);
+    } else if (lens === "sixth-sense") {
+      color = mixColor(color, { r: 141, g: 216, b: 255 }, clamp((ridge + gap + escarpment) * 0.16, 0, 0.30));
+      color = shadeColor(color, 6);
+    } else if (lens === "lattice") {
+      color = mixColor(color, { r: 15, g: 25, b: 42 }, 0.38);
+    } else if (lens === "receipt") {
+      color = mixColor(color, { r: 20, g: 29, b: 38 }, 0.32);
+    }
+
+    return color;
+  }
+
+  function buildTerrainTexture(lens) {
+    var mode = normalizeLens(lens);
+
+    if (state.textureCache[mode]) {
+      return state.textureCache[mode];
+    }
+
+    var data = new Uint8ClampedArray(TEXTURE_WIDTH * TEXTURE_HEIGHT * 4);
+
+    var landPixels = 0;
+    var reliefPixels = 0;
+    var futureFillPixels = 0;
+    var contrastTotal = 0;
+
+    for (var y = 0; y < TEXTURE_HEIGHT; y += 1) {
+      var v = y / Math.max(1, TEXTURE_HEIGHT - 1);
+      var lat = 90 - v * 180;
+
+      for (var x = 0; x < TEXTURE_WIDTH; x += 1) {
+        var u = x / TEXTURE_WIDTH;
+        var lon = -180 + u * 360;
+        var sample = sampleTerrainAtLonLat(lon, lat);
+
+        var index = (y * TEXTURE_WIDTH + x) * 4;
+
+        var color;
+
+        if (!sample) {
+          color = { r: 18, g: 31, b: 40 };
+        } else {
+          var grain = fbm(u * 22.0 + 0.13, v * 13.0 - 0.07, 9101, 4);
+          var fracture = fbm(u * 48.0 - 0.31, v * 24.0 + 0.19, 9107, 3);
+          color = colorForTerrain(sample, mode, grain, fracture);
+
+          var relief = clamp01(
+            sample.ridgePressure +
+            sample.mountainPressure +
+            sample.summitPressure +
+            sample.escarpmentPressure +
+            sample.trenchPressure
+          );
+
+          if (sample.dryElevation > 0.20) landPixels += 1;
+          if (relief > 0.36) reliefPixels += 1;
+          if (sample.futureFillEligible || sample.gapPressure > 0.42) futureFillPixels += 1;
+
+          contrastTotal += Math.abs(sample.dryElevation - 0.5) + relief * 0.35;
+        }
+
+        data[index] = clamp(Math.round(color.r), 0, 255);
+        data[index + 1] = clamp(Math.round(color.g), 0, 255);
+        data[index + 2] = clamp(Math.round(color.b), 0, 255);
+        data[index + 3] = 255;
       }
-    });
+    }
 
-    return best;
-  }
+    var total = Math.max(1, TEXTURE_WIDTH * TEXTURE_HEIGHT);
 
-  function buildEthicalMetricProfile(continent, node) {
-    var weights = continent.metricWeights;
-    var ridge = Number(node.ridgePressure || 0);
-    var mountain = Number(node.mountainPressure || 0);
-    var summit = Number(node.summitPressure || 0);
-    var basin = Number(node.basinPressure || 0);
-    var valley = Number(node.valleyPressure || 0);
-    var trench = Number(node.trenchPressure || 0);
-    var shelf = Number(node.shelfPressure || 0);
-    var escarpment = Number(node.escarpmentPressure || 0);
-    var gap = Number(node.gapPressure || 0);
-    var carving = Number(node.formerHydrosphereCarvingValue || 0);
-    var elevation = Number(node.dryElevation || node.elevation || 0.5);
-
-    var profile = {
-      receptivityPressure: clamp((basin + gap + valley + shelf * 0.42) * weights.receptivity, 0, 1),
-      expansionPressure: clamp((ridge * 0.34 + shelf * 0.34 + Math.max(0, elevation - 0.45)) * weights.expansion, 0, 1),
-      continuityPressure: clamp((1 - Math.abs(elevation - 0.55) + ridge * 0.24 + mountain * 0.14) * weights.continuity, 0, 1),
-      disciplinePressure: clamp((ridge + escarpment + trench * 0.56) * weights.discipline, 0, 1),
-      repairPressure: clamp((carving + basin * 0.46 + valley * 0.42 + gap * 0.34) * weights.repair, 0, 1),
-      restraintPressure: clamp((trench + valley + escarpment * 0.38) * weights.restraint, 0, 1),
-      timeDepthPressure: clamp((shelf + carving + basin * 0.38) * weights.timeDepth, 0, 1),
-      clarityPressure: clamp((summit + mountain * 0.42 + ridge * 0.26 - gap * 0.12) * weights.clarity, 0, 1)
-    };
-
-    var ethicalCoherenceScore = clamp(
-      profile.receptivityPressure * 0.12 +
-      profile.expansionPressure * 0.10 +
-      profile.continuityPressure * 0.16 +
-      profile.disciplinePressure * 0.13 +
-      profile.repairPressure * 0.12 +
-      profile.restraintPressure * 0.12 +
-      profile.timeDepthPressure * 0.12 +
-      profile.clarityPressure * 0.13,
-      0,
-      1
+    state.textureLandCoverageRatio = round(landPixels / total, 4);
+    state.textureReliefCoverageRatio = round(reliefPixels / total, 4);
+    state.textureFutureFillCoverageRatio = round(futureFillPixels / total, 4);
+    state.textureContrastAverage = round(contrastTotal / total, 4);
+    state.dryTerrainFormStrength = round(
+      clamp(
+        state.textureLandCoverageRatio * 0.48 +
+        state.textureReliefCoverageRatio * 0.24 +
+        state.textureContrastAverage * 0.42,
+        0,
+        1
+      ),
+      4
     );
 
-    profile.ethicalCoherenceScore = round(ethicalCoherenceScore, 4);
+    var texture = {
+      width: TEXTURE_WIDTH,
+      height: TEXTURE_HEIGHT,
+      data: data,
+      lens: mode,
+      builtAt: new Date().toISOString(),
+      contract: CONTRACT,
+      source: "dry-terrain-packet",
+      activeHydration: false,
+      activeWater: false,
+      finalVisualPassClaim: false
+    };
 
-    Object.keys(profile).forEach(function (key) {
-      profile[key] = round(profile[key], 4);
-    });
+    state.textureCache[mode] = texture;
+    state.textureBuilt = true;
+    state.textureBuildCount += 1;
+    state.lastTextureLens = mode;
 
-    return Object.freeze(profile);
+    return texture;
   }
 
-  function classifyInvariantBumpSize(continent, node, localIndex) {
-    var role = String(node.primaryTerrainRole || node.terrainClass || "");
-    var summit = Number(node.summitPressure || 0);
-    var ridge = Number(node.ridgePressure || 0);
-    var mountain = Number(node.mountainPressure || 0);
-    var basin = Number(node.basinPressure || 0);
-    var trench = Number(node.trenchPressure || 0);
-    var shelf = Number(node.shelfPressure || 0);
-    var gap = Number(node.gapPressure || 0);
+  function textureSample(texture, u, v) {
+    if (!texture || !texture.data) return [30, 42, 48];
 
-    if (
-      localIndex === 2 &&
-      (
-        summit > 0.50 ||
-        mountain > 0.54 ||
-        (continent.continentId === "purity" && summit > 0.32) ||
-        (continent.continentId === "humility" && basin + gap > 0.82) ||
-        (continent.continentId === "gratitude" && basin + shelf > 0.72)
-      )
-    ) {
-      return SIZE_CLASSES.ANCHOR;
-    }
+    var x = Math.floor((((u % 1) + 1) % 1) * texture.width) % texture.width;
+    var y = Math.floor(clamp01(v) * (texture.height - 1));
+    var index = (y * texture.width + x) * 4;
 
-    if (
-      localIndex === 1 &&
-      (
-        ridge > 0.38 ||
-        trench > 0.38 ||
-        shelf > 0.48 ||
-        role.indexOf("ridge") >= 0 ||
-        role.indexOf("trench") >= 0 ||
-        role.indexOf("shelf") >= 0 ||
-        role.indexOf("escarpment") >= 0
-      )
-    ) {
-      return SIZE_CLASSES.STRUCTURAL;
-    }
-
-    if (localIndex === 0 || role.indexOf("seabed") >= 0 || gap > 0.56) {
-      return SIZE_CLASSES.MICRO;
-    }
-
-    return SIZE_CLASSES.FIELD;
-  }
-
-  function calculateVariantNarrativeHeight(continent, node, sizeClass, neighbors) {
-    var metricsProfile = buildEthicalMetricProfile(continent, node);
-    var elevation = Number(node.dryElevation || node.elevation || 0.5);
-    var ridge = Number(node.ridgePressure || 0);
-    var mountain = Number(node.mountainPressure || 0);
-    var summit = Number(node.summitPressure || 0);
-    var basin = Number(node.basinPressure || 0);
-    var valley = Number(node.valleyPressure || 0);
-    var trench = Number(node.trenchPressure || 0);
-    var shelf = Number(node.shelfPressure || 0);
-    var escarpment = Number(node.escarpmentPressure || 0);
-    var gap = Number(node.gapPressure || 0);
-    var carving = Number(node.formerHydrosphereCarvingValue || 0);
-    var neighborInfluence = Number(neighbors && neighbors.neighborInfluence || 0.5);
-
-    var height = elevation * 0.34 + metricsProfile.ethicalCoherenceScore * 0.28 + neighborInfluence * 0.08;
-
-    if (continent.continentId === "gratitude") height += metricsProfile.receptivityPressure * 0.18 + ridge * 0.06 - gap * 0.10;
-    else if (continent.continentId === "generosity") height += metricsProfile.expansionPressure * 0.22 + ridge * 0.08 - basin * 0.04;
-    else if (continent.continentId === "dependability") height += metricsProfile.continuityPressure * 0.22 + mountain * 0.08 + ridge * 0.06;
-    else if (continent.continentId === "accountability") height += metricsProfile.disciplinePressure * 0.24 + escarpment * 0.12 + ridge * 0.08;
-    else if (continent.continentId === "forgiveness") height += metricsProfile.repairPressure * 0.12 + valley * 0.08 - carving * 0.08;
-    else if (continent.continentId === "humility") height += metricsProfile.restraintPressure * 0.06 + metricsProfile.receptivityPressure * 0.08 - basin * 0.18 - gap * 0.12;
-    else if (continent.continentId === "self-control") height += metricsProfile.restraintPressure * 0.24 + trench * 0.10 + ridge * 0.06 - gap * 0.04;
-    else if (continent.continentId === "patience") height += metricsProfile.timeDepthPressure * 0.18 + shelf * 0.12 + carving * 0.04;
-    else if (continent.continentId === "purity") height += metricsProfile.clarityPressure * 0.26 + summit * 0.12 + mountain * 0.08;
-
-    if (sizeClass.key === "MICRO") height += Math.sin(Number(node.x || 0) * 1.7 + Number(node.y || 0) * 0.9) * 0.025;
-    if (sizeClass.key === "FIELD") height += (valley + shelf) * 0.035;
-    if (sizeClass.key === "STRUCTURAL") height += (ridge + escarpment + trench) * 0.055;
-    if (sizeClass.key === "ANCHOR") height += (summit + mountain + basin * 0.36) * 0.075;
-
-    height = clamp(height, 0.08, 0.96);
-
-    return Object.freeze({
-      height: round(height, 4),
-      heightNarrative: height > 0.72 ? "high_coherence_rise" : height > 0.54 ? "stable_midland_continuity" : height > 0.36 ? "lowland_transition_or_repair" : "future_fill_depth_or_humility_floor",
-      ethicalMetricProfile: metricsProfile,
-      ethicalCoherenceScore: metricsProfile.ethicalCoherenceScore
-    });
-  }
-
-  function buildEthicalBumpAnchors(nodes) {
-    if (!state.ethicalProfiles.length) state.ethicalProfiles = buildNineContinentEthicalProfiles();
-
-    var offsets = [
-      { x: -0.24, y: -0.18 },
-      { x: 0.28, y: 0.02 },
-      { x: 0.02, y: 0.30 }
+    return [
+      texture.data[index],
+      texture.data[index + 1],
+      texture.data[index + 2]
     ];
-
-    var anchors = [];
-
-    nodes.forEach(function (node, sourceIndex) {
-      var neighbor = localNeighborInfluence(node, nodes);
-
-      for (var localIndex = 0; localIndex < 3; localIndex += 1) {
-        var offset = offsets[localIndex];
-        var point = {
-          x: Number(node.x || 0) + offset.x + Math.sin((sourceIndex + localIndex) * 0.73) * 0.045,
-          y: clamp(Number(node.y || 0) + offset.y + Math.cos((sourceIndex + localIndex) * 0.61) * 0.045, 0, FIBONACCI_BANDS - 1)
-        };
-
-        point.x = (point.x % RADIAL_NODES + RADIAL_NODES) % RADIAL_NODES;
-
-        var continent = assignContinentForTerrainPoint(point, node);
-        var sizeClass = classifyInvariantBumpSize(continent, node, localIndex);
-        var heightData = calculateVariantNarrativeHeight(continent, node, sizeClass, neighbor);
-        var ll = terrainSeatToLonLat(point.x, point.y);
-
-        anchors.push(Object.freeze({
-          bumpId: "AUDRALIA-ETHICAL-BUMP-" + String(sourceIndex).padStart(3, "0") + "-" + String(localIndex),
-          sourceSeatIndex: Number(node.seatIndex || node.nodeIndex || sourceIndex),
-          sourceNodeId: node.nodeId || node.seatKey || "source-" + sourceIndex,
-          x: round(point.x, 4),
-          y: round(point.y, 4),
-          lon: ll.lon,
-          lat: ll.lat,
-          point: lonLatPoint(ll.lon, ll.lat),
-          continentId: continent.continentId,
-          continentName: continent.continentName,
-          summitEthic: continent.summitEthic,
-          sizeClass: sizeClass.key,
-          sizeClassName: sizeClass.name,
-          invariantRadius: sizeClass.invariantRadius,
-          jurisdiction: sizeClass.jurisdiction,
-          height: heightData.height,
-          heightNarrative: heightData.heightNarrative,
-          ethicalMetricProfile: heightData.ethicalMetricProfile,
-          ethicalCoherenceScore: heightData.ethicalCoherenceScore,
-          terrainRole: node.primaryTerrainRole || node.terrainClass || "stable_core",
-          climateSeed: continent.climateSeed,
-          ecologySeed: continent.ecologySeed,
-          technologySeed: continent.technologySeed,
-          futureFillEligible: Boolean(node.futureFillEligible),
-          neighborInfluence: round(neighbor.neighborInfluence, 4),
-          neighborCount: neighbor.neighborCount,
-          renderAsFinalDot: false,
-          renderAsDisplacementAnchor: true,
-          carrierMayConsume: true,
-          finalVisualPassClaim: false
-        }));
-      }
-    });
-
-    return Object.freeze(anchors);
   }
 
-  function groupBumpsByContinent(bumps) {
-    var groups = {};
+  function inverseProjectedLonLat(nx, ny, z) {
+    var cp = Math.cos(state.pitch);
+    var sp = Math.sin(state.pitch);
 
-    state.ethicalProfiles.forEach(function (profile) {
-      groups[profile.continentId] = {
-        continentId: profile.continentId,
-        continentName: profile.continentName,
-        summitEthic: profile.summitEthic,
-        climateSeed: profile.climateSeed,
-        ecologySeed: profile.ecologySeed,
-        technologySeed: profile.technologySeed,
-        terrainSignature: profile.terrainSignature,
-        bumps: [],
-        microNodeCount: 0,
-        fieldNodeCount: 0,
-        structuralNodeCount: 0,
-        anchorNodeCount: 0,
-        totalBumpAnchorCount: 0,
-        averageNarrativeHeight: 0,
-        heightVariance: 0,
-        ethicalCoherenceScore: 0
-      };
-    });
+    var y1 = -ny * cp + z * sp;
+    var z1 = ny * sp + z * cp;
+    var x1 = nx;
 
-    bumps.forEach(function (bump) {
-      var group = groups[bump.continentId];
-      if (!group) return;
+    var cy = Math.cos(state.yaw);
+    var sy = Math.sin(state.yaw);
 
-      group.bumps.push(bump);
-      group.totalBumpAnchorCount += 1;
+    var x0 = x1 * cy - z1 * sy;
+    var z0 = x1 * sy + z1 * cy;
 
-      if (bump.sizeClass === "MICRO") group.microNodeCount += 1;
-      if (bump.sizeClass === "FIELD") group.fieldNodeCount += 1;
-      if (bump.sizeClass === "STRUCTURAL") group.structuralNodeCount += 1;
-      if (bump.sizeClass === "ANCHOR") group.anchorNodeCount += 1;
-
-      group.averageNarrativeHeight += Number(bump.height || 0);
-      group.ethicalCoherenceScore += Number(bump.ethicalCoherenceScore || 0);
-    });
-
-    Object.keys(groups).forEach(function (key) {
-      var group = groups[key];
-      var count = group.totalBumpAnchorCount || 1;
-      var variance = 0;
-
-      group.averageNarrativeHeight = round(group.averageNarrativeHeight / count, 4);
-      group.ethicalCoherenceScore = round(group.ethicalCoherenceScore / count, 4);
-
-      group.bumps.forEach(function (bump) {
-        variance += Math.pow(Number(bump.height || 0) - group.averageNarrativeHeight, 2);
-      });
-
-      group.heightVariance = round(Math.sqrt(variance / count), 4);
-      group.bumps = Object.freeze(group.bumps);
-      Object.freeze(group);
-    });
-
-    return Object.freeze(groups);
-  }
-
-  function buildContinentDisplacementFields(bumps) {
-    var groups = groupBumpsByContinent(bumps);
-    var fields = [];
-
-    Object.keys(groups).forEach(function (key) {
-      var group = groups[key];
-
-      fields.push(Object.freeze({
-        continentId: group.continentId,
-        continentName: group.continentName,
-        summitEthic: group.summitEthic,
-        climateSeed: group.climateSeed,
-        ecologySeed: group.ecologySeed,
-        technologySeed: group.technologySeed,
-        terrainSignature: group.terrainSignature,
-        nodeDistributionProfile: {
-          microNodeCount: group.microNodeCount,
-          fieldNodeCount: group.fieldNodeCount,
-          structuralNodeCount: group.structuralNodeCount,
-          anchorNodeCount: group.anchorNodeCount,
-          totalBumpAnchorCount: group.totalBumpAnchorCount
-        },
-        averageNarrativeHeight: group.averageNarrativeHeight,
-        heightVariance: group.heightVariance,
-        ethicalCoherenceScore: group.ethicalCoherenceScore,
-        finalVisualPassClaim: false
-      }));
-    });
-
-    state.continentBumpGroups = groups;
-    return Object.freeze(fields);
-  }
-
-  function buildDynamicSurfaceRows() {
-    var rows = [];
-
-    for (var i = 0; i < LAND_FIELD_ROWS; i += 1) {
-      var sourceBand = (i / (LAND_FIELD_ROWS - 1)) * (FIBONACCI_BANDS - 1);
-      var normalized = sourceBand / (FIBONACCI_BANDS - 1);
-      var latitude = 80 - normalized * 160;
-      var latitudeCompression = 0.62 + Math.cos((normalized - 0.5) * Math.PI) * 0.42;
-
-      rows.push(Object.freeze({
-        rowId: "LAND-BODY-ROW-" + String(i).padStart(2, "0"),
-        sourceBand: round(sourceBand, 4),
-        latitude: round(latitude, 3),
-        rowCompression: round(clamp(latitudeCompression, 0.45, 1.18), 4),
-        rowOffset: round(((i % 2) * 0.5 + Math.sin(i * 1.618) * 0.22) % RADIAL_NODES, 4),
-        rowWeaveAngle: round((i % 4 - 1.5) * 0.08, 4)
-      }));
-    }
-
-    return Object.freeze(rows);
-  }
-
-  function weightedBumpSample(xf, yf) {
-    if (!state.ethicalBumpFieldReady) {
-      return {
-        landPresence: 0,
-        height: 0.5,
-        ethicalCoherenceScore: 0,
-        continentId: "unassigned",
-        continentName: "Unassigned",
-        color: { r: 110, g: 125, b: 88 },
-        boundaryPressure: 0,
-        futureFillPressure: 0,
-        sizeClassInfluence: "FIELD"
-      };
-    }
-
-    var total = 0;
-    var height = 0;
-    var coherence = 0;
-    var futureFill = 0;
-    var continentScores = {};
-    var classScores = {};
-    var highestContribution = 0;
-
-    state.ethicalBumpAnchors.forEach(function (bump) {
-      var d = gridDistance(xf, yf, Number(bump.x || 0), Number(bump.y || 0));
-      if (d > 3.65) return;
-
-      var radius = Number(bump.invariantRadius || 1);
-      var heightValue = Number(bump.height || 0.5);
-      var weight = Math.pow(radius, 0.92) / Math.pow(0.46 + d, 2.28);
-
-      weight *= 0.86 + Number(bump.ethicalCoherenceScore || 0.5) * 0.32;
-      weight *= 0.90 + heightValue * 0.18;
-
-      total += weight;
-      highestContribution = Math.max(highestContribution, weight);
-      height += heightValue * weight;
-      coherence += Number(bump.ethicalCoherenceScore || 0.5) * weight;
-      futureFill += (bump.futureFillEligible ? 1 : 0) * weight;
-
-      continentScores[bump.continentId] = (continentScores[bump.continentId] || 0) + weight;
-      classScores[bump.sizeClass] = (classScores[bump.sizeClass] || 0) + weight;
-    });
-
-    if (!total) {
-      return {
-        landPresence: 0,
-        height: 0.5,
-        ethicalCoherenceScore: 0,
-        continentId: "unassigned",
-        continentName: "Unassigned",
-        color: { r: 110, g: 125, b: 88 },
-        boundaryPressure: 0,
-        futureFillPressure: 0,
-        sizeClassInfluence: "FIELD"
-      };
-    }
-
-    var continentId = maxKey(continentScores);
-    var sizeClass = maxKey(classScores);
-    var profile = findProfile(continentId);
-    var sorted = Object.keys(continentScores).map(function (key) {
-      return continentScores[key];
-    }).sort(function (a, b) { return b - a; });
-
-    var first = sorted[0] || 0;
-    var second = sorted[1] || 0;
-    var boundaryPressure = first ? clamp(second / first, 0, 1) : 0;
+    var lat = Math.asin(clamp(y1, -1, 1));
+    var lon = Math.atan2(z0, x0);
 
     return {
-      landPresence: round(clamp(total / 1.88, 0, 1), 4),
-      height: round(height / total, 4),
-      ethicalCoherenceScore: round(coherence / total, 4),
-      continentId: continentId,
-      continentName: profile ? profile.continentName : "Unassigned",
-      color: profile ? profile.color : { r: 110, g: 125, b: 88 },
-      boundaryPressure: round(boundaryPressure, 4),
-      futureFillPressure: round(futureFill / total, 4),
-      sizeClassInfluence: sizeClass || "FIELD",
-      highestContribution: round(highestContribution, 4)
+      lon: lon,
+      lat: lat
     };
   }
 
-  function buildLandInfluenceField() {
-    var samples = [];
-    var index = [];
+  function drawBackground() {
+    var ctx = state.ctx;
+    var m = metrics();
 
-    for (var y = 0; y < LAND_FIELD_ROWS; y += 1) {
-      index[y] = [];
+    ctx.clearRect(0, 0, state.width, state.height);
 
-      for (var x = 0; x < LAND_FIELD_COLS; x += 1) {
-        var gx = (x / LAND_FIELD_COLS) * RADIAL_NODES;
-        var gy = (y / (LAND_FIELD_ROWS - 1)) * (FIBONACCI_BANDS - 1);
-        var sample = weightedBumpSample(gx, gy);
-        var ll = landFieldToLonLat(x + 0.5, y + 0.5);
+    var bg = ctx.createRadialGradient(m.cx, m.cy, m.r * 0.15, m.cx, m.cy, Math.max(state.width, state.height) * 0.74);
+    bg.addColorStop(0.00, "rgba(21,40,54,0.92)");
+    bg.addColorStop(0.36, "rgba(5,13,31,0.98)");
+    bg.addColorStop(1.00, "rgba(1,4,12,1)");
 
-        var landPresence = clamp(
-          sample.landPresence * (0.94 - sample.boundaryPressure * 0.16) +
-          sample.ethicalCoherenceScore * 0.13,
-          0,
-          1
-        );
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, state.width, state.height);
 
-        var item = {
-          sampleId: "LAND-BODY-SAMPLE-" + String(y).padStart(2, "0") + "-" + String(x).padStart(3, "0"),
-          x: x,
-          y: y,
-          gridX: round(gx, 4),
-          gridY: round(gy, 4),
-          lon: ll.lon,
-          lat: ll.lat,
-          point: lonLatPoint(ll.lon, ll.lat),
-          continentId: sample.continentId,
-          continentName: sample.continentName,
-          color: sample.color,
-          sizeClassInfluence: sample.sizeClassInfluence,
-          landPresence: round(landPresence, 4),
-          height: sample.height,
-          slope: 0,
-          relief: 0,
-          ethicalCoherenceScore: sample.ethicalCoherenceScore,
-          boundaryPressure: sample.boundaryPressure,
-          futureFillPressure: sample.futureFillPressure,
-          nodesHiddenFromSurface: true,
-          existingNodesUsedAsLandMappingScaffold: true,
-          surfaceRenderIsDerived: true,
-          renderAsFinalDot: false,
-          finalVisualPassClaim: false
-        };
+    ctx.save();
+    ctx.globalAlpha = 0.34;
 
-        samples.push(item);
-        index[y][x] = item;
+    for (var i = 0; i < 58; i += 1) {
+      var x = hash2(i, 11, 301) * state.width;
+      var y = hash2(i, 19, 302) * state.height;
+      var r = 0.45 + hash2(i, 29, 303) * 1.4;
+
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, TAU);
+      ctx.fillStyle = "rgba(214,244,238,0.14)";
+      ctx.fill();
+    }
+
+    ctx.restore();
+
+    var glow = ctx.createRadialGradient(m.cx, m.cy, m.r * 0.36, m.cx, m.cy, m.r * 1.62);
+    glow.addColorStop(0.00, "rgba(143,240,195,0.025)");
+    glow.addColorStop(0.58, "rgba(141,216,255,0.075)");
+    glow.addColorStop(0.86, "rgba(243,200,111,0.050)");
+    glow.addColorStop(1.00, "rgba(141,216,255,0)");
+
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(m.cx, m.cy, m.r * 1.62, 0, TAU);
+    ctx.fill();
+  }
+
+  function drawSphere() {
+    if (!state.sphereCanvas || !state.sphereCtx) return;
+
+    var m = metrics();
+    var diameter = Math.max(240, Math.min(720, Math.floor(m.r * 2)));
+    var radius = diameter / 2;
+
+    if (state.sphereCanvas.width !== diameter) state.sphereCanvas.width = diameter;
+    if (state.sphereCanvas.height !== diameter) state.sphereCanvas.height = diameter;
+
+    var texture = buildTerrainTexture(state.activeLens);
+    var image = state.sphereCtx.createImageData(diameter, diameter);
+    var out = image.data;
+
+    var light = { x: -0.42, y: 0.34, z: 0.84 };
+    var mode = state.activeLens;
+
+    for (var y = 0; y < diameter; y += 1) {
+      var ny = (y + 0.5 - radius) / radius;
+
+      for (var x = 0; x < diameter; x += 1) {
+        var nx = (x + 0.5 - radius) / radius;
+        var d2 = nx * nx + ny * ny;
+        var index = (y * diameter + x) * 4;
+
+        if (d2 > 1) {
+          out[index + 3] = 0;
+          continue;
+        }
+
+        var z = Math.sqrt(1 - d2);
+        var ll = inverseProjectedLonLat(nx, ny, z);
+        var u = ll.lon / TAU + 0.5;
+        var v = 0.5 - ll.lat / Math.PI;
+
+        var color = textureSample(texture, u, v);
+
+        var lightDot = clamp(nx * light.x + (-ny) * light.y + z * light.z, -1, 1);
+        var daylight = 0.38 + Math.max(0, lightDot) * 0.88;
+        var night = smoothstep(-0.48, 0.12, lightDot);
+        var limb = Math.pow(1 - z, 1.70);
+        var rim = Math.pow(1 - z, 3.25);
+
+        var r = color[0] * daylight;
+        var g = color[1] * daylight;
+        var b = color[2] * daylight;
+
+        r = mix(r * 0.45, r, night);
+        g = mix(g * 0.50, g, night);
+        b = mix(b * 0.62, b, night);
+
+        if (mode === "surface") {
+          r *= 1.08;
+          g *= 1.08;
+          b *= 1.04;
+        }
+
+        if (mode === "hydration") {
+          var diagnostic = fbm(u * 14.0, v * 9.0, 7601, 3);
+          var trace = smoothstep(0.70, 0.92, diagnostic) * 0.08;
+          r = mix(r, 94, trace);
+          g = mix(g, 169, trace);
+          b = mix(b, 188, trace);
+        }
+
+        if (mode === "sixth-sense") {
+          var sense = fbm(u * 28.0, v * 16.0, 7611, 3);
+          var pulse = smoothstep(0.72, 0.95, sense) * 0.10;
+          r = mix(r, 141, pulse);
+          g = mix(g, 216, pulse);
+          b = mix(b, 255, pulse);
+        }
+
+        r = mix(r, 96, limb * 0.18);
+        g = mix(g, 178, limb * 0.16);
+        b = mix(b, 222, limb * 0.20);
+
+        r = mix(r, 154, rim * 0.34);
+        g = mix(g, 224, rim * 0.30);
+        b = mix(b, 236, rim * 0.32);
+
+        out[index] = clamp(Math.round(r), 0, 255);
+        out[index + 1] = clamp(Math.round(g), 0, 255);
+        out[index + 2] = clamp(Math.round(b), 0, 255);
+        out[index + 3] = clamp(Math.round(255 * smoothstep(1.006, 0.984, d2)), 0, 255);
       }
     }
 
-    for (var yy = 0; yy < LAND_FIELD_ROWS; yy += 1) {
-      for (var xx = 0; xx < LAND_FIELD_COLS; xx += 1) {
-        var current = index[yy][xx];
-        var left = index[yy][(xx - 1 + LAND_FIELD_COLS) % LAND_FIELD_COLS];
-        var right = index[yy][(xx + 1) % LAND_FIELD_COLS];
-        var up = index[Math.max(0, yy - 1)][xx];
-        var down = index[Math.min(LAND_FIELD_ROWS - 1, yy + 1)][xx];
+    state.sphereCtx.putImageData(image, 0, 0);
 
-        var dx = Number(right.height || 0) - Number(left.height || 0);
-        var dy = Number(down.height || 0) - Number(up.height || 0);
-        current.slope = round(clamp(Math.sqrt(dx * dx + dy * dy), 0, 1), 4);
-        current.relief = round(clamp(current.slope * 0.86 + Number(current.height || 0.5) * 0.14, 0, 1), 4);
-      }
-    }
-
-    state.landFieldIndex = index;
-    return Object.freeze(samples);
+    state.ctx.drawImage(state.sphereCanvas, m.cx - m.r, m.cy - m.r, m.r * 2, m.r * 2);
   }
 
-  function sampleNearestLandField(x, y) {
-    if (!state.landFieldIndex.length) return null;
-
-    var xx = ((Math.round(x) % LAND_FIELD_COLS) + LAND_FIELD_COLS) % LAND_FIELD_COLS;
-    var yy = clamp(Math.round(y), 0, LAND_FIELD_ROWS - 1);
-
-    return state.landFieldIndex[yy] && state.landFieldIndex[yy][xx] ? state.landFieldIndex[yy][xx] : null;
-  }
-
-  function sampleLandPresenceAt(x, y) {
-    var sample = sampleNearestLandField(x, y);
-    return sample ? sample.landPresence : 0;
-  }
-
-  function sampleContinentInfluenceAt(x, y) {
-    var sample = sampleNearestLandField(x, y);
-    return sample ? {
-      continentId: sample.continentId,
-      continentName: sample.continentName,
-      color: sample.color,
-      boundaryPressure: sample.boundaryPressure
-    } : null;
-  }
-
-  function sampleHeightDisplacementAt(x, y) {
-    var sample = sampleNearestLandField(x, y);
-    return sample ? sample.height : 0.5;
-  }
-
-  function sampleSlopeReliefAt(x, y) {
-    var sample = sampleNearestLandField(x, y);
-    return sample ? {
-      slope: sample.slope,
-      relief: sample.relief,
-      futureFillPressure: sample.futureFillPressure
-    } : { slope: 0, relief: 0, futureFillPressure: 0 };
-  }
-
-  function buildVisibleLandBodyPacket() {
-    var samples = state.landInfluenceField || [];
-    var continentCounts = {};
-
-    samples.forEach(function (sample) {
-      if (!continentCounts[sample.continentId]) continentCounts[sample.continentId] = 0;
-      if (sample.landPresence > 0.12) continentCounts[sample.continentId] += 1;
-    });
-
-    return Object.freeze({
-      contract: CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
-      recoveryBaseline: RECOVERY_BASELINE,
-      packetType: "runtime_derived_visible_land_body_packet_with_visual_tuning_socket",
-      sourceSeatCount: SOURCE_SEAT_COUNT,
-      ethicalBumpAnchorCount: state.ethicalBumpAnchors.length,
-      fieldSampleCount: samples.length,
-      landFieldCols: LAND_FIELD_COLS,
-      landFieldRows: LAND_FIELD_ROWS,
-      continentCounts: continentCounts,
-      terrainAtlasRemainsSource: true,
-      existingNodesUsedAsLandMappingScaffold: true,
-      nodesHiddenFromSurface: true,
-      surfaceRenderIsDerived: true,
-      carrierInventsTerrain: false,
-      carrierConsumesPacketsForDisplayOnly: true,
-      carrierDrawsPacketHandoffs: true,
-      carrierConsumesTriangularMesh: state.carrierConsumesTriangularMesh,
-      visualTuningSocketActive: true,
-      visualTuningChildDetected: state.visualTuningDetected,
-      visualTuningChildValidated: state.visualTuningValidated,
-      triangularReadabilityAdapterActive: true,
-      triangularMeshDisplayConsumptionDeprecated: true,
-      triangleLogicIsAdapter: true,
-      triangleLogicIsMaterialAuthority: false,
-      carrierMayUseTrianglesForReadability: true,
-      carrierMayUseTriangleColor: false,
-      carrierMayTintSurfaceFromTriangles: false,
-      carrierMayColorVoidFromTriangles: false,
-      carrierMayDrawTriangleFacetFillAsMaterial: false,
-      carrierMayDrawHydrationFromTriangles: false,
-      carrierMayDrawBeachFromTriangles: false,
-      carrierMayDrawCoastlineFromTriangles: false,
-      carrierMayDrawFutureFillAsWater: false,
-      carrierMayBlendLandAndVoidFromTriangles: false,
-      carrierMayReplaceLandCompositorWithTriangles: false,
-      existingLandCompositorPrimary: true,
-      triangleReadabilitySecondary: true,
-      carrierPreservesDerivativeExpression: true,
-      landVoidSeparationProtected: true,
-      voidRemainsVoid: true,
-      raw256VisibleOnlyInLattice: true,
-      activeHydration: false,
-      activeWater: false,
-      finalVisualPassClaim: false
-    });
-  }
-
-  function rebuildDerivedFields() {
-    var nodes = dryNodes();
-
-    state.ethicalProfiles = buildNineContinentEthicalProfiles();
-
-    if (!state.dryTerrainValidated || !nodes.length) {
-      state.ethicalBumpAnchors = [];
-      state.continentBumpGroups = {};
-      state.continentDisplacementFields = [];
-      state.ethicalBumpFieldReady = false;
-      state.dynamicSurfaceRows = [];
-      state.landInfluenceField = [];
-      state.landFieldIndex = [];
-      state.visibleLandBodyPacket = null;
-      state.landBodyCompositorReady = false;
-      rebuildDefinitionNodePointIndex();
-      return;
-    }
-
-    state.ethicalBumpAnchors = buildEthicalBumpAnchors(nodes);
-    state.continentBumpGroups = groupBumpsByContinent(state.ethicalBumpAnchors);
-    state.continentDisplacementFields = buildContinentDisplacementFields(state.ethicalBumpAnchors);
-    state.ethicalBumpFieldReady = state.ethicalBumpAnchors.length >= MIN_BUMP_ANCHOR_COUNT;
-    state.dynamicSurfaceRows = buildDynamicSurfaceRows();
-    state.landInfluenceField = buildLandInfluenceField();
-    state.visibleLandBodyPacket = buildVisibleLandBodyPacket();
-    state.landBodyCompositorReady = Boolean(state.visibleLandBodyPacket && state.landInfluenceField.length);
-
-    rebuildDefinitionNodePointIndex();
-  }
-
-  function rebuildDefinitionField() {
-    var relief = state.reliefValidated ? state.reliefCarrierPacket : null;
-    var landform = state.landformValidated ? state.landformCarrierPacket : null;
-    var elevation = state.elevationValidated ? state.elevationCarrierPacket : null;
-
-    state.definitionField = {
-      reliefSamples: relief && Array.isArray(relief.reliefSamples) ? relief.reliefSamples : [],
-
-      ridgeReliefExpressions: relief && Array.isArray(relief.ridgeReliefExpressions) ? relief.ridgeReliefExpressions : [],
-      basinDepthExpressions: relief && Array.isArray(relief.basinDepthExpressions) ? relief.basinDepthExpressions : [],
-      valleyFlowExpressions: relief && Array.isArray(relief.valleyFlowExpressions) ? relief.valleyFlowExpressions : [],
-      summitReliefExpressions: relief && Array.isArray(relief.summitReliefExpressions) ? relief.summitReliefExpressions : [],
-      highlandReliefExpressions: relief && Array.isArray(relief.highlandReliefExpressions) ? relief.highlandReliefExpressions : [],
-      lowlandReliefExpressions: relief && Array.isArray(relief.lowlandReliefExpressions) ? relief.lowlandReliefExpressions : [],
-      shelfReliefExpressions: relief && Array.isArray(relief.shelfReliefExpressions) ? relief.shelfReliefExpressions : [],
-      futureFillReliefExpressions: relief && Array.isArray(relief.futureFillReliefExpressions) ? relief.futureFillReliefExpressions : [],
-
-      elevationNodes: elevation && Array.isArray(elevation.elevationNodes) ? elevation.elevationNodes : [],
-      ridgeLines: elevation && Array.isArray(elevation.ridgeLines) ? elevation.ridgeLines : [],
-      basinFloors: elevation && Array.isArray(elevation.basinFloors) ? elevation.basinFloors : [],
-      valleyCorridors: elevation && Array.isArray(elevation.valleyCorridors) ? elevation.valleyCorridors : [],
-      highlandZones: elevation && Array.isArray(elevation.highlandZones) ? elevation.highlandZones : [],
-      summitZones: elevation && Array.isArray(elevation.summitZones) ? elevation.summitZones : [],
-
-      mountainRanges: landform && Array.isArray(landform.mountainRanges) ? landform.mountainRanges : [],
-      landmarks: landform && Array.isArray(landform.landmarks) ? landform.landmarks : [],
-      plateaus: landform && Array.isArray(landform.plateaus) ? landform.plateaus : [],
-      landformBasins: landform && Array.isArray(landform.landformBasins) ? landform.landformBasins : [],
-      cliffSystems: landform && Array.isArray(landform.cliffSystems) ? landform.cliffSystems : [],
-      continentLandformProfiles: landform && Array.isArray(landform.continentLandformProfiles) ? landform.continentLandformProfiles : []
-    };
-
-    state.definitionConsumptionReady = Boolean(
-      state.elevationValidated ||
-      state.reliefValidated ||
-      state.landformValidated ||
-      state.triangleMeshDisplayReady
-    );
-
-    state.definitionFieldReady = Boolean(
-      state.definitionField &&
-      (
-        state.definitionField.reliefSamples.length ||
-        state.definitionField.elevationNodes.length ||
-        state.definitionField.ridgeReliefExpressions.length ||
-        state.definitionField.basinDepthExpressions.length ||
-        state.definitionField.ridgeLines.length ||
-        state.definitionField.basinFloors.length ||
-        state.definitionField.mountainRanges.length ||
-        state.definitionField.cliffSystems.length ||
-        state.definitionField.plateaus.length ||
-        state.definitionField.landmarks.length ||
-        state.definitionField.continentLandformProfiles.length
-      )
-    );
-
-    rebuildDefinitionNodePointIndex();
-    return state.definitionFieldReady;
-  }
-
-  function indexDefinitionPoint(index, key, point) {
-    if (key === undefined || key === null || !point) return;
-    index[String(key)] = point;
-  }
-
-  function nodePointFromReliefSample(sample) {
-    if (!sample) return null;
-
-    var x = Number(sample.x || 0);
-    var y = Number(sample.y || 0);
-    var ll = terrainSeatToLonLat(x, y);
-
-    return {
-      source: "relief-sample",
-      sourcePriority: 1,
-      nodeId: sample.parentNodeId || sample.nodeId || sample.seatKey || "",
-      x: round(x, 4),
-      y: round(y, 4),
-      lon: round(ll.lon, 4),
-      lat: round(ll.lat, 4),
-      point: lonLatPoint(ll.lon, ll.lat),
-      continentId: sample.continentId || "unassigned",
-      continentName: sample.continentName || "Unassigned",
-      elevation: Number(sample.elevation || 0.5),
-      reliefIntensity: Number(sample.reliefIntensity || 0),
-      ridgeHighlight: Number(sample.ridgeHighlight || 0),
-      basinShadow: Number(sample.basinShadow || 0),
-      summitEmphasis: Number(sample.summitEmphasis || 0),
-      futureFillPressure: Number(sample.futureFillPressure || 0),
-      carrierVisualRole: sample.carrierVisualRole || "relief"
-    };
-  }
-
-  function nodePointFromDryNode(node, index) {
-    if (!node) return null;
-
-    var x = Number(node.x || node.radial || (index % RADIAL_NODES));
-    var y = Number(node.y || node.band || Math.floor(index / RADIAL_NODES));
-    var ll = terrainSeatToLonLat(x, y);
-
-    return {
-      source: "dry-terrain-node",
-      sourcePriority: 2,
-      nodeId: node.nodeId || node.seatKey || "source-" + index,
-      x: round(x, 4),
-      y: round(y, 4),
-      lon: round(ll.lon, 4),
-      lat: round(ll.lat, 4),
-      point: lonLatPoint(ll.lon, ll.lat),
-      continentId: node.regionSeed || node.continentId || "unassigned",
-      continentName: node.regionName || node.continentName || "Unassigned",
-      elevation: Number(node.dryElevation || node.elevation || 0.5),
-      reliefIntensity: Number(node.ridgePressure || node.mountainPressure || node.summitPressure || node.basinPressure || 0),
-      ridgeHighlight: Number(node.ridgePressure || node.mountainPressure || 0),
-      basinShadow: Number(node.basinPressure || node.gapPressure || 0),
-      summitEmphasis: Number(node.summitPressure || 0),
-      futureFillPressure: Number(node.gapPressure || node.basinPressure || 0),
-      carrierVisualRole: node.primaryTerrainRole || node.terrainClass || "dry-terrain"
-    };
-  }
-
-  function nodePointFromElevationNode(node) {
-    if (!node) return null;
-
-    var x = Number(node.x || 0);
-    var y = Number(node.y || 0);
-    var ll = Number.isFinite(Number(node.lon)) && Number.isFinite(Number(node.lat))
-      ? { lon: Number(node.lon), lat: Number(node.lat) }
-      : terrainSeatToLonLat(x, y);
-
-    return {
-      source: "elevation-node",
-      sourcePriority: 2,
-      nodeId: node.sourceNodeId || node.nodeId || "",
-      x: round(x, 4),
-      y: round(y, 4),
-      lon: round(ll.lon, 4),
-      lat: round(ll.lat, 4),
-      point: lonLatPoint(ll.lon, ll.lat),
-      continentId: node.continentId || "unassigned",
-      continentName: node.continentName || "Unassigned",
-      elevation: Number(node.elevation || 0.5),
-      reliefIntensity: Number(node.slopeMagnitude || node.flowConfidence || 0),
-      ridgeHighlight: node.elevationBand === "ridge" || node.elevationBand === "summit" ? Number(node.elevation || 0.5) : 0,
-      basinShadow: Number(node.futureFillPriority || 0),
-      summitEmphasis: node.elevationBand === "summit" ? Number(node.elevation || 0.5) : 0,
-      futureFillPressure: Number(node.futureFillPriority || 0),
-      carrierVisualRole: node.regionRole || node.elevationBand || "elevation"
-    };
-  }
-
-  function nodePointFromBumpAnchor(anchor) {
-    if (!anchor) return null;
-
-    return {
-      source: "ethical-bump-anchor",
-      sourcePriority: 3,
-      nodeId: anchor.sourceNodeId || anchor.bumpId,
-      x: Number(anchor.x || 0),
-      y: Number(anchor.y || 0),
-      lon: Number(anchor.lon || 0),
-      lat: Number(anchor.lat || 0),
-      point: anchor.point || lonLatPoint(anchor.lon || 0, anchor.lat || 0),
-      continentId: anchor.continentId || "unassigned",
-      continentName: anchor.continentName || "Unassigned",
-      elevation: Number(anchor.height || 0.5),
-      reliefIntensity: Number(anchor.height || 0),
-      ridgeHighlight: anchor.sizeClass === "STRUCTURAL" || anchor.sizeClass === "ANCHOR" ? Number(anchor.height || 0) : 0,
-      basinShadow: anchor.height < 0.42 ? 1 - Number(anchor.height || 0.5) : 0,
-      summitEmphasis: anchor.sizeClass === "ANCHOR" ? Number(anchor.height || 0) : 0,
-      futureFillPressure: anchor.futureFillEligible ? 1 : 0,
-      carrierVisualRole: anchor.terrainRole || "bump-anchor"
-    };
-  }
-
-  function nodePointFromLandInfluenceSample(sample) {
-    if (!sample) return null;
-
-    return {
-      source: "land-influence-sample",
-      sourcePriority: 4,
-      nodeId: sample.sampleId,
-      x: Number(sample.gridX || sample.x || 0),
-      y: Number(sample.gridY || sample.y || 0),
-      lon: Number(sample.lon || 0),
-      lat: Number(sample.lat || 0),
-      point: sample.point || lonLatPoint(sample.lon || 0, sample.lat || 0),
-      continentId: sample.continentId || "unassigned",
-      continentName: sample.continentName || "Unassigned",
-      elevation: Number(sample.height || 0.5),
-      reliefIntensity: Number(sample.relief || 0),
-      ridgeHighlight: Number(sample.relief || 0),
-      basinShadow: Number(sample.futureFillPressure || 0),
-      summitEmphasis: Number(sample.height > 0.72 ? sample.height : 0),
-      futureFillPressure: Number(sample.futureFillPressure || 0),
-      carrierVisualRole: sample.sizeClassInfluence || "land-field"
-    };
-  }
-
-  function rebuildDefinitionNodePointIndex() {
-    var index = {};
-
-    if (state.reliefValidated && state.reliefCarrierPacket && Array.isArray(state.reliefCarrierPacket.reliefSamples)) {
-      state.reliefCarrierPacket.reliefSamples.forEach(function (sample, i) {
-        var point = nodePointFromReliefSample(sample);
-        if (!point) return;
-
-        indexDefinitionPoint(index, sample.parentNodeId, point);
-        indexDefinitionPoint(index, sample.nodeId, point);
-        indexDefinitionPoint(index, sample.seatKey, point);
-        indexDefinitionPoint(index, sample.seatIndex, point);
-        indexDefinitionPoint(index, "relief-" + i, point);
-        indexDefinitionPoint(index, "source-" + i, point);
-        indexDefinitionPoint(index, String(i), point);
-      });
-    }
-
-    if (state.elevationValidated && state.elevationCarrierPacket && Array.isArray(state.elevationCarrierPacket.elevationNodes)) {
-      state.elevationCarrierPacket.elevationNodes.forEach(function (node, i) {
-        var point = nodePointFromElevationNode(node);
-        if (!point) return;
-
-        indexDefinitionPoint(index, node.nodeId, point);
-        indexDefinitionPoint(index, node.sourceNodeId, point);
-        indexDefinitionPoint(index, node.sourceSeatIndex, point);
-        indexDefinitionPoint(index, "source-seat-" + node.sourceSeatIndex, point);
-        indexDefinitionPoint(index, "elevation-" + i, point);
-      });
-    }
-
-    dryNodes().forEach(function (node, i) {
-      var point = nodePointFromDryNode(node, i);
-      if (!point) return;
-
-      indexDefinitionPoint(index, node.nodeId, point);
-      indexDefinitionPoint(index, node.seatKey, point);
-      indexDefinitionPoint(index, node.id, point);
-      indexDefinitionPoint(index, node.nodeIndex, point);
-      indexDefinitionPoint(index, node.seatIndex, point);
-      indexDefinitionPoint(index, "node-" + i, point);
-      indexDefinitionPoint(index, "source-" + i, point);
-      indexDefinitionPoint(index, "source-seat-" + i, point);
-      indexDefinitionPoint(index, String(i), point);
-    });
-
-    state.ethicalBumpAnchors.forEach(function (anchor) {
-      var point = nodePointFromBumpAnchor(anchor);
-      if (!point) return;
-
-      indexDefinitionPoint(index, anchor.sourceNodeId, point);
-      indexDefinitionPoint(index, anchor.bumpId, point);
-      indexDefinitionPoint(index, "source-" + anchor.sourceSeatIndex, point);
-      indexDefinitionPoint(index, "source-seat-" + anchor.sourceSeatIndex, point);
-      indexDefinitionPoint(index, anchor.sourceSeatIndex, point);
-    });
-
-    state.landInfluenceField.forEach(function (sample) {
-      var point = nodePointFromLandInfluenceSample(sample);
-      if (!point) return;
-
-      indexDefinitionPoint(index, sample.sampleId, point);
-      indexDefinitionPoint(index, "land-" + sample.y + "-" + sample.x, point);
-    });
-
-    state.definitionNodePointById = index;
-    state.definitionNodePointFallbackActive = true;
-
-    return index;
-  }
-
-  function numericTokenFromNodeId(nodeId) {
-    var match = String(nodeId || "").match(/(\d+)(?!.*\d)/);
-    if (!match) return null;
-
-    var value = Number(match[1]);
-    return Number.isFinite(value) ? value : null;
-  }
-
-  function fallbackRenderablePointFromNumericNodeId(nodeId) {
-    var value = numericTokenFromNodeId(nodeId);
-    if (value === null) return null;
-
-    var nodes = dryNodes();
-    if (nodes.length) {
-      var dryIndex = ((value % nodes.length) + nodes.length) % nodes.length;
-      var dryPoint = nodePointFromDryNode(nodes[dryIndex], dryIndex);
-      if (dryPoint) {
-        dryPoint.source = "fallback-dry-node";
-        return dryPoint;
-      }
-    }
-
-    if (state.landInfluenceField.length) {
-      var fieldIndex = ((value % state.landInfluenceField.length) + state.landInfluenceField.length) % state.landInfluenceField.length;
-      var fieldPoint = nodePointFromLandInfluenceSample(state.landInfluenceField[fieldIndex]);
-      if (fieldPoint) {
-        fieldPoint.source = "fallback-land-influence";
-        return fieldPoint;
-      }
-    }
-
-    return null;
-  }
-
-  function nodeIdToRenderablePoint(nodeId) {
-    if (nodeId === undefined || nodeId === null) return null;
-
-    var key = String(nodeId);
-    var exact = state.definitionNodePointById[key];
-
-    if (exact) {
-      state.definitionNodePointExactHits += 1;
-      return exact;
-    }
-
-    var fallback = fallbackRenderablePointFromNumericNodeId(key);
-
-    if (fallback) {
-      state.definitionNodePointFallbackHits += 1;
-      return fallback;
-    }
-
-    return null;
-  }
-
-  function nodeIdsToRenderablePoints(nodeIds, limit) {
-    var points = [];
-
-    (Array.isArray(nodeIds) ? nodeIds : []).slice(0, limit || 24).forEach(function (nodeId) {
-      var point = nodeIdToRenderablePoint(nodeId);
-      if (point) points.push(point);
-    });
-
-    return points;
-  }
-
-  function getEthicalBumpFieldReceipt() {
-    return {
-      contract: CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
-      recoveryBaseline: RECOVERY_BASELINE,
-      nineContinentEthicalFieldActive: state.ethicalBumpFieldReady,
-      nineContinentCount: state.ethicalProfiles.length,
-      bumpAnchorCount: state.ethicalBumpAnchors.length,
-      minimumBumpAnchorCount: MIN_BUMP_ANCHOR_COUNT,
-      fourInvariantSizeClassesActive: true,
-      sizeEqualsHeight: false,
-      heightVariantByEthicalMetric: true,
-      climateSeedOnly: true,
-      ecologySeedOnly: true,
-      technologySeedOnly: true,
-      raw256VisibleOnlyInLattice: true,
-      visualTuningSocketActive: true,
-      visualTuningChildDetected: state.visualTuningDetected,
-      visualTuningChildValidated: state.visualTuningValidated,
-      visualTuningFailureReason: state.visualTuningFailureReason,
-      triangularReadabilityAdapterActive: true,
-      triangleLogicIsAdapter: true,
-      triangleLogicIsMaterialAuthority: false,
-      hydrationHeld: true,
-      activeHydration: false,
-      activeWater: false,
-      carrierInventsTerrain: false,
-      carrierGeneratesMesh: false,
-      carrierOwnsTriangulation: false,
-      finalVisualPassClaim: false
-    };
-  }
-
-  function getLandBodyCompositorReceipt() {
-    return {
-      contract: CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
-      recoveryBaseline: RECOVERY_BASELINE,
-      landBodyCompositorActive: state.landBodyCompositorReady,
-      existingNodesUsedAsLandMappingScaffold: true,
-      nodesHiddenFromSurface: true,
-      visibleLandBodyPacketReady: Boolean(state.visibleLandBodyPacket),
-      fieldSampleCount: state.landInfluenceField.length,
-      landFieldRows: LAND_FIELD_ROWS,
-      landFieldCols: LAND_FIELD_COLS,
-      nineContinentFieldActive: state.ethicalBumpFieldReady,
-      surfaceRenderIsDerived: true,
-      raw256VisibleOnlyInLattice: true,
-      carrierConsumesPacketsForDisplayOnly: true,
-      carrierDrawsPacketHandoffs: true,
-      carrierConsumesTriangularMesh: state.carrierConsumesTriangularMesh,
-      triangleMeshDisplayReady: state.triangleMeshDisplayReady,
-      visualTuningSocketActive: true,
-      bodyGridReduced: true,
-      surfaceGridReduced: true,
-      sixthSenseDiagnosticScaffoldPreserved: true,
-      existingLandCompositorPrimary: true,
-      triangleReadabilitySecondary: true,
-      carrierPreservesDerivativeExpression: true,
-      landVoidSeparationProtected: true,
-      voidRemainsVoid: true,
-      carrierInventsTerrain: false,
-      carrierGeneratesMesh: false,
-      carrierOwnsTriangulation: false,
-      carrierMayUseTriangleColor: false,
-      carrierMayTintSurfaceFromTriangles: false,
-      carrierMayColorVoidFromTriangles: false,
-      carrierMayDrawTriangleFacetFillAsMaterial: false,
-      carrierMayReplaceLandCompositorWithTriangles: false,
-      hydrationHeld: true,
-      activeHydration: false,
-      activeWater: false,
-      finalVisualPassClaim: false
-    };
-  }
-
-  function getDefinitionConsumptionReceipt() {
-    return {
-      contract: CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
-      recoveryBaseline: RECOVERY_BASELINE,
-
-      elevationDetected: state.elevationDetected,
-      elevationValidated: state.elevationValidated,
-      elevationFailureReason: state.elevationFailureReason,
-
-      reliefExpressionDetected: state.reliefDetected,
-      reliefExpressionValidated: state.reliefValidated,
-      reliefFailureReason: state.reliefFailureReason,
-
-      landformSystemsDetected: state.landformDetected,
-      landformSystemsValidated: state.landformValidated,
-      landformFailureReason: state.landformFailureReason,
-
-      triangularMeshDetected: state.triangularMeshDetected,
-      triangularMeshValidated: state.triangularMeshValidated,
-      triangleMeshFailureReason: state.triangleMeshFailureReason,
-      carrierConsumesTriangularMesh: state.carrierConsumesTriangularMesh,
-      triangleMeshDisplayReady: state.triangleMeshDisplayReady,
-      triangleMeshVertexCount: state.triangleMeshVertexCount,
-      triangleMeshFaceCount: state.triangleMeshFaceCount,
-      triangleMeshEdgeBreakCount: state.triangleMeshEdgeBreakCount,
-
-      carrierConsumesReliefPacket: state.carrierConsumesReliefPacket,
-      carrierConsumesLandformPacket: state.carrierConsumesLandformPacket,
-      carrierConsumesPacketsForDisplayOnly: true,
-      carrierDrawsPacketHandoffs: true,
-      visualTuningSocketActive: true,
-      triangularReadabilityAdapterActive: true,
-      triangularMeshDisplayConsumptionDeprecated: true,
-      triangleLogicIsAdapter: true,
-      triangleLogicIsMaterialAuthority: false,
-      carrierMayUseTrianglesForReadability: true,
-      carrierMayUseTriangleColor: false,
-      carrierMayTintSurfaceFromTriangles: false,
-      carrierMayColorVoidFromTriangles: false,
-      carrierMayDrawTriangleFacetFillAsMaterial: false,
-      carrierMayDrawHydrationFromTriangles: false,
-      carrierMayDrawBeachFromTriangles: false,
-      carrierMayDrawCoastlineFromTriangles: false,
-      carrierMayDrawFutureFillAsWater: false,
-      carrierMayBlendLandAndVoidFromTriangles: false,
-      carrierMayReplaceLandCompositorWithTriangles: false,
-
-      bodyGridReduced: true,
-      surfaceGridReduced: true,
-      sixthSenseDiagnosticScaffoldPreserved: true,
-      latticeRaw256InspectionPreserved: true,
-
-      definitionConsumptionReady: state.definitionConsumptionReady,
-      definitionFieldReady: state.definitionFieldReady,
-      definitionNodePointFallbackActive: state.definitionNodePointFallbackActive,
-      definitionNodePointIndexCount: Object.keys(state.definitionNodePointById || {}).length,
-      definitionNodePointExactHits: state.definitionNodePointExactHits,
-      definitionNodePointFallbackHits: state.definitionNodePointFallbackHits,
-
-      carrierDoesNotOwnTerrainTruth: true,
-      carrierDoesNotOwnElevationTruth: true,
-      carrierDoesNotOwnReliefTruth: true,
-      carrierDoesNotOwnLandformTruth: true,
-      carrierDoesNotOwnBeachTruth: true,
-      carrierDoesNotOwnHydrationTruth: true,
-      carrierDoesNotMutateUpstreamMeaning: true,
-      carrierShouldNotOwnElevationTruth: true,
-      carrierShouldNotOwnReliefTruth: true,
-      carrierShouldNotOwnLandformTruth: true,
-      carrierOwnsTriangulation: false,
-      carrierGeneratesMesh: false,
-      carrierPreservesDerivativeExpression: true,
-      existingLandCompositorPrimary: true,
-      triangleReadabilitySecondary: true,
-      landVoidSeparationProtected: true,
-      voidRemainsVoid: true,
-      hydrosphereMemoryLensGated: true,
-      hydrosphereMemorySuppressedInBody: true,
-      hydrosphereMemorySuppressedInSurface: true,
-      futureFillSuppressedInSurface: true,
-      futureFillHydrationLensOnly: true,
-      hydrationHeld: true,
-      activeHydration: false,
-      activeWater: false,
-      finalTerrainPassClaim: false,
-      finalHydrationPassClaim: false,
-      finalVisualPassClaim: false
-    };
+  function drawAtmosphereRim() {
+    var ctx = state.ctx;
+    var m = metrics();
+
+    ctx.save();
+    ctx.globalCompositeOperation = "screen";
+
+    var halo = ctx.createRadialGradient(m.cx, m.cy, m.r * 0.88, m.cx, m.cy, m.r * 1.14);
+    halo.addColorStop(0.00, "rgba(141,216,255,0)");
+    halo.addColorStop(0.50, "rgba(141,216,255,0.030)");
+    halo.addColorStop(0.82, "rgba(141,216,255,0.120)");
+    halo.addColorStop(1.00, "rgba(141,216,255,0)");
+
+    ctx.fillStyle = halo;
+    ctx.beginPath();
+    ctx.arc(m.cx, m.cy, m.r * 1.14, 0, TAU);
+    ctx.fill();
+
+    ctx.globalCompositeOperation = "source-over";
+
+    ctx.beginPath();
+    ctx.arc(m.cx, m.cy, m.r * 1.002, 0, TAU);
+    ctx.strokeStyle = "rgba(190,232,255,0.22)";
+    ctx.lineWidth = Math.max(0.75, state.dpr * 0.72);
+    ctx.stroke();
+
+    ctx.restore();
   }
 
   function buildLatticeGeometry() {
@@ -2246,824 +1255,11 @@
     state.latticeReady = state.latticeSeats.length === SOURCE_SEAT_COUNT;
   }
 
-  function drawPlanetShadowBody() {
-    var ctx = state.ctx;
-    var m = metrics();
-
-    var base = ctx.createRadialGradient(m.cx - m.r * 0.28, m.cy - m.r * 0.38, 0, m.cx, m.cy, m.r * 1.18);
-    base.addColorStop(0.00, "rgba(60,76,84,0.98)");
-    base.addColorStop(0.20, "rgba(35,50,61,0.98)");
-    base.addColorStop(0.48, "rgba(11,24,42,1)");
-    base.addColorStop(0.78, "rgba(4,11,24,1)");
-    base.addColorStop(1.00, "rgba(1,5,14,1)");
-
-    ctx.beginPath();
-    ctx.arc(m.cx, m.cy, m.r, 0, TAU);
-    ctx.fillStyle = base;
-    ctx.fill();
-
-    ctx.save();
-    clipSphere();
-
-    var directional = ctx.createLinearGradient(m.cx - m.r, m.cy - m.r, m.cx + m.r, m.cy + m.r);
-    directional.addColorStop(0.00, "rgba(255,255,255,0.052)");
-    directional.addColorStop(0.34, "rgba(255,255,255,0.014)");
-    directional.addColorStop(0.70, "rgba(0,0,0,0.28)");
-    directional.addColorStop(1.00, "rgba(0,0,0,0.56)");
-
-    ctx.fillStyle = directional;
-    ctx.fillRect(m.cx - m.r, m.cy - m.r, m.r * 2, m.r * 2);
-    ctx.restore();
-  }
-
-  function drawHydrosphereMemoryUnderlayer(mode) {
-    if (mode !== "hydration" && mode !== "sixth-sense" && mode !== "receipt") return;
-
-    var ctx = state.ctx;
-    var m = metrics();
-    var diagnosticScale = mode === "hydration" ? 0.72 : mode === "sixth-sense" ? 0.46 : 0.30;
-
-    ctx.save();
-    clipSphere();
-
-    var memory = ctx.createRadialGradient(m.cx - m.r * 0.34, m.cy - m.r * 0.28, 0, m.cx, m.cy, m.r * 1.08);
-    memory.addColorStop(0.00, "rgba(105,184,212," + (0.095 * diagnosticScale).toFixed(3) + ")");
-    memory.addColorStop(0.28, "rgba(37,101,148," + (0.070 * diagnosticScale).toFixed(3) + ")");
-    memory.addColorStop(0.58, "rgba(8,42,91," + (0.058 * diagnosticScale).toFixed(3) + ")");
-    memory.addColorStop(1.00, "rgba(0,12,38," + (0.070 * diagnosticScale).toFixed(3) + ")");
-
-    ctx.beginPath();
-    ctx.arc(m.cx, m.cy, m.r * 0.995, 0, TAU);
-    ctx.fillStyle = memory;
-    ctx.fill();
-
-    ctx.restore();
-  }
-
-  function drawAtmosphereRim() {
-    var ctx = state.ctx;
-    var m = metrics();
-    var wash = state.definitionConsumptionReady ? 0.78 : 1;
-
-    var rim = ctx.createRadialGradient(m.cx, m.cy, m.r * 0.93, m.cx, m.cy, m.r * 1.105);
-    rim.addColorStop(0.00, "rgba(141,216,255,0.000)");
-    rim.addColorStop(0.62, "rgba(141,216,255," + (0.018 * wash).toFixed(3) + ")");
-    rim.addColorStop(0.84, "rgba(141,216,255," + (0.115 * wash).toFixed(3) + ")");
-    rim.addColorStop(1.00, "rgba(141,216,255,0.000)");
-
-    ctx.beginPath();
-    ctx.arc(m.cx, m.cy, m.r * 1.11, 0, TAU);
-    ctx.fillStyle = rim;
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.arc(m.cx, m.cy, m.r * 1.002, 0, TAU);
-    ctx.strokeStyle = "rgba(190,232,255,0.20)";
-    ctx.lineWidth = Math.max(0.75, state.dpr * 0.72);
-    ctx.stroke();
-  }
-
-  function mixColor(color, target, amount) {
-    return {
-      r: Math.floor(color.r * (1 - amount) + target.r * amount),
-      g: Math.floor(color.g * (1 - amount) + target.g * amount),
-      b: Math.floor(color.b * (1 - amount) + target.b * amount)
-    };
-  }
-
-  function rgba(rgb, alpha) {
-    return "rgba(" + Math.floor(rgb.r) + "," + Math.floor(rgb.g) + "," + Math.floor(rgb.b) + "," + clamp(alpha, 0, 1).toFixed(3) + ")";
-  }
-
-  function landSampleColor(sample, pass) {
-    var base = sample.color || { r: 112, g: 130, b: 88 };
-    var height = Number(sample.height || 0.5);
-    var relief = Number(sample.relief || 0);
-    var futureFill = Number(sample.futureFillPressure || 0);
-    var boundary = Number(sample.boundaryPressure || 0);
-
-    var high = { r: 212, g: 187, b: 126 };
-    var low = { r: 40, g: 58, b: 47 };
-    var edge = { r: 92, g: 74, b: 54 };
-    var color = base;
-
-    color = mixColor(color, height > 0.58 ? high : low, height > 0.58 ? (height - 0.58) * 0.58 : (0.58 - height) * 0.44);
-    color = mixColor(color, edge, boundary * 0.22);
-
-    if (pass === "relief") {
-      color = mixColor(color, high, clamp(relief * 0.58, 0, 0.44));
-    } else if (state.activeLens === "hydration" || state.activeLens === "sixth-sense") {
-      color = mixColor(color, { r: 16, g: 26, b: 30 }, futureFill * 0.16);
-    }
-
-    return color;
-  }
-
-  function drawLandBlob(sample, mode, pass) {
-    var ctx = state.ctx;
-    var p = project(sample.point);
-
-    if (!p.front) return;
-
-    var m = metrics();
-    var presence = Number(sample.landPresence || 0);
-    if (presence <= 0.030) return;
-
-    var visual = lensWeights(mode);
-    var height = Number(sample.height || 0.5);
-    var slope = Number(sample.slope || 0);
-    var boundary = Number(sample.boundaryPressure || 0);
-    var futureFill = Number(sample.futureFillPressure || 0);
-    var relief = Number(sample.relief || 0);
-    var color = landSampleColor(sample, pass);
-    var definitionTighten = state.definitionConsumptionReady ? 0.88 : 1;
-    var radiusUnit = pass === "under" ? visual.underRadius : pass === "relief" ? visual.reliefRadius : visual.landRadius;
-    var baseRadius = m.r * radiusUnit * definitionTighten;
-    var radius = Math.max(3.2, baseRadius * p.scale * (0.84 + presence * 0.34 + height * 0.10));
-    var alphaBase = visual.landAlpha;
-    var alpha = clamp(alphaBase * (0.54 + presence * 0.70 + height * 0.16), 0.020, 0.48);
-
-    if (state.triangleMeshDisplayReady && (mode === "body" || mode === "surface" || mode === "hydration" || mode === "lattice" || mode === "receipt")) {
-      alpha *= visual.legacyLandScaleWhenMesh;
-    }
-
-    if (pass === "under") alpha *= visual.underAlphaScale;
-    if (pass === "relief") alpha *= visual.reliefAlphaScale * clamp(0.34 + relief * 1.46 + slope * 1.18 + boundary * 0.26, 0.16, 0.80);
-
-    var gradient = ctx.createRadialGradient(
-      p.x - radius * 0.22,
-      p.y - radius * 0.18,
-      radius * 0.04,
-      p.x,
-      p.y,
-      radius
-    );
-
-    if ((mode === "hydration" || mode === "sixth-sense") && futureFill > 0.38 && pass !== "relief") {
-      gradient.addColorStop(0.00, rgba(color, alpha * 0.78));
-      gradient.addColorStop(0.42, "rgba(17,28,30," + clamp(alpha * 0.66, 0, 0.24).toFixed(3) + ")");
-      gradient.addColorStop(1.00, "rgba(17,28,30,0.000)");
-    } else {
-      gradient.addColorStop(0.00, rgba(color, alpha));
-      gradient.addColorStop(0.48, rgba(color, alpha * (0.40 + boundary * 0.10)));
-      gradient.addColorStop(1.00, rgba(color, 0.000));
-    }
-
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, radius, 0, TAU);
-    ctx.fillStyle = gradient;
-    ctx.fill();
-  }
-
-  function drawContinuousLandBodySurface(mode) {
-    if (!state.landBodyCompositorReady) return;
-
-    var samples = state.landInfluenceField;
-
-    state.ctx.save();
-    clipSphere();
-
-    for (var i = 0; i < samples.length; i += 1) {
-      drawLandBlob(samples[i], mode, "under");
-    }
-
-    for (var j = 0; j < samples.length; j += 1) {
-      drawLandBlob(samples[j], mode, "main");
-    }
-
-    if (mode === "surface" || mode === "sixth-sense") {
-      var stride = mode === "surface" && state.triangleMeshDisplayReady ? 2 : 1;
-
-      for (var k = 0; k < samples.length; k += stride) {
-        var sample = samples[k];
-        if (sample.relief > 0.15 || sample.height > 0.60 || sample.boundaryPressure > 0.44) {
-          drawLandBlob(sample, mode, "relief");
-        }
-      }
-    }
-
-    state.ctx.restore();
-  }
-
-  function plausibleSphereCoordinate(vertex) {
-    var x = Number(vertex && vertex.x);
-    var y = Number(vertex && vertex.y);
-    var z = Number(vertex && vertex.z);
-
-    if (!Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(z)) return false;
-    if (Math.abs(x) > 1.35 || Math.abs(y) > 1.35 || Math.abs(z) > 1.35) return false;
-
-    var length = Math.sqrt(x * x + y * y + z * z);
-    return length > 0.45 && length < 1.55;
-  }
-
-  function triangleVertexPoint(vertex) {
-    if (!vertex) return null;
-
-    if (
-      vertex.point &&
-      Number.isFinite(Number(vertex.point.x)) &&
-      Number.isFinite(Number(vertex.point.y)) &&
-      Number.isFinite(Number(vertex.point.z))
-    ) {
-      return {
-        x: Number(vertex.point.x),
-        y: Number(vertex.point.y),
-        z: Number(vertex.point.z)
-      };
-    }
-
-    if (plausibleSphereCoordinate(vertex)) {
-      var x = Number(vertex.x);
-      var y = Number(vertex.y);
-      var z = Number(vertex.z);
-      var length = Math.sqrt(x * x + y * y + z * z) || 1;
-
-      return {
-        x: x / length,
-        y: y / length,
-        z: z / length
-      };
-    }
-
-    if (Number.isFinite(Number(vertex.lon)) && Number.isFinite(Number(vertex.lat))) {
-      return lonLatPoint(Number(vertex.lon), Number(vertex.lat));
-    }
-
-    if (Number.isFinite(Number(vertex.x)) && Number.isFinite(Number(vertex.y)) && !Number.isFinite(Number(vertex.z))) {
-      var ll = terrainSeatToLonLat(Number(vertex.x), Number(vertex.y));
-      return lonLatPoint(ll.lon, ll.lat);
-    }
-
-    return null;
-  }
-
-  function sourceIndexToVertex(sourceIndex) {
-    var nodes = dryNodes();
-    var index = Number(sourceIndex);
-
-    if (!Number.isFinite(index) || !nodes.length) return null;
-
-    index = ((Math.round(index) % nodes.length) + nodes.length) % nodes.length;
-
-    var point = nodePointFromDryNode(nodes[index], index);
-    if (!point) return null;
-
-    return {
-      lon: point.lon,
-      lat: point.lat,
-      point: point.point,
-      nodeId: point.nodeId,
-      sourceIndex: index
-    };
-  }
-
-  function triangleFaceVertices(face) {
-    if (!face) return [];
-
-    if (Array.isArray(face.vertices) && face.vertices.length >= 3) {
-      var direct = [];
-
-      face.vertices.slice(0, 3).forEach(function (entry) {
-        if (entry && typeof entry === "object") {
-          direct.push(entry);
-        } else {
-          var vertex = state.triangleMeshVertexById[String(entry)];
-          if (vertex) direct.push(vertex);
-        }
-      });
-
-      return direct.length === 3 ? direct : [];
-    }
-
-    if (Array.isArray(face.vertexIds)) {
-      var vertices = [];
-      face.vertexIds.slice(0, 3).forEach(function (vertexId) {
-        var vertex = state.triangleMeshVertexById[String(vertexId)];
-        if (vertex) vertices.push(vertex);
-      });
-
-      return vertices.length === 3 ? vertices : [];
-    }
-
-    if (Array.isArray(face.sourceNodeIds) || Array.isArray(face.nodeIds)) {
-      var ids = Array.isArray(face.sourceNodeIds) ? face.sourceNodeIds : face.nodeIds;
-      var points = nodeIdsToRenderablePoints(ids, 3);
-
-      return points.length === 3 ? points.map(function (point) {
-        return {
-          lon: point.lon,
-          lat: point.lat,
-          point: point.point,
-          nodeId: point.nodeId
-        };
-      }) : [];
-    }
-
-    if (Array.isArray(face.sourceSeatIndexes)) {
-      var seatVertices = [];
-
-      face.sourceSeatIndexes.slice(0, 3).forEach(function (sourceIndex) {
-        var vertex = sourceIndexToVertex(sourceIndex);
-        if (vertex) seatVertices.push(vertex);
-      });
-
-      return seatVertices.length === 3 ? seatVertices : [];
-    }
-
-    if (Array.isArray(face.sourceIndexes)) {
-      var sourceVertices = [];
-
-      face.sourceIndexes.slice(0, 3).forEach(function (sourceIndex) {
-        var vertex = sourceIndexToVertex(sourceIndex);
-        if (vertex) sourceVertices.push(vertex);
-      });
-
-      return sourceVertices.length === 3 ? sourceVertices : [];
-    }
-
-    return [];
-  }
-
-  function triangleFaceLabel(face) {
-    return String(
-      (face && (
-        face.classification ||
-        face.terrainClass ||
-        face.landformClass ||
-        face.coastalClass ||
-        face.zoneType ||
-        face.faceClass ||
-        face.role ||
-        face.kind ||
-        ""
-      )) || ""
-    ).toLowerCase();
-  }
-
-  function faceVerticesLandSupported(face) {
-    var vertices = triangleFaceVertices(face);
-    if (vertices.length !== 3) return false;
-
-    var totalLand = 0;
-    var checked = 0;
-
-    vertices.forEach(function (vertex) {
-      var lon = Number(vertex.lon);
-      var lat = Number(vertex.lat);
-
-      if (!Number.isFinite(lon) || !Number.isFinite(lat)) {
-        if (Number.isFinite(Number(vertex.x)) && Number.isFinite(Number(vertex.y)) && !Number.isFinite(Number(vertex.z))) {
-          var ll = terrainSeatToLonLat(Number(vertex.x), Number(vertex.y));
-          lon = ll.lon;
-          lat = ll.lat;
-        } else {
-          return;
-        }
-      }
-
-      var fx = ((lon + 180) / 360) * LAND_FIELD_COLS;
-      var fy = ((82 - lat) / 164) * (LAND_FIELD_ROWS - 1);
-      var sample = sampleNearestLandField(fx, fy);
-
-      if (sample) {
-        totalLand += Number(sample.landPresence || 0);
-        checked += 1;
-      }
-    });
-
-    return checked >= 2 && totalLand / checked > 0.16;
-  }
-
-  function triangleFacetSupportedByLand(face) {
-    if (!face) return false;
-
-    var label = triangleFaceLabel(face);
-
-    if (hasTextTerm(label, FORBIDDEN_SURFACE_TERMS)) return false;
-    if (Number.isFinite(Number(face.landPresence))) return Number(face.landPresence) > 0.42;
-    if (Number.isFinite(Number(face.voidPresence))) return Number(face.voidPresence) < 0.35;
-    if (Number.isFinite(Number(face.averageElevation))) return Number(face.averageElevation) > 0.22;
-    if (Number.isFinite(Number(face.elevation))) return Number(face.elevation) > 0.22;
-    if (hasTextTerm(label, LAND_SUPPORT_TERMS)) return true;
-    if (faceVerticesLandSupported(face)) return true;
-
-    return false;
-  }
-
-  function triangleReadabilityColor(mode) {
-    if (mode === "sixth-sense") return { r: 141, g: 216, b: 255 };
-    if (mode === "hydration") return { r: 112, g: 156, b: 164 };
-    if (mode === "lattice") return { r: 141, g: 216, b: 255 };
-    return { r: 236, g: 204, b: 132 };
-  }
-
-  function drawTriangleFacet(face, mode) {
-    if (!state.triangleMeshDisplayReady || !face) return;
-
-    if (mode === "body" || mode === "surface" || mode === "lattice" || mode === "receipt") {
-      if (!triangleFacetSupportedByLand(face)) return;
-    }
-
-    if (mode === "hydration") {
-      var label = triangleFaceLabel(face);
-      var diagnosticEligible = face.hydrationBoundaryEligible === true ||
-        Number(face.futureFillScore || 0) > 0.55 ||
-        hasTextTerm(label, ["future", "basin", "hydro", "shore", "coast", "receiving"]);
-
-      if (!diagnosticEligible) return;
-    }
-
-    var vertices = triangleFaceVertices(face);
-    if (vertices.length !== 3) return;
-
-    var projected = vertices.map(function (vertex) {
-      var point = triangleVertexPoint(vertex);
-      return point ? project(point) : null;
-    });
-
-    if (!projected[0] || !projected[1] || !projected[2]) return;
-
-    var avgZ = (projected[0].z + projected[1].z + projected[2].z) / 3;
-    if (avgZ < -0.025) return;
-
-    var m = metrics();
-    var xs = projected.map(function (p) { return p.x; });
-    var ys = projected.map(function (p) { return p.y; });
-    var maxDx = Math.max.apply(null, xs) - Math.min.apply(null, xs);
-    var maxDy = Math.max.apply(null, ys) - Math.min.apply(null, ys);
-
-    if (maxDx > m.r * 0.78 || maxDy > m.r * 0.78) return;
-
-    var visual = lensWeights(mode);
-    var relief = Number(face.reliefIntensity || face.slopeHint || face.edgePresence || 0);
-    var edge = Number(face.edgeBreakWeight || face.edgePresence || 0);
-    var alpha = visual.triangleEdgeAlpha * clamp(0.28 + relief * 0.24 + edge * 0.34, 0.12, 0.82);
-
-    if (mode === "body") alpha *= 0.48;
-    if (mode === "surface") alpha *= 0.58;
-    if (mode === "sixth-sense") alpha *= 1.05;
-    if (mode === "hydration") alpha *= 0.64;
-    if (mode === "lattice") alpha *= 0.64;
-    if (mode === "receipt") alpha *= 0.38;
-
-    if (alpha <= 0.010) return;
-
-    var ctx = state.ctx;
-    var color = triangleReadabilityColor(mode);
-
-    ctx.beginPath();
-    ctx.moveTo(projected[0].x, projected[0].y);
-    ctx.lineTo(projected[1].x, projected[1].y);
-    ctx.lineTo(projected[2].x, projected[2].y);
-    ctx.closePath();
-
-    if (mode === "sixth-sense" && visual.triangleFacetAlpha > 0) {
-      ctx.fillStyle = rgba(color, visual.triangleFacetAlpha * 0.16);
-      ctx.fill();
-    }
-
-    ctx.strokeStyle = rgba(color, alpha);
-    ctx.lineWidth = Math.max(0.26, m.r * 0.00076 * (0.68 + relief * 0.40));
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.stroke();
-  }
-
-  function drawTriangleMeshFacetLayer(mode) {
-    if (!state.triangleMeshDisplayReady || !state.triangularMeshCarrierPacket) return;
-
-    var faces = normalizeTriangleFaces(state.triangularMeshCarrierPacket);
-    if (!faces.length) return;
-
-    state.ctx.save();
-    clipSphere();
-
-    for (var i = 0; i < faces.length; i += 1) {
-      drawTriangleFacet(faces[i], mode);
-    }
-
-    state.ctx.restore();
-  }
-
-  function triangleEdgeIsMaterialLeak(edge) {
-    var text = String(edge && (
-      edge.breakClass ||
-      edge.classification ||
-      edge.zoneType ||
-      edge.role ||
-      edge.kind ||
-      edge.label ||
-      edge.edgeClass ||
-      ""
-    ) || "").toLowerCase();
-
-    return hasTextTerm(text, MATERIAL_LEAK_TERMS);
-  }
-
-  function triangleEdgeColor(edge, mode) {
-    var breakClass = String(edge && (edge.breakClass || edge.classification || edge.edgeClass || "") || "").toLowerCase();
-
-    if (mode === "hydration") return { r: 112, g: 156, b: 164 };
-    if (mode === "sixth-sense") return { r: 141, g: 216, b: 255 };
-    if (breakClass.indexOf("cliff") >= 0) return { r: 92, g: 70, b: 52 };
-    if (breakClass.indexOf("ridge") >= 0) return { r: 226, g: 197, b: 134 };
-    if (breakClass.indexOf("relief") >= 0) return { r: 170, g: 145, b: 94 };
-
-    return { r: 160, g: 139, b: 91 };
-  }
-
-  function drawTriangleEdgeBreak(edge, mode) {
-    if (!state.triangleMeshDisplayReady || !edge) return;
-
-    if (triangleEdgeIsMaterialLeak(edge) && mode !== "hydration" && mode !== "sixth-sense" && mode !== "receipt") return;
-
-    var vertexIds = Array.isArray(edge.vertexIds) ? edge.vertexIds : [];
-    if (vertexIds.length < 2) return;
-
-    var visual = lensWeights(mode);
-    var weight = Number(edge.edgeBreakWeight || edge.edgePresence || edge.weight || 0);
-
-    if (mode === "body" && weight < 0.74) return;
-    if (mode === "surface" && weight < 0.44) return;
-    if (mode === "hydration" && !triangleEdgeIsMaterialLeak(edge)) return;
-    if (mode === "receipt" && weight < 0.64) return;
-
-    var a = state.triangleMeshVertexById[String(vertexIds[0])];
-    var b = state.triangleMeshVertexById[String(vertexIds[1])];
-
-    if (!a || !b) return;
-
-    var pa = triangleVertexPoint(a);
-    var pb = triangleVertexPoint(b);
-    if (!pa || !pb) return;
-
-    var p1 = project(pa);
-    var p2 = project(pb);
-    var avgZ = (p1.z + p2.z) / 2;
-
-    if (avgZ < -0.025) return;
-
-    var m = metrics();
-    var dx = Math.abs(p1.x - p2.x);
-    var dy = Math.abs(p1.y - p2.y);
-    if (dx > m.r * 0.60 || dy > m.r * 0.60) return;
-
-    var alpha = visual.triangleEdgeAlpha * clamp(0.22 + weight * 0.74, 0.14, 1);
-
-    if (mode === "body") alpha *= 0.34;
-    if (mode === "surface") alpha *= 0.48;
-    if (mode === "sixth-sense") alpha *= 1.08;
-    if (mode === "lattice") alpha *= 0.58;
-    if (mode === "receipt") alpha *= 0.36;
-    if (mode === "hydration") alpha = Math.min(alpha, 0.110);
-
-    if (alpha <= 0.010) return;
-
-    var ctx = state.ctx;
-    var color = triangleEdgeColor(edge, mode);
-
-    ctx.beginPath();
-    ctx.moveTo(p1.x, p1.y);
-    ctx.lineTo(p2.x, p2.y);
-    ctx.strokeStyle = rgba(color, alpha);
-    ctx.lineWidth = Math.max(0.28, m.r * 0.0010 * (0.65 + weight * 0.50));
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.stroke();
-  }
-
-  function drawTriangleMeshEdgeBreakLayer(mode) {
-    if (!state.triangleMeshDisplayReady || !state.triangularMeshCarrierPacket) return;
-
-    var edges = normalizeTriangleEdges(state.triangularMeshCarrierPacket);
-    if (!edges.length) return;
-
-    state.ctx.save();
-    clipSphere();
-
-    for (var i = 0; i < edges.length; i += 1) {
-      drawTriangleEdgeBreak(edges[i], mode);
-    }
-
-    state.ctx.restore();
-  }
-
-  function projectedRenderablePoint(renderablePoint) {
-    return renderablePoint && renderablePoint.point ? project(renderablePoint.point) : null;
-  }
-
-  function drawDefinitionNode(renderablePoint, alpha, radiusScale, rgb, stroke) {
-    if (!renderablePoint) return;
-
-    var p = projectedRenderablePoint(renderablePoint);
-    if (!p || !p.front) return;
-
-    var visual = activeLensWeights();
-    var ctx = state.ctx;
-    var m = metrics();
-    var intensity = clamp(
-      Number(renderablePoint.reliefIntensity || 0) +
-      Number(renderablePoint.ridgeHighlight || 0) * 0.42 +
-      Number(renderablePoint.basinShadow || 0) * 0.36 +
-      Number(renderablePoint.summitEmphasis || 0) * 0.30,
-      0,
-      1.35
-    );
-
-    var weightedAlpha = alpha * (stroke ? visual.definitionStrokeAlpha : visual.definitionNodeAlpha);
-
-    if (state.triangleMeshDisplayReady && (state.activeLens === "body" || state.activeLens === "surface")) {
-      weightedAlpha *= state.activeLens === "body" ? 0.56 : 0.70;
-    }
-
-    if (weightedAlpha <= 0.010) return;
-
-    var radius = Math.max(0.75, m.r * radiusScale * p.scale * (0.60 + intensity * 0.34));
-
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, radius, 0, TAU);
-
-    if (stroke) {
-      ctx.strokeStyle = rgba(rgb, weightedAlpha);
-      ctx.lineWidth = Math.max(0.42, state.dpr * radiusScale * 28);
-      ctx.stroke();
-    } else {
-      ctx.fillStyle = rgba(rgb, weightedAlpha);
-      ctx.fill();
-    }
-  }
-
-  function drawDefinitionLineFromNodeIds(nodeIds, alpha, widthScale, rgb, maxNodes) {
-    if (!Array.isArray(nodeIds) || nodeIds.length < 2) return;
-
-    var visual = activeLensWeights();
-    var ctx = state.ctx;
-    var m = metrics();
-    var weightedAlpha = alpha * visual.definitionLineAlpha;
-
-    if (state.triangleMeshDisplayReady && (state.activeLens === "body" || state.activeLens === "surface")) {
-      weightedAlpha *= state.activeLens === "body" ? 0.54 : 0.68;
-    }
-
-    if (weightedAlpha <= 0.010) return;
-
-    var renderablePoints = nodeIdsToRenderablePoints(nodeIds, maxNodes || 16);
-    var points = renderablePoints.map(projectedRenderablePoint).filter(function (p) {
-      return p && p.front;
-    });
-
-    if (points.length < 2) return;
-
-    ctx.beginPath();
-    ctx.moveTo(points[0].x, points[0].y);
-
-    for (var i = 1; i < points.length; i += 1) {
-      var prev = points[i - 1];
-      var next = points[i];
-      var dx = Math.abs(next.x - prev.x);
-      var dy = Math.abs(next.y - prev.y);
-
-      if (dx > m.r * 0.42 || dy > m.r * 0.42) ctx.moveTo(next.x, next.y);
-      else ctx.lineTo(next.x, next.y);
-    }
-
-    ctx.strokeStyle = rgba(rgb, weightedAlpha);
-    ctx.lineWidth = Math.max(0.52, m.r * widthScale * visual.definitionLineWidth);
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.stroke();
-  }
-
-  function drawElevationDefinitionLayer(mode) {
-    if (!state.definitionFieldReady || !state.definitionField) return;
-
-    var strength = mode === "body" ? 0.075 : mode === "surface" ? 0.19 : mode === "sixth-sense" ? 0.34 : 0.11;
-
-    (state.definitionField.ridgeLines || []).slice(0, 40).forEach(function (ridge) {
-      drawDefinitionLineFromNodeIds(ridge.nodeIds, strength * clamp(Number(ridge.watershedDivideStrength || 0.42), 0.20, 1), mode === "surface" ? 0.0028 : 0.0022, { r: 226, g: 197, b: 134 }, 18);
-    });
-
-    (state.definitionField.basinFloors || []).slice(0, 36).forEach(function (basin) {
-      var alpha = strength * 0.74 * clamp(Number(basin.receivingStrength || basin.futureFillPriority || 0.38), 0.18, 1);
-      (basin.nodeIds || []).slice(0, 10).forEach(function (nodeId) {
-        drawDefinitionNode(nodeIdToRenderablePoint(nodeId), alpha, 0.0074, { r: 38, g: 58, b: 53 }, false);
-      });
-    });
-  }
-
-  function drawReliefSampleLayer(mode) {
-    if (!state.definitionFieldReady || !state.definitionField || !state.definitionField.reliefSamples.length) return;
-
-    var strength = mode === "body" ? 0.035 : mode === "surface" ? 0.105 : mode === "sixth-sense" ? 0.26 : 0.07;
-
-    state.definitionField.reliefSamples.slice(0, mode === "sixth-sense" ? 220 : 120).forEach(function (sample, index) {
-      if (mode !== "sixth-sense" && index % 2 !== 0) return;
-      var point = nodePointFromReliefSample(sample);
-      var intensity = clamp(Number(sample.reliefIntensity || sample.ridgeHighlight || sample.summitEmphasis || 0.32), 0.12, 1);
-      drawDefinitionNode(point, strength * intensity, mode === "surface" ? 0.0048 : 0.0038, { r: 236, g: 204, b: 132 }, false);
-    });
-  }
-
-  function drawDefinitionOverlay(mode) {
-    if (!state.definitionFieldReady) return;
-
-    state.ctx.save();
-    clipSphere();
-
-    drawElevationDefinitionLayer(mode);
-    drawReliefSampleLayer(mode);
-
-    state.ctx.restore();
-  }
-
-  function drawFutureFillDepressions(mode) {
-    if (!state.landBodyCompositorReady || (mode !== "hydration" && mode !== "sixth-sense")) return;
-
-    var ctx = state.ctx;
-
-    ctx.save();
-    clipSphere();
-
-    state.landInfluenceField.forEach(function (sample) {
-      if (sample.futureFillPressure < 0.42) return;
-
-      var p = project(sample.point);
-      if (!p.front) return;
-
-      var radius = Math.max(1.8, metrics().r * 0.0105 * p.scale);
-      var alpha = mode === "hydration" ? 0.145 : 0.060;
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, radius, 0, TAU);
-      ctx.fillStyle = "rgba(100,146,160," + alpha.toFixed(3) + ")";
-      ctx.fill();
-    });
-
-    ctx.restore();
-  }
-
-  function drawSixthSenseNodeScaffold(mode) {
-    if (!state.ethicalBumpFieldReady || mode !== "sixth-sense") return;
-
-    var visual = lensWeights(mode);
-    var scaffoldAlpha = visual.scaffoldAlpha;
-    if (scaffoldAlpha <= 0) return;
-
-    var ctx = state.ctx;
-    var m = metrics();
-    var drawn = 0;
-
-    ctx.save();
-    clipSphere();
-
-    state.ethicalBumpAnchors.forEach(function (bump, index) {
-      if (index % 10 !== 0 && bump.sizeClass !== "ANCHOR") return;
-      if (drawn > 156) return;
-
-      var p = project(bump.point);
-      if (!p.front) return;
-
-      var profile = findProfile(bump.continentId);
-      var color = profile ? profile.color : { r: 180, g: 210, b: 180 };
-      var radius = Math.max(0.72, m.r * 0.0038 * Number(bump.invariantRadius || 1) * p.scale);
-      var alpha = bump.sizeClass === "ANCHOR" ? 0.24 : bump.sizeClass === "STRUCTURAL" ? 0.10 : 0.048;
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, radius, 0, TAU);
-      ctx.fillStyle = rgba(color, alpha * scaffoldAlpha);
-      ctx.fill();
-
-      if (bump.sizeClass === "ANCHOR") {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, radius * 2.25, 0, TAU);
-        ctx.strokeStyle = rgba(color, 0.10 * scaffoldAlpha);
-        ctx.lineWidth = Math.max(0.34, state.dpr * 0.36);
-        ctx.stroke();
-      }
-
-      drawn += 1;
-    });
-
-    ctx.restore();
-  }
-
-  function latticeColor(link, avgZ, layer) {
-    var isBack = layer === "back";
-    var major = Boolean(link.major);
-
-    if (isBack) return major ? "rgba(141,216,255,0.070)" : "rgba(141,216,255,0.040)";
-    if (link.family === "fibonacci") return major ? "rgba(244,207,131,0.62)" : "rgba(244,207,131,0.32)";
-
-    return major
-      ? "rgba(244,207,131," + clamp(0.42 + avgZ * 0.14, 0.28, 0.68).toFixed(3) + ")"
-      : "rgba(141,216,255," + clamp(0.22 + avgZ * 0.08, 0.14, 0.38).toFixed(3) + ")";
-  }
-
   function drawLatticeLayer(layer) {
     if (!state.latticeReady) return;
 
     var ctx = state.ctx;
+    var m = metrics();
 
     ctx.save();
     clipSphere();
@@ -3078,11 +1274,14 @@
       if (layer === "back" && isFront) continue;
       if (layer === "front" && !isFront) continue;
 
+      var alpha = layer === "front" ? (link.major ? 0.52 : 0.22) : (link.major ? 0.080 : 0.040);
+      var color = link.family === "fibonacci" ? "244,207,131" : "141,216,255";
+
       ctx.beginPath();
       ctx.moveTo(a.x, a.y);
       ctx.lineTo(b.x, b.y);
-      ctx.strokeStyle = latticeColor(link, avgZ, layer);
-      ctx.lineWidth = link.major ? Math.max(0.60, state.dpr * 0.62) : Math.max(0.34, state.dpr * 0.36);
+      ctx.strokeStyle = "rgba(" + color + "," + alpha.toFixed(3) + ")";
+      ctx.lineWidth = link.major ? Math.max(0.62, state.dpr * 0.64) : Math.max(0.32, state.dpr * 0.34);
       ctx.stroke();
     }
 
@@ -3094,32 +1293,96 @@
       if (layer === "back" && front) continue;
       if (layer === "front" && !front) continue;
 
-      var radius = seat.major ? 1.7 : seat.secondary ? 1.15 : 0.86;
-
       ctx.beginPath();
-      ctx.arc(p.x, p.y, Math.max(0.72, state.dpr * radius * p.scale), 0, TAU);
-      ctx.fillStyle = layer === "back"
-        ? (seat.major ? "rgba(141,216,255,0.100)" : "rgba(141,216,255,0.055)")
-        : (seat.major ? "rgba(244,207,131,0.76)" : "rgba(141,216,255,0.48)");
+      ctx.arc(p.x, p.y, Math.max(0.62, state.dpr * (seat.major ? 1.50 : seat.secondary ? 1.05 : 0.78) * p.scale), 0, TAU);
+      ctx.fillStyle = layer === "front"
+        ? (seat.major ? "rgba(244,207,131,0.72)" : "rgba(141,216,255,0.42)")
+        : (seat.major ? "rgba(141,216,255,0.080)" : "rgba(141,216,255,0.040)");
       ctx.fill();
     }
 
     ctx.restore();
   }
 
-  function drawReceipt() {
+  function drawTerrainDefinitionPoints(mode) {
+    if (!state.dryTerrainValidated || !state.dryTerrainNodes.length) return;
+    if (mode !== "surface" && mode !== "sixth-sense" && mode !== "hydration" && mode !== "receipt") return;
+
     var ctx = state.ctx;
     var m = metrics();
-    var ethicalReceipt = getEthicalBumpFieldReceipt();
-    var landReceipt = getLandBodyCompositorReceipt();
-    var definitionReceipt = getDefinitionConsumptionReceipt();
-    var w = Math.min(state.width * 0.91, m.baseRadius * 2.76);
-    var h = Math.min(state.height * 0.66, m.baseRadius * 1.76);
+    var stride = mode === "sixth-sense" ? 1 : mode === "surface" ? 2 : 3;
+
+    ctx.save();
+    clipSphere();
+
+    for (var i = 0; i < state.dryTerrainNodes.length; i += stride) {
+      var node = state.dryTerrainNodes[i];
+      var role = String(node.primaryTerrainRole || "");
+      var ridge = finite(node.ridgePressure, 0) + finite(node.mountainPressure, 0) + finite(node.summitPressure, 0);
+      var gap = finite(node.gapPressure, 0) + (node.futureFillEligible ? 0.35 : 0);
+      var draw = mode === "sixth-sense" || ridge > 0.40 || gap > 0.55 || role.indexOf("ridge") >= 0 || role.indexOf("mountain") >= 0;
+
+      if (!draw) continue;
+
+      var point = lonLatPoint(finite(node.lon, 0), finite(node.lat, 0));
+      var p = project(point);
+
+      if (!p.front) continue;
+
+      var alpha = mode === "sixth-sense" ? 0.36 : mode === "surface" ? 0.070 : mode === "hydration" ? 0.090 : 0.060;
+      var radius = Math.max(0.75, m.r * (mode === "sixth-sense" ? 0.0048 : 0.0031) * p.scale);
+
+      var color = ridge > gap ? { r: 236, g: 204, b: 132 } : { r: 100, g: 152, b: 166 };
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, radius, 0, TAU);
+      ctx.fillStyle = rgba(color, alpha);
+      ctx.fill();
+    }
+
+    ctx.restore();
+  }
+
+  function drawHydrationHeld() {
+    if (state.activeLens !== "hydration") return;
+
+    var ctx = state.ctx;
+    var m = metrics();
+
+    ctx.save();
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = "900 " + Math.max(10, 12 * state.dpr) + "px ui-monospace, monospace";
+    ctx.fillStyle = "rgba(182,245,255,0.78)";
+    ctx.fillText("HYDRATION HELD · FUTURE-FILL DIAGNOSTIC ONLY · ACTIVE WATER FALSE", m.cx, m.cy + m.r * 0.76);
+    ctx.restore();
+  }
+
+  function roundedRect(ctx, x, y, width, height, radius) {
+    var r = Math.min(radius, width / 2, height / 2);
+
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + width, y, x + width, y + height, r);
+    ctx.arcTo(x + width, y + height, x, y + height, r);
+    ctx.arcTo(x, y + height, x, y, r);
+    ctx.arcTo(x, y, x + width, y, r);
+    ctx.closePath();
+  }
+
+  function drawReceipt() {
+    if (state.activeLens !== "receipt") return;
+
+    var ctx = state.ctx;
+    var m = metrics();
+    var w = Math.min(state.width * 0.91, m.baseRadius * 2.86);
+    var h = Math.min(state.height * 0.68, m.baseRadius * 1.86);
     var x = m.cx - w / 2;
     var y = m.cy - h / 2;
 
     ctx.save();
-    ctx.fillStyle = "rgba(2,8,20,.84)";
+
+    ctx.fillStyle = "rgba(2,8,20,.86)";
     ctx.strokeStyle = "rgba(167,243,198,.54)";
     ctx.lineWidth = Math.max(1, state.dpr);
 
@@ -3129,67 +1392,32 @@
 
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.font = "900 " + Math.max(10, 12.6 * state.dpr) + "px ui-monospace, monospace";
+
+    ctx.font = "900 " + Math.max(10, 12.5 * state.dpr) + "px ui-monospace, monospace";
     ctx.fillStyle = "rgba(167,243,198,.94)";
-    ctx.fillText("VISUAL TUNING SOCKET · CARRIER PRESERVATION", m.cx, y + h * 0.060);
+    ctx.fillText("DRY TERRAIN FORM RENEWAL · CARRIER ONLY", m.cx, y + h * 0.075);
 
-    ctx.font = "900 " + Math.max(7, 8.3 * state.dpr) + "px ui-monospace, monospace";
-    ctx.fillStyle = "rgba(238,244,255,.84)";
-    ctx.fillText("DRY " + String(state.dryTerrainValidated).toUpperCase() + " · LAND FIELD " + landReceipt.fieldSampleCount, m.cx, y + h * 0.145);
+    ctx.font = "900 " + Math.max(7, 8.2 * state.dpr) + "px ui-monospace, monospace";
 
-    ctx.fillStyle = "rgba(141,216,255,.84)";
-    ctx.fillText("ELEVATION " + String(definitionReceipt.elevationValidated).toUpperCase() + " · RELIEF " + String(definitionReceipt.reliefExpressionValidated).toUpperCase(), m.cx, y + h * 0.225);
+    var rows = [
+      "CONTRACT " + CONTRACT,
+      "DRY VALIDATED " + String(state.dryTerrainValidated).toUpperCase() + " · NODES " + state.dryTerrainNodes.length,
+      "TEXTURE BUILT " + String(state.textureBuilt).toUpperCase() + " · FORM STRENGTH " + state.dryTerrainFormStrength,
+      "LAND " + state.textureLandCoverageRatio + " · RELIEF " + state.textureReliefCoverageRatio + " · FUTURE-FILL " + state.textureFutureFillCoverageRatio,
+      "ELEVATION " + String(state.elevationValidated).toUpperCase() + " · RELIEF PACKET " + String(state.reliefValidated).toUpperCase(),
+      "LANDFORM " + String(state.landformValidated).toUpperCase() + " · TRIANGLE DISPLAY " + String(state.triangularMeshValidated).toUpperCase(),
+      "TRIANGLE MATERIAL AUTHORITY FALSE · DISPLAY HANDOFF ONLY",
+      "HYDRATION HELD TRUE · ACTIVE WATER FALSE",
+      "RAW 256 GRID VISIBLE ONLY IN LATTICE",
+      "FINAL VISUAL PASS FALSE"
+    ];
 
-    ctx.fillStyle = "rgba(141,216,255,.84)";
-    ctx.fillText("LANDFORM " + String(definitionReceipt.landformSystemsValidated).toUpperCase() + " · TUNING CHILD " + String(state.visualTuningValidated).toUpperCase(), m.cx, y + h * 0.305);
-
-    ctx.fillStyle = "rgba(167,243,198,.84)";
-    ctx.fillText("TRIANGLE DETECTED " + String(state.triangularMeshDetected).toUpperCase() + " · VALIDATED " + String(state.triangularMeshValidated).toUpperCase(), m.cx, y + h * 0.385);
-
-    ctx.fillStyle = "rgba(244,207,131,.86)";
-    ctx.fillText("BODY/SURFACE GRID REDUCED · SIXTH/LATTICE DIAGNOSTIC PRESERVED", m.cx, y + h * 0.465);
-
-    ctx.fillStyle = "rgba(182,245,255,.78)";
-    ctx.fillText("LAND COMPOSITOR PRIMARY · TRIANGLE READABILITY SECONDARY", m.cx, y + h * 0.545);
-
-    ctx.fillStyle = "rgba(182,245,255,.78)";
-    ctx.fillText("TRIANGLE COLOR AUTHORITY FALSE · MATERIAL FILL FALSE", m.cx, y + h * 0.625);
-
-    ctx.fillStyle = "rgba(182,245,255,.78)";
-    ctx.fillText("FUTURE-FILL SURFACE SUPPRESSED · HYDRATION HELD", m.cx, y + h * 0.705);
-
-    ctx.fillStyle = "rgba(182,245,255,.78)";
-    ctx.fillText("VOID REMAINS VOID · LAND/VOID SEPARATION PROTECTED", m.cx, y + h * 0.785);
-
-    ctx.fillStyle = "rgba(238,244,255,.72)";
-    ctx.fillText("FINAL VISUAL PASS: FALSE · BUMPS " + ethicalReceipt.bumpAnchorCount, m.cx, y + h * 0.870);
-
-    ctx.fillStyle = "rgba(238,244,255,.54)";
-    ctx.fillText("TUNING: " + (state.visualTuningFailureReason || "socket active"), m.cx, y + h * 0.950);
+    rows.forEach(function (text, index) {
+      ctx.fillStyle = index === 0 ? "rgba(244,207,131,.90)" : index % 2 ? "rgba(238,244,255,.78)" : "rgba(141,216,255,.78)";
+      ctx.fillText(text, m.cx, y + h * (0.18 + index * 0.074));
+    });
 
     ctx.restore();
-  }
-
-  function drawHydrationHeld() {
-    if (state.activeLens !== "hydration") return;
-
-    drawFutureFillDepressions("hydration");
-
-    var ctx = state.ctx;
-    var m = metrics();
-
-    ctx.save();
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.font = "900 " + Math.max(10, 12 * state.dpr) + "px ui-monospace, monospace";
-    ctx.fillStyle = "rgba(182,245,255,0.76)";
-    ctx.fillText("HYDRATION HELD · FUTURE-FILL / TRIANGLE BOUNDARIES ARE DIAGNOSTIC ONLY", m.cx, m.cy + m.r * 0.74);
-    ctx.restore();
-  }
-
-  function drawMaterialStackBase(mode) {
-    drawPlanetShadowBody();
-    drawHydrosphereMemoryUnderlayer(mode);
   }
 
   function frame() {
@@ -3206,48 +1434,23 @@
       if (Math.abs(state.vy) < 0.00008) state.vy = 0;
     }
 
-    state.ctx.clearRect(0, 0, state.width, state.height);
-
-    drawMaterialStackBase(state.activeLens);
+    drawBackground();
 
     if (state.activeLens === "lattice") {
       drawLatticeLayer("back");
-      drawContinuousLandBodySurface("lattice");
-      drawTriangleMeshFacetLayer("lattice");
-      drawDefinitionOverlay("lattice");
-      drawTriangleMeshEdgeBreakLayer("lattice");
+      drawSphere();
+      drawTerrainDefinitionPoints("lattice");
       drawLatticeLayer("front");
-    } else if (state.activeLens === "body") {
-      drawContinuousLandBodySurface("body");
-      drawTriangleMeshFacetLayer("body");
-      drawTriangleMeshEdgeBreakLayer("body");
-      drawDefinitionOverlay("body");
-    } else if (state.activeLens === "surface") {
-      drawContinuousLandBodySurface("surface");
-      drawTriangleMeshFacetLayer("surface");
-      drawTriangleMeshEdgeBreakLayer("surface");
-      drawDefinitionOverlay("surface");
-    } else if (state.activeLens === "hydration") {
-      drawContinuousLandBodySurface("hydration");
-      drawTriangleMeshFacetLayer("hydration");
-      drawTriangleMeshEdgeBreakLayer("hydration");
-      drawDefinitionOverlay("hydration");
-      drawHydrationHeld();
-    } else if (state.activeLens === "sixth-sense") {
-      drawContinuousLandBodySurface("sixth-sense");
-      drawTriangleMeshFacetLayer("sixth-sense");
-      drawTriangleMeshEdgeBreakLayer("sixth-sense");
-      drawDefinitionOverlay("sixth-sense");
-      drawFutureFillDepressions("sixth-sense");
-      drawSixthSenseNodeScaffold("sixth-sense");
-    } else if (state.activeLens === "receipt") {
-      drawContinuousLandBodySurface("receipt");
-      drawTriangleMeshFacetLayer("receipt");
-      drawTriangleMeshEdgeBreakLayer("receipt");
-      drawDefinitionOverlay("receipt");
-      drawReceipt();
+    } else {
+      drawSphere();
+      drawTerrainDefinitionPoints(state.activeLens);
+      if (state.activeLens === "sixth-sense") {
+        drawLatticeLayer("front");
+      }
     }
 
+    drawHydrationHeld();
+    drawReceipt();
     drawAtmosphereRim();
 
     state.renderCount += 1;
@@ -3264,30 +1467,48 @@
     }
   }
 
+  function resize() {
+    if (!state.stage || !state.canvas) return;
+
+    var rect = state.stage.getBoundingClientRect();
+    var dpr = Math.max(1, Math.min(2.25, window.devicePixelRatio || 1));
+
+    state.dpr = dpr;
+    state.width = Math.max(320, Math.floor(rect.width * dpr));
+    state.height = Math.max(600, Math.floor(rect.height * dpr));
+    state.canvas.width = state.width;
+    state.canvas.height = state.height;
+
+    requestRender();
+  }
+
   function setLens(value) {
-    var lens = String(value || "body");
-    if (!LENSES[lens]) lens = "body";
+    var lens = normalizeLens(value);
+
+    if (!LENSES[lens]) lens = "surface";
 
     state.activeLens = lens;
 
     document.querySelectorAll("[data-audralia-planet-lens]").forEach(function (button) {
-      button.setAttribute("aria-pressed", button.dataset.audraliaPlanetLens === lens ? "true" : "false");
+      var buttonLens = normalizeLens(button.dataset.audraliaPlanetLens);
+      button.setAttribute("aria-pressed", buttonLens === lens ? "true" : "false");
     });
 
     var label = document.querySelector("[data-audralia-planet-stage-label]");
+
     if (label) {
-      if (lens === "surface") {
-        label.innerHTML = "<strong>Surface</strong> → continuous land expression primary; triangle grid reduced";
+      if (lens === "body") {
+        label.innerHTML = "<strong>Body</strong> → continuous dry physical form; normal grid suppressed";
+      } else if (lens === "surface") {
+        label.innerHTML = "<strong>Surface</strong> → dry terrain packet converted into readable planetary surface";
       } else if (lens === "hydration") {
-        label.innerHTML = "<strong>Hydration</strong> → held / future-fill diagnostic only";
+        label.innerHTML = "<strong>Hydration</strong> → held / future-fill diagnostic only; active water false";
       } else if (lens === "sixth-sense") {
-        label.innerHTML = "<strong>Sixth Sense</strong> → diagnostic triangle readability with scaffold";
+        label.innerHTML = "<strong>Sixth Sense</strong> → diagnostic scaffold over dry-terrain carrier form";
       } else if (lens === "lattice") {
-        label.innerHTML = "<strong>Lattice</strong> → raw 256 inspection with grid authority preserved";
+        label.innerHTML = "<strong>Lattice</strong> → raw 256 inspection only; not a second planet";
       } else if (lens === "receipt") {
-        label.innerHTML = "<strong>Receipt</strong> → visual tuning socket and carrier posture proof";
-      } else {
-        label.innerHTML = "<strong>Body</strong> → minimum physical form, grid reduced, hydrosphere memory suppressed";
+        label.innerHTML = "<strong>Receipt</strong> → carrier dry-terrain form renewal proof";
       }
     }
 
@@ -3303,7 +1524,7 @@
     });
 
     state.stage.addEventListener("pointerdown", function (event) {
-      var now = Date.now();
+      var tapTime = Date.now();
 
       state.pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
 
@@ -3313,8 +1534,8 @@
         state.pinchStartDistance = pointerDistance();
         state.pinchStartZoom = state.zoom;
       } else if (state.pointers.size === 1) {
-        if (now - state.lastTap < 320) resetCamera();
-        state.lastTap = now;
+        if (tapTime - state.lastTap < 320) resetCamera();
+        state.lastTap = tapTime;
 
         state.dragging = true;
         state.pinching = false;
@@ -3324,7 +1545,9 @@
         state.vy = 0;
       }
 
-      try { state.stage.setPointerCapture(event.pointerId); } catch (_error) {}
+      try {
+        state.stage.setPointerCapture(event.pointerId);
+      } catch (_error) {}
 
       event.preventDefault();
       requestRender();
@@ -3361,7 +1584,9 @@
     function release(event) {
       state.pointers.delete(event.pointerId);
 
-      try { state.stage.releasePointerCapture(event.pointerId); } catch (_error) {}
+      try {
+        state.stage.releasePointerCapture(event.pointerId);
+      } catch (_error) {}
 
       if (state.pointers.size < 2) {
         state.pinching = false;
@@ -3404,106 +1629,94 @@
     }, { passive: false });
   }
 
-  function publishStatus(options) {
-    var force = Boolean(options && options.force);
-    var now = (window.performance && typeof window.performance.now === "function") ? window.performance.now() : Date.now();
+  function refreshDownstreamPackets() {
+    detectVisualTuningChild();
+    detectDryTerrain();
+    detectElevationTrack();
+    detectReliefExpression();
+    detectLandformSystems();
+    detectTriangularMesh();
 
-    if (!force && state.lastStatusPayload && now - state.lastStatusPublishedAt < STATUS_THROTTLE_MS) {
-      return state.lastStatusPayload;
-    }
+    state.textureCache = {};
+    state.textureBuilt = false;
 
-    var ethicalReceipt = getEthicalBumpFieldReceipt();
-    var landReceipt = getLandBodyCompositorReceipt();
-    var definitionReceipt = getDefinitionConsumptionReceipt();
+    publishStatus({ force: true });
+    requestRender();
+  }
 
-    var payload = {
+  function getDryTerrainFormReceipt() {
+    return {
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       recoveryBaseline: RECOVERY_BASELINE,
-      target: FILE,
-      route: ROUTE,
+      gcr: GCR,
 
-      sameFileRenewal: true,
-      shellPreserved: true,
-      carrierIsRuntime: true,
-      carrierIsDisplayEndpoint: true,
-      directCarrierConsumption: true,
+      dryTerrainFormRenewalActive: true,
+      formlessPlanetConditionAddressed: true,
+      carrierVisibleFormEndpoint: true,
 
-      visualTuningSocketActive: true,
-      visualTuningChildPath: "/assets/audralia/clean/runtime/audralia.planet-body.visual-tuning.child.js",
-      visualTuningChildOptional: true,
-      visualTuningChildDetected: state.visualTuningDetected,
-      visualTuningChildValidated: state.visualTuningValidated,
-      visualTuningFailureReason: state.visualTuningFailureReason,
-      visualTuningFallbackWeightsActive: !state.visualTuningValidated,
-      visualTuningValuesClamped: true,
-      visualTuningWhitelistOnly: true,
-      bodyGridReduced: true,
-      surfaceGridReduced: true,
-      sixthSenseDiagnosticScaffoldPreserved: true,
-      latticeRaw256InspectionPreserved: true,
+      dryTerrainDetected: state.dryTerrainDetected,
+      dryTerrainApiComplete: state.dryTerrainApiComplete,
+      dryTerrainValidated: state.dryTerrainValidated,
+      dryFailureReason: state.dryFailureReason,
+      dryTerrainNodeCount: state.dryTerrainNodes.length,
 
-      statusThrottleActive: true,
-      statusThrottleMs: STATUS_THROTTLE_MS,
+      textureBuilt: state.textureBuilt,
+      textureBuildCount: state.textureBuildCount,
+      textureWidth: TEXTURE_WIDTH,
+      textureHeight: TEXTURE_HEIGHT,
+      textureLandCoverageRatio: state.textureLandCoverageRatio,
+      textureReliefCoverageRatio: state.textureReliefCoverageRatio,
+      textureFutureFillCoverageRatio: state.textureFutureFillCoverageRatio,
+      textureContrastAverage: state.textureContrastAverage,
+      dryTerrainFormStrength: state.dryTerrainFormStrength,
 
-      dryRevealedTerrainDetected: state.dryTerrainDetected,
-      dryRevealedTerrainApiComplete: state.dryTerrainApiComplete,
-      dryRevealedTerrainValidated: state.dryTerrainValidated,
-      dryRevealedTerrainFailureReason: state.dryFailureReason,
+      raw256VisibleOnlyInLattice: true,
+      bodyGridSuppressed: true,
+      surfaceGridSuppressed: true,
+      visibleDryTerrainStrengthened: true,
+
+      carrierInventsTerrain: false,
+      carrierDisplaysOnly: true,
+      carrierConsumesPacketsForDisplayOnly: true,
+
+      hydrationHeld: true,
+      activeHydration: false,
+      activeWater: false,
+      finalVisualPassClaim: false
+    };
+  }
+
+  function getDefinitionConsumptionReceipt() {
+    return {
+      contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      recoveryBaseline: RECOVERY_BASELINE,
 
       elevationDetected: state.elevationDetected,
       elevationValidated: state.elevationValidated,
       elevationFailureReason: state.elevationFailureReason,
 
-      carrierConsumes: "dry terrain + elevation track + relief-expression packet + landform-systems packet + triangular terrain mesh packet as readability handoffs",
-      carrierConsumesDryTerrainAtlas: state.dryTerrainValidated,
-      carrierConsumesElevationPacket: state.elevationValidated,
-      carrierConsumesReliefPacket: definitionReceipt.carrierConsumesReliefPacket,
-      carrierConsumesLandformPacket: definitionReceipt.carrierConsumesLandformPacket,
-      carrierConsumesTriangularMesh: state.carrierConsumesTriangularMesh,
-      carrierConsumesPacketsForDisplayOnly: true,
-      carrierDrawsPacketHandoffs: true,
+      reliefExpressionDetected: state.reliefDetected,
+      reliefExpressionValidated: state.reliefValidated,
+      reliefFailureReason: state.reliefFailureReason,
 
-      reliefExpressionDetected: definitionReceipt.reliefExpressionDetected,
-      reliefExpressionValidated: definitionReceipt.reliefExpressionValidated,
-      reliefFailureReason: definitionReceipt.reliefFailureReason,
-
-      landformSystemsDetected: definitionReceipt.landformSystemsDetected,
-      landformSystemsValidated: definitionReceipt.landformSystemsValidated,
-      landformFailureReason: definitionReceipt.landformFailureReason,
+      landformSystemsDetected: state.landformDetected,
+      landformSystemsValidated: state.landformValidated,
+      landformFailureReason: state.landformFailureReason,
 
       triangularMeshDetected: state.triangularMeshDetected,
       triangularMeshValidated: state.triangularMeshValidated,
-      triangleMeshFailureReason: state.triangleMeshFailureReason,
-      triangleMeshDisplayReady: state.triangleMeshDisplayReady,
+      triangleMeshFailureReason: state.triangularMeshFailureReason,
       triangleMeshVertexCount: state.triangleMeshVertexCount,
       triangleMeshFaceCount: state.triangleMeshFaceCount,
       triangleMeshEdgeBreakCount: state.triangleMeshEdgeBreakCount,
 
-      triangularReadabilityAdapterActive: true,
-      triangularMeshDisplayConsumptionDeprecated: true,
+      carrierConsumesPacketsForDisplayOnly: true,
+      carrierDrawsPacketHandoffs: true,
       triangleLogicIsAdapter: true,
       triangleLogicIsMaterialAuthority: false,
-      carrierMayUseTrianglesForReadability: true,
-      carrierMayUseTriangleColor: false,
-      carrierMayTintSurfaceFromTriangles: false,
-      carrierMayColorVoidFromTriangles: false,
-      carrierMayDrawTriangleFacetFillAsMaterial: false,
-      carrierMayDrawHydrationFromTriangles: false,
-      carrierMayDrawBeachFromTriangles: false,
-      carrierMayDrawCoastlineFromTriangles: false,
-      carrierMayDrawFutureFillAsWater: false,
-      carrierMayBlendLandAndVoidFromTriangles: false,
-      carrierMayReplaceLandCompositorWithTriangles: false,
 
-      carrierPreservesDerivativeExpression: true,
-      existingLandCompositorPrimary: true,
-      triangleReadabilitySecondary: true,
-      landVoidSeparationProtected: true,
-      voidRemainsVoid: true,
-
-      carrierOwnsTriangulation: false,
-      carrierGeneratesMesh: false,
       carrierDoesNotOwnTerrainTruth: true,
       carrierDoesNotOwnElevationTruth: true,
       carrierDoesNotOwnReliefTruth: true,
@@ -3511,46 +1724,168 @@
       carrierDoesNotOwnBeachTruth: true,
       carrierDoesNotOwnHydrationTruth: true,
       carrierDoesNotMutateUpstreamMeaning: true,
-      carrierShouldNotOwnElevationTruth: true,
-      carrierShouldNotOwnReliefTruth: true,
-      carrierShouldNotOwnLandformTruth: true,
+
+      hydrationHeld: true,
+      activeHydration: false,
+      activeWater: false,
+      finalTerrainPassClaim: false,
+      finalHydrationPassClaim: false,
+      finalVisualPassClaim: false
+    };
+  }
+
+  function sampleLandPresenceAt(x, y) {
+    var node = nodeAt(x, y);
+    if (!node) return 0;
+
+    return round(clamp(
+      finite(node.dryElevation, 0.5) * 0.54 +
+      finite(node.ridgePressure, 0) * 0.18 +
+      finite(node.mountainPressure, 0) * 0.16 -
+      finite(node.gapPressure, 0) * 0.10,
+      0,
+      1
+    ), 4);
+  }
+
+  function sampleContinentInfluenceAt(x, y) {
+    var node = nodeAt(x, y);
+    if (!node) return null;
+
+    return {
+      continentId: node.regionSeed || "unassigned",
+      continentName: node.regionSeedName || node.nearestSummitName || "Unassigned",
+      color: REGION_TINTS[node.regionSeed] || REGION_TINTS.gratitude,
+      boundaryPressure: round(finite(node.escarpmentPressure, 0) + finite(node.shelfPressure, 0) * 0.35, 4)
+    };
+  }
+
+  function sampleHeightDisplacementAt(x, y) {
+    var node = nodeAt(x, y);
+    return node ? finite(node.dryElevation, 0.5) : 0.5;
+  }
+
+  function sampleSlopeReliefAt(x, y) {
+    var node = nodeAt(x, y);
+    if (!node) return { slope: 0, relief: 0, futureFillPressure: 0 };
+
+    var relief = clamp(
+      finite(node.ridgePressure, 0) +
+      finite(node.mountainPressure, 0) +
+      finite(node.summitPressure, 0) +
+      finite(node.escarpmentPressure, 0) +
+      finite(node.trenchPressure, 0),
+      0,
+      1
+    );
+
+    return {
+      slope: round(relief * 0.64, 4),
+      relief: round(relief, 4),
+      futureFillPressure: round(finite(node.gapPressure, 0) + (node.futureFillEligible ? 0.30 : 0), 4)
+    };
+  }
+
+  function publishStatus(options) {
+    var force = Boolean(options && options.force);
+    var time = window.performance && typeof window.performance.now === "function" ? window.performance.now() : Date.now();
+
+    if (!force && state.lastStatusPayload && time - state.lastStatusPublishedAt < STATUS_THROTTLE_MS) {
+      return state.lastStatusPayload;
+    }
+
+    var dryReceipt = getDryTerrainFormReceipt();
+    var definitionReceipt = getDefinitionConsumptionReceipt();
+
+    var payload = {
+      contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      recoveryBaseline: RECOVERY_BASELINE,
+      gcr: GCR,
+      target: FILE,
+      route: ROUTE,
+
+      sameFileRenewal: true,
+      shellPreserved: true,
+      carrierIsRuntime: true,
+      carrierIsDisplayEndpoint: true,
+      carrierVisibleFormEndpoint: true,
+
+      formlessPlanetConditionAddressed: true,
+      dryTerrainFormRenewalActive: true,
+      visibleDryTerrainStrengthened: true,
+      textureAtlasSurfaceRendererActive: true,
+      terrainPacketToVisibleSurfaceBridgeActive: true,
+
+      dryTerrainDetected: state.dryTerrainDetected,
+      dryTerrainApiComplete: state.dryTerrainApiComplete,
+      dryTerrainValidated: state.dryTerrainValidated,
+      dryRevealedTerrainFailureReason: state.dryFailureReason,
+      dryTerrainNodeCount: state.dryTerrainNodes.length,
+
+      textureBuilt: state.textureBuilt,
+      textureBuildCount: state.textureBuildCount,
+      textureLandCoverageRatio: state.textureLandCoverageRatio,
+      textureReliefCoverageRatio: state.textureReliefCoverageRatio,
+      textureFutureFillCoverageRatio: state.textureFutureFillCoverageRatio,
+      textureContrastAverage: state.textureContrastAverage,
+      dryTerrainFormStrength: state.dryTerrainFormStrength,
+
+      elevationDetected: definitionReceipt.elevationDetected,
+      elevationValidated: definitionReceipt.elevationValidated,
+      reliefExpressionDetected: definitionReceipt.reliefExpressionDetected,
+      reliefExpressionValidated: definitionReceipt.reliefExpressionValidated,
+      landformSystemsDetected: definitionReceipt.landformSystemsDetected,
+      landformSystemsValidated: definitionReceipt.landformSystemsValidated,
+      triangularMeshDetected: definitionReceipt.triangularMeshDetected,
+      triangularMeshValidated: definitionReceipt.triangularMeshValidated,
+      triangleMeshFaceCount: definitionReceipt.triangleMeshFaceCount,
+
+      visualTuningSocketActive: true,
+      visualTuningChildOptional: true,
+      visualTuningChildDetected: state.visualTuningDetected,
+      visualTuningChildValidated: state.visualTuningValidated,
+      visualTuningFailureReason: state.visualTuningFailureReason,
+
+      activeLens: state.activeLens,
+      carrierLensRegistry: Object.keys(LENSES),
+      unsupportedBoundaryFullButtonsRequired: false,
+
+      zoomInspectionActive: true,
+      zoom: round(state.zoom, 4),
+      zoomMin: ZOOM.min,
+      zoomMax: ZOOM.max,
+      zoomMutatesTerrainTruth: false,
+
+      raw256VisibleOnlyInLattice: true,
+      bodyGridSuppressed: true,
+      surfaceGridSuppressed: true,
+      normalLensGridDominanceReduced: true,
+      latticeRaw256InspectionPreserved: true,
+
+      carrierConsumesPacketsForDisplayOnly: true,
+      carrierDrawsPacketHandoffs: true,
+      carrierInventsTerrain: false,
+      carrierGeneratesMesh: false,
+      carrierOwnsTriangulation: false,
+      triangleLogicIsAdapter: true,
+      triangleLogicIsMaterialAuthority: false,
+
+      carrierDoesNotOwnTerrainTruth: true,
+      carrierDoesNotOwnElevationTruth: true,
+      carrierDoesNotOwnReliefTruth: true,
+      carrierDoesNotOwnLandformTruth: true,
+      carrierDoesNotOwnBeachTruth: true,
+      carrierDoesNotOwnHydrationTruth: true,
+      carrierDoesNotMutateUpstreamMeaning: true,
 
       sourceTerrainMutated: false,
       elevationTruthMutated: false,
       reliefTruthMutated: false,
       landformTruthMutated: false,
       beachTruthMutated: false,
+      triangulationTruthMutated: false,
       hydrationTruthMutated: false,
-
-      definitionConsumptionReady: definitionReceipt.definitionConsumptionReady,
-      definitionFieldReady: definitionReceipt.definitionFieldReady,
-      definitionNodePointFallbackActive: definitionReceipt.definitionNodePointFallbackActive,
-      definitionNodePointIndexCount: definitionReceipt.definitionNodePointIndexCount,
-      definitionNodePointExactHits: definitionReceipt.definitionNodePointExactHits,
-      definitionNodePointFallbackHits: definitionReceipt.definitionNodePointFallbackHits,
-
-      nineContinentEthicalFieldActive: ethicalReceipt.nineContinentEthicalFieldActive,
-      nineContinentCount: ethicalReceipt.nineContinentCount,
-      bumpAnchorCount: ethicalReceipt.bumpAnchorCount,
-      fourInvariantSizeClassesActive: true,
-      sizeEqualsHeight: false,
-      heightVariantByEthicalMetric: true,
-
-      landBodyCompositorActive: landReceipt.landBodyCompositorActive,
-      existingNodesUsedAsLandMappingScaffold: true,
-      nodesHiddenFromSurface: true,
-      visibleLandBodyPacketReady: landReceipt.visibleLandBodyPacketReady,
-      fieldSampleCount: landReceipt.fieldSampleCount,
-      landFieldCols: LAND_FIELD_COLS,
-      landFieldRows: LAND_FIELD_ROWS,
-
-      climateSeedOnly: true,
-      ecologySeedOnly: true,
-      technologySeedOnly: true,
-
-      materialLayerSeparationActive: true,
-      surfaceRenderIsDerived: true,
-      raw256VisibleOnlyInLattice: true,
 
       hydrosphereMemoryLensGated: true,
       hydrosphereMemorySuppressedInBody: true,
@@ -3558,50 +1893,27 @@
       futureFillSuppressedInSurface: true,
       futureFillHydrationLensOnly: true,
 
-      atmosphereSeparatedFromHydrosphere: true,
-      hydrosphereMemoryIsUnderlayer: true,
-      dryCrustAboveHydrosphereMemory: true,
-
-      zoomInspectionActive: true,
-      zoom: Number(state.zoom.toFixed(4)),
-      zoomMin: ZOOM.min,
-      zoomMax: ZOOM.max,
-      zoomMutatesTerrainTruth: false,
-
-      fullGlobeLatticeActive: true,
-      latticeSeatCount: state.latticeSeats.length,
-      latticeWrapsEntireGlobe: true,
-
-      audraliaLevelTerrainAuthority: true,
-      gratitudeIsIsland: false,
-      gratitudeIslandRead: false,
-
       hydrationHeld: true,
       activeHydration: false,
       activeWater: false,
       futureFillOnly: true,
-      edgeDetailsHeld: true,
-
-      surfaceUsesContinuousLandBodySkin: state.landBodyCompositorReady,
-      surfaceUsesPacketDefinitionOverlay: state.definitionFieldReady,
-      surfaceUsesTriangleReadabilityAdapter: state.triangleMeshDisplayReady,
-      sixthSenseExposesNodeScaffold: true,
-      latticeRaw256InspectionPreserved: true,
-
-      activeLens: state.activeLens,
-      renderCount: state.renderCount,
 
       finalTerrainPassClaim: false,
       finalHydrationPassClaim: false,
       finalVisualPassClaim: false,
 
+      renderCount: state.renderCount,
+      statusThrottleActive: true,
+      statusThrottleMs: STATUS_THROTTLE_MS,
+
       errors: state.errors.slice(),
-      deployMarker: "AUDRALIA_CARRIER_VISUAL_TUNING_SOCKET_EXTRACTION_DEPLOY_MARKER_v1"
+      deployMarker: "AUDRALIA_PLANET_BODY_CARRIER_DRY_TERRAIN_FORM_RENEWAL_DEPLOY_MARKER_v1"
     };
 
-    state.lastStatusPublishedAt = now;
+    state.lastStatusPublishedAt = time;
     state.lastStatusPayload = payload;
 
+    window.AUDRALIA_PLANET_BODY_CARRIER_DRY_TERRAIN_FORM_RENEWAL_STATUS = payload;
     window.AUDRALIA_CARRIER_VISUAL_TUNING_SOCKET_EXTRACTION_STATUS = payload;
     window.AUDRALIA_CARRIER_TRIANGULAR_READABILITY_ADAPTER_PRESERVATION_STATUS = payload;
     window.AUDRALIA_CARRIER_TRIANGULAR_MESH_DISPLAY_CONSUMPTION_STATUS = payload;
@@ -3617,81 +1929,19 @@
     try {
       document.documentElement.dataset.audraliaRuntimeContract = CONTRACT;
       document.documentElement.dataset.audraliaRuntimePreviousContract = PREVIOUS_CONTRACT;
-      document.documentElement.dataset.audraliaSameFileRenewal = "true";
-      document.documentElement.dataset.audraliaShellPreserved = "true";
-
-      document.documentElement.dataset.audraliaVisualTuningSocketActive = "true";
-      document.documentElement.dataset.audraliaVisualTuningChildOptional = "true";
-      document.documentElement.dataset.audraliaVisualTuningChildDetected = String(state.visualTuningDetected);
-      document.documentElement.dataset.audraliaVisualTuningChildValidated = String(state.visualTuningValidated);
-      document.documentElement.dataset.audraliaVisualTuningFallbackWeightsActive = String(!state.visualTuningValidated);
-      document.documentElement.dataset.audraliaBodyGridReduced = "true";
-      document.documentElement.dataset.audraliaSurfaceGridReduced = "true";
-      document.documentElement.dataset.audraliaStatusThrottleActive = "true";
-
-      document.documentElement.dataset.audraliaTriangularReadabilityAdapterActive = "true";
-      document.documentElement.dataset.audraliaTriangularMeshDisplayConsumptionDeprecated = "true";
-      document.documentElement.dataset.audraliaTriangleLogicIsAdapter = "true";
-      document.documentElement.dataset.audraliaTriangleLogicIsMaterialAuthority = "false";
-      document.documentElement.dataset.audraliaCarrierMayUseTrianglesForReadability = "true";
-      document.documentElement.dataset.audraliaCarrierMayUseTriangleColor = "false";
-      document.documentElement.dataset.audraliaCarrierMayTintSurfaceFromTriangles = "false";
-      document.documentElement.dataset.audraliaCarrierMayColorVoidFromTriangles = "false";
-      document.documentElement.dataset.audraliaCarrierMayDrawTriangleFacetFillAsMaterial = "false";
-      document.documentElement.dataset.audraliaCarrierMayDrawHydrationFromTriangles = "false";
-      document.documentElement.dataset.audraliaCarrierMayDrawBeachFromTriangles = "false";
-      document.documentElement.dataset.audraliaCarrierMayDrawCoastlineFromTriangles = "false";
-      document.documentElement.dataset.audraliaCarrierMayDrawFutureFillAsWater = "false";
-      document.documentElement.dataset.audraliaCarrierMayBlendLandAndVoidFromTriangles = "false";
-      document.documentElement.dataset.audraliaCarrierMayReplaceLandCompositorWithTriangles = "false";
-
-      document.documentElement.dataset.audraliaCarrierPreservesDerivativeExpression = "true";
-      document.documentElement.dataset.audraliaExistingLandCompositorPrimary = "true";
-      document.documentElement.dataset.audraliaTriangleReadabilitySecondary = "true";
-      document.documentElement.dataset.audraliaLandVoidSeparationProtected = "true";
-      document.documentElement.dataset.audraliaVoidRemainsVoid = "true";
-
-      document.documentElement.dataset.audraliaCarrierConsumesPacketsForDisplayOnly = "true";
-      document.documentElement.dataset.audraliaCarrierDrawsPacketHandoffs = "true";
-      document.documentElement.dataset.audraliaCarrierConsumesElevationPacket = String(state.elevationValidated);
-      document.documentElement.dataset.audraliaCarrierConsumesReliefPacket = String(state.carrierConsumesReliefPacket);
-      document.documentElement.dataset.audraliaCarrierConsumesLandformPacket = String(state.carrierConsumesLandformPacket);
-      document.documentElement.dataset.audraliaCarrierConsumesTriangularMesh = String(state.carrierConsumesTriangularMesh);
-      document.documentElement.dataset.audraliaTriangularMeshDetected = String(state.triangularMeshDetected);
-      document.documentElement.dataset.audraliaTriangularMeshValidated = String(state.triangularMeshValidated);
-      document.documentElement.dataset.audraliaTriangleMeshDisplayReady = String(state.triangleMeshDisplayReady);
-      document.documentElement.dataset.audraliaTriangleMeshVertexCount = String(state.triangleMeshVertexCount);
-      document.documentElement.dataset.audraliaTriangleMeshFaceCount = String(state.triangleMeshFaceCount);
-      document.documentElement.dataset.audraliaTriangleMeshEdgeBreakCount = String(state.triangleMeshEdgeBreakCount);
-
-      document.documentElement.dataset.audraliaCarrierOwnsTriangulation = "false";
-      document.documentElement.dataset.audraliaCarrierGeneratesMesh = "false";
-      document.documentElement.dataset.audraliaCarrierDoesNotOwnTerrainTruth = "true";
-      document.documentElement.dataset.audraliaCarrierDoesNotOwnElevationTruth = "true";
-      document.documentElement.dataset.audraliaCarrierDoesNotOwnReliefTruth = "true";
-      document.documentElement.dataset.audraliaCarrierDoesNotOwnLandformTruth = "true";
-      document.documentElement.dataset.audraliaCarrierDoesNotOwnBeachTruth = "true";
-      document.documentElement.dataset.audraliaCarrierDoesNotOwnHydrationTruth = "true";
-      document.documentElement.dataset.audraliaCarrierDoesNotMutateUpstreamMeaning = "true";
-
-      document.documentElement.dataset.audraliaSourceTerrainMutated = "false";
-      document.documentElement.dataset.audraliaElevationTruthMutated = "false";
-      document.documentElement.dataset.audraliaReliefTruthMutated = "false";
-      document.documentElement.dataset.audraliaLandformTruthMutated = "false";
-      document.documentElement.dataset.audraliaBeachTruthMutated = "false";
-      document.documentElement.dataset.audraliaHydrationTruthMutated = "false";
-
-      document.documentElement.dataset.audraliaDefinitionConsumptionReady = String(state.definitionConsumptionReady);
-      document.documentElement.dataset.audraliaDefinitionFieldReady = String(state.definitionFieldReady);
-      document.documentElement.dataset.audraliaDefinitionNodePointFallbackActive = String(state.definitionNodePointFallbackActive);
-
-      document.documentElement.dataset.audraliaHydrosphereMemoryLensGated = "true";
-      document.documentElement.dataset.audraliaHydrosphereMemorySuppressedInBody = "true";
-      document.documentElement.dataset.audraliaHydrosphereMemorySuppressedInSurface = "true";
-      document.documentElement.dataset.audraliaFutureFillSuppressedInSurface = "true";
-      document.documentElement.dataset.audraliaFutureFillHydrationLensOnly = "true";
-
+      document.documentElement.dataset.audraliaCarrierDryTerrainFormRenewalActive = "true";
+      document.documentElement.dataset.audraliaFormlessPlanetConditionAddressed = "true";
+      document.documentElement.dataset.audraliaVisibleDryTerrainStrengthened = "true";
+      document.documentElement.dataset.audraliaTextureAtlasSurfaceRendererActive = "true";
+      document.documentElement.dataset.audraliaDryTerrainValidated = String(state.dryTerrainValidated);
+      document.documentElement.dataset.audraliaDryTerrainFormStrength = String(state.dryTerrainFormStrength);
+      document.documentElement.dataset.audraliaTextureLandCoverageRatio = String(state.textureLandCoverageRatio);
+      document.documentElement.dataset.audraliaTextureReliefCoverageRatio = String(state.textureReliefCoverageRatio);
+      document.documentElement.dataset.audraliaBodyGridSuppressed = "true";
+      document.documentElement.dataset.audraliaSurfaceGridSuppressed = "true";
+      document.documentElement.dataset.audraliaRaw256VisibleOnlyInLattice = "true";
       document.documentElement.dataset.audraliaCarrierInventsTerrain = "false";
+      document.documentElement.dataset.audraliaCarrierConsumesPacketsForDisplayOnly = "true";
       document.documentElement.dataset.audraliaHydrationHeld = "true";
       document.documentElement.dataset.audraliaActiveHydration = "false";
       document.documentElement.dataset.audraliaActiveWater = "false";
@@ -3723,78 +1973,37 @@
     state.canvas.setAttribute("data-contract", CONTRACT);
     state.canvas.setAttribute("data-previous-contract", PREVIOUS_CONTRACT);
     state.canvas.setAttribute("data-recovery-baseline", RECOVERY_BASELINE);
+    state.canvas.setAttribute("data-gcr", GCR);
     state.canvas.setAttribute("data-same-file-renewal", "true");
     state.canvas.setAttribute("data-shell-preserved", "true");
-    state.canvas.setAttribute("data-land-body-compositor-active", "true");
-    state.canvas.setAttribute("data-packet-handoff-draw-layer", "true");
-    state.canvas.setAttribute("data-definition-node-point-fallback-active", "true");
-
-    state.canvas.setAttribute("data-visual-tuning-socket-active", "true");
-    state.canvas.setAttribute("data-visual-tuning-child-optional", "true");
-    state.canvas.setAttribute("data-visual-tuning-fallback-weights-active", "true");
-    state.canvas.setAttribute("data-body-grid-reduced", "true");
-    state.canvas.setAttribute("data-surface-grid-reduced", "true");
-
-    state.canvas.setAttribute("data-triangular-readability-adapter-active", "true");
-    state.canvas.setAttribute("data-triangular-mesh-display-consumption-deprecated", "true");
-    state.canvas.setAttribute("data-triangle-logic-is-adapter", "true");
-    state.canvas.setAttribute("data-triangle-logic-is-material-authority", "false");
-    state.canvas.setAttribute("data-carrier-may-use-triangles-for-readability", "true");
-    state.canvas.setAttribute("data-carrier-may-use-triangle-color", "false");
-    state.canvas.setAttribute("data-carrier-may-tint-surface-from-triangles", "false");
-    state.canvas.setAttribute("data-carrier-may-color-void-from-triangles", "false");
-    state.canvas.setAttribute("data-carrier-may-draw-triangle-facet-fill-as-material", "false");
-    state.canvas.setAttribute("data-carrier-may-draw-hydration-from-triangles", "false");
-    state.canvas.setAttribute("data-carrier-may-draw-beach-from-triangles", "false");
-    state.canvas.setAttribute("data-carrier-may-draw-coastline-from-triangles", "false");
-    state.canvas.setAttribute("data-carrier-may-draw-future-fill-as-water", "false");
-    state.canvas.setAttribute("data-carrier-may-blend-land-and-void-from-triangles", "false");
-    state.canvas.setAttribute("data-carrier-may-replace-land-compositor-with-triangles", "false");
-
-    state.canvas.setAttribute("data-carrier-preserves-derivative-expression", "true");
-    state.canvas.setAttribute("data-existing-land-compositor-primary", "true");
-    state.canvas.setAttribute("data-triangle-readability-secondary", "true");
-    state.canvas.setAttribute("data-land-void-separation-protected", "true");
-    state.canvas.setAttribute("data-void-remains-void", "true");
-
+    state.canvas.setAttribute("data-carrier-dry-terrain-form-renewal-active", "true");
+    state.canvas.setAttribute("data-formless-planet-condition-addressed", "true");
+    state.canvas.setAttribute("data-visible-dry-terrain-strengthened", "true");
+    state.canvas.setAttribute("data-texture-atlas-surface-renderer-active", "true");
+    state.canvas.setAttribute("data-terrain-packet-to-visible-surface-bridge-active", "true");
+    state.canvas.setAttribute("data-body-grid-suppressed", "true");
+    state.canvas.setAttribute("data-surface-grid-suppressed", "true");
+    state.canvas.setAttribute("data-raw-256-visible-only-in-lattice", "true");
     state.canvas.setAttribute("data-carrier-consumes-packets-for-display-only", "true");
-    state.canvas.setAttribute("data-carrier-draws-packet-handoffs", "true");
-    state.canvas.setAttribute("data-carrier-consumes-triangular-mesh", "pending");
+    state.canvas.setAttribute("data-carrier-invents-terrain", "false");
     state.canvas.setAttribute("data-carrier-generates-mesh", "false");
     state.canvas.setAttribute("data-carrier-owns-triangulation", "false");
-
-    state.canvas.setAttribute("data-hydrosphere-memory-lens-gated", "true");
-    state.canvas.setAttribute("data-hydrosphere-memory-suppressed-in-body", "true");
-    state.canvas.setAttribute("data-hydrosphere-memory-suppressed-in-surface", "true");
-    state.canvas.setAttribute("data-future-fill-suppressed-in-surface", "true");
-    state.canvas.setAttribute("data-future-fill-hydration-lens-only", "true");
-
-    state.canvas.setAttribute("data-carrier-does-not-own-terrain-truth", "true");
-    state.canvas.setAttribute("data-carrier-does-not-own-elevation-truth", "true");
-    state.canvas.setAttribute("data-carrier-does-not-own-relief-truth", "true");
-    state.canvas.setAttribute("data-carrier-does-not-own-landform-truth", "true");
-    state.canvas.setAttribute("data-carrier-does-not-own-beach-truth", "true");
-    state.canvas.setAttribute("data-carrier-does-not-own-hydration-truth", "true");
-    state.canvas.setAttribute("data-carrier-does-not-mutate-upstream-meaning", "true");
-
-    state.canvas.setAttribute("data-source-terrain-mutated", "false");
-    state.canvas.setAttribute("data-elevation-truth-mutated", "false");
-    state.canvas.setAttribute("data-relief-truth-mutated", "false");
-    state.canvas.setAttribute("data-landform-truth-mutated", "false");
-    state.canvas.setAttribute("data-beach-truth-mutated", "false");
-    state.canvas.setAttribute("data-hydration-truth-mutated", "false");
-
-    state.canvas.setAttribute("data-carrier-invents-terrain", "false");
+    state.canvas.setAttribute("data-triangle-logic-is-adapter", "true");
+    state.canvas.setAttribute("data-triangle-logic-is-material-authority", "false");
     state.canvas.setAttribute("data-hydration-held", "true");
     state.canvas.setAttribute("data-active-hydration", "false");
     state.canvas.setAttribute("data-active-water", "false");
     state.canvas.setAttribute("data-final-terrain-pass-claim", "false");
     state.canvas.setAttribute("data-final-hydration-pass-claim", "false");
     state.canvas.setAttribute("data-final-visual-pass-claim", "false");
+    state.canvas.setAttribute("aria-label", "Audralia carrier dry-terrain form renewal planet renderer");
 
     state.mount.innerHTML = "";
     state.mount.appendChild(state.canvas);
+
     state.ctx = state.canvas.getContext("2d", { alpha: true });
+    state.sphereCanvas = document.createElement("canvas");
+    state.sphereCtx = state.sphereCanvas.getContext("2d", { alpha: true, willReadFrequently: false });
 
     buildLatticeGeometry();
     resize();
@@ -3808,7 +2017,7 @@
 
     window.addEventListener("resize", resize, { passive: true });
 
-    setLens("body");
+    setLens("surface");
     publishStatus({ force: true });
     requestRender();
   }
@@ -3819,20 +2028,19 @@
     contract: CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
     recoveryBaseline: RECOVERY_BASELINE,
+    gcr: GCR,
     status: function () { return publishStatus({ force: true }); },
-    detectVisualTuningChild: detectVisualTuningChild,
+    refreshDownstreamPackets: refreshDownstreamPackets,
     detectDryTerrain: detectDryTerrain,
     detectElevationTrack: detectElevationTrack,
     detectReliefExpression: detectReliefExpression,
     detectLandformSystems: detectLandformSystems,
     detectTriangularMesh: detectTriangularMesh,
-    refreshDownstreamPackets: refreshDownstreamPackets,
-    rebuildDefinitionNodePointIndex: rebuildDefinitionNodePointIndex,
-    nodeIdToRenderablePoint: nodeIdToRenderablePoint,
+    detectVisualTuningChild: detectVisualTuningChild,
+    setLens: setLens,
     setZoom: setZoom,
     resetCamera: resetCamera,
-    getEthicalBumpFieldReceipt: getEthicalBumpFieldReceipt,
-    getLandBodyCompositorReceipt: getLandBodyCompositorReceipt,
+    getDryTerrainFormReceipt: getDryTerrainFormReceipt,
     getDefinitionConsumptionReceipt: getDefinitionConsumptionReceipt,
     sampleLandPresenceAt: sampleLandPresenceAt,
     sampleContinentInfluenceAt: sampleContinentInfluenceAt,

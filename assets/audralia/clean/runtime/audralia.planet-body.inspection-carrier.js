@@ -1,36 +1,39 @@
 // /assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js
 // TNT FULL-FILE REPLACEMENT
-// AUDRALIA_PLANET_BODY_CARRIER_DRY_TERRAIN_FORM_RENEWAL_TNT_v1
+// AUDRALIA_PLANET_BODY_CARRIER_DRY_SOURCE_RECONCILIATION_TNT_v1
 //
 // Previous:
-// AUDRALIA_CARRIER_VISUAL_TUNING_SOCKET_EXTRACTION_TNT_v1
+// AUDRALIA_PLANET_BODY_CARRIER_DRY_TERRAIN_FORM_RENEWAL_TNT_v1
 //
 // Recovery base:
-// AUDRALIA_CARRIER_VISUAL_WEIGHTING_TERRAIN_RELIEF_READABILITY_RENEWAL_TNT_v1
+// AUDRALIA_CARRIER_VISUAL_TUNING_SOCKET_EXTRACTION_TNT_v1
 //
 // GCR target:
 // AUDRALIA_PLANET_FORMLESS_RUNTIME_GCR_v1
 //
+// CCR:
+// AUDRALIA_PLANET_DRY_TERRAIN_SOURCE_CHAIN_RECONCILIATION_CCR_v1
+//
 // Purpose:
-// - Renew the carrier runtime as the visible dry-terrain form endpoint.
-// - Convert the existing dry terrain packet into a strong continuous visible planetary surface.
-// - Stop the formless-planet condition without touching HTML, route JS, or upstream terrain truth.
-// - Preserve one visible planet, carrier-only rendering, zoom/drag inspection, and carrier-compatible lenses.
-// - Keep hydration held and active water false.
-// - Keep raw 256 lattice visibility out of normal Body/Surface lenses.
-// - Keep triangle/relief/landform packets as display handoffs only.
-// - Claim no final visual pass.
+// - Reconcile the carrier with every lawful dry-terrain source shape currently used in the Audralia chain.
+// - Accept dry terrain through direct API packets, nested carrier packets, static published packets, and compact field packets.
+// - Validate by actual node custody, not by one brittle status flag.
+// - Convert validated 256 dry terrain nodes into a visible continuous planetary surface.
+// - Publish exact failure reasons if dry terrain is missing, incomplete, stale, or node-empty.
+// - Preserve one visible carrier-rendered planet, carrier-compatible lenses, drag/zoom inspection, hydration held, active water false, and final visual pass false.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "AUDRALIA_PLANET_BODY_CARRIER_DRY_TERRAIN_FORM_RENEWAL_TNT_v1";
-  var PREVIOUS_CONTRACT = "AUDRALIA_CARRIER_VISUAL_TUNING_SOCKET_EXTRACTION_TNT_v1";
-  var RECOVERY_BASELINE = "AUDRALIA_CARRIER_VISUAL_WEIGHTING_TERRAIN_RELIEF_READABILITY_RENEWAL_TNT_v1";
+  var CONTRACT = "AUDRALIA_PLANET_BODY_CARRIER_DRY_SOURCE_RECONCILIATION_TNT_v1";
+  var PREVIOUS_CONTRACT = "AUDRALIA_PLANET_BODY_CARRIER_DRY_TERRAIN_FORM_RENEWAL_TNT_v1";
+  var RECOVERY_BASELINE = "AUDRALIA_CARRIER_VISUAL_TUNING_SOCKET_EXTRACTION_TNT_v1";
   var GCR = "AUDRALIA_PLANET_FORMLESS_RUNTIME_GCR_v1";
+  var CCR = "AUDRALIA_PLANET_DRY_TERRAIN_SOURCE_CHAIN_RECONCILIATION_CCR_v1";
 
   var FILE = "/assets/audralia/clean/runtime/audralia.planet-body.inspection-carrier.js";
   var ROUTE = "/showroom/globe/audralia/planet/";
+  var DRY_CHILD_PATH = "/assets/audralia/clean/terrain/audralia.dry-revealed-physical-terrain.child.js";
 
   var TAU = Math.PI * 2;
   var RADIAL_NODES = 16;
@@ -52,6 +55,13 @@
     "AUDRALIA_PLANET_PHYSICAL_TERRAIN_CHILD",
     "AUDRALIA_G2_DRY_REVEALED_PHYSICAL_TERRAIN_CHILD",
     "AUDRALIA_PLANET_TERRAIN_ATLAS_CHILD"
+  ]);
+
+  var STATIC_PACKET_GLOBALS = Object.freeze([
+    "AUDRALIA_DRY_REVEALED_PHYSICAL_TERRAIN_PACKET",
+    "AUDRALIA_PLANET_PHYSICAL_TERRAIN_PACKET",
+    "AUDRALIA_G2_DRY_REVEALED_PHYSICAL_TERRAIN_PACKET",
+    "AUDRALIA_PLANET_TERRAIN_ATLAS_PACKET"
   ]);
 
   var ELEVATION_GLOBALS = Object.freeze([
@@ -96,15 +106,15 @@
   });
 
   var LENS_ALIAS = Object.freeze({
-    full: "surface",
-    boundary: "lattice",
-    sixth: "sixth-sense",
-    sixthsense: "sixth-sense",
-    "sixth-sense": "sixth-sense",
     body: "body",
     surface: "surface",
     hydration: "hydration",
+    boundary: "lattice",
     lattice: "lattice",
+    full: "surface",
+    sixth: "sixth-sense",
+    sixthsense: "sixth-sense",
+    "sixth-sense": "sixth-sense",
     receipt: "receipt"
   });
 
@@ -133,7 +143,8 @@
     humility: Object.freeze({ r: 91, g: 116, b: 91 }),
     "self-control": Object.freeze({ r: 126, g: 113, b: 78 }),
     patience: Object.freeze({ r: 151, g: 130, b: 91 }),
-    purity: Object.freeze({ r: 168, g: 159, b: 118 })
+    purity: Object.freeze({ r: 168, g: 159, b: 118 }),
+    unassigned: Object.freeze({ r: 104, g: 122, b: 82 })
   });
 
   var state = {
@@ -173,11 +184,20 @@
     dryTerrainApiComplete: false,
     dryTerrainValidated: false,
     dryTerrainStatus: null,
+    drySourceName: "",
+    drySourceMethod: "",
     dryCarrierPacket: null,
     dryTerrainPacket: null,
     dryTerrainNodes: [],
     dryNodeGrid: [],
     dryFailureReason: "dry terrain not checked",
+    dryMissingGlobals: [],
+    dryMissingMethods: [],
+    dryCandidateTrace: [],
+    dryRescueLoadAttempted: false,
+    dryRescueLoadFinished: false,
+    dryRescueLoadSucceeded: false,
+    dryRescueLoadError: "",
 
     elevationApi: null,
     elevationDetected: false,
@@ -363,6 +383,14 @@
     return null;
   }
 
+  function existingGlobalNames(names) {
+    var found = [];
+    for (var i = 0; i < names.length; i += 1) {
+      if (window[names[i]]) found.push(names[i]);
+    }
+    return found;
+  }
+
   function safeCall(scope, api, method) {
     if (!api || typeof api[method] !== "function") return null;
 
@@ -383,181 +411,323 @@
     return LENS_ALIAS[key] || "surface";
   }
 
-  function pointerDistance() {
-    var points = Array.from(state.pointers.values());
-    if (points.length < 2) return 0;
-
-    var dx = points[0].x - points[1].x;
-    var dy = points[0].y - points[1].y;
-
-    return Math.sqrt(dx * dx + dy * dy);
+  function arrayFromMaybe(value) {
+    return Array.isArray(value) ? value : [];
   }
 
-  function resetCamera() {
-    state.yaw = -0.62;
-    state.pitch = -0.16;
-    state.vx = 0;
-    state.vy = 0;
-    state.zoom = ZOOM.defaultValue;
-    publishStatus({ force: true });
-    requestRender();
+  function isNodeLike(item) {
+    if (!item || typeof item !== "object") return false;
+
+    return Boolean(
+      item.nodeId ||
+      item.seatKey ||
+      item.seatIndex !== undefined ||
+      item.nodeIndex !== undefined ||
+      item.terrainClass ||
+      item.primaryTerrainRole ||
+      item.dryElevation !== undefined ||
+      item.elevation !== undefined
+    );
   }
 
-  function setZoom(nextZoom) {
-    state.zoom = clamp(nextZoom, ZOOM.min, ZOOM.max);
-    publishStatus({ force: true });
-    requestRender();
+  function normalizeNode(node, index) {
+    var x = finite(node.x, finite(node.radial, index % RADIAL_NODES));
+    var y = finite(node.y, finite(node.band, Math.floor(index / RADIAL_NODES)));
+
+    x = Math.round(clamp(x, 0, RADIAL_NODES - 1));
+    y = Math.round(clamp(y, 0, FIBONACCI_BANDS - 1));
+
+    var lon = finite(node.lon, -180 + ((x + 0.5) / RADIAL_NODES) * 360);
+    var lat = finite(node.lat, 80 - ((y + 0.5) / FIBONACCI_BANDS) * 160);
+
+    return Object.assign({}, node, {
+      nodeId: node.nodeId || node.seatKey || ("AUDRALIA-DRY-TERRAIN-RUNTIME-" + String(y).padStart(2, "0") + "-" + String(x).padStart(2, "0")),
+      seatIndex: finite(node.seatIndex, finite(node.nodeIndex, y * RADIAL_NODES + x)),
+      nodeIndex: finite(node.nodeIndex, finite(node.seatIndex, y * RADIAL_NODES + x)),
+      x: x,
+      y: y,
+      radial: x,
+      band: y,
+      lon: lon,
+      lat: lat,
+      terrainClass: node.terrainClass || "stable_craton",
+      primaryTerrainRole: node.primaryTerrainRole || "stable_core",
+      regionSeed: node.regionSeed || node.continentId || "unassigned",
+      regionSeedName: node.regionSeedName || node.continentName || node.nearestSummitName || "Unassigned",
+      dryElevation: clamp(finite(node.dryElevation, finite(node.elevation, 0.5)), 0, 1),
+      elevation: clamp(finite(node.elevation, finite(node.dryElevation, 0.5)), 0, 1),
+      relativeRelief: finite(node.relativeRelief, finite(node.dryElevation, finite(node.elevation, 0.5)) - 0.48),
+      ridgePressure: clamp01(finite(node.ridgePressure, 0)),
+      mountainPressure: clamp01(finite(node.mountainPressure, 0)),
+      basinPressure: clamp01(finite(node.basinPressure, 0)),
+      valleyPressure: clamp01(finite(node.valleyPressure, 0)),
+      trenchPressure: clamp01(finite(node.trenchPressure, 0)),
+      shelfPressure: clamp01(finite(node.shelfPressure, 0)),
+      escarpmentPressure: clamp01(finite(node.escarpmentPressure, 0)),
+      summitPressure: clamp01(finite(node.summitPressure, finite(node.summitMaxPressure, 0))),
+      gapPressure: clamp01(finite(node.gapPressure, node.futureFillEligible ? 0.45 : 0)),
+      formerHydrosphereCarvingValue: clamp01(finite(node.formerHydrosphereCarvingValue, 0)),
+      futureFillEligible: Boolean(node.futureFillEligible),
+      activeHydration: false,
+      activeWater: false,
+      finalVisualPassClaim: false
+    });
   }
 
-  function lonLatPoint(lonDeg, latDeg) {
-    var lon = lonDeg * Math.PI / 180;
-    var lat = latDeg * Math.PI / 180;
-    var clat = Math.cos(lat);
+  function extractNodesFromPacket(packet) {
+    var candidates = [];
+    var visited = [];
 
-    return {
-      x: clat * Math.cos(lon),
-      y: Math.sin(lat),
-      z: clat * Math.sin(lon)
-    };
-  }
+    function visit(value, path, depth) {
+      if (!value || typeof value !== "object" || depth > 5) return;
+      if (visited.indexOf(value) >= 0) return;
 
-  function rotate(point) {
-    var cy = Math.cos(state.yaw);
-    var sy = Math.sin(state.yaw);
+      visited.push(value);
 
-    var x1 = point.x * cy + point.z * sy;
-    var z1 = -point.x * sy + point.z * cy;
+      if (Array.isArray(value)) {
+        if (value.length && value.some(isNodeLike)) {
+          candidates.push({ path: path, nodes: value.filter(isNodeLike) });
+        }
+        return;
+      }
 
-    var cp = Math.cos(state.pitch);
-    var sp = Math.sin(state.pitch);
+      var preferredKeys = [
+        "nodes",
+        "terrainNodes",
+        "dryTerrainNodes",
+        "planetMassNodes",
+        "dryElevationNodes",
+        "samples"
+      ];
 
-    return {
-      x: x1,
-      y: point.y * cp - z1 * sp,
-      z: point.y * sp + z1 * cp
-    };
-  }
+      preferredKeys.forEach(function (key) {
+        if (Array.isArray(value[key]) && value[key].length && value[key].some(isNodeLike)) {
+          candidates.push({ path: path + "." + key, nodes: value[key].filter(isNodeLike) });
+        }
+      });
 
-  function metrics() {
-    var min = Math.min(state.width, state.height);
-    var baseRadius = min * 0.405;
+      var nestedKeys = [
+        "planetPhysicalTerrainPacket",
+        "dryRevealedTerrainPacket",
+        "carrierTerrainPacket",
+        "planetMassField",
+        "dryElevationField",
+        "terrainClassField",
+        "sourcePacket",
+        "packet",
+        "field"
+      ];
 
-    return {
-      cx: state.width / 2,
-      cy: state.height * 0.365,
-      baseRadius: baseRadius,
-      r: baseRadius * state.zoom,
-      camera: 3.92
-    };
-  }
-
-  function project(point) {
-    var m = metrics();
-    var p = rotate(point);
-    var scale = m.camera / Math.max(0.72, m.camera - p.z);
-
-    return {
-      x: m.cx + p.x * m.r * scale,
-      y: m.cy - p.y * m.r * scale,
-      z: p.z,
-      front: p.z >= -0.055,
-      scale: scale
-    };
-  }
-
-  function clipSphere() {
-    var ctx = state.ctx;
-    var m = metrics();
-
-    ctx.beginPath();
-    ctx.arc(m.cx, m.cy, m.r * 1.002, 0, TAU);
-    ctx.clip();
-  }
-
-  function terrainPacket() {
-    return state.dryTerrainPacket ||
-      (state.dryCarrierPacket && state.dryCarrierPacket.planetPhysicalTerrainPacket) ||
-      null;
-  }
-
-  function terrainNodes() {
-    var packet = terrainPacket();
-    return packet && Array.isArray(packet.nodes) ? packet.nodes : [];
-  }
-
-  function buildDryNodeGrid(nodes) {
-    var grid = [];
-
-    for (var y = 0; y < FIBONACCI_BANDS; y += 1) {
-      grid[y] = [];
+      nestedKeys.forEach(function (key) {
+        if (value[key] && typeof value[key] === "object") visit(value[key], path + "." + key, depth + 1);
+      });
     }
 
-    nodes.forEach(function (node, index) {
-      var x = Math.round(clamp(finite(node.x, finite(node.radial, index % RADIAL_NODES)), 0, RADIAL_NODES - 1));
-      var y = Math.round(clamp(finite(node.y, finite(node.band, Math.floor(index / RADIAL_NODES))), 0, FIBONACCI_BANDS - 1));
-      grid[y][x] = node;
+    visit(packet, "packet", 0);
+
+    candidates.sort(function (a, b) {
+      if (b.nodes.length !== a.nodes.length) return b.nodes.length - a.nodes.length;
+      if (a.path.indexOf(".nodes") >= 0 && b.path.indexOf(".nodes") < 0) return -1;
+      if (b.path.indexOf(".nodes") >= 0 && a.path.indexOf(".nodes") < 0) return 1;
+      return a.path.length - b.path.length;
     });
 
-    return grid;
+    return candidates.length ? candidates[0] : { path: "", nodes: [] };
   }
 
-  function nodeAt(x, y) {
-    if (!state.dryNodeGrid.length) return null;
+  function packetOwnershipSafe(packet) {
+    if (!packet || typeof packet !== "object") return true;
 
-    var xx = ((Math.round(x) % RADIAL_NODES) + RADIAL_NODES) % RADIAL_NODES;
-    var yy = Math.round(clamp(y, 0, FIBONACCI_BANDS - 1));
+    return Boolean(
+      packet.activeHydration !== true &&
+      packet.activeWater !== true &&
+      packet.finalVisualPassClaim !== true &&
+      packet.carrierInventsTerrain !== true &&
+      packet.carrierOwnsTerrainTruth !== true &&
+      packet.childDrawsVisuals !== true
+    );
+  }
 
-    return state.dryNodeGrid[yy] ? state.dryNodeGrid[yy][xx] || null : null;
+  function pushCandidate(trace, sourceName, methodName, packet) {
+    var extracted = extractNodesFromPacket(packet);
+    trace.push({
+      sourceName: sourceName,
+      methodName: methodName,
+      packetPresent: Boolean(packet),
+      nodePath: extracted.path,
+      nodeCount: extracted.nodes.length,
+      ownershipSafe: packetOwnershipSafe(packet)
+    });
+
+    return {
+      sourceName: sourceName,
+      methodName: methodName,
+      packet: packet,
+      nodePath: extracted.path,
+      nodes: extracted.nodes,
+      ownershipSafe: packetOwnershipSafe(packet)
+    };
+  }
+
+  function chooseBestDryCandidate(candidates) {
+    var valid = candidates.filter(function (candidate) {
+      return candidate &&
+        candidate.packet &&
+        candidate.ownershipSafe &&
+        candidate.nodes &&
+        candidate.nodes.length;
+    });
+
+    if (!valid.length) return null;
+
+    valid.sort(function (a, b) {
+      var aExact = a.nodes.length === SOURCE_SEAT_COUNT ? 1 : 0;
+      var bExact = b.nodes.length === SOURCE_SEAT_COUNT ? 1 : 0;
+
+      if (bExact !== aExact) return bExact - aExact;
+      if (b.nodes.length !== a.nodes.length) return b.nodes.length - a.nodes.length;
+
+      var aPriority = a.methodName.indexOf("getDryRevealedTerrainPacket") >= 0 ? 3 :
+        a.methodName.indexOf("getPlanetPhysicalTerrainPacket") >= 0 ? 2 :
+        a.methodName.indexOf("static") >= 0 ? 1 : 0;
+      var bPriority = b.methodName.indexOf("getDryRevealedTerrainPacket") >= 0 ? 3 :
+        b.methodName.indexOf("getPlanetPhysicalTerrainPacket") >= 0 ? 2 :
+        b.methodName.indexOf("static") >= 0 ? 1 : 0;
+
+      return bPriority - aPriority;
+    });
+
+    return valid[0];
+  }
+
+  function candidateMethodsForApi(api) {
+    var methods = [
+      "getDryRevealedTerrainPacket",
+      "getPlanetPhysicalTerrainPacket",
+      "getCarrierTerrainPacket",
+      "getPlanetMassField",
+      "getDryElevationField",
+      "getTerrainClassField"
+    ];
+
+    return methods.filter(function (method) {
+      return api && typeof api[method] === "function";
+    });
+  }
+
+  function rescueLoadDryChildIfNeeded() {
+    if (state.dryRescueLoadAttempted || state.dryTerrainValidated) return;
+
+    state.dryRescueLoadAttempted = true;
+
+    try {
+      var script = document.createElement("script");
+      script.defer = true;
+      script.src = DRY_CHILD_PATH + "?v=" + encodeURIComponent(CONTRACT + "_RESCUE_LOAD");
+      script.setAttribute("data-audralia-dry-source-rescue-loader", CONTRACT);
+      script.onload = function () {
+        state.dryRescueLoadFinished = true;
+        state.dryRescueLoadSucceeded = true;
+        refreshDownstreamPackets();
+      };
+      script.onerror = function () {
+        state.dryRescueLoadFinished = true;
+        state.dryRescueLoadSucceeded = false;
+        state.dryRescueLoadError = "dry terrain rescue script failed to load at " + DRY_CHILD_PATH;
+        publishStatus({ force: true });
+      };
+      document.head.appendChild(script);
+    } catch (error) {
+      state.dryRescueLoadFinished = true;
+      state.dryRescueLoadSucceeded = false;
+      state.dryRescueLoadError = error && error.message ? error.message : String(error);
+    }
   }
 
   function detectDryTerrain() {
-    var api = firstGlobal(DRY_TERRAIN_GLOBALS);
+    var candidates = [];
+    var trace = [];
+    var existingApiNames = existingGlobalNames(DRY_TERRAIN_GLOBALS);
+    var existingStaticNames = existingGlobalNames(STATIC_PACKET_GLOBALS);
 
-    state.dryTerrainApi = api;
-    state.dryTerrainDetected = Boolean(api);
-    state.dryTerrainApiComplete = Boolean(
-      api &&
-      typeof api.status === "function" &&
-      typeof api.getCarrierTerrainPacket === "function" &&
-      typeof api.getDryRevealedTerrainPacket === "function"
-    );
-
+    state.dryTerrainApi = firstGlobal(DRY_TERRAIN_GLOBALS);
+    state.dryTerrainDetected = Boolean(existingApiNames.length || existingStaticNames.length);
     state.dryTerrainStatus = null;
     state.dryCarrierPacket = null;
     state.dryTerrainPacket = null;
     state.dryTerrainNodes = [];
     state.dryNodeGrid = [];
     state.dryTerrainValidated = false;
+    state.drySourceName = "";
+    state.drySourceMethod = "";
+    state.dryMissingGlobals = DRY_TERRAIN_GLOBALS.filter(function (name) { return !window[name]; });
+    state.dryMissingMethods = [];
+    state.dryCandidateTrace = [];
 
-    if (!state.dryTerrainDetected) {
-      state.dryFailureReason = "dry revealed physical terrain child missing";
-      return false;
+    existingApiNames.forEach(function (globalName) {
+      var api = window[globalName];
+      var methods = candidateMethodsForApi(api);
+
+      if (typeof api.status === "function") {
+        var statusPacket = safeCall("dryTerrain:" + globalName, api, "status");
+        if (!state.dryTerrainStatus) state.dryTerrainStatus = statusPacket;
+        candidates.push(pushCandidate(trace, globalName, "status", statusPacket));
+      } else {
+        state.dryMissingMethods.push(globalName + ".status");
+      }
+
+      if (!methods.length) {
+        state.dryMissingMethods.push(globalName + ".packetMethods");
+      }
+
+      methods.forEach(function (method) {
+        var packet = safeCall("dryTerrain:" + globalName, api, method, "audralia-runtime-carrier", { compact: false });
+
+        if (method === "getCarrierTerrainPacket") state.dryCarrierPacket = packet;
+        if (method === "getDryRevealedTerrainPacket") state.dryTerrainPacket = packet;
+
+        candidates.push(pushCandidate(trace, globalName, method, packet));
+
+        if (method === "getCarrierTerrainPacket" && packet && packet.planetPhysicalTerrainPacket) {
+          candidates.push(pushCandidate(trace, globalName, method + ".planetPhysicalTerrainPacket", packet.planetPhysicalTerrainPacket));
+        }
+
+        if (method === "getCarrierTerrainPacket" && packet && packet.dryRevealedTerrainPacket) {
+          candidates.push(pushCandidate(trace, globalName, method + ".dryRevealedTerrainPacket", packet.dryRevealedTerrainPacket));
+        }
+      });
+    });
+
+    existingStaticNames.forEach(function (globalName) {
+      candidates.push(pushCandidate(trace, globalName, "staticPublishedPacket", window[globalName]));
+    });
+
+    var best = chooseBestDryCandidate(candidates);
+    state.dryCandidateTrace = trace.slice(0, 24);
+
+    if (best) {
+      state.drySourceName = best.sourceName;
+      state.drySourceMethod = best.methodName + (best.nodePath ? "@" + best.nodePath : "");
+      state.dryTerrainPacket = best.packet;
+      state.dryTerrainNodes = best.nodes.map(normalizeNode);
+      state.dryNodeGrid = buildDryNodeGrid(state.dryTerrainNodes);
+
+      state.dryTerrainApiComplete = true;
+      state.dryTerrainValidated = state.dryTerrainNodes.length === SOURCE_SEAT_COUNT;
+
+      if (state.dryTerrainValidated) {
+        state.dryFailureReason = "";
+      } else {
+        state.dryFailureReason = "dry terrain source found but node count is " + state.dryTerrainNodes.length + "; required " + SOURCE_SEAT_COUNT;
+      }
+    } else {
+      state.dryTerrainApiComplete = Boolean(existingApiNames.length && !state.dryMissingMethods.length);
+      state.dryFailureReason = state.dryTerrainDetected
+        ? "dry terrain source detected but no ownership-safe node packet was found"
+        : "dry terrain source globals missing; attempted globals: " + DRY_TERRAIN_GLOBALS.join(", ");
+      rescueLoadDryChildIfNeeded();
     }
 
-    if (!state.dryTerrainApiComplete) {
-      state.dryFailureReason = "dry revealed physical terrain child API incomplete";
-      return false;
-    }
-
-    state.dryTerrainStatus = safeCall("dryTerrain", api, "status");
-    state.dryCarrierPacket = safeCall("dryTerrain", api, "getCarrierTerrainPacket", "audralia-runtime-carrier", { compact: false });
-    state.dryTerrainPacket = safeCall("dryTerrain", api, "getDryRevealedTerrainPacket", "audralia-runtime-carrier", { compact: false });
-    state.dryTerrainNodes = terrainNodes();
-    state.dryNodeGrid = buildDryNodeGrid(state.dryTerrainNodes);
-
-    state.dryTerrainValidated = Boolean(
-      state.dryTerrainStatus &&
-      state.dryTerrainStatus.audraliaLevelTerrainAuthority === true &&
-      state.dryTerrainStatus.activeHydration === false &&
-      state.dryTerrainStatus.hydrationHeld === true &&
-      state.dryCarrierPacket &&
-      state.dryCarrierPacket.carrierTerrainPacketReady === true &&
-      state.dryCarrierPacket.carrierInventsTerrain === false &&
-      state.dryCarrierPacket.finalVisualPassClaim === false &&
-      state.dryTerrainNodes.length === SOURCE_SEAT_COUNT
-    );
-
-    state.dryFailureReason = state.dryTerrainValidated ? "" : "dry terrain validation failed or 256-node packet unavailable";
     return state.dryTerrainValidated;
   }
 
@@ -785,6 +955,30 @@
     return state.triangularMeshValidated;
   }
 
+  function buildDryNodeGrid(nodes) {
+    var grid = [];
+
+    for (var y = 0; y < FIBONACCI_BANDS; y += 1) {
+      grid[y] = [];
+    }
+
+    nodes.forEach(function (node, index) {
+      var normalized = normalizeNode(node, index);
+      grid[normalized.y][normalized.x] = normalized;
+    });
+
+    return grid;
+  }
+
+  function nodeAt(x, y) {
+    if (!state.dryNodeGrid.length) return null;
+
+    var xx = ((Math.round(x) % RADIAL_NODES) + RADIAL_NODES) % RADIAL_NODES;
+    var yy = Math.round(clamp(y, 0, FIBONACCI_BANDS - 1));
+
+    return state.dryNodeGrid[yy] ? state.dryNodeGrid[yy][xx] || null : null;
+  }
+
   function blendNodeProperties(a, b, c, d, tx, ty) {
     function value(node, key, fallback) {
       return finite(node && node[key], fallback);
@@ -801,8 +995,8 @@
       { node: b, weight: tx * (1 - ty) },
       { node: c, weight: (1 - tx) * ty },
       { node: d, weight: tx * ty }
-    ].sort(function (x, y) {
-      return y.weight - x.weight;
+    ].sort(function (left, right) {
+      return right.weight - left.weight;
     });
 
     var main = weights[0].node || a || b || c || d || {};
@@ -810,7 +1004,7 @@
     return {
       terrainClass: main.terrainClass || "stable_craton",
       primaryTerrainRole: main.primaryTerrainRole || "stable_core",
-      regionSeed: main.regionSeed || "gratitude",
+      regionSeed: main.regionSeed || "unassigned",
       dryElevation: interp("dryElevation", 0.5),
       elevation: interp("elevation", 0.5),
       relativeRelief: interp("relativeRelief", 0),
@@ -862,7 +1056,7 @@
 
   function colorForTerrain(sample, lens, grain, fracture) {
     var base = CLASS_COLORS[sample.terrainClass] || CLASS_COLORS.stable_craton;
-    var region = REGION_TINTS[sample.regionSeed] || REGION_TINTS.gratitude;
+    var region = REGION_TINTS[sample.regionSeed] || REGION_TINTS.unassigned;
 
     var elevation = clamp01(sample.dryElevation);
     var ridge = clamp01(sample.ridgePressure + sample.mountainPressure * 0.85 + sample.summitPressure * 0.70);
@@ -874,30 +1068,30 @@
     var escarpment = clamp01(sample.escarpmentPressure);
 
     var color = mixColor(base, region, 0.18);
-    color = mixColor(color, { r: 226, g: 200, b: 126 }, ridge * 0.30);
-    color = mixColor(color, { r: 53, g: 61, b: 52 }, basin * 0.20);
-    color = mixColor(color, { r: 36, g: 31, b: 30 }, trench * 0.34);
-    color = mixColor(color, { r: 131, g: 126, b: 84 }, shelf * 0.18);
-    color = mixColor(color, { r: 73, g: 61, b: 45 }, escarpment * 0.20);
-    color = mixColor(color, { r: 36, g: 54, b: 58 }, gap * 0.28);
-    color = mixColor(color, { r: 55, g: 75, b: 75 }, carving * 0.10);
+    color = mixColor(color, { r: 226, g: 200, b: 126 }, ridge * 0.32);
+    color = mixColor(color, { r: 50, g: 59, b: 50 }, basin * 0.22);
+    color = mixColor(color, { r: 34, g: 30, b: 30 }, trench * 0.34);
+    color = mixColor(color, { r: 134, g: 128, b: 83 }, shelf * 0.18);
+    color = mixColor(color, { r: 73, g: 61, b: 45 }, escarpment * 0.22);
+    color = mixColor(color, { r: 35, g: 55, b: 59 }, gap * 0.30);
+    color = mixColor(color, { r: 56, g: 76, b: 75 }, carving * 0.12);
 
-    var heightShade = (elevation - 0.50) * 44;
-    var reliefShade = (ridge - basin - trench * 0.50) * 25;
-    var grainShade = (grain - 0.5) * 18 + (fracture - 0.5) * 14;
+    var heightShade = (elevation - 0.50) * 48;
+    var reliefShade = (ridge - basin - trench * 0.50) * 28;
+    var grainShade = (grain - 0.5) * 18 + (fracture - 0.5) * 16;
 
     color = shadeColor(color, heightShade + reliefShade + grainShade);
 
     if (lens === "body") {
-      color = mixColor(color, { r: 34, g: 43, b: 40 }, 0.15);
+      color = mixColor(color, { r: 32, g: 42, b: 40 }, 0.12);
     } else if (lens === "surface") {
-      color = shadeColor(color, 14);
-      color = mixColor(color, { r: 235, g: 214, b: 145 }, ridge * 0.10);
+      color = shadeColor(color, 16);
+      color = mixColor(color, { r: 235, g: 214, b: 145 }, ridge * 0.12);
     } else if (lens === "hydration") {
-      color = mixColor(color, { r: 45, g: 83, b: 96 }, clamp(gap * 0.40 + carving * 0.18, 0, 0.46));
+      color = mixColor(color, { r: 45, g: 83, b: 96 }, clamp(gap * 0.42 + carving * 0.18, 0, 0.48));
       color = mixColor(color, { r: 20, g: 29, b: 31 }, 0.12);
     } else if (lens === "sixth-sense") {
-      color = mixColor(color, { r: 141, g: 216, b: 255 }, clamp((ridge + gap + escarpment) * 0.16, 0, 0.30));
+      color = mixColor(color, { r: 141, g: 216, b: 255 }, clamp((ridge + gap + escarpment) * 0.18, 0, 0.32));
       color = shadeColor(color, 6);
     } else if (lens === "lattice") {
       color = mixColor(color, { r: 15, g: 25, b: 42 }, 0.38);
@@ -930,9 +1124,7 @@
         var u = x / TEXTURE_WIDTH;
         var lon = -180 + u * 360;
         var sample = sampleTerrainAtLonLat(lon, lat);
-
         var index = (y * TEXTURE_WIDTH + x) * 4;
-
         var color;
 
         if (!sample) {
@@ -940,6 +1132,7 @@
         } else {
           var grain = fbm(u * 22.0 + 0.13, v * 13.0 - 0.07, 9101, 4);
           var fracture = fbm(u * 48.0 - 0.31, v * 24.0 + 0.19, 9107, 3);
+
           color = colorForTerrain(sample, mode, grain, fracture);
 
           var relief = clamp01(
@@ -988,7 +1181,7 @@
       lens: mode,
       builtAt: new Date().toISOString(),
       contract: CONTRACT,
-      source: "dry-terrain-packet",
+      source: state.drySourceName + ":" + state.drySourceMethod,
       activeHydration: false,
       activeWater: false,
       finalVisualPassClaim: false
@@ -1014,6 +1207,97 @@
       texture.data[index + 1],
       texture.data[index + 2]
     ];
+  }
+
+  function pointerDistance() {
+    var points = Array.from(state.pointers.values());
+    if (points.length < 2) return 0;
+
+    var dx = points[0].x - points[1].x;
+    var dy = points[0].y - points[1].y;
+
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  function resetCamera() {
+    state.yaw = -0.62;
+    state.pitch = -0.16;
+    state.vx = 0;
+    state.vy = 0;
+    state.zoom = ZOOM.defaultValue;
+    publishStatus({ force: true });
+    requestRender();
+  }
+
+  function setZoom(nextZoom) {
+    state.zoom = clamp(nextZoom, ZOOM.min, ZOOM.max);
+    publishStatus({ force: true });
+    requestRender();
+  }
+
+  function lonLatPoint(lonDeg, latDeg) {
+    var lon = lonDeg * Math.PI / 180;
+    var lat = latDeg * Math.PI / 180;
+    var clat = Math.cos(lat);
+
+    return {
+      x: clat * Math.cos(lon),
+      y: Math.sin(lat),
+      z: clat * Math.sin(lon)
+    };
+  }
+
+  function rotate(point) {
+    var cy = Math.cos(state.yaw);
+    var sy = Math.sin(state.yaw);
+
+    var x1 = point.x * cy + point.z * sy;
+    var z1 = -point.x * sy + point.z * cy;
+
+    var cp = Math.cos(state.pitch);
+    var sp = Math.sin(state.pitch);
+
+    return {
+      x: x1,
+      y: point.y * cp - z1 * sp,
+      z: point.y * sp + z1 * cp
+    };
+  }
+
+  function metrics() {
+    var min = Math.min(state.width, state.height);
+    var baseRadius = min * 0.405;
+
+    return {
+      cx: state.width / 2,
+      cy: state.height * 0.365,
+      baseRadius: baseRadius,
+      r: baseRadius * state.zoom,
+      camera: 3.92
+    };
+  }
+
+  function project(point) {
+    var m = metrics();
+    var p = rotate(point);
+    var scale = m.camera / Math.max(0.72, m.camera - p.z);
+
+    return {
+      x: m.cx + p.x * m.r * scale,
+      y: m.cy - p.y * m.r * scale,
+      z: p.z,
+      front: p.z >= -0.055,
+      scale: scale
+    };
+  }
+
+  function clipSphere() {
+    var ctx = state.ctx;
+    var m = metrics();
+
+    ctx.beginPath();
+    ctx.arc(m.cx, m.cy, m.r * 1.002, 0, TAU);
+    ctx.clip();
   }
 
   function inverseProjectedLonLat(nx, ny, z) {
@@ -1081,8 +1365,49 @@
     ctx.fill();
   }
 
+  function drawNoDrySourceDiagnostic() {
+    var ctx = state.ctx;
+    var m = metrics();
+    var radius = m.r;
+
+    ctx.save();
+
+    var base = ctx.createRadialGradient(m.cx - radius * 0.28, m.cy - radius * 0.38, 0, m.cx, m.cy, radius * 1.18);
+    base.addColorStop(0.00, "rgba(60,76,84,0.98)");
+    base.addColorStop(0.40, "rgba(13,26,43,0.98)");
+    base.addColorStop(1.00, "rgba(1,5,14,1)");
+
+    ctx.beginPath();
+    ctx.arc(m.cx, m.cy, radius, 0, TAU);
+    ctx.fillStyle = base;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(m.cx, m.cy, radius * 1.002, 0, TAU);
+    ctx.strokeStyle = "rgba(190,232,255,0.22)";
+    ctx.lineWidth = Math.max(0.75, state.dpr * 0.72);
+    ctx.stroke();
+
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = "900 " + Math.max(9, 10.5 * state.dpr) + "px ui-monospace, monospace";
+    ctx.fillStyle = "rgba(244,207,131,0.88)";
+    ctx.fillText("DRY SOURCE NOT VALIDATED", m.cx, m.cy - radius * 0.08);
+
+    ctx.font = "800 " + Math.max(7, 8.2 * state.dpr) + "px ui-monospace, monospace";
+    ctx.fillStyle = "rgba(238,244,255,0.68)";
+    ctx.fillText("RECEIPT LENS SHOWS EXACT SOURCE FAILURE", m.cx, m.cy + radius * 0.02);
+
+    ctx.restore();
+  }
+
   function drawSphere() {
     if (!state.sphereCanvas || !state.sphereCtx) return;
+
+    if (!state.dryTerrainValidated) {
+      drawNoDrySourceDiagnostic();
+      return;
+    }
 
     var m = metrics();
     var diameter = Math.max(240, Math.min(720, Math.floor(m.r * 2)));
@@ -1094,7 +1419,6 @@
     var texture = buildTerrainTexture(state.activeLens);
     var image = state.sphereCtx.createImageData(diameter, diameter);
     var out = image.data;
-
     var light = { x: -0.42, y: 0.34, z: 0.84 };
     var mode = state.activeLens;
 
@@ -1115,7 +1439,6 @@
         var ll = inverseProjectedLonLat(nx, ny, z);
         var u = ll.lon / TAU + 0.5;
         var v = 0.5 - ll.lat / Math.PI;
-
         var color = textureSample(texture, u, v);
 
         var lightDot = clamp(nx * light.x + (-ny) * light.y + z * light.z, -1, 1);
@@ -1170,7 +1493,6 @@
     }
 
     state.sphereCtx.putImageData(image, 0, 0);
-
     state.ctx.drawImage(state.sphereCanvas, m.cx - m.r, m.cy - m.r, m.r * 2, m.r * 2);
   }
 
@@ -1259,7 +1581,6 @@
     if (!state.latticeReady) return;
 
     var ctx = state.ctx;
-    var m = metrics();
 
     ctx.save();
     clipSphere();
@@ -1331,7 +1652,6 @@
 
       var alpha = mode === "sixth-sense" ? 0.36 : mode === "surface" ? 0.070 : mode === "hydration" ? 0.090 : 0.060;
       var radius = Math.max(0.75, m.r * (mode === "sixth-sense" ? 0.0048 : 0.0031) * p.scale);
-
       var color = ridge > gap ? { r: 236, g: 204, b: 132 } : { r: 100, g: 152, b: 166 };
 
       ctx.beginPath();
@@ -1375,14 +1695,14 @@
 
     var ctx = state.ctx;
     var m = metrics();
-    var w = Math.min(state.width * 0.91, m.baseRadius * 2.86);
-    var h = Math.min(state.height * 0.68, m.baseRadius * 1.86);
+    var w = Math.min(state.width * 0.93, m.baseRadius * 3.04);
+    var h = Math.min(state.height * 0.72, m.baseRadius * 2.06);
     var x = m.cx - w / 2;
     var y = m.cy - h / 2;
 
     ctx.save();
 
-    ctx.fillStyle = "rgba(2,8,20,.86)";
+    ctx.fillStyle = "rgba(2,8,20,.88)";
     ctx.strokeStyle = "rgba(167,243,198,.54)";
     ctx.lineWidth = Math.max(1, state.dpr);
 
@@ -1393,28 +1713,30 @@
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
-    ctx.font = "900 " + Math.max(10, 12.5 * state.dpr) + "px ui-monospace, monospace";
+    ctx.font = "900 " + Math.max(10, 12.2 * state.dpr) + "px ui-monospace, monospace";
     ctx.fillStyle = "rgba(167,243,198,.94)";
-    ctx.fillText("DRY TERRAIN FORM RENEWAL · CARRIER ONLY", m.cx, y + h * 0.075);
+    ctx.fillText("DRY SOURCE RECONCILIATION · CARRIER ONLY", m.cx, y + h * 0.060);
 
-    ctx.font = "900 " + Math.max(7, 8.2 * state.dpr) + "px ui-monospace, monospace";
+    ctx.font = "900 " + Math.max(7, 7.8 * state.dpr) + "px ui-monospace, monospace";
 
     var rows = [
       "CONTRACT " + CONTRACT,
       "DRY VALIDATED " + String(state.dryTerrainValidated).toUpperCase() + " · NODES " + state.dryTerrainNodes.length,
+      "SOURCE " + (state.drySourceName || "NONE"),
+      "METHOD " + (state.drySourceMethod || "NONE"),
       "TEXTURE BUILT " + String(state.textureBuilt).toUpperCase() + " · FORM STRENGTH " + state.dryTerrainFormStrength,
       "LAND " + state.textureLandCoverageRatio + " · RELIEF " + state.textureReliefCoverageRatio + " · FUTURE-FILL " + state.textureFutureFillCoverageRatio,
+      "FAILURE " + (state.dryFailureReason || "NONE"),
+      "RESCUE ATTEMPTED " + String(state.dryRescueLoadAttempted).toUpperCase() + " · SUCCESS " + String(state.dryRescueLoadSucceeded).toUpperCase(),
       "ELEVATION " + String(state.elevationValidated).toUpperCase() + " · RELIEF PACKET " + String(state.reliefValidated).toUpperCase(),
       "LANDFORM " + String(state.landformValidated).toUpperCase() + " · TRIANGLE DISPLAY " + String(state.triangularMeshValidated).toUpperCase(),
-      "TRIANGLE MATERIAL AUTHORITY FALSE · DISPLAY HANDOFF ONLY",
-      "HYDRATION HELD TRUE · ACTIVE WATER FALSE",
       "RAW 256 GRID VISIBLE ONLY IN LATTICE",
-      "FINAL VISUAL PASS FALSE"
+      "HYDRATION HELD TRUE · ACTIVE WATER FALSE · FINAL VISUAL PASS FALSE"
     ];
 
     rows.forEach(function (text, index) {
       ctx.fillStyle = index === 0 ? "rgba(244,207,131,.90)" : index % 2 ? "rgba(238,244,255,.78)" : "rgba(141,216,255,.78)";
-      ctx.fillText(text, m.cx, y + h * (0.18 + index * 0.074));
+      ctx.fillText(String(text).slice(0, 96), m.cx, y + h * (0.145 + index * 0.067));
     });
 
     ctx.restore();
@@ -1498,17 +1820,17 @@
 
     if (label) {
       if (lens === "body") {
-        label.innerHTML = "<strong>Body</strong> → continuous dry physical form; normal grid suppressed";
+        label.innerHTML = "<strong>Body</strong> → reconciled dry physical form; normal grid suppressed";
       } else if (lens === "surface") {
-        label.innerHTML = "<strong>Surface</strong> → dry terrain packet converted into readable planetary surface";
+        label.innerHTML = "<strong>Surface</strong> → dry source packet converted into readable planetary terrain";
       } else if (lens === "hydration") {
         label.innerHTML = "<strong>Hydration</strong> → held / future-fill diagnostic only; active water false";
       } else if (lens === "sixth-sense") {
-        label.innerHTML = "<strong>Sixth Sense</strong> → diagnostic scaffold over dry-terrain carrier form";
+        label.innerHTML = "<strong>Sixth Sense</strong> → diagnostic scaffold over reconciled dry-terrain form";
       } else if (lens === "lattice") {
         label.innerHTML = "<strong>Lattice</strong> → raw 256 inspection only; not a second planet";
       } else if (lens === "receipt") {
-        label.innerHTML = "<strong>Receipt</strong> → carrier dry-terrain form renewal proof";
+        label.innerHTML = "<strong>Receipt</strong> → dry source reconciliation proof";
       }
     }
 
@@ -1650,8 +1972,9 @@
       previousContract: PREVIOUS_CONTRACT,
       recoveryBaseline: RECOVERY_BASELINE,
       gcr: GCR,
+      ccr: CCR,
 
-      dryTerrainFormRenewalActive: true,
+      drySourceReconciliationActive: true,
       formlessPlanetConditionAddressed: true,
       carrierVisibleFormEndpoint: true,
 
@@ -1659,7 +1982,17 @@
       dryTerrainApiComplete: state.dryTerrainApiComplete,
       dryTerrainValidated: state.dryTerrainValidated,
       dryFailureReason: state.dryFailureReason,
+      drySourceName: state.drySourceName,
+      drySourceMethod: state.drySourceMethod,
       dryTerrainNodeCount: state.dryTerrainNodes.length,
+      dryMissingGlobals: state.dryMissingGlobals.slice(),
+      dryMissingMethods: state.dryMissingMethods.slice(),
+      dryCandidateTrace: state.dryCandidateTrace.slice(),
+
+      dryRescueLoadAttempted: state.dryRescueLoadAttempted,
+      dryRescueLoadFinished: state.dryRescueLoadFinished,
+      dryRescueLoadSucceeded: state.dryRescueLoadSucceeded,
+      dryRescueLoadError: state.dryRescueLoadError,
 
       textureBuilt: state.textureBuilt,
       textureBuildCount: state.textureBuildCount,
@@ -1755,7 +2088,7 @@
     return {
       continentId: node.regionSeed || "unassigned",
       continentName: node.regionSeedName || node.nearestSummitName || "Unassigned",
-      color: REGION_TINTS[node.regionSeed] || REGION_TINTS.gratitude,
+      color: REGION_TINTS[node.regionSeed] || REGION_TINTS.unassigned,
       boundaryPressure: round(finite(node.escarpmentPressure, 0) + finite(node.shelfPressure, 0) * 0.35, 4)
     };
   }
@@ -1794,7 +2127,6 @@
       return state.lastStatusPayload;
     }
 
-    var dryReceipt = getDryTerrainFormReceipt();
     var definitionReceipt = getDefinitionConsumptionReceipt();
 
     var payload = {
@@ -1802,6 +2134,7 @@
       previousContract: PREVIOUS_CONTRACT,
       recoveryBaseline: RECOVERY_BASELINE,
       gcr: GCR,
+      ccr: CCR,
       target: FILE,
       route: ROUTE,
 
@@ -1811,8 +2144,8 @@
       carrierIsDisplayEndpoint: true,
       carrierVisibleFormEndpoint: true,
 
+      drySourceReconciliationActive: true,
       formlessPlanetConditionAddressed: true,
-      dryTerrainFormRenewalActive: true,
       visibleDryTerrainStrengthened: true,
       textureAtlasSurfaceRendererActive: true,
       terrainPacketToVisibleSurfaceBridgeActive: true,
@@ -1821,7 +2154,17 @@
       dryTerrainApiComplete: state.dryTerrainApiComplete,
       dryTerrainValidated: state.dryTerrainValidated,
       dryRevealedTerrainFailureReason: state.dryFailureReason,
+      drySourceName: state.drySourceName,
+      drySourceMethod: state.drySourceMethod,
       dryTerrainNodeCount: state.dryTerrainNodes.length,
+      dryMissingGlobals: state.dryMissingGlobals.slice(),
+      dryMissingMethods: state.dryMissingMethods.slice(),
+      dryCandidateTrace: state.dryCandidateTrace.slice(),
+
+      dryRescueLoadAttempted: state.dryRescueLoadAttempted,
+      dryRescueLoadFinished: state.dryRescueLoadFinished,
+      dryRescueLoadSucceeded: state.dryRescueLoadSucceeded,
+      dryRescueLoadError: state.dryRescueLoadError,
 
       textureBuilt: state.textureBuilt,
       textureBuildCount: state.textureBuildCount,
@@ -1907,12 +2250,13 @@
       statusThrottleMs: STATUS_THROTTLE_MS,
 
       errors: state.errors.slice(),
-      deployMarker: "AUDRALIA_PLANET_BODY_CARRIER_DRY_TERRAIN_FORM_RENEWAL_DEPLOY_MARKER_v1"
+      deployMarker: "AUDRALIA_PLANET_BODY_CARRIER_DRY_SOURCE_RECONCILIATION_DEPLOY_MARKER_v1"
     };
 
     state.lastStatusPublishedAt = time;
     state.lastStatusPayload = payload;
 
+    window.AUDRALIA_PLANET_BODY_CARRIER_DRY_SOURCE_RECONCILIATION_STATUS = payload;
     window.AUDRALIA_PLANET_BODY_CARRIER_DRY_TERRAIN_FORM_RENEWAL_STATUS = payload;
     window.AUDRALIA_CARRIER_VISUAL_TUNING_SOCKET_EXTRACTION_STATUS = payload;
     window.AUDRALIA_CARRIER_TRIANGULAR_READABILITY_ADAPTER_PRESERVATION_STATUS = payload;
@@ -1929,11 +2273,14 @@
     try {
       document.documentElement.dataset.audraliaRuntimeContract = CONTRACT;
       document.documentElement.dataset.audraliaRuntimePreviousContract = PREVIOUS_CONTRACT;
-      document.documentElement.dataset.audraliaCarrierDryTerrainFormRenewalActive = "true";
+      document.documentElement.dataset.audraliaCarrierDrySourceReconciliationActive = "true";
       document.documentElement.dataset.audraliaFormlessPlanetConditionAddressed = "true";
       document.documentElement.dataset.audraliaVisibleDryTerrainStrengthened = "true";
       document.documentElement.dataset.audraliaTextureAtlasSurfaceRendererActive = "true";
       document.documentElement.dataset.audraliaDryTerrainValidated = String(state.dryTerrainValidated);
+      document.documentElement.dataset.audraliaDryTerrainNodeCount = String(state.dryTerrainNodes.length);
+      document.documentElement.dataset.audraliaDrySourceName = state.drySourceName || "";
+      document.documentElement.dataset.audraliaDrySourceMethod = state.drySourceMethod || "";
       document.documentElement.dataset.audraliaDryTerrainFormStrength = String(state.dryTerrainFormStrength);
       document.documentElement.dataset.audraliaTextureLandCoverageRatio = String(state.textureLandCoverageRatio);
       document.documentElement.dataset.audraliaTextureReliefCoverageRatio = String(state.textureReliefCoverageRatio);
@@ -1974,9 +2321,10 @@
     state.canvas.setAttribute("data-previous-contract", PREVIOUS_CONTRACT);
     state.canvas.setAttribute("data-recovery-baseline", RECOVERY_BASELINE);
     state.canvas.setAttribute("data-gcr", GCR);
+    state.canvas.setAttribute("data-ccr", CCR);
     state.canvas.setAttribute("data-same-file-renewal", "true");
     state.canvas.setAttribute("data-shell-preserved", "true");
-    state.canvas.setAttribute("data-carrier-dry-terrain-form-renewal-active", "true");
+    state.canvas.setAttribute("data-carrier-dry-source-reconciliation-active", "true");
     state.canvas.setAttribute("data-formless-planet-condition-addressed", "true");
     state.canvas.setAttribute("data-visible-dry-terrain-strengthened", "true");
     state.canvas.setAttribute("data-texture-atlas-surface-renderer-active", "true");
@@ -1996,7 +2344,7 @@
     state.canvas.setAttribute("data-final-terrain-pass-claim", "false");
     state.canvas.setAttribute("data-final-hydration-pass-claim", "false");
     state.canvas.setAttribute("data-final-visual-pass-claim", "false");
-    state.canvas.setAttribute("aria-label", "Audralia carrier dry-terrain form renewal planet renderer");
+    state.canvas.setAttribute("aria-label", "Audralia carrier dry source reconciliation planet renderer");
 
     state.mount.innerHTML = "";
     state.mount.appendChild(state.canvas);
@@ -2010,10 +2358,12 @@
     bindControls();
     refreshDownstreamPackets();
 
-    setTimeout(refreshDownstreamPackets, 180);
+    setTimeout(refreshDownstreamPackets, 120);
+    setTimeout(refreshDownstreamPackets, 280);
     setTimeout(refreshDownstreamPackets, 640);
     setTimeout(refreshDownstreamPackets, 1200);
     setTimeout(refreshDownstreamPackets, 1800);
+    setTimeout(refreshDownstreamPackets, 2600);
 
     window.addEventListener("resize", resize, { passive: true });
 
@@ -2029,6 +2379,7 @@
     previousContract: PREVIOUS_CONTRACT,
     recoveryBaseline: RECOVERY_BASELINE,
     gcr: GCR,
+    ccr: CCR,
     status: function () { return publishStatus({ force: true }); },
     refreshDownstreamPackets: refreshDownstreamPackets,
     detectDryTerrain: detectDryTerrain,

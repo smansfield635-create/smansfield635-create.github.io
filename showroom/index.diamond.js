@@ -1,16 +1,21 @@
 // TARGET FILE: /showroom/index.diamond.js
 // TNT FULL-FILE REPLACEMENT
-// SHOWROOM_DIAMOND_G2_VISUAL_VARIANTS_BOUNDED_RENDERER_TNT_v3
+// SHOWROOM_DIAMOND_G2_SUNFLOWER_PHYLLOTAXIS_CORE_SPIRAL_RENDERER_TNT_v5
 //
 // Purpose:
-// - Increase visible difference between dimensional variants.
-// - Prevent freeze/truncation behavior by keeping render passes bounded.
-// - Preserve clean viewport, G2 gem-governed object, 16 × 16 / 256 authority.
-// - Preserve existing HTML/UI hooks.
+// - Preserve Object Only as a physical dimensional gem.
+// - Keep Object Only free of dots, lattice, and proof residue.
+// - Replace two-curl spiral behavior with sunflower/phyllotaxis-style core-origin Fibonacci growth.
+// - Keep the lattice restrained, internal, organic, and readable.
+// - Preserve existing HTML and UI hooks.
+// - Stay bounded to avoid freeze / truncation.
 //
 // Owns:
 // - Diamond canvas rendering.
+// - Physical gem form.
 // - Visual variants.
+// - Internal lattice.
+// - Sunflower/phyllotaxis Fibonacci spiral field.
 // - Renderer API.
 //
 // Does not own:
@@ -23,58 +28,61 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "SHOWROOM_DIAMOND_G2_VISUAL_VARIANTS_BOUNDED_RENDERER_TNT_v3";
-  const PREVIOUS = "SHOWROOM_DIAMOND_G2_DIMENSIONAL_PROOF_OBJECT_RENDERER_TNT_v2";
+  const CONTRACT = "SHOWROOM_DIAMOND_G2_SUNFLOWER_PHYLLOTAXIS_CORE_SPIRAL_RENDERER_TNT_v5";
+  const PREVIOUS = "SHOWROOM_DIAMOND_G2_PHYSICAL_GEM_RESTRAINED_LATTICE_CORE_SPIRAL_RENDERER_TNT_v4";
   const FAMILY = "SHOWROOM_DIAMOND_G2_FULL_CONTRACT_RENEWAL_THREE_FILE_FAMILY_v1";
   const API_NAME = "DGBShowroomDiamondG2";
 
   const RADIAL_NODES = 16;
   const FIBONACCI_BANDS = 16;
   const LATTICE_SEATS = 256;
+  const PHYLLOTAXIS_SEEDS = 55;
   const TAU = Math.PI * 2;
+  const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
 
   const FIBONACCI_SEQUENCE = Object.freeze([
     1, 1, 2, 3, 5, 8, 13, 21,
     34, 55, 89, 144, 233, 377, 610, 987
   ]);
 
-  const FIBONACCI_OFFSETS = Object.freeze([1, 2, 3, 5, 8, 13]);
+  const PHYLLOTAXIS_FIBONACCI_CUMULATIVE = Object.freeze([1, 2, 4, 7, 12, 20, 33]);
+  const PHYLLOTAXIS_FIBONACCI_STEPS = Object.freeze([1, 1, 2, 3, 5, 8, 13]);
 
   const DIMENSIONS = Object.freeze({
     object: {
       label: "Object Only",
-      status: "Object Only active · clean gem-first proof object"
+      status: "Object Only active · physical faceted gem · no lattice"
     },
     memory: {
       label: "World Memory",
-      status: "World Memory active · internal world-pressure bands"
+      status: "World Memory active · physical gem with subtle internal pressure"
     },
     behind: {
       label: "Lattice Behind",
-      status: "Lattice Behind active · proof field behind the Diamond"
+      status: "Lattice Behind active · restrained proof field behind the gem"
     },
     through: {
       label: "Lattice Through",
-      status: "Lattice Through active · structure passing through the gem"
+      status: "Lattice Through active · sunflower Fibonacci spiral inside the gem"
     },
     full: {
       label: "Full Proof",
-      status: "Full Proof active · complete object + memory + lattice field"
+      status: "Full Proof active · gem + restrained lattice + phyllotaxis spiral chronology"
     }
   });
 
   const LENS_COPY = Object.freeze({
     crystal: {
       title: "Crystal Form",
-      route: "Crystal Form → G2 bounded proof gem",
+      route: "Crystal Form → physical G2 proof gem",
       copy:
-        "Crystal Form shows the object first: a globe-inspired but gem-governed Diamond with clean facets, glints, and a restrained proof field."
+        "Crystal Form restores the Diamond as a physical dimensional gem: cut planes, crown, girdle, pavilion, rim, and glints before any proof skeleton is exposed."
     },
     lattice: {
       title: "Lattice Structure",
-      route: "Lattice Structure → 16 radial nodes × 16 Fibonacci bands = 256 seats",
+      route: "Lattice Structure → restrained internal lattice + sunflower Fibonacci spiral",
       copy:
-        "Lattice Structure reveals the computable proof field without changing the Diamond into a planet or globe."
+        "Lattice Structure reveals the internal proof skeleton through selected lines, selected nodes, and a sunflower-style Fibonacci spiral that begins at the core and grows outward."
     }
   });
 
@@ -93,13 +101,17 @@
 
     seats: [],
     facets: [],
-    crystalLines: [],
-    latticeLines: [],
-    fibonacciLines: [],
-    points: [],
+    gemFacetLines: [],
+    gemRimLines: [],
+    memoryBands: [],
+    latticeSupportLines: [],
+    latticeCardinalLines: [],
+    phyllotaxisSeeds: [],
+    phyllotaxisLinks: [],
+    phyllotaxisChronology: [],
 
-    yaw: -0.64,
-    pitch: -0.20,
+    yaw: -0.62,
+    pitch: -0.18,
     roll: 0.02,
     velocityYaw: 0,
     velocityPitch: 0,
@@ -143,6 +155,10 @@
     return Math.max(min, Math.min(max, finite(value, min)));
   }
 
+  function now() {
+    return typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
+  }
+
   function query(selector, root = document) {
     try {
       return root.querySelector(selector);
@@ -162,6 +178,7 @@
   function setText(selector, value) {
     const node = query(selector);
     if (!node) return false;
+
     const text = String(value);
     if (node.textContent !== text) node.textContent = text;
     return true;
@@ -169,14 +186,24 @@
 
   function setDataset(key, value) {
     const text = String(value);
+
     try {
       document.documentElement.dataset[key] = text;
       if (document.body) document.body.dataset[key] = text;
     } catch (_error) {}
   }
 
-  function now() {
-    return typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
+  function recordError(scope, error) {
+    const message = error && error.message ? error.message : String(error || scope);
+
+    state.errors.push({
+      scope,
+      message,
+      time: new Date().toISOString()
+    });
+
+    setDataset("showroomDiamondG2Error", message);
+    publishStatus("error:" + scope);
   }
 
   function roleForBand(band) {
@@ -193,17 +220,17 @@
 
   function makeSeat(band, radial) {
     const radiusProfile = [
-      0.26, 0.36, 0.49, 0.66,
-      0.84, 1.02, 1.16, 1.21,
-      1.12, 0.97, 0.80, 0.61,
-      0.44, 0.28, 0.14, 0.045
+      0.255, 0.350, 0.480, 0.635,
+      0.815, 1.000, 1.165, 1.225,
+      1.125, 0.950, 0.765, 0.585,
+      0.415, 0.250, 0.120, 0.035
     ];
 
     const heightProfile = [
-      0.64, 0.59, 0.51, 0.40,
-      0.28, 0.15, 0.035, -0.045,
-      -0.125, -0.245, -0.380, -0.515,
-      -0.640, -0.735, -0.805, -0.850
+      0.655, 0.590, 0.500, 0.390,
+      0.270, 0.145, 0.030, -0.055,
+      -0.140, -0.265, -0.405, -0.535,
+      -0.650, -0.740, -0.810, -0.855
     ];
 
     const angle = (radial / RADIAL_NODES) * TAU;
@@ -212,12 +239,12 @@
 
     const cut =
       1 +
-      (radial % 2 === 0 ? 0.018 : -0.030) +
-      (radial % 4 === 0 ? 0.045 : 0) +
-      (radial % 4 === 2 ? -0.020 : 0);
+      (radial % 2 === 0 ? 0.020 : -0.034) +
+      (radial % 4 === 0 ? 0.055 : 0) +
+      (radial % 4 === 2 ? -0.024 : 0);
 
-    const radius = radiusProfile[band] * cut * (1 + worldPressure * 0.055) * (1 + (fib - 0.5) * 0.06);
-    const zScale = 0.71 + Math.sin(band * 0.55 + radial * 0.21) * 0.024;
+    const radius = radiusProfile[band] * cut * (1 + worldPressure * 0.05) * (1 + (fib - 0.5) * 0.045);
+    const zScale = 0.705 + Math.sin(band * 0.55 + radial * 0.21) * 0.020;
 
     return Object.freeze({
       seatIndex: band * RADIAL_NODES + radial,
@@ -236,6 +263,16 @@
     });
   }
 
+  function makePoint(x, y, z, family = "point", extra = {}) {
+    return Object.freeze({
+      x,
+      y,
+      z,
+      family,
+      ...extra
+    });
+  }
+
   function buildGeometry() {
     const rings = [];
 
@@ -251,22 +288,23 @@
       return rings[band][((radial % RADIAL_NODES) + RADIAL_NODES) % RADIAL_NODES];
     }
 
-    const facets = [];
-    const crystalLines = [];
-    const latticeLines = [];
-    const fibonacciLines = [];
-    const points = [];
-
-    function line(a, b, family, weight) {
+    function line(a, b, family, weight = 1) {
       return Object.freeze({
         a,
         b,
         family,
         weight,
-        major: a.major || b.major,
-        secondary: a.secondary || b.secondary
+        major: Boolean(a.major || b.major),
+        secondary: Boolean(a.secondary || b.secondary)
       });
     }
+
+    const facets = [];
+    const gemFacetLines = [];
+    const gemRimLines = [];
+    const memoryBands = [];
+    const latticeSupportLines = [];
+    const latticeCardinalLines = [];
 
     for (let band = 0; band < FIBONACCI_BANDS - 1; band += 1) {
       for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
@@ -278,7 +316,11 @@
         facets.push(Object.freeze({ a, b, c, d, role: a.role }));
 
         if (radial % 2 === 0) {
-          crystalLines.push(line(a, c, "crystal-diagonal", radial % 4 === 0 ? 1.25 : 0.72));
+          gemFacetLines.push(line(a, c, "gem-diagonal-cut", radial % 4 === 0 ? 1.15 : 0.72));
+        }
+
+        if (radial % 4 === 1 && band > 1 && band < 13) {
+          gemFacetLines.push(line(b, d, "gem-counter-cut", 0.50));
         }
       }
     }
@@ -288,8 +330,14 @@
         const a = seat(band, radial);
         const b = seat(band, radial + 1);
 
-        crystalLines.push(line(a, b, "crystal-ring", band >= 6 && band <= 8 ? 1.55 : a.major ? 1.25 : 0.70));
-        latticeLines.push(line(a, b, "lattice-ring", a.major ? 1.25 : 0.64));
+        const isRimBand = band === 1 || band === 6 || band === 7 || band === 8 || band === 14 || band === 15;
+        const weight = isRimBand ? 1.55 : a.major ? 1.05 : 0.58;
+
+        if (isRimBand) {
+          gemRimLines.push(line(a, b, "gem-rim-ring", weight));
+        } else if (band % 2 === 0 || radial % 4 === 0) {
+          gemFacetLines.push(line(a, b, "gem-facet-ring", weight));
+        }
       }
     }
 
@@ -298,42 +346,136 @@
         const a = seat(band, radial);
         const b = seat(band + 1, radial);
 
-        crystalLines.push(line(a, b, radial % 4 === 0 ? "crystal-cardinal" : "crystal-spine", radial % 4 === 0 ? 1.45 : 0.70));
-        latticeLines.push(line(a, b, radial % 4 === 0 ? "lattice-cardinal" : "lattice-spine", radial % 4 === 0 ? 1.35 : 0.64));
-      }
-    }
-
-    for (let band = 0; band < FIBONACCI_BANDS - 1; band += 1) {
-      const offset = FIBONACCI_OFFSETS[band % FIBONACCI_OFFSETS.length];
-
-      for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
-        const a = seat(band, radial);
-        fibonacciLines.push(line(a, seat(band + 1, radial + offset), "fibonacci-forward", radial % 4 === 0 ? 1.00 : 0.56));
-
-        if (band % 2 === 0) {
-          fibonacciLines.push(line(a, seat(band + 1, radial - offset), "fibonacci-return", radial % 4 === 0 ? 0.82 : 0.48));
+        if (radial % 4 === 0) {
+          gemRimLines.push(line(a, b, "gem-cardinal-cut", 1.20));
+        } else if (radial % 2 === 0 && band % 2 === 0) {
+          gemFacetLines.push(line(a, b, "gem-spine-cut", 0.54));
         }
       }
     }
 
-    for (let band = 0; band < FIBONACCI_BANDS; band += 1) {
-      for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
-        const s = seat(band, radial);
-        points.push(Object.freeze({
-          seat: s,
-          size: s.major ? 4.7 : s.secondary ? 3.1 : 2.0,
-          major: s.major,
-          secondary: s.secondary
-        }));
+    [3, 5, 7, 9, 11, 13].forEach((band) => {
+      const ring = [];
+
+      for (let radial = 0; radial <= RADIAL_NODES; radial += 1) {
+        ring.push(seat(band, radial % RADIAL_NODES));
       }
+
+      memoryBands.push(Object.freeze({
+        band,
+        points: Object.freeze(ring),
+        major: band === 7 || band === 11
+      }));
+    });
+
+    [4, 7, 10, 13].forEach((band) => {
+      for (let radial = 0; radial < RADIAL_NODES; radial += 2) {
+        latticeSupportLines.push(line(seat(band, radial), seat(band, radial + 2), "lattice-selected-ring", band === 7 ? 1.0 : 0.64));
+      }
+    });
+
+    [0, 4, 8, 12].forEach((radial) => {
+      for (let band = 3; band < 14; band += 2) {
+        latticeCardinalLines.push(line(seat(band, radial), seat(Math.min(14, band + 2), radial), "lattice-cardinal-support", 0.90));
+      }
+    });
+
+    [2, 6, 10, 14].forEach((radial) => {
+      for (let band = 4; band < 12; band += 3) {
+        latticeSupportLines.push(line(seat(band, radial), seat(Math.min(14, band + 2), radial + 1), "lattice-secondary-support", 0.46));
+      }
+    });
+
+    const phyllotaxisSeeds = [];
+    const phyllotaxisLinks = [];
+    const phyllotaxisChronology = [];
+
+    const fibonacciIndexMap = new Map();
+    PHYLLOTAXIS_FIBONACCI_CUMULATIVE.forEach((index, stepIndex) => {
+      fibonacciIndexMap.set(index, {
+        step: PHYLLOTAXIS_FIBONACCI_STEPS[stepIndex],
+        stepIndex
+      });
+    });
+
+    for (let i = 0; i < PHYLLOTAXIS_SEEDS; i += 1) {
+      const t = i / Math.max(1, PHYLLOTAXIS_SEEDS - 1);
+      const radius = Math.sqrt(t) * 0.79;
+      const angle = i * GOLDEN_ANGLE - 0.72;
+
+      const fibMeta = fibonacciIndexMap.get(i);
+      const selected = Boolean(fibMeta);
+      const core = i === 0;
+
+      const x = Math.cos(angle) * radius * 1.05;
+      const z = Math.sin(angle) * radius * 0.56;
+      const y =
+        -0.055 +
+        Math.sin(angle * 0.82 + radius * 1.4) * radius * 0.095 -
+        radius * 0.045;
+
+      phyllotaxisSeeds.push(makePoint(x, y, z, core ? "phyllotaxis-core" : "phyllotaxis-seed", {
+        index: i,
+        radius,
+        angle,
+        selected,
+        fibonacciStep: fibMeta ? fibMeta.step : null,
+        fibonacciStepIndex: fibMeta ? fibMeta.stepIndex : null,
+        core
+      }));
+    }
+
+    function phyllotaxisLink(aIndex, bIndex, family, weight) {
+      if (!phyllotaxisSeeds[aIndex] || !phyllotaxisSeeds[bIndex]) return;
+      phyllotaxisLinks.push(Object.freeze({
+        a: phyllotaxisSeeds[aIndex],
+        b: phyllotaxisSeeds[bIndex],
+        family,
+        weight,
+        offset: bIndex - aIndex
+      }));
+    }
+
+    for (let i = 0; i < PHYLLOTAXIS_SEEDS; i += 1) {
+      if (i + 5 < PHYLLOTAXIS_SEEDS && i % 2 === 0) {
+        phyllotaxisLink(i, i + 5, "phyllotaxis-parastichy-5", 0.46);
+      }
+
+      if (i + 8 < PHYLLOTAXIS_SEEDS && i % 3 === 0) {
+        phyllotaxisLink(i, i + 8, "phyllotaxis-parastichy-8", 0.42);
+      }
+
+      if (i + 13 < PHYLLOTAXIS_SEEDS && i % 5 === 0) {
+        phyllotaxisLink(i, i + 13, "phyllotaxis-parastichy-13", 0.38);
+      }
+    }
+
+    const chronologyIndexes = [0].concat(PHYLLOTAXIS_FIBONACCI_CUMULATIVE);
+    for (let i = 0; i < chronologyIndexes.length - 1; i += 1) {
+      const aIndex = chronologyIndexes[i];
+      const bIndex = chronologyIndexes[i + 1];
+
+      if (!phyllotaxisSeeds[aIndex] || !phyllotaxisSeeds[bIndex]) continue;
+
+      phyllotaxisChronology.push(Object.freeze({
+        a: phyllotaxisSeeds[aIndex],
+        b: phyllotaxisSeeds[bIndex],
+        family: "phyllotaxis-fibonacci-chronology",
+        step: i === 0 ? "core" : String(PHYLLOTAXIS_FIBONACCI_STEPS[i - 1] || 13),
+        weight: i === 0 ? 0.92 : 0.86 + i * 0.055
+      }));
     }
 
     state.seats = rings.flat();
     state.facets = facets;
-    state.crystalLines = crystalLines;
-    state.latticeLines = latticeLines;
-    state.fibonacciLines = fibonacciLines;
-    state.points = points;
+    state.gemFacetLines = gemFacetLines;
+    state.gemRimLines = gemRimLines;
+    state.memoryBands = memoryBands;
+    state.latticeSupportLines = latticeSupportLines;
+    state.latticeCardinalLines = latticeCardinalLines;
+    state.phyllotaxisSeeds = phyllotaxisSeeds;
+    state.phyllotaxisLinks = phyllotaxisLinks;
+    state.phyllotaxisChronology = phyllotaxisChronology;
     state.geometryBuilt = state.seats.length === LATTICE_SEATS;
   }
 
@@ -358,6 +500,7 @@
 
     const cr = Math.cos(state.roll);
     const sr = Math.sin(state.roll);
+
     return {
       x: x * cr - y * sr,
       y: x * sr + y * cr,
@@ -374,14 +517,14 @@
     return {
       centerX: width / 2,
       centerY: height * (cssWidth < 680 ? 0.51 : 0.50),
-      scale: minSide * (cssWidth < 680 ? 0.37 : 0.405),
+      scale: minSide * (cssWidth < 680 ? 0.385 : 0.415),
       cameraDistance: 4.55
     };
   }
 
-  function projectSeat(seat) {
+  function projectPoint(point) {
     const m = metrics();
-    const r = rotatePoint(seat);
+    const r = rotatePoint(point);
     const perspective = m.cameraDistance / Math.max(0.72, m.cameraDistance - r.z);
 
     return {
@@ -412,9 +555,9 @@
       m.scale * 1.65
     );
 
-    glow.addColorStop(0, `rgba(141,216,255,${0.10 + level * 0.08})`);
-    glow.addColorStop(0.38, `rgba(36,120,255,${0.05 + level * 0.05})`);
-    glow.addColorStop(0.76, `rgba(243,200,111,${0.035 + level * 0.035})`);
+    glow.addColorStop(0, `rgba(141,216,255,${0.08 + level * 0.07})`);
+    glow.addColorStop(0.38, `rgba(36,120,255,${0.04 + level * 0.05})`);
+    glow.addColorStop(0.76, `rgba(243,200,111,${0.030 + level * 0.030})`);
     glow.addColorStop(1, "rgba(0,0,0,0)");
 
     ctx.beginPath();
@@ -426,23 +569,32 @@
   }
 
   function facetColor(facet, depth, alpha) {
-    const role = facet.role;
     const light = clamp(0.70 + depth * 0.28, 0.55, 1.08);
 
     let r = 120;
     let g = 205;
     let b = 255;
 
-    if (role === "table") {
-      r = 236; g = 252; b = 255;
-    } else if (role === "crown") {
-      r = 135; g = 220; b = 255;
-    } else if (role === "girdle") {
-      r = 255; g = 211; b = 115;
-    } else if (role === "pavilion") {
-      r = 55; g = 116; b = 225;
+    if (facet.role === "table") {
+      r = 238;
+      g = 252;
+      b = 255;
+    } else if (facet.role === "crown") {
+      r = 132;
+      g = 218;
+      b = 255;
+    } else if (facet.role === "girdle") {
+      r = 255;
+      g = 214;
+      b = 118;
+    } else if (facet.role === "pavilion") {
+      r = 55;
+      g = 112;
+      b = 224;
     } else {
-      r = 35; g = 70; b = 140;
+      r = 35;
+      g = 70;
+      b = 140;
     }
 
     return `rgba(${Math.round(r * light)},${Math.round(g * light)},${Math.round(b * light)},${alpha})`;
@@ -453,12 +605,13 @@
 
     ctx.save();
 
-    for (const facet of state.facets) {
-      const a = projectSeat(facet.a);
-      const b = projectSeat(facet.b);
-      const c = projectSeat(facet.c);
-      const d = projectSeat(facet.d);
-      const depth = ((a.z + b.z + c.z + d.z) / 4 + 1.4) / 2.8;
+    for (let i = 0; i < state.facets.length; i += 1) {
+      const facet = state.facets[i];
+      const a = projectPoint(facet.a);
+      const b = projectPoint(facet.b);
+      const c = projectPoint(facet.c);
+      const d = projectPoint(facet.d);
+      const depth = clamp(((a.z + b.z + c.z + d.z) / 4 + 1.35) / 2.7, 0, 1);
 
       ctx.beginPath();
       ctx.moveTo(a.x, a.y);
@@ -466,12 +619,13 @@
       ctx.lineTo(c.x, c.y);
       ctx.lineTo(d.x, d.y);
       ctx.closePath();
+
       ctx.fillStyle = facetColor(facet, depth, alpha);
       ctx.fill();
 
       if (facet.a.major || facet.b.major) {
-        ctx.strokeStyle = `rgba(255,242,190,${0.12 * alpha})`;
-        ctx.lineWidth = Math.max(0.5, state.dpr * 0.42);
+        ctx.strokeStyle = `rgba(255,242,190,${0.11 * alpha})`;
+        ctx.lineWidth = Math.max(0.45, state.dpr * 0.38);
         ctx.stroke();
       }
     }
@@ -479,103 +633,37 @@
     ctx.restore();
   }
 
-  function lineColor(line, alpha) {
-    if (line.family.indexOf("fibonacci") >= 0) {
-      return line.major
-        ? `rgba(255,220,103,${0.78 * alpha})`
-        : `rgba(174,229,255,${0.38 * alpha})`;
-    }
-
-    if (line.family.indexOf("lattice") >= 0) {
-      return line.major
-        ? `rgba(255,220,105,${0.72 * alpha})`
-        : `rgba(115,205,255,${0.42 * alpha})`;
-    }
-
-    if (line.family.indexOf("cardinal") >= 0) {
-      return `rgba(255,228,143,${0.70 * alpha})`;
-    }
-
-    return `rgba(205,242,255,${0.36 * alpha})`;
+  function gemLineColor(line, alpha) {
+    if (line.family.indexOf("rim") >= 0) return `rgba(255,231,150,${0.70 * alpha})`;
+    if (line.family.indexOf("cardinal") >= 0) return `rgba(255,226,132,${0.58 * alpha})`;
+    if (line.family.indexOf("diagonal") >= 0) return `rgba(236,250,255,${0.42 * alpha})`;
+    return `rgba(190,235,255,${0.30 * alpha})`;
   }
 
-  function draw3DLines(lines, alpha, majorOnly) {
+  function latticeLineColor(line, alpha) {
+    if (line.family.indexOf("cardinal") >= 0) return `rgba(255,220,105,${0.50 * alpha})`;
+    if (line.family.indexOf("selected-ring") >= 0) return `rgba(120,210,255,${0.34 * alpha})`;
+    return `rgba(150,220,255,${0.20 * alpha})`;
+  }
+
+  function drawLines(lines, colorFn, alpha, majorOnly = false) {
     const ctx = state.ctx;
 
     ctx.save();
 
-    for (const line of lines) {
+    for (let i = 0; i < lines.length; i += 1) {
+      const line = lines[i];
       if (majorOnly && !line.major) continue;
 
-      const a = projectSeat(line.a);
-      const b = projectSeat(line.b);
+      const a = projectPoint(line.a);
+      const b = projectPoint(line.b);
+      const depth = clamp(((a.z + b.z) / 2 + 1.35) / 2.7, 0, 1);
 
       ctx.beginPath();
       ctx.moveTo(a.x, a.y);
       ctx.lineTo(b.x, b.y);
-      ctx.strokeStyle = lineColor(line, alpha);
+      ctx.strokeStyle = colorFn(line, alpha * (0.68 + depth * 0.42));
       ctx.lineWidth = Math.max(0.45, state.dpr * line.weight);
-      ctx.stroke();
-    }
-
-    ctx.restore();
-  }
-
-  function drawPoints(alpha, majorOnly) {
-    const ctx = state.ctx;
-
-    ctx.save();
-
-    for (const point of state.points) {
-      if (majorOnly && !point.major) continue;
-
-      const p = projectSeat(point.seat);
-      const baseAlpha = p.frontFacing ? 1 : 0.25;
-      const size = Math.max(1.2, point.size * state.dpr * p.perspective);
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, size, 0, TAU);
-      ctx.fillStyle = point.major
-        ? `rgba(255,224,116,${0.84 * alpha * baseAlpha})`
-        : `rgba(141,216,255,${0.52 * alpha * baseAlpha})`;
-      ctx.fill();
-    }
-
-    ctx.restore();
-  }
-
-  function drawBackgroundLattice(alpha) {
-    const ctx = state.ctx;
-    const m = metrics();
-    const pulse = 0.5 + Math.sin(state.time * 1.25) * 0.5;
-
-    ctx.save();
-
-    ctx.translate(m.centerX, m.centerY);
-    ctx.rotate(-0.18);
-
-    for (let i = 1; i <= 5; i += 1) {
-      ctx.beginPath();
-      ctx.ellipse(0, 0, m.scale * (0.28 + i * 0.16), m.scale * (0.12 + i * 0.07), 0, 0, TAU);
-      ctx.strokeStyle = i % 2 === 0
-        ? `rgba(255,220,103,${alpha * 0.18})`
-        : `rgba(141,216,255,${alpha * 0.20})`;
-      ctx.lineWidth = Math.max(0.6, state.dpr * 0.7);
-      ctx.stroke();
-    }
-
-    for (let i = 0; i < 16; i += 1) {
-      const a = (i / 16) * TAU;
-      const x = Math.cos(a) * m.scale * 1.03;
-      const y = Math.sin(a) * m.scale * 0.47;
-
-      ctx.beginPath();
-      ctx.moveTo(-x, -y);
-      ctx.lineTo(x, y);
-      ctx.strokeStyle = i % 4 === 0
-        ? `rgba(255,220,103,${alpha * (0.22 + pulse * 0.06)})`
-        : `rgba(141,216,255,${alpha * 0.10})`;
-      ctx.lineWidth = Math.max(0.45, state.dpr * (i % 4 === 0 ? 0.95 : 0.48));
       ctx.stroke();
     }
 
@@ -584,30 +672,209 @@
 
   function drawMemoryBands(alpha) {
     const ctx = state.ctx;
-    const bands = [2, 4, 6, 8, 10, 12];
-    const pulse = 0.5 + Math.sin(state.time * 1.55) * 0.5;
+    const pulse = 0.5 + Math.sin(state.time * 1.35) * 0.5;
 
     ctx.save();
 
-    for (const band of bands) {
+    for (let i = 0; i < state.memoryBands.length; i += 1) {
+      const band = state.memoryBands[i];
+
       ctx.beginPath();
 
-      for (let radial = 0; radial <= RADIAL_NODES; radial += 1) {
-        const seat = state.seats[band * RADIAL_NODES + (radial % RADIAL_NODES)];
-        const p = projectSeat(seat);
-
-        if (radial === 0) ctx.moveTo(p.x, p.y);
+      for (let j = 0; j < band.points.length; j += 1) {
+        const p = projectPoint(band.points[j]);
+        if (j === 0) ctx.moveTo(p.x, p.y);
         else ctx.lineTo(p.x, p.y);
       }
 
-      ctx.strokeStyle = band % 4 === 0
-        ? `rgba(255,224,116,${alpha * (0.25 + pulse * 0.12)})`
-        : `rgba(141,216,255,${alpha * (0.22 + pulse * 0.08)})`;
-      ctx.lineWidth = Math.max(0.7, state.dpr * (band % 4 === 0 ? 1.05 : 0.75));
+      ctx.strokeStyle = band.major
+        ? `rgba(255,224,116,${alpha * (0.18 + pulse * 0.08)})`
+        : `rgba(141,216,255,${alpha * (0.13 + pulse * 0.055)})`;
+      ctx.lineWidth = Math.max(0.65, state.dpr * (band.major ? 0.90 : 0.58));
       ctx.stroke();
     }
 
     ctx.restore();
+  }
+
+  function drawCoreGlow(alpha) {
+    const ctx = state.ctx;
+    const core = projectPoint(makePoint(0, -0.055, 0, "core"));
+    const pulse = 0.5 + Math.sin(state.time * 1.4) * 0.5;
+
+    ctx.save();
+
+    const r = Math.max(8, 18 * state.dpr * core.perspective);
+    const glow = ctx.createRadialGradient(core.x, core.y, 0, core.x, core.y, r * 2.8);
+
+    glow.addColorStop(0, `rgba(255,232,163,${alpha * (0.20 + pulse * 0.08)})`);
+    glow.addColorStop(0.38, `rgba(141,216,255,${alpha * 0.10})`);
+    glow.addColorStop(1, "rgba(0,0,0,0)");
+
+    ctx.beginPath();
+    ctx.arc(core.x, core.y, r * 2.8, 0, TAU);
+    ctx.fillStyle = glow;
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  function drawBackgroundLattice(alpha) {
+    const ctx = state.ctx;
+    const m = metrics();
+
+    ctx.save();
+    ctx.translate(m.centerX, m.centerY);
+    ctx.rotate(-0.18);
+
+    for (let i = 1; i <= 4; i += 1) {
+      ctx.beginPath();
+      ctx.ellipse(0, 0, m.scale * (0.32 + i * 0.17), m.scale * (0.13 + i * 0.075), 0, 0, TAU);
+      ctx.strokeStyle = i % 2 === 0
+        ? `rgba(255,220,103,${alpha * 0.10})`
+        : `rgba(141,216,255,${alpha * 0.12})`;
+      ctx.lineWidth = Math.max(0.55, state.dpr * 0.62);
+      ctx.stroke();
+    }
+
+    for (let i = 0; i < 8; i += 1) {
+      const a = (i / 8) * TAU;
+      const x = Math.cos(a) * m.scale * 1.03;
+      const y = Math.sin(a) * m.scale * 0.47;
+
+      ctx.beginPath();
+      ctx.moveTo(-x, -y);
+      ctx.lineTo(x, y);
+      ctx.strokeStyle = i % 2 === 0
+        ? `rgba(255,220,103,${alpha * 0.12})`
+        : `rgba(141,216,255,${alpha * 0.07})`;
+      ctx.lineWidth = Math.max(0.45, state.dpr * (i % 2 === 0 ? 0.72 : 0.44));
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
+  function drawPhyllotaxisLinks(alpha, includeThirteen) {
+    const ctx = state.ctx;
+
+    ctx.save();
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+
+    for (let i = 0; i < state.phyllotaxisLinks.length; i += 1) {
+      const link = state.phyllotaxisLinks[i];
+
+      if (!includeThirteen && link.offset === 13) continue;
+
+      const a = projectPoint(link.a);
+      const b = projectPoint(link.b);
+
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const cx = (a.x + b.x) / 2 - dy * 0.10;
+      const cy = (a.y + b.y) / 2 + dx * 0.10;
+
+      const familyAlpha =
+        link.offset === 5 ? 0.34 :
+        link.offset === 8 ? 0.25 :
+        0.18;
+
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.quadraticCurveTo(cx, cy, b.x, b.y);
+      ctx.strokeStyle = link.offset === 5
+        ? `rgba(255,223,112,${alpha * familyAlpha})`
+        : `rgba(141,216,255,${alpha * familyAlpha})`;
+      ctx.lineWidth = Math.max(0.45, state.dpr * link.weight);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
+  function drawPhyllotaxisChronology(alpha) {
+    const ctx = state.ctx;
+    const pulse = 0.5 + Math.sin(state.time * 1.35) * 0.5;
+
+    ctx.save();
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+
+    for (let i = 0; i < state.phyllotaxisChronology.length; i += 1) {
+      const segment = state.phyllotaxisChronology[i];
+      const a = projectPoint(segment.a);
+      const b = projectPoint(segment.b);
+
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const cx = (a.x + b.x) / 2 - dy * (0.10 + i * 0.012);
+      const cy = (a.y + b.y) / 2 + dx * (0.10 + i * 0.012);
+
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.quadraticCurveTo(cx, cy, b.x, b.y);
+      ctx.strokeStyle = `rgba(255,225,112,${alpha * (0.42 + pulse * 0.10)})`;
+      ctx.lineWidth = Math.max(0.8, state.dpr * segment.weight);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
+  function drawPhyllotaxisSeeds(alpha, selectedBoost) {
+    const ctx = state.ctx;
+    const pulse = 0.5 + Math.sin(state.time * 1.55) * 0.5;
+
+    ctx.save();
+
+    for (let i = 0; i < state.phyllotaxisSeeds.length; i += 1) {
+      const seed = state.phyllotaxisSeeds[i];
+      const p = projectPoint(seed);
+
+      const selected = seed.selected || seed.core;
+      const baseSize = seed.core ? 5.8 : selected ? 4.2 : 1.55 + seed.radius * 1.2;
+      const size = Math.max(1.1, state.dpr * baseSize * p.perspective);
+      const depth = clamp((p.z + 1.2) / 2.4, 0, 1);
+
+      const seedAlpha = selected
+        ? alpha * (0.56 + selectedBoost * 0.20 + pulse * 0.08)
+        : alpha * (0.18 + depth * 0.12);
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, size, 0, TAU);
+      ctx.fillStyle = seed.core
+        ? `rgba(255,238,166,${seedAlpha})`
+        : selected
+          ? `rgba(255,226,120,${seedAlpha})`
+          : `rgba(141,216,255,${seedAlpha})`;
+      ctx.fill();
+
+      if (selected) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, size * 2.0, 0, TAU);
+        ctx.strokeStyle = seed.core
+          ? `rgba(255,238,166,${alpha * 0.20})`
+          : `rgba(141,216,255,${alpha * 0.14})`;
+        ctx.lineWidth = Math.max(0.45, state.dpr * 0.52);
+        ctx.stroke();
+      }
+    }
+
+    ctx.restore();
+  }
+
+  function drawPhyllotaxisField(alpha, mode) {
+    const includeThirteen = mode === "full";
+    const selectedBoost = mode === "full" ? 1.0 : 0.72;
+
+    drawPhyllotaxisLinks(alpha, includeThirteen);
+    drawPhyllotaxisChronology(alpha * (mode === "full" ? 1.0 : 0.86));
+    drawPhyllotaxisSeeds(alpha, selectedBoost);
+  }
+
+  function drawRim(alpha) {
+    drawLines(state.gemRimLines, gemLineColor, alpha, false);
   }
 
   function drawGlints(alpha) {
@@ -621,28 +888,13 @@
 
     const glint = ctx.createLinearGradient(-m.scale, 0, m.scale, 0);
     glint.addColorStop(0, "rgba(255,255,255,0)");
-    glint.addColorStop(0.48, `rgba(255,255,255,${alpha * (0.16 + pulse * 0.24)})`);
-    glint.addColorStop(0.56, `rgba(255,230,150,${alpha * (0.10 + pulse * 0.12)})`);
+    glint.addColorStop(0.48, `rgba(255,255,255,${alpha * (0.14 + pulse * 0.21)})`);
+    glint.addColorStop(0.56, `rgba(255,230,150,${alpha * (0.08 + pulse * 0.12)})`);
     glint.addColorStop(1, "rgba(255,255,255,0)");
 
     ctx.globalCompositeOperation = "screen";
     ctx.fillStyle = glint;
-    ctx.fillRect(-m.scale, -m.scale * 0.42, m.scale * 2, m.scale * 0.18);
-
-    ctx.restore();
-  }
-
-  function drawRim(alpha) {
-    const ctx = state.ctx;
-    const m = metrics();
-
-    ctx.save();
-
-    ctx.beginPath();
-    ctx.ellipse(m.centerX, m.centerY, m.scale * 0.98, m.scale * 0.70, 0, 0, TAU);
-    ctx.strokeStyle = `rgba(255,231,150,${0.32 * alpha})`;
-    ctx.lineWidth = Math.max(1, state.dpr * 1.05);
-    ctx.stroke();
+    ctx.fillRect(-m.scale, -m.scale * 0.43, m.scale * 2, m.scale * 0.18);
 
     ctx.restore();
   }
@@ -653,48 +905,47 @@
     clear();
 
     if (state.dimension === "object") {
-      drawAmbient(0.55);
-      drawFacets(0.96);
-      draw3DLines(state.crystalLines, 0.65, true);
-      drawPoints(0.60, true);
-      drawGlints(1.0);
-      drawRim(0.9);
+      drawAmbient(0.48);
+      drawFacets(0.98);
+      drawLines(state.gemFacetLines, gemLineColor, 0.72, false);
+      drawRim(1.00);
+      drawGlints(1.00);
     } else if (state.dimension === "memory") {
-      drawAmbient(0.78);
-      drawFacets(0.84);
-      drawMemoryBands(1.35);
-      draw3DLines(state.crystalLines, 0.46, true);
-      drawPoints(0.38, true);
-      drawGlints(0.68);
-      drawRim(0.78);
+      drawAmbient(0.62);
+      drawCoreGlow(0.68);
+      drawFacets(0.92);
+      drawMemoryBands(0.92);
+      drawLines(state.gemFacetLines, gemLineColor, 0.58, false);
+      drawRim(0.88);
+      drawGlints(0.74);
     } else if (state.dimension === "behind") {
-      drawAmbient(0.72);
-      drawBackgroundLattice(1.10);
+      drawAmbient(0.62);
+      drawBackgroundLattice(0.92);
       drawFacets(0.96);
-      draw3DLines(state.crystalLines, 0.58, true);
-      drawPoints(0.34, true);
-      drawGlints(0.72);
-      drawRim(1.0);
+      drawLines(state.gemFacetLines, gemLineColor, 0.62, false);
+      drawRim(1.00);
+      drawGlints(0.74);
     } else if (state.dimension === "through") {
-      drawAmbient(0.85);
-      drawFacets(0.58);
-      draw3DLines(state.latticeLines, 1.00, false);
-      draw3DLines(state.fibonacciLines, 1.10, false);
-      draw3DLines(state.crystalLines, 0.30, true);
-      drawPoints(0.86, false);
-      drawGlints(0.38);
-      drawRim(0.86);
+      drawAmbient(0.76);
+      drawFacets(0.64);
+      drawLines(state.latticeSupportLines, latticeLineColor, 0.48, false);
+      drawLines(state.latticeCardinalLines, latticeLineColor, 0.62, false);
+      drawPhyllotaxisField(0.92, "through");
+      drawLines(state.gemFacetLines, gemLineColor, 0.32, true);
+      drawRim(0.76);
+      drawGlints(0.34);
     } else {
-      drawAmbient(1.0);
-      drawBackgroundLattice(0.95);
-      drawMemoryBands(0.95);
-      drawFacets(0.55);
-      draw3DLines(state.latticeLines, 1.05, false);
-      draw3DLines(state.fibonacciLines, 1.20, false);
-      draw3DLines(state.crystalLines, 0.42, true);
-      drawPoints(1.0, false);
-      drawGlints(0.45);
-      drawRim(1.0);
+      drawAmbient(0.88);
+      drawBackgroundLattice(0.36);
+      drawCoreGlow(0.54);
+      drawFacets(0.68);
+      drawMemoryBands(0.44);
+      drawLines(state.latticeSupportLines, latticeLineColor, 0.58, false);
+      drawLines(state.latticeCardinalLines, latticeLineColor, 0.72, false);
+      drawPhyllotaxisField(1.08, "full");
+      drawLines(state.gemFacetLines, gemLineColor, 0.38, true);
+      drawRim(0.88);
+      drawGlints(0.38);
     }
 
     state.renderCount += 1;
@@ -719,12 +970,12 @@
       if (Math.abs(state.velocityPitch) < 0.00008) state.velocityPitch = 0;
 
       if (state.velocityYaw === 0 && state.velocityPitch === 0) {
-        state.yaw += Math.sin(state.time * 0.24) * dt * 0.014;
+        state.yaw += Math.sin(state.time * 0.24) * dt * 0.012;
       }
     }
 
     state.pitch = clamp(state.pitch, -0.92, 0.74);
-    state.roll = Math.sin(state.time * 0.18) * 0.015;
+    state.roll = Math.sin(state.time * 0.18) * 0.014;
 
     render();
     state.raf = window.requestAnimationFrame(frame);
@@ -778,8 +1029,11 @@
 
     canvas.setAttribute("data-showroom-diamond-g2-renderer", CONTRACT);
     canvas.setAttribute("data-previous-renderer", PREVIOUS);
-    canvas.setAttribute("data-visual-variants", "object,memory,behind,through,full");
-    canvas.setAttribute("data-freeze-guard", "bounded-renderer");
+    canvas.setAttribute("data-object-only", "physical-gem-no-dots-no-lattice");
+    canvas.setAttribute("data-sunflower-phyllotaxis", "active-in-lattice-through-and-full-proof");
+    canvas.setAttribute("data-phyllotaxis-seeds", String(PHYLLOTAXIS_SEEDS));
+    canvas.setAttribute("data-restrained-lattice", "true");
+    canvas.setAttribute("data-freeze-guard", "bounded-renderer-no-per-frame-status-publish");
 
     state.canvas = canvas;
     state.ctx = canvas.getContext("2d", { alpha: true });
@@ -937,8 +1191,8 @@
   }
 
   function reset() {
-    state.yaw = -0.64;
-    state.pitch = -0.20;
+    state.yaw = -0.62;
+    state.pitch = -0.18;
     state.roll = 0.02;
     state.velocityYaw = 0;
     state.velocityPitch = 0;
@@ -968,7 +1222,10 @@
     if (inspectButton) {
       inspectButton.addEventListener("click", () => {
         const copy = DIMENSIONS[state.dimension] || DIMENSIONS.object;
-        setText("[data-showroom-diamond-status]", `${copy.status} · ${LATTICE_SEATS} seats · bounded renderer`);
+        setText(
+          "[data-showroom-diamond-status]",
+          `${copy.status} · 16 × 16 / 256 seats · sunflower phyllotaxis renderer`
+        );
         publishStatus("inspect");
       }, signal ? { signal } : false);
     }
@@ -983,26 +1240,43 @@
       target: "/showroom/index.diamond.js",
       role: "diamond_renderer",
 
-      object: "G2_visual_variants_bounded_gem_globe_proof_object",
+      object: "G2_physical_gem_restrained_lattice_sunflower_phyllotaxis_core_spiral",
       activeLens: state.lens,
       activeDimension: state.dimension,
       variants: Object.keys(DIMENSIONS),
 
+      objectOnlyPhysicalGem: true,
+      objectOnlyDots: false,
+      objectOnlyLattice: false,
+      objectOnlySpiral: false,
+
+      restrainedLattice: true,
+      sunflowerPhyllotaxisSpiral: true,
+      coreOriginFibonacciSpiral: true,
+      goldenAngleRadians: GOLDEN_ANGLE,
+      phyllotaxisSeedCount: state.phyllotaxisSeeds.length,
+      phyllotaxisLinkCount: state.phyllotaxisLinks.length,
+      phyllotaxisChronologyCount: state.phyllotaxisChronology.length,
+      fibonacciSequenceVisibleInLattice: "1_1_2_3_5_8_13",
+
       globeInspired: true,
       gemGoverned: true,
       planet: false,
+      audraliaInheritance: false,
+      planetTemplateInheritance: false,
 
       radialNodes: RADIAL_NODES,
       fibonacciBands: FIBONACCI_BANDS,
       latticeSeats: LATTICE_SEATS,
       seatCount: state.seats.length,
       facetCount: state.facets.length,
-      crystalLineCount: state.crystalLines.length,
-      latticeLineCount: state.latticeLines.length,
-      fibonacciLineCount: state.fibonacciLines.length,
-      pointCount: state.points.length,
+      gemFacetLineCount: state.gemFacetLines.length,
+      gemRimLineCount: state.gemRimLines.length,
+      memoryBandCount: state.memoryBands.length,
+      latticeSupportLineCount: state.latticeSupportLines.length,
+      latticeCardinalLineCount: state.latticeCardinalLines.length,
 
-      freezeGuard: "bounded_rendering_no_status_publish_per_frame",
+      freezeGuard: "bounded_rendering_no_per_frame_status_publish",
       geometryBuilt: state.geometryBuilt,
       canvasReady: state.canvasReady,
       initialized: state.initialized,
@@ -1024,14 +1298,19 @@
     });
 
     window.SHOWROOM_DIAMOND_G2_RENDERER_RECEIPT = payload;
-    window.SHOWROOM_DIAMOND_G2_VISUAL_VARIANTS_STATUS = payload;
+    window.SHOWROOM_DIAMOND_G2_SUNFLOWER_PHYLLOTAXIS_STATUS = payload;
     window.DGB_SHOWROOM_DIAMOND_G2_STATUS = payload;
 
     setDataset("showroomDiamondG2RendererContract", CONTRACT);
     setDataset("showroomDiamondG2RendererActive", "true");
     setDataset("showroomDiamondG2Dimension", state.dimension);
     setDataset("showroomDiamondG2Lens", state.lens);
-    setDataset("showroomDiamondG2VisualVariants", "object,memory,behind,through,full");
+    setDataset("showroomDiamondG2ObjectOnlyPhysicalGem", "true");
+    setDataset("showroomDiamondG2ObjectOnlyDots", "false");
+    setDataset("showroomDiamondG2ObjectOnlyLattice", "false");
+    setDataset("showroomDiamondG2RestrainedLattice", "true");
+    setDataset("showroomDiamondG2SunflowerPhyllotaxis", "true");
+    setDataset("showroomDiamondG2CoreOriginFibonacciSpiral", "true");
     setDataset("showroomDiamondG2FreezeGuard", "bounded-renderer");
     setDataset("showroomDiamondG2GeneratedImage", "false");
     setDataset("showroomDiamondG2GraphicBox", "false");
@@ -1110,10 +1389,7 @@
         window.dispatchEvent(new CustomEvent("showroom-diamond-g2-ready", { detail: status() }));
       } catch (_error) {}
     } catch (error) {
-      const message = error && error.message ? error.message : String(error);
-      state.errors.push({ scope: "init", message, time: new Date().toISOString() });
-      setDataset("showroomDiamondG2Error", message);
-      publishStatus("init-error");
+      recordError("init", error);
     }
   }
 

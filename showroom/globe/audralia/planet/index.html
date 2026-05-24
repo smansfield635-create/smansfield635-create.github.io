@@ -4,21 +4,23 @@
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
   data-page="audralia-g2-planet"
-  data-version="G2-FULL-VISUAL-NATIVE"
-  data-contract="AUDRALIA_G2_FULL_VISUAL_NATIVE_INTERACTION_ROUTE_TNT_v1"
+  data-version="G2-ROUTE-ONLY-NATIVE-FIRST"
+  data-contract="AUDRALIA_G2_ROUTE_ONLY_NATIVE_FIRST_VISUAL_TNT_v1"
   data-donor-contract="COMPASS_INTERGALACTIC_COCKPIT_ACCESS_HATCH_TNT_v1"
-  data-recovery-standard="full-donor-visual-native-interaction"
-  data-stack="datum-terrain-surface-ptr"
-  data-renderer="AUDRALIA_G2_PLANET_TERRAIN_RENDERER_FAIL_OPEN_TNT_v1"
+  data-recovery-standard="route-only-native-first-visual"
   data-static-page-usable-without-js="true"
   data-native-dropdown="true"
-  data-route-buttons-bound="route-level"
+  data-native-lens-controls="true"
   data-gem-visual-system="active"
+  data-runtime-stack-held="true"
+  data-ptr-held="true"
+  data-datum-held="true"
+  data-terrain-held="true"
+  data-surface-held="true"
   data-generated-image="false"
   data-graphic-box="false"
   data-hydration-held="true"
   data-active-water="false"
-  data-active-lens="surface"
   data-visual-pass-claimed="false"
   data-final-visual-pass-claim="false"
 >
@@ -30,7 +32,7 @@
   <title>Audralia G2 Planet · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Audralia G2 Planet route using full Compass-donor visual/native interaction: native dropdown, faceted gems, route-level lens controls, credible fallback planet, PTR enhancement held as optional."
+    content="Audralia G2 Planet route-only native-first visual shell: native dropdown, faceted gem lenses, dry planet field, and runtime stack held for the next phase."
   >
 
   <style>
@@ -49,7 +51,6 @@
       --panel:rgba(9,15,31,.88);
       --line:rgba(184,205,255,.18);
       --line-strong:rgba(143,240,195,.44);
-      --danger:rgba(255,151,151,.88);
       --shadow:0 32px 110px rgba(0,0,0,.48);
       --max:1180px;
       --brand-gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
@@ -101,7 +102,7 @@
     a{color:inherit;text-decoration:none}
 
     a:focus-visible,
-    button:focus-visible,
+    label:focus-visible,
     summary:focus-visible,
     [tabindex]:focus-visible{
       outline:2px solid var(--gold);
@@ -114,6 +115,20 @@
       height:0;
       overflow:hidden;
       pointer-events:none;
+    }
+
+    .lens-radio{
+      position:absolute;
+      width:1px;
+      height:1px;
+      margin:-1px;
+      padding:0;
+      border:0;
+      opacity:.001;
+      overflow:hidden;
+      clip:rect(0 0 0 0);
+      clip-path:inset(50%);
+      white-space:nowrap;
     }
 
     .skip{
@@ -561,10 +576,9 @@
     .lens-gem{
       position:relative;
       min-height:4.95rem;
-      border:0;
-      padding:0;
+      display:grid;
+      place-items:center;
       color:rgba(255,244,216,.98);
-      background:transparent;
       cursor:pointer;
       isolation:isolate;
       transform:translateZ(0);
@@ -574,20 +588,37 @@
       inset:.2rem;
     }
 
-    .lens-gem[aria-pressed="true"] .gem-svg{
+    .lens-gem:hover .gem-core{
+      transform:translateY(-.18rem) scale(1.035);
+    }
+
+    #lens-body:focus-visible ~ .shell label[for="lens-body"],
+    #lens-surface:focus-visible ~ .shell label[for="lens-surface"],
+    #lens-terrain:focus-visible ~ .shell label[for="lens-terrain"],
+    #lens-lattice:focus-visible ~ .shell label[for="lens-lattice"],
+    #lens-receipt:focus-visible ~ .shell label[for="lens-receipt"]{
+      outline:2px solid var(--gold);
+      outline-offset:4px;
+      border-radius:1.25rem;
+    }
+
+    #lens-body:checked ~ .shell label[for="lens-body"] .gem-svg,
+    #lens-surface:checked ~ .shell label[for="lens-surface"] .gem-svg,
+    #lens-terrain:checked ~ .shell label[for="lens-terrain"] .gem-svg,
+    #lens-lattice:checked ~ .shell label[for="lens-lattice"] .gem-svg,
+    #lens-receipt:checked ~ .shell label[for="lens-receipt"] .gem-svg{
       filter:
         drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
         drop-shadow(0 0 1.5rem rgba(143,240,195,.30))
         drop-shadow(0 0 .9rem rgba(243,200,111,.20));
     }
 
-    .lens-gem[aria-pressed="true"] .gem-label b{
+    #lens-body:checked ~ .shell label[for="lens-body"] .gem-label b,
+    #lens-surface:checked ~ .shell label[for="lens-surface"] .gem-label b,
+    #lens-terrain:checked ~ .shell label[for="lens-terrain"] .gem-label b,
+    #lens-lattice:checked ~ .shell label[for="lens-lattice"] .gem-label b,
+    #lens-receipt:checked ~ .shell label[for="lens-receipt"] .gem-label b{
       color:var(--green);
-    }
-
-    .lens-gem:hover .gem-core,
-    .lens-gem:focus-visible .gem-core{
-      transform:translateY(-.18rem) scale(1.035);
     }
 
     .gem-core{
@@ -687,7 +718,6 @@
       background:
         radial-gradient(circle at 50% 36%,rgba(26,54,66,.62) 0,rgba(4,11,24,.92) 46%,rgba(1,4,12,.98) 100%);
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-      touch-action:none;
     }
 
     .planet-stage::before,
@@ -795,6 +825,7 @@
         inset -3.8rem -2.8rem 5rem rgba(0,0,0,.58),
         inset 1.2rem 1rem 2.1rem rgba(255,244,216,.12),
         0 0 3.2rem rgba(141,216,255,.18);
+      transition:filter .25s ease,transform .25s ease,box-shadow .25s ease;
     }
 
     .fallback-globe::before{
@@ -817,6 +848,29 @@
         radial-gradient(circle at 32% 24%,rgba(255,255,255,.22),transparent 0 14%,transparent 42%),
         radial-gradient(circle at 68% 70%,rgba(0,0,0,.42),transparent 0 44%),
         linear-gradient(125deg,rgba(255,255,255,.08),transparent 34%,rgba(0,0,0,.24) 72%);
+    }
+
+    #lens-body:checked ~ .shell .fallback-globe{filter:saturate(.82) brightness(.86);transform:scale(.985)}
+    #lens-surface:checked ~ .shell .fallback-globe{filter:saturate(1.06) brightness(1.05);transform:scale(1)}
+    #lens-terrain:checked ~ .shell .fallback-globe{filter:saturate(1.14) contrast(1.14) brightness(1.07);transform:scale(1.018)}
+    #lens-lattice:checked ~ .shell .fallback-globe{filter:saturate(.76) brightness(.76);transform:scale(.995)}
+    #lens-receipt:checked ~ .shell .fallback-globe{filter:saturate(.72) brightness(.74);transform:scale(.972)}
+
+    #lens-lattice:checked ~ .shell .fallback-globe::before{
+      opacity:.88;
+      background:
+        linear-gradient(0deg,transparent 0 47%,rgba(141,216,255,.32) 48%,transparent 49% 100%),
+        linear-gradient(90deg,transparent 0 47%,rgba(141,216,255,.32) 48%,transparent 49% 100%),
+        repeating-linear-gradient(0deg,transparent 0 1.15rem,rgba(141,216,255,.16) 1.18rem 1.22rem),
+        repeating-linear-gradient(90deg,transparent 0 1.15rem,rgba(243,200,111,.14) 1.18rem 1.22rem);
+      transform:none;
+    }
+
+    #lens-receipt:checked ~ .shell .fallback-globe::before{
+      opacity:.34;
+      background:
+        repeating-linear-gradient(0deg,transparent 0 .92rem,rgba(143,240,195,.15) .95rem 1rem),
+        linear-gradient(95deg,transparent 0 9%,rgba(255,232,163,.10) 10%,transparent 13%);
     }
 
     .orbit-gems{
@@ -842,6 +896,7 @@
       letter-spacing:.10em;
       text-transform:uppercase;
       box-shadow:0 0 .8rem rgba(36,120,255,.08),inset 0 1px 0 rgba(255,255,255,.06);
+      transition:border-color .2s ease,color .2s ease,box-shadow .2s ease;
     }
 
     .orbit-chip:nth-child(1){left:50%;top:9%;transform:translateX(-50%)}
@@ -851,32 +906,21 @@
     .orbit-chip:nth-child(5){left:9%;bottom:25%}
     .orbit-chip:nth-child(6){left:10%;top:30%}
 
-    html[data-active-lens="body"] .fallback-globe{filter:saturate(.82) brightness(.86)}
-    html[data-active-lens="surface"] .fallback-globe{filter:saturate(1.06) brightness(1.05)}
-    html[data-active-lens="terrain"] .fallback-globe{filter:saturate(1.12) contrast(1.12) brightness(1.06)}
-    html[data-active-lens="lattice"] .fallback-globe{filter:saturate(.75) brightness(.76)}
-    html[data-active-lens="receipt"] .fallback-globe{filter:saturate(.7) brightness(.72)}
-
-    html[data-active-lens="lattice"] .fallback-globe::before{
-      opacity:.88;
-      background:
-        linear-gradient(0deg,transparent 0 47%,rgba(141,216,255,.32) 48%,transparent 49% 100%),
-        linear-gradient(90deg,transparent 0 47%,rgba(141,216,255,.32) 48%,transparent 49% 100%),
-        repeating-linear-gradient(0deg,transparent 0 1.15rem,rgba(141,216,255,.16) 1.18rem 1.22rem),
-        repeating-linear-gradient(90deg,transparent 0 1.15rem,rgba(243,200,111,.14) 1.18rem 1.22rem);
-      transform:none;
+    #lens-body:checked ~ .shell .orbit-chip[data-lens-chip="body"],
+    #lens-surface:checked ~ .shell .orbit-chip[data-lens-chip="surface"],
+    #lens-terrain:checked ~ .shell .orbit-chip[data-lens-chip="terrain"],
+    #lens-lattice:checked ~ .shell .orbit-chip[data-lens-chip="lattice"],
+    #lens-receipt:checked ~ .shell .orbit-chip[data-lens-chip="receipt"]{
+      border-color:rgba(143,240,195,.52);
+      color:var(--green);
+      box-shadow:0 0 1.2rem rgba(143,240,195,.14),inset 0 1px 0 rgba(255,255,255,.10);
     }
 
     .planet-mount{
       position:absolute;
       inset:0;
-      z-index:4;
-    }
-
-    .planet-mount canvas{
-      display:block;
-      width:100%;
-      height:100%;
+      z-index:0;
+      pointer-events:none;
     }
 
     .stage-label{
@@ -896,6 +940,16 @@
     }
 
     .stage-label strong{color:var(--green)}
+
+    .lens-line{display:none}
+
+    #lens-body:checked ~ .shell .lens-line.body,
+    #lens-surface:checked ~ .shell .lens-line.surface,
+    #lens-terrain:checked ~ .shell .lens-line.terrain,
+    #lens-lattice:checked ~ .shell .lens-line.lattice,
+    #lens-receipt:checked ~ .shell .lens-line.receipt{
+      display:block;
+    }
 
     .section{
       display:grid;
@@ -1128,6 +1182,12 @@
     </defs>
   </svg>
 
+  <input class="lens-radio" type="radio" name="audralia-lens" id="lens-body">
+  <input class="lens-radio" type="radio" name="audralia-lens" id="lens-surface" checked>
+  <input class="lens-radio" type="radio" name="audralia-lens" id="lens-terrain">
+  <input class="lens-radio" type="radio" name="audralia-lens" id="lens-lattice">
+  <input class="lens-radio" type="radio" name="audralia-lens" id="lens-receipt">
+
   <a class="skip" href="#main">Skip to Audralia G2 Planet</a>
 
   <div class="shell">
@@ -1203,24 +1263,24 @@
       <section class="hero" aria-labelledby="page-title">
         <article class="panel intro">
           <div>
-            <div class="kicker">G2 Planet · Full visual/native route recovery</div>
+            <div class="kicker">G2 Planet · Native route shell</div>
             <h1 id="page-title">Audralia G2 Planet</h1>
             <p class="lead">
-              The route now inherits the full Compass-family behavior: native dropdown, faceted gem language, object-level animation, route-level lens controls, a credible dry planet field, and PTR enhancement held as optional.
+              Inspect the dry planet body through native views for body, surface, terrain, lattice, and receipt. The renderer is held for the next phase; the page itself must stand first.
             </p>
 
-            <div class="route-proof-grid" aria-label="Recovery proof">
+            <div class="route-proof-grid" aria-label="Route proof">
               <div class="proof-row">
-                <b>Baseline</b>
-                <span>Compass donor grammar · full visual/native interaction</span>
+                <b>Native</b>
+                <span>dropdown and lens controls work without JavaScript</span>
               </div>
               <div class="proof-row">
-                <b>Route</b>
-                <span>dropdown, gems, stage, mount, lens controls, hidden receipt</span>
+                <b>Visual</b>
+                <span>faceted gems, dry planet field, orbit frame, stable text</span>
               </div>
               <div class="proof-row">
-                <b>Planet</b>
-                <span>credible dry fallback field before PTR enhancement</span>
+                <b>Held</b>
+                <span>datum, terrain, surface, renderer, canvas, and runtime stack</span>
               </div>
               <div class="proof-row">
                 <b>Water</b>
@@ -1229,22 +1289,22 @@
             </div>
           </div>
 
-          <div class="route-proof-grid" aria-label="G2 script order">
+          <div class="route-proof-grid" aria-label="Held stack">
             <div class="proof-row">
-              <b>1 Datum</b>
-              <span>/assets/audralia/clean/runtime/audralia.true-globe.datum.js</span>
+              <b>Datum</b>
+              <span>held for compatibility inspection after route approval</span>
             </div>
             <div class="proof-row">
-              <b>2 Terrain</b>
-              <span>/assets/audralia/clean/terrain/audralia.g2.physical-terrain.child.js</span>
+              <b>Terrain</b>
+              <span>held; no physical child file loaded in this route-only shell</span>
             </div>
             <div class="proof-row">
-              <b>3 Surface</b>
-              <span>/assets/audralia/clean/surface/audralia.g2.surface-material.child.js</span>
+              <b>Surface</b>
+              <span>held; no material child file loaded in this route-only shell</span>
             </div>
             <div class="proof-row">
-              <b>4 PTR</b>
-              <span>/assets/audralia/clean/runtime/audralia.g2.planet-terrain-renderer.js</span>
+              <b>Renderer</b>
+              <span>held; future mount socket present and inert</span>
             </div>
           </div>
         </article>
@@ -1254,7 +1314,7 @@
             <div class="planet-toolbar-head">
               <div>
                 <h2>Planet inspection field</h2>
-                <p>Native route controls work before PTR. The canvas mount may enhance the field later, but it cannot hold the page hostage.</p>
+                <p>Choose a native lens. No JavaScript, runtime, child packets, or canvas are required for this page state.</p>
               </div>
 
               <div class="planet-identity-gem" aria-hidden="true" style="--delay:-.2s;--tilt-a:-1.6deg;--tilt-b:2.4deg;">
@@ -1267,31 +1327,31 @@
               </div>
             </div>
 
-            <div class="lens-controls" aria-label="Audralia G2 lenses">
-              <button class="lens-gem" type="button" data-audralia-planet-lens="body" aria-pressed="false" style="--delay:-.3s;--tilt-a:-1.8deg;--tilt-b:1.8deg;">
+            <div class="lens-controls" aria-label="Audralia G2 native lens controls">
+              <label class="lens-gem" for="lens-body" style="--delay:-.3s;--tilt-a:-1.8deg;--tilt-b:1.8deg;">
                 <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
                 <span class="gem-label"><b>Body</b><span>Dry Mass</span></span>
-              </button>
+              </label>
 
-              <button class="lens-gem" type="button" data-audralia-planet-lens="surface" aria-pressed="true" style="--delay:-.9s;--tilt-a:1.3deg;--tilt-b:-2.2deg;">
+              <label class="lens-gem" for="lens-surface" style="--delay:-.9s;--tilt-a:1.3deg;--tilt-b:-2.2deg;">
                 <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
                 <span class="gem-label"><b>Surface</b><span>Dry Terrain</span></span>
-              </button>
+              </label>
 
-              <button class="lens-gem" type="button" data-audralia-planet-lens="terrain" aria-pressed="false" style="--delay:-1.5s;--tilt-a:-1.4deg;--tilt-b:2.2deg;">
+              <label class="lens-gem" for="lens-terrain" style="--delay:-1.5s;--tilt-a:-1.4deg;--tilt-b:2.2deg;">
                 <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
-                <span class="gem-label"><b>Terrain</b><span>Packet</span></span>
-              </button>
+                <span class="gem-label"><b>Terrain</b><span>Relief</span></span>
+              </label>
 
-              <button class="lens-gem" type="button" data-audralia-planet-lens="lattice" aria-pressed="false" style="--delay:-2.1s;--tilt-a:1.7deg;--tilt-b:-1.7deg;">
+              <label class="lens-gem" for="lens-lattice" style="--delay:-2.1s;--tilt-a:1.7deg;--tilt-b:-1.7deg;">
                 <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
                 <span class="gem-label"><b>Lattice</b><span>256 Seat</span></span>
-              </button>
+              </label>
 
-              <button class="lens-gem" type="button" data-audralia-planet-lens="receipt" aria-pressed="false" style="--delay:-2.7s;--tilt-a:-2deg;--tilt-b:2deg;">
+              <label class="lens-gem" for="lens-receipt" style="--delay:-2.7s;--tilt-a:-2deg;--tilt-b:2deg;">
                 <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaOrganicGem"></use></svg></span>
                 <span class="gem-label"><b>Receipt</b><span>Audit</span></span>
-              </button>
+              </label>
             </div>
           </header>
 
@@ -1299,8 +1359,7 @@
             id="audraliaPlanetInspectionStage"
             class="planet-stage"
             data-audralia-planet-inspection-stage
-            data-active-lens="surface"
-            aria-label="Audralia G2 planet inspection stage"
+            aria-label="Audralia G2 route-only planet stage"
           >
             <div class="stage-stars" aria-hidden="true"></div>
 
@@ -1311,305 +1370,89 @@
             </div>
 
             <div class="orbit-gems" aria-hidden="true">
-              <span class="orbit-chip">Datum</span>
-              <span class="orbit-chip">Terrain</span>
-              <span class="orbit-chip">Surface</span>
-              <span class="orbit-chip">PTR</span>
-              <span class="orbit-chip">Held Water</span>
-              <span class="orbit-chip">Receipt</span>
+              <span class="orbit-chip" data-lens-chip="body">Body</span>
+              <span class="orbit-chip" data-lens-chip="surface">Surface</span>
+              <span class="orbit-chip" data-lens-chip="terrain">Terrain</span>
+              <span class="orbit-chip">Held PTR</span>
+              <span class="orbit-chip" data-lens-chip="lattice">Lattice</span>
+              <span class="orbit-chip" data-lens-chip="receipt">Receipt</span>
             </div>
 
             <div
               id="audraliaPlanetInspectionMount"
               class="planet-mount"
               data-audralia-planet-inspection-mount
-              aria-label="PTR canvas mount"
+              aria-label="Future PTR mount socket; empty and inert in route-only phase"
             ></div>
 
-            <div class="stage-label" data-audralia-planet-stage-label>
-              <strong>Surface</strong> → visible dry terrain surface expression. PTR enhancement is optional; fallback remains visible if packets fail.
+            <div class="stage-label" aria-live="polite">
+              <span class="lens-line body"><strong>Body</strong> → stable dry planetary body baseline. Runtime stack held.</span>
+              <span class="lens-line surface"><strong>Surface</strong> → visible dry terrain surface expression. Runtime stack held.</span>
+              <span class="lens-line terrain"><strong>Terrain</strong> → relief-oriented dry terrain preview. Runtime stack held.</span>
+              <span class="lens-line lattice"><strong>Lattice</strong> → 256-seat inspection posture. No second planet and no canvas.</span>
+              <span class="lens-line receipt"><strong>Receipt</strong> → route-only shell proof. Final visual pass remains false.</span>
             </div>
           </section>
         </article>
       </section>
 
-      <section class="panel section" aria-labelledby="recovery-title">
-        <div class="kicker">Route ownership</div>
-        <h2 id="recovery-title">The route is a full visual/native page first. Packet fidelity comes after survival.</h2>
+      <section class="panel section" aria-labelledby="route-title">
+        <div class="kicker">Route-only proof</div>
+        <h2 id="route-title">The page proves its native shell before the renderer returns.</h2>
 
         <div class="route-statement">
           <div class="statement-card">
-            <b>Route shell</b>
-            <span>The page owns dropdown, navigation, gems, lens controls, stage, mount, fallback visual, hidden receipt, and route status. It does not own planet truth.</span>
+            <b>Native interaction</b>
+            <span>The dropdown is browser-native. The lens controls are radio inputs and labels. No JavaScript is required for this page state.</span>
           </div>
 
           <div class="statement-card">
-            <b>Renderer</b>
-            <span>PTR owns canvas drawing later. It may enhance the route, but the route remains usable if PTR is missing, late, or invalid.</span>
+            <b>Future mount</b>
+            <span>The PTR socket exists, but it is empty and inert here. No canvas is allowed in the route-only phase.</span>
           </div>
 
           <div class="statement-card">
-            <b>Packet stack</b>
-            <span>Datum, terrain, and surface packets increase fidelity when valid. Their absence may not blank the page or freeze the buttons.</span>
+            <b>Dry planet rule</b>
+            <span>Blue may appear as atmosphere, lattice glow, or held memory. It is not active water.</span>
           </div>
         </div>
 
         <template id="route-receipt" data-route-receipt>
-AUDRALIA_G2_FULL_VISUAL_NATIVE_INTERACTION_ROUTE_TNT_v1
+AUDRALIA_G2_ROUTE_ONLY_NATIVE_FIRST_VISUAL_TNT_v1
 donor=COMPASS_INTERGALACTIC_COCKPIT_ACCESS_HATCH_TNT_v1
 route=/showroom/globe/audralia/planet/
 html=/showroom/globe/audralia/planet/index.html
-page=audralia-g2-planet
-version=G2-FULL-VISUAL-NATIVE
 native_dropdown=true
-native_dropdown_selector=details.route-menu[data-audralia-route-menu]
-real_anchor_navigation=true
-gem_visual_system=active
-faceted_svg_gems=true
-object_animation_only=true
-stable_readable_text=true
-route_buttons_bound=route_level
+native_lens_controls=true
+lens_control_method=radio_label_css
+javascript_required=false
+runtime_stack_held=true
+ptr_held=true
+datum_held=true
+terrain_held=true
+surface_held=true
+ptr_mount_present=true
+ptr_mount_empty=true
+ptr_mount_inert=true
+canvas_present=false
+script_stack_loaded=false
 fallback_planet_visible=true
-fallback_planet_credible=true
-static_page_usable_without_js=true
-ptr_policy=enhancement_not_page_dependency
-packet_policy=enhancement_not_survival_dependency
-hydration_held=true
-active_water=false
+faceted_gem_system=active
 generated_image=false
 graphic_box=false
+hydration_held=true
+active_water=false
 visual_pass_claimed=false
 final_visual_pass_claim=false
-next_file=/assets/audralia/clean/runtime/audralia.g2.planet-terrain-renderer.js
-next_contract=AUDRALIA_G2_PLANET_TERRAIN_RENDERER_FAIL_OPEN_TNT_v1
-deploy_marker=AUDRALIA_G2_FULL_VISUAL_NATIVE_INTERACTION_ROUTE_DEPLOY_MARKER_v1
+next_phase=PTR_FAIL_OPEN_SPEC_OPS_AFTER_SCREENSHOT_APPROVAL
+deploy_marker=AUDRALIA_G2_ROUTE_ONLY_NATIVE_FIRST_VISUAL_DEPLOY_MARKER_v1
         </template>
       </section>
     </main>
 
     <footer>
-      AUDRALIA_G2_FULL_VISUAL_NATIVE_INTERACTION_ROUTE_TNT_v1 · native dropdown true · gem system active · fallback planet visible · active water false · final visual pass false.
+      AUDRALIA_G2_ROUTE_ONLY_NATIVE_FIRST_VISUAL_TNT_v1 · HTML + CSS only · native lenses · runtime stack held · active water false · final visual pass false.
     </footer>
   </div>
-
-  <script>
-    (function () {
-      "use strict";
-
-      var CONTRACT = "AUDRALIA_G2_FULL_VISUAL_NATIVE_INTERACTION_ROUTE_TNT_v1";
-      var DONOR_CONTRACT = "COMPASS_INTERGALACTIC_COCKPIT_ACCESS_HATCH_TNT_v1";
-      var ROUTE = "/showroom/globe/audralia/planet/";
-
-      var ACTIVE_LABELS = {
-        body: "<strong>Body</strong> → stable dry planetary body baseline. Route fallback remains visible; PTR enhancement is optional.",
-        surface: "<strong>Surface</strong> → visible dry terrain surface expression. PTR enhancement is optional; fallback remains visible if packets fail.",
-        terrain: "<strong>Terrain</strong> → physical terrain packet expression when available; fallback remains visible.",
-        lattice: "<strong>Lattice</strong> → 256-seat inspection lens. This is not a second planet and not a final visual pass.",
-        receipt: "<strong>Receipt</strong> → route and renderer status. Hidden audit receipt exists; final visual pass remains false."
-      };
-
-      function normalizeLens(value) {
-        var key = String(value || "surface").toLowerCase().replace(/\s+/g, "-");
-        if (key === "ptr") return "terrain";
-        if (key === "full") return "surface";
-        if (key === "boundary") return "lattice";
-        return ACTIVE_LABELS[key] ? key : "surface";
-      }
-
-      function getPtr() {
-        return window.AUDRALIA_G2_PTR || window.AUDRALIA_G2_PLANET_TERRAIN_RENDERER || null;
-      }
-
-      function applyLens(value) {
-        var lens = normalizeLens(value);
-        var stage = document.querySelector("#audraliaPlanetInspectionStage");
-        var label = document.querySelector("[data-audralia-planet-stage-label]");
-
-        document.documentElement.dataset.activeLens = lens;
-        document.documentElement.dataset.audraliaActiveLens = lens;
-
-        if (stage) {
-          stage.dataset.activeLens = lens;
-          stage.dataset.audraliaActiveLens = lens;
-        }
-
-        document.querySelectorAll("[data-audralia-planet-lens]").forEach(function (button) {
-          button.setAttribute("aria-pressed", normalizeLens(button.dataset.audraliaPlanetLens) === lens ? "true" : "false");
-        });
-
-        if (label) {
-          label.innerHTML = ACTIVE_LABELS[lens];
-        }
-
-        var ptr = getPtr();
-        if (ptr && typeof ptr.setLens === "function") {
-          try {
-            ptr.setLens(lens);
-          } catch (error) {
-            window.AUDRALIA_G2_FULL_VISUAL_NATIVE_LAST_PTR_LENS_ERROR = {
-              contract: CONTRACT,
-              lens: lens,
-              message: error && error.message ? error.message : String(error),
-              time: new Date().toISOString()
-            };
-          }
-        }
-
-        publishRouteStatus();
-      }
-
-      function routeReceipt() {
-        var ptr = getPtr();
-        var ptrStatus = null;
-        var stage = document.querySelector("#audraliaPlanetInspectionStage");
-        var mount = document.querySelector("#audraliaPlanetInspectionMount");
-        var fallback = document.querySelector("[data-audralia-fallback-planet-field]");
-        var menu = document.querySelector("[data-audralia-route-menu]");
-        var buttons = Array.prototype.slice.call(document.querySelectorAll("[data-audralia-planet-lens]"));
-        var canvasCount = mount ? mount.querySelectorAll("canvas").length : 0;
-
-        if (ptr && typeof ptr.status === "function") {
-          try {
-            ptrStatus = ptr.status();
-          } catch (error) {
-            ptrStatus = {
-              error: true,
-              message: error && error.message ? error.message : String(error)
-            };
-          }
-        } else {
-          ptrStatus = window.AUDRALIA_G2_PLANET_RENDERER_STATUS || null;
-        }
-
-        return {
-          contract: CONTRACT,
-          donorContract: DONOR_CONTRACT,
-          route: ROUTE,
-          target: "/showroom/globe/audralia/planet/index.html",
-          workingSiteBehaviorFirst: true,
-          fullVisualNativeInteraction: true,
-          staticPageUsableWithoutJs: true,
-
-          nativeDropdownPresent: Boolean(menu),
-          nativeDropdownWorksWithoutJs: true,
-          realAnchorNavigation: true,
-          facetedGemSystemActive: true,
-          objectAnimationOnly: true,
-          stableReadableText: true,
-
-          stageVisible: Boolean(stage),
-          mountVisible: Boolean(mount),
-          fallbackVisualPresent: Boolean(fallback),
-          fallbackPlanetCredible: true,
-
-          routeButtonsBound: buttons.length === 5,
-          buttonCount: buttons.length,
-          activeLens: document.documentElement.dataset.activeLens || "surface",
-
-          ptrDetected: Boolean(ptr),
-          ptrStatus: ptrStatus,
-          ptrMounted: Boolean(ptrStatus && (ptrStatus.oneCanvasMounted || (ptrStatus.renderReceipt && ptrStatus.renderReceipt.oneCanvasMounted))),
-          canvasCount: canvasCount,
-          oneCanvasMounted: canvasCount === 1 || Boolean(ptrStatus && ptrStatus.oneCanvasMounted),
-          onePlanetRendered: Boolean(ptrStatus && (ptrStatus.onePlanetRendered || (ptrStatus.renderReceipt && ptrStatus.renderReceipt.onePlanetRendered))),
-
-          datumDetected: Boolean(window.AUDRALIA_TRUE_GLOBE_DATUM),
-          terrainDetected: Boolean(window.AUDRALIA_G2_PHYSICAL_TERRAIN_CHILD),
-          surfaceDetected: Boolean(window.AUDRALIA_G2_SURFACE_MATERIAL_CHILD),
-
-          sourceFailureDoesNotBlankPage: true,
-          sourceFailureDoesNotDisableButtons: true,
-          sourceFailureDoesNotRemoveFallback: true,
-
-          hydrationHeld: true,
-          activeHydration: false,
-          activeWater: false,
-          generatedImage: false,
-          graphicBox: false,
-          visualPassClaimed: false,
-          finalVisualPassClaim: false,
-
-          checkedAt: new Date().toISOString()
-        };
-      }
-
-      function publishRouteStatus() {
-        var receipt = routeReceipt();
-
-        document.documentElement.dataset.audraliaG2FullVisualNativeStatus = "active";
-        document.documentElement.dataset.audraliaG2FullVisualNativeContract = CONTRACT;
-        document.documentElement.dataset.audraliaG2NativeDropdownPresent = String(receipt.nativeDropdownPresent);
-        document.documentElement.dataset.audraliaG2GemVisualSystemActive = "true";
-        document.documentElement.dataset.audraliaG2RouteButtonsBound = String(receipt.routeButtonsBound);
-        document.documentElement.dataset.audraliaG2FallbackPlanetVisible = String(receipt.fallbackVisualPresent);
-        document.documentElement.dataset.audraliaG2RoutePtrDetected = String(receipt.ptrDetected);
-        document.documentElement.dataset.audraliaG2RouteCanvasCount = String(receipt.canvasCount);
-        document.documentElement.dataset.audraliaG2RouteActiveWater = "false";
-        document.documentElement.dataset.audraliaG2RouteFinalVisualPassClaim = "false";
-
-        window.AUDRALIA_G2_FULL_VISUAL_NATIVE_INTERACTION_ROUTE_STATUS = receipt;
-        window.AUDRALIA_G2_ROUTE_RECOVERY_RECEIPT = receipt;
-        window.AUDRALIA_G2_ROUTE_CUTOVER_STATUS = receipt;
-
-        return receipt;
-      }
-
-      document.addEventListener("click", function (event) {
-        var button = event.target && event.target.closest
-          ? event.target.closest("[data-audralia-planet-lens]")
-          : null;
-
-        if (!button) return;
-
-        event.preventDefault();
-        applyLens(button.dataset.audraliaPlanetLens);
-      });
-
-      function boot() {
-        applyLens(document.documentElement.dataset.activeLens || "surface");
-        publishRouteStatus();
-
-        window.setTimeout(publishRouteStatus, 250);
-        window.setTimeout(publishRouteStatus, 700);
-        window.setTimeout(publishRouteStatus, 1400);
-        window.setTimeout(publishRouteStatus, 2400);
-      }
-
-      window.AUDRALIA_G2_ROUTE_RECOVERY_APPLY_LENS = applyLens;
-      window.AUDRALIA_G2_ROUTE_RECOVERY_STATUS = publishRouteStatus;
-      window.AUDRALIA_G2_FULL_VISUAL_NATIVE_APPLY_LENS = applyLens;
-      window.AUDRALIA_G2_FULL_VISUAL_NATIVE_STATUS = publishRouteStatus;
-
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", boot, { once: true });
-      } else {
-        boot();
-      }
-    })();
-  </script>
-
-  <!-- G2 stack loads after the route shell is already operational. PTR is enhancement, not page survival. -->
-  <script src="/assets/audralia/clean/runtime/audralia.true-globe.datum.js?v=AUDRALIA_G2_FULL_VISUAL_NATIVE_INTERACTION_ROUTE_TNT_v1"></script>
-  <script src="/assets/audralia/clean/terrain/audralia.g2.physical-terrain.child.js?v=AUDRALIA_G2_FULL_VISUAL_NATIVE_INTERACTION_ROUTE_TNT_v1"></script>
-  <script src="/assets/audralia/clean/surface/audralia.g2.surface-material.child.js?v=AUDRALIA_G2_FULL_VISUAL_NATIVE_INTERACTION_ROUTE_TNT_v1"></script>
-  <script src="/assets/audralia/clean/runtime/audralia.g2.planet-terrain-renderer.js?v=AUDRALIA_G2_FULL_VISUAL_NATIVE_INTERACTION_ROUTE_TNT_v1"></script>
-
-  <script>
-    (function () {
-      "use strict";
-
-      function refresh() {
-        if (typeof window.AUDRALIA_G2_FULL_VISUAL_NATIVE_STATUS === "function") {
-          window.AUDRALIA_G2_FULL_VISUAL_NATIVE_STATUS();
-        }
-      }
-
-      refresh();
-      window.setTimeout(refresh, 300);
-      window.setTimeout(refresh, 900);
-      window.setTimeout(refresh, 1800);
-      window.setTimeout(refresh, 3200);
-    })();
-  </script>
 </body>
 </html>

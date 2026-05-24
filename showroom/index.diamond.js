@@ -1,33 +1,29 @@
 // TARGET FILE: /showroom/index.diamond.js
 // TNT FULL-FILE REPLACEMENT
-// SHOWROOM_DIAMOND_G2_GEM_GLOBE_PROOF_OBJECT_RENDERER_TNT_v1
+// SHOWROOM_DIAMOND_G2_DIMENSIONAL_PROOF_OBJECT_RENDERER_TNT_v2
 //
-// Role:
-// - G2 Diamond renderer authority.
-// - Owns the native-rendered proof object.
-// - Creates the globe-inspired but gem-governed Diamond.
-// - Preserves Crystal Form / Lattice Structure.
-// - Preserves 16 radial nodes × 16 Fibonacci bands = 256 lattice seats.
-// - Publishes window.DGBShowroomDiamondG2.
+// Owns:
+// - G2 Diamond proof-object renderer
+// - globe-inspired but gem-governed geometry
+// - Crystal Form / Lattice Structure
+// - dimensional visual modes
+// - drag / glide / reset
+// - renderer API
 //
 // Does not own:
-// - HTML shell.
-// - Route narrative.
-// - Jump-pad navigation.
-// - Page UI controller.
-// - Audralia.
-// - Planet rendering.
-// - Generated images.
-// - GraphicBox.
+// - HTML shell
+// - page narrative
+// - jump-pad routing
+// - UI controller
+// - generated images
+// - GraphicBox
 
 (() => {
   "use strict";
 
-  const CONTRACT = "SHOWROOM_DIAMOND_G2_GEM_GLOBE_PROOF_OBJECT_RENDERER_TNT_v1";
+  const CONTRACT = "SHOWROOM_DIAMOND_G2_DIMENSIONAL_PROOF_OBJECT_RENDERER_TNT_v2";
+  const PREVIOUS = "SHOWROOM_DIAMOND_G2_GEM_GLOBE_PROOF_OBJECT_RENDERER_TNT_v1";
   const FAMILY = "SHOWROOM_DIAMOND_G2_FULL_CONTRACT_RENEWAL_THREE_FILE_FAMILY_v1";
-  const HTML_CONTRACT = "SHOWROOM_DIAMOND_G2_FULL_CONTRACT_RENEWAL_HTML_TNT_v1";
-  const ROUTE = "/showroom/";
-  const TARGET = "/showroom/index.diamond.js";
   const API_NAME = "DGBShowroomDiamondG2";
 
   const RADIAL_NODES = 16;
@@ -45,15 +41,38 @@
   const LENS_COPY = Object.freeze({
     crystal: {
       title: "Crystal Form",
-      route: "Crystal Form → G2 gem-globe proof object",
+      route: "Crystal Form → G2 dimensional proof gem",
       copy:
-        "Crystal Form shows the renewed G2 Diamond as a globe-inspired but gem-governed proof object: imperfect facets, internal world pressure, and a touchable crystalline body."
+        "Crystal Form shows the object first: a globe-inspired but gem-governed Diamond with internal world pressure and imperfect crystalline planes."
     },
     lattice: {
       title: "Lattice Structure",
-      route: "Lattice Structure → 16 radial nodes × 16 Fibonacci bands = 256 lattice seats",
+      route: "Lattice Structure → 16 radial nodes × 16 Fibonacci bands = 256 seats",
       copy:
-        "Lattice Structure reveals the computable proof field beneath the Diamond: sixteen radial nodes through sixteen Fibonacci-governed bands, producing 256 addressable lattice seats."
+        "Lattice Structure reveals the computable proof field beneath the Diamond without replacing the object."
+    }
+  });
+
+  const DIMENSION_COPY = Object.freeze({
+    object: {
+      label: "Object Only",
+      status: "Object Only active · pure G2 proof gem"
+    },
+    memory: {
+      label: "World Memory",
+      status: "World Memory active · internal curvature and coordinate pressure"
+    },
+    behind: {
+      label: "Lattice Behind",
+      status: "Lattice Behind active · proof field behind the object"
+    },
+    through: {
+      label: "Lattice Through",
+      status: "Lattice Through active · structure visible through the gem"
+    },
+    full: {
+      label: "Full Proof",
+      status: "Full Proof active · object plus 16 × 16 / 256 proof field"
     }
   });
 
@@ -68,6 +87,8 @@
     dpr: 1,
 
     lens: "crystal",
+    dimension: "object",
+
     seats: [],
     facets: [],
     edges: [],
@@ -80,6 +101,7 @@
     roll: 0.02,
     velocityYaw: 0,
     velocityPitch: 0,
+
     dragging: false,
     pointerId: null,
     pointerX: 0,
@@ -90,13 +112,12 @@
     lastFrame: 0,
     raf: 0,
     renderCount: 0,
-    duplicateCanvasCount: 0,
 
     geometryBuilt: false,
     canvasReady: false,
     initialized: false,
-    fallbackControlsBound: false,
     stopped: false,
+    duplicateCanvasCount: 0,
     errors: []
   };
 
@@ -125,10 +146,6 @@
     return a + (b - a) * clamp(t, 0, 1);
   }
 
-  function now() {
-    return typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
-  }
-
   function query(selector, root = document) {
     try {
       return root.querySelector(selector);
@@ -143,6 +160,10 @@
     } catch (_error) {
       return [];
     }
+  }
+
+  function now() {
+    return typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
   }
 
   function setDataset(key, value) {
@@ -209,10 +230,8 @@
       -0.640, -0.735, -0.805, -0.850
     ];
 
-    const fib = FIBONACCI_SEQUENCE[band];
     const fibNorm = fibonacciWeight(band);
     const angle = (radial / RADIAL_NODES) * TAU;
-    const role = roleForBand(band);
 
     const imperfectCut =
       1 +
@@ -221,7 +240,8 @@
       (radial % 4 === 2 ? -0.022 : 0) +
       (hash01(band * 23 + radial * 11) - 0.5) * 0.040;
 
-    const globePressure = 1 + Math.sin((band / (FIBONACCI_BANDS - 1)) * Math.PI) * 0.055;
+    const worldPressure = Math.sin((band / (FIBONACCI_BANDS - 1)) * Math.PI);
+    const globePressure = 1 + worldPressure * 0.055;
     const fibonacciBreath = 1 + (fibNorm - 0.5) * 0.065;
 
     const radius = radiusProfile[band] * imperfectCut * globePressure * fibonacciBreath;
@@ -234,8 +254,8 @@
       seatIndex: band * RADIAL_NODES + radial,
       band,
       radial,
-      role,
-      fibonacci: fib,
+      role: roleForBand(band),
+      fibonacci: FIBONACCI_SEQUENCE[band],
       fibonacciWeight: fibNorm,
       angle,
       radius,
@@ -245,8 +265,7 @@
       z: Math.sin(angle) * radius * zScale,
       major: radial % 4 === 0 || band % 4 === 0,
       secondary: radial % 2 === 0 || band % 2 === 0,
-      worldPressure: Math.sin((band / (FIBONACCI_BANDS - 1)) * Math.PI),
-      colorSeed: band * 31 + radial * 17
+      worldPressure
     });
   }
 
@@ -255,11 +274,9 @@
 
     for (let band = 0; band < FIBONACCI_BANDS; band += 1) {
       const ring = [];
-
       for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
         ring.push(makeSeat(band, radial));
       }
-
       rings.push(Object.freeze(ring));
     }
 
@@ -311,7 +328,7 @@
         const a = seat(band, radial);
         const b = seat(band, radial + 1);
 
-        addLine(a, b, "crystal-band-edge", band === 6 || band === 7 || band === 8 ? 1.85 : a.major ? 1.50 : 0.88);
+        addLine(a, b, "crystal-band-edge", band >= 6 && band <= 8 ? 1.85 : a.major ? 1.50 : 0.88);
         addLine(a, b, "lattice-ring", a.major ? 1.45 : 0.82);
       }
     }
@@ -331,13 +348,10 @@
 
       for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
         const a = seat(band, radial);
-        const forward = seat(band + 1, radial + offset);
-        const reverse = seat(band + 1, radial - offset);
-
-        addLine(a, forward, `fibonacci-forward-${offset}`, radial % 4 === 0 || band % 4 === 0 ? 1.20 : 0.74);
+        addLine(a, seat(band + 1, radial + offset), `fibonacci-forward-${offset}`, radial % 4 === 0 || band % 4 === 0 ? 1.20 : 0.74);
 
         if (band % 2 === 0) {
-          addLine(a, reverse, `fibonacci-return-${offset}`, radial % 4 === 0 ? 0.95 : 0.62);
+          addLine(a, seat(band + 1, radial - offset), `fibonacci-return-${offset}`, radial % 4 === 0 ? 0.95 : 0.62);
         }
       }
     }
@@ -345,7 +359,6 @@
     for (let band = 0; band < FIBONACCI_BANDS; band += 1) {
       for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
         const s = seat(band, radial);
-
         points.push(Object.freeze({
           seat: s,
           size: s.major ? 4.8 : s.secondary ? 3.4 : 2.4,
@@ -440,30 +453,15 @@
     let a = 0.58;
 
     if (role === "table") {
-      r = 238;
-      g = 252;
-      b = 255;
-      a = 0.82;
+      r = 238; g = 252; b = 255; a = 0.82;
     } else if (role === "crown") {
-      r = lerp(126, 226, fib * 1.8);
-      g = lerp(210, 244, t);
-      b = 255;
-      a = 0.72;
+      r = lerp(126, 226, fib * 1.8); g = lerp(210, 244, t); b = 255; a = 0.72;
     } else if (role === "girdle") {
-      r = 255;
-      g = lerp(193, 231, t);
-      b = lerp(88, 168, pulse);
-      a = 0.76;
+      r = 255; g = lerp(193, 231, t); b = lerp(88, 168, pulse); a = 0.76;
     } else if (role === "pavilion") {
-      r = lerp(35, 98, t);
-      g = lerp(88, 176, t);
-      b = lerp(190, 255, world);
-      a = 0.76;
+      r = lerp(35, 98, t); g = lerp(88, 176, t); b = lerp(190, 255, world); a = 0.76;
     } else {
-      r = 38;
-      g = 75;
-      b = 130;
-      a = 0.70;
+      r = 38; g = 75; b = 130; a = 0.70;
     }
 
     const light = clamp(0.70 + t * 0.35 + pulse * 0.08, 0.52, 1.18);
@@ -483,13 +481,8 @@
         : `rgba(117,205,255,${0.44 * alphaScale})`;
     }
 
-    if (line.family.indexOf("cardinal") >= 0) {
-      return `rgba(255,228,143,${0.76 * alphaScale})`;
-    }
-
-    if (line.family.indexOf("diagonal") >= 0) {
-      return `rgba(232,249,255,${0.30 * alphaScale})`;
-    }
+    if (line.family.indexOf("cardinal") >= 0) return `rgba(255,228,143,${0.76 * alphaScale})`;
+    if (line.family.indexOf("diagonal") >= 0) return `rgba(232,249,255,${0.30 * alphaScale})`;
 
     return `rgba(185,235,255,${0.46 * alphaScale})`;
   }
@@ -502,31 +495,29 @@
   function drawAmbientField() {
     const ctx = state.ctx;
     const m = metrics();
-    const cx = m.centerX;
-    const cy = m.centerY;
-    const r = m.scale * 1.54;
 
     ctx.save();
 
-    const glow = ctx.createRadialGradient(cx, cy, m.scale * 0.10, cx, cy, r);
+    const glow = ctx.createRadialGradient(m.centerX, m.centerY, m.scale * 0.10, m.centerX, m.centerY, m.scale * 1.54);
     glow.addColorStop(0, "rgba(141,216,255,0.18)");
     glow.addColorStop(0.35, "rgba(36,120,255,0.08)");
     glow.addColorStop(0.72, "rgba(243,200,111,0.06)");
     glow.addColorStop(1, "rgba(0,0,0,0)");
 
     ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, TAU);
+    ctx.arc(m.centerX, m.centerY, m.scale * 1.54, 0, TAU);
     ctx.fillStyle = glow;
     ctx.fill();
 
     ctx.restore();
   }
 
-  function drawFacets() {
+  function drawFacets(alpha = 1) {
     const ctx = state.ctx;
     const sorted = state.facets.slice().sort((a, b) => facetDepth(a) - facetDepth(b));
 
     ctx.save();
+    ctx.globalAlpha = alpha;
 
     for (const facet of sorted) {
       const a = projectSeat(facet.a);
@@ -579,7 +570,6 @@
       ctx.beginPath();
       ctx.moveTo(a.x, a.y);
       ctx.lineTo(b.x, b.y);
-
       ctx.strokeStyle = edgeColor(line, alphaScale * clamp(0.58 + depth * 0.48, 0.22, 1.0) * pulse);
       ctx.lineWidth = Math.max(0.45, state.dpr * line.weight * (0.58 + depth * 0.35));
       ctx.stroke();
@@ -588,16 +578,15 @@
     ctx.restore();
   }
 
-  function drawPoints(alphaScale = 1) {
+  function drawPoints(alphaScale = 1, majorOnly = false) {
     const ctx = state.ctx;
 
     ctx.save();
 
     for (const point of state.points) {
+      if (majorOnly && !point.major) continue;
+
       const p = projectSeat(point.seat);
-
-      if (state.lens === "crystal" && !point.major) continue;
-
       const alpha = p.frontFacing
         ? (point.major ? 0.90 : point.secondary ? 0.62 : 0.40)
         : (point.major ? 0.18 : 0.08);
@@ -615,14 +604,12 @@
     ctx.restore();
   }
 
-  function drawWorldPressureCurves() {
+  function drawWorldMemoryCurves(alpha = 1) {
     const ctx = state.ctx;
-
-    if (state.lens !== "crystal") return;
+    const rings = [2, 4, 6, 8, 10, 12];
 
     ctx.save();
-
-    const rings = [2, 4, 6, 8, 10, 12];
+    ctx.globalAlpha = alpha;
 
     for (const band of rings) {
       ctx.beginPath();
@@ -655,15 +642,14 @@
     const pulse = 0.5 + Math.sin(state.time * 1.8) * 0.5;
 
     ctx.save();
-
     ctx.translate(m.centerX, m.centerY);
     ctx.rotate(-0.52 + state.roll * 2);
 
     const glint = ctx.createLinearGradient(-m.scale * 0.9, 0, m.scale * 0.9, 0);
-    glint.addColorStop(0.00, "rgba(255,255,255,0)");
+    glint.addColorStop(0, "rgba(255,255,255,0)");
     glint.addColorStop(0.46, `rgba(255,255,255,${0.18 + pulse * 0.24})`);
     glint.addColorStop(0.54, `rgba(255,230,150,${0.10 + pulse * 0.14})`);
-    glint.addColorStop(1.00, "rgba(255,255,255,0)");
+    glint.addColorStop(1, "rgba(255,255,255,0)");
 
     ctx.fillStyle = glint;
     ctx.globalCompositeOperation = "screen";
@@ -672,28 +658,25 @@
     ctx.restore();
   }
 
-  function drawSilhouetteRim() {
+  function drawRim() {
     const ctx = state.ctx;
     const m = metrics();
-
-    const girdleSeats = state.seats.filter((seat) => seat.band === 6 || seat.band === 7 || seat.band === 8);
-    const projected = girdleSeats.map(projectSeat);
+    const seats = state.seats.filter((seat) => seat.band >= 6 && seat.band <= 8);
+    const projected = seats.map(projectSeat);
 
     if (!projected.length) return;
 
     ctx.save();
 
     ctx.beginPath();
-    for (let i = 0; i < projected.length; i += 1) {
-      const p = projected[i];
-
+    projected.forEach((p, i) => {
       if (i === 0) ctx.moveTo(p.x, p.y);
       else ctx.lineTo(p.x, p.y);
-    }
+    });
     ctx.closePath();
 
     ctx.strokeStyle = "rgba(255,231,150,0.44)";
-    ctx.lineWidth = Math.max(1.0, state.dpr * 1.08);
+    ctx.lineWidth = Math.max(1, state.dpr * 1.08);
     ctx.stroke();
 
     const rim = ctx.createRadialGradient(m.centerX, m.centerY, m.scale * 0.82, m.centerX, m.centerY, m.scale * 1.28);
@@ -715,25 +698,33 @@
     clearCanvas();
     drawAmbientField();
 
-    if (state.lens === "crystal") {
-      drawFacets();
-      drawWorldPressureCurves();
-      drawLines(state.edges, 0.72, true);
-      drawPoints(0.76);
-      drawGlints();
-      drawSilhouetteRim();
-    } else {
-      drawFacets();
-      state.ctx.save();
-      state.ctx.globalAlpha = 0.22;
-      drawLines(state.edges, 0.45, false);
-      state.ctx.restore();
-
-      drawLines(state.latticeLines, 0.86, false);
-      drawLines(state.fibonacciLines, 0.94, false);
-      drawPoints(1.0);
-      drawSilhouetteRim();
+    if (state.dimension === "behind") {
+      drawLines(state.latticeLines, 0.36, false);
+      drawLines(state.fibonacciLines, 0.32, false);
+      drawPoints(0.40, false);
     }
+
+    if (state.dimension === "full") {
+      drawLines(state.latticeLines, 0.82, false);
+      drawLines(state.fibonacciLines, 0.90, false);
+      drawPoints(0.86, false);
+      drawFacets(0.62);
+      drawLines(state.edges, 0.50, true);
+    } else if (state.dimension === "through" || state.lens === "lattice") {
+      drawFacets(0.72);
+      drawLines(state.latticeLines, 0.72, false);
+      drawLines(state.fibonacciLines, 0.78, false);
+      drawPoints(0.78, false);
+      drawLines(state.edges, 0.42, true);
+    } else {
+      drawFacets(1);
+      if (state.dimension === "memory") drawWorldMemoryCurves(1);
+      drawLines(state.edges, 0.72, true);
+      drawPoints(0.72, true);
+    }
+
+    drawGlints();
+    drawRim();
 
     state.renderCount += 1;
     publishStatus("render");
@@ -766,38 +757,7 @@
     state.roll = Math.sin(state.time * 0.18) * 0.015;
 
     render();
-
     state.raf = window.requestAnimationFrame(frame);
-  }
-
-  function start() {
-    if (!state.raf && !state.stopped) {
-      state.raf = window.requestAnimationFrame(frame);
-    }
-  }
-
-  function stop() {
-    state.stopped = true;
-
-    if (state.raf) {
-      try {
-        window.cancelAnimationFrame(state.raf);
-      } catch (_error) {}
-    }
-
-    state.raf = 0;
-
-    if (state.resizeObserver) {
-      try {
-        state.resizeObserver.disconnect();
-      } catch (_error2) {}
-    }
-
-    if (abortController) {
-      try {
-        abortController.abort();
-      } catch (_error3) {}
-    }
   }
 
   function resizeCanvas() {
@@ -830,16 +790,13 @@
       state.stage.appendChild(canvas);
     }
 
-    const canvases = all("canvas", state.stage);
-
-    for (const item of canvases) {
-      if (item === canvas) continue;
-
+    all("canvas", state.stage).forEach((item) => {
+      if (item === canvas) return;
       try {
         item.remove();
         state.duplicateCanvasCount += 1;
       } catch (_error) {}
-    }
+    });
 
     Object.assign(canvas.style, {
       position: "absolute",
@@ -851,13 +808,11 @@
     });
 
     canvas.setAttribute("data-showroom-diamond-g2-renderer", CONTRACT);
-    canvas.setAttribute("data-contract-family", FAMILY);
-    canvas.setAttribute("data-object", "G2_gem_globe_proof_object");
+    canvas.setAttribute("data-previous-renderer", PREVIOUS);
+    canvas.setAttribute("data-object", "G2_dimensional_gem_globe_proof_object");
     canvas.setAttribute("data-globe-inspired", "true");
     canvas.setAttribute("data-gem-governed", "true");
     canvas.setAttribute("data-planet", "false");
-    canvas.setAttribute("data-generated-image", "false");
-    canvas.setAttribute("data-graphic-box", "false");
 
     state.canvas = canvas;
     state.ctx = canvas.getContext("2d", { alpha: true });
@@ -937,32 +892,14 @@
     resizeCanvas();
 
     if (typeof ResizeObserver !== "undefined" && state.stage) {
-      state.resizeObserver = new ResizeObserver(() => {
-        resizeCanvas();
-      });
-
+      state.resizeObserver = new ResizeObserver(resizeCanvas);
       try {
         state.resizeObserver.observe(state.stage);
       } catch (_error) {}
     }
 
     window.addEventListener("resize", resizeCanvas, signal ? { signal, passive: true } : { passive: true });
-    window.addEventListener("orientationchange", () => {
-      setTimeout(resizeCanvas, 120);
-    }, signal ? { signal, passive: true } : { passive: true });
-  }
-
-  function setLens(nextLens) {
-    const lens = nextLens === "lattice" ? "lattice" : "crystal";
-    state.lens = lens;
-
-    setDataset("showroomDiamondG2Lens", lens);
-
-    updateLensCopy();
-    render();
-    publishStatus("set-lens");
-
-    return status();
+    window.addEventListener("orientationchange", () => setTimeout(resizeCanvas, 120), signal ? { signal, passive: true } : { passive: true });
   }
 
   function updateLensCopy() {
@@ -979,6 +916,60 @@
     });
   }
 
+  function updateDimensionControls() {
+    all("[data-diamond-dimension]").forEach((button) => {
+      const active = button.dataset.diamondDimension === state.dimension;
+      button.setAttribute("aria-pressed", active ? "true" : "false");
+      button.toggleAttribute("data-active", active);
+    });
+
+    const copy = DIMENSION_COPY[state.dimension] || DIMENSION_COPY.object;
+    setText("[data-showroom-diamond-status]", copy.status);
+    setText("[data-diamond-dimension-label]", copy.label);
+  }
+
+  function setLens(nextLens) {
+    state.lens = nextLens === "lattice" ? "lattice" : "crystal";
+
+    if (state.lens === "lattice" && state.dimension === "object") {
+      state.dimension = "through";
+    }
+
+    if (state.lens === "crystal" && state.dimension === "full") {
+      state.dimension = "object";
+    }
+
+    setDataset("showroomDiamondG2Lens", state.lens);
+    updateLensCopy();
+    updateDimensionControls();
+    render();
+    publishStatus("set-lens");
+
+    return status();
+  }
+
+  function setDimension(nextDimension) {
+    state.dimension = Object.prototype.hasOwnProperty.call(DIMENSION_COPY, nextDimension)
+      ? nextDimension
+      : "object";
+
+    if (state.dimension === "full" || state.dimension === "through") {
+      state.lens = "lattice";
+    }
+
+    if (state.dimension === "object" || state.dimension === "memory" || state.dimension === "behind") {
+      state.lens = "crystal";
+    }
+
+    setDataset("showroomDiamondG2Dimension", state.dimension);
+    updateLensCopy();
+    updateDimensionControls();
+    render();
+    publishStatus("set-dimension");
+
+    return status();
+  }
+
   function reset() {
     state.yaw = -0.64;
     state.pitch = -0.20;
@@ -993,51 +984,43 @@
     return status();
   }
 
-  function bindFallbackControlsForInspection() {
+  function bindFallbackControls() {
     all("[data-diamond-lens]").forEach((button) => {
-      button.addEventListener("click", () => {
-        setLens(button.dataset.diamondLens);
-      }, signal ? { signal } : false);
+      button.addEventListener("click", () => setLens(button.dataset.diamondLens), signal ? { signal } : false);
+    });
+
+    all("[data-diamond-dimension]").forEach((button) => {
+      button.addEventListener("click", () => setDimension(button.dataset.diamondDimension), signal ? { signal } : false);
     });
 
     const resetButton = query("[data-showroom-diamond-reset]");
     if (resetButton) {
-      resetButton.addEventListener("click", () => {
-        reset();
-      }, signal ? { signal } : false);
+      resetButton.addEventListener("click", () => reset(), signal ? { signal } : false);
     }
 
     const inspectButton = query("[data-showroom-diamond-inspect]");
     if (inspectButton) {
       inspectButton.addEventListener("click", () => {
-        const node = query("[data-showroom-diamond-status]");
-        const current = status();
-
-        if (node) {
-          node.textContent =
-            `G2 Diamond active · ${current.activeLens} · ${current.latticeSeats} seats · gem-governed`;
-        }
-
+        const copy = DIMENSION_COPY[state.dimension] || DIMENSION_COPY.object;
+        setText("[data-showroom-diamond-status]", `${copy.status} · ${LATTICE_SEATS} seats`);
         publishStatus("inspect");
       }, signal ? { signal } : false);
     }
-
-    state.fallbackControlsBound = true;
   }
 
   function status() {
     return Object.freeze({
       contract: CONTRACT,
+      previousRenderer: PREVIOUS,
       contractFamily: FAMILY,
-      htmlContract: HTML_CONTRACT,
-      route: ROUTE,
-      target: TARGET,
-      api: API_NAME,
+      route: "/showroom/",
+      target: "/showroom/index.diamond.js",
       role: "diamond_renderer",
 
-      object: "G2_gem_globe_proof_object",
+      object: "G2_dimensional_gem_globe_proof_object",
       objectThesis: "world_compressed_into_a_gem",
       activeLens: state.lens,
+      activeDimension: state.dimension,
 
       globeInspired: true,
       gemGoverned: true,
@@ -1055,12 +1038,12 @@
       fibonacciLineCount: state.fibonacciLines.length,
       pointCount: state.points.length,
 
+      dimensionalOptions: Object.keys(DIMENSION_COPY),
       crystalForm: true,
       latticeStructure: true,
       geometryBuilt: state.geometryBuilt,
       canvasReady: state.canvasReady,
       initialized: state.initialized,
-      fallbackControlsBound: state.fallbackControlsBound,
 
       generatedImage: false,
       graphicBox: false,
@@ -1079,20 +1062,20 @@
     });
 
     window.SHOWROOM_DIAMOND_G2_RENDERER_RECEIPT = payload;
-    window.SHOWROOM_DIAMOND_G2_GEM_GLOBE_PROOF_OBJECT_RENDERER_STATUS = payload;
+    window.SHOWROOM_DIAMOND_G2_DIMENSIONAL_RENDERER_STATUS = payload;
     window.DGB_SHOWROOM_DIAMOND_G2_STATUS = payload;
 
     setDataset("showroomDiamondG2RendererContract", CONTRACT);
     setDataset("showroomDiamondG2RendererActive", "true");
-    setDataset("showroomDiamondG2Object", "G2_gem_globe_proof_object");
-    setDataset("showroomDiamondG2ObjectThesis", "world-compressed-into-a-gem");
+    setDataset("showroomDiamondG2Object", "G2_dimensional_gem_globe_proof_object");
+    setDataset("showroomDiamondG2Dimension", state.dimension);
+    setDataset("showroomDiamondG2Lens", state.lens);
     setDataset("showroomDiamondG2GlobeInspired", "true");
     setDataset("showroomDiamondG2GemGoverned", "true");
     setDataset("showroomDiamondG2Planet", "false");
     setDataset("showroomDiamondG2RadialNodes", RADIAL_NODES);
     setDataset("showroomDiamondG2FibonacciBands", FIBONACCI_BANDS);
     setDataset("showroomDiamondG2LatticeSeats", LATTICE_SEATS);
-    setDataset("showroomDiamondG2Lens", state.lens);
     setDataset("showroomDiamondG2GeneratedImage", "false");
     setDataset("showroomDiamondG2GraphicBox", "false");
 
@@ -1104,17 +1087,44 @@
       contract: CONTRACT,
       contractFamily: FAMILY,
       setLens,
+      setDimension,
       reset,
       render,
       status
     });
   }
 
+  function start() {
+    if (!state.raf && !state.stopped) {
+      state.raf = window.requestAnimationFrame(frame);
+    }
+  }
+
+  function stop() {
+    state.stopped = true;
+
+    if (state.raf) {
+      try {
+        window.cancelAnimationFrame(state.raf);
+      } catch (_error) {}
+    }
+
+    if (state.resizeObserver) {
+      try {
+        state.resizeObserver.disconnect();
+      } catch (_error2) {}
+    }
+
+    if (abortController) {
+      try {
+        abortController.abort();
+      } catch (_error3) {}
+    }
+  }
+
   function announceReady() {
     try {
-      window.dispatchEvent(new CustomEvent("showroom-diamond-g2-ready", {
-        detail: status()
-      }));
+      window.dispatchEvent(new CustomEvent("showroom-diamond-g2-ready", { detail: status() }));
     } catch (_error) {}
   }
 
@@ -1141,8 +1151,9 @@
       buildGeometry();
       bindPointer();
       setupResize();
-      bindFallbackControlsForInspection();
+      bindFallbackControls();
       updateLensCopy();
+      updateDimensionControls();
 
       state.initialized = true;
 
@@ -1162,6 +1173,7 @@
     state,
     contract: CONTRACT,
     setLens,
+    setDimension,
     reset,
     status
   };

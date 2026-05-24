@@ -4,21 +4,22 @@
   lang="en"
   data-route="/showroom/"
   data-page="showroom"
-  data-version="G2-THREE-FILE-CACHE-CATCH"
-  data-contract="SHOWROOM_DIAMOND_G2_HTML_CHILD_JS_CACHE_CATCH_RENEWAL_TNT_v1"
-  data-previous-contract="SHOWROOM_DIAMOND_G2_FULL_CONTRACT_RENEWAL_HTML_TNT_v1"
+  data-version="G2-DIMENSIONAL-OPTIONS"
+  data-contract="SHOWROOM_DIAMOND_G2_DIMENSIONAL_OPTIONS_HTML_RENEWAL_TNT_v2"
+  data-previous-contract="SHOWROOM_DIAMOND_G2_HTML_CHILD_JS_CACHE_CATCH_RENEWAL_TNT_v1"
   data-contract-family="SHOWROOM_DIAMOND_G2_FULL_CONTRACT_RENEWAL_THREE_FILE_FAMILY_v1"
   data-role="showroom-proof-object-route"
   data-three-file-authority="true"
   data-diamond-renderer="/showroom/index.diamond.js"
   data-ui-controller="/showroom/index.ui.js"
-  data-diamond-js-cache-key="SHOWROOM_DIAMOND_G2_GEM_GLOBE_PROOF_OBJECT_RENDERER_TNT_v1_CHILD_CAPTURE"
+  data-diamond-js-cache-key="SHOWROOM_DIAMOND_G2_DIMENSIONAL_PROOF_OBJECT_RENDERER_TNT_v2"
   data-ui-js-cache-key="SHOWROOM_DIAMOND_G2_FULL_CONTRACT_RENEWAL_UI_TNT_v1_CHILD_CAPTURE"
   data-legacy-index-js-superseded="true"
   data-mirrorland-narrative-active="true"
   data-shadows-never-shatter-aligned="true"
   data-diamond-role="first-touchable-proof-object"
   data-object-thesis="world-compressed-into-a-gem"
+  data-dimensional-options="object,memory,behind,through,full"
   data-globe-inspired="true"
   data-gem-governed="true"
   data-radial-nodes="16"
@@ -38,7 +39,7 @@
   <title>Showroom Diamond · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="The Showroom Diamond is the first touchable proof object inside Diamond Gate Bridge: a G2 globe-inspired but gem-governed object with Crystal Form and Lattice Structure views."
+    content="The Showroom Diamond is the first touchable proof object inside Diamond Gate Bridge: a G2 dimensional gem with object, memory, lattice-behind, lattice-through, and full-proof views."
   >
 
   <style>
@@ -56,7 +57,6 @@
       --red:#ff8f8f;
       --panel:rgba(8,13,27,.88);
       --line:rgba(184,205,255,.18);
-      --line2:rgba(243,200,111,.31);
       --shadow:0 34px 115px rgba(0,0,0,.52);
       --max:1220px;
       --gem-path:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
@@ -175,10 +175,7 @@
       text-shadow:0 2px 10px rgba(0,0,0,.86);
     }
 
-    .brand-copy{
-      display:grid;
-      gap:.15rem;
-    }
+    .brand-copy{display:grid;gap:.15rem}
 
     .brand-copy span{
       color:var(--muted);
@@ -225,8 +222,6 @@
       font-weight:950;
       letter-spacing:.075em;
       text-transform:uppercase;
-      box-shadow:0 0 1.15rem rgba(243,200,111,.08),inset 0 1px 0 rgba(255,255,255,.08);
-      backdrop-filter:blur(7px);
     }
 
     .route-menu summary::-webkit-details-marker{display:none}
@@ -238,14 +233,6 @@
       border-right:2px solid rgba(230,238,255,.82);
       border-bottom:2px solid rgba(230,238,255,.82);
       transform:rotate(45deg) translateY(-.12rem);
-    }
-
-    .route-menu[open] summary{
-      border-color:rgba(243,200,111,.70);
-      color:rgba(255,244,216,.98);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(243,200,111,.25),transparent 72%),
-        linear-gradient(180deg,rgba(20,18,45,.84),rgba(4,9,20,.88));
     }
 
     .route-menu[open] summary::after{
@@ -602,13 +589,15 @@
       box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
     }
 
-    .lens-buttons{
+    .lens-buttons,
+    .dimension-buttons{
       display:flex;
       flex-wrap:wrap;
       gap:.5rem;
     }
 
-    .lens-buttons button{
+    .lens-buttons button,
+    .dimension-buttons button{
       min-height:2.35rem;
       border:1px solid rgba(184,205,255,.16);
       border-radius:999px;
@@ -624,15 +613,12 @@
     }
 
     .lens-buttons button[data-active],
-    .lens-buttons button[aria-pressed="true"]{
+    .lens-buttons button[aria-pressed="true"],
+    .dimension-buttons button[data-active],
+    .dimension-buttons button[aria-pressed="true"]{
       color:#06100b;
       border-color:rgba(243,200,111,.88);
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
-    }
-
-    .lens-copy{
-      display:grid;
-      gap:.55rem;
     }
 
     .lens-route{
@@ -886,14 +872,14 @@
       </section>
 
       <section id="diamond-object" class="panel section" aria-labelledby="diamond-title">
-        <div class="kicker">G2 Diamond · globe-inspired, gem-governed</div>
+        <div class="kicker">G2 Diamond · dimensional visual controls</div>
         <h2 id="diamond-title">A world compressed into a gem, not a globe pretending to be one.</h2>
 
         <div class="diamond-wrap">
           <div class="diamond-stage-card">
             <div class="stage-label">
               <b>G2 Proof Object</b>
-              <span>Crystal Form shows the object. Lattice Structure reveals the 16 × 16 / 256 proof field beneath it.</span>
+              <span>Choose Object Only, World Memory, Lattice Behind, Lattice Through, or Full Proof.</span>
             </div>
 
             <div
@@ -912,7 +898,7 @@
             </div>
 
             <div class="stage-status">
-              <span data-showroom-diamond-status>Diamond renderer preparing · G2 proof object</span>
+              <span data-showroom-diamond-status>Object Only active · pure G2 proof gem</span>
               <div class="actions">
                 <button class="button" type="button" data-showroom-diamond-inspect>Inspect</button>
                 <button class="button" type="button" data-showroom-diamond-reset>Reset</button>
@@ -921,17 +907,31 @@
           </div>
 
           <aside class="lens-panel" aria-labelledby="lens-title">
-            <div class="kicker">Lens control</div>
+            <div class="kicker">Integrated controls</div>
+
             <h3 id="lens-title" data-diamond-lens-title>Crystal Form</h3>
-            <span class="lens-route" data-diamond-route-label>Crystal Form → G2 gem-globe proof object</span>
+            <span class="lens-route" data-diamond-route-label>Crystal Form → G2 dimensional proof gem</span>
 
             <p data-diamond-lens-copy>
-              Crystal Form shows the renewed G2 Diamond as a globe-inspired but gem-governed proof object: imperfect facets, internal world pressure, and a touchable crystalline body.
+              Crystal Form shows the object first: a globe-inspired but gem-governed Diamond with internal world pressure and imperfect crystalline planes.
             </p>
 
             <div class="lens-buttons" aria-label="Diamond lens controls">
               <button type="button" data-diamond-lens="crystal" aria-pressed="true" data-active>Crystal Form</button>
               <button type="button" data-diamond-lens="lattice" aria-pressed="false">Lattice Structure</button>
+            </div>
+
+            <div class="proof-card">
+              <b>Dimensional View</b>
+              <span data-diamond-dimension-label>Object Only</span>
+            </div>
+
+            <div class="dimension-buttons" aria-label="Diamond dimensional view controls">
+              <button type="button" data-diamond-dimension="object" aria-pressed="true" data-active>Object Only</button>
+              <button type="button" data-diamond-dimension="memory" aria-pressed="false">World Memory</button>
+              <button type="button" data-diamond-dimension="behind" aria-pressed="false">Lattice Behind</button>
+              <button type="button" data-diamond-dimension="through" aria-pressed="false">Lattice Through</button>
+              <button type="button" data-diamond-dimension="full" aria-pressed="false">Full Proof</button>
             </div>
 
             <div class="proof-grid">
@@ -1010,16 +1010,17 @@
       </section>
 
       <template id="route-receipt" class="receipt" data-route-receipt>
-SHOWROOM_DIAMOND_G2_HTML_CHILD_JS_CACHE_CATCH_RENEWAL_TNT_v1
-previous=SHOWROOM_DIAMOND_G2_FULL_CONTRACT_RENEWAL_HTML_TNT_v1
+SHOWROOM_DIAMOND_G2_DIMENSIONAL_OPTIONS_HTML_RENEWAL_TNT_v2
+previous=SHOWROOM_DIAMOND_G2_HTML_CHILD_JS_CACHE_CATCH_RENEWAL_TNT_v1
 route=/showroom/
 html=/showroom/index.html
 diamond_renderer=/showroom/index.diamond.js
 ui=/showroom/index.ui.js
-diamond_js_cache_key=SHOWROOM_DIAMOND_G2_GEM_GLOBE_PROOF_OBJECT_RENDERER_TNT_v1_CHILD_CAPTURE
+diamond_js_cache_key=SHOWROOM_DIAMOND_G2_DIMENSIONAL_PROOF_OBJECT_RENDERER_TNT_v2
 ui_js_cache_key=SHOWROOM_DIAMOND_G2_FULL_CONTRACT_RENEWAL_UI_TNT_v1_CHILD_CAPTURE
 legacy_index_js_superseded=true
 three_file_authority=true
+dimensional_options=object,memory,behind,through,full
 mirrorland_narrative_active=true
 shadows_never_shatter_aligned=true
 diamond_role=first_touchable_proof_object
@@ -1029,23 +1030,22 @@ gem_governed=true
 radial_nodes=16
 fibonacci_bands=16
 lattice_seats=256
-jump_pad_pattern=preserved_for_reuse
 generated_image=false
 graphic_box=false
 external_image_asset=false
 audralia_inheritance=false
 planet_template_inheritance=false
 visual_pass_claimed=false
-deploy_marker=SHOWROOM_DIAMOND_G2_HTML_CHILD_JS_CACHE_CATCH_DEPLOY_MARKER_v1
+deploy_marker=SHOWROOM_DIAMOND_G2_DIMENSIONAL_OPTIONS_HTML_DEPLOY_MARKER_v2
       </template>
     </main>
 
     <footer>
-      SHOWROOM_DIAMOND_G2_HTML_CHILD_JS_CACHE_CATCH_RENEWAL_TNT_v1 · Showroom · Three-file authority active · Child JS captured.
+      SHOWROOM_DIAMOND_G2_DIMENSIONAL_OPTIONS_HTML_RENEWAL_TNT_v2 · Showroom · Dimensional proof object controls active.
     </footer>
   </div>
 
-  <script src="/showroom/index.diamond.js?v=SHOWROOM_DIAMOND_G2_GEM_GLOBE_PROOF_OBJECT_RENDERER_TNT_v1_CHILD_CAPTURE" defer></script>
+  <script src="/showroom/index.diamond.js?v=SHOWROOM_DIAMOND_G2_DIMENSIONAL_PROOF_OBJECT_RENDERER_TNT_v2" defer></script>
   <script src="/showroom/index.ui.js?v=SHOWROOM_DIAMOND_G2_FULL_CONTRACT_RENEWAL_UI_TNT_v1_CHILD_CAPTURE" defer></script>
 </body>
 </html>

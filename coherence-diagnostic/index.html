@@ -2,17 +2,23 @@
 <html
   lang="en"
   data-route="/coherence-diagnostic/"
-  data-page="coherence-diagnostic-real-world-random-scenario-bank-result-hero"
-  data-contract="COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HERO_TNT_v7"
-  data-previous-contract="COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_TNT_v6"
-  data-spec-ops-contract="COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HERO_SPEC_OPS_v7"
-  data-news-contract="COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HERO_NEWS_v7"
-  data-ccr-contract="COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HERO_CCR_v7"
-  data-change-type="real-world-scenario-bank-and-result-hero-renewal"
+  data-page="coherence-diagnostic-one-question-focus-flow"
+  data-contract="COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COLOR_BOXES_PRIVACY_FRONTLOAD_SECTION_CONTRAST_TNT_v8"
+  data-previous-contract="COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HERO_TNT_v7"
+  data-spec-ops-contract="COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COLOR_BOXES_PRIVACY_FRONTLOAD_SECTION_CONTRAST_SPEC_OPS_v8"
+  data-news-contract="COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COLOR_BOXES_PRIVACY_FRONTLOAD_SECTION_CONTRAST_NEWS_v8"
+  data-ccr-contract="COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COLOR_BOXES_PRIVACY_FRONTLOAD_SECTION_CONTRAST_CCR_v8"
+  data-change-type="one-question-focus-flow-primary-secondary-color-boxes-privacy-frontload-section-contrast"
   data-question-minimum="12"
   data-q1-fixed="true"
   data-q2-fixed="true"
   data-generated-scenario-count="10"
+  data-one-question-focus-flow="active"
+  data-primary-answer-zone="warm-gold"
+  data-secondary-answer-zone="cool-blue-green"
+  data-frontloaded-privacy-assurance="active"
+  data-review-answers="active"
+  data-auto-advance-after-both-selections="active"
   data-real-world-scenario-bank="active"
   data-controlled-randomization="active"
   data-result-hero-three-card-row="active"
@@ -23,20 +29,14 @@
   data-hidden-fragmentation-bucket="active"
   data-visible-answer-type-labels="false"
   data-visible-answer-strength-labels="false"
-  data-incoherence-probes-active="true"
-  data-option-randomization="true"
-  data-adaptive-generation="true"
-  data-primary-secondary-required="true"
-  data-results-visible-without-email="true"
-  data-engineering-lens-active="true"
-  data-technical-readout-result-only="true"
-  data-cognitive-processing-estimate="not-iq"
-  data-preference-type-hypothesis="not-official-mbti"
-  data-email-results-active="false"
-  data-character-profile-save-active="false"
   data-local-grading="true"
   data-no-backend="true"
   data-no-storage="true"
+  data-localstorage="false"
+  data-cookies="false"
+  data-api-call="false"
+  data-email-results-active="false"
+  data-character-profile-save-active="false"
   data-medical-diagnostic="false"
   data-employment-screening="false"
   data-legal-determination="false"
@@ -53,24 +53,20 @@
   <title>Coherence Diagnostic Assessment · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="A local-only adaptive coherence diagnostic using self-rated coherence, claimed archetype blend, randomized real-world scenarios, coherence probes, a visible result hero, and an optional Engineering Lens readout."
+    content="A local-only adaptive coherence diagnostic with one-question focus flow, real-world scenarios, primary and secondary answer zones, visible result hero, and optional Engineering Lens."
   >
 
   <style>
     :root{
       color-scheme:dark;
       --bg:#01050d;
-      --panel:rgba(5,15,32,.84);
       --text:rgba(239,247,255,.96);
       --muted:rgba(239,247,255,.70);
       --faint:rgba(239,247,255,.50);
       --gold:#f4cf83;
-      --gold2:#ffe8a3;
       --blue:#8dd8ff;
       --mint:#a7f3c6;
-      --violet:#ad8cff;
       --fail:#ff6b6b;
-      --line:rgba(255,255,255,.12);
       --max:1180px;
       --shadow:0 34px 120px rgba(0,0,0,.54);
     }
@@ -91,7 +87,6 @@
       color:var(--text);
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       letter-spacing:-.015em;
-      -webkit-font-smoothing:antialiased;
       background:
         radial-gradient(circle at 50% -14%,rgba(78,119,171,.30),transparent 38rem),
         radial-gradient(circle at 12% 18%,rgba(244,207,131,.10),transparent 30rem),
@@ -191,26 +186,9 @@
       letter-spacing:.08em;
     }
 
-    .brand-copy{
-      display:grid;
-      gap:2px;
-      min-width:0;
-    }
-
-    .brand-copy span{
-      color:rgba(141,216,255,.82);
-      font-size:.68rem;
-      letter-spacing:.22em;
-    }
-
-    .brand-copy strong{
-      color:rgba(255,244,216,.96);
-      font-size:clamp(1rem,2.6vw,1.48rem);
-      line-height:1;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
+    .brand-copy{display:grid;gap:2px;min-width:0}
+    .brand-copy span{color:rgba(141,216,255,.82);font-size:.68rem;letter-spacing:.22em}
+    .brand-copy strong{color:rgba(255,244,216,.96);font-size:clamp(1rem,2.6vw,1.48rem);line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
     .route-links{
       display:flex;
@@ -267,8 +245,7 @@
         rgba(0,0,0,.10);
     }
 
-    .kicker,
-    .eyebrow{
+    .kicker,.eyebrow{
       margin:0;
       color:var(--gold);
       font:900 .74rem/1.4 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
@@ -309,17 +286,9 @@
       line-height:1.55;
     }
 
-    .hero-copy{
-      max-width:900px;
-      display:grid;
-      gap:12px;
-    }
+    .hero-copy{max-width:900px;display:grid;gap:12px}
 
-    .pill-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-    }
+    .pill-row{display:flex;flex-wrap:wrap;gap:8px}
 
     .pill{
       min-height:32px;
@@ -330,7 +299,6 @@
       padding:0 11px;
       color:rgba(239,247,255,.76);
       background:rgba(2,8,20,.58);
-      backdrop-filter:blur(10px);
       font-size:.70rem;
       font-weight:850;
       letter-spacing:.04em;
@@ -338,7 +306,8 @@
     }
 
     .warning,
-    .coming-soon{
+    .coming-soon,
+    .privacy-panel{
       border:1px solid rgba(244,207,131,.18);
       border-radius:22px;
       padding:14px 16px;
@@ -349,6 +318,21 @@
       font-size:.88rem;
       font-weight:760;
       line-height:1.45;
+    }
+
+    .privacy-panel{
+      display:grid;
+      gap:8px;
+      border-color:rgba(167,243,198,.28);
+      background:
+        radial-gradient(circle at 8% 0%,rgba(167,243,198,.12),transparent 18rem),
+        radial-gradient(circle at 92% 0%,rgba(141,216,255,.08),transparent 18rem),
+        rgba(255,255,255,.030);
+    }
+
+    .privacy-panel strong{
+      color:rgba(167,243,198,.96);
+      font-size:1rem;
     }
 
     .assessment{
@@ -378,7 +362,6 @@
         linear-gradient(90deg,rgba(244,207,131,.075),transparent 48%),
         radial-gradient(circle at 0% 0%,rgba(141,216,255,.10),transparent 16rem),
         rgba(255,255,255,.030);
-      box-shadow:inset 0 -1px 0 rgba(141,216,255,.05);
     }
 
     .panel-body{
@@ -399,7 +382,6 @@
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
       gap:10px;
-      align-items:stretch;
     }
 
     .sequence-step{
@@ -411,38 +393,20 @@
       border:1px solid rgba(255,255,255,.10);
       border-radius:18px;
       padding:13px;
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.046),rgba(255,255,255,.016)),
-        rgba(0,0,0,.14);
+      background:linear-gradient(180deg,rgba(255,255,255,.046),rgba(255,255,255,.016)),rgba(0,0,0,.14);
       overflow:hidden;
     }
 
     .sequence-step::before{
       content:"";
       position:absolute;
-      left:0;
-      top:0;
-      bottom:0;
-      width:4px;
+      left:0;top:0;bottom:0;width:4px;
       background:linear-gradient(180deg,rgba(141,216,255,.70),rgba(244,207,131,.70));
       opacity:.76;
     }
 
-    .sequence-step b{
-      color:var(--gold);
-      font-size:.66rem;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-    }
-
-    .sequence-step span{
-      color:rgba(239,247,255,.72);
-      font-size:.82rem;
-      line-height:1.28;
-      font-weight:760;
-    }
-
-    .intake-panel .panel-body{gap:22px}
+    .sequence-step b{color:var(--gold);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase}
+    .sequence-step span{color:rgba(239,247,255,.72);font-size:.82rem;line-height:1.28;font-weight:760}
 
     .step-zone{
       position:relative;
@@ -451,51 +415,20 @@
       border:1px solid rgba(255,255,255,.11);
       border-radius:26px;
       padding:clamp(14px,3vw,20px);
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.034),rgba(255,255,255,.012)),
-        rgba(0,0,0,.14);
+      background:linear-gradient(180deg,rgba(255,255,255,.034),rgba(255,255,255,.012)),rgba(0,0,0,.14);
       overflow:hidden;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
     }
 
     .step-zone::before{
       content:"";
       position:absolute;
-      left:0;
-      top:0;
-      bottom:0;
-      width:5px;
+      left:0;top:0;bottom:0;width:5px;
       background:var(--zone-rail,linear-gradient(180deg,rgba(141,216,255,.70),rgba(244,207,131,.70)));
-      box-shadow:0 0 22px rgba(141,216,255,.18);
     }
 
-    .library-zone{
-      --zone-rail:linear-gradient(180deg,rgba(141,216,255,.88),rgba(244,207,131,.68));
-      background:
-        radial-gradient(circle at 8% 0%,rgba(141,216,255,.070),transparent 18rem),
-        radial-gradient(circle at 92% 0%,rgba(244,207,131,.052),transparent 18rem),
-        linear-gradient(180deg,rgba(255,255,255,.030),rgba(255,255,255,.010)),
-        rgba(1,7,18,.40);
-    }
-
-    .primary-zone{
-      --zone-rail:linear-gradient(180deg,rgba(255,232,163,.98),rgba(244,207,131,.70));
-      border-color:rgba(244,207,131,.22);
-      background:
-        radial-gradient(circle at 10% 0%,rgba(244,207,131,.105),transparent 18rem),
-        linear-gradient(180deg,rgba(255,255,255,.040),rgba(255,255,255,.014)),
-        rgba(8,11,24,.62);
-    }
-
-    .secondary-zone{
-      --zone-rail:linear-gradient(180deg,rgba(167,243,198,.88),rgba(141,216,255,.70));
-      border-color:rgba(141,216,255,.20);
-      background:
-        radial-gradient(circle at 10% 0%,rgba(167,243,198,.075),transparent 18rem),
-        radial-gradient(circle at 90% 15%,rgba(141,216,255,.080),transparent 18rem),
-        linear-gradient(180deg,rgba(255,255,255,.038),rgba(255,255,255,.012)),
-        rgba(4,12,24,.62);
-    }
+    .library-zone{--zone-rail:linear-gradient(180deg,rgba(141,216,255,.88),rgba(244,207,131,.68))}
+    .primary-zone{--zone-rail:linear-gradient(180deg,rgba(255,232,163,.98),rgba(244,207,131,.70));border-color:rgba(244,207,131,.22)}
+    .secondary-zone{--zone-rail:linear-gradient(180deg,rgba(167,243,198,.88),rgba(141,216,255,.70));border-color:rgba(141,216,255,.20)}
 
     .step-band{
       position:relative;
@@ -506,9 +439,7 @@
       padding:12px 13px;
       border:1px solid rgba(255,255,255,.10);
       border-radius:18px;
-      background:
-        linear-gradient(90deg,rgba(255,255,255,.050),transparent 72%),
-        rgba(0,0,0,.16);
+      background:linear-gradient(90deg,rgba(255,255,255,.050),transparent 72%),rgba(0,0,0,.16);
     }
 
     .step-index{
@@ -520,49 +451,22 @@
       color:#06101c;
       background:linear-gradient(135deg,#fff0b8,var(--gold));
       font-weight:950;
-      letter-spacing:-.03em;
-      box-shadow:0 10px 24px rgba(0,0,0,.24);
     }
 
     .secondary-zone .step-index{background:linear-gradient(135deg,#d7fff0,var(--blue))}
 
-    .step-copy{
-      display:grid;
-      gap:4px;
-      min-width:0;
-    }
+    .step-copy{display:grid;gap:4px}
+    .step-copy b{color:rgba(255,244,216,.96);font-size:clamp(1rem,2vw,1.22rem);line-height:1.12}
+    .step-copy span{color:rgba(239,247,255,.70);font-size:.86rem;line-height:1.38}
 
-    .step-copy b{
-      color:rgba(255,244,216,.96);
-      font-size:clamp(1rem,2vw,1.22rem);
-      line-height:1.12;
-      letter-spacing:-.025em;
-    }
-
-    .step-copy span{
-      color:rgba(239,247,255,.70);
-      font-size:.86rem;
-      line-height:1.38;
-    }
-
-    .mode-grid,
-    .select-grid,
-    .scale-grid,
-    .option-grid{
-      display:grid;
-      gap:10px;
-    }
-
-    .mode-grid,
-    .select-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .mode-grid,.select-grid,.scale-grid,.option-grid{display:grid;gap:10px}
+    .mode-grid,.select-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     .intake-select-grid{align-items:start;gap:18px}
     .option-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
-    .primary-zone .option-grid,
-    .secondary-zone .option-grid{grid-template-columns:1fr}
+    .primary-zone .option-grid,.secondary-zone .option-grid{grid-template-columns:1fr}
     .scale-grid{grid-template-columns:repeat(10,minmax(0,1fr))}
 
-    .choice-card,
-    .scale-card{
+    .choice-card,.scale-card{
       position:relative;
       min-height:112px;
       display:grid;
@@ -571,24 +475,10 @@
       border:1px solid rgba(255,255,255,.10);
       border-radius:18px;
       padding:13px;
-      background:
-        radial-gradient(circle at 20% 0%,rgba(244,207,131,.06),transparent 9rem),
-        rgba(255,255,255,.028);
+      background:radial-gradient(circle at 20% 0%,rgba(244,207,131,.06),transparent 9rem),rgba(255,255,255,.028);
       overflow:hidden;
       transition:transform .18s ease,border-color .18s ease,background .18s ease,filter .18s ease;
     }
-
-    .primary-zone .choice-card,
-    .secondary-zone .choice-card{
-      min-height:104px;
-      border-radius:20px;
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.044),rgba(255,255,255,.016)),
-        rgba(0,0,0,.18);
-    }
-
-    .primary-zone .choice-card{border-color:rgba(244,207,131,.14)}
-    .secondary-zone .choice-card{border-color:rgba(141,216,255,.14)}
 
     .scale-card{
       min-height:62px;
@@ -599,84 +489,34 @@
       color:rgba(255,244,216,.92);
     }
 
-    .choice-card:hover,
-    .scale-card:hover{
-      transform:translateY(-2px);
-      border-color:rgba(244,207,131,.34);
-      filter:brightness(1.08);
-    }
+    .choice-card:hover,.scale-card:hover{transform:translateY(-2px);border-color:rgba(244,207,131,.34);filter:brightness(1.08)}
+    .choice-card input,.scale-card input{position:absolute;opacity:0;pointer-events:none}
 
-    .choice-card input,
-    .scale-card input{
-      position:absolute;
-      opacity:0;
-      pointer-events:none;
-    }
-
-    .choice-card:has(input:checked),
-    .scale-card:has(input:checked){
+    .choice-card:has(input:checked),.scale-card:has(input:checked){
       border-color:rgba(244,207,131,.58);
-      background:
-        radial-gradient(circle at 20% 0%,rgba(244,207,131,.12),transparent 9rem),
-        linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018)),
-        rgba(6,15,32,.88);
+      background:radial-gradient(circle at 20% 0%,rgba(244,207,131,.12),transparent 9rem),linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018)),rgba(6,15,32,.88);
       box-shadow:0 0 0 1px rgba(244,207,131,.12),0 18px 52px rgba(0,0,0,.26);
     }
 
-    .secondary-zone .choice-card:has(input:checked){
-      border-color:rgba(141,216,255,.58);
-      background:
-        radial-gradient(circle at 20% 0%,rgba(141,216,255,.12),transparent 9rem),
-        linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018)),
-        rgba(6,15,32,.88);
-      box-shadow:0 0 0 1px rgba(141,216,255,.12),0 18px 52px rgba(0,0,0,.26);
-    }
-
-    .choice-card b{
-      color:var(--gold);
-      font-size:.70rem;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-    }
-
-    .secondary-zone .choice-card b{color:rgba(167,243,198,.90)}
-
-    .choice-card strong{
-      color:rgba(255,244,216,.96);
-      font-size:.98rem;
-      line-height:1.16;
-    }
-
-    .choice-card span{
-      color:rgba(239,247,255,.70);
-      font-size:.84rem;
-      line-height:1.35;
-    }
+    .choice-card b{color:var(--gold);font-size:.70rem;letter-spacing:.13em;text-transform:uppercase}
+    .choice-card strong{color:rgba(255,244,216,.96);font-size:.98rem;line-height:1.16}
+    .choice-card span{color:rgba(239,247,255,.70);font-size:.84rem;line-height:1.35}
 
     .archetype-library{display:grid;gap:12px}
 
-    .archetype-detail,
-    .engineering-readout{
+    .archetype-detail,.engineering-readout{
       border:1px solid rgba(255,255,255,.10);
       border-radius:20px;
-      background:
-        radial-gradient(circle at 12% 0%,rgba(141,216,255,.050),transparent 14rem),
-        rgba(255,255,255,.020);
+      background:radial-gradient(circle at 12% 0%,rgba(141,216,255,.050),transparent 14rem),rgba(255,255,255,.020);
       overflow:hidden;
     }
 
-    .archetype-detail[open],
-    .engineering-readout[open]{
+    .archetype-detail[open],.engineering-readout[open]{
       border-color:rgba(244,207,131,.34);
       box-shadow:0 18px 52px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.07);
-      background:
-        radial-gradient(circle at 12% 0%,rgba(141,216,255,.070),transparent 14rem),
-        radial-gradient(circle at 88% 0%,rgba(244,207,131,.050),transparent 14rem),
-        rgba(255,255,255,.025);
     }
 
-    .archetype-detail summary,
-    .engineering-readout summary{
+    .archetype-detail summary,.engineering-readout summary{
       list-style:none;
       display:grid;
       grid-template-columns:minmax(0,1fr) auto;
@@ -685,14 +525,11 @@
       padding:15px 16px;
       color:rgba(255,244,216,.96);
       font-weight:950;
-      letter-spacing:-.02em;
     }
 
-    .archetype-detail summary::-webkit-details-marker,
-    .engineering-readout summary::-webkit-details-marker{display:none}
+    .archetype-detail summary::-webkit-details-marker,.engineering-readout summary::-webkit-details-marker{display:none}
 
-    .archetype-detail summary::after,
-    .engineering-readout summary::after{
+    .archetype-detail summary::after,.engineering-readout summary::after{
       content:"Read";
       min-height:30px;
       display:inline-flex;
@@ -709,29 +546,22 @@
       text-transform:uppercase;
     }
 
-    .archetype-detail[open] summary::after,
-    .engineering-readout[open] summary::after{
+    .archetype-detail[open] summary::after,.engineering-readout[open] summary::after{
       content:"Close";
       color:#06101c;
       background:linear-gradient(135deg,#fff0b8,var(--gold));
       border-color:rgba(244,207,131,.50);
     }
 
-    .archetype-content,
-    .engineering-content{
+    .archetype-content,.engineering-content{
       display:grid;
       gap:16px;
       padding:0 16px 18px;
     }
 
-    .archetype-content p,
-    .engineering-content p{
-      font-size:.94rem;
-      line-height:1.62;
-    }
+    .archetype-content p,.engineering-content p{font-size:.94rem;line-height:1.62}
 
-    .mini-grid,
-    .metric-grid{
+    .mini-grid,.metric-grid{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
       gap:10px;
@@ -739,50 +569,19 @@
 
     .metric-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
 
-    .mini-card,
-    .metric-card,
-    .load-card{
+    .mini-card,.metric-card,.load-card{
       border:1px solid rgba(255,255,255,.08);
       border-radius:16px;
       padding:13px;
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.030),rgba(255,255,255,.010)),
-        rgba(0,0,0,.12);
+      background:linear-gradient(180deg,rgba(255,255,255,.030),rgba(255,255,255,.010)),rgba(0,0,0,.12);
       display:grid;
       gap:8px;
     }
 
-    .mini-card b,
-    .metric-card b,
-    .load-card b{
-      color:var(--gold);
-      font-size:.68rem;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-    }
-
-    .mini-card ul,
-    .load-card ul{
-      margin:0;
-      padding-left:18px;
-      color:rgba(239,247,255,.70);
-      font-size:.86rem;
-      line-height:1.48;
-    }
-
-    .metric-card strong{
-      color:rgba(255,244,216,.96);
-      font-size:1.05rem;
-      line-height:1.2;
-      overflow-wrap:anywhere;
-    }
-
-    .metric-card span{
-      color:rgba(239,247,255,.68);
-      font-size:.82rem;
-      line-height:1.35;
-      overflow-wrap:anywhere;
-    }
+    .mini-card b,.metric-card b,.load-card b{color:var(--gold);font-size:.68rem;letter-spacing:.13em;text-transform:uppercase}
+    .mini-card ul,.load-card ul{margin:0;padding-left:18px;color:rgba(239,247,255,.70);font-size:.86rem;line-height:1.48}
+    .metric-card strong{color:rgba(255,244,216,.96);font-size:1.05rem;line-height:1.2;overflow-wrap:anywhere}
+    .metric-card span{color:rgba(239,247,255,.68);font-size:.82rem;line-height:1.35;overflow-wrap:anywhere}
 
     .metric-bar{
       position:relative;
@@ -801,71 +600,98 @@
       background:linear-gradient(90deg,rgba(141,216,255,.74),rgba(244,207,131,.82));
     }
 
-    .metric-bar.break i{
-      background:linear-gradient(90deg,rgba(255,179,109,.78),rgba(255,107,107,.78));
-    }
+    .metric-bar.break i{background:linear-gradient(90deg,rgba(255,179,109,.78),rgba(255,107,107,.78))}
 
     .technical-summary{
       border:1px solid rgba(244,207,131,.20);
       border-radius:18px;
       padding:14px;
-      background:
-        radial-gradient(circle at 12% 0%,rgba(244,207,131,.08),transparent 12rem),
-        rgba(244,207,131,.030);
+      background:radial-gradient(circle at 12% 0%,rgba(244,207,131,.08),transparent 12rem),rgba(244,207,131,.030);
       color:rgba(255,244,216,.90);
       font-size:.92rem;
       line-height:1.5;
     }
 
-    .scenario-intro{
-      display:grid;
-      gap:10px;
-      border:1px solid rgba(141,216,255,.16);
-      border-radius:22px;
-      padding:16px;
-      background:
-        radial-gradient(circle at 10% 0%,rgba(141,216,255,.10),transparent 16rem),
-        radial-gradient(circle at 92% 0%,rgba(244,207,131,.06),transparent 16rem),
-        rgba(255,255,255,.025);
-    }
+    .diagnostic-stage,.result{display:none}
+    .diagnostic-stage.is-visible,.result.is-visible{display:grid;gap:16px}
 
-    .scenario-intro strong{
-      color:rgba(255,244,216,.96);
-      font-size:clamp(1rem,2vw,1.22rem);
-      line-height:1.2;
-    }
-
-    .scenario-intro span{
-      color:rgba(239,247,255,.70);
-      font-size:.92rem;
-      line-height:1.45;
-    }
-
-    .question{
+    .flow-shell{
       display:grid;
       gap:16px;
-      border:1px solid rgba(255,255,255,.09);
-      border-radius:26px;
-      padding:clamp(15px,3vw,20px);
+    }
+
+    .progress-panel{
+      display:grid;
+      gap:10px;
+      border:1px solid rgba(141,216,255,.18);
+      border-radius:22px;
+      padding:16px;
+      background:radial-gradient(circle at 8% 0%,rgba(141,216,255,.11),transparent 18rem),rgba(255,255,255,.024);
+    }
+
+    .progress-row{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+    }
+
+    .progress-title{
+      color:rgba(255,244,216,.96);
+      font-size:1.05rem;
+      font-weight:950;
+    }
+
+    .progress-count{
+      color:var(--gold);
+      font:900 .72rem/1.3 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .progress-track{
+      height:11px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:999px;
+      background:rgba(255,255,255,.035);
+      overflow:hidden;
+    }
+
+    .progress-track i{
+      display:block;
+      height:100%;
+      width:var(--w,0%);
+      border-radius:999px;
+      background:linear-gradient(90deg,rgba(244,207,131,.88),rgba(167,243,198,.86),rgba(141,216,255,.80));
+    }
+
+    .scenario-card{
+      display:grid;
+      gap:16px;
+      border:1px solid rgba(244,207,131,.18);
+      border-radius:28px;
+      padding:clamp(16px,3vw,22px);
       background:
-        radial-gradient(circle at 8% 0%,rgba(244,207,131,.06),transparent 18rem),
+        radial-gradient(circle at 8% 0%,rgba(244,207,131,.08),transparent 18rem),
         linear-gradient(180deg,rgba(255,255,255,.034),rgba(255,255,255,.012)),
         rgba(255,255,255,.020);
     }
 
-    .question-top{
+    .scenario-head{
       display:grid;
       gap:8px;
+      padding-bottom:2px;
     }
 
-    .question-number{
+    .scenario-number{
       color:var(--gold);
-      font:900 .68rem/1.3 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      font:900 .70rem/1.3 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
       letter-spacing:.16em;
       text-transform:uppercase;
     }
 
-    .question-category{
+    .scenario-category{
       width:fit-content;
       min-height:28px;
       display:inline-flex;
@@ -881,10 +707,7 @@
       text-transform:uppercase;
     }
 
-    .moment-stack{
-      display:grid;
-      gap:10px;
-    }
+    .moment-stack{display:grid;gap:10px}
 
     .moment-block{
       display:grid;
@@ -906,7 +729,6 @@
       color:rgba(255,244,216,.96);
       font-size:clamp(1rem,2vw,1.22rem);
       line-height:1.25;
-      letter-spacing:-.025em;
     }
 
     .moment-block span{
@@ -917,73 +739,174 @@
 
     .coherence-test{
       border-color:rgba(244,207,131,.18);
-      background:
-        radial-gradient(circle at 0% 0%,rgba(244,207,131,.08),transparent 12rem),
-        rgba(244,207,131,.025);
+      background:radial-gradient(circle at 0% 0%,rgba(244,207,131,.08),transparent 12rem),rgba(244,207,131,.025);
     }
 
     .coherence-test b{color:var(--gold)}
 
-    .answer-columns{
+    .answer-zone-grid{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:14px;
+      gap:16px;
+      align-items:start;
     }
 
-    .answer-box{
+    .answer-zone{
+      position:relative;
       display:grid;
-      gap:10px;
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:20px;
-      padding:13px;
-      background:rgba(0,0,0,.16);
+      gap:12px;
+      border-radius:24px;
+      padding:14px;
+      border:1px solid rgba(255,255,255,.11);
+      background:rgba(0,0,0,.18);
+      overflow:hidden;
     }
 
-    .answer-title{
-      color:rgba(141,216,255,.78);
-      font:900 .68rem/1.3 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-      letter-spacing:.14em;
+    .answer-zone::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:0;
+      bottom:0;
+      width:6px;
+      background:var(--zone-color);
+    }
+
+    .answer-zone.primary-answer{
+      --zone-color:linear-gradient(180deg,#fff0b8,var(--gold));
+      border-color:rgba(244,207,131,.36);
+      background:radial-gradient(circle at 10% 0%,rgba(244,207,131,.12),transparent 16rem),rgba(0,0,0,.18);
+    }
+
+    .answer-zone.secondary-answer{
+      --zone-color:linear-gradient(180deg,#d7fff0,var(--blue));
+      border-color:rgba(141,216,255,.30);
+      background:radial-gradient(circle at 10% 0%,rgba(141,216,255,.10),transparent 16rem),rgba(0,0,0,.18);
+    }
+
+    .answer-zone.is-emphasized{
+      box-shadow:0 0 0 1px rgba(141,216,255,.18),0 0 34px rgba(141,216,255,.12);
+      filter:brightness(1.08);
+    }
+
+    .answer-zone.is-selected{
+      box-shadow:0 0 0 1px rgba(244,207,131,.13),0 18px 48px rgba(0,0,0,.22);
+    }
+
+    .secondary-answer.is-selected{
+      box-shadow:0 0 0 1px rgba(141,216,255,.16),0 18px 48px rgba(0,0,0,.22);
+    }
+
+    .answer-zone-head{
+      display:grid;
+      gap:4px;
+      padding-left:4px;
+    }
+
+    .answer-zone-head b{
+      color:rgba(255,244,216,.96);
+      font-size:.76rem;
+      letter-spacing:.13em;
       text-transform:uppercase;
     }
 
-    .answer-box:first-child .answer-title{color:rgba(244,207,131,.86)}
-    .answer-box:last-child .answer-title{color:rgba(167,243,198,.82)}
+    .secondary-answer .answer-zone-head b{color:rgba(167,243,198,.95)}
 
-    .answer-choice{
+    .answer-zone-head span{
+      color:rgba(239,247,255,.70);
+      font-size:.84rem;
+      line-height:1.35;
+    }
+
+    .answer-option{
       position:relative;
       display:grid;
       gap:5px;
       border:1px solid rgba(255,255,255,.09);
       border-radius:16px;
       padding:12px;
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.030),rgba(255,255,255,.010)),
-        rgba(255,255,255,.022);
+      background:linear-gradient(180deg,rgba(255,255,255,.030),rgba(255,255,255,.010)),rgba(255,255,255,.022);
+      text-align:left;
       transition:border-color .18s ease,background .18s ease,transform .18s ease;
     }
 
-    .answer-choice:hover{
+    .answer-option:hover{
       transform:translateY(-1px);
       border-color:rgba(141,216,255,.25);
       background:rgba(141,216,255,.05);
     }
 
-    .answer-choice:has(input:checked){
-      border-color:rgba(244,207,131,.52);
-      background:rgba(244,207,131,.075);
+    .primary-answer .answer-option.is-selected{
+      border-color:rgba(244,207,131,.66);
+      background:rgba(244,207,131,.10);
     }
 
-    .answer-choice input{
-      position:absolute;
-      opacity:0;
-      pointer-events:none;
+    .secondary-answer .answer-option.is-selected{
+      border-color:rgba(141,216,255,.64);
+      background:rgba(141,216,255,.10);
     }
 
-    .answer-choice b{
+    .answer-option b{
       color:rgba(255,244,216,.94);
       font-size:.90rem;
       line-height:1.35;
       font-weight:820;
+    }
+
+    .flow-controls{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:space-between;
+      align-items:center;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:20px;
+      padding:14px;
+      background:rgba(0,0,0,.16);
+    }
+
+    .flow-note{
+      color:rgba(239,247,255,.68);
+      font-size:.88rem;
+      line-height:1.4;
+    }
+
+    .review-panel{
+      display:none;
+      gap:14px;
+      border:1px solid rgba(167,243,198,.20);
+      border-radius:24px;
+      padding:16px;
+      background:radial-gradient(circle at 10% 0%,rgba(167,243,198,.08),transparent 16rem),rgba(255,255,255,.024);
+    }
+
+    .review-panel.is-visible{display:grid}
+
+    .review-list{
+      display:grid;
+      gap:10px;
+    }
+
+    .review-item{
+      display:grid;
+      gap:8px;
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:18px;
+      padding:13px;
+      background:rgba(0,0,0,.14);
+    }
+
+    .review-item b{
+      color:var(--gold);
+      font-size:.72rem;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+
+    .review-item span{
+      color:rgba(239,247,255,.72);
+      font-size:.86rem;
+      line-height:1.4;
     }
 
     .validation{
@@ -999,19 +922,14 @@
 
     .validation.is-visible{display:block}
 
-    .button-row{
+    .button-row,.button-cluster{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
       align-items:center;
-      justify-content:space-between;
     }
 
-    .button-cluster{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-    }
+    .button-row{justify-content:space-between}
 
     .action-btn{
       min-height:44px;
@@ -1021,28 +939,13 @@
       box-shadow:0 12px 36px rgba(0,0,0,.26);
     }
 
-    .action-btn:disabled,
-    .disabled-btn{
+    .action-btn:disabled,.disabled-btn{
       cursor:not-allowed;
       opacity:.55;
       filter:grayscale(.3);
     }
 
-    .ghost-btn{
-      min-height:44px;
-      background:rgba(255,255,255,.040);
-    }
-
-    .diagnostic-stage,
-    .result{
-      display:none;
-    }
-
-    .diagnostic-stage.is-visible,
-    .result.is-visible{
-      display:grid;
-      gap:16px;
-    }
+    .ghost-btn{min-height:44px;background:rgba(255,255,255,.040)}
 
     .result-hero-grid{
       display:grid;
@@ -1058,37 +961,14 @@
       border:1px solid rgba(244,207,131,.28);
       border-radius:26px;
       padding:18px;
-      background:
-        radial-gradient(circle at 12% 0%,rgba(244,207,131,.12),transparent 16rem),
-        radial-gradient(circle at 90% 20%,rgba(141,216,255,.10),transparent 16rem),
-        linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.014)),
-        rgba(255,255,255,.030);
+      background:radial-gradient(circle at 12% 0%,rgba(244,207,131,.12),transparent 16rem),radial-gradient(circle at 90% 20%,rgba(141,216,255,.10),transparent 16rem),rgba(255,255,255,.030);
       box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 18px 54px rgba(0,0,0,.22);
     }
 
-    .result-hero-card.iq-card{
-      border-color:rgba(141,216,255,.26);
-      background:
-        radial-gradient(circle at 12% 0%,rgba(141,216,255,.12),transparent 16rem),
-        radial-gradient(circle at 88% 12%,rgba(244,207,131,.07),transparent 16rem),
-        rgba(255,255,255,.030);
-    }
+    .result-hero-card.iq-card{border-color:rgba(141,216,255,.26);background:radial-gradient(circle at 12% 0%,rgba(141,216,255,.12),transparent 16rem),rgba(255,255,255,.030)}
+    .result-hero-card.type-card{border-color:rgba(167,243,198,.22);background:radial-gradient(circle at 12% 0%,rgba(167,243,198,.10),transparent 16rem),rgba(255,255,255,.030)}
 
-    .result-hero-card.type-card{
-      border-color:rgba(167,243,198,.22);
-      background:
-        radial-gradient(circle at 12% 0%,rgba(167,243,198,.10),transparent 16rem),
-        radial-gradient(circle at 88% 12%,rgba(141,216,255,.08),transparent 16rem),
-        rgba(255,255,255,.030);
-    }
-
-    .hero-label{
-      color:var(--gold);
-      font:900 .70rem/1.3 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-      letter-spacing:.15em;
-      text-transform:uppercase;
-    }
-
+    .hero-label{color:var(--gold);font:900 .70rem/1.3 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;letter-spacing:.15em;text-transform:uppercase}
     .iq-card .hero-label{color:rgba(141,216,255,.90)}
     .type-card .hero-label{color:rgba(167,243,198,.88)}
 
@@ -1101,17 +981,8 @@
       overflow-wrap:anywhere;
     }
 
-    .type-card .hero-value{
-      font-size:clamp(1.75rem,4vw,3.25rem);
-      line-height:.95;
-    }
-
-    .hero-note{
-      color:rgba(239,247,255,.70);
-      font-size:.88rem;
-      line-height:1.36;
-      font-weight:760;
-    }
+    .type-card .hero-value{font-size:clamp(1.75rem,4vw,3.25rem);line-height:.95}
+    .hero-note{color:rgba(239,247,255,.70);font-size:.88rem;line-height:1.36;font-weight:760}
 
     .result-grid{
       display:grid;
@@ -1129,58 +1000,23 @@
       min-height:98px;
     }
 
-    .result-cell b{
-      color:var(--gold);
-      font-size:.68rem;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-    }
+    .result-cell b{color:var(--gold);font-size:.68rem;letter-spacing:.13em;text-transform:uppercase}
+    .result-cell strong{color:rgba(255,244,216,.96);font-size:.98rem;line-height:1.2}
+    .result-cell span,.result-cell li{color:rgba(239,247,255,.70);font-size:.84rem;line-height:1.35}
+    .result-cell ul{margin:0;padding-left:18px}
 
-    .result-cell strong{
-      color:rgba(255,244,216,.96);
-      font-size:.98rem;
-      line-height:1.2;
-    }
-
-    .result-cell span,
-    .result-cell li{
-      color:rgba(239,247,255,.70);
-      font-size:.84rem;
-      line-height:1.35;
-    }
-
-    .result-cell ul{
-      margin:0;
-      padding-left:18px;
-    }
-
-    .coming-soon{
-      display:grid;
-      gap:10px;
-      background:
-        radial-gradient(circle at 12% 0%,rgba(244,207,131,.10),transparent 16rem),
-        radial-gradient(circle at 88% 14%,rgba(141,216,255,.08),transparent 16rem),
-        rgba(255,255,255,.025);
-    }
-
+    .coming-soon{display:grid;gap:10px}
     .coming-soon h3{color:var(--gold)}
 
-    .receipt,
-    [data-route-receipt]{
+    .receipt,[data-route-receipt]{
       display:none!important;
       visibility:hidden!important;
       overflow:hidden!important;
-      width:0!important;
-      height:0!important;
-      max-width:0!important;
-      max-height:0!important;
-      margin:0!important;
-      padding:0!important;
-      border:0!important;
-      opacity:0!important;
-      pointer-events:none!important;
-      position:absolute!important;
-      clip-path:inset(50%)!important;
+      width:0!important;height:0!important;
+      max-width:0!important;max-height:0!important;
+      margin:0!important;padding:0!important;border:0!important;
+      opacity:0!important;pointer-events:none!important;
+      position:absolute!important;clip-path:inset(50%)!important;
       white-space:nowrap!important;
     }
 
@@ -1193,20 +1029,10 @@
     }
 
     @media (max-width:940px){
-      .sequence-rail,
-      .mode-grid,
-      .select-grid,
-      .option-grid,
-      .result-grid,
-      .mini-grid,
-      .metric-grid,
-      .metric-grid.three,
-      .result-hero-grid{
+      .sequence-rail,.mode-grid,.select-grid,.option-grid,.result-grid,.mini-grid,.metric-grid,.metric-grid.three,.result-hero-grid,.answer-zone-grid{
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
-
       .scale-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
-      .answer-columns{grid-template-columns:1fr}
       .result-hero-card:first-child{grid-column:1 / -1}
     }
 
@@ -1215,15 +1041,7 @@
       .topbar{grid-template-columns:1fr}
       .route-links{justify-content:flex-start}
 
-      .sequence-rail,
-      .mode-grid,
-      .select-grid,
-      .option-grid,
-      .result-grid,
-      .mini-grid,
-      .metric-grid,
-      .metric-grid.three,
-      .result-hero-grid{
+      .sequence-rail,.mode-grid,.select-grid,.option-grid,.result-grid,.mini-grid,.metric-grid,.metric-grid.three,.result-hero-grid,.answer-zone-grid{
         grid-template-columns:1fr;
       }
 
@@ -1234,18 +1052,11 @@
       .step-index{width:36px;height:36px}
       .result-hero-card:first-child{grid-column:auto}
       .result-hero-card{min-height:auto}
-
-      .button-row{align-items:stretch}
-      .button-cluster,
-      .action-btn,
-      .ghost-btn,
-      .disabled-btn{width:100%}
+      .button-row,.button-cluster,.action-btn,.ghost-btn,.disabled-btn{width:100%}
     }
 
     @media (prefers-reduced-motion:reduce){
-      *,
-      *::before,
-      *::after{
+      *,*::before,*::after{
         scroll-behavior:auto!important;
         animation-duration:.01ms!important;
         animation-iteration-count:1!important;
@@ -1278,19 +1089,18 @@
     <main class="page">
       <section class="hero" aria-labelledby="page-title">
         <div class="hero-copy">
-          <p class="kicker">Adaptive Assessment · Real-World Scenarios · Visible Result Hero</p>
+          <p class="kicker">Adaptive Assessment · One-Question Focus Flow · Local-Only</p>
           <h1 id="page-title">Coherence Diagnostic Assessment</h1>
           <p>
-            Start with your self-rated coherence and your claimed archetype blend. The diagnostic then draws real-world scenarios from work, family, money, group pressure, evidence, deadlines, repair, and responsibility.
+            Start with your self-rated coherence and claimed archetype blend. The diagnostic then moves through real-world scenarios one at a time so no question is missed.
           </p>
         </div>
 
         <div class="pill-row" aria-label="Assessment properties">
           <span class="pill">12 questions minimum</span>
-          <span class="pill">Q1 fixed scale</span>
-          <span class="pill">Q2 primary + secondary archetype</span>
-          <span class="pill">Randomized real-world scenarios</span>
-          <span class="pill">Coherence probes</span>
+          <span class="pill">One scenario at a time</span>
+          <span class="pill">Primary gold answer box</span>
+          <span class="pill">Secondary blue-green answer box</span>
           <span class="pill">Projected IQ-style range</span>
           <span class="pill">Possible MBTI-style type</span>
           <span class="pill">Local-only scoring</span>
@@ -1302,6 +1112,12 @@
       </section>
 
       <section id="assessment" class="assessment" aria-label="Coherence Diagnostic Assessment">
+        <section class="privacy-panel" aria-label="Privacy and local-only assurance">
+          <strong>Before you begin</strong>
+          <span>This diagnostic runs locally in your browser during this session. Your answers are not emailed, stored, archived, submitted, or saved by this version. You can still copy or print your result at the end.</span>
+          <span>No account. No upload. No email required.</span>
+        </section>
+
         <section class="panel sequence-panel" aria-labelledby="sequence-title">
           <div class="panel-head">
             <p class="eyebrow">Intake Sequence</p>
@@ -1313,7 +1129,7 @@
               <div class="sequence-step"><b>Read</b><span>Review the four archetypes before choosing.</span></div>
               <div class="sequence-step"><b>Claim Primary</b><span>Select the archetype you believe you lead with.</span></div>
               <div class="sequence-step"><b>Claim Secondary</b><span>Select the support pattern that balances your primary.</span></div>
-              <div class="sequence-step"><b>Generate</b><span>Open the real-world diagnostic after intake.</span></div>
+              <div class="sequence-step"><b>Generate</b><span>Open the one-question diagnostic flow.</span></div>
             </div>
           </div>
         </section>
@@ -1331,7 +1147,7 @@
                   <input type="radio" name="assessmentMode" value="graded" checked>
                   <b>Graded Mode</b>
                   <strong>Show my result</strong>
-                  <span>Receive coherence score, band, projected IQ-style range, possible MBTI-style type, claimed blend comparison, strengths, risks, and next step.</span>
+                  <span>Receive coherence score, projected IQ-style range, possible MBTI-style type, claimed blend comparison, strengths, risks, and next step.</span>
                 </label>
 
                 <label class="choice-card">
@@ -1432,94 +1248,55 @@
           <section id="diagnostic-stage" class="diagnostic-stage">
             <section class="panel" aria-labelledby="scenario-title">
               <div class="panel-head">
-                <p class="eyebrow">Questions 3–12 · Real-World Scenario Diagnostic</p>
-                <h2 id="scenario-title">You are about to enter ten recognizable pressure situations.</h2>
-                <p>Each situation asks two things: what you would do first, and what you would rely on next. The technical readout appears after the result, not during the questions.</p>
+                <p class="eyebrow">Questions 3–12 · One-Question Focus Flow</p>
+                <h2 id="scenario-title">Answer one pressure situation at a time.</h2>
+                <p>The gold box is your first move. The blue-green box is what you rely on next. The page advances only after both are selected.</p>
               </div>
-              <div class="panel-body" id="scenario-list"></div>
+              <div class="panel-body">
+                <div id="flow-shell" class="flow-shell"></div>
+                <div id="review-panel" class="review-panel"></div>
+              </div>
             </section>
 
             <div id="validation" class="validation" role="alert"></div>
-
-            <section class="panel">
-              <div class="panel-body">
-                <div class="button-row">
-                  <p>This page calculates your result locally. Email results and character profile saving are coming soon, but not active in this version.</p>
-                  <div class="button-cluster">
-                    <button class="ghost-btn" type="button" id="clear-generated-btn">Clear Generated Questions</button>
-                    <button class="action-btn" type="submit">Grade / Read Pattern</button>
-                  </div>
-                </div>
-              </div>
-            </section>
           </section>
         </form>
 
         <section id="result" class="result" aria-live="polite" aria-label="Assessment result"></section>
 
         <template id="route-receipt" data-route-receipt>
-COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HERO_TNT_v7
-previous=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_TNT_v6
+COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COLOR_BOXES_PRIVACY_FRONTLOAD_SECTION_CONTRAST_TNT_v8
+previous=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HERO_TNT_v7
 route=/coherence-diagnostic/
 file=/coherence-diagnostic/index.html
-change_type=real_world_scenario_bank_and_result_hero_renewal
-questions_minimum=12
-q1_fixed=true
-q2_fixed=true
-generated_scenario_count=10
-real_world_scenario_bank=active
-controlled_randomization=active
-balanced_draw=work_project,relationship_group,evidence_claim,responsibility_repair,instability,archetype_specific
-public_archetypes=Strategist,Builder,Mitigator,Auditor
-result_hero_three_card_row=active
-result_hero_coherence_score=active
-projected_iq_style_range=active
-projected_iq_style_range_boundary=estimate_only_not_iq_test
-possible_mbti_style_type=active
-possible_mbti_style_type_boundary=preference_hypothesis_not_official_mbti
-technical_readout_result_only=true
-hidden_fragmentation_bucket=true
-fragmented_public_archetype=false
-visible_answer_type_labels=false
-visible_answer_strength_labels=false
-incoherence_probes_active=true
-option_randomization=true
-adaptive_generation=true
-claimed_primary_required=true
-claimed_secondary_required=true
-duplicate_claimed_archetype_forbidden=true
-primary_secondary_required=true
-scoring_change=false
-archetype_model_change=false
-fragmentation_logic_change=false
-engineering_lens_change=false
-public_result_first=true
-engineering_lens_active=true
-fragmentation_engineering_readout=true
-cognitive_processing_estimate=not_iq
-preference_type_hypothesis=not_official_mbti
-results_visible_without_email=true
+one_question_focus_flow=active
+primary_answer_zone=warm_gold
+secondary_answer_zone=cool_blue_green
+frontloaded_privacy_assurance=active
+review_answers=active
+auto_advance_after_both_selections=active
+local_only=true
+backend=false
+storage=false
+localStorage=false
+cookies=false
+api_call=false
 email_results_active=false
 character_profile_save_active=false
-local_grading=true
-no_backend=true
-no_storage=true
-medical_diagnostic=false
-employment_screening=false
-legal_determination=false
-iq_claim=false
-official_mbti_claim=false
-canvas=false
-webgl=false
-generated_image=false
-graphic_box=false
-deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HERO_DEPLOY_MARKER_v7
+scoring_change=false
+scenario_bank_change=false
+fragmentation_logic_change=false
+result_hero_preserved=true
+engineering_lens_preserved=true
+projected_iq_style_range=active
+possible_mbti_style_type=active
+deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COLOR_BOXES_PRIVACY_FRONTLOAD_SECTION_CONTRAST_DEPLOY_MARKER_v8
         </template>
       </section>
     </main>
 
     <footer class="footer">
-      COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HERO_TNT_v7 · Real-world scenarios · Result hero renewed · Local-only.
+      COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COLOR_BOXES_PRIVACY_FRONTLOAD_SECTION_CONTRAST_TNT_v8 · One-question focus flow · Local-only.
     </footer>
   </div>
 
@@ -1527,10 +1304,11 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
     (() => {
       "use strict";
 
-      const CONTRACT = "COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HERO_TNT_v7";
+      const CONTRACT = "COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COLOR_BOXES_PRIVACY_FRONTLOAD_SECTION_CONTRAST_TNT_v8";
       const MAX_COHERENCE_VALUE = 4;
       const SUBSCALES = ["sequence","evidence","action","stability","correction","contradiction"];
       const PUBLIC_ARCHETYPES = ["Strategist","Builder","Mitigator","Auditor"];
+      const AUTO_ADVANCE_DELAY = 620;
 
       const archetypes = {
         Strategist: {
@@ -1597,20 +1375,11 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
         fragFalse:{sequence:1,evidence:0,action:1,stability:0,correction:0,contradiction:0},
         fragComfort:{sequence:1,evidence:0,action:0,stability:2,correction:0,contradiction:0},
         fragMotion:{sequence:0,evidence:0,action:2,stability:0,correction:1,contradiction:0},
-        fragAudit:{sequence:1,evidence:2,action:0,stability:0,correction:0,contradiction:2},
         fragCollapse:{sequence:0,evidence:0,action:0,stability:0,correction:0,contradiction:0}
       };
 
       const makeOption = (id, archetype, coherence, text, strength, risk, subscale, fragmentation = false, fragmentationType = "none") => ({
-        id,
-        archetype,
-        coherence,
-        text,
-        strength,
-        risk,
-        subscale,
-        fragmentation,
-        fragmentationType
+        id, archetype, coherence, text, strength, risk, subscale, fragmentation, fragmentationType
       });
 
       const fragment = (id, type, coherence, text, risk, subscale) =>
@@ -1754,7 +1523,7 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
           ]
         },
         {
-          id:"medical-family-uncertainty",
+          id:"family-crisis-uncertainty",
           title:"Family uncertainty during a stressful call",
           publicCategory:"Crisis / Uncertainty Pressure",
           categories:["crisis","uncertainty","family","relationship","instability"],
@@ -1768,57 +1537,6 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
             makeOption("family-crisis-mitigator","Mitigator",4,"Calm the immediate panic enough for people to communicate clearly.","regulation","delay risk",subscaleProfiles.mitigatorStrong),
             makeOption("family-crisis-auditor","Auditor",4,"Separate confirmed facts from rumors before anyone acts on the wrong information.","evidence separation","action friction risk",subscaleProfiles.auditorStrong),
             fragment("family-crisis-frag-collapse","collapse",0,"Back away from the conversation because too many people are talking at once.","pressure collapse",subscaleProfiles.fragCollapse)
-          ]
-        },
-        {
-          id:"roommate-money-split",
-          title:"Roommate bill disagreement",
-          publicCategory:"Money / Relationship Pressure",
-          categories:["money","transaction","relationship","responsibility","evidence"],
-          archetypeFocus:["Auditor","Mitigator"],
-          situation:"You and a roommate agreed to split a bill. Later, they say they never agreed to that amount and accuse you of being unfair.",
-          pressure:"The difficult part is that money, memory, and trust are now tangled together.",
-          choice:"What do you do first, and what do you rely on next?",
-          options:[
-            makeOption("roommate-bill-strategist","Strategist",3,"Clarify the agreement, the amount owed, and the next step for resolving it.","rule control","premature closure risk",subscaleProfiles.strategistEvidence),
-            makeOption("roommate-bill-builder","Builder",2,"Propose a practical payment plan that gets the issue moving without escalating it.","repair action","patching before diagnosis risk",subscaleProfiles.builderRisky),
-            makeOption("roommate-bill-mitigator","Mitigator",3,"Keep the conversation calm enough to protect the living arrangement while discussing the bill.","interaction stability","softening the contradiction risk",subscaleProfiles.mitigatorAccountable),
-            makeOption("roommate-bill-auditor","Auditor",4,"Check the messages, receipts, and dates before accepting either version of the story.","receipt logic","skepticism overload risk",subscaleProfiles.auditorConstructive),
-            fragment("roommate-bill-frag-blame","blame-shift",0,"Accuse them of lying first so they understand you will not be pushed around.","blame displacement",subscaleProfiles.fragBlame)
-          ]
-        },
-        {
-          id:"team-too-many-ideas",
-          title:"Team wants to build everything",
-          publicCategory:"Leadership / Project Pressure",
-          categories:["leadership","project","deadline","work","instability"],
-          archetypeFocus:["Strategist","Builder"],
-          situation:"A team meeting turns into a flood of ideas. Everyone wants to add something. The project is getting bigger every minute.",
-          pressure:"The difficult part is that the energy is useful, but the scope is starting to threaten the actual goal.",
-          choice:"What do you do first, and what do you rely on next?",
-          options:[
-            makeOption("too-many-ideas-strategist","Strategist",4,"Name the goal, set the order of operations, and choose the first lawful step.","sequence authority","command narrowness risk",subscaleProfiles.strategistStrong),
-            makeOption("too-many-ideas-builder","Builder",4,"Choose the smallest version that can prove whether the bigger idea is worth building.","minimum viable proof","scope creep risk",subscaleProfiles.builderProof),
-            makeOption("too-many-ideas-mitigator","Mitigator",3,"Protect the working baseline so the new ideas do not break what already functions.","baseline preservation","overpreservation risk",subscaleProfiles.mitigatorStrong),
-            makeOption("too-many-ideas-auditor","Auditor",3,"Separate ideas that are ready from ideas that are still only claims.","readiness audit","friction risk",subscaleProfiles.auditorConstructive),
-            fragment("too-many-ideas-frag-motion","motion-without-proof",1,"Let everyone start building their favorite part so the momentum does not die.","motion without proof",subscaleProfiles.fragMotion)
-          ]
-        },
-        {
-          id:"partner-big-purchase",
-          title:"Unexpected purchase at home",
-          publicCategory:"Family / Money Pressure",
-          categories:["relationship","family","money","responsibility","stability"],
-          archetypeFocus:["Mitigator","Strategist"],
-          situation:"Your partner or close family member makes a large purchase without discussing it first, then says you are overreacting when you ask about it.",
-          pressure:"The difficult part is that the issue is not only money. It is trust, timing, and shared responsibility.",
-          choice:"What do you do first, and what do you rely on next?",
-          options:[
-            makeOption("purchase-strategist","Strategist",4,"Clarify the shared rule for major decisions and what has to happen now.","rule control","authority snap risk",subscaleProfiles.strategistCorrection),
-            makeOption("purchase-builder","Builder",2,"Work out the immediate budget adjustment so the household can absorb the impact.","repair action","symptom patch risk",subscaleProfiles.builderRisky),
-            makeOption("purchase-mitigator","Mitigator",4,"Keep the conversation steady enough to discuss trust without turning it into an attack.","relational repair","delay risk",subscaleProfiles.mitigatorStrong),
-            makeOption("purchase-auditor","Auditor",3,"Separate the actual purchase details from the claim that you are overreacting.","contradiction clarity","overpressure risk",subscaleProfiles.auditorPressure),
-            fragment("purchase-frag-comfort","comfort-over-truth",1,"Drop the issue for now because arguing about money will probably make the relationship worse.","comfort over correction",subscaleProfiles.fragComfort)
           ]
         },
         {
@@ -1839,40 +1557,6 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
           ]
         },
         {
-          id:"friend-rumor-party",
-          title:"Rumor at a social event",
-          publicCategory:"Social / Evidence Pressure",
-          categories:["group","social","relationship","evidence","instability"],
-          archetypeFocus:["Auditor","Mitigator"],
-          situation:"At a party, someone tells you a rumor about a friend. A few people are already repeating it as if it is confirmed.",
-          pressure:"The difficult part is that pushing back may make the room uncomfortable, but repeating it may damage someone who is not there.",
-          choice:"What do you do first, and what do you rely on next?",
-          options:[
-            makeOption("rumor-strategist","Strategist",3,"Stop the spread by setting a simple rule: do not treat it as true without confirmation.","threshold setting","tone hardness risk",subscaleProfiles.strategistEvidence),
-            makeOption("rumor-builder","Builder",2,"Move the conversation away from gossip and toward something that does not harm the absent person.","action conversion","avoidance risk",subscaleProfiles.builderRisky),
-            makeOption("rumor-mitigator","Mitigator",4,"Lower the social temperature while protecting the person who is not there.","field stabilization","truth softening risk",subscaleProfiles.mitigatorStrong),
-            makeOption("rumor-auditor","Auditor",4,"Ask how they know and whether the person affected has had a chance to respond.","evidence separation","overpressure risk",subscaleProfiles.auditorStrong),
-            fragment("rumor-frag-motion","motion-without-proof",1,"Listen and pass it along carefully because people probably need to know.","motion without proof",subscaleProfiles.fragMotion)
-          ]
-        },
-        {
-          id:"customer-angry-line",
-          title:"Angry customer in line",
-          publicCategory:"Crisis / Public Pressure",
-          categories:["crisis","work","instability","stability","responsibility"],
-          archetypeFocus:["Mitigator","Builder"],
-          situation:"You are in a public-facing job. A customer becomes angry, raises their voice, and other people in line start watching.",
-          pressure:"The difficult part is that the moment needs control, but the person also needs to be heard enough to de-escalate.",
-          choice:"What do you do first, and what do you rely on next?",
-          options:[
-            makeOption("customer-strategist","Strategist",3,"Set a clear boundary for the conversation and define the next step you can take.","boundary clarity","tone hardness risk",subscaleProfiles.strategistStrong),
-            makeOption("customer-builder","Builder",3,"Identify the one practical thing that can be fixed immediately and start there.","repair momentum","patching before diagnosis risk",subscaleProfiles.builderStrong),
-            makeOption("customer-mitigator","Mitigator",4,"Lower the intensity while keeping the situation safe for everyone nearby.","regulation","delay risk",subscaleProfiles.mitigatorStrong),
-            makeOption("customer-auditor","Auditor",3,"Clarify what happened and what can actually be verified before promising anything.","bounded proof","harshness risk",subscaleProfiles.auditorConstructive),
-            fragment("customer-frag-collapse","collapse",0,"Freeze and wait for someone else to step in because the scene is too intense.","pressure collapse",subscaleProfiles.fragCollapse)
-          ]
-        },
-        {
           id:"friend-business-loan",
           title:"Friend asks for business money",
           publicCategory:"Money / Boundary Pressure",
@@ -1888,23 +1572,6 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
             makeOption("loan-auditor","Auditor",4,"Require evidence that the idea can work before treating it as an investment.","proof gate","challenge friction risk",subscaleProfiles.auditorConstructive),
             fragment("loan-frag-comfort","comfort-over-truth",1,"Give them some money because saying no would make you feel unsupportive.","comfort over accountability",subscaleProfiles.fragComfort)
           ]
-        },
-        {
-          id:"apology-with-excuses",
-          title:"Apology with excuses",
-          publicCategory:"Repair / Relationship Pressure",
-          categories:["repair","relationship","family","responsibility","accountability"],
-          archetypeFocus:["Auditor","Mitigator"],
-          situation:"Someone apologizes to you, but most of the apology is an explanation of why they had no choice. You still feel the harm was not owned.",
-          pressure:"The difficult part is deciding whether to accept the repair, ask for clearer accountability, or preserve the relationship while the issue remains incomplete.",
-          choice:"What do you do first, and what do you rely on next?",
-          options:[
-            makeOption("apology-strategist","Strategist",4,"Clarify what needs to be owned and what repair would actually close the issue.","corrective sequence","hard turn risk",subscaleProfiles.strategistCorrection),
-            makeOption("apology-builder","Builder",2,"Ask for one concrete action that would show the apology is real.","practical repair","symptom patch risk",subscaleProfiles.builderRisky),
-            makeOption("apology-mitigator","Mitigator",4,"Keep the relationship steady while making room for a more honest repair.","relational repair","soft accountability risk",subscaleProfiles.mitigatorAccountable),
-            makeOption("apology-auditor","Auditor",4,"Separate the apology from the excuses and name what still has not been owned.","truth closure","pressure shock risk",subscaleProfiles.auditorConstructive),
-            fragment("apology-frag-avoid","avoidance",1,"Accept the apology as-is because asking for more might restart the conflict.","avoidance",subscaleProfiles.fragAvoid)
-          ]
         }
       ];
 
@@ -1913,31 +1580,27 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
       const primaryOptions = document.getElementById("primary-archetype-options");
       const secondaryOptions = document.getElementById("secondary-archetype-options");
       const generateBtn = document.getElementById("generate-btn");
-      const scenarioList = document.getElementById("scenario-list");
       const diagnosticStage = document.getElementById("diagnostic-stage");
+      const flowShell = document.getElementById("flow-shell");
+      const reviewPanel = document.getElementById("review-panel");
       const validation = document.getElementById("validation");
       const intakeValidation = document.getElementById("intake-validation");
       const result = document.getElementById("result");
       const resetBtn = document.getElementById("reset-btn");
-      const clearGeneratedBtn = document.getElementById("clear-generated-btn");
 
       let generatedQuestions = [];
+      let currentScenarioIndex = 0;
+      let scenarioAnswers = {};
+      let reviewMode = false;
+      let autoAdvanceTimer = null;
 
       function escapeHtml(value){
         return String(value).replace(/[&<>"']/g,(char)=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[char]));
       }
 
-      function listItems(items){
-        return items.map((item)=>`<li>${escapeHtml(item)}</li>`).join("");
-      }
-
-      function formatPercent(value){
-        return `${Number(value).toFixed(1)}%`;
-      }
-
-      function clamp(value,min,max){
-        return Math.min(Math.max(value,min),max);
-      }
+      function listItems(items){return items.map((item)=>`<li>${escapeHtml(item)}</li>`).join("")}
+      function formatPercent(value){return `${Number(value).toFixed(1)}%`}
+      function clamp(value,min,max){return Math.min(Math.max(value,min),max)}
 
       function shuffle(items){
         const copy = items.slice();
@@ -1948,17 +1611,14 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
         return copy;
       }
 
-      function hasAny(item, tags){
-        return tags.some((tag)=>item.categories.includes(tag));
-      }
+      function hasAny(item,tags){return tags.some((tag)=>item.categories.includes(tag))}
 
       function renderArchetypeLibrary(){
         library.innerHTML = Object.values(archetypes).map((item,index)=>`
           <details class="archetype-detail" ${index === 0 ? "open" : ""}>
             <summary>
               <span>
-                <strong>${escapeHtml(item.label)}</strong>
-                <br>
+                <strong>${escapeHtml(item.label)}</strong><br>
                 <span style="color:rgba(239,247,255,.62);font-size:.84rem;font-weight:760;">${escapeHtml(item.title)}</span>
               </span>
             </summary>
@@ -2025,116 +1685,34 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
         return "";
       }
 
-      function validateDiagnostic(){
-        if(!generatedQuestions.length) return "Generate the diagnostic before grading.";
-
-        for(const question of generatedQuestions){
-          const primary = getRadioValue(`${question.id}-primary`);
-          const secondary = getRadioValue(`${question.id}-secondary`);
-
-          if(!primary) return `${question.title}: select what you would do first.`;
-          if(!secondary) return `${question.title}: select what you would rely on next.`;
-          if(primary === secondary) return `${question.title}: your first move and support move must be different.`;
-        }
-
-        return "";
-      }
-
-      function chooseBalancedScenarios(primary, secondary){
+      function chooseBalancedScenarios(primary,secondary){
         const selected = [];
         const seen = new Set();
 
-        const addFrom = (label, count, predicate) => {
+        const addFrom = (label,count,predicate) => {
           const pool = shuffle(scenarioBank.filter((item)=>!seen.has(item.id) && predicate(item)));
           pool.slice(0,count).forEach((item)=>{
-            selected.push({
-              ...item,
-              drawBucket: label,
-              renderedOptions: shuffle(item.options)
-            });
+            selected.push({...item,drawBucket:label,renderedOptions:shuffle(item.options)});
             seen.add(item.id);
           });
         };
 
-        addFrom("archetype-specific", 1, (item)=>item.archetypeFocus.includes(primary) || item.archetypeFocus.includes(secondary));
-        addFrom("work-project", 2, (item)=>hasAny(item,["work","project","deadline","leadership"]));
-        addFrom("relationship-group", 2, (item)=>hasAny(item,["family","relationship","group","social"]));
-        addFrom("evidence-claim", 2, (item)=>hasAny(item,["evidence","public-claim"]));
-        addFrom("responsibility-repair", 2, (item)=>hasAny(item,["responsibility","repair","accountability"]));
-        addFrom("instability-pressure", 1, (item)=>hasAny(item,["instability","crisis","uncertainty"]));
+        addFrom("archetype-specific",1,(item)=>item.archetypeFocus.includes(primary) || item.archetypeFocus.includes(secondary));
+        addFrom("work-project",2,(item)=>hasAny(item,["work","project","deadline","leadership"]));
+        addFrom("relationship-group",2,(item)=>hasAny(item,["family","relationship","group","social"]));
+        addFrom("evidence-claim",2,(item)=>hasAny(item,["evidence","public-claim"]));
+        addFrom("responsibility-repair",2,(item)=>hasAny(item,["responsibility","repair","accountability"]));
+        addFrom("instability-pressure",1,(item)=>hasAny(item,["instability","crisis","uncertainty"]));
 
         if(selected.length < 10){
-          addFrom("balanced-fill", 10 - selected.length, () => true);
+          addFrom("balanced-fill",10 - selected.length,()=>true);
         }
 
         return selected.slice(0,10);
       }
 
-      function renderQuestions(){
-        const intro = `
-          <div class="scenario-intro">
-            <strong>Do not answer as the person you wish you were. Answer from the pattern you recognize under real pressure.</strong>
-            <span>Each scenario is a practical situation. Choose what you would do first, then choose what you would rely on next. The answer labels do not reveal the scoring map.</span>
-          </div>
-        `;
-
-        scenarioList.innerHTML = intro + generatedQuestions.map((question,index)=>{
-          const number = index + 3;
-
-          const renderOption = (option,optionIndex,role)=>`
-            <label class="answer-choice">
-              <input
-                type="radio"
-                name="${question.id}-${role}"
-                value="${option.id}"
-                data-question="${question.id}"
-                data-role="${role}"
-              >
-              <b>${String.fromCharCode(65 + optionIndex)} · ${escapeHtml(option.text)}</b>
-            </label>
-          `;
-
-          const options = question.renderedOptions || question.options;
-
-          return `
-            <article class="question" data-question-card="${escapeHtml(question.id)}" data-draw-bucket="${escapeHtml(question.drawBucket || "scenario")}">
-              <div class="question-top">
-                <span class="question-number">Question ${number}</span>
-                <span class="question-category">${escapeHtml(question.publicCategory)}</span>
-                <h3>${escapeHtml(question.title)}</h3>
-              </div>
-
-              <div class="moment-stack">
-                <div class="moment-block">
-                  <b>The Situation</b>
-                  <span>${escapeHtml(question.situation)}</span>
-                </div>
-
-                <div class="moment-block">
-                  <b>The Pressure</b>
-                  <span>${escapeHtml(question.pressure)}</span>
-                </div>
-
-                <div class="moment-block coherence-test">
-                  <b>The Choice</b>
-                  <strong>${escapeHtml(question.choice)}</strong>
-                </div>
-              </div>
-
-              <div class="answer-columns">
-                <div class="answer-box">
-                  <span class="answer-title">What do you do first?</span>
-                  ${options.map((option,optionIndex)=>renderOption(option,optionIndex,"primary")).join("")}
-                </div>
-
-                <div class="answer-box">
-                  <span class="answer-title">What do you rely on next?</span>
-                  ${options.map((option,optionIndex)=>renderOption(option,optionIndex,"secondary")).join("")}
-                </div>
-              </div>
-            </article>
-          `;
-        }).join("");
+      function getAnswer(questionId){
+        return scenarioAnswers[questionId] || {questionId,primaryOptionId:"",secondaryOptionId:""};
       }
 
       function findOption(questionId,optionId){
@@ -2143,30 +1721,253 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
         return [...question.options,...(question.renderedOptions || [])].find((option)=>option.id === optionId) || null;
       }
 
-      function incrementMap(map,key,amount){
-        map.set(key,(map.get(key) || 0) + amount);
+      function isAllAnswered(){
+        return generatedQuestions.length === 10 && generatedQuestions.every((q)=>{
+          const answer = getAnswer(q.id);
+          return answer.primaryOptionId && answer.secondaryOptionId && answer.primaryOptionId !== answer.secondaryOptionId;
+        });
       }
 
-      function topEntries(map,limit = 3){
-        return Array.from(map.entries())
-          .sort((a,b)=>b[1] - a[1] || a[0].localeCompare(b[0]))
-          .slice(0,limit)
-          .map(([key])=>key);
+      function completedCount(){
+        return generatedQuestions.filter((q)=>{
+          const answer = getAnswer(q.id);
+          return answer.primaryOptionId && answer.secondaryOptionId && answer.primaryOptionId !== answer.secondaryOptionId;
+        }).length;
       }
 
-      function loadEntries(map,limit = 6){
-        return Array.from(map.entries())
-          .sort((a,b)=>b[1] - a[1] || a[0].localeCompare(b[0]))
-          .slice(0,limit)
-          .map(([label,weight])=>({label,weight}));
+      function saveAnswer(questionId,role,optionId){
+        const existing = getAnswer(questionId);
+        const now = new Date().toISOString();
+        const wasComplete = existing.primaryOptionId && existing.secondaryOptionId;
+
+        const next = {
+          ...existing,
+          questionId,
+          answeredAt: existing.answeredAt || now
+        };
+
+        if(role === "primary"){
+          next.primaryOptionId = optionId;
+          if(next.secondaryOptionId === optionId) next.secondaryOptionId = "";
+        }
+
+        if(role === "secondary"){
+          next.secondaryOptionId = optionId;
+          if(next.primaryOptionId === optionId) next.primaryOptionId = "";
+        }
+
+        if(wasComplete) next.revisedAt = now;
+        scenarioAnswers[questionId] = next;
+
+        renderFlow();
+
+        const answer = getAnswer(questionId);
+        if(answer.primaryOptionId && answer.secondaryOptionId && answer.primaryOptionId !== answer.secondaryOptionId){
+          window.clearTimeout(autoAdvanceTimer);
+          if(currentScenarioIndex < generatedQuestions.length - 1 && !reviewMode){
+            autoAdvanceTimer = window.setTimeout(()=>{
+              currentScenarioIndex += 1;
+              renderFlow();
+              flowShell.scrollIntoView({behavior:"smooth",block:"start"});
+            },AUTO_ADVANCE_DELAY);
+          }
+          if(currentScenarioIndex === generatedQuestions.length - 1){
+            renderReview(false);
+          }
+        }
       }
+
+      function renderFlow(){
+        if(!generatedQuestions.length){
+          flowShell.innerHTML = "";
+          return;
+        }
+
+        const question = generatedQuestions[currentScenarioIndex];
+        const answer = getAnswer(question.id);
+        const progress = Math.round((completedCount() / generatedQuestions.length) * 100);
+        const primarySelected = Boolean(answer.primaryOptionId);
+        const secondarySelected = Boolean(answer.secondaryOptionId);
+
+        const renderOption = (option,role,index) => {
+          const selected = role === "primary" ? answer.primaryOptionId === option.id : answer.secondaryOptionId === option.id;
+          return `
+            <button
+              class="answer-option ${selected ? "is-selected" : ""}"
+              type="button"
+              data-answer-role="${role}"
+              data-question-id="${escapeHtml(question.id)}"
+              data-option-id="${escapeHtml(option.id)}"
+            >
+              <b>${String.fromCharCode(65 + index)} · ${escapeHtml(option.text)}</b>
+            </button>
+          `;
+        };
+
+        const options = question.renderedOptions || question.options;
+
+        flowShell.innerHTML = `
+          <div class="progress-panel">
+            <div class="progress-row">
+              <span class="progress-title">Scenario ${currentScenarioIndex + 1} of ${generatedQuestions.length}</span>
+              <span class="progress-count">${completedCount()} complete · ${generatedQuestions.length - completedCount()} remaining</span>
+            </div>
+            <div class="progress-track" aria-hidden="true" style="--w:${progress}%"><i></i></div>
+          </div>
+
+          <article class="scenario-card">
+            <div class="scenario-head">
+              <span class="scenario-number">Scenario ${currentScenarioIndex + 1} of ${generatedQuestions.length}</span>
+              <span class="scenario-category">${escapeHtml(question.publicCategory)}</span>
+              <h3>${escapeHtml(question.title)}</h3>
+            </div>
+
+            <div class="moment-stack">
+              <div class="moment-block">
+                <b>The Situation</b>
+                <span>${escapeHtml(question.situation)}</span>
+              </div>
+
+              <div class="moment-block">
+                <b>The Pressure</b>
+                <span>${escapeHtml(question.pressure)}</span>
+              </div>
+
+              <div class="moment-block coherence-test">
+                <b>The Choice</b>
+                <strong>${escapeHtml(question.choice)}</strong>
+              </div>
+            </div>
+
+            <div class="answer-zone-grid">
+              <section class="answer-zone primary-answer ${primarySelected ? "is-selected" : ""}">
+                <div class="answer-zone-head">
+                  <b>Primary Answer · What do you do first?</b>
+                  <span>${primarySelected ? "First move selected." : "Waiting for first move."}</span>
+                </div>
+                ${options.map((option,index)=>renderOption(option,"primary",index)).join("")}
+              </section>
+
+              <section class="answer-zone secondary-answer ${primarySelected && !secondarySelected ? "is-emphasized" : ""} ${secondarySelected ? "is-selected" : ""}">
+                <div class="answer-zone-head">
+                  <b>Secondary Answer · What do you rely on next?</b>
+                  <span>${secondarySelected ? "Support move selected." : "Waiting for support move."}</span>
+                </div>
+                ${options.map((option,index)=>renderOption(option,"secondary",index)).join("")}
+              </section>
+            </div>
+
+            <div class="flow-controls">
+              <span class="flow-note">${primarySelected && secondarySelected ? "Both answers selected. You may continue, review, or revise." : "Select one answer in each colored box."}</span>
+              <div class="button-cluster">
+                <button class="ghost-btn" type="button" id="back-scenario" ${currentScenarioIndex === 0 ? "disabled" : ""}>Back</button>
+                <button class="ghost-btn" type="button" id="review-answers">Review Answers</button>
+                <button class="action-btn" type="button" id="grade-now" ${isAllAnswered() ? "" : "disabled"}>Grade / Read Pattern</button>
+              </div>
+            </div>
+          </article>
+        `;
+
+        flowShell.querySelectorAll("[data-answer-role]").forEach((button)=>{
+          button.addEventListener("click",()=>{
+            saveAnswer(button.dataset.questionId,button.dataset.answerRole,button.dataset.optionId);
+          });
+        });
+
+        const backButton = document.getElementById("back-scenario");
+        if(backButton){
+          backButton.addEventListener("click",()=>{
+            window.clearTimeout(autoAdvanceTimer);
+            currentScenarioIndex = Math.max(0,currentScenarioIndex - 1);
+            reviewMode = false;
+            renderFlow();
+          });
+        }
+
+        const reviewButton = document.getElementById("review-answers");
+        if(reviewButton){
+          reviewButton.addEventListener("click",()=>renderReview(true));
+        }
+
+        const gradeButton = document.getElementById("grade-now");
+        if(gradeButton){
+          gradeButton.addEventListener("click",gradeFromSavedAnswers);
+        }
+      }
+
+      function renderReview(scrollToReview){
+        reviewPanel.innerHTML = `
+          <h3>Review Answers</h3>
+          <p>Review all ten scenarios before grading. Hidden scoring labels are not shown here.</p>
+          <div class="review-list">
+            ${generatedQuestions.map((question,index)=>{
+              const answer = getAnswer(question.id);
+              const primary = answer.primaryOptionId ? findOption(question.id,answer.primaryOptionId) : null;
+              const secondary = answer.secondaryOptionId ? findOption(question.id,answer.secondaryOptionId) : null;
+
+              return `
+                <article class="review-item">
+                  <b>Scenario ${index + 1} · ${escapeHtml(question.title)}</b>
+                  <span><strong>First move:</strong> ${primary ? escapeHtml(primary.text) : "Not answered"}</span>
+                  <span><strong>Support move:</strong> ${secondary ? escapeHtml(secondary.text) : "Not answered"}</span>
+                  <button class="ghost-btn" type="button" data-edit-index="${index}">Edit Scenario ${index + 1}</button>
+                </article>
+              `;
+            }).join("")}
+          </div>
+          <div class="button-row">
+            <p>${isAllAnswered() ? "All scenarios are answered. You can grade now." : "Some scenarios still need both answers before grading."}</p>
+            <div class="button-cluster">
+              <button class="ghost-btn" type="button" id="close-review">Close Review</button>
+              <button class="action-btn" type="button" id="grade-from-review" ${isAllAnswered() ? "" : "disabled"}>Grade / Read Pattern</button>
+            </div>
+          </div>
+        `;
+
+        reviewPanel.classList.add("is-visible");
+
+        reviewPanel.querySelectorAll("[data-edit-index]").forEach((button)=>{
+          button.addEventListener("click",()=>{
+            currentScenarioIndex = Number(button.dataset.editIndex);
+            reviewMode = false;
+            renderFlow();
+            reviewPanel.classList.remove("is-visible");
+            flowShell.scrollIntoView({behavior:"smooth",block:"start"});
+          });
+        });
+
+        const closeReview = document.getElementById("close-review");
+        if(closeReview) closeReview.addEventListener("click",()=>reviewPanel.classList.remove("is-visible"));
+
+        const grade = document.getElementById("grade-from-review");
+        if(grade) grade.addEventListener("click",gradeFromSavedAnswers);
+
+        if(scrollToReview) reviewPanel.scrollIntoView({behavior:"smooth",block:"start"});
+      }
+
+      function validateSavedDiagnostic(){
+        if(!generatedQuestions.length) return "Generate the diagnostic before grading.";
+
+        for(const question of generatedQuestions){
+          const answer = getAnswer(question.id);
+          if(!answer.primaryOptionId) return `${question.title}: select what you would do first.`;
+          if(!answer.secondaryOptionId) return `${question.title}: select what you would rely on next.`;
+          if(answer.primaryOptionId === answer.secondaryOptionId) return `${question.title}: your first move and support move must be different.`;
+        }
+
+        return "";
+      }
+
+      function incrementMap(map,key,amount){map.set(key,(map.get(key) || 0) + amount)}
+      function topEntries(map,limit=3){return Array.from(map.entries()).sort((a,b)=>b[1]-a[1] || a[0].localeCompare(b[0])).slice(0,limit).map(([key])=>key)}
+      function loadEntries(map,limit=6){return Array.from(map.entries()).sort((a,b)=>b[1]-a[1] || a[0].localeCompare(b[0])).slice(0,limit).map(([label,weight])=>({label,weight}))}
 
       function scoreBand(score){
-        if(score < 3) return {label:"Fragmented / Low Coherence",text:"The pattern shows several breaks in sequence, accountability, evidence handling, or decision alignment. This is a calibration signal, not a personal condemnation."};
-        if(score < 5) return {label:"Developing Coherence",text:"The pattern shows usable instincts with noticeable drift under pressure. The next step is to reduce contradiction and strengthen sequence."};
-        if(score < 7) return {label:"Functional Coherence",text:"The pattern can function under normal pressure, though some choices may still drift when stress, ambiguity, or accountability rises."};
-        if(score < 8.5) return {label:"High Coherence",text:"The pattern shows strong alignment across responsibility, signal, sequence, and correction. Remaining risks are mostly overuse of your dominant style."};
-        return {label:"Exceptional Coherence",text:"The pattern shows unusually strong alignment under scenario pressure. Watch for overconfidence and continue testing claims against reality."};
+        if(score < 3) return {label:"Fragmented / Low Coherence",text:"The pattern shows several breaks in sequence, accountability, evidence handling, or decision alignment."};
+        if(score < 5) return {label:"Developing Coherence",text:"The pattern shows usable instincts with noticeable drift under pressure."};
+        if(score < 7) return {label:"Functional Coherence",text:"The pattern can function under normal pressure, though some choices may still drift under stress."};
+        if(score < 8.5) return {label:"High Coherence",text:"The pattern shows strong alignment across responsibility, signal, sequence, and correction."};
+        return {label:"Exceptional Coherence",text:"The pattern shows unusually strong alignment under scenario pressure."};
       }
 
       function fragmentationBand(rate){
@@ -2227,22 +2028,7 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
         }[claimMatch] || 25;
       }
 
-      function nextStepFor(primary,secondary,bandLabel,fragmentationRate){
-        const step = {
-          Strategist:"Practice adding listening, evidence checks, and adaptive room-read before locking direction.",
-          Builder:"Practice building smaller, reversible proofs before scaling momentum.",
-          Mitigator:"Practice preserving stability without delaying accountability, correction, or decision.",
-          Auditor:"Practice applying truth pressure with a constructive closure path."
-        }[primary] || "Retake later and compare the pattern.";
-
-        const pressure = fragmentationRate >= 10
-          ? " Also review the pressure-break markers before treating the score as the whole result."
-          : "";
-
-        return `${step} Your support pattern is ${secondary}. Current band: ${bandLabel}.${pressure}`;
-      }
-
-      function preferenceAxis(leftLabel,rightLabel,leftValue,rightValue,threshold = 7){
+      function preferenceAxis(leftLabel,rightLabel,leftValue,rightValue,threshold=7){
         const diff = leftValue - rightValue;
         if(Math.abs(diff) <= threshold) return {label:"Balanced",leftLabel,rightLabel,leftValue,rightValue,diff};
         return {label:diff > 0 ? leftLabel : rightLabel,leftLabel,rightLabel,leftValue,rightValue,diff};
@@ -2256,12 +2042,39 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
         return "Exceptional Processing Signal";
       }
 
-      function projectedIqStyleRange(cognitiveProcessingIndex){
-        if(cognitiveProcessingIndex >= 90) return "128–145";
-        if(cognitiveProcessingIndex >= 75) return "118–132";
-        if(cognitiveProcessingIndex >= 60) return "105–120";
-        if(cognitiveProcessingIndex >= 40) return "90–110";
+      function projectedIqStyleRange(cpi){
+        if(cpi >= 90) return "128–145";
+        if(cpi >= 75) return "118–132";
+        if(cpi >= 60) return "105–120";
+        if(cpi >= 40) return "90–110";
         return "75–95";
+      }
+
+      function combinations(parts){
+        return parts.reduce((acc,part)=>{
+          const values = Array.isArray(part) ? part : [part];
+          return acc.flatMap((prefix)=>values.map((value)=>prefix + value));
+        },[""]);
+      }
+
+      function mbtiStyleType(preference){
+        const mapAxis = (axis,leftLetter,rightLetter) => {
+          if(axis.label === "Balanced") return [leftLetter,rightLetter];
+          if(axis.label === axis.leftLabel) return leftLetter;
+          return rightLetter;
+        };
+
+        const axisParts = [
+          mapAxis(preference.orientation,"I","E"),
+          mapAxis(preference.information,"N","S"),
+          mapAxis(preference.judgment,"T","F"),
+          mapAxis(preference.closure,"J","P")
+        ];
+
+        const balancedCount = axisParts.filter(Array.isArray).length;
+        if(balancedCount >= 3) return "Balanced / Mixed-style";
+        const options = combinations(axisParts).slice(0,4).map((item)=>`${item}-style`);
+        return options.length === 1 ? options[0] : options.join(" / ");
       }
 
       function confidenceBand(dominanceMargin,vector){
@@ -2292,33 +2105,19 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
         }[key] || key;
       }
 
-      function combinations(parts){
-        return parts.reduce((acc,part)=>{
-          const values = Array.isArray(part) ? part : [part];
-          return acc.flatMap((prefix)=>values.map((value)=>prefix + value));
-        },[""]);
-      }
+      function nextStepFor(primary,secondary,bandLabel,fragmentationRate){
+        const step = {
+          Strategist:"Practice adding listening, evidence checks, and adaptive room-read before locking direction.",
+          Builder:"Practice building smaller, reversible proofs before scaling momentum.",
+          Mitigator:"Practice preserving stability without delaying accountability, correction, or decision.",
+          Auditor:"Practice applying truth pressure with a constructive closure path."
+        }[primary] || "Retake later and compare the pattern.";
 
-      function mbtiStyleType(preference){
-        const mapAxis = (axis,leftLetter,rightLetter) => {
-          if(axis.label === "Balanced") return [leftLetter,rightLetter];
-          if(axis.label === axis.leftLabel) return leftLetter;
-          return rightLetter;
-        };
+        const pressure = fragmentationRate >= 10
+          ? " Also review the pressure-break markers before treating the score as the whole result."
+          : "";
 
-        const axisParts = [
-          mapAxis(preference.orientation,"I","E"),
-          mapAxis(preference.information,"N","S"),
-          mapAxis(preference.judgment,"T","F"),
-          mapAxis(preference.closure,"J","P")
-        ];
-
-        const balancedCount = axisParts.filter(Array.isArray).length;
-        if(balancedCount >= 3) return "Balanced / Mixed-style";
-
-        const options = combinations(axisParts).slice(0,4).map((item)=>`${item}-style`);
-        if(options.length === 1) return options[0];
-        return options.join(" / ");
+        return `${step} Your support pattern is ${secondary}. Current band: ${bandLabel}.${pressure}`;
       }
 
       function calculateResult(){
@@ -2338,16 +2137,14 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
         const risks = new Map();
         const fragmentationTypes = new Map();
         const subscaleTotals = SUBSCALES.reduce((acc,key)=>{acc[key]=0;return acc;},{});
-
         let fragmentationWeighted = 0;
         let fragmentationPrimaryCount = 0;
         let fragmentationSecondaryCount = 0;
 
         for(const question of generatedQuestions){
-          const primaryId = getRadioValue(`${question.id}-primary`);
-          const secondaryId = getRadioValue(`${question.id}-secondary`);
-          const primary = findOption(question.id,primaryId);
-          const secondary = findOption(question.id,secondaryId);
+          const answer = getAnswer(question.id);
+          const primary = findOption(question.id,answer.primaryOptionId);
+          const secondary = findOption(question.id,answer.secondaryOptionId);
 
           [
             {option:primary,weight:2,role:"primary"},
@@ -2401,7 +2198,7 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
 
         const maxSubscale = generatedQuestions.length * 3 * MAX_COHERENCE_VALUE;
         const subscales = {};
-        SUBSCALES.forEach((key)=>{subscales[key] = Math.round((subscaleTotals[key] / maxSubscale) * 100);});
+        SUBSCALES.forEach((key)=>{subscales[key] = Math.round((subscaleTotals[key] / maxSubscale) * 100)});
         subscales.calibration = calibrationAccuracy;
         subscales.claimAlignment = claimPatternAlignment;
 
@@ -2435,9 +2232,6 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
         const preferenceType = balancedCount >= 2
           ? "Balanced Preference Type"
           : `${preference.information.label}-Led ${preference.closure.label} ${preference.judgment.label} Type`;
-
-        const strengthLoad = loadEntries(strengths);
-        const riskLoad = loadEntries(risks);
 
         const fragmentation = {
           weighted:fragmentationWeighted,
@@ -2479,8 +2273,8 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
           possibleMbtiStyleType: publicMbtiStyleType,
           preferenceType,
           preference,
-          strengthLoad,
-          riskLoad,
+          strengthLoad:loadEntries(strengths),
+          riskLoad:loadEntries(risks),
           scenarioDraw: generatedQuestions.map((item)=>({
             id:item.id,
             title:item.title,
@@ -2517,8 +2311,8 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
           risks:topEntries(risks),
           nextStep:nextStepFor(revealedPrimary,revealedSecondary,band.label,fragmentationRate),
           rankedArchetypes,
-          projectedIqStyleRange: publicIqStyleRange,
-          possibleMbtiStyleType: publicMbtiStyleType,
+          projectedIqStyleRange:publicIqStyleRange,
+          possibleMbtiStyleType:publicMbtiStyleType,
           engineering,
           generatedAt:new Date().toISOString()
         };
@@ -2528,13 +2322,8 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
         const showScore = data.mode === "graded";
         const e = data.engineering;
         const vectorText = e.archetypeVector.map((item)=>`${item.name}: ${item.points}/${generatedQuestions.length * 3} · ${formatPercent(item.percent)}`).join("; ");
-        const primaryDistributionText = e.primaryDistribution.map((item)=>`${item.name}: ${item.count}/${generatedQuestions.length} · ${formatPercent(item.percent)}`).join("; ");
-        const secondaryDistributionText = e.secondaryDistribution.map((item)=>`${item.name}: ${item.count}/${generatedQuestions.length} · ${formatPercent(item.percent)}`).join("; ");
         const subscaleText = Object.entries(e.subscales).map(([key,value])=>`${metricLabel(key)}: ${value}/100`).join("; ");
-        const strengthLoadText = e.strengthLoad.map((item)=>`${item.label}: weight ${item.weight}`).join("; ");
-        const riskLoadText = e.riskLoad.map((item)=>`${item.label}: weight ${item.weight}`).join("; ");
         const fragTypeText = e.fragmentation.types.length ? e.fragmentation.types.map((item)=>`${item.label}: weight ${item.weight}`).join("; ") : "none";
-        const scenarioText = e.scenarioDraw.map((item)=>`${item.publicCategory}: ${item.title}`).join("; ");
 
         return [
           "COHERENCE DIAGNOSTIC ASSESSMENT RESULT",
@@ -2569,41 +2358,29 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
           `Archetype vector: ${vectorText}`,
           `Dominance margin: ${formatPercent(e.dominanceMargin)} · ${e.dominanceDisposition}`,
           `Confidence band: ${e.confidenceBand}`,
-          `Primary response distribution: ${primaryDistributionText}`,
-          `Secondary response distribution: ${secondaryDistributionText}`,
           `Subscale metrics: ${subscaleText}`,
           `Fragmentation rate: ${formatPercent(e.fragmentation.rate)}`,
           `Primary fragmentation count: ${e.fragmentation.primaryCount}`,
           `Secondary fragmentation count: ${e.fragmentation.secondaryCount}`,
           `Top fragmentation markers: ${fragTypeText}`,
-          `Fragmentation interpretation: ${e.fragmentation.interpretation}`,
           `Cognitive Processing Estimate: ${e.cognitiveProcessingIndex}/100 · ${e.cognitiveProcessingBand} · not an IQ score`,
           `Projected IQ-Style Range: ${e.projectedIqStyleRange} · estimate only · not an IQ test`,
           `Preference-Type Hypothesis: ${e.preferenceType} · not official MBTI®`,
           `Possible MBTI-Style Type: ${e.possibleMbtiStyleType} · preference hypothesis · not official MBTI®`,
-          `Preference axes: Orientation ${e.preference.orientation.label}; Information ${e.preference.information.label}; Judgment ${e.preference.judgment.label}; Closure ${e.preference.closure.label}`,
-          `Strength load: ${strengthLoadText}`,
-          `Risk load: ${riskLoadText}`,
-          `Scenario draw: ${scenarioText}`,
-          `Technical disposition: ${e.technicalDisposition}`,
-          "",
-          "COMING SOON",
-          "Email results and character profile saving are not active yet.",
           "",
           "BOUNDARIES",
           "This is not a medical, mental-health, legal, employment, intelligence, or official personality-type diagnostic.",
           "The Projected IQ-Style Range is not an IQ score or IQ test.",
           "The Possible MBTI-Style Type is not an official MBTI® result.",
-          "Fragmentation markers identify pressure-break response patterns; they do not define the person.",
           "This version is local-only and does not email, store, archive, or submit your result."
         ].join("\n");
       }
 
-      function renderMetricCard(label,value,note = ""){
+      function renderMetricCard(label,value,note=""){
         return `<article class="metric-card"><b>${escapeHtml(label)}</b><strong>${escapeHtml(value)}</strong>${note ? `<span>${escapeHtml(note)}</span>` : ""}</article>`;
       }
 
-      function renderBarMetric(label,value,note = "",breakStyle = false){
+      function renderBarMetric(label,value,note="",breakStyle=false){
         const safeValue = clamp(Number(value) || 0,0,100);
         return `
           <article class="metric-card">
@@ -2666,9 +2443,7 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
             </summary>
 
             <div class="engineering-content">
-              <div class="technical-summary">
-                <strong>Technical Disposition:</strong> ${escapeHtml(e.technicalDisposition)}
-              </div>
+              <div class="technical-summary"><strong>Technical Disposition:</strong> ${escapeHtml(e.technicalDisposition)}</div>
 
               <div class="metric-grid three">
                 ${renderMetricCard("Raw Coherence Score",`${e.rawScore} / ${e.maxRaw}`,"Primary response is weighted ×2. Secondary response is weighted ×1.")}
@@ -2683,20 +2458,12 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
               </div>
 
               <h3>Archetype Vector</h3>
-              <div class="metric-grid">
-                ${renderVectorCards(e.archetypeVector,archetypeDenominator)}
-              </div>
+              <div class="metric-grid">${renderVectorCards(e.archetypeVector,archetypeDenominator)}</div>
 
               <h3>Response Architecture</h3>
               <div class="metric-grid">
-                <div class="load-card">
-                  <b>Primary Response Distribution</b>
-                  <div class="metric-grid">${renderDistributionCards(e.primaryDistribution,generatedQuestions.length)}</div>
-                </div>
-                <div class="load-card">
-                  <b>Secondary Response Distribution</b>
-                  <div class="metric-grid">${renderDistributionCards(e.secondaryDistribution,generatedQuestions.length)}</div>
-                </div>
+                <div class="load-card"><b>Primary Response Distribution</b><div class="metric-grid">${renderDistributionCards(e.primaryDistribution,generatedQuestions.length)}</div></div>
+                <div class="load-card"><b>Secondary Response Distribution</b><div class="metric-grid">${renderDistributionCards(e.secondaryDistribution,generatedQuestions.length)}</div></div>
               </div>
 
               <h3>Subscale Metrics</h3>
@@ -2716,18 +2483,12 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
                 ${renderBarMetric("Fragmentation Rate",e.fragmentation.rate,e.fragmentation.band,true)}
                 ${renderMetricCard("Primary Fragmentation",String(e.fragmentation.primaryCount),"Number of first-move pressure-break selections.")}
                 ${renderMetricCard("Secondary Fragmentation",String(e.fragmentation.secondaryCount),"Number of support-response pressure-break selections.")}
-                <div class="load-card">
-                  <b>Top Fragmentation Markers</b>
-                  <ul>${renderLoadList(e.fragmentation.types)}</ul>
-                </div>
+                <div class="load-card"><b>Top Fragmentation Markers</b><ul>${renderLoadList(e.fragmentation.types)}</ul></div>
               </div>
               <div class="technical-summary">${escapeHtml(e.fragmentation.interpretation)}</div>
 
               <h3>Scenario Draw</h3>
-              <div class="load-card">
-                <b>Randomized Real-World Scenario Set</b>
-                <ul>${renderScenarioDraw(e.scenarioDraw)}</ul>
-              </div>
+              <div class="load-card"><b>Randomized Real-World Scenario Set</b><ul>${renderScenarioDraw(e.scenarioDraw)}</ul></div>
 
               <h3>Preference-Type Hypothesis</h3>
               <div class="metric-grid">
@@ -2819,8 +2580,14 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
                 </div>
               </div>
 
+              <div class="privacy-panel">
+                <strong>Local-only boundary</strong>
+                <span>This result was generated locally in your browser during this session. This version does not email, store, archive, submit, or save your result.</span>
+                <span>The Projected IQ-Style Range is not an IQ score or IQ test. The Possible MBTI-Style Type is not an official MBTI® result.</span>
+              </div>
+
               <div class="warning">
-                This result is a coherence-pattern read only. It is not a medical, mental-health, legal, employment, intelligence, or official personality-type diagnostic. The Projected IQ-Style Range is not an IQ score or IQ test. The Possible MBTI-Style Type is not an official MBTI® result. Fragmentation markers identify pressure-break choices, not personal identity. This version does not email, store, archive, or submit your result.
+                This result is a coherence-pattern read only. It is not a medical, mental-health, legal, employment, intelligence, or official personality-type diagnostic. Fragmentation markers identify pressure-break choices, not personal identity.
               </div>
 
               <div class="button-row">
@@ -2856,7 +2623,12 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
         document.getElementById("retake-result").addEventListener("click",()=>{
           form.reset();
           generatedQuestions = [];
-          scenarioList.innerHTML = "";
+          scenarioAnswers = {};
+          currentScenarioIndex = 0;
+          reviewMode = false;
+          flowShell.innerHTML = "";
+          reviewPanel.innerHTML = "";
+          reviewPanel.classList.remove("is-visible");
           diagnosticStage.classList.remove("is-visible");
           result.classList.remove("is-visible");
           result.innerHTML = "";
@@ -2864,8 +2636,17 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
           clearValidation(intakeValidation);
           window.scrollTo({top:0,behavior:"smooth"});
         });
+      }
 
-        window.COHERENCE_DIAGNOSTIC_LAST_RESULT = data;
+      function gradeFromSavedAnswers(){
+        clearValidation(validation);
+        const message = validateSavedDiagnostic();
+        if(message){
+          showValidation(validation,message);
+          renderReview(true);
+          return;
+        }
+        renderResult(calculateResult());
       }
 
       function generateDiagnostic(){
@@ -2873,6 +2654,8 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
         clearValidation(validation);
         result.classList.remove("is-visible");
         result.innerHTML = "";
+        reviewPanel.classList.remove("is-visible");
+        reviewPanel.innerHTML = "";
 
         const message = validateIntake();
         if(message){
@@ -2884,7 +2667,10 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
         const secondary = getRadioValue("claimedSecondaryArchetype");
 
         generatedQuestions = chooseBalancedScenarios(primary,secondary);
-        renderQuestions();
+        scenarioAnswers = {};
+        currentScenarioIndex = 0;
+        reviewMode = false;
+        renderFlow();
 
         diagnosticStage.classList.add("is-visible");
         diagnosticStage.scrollIntoView({behavior:"smooth",block:"start"});
@@ -2892,32 +2678,9 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
         document.documentElement.dataset.generatedDiagnostic = "true";
         document.documentElement.dataset.claimedPrimaryArchetype = primary;
         document.documentElement.dataset.claimedSecondaryArchetype = secondary;
-        window.COHERENCE_DIAGNOSTIC_SCENARIO_DRAW = generatedQuestions.map((item)=>({
-          id:item.id,
-          title:item.title,
-          publicCategory:item.publicCategory,
-          drawBucket:item.drawBucket || "scenario"
-        }));
       }
 
-      form.addEventListener("submit",(event)=>{
-        event.preventDefault();
-        clearValidation(validation);
-
-        const intakeMessage = validateIntake();
-        if(intakeMessage){
-          showValidation(intakeValidation,intakeMessage);
-          return;
-        }
-
-        const diagnosticMessage = validateDiagnostic();
-        if(diagnosticMessage){
-          showValidation(validation,diagnosticMessage);
-          return;
-        }
-
-        renderResult(calculateResult());
-      });
+      form.addEventListener("submit",(event)=>event.preventDefault());
 
       form.addEventListener("change",(event)=>{
         const target = event.target;
@@ -2935,23 +2698,15 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
 
           if(generatedQuestions.length){
             generatedQuestions = [];
-            scenarioList.innerHTML = "";
+            scenarioAnswers = {};
+            currentScenarioIndex = 0;
+            flowShell.innerHTML = "";
+            reviewPanel.innerHTML = "";
+            reviewPanel.classList.remove("is-visible");
             diagnosticStage.classList.remove("is-visible");
             result.classList.remove("is-visible");
             result.innerHTML = "";
           }
-        }
-
-        if(!target.matches('input[type="radio"][data-question]')) return;
-
-        const questionId = target.dataset.question;
-        const primary = getRadioValue(`${questionId}-primary`);
-        const secondary = getRadioValue(`${questionId}-secondary`);
-
-        if(primary && secondary && primary === secondary){
-          const oppositeRole = target.dataset.role === "primary" ? "secondary" : "primary";
-          const opposite = form.querySelector(`input[name="${questionId}-${oppositeRole}"][value="${target.value}"]`);
-          if(opposite) opposite.checked = false;
         }
       });
 
@@ -2961,92 +2716,57 @@ deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HE
         clearValidation(intakeValidation);
         clearValidation(validation);
         generatedQuestions = [];
-        scenarioList.innerHTML = "";
+        scenarioAnswers = {};
+        currentScenarioIndex = 0;
+        flowShell.innerHTML = "";
+        reviewPanel.innerHTML = "";
+        reviewPanel.classList.remove("is-visible");
         diagnosticStage.classList.remove("is-visible");
         result.classList.remove("is-visible");
         result.innerHTML = "";
-      });
-
-      clearGeneratedBtn.addEventListener("click",()=>{
-        generatedQuestions = [];
-        scenarioList.innerHTML = "";
-        diagnosticStage.classList.remove("is-visible");
-        result.classList.remove("is-visible");
-        result.innerHTML = "";
-        clearValidation(validation);
       });
 
       renderArchetypeLibrary();
       renderArchetypeSelectors();
 
       document.documentElement.dataset.coherenceDiagnosticContract = CONTRACT;
-      document.documentElement.dataset.coherenceDiagnosticQuestions = "adaptive-12-minimum";
-      document.documentElement.dataset.coherenceDiagnosticLocalOnly = "true";
-      document.documentElement.dataset.coherenceDiagnosticStorage = "false";
-      document.documentElement.dataset.coherenceDiagnosticMedical = "false";
-      document.documentElement.dataset.coherenceDiagnosticEngineeringLens = "true";
-      document.documentElement.dataset.coherenceDiagnosticCognitiveEstimate = "not-iq";
-      document.documentElement.dataset.coherenceDiagnosticPreferenceType = "not-official-mbti";
-      document.documentElement.dataset.realWorldScenarioBank = "active";
-      document.documentElement.dataset.controlledRandomization = "active";
-      document.documentElement.dataset.resultHeroThreeCardRow = "active";
-      document.documentElement.dataset.projectedIqStyleRange = "active";
-      document.documentElement.dataset.possibleMbtiStyleType = "active";
-      document.documentElement.dataset.visibleAnswerTypeLabels = "false";
-      document.documentElement.dataset.visibleAnswerStrengthLabels = "false";
-      document.documentElement.dataset.incoherenceProbesActive = "true";
-      document.documentElement.dataset.fragmentationBucketActive = "true";
-      document.documentElement.dataset.technicalReadoutResultOnly = "true";
+      document.documentElement.dataset.oneQuestionFocusFlow = "active";
+      document.documentElement.dataset.primaryAnswerZone = "warm-gold";
+      document.documentElement.dataset.secondaryAnswerZone = "cool-blue-green";
+      document.documentElement.dataset.frontloadedPrivacyAssurance = "active";
+      document.documentElement.dataset.reviewAnswers = "active";
+      document.documentElement.dataset.localOnly = "true";
+      document.documentElement.dataset.storage = "false";
+      document.documentElement.dataset.localStorage = "false";
+      document.documentElement.dataset.cookies = "false";
+      document.documentElement.dataset.apiCall = "false";
+      document.documentElement.dataset.emailResultsActive = "false";
+      document.documentElement.dataset.characterProfileSaveActive = "false";
 
       window.COHERENCE_DIAGNOSTIC_ASSESSMENT_RECEIPT = {
         contract: CONTRACT,
-        previousContract: "COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_TNT_v6",
+        previousContract: "COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HERO_TNT_v7",
         route: "/coherence-diagnostic/",
         file: "/coherence-diagnostic/index.html",
-        changeType: "real-world scenario bank and result hero renewal",
-        questionsMinimum: 12,
-        fixedQ1: true,
-        fixedQ2: true,
-        generatedScenarioCount: 10,
-        realWorldScenarioBank: true,
-        controlledRandomization: true,
-        balancedDraw: ["archetype-specific","work-project","relationship-group","evidence-claim","responsibility-repair","instability-pressure"],
-        publicArchetypes: ["Strategist","Builder","Mitigator","Auditor"],
-        resultHeroThreeCardRow: true,
-        resultHeroCoherenceScore: true,
-        projectedIqStyleRange: true,
-        projectedIqStyleRangeBoundary: "Estimate only · not an IQ test",
-        possibleMbtiStyleType: true,
-        possibleMbtiStyleTypeBoundary: "Preference hypothesis · not official MBTI®",
-        technicalReadoutResultOnly: true,
-        hiddenFragmentationBucket: true,
-        fragmentedPublicArchetype: false,
-        visibleAnswerTypeLabels: false,
-        visibleAnswerStrengthLabels: false,
-        incoherenceProbesActive: true,
-        optionRandomization: true,
-        adaptiveGeneration: true,
-        primarySecondaryRequired: true,
-        scoringChange: false,
-        archetypeModelChange: false,
-        fragmentationLogicChange: false,
-        engineeringLensChange: false,
-        publicResultFirst: true,
-        engineeringLensActive: true,
-        fragmentationEngineeringReadout: true,
-        cognitiveProcessingEstimate: "not IQ",
-        preferenceTypeHypothesis: "not official MBTI®",
-        resultsVisibleWithoutEmail: true,
+        oneQuestionFocusFlow: true,
+        primaryAnswerZone: "warm/gold",
+        secondaryAnswerZone: "cool/blue-green",
+        frontloadedPrivacyAssurance: true,
+        reviewAnswers: true,
+        autoAdvanceAfterBothSelections: true,
+        localOnly: true,
+        backend: false,
+        storage: false,
+        localStorage: false,
+        cookies: false,
+        apiCall: false,
         emailResultsActive: false,
         characterProfileSaveActive: false,
-        localGrading: true,
-        noBackend: true,
-        noStorage: true,
-        medicalDiagnostic: false,
-        employmentScreening: false,
-        legalDetermination: false,
-        iqClaim: false,
-        officialMbtiClaim: false,
+        scoringChange: false,
+        scenarioBankChange: false,
+        fragmentationLogicChange: false,
+        resultHeroPreserved: true,
+        engineeringLensPreserved: true,
         canvas: false,
         webgl: false,
         generatedImage: false,

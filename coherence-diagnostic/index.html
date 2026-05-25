@@ -1,0 +1,1537 @@
+<!doctype html>
+<html
+  lang="en"
+  data-route="/coherence-diagnostic/"
+  data-page="coherence-diagnostic-assessment"
+  data-contract="COHERENCE_DIAGNOSTIC_ASSESSMENT_PUBLIC_PAGE_TNT_v1"
+  data-spec-ops-contract="COHERENCE_DIAGNOSTIC_ASSESSMENT_PUBLIC_PAGE_SPEC_OPS_v1"
+  data-news-contract="COHERENCE_DIAGNOSTIC_ASSESSMENT_PUBLIC_PAGE_NEWS_v1"
+  data-ccr-contract="COHERENCE_DIAGNOSTIC_ASSESSMENT_PUBLIC_PAGE_CCR_v1"
+  data-question-minimum="12"
+  data-q1-fixed="true"
+  data-q2-fixed="true"
+  data-primary-secondary-required="true"
+  data-local-grading="true"
+  data-no-backend="true"
+  data-no-storage="true"
+  data-medical-diagnostic="false"
+  data-employment-screening="false"
+  data-canvas="false"
+  data-webgl="false"
+  data-generated-image="false"
+  data-graphic-box="false"
+>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Coherence Diagnostic Assessment · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="A local-only coherence diagnostic assessment measuring self-rated coherence, claimed archetype, revealed primary pattern, secondary pattern, calibration gap, strengths, and risks."
+  >
+
+  <style>
+    :root{
+      color-scheme:dark;
+      --bg:#01050d;
+      --deep:#030814;
+      --panel:rgba(5,15,32,.84);
+      --panel2:rgba(3,9,20,.72);
+      --glass:rgba(255,255,255,.045);
+      --text:rgba(239,247,255,.96);
+      --muted:rgba(239,247,255,.70);
+      --faint:rgba(239,247,255,.50);
+      --gold:#f4cf83;
+      --gold2:#ffe8a3;
+      --blue:#8dd8ff;
+      --mint:#a7f3c6;
+      --violet:#ad8cff;
+      --warn:#ffb36d;
+      --fail:#ff6b6b;
+      --line:rgba(255,255,255,.12);
+      --line2:rgba(244,207,131,.26);
+      --max:1180px;
+      --shadow:0 34px 120px rgba(0,0,0,.54);
+    }
+
+    *{box-sizing:border-box}
+
+    html{
+      min-height:100%;
+      scroll-behavior:smooth;
+      background:var(--bg);
+    }
+
+    body{
+      margin:0;
+      min-width:320px;
+      min-height:100vh;
+      overflow-x:hidden;
+      color:var(--text);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      letter-spacing:-.015em;
+      -webkit-font-smoothing:antialiased;
+      background:
+        radial-gradient(circle at 50% -14%,rgba(78,119,171,.30),transparent 38rem),
+        radial-gradient(circle at 12% 18%,rgba(244,207,131,.10),transparent 30rem),
+        radial-gradient(circle at 88% 30%,rgba(141,216,255,.12),transparent 32rem),
+        radial-gradient(circle at 50% 100%,rgba(173,140,255,.10),transparent 42rem),
+        linear-gradient(180deg,#061020 0%,var(--bg) 58%,#01040a 100%);
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      background:
+        linear-gradient(rgba(141,216,255,.030) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.030) 1px,transparent 1px),
+        radial-gradient(circle,rgba(255,255,255,.13) 0 1px,transparent 1.4px);
+      background-size:58px 58px,58px 58px,230px 250px;
+      opacity:.18;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.48) 66%,rgba(0,0,0,.12));
+    }
+
+    a,button,input,label,summary,select{font:inherit;color:inherit}
+    a{text-decoration:none}
+    button,label,summary{cursor:pointer}
+
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    label:focus-visible{
+      outline:2px solid var(--gold);
+      outline-offset:4px;
+    }
+
+    .skip{
+      position:absolute;
+      left:12px;
+      top:12px;
+      z-index:50;
+      transform:translateY(-160%);
+      padding:10px 14px;
+      border-radius:999px;
+      background:var(--mint);
+      color:#06101c;
+      font-weight:950;
+    }
+
+    .skip:focus{transform:translateY(0)}
+
+    .shell{
+      position:relative;
+      z-index:2;
+      width:min(var(--max),calc(100% - 28px));
+      margin:0 auto;
+      padding:max(18px,env(safe-area-inset-top)) 0 max(54px,env(safe-area-inset-bottom));
+    }
+
+    .topbar{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      align-items:center;
+      gap:12px;
+      padding:10px 0 18px;
+    }
+
+    .brand{
+      display:inline-grid;
+      grid-template-columns:auto minmax(0,1fr);
+      align-items:center;
+      gap:12px;
+      min-width:0;
+      color:var(--gold);
+      font-weight:950;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+    }
+
+    .brand-mark{
+      display:grid;
+      place-items:center;
+      width:44px;
+      height:44px;
+      border:1px solid rgba(244,207,131,.50);
+      border-radius:15px;
+      background:
+        linear-gradient(135deg,rgba(255,255,255,.22),transparent 38%),
+        conic-gradient(from 45deg,rgba(255,255,255,.24),rgba(141,216,255,.20),rgba(7,19,52,.94),rgba(244,207,131,.18),rgba(255,255,255,.18));
+      box-shadow:0 0 24px rgba(141,216,255,.17),0 0 18px rgba(244,207,131,.12);
+    }
+
+    .brand-mark span{
+      color:rgba(255,244,216,.98);
+      text-shadow:0 2px 10px rgba(0,0,0,.8);
+      font-size:.72rem;
+      letter-spacing:.08em;
+    }
+
+    .brand-copy{
+      display:grid;
+      gap:2px;
+      min-width:0;
+    }
+
+    .brand-copy span{
+      color:rgba(141,216,255,.82);
+      font-size:.68rem;
+      letter-spacing:.22em;
+    }
+
+    .brand-copy strong{
+      color:rgba(255,244,216,.96);
+      font-size:clamp(1rem,2.6vw,1.48rem);
+      line-height:1;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .route-links{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:8px;
+    }
+
+    .route-links a,
+    .action-btn,
+    .ghost-btn{
+      min-height:40px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(244,207,131,.24);
+      border-radius:999px;
+      padding:0 13px;
+      color:rgba(239,247,255,.84);
+      background:rgba(255,255,255,.038);
+      font-size:.78rem;
+      font-weight:900;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+
+    .route-links a:hover,
+    .ghost-btn:hover{
+      color:#06101c;
+      background:linear-gradient(135deg,#fff0b8,var(--gold));
+      border-color:rgba(244,207,131,.52);
+    }
+
+    .page{
+      border:1px solid rgba(244,207,131,.20);
+      border-radius:clamp(24px,4vw,44px);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(141,216,255,.10),transparent 28rem),
+        radial-gradient(circle at 12% 18%,rgba(244,207,131,.08),transparent 24rem),
+        linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.016)),
+        rgba(3,8,18,.90);
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+
+    .hero{
+      display:grid;
+      gap:18px;
+      padding:clamp(24px,5vw,54px);
+      background:
+        radial-gradient(circle at 85% 12%,rgba(141,216,255,.14),transparent 22rem),
+        radial-gradient(circle at 10% 0%,rgba(244,207,131,.11),transparent 24rem),
+        rgba(0,0,0,.10);
+    }
+
+    .kicker,
+    .eyebrow{
+      margin:0;
+      color:var(--gold);
+      font:900 .74rem/1.4 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      letter-spacing:.19em;
+      text-transform:uppercase;
+    }
+
+    h1{
+      max-width:900px;
+      margin:0;
+      font-size:clamp(2.45rem,7vw,5.6rem);
+      line-height:.88;
+      letter-spacing:-.075em;
+      text-wrap:balance;
+    }
+
+    h2{
+      margin:0;
+      color:rgba(255,244,216,.96);
+      font-size:clamp(1.35rem,3.4vw,2.35rem);
+      line-height:1;
+      letter-spacing:-.055em;
+      text-wrap:balance;
+    }
+
+    h3{
+      margin:0;
+      color:rgba(255,244,216,.96);
+      font-size:clamp(1.08rem,2vw,1.42rem);
+      line-height:1.1;
+      letter-spacing:-.03em;
+    }
+
+    p{
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(.98rem,2.1vw,1.12rem);
+      line-height:1.55;
+    }
+
+    .hero-copy{
+      max-width:870px;
+      display:grid;
+      gap:12px;
+    }
+
+    .pill-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    .pill{
+      min-height:32px;
+      display:inline-flex;
+      align-items:center;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:999px;
+      padding:0 11px;
+      color:rgba(239,247,255,.76);
+      background:rgba(2,8,20,.58);
+      backdrop-filter:blur(10px);
+      font-size:.70rem;
+      font-weight:850;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+    }
+
+    .warning{
+      border:1px solid rgba(244,207,131,.18);
+      border-radius:22px;
+      padding:14px 16px;
+      color:rgba(255,244,216,.86);
+      background:
+        repeating-linear-gradient(135deg,rgba(244,207,131,.05) 0 8px,transparent 8px 16px),
+        rgba(255,255,255,.025);
+      font-size:.88rem;
+      font-weight:760;
+      line-height:1.45;
+    }
+
+    .assessment{
+      display:grid;
+      gap:16px;
+      padding:clamp(18px,4vw,34px);
+    }
+
+    .panel{
+      border:1px solid rgba(244,207,131,.16);
+      border-radius:26px;
+      background:
+        radial-gradient(circle at 10% 0%,rgba(244,207,131,.065),transparent 18rem),
+        radial-gradient(circle at 92% 15%,rgba(141,216,255,.07),transparent 18rem),
+        linear-gradient(180deg,rgba(255,255,255,.040),rgba(255,255,255,.014)),
+        rgba(4,10,23,.82);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      overflow:hidden;
+    }
+
+    .panel-head{
+      display:grid;
+      gap:8px;
+      padding:18px clamp(16px,3vw,24px);
+      border-bottom:1px solid rgba(255,255,255,.08);
+      background:
+        linear-gradient(90deg,rgba(255,255,255,.04),transparent),
+        rgba(255,255,255,.018);
+    }
+
+    .panel-body{
+      display:grid;
+      gap:16px;
+      padding:clamp(16px,3vw,24px);
+    }
+
+    .mode-grid,
+    .archetype-grid,
+    .scale-grid,
+    .option-grid{
+      display:grid;
+      gap:10px;
+    }
+
+    .mode-grid{
+      grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .archetype-grid,
+    .option-grid{
+      grid-template-columns:repeat(4,minmax(0,1fr));
+    }
+
+    .scale-grid{
+      grid-template-columns:repeat(10,minmax(0,1fr));
+    }
+
+    .choice-card,
+    .scale-card{
+      position:relative;
+      min-height:112px;
+      display:grid;
+      align-content:start;
+      gap:7px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      padding:13px;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(244,207,131,.06),transparent 9rem),
+        rgba(255,255,255,.028);
+      overflow:hidden;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease,filter .18s ease;
+    }
+
+    .scale-card{
+      min-height:62px;
+      place-items:center;
+      align-content:center;
+      font-size:1.05rem;
+      font-weight:950;
+      color:rgba(255,244,216,.92);
+    }
+
+    .choice-card:hover,
+    .scale-card:hover{
+      transform:translateY(-2px);
+      border-color:rgba(244,207,131,.34);
+      filter:brightness(1.08);
+    }
+
+    .choice-card input,
+    .scale-card input{
+      position:absolute;
+      opacity:0;
+      pointer-events:none;
+    }
+
+    .choice-card:has(input:checked),
+    .scale-card:has(input:checked){
+      border-color:rgba(244,207,131,.58);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(244,207,131,.12),transparent 9rem),
+        linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018)),
+        rgba(6,15,32,.88);
+      box-shadow:0 0 0 1px rgba(244,207,131,.12),0 18px 52px rgba(0,0,0,.26);
+    }
+
+    .choice-card b{
+      color:var(--gold);
+      font-size:.70rem;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .choice-card strong{
+      color:rgba(255,244,216,.96);
+      font-size:.98rem;
+      line-height:1.16;
+    }
+
+    .choice-card span{
+      color:rgba(239,247,255,.70);
+      font-size:.84rem;
+      line-height:1.35;
+    }
+
+    .question{
+      display:grid;
+      gap:14px;
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:22px;
+      padding:16px;
+      background:rgba(255,255,255,.024);
+    }
+
+    .question-top{
+      display:grid;
+      gap:8px;
+    }
+
+    .question-number{
+      color:var(--gold);
+      font:900 .68rem/1.3 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+
+    .answer-columns{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .answer-box{
+      display:grid;
+      gap:10px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:12px;
+      background:rgba(0,0,0,.16);
+    }
+
+    .answer-title{
+      color:rgba(141,216,255,.78);
+      font:900 .68rem/1.3 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .answer-choice{
+      position:relative;
+      display:grid;
+      gap:5px;
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:15px;
+      padding:11px;
+      background:rgba(255,255,255,.025);
+      transition:border-color .18s ease,background .18s ease;
+    }
+
+    .answer-choice:hover{
+      border-color:rgba(141,216,255,.25);
+      background:rgba(141,216,255,.05);
+    }
+
+    .answer-choice:has(input:checked){
+      border-color:rgba(244,207,131,.52);
+      background:rgba(244,207,131,.075);
+    }
+
+    .answer-choice input{
+      position:absolute;
+      opacity:0;
+      pointer-events:none;
+    }
+
+    .answer-choice b{
+      color:rgba(255,244,216,.94);
+      font-size:.88rem;
+      line-height:1.22;
+    }
+
+    .answer-choice span{
+      color:rgba(239,247,255,.64);
+      font-size:.78rem;
+      line-height:1.35;
+    }
+
+    .validation{
+      display:none;
+      border:1px solid rgba(255,107,107,.28);
+      border-radius:18px;
+      padding:12px 14px;
+      background:rgba(255,107,107,.075);
+      color:rgba(255,220,220,.94);
+      font-weight:820;
+      line-height:1.4;
+    }
+
+    .validation.is-visible{display:block}
+
+    .button-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+    }
+
+    .button-cluster{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .action-btn{
+      min-height:44px;
+      color:#06101c;
+      background:linear-gradient(135deg,#fff0b8,var(--gold));
+      border-color:rgba(244,207,131,.56);
+      box-shadow:0 12px 36px rgba(0,0,0,.26);
+    }
+
+    .action-btn:disabled{
+      cursor:not-allowed;
+      opacity:.55;
+      filter:grayscale(.3);
+    }
+
+    .ghost-btn{
+      min-height:44px;
+      background:rgba(255,255,255,.040);
+    }
+
+    .result{
+      display:none;
+    }
+
+    .result.is-visible{
+      display:grid;
+      gap:16px;
+    }
+
+    .score-card{
+      display:grid;
+      gap:10px;
+      border:1px solid rgba(244,207,131,.28);
+      border-radius:26px;
+      padding:18px;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(244,207,131,.12),transparent 16rem),
+        radial-gradient(circle at 90% 20%,rgba(141,216,255,.10),transparent 16rem),
+        rgba(255,255,255,.030);
+    }
+
+    .score-number{
+      color:rgba(255,244,216,.98);
+      font-size:clamp(2.8rem,8vw,5.2rem);
+      line-height:.9;
+      letter-spacing:-.07em;
+      font-weight:950;
+    }
+
+    .result-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .result-cell{
+      display:grid;
+      gap:6px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      padding:13px;
+      background:rgba(255,255,255,.026);
+      min-height:98px;
+    }
+
+    .result-cell b{
+      color:var(--gold);
+      font-size:.68rem;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .result-cell strong{
+      color:rgba(255,244,216,.96);
+      font-size:.98rem;
+      line-height:1.2;
+    }
+
+    .result-cell span,
+    .result-cell li{
+      color:rgba(239,247,255,.70);
+      font-size:.84rem;
+      line-height:1.35;
+    }
+
+    .result-cell ul{
+      margin:0;
+      padding-left:18px;
+    }
+
+    .receipt{
+      display:none!important;
+      visibility:hidden!important;
+      overflow:hidden!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      position:absolute!important;
+      clip-path:inset(50%)!important;
+      white-space:nowrap!important;
+    }
+
+    .footer{
+      margin-top:18px;
+      padding:18px 0 0;
+      color:var(--faint);
+      font-size:.78rem;
+      text-align:center;
+    }
+
+    @media (max-width:940px){
+      .mode-grid,
+      .archetype-grid,
+      .option-grid,
+      .result-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .scale-grid{
+        grid-template-columns:repeat(5,minmax(0,1fr));
+      }
+
+      .answer-columns{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width:640px){
+      .shell{
+        width:min(100% - 18px,var(--max));
+      }
+
+      .topbar{
+        grid-template-columns:1fr;
+      }
+
+      .route-links{
+        justify-content:flex-start;
+      }
+
+      .mode-grid,
+      .archetype-grid,
+      .option-grid,
+      .result-grid{
+        grid-template-columns:1fr;
+      }
+
+      .scale-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .hero,
+      .assessment{
+        padding:18px;
+      }
+
+      .button-row{
+        align-items:stretch;
+      }
+
+      .button-cluster,
+      .action-btn,
+      .ghost-btn{
+        width:100%;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *,
+      *::before,
+      *::after{
+        scroll-behavior:auto!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip" href="#assessment">Skip to assessment</a>
+
+  <div class="shell">
+    <header class="topbar" aria-label="Coherence Diagnostic navigation">
+      <a class="brand" href="/coherence-diagnostic/" aria-current="page">
+        <span class="brand-mark" aria-hidden="true"><span>CD</span></span>
+        <span class="brand-copy">
+          <span>Diamond Gate Bridge</span>
+          <strong>Coherence Diagnostic</strong>
+        </span>
+      </a>
+
+      <nav class="route-links" aria-label="Route links">
+        <a href="/">Compass</a>
+        <a href="/showroom/globe/">Mirrorland</a>
+        <a href="/gauges/">Triple G</a>
+      </nav>
+    </header>
+
+    <main class="page">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="kicker">Public Assessment · Local Grading · Primary / Secondary Pattern Read</p>
+          <h1 id="page-title">Coherence Diagnostic Assessment</h1>
+          <p>
+            This assessment compares how coherent you believe yourself to be, which archetype you claim, and what your scenario choices reveal under pressure.
+          </p>
+        </div>
+
+        <div class="pill-row" aria-label="Assessment properties">
+          <span class="pill">12 questions minimum</span>
+          <span class="pill">Q1 fixed scale</span>
+          <span class="pill">Q2 fixed archetype claim</span>
+          <span class="pill">Primary + secondary choices</span>
+          <span class="pill">Local-only scoring</span>
+          <span class="pill">No storage</span>
+        </div>
+
+        <div class="warning">
+          This assessment is not a medical, mental-health, legal, or employment diagnostic. It is a self-reflection and pattern-assessment tool for coherence, consistency, accountability, and decision alignment.
+        </div>
+      </section>
+
+      <section id="assessment" class="assessment" aria-label="Coherence Diagnostic Assessment">
+        <form id="coherence-form" novalidate>
+          <section class="panel" aria-labelledby="mode-title">
+            <div class="panel-head">
+              <p class="eyebrow">Assessment Mode</p>
+              <h2 id="mode-title">Choose how you want the result handled.</h2>
+              <p>Graded mode shows a score, band, calibration gap, and archetype match. Ungraded mode gives a neutral pattern read without a formal score.</p>
+            </div>
+            <div class="panel-body">
+              <div class="mode-grid">
+                <label class="choice-card">
+                  <input type="radio" name="assessmentMode" value="graded" checked>
+                  <b>Graded Mode</b>
+                  <strong>Show my result</strong>
+                  <span>Receive coherence score, band, calibration gap, claimed archetype comparison, strengths, risks, and next step.</span>
+                </label>
+
+                <label class="choice-card">
+                  <input type="radio" name="assessmentMode" value="ungraded">
+                  <b>Ungraded Mode</b>
+                  <strong>Pattern read only</strong>
+                  <span>Receive a neutral summary without a formal numeric score or score band.</span>
+                </label>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" aria-labelledby="q1-title">
+            <div class="panel-head">
+              <p class="eyebrow">Question 1 · Fixed Intake Anchor</p>
+              <h2 id="q1-title">On a scale from 1 to 10, how coherent do you believe yourself to be?</h2>
+              <p>This is a self-perception anchor. It does not prove the final score by itself.</p>
+            </div>
+            <div class="panel-body">
+              <div class="scale-grid" aria-label="Self-rated coherence scale">
+                <label class="scale-card"><input type="radio" name="selfRating" value="1">1</label>
+                <label class="scale-card"><input type="radio" name="selfRating" value="2">2</label>
+                <label class="scale-card"><input type="radio" name="selfRating" value="3">3</label>
+                <label class="scale-card"><input type="radio" name="selfRating" value="4">4</label>
+                <label class="scale-card"><input type="radio" name="selfRating" value="5">5</label>
+                <label class="scale-card"><input type="radio" name="selfRating" value="6">6</label>
+                <label class="scale-card"><input type="radio" name="selfRating" value="7">7</label>
+                <label class="scale-card"><input type="radio" name="selfRating" value="8">8</label>
+                <label class="scale-card"><input type="radio" name="selfRating" value="9">9</label>
+                <label class="scale-card"><input type="radio" name="selfRating" value="10">10</label>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" aria-labelledby="q2-title">
+            <div class="panel-head">
+              <p class="eyebrow">Question 2 · Fixed Claim Anchor</p>
+              <h2 id="q2-title">Read the four archetypes. Which archetype do you believe best describes you?</h2>
+              <p>The claimed archetype is a claim anchor, not proof. The assessment compares it against your scenario pattern.</p>
+            </div>
+            <div class="panel-body">
+              <div class="archetype-grid">
+                <label class="choice-card">
+                  <input type="radio" name="claimedArchetype" value="North">
+                  <b>North</b>
+                  <strong>Structure / Command</strong>
+                  <span>Direction, principle, boundary, order, sequence, and decision. Risk: overcontrol or rigidity.</span>
+                </label>
+
+                <label class="choice-card">
+                  <input type="radio" name="claimedArchetype" value="East">
+                  <b>East</b>
+                  <strong>Signal / Pattern</strong>
+                  <span>Perception, intelligence, interpretation, possibility, and idea flow. Risk: abstraction drift.</span>
+                </label>
+
+                <label class="choice-card">
+                  <input type="radio" name="claimedArchetype" value="South">
+                  <b>South</b>
+                  <strong>Stability / Flow</strong>
+                  <span>Continuity, preservation, support, integration, patience, and field stability. Risk: over-accommodation.</span>
+                </label>
+
+                <label class="choice-card">
+                  <input type="radio" name="claimedArchetype" value="West">
+                  <b>West</b>
+                  <strong>Audit / Evidence</strong>
+                  <span>Contradiction, proof, diagnostic pressure, evidence, and truth-testing. Risk: adversarial overpressure.</span>
+                </label>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" aria-labelledby="scenario-title">
+            <div class="panel-head">
+              <p class="eyebrow">Questions 3–12 · Diagnostic Scenarios</p>
+              <h2 id="scenario-title">Choose a primary and secondary response for each scenario.</h2>
+              <p>Primary means what you would do first. Secondary means what you would rely on next. The same option cannot be selected twice for the same question.</p>
+            </div>
+            <div class="panel-body" id="scenario-list"></div>
+          </section>
+
+          <div id="validation" class="validation" role="alert"></div>
+
+          <div class="panel">
+            <div class="panel-body">
+              <div class="button-row">
+                <p class="boundary-note">Answers are processed locally in this browser. This MVP does not store or submit results.</p>
+                <div class="button-cluster">
+                  <button class="ghost-btn" type="reset" id="reset-btn">Reset</button>
+                  <button class="action-btn" type="submit">Grade / Read Pattern</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <section id="result" class="result" aria-live="polite" aria-label="Assessment result"></section>
+
+        <template id="route-receipt" class="receipt">
+COHERENCE_DIAGNOSTIC_ASSESSMENT_PUBLIC_PAGE_TNT_v1
+route=/coherence-diagnostic/
+file=/coherence-diagnostic/index.html
+questions_minimum=12
+q1_fixed=true
+q2_fixed=true
+primary_secondary_required=true
+local_grading=true
+no_backend=true
+no_storage=true
+medical_diagnostic=false
+employment_screening=false
+canvas=false
+webgl=false
+generated_image=false
+graphic_box=false
+        </template>
+      </section>
+    </main>
+
+    <footer class="footer">
+      Diamond Gate Bridge · Coherence Diagnostic Assessment · Local-only MVP · No clinical or employment diagnostic claim.
+    </footer>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const CONTRACT = "COHERENCE_DIAGNOSTIC_ASSESSMENT_PUBLIC_PAGE_TNT_v1";
+      const MAX_COHERENCE_VALUE = 4;
+
+      const archetypes = {
+        North: {
+          label: "North",
+          title: "Structure / Command",
+          summary: "You move through direction, boundary, sequence, principle, and decision."
+        },
+        East: {
+          label: "East",
+          title: "Signal / Pattern",
+          summary: "You move through pattern recognition, interpretation, possibility, and signal reading."
+        },
+        South: {
+          label: "South",
+          title: "Stability / Flow",
+          summary: "You move through continuity, preservation, support, integration, and stabilizing flow."
+        },
+        West: {
+          label: "West",
+          title: "Audit / Evidence",
+          summary: "You move through proof, contradiction detection, pressure testing, and diagnostic clarity."
+        }
+      };
+
+      const questions = [
+        {
+          id: "conflict",
+          title: "Conflict response",
+          prompt: "A disagreement is escalating in a group. What do you do first, and what do you rely on second?",
+          options: [
+            { id: "conflict-north", archetype: "North", coherence: 4, text: "Set the boundary, define the decision point, and restore sequence.", strength: "boundary clarity", risk: "overcontrol risk" },
+            { id: "conflict-east", archetype: "East", coherence: 3, text: "Read the signals, identify the hidden misunderstanding, and reframe the issue.", strength: "pattern detection", risk: "overinterpretation risk" },
+            { id: "conflict-south", archetype: "South", coherence: 3, text: "Lower the temperature, preserve the relationship, and stabilize the room.", strength: "field stabilization", risk: "delay risk" },
+            { id: "conflict-west", archetype: "West", coherence: 4, text: "Identify the contradiction, ask for evidence, and separate claim from fact.", strength: "truth protection", risk: "adversarial pressure risk" }
+          ]
+        },
+        {
+          id: "ambiguous-information",
+          title: "Ambiguous information",
+          prompt: "You receive incomplete information and people want a fast conclusion. What is your first move?",
+          options: [
+            { id: "ambiguous-north", archetype: "North", coherence: 3, text: "Define what must be known before any decision is allowed.", strength: "decision discipline", risk: "rigidity risk" },
+            { id: "ambiguous-east", archetype: "East", coherence: 4, text: "Map the possible meanings and identify which signal would change the answer.", strength: "signal clarity", risk: "possibility drift risk" },
+            { id: "ambiguous-south", archetype: "South", coherence: 2, text: "Slow the process down and keep people from committing too early.", strength: "pace control", risk: "indecision risk" },
+            { id: "ambiguous-west", archetype: "West", coherence: 4, text: "Separate evidence from assumption and mark every unsupported claim.", strength: "evidence separation", risk: "skepticism overload risk" }
+          ]
+        },
+        {
+          id: "responsibility-pressure",
+          title: "Responsibility pressure",
+          prompt: "A project fails and the group begins shifting blame. What do you do first?",
+          options: [
+            { id: "responsibility-north", archetype: "North", coherence: 4, text: "Assign the chain of responsibility and define the repair sequence.", strength: "accountability structure", risk: "command pressure risk" },
+            { id: "responsibility-east", archetype: "East", coherence: 3, text: "Look for the pattern that caused the failure before blaming individuals.", strength: "system insight", risk: "abstraction risk" },
+            { id: "responsibility-south", archetype: "South", coherence: 2, text: "Keep the group from fragmenting and preserve enough trust to continue.", strength: "continuity protection", risk: "accountability delay risk" },
+            { id: "responsibility-west", archetype: "West", coherence: 4, text: "Audit what happened, what was promised, and what was actually done.", strength: "receipt logic", risk: "cold delivery risk" }
+          ]
+        },
+        {
+          id: "contradiction",
+          title: "Contradiction detection",
+          prompt: "Someone makes two claims that cannot both be true. What do you do first?",
+          options: [
+            { id: "contradiction-north", archetype: "North", coherence: 3, text: "Pause the process and require one controlling rule.", strength: "rule control", risk: "premature closure risk" },
+            { id: "contradiction-east", archetype: "East", coherence: 3, text: "Look for the frame where both claims appeared to make sense.", strength: "context reading", risk: "ambiguity expansion risk" },
+            { id: "contradiction-south", archetype: "South", coherence: 2, text: "Keep the exchange stable while the contradiction is clarified.", strength: "interaction stability", risk: "softening the contradiction risk" },
+            { id: "contradiction-west", archetype: "West", coherence: 4, text: "Name the contradiction directly and ask which claim should be withdrawn or revised.", strength: "contradiction clarity", risk: "overpressure risk" }
+          ]
+        },
+        {
+          id: "execution-sequencing",
+          title: "Execution sequencing",
+          prompt: "A team wants to build everything at once. What do you do first?",
+          options: [
+            { id: "execution-north", archetype: "North", coherence: 4, text: "Define the order of operations and lock the first lawful step.", strength: "sequence authority", risk: "command narrowness risk" },
+            { id: "execution-east", archetype: "East", coherence: 3, text: "Map the dependencies and detect which pieces influence the others.", strength: "dependency perception", risk: "mapping too long risk" },
+            { id: "execution-south", archetype: "South", coherence: 3, text: "Protect the working baseline and prevent unnecessary disruption.", strength: "baseline preservation", risk: "overpreservation risk" },
+            { id: "execution-west", archetype: "West", coherence: 4, text: "Audit which claims are ready, which are assumed, and which are not proven.", strength: "readiness audit", risk: "friction risk" }
+          ]
+        },
+        {
+          id: "group-instability",
+          title: "Group instability",
+          prompt: "The group is anxious, distracted, and starting to lose coherence. What do you do first?",
+          options: [
+            { id: "group-north", archetype: "North", coherence: 3, text: "Give the group a clear immediate objective and stop the drift.", strength: "direction under pressure", risk: "tone hardness risk" },
+            { id: "group-east", archetype: "East", coherence: 2, text: "Identify which signal is causing the instability.", strength: "source detection", risk: "analysis delay risk" },
+            { id: "group-south", archetype: "South", coherence: 4, text: "Stabilize the room, reduce noise, and restore continuity.", strength: "field coherence", risk: "comfort over action risk" },
+            { id: "group-west", archetype: "West", coherence: 3, text: "Challenge the false claims feeding the instability.", strength: "false-signal removal", risk: "escalation risk" }
+          ]
+        },
+        {
+          id: "evidence-intuition",
+          title: "Evidence versus intuition",
+          prompt: "Your intuition says one thing, but the evidence is incomplete. What do you do first?",
+          options: [
+            { id: "evidence-north", archetype: "North", coherence: 3, text: "Set a rule for what evidence is required before acting.", strength: "threshold setting", risk: "overformalization risk" },
+            { id: "evidence-east", archetype: "East", coherence: 4, text: "Treat intuition as a signal, then test what would confirm or deny it.", strength: "signal testing", risk: "signal attachment risk" },
+            { id: "evidence-south", archetype: "South", coherence: 2, text: "Hold the field open until the evidence catches up.", strength: "patience", risk: "stalling risk" },
+            { id: "evidence-west", archetype: "West", coherence: 4, text: "Refuse to convert intuition into claim until evidence supports it.", strength: "claim discipline", risk: "intuition suppression risk" }
+          ]
+        },
+        {
+          id: "emotional-pressure",
+          title: "Emotional pressure",
+          prompt: "A decision must be made while emotions are high. What do you do first?",
+          options: [
+            { id: "emotion-north", archetype: "North", coherence: 3, text: "Separate the decision from the emotional surge and set the next step.", strength: "decision containment", risk: "emotional dismissal risk" },
+            { id: "emotion-east", archetype: "East", coherence: 3, text: "Identify what the emotion is signaling before deciding.", strength: "emotional signal reading", risk: "overprocessing risk" },
+            { id: "emotion-south", archetype: "South", coherence: 4, text: "Regulate the field first so the decision is not made from distortion.", strength: "regulation", risk: "delay risk" },
+            { id: "emotion-west", archetype: "West", coherence: 3, text: "Test whether the emotional claim matches the evidence.", strength: "reality check", risk: "harshness risk" }
+          ]
+        },
+        {
+          id: "decision-timing",
+          title: "Decision timing",
+          prompt: "You have enough information to act, but not enough to feel certain. What do you do first?",
+          options: [
+            { id: "timing-north", archetype: "North", coherence: 4, text: "Make the bounded decision and define the review point.", strength: "bounded execution", risk: "early lock-in risk" },
+            { id: "timing-east", archetype: "East", coherence: 3, text: "Check if one more signal would materially change the decision.", strength: "signal relevance", risk: "last-signal chasing risk" },
+            { id: "timing-south", archetype: "South", coherence: 2, text: "Wait until the group feels more settled.", strength: "group comfort", risk: "missed timing risk" },
+            { id: "timing-west", archetype: "West", coherence: 3, text: "Document the uncertainty and act only within what the evidence supports.", strength: "bounded proof", risk: "action friction risk" }
+          ]
+        },
+        {
+          id: "repair-after-error",
+          title: "Repair after error",
+          prompt: "You realize you were wrong. What do you do first?",
+          options: [
+            { id: "repair-north", archetype: "North", coherence: 4, text: "State the correction, update the rule, and define the repair sequence.", strength: "corrective leadership", risk: "controlled admission risk" },
+            { id: "repair-east", archetype: "East", coherence: 3, text: "Identify the pattern that led to the error so it does not repeat.", strength: "learning pattern", risk: "analysis cover risk" },
+            { id: "repair-south", archetype: "South", coherence: 3, text: "Repair trust and stabilize the people affected.", strength: "relational repair", risk: "soft accountability risk" },
+            { id: "repair-west", archetype: "West", coherence: 4, text: "Name the error plainly, show the evidence, and correct the record.", strength: "truth repair", risk: "self-pressure risk" }
+          ]
+        }
+      ];
+
+      const form = document.getElementById("coherence-form");
+      const scenarioList = document.getElementById("scenario-list");
+      const validation = document.getElementById("validation");
+      const result = document.getElementById("result");
+      const resetBtn = document.getElementById("reset-btn");
+
+      function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, (char) => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          "\"": "&quot;",
+          "'": "&#039;"
+        })[char]);
+      }
+
+      function renderQuestions() {
+        scenarioList.innerHTML = questions.map((question, index) => {
+          const number = index + 3;
+          const optionsHtml = question.options.map((option, optionIndex) => `
+            <label class="answer-choice">
+              <input
+                type="radio"
+                name="${question.id}-primary"
+                value="${option.id}"
+                data-question="${question.id}"
+                data-role="primary"
+              >
+              <b>${String.fromCharCode(65 + optionIndex)} · ${escapeHtml(option.text)}</b>
+              <span>${escapeHtml(option.archetype)} · ${escapeHtml(option.strength)}</span>
+            </label>
+          `).join("");
+
+          const secondaryHtml = question.options.map((option, optionIndex) => `
+            <label class="answer-choice">
+              <input
+                type="radio"
+                name="${question.id}-secondary"
+                value="${option.id}"
+                data-question="${question.id}"
+                data-role="secondary"
+              >
+              <b>${String.fromCharCode(65 + optionIndex)} · ${escapeHtml(option.text)}</b>
+              <span>${escapeHtml(option.archetype)} · ${escapeHtml(option.strength)}</span>
+            </label>
+          `).join("");
+
+          return `
+            <article class="question" data-question-card="${escapeHtml(question.id)}">
+              <div class="question-top">
+                <span class="question-number">Question ${number} · ${escapeHtml(question.title)}</span>
+                <h3>${escapeHtml(question.prompt)}</h3>
+              </div>
+
+              <div class="answer-columns">
+                <div class="answer-box">
+                  <span class="answer-title">Primary Choice</span>
+                  ${optionsHtml}
+                </div>
+
+                <div class="answer-box">
+                  <span class="answer-title">Secondary Choice</span>
+                  ${secondaryHtml}
+                </div>
+              </div>
+            </article>
+          `;
+        }).join("");
+      }
+
+      function getRadioValue(name) {
+        const checked = form.querySelector(`input[name="${name}"]:checked`);
+        return checked ? checked.value : "";
+      }
+
+      function findOption(questionId, optionId) {
+        const question = questions.find((item) => item.id === questionId);
+        if (!question) return null;
+        return question.options.find((option) => option.id === optionId) || null;
+      }
+
+      function showValidation(message) {
+        validation.textContent = message;
+        validation.classList.add("is-visible");
+        validation.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+
+      function clearValidation() {
+        validation.textContent = "";
+        validation.classList.remove("is-visible");
+      }
+
+      function validate() {
+        const selfRating = getRadioValue("selfRating");
+        const claimedArchetype = getRadioValue("claimedArchetype");
+
+        if (!selfRating) return "Question 1 is required. Select your self-rated coherence from 1 to 10.";
+        if (!claimedArchetype) return "Question 2 is required. Select the archetype you believe best describes you.";
+
+        for (const question of questions) {
+          const primary = getRadioValue(`${question.id}-primary`);
+          const secondary = getRadioValue(`${question.id}-secondary`);
+
+          if (!primary) return `${question.title}: select a primary choice.`;
+          if (!secondary) return `${question.title}: select a secondary choice.`;
+          if (primary === secondary) return `${question.title}: primary and secondary must be different choices.`;
+        }
+
+        return "";
+      }
+
+      function incrementMap(map, key, amount) {
+        map.set(key, (map.get(key) || 0) + amount);
+      }
+
+      function topEntries(map, limit = 3) {
+        return Array.from(map.entries())
+          .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+          .slice(0, limit)
+          .map(([key]) => key);
+      }
+
+      function scoreBand(score) {
+        if (score < 3) return {
+          label: "Fragmented / Low Coherence",
+          text: "The pattern shows several breaks in sequence, accountability, evidence handling, or decision alignment. This is a calibration signal, not a personal condemnation."
+        };
+        if (score < 5) return {
+          label: "Developing Coherence",
+          text: "The pattern shows usable instincts with noticeable drift under pressure. The next step is to reduce contradiction and strengthen sequence."
+        };
+        if (score < 7) return {
+          label: "Functional Coherence",
+          text: "The pattern can function under normal pressure, though some choices may still drift when stress, ambiguity, or accountability rises."
+        };
+        if (score < 8.5) return {
+          label: "High Coherence",
+          text: "The pattern shows strong alignment across responsibility, signal, sequence, and correction. Remaining risks are mostly overuse of your dominant style."
+        };
+        return {
+          label: "Exceptional Coherence",
+          text: "The pattern shows unusually strong alignment under scenario pressure. Watch for overconfidence and continue testing claims against reality."
+        };
+      }
+
+      function calibrationText(gap) {
+        if (gap >= -1 && gap <= 1) return "Calibrated. Your self-rating is close to the revealed scenario pattern.";
+        if (gap > 1 && gap <= 2.5) return "Your self-rating is higher than the revealed pattern. This suggests a moderate overclaim or pressure-gap.";
+        if (gap > 2.5) return "Your self-rating is much higher than the revealed pattern. This suggests a high overclaim risk under scenario pressure.";
+        if (gap < -1 && gap >= -2.5) return "Your self-rating is lower than the revealed pattern. This suggests underclaim or lower confidence than your choices support.";
+        return "Your self-rating is much lower than the revealed pattern. This suggests high underclaim or a confidence gap.";
+      }
+
+      function claimMatchText(claimed, primary, secondary) {
+        if (claimed === primary) return "Strong Match";
+        if (claimed === secondary) return "Partial Match";
+        return "Mismatch / Recalibration Suggested";
+      }
+
+      function nextStepFor(primary, bandLabel) {
+        const step = {
+          North: "Practice adding listening and evidence checks before locking direction.",
+          East: "Practice converting pattern recognition into one clear next action.",
+          South: "Practice preserving stability without delaying accountability or decision.",
+          West: "Practice applying audit pressure with a constructive closure path."
+        }[primary] || "Retake later and compare the pattern.";
+
+        return `${step} Current band: ${bandLabel}.`;
+      }
+
+      function calculateResult() {
+        const mode = getRadioValue("assessmentMode") || "graded";
+        const selfRating = Number(getRadioValue("selfRating"));
+        const claimedArchetype = getRadioValue("claimedArchetype");
+
+        let rawScore = 0;
+        const maxRaw = questions.length * 3 * MAX_COHERENCE_VALUE;
+        const archetypeTotals = new Map();
+        const archetypeCoherence = new Map();
+        const strengths = new Map();
+        const risks = new Map();
+
+        const selections = [];
+
+        for (const question of questions) {
+          const primaryId = getRadioValue(`${question.id}-primary`);
+          const secondaryId = getRadioValue(`${question.id}-secondary`);
+          const primary = findOption(question.id, primaryId);
+          const secondary = findOption(question.id, secondaryId);
+
+          const pair = [
+            { option: primary, weight: 2, role: "primary" },
+            { option: secondary, weight: 1, role: "secondary" }
+          ];
+
+          for (const item of pair) {
+            rawScore += item.option.coherence * item.weight;
+            incrementMap(archetypeTotals, item.option.archetype, item.weight);
+            incrementMap(archetypeCoherence, item.option.archetype, item.option.coherence * item.weight);
+            incrementMap(strengths, item.option.strength, item.weight);
+            incrementMap(risks, item.option.risk, item.weight);
+          }
+
+          selections.push({
+            question: question.title,
+            primary,
+            secondary
+          });
+        }
+
+        const scaledScore = Number((1 + ((rawScore / maxRaw) * 9)).toFixed(1));
+        const band = scoreBand(scaledScore);
+
+        const rankedArchetypes = Object.keys(archetypes)
+          .map((name) => ({
+            name,
+            points: archetypeTotals.get(name) || 0,
+            coherence: archetypeCoherence.get(name) || 0
+          }))
+          .sort((a, b) => b.points - a.points || b.coherence - a.coherence || a.name.localeCompare(b.name));
+
+        const primaryArchetype = rankedArchetypes[0]?.name || "Undetermined";
+        const secondaryArchetype = rankedArchetypes[1]?.name || "Undetermined";
+        const claimMatch = claimMatchText(claimedArchetype, primaryArchetype, secondaryArchetype);
+        const calibrationGap = Number((selfRating - scaledScore).toFixed(1));
+
+        return {
+          mode,
+          selfRating,
+          claimedArchetype,
+          rawScore,
+          maxRaw,
+          scaledScore,
+          band,
+          calibrationGap,
+          calibrationExplanation: calibrationText(calibrationGap),
+          primaryArchetype,
+          secondaryArchetype,
+          claimMatch,
+          strengths: topEntries(strengths),
+          risks: topEntries(risks),
+          nextStep: nextStepFor(primaryArchetype, band.label),
+          rankedArchetypes,
+          selections,
+          generatedAt: new Date().toISOString()
+        };
+      }
+
+      function resultText(data) {
+        const showScore = data.mode === "graded";
+
+        return [
+          "COHERENCE DIAGNOSTIC ASSESSMENT RESULT",
+          `Generated: ${data.generatedAt}`,
+          "",
+          `Mode: ${data.mode}`,
+          showScore ? `Coherence score: ${data.scaledScore}/10` : "Coherence score: Not shown in ungraded mode",
+          showScore ? `Coherence band: ${data.band.label}` : "Coherence band: Not shown in ungraded mode",
+          `Self-rated coherence: ${data.selfRating}/10`,
+          showScore ? `Calibration gap: ${data.calibrationGap}` : "Calibration gap: Not shown in ungraded mode",
+          `Calibration note: ${showScore ? data.calibrationExplanation : "Ungraded mode selected."}`,
+          "",
+          `Claimed archetype: ${data.claimedArchetype}`,
+          `Revealed primary archetype: ${data.primaryArchetype}`,
+          `Revealed secondary archetype: ${data.secondaryArchetype}`,
+          `Claim match: ${data.claimMatch}`,
+          "",
+          `Top strengths: ${data.strengths.join(", ")}`,
+          `Top risks: ${data.risks.join(", ")}`,
+          `Recommended next step: ${data.nextStep}`,
+          "",
+          "Boundary: This is not a medical, mental-health, legal, or employment diagnostic."
+        ].join("\n");
+      }
+
+      function listItems(items) {
+        return items.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+      }
+
+      function renderResult(data) {
+        const showScore = data.mode === "graded";
+        const text = resultText(data);
+
+        result.innerHTML = `
+          <section class="panel">
+            <div class="panel-head">
+              <p class="eyebrow">Assessment Result</p>
+              <h2>${showScore ? "Your coherence result is ready." : "Your pattern read is ready."}</h2>
+              <p>${showScore ? escapeHtml(data.band.text) : "Ungraded mode was selected, so this result does not display a formal numeric score or score band."}</p>
+            </div>
+
+            <div class="panel-body">
+              <article class="score-card">
+                <span class="eyebrow">${showScore ? "Coherence Score" : "Ungraded Pattern Read"}</span>
+                <strong class="score-number">${showScore ? `${data.scaledScore}/10` : "Pattern"}</strong>
+                <p>${showScore ? escapeHtml(data.band.label) : "Score hidden by selected mode."}</p>
+              </article>
+
+              <div class="result-grid">
+                <article class="result-cell">
+                  <b>Self-Rating</b>
+                  <strong>${data.selfRating}/10</strong>
+                  <span>Question 1 intake anchor.</span>
+                </article>
+
+                <article class="result-cell">
+                  <b>Calibration Gap</b>
+                  <strong>${showScore ? escapeHtml(data.calibrationGap) : "Hidden"}</strong>
+                  <span>${showScore ? escapeHtml(data.calibrationExplanation) : "Ungraded mode selected."}</span>
+                </article>
+
+                <article class="result-cell">
+                  <b>Claim Match</b>
+                  <strong>${escapeHtml(data.claimMatch)}</strong>
+                  <span>Comparison between claimed and revealed archetype pattern.</span>
+                </article>
+
+                <article class="result-cell">
+                  <b>Claimed Archetype</b>
+                  <strong>${escapeHtml(data.claimedArchetype)}</strong>
+                  <span>${escapeHtml(archetypes[data.claimedArchetype].summary)}</span>
+                </article>
+
+                <article class="result-cell">
+                  <b>Revealed Primary</b>
+                  <strong>${escapeHtml(data.primaryArchetype)}</strong>
+                  <span>${escapeHtml(archetypes[data.primaryArchetype].summary)}</span>
+                </article>
+
+                <article class="result-cell">
+                  <b>Revealed Secondary</b>
+                  <strong>${escapeHtml(data.secondaryArchetype)}</strong>
+                  <span>${escapeHtml(archetypes[data.secondaryArchetype].summary)}</span>
+                </article>
+
+                <article class="result-cell">
+                  <b>Top Strengths</b>
+                  <ul>${listItems(data.strengths)}</ul>
+                </article>
+
+                <article class="result-cell">
+                  <b>Top Risks</b>
+                  <ul>${listItems(data.risks)}</ul>
+                </article>
+
+                <article class="result-cell">
+                  <b>Next Step</b>
+                  <strong>Recommended focus</strong>
+                  <span>${escapeHtml(data.nextStep)}</span>
+                </article>
+              </div>
+
+              <div class="warning">
+                This result is a coherence-pattern read only. It is not a medical, mental-health, legal, employment, or intelligence diagnostic.
+              </div>
+
+              <div class="button-row">
+                <p class="boundary-note">This result was generated locally in your browser. It is not stored by this page.</p>
+                <div class="button-cluster">
+                  <button class="ghost-btn" type="button" id="copy-result">Copy Result</button>
+                  <button class="ghost-btn" type="button" id="print-result">Print</button>
+                  <button class="action-btn" type="button" id="retake-result">Retake</button>
+                </div>
+              </div>
+
+              <textarea id="plain-result" hidden>${escapeHtml(text)}</textarea>
+            </div>
+          </section>
+        `;
+
+        result.classList.add("is-visible");
+        result.scrollIntoView({ behavior: "smooth", block: "start" });
+
+        document.getElementById("copy-result").addEventListener("click", async () => {
+          const plain = document.getElementById("plain-result").value;
+          try {
+            await navigator.clipboard.writeText(plain);
+            document.getElementById("copy-result").textContent = "Copied";
+          } catch {
+            document.getElementById("plain-result").hidden = false;
+            document.getElementById("plain-result").select();
+          }
+        });
+
+        document.getElementById("print-result").addEventListener("click", () => {
+          window.print();
+        });
+
+        document.getElementById("retake-result").addEventListener("click", () => {
+          form.reset();
+          result.classList.remove("is-visible");
+          result.innerHTML = "";
+          clearValidation();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+
+        window.COHERENCE_DIAGNOSTIC_LAST_RESULT = data;
+      }
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        clearValidation();
+
+        const message = validate();
+        if (message) {
+          showValidation(message);
+          return;
+        }
+
+        const data = calculateResult();
+        renderResult(data);
+      });
+
+      form.addEventListener("change", (event) => {
+        const target = event.target;
+        if (!target.matches('input[type="radio"][data-question]')) return;
+
+        const questionId = target.dataset.question;
+        const primary = getRadioValue(`${questionId}-primary`);
+        const secondary = getRadioValue(`${questionId}-secondary`);
+
+        if (primary && secondary && primary === secondary) {
+          const oppositeRole = target.dataset.role === "primary" ? "secondary" : "primary";
+          const opposite = form.querySelector(`input[name="${questionId}-${oppositeRole}"][value="${target.value}"]`);
+          if (opposite) opposite.checked = false;
+        }
+      });
+
+      resetBtn.addEventListener("click", () => {
+        clearValidation();
+        result.classList.remove("is-visible");
+        result.innerHTML = "";
+      });
+
+      renderQuestions();
+
+      document.documentElement.dataset.coherenceDiagnosticContract = CONTRACT;
+      document.documentElement.dataset.coherenceDiagnosticQuestions = "12";
+      document.documentElement.dataset.coherenceDiagnosticLocalOnly = "true";
+      document.documentElement.dataset.coherenceDiagnosticStorage = "false";
+      document.documentElement.dataset.coherenceDiagnosticMedical = "false";
+      window.COHERENCE_DIAGNOSTIC_ASSESSMENT_RECEIPT = {
+        contract: CONTRACT,
+        route: "/coherence-diagnostic/",
+        file: "/coherence-diagnostic/index.html",
+        questionsMinimum: 12,
+        fixedQ1: true,
+        fixedQ2: true,
+        primarySecondaryRequired: true,
+        localGrading: true,
+        noBackend: true,
+        noStorage: true,
+        medicalDiagnostic: false,
+        employmentScreening: false,
+        canvas: false,
+        webgl: false,
+        generatedImage: false,
+        graphicBox: false
+      };
+    })();
+  </script>
+</body>
+</html>

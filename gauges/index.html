@@ -1,52 +1,55 @@
+<!-- TARGET FILE: /gauges/index.html -->
 <!doctype html>
 <html
   lang="en"
   data-route="/gauges/"
-  data-page="gauges"
-  data-contract="GAUGES_TRUTH_SUMMARY_ROLE_RENEWAL_HTML_JS_TNT_v1"
-  data-previous-contract="TRIPLE_G_EXIT_RELEASE_FALSE_POSITIVE_REPAIR_TNT_v1"
-  data-role="measurement-audit-route-status-summary"
-  data-proof-path="/laws/"
-  data-gauges-role="truth-summary-not-progress-engine"
-  data-progress-engine="false"
-  data-proof-authority="laws"
-  data-measurement-authority="gauges"
-  data-static-page-usable-without-js="true"
+  data-page="triple-g"
+  data-version="2026-05-24.triple-g-audrelia-narrative-conjugation-static-v1"
+  data-contract="TRIPLE_G_AUDRELIA_NARRATIVE_CONJUGATION_STATIC_HTML_TNT_v1"
+  data-previous-contract="LEGACY_TRIPLE_G_PAGE_STATIC_RECEIPT_HELD"
+  data-role="goals-gauges-gaps-measurement-chamber"
+  data-static-page="true"
+  data-live-behavior="false"
+  data-runtime="false"
+  data-js-required="false"
+  data-goals-gauges-gaps="true"
+  data-diamond-gate-bridge-conjugation="true"
+  data-mirrorland-context="true"
+  data-audrelia-development-focus="true"
+  data-public-spelling="Audrelia"
+  data-technical-route-spelling="audralia"
+  data-next-move-required="true"
   data-generated-image="false"
   data-graphic-box="false"
-  data-streaming="false"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Triple G · Truth Summary · Diamond Gate Bridge</title>
+  <title>Triple G · Goals · Gauges · Gaps</title>
   <meta
     name="description"
-    content="Triple G summarizes what is live, routed, held, missing, and measurable across Diamond Gate Bridge. Laws carries the proof path; Gauges carries measurement and route-status truth."
+    content="Triple G is the static measurement chamber for Diamond Gate Bridge, Mirrorland, and Audrelia’s development: Goals, Gauges, and Gaps."
   >
-  <link rel="canonical" href="https://diamondgatebridge.com/gauges/">
-  <meta name="theme-color" content="#02040b">
 
   <style>
     :root{
       color-scheme:dark;
       --bg:#02040b;
       --ink:#fff4d8;
-      --muted:rgba(230,238,255,.78);
-      --faint:rgba(230,238,255,.50);
+      --muted:rgba(230,238,255,.76);
+      --faint:rgba(230,238,255,.48);
       --gold:#f3c86f;
       --gold2:#ffe8a3;
       --blue:#8dd8ff;
       --green:#8ff0c3;
-      --amber:#ffd27a;
-      --red:#ff9f9f;
+      --violet:#9b7cff;
       --panel:rgba(9,15,31,.88);
       --line:rgba(184,205,255,.18);
-      --shadow:0 32px 110px rgba(0,0,0,.48);
       --max:1180px;
-      --brand-gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
+      --shadow:0 32px 110px rgba(0,0,0,.48);
+      --gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
     }
 
     *{box-sizing:border-box}
@@ -69,9 +72,9 @@
       overflow-x:hidden;
       background:
         radial-gradient(circle at 50% -8%,rgba(243,200,111,.20),transparent 28rem),
-        radial-gradient(circle at 12% 18%,rgba(141,216,255,.20),transparent 28rem),
-        radial-gradient(circle at 88% 30%,rgba(143,240,195,.13),transparent 28rem),
-        radial-gradient(circle at 50% 78%,rgba(190,170,255,.12),transparent 34rem),
+        radial-gradient(circle at 12% 18%,rgba(36,120,255,.18),transparent 28rem),
+        radial-gradient(circle at 88% 28%,rgba(141,216,255,.13),transparent 30rem),
+        radial-gradient(circle at 50% 82%,rgba(143,240,195,.10),transparent 36rem),
         linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
       -webkit-font-smoothing:antialiased;
       text-rendering:geometricPrecision;
@@ -84,18 +87,18 @@
       z-index:0;
       pointer-events:none;
       background-image:
-        radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
+        radial-gradient(circle,rgba(255,255,255,.16) 0 1px,transparent 1.5px),
         linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
         linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px);
       background-size:220px 260px,54px 54px,54px 54px;
       opacity:.22;
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.50) 64%,rgba(0,0,0,.22));
     }
 
     a{color:inherit;text-decoration:none}
 
     a:focus-visible,
-    button:focus-visible{
+    summary:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
     }
@@ -125,7 +128,7 @@
     .topbar{
       display:grid;
       grid-template-columns:auto 1fr;
-      align-items:center;
+      align-items:start;
       gap:18px;
       padding:12px 0 18px;
     }
@@ -145,14 +148,14 @@
       place-items:center;
       border:1px solid rgba(243,200,111,.44);
       transform:rotate(45deg);
-      clip-path:var(--brand-gem);
+      clip-path:var(--gem);
       background:
         linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.26) 21% 23%,transparent 24%),
-        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.28),rgba(141,216,255,.26),rgba(1,15,60,.58),rgba(143,240,195,.18),rgba(255,255,255,.28)),
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.28),rgba(36,120,255,.20),rgba(1,15,60,.58),rgba(243,200,111,.18),rgba(255,255,255,.28)),
         radial-gradient(circle at 48% 22%,rgba(255,255,255,.30),transparent 42%),
         linear-gradient(145deg,rgba(9,44,112,.95),rgba(5,8,20,.98));
       box-shadow:
-        0 0 2rem rgba(141,216,255,.25),
+        0 0 2rem rgba(36,120,255,.28),
         0 1.2rem 2.8rem rgba(0,0,0,.46),
         inset 0 1px 0 rgba(255,255,255,.16);
     }
@@ -170,12 +173,6 @@
       gap:.18rem;
     }
 
-    .brand-copy strong{
-      font-size:clamp(1.08rem,3vw,1.7rem);
-      line-height:1;
-      letter-spacing:-.045em;
-    }
-
     .brand-copy span{
       color:var(--muted);
       font-size:.74rem;
@@ -184,34 +181,120 @@
       text-transform:uppercase;
     }
 
+    .brand-copy strong{
+      font-size:clamp(1.08rem,3vw,1.7rem);
+      line-height:1;
+      letter-spacing:-.045em;
+    }
+
     .nav{
       display:flex;
       flex-wrap:wrap;
       justify-content:flex-end;
+      gap:.6rem;
+    }
+
+    .route-menu{
+      position:relative;
+      min-width:min(17rem,100%);
+    }
+
+    .route-menu summary{
+      list-style:none;
+      cursor:pointer;
+      min-height:2.6rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:.75rem;
+      border:1px solid rgba(243,200,111,.28);
+      border-radius:999px;
+      padding:.62rem .85rem;
+      color:rgba(241,246,255,.90);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(243,200,111,.14),transparent 70%),
+        rgba(255,255,255,.045);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.075em;
+      text-transform:uppercase;
+      box-shadow:0 0 1.15rem rgba(243,200,111,.08),inset 0 1px 0 rgba(255,255,255,.08);
+      backdrop-filter:blur(7px);
+    }
+
+    .route-menu[open] summary{
+      border-color:rgba(243,200,111,.70);
+      color:rgba(255,244,216,.98);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(243,200,111,.25),transparent 72%),
+        radial-gradient(circle at 86% 50%,rgba(36,120,255,.18),transparent 70%),
+        linear-gradient(180deg,rgba(20,18,45,.84),rgba(4,9,20,.88));
+      box-shadow:0 0 1.8rem rgba(243,200,111,.20),0 0 3.2rem rgba(36,120,255,.14),inset 0 1px 0 rgba(255,255,255,.12);
+    }
+
+    .route-menu summary::-webkit-details-marker{display:none}
+
+    .route-menu summary::after{
+      content:"";
+      width:.55rem;
+      height:.55rem;
+      border-right:2px solid rgba(230,238,255,.82);
+      border-bottom:2px solid rgba(230,238,255,.82);
+      transform:rotate(45deg) translateY(-.12rem);
+    }
+
+    .route-menu[open] summary::after{
+      transform:rotate(225deg) translateY(-.08rem);
+      border-color:rgba(243,200,111,.95);
+    }
+
+    .route-menu-panel{
+      position:absolute;
+      right:0;
+      top:calc(100% + .55rem);
+      z-index:40;
+      width:min(38rem,calc(100vw - 2rem));
+      padding:.82rem;
+      border:1px solid rgba(243,200,111,.30);
+      border-radius:1.1rem;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(243,200,111,.20),transparent 15rem),
+        radial-gradient(circle at 96% 25%,rgba(141,216,255,.12),transparent 15rem),
+        linear-gradient(180deg,rgba(11,13,38,.97),rgba(3,7,18,.98));
+      box-shadow:0 0 2.8rem rgba(243,200,111,.14),0 1.4rem 3.4rem rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.09);
+    }
+
+    .menu-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
       gap:.48rem;
     }
 
-    .nav a{
-      min-height:2.25rem;
-      display:inline-flex;
+    .menu-link{
+      min-height:2.35rem;
+      display:flex;
       align-items:center;
       justify-content:center;
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:999px;
-      padding:.5rem .74rem;
-      color:rgba(241,246,255,.84);
-      background:rgba(255,255,255,.035);
-      font-size:.68rem;
+      border:1px solid rgba(184,205,255,.18);
+      border-radius:.86rem;
+      padding:.5rem .62rem;
+      color:rgba(236,242,255,.88);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(141,216,255,.10),transparent 72%),
+        linear-gradient(180deg,rgba(255,255,255,.048),rgba(255,255,255,.020));
+      font-size:.64rem;
       font-weight:950;
-      letter-spacing:.055em;
+      letter-spacing:.06em;
+      text-align:center;
       text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      box-shadow:0 0 .85rem rgba(36,120,255,.08),inset 0 1px 0 rgba(255,255,255,.07);
     }
 
-    .nav a[aria-current="page"]{
-      border-color:rgba(243,200,111,.88);
-      color:#060811;
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    .menu-link:hover,
+    .menu-link:focus-visible{
+      border-color:rgba(243,200,111,.56);
+      color:rgba(255,244,216,.98);
+      outline:none;
     }
 
     .panel{
@@ -219,7 +302,7 @@
       border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
         radial-gradient(circle at 14% 0%,rgba(141,216,255,.10),transparent 28rem),
-        radial-gradient(circle at 86% 18%,rgba(143,240,195,.10),transparent 28rem),
+        radial-gradient(circle at 86% 18%,rgba(36,120,255,.14),transparent 28rem),
         linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
         var(--panel);
       box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
@@ -228,7 +311,7 @@
 
     .hero{
       position:relative;
-      min-height:clamp(24rem,42vw,34rem);
+      min-height:clamp(28rem,54vw,39rem);
       display:grid;
       align-content:center;
       gap:1rem;
@@ -237,11 +320,32 @@
       isolation:isolate;
     }
 
-    .kicker{
+    .hero::before{
+      content:"";
+      position:absolute;
+      right:clamp(1rem,6vw,5.5rem);
+      top:50%;
+      z-index:0;
+      width:clamp(10rem,28vw,20rem);
+      height:clamp(10rem,28vw,20rem);
+      border:1px solid rgba(243,200,111,.18);
+      border-radius:2.9rem;
+      transform:translateY(-50%) rotate(45deg);
+      background:
+        radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
+        radial-gradient(circle at 50% 72%,rgba(36,120,255,.18),transparent 62%),
+        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+      pointer-events:none;
+      opacity:.52;
+    }
+
+    .kicker,
+    .label{
       width:fit-content;
       display:inline-flex;
       align-items:center;
       gap:.58rem;
+      margin:0;
       padding:.58rem .95rem;
       border:1px solid rgba(255,255,255,.14);
       border-radius:999px;
@@ -255,7 +359,8 @@
       z-index:2;
     }
 
-    .kicker::before{
+    .kicker::before,
+    .label::before{
       content:"";
       width:.72rem;
       height:.72rem;
@@ -267,10 +372,10 @@
 
     h1{
       margin:0;
-      max-width:1020px;
-      font-size:clamp(3.4rem,10vw,7.2rem);
-      line-height:.84;
-      letter-spacing:-.105em;
+      max-width:980px;
+      font-size:clamp(4rem,13vw,8.1rem);
+      line-height:.82;
+      letter-spacing:-.112em;
       text-wrap:balance;
       position:relative;
       z-index:2;
@@ -279,12 +384,20 @@
     h2{
       margin:0;
       color:var(--gold);
-      font-size:clamp(1.45rem,4.7vw,2.65rem);
+      font-size:clamp(1.45rem,4.7vw,2.75rem);
       line-height:.98;
       letter-spacing:-.07em;
       text-wrap:balance;
       position:relative;
       z-index:2;
+    }
+
+    h3{
+      margin:0;
+      color:rgba(255,244,216,.96);
+      font-size:clamp(1.16rem,3vw,1.58rem);
+      line-height:1.06;
+      letter-spacing:-.045em;
     }
 
     p{
@@ -295,19 +408,20 @@
     }
 
     .lead{
-      max-width:980px;
+      max-width:940px;
       position:relative;
       z-index:2;
     }
 
-    .principle{
-      max-width:980px;
+    .quote{
+      max-width:920px;
       padding:1rem 1.1rem;
-      border:1px solid rgba(143,240,195,.24);
+      border:1px solid rgba(243,200,111,.22);
       border-radius:1.2rem;
-      color:rgba(180,255,218,.96);
-      background:rgba(143,240,195,.065);
-      font-weight:900;
+      color:rgba(255,244,216,.92);
+      background:rgba(243,200,111,.065);
+      font-size:clamp(1rem,2.7vw,1.18rem);
+      font-weight:850;
       position:relative;
       z-index:2;
     }
@@ -336,12 +450,10 @@
       letter-spacing:.055em;
       text-transform:uppercase;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
     .button:hover,
     .button:focus-visible{
-      transform:translateY(-2px);
       border-color:rgba(243,200,111,.62);
       outline:none;
     }
@@ -350,6 +462,13 @@
       border-color:rgba(243,200,111,.9);
       color:#060811;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
+      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
+    }
+
+    .button.green{
+      border-color:rgba(143,240,195,.42);
+      color:var(--green);
+      background:rgba(143,240,195,.07);
     }
 
     .section{
@@ -359,48 +478,54 @@
       gap:1.05rem;
     }
 
-    .summary-grid{
+    .section-head{
       display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.72rem;
+      max-width:980px;
+    }
+
+    .card-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
       gap:.85rem;
     }
 
-    .summary-card,
-    .lane-card,
-    .truth-card{
+    .card-grid.two{
+      grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .card{
       position:relative;
       display:grid;
-      gap:.62rem;
-      padding:1rem;
+      gap:.85rem;
+      min-height:14rem;
+      padding:1.15rem;
       border:1px solid rgba(255,255,255,.12);
-      border-radius:1.25rem;
+      border-radius:1.35rem;
       background:
-        radial-gradient(circle at 20% 0%,rgba(141,216,255,.08),transparent 60%),
+        radial-gradient(circle at 20% 0%,rgba(36,120,255,.10),transparent 60%),
         rgba(255,255,255,.035);
       overflow:hidden;
     }
 
-    .summary-card::after,
-    .lane-card::after,
-    .truth-card::after{
+    .card::after{
       content:"";
       position:absolute;
-      right:.85rem;
-      top:.85rem;
-      width:3.3rem;
-      height:2.45rem;
-      clip-path:var(--brand-gem);
-      opacity:.30;
+      right:1rem;
+      top:1rem;
+      width:4.5rem;
+      height:3.3rem;
+      clip-path:var(--gem);
+      opacity:.36;
       background:
-        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.24) 21% 23%,transparent 24%),
-        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.24),rgba(141,216,255,.36),rgba(20,10,62,.70),rgba(143,240,195,.16),rgba(255,255,255,.22));
-      filter:drop-shadow(0 .8rem 1rem rgba(0,0,0,.28));
+        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.26) 21% 23%,transparent 24%),
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.24),rgba(36,120,255,.38),rgba(20,10,62,.70),rgba(243,200,111,.16),rgba(255,255,255,.22)),
+        radial-gradient(circle at 50% 26%,rgba(255,255,255,.30),transparent 44%);
+      filter:drop-shadow(0 .8rem 1rem rgba(0,0,0,.28)) drop-shadow(0 0 .8rem rgba(36,120,255,.18));
       pointer-events:none;
     }
 
-    .summary-card b,
-    .lane-card b,
-    .truth-card b{
+    .card b{
       color:var(--gold);
       font-size:.68rem;
       letter-spacing:.12em;
@@ -409,162 +534,107 @@
       z-index:2;
     }
 
-    .summary-card strong{
-      color:rgba(255,244,216,.98);
-      font-size:1.35rem;
-      line-height:1.05;
+    .card p,
+    .card ul,
+    .card ol{
       position:relative;
       z-index:2;
     }
 
-    .summary-card span,
-    .lane-card span,
-    .truth-card span{
+    ul,
+    ol{
+      margin:.1rem 0 0;
+      padding-left:1.05rem;
       color:var(--muted);
-      font-size:.94rem;
-      line-height:1.42;
-      position:relative;
-      z-index:2;
+      font-size:.96rem;
+      line-height:1.5;
     }
 
-    .lane-stack{
-      display:grid;
-      gap:.85rem;
-    }
+    li + li{margin-top:.42rem}
 
-    .lane-card{
-      min-height:12rem;
-    }
-
-    .lane-head{
+    .status-row{
       display:flex;
       flex-wrap:wrap;
-      gap:.6rem;
-      align-items:center;
-      justify-content:space-between;
+      gap:.55rem;
       position:relative;
       z-index:2;
     }
 
-    .lane-title{
-      display:grid;
-      gap:.22rem;
-    }
-
-    .lane-title h3{
-      margin:0;
-      color:rgba(255,244,216,.98);
-      font-size:clamp(1.1rem,3vw,1.45rem);
-      line-height:1.05;
-      letter-spacing:-.04em;
-    }
-
-    .status{
+    .pill{
+      min-height:2.15rem;
       display:inline-flex;
       align-items:center;
-      justify-content:center;
-      min-height:2rem;
       border:1px solid rgba(255,255,255,.12);
       border-radius:999px;
-      padding:.35rem .7rem;
-      font-size:.66rem;
+      padding:.45rem .72rem;
+      color:rgba(241,246,255,.82);
+      background:rgba(255,255,255,.04);
+      font-size:.68rem;
       font-weight:950;
       letter-spacing:.08em;
       text-transform:uppercase;
-      white-space:nowrap;
     }
 
-    .status.confirmed{
-      color:var(--green);
-      border-color:rgba(143,240,195,.34);
-      background:rgba(143,240,195,.07);
-    }
-
-    .status.held{
-      color:var(--amber);
-      border-color:rgba(255,210,122,.34);
-      background:rgba(255,210,122,.07);
-    }
-
-    .status.review{
-      color:var(--red);
-      border-color:rgba(255,159,159,.34);
-      background:rgba(255,159,159,.07);
-    }
-
-    .checks{
-      position:relative;
-      z-index:2;
+    .matrix{
       display:grid;
-      gap:.42rem;
-      margin:0;
-      padding:0;
-      list-style:none;
-    }
-
-    .checks li{
-      display:grid;
-      grid-template-columns:auto 1fr;
-      gap:.5rem;
-      align-items:start;
-      color:rgba(230,238,255,.78);
-      font-size:.92rem;
-      line-height:1.38;
-    }
-
-    .checks li::before{
-      content:"";
-      width:.58rem;
-      height:.58rem;
-      margin-top:.34rem;
-      border-radius:.16rem;
-      transform:rotate(45deg);
-      background:rgba(141,216,255,.42);
-      box-shadow:0 0 .8rem rgba(141,216,255,.20);
-    }
-
-    .truth-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
+      grid-template-columns:1.05fr .95fr 1.05fr;
       gap:.85rem;
     }
 
-    .audit-log{
-      margin:0;
+    .matrix-card{
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.35rem;
+      padding:1.15rem;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(243,200,111,.09),transparent 66%),
+        rgba(255,255,255,.035);
+    }
+
+    .matrix-card strong{
+      display:block;
+      color:var(--gold);
+      font-size:.76rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      margin-bottom:.6rem;
+    }
+
+    .matrix-card span{
+      display:block;
+      color:var(--muted);
+      font-size:.96rem;
+      line-height:1.45;
+    }
+
+    .receipt{
+      display:block;
+      margin-top:.25rem;
       padding:1rem;
-      min-height:9rem;
-      max-height:22rem;
-      overflow:auto;
       border:1px solid rgba(255,255,255,.10);
-      border-radius:1.2rem;
-      color:rgba(230,238,255,.72);
-      background:rgba(0,0,0,.18);
-      font:700 .72rem/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      border-radius:1rem;
+      color:rgba(230,238,255,.70);
+      background:rgba(0,0,0,.24);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      font-size:.76rem;
+      line-height:1.5;
       white-space:pre-wrap;
       overflow-wrap:anywhere;
     }
 
-    .route-receipt,
+    .hidden-receipt,
     [data-route-receipt],
-    [data-contract-receipt],
-    [data-debug-receipt],
-    .receipt{
+    [data-contract-receipt]{
       display:none!important;
       visibility:hidden!important;
-      overflow:hidden!important;
       width:0!important;
       height:0!important;
       max-width:0!important;
       max-height:0!important;
-      margin:0!important;
-      padding:0!important;
-      border:0!important;
+      overflow:hidden!important;
       opacity:0!important;
       pointer-events:none!important;
       position:absolute!important;
-      inset:auto!important;
       clip-path:inset(50%)!important;
-      white-space:nowrap!important;
     }
 
     footer{
@@ -575,26 +645,41 @@
     }
 
     @media (max-width:1080px){
-      .summary-grid,
-      .truth-grid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
+      .card-grid,
+      .card-grid.two,
+      .matrix{
+        grid-template-columns:1fr;
       }
     }
 
     @media (max-width:980px){
-      .topbar{grid-template-columns:1fr;align-items:start}
+      .topbar{
+        grid-template-columns:1fr;
+      }
+
       .nav{justify-content:flex-start}
+      .route-menu-panel{left:0;right:auto}
     }
 
-    @media (max-width:720px){
+    @media (max-width:760px){
       .shell{width:min(100% - 22px,var(--max))}
-      h1{font-size:clamp(3rem,17vw,5rem)}
-      .hero{min-height:27rem;padding:1rem}
+      h1{font-size:clamp(3.4rem,18vw,5.8rem)}
+      .hero{min-height:31rem;padding:1rem}
       .actions{display:grid}
       .button{width:100%}
-      .summary-grid,
-      .truth-grid{
-        grid-template-columns:1fr;
+      .route-menu{width:100%}
+      .route-menu-panel{position:static;margin-top:.45rem;width:100%}
+      .menu-grid{grid-template-columns:1fr}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *,
+      *::before,
+      *::after{
+        scroll-behavior:auto!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
       }
     }
   </style>
@@ -605,155 +690,314 @@
 
   <div class="shell">
     <header class="topbar" aria-label="Triple G header">
-      <a class="brand" href="/">
+      <a class="brand" href="/gauges/" aria-current="page">
         <span class="brand-mark" aria-hidden="true"><span>GG</span></span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge</span>
-          <strong>Triple G · Truth Summary</strong>
+          <strong>Triple G</strong>
         </span>
       </a>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/laws/">Laws</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/">Interactive Narrative</a>
-        <a href="/showroom/globe/h-earth/">H-Earth</a>
-        <a href="/gauges/" aria-current="page">Gauges</a>
+      <nav class="nav" aria-label="Triple G navigation">
+        <details class="route-menu">
+          <summary>Measure Map</summary>
+          <div class="route-menu-panel">
+            <div class="menu-grid">
+              <a class="menu-link" href="/">Compass</a>
+              <a class="menu-link" href="/showroom/">Showroom</a>
+              <a class="menu-link" href="/showroom/globe/">Mirrorland Gateway</a>
+              <a class="menu-link" href="/showroom/globe/audralia/">Audrelia</a>
+              <a class="menu-link" href="/showroom/globe/audralia/planet/">Development Path</a>
+              <a class="menu-link" href="/showroom/globe/audralia/disposition/">Cockpit</a>
+              <a class="menu-link" href="/laws/">Laws</a>
+              <a class="menu-link" href="#next-move">Next Move</a>
+            </div>
+          </div>
+        </details>
       </nav>
     </header>
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Goals · Gauges · Gaps</div>
+        <p class="kicker">Goals · Gauges · Gaps</p>
 
-        <h1 id="page-title">Triple G summarizes what is live.</h1>
+        <h1 id="page-title">Triple G</h1>
 
         <p class="lead">
-          Gauges reports the current served state: what is present, routed, live, held, missing, or ready for review. It is the measurement layer, not the progress engine.
+          Triple G is the measurement chamber for Diamond Gate Bridge and Audrelia’s development. It does not run the world. It names the goals, reads the gauges, and protects the gaps that still stand between the public bridge system and deeper world expression.
         </p>
 
-        <div class="principle">
-          Laws carries the proof path. Gauges carries measurement, audit, route-status verification, and truth summary.
+        <div class="quote">
+          Diamond Gate Bridge is the gate-and-bridge construct. Mirrorland is the world beyond. Audrelia is the active homeworld under development. Triple G measures whether those layers still agree.
         </div>
 
         <div class="actions">
-          <button class="button gold" type="button" id="runTripleG">Run Truth Summary</button>
-          <a class="button" href="/laws/">Open Laws</a>
-          <a class="button" href="/showroom/globe/">Open Interactive Narrative</a>
-          <a class="button" href="/showroom/globe/h-earth/">Open H-Earth</a>
+          <a class="button gold" href="#goals">Goals</a>
+          <a class="button" href="#gauges">Gauges</a>
+          <a class="button" href="#gaps">Gaps</a>
+          <a class="button green" href="#audrelia-focus">Audrelia Focus</a>
+          <a class="button" href="#next-move">Next Move</a>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="summary-title">
-        <div class="kicker">Current Summary</div>
-        <h2 id="summary-title">Served truth first. Interpretation second.</h2>
+      <section class="panel section" aria-labelledby="construct-title">
+        <div class="section-head">
+          <p class="label">Narrative construct</p>
+          <h2 id="construct-title">Triple G conjugates the bridge, the world, and the development path.</h2>
+          <p>
+            This page is static by design. Its job is not live behavior. Its job is public orientation: what the project is trying to build, what the visible system can currently support, and what remains unresolved.
+          </p>
+        </div>
 
-        <div class="summary-grid" aria-label="Triple G summary totals">
-          <article class="summary-card">
-            <b>Overall</b>
-            <strong id="overallStatus">Awaiting run</strong>
-            <span id="overallText">Run Triple G to summarize the current served state.</span>
+        <div class="matrix" aria-label="Diamond Gate Bridge narrative conjugation">
+          <article class="matrix-card">
+            <strong>Diamond Gate Bridge</strong>
+            <span>The public gate-and-bridge system. It organizes entry, proof, story, frontier, products, visible software objects, and the route structure visitors can actually inspect.</span>
           </article>
 
-          <article class="summary-card">
-            <b>Confirmed</b>
-            <strong id="confirmedCount">0</strong>
-            <span>Items currently present, routed, or live.</span>
+          <article class="matrix-card">
+            <strong>Mirrorland</strong>
+            <span>The world beyond the bridges. The site remains digital reality, but the bridge system points toward the story-world, its rules, its consequences, and its future paths.</span>
           </article>
 
-          <article class="summary-card">
-            <b>Held</b>
-            <strong id="heldCount">0</strong>
-            <span>Known holds that should not be treated as broken architecture.</span>
-          </article>
-
-          <article class="summary-card">
-            <b>Needs Review</b>
-            <strong id="reviewCount">0</strong>
-            <span>Items that deserve human review before interpretation.</span>
+          <article class="matrix-card">
+            <strong>Audrelia</strong>
+            <span>The active development focus. Audrelia is the homeworld lane where narrative, physics, template logic, observable globe work, diagnostic reporting, and held downstream systems converge.</span>
           </article>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="lanes-title">
-        <div class="kicker">Renewed Gauges</div>
-        <h2 id="lanes-title">Seven summary lanes describe the current served state.</h2>
+      <section class="panel section" aria-labelledby="triple-title">
+        <div class="section-head">
+          <p class="label">Triple structure</p>
+          <h2 id="triple-title">Goals say what must be built. Gauges say what can be read. Gaps say what must not be faked.</h2>
+        </div>
 
-        <div class="lane-stack" id="laneStack" aria-live="polite">
-          <article class="lane-card">
-            <div class="lane-head">
-              <div class="lane-title">
-                <b>Pending</b>
-                <h3>Truth summary has not run yet.</h3>
-              </div>
-              <span class="status held">Held</span>
+        <div class="card-grid">
+          <article id="goals" class="card">
+            <b>Goals</b>
+            <h3>What Diamond Gate Bridge is trying to build.</h3>
+            <ul>
+              <li>Make the root Compass readable as one gate, four bridges, and one world beyond.</li>
+              <li>Connect the public bridge system to Mirrorland without pretending the site itself is Mirrorland.</li>
+              <li>Position Audrelia as the active homeworld development focus.</li>
+              <li>Keep story, physics, proof, route structure, and development status aligned.</li>
+              <li>Move visitors from public orientation into world inspection without collapsing every page into one job.</li>
+            </ul>
+          </article>
+
+          <article id="gauges" class="card">
+            <b>Gauges</b>
+            <h3>What the static public system can presently report.</h3>
+            <ul>
+              <li>Route presence and route meaning.</li>
+              <li>Contract alignment and page-role clarity.</li>
+              <li>Dropdown access and public navigation hierarchy.</li>
+              <li>Audrelia route visibility, development path access, and Cockpit/disposition access.</li>
+              <li>Static measurement posture: readable, inspectable, and non-runtime.</li>
+            </ul>
+          </article>
+
+          <article id="gaps" class="card">
+            <b>Gaps</b>
+            <h3>What remains unresolved or intentionally held.</h3>
+            <ul>
+              <li>Downstream world systems remain held until their owning pages authorize development.</li>
+              <li>Render readiness and story readiness are not the same claim.</li>
+              <li>Audrelia’s deeper terrain, surface, atmosphere, and child systems require separate development authority.</li>
+              <li>Static page clarity must not be mistaken for live gauge execution.</li>
+              <li>Any uninspected legacy receipts remain receipts, not quality baselines.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="audrelia-focus" class="panel section" aria-labelledby="audrelia-title">
+        <div class="section-head">
+          <p class="label">Audrelia development focus</p>
+          <h2 id="audrelia-title">Audrelia is the active world-building lane being measured.</h2>
+          <p>
+            Triple G does not become Audrelia, the Globe, or the Cockpit. It measures the relationship between Audrelia’s public meaning, the current route system, and the unresolved work required before deeper development can continue.
+          </p>
+        </div>
+
+        <div class="card-grid two">
+          <article class="card">
+            <b>Homeworld context</b>
+            <h3>Audrelia is the homeworld lane.</h3>
+            <p>
+              Audrelia connects the Nine Summits galaxy, Mirrorland, planetary template logic, physics, and public inspection into one active development focus.
+            </p>
+            <div class="status-row">
+              <span class="pill">Homeworld context active</span>
+              <span class="pill">Narrative focus active</span>
             </div>
-            <span>Use “Run Truth Summary” to fetch served pages and summarize route truth without treating Gauges as the progress engine.</span>
+          </article>
+
+          <article class="card">
+            <b>Physics and template</b>
+            <h3>A homeworld must survive physics before it can carry meaning.</h3>
+            <p>
+              Gravity, water, terrain, atmosphere, shelter, energy, and time remain the development pressure. The template matters because it forces the story-world to answer physical survival.
+            </p>
+            <div class="status-row">
+              <span class="pill">Physics context active</span>
+              <span class="pill">Template preserved</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <b>Observable route system</b>
+            <h3>The public can inspect the path without activating the downstream chain.</h3>
+            <p>
+              The Audrelia parent route, development path, and Cockpit/disposition route are separate access points. Triple G names their relationship without taking ownership of their systems.
+            </p>
+            <div class="status-row">
+              <span class="pill">Parent route visible</span>
+              <span class="pill">Development path open</span>
+              <span class="pill">Cockpit linked</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <b>Held systems</b>
+            <h3>Held does not mean failed.</h3>
+            <p>
+              Held means a system has not been authorized to advance from this page. Terrain, surface, runtime, renderer, Cockpit logic, and downstream child systems remain under their own authority.
+            </p>
+            <div class="status-row">
+              <span class="pill">Downstream held</span>
+              <span class="pill">No runtime claim</span>
+              <span class="pill">No visual pass</span>
+            </div>
           </article>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="truth-title">
-        <div class="kicker">Current Truth Summary</div>
-        <h2 id="truth-title">Do not rebuild what is already confirmed.</h2>
+      <section class="panel section" aria-labelledby="static-title">
+        <div class="section-head">
+          <p class="label">Static measurement posture</p>
+          <h2 id="static-title">Triple G is a clarity board, not a live engine.</h2>
+          <p>
+            The word “gauges” means public measurement categories here. This static page does not run dynamic audits, does not execute route logic, and does not claim live render truth.
+          </p>
+        </div>
 
-        <div class="truth-grid">
-          <article class="truth-card">
-            <b>Current confirmed truth</b>
-            <strong>Parent and child routes can be verified without making Gauges the build authority.</strong>
-            <span id="winsText">Awaiting run.</span>
+        <div class="card-grid">
+          <article class="card">
+            <b>Static</b>
+            <h3>No runtime required.</h3>
+            <p>This page is usable without JavaScript and carries no live page behavior.</p>
           </article>
 
-          <article class="truth-card">
-            <b>Current hold</b>
-            <strong>Held items are not the same as failed architecture.</strong>
-            <span id="holdText">Awaiting run.</span>
+          <article class="card">
+            <b>Public</b>
+            <h3>Readable before technical inspection.</h3>
+            <p>Visitors should understand what Goals, Gauges, and Gaps mean before reading receipts.</p>
           </article>
 
-          <article class="truth-card">
-            <b>Suggested review target</b>
-            <strong>Gauges may suggest review, but it does not command progress.</strong>
-            <span id="reviewText">Awaiting run.</span>
+          <article class="card">
+            <b>Bounded</b>
+            <h3>Measurement without overclaiming.</h3>
+            <p>Triple G may describe posture, but it does not certify visual pass, runtime pass, or downstream completion.</p>
           </article>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="log-title">
-        <div class="kicker">Audit Log</div>
-        <h2 id="log-title">Live diagnostic output.</h2>
-        <pre class="audit-log" id="auditLog">Triple G truth-summary renewal loaded. Awaiting run.</pre>
+      <section id="next-move" class="panel section" aria-labelledby="next-title">
+        <div class="section-head">
+          <p class="label">Next Move</p>
+          <h2 id="next-title">Advance Audrelia by resolving the next real gap, not by pretending the gap is gone.</h2>
+          <p>
+            The next lawful move is to inspect the current Audrelia development layer, identify the first controlling gap, and renew only the owning file or route. Triple G should continue to report the relationship between goal, measurable posture, and unresolved distance.
+          </p>
+        </div>
+
+        <div class="card-grid">
+          <a class="card" href="/showroom/globe/audralia/">
+            <b>Inspect Audrelia</b>
+            <h3>Start at the homeworld route.</h3>
+            <p>Confirm the public meaning, globe carrier, template language, and development-path access.</p>
+            <span class="pill">Open Audrelia</span>
+          </a>
+
+          <a class="card" href="/showroom/globe/audralia/planet/">
+            <b>Development Path</b>
+            <h3>Inspect the next development surface.</h3>
+            <p>Use the development route to locate the next real gap before authorizing a deeper renewal.</p>
+            <span class="pill">Open Path</span>
+          </a>
+
+          <a class="card" href="/showroom/globe/audralia/disposition/">
+            <b>Cockpit</b>
+            <h3>Use systems access without confusing it for public proof.</h3>
+            <p>The Cockpit remains a systems hatch. It can support inspection, but it does not replace Triple G.</p>
+            <span class="pill">Open Cockpit</span>
+          </a>
+        </div>
       </section>
 
-      <template id="route-receipt" data-route-receipt>
-GAUGES_TRUTH_SUMMARY_ROLE_RENEWAL_HTML_JS_TNT_v1
-previous=TRIPLE_G_EXIT_RELEASE_FALSE_POSITIVE_REPAIR_TNT_v1
+      <section class="panel section" aria-labelledby="receipt-title">
+        <div class="section-head">
+          <p class="label">Route receipt</p>
+          <h2 id="receipt-title">Static Triple G renewal receipt.</h2>
+          <p>
+            This renewal keeps Goals, Gauges, and Gaps, but repositions Triple G around Diamond Gate Bridge’s narrative construct and Audrelia’s development focus.
+          </p>
+        </div>
+
+        <code class="receipt">TRIPLE_G_AUDRELIA_NARRATIVE_CONJUGATION_STATIC_HTML_TNT_v1
 route=/gauges/
-page=gauges
-role=measurement_audit_route_status_summary
-proof_path=/laws/
-proof_authority=Laws
-gauges_role=truth_summary_measurement_audit_route_status_verification
-gauges_is_progress_engine=false
-gauges_is_primary_proof_path=false
-removed_language=repair_required,correct_before_visual_refinement,next_lawful_build,do_not_touch
-replacement_language=confirmed,held,needs_review,current_truth_summary,suggested_review_target,preserve
-summary_frame=what_is_live_routed_present_held_missing_measurable
-lanes=parent_selector_summary,h_earth_child_route_summary,classic_canvas_summary,condition_stack_summary,runtime_cleanup_summary,baseline_purity_summary,material_expression_summary
-route_owns=gauges_page,truth_summary_copy,served_html_fetch_audit,route_status_summary
-route_does_not_own=laws_proof_path,site_progress_engine,showroom_rendering,h_earth_runtime,planet_material_expression,asset_authority
+html=/gauges/index.html
+page=triple_g
+mode=static_public_measurement_chamber
+live_behavior=false
+runtime=false
+js_required=false
+goals_gauges_gaps=true
+diamond_gate_bridge_conjugation=true
+mirrorland_context=true
+audrelia_development_focus=true
+public_spelling=Audrelia
+technical_route_spelling=audralia
+diamond_gate_bridge=public_gate_and_bridge_construct
+mirrorland=world_beyond_the_bridges
+audrelia=active_homeworld_development_focus
+triple_g=measurement_chamber
+goals=intended_direction
+gauges=static_public_measurement_categories
+gaps=unresolved_distance
+next_move=required
+does_not_own=audrelia_renderer,audrelia_runtime,cockpit_logic,gauges_dynamic_logic,route_audit_engine,downstream_children
+no_dynamic_audit=true
+no_visual_pass_claim=true
+generated_image=false
+graphic_box=false</code>
+
+        <template id="triple-g-route-receipt" class="hidden-receipt" data-route-receipt>
+TRIPLE_G_AUDRELIA_NARRATIVE_CONJUGATION_STATIC_HTML_TNT_v1
+target=/gauges/index.html
+static_page=true
+live_behavior=false
+runtime=false
+js_required=false
+goals_gauges_gaps_preserved=true
+diamond_gate_bridge_narrative_construct_active=true
+mirrorland_context_active=true
+audrelia_development_focus_active=true
+next_move_section_present=true
+no_dynamic_audit=true
+no_runtime_claim=true
+no_visual_pass_claim=true
 generated_image=false
 graphic_box=false
-streaming=false
-visual_pass_claimed=false
-      </template>
+        </template>
+      </section>
     </main>
 
     <footer>
-      GAUGES_TRUTH_SUMMARY_ROLE_RENEWAL_HTML_JS_TNT_v1 · Gauges summarize truth · Laws carries proof.
+      TRIPLE_G_AUDRELIA_NARRATIVE_CONJUGATION_STATIC_HTML_TNT_v1 · Goals · Gauges · Gaps · Diamond Gate Bridge · Audrelia Development Focus.
     </footer>
   </div>
-
-  <script src="/gauges/index.js?v=GAUGES_TRUTH_SUMMARY_ROLE_RENEWAL_HTML_JS_TNT_v1" defer></script>
 </body>
 </html>

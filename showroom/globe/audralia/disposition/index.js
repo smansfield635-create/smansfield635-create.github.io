@@ -1,39 +1,59 @@
 // /showroom/globe/audralia/disposition/index.js
-// AUDRALIA_G1_INTERGALACTIC_COCKPIT_360_LATTICE_GEM_ROUTE_JS_TNT_v1
+// AUDRALIA_G1_INTERGALACTIC_COCKPIT_THREE_FILE_SPLIT_CURRENT_TIME_INSTRUMENTS_TNT_v1
 // Full-file replacement.
-// Purpose: convert cockpit gems from flat indicator objects into independent 360-degree lattice-designated gem instruments.
-// Owns: Disposition Harness cockpit JS, Dexterion’s Lab lattice-gem registry, lattice-gem DOM mounting, passive stream verification, session-only lattice-seat touch behavior.
-// Does not own: parent Audralia route, datum source file, disposition child source file, terrain child source file, Runtime / Strength activation, canvas, WebGL, generated image, GraphicBox, or visual-render pass.
+// Purpose: unify cockpit behavior into one route JS authority after the three-file split; preserve lattice gems, proof loading, generated gauges, streams, receipts, seat toggles, chamber behavior, NEWS bridge status, and current-time instrument updates.
+// Owns: route JS behavior, cockpit receipt publication, chamber behavior, Run Cockpit behavior, lattice registry, passive proof loading, generated instruments, current-time status, public status objects.
+// Does not own: CSS, HTML structure, child renewal, Runtime / Strength activation, canvas, WebGL, generated image, GraphicBox, or visual-render pass.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_360_LATTICE_GEM_ROUTE_JS_TNT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_DUAL_DONOR_CIRCUIT_TOUCH_GEM_INSTRUMENT_ROUTE_JS_TNT_v1";
-  const HTML_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_360_LATTICE_GEM_HTML_BINDING_TNT_v1";
+  const CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_THREE_FILE_SPLIT_CURRENT_TIME_INSTRUMENTS_TNT_v1";
+  const SPEC_OPS_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_THREE_FILE_SPLIT_CURRENT_TIME_INSTRUMENTS_SPEC_OPS_v1";
+  const NEWS_PROTOCOL = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_FULL_NEWS_ALIGNMENT_PROTOCOL_v1";
+  const PREVIOUS_JS_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_360_LATTICE_GEM_ROUTE_JS_TNT_v1";
+  const PREVIOUS_HTML_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_ENGINEERING_LENS_TECHNICAL_EXPRESSION_TNT_v1";
+  const PARENT_MATCHING_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_PARENT_MATCHING_CONTRACT_TNT_v1";
+  const ROUTE = "/showroom/globe/audralia/disposition/";
+  const ORBIT_ID = "cockpit-orbit";
+  const HEARTBEAT_MS = 60000;
 
-  const RECEIPT = {
+  const RECEIPT = Object.freeze({
     contract: CONTRACT,
-    previousContract: PREVIOUS_CONTRACT,
-    htmlContract: HTML_CONTRACT,
-    route: "/showroom/globe/audralia/disposition/",
+    specOpsContract: SPEC_OPS_CONTRACT,
+    newsProtocol: NEWS_PROTOCOL,
+    previousJsContract: PREVIOUS_JS_CONTRACT,
+    previousHtmlContract: PREVIOUS_HTML_CONTRACT,
+    parentMatchingContract: PARENT_MATCHING_CONTRACT,
+    route: ROUTE,
+    html: "/showroom/globe/audralia/disposition/index.html",
+    css: "/showroom/globe/audralia/disposition/index.css",
     js: "/showroom/globe/audralia/disposition/index.js",
     cockpitFrame: "Intergalactic Cockpit",
     instrumentAuthority: "Dexterion’s Lab",
+    visibleInterface: "first-person spaceship cockpit with asymmetric instrument wings",
+    bridgeModel: "North Bridge / East Bridge / South Bridge / West Bridge",
+    newsGovernanceOrder: "North -> East -> West -> South",
+    visibleCircumferenceOrder: "North -> East -> South -> West",
     gemModel: "360-degree circumferential lattice gems",
     circumferenceLaw: "360 circumference delegated by inconsistent cut-gem edges",
     htmlFunction: "wisdom",
     jsFunction: "courage",
     runtimeFunction: "strength",
     runtimeStrengthHeld: true,
+    threeFileSplit: true,
+    inlineCss: false,
+    inlineJs: false,
+    currentTimeInstruments: true,
+    noChildRenewal: true,
     noCanvasCreation: true,
     noWebGL: true,
     generatedImage: false,
     graphicBox: false,
     noVisualPassClaim: true
-  };
+  });
 
-  const ASSETS = {
+  const ASSETS = Object.freeze({
     datum: {
       key: "datum",
       label: "Datum",
@@ -52,9 +72,40 @@
       url: "/assets/audralia/clean/runtime/audralia.true-globe.terrain.js",
       role: "passive terrain receive proof"
     }
-  };
+  });
 
-  const LATTICE_GEM_DEFINITIONS = [
+  const BRIDGES = Object.freeze({
+    north: {
+      label: "North Bridge",
+      compass: "N/NNE -> NE/ENE",
+      governance: "North",
+      role: "scan and navigation orientation",
+      chambers: ["systems-glass", "lattice-console"]
+    },
+    east: {
+      label: "East Bridge",
+      compass: "E/ESE -> SE/SSE",
+      governance: "East",
+      role: "proof streams and local seat inspection",
+      chambers: ["stream-deck", "seat-inspector"]
+    },
+    west: {
+      label: "West Bridge",
+      compass: "W/WNW -> NW/NNW",
+      governance: "West",
+      role: "receipt arrival and contract closure",
+      chambers: ["lattice-receipts", "contract-receipt"]
+    },
+    south: {
+      label: "South Bridge",
+      compass: "S/SSW -> SW/WSW",
+      governance: "South",
+      role: "runtime hold and measurement calibration",
+      chambers: ["runtime-hold", "gauge-board"]
+    }
+  });
+
+  const LATTICE_GEM_DEFINITIONS = Object.freeze([
     {
       gemId: "dexterion-master",
       label: "Dexterion Master",
@@ -146,21 +197,49 @@
       functionText: "future multi-stream render staged only",
       locked: true
     }
-  ];
+  ]);
 
   const state = {
     contract: CONTRACT,
     receipt: RECEIPT,
     phase: "booting",
     failure: "none",
+    proof: {
+      datumSeatCount: 0,
+      dispositionSeatCount: 0,
+      terrainSeatCount: 0,
+      receiveMapReady: false,
+      terrainMapReady: false,
+      newsComplete: false,
+      terrainNewsComplete: false
+    },
     assetResults: {
-      datum: { ok: false, status: "pending" },
-      disposition: { ok: false, status: "pending" },
-      terrain: { ok: false, status: "pending" }
+      datum: { ok: false, status: "pending", url: ASSETS.datum.url },
+      disposition: { ok: false, status: "pending", url: ASSETS.disposition.url },
+      terrain: { ok: false, status: "pending", url: ASSETS.terrain.url }
     },
     latticeGems: [],
     touchedSeats: [],
-    generatedAt: new Date().toISOString()
+    currentTime: {
+      iso: "",
+      local: "",
+      localDate: "",
+      localTime: "",
+      timeZone: "",
+      updatedAt: "",
+      heartbeat: 0
+    },
+    bridgeStatus: {
+      north: "booting",
+      east: "booting",
+      west: "booting",
+      south: "held"
+    },
+    generatedAt: new Date().toISOString(),
+    booted: false,
+    eventsBound: false,
+    heartbeatId: null,
+    refreshInFlight: false
   };
 
   const qsa = (selector, root = document) => Array.from(root.querySelectorAll(selector));
@@ -178,24 +257,29 @@
 
   const createNode = (tag, className, attributes = {}) => {
     const node = document.createElement(tag);
+
     if (className) node.className = className;
 
     Object.entries(attributes).forEach(([key, value]) => {
       if (value === null || value === undefined) return;
+
       if (key === "text") {
         node.textContent = String(value);
         return;
       }
+
       if (key === "html") {
         node.innerHTML = String(value);
         return;
       }
+
       if (key === "dataset" && value && typeof value === "object") {
         Object.entries(value).forEach(([dataKey, dataValue]) => {
           node.dataset[dataKey] = String(dataValue);
         });
         return;
       }
+
       node.setAttribute(key, String(value));
     });
 
@@ -204,448 +288,106 @@
 
   const safeId = (value) => String(value).replace(/[^a-z0-9_-]/gi, "-").toLowerCase();
 
-  function ensureLatticeGemStyles() {
-    if (document.getElementById("audralia-360-lattice-gem-style")) return;
+  function formatLocalTime(date) {
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "local";
 
-    const style = document.createElement("style");
-    style.id = "audralia-360-lattice-gem-style";
-    style.textContent = `
-      .lattice-gem-foundry-copy{
-        display:grid;
-        gap:.75rem;
-      }
+    const localDate = new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    }).format(date);
 
-      .lattice-gem-grid{
-        display:grid;
-        grid-template-columns:repeat(3,minmax(0,1fr));
-        gap:14px;
-        margin-top:18px;
-      }
+    const localTime = new Intl.DateTimeFormat("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+      timeZoneName: "short"
+    }).format(date);
 
-      .lattice-gem{
-        --state-glow:rgba(141,216,255,.22);
-        --state-line:rgba(141,216,255,.28);
-        --state-fill:rgba(141,216,255,.08);
-        position:relative;
-        display:grid;
-        gap:1rem;
-        min-height:26rem;
-        padding:1rem;
-        border:1px solid rgba(244,207,131,.18);
-        border-radius:1.65rem;
-        background:
-          radial-gradient(circle at 50% 0%,rgba(141,216,255,.13),transparent 14rem),
-          radial-gradient(circle at 16% 10%,rgba(244,207,131,.075),transparent 12rem),
-          linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.018)),
-          rgba(4,10,23,.86);
-        overflow:hidden;
-        box-shadow:
-          0 1.1rem 3.2rem rgba(0,0,0,.22),
-          inset 0 1px 0 rgba(255,255,255,.07);
-      }
+    return {
+      iso: date.toISOString(),
+      local: `${localDate} ${localTime}`,
+      localDate,
+      localTime,
+      timeZone,
+      updatedAt: date.toISOString()
+    };
+  }
 
-      .lattice-gem[data-state="pass"],
-      .lattice-gem[data-gem-state="pass"]{
-        --state-glow:rgba(167,243,198,.30);
-        --state-line:rgba(167,243,198,.52);
-        --state-fill:rgba(167,243,198,.10);
-      }
+  function updateCurrentTimeState() {
+    const now = new Date();
+    const current = formatLocalTime(now);
 
-      .lattice-gem[data-state="held"],
-      .lattice-gem[data-gem-state="held"]{
-        --state-glow:rgba(141,216,255,.22);
-        --state-line:rgba(141,216,255,.36);
-        --state-fill:rgba(141,216,255,.075);
-      }
+    state.currentTime = {
+      ...current,
+      heartbeat: state.currentTime.heartbeat + 1
+    };
 
-      .lattice-gem[data-state="staged"],
-      .lattice-gem[data-gem-state="staged"]{
-        --state-glow:rgba(173,140,255,.32);
-        --state-line:rgba(173,140,255,.48);
-        --state-fill:rgba(173,140,255,.095);
-      }
+    document.documentElement.dataset.cockpitLocalTime = current.local;
+    document.documentElement.dataset.cockpitUpdatedAt = current.updatedAt;
+    document.documentElement.dataset.cockpitTimeZone = current.timeZone;
+    document.documentElement.dataset.cockpitHeartbeat = String(state.currentTime.heartbeat);
 
-      .lattice-gem[data-state="coordinator"],
-      .lattice-gem[data-gem-state="coordinator"]{
-        --state-glow:rgba(244,207,131,.32);
-        --state-line:rgba(244,207,131,.54);
-        --state-fill:rgba(244,207,131,.10);
-      }
+    setText("[data-cockpit-local-time]", current.local);
+    setText("[data-cockpit-updated-at]", current.updatedAt);
+    setText("[data-gauge-heartbeat]", `current · ${current.local}`);
+    setText("[data-proof-refreshed-at]", current.local);
+    setText("[data-receipt-updated-at]", current.local);
+    setText("[data-runtime-hold-confirmed-at]", current.local);
 
-      .lattice-gem[data-state="fail"],
-      .lattice-gem[data-gem-state="fail"]{
-        --state-glow:rgba(255,107,107,.34);
-        --state-line:rgba(255,107,107,.52);
-        --state-fill:rgba(255,107,107,.095);
-      }
+    qsa("[data-current-time-label]").forEach((node) => {
+      node.textContent = `Updated ${current.localTime}`;
+    });
 
-      .lattice-gem::before{
-        content:"";
-        position:absolute;
-        inset:0;
-        pointer-events:none;
-        background:
-          linear-gradient(135deg,rgba(255,255,255,.08),transparent 34%,rgba(141,216,255,.045)),
-          radial-gradient(circle at 50% 50%,var(--state-glow),transparent 62%);
-        opacity:.82;
-      }
+    return current;
+  }
 
-      .lattice-gem-shell{
-        position:relative;
-        z-index:2;
-        min-height:16.5rem;
-        display:grid;
-        place-items:center;
-        perspective:900px;
-        isolation:isolate;
-      }
+  function ensureCurrentTimeReadout() {
+    const viewportStatus = qs(".viewport-status");
+    if (!viewportStatus || qs("[data-current-time-label]", viewportStatus)) return;
 
-      .lattice-gem-circumference{
-        position:absolute;
-        width:14.2rem;
-        height:9.25rem;
-        border-radius:50%;
-        transform:rotateX(63deg) rotateZ(-11deg);
-        border:1px solid rgba(141,216,255,.28);
-        background:
-          radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(141,216,255,.045) 52%,transparent 68%);
-        box-shadow:
-          0 0 1.8rem var(--state-glow),
-          inset 0 0 1.2rem rgba(244,207,131,.07);
-        opacity:.92;
-      }
+    const pill = createNode("span", "status-pill cockpit-time-readout", {
+      "data-current-time-label": "true",
+      text: "Updated pending"
+    });
 
-      .lattice-gem-circumference::before,
-      .lattice-gem-circumference::after{
-        content:"";
-        position:absolute;
-        inset:9%;
-        border-radius:50%;
-        border:1px dashed rgba(244,207,131,.18);
-      }
+    viewportStatus.appendChild(pill);
+  }
 
-      .lattice-gem-circumference::after{
-        inset:21%;
-        border-color:rgba(141,216,255,.16);
-        transform:rotate(17deg);
-      }
+  function startCurrentTimeHeartbeat() {
+    updateCurrentTimeState();
+    publishLatticeGemStatus();
 
-      .lattice-gem-edge-segment{
-        position:absolute;
-        left:50%;
-        top:50%;
-        width:var(--edge-length,48px);
-        height:2px;
-        border-radius:999px;
-        transform-origin:0 50%;
-        transform:
-          rotate(var(--edge-angle,0deg))
-          translateX(var(--edge-depth,78px))
-          rotate(var(--edge-slant,0deg));
-        background:
-          linear-gradient(90deg,transparent,rgba(255,255,255,.34),var(--state-line),transparent);
-        box-shadow:
-          0 0 .45rem var(--state-glow),
-          0 0 .85rem rgba(141,216,255,.10);
-        opacity:var(--edge-opacity,.76);
-      }
+    if (state.heartbeatId) window.clearInterval(state.heartbeatId);
 
-      .lattice-gem-cut-body{
-        position:relative;
-        z-index:3;
-        width:12.2rem;
-        height:8.7rem;
-        clip-path:polygon(
-          50% 0%,
-          67% 6%,
-          84% 18%,
-          100% 43%,
-          88% 68%,
-          63% 85%,
-          50% 100%,
-          34% 84%,
-          10% 67%,
-          0% 41%,
-          14% 18%,
-          33% 5%
-        );
-        background:
-          linear-gradient(125deg,rgba(255,255,255,.38),transparent 22%),
-          conic-gradient(from 20deg,rgba(255,255,255,.30),rgba(141,216,255,.36),rgba(7,19,52,.98),rgba(244,207,131,.25),rgba(255,255,255,.22)),
-          radial-gradient(circle at 50% 35%,rgba(255,255,255,.28),transparent 42%);
-        box-shadow:
-          0 1.4rem 2.8rem rgba(0,0,0,.36),
-          0 0 2rem var(--state-glow),
-          inset 0 1px 0 rgba(255,255,255,.18);
-        transform:rotateX(10deg);
-        overflow:hidden;
-      }
+    state.heartbeatId = window.setInterval(() => {
+      updateCurrentTimeState();
+      publishLatticeGemStatus();
+    }, HEARTBEAT_MS);
+  }
 
-      .lattice-gem-cut-body::before{
-        content:"";
-        position:absolute;
-        inset:0;
-        background:
-          linear-gradient(90deg,transparent 0 49%,rgba(255,255,255,.30) 50%,transparent 51%),
-          linear-gradient(27deg,transparent 0 43%,rgba(255,255,255,.18) 44%,transparent 45%),
-          linear-gradient(151deg,transparent 0 44%,rgba(244,207,131,.18) 45%,transparent 46%),
-          linear-gradient(7deg,transparent 0 50%,rgba(141,216,255,.18) 51%,transparent 52%),
-          linear-gradient(110deg,transparent 0 51%,rgba(255,255,255,.15) 52%,transparent 53%);
-        opacity:.90;
-      }
+  function publishDatasets() {
+    document.documentElement.dataset.activeCockpitTnt = CONTRACT;
+    document.documentElement.dataset.audraliaCockpitJsContract = CONTRACT;
+    document.documentElement.dataset.audraliaCockpitPreviousJsContract = PREVIOUS_JS_CONTRACT;
+    document.documentElement.dataset.audraliaCockpitSpecOps = SPEC_OPS_CONTRACT;
+    document.documentElement.dataset.audraliaCockpitNewsProtocol = NEWS_PROTOCOL;
+    document.documentElement.dataset.audraliaCockpitGemModel = "360-lattice-gems";
+    document.documentElement.dataset.audraliaCockpitInstrumentAuthority = "dexterions-lab";
+    document.documentElement.dataset.newsAlignment = "active";
+    document.documentElement.dataset.bridgeModel = "north-east-south-west-visible";
+    document.documentElement.dataset.newsGovernanceOrder = "north-east-west-south";
+    document.documentElement.dataset.localGaugeScope = "16x16-256-per-gauge";
+    document.documentElement.dataset.runtimeStrengthHeld = "true";
+    document.documentElement.dataset.noChildRenewal = "true";
+    document.documentElement.dataset.noCanvasCreation = "true";
+    document.documentElement.dataset.noWebgl = "true";
+    document.documentElement.dataset.noVisualPassClaim = "true";
+    document.documentElement.dataset.cockpitReceipt = JSON.stringify(RECEIPT);
 
-      .lattice-gem-cut-body::after{
-        content:"";
-        position:absolute;
-        inset:0;
-        background:
-          radial-gradient(circle at 50% 28%,rgba(255,255,255,.36),transparent 20%),
-          radial-gradient(circle at 36% 70%,rgba(37,128,255,.18),transparent 30%),
-          radial-gradient(circle at 72% 60%,rgba(244,207,131,.18),transparent 32%);
-        mix-blend-mode:screen;
-        opacity:.72;
-      }
-
-      .lattice-gem-inner-lattice{
-        position:absolute;
-        z-index:6;
-        width:7.25rem;
-        height:5.35rem;
-        display:grid;
-        grid-template-columns:repeat(4,1fr);
-        gap:.30rem;
-        transform:translateY(.05rem) rotateX(18deg);
-      }
-
-      .lattice-gem-seat{
-        min-width:0;
-        aspect-ratio:1/1;
-        border:1px solid rgba(141,216,255,.24);
-        border-radius:.30rem;
-        background:
-          radial-gradient(circle at 50% 20%,rgba(255,255,255,.10),transparent 50%),
-          rgba(255,255,255,.034);
-        cursor:pointer;
-        box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-        transition:border-color .18s ease,background .18s ease,box-shadow .18s ease,opacity .18s ease,filter .18s ease;
-        -webkit-tap-highlight-color:transparent;
-      }
-
-      .lattice-gem-seat:hover,
-      .lattice-gem-seat:focus-visible{
-        border-color:rgba(244,207,131,.62);
-        box-shadow:0 0 .55rem rgba(244,207,131,.22),inset 0 1px 0 rgba(255,255,255,.10);
-      }
-
-      .lattice-gem-seat.is-active{
-        border-color:rgba(167,243,198,.72);
-        background:
-          radial-gradient(circle at 50% 20%,rgba(255,255,255,.34),transparent 48%),
-          radial-gradient(circle at 50% 70%,rgba(167,243,198,.32),transparent 62%),
-          rgba(167,243,198,.16);
-        box-shadow:
-          0 0 .65rem rgba(167,243,198,.34),
-          inset 0 1px 0 rgba(255,255,255,.16);
-      }
-
-      .lattice-gem-seat.is-staged{
-        border-color:rgba(173,140,255,.58);
-        background:rgba(173,140,255,.14);
-        box-shadow:0 0 .55rem rgba(173,140,255,.24);
-      }
-
-      .lattice-gem-seat.is-held{
-        cursor:not-allowed;
-        opacity:.58;
-        border-color:rgba(141,216,255,.28);
-        background:rgba(141,216,255,.07);
-      }
-
-      .lattice-gem-seat.manual{
-        border-color:rgba(244,207,131,.76);
-        box-shadow:
-          0 0 .50rem rgba(244,207,131,.34),
-          0 0 1rem rgba(167,243,198,.12),
-          inset 0 1px 0 rgba(255,255,255,.18);
-      }
-
-      .lattice-gem-axis{
-        position:absolute;
-        z-index:7;
-        pointer-events:none;
-        opacity:.62;
-      }
-
-      .axis-north,
-      .axis-south{
-        width:1px;
-        height:8.5rem;
-        background:linear-gradient(180deg,transparent,rgba(244,207,131,.72),transparent);
-      }
-
-      .axis-east,
-      .axis-west{
-        width:8.5rem;
-        height:1px;
-        background:linear-gradient(90deg,transparent,rgba(244,207,131,.72),transparent);
-      }
-
-      .axis-north{transform:translateY(-.1rem)}
-      .axis-south{transform:translateY(.1rem)}
-      .axis-east{transform:translateX(.1rem)}
-      .axis-west{transform:translateX(-.1rem)}
-
-      .lattice-gem-star{
-        position:absolute;
-        z-index:4;
-        width:9.1rem;
-        height:9.1rem;
-        border-radius:50%;
-        border:1px solid rgba(255,255,255,.08);
-        background:
-          conic-gradient(from 0deg,transparent,rgba(141,216,255,.21),transparent,rgba(244,207,131,.19),transparent);
-        opacity:.64;
-        animation:latticeGemStarTurn 28s linear infinite;
-      }
-
-      @keyframes latticeGemStarTurn{
-        to{transform:rotate(360deg)}
-      }
-
-      .lattice-gem-glint{
-        position:absolute;
-        z-index:8;
-        width:10.6rem;
-        height:.48rem;
-        border-radius:999px;
-        transform:rotate(-28deg);
-        background:linear-gradient(90deg,transparent,rgba(255,255,255,.60),rgba(141,216,255,.34),transparent);
-        animation:latticeGemGlint 8.5s ease-in-out infinite;
-        opacity:.30;
-        pointer-events:none;
-      }
-
-      @keyframes latticeGemGlint{
-        0%,100%{transform:translateX(-3.2rem) rotate(-28deg);opacity:.08}
-        50%{transform:translateX(3.2rem) rotate(-28deg);opacity:.58}
-      }
-
-      .lattice-gem-label{
-        position:relative;
-        z-index:4;
-        display:grid;
-        gap:.42rem;
-      }
-
-      .lattice-gem-label b{
-        color:var(--gold,#f4cf83);
-        font-size:.70rem;
-        letter-spacing:.16em;
-        text-transform:uppercase;
-      }
-
-      .lattice-gem-label strong{
-        color:rgba(255,244,216,.96);
-        font-size:1.08rem;
-        line-height:1.15;
-      }
-
-      .lattice-gem-label span{
-        color:rgba(238,244,255,.72);
-        font-size:.84rem;
-        line-height:1.36;
-      }
-
-      .lattice-gem-receipt{
-        position:relative;
-        z-index:4;
-        display:block;
-        padding:.72rem .76rem;
-        border:1px solid rgba(255,255,255,.08);
-        border-radius:.9rem;
-        background:rgba(0,0,0,.18);
-        color:rgba(238,244,255,.66);
-        font:700 .70rem/1.35 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-        white-space:normal;
-        overflow-wrap:anywhere;
-      }
-
-      .lattice-receipt-grid{
-        display:grid;
-        grid-template-columns:repeat(3,minmax(0,1fr));
-        gap:10px;
-        margin-top:18px;
-      }
-
-      .lattice-receipt-card{
-        border:1px solid rgba(255,255,255,.10);
-        border-radius:16px;
-        padding:12px;
-        background:rgba(255,255,255,.026);
-        display:grid;
-        gap:6px;
-      }
-
-      .lattice-receipt-card b{
-        color:var(--gold,#f4cf83);
-        font-size:.68rem;
-        letter-spacing:.13em;
-        text-transform:uppercase;
-      }
-
-      .lattice-receipt-card code{
-        color:rgba(238,244,255,.70);
-        font:700 .72rem/1.35 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-        overflow-wrap:anywhere;
-        white-space:normal;
-      }
-
-      @media (max-width:1080px){
-        .lattice-gem-grid,
-        .lattice-receipt-grid{
-          grid-template-columns:repeat(2,minmax(0,1fr));
-        }
-      }
-
-      @media (max-width:760px){
-        .lattice-gem-grid,
-        .lattice-receipt-grid{
-          grid-template-columns:1fr;
-        }
-
-        .lattice-gem{
-          min-height:24rem;
-        }
-
-        .lattice-gem-shell{
-          min-height:15rem;
-        }
-
-        .lattice-gem-circumference{
-          width:12.6rem;
-          height:8.25rem;
-        }
-
-        .lattice-gem-cut-body{
-          width:10.6rem;
-          height:7.6rem;
-        }
-
-        .lattice-gem-inner-lattice{
-          width:6.25rem;
-          height:4.7rem;
-          gap:.25rem;
-        }
-      }
-
-      @media (prefers-reduced-motion:reduce){
-        .lattice-gem-star,
-        .lattice-gem-glint{
-          animation:none!important;
-        }
-      }
-    `;
-    document.head.appendChild(style);
+    window.AUDRALIA_INTERGALACTIC_COCKPIT_ENGINEERING_LENS_RECEIPT = RECEIPT;
+    window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_THREE_FILE_SPLIT_RECEIPT = RECEIPT;
   }
 
   function createCircumferenceMap(gemId) {
@@ -782,6 +524,7 @@
           `--edge-opacity:${segment.opacity}`
         ].join(";")
       });
+
       circumference.appendChild(edge);
     });
 
@@ -823,11 +566,7 @@
     const shell = createNode("div", "lattice-gem-shell");
 
     shell.appendChild(renderEdgeSegments(record));
-
-    const cutBody = createNode("div", "lattice-gem-cut-body", {
-      "aria-hidden": "true"
-    });
-    shell.appendChild(cutBody);
+    shell.appendChild(createNode("div", "lattice-gem-cut-body", { "aria-hidden": "true" }));
 
     const lattice = createNode("div", "lattice-gem-inner-lattice", {
       "data-lattice-seats": record.gemId,
@@ -884,7 +623,7 @@
     setNodeText(h2, "Each cockpit gem owns its own 360-degree lattice.");
     setNodeText(
       p,
-      "The cockpit no longer treats gems as flat indicators. Each gem is a native lattice instrument with its own circumference, irregular cut-edge delegation, diagnostic seats, cardinal axis, and stream receipt."
+      "The cockpit treats each gem as a native lattice instrument with its own circumference, irregular cut-edge delegation, diagnostic seats, cardinal axis, and stream receipt."
     );
   }
 
@@ -897,6 +636,7 @@
     consoleNode.dataset.latticeGemConsole = "true";
     consoleNode.dataset.gemAuthority = "Dexterion’s Lab";
     consoleNode.dataset.circumferenceLaw = "360_irregular_cut_edge";
+    consoleNode.dataset.currentTime = state.currentTime.local || "";
     consoleNode.innerHTML = "";
 
     state.latticeGems.forEach((record) => {
@@ -912,6 +652,8 @@
     const cockpitMain = qs("#cockpit-main") || qs("main") || document.body;
     const gemPanel = findGemConsole()?.closest(".cockpit-panel");
 
+    if (!gemPanel && qs("[data-lattice-gem-console]")) return;
+
     const section = createNode("section", "cockpit-panel", {
       id: "lattice-gem-foundry",
       "aria-label": "Lattice Gem Foundry"
@@ -919,7 +661,7 @@
 
     const head = createNode("div", "panel-head lattice-gem-foundry-copy");
     head.appendChild(createNode("p", "section-title", { text: "Lattice Gem Foundry" }));
-    head.appendChild(createNode("h2", "", { text: "Native cockpit gems now carry independent lattice authority." }));
+    head.appendChild(createNode("h2", "", { text: "Native cockpit gems carry independent lattice authority." }));
     head.appendChild(createNode("p", "", {
       text: "Each gem keeps a full 360-degree circumference while refusing a smooth perfect circle. The circumference is delegated through inconsistent cut-gem edges, and each gem owns its own 16 × 16 / 256-seat diagnostic lattice."
     }));
@@ -928,49 +670,53 @@
 
     if (gemPanel && gemPanel.parentNode) {
       gemPanel.parentNode.insertBefore(section, gemPanel);
-    } else {
+    } else if (!qs("[data-lattice-gem-console]")) {
       cockpitMain.appendChild(section);
     }
   }
 
   function mountLatticeReceipts() {
-    let section = qs("#lattice-receipts");
+    let grid = qs("[data-lattice-receipt-grid]");
 
-    if (!section) {
-      const gemPanel = findGemConsole()?.closest(".cockpit-panel");
-      section = createNode("section", "cockpit-panel", {
-        id: "lattice-receipts",
-        "aria-label": "Lattice receipts"
-      });
+    if (!grid) {
+      let section = qs("#lattice-receipts");
 
-      const head = createNode("div", "panel-head");
-      head.appendChild(createNode("p", "section-title", { text: "Lattice Receipts" }));
-      head.appendChild(createNode("h2", "", { text: "Every gem publishes its own lattice receipt." }));
-      head.appendChild(createNode("p", "", {
-        text: "The master gem coordinates the cockpit, but it does not absorb child lattice authority."
-      }));
+      if (!section) {
+        const gemPanel = findGemConsole()?.closest(".cockpit-panel");
+        section = createNode("section", "cockpit-panel", {
+          id: "lattice-receipts",
+          "aria-label": "Lattice receipts"
+        });
 
-      section.appendChild(head);
-      section.appendChild(createNode("div", "lattice-receipt-grid", {
-        "data-lattice-receipt-grid": "true"
-      }));
+        const head = createNode("div", "panel-head");
+        head.appendChild(createNode("p", "section-title", { text: "Lattice Receipts" }));
+        head.appendChild(createNode("h2", "", { text: "Every gem publishes its own lattice receipt." }));
+        head.appendChild(createNode("p", "", {
+          text: "The master gem coordinates the cockpit, but it does not absorb child lattice authority."
+        }));
 
-      if (gemPanel && gemPanel.parentNode) {
-        gemPanel.parentNode.insertBefore(section, gemPanel.nextSibling);
-      } else {
-        (qs("#cockpit-main") || qs("main") || document.body).appendChild(section);
+        section.appendChild(head);
+
+        if (gemPanel && gemPanel.parentNode) {
+          gemPanel.parentNode.insertBefore(section, gemPanel.nextSibling);
+        } else {
+          (qs("#cockpit-main") || qs("main") || document.body).appendChild(section);
+        }
       }
+
+      grid = createNode("div", "lattice-receipt-grid", {
+        "data-lattice-receipt-grid": "true"
+      });
+      section.appendChild(grid);
     }
 
-    const grid = qs("[data-lattice-receipt-grid]", section) || createNode("div", "lattice-receipt-grid", {
-      "data-lattice-receipt-grid": "true"
-    });
-
-    if (!grid.parentNode) section.appendChild(grid);
     grid.innerHTML = "";
 
     state.latticeGems.forEach((record) => {
-      const card = createNode("article", "lattice-receipt-card");
+      const card = createNode("article", "lattice-receipt-card", {
+        "data-state": record.state,
+        "data-lattice-id": record.latticeId
+      });
       card.appendChild(createNode("b", "", { text: record.label }));
       card.appendChild(createNode("code", "", { text: record.receipt }));
       grid.appendChild(card);
@@ -982,6 +728,8 @@
     if (!board) return;
 
     board.innerHTML = "";
+    board.dataset.currentTime = state.currentTime.local || "";
+    board.dataset.gaugeHeartbeat = String(state.currentTime.heartbeat || 0);
 
     state.latticeGems.forEach((record) => {
       const gauge = createNode("article", "gauge-dial cockpit-gauge-dial", {
@@ -998,6 +746,7 @@
       gauge.appendChild(createNode("b", "", { text: `${record.label} Gauge` }));
       gauge.appendChild(createNode("strong", "", { text: labelForState(record.state) }));
       gauge.appendChild(createNode("span", "", { text: `${record.latticeId} · ${record.stream}` }));
+      gauge.appendChild(createNode("span", "", { text: `Updated ${state.currentTime.localTime || "pending"}` }));
 
       board.appendChild(gauge);
     });
@@ -1013,11 +762,13 @@
     board.dataset.localAddresses = "256";
     board.dataset.visibleSample = "4x4";
     board.dataset.runtimeActivation = "false";
+    board.dataset.currentTime = state.currentTime.local || "";
 
     state.latticeGems.forEach((record) => {
       const instrument = createNode("article", "cockpit-control-instrument", {
         "data-control-instrument": record.gemId,
-        "data-lattice-id": record.latticeId
+        "data-lattice-id": record.latticeId,
+        "data-state": record.state
       });
 
       instrument.appendChild(createNode("b", "", { text: `${record.label} Control Lattice` }));
@@ -1056,6 +807,7 @@
     if (!streamDeck) return;
 
     streamDeck.innerHTML = "";
+    streamDeck.dataset.currentTime = state.currentTime.local || "";
 
     state.latticeGems.forEach((record) => {
       const card = createNode("article", "stream-card", {
@@ -1068,6 +820,7 @@
       card.appendChild(createNode("span", "", { text: record.latticeId }));
       card.appendChild(createNode("em", "", { text: record.functionText }));
       card.appendChild(createNode("strong", "", { text: labelForState(record.state) }));
+      card.appendChild(createNode("span", "", { text: `Refreshed ${state.currentTime.localTime || "pending"}` }));
 
       streamDeck.appendChild(card);
     });
@@ -1101,6 +854,8 @@
       script.dataset.audraliaCockpitAsset = asset.key;
       script.dataset.contract = CONTRACT;
       script.dataset.role = asset.role;
+      script.dataset.runtimeActivation = "false";
+      script.dataset.visualPassClaim = "false";
 
       script.onload = () => {
         resolve({ key: asset.key, ok: true, status: "loaded", url: asset.url });
@@ -1133,6 +888,7 @@
 
       for (const key of directKeys) {
         if (Array.isArray(value[key]) && value[key].length === 256) return 256;
+
         if (value[key] && typeof value[key] === "object") {
           const nested = walk(value[key], depth + 1);
           if (nested === 256) return 256;
@@ -1189,6 +945,23 @@
     };
   }
 
+  function updateBridgeStatus(proof) {
+    state.bridgeStatus.north = state.phase === "pass" ? "pass" : "hold";
+    state.bridgeStatus.east = proof.receiveMapReady || proof.newsComplete ? "pass" : "hold";
+    state.bridgeStatus.west = "pass";
+    state.bridgeStatus.south = "held";
+
+    document.documentElement.dataset.northBridgeStatus = state.bridgeStatus.north;
+    document.documentElement.dataset.eastBridgeStatus = state.bridgeStatus.east;
+    document.documentElement.dataset.westBridgeStatus = state.bridgeStatus.west;
+    document.documentElement.dataset.southBridgeStatus = state.bridgeStatus.south;
+
+    setText("[data-north-bridge-status]", state.bridgeStatus.north);
+    setText("[data-east-bridge-status]", state.bridgeStatus.east);
+    setText("[data-west-bridge-status]", state.bridgeStatus.west);
+    setText("[data-south-bridge-status]", state.bridgeStatus.south);
+  }
+
   function setProofTexts(proof) {
     const failures = Object.values(state.assetResults).filter((result) => !result.ok);
 
@@ -1196,6 +969,8 @@
     state.failure = failures.length === 0
       ? "none"
       : failures.map((result) => `${result.key}:${result.status}`).join(" · ");
+
+    state.proof = proof;
 
     setText("[data-cockpit-phase]", state.phase);
     setText("[data-cockpit-failure]", state.failure);
@@ -1219,17 +994,24 @@
 
     setText("[data-public-instrument-authority]", "Dexterion’s Lab");
     setText("[data-cockpit-dexterion-mode]", "360 lattice gem cockpit");
+    setText("[data-cockpit-parent-match]", "active · parent-only renewal");
     setText("[data-cockpit-dual-donor-status]", "active · circuit grammar + touch grammar adopted into native cockpit gems");
     setText("[data-control-cell-status]", "active · session-only lattice seats");
+    setText("[data-cockpit-child-renewal]", "forbidden · existing child structure preserved");
+    setText("[data-cockpit-runtime-lock]", "held · future engine carrier only");
 
     setText("[data-gauge-datum]", state.assetResults.datum.ok ? "pass · cloned seed origin lattice" : "held · datum not loaded");
     setText("[data-gauge-disposition]", state.assetResults.disposition.ok ? "pass · passive receive lattice" : "held · disposition not loaded");
     setText("[data-gauge-terrain]", state.assetResults.terrain.ok ? "pass · terrain readiness lattice" : "held · terrain not loaded");
     setText("[data-gauge-news]", proof.newsComplete ? "pass · N/E/W/S complete" : "held · NEWS incomplete");
+    setText("[data-gauge-parent-match]", "active · parent-only renewal");
     setText("[data-gauge-parent]", "pass · mutation guard lattice");
     setText("[data-gauge-render]", "pass · render hold lattice");
     setText("[data-gauge-runtime]", "held · Strength lock lattice");
     setText("[data-gauge-multistream]", "staged · launchpad lattice");
+
+    updateBridgeStatus(proof);
+    updateCurrentTimeState();
   }
 
   function applyProofToGems(proof) {
@@ -1245,22 +1027,48 @@
   }
 
   function publishLatticeGemStatus() {
+    const current = state.currentTime.iso ? state.currentTime : updateCurrentTimeState();
+
     const publicStatus = {
       contract: CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
-      htmlContract: HTML_CONTRACT,
+      specOpsContract: SPEC_OPS_CONTRACT,
+      newsProtocol: NEWS_PROTOCOL,
+      previousJsContract: PREVIOUS_JS_CONTRACT,
+      previousHtmlContract: PREVIOUS_HTML_CONTRACT,
+      parentMatchingContract: PARENT_MATCHING_CONTRACT,
       phase: state.phase,
       failure: state.failure,
+      route: ROUTE,
       instrumentAuthority: "Dexterion’s Lab",
       cockpitFrame: "Intergalactic Cockpit",
       gemModel: "360 lattice-designated cut gems",
       circumferenceLaw: "full 360-degree circumference delegated by inconsistent cut-gem edges",
+      threeFileSplit: true,
+      inlineCss: false,
+      inlineJs: false,
+      currentTimeInstruments: true,
+      newsAlignment: "active",
+      bridgeModel: "north-east-south-west-visible / north-east-west-south-governance",
+      bridgeCount: 4,
+      gaugeCount: 8,
+      localGaugeScope: "16x16 / 256 per gauge",
+      bridgeStatus: { ...state.bridgeStatus },
+      bridges: BRIDGES,
+      cockpitLocalTime: current.local,
+      cockpitUpdatedAt: current.updatedAt,
+      cockpitTimeZone: current.timeZone,
+      northBridgeStatus: state.bridgeStatus.north,
+      eastBridgeStatus: state.bridgeStatus.east,
+      westBridgeStatus: state.bridgeStatus.west,
+      southBridgeStatus: state.bridgeStatus.south,
       runtimeStrengthHeld: true,
+      noChildRenewal: true,
       noCanvasCreation: true,
       noWebGL: true,
       generatedImage: false,
       graphicBox: false,
       noVisualPassClaim: true,
+      proof: state.proof,
       assetResults: state.assetResults,
       latticeGems: state.latticeGems.map((gem) => ({
         gemId: gem.gemId,
@@ -1277,41 +1085,68 @@
       })),
       touchedSeats: state.touchedSeats.slice(-24),
       receipt: RECEIPT,
-      updatedAt: new Date().toISOString()
+      generatedAt: state.generatedAt,
+      updatedAt: current.updatedAt
     };
 
     window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_360_LATTICE_GEM_STATUS = publicStatus;
     window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_STATUS = publicStatus;
     window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_DUAL_DONOR_CIRCUIT_TOUCH_GEM_INSTRUMENT_STATUS = publicStatus;
+    window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_THREE_FILE_SPLIT_STATUS = publicStatus;
+    window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_NEWS_ALIGNMENT_STATUS = publicStatus;
 
     return publicStatus;
   }
 
   async function refreshCockpit() {
+    if (state.refreshInFlight) return publishLatticeGemStatus();
+
+    state.refreshInFlight = true;
     state.phase = "loading";
     state.failure = "none";
+
+    updateCurrentTimeState();
     setText("[data-cockpit-phase]", "loading");
     setText("[data-cockpit-failure]", "none");
 
-    const results = await Promise.all([
-      loadScriptAsset(ASSETS.datum),
-      loadScriptAsset(ASSETS.disposition),
-      loadScriptAsset(ASSETS.terrain)
-    ]);
+    const runButton = qs("[data-cockpit-refresh]");
+    if (runButton) {
+      runButton.textContent = "Running Cockpit";
+      runButton.setAttribute("aria-label", "Cockpit verification running");
+      runButton.disabled = true;
+    }
 
-    results.forEach((result) => {
-      state.assetResults[result.key] = {
-        ok: Boolean(result.ok),
-        status: result.status,
-        url: result.url
-      };
-    });
+    try {
+      const results = await Promise.all([
+        loadScriptAsset(ASSETS.datum),
+        loadScriptAsset(ASSETS.disposition),
+        loadScriptAsset(ASSETS.terrain)
+      ]);
 
-    const proof = deriveAssetProof();
-    applyProofToGems(proof);
-    setProofTexts(proof);
-    renderAllLatticeSystems();
-    publishLatticeGemStatus();
+      results.forEach((result) => {
+        state.assetResults[result.key] = {
+          ok: Boolean(result.ok),
+          status: result.status,
+          url: result.url
+        };
+      });
+
+      const proof = deriveAssetProof();
+      applyProofToGems(proof);
+      setProofTexts(proof);
+      renderAllLatticeSystems();
+      publishLatticeGemStatus();
+
+      if (runButton) {
+        runButton.textContent = state.phase === "pass" ? "Cockpit Passed" : "Cockpit Held";
+        runButton.setAttribute("aria-label", state.phase === "pass" ? "Cockpit verification passed" : "Cockpit verification held");
+      }
+    } finally {
+      if (runButton) runButton.disabled = false;
+      state.refreshInFlight = false;
+    }
+
+    return publishLatticeGemStatus();
   }
 
   function handleLatticeSeatToggle(target) {
@@ -1343,12 +1178,62 @@
       touchedAt: new Date().toISOString()
     });
 
+    updateCurrentTimeState();
     setText("[data-control-last-touch]", `${record.label} ${seat.address} · ${seat.state}`);
     renderAllLatticeSystems();
     publishLatticeGemStatus();
   }
 
+  function clearActiveInstruments() {
+    qsa(".instrument[data-target]").forEach((instrument) => {
+      instrument.classList.remove("is-active");
+    });
+  }
+
+  function openChamber(id, shouldScroll = true) {
+    const chamber = document.getElementById(id);
+    if (!chamber || chamber.tagName.toLowerCase() !== "details") return;
+
+    qsa("details.chamber[id]").forEach((item) => {
+      if (item !== chamber) item.open = false;
+    });
+
+    chamber.open = true;
+    clearActiveInstruments();
+
+    const activeInstrument = qsa(".instrument[data-target]").find((instrument) => instrument.dataset.target === id);
+    if (activeInstrument) activeInstrument.classList.add("is-active");
+
+    document.documentElement.dataset.activeCockpitChamber = id;
+
+    const bridge = Object.entries(BRIDGES).find(([, config]) => config.chambers.includes(id));
+    if (bridge) {
+      document.documentElement.dataset.activeCockpitBridge = bridge[0];
+    }
+
+    if (shouldScroll) {
+      requestAnimationFrame(() => {
+        chamber.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+  }
+
+  function closeMenu() {
+    const menu = qs(".cockpit-menu");
+    if (menu) menu.open = false;
+  }
+
+  function handleReturnToOrbit() {
+    clearActiveInstruments();
+    document.documentElement.dataset.cockpitReturn = "orbit";
+    document.documentElement.dataset.activeCockpitChamber = "";
+    document.documentElement.dataset.activeCockpitBridge = "";
+  }
+
   function bindEvents() {
+    if (state.eventsBound) return;
+    state.eventsBound = true;
+
     document.addEventListener("click", (event) => {
       const seat = event.target.closest(".lattice-gem-seat,[data-control-seat-id]");
       if (seat) {
@@ -1360,7 +1245,31 @@
       const refresh = event.target.closest("[data-cockpit-refresh]");
       if (refresh) {
         event.preventDefault();
+        document.documentElement.dataset.cockpitRun = "requested";
         refreshCockpit();
+        return;
+      }
+
+      const instrument = event.target.closest(".instrument[data-target]");
+      if (instrument) {
+        const target = instrument.dataset.target;
+        if (!target) return;
+
+        event.preventDefault();
+        history.replaceState(null, "", `#${target}`);
+        openChamber(target);
+        return;
+      }
+
+      const orbitLink = event.target.closest(".return-orbit");
+      if (orbitLink) {
+        handleReturnToOrbit();
+        return;
+      }
+
+      const menuLink = event.target.closest(".cockpit-menu-panel a");
+      if (menuLink) {
+        closeMenu();
       }
     });
 
@@ -1373,29 +1282,44 @@
       event.preventDefault();
       handleLatticeSeatToggle(seat);
     });
+
+    window.addEventListener("hashchange", () => {
+      const id = window.location.hash ? window.location.hash.slice(1) : "";
+      if (id && id !== ORBIT_ID) openChamber(id);
+      if (id === ORBIT_ID) handleReturnToOrbit();
+    });
+  }
+
+  function openInitialHash() {
+    const id = window.location.hash ? window.location.hash.slice(1) : "";
+    if (id && id !== ORBIT_ID) openChamber(id, false);
   }
 
   function boot() {
-    document.documentElement.dataset.audraliaCockpitJsContract = CONTRACT;
-    document.documentElement.dataset.audraliaCockpitGemModel = "360-lattice-gems";
-    document.documentElement.dataset.audraliaCockpitInstrumentAuthority = "dexterions-lab";
-    document.documentElement.dataset.runtimeStrengthHeld = "true";
-    document.documentElement.dataset.noCanvasCreation = "true";
-    document.documentElement.dataset.noWebgl = "true";
-    document.documentElement.dataset.noVisualPassClaim = "true";
+    if (state.booted) return;
+    state.booted = true;
 
-    ensureLatticeGemStyles();
+    publishDatasets();
+    ensureCurrentTimeReadout();
+    updateCurrentTimeState();
 
     state.latticeGems = createLatticeGemRegistry();
 
     renderAllLatticeSystems();
+
     setText("[data-cockpit-phase]", "booting");
     setText("[data-cockpit-failure]", "none");
     setText("[data-cockpit-dexterion]", "mounting · 360 lattice gem instruments");
     setText("[data-control-cell-status]", "mounting · independent lattice seats");
+    setText("[data-public-instrument-authority]", "Dexterion’s Lab");
+    setText("[data-cockpit-dexterion-mode]", "360 lattice gem cockpit");
+    setText("[data-cockpit-parent-match]", "active · parent-only renewal");
+    setText("[data-cockpit-child-renewal]", "forbidden · existing child structure preserved");
 
     bindEvents();
+    openInitialHash();
     publishLatticeGemStatus();
+    startCurrentTimeHeartbeat();
     refreshCockpit();
   }
 

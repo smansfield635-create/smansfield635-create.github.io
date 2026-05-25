@@ -2,40 +2,34 @@
 <html
   lang="en"
   data-route="/coherence-diagnostic/"
-  data-page="coherence-diagnostic-section-contrast-cognitive-load-reduction"
-  data-contract="COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_TNT_v5"
-  data-previous-contract="COHERENCE_DIAGNOSTIC_VISIBLE_NEUTRALITY_AND_INCOHERENCE_PROBE_TNT_v4"
-  data-spec-ops-contract="COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_SPEC_OPS_v5"
-  data-news-contract="COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_NEWS_v5"
-  data-ccr-contract="COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_CCR_v5"
-  data-change-type="visual-hierarchy-renewal-only"
+  data-page="coherence-diagnostic-presentation-forward-question-delivery"
+  data-contract="COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_TNT_v6"
+  data-previous-contract="COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_TNT_v5"
+  data-spec-ops-contract="COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_SPEC_OPS_v6"
+  data-news-contract="COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_NEWS_v6"
+  data-ccr-contract="COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_CCR_v6"
+  data-change-type="question-delivery-renewal-only"
   data-question-minimum="12"
   data-q1-fixed="true"
   data-q2-fixed="true"
   data-public-archetypes="Strategist,Builder,Mitigator,Auditor"
+  data-question-delivery="presentation-forward-human-moments"
+  data-scenario-rhythm="moment-pressure-coherence-test"
   data-hidden-fragmentation-bucket="active"
   data-visible-answer-type-labels="false"
   data-visible-answer-strength-labels="false"
   data-incoherence-probes-active="true"
   data-option-randomization="true"
-  data-fragmented-public-archetype="false"
   data-adaptive-generation="true"
   data-primary-secondary-required="true"
   data-section-contrast-renewed="true"
-  data-cognitive-load-reduced="true"
-  data-static-sequence-rail="active"
-  data-step-bands="active"
-  data-library-zone-contrast="active"
-  data-primary-zone-contrast="active"
-  data-secondary-zone-contrast="active"
   data-results-visible-without-email="true"
   data-engineering-lens-active="true"
+  data-technical-readout-result-only="true"
   data-cognitive-processing-estimate="not-iq"
   data-preference-type-hypothesis="not-official-mbti"
   data-email-results-active="false"
   data-character-profile-save-active="false"
-  data-character-profile-coming-soon-tone="intrigue-forward"
-  data-email-results-coming-soon-tone="plain-practical"
   data-local-grading="true"
   data-no-backend="true"
   data-no-storage="true"
@@ -55,7 +49,7 @@
   <title>Coherence Diagnostic Assessment · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="A local-only adaptive coherence diagnostic using self-rated coherence, claimed primary and secondary archetypes, neutral answer choices, incoherence probes, stronger section contrast, and an optional Engineering Lens technical readout."
+    content="A local-only adaptive coherence diagnostic using self-rated coherence, claimed archetype blend, presentation-forward human scenario questions, coherence probes, and an optional Engineering Lens result readout."
   >
 
   <style>
@@ -445,9 +439,7 @@
       font-weight:760;
     }
 
-    .intake-panel .panel-body{
-      gap:22px;
-    }
+    .intake-panel .panel-body{gap:22px}
 
     .step-zone{
       position:relative;
@@ -529,9 +521,7 @@
       box-shadow:0 10px 24px rgba(0,0,0,.24);
     }
 
-    .secondary-zone .step-index{
-      background:linear-gradient(135deg,#d7fff0,var(--blue));
-    }
+    .secondary-zone .step-index{background:linear-gradient(135deg,#d7fff0,var(--blue))}
 
     .step-copy{
       display:grid;
@@ -561,27 +551,12 @@
     }
 
     .mode-grid,
-    .select-grid{
-      grid-template-columns:repeat(2,minmax(0,1fr));
-    }
-
-    .intake-select-grid{
-      align-items:start;
-      gap:18px;
-    }
-
-    .option-grid{
-      grid-template-columns:repeat(4,minmax(0,1fr));
-    }
-
+    .select-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .intake-select-grid{align-items:start;gap:18px}
+    .option-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
     .primary-zone .option-grid,
-    .secondary-zone .option-grid{
-      grid-template-columns:1fr;
-    }
-
-    .scale-grid{
-      grid-template-columns:repeat(10,minmax(0,1fr));
-    }
+    .secondary-zone .option-grid{grid-template-columns:1fr}
+    .scale-grid{grid-template-columns:repeat(10,minmax(0,1fr))}
 
     .choice-card,
     .scale-card{
@@ -609,13 +584,8 @@
         rgba(0,0,0,.18);
     }
 
-    .primary-zone .choice-card{
-      border-color:rgba(244,207,131,.14);
-    }
-
-    .secondary-zone .choice-card{
-      border-color:rgba(141,216,255,.14);
-    }
+    .primary-zone .choice-card{border-color:rgba(244,207,131,.14)}
+    .secondary-zone .choice-card{border-color:rgba(141,216,255,.14)}
 
     .scale-card{
       min-height:62px;
@@ -666,9 +636,7 @@
       text-transform:uppercase;
     }
 
-    .secondary-zone .choice-card b{
-      color:rgba(167,243,198,.90);
-    }
+    .secondary-zone .choice-card b{color:rgba(167,243,198,.90)}
 
     .choice-card strong{
       color:rgba(255,244,216,.96);
@@ -682,10 +650,7 @@
       line-height:1.35;
     }
 
-    .archetype-library{
-      display:grid;
-      gap:12px;
-    }
+    .archetype-library{display:grid;gap:12px}
 
     .archetype-detail,
     .engineering-readout{
@@ -763,17 +728,13 @@
     }
 
     .mini-grid,
-    .engineering-grid,
     .metric-grid{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
       gap:10px;
     }
 
-    .engineering-grid.three,
-    .metric-grid.three{
-      grid-template-columns:repeat(3,minmax(0,1fr));
-    }
+    .metric-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
 
     .mini-card,
     .metric-card,
@@ -853,18 +814,45 @@
       line-height:1.5;
     }
 
-    .question{
+    .scenario-intro{
       display:grid;
-      gap:14px;
-      border:1px solid rgba(255,255,255,.09);
+      gap:10px;
+      border:1px solid rgba(141,216,255,.16);
       border-radius:22px;
       padding:16px;
-      background:rgba(255,255,255,.024);
+      background:
+        radial-gradient(circle at 10% 0%,rgba(141,216,255,.10),transparent 16rem),
+        radial-gradient(circle at 92% 0%,rgba(244,207,131,.06),transparent 16rem),
+        rgba(255,255,255,.025);
+    }
+
+    .scenario-intro strong{
+      color:rgba(255,244,216,.96);
+      font-size:clamp(1rem,2vw,1.22rem);
+      line-height:1.2;
+    }
+
+    .scenario-intro span{
+      color:rgba(239,247,255,.70);
+      font-size:.92rem;
+      line-height:1.45;
+    }
+
+    .question{
+      display:grid;
+      gap:16px;
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:26px;
+      padding:clamp(15px,3vw,20px);
+      background:
+        radial-gradient(circle at 8% 0%,rgba(244,207,131,.06),transparent 18rem),
+        linear-gradient(180deg,rgba(255,255,255,.034),rgba(255,255,255,.012)),
+        rgba(255,255,255,.020);
     }
 
     .question-top{
       display:grid;
-      gap:8px;
+      gap:10px;
     }
 
     .question-number{
@@ -873,6 +861,49 @@
       letter-spacing:.16em;
       text-transform:uppercase;
     }
+
+    .moment-stack{
+      display:grid;
+      gap:10px;
+    }
+
+    .moment-block{
+      display:grid;
+      gap:6px;
+      border:1px solid rgba(255,255,255,.085);
+      border-radius:18px;
+      padding:13px;
+      background:rgba(0,0,0,.14);
+    }
+
+    .moment-block b{
+      color:rgba(141,216,255,.82);
+      font:900 .66rem/1.3 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .moment-block strong{
+      color:rgba(255,244,216,.96);
+      font-size:clamp(1rem,2vw,1.22rem);
+      line-height:1.25;
+      letter-spacing:-.025em;
+    }
+
+    .moment-block span{
+      color:rgba(239,247,255,.72);
+      font-size:.94rem;
+      line-height:1.55;
+    }
+
+    .coherence-test{
+      border-color:rgba(244,207,131,.18);
+      background:
+        radial-gradient(circle at 0% 0%,rgba(244,207,131,.08),transparent 12rem),
+        rgba(244,207,131,.025);
+    }
+
+    .coherence-test b{color:var(--gold)}
 
     .answer-columns{
       display:grid;
@@ -884,8 +915,8 @@
       display:grid;
       gap:10px;
       border:1px solid rgba(255,255,255,.08);
-      border-radius:18px;
-      padding:12px;
+      border-radius:20px;
+      padding:13px;
       background:rgba(0,0,0,.16);
     }
 
@@ -896,18 +927,24 @@
       text-transform:uppercase;
     }
 
+    .answer-box:first-child .answer-title{color:rgba(244,207,131,.86)}
+    .answer-box:last-child .answer-title{color:rgba(167,243,198,.82)}
+
     .answer-choice{
       position:relative;
       display:grid;
       gap:5px;
       border:1px solid rgba(255,255,255,.09);
-      border-radius:15px;
-      padding:11px;
-      background:rgba(255,255,255,.025);
-      transition:border-color .18s ease,background .18s ease;
+      border-radius:16px;
+      padding:12px;
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.030),rgba(255,255,255,.010)),
+        rgba(255,255,255,.022);
+      transition:border-color .18s ease,background .18s ease,transform .18s ease;
     }
 
     .answer-choice:hover{
+      transform:translateY(-1px);
       border-color:rgba(141,216,255,.25);
       background:rgba(141,216,255,.05);
     }
@@ -925,8 +962,8 @@
 
     .answer-choice b{
       color:rgba(255,244,216,.94);
-      font-size:.88rem;
-      line-height:1.28;
+      font-size:.90rem;
+      line-height:1.35;
       font-weight:820;
     }
 
@@ -1058,9 +1095,7 @@
         rgba(255,255,255,.025);
     }
 
-    .coming-soon h3{
-      color:var(--gold);
-    }
+    .coming-soon h3{color:var(--gold)}
 
     .receipt,
     [data-route-receipt]{
@@ -1096,34 +1131,19 @@
       .option-grid,
       .result-grid,
       .mini-grid,
-      .engineering-grid,
-      .engineering-grid.three,
       .metric-grid,
       .metric-grid.three{
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
 
-      .scale-grid{
-        grid-template-columns:repeat(5,minmax(0,1fr));
-      }
-
-      .answer-columns{
-        grid-template-columns:1fr;
-      }
+      .scale-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
+      .answer-columns{grid-template-columns:1fr}
     }
 
     @media (max-width:640px){
-      .shell{
-        width:min(100% - 18px,var(--max));
-      }
-
-      .topbar{
-        grid-template-columns:1fr;
-      }
-
-      .route-links{
-        justify-content:flex-start;
-      }
+      .shell{width:min(100% - 18px,var(--max))}
+      .topbar{grid-template-columns:1fr}
+      .route-links{justify-content:flex-start}
 
       .sequence-rail,
       .mode-grid,
@@ -1131,46 +1151,22 @@
       .option-grid,
       .result-grid,
       .mini-grid,
-      .engineering-grid,
-      .engineering-grid.three,
       .metric-grid,
       .metric-grid.three{
         grid-template-columns:1fr;
       }
 
-      .scale-grid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
+      .scale-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .hero,.assessment{padding:18px}
+      .step-zone{padding:14px;border-radius:22px}
+      .step-band{grid-template-columns:1fr}
+      .step-index{width:36px;height:36px}
 
-      .hero,
-      .assessment{
-        padding:18px;
-      }
-
-      .step-zone{
-        padding:14px;
-        border-radius:22px;
-      }
-
-      .step-band{
-        grid-template-columns:1fr;
-      }
-
-      .step-index{
-        width:36px;
-        height:36px;
-      }
-
-      .button-row{
-        align-items:stretch;
-      }
-
+      .button-row{align-items:stretch}
       .button-cluster,
       .action-btn,
       .ghost-btn,
-      .disabled-btn{
-        width:100%;
-      }
+      .disabled-btn{width:100%}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -1209,10 +1205,10 @@
     <main class="page">
       <section class="hero" aria-labelledby="page-title">
         <div class="hero-copy">
-          <p class="kicker">Adaptive Assessment · Neutral Answers · Coherence Probes</p>
+          <p class="kicker">Adaptive Assessment · Human Moments · Coherence Probes</p>
           <h1 id="page-title">Coherence Diagnostic Assessment</h1>
           <p>
-            Start with your self-rated coherence and your claimed archetype blend. The diagnostic questions generate only after your intake is complete.
+            Start with your self-rated coherence and your claimed archetype blend. The diagnostic questions open only after your intake is complete.
           </p>
         </div>
 
@@ -1220,9 +1216,9 @@
           <span class="pill">12 questions minimum</span>
           <span class="pill">Q1 fixed scale</span>
           <span class="pill">Q2 primary + secondary archetype</span>
-          <span class="pill">Neutral answer choices</span>
+          <span class="pill">Human scenario delivery</span>
           <span class="pill">Coherence probes</span>
-          <span class="pill">Engineering Lens</span>
+          <span class="pill">Engineering Lens after result</span>
           <span class="pill">Local-only scoring</span>
         </div>
 
@@ -1324,7 +1320,6 @@
                       <span>Select the archetype you believe you naturally lead with under pressure.</span>
                     </span>
                   </div>
-
                   <div class="option-grid" id="primary-archetype-options"></div>
                 </div>
 
@@ -1336,7 +1331,6 @@
                       <span>Select the support pattern you believe balances or reinforces your primary.</span>
                     </span>
                   </div>
-
                   <div class="option-grid" id="secondary-archetype-options"></div>
                 </div>
               </div>
@@ -1365,8 +1359,8 @@
             <section class="panel" aria-labelledby="scenario-title">
               <div class="panel-head">
                 <p class="eyebrow">Questions 3–12 · Adaptive Diagnostic</p>
-                <h2 id="scenario-title">Choose a primary and secondary response for each generated scenario.</h2>
-                <p>Primary means what you would do first. Secondary means what you would rely on next. The same option cannot be selected twice for the same question.</p>
+                <h2 id="scenario-title">You are about to enter a sequence of pressure moments.</h2>
+                <p>Each moment asks two things: what you would do first, and what you would rely on next. The technical readout appears after the result, not during the questions.</p>
               </div>
               <div class="panel-body" id="scenario-list"></div>
             </section>
@@ -1390,15 +1384,18 @@
         <section id="result" class="result" aria-live="polite" aria-label="Assessment result"></section>
 
         <template id="route-receipt" data-route-receipt>
-COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_TNT_v5
-previous=COHERENCE_DIAGNOSTIC_VISIBLE_NEUTRALITY_AND_INCOHERENCE_PROBE_TNT_v4
+COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_TNT_v6
+previous=COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_TNT_v5
 route=/coherence-diagnostic/
 file=/coherence-diagnostic/index.html
-change_type=visual_hierarchy_renewal_only
+change_type=question_delivery_renewal_only
 questions_minimum=12
 q1_fixed=true
 q2_fixed=true
 public_archetypes=Strategist,Builder,Mitigator,Auditor
+question_delivery=presentation_forward_human_moments
+scenario_rhythm=moment_pressure_coherence_test
+technical_readout_result_only=true
 hidden_fragmentation_bucket=true
 fragmented_public_archetype=false
 visible_answer_type_labels=false
@@ -1410,29 +1407,20 @@ claimed_primary_required=true
 claimed_secondary_required=true
 duplicate_claimed_archetype_forbidden=true
 primary_secondary_required=true
-section_contrast_renewed=true
-static_sequence_rail=active
-step_bands=active
-library_zone_contrast=active
-primary_zone_contrast=active
-secondary_zone_contrast=active
-cognitive_load_reduced=true
+section_contrast_preserved=true
 scoring_change=false
-question_model_change=false
+question_selection_change=false
 archetype_model_change=false
 fragmentation_logic_change=false
 engineering_lens_change=false
 public_result_first=true
 engineering_lens_active=true
 fragmentation_engineering_readout=true
-pressure_break_public_threshold=10_percent
 cognitive_processing_estimate=not_iq
 preference_type_hypothesis=not_official_mbti
 results_visible_without_email=true
 email_results_active=false
 character_profile_save_active=false
-character_profile_coming_soon_tone=intrigue_forward
-email_results_coming_soon_tone=plain_practical
 local_grading=true
 no_backend=true
 no_storage=true
@@ -1445,13 +1433,13 @@ canvas=false
 webgl=false
 generated_image=false
 graphic_box=false
-deploy_marker=COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_DEPLOY_MARKER_v5
+deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
         </template>
       </section>
     </main>
 
     <footer class="footer">
-      COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_TNT_v5 · Section contrast renewed · Cognitive load reduced · Local-only.
+      COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_TNT_v6 · Question delivery renewed · Engineering Lens remains result-stage only · Local-only.
     </footer>
   </div>
 
@@ -1459,10 +1447,10 @@ deploy_marker=COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_DEP
     (() => {
       "use strict";
 
-      const CONTRACT = "COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_TNT_v5";
+      const CONTRACT = "COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_TNT_v6";
       const MAX_COHERENCE_VALUE = 4;
-      const SUBSCALES = ["sequence", "evidence", "action", "stability", "correction", "contradiction"];
-      const PUBLIC_ARCHETYPES = ["Strategist", "Builder", "Mitigator", "Auditor"];
+      const SUBSCALES = ["sequence","evidence","action","stability","correction","contradiction"];
+      const PUBLIC_ARCHETYPES = ["Strategist","Builder","Mitigator","Auditor"];
 
       const archetypes = {
         Strategist: {
@@ -1546,45 +1534,51 @@ deploy_marker=COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_DEP
       });
 
       const fragment = (id, type, coherence, text, risk, subscale) =>
-        makeOption(id, "Fragmented", coherence, text, "pressure-break marker", risk, subscale, true, type);
+        makeOption(id,"Fragmented",coherence,text,"pressure-break marker",risk,subscale,true,type);
 
       const baseQuestions = [
         {
           id:"conflict",
           title:"Conflict response",
           tags:["all","pressure","conflict"],
-          prompt:"A disagreement is escalating and people are beginning to defend themselves instead of solve the issue. What do you do first, and what do you rely on second?",
+          moment:"You are in a room where everyone can feel that something is off, but nobody agrees on what broke. The temperature rises. People stop listening and start protecting themselves.",
+          pressure:"The test is whether you can keep the room from splitting while still moving toward truth, accountability, and repair.",
+          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
           options:[
-            makeOption("conflict-strategist","Strategist",4,"Set the boundary, define the decision point, and restore sequence.","boundary clarity","overcontrol risk",subscaleProfiles.strategistStrong),
-            makeOption("conflict-builder","Builder",3,"Move the group into a small practical test so the conflict becomes concrete.","action conversion","moving too fast risk",subscaleProfiles.builderStrong),
-            makeOption("conflict-mitigator","Mitigator",4,"Lower the temperature, preserve enough trust to continue, and stabilize the room.","field stabilization","delay risk",subscaleProfiles.mitigatorStrong),
-            makeOption("conflict-auditor","Auditor",4,"Identify the contradiction, ask for evidence, and separate claim from fact.","truth protection","adversarial pressure risk",subscaleProfiles.auditorStrong),
-            fragment("conflict-frag-comfort","comfort-over-truth",1,"Keep everyone calm by avoiding the contradiction until people are ready to hear it.","comfort over truth",subscaleProfiles.fragComfort)
+            makeOption("conflict-strategist","Strategist",4,"Pause the room, name the decision that matters, and bring everyone back to the next clear step.","boundary clarity","overcontrol risk",subscaleProfiles.strategistStrong),
+            makeOption("conflict-builder","Builder",3,"Turn the disagreement into one small test the room can actually see and respond to.","action conversion","moving too fast risk",subscaleProfiles.builderStrong),
+            makeOption("conflict-mitigator","Mitigator",4,"Lower the temperature enough for people to hear each other again without pretending the issue is gone.","field stabilization","delay risk",subscaleProfiles.mitigatorStrong),
+            makeOption("conflict-auditor","Auditor",4,"Separate what is being claimed from what is actually known, then ask the room to deal with the difference.","truth protection","adversarial pressure risk",subscaleProfiles.auditorStrong),
+            fragment("conflict-frag-comfort","comfort-over-truth",1,"Keep the room comfortable for now, even if the real issue stays unresolved.","comfort over truth",subscaleProfiles.fragComfort)
           ]
         },
         {
           id:"ambiguous-information",
           title:"Ambiguous information",
           tags:["all","evidence","signal"],
-          prompt:"You receive incomplete information and people want a fast conclusion. What is your first move?",
+          moment:"You receive only part of the story. A few people are already confident. Others are unsure. The pressure in the room is not just to decide, but to decide quickly.",
+          pressure:"The test is whether speed turns into false certainty, or whether the room can move without pretending it knows more than it does.",
+          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
           options:[
-            makeOption("ambiguous-strategist","Strategist",3,"Define what must be known before any decision is allowed.","decision discipline","rigidity risk",subscaleProfiles.strategistEvidence),
-            makeOption("ambiguous-builder","Builder",3,"Create a quick test that exposes what is true enough to act on.","proof through action","premature prototype risk",subscaleProfiles.builderProof),
-            makeOption("ambiguous-mitigator","Mitigator",2,"Slow the process down and keep people from committing too early.","pace control","indecision risk",subscaleProfiles.mitigatorSoft),
-            makeOption("ambiguous-auditor","Auditor",4,"Separate evidence from assumption and mark every unsupported claim.","evidence separation","skepticism overload risk",subscaleProfiles.auditorStrong),
-            fragment("ambiguous-frag-false","false-certainty",0,"Pick the answer that feels most correct and defend it until the room stops questioning it.","false certainty",subscaleProfiles.fragFalse)
+            makeOption("ambiguous-strategist","Strategist",3,"Define what must be known before a real decision is allowed.","decision discipline","rigidity risk",subscaleProfiles.strategistEvidence),
+            makeOption("ambiguous-builder","Builder",3,"Create a quick, limited test that reveals what is true enough to act on.","proof through action","premature prototype risk",subscaleProfiles.builderProof),
+            makeOption("ambiguous-mitigator","Mitigator",2,"Slow the room down so people do not commit to a conclusion before the facts can catch up.","pace control","indecision risk",subscaleProfiles.mitigatorSoft),
+            makeOption("ambiguous-auditor","Auditor",4,"Separate evidence from assumption and mark every claim that still needs support.","evidence separation","skepticism overload risk",subscaleProfiles.auditorStrong),
+            fragment("ambiguous-frag-false","false-certainty",0,"Choose the answer that feels right and defend it until the room stops circling.","false certainty",subscaleProfiles.fragFalse)
           ]
         },
         {
           id:"responsibility-pressure",
           title:"Responsibility pressure",
           tags:["all","accountability","repair"],
-          prompt:"A project fails and the group begins shifting blame. What do you do first?",
+          moment:"A project fails. The first reaction is not repair. It is self-protection. People begin explaining why the failure was not really theirs.",
+          pressure:"The test is whether accountability becomes blame, avoidance, repair, or a usable sequence of responsibility.",
+          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
           options:[
-            makeOption("responsibility-strategist","Strategist",4,"Assign the chain of responsibility and define the repair sequence.","accountability structure","command pressure risk",subscaleProfiles.strategistCorrection),
-            makeOption("responsibility-builder","Builder",3,"Build the first repair step immediately so the failure stops spreading.","repair momentum","patching before diagnosis risk",subscaleProfiles.builderStrong),
-            makeOption("responsibility-mitigator","Mitigator",2,"Keep the group from fragmenting and preserve enough trust to continue.","continuity protection","accountability delay risk",subscaleProfiles.mitigatorSoft),
-            makeOption("responsibility-auditor","Auditor",4,"Audit what happened, what was promised, and what was actually done.","receipt logic","cold delivery risk",subscaleProfiles.auditorConstructive),
+            makeOption("responsibility-strategist","Strategist",4,"Clarify who owned what, then define the repair sequence from there.","accountability structure","command pressure risk",subscaleProfiles.strategistCorrection),
+            makeOption("responsibility-builder","Builder",3,"Stop the failure from spreading by building the first practical repair step.","repair momentum","patching before diagnosis risk",subscaleProfiles.builderStrong),
+            makeOption("responsibility-mitigator","Mitigator",2,"Keep the group from fragmenting long enough to continue the repair conversation.","continuity protection","accountability delay risk",subscaleProfiles.mitigatorSoft),
+            makeOption("responsibility-auditor","Auditor",4,"Compare what was promised against what was actually done and correct the record.","receipt logic","cold delivery risk",subscaleProfiles.auditorConstructive),
             fragment("responsibility-frag-blame","blame-shift",0,"Focus first on who caused the problem, because nothing should move until the person at fault is exposed.","blame displacement",subscaleProfiles.fragBlame)
           ]
         },
@@ -1592,25 +1586,29 @@ deploy_marker=COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_DEP
           id:"contradiction",
           title:"Contradiction detection",
           tags:["all","evidence","contradiction"],
-          prompt:"Someone makes two claims that cannot both be true. What do you do first?",
+          moment:"Someone makes two claims that cannot both be true. The room notices, but nobody wants to stop the momentum and deal with it directly.",
+          pressure:"The test is whether contradiction becomes a turning point or gets absorbed into confusion.",
+          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
           options:[
-            makeOption("contradiction-strategist","Strategist",3,"Pause the process and require one controlling rule.","rule control","premature closure risk",subscaleProfiles.strategistEvidence),
-            makeOption("contradiction-builder","Builder",2,"Test both claims in a practical model and see which one survives contact.","reality contact","testing around a contradiction risk",subscaleProfiles.builderRisky),
+            makeOption("contradiction-strategist","Strategist",3,"Pause the process and require one clear rule before the room moves forward.","rule control","premature closure risk",subscaleProfiles.strategistEvidence),
+            makeOption("contradiction-builder","Builder",2,"Put both claims into a practical test and see which one survives contact with reality.","reality contact","testing around a contradiction risk",subscaleProfiles.builderRisky),
             makeOption("contradiction-mitigator","Mitigator",2,"Keep the exchange stable while the contradiction is clarified.","interaction stability","softening the contradiction risk",subscaleProfiles.mitigatorSoft),
-            makeOption("contradiction-auditor","Auditor",4,"Name the contradiction directly and ask which claim should be withdrawn or revised.","contradiction clarity","overpressure risk",subscaleProfiles.auditorStrong),
-            fragment("contradiction-frag-avoid","avoidance",1,"Wait until someone else decides how serious the contradiction is, then adjust to whatever direction they choose.","responsibility deferral",subscaleProfiles.fragAvoid)
+            makeOption("contradiction-auditor","Auditor",4,"Name the contradiction plainly and ask which claim needs to be withdrawn or revised.","contradiction clarity","overpressure risk",subscaleProfiles.auditorStrong),
+            fragment("contradiction-frag-avoid","avoidance",1,"Wait until someone else decides how serious the contradiction is, then adjust to that direction.","responsibility deferral",subscaleProfiles.fragAvoid)
           ]
         },
         {
           id:"execution-sequencing",
           title:"Execution sequencing",
           tags:["all","sequence","action"],
-          prompt:"A team wants to build everything at once. What do you do first?",
+          moment:"The team wants to build everything at once. The energy is high. The danger is that momentum starts feeling like proof.",
+          pressure:"The test is whether action becomes a disciplined first step or turns into scattered motion.",
+          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
           options:[
-            makeOption("execution-strategist","Strategist",4,"Define the order of operations and lock the first lawful step.","sequence authority","command narrowness risk",subscaleProfiles.strategistStrong),
-            makeOption("execution-builder","Builder",3,"Choose the smallest build that proves the largest assumption.","minimum viable proof","scope creep risk",subscaleProfiles.builderProof),
-            makeOption("execution-mitigator","Mitigator",3,"Protect the working baseline and prevent unnecessary disruption.","baseline preservation","overpreservation risk",subscaleProfiles.mitigatorStrong),
-            makeOption("execution-auditor","Auditor",4,"Audit which claims are ready, which are assumed, and which are not proven.","readiness audit","friction risk",subscaleProfiles.auditorConstructive),
+            makeOption("execution-strategist","Strategist",4,"Set the order of operations and lock the first step that everything else depends on.","sequence authority","command narrowness risk",subscaleProfiles.strategistStrong),
+            makeOption("execution-builder","Builder",3,"Choose the smallest build that can prove the largest assumption.","minimum viable proof","scope creep risk",subscaleProfiles.builderProof),
+            makeOption("execution-mitigator","Mitigator",3,"Protect the working baseline so the new push does not break what already functions.","baseline preservation","overpreservation risk",subscaleProfiles.mitigatorStrong),
+            makeOption("execution-auditor","Auditor",4,"Audit which claims are ready, which are assumed, and which are not yet proven.","readiness audit","friction risk",subscaleProfiles.auditorConstructive),
             fragment("execution-frag-motion","motion-without-proof",1,"Start building immediately so the pressure feels productive, even if the cause is not clear yet.","motion without proof",subscaleProfiles.fragMotion)
           ]
         },
@@ -1618,12 +1616,14 @@ deploy_marker=COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_DEP
           id:"group-instability",
           title:"Group instability",
           tags:["all","stability","pressure"],
-          prompt:"The group is anxious, distracted, and starting to lose coherence. What do you do first?",
+          moment:"The group is anxious, distracted, and starting to lose the thread. People are still present, but the room is no longer moving as one field.",
+          pressure:"The test is whether you can restore usable attention without turning the room into control, avoidance, or noise.",
+          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
           options:[
-            makeOption("group-strategist","Strategist",3,"Give the group a clear immediate objective and stop the drift.","direction under pressure","tone hardness risk",subscaleProfiles.strategistStrong),
+            makeOption("group-strategist","Strategist",3,"Give the group one clear immediate objective so the drift has somewhere to land.","direction under pressure","tone hardness risk",subscaleProfiles.strategistStrong),
             makeOption("group-builder","Builder",2,"Give everyone a concrete task so the room starts moving again.","task activation","activity without coherence risk",subscaleProfiles.builderRisky),
-            makeOption("group-mitigator","Mitigator",4,"Stabilize the room, reduce noise, and restore continuity.","field coherence","comfort over action risk",subscaleProfiles.mitigatorStrong),
-            makeOption("group-auditor","Auditor",3,"Challenge the false claims feeding the instability.","false-signal removal","escalation risk",subscaleProfiles.auditorPressure),
+            makeOption("group-mitigator","Mitigator",4,"Stabilize the room, reduce the noise, and restore enough continuity to continue.","field coherence","comfort over action risk",subscaleProfiles.mitigatorStrong),
+            makeOption("group-auditor","Auditor",3,"Challenge the false claims that are feeding the instability.","false-signal removal","escalation risk",subscaleProfiles.auditorPressure),
             fragment("group-frag-collapse","collapse",0,"Step back completely because the situation is too messy to handle clearly.","pressure collapse",subscaleProfiles.fragCollapse)
           ]
         },
@@ -1631,12 +1631,14 @@ deploy_marker=COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_DEP
           id:"evidence-intuition",
           title:"Evidence versus intuition",
           tags:["all","evidence","signal"],
-          prompt:"Your intuition says one thing, but the evidence is incomplete. What do you do first?",
+          moment:"Your intuition is loud, but the evidence is incomplete. You may be right. You may be early. You may also be filling in blanks.",
+          pressure:"The test is whether instinct becomes a useful signal or gets converted into an unsupported claim.",
+          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
           options:[
-            makeOption("evidence-strategist","Strategist",3,"Set a rule for what evidence is required before acting.","threshold setting","overformalization risk",subscaleProfiles.strategistEvidence),
+            makeOption("evidence-strategist","Strategist",3,"Set a clear threshold for what evidence is required before acting.","threshold setting","overformalization risk",subscaleProfiles.strategistEvidence),
             makeOption("evidence-builder","Builder",3,"Run a small practical test instead of arguing about the intuition.","test motion","testing too soon risk",subscaleProfiles.builderProof),
             makeOption("evidence-mitigator","Mitigator",2,"Hold the field open until the evidence catches up.","patience","stalling risk",subscaleProfiles.mitigatorSoft),
-            makeOption("evidence-auditor","Auditor",4,"Refuse to convert intuition into claim until evidence supports it.","claim discipline","intuition suppression risk",subscaleProfiles.auditorStrong),
+            makeOption("evidence-auditor","Auditor",4,"Refuse to turn intuition into a claim until the evidence supports it.","claim discipline","intuition suppression risk",subscaleProfiles.auditorStrong),
             fragment("evidence-frag-false","false-certainty",0,"Trust the intuition as the answer and explain the evidence later if people need it.","unsupported certainty",subscaleProfiles.fragFalse)
           ]
         },
@@ -1644,12 +1646,14 @@ deploy_marker=COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_DEP
           id:"emotional-pressure",
           title:"Emotional pressure",
           tags:["all","stability","timing"],
-          prompt:"A decision must be made while emotions are high. What do you do first?",
+          moment:"A decision must be made while emotions are high. The room wants relief, but relief and coherence are not always the same thing.",
+          pressure:"The test is whether emotion gets dismissed, obeyed, regulated, or checked against reality.",
+          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
           options:[
-            makeOption("emotion-strategist","Strategist",3,"Separate the decision from the emotional surge and set the next step.","decision containment","emotional dismissal risk",subscaleProfiles.strategistStrong),
+            makeOption("emotion-strategist","Strategist",3,"Separate the decision from the emotional surge and name the next step.","decision containment","emotional dismissal risk",subscaleProfiles.strategistStrong),
             makeOption("emotion-builder","Builder",2,"Move into a simple action that prevents the room from freezing.","motion under pressure","bypassing emotion risk",subscaleProfiles.builderRisky),
             makeOption("emotion-mitigator","Mitigator",4,"Regulate the field first so the decision is not made from distortion.","regulation","delay risk",subscaleProfiles.mitigatorStrong),
-            makeOption("emotion-auditor","Auditor",3,"Test whether the emotional claim matches the evidence.","reality check","harshness risk",subscaleProfiles.auditorPressure),
+            makeOption("emotion-auditor","Auditor",3,"Check whether the emotional claim matches the evidence.","reality check","harshness risk",subscaleProfiles.auditorPressure),
             fragment("emotion-frag-comfort","comfort-over-truth",1,"Make the choice that keeps people comfortable now, even if the real issue remains unresolved.","comfort over correction",subscaleProfiles.fragComfort)
           ]
         },
@@ -1657,12 +1661,14 @@ deploy_marker=COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_DEP
           id:"decision-timing",
           title:"Decision timing",
           tags:["all","timing","sequence"],
-          prompt:"You have enough information to act, but not enough to feel certain. What do you do first?",
+          moment:"You have enough information to act, but not enough to feel certain. Waiting feels safer. Moving feels risky. The window will not stay open forever.",
+          pressure:"The test is whether uncertainty becomes paralysis, recklessness, or bounded movement.",
+          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
           options:[
-            makeOption("timing-strategist","Strategist",4,"Make the bounded decision and define the review point.","bounded execution","early lock-in risk",subscaleProfiles.strategistStrong),
+            makeOption("timing-strategist","Strategist",4,"Make the bounded decision and define the point where it will be reviewed.","bounded execution","early lock-in risk",subscaleProfiles.strategistStrong),
             makeOption("timing-builder","Builder",3,"Build the next step as a reversible test, not a permanent commitment.","reversible action","experiment sprawl risk",subscaleProfiles.builderProof),
             makeOption("timing-mitigator","Mitigator",2,"Wait until the group feels more settled.","group comfort","missed timing risk",subscaleProfiles.mitigatorSoft),
-            makeOption("timing-auditor","Auditor",3,"Document the uncertainty and act only within what the evidence supports.","bounded proof","action friction risk",subscaleProfiles.auditorConstructive),
+            makeOption("timing-auditor","Auditor",3,"Document the uncertainty and act only inside what the evidence supports.","bounded proof","action friction risk",subscaleProfiles.auditorConstructive),
             fragment("timing-frag-avoid","avoidance",1,"Hold back until someone else makes the call, then support the result if it works.","decision avoidance",subscaleProfiles.fragAvoid)
           ]
         },
@@ -1670,11 +1676,13 @@ deploy_marker=COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_DEP
           id:"repair-after-error",
           title:"Repair after error",
           tags:["all","repair","accountability"],
-          prompt:"You realize you were wrong. What do you do first?",
+          moment:"You realize you were wrong. Now there are two tests: whether you can admit the error, and whether you can repair what the error touched.",
+          pressure:"The test is whether correction becomes ownership, speed, avoidance, or a clean update to the record.",
+          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
           options:[
             makeOption("repair-strategist","Strategist",4,"State the correction, update the rule, and define the repair sequence.","corrective leadership","controlled admission risk",subscaleProfiles.strategistCorrection),
             makeOption("repair-builder","Builder",3,"Fix the affected part immediately and improve the process from there.","practical repair","repair before full ownership risk",subscaleProfiles.builderStrong),
-            makeOption("repair-mitigator","Mitigator",3,"Repair trust and stabilize the people affected.","relational repair","soft accountability risk",subscaleProfiles.mitigatorAccountable),
+            makeOption("repair-mitigator","Mitigator",3,"Repair trust and stabilize the people affected by the mistake.","relational repair","soft accountability risk",subscaleProfiles.mitigatorAccountable),
             makeOption("repair-auditor","Auditor",4,"Name the error plainly, show the evidence, and correct the record.","truth repair","self-pressure risk",subscaleProfiles.auditorConstructive),
             fragment("repair-frag-blame","blame-shift",0,"Explain what other people did that contributed to the error before taking any corrective step.","accountability displacement",subscaleProfiles.fragBlame)
           ]
@@ -1686,12 +1694,14 @@ deploy_marker=COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_DEP
           id:"strategist-overstructure",
           title:"Structure under pressure",
           tags:["Strategist","structure"],
-          prompt:"Your plan is coherent, but the room is moving faster than the plan can absorb. What do you do first?",
+          moment:"Your plan is coherent, but the room is moving faster than the plan can absorb. The structure is not wrong, but the pressure has changed.",
+          pressure:"The test is whether structure adapts without collapsing into control or losing the field it was meant to guide.",
+          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
           options:[
             makeOption("strategist-overstructure-strategist","Strategist",4,"Compress the plan into one controlling sequence and define the next checkpoint.","adaptive sequence","over-compression risk",subscaleProfiles.strategistStrong),
-            makeOption("strategist-overstructure-builder","Builder",3,"Build a small working step to test whether the plan can survive contact.","structure-to-action","premature build risk",subscaleProfiles.builderProof),
+            makeOption("strategist-overstructure-builder","Builder",3,"Build a small working step to see whether the plan survives contact with reality.","structure-to-action","premature build risk",subscaleProfiles.builderProof),
             makeOption("strategist-overstructure-mitigator","Mitigator",3,"Stabilize the people affected before the structure loses trust.","trust preservation","decision delay risk",subscaleProfiles.mitigatorAccountable),
-            makeOption("strategist-overstructure-auditor","Auditor",4,"Audit which part of the plan is proven and which part is just assumed.","assumption control","review drag risk",subscaleProfiles.auditorConstructive),
+            makeOption("strategist-overstructure-auditor","Auditor",4,"Audit which part of the plan is proven and which part is only assumed.","assumption control","review drag risk",subscaleProfiles.auditorConstructive),
             fragment("strategist-overstructure-frag-false","false-certainty",0,"Hold the original plan because changing it now would make the group doubt the structure.","false certainty",subscaleProfiles.fragFalse)
           ]
         }],
@@ -1699,9 +1709,11 @@ deploy_marker=COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_DEP
           id:"builder-premature-motion",
           title:"Momentum before proof",
           tags:["Builder","action"],
-          prompt:"You can start building immediately, but the proof is not fully settled. What do you do first?",
+          moment:"You can start building immediately. The energy is there. The team is ready. But the proof is not fully settled.",
+          pressure:"The test is whether movement becomes disciplined progress or just a more exciting form of uncertainty.",
+          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
           options:[
-            makeOption("builder-premature-motion-strategist","Strategist",4,"Define the lawful build sequence before moving.","build sequencing","slowing momentum risk",subscaleProfiles.strategistStrong),
+            makeOption("builder-premature-motion-strategist","Strategist",4,"Define the lawful build sequence before the first real move.","build sequencing","slowing momentum risk",subscaleProfiles.strategistStrong),
             makeOption("builder-premature-motion-builder","Builder",4,"Build the smallest reversible prototype that tests the core assumption.","reversible prototype","prototype attachment risk",subscaleProfiles.builderProof),
             makeOption("builder-premature-motion-mitigator","Mitigator",3,"Check what could be disrupted before the build begins.","impact control","over-caution risk",subscaleProfiles.mitigatorAccountable),
             makeOption("builder-premature-motion-auditor","Auditor",4,"Identify the unproven claim and require proof before scaling.","proof gate","challenge friction risk",subscaleProfiles.auditorConstructive),
@@ -1712,12 +1724,14 @@ deploy_marker=COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_DEP
           id:"mitigator-overpreserve",
           title:"Stability versus correction",
           tags:["Mitigator","stability"],
-          prompt:"Stability is keeping the room together, but an unresolved problem keeps returning. What do you do first?",
+          moment:"Stability is keeping the room together, but the same unresolved problem keeps returning. The room is calm, but the pattern is not fixed.",
+          pressure:"The test is whether preservation becomes a bridge to correction or a way to delay it.",
+          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
           options:[
             makeOption("mitigator-overpreserve-strategist","Strategist",4,"Set the correction sequence and clarify what can no longer be preserved.","corrective sequence","hard turn risk",subscaleProfiles.strategistCorrection),
             makeOption("mitigator-overpreserve-builder","Builder",3,"Build a practical repair that reduces the recurring pressure.","repair action","symptom patch risk",subscaleProfiles.builderStrong),
             makeOption("mitigator-overpreserve-mitigator","Mitigator",3,"Stabilize the room enough to make correction possible.","safe correction field","prolonged holding risk",subscaleProfiles.mitigatorAccountable),
-            makeOption("mitigator-overpreserve-auditor","Auditor",4,"Name the recurring issue and prove where preservation has become avoidance.","avoidance detection","pressure shock risk",subscaleProfiles.auditorConstructive),
+            makeOption("mitigator-overpreserve-auditor","Auditor",4,"Name the recurring issue and show where preservation has become avoidance.","avoidance detection","pressure shock risk",subscaleProfiles.auditorConstructive),
             fragment("mitigator-overpreserve-frag-comfort","comfort-over-truth",1,"Keep preserving stability and avoid forcing the issue until the room becomes ready on its own.","comfort over accountability",subscaleProfiles.fragComfort)
           ]
         }],
@@ -1725,7 +1739,9 @@ deploy_marker=COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_DEP
           id:"auditor-closure",
           title:"Audit with closure",
           tags:["Auditor","evidence"],
-          prompt:"You found the contradiction, but the room now needs a constructive next step. What do you do first?",
+          moment:"You found the contradiction. The room can see it now. But discovery is not the same thing as closure.",
+          pressure:"The test is whether truth pressure becomes repair, sequence, escalation, or an endless audit loop.",
+          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
           options:[
             makeOption("auditor-closure-strategist","Strategist",4,"Turn the audit into a corrected decision sequence.","audit-to-sequence","authority snap risk",subscaleProfiles.strategistCorrection),
             makeOption("auditor-closure-builder","Builder",3,"Build the smallest repair that proves the corrected claim.","proof repair","repair too soon risk",subscaleProfiles.builderProof),
@@ -1870,10 +1886,7 @@ deploy_marker=COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_DEP
 
         const pushQuestion = (question)=>{
           if(!question || seen.has(question.id)) return;
-          selected.push({
-            ...question,
-            renderedOptions: shuffle(question.options)
-          });
+          selected.push({...question,renderedOptions:shuffle(question.options)});
           seen.add(question.id);
         };
 
@@ -1891,12 +1904,18 @@ deploy_marker=COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_DEP
           .forEach(pushQuestion);
 
         baseQuestions.forEach(pushQuestion);
-
         return selected.slice(0,10);
       }
 
       function renderQuestions(){
-        scenarioList.innerHTML = generatedQuestions.map((question,index)=>{
+        const intro = `
+          <div class="scenario-intro">
+            <strong>Do not answer as the person you wish you were. Answer from the pattern you recognize under pressure.</strong>
+            <span>Each scenario is built as a moment, a pressure point, and a coherence test. Choose your first move, then choose what you would rely on next.</span>
+          </div>
+        `;
+
+        scenarioList.innerHTML = intro + generatedQuestions.map((question,index)=>{
           const number = index + 3;
 
           const renderOption = (option,optionIndex,role)=>`
@@ -1918,17 +1937,34 @@ deploy_marker=COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_DEP
             <article class="question" data-question-card="${escapeHtml(question.id)}">
               <div class="question-top">
                 <span class="question-number">Question ${number} · ${escapeHtml(question.title)}</span>
-                <h3>${escapeHtml(question.prompt)}</h3>
+                <h3>Read the moment. Feel the pressure. Then choose the response that sounds most like what you would actually do.</h3>
+              </div>
+
+              <div class="moment-stack">
+                <div class="moment-block">
+                  <b>The Moment</b>
+                  <span>${escapeHtml(question.moment)}</span>
+                </div>
+
+                <div class="moment-block">
+                  <b>The Pressure</b>
+                  <span>${escapeHtml(question.pressure)}</span>
+                </div>
+
+                <div class="moment-block coherence-test">
+                  <b>The Coherence Test</b>
+                  <strong>${escapeHtml(question.test)}</strong>
+                </div>
               </div>
 
               <div class="answer-columns">
                 <div class="answer-box">
-                  <span class="answer-title">Primary Response</span>
+                  <span class="answer-title">What do you do first?</span>
                   ${options.map((option,optionIndex)=>renderOption(option,optionIndex,"primary")).join("")}
                 </div>
 
                 <div class="answer-box">
-                  <span class="answer-title">Secondary Response</span>
+                  <span class="answer-title">What do you rely on next?</span>
                   ${options.map((option,optionIndex)=>renderOption(option,optionIndex,"secondary")).join("")}
                 </div>
               </div>
@@ -2142,10 +2178,7 @@ deploy_marker=COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_DEP
         const baseBand = scoreBand(scaledScore);
         const fragmentationRate = Number(((fragmentationWeighted / totalResponseWeight) * 100).toFixed(1));
         const fragmentationLoad = loadEntries(fragmentationTypes);
-        const band = {
-          ...baseBand,
-          label: bandWithFragmentation(baseBand.label,fragmentationRate)
-        };
+        const band = {...baseBand,label:bandWithFragmentation(baseBand.label,fragmentationRate)};
 
         const rankedArchetypes = PUBLIC_ARCHETYPES
           .map((name)=>({
@@ -2167,9 +2200,7 @@ deploy_marker=COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_DEP
 
         const maxSubscale = generatedQuestions.length * 3 * MAX_COHERENCE_VALUE;
         const subscales = {};
-        SUBSCALES.forEach((key)=>{
-          subscales[key] = Math.round((subscaleTotals[key] / maxSubscale) * 100);
-        });
+        SUBSCALES.forEach((key)=>{subscales[key] = Math.round((subscaleTotals[key] / maxSubscale) * 100);});
         subscales.calibration = calibrationAccuracy;
         subscales.claimAlignment = claimPatternAlignment;
 
@@ -2707,21 +2738,23 @@ deploy_marker=COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_DEP
       document.documentElement.dataset.visibleAnswerStrengthLabels = "false";
       document.documentElement.dataset.incoherenceProbesActive = "true";
       document.documentElement.dataset.fragmentationBucketActive = "true";
-      document.documentElement.dataset.sectionContrastRenewed = "true";
-      document.documentElement.dataset.cognitiveLoadReduced = "true";
-      document.documentElement.dataset.staticSequenceRail = "active";
-      document.documentElement.dataset.stepBands = "active";
+      document.documentElement.dataset.questionDelivery = "presentation-forward-human-moments";
+      document.documentElement.dataset.scenarioRhythm = "moment-pressure-coherence-test";
+      document.documentElement.dataset.technicalReadoutResultOnly = "true";
 
       window.COHERENCE_DIAGNOSTIC_ASSESSMENT_RECEIPT = {
         contract: CONTRACT,
-        previousContract: "COHERENCE_DIAGNOSTIC_VISIBLE_NEUTRALITY_AND_INCOHERENCE_PROBE_TNT_v4",
+        previousContract: "COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_TNT_v5",
         route: "/coherence-diagnostic/",
         file: "/coherence-diagnostic/index.html",
-        changeType: "visual hierarchy renewal only",
+        changeType: "question delivery renewal only",
         questionsMinimum: 12,
         fixedQ1: true,
         fixedQ2: true,
         publicArchetypes: ["Strategist","Builder","Mitigator","Auditor"],
+        questionDelivery: "presentation-forward human moments",
+        scenarioRhythm: "moment / pressure / coherence test",
+        technicalReadoutResultOnly: true,
         hiddenFragmentationBucket: true,
         fragmentedPublicArchetype: false,
         visibleAnswerTypeLabels: false,
@@ -2730,14 +2763,9 @@ deploy_marker=COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_DEP
         optionRandomization: true,
         adaptiveGeneration: true,
         primarySecondaryRequired: true,
-        sectionContrastRenewed: true,
-        staticSequenceRail: true,
-        stepBands: true,
-        libraryZoneContrast: true,
-        primaryZoneContrast: true,
-        secondaryZoneContrast: true,
+        sectionContrastPreserved: true,
         scoringChange: false,
-        questionModelChange: false,
+        questionSelectionChange: false,
         archetypeModelChange: false,
         fragmentationLogicChange: false,
         engineeringLensChange: false,
@@ -2749,8 +2777,6 @@ deploy_marker=COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_DEP
         resultsVisibleWithoutEmail: true,
         emailResultsActive: false,
         characterProfileSaveActive: false,
-        characterProfileComingSoonTone: "intrigue-forward",
-        emailResultsComingSoonTone: "plain-practical",
         localGrading: true,
         noBackend: true,
         noStorage: true,

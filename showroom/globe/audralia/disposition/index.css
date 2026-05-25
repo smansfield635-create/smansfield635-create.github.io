@@ -1,9 +1,9 @@
 /* /showroom/globe/audralia/disposition/index.css */
-/* AUDRALIA_G1_INTERGALACTIC_COCKPIT_THREE_FILE_SPLIT_CURRENT_TIME_INSTRUMENTS_TNT_v1 */
+/* AUDRALIA_G1_INTERGALACTIC_COCKPIT_FILE_1_MOBILE_DROPDOWN_CONTAINMENT_TNT_v1 */
 /* Full-file replacement. */
-/* Purpose: move all cockpit visual authority, animation authority, lattice-gem styling, generated gauge styling, stream styling, receipt styling, control-board styling, and NEWS bridge grouping into one CSS authority. */
-/* Owns: visual cockpit, animations, responsive rules, bridge grouping, generated instrument styling. */
-/* Does not own: HTML structure, JS behavior, proof loading, runtime activation, canvas, WebGL, generated image, GraphicBox, or visual-pass claim. */
+/* Purpose: preserve the cockpit visual system while preventing the mobile dropdown from covering/cutting the title card. */
+/* Owns: visual styling, animation styling, cockpit dropdown containment, lattice-gem styling, generated gauge/stream/control styling. */
+/* Does not own: HTML structure, JS behavior, child renewal, Runtime / Strength activation, canvas, WebGL, generated image, GraphicBox, or visual-render pass. */
 
 :root{
   color-scheme:dark;
@@ -219,36 +219,6 @@ summary:focus-visible{
   backdrop-filter:blur(18px);
 }
 
-.menu-bridge-group{
-  display:grid;
-  gap:6px;
-  padding:7px;
-  border:1px solid rgba(255,255,255,.07);
-  border-radius:17px;
-  background:
-    radial-gradient(circle at 0% 0%,rgba(141,216,255,.06),transparent 9rem),
-    rgba(255,255,255,.018);
-}
-
-.menu-bridge-title{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  min-height:22px;
-  padding:0 5px;
-  color:rgba(244,207,131,.88);
-  font:900 .56rem/1.2 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-  letter-spacing:.15em;
-  text-transform:uppercase;
-}
-
-.menu-route-group{
-  display:grid;
-  gap:6px;
-  padding-top:2px;
-}
-
 .cockpit-menu-panel a{
   display:flex;
   align-items:center;
@@ -269,6 +239,37 @@ summary:focus-visible{
   color:rgba(255,244,216,.98);
   border-color:rgba(141,216,255,.22);
   background:rgba(141,216,255,.075);
+}
+
+.menu-bridge-group,
+.menu-route-group{
+  display:grid;
+  gap:8px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;
+  padding:10px;
+  background:
+    radial-gradient(circle at 12% 0%,rgba(141,216,255,.06),transparent 10rem),
+    rgba(255,255,255,.018);
+}
+
+.menu-bridge-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:2px 2px 4px;
+  color:var(--gold);
+  font:900 .66rem/1.1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+
+.menu-route-group{
+  border-color:rgba(244,207,131,.14);
+  background:
+    radial-gradient(circle at 10% 0%,rgba(244,207,131,.06),transparent 10rem),
+    rgba(255,255,255,.018);
 }
 
 .run-button{
@@ -583,6 +584,11 @@ p{
   font-weight:850;
   letter-spacing:.04em;
   text-transform:uppercase;
+}
+
+.cockpit-time-readout{
+  border-color:rgba(244,207,131,.24);
+  color:rgba(255,232,163,.86);
 }
 
 .instrument-wing{
@@ -990,62 +996,40 @@ p{
   display:grid;
   gap:12px;
   border:1px solid rgba(244,207,131,.14);
-  border-radius:30px;
-  padding:clamp(12px,2vw,16px);
+  border-radius:28px;
+  padding:14px;
   background:
-    radial-gradient(circle at 8% 0%,rgba(141,216,255,.07),transparent 18rem),
-    radial-gradient(circle at 92% 0%,rgba(244,207,131,.055),transparent 16rem),
-    linear-gradient(180deg,rgba(255,255,255,.032),rgba(255,255,255,.012)),
-    rgba(2,8,20,.46);
+    radial-gradient(circle at 10% 0%,rgba(244,207,131,.06),transparent 16rem),
+    radial-gradient(circle at 92% 10%,rgba(141,216,255,.055),transparent 16rem),
+    linear-gradient(180deg,rgba(255,255,255,.026),rgba(255,255,255,.010)),
+    rgba(2,7,17,.42);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
 }
 
-.bridge-group[data-bridge="north"]{
-  border-color:rgba(141,216,255,.16);
-}
-
-.bridge-group[data-bridge="east"]{
-  border-color:rgba(167,243,198,.14);
-}
-
-.bridge-group[data-bridge="south"]{
-  border-color:rgba(173,140,255,.16);
-}
-
-.bridge-group[data-bridge="west"]{
-  border-color:rgba(244,207,131,.17);
-}
-
 .bridge-head{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) auto;
-  gap:12px;
-  align-items:center;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:22px;
-  padding:13px clamp(12px,2vw,16px);
-  background:
-    linear-gradient(90deg,rgba(255,255,255,.040),transparent),
-    rgba(255,255,255,.020);
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  padding:2px 6px;
 }
 
 .bridge-copy{
   display:grid;
   gap:4px;
-  min-width:0;
 }
 
 .bridge-copy b{
-  color:rgba(255,244,216,.96);
-  font-size:clamp(.98rem,2vw,1.22rem);
-  line-height:1.1;
-  letter-spacing:-.02em;
+  color:var(--gold);
+  font:900 .78rem/1.2 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+  letter-spacing:.20em;
+  text-transform:uppercase;
 }
 
 .bridge-copy span{
-  color:rgba(141,216,255,.76);
-  font:850 .66rem/1.25 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-  letter-spacing:.11em;
+  color:rgba(141,216,255,.70);
+  font:800 .66rem/1.25 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+  letter-spacing:.10em;
   text-transform:uppercase;
 }
 
@@ -1057,19 +1041,19 @@ p{
 }
 
 .bridge-pill{
-  min-height:28px;
+  min-height:26px;
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  border:1px solid rgba(244,207,131,.18);
+  border:1px solid rgba(255,255,255,.09);
   border-radius:999px;
   padding:0 10px;
-  color:rgba(255,244,216,.78);
-  background:rgba(2,8,20,.50);
-  font:900 .58rem/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-  letter-spacing:.12em;
+  color:rgba(239,247,255,.72);
+  background:rgba(255,255,255,.030);
+  font-size:.64rem;
+  font-weight:900;
+  letter-spacing:.08em;
   text-transform:uppercase;
-  white-space:nowrap;
 }
 
 .chamber{
@@ -1751,107 +1735,6 @@ p{
   gap:10px;
 }
 
-.engineering-content .lattice-gem-grid,
-.engineering-content .lattice-receipt-grid,
-.engineering-content .gauge-grid,
-.engineering-content .control-board,
-.engineering-content .stream-grid{
-  max-height:240px;
-  overflow:auto;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:18px;
-  padding:10px;
-  background:rgba(0,0,0,.18);
-  grid-template-columns:repeat(4,minmax(0,1fr));
-}
-
-.engineering-content .lattice-gem-grid > *,
-.engineering-content .lattice-receipt-grid > *,
-.engineering-content .gauge-grid > *,
-.engineering-content .control-board > *,
-.engineering-content .stream-grid > *{
-  min-height:70px!important;
-  max-height:120px;
-  overflow:hidden;
-  border-radius:14px!important;
-  border:1px solid rgba(141,216,255,.12)!important;
-  background:rgba(255,255,255,.026)!important;
-  box-shadow:none!important;
-  font-size:.75rem!important;
-}
-
-.return-row{
-  display:flex;
-  flex-wrap:wrap;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  border-top:1px solid rgba(255,255,255,.08);
-  padding-top:12px;
-}
-
-.return-orbit{
-  display:inline-flex;
-  min-height:38px;
-  align-items:center;
-  justify-content:center;
-  border:1px solid rgba(244,207,131,.36);
-  border-radius:999px;
-  padding:0 14px;
-  color:#06101c;
-  background:linear-gradient(135deg,#fff0b8,var(--gold));
-  font-size:.78rem;
-  font-weight:950;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-}
-
-.boundary-note{
-  color:rgba(239,247,255,.58);
-  font-size:.76rem;
-  line-height:1.4;
-}
-
-.warning-strip{
-  border:1px solid rgba(244,207,131,.16);
-  border-radius:18px;
-  padding:13px 14px;
-  color:rgba(255,244,216,.86);
-  background:
-    repeating-linear-gradient(135deg,rgba(244,207,131,.05) 0 8px,transparent 8px 16px),
-    rgba(255,255,255,.025);
-  font-size:.84rem;
-  font-weight:820;
-  letter-spacing:.03em;
-}
-
-.receipt,
-[data-route-receipt]{
-  display:none!important;
-  visibility:hidden!important;
-  overflow:hidden!important;
-  width:0!important;
-  height:0!important;
-  max-width:0!important;
-  max-height:0!important;
-  margin:0!important;
-  padding:0!important;
-  border:0!important;
-  opacity:0!important;
-  pointer-events:none!important;
-  position:absolute!important;
-  clip-path:inset(50%)!important;
-  white-space:nowrap!important;
-}
-
-.footer{
-  margin-top:18px;
-  padding:18px 0 0;
-  color:var(--faint);
-  font-size:.78rem;
-  text-align:center;
-}
-
 .lattice-gem-foundry-copy{
   display:grid;
   gap:.75rem;
@@ -2246,85 +2129,38 @@ p{
 .control-board,
 .stream-grid{
   display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
   gap:10px;
 }
 
 .gauge-dial,
-.cockpit-gauge-dial,
 .cockpit-control-instrument,
 .stream-card{
   position:relative;
   display:grid;
   align-content:start;
   gap:7px;
-  min-height:126px;
+  min-height:112px;
   border:1px solid rgba(255,255,255,.10);
   border-radius:18px;
   padding:13px;
   background:
-    radial-gradient(circle at 20% 0%,rgba(141,216,255,.06),transparent 9rem),
-    rgba(255,255,255,.028);
+    radial-gradient(circle at 20% 0%,rgba(141,216,255,.07),transparent 9rem),
+    rgba(255,255,255,.026);
   overflow:hidden;
-}
-
-.gauge-dial[data-state="pass"],
-.gauge-dial[data-gauge-state="pass"],
-.stream-card[data-state="pass"]{
-  border-color:rgba(167,243,198,.20);
-  background:
-    radial-gradient(circle at 20% 0%,rgba(167,243,198,.09),transparent 9rem),
-    rgba(255,255,255,.028);
-}
-
-.gauge-dial[data-state="held"],
-.gauge-dial[data-gauge-state="held"],
-.stream-card[data-state="held"]{
-  border-color:rgba(141,216,255,.16);
-}
-
-.gauge-dial[data-state="staged"],
-.gauge-dial[data-gauge-state="staged"],
-.stream-card[data-state="staged"]{
-  border-color:rgba(173,140,255,.20);
-  background:
-    radial-gradient(circle at 20% 0%,rgba(173,140,255,.09),transparent 9rem),
-    rgba(255,255,255,.028);
 }
 
 .gauge-face{
   position:relative;
-  width:72px;
+  display:block;
+  width:74px;
   aspect-ratio:1/1;
   border-radius:50%;
-  border:1px solid rgba(255,179,109,.22);
+  border:1px solid rgba(255,179,109,.25);
   background:
     radial-gradient(circle at 50% 55%,rgba(2,7,18,.96) 0 36%,transparent 37%),
-    conic-gradient(from -130deg,rgba(255,179,109,.70) 0 55%,rgba(255,255,255,.08) 56% 100%);
+    conic-gradient(from -130deg,rgba(255,179,109,.72) 0 55%,rgba(255,255,255,.08) 56% 100%);
   box-shadow:inset 0 0 16px rgba(0,0,0,.64);
-}
-
-.gauge-dial[data-state="pass"] .gauge-face,
-.gauge-dial[data-gauge-state="pass"] .gauge-face{
-  border-color:rgba(167,243,198,.25);
-  background:
-    radial-gradient(circle at 50% 55%,rgba(2,7,18,.96) 0 36%,transparent 37%),
-    conic-gradient(from -130deg,rgba(167,243,198,.72) 0 68%,rgba(255,255,255,.08) 69% 100%);
-}
-
-.gauge-dial[data-state="held"] .gauge-face,
-.gauge-dial[data-gauge-state="held"] .gauge-face{
-  border-color:rgba(141,216,255,.24);
-  background:
-    radial-gradient(circle at 50% 55%,rgba(2,7,18,.96) 0 36%,transparent 37%),
-    conic-gradient(from -130deg,rgba(141,216,255,.62) 0 38%,rgba(255,255,255,.08) 39% 100%);
-}
-
-.gauge-dial[data-state="staged"] .gauge-face,
-.gauge-dial[data-gauge-state="staged"] .gauge-face{
-  border-color:rgba(173,140,255,.26);
-  background:
-    radial-gradient(circle at 50% 55%,rgba(2,7,18,.96) 0 36%,transparent 37%),
-    conic-gradient(from -130deg,rgba(173,140,255,.70) 0 47%,rgba(255,255,255,.08) 48% 100%);
 }
 
 .gauge-needle{
@@ -2334,31 +2170,10 @@ p{
   width:2px;
   height:38%;
   transform-origin:50% 92%;
-  transform:translate(-50%,-92%) rotate(24deg);
+  transform:translate(-50%,-92%) rotate(34deg);
   border-radius:999px;
   background:rgba(255,244,216,.90);
-}
-
-.gauge-dial[data-state="pass"] .gauge-needle,
-.gauge-dial[data-gauge-state="pass"] .gauge-needle{
-  transform:translate(-50%,-92%) rotate(62deg);
-}
-
-.gauge-dial[data-state="held"] .gauge-needle,
-.gauge-dial[data-gauge-state="held"] .gauge-needle{
-  transform:translate(-50%,-92%) rotate(-14deg);
-}
-
-.gauge-dial[data-state="staged"] .gauge-needle,
-.gauge-dial[data-gauge-state="staged"] .gauge-needle{
-  transform:translate(-50%,-92%) rotate(24deg);
-}
-
-.gauge-arc{
-  position:absolute;
-  inset:8px;
-  border-radius:50%;
-  border:1px dashed rgba(244,207,131,.16);
+  animation:dialSweep 8s ease-in-out infinite;
 }
 
 .gauge-dial b,
@@ -2374,9 +2189,8 @@ p{
 .gauge-dial strong,
 .stream-card strong{
   color:rgba(255,244,216,.96);
-  font-size:.88rem;
+  font-size:.92rem;
   line-height:1.2;
-  overflow-wrap:anywhere;
 }
 
 .gauge-dial span,
@@ -2384,72 +2198,145 @@ p{
 .stream-card span,
 .stream-card em{
   color:rgba(239,247,255,.70);
-  font-size:.78rem;
+  font-size:.80rem;
   line-height:1.35;
-  font-style:normal;
   overflow-wrap:anywhere;
 }
 
 .cockpit-control-grid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:4px;
+  gap:5px;
+  margin-top:4px;
 }
 
 .cockpit-control-cell{
   aspect-ratio:1/1;
-  min-height:24px;
-  border:1px solid rgba(141,216,255,.18);
-  border-radius:5px;
-  background:rgba(255,255,255,.034);
-  cursor:pointer;
-}
-
-.cockpit-control-cell:hover,
-.cockpit-control-cell:focus-visible{
-  border-color:rgba(244,207,131,.58);
-  box-shadow:0 0 9px rgba(244,207,131,.18);
+  border:1px solid rgba(141,216,255,.20);
+  border-radius:7px;
+  background:rgba(255,255,255,.035);
 }
 
 .cockpit-control-cell.is-active{
-  border-color:rgba(167,243,198,.66);
   background:rgba(167,243,198,.16);
-  box-shadow:0 0 9px rgba(167,243,198,.22);
+  border-color:rgba(167,243,198,.50);
 }
 
 .cockpit-control-cell.staged{
-  border-color:rgba(173,140,255,.50);
-  background:rgba(173,140,255,.12);
+  background:rgba(173,140,255,.14);
+  border-color:rgba(173,140,255,.44);
 }
 
 .cockpit-control-cell.held{
-  cursor:not-allowed;
-  opacity:.58;
-  border-color:rgba(141,216,255,.20);
-  background:rgba(141,216,255,.06);
+  background:rgba(141,216,255,.07);
+  border-color:rgba(141,216,255,.24);
+  opacity:.60;
 }
 
 .cockpit-control-cell.manual{
-  border-color:rgba(244,207,131,.70);
-  box-shadow:0 0 10px rgba(244,207,131,.24);
+  border-color:rgba(244,207,131,.72);
+  box-shadow:0 0 10px rgba(244,207,131,.18);
 }
 
-.cockpit-time-readout{
-  display:inline-flex;
+.engineering-content .lattice-gem-grid,
+.engineering-content .lattice-receipt-grid,
+.engineering-content .gauge-grid,
+.engineering-content .control-board,
+.engineering-content .stream-grid{
+  max-height:240px;
+  overflow:auto;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  padding:10px;
+  background:rgba(0,0,0,.18);
+  grid-template-columns:repeat(4,minmax(0,1fr));
+}
+
+.engineering-content .lattice-gem-grid > *,
+.engineering-content .lattice-receipt-grid > *,
+.engineering-content .gauge-grid > *,
+.engineering-content .control-board > *,
+.engineering-content .stream-grid > *{
+  min-height:70px!important;
+  max-height:120px;
+  overflow:hidden;
+  border-radius:14px!important;
+  border:1px solid rgba(141,216,255,.12)!important;
+  background:rgba(255,255,255,.026)!important;
+  box-shadow:none!important;
+  font-size:.75rem!important;
+}
+
+.return-row{
+  display:flex;
+  flex-wrap:wrap;
   align-items:center;
-  min-height:28px;
-  border:1px solid rgba(244,207,131,.18);
+  justify-content:space-between;
+  gap:10px;
+  border-top:1px solid rgba(255,255,255,.08);
+  padding-top:12px;
+}
+
+.return-orbit{
+  display:inline-flex;
+  min-height:38px;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(244,207,131,.36);
   border-radius:999px;
-  padding:0 10px;
-  color:rgba(255,244,216,.76);
-  background:rgba(2,8,20,.52);
-  font:900 .58rem/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-  letter-spacing:.10em;
+  padding:0 14px;
+  color:#06101c;
+  background:linear-gradient(135deg,#fff0b8,var(--gold));
+  font-size:.78rem;
+  font-weight:950;
+  letter-spacing:.08em;
   text-transform:uppercase;
 }
 
-[data-current-time-label]{
-  color:rgba(255,244,216,.78);
+.boundary-note{
+  color:rgba(239,247,255,.58);
+  font-size:.76rem;
+  line-height:1.4;
+}
+
+.warning-strip{
+  border:1px solid rgba(244,207,131,.16);
+  border-radius:18px;
+  padding:13px 14px;
+  color:rgba(255,244,216,.86);
+  background:
+    repeating-linear-gradient(135deg,rgba(244,207,131,.05) 0 8px,transparent 8px 16px),
+    rgba(255,255,255,.025);
+  font-size:.84rem;
+  font-weight:820;
+  letter-spacing:.03em;
+}
+
+.receipt,
+[data-route-receipt]{
+  display:none!important;
+  visibility:hidden!important;
+  overflow:hidden!important;
+  width:0!important;
+  height:0!important;
+  max-width:0!important;
+  max-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  opacity:0!important;
+  pointer-events:none!important;
+  position:absolute!important;
+  clip-path:inset(50%)!important;
+  white-space:nowrap!important;
+}
+
+.footer{
+  margin-top:18px;
+  padding:18px 0 0;
+  color:var(--faint);
+  font-size:.78rem;
+  text-align:center;
 }
 
 @media (min-width:1800px){
@@ -2479,6 +2366,11 @@ p{
   .card-grid.two,
   .tech-readout-grid,
   .calibration-board,
+  .gauge-grid,
+  .control-board,
+  .stream-grid,
+  .lattice-gem-grid,
+  .lattice-receipt-grid,
   .engineering-content .lattice-gem-grid,
   .engineering-content .lattice-receipt-grid,
   .engineering-content .gauge-grid,
@@ -2491,34 +2383,38 @@ p{
   .containment-schematic{
     grid-template-columns:1fr;
   }
-
-  .bridge-head{
-    grid-template-columns:1fr;
-  }
-
-  .bridge-pills{
-    justify-content:flex-start;
-  }
-}
-
-@media (max-width:1080px){
-  .lattice-gem-grid,
-  .lattice-receipt-grid{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-  }
 }
 
 @media (max-width:760px){
-  .cockpit-shell{width:min(100% - 18px,var(--max))}
-  .command-rail{grid-template-columns:1fr}
+  .cockpit-shell{
+    width:min(100% - 18px,var(--max));
+  }
+
+  .command-rail{
+    grid-template-columns:1fr;
+    align-items:stretch;
+  }
 
   .cockpit-menu summary,
-  .run-button{width:100%}
+  .run-button{
+    width:100%;
+  }
+
+  .cockpit-menu{
+    display:grid;
+  }
 
   .cockpit-menu-panel{
-    left:0;
+    position:relative;
+    top:auto;
+    left:auto;
     right:auto;
     width:100%;
+    max-height:min(70svh,640px);
+    overflow:auto;
+    overscroll-behavior:contain;
+    margin-top:10px;
+    -webkit-overflow-scrolling:touch;
   }
 
   .space-window{
@@ -2544,9 +2440,13 @@ p{
     top:224px;
   }
 
-  .viewport-beam{display:none}
+  .viewport-beam{
+    display:none;
+  }
 
-  h1{font-size:clamp(2.1rem,12vw,3.65rem)}
+  h1{
+    font-size:clamp(2.1rem,12vw,3.65rem);
+  }
 
   .instrument-wing{
     grid-template-columns:1fr;
@@ -2556,11 +2456,24 @@ p{
     min-height:118px;
   }
 
+  .bridge-head{
+    display:grid;
+  }
+
+  .bridge-pills{
+    justify-content:flex-start;
+  }
+
   .card-grid,
   .card-grid.three,
   .card-grid.two,
   .tech-readout-grid,
   .calibration-board,
+  .gauge-grid,
+  .control-board,
+  .stream-grid,
+  .lattice-gem-grid,
+  .lattice-receipt-grid,
   .engineering-content .lattice-gem-grid,
   .engineering-content .lattice-receipt-grid,
   .engineering-content .gauge-grid,
@@ -2577,20 +2490,8 @@ p{
     grid-template-columns:1fr;
   }
 
-  .summary-action{justify-content:center}
-
-  .bridge-group{
-    border-radius:24px;
-    padding:10px;
-  }
-
-  .bridge-head{
-    border-radius:18px;
-  }
-
-  .lattice-gem-grid,
-  .lattice-receipt-grid{
-    grid-template-columns:1fr;
+  .summary-action{
+    justify-content:center;
   }
 
   .lattice-gem{
@@ -2650,7 +2551,8 @@ p{
   .packet-slot::before,
   .seal-line::after,
   .lattice-gem-star,
-  .lattice-gem-glint{
+  .lattice-gem-glint,
+  .gauge-needle{
     animation:none!important;
   }
 }

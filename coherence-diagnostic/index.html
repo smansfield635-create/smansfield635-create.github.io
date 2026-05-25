@@ -2,15 +2,22 @@
 <html
   lang="en"
   data-route="/coherence-diagnostic/"
-  data-page="coherence-diagnostic-assessment"
-  data-contract="COHERENCE_DIAGNOSTIC_ASSESSMENT_PUBLIC_PAGE_TNT_v1"
-  data-spec-ops-contract="COHERENCE_DIAGNOSTIC_ASSESSMENT_PUBLIC_PAGE_SPEC_OPS_v1"
-  data-news-contract="COHERENCE_DIAGNOSTIC_ASSESSMENT_PUBLIC_PAGE_NEWS_v1"
-  data-ccr-contract="COHERENCE_DIAGNOSTIC_ASSESSMENT_PUBLIC_PAGE_CCR_v1"
+  data-page="coherence-diagnostic-adaptive-archetype-library"
+  data-contract="COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULTS_TNT_v2"
+  data-previous-contract="COHERENCE_DIAGNOSTIC_ASSESSMENT_PUBLIC_PAGE_TNT_v1"
+  data-spec-ops-contract="COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULTS_SPEC_OPS_v2"
+  data-news-contract="COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULTS_NEWS_v2"
+  data-ccr-contract="COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULTS_CCR_v2"
   data-question-minimum="12"
   data-q1-fixed="true"
   data-q2-fixed="true"
+  data-public-archetypes="Strategist,Builder,Mitigator,Auditor"
+  data-hidden-scoring-map="active"
+  data-adaptive-generation="true"
   data-primary-secondary-required="true"
+  data-results-visible-without-email="true"
+  data-email-results-active="false"
+  data-character-profile-save-active="false"
   data-local-grading="true"
   data-no-backend="true"
   data-no-storage="true"
@@ -27,7 +34,7 @@
   <title>Coherence Diagnostic Assessment · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="A local-only coherence diagnostic assessment measuring self-rated coherence, claimed archetype, revealed primary pattern, secondary pattern, calibration gap, strengths, and risks."
+    content="A local-only adaptive coherence diagnostic using self-rated coherence, claimed primary and secondary archetypes, adaptive scenario questions, and an immediate on-page result."
   >
 
   <style>
@@ -101,7 +108,8 @@
     a:focus-visible,
     button:focus-visible,
     input:focus-visible,
-    label:focus-visible{
+    label:focus-visible,
+    summary:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
     }
@@ -199,7 +207,8 @@
 
     .route-links a,
     .action-btn,
-    .ghost-btn{
+    .ghost-btn,
+    .disabled-btn{
       min-height:40px;
       display:inline-flex;
       align-items:center;
@@ -254,7 +263,7 @@
     }
 
     h1{
-      max-width:900px;
+      max-width:960px;
       margin:0;
       font-size:clamp(2.45rem,7vw,5.6rem);
       line-height:.88;
@@ -287,7 +296,7 @@
     }
 
     .hero-copy{
-      max-width:870px;
+      max-width:900px;
       display:grid;
       gap:12px;
     }
@@ -314,7 +323,8 @@
       text-transform:uppercase;
     }
 
-    .warning{
+    .warning,
+    .coming-soon{
       border:1px solid rgba(244,207,131,.18);
       border-radius:22px;
       padding:14px 16px;
@@ -362,18 +372,18 @@
     }
 
     .mode-grid,
-    .archetype-grid,
+    .select-grid,
     .scale-grid,
     .option-grid{
       display:grid;
       gap:10px;
     }
 
-    .mode-grid{
+    .mode-grid,
+    .select-grid{
       grid-template-columns:repeat(2,minmax(0,1fr));
     }
 
-    .archetype-grid,
     .option-grid{
       grid-template-columns:repeat(4,minmax(0,1fr));
     }
@@ -449,6 +459,103 @@
       color:rgba(239,247,255,.70);
       font-size:.84rem;
       line-height:1.35;
+    }
+
+    .archetype-library{
+      display:grid;
+      gap:10px;
+    }
+
+    .archetype-detail{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:20px;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(141,216,255,.07),transparent 14rem),
+        rgba(255,255,255,.026);
+      overflow:hidden;
+    }
+
+    .archetype-detail[open]{
+      border-color:rgba(244,207,131,.34);
+      box-shadow:0 18px 52px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.07);
+    }
+
+    .archetype-detail summary{
+      list-style:none;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      gap:12px;
+      align-items:center;
+      padding:15px 16px;
+      color:rgba(255,244,216,.96);
+      font-weight:950;
+      letter-spacing:-.02em;
+    }
+
+    .archetype-detail summary::-webkit-details-marker{display:none}
+
+    .archetype-detail summary::after{
+      content:"Read";
+      min-height:30px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:999px;
+      padding:0 10px;
+      color:rgba(239,247,255,.78);
+      background:rgba(255,255,255,.035);
+      font-size:.66rem;
+      font-weight:900;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+
+    .archetype-detail[open] summary::after{
+      content:"Close";
+      color:#06101c;
+      background:linear-gradient(135deg,#fff0b8,var(--gold));
+      border-color:rgba(244,207,131,.50);
+    }
+
+    .archetype-content{
+      display:grid;
+      gap:12px;
+      padding:0 16px 16px;
+    }
+
+    .archetype-content p{
+      font-size:.92rem;
+    }
+
+    .mini-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .mini-card{
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:16px;
+      padding:12px;
+      background:rgba(0,0,0,.16);
+      display:grid;
+      gap:7px;
+    }
+
+    .mini-card b{
+      color:var(--gold);
+      font-size:.68rem;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .mini-card ul{
+      margin:0;
+      padding-left:18px;
+      color:rgba(239,247,255,.70);
+      font-size:.84rem;
+      line-height:1.4;
     }
 
     .question{
@@ -568,7 +675,8 @@
       box-shadow:0 12px 36px rgba(0,0,0,.26);
     }
 
-    .action-btn:disabled{
+    .action-btn:disabled,
+    .disabled-btn{
       cursor:not-allowed;
       opacity:.55;
       filter:grayscale(.3);
@@ -579,10 +687,12 @@
       background:rgba(255,255,255,.040);
     }
 
+    .diagnostic-stage,
     .result{
       display:none;
     }
 
+    .diagnostic-stage.is-visible,
     .result.is-visible{
       display:grid;
       gap:16px;
@@ -649,7 +759,21 @@
       padding-left:18px;
     }
 
-    .receipt{
+    .coming-soon{
+      display:grid;
+      gap:10px;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(244,207,131,.10),transparent 16rem),
+        radial-gradient(circle at 88% 14%,rgba(141,216,255,.08),transparent 16rem),
+        rgba(255,255,255,.025);
+    }
+
+    .coming-soon h3{
+      color:var(--gold);
+    }
+
+    .receipt,
+    [data-route-receipt]{
       display:none!important;
       visibility:hidden!important;
       overflow:hidden!important;
@@ -677,9 +801,10 @@
 
     @media (max-width:940px){
       .mode-grid,
-      .archetype-grid,
+      .select-grid,
       .option-grid,
-      .result-grid{
+      .result-grid,
+      .mini-grid{
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
 
@@ -706,9 +831,10 @@
       }
 
       .mode-grid,
-      .archetype-grid,
+      .select-grid,
       .option-grid,
-      .result-grid{
+      .result-grid,
+      .mini-grid{
         grid-template-columns:1fr;
       }
 
@@ -727,7 +853,8 @@
 
       .button-cluster,
       .action-btn,
-      .ghost-btn{
+      .ghost-btn,
+      .disabled-btn{
         width:100%;
       }
     }
@@ -768,20 +895,20 @@
     <main class="page">
       <section class="hero" aria-labelledby="page-title">
         <div class="hero-copy">
-          <p class="kicker">Public Assessment · Local Grading · Primary / Secondary Pattern Read</p>
+          <p class="kicker">Adaptive Assessment · Archetype Library · Local Result</p>
           <h1 id="page-title">Coherence Diagnostic Assessment</h1>
           <p>
-            This assessment compares how coherent you believe yourself to be, which archetype you claim, and what your scenario choices reveal under pressure.
+            Start with your self-rated coherence and your claimed archetype blend. The diagnostic questions generate only after your intake is complete.
           </p>
         </div>
 
         <div class="pill-row" aria-label="Assessment properties">
           <span class="pill">12 questions minimum</span>
           <span class="pill">Q1 fixed scale</span>
-          <span class="pill">Q2 fixed archetype claim</span>
-          <span class="pill">Primary + secondary choices</span>
+          <span class="pill">Q2 primary + secondary archetype</span>
+          <span class="pill">Adaptive questions</span>
           <span class="pill">Local-only scoring</span>
-          <span class="pill">No storage</span>
+          <span class="pill">No email required</span>
         </div>
 
         <div class="warning">
@@ -794,7 +921,7 @@
           <section class="panel" aria-labelledby="mode-title">
             <div class="panel-head">
               <p class="eyebrow">Assessment Mode</p>
-              <h2 id="mode-title">Choose how you want the result handled.</h2>
+              <h2 id="mode-title">Choose how you want the result displayed.</h2>
               <p>Graded mode shows a score, band, calibration gap, and archetype match. Ungraded mode gives a neutral pattern read without a formal score.</p>
             </div>
             <div class="panel-body">
@@ -803,7 +930,7 @@
                   <input type="radio" name="assessmentMode" value="graded" checked>
                   <b>Graded Mode</b>
                   <strong>Show my result</strong>
-                  <span>Receive coherence score, band, calibration gap, claimed archetype comparison, strengths, risks, and next step.</span>
+                  <span>Receive coherence score, band, calibration gap, claimed blend comparison, strengths, risks, and next step.</span>
                 </label>
 
                 <label class="choice-card">
@@ -840,77 +967,92 @@
 
           <section class="panel" aria-labelledby="q2-title">
             <div class="panel-head">
-              <p class="eyebrow">Question 2 · Fixed Claim Anchor</p>
-              <h2 id="q2-title">Read the four archetypes. Which archetype do you believe best describes you?</h2>
-              <p>The claimed archetype is a claim anchor, not proof. The assessment compares it against your scenario pattern.</p>
+              <p class="eyebrow">Question 2 · Archetype Library</p>
+              <h2 id="q2-title">Read the four archetypes, then choose your claimed primary and secondary archetype.</h2>
+              <p>Your primary archetype is what you believe you naturally lead with. Your secondary archetype is what you believe supports, balances, or reinforces your primary pattern.</p>
             </div>
+
             <div class="panel-body">
-              <div class="archetype-grid">
-                <label class="choice-card">
-                  <input type="radio" name="claimedArchetype" value="North">
-                  <b>North</b>
-                  <strong>Structure / Command</strong>
-                  <span>Direction, principle, boundary, order, sequence, and decision. Risk: overcontrol or rigidity.</span>
-                </label>
+              <div class="archetype-library" id="archetype-library"></div>
 
-                <label class="choice-card">
-                  <input type="radio" name="claimedArchetype" value="East">
-                  <b>East</b>
-                  <strong>Signal / Pattern</strong>
-                  <span>Perception, intelligence, interpretation, possibility, and idea flow. Risk: abstraction drift.</span>
-                </label>
+              <div class="select-grid" aria-label="Claimed primary and secondary archetype">
+                <div>
+                  <p class="eyebrow">Claimed Primary Archetype</p>
+                  <div class="option-grid" id="primary-archetype-options"></div>
+                </div>
 
-                <label class="choice-card">
-                  <input type="radio" name="claimedArchetype" value="South">
-                  <b>South</b>
-                  <strong>Stability / Flow</strong>
-                  <span>Continuity, preservation, support, integration, patience, and field stability. Risk: over-accommodation.</span>
-                </label>
+                <div>
+                  <p class="eyebrow">Claimed Secondary Archetype</p>
+                  <div class="option-grid" id="secondary-archetype-options"></div>
+                </div>
+              </div>
 
-                <label class="choice-card">
-                  <input type="radio" name="claimedArchetype" value="West">
-                  <b>West</b>
-                  <strong>Audit / Evidence</strong>
-                  <span>Contradiction, proof, diagnostic pressure, evidence, and truth-testing. Risk: adversarial overpressure.</span>
-                </label>
+              <div class="warning">
+                Primary and secondary cannot be the same. The diagnostic will generate after this intake is complete.
               </div>
             </div>
           </section>
 
-          <section class="panel" aria-labelledby="scenario-title">
-            <div class="panel-head">
-              <p class="eyebrow">Questions 3–12 · Diagnostic Scenarios</p>
-              <h2 id="scenario-title">Choose a primary and secondary response for each scenario.</h2>
-              <p>Primary means what you would do first. Secondary means what you would rely on next. The same option cannot be selected twice for the same question.</p>
-            </div>
-            <div class="panel-body" id="scenario-list"></div>
-          </section>
+          <div id="intake-validation" class="validation" role="alert"></div>
 
-          <div id="validation" class="validation" role="alert"></div>
-
-          <div class="panel">
+          <section class="panel">
             <div class="panel-body">
               <div class="button-row">
-                <p class="boundary-note">Answers are processed locally in this browser. This MVP does not store or submit results.</p>
+                <p>Questions 3–12 are intentionally held until your self-rating and claimed archetype blend are complete.</p>
                 <div class="button-cluster">
                   <button class="ghost-btn" type="reset" id="reset-btn">Reset</button>
-                  <button class="action-btn" type="submit">Grade / Read Pattern</button>
+                  <button class="action-btn" type="button" id="generate-btn">Generate Diagnostic</button>
                 </div>
               </div>
             </div>
-          </div>
+          </section>
+
+          <section id="diagnostic-stage" class="diagnostic-stage">
+            <section class="panel" aria-labelledby="scenario-title">
+              <div class="panel-head">
+                <p class="eyebrow">Questions 3–12 · Adaptive Diagnostic</p>
+                <h2 id="scenario-title">Choose a primary and secondary response for each generated scenario.</h2>
+                <p>Primary means what you would do first. Secondary means what you would rely on next. The same option cannot be selected twice for the same question.</p>
+              </div>
+              <div class="panel-body" id="scenario-list"></div>
+            </section>
+
+            <div id="validation" class="validation" role="alert"></div>
+
+            <section class="panel">
+              <div class="panel-body">
+                <div class="button-row">
+                  <p>This page calculates your result locally. Email results and character profile saving are coming soon, but not active in this version.</p>
+                  <div class="button-cluster">
+                    <button class="ghost-btn" type="button" id="clear-generated-btn">Clear Generated Questions</button>
+                    <button class="action-btn" type="submit">Grade / Read Pattern</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </section>
         </form>
 
         <section id="result" class="result" aria-live="polite" aria-label="Assessment result"></section>
 
-        <template id="route-receipt" class="receipt">
-COHERENCE_DIAGNOSTIC_ASSESSMENT_PUBLIC_PAGE_TNT_v1
+        <template id="route-receipt" data-route-receipt>
+COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULTS_TNT_v2
+previous=COHERENCE_DIAGNOSTIC_ASSESSMENT_PUBLIC_PAGE_TNT_v1
 route=/coherence-diagnostic/
 file=/coherence-diagnostic/index.html
 questions_minimum=12
 q1_fixed=true
 q2_fixed=true
+public_archetypes=Strategist,Builder,Mitigator,Auditor
+hidden_scoring_map=true
+adaptive_generation=true
+claimed_primary_required=true
+claimed_secondary_required=true
+duplicate_claimed_archetype_forbidden=true
 primary_secondary_required=true
+results_visible_without_email=true
+email_results_active=false
+character_profile_save_active=false
 local_grading=true
 no_backend=true
 no_storage=true
@@ -920,12 +1062,13 @@ canvas=false
 webgl=false
 generated_image=false
 graphic_box=false
+deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULTS_DEPLOY_MARKER_v2
         </template>
       </section>
     </main>
 
     <footer class="footer">
-      Diamond Gate Bridge · Coherence Diagnostic Assessment · Local-only MVP · No clinical or employment diagnostic claim.
+      COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULTS_TNT_v2 · Local-only adaptive diagnostic · Email and character profile saving coming soon.
     </footer>
   </div>
 
@@ -933,150 +1076,304 @@ graphic_box=false
     (() => {
       "use strict";
 
-      const CONTRACT = "COHERENCE_DIAGNOSTIC_ASSESSMENT_PUBLIC_PAGE_TNT_v1";
+      const CONTRACT = "COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULTS_TNT_v2";
       const MAX_COHERENCE_VALUE = 4;
 
       const archetypes = {
-        North: {
-          label: "North",
-          title: "Structure / Command",
-          summary: "You move through direction, boundary, sequence, principle, and decision."
+        Strategist: {
+          label: "Strategist",
+          internalDirection: "north",
+          title: "Structure / Sequence / Decision",
+          short: "Organizes direction, priority, timing, and decision structure.",
+          pressureQuestion: "What is the correct order, and what decision governs the rest?",
+          healthy: [
+            "Clarifies direction",
+            "Sets sequence",
+            "Protects structure",
+            "Makes decisions under pressure",
+            "Prevents scattered execution"
+          ],
+          risks: [
+            "Over-controlling the field",
+            "Waiting for perfect structure",
+            "Compressing people into the plan",
+            "Mistaking authority for coherence",
+            "Becoming rigid when adaptation is needed"
+          ],
+          primary: "As a primary archetype, Strategist means you likely lead through order, direction, decision, and structure.",
+          secondary: "As a secondary archetype, Strategist means you may not lead with structure first, but you rely on planning and sequencing to support your main pattern.",
+          description: "The Strategist organizes direction, sequence, priority, timing, and decision structure. Strategists want to understand what comes first, what governs the field, what must be protected, and what order of operations prevents collapse."
         },
-        East: {
-          label: "East",
-          title: "Signal / Pattern",
-          summary: "You move through pattern recognition, interpretation, possibility, and signal reading."
+        Builder: {
+          label: "Builder",
+          internalDirection: "east",
+          title: "Action / Construction / Visible Progress",
+          short: "Turns possibility into working form through action, testing, and construction.",
+          pressureQuestion: "What can we make, fix, test, or move right now?",
+          healthy: [
+            "Creates momentum",
+            "Converts ideas into action",
+            "Builds proof through real attempts",
+            "Learns from working models",
+            "Resists stagnation"
+          ],
+          risks: [
+            "Moving before structure is ready",
+            "Building around unresolved contradictions",
+            "Treating motion as proof",
+            "Starting more than can be finished",
+            "Frustration with slow review or mitigation"
+          ],
+          primary: "As a primary archetype, Builder means you likely lead through action, construction, testing, and visible progress.",
+          secondary: "As a secondary archetype, Builder means you may not lead with action first, but you rely on building, testing, or prototyping to support your main pattern.",
+          description: "The Builder turns possibility into working form. Builders move toward construction, prototypes, action, experiments, systems, tools, products, and visible progress."
         },
-        South: {
-          label: "South",
-          title: "Stability / Flow",
-          summary: "You move through continuity, preservation, support, integration, and stabilizing flow."
+        Mitigator: {
+          label: "Mitigator",
+          internalDirection: "south",
+          title: "Stability / Risk Reduction / Continuity",
+          short: "Reduces harm, stabilizes tension, protects continuity, and keeps the field usable.",
+          pressureQuestion: "What needs to be stabilized so this does not break?",
+          healthy: [
+            "Reduces harm",
+            "Stabilizes conflict",
+            "Preserves continuity",
+            "Protects people and systems from overload",
+            "Keeps the field usable under pressure"
+          ],
+          risks: [
+            "Delaying needed decisions",
+            "Over-accommodating instability",
+            "Preserving a failing structure too long",
+            "Softening accountability",
+            "Confusing peace with coherence"
+          ],
+          primary: "As a primary archetype, Mitigator means you likely lead by stabilizing, preserving, reducing harm, and keeping the field intact.",
+          secondary: "As a secondary archetype, Mitigator means you may not lead with stabilization first, but you rely on risk reduction and continuity to support your main pattern.",
+          description: "The Mitigator reduces harm, stabilizes tension, protects continuity, and keeps people or systems from breaking under pressure. Mitigators are sensitive to risk, emotional temperature, relational strain, and downstream consequences."
         },
-        West: {
-          label: "West",
-          title: "Audit / Evidence",
-          summary: "You move through proof, contradiction detection, pressure testing, and diagnostic clarity."
+        Auditor: {
+          label: "Auditor",
+          internalDirection: "west",
+          title: "Evidence / Contradiction / Proof",
+          short: "Tests claims, detects contradictions, checks evidence, and protects truth under pressure.",
+          pressureQuestion: "What is the evidence, and where is the contradiction?",
+          healthy: [
+            "Detects contradiction",
+            "Protects truth",
+            "Finds weak points",
+            "Prevents false claims",
+            "Tests systems before trust is granted"
+          ],
+          risks: [
+            "Over-challenging",
+            "Becoming adversarial",
+            "Slowing action through excessive doubt",
+            "Applying pressure without closure",
+            "Treating flaws as the whole picture"
+          ],
+          primary: "As a primary archetype, Auditor means you likely lead by testing, verifying, challenging, and protecting evidence.",
+          secondary: "As a secondary archetype, Auditor means you may not lead with audit first, but you rely on proof, contradiction detection, and pressure testing to support your main pattern.",
+          description: "The Auditor tests claims, detects contradictions, checks evidence, and protects truth under pressure. Auditors are drawn to proof, receipts, weak points, inconsistencies, and the difference between what is claimed and what is actually shown."
         }
       };
 
-      const questions = [
+      const baseQuestions = [
         {
           id: "conflict",
           title: "Conflict response",
-          prompt: "A disagreement is escalating in a group. What do you do first, and what do you rely on second?",
+          tags: ["all", "pressure", "conflict"],
+          prompt: "A disagreement is escalating and people are beginning to defend themselves instead of solve the issue. What do you do first, and what do you rely on second?",
           options: [
-            { id: "conflict-north", archetype: "North", coherence: 4, text: "Set the boundary, define the decision point, and restore sequence.", strength: "boundary clarity", risk: "overcontrol risk" },
-            { id: "conflict-east", archetype: "East", coherence: 3, text: "Read the signals, identify the hidden misunderstanding, and reframe the issue.", strength: "pattern detection", risk: "overinterpretation risk" },
-            { id: "conflict-south", archetype: "South", coherence: 3, text: "Lower the temperature, preserve the relationship, and stabilize the room.", strength: "field stabilization", risk: "delay risk" },
-            { id: "conflict-west", archetype: "West", coherence: 4, text: "Identify the contradiction, ask for evidence, and separate claim from fact.", strength: "truth protection", risk: "adversarial pressure risk" }
+            { id: "conflict-strategist", archetype: "Strategist", coherence: 4, text: "Set the boundary, define the decision point, and restore sequence.", strength: "boundary clarity", risk: "overcontrol risk" },
+            { id: "conflict-builder", archetype: "Builder", coherence: 3, text: "Move the group into a small practical test so the conflict becomes concrete.", strength: "action conversion", risk: "moving too fast risk" },
+            { id: "conflict-mitigator", archetype: "Mitigator", coherence: 4, text: "Lower the temperature, preserve enough trust to continue, and stabilize the room.", strength: "field stabilization", risk: "delay risk" },
+            { id: "conflict-auditor", archetype: "Auditor", coherence: 4, text: "Identify the contradiction, ask for evidence, and separate claim from fact.", strength: "truth protection", risk: "adversarial pressure risk" }
           ]
         },
         {
           id: "ambiguous-information",
           title: "Ambiguous information",
+          tags: ["all", "evidence", "signal"],
           prompt: "You receive incomplete information and people want a fast conclusion. What is your first move?",
           options: [
-            { id: "ambiguous-north", archetype: "North", coherence: 3, text: "Define what must be known before any decision is allowed.", strength: "decision discipline", risk: "rigidity risk" },
-            { id: "ambiguous-east", archetype: "East", coherence: 4, text: "Map the possible meanings and identify which signal would change the answer.", strength: "signal clarity", risk: "possibility drift risk" },
-            { id: "ambiguous-south", archetype: "South", coherence: 2, text: "Slow the process down and keep people from committing too early.", strength: "pace control", risk: "indecision risk" },
-            { id: "ambiguous-west", archetype: "West", coherence: 4, text: "Separate evidence from assumption and mark every unsupported claim.", strength: "evidence separation", risk: "skepticism overload risk" }
+            { id: "ambiguous-strategist", archetype: "Strategist", coherence: 3, text: "Define what must be known before any decision is allowed.", strength: "decision discipline", risk: "rigidity risk" },
+            { id: "ambiguous-builder", archetype: "Builder", coherence: 3, text: "Create a quick test that exposes what is true enough to act on.", strength: "proof through action", risk: "premature prototype risk" },
+            { id: "ambiguous-mitigator", archetype: "Mitigator", coherence: 2, text: "Slow the process down and keep people from committing too early.", strength: "pace control", risk: "indecision risk" },
+            { id: "ambiguous-auditor", archetype: "Auditor", coherence: 4, text: "Separate evidence from assumption and mark every unsupported claim.", strength: "evidence separation", risk: "skepticism overload risk" }
           ]
         },
         {
           id: "responsibility-pressure",
           title: "Responsibility pressure",
+          tags: ["all", "accountability", "repair"],
           prompt: "A project fails and the group begins shifting blame. What do you do first?",
           options: [
-            { id: "responsibility-north", archetype: "North", coherence: 4, text: "Assign the chain of responsibility and define the repair sequence.", strength: "accountability structure", risk: "command pressure risk" },
-            { id: "responsibility-east", archetype: "East", coherence: 3, text: "Look for the pattern that caused the failure before blaming individuals.", strength: "system insight", risk: "abstraction risk" },
-            { id: "responsibility-south", archetype: "South", coherence: 2, text: "Keep the group from fragmenting and preserve enough trust to continue.", strength: "continuity protection", risk: "accountability delay risk" },
-            { id: "responsibility-west", archetype: "West", coherence: 4, text: "Audit what happened, what was promised, and what was actually done.", strength: "receipt logic", risk: "cold delivery risk" }
+            { id: "responsibility-strategist", archetype: "Strategist", coherence: 4, text: "Assign the chain of responsibility and define the repair sequence.", strength: "accountability structure", risk: "command pressure risk" },
+            { id: "responsibility-builder", archetype: "Builder", coherence: 3, text: "Build the first repair step immediately so the failure stops spreading.", strength: "repair momentum", risk: "patching before diagnosis risk" },
+            { id: "responsibility-mitigator", archetype: "Mitigator", coherence: 2, text: "Keep the group from fragmenting and preserve enough trust to continue.", strength: "continuity protection", risk: "accountability delay risk" },
+            { id: "responsibility-auditor", archetype: "Auditor", coherence: 4, text: "Audit what happened, what was promised, and what was actually done.", strength: "receipt logic", risk: "cold delivery risk" }
           ]
         },
         {
           id: "contradiction",
           title: "Contradiction detection",
+          tags: ["all", "evidence", "contradiction"],
           prompt: "Someone makes two claims that cannot both be true. What do you do first?",
           options: [
-            { id: "contradiction-north", archetype: "North", coherence: 3, text: "Pause the process and require one controlling rule.", strength: "rule control", risk: "premature closure risk" },
-            { id: "contradiction-east", archetype: "East", coherence: 3, text: "Look for the frame where both claims appeared to make sense.", strength: "context reading", risk: "ambiguity expansion risk" },
-            { id: "contradiction-south", archetype: "South", coherence: 2, text: "Keep the exchange stable while the contradiction is clarified.", strength: "interaction stability", risk: "softening the contradiction risk" },
-            { id: "contradiction-west", archetype: "West", coherence: 4, text: "Name the contradiction directly and ask which claim should be withdrawn or revised.", strength: "contradiction clarity", risk: "overpressure risk" }
+            { id: "contradiction-strategist", archetype: "Strategist", coherence: 3, text: "Pause the process and require one controlling rule.", strength: "rule control", risk: "premature closure risk" },
+            { id: "contradiction-builder", archetype: "Builder", coherence: 2, text: "Test both claims in a practical model and see which one survives contact.", strength: "reality contact", risk: "testing around a contradiction risk" },
+            { id: "contradiction-mitigator", archetype: "Mitigator", coherence: 2, text: "Keep the exchange stable while the contradiction is clarified.", strength: "interaction stability", risk: "softening the contradiction risk" },
+            { id: "contradiction-auditor", archetype: "Auditor", coherence: 4, text: "Name the contradiction directly and ask which claim should be withdrawn or revised.", strength: "contradiction clarity", risk: "overpressure risk" }
           ]
         },
         {
           id: "execution-sequencing",
           title: "Execution sequencing",
+          tags: ["all", "sequence", "action"],
           prompt: "A team wants to build everything at once. What do you do first?",
           options: [
-            { id: "execution-north", archetype: "North", coherence: 4, text: "Define the order of operations and lock the first lawful step.", strength: "sequence authority", risk: "command narrowness risk" },
-            { id: "execution-east", archetype: "East", coherence: 3, text: "Map the dependencies and detect which pieces influence the others.", strength: "dependency perception", risk: "mapping too long risk" },
-            { id: "execution-south", archetype: "South", coherence: 3, text: "Protect the working baseline and prevent unnecessary disruption.", strength: "baseline preservation", risk: "overpreservation risk" },
-            { id: "execution-west", archetype: "West", coherence: 4, text: "Audit which claims are ready, which are assumed, and which are not proven.", strength: "readiness audit", risk: "friction risk" }
+            { id: "execution-strategist", archetype: "Strategist", coherence: 4, text: "Define the order of operations and lock the first lawful step.", strength: "sequence authority", risk: "command narrowness risk" },
+            { id: "execution-builder", archetype: "Builder", coherence: 3, text: "Choose the smallest build that proves the largest assumption.", strength: "minimum viable proof", risk: "scope creep risk" },
+            { id: "execution-mitigator", archetype: "Mitigator", coherence: 3, text: "Protect the working baseline and prevent unnecessary disruption.", strength: "baseline preservation", risk: "overpreservation risk" },
+            { id: "execution-auditor", archetype: "Auditor", coherence: 4, text: "Audit which claims are ready, which are assumed, and which are not proven.", strength: "readiness audit", risk: "friction risk" }
           ]
         },
         {
           id: "group-instability",
           title: "Group instability",
+          tags: ["all", "stability", "pressure"],
           prompt: "The group is anxious, distracted, and starting to lose coherence. What do you do first?",
           options: [
-            { id: "group-north", archetype: "North", coherence: 3, text: "Give the group a clear immediate objective and stop the drift.", strength: "direction under pressure", risk: "tone hardness risk" },
-            { id: "group-east", archetype: "East", coherence: 2, text: "Identify which signal is causing the instability.", strength: "source detection", risk: "analysis delay risk" },
-            { id: "group-south", archetype: "South", coherence: 4, text: "Stabilize the room, reduce noise, and restore continuity.", strength: "field coherence", risk: "comfort over action risk" },
-            { id: "group-west", archetype: "West", coherence: 3, text: "Challenge the false claims feeding the instability.", strength: "false-signal removal", risk: "escalation risk" }
+            { id: "group-strategist", archetype: "Strategist", coherence: 3, text: "Give the group a clear immediate objective and stop the drift.", strength: "direction under pressure", risk: "tone hardness risk" },
+            { id: "group-builder", archetype: "Builder", coherence: 2, text: "Give everyone a concrete task so the room starts moving again.", strength: "task activation", risk: "activity without coherence risk" },
+            { id: "group-mitigator", archetype: "Mitigator", coherence: 4, text: "Stabilize the room, reduce noise, and restore continuity.", strength: "field coherence", risk: "comfort over action risk" },
+            { id: "group-auditor", archetype: "Auditor", coherence: 3, text: "Challenge the false claims feeding the instability.", strength: "false-signal removal", risk: "escalation risk" }
           ]
         },
         {
           id: "evidence-intuition",
           title: "Evidence versus intuition",
+          tags: ["all", "evidence", "signal"],
           prompt: "Your intuition says one thing, but the evidence is incomplete. What do you do first?",
           options: [
-            { id: "evidence-north", archetype: "North", coherence: 3, text: "Set a rule for what evidence is required before acting.", strength: "threshold setting", risk: "overformalization risk" },
-            { id: "evidence-east", archetype: "East", coherence: 4, text: "Treat intuition as a signal, then test what would confirm or deny it.", strength: "signal testing", risk: "signal attachment risk" },
-            { id: "evidence-south", archetype: "South", coherence: 2, text: "Hold the field open until the evidence catches up.", strength: "patience", risk: "stalling risk" },
-            { id: "evidence-west", archetype: "West", coherence: 4, text: "Refuse to convert intuition into claim until evidence supports it.", strength: "claim discipline", risk: "intuition suppression risk" }
+            { id: "evidence-strategist", archetype: "Strategist", coherence: 3, text: "Set a rule for what evidence is required before acting.", strength: "threshold setting", risk: "overformalization risk" },
+            { id: "evidence-builder", archetype: "Builder", coherence: 3, text: "Run a small practical test instead of arguing about the intuition.", strength: "test motion", risk: "testing too soon risk" },
+            { id: "evidence-mitigator", archetype: "Mitigator", coherence: 2, text: "Hold the field open until the evidence catches up.", strength: "patience", risk: "stalling risk" },
+            { id: "evidence-auditor", archetype: "Auditor", coherence: 4, text: "Refuse to convert intuition into claim until evidence supports it.", strength: "claim discipline", risk: "intuition suppression risk" }
           ]
         },
         {
           id: "emotional-pressure",
           title: "Emotional pressure",
+          tags: ["all", "stability", "timing"],
           prompt: "A decision must be made while emotions are high. What do you do first?",
           options: [
-            { id: "emotion-north", archetype: "North", coherence: 3, text: "Separate the decision from the emotional surge and set the next step.", strength: "decision containment", risk: "emotional dismissal risk" },
-            { id: "emotion-east", archetype: "East", coherence: 3, text: "Identify what the emotion is signaling before deciding.", strength: "emotional signal reading", risk: "overprocessing risk" },
-            { id: "emotion-south", archetype: "South", coherence: 4, text: "Regulate the field first so the decision is not made from distortion.", strength: "regulation", risk: "delay risk" },
-            { id: "emotion-west", archetype: "West", coherence: 3, text: "Test whether the emotional claim matches the evidence.", strength: "reality check", risk: "harshness risk" }
+            { id: "emotion-strategist", archetype: "Strategist", coherence: 3, text: "Separate the decision from the emotional surge and set the next step.", strength: "decision containment", risk: "emotional dismissal risk" },
+            { id: "emotion-builder", archetype: "Builder", coherence: 2, text: "Move into a simple action that prevents the room from freezing.", strength: "motion under pressure", risk: "bypassing emotion risk" },
+            { id: "emotion-mitigator", archetype: "Mitigator", coherence: 4, text: "Regulate the field first so the decision is not made from distortion.", strength: "regulation", risk: "delay risk" },
+            { id: "emotion-auditor", archetype: "Auditor", coherence: 3, text: "Test whether the emotional claim matches the evidence.", strength: "reality check", risk: "harshness risk" }
           ]
         },
         {
           id: "decision-timing",
           title: "Decision timing",
+          tags: ["all", "timing", "sequence"],
           prompt: "You have enough information to act, but not enough to feel certain. What do you do first?",
           options: [
-            { id: "timing-north", archetype: "North", coherence: 4, text: "Make the bounded decision and define the review point.", strength: "bounded execution", risk: "early lock-in risk" },
-            { id: "timing-east", archetype: "East", coherence: 3, text: "Check if one more signal would materially change the decision.", strength: "signal relevance", risk: "last-signal chasing risk" },
-            { id: "timing-south", archetype: "South", coherence: 2, text: "Wait until the group feels more settled.", strength: "group comfort", risk: "missed timing risk" },
-            { id: "timing-west", archetype: "West", coherence: 3, text: "Document the uncertainty and act only within what the evidence supports.", strength: "bounded proof", risk: "action friction risk" }
+            { id: "timing-strategist", archetype: "Strategist", coherence: 4, text: "Make the bounded decision and define the review point.", strength: "bounded execution", risk: "early lock-in risk" },
+            { id: "timing-builder", archetype: "Builder", coherence: 3, text: "Build the next step as a reversible test, not a permanent commitment.", strength: "reversible action", risk: "experiment sprawl risk" },
+            { id: "timing-mitigator", archetype: "Mitigator", coherence: 2, text: "Wait until the group feels more settled.", strength: "group comfort", risk: "missed timing risk" },
+            { id: "timing-auditor", archetype: "Auditor", coherence: 3, text: "Document the uncertainty and act only within what the evidence supports.", strength: "bounded proof", risk: "action friction risk" }
           ]
         },
         {
           id: "repair-after-error",
           title: "Repair after error",
+          tags: ["all", "repair", "accountability"],
           prompt: "You realize you were wrong. What do you do first?",
           options: [
-            { id: "repair-north", archetype: "North", coherence: 4, text: "State the correction, update the rule, and define the repair sequence.", strength: "corrective leadership", risk: "controlled admission risk" },
-            { id: "repair-east", archetype: "East", coherence: 3, text: "Identify the pattern that led to the error so it does not repeat.", strength: "learning pattern", risk: "analysis cover risk" },
-            { id: "repair-south", archetype: "South", coherence: 3, text: "Repair trust and stabilize the people affected.", strength: "relational repair", risk: "soft accountability risk" },
-            { id: "repair-west", archetype: "West", coherence: 4, text: "Name the error plainly, show the evidence, and correct the record.", strength: "truth repair", risk: "self-pressure risk" }
+            { id: "repair-strategist", archetype: "Strategist", coherence: 4, text: "State the correction, update the rule, and define the repair sequence.", strength: "corrective leadership", risk: "controlled admission risk" },
+            { id: "repair-builder", archetype: "Builder", coherence: 3, text: "Fix the affected part immediately and improve the process from there.", strength: "practical repair", risk: "repair before full ownership risk" },
+            { id: "repair-mitigator", archetype: "Mitigator", coherence: 3, text: "Repair trust and stabilize the people affected.", strength: "relational repair", risk: "soft accountability risk" },
+            { id: "repair-auditor", archetype: "Auditor", coherence: 4, text: "Name the error plainly, show the evidence, and correct the record.", strength: "truth repair", risk: "self-pressure risk" }
           ]
         }
       ];
 
+      const branchQuestions = {
+        Strategist: [
+          {
+            id: "strategist-overstructure",
+            title: "Structure under pressure",
+            tags: ["Strategist", "structure"],
+            prompt: "Your plan is coherent, but the room is moving faster than the plan can absorb. What do you do first?",
+            options: [
+              { id: "strategist-overstructure-strategist", archetype: "Strategist", coherence: 4, text: "Compress the plan into one controlling sequence and define the next checkpoint.", strength: "adaptive sequence", risk: "over-compression risk" },
+              { id: "strategist-overstructure-builder", archetype: "Builder", coherence: 3, text: "Build a small working step to test whether the plan can survive contact.", strength: "structure-to-action", risk: "premature build risk" },
+              { id: "strategist-overstructure-mitigator", archetype: "Mitigator", coherence: 3, text: "Stabilize the people affected before the structure loses trust.", strength: "trust preservation", risk: "decision delay risk" },
+              { id: "strategist-overstructure-auditor", archetype: "Auditor", coherence: 4, text: "Audit which part of the plan is proven and which part is just assumed.", strength: "assumption control", risk: "review drag risk" }
+            ]
+          }
+        ],
+        Builder: [
+          {
+            id: "builder-premature-motion",
+            title: "Momentum before proof",
+            tags: ["Builder", "action"],
+            prompt: "You can start building immediately, but the proof is not fully settled. What do you do first?",
+            options: [
+              { id: "builder-premature-motion-strategist", archetype: "Strategist", coherence: 4, text: "Define the lawful build sequence before moving.", strength: "build sequencing", risk: "slowing momentum risk" },
+              { id: "builder-premature-motion-builder", archetype: "Builder", coherence: 4, text: "Build the smallest reversible prototype that tests the core assumption.", strength: "reversible prototype", risk: "prototype attachment risk" },
+              { id: "builder-premature-motion-mitigator", archetype: "Mitigator", coherence: 3, text: "Check what could be disrupted before the build begins.", strength: "impact control", risk: "over-caution risk" },
+              { id: "builder-premature-motion-auditor", archetype: "Auditor", coherence: 4, text: "Identify the unproven claim and require proof before scaling.", strength: "proof gate", risk: "challenge friction risk" }
+            ]
+          }
+        ],
+        Mitigator: [
+          {
+            id: "mitigator-overpreserve",
+            title: "Stability versus correction",
+            tags: ["Mitigator", "stability"],
+            prompt: "Stability is keeping the room together, but an unresolved problem keeps returning. What do you do first?",
+            options: [
+              { id: "mitigator-overpreserve-strategist", archetype: "Strategist", coherence: 4, text: "Set the correction sequence and clarify what can no longer be preserved.", strength: "corrective sequence", risk: "hard turn risk" },
+              { id: "mitigator-overpreserve-builder", archetype: "Builder", coherence: 3, text: "Build a practical repair that reduces the recurring pressure.", strength: "repair action", risk: "symptom patch risk" },
+              { id: "mitigator-overpreserve-mitigator", archetype: "Mitigator", coherence: 3, text: "Stabilize the room enough to make correction possible.", strength: "safe correction field", risk: "prolonged holding risk" },
+              { id: "mitigator-overpreserve-auditor", archetype: "Auditor", coherence: 4, text: "Name the recurring issue and prove where preservation has become avoidance.", strength: "avoidance detection", risk: "pressure shock risk" }
+            ]
+          }
+        ],
+        Auditor: [
+          {
+            id: "auditor-closure",
+            title: "Audit with closure",
+            tags: ["Auditor", "evidence"],
+            prompt: "You found the contradiction, but the room now needs a constructive next step. What do you do first?",
+            options: [
+              { id: "auditor-closure-strategist", archetype: "Strategist", coherence: 4, text: "Turn the audit into a corrected decision sequence.", strength: "audit-to-sequence", risk: "authority snap risk" },
+              { id: "auditor-closure-builder", archetype: "Builder", coherence: 3, text: "Build the smallest repair that proves the corrected claim.", strength: "proof repair", risk: "repair too soon risk" },
+              { id: "auditor-closure-mitigator", archetype: "Mitigator", coherence: 3, text: "Reduce the social damage caused by the contradiction before moving forward.", strength: "pressure care", risk: "truth softening risk" },
+              { id: "auditor-closure-auditor", archetype: "Auditor", coherence: 4, text: "State the contradiction, state the correction, and close the audit with a receipt.", strength: "truth closure", risk: "cold closure risk" }
+            ]
+          }
+        ]
+      };
+
       const form = document.getElementById("coherence-form");
+      const library = document.getElementById("archetype-library");
+      const primaryOptions = document.getElementById("primary-archetype-options");
+      const secondaryOptions = document.getElementById("secondary-archetype-options");
+      const generateBtn = document.getElementById("generate-btn");
       const scenarioList = document.getElementById("scenario-list");
+      const diagnosticStage = document.getElementById("diagnostic-stage");
       const validation = document.getElementById("validation");
+      const intakeValidation = document.getElementById("intake-validation");
       const result = document.getElementById("result");
       const resetBtn = document.getElementById("reset-btn");
+      const clearGeneratedBtn = document.getElementById("clear-generated-btn");
+
+      let generatedQuestions = [];
 
       function escapeHtml(value) {
         return String(value).replace(/[&<>"']/g, (char) => ({
@@ -1088,10 +1385,141 @@ graphic_box=false
         })[char]);
       }
 
+      function listItems(items) {
+        return items.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+      }
+
+      function renderArchetypeLibrary() {
+        library.innerHTML = Object.values(archetypes).map((item, index) => `
+          <details class="archetype-detail" ${index === 0 ? "open" : ""}>
+            <summary>
+              <span>
+                <strong>${escapeHtml(item.label)}</strong>
+                <br>
+                <span style="color:rgba(239,247,255,.62);font-size:.84rem;font-weight:760;">${escapeHtml(item.title)}</span>
+              </span>
+            </summary>
+            <div class="archetype-content">
+              <p>${escapeHtml(item.description)}</p>
+              <p><strong>Under pressure:</strong> ${escapeHtml(item.pressureQuestion)}</p>
+
+              <div class="mini-grid">
+                <div class="mini-card">
+                  <b>Healthy Form</b>
+                  <ul>${listItems(item.healthy)}</ul>
+                </div>
+                <div class="mini-card">
+                  <b>Risk Form</b>
+                  <ul>${listItems(item.risks)}</ul>
+                </div>
+              </div>
+
+              <p>${escapeHtml(item.primary)}</p>
+              <p>${escapeHtml(item.secondary)}</p>
+            </div>
+          </details>
+        `).join("");
+      }
+
+      function renderArchetypeSelectors() {
+        const primary = Object.values(archetypes).map((item) => `
+          <label class="choice-card">
+            <input type="radio" name="claimedPrimaryArchetype" value="${escapeHtml(item.label)}">
+            <b>${escapeHtml(item.label)}</b>
+            <strong>${escapeHtml(item.title)}</strong>
+            <span>${escapeHtml(item.short)}</span>
+          </label>
+        `).join("");
+
+        const secondary = Object.values(archetypes).map((item) => `
+          <label class="choice-card">
+            <input type="radio" name="claimedSecondaryArchetype" value="${escapeHtml(item.label)}">
+            <b>${escapeHtml(item.label)}</b>
+            <strong>${escapeHtml(item.title)}</strong>
+            <span>${escapeHtml(item.short)}</span>
+          </label>
+        `).join("");
+
+        primaryOptions.innerHTML = primary;
+        secondaryOptions.innerHTML = secondary;
+      }
+
+      function getRadioValue(name) {
+        const checked = form.querySelector(`input[name="${name}"]:checked`);
+        return checked ? checked.value : "";
+      }
+
+      function showValidation(node, message) {
+        node.textContent = message;
+        node.classList.add("is-visible");
+        node.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+
+      function clearValidation(node) {
+        node.textContent = "";
+        node.classList.remove("is-visible");
+      }
+
+      function validateIntake() {
+        const selfRating = getRadioValue("selfRating");
+        const primary = getRadioValue("claimedPrimaryArchetype");
+        const secondary = getRadioValue("claimedSecondaryArchetype");
+
+        if (!selfRating) return "Question 1 is required. Select your self-rated coherence from 1 to 10.";
+        if (!primary) return "Question 2A is required. Select your claimed primary archetype.";
+        if (!secondary) return "Question 2B is required. Select your claimed secondary archetype.";
+        if (primary === secondary) return "Your claimed primary and secondary archetype must be different.";
+
+        return "";
+      }
+
+      function validateDiagnostic() {
+        if (!generatedQuestions.length) return "Generate the diagnostic before grading.";
+
+        for (const question of generatedQuestions) {
+          const primary = getRadioValue(`${question.id}-primary`);
+          const secondary = getRadioValue(`${question.id}-secondary`);
+
+          if (!primary) return `${question.title}: select a primary response.`;
+          if (!secondary) return `${question.title}: select a secondary response.`;
+          if (primary === secondary) return `${question.title}: primary and secondary responses must be different.`;
+        }
+
+        return "";
+      }
+
+      function chooseAdaptiveQuestions(primary, secondary) {
+        const selected = [];
+        const seen = new Set();
+
+        const pushQuestion = (question) => {
+          if (!question || seen.has(question.id)) return;
+          selected.push(question);
+          seen.add(question.id);
+        };
+
+        (branchQuestions[primary] || []).forEach(pushQuestion);
+
+        const secondaryPressure = {
+          Strategist: ["sequence", "timing"],
+          Builder: ["action", "repair"],
+          Mitigator: ["stability", "conflict"],
+          Auditor: ["evidence", "contradiction"]
+        }[secondary] || [];
+
+        baseQuestions
+          .filter((question) => question.tags.some((tag) => secondaryPressure.includes(tag)))
+          .forEach(pushQuestion);
+
+        baseQuestions.forEach(pushQuestion);
+
+        return selected.slice(0, 10);
+      }
+
       function renderQuestions() {
-        scenarioList.innerHTML = questions.map((question, index) => {
+        scenarioList.innerHTML = generatedQuestions.map((question, index) => {
           const number = index + 3;
-          const optionsHtml = question.options.map((option, optionIndex) => `
+          const primaryHtml = question.options.map((option, optionIndex) => `
             <label class="answer-choice">
               <input
                 type="radio"
@@ -1128,12 +1556,12 @@ graphic_box=false
 
               <div class="answer-columns">
                 <div class="answer-box">
-                  <span class="answer-title">Primary Choice</span>
-                  ${optionsHtml}
+                  <span class="answer-title">Primary Response</span>
+                  ${primaryHtml}
                 </div>
 
                 <div class="answer-box">
-                  <span class="answer-title">Secondary Choice</span>
+                  <span class="answer-title">Secondary Response</span>
                   ${secondaryHtml}
                 </div>
               </div>
@@ -1142,45 +1570,10 @@ graphic_box=false
         }).join("");
       }
 
-      function getRadioValue(name) {
-        const checked = form.querySelector(`input[name="${name}"]:checked`);
-        return checked ? checked.value : "";
-      }
-
       function findOption(questionId, optionId) {
-        const question = questions.find((item) => item.id === questionId);
+        const question = generatedQuestions.find((item) => item.id === questionId);
         if (!question) return null;
         return question.options.find((option) => option.id === optionId) || null;
-      }
-
-      function showValidation(message) {
-        validation.textContent = message;
-        validation.classList.add("is-visible");
-        validation.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-
-      function clearValidation() {
-        validation.textContent = "";
-        validation.classList.remove("is-visible");
-      }
-
-      function validate() {
-        const selfRating = getRadioValue("selfRating");
-        const claimedArchetype = getRadioValue("claimedArchetype");
-
-        if (!selfRating) return "Question 1 is required. Select your self-rated coherence from 1 to 10.";
-        if (!claimedArchetype) return "Question 2 is required. Select the archetype you believe best describes you.";
-
-        for (const question of questions) {
-          const primary = getRadioValue(`${question.id}-primary`);
-          const secondary = getRadioValue(`${question.id}-secondary`);
-
-          if (!primary) return `${question.title}: select a primary choice.`;
-          if (!secondary) return `${question.title}: select a secondary choice.`;
-          if (primary === secondary) return `${question.title}: primary and secondary must be different choices.`;
-        }
-
-        return "";
       }
 
       function incrementMap(map, key, amount) {
@@ -1225,60 +1618,54 @@ graphic_box=false
         return "Your self-rating is much lower than the revealed pattern. This suggests high underclaim or a confidence gap.";
       }
 
-      function claimMatchText(claimed, primary, secondary) {
-        if (claimed === primary) return "Strong Match";
-        if (claimed === secondary) return "Partial Match";
+      function claimMatchText(claimedPrimary, claimedSecondary, revealedPrimary, revealedSecondary) {
+        if (claimedPrimary === revealedPrimary && claimedSecondary === revealedSecondary) return "Exact Blend Match";
+        if (claimedPrimary === revealedSecondary && claimedSecondary === revealedPrimary) return "Blend Match / Order Reversal";
+        if (claimedPrimary === revealedPrimary) return "Primary Match";
+        if (claimedSecondary === revealedSecondary) return "Secondary Match";
+        if ([revealedPrimary, revealedSecondary].includes(claimedPrimary) || [revealedPrimary, revealedSecondary].includes(claimedSecondary)) return "Partial Match";
         return "Mismatch / Recalibration Suggested";
       }
 
-      function nextStepFor(primary, bandLabel) {
+      function nextStepFor(primary, secondary, bandLabel) {
         const step = {
-          North: "Practice adding listening and evidence checks before locking direction.",
-          East: "Practice converting pattern recognition into one clear next action.",
-          South: "Practice preserving stability without delaying accountability or decision.",
-          West: "Practice applying audit pressure with a constructive closure path."
+          Strategist: "Practice adding listening, evidence checks, and adaptive room-read before locking direction.",
+          Builder: "Practice building smaller, reversible proofs before scaling momentum.",
+          Mitigator: "Practice preserving stability without delaying accountability, correction, or decision.",
+          Auditor: "Practice applying truth pressure with a constructive closure path."
         }[primary] || "Retake later and compare the pattern.";
 
-        return `${step} Current band: ${bandLabel}.`;
+        return `${step} Your support pattern is ${secondary}. Current band: ${bandLabel}.`;
       }
 
       function calculateResult() {
         const mode = getRadioValue("assessmentMode") || "graded";
         const selfRating = Number(getRadioValue("selfRating"));
-        const claimedArchetype = getRadioValue("claimedArchetype");
+        const claimedPrimary = getRadioValue("claimedPrimaryArchetype");
+        const claimedSecondary = getRadioValue("claimedSecondaryArchetype");
 
         let rawScore = 0;
-        const maxRaw = questions.length * 3 * MAX_COHERENCE_VALUE;
+        const maxRaw = generatedQuestions.length * 3 * MAX_COHERENCE_VALUE;
         const archetypeTotals = new Map();
         const archetypeCoherence = new Map();
         const strengths = new Map();
         const risks = new Map();
 
-        const selections = [];
-
-        for (const question of questions) {
+        for (const question of generatedQuestions) {
           const primaryId = getRadioValue(`${question.id}-primary`);
           const secondaryId = getRadioValue(`${question.id}-secondary`);
           const primary = findOption(question.id, primaryId);
           const secondary = findOption(question.id, secondaryId);
 
-          const pair = [
-            { option: primary, weight: 2, role: "primary" },
-            { option: secondary, weight: 1, role: "secondary" }
-          ];
-
-          for (const item of pair) {
+          [
+            { option: primary, weight: 2 },
+            { option: secondary, weight: 1 }
+          ].forEach((item) => {
             rawScore += item.option.coherence * item.weight;
             incrementMap(archetypeTotals, item.option.archetype, item.weight);
             incrementMap(archetypeCoherence, item.option.archetype, item.option.coherence * item.weight);
             incrementMap(strengths, item.option.strength, item.weight);
             incrementMap(risks, item.option.risk, item.weight);
-          }
-
-          selections.push({
-            question: question.title,
-            primary,
-            secondary
           });
         }
 
@@ -1293,29 +1680,29 @@ graphic_box=false
           }))
           .sort((a, b) => b.points - a.points || b.coherence - a.coherence || a.name.localeCompare(b.name));
 
-        const primaryArchetype = rankedArchetypes[0]?.name || "Undetermined";
-        const secondaryArchetype = rankedArchetypes[1]?.name || "Undetermined";
-        const claimMatch = claimMatchText(claimedArchetype, primaryArchetype, secondaryArchetype);
+        const revealedPrimary = rankedArchetypes[0]?.name || "Undetermined";
+        const revealedSecondary = rankedArchetypes[1]?.name || "Undetermined";
+        const claimMatch = claimMatchText(claimedPrimary, claimedSecondary, revealedPrimary, revealedSecondary);
         const calibrationGap = Number((selfRating - scaledScore).toFixed(1));
 
         return {
           mode,
           selfRating,
-          claimedArchetype,
+          claimedPrimary,
+          claimedSecondary,
           rawScore,
           maxRaw,
           scaledScore,
           band,
           calibrationGap,
           calibrationExplanation: calibrationText(calibrationGap),
-          primaryArchetype,
-          secondaryArchetype,
+          revealedPrimary,
+          revealedSecondary,
           claimMatch,
           strengths: topEntries(strengths),
           risks: topEntries(risks),
-          nextStep: nextStepFor(primaryArchetype, band.label),
+          nextStep: nextStepFor(revealedPrimary, revealedSecondary, band.label),
           rankedArchetypes,
-          selections,
           generatedAt: new Date().toISOString()
         };
       }
@@ -1334,21 +1721,19 @@ graphic_box=false
           showScore ? `Calibration gap: ${data.calibrationGap}` : "Calibration gap: Not shown in ungraded mode",
           `Calibration note: ${showScore ? data.calibrationExplanation : "Ungraded mode selected."}`,
           "",
-          `Claimed archetype: ${data.claimedArchetype}`,
-          `Revealed primary archetype: ${data.primaryArchetype}`,
-          `Revealed secondary archetype: ${data.secondaryArchetype}`,
+          `Claimed primary archetype: ${data.claimedPrimary}`,
+          `Claimed secondary archetype: ${data.claimedSecondary}`,
+          `Revealed primary archetype: ${data.revealedPrimary}`,
+          `Revealed secondary archetype: ${data.revealedSecondary}`,
           `Claim match: ${data.claimMatch}`,
           "",
           `Top strengths: ${data.strengths.join(", ")}`,
           `Top risks: ${data.risks.join(", ")}`,
           `Recommended next step: ${data.nextStep}`,
           "",
-          "Boundary: This is not a medical, mental-health, legal, or employment diagnostic."
+          "Coming soon: email results and character profile saving.",
+          "Boundary: This is not a medical, mental-health, legal, employment, or IQ diagnostic."
         ].join("\n");
-      }
-
-      function listItems(items) {
-        return items.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
       }
 
       function renderResult(data) {
@@ -1386,25 +1771,31 @@ graphic_box=false
                 <article class="result-cell">
                   <b>Claim Match</b>
                   <strong>${escapeHtml(data.claimMatch)}</strong>
-                  <span>Comparison between claimed and revealed archetype pattern.</span>
+                  <span>Comparison between claimed blend and revealed blend.</span>
                 </article>
 
                 <article class="result-cell">
-                  <b>Claimed Archetype</b>
-                  <strong>${escapeHtml(data.claimedArchetype)}</strong>
-                  <span>${escapeHtml(archetypes[data.claimedArchetype].summary)}</span>
+                  <b>Claimed Primary</b>
+                  <strong>${escapeHtml(data.claimedPrimary)}</strong>
+                  <span>${escapeHtml(archetypes[data.claimedPrimary].short)}</span>
+                </article>
+
+                <article class="result-cell">
+                  <b>Claimed Secondary</b>
+                  <strong>${escapeHtml(data.claimedSecondary)}</strong>
+                  <span>${escapeHtml(archetypes[data.claimedSecondary].short)}</span>
                 </article>
 
                 <article class="result-cell">
                   <b>Revealed Primary</b>
-                  <strong>${escapeHtml(data.primaryArchetype)}</strong>
-                  <span>${escapeHtml(archetypes[data.primaryArchetype].summary)}</span>
+                  <strong>${escapeHtml(data.revealedPrimary)}</strong>
+                  <span>${escapeHtml(archetypes[data.revealedPrimary].short)}</span>
                 </article>
 
                 <article class="result-cell">
                   <b>Revealed Secondary</b>
-                  <strong>${escapeHtml(data.secondaryArchetype)}</strong>
-                  <span>${escapeHtml(archetypes[data.secondaryArchetype].summary)}</span>
+                  <strong>${escapeHtml(data.revealedSecondary)}</strong>
+                  <span>${escapeHtml(archetypes[data.revealedSecondary].short)}</span>
                 </article>
 
                 <article class="result-cell">
@@ -1424,12 +1815,23 @@ graphic_box=false
                 </article>
               </div>
 
+              <div class="coming-soon">
+                <h3>Coming Soon</h3>
+                <p><strong>Email Results:</strong> Soon, you will be able to enter your email and receive your diagnostic read directly in your inbox.</p>
+                <p><strong>Character Profile Save:</strong> Soon, you will be able to save this result into your interactive narrative character profile, so your coherence pattern can help shape your role, archetype, and profile read.</p>
+                <p>For now, your full result is available directly on this page. You can copy it or print it without entering an email.</p>
+                <div class="button-cluster">
+                  <button class="disabled-btn" type="button" disabled>Email Results — Coming Soon</button>
+                  <button class="disabled-btn" type="button" disabled>Save to Character Profile — Coming Soon</button>
+                </div>
+              </div>
+
               <div class="warning">
-                This result is a coherence-pattern read only. It is not a medical, mental-health, legal, employment, or intelligence diagnostic.
+                This result is a coherence-pattern read only. It is not a medical, mental-health, legal, employment, or intelligence diagnostic. This version does not email, store, archive, or submit your result.
               </div>
 
               <div class="button-row">
-                <p class="boundary-note">This result was generated locally in your browser. It is not stored by this page.</p>
+                <p>This result was generated locally in your browser. It is not stored by this page.</p>
                 <div class="button-cluster">
                   <button class="ghost-btn" type="button" id="copy-result">Copy Result</button>
                   <button class="ghost-btn" type="button" id="print-result">Print</button>
@@ -1462,22 +1864,58 @@ graphic_box=false
 
         document.getElementById("retake-result").addEventListener("click", () => {
           form.reset();
+          generatedQuestions = [];
+          scenarioList.innerHTML = "";
+          diagnosticStage.classList.remove("is-visible");
           result.classList.remove("is-visible");
           result.innerHTML = "";
-          clearValidation();
+          clearValidation(validation);
+          clearValidation(intakeValidation);
           window.scrollTo({ top: 0, behavior: "smooth" });
         });
 
         window.COHERENCE_DIAGNOSTIC_LAST_RESULT = data;
       }
 
+      function generateDiagnostic() {
+        clearValidation(intakeValidation);
+        clearValidation(validation);
+        result.classList.remove("is-visible");
+        result.innerHTML = "";
+
+        const message = validateIntake();
+        if (message) {
+          showValidation(intakeValidation, message);
+          return;
+        }
+
+        const primary = getRadioValue("claimedPrimaryArchetype");
+        const secondary = getRadioValue("claimedSecondaryArchetype");
+
+        generatedQuestions = chooseAdaptiveQuestions(primary, secondary);
+        renderQuestions();
+
+        diagnosticStage.classList.add("is-visible");
+        diagnosticStage.scrollIntoView({ behavior: "smooth", block: "start" });
+
+        document.documentElement.dataset.generatedDiagnostic = "true";
+        document.documentElement.dataset.claimedPrimaryArchetype = primary;
+        document.documentElement.dataset.claimedSecondaryArchetype = secondary;
+      }
+
       form.addEventListener("submit", (event) => {
         event.preventDefault();
-        clearValidation();
+        clearValidation(validation);
 
-        const message = validate();
-        if (message) {
-          showValidation(message);
+        const intakeMessage = validateIntake();
+        if (intakeMessage) {
+          showValidation(intakeValidation, intakeMessage);
+          return;
+        }
+
+        const diagnosticMessage = validateDiagnostic();
+        if (diagnosticMessage) {
+          showValidation(validation, diagnosticMessage);
           return;
         }
 
@@ -1487,6 +1925,27 @@ graphic_box=false
 
       form.addEventListener("change", (event) => {
         const target = event.target;
+
+        if (target.name === "claimedPrimaryArchetype" || target.name === "claimedSecondaryArchetype") {
+          const primary = getRadioValue("claimedPrimaryArchetype");
+          const secondary = getRadioValue("claimedSecondaryArchetype");
+
+          if (primary && secondary && primary === secondary) {
+            target.checked = false;
+            showValidation(intakeValidation, "Your claimed primary and secondary archetype must be different.");
+          } else {
+            clearValidation(intakeValidation);
+          }
+
+          if (generatedQuestions.length) {
+            generatedQuestions = [];
+            scenarioList.innerHTML = "";
+            diagnosticStage.classList.remove("is-visible");
+            result.classList.remove("is-visible");
+            result.innerHTML = "";
+          }
+        }
+
         if (!target.matches('input[type="radio"][data-question]')) return;
 
         const questionId = target.dataset.question;
@@ -1500,16 +1959,32 @@ graphic_box=false
         }
       });
 
+      generateBtn.addEventListener("click", generateDiagnostic);
+
       resetBtn.addEventListener("click", () => {
-        clearValidation();
+        clearValidation(intakeValidation);
+        clearValidation(validation);
+        generatedQuestions = [];
+        scenarioList.innerHTML = "";
+        diagnosticStage.classList.remove("is-visible");
         result.classList.remove("is-visible");
         result.innerHTML = "";
       });
 
-      renderQuestions();
+      clearGeneratedBtn.addEventListener("click", () => {
+        generatedQuestions = [];
+        scenarioList.innerHTML = "";
+        diagnosticStage.classList.remove("is-visible");
+        result.classList.remove("is-visible");
+        result.innerHTML = "";
+        clearValidation(validation);
+      });
+
+      renderArchetypeLibrary();
+      renderArchetypeSelectors();
 
       document.documentElement.dataset.coherenceDiagnosticContract = CONTRACT;
-      document.documentElement.dataset.coherenceDiagnosticQuestions = "12";
+      document.documentElement.dataset.coherenceDiagnosticQuestions = "adaptive-12-minimum";
       document.documentElement.dataset.coherenceDiagnosticLocalOnly = "true";
       document.documentElement.dataset.coherenceDiagnosticStorage = "false";
       document.documentElement.dataset.coherenceDiagnosticMedical = "false";
@@ -1520,7 +1995,12 @@ graphic_box=false
         questionsMinimum: 12,
         fixedQ1: true,
         fixedQ2: true,
+        publicArchetypes: ["Strategist", "Builder", "Mitigator", "Auditor"],
+        adaptiveGeneration: true,
         primarySecondaryRequired: true,
+        resultsVisibleWithoutEmail: true,
+        emailResultsActive: false,
+        characterProfileSaveActive: false,
         localGrading: true,
         noBackend: true,
         noStorage: true,

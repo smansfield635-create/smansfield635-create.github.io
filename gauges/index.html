@@ -4,33 +4,35 @@
   lang="en"
   data-route="/gauges/"
   data-page="triple-g"
-  data-version="2026-05-24.triple-g-audrelia-narrative-conjugation-static-v1"
-  data-contract="TRIPLE_G_AUDRELIA_NARRATIVE_CONJUGATION_STATIC_HTML_TNT_v1"
-  data-previous-contract="LEGACY_TRIPLE_G_PAGE_STATIC_RECEIPT_HELD"
-  data-role="goals-gauges-gaps-measurement-chamber"
-  data-static-page="true"
-  data-live-behavior="false"
-  data-runtime="false"
-  data-js-required="false"
-  data-goals-gauges-gaps="true"
-  data-diamond-gate-bridge-conjugation="true"
-  data-mirrorland-context="true"
-  data-audrelia-development-focus="true"
-  data-public-spelling="Audrelia"
-  data-technical-route-spelling="audralia"
-  data-next-move-required="true"
+  data-version="G3-V1"
+  data-contract="TRIPLE_G_JUMP_PAD_AUDRELIA_NARRATIVE_CONJUGATION_HTML_TNT_v1"
+  data-previous-contract="LEGACY_TRIPLE_G_LIVE_FILE_SUPERSEDED"
+  data-role="triple-g-jump-pad"
+  data-primary-title="Triple G"
+  data-expanded-title="Goals, Gauges, Gaps"
+  data-public-role="measurement-jump-pad"
+  data-diamond-gate-bridge-context="active"
+  data-mirrorland-context="active"
+  data-audrelia-development-focus="active"
+  data-jump-pad="true"
+  data-goals="active"
+  data-gauges="active"
+  data-gaps="active"
+  data-next-move="active"
+  data-static-page-usable-without-js="true"
   data-generated-image="false"
   data-graphic-box="false"
+  data-streaming="false"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Triple G · Goals · Gauges · Gaps</title>
+  <title>Triple G Jump Pad · Goals · Gauges · Gaps</title>
   <meta
     name="description"
-    content="Triple G is the static measurement chamber for Diamond Gate Bridge, Mirrorland, and Audrelia’s development: Goals, Gauges, and Gaps."
+    content="Triple G is the Goals, Gauges, and Gaps jump pad for Diamond Gate Bridge, Mirrorland, and Audrelia’s active development."
   >
 
   <style>
@@ -38,18 +40,19 @@
       color-scheme:dark;
       --bg:#02040b;
       --ink:#fff4d8;
-      --muted:rgba(230,238,255,.76);
-      --faint:rgba(230,238,255,.48);
+      --muted:rgba(230,238,255,.78);
+      --faint:rgba(230,238,255,.52);
       --gold:#f3c86f;
       --gold2:#ffe8a3;
       --blue:#8dd8ff;
       --green:#8ff0c3;
-      --violet:#9b7cff;
+      --violet:#9a7bff;
+      --ruby:#ff8f9f;
       --panel:rgba(9,15,31,.88);
       --line:rgba(184,205,255,.18);
-      --max:1180px;
       --shadow:0 32px 110px rgba(0,0,0,.48);
-      --gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
+      --max:1180px;
+      --brand-gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
     }
 
     *{box-sizing:border-box}
@@ -73,8 +76,8 @@
       background:
         radial-gradient(circle at 50% -8%,rgba(243,200,111,.20),transparent 28rem),
         radial-gradient(circle at 12% 18%,rgba(36,120,255,.18),transparent 28rem),
-        radial-gradient(circle at 88% 28%,rgba(141,216,255,.13),transparent 30rem),
-        radial-gradient(circle at 50% 82%,rgba(143,240,195,.10),transparent 36rem),
+        radial-gradient(circle at 88% 30%,rgba(141,216,255,.14),transparent 28rem),
+        radial-gradient(circle at 50% 78%,rgba(154,123,255,.12),transparent 34rem),
         linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
       -webkit-font-smoothing:antialiased;
       text-rendering:geometricPrecision;
@@ -87,18 +90,20 @@
       z-index:0;
       pointer-events:none;
       background-image:
-        radial-gradient(circle,rgba(255,255,255,.16) 0 1px,transparent 1.5px),
+        radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
         linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
         linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px);
       background-size:220px 260px,54px 54px,54px 54px;
       opacity:.22;
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.50) 64%,rgba(0,0,0,.22));
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
     }
 
     a{color:inherit;text-decoration:none}
 
     a:focus-visible,
-    summary:focus-visible{
+    button:focus-visible,
+    summary:focus-visible,
+    [tabindex]:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
     }
@@ -148,7 +153,7 @@
       place-items:center;
       border:1px solid rgba(243,200,111,.44);
       transform:rotate(45deg);
-      clip-path:var(--gem);
+      clip-path:var(--brand-gem);
       background:
         linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.26) 21% 23%,transparent 24%),
         conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.28),rgba(36,120,255,.20),rgba(1,15,60,.58),rgba(243,200,111,.18),rgba(255,255,255,.28)),
@@ -264,13 +269,13 @@
       box-shadow:0 0 2.8rem rgba(243,200,111,.14),0 1.4rem 3.4rem rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.09);
     }
 
-    .menu-grid{
+    .route-menu-grid{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
       gap:.48rem;
     }
 
-    .menu-link{
+    .route-menu-link{
       min-height:2.35rem;
       display:flex;
       align-items:center;
@@ -288,10 +293,12 @@
       text-align:center;
       text-transform:uppercase;
       box-shadow:0 0 .85rem rgba(36,120,255,.08),inset 0 1px 0 rgba(255,255,255,.07);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
-    .menu-link:hover,
-    .menu-link:focus-visible{
+    .route-menu-link:hover,
+    .route-menu-link:focus-visible{
+      transform:translateY(-2px);
       border-color:rgba(243,200,111,.56);
       color:rgba(255,244,216,.98);
       outline:none;
@@ -311,7 +318,7 @@
 
     .hero{
       position:relative;
-      min-height:clamp(28rem,54vw,39rem);
+      min-height:clamp(30rem,54vw,40rem);
       display:grid;
       align-content:center;
       gap:1rem;
@@ -339,13 +346,11 @@
       opacity:.52;
     }
 
-    .kicker,
-    .label{
+    .kicker{
       width:fit-content;
       display:inline-flex;
       align-items:center;
       gap:.58rem;
-      margin:0;
       padding:.58rem .95rem;
       border:1px solid rgba(255,255,255,.14);
       border-radius:999px;
@@ -359,8 +364,7 @@
       z-index:2;
     }
 
-    .kicker::before,
-    .label::before{
+    .kicker::before{
       content:"";
       width:.72rem;
       height:.72rem;
@@ -392,14 +396,6 @@
       z-index:2;
     }
 
-    h3{
-      margin:0;
-      color:rgba(255,244,216,.96);
-      font-size:clamp(1.16rem,3vw,1.58rem);
-      line-height:1.06;
-      letter-spacing:-.045em;
-    }
-
     p{
       margin:0;
       color:var(--muted);
@@ -414,7 +410,7 @@
     }
 
     .quote{
-      max-width:920px;
+      max-width:900px;
       padding:1rem 1.1rem;
       border:1px solid rgba(243,200,111,.22);
       border-radius:1.2rem;
@@ -450,10 +446,12 @@
       letter-spacing:.055em;
       text-transform:uppercase;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
     .button:hover,
     .button:focus-visible{
+      transform:translateY(-2px);
       border-color:rgba(243,200,111,.62);
       outline:none;
     }
@@ -478,27 +476,18 @@
       gap:1.05rem;
     }
 
-    .section-head{
-      display:grid;
-      gap:.72rem;
-      max-width:980px;
-    }
-
-    .card-grid{
+    .jump-grid{
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
       gap:.85rem;
     }
 
-    .card-grid.two{
-      grid-template-columns:repeat(2,minmax(0,1fr));
-    }
-
-    .card{
+    .jump-card{
       position:relative;
+      min-height:16rem;
       display:grid;
-      gap:.85rem;
-      min-height:14rem;
+      align-content:start;
+      gap:.8rem;
       padding:1.15rem;
       border:1px solid rgba(255,255,255,.12);
       border-radius:1.35rem;
@@ -508,24 +497,31 @@
       overflow:hidden;
     }
 
-    .card::after{
+    .jump-card.primary{
+      border-color:rgba(243,200,111,.38);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(243,200,111,.13),transparent 64%),
+        radial-gradient(circle at 88% 28%,rgba(141,216,255,.10),transparent 58%),
+        rgba(255,255,255,.04);
+    }
+
+    .jump-card::after{
       content:"";
       position:absolute;
       right:1rem;
       top:1rem;
       width:4.5rem;
       height:3.3rem;
-      clip-path:var(--gem);
-      opacity:.36;
+      clip-path:var(--brand-gem);
+      opacity:.42;
       background:
         linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.26) 21% 23%,transparent 24%),
         conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.24),rgba(36,120,255,.38),rgba(20,10,62,.70),rgba(243,200,111,.16),rgba(255,255,255,.22)),
         radial-gradient(circle at 50% 26%,rgba(255,255,255,.30),transparent 44%);
-      filter:drop-shadow(0 .8rem 1rem rgba(0,0,0,.28)) drop-shadow(0 0 .8rem rgba(36,120,255,.18));
       pointer-events:none;
     }
 
-    .card b{
+    .jump-card b{
       color:var(--gold);
       font-size:.68rem;
       letter-spacing:.12em;
@@ -534,107 +530,135 @@
       z-index:2;
     }
 
-    .card p,
-    .card ul,
-    .card ol{
+    .jump-card strong{
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.22rem,3vw,1.65rem);
+      line-height:1.05;
+      letter-spacing:-.045em;
       position:relative;
       z-index:2;
     }
 
-    ul,
-    ol{
-      margin:.1rem 0 0;
-      padding-left:1.05rem;
+    .jump-card span,
+    .jump-card p{
       color:var(--muted);
       font-size:.96rem;
-      line-height:1.5;
-    }
-
-    li + li{margin-top:.42rem}
-
-    .status-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.55rem;
+      line-height:1.44;
       position:relative;
       z-index:2;
     }
 
-    .pill{
-      min-height:2.15rem;
-      display:inline-flex;
+    .meter{
+      display:grid;
+      gap:.45rem;
+      margin-top:.2rem;
+      position:relative;
+      z-index:2;
+    }
+
+    .meter-row{
+      display:grid;
+      grid-template-columns:6.5rem 1fr;
+      gap:.7rem;
       align-items:center;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:999px;
-      padding:.45rem .72rem;
-      color:rgba(241,246,255,.82);
-      background:rgba(255,255,255,.04);
-      font-size:.68rem;
-      font-weight:950;
+      color:rgba(230,238,255,.78);
+      font-size:.72rem;
+      font-weight:900;
       letter-spacing:.08em;
       text-transform:uppercase;
     }
 
-    .matrix{
-      display:grid;
-      grid-template-columns:1.05fr .95fr 1.05fr;
-      gap:.85rem;
+    .bar{
+      height:.56rem;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:999px;
+      background:rgba(255,255,255,.045);
+      overflow:hidden;
     }
 
-    .matrix-card{
-      border:1px solid rgba(255,255,255,.12);
+    .bar span{
+      display:block;
+      height:100%;
+      width:var(--fill,50%);
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--gold),var(--blue));
+    }
+
+    .route-list{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.5rem;
+      margin-top:auto;
+      position:relative;
+      z-index:2;
+    }
+
+    .route-pill{
+      min-height:2.25rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:999px;
+      padding:.5rem .72rem;
+      color:rgba(241,246,255,.88);
+      background:rgba(255,255,255,.04);
+      font-size:.66rem;
+      font-weight:950;
+      letter-spacing:.07em;
+      text-transform:uppercase;
+    }
+
+    .route-pill:hover,
+    .route-pill:focus-visible{
+      border-color:rgba(243,200,111,.55);
+      color:rgba(255,244,216,.98);
+      outline:none;
+    }
+
+    .receipt-card{
+      margin-top:1.15rem;
+      border:1px solid var(--line);
       border-radius:1.35rem;
       padding:1.15rem;
-      background:
-        radial-gradient(circle at 50% 0%,rgba(243,200,111,.09),transparent 66%),
-        rgba(255,255,255,.035);
+      background:rgba(7,15,31,.62);
     }
 
-    .matrix-card strong{
+    .receipt-card code{
       display:block;
-      color:var(--gold);
-      font-size:.76rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      margin-bottom:.6rem;
-    }
-
-    .matrix-card span{
-      display:block;
-      color:var(--muted);
-      font-size:.96rem;
-      line-height:1.45;
-    }
-
-    .receipt{
-      display:block;
-      margin-top:.25rem;
+      margin-top:1rem;
       padding:1rem;
-      border:1px solid rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.09);
       border-radius:1rem;
-      color:rgba(230,238,255,.70);
-      background:rgba(0,0,0,.24);
-      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-      font-size:.76rem;
-      line-height:1.5;
+      background:rgba(0,0,0,.28);
+      color:rgba(238,244,255,.72);
+      font-size:.78rem;
+      line-height:1.45;
       white-space:pre-wrap;
       overflow-wrap:anywhere;
     }
 
-    .hidden-receipt,
+    .route-receipt,
     [data-route-receipt],
-    [data-contract-receipt]{
+    [data-contract-receipt],
+    [data-debug-receipt],
+    .receipt{
       display:none!important;
       visibility:hidden!important;
+      overflow:hidden!important;
       width:0!important;
       height:0!important;
       max-width:0!important;
       max-height:0!important;
-      overflow:hidden!important;
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
       opacity:0!important;
       pointer-events:none!important;
       position:absolute!important;
+      inset:auto!important;
       clip-path:inset(50%)!important;
+      white-space:nowrap!important;
     }
 
     footer{
@@ -645,42 +669,26 @@
     }
 
     @media (max-width:1080px){
-      .card-grid,
-      .card-grid.two,
-      .matrix{
-        grid-template-columns:1fr;
-      }
+      .jump-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
     @media (max-width:980px){
-      .topbar{
-        grid-template-columns:1fr;
-      }
-
+      .topbar{grid-template-columns:1fr}
       .nav{justify-content:flex-start}
       .route-menu-panel{left:0;right:auto}
     }
 
     @media (max-width:760px){
       .shell{width:min(100% - 22px,var(--max))}
-      h1{font-size:clamp(3.4rem,18vw,5.8rem)}
+      h1{font-size:clamp(3.4rem,18vw,6rem)}
       .hero{min-height:31rem;padding:1rem}
       .actions{display:grid}
       .button{width:100%}
       .route-menu{width:100%}
       .route-menu-panel{position:static;margin-top:.45rem;width:100%}
-      .menu-grid{grid-template-columns:1fr}
-    }
-
-    @media (prefers-reduced-motion:reduce){
-      *,
-      *::before,
-      *::after{
-        scroll-behavior:auto!important;
-        animation-duration:.01ms!important;
-        animation-iteration-count:1!important;
-        transition-duration:.01ms!important;
-      }
+      .route-menu-grid{grid-template-columns:1fr}
+      .jump-grid{grid-template-columns:1fr}
+      .meter-row{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -690,27 +698,27 @@
 
   <div class="shell">
     <header class="topbar" aria-label="Triple G header">
-      <a class="brand" href="/gauges/" aria-current="page">
-        <span class="brand-mark" aria-hidden="true"><span>GG</span></span>
+      <a class="brand" href="/gauges/">
+        <span class="brand-mark" aria-hidden="true"><span>GGG</span></span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge</span>
-          <strong>Triple G</strong>
+          <strong>Triple G Jump Pad</strong>
         </span>
       </a>
 
-      <nav class="nav" aria-label="Triple G navigation">
+      <nav class="nav" aria-label="Triple G jump navigation">
         <details class="route-menu">
-          <summary>Measure Map</summary>
+          <summary>Jump Pad Map</summary>
           <div class="route-menu-panel">
-            <div class="menu-grid">
-              <a class="menu-link" href="/">Compass</a>
-              <a class="menu-link" href="/showroom/">Showroom</a>
-              <a class="menu-link" href="/showroom/globe/">Mirrorland Gateway</a>
-              <a class="menu-link" href="/showroom/globe/audralia/">Audrelia</a>
-              <a class="menu-link" href="/showroom/globe/audralia/planet/">Development Path</a>
-              <a class="menu-link" href="/showroom/globe/audralia/disposition/">Cockpit</a>
-              <a class="menu-link" href="/laws/">Laws</a>
-              <a class="menu-link" href="#next-move">Next Move</a>
+            <div class="route-menu-grid">
+              <a class="route-menu-link" href="/">Compass</a>
+              <a class="route-menu-link" href="/showroom/">Showroom</a>
+              <a class="route-menu-link" href="/showroom/globe/">Mirrorland</a>
+              <a class="route-menu-link" href="/showroom/globe/audralia/">Audrelia</a>
+              <a class="route-menu-link" href="/showroom/globe/audralia/planet/">Development Path</a>
+              <a class="route-menu-link" href="/showroom/globe/audralia/disposition/">Cockpit</a>
+              <a class="route-menu-link" href="/laws/">Laws</a>
+              <a class="route-menu-link" href="#next-move">Next Move</a>
             </div>
           </div>
         </details>
@@ -719,284 +727,259 @@
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <p class="kicker">Goals · Gauges · Gaps</p>
+        <div class="kicker">Goals · Gauges · Gaps</div>
 
-        <h1 id="page-title">Triple G</h1>
+        <h1 id="page-title">Triple G Jump Pad.</h1>
 
         <p class="lead">
-          Triple G is the measurement chamber for Diamond Gate Bridge and Audrelia’s development. It does not run the world. It names the goals, reads the gauges, and protects the gaps that still stand between the public bridge system and deeper world expression.
+          Triple G is the jump pad for Diamond Gate Bridge. It shows what the project is trying to build, what the live system can currently prove, and what still blocks Audrelia’s deeper development.
         </p>
 
         <div class="quote">
-          Diamond Gate Bridge is the gate-and-bridge construct. Mirrorland is the world beyond. Audrelia is the active homeworld under development. Triple G measures whether those layers still agree.
+          Diamond Gate Bridge is the public construct. Mirrorland is the world beyond. Audrelia is the active homeworld under development. Triple G measures the jump between them.
         </div>
 
         <div class="actions">
           <a class="button gold" href="#goals">Goals</a>
           <a class="button" href="#gauges">Gauges</a>
-          <a class="button" href="#gaps">Gaps</a>
-          <a class="button green" href="#audrelia-focus">Audrelia Focus</a>
+          <a class="button green" href="#gaps">Gaps</a>
+          <a class="button" href="#audrelia-focus">Audrelia Focus</a>
           <a class="button" href="#next-move">Next Move</a>
         </div>
       </section>
 
       <section class="panel section" aria-labelledby="construct-title">
-        <div class="section-head">
-          <p class="label">Narrative construct</p>
-          <h2 id="construct-title">Triple G conjugates the bridge, the world, and the development path.</h2>
-          <p>
-            This page is static by design. Its job is not live behavior. Its job is public orientation: what the project is trying to build, what the visible system can currently support, and what remains unresolved.
-          </p>
-        </div>
+        <div class="kicker">Narrative construct · Conjugation layer</div>
+        <h2 id="construct-title">Triple G connects the bridge, the world, and the active development path.</h2>
 
-        <div class="matrix" aria-label="Diamond Gate Bridge narrative conjugation">
-          <article class="matrix-card">
-            <strong>Diamond Gate Bridge</strong>
-            <span>The public gate-and-bridge system. It organizes entry, proof, story, frontier, products, visible software objects, and the route structure visitors can actually inspect.</span>
+        <div class="jump-grid">
+          <article class="jump-card primary">
+            <b>Diamond Gate Bridge</b>
+            <strong>The public gate-and-bridge system.</strong>
+            <span>The site remains digital reality: routes, pages, proof surfaces, public objects, and access paths.</span>
+            <div class="route-list">
+              <a class="route-pill" href="/">Compass</a>
+              <a class="route-pill" href="/showroom/">Showroom</a>
+              <a class="route-pill" href="/laws/">Laws</a>
+            </div>
           </article>
 
-          <article class="matrix-card">
-            <strong>Mirrorland</strong>
-            <span>The world beyond the bridges. The site remains digital reality, but the bridge system points toward the story-world, its rules, its consequences, and its future paths.</span>
+          <article class="jump-card primary">
+            <b>Mirrorland</b>
+            <strong>The world beyond the bridges.</strong>
+            <span>Mirrorland is the narrative destination the bridge system prepares the visitor to understand and approach.</span>
+            <div class="route-list">
+              <a class="route-pill" href="/showroom/globe/">Enter Mirrorland</a>
+            </div>
           </article>
 
-          <article class="matrix-card">
-            <strong>Audrelia</strong>
-            <span>The active development focus. Audrelia is the homeworld lane where narrative, physics, template logic, observable globe work, diagnostic reporting, and held downstream systems converge.</span>
+          <article class="jump-card primary">
+            <b>Audrelia</b>
+            <strong>The active homeworld under development.</strong>
+            <span>Audrelia is where the narrative construct, physical world formation, diagnostic reporting, and development gaps converge.</span>
+            <div class="route-list">
+              <a class="route-pill" href="/showroom/globe/audralia/">Open Audrelia</a>
+              <a class="route-pill" href="/showroom/globe/audralia/planet/">Development Path</a>
+            </div>
           </article>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="triple-title">
-        <div class="section-head">
-          <p class="label">Triple structure</p>
-          <h2 id="triple-title">Goals say what must be built. Gauges say what can be read. Gaps say what must not be faked.</h2>
+      <section id="goals" class="panel section" aria-labelledby="goals-title">
+        <div class="kicker">G1 · Goals</div>
+        <h2 id="goals-title">Goals define what Diamond Gate Bridge is trying to build.</h2>
+
+        <div class="jump-grid">
+          <article class="jump-card">
+            <b>Goal · Bridge system</b>
+            <strong>Keep the public route map coherent.</strong>
+            <span>The Compass is one gate. The four bridges stay separate. The public routes remain understandable before the visitor approaches Mirrorland.</span>
+          </article>
+
+          <article class="jump-card">
+            <b>Goal · Mirrorland</b>
+            <strong>Make the world beyond readable.</strong>
+            <span>Mirrorland should feel like a destination world, not a loose theme or detached page collection.</span>
+          </article>
+
+          <article class="jump-card">
+            <b>Goal · Audrelia</b>
+            <strong>Develop the active homeworld without false closure.</strong>
+            <span>Audrelia should continue moving from homeworld context into physical world expression while preserving diagnostic truth.</span>
+          </article>
         </div>
+      </section>
 
-        <div class="card-grid">
-          <article id="goals" class="card">
-            <b>Goals</b>
-            <h3>What Diamond Gate Bridge is trying to build.</h3>
-            <ul>
-              <li>Make the root Compass readable as one gate, four bridges, and one world beyond.</li>
-              <li>Connect the public bridge system to Mirrorland without pretending the site itself is Mirrorland.</li>
-              <li>Position Audrelia as the active homeworld development focus.</li>
-              <li>Keep story, physics, proof, route structure, and development status aligned.</li>
-              <li>Move visitors from public orientation into world inspection without collapsing every page into one job.</li>
-            </ul>
+      <section id="gauges" class="panel section" aria-labelledby="gauges-title">
+        <div class="kicker">G2 · Gauges</div>
+        <h2 id="gauges-title">Gauges show what the live system can currently prove.</h2>
+
+        <div class="jump-grid">
+          <article class="jump-card">
+            <b>Gauge · Route coherence</b>
+            <strong>Public bridge routes are visible.</strong>
+            <span>Compass, Showroom, Mirrorland, Audrelia, Laws, Frontier, Products, and Cockpit routes remain the measurable public approach system.</span>
+            <div class="meter">
+              <div class="meter-row"><span>Route presence</span><div class="bar"><span style="--fill:82%"></span></div></div>
+              <div class="meter-row"><span>Context clarity</span><div class="bar"><span style="--fill:76%"></span></div></div>
+            </div>
           </article>
 
-          <article id="gauges" class="card">
-            <b>Gauges</b>
-            <h3>What the static public system can presently report.</h3>
-            <ul>
-              <li>Route presence and route meaning.</li>
-              <li>Contract alignment and page-role clarity.</li>
-              <li>Dropdown access and public navigation hierarchy.</li>
-              <li>Audrelia route visibility, development path access, and Cockpit/disposition access.</li>
-              <li>Static measurement posture: readable, inspectable, and non-runtime.</li>
-            </ul>
+          <article class="jump-card">
+            <b>Gauge · Audrelia</b>
+            <strong>Homeworld development is active.</strong>
+            <span>Audrelia has a homeworld context, observable globe posture, diagnostic-reporting posture, development path, and cockpit/disposition access.</span>
+            <div class="meter">
+              <div class="meter-row"><span>Homeworld</span><div class="bar"><span style="--fill:80%"></span></div></div>
+              <div class="meter-row"><span>Development</span><div class="bar"><span style="--fill:64%"></span></div></div>
+            </div>
           </article>
 
-          <article id="gaps" class="card">
-            <b>Gaps</b>
-            <h3>What remains unresolved or intentionally held.</h3>
-            <ul>
-              <li>Downstream world systems remain held until their owning pages authorize development.</li>
-              <li>Render readiness and story readiness are not the same claim.</li>
-              <li>Audrelia’s deeper terrain, surface, atmosphere, and child systems require separate development authority.</li>
-              <li>Static page clarity must not be mistaken for live gauge execution.</li>
-              <li>Any uninspected legacy receipts remain receipts, not quality baselines.</li>
-            </ul>
+          <article class="jump-card">
+            <b>Gauge · Proof posture</b>
+            <strong>Measurement remains separate from rendering.</strong>
+            <span>Triple G measures goals, gauges, and gaps. It does not become the globe, renderer, cockpit, or Audrelia itself.</span>
+            <div class="meter">
+              <div class="meter-row"><span>Boundary</span><div class="bar"><span style="--fill:88%"></span></div></div>
+              <div class="meter-row"><span>Proof</span><div class="bar"><span style="--fill:70%"></span></div></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="gaps" class="panel section" aria-labelledby="gaps-title">
+        <div class="kicker">G3 · Gaps</div>
+        <h2 id="gaps-title">Gaps show the distance between intention and proof.</h2>
+
+        <div class="jump-grid">
+          <article class="jump-card">
+            <b>Gap · Legacy carryover</b>
+            <strong>Old audit framing must not control the new page.</strong>
+            <span>The legacy file is superseded as a quality baseline. Triple G must now read as a jump pad, not a detached audit dump.</span>
+          </article>
+
+          <article class="jump-card">
+            <b>Gap · Audrelia depth</b>
+            <strong>World expression still has held layers.</strong>
+            <span>Audrelia can be highlighted as the active development focus without pretending that downstream world layers are complete.</span>
+          </article>
+
+          <article class="jump-card">
+            <b>Gap · Narrative proof</b>
+            <strong>The story and measurable site state must stay conjugated.</strong>
+            <span>Diamond Gate Bridge, Mirrorland, and Audrelia must remain aligned across public copy, routes, proof posture, and development sequence.</span>
           </article>
         </div>
       </section>
 
       <section id="audrelia-focus" class="panel section" aria-labelledby="audrelia-title">
-        <div class="section-head">
-          <p class="label">Audrelia development focus</p>
-          <h2 id="audrelia-title">Audrelia is the active world-building lane being measured.</h2>
-          <p>
-            Triple G does not become Audrelia, the Globe, or the Cockpit. It measures the relationship between Audrelia’s public meaning, the current route system, and the unresolved work required before deeper development can continue.
-          </p>
-        </div>
+        <div class="kicker">Audrelia development focus</div>
+        <h2 id="audrelia-title">Audrelia is the current jump target.</h2>
 
-        <div class="card-grid two">
-          <article class="card">
-            <b>Homeworld context</b>
-            <h3>Audrelia is the homeworld lane.</h3>
-            <p>
-              Audrelia connects the Nine Summits galaxy, Mirrorland, planetary template logic, physics, and public inspection into one active development focus.
-            </p>
-            <div class="status-row">
-              <span class="pill">Homeworld context active</span>
-              <span class="pill">Narrative focus active</span>
+        <div class="jump-grid">
+          <article class="jump-card primary">
+            <b>Homeworld</b>
+            <strong>Audrelia carries the active world-building lane.</strong>
+            <span>The page should focus the visitor on Audrelia’s movement from narrative context into development, measurement, diagnostics, and deeper expression.</span>
+            <div class="route-list">
+              <a class="route-pill" href="/showroom/globe/audralia/">Homeworld Page</a>
+              <a class="route-pill" href="/showroom/globe/audralia/planet/">Planet Path</a>
+              <a class="route-pill" href="/showroom/globe/audralia/disposition/">Cockpit</a>
             </div>
           </article>
 
-          <article class="card">
-            <b>Physics and template</b>
-            <h3>A homeworld must survive physics before it can carry meaning.</h3>
-            <p>
-              Gravity, water, terrain, atmosphere, shelter, energy, and time remain the development pressure. The template matters because it forces the story-world to answer physical survival.
-            </p>
-            <div class="status-row">
-              <span class="pill">Physics context active</span>
-              <span class="pill">Template preserved</span>
-            </div>
+          <article class="jump-card">
+            <b>Current posture</b>
+            <strong>Readable, active, not complete.</strong>
+            <span>Audrelia’s public context is active. Development continues through controlled layers rather than false completion claims.</span>
           </article>
 
-          <article class="card">
-            <b>Observable route system</b>
-            <h3>The public can inspect the path without activating the downstream chain.</h3>
-            <p>
-              The Audrelia parent route, development path, and Cockpit/disposition route are separate access points. Triple G names their relationship without taking ownership of their systems.
-            </p>
-            <div class="status-row">
-              <span class="pill">Parent route visible</span>
-              <span class="pill">Development path open</span>
-              <span class="pill">Cockpit linked</span>
-            </div>
-          </article>
-
-          <article class="card">
-            <b>Held systems</b>
-            <h3>Held does not mean failed.</h3>
-            <p>
-              Held means a system has not been authorized to advance from this page. Terrain, surface, runtime, renderer, Cockpit logic, and downstream child systems remain under their own authority.
-            </p>
-            <div class="status-row">
-              <span class="pill">Downstream held</span>
-              <span class="pill">No runtime claim</span>
-              <span class="pill">No visual pass</span>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel section" aria-labelledby="static-title">
-        <div class="section-head">
-          <p class="label">Static measurement posture</p>
-          <h2 id="static-title">Triple G is a clarity board, not a live engine.</h2>
-          <p>
-            The word “gauges” means public measurement categories here. This static page does not run dynamic audits, does not execute route logic, and does not claim live render truth.
-          </p>
-        </div>
-
-        <div class="card-grid">
-          <article class="card">
-            <b>Static</b>
-            <h3>No runtime required.</h3>
-            <p>This page is usable without JavaScript and carries no live page behavior.</p>
-          </article>
-
-          <article class="card">
-            <b>Public</b>
-            <h3>Readable before technical inspection.</h3>
-            <p>Visitors should understand what Goals, Gauges, and Gaps mean before reading receipts.</p>
-          </article>
-
-          <article class="card">
-            <b>Bounded</b>
-            <h3>Measurement without overclaiming.</h3>
-            <p>Triple G may describe posture, but it does not certify visual pass, runtime pass, or downstream completion.</p>
+          <article class="jump-card">
+            <b>Required discipline</b>
+            <strong>Measure before escalation.</strong>
+            <span>Triple G should expose what is proven, what is held, and what must happen next before any deeper world layer is claimed.</span>
           </article>
         </div>
       </section>
 
       <section id="next-move" class="panel section" aria-labelledby="next-title">
-        <div class="section-head">
-          <p class="label">Next Move</p>
-          <h2 id="next-title">Advance Audrelia by resolving the next real gap, not by pretending the gap is gone.</h2>
-          <p>
-            The next lawful move is to inspect the current Audrelia development layer, identify the first controlling gap, and renew only the owning file or route. Triple G should continue to report the relationship between goal, measurable posture, and unresolved distance.
-          </p>
-        </div>
+        <div class="kicker">Next Move</div>
+        <h2 id="next-title">Use Triple G as the jump pad before the next Audrelia layer.</h2>
 
-        <div class="card-grid">
-          <a class="card" href="/showroom/globe/audralia/">
-            <b>Inspect Audrelia</b>
-            <h3>Start at the homeworld route.</h3>
-            <p>Confirm the public meaning, globe carrier, template language, and development-path access.</p>
-            <span class="pill">Open Audrelia</span>
-          </a>
+        <div class="jump-grid">
+          <article class="jump-card primary">
+            <b>Next · Public alignment</b>
+            <strong>Keep Diamond Gate Bridge, Mirrorland, and Audrelia conjugated.</strong>
+            <span>Every new page or route should preserve the relationship: bridge system, world beyond, active homeworld development.</span>
+          </article>
 
-          <a class="card" href="/showroom/globe/audralia/planet/">
-            <b>Development Path</b>
-            <h3>Inspect the next development surface.</h3>
-            <p>Use the development route to locate the next real gap before authorizing a deeper renewal.</p>
-            <span class="pill">Open Path</span>
-          </a>
+          <article class="jump-card primary">
+            <b>Next · Measurement</b>
+            <strong>Separate goals, gauges, and gaps before each build.</strong>
+            <span>The next build should identify what it wants, what can be measured, and what remains held before code executes.</span>
+          </article>
 
-          <a class="card" href="/showroom/globe/audralia/disposition/">
-            <b>Cockpit</b>
-            <h3>Use systems access without confusing it for public proof.</h3>
-            <p>The Cockpit remains a systems hatch. It can support inspection, but it does not replace Triple G.</p>
-            <span class="pill">Open Cockpit</span>
-          </a>
+          <article class="jump-card primary">
+            <b>Next · Audrelia</b>
+            <strong>Advance only through lawful development layers.</strong>
+            <span>Audrelia remains the active focus, but each layer must pass through goals, gauges, and gaps before claiming deeper readiness.</span>
+          </article>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="receipt-title">
-        <div class="section-head">
-          <p class="label">Route receipt</p>
-          <h2 id="receipt-title">Static Triple G renewal receipt.</h2>
-          <p>
-            This renewal keeps Goals, Gauges, and Gaps, but repositions Triple G around Diamond Gate Bridge’s narrative construct and Audrelia’s development focus.
-          </p>
-        </div>
+      <section class="receipt-card" aria-label="Triple G route receipt">
+        <div class="kicker">Route receipt</div>
+        <h2>Triple G Jump Pad renewal active.</h2>
+        <p>
+          This renewal supersedes the legacy audit-board framing and repositions Triple G as the Goals, Gauges, and Gaps jump pad for Diamond Gate Bridge, Mirrorland, and Audrelia’s active development.
+        </p>
 
-        <code class="receipt">TRIPLE_G_AUDRELIA_NARRATIVE_CONJUGATION_STATIC_HTML_TNT_v1
+        <code>TRIPLE_G_JUMP_PAD_AUDRELIA_NARRATIVE_CONJUGATION_HTML_TNT_v1
 route=/gauges/
 html=/gauges/index.html
-page=triple_g
-mode=static_public_measurement_chamber
-live_behavior=false
-runtime=false
-js_required=false
-goals_gauges_gaps=true
-diamond_gate_bridge_conjugation=true
-mirrorland_context=true
-audrelia_development_focus=true
-public_spelling=Audrelia
-technical_route_spelling=audralia
-diamond_gate_bridge=public_gate_and_bridge_construct
-mirrorland=world_beyond_the_bridges
-audrelia=active_homeworld_development_focus
-triple_g=measurement_chamber
-goals=intended_direction
-gauges=static_public_measurement_categories
+previous=LEGACY_TRIPLE_G_LIVE_FILE_SUPERSEDED
+role=triple_g_jump_pad
+goals_gauges_gaps=preserved
+diamond_gate_bridge_context=active
+mirrorland_context=active
+audrelia_development_focus=active
+jump_pad=true
+legacy_audit_board_framing=superseded
+public_subject=measurement_chamber_for_diamond_gate_bridge_and_audrelia_development
+goals=project_intention
+gauges=live_measurable_proof
 gaps=unresolved_distance
-next_move=required
-does_not_own=audrelia_renderer,audrelia_runtime,cockpit_logic,gauges_dynamic_logic,route_audit_engine,downstream_children
-no_dynamic_audit=true
-no_visual_pass_claim=true
-generated_image=false
-graphic_box=false</code>
-
-        <template id="triple-g-route-receipt" class="hidden-receipt" data-route-receipt>
-TRIPLE_G_AUDRELIA_NARRATIVE_CONJUGATION_STATIC_HTML_TNT_v1
-target=/gauges/index.html
-static_page=true
-live_behavior=false
-runtime=false
-js_required=false
-goals_gauges_gaps_preserved=true
-diamond_gate_bridge_narrative_construct_active=true
-mirrorland_context_active=true
-audrelia_development_focus_active=true
-next_move_section_present=true
-no_dynamic_audit=true
-no_runtime_claim=true
-no_visual_pass_claim=true
+next_move=active
+does_not_own=audrelia_renderer,cockpit_logic,globe_runtime,route_logic,heavy_runtime
+static_page_usable_without_js=true
 generated_image=false
 graphic_box=false
+streaming=false
+visual_pass_claimed=false</code>
+
+        <template id="route-receipt" data-route-receipt>
+TRIPLE_G_JUMP_PAD_AUDRELIA_NARRATIVE_CONJUGATION_HTML_TNT_v1
+target=/gauges/index.html
+route=/gauges/
+role=triple_g_jump_pad
+goals_gauges_gaps=preserved
+diamond_gate_bridge_context=active
+mirrorland_context=active
+audrelia_development_focus=active
+legacy_file_superseded=true
+jump_pad=true
+next_move=active
+static_page_usable_without_js=true
+generated_image=false
+graphic_box=false
+streaming=false
+visual_pass_claimed=false
         </template>
       </section>
     </main>
 
     <footer>
-      TRIPLE_G_AUDRELIA_NARRATIVE_CONJUGATION_STATIC_HTML_TNT_v1 · Goals · Gauges · Gaps · Diamond Gate Bridge · Audrelia Development Focus.
+      TRIPLE_G_JUMP_PAD_AUDRELIA_NARRATIVE_CONJUGATION_HTML_TNT_v1 · Goals · Gauges · Gaps · Audrelia development focus.
     </footer>
   </div>
 </body>

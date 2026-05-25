@@ -1,16 +1,18 @@
 // /showroom/globe/audralia/disposition/index.js
-// AUDRALIA_G1_INTERGALACTIC_COCKPIT_THREE_FILE_SPLIT_CURRENT_TIME_INSTRUMENTS_TNT_v1
+// AUDRALIA_G1_INTERGALACTIC_COCKPIT_FILE_2_DATASET_SELECTOR_COLLISION_HOTFIX_TNT_v1
 // Full-file replacement.
-// Purpose: unify cockpit behavior into one route JS authority after the three-file split; preserve lattice gems, proof loading, generated gauges, streams, receipts, seat toggles, chamber behavior, NEWS bridge status, and current-time instrument updates.
-// Owns: route JS behavior, cockpit receipt publication, chamber behavior, Run Cockpit behavior, lattice registry, passive proof loading, generated instruments, current-time status, public status objects.
+// Purpose: preserve the three-file cockpit split while preventing dataset selector collisions from mutating <html>, <head>, or <body>.
+// Owns: route JS behavior, cockpit receipt publication, chamber behavior, Run Cockpit behavior, lattice registry, passive proof loading, generated instruments, current-time status, public status objects, safe visible text updates.
 // Does not own: CSS, HTML structure, child renewal, Runtime / Strength activation, canvas, WebGL, generated image, GraphicBox, or visual-render pass.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_THREE_FILE_SPLIT_CURRENT_TIME_INSTRUMENTS_TNT_v1";
-  const SPEC_OPS_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_THREE_FILE_SPLIT_CURRENT_TIME_INSTRUMENTS_SPEC_OPS_v1";
-  const NEWS_PROTOCOL = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_FULL_NEWS_ALIGNMENT_PROTOCOL_v1";
+  const CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_FILE_2_DATASET_SELECTOR_COLLISION_HOTFIX_TNT_v1";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_THREE_FILE_SPLIT_CURRENT_TIME_INSTRUMENTS_TNT_v1";
+  const SPEC_OPS_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_FILE_2_DATASET_SELECTOR_COLLISION_HOTFIX_SPEC_OPS_v1";
+  const NEWS_PROTOCOL = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_FILE_2_DATASET_SELECTOR_COLLISION_HOTFIX_NEWS_v1";
+  const CCR_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_FILE_2_DATASET_SELECTOR_COLLISION_HOTFIX_CCR_v1";
   const PREVIOUS_JS_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_360_LATTICE_GEM_ROUTE_JS_TNT_v1";
   const PREVIOUS_HTML_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_ENGINEERING_LENS_TECHNICAL_EXPRESSION_TNT_v1";
   const PARENT_MATCHING_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_PARENT_MATCHING_CONTRACT_TNT_v1";
@@ -18,10 +20,24 @@
   const ORBIT_ID = "cockpit-orbit";
   const HEARTBEAT_MS = 60000;
 
+  const UNSAFE_TEXT_TAGS = new Set([
+    "HTML",
+    "HEAD",
+    "BODY",
+    "SCRIPT",
+    "STYLE",
+    "LINK",
+    "META",
+    "TITLE",
+    "TEMPLATE"
+  ]);
+
   const RECEIPT = Object.freeze({
     contract: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
     specOpsContract: SPEC_OPS_CONTRACT,
     newsProtocol: NEWS_PROTOCOL,
+    ccrContract: CCR_CONTRACT,
     previousJsContract: PREVIOUS_JS_CONTRACT,
     previousHtmlContract: PREVIOUS_HTML_CONTRACT,
     parentMatchingContract: PARENT_MATCHING_CONTRACT,
@@ -37,6 +53,8 @@
     visibleCircumferenceOrder: "North -> East -> South -> West",
     gemModel: "360-degree circumferential lattice gems",
     circumferenceLaw: "360 circumference delegated by inconsistent cut-gem edges",
+    hotfix: "dataset selector collision guard",
+    safeTextWriter: true,
     htmlFunction: "wisdom",
     jsFunction: "courage",
     runtimeFunction: "strength",
@@ -245,14 +263,28 @@
   const qsa = (selector, root = document) => Array.from(root.querySelectorAll(selector));
   const qs = (selector, root = document) => root.querySelector(selector);
 
+  function isSafeTextTarget(node) {
+    if (!node || node.nodeType !== 1) return false;
+    if (node === document.documentElement) return false;
+    if (node === document.head) return false;
+    if (node === document.body) return false;
+
+    const tagName = String(node.tagName || "").toUpperCase();
+    if (UNSAFE_TEXT_TAGS.has(tagName)) return false;
+
+    return true;
+  }
+
   const setText = (selector, value) => {
     qsa(selector).forEach((node) => {
+      if (!isSafeTextTarget(node)) return;
       node.textContent = String(value);
     });
   };
 
   const setNodeText = (node, value) => {
-    if (node) node.textContent = String(value);
+    if (!isSafeTextTarget(node)) return;
+    node.textContent = String(value);
   };
 
   const createNode = (tag, className, attributes = {}) => {
@@ -337,6 +369,7 @@
     setText("[data-runtime-hold-confirmed-at]", current.local);
 
     qsa("[data-current-time-label]").forEach((node) => {
+      if (!isSafeTextTarget(node)) return;
       node.textContent = `Updated ${current.localTime}`;
     });
 
@@ -370,15 +403,19 @@
   function publishDatasets() {
     document.documentElement.dataset.activeCockpitTnt = CONTRACT;
     document.documentElement.dataset.audraliaCockpitJsContract = CONTRACT;
+    document.documentElement.dataset.audraliaCockpitPreviousContract = PREVIOUS_CONTRACT;
     document.documentElement.dataset.audraliaCockpitPreviousJsContract = PREVIOUS_JS_CONTRACT;
     document.documentElement.dataset.audraliaCockpitSpecOps = SPEC_OPS_CONTRACT;
     document.documentElement.dataset.audraliaCockpitNewsProtocol = NEWS_PROTOCOL;
+    document.documentElement.dataset.audraliaCockpitCcr = CCR_CONTRACT;
     document.documentElement.dataset.audraliaCockpitGemModel = "360-lattice-gems";
     document.documentElement.dataset.audraliaCockpitInstrumentAuthority = "dexterions-lab";
     document.documentElement.dataset.newsAlignment = "active";
     document.documentElement.dataset.bridgeModel = "north-east-south-west-visible";
     document.documentElement.dataset.newsGovernanceOrder = "north-east-west-south";
     document.documentElement.dataset.localGaugeScope = "16x16-256-per-gauge";
+    document.documentElement.dataset.selectorCollisionGuard = "active";
+    document.documentElement.dataset.safeTextWriter = "true";
     document.documentElement.dataset.runtimeStrengthHeld = "true";
     document.documentElement.dataset.noChildRenewal = "true";
     document.documentElement.dataset.noCanvasCreation = "true";
@@ -388,6 +425,7 @@
 
     window.AUDRALIA_INTERGALACTIC_COCKPIT_ENGINEERING_LENS_RECEIPT = RECEIPT;
     window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_THREE_FILE_SPLIT_RECEIPT = RECEIPT;
+    window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_FILE_2_HOTFIX_RECEIPT = RECEIPT;
   }
 
   function createCircumferenceMap(gemId) {
@@ -1031,8 +1069,10 @@
 
     const publicStatus = {
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       specOpsContract: SPEC_OPS_CONTRACT,
       newsProtocol: NEWS_PROTOCOL,
+      ccrContract: CCR_CONTRACT,
       previousJsContract: PREVIOUS_JS_CONTRACT,
       previousHtmlContract: PREVIOUS_HTML_CONTRACT,
       parentMatchingContract: PARENT_MATCHING_CONTRACT,
@@ -1043,6 +1083,8 @@
       cockpitFrame: "Intergalactic Cockpit",
       gemModel: "360 lattice-designated cut gems",
       circumferenceLaw: "full 360-degree circumference delegated by inconsistent cut-gem edges",
+      hotfix: "dataset selector collision guard",
+      safeTextWriter: true,
       threeFileSplit: true,
       inlineCss: false,
       inlineJs: false,
@@ -1094,6 +1136,7 @@
     window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_DUAL_DONOR_CIRCUIT_TOUCH_GEM_INSTRUMENT_STATUS = publicStatus;
     window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_THREE_FILE_SPLIT_STATUS = publicStatus;
     window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_NEWS_ALIGNMENT_STATUS = publicStatus;
+    window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_FILE_2_HOTFIX_STATUS = publicStatus;
 
     return publicStatus;
   }

@@ -2,11 +2,13 @@
 <html
   lang="en"
   data-route="/coherence-diagnostic/"
-  data-page="coherence-diagnostic-visible-neutrality-and-incoherence-probe"
-  data-contract="COHERENCE_DIAGNOSTIC_VISIBLE_NEUTRALITY_AND_INCOHERENCE_PROBE_TNT_v4"
-  data-previous-contract="COHERENCE_DIAGNOSTIC_ENGINEERING_LENS_RESULT_READOUT_TNT_v3"
-  data-spec-ops-contract="COHERENCE_DIAGNOSTIC_VISIBLE_NEUTRALITY_AND_INCOHERENCE_PROBE_SPEC_OPS_v4"
-  data-news-contract="COHERENCE_DIAGNOSTIC_VISIBLE_NEUTRALITY_AND_INCOHERENCE_PROBE_NEWS_v4"
+  data-page="coherence-diagnostic-section-contrast-cognitive-load-reduction"
+  data-contract="COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_TNT_v5"
+  data-previous-contract="COHERENCE_DIAGNOSTIC_VISIBLE_NEUTRALITY_AND_INCOHERENCE_PROBE_TNT_v4"
+  data-spec-ops-contract="COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_SPEC_OPS_v5"
+  data-news-contract="COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_NEWS_v5"
+  data-ccr-contract="COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_CCR_v5"
+  data-change-type="visual-hierarchy-renewal-only"
   data-question-minimum="12"
   data-q1-fixed="true"
   data-q2-fixed="true"
@@ -19,6 +21,13 @@
   data-fragmented-public-archetype="false"
   data-adaptive-generation="true"
   data-primary-secondary-required="true"
+  data-section-contrast-renewed="true"
+  data-cognitive-load-reduced="true"
+  data-static-sequence-rail="active"
+  data-step-bands="active"
+  data-library-zone-contrast="active"
+  data-primary-zone-contrast="active"
+  data-secondary-zone-contrast="active"
   data-results-visible-without-email="true"
   data-engineering-lens-active="true"
   data-cognitive-processing-estimate="not-iq"
@@ -46,7 +55,7 @@
   <title>Coherence Diagnostic Assessment · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="A local-only adaptive coherence diagnostic using self-rated coherence, claimed primary and secondary archetypes, neutral answer choices, incoherence probes, and an optional Engineering Lens technical readout."
+    content="A local-only adaptive coherence diagnostic using self-rated coherence, claimed primary and secondary archetypes, neutral answer choices, incoherence probes, stronger section contrast, and an optional Engineering Lens technical readout."
   >
 
   <style>
@@ -347,7 +356,7 @@
 
     .assessment{
       display:grid;
-      gap:16px;
+      gap:20px;
       padding:clamp(18px,4vw,34px);
     }
 
@@ -366,17 +375,181 @@
     .panel-head{
       display:grid;
       gap:8px;
-      padding:18px clamp(16px,3vw,24px);
-      border-bottom:1px solid rgba(255,255,255,.08);
+      padding:20px clamp(16px,3vw,26px);
+      border-bottom:1px solid rgba(244,207,131,.18);
       background:
-        linear-gradient(90deg,rgba(255,255,255,.04),transparent),
-        rgba(255,255,255,.018);
+        linear-gradient(90deg,rgba(244,207,131,.075),transparent 48%),
+        radial-gradient(circle at 0% 0%,rgba(141,216,255,.10),transparent 16rem),
+        rgba(255,255,255,.030);
+      box-shadow:inset 0 -1px 0 rgba(141,216,255,.05);
     }
 
     .panel-body{
       display:grid;
-      gap:16px;
+      gap:18px;
       padding:clamp(16px,3vw,24px);
+    }
+
+    .sequence-panel{
+      border-color:rgba(141,216,255,.18);
+      background:
+        radial-gradient(circle at 8% 0%,rgba(141,216,255,.10),transparent 16rem),
+        radial-gradient(circle at 92% 0%,rgba(244,207,131,.08),transparent 16rem),
+        rgba(3,9,20,.78);
+    }
+
+    .sequence-rail{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
+      align-items:stretch;
+    }
+
+    .sequence-step{
+      position:relative;
+      min-height:76px;
+      display:grid;
+      align-content:center;
+      gap:5px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      padding:13px;
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.046),rgba(255,255,255,.016)),
+        rgba(0,0,0,.14);
+      overflow:hidden;
+    }
+
+    .sequence-step::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:0;
+      bottom:0;
+      width:4px;
+      background:linear-gradient(180deg,rgba(141,216,255,.70),rgba(244,207,131,.70));
+      opacity:.76;
+    }
+
+    .sequence-step b{
+      color:var(--gold);
+      font-size:.66rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .sequence-step span{
+      color:rgba(239,247,255,.72);
+      font-size:.82rem;
+      line-height:1.28;
+      font-weight:760;
+    }
+
+    .intake-panel .panel-body{
+      gap:22px;
+    }
+
+    .step-zone{
+      position:relative;
+      display:grid;
+      gap:14px;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:26px;
+      padding:clamp(14px,3vw,20px);
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.034),rgba(255,255,255,.012)),
+        rgba(0,0,0,.14);
+      overflow:hidden;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
+    }
+
+    .step-zone::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:0;
+      bottom:0;
+      width:5px;
+      background:var(--zone-rail,linear-gradient(180deg,rgba(141,216,255,.70),rgba(244,207,131,.70)));
+      box-shadow:0 0 22px rgba(141,216,255,.18);
+    }
+
+    .library-zone{
+      --zone-rail:linear-gradient(180deg,rgba(141,216,255,.88),rgba(244,207,131,.68));
+      background:
+        radial-gradient(circle at 8% 0%,rgba(141,216,255,.070),transparent 18rem),
+        radial-gradient(circle at 92% 0%,rgba(244,207,131,.052),transparent 18rem),
+        linear-gradient(180deg,rgba(255,255,255,.030),rgba(255,255,255,.010)),
+        rgba(1,7,18,.40);
+    }
+
+    .primary-zone{
+      --zone-rail:linear-gradient(180deg,rgba(255,232,163,.98),rgba(244,207,131,.70));
+      border-color:rgba(244,207,131,.22);
+      background:
+        radial-gradient(circle at 10% 0%,rgba(244,207,131,.105),transparent 18rem),
+        linear-gradient(180deg,rgba(255,255,255,.040),rgba(255,255,255,.014)),
+        rgba(8,11,24,.62);
+    }
+
+    .secondary-zone{
+      --zone-rail:linear-gradient(180deg,rgba(167,243,198,.88),rgba(141,216,255,.70));
+      border-color:rgba(141,216,255,.20);
+      background:
+        radial-gradient(circle at 10% 0%,rgba(167,243,198,.075),transparent 18rem),
+        radial-gradient(circle at 90% 15%,rgba(141,216,255,.080),transparent 18rem),
+        linear-gradient(180deg,rgba(255,255,255,.038),rgba(255,255,255,.012)),
+        rgba(4,12,24,.62);
+    }
+
+    .step-band{
+      position:relative;
+      display:grid;
+      grid-template-columns:auto minmax(0,1fr);
+      gap:12px;
+      align-items:start;
+      padding:12px 13px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      background:
+        linear-gradient(90deg,rgba(255,255,255,.050),transparent 72%),
+        rgba(0,0,0,.16);
+    }
+
+    .step-index{
+      display:grid;
+      place-items:center;
+      width:38px;
+      height:38px;
+      border-radius:14px;
+      color:#06101c;
+      background:linear-gradient(135deg,#fff0b8,var(--gold));
+      font-weight:950;
+      letter-spacing:-.03em;
+      box-shadow:0 10px 24px rgba(0,0,0,.24);
+    }
+
+    .secondary-zone .step-index{
+      background:linear-gradient(135deg,#d7fff0,var(--blue));
+    }
+
+    .step-copy{
+      display:grid;
+      gap:4px;
+      min-width:0;
+    }
+
+    .step-copy b{
+      color:rgba(255,244,216,.96);
+      font-size:clamp(1rem,2vw,1.22rem);
+      line-height:1.12;
+      letter-spacing:-.025em;
+    }
+
+    .step-copy span{
+      color:rgba(239,247,255,.70);
+      font-size:.86rem;
+      line-height:1.38;
     }
 
     .mode-grid,
@@ -392,8 +565,18 @@
       grid-template-columns:repeat(2,minmax(0,1fr));
     }
 
+    .intake-select-grid{
+      align-items:start;
+      gap:18px;
+    }
+
     .option-grid{
       grid-template-columns:repeat(4,minmax(0,1fr));
+    }
+
+    .primary-zone .option-grid,
+    .secondary-zone .option-grid{
+      grid-template-columns:1fr;
     }
 
     .scale-grid{
@@ -415,6 +598,23 @@
         rgba(255,255,255,.028);
       overflow:hidden;
       transition:transform .18s ease,border-color .18s ease,background .18s ease,filter .18s ease;
+    }
+
+    .primary-zone .choice-card,
+    .secondary-zone .choice-card{
+      min-height:104px;
+      border-radius:20px;
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.044),rgba(255,255,255,.016)),
+        rgba(0,0,0,.18);
+    }
+
+    .primary-zone .choice-card{
+      border-color:rgba(244,207,131,.14);
+    }
+
+    .secondary-zone .choice-card{
+      border-color:rgba(141,216,255,.14);
     }
 
     .scale-card{
@@ -450,11 +650,24 @@
       box-shadow:0 0 0 1px rgba(244,207,131,.12),0 18px 52px rgba(0,0,0,.26);
     }
 
+    .secondary-zone .choice-card:has(input:checked){
+      border-color:rgba(141,216,255,.58);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(141,216,255,.12),transparent 9rem),
+        linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018)),
+        rgba(6,15,32,.88);
+      box-shadow:0 0 0 1px rgba(141,216,255,.12),0 18px 52px rgba(0,0,0,.26);
+    }
+
     .choice-card b{
       color:var(--gold);
       font-size:.70rem;
       letter-spacing:.13em;
       text-transform:uppercase;
+    }
+
+    .secondary-zone .choice-card b{
+      color:rgba(167,243,198,.90);
     }
 
     .choice-card strong{
@@ -471,7 +684,7 @@
 
     .archetype-library{
       display:grid;
-      gap:10px;
+      gap:12px;
     }
 
     .archetype-detail,
@@ -479,8 +692,8 @@
       border:1px solid rgba(255,255,255,.10);
       border-radius:20px;
       background:
-        radial-gradient(circle at 12% 0%,rgba(141,216,255,.07),transparent 14rem),
-        rgba(255,255,255,.026);
+        radial-gradient(circle at 12% 0%,rgba(141,216,255,.050),transparent 14rem),
+        rgba(255,255,255,.020);
       overflow:hidden;
     }
 
@@ -488,6 +701,10 @@
     .engineering-readout[open]{
       border-color:rgba(244,207,131,.34);
       box-shadow:0 18px 52px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.07);
+      background:
+        radial-gradient(circle at 12% 0%,rgba(141,216,255,.070),transparent 14rem),
+        radial-gradient(circle at 88% 0%,rgba(244,207,131,.050),transparent 14rem),
+        rgba(255,255,255,.025);
     }
 
     .archetype-detail summary,
@@ -535,13 +752,14 @@
     .archetype-content,
     .engineering-content{
       display:grid;
-      gap:12px;
-      padding:0 16px 16px;
+      gap:16px;
+      padding:0 16px 18px;
     }
 
     .archetype-content p,
     .engineering-content p{
-      font-size:.92rem;
+      font-size:.94rem;
+      line-height:1.62;
     }
 
     .mini-grid,
@@ -560,12 +778,14 @@
     .mini-card,
     .metric-card,
     .load-card{
-      border:1px solid rgba(255,255,255,.09);
+      border:1px solid rgba(255,255,255,.08);
       border-radius:16px;
-      padding:12px;
-      background:rgba(0,0,0,.16);
+      padding:13px;
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.030),rgba(255,255,255,.010)),
+        rgba(0,0,0,.12);
       display:grid;
-      gap:7px;
+      gap:8px;
     }
 
     .mini-card b,
@@ -582,8 +802,8 @@
       margin:0;
       padding-left:18px;
       color:rgba(239,247,255,.70);
-      font-size:.84rem;
-      line-height:1.4;
+      font-size:.86rem;
+      line-height:1.48;
     }
 
     .metric-card strong{
@@ -870,6 +1090,7 @@
     }
 
     @media (max-width:940px){
+      .sequence-rail,
       .mode-grid,
       .select-grid,
       .option-grid,
@@ -904,6 +1125,7 @@
         justify-content:flex-start;
       }
 
+      .sequence-rail,
       .mode-grid,
       .select-grid,
       .option-grid,
@@ -923,6 +1145,20 @@
       .hero,
       .assessment{
         padding:18px;
+      }
+
+      .step-zone{
+        padding:14px;
+        border-radius:22px;
+      }
+
+      .step-band{
+        grid-template-columns:1fr;
+      }
+
+      .step-index{
+        width:36px;
+        height:36px;
       }
 
       .button-row{
@@ -996,6 +1232,22 @@
       </section>
 
       <section id="assessment" class="assessment" aria-label="Coherence Diagnostic Assessment">
+        <section class="panel sequence-panel" aria-labelledby="sequence-title">
+          <div class="panel-head">
+            <p class="eyebrow">Intake Sequence</p>
+            <h2 id="sequence-title">Move through the assessment in four clean steps.</h2>
+            <p>The first two questions establish the intake anchor. The adaptive scenarios remain held until the intake is complete.</p>
+          </div>
+          <div class="panel-body">
+            <div class="sequence-rail" aria-label="Assessment sequence">
+              <div class="sequence-step"><b>Read</b><span>Review the four archetypes before choosing.</span></div>
+              <div class="sequence-step"><b>Claim Primary</b><span>Select the archetype you believe you lead with.</span></div>
+              <div class="sequence-step"><b>Claim Secondary</b><span>Select the support pattern that balances your primary.</span></div>
+              <div class="sequence-step"><b>Generate</b><span>Open the adaptive diagnostic after intake.</span></div>
+            </div>
+          </div>
+        </section>
+
         <form id="coherence-form" novalidate>
           <section class="panel" aria-labelledby="mode-title">
             <div class="panel-head">
@@ -1044,7 +1296,7 @@
             </div>
           </section>
 
-          <section class="panel" aria-labelledby="q2-title">
+          <section class="panel intake-panel" aria-labelledby="q2-title">
             <div class="panel-head">
               <p class="eyebrow">Question 2 · Archetype Library</p>
               <h2 id="q2-title">Read the four archetypes, then choose your claimed primary and secondary archetype.</h2>
@@ -1052,16 +1304,39 @@
             </div>
 
             <div class="panel-body">
-              <div class="archetype-library" id="archetype-library"></div>
+              <div class="step-zone library-zone" aria-labelledby="library-step-title">
+                <div class="step-band">
+                  <span class="step-index">1</span>
+                  <span class="step-copy">
+                    <b id="library-step-title">Read the archetypes.</b>
+                    <span>Open each dropdown as needed. This area is for understanding the four patterns before you claim your blend.</span>
+                  </span>
+                </div>
+                <div class="archetype-library" id="archetype-library"></div>
+              </div>
 
-              <div class="select-grid" aria-label="Claimed primary and secondary archetype">
-                <div>
-                  <p class="eyebrow">Claimed Primary Archetype</p>
+              <div class="select-grid intake-select-grid" aria-label="Claimed primary and secondary archetype">
+                <div class="step-zone primary-zone" aria-labelledby="primary-step-title">
+                  <div class="step-band">
+                    <span class="step-index">2</span>
+                    <span class="step-copy">
+                      <b id="primary-step-title">Choose claimed primary.</b>
+                      <span>Select the archetype you believe you naturally lead with under pressure.</span>
+                    </span>
+                  </div>
+
                   <div class="option-grid" id="primary-archetype-options"></div>
                 </div>
 
-                <div>
-                  <p class="eyebrow">Claimed Secondary Archetype</p>
+                <div class="step-zone secondary-zone" aria-labelledby="secondary-step-title">
+                  <div class="step-band">
+                    <span class="step-index">3</span>
+                    <span class="step-copy">
+                      <b id="secondary-step-title">Choose claimed secondary.</b>
+                      <span>Select the support pattern you believe balances or reinforces your primary.</span>
+                    </span>
+                  </div>
+
                   <div class="option-grid" id="secondary-archetype-options"></div>
                 </div>
               </div>
@@ -1115,10 +1390,11 @@
         <section id="result" class="result" aria-live="polite" aria-label="Assessment result"></section>
 
         <template id="route-receipt" data-route-receipt>
-COHERENCE_DIAGNOSTIC_VISIBLE_NEUTRALITY_AND_INCOHERENCE_PROBE_TNT_v4
-previous=COHERENCE_DIAGNOSTIC_ENGINEERING_LENS_RESULT_READOUT_TNT_v3
+COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_TNT_v5
+previous=COHERENCE_DIAGNOSTIC_VISIBLE_NEUTRALITY_AND_INCOHERENCE_PROBE_TNT_v4
 route=/coherence-diagnostic/
 file=/coherence-diagnostic/index.html
+change_type=visual_hierarchy_renewal_only
 questions_minimum=12
 q1_fixed=true
 q2_fixed=true
@@ -1134,6 +1410,18 @@ claimed_primary_required=true
 claimed_secondary_required=true
 duplicate_claimed_archetype_forbidden=true
 primary_secondary_required=true
+section_contrast_renewed=true
+static_sequence_rail=active
+step_bands=active
+library_zone_contrast=active
+primary_zone_contrast=active
+secondary_zone_contrast=active
+cognitive_load_reduced=true
+scoring_change=false
+question_model_change=false
+archetype_model_change=false
+fragmentation_logic_change=false
+engineering_lens_change=false
 public_result_first=true
 engineering_lens_active=true
 fragmentation_engineering_readout=true
@@ -1157,13 +1445,13 @@ canvas=false
 webgl=false
 generated_image=false
 graphic_box=false
-deploy_marker=COHERENCE_DIAGNOSTIC_VISIBLE_NEUTRALITY_AND_INCOHERENCE_PROBE_DEPLOY_MARKER_v4
+deploy_marker=COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_DEPLOY_MARKER_v5
         </template>
       </section>
     </main>
 
     <footer class="footer">
-      COHERENCE_DIAGNOSTIC_VISIBLE_NEUTRALITY_AND_INCOHERENCE_PROBE_TNT_v4 · Neutral answer choices · Coherence probes active · Local-only.
+      COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_TNT_v5 · Section contrast renewed · Cognitive load reduced · Local-only.
     </footer>
   </div>
 
@@ -1171,7 +1459,7 @@ deploy_marker=COHERENCE_DIAGNOSTIC_VISIBLE_NEUTRALITY_AND_INCOHERENCE_PROBE_DEPL
     (() => {
       "use strict";
 
-      const CONTRACT = "COHERENCE_DIAGNOSTIC_VISIBLE_NEUTRALITY_AND_INCOHERENCE_PROBE_TNT_v4";
+      const CONTRACT = "COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_TNT_v5";
       const MAX_COHERENCE_VALUE = 4;
       const SUBSCALES = ["sequence", "evidence", "action", "stability", "correction", "contradiction"];
       const PUBLIC_ARCHETYPES = ["Strategist", "Builder", "Mitigator", "Auditor"];
@@ -2419,11 +2707,17 @@ deploy_marker=COHERENCE_DIAGNOSTIC_VISIBLE_NEUTRALITY_AND_INCOHERENCE_PROBE_DEPL
       document.documentElement.dataset.visibleAnswerStrengthLabels = "false";
       document.documentElement.dataset.incoherenceProbesActive = "true";
       document.documentElement.dataset.fragmentationBucketActive = "true";
+      document.documentElement.dataset.sectionContrastRenewed = "true";
+      document.documentElement.dataset.cognitiveLoadReduced = "true";
+      document.documentElement.dataset.staticSequenceRail = "active";
+      document.documentElement.dataset.stepBands = "active";
+
       window.COHERENCE_DIAGNOSTIC_ASSESSMENT_RECEIPT = {
         contract: CONTRACT,
-        previousContract: "COHERENCE_DIAGNOSTIC_ENGINEERING_LENS_RESULT_READOUT_TNT_v3",
+        previousContract: "COHERENCE_DIAGNOSTIC_VISIBLE_NEUTRALITY_AND_INCOHERENCE_PROBE_TNT_v4",
         route: "/coherence-diagnostic/",
         file: "/coherence-diagnostic/index.html",
+        changeType: "visual hierarchy renewal only",
         questionsMinimum: 12,
         fixedQ1: true,
         fixedQ2: true,
@@ -2436,6 +2730,17 @@ deploy_marker=COHERENCE_DIAGNOSTIC_VISIBLE_NEUTRALITY_AND_INCOHERENCE_PROBE_DEPL
         optionRandomization: true,
         adaptiveGeneration: true,
         primarySecondaryRequired: true,
+        sectionContrastRenewed: true,
+        staticSequenceRail: true,
+        stepBands: true,
+        libraryZoneContrast: true,
+        primaryZoneContrast: true,
+        secondaryZoneContrast: true,
+        scoringChange: false,
+        questionModelChange: false,
+        archetypeModelChange: false,
+        fragmentationLogicChange: false,
+        engineeringLensChange: false,
         publicResultFirst: true,
         engineeringLensActive: true,
         fragmentationEngineeringReadout: true,

@@ -2,12 +2,12 @@
 <html
   lang="en"
   data-route="/coherence-diagnostic/"
-  data-page="coherence-diagnostic-adaptive-archetype-library"
-  data-contract="COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULTS_TNT_v2"
-  data-previous-contract="COHERENCE_DIAGNOSTIC_ASSESSMENT_PUBLIC_PAGE_TNT_v1"
-  data-spec-ops-contract="COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULTS_SPEC_OPS_v2"
-  data-news-contract="COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULTS_NEWS_v2"
-  data-ccr-contract="COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULTS_CCR_v2"
+  data-page="coherence-diagnostic-engineering-lens-result-readout"
+  data-contract="COHERENCE_DIAGNOSTIC_ENGINEERING_LENS_RESULT_READOUT_TNT_v3"
+  data-previous-contract="COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULTS_TNT_v2"
+  data-spec-ops-contract="COHERENCE_DIAGNOSTIC_ENGINEERING_LENS_RESULT_READOUT_SPEC_OPS_v3"
+  data-news-contract="COHERENCE_DIAGNOSTIC_ENGINEERING_LENS_RESULT_READOUT_NEWS_REPLAY_v3"
+  data-ccr-contract="COHERENCE_DIAGNOSTIC_ENGINEERING_LENS_RESULT_READOUT_CCR_v3"
   data-question-minimum="12"
   data-q1-fixed="true"
   data-q2-fixed="true"
@@ -16,13 +16,21 @@
   data-adaptive-generation="true"
   data-primary-secondary-required="true"
   data-results-visible-without-email="true"
+  data-engineering-lens-active="true"
+  data-cognitive-processing-estimate="not-iq"
+  data-preference-type-hypothesis="not-official-mbti"
   data-email-results-active="false"
   data-character-profile-save-active="false"
+  data-character-profile-coming-soon-tone="intrigue-forward"
+  data-email-results-coming-soon-tone="plain-practical"
   data-local-grading="true"
   data-no-backend="true"
   data-no-storage="true"
   data-medical-diagnostic="false"
   data-employment-screening="false"
+  data-legal-determination="false"
+  data-iq-claim="false"
+  data-official-mbti-claim="false"
   data-canvas="false"
   data-webgl="false"
   data-generated-image="false"
@@ -34,7 +42,7 @@
   <title>Coherence Diagnostic Assessment · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="A local-only adaptive coherence diagnostic using self-rated coherence, claimed primary and secondary archetypes, adaptive scenario questions, and an immediate on-page result."
+    content="A local-only adaptive coherence diagnostic using self-rated coherence, claimed primary and secondary archetypes, adaptive scenario questions, an immediate public result, and an optional Engineering Lens technical readout."
   >
 
   <style>
@@ -466,7 +474,8 @@
       gap:10px;
     }
 
-    .archetype-detail{
+    .archetype-detail,
+    .engineering-readout{
       border:1px solid rgba(255,255,255,.10);
       border-radius:20px;
       background:
@@ -475,12 +484,14 @@
       overflow:hidden;
     }
 
-    .archetype-detail[open]{
+    .archetype-detail[open],
+    .engineering-readout[open]{
       border-color:rgba(244,207,131,.34);
       box-shadow:0 18px 52px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.07);
     }
 
-    .archetype-detail summary{
+    .archetype-detail summary,
+    .engineering-readout summary{
       list-style:none;
       display:grid;
       grid-template-columns:minmax(0,1fr) auto;
@@ -492,9 +503,11 @@
       letter-spacing:-.02em;
     }
 
-    .archetype-detail summary::-webkit-details-marker{display:none}
+    .archetype-detail summary::-webkit-details-marker,
+    .engineering-readout summary::-webkit-details-marker{display:none}
 
-    .archetype-detail summary::after{
+    .archetype-detail summary::after,
+    .engineering-readout summary::after{
       content:"Read";
       min-height:30px;
       display:inline-flex;
@@ -511,30 +524,42 @@
       text-transform:uppercase;
     }
 
-    .archetype-detail[open] summary::after{
+    .archetype-detail[open] summary::after,
+    .engineering-readout[open] summary::after{
       content:"Close";
       color:#06101c;
       background:linear-gradient(135deg,#fff0b8,var(--gold));
       border-color:rgba(244,207,131,.50);
     }
 
-    .archetype-content{
+    .archetype-content,
+    .engineering-content{
       display:grid;
       gap:12px;
       padding:0 16px 16px;
     }
 
-    .archetype-content p{
+    .archetype-content p,
+    .engineering-content p{
       font-size:.92rem;
     }
 
-    .mini-grid{
+    .mini-grid,
+    .engineering-grid,
+    .metric-grid{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
       gap:10px;
     }
 
-    .mini-card{
+    .engineering-grid.three,
+    .metric-grid.three{
+      grid-template-columns:repeat(3,minmax(0,1fr));
+    }
+
+    .mini-card,
+    .metric-card,
+    .load-card{
       border:1px solid rgba(255,255,255,.09);
       border-radius:16px;
       padding:12px;
@@ -543,19 +568,65 @@
       gap:7px;
     }
 
-    .mini-card b{
+    .mini-card b,
+    .metric-card b,
+    .load-card b{
       color:var(--gold);
       font-size:.68rem;
       letter-spacing:.13em;
       text-transform:uppercase;
     }
 
-    .mini-card ul{
+    .mini-card ul,
+    .load-card ul{
       margin:0;
       padding-left:18px;
       color:rgba(239,247,255,.70);
       font-size:.84rem;
       line-height:1.4;
+    }
+
+    .metric-card strong{
+      color:rgba(255,244,216,.96);
+      font-size:1.05rem;
+      line-height:1.2;
+      overflow-wrap:anywhere;
+    }
+
+    .metric-card span{
+      color:rgba(239,247,255,.68);
+      font-size:.82rem;
+      line-height:1.35;
+      overflow-wrap:anywhere;
+    }
+
+    .metric-bar{
+      position:relative;
+      height:10px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:999px;
+      background:rgba(255,255,255,.035);
+      overflow:hidden;
+    }
+
+    .metric-bar i{
+      display:block;
+      height:100%;
+      width:var(--w,0%);
+      border-radius:999px;
+      background:linear-gradient(90deg,rgba(141,216,255,.74),rgba(244,207,131,.82));
+    }
+
+    .technical-summary{
+      border:1px solid rgba(244,207,131,.20);
+      border-radius:18px;
+      padding:14px;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(244,207,131,.08),transparent 12rem),
+        rgba(244,207,131,.030);
+      color:rgba(255,244,216,.90);
+      font-size:.92rem;
+      line-height:1.5;
     }
 
     .question{
@@ -804,7 +875,11 @@
       .select-grid,
       .option-grid,
       .result-grid,
-      .mini-grid{
+      .mini-grid,
+      .engineering-grid,
+      .engineering-grid.three,
+      .metric-grid,
+      .metric-grid.three{
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
 
@@ -834,7 +909,11 @@
       .select-grid,
       .option-grid,
       .result-grid,
-      .mini-grid{
+      .mini-grid,
+      .engineering-grid,
+      .engineering-grid.three,
+      .metric-grid,
+      .metric-grid.three{
         grid-template-columns:1fr;
       }
 
@@ -895,7 +974,7 @@
     <main class="page">
       <section class="hero" aria-labelledby="page-title">
         <div class="hero-copy">
-          <p class="kicker">Adaptive Assessment · Archetype Library · Local Result</p>
+          <p class="kicker">Adaptive Assessment · Archetype Library · Engineering Lens</p>
           <h1 id="page-title">Coherence Diagnostic Assessment</h1>
           <p>
             Start with your self-rated coherence and your claimed archetype blend. The diagnostic questions generate only after your intake is complete.
@@ -907,12 +986,13 @@
           <span class="pill">Q1 fixed scale</span>
           <span class="pill">Q2 primary + secondary archetype</span>
           <span class="pill">Adaptive questions</span>
+          <span class="pill">Engineering Lens</span>
           <span class="pill">Local-only scoring</span>
           <span class="pill">No email required</span>
         </div>
 
         <div class="warning">
-          This assessment is not a medical, mental-health, legal, or employment diagnostic. It is a self-reflection and pattern-assessment tool for coherence, consistency, accountability, and decision alignment.
+          This assessment is not a medical, mental-health, legal, employment, intelligence, or official personality-type diagnostic. It is a self-reflection and pattern-assessment tool for coherence, consistency, accountability, and decision alignment.
         </div>
       </section>
 
@@ -1036,8 +1116,8 @@
         <section id="result" class="result" aria-live="polite" aria-label="Assessment result"></section>
 
         <template id="route-receipt" data-route-receipt>
-COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULTS_TNT_v2
-previous=COHERENCE_DIAGNOSTIC_ASSESSMENT_PUBLIC_PAGE_TNT_v1
+COHERENCE_DIAGNOSTIC_ENGINEERING_LENS_RESULT_READOUT_TNT_v3
+previous=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULTS_TNT_v2
 route=/coherence-diagnostic/
 file=/coherence-diagnostic/index.html
 questions_minimum=12
@@ -1050,25 +1130,44 @@ claimed_primary_required=true
 claimed_secondary_required=true
 duplicate_claimed_archetype_forbidden=true
 primary_secondary_required=true
+public_result_first=true
+engineering_lens_active=true
+engineering_lens_optional=true
+raw_score=true
+normalized_score=true
+calibration_error=true
+claim_alignment=true
+archetype_vector=true
+dominance_margin=true
+confidence_band=true
+response_distribution=true
+subscale_metrics=true
+cognitive_processing_estimate=not_iq
+preference_type_hypothesis=not_official_mbti
 results_visible_without_email=true
 email_results_active=false
 character_profile_save_active=false
+character_profile_coming_soon_tone=intrigue_forward
+email_results_coming_soon_tone=plain_practical
 local_grading=true
 no_backend=true
 no_storage=true
 medical_diagnostic=false
 employment_screening=false
+legal_determination=false
+iq_claim=false
+official_mbti_claim=false
 canvas=false
 webgl=false
 generated_image=false
 graphic_box=false
-deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULTS_DEPLOY_MARKER_v2
+deploy_marker=COHERENCE_DIAGNOSTIC_ENGINEERING_LENS_RESULT_READOUT_DEPLOY_MARKER_v3
         </template>
       </section>
     </main>
 
     <footer class="footer">
-      COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULTS_TNT_v2 · Local-only adaptive diagnostic · Email and character profile saving coming soon.
+      COHERENCE_DIAGNOSTIC_ENGINEERING_LENS_RESULT_READOUT_TNT_v3 · Local-only adaptive diagnostic · Engineering Lens active · Email and character profile saving coming soon.
     </footer>
   </div>
 
@@ -1076,8 +1175,9 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
     (() => {
       "use strict";
 
-      const CONTRACT = "COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULTS_TNT_v2";
+      const CONTRACT = "COHERENCE_DIAGNOSTIC_ENGINEERING_LENS_RESULT_READOUT_TNT_v3";
       const MAX_COHERENCE_VALUE = 4;
+      const SUBSCALES = ["sequence", "evidence", "action", "stability", "correction", "contradiction"];
 
       const archetypes = {
         Strategist: {
@@ -1178,6 +1278,31 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
         }
       };
 
+      const subscaleProfiles = {
+        strategistStrong: { sequence: 4, evidence: 2, action: 2, stability: 2, correction: 3, contradiction: 2 },
+        strategistEvidence: { sequence: 4, evidence: 3, action: 1, stability: 2, correction: 2, contradiction: 3 },
+        strategistCorrection: { sequence: 4, evidence: 3, action: 2, stability: 2, correction: 4, contradiction: 3 },
+        builderStrong: { sequence: 2, evidence: 2, action: 4, stability: 2, correction: 3, contradiction: 1 },
+        builderProof: { sequence: 3, evidence: 3, action: 4, stability: 2, correction: 3, contradiction: 2 },
+        builderRisky: { sequence: 1, evidence: 1, action: 3, stability: 1, correction: 2, contradiction: 0 },
+        mitigatorStrong: { sequence: 2, evidence: 2, action: 1, stability: 4, correction: 3, contradiction: 1 },
+        mitigatorAccountable: { sequence: 3, evidence: 2, action: 2, stability: 4, correction: 4, contradiction: 2 },
+        mitigatorSoft: { sequence: 1, evidence: 1, action: 1, stability: 3, correction: 1, contradiction: 0 },
+        auditorStrong: { sequence: 2, evidence: 4, action: 1, stability: 1, correction: 3, contradiction: 4 },
+        auditorConstructive: { sequence: 3, evidence: 4, action: 2, stability: 2, correction: 4, contradiction: 4 },
+        auditorPressure: { sequence: 2, evidence: 4, action: 1, stability: 0, correction: 2, contradiction: 4 }
+      };
+
+      const makeOption = (id, archetype, coherence, text, strength, risk, subscale) => ({
+        id,
+        archetype,
+        coherence,
+        text,
+        strength,
+        risk,
+        subscale
+      });
+
       const baseQuestions = [
         {
           id: "conflict",
@@ -1185,10 +1310,10 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
           tags: ["all", "pressure", "conflict"],
           prompt: "A disagreement is escalating and people are beginning to defend themselves instead of solve the issue. What do you do first, and what do you rely on second?",
           options: [
-            { id: "conflict-strategist", archetype: "Strategist", coherence: 4, text: "Set the boundary, define the decision point, and restore sequence.", strength: "boundary clarity", risk: "overcontrol risk" },
-            { id: "conflict-builder", archetype: "Builder", coherence: 3, text: "Move the group into a small practical test so the conflict becomes concrete.", strength: "action conversion", risk: "moving too fast risk" },
-            { id: "conflict-mitigator", archetype: "Mitigator", coherence: 4, text: "Lower the temperature, preserve enough trust to continue, and stabilize the room.", strength: "field stabilization", risk: "delay risk" },
-            { id: "conflict-auditor", archetype: "Auditor", coherence: 4, text: "Identify the contradiction, ask for evidence, and separate claim from fact.", strength: "truth protection", risk: "adversarial pressure risk" }
+            makeOption("conflict-strategist", "Strategist", 4, "Set the boundary, define the decision point, and restore sequence.", "boundary clarity", "overcontrol risk", subscaleProfiles.strategistStrong),
+            makeOption("conflict-builder", "Builder", 3, "Move the group into a small practical test so the conflict becomes concrete.", "action conversion", "moving too fast risk", subscaleProfiles.builderStrong),
+            makeOption("conflict-mitigator", "Mitigator", 4, "Lower the temperature, preserve enough trust to continue, and stabilize the room.", "field stabilization", "delay risk", subscaleProfiles.mitigatorStrong),
+            makeOption("conflict-auditor", "Auditor", 4, "Identify the contradiction, ask for evidence, and separate claim from fact.", "truth protection", "adversarial pressure risk", subscaleProfiles.auditorStrong)
           ]
         },
         {
@@ -1197,10 +1322,10 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
           tags: ["all", "evidence", "signal"],
           prompt: "You receive incomplete information and people want a fast conclusion. What is your first move?",
           options: [
-            { id: "ambiguous-strategist", archetype: "Strategist", coherence: 3, text: "Define what must be known before any decision is allowed.", strength: "decision discipline", risk: "rigidity risk" },
-            { id: "ambiguous-builder", archetype: "Builder", coherence: 3, text: "Create a quick test that exposes what is true enough to act on.", strength: "proof through action", risk: "premature prototype risk" },
-            { id: "ambiguous-mitigator", archetype: "Mitigator", coherence: 2, text: "Slow the process down and keep people from committing too early.", strength: "pace control", risk: "indecision risk" },
-            { id: "ambiguous-auditor", archetype: "Auditor", coherence: 4, text: "Separate evidence from assumption and mark every unsupported claim.", strength: "evidence separation", risk: "skepticism overload risk" }
+            makeOption("ambiguous-strategist", "Strategist", 3, "Define what must be known before any decision is allowed.", "decision discipline", "rigidity risk", subscaleProfiles.strategistEvidence),
+            makeOption("ambiguous-builder", "Builder", 3, "Create a quick test that exposes what is true enough to act on.", "proof through action", "premature prototype risk", subscaleProfiles.builderProof),
+            makeOption("ambiguous-mitigator", "Mitigator", 2, "Slow the process down and keep people from committing too early.", "pace control", "indecision risk", subscaleProfiles.mitigatorSoft),
+            makeOption("ambiguous-auditor", "Auditor", 4, "Separate evidence from assumption and mark every unsupported claim.", "evidence separation", "skepticism overload risk", subscaleProfiles.auditorStrong)
           ]
         },
         {
@@ -1209,10 +1334,10 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
           tags: ["all", "accountability", "repair"],
           prompt: "A project fails and the group begins shifting blame. What do you do first?",
           options: [
-            { id: "responsibility-strategist", archetype: "Strategist", coherence: 4, text: "Assign the chain of responsibility and define the repair sequence.", strength: "accountability structure", risk: "command pressure risk" },
-            { id: "responsibility-builder", archetype: "Builder", coherence: 3, text: "Build the first repair step immediately so the failure stops spreading.", strength: "repair momentum", risk: "patching before diagnosis risk" },
-            { id: "responsibility-mitigator", archetype: "Mitigator", coherence: 2, text: "Keep the group from fragmenting and preserve enough trust to continue.", strength: "continuity protection", risk: "accountability delay risk" },
-            { id: "responsibility-auditor", archetype: "Auditor", coherence: 4, text: "Audit what happened, what was promised, and what was actually done.", strength: "receipt logic", risk: "cold delivery risk" }
+            makeOption("responsibility-strategist", "Strategist", 4, "Assign the chain of responsibility and define the repair sequence.", "accountability structure", "command pressure risk", subscaleProfiles.strategistCorrection),
+            makeOption("responsibility-builder", "Builder", 3, "Build the first repair step immediately so the failure stops spreading.", "repair momentum", "patching before diagnosis risk", subscaleProfiles.builderStrong),
+            makeOption("responsibility-mitigator", "Mitigator", 2, "Keep the group from fragmenting and preserve enough trust to continue.", "continuity protection", "accountability delay risk", subscaleProfiles.mitigatorSoft),
+            makeOption("responsibility-auditor", "Auditor", 4, "Audit what happened, what was promised, and what was actually done.", "receipt logic", "cold delivery risk", subscaleProfiles.auditorConstructive)
           ]
         },
         {
@@ -1221,10 +1346,10 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
           tags: ["all", "evidence", "contradiction"],
           prompt: "Someone makes two claims that cannot both be true. What do you do first?",
           options: [
-            { id: "contradiction-strategist", archetype: "Strategist", coherence: 3, text: "Pause the process and require one controlling rule.", strength: "rule control", risk: "premature closure risk" },
-            { id: "contradiction-builder", archetype: "Builder", coherence: 2, text: "Test both claims in a practical model and see which one survives contact.", strength: "reality contact", risk: "testing around a contradiction risk" },
-            { id: "contradiction-mitigator", archetype: "Mitigator", coherence: 2, text: "Keep the exchange stable while the contradiction is clarified.", strength: "interaction stability", risk: "softening the contradiction risk" },
-            { id: "contradiction-auditor", archetype: "Auditor", coherence: 4, text: "Name the contradiction directly and ask which claim should be withdrawn or revised.", strength: "contradiction clarity", risk: "overpressure risk" }
+            makeOption("contradiction-strategist", "Strategist", 3, "Pause the process and require one controlling rule.", "rule control", "premature closure risk", subscaleProfiles.strategistEvidence),
+            makeOption("contradiction-builder", "Builder", 2, "Test both claims in a practical model and see which one survives contact.", "reality contact", "testing around a contradiction risk", subscaleProfiles.builderRisky),
+            makeOption("contradiction-mitigator", "Mitigator", 2, "Keep the exchange stable while the contradiction is clarified.", "interaction stability", "softening the contradiction risk", subscaleProfiles.mitigatorSoft),
+            makeOption("contradiction-auditor", "Auditor", 4, "Name the contradiction directly and ask which claim should be withdrawn or revised.", "contradiction clarity", "overpressure risk", subscaleProfiles.auditorStrong)
           ]
         },
         {
@@ -1233,10 +1358,10 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
           tags: ["all", "sequence", "action"],
           prompt: "A team wants to build everything at once. What do you do first?",
           options: [
-            { id: "execution-strategist", archetype: "Strategist", coherence: 4, text: "Define the order of operations and lock the first lawful step.", strength: "sequence authority", risk: "command narrowness risk" },
-            { id: "execution-builder", archetype: "Builder", coherence: 3, text: "Choose the smallest build that proves the largest assumption.", strength: "minimum viable proof", risk: "scope creep risk" },
-            { id: "execution-mitigator", archetype: "Mitigator", coherence: 3, text: "Protect the working baseline and prevent unnecessary disruption.", strength: "baseline preservation", risk: "overpreservation risk" },
-            { id: "execution-auditor", archetype: "Auditor", coherence: 4, text: "Audit which claims are ready, which are assumed, and which are not proven.", strength: "readiness audit", risk: "friction risk" }
+            makeOption("execution-strategist", "Strategist", 4, "Define the order of operations and lock the first lawful step.", "sequence authority", "command narrowness risk", subscaleProfiles.strategistStrong),
+            makeOption("execution-builder", "Builder", 3, "Choose the smallest build that proves the largest assumption.", "minimum viable proof", "scope creep risk", subscaleProfiles.builderProof),
+            makeOption("execution-mitigator", "Mitigator", 3, "Protect the working baseline and prevent unnecessary disruption.", "baseline preservation", "overpreservation risk", subscaleProfiles.mitigatorStrong),
+            makeOption("execution-auditor", "Auditor", 4, "Audit which claims are ready, which are assumed, and which are not proven.", "readiness audit", "friction risk", subscaleProfiles.auditorConstructive)
           ]
         },
         {
@@ -1245,10 +1370,10 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
           tags: ["all", "stability", "pressure"],
           prompt: "The group is anxious, distracted, and starting to lose coherence. What do you do first?",
           options: [
-            { id: "group-strategist", archetype: "Strategist", coherence: 3, text: "Give the group a clear immediate objective and stop the drift.", strength: "direction under pressure", risk: "tone hardness risk" },
-            { id: "group-builder", archetype: "Builder", coherence: 2, text: "Give everyone a concrete task so the room starts moving again.", strength: "task activation", risk: "activity without coherence risk" },
-            { id: "group-mitigator", archetype: "Mitigator", coherence: 4, text: "Stabilize the room, reduce noise, and restore continuity.", strength: "field coherence", risk: "comfort over action risk" },
-            { id: "group-auditor", archetype: "Auditor", coherence: 3, text: "Challenge the false claims feeding the instability.", strength: "false-signal removal", risk: "escalation risk" }
+            makeOption("group-strategist", "Strategist", 3, "Give the group a clear immediate objective and stop the drift.", "direction under pressure", "tone hardness risk", subscaleProfiles.strategistStrong),
+            makeOption("group-builder", "Builder", 2, "Give everyone a concrete task so the room starts moving again.", "task activation", "activity without coherence risk", subscaleProfiles.builderRisky),
+            makeOption("group-mitigator", "Mitigator", 4, "Stabilize the room, reduce noise, and restore continuity.", "field coherence", "comfort over action risk", subscaleProfiles.mitigatorStrong),
+            makeOption("group-auditor", "Auditor", 3, "Challenge the false claims feeding the instability.", "false-signal removal", "escalation risk", subscaleProfiles.auditorPressure)
           ]
         },
         {
@@ -1257,10 +1382,10 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
           tags: ["all", "evidence", "signal"],
           prompt: "Your intuition says one thing, but the evidence is incomplete. What do you do first?",
           options: [
-            { id: "evidence-strategist", archetype: "Strategist", coherence: 3, text: "Set a rule for what evidence is required before acting.", strength: "threshold setting", risk: "overformalization risk" },
-            { id: "evidence-builder", archetype: "Builder", coherence: 3, text: "Run a small practical test instead of arguing about the intuition.", strength: "test motion", risk: "testing too soon risk" },
-            { id: "evidence-mitigator", archetype: "Mitigator", coherence: 2, text: "Hold the field open until the evidence catches up.", strength: "patience", risk: "stalling risk" },
-            { id: "evidence-auditor", archetype: "Auditor", coherence: 4, text: "Refuse to convert intuition into claim until evidence supports it.", strength: "claim discipline", risk: "intuition suppression risk" }
+            makeOption("evidence-strategist", "Strategist", 3, "Set a rule for what evidence is required before acting.", "threshold setting", "overformalization risk", subscaleProfiles.strategistEvidence),
+            makeOption("evidence-builder", "Builder", 3, "Run a small practical test instead of arguing about the intuition.", "test motion", "testing too soon risk", subscaleProfiles.builderProof),
+            makeOption("evidence-mitigator", "Mitigator", 2, "Hold the field open until the evidence catches up.", "patience", "stalling risk", subscaleProfiles.mitigatorSoft),
+            makeOption("evidence-auditor", "Auditor", 4, "Refuse to convert intuition into claim until evidence supports it.", "claim discipline", "intuition suppression risk", subscaleProfiles.auditorStrong)
           ]
         },
         {
@@ -1269,10 +1394,10 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
           tags: ["all", "stability", "timing"],
           prompt: "A decision must be made while emotions are high. What do you do first?",
           options: [
-            { id: "emotion-strategist", archetype: "Strategist", coherence: 3, text: "Separate the decision from the emotional surge and set the next step.", strength: "decision containment", risk: "emotional dismissal risk" },
-            { id: "emotion-builder", archetype: "Builder", coherence: 2, text: "Move into a simple action that prevents the room from freezing.", strength: "motion under pressure", risk: "bypassing emotion risk" },
-            { id: "emotion-mitigator", archetype: "Mitigator", coherence: 4, text: "Regulate the field first so the decision is not made from distortion.", strength: "regulation", risk: "delay risk" },
-            { id: "emotion-auditor", archetype: "Auditor", coherence: 3, text: "Test whether the emotional claim matches the evidence.", strength: "reality check", risk: "harshness risk" }
+            makeOption("emotion-strategist", "Strategist", 3, "Separate the decision from the emotional surge and set the next step.", "decision containment", "emotional dismissal risk", subscaleProfiles.strategistStrong),
+            makeOption("emotion-builder", "Builder", 2, "Move into a simple action that prevents the room from freezing.", "motion under pressure", "bypassing emotion risk", subscaleProfiles.builderRisky),
+            makeOption("emotion-mitigator", "Mitigator", 4, "Regulate the field first so the decision is not made from distortion.", "regulation", "delay risk", subscaleProfiles.mitigatorStrong),
+            makeOption("emotion-auditor", "Auditor", 3, "Test whether the emotional claim matches the evidence.", "reality check", "harshness risk", subscaleProfiles.auditorPressure)
           ]
         },
         {
@@ -1281,10 +1406,10 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
           tags: ["all", "timing", "sequence"],
           prompt: "You have enough information to act, but not enough to feel certain. What do you do first?",
           options: [
-            { id: "timing-strategist", archetype: "Strategist", coherence: 4, text: "Make the bounded decision and define the review point.", strength: "bounded execution", risk: "early lock-in risk" },
-            { id: "timing-builder", archetype: "Builder", coherence: 3, text: "Build the next step as a reversible test, not a permanent commitment.", strength: "reversible action", risk: "experiment sprawl risk" },
-            { id: "timing-mitigator", archetype: "Mitigator", coherence: 2, text: "Wait until the group feels more settled.", strength: "group comfort", risk: "missed timing risk" },
-            { id: "timing-auditor", archetype: "Auditor", coherence: 3, text: "Document the uncertainty and act only within what the evidence supports.", strength: "bounded proof", risk: "action friction risk" }
+            makeOption("timing-strategist", "Strategist", 4, "Make the bounded decision and define the review point.", "bounded execution", "early lock-in risk", subscaleProfiles.strategistStrong),
+            makeOption("timing-builder", "Builder", 3, "Build the next step as a reversible test, not a permanent commitment.", "reversible action", "experiment sprawl risk", subscaleProfiles.builderProof),
+            makeOption("timing-mitigator", "Mitigator", 2, "Wait until the group feels more settled.", "group comfort", "missed timing risk", subscaleProfiles.mitigatorSoft),
+            makeOption("timing-auditor", "Auditor", 3, "Document the uncertainty and act only within what the evidence supports.", "bounded proof", "action friction risk", subscaleProfiles.auditorConstructive)
           ]
         },
         {
@@ -1293,10 +1418,10 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
           tags: ["all", "repair", "accountability"],
           prompt: "You realize you were wrong. What do you do first?",
           options: [
-            { id: "repair-strategist", archetype: "Strategist", coherence: 4, text: "State the correction, update the rule, and define the repair sequence.", strength: "corrective leadership", risk: "controlled admission risk" },
-            { id: "repair-builder", archetype: "Builder", coherence: 3, text: "Fix the affected part immediately and improve the process from there.", strength: "practical repair", risk: "repair before full ownership risk" },
-            { id: "repair-mitigator", archetype: "Mitigator", coherence: 3, text: "Repair trust and stabilize the people affected.", strength: "relational repair", risk: "soft accountability risk" },
-            { id: "repair-auditor", archetype: "Auditor", coherence: 4, text: "Name the error plainly, show the evidence, and correct the record.", strength: "truth repair", risk: "self-pressure risk" }
+            makeOption("repair-strategist", "Strategist", 4, "State the correction, update the rule, and define the repair sequence.", "corrective leadership", "controlled admission risk", subscaleProfiles.strategistCorrection),
+            makeOption("repair-builder", "Builder", 3, "Fix the affected part immediately and improve the process from there.", "practical repair", "repair before full ownership risk", subscaleProfiles.builderStrong),
+            makeOption("repair-mitigator", "Mitigator", 3, "Repair trust and stabilize the people affected.", "relational repair", "soft accountability risk", subscaleProfiles.mitigatorAccountable),
+            makeOption("repair-auditor", "Auditor", 4, "Name the error plainly, show the evidence, and correct the record.", "truth repair", "self-pressure risk", subscaleProfiles.auditorConstructive)
           ]
         }
       ];
@@ -1309,10 +1434,10 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
             tags: ["Strategist", "structure"],
             prompt: "Your plan is coherent, but the room is moving faster than the plan can absorb. What do you do first?",
             options: [
-              { id: "strategist-overstructure-strategist", archetype: "Strategist", coherence: 4, text: "Compress the plan into one controlling sequence and define the next checkpoint.", strength: "adaptive sequence", risk: "over-compression risk" },
-              { id: "strategist-overstructure-builder", archetype: "Builder", coherence: 3, text: "Build a small working step to test whether the plan can survive contact.", strength: "structure-to-action", risk: "premature build risk" },
-              { id: "strategist-overstructure-mitigator", archetype: "Mitigator", coherence: 3, text: "Stabilize the people affected before the structure loses trust.", strength: "trust preservation", risk: "decision delay risk" },
-              { id: "strategist-overstructure-auditor", archetype: "Auditor", coherence: 4, text: "Audit which part of the plan is proven and which part is just assumed.", strength: "assumption control", risk: "review drag risk" }
+              makeOption("strategist-overstructure-strategist", "Strategist", 4, "Compress the plan into one controlling sequence and define the next checkpoint.", "adaptive sequence", "over-compression risk", subscaleProfiles.strategistStrong),
+              makeOption("strategist-overstructure-builder", "Builder", 3, "Build a small working step to test whether the plan can survive contact.", "structure-to-action", "premature build risk", subscaleProfiles.builderProof),
+              makeOption("strategist-overstructure-mitigator", "Mitigator", 3, "Stabilize the people affected before the structure loses trust.", "trust preservation", "decision delay risk", subscaleProfiles.mitigatorAccountable),
+              makeOption("strategist-overstructure-auditor", "Auditor", 4, "Audit which part of the plan is proven and which part is just assumed.", "assumption control", "review drag risk", subscaleProfiles.auditorConstructive)
             ]
           }
         ],
@@ -1323,10 +1448,10 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
             tags: ["Builder", "action"],
             prompt: "You can start building immediately, but the proof is not fully settled. What do you do first?",
             options: [
-              { id: "builder-premature-motion-strategist", archetype: "Strategist", coherence: 4, text: "Define the lawful build sequence before moving.", strength: "build sequencing", risk: "slowing momentum risk" },
-              { id: "builder-premature-motion-builder", archetype: "Builder", coherence: 4, text: "Build the smallest reversible prototype that tests the core assumption.", strength: "reversible prototype", risk: "prototype attachment risk" },
-              { id: "builder-premature-motion-mitigator", archetype: "Mitigator", coherence: 3, text: "Check what could be disrupted before the build begins.", strength: "impact control", risk: "over-caution risk" },
-              { id: "builder-premature-motion-auditor", archetype: "Auditor", coherence: 4, text: "Identify the unproven claim and require proof before scaling.", strength: "proof gate", risk: "challenge friction risk" }
+              makeOption("builder-premature-motion-strategist", "Strategist", 4, "Define the lawful build sequence before moving.", "build sequencing", "slowing momentum risk", subscaleProfiles.strategistStrong),
+              makeOption("builder-premature-motion-builder", "Builder", 4, "Build the smallest reversible prototype that tests the core assumption.", "reversible prototype", "prototype attachment risk", subscaleProfiles.builderProof),
+              makeOption("builder-premature-motion-mitigator", "Mitigator", 3, "Check what could be disrupted before the build begins.", "impact control", "over-caution risk", subscaleProfiles.mitigatorAccountable),
+              makeOption("builder-premature-motion-auditor", "Auditor", 4, "Identify the unproven claim and require proof before scaling.", "proof gate", "challenge friction risk", subscaleProfiles.auditorConstructive)
             ]
           }
         ],
@@ -1337,10 +1462,10 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
             tags: ["Mitigator", "stability"],
             prompt: "Stability is keeping the room together, but an unresolved problem keeps returning. What do you do first?",
             options: [
-              { id: "mitigator-overpreserve-strategist", archetype: "Strategist", coherence: 4, text: "Set the correction sequence and clarify what can no longer be preserved.", strength: "corrective sequence", risk: "hard turn risk" },
-              { id: "mitigator-overpreserve-builder", archetype: "Builder", coherence: 3, text: "Build a practical repair that reduces the recurring pressure.", strength: "repair action", risk: "symptom patch risk" },
-              { id: "mitigator-overpreserve-mitigator", archetype: "Mitigator", coherence: 3, text: "Stabilize the room enough to make correction possible.", strength: "safe correction field", risk: "prolonged holding risk" },
-              { id: "mitigator-overpreserve-auditor", archetype: "Auditor", coherence: 4, text: "Name the recurring issue and prove where preservation has become avoidance.", strength: "avoidance detection", risk: "pressure shock risk" }
+              makeOption("mitigator-overpreserve-strategist", "Strategist", 4, "Set the correction sequence and clarify what can no longer be preserved.", "corrective sequence", "hard turn risk", subscaleProfiles.strategistCorrection),
+              makeOption("mitigator-overpreserve-builder", "Builder", 3, "Build a practical repair that reduces the recurring pressure.", "repair action", "symptom patch risk", subscaleProfiles.builderStrong),
+              makeOption("mitigator-overpreserve-mitigator", "Mitigator", 3, "Stabilize the room enough to make correction possible.", "safe correction field", "prolonged holding risk", subscaleProfiles.mitigatorAccountable),
+              makeOption("mitigator-overpreserve-auditor", "Auditor", 4, "Name the recurring issue and prove where preservation has become avoidance.", "avoidance detection", "pressure shock risk", subscaleProfiles.auditorConstructive)
             ]
           }
         ],
@@ -1351,10 +1476,10 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
             tags: ["Auditor", "evidence"],
             prompt: "You found the contradiction, but the room now needs a constructive next step. What do you do first?",
             options: [
-              { id: "auditor-closure-strategist", archetype: "Strategist", coherence: 4, text: "Turn the audit into a corrected decision sequence.", strength: "audit-to-sequence", risk: "authority snap risk" },
-              { id: "auditor-closure-builder", archetype: "Builder", coherence: 3, text: "Build the smallest repair that proves the corrected claim.", strength: "proof repair", risk: "repair too soon risk" },
-              { id: "auditor-closure-mitigator", archetype: "Mitigator", coherence: 3, text: "Reduce the social damage caused by the contradiction before moving forward.", strength: "pressure care", risk: "truth softening risk" },
-              { id: "auditor-closure-auditor", archetype: "Auditor", coherence: 4, text: "State the contradiction, state the correction, and close the audit with a receipt.", strength: "truth closure", risk: "cold closure risk" }
+              makeOption("auditor-closure-strategist", "Strategist", 4, "Turn the audit into a corrected decision sequence.", "audit-to-sequence", "authority snap risk", subscaleProfiles.strategistCorrection),
+              makeOption("auditor-closure-builder", "Builder", 3, "Build the smallest repair that proves the corrected claim.", "proof repair", "repair too soon risk", subscaleProfiles.builderProof),
+              makeOption("auditor-closure-mitigator", "Mitigator", 3, "Reduce the social damage caused by the contradiction before moving forward.", "pressure care", "truth softening risk", subscaleProfiles.mitigatorAccountable),
+              makeOption("auditor-closure-auditor", "Auditor", 4, "State the contradiction, state the correction, and close the audit with a receipt.", "truth closure", "cold closure risk", subscaleProfiles.auditorConstructive)
             ]
           }
         ]
@@ -1387,6 +1512,14 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
 
       function listItems(items) {
         return items.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+      }
+
+      function formatPercent(value) {
+        return `${Number(value).toFixed(1)}%`;
+      }
+
+      function clamp(value, min, max) {
+        return Math.min(Math.max(value, min), max);
       }
 
       function renderArchetypeLibrary() {
@@ -1587,6 +1720,13 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
           .map(([key]) => key);
       }
 
+      function loadEntries(map, limit = 6) {
+        return Array.from(map.entries())
+          .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+          .slice(0, limit)
+          .map(([label, weight]) => ({ label, weight }));
+      }
+
       function scoreBand(score) {
         if (score < 3) return {
           label: "Fragmented / Low Coherence",
@@ -1618,6 +1758,14 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
         return "Your self-rating is much lower than the revealed pattern. This suggests high underclaim or a confidence gap.";
       }
 
+      function calibrationDirection(gap) {
+        if (gap >= -1 && gap <= 1) return "Calibrated";
+        if (gap > 2.5) return "High overclaim";
+        if (gap > 1) return "Moderate overclaim";
+        if (gap < -2.5) return "High underclaim";
+        return "Moderate underclaim";
+      }
+
       function claimMatchText(claimedPrimary, claimedSecondary, revealedPrimary, revealedSecondary) {
         if (claimedPrimary === revealedPrimary && claimedSecondary === revealedSecondary) return "Exact Blend Match";
         if (claimedPrimary === revealedSecondary && claimedSecondary === revealedPrimary) return "Blend Match / Order Reversal";
@@ -1625,6 +1773,17 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
         if (claimedSecondary === revealedSecondary) return "Secondary Match";
         if ([revealedPrimary, revealedSecondary].includes(claimedPrimary) || [revealedPrimary, revealedSecondary].includes(claimedSecondary)) return "Partial Match";
         return "Mismatch / Recalibration Suggested";
+      }
+
+      function claimAlignmentScore(claimMatch) {
+        return {
+          "Exact Blend Match": 100,
+          "Blend Match / Order Reversal": 85,
+          "Primary Match": 75,
+          "Secondary Match": 65,
+          "Partial Match": 50,
+          "Mismatch / Recalibration Suggested": 25
+        }[claimMatch] || 25;
       }
 
       function nextStepFor(primary, secondary, bandLabel) {
@@ -1638,6 +1797,64 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
         return `${step} Your support pattern is ${secondary}. Current band: ${bandLabel}.`;
       }
 
+      function preferenceAxis(leftLabel, rightLabel, leftValue, rightValue, threshold = 7) {
+        const diff = leftValue - rightValue;
+        if (Math.abs(diff) <= threshold) return {
+          label: "Balanced",
+          leftLabel,
+          rightLabel,
+          leftValue,
+          rightValue,
+          diff
+        };
+
+        return {
+          label: diff > 0 ? leftLabel : rightLabel,
+          leftLabel,
+          rightLabel,
+          leftValue,
+          rightValue,
+          diff
+        };
+      }
+
+      function processingBand(index) {
+        if (index < 40) return "Emerging Processing Signal";
+        if (index < 60) return "Functional Processing Signal";
+        if (index < 75) return "Strong Processing Signal";
+        if (index < 90) return "Advanced Processing Signal";
+        return "Exceptional Processing Signal";
+      }
+
+      function confidenceBand(dominanceMargin, vector) {
+        const topThree = vector.slice(0, 3).map((item) => item.percent);
+        const clustered = topThree.length === 3 && Math.max(...topThree) - Math.min(...topThree) <= 10;
+
+        if (clustered) return "Clustered / mixed profile";
+        if (dominanceMargin >= 15) return "High confidence";
+        if (dominanceMargin >= 7) return "Moderate confidence";
+        return "Low / blended confidence";
+      }
+
+      function dominanceDisposition(margin) {
+        if (margin >= 15) return "Strong lead";
+        if (margin >= 7) return "Moderate lead";
+        return "Blended result";
+      }
+
+      function metricLabel(key) {
+        return {
+          sequence: "Sequence Integrity",
+          evidence: "Evidence Discipline",
+          action: "Action Realism",
+          stability: "Field Stability",
+          correction: "Correction Capacity",
+          contradiction: "Contradiction Resistance",
+          calibration: "Calibration Accuracy",
+          claimAlignment: "Claim-Pattern Alignment"
+        }[key] || key;
+      }
+
       function calculateResult() {
         const mode = getRadioValue("assessmentMode") || "graded";
         const selfRating = Number(getRadioValue("selfRating"));
@@ -1648,14 +1865,23 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
         const maxRaw = generatedQuestions.length * 3 * MAX_COHERENCE_VALUE;
         const archetypeTotals = new Map();
         const archetypeCoherence = new Map();
+        const primaryResponseTotals = new Map();
+        const secondaryResponseTotals = new Map();
         const strengths = new Map();
         const risks = new Map();
+        const subscaleTotals = SUBSCALES.reduce((acc, key) => {
+          acc[key] = 0;
+          return acc;
+        }, {});
 
         for (const question of generatedQuestions) {
           const primaryId = getRadioValue(`${question.id}-primary`);
           const secondaryId = getRadioValue(`${question.id}-secondary`);
           const primary = findOption(question.id, primaryId);
           const secondary = findOption(question.id, secondaryId);
+
+          incrementMap(primaryResponseTotals, primary.archetype, 1);
+          incrementMap(secondaryResponseTotals, secondary.archetype, 1);
 
           [
             { option: primary, weight: 2 },
@@ -1666,6 +1892,10 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
             incrementMap(archetypeCoherence, item.option.archetype, item.option.coherence * item.weight);
             incrementMap(strengths, item.option.strength, item.weight);
             incrementMap(risks, item.option.risk, item.weight);
+
+            SUBSCALES.forEach((key) => {
+              subscaleTotals[key] += (item.option.subscale[key] || 0) * item.weight;
+            });
           });
         }
 
@@ -1676,14 +1906,118 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
           .map((name) => ({
             name,
             points: archetypeTotals.get(name) || 0,
-            coherence: archetypeCoherence.get(name) || 0
+            coherence: archetypeCoherence.get(name) || 0,
+            percent: Number((((archetypeTotals.get(name) || 0) / (generatedQuestions.length * 3)) * 100).toFixed(1)),
+            primaryCount: primaryResponseTotals.get(name) || 0,
+            secondaryCount: secondaryResponseTotals.get(name) || 0
           }))
           .sort((a, b) => b.points - a.points || b.coherence - a.coherence || a.name.localeCompare(b.name));
 
         const revealedPrimary = rankedArchetypes[0]?.name || "Undetermined";
         const revealedSecondary = rankedArchetypes[1]?.name || "Undetermined";
         const claimMatch = claimMatchText(claimedPrimary, claimedSecondary, revealedPrimary, revealedSecondary);
+        const claimPatternAlignment = claimAlignmentScore(claimMatch);
         const calibrationGap = Number((selfRating - scaledScore).toFixed(1));
+        const calibrationAccuracy = Math.round(clamp((1 - (Math.abs(calibrationGap) / 5)) * 100, 0, 100));
+
+        const maxSubscale = generatedQuestions.length * 3 * MAX_COHERENCE_VALUE;
+        const subscales = {};
+        SUBSCALES.forEach((key) => {
+          subscales[key] = Math.round((subscaleTotals[key] / maxSubscale) * 100);
+        });
+        subscales.calibration = calibrationAccuracy;
+        subscales.claimAlignment = claimPatternAlignment;
+
+        const dominanceMargin = Number(((rankedArchetypes[0]?.percent || 0) - (rankedArchetypes[1]?.percent || 0)).toFixed(1));
+        const confidence = confidenceBand(dominanceMargin, rankedArchetypes);
+
+        const cognitiveProcessingIndex = Math.round(
+          subscales.sequence * 0.18 +
+          subscales.evidence * 0.20 +
+          subscales.contradiction * 0.18 +
+          subscales.correction * 0.16 +
+          subscales.calibration * 0.14 +
+          subscales.claimAlignment * 0.14
+        );
+
+        const vectorByName = Object.fromEntries(rankedArchetypes.map((item) => [item.name, item.percent]));
+        const strategistAuditor = (vectorByName.Strategist || 0) + (vectorByName.Auditor || 0);
+        const builderMitigator = (vectorByName.Builder || 0) + (vectorByName.Mitigator || 0);
+
+        const preference = {
+          orientation: preferenceAxis(
+            "Internal",
+            "External",
+            subscales.evidence + subscales.sequence + subscales.contradiction,
+            subscales.action + subscales.stability
+          ),
+          information: preferenceAxis(
+            "Pattern",
+            "Concrete",
+            strategistAuditor,
+            builderMitigator
+          ),
+          judgment: preferenceAxis(
+            "Logic",
+            "Relational",
+            strategistAuditor + subscales.evidence + subscales.contradiction,
+            (vectorByName.Mitigator || 0) + subscales.stability + subscales.correction
+          ),
+          closure: preferenceAxis(
+            "Structured",
+            "Adaptive",
+            subscales.sequence + subscales.claimAlignment + subscales.contradiction,
+            subscales.action + subscales.stability + subscales.correction
+          )
+        };
+
+        const balancedCount = Object.values(preference).filter((axis) => axis.label === "Balanced").length;
+        const preferenceType = balancedCount >= 2
+          ? "Balanced Preference Type"
+          : `${preference.information.label}-Led ${preference.closure.label} ${preference.judgment.label} Type`;
+
+        const strengthLoad = loadEntries(strengths);
+        const riskLoad = loadEntries(risks);
+
+        const engineering = {
+          rawScore,
+          maxRaw,
+          normalizedScore: scaledScore,
+          calibrationError: calibrationGap,
+          calibrationDirection: calibrationDirection(calibrationGap),
+          claimAlignmentClass: claimMatch,
+          claimPatternAlignment,
+          archetypeVector: rankedArchetypes,
+          dominanceMargin,
+          dominanceDisposition: dominanceDisposition(dominanceMargin),
+          confidenceBand: confidence,
+          primaryDistribution: Object.keys(archetypes).map((name) => ({
+            name,
+            count: primaryResponseTotals.get(name) || 0,
+            percent: Number((((primaryResponseTotals.get(name) || 0) / generatedQuestions.length) * 100).toFixed(1))
+          })),
+          secondaryDistribution: Object.keys(archetypes).map((name) => ({
+            name,
+            count: secondaryResponseTotals.get(name) || 0,
+            percent: Number((((secondaryResponseTotals.get(name) || 0) / generatedQuestions.length) * 100).toFixed(1))
+          })),
+          subscales,
+          cognitiveProcessingIndex,
+          cognitiveProcessingBand: processingBand(cognitiveProcessingIndex),
+          preferenceType,
+          preference,
+          strengthLoad,
+          riskLoad
+        };
+
+        engineering.technicalDisposition = [
+          `${band.label} with ${claimMatch}.`,
+          `Revealed pattern is ${revealedPrimary}-led with ${revealedSecondary} support.`,
+          `Dominance reads as ${engineering.dominanceDisposition.toLowerCase()} with ${confidence.toLowerCase()}.`,
+          `Calibration direction: ${engineering.calibrationDirection.toLowerCase()}.`,
+          `Cognitive Processing Estimate: ${cognitiveProcessingIndex}/100, ${engineering.cognitiveProcessingBand.toLowerCase()}, not an IQ score.`,
+          `Preference-Type Hypothesis: ${preferenceType}, not official MBTI®.`
+        ].join(" ");
 
         return {
           mode,
@@ -1703,37 +2037,230 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
           risks: topEntries(risks),
           nextStep: nextStepFor(revealedPrimary, revealedSecondary, band.label),
           rankedArchetypes,
+          engineering,
           generatedAt: new Date().toISOString()
         };
       }
 
       function resultText(data) {
         const showScore = data.mode === "graded";
+        const e = data.engineering;
+
+        const vectorText = e.archetypeVector
+          .map((item) => `${item.name}: ${item.points}/${generatedQuestions.length * 3} · ${formatPercent(item.percent)}`)
+          .join("; ");
+
+        const primaryDistributionText = e.primaryDistribution
+          .map((item) => `${item.name}: ${item.count}/${generatedQuestions.length} · ${formatPercent(item.percent)}`)
+          .join("; ");
+
+        const secondaryDistributionText = e.secondaryDistribution
+          .map((item) => `${item.name}: ${item.count}/${generatedQuestions.length} · ${formatPercent(item.percent)}`)
+          .join("; ");
+
+        const subscaleText = Object.entries(e.subscales)
+          .map(([key, value]) => `${metricLabel(key)}: ${value}/100`)
+          .join("; ");
+
+        const strengthLoadText = e.strengthLoad.map((item) => `${item.label}: weight ${item.weight}`).join("; ");
+        const riskLoadText = e.riskLoad.map((item) => `${item.label}: weight ${item.weight}`).join("; ");
 
         return [
           "COHERENCE DIAGNOSTIC ASSESSMENT RESULT",
           `Generated: ${data.generatedAt}`,
           "",
+          "PUBLIC RESULT",
           `Mode: ${data.mode}`,
           showScore ? `Coherence score: ${data.scaledScore}/10` : "Coherence score: Not shown in ungraded mode",
           showScore ? `Coherence band: ${data.band.label}` : "Coherence band: Not shown in ungraded mode",
           `Self-rated coherence: ${data.selfRating}/10`,
           showScore ? `Calibration gap: ${data.calibrationGap}` : "Calibration gap: Not shown in ungraded mode",
           `Calibration note: ${showScore ? data.calibrationExplanation : "Ungraded mode selected."}`,
-          "",
           `Claimed primary archetype: ${data.claimedPrimary}`,
           `Claimed secondary archetype: ${data.claimedSecondary}`,
           `Revealed primary archetype: ${data.revealedPrimary}`,
           `Revealed secondary archetype: ${data.revealedSecondary}`,
           `Claim match: ${data.claimMatch}`,
-          "",
           `Top strengths: ${data.strengths.join(", ")}`,
           `Top risks: ${data.risks.join(", ")}`,
           `Recommended next step: ${data.nextStep}`,
           "",
-          "Coming soon: email results and character profile saving.",
-          "Boundary: This is not a medical, mental-health, legal, employment, or IQ diagnostic."
+          "ENGINEERING LENS",
+          `Raw score: ${e.rawScore}/${e.maxRaw}`,
+          `Normalized score: ${e.normalizedScore}/10`,
+          `Calibration error: ${e.calibrationError}`,
+          `Calibration direction: ${e.calibrationDirection}`,
+          `Claim alignment: ${e.claimAlignmentClass}`,
+          `Archetype vector: ${vectorText}`,
+          `Dominance margin: ${formatPercent(e.dominanceMargin)} · ${e.dominanceDisposition}`,
+          `Confidence band: ${e.confidenceBand}`,
+          `Primary response distribution: ${primaryDistributionText}`,
+          `Secondary response distribution: ${secondaryDistributionText}`,
+          `Subscale metrics: ${subscaleText}`,
+          `Cognitive Processing Estimate: ${e.cognitiveProcessingIndex}/100 · ${e.cognitiveProcessingBand} · not an IQ score`,
+          `Preference-Type Hypothesis: ${e.preferenceType} · not official MBTI®`,
+          `Preference axes: Orientation ${e.preference.orientation.label}; Information ${e.preference.information.label}; Judgment ${e.preference.judgment.label}; Closure ${e.preference.closure.label}`,
+          `Strength load: ${strengthLoadText}`,
+          `Risk load: ${riskLoadText}`,
+          `Technical disposition: ${e.technicalDisposition}`,
+          "",
+          "COMING SOON",
+          "Email results and character profile saving are not active yet.",
+          "",
+          "BOUNDARIES",
+          "This is not a medical, mental-health, legal, employment, intelligence, or official personality-type diagnostic.",
+          "The Cognitive Processing Estimate is not an IQ score.",
+          "The Preference-Type Hypothesis is not an official MBTI® result.",
+          "This version is local-only and does not email, store, archive, or submit your result."
         ].join("\n");
+      }
+
+      function renderMetricCard(label, value, note = "") {
+        return `
+          <article class="metric-card">
+            <b>${escapeHtml(label)}</b>
+            <strong>${escapeHtml(value)}</strong>
+            ${note ? `<span>${escapeHtml(note)}</span>` : ""}
+          </article>
+        `;
+      }
+
+      function renderBarMetric(label, value, note = "") {
+        const safeValue = clamp(Number(value) || 0, 0, 100);
+        return `
+          <article class="metric-card">
+            <b>${escapeHtml(label)}</b>
+            <strong>${safeValue}/100</strong>
+            <div class="metric-bar" aria-hidden="true" style="--w:${safeValue}%"><i></i></div>
+            ${note ? `<span>${escapeHtml(note)}</span>` : ""}
+          </article>
+        `;
+      }
+
+      function renderLoadList(items) {
+        if (!items.length) return "<li>No load markers.</li>";
+        return items.map((item) => `<li>${escapeHtml(item.label)} · weight ${escapeHtml(item.weight)}</li>`).join("");
+      }
+
+      function renderVectorCards(items, denominator) {
+        return items.map((item) => `
+          <article class="metric-card">
+            <b>${escapeHtml(item.name)}</b>
+            <strong>${escapeHtml(item.points)} / ${escapeHtml(denominator)} · ${escapeHtml(formatPercent(item.percent))}</strong>
+            <div class="metric-bar" aria-hidden="true" style="--w:${item.percent}%"><i></i></div>
+            <span>Primary ${item.primaryCount} · Secondary ${item.secondaryCount}</span>
+          </article>
+        `).join("");
+      }
+
+      function renderDistributionCards(items, denominator) {
+        return items.map((item) => `
+          <article class="metric-card">
+            <b>${escapeHtml(item.name)}</b>
+            <strong>${escapeHtml(item.count)} / ${escapeHtml(denominator)} · ${escapeHtml(formatPercent(item.percent))}</strong>
+            <div class="metric-bar" aria-hidden="true" style="--w:${item.percent}%"><i></i></div>
+          </article>
+        `).join("");
+      }
+
+      function renderEngineeringLens(data) {
+        const e = data.engineering;
+        const archetypeDenominator = generatedQuestions.length * 3;
+
+        return `
+          <details class="engineering-readout">
+            <summary>
+              <span>
+                <strong>Engineering Lens · Technical Assessment Disposition</strong>
+                <br>
+                <span style="color:rgba(239,247,255,.62);font-size:.84rem;font-weight:760;">
+                  Open for raw score, archetype vector, dominance, confidence, subscales, cognitive processing estimate, and preference-type hypothesis.
+                </span>
+              </span>
+            </summary>
+
+            <div class="engineering-content">
+              <div class="technical-summary">
+                <strong>Technical Disposition:</strong> ${escapeHtml(e.technicalDisposition)}
+              </div>
+
+              <div class="metric-grid three">
+                ${renderMetricCard("Raw Coherence Score", `${e.rawScore} / ${e.maxRaw}`, "Primary response is weighted ×2. Secondary response is weighted ×1.")}
+                ${renderMetricCard("Normalized Score", `${e.normalizedScore} / 10`, "Scaled from the raw local result.")}
+                ${renderMetricCard("Calibration Error", `${e.calibrationError}`, `${e.calibrationDirection}: self-rating minus normalized score.`)}
+                ${renderMetricCard("Claim Alignment", e.claimAlignmentClass, "Compares claimed blend against revealed blend.")}
+                ${renderMetricCard("Dominance Margin", `${formatPercent(e.dominanceMargin)}`, e.dominanceDisposition)}
+                ${renderMetricCard("Confidence Band", e.confidenceBand, "Confidence measures archetype separation, not overall coherence.")}
+              </div>
+
+              <h3>Archetype Vector</h3>
+              <div class="metric-grid">
+                ${renderVectorCards(e.archetypeVector, archetypeDenominator)}
+              </div>
+
+              <h3>Response Architecture</h3>
+              <div class="metric-grid">
+                <div class="load-card">
+                  <b>Primary Response Distribution</b>
+                  <div class="metric-grid">
+                    ${renderDistributionCards(e.primaryDistribution, generatedQuestions.length)}
+                  </div>
+                </div>
+
+                <div class="load-card">
+                  <b>Secondary Response Distribution</b>
+                  <div class="metric-grid">
+                    ${renderDistributionCards(e.secondaryDistribution, generatedQuestions.length)}
+                  </div>
+                </div>
+              </div>
+
+              <h3>Subscale Metrics</h3>
+              <div class="metric-grid">
+                ${renderBarMetric("Sequence Integrity", e.subscales.sequence, "Order, timing, lawful steps, and decision sequence.")}
+                ${renderBarMetric("Evidence Discipline", e.subscales.evidence, "Separation of evidence from assumption.")}
+                ${renderBarMetric("Action Realism", e.subscales.action, "Ability to convert insight into realistic action.")}
+                ${renderBarMetric("Field Stability", e.subscales.stability, "Ability to keep people and systems usable under pressure.")}
+                ${renderBarMetric("Correction Capacity", e.subscales.correction, "Ability to admit, repair, revise, and update.")}
+                ${renderBarMetric("Contradiction Resistance", e.subscales.contradiction, "Ability to withstand incompatible claims without false closure.")}
+                ${renderBarMetric("Calibration Accuracy", e.subscales.calibration, "Alignment between self-rating and revealed scenario pattern.")}
+                ${renderBarMetric("Claim-Pattern Alignment", e.subscales.claimAlignment, "Alignment between claimed archetype blend and revealed blend.")}
+              </div>
+
+              <h3>Cognitive Processing Estimate</h3>
+              <div class="metric-grid">
+                ${renderBarMetric("Cognitive Processing Index", e.cognitiveProcessingIndex, e.cognitiveProcessingBand)}
+                ${renderMetricCard("Boundary", "Not an IQ score", "This is a scenario-based estimate of reasoning pressure, evidence handling, contradiction resistance, correction capacity, and self-calibration inside this diagnostic.")}
+              </div>
+
+              <h3>Preference-Type Hypothesis</h3>
+              <div class="metric-grid">
+                ${renderMetricCard("Preference-Type Hypothesis", e.preferenceType, "Reflection-only preference signal inferred from this diagnostic’s scenario choices.")}
+                ${renderMetricCard("Boundary", "Not official MBTI®", "This is not an official MBTI® result, certified personality type, or personality diagnosis.")}
+                ${renderMetricCard("Orientation Axis", e.preference.orientation.label, `${e.preference.orientation.leftLabel} / ${e.preference.orientation.rightLabel}`)}
+                ${renderMetricCard("Information Axis", e.preference.information.label, `${e.preference.information.leftLabel} / ${e.preference.information.rightLabel}`)}
+                ${renderMetricCard("Judgment Axis", e.preference.judgment.label, `${e.preference.judgment.leftLabel} / ${e.preference.judgment.rightLabel}`)}
+                ${renderMetricCard("Closure Axis", e.preference.closure.label, `${e.preference.closure.leftLabel} / ${e.preference.closure.rightLabel}`)}
+              </div>
+
+              <div class="metric-grid">
+                <div class="load-card">
+                  <b>Strength Load</b>
+                  <ul>${renderLoadList(e.strengthLoad)}</ul>
+                </div>
+
+                <div class="load-card">
+                  <b>Risk Load</b>
+                  <ul>${renderLoadList(e.riskLoad)}</ul>
+                </div>
+              </div>
+
+              <div class="warning">
+                The Engineering Lens is a technical readout of this local diagnostic only. It is not medical, mental-health, legal, employment, intelligence, or official personality-type assessment output.
+              </div>
+            </div>
+          </details>
+        `;
       }
 
       function renderResult(data) {
@@ -1815,10 +2342,12 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
                 </article>
               </div>
 
+              ${renderEngineeringLens(data)}
+
               <div class="coming-soon">
                 <h3>Coming Soon</h3>
                 <p><strong>Email Results:</strong> Soon, you will be able to enter your email and receive your diagnostic read directly in your inbox.</p>
-                <p><strong>Character Profile Save:</strong> Soon, you will be able to save this result into your interactive narrative character profile, so your coherence pattern can help shape your role, archetype, and profile read.</p>
+                <p><strong>Character Profile Save:</strong> Soon, this result will become more than a score. You will be able to save your coherence pattern into your interactive narrative character profile, where your revealed archetype blend can help shape your role, your starting disposition, your strengths, your risks, and the way the story recognizes you when you enter.</p>
                 <p>For now, your full result is available directly on this page. You can copy it or print it without entering an email.</p>
                 <div class="button-cluster">
                   <button class="disabled-btn" type="button" disabled>Email Results — Coming Soon</button>
@@ -1827,7 +2356,7 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
               </div>
 
               <div class="warning">
-                This result is a coherence-pattern read only. It is not a medical, mental-health, legal, employment, or intelligence diagnostic. This version does not email, store, archive, or submit your result.
+                This result is a coherence-pattern read only. It is not a medical, mental-health, legal, employment, intelligence, or official personality-type diagnostic. The Cognitive Processing Estimate is not an IQ score. The Preference-Type Hypothesis is not an official MBTI® result. This version does not email, store, archive, or submit your result.
               </div>
 
               <div class="button-row">
@@ -1988,8 +2517,12 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
       document.documentElement.dataset.coherenceDiagnosticLocalOnly = "true";
       document.documentElement.dataset.coherenceDiagnosticStorage = "false";
       document.documentElement.dataset.coherenceDiagnosticMedical = "false";
+      document.documentElement.dataset.coherenceDiagnosticEngineeringLens = "true";
+      document.documentElement.dataset.coherenceDiagnosticCognitiveEstimate = "not-iq";
+      document.documentElement.dataset.coherenceDiagnosticPreferenceType = "not-official-mbti";
       window.COHERENCE_DIAGNOSTIC_ASSESSMENT_RECEIPT = {
         contract: CONTRACT,
+        previousContract: "COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULTS_TNT_v2",
         route: "/coherence-diagnostic/",
         file: "/coherence-diagnostic/index.html",
         questionsMinimum: 12,
@@ -1998,14 +2531,23 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ADAPTIVE_ARCHETYPE_LIBRARY_COMING_SOON_RESULT
         publicArchetypes: ["Strategist", "Builder", "Mitigator", "Auditor"],
         adaptiveGeneration: true,
         primarySecondaryRequired: true,
+        publicResultFirst: true,
+        engineeringLensActive: true,
+        cognitiveProcessingEstimate: "not IQ",
+        preferenceTypeHypothesis: "not official MBTI®",
         resultsVisibleWithoutEmail: true,
         emailResultsActive: false,
         characterProfileSaveActive: false,
+        characterProfileComingSoonTone: "intrigue-forward",
+        emailResultsComingSoonTone: "plain-practical",
         localGrading: true,
         noBackend: true,
         noStorage: true,
         medicalDiagnostic: false,
         employmentScreening: false,
+        legalDetermination: false,
+        iqClaim: false,
+        officialMbtiClaim: false,
         canvas: false,
         webgl: false,
         generatedImage: false,

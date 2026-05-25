@@ -2,19 +2,24 @@
 <html
   lang="en"
   data-route="/coherence-diagnostic/"
-  data-page="coherence-diagnostic-presentation-forward-question-delivery"
-  data-contract="COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_TNT_v6"
-  data-previous-contract="COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_TNT_v5"
-  data-spec-ops-contract="COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_SPEC_OPS_v6"
-  data-news-contract="COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_NEWS_v6"
-  data-ccr-contract="COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_CCR_v6"
-  data-change-type="question-delivery-renewal-only"
+  data-page="coherence-diagnostic-real-world-random-scenario-bank-result-hero"
+  data-contract="COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HERO_TNT_v7"
+  data-previous-contract="COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_TNT_v6"
+  data-spec-ops-contract="COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HERO_SPEC_OPS_v7"
+  data-news-contract="COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HERO_NEWS_v7"
+  data-ccr-contract="COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HERO_CCR_v7"
+  data-change-type="real-world-scenario-bank-and-result-hero-renewal"
   data-question-minimum="12"
   data-q1-fixed="true"
   data-q2-fixed="true"
+  data-generated-scenario-count="10"
+  data-real-world-scenario-bank="active"
+  data-controlled-randomization="active"
+  data-result-hero-three-card-row="active"
+  data-result-hero-coherence-score="active"
+  data-projected-iq-style-range="active"
+  data-possible-mbti-style-type="active"
   data-public-archetypes="Strategist,Builder,Mitigator,Auditor"
-  data-question-delivery="presentation-forward-human-moments"
-  data-scenario-rhythm="moment-pressure-coherence-test"
   data-hidden-fragmentation-bucket="active"
   data-visible-answer-type-labels="false"
   data-visible-answer-strength-labels="false"
@@ -22,7 +27,6 @@
   data-option-randomization="true"
   data-adaptive-generation="true"
   data-primary-secondary-required="true"
-  data-section-contrast-renewed="true"
   data-results-visible-without-email="true"
   data-engineering-lens-active="true"
   data-technical-readout-result-only="true"
@@ -49,7 +53,7 @@
   <title>Coherence Diagnostic Assessment · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="A local-only adaptive coherence diagnostic using self-rated coherence, claimed archetype blend, presentation-forward human scenario questions, coherence probes, and an optional Engineering Lens result readout."
+    content="A local-only adaptive coherence diagnostic using self-rated coherence, claimed archetype blend, randomized real-world scenarios, coherence probes, a visible result hero, and an optional Engineering Lens readout."
   >
 
   <style>
@@ -65,7 +69,6 @@
       --blue:#8dd8ff;
       --mint:#a7f3c6;
       --violet:#ad8cff;
-      --warn:#ffb36d;
       --fail:#ff6b6b;
       --line:rgba(255,255,255,.12);
       --max:1180px;
@@ -852,13 +855,29 @@
 
     .question-top{
       display:grid;
-      gap:10px;
+      gap:8px;
     }
 
     .question-number{
       color:var(--gold);
       font:900 .68rem/1.3 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
       letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+
+    .question-category{
+      width:fit-content;
+      min-height:28px;
+      display:inline-flex;
+      align-items:center;
+      border:1px solid rgba(141,216,255,.14);
+      border-radius:999px;
+      padding:0 10px;
+      color:rgba(141,216,255,.82);
+      background:rgba(141,216,255,.045);
+      font-size:.66rem;
+      font-weight:900;
+      letter-spacing:.10em;
       text-transform:uppercase;
     }
 
@@ -1025,8 +1044,16 @@
       gap:16px;
     }
 
-    .score-card{
+    .result-hero-grid{
       display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .result-hero-card{
+      min-height:176px;
+      display:grid;
+      align-content:start;
       gap:10px;
       border:1px solid rgba(244,207,131,.28);
       border-radius:26px;
@@ -1034,15 +1061,56 @@
       background:
         radial-gradient(circle at 12% 0%,rgba(244,207,131,.12),transparent 16rem),
         radial-gradient(circle at 90% 20%,rgba(141,216,255,.10),transparent 16rem),
+        linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.014)),
+        rgba(255,255,255,.030);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 18px 54px rgba(0,0,0,.22);
+    }
+
+    .result-hero-card.iq-card{
+      border-color:rgba(141,216,255,.26);
+      background:
+        radial-gradient(circle at 12% 0%,rgba(141,216,255,.12),transparent 16rem),
+        radial-gradient(circle at 88% 12%,rgba(244,207,131,.07),transparent 16rem),
         rgba(255,255,255,.030);
     }
 
-    .score-number{
+    .result-hero-card.type-card{
+      border-color:rgba(167,243,198,.22);
+      background:
+        radial-gradient(circle at 12% 0%,rgba(167,243,198,.10),transparent 16rem),
+        radial-gradient(circle at 88% 12%,rgba(141,216,255,.08),transparent 16rem),
+        rgba(255,255,255,.030);
+    }
+
+    .hero-label{
+      color:var(--gold);
+      font:900 .70rem/1.3 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      letter-spacing:.15em;
+      text-transform:uppercase;
+    }
+
+    .iq-card .hero-label{color:rgba(141,216,255,.90)}
+    .type-card .hero-label{color:rgba(167,243,198,.88)}
+
+    .hero-value{
       color:rgba(255,244,216,.98);
-      font-size:clamp(2.8rem,8vw,5.2rem);
-      line-height:.9;
+      font-size:clamp(2.2rem,5vw,4.4rem);
+      line-height:.92;
       letter-spacing:-.07em;
       font-weight:950;
+      overflow-wrap:anywhere;
+    }
+
+    .type-card .hero-value{
+      font-size:clamp(1.75rem,4vw,3.25rem);
+      line-height:.95;
+    }
+
+    .hero-note{
+      color:rgba(239,247,255,.70);
+      font-size:.88rem;
+      line-height:1.36;
+      font-weight:760;
     }
 
     .result-grid{
@@ -1132,12 +1200,14 @@
       .result-grid,
       .mini-grid,
       .metric-grid,
-      .metric-grid.three{
+      .metric-grid.three,
+      .result-hero-grid{
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
 
       .scale-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
       .answer-columns{grid-template-columns:1fr}
+      .result-hero-card:first-child{grid-column:1 / -1}
     }
 
     @media (max-width:640px){
@@ -1152,7 +1222,8 @@
       .result-grid,
       .mini-grid,
       .metric-grid,
-      .metric-grid.three{
+      .metric-grid.three,
+      .result-hero-grid{
         grid-template-columns:1fr;
       }
 
@@ -1161,6 +1232,8 @@
       .step-zone{padding:14px;border-radius:22px}
       .step-band{grid-template-columns:1fr}
       .step-index{width:36px;height:36px}
+      .result-hero-card:first-child{grid-column:auto}
+      .result-hero-card{min-height:auto}
 
       .button-row{align-items:stretch}
       .button-cluster,
@@ -1205,10 +1278,10 @@
     <main class="page">
       <section class="hero" aria-labelledby="page-title">
         <div class="hero-copy">
-          <p class="kicker">Adaptive Assessment · Human Moments · Coherence Probes</p>
+          <p class="kicker">Adaptive Assessment · Real-World Scenarios · Visible Result Hero</p>
           <h1 id="page-title">Coherence Diagnostic Assessment</h1>
           <p>
-            Start with your self-rated coherence and your claimed archetype blend. The diagnostic questions open only after your intake is complete.
+            Start with your self-rated coherence and your claimed archetype blend. The diagnostic then draws real-world scenarios from work, family, money, group pressure, evidence, deadlines, repair, and responsibility.
           </p>
         </div>
 
@@ -1216,9 +1289,10 @@
           <span class="pill">12 questions minimum</span>
           <span class="pill">Q1 fixed scale</span>
           <span class="pill">Q2 primary + secondary archetype</span>
-          <span class="pill">Human scenario delivery</span>
+          <span class="pill">Randomized real-world scenarios</span>
           <span class="pill">Coherence probes</span>
-          <span class="pill">Engineering Lens after result</span>
+          <span class="pill">Projected IQ-style range</span>
+          <span class="pill">Possible MBTI-style type</span>
           <span class="pill">Local-only scoring</span>
         </div>
 
@@ -1232,14 +1306,14 @@
           <div class="panel-head">
             <p class="eyebrow">Intake Sequence</p>
             <h2 id="sequence-title">Move through the assessment in four clean steps.</h2>
-            <p>The first two questions establish the intake anchor. The adaptive scenarios remain held until the intake is complete.</p>
+            <p>The first two questions establish the intake anchor. The real-world scenarios remain held until the intake is complete.</p>
           </div>
           <div class="panel-body">
             <div class="sequence-rail" aria-label="Assessment sequence">
               <div class="sequence-step"><b>Read</b><span>Review the four archetypes before choosing.</span></div>
               <div class="sequence-step"><b>Claim Primary</b><span>Select the archetype you believe you lead with.</span></div>
               <div class="sequence-step"><b>Claim Secondary</b><span>Select the support pattern that balances your primary.</span></div>
-              <div class="sequence-step"><b>Generate</b><span>Open the adaptive diagnostic after intake.</span></div>
+              <div class="sequence-step"><b>Generate</b><span>Open the real-world diagnostic after intake.</span></div>
             </div>
           </div>
         </section>
@@ -1249,7 +1323,7 @@
             <div class="panel-head">
               <p class="eyebrow">Assessment Mode</p>
               <h2 id="mode-title">Choose how you want the result displayed.</h2>
-              <p>Graded mode shows a score, band, calibration gap, and archetype match. Ungraded mode gives a neutral pattern read without a formal score.</p>
+              <p>Graded mode shows a score, band, calibration gap, projected IQ-style range, possible MBTI-style type, and archetype match. Ungraded mode gives a neutral pattern read without a formal coherence score.</p>
             </div>
             <div class="panel-body">
               <div class="mode-grid">
@@ -1257,14 +1331,14 @@
                   <input type="radio" name="assessmentMode" value="graded" checked>
                   <b>Graded Mode</b>
                   <strong>Show my result</strong>
-                  <span>Receive coherence score, band, calibration gap, claimed blend comparison, strengths, risks, and next step.</span>
+                  <span>Receive coherence score, band, projected IQ-style range, possible MBTI-style type, claimed blend comparison, strengths, risks, and next step.</span>
                 </label>
 
                 <label class="choice-card">
                   <input type="radio" name="assessmentMode" value="ungraded">
                   <b>Ungraded Mode</b>
                   <strong>Pattern read only</strong>
-                  <span>Receive a neutral summary without a formal numeric score or score band.</span>
+                  <span>Receive a neutral summary without a formal numeric coherence score or score band. Estimate boundaries still apply.</span>
                 </label>
               </div>
             </div>
@@ -1346,7 +1420,7 @@
           <section class="panel">
             <div class="panel-body">
               <div class="button-row">
-                <p>Questions 3–12 are intentionally held until your self-rating and claimed archetype blend are complete.</p>
+                <p>Questions 3–12 are generated from a balanced real-world scenario bank after your self-rating and claimed archetype blend are complete.</p>
                 <div class="button-cluster">
                   <button class="ghost-btn" type="reset" id="reset-btn">Reset</button>
                   <button class="action-btn" type="button" id="generate-btn">Generate Diagnostic</button>
@@ -1358,9 +1432,9 @@
           <section id="diagnostic-stage" class="diagnostic-stage">
             <section class="panel" aria-labelledby="scenario-title">
               <div class="panel-head">
-                <p class="eyebrow">Questions 3–12 · Adaptive Diagnostic</p>
-                <h2 id="scenario-title">You are about to enter a sequence of pressure moments.</h2>
-                <p>Each moment asks two things: what you would do first, and what you would rely on next. The technical readout appears after the result, not during the questions.</p>
+                <p class="eyebrow">Questions 3–12 · Real-World Scenario Diagnostic</p>
+                <h2 id="scenario-title">You are about to enter ten recognizable pressure situations.</h2>
+                <p>Each situation asks two things: what you would do first, and what you would rely on next. The technical readout appears after the result, not during the questions.</p>
               </div>
               <div class="panel-body" id="scenario-list"></div>
             </section>
@@ -1384,17 +1458,25 @@
         <section id="result" class="result" aria-live="polite" aria-label="Assessment result"></section>
 
         <template id="route-receipt" data-route-receipt>
-COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_TNT_v6
-previous=COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_TNT_v5
+COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HERO_TNT_v7
+previous=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_TNT_v6
 route=/coherence-diagnostic/
 file=/coherence-diagnostic/index.html
-change_type=question_delivery_renewal_only
+change_type=real_world_scenario_bank_and_result_hero_renewal
 questions_minimum=12
 q1_fixed=true
 q2_fixed=true
+generated_scenario_count=10
+real_world_scenario_bank=active
+controlled_randomization=active
+balanced_draw=work_project,relationship_group,evidence_claim,responsibility_repair,instability,archetype_specific
 public_archetypes=Strategist,Builder,Mitigator,Auditor
-question_delivery=presentation_forward_human_moments
-scenario_rhythm=moment_pressure_coherence_test
+result_hero_three_card_row=active
+result_hero_coherence_score=active
+projected_iq_style_range=active
+projected_iq_style_range_boundary=estimate_only_not_iq_test
+possible_mbti_style_type=active
+possible_mbti_style_type_boundary=preference_hypothesis_not_official_mbti
 technical_readout_result_only=true
 hidden_fragmentation_bucket=true
 fragmented_public_archetype=false
@@ -1407,9 +1489,7 @@ claimed_primary_required=true
 claimed_secondary_required=true
 duplicate_claimed_archetype_forbidden=true
 primary_secondary_required=true
-section_contrast_preserved=true
 scoring_change=false
-question_selection_change=false
 archetype_model_change=false
 fragmentation_logic_change=false
 engineering_lens_change=false
@@ -1433,13 +1513,13 @@ canvas=false
 webgl=false
 generated_image=false
 graphic_box=false
-deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
+deploy_marker=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HERO_DEPLOY_MARKER_v7
         </template>
       </section>
     </main>
 
     <footer class="footer">
-      COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_TNT_v6 · Question delivery renewed · Engineering Lens remains result-stage only · Local-only.
+      COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HERO_TNT_v7 · Real-world scenarios · Result hero renewed · Local-only.
     </footer>
   </div>
 
@@ -1447,7 +1527,7 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
     (() => {
       "use strict";
 
-      const CONTRACT = "COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_TNT_v6";
+      const CONTRACT = "COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HERO_TNT_v7";
       const MAX_COHERENCE_VALUE = 4;
       const SUBSCALES = ["sequence","evidence","action","stability","correction","contradiction"];
       const PUBLIC_ARCHETYPES = ["Strategist","Builder","Mitigator","Auditor"];
@@ -1536,221 +1616,297 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
       const fragment = (id, type, coherence, text, risk, subscale) =>
         makeOption(id,"Fragmented",coherence,text,"pressure-break marker",risk,subscale,true,type);
 
-      const baseQuestions = [
+      const scenarioBank = [
         {
-          id:"conflict",
-          title:"Conflict response",
-          tags:["all","pressure","conflict"],
-          moment:"You are in a room where everyone can feel that something is off, but nobody agrees on what broke. The temperature rises. People stop listening and start protecting themselves.",
-          pressure:"The test is whether you can keep the room from splitting while still moving toward truth, accountability, and repair.",
-          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
+          id:"work-unclear-manager",
+          title:"Unclear instructions at work",
+          publicCategory:"Work / Job Pressure",
+          categories:["work","project","responsibility","evidence","accountability"],
+          archetypeFocus:["Strategist","Auditor"],
+          situation:"You are at work. Your manager gives the team unclear instructions, then blames the group when the result is wrong.",
+          pressure:"The difficult part is that challenging the blame could create tension, but ignoring it could let the same failure happen again.",
+          choice:"What do you do first, and what do you rely on next?",
           options:[
-            makeOption("conflict-strategist","Strategist",4,"Pause the room, name the decision that matters, and bring everyone back to the next clear step.","boundary clarity","overcontrol risk",subscaleProfiles.strategistStrong),
-            makeOption("conflict-builder","Builder",3,"Turn the disagreement into one small test the room can actually see and respond to.","action conversion","moving too fast risk",subscaleProfiles.builderStrong),
-            makeOption("conflict-mitigator","Mitigator",4,"Lower the temperature enough for people to hear each other again without pretending the issue is gone.","field stabilization","delay risk",subscaleProfiles.mitigatorStrong),
-            makeOption("conflict-auditor","Auditor",4,"Separate what is being claimed from what is actually known, then ask the room to deal with the difference.","truth protection","adversarial pressure risk",subscaleProfiles.auditorStrong),
-            fragment("conflict-frag-comfort","comfort-over-truth",1,"Keep the room comfortable for now, even if the real issue stays unresolved.","comfort over truth",subscaleProfiles.fragComfort)
+            makeOption("work-manager-strategist","Strategist",4,"Ask the manager to clarify the original instruction, the expected result, and what needs to happen next.","accountability structure","command pressure risk",subscaleProfiles.strategistCorrection),
+            makeOption("work-manager-builder","Builder",3,"Start fixing the work immediately so the team can recover before the damage spreads.","repair momentum","patching before diagnosis risk",subscaleProfiles.builderStrong),
+            makeOption("work-manager-mitigator","Mitigator",3,"Keep the team calm and stop the blame from turning into a bigger conflict.","continuity protection","accountability delay risk",subscaleProfiles.mitigatorAccountable),
+            makeOption("work-manager-auditor","Auditor",4,"Compare what was actually said against what is now being claimed.","receipt logic","cold delivery risk",subscaleProfiles.auditorConstructive),
+            fragment("work-manager-frag-avoid","avoidance",1,"Stay quiet for now because challenging the manager could make things worse.","decision avoidance",subscaleProfiles.fragAvoid)
           ]
         },
         {
-          id:"ambiguous-information",
-          title:"Ambiguous information",
-          tags:["all","evidence","signal"],
-          moment:"You receive only part of the story. A few people are already confident. Others are unsure. The pressure in the room is not just to decide, but to decide quickly.",
-          pressure:"The test is whether speed turns into false certainty, or whether the room can move without pretending it knows more than it does.",
-          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
+          id:"group-chat-claim",
+          title:"Group chat claim",
+          publicCategory:"Group Chat / Social Pressure",
+          categories:["group","social","evidence","public-claim","instability"],
+          archetypeFocus:["Auditor","Mitigator"],
+          situation:"You are in a group chat. Someone posts a serious claim about another person, and everyone starts reacting before anyone verifies it.",
+          pressure:"The difficult part is that the reaction is moving faster than the evidence, and silence can look like agreement.",
+          choice:"What do you do first, and what do you rely on next?",
           options:[
-            makeOption("ambiguous-strategist","Strategist",3,"Define what must be known before a real decision is allowed.","decision discipline","rigidity risk",subscaleProfiles.strategistEvidence),
-            makeOption("ambiguous-builder","Builder",3,"Create a quick, limited test that reveals what is true enough to act on.","proof through action","premature prototype risk",subscaleProfiles.builderProof),
-            makeOption("ambiguous-mitigator","Mitigator",2,"Slow the room down so people do not commit to a conclusion before the facts can catch up.","pace control","indecision risk",subscaleProfiles.mitigatorSoft),
-            makeOption("ambiguous-auditor","Auditor",4,"Separate evidence from assumption and mark every claim that still needs support.","evidence separation","skepticism overload risk",subscaleProfiles.auditorStrong),
-            fragment("ambiguous-frag-false","false-certainty",0,"Choose the answer that feels right and defend it until the room stops circling.","false certainty",subscaleProfiles.fragFalse)
+            makeOption("chat-claim-strategist","Strategist",3,"Pause the thread and ask the group to separate what is known from what is being assumed.","threshold setting","tone hardness risk",subscaleProfiles.strategistEvidence),
+            makeOption("chat-claim-builder","Builder",2,"Move the conversation into one practical step: verify the source before anyone spreads it further.","test motion","testing too soon risk",subscaleProfiles.builderRisky),
+            makeOption("chat-claim-mitigator","Mitigator",3,"Slow the pile-on and keep the conversation from turning into public damage.","pressure care","truth softening risk",subscaleProfiles.mitigatorAccountable),
+            makeOption("chat-claim-auditor","Auditor",4,"Ask for the evidence and make it clear that a serious claim should not travel without proof.","claim discipline","overpressure risk",subscaleProfiles.auditorStrong),
+            fragment("chat-claim-frag-motion","motion-without-proof",1,"React with the group now and worry about verification later if it turns out to be wrong.","motion without proof",subscaleProfiles.fragMotion)
           ]
         },
         {
-          id:"responsibility-pressure",
-          title:"Responsibility pressure",
-          tags:["all","accountability","repair"],
-          moment:"A project fails. The first reaction is not repair. It is self-protection. People begin explaining why the failure was not really theirs.",
-          pressure:"The test is whether accountability becomes blame, avoidance, repair, or a usable sequence of responsibility.",
-          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
+          id:"contractor-vague-excuse",
+          title:"Contractor asks for more money",
+          publicCategory:"Money / Transaction Pressure",
+          categories:["money","transaction","evidence","responsibility","repair"],
+          archetypeFocus:["Auditor","Strategist"],
+          situation:"You hired someone to fix something at your house. They miss the deadline, give a vague excuse, and ask for more money before showing proof of progress.",
+          pressure:"The difficult part is deciding whether to preserve the working relationship, demand receipts, or move toward a harder boundary.",
+          choice:"What do you do first, and what do you rely on next?",
           options:[
-            makeOption("responsibility-strategist","Strategist",4,"Clarify who owned what, then define the repair sequence from there.","accountability structure","command pressure risk",subscaleProfiles.strategistCorrection),
-            makeOption("responsibility-builder","Builder",3,"Stop the failure from spreading by building the first practical repair step.","repair momentum","patching before diagnosis risk",subscaleProfiles.builderStrong),
-            makeOption("responsibility-mitigator","Mitigator",2,"Keep the group from fragmenting long enough to continue the repair conversation.","continuity protection","accountability delay risk",subscaleProfiles.mitigatorSoft),
-            makeOption("responsibility-auditor","Auditor",4,"Compare what was promised against what was actually done and correct the record.","receipt logic","cold delivery risk",subscaleProfiles.auditorConstructive),
-            fragment("responsibility-frag-blame","blame-shift",0,"Focus first on who caused the problem, because nothing should move until the person at fault is exposed.","blame displacement",subscaleProfiles.fragBlame)
+            makeOption("contractor-strategist","Strategist",4,"Restate the agreement, define what proof is required, and set the next decision point.","boundary clarity","overcontrol risk",subscaleProfiles.strategistCorrection),
+            makeOption("contractor-builder","Builder",2,"Ask what can be finished today and push the work back into visible progress.","repair action","symptom patch risk",subscaleProfiles.builderRisky),
+            makeOption("contractor-mitigator","Mitigator",2,"Keep the exchange calm so the situation does not become hostile too quickly.","interaction stability","soft accountability risk",subscaleProfiles.mitigatorSoft),
+            makeOption("contractor-auditor","Auditor",4,"Require proof of completed work before approving more money.","evidence separation","challenge friction risk",subscaleProfiles.auditorConstructive),
+            fragment("contractor-frag-comfort","comfort-over-truth",1,"Pay the extra amount to avoid conflict and hope the work gets back on track.","comfort over accountability",subscaleProfiles.fragComfort)
           ]
         },
         {
-          id:"contradiction",
-          title:"Contradiction detection",
-          tags:["all","evidence","contradiction"],
-          moment:"Someone makes two claims that cannot both be true. The room notices, but nobody wants to stop the momentum and deal with it directly.",
-          pressure:"The test is whether contradiction becomes a turning point or gets absorbed into confusion.",
-          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
+          id:"family-dinner-old-argument",
+          title:"Family dinner argument",
+          publicCategory:"Family / Relationship Pressure",
+          categories:["family","relationship","group","instability","responsibility"],
+          archetypeFocus:["Mitigator","Strategist"],
+          situation:"You are at a family dinner. Two relatives start arguing about something from years ago, and the room splits into sides.",
+          pressure:"The difficult part is that people want loyalty more than clarity, and the room can become unsafe before anyone solves anything.",
+          choice:"What do you do first, and what do you rely on next?",
           options:[
-            makeOption("contradiction-strategist","Strategist",3,"Pause the process and require one clear rule before the room moves forward.","rule control","premature closure risk",subscaleProfiles.strategistEvidence),
-            makeOption("contradiction-builder","Builder",2,"Put both claims into a practical test and see which one survives contact with reality.","reality contact","testing around a contradiction risk",subscaleProfiles.builderRisky),
-            makeOption("contradiction-mitigator","Mitigator",2,"Keep the exchange stable while the contradiction is clarified.","interaction stability","softening the contradiction risk",subscaleProfiles.mitigatorSoft),
-            makeOption("contradiction-auditor","Auditor",4,"Name the contradiction plainly and ask which claim needs to be withdrawn or revised.","contradiction clarity","overpressure risk",subscaleProfiles.auditorStrong),
-            fragment("contradiction-frag-avoid","avoidance",1,"Wait until someone else decides how serious the contradiction is, then adjust to that direction.","responsibility deferral",subscaleProfiles.fragAvoid)
+            makeOption("family-dinner-strategist","Strategist",3,"Name what can actually be resolved tonight and stop the conversation from expanding into everything else.","decision containment","emotional dismissal risk",subscaleProfiles.strategistStrong),
+            makeOption("family-dinner-builder","Builder",2,"Move the room toward one concrete next step instead of letting the argument keep looping.","task activation","activity without coherence risk",subscaleProfiles.builderRisky),
+            makeOption("family-dinner-mitigator","Mitigator",4,"Lower the temperature and keep the room from splitting into permanent sides.","field coherence","delay risk",subscaleProfiles.mitigatorStrong),
+            makeOption("family-dinner-auditor","Auditor",3,"Separate what happened from what people are adding onto the story now.","reality check","harshness risk",subscaleProfiles.auditorPressure),
+            fragment("family-dinner-frag-blame","blame-shift",0,"Pick the side you trust most and push back against the other person until they drop it.","blame displacement",subscaleProfiles.fragBlame)
           ]
         },
         {
-          id:"execution-sequencing",
-          title:"Execution sequencing",
-          tags:["all","sequence","action"],
-          moment:"The team wants to build everything at once. The energy is high. The danger is that momentum starts feeling like proof.",
-          pressure:"The test is whether action becomes a disciplined first step or turns into scattered motion.",
-          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
+          id:"project-teammate-missing-deadline",
+          title:"Project deadline slipping",
+          publicCategory:"Project / Deadline Pressure",
+          categories:["project","deadline","work","responsibility","accountability"],
+          archetypeFocus:["Builder","Strategist"],
+          situation:"You are leading a small project. One person keeps saying, “I’ll handle it,” but nothing is getting done and the deadline is close.",
+          pressure:"The difficult part is that trusting the person longer could preserve comfort, but the project may fail if nothing changes.",
+          choice:"What do you do first, and what do you rely on next?",
           options:[
-            makeOption("execution-strategist","Strategist",4,"Set the order of operations and lock the first step that everything else depends on.","sequence authority","command narrowness risk",subscaleProfiles.strategistStrong),
-            makeOption("execution-builder","Builder",3,"Choose the smallest build that can prove the largest assumption.","minimum viable proof","scope creep risk",subscaleProfiles.builderProof),
-            makeOption("execution-mitigator","Mitigator",3,"Protect the working baseline so the new push does not break what already functions.","baseline preservation","overpreservation risk",subscaleProfiles.mitigatorStrong),
-            makeOption("execution-auditor","Auditor",4,"Audit which claims are ready, which are assumed, and which are not yet proven.","readiness audit","friction risk",subscaleProfiles.auditorConstructive),
-            fragment("execution-frag-motion","motion-without-proof",1,"Start building immediately so the pressure feels productive, even if the cause is not clear yet.","motion without proof",subscaleProfiles.fragMotion)
+            makeOption("deadline-strategist","Strategist",4,"Reset ownership, deadline, and the next checkpoint so the work is no longer vague.","sequence authority","command narrowness risk",subscaleProfiles.strategistStrong),
+            makeOption("deadline-builder","Builder",4,"Break the work into the smallest visible next task and get movement today.","minimum viable proof","scope creep risk",subscaleProfiles.builderProof),
+            makeOption("deadline-mitigator","Mitigator",2,"Check whether the person is overloaded and stabilize the team before changing ownership.","trust preservation","accountability delay risk",subscaleProfiles.mitigatorSoft),
+            makeOption("deadline-auditor","Auditor",4,"Compare what was promised against what has actually been delivered.","readiness audit","friction risk",subscaleProfiles.auditorConstructive),
+            fragment("deadline-frag-avoid","avoidance",1,"Wait a little longer because stepping in now might make the person feel attacked.","responsibility deferral",subscaleProfiles.fragAvoid)
           ]
         },
         {
-          id:"group-instability",
-          title:"Group instability",
-          tags:["all","stability","pressure"],
-          moment:"The group is anxious, distracted, and starting to lose the thread. People are still present, but the room is no longer moving as one field.",
-          pressure:"The test is whether you can restore usable attention without turning the room into control, avoidance, or noise.",
-          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
+          id:"public-claim-without-source",
+          title:"Public claim without source",
+          publicCategory:"Public Claim / Evidence Pressure",
+          categories:["public-claim","evidence","social","group"],
+          archetypeFocus:["Auditor","Strategist"],
+          situation:"Someone gives a confident explanation online about a topic that affects real people, but they provide no source and dismiss anyone who asks for one.",
+          pressure:"The difficult part is that the claim sounds persuasive, but confidence is not the same thing as evidence.",
+          choice:"What do you do first, and what do you rely on next?",
           options:[
-            makeOption("group-strategist","Strategist",3,"Give the group one clear immediate objective so the drift has somewhere to land.","direction under pressure","tone hardness risk",subscaleProfiles.strategistStrong),
-            makeOption("group-builder","Builder",2,"Give everyone a concrete task so the room starts moving again.","task activation","activity without coherence risk",subscaleProfiles.builderRisky),
-            makeOption("group-mitigator","Mitigator",4,"Stabilize the room, reduce the noise, and restore enough continuity to continue.","field coherence","comfort over action risk",subscaleProfiles.mitigatorStrong),
-            makeOption("group-auditor","Auditor",3,"Challenge the false claims that are feeding the instability.","false-signal removal","escalation risk",subscaleProfiles.auditorPressure),
-            fragment("group-frag-collapse","collapse",0,"Step back completely because the situation is too messy to handle clearly.","pressure collapse",subscaleProfiles.fragCollapse)
+            makeOption("public-claim-strategist","Strategist",3,"Ask what standard of proof should govern the conversation before people accept the claim.","threshold setting","overformalization risk",subscaleProfiles.strategistEvidence),
+            makeOption("public-claim-builder","Builder",2,"Look for one quick way to test whether the claim holds up in practice.","reality contact","testing around a contradiction risk",subscaleProfiles.builderRisky),
+            makeOption("public-claim-mitigator","Mitigator",2,"Keep the exchange civil so the conversation does not turn into a public fight.","interaction stability","truth softening risk",subscaleProfiles.mitigatorSoft),
+            makeOption("public-claim-auditor","Auditor",4,"Ask for the source and separate the claim from the person making it.","evidence separation","skepticism overload risk",subscaleProfiles.auditorStrong),
+            fragment("public-claim-frag-false","false-certainty",0,"Accept the explanation because it sounds right and challenging it would probably waste time.","unsupported certainty",subscaleProfiles.fragFalse)
           ]
         },
         {
-          id:"evidence-intuition",
-          title:"Evidence versus intuition",
-          tags:["all","evidence","signal"],
-          moment:"Your intuition is loud, but the evidence is incomplete. You may be right. You may be early. You may also be filling in blanks.",
-          pressure:"The test is whether instinct becomes a useful signal or gets converted into an unsupported claim.",
-          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
+          id:"mistake-sent-wrong-file",
+          title:"You sent the wrong file",
+          publicCategory:"Repair After Mistake",
+          categories:["repair","responsibility","work","accountability"],
+          archetypeFocus:["Auditor","Builder"],
+          situation:"You realize you sent the wrong file to a client or team member. The mistake may cause confusion, but nobody else has noticed yet.",
+          pressure:"The difficult part is whether you correct it immediately, quietly patch it, or wait to see if it becomes a problem.",
+          choice:"What do you do first, and what do you rely on next?",
           options:[
-            makeOption("evidence-strategist","Strategist",3,"Set a clear threshold for what evidence is required before acting.","threshold setting","overformalization risk",subscaleProfiles.strategistEvidence),
-            makeOption("evidence-builder","Builder",3,"Run a small practical test instead of arguing about the intuition.","test motion","testing too soon risk",subscaleProfiles.builderProof),
-            makeOption("evidence-mitigator","Mitigator",2,"Hold the field open until the evidence catches up.","patience","stalling risk",subscaleProfiles.mitigatorSoft),
-            makeOption("evidence-auditor","Auditor",4,"Refuse to turn intuition into a claim until the evidence supports it.","claim discipline","intuition suppression risk",subscaleProfiles.auditorStrong),
-            fragment("evidence-frag-false","false-certainty",0,"Trust the intuition as the answer and explain the evidence later if people need it.","unsupported certainty",subscaleProfiles.fragFalse)
+            makeOption("wrong-file-strategist","Strategist",4,"State the correction, replace the file, and clarify which version should be used.","corrective leadership","controlled admission risk",subscaleProfiles.strategistCorrection),
+            makeOption("wrong-file-builder","Builder",3,"Fix the file path immediately and make the corrected version easy to access.","practical repair","repair before full ownership risk",subscaleProfiles.builderStrong),
+            makeOption("wrong-file-mitigator","Mitigator",3,"Notify the affected people calmly so the mistake does not create unnecessary alarm.","relational repair","soft accountability risk",subscaleProfiles.mitigatorAccountable),
+            makeOption("wrong-file-auditor","Auditor",4,"Name the error plainly, show what changed, and correct the record.","truth repair","self-pressure risk",subscaleProfiles.auditorConstructive),
+            fragment("wrong-file-frag-avoid","avoidance",0,"Replace the file quietly and hope nobody asks about the first version.","avoidance",subscaleProfiles.fragAvoid)
           ]
         },
         {
-          id:"emotional-pressure",
-          title:"Emotional pressure",
-          tags:["all","stability","timing"],
-          moment:"A decision must be made while emotions are high. The room wants relief, but relief and coherence are not always the same thing.",
-          pressure:"The test is whether emotion gets dismissed, obeyed, regulated, or checked against reality.",
-          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
+          id:"friend-repeated-favor",
+          title:"Friend keeps asking for favors",
+          publicCategory:"Boundary / Responsibility Pressure",
+          categories:["boundary","relationship","responsibility","stability"],
+          archetypeFocus:["Mitigator","Strategist"],
+          situation:"A friend keeps asking for favors that disrupt your schedule. When you hesitate, they remind you of times they helped you before.",
+          pressure:"The difficult part is separating gratitude from obligation without turning the relationship into a transaction.",
+          choice:"What do you do first, and what do you rely on next?",
           options:[
-            makeOption("emotion-strategist","Strategist",3,"Separate the decision from the emotional surge and name the next step.","decision containment","emotional dismissal risk",subscaleProfiles.strategistStrong),
-            makeOption("emotion-builder","Builder",2,"Move into a simple action that prevents the room from freezing.","motion under pressure","bypassing emotion risk",subscaleProfiles.builderRisky),
-            makeOption("emotion-mitigator","Mitigator",4,"Regulate the field first so the decision is not made from distortion.","regulation","delay risk",subscaleProfiles.mitigatorStrong),
-            makeOption("emotion-auditor","Auditor",3,"Check whether the emotional claim matches the evidence.","reality check","harshness risk",subscaleProfiles.auditorPressure),
-            fragment("emotion-frag-comfort","comfort-over-truth",1,"Make the choice that keeps people comfortable now, even if the real issue remains unresolved.","comfort over correction",subscaleProfiles.fragComfort)
+            makeOption("friend-favor-strategist","Strategist",4,"Set a clear boundary for what you can and cannot do this time.","boundary clarity","tone hardness risk",subscaleProfiles.strategistStrong),
+            makeOption("friend-favor-builder","Builder",2,"Offer one smaller practical help that does not break your schedule.","repair action","symptom patch risk",subscaleProfiles.builderRisky),
+            makeOption("friend-favor-mitigator","Mitigator",4,"Acknowledge the relationship while keeping the boundary from becoming a fight.","field stabilization","delay risk",subscaleProfiles.mitigatorStrong),
+            makeOption("friend-favor-auditor","Auditor",3,"Name the difference between past help and the current request.","claim discipline","cold delivery risk",subscaleProfiles.auditorConstructive),
+            fragment("friend-favor-frag-comfort","comfort-over-truth",1,"Say yes even though it disrupts you, because saying no would feel disloyal.","comfort over accountability",subscaleProfiles.fragComfort)
           ]
         },
         {
-          id:"decision-timing",
-          title:"Decision timing",
-          tags:["all","timing","sequence"],
-          moment:"You have enough information to act, but not enough to feel certain. Waiting feels safer. Moving feels risky. The window will not stay open forever.",
-          pressure:"The test is whether uncertainty becomes paralysis, recklessness, or bounded movement.",
-          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
+          id:"medical-family-uncertainty",
+          title:"Family uncertainty during a stressful call",
+          publicCategory:"Crisis / Uncertainty Pressure",
+          categories:["crisis","uncertainty","family","relationship","instability"],
+          archetypeFocus:["Mitigator","Auditor"],
+          situation:"A family member calls upset about a possible emergency. Details are incomplete, people are panicking, and several relatives start spreading different versions of what happened.",
+          pressure:"The difficult part is that speed matters, but bad information can make the situation worse.",
+          choice:"What do you do first, and what do you rely on next?",
           options:[
-            makeOption("timing-strategist","Strategist",4,"Make the bounded decision and define the point where it will be reviewed.","bounded execution","early lock-in risk",subscaleProfiles.strategistStrong),
-            makeOption("timing-builder","Builder",3,"Build the next step as a reversible test, not a permanent commitment.","reversible action","experiment sprawl risk",subscaleProfiles.builderProof),
-            makeOption("timing-mitigator","Mitigator",2,"Wait until the group feels more settled.","group comfort","missed timing risk",subscaleProfiles.mitigatorSoft),
-            makeOption("timing-auditor","Auditor",3,"Document the uncertainty and act only inside what the evidence supports.","bounded proof","action friction risk",subscaleProfiles.auditorConstructive),
-            fragment("timing-frag-avoid","avoidance",1,"Hold back until someone else makes the call, then support the result if it works.","decision avoidance",subscaleProfiles.fragAvoid)
+            makeOption("family-crisis-strategist","Strategist",4,"Identify the next necessary decision and assign who will verify what.","decision discipline","command pressure risk",subscaleProfiles.strategistStrong),
+            makeOption("family-crisis-builder","Builder",3,"Take one immediate practical step that improves safety while facts are being gathered.","reversible action","experiment sprawl risk",subscaleProfiles.builderProof),
+            makeOption("family-crisis-mitigator","Mitigator",4,"Calm the immediate panic enough for people to communicate clearly.","regulation","delay risk",subscaleProfiles.mitigatorStrong),
+            makeOption("family-crisis-auditor","Auditor",4,"Separate confirmed facts from rumors before anyone acts on the wrong information.","evidence separation","action friction risk",subscaleProfiles.auditorStrong),
+            fragment("family-crisis-frag-collapse","collapse",0,"Back away from the conversation because too many people are talking at once.","pressure collapse",subscaleProfiles.fragCollapse)
           ]
         },
         {
-          id:"repair-after-error",
-          title:"Repair after error",
-          tags:["all","repair","accountability"],
-          moment:"You realize you were wrong. Now there are two tests: whether you can admit the error, and whether you can repair what the error touched.",
-          pressure:"The test is whether correction becomes ownership, speed, avoidance, or a clean update to the record.",
-          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
+          id:"roommate-money-split",
+          title:"Roommate bill disagreement",
+          publicCategory:"Money / Relationship Pressure",
+          categories:["money","transaction","relationship","responsibility","evidence"],
+          archetypeFocus:["Auditor","Mitigator"],
+          situation:"You and a roommate agreed to split a bill. Later, they say they never agreed to that amount and accuse you of being unfair.",
+          pressure:"The difficult part is that money, memory, and trust are now tangled together.",
+          choice:"What do you do first, and what do you rely on next?",
           options:[
-            makeOption("repair-strategist","Strategist",4,"State the correction, update the rule, and define the repair sequence.","corrective leadership","controlled admission risk",subscaleProfiles.strategistCorrection),
-            makeOption("repair-builder","Builder",3,"Fix the affected part immediately and improve the process from there.","practical repair","repair before full ownership risk",subscaleProfiles.builderStrong),
-            makeOption("repair-mitigator","Mitigator",3,"Repair trust and stabilize the people affected by the mistake.","relational repair","soft accountability risk",subscaleProfiles.mitigatorAccountable),
-            makeOption("repair-auditor","Auditor",4,"Name the error plainly, show the evidence, and correct the record.","truth repair","self-pressure risk",subscaleProfiles.auditorConstructive),
-            fragment("repair-frag-blame","blame-shift",0,"Explain what other people did that contributed to the error before taking any corrective step.","accountability displacement",subscaleProfiles.fragBlame)
+            makeOption("roommate-bill-strategist","Strategist",3,"Clarify the agreement, the amount owed, and the next step for resolving it.","rule control","premature closure risk",subscaleProfiles.strategistEvidence),
+            makeOption("roommate-bill-builder","Builder",2,"Propose a practical payment plan that gets the issue moving without escalating it.","repair action","patching before diagnosis risk",subscaleProfiles.builderRisky),
+            makeOption("roommate-bill-mitigator","Mitigator",3,"Keep the conversation calm enough to protect the living arrangement while discussing the bill.","interaction stability","softening the contradiction risk",subscaleProfiles.mitigatorAccountable),
+            makeOption("roommate-bill-auditor","Auditor",4,"Check the messages, receipts, and dates before accepting either version of the story.","receipt logic","skepticism overload risk",subscaleProfiles.auditorConstructive),
+            fragment("roommate-bill-frag-blame","blame-shift",0,"Accuse them of lying first so they understand you will not be pushed around.","blame displacement",subscaleProfiles.fragBlame)
+          ]
+        },
+        {
+          id:"team-too-many-ideas",
+          title:"Team wants to build everything",
+          publicCategory:"Leadership / Project Pressure",
+          categories:["leadership","project","deadline","work","instability"],
+          archetypeFocus:["Strategist","Builder"],
+          situation:"A team meeting turns into a flood of ideas. Everyone wants to add something. The project is getting bigger every minute.",
+          pressure:"The difficult part is that the energy is useful, but the scope is starting to threaten the actual goal.",
+          choice:"What do you do first, and what do you rely on next?",
+          options:[
+            makeOption("too-many-ideas-strategist","Strategist",4,"Name the goal, set the order of operations, and choose the first lawful step.","sequence authority","command narrowness risk",subscaleProfiles.strategistStrong),
+            makeOption("too-many-ideas-builder","Builder",4,"Choose the smallest version that can prove whether the bigger idea is worth building.","minimum viable proof","scope creep risk",subscaleProfiles.builderProof),
+            makeOption("too-many-ideas-mitigator","Mitigator",3,"Protect the working baseline so the new ideas do not break what already functions.","baseline preservation","overpreservation risk",subscaleProfiles.mitigatorStrong),
+            makeOption("too-many-ideas-auditor","Auditor",3,"Separate ideas that are ready from ideas that are still only claims.","readiness audit","friction risk",subscaleProfiles.auditorConstructive),
+            fragment("too-many-ideas-frag-motion","motion-without-proof",1,"Let everyone start building their favorite part so the momentum does not die.","motion without proof",subscaleProfiles.fragMotion)
+          ]
+        },
+        {
+          id:"partner-big-purchase",
+          title:"Unexpected purchase at home",
+          publicCategory:"Family / Money Pressure",
+          categories:["relationship","family","money","responsibility","stability"],
+          archetypeFocus:["Mitigator","Strategist"],
+          situation:"Your partner or close family member makes a large purchase without discussing it first, then says you are overreacting when you ask about it.",
+          pressure:"The difficult part is that the issue is not only money. It is trust, timing, and shared responsibility.",
+          choice:"What do you do first, and what do you rely on next?",
+          options:[
+            makeOption("purchase-strategist","Strategist",4,"Clarify the shared rule for major decisions and what has to happen now.","rule control","authority snap risk",subscaleProfiles.strategistCorrection),
+            makeOption("purchase-builder","Builder",2,"Work out the immediate budget adjustment so the household can absorb the impact.","repair action","symptom patch risk",subscaleProfiles.builderRisky),
+            makeOption("purchase-mitigator","Mitigator",4,"Keep the conversation steady enough to discuss trust without turning it into an attack.","relational repair","delay risk",subscaleProfiles.mitigatorStrong),
+            makeOption("purchase-auditor","Auditor",3,"Separate the actual purchase details from the claim that you are overreacting.","contradiction clarity","overpressure risk",subscaleProfiles.auditorPressure),
+            fragment("purchase-frag-comfort","comfort-over-truth",1,"Drop the issue for now because arguing about money will probably make the relationship worse.","comfort over correction",subscaleProfiles.fragComfort)
+          ]
+        },
+        {
+          id:"coworker-takes-credit",
+          title:"Coworker takes credit",
+          publicCategory:"Work / Accountability Pressure",
+          categories:["work","leadership","responsibility","evidence","accountability"],
+          archetypeFocus:["Auditor","Strategist"],
+          situation:"A coworker presents your work in a meeting as if they led it. Several people believe them because you do not speak up immediately.",
+          pressure:"The difficult part is correcting the record without turning the room into a personal fight.",
+          choice:"What do you do first, and what do you rely on next?",
+          options:[
+            makeOption("credit-strategist","Strategist",4,"Clarify roles and ownership in a way that keeps the meeting moving forward.","accountability structure","command pressure risk",subscaleProfiles.strategistCorrection),
+            makeOption("credit-builder","Builder",2,"Add the missing work details so the room can see who actually built what.","proof through action","bypassing accountability risk",subscaleProfiles.builderRisky),
+            makeOption("credit-mitigator","Mitigator",2,"Avoid embarrassing them publicly and look for a calmer way to correct it later.","pressure care","accountability delay risk",subscaleProfiles.mitigatorSoft),
+            makeOption("credit-auditor","Auditor",4,"State the record clearly and point to the work trail without attacking the person.","truth repair","cold delivery risk",subscaleProfiles.auditorConstructive),
+            fragment("credit-frag-avoid","avoidance",0,"Stay quiet because correcting them in front of everyone could make you look difficult.","decision avoidance",subscaleProfiles.fragAvoid)
+          ]
+        },
+        {
+          id:"friend-rumor-party",
+          title:"Rumor at a social event",
+          publicCategory:"Social / Evidence Pressure",
+          categories:["group","social","relationship","evidence","instability"],
+          archetypeFocus:["Auditor","Mitigator"],
+          situation:"At a party, someone tells you a rumor about a friend. A few people are already repeating it as if it is confirmed.",
+          pressure:"The difficult part is that pushing back may make the room uncomfortable, but repeating it may damage someone who is not there.",
+          choice:"What do you do first, and what do you rely on next?",
+          options:[
+            makeOption("rumor-strategist","Strategist",3,"Stop the spread by setting a simple rule: do not treat it as true without confirmation.","threshold setting","tone hardness risk",subscaleProfiles.strategistEvidence),
+            makeOption("rumor-builder","Builder",2,"Move the conversation away from gossip and toward something that does not harm the absent person.","action conversion","avoidance risk",subscaleProfiles.builderRisky),
+            makeOption("rumor-mitigator","Mitigator",4,"Lower the social temperature while protecting the person who is not there.","field stabilization","truth softening risk",subscaleProfiles.mitigatorStrong),
+            makeOption("rumor-auditor","Auditor",4,"Ask how they know and whether the person affected has had a chance to respond.","evidence separation","overpressure risk",subscaleProfiles.auditorStrong),
+            fragment("rumor-frag-motion","motion-without-proof",1,"Listen and pass it along carefully because people probably need to know.","motion without proof",subscaleProfiles.fragMotion)
+          ]
+        },
+        {
+          id:"customer-angry-line",
+          title:"Angry customer in line",
+          publicCategory:"Crisis / Public Pressure",
+          categories:["crisis","work","instability","stability","responsibility"],
+          archetypeFocus:["Mitigator","Builder"],
+          situation:"You are in a public-facing job. A customer becomes angry, raises their voice, and other people in line start watching.",
+          pressure:"The difficult part is that the moment needs control, but the person also needs to be heard enough to de-escalate.",
+          choice:"What do you do first, and what do you rely on next?",
+          options:[
+            makeOption("customer-strategist","Strategist",3,"Set a clear boundary for the conversation and define the next step you can take.","boundary clarity","tone hardness risk",subscaleProfiles.strategistStrong),
+            makeOption("customer-builder","Builder",3,"Identify the one practical thing that can be fixed immediately and start there.","repair momentum","patching before diagnosis risk",subscaleProfiles.builderStrong),
+            makeOption("customer-mitigator","Mitigator",4,"Lower the intensity while keeping the situation safe for everyone nearby.","regulation","delay risk",subscaleProfiles.mitigatorStrong),
+            makeOption("customer-auditor","Auditor",3,"Clarify what happened and what can actually be verified before promising anything.","bounded proof","harshness risk",subscaleProfiles.auditorConstructive),
+            fragment("customer-frag-collapse","collapse",0,"Freeze and wait for someone else to step in because the scene is too intense.","pressure collapse",subscaleProfiles.fragCollapse)
+          ]
+        },
+        {
+          id:"friend-business-loan",
+          title:"Friend asks for business money",
+          publicCategory:"Money / Boundary Pressure",
+          categories:["money","boundary","relationship","evidence","responsibility"],
+          archetypeFocus:["Auditor","Strategist"],
+          situation:"A friend asks you to invest money in their idea. They are excited, but they do not have a clear plan, budget, or proof that the idea works.",
+          pressure:"The difficult part is that you want to support them, but encouragement and financial trust are not the same thing.",
+          choice:"What do you do first, and what do you rely on next?",
+          options:[
+            makeOption("loan-strategist","Strategist",4,"Ask for the plan, budget, timeline, and decision rules before discussing money.","decision discipline","rigidity risk",subscaleProfiles.strategistEvidence),
+            makeOption("loan-builder","Builder",3,"Suggest a small test of the idea before anyone invests serious money.","reversible prototype","prototype attachment risk",subscaleProfiles.builderProof),
+            makeOption("loan-mitigator","Mitigator",3,"Protect the friendship by separating emotional support from financial commitment.","trust preservation","over-caution risk",subscaleProfiles.mitigatorAccountable),
+            makeOption("loan-auditor","Auditor",4,"Require evidence that the idea can work before treating it as an investment.","proof gate","challenge friction risk",subscaleProfiles.auditorConstructive),
+            fragment("loan-frag-comfort","comfort-over-truth",1,"Give them some money because saying no would make you feel unsupportive.","comfort over accountability",subscaleProfiles.fragComfort)
+          ]
+        },
+        {
+          id:"apology-with-excuses",
+          title:"Apology with excuses",
+          publicCategory:"Repair / Relationship Pressure",
+          categories:["repair","relationship","family","responsibility","accountability"],
+          archetypeFocus:["Auditor","Mitigator"],
+          situation:"Someone apologizes to you, but most of the apology is an explanation of why they had no choice. You still feel the harm was not owned.",
+          pressure:"The difficult part is deciding whether to accept the repair, ask for clearer accountability, or preserve the relationship while the issue remains incomplete.",
+          choice:"What do you do first, and what do you rely on next?",
+          options:[
+            makeOption("apology-strategist","Strategist",4,"Clarify what needs to be owned and what repair would actually close the issue.","corrective sequence","hard turn risk",subscaleProfiles.strategistCorrection),
+            makeOption("apology-builder","Builder",2,"Ask for one concrete action that would show the apology is real.","practical repair","symptom patch risk",subscaleProfiles.builderRisky),
+            makeOption("apology-mitigator","Mitigator",4,"Keep the relationship steady while making room for a more honest repair.","relational repair","soft accountability risk",subscaleProfiles.mitigatorAccountable),
+            makeOption("apology-auditor","Auditor",4,"Separate the apology from the excuses and name what still has not been owned.","truth closure","pressure shock risk",subscaleProfiles.auditorConstructive),
+            fragment("apology-frag-avoid","avoidance",1,"Accept the apology as-is because asking for more might restart the conflict.","avoidance",subscaleProfiles.fragAvoid)
           ]
         }
       ];
-
-      const branchQuestions = {
-        Strategist: [{
-          id:"strategist-overstructure",
-          title:"Structure under pressure",
-          tags:["Strategist","structure"],
-          moment:"Your plan is coherent, but the room is moving faster than the plan can absorb. The structure is not wrong, but the pressure has changed.",
-          pressure:"The test is whether structure adapts without collapsing into control or losing the field it was meant to guide.",
-          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
-          options:[
-            makeOption("strategist-overstructure-strategist","Strategist",4,"Compress the plan into one controlling sequence and define the next checkpoint.","adaptive sequence","over-compression risk",subscaleProfiles.strategistStrong),
-            makeOption("strategist-overstructure-builder","Builder",3,"Build a small working step to see whether the plan survives contact with reality.","structure-to-action","premature build risk",subscaleProfiles.builderProof),
-            makeOption("strategist-overstructure-mitigator","Mitigator",3,"Stabilize the people affected before the structure loses trust.","trust preservation","decision delay risk",subscaleProfiles.mitigatorAccountable),
-            makeOption("strategist-overstructure-auditor","Auditor",4,"Audit which part of the plan is proven and which part is only assumed.","assumption control","review drag risk",subscaleProfiles.auditorConstructive),
-            fragment("strategist-overstructure-frag-false","false-certainty",0,"Hold the original plan because changing it now would make the group doubt the structure.","false certainty",subscaleProfiles.fragFalse)
-          ]
-        }],
-        Builder: [{
-          id:"builder-premature-motion",
-          title:"Momentum before proof",
-          tags:["Builder","action"],
-          moment:"You can start building immediately. The energy is there. The team is ready. But the proof is not fully settled.",
-          pressure:"The test is whether movement becomes disciplined progress or just a more exciting form of uncertainty.",
-          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
-          options:[
-            makeOption("builder-premature-motion-strategist","Strategist",4,"Define the lawful build sequence before the first real move.","build sequencing","slowing momentum risk",subscaleProfiles.strategistStrong),
-            makeOption("builder-premature-motion-builder","Builder",4,"Build the smallest reversible prototype that tests the core assumption.","reversible prototype","prototype attachment risk",subscaleProfiles.builderProof),
-            makeOption("builder-premature-motion-mitigator","Mitigator",3,"Check what could be disrupted before the build begins.","impact control","over-caution risk",subscaleProfiles.mitigatorAccountable),
-            makeOption("builder-premature-motion-auditor","Auditor",4,"Identify the unproven claim and require proof before scaling.","proof gate","challenge friction risk",subscaleProfiles.auditorConstructive),
-            fragment("builder-premature-motion-frag-motion","motion-without-proof",1,"Start building at full speed so the project feels alive, then sort the proof out later.","motion without proof",subscaleProfiles.fragMotion)
-          ]
-        }],
-        Mitigator: [{
-          id:"mitigator-overpreserve",
-          title:"Stability versus correction",
-          tags:["Mitigator","stability"],
-          moment:"Stability is keeping the room together, but the same unresolved problem keeps returning. The room is calm, but the pattern is not fixed.",
-          pressure:"The test is whether preservation becomes a bridge to correction or a way to delay it.",
-          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
-          options:[
-            makeOption("mitigator-overpreserve-strategist","Strategist",4,"Set the correction sequence and clarify what can no longer be preserved.","corrective sequence","hard turn risk",subscaleProfiles.strategistCorrection),
-            makeOption("mitigator-overpreserve-builder","Builder",3,"Build a practical repair that reduces the recurring pressure.","repair action","symptom patch risk",subscaleProfiles.builderStrong),
-            makeOption("mitigator-overpreserve-mitigator","Mitigator",3,"Stabilize the room enough to make correction possible.","safe correction field","prolonged holding risk",subscaleProfiles.mitigatorAccountable),
-            makeOption("mitigator-overpreserve-auditor","Auditor",4,"Name the recurring issue and show where preservation has become avoidance.","avoidance detection","pressure shock risk",subscaleProfiles.auditorConstructive),
-            fragment("mitigator-overpreserve-frag-comfort","comfort-over-truth",1,"Keep preserving stability and avoid forcing the issue until the room becomes ready on its own.","comfort over accountability",subscaleProfiles.fragComfort)
-          ]
-        }],
-        Auditor: [{
-          id:"auditor-closure",
-          title:"Audit with closure",
-          tags:["Auditor","evidence"],
-          moment:"You found the contradiction. The room can see it now. But discovery is not the same thing as closure.",
-          pressure:"The test is whether truth pressure becomes repair, sequence, escalation, or an endless audit loop.",
-          test:"This is where coherence gets tested. What do you do first, and what do you rely on next?",
-          options:[
-            makeOption("auditor-closure-strategist","Strategist",4,"Turn the audit into a corrected decision sequence.","audit-to-sequence","authority snap risk",subscaleProfiles.strategistCorrection),
-            makeOption("auditor-closure-builder","Builder",3,"Build the smallest repair that proves the corrected claim.","proof repair","repair too soon risk",subscaleProfiles.builderProof),
-            makeOption("auditor-closure-mitigator","Mitigator",3,"Reduce the social damage caused by the contradiction before moving forward.","pressure care","truth softening risk",subscaleProfiles.mitigatorAccountable),
-            makeOption("auditor-closure-auditor","Auditor",4,"State the contradiction, state the correction, and close the audit with a receipt.","truth closure","cold closure risk",subscaleProfiles.auditorConstructive),
-            fragment("auditor-closure-frag-audit","audit-without-closure",1,"Keep pressing the contradiction until everyone admits what is wrong, even if no next step is defined.","audit without closure",subscaleProfiles.fragAudit)
-          ]
-        }]
-      };
 
       const form = document.getElementById("coherence-form");
       const library = document.getElementById("archetype-library");
@@ -1790,6 +1946,10 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
           [copy[i],copy[j]] = [copy[j],copy[i]];
         }
         return copy;
+      }
+
+      function hasAny(item, tags){
+        return tags.some((tag)=>item.categories.includes(tag));
       }
 
       function renderArchetypeLibrary(){
@@ -1872,46 +2032,49 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
           const primary = getRadioValue(`${question.id}-primary`);
           const secondary = getRadioValue(`${question.id}-secondary`);
 
-          if(!primary) return `${question.title}: select a primary response.`;
-          if(!secondary) return `${question.title}: select a secondary response.`;
-          if(primary === secondary) return `${question.title}: primary and secondary responses must be different.`;
+          if(!primary) return `${question.title}: select what you would do first.`;
+          if(!secondary) return `${question.title}: select what you would rely on next.`;
+          if(primary === secondary) return `${question.title}: your first move and support move must be different.`;
         }
 
         return "";
       }
 
-      function chooseAdaptiveQuestions(primary,secondary){
+      function chooseBalancedScenarios(primary, secondary){
         const selected = [];
         const seen = new Set();
 
-        const pushQuestion = (question)=>{
-          if(!question || seen.has(question.id)) return;
-          selected.push({...question,renderedOptions:shuffle(question.options)});
-          seen.add(question.id);
+        const addFrom = (label, count, predicate) => {
+          const pool = shuffle(scenarioBank.filter((item)=>!seen.has(item.id) && predicate(item)));
+          pool.slice(0,count).forEach((item)=>{
+            selected.push({
+              ...item,
+              drawBucket: label,
+              renderedOptions: shuffle(item.options)
+            });
+            seen.add(item.id);
+          });
         };
 
-        (branchQuestions[primary] || []).forEach(pushQuestion);
+        addFrom("archetype-specific", 1, (item)=>item.archetypeFocus.includes(primary) || item.archetypeFocus.includes(secondary));
+        addFrom("work-project", 2, (item)=>hasAny(item,["work","project","deadline","leadership"]));
+        addFrom("relationship-group", 2, (item)=>hasAny(item,["family","relationship","group","social"]));
+        addFrom("evidence-claim", 2, (item)=>hasAny(item,["evidence","public-claim"]));
+        addFrom("responsibility-repair", 2, (item)=>hasAny(item,["responsibility","repair","accountability"]));
+        addFrom("instability-pressure", 1, (item)=>hasAny(item,["instability","crisis","uncertainty"]));
 
-        const secondaryPressure = {
-          Strategist:["sequence","timing"],
-          Builder:["action","repair"],
-          Mitigator:["stability","conflict"],
-          Auditor:["evidence","contradiction"]
-        }[secondary] || [];
+        if(selected.length < 10){
+          addFrom("balanced-fill", 10 - selected.length, () => true);
+        }
 
-        baseQuestions
-          .filter((question)=>question.tags.some((tag)=>secondaryPressure.includes(tag)))
-          .forEach(pushQuestion);
-
-        baseQuestions.forEach(pushQuestion);
         return selected.slice(0,10);
       }
 
       function renderQuestions(){
         const intro = `
           <div class="scenario-intro">
-            <strong>Do not answer as the person you wish you were. Answer from the pattern you recognize under pressure.</strong>
-            <span>Each scenario is built as a moment, a pressure point, and a coherence test. Choose your first move, then choose what you would rely on next.</span>
+            <strong>Do not answer as the person you wish you were. Answer from the pattern you recognize under real pressure.</strong>
+            <span>Each scenario is a practical situation. Choose what you would do first, then choose what you would rely on next. The answer labels do not reveal the scoring map.</span>
           </div>
         `;
 
@@ -1934,16 +2097,17 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
           const options = question.renderedOptions || question.options;
 
           return `
-            <article class="question" data-question-card="${escapeHtml(question.id)}">
+            <article class="question" data-question-card="${escapeHtml(question.id)}" data-draw-bucket="${escapeHtml(question.drawBucket || "scenario")}">
               <div class="question-top">
-                <span class="question-number">Question ${number} · ${escapeHtml(question.title)}</span>
-                <h3>Read the moment. Feel the pressure. Then choose the response that sounds most like what you would actually do.</h3>
+                <span class="question-number">Question ${number}</span>
+                <span class="question-category">${escapeHtml(question.publicCategory)}</span>
+                <h3>${escapeHtml(question.title)}</h3>
               </div>
 
               <div class="moment-stack">
                 <div class="moment-block">
-                  <b>The Moment</b>
-                  <span>${escapeHtml(question.moment)}</span>
+                  <b>The Situation</b>
+                  <span>${escapeHtml(question.situation)}</span>
                 </div>
 
                 <div class="moment-block">
@@ -1952,8 +2116,8 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
                 </div>
 
                 <div class="moment-block coherence-test">
-                  <b>The Coherence Test</b>
-                  <strong>${escapeHtml(question.test)}</strong>
+                  <b>The Choice</b>
+                  <strong>${escapeHtml(question.choice)}</strong>
                 </div>
               </div>
 
@@ -2092,6 +2256,14 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
         return "Exceptional Processing Signal";
       }
 
+      function projectedIqStyleRange(cognitiveProcessingIndex){
+        if(cognitiveProcessingIndex >= 90) return "128–145";
+        if(cognitiveProcessingIndex >= 75) return "118–132";
+        if(cognitiveProcessingIndex >= 60) return "105–120";
+        if(cognitiveProcessingIndex >= 40) return "90–110";
+        return "75–95";
+      }
+
       function confidenceBand(dominanceMargin,vector){
         const topThree = vector.slice(0,3).map((item)=>item.percent);
         const clustered = topThree.length === 3 && Math.max(...topThree) - Math.min(...topThree) <= 10;
@@ -2118,6 +2290,35 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
           calibration:"Calibration Accuracy",
           claimAlignment:"Claim-Pattern Alignment"
         }[key] || key;
+      }
+
+      function combinations(parts){
+        return parts.reduce((acc,part)=>{
+          const values = Array.isArray(part) ? part : [part];
+          return acc.flatMap((prefix)=>values.map((value)=>prefix + value));
+        },[""]);
+      }
+
+      function mbtiStyleType(preference){
+        const mapAxis = (axis,leftLetter,rightLetter) => {
+          if(axis.label === "Balanced") return [leftLetter,rightLetter];
+          if(axis.label === axis.leftLabel) return leftLetter;
+          return rightLetter;
+        };
+
+        const axisParts = [
+          mapAxis(preference.orientation,"I","E"),
+          mapAxis(preference.information,"N","S"),
+          mapAxis(preference.judgment,"T","F"),
+          mapAxis(preference.closure,"J","P")
+        ];
+
+        const balancedCount = axisParts.filter(Array.isArray).length;
+        if(balancedCount >= 3) return "Balanced / Mixed-style";
+
+        const options = combinations(axisParts).slice(0,4).map((item)=>`${item}-style`);
+        if(options.length === 1) return options[0];
+        return options.join(" / ");
       }
 
       function calculateResult(){
@@ -2227,6 +2428,9 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
           closure:preferenceAxis("Structured","Adaptive",subscales.sequence + subscales.claimAlignment + subscales.contradiction,subscales.action + subscales.stability + subscales.correction)
         };
 
+        const publicMbtiStyleType = mbtiStyleType(preference);
+        const publicIqStyleRange = projectedIqStyleRange(cognitiveProcessingIndex);
+
         const balancedCount = Object.values(preference).filter((axis)=>axis.label === "Balanced").length;
         const preferenceType = balancedCount >= 2
           ? "Balanced Preference Type"
@@ -2271,10 +2475,18 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
           fragmentation,
           cognitiveProcessingIndex,
           cognitiveProcessingBand:processingBand(cognitiveProcessingIndex),
+          projectedIqStyleRange: publicIqStyleRange,
+          possibleMbtiStyleType: publicMbtiStyleType,
           preferenceType,
           preference,
           strengthLoad,
-          riskLoad
+          riskLoad,
+          scenarioDraw: generatedQuestions.map((item)=>({
+            id:item.id,
+            title:item.title,
+            publicCategory:item.publicCategory,
+            drawBucket:item.drawBucket || "scenario"
+          }))
         };
 
         engineering.technicalDisposition = [
@@ -2283,8 +2495,8 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
           `Dominance reads as ${engineering.dominanceDisposition.toLowerCase()} with ${confidence.toLowerCase()}.`,
           `Calibration direction: ${engineering.calibrationDirection.toLowerCase()}.`,
           `Fragmentation read: ${fragmentation.band.toLowerCase()}.`,
-          `Cognitive Processing Estimate: ${cognitiveProcessingIndex}/100, ${engineering.cognitiveProcessingBand.toLowerCase()}, not an IQ score.`,
-          `Preference-Type Hypothesis: ${preferenceType}, not official MBTI®.`
+          `Projected IQ-Style Range: ${publicIqStyleRange}, estimate only, not an IQ test.`,
+          `Possible MBTI-Style Type: ${publicMbtiStyleType}, preference hypothesis only, not official MBTI®.`
         ].join(" ");
 
         return {
@@ -2305,6 +2517,8 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
           risks:topEntries(risks),
           nextStep:nextStepFor(revealedPrimary,revealedSecondary,band.label,fragmentationRate),
           rankedArchetypes,
+          projectedIqStyleRange: publicIqStyleRange,
+          possibleMbtiStyleType: publicMbtiStyleType,
           engineering,
           generatedAt:new Date().toISOString()
         };
@@ -2320,15 +2534,20 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
         const strengthLoadText = e.strengthLoad.map((item)=>`${item.label}: weight ${item.weight}`).join("; ");
         const riskLoadText = e.riskLoad.map((item)=>`${item.label}: weight ${item.weight}`).join("; ");
         const fragTypeText = e.fragmentation.types.length ? e.fragmentation.types.map((item)=>`${item.label}: weight ${item.weight}`).join("; ") : "none";
+        const scenarioText = e.scenarioDraw.map((item)=>`${item.publicCategory}: ${item.title}`).join("; ");
 
         return [
           "COHERENCE DIAGNOSTIC ASSESSMENT RESULT",
           `Generated: ${data.generatedAt}`,
           "",
-          "PUBLIC RESULT",
-          `Mode: ${data.mode}`,
+          "PUBLIC RESULT HERO",
           showScore ? `Coherence score: ${data.scaledScore}/10` : "Coherence score: Not shown in ungraded mode",
           showScore ? `Coherence band: ${data.band.label}` : "Coherence band: Not shown in ungraded mode",
+          `Projected IQ-Style Range: ${data.projectedIqStyleRange} · Estimate only · not an IQ test`,
+          `Possible MBTI-Style Type: ${data.possibleMbtiStyleType} · Preference hypothesis · not official MBTI®`,
+          "",
+          "PUBLIC RESULT DETAILS",
+          `Mode: ${data.mode}`,
           `Self-rated coherence: ${data.selfRating}/10`,
           showScore ? `Calibration gap: ${data.calibrationGap}` : "Calibration gap: Not shown in ungraded mode",
           `Calibration note: ${showScore ? data.calibrationExplanation : "Ungraded mode selected."}`,
@@ -2359,10 +2578,13 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
           `Top fragmentation markers: ${fragTypeText}`,
           `Fragmentation interpretation: ${e.fragmentation.interpretation}`,
           `Cognitive Processing Estimate: ${e.cognitiveProcessingIndex}/100 · ${e.cognitiveProcessingBand} · not an IQ score`,
+          `Projected IQ-Style Range: ${e.projectedIqStyleRange} · estimate only · not an IQ test`,
           `Preference-Type Hypothesis: ${e.preferenceType} · not official MBTI®`,
+          `Possible MBTI-Style Type: ${e.possibleMbtiStyleType} · preference hypothesis · not official MBTI®`,
           `Preference axes: Orientation ${e.preference.orientation.label}; Information ${e.preference.information.label}; Judgment ${e.preference.judgment.label}; Closure ${e.preference.closure.label}`,
           `Strength load: ${strengthLoadText}`,
           `Risk load: ${riskLoadText}`,
+          `Scenario draw: ${scenarioText}`,
           `Technical disposition: ${e.technicalDisposition}`,
           "",
           "COMING SOON",
@@ -2370,8 +2592,8 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
           "",
           "BOUNDARIES",
           "This is not a medical, mental-health, legal, employment, intelligence, or official personality-type diagnostic.",
-          "The Cognitive Processing Estimate is not an IQ score.",
-          "The Preference-Type Hypothesis is not an official MBTI® result.",
+          "The Projected IQ-Style Range is not an IQ score or IQ test.",
+          "The Possible MBTI-Style Type is not an official MBTI® result.",
           "Fragmentation markers identify pressure-break response patterns; they do not define the person.",
           "This version is local-only and does not email, store, archive, or submit your result."
         ].join("\n");
@@ -2419,6 +2641,14 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
         `).join("");
       }
 
+      function renderScenarioDraw(items){
+        return items.map((item)=>`<li>${escapeHtml(item.publicCategory)} · ${escapeHtml(item.title)}</li>`).join("");
+      }
+
+      function archetypeShort(name){
+        return archetypes[name] ? archetypes[name].short : "No stable revealed archetype because public archetype signal was too low.";
+      }
+
       function renderEngineeringLens(data){
         const e = data.engineering;
         const archetypeDenominator = generatedQuestions.length * 3;
@@ -2430,7 +2660,7 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
                 <strong>Engineering Lens · Technical Assessment Disposition</strong>
                 <br>
                 <span style="color:rgba(239,247,255,.62);font-size:.84rem;font-weight:760;">
-                  Open for raw score, archetype vector, pressure-break markers, subscales, cognitive processing estimate, and preference-type hypothesis.
+                  Open for raw score, archetype vector, pressure-break markers, subscales, projected IQ-style range logic, and possible MBTI-style type logic.
                 </span>
               </span>
             </summary>
@@ -2445,8 +2675,11 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
                 ${renderMetricCard("Normalized Score",`${e.normalizedScore} / 10`,"Scaled from the raw local result.")}
                 ${renderMetricCard("Calibration Error",`${e.calibrationError}`,`${e.calibrationDirection}: self-rating minus normalized score.`)}
                 ${renderMetricCard("Claim Alignment",e.claimAlignmentClass,"Compares claimed blend against revealed blend.")}
+                ${renderMetricCard("Projected IQ-Style Range",e.projectedIqStyleRange,"Estimate only · not an IQ test.")}
+                ${renderMetricCard("Possible MBTI-Style Type",e.possibleMbtiStyleType,"Preference hypothesis · not official MBTI®.")}
                 ${renderMetricCard("Dominance Margin",`${formatPercent(e.dominanceMargin)}`,e.dominanceDisposition)}
                 ${renderMetricCard("Confidence Band",e.confidenceBand,"Confidence measures archetype separation, not overall coherence.")}
+                ${renderMetricCard("Cognitive Processing Estimate",`${e.cognitiveProcessingIndex}/100`,`${e.cognitiveProcessingBand} · not an IQ score.`)}
               </div>
 
               <h3>Archetype Vector</h3>
@@ -2490,10 +2723,10 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
               </div>
               <div class="technical-summary">${escapeHtml(e.fragmentation.interpretation)}</div>
 
-              <h3>Cognitive Processing Estimate</h3>
-              <div class="metric-grid">
-                ${renderBarMetric("Cognitive Processing Index",e.cognitiveProcessingIndex,e.cognitiveProcessingBand)}
-                ${renderMetricCard("Boundary","Not an IQ score","This is a scenario-based estimate of reasoning pressure, evidence handling, contradiction resistance, correction capacity, and self-calibration inside this diagnostic.")}
+              <h3>Scenario Draw</h3>
+              <div class="load-card">
+                <b>Randomized Real-World Scenario Set</b>
+                <ul>${renderScenarioDraw(e.scenarioDraw)}</ul>
               </div>
 
               <h3>Preference-Type Hypothesis</h3>
@@ -2512,7 +2745,7 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
               </div>
 
               <div class="warning">
-                The Engineering Lens is a technical readout of this local diagnostic only. Fragmentation markers identify pressure-break choices, not personal identity. This is not medical, mental-health, legal, employment, intelligence, or official personality-type assessment output.
+                The Engineering Lens is a technical readout of this local diagnostic only. The Projected IQ-Style Range is not an IQ score or IQ test. The Possible MBTI-Style Type is not an official MBTI® result. Fragmentation markers identify pressure-break choices, not personal identity. This is not medical, mental-health, legal, employment, intelligence, or official personality-type assessment output.
               </div>
             </div>
           </details>
@@ -2534,16 +2767,30 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
           <section class="panel">
             <div class="panel-head">
               <p class="eyebrow">Assessment Result</p>
-              <h2>${showScore ? "Your coherence result is ready." : "Your pattern read is ready."}</h2>
-              <p>${showScore ? escapeHtml(data.band.text) : "Ungraded mode was selected, so this result does not display a formal numeric score or score band."}</p>
+              <h2>${showScore ? "Your headline result is ready." : "Your pattern read is ready."}</h2>
+              <p>${showScore ? escapeHtml(data.band.text) : "Ungraded mode was selected, so this result does not display a formal numeric coherence score or score band."}</p>
             </div>
 
             <div class="panel-body">
-              <article class="score-card">
-                <span class="eyebrow">${showScore ? "Coherence Score" : "Ungraded Pattern Read"}</span>
-                <strong class="score-number">${showScore ? `${data.scaledScore}/10` : "Pattern"}</strong>
-                <p>${showScore ? escapeHtml(data.band.label) : "Score hidden by selected mode."}</p>
-              </article>
+              <div class="result-hero-grid" aria-label="Headline result cards">
+                <article class="result-hero-card">
+                  <span class="hero-label">Coherence Score</span>
+                  <strong class="hero-value">${showScore ? `${data.scaledScore}/10` : "Pattern"}</strong>
+                  <span class="hero-note">${showScore ? escapeHtml(data.band.label) : "Score hidden by selected mode."}</span>
+                </article>
+
+                <article class="result-hero-card iq-card">
+                  <span class="hero-label">Projected IQ-Style Range</span>
+                  <strong class="hero-value">${escapeHtml(data.projectedIqStyleRange)}</strong>
+                  <span class="hero-note">Estimate only · not an IQ test</span>
+                </article>
+
+                <article class="result-hero-card type-card">
+                  <span class="hero-label">Possible MBTI-Style Type</span>
+                  <strong class="hero-value">${escapeHtml(data.possibleMbtiStyleType)}</strong>
+                  <span class="hero-note">Preference hypothesis · not official MBTI®</span>
+                </article>
+              </div>
 
               <div class="result-grid">
                 <article class="result-cell"><b>Self-Rating</b><strong>${data.selfRating}/10</strong><span>Question 1 intake anchor.</span></article>
@@ -2551,8 +2798,8 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
                 <article class="result-cell"><b>Claim Match</b><strong>${escapeHtml(data.claimMatch)}</strong><span>Comparison between claimed blend and revealed blend.</span></article>
                 <article class="result-cell"><b>Claimed Primary</b><strong>${escapeHtml(data.claimedPrimary)}</strong><span>${escapeHtml(archetypes[data.claimedPrimary].short)}</span></article>
                 <article class="result-cell"><b>Claimed Secondary</b><strong>${escapeHtml(data.claimedSecondary)}</strong><span>${escapeHtml(archetypes[data.claimedSecondary].short)}</span></article>
-                <article class="result-cell"><b>Revealed Primary</b><strong>${escapeHtml(data.revealedPrimary)}</strong><span>${data.revealedPrimary === "Undetermined" ? "No stable revealed primary because public archetype signal was too low." : escapeHtml(archetypes[data.revealedPrimary].short)}</span></article>
-                <article class="result-cell"><b>Revealed Secondary</b><strong>${escapeHtml(data.revealedSecondary)}</strong><span>${data.revealedSecondary === "Undetermined" ? "No stable revealed secondary because public archetype signal was too low." : escapeHtml(archetypes[data.revealedSecondary].short)}</span></article>
+                <article class="result-cell"><b>Revealed Primary</b><strong>${escapeHtml(data.revealedPrimary)}</strong><span>${escapeHtml(archetypeShort(data.revealedPrimary))}</span></article>
+                <article class="result-cell"><b>Revealed Secondary</b><strong>${escapeHtml(data.revealedSecondary)}</strong><span>${escapeHtml(archetypeShort(data.revealedSecondary))}</span></article>
                 ${pressureBreakCell}
                 <article class="result-cell"><b>Top Strengths</b><ul>${listItems(data.strengths)}</ul></article>
                 <article class="result-cell"><b>Top Risks</b><ul>${listItems(data.risks)}</ul></article>
@@ -2573,7 +2820,7 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
               </div>
 
               <div class="warning">
-                This result is a coherence-pattern read only. It is not a medical, mental-health, legal, employment, intelligence, or official personality-type diagnostic. The Cognitive Processing Estimate is not an IQ score. The Preference-Type Hypothesis is not an official MBTI® result. Fragmentation markers identify pressure-break choices, not personal identity. This version does not email, store, archive, or submit your result.
+                This result is a coherence-pattern read only. It is not a medical, mental-health, legal, employment, intelligence, or official personality-type diagnostic. The Projected IQ-Style Range is not an IQ score or IQ test. The Possible MBTI-Style Type is not an official MBTI® result. Fragmentation markers identify pressure-break choices, not personal identity. This version does not email, store, archive, or submit your result.
               </div>
 
               <div class="button-row">
@@ -2636,7 +2883,7 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
         const primary = getRadioValue("claimedPrimaryArchetype");
         const secondary = getRadioValue("claimedSecondaryArchetype");
 
-        generatedQuestions = chooseAdaptiveQuestions(primary,secondary);
+        generatedQuestions = chooseBalancedScenarios(primary,secondary);
         renderQuestions();
 
         diagnosticStage.classList.add("is-visible");
@@ -2645,6 +2892,12 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
         document.documentElement.dataset.generatedDiagnostic = "true";
         document.documentElement.dataset.claimedPrimaryArchetype = primary;
         document.documentElement.dataset.claimedSecondaryArchetype = secondary;
+        window.COHERENCE_DIAGNOSTIC_SCENARIO_DRAW = generatedQuestions.map((item)=>({
+          id:item.id,
+          title:item.title,
+          publicCategory:item.publicCategory,
+          drawBucket:item.drawBucket || "scenario"
+        }));
       }
 
       form.addEventListener("submit",(event)=>{
@@ -2734,26 +2987,37 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
       document.documentElement.dataset.coherenceDiagnosticEngineeringLens = "true";
       document.documentElement.dataset.coherenceDiagnosticCognitiveEstimate = "not-iq";
       document.documentElement.dataset.coherenceDiagnosticPreferenceType = "not-official-mbti";
+      document.documentElement.dataset.realWorldScenarioBank = "active";
+      document.documentElement.dataset.controlledRandomization = "active";
+      document.documentElement.dataset.resultHeroThreeCardRow = "active";
+      document.documentElement.dataset.projectedIqStyleRange = "active";
+      document.documentElement.dataset.possibleMbtiStyleType = "active";
       document.documentElement.dataset.visibleAnswerTypeLabels = "false";
       document.documentElement.dataset.visibleAnswerStrengthLabels = "false";
       document.documentElement.dataset.incoherenceProbesActive = "true";
       document.documentElement.dataset.fragmentationBucketActive = "true";
-      document.documentElement.dataset.questionDelivery = "presentation-forward-human-moments";
-      document.documentElement.dataset.scenarioRhythm = "moment-pressure-coherence-test";
       document.documentElement.dataset.technicalReadoutResultOnly = "true";
 
       window.COHERENCE_DIAGNOSTIC_ASSESSMENT_RECEIPT = {
         contract: CONTRACT,
-        previousContract: "COHERENCE_DIAGNOSTIC_SECTION_CONTRAST_COGNITIVE_LOAD_REDUCTION_TNT_v5",
+        previousContract: "COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_TNT_v6",
         route: "/coherence-diagnostic/",
         file: "/coherence-diagnostic/index.html",
-        changeType: "question delivery renewal only",
+        changeType: "real-world scenario bank and result hero renewal",
         questionsMinimum: 12,
         fixedQ1: true,
         fixedQ2: true,
+        generatedScenarioCount: 10,
+        realWorldScenarioBank: true,
+        controlledRandomization: true,
+        balancedDraw: ["archetype-specific","work-project","relationship-group","evidence-claim","responsibility-repair","instability-pressure"],
         publicArchetypes: ["Strategist","Builder","Mitigator","Auditor"],
-        questionDelivery: "presentation-forward human moments",
-        scenarioRhythm: "moment / pressure / coherence test",
+        resultHeroThreeCardRow: true,
+        resultHeroCoherenceScore: true,
+        projectedIqStyleRange: true,
+        projectedIqStyleRangeBoundary: "Estimate only · not an IQ test",
+        possibleMbtiStyleType: true,
+        possibleMbtiStyleTypeBoundary: "Preference hypothesis · not official MBTI®",
         technicalReadoutResultOnly: true,
         hiddenFragmentationBucket: true,
         fragmentedPublicArchetype: false,
@@ -2763,9 +3027,7 @@ deploy_marker=COHERENCE_DIAGNOSTIC_TED_STYLE_QUESTION_DELIVERY_DEPLOY_MARKER_v6
         optionRandomization: true,
         adaptiveGeneration: true,
         primarySecondaryRequired: true,
-        sectionContrastPreserved: true,
         scoringChange: false,
-        questionSelectionChange: false,
         archetypeModelChange: false,
         fragmentationLogicChange: false,
         engineeringLensChange: false,

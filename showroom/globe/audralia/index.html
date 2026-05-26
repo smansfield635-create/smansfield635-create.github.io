@@ -1,22 +1,22 @@
 <!-- TARGET FILE: /showroom/globe/audralia/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- AUDRALIA_PARENT_ROUTE_MIRRORLAND_THRESHOLD_AND_CARDINAL_MENU_HTML_TNT_v1 -->
+<!-- AUDRALIA_PARENT_ROUTE_PLANETARY_PATH_RELINK_HTML_TNT_v1 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/globe/audralia/"
   data-page="audralia-mirrorland-threshold"
-  data-version="G1-MIRRORLAND-THRESHOLD-CARDINAL-MENU"
-  data-contract="AUDRALIA_PARENT_ROUTE_MIRRORLAND_THRESHOLD_AND_CARDINAL_MENU_HTML_TNT_v1"
-  data-previous-contract="AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_HTML_TNT_v1"
+  data-version="G1-MIRRORLAND-THRESHOLD-PLANETARY-PATH-RELINK"
+  data-contract="AUDRALIA_PARENT_ROUTE_PLANETARY_PATH_RELINK_HTML_TNT_v1"
+  data-previous-contract="AUDRALIA_PARENT_ROUTE_MIRRORLAND_THRESHOLD_AND_CARDINAL_MENU_HTML_TNT_v1"
   data-js-contract-held="AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_JS_TNT_v1"
   data-route-family="AUDRALIA_MIRRORLAND_THRESHOLD_INTERACTIVE_TEMPLATE_ROUTE"
   data-threshold-role="after-door-welcome-to-mirrorland"
   data-planetary-template="Audralia"
+  data-planetary-path="/showroom/globe/audralia/planet/"
+  data-planetary-path-label="Audralia Planetary Path"
   data-homeworld-subtext="Homeworld of the Nine Summits Galaxy"
   data-cardinal-menu-active="true"
-  data-child-route="/showroom/globe/audralia/planet/"
-  data-child-route-held="true"
   data-blueprint-work-held="true"
   data-datum-child-held="true"
   data-active-water="false"
@@ -28,10 +28,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Welcome to Mirrorland · Audralia</title>
+  <title>Welcome to Mirrorland · Audralia Planetary Path</title>
   <meta
     name="description"
-    content="Welcome to Mirrorland. Audralia is the first planetary template after the Door: an interactive globe with Planet View, Lattice View, and Diagnostic Scope."
+    content="Welcome to Mirrorland. Audralia is the first planetary template after the Door, with a visible planetary path into the world being built."
   >
 
   <style>
@@ -214,7 +214,6 @@
       border-right:2px solid rgba(255,243,210,.82);
       border-bottom:2px solid rgba(255,243,210,.82);
       transform:rotate(45deg) translateY(-.15rem);
-      transition:transform .18s ease,border-color .18s ease;
       flex:0 0 auto;
     }
 
@@ -235,7 +234,7 @@
       right:0;
       top:calc(100% + .65rem);
       z-index:40;
-      width:min(50rem,calc(100vw - 2rem));
+      width:min(54rem,calc(100vw - 2rem));
       padding:1rem;
       border:1px solid rgba(242,198,109,.30);
       border-radius:1.35rem;
@@ -324,6 +323,13 @@
       border-color:rgba(242,198,109,.70);
       color:#05070d;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .cardinal-links a[data-planetary-path]{
+      border-color:rgba(126,216,255,.38);
+      background:
+        radial-gradient(circle at 16% 0%,rgba(126,216,255,.13),transparent 72%),
+        rgba(255,255,255,.045);
     }
 
     .cardinal-links a small{
@@ -483,6 +489,14 @@
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
     }
 
+    .button.blue{
+      border-color:rgba(126,216,255,.52);
+      color:#ecfbff;
+      background:
+        radial-gradient(circle at 30% 0%,rgba(126,216,255,.18),transparent 70%),
+        rgba(126,216,255,.075);
+    }
+
     .status-card{
       display:grid;
       gap:.75rem;
@@ -516,6 +530,13 @@
       font-size:.86rem;
       font-weight:780;
       line-height:1.34;
+    }
+
+    .planetary-path-card{
+      border-color:rgba(126,216,255,.28);
+      background:
+        radial-gradient(circle at 16% 0%,rgba(126,216,255,.12),transparent 76%),
+        rgba(255,255,255,.038);
     }
 
     .section{
@@ -693,6 +714,13 @@
         rgba(255,255,255,.038);
     }
 
+    details.restore-panel[data-planetary-path-panel]{
+      border-color:rgba(126,216,255,.28);
+      background:
+        radial-gradient(circle at 10% 0%,rgba(126,216,255,.12),transparent 18rem),
+        rgba(255,255,255,.038);
+    }
+
     details.restore-panel summary{
       cursor:pointer;
       list-style:none;
@@ -823,10 +851,11 @@
 
               <section class="cardinal-group" aria-labelledby="east-routes">
                 <h2 id="east-routes">East · Expression / Story</h2>
-                <p>Character, world, and visible-story expression routes.</p>
+                <p>Mirrorland expression, visible world-entry, and planetary build paths.</p>
                 <div class="cardinal-links">
                   <a href="/characters/"><span>Characters</span><small>Story</small></a>
-                  <a href="/showroom/globe/audralia/" aria-current="page"><span>Mirrorland / Audralia</span><small>Here</small></a>
+                  <a href="/showroom/globe/audralia/" aria-current="page"><span>Mirrorland Threshold / Audralia</span><small>Here</small></a>
+                  <a href="/showroom/globe/audralia/planet/" data-planetary-path><span>Audralia Planetary Path</span><small>Build</small></a>
                   <a href="/showroom/globe/"><span>Showroom / Globe</span><small>Display</small></a>
                 </div>
               </section>
@@ -862,7 +891,7 @@
           <div class="kicker">Mirrorland Threshold · After the Door</div>
           <h1 id="page-title">Welcome to Mirrorland.</h1>
           <p class="lead">
-            Audralia is the first planetary template after the Door: a living globe you can spin, inspect, and read through Planet View, Lattice View, and Diagnostic Scope.
+            Audralia is the first planetary template after the Door: a living globe you can spin, inspect, and then follow into the planetary build path where Audralia itself is being formed.
           </p>
 
           <div class="seal">
@@ -872,8 +901,8 @@
 
           <div class="actions">
             <a class="button gold" href="#planet-view">Spin the Globe</a>
+            <a class="button blue" href="/showroom/globe/audralia/planet/">Enter Planetary Path</a>
             <a class="button" href="#diagnostics">Read Diagnostics</a>
-            <a class="button" href="/showroom/globe/audralia/planet/">Open Child Planet Route</a>
           </div>
         </div>
 
@@ -886,9 +915,9 @@
             <span>This page welcomes the visitor into Mirrorland before sending them deeper into planet logic.</span>
           </div>
 
-          <div class="stat">
-            <b>Subtext read</b>
-            <span>Audralia is the first planetary template and Homeworld carrier for the Nine Summits Galaxy.</span>
+          <div class="stat planetary-path-card">
+            <b>Planetary Path</b>
+            <span>Audralia continues into the planet being built at /showroom/globe/audralia/planet/.</span>
           </div>
 
           <div class="stat">
@@ -960,9 +989,9 @@
               <span>16 radial nodes × 16 Fibonacci bands = 256 diagnostic states.</span>
             </div>
 
-            <div class="stat">
-              <b>Datum</b>
-              <span>Datum child may be consumed and reported, but it is not rewritten in this pass.</span>
+            <div class="stat planetary-path-card">
+              <b>Planetary Path</b>
+              <span><a href="/showroom/globe/audralia/planet/">Enter the Audralia Planetary Path</a> after inspecting the threshold globe.</span>
             </div>
 
             <div class="stat">
@@ -1007,6 +1036,19 @@
             </div>
           </details>
 
+          <details class="restore-panel" data-planetary-path-panel open>
+            <summary>
+              <b>Planetary Path boundary</b>
+              <h3>This is where Audralia moves from threshold welcome into the planet being built.</h3>
+            </summary>
+            <div class="body">
+              <p>
+                The threshold page introduces Mirrorland and the template globe. The Audralia Planetary Path carries the next step: the active planet-building route where Audralia itself is developed beyond the welcome surface.
+              </p>
+              <a class="button blue" href="/showroom/globe/audralia/planet/">Enter the Audralia Planetary Path</a>
+            </div>
+          </details>
+
           <details class="restore-panel">
             <summary>
               <b>Runtime boundary</b>
@@ -1015,18 +1057,6 @@
             <div class="body">
               <p>
                 HTML provides the threshold shell, cardinal route map, stage, mount, controls, and diagnostic slots. JavaScript remains held and owns the canvas globe, spin behavior, lattice drawing, and diagnostic reporting cycle.
-              </p>
-            </div>
-          </details>
-
-          <details class="restore-panel">
-            <summary>
-              <b>Planetary-template boundary</b>
-              <h3>Homeworld stays as subtext, not the first doorway.</h3>
-            </summary>
-            <div class="body">
-              <p>
-                “Homeworld of the Nine Summits Galaxy” remains true as the deeper seal. The public entry reads first as Mirrorland threshold so the visitor understands where they are after crossing the Door.
               </p>
             </div>
           </details>
@@ -1044,31 +1074,36 @@
           </details>
         </div>
 
-        <template id="audralia-mirrorland-threshold-receipt" class="receipt" data-audralia-parent-route-receipt>
-AUDRALIA_PARENT_ROUTE_MIRRORLAND_THRESHOLD_AND_CARDINAL_MENU_HTML_TNT_v1
+        <template id="audralia-planetary-path-relink-receipt" class="receipt" data-audralia-parent-route-receipt>
+AUDRALIA_PARENT_ROUTE_PLANETARY_PATH_RELINK_HTML_TNT_v1
 route=/showroom/globe/audralia/
 routeFamily=AUDRALIA_MIRRORLAND_THRESHOLD_INTERACTIVE_TEMPLATE_ROUTE
-previousHtml=AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_HTML_TNT_v1
+previousHtml=AUDRALIA_PARENT_ROUTE_MIRRORLAND_THRESHOLD_AND_CARDINAL_MENU_HTML_TNT_v1
 heldJs=/showroom/globe/audralia/index.js
 heldJsContract=AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_JS_TNT_v1
 thresholdRole=after-door-welcome-to-mirrorland
 primaryHeadline=Welcome to Mirrorland.
-subtextSeal=Homeworld of the Nine Summits Galaxy
 planetaryTemplate=Audralia
+planetaryPath=/showroom/globe/audralia/planet/
+planetaryPathLabel=Audralia Planetary Path
+planetaryPathVisible=true
+planetaryPathHeroCta=true
+planetaryPathCardinalMenu=true
+planetaryPathDeepPanel=true
+subtextSeal=Homeworld of the Nine Summits Galaxy
 cardinalMenuActive=true
 north=Compass,Door,Home
-east=Characters,Mirrorland/Audralia,Showroom/Globe
+east=Characters,MirrorlandThreshold/Audralia,AudraliaPlanetaryPath,Showroom/Globe
 south=Products,Gauges,Cockpit/Diagnostics
 west=Explore,Frontier,Laws
 requiredStage=#audraliaGlobeStage
 requiredMount=#audraliaGlobeMount
 lensButtons=planet,lattice,diagnostic
 diagnosticSlots=14
-childRoute=/showroom/globe/audralia/planet/
-childRouteHeld=true
 blueprintWorkHeld=true
 datumChildHeld=true
 runtimeTouched=false
+planetRouteTouched=false
 interactiveGlobeRequired=true
 fingerDragRequired=true
 latticeViewRequired=true
@@ -1083,7 +1118,7 @@ finalVisualPass=false
     </main>
 
     <footer>
-      AUDRALIA_PARENT_ROUTE_MIRRORLAND_THRESHOLD_AND_CARDINAL_MENU_HTML_TNT_v1 · Welcome to Mirrorland · Audralia planetary template · Cardinal Route Map · Interactive runtime held · No final visual pass.
+      AUDRALIA_PARENT_ROUTE_PLANETARY_PATH_RELINK_HTML_TNT_v1 · Welcome to Mirrorland · Audralia Planetary Path restored · Interactive runtime held · No final visual pass.
     </footer>
   </div>
 

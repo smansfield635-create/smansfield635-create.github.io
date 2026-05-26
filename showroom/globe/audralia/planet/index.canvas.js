@@ -1,53 +1,39 @@
 // TARGET FILE: /showroom/globe/audralia/planet/index.canvas.js
 // TNT FULL-FILE REPLACEMENT
-// AUDRALIA_PLANET_FILE_5_PARENT_CANVAS_TERRAIN_FEED_HANDOFF_TNT_v1
+// AUDRALIA_PLANET_FILE_5B_DISPLAY_ONLY_CANVAS_INTERPRETER_TNT_v1
 //
-// File 5 of 5 in the backward-build terrain strategy.
-// Authority position:
-// index.canvas.js
-// └── index.canvas.terrain.nodes.js
-//     ├── index.canvas.terrain.nodes.subterranean.js
-//     ├── index.canvas.terrain.nodes.above-sea.js
-//     └── index.canvas.terrain.nodes.boundary.js
+// Display-only canvas interpreter.
+// The canvas is the screen/projector only.
+// Downstream files decide what the globe becomes by emitting generic display primitives.
 //
-// Owns:
-// - visible canvas picture
-// - clay-globe carrier
-// - projection
-// - rotation
-// - drag
-// - one-canvas discipline
-// - visible dry-terrain feed expression
-//
-// Consumes only:
-// - DGBAudraliaCanvasTerrainNodes.getCanvasTerrainFeed()
-// - fallback AUDRALIA_CANVAS_TERRAIN_FEED_PACKET
+// Consumes:
+// - DGBAudraliaCanvasTerrainNodes.getCanvasDisplayPacket()
+// - fallback AUDRALIA_CANVAS_DISPLAY_PACKET
 //
 // Does not directly consume:
 // - DGBAudraliaCanvasTerrainNodesSubterranean
 // - DGBAudraliaCanvasTerrainNodesAboveSea
 // - DGBAudraliaCanvasTerrainNodesBoundary
 //
-// Does not own:
-// - node baseline truth
-// - subterranean truth
-// - above-sea terrain truth
-// - boundary truth
-// - hydration
-// - active water
-// - final visual pass
+// Does not semantically interpret:
+// - landform
+// - boundaryClass
+// - beachCandidate
+// - islandFragmentCandidate
+// - subterraneanClass
+// - elevationBand
+// - terrainPotential
+// - hydration meaning
+// - future material meaning
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_PLANET_FILE_5_PARENT_CANVAS_TERRAIN_FEED_HANDOFF_TNT_v1";
-  const PREVIOUS_CANVAS_CONTRACT = "AUDRALIA_G2_PLANET_OPERATION_A_DONOR_CANVAS_FEED_EVOLUTION_TNT_v1";
-  const SPEC_OPS = "AUDRALIA_PLANET_FILE_5_PARENT_CANVAS_TERRAIN_FEED_HANDOFF_SPEC_OPS_v1";
-  const CCR = "AUDRALIA_PLANET_FILE_5_PARENT_CANVAS_TERRAIN_FEED_HANDOFF_CCR_v1";
-  const FULL_PLAN = "AUDRALIA_PLANET_CANVAS_TERRAIN_BACKWARD_BUILD_FULL_PLAN_CCR_v1";
-
-  const TERRAIN_NODES_CONTRACT = "AUDRALIA_PLANET_FILE_4_TERRAIN_NODES_COMPOSER_TNT_v1";
-  const TERRAIN_NODES_FILE = "/showroom/globe/audralia/planet/index.canvas.terrain.nodes.js";
+  const CONTRACT = "AUDRALIA_PLANET_FILE_5B_DISPLAY_ONLY_CANVAS_INTERPRETER_TNT_v1";
+  const PREVIOUS_CANVAS_CONTRACT = "AUDRALIA_PLANET_FILE_5_PARENT_CANVAS_TERRAIN_FEED_HANDOFF_TNT_v1";
+  const DIRECT_CHILD_CONTRACT = "AUDRALIA_PLANET_FILE_4B_TERRAIN_NODES_DISPLAY_PACKET_COMPOSER_TNT_v1";
+  const DIRECT_CHILD_FILE = "/showroom/globe/audralia/planet/index.canvas.terrain.nodes.js";
+  const PRIMITIVE_PROTOCOL = "AUDRALIA_CANVAS_DISPLAY_PRIMITIVES_v1";
 
   const ROUTE = "/showroom/globe/audralia/planet/";
   const TARGET = "/showroom/globe/audralia/planet/index.canvas.js";
@@ -59,26 +45,32 @@
   const TAU = Math.PI * 2;
   const HALF_PI = Math.PI / 2;
 
+  const MODES = Object.freeze(["body", "surface", "terrain", "lattice", "receipt"]);
+
+  const DEFAULT_MODE_WEIGHT = Object.freeze({
+    body: 0.20,
+    surface: 0.40,
+    terrain: 0.80,
+    lattice: 0.12,
+    receipt: 0.30
+  });
+
   const FIBONACCI_SEQUENCE = Object.freeze([
     1, 1, 2, 3, 5, 8, 13, 21,
     34, 55, 89, 144, 233, 377, 610, 987
   ]);
 
   const FIBONACCI_OFFSETS = Object.freeze([1, 2, 3, 5, 8, 13]);
-  const MODES = Object.freeze(["body", "surface", "terrain", "lattice", "receipt"]);
 
   const BASELINE_FEED = Object.freeze({
     id: "CLAY_GLOBE_BASELINE_FEED",
-    role: "TV_SCREEN_CANVAS_FEED",
+    role: "DISPLAY_ONLY_CANVAS_FALLBACK",
     publicIdentity: "Audralia",
     templateSource: "AUSTRALIA_TEMPLATE_HIDDEN_SCAFFOLD",
     latLongDisposition: "PREDESTINED",
     material: "dry moldable clay",
     activeWater: false,
     hydrationActive: false,
-    terrainChildActive: false,
-    surfaceChildActive: false,
-    datumChildActive: false,
     finalVisualPass: false
   });
 
@@ -106,20 +98,21 @@
   });
 
   const CLAY_PALETTE_32 = Object.freeze([
-    "rgba(136,103,64,.26)", "rgba(170,130,76,.23)", "rgba(110,91,62,.24)", "rgba(193,153,88,.20)",
-    "rgba(82,101,76,.20)", "rgba(116,94,61,.25)", "rgba(146,117,74,.22)", "rgba(203,171,103,.18)",
-    "rgba(94,72,52,.27)", "rgba(158,119,70,.23)", "rgba(126,135,91,.18)", "rgba(181,143,86,.21)",
-    "rgba(73,82,68,.22)", "rgba(132,101,66,.25)", "rgba(212,181,111,.17)", "rgba(102,85,66,.23)",
-    "rgba(151,129,91,.20)", "rgba(121,83,58,.24)", "rgba(173,152,105,.18)", "rgba(89,109,83,.18)",
-    "rgba(139,92,63,.23)", "rgba(196,162,100,.18)", "rgba(111,118,84,.18)", "rgba(95,74,54,.25)",
-    "rgba(164,132,86,.21)", "rgba(118,96,71,.22)", "rgba(220,190,123,.15)", "rgba(78,88,72,.20)",
-    "rgba(144,112,72,.23)", "rgba(102,79,58,.25)", "rgba(181,138,78,.20)", "rgba(126,146,101,.16)"
+    "rgba(136,103,64,.22)", "rgba(170,130,76,.20)", "rgba(110,91,62,.22)", "rgba(193,153,88,.18)",
+    "rgba(82,101,76,.18)", "rgba(116,94,61,.22)", "rgba(146,117,74,.20)", "rgba(203,171,103,.16)",
+    "rgba(94,72,52,.24)", "rgba(158,119,70,.20)", "rgba(126,135,91,.16)", "rgba(181,143,86,.18)",
+    "rgba(73,82,68,.20)", "rgba(132,101,66,.22)", "rgba(212,181,111,.15)", "rgba(102,85,66,.20)",
+    "rgba(151,129,91,.18)", "rgba(121,83,58,.21)", "rgba(173,152,105,.16)", "rgba(89,109,83,.16)",
+    "rgba(139,92,63,.20)", "rgba(196,162,100,.16)", "rgba(111,118,84,.16)", "rgba(95,74,54,.22)",
+    "rgba(164,132,86,.18)", "rgba(118,96,71,.20)", "rgba(220,190,123,.13)", "rgba(78,88,72,.18)",
+    "rgba(144,112,72,.20)", "rgba(102,79,58,.22)", "rgba(181,138,78,.18)", "rgba(126,146,101,.14)"
   ]);
 
   const state = {
     stage: null,
     canvas: null,
     ctx: null,
+    statusNode: null,
     resizeObserver: null,
 
     width: 0,
@@ -151,22 +144,25 @@
     pointerY: 0,
     lastTap: 0,
 
-    terrainFeed: null,
-    terrainFeedActive: false,
-    terrainFeedMode: "WAITING_FOR_TERRAIN_NODES",
-    terrainFeedLastRead: 0,
-    terrainFeedError: "",
-    terrainRenderableCells: [],
-    terrainRenderableBySeatIndex: new Map(),
-    terrainRenderableByNodeId: new Map(),
-    terrainChildLoadAttempted: false,
-    terrainChildLoaded: false,
-    terrainChildConsumed: false,
-    terrainChildContract: "",
+    canvasDisplayPacket: null,
+    displayPacketActive: false,
+    displayPacketMode: "WAITING_FOR_DISPLAY_PACKET",
+    displayPacketLastRead: 0,
+    displayPacketError: "",
+    displayPacketContract: "",
+    displayPrimitiveProtocol: "",
+    displayPrimitives: [],
+    displayPrimitiveGroups: Object.freeze({}),
+    displayPrimitiveTypes: Object.freeze({}),
+    displayPrimitiveCount: 0,
+
     terrainNodesActive: false,
     subterraneanActive: false,
     aboveSeaActive: false,
     boundaryActive: false,
+
+    directChildLoadAttempted: false,
+    directChildLoaded: false,
 
     raf: 0,
     lastFrameTime: 0,
@@ -182,7 +178,8 @@
 
   const previousControllers = [
     "__AUDRALIA_G2_PLANET_OPERATION_A_CANVAS_CONTROLLER__",
-    "__AUDRALIA_PLANET_FILE_5_PARENT_CANVAS_CONTROLLER__"
+    "__AUDRALIA_PLANET_FILE_5_PARENT_CANVAS_CONTROLLER__",
+    "__AUDRALIA_PLANET_FILE_5B_DISPLAY_ONLY_CANVAS_CONTROLLER__"
   ];
 
   for (const key of previousControllers) {
@@ -223,6 +220,15 @@
     }
   }
 
+  function setDataset(key, value) {
+    const text = String(value);
+
+    try {
+      document.documentElement.dataset[key] = text;
+      if (document.body) document.body.dataset[key] = text;
+    } catch (_error) {}
+  }
+
   function recordError(scope, error) {
     const message = error && error.message ? error.message : String(error || "unknown");
 
@@ -232,16 +238,20 @@
       time: new Date().toISOString()
     });
 
-    document.documentElement.dataset.audraliaCanvasError = message;
+    state.displayPacketError = message;
+    setDataset("audraliaCanvasError", message);
     publishStatus("error:" + scope);
   }
 
-  function setDataset(key, value) {
-    const text = String(value);
+  function updateVisibleStatus() {
+    if (!state.statusNode) return;
+
+    const text = state.displayPacketActive
+      ? "Display packet active · " + state.displayPrimitiveCount + " primitives · " + state.displayPacketMode
+      : "Display packet waiting · clay fallback active";
 
     try {
-      document.documentElement.dataset[key] = text;
-      if (document.body) document.body.dataset[key] = text;
+      state.statusNode.textContent = text;
     } catch (_error) {}
   }
 
@@ -381,7 +391,7 @@
       lonRad: centeredTemplateLon(anchor.lon)
     }));
 
-    const dispositionCells = state.seats.map((seat) => {
+    state.dispositionCells = state.seats.map((seat) => {
       let mass = 0;
       let pressure = 0;
       let basin = 0;
@@ -396,15 +406,12 @@
         pressure += weight * anchor.pressure;
         basin += weight * anchor.basin;
 
-        if (weight * anchor.mass > mass * 0.32) {
-          dominant = anchor.id;
-        }
+        if (weight * anchor.mass > mass * 0.32) dominant = anchor.id;
       }
 
       const latitudePressure = 1 - Math.abs(Math.sin(seat.latitude)) * 0.22;
       const fibonacciPressure = 0.78 + seat.fibonacciPhase * 0.38;
       const noise = hash01(seat.seatIndex + 17) * 0.16;
-
       const intensity = clamp((mass * latitudePressure * fibonacciPressure) + noise, 0, 1.35);
       const normalized = clamp(intensity / 1.08, 0, 1);
 
@@ -415,62 +422,12 @@
         pressure: clamp(pressure, 0, 1.2),
         basin: clamp(basin, 0, 1.1),
         colorIndex: (seat.colorIndex + Math.floor(normalized * 11)) % 32,
-        elevationHint: clamp((normalized * 0.64 + pressure * 0.22 - basin * 0.10), 0, 1),
-        shelfHint: clamp((basin * 0.54 + (1 - normalized) * 0.18), 0, 1)
+        clayHint: clamp((normalized * 0.64 + pressure * 0.22 - basin * 0.10), 0, 1)
       });
     });
 
-    const contourLines = [];
-    const ridgeLines = [];
-
-    for (let i = 0; i < anchors.length; i += 1) {
-      const current = anchors[i];
-      const next = anchors[(i + 1) % anchors.length];
-
-      contourLines.push(Object.freeze({
-        aLat: current.latRad,
-        aLon: current.lonRad,
-        bLat: next.latRad,
-        bLon: next.lonRad,
-        pressure: (current.pressure + next.pressure) / 2,
-        basin: (current.basin + next.basin) / 2,
-        family: "template-contour"
-      }));
-    }
-
-    const ridgePairs = [
-      [0, 4],
-      [1, 4],
-      [2, 4],
-      [3, 4],
-      [4, 5],
-      [4, 6],
-      [4, 7],
-      [4, 8],
-      [6, 8],
-      [3, 6],
-      [5, 8],
-      [0, 2]
-    ];
-
-    for (let i = 0; i < ridgePairs.length; i += 1) {
-      const a = anchors[ridgePairs[i][0]];
-      const b = anchors[ridgePairs[i][1]];
-
-      ridgeLines.push(Object.freeze({
-        aLat: a.latRad,
-        aLon: a.lonRad,
-        bLat: b.latRad,
-        bLon: b.lonRad,
-        pressure: (a.pressure + b.pressure) / 2,
-        bend: (hash01(i + 91) - 0.5) * 0.26,
-        family: "pressure-ridge"
-      }));
-    }
-
-    state.dispositionCells = dispositionCells;
-    state.contourLines = contourLines;
-    state.ridgeLines = ridgeLines;
+    state.contourLines = [];
+    state.ridgeLines = [];
   }
 
   function rotatePoint(point) {
@@ -501,11 +458,14 @@
   }
 
   function pointFromLatLon(latitude, longitude) {
-    const clat = Math.cos(latitude);
+    const lat = clamp(latitude, -HALF_PI, HALF_PI);
+    const lon = finite(longitude, 0);
+    const clat = Math.cos(lat);
+
     return {
-      x: clat * Math.cos(longitude),
-      y: Math.sin(latitude),
-      z: clat * Math.sin(longitude)
+      x: clat * Math.cos(lon),
+      y: Math.sin(lat),
+      z: clat * Math.sin(lon)
     };
   }
 
@@ -537,228 +497,6 @@
     };
   }
 
-  function validateTerrainFeed(feed) {
-    if (!feed || typeof feed !== "object") return false;
-    if (!Array.isArray(feed.renderableCells)) return false;
-    if (feed.activeWater === true) return false;
-    if (feed.hydration === true) return false;
-    if (feed.finalVisualPass === true) return false;
-    return true;
-  }
-
-  function indexTerrainFeed(feed) {
-    const cells = Array.isArray(feed && feed.renderableCells) ? feed.renderableCells : [];
-    const bySeat = new Map();
-    const byNode = new Map();
-
-    for (const cell of cells) {
-      if (!cell || typeof cell !== "object") continue;
-
-      if (Number.isFinite(Number(cell.seatIndex))) {
-        bySeat.set(Number(cell.seatIndex), cell);
-      }
-
-      if (cell.nodeId) {
-        byNode.set(String(cell.nodeId), cell);
-      }
-    }
-
-    state.terrainRenderableCells = cells;
-    state.terrainRenderableBySeatIndex = bySeat;
-    state.terrainRenderableByNodeId = byNode;
-  }
-
-  function readTerrainFeed(scope = "read", forceRefresh = false) {
-    let feed = null;
-    let error = "";
-    let consumed = false;
-
-    try {
-      const api = window.DGBAudraliaCanvasTerrainNodes;
-
-      if (api && typeof api === "object") {
-        if (forceRefresh && typeof api.refreshComposition === "function") {
-          try {
-            api.refreshComposition();
-          } catch (_refreshError) {}
-        }
-
-        if (typeof api.getCanvasTerrainFeed === "function") {
-          feed = api.getCanvasTerrainFeed();
-          consumed = true;
-        }
-      }
-
-      if (!feed && window.AUDRALIA_CANVAS_TERRAIN_FEED_PACKET) {
-        feed = window.AUDRALIA_CANVAS_TERRAIN_FEED_PACKET;
-        consumed = true;
-      }
-
-      if (!validateTerrainFeed(feed)) {
-        state.terrainFeed = null;
-        state.terrainFeedActive = false;
-        state.terrainFeedMode = feed ? "INVALID_FEED" : "WAITING_FOR_TERRAIN_NODES";
-        state.terrainFeedError = feed ? "INVALID_OR_BLOCKED_TERRAIN_FEED" : "";
-        state.terrainRenderableCells = [];
-        state.terrainRenderableBySeatIndex = new Map();
-        state.terrainRenderableByNodeId = new Map();
-        state.terrainChildConsumed = false;
-        state.terrainChildContract = "";
-        state.terrainNodesActive = false;
-        state.subterraneanActive = false;
-        state.aboveSeaActive = false;
-        state.boundaryActive = false;
-        publishTerrainDataset();
-        return false;
-      }
-
-      state.terrainFeed = feed;
-      state.terrainFeedActive = Boolean(feed.terrainNodesActive || feed.nodeCount || feed.renderableCells.length);
-      state.terrainFeedMode = String(feed.feedMode || "NODE_BASELINE_ONLY");
-      state.terrainFeedLastRead = now();
-      state.terrainFeedError = "";
-      state.terrainChildConsumed = consumed;
-      state.terrainChildContract = String(feed.contract || TERRAIN_NODES_CONTRACT);
-      state.terrainNodesActive = Boolean(feed.terrainNodesActive);
-      state.subterraneanActive = Boolean(feed.subterraneanActive);
-      state.aboveSeaActive = Boolean(feed.aboveSeaActive);
-      state.boundaryActive = Boolean(feed.boundaryActive);
-
-      indexTerrainFeed(feed);
-      publishTerrainDataset();
-      publishStatus("terrain-feed:" + scope);
-      return true;
-    } catch (feedError) {
-      error = feedError && feedError.message ? feedError.message : String(feedError || "unknown");
-      state.terrainFeed = null;
-      state.terrainFeedActive = false;
-      state.terrainFeedMode = "FEED_READ_ERROR";
-      state.terrainFeedError = error;
-      state.terrainChildConsumed = false;
-      state.terrainChildContract = "";
-      state.terrainNodesActive = false;
-      state.subterraneanActive = false;
-      state.aboveSeaActive = false;
-      state.boundaryActive = false;
-      state.terrainRenderableCells = [];
-      state.terrainRenderableBySeatIndex = new Map();
-      state.terrainRenderableByNodeId = new Map();
-
-      publishTerrainDataset();
-      return false;
-    }
-  }
-
-  function loadTerrainDirectChild() {
-    if (state.terrainChildLoadAttempted) return;
-    state.terrainChildLoadAttempted = true;
-
-    if (window.DGBAudraliaCanvasTerrainNodes || window.AUDRALIA_CANVAS_TERRAIN_FEED_PACKET) {
-      state.terrainChildLoaded = true;
-      readTerrainFeed("existing-direct-child", true);
-      return;
-    }
-
-    const existing = query("script[data-audralia-canvas-terrain-nodes-loader]");
-    if (existing) return;
-
-    try {
-      const script = document.createElement("script");
-      script.src = TERRAIN_NODES_FILE + "?v=" + encodeURIComponent(TERRAIN_NODES_CONTRACT);
-      script.async = true;
-      script.defer = true;
-      script.setAttribute("data-audralia-canvas-terrain-nodes-loader", CONTRACT);
-      script.setAttribute("data-direct-child-only", "true");
-
-      script.addEventListener("load", () => {
-        state.terrainChildLoaded = true;
-        readTerrainFeed("direct-child-loaded", true);
-        requestRender(18);
-      }, { once: true });
-
-      script.addEventListener("error", () => {
-        state.terrainChildLoaded = false;
-        state.terrainFeedMode = "WAITING_FOR_TERRAIN_NODES";
-        publishTerrainDataset();
-        requestRender(8);
-      }, { once: true });
-
-      (document.head || document.documentElement).appendChild(script);
-    } catch (_error) {}
-  }
-
-  function publishTerrainDataset() {
-    setDataset("audraliaCanvasTerrainFeedActive", state.terrainFeedActive ? "true" : "false");
-    setDataset("audraliaCanvasTerrainFeedMode", state.terrainFeedMode);
-    setDataset("audraliaCanvasTerrainNodesActive", state.terrainNodesActive ? "true" : "false");
-    setDataset("audraliaCanvasTerrainSubterraneanActive", state.subterraneanActive ? "true" : "false");
-    setDataset("audraliaCanvasTerrainAboveSeaActive", state.aboveSeaActive ? "true" : "false");
-    setDataset("audraliaCanvasTerrainBoundaryActive", state.boundaryActive ? "true" : "false");
-    setDataset("audraliaCanvasTerrainRenderableCellCount", state.terrainRenderableCells.length);
-    setDataset("audraliaCanvasTerrainChildConsumed", state.terrainChildConsumed ? "true" : "false");
-    setDataset("audraliaCanvasActiveWater", "false");
-    setDataset("audraliaCanvasHydrationActive", "false");
-    setDataset("audraliaCanvasFinalVisualPass", "false");
-  }
-
-  function terrainCellForSeat(seatIndex) {
-    return state.terrainRenderableBySeatIndex.get(Number(seatIndex)) || null;
-  }
-
-  function terrainAlphaForMode() {
-    if (!state.terrainFeedActive) return 0;
-
-    if (state.mode === "body") return 0.24;
-    if (state.mode === "surface") return 0.42;
-    if (state.mode === "terrain") return 0.66;
-    if (state.mode === "lattice") return 0.18;
-    if (state.mode === "receipt") return 0.30;
-
-    return 0.28;
-  }
-
-  function terrainColor(cell, alpha) {
-    const landform = String(cell.landform || "");
-    const boundaryClass = String(cell.boundaryClass || "");
-    const elevation = clamp(cell.elevation, 0, 1);
-    const pressure = clamp(cell.subterraneanPressure, 0, 1);
-    const boundary = clamp(cell.boundaryScore, 0, 1);
-
-    if (cell.beachCandidate) {
-      return "rgba(226,197,128," + clamp(alpha * (0.72 + boundary * 0.28), 0, 0.82).toFixed(3) + ")";
-    }
-
-    if (cell.islandFragmentCandidate) {
-      return "rgba(202,171,105," + clamp(alpha * (0.62 + boundary * 0.22), 0, 0.76).toFixed(3) + ")";
-    }
-
-    if (boundaryClass.includes("bay") || boundaryClass.includes("inlet") || boundaryClass.includes("fracture")) {
-      return "rgba(92,73,49," + clamp(alpha * (0.64 + boundary * 0.30), 0, 0.78).toFixed(3) + ")";
-    }
-
-    if (landform.includes("summit") || landform.includes("mountain")) {
-      return "rgba(211,177,102," + clamp(alpha * (0.78 + elevation * 0.22), 0, 0.90).toFixed(3) + ")";
-    }
-
-    if (landform.includes("ridge") || landform.includes("escarpment")) {
-      return "rgba(142,101,62," + clamp(alpha * (0.70 + pressure * 0.28), 0, 0.86).toFixed(3) + ")";
-    }
-
-    if (landform.includes("basin")) {
-      return "rgba(70,68,49," + clamp(alpha * (0.72 + pressure * 0.26), 0, 0.86).toFixed(3) + ")";
-    }
-
-    if (landform.includes("plateau")) {
-      return "rgba(174,134,78," + clamp(alpha * (0.64 + elevation * 0.24), 0, 0.80).toFixed(3) + ")";
-    }
-
-    if (landform.includes("shelf")) {
-      return "rgba(119,96,66," + clamp(alpha * (0.54 + boundary * 0.18), 0, 0.72).toFixed(3) + ")";
-    }
-
-    return "rgba(132,105,68," + clamp(alpha * (0.48 + elevation * 0.20 + pressure * 0.18), 0, 0.72).toFixed(3) + ")";
-  }
-
   function clearCanvas() {
     if (!state.ctx) return;
     state.ctx.clearRect(0, 0, state.width, state.height);
@@ -771,6 +509,413 @@
     ctx.beginPath();
     ctx.arc(m.centerX, m.centerY, m.radius * 1.003, 0, TAU);
     ctx.clip();
+  }
+
+  function validateDisplayPacket(packet) {
+    if (!packet || typeof packet !== "object") return false;
+    if (packet.primitiveProtocol !== PRIMITIVE_PROTOCOL) return false;
+    if (!Array.isArray(packet.primitives)) return false;
+
+    if (packet.activeWater === true) return false;
+    if (packet.hydration === true) return false;
+    if (packet.oceans === true) return false;
+    if (packet.rivers === true) return false;
+    if (packet.lakes === true) return false;
+    if (packet.beachRendering === true) return false;
+    if (packet.finalVisualPass === true) return false;
+
+    return true;
+  }
+
+  function indexDisplayPrimitives(packet) {
+    const primitives = Array.isArray(packet && packet.primitives) ? packet.primitives : [];
+    const groups = {};
+    const types = {};
+
+    for (const primitive of primitives) {
+      if (!primitive || typeof primitive !== "object") continue;
+
+      const group = String(primitive.group || "ungrouped");
+      const type = String(primitive.type || "unknown");
+
+      groups[group] = (groups[group] || 0) + 1;
+      types[type] = (types[type] || 0) + 1;
+    }
+
+    state.displayPrimitives = primitives;
+    state.displayPrimitiveGroups = Object.freeze(groups);
+    state.displayPrimitiveTypes = Object.freeze(types);
+    state.displayPrimitiveCount = primitives.length;
+  }
+
+  function readCanvasDisplayPacket(scope = "read", forceRefresh = false) {
+    try {
+      let packet = null;
+      const api = window.DGBAudraliaCanvasTerrainNodes;
+
+      if (api && typeof api === "object") {
+        if (forceRefresh && typeof api.refreshComposition === "function") {
+          try {
+            api.refreshComposition();
+          } catch (_refreshError) {}
+        }
+
+        if (typeof api.getCanvasDisplayPacket === "function") {
+          packet = api.getCanvasDisplayPacket();
+        }
+      }
+
+      if (!packet && window.AUDRALIA_CANVAS_DISPLAY_PACKET) {
+        packet = window.AUDRALIA_CANVAS_DISPLAY_PACKET;
+      }
+
+      if (!validateDisplayPacket(packet)) {
+        state.canvasDisplayPacket = null;
+        state.displayPacketActive = false;
+        state.displayPacketMode = packet ? "INVALID_DISPLAY_PACKET" : "WAITING_FOR_DISPLAY_PACKET";
+        state.displayPacketError = packet ? "INVALID_OR_BLOCKED_DISPLAY_PACKET" : "";
+        state.displayPacketContract = "";
+        state.displayPrimitiveProtocol = "";
+        state.displayPrimitives = [];
+        state.displayPrimitiveGroups = Object.freeze({});
+        state.displayPrimitiveTypes = Object.freeze({});
+        state.displayPrimitiveCount = 0;
+        state.terrainNodesActive = false;
+        state.subterraneanActive = false;
+        state.aboveSeaActive = false;
+        state.boundaryActive = false;
+
+        publishStatus("display-packet:" + scope);
+        return false;
+      }
+
+      state.canvasDisplayPacket = packet;
+      state.displayPacketActive = true;
+      state.displayPacketMode = String(packet.feedMode || "DISPLAY_PACKET_ACTIVE");
+      state.displayPacketLastRead = now();
+      state.displayPacketError = "";
+      state.displayPacketContract = String(packet.contract || "");
+      state.displayPrimitiveProtocol = String(packet.primitiveProtocol || "");
+      state.terrainNodesActive = Boolean(packet.terrainNodesActive);
+      state.subterraneanActive = Boolean(packet.subterraneanActive);
+      state.aboveSeaActive = Boolean(packet.aboveSeaActive);
+      state.boundaryActive = Boolean(packet.boundaryActive);
+
+      indexDisplayPrimitives(packet);
+      publishStatus("display-packet:" + scope);
+      updateVisibleStatus();
+      return true;
+    } catch (error) {
+      state.canvasDisplayPacket = null;
+      state.displayPacketActive = false;
+      state.displayPacketMode = "DISPLAY_PACKET_READ_ERROR";
+      state.displayPacketError = error && error.message ? error.message : String(error || "unknown");
+      state.displayPacketContract = "";
+      state.displayPrimitiveProtocol = "";
+      state.displayPrimitives = [];
+      state.displayPrimitiveGroups = Object.freeze({});
+      state.displayPrimitiveTypes = Object.freeze({});
+      state.displayPrimitiveCount = 0;
+
+      publishStatus("display-packet-error:" + scope);
+      updateVisibleStatus();
+      return false;
+    }
+  }
+
+  function loadDirectChildIfNeeded() {
+    if (state.directChildLoadAttempted) return;
+    state.directChildLoadAttempted = true;
+
+    const api = window.DGBAudraliaCanvasTerrainNodes;
+
+    if (
+      api &&
+      typeof api.getCanvasDisplayPacket === "function" &&
+      api.contract === DIRECT_CHILD_CONTRACT
+    ) {
+      state.directChildLoaded = true;
+      readCanvasDisplayPacket("direct-child-present", true);
+      return;
+    }
+
+    const existing = query("script[data-audralia-display-packet-composer-loader]");
+    if (existing) return;
+
+    try {
+      const script = document.createElement("script");
+      script.src = DIRECT_CHILD_FILE + "?v=" + encodeURIComponent(DIRECT_CHILD_CONTRACT);
+      script.async = true;
+      script.defer = true;
+      script.setAttribute("data-audralia-display-packet-composer-loader", CONTRACT);
+      script.setAttribute("data-direct-child-only", "true");
+
+      script.addEventListener("load", () => {
+        state.directChildLoaded = true;
+        readCanvasDisplayPacket("direct-child-loaded", true);
+        requestRender(20);
+      }, { once: true });
+
+      script.addEventListener("error", () => {
+        state.directChildLoaded = false;
+        state.displayPacketMode = "WAITING_FOR_DISPLAY_PACKET";
+        publishStatus("direct-child-load-error");
+        requestRender(8);
+      }, { once: true });
+
+      (document.head || document.documentElement).appendChild(script);
+    } catch (_error) {}
+  }
+
+  function displayAlphaForMode(primitive) {
+    const alpha = clamp(primitive && primitive.alpha, 0, 1);
+    const weights = primitive && primitive.modeWeight && typeof primitive.modeWeight === "object"
+      ? primitive.modeWeight
+      : DEFAULT_MODE_WEIGHT;
+
+    const weight = Number.isFinite(Number(weights[state.mode]))
+      ? Number(weights[state.mode])
+      : DEFAULT_MODE_WEIGHT[state.mode];
+
+    return clamp(alpha * weight, 0, 1);
+  }
+
+  function primitivePoint(primitive) {
+    return projectPoint(pointFromLatLon(finite(primitive.lat, 0), finite(primitive.lon, 0)));
+  }
+
+  function primitiveSize(value, fallback) {
+    return clamp(value, 0.001, 2) || fallback;
+  }
+
+  function applyPrimitiveStroke(ctx, primitive, alpha) {
+    if (primitive.stroke) ctx.strokeStyle = String(primitive.stroke);
+    else ctx.strokeStyle = "rgba(255,232,163,.42)";
+
+    ctx.globalAlpha = alpha;
+    ctx.lineWidth = Math.max(0.25, finite(primitive.lineWidth, 0.65) * state.dpr);
+  }
+
+  function applyPrimitiveFill(ctx, primitive, alpha) {
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = primitive.fill ? String(primitive.fill) : "rgba(196,154,92,1)";
+  }
+
+  function drawPrimitiveEllipse(primitive) {
+    const ctx = state.ctx;
+    const p = primitivePoint(primitive);
+
+    if (!p.frontFacing) return;
+
+    const m = metrics();
+    const alpha = displayAlphaForMode(primitive);
+    if (alpha <= 0.005) return;
+
+    const width = m.radius * primitiveSize(primitive.width, 0.035) * p.perspective;
+    const height = m.radius * primitiveSize(primitive.height, 0.020) * p.perspective;
+    const rotation = finite(primitive.rotation, 0) + state.yaw;
+
+    ctx.save();
+
+    if (primitive.fill) {
+      applyPrimitiveFill(ctx, primitive, alpha);
+      ctx.beginPath();
+      ctx.ellipse(p.x, p.y, width, height, rotation, 0, TAU);
+      ctx.fill();
+    }
+
+    if (primitive.stroke) {
+      applyPrimitiveStroke(ctx, primitive, alpha * 0.84);
+      ctx.beginPath();
+      ctx.ellipse(p.x, p.y, width, height, rotation, 0, TAU);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
+  function drawPrimitivePoint(primitive) {
+    const ctx = state.ctx;
+    const p = primitivePoint(primitive);
+
+    if (!p.frontFacing) return;
+
+    const m = metrics();
+    const alpha = displayAlphaForMode(primitive);
+    if (alpha <= 0.005) return;
+
+    const radius = Math.max(0.65, m.radius * primitiveSize(primitive.radius, 0.006) * p.perspective);
+
+    ctx.save();
+    applyPrimitiveFill(ctx, primitive, alpha);
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, radius, 0, TAU);
+    ctx.fill();
+
+    if (primitive.stroke) {
+      applyPrimitiveStroke(ctx, primitive, alpha * 0.72);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, radius, 0, TAU);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
+  function drawPrimitiveStroke(primitive) {
+    const ctx = state.ctx;
+    const points = Array.isArray(primitive.points) ? primitive.points : [];
+    if (points.length < 2) return;
+
+    const projected = points.map((point) => projectPoint(pointFromLatLon(finite(point.lat, 0), finite(point.lon, 0))));
+    if (!projected.some((point) => point.frontFacing)) return;
+
+    const alpha = displayAlphaForMode(primitive);
+    if (alpha <= 0.005) return;
+
+    ctx.save();
+    applyPrimitiveStroke(ctx, primitive, alpha);
+    ctx.beginPath();
+    ctx.moveTo(projected[0].x, projected[0].y);
+
+    for (let i = 1; i < projected.length; i += 1) {
+      ctx.lineTo(projected[i].x, projected[i].y);
+    }
+
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawPrimitiveCurvedStroke(primitive) {
+    const ctx = state.ctx;
+    const points = Array.isArray(primitive.points) ? primitive.points : [];
+    if (points.length < 2) return;
+
+    const projected = points.map((point) => projectPoint(pointFromLatLon(finite(point.lat, 0), finite(point.lon, 0))));
+    if (!projected.some((point) => point.frontFacing)) return;
+
+    const alpha = displayAlphaForMode(primitive);
+    if (alpha <= 0.005) return;
+
+    ctx.save();
+    applyPrimitiveStroke(ctx, primitive, alpha);
+    ctx.beginPath();
+    ctx.moveTo(projected[0].x, projected[0].y);
+
+    if (projected.length >= 3) {
+      ctx.quadraticCurveTo(projected[1].x, projected[1].y, projected[2].x, projected[2].y);
+    } else {
+      const midX = (projected[0].x + projected[1].x) / 2;
+      const midY = (projected[0].y + projected[1].y) / 2 - metrics().radius * 0.025;
+      ctx.quadraticCurveTo(midX, midY, projected[1].x, projected[1].y);
+    }
+
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawPrimitiveRing(primitive) {
+    const ctx = state.ctx;
+    const m = metrics();
+    const alpha = displayAlphaForMode(primitive);
+    if (alpha <= 0.005) return;
+
+    const radiusX = primitiveSize(primitive.radiusX, 0.020);
+    const radiusY = primitiveSize(primitive.radiusY, 0.012);
+
+    ctx.save();
+    applyPrimitiveStroke(ctx, primitive, alpha);
+
+    if (radiusX >= 0.70 && radiusY >= 0.70) {
+      ctx.beginPath();
+      ctx.ellipse(
+        m.centerX,
+        m.centerY,
+        m.radius * radiusX,
+        m.radius * radiusY,
+        finite(primitive.rotation, 0),
+        0,
+        TAU
+      );
+      ctx.stroke();
+      ctx.restore();
+      return;
+    }
+
+    const p = primitivePoint(primitive);
+    if (!p.frontFacing) {
+      ctx.restore();
+      return;
+    }
+
+    ctx.beginPath();
+    ctx.ellipse(
+      p.x,
+      p.y,
+      m.radius * radiusX * p.perspective,
+      m.radius * radiusY * p.perspective,
+      finite(primitive.rotation, 0) + state.yaw,
+      0,
+      TAU
+    );
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawPrimitiveTextureStroke(primitive) {
+    const ctx = state.ctx;
+    const p = primitivePoint(primitive);
+
+    if (!p.frontFacing) return;
+
+    const alpha = displayAlphaForMode(primitive);
+    if (alpha <= 0.005) return;
+
+    const m = metrics();
+    const length = m.radius * primitiveSize(primitive.length, 0.030) * p.perspective;
+    const angle = finite(primitive.angle, 0) + state.yaw;
+
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(angle);
+    applyPrimitiveStroke(ctx, primitive, alpha);
+
+    ctx.beginPath();
+    ctx.moveTo(-length, 0);
+    ctx.quadraticCurveTo(0, -length * 0.24, length, 0);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function drawDisplayPrimitive(primitive) {
+    if (!primitive || typeof primitive !== "object") return;
+
+    const type = String(primitive.type || "");
+
+    if (type === "ellipse") drawPrimitiveEllipse(primitive);
+    else if (type === "stroke") drawPrimitiveStroke(primitive);
+    else if (type === "curvedStroke") drawPrimitiveCurvedStroke(primitive);
+    else if (type === "point") drawPrimitivePoint(primitive);
+    else if (type === "ring") drawPrimitiveRing(primitive);
+    else if (type === "textureStroke") drawPrimitiveTextureStroke(primitive);
+  }
+
+  function drawDisplayPrimitives() {
+    if (!state.displayPacketActive || !state.displayPrimitives.length) return;
+
+    const primitives = state.displayPrimitives
+      .slice()
+      .sort((a, b) => finite(a.zWeight, 0.5) - finite(b.zWeight, 0.5));
+
+    state.ctx.save();
+    clipSphere();
+
+    for (const primitive of primitives) {
+      drawDisplayPrimitive(primitive);
+    }
+
+    state.ctx.restore();
   }
 
   function drawCarrier() {
@@ -836,7 +981,7 @@
     ctx.save();
     clipSphere();
 
-    ctx.globalAlpha = state.terrainFeedActive ? 0.085 : 0.10;
+    ctx.globalAlpha = state.displayPacketActive ? 0.065 : 0.10;
 
     for (let i = 0; i < 34; i += 1) {
       const y = cy - r + (i / 33) * r * 2;
@@ -853,7 +998,7 @@
         y - wave
       );
 
-      ctx.strokeStyle = i % 3 === 0 ? "rgba(255,232,163,.34)" : "rgba(41,34,28,.42)";
+      ctx.strokeStyle = i % 3 === 0 ? "rgba(255,232,163,.28)" : "rgba(41,34,28,.36)";
       ctx.lineWidth = Math.max(0.55, state.dpr * 0.56);
       ctx.stroke();
     }
@@ -861,27 +1006,12 @@
     ctx.restore();
   }
 
-  function cellSizeFor(cell, p, base) {
-    const modeBoost =
-      state.mode === "terrain" ? 1.18 :
-      state.mode === "surface" ? 1.08 :
-      state.mode === "receipt" ? 0.94 :
-      1;
-
-    const terrain = terrainCellForSeat(cell.seat.seatIndex);
-    const terrainBoost = terrain ? 1 + clamp(terrain.terrainRenderWeight, 0, 1) * 0.28 : 1;
-
-    const width = base * (0.62 + cell.mass * 0.86 + cell.pressure * 0.22) * p.perspective * modeBoost * terrainBoost;
-    const height = base * (0.38 + cell.basin * 0.54 + cell.mass * 0.22) * p.perspective * modeBoost * terrainBoost;
-
-    return { width, height };
-  }
-
   function drawDispositionCells() {
     const ctx = state.ctx;
     const m = metrics();
     const r = m.radius;
-    const base = r * 0.068;
+    const base = r * 0.056;
+    const alphaTrim = state.displayPacketActive ? 0.42 : 1.00;
 
     const cells = state.dispositionCells
       .map((cell) => ({
@@ -897,94 +1027,13 @@
     for (const item of cells) {
       const cell = item.cell;
       const p = item.point;
-      const size = cellSizeFor(cell, p, base);
-      const terrain = terrainCellForSeat(cell.seat.seatIndex);
 
-      const alpha =
-        state.mode === "body" ? 0.50 :
-        state.mode === "surface" ? 0.62 :
-        state.mode === "terrain" ? 0.66 :
-        0.47;
+      const width = base * (0.62 + cell.mass * 0.86 + cell.pressure * 0.22) * p.perspective;
+      const height = base * (0.38 + cell.basin * 0.54 + cell.mass * 0.22) * p.perspective;
 
       ctx.save();
-      ctx.globalAlpha = clamp((0.22 + cell.mass * 0.56) * alpha, 0.08, 0.72);
-      ctx.fillStyle = terrain ? terrainColor(terrain, 0.38) : CLAY_PALETTE_32[cell.colorIndex];
-
-      ctx.beginPath();
-      ctx.ellipse(
-        p.x,
-        p.y,
-        size.width,
-        size.height,
-        cell.seat.longitude + state.yaw + cell.pressure * 0.42,
-        0,
-        TAU
-      );
-      ctx.fill();
-
-      if (cell.mass > 0.48 && (state.mode === "surface" || state.mode === "terrain" || terrain)) {
-        ctx.globalAlpha = clamp(0.10 + cell.elevationHint * 0.18, 0.08, 0.30);
-        ctx.strokeStyle = "rgba(255,232,163,.46)";
-        ctx.lineWidth = Math.max(0.5, state.dpr * 0.55);
-        ctx.beginPath();
-        ctx.ellipse(
-          p.x,
-          p.y,
-          size.width * 0.72,
-          size.height * 0.55,
-          cell.seat.longitude + state.yaw + 0.5,
-          0,
-          TAU
-        );
-        ctx.stroke();
-      }
-
-      ctx.restore();
-    }
-
-    ctx.restore();
-  }
-
-  function drawTerrainFeedCells() {
-    if (!state.terrainFeedActive || !state.terrainRenderableCells.length) return;
-
-    const ctx = state.ctx;
-    const m = metrics();
-    const base = m.radius * 0.052;
-    const alphaBase = terrainAlphaForMode();
-
-    if (alphaBase <= 0) return;
-
-    const cells = state.terrainRenderableCells
-      .map((cell) => {
-        const point = pointFromLatLon(clamp(cell.latitude, -HALF_PI, HALF_PI), finite(cell.longitude, 0));
-        return {
-          cell,
-          point: projectPoint(point)
-        };
-      })
-      .filter((item) => item.point.frontFacing)
-      .sort((a, b) => a.point.z - b.point.z);
-
-    ctx.save();
-    clipSphere();
-
-    for (const item of cells) {
-      const cell = item.cell;
-      const p = item.point;
-
-      const terrainWeight = clamp(cell.terrainRenderWeight, 0, 1);
-      const pressure = clamp(cell.pressureRenderWeight, 0, 1);
-      const elevation = clamp(cell.elevationRenderWeight, 0, 1);
-      const boundary = clamp(cell.boundaryRenderWeight, 0, 1);
-
-      const width = base * (0.78 + terrainWeight * 1.18 + boundary * 0.36) * p.perspective;
-      const height = base * (0.46 + elevation * 0.84 + pressure * 0.34) * p.perspective;
-      const alpha = clamp(alphaBase * (0.42 + terrainWeight * 0.46 + elevation * 0.22), 0.02, 0.76);
-
-      ctx.save();
-      ctx.globalAlpha = alpha;
-      ctx.fillStyle = terrainColor(cell, alpha);
+      ctx.globalAlpha = clamp((0.20 + cell.mass * 0.48) * alphaTrim, 0.04, 0.60);
+      ctx.fillStyle = CLAY_PALETTE_32[cell.colorIndex];
 
       ctx.beginPath();
       ctx.ellipse(
@@ -992,196 +1041,12 @@
         p.y,
         width,
         height,
-        finite(cell.longitude, 0) + state.yaw + pressure * 0.45,
+        cell.seat.longitude + state.yaw + cell.pressure * 0.42,
         0,
         TAU
       );
       ctx.fill();
-
-      if (state.mode === "terrain" && (String(cell.landform || "").includes("ridge") || String(cell.landform || "").includes("mountain"))) {
-        ctx.globalAlpha = clamp(alpha * 0.48, 0.04, 0.38);
-        ctx.strokeStyle = "rgba(246,215,146,.62)";
-        ctx.lineWidth = Math.max(0.45, state.dpr * 0.58);
-        ctx.beginPath();
-        ctx.ellipse(
-          p.x,
-          p.y,
-          width * 0.58,
-          height * 0.36,
-          finite(cell.longitude, 0) + state.yaw + 0.65,
-          0,
-          TAU
-        );
-        ctx.stroke();
-      }
-
       ctx.restore();
-    }
-
-    ctx.restore();
-  }
-
-  function drawTerrainFeedRidges() {
-    if (!state.terrainFeedActive || state.mode === "body" || state.mode === "lattice") return;
-
-    const ctx = state.ctx;
-    const strong = state.mode === "terrain" ? 0.34 : 0.20;
-    const candidates = state.terrainRenderableCells.filter((cell) => {
-      const landform = String(cell.landform || "");
-      return landform.includes("ridge") || landform.includes("mountain") || landform.includes("summit") || landform.includes("escarpment");
-    });
-
-    if (!candidates.length) return;
-
-    ctx.save();
-    clipSphere();
-
-    for (const cell of candidates) {
-      const point = pointFromLatLon(clamp(cell.latitude, -HALF_PI, HALF_PI), finite(cell.longitude, 0));
-      const p = projectPoint(point);
-      if (!p.frontFacing) continue;
-
-      const weight = clamp(cell.elevationRenderWeight, 0, 1);
-      const length = metrics().radius * (0.026 + weight * 0.032) * p.perspective;
-      const angle = finite(cell.longitude, 0) + state.yaw + 0.72;
-
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(angle);
-      ctx.globalAlpha = clamp(strong * (0.42 + weight * 0.48), 0.03, 0.42);
-      ctx.strokeStyle = "rgba(66,42,30,.82)";
-      ctx.lineWidth = Math.max(0.52, state.dpr * (0.55 + weight * 0.42));
-      ctx.beginPath();
-      ctx.moveTo(-length, 0);
-      ctx.quadraticCurveTo(0, -length * 0.28, length, 0);
-      ctx.stroke();
-
-      ctx.globalAlpha = clamp(strong * 0.55, 0.03, 0.24);
-      ctx.strokeStyle = "rgba(255,232,163,.58)";
-      ctx.lineWidth = Math.max(0.35, state.dpr * 0.42);
-      ctx.beginPath();
-      ctx.moveTo(-length * 0.58, -length * 0.09);
-      ctx.quadraticCurveTo(0, -length * 0.24, length * 0.58, -length * 0.09);
-      ctx.stroke();
-      ctx.restore();
-    }
-
-    ctx.restore();
-  }
-
-  function drawDryBoundaryHints() {
-    if (!state.terrainFeedActive) return;
-    if (state.mode !== "terrain" && state.mode !== "surface" && state.mode !== "receipt") return;
-
-    const ctx = state.ctx;
-    const alphaBase = state.mode === "terrain" ? 0.38 : 0.22;
-
-    const boundaryCells = state.terrainRenderableCells.filter((cell) => {
-      return cell.beachCandidate ||
-        cell.islandFragmentCandidate ||
-        clamp(cell.boundaryRenderWeight, 0, 1) >= 0.52 ||
-        String(cell.boundaryClass || "").includes("candidate");
-    });
-
-    if (!boundaryCells.length) return;
-
-    ctx.save();
-    clipSphere();
-
-    for (const cell of boundaryCells) {
-      const p = projectPoint(pointFromLatLon(clamp(cell.latitude, -HALF_PI, HALF_PI), finite(cell.longitude, 0)));
-      if (!p.frontFacing) continue;
-
-      const boundary = clamp(cell.boundaryRenderWeight, 0, 1);
-      const radius = metrics().radius * (0.010 + boundary * 0.018) * p.perspective;
-
-      ctx.save();
-      ctx.globalAlpha = clamp(alphaBase * (0.30 + boundary * 0.70), 0.03, 0.42);
-      ctx.strokeStyle = cell.beachCandidate ? "rgba(236,208,137,.76)" : "rgba(105,82,52,.70)";
-      ctx.lineWidth = Math.max(0.45, state.dpr * 0.52);
-      ctx.beginPath();
-      ctx.ellipse(
-        p.x,
-        p.y,
-        radius * 1.75,
-        radius * 0.62,
-        finite(cell.longitude, 0) + state.yaw + 1.05,
-        0,
-        TAU
-      );
-      ctx.stroke();
-
-      if (cell.islandFragmentCandidate) {
-        ctx.globalAlpha = clamp(alphaBase * 0.42, 0.03, 0.28);
-        ctx.fillStyle = "rgba(210,178,108,.52)";
-        ctx.beginPath();
-        ctx.arc(p.x + radius * 0.85, p.y - radius * 0.25, Math.max(0.85, radius * 0.32), 0, TAU);
-        ctx.fill();
-      }
-
-      ctx.restore();
-    }
-
-    ctx.restore();
-  }
-
-  function drawTemplateContourLines() {
-    if (state.mode === "body") return;
-
-    const ctx = state.ctx;
-
-    ctx.save();
-    clipSphere();
-
-    ctx.globalAlpha =
-      state.mode === "surface" ? 0.20 :
-      state.mode === "terrain" ? 0.30 :
-      state.mode === "lattice" ? 0.14 :
-      0.18;
-
-    for (const line of state.contourLines) {
-      const a = projectPoint(pointFromLatLon(line.aLat, line.aLon));
-      const b = projectPoint(pointFromLatLon(line.bLat, line.bLon));
-
-      if (!a.frontFacing && !b.frontFacing) continue;
-
-      const midLat = (line.aLat + line.bLat) / 2 + (line.pressure - 0.5) * 0.12;
-      const midLon = (line.aLon + line.bLon) / 2 + (line.basin - 0.35) * 0.16;
-      const mid = projectPoint(pointFromLatLon(midLat, midLon));
-
-      ctx.beginPath();
-      ctx.moveTo(a.x, a.y);
-      ctx.quadraticCurveTo(mid.x, mid.y, b.x, b.y);
-      ctx.strokeStyle = "rgba(255,232,163,.48)";
-      ctx.lineWidth = Math.max(0.72, state.dpr * 0.80);
-      ctx.stroke();
-    }
-
-    ctx.restore();
-
-    if (state.mode !== "terrain" && state.mode !== "receipt") return;
-
-    ctx.save();
-    clipSphere();
-    ctx.globalAlpha = state.mode === "terrain" ? 0.25 : 0.16;
-
-    for (const ridge of state.ridgeLines) {
-      const a = projectPoint(pointFromLatLon(ridge.aLat, ridge.aLon));
-      const b = projectPoint(pointFromLatLon(ridge.bLat, ridge.bLon));
-
-      if (!a.frontFacing && !b.frontFacing) continue;
-
-      const mid = projectPoint(pointFromLatLon(
-        (ridge.aLat + ridge.bLat) / 2 + ridge.bend,
-        (ridge.aLon + ridge.bLon) / 2
-      ));
-
-      ctx.beginPath();
-      ctx.moveTo(a.x, a.y);
-      ctx.quadraticCurveTo(mid.x, mid.y, b.x, b.y);
-      ctx.strokeStyle = "rgba(66,42,30,.74)";
-      ctx.lineWidth = Math.max(0.85, state.dpr * (0.84 + ridge.pressure * 0.75));
-      ctx.stroke();
     }
 
     ctx.restore();
@@ -1356,13 +1221,13 @@
 
     ctx.beginPath();
     ctx.arc(cx, cy, r * 1.018, 0, TAU);
-    ctx.strokeStyle = state.terrainFeedActive ? "rgba(244,207,131,.58)" : "rgba(244,207,131,.46)";
+    ctx.strokeStyle = state.displayPacketActive ? "rgba(244,207,131,.58)" : "rgba(244,207,131,.46)";
     ctx.lineWidth = Math.max(1, state.dpr * 1.15);
     ctx.setLineDash([6 * state.dpr, 8 * state.dpr]);
     ctx.stroke();
     ctx.setLineDash([]);
 
-    ctx.globalAlpha = state.terrainFeedActive ? 0.22 : 0.18;
+    ctx.globalAlpha = state.displayPacketActive ? 0.22 : 0.18;
     ctx.fillStyle = "rgba(244,207,131,.30)";
     ctx.beginPath();
     ctx.arc(cx, cy, r * 1.012, 0, TAU);
@@ -1405,8 +1270,8 @@
 
     state.raf = 0;
 
-    if (state.renderCount % 42 === 0 || (!state.terrainFeedActive && state.renderCount % 18 === 0)) {
-      readTerrainFeed("render-poll", false);
+    if (state.renderCount % 42 === 0 || (!state.displayPacketActive && state.renderCount % 18 === 0)) {
+      readCanvasDisplayPacket("render-poll", false);
     }
 
     const dt = state.lastFrameTime ? clamp((timestamp - state.lastFrameTime) / 1000, 0, 0.05) : 0;
@@ -1436,10 +1301,7 @@
     drawCarrier();
     drawClayGrain();
     drawDispositionCells();
-    drawTerrainFeedCells();
-    drawTemplateContourLines();
-    drawTerrainFeedRidges();
-    drawDryBoundaryHints();
+    drawDisplayPrimitives();
     drawLatLongInspectionGrid();
     drawDiagnosticLattice(state.pointerActive || state.mode === "body");
     drawReceiptOverlay();
@@ -1484,8 +1346,8 @@
     state.roll = TEMPLATE.orientation.roll;
     state.velocityYaw = 0;
     state.velocityPitch = 0;
-    readTerrainFeed("reset-view", true);
-    requestRender(12);
+    readCanvasDisplayPacket("reset-view", true);
+    requestRender(14);
     publishStatus("reset-view");
     return status();
   }
@@ -1570,7 +1432,7 @@
       canvas = document.createElement("canvas");
       canvas.className = "planet-canvas";
       canvas.setAttribute("data-audralia-planet-canvas", "");
-      canvas.setAttribute("aria-label", "Audralia dry terrain canvas");
+      canvas.setAttribute("aria-label", "Audralia display-only canvas");
       state.stage.appendChild(canvas);
     }
 
@@ -1595,12 +1457,11 @@
 
     canvas.setAttribute("data-audralia-canvas-contract", CONTRACT);
     canvas.setAttribute("data-previous-canvas-contract", PREVIOUS_CANVAS_CONTRACT);
-    canvas.setAttribute("data-terrain-nodes-contract", TERRAIN_NODES_CONTRACT);
-    canvas.setAttribute("data-canvas-role", "tv-screen-canvas");
-    canvas.setAttribute("data-baseline-feed", "clay-globe-with-dry-terrain-feed-handoff");
+    canvas.setAttribute("data-direct-child-contract", DIRECT_CHILD_CONTRACT);
+    canvas.setAttribute("data-primitive-protocol", PRIMITIVE_PROTOCOL);
+    canvas.setAttribute("data-canvas-role", "display-only-interpreter");
     canvas.setAttribute("data-public-identity", "Audralia");
     canvas.setAttribute("data-template-source", "Australia-template hidden scaffold");
-    canvas.setAttribute("data-lat-long-disposition", "predestined");
     canvas.setAttribute("data-active-water", "false");
     canvas.setAttribute("data-hydration", "false");
     canvas.setAttribute("data-final-visual-pass", "false");
@@ -1609,9 +1470,8 @@
     state.ctx = canvas.getContext("2d", { alpha: true });
     state.mounted = Boolean(state.ctx);
 
-    state.stage.dataset.canvasRole = "tv-screen";
-    state.stage.dataset.screenRole = "tv-screen-canvas";
-    state.stage.dataset.feed = "clay-globe-terrain-feed-handoff";
+    state.stage.dataset.canvasRole = "display-only-interpreter";
+    state.stage.dataset.screenRole = "display-only-canvas";
     state.stage.dataset.rendererState = "active";
     state.stage.dataset.activeWater = "false";
     state.stage.dataset.hydration = "false";
@@ -1690,13 +1550,13 @@
 
     state.mode = next;
 
-    readTerrainFeed("set-mode", true);
+    readCanvasDisplayPacket("set-mode", true);
 
     setDataset("audraliaCanvasMode", next);
     setDataset("audraliaCanvasContract", CONTRACT);
-    setDataset("audraliaCanvasRole", "tv-screen-canvas");
+    setDataset("audraliaCanvasRole", "display-only-interpreter");
 
-    requestRender(next === "body" ? 8 : 14);
+    requestRender(next === "body" ? 8 : 16);
     publishStatus("set-mode");
 
     return status();
@@ -1716,12 +1576,8 @@
       id: feedPacket.id || BASELINE_FEED.id,
       publicIdentity: "Audralia",
       templateSource: "AUSTRALIA_TEMPLATE_HIDDEN_SCAFFOLD",
-      latLongDisposition: "PREDESTINED",
       activeWater: false,
       hydrationActive: false,
-      terrainChildActive: Boolean(state.terrainFeedActive),
-      surfaceChildActive: false,
-      datumChildActive: false,
       finalVisualPass: false
     });
 
@@ -1735,44 +1591,41 @@
     return Object.freeze({
       contract: CONTRACT,
       previousCanvasContract: PREVIOUS_CANVAS_CONTRACT,
-      terrainNodesContract: TERRAIN_NODES_CONTRACT,
-      specOps: SPEC_OPS,
-      ccr: CCR,
-      fullPlan: FULL_PLAN,
+      directChildContract: DIRECT_CHILD_CONTRACT,
+      primitiveProtocol: PRIMITIVE_PROTOCOL,
       route: ROUTE,
       target: TARGET,
       api: API_NAME,
 
       initialized: state.initialized,
       mounted: state.mounted,
-      screenRole: "TV_SCREEN_CANVAS",
+      screenRole: "DISPLAY_ONLY_CANVAS_INTERPRETER",
       currentMode: state.mode,
       feed: state.feed.id || BASELINE_FEED.id,
       baselineFeed: BASELINE_FEED.id,
 
-      terrainFeedActive: state.terrainFeedActive,
-      terrainFeedMode: state.terrainFeedMode,
+      displayPacketActive: state.displayPacketActive,
+      displayPacketMode: state.displayPacketMode,
+      displayPacketContract: state.displayPacketContract,
+      displayPrimitiveProtocol: state.displayPrimitiveProtocol,
+      displayPrimitiveCount: state.displayPrimitiveCount,
+      displayPrimitiveGroups: state.displayPrimitiveGroups,
+      displayPrimitiveTypes: state.displayPrimitiveTypes,
+      displayPacketError: state.displayPacketError,
+
       terrainNodesActive: state.terrainNodesActive,
       subterraneanActive: state.subterraneanActive,
       aboveSeaActive: state.aboveSeaActive,
       boundaryActive: state.boundaryActive,
-      terrainRenderableCellCount: state.terrainRenderableCells.length,
-      terrainChildConsumed: state.terrainChildConsumed,
-      terrainChildContract: state.terrainChildContract,
-      terrainFeedError: state.terrainFeedError,
 
       publicIdentity: "Audralia",
       templateSource: "AUSTRALIA_TEMPLATE_HIDDEN_SCAFFOLD",
-      latLongDisposition: "PREDESTINED",
       publicAustraliaIdentity: false,
 
       radialNodes: RADIAL_NODES,
       fibonacciBands: FIBONACCI_BANDS,
       latticeStates: LATTICE_STATES,
       seatCount: state.seats.length,
-      dispositionCellCount: state.dispositionCells.length,
-      contourLineCount: state.contourLines.length,
-      ridgeLineCount: state.ridgeLines.length,
       geometryBuilt: state.geometryBuilt,
 
       activeWater: false,
@@ -1787,6 +1640,7 @@
 
       renderCount: state.renderCount,
       duplicateCanvasRemoved: state.duplicateCanvasRemoved,
+      directChildLoaded: state.directChildLoaded,
       errors: state.errors.slice()
     });
   }
@@ -1798,6 +1652,9 @@
       time: new Date().toISOString()
     });
 
+    window.AUDRALIA_PLANET_CANVAS_DISPLAY_ONLY_INTERPRETER_STATUS = payload;
+    window.AUDRALIA_PLANET_CANVAS_DISPLAY_ONLY_INTERPRETER_RECEIPT = payload;
+
     window.AUDRALIA_G2_PLANET_CANVAS_RECEIPT = payload;
     window.AUDRALIA_G2_PLANET_OPERATION_A_CANVAS_STATUS = payload;
     window.AUDRALIA_PLANET_CANVAS_TERRAIN_FEED_HANDOFF_STATUS = payload;
@@ -1805,21 +1662,21 @@
 
     setDataset("audraliaCanvasContract", CONTRACT);
     setDataset("audraliaCanvasPreviousContract", PREVIOUS_CANVAS_CONTRACT);
-    setDataset("audraliaCanvasTerrainNodesContract", TERRAIN_NODES_CONTRACT);
-    setDataset("audraliaCanvasRole", "tv-screen-canvas");
-    setDataset("audraliaCanvasFeed", "clay-globe-terrain-feed-handoff");
+    setDataset("audraliaCanvasDirectChildContract", DIRECT_CHILD_CONTRACT);
+    setDataset("audraliaCanvasRole", "display-only-interpreter");
     setDataset("audraliaCanvasPublicIdentity", "Audralia");
     setDataset("audraliaCanvasTemplateSource", "Australia-template-hidden-scaffold");
-    setDataset("audraliaCanvasLatLongDisposition", "predestined");
 
-    setDataset("audraliaCanvasTerrainFeedActive", state.terrainFeedActive ? "true" : "false");
-    setDataset("audraliaCanvasTerrainFeedMode", state.terrainFeedMode);
+    setDataset("audraliaCanvasDisplayPacketActive", state.displayPacketActive ? "true" : "false");
+    setDataset("audraliaCanvasDisplayPacketMode", state.displayPacketMode);
+    setDataset("audraliaCanvasDisplayPacketContract", state.displayPacketContract);
+    setDataset("audraliaCanvasDisplayPrimitiveProtocol", state.displayPrimitiveProtocol);
+    setDataset("audraliaCanvasDisplayPrimitiveCount", state.displayPrimitiveCount);
+
     setDataset("audraliaCanvasTerrainNodesActive", state.terrainNodesActive ? "true" : "false");
     setDataset("audraliaCanvasTerrainSubterraneanActive", state.subterraneanActive ? "true" : "false");
     setDataset("audraliaCanvasTerrainAboveSeaActive", state.aboveSeaActive ? "true" : "false");
     setDataset("audraliaCanvasTerrainBoundaryActive", state.boundaryActive ? "true" : "false");
-    setDataset("audraliaCanvasTerrainRenderableCellCount", state.terrainRenderableCells.length);
-    setDataset("audraliaCanvasTerrainChildConsumed", state.terrainChildConsumed ? "true" : "false");
 
     setDataset("audraliaCanvasActiveWater", "false");
     setDataset("audraliaCanvasHydrationActive", "false");
@@ -1833,6 +1690,8 @@
     setDataset("audraliaCanvasRenderCount", state.renderCount);
     setDataset("audraliaCanvasMounted", state.mounted ? "true" : "false");
 
+    updateVisibleStatus();
+
     return payload;
   }
 
@@ -1840,12 +1699,13 @@
     window[API_NAME] = Object.freeze({
       contract: CONTRACT,
       previousCanvasContract: PREVIOUS_CANVAS_CONTRACT,
-      terrainNodesContract: TERRAIN_NODES_CONTRACT,
+      directChildContract: DIRECT_CHILD_CONTRACT,
+      primitiveProtocol: PRIMITIVE_PROTOCOL,
       baselineFeed: BASELINE_FEED,
       setFeed,
       setMode,
       resetView,
-      readTerrainFeed,
+      readCanvasDisplayPacket,
       status
     });
   }
@@ -1876,9 +1736,10 @@
     setMode,
     setFeed,
     resetView,
-    readTerrainFeed
+    readCanvasDisplayPacket
   };
 
+  window.__AUDRALIA_PLANET_FILE_5B_DISPLAY_ONLY_CANVAS_CONTROLLER__ = controller;
   window.__AUDRALIA_PLANET_FILE_5_PARENT_CANVAS_CONTROLLER__ = controller;
   window.__AUDRALIA_G2_PLANET_OPERATION_A_CANVAS_CONTROLLER__ = controller;
 
@@ -1887,6 +1748,7 @@
       exposeApi();
 
       state.stage = query("[data-audralia-planet-stage]");
+      state.statusNode = query("[data-audralia-renderer-status]");
 
       if (!state.stage) {
         recordError("init", "Missing [data-audralia-planet-stage]");
@@ -1909,11 +1771,11 @@
       state.initialized = true;
       state.mounted = true;
 
-      readTerrainFeed("init", true);
-      loadTerrainDirectChild();
+      readCanvasDisplayPacket("init", true);
+      loadDirectChildIfNeeded();
 
       publishStatus("init-complete");
-      requestRender(16);
+      requestRender(18);
     } catch (error) {
       recordError("init", error);
       state.initialized = true;

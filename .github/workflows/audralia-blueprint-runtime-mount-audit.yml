@@ -1,11 +1,11 @@
 # TARGET FILE: /.github/workflows/audralia-blueprint-runtime-mount-audit.yml
 # TNT FULL-FILE REPLACEMENT
-# AUDRALIA_PLANET_BLUEPRINT_RUNTIME_MOUNT_BROWSER_AUDIT_WORKFLOW_TNT_v1
+# AUDRALIA_BLUEPRINT_RUNTIME_MOUNT_AUDIT_WORKFLOW_SELF_COPY_FIX_TNT_v2
 #
 # Purpose:
 # Run a real Chromium browser audit against the live Audralia Planet route and
-# classify why the Manor Blueprint bubble is not visible after the HTML/static
-# asset deployment layer has already passed.
+# classify Blueprint runtime mount state without false-failing after a successful
+# PASS_RUNTIME_MOUNT_VISIBLE result.
 #
 # Owns:
 # - browser runtime mount inspection
@@ -14,6 +14,8 @@
 # - Blueprint HUD status inspection
 # - bubble DOM/style/viewport/stacking inspection
 # - final CLASSIFICATION output
+# - Step Summary
+# - artifact upload
 #
 # Does not own:
 # - rewriting HTML
@@ -65,7 +67,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          echo "AUDIT_WORKFLOW_CONTRACT=AUDRALIA_PLANET_BLUEPRINT_RUNTIME_MOUNT_BROWSER_AUDIT_WORKFLOW_TNT_v1"
+          echo "AUDIT_WORKFLOW_CONTRACT=AUDRALIA_BLUEPRINT_RUNTIME_MOUNT_AUDIT_WORKFLOW_SELF_COPY_FIX_TNT_v2"
 
           npm init -y
           npm install playwright@latest
@@ -86,7 +88,8 @@ jobs:
           import { chromium } from "playwright";
           import fs from "node:fs";
 
-          const CONTRACT = "AUDRALIA_PLANET_BLUEPRINT_RUNTIME_MOUNT_BROWSER_AUDIT_WORKFLOW_TNT_v1";
+          const CONTRACT = "AUDRALIA_BLUEPRINT_RUNTIME_MOUNT_AUDIT_WORKFLOW_SELF_COPY_FIX_TNT_v2";
+          const PREVIOUS_CONTRACT = "AUDRALIA_PLANET_BLUEPRINT_RUNTIME_MOUNT_BROWSER_AUDIT_WORKFLOW_TNT_v1";
           const TARGET_ROUTE = "https://diamondgatebridge.com/showroom/globe/audralia/planet/";
           const EXPECTED_HTML_MARKER = "AUDRALIA_PLANET_HTML_MANOR_BLUEPRINT_TEST_ROUTE_INSTALL_CACHE_CATCH_TNT_v2";
           const EXPECTED_BOOTSTRAP_KEY = "MANOR_BLUEPRINT_GLOBAL_BOOTSTRAP_TNT_v1__AUDRALIA_PLANET_HTML_CACHE_CATCH_v2";
@@ -166,12 +169,12 @@ jobs:
 
             const style = state.bubbleStyle || {};
             const rect = state.bubbleRect || {};
-
             const opacity = Number(style.opacity);
+
             const hiddenByCss =
               style.display === "none" ||
               style.visibility === "hidden" ||
-              Number.isFinite(opacity) && opacity <= 0 ||
+              (Number.isFinite(opacity) && opacity <= 0) ||
               Number(rect.width || 0) <= 0 ||
               Number(rect.height || 0) <= 0;
 
@@ -279,122 +282,131 @@ jobs:
 
           const html = await page.content();
 
-          const runtimeState = await page.evaluate(({ BUBBLE_SELECTOR, OVERLAY_SELECTOR, EXPECTED_HTML_MARKER, EXPECTED_BOOTSTRAP_KEY }) => {
-            const bubble = document.querySelector(BUBBLE_SELECTOR);
-            const overlay = document.querySelector(OVERLAY_SELECTOR);
+          const runtimeState = await page.evaluate(
+            ({ BUBBLE_SELECTOR, OVERLAY_SELECTOR, EXPECTED_HTML_MARKER, EXPECTED_BOOTSTRAP_KEY }) => {
+              const bubble = document.querySelector(BUBBLE_SELECTOR);
+              const overlay = document.querySelector(OVERLAY_SELECTOR);
 
-            const bubbleCount = document.querySelectorAll(BUBBLE_SELECTOR).length;
-            const overlayCount = document.querySelectorAll(OVERLAY_SELECTOR).length;
+              const bubbleCount = document.querySelectorAll(BUBBLE_SELECTOR).length;
+              const overlayCount = document.querySelectorAll(OVERLAY_SELECTOR).length;
 
-            const bootstrapStatus = window.DGB_MANOR_BLUEPRINT_BOOTSTRAP_STATUS || null;
-            const bootstrapReceipt = window.DGB_MANOR_BLUEPRINT_BOOTSTRAP_RECEIPT || null;
-            const siteBootstrapStatus = window.DGB_SITE_BOOTSTRAP_STATUS || null;
-            const blueprintStatus = window.DGB_MANOR_BLUEPRINT_STATUS || null;
-            const blueprintReceipt = window.DGB_MANOR_BLUEPRINT_RECEIPT || null;
-            const registry = window.DGB_MANOR_BLUEPRINT_REGISTRY || null;
-            const blueprintApi = window.DGB_MANOR_BLUEPRINT_API || null;
+              const bootstrapStatus = window.DGB_MANOR_BLUEPRINT_BOOTSTRAP_STATUS || null;
+              const bootstrapReceipt = window.DGB_MANOR_BLUEPRINT_BOOTSTRAP_RECEIPT || null;
+              const siteBootstrapStatus = window.DGB_SITE_BOOTSTRAP_STATUS || null;
+              const blueprintStatus = window.DGB_MANOR_BLUEPRINT_STATUS || null;
+              const blueprintReceipt = window.DGB_MANOR_BLUEPRINT_RECEIPT || null;
+              const registry = window.DGB_MANOR_BLUEPRINT_REGISTRY || null;
+              const blueprintApi = window.DGB_MANOR_BLUEPRINT_API || null;
 
-            let bubbleStyle = null;
-            let bubbleRect = null;
-            let elementFromPointSummary = null;
-            let elementFromPointHitsBubble = false;
+              let bubbleStyle = null;
+              let bubbleRect = null;
+              let elementFromPointSummary = null;
+              let elementFromPointHitsBubble = false;
 
-            if (bubble) {
-              const computed = window.getComputedStyle(bubble);
-              const rect = bubble.getBoundingClientRect();
+              if (bubble) {
+                const computed = window.getComputedStyle(bubble);
+                const rect = bubble.getBoundingClientRect();
 
-              bubbleStyle = {
-                display: computed.display,
-                visibility: computed.visibility,
-                opacity: computed.opacity,
-                position: computed.position,
-                zIndex: computed.zIndex,
-                pointerEvents: computed.pointerEvents,
-                left: computed.left,
-                top: computed.top,
-                right: computed.right,
-                bottom: computed.bottom,
-                width: computed.width,
-                height: computed.height,
-                transform: computed.transform,
-                overflow: computed.overflow
-              };
-
-              bubbleRect = {
-                x: rect.x,
-                y: rect.y,
-                top: rect.top,
-                left: rect.left,
-                right: rect.right,
-                bottom: rect.bottom,
-                width: rect.width,
-                height: rect.height
-              };
-
-              const centerX = Math.max(0, Math.min(window.innerWidth - 1, rect.left + rect.width / 2));
-              const centerY = Math.max(0, Math.min(window.innerHeight - 1, rect.top + rect.height / 2));
-              const hit = document.elementFromPoint(centerX, centerY);
-
-              if (hit) {
-                elementFromPointSummary = {
-                  tagName: hit.tagName,
-                  id: hit.id || "",
-                  className: typeof hit.className === "string" ? hit.className : "",
-                  dataBubble: hit.hasAttribute("data-dgb-blueprint-bubble"),
-                  closestBubble: Boolean(hit.closest(BUBBLE_SELECTOR))
+                bubbleStyle = {
+                  display: computed.display,
+                  visibility: computed.visibility,
+                  opacity: computed.opacity,
+                  position: computed.position,
+                  zIndex: computed.zIndex,
+                  pointerEvents: computed.pointerEvents,
+                  left: computed.left,
+                  top: computed.top,
+                  right: computed.right,
+                  bottom: computed.bottom,
+                  width: computed.width,
+                  height: computed.height,
+                  transform: computed.transform,
+                  overflow: computed.overflow
                 };
 
-                elementFromPointHitsBubble = hit === bubble || Boolean(hit.closest(BUBBLE_SELECTOR));
+                bubbleRect = {
+                  x: rect.x,
+                  y: rect.y,
+                  top: rect.top,
+                  left: rect.left,
+                  right: rect.right,
+                  bottom: rect.bottom,
+                  width: rect.width,
+                  height: rect.height
+                };
+
+                const centerX = Math.max(0, Math.min(window.innerWidth - 1, rect.left + rect.width / 2));
+                const centerY = Math.max(0, Math.min(window.innerHeight - 1, rect.top + rect.height / 2));
+                const hit = document.elementFromPoint(centerX, centerY);
+
+                if (hit) {
+                  elementFromPointSummary = {
+                    tagName: hit.tagName,
+                    id: hit.id || "",
+                    className: typeof hit.className === "string" ? hit.className : "",
+                    dataBubble: hit.hasAttribute("data-dgb-blueprint-bubble"),
+                    closestBubble: Boolean(hit.closest(BUBBLE_SELECTOR))
+                  };
+
+                  elementFromPointHitsBubble = hit === bubble || Boolean(hit.closest(BUBBLE_SELECTOR));
+                }
               }
+
+              return {
+                url: document.location.href,
+                title: document.title,
+                readyState: document.readyState,
+                htmlHasExpectedMarker:
+                  document.documentElement.outerHTML.includes(EXPECTED_HTML_MARKER) ||
+                  document.body.outerHTML.includes(EXPECTED_HTML_MARKER),
+                htmlHasBootstrapKey:
+                  document.documentElement.outerHTML.includes(EXPECTED_BOOTSTRAP_KEY) ||
+                  document.body.outerHTML.includes(EXPECTED_BOOTSTRAP_KEY),
+                documentElementDataset: { ...document.documentElement.dataset },
+                bodyClassList: Array.from(document.body.classList),
+
+                bootstrapStatusExists: Boolean(bootstrapStatus),
+                bootstrapStatus,
+                bootstrapReceipt,
+                siteBootstrapStatus,
+
+                blueprintApiExists: Boolean(blueprintApi),
+                blueprintApiContract: blueprintApi?.contract || "",
+                blueprintApiImplementationContract: blueprintApi?.implementationContract || "",
+                blueprintStatusExists: Boolean(blueprintStatus),
+                blueprintStatus,
+                blueprintReceipt,
+
+                registryExists: Boolean(registry),
+                registryContract: registry?.contract || "",
+                registryRouteCount: Array.isArray(registry?.routes) ? registry.routes.length : null,
+
+                bubbleExists: Boolean(bubble),
+                overlayExists: Boolean(overlay),
+                bubbleCount,
+                overlayCount,
+                bubbleStyle,
+                bubbleRect,
+                elementFromPointSummary,
+                elementFromPointHitsBubble,
+
+                viewport: {
+                  width: window.innerWidth,
+                  height: window.innerHeight
+                }
+              };
+            },
+            {
+              BUBBLE_SELECTOR,
+              OVERLAY_SELECTOR,
+              EXPECTED_HTML_MARKER,
+              EXPECTED_BOOTSTRAP_KEY
             }
-
-            return {
-              url: document.location.href,
-              title: document.title,
-              readyState: document.readyState,
-              htmlHasExpectedMarker: document.documentElement.outerHTML.includes(EXPECTED_HTML_MARKER),
-              htmlHasBootstrapKey: document.documentElement.outerHTML.includes(EXPECTED_BOOTSTRAP_KEY) || document.body.outerHTML.includes(EXPECTED_BOOTSTRAP_KEY),
-              documentElementDataset: { ...document.documentElement.dataset },
-              bodyClassList: Array.from(document.body.classList),
-
-              bootstrapStatusExists: Boolean(bootstrapStatus),
-              bootstrapStatus,
-              bootstrapReceipt,
-              siteBootstrapStatus,
-
-              blueprintApiExists: Boolean(blueprintApi),
-              blueprintApiContract: blueprintApi?.contract || "",
-              blueprintStatusExists: Boolean(blueprintStatus),
-              blueprintStatus,
-              blueprintReceipt,
-
-              registryExists: Boolean(registry),
-              registryContract: registry?.contract || "",
-              registryRouteCount: Array.isArray(registry?.routes) ? registry.routes.length : null,
-
-              bubbleExists: Boolean(bubble),
-              overlayExists: Boolean(overlay),
-              bubbleCount,
-              overlayCount,
-              bubbleStyle,
-              bubbleRect,
-              elementFromPointSummary,
-              elementFromPointHitsBubble,
-
-              viewport: {
-                width: window.innerWidth,
-                height: window.innerHeight
-              }
-            };
-          }, {
-            BUBBLE_SELECTOR,
-            OVERLAY_SELECTOR,
-            EXPECTED_HTML_MARKER,
-            EXPECTED_BOOTSTRAP_KEY
-          });
+          );
 
           const auditState = {
             contract: CONTRACT,
+            previousContract: PREVIOUS_CONTRACT,
             targetRoute: TARGET_ROUTE,
             gotoError,
             htmlContainsExpectedMarker: html.includes(EXPECTED_HTML_MARKER),
@@ -414,6 +426,7 @@ jobs:
 
           console.log("══════════════════════════════════════════════════════════════════════");
           console.log(CONTRACT);
+          console.log(`PREVIOUS_CONTRACT=${PREVIOUS_CONTRACT}`);
           console.log(`TARGET_ROUTE=${TARGET_ROUTE}`);
           console.log("══════════════════════════════════════════════════════════════════════");
           console.log("");
@@ -433,7 +446,9 @@ jobs:
           console.log(`BOOTSTRAP_BLUEPRINT_API_PRESENT=${auditState.bootstrapStatus?.blueprintApiPresent ?? "missing"}`);
           console.log(`BLUEPRINT_API_EXISTS=${auditState.blueprintApiExists}`);
           console.log(`BLUEPRINT_API_CONTRACT=${auditState.blueprintApiContract}`);
+          console.log(`BLUEPRINT_API_IMPLEMENTATION_CONTRACT=${auditState.blueprintApiImplementationContract}`);
           console.log(`BLUEPRINT_STATUS_EXISTS=${auditState.blueprintStatusExists}`);
+          console.log(`BLUEPRINT_STATUS_CONTRACT=${auditState.blueprintStatus?.contract ?? "missing"}`);
           console.log(`BLUEPRINT_ACTIVE=${auditState.blueprintStatus?.active ?? "missing"}`);
           console.log(`BLUEPRINT_BUBBLE_MOUNTED=${auditState.blueprintStatus?.bubbleMounted ?? "missing"}`);
           console.log(`BLUEPRINT_OVERLAY_MOUNTED=${auditState.blueprintStatus?.overlayMounted ?? "missing"}`);
@@ -471,20 +486,21 @@ jobs:
           console.log("AUDIT_STATUS=COMPLETE");
 
           await browser.close();
-
-          if (classification !== "PASS_RUNTIME_MOUNT_VISIBLE") {
-            process.exitCode = 0;
-          }
           NODE
 
           node audralia-blueprint-runtime-mount-audit.mjs | tee "${AUDIT_LOG}"
-
-          cp audralia-blueprint-runtime-mount-audit.json "${AUDIT_JSON}"
 
           CLASSIFICATION="$(grep -E '^CLASSIFICATION=' "${AUDIT_LOG}" | tail -n 1 | cut -d '=' -f 2- || true)"
 
           if [ -z "${CLASSIFICATION}" ]; then
             CLASSIFICATION="CLASS_F_UNKNOWN_RUNTIME_FAILURE"
+            echo "FAIL: No CLASSIFICATION line found in runtime audit output"
+            exit 1
+          fi
+
+          if [ ! -f "${AUDIT_JSON}" ]; then
+            echo "FAIL: Runtime audit JSON was not created at ${AUDIT_JSON}"
+            exit 1
           fi
 
           echo "classification=${CLASSIFICATION}" >> "$GITHUB_OUTPUT"
@@ -503,11 +519,13 @@ jobs:
           {
             echo "# Audralia Blueprint Runtime Mount Audit"
             echo ""
-            echo "**Workflow contract:** \`AUDRALIA_PLANET_BLUEPRINT_RUNTIME_MOUNT_BROWSER_AUDIT_WORKFLOW_TNT_v1\`"
+            echo "**Workflow contract:** \`AUDRALIA_BLUEPRINT_RUNTIME_MOUNT_AUDIT_WORKFLOW_SELF_COPY_FIX_TNT_v2\`"
+            echo ""
+            echo "**Previous workflow contract:** \`AUDRALIA_PLANET_BLUEPRINT_RUNTIME_MOUNT_BROWSER_AUDIT_WORKFLOW_TNT_v1\`"
             echo ""
             echo "**Target route:** \`https://diamondgatebridge.com/showroom/globe/audralia/planet/\`"
             echo ""
-            echo "**Classification:** \`${CLASSIFICATION:-CLASS_F_UNKNOWN_RUNTIME_FAILURE}\`"
+            echo "**Classification:** \`${CLASSIFICATION:-CLASSIFICATION_NOT_AVAILABLE}\`"
             echo ""
             echo "## Raw audit output"
             echo ""

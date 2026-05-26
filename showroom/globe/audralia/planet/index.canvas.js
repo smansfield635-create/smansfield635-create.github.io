@@ -1,38 +1,35 @@
 // TARGET FILE: /showroom/globe/audralia/planet/index.canvas.js
 // TNT FULL-FILE REPLACEMENT
-// AUDRALIA_PLANET_FILE_5B_DISPLAY_ONLY_CANVAS_INTERPRETER_TNT_v1
+// AUDRALIA_PLANET_FILE_5C_RENDERPLEX_CHILD_CHAIN_LOADER_TNT_v1
 //
-// Display-only canvas interpreter.
-// The canvas is the screen/projector only.
-// Downstream files decide what the globe becomes by emitting generic display primitives.
+// Canvas / Renderplex authority.
+// The HTML shell owns the mount. The canvas owns the live planet child chain.
 //
-// Consumes:
-// - DGBAudraliaCanvasTerrainNodes.getCanvasDisplayPacket()
-// - fallback AUDRALIA_CANVAS_DISPLAY_PACKET
+// Owns:
+// - one-canvas discipline
+// - sphere projection
+// - drag / rotation / inertial glide
+// - display-only primitive interpretation
+// - renderplex child-chain manifest
+// - ordered child / grandchild script loading
+// - File 4C preference over stale File 4B
 //
-// Does not directly consume:
-// - DGBAudraliaCanvasTerrainNodesSubterranean
-// - DGBAudraliaCanvasTerrainNodesAboveSea
-// - DGBAudraliaCanvasTerrainNodesBoundary
-//
-// Does not semantically interpret:
-// - landform
-// - boundaryClass
-// - beachCandidate
-// - islandFragmentCandidate
-// - subterraneanClass
-// - elevationBand
-// - terrainPotential
-// - hydration meaning
-// - future material meaning
+// Does not own:
+// - terrain meaning
+// - subterranean meaning
+// - above-sea meaning
+// - boundary meaning
+// - water / hydration
+// - final visual pass
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_PLANET_FILE_5B_DISPLAY_ONLY_CANVAS_INTERPRETER_TNT_v1";
-  const PREVIOUS_CANVAS_CONTRACT = "AUDRALIA_PLANET_FILE_5_PARENT_CANVAS_TERRAIN_FEED_HANDOFF_TNT_v1";
-  const DIRECT_CHILD_CONTRACT = "AUDRALIA_PLANET_FILE_4B_TERRAIN_NODES_DISPLAY_PACKET_COMPOSER_TNT_v1";
-  const DIRECT_CHILD_FILE = "/showroom/globe/audralia/planet/index.canvas.terrain.nodes.js";
+  const CONTRACT = "AUDRALIA_PLANET_FILE_5C_RENDERPLEX_CHILD_CHAIN_LOADER_TNT_v1";
+  const PREVIOUS_CANVAS_CONTRACT = "AUDRALIA_PLANET_FILE_5B_DISPLAY_ONLY_CANVAS_INTERPRETER_TNT_v1";
+  const MANIFEST_CONTRACT = "AUDRALIA_PLANET_RENDERPLEX_CHILD_CHAIN_MANIFEST_v1";
+  const DIRECT_CHILD_CONTRACT = "AUDRALIA_PLANET_FILE_4C_STRUCTURAL_SPIRAL_NODE_MAP_TNT_v1";
+  const STALE_DIRECT_CHILD_CONTRACT = "AUDRALIA_PLANET_FILE_4B_TERRAIN_NODES_DISPLAY_PACKET_COMPOSER_TNT_v1";
   const PRIMITIVE_PROTOCOL = "AUDRALIA_CANVAS_DISPLAY_PRIMITIVES_v1";
 
   const ROUTE = "/showroom/globe/audralia/planet/";
@@ -64,7 +61,7 @@
 
   const BASELINE_FEED = Object.freeze({
     id: "CLAY_GLOBE_BASELINE_FEED",
-    role: "DISPLAY_ONLY_CANVAS_FALLBACK",
+    role: "RENDERPLEX_DISPLAY_FALLBACK",
     publicIdentity: "Audralia",
     templateSource: "AUSTRALIA_TEMPLATE_HIDDEN_SCAFFOLD",
     latLongDisposition: "PREDESTINED",
@@ -96,6 +93,46 @@
       { id: "SE_MEMORY", lat: -37.2, lon: 148.0, mass: 0.74, pressure: 0.58, basin: 0.42 }
     ])
   });
+
+  const RENDERPLEX_MANIFEST = Object.freeze([
+    Object.freeze({
+      key: "subterranean",
+      index: 1,
+      role: "terrain-grandchild-subterranean",
+      path: "/showroom/globe/audralia/planet/index.canvas.terrain.nodes.subterranean.js",
+      contract: "AUDRALIA_PLANET_FILE_1_SUBTERRANEAN_GRANDCHILD_TNT_v1",
+      api: "DGBAudraliaCanvasTerrainNodesSubterranean",
+      global: "AUDRALIA_CANVAS_TERRAIN_NODES_SUBTERRANEAN_PACKET"
+    }),
+    Object.freeze({
+      key: "aboveSea",
+      index: 2,
+      role: "terrain-grandchild-above-sea",
+      path: "/showroom/globe/audralia/planet/index.canvas.terrain.nodes.above-sea.js",
+      contract: "AUDRALIA_PLANET_FILE_2_ABOVE_SEA_GRANDCHILD_TNT_v1",
+      api: "DGBAudraliaCanvasTerrainNodesAboveSea",
+      global: "AUDRALIA_CANVAS_TERRAIN_NODES_ABOVE_SEA_PACKET"
+    }),
+    Object.freeze({
+      key: "boundary",
+      index: 3,
+      role: "terrain-grandchild-boundary",
+      path: "/showroom/globe/audralia/planet/index.canvas.terrain.nodes.boundary.js",
+      contract: "AUDRALIA_PLANET_FILE_3_BOUNDARY_GRANDCHILD_TNT_v1",
+      api: "DGBAudraliaCanvasTerrainNodesBoundary",
+      global: "AUDRALIA_CANVAS_TERRAIN_NODES_BOUNDARY_PACKET"
+    }),
+    Object.freeze({
+      key: "directChild",
+      index: 4,
+      role: "structural-spiral-node-map-direct-child",
+      path: "/showroom/globe/audralia/planet/index.canvas.terrain.nodes.js",
+      contract: DIRECT_CHILD_CONTRACT,
+      api: "DGBAudraliaCanvasTerrainNodes",
+      global: "AUDRALIA_STRUCTURAL_SPIRAL_NODE_MAP_PACKET",
+      staleContract: STALE_DIRECT_CHILD_CONTRACT
+    })
+  ]);
 
   const CLAY_PALETTE_32 = Object.freeze([
     "rgba(136,103,64,.22)", "rgba(170,130,76,.20)", "rgba(110,91,62,.22)", "rgba(193,153,88,.18)",
@@ -129,8 +166,6 @@
     fibonacciLinks: [],
     fibonacciReturnLinks: [],
     dispositionCells: [],
-    contourLines: [],
-    ridgeLines: [],
     geometryBuilt: false,
 
     yaw: TEMPLATE.orientation.yaw,
@@ -156,13 +191,28 @@
     displayPrimitiveTypes: Object.freeze({}),
     displayPrimitiveCount: 0,
 
-    terrainNodesActive: false,
-    subterraneanActive: false,
-    aboveSeaActive: false,
-    boundaryActive: false,
+    structuralNodeMapActive: false,
+    macroNodeCount: 0,
+    spiralLatticePerNode: false,
+    spiralSeatsPerNode: 0,
+    totalSpiralSeats: 0,
 
-    directChildLoadAttempted: false,
+    terrainNodesActive: false,
+    subterraneanLoaded: false,
+    aboveSeaLoaded: false,
+    boundaryLoaded: false,
     directChildLoaded: false,
+
+    renderplexManifest: RENDERPLEX_MANIFEST,
+    renderplexManifestContract: MANIFEST_CONTRACT,
+    renderplexLoadStarted: false,
+    renderplexLoadComplete: false,
+    renderplexLoadFailed: false,
+    renderplexLoadedItems: [],
+    renderplexFailedItems: [],
+    renderplexPreferredChildContract: DIRECT_CHILD_CONTRACT,
+    renderplexLastLoadTime: "",
+    renderplexLastPacketReadTime: "",
 
     raf: 0,
     lastFrameTime: 0,
@@ -179,7 +229,8 @@
   const previousControllers = [
     "__AUDRALIA_G2_PLANET_OPERATION_A_CANVAS_CONTROLLER__",
     "__AUDRALIA_PLANET_FILE_5_PARENT_CANVAS_CONTROLLER__",
-    "__AUDRALIA_PLANET_FILE_5B_DISPLAY_ONLY_CANVAS_CONTROLLER__"
+    "__AUDRALIA_PLANET_FILE_5B_DISPLAY_ONLY_CANVAS_CONTROLLER__",
+    "__AUDRALIA_PLANET_FILE_5C_RENDERPLEX_CANVAS_CONTROLLER__"
   ];
 
   for (const key of previousControllers) {
@@ -247,12 +298,151 @@
     if (!state.statusNode) return;
 
     const text = state.displayPacketActive
-      ? "Display packet active · " + state.displayPrimitiveCount + " primitives · " + state.displayPacketMode
-      : "Display packet waiting · clay fallback active";
+      ? "Renderplex active · " + state.displayPacketMode + " · " + state.displayPrimitiveCount + " primitives"
+      : "Renderplex waiting · clay fallback active";
 
     try {
       state.statusNode.textContent = text;
     } catch (_error) {}
+  }
+
+  function hasExpectedApi(item) {
+    const api = window[item.api];
+    if (!api || typeof api !== "object") return false;
+
+    if (item.key === "directChild") {
+      return api.contract === DIRECT_CHILD_CONTRACT && typeof api.getCanvasDisplayPacket === "function";
+    }
+
+    return true;
+  }
+
+  function hasExpectedGlobal(item) {
+    const packet = window[item.global];
+    if (!packet || typeof packet !== "object") return false;
+
+    if (item.key === "directChild") {
+      return packet.contract === DIRECT_CHILD_CONTRACT;
+    }
+
+    return true;
+  }
+
+  function matchingScriptExists(item) {
+    const scripts = Array.from(document.scripts || []);
+    return scripts.some((script) => {
+      const src = String(script.getAttribute("src") || "");
+      return src.includes(item.path) && src.includes(item.contract);
+    });
+  }
+
+  function staleDirectChildPresent() {
+    const api = window.DGBAudraliaCanvasTerrainNodes;
+    const packet = window.AUDRALIA_CANVAS_DISPLAY_PACKET;
+    const structural = window.AUDRALIA_STRUCTURAL_SPIRAL_NODE_MAP_PACKET;
+
+    if (api && api.contract === STALE_DIRECT_CHILD_CONTRACT) return true;
+    if (packet && packet.contract === STALE_DIRECT_CHILD_CONTRACT) return true;
+    if (!structural && api && api.contract !== DIRECT_CHILD_CONTRACT) return true;
+
+    return false;
+  }
+
+  function markManifestItem(item, statusText) {
+    const key = item.key + ":" + statusText;
+    if (!state.renderplexLoadedItems.includes(key)) {
+      state.renderplexLoadedItems.push(key);
+    }
+  }
+
+  function markManifestFailure(item, reason) {
+    const key = item.key + ":" + reason;
+    if (!state.renderplexFailedItems.includes(key)) {
+      state.renderplexFailedItems.push(key);
+    }
+  }
+
+  function loadManifestScript(item) {
+    return new Promise((resolve) => {
+      if (hasExpectedApi(item) || hasExpectedGlobal(item)) {
+        markManifestItem(item, "present");
+        resolve(true);
+        return;
+      }
+
+      if (item.key !== "directChild" && matchingScriptExists(item)) {
+        markManifestItem(item, "script-present");
+        resolve(true);
+        return;
+      }
+
+      if (item.key === "directChild" && matchingScriptExists(item) && !staleDirectChildPresent()) {
+        markManifestItem(item, "script-present");
+        resolve(true);
+        return;
+      }
+
+      const script = document.createElement("script");
+      const src = item.path + "?v=" + encodeURIComponent(item.contract);
+
+      script.src = src;
+      script.async = false;
+      script.defer = true;
+      script.setAttribute("data-audralia-renderplex-loader", CONTRACT);
+      script.setAttribute("data-renderplex-contract", MANIFEST_CONTRACT);
+      script.setAttribute("data-renderplex-role", item.role);
+      script.setAttribute("data-renderplex-index", String(item.index));
+      script.setAttribute("data-renderplex-child-contract", item.contract);
+      script.setAttribute("data-renderplex-preferred", item.key === "directChild" ? "true" : "false");
+
+      script.addEventListener("load", () => {
+        markManifestItem(item, "loaded");
+        resolve(true);
+      }, { once: true });
+
+      script.addEventListener("error", () => {
+        markManifestFailure(item, "load-error");
+        resolve(false);
+      }, { once: true });
+
+      try {
+        (document.head || document.documentElement).appendChild(script);
+      } catch (_error) {
+        markManifestFailure(item, "append-error");
+        resolve(false);
+      }
+    });
+  }
+
+  async function loadRenderplexChain() {
+    if (state.renderplexLoadStarted) return state.renderplexLoadComplete;
+
+    state.renderplexLoadStarted = true;
+    state.renderplexLoadFailed = false;
+    state.renderplexLoadedItems = [];
+    state.renderplexFailedItems = [];
+    state.renderplexLastLoadTime = new Date().toISOString();
+
+    publishStatus("renderplex-load-start");
+
+    for (const item of RENDERPLEX_MANIFEST) {
+      await loadManifestScript(item);
+    }
+
+    state.subterraneanLoaded = hasExpectedApi(RENDERPLEX_MANIFEST[0]) || hasExpectedGlobal(RENDERPLEX_MANIFEST[0]);
+    state.aboveSeaLoaded = hasExpectedApi(RENDERPLEX_MANIFEST[1]) || hasExpectedGlobal(RENDERPLEX_MANIFEST[1]);
+    state.boundaryLoaded = hasExpectedApi(RENDERPLEX_MANIFEST[2]) || hasExpectedGlobal(RENDERPLEX_MANIFEST[2]);
+    state.directChildLoaded = hasExpectedApi(RENDERPLEX_MANIFEST[3]) || hasExpectedGlobal(RENDERPLEX_MANIFEST[3]);
+
+    state.renderplexLoadComplete = state.directChildLoaded;
+    state.renderplexLoadFailed = !state.renderplexLoadComplete;
+
+    readCanvasDisplayPacket("renderplex-load-complete", true);
+    publishRenderplexReceipt();
+    publishStatus("renderplex-load-complete");
+    requestRender(18);
+
+    return state.renderplexLoadComplete;
   }
 
   function makeSeat(band, radial) {
@@ -395,7 +585,6 @@
       let mass = 0;
       let pressure = 0;
       let basin = 0;
-      let dominant = "BACKGROUND";
 
       for (const anchor of anchors) {
         const d = angularDistance(seat.latitude, seat.longitude, anchor.latRad, anchor.lonRad);
@@ -405,8 +594,6 @@
         mass += weight * anchor.mass;
         pressure += weight * anchor.pressure;
         basin += weight * anchor.basin;
-
-        if (weight * anchor.mass > mass * 0.32) dominant = anchor.id;
       }
 
       const latitudePressure = 1 - Math.abs(Math.sin(seat.latitude)) * 0.22;
@@ -417,17 +604,12 @@
 
       return Object.freeze({
         seat,
-        dominant,
         mass: normalized,
         pressure: clamp(pressure, 0, 1.2),
         basin: clamp(basin, 0, 1.1),
-        colorIndex: (seat.colorIndex + Math.floor(normalized * 11)) % 32,
-        clayHint: clamp((normalized * 0.64 + pressure * 0.22 - basin * 0.10), 0, 1)
+        colorIndex: (seat.colorIndex + Math.floor(normalized * 11)) % 32
       });
     });
-
-    state.contourLines = [];
-    state.ridgeLines = [];
   }
 
   function rotatePoint(point) {
@@ -498,8 +680,7 @@
   }
 
   function clearCanvas() {
-    if (!state.ctx) return;
-    state.ctx.clearRect(0, 0, state.width, state.height);
+    if (state.ctx) state.ctx.clearRect(0, 0, state.width, state.height);
   }
 
   function clipSphere() {
@@ -523,6 +704,15 @@
     if (packet.lakes === true) return false;
     if (packet.beachRendering === true) return false;
     if (packet.finalVisualPass === true) return false;
+
+    if (
+      packet.contract === DIRECT_CHILD_CONTRACT &&
+      packet.structuralNodeMapActive === true &&
+      packet.spiralLatticePerNode === true &&
+      packet.macroNodeCount === 256
+    ) {
+      return true;
+    }
 
     return true;
   }
@@ -548,31 +738,44 @@
     state.displayPrimitiveCount = primitives.length;
   }
 
+  function getPreferredDisplayPacket(forceRefresh = false) {
+    const api = window.DGBAudraliaCanvasTerrainNodes;
+
+    if (api && api.contract === DIRECT_CHILD_CONTRACT && typeof api.refreshComposition === "function" && forceRefresh) {
+      try {
+        api.refreshComposition();
+      } catch (_error) {}
+    }
+
+    if (api && api.contract === DIRECT_CHILD_CONTRACT && typeof api.getCanvasDisplayPacket === "function") {
+      try {
+        const packet = api.getCanvasDisplayPacket();
+        if (packet && packet.contract === DIRECT_CHILD_CONTRACT) return packet;
+      } catch (_error) {}
+    }
+
+    const structuralPacket = window.AUDRALIA_CANVAS_DISPLAY_PACKET;
+    if (structuralPacket && structuralPacket.contract === DIRECT_CHILD_CONTRACT) return structuralPacket;
+
+    if (staleDirectChildPresent()) return null;
+
+    if (api && typeof api.getCanvasDisplayPacket === "function") {
+      try {
+        return api.getCanvasDisplayPacket();
+      } catch (_error) {}
+    }
+
+    return window.AUDRALIA_CANVAS_DISPLAY_PACKET || null;
+  }
+
   function readCanvasDisplayPacket(scope = "read", forceRefresh = false) {
     try {
-      let packet = null;
-      const api = window.DGBAudraliaCanvasTerrainNodes;
-
-      if (api && typeof api === "object") {
-        if (forceRefresh && typeof api.refreshComposition === "function") {
-          try {
-            api.refreshComposition();
-          } catch (_refreshError) {}
-        }
-
-        if (typeof api.getCanvasDisplayPacket === "function") {
-          packet = api.getCanvasDisplayPacket();
-        }
-      }
-
-      if (!packet && window.AUDRALIA_CANVAS_DISPLAY_PACKET) {
-        packet = window.AUDRALIA_CANVAS_DISPLAY_PACKET;
-      }
+      const packet = getPreferredDisplayPacket(forceRefresh);
 
       if (!validateDisplayPacket(packet)) {
         state.canvasDisplayPacket = null;
         state.displayPacketActive = false;
-        state.displayPacketMode = packet ? "INVALID_DISPLAY_PACKET" : "WAITING_FOR_DISPLAY_PACKET";
+        state.displayPacketMode = packet ? "INVALID_OR_STALE_DISPLAY_PACKET" : "WAITING_FOR_DISPLAY_PACKET";
         state.displayPacketError = packet ? "INVALID_OR_BLOCKED_DISPLAY_PACKET" : "";
         state.displayPacketContract = "";
         state.displayPrimitiveProtocol = "";
@@ -580,10 +783,11 @@
         state.displayPrimitiveGroups = Object.freeze({});
         state.displayPrimitiveTypes = Object.freeze({});
         state.displayPrimitiveCount = 0;
-        state.terrainNodesActive = false;
-        state.subterraneanActive = false;
-        state.aboveSeaActive = false;
-        state.boundaryActive = false;
+        state.structuralNodeMapActive = false;
+        state.macroNodeCount = 0;
+        state.spiralLatticePerNode = false;
+        state.spiralSeatsPerNode = 0;
+        state.totalSpiralSeats = 0;
 
         publishStatus("display-packet:" + scope);
         return false;
@@ -591,15 +795,24 @@
 
       state.canvasDisplayPacket = packet;
       state.displayPacketActive = true;
-      state.displayPacketMode = String(packet.feedMode || "DISPLAY_PACKET_ACTIVE");
+      state.displayPacketMode = String(packet.feedMode || packet.displayRole || "DISPLAY_PACKET_ACTIVE");
       state.displayPacketLastRead = now();
+      state.renderplexLastPacketReadTime = new Date().toISOString();
       state.displayPacketError = "";
       state.displayPacketContract = String(packet.contract || "");
       state.displayPrimitiveProtocol = String(packet.primitiveProtocol || "");
-      state.terrainNodesActive = Boolean(packet.terrainNodesActive);
-      state.subterraneanActive = Boolean(packet.subterraneanActive);
-      state.aboveSeaActive = Boolean(packet.aboveSeaActive);
-      state.boundaryActive = Boolean(packet.boundaryActive);
+
+      state.terrainNodesActive = Boolean(packet.terrainNodesActive || packet.structuralNodeMapActive);
+      state.structuralNodeMapActive = Boolean(packet.structuralNodeMapActive);
+      state.macroNodeCount = finite(packet.macroNodeCount, 0);
+      state.spiralLatticePerNode = Boolean(packet.spiralLatticePerNode);
+      state.spiralSeatsPerNode = finite(packet.spiralSeatsPerNode, 0);
+      state.totalSpiralSeats = finite(packet.totalSpiralSeats, 0);
+
+      state.subterraneanLoaded = Boolean(packet.subterraneanActive || state.subterraneanLoaded);
+      state.aboveSeaLoaded = Boolean(packet.aboveSeaActive || state.aboveSeaLoaded);
+      state.boundaryLoaded = Boolean(packet.boundaryActive || state.boundaryLoaded);
+      state.directChildLoaded = packet.contract === DIRECT_CHILD_CONTRACT || state.directChildLoaded;
 
       indexDisplayPrimitives(packet);
       publishStatus("display-packet:" + scope);
@@ -621,50 +834,6 @@
       updateVisibleStatus();
       return false;
     }
-  }
-
-  function loadDirectChildIfNeeded() {
-    if (state.directChildLoadAttempted) return;
-    state.directChildLoadAttempted = true;
-
-    const api = window.DGBAudraliaCanvasTerrainNodes;
-
-    if (
-      api &&
-      typeof api.getCanvasDisplayPacket === "function" &&
-      api.contract === DIRECT_CHILD_CONTRACT
-    ) {
-      state.directChildLoaded = true;
-      readCanvasDisplayPacket("direct-child-present", true);
-      return;
-    }
-
-    const existing = query("script[data-audralia-display-packet-composer-loader]");
-    if (existing) return;
-
-    try {
-      const script = document.createElement("script");
-      script.src = DIRECT_CHILD_FILE + "?v=" + encodeURIComponent(DIRECT_CHILD_CONTRACT);
-      script.async = true;
-      script.defer = true;
-      script.setAttribute("data-audralia-display-packet-composer-loader", CONTRACT);
-      script.setAttribute("data-direct-child-only", "true");
-
-      script.addEventListener("load", () => {
-        state.directChildLoaded = true;
-        readCanvasDisplayPacket("direct-child-loaded", true);
-        requestRender(20);
-      }, { once: true });
-
-      script.addEventListener("error", () => {
-        state.directChildLoaded = false;
-        state.displayPacketMode = "WAITING_FOR_DISPLAY_PACKET";
-        publishStatus("direct-child-load-error");
-        requestRender(8);
-      }, { once: true });
-
-      (document.head || document.documentElement).appendChild(script);
-    } catch (_error) {}
   }
 
   function displayAlphaForMode(primitive) {
@@ -689,9 +858,7 @@
   }
 
   function applyPrimitiveStroke(ctx, primitive, alpha) {
-    if (primitive.stroke) ctx.strokeStyle = String(primitive.stroke);
-    else ctx.strokeStyle = "rgba(255,232,163,.42)";
-
+    ctx.strokeStyle = primitive.stroke ? String(primitive.stroke) : "rgba(255,232,163,.42)";
     ctx.globalAlpha = alpha;
     ctx.lineWidth = Math.max(0.25, finite(primitive.lineWidth, 0.65) * state.dpr);
   }
@@ -704,7 +871,6 @@
   function drawPrimitiveEllipse(primitive) {
     const ctx = state.ctx;
     const p = primitivePoint(primitive);
-
     if (!p.frontFacing) return;
 
     const m = metrics();
@@ -737,7 +903,6 @@
   function drawPrimitivePoint(primitive) {
     const ctx = state.ctx;
     const p = primitivePoint(primitive);
-
     if (!p.frontFacing) return;
 
     const m = metrics();
@@ -828,15 +993,7 @@
 
     if (radiusX >= 0.70 && radiusY >= 0.70) {
       ctx.beginPath();
-      ctx.ellipse(
-        m.centerX,
-        m.centerY,
-        m.radius * radiusX,
-        m.radius * radiusY,
-        finite(primitive.rotation, 0),
-        0,
-        TAU
-      );
+      ctx.ellipse(m.centerX, m.centerY, m.radius * radiusX, m.radius * radiusY, finite(primitive.rotation, 0), 0, TAU);
       ctx.stroke();
       ctx.restore();
       return;
@@ -865,7 +1022,6 @@
   function drawPrimitiveTextureStroke(primitive) {
     const ctx = state.ctx;
     const p = primitivePoint(primitive);
-
     if (!p.frontFacing) return;
 
     const alpha = displayAlphaForMode(primitive);
@@ -879,12 +1035,10 @@
     ctx.translate(p.x, p.y);
     ctx.rotate(angle);
     applyPrimitiveStroke(ctx, primitive, alpha);
-
     ctx.beginPath();
     ctx.moveTo(-length, 0);
     ctx.quadraticCurveTo(0, -length * 0.24, length, 0);
     ctx.stroke();
-
     ctx.restore();
   }
 
@@ -892,7 +1046,6 @@
     if (!primitive || typeof primitive !== "object") return;
 
     const type = String(primitive.type || "");
-
     if (type === "ellipse") drawPrimitiveEllipse(primitive);
     else if (type === "stroke") drawPrimitiveStroke(primitive);
     else if (type === "curvedStroke") drawPrimitiveCurvedStroke(primitive);
@@ -957,17 +1110,6 @@
     ctx.lineWidth = Math.max(0.85, state.dpr * 0.82);
     ctx.stroke();
 
-    const screenGlow = ctx.createRadialGradient(cx, cy, r * 0.86, cx, cy, r * 1.22);
-    screenGlow.addColorStop(0.00, "rgba(141,216,255,0)");
-    screenGlow.addColorStop(0.74, "rgba(141,216,255,0.06)");
-    screenGlow.addColorStop(0.93, "rgba(141,216,255,0.18)");
-    screenGlow.addColorStop(1.00, "rgba(141,216,255,0)");
-
-    ctx.beginPath();
-    ctx.arc(cx, cy, r * 1.16, 0, TAU);
-    ctx.fillStyle = screenGlow;
-    ctx.fill();
-
     ctx.restore();
   }
 
@@ -980,8 +1122,7 @@
 
     ctx.save();
     clipSphere();
-
-    ctx.globalAlpha = state.displayPacketActive ? 0.065 : 0.10;
+    ctx.globalAlpha = state.displayPacketActive && state.displayPrimitiveCount > 0 ? 0.065 : 0.10;
 
     for (let i = 0; i < 34; i += 1) {
       const y = cy - r + (i / 33) * r * 2;
@@ -1011,13 +1152,10 @@
     const m = metrics();
     const r = m.radius;
     const base = r * 0.056;
-    const alphaTrim = state.displayPacketActive ? 0.42 : 1.00;
+    const alphaTrim = state.displayPacketActive && state.displayPrimitiveCount > 0 ? 0.42 : 1.00;
 
     const cells = state.dispositionCells
-      .map((cell) => ({
-        cell,
-        point: projectPoint(cell.seat)
-      }))
+      .map((cell) => ({ cell, point: projectPoint(cell.seat) }))
       .filter((item) => item.point.frontFacing && item.cell.mass > 0.13)
       .sort((a, b) => a.point.z - b.point.z);
 
@@ -1066,7 +1204,6 @@
 
       for (let i = 0; i < points.length; i += 1) {
         const p = projectPoint(points[i]);
-
         if (!p.frontFacing && i !== 0) continue;
 
         if (!started) {
@@ -1139,12 +1276,6 @@
         : "rgba(184,238,255,0.045)";
     }
 
-    if (link.major) {
-      return front
-        ? "rgba(244,207,131," + clamp(0.36 + z * 0.10, 0.20, 0.60).toFixed(3) + ")"
-        : "rgba(244,207,131,0.07)";
-    }
-
     return front
       ? "rgba(112,199,255," + clamp(0.18 + z * 0.08, 0.09, 0.34).toFixed(3) + ")"
       : "rgba(112,199,255,0.040)";
@@ -1188,10 +1319,9 @@
   }
 
   function drawDiagnosticLattice(reduced) {
-    const ctx = state.ctx;
-
     if (state.mode !== "lattice" && state.mode !== "receipt") return;
 
+    const ctx = state.ctx;
     ctx.save();
     clipSphere();
 
@@ -1221,13 +1351,13 @@
 
     ctx.beginPath();
     ctx.arc(cx, cy, r * 1.018, 0, TAU);
-    ctx.strokeStyle = state.displayPacketActive ? "rgba(244,207,131,.58)" : "rgba(244,207,131,.46)";
+    ctx.strokeStyle = state.structuralNodeMapActive ? "rgba(244,207,131,.58)" : "rgba(244,207,131,.46)";
     ctx.lineWidth = Math.max(1, state.dpr * 1.15);
     ctx.setLineDash([6 * state.dpr, 8 * state.dpr]);
     ctx.stroke();
     ctx.setLineDash([]);
 
-    ctx.globalAlpha = state.displayPacketActive ? 0.22 : 0.18;
+    ctx.globalAlpha = state.structuralNodeMapActive ? 0.22 : 0.18;
     ctx.fillStyle = "rgba(244,207,131,.30)";
     ctx.beginPath();
     ctx.arc(cx, cy, r * 1.012, 0, TAU);
@@ -1270,7 +1400,7 @@
 
     state.raf = 0;
 
-    if (state.renderCount % 42 === 0 || (!state.displayPacketActive && state.renderCount % 18 === 0)) {
+    if (state.renderCount % 36 === 0 || (!state.displayPacketActive && state.renderCount % 12 === 0)) {
       readCanvasDisplayPacket("render-poll", false);
     }
 
@@ -1308,7 +1438,6 @@
     drawScreenGlass();
 
     state.renderCount += 1;
-
     if (state.settleFrames > 0) state.settleFrames -= 1;
 
     publishStatus("render");
@@ -1346,9 +1475,11 @@
     state.roll = TEMPLATE.orientation.roll;
     state.velocityYaw = 0;
     state.velocityPitch = 0;
+
     readCanvasDisplayPacket("reset-view", true);
     requestRender(14);
     publishStatus("reset-view");
+
     return status();
   }
 
@@ -1432,7 +1563,7 @@
       canvas = document.createElement("canvas");
       canvas.className = "planet-canvas";
       canvas.setAttribute("data-audralia-planet-canvas", "");
-      canvas.setAttribute("aria-label", "Audralia display-only canvas");
+      canvas.setAttribute("aria-label", "Audralia renderplex canvas");
       state.stage.appendChild(canvas);
     }
 
@@ -1457,11 +1588,10 @@
 
     canvas.setAttribute("data-audralia-canvas-contract", CONTRACT);
     canvas.setAttribute("data-previous-canvas-contract", PREVIOUS_CANVAS_CONTRACT);
+    canvas.setAttribute("data-renderplex-contract", MANIFEST_CONTRACT);
     canvas.setAttribute("data-direct-child-contract", DIRECT_CHILD_CONTRACT);
     canvas.setAttribute("data-primitive-protocol", PRIMITIVE_PROTOCOL);
-    canvas.setAttribute("data-canvas-role", "display-only-interpreter");
-    canvas.setAttribute("data-public-identity", "Audralia");
-    canvas.setAttribute("data-template-source", "Australia-template hidden scaffold");
+    canvas.setAttribute("data-canvas-role", "renderplex-display-only-canvas");
     canvas.setAttribute("data-active-water", "false");
     canvas.setAttribute("data-hydration", "false");
     canvas.setAttribute("data-final-visual-pass", "false");
@@ -1470,8 +1600,8 @@
     state.ctx = canvas.getContext("2d", { alpha: true });
     state.mounted = Boolean(state.ctx);
 
-    state.stage.dataset.canvasRole = "display-only-interpreter";
-    state.stage.dataset.screenRole = "display-only-canvas";
+    state.stage.dataset.canvasRole = "renderplex-display-only-canvas";
+    state.stage.dataset.screenRole = "renderplex";
     state.stage.dataset.rendererState = "active";
     state.stage.dataset.activeWater = "false";
     state.stage.dataset.hydration = "false";
@@ -1549,12 +1679,11 @@
     const next = MODES.includes(mode) ? mode : "body";
 
     state.mode = next;
-
     readCanvasDisplayPacket("set-mode", true);
 
     setDataset("audraliaCanvasMode", next);
     setDataset("audraliaCanvasContract", CONTRACT);
-    setDataset("audraliaCanvasRole", "display-only-interpreter");
+    setDataset("audraliaCanvasRole", "renderplex-display-only-canvas");
 
     requestRender(next === "body" ? 8 : 16);
     publishStatus("set-mode");
@@ -1591,7 +1720,17 @@
     return Object.freeze({
       contract: CONTRACT,
       previousCanvasContract: PREVIOUS_CANVAS_CONTRACT,
-      directChildContract: DIRECT_CHILD_CONTRACT,
+      renderplexActive: true,
+      renderplexManifestContract: MANIFEST_CONTRACT,
+      renderplexLoadStarted: state.renderplexLoadStarted,
+      renderplexLoadComplete: state.renderplexLoadComplete,
+      renderplexLoadFailed: state.renderplexLoadFailed,
+      renderplexLoadedItems: state.renderplexLoadedItems.slice(),
+      renderplexFailedItems: state.renderplexFailedItems.slice(),
+      preferredDirectChildContract: DIRECT_CHILD_CONTRACT,
+      staleDirectChildContract: STALE_DIRECT_CHILD_CONTRACT,
+      directChildContract: state.directChildLoaded ? DIRECT_CHILD_CONTRACT : "",
+
       primitiveProtocol: PRIMITIVE_PROTOCOL,
       route: ROUTE,
       target: TARGET,
@@ -1599,10 +1738,8 @@
 
       initialized: state.initialized,
       mounted: state.mounted,
-      screenRole: "DISPLAY_ONLY_CANVAS_INTERPRETER",
+      screenRole: "RENDERPLEX_DISPLAY_ONLY_CANVAS",
       currentMode: state.mode,
-      feed: state.feed.id || BASELINE_FEED.id,
-      baselineFeed: BASELINE_FEED.id,
 
       displayPacketActive: state.displayPacketActive,
       displayPacketMode: state.displayPacketMode,
@@ -1613,14 +1750,16 @@
       displayPrimitiveTypes: state.displayPrimitiveTypes,
       displayPacketError: state.displayPacketError,
 
-      terrainNodesActive: state.terrainNodesActive,
-      subterraneanActive: state.subterraneanActive,
-      aboveSeaActive: state.aboveSeaActive,
-      boundaryActive: state.boundaryActive,
+      structuralNodeMapActive: state.structuralNodeMapActive,
+      macroNodeCount: state.macroNodeCount,
+      spiralLatticePerNode: state.spiralLatticePerNode,
+      spiralSeatsPerNode: state.spiralSeatsPerNode,
+      totalSpiralSeats: state.totalSpiralSeats,
 
-      publicIdentity: "Audralia",
-      templateSource: "AUSTRALIA_TEMPLATE_HIDDEN_SCAFFOLD",
-      publicAustraliaIdentity: false,
+      subterraneanLoaded: state.subterraneanLoaded,
+      aboveSeaLoaded: state.aboveSeaLoaded,
+      boundaryLoaded: state.boundaryLoaded,
+      directChildLoaded: state.directChildLoaded,
 
       radialNodes: RADIAL_NODES,
       fibonacciBands: FIBONACCI_BANDS,
@@ -1640,9 +1779,36 @@
 
       renderCount: state.renderCount,
       duplicateCanvasRemoved: state.duplicateCanvasRemoved,
-      directChildLoaded: state.directChildLoaded,
       errors: state.errors.slice()
     });
+  }
+
+  function publishRenderplexReceipt() {
+    const payload = Object.freeze({
+      contract: CONTRACT,
+      manifestContract: MANIFEST_CONTRACT,
+      manifest: RENDERPLEX_MANIFEST,
+      loadedItems: state.renderplexLoadedItems.slice(),
+      failedItems: state.renderplexFailedItems.slice(),
+      loadStarted: state.renderplexLoadStarted,
+      loadComplete: state.renderplexLoadComplete,
+      loadFailed: state.renderplexLoadFailed,
+      preferredDirectChildContract: DIRECT_CHILD_CONTRACT,
+      structuralNodeMapActive: state.structuralNodeMapActive,
+      macroNodeCount: state.macroNodeCount,
+      spiralLatticePerNode: state.spiralLatticePerNode,
+      spiralSeatsPerNode: state.spiralSeatsPerNode,
+      totalSpiralSeats: state.totalSpiralSeats,
+      activeWater: false,
+      hydration: false,
+      finalVisualPass: false,
+      time: new Date().toISOString()
+    });
+
+    window.AUDRALIA_PLANET_RENDERPLEX_MANIFEST = RENDERPLEX_MANIFEST;
+    window.AUDRALIA_PLANET_RENDERPLEX_LOAD_RECEIPT = payload;
+
+    return payload;
   }
 
   function publishStatus(scope = "status") {
@@ -1652,9 +1818,12 @@
       time: new Date().toISOString()
     });
 
+    window.AUDRALIA_PLANET_FILE_5C_RENDERPLEX_STATUS = payload;
+    window.AUDRALIA_PLANET_FILE_5C_RENDERPLEX_RECEIPT = payload;
+    window.AUDRALIA_PLANET_RENDERPLEX_MANIFEST = RENDERPLEX_MANIFEST;
+
     window.AUDRALIA_PLANET_CANVAS_DISPLAY_ONLY_INTERPRETER_STATUS = payload;
     window.AUDRALIA_PLANET_CANVAS_DISPLAY_ONLY_INTERPRETER_RECEIPT = payload;
-
     window.AUDRALIA_G2_PLANET_CANVAS_RECEIPT = payload;
     window.AUDRALIA_G2_PLANET_OPERATION_A_CANVAS_STATUS = payload;
     window.AUDRALIA_PLANET_CANVAS_TERRAIN_FEED_HANDOFF_STATUS = payload;
@@ -1662,10 +1831,13 @@
 
     setDataset("audraliaCanvasContract", CONTRACT);
     setDataset("audraliaCanvasPreviousContract", PREVIOUS_CANVAS_CONTRACT);
-    setDataset("audraliaCanvasDirectChildContract", DIRECT_CHILD_CONTRACT);
-    setDataset("audraliaCanvasRole", "display-only-interpreter");
-    setDataset("audraliaCanvasPublicIdentity", "Audralia");
-    setDataset("audraliaCanvasTemplateSource", "Australia-template-hidden-scaffold");
+    setDataset("audraliaRenderplexActive", "true");
+    setDataset("audraliaRenderplexManifestContract", MANIFEST_CONTRACT);
+    setDataset("audraliaRenderplexLoadStarted", state.renderplexLoadStarted ? "true" : "false");
+    setDataset("audraliaRenderplexLoadComplete", state.renderplexLoadComplete ? "true" : "false");
+    setDataset("audraliaRenderplexLoadedItems", state.renderplexLoadedItems.join(","));
+    setDataset("audraliaRenderplexFailedItems", state.renderplexFailedItems.join(","));
+    setDataset("audraliaRenderplexDirectChildContract", DIRECT_CHILD_CONTRACT);
 
     setDataset("audraliaCanvasDisplayPacketActive", state.displayPacketActive ? "true" : "false");
     setDataset("audraliaCanvasDisplayPacketMode", state.displayPacketMode);
@@ -1673,10 +1845,16 @@
     setDataset("audraliaCanvasDisplayPrimitiveProtocol", state.displayPrimitiveProtocol);
     setDataset("audraliaCanvasDisplayPrimitiveCount", state.displayPrimitiveCount);
 
-    setDataset("audraliaCanvasTerrainNodesActive", state.terrainNodesActive ? "true" : "false");
-    setDataset("audraliaCanvasTerrainSubterraneanActive", state.subterraneanActive ? "true" : "false");
-    setDataset("audraliaCanvasTerrainAboveSeaActive", state.aboveSeaActive ? "true" : "false");
-    setDataset("audraliaCanvasTerrainBoundaryActive", state.boundaryActive ? "true" : "false");
+    setDataset("audraliaStructuralNodeMapActive", state.structuralNodeMapActive ? "true" : "false");
+    setDataset("audraliaMacroNodeCount", state.macroNodeCount);
+    setDataset("audraliaSpiralLatticePerNode", state.spiralLatticePerNode ? "true" : "false");
+    setDataset("audraliaSpiralSeatsPerNode", state.spiralSeatsPerNode);
+    setDataset("audraliaTotalSpiralSeats", state.totalSpiralSeats);
+
+    setDataset("audraliaCanvasTerrainSubterraneanLoaded", state.subterraneanLoaded ? "true" : "false");
+    setDataset("audraliaCanvasTerrainAboveSeaLoaded", state.aboveSeaLoaded ? "true" : "false");
+    setDataset("audraliaCanvasTerrainBoundaryLoaded", state.boundaryLoaded ? "true" : "false");
+    setDataset("audraliaCanvasTerrainDirectChildLoaded", state.directChildLoaded ? "true" : "false");
 
     setDataset("audraliaCanvasActiveWater", "false");
     setDataset("audraliaCanvasHydrationActive", "false");
@@ -1699,9 +1877,11 @@
     window[API_NAME] = Object.freeze({
       contract: CONTRACT,
       previousCanvasContract: PREVIOUS_CANVAS_CONTRACT,
+      renderplexManifestContract: MANIFEST_CONTRACT,
       directChildContract: DIRECT_CHILD_CONTRACT,
       primitiveProtocol: PRIMITIVE_PROTOCOL,
       baselineFeed: BASELINE_FEED,
+      loadRenderplexChain,
       setFeed,
       setMode,
       resetView,
@@ -1736,9 +1916,11 @@
     setMode,
     setFeed,
     resetView,
-    readCanvasDisplayPacket
+    readCanvasDisplayPacket,
+    loadRenderplexChain
   };
 
+  window.__AUDRALIA_PLANET_FILE_5C_RENDERPLEX_CANVAS_CONTROLLER__ = controller;
   window.__AUDRALIA_PLANET_FILE_5B_DISPLAY_ONLY_CANVAS_CONTROLLER__ = controller;
   window.__AUDRALIA_PLANET_FILE_5_PARENT_CANVAS_CONTROLLER__ = controller;
   window.__AUDRALIA_G2_PLANET_OPERATION_A_CANVAS_CONTROLLER__ = controller;
@@ -1771,8 +1953,8 @@
       state.initialized = true;
       state.mounted = true;
 
-      readCanvasDisplayPacket("init", true);
-      loadDirectChildIfNeeded();
+      readCanvasDisplayPacket("init-before-renderplex", false);
+      loadRenderplexChain();
 
       publishStatus("init-complete");
       requestRender(18);

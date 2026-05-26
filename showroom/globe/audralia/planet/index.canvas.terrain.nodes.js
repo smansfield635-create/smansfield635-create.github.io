@@ -1,14 +1,10 @@
 // TARGET FILE: /showroom/globe/audralia/planet/index.canvas.terrain.nodes.js
 // TNT FULL-FILE REPLACEMENT
-// AUDRALIA_PLANET_FILE_4_TERRAIN_NODES_COMPOSER_TNT_v1
+// AUDRALIA_PLANET_FILE_4B_TERRAIN_NODES_DISPLAY_PACKET_COMPOSER_TNT_v1
 //
-// File 4 of 5 in the backward-build terrain strategy.
-// Authority position:
-// index.canvas.js
-// └── index.canvas.terrain.nodes.js
-//     ├── index.canvas.terrain.nodes.subterranean.js
-//     ├── index.canvas.terrain.nodes.above-sea.js
-//     └── index.canvas.terrain.nodes.boundary.js
+// Direct child display-packet composer.
+// Canvas remains display-only.
+// This file owns downstream meaning translation into neutral canvas primitives.
 //
 // Owns:
 // - terrain node baseline
@@ -16,15 +12,14 @@
 // - 256 terrain nodes
 // - local 256-state lattice identity per node
 // - computable Nine Summits influence
-// - downstream child discovery
-// - downstream grandchild refresh sequence
-// - one canvas-safe terrain feed
+// - downstream child discovery and packet collection
+// - canvas-safe terrain feed
+// - canvas-ready display packet
 //
 // Does not own:
 // - canvas rendering
 // - canvas creation
 // - drag / rotation
-// - child authority recomputation
 // - hydration
 // - active water
 // - final visual pass
@@ -32,10 +27,11 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_PLANET_FILE_4_TERRAIN_NODES_COMPOSER_TNT_v1";
-  const SPEC_OPS = "AUDRALIA_PLANET_FILE_4_TERRAIN_NODES_COMPOSER_SPEC_OPS_v1";
-  const CCR = "AUDRALIA_PLANET_FILE_4_TERRAIN_NODES_COMPOSER_CCR_v1";
-  const FULL_PLAN = "AUDRALIA_PLANET_CANVAS_TERRAIN_BACKWARD_BUILD_FULL_PLAN_CCR_v1";
+  const CONTRACT = "AUDRALIA_PLANET_FILE_4B_TERRAIN_NODES_DISPLAY_PACKET_COMPOSER_TNT_v1";
+  const PREVIOUS_CONTRACT = "AUDRALIA_PLANET_FILE_4_TERRAIN_NODES_COMPOSER_TNT_v1";
+  const SPEC_OPS = "AUDRALIA_PLANET_DISPLAY_ONLY_CANVAS_AND_DOWNSTREAM_DISPLAY_PACKET_SPEC_OPS_v1";
+  const NEWS = "AUDRALIA_PLANET_DISPLAY_ONLY_CANVAS_AND_DOWNSTREAM_DISPLAY_PACKET_NEWS_v1";
+  const CCR = "AUDRALIA_PLANET_DISPLAY_ONLY_CANVAS_AND_DOWNSTREAM_DISPLAY_PACKET_CCR_v1";
 
   const PREVIOUS_FILE_1_CONTRACT = "AUDRALIA_PLANET_FILE_1_SUBTERRANEAN_GRANDCHILD_TNT_v1";
   const PREVIOUS_FILE_2_CONTRACT = "AUDRALIA_PLANET_FILE_2_ABOVE_SEA_GRANDCHILD_TNT_v1";
@@ -45,6 +41,7 @@
   const TARGET = "/showroom/globe/audralia/planet/index.canvas.terrain.nodes.js";
   const PARENT_CANVAS = "/showroom/globe/audralia/planet/index.canvas.js";
   const API_NAME = "DGBAudraliaCanvasTerrainNodes";
+  const PRIMITIVE_PROTOCOL = "AUDRALIA_CANVAS_DISPLAY_PRIMITIVES_v1";
 
   const MACRO_ROWS = 16;
   const MACRO_COLUMNS = 16;
@@ -75,6 +72,7 @@
   let nodePacket = null;
   let childPackets = null;
   let canvasTerrainFeed = null;
+  let canvasDisplayPacket = null;
   let composing = false;
   let compositionCount = 0;
 
@@ -185,13 +183,7 @@
     const primary = influences[0];
     const secondary = influences[1];
 
-    const summitPressure = clamp(
-      primary.influence * 0.72 +
-      secondary.influence * 0.28,
-      0,
-      1
-    );
-
+    const summitPressure = clamp(primary.influence * 0.72 + secondary.influence * 0.28, 0, 1);
     const latitudePressure = clamp(1 - Math.abs(Math.sin(latitude)) * 0.18, 0, 1);
     const deterministicTexture = hash01(macroState + row * 17 + column * 31);
     const edgePressure = clamp(
@@ -240,13 +232,6 @@
       1
     );
 
-    const localSeed = makeLocalLatticeSeed(
-      macroState,
-      fibonacci,
-      primary.order,
-      secondary.order
-    );
-
     return Object.freeze({
       nodeId: "ATN-" + String(macroState).padStart(3, "0"),
       seatIndex,
@@ -263,7 +248,7 @@
         stateCount: LOCAL_STATE_COUNT,
         rows: LOCAL_LATTICE_ROWS,
         columns: LOCAL_LATTICE_COLUMNS,
-        seed: localSeed,
+        seed: makeLocalLatticeSeed(macroState, fibonacci, primary.order, secondary.order),
         representation: "DETERMINISTIC_16_BY_16_LOCAL_STATE_LATTICE"
       }),
       regionFamily: regionFamily(latitude, longitude, primary, row, column),
@@ -303,6 +288,7 @@
   function makeNodePacket(nodes) {
     const receipt = Object.freeze({
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       route: ROUTE,
       target: TARGET,
       parentCanvas: PARENT_CANVAS,
@@ -318,15 +304,16 @@
 
     return Object.freeze({
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       specOps: SPEC_OPS,
+      news: NEWS,
       ccr: CCR,
-      fullPlan: FULL_PLAN,
       previousFile1Contract: PREVIOUS_FILE_1_CONTRACT,
       previousFile2Contract: PREVIOUS_FILE_2_CONTRACT,
       previousFile3Contract: PREVIOUS_FILE_3_CONTRACT,
       route: ROUTE,
       target: TARGET,
-      role: "canvas-terrain-nodes-composer",
+      role: "canvas-terrain-nodes-display-packet-composer",
       parentCanvas: PARENT_CANVAS,
       macroRows: MACRO_ROWS,
       macroColumns: MACRO_COLUMNS,
@@ -413,11 +400,7 @@
       "AUDRALIA_CANVAS_TERRAIN_NODES_BOUNDARY_PACKET"
     ) || inactiveChildPacket("BOUNDARY");
 
-    return Object.freeze({
-      subterranean,
-      aboveSea,
-      boundary
-    });
+    return Object.freeze({ subterranean, aboveSea, boundary });
   }
 
   function mapCells(cells) {
@@ -445,7 +428,7 @@
   }
 
   function renderWeight(value, fallback = 0) {
-    return round(clamp(value, 0, 1), 6);
+    return round(clamp(Number.isFinite(Number(value)) ? value : fallback, 0, 1), 6);
   }
 
   function buildRenderableCells(nodes, children) {
@@ -458,9 +441,9 @@
       const above = aboveSeaMap.get(node.nodeId) || null;
       const boundary = boundaryMap.get(node.nodeId) || null;
 
-      const subterraneanPressure = sub ? clamp(sub.subterraneanPressure, 0, 1) : 0;
-      const elevation = above ? clamp(above.elevation, 0, 1) : 0;
-      const boundaryScore = boundary ? clamp(boundary.boundaryScore, 0, 1) : 0;
+      const subterraneanPressure = sub ? clamp(sub.subterraneanPressure, 0, 1) : node.subterraneanEligibility;
+      const elevation = above ? clamp(above.elevation, 0, 1) : node.aboveSeaEligibility * 0.42;
+      const boundaryScore = boundary ? clamp(boundary.boundaryScore, 0, 1) : node.boundaryEligibility * 0.55;
 
       const pressureRenderWeight = renderWeight(subterraneanPressure);
       const elevationRenderWeight = renderWeight(elevation);
@@ -482,12 +465,12 @@
         regionFamily: node.regionFamily,
         primarySummit: node.primarySummit,
         terrainPotential: node.terrainPotential,
-        subterraneanClass: sub ? String(sub.subterraneanClass || "UNCLASSIFIED_SUBTERRANEAN") : "SUBTERRANEAN_HELD",
+        subterraneanClass: sub ? String(sub.subterraneanClass || "UNCLASSIFIED_SUBTERRANEAN") : "SUBTERRANEAN_NODE_BASELINE",
         subterraneanPressure: round(subterraneanPressure),
         elevation: round(elevation),
-        elevationBand: above ? String(above.elevationBand || "ELEVATION_HELD") : "ELEVATION_HELD",
-        landform: above ? String(above.landform || "LANDFORM_HELD") : "LANDFORM_HELD",
-        boundaryClass: boundary ? String(boundary.boundaryClass || "BOUNDARY_HELD") : "BOUNDARY_HELD",
+        elevationBand: above ? String(above.elevationBand || "ELEVATION_NODE_BASELINE") : "ELEVATION_NODE_BASELINE",
+        landform: above ? String(above.landform || "LANDFORM_NODE_BASELINE") : "LANDFORM_NODE_BASELINE",
+        boundaryClass: boundary ? String(boundary.boundaryClass || "BOUNDARY_NODE_BASELINE") : "BOUNDARY_NODE_BASELINE",
         boundaryScore: round(boundaryScore),
         beachCandidate: Boolean(boundary && boundary.isBeachCandidate),
         islandFragmentCandidate: Boolean(boundary && boundary.isIslandFragmentCandidate),
@@ -554,6 +537,7 @@
 
     const receipt = Object.freeze({
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       route: ROUTE,
       parentCanvas: PARENT_CANVAS,
       feedRole: "canvas-safe-terrain-feed",
@@ -572,9 +556,7 @@
 
     return Object.freeze({
       contract: CONTRACT,
-      specOps: SPEC_OPS,
-      ccr: CCR,
-      fullPlan: FULL_PLAN,
+      previousContract: PREVIOUS_CONTRACT,
       route: ROUTE,
       parentCanvas: PARENT_CANVAS,
       feedRole: "canvas-safe-terrain-feed",
@@ -601,11 +583,251 @@
     });
   }
 
+  function colorForCell(cell, group) {
+    const terrain = clamp(cell.terrainRenderWeight, 0, 1);
+    const pressure = clamp(cell.pressureRenderWeight, 0, 1);
+    const elevation = clamp(cell.elevationRenderWeight, 0, 1);
+    const boundary = clamp(cell.boundaryRenderWeight, 0, 1);
+
+    if (group === "pressure") {
+      return `rgba(${Math.round(70 + pressure * 52)},${Math.round(54 + pressure * 38)},${Math.round(36 + pressure * 24)},1)`;
+    }
+
+    if (group === "elevation") {
+      return `rgba(${Math.round(156 + elevation * 72)},${Math.round(116 + elevation * 54)},${Math.round(66 + elevation * 38)},1)`;
+    }
+
+    if (group === "boundary") {
+      return `rgba(${Math.round(196 + boundary * 42)},${Math.round(165 + boundary * 38)},${Math.round(96 + boundary * 28)},1)`;
+    }
+
+    if (group === "texture") {
+      return `rgba(${Math.round(88 + terrain * 70)},${Math.round(74 + terrain * 50)},${Math.round(50 + terrain * 30)},1)`;
+    }
+
+    return `rgba(${Math.round(118 + terrain * 80)},${Math.round(91 + terrain * 58)},${Math.round(58 + terrain * 40)},1)`;
+  }
+
+  function modeWeight(body, surface, terrain, lattice, receipt) {
+    return Object.freeze({
+      body: round(body, 3),
+      surface: round(surface, 3),
+      terrain: round(terrain, 3),
+      lattice: round(lattice, 3),
+      receipt: round(receipt, 3)
+    });
+  }
+
+  function primitiveBase(type, id, group) {
+    return {
+      type,
+      id,
+      group,
+      activeWater: false,
+      hydration: false,
+      finalVisualPass: false
+    };
+  }
+
+  function makeDisplayPrimitives(feed) {
+    const cells = Array.isArray(feed && feed.renderableCells) ? feed.renderableCells : [];
+    const primitives = [];
+
+    for (const cell of cells) {
+      const terrain = clamp(cell.terrainRenderWeight, 0, 1);
+      const pressure = clamp(cell.pressureRenderWeight, 0, 1);
+      const elevation = clamp(cell.elevationRenderWeight, 0, 1);
+      const boundary = clamp(cell.boundaryRenderWeight, 0, 1);
+      const lat = round(cell.latitude, 6);
+      const lon = round(cell.longitude, 6);
+
+      primitives.push(Object.freeze({
+        ...primitiveBase("ellipse", cell.nodeId + "-baseMass", "baseMass"),
+        lat,
+        lon,
+        width: round(0.042 + terrain * 0.055),
+        height: round(0.024 + elevation * 0.045),
+        rotation: round(lon + pressure * 0.42),
+        fill: colorForCell(cell, "baseMass"),
+        stroke: "rgba(255,232,163,.18)",
+        lineWidth: round(0.35 + terrain * 0.45),
+        alpha: round(0.34 + terrain * 0.42),
+        modeWeight: modeWeight(0.30, 0.54, 0.86, 0.14, 0.34),
+        zWeight: round(0.48 + terrain * 0.34)
+      }));
+
+      primitives.push(Object.freeze({
+        ...primitiveBase("ellipse", cell.nodeId + "-pressure", "pressure"),
+        lat,
+        lon,
+        width: round(0.030 + pressure * 0.052),
+        height: round(0.016 + pressure * 0.030),
+        rotation: round(lon + pressure * 0.72),
+        fill: colorForCell(cell, "pressure"),
+        stroke: "rgba(43,31,22,.40)",
+        lineWidth: round(0.28 + pressure * 0.55),
+        alpha: round(0.18 + pressure * 0.46),
+        modeWeight: modeWeight(0.12, 0.36, 0.92, 0.08, 0.30),
+        zWeight: round(0.50 + pressure * 0.38)
+      }));
+
+      if (elevation >= 0.18) {
+        primitives.push(Object.freeze({
+          ...primitiveBase("textureStroke", cell.nodeId + "-elevation-texture", "elevation"),
+          lat,
+          lon,
+          length: round(0.032 + elevation * 0.060),
+          angle: round(lon + 0.72 + elevation * 0.32),
+          stroke: colorForCell(cell, "elevation"),
+          lineWidth: round(0.42 + elevation * 0.72),
+          alpha: round(0.22 + elevation * 0.48),
+          modeWeight: modeWeight(0.06, 0.44, 1.00, 0.10, 0.28),
+          zWeight: round(0.55 + elevation * 0.38)
+        }));
+      }
+
+      if (boundary >= 0.22) {
+        primitives.push(Object.freeze({
+          ...primitiveBase("ring", cell.nodeId + "-boundary-ring", "boundary"),
+          lat,
+          lon,
+          radiusX: round(0.014 + boundary * 0.040),
+          radiusY: round(0.006 + boundary * 0.018),
+          rotation: round(lon + 1.05),
+          stroke: colorForCell(cell, "boundary"),
+          lineWidth: round(0.36 + boundary * 0.50),
+          alpha: round(0.18 + boundary * 0.42),
+          modeWeight: modeWeight(0.05, 0.34, 0.94, 0.08, 0.22),
+          zWeight: round(0.48 + boundary * 0.38)
+        }));
+      }
+
+      if (cell.islandFragmentCandidate || boundary >= 0.68) {
+        primitives.push(Object.freeze({
+          ...primitiveBase("point", cell.nodeId + "-fragment-point", "texture"),
+          lat: round(lat + 0.010 * (hash01(cell.seatIndex + 9) - 0.5)),
+          lon: round(lon + 0.014 * (hash01(cell.seatIndex + 21) - 0.5)),
+          radius: round(0.004 + boundary * 0.011),
+          fill: colorForCell(cell, "texture"),
+          alpha: round(0.18 + boundary * 0.34),
+          modeWeight: modeWeight(0.04, 0.28, 0.72, 0.05, 0.22),
+          zWeight: round(0.44 + boundary * 0.30)
+        }));
+      }
+    }
+
+    const summitNodes = nodePacket.nodes
+      .filter((node) => node.summitPressure >= 0.34)
+      .sort((a, b) => b.summitPressure - a.summitPressure)
+      .slice(0, 18);
+
+    for (const node of summitNodes) {
+      primitives.push(Object.freeze({
+        ...primitiveBase("point", node.nodeId + "-summit-point", "elevation"),
+        lat: node.latitude,
+        lon: node.longitude,
+        radius: round(0.006 + node.summitPressure * 0.014),
+        fill: "rgba(238,199,112,1)",
+        alpha: round(0.22 + node.summitPressure * 0.44),
+        modeWeight: modeWeight(0.08, 0.42, 0.94, 0.10, 0.26),
+        zWeight: round(0.62 + node.summitPressure * 0.30)
+      }));
+    }
+
+    primitives.push(Object.freeze({
+      ...primitiveBase("ring", "receipt-sphere-ring", "receipt"),
+      lat: 0,
+      lon: 0,
+      radiusX: 1.018,
+      radiusY: 1.018,
+      rotation: 0,
+      stroke: "rgba(244,207,131,.48)",
+      lineWidth: 1.1,
+      alpha: 0.44,
+      modeWeight: modeWeight(0.00, 0.00, 0.08, 0.00, 1.00),
+      zWeight: 1
+    }));
+
+    return freezeArray(primitives);
+  }
+
+  function summarizePrimitives(primitives) {
+    const groups = {};
+
+    for (const primitive of primitives) {
+      groups[primitive.group] = (groups[primitive.group] || 0) + 1;
+    }
+
+    return Object.freeze({
+      primitiveCount: primitives.length,
+      primitiveGroups: Object.freeze({ ...groups }),
+      primitiveTypes: Object.freeze(primitives.reduce((acc, primitive) => {
+        acc[primitive.type] = (acc[primitive.type] || 0) + 1;
+        return acc;
+      }, {}))
+    });
+  }
+
+  function makeCanvasDisplayPacket(feed) {
+    const primitives = makeDisplayPrimitives(feed);
+    const primitiveSummary = summarizePrimitives(primitives);
+
+    const receipt = Object.freeze({
+      contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      route: ROUTE,
+      target: TARGET,
+      parentCanvas: PARENT_CANVAS,
+      displayRole: "canvas-ready-display-packet",
+      primitiveProtocol: PRIMITIVE_PROTOCOL,
+      primitiveCount: primitives.length,
+      primitiveGroups: primitiveSummary.primitiveGroups,
+      feedMode: feed.feedMode,
+      activeWater: false,
+      hydration: false,
+      finalVisualPass: false,
+      compositionCount
+    });
+
+    return Object.freeze({
+      contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      route: ROUTE,
+      target: TARGET,
+      parentCanvas: PARENT_CANVAS,
+      displayRole: "canvas-ready-display-packet",
+      primitiveProtocol: PRIMITIVE_PROTOCOL,
+      displayPacketActive: true,
+      feedMode: feed.feedMode,
+      terrainNodesActive: true,
+      subterraneanActive: Boolean(feed.subterraneanActive),
+      aboveSeaActive: Boolean(feed.aboveSeaActive),
+      boundaryActive: Boolean(feed.boundaryActive),
+      activeWater: false,
+      hydration: false,
+      oceans: false,
+      rivers: false,
+      lakes: false,
+      beachRendering: false,
+      finalVisualPass: false,
+      primitiveCount: primitives.length,
+      primitiveGroups: primitiveSummary.primitiveGroups,
+      primitiveTypes: primitiveSummary.primitiveTypes,
+      primitives,
+      summary: Object.freeze({
+        ...primitiveSummary,
+        terrainFeedSummary: feed.summary
+      }),
+      receipt
+    });
+  }
+
   function publishNodePacket() {
     window.AUDRALIA_CANVAS_TERRAIN_NODES_PACKET = nodePacket;
     window.AUDRALIA_CANVAS_TERRAIN_NODES_RECEIPT = nodePacket.receipt;
 
     safeDataset("audraliaCanvasTerrainNodesContract", CONTRACT);
+    safeDataset("audraliaCanvasTerrainNodesPreviousContract", PREVIOUS_CONTRACT);
     safeDataset("audraliaCanvasTerrainNodesActive", "true");
     safeDataset("audraliaCanvasTerrainNodeCount", nodePacket.nodes.length);
     safeDataset("audraliaCanvasTerrainLocalStateModel", nodePacket.localStateModel);
@@ -616,12 +838,18 @@
 
   function publishFeed() {
     window.AUDRALIA_CANVAS_TERRAIN_FEED_PACKET = canvasTerrainFeed;
+    window.AUDRALIA_CANVAS_DISPLAY_PACKET = canvasDisplayPacket;
+    window.AUDRALIA_CANVAS_DISPLAY_PACKET_RECEIPT = canvasDisplayPacket ? canvasDisplayPacket.receipt : null;
 
     safeDataset("audraliaCanvasTerrainFeedActive", canvasTerrainFeed ? "true" : "false");
     safeDataset("audraliaCanvasTerrainFeedMode", canvasTerrainFeed ? canvasTerrainFeed.feedMode : "UNBUILT");
     safeDataset("audraliaCanvasTerrainSubterraneanActive", canvasTerrainFeed && canvasTerrainFeed.subterraneanActive ? "true" : "false");
     safeDataset("audraliaCanvasTerrainAboveSeaActive", canvasTerrainFeed && canvasTerrainFeed.aboveSeaActive ? "true" : "false");
     safeDataset("audraliaCanvasTerrainBoundaryActive", canvasTerrainFeed && canvasTerrainFeed.boundaryActive ? "true" : "false");
+    safeDataset("audraliaCanvasDisplayPacketActive", canvasDisplayPacket ? "true" : "false");
+    safeDataset("audraliaCanvasDisplayPrimitiveProtocol", PRIMITIVE_PROTOCOL);
+    safeDataset("audraliaCanvasDisplayPrimitiveCount", canvasDisplayPacket ? canvasDisplayPacket.primitiveCount : 0);
+    safeDataset("audraliaCanvasDisplayPrimitiveGroups", canvasDisplayPacket ? Object.keys(canvasDisplayPacket.primitiveGroups).join(",") : "");
     safeDataset("audraliaCanvasTerrainActiveWater", "false");
     safeDataset("audraliaCanvasTerrainHydration", "false");
     safeDataset("audraliaCanvasTerrainFinalVisualPass", "false");
@@ -629,7 +857,7 @@
 
   function refreshComposition() {
     if (composing) {
-      return canvasTerrainFeed || status();
+      return canvasDisplayPacket || canvasTerrainFeed || status();
     }
 
     composing = true;
@@ -645,10 +873,11 @@
 
       childPackets = collectChildPackets();
       canvasTerrainFeed = makeCanvasTerrainFeed(childPackets);
+      canvasDisplayPacket = makeCanvasDisplayPacket(canvasTerrainFeed);
 
       publishFeed();
 
-      return canvasTerrainFeed;
+      return canvasDisplayPacket;
     } finally {
       composing = false;
     }
@@ -720,17 +949,22 @@
   }
 
   function getCanvasTerrainFeed() {
-    return canvasTerrainFeed || refreshComposition();
+    if (!canvasTerrainFeed) refreshComposition();
+    return canvasTerrainFeed;
+  }
+
+  function getCanvasDisplayPacket() {
+    if (!canvasDisplayPacket) refreshComposition();
+    return canvasDisplayPacket;
   }
 
   function status() {
-    const feed = canvasTerrainFeed;
-
     return Object.freeze({
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       specOps: SPEC_OPS,
+      news: NEWS,
       ccr: CCR,
-      fullPlan: FULL_PLAN,
       route: ROUTE,
       target: TARGET,
       parentCanvas: PARENT_CANVAS,
@@ -739,11 +973,15 @@
       nodeCount: nodePacket && nodePacket.nodes ? nodePacket.nodes.length : 0,
       localStateModel: nodePacket ? nodePacket.localStateModel : "UNBUILT",
       totalRepresentedLocalStates: TOTAL_REPRESENTED_LOCAL_STATES,
-      feedActive: Boolean(feed),
-      feedMode: feed ? feed.feedMode : "UNBUILT",
-      subterraneanActive: Boolean(feed && feed.subterraneanActive),
-      aboveSeaActive: Boolean(feed && feed.aboveSeaActive),
-      boundaryActive: Boolean(feed && feed.boundaryActive),
+      feedActive: Boolean(canvasTerrainFeed),
+      feedMode: canvasTerrainFeed ? canvasTerrainFeed.feedMode : "UNBUILT",
+      displayPacketActive: Boolean(canvasDisplayPacket),
+      primitiveProtocol: PRIMITIVE_PROTOCOL,
+      primitiveCount: canvasDisplayPacket ? canvasDisplayPacket.primitiveCount : 0,
+      primitiveGroups: canvasDisplayPacket ? canvasDisplayPacket.primitiveGroups : Object.freeze({}),
+      subterraneanActive: Boolean(canvasTerrainFeed && canvasTerrainFeed.subterraneanActive),
+      aboveSeaActive: Boolean(canvasTerrainFeed && canvasTerrainFeed.aboveSeaActive),
+      boundaryActive: Boolean(canvasTerrainFeed && canvasTerrainFeed.boundaryActive),
       compositionCount,
       composing,
       seaLevelDatum: true,
@@ -762,11 +1000,14 @@
 
   window[API_NAME] = Object.freeze({
     contract: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
+    primitiveProtocol: PRIMITIVE_PROTOCOL,
     getNodePacket,
     getNode,
     getLocalState,
     getChildPackets,
     getCanvasTerrainFeed,
+    getCanvasDisplayPacket,
     refreshComposition,
     status
   });

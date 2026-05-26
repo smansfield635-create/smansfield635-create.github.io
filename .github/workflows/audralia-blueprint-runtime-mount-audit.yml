@@ -1,0 +1,541 @@
+# TARGET FILE: /.github/workflows/audralia-blueprint-runtime-mount-audit.yml
+# TNT FULL-FILE REPLACEMENT
+# AUDRALIA_PLANET_BLUEPRINT_RUNTIME_MOUNT_BROWSER_AUDIT_WORKFLOW_TNT_v1
+#
+# Purpose:
+# Run a real Chromium browser audit against the live Audralia Planet route and
+# classify why the Manor Blueprint bubble is not visible after the HTML/static
+# asset deployment layer has already passed.
+#
+# Owns:
+# - browser runtime mount inspection
+# - console/page/network error capture
+# - Blueprint bootstrap status inspection
+# - Blueprint HUD status inspection
+# - bubble DOM/style/viewport/stacking inspection
+# - final CLASSIFICATION output
+#
+# Does not own:
+# - rewriting HTML
+# - rewriting Blueprint assets
+# - rewriting site.bootstrap.js
+# - rewriting planet canvas/UI files
+# - deploying Pages
+# - purging cache
+# - changing runtime behavior
+
+name: Audralia Blueprint Runtime Mount Audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/audralia-blueprint-runtime-mount-audit.yml"
+      - "showroom/globe/audralia/planet/index.html"
+      - "assets/site.bootstrap.js"
+      - "assets/manor-blueprint/manor.blueprint.registry.js"
+      - "assets/manor-blueprint/manor.blueprint.css"
+      - "assets/manor-blueprint/manor.blueprint.js"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: audralia-blueprint-runtime-mount-audit
+  cancel-in-progress: true
+
+jobs:
+  browser-runtime-mount-audit:
+    name: Browser Runtime Mount Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Prepare Node and Playwright
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Playwright Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "AUDIT_WORKFLOW_CONTRACT=AUDRALIA_PLANET_BLUEPRINT_RUNTIME_MOUNT_BROWSER_AUDIT_WORKFLOW_TNT_v1"
+
+          npm init -y
+          npm install playwright@latest
+          npx playwright install --with-deps chromium
+
+          echo "PASS: Playwright Chromium installed"
+
+      - name: Run browser runtime mount audit
+        id: runtime_audit
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          AUDIT_LOG="audralia-blueprint-runtime-mount-audit.log"
+          AUDIT_JSON="audralia-blueprint-runtime-mount-audit.json"
+
+          cat > audralia-blueprint-runtime-mount-audit.mjs <<'NODE'
+          import { chromium } from "playwright";
+          import fs from "node:fs";
+
+          const CONTRACT = "AUDRALIA_PLANET_BLUEPRINT_RUNTIME_MOUNT_BROWSER_AUDIT_WORKFLOW_TNT_v1";
+          const TARGET_ROUTE = "https://diamondgatebridge.com/showroom/globe/audralia/planet/";
+          const EXPECTED_HTML_MARKER = "AUDRALIA_PLANET_HTML_MANOR_BLUEPRINT_TEST_ROUTE_INSTALL_CACHE_CATCH_TNT_v2";
+          const EXPECTED_BOOTSTRAP_KEY = "MANOR_BLUEPRINT_GLOBAL_BOOTSTRAP_TNT_v1__AUDRALIA_PLANET_HTML_CACHE_CATCH_v2";
+          const BUBBLE_SELECTOR = "[data-dgb-blueprint-bubble]";
+          const OVERLAY_SELECTOR = "[data-dgb-blueprint-overlay]";
+
+          const consoleErrors = [];
+          const consoleWarnings = [];
+          const pageErrors = [];
+          const failedRequests = [];
+          const requiredFailedRequests = [];
+
+          function safeJson(value) {
+            try {
+              return JSON.parse(JSON.stringify(value));
+            } catch (_error) {
+              return null;
+            }
+          }
+
+          function includesRequiredAsset(url) {
+            return [
+              "site.bootstrap.js",
+              "manor.blueprint.registry.js",
+              "manor.blueprint.css",
+              "manor.blueprint.js",
+              "index.canvas.js",
+              "index.ui.js"
+            ].some((part) => String(url || "").includes(part));
+          }
+
+          function classify(state) {
+            if (state.requiredFailedRequests.length > 0) {
+              return "CLASS_F8_NETWORK_RUNTIME_FAILURE";
+            }
+
+            const hasFatalRuntimeSignal =
+              state.pageErrors.length > 0 ||
+              state.consoleErrors.some((entry) => {
+                const text = `${entry.text || ""} ${entry.location || ""}`.toLowerCase();
+                return (
+                  text.includes("manor.blueprint") ||
+                  text.includes("site.bootstrap") ||
+                  text.includes("uncaught") ||
+                  text.includes("syntaxerror") ||
+                  text.includes("referenceerror") ||
+                  text.includes("typeerror")
+                );
+              });
+
+            if (!state.bootstrapStatusExists) {
+              return hasFatalRuntimeSignal
+                ? "CLASS_F9_CONSOLE_FATAL_ERROR"
+                : "CLASS_F1_BOOTSTRAP_RUNTIME_DID_NOT_EXECUTE";
+            }
+
+            if (
+              !state.bootstrapStatus?.loadComplete ||
+              !state.bootstrapStatus?.jsLoaded ||
+              !state.bootstrapStatus?.blueprintApiPresent ||
+              !state.blueprintApiExists
+            ) {
+              return hasFatalRuntimeSignal
+                ? "CLASS_F9_CONSOLE_FATAL_ERROR"
+                : "CLASS_F2_BOOTSTRAP_LOADED_BUT_HUD_JS_NOT_READY";
+            }
+
+            if (!state.blueprintStatusExists || !state.bubbleExists || !state.blueprintStatus?.bubbleMounted) {
+              return hasFatalRuntimeSignal
+                ? "CLASS_F9_CONSOLE_FATAL_ERROR"
+                : "CLASS_F3_HUD_JS_EXECUTED_BUT_BUBBLE_NOT_MOUNTED";
+            }
+
+            if (!state.overlayExists || !state.blueprintStatus?.overlayMounted) {
+              return "CLASS_F7_OVERLAY_MOUNT_FAILURE";
+            }
+
+            const style = state.bubbleStyle || {};
+            const rect = state.bubbleRect || {};
+
+            const opacity = Number(style.opacity);
+            const hiddenByCss =
+              style.display === "none" ||
+              style.visibility === "hidden" ||
+              Number.isFinite(opacity) && opacity <= 0 ||
+              Number(rect.width || 0) <= 0 ||
+              Number(rect.height || 0) <= 0;
+
+            if (hiddenByCss) {
+              return "CLASS_F4_BUBBLE_MOUNTED_BUT_HIDDEN_BY_CSS";
+            }
+
+            const partiallyInsideViewport =
+              Number(rect.right || 0) > 0 &&
+              Number(rect.bottom || 0) > 0 &&
+              Number(rect.left || 0) < Number(state.viewport?.width || 0) &&
+              Number(rect.top || 0) < Number(state.viewport?.height || 0);
+
+            if (!partiallyInsideViewport) {
+              return "CLASS_F5_BUBBLE_MOUNTED_BUT_OFFSCREEN";
+            }
+
+            if (!state.elementFromPointHitsBubble) {
+              return "CLASS_F6_BUBBLE_MOUNTED_BUT_BEHIND_LAYER";
+            }
+
+            if (hasFatalRuntimeSignal) {
+              return "CLASS_F9_CONSOLE_FATAL_ERROR";
+            }
+
+            return "PASS_RUNTIME_MOUNT_VISIBLE";
+          }
+
+          const browser = await chromium.launch({
+            headless: true
+          });
+
+          const context = await browser.newContext({
+            viewport: { width: 1440, height: 1100 },
+            deviceScaleFactor: 1
+          });
+
+          const page = await context.newPage();
+
+          page.on("console", (message) => {
+            const entry = {
+              type: message.type(),
+              text: message.text(),
+              location: message.location()
+            };
+
+            if (message.type() === "error") {
+              consoleErrors.push(entry);
+            }
+
+            if (message.type() === "warning") {
+              consoleWarnings.push(entry);
+            }
+          });
+
+          page.on("pageerror", (error) => {
+            pageErrors.push({
+              message: error?.message || String(error),
+              stack: error?.stack || ""
+            });
+          });
+
+          page.on("requestfailed", (request) => {
+            const failure = request.failure();
+            const entry = {
+              url: request.url(),
+              method: request.method(),
+              resourceType: request.resourceType(),
+              errorText: failure?.errorText || ""
+            };
+
+            failedRequests.push(entry);
+
+            if (includesRequiredAsset(entry.url)) {
+              requiredFailedRequests.push(entry);
+            }
+          });
+
+          let gotoError = null;
+
+          try {
+            await page.goto(TARGET_ROUTE, {
+              waitUntil: "domcontentloaded",
+              timeout: 45000
+            });
+          } catch (error) {
+            gotoError = {
+              message: error?.message || String(error),
+              stack: error?.stack || ""
+            };
+          }
+
+          try {
+            await page.waitForLoadState("networkidle", { timeout: 15000 });
+          } catch (_error) {}
+
+          try {
+            await page.waitForSelector(BUBBLE_SELECTOR, {
+              state: "attached",
+              timeout: 8000
+            });
+          } catch (_error) {}
+
+          await page.waitForTimeout(2500);
+
+          const html = await page.content();
+
+          const runtimeState = await page.evaluate(({ BUBBLE_SELECTOR, OVERLAY_SELECTOR, EXPECTED_HTML_MARKER, EXPECTED_BOOTSTRAP_KEY }) => {
+            const bubble = document.querySelector(BUBBLE_SELECTOR);
+            const overlay = document.querySelector(OVERLAY_SELECTOR);
+
+            const bubbleCount = document.querySelectorAll(BUBBLE_SELECTOR).length;
+            const overlayCount = document.querySelectorAll(OVERLAY_SELECTOR).length;
+
+            const bootstrapStatus = window.DGB_MANOR_BLUEPRINT_BOOTSTRAP_STATUS || null;
+            const bootstrapReceipt = window.DGB_MANOR_BLUEPRINT_BOOTSTRAP_RECEIPT || null;
+            const siteBootstrapStatus = window.DGB_SITE_BOOTSTRAP_STATUS || null;
+            const blueprintStatus = window.DGB_MANOR_BLUEPRINT_STATUS || null;
+            const blueprintReceipt = window.DGB_MANOR_BLUEPRINT_RECEIPT || null;
+            const registry = window.DGB_MANOR_BLUEPRINT_REGISTRY || null;
+            const blueprintApi = window.DGB_MANOR_BLUEPRINT_API || null;
+
+            let bubbleStyle = null;
+            let bubbleRect = null;
+            let elementFromPointSummary = null;
+            let elementFromPointHitsBubble = false;
+
+            if (bubble) {
+              const computed = window.getComputedStyle(bubble);
+              const rect = bubble.getBoundingClientRect();
+
+              bubbleStyle = {
+                display: computed.display,
+                visibility: computed.visibility,
+                opacity: computed.opacity,
+                position: computed.position,
+                zIndex: computed.zIndex,
+                pointerEvents: computed.pointerEvents,
+                left: computed.left,
+                top: computed.top,
+                right: computed.right,
+                bottom: computed.bottom,
+                width: computed.width,
+                height: computed.height,
+                transform: computed.transform,
+                overflow: computed.overflow
+              };
+
+              bubbleRect = {
+                x: rect.x,
+                y: rect.y,
+                top: rect.top,
+                left: rect.left,
+                right: rect.right,
+                bottom: rect.bottom,
+                width: rect.width,
+                height: rect.height
+              };
+
+              const centerX = Math.max(0, Math.min(window.innerWidth - 1, rect.left + rect.width / 2));
+              const centerY = Math.max(0, Math.min(window.innerHeight - 1, rect.top + rect.height / 2));
+              const hit = document.elementFromPoint(centerX, centerY);
+
+              if (hit) {
+                elementFromPointSummary = {
+                  tagName: hit.tagName,
+                  id: hit.id || "",
+                  className: typeof hit.className === "string" ? hit.className : "",
+                  dataBubble: hit.hasAttribute("data-dgb-blueprint-bubble"),
+                  closestBubble: Boolean(hit.closest(BUBBLE_SELECTOR))
+                };
+
+                elementFromPointHitsBubble = hit === bubble || Boolean(hit.closest(BUBBLE_SELECTOR));
+              }
+            }
+
+            return {
+              url: document.location.href,
+              title: document.title,
+              readyState: document.readyState,
+              htmlHasExpectedMarker: document.documentElement.outerHTML.includes(EXPECTED_HTML_MARKER),
+              htmlHasBootstrapKey: document.documentElement.outerHTML.includes(EXPECTED_BOOTSTRAP_KEY) || document.body.outerHTML.includes(EXPECTED_BOOTSTRAP_KEY),
+              documentElementDataset: { ...document.documentElement.dataset },
+              bodyClassList: Array.from(document.body.classList),
+
+              bootstrapStatusExists: Boolean(bootstrapStatus),
+              bootstrapStatus,
+              bootstrapReceipt,
+              siteBootstrapStatus,
+
+              blueprintApiExists: Boolean(blueprintApi),
+              blueprintApiContract: blueprintApi?.contract || "",
+              blueprintStatusExists: Boolean(blueprintStatus),
+              blueprintStatus,
+              blueprintReceipt,
+
+              registryExists: Boolean(registry),
+              registryContract: registry?.contract || "",
+              registryRouteCount: Array.isArray(registry?.routes) ? registry.routes.length : null,
+
+              bubbleExists: Boolean(bubble),
+              overlayExists: Boolean(overlay),
+              bubbleCount,
+              overlayCount,
+              bubbleStyle,
+              bubbleRect,
+              elementFromPointSummary,
+              elementFromPointHitsBubble,
+
+              viewport: {
+                width: window.innerWidth,
+                height: window.innerHeight
+              }
+            };
+          }, {
+            BUBBLE_SELECTOR,
+            OVERLAY_SELECTOR,
+            EXPECTED_HTML_MARKER,
+            EXPECTED_BOOTSTRAP_KEY
+          });
+
+          const auditState = {
+            contract: CONTRACT,
+            targetRoute: TARGET_ROUTE,
+            gotoError,
+            htmlContainsExpectedMarker: html.includes(EXPECTED_HTML_MARKER),
+            htmlContainsBootstrapKey: html.includes(EXPECTED_BOOTSTRAP_KEY),
+            consoleErrors: safeJson(consoleErrors) || [],
+            consoleWarnings: safeJson(consoleWarnings) || [],
+            pageErrors: safeJson(pageErrors) || [],
+            failedRequests: safeJson(failedRequests) || [],
+            requiredFailedRequests: safeJson(requiredFailedRequests) || [],
+            ...safeJson(runtimeState)
+          };
+
+          const classification = classify(auditState);
+          auditState.classification = classification;
+
+          fs.writeFileSync("audralia-blueprint-runtime-mount-audit.json", JSON.stringify(auditState, null, 2));
+
+          console.log("══════════════════════════════════════════════════════════════════════");
+          console.log(CONTRACT);
+          console.log(`TARGET_ROUTE=${TARGET_ROUTE}`);
+          console.log("══════════════════════════════════════════════════════════════════════");
+          console.log("");
+          console.log("SECTION 1 — DOCUMENT STATE");
+          console.log("──────────────────────────────────────────────────────────────────────");
+          console.log(`URL=${auditState.url}`);
+          console.log(`TITLE=${auditState.title}`);
+          console.log(`READY_STATE=${auditState.readyState}`);
+          console.log(`HTML_HAS_EXPECTED_MARKER=${auditState.htmlContainsExpectedMarker}`);
+          console.log(`HTML_HAS_BOOTSTRAP_KEY=${auditState.htmlContainsBootstrapKey}`);
+          console.log("");
+          console.log("SECTION 2 — BOOTSTRAP / BLUEPRINT STATUS");
+          console.log("──────────────────────────────────────────────────────────────────────");
+          console.log(`BOOTSTRAP_STATUS_EXISTS=${auditState.bootstrapStatusExists}`);
+          console.log(`BOOTSTRAP_LOAD_COMPLETE=${auditState.bootstrapStatus?.loadComplete ?? "missing"}`);
+          console.log(`BOOTSTRAP_JS_LOADED=${auditState.bootstrapStatus?.jsLoaded ?? "missing"}`);
+          console.log(`BOOTSTRAP_BLUEPRINT_API_PRESENT=${auditState.bootstrapStatus?.blueprintApiPresent ?? "missing"}`);
+          console.log(`BLUEPRINT_API_EXISTS=${auditState.blueprintApiExists}`);
+          console.log(`BLUEPRINT_API_CONTRACT=${auditState.blueprintApiContract}`);
+          console.log(`BLUEPRINT_STATUS_EXISTS=${auditState.blueprintStatusExists}`);
+          console.log(`BLUEPRINT_ACTIVE=${auditState.blueprintStatus?.active ?? "missing"}`);
+          console.log(`BLUEPRINT_BUBBLE_MOUNTED=${auditState.blueprintStatus?.bubbleMounted ?? "missing"}`);
+          console.log(`BLUEPRINT_OVERLAY_MOUNTED=${auditState.blueprintStatus?.overlayMounted ?? "missing"}`);
+          console.log("");
+          console.log("SECTION 3 — DOM MOUNT STATE");
+          console.log("──────────────────────────────────────────────────────────────────────");
+          console.log(`BUBBLE_EXISTS=${auditState.bubbleExists}`);
+          console.log(`BUBBLE_COUNT=${auditState.bubbleCount}`);
+          console.log(`OVERLAY_EXISTS=${auditState.overlayExists}`);
+          console.log(`OVERLAY_COUNT=${auditState.overlayCount}`);
+          console.log("");
+          console.log("SECTION 4 — BUBBLE STYLE / RECT");
+          console.log("──────────────────────────────────────────────────────────────────────");
+          console.log(JSON.stringify({
+            bubbleStyle: auditState.bubbleStyle,
+            bubbleRect: auditState.bubbleRect,
+            viewport: auditState.viewport,
+            elementFromPointSummary: auditState.elementFromPointSummary,
+            elementFromPointHitsBubble: auditState.elementFromPointHitsBubble
+          }, null, 2));
+          console.log("");
+          console.log("SECTION 5 — ERRORS / FAILED REQUESTS");
+          console.log("──────────────────────────────────────────────────────────────────────");
+          console.log(`CONSOLE_ERROR_COUNT=${auditState.consoleErrors.length}`);
+          console.log(`CONSOLE_WARNING_COUNT=${auditState.consoleWarnings.length}`);
+          console.log(`PAGE_ERROR_COUNT=${auditState.pageErrors.length}`);
+          console.log(`FAILED_REQUEST_COUNT=${auditState.failedRequests.length}`);
+          console.log(`REQUIRED_FAILED_REQUEST_COUNT=${auditState.requiredFailedRequests.length}`);
+          console.log("");
+          console.log("SECTION 6 — STRUCTURED JSON");
+          console.log("──────────────────────────────────────────────────────────────────────");
+          console.log(JSON.stringify(auditState, null, 2));
+          console.log("");
+          console.log(`CLASSIFICATION=${classification}`);
+          console.log("AUDIT_STATUS=COMPLETE");
+
+          await browser.close();
+
+          if (classification !== "PASS_RUNTIME_MOUNT_VISIBLE") {
+            process.exitCode = 0;
+          }
+          NODE
+
+          node audralia-blueprint-runtime-mount-audit.mjs | tee "${AUDIT_LOG}"
+
+          cp audralia-blueprint-runtime-mount-audit.json "${AUDIT_JSON}"
+
+          CLASSIFICATION="$(grep -E '^CLASSIFICATION=' "${AUDIT_LOG}" | tail -n 1 | cut -d '=' -f 2- || true)"
+
+          if [ -z "${CLASSIFICATION}" ]; then
+            CLASSIFICATION="CLASS_F_UNKNOWN_RUNTIME_FAILURE"
+          fi
+
+          echo "classification=${CLASSIFICATION}" >> "$GITHUB_OUTPUT"
+          echo "AUDIT_CLASSIFICATION=${CLASSIFICATION}"
+
+      - name: Write runtime audit summary
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          AUDIT_LOG="audralia-blueprint-runtime-mount-audit.log"
+          AUDIT_JSON="audralia-blueprint-runtime-mount-audit.json"
+          CLASSIFICATION="${{ steps.runtime_audit.outputs.classification }}"
+
+          {
+            echo "# Audralia Blueprint Runtime Mount Audit"
+            echo ""
+            echo "**Workflow contract:** \`AUDRALIA_PLANET_BLUEPRINT_RUNTIME_MOUNT_BROWSER_AUDIT_WORKFLOW_TNT_v1\`"
+            echo ""
+            echo "**Target route:** \`https://diamondgatebridge.com/showroom/globe/audralia/planet/\`"
+            echo ""
+            echo "**Classification:** \`${CLASSIFICATION:-CLASS_F_UNKNOWN_RUNTIME_FAILURE}\`"
+            echo ""
+            echo "## Raw audit output"
+            echo ""
+            echo '```text'
+            if [ -f "${AUDIT_LOG}" ]; then
+              cat "${AUDIT_LOG}"
+            else
+              echo "Audit log was not created."
+            fi
+            echo '```'
+            echo ""
+            echo "## Structured JSON"
+            echo ""
+            echo '```json'
+            if [ -f "${AUDIT_JSON}" ]; then
+              cat "${AUDIT_JSON}"
+            else
+              echo "{}"
+            fi
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload runtime audit artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audralia-blueprint-runtime-mount-audit
+          path: |
+            audralia-blueprint-runtime-mount-audit.log
+            audralia-blueprint-runtime-mount-audit.json
+          if-no-files-found: warn

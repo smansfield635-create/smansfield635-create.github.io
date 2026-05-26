@@ -277,4 +277,423 @@
     const ridgeSignal = clamp(
       sub.faultPressure * 0.42 +
       sub.crustStress * 0.22 +
-      node.
+      node.terrainPotential * 0.18 +
+      (node.column % 4 === 0 || node.row % 4 === 0 ? 0.12 : 0.035),
+      0,
+      1
+    );
+
+    const basinSignal = clamp(
+      sub.basinPotential * 0.45 +
+      sub.collapsePotential * 0.24 +
+      (1 - elevation) * 0.18 +
+      node.boundaryEligibility * 0.10,
+      0,
+      1
+    );
+
+    const plateauSignal = clamp(
+      (elevation >= 0.50 && elevation <= 0.74 ? 0.32 : 0.08) +
+      node.terrainPotential * 0.24 +
+      sub.compression * 0.18 +
+      (1 - Math.abs(elevation - 0.62)) * 0.13,
+      0,
+      1
+    );
+
+    const escarpmentSignal = clamp(
+      sub.faultPressure * 0.36 +
+      sub.crustStress * 0.22 +
+      node.boundaryEligibility * 0.14 +
+      (node.row % 4 === 0 || node.column % 4 === 0 ? 0.18 : 0.04),
+      0,
+      1
+    );
+
+    const summitEmergenceSignal = clamp(
+      node.summitPressure * 0.32 +
+      sub.upliftPotential * 0.30 +
+      sub.buriedMassForce * 0.16 +
+      mountainSignal * 0.15 +
+      summitModifier(node.primarySummit),
+      0,
+      1
+    );
+
+    return Object.freeze({
+      mountainSignal: round(mountainSignal),
+      ridgeSignal: round(ridgeSignal),
+      basinSignal: round(basinSignal),
+      plateauSignal: round(plateauSignal),
+      escarpmentSignal: round(escarpmentSignal),
+      summitEmergenceSignal: round(summitEmergenceSignal)
+    });
+  }
+
+  function computeCell(rawNode, rawSubterranean, fallbackIndex, mode) {
+    const node = normalizeNode(rawNode, fallbackIndex);
+    const sub = normalizeSubterranean(rawSubterranean);
+    const seed = node.localLattice.seed;
+    const seedNoise = hash01(seed + node.seatIndex * 11 + 211);
+    const shelfNoise = hash01(seed + node.row * 37 + node.column * 41 + 607);
+
+    const nodeBase = clamp(
+      0.12 +
+      node.aboveSeaEligibility * 0.28 +
+      node.terrainPotential * 0.21 +
+      node.summitPressure * 0.15 +
+      positionElevation(node) +
+      seedNoise * 0.07,
+      0,
+      1
+    );
+
+    const subterraneanLift =
+      mode === "NODE_PLUS_SUBTERRANEAN"
+        ? (
+          sub.upliftPotential * 0.18 +
+          sub.subterraneanPressure * 0.10 +
+          sub.buriedMassForce * 0.10 -
+          sub.collapsePotential * 0.13 -
+          sub.basinPotential * 0.07
+        )
+        : (
+          node.summitPressure * 0.07 +
+          node.terrainPotential * 0.05 -
+          node.boundaryEligibility * 0.035
+        );
+
+    const datumShelfAdjustment = node.boundaryEligibility > 0.58 ? -0.025 + shelfNoise * 0.035 : shelfNoise * 0.018;
+
+    const elevation = clamp(
+      nodeBase +
+      subterraneanLift +
+      summitModifier(node.primarySummit) +
+      datumShelfAdjustment,
+      0,
+      1
+    );
+
+    const signals = computeSignals(node, sub, elevation, seedNoise);
+    const band = elevationBand(elevation);
+    const landform = classifyLandform(node, sub, elevation, signals);
+
+    return Object.freeze({
+      nodeId: node.nodeId,
+      seatIndex: node.seatIndex,
+      row: node.row,
+      column: node.column,
+      regionFamily: node.regionFamily,
+      primarySummit: node.primarySummit,
+      elevation: round(elevation),
+      seaLevelDatum: true,
+      seaLevelDatumValue: SEA_LEVEL_DATUM,
+      aboveSeaDatum: elevation >= SEA_LEVEL_DATUM,
+      elevationBand: band,
+      landform,
+      mountainSignal: signals.mountainSignal,
+      ridgeSignal: signals.ridgeSignal,
+      basinSignal: signals.basinSignal,
+      plateauSignal: signals.plateauSignal,
+      escarpmentSignal: signals.escarpmentSignal,
+      summitEmergenceSignal: signals.summitEmergenceSignal,
+      computationMode: mode,
+      subterraneanClass: sub.subterraneanClass,
+      dryTerrain: true,
+      activeWater: false,
+      hydration: false,
+      oceans: false,
+      rivers: false,
+      lakes: false,
+      beachRendering: false,
+      renders: false,
+      finalVisualPass: false
+    });
+  }
+
+  function summarize(cells) {
+    const count = Math.max(1, cells.length);
+    const totals = cells.reduce((acc, cell) => {
+      acc.elevation += cell.elevation;
+      acc.mountainSignal += cell.mountainSignal;
+      acc.ridgeSignal += cell.ridgeSignal;
+      acc.basinSignal += cell.basinSignal;
+      acc.plateauSignal += cell.plateauSignal;
+      acc.escarpmentSignal += cell.escarpmentSignal;
+      acc.summitEmergenceSignal += cell.summitEmergenceSignal;
+
+      if (cell.aboveSeaDatum) acc.aboveSeaDatumCount += 1;
+      else acc.belowDatumDryCount += 1;
+
+      acc.elevationBandCounts[cell.elevationBand] = (acc.elevationBandCounts[cell.elevationBand] || 0) + 1;
+      acc.landformCounts[cell.landform] = (acc.landformCounts[cell.landform] || 0) + 1;
+
+      acc.minElevation = Math.min(acc.minElevation, cell.elevation);
+      acc.maxElevation = Math.max(acc.maxElevation, cell.elevation);
+
+      return acc;
+    }, {
+      elevation: 0,
+      mountainSignal: 0,
+      ridgeSignal: 0,
+      basinSignal: 0,
+      plateauSignal: 0,
+      escarpmentSignal: 0,
+      summitEmergenceSignal: 0,
+      aboveSeaDatumCount: 0,
+      belowDatumDryCount: 0,
+      minElevation: cells.length ? 1 : 0,
+      maxElevation: 0,
+      elevationBandCounts: {},
+      landformCounts: {}
+    });
+
+    return Object.freeze({
+      cellCount: cells.length,
+      seaLevelDatum: true,
+      seaLevelDatumValue: SEA_LEVEL_DATUM,
+      averageElevation: round(totals.elevation / count),
+      minElevation: round(totals.minElevation),
+      maxElevation: round(totals.maxElevation),
+      averageMountainSignal: round(totals.mountainSignal / count),
+      averageRidgeSignal: round(totals.ridgeSignal / count),
+      averageBasinSignal: round(totals.basinSignal / count),
+      averagePlateauSignal: round(totals.plateauSignal / count),
+      averageEscarpmentSignal: round(totals.escarpmentSignal / count),
+      averageSummitEmergenceSignal: round(totals.summitEmergenceSignal / count),
+      aboveSeaDatumCount: totals.aboveSeaDatumCount,
+      belowDatumDryCount: totals.belowDatumDryCount,
+      elevationBandCounts: Object.freeze({ ...totals.elevationBandCounts }),
+      landformCounts: Object.freeze({ ...totals.landformCounts })
+    });
+  }
+
+  function inactivePacket(reason) {
+    const receipt = Object.freeze({
+      contract: CONTRACT,
+      route: ROUTE,
+      target: TARGET,
+      active: false,
+      dependencyStatus: reason,
+      subterraneanDependency: "UNRESOLVED",
+      computationMode: "INACTIVE",
+      aboveSeaActive: false,
+      nodeCount: 0,
+      activeWater: false,
+      hydration: false,
+      beachRendering: false,
+      finalVisualPass: false
+    });
+
+    return Object.freeze({
+      contract: CONTRACT,
+      specOps: SPEC_OPS,
+      ccr: CCR,
+      fullPlan: FULL_PLAN,
+      previousFileContract: PREVIOUS_FILE_CONTRACT,
+      route: ROUTE,
+      target: TARGET,
+      role: "above-sea-dry-terrain-grandchild",
+      authorityPosition: "canvas->terrain-nodes->above-sea",
+      buildPosition: "2_of_5",
+      parentNodeFile: FUTURE_NODE_CHILD,
+      subterraneanFile: SUBTERRANEAN_FILE,
+      parentNodeContract: "WAITING_FOR_NODE_COMPOSER",
+      subterraneanContract: "UNRESOLVED",
+      active: false,
+      dependencyStatus: reason,
+      subterraneanDependency: "UNRESOLVED",
+      computationMode: "INACTIVE",
+      aboveSeaActive: false,
+      nodeCount: 0,
+      seaLevelDatum: true,
+      seaLevelDatumOnly: true,
+      seaLevelDatumValue: SEA_LEVEL_DATUM,
+      dryTerrain: true,
+      activeWater: false,
+      hydration: false,
+      oceans: false,
+      rivers: false,
+      lakes: false,
+      beachRendering: false,
+      renders: false,
+      finalVisualPass: false,
+      summary: summarize([]),
+      cells: Object.freeze([]),
+      receipt
+    });
+  }
+
+  function activePacket(nodePacket, subterraneanPacket) {
+    const nodes = Array.isArray(nodePacket.nodes) ? nodePacket.nodes : [];
+    const subterraneanConnected = Boolean(
+      subterraneanPacket &&
+      subterraneanPacket.active &&
+      Array.isArray(subterraneanPacket.cells)
+    );
+
+    const subMap = buildSubterraneanMap(subterraneanPacket);
+    const computationMode = subterraneanConnected ? "NODE_PLUS_SUBTERRANEAN" : "NODE_ONLY_FALLBACK";
+    const subterraneanDependency = subterraneanConnected ? "CONNECTED" : "MISSING_OR_INACTIVE";
+    const cells = freezeArray(nodes.map((node, index) => {
+      const normalized = normalizeNode(node, index);
+      return computeCell(normalized, subMap.get(normalized.nodeId), index, computationMode);
+    }));
+
+    const receipt = Object.freeze({
+      contract: CONTRACT,
+      route: ROUTE,
+      target: TARGET,
+      active: true,
+      dependencyStatus: "NODE_PACKET_CONNECTED",
+      subterraneanDependency,
+      computationMode,
+      parentNodeContract: String(nodePacket.contract || "NODE_PACKET_CONTRACT_UNSPECIFIED"),
+      subterraneanContract: subterraneanConnected
+        ? String(subterraneanPacket.contract || "SUBTERRANEAN_CONTRACT_UNSPECIFIED")
+        : "MISSING_OR_INACTIVE",
+      aboveSeaActive: true,
+      nodeCount: nodes.length,
+      activeWater: false,
+      hydration: false,
+      beachRendering: false,
+      finalVisualPass: false
+    });
+
+    return Object.freeze({
+      contract: CONTRACT,
+      specOps: SPEC_OPS,
+      ccr: CCR,
+      fullPlan: FULL_PLAN,
+      previousFileContract: PREVIOUS_FILE_CONTRACT,
+      route: ROUTE,
+      target: TARGET,
+      role: "above-sea-dry-terrain-grandchild",
+      authorityPosition: "canvas->terrain-nodes->above-sea",
+      buildPosition: "2_of_5",
+      parentNodeFile: FUTURE_NODE_CHILD,
+      subterraneanFile: SUBTERRANEAN_FILE,
+      parentNodeContract: String(nodePacket.contract || "NODE_PACKET_CONTRACT_UNSPECIFIED"),
+      subterraneanContract: subterraneanConnected
+        ? String(subterraneanPacket.contract || "SUBTERRANEAN_CONTRACT_UNSPECIFIED")
+        : "MISSING_OR_INACTIVE",
+      active: true,
+      dependencyStatus: "NODE_PACKET_CONNECTED",
+      subterraneanDependency,
+      computationMode,
+      aboveSeaActive: true,
+      nodeCount: nodes.length,
+      seaLevelDatum: true,
+      seaLevelDatumOnly: true,
+      seaLevelDatumValue: SEA_LEVEL_DATUM,
+      dryTerrain: true,
+      activeWater: false,
+      hydration: false,
+      oceans: false,
+      rivers: false,
+      lakes: false,
+      beachRendering: false,
+      renders: false,
+      finalVisualPass: false,
+      summary: summarize(cells),
+      cells,
+      receipt
+    });
+  }
+
+  function buildPacket() {
+    const nodePacket = getNodePacket();
+
+    if (!nodePacket) {
+      return inactivePacket("WAITING_FOR_NODE_COMPOSER");
+    }
+
+    if (!Array.isArray(nodePacket.nodes)) {
+      return inactivePacket("NODE_PACKET_INVALID");
+    }
+
+    if (!nodePacket.nodes.length) {
+      return inactivePacket("NODE_PACKET_EMPTY");
+    }
+
+    return activePacket(nodePacket, getSubterraneanPacket());
+  }
+
+  let packet = buildPacket();
+
+  function publish() {
+    window.AUDRALIA_CANVAS_TERRAIN_NODES_ABOVE_SEA_PACKET = packet;
+    window.AUDRALIA_CANVAS_TERRAIN_NODES_ABOVE_SEA_RECEIPT = packet.receipt;
+
+    safeDataset("audraliaCanvasTerrainNodesAboveSeaContract", CONTRACT);
+    safeDataset("audraliaCanvasTerrainNodesAboveSeaActive", packet.active ? "true" : "false");
+    safeDataset("audraliaCanvasTerrainNodesAboveSeaDependency", packet.dependencyStatus);
+    safeDataset("audraliaCanvasTerrainNodesAboveSeaSubterraneanDependency", packet.subterraneanDependency);
+    safeDataset("audraliaCanvasTerrainActiveWater", "false");
+    safeDataset("audraliaCanvasTerrainHydration", "false");
+    safeDataset("audraliaCanvasTerrainFinalVisualPass", "false");
+  }
+
+  function refresh() {
+    const subterraneanApi = window.DGBAudraliaCanvasTerrainNodesSubterranean;
+
+    if (subterraneanApi && typeof subterraneanApi.refresh === "function") {
+      try {
+        subterraneanApi.refresh();
+      } catch (_error) {}
+    }
+
+    packet = buildPacket();
+    publish();
+    return packet;
+  }
+
+  function getPacket() {
+    return packet;
+  }
+
+  function getCell(nodeId) {
+    const id = String(nodeId || "");
+    return packet.cells.find((cell) => cell.nodeId === id) || null;
+  }
+
+  function status() {
+    return Object.freeze({
+      contract: CONTRACT,
+      specOps: SPEC_OPS,
+      ccr: CCR,
+      fullPlan: FULL_PLAN,
+      previousFileContract: PREVIOUS_FILE_CONTRACT,
+      route: ROUTE,
+      target: TARGET,
+      active: Boolean(packet.active),
+      dependencyStatus: packet.dependencyStatus,
+      subterraneanDependency: packet.subterraneanDependency,
+      computationMode: packet.computationMode,
+      aboveSeaActive: Boolean(packet.aboveSeaActive),
+      nodeCount: packet.nodeCount || 0,
+      cellCount: packet.cells.length,
+      seaLevelDatum: true,
+      seaLevelDatumOnly: true,
+      dryTerrain: true,
+      activeWater: false,
+      hydration: false,
+      oceans: false,
+      rivers: false,
+      lakes: false,
+      beachRendering: false,
+      renders: false,
+      finalVisualPass: false
+    });
+  }
+
+  window[API_NAME] = Object.freeze({
+    contract: CONTRACT,
+    getPacket,
+    getCell,
+    refresh,
+    status
+  });
+
+  publish();
+})();

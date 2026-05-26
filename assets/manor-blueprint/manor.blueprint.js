@@ -1,25 +1,29 @@
 // TARGET FILE: /assets/manor-blueprint/manor.blueprint.js
 // TNT FULL-FILE REPLACEMENT
-// MANOR_BLUEPRINT_GLOBAL_JOYSTICK_SCROLL_SITEWIDE_JS_TNT_v1
+// MANOR_BLUEPRINT_JOYSTICK_SCROLL_FORCE_40_PERCENT_INCREASE_JS_TNT_v1
 //
 // Purpose:
-// Renew the global Manor Blueprint HUD so the map bubble is sitewide,
-// draggable through the full visible viewport, and usable as a mobile
-// joystick-scroll control.
+// Preserve the Manor Blueprint HUD while increasing joystick-scroll force by
+// approximately 40% when the map bubble is held near the top or bottom screen
+// zones.
 //
 // Compatibility API contract preserved:
 // MANOR_BLUEPRINT_FIXED_DRAGGABLE_BUBBLE_FULLSCREEN_MAP_INSTRUCTIONS_TOGGLE_JS_TNT_v1
 //
-// Previous behavior contract:
+// Previous runtime contract:
+// MANOR_BLUEPRINT_GLOBAL_JOYSTICK_SCROLL_SITEWIDE_JS_TNT_v1
+//
+// Legacy behavior contract:
 // MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_POSITION_RENEWAL_TNT_v1
 //
 // Owns:
-// - global map bubble
+// - map bubble
 // - full-screen overlay
 // - map/instructions lens
 // - registry consumption
 // - full-viewport drag
 // - joystick scroll while dragging
+// - joystick scroll force multiplier
 // - position persistence and repair
 // - status / receipt globals
 //
@@ -36,9 +40,10 @@
 
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CONTRACT = "MANOR_BLUEPRINT_GLOBAL_JOYSTICK_SCROLL_SITEWIDE_JS_TNT_v1";
+  const CONTRACT = "MANOR_BLUEPRINT_JOYSTICK_SCROLL_FORCE_40_PERCENT_INCREASE_JS_TNT_v1";
   const API_CONTRACT = "MANOR_BLUEPRINT_FIXED_DRAGGABLE_BUBBLE_FULLSCREEN_MAP_INSTRUCTIONS_TOGGLE_JS_TNT_v1";
-  const PREVIOUS_CONTRACT = "MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_POSITION_RENEWAL_TNT_v1";
+  const PREVIOUS_CONTRACT = "MANOR_BLUEPRINT_GLOBAL_JOYSTICK_SCROLL_SITEWIDE_JS_TNT_v1";
+  const LEGACY_CONTRACT = "MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_POSITION_RENEWAL_TNT_v1";
 
   const STATUS_GLOBAL = "DGB_MANOR_BLUEPRINT_STATUS";
   const RECEIPT_GLOBAL = "DGB_MANOR_BLUEPRINT_RECEIPT";
@@ -52,6 +57,8 @@
   const TAP_MOVE_THRESHOLD = 6;
   const MIN_SCROLL_SPEED = 4;
   const MAX_SCROLL_SPEED = 32;
+  const JOYSTICK_SCROLL_FORCE_MULTIPLIER = 1.4;
+  const JOYSTICK_SCROLL_FORCE_INCREASE_PERCENT = 40;
   const MOBILE_BREAKPOINT = 760;
 
   let bubble = null;
@@ -198,7 +205,13 @@
 
   function storedPositionAllowed(stored) {
     if (!stored) return false;
-    if (stored.contract !== CONTRACT) return false;
+
+    const acceptedContract =
+      stored.contract === CONTRACT ||
+      stored.contract === PREVIOUS_CONTRACT ||
+      stored.contract === LEGACY_CONTRACT;
+
+    if (!acceptedContract) return false;
 
     const clamped = clampPosition(stored);
     return !clamped.clamped;
@@ -211,8 +224,11 @@
         y: Math.round(pos.y),
         contract: CONTRACT,
         previousContract: PREVIOUS_CONTRACT,
+        legacyContract: LEGACY_CONTRACT,
         fullViewportDrag: true,
         joystickScrollActive: true,
+        joystickScrollForceMultiplier: JOYSTICK_SCROLL_FORCE_MULTIPLIER,
+        joystickScrollForceIncreasePercent: JOYSTICK_SCROLL_FORCE_INCREASE_PERCENT,
         time: nowIso()
       }));
     } catch (_error) {}
@@ -323,9 +339,9 @@
     const source = Array.isArray(reg?.instructions) ? reg.instructions : [
       { title: "Tap", body: "Tap the bubble to open or close the Manor Blueprint route map." },
       { title: "Drag", body: "Drag the bubble anywhere inside the visible screen." },
-      { title: "Joystick Scroll", body: "While dragging, pull near the bottom edge to scroll down or near the top edge to scroll up." },
+      { title: "Joystick Scroll", body: "While dragging, pull near the bottom edge to scroll down or near the top edge to scroll up. This pass increases scroll force by 40%." },
       { title: "Reset", body: "Use Reset Bubble to restore the upper-right safe anchor." },
-      { title: "Global HUD", body: "The bubble is loaded globally through the site bootstrap chain." }
+      { title: "HUD", body: "The bubble loads wherever the Manor Blueprint runtime is installed." }
     ];
 
     return source.map((item, index) => ({
@@ -368,6 +384,7 @@
     bubble.setAttribute("data-api-contract", API_CONTRACT);
     bubble.setAttribute("data-full-viewport-drag", "true");
     bubble.setAttribute("data-joystick-scroll", "true");
+    bubble.setAttribute("data-joystick-scroll-force-multiplier", String(JOYSTICK_SCROLL_FORCE_MULTIPLIER));
     bubble.innerHTML = `
       <span class="dgb-blueprint-bubble-label dgb-blueprint-bubble__label">
         <strong>Map</strong>
@@ -518,10 +535,10 @@
     overlay.innerHTML = `
       <div class="dgb-bp-topbar">
         <div class="dgb-bp-titleblock">
-          <div class="dgb-bp-kicker">Manor Blueprint · Global HUD</div>
+          <div class="dgb-bp-kicker">Manor Blueprint · Route HUD</div>
           <h2 class="dgb-bp-title">${state.activeLens === "map" ? "Route Map" : "Instructions"}</h2>
           <p class="dgb-bp-subtitle">
-            The map bubble is now a full-viewport drag control with mobile joystick-scroll behavior.
+            The map bubble is a full-viewport drag control with joystick-scroll behavior. Current scroll force is increased by 40%.
           </p>
         </div>
         <button class="dgb-bp-close" type="button" data-dgb-close aria-label="Close Manor Blueprint">×</button>
@@ -605,6 +622,12 @@
     applyPosition(defaultPosition(), "reset", true);
   }
 
+  function joystickSpeedFromPressure(pressure) {
+    const cleanPressure = Math.max(0, Math.min(1, Number(pressure) || 0));
+    const baseSpeed = MIN_SCROLL_SPEED + (MAX_SCROLL_SPEED - MIN_SCROLL_SPEED) * cleanPressure;
+    return baseSpeed * JOYSTICK_SCROLL_FORCE_MULTIPLIER;
+  }
+
   function joystickMetrics(clientY) {
     const v = viewport();
     const topZone = Math.max(96, Math.floor(v.height * 0.18));
@@ -615,7 +638,7 @@
       const pressure = Math.max(0, Math.min(1, (topZone - y) / topZone));
       return {
         direction: "up",
-        speed: MIN_SCROLL_SPEED + (MAX_SCROLL_SPEED - MIN_SCROLL_SPEED) * pressure
+        speed: joystickSpeedFromPressure(pressure)
       };
     }
 
@@ -623,7 +646,7 @@
       const pressure = Math.max(0, Math.min(1, (y - (v.height - bottomZone)) / bottomZone));
       return {
         direction: "down",
-        speed: MIN_SCROLL_SPEED + (MAX_SCROLL_SPEED - MIN_SCROLL_SPEED) * pressure
+        speed: joystickSpeedFromPressure(pressure)
       };
     }
 
@@ -754,6 +777,10 @@
     bubble.addEventListener("lostpointercapture", release, { passive: false });
   }
 
+  function round2(value) {
+    return Math.round(Number(value || 0) * 100) / 100;
+  }
+
   function publishStatus() {
     const v = viewport();
     const m = safeMargins();
@@ -764,6 +791,7 @@
     const payload = {
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
+      legacyContract: LEGACY_CONTRACT,
       apiContract: API_CONTRACT,
 
       active: true,
@@ -778,7 +806,13 @@
       joystickScrollActive: true,
       joystickScrolling: state.joystickActive,
       joystickDirection: state.joystickDirection,
-      joystickSpeed: Math.round(state.joystickSpeed * 100) / 100,
+      joystickSpeed: round2(state.joystickSpeed),
+      joystickScrollForceMultiplier: JOYSTICK_SCROLL_FORCE_MULTIPLIER,
+      joystickScrollForceIncreasePercent: JOYSTICK_SCROLL_FORCE_INCREASE_PERCENT,
+      joystickMinScrollSpeed: MIN_SCROLL_SPEED,
+      joystickMaxScrollSpeed: MAX_SCROLL_SPEED,
+      joystickEffectiveMinScrollSpeed: round2(MIN_SCROLL_SPEED * JOYSTICK_SCROLL_FORCE_MULTIPLIER),
+      joystickEffectiveMaxScrollSpeed: round2(MAX_SCROLL_SPEED * JOYSTICK_SCROLL_FORCE_MULTIPLIER),
 
       activeLens: state.activeLens,
       currentPath: normalizePath(window.location.pathname || "/"),
@@ -839,8 +873,11 @@
       document.documentElement.dataset.manorBlueprintActive = "true";
       document.documentElement.dataset.manorBlueprintContract = CONTRACT;
       document.documentElement.dataset.manorBlueprintPreviousContract = PREVIOUS_CONTRACT;
+      document.documentElement.dataset.manorBlueprintLegacyContract = LEGACY_CONTRACT;
       document.documentElement.dataset.manorBlueprintFullViewportDrag = "true";
       document.documentElement.dataset.manorBlueprintJoystickScroll = "true";
+      document.documentElement.dataset.manorBlueprintJoystickScrollForceMultiplier = String(JOYSTICK_SCROLL_FORCE_MULTIPLIER);
+      document.documentElement.dataset.manorBlueprintJoystickScrollForceIncreasePercent = String(JOYSTICK_SCROLL_FORCE_INCREASE_PERCENT);
       document.documentElement.dataset.manorBlueprintCurrentRoute = payload.currentRouteId;
       document.documentElement.dataset.manorBlueprintLens = state.activeLens;
       document.documentElement.dataset.manorBlueprintPositionSource = state.positionSource;
@@ -885,6 +922,9 @@
       contract: API_CONTRACT,
       implementationContract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
+      legacyContract: LEGACY_CONTRACT,
+      joystickScrollForceMultiplier: JOYSTICK_SCROLL_FORCE_MULTIPLIER,
+      joystickScrollForceIncreasePercent: JOYSTICK_SCROLL_FORCE_INCREASE_PERCENT,
       refresh,
       open,
       close,

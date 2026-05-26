@@ -1,34 +1,56 @@
 // TARGET FILE: /showroom/globe/audralia/planet/index.canvas.js
 // TNT FULL-FILE REPLACEMENT
-// AUDRALIA_G2_PLANET_OPERATION_A_DONOR_CANVAS_FEED_EVOLUTION_TNT_v1
+// AUDRALIA_PLANET_FILE_5_PARENT_CANVAS_TERRAIN_FEED_HANDOFF_TNT_v1
 //
-// Operation A:
-// - Canvas feed evolution only.
-// - Harvests the proven Audralia G1 globe mechanics: sphere projection, 360 drag, 16 × 16 lattice, Fibonacci links, one-canvas discipline.
-// - Strips datum loading, old diagnostic slots, old route reporting, and hydrosphere active-water read.
-// - Evolves the visible body into a dry clay-globe baseline feed with predestined latitude / longitude disposition.
-// - Public identity remains Audralia.
-// - Australia-template remains hidden scaffold only.
+// File 5 of 5 in the backward-build terrain strategy.
+// Authority position:
+// index.canvas.js
+// └── index.canvas.terrain.nodes.js
+//     ├── index.canvas.terrain.nodes.subterranean.js
+//     ├── index.canvas.terrain.nodes.above-sea.js
+//     └── index.canvas.terrain.nodes.boundary.js
 //
-// Does not touch:
-// - Shell.
-// - UI.
-// - Gems.
-// - Tabs.
-// - Chambers.
-// - Billboard/stat card.
-// - Active water.
-// - Final visual pass.
+// Owns:
+// - visible canvas picture
+// - clay-globe carrier
+// - projection
+// - rotation
+// - drag
+// - one-canvas discipline
+// - visible dry-terrain feed expression
+//
+// Consumes only:
+// - DGBAudraliaCanvasTerrainNodes.getCanvasTerrainFeed()
+// - fallback AUDRALIA_CANVAS_TERRAIN_FEED_PACKET
+//
+// Does not directly consume:
+// - DGBAudraliaCanvasTerrainNodesSubterranean
+// - DGBAudraliaCanvasTerrainNodesAboveSea
+// - DGBAudraliaCanvasTerrainNodesBoundary
+//
+// Does not own:
+// - node baseline truth
+// - subterranean truth
+// - above-sea terrain truth
+// - boundary truth
+// - hydration
+// - active water
+// - final visual pass
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G2_PLANET_OPERATION_A_DONOR_CANVAS_FEED_EVOLUTION_TNT_v1";
-  const PREVIOUS_CANVAS_CONTRACT = "AUDRALIA_G2_PLANET_CLAY_GLOBE_TV_SCREEN_CANVAS_TNT_v1";
-  const DONOR_CONTRACT = "AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1";
+  const CONTRACT = "AUDRALIA_PLANET_FILE_5_PARENT_CANVAS_TERRAIN_FEED_HANDOFF_TNT_v1";
+  const PREVIOUS_CANVAS_CONTRACT = "AUDRALIA_G2_PLANET_OPERATION_A_DONOR_CANVAS_FEED_EVOLUTION_TNT_v1";
+  const SPEC_OPS = "AUDRALIA_PLANET_FILE_5_PARENT_CANVAS_TERRAIN_FEED_HANDOFF_SPEC_OPS_v1";
+  const CCR = "AUDRALIA_PLANET_FILE_5_PARENT_CANVAS_TERRAIN_FEED_HANDOFF_CCR_v1";
+  const FULL_PLAN = "AUDRALIA_PLANET_CANVAS_TERRAIN_BACKWARD_BUILD_FULL_PLAN_CCR_v1";
+
+  const TERRAIN_NODES_CONTRACT = "AUDRALIA_PLANET_FILE_4_TERRAIN_NODES_COMPOSER_TNT_v1";
+  const TERRAIN_NODES_FILE = "/showroom/globe/audralia/planet/index.canvas.terrain.nodes.js";
+
   const ROUTE = "/showroom/globe/audralia/planet/";
   const TARGET = "/showroom/globe/audralia/planet/index.canvas.js";
-  const DONOR = "/showroom/globe/audralia/index.js";
   const API_NAME = "DGBAudraliaPlanetCanvas";
 
   const RADIAL_NODES = 16;
@@ -43,7 +65,6 @@
   ]);
 
   const FIBONACCI_OFFSETS = Object.freeze([1, 2, 3, 5, 8, 13]);
-
   const MODES = Object.freeze(["body", "surface", "terrain", "lattice", "receipt"]);
 
   const BASELINE_FEED = Object.freeze({
@@ -130,6 +151,23 @@
     pointerY: 0,
     lastTap: 0,
 
+    terrainFeed: null,
+    terrainFeedActive: false,
+    terrainFeedMode: "WAITING_FOR_TERRAIN_NODES",
+    terrainFeedLastRead: 0,
+    terrainFeedError: "",
+    terrainRenderableCells: [],
+    terrainRenderableBySeatIndex: new Map(),
+    terrainRenderableByNodeId: new Map(),
+    terrainChildLoadAttempted: false,
+    terrainChildLoaded: false,
+    terrainChildConsumed: false,
+    terrainChildContract: "",
+    terrainNodesActive: false,
+    subterraneanActive: false,
+    aboveSeaActive: false,
+    boundaryActive: false,
+
     raf: 0,
     lastFrameTime: 0,
     renderCount: 0,
@@ -142,13 +180,17 @@
     errors: []
   };
 
-  if (
-    window.__AUDRALIA_G2_PLANET_OPERATION_A_CANVAS_CONTROLLER__ &&
-    typeof window.__AUDRALIA_G2_PLANET_OPERATION_A_CANVAS_CONTROLLER__.stop === "function"
-  ) {
-    try {
-      window.__AUDRALIA_G2_PLANET_OPERATION_A_CANVAS_CONTROLLER__.stop();
-    } catch (_error) {}
+  const previousControllers = [
+    "__AUDRALIA_G2_PLANET_OPERATION_A_CANVAS_CONTROLLER__",
+    "__AUDRALIA_PLANET_FILE_5_PARENT_CANVAS_CONTROLLER__"
+  ];
+
+  for (const key of previousControllers) {
+    if (window[key] && typeof window[key].stop === "function") {
+      try {
+        window[key].stop();
+      } catch (_error) {}
+    }
   }
 
   function finite(value, fallback = 0) {
@@ -495,6 +537,228 @@
     };
   }
 
+  function validateTerrainFeed(feed) {
+    if (!feed || typeof feed !== "object") return false;
+    if (!Array.isArray(feed.renderableCells)) return false;
+    if (feed.activeWater === true) return false;
+    if (feed.hydration === true) return false;
+    if (feed.finalVisualPass === true) return false;
+    return true;
+  }
+
+  function indexTerrainFeed(feed) {
+    const cells = Array.isArray(feed && feed.renderableCells) ? feed.renderableCells : [];
+    const bySeat = new Map();
+    const byNode = new Map();
+
+    for (const cell of cells) {
+      if (!cell || typeof cell !== "object") continue;
+
+      if (Number.isFinite(Number(cell.seatIndex))) {
+        bySeat.set(Number(cell.seatIndex), cell);
+      }
+
+      if (cell.nodeId) {
+        byNode.set(String(cell.nodeId), cell);
+      }
+    }
+
+    state.terrainRenderableCells = cells;
+    state.terrainRenderableBySeatIndex = bySeat;
+    state.terrainRenderableByNodeId = byNode;
+  }
+
+  function readTerrainFeed(scope = "read", forceRefresh = false) {
+    let feed = null;
+    let error = "";
+    let consumed = false;
+
+    try {
+      const api = window.DGBAudraliaCanvasTerrainNodes;
+
+      if (api && typeof api === "object") {
+        if (forceRefresh && typeof api.refreshComposition === "function") {
+          try {
+            api.refreshComposition();
+          } catch (_refreshError) {}
+        }
+
+        if (typeof api.getCanvasTerrainFeed === "function") {
+          feed = api.getCanvasTerrainFeed();
+          consumed = true;
+        }
+      }
+
+      if (!feed && window.AUDRALIA_CANVAS_TERRAIN_FEED_PACKET) {
+        feed = window.AUDRALIA_CANVAS_TERRAIN_FEED_PACKET;
+        consumed = true;
+      }
+
+      if (!validateTerrainFeed(feed)) {
+        state.terrainFeed = null;
+        state.terrainFeedActive = false;
+        state.terrainFeedMode = feed ? "INVALID_FEED" : "WAITING_FOR_TERRAIN_NODES";
+        state.terrainFeedError = feed ? "INVALID_OR_BLOCKED_TERRAIN_FEED" : "";
+        state.terrainRenderableCells = [];
+        state.terrainRenderableBySeatIndex = new Map();
+        state.terrainRenderableByNodeId = new Map();
+        state.terrainChildConsumed = false;
+        state.terrainChildContract = "";
+        state.terrainNodesActive = false;
+        state.subterraneanActive = false;
+        state.aboveSeaActive = false;
+        state.boundaryActive = false;
+        publishTerrainDataset();
+        return false;
+      }
+
+      state.terrainFeed = feed;
+      state.terrainFeedActive = Boolean(feed.terrainNodesActive || feed.nodeCount || feed.renderableCells.length);
+      state.terrainFeedMode = String(feed.feedMode || "NODE_BASELINE_ONLY");
+      state.terrainFeedLastRead = now();
+      state.terrainFeedError = "";
+      state.terrainChildConsumed = consumed;
+      state.terrainChildContract = String(feed.contract || TERRAIN_NODES_CONTRACT);
+      state.terrainNodesActive = Boolean(feed.terrainNodesActive);
+      state.subterraneanActive = Boolean(feed.subterraneanActive);
+      state.aboveSeaActive = Boolean(feed.aboveSeaActive);
+      state.boundaryActive = Boolean(feed.boundaryActive);
+
+      indexTerrainFeed(feed);
+      publishTerrainDataset();
+      publishStatus("terrain-feed:" + scope);
+      return true;
+    } catch (feedError) {
+      error = feedError && feedError.message ? feedError.message : String(feedError || "unknown");
+      state.terrainFeed = null;
+      state.terrainFeedActive = false;
+      state.terrainFeedMode = "FEED_READ_ERROR";
+      state.terrainFeedError = error;
+      state.terrainChildConsumed = false;
+      state.terrainChildContract = "";
+      state.terrainNodesActive = false;
+      state.subterraneanActive = false;
+      state.aboveSeaActive = false;
+      state.boundaryActive = false;
+      state.terrainRenderableCells = [];
+      state.terrainRenderableBySeatIndex = new Map();
+      state.terrainRenderableByNodeId = new Map();
+
+      publishTerrainDataset();
+      return false;
+    }
+  }
+
+  function loadTerrainDirectChild() {
+    if (state.terrainChildLoadAttempted) return;
+    state.terrainChildLoadAttempted = true;
+
+    if (window.DGBAudraliaCanvasTerrainNodes || window.AUDRALIA_CANVAS_TERRAIN_FEED_PACKET) {
+      state.terrainChildLoaded = true;
+      readTerrainFeed("existing-direct-child", true);
+      return;
+    }
+
+    const existing = query("script[data-audralia-canvas-terrain-nodes-loader]");
+    if (existing) return;
+
+    try {
+      const script = document.createElement("script");
+      script.src = TERRAIN_NODES_FILE + "?v=" + encodeURIComponent(TERRAIN_NODES_CONTRACT);
+      script.async = true;
+      script.defer = true;
+      script.setAttribute("data-audralia-canvas-terrain-nodes-loader", CONTRACT);
+      script.setAttribute("data-direct-child-only", "true");
+
+      script.addEventListener("load", () => {
+        state.terrainChildLoaded = true;
+        readTerrainFeed("direct-child-loaded", true);
+        requestRender(18);
+      }, { once: true });
+
+      script.addEventListener("error", () => {
+        state.terrainChildLoaded = false;
+        state.terrainFeedMode = "WAITING_FOR_TERRAIN_NODES";
+        publishTerrainDataset();
+        requestRender(8);
+      }, { once: true });
+
+      (document.head || document.documentElement).appendChild(script);
+    } catch (_error) {}
+  }
+
+  function publishTerrainDataset() {
+    setDataset("audraliaCanvasTerrainFeedActive", state.terrainFeedActive ? "true" : "false");
+    setDataset("audraliaCanvasTerrainFeedMode", state.terrainFeedMode);
+    setDataset("audraliaCanvasTerrainNodesActive", state.terrainNodesActive ? "true" : "false");
+    setDataset("audraliaCanvasTerrainSubterraneanActive", state.subterraneanActive ? "true" : "false");
+    setDataset("audraliaCanvasTerrainAboveSeaActive", state.aboveSeaActive ? "true" : "false");
+    setDataset("audraliaCanvasTerrainBoundaryActive", state.boundaryActive ? "true" : "false");
+    setDataset("audraliaCanvasTerrainRenderableCellCount", state.terrainRenderableCells.length);
+    setDataset("audraliaCanvasTerrainChildConsumed", state.terrainChildConsumed ? "true" : "false");
+    setDataset("audraliaCanvasActiveWater", "false");
+    setDataset("audraliaCanvasHydrationActive", "false");
+    setDataset("audraliaCanvasFinalVisualPass", "false");
+  }
+
+  function terrainCellForSeat(seatIndex) {
+    return state.terrainRenderableBySeatIndex.get(Number(seatIndex)) || null;
+  }
+
+  function terrainAlphaForMode() {
+    if (!state.terrainFeedActive) return 0;
+
+    if (state.mode === "body") return 0.24;
+    if (state.mode === "surface") return 0.42;
+    if (state.mode === "terrain") return 0.66;
+    if (state.mode === "lattice") return 0.18;
+    if (state.mode === "receipt") return 0.30;
+
+    return 0.28;
+  }
+
+  function terrainColor(cell, alpha) {
+    const landform = String(cell.landform || "");
+    const boundaryClass = String(cell.boundaryClass || "");
+    const elevation = clamp(cell.elevation, 0, 1);
+    const pressure = clamp(cell.subterraneanPressure, 0, 1);
+    const boundary = clamp(cell.boundaryScore, 0, 1);
+
+    if (cell.beachCandidate) {
+      return "rgba(226,197,128," + clamp(alpha * (0.72 + boundary * 0.28), 0, 0.82).toFixed(3) + ")";
+    }
+
+    if (cell.islandFragmentCandidate) {
+      return "rgba(202,171,105," + clamp(alpha * (0.62 + boundary * 0.22), 0, 0.76).toFixed(3) + ")";
+    }
+
+    if (boundaryClass.includes("bay") || boundaryClass.includes("inlet") || boundaryClass.includes("fracture")) {
+      return "rgba(92,73,49," + clamp(alpha * (0.64 + boundary * 0.30), 0, 0.78).toFixed(3) + ")";
+    }
+
+    if (landform.includes("summit") || landform.includes("mountain")) {
+      return "rgba(211,177,102," + clamp(alpha * (0.78 + elevation * 0.22), 0, 0.90).toFixed(3) + ")";
+    }
+
+    if (landform.includes("ridge") || landform.includes("escarpment")) {
+      return "rgba(142,101,62," + clamp(alpha * (0.70 + pressure * 0.28), 0, 0.86).toFixed(3) + ")";
+    }
+
+    if (landform.includes("basin")) {
+      return "rgba(70,68,49," + clamp(alpha * (0.72 + pressure * 0.26), 0, 0.86).toFixed(3) + ")";
+    }
+
+    if (landform.includes("plateau")) {
+      return "rgba(174,134,78," + clamp(alpha * (0.64 + elevation * 0.24), 0, 0.80).toFixed(3) + ")";
+    }
+
+    if (landform.includes("shelf")) {
+      return "rgba(119,96,66," + clamp(alpha * (0.54 + boundary * 0.18), 0, 0.72).toFixed(3) + ")";
+    }
+
+    return "rgba(132,105,68," + clamp(alpha * (0.48 + elevation * 0.20 + pressure * 0.18), 0, 0.72).toFixed(3) + ")";
+  }
+
   function clearCanvas() {
     if (!state.ctx) return;
     state.ctx.clearRect(0, 0, state.width, state.height);
@@ -572,7 +836,7 @@
     ctx.save();
     clipSphere();
 
-    ctx.globalAlpha = 0.10;
+    ctx.globalAlpha = state.terrainFeedActive ? 0.085 : 0.10;
 
     for (let i = 0; i < 34; i += 1) {
       const y = cy - r + (i / 33) * r * 2;
@@ -604,8 +868,11 @@
       state.mode === "receipt" ? 0.94 :
       1;
 
-    const width = base * (0.62 + cell.mass * 0.86 + cell.pressure * 0.22) * p.perspective * modeBoost;
-    const height = base * (0.38 + cell.basin * 0.54 + cell.mass * 0.22) * p.perspective * modeBoost;
+    const terrain = terrainCellForSeat(cell.seat.seatIndex);
+    const terrainBoost = terrain ? 1 + clamp(terrain.terrainRenderWeight, 0, 1) * 0.28 : 1;
+
+    const width = base * (0.62 + cell.mass * 0.86 + cell.pressure * 0.22) * p.perspective * modeBoost * terrainBoost;
+    const height = base * (0.38 + cell.basin * 0.54 + cell.mass * 0.22) * p.perspective * modeBoost * terrainBoost;
 
     return { width, height };
   }
@@ -631,15 +898,17 @@
       const cell = item.cell;
       const p = item.point;
       const size = cellSizeFor(cell, p, base);
+      const terrain = terrainCellForSeat(cell.seat.seatIndex);
+
       const alpha =
-        state.mode === "body" ? 0.54 :
-        state.mode === "surface" ? 0.68 :
-        state.mode === "terrain" ? 0.72 :
-        0.50;
+        state.mode === "body" ? 0.50 :
+        state.mode === "surface" ? 0.62 :
+        state.mode === "terrain" ? 0.66 :
+        0.47;
 
       ctx.save();
       ctx.globalAlpha = clamp((0.22 + cell.mass * 0.56) * alpha, 0.08, 0.72);
-      ctx.fillStyle = CLAY_PALETTE_32[cell.colorIndex];
+      ctx.fillStyle = terrain ? terrainColor(terrain, 0.38) : CLAY_PALETTE_32[cell.colorIndex];
 
       ctx.beginPath();
       ctx.ellipse(
@@ -653,7 +922,7 @@
       );
       ctx.fill();
 
-      if (cell.mass > 0.48 && (state.mode === "surface" || state.mode === "terrain")) {
+      if (cell.mass > 0.48 && (state.mode === "surface" || state.mode === "terrain" || terrain)) {
         ctx.globalAlpha = clamp(0.10 + cell.elevationHint * 0.18, 0.08, 0.30);
         ctx.strokeStyle = "rgba(255,232,163,.46)";
         ctx.lineWidth = Math.max(0.5, state.dpr * 0.55);
@@ -676,21 +945,199 @@
     ctx.restore();
   }
 
+  function drawTerrainFeedCells() {
+    if (!state.terrainFeedActive || !state.terrainRenderableCells.length) return;
+
+    const ctx = state.ctx;
+    const m = metrics();
+    const base = m.radius * 0.052;
+    const alphaBase = terrainAlphaForMode();
+
+    if (alphaBase <= 0) return;
+
+    const cells = state.terrainRenderableCells
+      .map((cell) => {
+        const point = pointFromLatLon(clamp(cell.latitude, -HALF_PI, HALF_PI), finite(cell.longitude, 0));
+        return {
+          cell,
+          point: projectPoint(point)
+        };
+      })
+      .filter((item) => item.point.frontFacing)
+      .sort((a, b) => a.point.z - b.point.z);
+
+    ctx.save();
+    clipSphere();
+
+    for (const item of cells) {
+      const cell = item.cell;
+      const p = item.point;
+
+      const terrainWeight = clamp(cell.terrainRenderWeight, 0, 1);
+      const pressure = clamp(cell.pressureRenderWeight, 0, 1);
+      const elevation = clamp(cell.elevationRenderWeight, 0, 1);
+      const boundary = clamp(cell.boundaryRenderWeight, 0, 1);
+
+      const width = base * (0.78 + terrainWeight * 1.18 + boundary * 0.36) * p.perspective;
+      const height = base * (0.46 + elevation * 0.84 + pressure * 0.34) * p.perspective;
+      const alpha = clamp(alphaBase * (0.42 + terrainWeight * 0.46 + elevation * 0.22), 0.02, 0.76);
+
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = terrainColor(cell, alpha);
+
+      ctx.beginPath();
+      ctx.ellipse(
+        p.x,
+        p.y,
+        width,
+        height,
+        finite(cell.longitude, 0) + state.yaw + pressure * 0.45,
+        0,
+        TAU
+      );
+      ctx.fill();
+
+      if (state.mode === "terrain" && (String(cell.landform || "").includes("ridge") || String(cell.landform || "").includes("mountain"))) {
+        ctx.globalAlpha = clamp(alpha * 0.48, 0.04, 0.38);
+        ctx.strokeStyle = "rgba(246,215,146,.62)";
+        ctx.lineWidth = Math.max(0.45, state.dpr * 0.58);
+        ctx.beginPath();
+        ctx.ellipse(
+          p.x,
+          p.y,
+          width * 0.58,
+          height * 0.36,
+          finite(cell.longitude, 0) + state.yaw + 0.65,
+          0,
+          TAU
+        );
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+
+    ctx.restore();
+  }
+
+  function drawTerrainFeedRidges() {
+    if (!state.terrainFeedActive || state.mode === "body" || state.mode === "lattice") return;
+
+    const ctx = state.ctx;
+    const strong = state.mode === "terrain" ? 0.34 : 0.20;
+    const candidates = state.terrainRenderableCells.filter((cell) => {
+      const landform = String(cell.landform || "");
+      return landform.includes("ridge") || landform.includes("mountain") || landform.includes("summit") || landform.includes("escarpment");
+    });
+
+    if (!candidates.length) return;
+
+    ctx.save();
+    clipSphere();
+
+    for (const cell of candidates) {
+      const point = pointFromLatLon(clamp(cell.latitude, -HALF_PI, HALF_PI), finite(cell.longitude, 0));
+      const p = projectPoint(point);
+      if (!p.frontFacing) continue;
+
+      const weight = clamp(cell.elevationRenderWeight, 0, 1);
+      const length = metrics().radius * (0.026 + weight * 0.032) * p.perspective;
+      const angle = finite(cell.longitude, 0) + state.yaw + 0.72;
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(angle);
+      ctx.globalAlpha = clamp(strong * (0.42 + weight * 0.48), 0.03, 0.42);
+      ctx.strokeStyle = "rgba(66,42,30,.82)";
+      ctx.lineWidth = Math.max(0.52, state.dpr * (0.55 + weight * 0.42));
+      ctx.beginPath();
+      ctx.moveTo(-length, 0);
+      ctx.quadraticCurveTo(0, -length * 0.28, length, 0);
+      ctx.stroke();
+
+      ctx.globalAlpha = clamp(strong * 0.55, 0.03, 0.24);
+      ctx.strokeStyle = "rgba(255,232,163,.58)";
+      ctx.lineWidth = Math.max(0.35, state.dpr * 0.42);
+      ctx.beginPath();
+      ctx.moveTo(-length * 0.58, -length * 0.09);
+      ctx.quadraticCurveTo(0, -length * 0.24, length * 0.58, -length * 0.09);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    ctx.restore();
+  }
+
+  function drawDryBoundaryHints() {
+    if (!state.terrainFeedActive) return;
+    if (state.mode !== "terrain" && state.mode !== "surface" && state.mode !== "receipt") return;
+
+    const ctx = state.ctx;
+    const alphaBase = state.mode === "terrain" ? 0.38 : 0.22;
+
+    const boundaryCells = state.terrainRenderableCells.filter((cell) => {
+      return cell.beachCandidate ||
+        cell.islandFragmentCandidate ||
+        clamp(cell.boundaryRenderWeight, 0, 1) >= 0.52 ||
+        String(cell.boundaryClass || "").includes("candidate");
+    });
+
+    if (!boundaryCells.length) return;
+
+    ctx.save();
+    clipSphere();
+
+    for (const cell of boundaryCells) {
+      const p = projectPoint(pointFromLatLon(clamp(cell.latitude, -HALF_PI, HALF_PI), finite(cell.longitude, 0)));
+      if (!p.frontFacing) continue;
+
+      const boundary = clamp(cell.boundaryRenderWeight, 0, 1);
+      const radius = metrics().radius * (0.010 + boundary * 0.018) * p.perspective;
+
+      ctx.save();
+      ctx.globalAlpha = clamp(alphaBase * (0.30 + boundary * 0.70), 0.03, 0.42);
+      ctx.strokeStyle = cell.beachCandidate ? "rgba(236,208,137,.76)" : "rgba(105,82,52,.70)";
+      ctx.lineWidth = Math.max(0.45, state.dpr * 0.52);
+      ctx.beginPath();
+      ctx.ellipse(
+        p.x,
+        p.y,
+        radius * 1.75,
+        radius * 0.62,
+        finite(cell.longitude, 0) + state.yaw + 1.05,
+        0,
+        TAU
+      );
+      ctx.stroke();
+
+      if (cell.islandFragmentCandidate) {
+        ctx.globalAlpha = clamp(alphaBase * 0.42, 0.03, 0.28);
+        ctx.fillStyle = "rgba(210,178,108,.52)";
+        ctx.beginPath();
+        ctx.arc(p.x + radius * 0.85, p.y - radius * 0.25, Math.max(0.85, radius * 0.32), 0, TAU);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+
+    ctx.restore();
+  }
+
   function drawTemplateContourLines() {
     if (state.mode === "body") return;
 
     const ctx = state.ctx;
-    const m = metrics();
-    const r = m.radius;
 
     ctx.save();
     clipSphere();
 
     ctx.globalAlpha =
-      state.mode === "surface" ? 0.22 :
-      state.mode === "terrain" ? 0.34 :
-      state.mode === "lattice" ? 0.18 :
-      0.20;
+      state.mode === "surface" ? 0.20 :
+      state.mode === "terrain" ? 0.30 :
+      state.mode === "lattice" ? 0.14 :
+      0.18;
 
     for (const line of state.contourLines) {
       const a = projectPoint(pointFromLatLon(line.aLat, line.aLon));
@@ -705,7 +1152,7 @@
       ctx.beginPath();
       ctx.moveTo(a.x, a.y);
       ctx.quadraticCurveTo(mid.x, mid.y, b.x, b.y);
-      ctx.strokeStyle = "rgba(255,232,163,.58)";
+      ctx.strokeStyle = "rgba(255,232,163,.48)";
       ctx.lineWidth = Math.max(0.72, state.dpr * 0.80);
       ctx.stroke();
     }
@@ -716,7 +1163,7 @@
 
     ctx.save();
     clipSphere();
-    ctx.globalAlpha = state.mode === "terrain" ? 0.30 : 0.18;
+    ctx.globalAlpha = state.mode === "terrain" ? 0.25 : 0.16;
 
     for (const ridge of state.ridgeLines) {
       const a = projectPoint(pointFromLatLon(ridge.aLat, ridge.aLon));
@@ -732,7 +1179,7 @@
       ctx.beginPath();
       ctx.moveTo(a.x, a.y);
       ctx.quadraticCurveTo(mid.x, mid.y, b.x, b.y);
-      ctx.strokeStyle = "rgba(66,42,30,.82)";
+      ctx.strokeStyle = "rgba(66,42,30,.74)";
       ctx.lineWidth = Math.max(0.85, state.dpr * (0.84 + ridge.pressure * 0.75));
       ctx.stroke();
     }
@@ -909,13 +1356,13 @@
 
     ctx.beginPath();
     ctx.arc(cx, cy, r * 1.018, 0, TAU);
-    ctx.strokeStyle = "rgba(244,207,131,.46)";
+    ctx.strokeStyle = state.terrainFeedActive ? "rgba(244,207,131,.58)" : "rgba(244,207,131,.46)";
     ctx.lineWidth = Math.max(1, state.dpr * 1.15);
     ctx.setLineDash([6 * state.dpr, 8 * state.dpr]);
     ctx.stroke();
     ctx.setLineDash([]);
 
-    ctx.globalAlpha = 0.18;
+    ctx.globalAlpha = state.terrainFeedActive ? 0.22 : 0.18;
     ctx.fillStyle = "rgba(244,207,131,.30)";
     ctx.beginPath();
     ctx.arc(cx, cy, r * 1.012, 0, TAU);
@@ -958,6 +1405,10 @@
 
     state.raf = 0;
 
+    if (state.renderCount % 42 === 0 || (!state.terrainFeedActive && state.renderCount % 18 === 0)) {
+      readTerrainFeed("render-poll", false);
+    }
+
     const dt = state.lastFrameTime ? clamp((timestamp - state.lastFrameTime) / 1000, 0, 0.05) : 0;
     state.lastFrameTime = timestamp;
 
@@ -985,7 +1436,10 @@
     drawCarrier();
     drawClayGrain();
     drawDispositionCells();
+    drawTerrainFeedCells();
     drawTemplateContourLines();
+    drawTerrainFeedRidges();
+    drawDryBoundaryHints();
     drawLatLongInspectionGrid();
     drawDiagnosticLattice(state.pointerActive || state.mode === "body");
     drawReceiptOverlay();
@@ -1030,6 +1484,7 @@
     state.roll = TEMPLATE.orientation.roll;
     state.velocityYaw = 0;
     state.velocityPitch = 0;
+    readTerrainFeed("reset-view", true);
     requestRender(12);
     publishStatus("reset-view");
     return status();
@@ -1115,7 +1570,7 @@
       canvas = document.createElement("canvas");
       canvas.className = "planet-canvas";
       canvas.setAttribute("data-audralia-planet-canvas", "");
-      canvas.setAttribute("aria-label", "Audralia clay globe baseline canvas");
+      canvas.setAttribute("aria-label", "Audralia dry terrain canvas");
       state.stage.appendChild(canvas);
     }
 
@@ -1140,13 +1595,14 @@
 
     canvas.setAttribute("data-audralia-canvas-contract", CONTRACT);
     canvas.setAttribute("data-previous-canvas-contract", PREVIOUS_CANVAS_CONTRACT);
-    canvas.setAttribute("data-donor-contract", DONOR_CONTRACT);
+    canvas.setAttribute("data-terrain-nodes-contract", TERRAIN_NODES_CONTRACT);
     canvas.setAttribute("data-canvas-role", "tv-screen-canvas");
-    canvas.setAttribute("data-baseline-feed", "clay-globe");
+    canvas.setAttribute("data-baseline-feed", "clay-globe-with-dry-terrain-feed-handoff");
     canvas.setAttribute("data-public-identity", "Audralia");
     canvas.setAttribute("data-template-source", "Australia-template hidden scaffold");
     canvas.setAttribute("data-lat-long-disposition", "predestined");
     canvas.setAttribute("data-active-water", "false");
+    canvas.setAttribute("data-hydration", "false");
     canvas.setAttribute("data-final-visual-pass", "false");
 
     state.canvas = canvas;
@@ -1155,9 +1611,10 @@
 
     state.stage.dataset.canvasRole = "tv-screen";
     state.stage.dataset.screenRole = "tv-screen-canvas";
-    state.stage.dataset.feed = "clay-globe";
+    state.stage.dataset.feed = "clay-globe-terrain-feed-handoff";
     state.stage.dataset.rendererState = "active";
     state.stage.dataset.activeWater = "false";
+    state.stage.dataset.hydration = "false";
     state.stage.dataset.finalVisualPass = "false";
 
     return state.mounted;
@@ -1233,6 +1690,8 @@
 
     state.mode = next;
 
+    readTerrainFeed("set-mode", true);
+
     setDataset("audraliaCanvasMode", next);
     setDataset("audraliaCanvasContract", CONTRACT);
     setDataset("audraliaCanvasRole", "tv-screen-canvas");
@@ -1260,7 +1719,7 @@
       latLongDisposition: "PREDESTINED",
       activeWater: false,
       hydrationActive: false,
-      terrainChildActive: false,
+      terrainChildActive: Boolean(state.terrainFeedActive),
       surfaceChildActive: false,
       datumChildActive: false,
       finalVisualPass: false
@@ -1276,10 +1735,12 @@
     return Object.freeze({
       contract: CONTRACT,
       previousCanvasContract: PREVIOUS_CANVAS_CONTRACT,
-      donorContract: DONOR_CONTRACT,
+      terrainNodesContract: TERRAIN_NODES_CONTRACT,
+      specOps: SPEC_OPS,
+      ccr: CCR,
+      fullPlan: FULL_PLAN,
       route: ROUTE,
       target: TARGET,
-      donor: DONOR,
       api: API_NAME,
 
       initialized: state.initialized,
@@ -1288,6 +1749,17 @@
       currentMode: state.mode,
       feed: state.feed.id || BASELINE_FEED.id,
       baselineFeed: BASELINE_FEED.id,
+
+      terrainFeedActive: state.terrainFeedActive,
+      terrainFeedMode: state.terrainFeedMode,
+      terrainNodesActive: state.terrainNodesActive,
+      subterraneanActive: state.subterraneanActive,
+      aboveSeaActive: state.aboveSeaActive,
+      boundaryActive: state.boundaryActive,
+      terrainRenderableCellCount: state.terrainRenderableCells.length,
+      terrainChildConsumed: state.terrainChildConsumed,
+      terrainChildContract: state.terrainChildContract,
+      terrainFeedError: state.terrainFeedError,
 
       publicIdentity: "Audralia",
       templateSource: "AUSTRALIA_TEMPLATE_HIDDEN_SCAFFOLD",
@@ -1305,9 +1777,10 @@
 
       activeWater: false,
       hydrationActive: false,
-      terrainChildActive: false,
-      surfaceChildActive: false,
-      datumChildActive: false,
+      oceans: false,
+      rivers: false,
+      lakes: false,
+      beachRendering: false,
       generatedImage: false,
       graphicBox: false,
       finalVisualPass: false,
@@ -1327,21 +1800,33 @@
 
     window.AUDRALIA_G2_PLANET_CANVAS_RECEIPT = payload;
     window.AUDRALIA_G2_PLANET_OPERATION_A_CANVAS_STATUS = payload;
-    window.AUDRALIA_G2_PLANET_OPERATION_A_DONOR_CANVAS_FEED_EVOLUTION_STATUS = payload;
+    window.AUDRALIA_PLANET_CANVAS_TERRAIN_FEED_HANDOFF_STATUS = payload;
+    window.AUDRALIA_PLANET_CANVAS_TERRAIN_FEED_HANDOFF_RECEIPT = payload;
 
     setDataset("audraliaCanvasContract", CONTRACT);
     setDataset("audraliaCanvasPreviousContract", PREVIOUS_CANVAS_CONTRACT);
-    setDataset("audraliaCanvasDonorContract", DONOR_CONTRACT);
+    setDataset("audraliaCanvasTerrainNodesContract", TERRAIN_NODES_CONTRACT);
     setDataset("audraliaCanvasRole", "tv-screen-canvas");
-    setDataset("audraliaCanvasFeed", "clay-globe-baseline");
+    setDataset("audraliaCanvasFeed", "clay-globe-terrain-feed-handoff");
     setDataset("audraliaCanvasPublicIdentity", "Audralia");
     setDataset("audraliaCanvasTemplateSource", "Australia-template-hidden-scaffold");
     setDataset("audraliaCanvasLatLongDisposition", "predestined");
+
+    setDataset("audraliaCanvasTerrainFeedActive", state.terrainFeedActive ? "true" : "false");
+    setDataset("audraliaCanvasTerrainFeedMode", state.terrainFeedMode);
+    setDataset("audraliaCanvasTerrainNodesActive", state.terrainNodesActive ? "true" : "false");
+    setDataset("audraliaCanvasTerrainSubterraneanActive", state.subterraneanActive ? "true" : "false");
+    setDataset("audraliaCanvasTerrainAboveSeaActive", state.aboveSeaActive ? "true" : "false");
+    setDataset("audraliaCanvasTerrainBoundaryActive", state.boundaryActive ? "true" : "false");
+    setDataset("audraliaCanvasTerrainRenderableCellCount", state.terrainRenderableCells.length);
+    setDataset("audraliaCanvasTerrainChildConsumed", state.terrainChildConsumed ? "true" : "false");
+
     setDataset("audraliaCanvasActiveWater", "false");
     setDataset("audraliaCanvasHydrationActive", "false");
-    setDataset("audraliaCanvasTerrainChildActive", "false");
-    setDataset("audraliaCanvasSurfaceChildActive", "false");
-    setDataset("audraliaCanvasDatumChildActive", "false");
+    setDataset("audraliaCanvasOceans", "false");
+    setDataset("audraliaCanvasRivers", "false");
+    setDataset("audraliaCanvasLakes", "false");
+    setDataset("audraliaCanvasBeachRendering", "false");
     setDataset("audraliaCanvasGeneratedImage", "false");
     setDataset("audraliaCanvasGraphicBox", "false");
     setDataset("audraliaCanvasFinalVisualPass", "false");
@@ -1355,11 +1840,12 @@
     window[API_NAME] = Object.freeze({
       contract: CONTRACT,
       previousCanvasContract: PREVIOUS_CANVAS_CONTRACT,
-      donorContract: DONOR_CONTRACT,
+      terrainNodesContract: TERRAIN_NODES_CONTRACT,
       baselineFeed: BASELINE_FEED,
       setFeed,
       setMode,
       resetView,
+      readTerrainFeed,
       status
     });
   }
@@ -1382,15 +1868,19 @@
     }
   }
 
-  window.__AUDRALIA_G2_PLANET_OPERATION_A_CANVAS_CONTROLLER__ = {
+  const controller = {
     stop,
     state,
     contract: CONTRACT,
     status,
     setMode,
     setFeed,
-    resetView
+    resetView,
+    readTerrainFeed
   };
+
+  window.__AUDRALIA_PLANET_FILE_5_PARENT_CANVAS_CONTROLLER__ = controller;
+  window.__AUDRALIA_G2_PLANET_OPERATION_A_CANVAS_CONTROLLER__ = controller;
 
   function init() {
     try {
@@ -1419,8 +1909,11 @@
       state.initialized = true;
       state.mounted = true;
 
+      readTerrainFeed("init", true);
+      loadTerrainDirectChild();
+
       publishStatus("init-complete");
-      requestRender(12);
+      requestRender(16);
     } catch (error) {
       recordError("init", error);
       state.initialized = true;

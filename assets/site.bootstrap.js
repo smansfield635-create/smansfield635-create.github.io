@@ -1,23 +1,32 @@
 // TARGET FILE: /assets/site.bootstrap.js
 // TNT FULL-FILE REPLACEMENT
-// MANOR_BLUEPRINT_GLOBAL_BOOTSTRAP_TNT_v1
+// MANOR_BLUEPRINT_BOOTSTRAP_MOBILE_SAFE_HUD_CACHE_KEY_RENEWAL_TNT_v1
 //
 // Global site bootstrap loader.
-// Owns loading and duplicate-prevention for the Manor Blueprint HUD system.
+// Renews the Manor Blueprint HUD JS cache key so the site requests the
+// mobile-safe HUD implementation.
 //
-// Loads:
-// 1. /assets/manor-blueprint/manor.blueprint.registry.js
-// 2. /assets/manor-blueprint/manor.blueprint.css
-// 3. /assets/manor-blueprint/manor.blueprint.js
+// Previous contract:
+// MANOR_BLUEPRINT_GLOBAL_BOOTSTRAP_TNT_v1
+//
+// Owns:
+// - registry load
+// - CSS load
+// - HUD JS load
+// - HUD JS cache-key authority
+// - duplicate prevention
+// - implementation freshness proof
+// - bootstrap status / receipt globals
 //
 // Does not own:
-// - route truth
+// - route HTML
 // - bubble creation
 // - overlay rendering
-// - page content
-// - page layout
-// - planet canvas files
-// - Gauges logic
+// - drag behavior
+// - map/instructions content
+// - Audralia canvas/renderplex
+// - Audralia UI
+// - water/hydration/final visual pass
 // - image generation
 // - GraphicBox
 // - heavy runtime
@@ -27,11 +36,15 @@
 
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CONTRACT = "MANOR_BLUEPRINT_GLOBAL_BOOTSTRAP_TNT_v1";
+  const CONTRACT = "MANOR_BLUEPRINT_BOOTSTRAP_MOBILE_SAFE_HUD_CACHE_KEY_RENEWAL_TNT_v1";
+  const PREVIOUS_CONTRACT = "MANOR_BLUEPRINT_GLOBAL_BOOTSTRAP_TNT_v1";
 
   const REGISTRY_CONTRACT = "MANOR_BLUEPRINT_ROUTE_REGISTRY_TNT_v1";
   const CSS_CONTRACT = "MANOR_BLUEPRINT_FIXED_BUBBLE_FULLSCREEN_OVERLAY_CSS_TNT_v1";
-  const JS_CONTRACT = "MANOR_BLUEPRINT_FIXED_DRAGGABLE_BUBBLE_FULLSCREEN_MAP_INSTRUCTIONS_TOGGLE_JS_TNT_v1";
+
+  const JS_COMPAT_CONTRACT = "MANOR_BLUEPRINT_FIXED_DRAGGABLE_BUBBLE_FULLSCREEN_MAP_INSTRUCTIONS_TOGGLE_JS_TNT_v1";
+  const HUD_JS_CACHE_KEY = "MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_POSITION_RENEWAL_TNT_v1";
+  const EXPECTED_IMPLEMENTATION_CONTRACT = "MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_POSITION_RENEWAL_TNT_v1";
 
   const REGISTRY_PATH = "/assets/manor-blueprint/manor.blueprint.registry.js";
   const CSS_PATH = "/assets/manor-blueprint/manor.blueprint.css";
@@ -40,6 +53,9 @@
   const STATUS_GLOBAL = "DGB_MANOR_BLUEPRINT_BOOTSTRAP_STATUS";
   const RECEIPT_GLOBAL = "DGB_MANOR_BLUEPRINT_BOOTSTRAP_RECEIPT";
   const SITE_STATUS_GLOBAL = "DGB_SITE_BOOTSTRAP_STATUS";
+
+  const API_GLOBAL = "DGB_MANOR_BLUEPRINT_API";
+  const BLUEPRINT_STATUS_GLOBAL = "DGB_MANOR_BLUEPRINT_STATUS";
 
   const CONTROLLER_GLOBAL = "__DGB_MANOR_BLUEPRINT_GLOBAL_BOOTSTRAP_CONTROLLER__";
 
@@ -56,7 +72,18 @@
 
   const state = {
     contract: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
     active: true,
+
+    registryContract: REGISTRY_CONTRACT,
+    cssContract: CSS_CONTRACT,
+    jsContract: JS_COMPAT_CONTRACT,
+
+    hudJsCacheKey: HUD_JS_CACHE_KEY,
+    expectedImplementationContract: EXPECTED_IMPLEMENTATION_CONTRACT,
+    blueprintImplementationContractDetected: "",
+    implementationFresh: false,
+    mobileSafeHudRequested: true,
 
     loadStarted: false,
     loadComplete: false,
@@ -111,12 +138,21 @@
     publishStatus();
   }
 
-  function scriptExists(path) {
-    const scripts = Array.from(document.scripts || []);
+  function getScripts() {
+    return Array.from(document.scripts || []);
+  }
 
-    return scripts.some((script) => {
+  function scriptExists(path) {
+    return getScripts().some((script) => {
       const src = String(script.getAttribute("src") || "");
       return src.includes(path);
+    });
+  }
+
+  function scriptWithCacheKeyExists(path, cacheKey) {
+    return getScripts().some((script) => {
+      const src = String(script.getAttribute("src") || "");
+      return src.includes(path) && src.includes(encodeURIComponent(cacheKey));
     });
   }
 
@@ -144,11 +180,34 @@
     );
   }
 
+  function getBlueprintApi() {
+    return window[API_GLOBAL] || null;
+  }
+
+  function getBlueprintStatus() {
+    return window[BLUEPRINT_STATUS_GLOBAL] || null;
+  }
+
   function blueprintApiAvailable() {
-    return Boolean(
-      window.DGB_MANOR_BLUEPRINT_API &&
-      window.DGB_MANOR_BLUEPRINT_API.contract === JS_CONTRACT
+    return Boolean(getBlueprintApi());
+  }
+
+  function getDetectedImplementationContract() {
+    const api = getBlueprintApi();
+    const blueprintStatus = getBlueprintStatus();
+
+    return String(
+      (api && api.implementationContract) ||
+      (blueprintStatus && blueprintStatus.contract) ||
+      ""
     );
+  }
+
+  function implementationFresh() {
+    const detected = getDetectedImplementationContract();
+    state.blueprintImplementationContractDetected = detected;
+    state.implementationFresh = detected === EXPECTED_IMPLEMENTATION_CONTRACT;
+    return state.implementationFresh;
   }
 
   function waitForCondition(predicate, timeoutMs = 1600, intervalMs = 40) {
@@ -189,8 +248,15 @@
       script.async = false;
       script.defer = true;
       script.setAttribute("data-manor-blueprint-bootstrap", CONTRACT);
+      script.setAttribute("data-manor-blueprint-previous-bootstrap", PREVIOUS_CONTRACT);
       script.setAttribute("data-manor-blueprint-contract", contract);
       script.setAttribute("data-manor-blueprint-role", role);
+
+      if (role === "hud-js") {
+        script.setAttribute("data-manor-blueprint-hud-js-cache-key", HUD_JS_CACHE_KEY);
+        script.setAttribute("data-manor-blueprint-expected-implementation-contract", EXPECTED_IMPLEMENTATION_CONTRACT);
+        script.setAttribute("data-manor-blueprint-mobile-safe-hud-requested", "true");
+      }
 
       script.addEventListener("load", () => resolve(true), { once: true });
       script.addEventListener("error", () => resolve(false), { once: true });
@@ -211,6 +277,7 @@
       link.rel = "stylesheet";
       link.href = assetUrl(path, contract);
       link.setAttribute("data-manor-blueprint-bootstrap", CONTRACT);
+      link.setAttribute("data-manor-blueprint-previous-bootstrap", PREVIOUS_CONTRACT);
       link.setAttribute("data-manor-blueprint-contract", contract);
       link.setAttribute("data-manor-blueprint-role", "css");
 
@@ -236,6 +303,7 @@
 
     if (scriptExists(REGISTRY_PATH)) {
       safeArrayPush(state.skippedAssets, "registry:script-present");
+
       const becameAvailable = await waitForCondition(registryAvailable, 1400, 40);
       state.registryLoaded = Boolean(becameAvailable || registryAvailable());
 
@@ -289,33 +357,47 @@
     return state.cssLoaded;
   }
 
+  async function refreshBlueprintApiIfAvailable(scope) {
+    const api = getBlueprintApi();
+
+    if (api && typeof api.refresh === "function") {
+      try {
+        api.refresh();
+      } catch (error) {
+        recordError(scope || "blueprint-api-refresh", error);
+      }
+    }
+  }
+
   async function loadBlueprintJs() {
-    if (blueprintApiAvailable()) {
+    const hasApi = blueprintApiAvailable();
+    const fresh = implementationFresh();
+
+    if (hasApi && fresh) {
       state.jsLoaded = true;
       state.blueprintApiPresent = true;
-      safeArrayPush(state.skippedAssets, "hud-js:api-present");
-
-      try {
-        if (typeof window.DGB_MANOR_BLUEPRINT_API.refresh === "function") {
-          window.DGB_MANOR_BLUEPRINT_API.refresh();
-        }
-      } catch (error) {
-        recordError("blueprint-api-refresh", error);
-      }
-
+      safeArrayPush(state.skippedAssets, "hud-js:fresh-api-present");
+      await refreshBlueprintApiIfAvailable("fresh-blueprint-api-refresh");
       publishStatus();
       return true;
     }
 
-    if (scriptExists(JS_PATH)) {
-      safeArrayPush(state.skippedAssets, "hud-js:script-present");
+    if (hasApi && !fresh) {
+      safeArrayPush(state.skippedAssets, "hud-js:stale-api-detected");
+    }
 
-      const becameAvailable = await waitForCondition(blueprintApiAvailable, 1800, 40);
-      state.jsLoaded = Boolean(becameAvailable || blueprintApiAvailable());
+    if (scriptWithCacheKeyExists(JS_PATH, HUD_JS_CACHE_KEY)) {
+      safeArrayPush(state.skippedAssets, "hud-js:mobile-safe-script-present");
+
+      const becameFresh = await waitForCondition(implementationFresh, 2200, 50);
+      state.jsLoaded = Boolean(blueprintApiAvailable());
       state.blueprintApiPresent = Boolean(blueprintApiAvailable());
 
-      if (state.jsLoaded) {
-        safeArrayPush(state.loadedAssets, "hud-js:detected");
+      if (becameFresh || implementationFresh()) {
+        safeArrayPush(state.loadedAssets, "hud-js:mobile-safe-detected");
+        await refreshBlueprintApiIfAvailable("mobile-safe-blueprint-api-refresh");
+      } else if (state.blueprintApiPresent) {
+        safeArrayPush(state.failedAssets, "hud-js:script-present-but-implementation-not-fresh");
       } else {
         safeArrayPush(state.failedAssets, "hud-js:script-present-but-api-missing");
       }
@@ -324,11 +406,12 @@
       return state.jsLoaded;
     }
 
-    const loaded = await appendScript(JS_PATH, JS_CONTRACT, "hud-js");
+    const loaded = await appendScript(JS_PATH, HUD_JS_CACHE_KEY, "hud-js");
 
     if (loaded || blueprintApiAvailable()) {
-      const becameAvailable = await waitForCondition(blueprintApiAvailable, 1800, 40);
-      state.jsLoaded = Boolean(becameAvailable || blueprintApiAvailable());
+      await waitForCondition(blueprintApiAvailable, 1800, 40);
+      await waitForCondition(implementationFresh, 2200, 50);
+      state.jsLoaded = Boolean(blueprintApiAvailable());
       state.blueprintApiPresent = Boolean(blueprintApiAvailable());
     } else {
       state.jsLoaded = false;
@@ -336,11 +419,13 @@
     }
 
     if (state.jsLoaded) {
-      safeArrayPush(state.loadedAssets, "hud-js");
+      safeArrayPush(state.loadedAssets, "hud-js:mobile-safe");
+      await refreshBlueprintApiIfAvailable("post-load-blueprint-refresh");
     } else {
-      safeArrayPush(state.failedAssets, "hud-js");
+      safeArrayPush(state.failedAssets, "hud-js:mobile-safe");
     }
 
+    implementationFresh();
     publishStatus();
     return state.jsLoaded;
   }
@@ -352,6 +437,7 @@
     state.blueprintApiPresent = Boolean(blueprintApiAvailable());
     state.bubblePresent = bubbleExists();
     state.overlayPresent = overlayExists();
+    implementationFresh();
   }
 
   function status() {
@@ -359,11 +445,18 @@
 
     return Object.freeze({
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       active: true,
 
       registryContract: REGISTRY_CONTRACT,
       cssContract: CSS_CONTRACT,
-      jsContract: JS_CONTRACT,
+      jsContract: JS_COMPAT_CONTRACT,
+
+      hudJsCacheKey: HUD_JS_CACHE_KEY,
+      expectedImplementationContract: EXPECTED_IMPLEMENTATION_CONTRACT,
+      blueprintImplementationContractDetected: state.blueprintImplementationContractDetected,
+      implementationFresh: state.implementationFresh,
+      mobileSafeHudRequested: true,
 
       registryLoaded: state.registryLoaded,
       cssLoaded: state.cssLoaded,
@@ -405,10 +498,19 @@
 
     setDataset("siteBootstrapActive", "true");
     setDataset("siteBootstrapContract", CONTRACT);
+    setDataset("siteBootstrapPreviousContract", PREVIOUS_CONTRACT);
+
     setDataset("manorBlueprintBootstrapActive", "true");
     setDataset("manorBlueprintRegistryContract", REGISTRY_CONTRACT);
     setDataset("manorBlueprintCssContract", CSS_CONTRACT);
-    setDataset("manorBlueprintJsContract", JS_CONTRACT);
+    setDataset("manorBlueprintJsContract", JS_COMPAT_CONTRACT);
+
+    setDataset("manorBlueprintHudJsCacheKey", HUD_JS_CACHE_KEY);
+    setDataset("manorBlueprintExpectedImplementationContract", EXPECTED_IMPLEMENTATION_CONTRACT);
+    setDataset("manorBlueprintImplementationContractDetected", state.blueprintImplementationContractDetected || "");
+    setDataset("manorBlueprintImplementationFresh", state.implementationFresh ? "true" : "false");
+    setDataset("manorBlueprintMobileSafeHudRequested", "true");
+
     setDataset("manorBlueprintBootstrapLoadComplete", state.loadComplete ? "true" : "false");
     setDataset("manorBlueprintBootstrapLoadFailed", state.loadFailed ? "true" : "false");
     setDataset("manorBlueprintBootstrapRegistryLoaded", state.registryLoaded ? "true" : "false");
@@ -438,20 +540,22 @@
 
       refreshPresence();
 
-      state.loadComplete = Boolean(state.jsLoaded || state.blueprintApiPresent);
+      state.loadComplete = Boolean(
+        state.registryLoaded &&
+        state.cssLoaded &&
+        state.jsLoaded &&
+        state.blueprintApiPresent
+      );
+
       state.loadFailed = !state.loadComplete;
       state.completedAt = nowIso();
       state.lastAction = state.loadComplete ? "load-complete" : "load-failed";
 
-      if (blueprintApiAvailable() && typeof window.DGB_MANOR_BLUEPRINT_API.refresh === "function") {
-        try {
-          window.DGB_MANOR_BLUEPRINT_API.refresh();
-        } catch (error) {
-          recordError("post-load-blueprint-refresh", error);
-        }
-      }
+      await refreshBlueprintApiIfAvailable("final-blueprint-api-refresh");
 
+      refreshPresence();
       publishStatus();
+
       return status();
     } catch (error) {
       state.loadComplete = false;
@@ -466,13 +570,7 @@
   function refresh() {
     refreshPresence();
 
-    if (blueprintApiAvailable() && typeof window.DGB_MANOR_BLUEPRINT_API.refresh === "function") {
-      try {
-        window.DGB_MANOR_BLUEPRINT_API.refresh();
-      } catch (error) {
-        recordError("refresh-blueprint-api", error);
-      }
-    }
+    refreshBlueprintApiIfAvailable("refresh-blueprint-api");
 
     state.lastAction = "refresh";
     publishStatus();
@@ -482,6 +580,9 @@
   function exposeController() {
     window[CONTROLLER_GLOBAL] = Object.freeze({
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      hudJsCacheKey: HUD_JS_CACHE_KEY,
+      expectedImplementationContract: EXPECTED_IMPLEMENTATION_CONTRACT,
       run,
       refresh,
       status

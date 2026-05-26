@@ -1,0 +1,139 @@
+# TARGET FILE: /.github/workflows/audralia-route-authority-audit.yml
+# TNT FULL-FILE REPLACEMENT
+# AUDRALIA_PLANET_SERVED_ROUTE_DEPLOYMENT_AUTHORITY_AUDIT_WORKFLOW_TNT_v1
+#
+# Purpose:
+# Run /tools/audralia-planet-served-route-authority-audit.sh from GitHub Actions
+# and print the served-route authority classification.
+#
+# Owns:
+# - manual audit execution
+# - push-triggered audit execution when relevant files change
+# - Actions log output
+# - GitHub Step Summary output
+#
+# Does not own:
+# - rewriting HTML
+# - rewriting Blueprint assets
+# - deploying Pages
+# - purging CDN cache
+# - changing renderplex/canvas/UI files
+
+name: Audralia Planet Route Authority Audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "tools/audralia-planet-served-route-authority-audit.sh"
+      - "showroom/globe/audralia/planet/index.html"
+      - "assets/site.bootstrap.js"
+      - "assets/manor-blueprint/manor.blueprint.registry.js"
+      - "assets/manor-blueprint/manor.blueprint.css"
+      - "assets/manor-blueprint/manor.blueprint.js"
+      - ".github/workflows/audralia-route-authority-audit.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: audralia-planet-route-authority-audit
+  cancel-in-progress: true
+
+jobs:
+  served-route-authority-audit:
+    name: Served Route Authority Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Confirm audit file exists
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          AUDIT_FILE="tools/audralia-planet-served-route-authority-audit.sh"
+
+          echo "AUDIT_WORKFLOW_CONTRACT=AUDRALIA_PLANET_SERVED_ROUTE_DEPLOYMENT_AUTHORITY_AUDIT_WORKFLOW_TNT_v1"
+          echo "AUDIT_FILE=${AUDIT_FILE}"
+
+          if [ ! -f "${AUDIT_FILE}" ]; then
+            echo "FAIL: audit script is missing at ${AUDIT_FILE}"
+            exit 1
+          fi
+
+          echo "PASS: audit script found"
+
+      - name: Prepare audit script
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          chmod +x tools/audralia-planet-served-route-authority-audit.sh
+          echo "PASS: audit script marked executable"
+
+      - name: Run served-route authority audit
+        id: route_audit
+        shell: bash
+        run: |
+          set -o pipefail
+
+          AUDIT_LOG="audralia-route-authority-audit.log"
+
+          echo "══════════════════════════════════════════════════════════════════════"
+          echo "AUDRALIA_PLANET_SERVED_ROUTE_DEPLOYMENT_AUTHORITY_AUDIT_WORKFLOW_TNT_v1"
+          echo "TARGET_ROUTE=https://diamondgatebridge.com/showroom/globe/audralia/planet/"
+          echo "SCRIPT=tools/audralia-planet-served-route-authority-audit.sh"
+          echo "══════════════════════════════════════════════════════════════════════"
+
+          ./tools/audralia-planet-served-route-authority-audit.sh | tee "${AUDIT_LOG}"
+
+          CLASSIFICATION="$(grep -E '^CLASSIFICATION=' "${AUDIT_LOG}" | tail -n 1 | cut -d '=' -f 2- || true)"
+
+          if [ -z "${CLASSIFICATION}" ]; then
+            CLASSIFICATION="NO_CLASSIFICATION_FOUND"
+          fi
+
+          echo "classification=${CLASSIFICATION}" >> "$GITHUB_OUTPUT"
+          echo "AUDIT_CLASSIFICATION=${CLASSIFICATION}"
+
+      - name: Write audit summary
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          AUDIT_LOG="audralia-route-authority-audit.log"
+          CLASSIFICATION="${{ steps.route_audit.outputs.classification }}"
+
+          {
+            echo "# Audralia Planet Route Authority Audit"
+            echo ""
+            echo "**Workflow contract:** \`AUDRALIA_PLANET_SERVED_ROUTE_DEPLOYMENT_AUTHORITY_AUDIT_WORKFLOW_TNT_v1\`"
+            echo ""
+            echo "**Target route:** \`https://diamondgatebridge.com/showroom/globe/audralia/planet/\`"
+            echo ""
+            echo "**Classification:** \`${CLASSIFICATION:-NO_CLASSIFICATION_FOUND}\`"
+            echo ""
+            echo "## Raw audit output"
+            echo ""
+            echo '```text'
+            if [ -f "${AUDIT_LOG}" ]; then
+              cat "${AUDIT_LOG}"
+            else
+              echo "Audit log was not created."
+            fi
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload audit log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audralia-route-authority-audit-log
+          path: audralia-route-authority-audit.log
+          if-no-files-found: warn

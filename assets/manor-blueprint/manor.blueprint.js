@@ -1,277 +1,265 @@
 // TARGET FILE: /assets/manor-blueprint/manor.blueprint.js
 // TNT FULL-FILE REPLACEMENT
-// MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_POSITION_RENEWAL_TNT_v1
+// MANOR_BLUEPRINT_HUD_JS_SYNTAX_STABILIZATION_TNT_v2
 //
 // Purpose:
-// Renew the Manor Blueprint fixed draggable bubble so it remains visible,
-// reachable, and safely clamped on mobile browsers while preserving the
-// existing global bootstrap contract, map/instructions overlay, route registry,
-// drag behavior, and no-per-page-code architecture.
+// Stabilize the Manor Blueprint HUD runtime so the fixed draggable bubble mounts
+// before map/instruction rendering, avoids fragile multiline quoted strings,
+// repairs stale mobile positions, and preserves global bootstrap compatibility.
 //
-// Bootstrap compatibility:
-// /assets/site.bootstrap.js currently detects the HUD API by the prior public
-// API contract. This file preserves API.contract for bootstrap compatibility
-// while publishing the new implementation contract in status/receipt fields.
+// Public API compatibility contract:
+// MANOR_BLUEPRINT_FIXED_DRAGGABLE_BUBBLE_FULLSCREEN_MAP_INSTRUCTIONS_TOGGLE_JS_TNT_v1
+//
+// Public implementation compatibility contract intentionally preserved for
+// /assets/site.bootstrap.js freshness detection:
+// MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_POSITION_RENEWAL_TNT_v1
+//
+// Stabilization contract:
+// MANOR_BLUEPRINT_HUD_JS_SYNTAX_STABILIZATION_TNT_v2
 //
 // Owns:
-// - Blueprint bubble creation
-// - Blueprint overlay creation
-// - fixed draggable bubble behavior
-// - mobile-safe bubble positioning
-// - viewport/safe-area clamping
-// - localStorage position repair
-// - Map / Instructions overlay toggle
-// - runtime status and receipt publication
+// - fixed draggable bubble
+// - fullscreen map/instructions overlay
+// - route registry consumption
+// - fallback route/instruction data
+// - mobile-safe position clamp / repair
+// - status and receipt globals
 //
 // Does not own:
-// - HTML page shell
-// - site bootstrap loading
-// - registry source truth
-// - Audralia canvas/renderplex
-// - Audralia UI
-// - water/hydration/final visual state
-// - image generation
-// - GraphicBox
-// - heavy runtime
+// - route HTML
+// - site.bootstrap.js
+// - CSS file contract
+// - registry file contract
+// - Audralia canvas/UI
+// - water/hydration/final visual pass
 
 (() => {
   "use strict";
 
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const IMPLEMENTATION_CONTRACT = "MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_POSITION_RENEWAL_TNT_v1";
-  const PREVIOUS_CONTRACT = "MANOR_BLUEPRINT_FIXED_DRAGGABLE_BUBBLE_FULLSCREEN_MAP_INSTRUCTIONS_TOGGLE_JS_TNT_v1";
-  const BOOTSTRAP_COMPAT_API_CONTRACT = "MANOR_BLUEPRINT_FIXED_DRAGGABLE_BUBBLE_FULLSCREEN_MAP_INSTRUCTIONS_TOGGLE_JS_TNT_v1";
-  const REGISTRY_CONTRACT = "MANOR_BLUEPRINT_ROUTE_REGISTRY_TNT_v1";
-  const CSS_CONTRACT = "MANOR_BLUEPRINT_FIXED_BUBBLE_FULLSCREEN_OVERLAY_CSS_TNT_v1";
+  const API_COMPAT_CONTRACT = "MANOR_BLUEPRINT_FIXED_DRAGGABLE_BUBBLE_FULLSCREEN_MAP_INSTRUCTIONS_TOGGLE_JS_TNT_v1";
+  const PUBLIC_IMPLEMENTATION_CONTRACT = "MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_POSITION_RENEWAL_TNT_v1";
+  const STABILIZATION_CONTRACT = "MANOR_BLUEPRINT_HUD_JS_SYNTAX_STABILIZATION_TNT_v2";
+  const PREVIOUS_IMPLEMENTATION_CONTRACT = "MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_POSITION_RENEWAL_TNT_v1";
 
+  const CONTROLLER_GLOBAL = "__DGB_MANOR_BLUEPRINT_MOBILE_SAFE_CONTROLLER__";
+  const API_GLOBAL = "DGB_MANOR_BLUEPRINT_API";
   const STATUS_GLOBAL = "DGB_MANOR_BLUEPRINT_STATUS";
   const RECEIPT_GLOBAL = "DGB_MANOR_BLUEPRINT_RECEIPT";
-  const API_GLOBAL = "DGB_MANOR_BLUEPRINT_API";
-  const CONTROLLER_GLOBAL = "__DGB_MANOR_BLUEPRINT_MOBILE_SAFE_CONTROLLER__";
+
+  const REGISTRY_GLOBALS = [
+    "DGB_MANOR_BLUEPRINT_REGISTRY",
+    "DGB_MANOR_BLUEPRINT_ROUTE_REGISTRY"
+  ];
 
   const BUBBLE_SELECTOR = "[data-dgb-blueprint-bubble]";
   const OVERLAY_SELECTOR = "[data-dgb-blueprint-overlay]";
   const STORAGE_KEY = "DGB_MANOR_BLUEPRINT_BUBBLE_POSITION_v1";
 
-  const MOBILE_WIDTH_MAX = 760;
-  const DRAG_THRESHOLD_PX = 6;
+  const MOBILE_BREAKPOINT = 760;
+  const MOBILE_SAFE_BOTTOM = 96;
+  const DESKTOP_SAFE_BOTTOM = 20;
 
   const state = {
-    contract: IMPLEMENTATION_CONTRACT,
-    previousContract: PREVIOUS_CONTRACT,
-    bootstrapCompatApiContract: BOOTSTRAP_COMPAT_API_CONTRACT,
-    registryContract: REGISTRY_CONTRACT,
-    cssContract: CSS_CONTRACT,
-
     active: true,
-    bubbleMounted: false,
-    overlayMounted: false,
+    mounted: false,
     overlayOpen: false,
     activeLens: "map",
-
+    dragging: false,
+    dragMoved: false,
+    position: { x: 0, y: 0 },
+    positionSource: "default",
+    positionWasClamped: false,
+    safeMargins: null,
     currentPath: normalizePath(window.location.pathname || "/"),
-    currentRouteId: "",
-    currentRouteTitle: "",
-    registryAvailable: false,
+    currentRouteId: "unknown",
+    currentRouteTitle: "Current Page",
     routeCount: 0,
     instructionCount: 0,
-
-    bubblePosition: { x: 0, y: 0 },
-    dragging: false,
+    errors: [],
     lastAction: "boot",
-    localStorageKey: STORAGE_KEY,
-
-    fixedBubble: true,
-    fullScreenOverlay: true,
-    mapInstructionsToggle: true,
-
-    mobileSafePosition: true,
-    viewportWidth: 0,
-    viewportHeight: 0,
-    visualViewportUsed: false,
-    safeMargins: null,
-    bubbleRect: null,
-    positionWasClamped: false,
-    positionSource: "boot",
-
-    imageGeneration: false,
-    graphicBox: false,
-    heavyRuntime: false,
-    perPageCustomCode: false,
-
-    errors: []
+    startedAt: new Date().toISOString(),
+    updatedAt: ""
   };
 
   let bubbleEl = null;
   let overlayEl = null;
-  let currentRoute = null;
-  let routeRegistry = null;
-
-  let dragState = null;
-  let suppressClickUntil = 0;
-  let resizeTimer = 0;
+  let styleEl = null;
 
   function nowIso() {
     return new Date().toISOString();
   }
 
   function recordError(scope, error) {
-    const message = error && error.message ? error.message : String(error || "unknown");
-
     state.errors.push({
       scope,
-      message,
+      message: error && error.message ? error.message : String(error || "unknown"),
       time: nowIso()
     });
-
     state.lastAction = "error:" + scope;
     publishStatus();
   }
 
   function normalizePath(path) {
-    const raw = String(path || "/").split("?")[0].split("#")[0].trim();
-
-    if (!raw || raw === "/") return "/";
-
-    const withLead = raw.startsWith("/") ? raw : "/" + raw;
-    const collapsed = withLead.replace(/\/{2,}/g, "/");
-
-    return collapsed.endsWith("/") ? collapsed : collapsed + "/";
+    const raw = String(path || "/").split("?")[0].split("#")[0].trim() || "/";
+    if (raw === "/") return "/";
+    return raw.endsWith("/") ? raw : raw + "/";
   }
 
-  function setDataset(key, value) {
-    try {
-      document.documentElement.dataset[key] = String(value);
-    } catch (_error) {}
+  function escapeHtml(value) {
+    return String(value == null ? "" : value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
   }
 
-  function finiteNumber(value) {
-    return typeof value === "number" && Number.isFinite(value);
-  }
-
-  function clampNumber(value, min, max) {
-    if (!Number.isFinite(value)) return min;
-    if (max < min) return min;
-    return Math.min(max, Math.max(min, value));
-  }
-
-  function isMobileViewport(viewportBox) {
-    return Number(viewportBox.width || 0) <= MOBILE_WIDTH_MAX;
-  }
-
-  function getViewportBox() {
-    const vv = window.visualViewport;
-
-    if (vv && Number.isFinite(vv.width) && Number.isFinite(vv.height)) {
-      return {
-        width: vv.width,
-        height: vv.height,
-        offsetLeft: Number.isFinite(vv.offsetLeft) ? vv.offsetLeft : 0,
-        offsetTop: Number.isFinite(vv.offsetTop) ? vv.offsetTop : 0,
-        visualViewportUsed: true
-      };
+  function getRegistry() {
+    for (const key of REGISTRY_GLOBALS) {
+      if (window[key] && typeof window[key] === "object") return window[key];
     }
+    return null;
+  }
 
+  function fallbackRoutes() {
+    return [
+      { id: "compass", title: "Compass", path: "/", group: "Core", body: "Return to the main compass and entry field." },
+      { id: "door", title: "Door", path: "/door/", group: "Core", body: "Enter through the threshold route." },
+      { id: "home", title: "Home", path: "/home/", group: "Core", body: "Return to the home route." },
+      { id: "showroom", title: "Showroom", path: "/showroom/", group: "Manor", body: "Enter the Manor showroom." },
+      { id: "globe", title: "Globe Showcase", path: "/showroom/globe/", group: "Showroom", body: "Inspect the globe selector route." },
+      { id: "audralia", title: "Audralia", path: "/showroom/globe/audralia/", group: "Audralia", body: "Open the Audralia route." },
+      { id: "audralia-planet", title: "Audralia Planet", path: "/showroom/globe/audralia/planet/", group: "Audralia", body: "Inspect the Audralia future-body screen." },
+      { id: "audralia-cockpit", title: "Audralia Cockpit", path: "/showroom/globe/audralia/disposition/", group: "Audralia", body: "Open the Audralia cockpit instruments." },
+      { id: "products", title: "Products", path: "/products/", group: "Manor", body: "Review product-facing rooms." },
+      { id: "gauges", title: "Gauges", path: "/gauges/", group: "Proof", body: "Open the route proof and audit rooms." },
+      { id: "laws", title: "Laws", path: "/laws/", group: "Proof", body: "Open the law framework route." },
+      { id: "frontier", title: "Frontier", path: "/frontier/", group: "Frontier", body: "Open the frontier hub." }
+    ];
+  }
+
+  function fallbackInstructions() {
+    return [
+      { title: "Map", body: "Use Map to see the current route, nearby rooms, and available navigation paths." },
+      { title: "Instructions", body: "Use Instructions to learn the site controls and the purpose of unique interface features." },
+      { title: "Return to Orbit", body: "Return to Orbit brings you back to the main orbit or inspection section of the current page." },
+      { title: "Floating Bubble", body: "The bubble stays fixed while you scroll and can be dragged away from text or buttons." },
+      { title: "Drag", body: "Press and drag the bubble to move it. The position is saved and repaired if it becomes unsafe." },
+      { title: "Mobile Safe Zone", body: "On phones, the bubble is clamped above browser controls and inside the visible viewport." },
+      { title: "Fullscreen Overlay", body: "Opening the bubble displays a fullscreen overlay with Map and Instructions views." },
+      { title: "You Are Here", body: "The active route is marked so visitors understand where they are inside the site." },
+      { title: "Gauges", body: "Gauges are proof rooms that inspect whether a route, render, or contract is behaving as expected." },
+      { title: "No Page-by-Page Code", body: "The Blueprint HUD is loaded globally through the site bootstrap instead of being hand-coded into every page." }
+    ];
+  }
+
+  function getRoutes() {
+    const registry = getRegistry();
+    const rawRoutes = Array.isArray(registry && registry.routes) ? registry.routes : fallbackRoutes();
+
+    const routes = rawRoutes.map((route, index) => {
+      const path = normalizePath(route.path || route.href || route.url || "/");
+      return {
+        id: String(route.id || route.key || "route-" + index),
+        title: String(route.title || route.label || route.name || path),
+        path,
+        group: String(route.group || route.family || "Route"),
+        body: String(route.body || route.description || route.summary || "Open this route.")
+      };
+    });
+
+    state.routeCount = routes.length;
+    return routes;
+  }
+
+  function getInstructions() {
+    const registry = getRegistry();
+    const raw = Array.isArray(registry && registry.instructions) ? registry.instructions : fallbackInstructions();
+
+    const instructions = raw.map((item, index) => ({
+      title: String(item.title || item.label || "Instruction " + (index + 1)),
+      body: String(item.body || item.text || item.description || "Read this instruction.")
+    }));
+
+    state.instructionCount = instructions.length;
+    return instructions;
+  }
+
+  function findCurrentRoute(routes) {
+    const exact = routes.find((route) => normalizePath(route.path) === state.currentPath);
+    const fallback = exact || routes.find((route) => state.currentPath.startsWith(normalizePath(route.path)) && route.path !== "/") || routes[0];
+
+    state.currentRouteId = fallback ? fallback.id : "unknown";
+    state.currentRouteTitle = fallback ? fallback.title : document.title || "Current Page";
+    return fallback;
+  }
+
+  function getViewport() {
+    const visual = window.visualViewport || null;
     return {
-      width: window.innerWidth || document.documentElement.clientWidth || 320,
-      height: window.innerHeight || document.documentElement.clientHeight || 640,
-      offsetLeft: 0,
-      offsetTop: 0,
-      visualViewportUsed: false
+      width: Math.max(320, Math.floor(visual ? visual.width : window.innerWidth || document.documentElement.clientWidth || 320)),
+      height: Math.max(320, Math.floor(visual ? visual.height : window.innerHeight || document.documentElement.clientHeight || 640)),
+      offsetLeft: Math.floor(visual ? visual.offsetLeft : 0),
+      offsetTop: Math.floor(visual ? visual.offsetTop : 0),
+      scale: visual ? visual.scale : 1
     };
   }
 
-  function getSafeMargins(viewportBox) {
-    if (isMobileViewport(viewportBox)) {
-      return {
-        left: 16,
-        right: 16,
-        top: 18,
-        bottom: 96,
-        mode: "mobile"
-      };
-    }
-
+  function getSafeMargins() {
+    const viewport = getViewport();
+    const mobile = viewport.width <= MOBILE_BREAKPOINT;
     return {
-      left: 16,
-      right: 16,
-      top: 16,
-      bottom: 16,
-      mode: "desktop"
+      left: mobile ? 16 : 20,
+      right: mobile ? 16 : 20,
+      top: mobile ? 18 : 20,
+      bottom: mobile ? MOBILE_SAFE_BOTTOM : DESKTOP_SAFE_BOTTOM,
+      mode: mobile ? "mobile" : "desktop"
     };
   }
 
   function getBubbleSize() {
-    if (bubbleEl) {
-      const rect = bubbleEl.getBoundingClientRect();
-
-      if (rect && rect.width > 0 && rect.height > 0) {
-        return {
-          width: rect.width,
-          height: rect.height
-        };
-      }
-    }
-
+    if (!bubbleEl) return { width: 72, height: 72 };
+    const rect = bubbleEl.getBoundingClientRect();
     return {
-      width: 72,
-      height: 72
+      width: rect.width > 10 ? rect.width : 72,
+      height: rect.height > 10 ? rect.height : 72
     };
   }
 
-  function getDefaultBubblePosition(positionSource = "default") {
-    const viewportBox = getViewportBox();
-    const margins = getSafeMargins(viewportBox);
+  function clampPosition(position) {
+    const viewport = getViewport();
+    const margins = getSafeMargins();
     const size = getBubbleSize();
 
-    const x = viewportBox.offsetLeft + viewportBox.width - size.width - margins.right;
-    const y = viewportBox.offsetTop + viewportBox.height - size.height - margins.bottom;
+    const minX = margins.left + viewport.offsetLeft;
+    const minY = margins.top + viewport.offsetTop;
+    const maxX = viewport.offsetLeft + viewport.width - size.width - margins.right;
+    const maxY = viewport.offsetTop + viewport.height - size.height - margins.bottom;
 
-    return clampBubblePosition({ x, y }, {
-      positionSource,
-      forceClampedFlag: false
-    });
-  }
+    const safeMaxX = Math.max(minX, maxX);
+    const safeMaxY = Math.max(minY, maxY);
 
-  function clampBubblePosition(position, options = {}) {
-    const viewportBox = getViewportBox();
-    const margins = getSafeMargins(viewportBox);
-    const size = getBubbleSize();
-
-    const minX = viewportBox.offsetLeft + margins.left;
-    const maxX = viewportBox.offsetLeft + viewportBox.width - size.width - margins.right;
-
-    const minY = viewportBox.offsetTop + margins.top;
-    const maxY = viewportBox.offsetTop + viewportBox.height - size.height - margins.bottom;
-
-    const originalX = Number(position && position.x);
-    const originalY = Number(position && position.y);
-
-    const safeX = clampNumber(originalX, minX, maxX);
-    const safeY = clampNumber(originalY, minY, maxY);
-
-    const wasClamped =
-      options.forceClampedFlag === true ||
-      !Number.isFinite(originalX) ||
-      !Number.isFinite(originalY) ||
-      Math.abs(safeX - originalX) > 0.5 ||
-      Math.abs(safeY - originalY) > 0.5;
-
-    state.viewportWidth = Math.round(viewportBox.width);
-    state.viewportHeight = Math.round(viewportBox.height);
-    state.visualViewportUsed = Boolean(viewportBox.visualViewportUsed);
-    state.safeMargins = { ...margins };
-    state.positionWasClamped = wasClamped;
-    state.positionSource = options.positionSource || state.positionSource || "unknown";
+    const x = Math.min(Math.max(Number(position.x) || 0, minX), safeMaxX);
+    const y = Math.min(Math.max(Number(position.y) || 0, minY), safeMaxY);
 
     return {
-      x: safeX,
-      y: safeY,
-      wasClamped,
-      viewportBox,
-      safeMargins: margins,
-      bubbleSize: size
+      x,
+      y,
+      clamped: x !== Number(position.x) || y !== Number(position.y),
+      margins
+    };
+  }
+
+  function defaultPosition() {
+    const viewport = getViewport();
+    const margins = getSafeMargins();
+    const size = getBubbleSize();
+
+    return {
+      x: viewport.offsetLeft + viewport.width - size.width - margins.right,
+      y: viewport.offsetTop + viewport.height - size.height - margins.bottom
     };
   }
 
@@ -279,825 +267,554 @@
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (!raw) return null;
-
       const parsed = JSON.parse(raw);
-
-      if (!parsed || !finiteNumber(parsed.x) || !finiteNumber(parsed.y)) {
-        return null;
-      }
-
-      return {
-        x: parsed.x,
-        y: parsed.y
-      };
-    } catch (error) {
-      recordError("read-stored-position", error);
+      if (!parsed || typeof parsed !== "object") return null;
+      if (!Number.isFinite(Number(parsed.x)) || !Number.isFinite(Number(parsed.y))) return null;
+      return { x: Number(parsed.x), y: Number(parsed.y) };
+    } catch (_error) {
       return null;
     }
   }
 
-  function saveStoredPosition(position) {
+  function storePosition(position) {
     try {
-      if (!position || !finiteNumber(position.x) || !finiteNumber(position.y)) return;
-
-      window.localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({
-          x: position.x,
-          y: position.y,
-          contract: IMPLEMENTATION_CONTRACT,
-          savedAt: nowIso()
-        })
-      );
-    } catch (error) {
-      recordError("save-stored-position", error);
-    }
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        x: Math.round(position.x),
+        y: Math.round(position.y),
+        contract: STABILIZATION_CONTRACT,
+        time: nowIso()
+      }));
+    } catch (_error) {}
   }
 
-  function positionLeavesEnoughBubbleVisible(position) {
-    const viewportBox = getViewportBox();
-    const size = getBubbleSize();
-
-    const visibleLeft = Math.max(position.x, viewportBox.offsetLeft);
-    const visibleTop = Math.max(position.y, viewportBox.offsetTop);
-    const visibleRight = Math.min(position.x + size.width, viewportBox.offsetLeft + viewportBox.width);
-    const visibleBottom = Math.min(position.y + size.height, viewportBox.offsetTop + viewportBox.height);
-
-    const visibleWidth = Math.max(0, visibleRight - visibleLeft);
-    const visibleHeight = Math.max(0, visibleBottom - visibleTop);
-
-    return visibleWidth >= size.width * 0.5 && visibleHeight >= size.height * 0.5;
-  }
-
-  function resolveInitialPosition() {
-    const stored = readStoredPosition();
-
-    if (!stored) {
-      return getDefaultBubblePosition("default");
-    }
-
-    const clamped = clampBubblePosition(stored, {
-      positionSource: "stored"
-    });
-
-    if (!positionLeavesEnoughBubbleVisible(clamped)) {
-      return getDefaultBubblePosition("repair");
-    }
-
-    if (clamped.wasClamped) {
-      saveStoredPosition(clamped);
-      state.positionSource = "repair";
-    }
-
-    return clamped;
-  }
-
-  function applyBubblePosition(position, options = {}) {
+  function applyBubblePosition(position, source) {
     if (!bubbleEl) return;
 
-    const clamped = clampBubblePosition(position, {
-      positionSource: options.positionSource || "apply",
-      forceClampedFlag: options.forceClampedFlag
-    });
+    const clamped = clampPosition(position);
+    state.position = { x: clamped.x, y: clamped.y };
+    state.positionSource = source || (clamped.clamped ? "repair" : "default");
+    state.positionWasClamped = Boolean(clamped.clamped);
+    state.safeMargins = clamped.margins;
 
-    bubbleEl.style.position = "fixed";
-    bubbleEl.style.left = `${Math.round(clamped.x)}px`;
-    bubbleEl.style.top = `${Math.round(clamped.y)}px`;
-    bubbleEl.style.right = "auto";
-    bubbleEl.style.bottom = "auto";
-    bubbleEl.style.zIndex = "99990";
-    bubbleEl.style.pointerEvents = "auto";
-    bubbleEl.style.display = "grid";
-    bubbleEl.style.visibility = "visible";
-    bubbleEl.style.opacity = "1";
+    bubbleEl.style.setProperty("left", Math.round(clamped.x) + "px", "important");
+    bubbleEl.style.setProperty("top", Math.round(clamped.y) + "px", "important");
+    bubbleEl.style.setProperty("right", "auto", "important");
+    bubbleEl.style.setProperty("bottom", "auto", "important");
+    bubbleEl.style.setProperty("display", "grid", "important");
+    bubbleEl.style.setProperty("visibility", "visible", "important");
+    bubbleEl.style.setProperty("opacity", "1", "important");
+    bubbleEl.style.setProperty("pointer-events", "auto", "important");
 
-    state.bubblePosition = {
-      x: Math.round(clamped.x),
-      y: Math.round(clamped.y)
-    };
-
-    refreshBubbleRect();
-
-    if (options.save === true) {
-      saveStoredPosition(state.bubblePosition);
+    if (clamped.clamped || source === "drag" || source === "reset") {
+      storePosition(state.position);
     }
 
     publishStatus();
   }
 
-  function repairBubblePositionIfNeeded(positionSource = "repair") {
-    if (!bubbleEl) return;
-
-    const current = state.bubblePosition && finiteNumber(state.bubblePosition.x) && finiteNumber(state.bubblePosition.y)
-      ? state.bubblePosition
-      : resolveInitialPosition();
-
-    const clamped = clampBubblePosition(current, {
-      positionSource
-    });
-
-    const shouldRepair =
-      clamped.wasClamped ||
-      !positionLeavesEnoughBubbleVisible(clamped);
-
-    if (shouldRepair) {
-      applyBubblePosition(clamped, {
-        save: true,
-        positionSource
-      });
-    } else {
-      applyBubblePosition(clamped, {
-        save: false,
-        positionSource
-      });
-    }
+  function initializePosition() {
+    const stored = readStoredPosition();
+    const source = stored ? "stored" : "default";
+    const initial = stored || defaultPosition();
+    const clamped = clampPosition(initial);
+    const finalSource = clamped.clamped && stored ? "repair" : source;
+    applyBubblePosition(initial, finalSource);
   }
 
-  function refreshBubbleRect() {
-    if (!bubbleEl) {
-      state.bubbleRect = null;
-      return;
-    }
+  function injectStyle() {
+    if (document.getElementById("dgb-manor-blueprint-hud-style")) return;
 
-    const rect = bubbleEl.getBoundingClientRect();
-
-    state.bubbleRect = {
-      x: Math.round(rect.x),
-      y: Math.round(rect.y),
-      top: Math.round(rect.top),
-      left: Math.round(rect.left),
-      right: Math.round(rect.right),
-      bottom: Math.round(rect.bottom),
-      width: Math.round(rect.width),
-      height: Math.round(rect.height)
-    };
-  }
-
-  function fallbackRoutes() {
-    return [
-      { id: "compass", title: "Compass", path: "/", group: "Manor", chain: ["Manor", "Compass"] },
-      { id: "showroom", title: "Showroom", path: "/showroom/", group: "Showroom", chain: ["Manor", "Showroom"] },
-      { id: "globe", title: "Globe Showcase", path: "/showroom/globe/", group: "Showroom", chain: ["Manor", "Showroom", "Globe"] },
-      { id: "audralia", title: "Audralia", path: "/showroom/globe/audralia/", group: "Audralia", chain: ["Manor", "Showroom", "Globe", "Audralia"] },
-      { id: "audralia-planet", title: "Audralia Planet", path: "/showroom/globe/audralia/planet/", group: "Audralia", chain: ["Manor", "Showroom", "Globe", "Audralia", "Planet"] },
-      { id: "audralia-cockpit", title: "Audralia Cockpit", path: "/showroom/globe/audralia/disposition/", group: "Audralia", chain: ["Manor", "Showroom", "Globe", "Audralia", "Cockpit"] },
-      { id: "gauges", title: "Gauges", path: "/gauges/", group: "Proof", chain: ["Manor", "Gauges"] },
-      { id: "laws", title: "Laws", path: "/laws/", group: "Proof", chain: ["Manor", "Laws"] }
-    ];
-  }
-
-  function fallbackInstructions() {
-    return [
-      {
-        title: "Blueprint Bubble",
-        body: "The floating bubble opens the Manor Blueprint: a site-wide map and instruction layer."
-      },
-      {
-        title: "Return to Orbit",
-        body: "Return to Orbit moves you back to the page’s primary navigation field or main inspection stage."
-      },
-      {
-        title: "Map Lens",
-        body: "The Map lens identifies where you are and shows nearby rooms, chambers, and routes."
-      },
-      {
-        title: "Instructions Lens",
-        body: "The Instructions lens explains recurring navigation patterns, route gems, chambers, receipts, and proof lanes."
-      },
-      {
-        title: "Gauges / Triple G",
-        body: "Gauges are proof rooms. They help inspect whether a route, render, or contract is behaving as expected."
+    styleEl = document.createElement("style");
+    styleEl.id = "dgb-manor-blueprint-hud-style";
+    styleEl.setAttribute("data-manor-blueprint-contract", STABILIZATION_CONTRACT);
+    styleEl.textContent = `
+      .dgb-blueprint-bubble{
+        width:72px!important;
+        height:72px!important;
+        border-radius:999px!important;
+        border:1px solid rgba(243,200,111,.72)!important;
+        background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.42),transparent 28%),linear-gradient(135deg,#fff2a8,#f3c86f)!important;
+        color:#060811!important;
+        box-shadow:0 18px 40px rgba(0,0,0,.42),0 0 26px rgba(243,200,111,.26)!important;
+        place-items:center!important;
+        font:900 11px/1 Inter,system-ui,sans-serif!important;
+        letter-spacing:.08em!important;
+        text-transform:uppercase!important;
+        touch-action:none!important;
+        user-select:none!important;
+        -webkit-user-select:none!important;
       }
-    ];
+      .dgb-blueprint-bubble span{pointer-events:none!important;display:grid!important;gap:2px!important;text-align:center!important}
+      .dgb-blueprint-bubble b{font-size:16px!important;line-height:1!important}
+      .dgb-blueprint-bubble small{font-size:8px!important;letter-spacing:.12em!important}
+      .dgb-blueprint-overlay{
+        position:fixed!important;
+        inset:0!important;
+        z-index:99980!important;
+        background:rgba(1,4,12,.94)!important;
+        color:#fff4d8!important;
+        overflow:auto!important;
+        -webkit-overflow-scrolling:touch!important;
+        padding:18px!important;
+      }
+      .dgb-blueprint-panel{
+        width:min(1120px,100%)!important;
+        margin:0 auto!important;
+        border:1px solid rgba(243,200,111,.26)!important;
+        border-radius:24px!important;
+        background:linear-gradient(180deg,rgba(12,18,36,.96),rgba(4,8,18,.98))!important;
+        box-shadow:0 30px 90px rgba(0,0,0,.55)!important;
+        padding:18px!important;
+      }
+      .dgb-blueprint-top{
+        display:flex!important;
+        align-items:flex-start!important;
+        justify-content:space-between!important;
+        gap:14px!important;
+        flex-wrap:wrap!important;
+        margin-bottom:14px!important;
+      }
+      .dgb-blueprint-title{display:grid!important;gap:4px!important}
+      .dgb-blueprint-title b{font-size:13px!important;letter-spacing:.14em!important;text-transform:uppercase!important;color:#f3c86f!important}
+      .dgb-blueprint-title h2{margin:0!important;font-size:clamp(26px,6vw,48px)!important;line-height:.95!important;letter-spacing:-.05em!important;color:#fff4d8!important}
+      .dgb-blueprint-actions{display:flex!important;gap:8px!important;flex-wrap:wrap!important}
+      .dgb-blueprint-actions button,
+      .dgb-blueprint-card a{
+        border:1px solid rgba(243,200,111,.36)!important;
+        border-radius:999px!important;
+        min-height:38px!important;
+        padding:8px 12px!important;
+        background:rgba(255,255,255,.06)!important;
+        color:#fff4d8!important;
+        font:900 11px/1 Inter,system-ui,sans-serif!important;
+        letter-spacing:.08em!important;
+        text-transform:uppercase!important;
+        cursor:pointer!important;
+        text-decoration:none!important;
+      }
+      .dgb-blueprint-actions button[data-active="true"]{
+        background:linear-gradient(135deg,#fff2a8,#f3c86f)!important;
+        color:#05070d!important;
+      }
+      .dgb-blueprint-grid{
+        display:grid!important;
+        grid-template-columns:repeat(auto-fit,minmax(220px,1fr))!important;
+        gap:10px!important;
+      }
+      .dgb-blueprint-card{
+        border:1px solid rgba(184,205,255,.15)!important;
+        border-radius:18px!important;
+        padding:13px!important;
+        background:rgba(255,255,255,.045)!important;
+        display:grid!important;
+        gap:8px!important;
+      }
+      .dgb-blueprint-card[data-current="true"]{
+        border-color:rgba(243,200,111,.72)!important;
+        box-shadow:0 0 0 1px rgba(243,200,111,.18),0 0 28px rgba(243,200,111,.10)!important;
+      }
+      .dgb-blueprint-card b{color:#f3c86f!important;font-size:11px!important;letter-spacing:.12em!important;text-transform:uppercase!important}
+      .dgb-blueprint-card h3{margin:0!important;color:#fff4d8!important;font-size:18px!important;line-height:1.08!important}
+      .dgb-blueprint-card p{margin:0!important;color:rgba(230,238,255,.80)!important;font-size:14px!important;line-height:1.42!important}
+      @media(max-width:760px){
+        .dgb-blueprint-bubble{width:68px!important;height:68px!important}
+        .dgb-blueprint-overlay{padding:12px!important}
+        .dgb-blueprint-panel{border-radius:18px!important;padding:14px!important}
+      }
+    `;
+
+    (document.head || document.documentElement).appendChild(styleEl);
   }
 
-  function getRawRegistry() {
-    return window.DGB_MANOR_BLUEPRINT_REGISTRY || window.DGB_MANOR_BLUEPRINT_ROUTE_REGISTRY || null;
-  }
-
-  function normalizeRoute(rawRoute, index) {
-    const path = normalizePath(rawRoute.path || rawRoute.href || rawRoute.url || rawRoute.route || "/");
-    const title = rawRoute.title || rawRoute.label || rawRoute.name || rawRoute.id || `Route ${index + 1}`;
-    const id = rawRoute.id || title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || `route-${index + 1}`;
-
-    let chain = rawRoute.chain || rawRoute.breadcrumbs || rawRoute.pathChain;
-
-    if (!Array.isArray(chain) || chain.length === 0) {
-      chain = path === "/"
-        ? ["Manor", "Compass"]
-        : ["Manor"].concat(path.split("/").filter(Boolean).map((part) => part.replace(/-/g, " ")));
+  function createOrGetBubble() {
+    const existing = document.querySelector(BUBBLE_SELECTOR);
+    if (existing) {
+      bubbleEl = existing;
+      return bubbleEl;
     }
 
-    return {
-      ...rawRoute,
-      id,
-      title,
-      path,
-      group: rawRoute.group || rawRoute.house || rawRoute.zone || "Manor",
-      description: rawRoute.description || rawRoute.summary || "",
-      chain
-    };
+    bubbleEl = document.createElement("button");
+    bubbleEl.type = "button";
+    bubbleEl.className = "dgb-blueprint-bubble";
+    bubbleEl.setAttribute("aria-label", "Open Manor Blueprint map and instructions");
+    bubbleEl.setAttribute("data-dgb-blueprint-bubble", "true");
+    bubbleEl.setAttribute("data-manor-blueprint-contract", STABILIZATION_CONTRACT);
+    bubbleEl.innerHTML = "<span><b>◇</b><small>Map</small></span>";
+
+    bubbleEl.style.cssText = [
+      "position:fixed!important",
+      "z-index:99990!important",
+      "display:grid!important",
+      "visibility:visible!important",
+      "opacity:1!important",
+      "pointer-events:auto!important",
+      "overflow:visible!important",
+      "left:0!important",
+      "top:0!important"
+    ].join(";");
+
+    document.body.appendChild(bubbleEl);
+    return bubbleEl;
   }
 
-  function loadRegistry() {
-    const raw = getRawRegistry();
+  function createOrGetOverlay() {
+    const existing = document.querySelector(OVERLAY_SELECTOR);
+    if (existing) {
+      overlayEl = existing;
+      return overlayEl;
+    }
 
-    const routes = raw && Array.isArray(raw.routes)
-      ? raw.routes.map(normalizeRoute)
-      : fallbackRoutes().map(normalizeRoute);
+    overlayEl = document.createElement("section");
+    overlayEl.className = "dgb-blueprint-overlay";
+    overlayEl.setAttribute("data-dgb-blueprint-overlay", "true");
+    overlayEl.setAttribute("data-manor-blueprint-contract", STABILIZATION_CONTRACT);
+    overlayEl.setAttribute("aria-label", "Manor Blueprint map and instructions");
+    overlayEl.style.setProperty("display", "none", "important");
 
-    const instructions = raw && Array.isArray(raw.instructions)
-      ? raw.instructions
-      : fallbackInstructions();
-
-    routeRegistry = {
-      raw,
-      routes,
-      instructions,
-      contract: raw && raw.contract ? raw.contract : REGISTRY_CONTRACT
-    };
-
-    state.registryAvailable = Boolean(raw);
-    state.routeCount = routes.length;
-    state.instructionCount = instructions.length;
-
-    currentRoute = resolveCurrentRoute(routes);
-    state.currentRouteId = currentRoute.id;
-    state.currentRouteTitle = currentRoute.title;
-  }
-
-  function resolveCurrentRoute(routes) {
-    const currentPath = normalizePath(window.location.pathname || "/");
-
-    const exact = routes.find((route) => normalizePath(route.path) === currentPath);
-    if (exact) return exact;
-
-    const partial = routes
-      .filter((route) => {
-        const routePath = normalizePath(route.path);
-        return routePath !== "/" && currentPath.startsWith(routePath);
-      })
-      .sort((a, b) => normalizePath(b.path).length - normalizePath(a.path).length)[0];
-
-    if (partial) return partial;
-
-    return routes.find((route) => normalizePath(route.path) === "/") || {
-      id: "current",
-      title: document.title || "Current Page",
-      path: currentPath,
-      group: "Current",
-      chain: ["Manor", "Current Page"],
-      description: ""
-    };
-  }
-
-  function escapeHtml(value) {
-    return String(value ?? "")
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;");
-  }
-
-  function renderRouteCards() {
-    const routes = routeRegistry && Array.isArray(routeRegistry.routes)
-      ? routeRegistry.routes
-      : fallbackRoutes();
-
-    return routes
-      .map((route) => {
-        const isCurrent = route.id === state.currentRouteId;
-        const description = route.description || route.group || "";
-
-        return `
-          <a class="dgb-bp-route-card" href="${escapeHtml(route.path)}" ${isCurrent ? 'data-current-route="true"' : ""}>
-            <span class="dgb-bp-route-card__kicker">${isCurrent ? "You Are Here" : escapeHtml(route.group || "Route")}</span>
-            <strong>${escapeHtml(route.title)}</strong>
-            <small>${escapeHtml(description)}</small>
-          </a>
-        `;
-      })
-      .join("");
-  }
-
-  function renderInstructionCards() {
-    const instructions = routeRegistry && Array.isArray(routeRegistry.instructions)
-      ? routeRegistry.instructions
-      : fallbackInstructions();
-
-    return instructions
-      .map((item, index) => {
-        const title = item.title || item.label || `Instruction ${index + 1}`;
-        const body = item.body || item.description || item.text || "";
-
-        return `
-          <article class="dgb-bp-instruction-card">
-            <b>${escapeHtml(title)}</b>
-            <p>${escapeHtml(body)}</p>
-          </article>
-        `;
-      })
-      .join("");
+    document.body.appendChild(overlayEl);
+    return overlayEl;
   }
 
   function renderOverlay() {
     if (!overlayEl) return;
 
-    const chain = currentRoute && Array.isArray(currentRoute.chain)
-      ? currentRoute.chain
-      : ["Manor", state.currentRouteTitle || "Current Page"];
+    const routes = getRoutes();
+    const instructions = getInstructions();
+    const current = findCurrentRoute(routes);
+
+    const mapCards = routes.map((route) => {
+      const isCurrent = current && route.id === current.id;
+      return `
+        <article class="dgb-blueprint-card" data-current="${isCurrent ? "true" : "false"}">
+          <b>${escapeHtml(route.group)}${isCurrent ? " · You Are Here" : ""}</b>
+          <h3>${escapeHtml(route.title)}</h3>
+          <p>${escapeHtml(route.body)}</p>
+          <a href="${escapeHtml(route.path)}">${isCurrent ? "Stay Here" : "Open Route"}</a>
+        </article>
+      `;
+    }).join("");
+
+    const instructionCards = instructions.map((item) => `
+      <article class="dgb-blueprint-card">
+        <b>Instruction</b>
+        <h3>${escapeHtml(item.title)}</h3>
+        <p>${escapeHtml(item.body)}</p>
+      </article>
+    `).join("");
 
     overlayEl.innerHTML = `
-      <div class="dgb-bp-shell" role="document">
-        <header class="dgb-bp-header">
-          <div>
-            <span class="dgb-bp-kicker">Manor Blueprint</span>
-            <h2>Map / Instructions</h2>
-            <p>Use the Blueprint to see where you are, move through the Manor, and understand route controls.</p>
+      <div class="dgb-blueprint-panel">
+        <div class="dgb-blueprint-top">
+          <div class="dgb-blueprint-title">
+            <b>Manor Blueprint · ${escapeHtml(state.activeLens)}</b>
+            <h2>${state.activeLens === "map" ? "Site Map" : "Instructions"}</h2>
+            <p style="margin:0;color:rgba(230,238,255,.78);font:700 14px/1.45 Inter,system-ui,sans-serif;">
+              Current route: ${escapeHtml(state.currentRouteTitle)}
+            </p>
           </div>
-          <button class="dgb-bp-close" type="button" data-dgb-blueprint-close aria-label="Close Manor Blueprint">×</button>
-        </header>
-
-        <nav class="dgb-bp-tabs" aria-label="Blueprint lenses">
-          <button type="button" data-dgb-blueprint-lens="map" aria-pressed="${state.activeLens === "map"}">Map</button>
-          <button type="button" data-dgb-blueprint-lens="instructions" aria-pressed="${state.activeLens === "instructions"}">Instructions</button>
-        </nav>
-
-        <section class="dgb-bp-lens" data-dgb-blueprint-panel="map" ${state.activeLens === "map" ? "" : "hidden"}>
-          <div class="dgb-bp-you-are-here">
-            <span>You Are Here</span>
-            <strong>${escapeHtml(state.currentRouteTitle || "Current Page")}</strong>
-            <p>${chain.map(escapeHtml).join(" → ")}</p>
+          <div class="dgb-blueprint-actions">
+            <button type="button" data-dgb-blueprint-lens="map" data-active="${state.activeLens === "map" ? "true" : "false"}">Map</button>
+            <button type="button" data-dgb-blueprint-lens="instructions" data-active="${state.activeLens === "instructions" ? "true" : "false"}">Instructions</button>
+            <button type="button" data-dgb-blueprint-reset>Reset Bubble</button>
+            <button type="button" data-dgb-blueprint-close>Close</button>
           </div>
-          <div class="dgb-bp-route-grid">
-            ${renderRouteCards()}
-          </div>
-        </section>
-
-        <section class="dgb-bp-lens" data-dgb-blueprint-panel="instructions" ${state.activeLens === "instructions" ? "" : "hidden"}>
-          <div class="dgb-bp-instruction-grid">
-            ${renderInstructionCards()}
-          </div>
-        </section>
+        </div>
+        <div class="dgb-blueprint-grid">
+          ${state.activeLens === "map" ? mapCards : instructionCards}
+        </div>
       </div>
     `;
 
-    bindOverlayEvents();
-  }
-
-  function bindOverlayEvents() {
-    if (!overlayEl || overlayEl.dataset.dgbBlueprintEventsBound === "true") return;
-
-    overlayEl.dataset.dgbBlueprintEventsBound = "true";
-
-    overlayEl.addEventListener("click", (event) => {
-      const closeButton = event.target.closest("[data-dgb-blueprint-close]");
-      if (closeButton) {
-        event.preventDefault();
-        closeOverlay();
-        return;
-      }
-
-      const lensButton = event.target.closest("[data-dgb-blueprint-lens]");
-      if (lensButton) {
-        event.preventDefault();
-        setLens(lensButton.getAttribute("data-dgb-blueprint-lens") || "map");
-        return;
-      }
-
-      if (event.target === overlayEl) {
-        closeOverlay();
-      }
+    overlayEl.querySelectorAll("[data-dgb-blueprint-lens]").forEach((button) => {
+      button.addEventListener("click", () => setLens(button.getAttribute("data-dgb-blueprint-lens") || "map"));
     });
 
-    overlayEl.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        closeOverlay();
-      }
-    });
-  }
+    const close = overlayEl.querySelector("[data-dgb-blueprint-close]");
+    if (close) close.addEventListener("click", closeOverlay);
 
-  function createOrGetBubble() {
-    const existing = document.querySelector(BUBBLE_SELECTOR);
-
-    if (existing) {
-      bubbleEl = existing;
-    } else {
-      bubbleEl = document.createElement("button");
-      bubbleEl.type = "button";
-      bubbleEl.className = "dgb-blueprint-bubble";
-      bubbleEl.setAttribute("data-dgb-blueprint-bubble", "true");
-      bubbleEl.setAttribute("aria-label", "Open Manor Blueprint Map");
-      bubbleEl.setAttribute("title", "Open Manor Blueprint Map");
-      bubbleEl.innerHTML = `
-        <span class="dgb-blueprint-bubble__gem" aria-hidden="true"></span>
-        <span class="dgb-blueprint-bubble__label">MAP</span>
-      `;
-      document.body.appendChild(bubbleEl);
-    }
-
-    bubbleEl.setAttribute("data-contract", IMPLEMENTATION_CONTRACT);
-    bubbleEl.setAttribute("data-bootstrap-compat-contract", BOOTSTRAP_COMPAT_API_CONTRACT);
-    bubbleEl.setAttribute("data-mobile-safe-position", "true");
-
-    state.bubbleMounted = true;
-  }
-
-  function createOrGetOverlay() {
-    const existing = document.querySelector(OVERLAY_SELECTOR);
-
-    if (existing) {
-      overlayEl = existing;
-    } else {
-      overlayEl = document.createElement("aside");
-      overlayEl.className = "dgb-blueprint-overlay";
-      overlayEl.setAttribute("data-dgb-blueprint-overlay", "true");
-      overlayEl.setAttribute("role", "dialog");
-      overlayEl.setAttribute("aria-modal", "true");
-      overlayEl.setAttribute("aria-label", "Manor Blueprint Map and Instructions");
-      overlayEl.hidden = true;
-      document.body.appendChild(overlayEl);
-    }
-
-    overlayEl.setAttribute("data-contract", IMPLEMENTATION_CONTRACT);
-    overlayEl.setAttribute("data-open", state.overlayOpen ? "true" : "false");
-
-    state.overlayMounted = true;
-
-    renderOverlay();
+    const reset = overlayEl.querySelector("[data-dgb-blueprint-reset]");
+    if (reset) reset.addEventListener("click", resetPosition);
   }
 
   function openOverlay() {
-    if (!overlayEl) return;
-
+    createOrGetOverlay();
     state.overlayOpen = true;
-    state.lastAction = "open-overlay";
-
-    overlayEl.hidden = false;
-    overlayEl.setAttribute("data-open", "true");
+    state.lastAction = "open";
     renderOverlay();
+    overlayEl.style.setProperty("display", "block", "important");
+    overlayEl.setAttribute("data-open", "true");
     publishStatus();
-
-    const closeButton = overlayEl.querySelector("[data-dgb-blueprint-close]");
-    if (closeButton && typeof closeButton.focus === "function") {
-      window.setTimeout(() => closeButton.focus({ preventScroll: true }), 0);
-    }
   }
 
   function closeOverlay() {
     if (!overlayEl) return;
-
     state.overlayOpen = false;
-    state.lastAction = "close-overlay";
-
-    overlayEl.hidden = true;
+    state.lastAction = "close";
+    overlayEl.style.setProperty("display", "none", "important");
     overlayEl.setAttribute("data-open", "false");
     publishStatus();
+  }
 
-    if (bubbleEl && typeof bubbleEl.focus === "function") {
-      window.setTimeout(() => bubbleEl.focus({ preventScroll: true }), 0);
-    }
+  function toggleOverlay() {
+    if (state.overlayOpen) closeOverlay();
+    else openOverlay();
   }
 
   function setLens(lens) {
     state.activeLens = lens === "instructions" ? "instructions" : "map";
-    state.lastAction = "set-lens";
-
-    setDataset("manorBlueprintLens", state.activeLens);
+    state.lastAction = "set-lens:" + state.activeLens;
     renderOverlay();
     publishStatus();
   }
 
-  function bindBubbleEvents() {
-    if (!bubbleEl || bubbleEl.dataset.dgbBlueprintEventsBound === "true") return;
+  function resetPosition() {
+    try {
+      window.localStorage.removeItem(STORAGE_KEY);
+    } catch (_error) {}
+    applyBubblePosition(defaultPosition(), "reset");
+  }
 
-    bubbleEl.dataset.dgbBlueprintEventsBound = "true";
+  function attachBubbleEvents() {
+    if (!bubbleEl || bubbleEl.__dgbBlueprintEventsAttached) return;
+    bubbleEl.__dgbBlueprintEventsAttached = true;
+
+    let startX = 0;
+    let startY = 0;
+    let baseX = 0;
+    let baseY = 0;
+    let pointerId = null;
 
     bubbleEl.addEventListener("pointerdown", (event) => {
-      if (event.button !== undefined && event.button !== 0) return;
-
-      const startPosition = {
-        x: state.bubblePosition.x,
-        y: state.bubblePosition.y
-      };
-
-      dragState = {
-        pointerId: event.pointerId,
-        startClientX: event.clientX,
-        startClientY: event.clientY,
-        startPosition,
-        moved: false
-      };
-
-      state.dragging = false;
-      state.lastAction = "pointer-down";
+      state.dragging = true;
+      state.dragMoved = false;
+      pointerId = event.pointerId;
+      startX = event.clientX;
+      startY = event.clientY;
+      baseX = state.position.x;
+      baseY = state.position.y;
 
       try {
-        bubbleEl.setPointerCapture(event.pointerId);
+        bubbleEl.setPointerCapture(pointerId);
       } catch (_error) {}
 
+      state.lastAction = "drag-start";
       publishStatus();
     });
 
     bubbleEl.addEventListener("pointermove", (event) => {
-      if (!dragState || dragState.pointerId !== event.pointerId) return;
+      if (!state.dragging) return;
 
-      const dx = event.clientX - dragState.startClientX;
-      const dy = event.clientY - dragState.startClientY;
-      const distance = Math.sqrt(dx * dx + dy * dy);
+      const dx = event.clientX - startX;
+      const dy = event.clientY - startY;
 
-      if (distance < DRAG_THRESHOLD_PX && !dragState.moved) return;
+      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) state.dragMoved = true;
 
+      applyBubblePosition({ x: baseX + dx, y: baseY + dy }, "drag");
       event.preventDefault();
+    }, { passive: false });
 
-      dragState.moved = true;
-      state.dragging = true;
-      state.lastAction = "drag";
-
-      applyBubblePosition({
-        x: dragState.startPosition.x + dx,
-        y: dragState.startPosition.y + dy
-      }, {
-        save: false,
-        positionSource: "drag"
-      });
-    });
-
-    bubbleEl.addEventListener("pointerup", (event) => {
-      if (!dragState || dragState.pointerId !== event.pointerId) return;
-
-      event.preventDefault();
+    bubbleEl.addEventListener("pointerup", () => {
+      if (!state.dragging) return;
 
       try {
-        bubbleEl.releasePointerCapture(event.pointerId);
+        if (pointerId !== null) bubbleEl.releasePointerCapture(pointerId);
       } catch (_error) {}
 
-      const wasDrag = Boolean(dragState.moved);
-      dragState = null;
-
-      if (wasDrag) {
-        state.dragging = false;
-        state.lastAction = "drag-save";
-        suppressClickUntil = Date.now() + 450;
-
-        applyBubblePosition(state.bubblePosition, {
-          save: true,
-          positionSource: "drag"
-        });
-
-        publishStatus();
-        return;
-      }
-
       state.dragging = false;
-      state.lastAction = "tap-open";
-      openOverlay();
-    });
+      state.lastAction = state.dragMoved ? "drag-end" : "tap";
 
-    bubbleEl.addEventListener("pointercancel", (event) => {
-      if (!dragState || dragState.pointerId !== event.pointerId) return;
+      if (!state.dragMoved) toggleOverlay();
+      else storePosition(state.position);
 
-      try {
-        bubbleEl.releasePointerCapture(event.pointerId);
-      } catch (_error) {}
-
-      dragState = null;
-      state.dragging = false;
-      state.lastAction = "pointer-cancel";
-      repairBubblePositionIfNeeded("repair");
       publishStatus();
     });
 
-    bubbleEl.addEventListener("click", (event) => {
-      if (Date.now() < suppressClickUntil) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-    });
-
-    bubbleEl.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        openOverlay();
-      }
+    bubbleEl.addEventListener("pointercancel", () => {
+      state.dragging = false;
+      state.lastAction = "drag-cancel";
+      publishStatus();
     });
   }
 
-  function bindViewportEvents() {
-    if (window.__DGB_MANOR_BLUEPRINT_VIEWPORT_EVENTS_BOUND__ === IMPLEMENTATION_CONTRACT) return;
-
-    window.__DGB_MANOR_BLUEPRINT_VIEWPORT_EVENTS_BOUND__ = IMPLEMENTATION_CONTRACT;
-
-    const scheduleRepair = (source) => {
-      window.clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(() => {
-        state.lastAction = source;
-        repairBubblePositionIfNeeded(source);
-      }, 80);
+  function getBubbleRect() {
+    if (!bubbleEl) return null;
+    const rect = bubbleEl.getBoundingClientRect();
+    return {
+      x: rect.x,
+      y: rect.y,
+      top: rect.top,
+      left: rect.left,
+      right: rect.right,
+      bottom: rect.bottom,
+      width: rect.width,
+      height: rect.height
     };
-
-    window.addEventListener("resize", () => scheduleRepair("resize"), { passive: true });
-    window.addEventListener("orientationchange", () => scheduleRepair("orientationchange"), { passive: true });
-
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener("resize", () => scheduleRepair("visual-viewport-resize"), { passive: true });
-      window.visualViewport.addEventListener("scroll", () => scheduleRepair("visual-viewport-scroll"), { passive: true });
-    }
   }
 
-  function resetBubblePosition() {
-    try {
-      window.localStorage.removeItem(STORAGE_KEY);
-    } catch (error) {
-      recordError("reset-remove-storage", error);
-    }
-
-    const next = getDefaultBubblePosition("reset");
-
-    state.lastAction = "reset-bubble-position";
-    applyBubblePosition(next, {
-      save: true,
-      positionSource: "reset",
-      forceClampedFlag: next.wasClamped
-    });
-
-    return status();
-  }
-
-  function refresh() {
-    loadRegistry();
-
-    if (!bubbleEl) createOrGetBubble();
-    if (!overlayEl) createOrGetOverlay();
-
-    repairBubblePositionIfNeeded("refresh");
-    renderOverlay();
-
-    state.lastAction = "refresh";
-    publishStatus();
-
-    return status();
-  }
-
-  function status() {
-    refreshBubbleRect();
-
-    return Object.freeze({
-      contract: IMPLEMENTATION_CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
-      bootstrapCompatApiContract: BOOTSTRAP_COMPAT_API_CONTRACT,
-      registryContract: REGISTRY_CONTRACT,
-      cssContract: CSS_CONTRACT,
-
-      active: state.active,
-      bubbleMounted: state.bubbleMounted,
-      overlayMounted: state.overlayMounted,
-      overlayOpen: state.overlayOpen,
-      activeLens: state.activeLens,
-
-      currentPath: state.currentPath,
-      currentRouteId: state.currentRouteId,
-      currentRouteTitle: state.currentRouteTitle,
-      registryAvailable: state.registryAvailable,
-      routeCount: state.routeCount,
-      instructionCount: state.instructionCount,
-
-      bubblePosition: { ...state.bubblePosition },
-      dragging: state.dragging,
-      lastAction: state.lastAction,
-      localStorageKey: state.localStorageKey,
-
-      fixedBubble: true,
-      fullScreenOverlay: true,
-      mapInstructionsToggle: true,
-
-      mobileSafePosition: true,
-      viewportWidth: state.viewportWidth,
-      viewportHeight: state.viewportHeight,
-      visualViewportUsed: state.visualViewportUsed,
-      safeMargins: state.safeMargins ? { ...state.safeMargins } : null,
-      bubbleRect: state.bubbleRect ? { ...state.bubbleRect } : null,
-      positionWasClamped: state.positionWasClamped,
-      positionSource: state.positionSource,
-
-      imageGeneration: false,
-      graphicBox: false,
-      heavyRuntime: false,
-      perPageCustomCode: false,
-
-      errors: state.errors.slice()
-    });
+  function isMobileSafe(rect, margins, viewport) {
+    if (!rect || !margins || margins.mode !== "mobile") return margins && margins.mode === "desktop";
+    return (
+      rect.left >= margins.left - 1 &&
+      rect.top >= margins.top - 1 &&
+      rect.right <= viewport.width - margins.right + 1 &&
+      rect.bottom <= viewport.height - Math.min(80, margins.bottom) + 1
+    );
   }
 
   function publishStatus() {
-    const payload = status();
+    const viewport = getViewport();
+    const rect = getBubbleRect();
+    const margins = state.safeMargins || getSafeMargins();
+
+    const payload = {
+      contract: STABILIZATION_CONTRACT,
+      apiContract: API_COMPAT_CONTRACT,
+      implementationContract: PUBLIC_IMPLEMENTATION_CONTRACT,
+      stabilizationContract: STABILIZATION_CONTRACT,
+      previousImplementationContract: PREVIOUS_IMPLEMENTATION_CONTRACT,
+      active: true,
+      bubbleMounted: Boolean(bubbleEl && document.body.contains(bubbleEl)),
+      overlayMounted: Boolean(overlayEl && document.body.contains(overlayEl)),
+      overlayOpen: state.overlayOpen,
+      activeLens: state.activeLens,
+      currentPath: state.currentPath,
+      currentRouteId: state.currentRouteId,
+      currentRouteTitle: state.currentRouteTitle,
+      registryAvailable: Boolean(getRegistry()),
+      routeCount: state.routeCount,
+      instructionCount: state.instructionCount,
+      fixedBubble: true,
+      fullScreenOverlay: true,
+      mapInstructionsToggle: true,
+      draggable: true,
+      mobileSafePosition: Boolean(isMobileSafe(rect, margins, viewport)),
+      safeMargins: margins,
+      positionSource: state.positionSource,
+      positionWasClamped: state.positionWasClamped,
+      bubblePosition: { ...state.position },
+      bubbleRect: rect,
+      viewportWidth: viewport.width,
+      viewportHeight: viewport.height,
+      visualViewportUsed: Boolean(window.visualViewport),
+      localStorageKey: STORAGE_KEY,
+      imageGeneration: false,
+      graphicBox: false,
+      heavyRuntime: false,
+      webGL: false,
+      canvasMapEngine: false,
+      perPageCustomCode: false,
+      errors: state.errors.slice(),
+      lastAction: state.lastAction,
+      startedAt: state.startedAt,
+      updatedAt: nowIso()
+    };
 
     window[STATUS_GLOBAL] = payload;
     window[RECEIPT_GLOBAL] = payload;
 
-    setDataset("manorBlueprintCurrentRoute", state.currentRouteId || "unknown");
-    setDataset("manorBlueprintLens", state.activeLens);
-    setDataset("manorBlueprintActive", "true");
-    setDataset("manorBlueprintContract", IMPLEMENTATION_CONTRACT);
-    setDataset("manorBlueprintPreviousContract", PREVIOUS_CONTRACT);
-    setDataset("manorBlueprintBootstrapCompatApiContract", BOOTSTRAP_COMPAT_API_CONTRACT);
-    setDataset("manorBlueprintOverlayOpen", state.overlayOpen ? "true" : "false");
-    setDataset("manorBlueprintFixedBubble", "true");
-    setDataset("manorBlueprintFullscreenOverlay", "true");
-    setDataset("manorBlueprintMobileSafePosition", "true");
-    setDataset("manorBlueprintViewportWidth", String(state.viewportWidth || ""));
-    setDataset("manorBlueprintViewportHeight", String(state.viewportHeight || ""));
-    setDataset("manorBlueprintPositionSource", state.positionSource || "");
-    setDataset("manorBlueprintPositionWasClamped", state.positionWasClamped ? "true" : "false");
+    try {
+      document.documentElement.dataset.manorBlueprintActive = "true";
+      document.documentElement.dataset.manorBlueprintContract = STABILIZATION_CONTRACT;
+      document.documentElement.dataset.manorBlueprintImplementationContract = PUBLIC_IMPLEMENTATION_CONTRACT;
+      document.documentElement.dataset.manorBlueprintStabilizationContract = STABILIZATION_CONTRACT;
+      document.documentElement.dataset.manorBlueprintOverlayOpen = state.overlayOpen ? "true" : "false";
+      document.documentElement.dataset.manorBlueprintFixedBubble = "true";
+      document.documentElement.dataset.manorBlueprintFullscreenOverlay = "true";
+      document.documentElement.dataset.manorBlueprintMobileSafePosition = payload.mobileSafePosition ? "true" : "false";
+    } catch (_error) {}
 
     return payload;
   }
 
-  function exposeApi() {
-    window[API_GLOBAL] = Object.freeze({
-      contract: BOOTSTRAP_COMPAT_API_CONTRACT,
-      implementationContract: IMPLEMENTATION_CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
-      registryContract: REGISTRY_CONTRACT,
-      cssContract: CSS_CONTRACT,
+  function status() {
+    return publishStatus();
+  }
 
+  function refresh() {
+    try {
+      createOrGetBubble();
+      createOrGetOverlay();
+      attachBubbleEvents();
+      renderOverlay();
+      applyBubblePosition(state.position || defaultPosition(), "repair");
+      state.lastAction = "refresh";
+      return publishStatus();
+    } catch (error) {
+      recordError("refresh", error);
+      return publishStatus();
+    }
+  }
+
+  function exposeApi() {
+    const api = {
+      contract: API_COMPAT_CONTRACT,
+      implementationContract: PUBLIC_IMPLEMENTATION_CONTRACT,
+      stabilizationContract: STABILIZATION_CONTRACT,
+      previousImplementationContract: PREVIOUS_IMPLEMENTATION_CONTRACT,
+      refresh,
       open: openOverlay,
       close: closeOverlay,
-      toggle: () => {
-        if (state.overlayOpen) {
-          closeOverlay();
-        } else {
-          openOverlay();
-        }
-
-        return status();
-      },
+      toggle: toggleOverlay,
       setLens,
-      refresh,
-      status,
-      resetBubblePosition
-    });
+      resetPosition,
+      status
+    };
 
-    window[CONTROLLER_GLOBAL] = Object.freeze({
-      contract: BOOTSTRAP_COMPAT_API_CONTRACT,
-      implementationContract: IMPLEMENTATION_CONTRACT,
-      refresh,
-      status,
-      resetBubblePosition
-    });
+    window[API_GLOBAL] = api;
+    window[CONTROLLER_GLOBAL] = api;
   }
 
   function mount() {
     try {
-      loadRegistry();
+      injectStyle();
       createOrGetBubble();
       createOrGetOverlay();
-      bindBubbleEvents();
-      bindOverlayEvents();
-      bindViewportEvents();
+      exposeApi();
 
-      const initialPosition = resolveInitialPosition();
+      state.mounted = true;
+      state.lastAction = "mounted";
 
-      applyBubblePosition(initialPosition, {
-        save: initialPosition.wasClamped,
-        positionSource: state.positionSource || "default",
-        forceClampedFlag: initialPosition.wasClamped
+      attachBubbleEvents();
+      renderOverlay();
+      initializePosition();
+
+      window.addEventListener("resize", () => applyBubblePosition(state.position, "repair"), { passive: true });
+      window.addEventListener("orientationchange", () => {
+        window.setTimeout(() => applyBubblePosition(state.position, "repair"), 250);
+      }, { passive: true });
+
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", () => applyBubblePosition(state.position, "repair"), { passive: true });
+        window.visualViewport.addEventListener("scroll", () => applyBubblePosition(state.position, "repair"), { passive: true });
+      }
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeOverlay();
       });
 
-      state.lastAction = "mount-complete";
-      exposeApi();
       publishStatus();
-
-      window.setTimeout(() => repairBubblePositionIfNeeded("repair"), 80);
-      window.setTimeout(() => repairBubblePositionIfNeeded("repair"), 700);
     } catch (error) {
       recordError("mount", error);
-      exposeApi();
-      publishStatus();
     }
   }
 
-  function init() {
-    const existingController = window[CONTROLLER_GLOBAL];
-
-    if (
-      existingController &&
-      existingController.implementationContract === IMPLEMENTATION_CONTRACT &&
-      typeof existingController.refresh === "function"
-    ) {
-      existingController.refresh();
-      return;
-    }
-
-    exposeApi();
-
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", mount, { once: true });
-    } else {
-      mount();
-    }
+  if (
+    window[CONTROLLER_GLOBAL] &&
+    window[CONTROLLER_GLOBAL].stabilizationContract === STABILIZATION_CONTRACT &&
+    typeof window[CONTROLLER_GLOBAL].refresh === "function"
+  ) {
+    try {
+      window[CONTROLLER_GLOBAL].refresh();
+    } catch (_error) {}
+    return;
   }
 
-  init();
+  exposeApi();
+  publishStatus();
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", mount, { once: true });
+  } else {
+    mount();
+  }
 })();

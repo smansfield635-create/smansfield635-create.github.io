@@ -2,33 +2,31 @@
 <html
   lang="en"
   data-route="/coherence-diagnostic/"
-  data-page="coherence-diagnostic-one-question-focus-flow"
-  data-contract="COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COLOR_BOXES_PRIVACY_FRONTLOAD_SECTION_CONTRAST_TNT_v8"
-  data-previous-contract="COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HERO_TNT_v7"
-  data-spec-ops-contract="COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COLOR_BOXES_PRIVACY_FRONTLOAD_SECTION_CONTRAST_SPEC_OPS_v8"
-  data-news-contract="COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COLOR_BOXES_PRIVACY_FRONTLOAD_SECTION_CONTRAST_NEWS_v8"
-  data-ccr-contract="COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COLOR_BOXES_PRIVACY_FRONTLOAD_SECTION_CONTRAST_CCR_v8"
-  data-change-type="one-question-focus-flow-primary-secondary-color-boxes-privacy-frontload-section-contrast"
+  data-page="coherence-diagnostic-linear-one-scenario-submit-flow"
+  data-contract="COHERENCE_DIAGNOSTIC_LINEAR_ONE_SCENARIO_SUBMIT_FLOW_TNT_v9"
+  data-previous-contract="COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COLOR_BOXES_PRIVACY_FRONTLOAD_SECTION_CONTRAST_TNT_v8"
+  data-spec-ops-contract="COHERENCE_DIAGNOSTIC_LINEAR_ONE_SCENARIO_SUBMIT_FLOW_SPEC_OPS_v9"
+  data-news-contract="COHERENCE_DIAGNOSTIC_LINEAR_ONE_SCENARIO_SUBMIT_FLOW_NEWS_v9"
+  data-ccr-contract="COHERENCE_DIAGNOSTIC_LINEAR_ONE_SCENARIO_SUBMIT_FLOW_TECHNICAL_RESULTS_HIGHLIGHT_CCR_v9"
+  data-change-type="linear-one-scenario-submit-flow-technical-results-highlight"
   data-question-minimum="12"
   data-q1-fixed="true"
   data-q2-fixed="true"
   data-generated-scenario-count="10"
-  data-one-question-focus-flow="active"
+  data-linear-submit-flow="active"
+  data-one-scenario-visible="true"
+  data-review-answers-panel="false"
+  data-edit-scenario-buttons="false"
+  data-future-scenario-preview="false"
+  data-auto-advance="false"
+  data-submit-answers-required="true"
   data-primary-answer-zone="warm-gold"
   data-secondary-answer-zone="cool-blue-green"
   data-frontloaded-privacy-assurance="active"
-  data-review-answers="active"
-  data-auto-advance-after-both-selections="active"
-  data-real-world-scenario-bank="active"
-  data-controlled-randomization="active"
+  data-technical-results-highlight="active"
   data-result-hero-three-card-row="active"
-  data-result-hero-coherence-score="active"
   data-projected-iq-style-range="active"
   data-possible-mbti-style-type="active"
-  data-public-archetypes="Strategist,Builder,Mitigator,Auditor"
-  data-hidden-fragmentation-bucket="active"
-  data-visible-answer-type-labels="false"
-  data-visible-answer-strength-labels="false"
   data-local-grading="true"
   data-no-backend="true"
   data-no-storage="true"
@@ -53,20 +51,24 @@
   <title>Coherence Diagnostic Assessment · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="A local-only adaptive coherence diagnostic with one-question focus flow, real-world scenarios, primary and secondary answer zones, visible result hero, and optional Engineering Lens."
+    content="A local-only adaptive coherence diagnostic with a linear one-scenario submit flow, real-world scenarios, primary and secondary answer zones, visible result hero, and highlighted technical results."
   >
 
   <style>
     :root{
       color-scheme:dark;
       --bg:#01050d;
+      --panel:rgba(5,15,32,.84);
       --text:rgba(239,247,255,.96);
       --muted:rgba(239,247,255,.70);
       --faint:rgba(239,247,255,.50);
       --gold:#f4cf83;
+      --gold2:#ffe8a3;
       --blue:#8dd8ff;
       --mint:#a7f3c6;
+      --violet:#ad8cff;
       --fail:#ff6b6b;
+      --line:rgba(255,255,255,.12);
       --max:1180px;
       --shadow:0 34px 120px rgba(0,0,0,.54);
     }
@@ -87,6 +89,7 @@
       color:var(--text);
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       letter-spacing:-.015em;
+      -webkit-font-smoothing:antialiased;
       background:
         radial-gradient(circle at 50% -14%,rgba(78,119,171,.30),transparent 38rem),
         radial-gradient(circle at 12% 18%,rgba(244,207,131,.10),transparent 30rem),
@@ -121,6 +124,12 @@
     summary:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
+    }
+
+    button:disabled{
+      cursor:not-allowed;
+      opacity:.48;
+      filter:grayscale(.35);
     }
 
     .skip{
@@ -186,9 +195,26 @@
       letter-spacing:.08em;
     }
 
-    .brand-copy{display:grid;gap:2px;min-width:0}
-    .brand-copy span{color:rgba(141,216,255,.82);font-size:.68rem;letter-spacing:.22em}
-    .brand-copy strong{color:rgba(255,244,216,.96);font-size:clamp(1rem,2.6vw,1.48rem);line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .brand-copy{
+      display:grid;
+      gap:2px;
+      min-width:0;
+    }
+
+    .brand-copy span{
+      color:rgba(141,216,255,.82);
+      font-size:.68rem;
+      letter-spacing:.22em;
+    }
+
+    .brand-copy strong{
+      color:rgba(255,244,216,.96);
+      font-size:clamp(1rem,2.6vw,1.48rem);
+      line-height:1;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
 
     .route-links{
       display:flex;
@@ -245,7 +271,8 @@
         rgba(0,0,0,.10);
     }
 
-    .kicker,.eyebrow{
+    .kicker,
+    .eyebrow{
       margin:0;
       color:var(--gold);
       font:900 .74rem/1.4 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
@@ -286,9 +313,17 @@
       line-height:1.55;
     }
 
-    .hero-copy{max-width:900px;display:grid;gap:12px}
+    .hero-copy{
+      max-width:900px;
+      display:grid;
+      gap:12px;
+    }
 
-    .pill-row{display:flex;flex-wrap:wrap;gap:8px}
+    .pill-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
 
     .pill{
       min-height:32px;
@@ -299,6 +334,7 @@
       padding:0 11px;
       color:rgba(239,247,255,.76);
       background:rgba(2,8,20,.58);
+      backdrop-filter:blur(10px);
       font-size:.70rem;
       font-weight:850;
       letter-spacing:.04em;
@@ -307,7 +343,8 @@
 
     .warning,
     .coming-soon,
-    .privacy-panel{
+    .privacy-panel,
+    .technical-invite{
       border:1px solid rgba(244,207,131,.18);
       border-radius:22px;
       padding:14px 16px;
@@ -362,6 +399,7 @@
         linear-gradient(90deg,rgba(244,207,131,.075),transparent 48%),
         radial-gradient(circle at 0% 0%,rgba(141,216,255,.10),transparent 16rem),
         rgba(255,255,255,.030);
+      box-shadow:inset 0 -1px 0 rgba(141,216,255,.05);
     }
 
     .panel-body{
@@ -393,20 +431,36 @@
       border:1px solid rgba(255,255,255,.10);
       border-radius:18px;
       padding:13px;
-      background:linear-gradient(180deg,rgba(255,255,255,.046),rgba(255,255,255,.016)),rgba(0,0,0,.14);
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.046),rgba(255,255,255,.016)),
+        rgba(0,0,0,.14);
       overflow:hidden;
     }
 
     .sequence-step::before{
       content:"";
       position:absolute;
-      left:0;top:0;bottom:0;width:4px;
+      left:0;
+      top:0;
+      bottom:0;
+      width:4px;
       background:linear-gradient(180deg,rgba(141,216,255,.70),rgba(244,207,131,.70));
       opacity:.76;
     }
 
-    .sequence-step b{color:var(--gold);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase}
-    .sequence-step span{color:rgba(239,247,255,.72);font-size:.82rem;line-height:1.28;font-weight:760}
+    .sequence-step b{
+      color:var(--gold);
+      font-size:.66rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .sequence-step span{
+      color:rgba(239,247,255,.72);
+      font-size:.82rem;
+      line-height:1.28;
+      font-weight:760;
+    }
 
     .step-zone{
       position:relative;
@@ -415,20 +469,37 @@
       border:1px solid rgba(255,255,255,.11);
       border-radius:26px;
       padding:clamp(14px,3vw,20px);
-      background:linear-gradient(180deg,rgba(255,255,255,.034),rgba(255,255,255,.012)),rgba(0,0,0,.14);
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.034),rgba(255,255,255,.012)),
+        rgba(0,0,0,.14);
       overflow:hidden;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
     }
 
     .step-zone::before{
       content:"";
       position:absolute;
-      left:0;top:0;bottom:0;width:5px;
+      left:0;
+      top:0;
+      bottom:0;
+      width:5px;
       background:var(--zone-rail,linear-gradient(180deg,rgba(141,216,255,.70),rgba(244,207,131,.70)));
+      box-shadow:0 0 22px rgba(141,216,255,.18);
     }
 
-    .library-zone{--zone-rail:linear-gradient(180deg,rgba(141,216,255,.88),rgba(244,207,131,.68))}
-    .primary-zone{--zone-rail:linear-gradient(180deg,rgba(255,232,163,.98),rgba(244,207,131,.70));border-color:rgba(244,207,131,.22)}
-    .secondary-zone{--zone-rail:linear-gradient(180deg,rgba(167,243,198,.88),rgba(141,216,255,.70));border-color:rgba(141,216,255,.20)}
+    .library-zone{
+      --zone-rail:linear-gradient(180deg,rgba(141,216,255,.88),rgba(244,207,131,.68));
+    }
+
+    .primary-zone{
+      --zone-rail:linear-gradient(180deg,rgba(255,232,163,.98),rgba(244,207,131,.70));
+      border-color:rgba(244,207,131,.22);
+    }
+
+    .secondary-zone{
+      --zone-rail:linear-gradient(180deg,rgba(167,243,198,.88),rgba(141,216,255,.70));
+      border-color:rgba(141,216,255,.20);
+    }
 
     .step-band{
       position:relative;
@@ -439,7 +510,9 @@
       padding:12px 13px;
       border:1px solid rgba(255,255,255,.10);
       border-radius:18px;
-      background:linear-gradient(90deg,rgba(255,255,255,.050),transparent 72%),rgba(0,0,0,.16);
+      background:
+        linear-gradient(90deg,rgba(255,255,255,.050),transparent 72%),
+        rgba(0,0,0,.16);
     }
 
     .step-index{
@@ -451,22 +524,66 @@
       color:#06101c;
       background:linear-gradient(135deg,#fff0b8,var(--gold));
       font-weight:950;
+      letter-spacing:-.03em;
+      box-shadow:0 10px 24px rgba(0,0,0,.24);
     }
 
-    .secondary-zone .step-index{background:linear-gradient(135deg,#d7fff0,var(--blue))}
+    .secondary-zone .step-index{
+      background:linear-gradient(135deg,#d7fff0,var(--blue));
+    }
 
-    .step-copy{display:grid;gap:4px}
-    .step-copy b{color:rgba(255,244,216,.96);font-size:clamp(1rem,2vw,1.22rem);line-height:1.12}
-    .step-copy span{color:rgba(239,247,255,.70);font-size:.86rem;line-height:1.38}
+    .step-copy{
+      display:grid;
+      gap:4px;
+      min-width:0;
+    }
 
-    .mode-grid,.select-grid,.scale-grid,.option-grid{display:grid;gap:10px}
-    .mode-grid,.select-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .intake-select-grid{align-items:start;gap:18px}
-    .option-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
-    .primary-zone .option-grid,.secondary-zone .option-grid{grid-template-columns:1fr}
-    .scale-grid{grid-template-columns:repeat(10,minmax(0,1fr))}
+    .step-copy b{
+      color:rgba(255,244,216,.96);
+      font-size:clamp(1rem,2vw,1.22rem);
+      line-height:1.12;
+      letter-spacing:-.025em;
+    }
 
-    .choice-card,.scale-card{
+    .step-copy span{
+      color:rgba(239,247,255,.70);
+      font-size:.86rem;
+      line-height:1.38;
+    }
+
+    .mode-grid,
+    .select-grid,
+    .scale-grid,
+    .option-grid{
+      display:grid;
+      gap:10px;
+    }
+
+    .mode-grid,
+    .select-grid{
+      grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .intake-select-grid{
+      align-items:start;
+      gap:18px;
+    }
+
+    .option-grid{
+      grid-template-columns:repeat(4,minmax(0,1fr));
+    }
+
+    .primary-zone .option-grid,
+    .secondary-zone .option-grid{
+      grid-template-columns:1fr;
+    }
+
+    .scale-grid{
+      grid-template-columns:repeat(10,minmax(0,1fr));
+    }
+
+    .choice-card,
+    .scale-card{
       position:relative;
       min-height:112px;
       display:grid;
@@ -475,7 +592,9 @@
       border:1px solid rgba(255,255,255,.10);
       border-radius:18px;
       padding:13px;
-      background:radial-gradient(circle at 20% 0%,rgba(244,207,131,.06),transparent 9rem),rgba(255,255,255,.028);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(244,207,131,.06),transparent 9rem),
+        rgba(255,255,255,.028);
       overflow:hidden;
       transition:transform .18s ease,border-color .18s ease,background .18s ease,filter .18s ease;
     }
@@ -489,34 +608,73 @@
       color:rgba(255,244,216,.92);
     }
 
-    .choice-card:hover,.scale-card:hover{transform:translateY(-2px);border-color:rgba(244,207,131,.34);filter:brightness(1.08)}
-    .choice-card input,.scale-card input{position:absolute;opacity:0;pointer-events:none}
+    .choice-card:hover,
+    .scale-card:hover{
+      transform:translateY(-2px);
+      border-color:rgba(244,207,131,.34);
+      filter:brightness(1.08);
+    }
 
-    .choice-card:has(input:checked),.scale-card:has(input:checked){
+    .choice-card input,
+    .scale-card input{
+      position:absolute;
+      opacity:0;
+      pointer-events:none;
+    }
+
+    .choice-card:has(input:checked),
+    .scale-card:has(input:checked){
       border-color:rgba(244,207,131,.58);
-      background:radial-gradient(circle at 20% 0%,rgba(244,207,131,.12),transparent 9rem),linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018)),rgba(6,15,32,.88);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(244,207,131,.12),transparent 9rem),
+        linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018)),
+        rgba(6,15,32,.88);
       box-shadow:0 0 0 1px rgba(244,207,131,.12),0 18px 52px rgba(0,0,0,.26);
     }
 
-    .choice-card b{color:var(--gold);font-size:.70rem;letter-spacing:.13em;text-transform:uppercase}
-    .choice-card strong{color:rgba(255,244,216,.96);font-size:.98rem;line-height:1.16}
-    .choice-card span{color:rgba(239,247,255,.70);font-size:.84rem;line-height:1.35}
+    .choice-card b{
+      color:var(--gold);
+      font-size:.70rem;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
 
-    .archetype-library{display:grid;gap:12px}
+    .choice-card strong{
+      color:rgba(255,244,216,.96);
+      font-size:.98rem;
+      line-height:1.16;
+    }
 
-    .archetype-detail,.engineering-readout{
+    .choice-card span{
+      color:rgba(239,247,255,.70);
+      font-size:.84rem;
+      line-height:1.35;
+    }
+
+    .archetype-library{
+      display:grid;
+      gap:12px;
+    }
+
+    .archetype-detail{
       border:1px solid rgba(255,255,255,.10);
       border-radius:20px;
-      background:radial-gradient(circle at 12% 0%,rgba(141,216,255,.050),transparent 14rem),rgba(255,255,255,.020);
+      background:
+        radial-gradient(circle at 12% 0%,rgba(141,216,255,.050),transparent 14rem),
+        rgba(255,255,255,.020);
       overflow:hidden;
     }
 
-    .archetype-detail[open],.engineering-readout[open]{
+    .archetype-detail[open]{
       border-color:rgba(244,207,131,.34);
       box-shadow:0 18px 52px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.07);
+      background:
+        radial-gradient(circle at 12% 0%,rgba(141,216,255,.070),transparent 14rem),
+        radial-gradient(circle at 88% 0%,rgba(244,207,131,.050),transparent 14rem),
+        rgba(255,255,255,.025);
     }
 
-    .archetype-detail summary,.engineering-readout summary{
+    .archetype-detail summary{
       list-style:none;
       display:grid;
       grid-template-columns:minmax(0,1fr) auto;
@@ -525,11 +683,12 @@
       padding:15px 16px;
       color:rgba(255,244,216,.96);
       font-weight:950;
+      letter-spacing:-.02em;
     }
 
-    .archetype-detail summary::-webkit-details-marker,.engineering-readout summary::-webkit-details-marker{display:none}
+    .archetype-detail summary::-webkit-details-marker{display:none}
 
-    .archetype-detail summary::after,.engineering-readout summary::after{
+    .archetype-detail summary::after{
       content:"Read";
       min-height:30px;
       display:inline-flex;
@@ -546,42 +705,79 @@
       text-transform:uppercase;
     }
 
-    .archetype-detail[open] summary::after,.engineering-readout[open] summary::after{
+    .archetype-detail[open] summary::after{
       content:"Close";
       color:#06101c;
       background:linear-gradient(135deg,#fff0b8,var(--gold));
       border-color:rgba(244,207,131,.50);
     }
 
-    .archetype-content,.engineering-content{
+    .archetype-content{
       display:grid;
       gap:16px;
       padding:0 16px 18px;
     }
 
-    .archetype-content p,.engineering-content p{font-size:.94rem;line-height:1.62}
+    .archetype-content p{
+      font-size:.94rem;
+      line-height:1.62;
+    }
 
-    .mini-grid,.metric-grid{
+    .mini-grid,
+    .metric-grid{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
       gap:10px;
     }
 
-    .metric-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .metric-grid.three{
+      grid-template-columns:repeat(3,minmax(0,1fr));
+    }
 
-    .mini-card,.metric-card,.load-card{
+    .mini-card,
+    .metric-card,
+    .load-card{
       border:1px solid rgba(255,255,255,.08);
       border-radius:16px;
       padding:13px;
-      background:linear-gradient(180deg,rgba(255,255,255,.030),rgba(255,255,255,.010)),rgba(0,0,0,.12);
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.030),rgba(255,255,255,.010)),
+        rgba(0,0,0,.12);
       display:grid;
       gap:8px;
     }
 
-    .mini-card b,.metric-card b,.load-card b{color:var(--gold);font-size:.68rem;letter-spacing:.13em;text-transform:uppercase}
-    .mini-card ul,.load-card ul{margin:0;padding-left:18px;color:rgba(239,247,255,.70);font-size:.86rem;line-height:1.48}
-    .metric-card strong{color:rgba(255,244,216,.96);font-size:1.05rem;line-height:1.2;overflow-wrap:anywhere}
-    .metric-card span{color:rgba(239,247,255,.68);font-size:.82rem;line-height:1.35;overflow-wrap:anywhere}
+    .mini-card b,
+    .metric-card b,
+    .load-card b{
+      color:var(--gold);
+      font-size:.68rem;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .mini-card ul,
+    .load-card ul{
+      margin:0;
+      padding-left:18px;
+      color:rgba(239,247,255,.70);
+      font-size:.86rem;
+      line-height:1.48;
+    }
+
+    .metric-card strong{
+      color:rgba(255,244,216,.96);
+      font-size:1.05rem;
+      line-height:1.2;
+      overflow-wrap:anywhere;
+    }
+
+    .metric-card span{
+      color:rgba(239,247,255,.68);
+      font-size:.82rem;
+      line-height:1.35;
+      overflow-wrap:anywhere;
+    }
 
     .metric-bar{
       position:relative;
@@ -600,20 +796,34 @@
       background:linear-gradient(90deg,rgba(141,216,255,.74),rgba(244,207,131,.82));
     }
 
-    .metric-bar.break i{background:linear-gradient(90deg,rgba(255,179,109,.78),rgba(255,107,107,.78))}
+    .metric-bar.break i{
+      background:linear-gradient(90deg,rgba(255,179,109,.78),rgba(255,107,107,.78));
+    }
 
     .technical-summary{
       border:1px solid rgba(244,207,131,.20);
       border-radius:18px;
       padding:14px;
-      background:radial-gradient(circle at 12% 0%,rgba(244,207,131,.08),transparent 12rem),rgba(244,207,131,.030);
+      background:
+        radial-gradient(circle at 12% 0%,rgba(244,207,131,.08),transparent 12rem),
+        rgba(244,207,131,.030);
       color:rgba(255,244,216,.90);
       font-size:.92rem;
       line-height:1.5;
     }
 
-    .diagnostic-stage,.result{display:none}
-    .diagnostic-stage.is-visible,.result.is-visible{display:grid;gap:16px}
+    .diagnostic-stage,
+    .result,
+    .technical-results{
+      display:none;
+    }
+
+    .diagnostic-stage.is-visible,
+    .result.is-visible,
+    .technical-results.is-visible{
+      display:grid;
+      gap:16px;
+    }
 
     .flow-shell{
       display:grid;
@@ -626,7 +836,9 @@
       border:1px solid rgba(141,216,255,.18);
       border-radius:22px;
       padding:16px;
-      background:radial-gradient(circle at 8% 0%,rgba(141,216,255,.11),transparent 18rem),rgba(255,255,255,.024);
+      background:
+        radial-gradient(circle at 8% 0%,rgba(141,216,255,.11),transparent 18rem),
+        rgba(255,255,255,.024);
     }
 
     .progress-row{
@@ -707,7 +919,10 @@
       text-transform:uppercase;
     }
 
-    .moment-stack{display:grid;gap:10px}
+    .moment-stack{
+      display:grid;
+      gap:10px;
+    }
 
     .moment-block{
       display:grid;
@@ -729,6 +944,7 @@
       color:rgba(255,244,216,.96);
       font-size:clamp(1rem,2vw,1.22rem);
       line-height:1.25;
+      letter-spacing:-.025em;
     }
 
     .moment-block span{
@@ -739,10 +955,14 @@
 
     .coherence-test{
       border-color:rgba(244,207,131,.18);
-      background:radial-gradient(circle at 0% 0%,rgba(244,207,131,.08),transparent 12rem),rgba(244,207,131,.025);
+      background:
+        radial-gradient(circle at 0% 0%,rgba(244,207,131,.08),transparent 12rem),
+        rgba(244,207,131,.025);
     }
 
-    .coherence-test b{color:var(--gold)}
+    .coherence-test b{
+      color:var(--gold);
+    }
 
     .answer-zone-grid{
       display:grid;
@@ -775,18 +995,17 @@
     .answer-zone.primary-answer{
       --zone-color:linear-gradient(180deg,#fff0b8,var(--gold));
       border-color:rgba(244,207,131,.36);
-      background:radial-gradient(circle at 10% 0%,rgba(244,207,131,.12),transparent 16rem),rgba(0,0,0,.18);
+      background:
+        radial-gradient(circle at 10% 0%,rgba(244,207,131,.12),transparent 16rem),
+        rgba(0,0,0,.18);
     }
 
     .answer-zone.secondary-answer{
       --zone-color:linear-gradient(180deg,#d7fff0,var(--blue));
       border-color:rgba(141,216,255,.30);
-      background:radial-gradient(circle at 10% 0%,rgba(141,216,255,.10),transparent 16rem),rgba(0,0,0,.18);
-    }
-
-    .answer-zone.is-emphasized{
-      box-shadow:0 0 0 1px rgba(141,216,255,.18),0 0 34px rgba(141,216,255,.12);
-      filter:brightness(1.08);
+      background:
+        radial-gradient(circle at 10% 0%,rgba(141,216,255,.10),transparent 16rem),
+        rgba(0,0,0,.18);
     }
 
     .answer-zone.is-selected{
@@ -810,7 +1029,9 @@
       text-transform:uppercase;
     }
 
-    .secondary-answer .answer-zone-head b{color:rgba(167,243,198,.95)}
+    .secondary-answer .answer-zone-head b{
+      color:rgba(167,243,198,.95);
+    }
 
     .answer-zone-head span{
       color:rgba(239,247,255,.70);
@@ -825,7 +1046,9 @@
       border:1px solid rgba(255,255,255,.09);
       border-radius:16px;
       padding:12px;
-      background:linear-gradient(180deg,rgba(255,255,255,.030),rgba(255,255,255,.010)),rgba(255,255,255,.022);
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.030),rgba(255,255,255,.010)),
+        rgba(255,255,255,.022);
       text-align:left;
       transition:border-color .18s ease,background .18s ease,transform .18s ease;
     }
@@ -871,44 +1094,6 @@
       line-height:1.4;
     }
 
-    .review-panel{
-      display:none;
-      gap:14px;
-      border:1px solid rgba(167,243,198,.20);
-      border-radius:24px;
-      padding:16px;
-      background:radial-gradient(circle at 10% 0%,rgba(167,243,198,.08),transparent 16rem),rgba(255,255,255,.024);
-    }
-
-    .review-panel.is-visible{display:grid}
-
-    .review-list{
-      display:grid;
-      gap:10px;
-    }
-
-    .review-item{
-      display:grid;
-      gap:8px;
-      border:1px solid rgba(255,255,255,.09);
-      border-radius:18px;
-      padding:13px;
-      background:rgba(0,0,0,.14);
-    }
-
-    .review-item b{
-      color:var(--gold);
-      font-size:.72rem;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-    }
-
-    .review-item span{
-      color:rgba(239,247,255,.72);
-      font-size:.86rem;
-      line-height:1.4;
-    }
-
     .validation{
       display:none;
       border:1px solid rgba(255,107,107,.28);
@@ -920,16 +1105,23 @@
       line-height:1.4;
     }
 
-    .validation.is-visible{display:block}
+    .validation.is-visible{
+      display:block;
+    }
 
-    .button-row,.button-cluster{
+    .button-row{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
       align-items:center;
+      justify-content:space-between;
     }
 
-    .button-row{justify-content:space-between}
+    .button-cluster{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
 
     .action-btn{
       min-height:44px;
@@ -939,13 +1131,10 @@
       box-shadow:0 12px 36px rgba(0,0,0,.26);
     }
 
-    .action-btn:disabled,.disabled-btn{
-      cursor:not-allowed;
-      opacity:.55;
-      filter:grayscale(.3);
+    .ghost-btn{
+      min-height:44px;
+      background:rgba(255,255,255,.040);
     }
-
-    .ghost-btn{min-height:44px;background:rgba(255,255,255,.040)}
 
     .result-hero-grid{
       display:grid;
@@ -961,16 +1150,44 @@
       border:1px solid rgba(244,207,131,.28);
       border-radius:26px;
       padding:18px;
-      background:radial-gradient(circle at 12% 0%,rgba(244,207,131,.12),transparent 16rem),radial-gradient(circle at 90% 20%,rgba(141,216,255,.10),transparent 16rem),rgba(255,255,255,.030);
+      background:
+        radial-gradient(circle at 12% 0%,rgba(244,207,131,.12),transparent 16rem),
+        radial-gradient(circle at 90% 20%,rgba(141,216,255,.10),transparent 16rem),
+        linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.014)),
+        rgba(255,255,255,.030);
       box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 18px 54px rgba(0,0,0,.22);
     }
 
-    .result-hero-card.iq-card{border-color:rgba(141,216,255,.26);background:radial-gradient(circle at 12% 0%,rgba(141,216,255,.12),transparent 16rem),rgba(255,255,255,.030)}
-    .result-hero-card.type-card{border-color:rgba(167,243,198,.22);background:radial-gradient(circle at 12% 0%,rgba(167,243,198,.10),transparent 16rem),rgba(255,255,255,.030)}
+    .result-hero-card.iq-card{
+      border-color:rgba(141,216,255,.26);
+      background:
+        radial-gradient(circle at 12% 0%,rgba(141,216,255,.12),transparent 16rem),
+        radial-gradient(circle at 88% 12%,rgba(244,207,131,.07),transparent 16rem),
+        rgba(255,255,255,.030);
+    }
 
-    .hero-label{color:var(--gold);font:900 .70rem/1.3 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;letter-spacing:.15em;text-transform:uppercase}
-    .iq-card .hero-label{color:rgba(141,216,255,.90)}
-    .type-card .hero-label{color:rgba(167,243,198,.88)}
+    .result-hero-card.type-card{
+      border-color:rgba(167,243,198,.22);
+      background:
+        radial-gradient(circle at 12% 0%,rgba(167,243,198,.10),transparent 16rem),
+        radial-gradient(circle at 88% 12%,rgba(141,216,255,.08),transparent 16rem),
+        rgba(255,255,255,.030);
+    }
+
+    .hero-label{
+      color:var(--gold);
+      font:900 .70rem/1.3 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      letter-spacing:.15em;
+      text-transform:uppercase;
+    }
+
+    .iq-card .hero-label{
+      color:rgba(141,216,255,.90);
+    }
+
+    .type-card .hero-label{
+      color:rgba(167,243,198,.88);
+    }
 
     .hero-value{
       color:rgba(255,244,216,.98);
@@ -981,8 +1198,17 @@
       overflow-wrap:anywhere;
     }
 
-    .type-card .hero-value{font-size:clamp(1.75rem,4vw,3.25rem);line-height:.95}
-    .hero-note{color:rgba(239,247,255,.70);font-size:.88rem;line-height:1.36;font-weight:760}
+    .type-card .hero-value{
+      font-size:clamp(1.75rem,4vw,3.25rem);
+      line-height:.95;
+    }
+
+    .hero-note{
+      color:rgba(239,247,255,.70);
+      font-size:.88rem;
+      line-height:1.36;
+      font-weight:760;
+    }
 
     .result-grid{
       display:grid;
@@ -1000,23 +1226,86 @@
       min-height:98px;
     }
 
-    .result-cell b{color:var(--gold);font-size:.68rem;letter-spacing:.13em;text-transform:uppercase}
-    .result-cell strong{color:rgba(255,244,216,.96);font-size:.98rem;line-height:1.2}
-    .result-cell span,.result-cell li{color:rgba(239,247,255,.70);font-size:.84rem;line-height:1.35}
-    .result-cell ul{margin:0;padding-left:18px}
+    .result-cell b{
+      color:var(--gold);
+      font-size:.68rem;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
 
-    .coming-soon{display:grid;gap:10px}
-    .coming-soon h3{color:var(--gold)}
+    .result-cell strong{
+      color:rgba(255,244,216,.96);
+      font-size:.98rem;
+      line-height:1.2;
+    }
 
-    .receipt,[data-route-receipt]{
+    .result-cell span,
+    .result-cell li{
+      color:rgba(239,247,255,.70);
+      font-size:.84rem;
+      line-height:1.35;
+    }
+
+    .result-cell ul{
+      margin:0;
+      padding-left:18px;
+    }
+
+    .technical-invite{
+      display:grid;
+      gap:10px;
+      border-color:rgba(141,216,255,.28);
+      background:
+        radial-gradient(circle at 8% 0%,rgba(141,216,255,.12),transparent 18rem),
+        radial-gradient(circle at 92% 12%,rgba(244,207,131,.08),transparent 18rem),
+        linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.014)),
+        rgba(255,255,255,.028);
+    }
+
+    .technical-invite h3{
+      color:rgba(255,244,216,.96);
+    }
+
+    .technical-results{
+      border:1px solid rgba(141,216,255,.24);
+      border-radius:26px;
+      padding:18px;
+      background:
+        radial-gradient(circle at 10% 0%,rgba(141,216,255,.12),transparent 18rem),
+        radial-gradient(circle at 92% 0%,rgba(244,207,131,.07),transparent 18rem),
+        linear-gradient(180deg,rgba(255,255,255,.050),rgba(255,255,255,.016)),
+        rgba(3,9,20,.82);
+    }
+
+    .coming-soon{
+      display:grid;
+      gap:10px;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(244,207,131,.10),transparent 16rem),
+        radial-gradient(circle at 88% 14%,rgba(141,216,255,.08),transparent 16rem),
+        rgba(255,255,255,.025);
+    }
+
+    .coming-soon h3{
+      color:var(--gold);
+    }
+
+    .receipt,
+    [data-route-receipt]{
       display:none!important;
       visibility:hidden!important;
       overflow:hidden!important;
-      width:0!important;height:0!important;
-      max-width:0!important;max-height:0!important;
-      margin:0!important;padding:0!important;border:0!important;
-      opacity:0!important;pointer-events:none!important;
-      position:absolute!important;clip-path:inset(50%)!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      position:absolute!important;
+      clip-path:inset(50%)!important;
       white-space:nowrap!important;
     }
 
@@ -1029,34 +1318,98 @@
     }
 
     @media (max-width:940px){
-      .sequence-rail,.mode-grid,.select-grid,.option-grid,.result-grid,.mini-grid,.metric-grid,.metric-grid.three,.result-hero-grid,.answer-zone-grid{
+      .sequence-rail,
+      .mode-grid,
+      .select-grid,
+      .option-grid,
+      .result-grid,
+      .mini-grid,
+      .metric-grid,
+      .metric-grid.three,
+      .result-hero-grid,
+      .answer-zone-grid{
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
-      .scale-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
-      .result-hero-card:first-child{grid-column:1 / -1}
+
+      .scale-grid{
+        grid-template-columns:repeat(5,minmax(0,1fr));
+      }
+
+      .result-hero-card:first-child{
+        grid-column:1 / -1;
+      }
     }
 
     @media (max-width:640px){
-      .shell{width:min(100% - 18px,var(--max))}
-      .topbar{grid-template-columns:1fr}
-      .route-links{justify-content:flex-start}
+      .shell{
+        width:min(100% - 18px,var(--max));
+      }
 
-      .sequence-rail,.mode-grid,.select-grid,.option-grid,.result-grid,.mini-grid,.metric-grid,.metric-grid.three,.result-hero-grid,.answer-zone-grid{
+      .topbar{
         grid-template-columns:1fr;
       }
 
-      .scale-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .hero,.assessment{padding:18px}
-      .step-zone{padding:14px;border-radius:22px}
-      .step-band{grid-template-columns:1fr}
-      .step-index{width:36px;height:36px}
-      .result-hero-card:first-child{grid-column:auto}
-      .result-hero-card{min-height:auto}
-      .button-row,.button-cluster,.action-btn,.ghost-btn,.disabled-btn{width:100%}
+      .route-links{
+        justify-content:flex-start;
+      }
+
+      .sequence-rail,
+      .mode-grid,
+      .select-grid,
+      .option-grid,
+      .result-grid,
+      .mini-grid,
+      .metric-grid,
+      .metric-grid.three,
+      .result-hero-grid,
+      .answer-zone-grid{
+        grid-template-columns:1fr;
+      }
+
+      .scale-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .hero,
+      .assessment{
+        padding:18px;
+      }
+
+      .step-zone{
+        padding:14px;
+        border-radius:22px;
+      }
+
+      .step-band{
+        grid-template-columns:1fr;
+      }
+
+      .step-index{
+        width:36px;
+        height:36px;
+      }
+
+      .result-hero-card:first-child{
+        grid-column:auto;
+      }
+
+      .result-hero-card{
+        min-height:auto;
+      }
+
+      .button-row,
+      .button-cluster,
+      .action-btn,
+      .ghost-btn,
+      .disabled-btn{
+        width:100%;
+      }
     }
 
     @media (prefers-reduced-motion:reduce){
-      *,*::before,*::after{
+      *,
+      *::before,
+      *::after{
         scroll-behavior:auto!important;
         animation-duration:.01ms!important;
         animation-iteration-count:1!important;
@@ -1089,16 +1442,17 @@
     <main class="page">
       <section class="hero" aria-labelledby="page-title">
         <div class="hero-copy">
-          <p class="kicker">Adaptive Assessment · One-Question Focus Flow · Local-Only</p>
+          <p class="kicker">Adaptive Assessment · Linear Scenario Flow · Local-Only</p>
           <h1 id="page-title">Coherence Diagnostic Assessment</h1>
           <p>
-            Start with your self-rated coherence and claimed archetype blend. The diagnostic then moves through real-world scenarios one at a time so no question is missed.
+            Start with your self-rated coherence and claimed archetype blend. The diagnostic then moves through one real-world scenario at a time: choose a first move, choose a support move, submit, and continue.
           </p>
         </div>
 
         <div class="pill-row" aria-label="Assessment properties">
           <span class="pill">12 questions minimum</span>
           <span class="pill">One scenario at a time</span>
+          <span class="pill">Submit answers to continue</span>
           <span class="pill">Primary gold answer box</span>
           <span class="pill">Secondary blue-green answer box</span>
           <span class="pill">Projected IQ-style range</span>
@@ -1121,15 +1475,15 @@
         <section class="panel sequence-panel" aria-labelledby="sequence-title">
           <div class="panel-head">
             <p class="eyebrow">Intake Sequence</p>
-            <h2 id="sequence-title">Move through the assessment in four clean steps.</h2>
-            <p>The first two questions establish the intake anchor. The real-world scenarios remain held until the intake is complete.</p>
+            <h2 id="sequence-title">Move through the assessment in a clean line.</h2>
+            <p>The first two questions establish the intake anchor. The real-world scenarios open after the intake is complete.</p>
           </div>
           <div class="panel-body">
             <div class="sequence-rail" aria-label="Assessment sequence">
               <div class="sequence-step"><b>Read</b><span>Review the four archetypes before choosing.</span></div>
               <div class="sequence-step"><b>Claim Primary</b><span>Select the archetype you believe you lead with.</span></div>
               <div class="sequence-step"><b>Claim Secondary</b><span>Select the support pattern that balances your primary.</span></div>
-              <div class="sequence-step"><b>Generate</b><span>Open the one-question diagnostic flow.</span></div>
+              <div class="sequence-step"><b>Answer</b><span>Move through one scenario at a time.</span></div>
             </div>
           </div>
         </section>
@@ -1226,7 +1580,7 @@
               </div>
 
               <div class="warning">
-                Primary and secondary cannot be the same. The diagnostic will generate after this intake is complete.
+                Primary and secondary cannot be the same. The scenario path will generate after this intake is complete.
               </div>
             </div>
           </section>
@@ -1248,13 +1602,12 @@
           <section id="diagnostic-stage" class="diagnostic-stage">
             <section class="panel" aria-labelledby="scenario-title">
               <div class="panel-head">
-                <p class="eyebrow">Questions 3–12 · One-Question Focus Flow</p>
+                <p class="eyebrow">Questions 3–12 · Linear Scenario Path</p>
                 <h2 id="scenario-title">Answer one pressure situation at a time.</h2>
-                <p>The gold box is your first move. The blue-green box is what you rely on next. The page advances only after both are selected.</p>
+                <p>The gold box is your first move. The blue-green box is what you rely on next. Tap Submit Answers to continue.</p>
               </div>
               <div class="panel-body">
                 <div id="flow-shell" class="flow-shell"></div>
-                <div id="review-panel" class="review-panel"></div>
               </div>
             </section>
 
@@ -1265,16 +1618,25 @@
         <section id="result" class="result" aria-live="polite" aria-label="Assessment result"></section>
 
         <template id="route-receipt" data-route-receipt>
-COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COLOR_BOXES_PRIVACY_FRONTLOAD_SECTION_CONTRAST_TNT_v8
-previous=COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HERO_TNT_v7
+COHERENCE_DIAGNOSTIC_LINEAR_ONE_SCENARIO_SUBMIT_FLOW_TNT_v9
+previous=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COLOR_BOXES_PRIVACY_FRONTLOAD_SECTION_CONTRAST_TNT_v8
 route=/coherence-diagnostic/
 file=/coherence-diagnostic/index.html
-one_question_focus_flow=active
+linear_submit_flow=active
+one_scenario_visible=true
+review_answers_panel=false
+edit_scenario_buttons=false
+future_scenario_preview=false
+auto_advance=false
+submit_answers_required=true
 primary_answer_zone=warm_gold
 secondary_answer_zone=cool_blue_green
+technical_results_highlight=active
+want_the_technical_read_panel=active
 frontloaded_privacy_assurance=active
-review_answers=active
-auto_advance_after_both_selections=active
+result_hero_preserved=true
+projected_iq_style_range=active
+possible_mbti_style_type=active
 local_only=true
 backend=false
 storage=false
@@ -1286,17 +1648,17 @@ character_profile_save_active=false
 scoring_change=false
 scenario_bank_change=false
 fragmentation_logic_change=false
-result_hero_preserved=true
-engineering_lens_preserved=true
-projected_iq_style_range=active
-possible_mbti_style_type=active
-deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COLOR_BOXES_PRIVACY_FRONTLOAD_SECTION_CONTRAST_DEPLOY_MARKER_v8
+canvas=false
+webgl=false
+generated_image=false
+graphic_box=false
+deploy_marker=COHERENCE_DIAGNOSTIC_LINEAR_ONE_SCENARIO_SUBMIT_FLOW_DEPLOY_MARKER_v9
         </template>
       </section>
     </main>
 
     <footer class="footer">
-      COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COLOR_BOXES_PRIVACY_FRONTLOAD_SECTION_CONTRAST_TNT_v8 · One-question focus flow · Local-only.
+      COHERENCE_DIAGNOSTIC_LINEAR_ONE_SCENARIO_SUBMIT_FLOW_TNT_v9 · Linear scenario submit flow · Technical results highlighted · Local-only.
     </footer>
   </div>
 
@@ -1304,11 +1666,10 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
     (() => {
       "use strict";
 
-      const CONTRACT = "COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COLOR_BOXES_PRIVACY_FRONTLOAD_SECTION_CONTRAST_TNT_v8";
+      const CONTRACT = "COHERENCE_DIAGNOSTIC_LINEAR_ONE_SCENARIO_SUBMIT_FLOW_TNT_v9";
       const MAX_COHERENCE_VALUE = 4;
       const SUBSCALES = ["sequence","evidence","action","stability","correction","contradiction"];
       const PUBLIC_ARCHETYPES = ["Strategist","Builder","Mitigator","Auditor"];
-      const AUTO_ADVANCE_DELAY = 620;
 
       const archetypes = {
         Strategist: {
@@ -1379,7 +1740,15 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
       };
 
       const makeOption = (id, archetype, coherence, text, strength, risk, subscale, fragmentation = false, fragmentationType = "none") => ({
-        id, archetype, coherence, text, strength, risk, subscale, fragmentation, fragmentationType
+        id,
+        archetype,
+        coherence,
+        text,
+        strength,
+        risk,
+        subscale,
+        fragmentation,
+        fragmentationType
       });
 
       const fragment = (id, type, coherence, text, risk, subscale) =>
@@ -1582,7 +1951,6 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
       const generateBtn = document.getElementById("generate-btn");
       const diagnosticStage = document.getElementById("diagnostic-stage");
       const flowShell = document.getElementById("flow-shell");
-      const reviewPanel = document.getElementById("review-panel");
       const validation = document.getElementById("validation");
       const intakeValidation = document.getElementById("intake-validation");
       const result = document.getElementById("result");
@@ -1591,16 +1959,28 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
       let generatedQuestions = [];
       let currentScenarioIndex = 0;
       let scenarioAnswers = {};
-      let reviewMode = false;
-      let autoAdvanceTimer = null;
 
       function escapeHtml(value){
-        return String(value).replace(/[&<>"']/g,(char)=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[char]));
+        return String(value).replace(/[&<>"']/g,(char)=>({
+          "&":"&amp;",
+          "<":"&lt;",
+          ">":"&gt;",
+          "\"":"&quot;",
+          "'":"&#039;"
+        })[char]);
       }
 
-      function listItems(items){return items.map((item)=>`<li>${escapeHtml(item)}</li>`).join("")}
-      function formatPercent(value){return `${Number(value).toFixed(1)}%`}
-      function clamp(value,min,max){return Math.min(Math.max(value,min),max)}
+      function listItems(items){
+        return items.map((item)=>`<li>${escapeHtml(item)}</li>`).join("");
+      }
+
+      function formatPercent(value){
+        return `${Number(value).toFixed(1)}%`;
+      }
+
+      function clamp(value,min,max){
+        return Math.min(Math.max(value,min),max);
+      }
 
       function shuffle(items){
         const copy = items.slice();
@@ -1611,14 +1991,17 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
         return copy;
       }
 
-      function hasAny(item,tags){return tags.some((tag)=>item.categories.includes(tag))}
+      function hasAny(item,tags){
+        return tags.some((tag)=>item.categories.includes(tag));
+      }
 
       function renderArchetypeLibrary(){
         library.innerHTML = Object.values(archetypes).map((item,index)=>`
           <details class="archetype-detail" ${index === 0 ? "open" : ""}>
             <summary>
               <span>
-                <strong>${escapeHtml(item.label)}</strong><br>
+                <strong>${escapeHtml(item.label)}</strong>
+                <br>
                 <span style="color:rgba(239,247,255,.62);font-size:.84rem;font-weight:760;">${escapeHtml(item.title)}</span>
               </span>
             </summary>
@@ -1692,7 +2075,11 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
         const addFrom = (label,count,predicate) => {
           const pool = shuffle(scenarioBank.filter((item)=>!seen.has(item.id) && predicate(item)));
           pool.slice(0,count).forEach((item)=>{
-            selected.push({...item,drawBucket:label,renderedOptions:shuffle(item.options)});
+            selected.push({
+              ...item,
+              drawBucket:label,
+              renderedOptions:shuffle(item.options)
+            });
             seen.add(item.id);
           });
         };
@@ -1712,20 +2099,17 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
       }
 
       function getAnswer(questionId){
-        return scenarioAnswers[questionId] || {questionId,primaryOptionId:"",secondaryOptionId:""};
+        return scenarioAnswers[questionId] || {
+          questionId,
+          primaryOptionId:"",
+          secondaryOptionId:""
+        };
       }
 
       function findOption(questionId,optionId){
         const question = generatedQuestions.find((item)=>item.id === questionId);
         if(!question) return null;
         return [...question.options,...(question.renderedOptions || [])].find((option)=>option.id === optionId) || null;
-      }
-
-      function isAllAnswered(){
-        return generatedQuestions.length === 10 && generatedQuestions.every((q)=>{
-          const answer = getAnswer(q.id);
-          return answer.primaryOptionId && answer.secondaryOptionId && answer.primaryOptionId !== answer.secondaryOptionId;
-        });
       }
 
       function completedCount(){
@@ -1735,15 +2119,11 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
         }).length;
       }
 
-      function saveAnswer(questionId,role,optionId){
+      function saveDraftAnswer(questionId,role,optionId){
         const existing = getAnswer(questionId);
-        const now = new Date().toISOString();
-        const wasComplete = existing.primaryOptionId && existing.secondaryOptionId;
-
         const next = {
           ...existing,
-          questionId,
-          answeredAt: existing.answeredAt || now
+          questionId
         };
 
         if(role === "primary"){
@@ -1756,25 +2136,48 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
           if(next.primaryOptionId === optionId) next.primaryOptionId = "";
         }
 
-        if(wasComplete) next.revisedAt = now;
         scenarioAnswers[questionId] = next;
-
         renderFlow();
+      }
 
-        const answer = getAnswer(questionId);
-        if(answer.primaryOptionId && answer.secondaryOptionId && answer.primaryOptionId !== answer.secondaryOptionId){
-          window.clearTimeout(autoAdvanceTimer);
-          if(currentScenarioIndex < generatedQuestions.length - 1 && !reviewMode){
-            autoAdvanceTimer = window.setTimeout(()=>{
-              currentScenarioIndex += 1;
-              renderFlow();
-              flowShell.scrollIntoView({behavior:"smooth",block:"start"});
-            },AUTO_ADVANCE_DELAY);
-          }
-          if(currentScenarioIndex === generatedQuestions.length - 1){
-            renderReview(false);
-          }
+      function submitCurrentScenario(){
+        clearValidation(validation);
+
+        const question = generatedQuestions[currentScenarioIndex];
+        const answer = getAnswer(question.id);
+
+        if(!answer.primaryOptionId){
+          showValidation(validation,"Select what you would do first.");
+          return;
         }
+
+        if(!answer.secondaryOptionId){
+          showValidation(validation,"Select what you would rely on next.");
+          return;
+        }
+
+        if(answer.primaryOptionId === answer.secondaryOptionId){
+          showValidation(validation,"Your first move and support move must be different.");
+          return;
+        }
+
+        const now = new Date().toISOString();
+        const alreadyAnswered = Boolean(answer.answeredAt);
+
+        scenarioAnswers[question.id] = {
+          ...answer,
+          answeredAt: answer.answeredAt || now,
+          revisedAt: alreadyAnswered ? now : answer.revisedAt
+        };
+
+        if(currentScenarioIndex < generatedQuestions.length - 1){
+          currentScenarioIndex += 1;
+          renderFlow();
+          flowShell.scrollIntoView({behavior:"smooth",block:"start"});
+          return;
+        }
+
+        renderResult(calculateResult());
       }
 
       function renderFlow(){
@@ -1788,6 +2191,8 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
         const progress = Math.round((completedCount() / generatedQuestions.length) * 100);
         const primarySelected = Boolean(answer.primaryOptionId);
         const secondarySelected = Boolean(answer.secondaryOptionId);
+        const isValid = primarySelected && secondarySelected && answer.primaryOptionId !== answer.secondaryOptionId;
+        const options = question.renderedOptions || question.options;
 
         const renderOption = (option,role,index) => {
           const selected = role === "primary" ? answer.primaryOptionId === option.id : answer.secondaryOptionId === option.id;
@@ -1803,8 +2208,6 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
             </button>
           `;
         };
-
-        const options = question.renderedOptions || question.options;
 
         flowShell.innerHTML = `
           <div class="progress-panel">
@@ -1843,26 +2246,27 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
               <section class="answer-zone primary-answer ${primarySelected ? "is-selected" : ""}">
                 <div class="answer-zone-head">
                   <b>Primary Answer · What do you do first?</b>
-                  <span>${primarySelected ? "First move selected." : "Waiting for first move."}</span>
+                  <span>${primarySelected ? "First move selected." : "Choose one first move."}</span>
                 </div>
                 ${options.map((option,index)=>renderOption(option,"primary",index)).join("")}
               </section>
 
-              <section class="answer-zone secondary-answer ${primarySelected && !secondarySelected ? "is-emphasized" : ""} ${secondarySelected ? "is-selected" : ""}">
+              <section class="answer-zone secondary-answer ${secondarySelected ? "is-selected" : ""}">
                 <div class="answer-zone-head">
                   <b>Secondary Answer · What do you rely on next?</b>
-                  <span>${secondarySelected ? "Support move selected." : "Waiting for support move."}</span>
+                  <span>${secondarySelected ? "Support move selected." : "Choose one support move."}</span>
                 </div>
                 ${options.map((option,index)=>renderOption(option,"secondary",index)).join("")}
               </section>
             </div>
 
             <div class="flow-controls">
-              <span class="flow-note">${primarySelected && secondarySelected ? "Both answers selected. You may continue, review, or revise." : "Select one answer in each colored box."}</span>
+              <span class="flow-note">Choose one answer in each colored box, then submit to continue.</span>
               <div class="button-cluster">
                 <button class="ghost-btn" type="button" id="back-scenario" ${currentScenarioIndex === 0 ? "disabled" : ""}>Back</button>
-                <button class="ghost-btn" type="button" id="review-answers">Review Answers</button>
-                <button class="action-btn" type="button" id="grade-now" ${isAllAnswered() ? "" : "disabled"}>Grade / Read Pattern</button>
+                <button class="action-btn" type="button" id="submit-scenario" ${isValid ? "" : "disabled"}>
+                  ${currentScenarioIndex === generatedQuestions.length - 1 ? "Submit Answers & View Results" : "Submit Answers"}
+                </button>
               </div>
             </div>
           </article>
@@ -1870,104 +2274,49 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
 
         flowShell.querySelectorAll("[data-answer-role]").forEach((button)=>{
           button.addEventListener("click",()=>{
-            saveAnswer(button.dataset.questionId,button.dataset.answerRole,button.dataset.optionId);
+            saveDraftAnswer(button.dataset.questionId,button.dataset.answerRole,button.dataset.optionId);
           });
         });
 
         const backButton = document.getElementById("back-scenario");
         if(backButton){
           backButton.addEventListener("click",()=>{
-            window.clearTimeout(autoAdvanceTimer);
             currentScenarioIndex = Math.max(0,currentScenarioIndex - 1);
-            reviewMode = false;
             renderFlow();
-          });
-        }
-
-        const reviewButton = document.getElementById("review-answers");
-        if(reviewButton){
-          reviewButton.addEventListener("click",()=>renderReview(true));
-        }
-
-        const gradeButton = document.getElementById("grade-now");
-        if(gradeButton){
-          gradeButton.addEventListener("click",gradeFromSavedAnswers);
-        }
-      }
-
-      function renderReview(scrollToReview){
-        reviewPanel.innerHTML = `
-          <h3>Review Answers</h3>
-          <p>Review all ten scenarios before grading. Hidden scoring labels are not shown here.</p>
-          <div class="review-list">
-            ${generatedQuestions.map((question,index)=>{
-              const answer = getAnswer(question.id);
-              const primary = answer.primaryOptionId ? findOption(question.id,answer.primaryOptionId) : null;
-              const secondary = answer.secondaryOptionId ? findOption(question.id,answer.secondaryOptionId) : null;
-
-              return `
-                <article class="review-item">
-                  <b>Scenario ${index + 1} · ${escapeHtml(question.title)}</b>
-                  <span><strong>First move:</strong> ${primary ? escapeHtml(primary.text) : "Not answered"}</span>
-                  <span><strong>Support move:</strong> ${secondary ? escapeHtml(secondary.text) : "Not answered"}</span>
-                  <button class="ghost-btn" type="button" data-edit-index="${index}">Edit Scenario ${index + 1}</button>
-                </article>
-              `;
-            }).join("")}
-          </div>
-          <div class="button-row">
-            <p>${isAllAnswered() ? "All scenarios are answered. You can grade now." : "Some scenarios still need both answers before grading."}</p>
-            <div class="button-cluster">
-              <button class="ghost-btn" type="button" id="close-review">Close Review</button>
-              <button class="action-btn" type="button" id="grade-from-review" ${isAllAnswered() ? "" : "disabled"}>Grade / Read Pattern</button>
-            </div>
-          </div>
-        `;
-
-        reviewPanel.classList.add("is-visible");
-
-        reviewPanel.querySelectorAll("[data-edit-index]").forEach((button)=>{
-          button.addEventListener("click",()=>{
-            currentScenarioIndex = Number(button.dataset.editIndex);
-            reviewMode = false;
-            renderFlow();
-            reviewPanel.classList.remove("is-visible");
             flowShell.scrollIntoView({behavior:"smooth",block:"start"});
           });
-        });
-
-        const closeReview = document.getElementById("close-review");
-        if(closeReview) closeReview.addEventListener("click",()=>reviewPanel.classList.remove("is-visible"));
-
-        const grade = document.getElementById("grade-from-review");
-        if(grade) grade.addEventListener("click",gradeFromSavedAnswers);
-
-        if(scrollToReview) reviewPanel.scrollIntoView({behavior:"smooth",block:"start"});
-      }
-
-      function validateSavedDiagnostic(){
-        if(!generatedQuestions.length) return "Generate the diagnostic before grading.";
-
-        for(const question of generatedQuestions){
-          const answer = getAnswer(question.id);
-          if(!answer.primaryOptionId) return `${question.title}: select what you would do first.`;
-          if(!answer.secondaryOptionId) return `${question.title}: select what you would rely on next.`;
-          if(answer.primaryOptionId === answer.secondaryOptionId) return `${question.title}: your first move and support move must be different.`;
         }
 
-        return "";
+        const submitButton = document.getElementById("submit-scenario");
+        if(submitButton){
+          submitButton.addEventListener("click",submitCurrentScenario);
+        }
       }
 
-      function incrementMap(map,key,amount){map.set(key,(map.get(key) || 0) + amount)}
-      function topEntries(map,limit=3){return Array.from(map.entries()).sort((a,b)=>b[1]-a[1] || a[0].localeCompare(b[0])).slice(0,limit).map(([key])=>key)}
-      function loadEntries(map,limit=6){return Array.from(map.entries()).sort((a,b)=>b[1]-a[1] || a[0].localeCompare(b[0])).slice(0,limit).map(([label,weight])=>({label,weight}))}
+      function incrementMap(map,key,amount){
+        map.set(key,(map.get(key) || 0) + amount);
+      }
+
+      function topEntries(map,limit = 3){
+        return Array.from(map.entries())
+          .sort((a,b)=>b[1] - a[1] || a[0].localeCompare(b[0]))
+          .slice(0,limit)
+          .map(([key])=>key);
+      }
+
+      function loadEntries(map,limit = 6){
+        return Array.from(map.entries())
+          .sort((a,b)=>b[1] - a[1] || a[0].localeCompare(b[0]))
+          .slice(0,limit)
+          .map(([label,weight])=>({label,weight}));
+      }
 
       function scoreBand(score){
-        if(score < 3) return {label:"Fragmented / Low Coherence",text:"The pattern shows several breaks in sequence, accountability, evidence handling, or decision alignment."};
-        if(score < 5) return {label:"Developing Coherence",text:"The pattern shows usable instincts with noticeable drift under pressure."};
-        if(score < 7) return {label:"Functional Coherence",text:"The pattern can function under normal pressure, though some choices may still drift under stress."};
-        if(score < 8.5) return {label:"High Coherence",text:"The pattern shows strong alignment across responsibility, signal, sequence, and correction."};
-        return {label:"Exceptional Coherence",text:"The pattern shows unusually strong alignment under scenario pressure."};
+        if(score < 3) return {label:"Fragmented / Low Coherence",text:"The pattern shows several breaks in sequence, accountability, evidence handling, or decision alignment. This is a calibration signal, not a personal condemnation."};
+        if(score < 5) return {label:"Developing Coherence",text:"The pattern shows usable instincts with noticeable drift under pressure. The next step is to reduce contradiction and strengthen sequence."};
+        if(score < 7) return {label:"Functional Coherence",text:"The pattern can function under normal pressure, though some choices may still drift when stress, ambiguity, or accountability rises."};
+        if(score < 8.5) return {label:"High Coherence",text:"The pattern shows strong alignment across responsibility, signal, sequence, and correction. Remaining risks are mostly overuse of your dominant style."};
+        return {label:"Exceptional Coherence",text:"The pattern shows unusually strong alignment under scenario pressure. Watch for overconfidence and continue testing claims against reality."};
       }
 
       function fragmentationBand(rate){
@@ -2028,7 +2377,7 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
         }[claimMatch] || 25;
       }
 
-      function preferenceAxis(leftLabel,rightLabel,leftValue,rightValue,threshold=7){
+      function preferenceAxis(leftLabel,rightLabel,leftValue,rightValue,threshold = 7){
         const diff = leftValue - rightValue;
         if(Math.abs(diff) <= threshold) return {label:"Balanced",leftLabel,rightLabel,leftValue,rightValue,diff};
         return {label:diff > 0 ? leftLabel : rightLabel,leftLabel,rightLabel,leftValue,rightValue,diff};
@@ -2042,39 +2391,12 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
         return "Exceptional Processing Signal";
       }
 
-      function projectedIqStyleRange(cpi){
-        if(cpi >= 90) return "128–145";
-        if(cpi >= 75) return "118–132";
-        if(cpi >= 60) return "105–120";
-        if(cpi >= 40) return "90–110";
+      function projectedIqStyleRange(cognitiveProcessingIndex){
+        if(cognitiveProcessingIndex >= 90) return "128–145";
+        if(cognitiveProcessingIndex >= 75) return "118–132";
+        if(cognitiveProcessingIndex >= 60) return "105–120";
+        if(cognitiveProcessingIndex >= 40) return "90–110";
         return "75–95";
-      }
-
-      function combinations(parts){
-        return parts.reduce((acc,part)=>{
-          const values = Array.isArray(part) ? part : [part];
-          return acc.flatMap((prefix)=>values.map((value)=>prefix + value));
-        },[""]);
-      }
-
-      function mbtiStyleType(preference){
-        const mapAxis = (axis,leftLetter,rightLetter) => {
-          if(axis.label === "Balanced") return [leftLetter,rightLetter];
-          if(axis.label === axis.leftLabel) return leftLetter;
-          return rightLetter;
-        };
-
-        const axisParts = [
-          mapAxis(preference.orientation,"I","E"),
-          mapAxis(preference.information,"N","S"),
-          mapAxis(preference.judgment,"T","F"),
-          mapAxis(preference.closure,"J","P")
-        ];
-
-        const balancedCount = axisParts.filter(Array.isArray).length;
-        if(balancedCount >= 3) return "Balanced / Mixed-style";
-        const options = combinations(axisParts).slice(0,4).map((item)=>`${item}-style`);
-        return options.length === 1 ? options[0] : options.join(" / ");
       }
 
       function confidenceBand(dominanceMargin,vector){
@@ -2103,6 +2425,34 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
           calibration:"Calibration Accuracy",
           claimAlignment:"Claim-Pattern Alignment"
         }[key] || key;
+      }
+
+      function combinations(parts){
+        return parts.reduce((acc,part)=>{
+          const values = Array.isArray(part) ? part : [part];
+          return acc.flatMap((prefix)=>values.map((value)=>prefix + value));
+        },[""]);
+      }
+
+      function mbtiStyleType(preference){
+        const mapAxis = (axis,leftLetter,rightLetter) => {
+          if(axis.label === "Balanced") return [leftLetter,rightLetter];
+          if(axis.label === axis.leftLabel) return leftLetter;
+          return rightLetter;
+        };
+
+        const axisParts = [
+          mapAxis(preference.orientation,"I","E"),
+          mapAxis(preference.information,"N","S"),
+          mapAxis(preference.judgment,"T","F"),
+          mapAxis(preference.closure,"J","P")
+        ];
+
+        const balancedCount = axisParts.filter(Array.isArray).length;
+        if(balancedCount >= 3) return "Balanced / Mixed-style";
+
+        const options = combinations(axisParts).slice(0,4).map((item)=>`${item}-style`);
+        return options.length === 1 ? options[0] : options.join(" / ");
       }
 
       function nextStepFor(primary,secondary,bandLabel,fragmentationRate){
@@ -2137,12 +2487,13 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
         const risks = new Map();
         const fragmentationTypes = new Map();
         const subscaleTotals = SUBSCALES.reduce((acc,key)=>{acc[key]=0;return acc;},{});
+
         let fragmentationWeighted = 0;
         let fragmentationPrimaryCount = 0;
         let fragmentationSecondaryCount = 0;
 
         for(const question of generatedQuestions){
-          const answer = getAnswer(question.id);
+          const answer = scenarioAnswers[question.id];
           const primary = findOption(question.id,answer.primaryOptionId);
           const secondary = findOption(question.id,answer.secondaryOptionId);
 
@@ -2198,7 +2549,9 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
 
         const maxSubscale = generatedQuestions.length * 3 * MAX_COHERENCE_VALUE;
         const subscales = {};
-        SUBSCALES.forEach((key)=>{subscales[key] = Math.round((subscaleTotals[key] / maxSubscale) * 100)});
+        SUBSCALES.forEach((key)=>{
+          subscales[key] = Math.round((subscaleTotals[key] / maxSubscale) * 100);
+        });
         subscales.calibration = calibrationAccuracy;
         subscales.claimAlignment = claimPatternAlignment;
 
@@ -2232,6 +2585,9 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
         const preferenceType = balancedCount >= 2
           ? "Balanced Preference Type"
           : `${preference.information.label}-Led ${preference.closure.label} ${preference.judgment.label} Type`;
+
+        const strengthLoad = loadEntries(strengths);
+        const riskLoad = loadEntries(risks);
 
         const fragmentation = {
           weighted:fragmentationWeighted,
@@ -2269,13 +2625,13 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
           fragmentation,
           cognitiveProcessingIndex,
           cognitiveProcessingBand:processingBand(cognitiveProcessingIndex),
-          projectedIqStyleRange: publicIqStyleRange,
-          possibleMbtiStyleType: publicMbtiStyleType,
+          projectedIqStyleRange:publicIqStyleRange,
+          possibleMbtiStyleType:publicMbtiStyleType,
           preferenceType,
           preference,
-          strengthLoad:loadEntries(strengths),
-          riskLoad:loadEntries(risks),
-          scenarioDraw: generatedQuestions.map((item)=>({
+          strengthLoad,
+          riskLoad,
+          scenarioDraw:generatedQuestions.map((item)=>({
             id:item.id,
             title:item.title,
             publicCategory:item.publicCategory,
@@ -2349,7 +2705,7 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
           `Top risks: ${data.risks.join(", ")}`,
           `Recommended next step: ${data.nextStep}`,
           "",
-          "ENGINEERING LENS",
+          "TECHNICAL RESULTS",
           `Raw score: ${e.rawScore}/${e.maxRaw}`,
           `Normalized score: ${e.normalizedScore}/10`,
           `Calibration error: ${e.calibrationError}`,
@@ -2376,11 +2732,11 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
         ].join("\n");
       }
 
-      function renderMetricCard(label,value,note=""){
+      function renderMetricCard(label,value,note = ""){
         return `<article class="metric-card"><b>${escapeHtml(label)}</b><strong>${escapeHtml(value)}</strong>${note ? `<span>${escapeHtml(note)}</span>` : ""}</article>`;
       }
 
-      function renderBarMetric(label,value,note="",breakStyle=false){
+      function renderBarMetric(label,value,note = "",breakStyle = false){
         const safeValue = clamp(Number(value) || 0,0,100);
         return `
           <article class="metric-card">
@@ -2426,96 +2782,104 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
         return archetypes[name] ? archetypes[name].short : "No stable revealed archetype because public archetype signal was too low.";
       }
 
-      function renderEngineeringLens(data){
+      function renderTechnicalResults(data){
         const e = data.engineering;
         const archetypeDenominator = generatedQuestions.length * 3;
 
         return `
-          <details class="engineering-readout">
-            <summary>
-              <span>
-                <strong>Engineering Lens · Technical Assessment Disposition</strong>
-                <br>
-                <span style="color:rgba(239,247,255,.62);font-size:.84rem;font-weight:760;">
-                  Open for raw score, archetype vector, pressure-break markers, subscales, projected IQ-style range logic, and possible MBTI-style type logic.
-                </span>
-              </span>
-            </summary>
+          <section id="technical-results" class="technical-results" aria-label="Technical results">
+            <p class="eyebrow">Engineering Lens · Technical Results</p>
+            <h3>Technical Assessment Disposition</h3>
+            <div class="technical-summary">
+              <strong>Technical Disposition:</strong> ${escapeHtml(e.technicalDisposition)}
+            </div>
 
-            <div class="engineering-content">
-              <div class="technical-summary"><strong>Technical Disposition:</strong> ${escapeHtml(e.technicalDisposition)}</div>
+            <div class="metric-grid three">
+              ${renderMetricCard("Raw Coherence Score",`${e.rawScore} / ${e.maxRaw}`,"Primary response is weighted ×2. Secondary response is weighted ×1.")}
+              ${renderMetricCard("Normalized Score",`${e.normalizedScore} / 10`,"Scaled from the raw local result.")}
+              ${renderMetricCard("Calibration Error",`${e.calibrationError}`,`${e.calibrationDirection}: self-rating minus normalized score.`)}
+              ${renderMetricCard("Claim Alignment",e.claimAlignmentClass,"Compares claimed blend against revealed blend.")}
+              ${renderMetricCard("Projected IQ-Style Range",e.projectedIqStyleRange,"Estimate only · not an IQ test.")}
+              ${renderMetricCard("Possible MBTI-Style Type",e.possibleMbtiStyleType,"Preference hypothesis · not official MBTI®.")}
+              ${renderMetricCard("Dominance Margin",`${formatPercent(e.dominanceMargin)}`,e.dominanceDisposition)}
+              ${renderMetricCard("Confidence Band",e.confidenceBand,"Confidence measures archetype separation, not overall coherence.")}
+              ${renderMetricCard("Cognitive Processing Estimate",`${e.cognitiveProcessingIndex}/100`,`${e.cognitiveProcessingBand} · not an IQ score.`)}
+            </div>
 
-              <div class="metric-grid three">
-                ${renderMetricCard("Raw Coherence Score",`${e.rawScore} / ${e.maxRaw}`,"Primary response is weighted ×2. Secondary response is weighted ×1.")}
-                ${renderMetricCard("Normalized Score",`${e.normalizedScore} / 10`,"Scaled from the raw local result.")}
-                ${renderMetricCard("Calibration Error",`${e.calibrationError}`,`${e.calibrationDirection}: self-rating minus normalized score.`)}
-                ${renderMetricCard("Claim Alignment",e.claimAlignmentClass,"Compares claimed blend against revealed blend.")}
-                ${renderMetricCard("Projected IQ-Style Range",e.projectedIqStyleRange,"Estimate only · not an IQ test.")}
-                ${renderMetricCard("Possible MBTI-Style Type",e.possibleMbtiStyleType,"Preference hypothesis · not official MBTI®.")}
-                ${renderMetricCard("Dominance Margin",`${formatPercent(e.dominanceMargin)}`,e.dominanceDisposition)}
-                ${renderMetricCard("Confidence Band",e.confidenceBand,"Confidence measures archetype separation, not overall coherence.")}
-                ${renderMetricCard("Cognitive Processing Estimate",`${e.cognitiveProcessingIndex}/100`,`${e.cognitiveProcessingBand} · not an IQ score.`)}
+            <h3>Archetype Vector</h3>
+            <div class="metric-grid">
+              ${renderVectorCards(e.archetypeVector,archetypeDenominator)}
+            </div>
+
+            <h3>Response Architecture</h3>
+            <div class="metric-grid">
+              <div class="load-card">
+                <b>Primary Response Distribution</b>
+                <div class="metric-grid">${renderDistributionCards(e.primaryDistribution,generatedQuestions.length)}</div>
               </div>
-
-              <h3>Archetype Vector</h3>
-              <div class="metric-grid">${renderVectorCards(e.archetypeVector,archetypeDenominator)}</div>
-
-              <h3>Response Architecture</h3>
-              <div class="metric-grid">
-                <div class="load-card"><b>Primary Response Distribution</b><div class="metric-grid">${renderDistributionCards(e.primaryDistribution,generatedQuestions.length)}</div></div>
-                <div class="load-card"><b>Secondary Response Distribution</b><div class="metric-grid">${renderDistributionCards(e.secondaryDistribution,generatedQuestions.length)}</div></div>
-              </div>
-
-              <h3>Subscale Metrics</h3>
-              <div class="metric-grid">
-                ${renderBarMetric("Sequence Integrity",e.subscales.sequence,"Order, timing, lawful steps, and decision sequence.")}
-                ${renderBarMetric("Evidence Discipline",e.subscales.evidence,"Separation of evidence from assumption.")}
-                ${renderBarMetric("Action Realism",e.subscales.action,"Ability to convert insight into realistic action.")}
-                ${renderBarMetric("Field Stability",e.subscales.stability,"Ability to keep people and systems usable under pressure.")}
-                ${renderBarMetric("Correction Capacity",e.subscales.correction,"Ability to admit, repair, revise, and update.")}
-                ${renderBarMetric("Contradiction Resistance",e.subscales.contradiction,"Ability to withstand incompatible claims without false closure.")}
-                ${renderBarMetric("Calibration Accuracy",e.subscales.calibration,"Alignment between self-rating and revealed scenario pattern.")}
-                ${renderBarMetric("Claim-Pattern Alignment",e.subscales.claimAlignment,"Alignment between claimed archetype blend and revealed blend.")}
-              </div>
-
-              <h3>Fragmentation / Coherence Break Markers</h3>
-              <div class="metric-grid">
-                ${renderBarMetric("Fragmentation Rate",e.fragmentation.rate,e.fragmentation.band,true)}
-                ${renderMetricCard("Primary Fragmentation",String(e.fragmentation.primaryCount),"Number of first-move pressure-break selections.")}
-                ${renderMetricCard("Secondary Fragmentation",String(e.fragmentation.secondaryCount),"Number of support-response pressure-break selections.")}
-                <div class="load-card"><b>Top Fragmentation Markers</b><ul>${renderLoadList(e.fragmentation.types)}</ul></div>
-              </div>
-              <div class="technical-summary">${escapeHtml(e.fragmentation.interpretation)}</div>
-
-              <h3>Scenario Draw</h3>
-              <div class="load-card"><b>Randomized Real-World Scenario Set</b><ul>${renderScenarioDraw(e.scenarioDraw)}</ul></div>
-
-              <h3>Preference-Type Hypothesis</h3>
-              <div class="metric-grid">
-                ${renderMetricCard("Preference-Type Hypothesis",e.preferenceType,"Reflection-only preference signal inferred from this diagnostic’s scenario choices.")}
-                ${renderMetricCard("Boundary","Not official MBTI®","This is not an official MBTI® result, certified personality type, or personality diagnosis.")}
-                ${renderMetricCard("Orientation Axis",e.preference.orientation.label,`${e.preference.orientation.leftLabel} / ${e.preference.orientation.rightLabel}`)}
-                ${renderMetricCard("Information Axis",e.preference.information.label,`${e.preference.information.leftLabel} / ${e.preference.information.rightLabel}`)}
-                ${renderMetricCard("Judgment Axis",e.preference.judgment.label,`${e.preference.judgment.leftLabel} / ${e.preference.judgment.rightLabel}`)}
-                ${renderMetricCard("Closure Axis",e.preference.closure.label,`${e.preference.closure.leftLabel} / ${e.preference.closure.rightLabel}`)}
-              </div>
-
-              <div class="metric-grid">
-                <div class="load-card"><b>Strength Load</b><ul>${renderLoadList(e.strengthLoad)}</ul></div>
-                <div class="load-card"><b>Risk Load</b><ul>${renderLoadList(e.riskLoad)}</ul></div>
-              </div>
-
-              <div class="warning">
-                The Engineering Lens is a technical readout of this local diagnostic only. The Projected IQ-Style Range is not an IQ score or IQ test. The Possible MBTI-Style Type is not an official MBTI® result. Fragmentation markers identify pressure-break choices, not personal identity. This is not medical, mental-health, legal, employment, intelligence, or official personality-type assessment output.
+              <div class="load-card">
+                <b>Secondary Response Distribution</b>
+                <div class="metric-grid">${renderDistributionCards(e.secondaryDistribution,generatedQuestions.length)}</div>
               </div>
             </div>
-          </details>
+
+            <h3>Subscale Metrics</h3>
+            <div class="metric-grid">
+              ${renderBarMetric("Sequence Integrity",e.subscales.sequence,"Order, timing, lawful steps, and decision sequence.")}
+              ${renderBarMetric("Evidence Discipline",e.subscales.evidence,"Separation of evidence from assumption.")}
+              ${renderBarMetric("Action Realism",e.subscales.action,"Ability to convert insight into realistic action.")}
+              ${renderBarMetric("Field Stability",e.subscales.stability,"Ability to keep people and systems usable under pressure.")}
+              ${renderBarMetric("Correction Capacity",e.subscales.correction,"Ability to admit, repair, revise, and update.")}
+              ${renderBarMetric("Contradiction Resistance",e.subscales.contradiction,"Ability to withstand incompatible claims without false closure.")}
+              ${renderBarMetric("Calibration Accuracy",e.subscales.calibration,"Alignment between self-rating and revealed scenario pattern.")}
+              ${renderBarMetric("Claim-Pattern Alignment",e.subscales.claimAlignment,"Alignment between claimed archetype blend and revealed blend.")}
+            </div>
+
+            <h3>Pressure-Break Markers</h3>
+            <div class="metric-grid">
+              ${renderBarMetric("Fragmentation Rate",e.fragmentation.rate,e.fragmentation.band,true)}
+              ${renderMetricCard("Primary Fragmentation",String(e.fragmentation.primaryCount),"Number of first-move pressure-break selections.")}
+              ${renderMetricCard("Secondary Fragmentation",String(e.fragmentation.secondaryCount),"Number of support-response pressure-break selections.")}
+              <div class="load-card">
+                <b>Top Fragmentation Markers</b>
+                <ul>${renderLoadList(e.fragmentation.types)}</ul>
+              </div>
+            </div>
+
+            <div class="technical-summary">${escapeHtml(e.fragmentation.interpretation)}</div>
+
+            <h3>Scenario Draw</h3>
+            <div class="load-card">
+              <b>Randomized Real-World Scenario Set</b>
+              <ul>${renderScenarioDraw(e.scenarioDraw)}</ul>
+            </div>
+
+            <h3>Preference-Type Hypothesis</h3>
+            <div class="metric-grid">
+              ${renderMetricCard("Preference-Type Hypothesis",e.preferenceType,"Reflection-only preference signal inferred from this diagnostic’s scenario choices.")}
+              ${renderMetricCard("Boundary","Not official MBTI®","This is not an official MBTI® result, certified personality type, or personality diagnosis.")}
+              ${renderMetricCard("Orientation Axis",e.preference.orientation.label,`${e.preference.orientation.leftLabel} / ${e.preference.orientation.rightLabel}`)}
+              ${renderMetricCard("Information Axis",e.preference.information.label,`${e.preference.information.leftLabel} / ${e.preference.information.rightLabel}`)}
+              ${renderMetricCard("Judgment Axis",e.preference.judgment.label,`${e.preference.judgment.leftLabel} / ${e.preference.judgment.rightLabel}`)}
+              ${renderMetricCard("Closure Axis",e.preference.closure.label,`${e.preference.closure.leftLabel} / ${e.preference.closure.rightLabel}`)}
+            </div>
+
+            <div class="metric-grid">
+              <div class="load-card"><b>Strength Load</b><ul>${renderLoadList(e.strengthLoad)}</ul></div>
+              <div class="load-card"><b>Risk Load</b><ul>${renderLoadList(e.riskLoad)}</ul></div>
+            </div>
+
+            <div class="warning">
+              The Technical Results section is a technical readout of this local diagnostic only. The Projected IQ-Style Range is not an IQ score or IQ test. The Possible MBTI-Style Type is not an official MBTI® result. Fragmentation markers identify pressure-break choices, not personal identity.
+            </div>
+          </section>
         `;
       }
 
       function renderResult(data){
         const showScore = data.mode === "graded";
         const text = resultText(data);
+
         const pressureBreakCell = data.engineering.fragmentation.rate >= 10 ? `
           <article class="result-cell">
             <b>Pressure-Break Signal</b>
@@ -2567,7 +2931,15 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
                 <article class="result-cell"><b>Next Step</b><strong>Recommended focus</strong><span>${escapeHtml(data.nextStep)}</span></article>
               </div>
 
-              ${renderEngineeringLens(data)}
+              <section class="technical-invite" aria-label="Technical results invitation">
+                <h3>Want the technical read?</h3>
+                <p>Open the Engineering Lens for the raw score, archetype vector, calibration error, subscale metrics, pressure-break markers, projected IQ-style range logic, and possible MBTI-style hypothesis.</p>
+                <div class="button-cluster">
+                  <button class="action-btn" type="button" id="open-technical-results">Open Technical Results</button>
+                </div>
+              </section>
+
+              ${renderTechnicalResults(data)}
 
               <div class="coming-soon">
                 <h3>Coming Soon</h3>
@@ -2607,6 +2979,17 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
         result.classList.add("is-visible");
         result.scrollIntoView({behavior:"smooth",block:"start"});
 
+        const openTechnical = document.getElementById("open-technical-results");
+        const technicalResults = document.getElementById("technical-results");
+
+        if(openTechnical && technicalResults){
+          openTechnical.addEventListener("click",()=>{
+            technicalResults.classList.add("is-visible");
+            openTechnical.textContent = "Technical Results Open";
+            technicalResults.scrollIntoView({behavior:"smooth",block:"start"});
+          });
+        }
+
         document.getElementById("copy-result").addEventListener("click",async()=>{
           const plain = document.getElementById("plain-result").value;
           try{
@@ -2625,10 +3008,7 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
           generatedQuestions = [];
           scenarioAnswers = {};
           currentScenarioIndex = 0;
-          reviewMode = false;
           flowShell.innerHTML = "";
-          reviewPanel.innerHTML = "";
-          reviewPanel.classList.remove("is-visible");
           diagnosticStage.classList.remove("is-visible");
           result.classList.remove("is-visible");
           result.innerHTML = "";
@@ -2636,17 +3016,8 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
           clearValidation(intakeValidation);
           window.scrollTo({top:0,behavior:"smooth"});
         });
-      }
 
-      function gradeFromSavedAnswers(){
-        clearValidation(validation);
-        const message = validateSavedDiagnostic();
-        if(message){
-          showValidation(validation,message);
-          renderReview(true);
-          return;
-        }
-        renderResult(calculateResult());
+        window.COHERENCE_DIAGNOSTIC_LAST_RESULT = data;
       }
 
       function generateDiagnostic(){
@@ -2654,8 +3025,6 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
         clearValidation(validation);
         result.classList.remove("is-visible");
         result.innerHTML = "";
-        reviewPanel.classList.remove("is-visible");
-        reviewPanel.innerHTML = "";
 
         const message = validateIntake();
         if(message){
@@ -2669,7 +3038,6 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
         generatedQuestions = chooseBalancedScenarios(primary,secondary);
         scenarioAnswers = {};
         currentScenarioIndex = 0;
-        reviewMode = false;
         renderFlow();
 
         diagnosticStage.classList.add("is-visible");
@@ -2701,8 +3069,6 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
             scenarioAnswers = {};
             currentScenarioIndex = 0;
             flowShell.innerHTML = "";
-            reviewPanel.innerHTML = "";
-            reviewPanel.classList.remove("is-visible");
             diagnosticStage.classList.remove("is-visible");
             result.classList.remove("is-visible");
             result.innerHTML = "";
@@ -2719,8 +3085,6 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
         scenarioAnswers = {};
         currentScenarioIndex = 0;
         flowShell.innerHTML = "";
-        reviewPanel.innerHTML = "";
-        reviewPanel.classList.remove("is-visible");
         diagnosticStage.classList.remove("is-visible");
         result.classList.remove("is-visible");
         result.innerHTML = "";
@@ -2730,11 +3094,16 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
       renderArchetypeSelectors();
 
       document.documentElement.dataset.coherenceDiagnosticContract = CONTRACT;
-      document.documentElement.dataset.oneQuestionFocusFlow = "active";
+      document.documentElement.dataset.linearSubmitFlow = "active";
+      document.documentElement.dataset.oneScenarioVisible = "true";
+      document.documentElement.dataset.reviewAnswersPanel = "false";
+      document.documentElement.dataset.editScenarioButtons = "false";
+      document.documentElement.dataset.futureScenarioPreview = "false";
+      document.documentElement.dataset.autoAdvance = "false";
+      document.documentElement.dataset.submitAnswersRequired = "true";
       document.documentElement.dataset.primaryAnswerZone = "warm-gold";
       document.documentElement.dataset.secondaryAnswerZone = "cool-blue-green";
-      document.documentElement.dataset.frontloadedPrivacyAssurance = "active";
-      document.documentElement.dataset.reviewAnswers = "active";
+      document.documentElement.dataset.technicalResultsHighlight = "active";
       document.documentElement.dataset.localOnly = "true";
       document.documentElement.dataset.storage = "false";
       document.documentElement.dataset.localStorage = "false";
@@ -2745,15 +3114,20 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
 
       window.COHERENCE_DIAGNOSTIC_ASSESSMENT_RECEIPT = {
         contract: CONTRACT,
-        previousContract: "COHERENCE_DIAGNOSTIC_REAL_WORLD_RANDOM_SCENARIO_BANK_AND_RESULT_HERO_TNT_v7",
+        previousContract: "COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COLOR_BOXES_PRIVACY_FRONTLOAD_SECTION_CONTRAST_TNT_v8",
         route: "/coherence-diagnostic/",
         file: "/coherence-diagnostic/index.html",
-        oneQuestionFocusFlow: true,
+        linearSubmitFlow: true,
+        oneScenarioVisible: true,
+        reviewAnswersPanel: false,
+        editScenarioButtons: false,
+        futureScenarioPreview: false,
+        autoAdvance: false,
+        submitAnswersRequired: true,
         primaryAnswerZone: "warm/gold",
         secondaryAnswerZone: "cool/blue-green",
+        technicalResultsHighlight: true,
         frontloadedPrivacyAssurance: true,
-        reviewAnswers: true,
-        autoAdvanceAfterBothSelections: true,
         localOnly: true,
         backend: false,
         storage: false,
@@ -2766,7 +3140,8 @@ deploy_marker=COHERENCE_DIAGNOSTIC_ONE_QUESTION_FOCUS_FLOW_PRIMARY_SECONDARY_COL
         scenarioBankChange: false,
         fragmentationLogicChange: false,
         resultHeroPreserved: true,
-        engineeringLensPreserved: true,
+        projectedIqStyleRange: true,
+        possibleMbtiStyleType: true,
         canvas: false,
         webgl: false,
         generatedImage: false,

@@ -1,30 +1,30 @@
 # TARGET FILE: /.github/workflows/audralia-blueprint-runtime-mount-audit.yml
 # TNT FULL-FILE REPLACEMENT
-# AUDRALIA_BLUEPRINT_RUNTIME_MOUNT_AUDIT_WORKFLOW_SELF_COPY_FIX_TNT_v2
+# MANOR_BLUEPRINT_MOBILE_RUNTIME_VISIBILITY_AUDIT_WORKFLOW_TNT_v1
 #
 # Purpose:
-# Run a real Chromium browser audit against the live Audralia Planet route and
-# classify Blueprint runtime mount state without false-failing after a successful
-# PASS_RUNTIME_MOUNT_VISIBLE result.
+# Preserve the working desktop Blueprint runtime audit and add a mobile Android-like
+# viewport audit so the remaining phone visibility failure can be classified.
 #
 # Owns:
-# - browser runtime mount inspection
+# - desktop runtime mount inspection
+# - mobile runtime mount inspection
 # - console/page/network error capture
-# - Blueprint bootstrap status inspection
-# - Blueprint HUD status inspection
-# - bubble DOM/style/viewport/stacking inspection
-# - final CLASSIFICATION output
+# - bootstrap status inspection
+# - Blueprint API/status inspection
+# - bubble DOM/style/rect/viewport/stacking inspection
+# - mobile safe-margin / mobile-safe-position inspection
+# - final classification output
 # - Step Summary
 # - artifact upload
 #
 # Does not own:
 # - rewriting HTML
-# - rewriting Blueprint assets
 # - rewriting site.bootstrap.js
-# - rewriting planet canvas/UI files
-# - deploying Pages
-# - purging cache
-# - changing runtime behavior
+# - rewriting Blueprint HUD JS/CSS/registry
+# - rewriting Audralia canvas/UI
+# - page-by-page installation
+# - water/hydration/final visual pass
 
 name: Audralia Blueprint Runtime Mount Audit
 
@@ -67,7 +67,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          echo "AUDIT_WORKFLOW_CONTRACT=AUDRALIA_BLUEPRINT_RUNTIME_MOUNT_AUDIT_WORKFLOW_SELF_COPY_FIX_TNT_v2"
+          echo "AUDIT_WORKFLOW_CONTRACT=MANOR_BLUEPRINT_MOBILE_RUNTIME_VISIBILITY_AUDIT_WORKFLOW_TNT_v1"
 
           npm init -y
           npm install playwright@latest
@@ -75,7 +75,7 @@ jobs:
 
           echo "PASS: Playwright Chromium installed"
 
-      - name: Run browser runtime mount audit
+      - name: Run desktop and mobile runtime mount audit
         id: runtime_audit
         shell: bash
         run: |
@@ -83,24 +83,25 @@ jobs:
 
           AUDIT_LOG="audralia-blueprint-runtime-mount-audit.log"
           AUDIT_JSON="audralia-blueprint-runtime-mount-audit.json"
+          MOBILE_JSON="audralia-blueprint-mobile-runtime-mount-audit.json"
 
           cat > audralia-blueprint-runtime-mount-audit.mjs <<'NODE'
           import { chromium } from "playwright";
           import fs from "node:fs";
 
-          const CONTRACT = "AUDRALIA_BLUEPRINT_RUNTIME_MOUNT_AUDIT_WORKFLOW_SELF_COPY_FIX_TNT_v2";
-          const PREVIOUS_CONTRACT = "AUDRALIA_PLANET_BLUEPRINT_RUNTIME_MOUNT_BROWSER_AUDIT_WORKFLOW_TNT_v1";
+          const WORKFLOW_CONTRACT = "MANOR_BLUEPRINT_MOBILE_RUNTIME_VISIBILITY_AUDIT_WORKFLOW_TNT_v1";
+          const PREVIOUS_WORKFLOW_CONTRACT = "AUDRALIA_BLUEPRINT_RUNTIME_MOUNT_AUDIT_WORKFLOW_SELF_COPY_FIX_TNT_v2";
+
           const TARGET_ROUTE = "https://diamondgatebridge.com/showroom/globe/audralia/planet/";
-          const EXPECTED_HTML_MARKER = "AUDRALIA_PLANET_HTML_MANOR_BLUEPRINT_TEST_ROUTE_INSTALL_CACHE_CATCH_TNT_v2";
-          const EXPECTED_BOOTSTRAP_KEY = "MANOR_BLUEPRINT_GLOBAL_BOOTSTRAP_TNT_v1__AUDRALIA_PLANET_HTML_CACHE_CATCH_v2";
+          const EXPECTED_HTML_MARKER = "AUDRALIA_PLANET_HTML_BOOTSTRAP_MOBILE_SAFE_CACHE_KEY_RENEWAL_TNT_v3";
+          const EXPECTED_BOOTSTRAP_KEY = "MANOR_BLUEPRINT_BOOTSTRAP_MOBILE_SAFE_HUD_CACHE_KEY_RENEWAL_TNT_v1";
+          const EXPECTED_HUD_IMPLEMENTATION = "MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_POSITION_RENEWAL_TNT_v1";
+
           const BUBBLE_SELECTOR = "[data-dgb-blueprint-bubble]";
           const OVERLAY_SELECTOR = "[data-dgb-blueprint-overlay]";
 
-          const consoleErrors = [];
-          const consoleWarnings = [];
-          const pageErrors = [];
-          const failedRequests = [];
-          const requiredFailedRequests = [];
+          const ANDROID_UA =
+            "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Mobile Safari/537.36";
 
           function safeJson(value) {
             try {
@@ -121,15 +122,12 @@ jobs:
             ].some((part) => String(url || "").includes(part));
           }
 
-          function classify(state) {
-            if (state.requiredFailedRequests.length > 0) {
-              return "CLASS_F8_NETWORK_RUNTIME_FAILURE";
-            }
-
-            const hasFatalRuntimeSignal =
+          function hasFatalRuntimeSignal(state) {
+            return (
               state.pageErrors.length > 0 ||
               state.consoleErrors.some((entry) => {
-                const text = `${entry.text || ""} ${entry.location || ""}`.toLowerCase();
+                const text = `${entry.text || ""} ${JSON.stringify(entry.location || {})}`.toLowerCase();
+
                 return (
                   text.includes("manor.blueprint") ||
                   text.includes("site.bootstrap") ||
@@ -138,12 +136,79 @@ jobs:
                   text.includes("referenceerror") ||
                   text.includes("typeerror")
                 );
-              });
+              })
+            );
+          }
+
+          function numberOrNull(value) {
+            const next = Number(value);
+            return Number.isFinite(next) ? next : null;
+          }
+
+          function isHiddenByCss(state) {
+            const style = state.bubbleStyle || {};
+            const rect = state.bubbleRect || {};
+            const opacity = Number(style.opacity);
+
+            return (
+              style.display === "none" ||
+              style.visibility === "hidden" ||
+              (Number.isFinite(opacity) && opacity <= 0) ||
+              Number(rect.width || 0) <= 0 ||
+              Number(rect.height || 0) <= 0
+            );
+          }
+
+          function isPartiallyInsideViewport(state) {
+            const rect = state.bubbleRect || {};
+            const viewport = state.viewport || {};
+
+            return (
+              Number(rect.right || 0) > 0 &&
+              Number(rect.bottom || 0) > 0 &&
+              Number(rect.left || 0) < Number(viewport.width || 0) &&
+              Number(rect.top || 0) < Number(viewport.height || 0)
+            );
+          }
+
+          function getViewportHeightForDangerZone(state) {
+            const visualHeight = numberOrNull(state.visualViewport?.height);
+            const viewportHeight = numberOrNull(state.viewport?.height);
+            return visualHeight || viewportHeight || 0;
+          }
+
+          function getSafeMargins(state) {
+            const status = state.blueprintStatus || {};
+            const margins =
+              status.safeMargins ||
+              status.mobileSafeMargins ||
+              status.safeMargin ||
+              null;
+
+            if (!margins || typeof margins !== "object") return null;
+            return margins;
+          }
+
+          function getSafeBottom(state) {
+            const margins = getSafeMargins(state);
+            if (!margins) return null;
+
+            return numberOrNull(
+              margins.bottom ??
+              margins.bottomPx ??
+              margins.mobileBottom ??
+              margins.mobileBottomPx ??
+              null
+            );
+          }
+
+          function classifyDesktop(state) {
+            if (state.requiredFailedRequests.length > 0) return "CLASS_F8_NETWORK_RUNTIME_FAILURE";
+
+            const fatal = hasFatalRuntimeSignal(state);
 
             if (!state.bootstrapStatusExists) {
-              return hasFatalRuntimeSignal
-                ? "CLASS_F9_CONSOLE_FATAL_ERROR"
-                : "CLASS_F1_BOOTSTRAP_RUNTIME_DID_NOT_EXECUTE";
+              return fatal ? "CLASS_F9_CONSOLE_FATAL_ERROR" : "CLASS_F1_BOOTSTRAP_RUNTIME_DID_NOT_EXECUTE";
             }
 
             if (
@@ -152,349 +217,505 @@ jobs:
               !state.bootstrapStatus?.blueprintApiPresent ||
               !state.blueprintApiExists
             ) {
-              return hasFatalRuntimeSignal
-                ? "CLASS_F9_CONSOLE_FATAL_ERROR"
-                : "CLASS_F2_BOOTSTRAP_LOADED_BUT_HUD_JS_NOT_READY";
+              return fatal ? "CLASS_F9_CONSOLE_FATAL_ERROR" : "CLASS_F2_BOOTSTRAP_LOADED_BUT_HUD_JS_NOT_READY";
             }
 
             if (!state.blueprintStatusExists || !state.bubbleExists || !state.blueprintStatus?.bubbleMounted) {
-              return hasFatalRuntimeSignal
-                ? "CLASS_F9_CONSOLE_FATAL_ERROR"
-                : "CLASS_F3_HUD_JS_EXECUTED_BUT_BUBBLE_NOT_MOUNTED";
+              return fatal ? "CLASS_F9_CONSOLE_FATAL_ERROR" : "CLASS_F3_HUD_JS_EXECUTED_BUT_BUBBLE_NOT_MOUNTED";
             }
 
             if (!state.overlayExists || !state.blueprintStatus?.overlayMounted) {
               return "CLASS_F7_OVERLAY_MOUNT_FAILURE";
             }
 
-            const style = state.bubbleStyle || {};
-            const rect = state.bubbleRect || {};
-            const opacity = Number(style.opacity);
-
-            const hiddenByCss =
-              style.display === "none" ||
-              style.visibility === "hidden" ||
-              (Number.isFinite(opacity) && opacity <= 0) ||
-              Number(rect.width || 0) <= 0 ||
-              Number(rect.height || 0) <= 0;
-
-            if (hiddenByCss) {
-              return "CLASS_F4_BUBBLE_MOUNTED_BUT_HIDDEN_BY_CSS";
-            }
-
-            const partiallyInsideViewport =
-              Number(rect.right || 0) > 0 &&
-              Number(rect.bottom || 0) > 0 &&
-              Number(rect.left || 0) < Number(state.viewport?.width || 0) &&
-              Number(rect.top || 0) < Number(state.viewport?.height || 0);
-
-            if (!partiallyInsideViewport) {
-              return "CLASS_F5_BUBBLE_MOUNTED_BUT_OFFSCREEN";
-            }
-
-            if (!state.elementFromPointHitsBubble) {
-              return "CLASS_F6_BUBBLE_MOUNTED_BUT_BEHIND_LAYER";
-            }
-
-            if (hasFatalRuntimeSignal) {
-              return "CLASS_F9_CONSOLE_FATAL_ERROR";
-            }
+            if (isHiddenByCss(state)) return "CLASS_F4_BUBBLE_MOUNTED_BUT_HIDDEN_BY_CSS";
+            if (!isPartiallyInsideViewport(state)) return "CLASS_F5_BUBBLE_MOUNTED_BUT_OFFSCREEN";
+            if (!state.elementFromPointHitsBubble) return "CLASS_F6_BUBBLE_MOUNTED_BUT_BEHIND_LAYER";
+            if (fatal) return "CLASS_F9_CONSOLE_FATAL_ERROR";
 
             return "PASS_RUNTIME_MOUNT_VISIBLE";
+          }
+
+          function classifyMobile(state) {
+            if (state.requiredFailedRequests.length > 0) return "CLASS_M8_NETWORK_RUNTIME_FAILURE_MOBILE";
+
+            const fatal = hasFatalRuntimeSignal(state);
+
+            if (!state.htmlHasExpectedMarker || !state.htmlHasBootstrapMobileSafeKey) {
+              return "CLASS_M1_BOOTSTRAP_NOT_EXECUTED_MOBILE";
+            }
+
+            if (!state.bootstrapStatusExists) {
+              return fatal ? "CLASS_M9_CONSOLE_FATAL_ERROR_MOBILE" : "CLASS_M1_BOOTSTRAP_NOT_EXECUTED_MOBILE";
+            }
+
+            if (
+              !state.bootstrapStatus?.loadComplete ||
+              !state.bootstrapStatus?.jsLoaded ||
+              !state.bootstrapStatus?.blueprintApiPresent ||
+              !state.blueprintApiExists
+            ) {
+              return fatal ? "CLASS_M9_CONSOLE_FATAL_ERROR_MOBILE" : "CLASS_M2_BOOTSTRAP_EXECUTED_HUD_NOT_READY_MOBILE";
+            }
+
+            if (state.blueprintApiImplementationContract !== EXPECTED_HUD_IMPLEMENTATION) {
+              return "CLASS_M10_IMPLEMENTATION_NOT_FRESH_MOBILE";
+            }
+
+            if (!state.blueprintStatusExists) {
+              return "CLASS_M11_MOBILE_SAFE_POSITION_STATUS_MISSING";
+            }
+
+            if (!state.bubbleExists || !state.blueprintStatus?.bubbleMounted) {
+              return "CLASS_M3_HUD_EXECUTED_BUBBLE_NOT_MOUNTED_MOBILE";
+            }
+
+            if (!state.overlayExists || !state.blueprintStatus?.overlayMounted) {
+              return "CLASS_M7_OVERLAY_MOUNT_FAILURE_MOBILE";
+            }
+
+            const mobileSafePosition = state.blueprintStatus?.mobileSafePosition;
+
+            if (typeof mobileSafePosition !== "boolean") {
+              return "CLASS_M11_MOBILE_SAFE_POSITION_STATUS_MISSING";
+            }
+
+            if (mobileSafePosition !== true) {
+              return "CLASS_M12_MOBILE_SAFE_POSITION_FALSE";
+            }
+
+            if (!getSafeMargins(state)) {
+              return "CLASS_M11_MOBILE_SAFE_POSITION_STATUS_MISSING";
+            }
+
+            if (isHiddenByCss(state)) return "CLASS_M4_BUBBLE_MOUNTED_HIDDEN_BY_CSS_MOBILE";
+            if (!isPartiallyInsideViewport(state)) return "CLASS_M5_BUBBLE_MOUNTED_OFFSCREEN_MOBILE";
+
+            const viewportHeight = getViewportHeightForDangerZone(state);
+            const rect = state.bubbleRect || {};
+            const safeBottom = getSafeBottom(state);
+
+            if (viewportHeight && Number(rect.bottom || 0) > viewportHeight - 80) {
+              return "CLASS_M13_MOBILE_SAFE_MARGIN_FAILURE";
+            }
+
+            if (safeBottom !== null && safeBottom < 80) {
+              return "CLASS_M13_MOBILE_SAFE_MARGIN_FAILURE";
+            }
+
+            if (!state.elementFromPointHitsBubble) return "CLASS_M6_BUBBLE_MOUNTED_BEHIND_LAYER_MOBILE";
+            if (fatal) return "CLASS_M9_CONSOLE_FATAL_ERROR_MOBILE";
+
+            return "PASS_MOBILE_RUNTIME_MOUNT_VISIBLE";
+          }
+
+          function finalClassification(desktopClassification, mobileClassification) {
+            if (desktopClassification !== "PASS_RUNTIME_MOUNT_VISIBLE") {
+              return "FAIL_DESKTOP_RUNTIME_VISIBILITY";
+            }
+
+            if (mobileClassification !== "PASS_MOBILE_RUNTIME_MOUNT_VISIBLE") {
+              return "FAIL_MOBILE_RUNTIME_VISIBILITY";
+            }
+
+            return "PASS_DESKTOP_AND_MOBILE_RUNTIME_VISIBLE";
+          }
+
+          async function auditRuntime(browser, profile) {
+            const consoleErrors = [];
+            const consoleWarnings = [];
+            const pageErrors = [];
+            const failedRequests = [];
+            const requiredFailedRequests = [];
+
+            const context = await browser.newContext({
+              ...profile.contextOptions,
+              extraHTTPHeaders: {
+                "Cache-Control": "no-cache",
+                "Pragma": "no-cache"
+              }
+            });
+
+            const page = await context.newPage();
+
+            page.on("console", (message) => {
+              const entry = {
+                type: message.type(),
+                text: message.text(),
+                location: message.location()
+              };
+
+              if (message.type() === "error") consoleErrors.push(entry);
+              if (message.type() === "warning") consoleWarnings.push(entry);
+            });
+
+            page.on("pageerror", (error) => {
+              pageErrors.push({
+                message: error?.message || String(error),
+                stack: error?.stack || ""
+              });
+            });
+
+            page.on("requestfailed", (request) => {
+              const failure = request.failure();
+              const entry = {
+                url: request.url(),
+                method: request.method(),
+                resourceType: request.resourceType(),
+                errorText: failure?.errorText || ""
+              };
+
+              failedRequests.push(entry);
+
+              if (includesRequiredAsset(entry.url)) {
+                requiredFailedRequests.push(entry);
+              }
+            });
+
+            let gotoError = null;
+            const auditedUrl = `${TARGET_ROUTE}?dgbRuntimeAudit=${encodeURIComponent(profile.name)}-${Date.now()}`;
+
+            try {
+              await page.goto(auditedUrl, {
+                waitUntil: "domcontentloaded",
+                timeout: 45000
+              });
+            } catch (error) {
+              gotoError = {
+                message: error?.message || String(error),
+                stack: error?.stack || ""
+              };
+            }
+
+            try {
+              await page.waitForLoadState("networkidle", { timeout: 18000 });
+            } catch (_error) {}
+
+            try {
+              await page.waitForSelector(BUBBLE_SELECTOR, {
+                state: "attached",
+                timeout: 9000
+              });
+            } catch (_error) {}
+
+            await page.waitForTimeout(3000);
+
+            const html = await page.content();
+
+            const runtimeState = await page.evaluate(
+              ({ BUBBLE_SELECTOR, OVERLAY_SELECTOR, EXPECTED_HTML_MARKER, EXPECTED_BOOTSTRAP_KEY }) => {
+                const bubble = document.querySelector(BUBBLE_SELECTOR);
+                const overlay = document.querySelector(OVERLAY_SELECTOR);
+
+                const bubbleCount = document.querySelectorAll(BUBBLE_SELECTOR).length;
+                const overlayCount = document.querySelectorAll(OVERLAY_SELECTOR).length;
+
+                const bootstrapStatus = window.DGB_MANOR_BLUEPRINT_BOOTSTRAP_STATUS || null;
+                const bootstrapReceipt = window.DGB_MANOR_BLUEPRINT_BOOTSTRAP_RECEIPT || null;
+                const siteBootstrapStatus = window.DGB_SITE_BOOTSTRAP_STATUS || null;
+
+                const blueprintApi = window.DGB_MANOR_BLUEPRINT_API || null;
+                const blueprintStatus = window.DGB_MANOR_BLUEPRINT_STATUS || null;
+                const blueprintReceipt = window.DGB_MANOR_BLUEPRINT_RECEIPT || null;
+
+                const registry = window.DGB_MANOR_BLUEPRINT_REGISTRY || window.DGB_MANOR_BLUEPRINT_ROUTE_REGISTRY || null;
+
+                let bubbleStyle = null;
+                let bubbleRect = null;
+                let elementFromPointSummary = null;
+                let elementFromPointHitsBubble = false;
+
+                if (bubble) {
+                  const computed = window.getComputedStyle(bubble);
+                  const rect = bubble.getBoundingClientRect();
+
+                  bubbleStyle = {
+                    display: computed.display,
+                    visibility: computed.visibility,
+                    opacity: computed.opacity,
+                    position: computed.position,
+                    zIndex: computed.zIndex,
+                    pointerEvents: computed.pointerEvents,
+                    left: computed.left,
+                    top: computed.top,
+                    right: computed.right,
+                    bottom: computed.bottom,
+                    width: computed.width,
+                    height: computed.height,
+                    transform: computed.transform,
+                    overflow: computed.overflow
+                  };
+
+                  bubbleRect = {
+                    x: rect.x,
+                    y: rect.y,
+                    top: rect.top,
+                    left: rect.left,
+                    right: rect.right,
+                    bottom: rect.bottom,
+                    width: rect.width,
+                    height: rect.height
+                  };
+
+                  const centerX = Math.max(0, Math.min(window.innerWidth - 1, rect.left + rect.width / 2));
+                  const centerY = Math.max(0, Math.min(window.innerHeight - 1, rect.top + rect.height / 2));
+                  const hit = document.elementFromPoint(centerX, centerY);
+
+                  if (hit) {
+                    elementFromPointSummary = {
+                      tagName: hit.tagName,
+                      id: hit.id || "",
+                      className: typeof hit.className === "string" ? hit.className : "",
+                      dataBubble: hit.hasAttribute("data-dgb-blueprint-bubble"),
+                      closestBubble: Boolean(hit.closest(BUBBLE_SELECTOR))
+                    };
+
+                    elementFromPointHitsBubble = hit === bubble || Boolean(hit.closest(BUBBLE_SELECTOR));
+                  }
+                }
+
+                const visualViewport = window.visualViewport
+                  ? {
+                      width: window.visualViewport.width,
+                      height: window.visualViewport.height,
+                      offsetTop: window.visualViewport.offsetTop,
+                      offsetLeft: window.visualViewport.offsetLeft,
+                      scale: window.visualViewport.scale
+                    }
+                  : null;
+
+                return {
+                  url: document.location.href,
+                  title: document.title,
+                  readyState: document.readyState,
+
+                  htmlHasExpectedMarker:
+                    document.documentElement.outerHTML.includes(EXPECTED_HTML_MARKER) ||
+                    document.body.outerHTML.includes(EXPECTED_HTML_MARKER),
+
+                  htmlHasBootstrapMobileSafeKey:
+                    document.documentElement.outerHTML.includes(EXPECTED_BOOTSTRAP_KEY) ||
+                    document.body.outerHTML.includes(EXPECTED_BOOTSTRAP_KEY),
+
+                  documentElementDataset: { ...document.documentElement.dataset },
+                  bodyClassList: Array.from(document.body.classList),
+
+                  bootstrapStatusExists: Boolean(bootstrapStatus),
+                  bootstrapStatus,
+                  bootstrapReceipt,
+                  siteBootstrapStatus,
+
+                  blueprintApiExists: Boolean(blueprintApi),
+                  blueprintApiContract: blueprintApi?.contract || "",
+                  blueprintApiImplementationContract: blueprintApi?.implementationContract || "",
+                  blueprintStatusExists: Boolean(blueprintStatus),
+                  blueprintStatus,
+                  blueprintReceipt,
+
+                  registryExists: Boolean(registry),
+                  registryContract: registry?.contract || "",
+                  registryRouteCount: Array.isArray(registry?.routes) ? registry.routes.length : null,
+
+                  bubbleExists: Boolean(bubble),
+                  overlayExists: Boolean(overlay),
+                  bubbleCount,
+                  overlayCount,
+
+                  bubbleStyle,
+                  bubbleRect,
+                  elementFromPointSummary,
+                  elementFromPointHitsBubble,
+
+                  viewport: {
+                    width: window.innerWidth,
+                    height: window.innerHeight,
+                    devicePixelRatio: window.devicePixelRatio
+                  },
+
+                  visualViewport
+                };
+              },
+              {
+                BUBBLE_SELECTOR,
+                OVERLAY_SELECTOR,
+                EXPECTED_HTML_MARKER,
+                EXPECTED_BOOTSTRAP_KEY
+              }
+            );
+
+            const auditState = {
+              profile: profile.name,
+              profileRole: profile.role,
+              workflowContract: WORKFLOW_CONTRACT,
+              previousWorkflowContract: PREVIOUS_WORKFLOW_CONTRACT,
+              targetRoute: TARGET_ROUTE,
+              auditedUrl,
+              expectedHtmlMarker: EXPECTED_HTML_MARKER,
+              expectedBootstrapKey: EXPECTED_BOOTSTRAP_KEY,
+              expectedHudImplementation: EXPECTED_HUD_IMPLEMENTATION,
+              contextOptions: profile.contextOptions,
+              gotoError,
+              htmlContainsExpectedMarker: html.includes(EXPECTED_HTML_MARKER),
+              htmlContainsBootstrapMobileSafeKey: html.includes(EXPECTED_BOOTSTRAP_KEY),
+              consoleErrors: safeJson(consoleErrors) || [],
+              consoleWarnings: safeJson(consoleWarnings) || [],
+              pageErrors: safeJson(pageErrors) || [],
+              failedRequests: safeJson(failedRequests) || [],
+              requiredFailedRequests: safeJson(requiredFailedRequests) || [],
+              ...safeJson(runtimeState)
+            };
+
+            await context.close();
+
+            return auditState;
+          }
+
+          function printAuditSection(label, state, classification) {
+            console.log("");
+            console.log(`SECTION — ${label}`);
+            console.log("──────────────────────────────────────────────────────────────────────");
+            console.log(`PROFILE=${state.profile}`);
+            console.log(`URL=${state.url}`);
+            console.log(`TITLE=${state.title}`);
+            console.log(`READY_STATE=${state.readyState}`);
+            console.log(`HTML_HAS_EXPECTED_MARKER=${state.htmlHasExpectedMarker}`);
+            console.log(`HTML_HAS_BOOTSTRAP_MOBILE_SAFE_KEY=${state.htmlHasBootstrapMobileSafeKey}`);
+            console.log(`BOOTSTRAP_STATUS_EXISTS=${state.bootstrapStatusExists}`);
+            console.log(`BOOTSTRAP_CONTRACT=${state.bootstrapStatus?.contract ?? "missing"}`);
+            console.log(`BOOTSTRAP_LOAD_COMPLETE=${state.bootstrapStatus?.loadComplete ?? "missing"}`);
+            console.log(`BOOTSTRAP_JS_LOADED=${state.bootstrapStatus?.jsLoaded ?? "missing"}`);
+            console.log(`BOOTSTRAP_HUD_JS_CACHE_KEY=${state.bootstrapStatus?.hudJsCacheKey ?? "missing"}`);
+            console.log(`BOOTSTRAP_IMPLEMENTATION_FRESH=${state.bootstrapStatus?.implementationFresh ?? "missing"}`);
+            console.log(`BOOTSTRAP_IMPLEMENTATION_DETECTED=${state.bootstrapStatus?.blueprintImplementationContractDetected ?? "missing"}`);
+            console.log(`BLUEPRINT_API_EXISTS=${state.blueprintApiExists}`);
+            console.log(`BLUEPRINT_API_CONTRACT=${state.blueprintApiContract}`);
+            console.log(`BLUEPRINT_API_IMPLEMENTATION_CONTRACT=${state.blueprintApiImplementationContract}`);
+            console.log(`BLUEPRINT_STATUS_EXISTS=${state.blueprintStatusExists}`);
+            console.log(`BLUEPRINT_STATUS_CONTRACT=${state.blueprintStatus?.contract ?? "missing"}`);
+            console.log(`BLUEPRINT_MOBILE_SAFE_POSITION=${state.blueprintStatus?.mobileSafePosition ?? "missing"}`);
+            console.log(`BLUEPRINT_POSITION_SOURCE=${state.blueprintStatus?.positionSource ?? "missing"}`);
+            console.log(`BLUEPRINT_POSITION_WAS_CLAMPED=${state.blueprintStatus?.positionWasClamped ?? "missing"}`);
+            console.log(`BUBBLE_EXISTS=${state.bubbleExists}`);
+            console.log(`BUBBLE_COUNT=${state.bubbleCount}`);
+            console.log(`OVERLAY_EXISTS=${state.overlayExists}`);
+            console.log(`OVERLAY_COUNT=${state.overlayCount}`);
+            console.log(`ELEMENT_FROM_POINT_HITS_BUBBLE=${state.elementFromPointHitsBubble}`);
+            console.log(`CONSOLE_ERROR_COUNT=${state.consoleErrors.length}`);
+            console.log(`CONSOLE_WARNING_COUNT=${state.consoleWarnings.length}`);
+            console.log(`PAGE_ERROR_COUNT=${state.pageErrors.length}`);
+            console.log(`FAILED_REQUEST_COUNT=${state.failedRequests.length}`);
+            console.log(`REQUIRED_FAILED_REQUEST_COUNT=${state.requiredFailedRequests.length}`);
+            console.log(`${label.toUpperCase().replaceAll(" ", "_")}_CLASSIFICATION=${classification}`);
+            console.log("");
+            console.log(`${label.toUpperCase().replaceAll(" ", "_")}_GEOMETRY=`);
+            console.log(JSON.stringify({
+              viewport: state.viewport,
+              visualViewport: state.visualViewport,
+              bubbleStyle: state.bubbleStyle,
+              bubbleRect: state.bubbleRect,
+              safeMargins: state.blueprintStatus?.safeMargins || state.blueprintStatus?.mobileSafeMargins || null,
+              bubblePosition: state.blueprintStatus?.bubblePosition || null,
+              elementFromPointSummary: state.elementFromPointSummary
+            }, null, 2));
           }
 
           const browser = await chromium.launch({
             headless: true
           });
 
-          const context = await browser.newContext({
-            viewport: { width: 1440, height: 1100 },
-            deviceScaleFactor: 1
-          });
-
-          const page = await context.newPage();
-
-          page.on("console", (message) => {
-            const entry = {
-              type: message.type(),
-              text: message.text(),
-              location: message.location()
-            };
-
-            if (message.type() === "error") {
-              consoleErrors.push(entry);
+          const desktopProfile = {
+            name: "desktop",
+            role: "desktop-runtime-control",
+            contextOptions: {
+              viewport: { width: 1440, height: 1100 },
+              deviceScaleFactor: 1
             }
-
-            if (message.type() === "warning") {
-              consoleWarnings.push(entry);
-            }
-          });
-
-          page.on("pageerror", (error) => {
-            pageErrors.push({
-              message: error?.message || String(error),
-              stack: error?.stack || ""
-            });
-          });
-
-          page.on("requestfailed", (request) => {
-            const failure = request.failure();
-            const entry = {
-              url: request.url(),
-              method: request.method(),
-              resourceType: request.resourceType(),
-              errorText: failure?.errorText || ""
-            };
-
-            failedRequests.push(entry);
-
-            if (includesRequiredAsset(entry.url)) {
-              requiredFailedRequests.push(entry);
-            }
-          });
-
-          let gotoError = null;
-
-          try {
-            await page.goto(TARGET_ROUTE, {
-              waitUntil: "domcontentloaded",
-              timeout: 45000
-            });
-          } catch (error) {
-            gotoError = {
-              message: error?.message || String(error),
-              stack: error?.stack || ""
-            };
-          }
-
-          try {
-            await page.waitForLoadState("networkidle", { timeout: 15000 });
-          } catch (_error) {}
-
-          try {
-            await page.waitForSelector(BUBBLE_SELECTOR, {
-              state: "attached",
-              timeout: 8000
-            });
-          } catch (_error) {}
-
-          await page.waitForTimeout(2500);
-
-          const html = await page.content();
-
-          const runtimeState = await page.evaluate(
-            ({ BUBBLE_SELECTOR, OVERLAY_SELECTOR, EXPECTED_HTML_MARKER, EXPECTED_BOOTSTRAP_KEY }) => {
-              const bubble = document.querySelector(BUBBLE_SELECTOR);
-              const overlay = document.querySelector(OVERLAY_SELECTOR);
-
-              const bubbleCount = document.querySelectorAll(BUBBLE_SELECTOR).length;
-              const overlayCount = document.querySelectorAll(OVERLAY_SELECTOR).length;
-
-              const bootstrapStatus = window.DGB_MANOR_BLUEPRINT_BOOTSTRAP_STATUS || null;
-              const bootstrapReceipt = window.DGB_MANOR_BLUEPRINT_BOOTSTRAP_RECEIPT || null;
-              const siteBootstrapStatus = window.DGB_SITE_BOOTSTRAP_STATUS || null;
-              const blueprintStatus = window.DGB_MANOR_BLUEPRINT_STATUS || null;
-              const blueprintReceipt = window.DGB_MANOR_BLUEPRINT_RECEIPT || null;
-              const registry = window.DGB_MANOR_BLUEPRINT_REGISTRY || null;
-              const blueprintApi = window.DGB_MANOR_BLUEPRINT_API || null;
-
-              let bubbleStyle = null;
-              let bubbleRect = null;
-              let elementFromPointSummary = null;
-              let elementFromPointHitsBubble = false;
-
-              if (bubble) {
-                const computed = window.getComputedStyle(bubble);
-                const rect = bubble.getBoundingClientRect();
-
-                bubbleStyle = {
-                  display: computed.display,
-                  visibility: computed.visibility,
-                  opacity: computed.opacity,
-                  position: computed.position,
-                  zIndex: computed.zIndex,
-                  pointerEvents: computed.pointerEvents,
-                  left: computed.left,
-                  top: computed.top,
-                  right: computed.right,
-                  bottom: computed.bottom,
-                  width: computed.width,
-                  height: computed.height,
-                  transform: computed.transform,
-                  overflow: computed.overflow
-                };
-
-                bubbleRect = {
-                  x: rect.x,
-                  y: rect.y,
-                  top: rect.top,
-                  left: rect.left,
-                  right: rect.right,
-                  bottom: rect.bottom,
-                  width: rect.width,
-                  height: rect.height
-                };
-
-                const centerX = Math.max(0, Math.min(window.innerWidth - 1, rect.left + rect.width / 2));
-                const centerY = Math.max(0, Math.min(window.innerHeight - 1, rect.top + rect.height / 2));
-                const hit = document.elementFromPoint(centerX, centerY);
-
-                if (hit) {
-                  elementFromPointSummary = {
-                    tagName: hit.tagName,
-                    id: hit.id || "",
-                    className: typeof hit.className === "string" ? hit.className : "",
-                    dataBubble: hit.hasAttribute("data-dgb-blueprint-bubble"),
-                    closestBubble: Boolean(hit.closest(BUBBLE_SELECTOR))
-                  };
-
-                  elementFromPointHitsBubble = hit === bubble || Boolean(hit.closest(BUBBLE_SELECTOR));
-                }
-              }
-
-              return {
-                url: document.location.href,
-                title: document.title,
-                readyState: document.readyState,
-                htmlHasExpectedMarker:
-                  document.documentElement.outerHTML.includes(EXPECTED_HTML_MARKER) ||
-                  document.body.outerHTML.includes(EXPECTED_HTML_MARKER),
-                htmlHasBootstrapKey:
-                  document.documentElement.outerHTML.includes(EXPECTED_BOOTSTRAP_KEY) ||
-                  document.body.outerHTML.includes(EXPECTED_BOOTSTRAP_KEY),
-                documentElementDataset: { ...document.documentElement.dataset },
-                bodyClassList: Array.from(document.body.classList),
-
-                bootstrapStatusExists: Boolean(bootstrapStatus),
-                bootstrapStatus,
-                bootstrapReceipt,
-                siteBootstrapStatus,
-
-                blueprintApiExists: Boolean(blueprintApi),
-                blueprintApiContract: blueprintApi?.contract || "",
-                blueprintApiImplementationContract: blueprintApi?.implementationContract || "",
-                blueprintStatusExists: Boolean(blueprintStatus),
-                blueprintStatus,
-                blueprintReceipt,
-
-                registryExists: Boolean(registry),
-                registryContract: registry?.contract || "",
-                registryRouteCount: Array.isArray(registry?.routes) ? registry.routes.length : null,
-
-                bubbleExists: Boolean(bubble),
-                overlayExists: Boolean(overlay),
-                bubbleCount,
-                overlayCount,
-                bubbleStyle,
-                bubbleRect,
-                elementFromPointSummary,
-                elementFromPointHitsBubble,
-
-                viewport: {
-                  width: window.innerWidth,
-                  height: window.innerHeight
-                }
-              };
-            },
-            {
-              BUBBLE_SELECTOR,
-              OVERLAY_SELECTOR,
-              EXPECTED_HTML_MARKER,
-              EXPECTED_BOOTSTRAP_KEY
-            }
-          );
-
-          const auditState = {
-            contract: CONTRACT,
-            previousContract: PREVIOUS_CONTRACT,
-            targetRoute: TARGET_ROUTE,
-            gotoError,
-            htmlContainsExpectedMarker: html.includes(EXPECTED_HTML_MARKER),
-            htmlContainsBootstrapKey: html.includes(EXPECTED_BOOTSTRAP_KEY),
-            consoleErrors: safeJson(consoleErrors) || [],
-            consoleWarnings: safeJson(consoleWarnings) || [],
-            pageErrors: safeJson(pageErrors) || [],
-            failedRequests: safeJson(failedRequests) || [],
-            requiredFailedRequests: safeJson(requiredFailedRequests) || [],
-            ...safeJson(runtimeState)
           };
 
-          const classification = classify(auditState);
-          auditState.classification = classification;
+          const mobileProfile = {
+            name: "mobile-android-390x844",
+            role: "mobile-runtime-visibility",
+            contextOptions: {
+              viewport: { width: 390, height: 844 },
+              deviceScaleFactor: 3,
+              isMobile: true,
+              hasTouch: true,
+              userAgent: ANDROID_UA
+            }
+          };
 
-          fs.writeFileSync("audralia-blueprint-runtime-mount-audit.json", JSON.stringify(auditState, null, 2));
-
-          console.log("══════════════════════════════════════════════════════════════════════");
-          console.log(CONTRACT);
-          console.log(`PREVIOUS_CONTRACT=${PREVIOUS_CONTRACT}`);
-          console.log(`TARGET_ROUTE=${TARGET_ROUTE}`);
-          console.log("══════════════════════════════════════════════════════════════════════");
-          console.log("");
-          console.log("SECTION 1 — DOCUMENT STATE");
-          console.log("──────────────────────────────────────────────────────────────────────");
-          console.log(`URL=${auditState.url}`);
-          console.log(`TITLE=${auditState.title}`);
-          console.log(`READY_STATE=${auditState.readyState}`);
-          console.log(`HTML_HAS_EXPECTED_MARKER=${auditState.htmlContainsExpectedMarker}`);
-          console.log(`HTML_HAS_BOOTSTRAP_KEY=${auditState.htmlContainsBootstrapKey}`);
-          console.log("");
-          console.log("SECTION 2 — BOOTSTRAP / BLUEPRINT STATUS");
-          console.log("──────────────────────────────────────────────────────────────────────");
-          console.log(`BOOTSTRAP_STATUS_EXISTS=${auditState.bootstrapStatusExists}`);
-          console.log(`BOOTSTRAP_LOAD_COMPLETE=${auditState.bootstrapStatus?.loadComplete ?? "missing"}`);
-          console.log(`BOOTSTRAP_JS_LOADED=${auditState.bootstrapStatus?.jsLoaded ?? "missing"}`);
-          console.log(`BOOTSTRAP_BLUEPRINT_API_PRESENT=${auditState.bootstrapStatus?.blueprintApiPresent ?? "missing"}`);
-          console.log(`BLUEPRINT_API_EXISTS=${auditState.blueprintApiExists}`);
-          console.log(`BLUEPRINT_API_CONTRACT=${auditState.blueprintApiContract}`);
-          console.log(`BLUEPRINT_API_IMPLEMENTATION_CONTRACT=${auditState.blueprintApiImplementationContract}`);
-          console.log(`BLUEPRINT_STATUS_EXISTS=${auditState.blueprintStatusExists}`);
-          console.log(`BLUEPRINT_STATUS_CONTRACT=${auditState.blueprintStatus?.contract ?? "missing"}`);
-          console.log(`BLUEPRINT_ACTIVE=${auditState.blueprintStatus?.active ?? "missing"}`);
-          console.log(`BLUEPRINT_BUBBLE_MOUNTED=${auditState.blueprintStatus?.bubbleMounted ?? "missing"}`);
-          console.log(`BLUEPRINT_OVERLAY_MOUNTED=${auditState.blueprintStatus?.overlayMounted ?? "missing"}`);
-          console.log("");
-          console.log("SECTION 3 — DOM MOUNT STATE");
-          console.log("──────────────────────────────────────────────────────────────────────");
-          console.log(`BUBBLE_EXISTS=${auditState.bubbleExists}`);
-          console.log(`BUBBLE_COUNT=${auditState.bubbleCount}`);
-          console.log(`OVERLAY_EXISTS=${auditState.overlayExists}`);
-          console.log(`OVERLAY_COUNT=${auditState.overlayCount}`);
-          console.log("");
-          console.log("SECTION 4 — BUBBLE STYLE / RECT");
-          console.log("──────────────────────────────────────────────────────────────────────");
-          console.log(JSON.stringify({
-            bubbleStyle: auditState.bubbleStyle,
-            bubbleRect: auditState.bubbleRect,
-            viewport: auditState.viewport,
-            elementFromPointSummary: auditState.elementFromPointSummary,
-            elementFromPointHitsBubble: auditState.elementFromPointHitsBubble
-          }, null, 2));
-          console.log("");
-          console.log("SECTION 5 — ERRORS / FAILED REQUESTS");
-          console.log("──────────────────────────────────────────────────────────────────────");
-          console.log(`CONSOLE_ERROR_COUNT=${auditState.consoleErrors.length}`);
-          console.log(`CONSOLE_WARNING_COUNT=${auditState.consoleWarnings.length}`);
-          console.log(`PAGE_ERROR_COUNT=${auditState.pageErrors.length}`);
-          console.log(`FAILED_REQUEST_COUNT=${auditState.failedRequests.length}`);
-          console.log(`REQUIRED_FAILED_REQUEST_COUNT=${auditState.requiredFailedRequests.length}`);
-          console.log("");
-          console.log("SECTION 6 — STRUCTURED JSON");
-          console.log("──────────────────────────────────────────────────────────────────────");
-          console.log(JSON.stringify(auditState, null, 2));
-          console.log("");
-          console.log(`CLASSIFICATION=${classification}`);
-          console.log("AUDIT_STATUS=COMPLETE");
+          const desktopAudit = await auditRuntime(browser, desktopProfile);
+          const mobileAudit = await auditRuntime(browser, mobileProfile);
 
           await browser.close();
+
+          const desktopClassification = classifyDesktop(desktopAudit);
+          const mobileClassification = classifyMobile(mobileAudit);
+          const final = finalClassification(desktopClassification, mobileClassification);
+
+          desktopAudit.classification = desktopClassification;
+          mobileAudit.classification = mobileClassification;
+
+          const combinedAudit = {
+            workflowContract: WORKFLOW_CONTRACT,
+            previousWorkflowContract: PREVIOUS_WORKFLOW_CONTRACT,
+            targetRoute: TARGET_ROUTE,
+            expectedHtmlMarker: EXPECTED_HTML_MARKER,
+            expectedBootstrapKey: EXPECTED_BOOTSTRAP_KEY,
+            expectedHudImplementation: EXPECTED_HUD_IMPLEMENTATION,
+            desktopClassification,
+            mobileClassification,
+            finalClassification: final,
+            desktop: desktopAudit,
+            mobile: mobileAudit
+          };
+
+          fs.writeFileSync("audralia-blueprint-runtime-mount-audit.json", JSON.stringify(combinedAudit, null, 2));
+          fs.writeFileSync("audralia-blueprint-mobile-runtime-mount-audit.json", JSON.stringify(mobileAudit, null, 2));
+
+          console.log("══════════════════════════════════════════════════════════════════════");
+          console.log(WORKFLOW_CONTRACT);
+          console.log(`PREVIOUS_WORKFLOW_CONTRACT=${PREVIOUS_WORKFLOW_CONTRACT}`);
+          console.log(`TARGET_ROUTE=${TARGET_ROUTE}`);
+          console.log(`EXPECTED_HTML_MARKER=${EXPECTED_HTML_MARKER}`);
+          console.log(`EXPECTED_BOOTSTRAP_KEY=${EXPECTED_BOOTSTRAP_KEY}`);
+          console.log(`EXPECTED_HUD_IMPLEMENTATION=${EXPECTED_HUD_IMPLEMENTATION}`);
+          console.log("══════════════════════════════════════════════════════════════════════");
+
+          printAuditSection("desktop", desktopAudit, desktopClassification);
+          printAuditSection("mobile", mobileAudit, mobileClassification);
+
+          console.log("");
+          console.log("SECTION — FINAL CLASSIFICATION");
+          console.log("──────────────────────────────────────────────────────────────────────");
+          console.log(`DESKTOP_CLASSIFICATION=${desktopClassification}`);
+          console.log(`MOBILE_CLASSIFICATION=${mobileClassification}`);
+          console.log(`FINAL_CLASSIFICATION=${final}`);
+          console.log("AUDIT_STATUS=COMPLETE");
+          console.log("");
+          console.log("SECTION — STRUCTURED JSON");
+          console.log("──────────────────────────────────────────────────────────────────────");
+          console.log(JSON.stringify(combinedAudit, null, 2));
           NODE
 
           node audralia-blueprint-runtime-mount-audit.mjs | tee "${AUDIT_LOG}"
 
-          CLASSIFICATION="$(grep -E '^CLASSIFICATION=' "${AUDIT_LOG}" | tail -n 1 | cut -d '=' -f 2- || true)"
+          DESKTOP_CLASSIFICATION="$(grep -E '^DESKTOP_CLASSIFICATION=' "${AUDIT_LOG}" | tail -n 1 | cut -d '=' -f 2- || true)"
+          MOBILE_CLASSIFICATION="$(grep -E '^MOBILE_CLASSIFICATION=' "${AUDIT_LOG}" | tail -n 1 | cut -d '=' -f 2- || true)"
+          FINAL_CLASSIFICATION="$(grep -E '^FINAL_CLASSIFICATION=' "${AUDIT_LOG}" | tail -n 1 | cut -d '=' -f 2- || true)"
 
-          if [ -z "${CLASSIFICATION}" ]; then
-            CLASSIFICATION="CLASS_F_UNKNOWN_RUNTIME_FAILURE"
-            echo "FAIL: No CLASSIFICATION line found in runtime audit output"
+          if [ -z "${DESKTOP_CLASSIFICATION}" ]; then
+            echo "FAIL: No DESKTOP_CLASSIFICATION line found in runtime audit output"
+            exit 1
+          fi
+
+          if [ -z "${MOBILE_CLASSIFICATION}" ]; then
+            echo "FAIL: No MOBILE_CLASSIFICATION line found in runtime audit output"
+            exit 1
+          fi
+
+          if [ -z "${FINAL_CLASSIFICATION}" ]; then
+            echo "FAIL: No FINAL_CLASSIFICATION line found in runtime audit output"
             exit 1
           fi
 
@@ -503,8 +724,18 @@ jobs:
             exit 1
           fi
 
-          echo "classification=${CLASSIFICATION}" >> "$GITHUB_OUTPUT"
-          echo "AUDIT_CLASSIFICATION=${CLASSIFICATION}"
+          if [ ! -f "${MOBILE_JSON}" ]; then
+            echo "FAIL: Mobile runtime audit JSON was not created at ${MOBILE_JSON}"
+            exit 1
+          fi
+
+          echo "desktop_classification=${DESKTOP_CLASSIFICATION}" >> "$GITHUB_OUTPUT"
+          echo "mobile_classification=${MOBILE_CLASSIFICATION}" >> "$GITHUB_OUTPUT"
+          echo "final_classification=${FINAL_CLASSIFICATION}" >> "$GITHUB_OUTPUT"
+
+          echo "DESKTOP_CLASSIFICATION=${DESKTOP_CLASSIFICATION}"
+          echo "MOBILE_CLASSIFICATION=${MOBILE_CLASSIFICATION}"
+          echo "FINAL_CLASSIFICATION=${FINAL_CLASSIFICATION}"
 
       - name: Write runtime audit summary
         if: always()
@@ -514,18 +745,62 @@ jobs:
 
           AUDIT_LOG="audralia-blueprint-runtime-mount-audit.log"
           AUDIT_JSON="audralia-blueprint-runtime-mount-audit.json"
-          CLASSIFICATION="${{ steps.runtime_audit.outputs.classification }}"
+          MOBILE_JSON="audralia-blueprint-mobile-runtime-mount-audit.json"
+
+          DESKTOP_CLASSIFICATION="${{ steps.runtime_audit.outputs.desktop_classification }}"
+          MOBILE_CLASSIFICATION="${{ steps.runtime_audit.outputs.mobile_classification }}"
+          FINAL_CLASSIFICATION="${{ steps.runtime_audit.outputs.final_classification }}"
 
           {
             echo "# Audralia Blueprint Runtime Mount Audit"
             echo ""
-            echo "**Workflow contract:** \`AUDRALIA_BLUEPRINT_RUNTIME_MOUNT_AUDIT_WORKFLOW_SELF_COPY_FIX_TNT_v2\`"
+            echo "**Workflow contract:** \`MANOR_BLUEPRINT_MOBILE_RUNTIME_VISIBILITY_AUDIT_WORKFLOW_TNT_v1\`"
             echo ""
-            echo "**Previous workflow contract:** \`AUDRALIA_PLANET_BLUEPRINT_RUNTIME_MOUNT_BROWSER_AUDIT_WORKFLOW_TNT_v1\`"
+            echo "**Previous workflow contract:** \`AUDRALIA_BLUEPRINT_RUNTIME_MOUNT_AUDIT_WORKFLOW_SELF_COPY_FIX_TNT_v2\`"
             echo ""
             echo "**Target route:** \`https://diamondgatebridge.com/showroom/globe/audralia/planet/\`"
             echo ""
-            echo "**Classification:** \`${CLASSIFICATION:-CLASSIFICATION_NOT_AVAILABLE}\`"
+            echo "**Desktop classification:** \`${DESKTOP_CLASSIFICATION:-DESKTOP_CLASSIFICATION_NOT_AVAILABLE}\`"
+            echo ""
+            echo "**Mobile classification:** \`${MOBILE_CLASSIFICATION:-MOBILE_CLASSIFICATION_NOT_AVAILABLE}\`"
+            echo ""
+            echo "**Final classification:** \`${FINAL_CLASSIFICATION:-FINAL_CLASSIFICATION_NOT_AVAILABLE}\`"
+            echo ""
+            echo "## Mobile quick proof"
+            echo ""
+            echo '```json'
+            if [ -f "${MOBILE_JSON}" ]; then
+              node - <<'NODE'
+              const fs = require("node:fs");
+              const mobile = JSON.parse(fs.readFileSync("audralia-blueprint-mobile-runtime-mount-audit.json", "utf8"));
+
+              const safeMargins =
+                mobile?.blueprintStatus?.safeMargins ||
+                mobile?.blueprintStatus?.mobileSafeMargins ||
+                null;
+
+              console.log(JSON.stringify({
+                classification: mobile.classification,
+                viewport: mobile.viewport,
+                visualViewport: mobile.visualViewport,
+                blueprintApiImplementationContract: mobile.blueprintApiImplementationContract,
+                blueprintStatusContract: mobile?.blueprintStatus?.contract || null,
+                mobileSafePosition: mobile?.blueprintStatus?.mobileSafePosition ?? null,
+                safeMargins,
+                positionSource: mobile?.blueprintStatus?.positionSource ?? null,
+                positionWasClamped: mobile?.blueprintStatus?.positionWasClamped ?? null,
+                bubbleExists: mobile.bubbleExists,
+                overlayExists: mobile.overlayExists,
+                bubbleStyle: mobile.bubbleStyle,
+                bubbleRect: mobile.bubbleRect,
+                elementFromPointHitsBubble: mobile.elementFromPointHitsBubble,
+                elementFromPointSummary: mobile.elementFromPointSummary
+              }, null, 2));
+              NODE
+            else
+              echo "{}"
+            fi
+            echo '```'
             echo ""
             echo "## Raw audit output"
             echo ""
@@ -537,7 +812,7 @@ jobs:
             fi
             echo '```'
             echo ""
-            echo "## Structured JSON"
+            echo "## Structured combined JSON"
             echo ""
             echo '```json'
             if [ -f "${AUDIT_JSON}" ]; then
@@ -556,4 +831,5 @@ jobs:
           path: |
             audralia-blueprint-runtime-mount-audit.log
             audralia-blueprint-runtime-mount-audit.json
+            audralia-blueprint-mobile-runtime-mount-audit.json
           if-no-files-found: warn

@@ -1,16 +1,20 @@
 <!-- TARGET FILE: /showroom/globe/audralia/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_HTML_TNT_v1 -->
+<!-- AUDRALIA_PARENT_ROUTE_MIRRORLAND_THRESHOLD_AND_CARDINAL_MENU_HTML_TNT_v1 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/globe/audralia/"
-  data-page="audralia-parent-interactive-globe"
-  data-version="G1-PARENT-INTERACTIVE-GLOBE-LATTICE-RESTORE"
-  data-contract="AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_HTML_TNT_v1"
-  data-js-contract="AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_JS_TNT_v1"
-  data-previous-functional-js="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1"
-  data-route-family="AUDRALIA_HOMEWORLD_PARENT_INTERACTIVE_GLOBE_ROUTE"
+  data-page="audralia-mirrorland-threshold"
+  data-version="G1-MIRRORLAND-THRESHOLD-CARDINAL-MENU"
+  data-contract="AUDRALIA_PARENT_ROUTE_MIRRORLAND_THRESHOLD_AND_CARDINAL_MENU_HTML_TNT_v1"
+  data-previous-contract="AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_HTML_TNT_v1"
+  data-js-contract-held="AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_JS_TNT_v1"
+  data-route-family="AUDRALIA_MIRRORLAND_THRESHOLD_INTERACTIVE_TEMPLATE_ROUTE"
+  data-threshold-role="after-door-welcome-to-mirrorland"
+  data-planetary-template="Audralia"
+  data-homeworld-subtext="Homeworld of the Nine Summits Galaxy"
+  data-cardinal-menu-active="true"
   data-child-route="/showroom/globe/audralia/planet/"
   data-child-route-held="true"
   data-blueprint-work-held="true"
@@ -24,10 +28,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Audralia · Interactive Homeworld Globe</title>
+  <title>Welcome to Mirrorland · Audralia</title>
   <meta
     name="description"
-    content="Audralia parent Homeworld route with a finger-spinnable 3D canvas globe, Lattice View, Diagnostic Scope, and 256-state diagnostic reporting."
+    content="Welcome to Mirrorland. Audralia is the first planetary template after the Door: an interactive globe with Planet View, Lattice View, and Diagnostic Scope."
   >
 
   <style>
@@ -121,7 +125,7 @@
 
     .topbar{
       display:grid;
-      grid-template-columns:auto 1fr;
+      grid-template-columns:auto minmax(18rem,1fr);
       gap:1.1rem;
       align-items:start;
       padding:1rem 0 1.25rem;
@@ -170,31 +174,164 @@
     .nav{
       display:flex;
       justify-content:flex-end;
-      flex-wrap:wrap;
-      gap:.6rem;
+      align-items:flex-start;
     }
 
-    .nav a{
-      min-height:2.55rem;
-      display:inline-flex;
+    .route-menu{
+      position:relative;
+      width:min(44rem,100%);
+    }
+
+    .route-menu summary{
+      list-style:none;
+      cursor:pointer;
+      min-height:3rem;
+      display:flex;
       align-items:center;
-      justify-content:center;
-      border:1px solid rgba(188,208,255,.15);
+      justify-content:space-between;
+      gap:1rem;
+      border:1px solid rgba(242,198,109,.34);
       border-radius:999px;
-      padding:.66rem .98rem;
-      background:rgba(255,255,255,.045);
-      color:rgba(236,242,255,.88);
+      padding:.78rem 1rem;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(242,198,109,.15),transparent 72%),
+        rgba(255,255,255,.045);
+      color:rgba(255,243,210,.94);
+      font-size:.75rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 0 1.2rem rgba(242,198,109,.08);
+      backdrop-filter:blur(7px);
+    }
+
+    .route-menu summary::-webkit-details-marker{display:none}
+
+    .route-menu summary::after{
+      content:"";
+      width:.62rem;
+      height:.62rem;
+      border-right:2px solid rgba(255,243,210,.82);
+      border-bottom:2px solid rgba(255,243,210,.82);
+      transform:rotate(45deg) translateY(-.15rem);
+      transition:transform .18s ease,border-color .18s ease;
+      flex:0 0 auto;
+    }
+
+    .route-menu[open] summary{
+      border-color:rgba(242,198,109,.78);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(242,198,109,.23),transparent 72%),
+        linear-gradient(180deg,rgba(24,22,48,.86),rgba(5,10,22,.90));
+    }
+
+    .route-menu[open] summary::after{
+      transform:rotate(225deg) translateY(-.08rem);
+      border-color:rgba(242,198,109,.96);
+    }
+
+    .route-menu-panel{
+      position:absolute;
+      right:0;
+      top:calc(100% + .65rem);
+      z-index:40;
+      width:min(50rem,calc(100vw - 2rem));
+      padding:1rem;
+      border:1px solid rgba(242,198,109,.30);
+      border-radius:1.35rem;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(242,198,109,.17),transparent 16rem),
+        radial-gradient(circle at 96% 25%,rgba(126,216,255,.12),transparent 16rem),
+        linear-gradient(180deg,rgba(11,15,35,.98),rgba(3,7,18,.99));
+      box-shadow:0 1.4rem 3.4rem rgba(0,0,0,.48),0 0 2.8rem rgba(242,198,109,.12),inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .route-menu-intro{
+      display:grid;
+      gap:.25rem;
+      padding:.25rem .15rem .85rem;
+    }
+
+    .route-menu-intro b{
+      color:var(--gold);
+      font-size:.68rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .route-menu-intro span{
+      color:var(--muted);
+      font-size:.88rem;
+      font-weight:750;
+    }
+
+    .cardinal-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.75rem;
+    }
+
+    .cardinal-group{
+      display:grid;
+      gap:.55rem;
+      padding:.8rem;
+      border:1px solid rgba(188,208,255,.14);
+      border-radius:1.05rem;
+      background:
+        radial-gradient(circle at 18% 0%,rgba(126,216,255,.08),transparent 78%),
+        rgba(255,255,255,.032);
+    }
+
+    .cardinal-group h2{
+      margin:0;
+      color:var(--gold);
+      font-size:.76rem;
+      letter-spacing:.14em;
+      line-height:1.1;
+      text-transform:uppercase;
+    }
+
+    .cardinal-group p{
+      margin:0;
+      color:rgba(226,235,255,.66);
+      font-size:.78rem;
+      line-height:1.35;
+    }
+
+    .cardinal-links{
+      display:grid;
+      gap:.42rem;
+    }
+
+    .cardinal-links a{
+      display:flex;
+      justify-content:space-between;
+      gap:.7rem;
+      align-items:center;
+      min-height:2.45rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:.78rem;
+      padding:.58rem .65rem;
+      background:rgba(255,255,255,.035);
+      color:rgba(241,246,255,.88);
       font-size:.72rem;
+      font-weight:900;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+
+    .cardinal-links a[aria-current="page"]{
+      border-color:rgba(242,198,109,.70);
+      color:#05070d;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .cardinal-links a small{
+      color:inherit;
+      opacity:.72;
+      font-size:.58rem;
       font-weight:950;
       letter-spacing:.08em;
-      text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
-    }
-
-    .nav a[aria-current="page"]{
-      border-color:rgba(242,198,109,.72);
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
-      color:#05070d;
     }
 
     .panel{
@@ -286,6 +423,31 @@
     .lead{
       max-width:860px;
       font-size:clamp(1.05rem,3vw,1.28rem);
+    }
+
+    .seal{
+      width:fit-content;
+      max-width:100%;
+      display:grid;
+      gap:.22rem;
+      padding:.85rem 1rem;
+      border:1px solid rgba(242,198,109,.26);
+      border-radius:1rem;
+      background:rgba(242,198,109,.065);
+    }
+
+    .seal b{
+      color:var(--gold);
+      font-size:.64rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .seal span{
+      color:rgba(255,243,210,.92);
+      font-size:.94rem;
+      font-weight:850;
+      line-height:1.35;
     }
 
     .actions{
@@ -575,22 +737,33 @@
     }
 
     @media (max-width:1050px){
+      .topbar,
       .hero,
       .globe-layout{
         grid-template-columns:1fr;
+      }
+
+      .nav{justify-content:flex-start}
+
+      .route-menu{
+        width:100%;
+      }
+
+      .route-menu-panel{
+        position:static;
+        width:100%;
+        margin-top:.65rem;
       }
     }
 
     @media (max-width:760px){
       .shell{width:min(100% - 20px,var(--max))}
-      .topbar{grid-template-columns:1fr}
-      .nav{justify-content:flex-start}
-      .nav a{min-height:2.35rem;padding:.58rem .76rem;font-size:.67rem}
       .hero{padding:1rem}
       .hero-copy{min-height:22rem}
       h1{font-size:clamp(3.1rem,15vw,5.8rem)}
       .actions{display:grid}
       .button{width:100%}
+      .cardinal-grid{grid-template-columns:1fr}
       .globe-stage{min-height:40rem}
       .globe-label{left:.75rem;right:.75rem;max-width:none}
       .globe-status{left:.75rem;right:.75rem}
@@ -615,40 +788,87 @@
 </head>
 
 <body>
-  <a class="skip" href="#main">Skip to Audralia Interactive Globe</a>
+  <a class="skip" href="#main">Skip to Mirrorland Threshold</a>
 
   <div class="shell">
-    <header class="topbar" aria-label="Audralia parent route header">
+    <header class="topbar" aria-label="Audralia Mirrorland threshold header">
       <a class="brand" href="/">
-        <span class="brand-mark" aria-hidden="true">AU</span>
+        <span class="brand-mark" aria-hidden="true">ML</span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge · Mirrorland</span>
           <strong>Audralia</strong>
         </span>
       </a>
 
-      <nav class="nav" aria-label="Primary route navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/characters/">Characters</a>
-        <a href="/showroom/globe/" aria-current="page">Globe</a>
-        <a href="/explore/">Explore</a>
-        <a href="/frontier/">Frontier</a>
-        <a href="/laws/">Laws</a>
-        <a href="/products/">Products</a>
-        <a href="/gauges/">Gauges</a>
+      <nav class="nav" aria-label="Cardinal route navigation">
+        <details class="route-menu">
+          <summary>Route Map · North / East / South / West</summary>
+
+          <div class="route-menu-panel">
+            <div class="route-menu-intro">
+              <b>Cardinal Route Map</b>
+              <span>North orients. East expresses. South executes. West tests the boundary.</span>
+            </div>
+
+            <div class="cardinal-grid">
+              <section class="cardinal-group" aria-labelledby="north-routes">
+                <h2 id="north-routes">North · Origin / Authority</h2>
+                <p>Entry, orientation, and primary authority routes.</p>
+                <div class="cardinal-links">
+                  <a href="/"><span>Compass</span><small>Origin</small></a>
+                  <a href="/door/"><span>Door</span><small>Threshold</small></a>
+                  <a href="/home/"><span>Home</span><small>Return</small></a>
+                </div>
+              </section>
+
+              <section class="cardinal-group" aria-labelledby="east-routes">
+                <h2 id="east-routes">East · Expression / Story</h2>
+                <p>Character, world, and visible-story expression routes.</p>
+                <div class="cardinal-links">
+                  <a href="/characters/"><span>Characters</span><small>Story</small></a>
+                  <a href="/showroom/globe/audralia/" aria-current="page"><span>Mirrorland / Audralia</span><small>Here</small></a>
+                  <a href="/showroom/globe/"><span>Showroom / Globe</span><small>Display</small></a>
+                </div>
+              </section>
+
+              <section class="cardinal-group" aria-labelledby="south-routes">
+                <h2 id="south-routes">South · Execution / Systems</h2>
+                <p>Operational, product, cockpit, and proof-system routes.</p>
+                <div class="cardinal-links">
+                  <a href="/products/"><span>Products</span><small>Build</small></a>
+                  <a href="/gauges/"><span>Gauges</span><small>Audit</small></a>
+                  <a href="/showroom/globe/audralia/disposition/"><span>Cockpit / Diagnostics</span><small>Run</small></a>
+                </div>
+              </section>
+
+              <section class="cardinal-group" aria-labelledby="west-routes">
+                <h2 id="west-routes">West · Boundary / Law / Frontier</h2>
+                <p>Exploration, boundary testing, future path, and law routes.</p>
+                <div class="cardinal-links">
+                  <a href="/explore/"><span>Explore</span><small>Map</small></a>
+                  <a href="/frontier/"><span>Frontier</span><small>Future</small></a>
+                  <a href="/laws/"><span>Laws</span><small>Boundary</small></a>
+                </div>
+              </section>
+            </div>
+          </div>
+        </details>
       </nav>
     </header>
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
         <div class="hero-copy">
-          <div class="kicker">Audralia · Interactive Homeworld Route</div>
-          <h1 id="page-title">Homeworld of the Nine Summits Galaxy.</h1>
+          <div class="kicker">Mirrorland Threshold · After the Door</div>
+          <h1 id="page-title">Welcome to Mirrorland.</h1>
           <p class="lead">
-            Audralia is the parent interactive globe route. The planet carrier must spin with a finger, expose its 256-state lattice, and report diagnostic scope without collapsing into the child Planet Future-Body shell.
+            Audralia is the first planetary template after the Door: a living globe you can spin, inspect, and read through Planet View, Lattice View, and Diagnostic Scope.
           </p>
+
+          <div class="seal">
+            <b>Subtext Seal</b>
+            <span>Homeworld of the Nine Summits Galaxy · planetary template carrier · no final visual pass.</span>
+          </div>
 
           <div class="actions">
             <a class="button gold" href="#planet-view">Spin the Globe</a>
@@ -657,32 +877,32 @@
           </div>
         </div>
 
-        <aside class="status-card" aria-label="Parent route status">
-          <div class="kicker">Functional Restore</div>
-          <h2>Canvas globe restored.</h2>
+        <aside class="status-card" aria-label="Mirrorland threshold status">
+          <div class="kicker">Threshold Role</div>
+          <h2>The entrance after the Door.</h2>
 
           <div class="stat">
-            <b>Parent owns</b>
-            <span>Interactive globe, Planet View, Lattice View, Diagnostic Scope, and datum reporting.</span>
+            <b>Public read</b>
+            <span>This page welcomes the visitor into Mirrorland before sending them deeper into planet logic.</span>
           </div>
 
           <div class="stat">
-            <b>Child held</b>
-            <span>Planet Future-Body and Blueprint/mobile-safe work remain isolated to /showroom/globe/audralia/planet/.</span>
+            <b>Subtext read</b>
+            <span>Audralia is the first planetary template and Homeworld carrier for the Nine Summits Galaxy.</span>
           </div>
 
           <div class="stat">
-            <b>False finality blocked</b>
-            <span>Water, hydration, generated image, GraphicBox, and final visual pass remain false.</span>
+            <b>Runtime held</b>
+            <span>The restored interactive globe controller remains untouched and continues to own spin, lattice, and diagnostic scope.</span>
           </div>
         </aside>
       </section>
 
       <section id="planet-view" class="panel section" aria-labelledby="globe-title">
         <div class="kicker">Planet View · Lattice View · Diagnostic Scope</div>
-        <h2 id="globe-title">Spin the globe first. Then inspect the lattice.</h2>
+        <h2 id="globe-title">The planetary template is inspected through the globe.</h2>
         <p>
-          The stage below is the real controller mount. Drag the globe with one finger. Use Lattice View to expose the diagnostic structure.
+          Drag the globe with one finger. Planet View is the welcome lens. Lattice View reveals the structure. Diagnostic Scope reports what is active, held, and not yet claimed.
         </p>
 
         <div class="globe-layout">
@@ -690,11 +910,11 @@
             id="audraliaGlobeStage"
             class="globe-stage"
             data-audralia-globe-stage="true"
-            data-route-family="AUDRALIA_HOMEWORLD_PARENT_INTERACTIVE_GLOBE_ROUTE"
+            data-route-family="AUDRALIA_MIRRORLAND_THRESHOLD_INTERACTIVE_TEMPLATE_ROUTE"
             aria-label="Interactive Audralia globe stage"
           >
             <div class="globe-label">
-              <b>Audralia · Interactive Globe Carrier</b>
+              <b>Audralia · Mirrorland Planetary Template</b>
               <span data-audralia-stage-label>
                 <strong>Planet View</strong> → spherical carrier · diagnostic reporting active
               </span>
@@ -755,7 +975,7 @@
 
       <section id="diagnostics" class="panel section" aria-labelledby="diagnostic-title">
         <div class="kicker">Diagnostic reporting active</div>
-        <h2 id="diagnostic-title">The route reports the carrier without replacing it.</h2>
+        <h2 id="diagnostic-title">The threshold reports the carrier without replacing it.</h2>
 
         <div class="diagnostic-grid">
           <div class="diagnostic"><b>Route</b><span data-audralia-diagnostic-route>boot pending</span></div>
@@ -777,14 +997,13 @@
         <div class="deep-grid">
           <details class="restore-panel" open>
             <summary>
-              <b>Parent route boundary</b>
-              <h3>Audralia Homeworld cannot collapse into the child route.</h3>
+              <b>Threshold boundary</b>
+              <h3>Mirrorland opens before the planet deepens.</h3>
             </summary>
             <div class="body">
               <p>
-                The parent route introduces and inspects Audralia as an interactive Homeworld globe. It may link into the Planet Future-Body child route, but it must not be overwritten by that child shell.
+                This route is the threshold after the Door. Audralia appears here as the first planetary template: visible enough to spin, structured enough to inspect, and still honest about what remains held.
               </p>
-              <a class="button" href="/showroom/globe/audralia/planet/">Open the child Planet route</a>
             </div>
           </details>
 
@@ -795,19 +1014,19 @@
             </summary>
             <div class="body">
               <p>
-                HTML provides the stage, mount, controls, and diagnostic slots. JavaScript owns the canvas globe, spin behavior, lattice drawing, and diagnostic reporting cycle.
+                HTML provides the threshold shell, cardinal route map, stage, mount, controls, and diagnostic slots. JavaScript remains held and owns the canvas globe, spin behavior, lattice drawing, and diagnostic reporting cycle.
               </p>
             </div>
           </details>
 
           <details class="restore-panel">
             <summary>
-              <b>Datum boundary</b>
-              <h3>Cloned datum consumption stays under the hood.</h3>
+              <b>Planetary-template boundary</b>
+              <h3>Homeworld stays as subtext, not the first doorway.</h3>
             </summary>
             <div class="body">
               <p>
-                The route may report scaffolded datum consumption, but the visible page must continue to read as Audralia, not Earth-copy Australia.
+                “Homeworld of the Nine Summits Galaxy” remains true as the deeper seal. The public entry reads first as Mirrorland threshold so the visitor understands where they are after crossing the Door.
               </p>
             </div>
           </details>
@@ -825,14 +1044,22 @@
           </details>
         </div>
 
-        <template id="audralia-parent-interactive-route-receipt" class="receipt" data-audralia-parent-route-receipt>
-AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_HTML_TNT_v1
+        <template id="audralia-mirrorland-threshold-receipt" class="receipt" data-audralia-parent-route-receipt>
+AUDRALIA_PARENT_ROUTE_MIRRORLAND_THRESHOLD_AND_CARDINAL_MENU_HTML_TNT_v1
 route=/showroom/globe/audralia/
-routeFamily=AUDRALIA_HOMEWORLD_PARENT_INTERACTIVE_GLOBE_ROUTE
-pairedFamily=AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_TNT_v1
-js=/showroom/globe/audralia/index.js
-jsContract=AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_JS_TNT_v1
-previousFunctionalJs=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1
+routeFamily=AUDRALIA_MIRRORLAND_THRESHOLD_INTERACTIVE_TEMPLATE_ROUTE
+previousHtml=AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_HTML_TNT_v1
+heldJs=/showroom/globe/audralia/index.js
+heldJsContract=AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_JS_TNT_v1
+thresholdRole=after-door-welcome-to-mirrorland
+primaryHeadline=Welcome to Mirrorland.
+subtextSeal=Homeworld of the Nine Summits Galaxy
+planetaryTemplate=Audralia
+cardinalMenuActive=true
+north=Compass,Door,Home
+east=Characters,Mirrorland/Audralia,Showroom/Globe
+south=Products,Gauges,Cockpit/Diagnostics
+west=Explore,Frontier,Laws
 requiredStage=#audraliaGlobeStage
 requiredMount=#audraliaGlobeMount
 lensButtons=planet,lattice,diagnostic
@@ -841,6 +1068,7 @@ childRoute=/showroom/globe/audralia/planet/
 childRouteHeld=true
 blueprintWorkHeld=true
 datumChildHeld=true
+runtimeTouched=false
 interactiveGlobeRequired=true
 fingerDragRequired=true
 latticeViewRequired=true
@@ -855,7 +1083,7 @@ finalVisualPass=false
     </main>
 
     <footer>
-      AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_HTML_TNT_v1 · Interactive parent globe restored · Planet View / Lattice View / Diagnostic Scope · Child route held · No final visual pass.
+      AUDRALIA_PARENT_ROUTE_MIRRORLAND_THRESHOLD_AND_CARDINAL_MENU_HTML_TNT_v1 · Welcome to Mirrorland · Audralia planetary template · Cardinal Route Map · Interactive runtime held · No final visual pass.
     </footer>
   </div>
 

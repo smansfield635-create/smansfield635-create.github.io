@@ -1,30 +1,28 @@
 # TARGET FILE: /.github/workflows/audralia-blueprint-runtime-mount-audit.yml
 # TNT FULL-FILE REPLACEMENT
-# MANOR_BLUEPRINT_MOBILE_RUNTIME_VISIBILITY_AUDIT_WORKFLOW_TNT_v1
+# MANOR_BLUEPRINT_MOBILE_RUNTIME_VISIBILITY_AUDIT_SUMMARY_HEREDOC_REPAIR_TNT_v2
 #
 # Purpose:
-# Preserve the working desktop Blueprint runtime audit and add a mobile Android-like
-# viewport audit so the remaining phone visibility failure can be classified.
+# Preserve the desktop + mobile Blueprint runtime visibility audit and repair the
+# failing GitHub Step Summary heredoc block.
+#
+# Previous contract:
+# MANOR_BLUEPRINT_MOBILE_RUNTIME_VISIBILITY_AUDIT_WORKFLOW_TNT_v1
 #
 # Owns:
 # - desktop runtime mount inspection
 # - mobile runtime mount inspection
-# - console/page/network error capture
-# - bootstrap status inspection
-# - Blueprint API/status inspection
-# - bubble DOM/style/rect/viewport/stacking inspection
-# - mobile safe-margin / mobile-safe-position inspection
-# - final classification output
-# - Step Summary
+# - browser/console/network state capture
+# - desktop/mobile/final classification
 # - artifact upload
+# - safe Step Summary writing without fragile heredoc
 #
 # Does not own:
-# - rewriting HTML
-# - rewriting site.bootstrap.js
-# - rewriting Blueprint HUD JS/CSS/registry
-# - rewriting Audralia canvas/UI
-# - page-by-page installation
-# - water/hydration/final visual pass
+# - website HTML
+# - site.bootstrap.js
+# - Blueprint HUD JS/CSS/registry
+# - Audralia canvas/UI
+# - page-by-page implementation
 
 name: Audralia Blueprint Runtime Mount Audit
 
@@ -67,7 +65,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          echo "AUDIT_WORKFLOW_CONTRACT=MANOR_BLUEPRINT_MOBILE_RUNTIME_VISIBILITY_AUDIT_WORKFLOW_TNT_v1"
+          echo "AUDIT_WORKFLOW_CONTRACT=MANOR_BLUEPRINT_MOBILE_RUNTIME_VISIBILITY_AUDIT_SUMMARY_HEREDOC_REPAIR_TNT_v2"
 
           npm init -y
           npm install playwright@latest
@@ -89,8 +87,8 @@ jobs:
           import { chromium } from "playwright";
           import fs from "node:fs";
 
-          const WORKFLOW_CONTRACT = "MANOR_BLUEPRINT_MOBILE_RUNTIME_VISIBILITY_AUDIT_WORKFLOW_TNT_v1";
-          const PREVIOUS_WORKFLOW_CONTRACT = "AUDRALIA_BLUEPRINT_RUNTIME_MOUNT_AUDIT_WORKFLOW_SELF_COPY_FIX_TNT_v2";
+          const WORKFLOW_CONTRACT = "MANOR_BLUEPRINT_MOBILE_RUNTIME_VISIBILITY_AUDIT_SUMMARY_HEREDOC_REPAIR_TNT_v2";
+          const PREVIOUS_WORKFLOW_CONTRACT = "MANOR_BLUEPRINT_MOBILE_RUNTIME_VISIBILITY_AUDIT_WORKFLOW_TNT_v1";
 
           const TARGET_ROUTE = "https://diamondgatebridge.com/showroom/globe/audralia/planet/";
           const EXPECTED_HTML_MARKER = "AUDRALIA_PLANET_HTML_BOOTSTRAP_MOBILE_SAFE_CACHE_KEY_RENEWAL_TNT_v3";
@@ -754,9 +752,9 @@ jobs:
           {
             echo "# Audralia Blueprint Runtime Mount Audit"
             echo ""
-            echo "**Workflow contract:** \`MANOR_BLUEPRINT_MOBILE_RUNTIME_VISIBILITY_AUDIT_WORKFLOW_TNT_v1\`"
+            echo "**Workflow contract:** \`MANOR_BLUEPRINT_MOBILE_RUNTIME_VISIBILITY_AUDIT_SUMMARY_HEREDOC_REPAIR_TNT_v2\`"
             echo ""
-            echo "**Previous workflow contract:** \`AUDRALIA_BLUEPRINT_RUNTIME_MOUNT_AUDIT_WORKFLOW_SELF_COPY_FIX_TNT_v2\`"
+            echo "**Previous workflow contract:** \`MANOR_BLUEPRINT_MOBILE_RUNTIME_VISIBILITY_AUDIT_WORKFLOW_TNT_v1\`"
             echo ""
             echo "**Target route:** \`https://diamondgatebridge.com/showroom/globe/audralia/planet/\`"
             echo ""
@@ -766,37 +764,11 @@ jobs:
             echo ""
             echo "**Final classification:** \`${FINAL_CLASSIFICATION:-FINAL_CLASSIFICATION_NOT_AVAILABLE}\`"
             echo ""
-            echo "## Mobile quick proof"
+            echo "## Mobile audit artifact"
             echo ""
             echo '```json'
             if [ -f "${MOBILE_JSON}" ]; then
-              node - <<'NODE'
-              const fs = require("node:fs");
-              const mobile = JSON.parse(fs.readFileSync("audralia-blueprint-mobile-runtime-mount-audit.json", "utf8"));
-
-              const safeMargins =
-                mobile?.blueprintStatus?.safeMargins ||
-                mobile?.blueprintStatus?.mobileSafeMargins ||
-                null;
-
-              console.log(JSON.stringify({
-                classification: mobile.classification,
-                viewport: mobile.viewport,
-                visualViewport: mobile.visualViewport,
-                blueprintApiImplementationContract: mobile.blueprintApiImplementationContract,
-                blueprintStatusContract: mobile?.blueprintStatus?.contract || null,
-                mobileSafePosition: mobile?.blueprintStatus?.mobileSafePosition ?? null,
-                safeMargins,
-                positionSource: mobile?.blueprintStatus?.positionSource ?? null,
-                positionWasClamped: mobile?.blueprintStatus?.positionWasClamped ?? null,
-                bubbleExists: mobile.bubbleExists,
-                overlayExists: mobile.overlayExists,
-                bubbleStyle: mobile.bubbleStyle,
-                bubbleRect: mobile.bubbleRect,
-                elementFromPointHitsBubble: mobile.elementFromPointHitsBubble,
-                elementFromPointSummary: mobile.elementFromPointSummary
-              }, null, 2));
-              NODE
+              cat "${MOBILE_JSON}"
             else
               echo "{}"
             fi

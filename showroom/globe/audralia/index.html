@@ -1,61 +1,33 @@
 <!-- TARGET FILE: /showroom/globe/audralia/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- AUDRALIA_PARENT_ROUTE_HOMEWORLD_VISUAL_RESTORE_HTML_TNT_v1 -->
-<!--
-  Purpose:
-  Restore the Audralia parent route as the Homeworld / Planet View / Lattice View /
-  Diagnostic Scope page family.
-
-  Owns:
-  - Parent Audralia route shell
-  - Homeworld framing
-  - Planet View / Lattice View / Diagnostic Scope structure
-  - Observable globe carrier
-  - Diagnostic reporting active language
-  - Parent-route receipt
-
-  Does not own:
-  - /showroom/globe/audralia/planet/
-  - Blueprint HUD
-  - site.bootstrap.js
-  - Manor Blueprint files
-  - Audralia child/grandchild terrain files
-  - water/hydration/final visual pass
--->
+<!-- AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_HTML_TNT_v1 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/globe/audralia/"
-  data-page="audralia-parent-homeworld"
-  data-version="G2-PARENT-HOMEWORLD-VISUAL-RESTORE"
-  data-contract="AUDRALIA_PARENT_ROUTE_HOMEWORLD_VISUAL_RESTORE_HTML_TNT_v1"
-  data-previous-contract="AUDRALIA_G2_NINE_SUMMITS_HOMEWORLD_MIRRORLAND_MEANING_SHELL_HTML_TNT_v2"
-  data-route-family="AUDRALIA_HOMEWORLD_PARENT_ROUTE"
+  data-page="audralia-parent-interactive-globe"
+  data-version="G1-PARENT-INTERACTIVE-GLOBE-LATTICE-RESTORE"
+  data-contract="AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_HTML_TNT_v1"
+  data-js-contract="AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_JS_TNT_v1"
+  data-previous-functional-js="AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1"
+  data-route-family="AUDRALIA_HOMEWORLD_PARENT_INTERACTIVE_GLOBE_ROUTE"
   data-child-route="/showroom/globe/audralia/planet/"
   data-child-route-held="true"
-  data-parent-route-restored="true"
-  data-homeworld-route="true"
-  data-planet-view-active="true"
-  data-lattice-view-active="true"
-  data-diagnostic-scope-active="true"
-  data-observable-globe-carrier="true"
-  data-diagnostic-reporting-active="true"
-  data-cloned-datum-consumption="reported-under-hood"
-  data-planet-body-preserved="true"
+  data-blueprint-work-held="true"
+  data-datum-child-held="true"
   data-active-water="false"
   data-hydration-active="false"
   data-final-visual-pass="false"
   data-generated-image="false"
   data-graphic-box="false"
-  data-blueprint-work-held="true"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Audralia · Homeworld of the Nine Summits Galaxy</title>
+  <title>Audralia · Interactive Homeworld Globe</title>
   <meta
     name="description"
-    content="Audralia parent route: Homeworld of the Nine Summits Galaxy, with Planet View, Lattice View, Diagnostic Scope, and observable globe carrier restored."
+    content="Audralia parent Homeworld route with a finger-spinnable 3D canvas globe, Lattice View, Diagnostic Scope, and 256-state diagnostic reporting."
   >
 
   <style>
@@ -68,11 +40,8 @@
       --gold:#f2c66d;
       --gold2:#ffe9a6;
       --blue:#7fd8ff;
-      --deep:#071427;
       --panel:rgba(11,18,34,.84);
-      --panel2:rgba(20,31,54,.74);
       --line:rgba(188,208,255,.17);
-      --lineGold:rgba(242,198,109,.32);
       --max:1220px;
       --gem:polygon(50% 0%,78% 10%,100% 35%,90% 74%,50% 100%,10% 74%,0 35%,22% 10%);
     }
@@ -182,10 +151,7 @@
       box-shadow:0 1.2rem 2.5rem rgba(0,0,0,.45),0 0 2.2rem rgba(126,216,255,.18),inset 0 1px 0 rgba(255,255,255,.16);
     }
 
-    .brand-copy{
-      display:grid;
-      gap:.15rem;
-    }
+    .brand-copy{display:grid;gap:.15rem}
 
     .brand-copy span{
       color:var(--muted);
@@ -245,7 +211,7 @@
 
     .hero{
       display:grid;
-      grid-template-columns:minmax(0,.88fr) minmax(18rem,.72fr);
+      grid-template-columns:minmax(0,.92fr) minmax(18rem,.58fr);
       gap:clamp(1rem,3vw,1.5rem);
       align-items:stretch;
       padding:clamp(1.25rem,4vw,2.5rem);
@@ -255,7 +221,7 @@
       display:grid;
       gap:1rem;
       align-content:center;
-      min-height:26rem;
+      min-height:24rem;
     }
 
     .kicker{
@@ -286,7 +252,7 @@
 
     h1{
       margin:0;
-      max-width:820px;
+      max-width:860px;
       font-size:clamp(3.25rem,10vw,7.25rem);
       line-height:.86;
       letter-spacing:-.11em;
@@ -318,20 +284,8 @@
     }
 
     .lead{
-      max-width:850px;
+      max-width:860px;
       font-size:clamp(1.05rem,3vw,1.28rem);
-    }
-
-    .hero-card{
-      display:grid;
-      gap:.8rem;
-      align-content:center;
-      padding:1rem;
-      border:1px solid rgba(242,198,109,.22);
-      border-radius:1.4rem;
-      background:
-        radial-gradient(circle at 50% 18%,rgba(126,216,255,.14),transparent 17rem),
-        linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.025));
     }
 
     .actions{
@@ -340,7 +294,8 @@
       gap:.62rem;
     }
 
-    .button{
+    .button,
+    button.button{
       min-height:2.65rem;
       display:inline-flex;
       align-items:center;
@@ -350,17 +305,55 @@
       padding:.65rem 1rem;
       background:rgba(255,255,255,.045);
       color:rgba(241,246,255,.88);
+      font-family:inherit;
       font-size:.74rem;
       font-weight:950;
       letter-spacing:.06em;
       text-transform:uppercase;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      cursor:pointer;
     }
 
-    .button.gold{
+    .button.gold,
+    button.button.gold{
       border-color:rgba(242,198,109,.9);
       color:#060811;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .status-card{
+      display:grid;
+      gap:.75rem;
+      align-content:center;
+      padding:1rem;
+      border:1px solid rgba(242,198,109,.22);
+      border-radius:1.4rem;
+      background:
+        radial-gradient(circle at 50% 18%,rgba(126,216,255,.14),transparent 17rem),
+        linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.025));
+    }
+
+    .stat{
+      display:grid;
+      gap:.16rem;
+      padding:.72rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:1rem;
+      background:rgba(255,255,255,.032);
+    }
+
+    .stat b{
+      color:var(--gold);
+      font-size:.62rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .stat span{
+      color:rgba(230,238,255,.78);
+      font-size:.86rem;
+      font-weight:780;
+      line-height:1.34;
     }
 
     .section{
@@ -370,16 +363,16 @@
       gap:1rem;
     }
 
-    .view-grid{
+    .globe-layout{
       display:grid;
-      grid-template-columns:minmax(0,1.04fr) minmax(18rem,.62fr);
+      grid-template-columns:minmax(0,1.05fr) minmax(18rem,.55fr);
       gap:1rem;
       align-items:stretch;
     }
 
-    .carrier-card{
+    .globe-stage{
       position:relative;
-      min-height:clamp(34rem,68vw,48rem);
+      min-height:clamp(34rem,68vw,49rem);
       border:1px solid rgba(188,208,255,.15);
       border-radius:clamp(1.2rem,4vw,2rem);
       overflow:hidden;
@@ -389,12 +382,16 @@
         linear-gradient(180deg,rgba(0,6,18,.72),rgba(1,5,15,.96));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
       isolation:isolate;
+      touch-action:none;
+      user-select:none;
+      -webkit-user-select:none;
     }
 
-    .carrier-card::before{
+    .globe-stage::before{
       content:"";
       position:absolute;
       inset:0;
+      z-index:0;
       background-image:
         linear-gradient(rgba(126,216,255,.035) 1px,transparent 1px),
         linear-gradient(90deg,rgba(126,216,255,.035) 1px,transparent 1px);
@@ -403,162 +400,113 @@
       pointer-events:none;
     }
 
-    .carrier-label{
+    .globe-label{
       position:absolute;
       left:1rem;
       top:1rem;
       z-index:5;
       display:grid;
       gap:.18rem;
-      max-width:min(30rem,calc(100% - 2rem));
+      max-width:min(33rem,calc(100% - 2rem));
       padding:.82rem .9rem;
       border:1px solid rgba(255,255,255,.12);
       border-radius:1rem;
       background:rgba(2,6,18,.74);
       backdrop-filter:blur(8px);
+      pointer-events:none;
     }
 
-    .carrier-label b{
+    .globe-label b{
       color:var(--gold);
       font-size:.64rem;
       letter-spacing:.13em;
       text-transform:uppercase;
     }
 
-    .carrier-label span{
+    .globe-label span{
       color:rgba(230,238,255,.80);
       font-size:.82rem;
       font-weight:760;
     }
 
-    .carrier-visual{
+    .globe-mount{
       position:absolute;
-      inset:4.5rem 1rem 8.8rem;
+      inset:0;
       z-index:2;
-      display:grid;
-      place-items:center;
     }
 
-    .carrier-svg{
-      width:min(82vw,38rem);
-      max-width:100%;
-      height:auto;
-      overflow:visible;
-      filter:drop-shadow(0 2rem 3rem rgba(0,0,0,.50)) drop-shadow(0 0 2.2rem rgba(126,216,255,.18));
-    }
-
-    .carrier-status{
+    .globe-status{
       position:absolute;
       left:1rem;
       right:1rem;
       bottom:1rem;
       z-index:5;
       display:grid;
-      gap:.8rem;
+      gap:.75rem;
       padding:.95rem;
       border:1px solid rgba(255,255,255,.12);
       border-radius:1rem;
-      background:rgba(2,6,18,.76);
+      background:rgba(2,6,18,.78);
       backdrop-filter:blur(8px);
-      text-align:center;
     }
 
-    .carrier-status strong{
+    .globe-status strong{
       color:var(--blue);
-      font-size:clamp(1.05rem,3vw,1.45rem);
+      font-size:clamp(1.05rem,3vw,1.42rem);
       line-height:1.08;
     }
 
-    .carrier-status span{
+    .globe-status span{
       color:rgba(230,238,255,.82);
       font-weight:850;
     }
 
-    .info-stack{
+    .lens-panel{
       display:grid;
-      gap:.7rem;
-    }
-
-    .info-card{
-      display:grid;
-      gap:.35rem;
-      padding:.85rem;
-      border:1px solid rgba(255,255,255,.11);
-      border-radius:1rem;
-      background:rgba(255,255,255,.035);
-    }
-
-    .info-card b{
-      color:var(--gold);
-      font-size:.62rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .info-card span{
-      color:rgba(230,238,255,.80);
-      font-size:.9rem;
-      font-weight:730;
-      line-height:1.38;
-    }
-
-    .mode-row{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:.8rem;
-    }
-
-    .mode-card{
-      display:grid;
-      gap:.55rem;
-      min-height:11rem;
+      gap:.85rem;
       padding:1rem;
       border:1px solid rgba(188,208,255,.14);
-      border-radius:1.25rem;
-      background:
-        radial-gradient(circle at 50% 0%,rgba(126,216,255,.09),transparent 72%),
-        rgba(255,255,255,.032);
+      border-radius:1.35rem;
+      background:rgba(255,255,255,.032);
     }
 
-    .mode-card[data-active="true"]{
-      border-color:rgba(242,198,109,.42);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(242,198,109,.12),transparent 72%),
-        rgba(255,255,255,.04);
+    .lens-buttons{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.55rem;
     }
 
-    .mode-card b{
-      color:var(--gold);
-      font-size:.64rem;
-      letter-spacing:.13em;
-      text-transform:uppercase;
+    .lens-buttons button[aria-pressed="true"]{
+      border-color:rgba(242,198,109,.9);
+      color:#05070d;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
     }
 
     .diagnostic-grid{
       display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:.7rem;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.62rem;
     }
 
     .diagnostic{
       display:grid;
-      gap:.22rem;
-      padding:.8rem;
+      gap:.16rem;
+      padding:.7rem;
       border:1px solid rgba(255,255,255,.105);
-      border-radius:1rem;
+      border-radius:.9rem;
       background:rgba(255,255,255,.032);
     }
 
     .diagnostic b{
       color:rgba(242,198,109,.94);
-      font-size:.58rem;
+      font-size:.56rem;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
 
     .diagnostic span{
       color:rgba(230,238,255,.78);
-      font-size:.82rem;
+      font-size:.78rem;
       font-weight:780;
       line-height:1.32;
     }
@@ -628,13 +576,8 @@
 
     @media (max-width:1050px){
       .hero,
-      .view-grid{
+      .globe-layout{
         grid-template-columns:1fr;
-      }
-
-      .mode-row,
-      .diagnostic-grid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
       }
     }
 
@@ -644,14 +587,14 @@
       .nav{justify-content:flex-start}
       .nav a{min-height:2.35rem;padding:.58rem .76rem;font-size:.67rem}
       .hero{padding:1rem}
-      .hero-copy{min-height:24rem}
+      .hero-copy{min-height:22rem}
       h1{font-size:clamp(3.1rem,15vw,5.8rem)}
       .actions{display:grid}
       .button{width:100%}
-      .carrier-card{min-height:39rem}
-      .carrier-visual{inset:5.25rem .35rem 10.6rem}
-      .carrier-status{text-align:left}
-      .mode-row,
+      .globe-stage{min-height:40rem}
+      .globe-label{left:.75rem;right:.75rem;max-width:none}
+      .globe-status{left:.75rem;right:.75rem}
+      .lens-buttons,
       .diagnostic-grid,
       .deep-grid{
         grid-template-columns:1fr;
@@ -672,7 +615,7 @@
 </head>
 
 <body>
-  <a class="skip" href="#main">Skip to Audralia Homeworld</a>
+  <a class="skip" href="#main">Skip to Audralia Interactive Globe</a>
 
   <div class="shell">
     <header class="topbar" aria-label="Audralia parent route header">
@@ -701,250 +644,134 @@
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
         <div class="hero-copy">
-          <div class="kicker">Audralia · Parent Route Restore</div>
+          <div class="kicker">Audralia · Interactive Homeworld Route</div>
           <h1 id="page-title">Homeworld of the Nine Summits Galaxy.</h1>
           <p class="lead">
-            Audralia is the parent Homeworld route: a planetary template and inspection field where the observable globe carrier, lattice read, and diagnostic scope remain visible before deeper world expression is authorized.
+            Audralia is the parent interactive globe route. The planet carrier must spin with a finger, expose its 256-state lattice, and report diagnostic scope without collapsing into the child Planet Future-Body shell.
           </p>
 
           <div class="actions">
-            <a class="button gold" href="#planet-view">Inspect Planet View</a>
-            <a class="button" href="#diagnostic-scope">Open Diagnostic Scope</a>
+            <a class="button gold" href="#planet-view">Spin the Globe</a>
+            <a class="button" href="#diagnostics">Read Diagnostics</a>
             <a class="button" href="/showroom/globe/audralia/planet/">Open Child Planet Route</a>
           </div>
         </div>
 
-        <aside class="hero-card" aria-label="Parent route status">
-          <div class="kicker">Route Family</div>
-          <h2>Parent route restored.</h2>
-          <p>
-            This page is not the Planet Future-Body child shell. The parent route preserves Audralia as Homeworld, observable carrier, lattice, and diagnostic reporting surface.
-          </p>
+        <aside class="status-card" aria-label="Parent route status">
+          <div class="kicker">Functional Restore</div>
+          <h2>Canvas globe restored.</h2>
 
-          <div class="info-stack">
-            <div class="info-card">
-              <b>Parent owns</b>
-              <span>Homeworld, Planet View, Lattice View, Diagnostic Scope, observable globe carrier.</span>
-            </div>
-            <div class="info-card">
-              <b>Child held</b>
-              <span>Planet Future-Body and Blueprint/mobile-safe work remain isolated to /showroom/globe/audralia/planet/.</span>
-            </div>
-            <div class="info-card">
-              <b>False finality blocked</b>
-              <span>Water, hydration, generated image, GraphicBox, and final visual pass remain false.</span>
-            </div>
+          <div class="stat">
+            <b>Parent owns</b>
+            <span>Interactive globe, Planet View, Lattice View, Diagnostic Scope, and datum reporting.</span>
+          </div>
+
+          <div class="stat">
+            <b>Child held</b>
+            <span>Planet Future-Body and Blueprint/mobile-safe work remain isolated to /showroom/globe/audralia/planet/.</span>
+          </div>
+
+          <div class="stat">
+            <b>False finality blocked</b>
+            <span>Water, hydration, generated image, GraphicBox, and final visual pass remain false.</span>
           </div>
         </aside>
       </section>
 
-      <section id="planet-view" class="panel section" aria-labelledby="planet-title">
-        <div class="kicker">Planet View · spherical carrier · diagnostic reporting active</div>
-        <h2 id="planet-title">Inspect the planetary template first.</h2>
+      <section id="planet-view" class="panel section" aria-labelledby="globe-title">
+        <div class="kicker">Planet View · Lattice View · Diagnostic Scope</div>
+        <h2 id="globe-title">Spin the globe first. Then inspect the lattice.</h2>
         <p>
-          Planet View preserves the observable globe carrier. Cloned datum consumption is reported under the hood without replacing the planet body.
+          The stage below is the real controller mount. Drag the globe with one finger. Use Lattice View to expose the diagnostic structure.
         </p>
 
-        <div class="view-grid">
-          <div class="carrier-card" data-audralia-parent-carrier="true">
-            <div class="carrier-label">
-              <b>Audralia · Homeworld Carrier</b>
-              <span>Planet body preserved · lattice and diagnostic scope active · child route held.</span>
-            </div>
-
-            <div class="carrier-visual" aria-label="Audralia observable globe carrier">
-              <svg class="carrier-svg" viewBox="0 0 720 720" role="img" aria-labelledby="carrier-svg-title carrier-svg-desc">
-                <title id="carrier-svg-title">Audralia observable globe carrier</title>
-                <desc id="carrier-svg-desc">A blue spherical planet carrier with lattice lines, diagnostic nodes, and north/south markers.</desc>
-
-                <defs>
-                  <radialGradient id="planetBody" cx="42%" cy="34%" r="62%">
-                    <stop offset="0" stop-color="#bff5ff" stop-opacity=".96"/>
-                    <stop offset=".16" stop-color="#54d5ff" stop-opacity=".86"/>
-                    <stop offset=".42" stop-color="#0675ce" stop-opacity=".88"/>
-                    <stop offset=".73" stop-color="#052f78" stop-opacity=".96"/>
-                    <stop offset="1" stop-color="#02102b" stop-opacity="1"/>
-                  </radialGradient>
-
-                  <radialGradient id="atmosphere" cx="50%" cy="50%" r="58%">
-                    <stop offset=".70" stop-color="#82e8ff" stop-opacity="0"/>
-                    <stop offset=".88" stop-color="#82e8ff" stop-opacity=".18"/>
-                    <stop offset="1" stop-color="#dffbff" stop-opacity=".25"/>
-                  </radialGradient>
-
-                  <filter id="softGlow" x="-35%" y="-35%" width="170%" height="170%">
-                    <feGaussianBlur stdDeviation="8" result="blur"/>
-                    <feColorMatrix
-                      in="blur"
-                      type="matrix"
-                      values="
-                        .45 0 0 0 0
-                        0 .75 0 0 0
-                        0 0 1 0 0
-                        0 0 0 .34 0"
-                      result="glow"
-                    />
-                    <feMerge>
-                      <feMergeNode in="glow"/>
-                      <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
-                  </filter>
-
-                  <clipPath id="sphereClip">
-                    <circle cx="360" cy="360" r="220"/>
-                  </clipPath>
-                </defs>
-
-                <circle cx="360" cy="360" r="292" fill="rgba(126,216,255,.055)" stroke="rgba(126,216,255,.18)" stroke-width="2"/>
-                <circle cx="360" cy="360" r="250" fill="rgba(126,216,255,.06)" stroke="rgba(255,255,255,.07)" stroke-width="1"/>
-
-                <g filter="url(#softGlow)">
-                  <circle cx="360" cy="360" r="220" fill="url(#planetBody)" stroke="rgba(216,250,255,.42)" stroke-width="1.6"/>
-                  <circle cx="360" cy="360" r="244" fill="url(#atmosphere)" stroke="rgba(126,216,255,.18)" stroke-width="1.4"/>
-                </g>
-
-                <g clip-path="url(#sphereClip)" opacity=".72">
-                  <ellipse cx="360" cy="360" rx="220" ry="46" fill="none" stroke="rgba(242,198,109,.55)" stroke-width="2"/>
-                  <ellipse cx="360" cy="340" rx="208" ry="72" fill="none" stroke="rgba(230,238,255,.20)" stroke-width="1.4"/>
-                  <ellipse cx="360" cy="386" rx="214" ry="76" fill="none" stroke="rgba(230,238,255,.16)" stroke-width="1.2"/>
-                  <ellipse cx="360" cy="360" rx="78" ry="220" fill="none" stroke="rgba(230,238,255,.17)" stroke-width="1.2"/>
-                  <ellipse cx="360" cy="360" rx="135" ry="220" fill="none" stroke="rgba(230,238,255,.12)" stroke-width="1"/>
-                  <line x1="360" y1="142" x2="360" y2="578" stroke="rgba(230,238,255,.18)" stroke-width="1"/>
-                  <line x1="142" y1="360" x2="578" y2="360" stroke="rgba(242,198,109,.22)" stroke-width="1"/>
-
-                  <path d="M188 222 C282 258, 318 292, 388 318 C450 341, 500 379, 548 454" fill="none" stroke="rgba(242,198,109,.22)" stroke-width="1.4"/>
-                  <path d="M184 495 C246 424, 302 405, 362 375 C447 331, 505 278, 544 218" fill="none" stroke="rgba(230,238,255,.15)" stroke-width="1.2"/>
-                  <path d="M220 177 C288 260, 352 294, 430 350 C498 399, 535 454, 550 529" fill="none" stroke="rgba(230,238,255,.13)" stroke-width="1.2"/>
-                  <path d="M175 382 C255 346, 322 332, 405 342 C476 351, 520 375, 566 420" fill="none" stroke="rgba(126,216,255,.20)" stroke-width="1.2"/>
-
-                  <g fill="rgba(242,198,109,.45)" stroke="rgba(255,243,210,.22)" stroke-width=".8">
-                    <circle cx="360" cy="142" r="6"/>
-                    <circle cx="360" cy="205" r="5"/>
-                    <circle cx="360" cy="281" r="5"/>
-                    <circle cx="360" cy="360" r="6"/>
-                    <circle cx="360" cy="438" r="5"/>
-                    <circle cx="360" cy="515" r="5"/>
-                    <circle cx="360" cy="578" r="6"/>
-                    <circle cx="226" cy="252" r="5"/>
-                    <circle cx="287" cy="220" r="5"/>
-                    <circle cx="438" cy="222" r="5"/>
-                    <circle cx="502" cy="273" r="5"/>
-                    <circle cx="218" cy="457" r="5"/>
-                    <circle cx="292" cy="504" r="5"/>
-                    <circle cx="445" cy="502" r="5"/>
-                    <circle cx="515" cy="438" r="5"/>
-                  </g>
-                </g>
-
-                <circle cx="282" cy="305" r="58" fill="rgba(191,245,255,.28)"/>
-                <circle cx="279" cy="302" r="108" fill="rgba(126,216,255,.08)"/>
-
-                <text x="360" y="128" text-anchor="middle" fill="#f3c86f" font-family="Inter, system-ui, sans-serif" font-size="24" font-weight="950">N</text>
-                <text x="360" y="606" text-anchor="middle" fill="#f3c86f" font-family="Inter, system-ui, sans-serif" font-size="24" font-weight="950">S</text>
-              </svg>
-            </div>
-
-            <div class="carrier-status">
-              <strong>Planet View → spherical carrier · diagnostic reporting active</strong>
-              <span>
-                The globe, lattice, and diagnostic scope show how Audralia is being prepared for deeper world expression.
+        <div class="globe-layout">
+          <section
+            id="audraliaGlobeStage"
+            class="globe-stage"
+            data-audralia-globe-stage="true"
+            data-route-family="AUDRALIA_HOMEWORLD_PARENT_INTERACTIVE_GLOBE_ROUTE"
+            aria-label="Interactive Audralia globe stage"
+          >
+            <div class="globe-label">
+              <b>Audralia · Interactive Globe Carrier</b>
+              <span data-audralia-stage-label>
+                <strong>Planet View</strong> → spherical carrier · diagnostic reporting active
               </span>
             </div>
-          </div>
 
-          <aside class="info-stack" aria-label="Audralia parent diagnostics">
-            <div class="info-card">
-              <b>Carrier law</b>
-              <span>Planet body remains the visible parent object. No child shell may replace this route’s identity.</span>
+            <div
+              id="audraliaGlobeMount"
+              class="globe-mount"
+              data-audralia-globe-mount="true"
+              aria-hidden="true"
+            ></div>
+
+            <div class="globe-status">
+              <strong data-audralia-lens-title>Planet View</strong>
+              <span data-audralia-lens-copy>
+                Planet View preserves the observable globe carrier. Cloned datum consumption is reported under the hood without replacing the planet body.
+              </span>
             </div>
-            <div class="info-card">
-              <b>Datum law</b>
-              <span>Cloned datum consumption is reported under the hood without turning Audralia into Earth-copy Australia.</span>
+          </section>
+
+          <aside class="lens-panel" aria-label="Audralia lens and diagnostic controls">
+            <div class="kicker">View Controls</div>
+
+            <div class="lens-buttons" role="group" aria-label="Audralia globe view controls">
+              <button class="button gold" type="button" data-audralia-lens-button="planet" aria-pressed="true">
+                Planet View
+              </button>
+              <button class="button" type="button" data-audralia-lens-button="lattice" aria-pressed="false">
+                Lattice View
+              </button>
+              <button class="button" type="button" data-audralia-lens-button="diagnostic" aria-pressed="false">
+                Diagnostic Scope
+              </button>
             </div>
-            <div class="info-card">
-              <b>Diagnostic law</b>
-              <span>Planet View, Lattice View, and Diagnostic Scope inspect the same carrier through different proof lenses.</span>
+
+            <div class="stat">
+              <b>Interaction</b>
+              <span>Finger drag spins the globe. Double tap resets the carrier.</span>
             </div>
-            <div class="info-card">
-              <b>Held states</b>
-              <span>Water, hydration, final surface truth, generated images, and final visual pass remain false.</span>
+
+            <div class="stat">
+              <b>Lattice</b>
+              <span>16 radial nodes × 16 Fibonacci bands = 256 diagnostic states.</span>
             </div>
-            <div class="info-card">
-              <b>Child route</b>
-              <span>Planet Future-Body remains available as a child route, not as the parent Homeworld shell.</span>
+
+            <div class="stat">
+              <b>Datum</b>
+              <span>Datum child may be consumed and reported, but it is not rewritten in this pass.</span>
+            </div>
+
+            <div class="stat">
+              <b>Held</b>
+              <span>Downstream terrain, moisture, surface, clouds, continents, water, and final visual pass remain held.</span>
             </div>
           </aside>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="views-title">
-        <div class="kicker">Inspection Family</div>
-        <h2 id="views-title">Planet View, Lattice View, and Diagnostic Scope remain together.</h2>
-
-        <div class="mode-row">
-          <article class="mode-card" data-active="true">
-            <b>Planet View</b>
-            <h3>Spherical carrier</h3>
-            <p>
-              The observable globe carrier is the parent route’s first proof. It shows the planet body before deeper world-expression layers are allowed to claim completion.
-            </p>
-          </article>
-
-          <article class="mode-card" id="lattice-view">
-            <b>Lattice View</b>
-            <h3>Structured preparation</h3>
-            <p>
-              The lattice read shows Audralia as an inspectable planetary template, not a random decoration or a copied Earth mask.
-            </p>
-          </article>
-
-          <article class="mode-card" id="diagnostic-scope">
-            <b>Diagnostic Scope</b>
-            <h3>Reporting active</h3>
-            <p>
-              Diagnostic reporting tracks what is prepared, what is held, and what must not be falsely activated.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel section" aria-labelledby="diagnostic-title">
-        <div class="kicker">Under-hood diagnostic report</div>
-        <h2 id="diagnostic-title">The parent route reports without replacing the planet body.</h2>
+      <section id="diagnostics" class="panel section" aria-labelledby="diagnostic-title">
+        <div class="kicker">Diagnostic reporting active</div>
+        <h2 id="diagnostic-title">The route reports the carrier without replacing it.</h2>
 
         <div class="diagnostic-grid">
-          <div class="diagnostic">
-            <b>Route family</b>
-            <span>AUDRALIA_HOMEWORLD_PARENT_ROUTE</span>
-          </div>
-          <div class="diagnostic">
-            <b>Carrier</b>
-            <span>Observable globe preserved</span>
-          </div>
-          <div class="diagnostic">
-            <b>Planet View</b>
-            <span>Active</span>
-          </div>
-          <div class="diagnostic">
-            <b>Lattice View</b>
-            <span>Active</span>
-          </div>
-          <div class="diagnostic">
-            <b>Diagnostic Scope</b>
-            <span>Active</span>
-          </div>
-          <div class="diagnostic">
-            <b>Child route</b>
-            <span>Held separate</span>
-          </div>
-          <div class="diagnostic">
-            <b>Hydration</b>
-            <span>False</span>
-          </div>
-          <div class="diagnostic">
-            <b>Final visual pass</b>
-            <span>False</span>
-          </div>
+          <div class="diagnostic"><b>Route</b><span data-audralia-diagnostic-route>boot pending</span></div>
+          <div class="diagnostic"><b>Carrier</b><span data-audralia-diagnostic-carrier>boot pending</span></div>
+          <div class="diagnostic"><b>Lens</b><span data-audralia-diagnostic-lens>planet</span></div>
+          <div class="diagnostic"><b>Canvas</b><span data-audralia-diagnostic-canvas>canvas pending</span></div>
+          <div class="diagnostic"><b>Loop</b><span data-audralia-diagnostic-loop>loop pending</span></div>
+          <div class="diagnostic"><b>Children</b><span data-audralia-diagnostic-children>downstream held</span></div>
+          <div class="diagnostic"><b>NEWS</b><span data-audralia-diagnostic-news>boot pending</span></div>
+          <div class="diagnostic"><b>Scope</b><span data-audralia-diagnostic-scope>360 scope pending</span></div>
+          <div class="diagnostic"><b>Datum Child</b><span data-audralia-diagnostic-datum-child>datum pending</span></div>
+          <div class="diagnostic"><b>Receive Map</b><span data-audralia-diagnostic-receive-map>receive map pending</span></div>
+          <div class="diagnostic"><b>NEWS Map</b><span data-audralia-diagnostic-news-map>NEWS map pending</span></div>
+          <div class="diagnostic"><b>Child Packet</b><span data-audralia-diagnostic-child-packet>packet pending</span></div>
+          <div class="diagnostic"><b>Seat Count</b><span data-audralia-diagnostic-seat-count>256 pending</span></div>
+          <div class="diagnostic"><b>Downstream</b><span data-audralia-diagnostic-downstream>held · no activation</span></div>
         </div>
 
         <div class="deep-grid">
@@ -955,7 +782,7 @@
             </summary>
             <div class="body">
               <p>
-                The parent route introduces and inspects Audralia as a Homeworld. It may link into the Planet Future-Body child route, but it must not be overwritten by that child shell.
+                The parent route introduces and inspects Audralia as an interactive Homeworld globe. It may link into the Planet Future-Body child route, but it must not be overwritten by that child shell.
               </p>
               <a class="button" href="/showroom/globe/audralia/planet/">Open the child Planet route</a>
             </div>
@@ -963,12 +790,12 @@
 
           <details class="restore-panel">
             <summary>
-              <b>Diagnostic carrier boundary</b>
-              <h3>The globe is not replaced by a receipt.</h3>
+              <b>Runtime boundary</b>
+              <h3>The globe is controlled by index.js.</h3>
             </summary>
             <div class="body">
               <p>
-                Receipts report state. The visual carrier remains the planetary body. Diagnostic language must support the carrier, not replace it.
+                HTML provides the stage, mount, controls, and diagnostic slots. JavaScript owns the canvas globe, spin behavior, lattice drawing, and diagnostic reporting cycle.
               </p>
             </div>
           </details>
@@ -992,33 +819,32 @@
             </summary>
             <div class="body">
               <p>
-                Water, hydration, final surface truth, generated image replacement, GraphicBox, and final visual pass remain false until their own downstream authority is restored and audited.
+                Water, hydration, terrain downstream, final surface truth, generated image replacement, GraphicBox, and final visual pass remain false.
               </p>
             </div>
           </details>
         </div>
 
-        <template id="audralia-parent-route-receipt" class="receipt" data-audralia-parent-route-receipt>
-AUDRALIA_PARENT_ROUTE_HOMEWORLD_VISUAL_RESTORE_HTML_TNT_v1
+        <template id="audralia-parent-interactive-route-receipt" class="receipt" data-audralia-parent-route-receipt>
+AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_HTML_TNT_v1
 route=/showroom/globe/audralia/
-routeFamily=AUDRALIA_HOMEWORLD_PARENT_ROUTE
-previous=AUDRALIA_G2_NINE_SUMMITS_HOMEWORLD_MIRRORLAND_MEANING_SHELL_HTML_TNT_v2
+routeFamily=AUDRALIA_HOMEWORLD_PARENT_INTERACTIVE_GLOBE_ROUTE
+pairedFamily=AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_TNT_v1
+js=/showroom/globe/audralia/index.js
+jsContract=AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_JS_TNT_v1
+previousFunctionalJs=AUDRALIA_G1_DATUM_CLONING_METHOD_CONSUMER_ROUTE_JS_DIAGNOSTIC_REPORTING_TNT_v1
+requiredStage=#audraliaGlobeStage
+requiredMount=#audraliaGlobeMount
+lensButtons=planet,lattice,diagnostic
+diagnosticSlots=14
 childRoute=/showroom/globe/audralia/planet/
 childRouteHeld=true
-childRouteFamily=AUDRALIA_PLANET_FUTURE_BODY_CHILD_ROUTE
-parentOwns=Homeworld,PlanetView,LatticeView,DiagnosticScope,ObservableGlobeCarrier
-planetView=active
-latticeView=active
-diagnosticScope=active
-diagnosticReporting=active
-observableGlobeCarrier=true
-planetBodyPreserved=true
-clonedDatumConsumption=reported-under-hood
-audraliaNotEarthCopyAustralia=true
 blueprintWorkHeld=true
-manorBlueprintFilesTouched=false
-siteBootstrapTouched=false
-globalCssTouched=false
+datumChildHeld=true
+interactiveGlobeRequired=true
+fingerDragRequired=true
+latticeViewRequired=true
+diagnosticScopeRequired=true
 waterActive=false
 hydrationActive=false
 generatedImage=false
@@ -1029,10 +855,10 @@ finalVisualPass=false
     </main>
 
     <footer>
-      AUDRALIA_PARENT_ROUTE_HOMEWORLD_VISUAL_RESTORE_HTML_TNT_v1 · Parent route restored · Homeworld / Planet View / Lattice View / Diagnostic Scope · Child Planet Future-Body route held · No water · No hydration · No final visual pass.
+      AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_HTML_TNT_v1 · Interactive parent globe restored · Planet View / Lattice View / Diagnostic Scope · Child route held · No final visual pass.
     </footer>
   </div>
 
-  <script src="/showroom/globe/audralia/index.js?v=AUDRALIA_PARENT_ROUTE_HOMEWORLD_VISUAL_RESTORE_HTML_TNT_v1" defer></script>
+  <script src="/showroom/globe/audralia/index.js?v=AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_JS_TNT_v1" defer></script>
 </body>
 </html>

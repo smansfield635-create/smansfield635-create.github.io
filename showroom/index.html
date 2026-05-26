@@ -1,12 +1,15 @@
 <!-- TARGET FILE: /showroom/index.html -->
+<!-- TNT FULL-FILE REPLACEMENT -->
+<!-- SHOWROOM_MIRRORLAND_ENTRY_BLUEPRINT_MARKER_HTML_TNT_v1 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/"
   data-page="showroom"
-  data-version="G2-NOW-ENTERING-MIRRORLAND-DOOR-COPY"
-  data-contract="SHOWROOM_DIAMOND_G2_NOW_ENTERING_MIRRORLAND_DOOR_COPY_HTML_TNT_v11"
-  data-previous-contract="SHOWROOM_DIAMOND_G2_WELCOME_TO_MIRRORLAND_ENTRY_DOOR_HTML_TNT_v10"
+  data-version="G2-NOW-ENTERING-MIRRORLAND-DOOR-BLUEPRINT-MARKER"
+  data-contract="SHOWROOM_MIRRORLAND_ENTRY_BLUEPRINT_MARKER_HTML_TNT_v1"
+  data-previous-contract="SHOWROOM_DIAMOND_G2_NOW_ENTERING_MIRRORLAND_DOOR_COPY_HTML_TNT_v11"
+  data-baseline-contract="SHOWROOM_DIAMOND_G2_NOW_ENTERING_MIRRORLAND_DOOR_COPY_HTML_TNT_v11"
   data-contract-family="SHOWROOM_DIAMOND_G2_FULL_CONTRACT_RENEWAL_THREE_FILE_FAMILY_v1"
   data-role="now-entering-mirrorland-door"
   data-public-work="SHADOWS_NEVER_SHATTER_IN_MIRRORLAND"
@@ -20,7 +23,18 @@
   data-tertiary-route="#diamond-object"
   data-audralia-role="inherent-first-planetary-doorway"
   data-three-file-authority="true"
-  data-context-renewal="now-entering-mirrorland-door-copy-only"
+  data-context-renewal="mirrorland-entry-blueprint-marker-only"
+  data-mirrorland-blueprint-marker="true"
+  data-mirrorland-blueprint-marker-role="entered-mirrorland-threshold-indicator"
+  data-mirrorland-blueprint-marker-scope="showroom-entry-door-only"
+  data-blueprint-registry="/assets/manor-blueprint/manor.blueprint.registry.js"
+  data-blueprint-css="/assets/manor-blueprint/manor.blueprint.css"
+  data-blueprint-js="/assets/manor-blueprint/manor.blueprint.js"
+  data-blueprint-registry-contract="MANOR_BLUEPRINT_ROUTE_REGISTRY_TNT_v1"
+  data-blueprint-css-contract="MANOR_BLUEPRINT_FIXED_BUBBLE_FULLSCREEN_OVERLAY_CSS_TNT_v1"
+  data-blueprint-js-cache-key="MANOR_BLUEPRINT_GLOBAL_JOYSTICK_SCROLL_SITEWIDE_JS_TNT_v1"
+  data-blueprint-sitewide="false"
+  data-blueprint-page-scoped="true"
   data-diamond-renderer="/showroom/index.diamond.js"
   data-ui-controller="/showroom/index.ui.js"
   data-diamond-js-cache-key="SHOWROOM_DIAMOND_G2_PHYSICAL_GEM_RESTRAINED_LATTICE_CORE_SPIRAL_RENDERER_TNT_v4"
@@ -62,6 +76,13 @@
   <meta
     name="description"
     content="You are now entering Mirrorland. This is the door. Touch the Diamond before you cross."
+  >
+
+  <link
+    rel="stylesheet"
+    href="/assets/manor-blueprint/manor.blueprint.css?v=MANOR_BLUEPRINT_FIXED_BUBBLE_FULLSCREEN_OVERLAY_CSS_TNT_v1"
+    data-mirrorland-blueprint-marker="true"
+    data-blueprint-page-scoped="true"
   >
 
   <style>
@@ -1052,8 +1073,9 @@
       </section>
 
       <template id="route-receipt" class="receipt" data-route-receipt>
-SHOWROOM_DIAMOND_G2_NOW_ENTERING_MIRRORLAND_DOOR_COPY_HTML_TNT_v11
-previous=SHOWROOM_DIAMOND_G2_WELCOME_TO_MIRRORLAND_ENTRY_DOOR_HTML_TNT_v10
+SHOWROOM_MIRRORLAND_ENTRY_BLUEPRINT_MARKER_HTML_TNT_v1
+previous=SHOWROOM_DIAMOND_G2_NOW_ENTERING_MIRRORLAND_DOOR_COPY_HTML_TNT_v11
+baseline=SHOWROOM_DIAMOND_G2_NOW_ENTERING_MIRRORLAND_DOOR_COPY_HTML_TNT_v11
 route=/showroom/
 html=/showroom/index.html
 page_role=now_entering_mirrorland_door
@@ -1073,6 +1095,17 @@ secondary_cta=Proceed_into_the_Planetary_Path
 secondary_route=/showroom/globe/audralia/
 tertiary_cta=Touch_the_Door
 tertiary_route=#diamond-object
+mirrorland_blueprint_marker=true
+mirrorland_blueprint_marker_role=entered_mirrorland_threshold_indicator
+mirrorland_blueprint_marker_scope=showroom_entry_door_only
+blueprint_sitewide=false
+blueprint_page_scoped=true
+blueprint_registry=/assets/manor-blueprint/manor.blueprint.registry.js
+blueprint_registry_contract=MANOR_BLUEPRINT_ROUTE_REGISTRY_TNT_v1
+blueprint_css=/assets/manor-blueprint/manor.blueprint.css
+blueprint_css_contract=MANOR_BLUEPRINT_FIXED_BUBBLE_FULLSCREEN_OVERLAY_CSS_TNT_v1
+blueprint_js=/assets/manor-blueprint/manor.blueprint.js
+blueprint_js_cache_key=MANOR_BLUEPRINT_GLOBAL_JOYSTICK_SCROLL_SITEWIDE_JS_TNT_v1
 audralia_role=inherent_first_planetary_doorway
 planet_template_language=under_hood_only
 showroom_beginning=true
@@ -1115,7 +1148,11 @@ external_image_asset=false
 audralia_inheritance=false
 planet_template_inheritance=false
 visual_pass_claimed=false
-deploy_marker=SHOWROOM_DIAMOND_G2_NOW_ENTERING_MIRRORLAND_DOOR_COPY_DEPLOY_MARKER_v11
+site_bootstrap_touched=false
+non_mirrorland_pages_touched=false
+audralia_runtime_touched=false
+planet_runtime_touched=false
+deploy_marker=SHOWROOM_MIRRORLAND_ENTRY_BLUEPRINT_MARKER_DEPLOY_MARKER_v1
       </template>
     </main>
 
@@ -1126,5 +1163,17 @@ deploy_marker=SHOWROOM_DIAMOND_G2_NOW_ENTERING_MIRRORLAND_DOOR_COPY_DEPLOY_MARKE
 
   <script src="/showroom/index.diamond.js?v=SHOWROOM_DIAMOND_G2_PHYSICAL_GEM_RESTRAINED_LATTICE_CORE_SPIRAL_RENDERER_TNT_v4" defer></script>
   <script src="/showroom/index.ui.js?v=SHOWROOM_DIAMOND_G2_FULL_CONTRACT_RENEWAL_UI_TNT_v1_CHILD_CAPTURE" defer></script>
+  <script
+    src="/assets/manor-blueprint/manor.blueprint.registry.js?v=MANOR_BLUEPRINT_ROUTE_REGISTRY_TNT_v1"
+    defer
+    data-mirrorland-blueprint-marker="true"
+    data-blueprint-page-scoped="true"
+  ></script>
+  <script
+    src="/assets/manor-blueprint/manor.blueprint.js?v=MANOR_BLUEPRINT_GLOBAL_JOYSTICK_SCROLL_SITEWIDE_JS_TNT_v1"
+    defer
+    data-mirrorland-blueprint-marker="true"
+    data-blueprint-page-scoped="true"
+  ></script>
 </body>
 </html>

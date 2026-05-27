@@ -1,6 +1,6 @@
 /* TARGET FILE: /assets/site-guide/site-guide.css */
 /* TNT FULL-FILE REPLACEMENT */
-/* SITE_GUIDE_ROUTE_CHOICE_BOARD_ZONE_ALIGNMENT_CSS_TNT_v1 */
+/* SITE_GUIDE_BLUEPRINT_SCAN_MODE_ZONE_CSS_TNT_v1 */
 /*
   Owns:
   - Guide Desk visual system
@@ -12,13 +12,16 @@
   - Destination Goal card zone
   - Recommended Path rail
   - estate blueprint floorplan
+  - blueprint scan-first map mode
+  - readable room scan state
   - scratch-surface jump deck visuals
+  - return-to-blueprint visual support
   - diagnostic matrix / spectrum visuals
   - controlled animation
   - reduced-motion safety
 
   Previous contract:
-  SITE_GUIDE_THREE_FILE_FOCUS_ANIMATION_CSS_TNT_v1
+  SITE_GUIDE_ROUTE_CHOICE_BOARD_ZONE_ALIGNMENT_CSS_TNT_v1
 
   Does not own:
   - HTML content structure
@@ -244,6 +247,20 @@ select{
 .button.green{border-color:rgba(143,240,195,.38);background:rgba(143,240,195,.07)}
 .button.violet{border-color:rgba(168,140,255,.38);background:rgba(168,140,255,.07)}
 .button.amber{border-color:rgba(255,180,95,.40);background:rgba(255,180,95,.07)}
+
+[data-return-to-blueprint],
+button[data-open-blueprint]{
+  border-color:rgba(141,216,255,.44);
+  background:
+    radial-gradient(circle at 12% 0%,rgba(141,216,255,.13),transparent 9rem),
+    rgba(141,216,255,.07);
+}
+
+[data-return-to-blueprint]::before{
+  content:"▣";
+  margin-right:.35rem;
+  color:var(--sg-blue);
+}
 
 [data-muted="true"]{
   opacity:.34;
@@ -886,6 +903,40 @@ p{
   overflow:hidden;
 }
 
+.estate-blueprint[data-scan-mode="true"]{
+  border-color:rgba(243,200,111,.32);
+  background:
+    linear-gradient(rgba(141,216,255,.065) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(141,216,255,.065) 1px,transparent 1px),
+    radial-gradient(circle at 22% 20%,rgba(141,216,255,.10),transparent 20rem),
+    radial-gradient(circle at 78% 48%,rgba(243,200,111,.11),transparent 22rem),
+    radial-gradient(circle at 50% 85%,rgba(143,240,195,.08),transparent 24rem),
+    rgba(1,5,16,.70);
+  background-size:34px 34px,34px 34px,auto,auto,auto,auto;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 0 1.4rem rgba(243,200,111,.08);
+}
+
+.estate-blueprint[data-scan-mode="true"]::after{
+  content:"Scan the rooms";
+  position:absolute;
+  right:.85rem;
+  bottom:.85rem;
+  z-index:9;
+  border:1px solid rgba(243,200,111,.32);
+  border-radius:999px;
+  padding:.32rem .58rem;
+  color:rgba(255,244,216,.86);
+  background:rgba(2,7,18,.72);
+  font-size:.54rem;
+  font-weight:950;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+  pointer-events:none;
+  box-shadow:0 0 1rem rgba(243,200,111,.08);
+}
+
 .room-shape{
   --room:var(--sg-gold);
   position:absolute;
@@ -976,6 +1027,90 @@ p{
   filter:saturate(.82) grayscale(.08);
 }
 
+.estate-blueprint[data-scan-mode="true"] .room-shape,
+.estate-blueprint[data-scan-mode="true"] [data-blueprint-room]{
+  opacity:.92;
+  filter:saturate(.96) grayscale(0);
+  border-color:color-mix(in srgb,var(--room),transparent 46%);
+  background:
+    linear-gradient(135deg,color-mix(in srgb,var(--room),transparent 86%),transparent 58%),
+    rgba(2,9,22,.78);
+}
+
+.estate-blueprint[data-scan-mode="true"] .room-shape:hover,
+.estate-blueprint[data-scan-mode="true"] [data-blueprint-room]:hover{
+  z-index:10;
+  opacity:1;
+  filter:none;
+  transform:translateY(-2px) scale(1.015);
+  border-color:color-mix(in srgb,var(--room),transparent 20%);
+  background:
+    linear-gradient(135deg,color-mix(in srgb,var(--room),transparent 80%),transparent 58%),
+    rgba(4,12,28,.88);
+  box-shadow:0 0 1rem color-mix(in srgb,var(--room),transparent 82%);
+}
+
+.estate-blueprint[data-scan-mode="true"] .room-shape[data-active="true"],
+.estate-blueprint[data-scan-mode="true"] [data-blueprint-room][data-active="true"]{
+  z-index:12;
+  opacity:1;
+  filter:none;
+  transform:scale(1.035);
+  border-color:var(--room);
+  background:
+    radial-gradient(circle at 16% 0%,color-mix(in srgb,var(--room),transparent 75%),transparent 9rem),
+    linear-gradient(135deg,color-mix(in srgb,var(--room),transparent 78%),transparent 58%),
+    rgba(4,12,28,.92);
+  box-shadow:
+    0 0 1.55rem color-mix(in srgb,var(--room),transparent 73%),
+    0 .9rem 1.45rem rgba(0,0,0,.24),
+    inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.estate-blueprint[data-scan-mode="true"] .room-shape[data-active="true"]::after,
+.estate-blueprint[data-scan-mode="true"] [data-blueprint-room][data-active="true"]::after{
+  content:"Preview";
+  position:absolute;
+  right:.28rem;
+  bottom:.24rem;
+  border:1px solid color-mix(in srgb,var(--room),transparent 34%);
+  border-radius:999px;
+  padding:.12rem .28rem;
+  color:color-mix(in srgb,var(--room),white 14%);
+  background:rgba(2,7,18,.70);
+  font-size:.44rem;
+  font-weight:950;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  pointer-events:none;
+}
+
+.estate-blueprint[data-scan-mode="true"] .room-shape[data-muted="true"],
+.estate-blueprint[data-scan-mode="true"] [data-blueprint-room][data-muted="true"]{
+  opacity:.82;
+  filter:saturate(.84) grayscale(.06);
+  border-color:color-mix(in srgb,var(--room),transparent 58%);
+  background:
+    linear-gradient(135deg,color-mix(in srgb,var(--room),transparent 90%),transparent 58%),
+    rgba(2,8,20,.68);
+}
+
+.estate-blueprint[data-scan-mode="true"] .room-shape b,
+.estate-blueprint[data-scan-mode="true"] [data-blueprint-room] b{
+  text-shadow:0 1px 8px rgba(0,0,0,.72);
+}
+
+.estate-blueprint[data-scan-mode="true"] .room-shape strong,
+.estate-blueprint[data-scan-mode="true"] [data-blueprint-room] strong{
+  color:rgba(255,244,216,.96);
+  text-shadow:0 1px 9px rgba(0,0,0,.78);
+}
+
+.estate-blueprint[data-scan-mode="true"] .room-shape span,
+.estate-blueprint[data-scan-mode="true"] [data-blueprint-room] span{
+  color:rgba(230,238,255,.78);
+}
+
 @keyframes sgRoomBeacon{
   0%,100%{box-shadow:0 0 1.1rem color-mix(in srgb,var(--room),transparent 82%),0 1rem 1.7rem rgba(0,0,0,.26)}
   50%{box-shadow:0 0 1.9rem color-mix(in srgb,var(--room),transparent 68%),0 1rem 1.7rem rgba(0,0,0,.26)}
@@ -1034,7 +1169,7 @@ p{
 
 .jump-surface::after,
 [data-jump-section]::after{
-  content:"Scratch Surface";
+  content:"Preview";
   position:absolute;
   right:.78rem;
   top:.72rem;
@@ -1066,25 +1201,46 @@ p{
 
 .jump-surface[data-active="true"]::after,
 [data-jump-section][data-active="true"]::after{
-  content:"Selected Surface";
+  content:"Selected Preview";
   border-color:color-mix(in srgb,var(--demo),transparent 35%);
   background:color-mix(in srgb,var(--demo),rgba(2,7,18,.72) 78%);
 }
 
 .jump-surface[data-muted="true"],
 [data-jump-section][data-muted="true"]{
-  opacity:.58;
-  filter:saturate(.68) grayscale(.18);
+  opacity:.60;
+  filter:saturate(.70) grayscale(.14);
   border-color:color-mix(in srgb,var(--demo),transparent 82%);
   background:
     radial-gradient(circle at 12% 0%,color-mix(in srgb,var(--demo),transparent 94%),transparent 12rem),
     rgba(255,255,255,.022);
 }
 
+.jump-surface[data-muted="true"] strong,
+[data-jump-section][data-muted="true"] strong{
+  color:rgba(255,244,216,.80);
+}
+
+.jump-surface[data-muted="true"] p,
+[data-jump-section][data-muted="true"] p{
+  color:rgba(230,238,255,.66);
+}
+
 .jump-surface[data-muted="true"]:hover,
 [data-jump-section][data-muted="true"]:hover{
-  opacity:.78;
-  filter:saturate(.82) grayscale(.08);
+  opacity:.82;
+  filter:saturate(.86) grayscale(.04);
+}
+
+.jump-surface .actions [data-return-to-blueprint],
+.jump-surface .actions button[data-open-blueprint],
+[data-jump-section] .actions [data-return-to-blueprint],
+[data-jump-section] .actions button[data-open-blueprint]{
+  border-color:rgba(141,216,255,.48);
+  color:rgba(241,246,255,.92);
+  background:
+    radial-gradient(circle at 12% 0%,rgba(141,216,255,.16),transparent 9rem),
+    rgba(141,216,255,.08);
 }
 
 .route-choice-board{
@@ -1546,11 +1702,24 @@ footer{
   .estate-blueprint{
     min-height:51rem;
   }
+  .estate-blueprint[data-scan-mode="true"]::after{
+    right:.5rem;
+    bottom:.5rem;
+    font-size:.48rem;
+  }
   .room-shape{
     padding:.38rem;
   }
   .room-shape strong{font-size:.62rem}
   .room-shape span{display:none}
+  .estate-blueprint[data-scan-mode="true"] .room-shape strong,
+  .estate-blueprint[data-scan-mode="true"] [data-blueprint-room] strong{
+    font-size:.64rem;
+  }
+  .estate-blueprint[data-scan-mode="true"] .room-shape[data-active="true"]::after,
+  .estate-blueprint[data-scan-mode="true"] [data-blueprint-room][data-active="true"]::after{
+    display:none;
+  }
   .room-shape[data-room="compass"]{--x:6;--y:4;--w:42;--h:8}
   .room-shape[data-room="guide"]{--x:52;--y:4;--w:42;--h:8}
   .room-shape[data-room="main"]{--x:6;--y:15;--w:42;--h:10}

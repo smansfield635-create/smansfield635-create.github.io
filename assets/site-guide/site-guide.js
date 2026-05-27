@@ -1,6 +1,6 @@
 // TARGET FILE: /assets/site-guide/site-guide.js
 // TNT FULL-FILE REPLACEMENT
-// SITE_GUIDE_BLUEPRINT_JUMP_PAD_CONTROLLER_TNT_v1
+// SITE_GUIDE_ROUTE_CHOICE_BOARD_CONTROLLER_TNT_v1
 //
 // Owns:
 // - GUIDE_FOCUS_CONTROLLER
@@ -11,11 +11,14 @@
 // - Return to Orbit reset
 // - blueprint jump-pad controller
 // - local scratch-surface activation
+// - Route Choice Board controller
+// - Visitor Position card selection
+// - Destination Goal card selection
+// - Recommended Path rail rendering
 // - focus lock
 // - scroll-aware activation
 // - blueprint room selection
 // - category selection
-// - route planner
 // - 4x4 matrix selection
 // - 16x16 diagnostic spectrum generation / selection
 // - status globals
@@ -35,9 +38,9 @@
 
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CONTRACT = "SITE_GUIDE_BLUEPRINT_JUMP_PAD_CONTROLLER_TNT_v1";
-  const PREVIOUS_CONTRACT = "SITE_GUIDE_THREE_FILE_FOCUS_ANIMATION_TNT_v1";
-  const HTML_CONTRACT = "SITE_GUIDE_BLUEPRINT_JUMP_PAD_HTML_TNT_v1";
+  const CONTRACT = "SITE_GUIDE_ROUTE_CHOICE_BOARD_CONTROLLER_TNT_v1";
+  const PREVIOUS_CONTRACT = "SITE_GUIDE_BLUEPRINT_JUMP_PAD_CONTROLLER_TNT_v1";
+  const HTML_CONTRACT = "SITE_GUIDE_ROUTE_CHOICE_BOARD_HTML_TNT_v1";
   const STATUS_GLOBAL = "DGB_SITE_GUIDE_STATUS";
   const CONTROLLER_GLOBAL = "DGB_GUIDE_FOCUS_CONTROLLER";
 
@@ -53,6 +56,8 @@
     categoryButton: "[data-category-button]",
     categoryPanel: "[data-category-panel]",
     demoCard: "[data-demo-card]",
+    routeStart: "[data-route-start]",
+    routeGoal: "[data-route-goal]",
     matrixCell: "[data-matrix-cell]",
     spectrumRoot: ".spectrum-16x16",
     spectrumCell: "[data-spectrum-cell]",
@@ -88,6 +93,8 @@
   });
 
   const BLUEPRINT_DEFAULT_ROOM = "atrium";
+  const DEFAULT_ROUTE_START = "new";
+  const DEFAULT_ROUTE_GOAL = "orientation";
 
   const blueprintData = Object.freeze({
     compass: {
@@ -209,6 +216,7 @@
       copy: "Use Guide Desk for the map of meaning, then move through the regular website toward usable public value.",
       path: [["Guide Desk", "/site-guide/"], ["Main Hall", "/home/"], ["Product Gallery", "/products/"]]
     },
+
     "mirrorland:orientation": {
       title: "Map / Portal → Main Menu → Compass Desk",
       copy: "When you are inside Mirrorland and need ordinary-site orientation, open Main Menu and exit to Compass Desk.",
@@ -234,6 +242,7 @@
       copy: "Products are regular website rooms. Use Main Menu to exit Mirrorland and open Product Gallery.",
       path: [["Map / Portal", "#guide-orbit"], ["Main Menu", "/products/"], ["Product Gallery", "/products/"]]
     },
+
     "proof:orientation": {
       title: "The Lab → Guide Desk → Compass Desk",
       copy: "When proof creates too much detail, use Guide Desk for the construction narrative and Compass Desk for orientation.",
@@ -259,6 +268,7 @@
       copy: "Use proof to support usable public value, then move to Product Gallery.",
       path: [["The Lab", "/gauges/"], ["Product Gallery", "/products/"]]
     },
+
     "frontier:orientation": {
       title: "Frontier Workshop Yard → Guide Desk",
       copy: "When Frontier feels large, return to Guide Desk to understand how applied systems fit the estate.",
@@ -294,6 +304,8 @@
     activeJumpSection: "",
     activeCategory: "presentation",
     activeDiagnosticCell: "",
+    activeRouteStart: DEFAULT_ROUTE_START,
+    activeRouteGoal: DEFAULT_ROUTE_GOAL,
     focusLocked: false,
     scrollFocusEnabled: true,
     lastAction: "boot",
@@ -666,12 +678,21 @@
 
   function activateCardWithinGroup(card) {
     const group = card.closest("[data-select-group]");
-    const cards = group ? all(SELECTORS.demoCard, group) : all(SELECTORS.demoCard);
+    const cards = group ? all(SELECTORS.demoCard, group).filter((node) => !isControllerOwnedCard(node)) : all(SELECTORS.demoCard).filter((node) => !isControllerOwnedCard(node));
 
     setExclusive(cards, card);
 
     state.lastAction = `demo-card:${card.textContent.trim().slice(0, 48)}`;
     publishStatus();
+  }
+
+  function isControllerOwnedCard(node) {
+    return Boolean(
+      node.matches(SELECTORS.routeStart) ||
+      node.matches(SELECTORS.routeGoal) ||
+      node.matches(SELECTORS.jumpSection) ||
+      node.classList.contains("jump-surface")
+    );
   }
 
   function activateMatrixCell(cell) {
@@ -697,12 +718,86 @@
     publishStatus();
   }
 
+  function selectedRouteStart() {
+    const activeCard = one(`${SELECTORS.routeStart}[data-active="true"]`);
+    if (activeCard) return activeCard.getAttribute("data-route-start") || state.activeRouteStart || DEFAULT_ROUTE_START;
+
+    const select = one(SELECTORS.startSelect);
+    if (select && select.value) return select.value;
+
+    return state.activeRouteStart || DEFAULT_ROUTE_START;
+  }
+
+  function selectedRouteGoal() {
+    const activeCard = one(`${SELECTORS.routeGoal}[data-active="true"]`);
+    if (activeCard) return activeCard.getAttribute("data-route-goal") || state.activeRouteGoal || DEFAULT_ROUTE_GOAL;
+
+    const select = one(SELECTORS.goalSelect);
+    if (select && select.value) return select.value;
+
+    return state.activeRouteGoal || DEFAULT_ROUTE_GOAL;
+  }
+
+  function activateRouteStart(value, options = {}) {
+    const clean = plans[`${value}:${state.activeRouteGoal || DEFAULT_ROUTE_GOAL}`] || all(SELECTORS.routeStart).some((node) => node.getAttribute("data-route-start") === value)
+      ? String(value || DEFAULT_ROUTE_START)
+      : DEFAULT_ROUTE_START;
+
+    const card = one(`${SELECTORS.routeStart}[data-route-start="${cssEscape(clean)}"]`);
+
+    state.activeRouteStart = clean;
+    state.lastAction = `route-start:${clean}`;
+
+    if (card) {
+      setExclusive(all(SELECTORS.routeStart), card, { muteSiblings: options.mute !== false });
+    }
+
+    if (options.render !== false) renderPlan();
+    if (options.publish !== false) publishStatus();
+  }
+
+  function activateRouteGoal(value, options = {}) {
+    const clean = plans[`${state.activeRouteStart || DEFAULT_ROUTE_START}:${value}`] || all(SELECTORS.routeGoal).some((node) => node.getAttribute("data-route-goal") === value)
+      ? String(value || DEFAULT_ROUTE_GOAL)
+      : DEFAULT_ROUTE_GOAL;
+
+    const card = one(`${SELECTORS.routeGoal}[data-route-goal="${cssEscape(clean)}"]`);
+
+    state.activeRouteGoal = clean;
+    state.lastAction = `route-goal:${clean}`;
+
+    if (card) {
+      setExclusive(all(SELECTORS.routeGoal), card, { muteSiblings: options.mute !== false });
+    }
+
+    if (options.render !== false) renderPlan();
+    if (options.publish !== false) publishStatus();
+  }
+
   function clearJumpSections() {
     all(`${SELECTORS.jumpSection}, ${SELECTORS.jumpSurface}`).forEach((node) => {
       setActive(node, false);
       setMuted(node, false);
       setBool(node, "data-scroll-active", false);
     });
+  }
+
+  function resetRouteChoiceBoard(options = {}) {
+    activateRouteStart(DEFAULT_ROUTE_START, {
+      mute: true,
+      render: false,
+      publish: false
+    });
+
+    activateRouteGoal(DEFAULT_ROUTE_GOAL, {
+      mute: true,
+      render: false,
+      publish: false
+    });
+
+    renderPlan();
+
+    if (options.publish !== false) publishStatus();
   }
 
   function returnToOrbit() {
@@ -751,6 +846,8 @@
     state.focusLocked = false;
     state.scrollFocusEnabled = true;
 
+    resetRouteChoiceBoard({ publish: false });
+
     window.setTimeout(() => scrollToTarget(SELECTORS.guideOrbit, "start"), 40);
     publishStatus();
   }
@@ -784,16 +881,20 @@
   }
 
   function renderPlan() {
-    const start = one(SELECTORS.startSelect);
-    const goal = one(SELECTORS.goalSelect);
     const title = one(SELECTORS.planTitle);
     const copy = one(SELECTORS.planCopy);
     const rail = one(SELECTORS.pathRail);
 
-    if (!start || !goal || !title || !copy || !rail) return;
+    if (!title || !copy || !rail) return;
 
-    const key = `${start.value}:${goal.value}`;
-    const plan = plans[key] || plans["new:orientation"];
+    const start = selectedRouteStart();
+    const goal = selectedRouteGoal();
+
+    state.activeRouteStart = start;
+    state.activeRouteGoal = goal;
+
+    const key = `${start}:${goal}`;
+    const plan = plans[key] || plans[`${DEFAULT_ROUTE_START}:${DEFAULT_ROUTE_GOAL}`];
 
     title.textContent = plan.title;
     copy.textContent = plan.copy;
@@ -868,6 +969,18 @@
       }, { signal });
     });
 
+    all(SELECTORS.routeStart).forEach((card) => {
+      card.addEventListener("click", () => {
+        activateRouteStart(card.getAttribute("data-route-start") || DEFAULT_ROUTE_START);
+      }, { signal });
+    });
+
+    all(SELECTORS.routeGoal).forEach((card) => {
+      card.addEventListener("click", () => {
+        activateRouteGoal(card.getAttribute("data-route-goal") || DEFAULT_ROUTE_GOAL);
+      }, { signal });
+    });
+
     all(SELECTORS.categoryButton).forEach((button) => {
       button.addEventListener("click", () => {
         activateCategory(button.getAttribute("data-category") || "presentation");
@@ -875,7 +988,7 @@
     });
 
     all(SELECTORS.demoCard).forEach((card) => {
-      if (card.matches(SELECTORS.jumpSection) || card.classList.contains("jump-surface")) return;
+      if (isControllerOwnedCard(card)) return;
       card.addEventListener("click", () => activateCardWithinGroup(card), { signal });
     });
 
@@ -922,8 +1035,19 @@
     const start = one(SELECTORS.startSelect);
     const goal = one(SELECTORS.goalSelect);
 
-    if (start) start.addEventListener("change", renderPlan, { signal });
-    if (goal) goal.addEventListener("change", renderPlan, { signal });
+    if (start) {
+      start.addEventListener("change", () => {
+        state.activeRouteStart = start.value || DEFAULT_ROUTE_START;
+        renderPlan();
+      }, { signal });
+    }
+
+    if (goal) {
+      goal.addEventListener("change", () => {
+        state.activeRouteGoal = goal.value || DEFAULT_ROUTE_GOAL;
+        renderPlan();
+      }, { signal });
+    }
   }
 
   function isOpenBlueprintTrigger(node) {
@@ -960,6 +1084,7 @@
       guideDesk: true,
       threeFileArchitecture: true,
       focusController: true,
+
       activeLens: state.activeLens,
       activeFeature: state.activeFeature,
       activeSection: state.activeSection,
@@ -967,8 +1092,18 @@
       activeJumpSection: state.activeJumpSection,
       activeCategory: state.activeCategory,
       activeDiagnosticCell: state.activeDiagnosticCell,
+      activeRouteStart: state.activeRouteStart,
+      activeRouteGoal: state.activeRouteGoal,
       focusLocked: state.focusLocked,
       scrollFocusEnabled: state.scrollFocusEnabled,
+
+      routeChoiceBoardController: true,
+      nativeSelectPlanner: false,
+      routeChoiceBoardCardsActive: true,
+      routeChoiceBoardUpdatesPath: true,
+      visitorPositionCards: true,
+      destinationGoalCards: true,
+      recommendedPathRail: true,
 
       blueprintJumpPadController: true,
       blueprintRoomReadsJumpTarget: true,
@@ -1015,6 +1150,8 @@
       document.documentElement.dataset.siteGuideActiveFeature = state.activeFeature;
       document.documentElement.dataset.siteGuideActiveBlueprintRoom = state.activeBlueprintRoom;
       document.documentElement.dataset.siteGuideActiveJumpSection = state.activeJumpSection;
+      document.documentElement.dataset.siteGuideActiveRouteStart = state.activeRouteStart;
+      document.documentElement.dataset.siteGuideActiveRouteGoal = state.activeRouteGoal;
       document.documentElement.dataset.siteGuideFocusLocked = String(state.focusLocked);
       document.documentElement.dataset.siteGuideReturnToOrbitReset = "true";
       document.documentElement.dataset.siteGuideScrollActivation = String(Boolean(state.observer));
@@ -1023,6 +1160,9 @@
       document.documentElement.dataset.siteGuideBlueprintRoomReadsJumpTarget = "true";
       document.documentElement.dataset.siteGuideReturnToBlueprintController = "true";
       document.documentElement.dataset.siteGuideReturnToOrbitClearsJumpSections = "true";
+      document.documentElement.dataset.siteGuideRouteChoiceBoardController = "true";
+      document.documentElement.dataset.siteGuideNativeSelectPlanner = "false";
+      document.documentElement.dataset.siteGuideRouteChoiceBoardUpdatesPath = "true";
       document.documentElement.dataset.siteGuideDiagnosticScope256 = "true";
     } catch (_error) {}
 
@@ -1059,6 +1199,11 @@
       activateBlueprintRoom,
       activateJumpSection,
       activateCategory,
+      selectedRouteStart,
+      selectedRouteGoal,
+      activateRouteStart,
+      activateRouteGoal,
+      resetRouteChoiceBoard,
       renderPlan,
       publishStatus,
       stop
@@ -1086,6 +1231,8 @@
     state.activeJumpSection = "";
     state.activeCategory = "presentation";
     state.activeDiagnosticCell = "";
+    state.activeRouteStart = selectedRouteStart() || DEFAULT_ROUTE_START;
+    state.activeRouteGoal = selectedRouteGoal() || DEFAULT_ROUTE_GOAL;
     state.focusLocked = false;
     state.scrollFocusEnabled = true;
     state.lastAction = "mounted";
@@ -1096,13 +1243,15 @@
 
     switchLens("presentation");
     activateCategory("presentation");
+
     activateBlueprintRoom(BLUEPRINT_DEFAULT_ROOM, {
       mute: false,
       scroll: false,
       lock: false,
       activateJump: false
     });
-    renderPlan();
+
+    resetRouteChoiceBoard({ publish: false });
     setupScrollObserver();
 
     state.focusLocked = false;

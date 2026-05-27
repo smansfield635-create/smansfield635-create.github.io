@@ -1,25 +1,45 @@
 // TARGET FILE: /assets/manor-blueprint/manor.blueprint.js
 // TNT FULL-FILE REPLACEMENT
-// MIRRORLAND_BLUEPRINT_ESTATE_ROOM_LANGUAGE_REGISTRY_RUNTIME_CSS_TNT_v1
+// MANOR_BLUEPRINT_VALUE_CATEGORY_ESTATE_LANGUAGE_RUNTIME_TNT_v1
 //
-// Runtime portion.
 // Purpose:
-// - Render visitor-facing estate-room language.
-// - Hide route/file/wing/role metadata from public cards.
-// - Preserve Map / Portal blip, overlay, drag, joystick scroll, and menu split.
+// Render the Manor Blueprint Portal as a value-category estate map instead
+// of a route/path/cardinal file directory.
 //
 // Previous runtime contract:
 // MANOR_BLUEPRINT_MENU_CATEGORY_OWNERSHIP_RUNTIME_TNT_v1
+//
+// Compatibility API contract preserved:
+// MANOR_BLUEPRINT_FIXED_DRAGGABLE_BUBBLE_FULLSCREEN_MAP_INSTRUCTIONS_TOGGLE_JS_TNT_v1
+//
+// Owns:
+// - Map / Portal blip
+// - Mirrorland Doors / Main Menu / Instructions lenses
+// - value-category estate room rendering
+// - current-room detection
+// - visitor-facing room labels
+// - hidden builder path / visible room identity separation
+// - full-viewport drag
+// - strong-visible joystick scroll
+// - status / receipt globals
+//
+// Does not own:
+// - registry source truth
+// - CSS source truth
+// - page content
+// - planet renderers
+// - Frontier node animation
+// - Gauges logic
+// - generated images
+// - GraphicBox
 
 (() => {
   "use strict";
 
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CONTRACT = "MIRRORLAND_BLUEPRINT_ESTATE_ROOM_LANGUAGE_REGISTRY_RUNTIME_CSS_TNT_v1";
+  const CONTRACT = "MANOR_BLUEPRINT_VALUE_CATEGORY_ESTATE_LANGUAGE_RUNTIME_TNT_v1";
   const PREVIOUS_CONTRACT = "MANOR_BLUEPRINT_MENU_CATEGORY_OWNERSHIP_RUNTIME_TNT_v1";
-  const PRIOR_CONTRACT = "MANOR_BLUEPRINT_MIRRORLAND_DOORS_SINGLE_ENTRYWAY_RUNTIME_TNT_v1";
-  const LEGACY_CONTRACT = "MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_POSITION_RENEWAL_TNT_v1";
   const API_CONTRACT = "MANOR_BLUEPRINT_FIXED_DRAGGABLE_BUBBLE_FULLSCREEN_MAP_INSTRUCTIONS_TOGGLE_JS_TNT_v1";
 
   const STATUS_GLOBAL = "DGB_MANOR_BLUEPRINT_STATUS";
@@ -35,36 +55,17 @@
   const MIN_SCROLL_SPEED = 8;
   const MAX_SCROLL_SPEED = 56;
   const JOYSTICK_SCROLL_FORCE_MULTIPLIER = 1.4;
-  const JOYSTICK_SCROLL_FORCE_INCREASE_PERCENT = 40;
   const JOYSTICK_SCROLL_FORCE_PROFILE = "strong-visible";
   const MOBILE_BREAKPOINT = 760;
 
-  const CARDINAL_ORDER = Object.freeze(["north", "east", "center", "west", "south"]);
-
-  const CARDINAL_LABELS = Object.freeze({
-    north: { title: "North Hall", meaning: "Front doors, orientation, and return rooms" },
-    east: { title: "East Gallery", meaning: "Story rooms, worlds, studies, and living doors" },
-    center: { title: "Center Foyer", meaning: "Arrival, threshold, and current position" },
-    west: { title: "West Grounds", meaning: "Workshop yard, public rooms, and applied systems" },
-    south: { title: "South Library", meaning: "Law, testing, proof, and measurement rooms" }
-  });
-
-  const MIRRORLAND_PREFIXES = Object.freeze([
-    "/showroom/",
-    "/characters/",
-    "/nine-summits/universe/",
-    "/explore/frontier/"
-  ]);
-
-  const REGULAR_WEBSITE_PREFIXES = Object.freeze([
-    "/door/",
-    "/home/",
-    "/products/",
-    "/laws/",
-    "/governance/",
-    "/gauges/",
-    "/about-this-underdog/",
-    "/site-guide/"
+  const FALLBACK_CATEGORIES = Object.freeze([
+    { key: "arrival", label: "Arrival", shortLabel: "Arrival", purpose: "Orient, enter, and cross the public threshold.", order: 10 },
+    { key: "world-study", label: "World Study", shortLabel: "Worlds", purpose: "Study worlds, maps, planetary rooms, and living environments.", order: 20 },
+    { key: "control-instruments", label: "Control / Instruments", shortLabel: "Controls", purpose: "Operate cockpits, instruments, labs, inspections, and readiness surfaces.", order: 30 },
+    { key: "workshop-frontier", label: "Workshop / Frontier Systems", shortLabel: "Workshop", purpose: "Pressure-test applied systems before they become living-world infrastructure.", order: 40 },
+    { key: "law-governance-proof", label: "Law / Governance / Proof", shortLabel: "Proof", purpose: "Study rules, boundaries, governance, proof, and accountability.", order: 50 },
+    { key: "public-product-value", label: "Public / Product Value", shortLabel: "Products", purpose: "Open usable offers, public identity, tools, and visitor-facing value.", order: 60 },
+    { key: "story-cast-universe", label: "Story / Cast / Universe", shortLabel: "Story", purpose: "Enter characters, story rooms, universe context, and narrative immersion.", order: 70 }
   ]);
 
   let bubble = null;
@@ -79,29 +80,21 @@
     pointerId: null,
     pointerStartX: 0,
     pointerStartY: 0,
-    pointerClientX: 0,
     pointerClientY: 0,
     baseX: 0,
     baseY: 0,
     position: { x: 0, y: 0 },
     positionSource: "boot",
     positionWasClamped: false,
-    localStorageRepaired: false,
     joystickActive: false,
     joystickDirection: "none",
     joystickSpeed: 0,
     lastAction: "boot",
-    lastRoomSummary: null,
     errors: []
   };
 
-  if (
-    window[CONTROLLER_GLOBAL] &&
-    typeof window[CONTROLLER_GLOBAL].stop === "function"
-  ) {
-    try {
-      window[CONTROLLER_GLOBAL].stop();
-    } catch (_error) {}
+  if (window[CONTROLLER_GLOBAL] && typeof window[CONTROLLER_GLOBAL].stop === "function") {
+    try { window[CONTROLLER_GLOBAL].stop(); } catch (_error) {}
   }
 
   function nowIso() {
@@ -109,16 +102,150 @@
   }
 
   function normalizePath(path) {
-    const clean = String(path || "/").split("?")[0].split("#")[0] || "/";
+    let clean = String(path || "/").split("?")[0].split("#")[0] || "/";
+    if (!clean.startsWith("/")) clean = "/" + clean;
+    clean = clean.replace(/\/{2,}/g, "/");
     return clean === "/" ? "/" : clean.replace(/\/?$/, "/");
   }
 
-  function slug(value) {
-    return String(value || "")
-      .toLowerCase()
-      .replace(/&/g, "and")
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "") || "room";
+  function escapeHtml(value) {
+    return String(value == null ? "" : value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
+  }
+
+  function registryApi() {
+    return window.DGB_MANOR_BLUEPRINT_REGISTRY || null;
+  }
+
+  function registryRoutes() {
+    const api = registryApi();
+
+    if (Array.isArray(api?.routes)) return api.routes;
+    if (Array.isArray(window.DGB_MANOR_BLUEPRINT_ROUTE_REGISTRY)) return window.DGB_MANOR_BLUEPRINT_ROUTE_REGISTRY;
+
+    return [];
+  }
+
+  function categories() {
+    const api = registryApi();
+    const source = Array.isArray(api?.valueCategories) ? api.valueCategories : FALLBACK_CATEGORIES;
+    return source.slice().sort((a, b) => Number(a.order || 999) - Number(b.order || 999));
+  }
+
+  function instructions() {
+    const api = registryApi();
+    const source = Array.isArray(api?.instructions)
+      ? api.instructions
+      : Array.isArray(window.DGB_MANOR_BLUEPRINT_INSTRUCTIONS)
+        ? window.DGB_MANOR_BLUEPRINT_INSTRUCTIONS
+        : [];
+
+    if (source.length) return source;
+
+    return [
+      {
+        title: "File Name Is Not Room Identity",
+        body: "Builder paths stay hidden. The visitor sees the estate-room identity."
+      },
+      {
+        title: "Value Category First",
+        body: "Rooms are grouped by the value they give the visitor."
+      },
+      {
+        title: "ZIONTS / Zience",
+        body: "The route under Earth displays as ZIONTS, pronounced Zience."
+      }
+    ];
+  }
+
+  function routeFromRaw(input) {
+    const path = normalizePath(input.path || input.href || "/");
+    const publicRoomName = String(input.publicRoomName || input.title || input.shortTitle || "Estate Room");
+    const valueCategory = String(input.valueCategory || "arrival");
+
+    return Object.freeze({
+      routeId: String(input.routeId || input.id || publicRoomName.toLowerCase().replace(/[^a-z0-9]+/g, "-")),
+      path,
+      href: path,
+      builderPathHidden: String(input.builderPathHidden || path),
+      technicalLabelHidden: String(input.technicalLabelHidden || input.title || path),
+
+      title: String(input.title || publicRoomName),
+      shortTitle: String(input.shortTitle || publicRoomName),
+      publicRoomName,
+      estateLocation: String(input.estateLocation || input.wing || "Estate Room"),
+      valueCategory,
+      valueCategoryLabel: String(input.valueCategoryLabel || categoryLabel(valueCategory)),
+      valueCategoryShortLabel: String(input.valueCategoryShortLabel || categoryShortLabel(valueCategory)),
+      visitorPurpose: String(input.visitorPurpose || input.description || "Open this estate room."),
+      visitorAction: String(input.visitorAction || "Enter Room"),
+      shortContext: String(input.shortContext || input.visitorPurpose || input.description || "Open this estate room."),
+      deepContext: String(input.deepContext || input.body || input.shortContext || input.visitorPurpose || "This room has a visitor-facing purpose."),
+      estateMeaning: String(input.estateMeaning || input.deepContext || input.shortContext || input.visitorPurpose || "This room has a visitor-facing purpose."),
+
+      menu: String(input.menu || (input.mirrorlandDoor || input.mirrorlandAligned ? "mirrorland" : "main")),
+      group: String(input.group || (input.menu === "main" ? "Main Menu / Website Options" : "Mirrorland Doors")),
+      parent: input.parent ? normalizePath(input.parent) : "",
+      priority: Number.isFinite(Number(input.priority)) ? Number(input.priority) : 50,
+      showInBlueprint: input.showInBlueprint !== false,
+      mirrorlandAligned: Boolean(input.mirrorlandAligned || input.mirrorlandDoor),
+      mirrorlandDoor: Boolean(input.mirrorlandDoor),
+      websiteOption: Boolean(input.websiteOption)
+    });
+  }
+
+  function categoryLabel(key) {
+    return categories().find((item) => item.key === key)?.label || "Arrival";
+  }
+
+  function categoryShortLabel(key) {
+    return categories().find((item) => item.key === key)?.shortLabel || "Arrival";
+  }
+
+  function allRoutes() {
+    return registryRoutes().map(routeFromRaw).filter((item) => item.showInBlueprint);
+  }
+
+  function routesForLens(lens) {
+    const menu = lens === "main" ? "main" : "mirrorland";
+
+    return allRoutes()
+      .filter((item) => item.menu === menu)
+      .sort((a, b) => b.priority - a.priority || a.publicRoomName.localeCompare(b.publicRoomName));
+  }
+
+  function currentRoute(routes) {
+    const path = normalizePath(window.location.pathname || "/");
+    const source = routes && routes.length ? routes : allRoutes();
+
+    return source.find((item) => item.path === path) ||
+      source
+        .filter((item) => item.path !== "/" && path.startsWith(item.path))
+        .sort((a, b) => b.path.length - a.path.length || b.priority - a.priority)[0] ||
+      source.find((item) => item.path === "/") ||
+      source[0] ||
+      null;
+  }
+
+  function groupedByValueCategory(routes) {
+    const grouped = new Map();
+
+    for (const category of categories()) grouped.set(category.key, []);
+
+    for (const route of routes) {
+      if (!grouped.has(route.valueCategory)) grouped.set(route.valueCategory, []);
+      grouped.get(route.valueCategory).push(route);
+    }
+
+    for (const [key, list] of grouped.entries()) {
+      grouped.set(key, list.sort((a, b) => b.priority - a.priority || a.publicRoomName.localeCompare(b.publicRoomName)));
+    }
+
+    return grouped;
   }
 
   function viewport() {
@@ -140,18 +267,14 @@
 
   function safeMargins() {
     return isMobile()
-      ? { left: 14, right: 14, top: 14, bottom: 14, mode: "mobile-full-viewport" }
-      : { left: 16, right: 16, top: 16, bottom: 16, mode: "desktop-full-viewport" };
+      ? { left: 14, right: 14, top: 14, bottom: 14 }
+      : { left: 16, right: 16, top: 16, bottom: 16 };
   }
 
   function bubbleSize() {
     if (!bubble) return { width: 68, height: 68 };
     const rect = bubble.getBoundingClientRect();
-
-    return {
-      width: rect.width > 10 ? rect.width : 68,
-      height: rect.height > 10 ? rect.height : 68
-    };
+    return { width: rect.width > 10 ? rect.width : 68, height: rect.height > 10 ? rect.height : 68 };
   }
 
   function defaultPosition() {
@@ -177,10 +300,8 @@
 
     const rawX = Number(pos.x);
     const rawY = Number(pos.y);
-
     const sourceX = Number.isFinite(rawX) ? rawX : maxX;
     const sourceY = Number.isFinite(rawY) ? rawY : minY;
-
     const x = Math.min(Math.max(sourceX, minX), maxX);
     const y = Math.min(Math.max(sourceY, minY), maxY);
 
@@ -191,40 +312,14 @@
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (!raw) return null;
-
       const parsed = JSON.parse(raw);
-      if (!parsed || typeof parsed !== "object") return null;
-
-      const x = Number(parsed.x);
-      const y = Number(parsed.y);
-
+      const x = Number(parsed?.x);
+      const y = Number(parsed?.y);
       if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
-
-      return { x, y, contract: String(parsed.contract || "") };
+      return { x, y };
     } catch (_error) {
       return null;
     }
-  }
-
-  function clearStoredPosition() {
-    try {
-      window.localStorage.removeItem(STORAGE_KEY);
-    } catch (_error) {}
-  }
-
-  function storedPositionAllowed(stored) {
-    if (!stored) return false;
-
-    const acceptedContract =
-      stored.contract === CONTRACT ||
-      stored.contract === PREVIOUS_CONTRACT ||
-      stored.contract === PRIOR_CONTRACT ||
-      stored.contract === LEGACY_CONTRACT;
-
-    if (!acceptedContract) return false;
-
-    const clamped = clampPosition(stored);
-    return !clamped.clamped;
   }
 
   function savePosition(pos) {
@@ -233,24 +328,6 @@
         x: Math.round(pos.x),
         y: Math.round(pos.y),
         contract: CONTRACT,
-        previousContract: PREVIOUS_CONTRACT,
-        priorContract: PRIOR_CONTRACT,
-        legacyContract: LEGACY_CONTRACT,
-        mapBlipSingleEntryway: true,
-        mirrorlandEntryway: "map-portal-blip",
-        estateRoomLanguageActive: true,
-        publicLabelsBound: true,
-        routePathHiddenFromPublicCards: true,
-        mainMenuWebsiteOptionsOnly: true,
-        mirrorlandDoorsCategoryOnly: true,
-        supportDoesNotEqualOwnership: true,
-        fullViewportDrag: true,
-        joystickScrollActive: true,
-        joystickScrollForceProfile: JOYSTICK_SCROLL_FORCE_PROFILE,
-        joystickMinScrollSpeed: MIN_SCROLL_SPEED,
-        joystickMaxScrollSpeed: MAX_SCROLL_SPEED,
-        joystickScrollForceMultiplier: JOYSTICK_SCROLL_FORCE_MULTIPLIER,
-        joystickScrollForceIncreasePercent: JOYSTICK_SCROLL_FORCE_INCREASE_PERCENT,
         time: nowIso()
       }));
     } catch (_error) {}
@@ -275,752 +352,12 @@
     bubble.style.setProperty("pointer-events", "auto", "important");
 
     if (shouldSave) savePosition(state.position);
-
     publishStatus();
   }
 
-  function queryForcesReset() {
-    try {
-      const params = new URLSearchParams(window.location.search || "");
-      return params.get("dgbBlueprintReset") === "1" || params.get("dgbBlueprintTop") === "1";
-    } catch (_error) {
-      return false;
-    }
-  }
-
   function initializePosition() {
-    if (queryForcesReset()) {
-      clearStoredPosition();
-      state.localStorageRepaired = true;
-      applyPosition(defaultPosition(), "reset-query", true);
-      return;
-    }
-
     const stored = readStoredPosition();
-
-    if (storedPositionAllowed(stored)) {
-      applyPosition(stored, "stored", false);
-      return;
-    }
-
-    if (stored) {
-      clearStoredPosition();
-      state.localStorageRepaired = true;
-    }
-
-    applyPosition(defaultPosition(), "upper-right-safe-anchor", true);
-  }
-
-  function escapeHtml(value) {
-    return String(value == null ? "" : value)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#39;");
-  }
-
-  function registry() {
-    return window.DGB_MANOR_BLUEPRINT_REGISTRY ||
-      window.DGB_MANOR_BLUEPRINT_ROUTE_REGISTRY ||
-      null;
-  }
-
-  function pathStartsWith(path, prefix) {
-    const cleanPath = normalizePath(path);
-    const cleanPrefix = normalizePath(prefix);
-
-    if (cleanPrefix === "/") return cleanPath === "/";
-    return cleanPath === cleanPrefix || cleanPath.startsWith(cleanPrefix);
-  }
-
-  function isRegularWebsitePath(path) {
-    const clean = normalizePath(path);
-    if (clean === "/") return true;
-    return REGULAR_WEBSITE_PREFIXES.some((prefix) => pathStartsWith(clean, prefix));
-  }
-
-  function isMirrorlandCategoryPath(path) {
-    const clean = normalizePath(path);
-    if (isRegularWebsitePath(clean)) return false;
-    return MIRRORLAND_PREFIXES.some((prefix) => pathStartsWith(clean, prefix));
-  }
-
-  function mirrorlandEntered() {
-    return isMirrorlandCategoryPath(window.location.pathname || "/");
-  }
-
-  function frontierActive() {
-    return pathStartsWith(window.location.pathname || "/", "/explore/frontier/");
-  }
-
-  function classifyCardinalFromPathAndTitle(path, title, group) {
-    const p = normalizePath(path);
-    const t = String(title || "").toLowerCase();
-    const g = String(group || "").toLowerCase();
-
-    if (
-      p === "/" ||
-      p.startsWith("/door/") ||
-      p.startsWith("/home/") ||
-      p.startsWith("/site-guide/") ||
-      t.includes("compass") ||
-      t.includes("door") ||
-      t.includes("home") ||
-      t.includes("guide") ||
-      g.includes("main menu") ||
-      g.includes("website options")
-    ) {
-      return "north";
-    }
-
-    if (
-      p.startsWith("/explore/frontier/") ||
-      p.startsWith("/products/") ||
-      p.startsWith("/about-this-underdog/") ||
-      t.includes("frontier") ||
-      t.includes("product") ||
-      t.includes("sean") ||
-      t.includes("workshop") ||
-      t.includes("gallery")
-    ) {
-      return "west";
-    }
-
-    if (
-      p.startsWith("/laws/") ||
-      p.startsWith("/gauges/") ||
-      p.startsWith("/governance/") ||
-      t.includes("law") ||
-      t.includes("lab") ||
-      t.includes("council") ||
-      t.includes("gauge") ||
-      t.includes("governance")
-    ) {
-      return "south";
-    }
-
-    if (
-      p.startsWith("/showroom/") ||
-      p.startsWith("/characters/") ||
-      p.startsWith("/nine-summits/") ||
-      p.includes("/audralia/") ||
-      p.includes("/h-earth/") ||
-      t.includes("atrium") ||
-      t.includes("atlas") ||
-      t.includes("zionts") ||
-      t.includes("audralia") ||
-      t.includes("world") ||
-      t.includes("portrait") ||
-      t.includes("universe") ||
-      g.includes("mirrorland")
-    ) {
-      return "east";
-    }
-
-    return "center";
-  }
-
-  function defaultEstateFromPath(path, title) {
-    const p = normalizePath(path);
-    const t = String(title || "").toLowerCase();
-
-    if (p === "/" || t.includes("compass")) return "The Compass Desk";
-    if (p.startsWith("/door/")) return "The Front Door";
-    if (p.startsWith("/home/")) return "The Hearth";
-    if (p.startsWith("/site-guide/")) return "The Guide Desk";
-    if (p.startsWith("/products/")) return "The Product Gallery";
-    if (p.startsWith("/laws/")) return "The Law Library";
-    if (p.startsWith("/governance/")) return "The Council Room";
-    if (p.startsWith("/gauges/")) return "The Lab";
-    if (p.startsWith("/about-this-underdog/")) return "The Host Portrait";
-    if (p.startsWith("/showroom/globe/earth/")) return "ZIONTS";
-    if (p.startsWith("/showroom/globe/audralia/planet/")) return "Audralia Worldroom";
-    if (p.startsWith("/showroom/globe/audralia/disposition/")) return "The Control Room";
-    if (p.startsWith("/showroom/globe/audralia/")) return "Audralia Conservatory";
-    if (p.startsWith("/showroom/globe/")) return "The Atlas Study";
-    if (p.startsWith("/showroom/")) return "The Atrium";
-    if (p.startsWith("/characters/")) return "The Portrait Hall";
-    if (p.startsWith("/nine-summits/universe/")) return "The Universe Gallery";
-    if (p.startsWith("/explore/frontier/")) return "Frontier Workshop Yard";
-
-    return title || "Estate Room";
-  }
-
-  function defaultEstateSection(path, mirrorlandAligned) {
-    const p = normalizePath(path);
-
-    if (p.startsWith("/explore/frontier/")) return "Mirrorland Grounds";
-    if (p.startsWith("/showroom/globe/audralia/")) return "Audralia Conservatory";
-    if (p.startsWith("/showroom/globe/")) return "The Atlas Study";
-    if (p.startsWith("/showroom/") || p.startsWith("/characters/") || p.startsWith("/nine-summits/")) return "Mirrorland Estate";
-
-    return mirrorlandAligned ? "Mirrorland Estate" : "Main House";
-  }
-
-  function defaultSummary(path, label) {
-    const p = normalizePath(path);
-
-    if (p === "/") return "Start here when you need ordinary site orientation.";
-    if (p.startsWith("/door/")) return "Cross the ordinary entrance threshold.";
-    if (p.startsWith("/home/")) return "Return to the stable center of the main estate.";
-    if (p.startsWith("/site-guide/")) return "Learn how the estate, rooms, lenses, and returns work.";
-    if (p.startsWith("/products/")) return "View usable objects, offers, and public-facing extensions.";
-    if (p.startsWith("/laws/")) return "Study the rules, boundaries, proof, and governing constraints.";
-    if (p.startsWith("/governance/")) return "Enter the decision room for policy, risk, and responsibility.";
-    if (p.startsWith("/gauges/")) return "Check route truth, readiness, and audit signals.";
-    if (p.startsWith("/about-this-underdog/")) return "Meet the human origin, mission, and public voice behind the estate.";
-    if (p.startsWith("/showroom/globe/earth/")) return "ZIONTS, pronounced Zience, is the first world-door in the Atlas Study.";
-    if (p.startsWith("/showroom/globe/audralia/planet/")) return "Inspect Audralia’s future body and world-formation path.";
-    if (p.startsWith("/showroom/globe/audralia/disposition/")) return "Open the instrument room for Audralia’s controls and operating signals.";
-    if (p.startsWith("/showroom/globe/audralia/")) return "Enter a living-world room where Audralia opens as a constructive future.";
-    if (p.startsWith("/showroom/globe/")) return "Open the study of worlds: globes, maps, planetary doors, and living-world entries.";
-    if (p.startsWith("/showroom/")) return "Enter the first interior arrival room and display floor.";
-    if (p.startsWith("/characters/")) return "Meet the living characters and story faces of Mirrorland.";
-    if (p.startsWith("/nine-summits/universe/")) return "Open the story-world gallery for the larger universe setting.";
-    if (p.startsWith("/explore/frontier/")) return "Enter the outdoor testing yard where Audralia’s future systems are tried.";
-
-    return `Enter ${label}.`;
-  }
-
-  function inferMirrorlandAligned(path, title, group) {
-    const p = normalizePath(path);
-    if (isRegularWebsitePath(p)) return false;
-    if (isMirrorlandCategoryPath(p)) return true;
-
-    const t = String(title || "").toLowerCase();
-    const g = String(group || "").toLowerCase();
-
-    if (
-      t.includes("showroom") ||
-      t.includes("planet") ||
-      t.includes("cockpit") ||
-      t.includes("frontier") ||
-      t.includes("character") ||
-      t.includes("story") ||
-      t.includes("narrative") ||
-      t.includes("nine summits") ||
-      g.includes("mirrorland")
-    ) {
-      return true;
-    }
-
-    return false;
-  }
-
-  function room(input) {
-    const path = normalizePath(input.path || "/");
-    const rawTitle = String(input.title || input.publicLabel || "Room");
-    const group = String(input.group || "");
-    const cardinal = input.cardinal || classifyCardinalFromPathAndTitle(path, rawTitle, group);
-    const mirrorlandAligned = input.mirrorlandAligned != null
-      ? Boolean(input.mirrorlandAligned)
-      : inferMirrorlandAligned(path, rawTitle, group);
-
-    const publicLabel = String(input.publicLabel || input.publicShortLabel || defaultEstateFromPath(path, rawTitle));
-    const estateRoom = String(input.estateRoom || publicLabel);
-    const estateSection = String(input.estateSection || defaultEstateSection(path, mirrorlandAligned));
-    const publicSummary = String(input.publicSummary || input.body || defaultSummary(path, publicLabel));
-    const enterLabel = String(input.enterLabel || "Enter");
-
-    return Object.freeze({
-      id: String(input.id || slug(publicLabel + "-" + path)),
-      title: rawTitle,
-      publicLabel,
-      publicShortLabel: String(input.publicShortLabel || publicLabel),
-      estateRoom,
-      estateSection,
-      publicSummary,
-      enterLabel,
-      path,
-      file: String(input.file || path.replace(/\/$/, "/index.html")),
-      builderPathNote: String(input.builderPathNote || ""),
-      cardinal: CARDINAL_LABELS[cardinal] ? cardinal : classifyCardinalFromPathAndTitle(path, publicLabel, group),
-      wing: String(input.wing || estateSection),
-      role: String(input.role || "estate-room"),
-      menu: String(input.menu || (mirrorlandAligned ? "mirrorland" : "main")),
-      body: publicSummary,
-      current: Boolean(input.current),
-      mirrorlandAligned,
-      support: Boolean(input.support),
-      source: String(input.source || "runtime")
-    });
-  }
-
-  function mirrorlandCoreRooms() {
-    return [
-      room({
-        id: "showroom-door",
-        title: "Door / Showroom",
-        publicLabel: "The Atrium",
-        publicShortLabel: "Atrium",
-        estateRoom: "The Atrium",
-        estateSection: "Mirrorland Estate",
-        publicSummary: "The first interior arrival room: display floor, orientation space, and Mirrorland entry presence.",
-        path: "/showroom/",
-        cardinal: "center",
-        menu: "mirrorland",
-        mirrorlandAligned: true,
-        source: "core"
-      }),
-      room({
-        id: "mirrorland-field",
-        title: "Globe / Mirrorland Field",
-        publicLabel: "The Atlas Study",
-        publicShortLabel: "Atlas Study",
-        estateRoom: "The Atlas Study",
-        estateSection: "Mirrorland Estate",
-        publicSummary: "The study of worlds: globes, maps, planetary doors, and living-world entries.",
-        path: "/showroom/globe/",
-        cardinal: "east",
-        menu: "mirrorland",
-        mirrorlandAligned: true,
-        source: "core"
-      }),
-      room({
-        id: "earth-reference",
-        title: "Earth Reference",
-        publicLabel: "ZIONTS",
-        publicShortLabel: "ZIONTS",
-        estateRoom: "The ZIONTS Room",
-        estateSection: "The Atlas Study",
-        publicSummary: "ZIONTS, pronounced Zience, is the first world-door in the Atlas Study.",
-        builderPathNote: "Served under /showroom/globe/earth/ while public context resolves as ZIONTS.",
-        path: "/showroom/globe/earth/",
-        cardinal: "east",
-        menu: "mirrorland",
-        mirrorlandAligned: true,
-        source: "core"
-      }),
-      room({
-        id: "audralia",
-        title: "Audralia / Planetary Path",
-        publicLabel: "Audralia Conservatory",
-        publicShortLabel: "Audralia",
-        estateRoom: "Audralia Conservatory",
-        estateSection: "The Atlas Study",
-        publicSummary: "A living-world room where Audralia opens as a constructive future under formation.",
-        path: "/showroom/globe/audralia/",
-        cardinal: "east",
-        menu: "mirrorland",
-        mirrorlandAligned: true,
-        source: "core"
-      }),
-      room({
-        id: "audralia-planet",
-        title: "Audralia Planet",
-        publicLabel: "Audralia Worldroom",
-        publicShortLabel: "Worldroom",
-        estateRoom: "Audralia Worldroom",
-        estateSection: "Audralia Conservatory",
-        publicSummary: "The room for inspecting Audralia’s future body, surface direction, and world-formation path.",
-        path: "/showroom/globe/audralia/planet/",
-        cardinal: "east",
-        menu: "mirrorland",
-        mirrorlandAligned: true,
-        source: "core"
-      }),
-      room({
-        id: "audralia-cockpit",
-        title: "Audralia Cockpit",
-        publicLabel: "The Control Room",
-        publicShortLabel: "Control Room",
-        estateRoom: "The Control Room",
-        estateSection: "Audralia Conservatory",
-        publicSummary: "The instrument room for reading Audralia’s disposition, controls, and operating signals.",
-        path: "/showroom/globe/audralia/disposition/",
-        cardinal: "east",
-        menu: "mirrorland",
-        mirrorlandAligned: true,
-        source: "core"
-      }),
-      room({
-        id: "hearth",
-        title: "Hearth",
-        publicLabel: "Hearth Room",
-        estateRoom: "Hearth Room",
-        estateSection: "The Atlas Study",
-        publicSummary: "A world-room for Hearth’s planet path and terrain development.",
-        path: "/showroom/globe/hearth/",
-        cardinal: "east",
-        menu: "mirrorland",
-        mirrorlandAligned: true,
-        source: "core"
-      }),
-      room({
-        id: "h-earth",
-        title: "H-Earth",
-        publicLabel: "H-Earth Room",
-        estateRoom: "H-Earth Room",
-        estateSection: "The Atlas Study",
-        publicSummary: "A hybrid-world study room for surface, terrain, and parent-chain experiments.",
-        path: "/showroom/globe/h-earth/",
-        cardinal: "east",
-        menu: "mirrorland",
-        mirrorlandAligned: true,
-        source: "core"
-      }),
-      room({
-        id: "characters",
-        title: "Characters / Story Faces",
-        publicLabel: "The Portrait Hall",
-        publicShortLabel: "Portrait Hall",
-        estateRoom: "The Portrait Hall",
-        estateSection: "Mirrorland Estate",
-        publicSummary: "The hall where the living characters and story faces of Mirrorland are introduced.",
-        path: "/characters/",
-        cardinal: "east",
-        menu: "mirrorland",
-        mirrorlandAligned: true,
-        source: "core"
-      }),
-      room({
-        id: "nine-summits",
-        title: "Nine Summits Universe",
-        publicLabel: "The Universe Gallery",
-        publicShortLabel: "Universe Gallery",
-        estateRoom: "The Universe Gallery",
-        estateSection: "Mirrorland Estate",
-        publicSummary: "A story-world gallery for Nine Summits, outer context, and the larger universe setting.",
-        path: "/nine-summits/universe/",
-        cardinal: "east",
-        menu: "mirrorland",
-        mirrorlandAligned: true,
-        source: "core"
-      }),
-      room({
-        id: "frontier",
-        title: "Frontier / West Deployment Wing",
-        publicLabel: "Frontier Workshop Yard",
-        publicShortLabel: "Workshop Yard",
-        estateRoom: "Frontier Workshop Yard",
-        estateSection: "Mirrorland Grounds",
-        publicSummary: "The outdoor testing yard where Audralia’s future systems are tried before they become living-world infrastructure.",
-        path: "/explore/frontier/",
-        cardinal: "west",
-        menu: "mirrorland",
-        mirrorlandAligned: true,
-        source: "core"
-      })
-    ];
-  }
-
-  function mainCoreRooms() {
-    return [
-      room({
-        id: "compass",
-        title: "Compass",
-        publicLabel: "Compass",
-        estateRoom: "The Compass Desk",
-        estateSection: "Main House",
-        publicSummary: "Start here when you need ordinary site orientation.",
-        path: "/",
-        cardinal: "north",
-        menu: "main",
-        mirrorlandAligned: false,
-        source: "core"
-      }),
-      room({
-        id: "door",
-        title: "Door",
-        publicLabel: "The Front Door",
-        estateRoom: "The Front Door",
-        estateSection: "Main House",
-        publicSummary: "Cross the ordinary entrance threshold.",
-        path: "/door/",
-        cardinal: "north",
-        menu: "main",
-        mirrorlandAligned: false,
-        source: "core"
-      }),
-      room({
-        id: "home",
-        title: "Home",
-        publicLabel: "The Hearth",
-        estateRoom: "The Hearth",
-        estateSection: "Main House",
-        publicSummary: "Return to the stable center of the main estate.",
-        path: "/home/",
-        cardinal: "north",
-        menu: "main",
-        mirrorlandAligned: false,
-        source: "core"
-      }),
-      room({
-        id: "site-guide",
-        title: "Site Guide",
-        publicLabel: "The Guide Desk",
-        estateRoom: "The Guide Desk",
-        estateSection: "Main House",
-        publicSummary: "Learn how the estate, rooms, lenses, and returns work.",
-        path: "/site-guide/",
-        cardinal: "north",
-        menu: "main",
-        mirrorlandAligned: false,
-        source: "core"
-      }),
-      room({
-        id: "laws",
-        title: "Laws",
-        publicLabel: "The Law Library",
-        estateRoom: "The Law Library",
-        estateSection: "Main House",
-        publicSummary: "Study the rules, boundaries, proof, and governing constraints.",
-        path: "/laws/",
-        cardinal: "south",
-        menu: "main",
-        mirrorlandAligned: false,
-        source: "core"
-      }),
-      room({
-        id: "governance",
-        title: "Governance",
-        publicLabel: "The Council Room",
-        estateRoom: "The Council Room",
-        estateSection: "Main House",
-        publicSummary: "Enter the decision room for policy, risk, and responsibility.",
-        path: "/governance/",
-        cardinal: "south",
-        menu: "main",
-        mirrorlandAligned: false,
-        source: "core"
-      }),
-      room({
-        id: "gauges-main",
-        title: "Gauges",
-        publicLabel: "The Lab",
-        estateRoom: "The Lab",
-        estateSection: "Main House",
-        publicSummary: "Check route truth, readiness, and audit signals.",
-        path: "/gauges/",
-        cardinal: "south",
-        menu: "main",
-        mirrorlandAligned: false,
-        source: "core"
-      }),
-      room({
-        id: "gauges-h-earth",
-        title: "H-Earth Gauges",
-        publicLabel: "H-Earth Lab Bench",
-        estateRoom: "The Lab",
-        estateSection: "Main House",
-        publicSummary: "Open the dedicated H-Earth test bench.",
-        path: "/gauges/h-earth/",
-        cardinal: "south",
-        menu: "main",
-        mirrorlandAligned: false,
-        source: "core"
-      }),
-      room({
-        id: "products",
-        title: "Products",
-        publicLabel: "The Product Gallery",
-        estateRoom: "The Product Gallery",
-        estateSection: "Main House",
-        publicSummary: "View usable objects, offers, and public-facing extensions.",
-        path: "/products/",
-        cardinal: "west",
-        menu: "main",
-        mirrorlandAligned: false,
-        source: "core"
-      }),
-      room({
-        id: "meet-sean",
-        title: "Meet Sean Mansfield",
-        publicLabel: "Meet Sean",
-        estateRoom: "The Host Portrait",
-        estateSection: "Main House",
-        publicSummary: "Meet the human origin, mission, and public voice behind the estate.",
-        path: "/about-this-underdog/",
-        cardinal: "west",
-        menu: "main",
-        mirrorlandAligned: false,
-        source: "core"
-      })
-    ];
-  }
-
-  function registryRooms() {
-    const reg = registry();
-    const source = Array.isArray(reg?.routes)
-      ? reg.routes
-      : Array.isArray(window.DGB_MANOR_BLUEPRINT_ROUTE_REGISTRY)
-        ? window.DGB_MANOR_BLUEPRINT_ROUTE_REGISTRY
-        : [];
-
-    return source.map((item, index) => {
-      const title = String(item.title || item.label || item.name || "Room");
-      const publicLabel = String(item.publicLabel || item.publicShortLabel || defaultEstateFromPath(item.path || item.href || "/", title));
-      const path = normalizePath(item.path || item.href || "/");
-      const group = String(item.group || item.family || "");
-      const cardinal = item.cardinal
-        ? String(item.cardinal).toLowerCase()
-        : classifyCardinalFromPathAndTitle(path, publicLabel, group);
-      const mirrorlandAligned = item.mirrorlandAligned != null
-        ? Boolean(item.mirrorlandAligned)
-        : inferMirrorlandAligned(path, title, group);
-      const menu = item.menu || (item.mirrorlandDoor || mirrorlandAligned ? "mirrorland" : "main");
-
-      return room({
-        id: String(item.id || item.routeId || item.key || `registry-${slug(publicLabel)}-${index}`),
-        title,
-        publicLabel,
-        publicShortLabel: String(item.publicShortLabel || publicLabel),
-        estateRoom: String(item.estateRoom || publicLabel),
-        estateSection: String(item.estateSection || defaultEstateSection(path, mirrorlandAligned)),
-        publicSummary: String(item.publicSummary || item.body || item.description || defaultSummary(path, publicLabel)),
-        enterLabel: String(item.enterLabel || "Enter"),
-        builderPathNote: String(item.builderPathNote || ""),
-        path,
-        file: String(item.file || item.target || path.replace(/\/$/, "/index.html")),
-        cardinal: CARDINAL_LABELS[cardinal] ? cardinal : classifyCardinalFromPathAndTitle(path, publicLabel, group),
-        wing: String(item.wing || item.estateSection || defaultEstateSection(path, mirrorlandAligned)),
-        role: String(item.role || "estate-room"),
-        menu,
-        body: String(item.publicSummary || item.body || item.description || defaultSummary(path, publicLabel)),
-        mirrorlandAligned,
-        source: "registry"
-      });
-    });
-  }
-
-  function dedupeRooms(rooms) {
-    const seen = new Set();
-    const output = [];
-
-    rooms.forEach((item) => {
-      const key = item.menu + "::" + normalizePath(item.path);
-      if (seen.has(key)) return;
-      seen.add(key);
-      output.push(item);
-    });
-
-    return output;
-  }
-
-  function mirrorlandRooms() {
-    const registryMirrorland = registryRooms()
-      .filter((item) => item.mirrorlandAligned && !isRegularWebsitePath(item.path))
-      .map((item) => room({ ...item, menu: "mirrorland" }));
-
-    return dedupeRooms(registryMirrorland.concat(mirrorlandCoreRooms()));
-  }
-
-  function mainMenuRooms() {
-    const registryMain = registryRooms()
-      .filter((item) => {
-        if (item.mirrorlandAligned) return false;
-        if (isMirrorlandCategoryPath(item.path)) return false;
-        return true;
-      })
-      .map((item) => room({ ...item, menu: "main", mirrorlandAligned: false }));
-
-    return dedupeRooms(registryMain.concat(mainCoreRooms()));
-  }
-
-  function allKnownRooms() {
-    return dedupeRooms(mirrorlandRooms().concat(mainMenuRooms()));
-  }
-
-  function currentRoom(rooms) {
-    const path = normalizePath(window.location.pathname || "/");
-
-    return rooms.find((item) => normalizePath(item.path) === path) ||
-      rooms.find((item) => normalizePath(item.path) !== "/" && pathStartsWith(path, item.path)) ||
-      rooms[0] ||
-      null;
-  }
-
-  function markCurrentRooms(rooms) {
-    const current = currentRoom(rooms);
-
-    return rooms.map((item) => room({
-      ...item,
-      current: Boolean(current && item.id === current.id)
-    }));
-  }
-
-  function groupedRooms(rooms) {
-    const grouped = { north: [], east: [], center: [], west: [], south: [] };
-
-    markCurrentRooms(rooms).forEach((item) => {
-      const key = CARDINAL_LABELS[item.cardinal] ? item.cardinal : "center";
-      grouped[key].push(item);
-    });
-
-    return grouped;
-  }
-
-  function roomSummary(rooms) {
-    const grouped = groupedRooms(rooms);
-    const current = currentRoom(rooms);
-
-    return {
-      currentRoom: current,
-      northRoomCount: grouped.north.length,
-      eastRoomCount: grouped.east.length,
-      centerRoomCount: grouped.center.length,
-      westRoomCount: grouped.west.length,
-      southRoomCount: grouped.south.length,
-      totalRoomCount: rooms.length
-    };
-  }
-
-  function instructions() {
-    const reg = registry();
-    const source = Array.isArray(reg?.instructions)
-      ? reg.instructions
-      : Array.isArray(reg?.navigationTerms)
-        ? reg.navigationTerms
-        : Array.isArray(window.DGB_MANOR_BLUEPRINT_INSTRUCTIONS)
-          ? window.DGB_MANOR_BLUEPRINT_INSTRUCTIONS
-          : [
-            {
-              title: "Estate Room Language",
-              body: "The public map uses room names and real-world estate context. Route paths and file names stay in builder receipts."
-            },
-            {
-              title: "Path Is Not Identity",
-              body: "A route address is only where a page is served. It is not automatically the room’s public identity."
-            },
-            {
-              title: "ZIONTS",
-              body: "ZIONTS is pronounced Zience. It may be served through the Earth route, but the map presents the public world-door identity."
-            }
-          ];
-
-    return source.map((item, index) => ({
-      title: String(item.title || `Instruction ${index + 1}`),
-      body: String(item.body || item.description || item.text || "Read this instruction.")
-    }));
-  }
-
-  function normalizeLens(lens) {
-    if (lens === "main" || lens === "website" || lens === "site") return "main";
-    if (lens === "instructions") return "instructions";
-    return "mirrorland";
-  }
-
-  function lensTitle() {
-    if (state.activeLens === "main") return "Main Menu";
-    if (state.activeLens === "instructions") return "Instructions";
-    return "Mirrorland Doors";
-  }
-
-  function lensSubtitle() {
-    if (state.activeLens === "main") {
-      return "Ordinary estate rooms: Compass, Front Door, Hearth, Product Gallery, Law Library, Council Room, Lab, Guide Desk, and Meet Sean.";
-    }
-
-    if (state.activeLens === "instructions") {
-      return "This map uses estate-room names for visitors. Route paths and file names stay hidden for builders.";
-    }
-
-    if (frontierActive()) {
-      return "You are near Frontier Workshop Yard, the outdoor testing grounds for Audralia’s future systems.";
-    }
-
-    return "Choose an immersive room: The Atrium, The Atlas Study, ZIONTS, Audralia, The Control Room, Frontier Workshop Yard, or story rooms.";
+    applyPosition(stored || defaultPosition(), stored ? "stored" : "upper-right-safe-anchor", Boolean(!stored));
   }
 
   function enforceSingleElement(selector) {
@@ -1028,9 +365,7 @@
     const keeper = nodes[0] || null;
 
     nodes.slice(1).forEach((node) => {
-      try {
-        node.remove();
-      } catch (_error) {}
+      try { node.remove(); } catch (_error) {}
     });
 
     return keeper;
@@ -1043,23 +378,10 @@
     bubble = document.createElement("button");
     bubble.type = "button";
     bubble.className = "dgb-blueprint-bubble";
-    bubble.setAttribute("aria-label", "Open Mirrorland Map Portal entryway");
+    bubble.setAttribute("aria-label", "Open Mirrorland Map Portal");
     bubble.setAttribute("data-dgb-blueprint-bubble", "true");
     bubble.setAttribute("data-manor-blueprint-contract", CONTRACT);
-    bubble.setAttribute("data-api-contract", API_CONTRACT);
-    bubble.setAttribute("data-full-viewport-drag", "true");
-    bubble.setAttribute("data-joystick-scroll", "true");
-    bubble.setAttribute("data-joystick-scroll-force-profile", JOYSTICK_SCROLL_FORCE_PROFILE);
-    bubble.setAttribute("data-map-blip-single-entryway", "true");
-    bubble.setAttribute("data-mirrorland-entryway", "map-portal-blip");
-    bubble.setAttribute("data-estate-room-language-active", "true");
-    bubble.setAttribute("data-main-menu-website-options-only", "true");
-    bubble.setAttribute("data-mirrorland-doors-category-only", "true");
-    bubble.setAttribute("data-support-does-not-equal-ownership", "true");
-    bubble.setAttribute("data-mirrorland-portal", "true");
-    bubble.setAttribute("data-cardinal-room-map", "true");
-    bubble.setAttribute("data-frontier-mirrorland-aligned", "true");
-    bubble.setAttribute("data-dual-menu", "true");
+    bubble.setAttribute("data-value-category-estate-language", "true");
     bubble.innerHTML = `
       <span class="dgb-blueprint-bubble-label dgb-blueprint-bubble__label">
         <strong>Map</strong>
@@ -1094,239 +416,162 @@
     overlay.setAttribute("data-dgb-blueprint-overlay", "true");
     overlay.setAttribute("data-open", "false");
     overlay.setAttribute("data-manor-blueprint-contract", CONTRACT);
-    overlay.setAttribute("data-map-blip-single-entryway", "true");
-    overlay.setAttribute("data-mirrorland-entryway", "map-portal-blip");
-    overlay.setAttribute("data-estate-room-language-active", "true");
-    overlay.setAttribute("data-main-menu-website-options-only", "true");
-    overlay.setAttribute("data-mirrorland-doors-category-only", "true");
-    overlay.setAttribute("data-support-does-not-equal-ownership", "true");
-    overlay.setAttribute("data-mirrorland-portal", "true");
-    overlay.setAttribute("data-cardinal-room-map", "true");
-    overlay.setAttribute("data-frontier-mirrorland-aligned", "true");
-    overlay.setAttribute("aria-label", "Mirrorland estate room map");
+    overlay.setAttribute("data-value-category-estate-language", "true");
+    overlay.setAttribute("aria-label", "Mirrorland estate map portal");
 
     document.body.appendChild(overlay);
     return overlay;
   }
 
-  function renderRoomCard(item) {
-    return `
-      <a
-        class="dgb-bp-room${item.current ? " dgb-bp-room-current" : ""}"
-        href="${escapeHtml(item.path)}"
-        data-room-id="${escapeHtml(item.id)}"
-        data-cardinal="${escapeHtml(item.cardinal)}"
-        data-estate-room="${escapeHtml(item.estateRoom)}"
-        data-estate-section="${escapeHtml(item.estateSection)}"
-        data-menu="${escapeHtml(item.menu)}"
-        data-current="${item.current ? "true" : "false"}"
-        data-mirrorland-aligned="${item.mirrorlandAligned ? "true" : "false"}"
-        data-path="${escapeHtml(item.path)}"
-        data-file="${escapeHtml(item.file)}"
-        data-builder-path-note="${escapeHtml(item.builderPathNote)}"
-      >
-        <span class="dgb-bp-room-door" aria-hidden="true"></span>
-        <span class="dgb-bp-room-meta">
-          <span class="dgb-bp-room-estate">${escapeHtml(item.estateSection)}</span>
-          <strong class="dgb-bp-room-title">${escapeHtml(item.publicLabel)}</strong>
-          <span class="dgb-bp-room-summary">${escapeHtml(item.publicSummary)}</span>
-          <span class="dgb-bp-room-enter">${escapeHtml(item.enterLabel)}</span>
-        </span>
-      </a>
-    `;
+  function lensTitle() {
+    if (state.activeLens === "main") return "Main Menu";
+    if (state.activeLens === "instructions") return "Instructions";
+    return "Mirrorland Doors";
   }
 
-  function renderCardinalZone(cardinal, rooms) {
-    const label = CARDINAL_LABELS[cardinal] || CARDINAL_LABELS.center;
+  function lensSubtitle() {
+    if (state.activeLens === "main") {
+      return "Regular website rooms. These support the estate without becoming Mirrorland doors.";
+    }
 
-    return `
-      <section class="dgb-bp-cardinal-zone" data-cardinal="${escapeHtml(cardinal)}" data-room-count="${rooms.length}">
-        <header class="dgb-bp-cardinal-head">
-          <b>${escapeHtml(label.title)}</b>
-          <span>${escapeHtml(label.meaning)}</span>
-        </header>
-        <div class="dgb-bp-room-stack">
-          ${rooms.length ? rooms.map(renderRoomCard).join("") : `
-            <div class="dgb-bp-room dgb-bp-room-empty" data-cardinal="${escapeHtml(cardinal)}">
-              <span class="dgb-bp-room-door" aria-hidden="true"></span>
-              <span class="dgb-bp-room-meta">
-                <span class="dgb-bp-room-estate">${escapeHtml(label.title)}</span>
-                <strong class="dgb-bp-room-title">Room Held</strong>
-                <span class="dgb-bp-room-summary">No room is assigned here yet.</span>
-              </span>
-            </div>
-          `}
-        </div>
-      </section>
-    `;
+    if (state.activeLens === "instructions") {
+      return "The public map uses estate-room identity. Builder file paths stay hidden unless inspected by code.";
+    }
+
+    return "Choose rooms by visitor value: arrival, worlds, instruments, workshop systems, proof, products, and story.";
   }
 
-  function renderRoomMap(rooms) {
-    const marked = markCurrentRooms(rooms);
-    const grouped = groupedRooms(marked);
-    const summary = roomSummary(marked);
-
-    state.lastRoomSummary = summary;
+  function renderCurrentPanel(routes, mode) {
+    const current = currentRoute(routes);
+    const label = mode === "main" ? "Website Position" : "Estate Position";
 
     return `
-      <div
-        class="dgb-bp-room-map"
-        data-room-map-active="true"
-        data-cardinal-room-map="true"
-        data-floating-nodes-replaced="true"
-        data-blueprint-rooms-clickable="true"
-        data-map-blip-single-entryway="true"
-        data-estate-room-language-active="true"
-        data-current-room-id="${escapeHtml(summary.currentRoom?.id || "")}"
-        data-current-room-label="${escapeHtml(summary.currentRoom?.publicLabel || "")}"
-        data-current-cardinal="${escapeHtml(summary.currentRoom?.cardinal || "")}"
-      >
-        <div class="dgb-bp-room-map-axis dgb-bp-room-map-axis-north" aria-hidden="true">North</div>
-        <div class="dgb-bp-room-map-axis dgb-bp-room-map-axis-east" aria-hidden="true">East</div>
-        <div class="dgb-bp-room-map-axis dgb-bp-room-map-axis-west" aria-hidden="true">West</div>
-        <div class="dgb-bp-room-map-axis dgb-bp-room-map-axis-south" aria-hidden="true">South</div>
-        ${CARDINAL_ORDER.map((cardinal) => renderCardinalZone(cardinal, grouped[cardinal] || [])).join("")}
-      </div>
-    `;
-  }
-
-  function renderCurrentPanel(rooms, mode) {
-    const current = currentRoom(rooms);
-    const entered = mirrorlandEntered();
-    const frontier = frontierActive();
-
-    const locationLabel = mode === "main"
-      ? "Main House"
-      : frontier
-        ? "Mirrorland Grounds"
-        : entered
-          ? "Inside Mirrorland"
-          : "Estate Map Open";
-
-    return `
-      <aside class="dgb-bp-panel">
-        <div class="dgb-bp-panel-head">
-          <b>${mode === "main" ? "Current Room" : "Mirrorland Map"}</b>
-          <h3>${escapeHtml(current?.publicLabel || (mode === "main" ? "Main Menu" : "Mirrorland Doors"))}</h3>
-          <p>${escapeHtml(current?.publicSummary || (mode === "main" ? "Choose a regular estate room." : "Choose a room inside Mirrorland."))}</p>
-        </div>
-
-        <div class="dgb-bp-you-are-here">
-          <div class="dgb-bp-location-card">
-            <b>${escapeHtml(locationLabel)}</b>
-            <strong>${escapeHtml(current?.estateRoom || current?.publicLabel || "Choose a room")}</strong>
-            <span>${escapeHtml(current?.estateSection || (mode === "main" ? "Main House" : "Mirrorland Estate"))}</span>
-          </div>
-
-          <div class="dgb-bp-chain">
-            ${mode === "main" ? `
-              <span>Main House</span>
-              <span class="dgb-bp-chain-separator">→</span>
-              <span>${escapeHtml(current?.publicLabel || "Choose Room")}</span>
-            ` : `
-              <span>Map Portal</span>
-              <span class="dgb-bp-chain-separator">→</span>
-              <span>Mirrorland Doors</span>
-              <span class="dgb-bp-chain-separator">→</span>
-              <span>${escapeHtml(current?.publicLabel || "Choose Room")}</span>
-            `}
-          </div>
-
-          <div class="dgb-bp-guide-link" aria-label="${mode === "main" ? "Main menu context" : "Mirrorland room context"}">
-            ${mode === "main" ? "Website rooms" : "Estate rooms"}
-          </div>
+      <aside class="dgb-bp-current-card" data-current-room="${escapeHtml(current?.routeId || "")}">
+        <span class="dgb-bp-chip">${escapeHtml(label)}</span>
+        <h3>${escapeHtml(current?.publicRoomName || lensTitle())}</h3>
+        <p>${escapeHtml(current?.shortContext || "Choose a room from the estate map.")}</p>
+        <div class="dgb-bp-location-strip">
+          <span>${escapeHtml(current?.valueCategoryLabel || "Arrival")}</span>
+          <span>${escapeHtml(current?.estateLocation || "Estate")}</span>
         </div>
       </aside>
     `;
   }
 
-  function renderMirrorlandLens() {
-    const rooms = mirrorlandRooms();
+  function renderRoomCard(item) {
+    const isCurrent = normalizePath(window.location.pathname || "/") === item.path;
 
     return `
-      <div class="dgb-bp-map-grid dgb-bp-room-grid">
-        ${renderCurrentPanel(rooms, "mirrorland")}
+      <article
+        class="dgb-bp-value-card${isCurrent ? " dgb-bp-value-card-current" : ""}"
+        data-route-id="${escapeHtml(item.routeId)}"
+        data-value-category="${escapeHtml(item.valueCategory)}"
+        data-current="${isCurrent ? "true" : "false"}"
+        data-builder-path="${escapeHtml(item.builderPathHidden)}"
+        data-technical-label="${escapeHtml(item.technicalLabelHidden)}"
+      >
+        <div class="dgb-bp-value-card-top">
+          <span class="dgb-bp-value-badge">${escapeHtml(item.valueCategoryShortLabel)}</span>
+          <span class="dgb-bp-estate-location">${escapeHtml(item.estateLocation)}</span>
+        </div>
 
-        <section class="dgb-bp-panel dgb-bp-room-map-panel">
-          <div class="dgb-bp-panel-head">
-            <b>Mirrorland Doors</b>
-            <h3>Choose a room inside the estate</h3>
-            <p>The public map uses room names. File paths stay hidden underneath for builders.</p>
+        <h4>${escapeHtml(item.publicRoomName)}</h4>
+        <p>${escapeHtml(item.visitorPurpose)}</p>
+
+        <details class="dgb-bp-room-details">
+          <summary>Read room</summary>
+          <div class="dgb-bp-room-details-body">
+            <b>What this room is</b>
+            <p>${escapeHtml(item.shortContext)}</p>
+            <b>Why it matters</b>
+            <p>${escapeHtml(item.deepContext)}</p>
+            <b>Where it sits</b>
+            <p>${escapeHtml(item.estateLocation)} · ${escapeHtml(item.valueCategoryLabel)}</p>
           </div>
-          <div class="dgb-bp-route-tools dgb-bp-room-tools">
-            ${renderRoomMap(rooms)}
-          </div>
-        </section>
-      </div>
+        </details>
+
+        <a class="dgb-bp-room-action" href="${escapeHtml(item.href)}">
+          ${escapeHtml(item.visitorAction)}
+        </a>
+      </article>
     `;
   }
 
-  function renderMainLens() {
-    const rooms = mainMenuRooms();
+  function renderCategorySection(category, routes) {
+    if (!routes.length) return "";
 
     return `
-      <div class="dgb-bp-map-grid dgb-bp-room-grid">
-        ${renderCurrentPanel(rooms, "main")}
+      <section class="dgb-bp-value-section" data-value-category="${escapeHtml(category.key)}">
+        <header class="dgb-bp-value-section-head">
+          <span>${escapeHtml(category.shortLabel || category.label)}</span>
+          <h3>${escapeHtml(category.label)}</h3>
+          <p>${escapeHtml(category.purpose || "Choose a room.")}</p>
+        </header>
+        <div class="dgb-bp-value-grid">
+          ${routes.map(renderRoomCard).join("")}
+        </div>
+      </section>
+    `;
+  }
 
-        <section class="dgb-bp-panel dgb-bp-room-map-panel">
-          <div class="dgb-bp-panel-head">
-            <b>Main Menu</b>
-            <h3>Regular estate rooms</h3>
-            <p>Compass, Front Door, Hearth, Product Gallery, Law Library, Council Room, Lab, Guide Desk, and Meet Sean stay here.</p>
-          </div>
-          <div class="dgb-bp-route-tools dgb-bp-room-tools">
-            ${renderRoomMap(rooms)}
-          </div>
-        </section>
+  function renderEstateMap(mode) {
+    const routes = routesForLens(mode);
+    const grouped = groupedByValueCategory(routes);
+
+    return `
+      <div class="dgb-bp-estate-layout">
+        ${renderCurrentPanel(routes, mode)}
+        <div class="dgb-bp-estate-map" data-estate-map="value-category">
+          ${categories().map((category) => renderCategorySection(category, grouped.get(category.key) || [])).join("")}
+        </div>
       </div>
     `;
   }
 
   function renderInstructionsLens() {
-    const cards = instructions().map((item, index) => `
-      <article class="dgb-bp-instruction-card">
-        <b>Instruction ${index + 1}</b>
-        <h3>${escapeHtml(item.title)}</h3>
-        <p>${escapeHtml(item.body)}</p>
-      </article>
-    `).join("");
-
-    return `<div class="dgb-bp-instructions-grid">${cards}</div>`;
+    return `
+      <div class="dgb-bp-instructions-grid">
+        ${instructions().map((item, index) => `
+          <article class="dgb-bp-instruction-card">
+            <b>Instruction ${index + 1}</b>
+            <h3>${escapeHtml(item.title || "Instruction")}</h3>
+            <p>${escapeHtml(item.body || item.description || "Read this instruction.")}</p>
+          </article>
+        `).join("")}
+      </div>
+    `;
   }
 
   function renderActiveLens() {
-    if (state.activeLens === "main") return renderMainLens();
+    if (state.activeLens === "main") return renderEstateMap("main");
     if (state.activeLens === "instructions") return renderInstructionsLens();
-    return renderMirrorlandLens();
+    return renderEstateMap("mirrorland");
   }
 
   function renderOverlay() {
     if (!overlay) return;
 
-    const entered = mirrorlandEntered();
-    const frontier = frontierActive();
-
     overlay.innerHTML = `
       <div class="dgb-bp-topbar">
         <div class="dgb-bp-titleblock">
-          <div class="dgb-bp-kicker">${state.activeLens === "main" ? "Main House" : state.activeLens === "instructions" ? "Portal Instructions" : "Mirrorland Estate"}</div>
+          <div class="dgb-bp-kicker">Mirrorland House Blueprint</div>
           <h2 class="dgb-bp-title">${escapeHtml(lensTitle())}</h2>
           <p class="dgb-bp-subtitle">${escapeHtml(lensSubtitle())}</p>
         </div>
-        <button class="dgb-bp-close" type="button" data-dgb-close aria-label="Close Mirrorland Portal">×</button>
+        <button class="dgb-bp-close" type="button" data-dgb-close aria-label="Close Map Portal">×</button>
       </div>
 
       <div class="dgb-bp-main">
         <div class="dgb-bp-tabs">
-          <div class="dgb-bp-tablist" role="tablist" aria-label="Mirrorland Portal lenses">
+          <div class="dgb-bp-tablist" role="tablist" aria-label="Map Portal lenses">
             <button class="dgb-bp-tab" type="button" data-dgb-lens="mirrorland" aria-selected="${state.activeLens === "mirrorland"}" data-active="${state.activeLens === "mirrorland"}">Mirrorland Doors</button>
             <button class="dgb-bp-tab" type="button" data-dgb-lens="main" aria-selected="${state.activeLens === "main"}" data-active="${state.activeLens === "main"}">Main Menu</button>
             <button class="dgb-bp-tab" type="button" data-dgb-lens="instructions" aria-selected="${state.activeLens === "instructions"}" data-active="${state.activeLens === "instructions"}">Instructions</button>
           </div>
-          <div class="dgb-bp-current-pill">${state.activeLens === "main" ? "Main House" : frontier ? "Frontier Workshop Yard" : entered ? "Inside Mirrorland" : "Estate Map"}</div>
+          <div class="dgb-bp-current-pill">${state.activeLens === "main" ? "Website Rooms" : state.activeLens === "instructions" ? "How To Read" : "Estate Rooms"}</div>
         </div>
 
-        <div class="dgb-bp-content" data-cardinal-room-map="true" data-map-blip-single-entryway="true" data-estate-room-language-active="true">
+        <div class="dgb-bp-content" data-value-category-estate-language="true">
           <section class="dgb-bp-lens" data-lens-panel="${escapeHtml(state.activeLens)}">
             ${renderActiveLens()}
           </section>
@@ -1345,7 +590,6 @@
     if (!overlay) return;
 
     stopJoystickScroll();
-
     state.overlayOpen = true;
     state.lastAction = "open";
     state.activeLens = "mirrorland";
@@ -1382,25 +626,24 @@
   }
 
   function setLens(lens) {
-    state.activeLens = normalizeLens(lens);
-    state.lastAction = "set-lens:" + state.activeLens;
+    const clean = lens === "main" || lens === "instructions" ? lens : "mirrorland";
+    state.activeLens = clean;
+    state.lastAction = "set-lens:" + clean;
 
-    if (overlay) overlay.setAttribute("data-active-lens", state.activeLens);
+    if (overlay) overlay.setAttribute("data-active-lens", clean);
 
     renderOverlay();
     publishStatus();
   }
 
   function resetPosition() {
-    clearStoredPosition();
-    state.localStorageRepaired = true;
+    try { window.localStorage.removeItem(STORAGE_KEY); } catch (_error) {}
     applyPosition(defaultPosition(), "reset", true);
   }
 
   function joystickSpeedFromPressure(pressure) {
     const cleanPressure = Math.max(0, Math.min(1, Number(pressure) || 0));
-    const baseSpeed = MIN_SCROLL_SPEED + (MAX_SCROLL_SPEED - MIN_SCROLL_SPEED) * cleanPressure;
-    return baseSpeed * JOYSTICK_SCROLL_FORCE_MULTIPLIER;
+    return (MIN_SCROLL_SPEED + (MAX_SCROLL_SPEED - MIN_SCROLL_SPEED) * cleanPressure) * JOYSTICK_SCROLL_FORCE_MULTIPLIER;
   }
 
   function joystickMetrics(clientY) {
@@ -1410,13 +653,11 @@
     const y = clientY - v.offsetTop;
 
     if (y < topZone) {
-      const pressure = Math.max(0, Math.min(1, (topZone - y) / topZone));
-      return { direction: "up", speed: joystickSpeedFromPressure(pressure) };
+      return { direction: "up", speed: joystickSpeedFromPressure((topZone - y) / topZone) };
     }
 
     if (y > v.height - bottomZone) {
-      const pressure = Math.max(0, Math.min(1, (y - (v.height - bottomZone)) / bottomZone));
-      return { direction: "down", speed: joystickSpeedFromPressure(pressure) };
+      return { direction: "down", speed: joystickSpeedFromPressure((y - (v.height - bottomZone)) / bottomZone) };
     }
 
     return { direction: "none", speed: 0 };
@@ -1452,9 +693,7 @@
 
   function stopJoystickScroll() {
     if (joystickRaf) {
-      try {
-        window.cancelAnimationFrame(joystickRaf);
-      } catch (_error) {}
+      try { window.cancelAnimationFrame(joystickRaf); } catch (_error) {}
     }
 
     joystickRaf = 0;
@@ -1464,8 +703,8 @@
   }
 
   function attachDrag() {
-    if (!bubble || bubble.__dgbJoystickDragAttached) return;
-    bubble.__dgbJoystickDragAttached = true;
+    if (!bubble || bubble.__dgbValueCategoryDragAttached) return;
+    bubble.__dgbValueCategoryDragAttached = true;
 
     bubble.addEventListener("pointerdown", (event) => {
       if (state.overlayOpen) return;
@@ -1475,7 +714,6 @@
       state.pointerId = event.pointerId;
       state.pointerStartX = event.clientX;
       state.pointerStartY = event.clientY;
-      state.pointerClientX = event.clientX;
       state.pointerClientY = event.clientY;
       state.baseX = state.position.x;
       state.baseY = state.position.y;
@@ -1483,9 +721,7 @@
 
       bubble.setAttribute("data-dragging", "true");
 
-      try {
-        bubble.setPointerCapture(event.pointerId);
-      } catch (_error) {}
+      try { bubble.setPointerCapture(event.pointerId); } catch (_error) {}
 
       startJoystickScroll();
       publishStatus();
@@ -1495,7 +731,6 @@
     bubble.addEventListener("pointermove", (event) => {
       if (!state.dragging) return;
 
-      state.pointerClientX = event.clientX;
       state.pointerClientY = event.clientY;
 
       const dx = event.clientX - state.pointerStartX;
@@ -1504,11 +739,7 @@
 
       if (distance > TAP_MOVE_THRESHOLD) state.dragMoved = true;
 
-      applyPosition(
-        { x: state.baseX + dx, y: state.baseY + dy },
-        state.dragMoved ? "drag-full-viewport" : "tap-pending",
-        false
-      );
+      applyPosition({ x: state.baseX + dx, y: state.baseY + dy }, state.dragMoved ? "drag-full-viewport" : "tap-pending", false);
 
       startJoystickScroll();
       event.preventDefault();
@@ -1523,9 +754,7 @@
 
       stopJoystickScroll();
 
-      try {
-        bubble.releasePointerCapture(event.pointerId);
-      } catch (_error) {}
+      try { bubble.releasePointerCapture(event.pointerId); } catch (_error) {}
 
       if (state.dragMoved) {
         state.lastAction = "drag-release";
@@ -1536,9 +765,7 @@
         toggle();
       }
 
-      try {
-        event.preventDefault();
-      } catch (_error2) {}
+      try { event.preventDefault(); } catch (_error2) {}
     }
 
     bubble.addEventListener("pointerup", release, { passive: false });
@@ -1546,121 +773,60 @@
     bubble.addEventListener("lostpointercapture", release, { passive: false });
   }
 
-  function round2(value) {
-    return Math.round(Number(value || 0) * 100) / 100;
-  }
-
   function publishStatus() {
     const v = viewport();
-    const m = safeMargins();
     const rect = bubble ? bubble.getBoundingClientRect() : null;
-
-    const mirrorRooms = mirrorlandRooms();
-    const mainRooms = mainMenuRooms();
-    const activeRooms = state.activeLens === "main" ? mainRooms : mirrorRooms;
-    const summary = roomSummary(activeRooms);
-    const current = summary.currentRoom || currentRoom(allKnownRooms());
+    const activeRoutes = state.activeLens === "main" ? routesForLens("main") : routesForLens("mirrorland");
+    const current = currentRoute(activeRoutes) || currentRoute(allRoutes());
 
     const payload = {
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
-      priorContract: PRIOR_CONTRACT,
-      legacyContract: LEGACY_CONTRACT,
       apiContract: API_CONTRACT,
-
       active: true,
-      estateRoomLanguageActive: true,
-      publicLabelsBound: true,
-      routePathHiddenFromPublicCards: true,
-      builderMetadataHidden: true,
-      ziontsPublicIdentityBound: true,
+
+      valueCategoryEstateLanguageActive: true,
+      builderPathHiddenFromVisitorCards: true,
+      fileNameIsNotRoomIdentity: true,
+      ziontsVisibleIdentity: true,
+      ziontsSpelling: "ZIONTS",
       ziontsPronunciation: "Zience",
-      ziontsServedAtEarthRoute: true,
-      labPublicLabelBound: true,
-      frontierWorkshopYardBound: true,
+      earthRouteDisplayedAsZionts: true,
+      gaugesDisplayedAsTheLab: true,
+      frontierWorkshopYardLabelActive: true,
 
       mapBlipSingleEntryway: true,
       mirrorlandEntryway: "map_portal_blip",
-      mirrorlandClassificationNarrowed: true,
       mainMenuWebsiteOptionsOnly: true,
       mirrorlandDoorsCategoryOnly: true,
       supportDoesNotEqualOwnership: true,
-      gaugesMirrorlandAligned: false,
-      lawsMirrorlandAligned: false,
-      governanceMirrorlandAligned: false,
-      productsMirrorlandAligned: false,
-      compassSeparated: true,
-      pageBodyDirectory: false,
-
-      showroomMirrorland: true,
-      planetaryPagesMirrorland: true,
-      cockpitPagesMirrorland: true,
-      frontierMirrorlandAligned: true,
-      frontierBelongsToMirrorland: true,
-      frontierCardinalDisposition: "west",
-      frontierRoom: "Frontier Workshop Yard",
-      narrativePagesMirrorland: true,
-      charactersMirrorland: true,
-      nineSummitsMirrorland: true,
-
-      mirrorlandPortalActive: true,
-      roomMapActive: true,
-      cardinalRoomMap: true,
-      floatingNodesReplaced: true,
-      blueprintRoomsClickable: true,
-      cardinalDispositionActive: true,
-
-      mirrorlandEntered: mirrorlandEntered(),
-      mirrorlandMenuDefault: true,
-      mirrorlandMenuAvailable: true,
-      mirrorlandMenuLabel: "Mirrorland Doors",
-      mainMenuAvailable: true,
-      websiteOptionsSeparated: true,
-      instructionsAvailable: true,
-      dualMenuActive: true,
 
       bubbleMounted: Boolean(bubble && document.body.contains(bubble)),
       overlayMounted: Boolean(overlay && document.body.contains(overlay)),
       overlayOpen: state.overlayOpen,
 
+      activeLens: state.activeLens,
+      currentPath: normalizePath(window.location.pathname || "/"),
+      currentRouteId: current?.routeId || "",
+      currentPublicRoomName: current?.publicRoomName || "",
+      currentEstateLocation: current?.estateLocation || "",
+      currentValueCategory: current?.valueCategory || "",
+
+      routeCount: allRoutes().length,
+      mirrorlandRoomCount: routesForLens("mirrorland").length,
+      mainMenuRoomCount: routesForLens("main").length,
+      valueCategoryCount: categories().length,
+      registryAvailable: Boolean(registryApi()),
+
       fullViewportDrag: true,
       joystickScrollActive: true,
       joystickScrolling: state.joystickActive,
       joystickDirection: state.joystickDirection,
-      joystickSpeed: round2(state.joystickSpeed),
+      joystickSpeed: Math.round(state.joystickSpeed * 100) / 100,
       joystickScrollForceProfile: JOYSTICK_SCROLL_FORCE_PROFILE,
-      joystickScrollForceMultiplier: JOYSTICK_SCROLL_FORCE_MULTIPLIER,
-      joystickScrollForceIncreasePercent: JOYSTICK_SCROLL_FORCE_INCREASE_PERCENT,
-      joystickMinScrollSpeed: MIN_SCROLL_SPEED,
-      joystickMaxScrollSpeed: MAX_SCROLL_SPEED,
-      joystickEffectiveMinScrollSpeed: round2(MIN_SCROLL_SPEED * JOYSTICK_SCROLL_FORCE_MULTIPLIER),
-      joystickEffectiveMaxScrollSpeed: round2(MAX_SCROLL_SPEED * JOYSTICK_SCROLL_FORCE_MULTIPLIER),
-
-      activeLens: state.activeLens,
-      currentPath: normalizePath(window.location.pathname || "/"),
-      currentRoomId: current?.id || "",
-      currentRoomTitle: current?.title || "",
-      currentPublicLabel: current?.publicLabel || "",
-      currentEstateRoom: current?.estateRoom || "",
-      currentEstateSection: current?.estateSection || "",
-      currentRoomCardinal: current?.cardinal || "",
-      currentRoomWing: current?.wing || "",
-
-      northRoomCount: summary.northRoomCount,
-      eastRoomCount: summary.eastRoomCount,
-      centerRoomCount: summary.centerRoomCount,
-      westRoomCount: summary.westRoomCount,
-      southRoomCount: summary.southRoomCount,
-      activeRoomCount: summary.totalRoomCount,
-      mirrorlandRoomCount: mirrorRooms.length,
-      mainMenuRoomCount: mainRooms.length,
-
-      registryAvailable: Boolean(registry()),
 
       fixedBubble: true,
       fullScreenOverlay: true,
-      mapInstructionsToggle: true,
-      draggable: true,
       mobileSafePosition: Boolean(
         rect &&
         rect.left >= v.offsetLeft - 1 &&
@@ -1669,26 +835,9 @@
         rect.bottom <= v.offsetTop + v.height + 1
       ),
 
-      visualViewportUsed: v.visualViewportUsed,
-      viewportWidth: v.width,
-      viewportHeight: v.height,
-      visualViewportScale: v.scale,
-      safeMargins: m,
-
       positionSource: state.positionSource,
       positionWasClamped: state.positionWasClamped,
-      localStorageRepaired: state.localStorageRepaired,
       bubblePosition: { ...state.position },
-      bubbleRect: rect ? {
-        x: rect.x,
-        y: rect.y,
-        top: rect.top,
-        left: rect.left,
-        right: rect.right,
-        bottom: rect.bottom,
-        width: rect.width,
-        height: rect.height
-      } : null,
 
       imageGeneration: false,
       graphicBox: false,
@@ -1708,59 +857,15 @@
       document.documentElement.dataset.manorBlueprintActive = "true";
       document.documentElement.dataset.manorBlueprintContract = CONTRACT;
       document.documentElement.dataset.manorBlueprintPreviousContract = PREVIOUS_CONTRACT;
-      document.documentElement.dataset.manorBlueprintPriorContract = PRIOR_CONTRACT;
-      document.documentElement.dataset.manorBlueprintLegacyContract = LEGACY_CONTRACT;
-
-      document.documentElement.dataset.manorBlueprintEstateRoomLanguageActive = "true";
-      document.documentElement.dataset.manorBlueprintPublicLabelsBound = "true";
-      document.documentElement.dataset.manorBlueprintRoutePathHiddenFromPublicCards = "true";
-      document.documentElement.dataset.manorBlueprintBuilderMetadataHidden = "true";
-      document.documentElement.dataset.manorBlueprintZiontsPublicIdentityBound = "true";
-      document.documentElement.dataset.manorBlueprintZiontsPronunciation = "Zience";
-      document.documentElement.dataset.manorBlueprintLabPublicLabelBound = "true";
-      document.documentElement.dataset.manorBlueprintFrontierWorkshopYardBound = "true";
-
-      document.documentElement.dataset.manorBlueprintMapBlipSingleEntryway = "true";
-      document.documentElement.dataset.manorBlueprintMirrorlandEntryway = "map-portal-blip";
-      document.documentElement.dataset.manorBlueprintMainMenuWebsiteOptionsOnly = "true";
-      document.documentElement.dataset.manorBlueprintMirrorlandDoorsCategoryOnly = "true";
-      document.documentElement.dataset.manorBlueprintSupportDoesNotEqualOwnership = "true";
-      document.documentElement.dataset.manorBlueprintGaugesMirrorlandAligned = "false";
-      document.documentElement.dataset.manorBlueprintFrontierMirrorlandAligned = "true";
-      document.documentElement.dataset.manorBlueprintNarrativePagesMirrorland = "true";
-      document.documentElement.dataset.manorBlueprintCompassSeparated = "true";
-      document.documentElement.dataset.manorBlueprintPageBodyDirectory = "false";
-
-      document.documentElement.dataset.manorBlueprintMirrorlandPortalActive = "true";
-      document.documentElement.dataset.manorBlueprintRoomMapActive = "true";
-      document.documentElement.dataset.manorBlueprintCardinalRoomMap = "true";
-      document.documentElement.dataset.manorBlueprintFloatingNodesReplaced = "true";
-      document.documentElement.dataset.manorBlueprintRoomsClickable = "true";
-      document.documentElement.dataset.manorBlueprintCardinalDispositionActive = "true";
-
-      document.documentElement.dataset.manorBlueprintMirrorlandMenuLabel = "Mirrorland Doors";
-      document.documentElement.dataset.manorBlueprintWebsiteOptionsSeparated = "true";
-      document.documentElement.dataset.manorBlueprintDualMenuActive = "true";
-
-      document.documentElement.dataset.manorBlueprintJoystickScrollForceProfile = JOYSTICK_SCROLL_FORCE_PROFILE;
-      document.documentElement.dataset.manorBlueprintJoystickMinScrollSpeed = String(MIN_SCROLL_SPEED);
-      document.documentElement.dataset.manorBlueprintJoystickMaxScrollSpeed = String(MAX_SCROLL_SPEED);
-      document.documentElement.dataset.manorBlueprintJoystickScrollForceMultiplier = String(JOYSTICK_SCROLL_FORCE_MULTIPLIER);
-
+      document.documentElement.dataset.manorBlueprintValueCategoryEstateLanguage = "true";
+      document.documentElement.dataset.manorBlueprintBuilderPathHidden = "true";
+      document.documentElement.dataset.manorBlueprintFileNameIsNotRoomIdentity = "true";
+      document.documentElement.dataset.manorBlueprintZiontsVisibleIdentity = "true";
+      document.documentElement.dataset.manorBlueprintGaugesDisplayedAsTheLab = "true";
+      document.documentElement.dataset.manorBlueprintFrontierWorkshopYard = "true";
       document.documentElement.dataset.manorBlueprintActiveLens = state.activeLens;
-      document.documentElement.dataset.manorBlueprintCurrentRoom = payload.currentRoomId;
-      document.documentElement.dataset.manorBlueprintCurrentPublicLabel = payload.currentPublicLabel;
-      document.documentElement.dataset.manorBlueprintCurrentEstateRoom = payload.currentEstateRoom;
-      document.documentElement.dataset.manorBlueprintCurrentEstateSection = payload.currentEstateSection;
-      document.documentElement.dataset.manorBlueprintCurrentRoomCardinal = payload.currentRoomCardinal;
-      document.documentElement.dataset.manorBlueprintNorthRoomCount = String(payload.northRoomCount);
-      document.documentElement.dataset.manorBlueprintEastRoomCount = String(payload.eastRoomCount);
-      document.documentElement.dataset.manorBlueprintCenterRoomCount = String(payload.centerRoomCount);
-      document.documentElement.dataset.manorBlueprintWestRoomCount = String(payload.westRoomCount);
-      document.documentElement.dataset.manorBlueprintSouthRoomCount = String(payload.southRoomCount);
-
-      document.documentElement.dataset.manorBlueprintPositionSource = state.positionSource;
-      document.documentElement.dataset.manorBlueprintPositionWasClamped = String(state.positionWasClamped);
+      document.documentElement.dataset.manorBlueprintCurrentRoom = payload.currentRouteId;
+      document.documentElement.dataset.manorBlueprintCurrentPublicRoomName = payload.currentPublicRoomName;
     } catch (_error) {}
 
     return payload;
@@ -1781,15 +886,11 @@
     close();
 
     if (bubble) {
-      try {
-        bubble.remove();
-      } catch (_error) {}
+      try { bubble.remove(); } catch (_error) {}
     }
 
     if (overlay) {
-      try {
-        overlay.remove();
-      } catch (_error2) {}
+      try { overlay.remove(); } catch (_error2) {}
     }
 
     bubble = null;
@@ -1801,40 +902,19 @@
       contract: API_CONTRACT,
       implementationContract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
-      priorContract: PRIOR_CONTRACT,
-      legacyContract: LEGACY_CONTRACT,
 
-      estateRoomLanguageActive: true,
-      publicLabelsBound: true,
-      routePathHiddenFromPublicCards: true,
-      builderMetadataHidden: true,
-      ziontsPublicIdentityBound: true,
-      ziontsPronunciation: "Zience",
-      labPublicLabelBound: true,
-      frontierWorkshopYardBound: true,
+      valueCategoryEstateLanguageActive: true,
+      builderPathHiddenFromVisitorCards: true,
+      fileNameIsNotRoomIdentity: true,
+      ziontsVisibleIdentity: true,
+      gaugesDisplayedAsTheLab: true,
+      frontierWorkshopYardLabelActive: true,
 
       mapBlipSingleEntryway: true,
       mirrorlandEntryway: "map_portal_blip",
       mainMenuWebsiteOptionsOnly: true,
       mirrorlandDoorsCategoryOnly: true,
       supportDoesNotEqualOwnership: true,
-      gaugesMirrorlandAligned: false,
-      frontierMirrorlandAligned: true,
-      narrativePagesMirrorland: true,
-      compassSeparated: true,
-
-      mirrorlandPortalActive: true,
-      roomMapActive: true,
-      cardinalRoomMap: true,
-      floatingNodesReplaced: true,
-      blueprintRoomsClickable: true,
-      cardinalDispositionActive: true,
-
-      joystickScrollForceProfile: JOYSTICK_SCROLL_FORCE_PROFILE,
-      joystickMinScrollSpeed: MIN_SCROLL_SPEED,
-      joystickMaxScrollSpeed: MAX_SCROLL_SPEED,
-      joystickScrollForceMultiplier: JOYSTICK_SCROLL_FORCE_MULTIPLIER,
-      joystickScrollForceIncreasePercent: JOYSTICK_SCROLL_FORCE_INCREASE_PERCENT,
 
       refresh,
       open,
@@ -1859,21 +939,14 @@
       attachDrag();
       initializePosition();
 
-      window.addEventListener("resize", () => {
-        applyPosition(state.position, "resize-reclamp", true);
-      }, { passive: true });
+      window.addEventListener("resize", () => applyPosition(state.position, "resize-reclamp", true), { passive: true });
 
       window.addEventListener("orientationchange", () => {
-        window.setTimeout(() => {
-          applyPosition(state.position, "orientation-reclamp", true);
-        }, 250);
+        window.setTimeout(() => applyPosition(state.position, "orientation-reclamp", true), 250);
       }, { passive: true });
 
       if (window.visualViewport) {
-        window.visualViewport.addEventListener("resize", () => {
-          applyPosition(state.position, "visual-viewport-reclamp", true);
-        }, { passive: true });
-
+        window.visualViewport.addEventListener("resize", () => applyPosition(state.position, "visual-viewport-reclamp", true), { passive: true });
         window.visualViewport.addEventListener("scroll", () => {
           if (!state.dragging) applyPosition(state.position, "visual-viewport-scroll-reclamp", false);
         }, { passive: true });
@@ -1886,11 +959,7 @@
       state.lastAction = "mounted";
       publishStatus();
     } catch (error) {
-      state.errors.push({
-        scope: "mount",
-        message: error?.message || String(error),
-        time: nowIso()
-      });
+      state.errors.push({ scope: "mount", message: error?.message || String(error), time: nowIso() });
       publishStatus();
     }
   }

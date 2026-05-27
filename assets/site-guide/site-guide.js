@@ -1,13 +1,16 @@
 // TARGET FILE: /assets/site-guide/site-guide.js
 // TNT FULL-FILE REPLACEMENT
-// SITE_GUIDE_THREE_FILE_FOCUS_ANIMATION_JS_TNT_v1
+// SITE_GUIDE_BLUEPRINT_JUMP_PAD_CONTROLLER_TNT_v1
 //
 // Owns:
 // - GUIDE_FOCUS_CONTROLLER
 // - page lens switching
 // - feature activation
 // - Open Blueprint controller action
+// - Return to Blueprint controller action
 // - Return to Orbit reset
+// - blueprint jump-pad controller
+// - local scratch-surface activation
 // - focus lock
 // - scroll-aware activation
 // - blueprint room selection
@@ -32,7 +35,9 @@
 
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CONTRACT = "SITE_GUIDE_THREE_FILE_FOCUS_ANIMATION_TNT_v1";
+  const CONTRACT = "SITE_GUIDE_BLUEPRINT_JUMP_PAD_CONTROLLER_TNT_v1";
+  const PREVIOUS_CONTRACT = "SITE_GUIDE_THREE_FILE_FOCUS_ANIMATION_TNT_v1";
+  const HTML_CONTRACT = "SITE_GUIDE_BLUEPRINT_JUMP_PAD_HTML_TNT_v1";
   const STATUS_GLOBAL = "DGB_SITE_GUIDE_STATUS";
   const CONTROLLER_GLOBAL = "DGB_GUIDE_FOCUS_CONTROLLER";
 
@@ -43,6 +48,8 @@
     featureGem: "[data-feature-gem]",
     featureDetail: "[data-feature-detail]",
     blueprintRoom: "[data-blueprint-room]",
+    jumpSection: "[data-jump-section]",
+    jumpSurface: ".jump-surface",
     categoryButton: "[data-category-button]",
     categoryPanel: "[data-category-panel]",
     demoCard: "[data-demo-card]",
@@ -55,6 +62,7 @@
     planTitle: "[data-plan-title]",
     planCopy: "[data-plan-copy]",
     openBlueprint: "[data-open-blueprint]",
+    returnToBlueprint: "[data-return-to-blueprint]",
     returnToOrbit: "[data-return-to-orbit]"
   });
 
@@ -283,6 +291,7 @@
     activeFeature: "",
     activeSection: "",
     activeBlueprintRoom: BLUEPRINT_DEFAULT_ROOM,
+    activeJumpSection: "",
     activeCategory: "presentation",
     activeDiagnosticCell: "",
     focusLocked: false,
@@ -300,6 +309,14 @@
     return root.querySelector(selector);
   }
 
+  function cssEscape(value) {
+    if (window.CSS && typeof window.CSS.escape === "function") {
+      return window.CSS.escape(String(value));
+    }
+
+    return String(value).replace(/[^a-zA-Z0-9_-]/g, "\\$&");
+  }
+
   function setBool(node, name, value) {
     if (!node) return;
     node.setAttribute(name, value ? "true" : "false");
@@ -313,19 +330,21 @@
     setBool(node, "data-muted", muted);
   }
 
+  function prefersReducedMotion() {
+    return Boolean(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }
+
   function scrollToTarget(target, block = "start") {
     const node = typeof target === "string" ? one(target) : target;
-    if (!node) return;
+    if (!node) return false;
 
     node.scrollIntoView({
       behavior: prefersReducedMotion() ? "auto" : "smooth",
       block,
       inline: "nearest"
     });
-  }
 
-  function prefersReducedMotion() {
-    return Boolean(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    return true;
   }
 
   function setExclusive(nodes, activeNode, options = {}) {
@@ -342,6 +361,7 @@
     all(selector).forEach((node) => {
       setActive(node, false);
       setMuted(node, false);
+      setBool(node, "data-scroll-active", false);
     });
   }
 
@@ -387,7 +407,7 @@
     }
 
     const clean = String(feature || "").trim();
-    const gem = one(`${SELECTORS.featureGem}[data-feature="${CSS.escape(clean)}"]`);
+    const gem = one(`${SELECTORS.featureGem}[data-feature="${cssEscape(clean)}"]`);
     const lens = FEATURE_LENS[clean] || "presentation";
     const target = FEATURE_TARGETS[clean] || SELECTORS.guideOrbit;
 
@@ -408,8 +428,13 @@
       detail.hidden = !active;
     });
 
-    if (clean === "blueprint") {
-      activateBlueprintRoom(state.activeBlueprintRoom || BLUEPRINT_DEFAULT_ROOM, { mute: true });
+    if (clean === "blueprint" && options.activateBlueprint !== false) {
+      activateBlueprintRoom(state.activeBlueprintRoom || BLUEPRINT_DEFAULT_ROOM, {
+        mute: true,
+        scroll: false,
+        lock: options.lock !== false,
+        activateJump: false
+      });
     }
 
     if (options.scroll !== false) {
@@ -436,7 +461,7 @@
     });
 
     const feature = clean === "blueprint" ? "blueprint" : clean;
-    const gem = one(`${SELECTORS.featureGem}[data-feature="${CSS.escape(feature)}"]`);
+    const gem = one(`${SELECTORS.featureGem}[data-feature="${cssEscape(feature)}"]`);
 
     if (gem) {
       all(SELECTORS.featureGem).forEach((node) => {
@@ -450,14 +475,25 @@
   }
 
   function openBlueprint(options = {}) {
-    state.focusLocked = true;
+    state.focusLocked = options.lock !== false;
     state.scrollFocusEnabled = false;
     state.activeFeature = "blueprint";
     state.lastAction = "open-blueprint";
 
     switchLens("presentation");
-    activateFeature("blueprint", { force: true, scroll: false, lock: true });
-    activateBlueprintRoom(options.room || BLUEPRINT_DEFAULT_ROOM, { mute: true });
+    activateFeature("blueprint", {
+      force: true,
+      scroll: false,
+      lock: options.lock !== false,
+      activateBlueprint: false
+    });
+
+    activateBlueprintRoom(options.room || state.activeBlueprintRoom || BLUEPRINT_DEFAULT_ROOM, {
+      mute: true,
+      scroll: false,
+      lock: options.lock !== false,
+      activateJump: false
+    });
 
     window.setTimeout(() => {
       scrollToTarget(".estate-blueprint", "center");
@@ -466,17 +502,124 @@
     publishStatus();
   }
 
+  function returnToBlueprint() {
+    state.focusLocked = true;
+    state.scrollFocusEnabled = false;
+    state.activeFeature = "blueprint";
+    state.lastAction = "return-to-blueprint";
+
+    switchLens("presentation");
+
+    const roomKey = state.activeBlueprintRoom || BLUEPRINT_DEFAULT_ROOM;
+
+    activateFeature("blueprint", {
+      force: true,
+      scroll: false,
+      lock: true,
+      activateBlueprint: false
+    });
+
+    activateBlueprintRoom(roomKey, {
+      mute: true,
+      scroll: false,
+      lock: true,
+      activateJump: false
+    });
+
+    if (state.activeJumpSection) {
+      activateJumpSection(state.activeJumpSection, jumpTargetForRoom(roomKey), {
+        scroll: false,
+        mute: true,
+        lock: true
+      });
+    }
+
+    window.setTimeout(() => {
+      scrollToTarget(".estate-blueprint", "center");
+    }, 40);
+
+    publishStatus();
+  }
+
   function activateBlueprintRoom(roomKey, options = {}) {
     const clean = blueprintData[roomKey] ? roomKey : BLUEPRINT_DEFAULT_ROOM;
-    const room = one(`${SELECTORS.blueprintRoom}[data-room="${CSS.escape(clean)}"]`);
+    const room = one(`${SELECTORS.blueprintRoom}[data-room="${cssEscape(clean)}"]`);
 
     if (!room) return;
 
     state.activeBlueprintRoom = clean;
+    state.activeFeature = "blueprint";
     state.lastAction = `blueprint-room:${clean}`;
+
+    if (options.lock !== false) {
+      state.focusLocked = true;
+      state.scrollFocusEnabled = false;
+    }
 
     setExclusive(all(SELECTORS.blueprintRoom), room, { muteSiblings: options.mute !== false });
     updateBlueprintDetail(clean);
+
+    const jumpTarget = room.getAttribute("data-jump-target") || jumpTargetForRoom(clean);
+
+    if (options.activateJump !== false) {
+      activateJumpSection(clean, jumpTarget, {
+        scroll: options.scroll !== false,
+        mute: true,
+        lock: options.lock !== false
+      });
+    }
+
+    publishStatus();
+  }
+
+  function jumpTargetForRoom(roomKey) {
+    return `#jump-${String(roomKey || BLUEPRINT_DEFAULT_ROOM).trim()}`;
+  }
+
+  function activateJumpSection(roomKey, target, options = {}) {
+    const clean = blueprintData[roomKey] ? roomKey : String(roomKey || BLUEPRINT_DEFAULT_ROOM).trim();
+    const targetSelector = target || jumpTargetForRoom(clean);
+
+    let section = one(`${SELECTORS.jumpSection}[data-jump-section="${cssEscape(clean)}"]`);
+
+    if (!section && targetSelector) {
+      section = one(targetSelector);
+    }
+
+    if (!section) return;
+
+    state.activeJumpSection = clean;
+    state.activeSection = clean;
+    state.activeBlueprintRoom = clean;
+    state.lastAction = `jump-section:${clean}`;
+
+    if (options.lock !== false) {
+      state.focusLocked = true;
+      state.scrollFocusEnabled = false;
+    }
+
+    const jumpSections = all(`${SELECTORS.jumpSection}, ${SELECTORS.jumpSurface}`);
+    const uniqueSections = Array.from(new Set(jumpSections));
+
+    uniqueSections.forEach((node) => {
+      const active = node === section;
+      setActive(node, active);
+      setMuted(node, options.mute !== false && !active);
+      setBool(node, "data-scroll-active", active);
+    });
+
+    all("[data-focus-section]").forEach((node) => {
+      if (node.matches(SELECTORS.jumpSection) || node.classList.contains("jump-surface")) return;
+      const active = node.getAttribute("data-focus-section") === clean;
+      if (active) setBool(node, "data-scroll-active", true);
+    });
+
+    if (options.scroll !== false) {
+      window.setTimeout(() => {
+        scrollToTarget(section, "center");
+      }, 45);
+    }
+
     publishStatus();
   }
 
@@ -503,7 +646,7 @@
 
   function activateCategory(categoryKey) {
     const clean = String(categoryKey || "presentation").trim();
-    const button = one(`${SELECTORS.categoryButton}[data-category="${CSS.escape(clean)}"]`);
+    const button = one(`${SELECTORS.categoryButton}[data-category="${cssEscape(clean)}"]`);
 
     if (!button) return;
 
@@ -554,9 +697,18 @@
     publishStatus();
   }
 
-  function returnToOrbit(options = {}) {
+  function clearJumpSections() {
+    all(`${SELECTORS.jumpSection}, ${SELECTORS.jumpSurface}`).forEach((node) => {
+      setActive(node, false);
+      setMuted(node, false);
+      setBool(node, "data-scroll-active", false);
+    });
+  }
+
+  function returnToOrbit() {
     state.activeFeature = "";
     state.activeSection = "";
+    state.activeJumpSection = "";
     state.activeDiagnosticCell = "";
     state.focusLocked = false;
     state.scrollFocusEnabled = true;
@@ -567,6 +719,7 @@
     clearCollection(SELECTORS.matrixCell);
     clearCollection(SELECTORS.spectrumCell);
     clearCollection("[data-focus-section]");
+    clearJumpSections();
 
     all(SELECTORS.featureDetail).forEach((detail) => {
       setActive(detail, false);
@@ -586,9 +739,17 @@
     activateCategory("presentation");
     switchLens("presentation");
 
-    if (options.keepBlueprintDefault !== false) {
-      activateBlueprintRoom(BLUEPRINT_DEFAULT_ROOM, { mute: false });
-    }
+    activateBlueprintRoom(BLUEPRINT_DEFAULT_ROOM, {
+      mute: false,
+      scroll: false,
+      lock: false,
+      activateJump: false
+    });
+
+    state.activeBlueprintRoom = BLUEPRINT_DEFAULT_ROOM;
+    state.activeJumpSection = "";
+    state.focusLocked = false;
+    state.scrollFocusEnabled = true;
 
     window.setTimeout(() => scrollToTarget(SELECTORS.guideOrbit, "start"), 40);
     publishStatus();
@@ -698,7 +859,12 @@
 
     all(SELECTORS.blueprintRoom).forEach((room) => {
       room.addEventListener("click", () => {
-        activateBlueprintRoom(room.getAttribute("data-room") || BLUEPRINT_DEFAULT_ROOM, { mute: true });
+        activateBlueprintRoom(room.getAttribute("data-room") || BLUEPRINT_DEFAULT_ROOM, {
+          mute: true,
+          scroll: true,
+          lock: true,
+          activateJump: true
+        });
       }, { signal });
     });
 
@@ -709,6 +875,7 @@
     });
 
     all(SELECTORS.demoCard).forEach((card) => {
+      if (card.matches(SELECTORS.jumpSection) || card.classList.contains("jump-surface")) return;
       card.addEventListener("click", () => activateCardWithinGroup(card), { signal });
     });
 
@@ -717,17 +884,32 @@
     });
 
     document.addEventListener("click", (event) => {
-      const openBlueprintTrigger = event.target.closest(`${SELECTORS.openBlueprint}, a[href="#presentation-layer"]`);
-      if (openBlueprintTrigger && isOpenBlueprintTrigger(openBlueprintTrigger)) {
-        event.preventDefault();
-        openBlueprint();
-        return;
-      }
-
       const returnTrigger = event.target.closest(`${SELECTORS.returnToOrbit}, a[href="#guide-orbit"]`);
       if (returnTrigger) {
         event.preventDefault();
         returnToOrbit();
+        return;
+      }
+
+      const returnBlueprintTrigger = event.target.closest(SELECTORS.returnToBlueprint);
+      if (returnBlueprintTrigger) {
+        event.preventDefault();
+        returnToBlueprint();
+        return;
+      }
+
+      const openBlueprintTrigger = event.target.closest(`${SELECTORS.openBlueprint}, a[href="#presentation-layer"]`);
+      if (openBlueprintTrigger && isOpenBlueprintTrigger(openBlueprintTrigger)) {
+        event.preventDefault();
+
+        const text = String(openBlueprintTrigger.textContent || "").trim().toLowerCase();
+
+        if (text.includes("return to blueprint")) {
+          returnToBlueprint();
+        } else {
+          openBlueprint();
+        }
+
         return;
       }
 
@@ -750,6 +932,7 @@
 
     const text = String(node.textContent || "").trim().toLowerCase();
     if (text.includes("open blueprint")) return true;
+    if (text.includes("return to blueprint")) return true;
     if (text.includes("blueprint") && node.getAttribute("href") === "#presentation-layer") return true;
 
     return false;
@@ -771,6 +954,8 @@
   function publishStatus() {
     const payload = {
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      htmlContract: HTML_CONTRACT,
       route: "/site-guide/",
       guideDesk: true,
       threeFileArchitecture: true,
@@ -779,10 +964,19 @@
       activeFeature: state.activeFeature,
       activeSection: state.activeSection,
       activeBlueprintRoom: state.activeBlueprintRoom,
+      activeJumpSection: state.activeJumpSection,
       activeCategory: state.activeCategory,
       activeDiagnosticCell: state.activeDiagnosticCell,
       focusLocked: state.focusLocked,
       scrollFocusEnabled: state.scrollFocusEnabled,
+
+      blueprintJumpPadController: true,
+      blueprintRoomReadsJumpTarget: true,
+      returnToBlueprintController: true,
+      returnToOrbitClearsJumpSections: true,
+      blueprintRoomClickActivatesJumpSection: true,
+      blueprintRoomClickScrollsToJumpSection: true,
+
       openBlueprintController: true,
       returnToOrbitReset: true,
       scrollActivation: Boolean(state.observer),
@@ -814,13 +1008,21 @@
 
     try {
       document.documentElement.dataset.siteGuideContract = CONTRACT;
+      document.documentElement.dataset.siteGuidePreviousContract = PREVIOUS_CONTRACT;
+      document.documentElement.dataset.siteGuideHtmlContract = HTML_CONTRACT;
       document.documentElement.dataset.siteGuideFocusController = "true";
       document.documentElement.dataset.siteGuideActiveLens = state.activeLens;
       document.documentElement.dataset.siteGuideActiveFeature = state.activeFeature;
+      document.documentElement.dataset.siteGuideActiveBlueprintRoom = state.activeBlueprintRoom;
+      document.documentElement.dataset.siteGuideActiveJumpSection = state.activeJumpSection;
       document.documentElement.dataset.siteGuideFocusLocked = String(state.focusLocked);
       document.documentElement.dataset.siteGuideReturnToOrbitReset = "true";
       document.documentElement.dataset.siteGuideScrollActivation = String(Boolean(state.observer));
       document.documentElement.dataset.siteGuideOpenBlueprintController = "true";
+      document.documentElement.dataset.siteGuideBlueprintJumpPadController = "true";
+      document.documentElement.dataset.siteGuideBlueprintRoomReadsJumpTarget = "true";
+      document.documentElement.dataset.siteGuideReturnToBlueprintController = "true";
+      document.documentElement.dataset.siteGuideReturnToOrbitClearsJumpSections = "true";
       document.documentElement.dataset.siteGuideDiagnosticScope256 = "true";
     } catch (_error) {}
 
@@ -845,13 +1047,17 @@
   function exposeApi() {
     const api = {
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      htmlContract: HTML_CONTRACT,
       state,
       switchLens,
       activateFeature,
       activateSection,
       openBlueprint,
+      returnToBlueprint,
       returnToOrbit,
       activateBlueprintRoom,
+      activateJumpSection,
       activateCategory,
       renderPlan,
       publishStatus,
@@ -877,6 +1083,7 @@
     state.activeFeature = "";
     state.activeSection = "";
     state.activeBlueprintRoom = BLUEPRINT_DEFAULT_ROOM;
+    state.activeJumpSection = "";
     state.activeCategory = "presentation";
     state.activeDiagnosticCell = "";
     state.focusLocked = false;
@@ -889,9 +1096,19 @@
 
     switchLens("presentation");
     activateCategory("presentation");
-    activateBlueprintRoom(BLUEPRINT_DEFAULT_ROOM, { mute: false });
+    activateBlueprintRoom(BLUEPRINT_DEFAULT_ROOM, {
+      mute: false,
+      scroll: false,
+      lock: false,
+      activateJump: false
+    });
     renderPlan();
     setupScrollObserver();
+
+    state.focusLocked = false;
+    state.scrollFocusEnabled = true;
+    state.lastAction = "mounted-ready";
+
     publishStatus();
   }
 

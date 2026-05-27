@@ -1,14 +1,14 @@
 <!-- TARGET FILE: /showroom/globe/audralia/planet/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- AUDRALIA_PLANET_RETURN_TO_GEM_ORBIT_SELECTOR_CORRECTION_HTML_TNT_v2 -->
+<!-- AUDRALIA_PLANET_COMPACT_NARRATIVE_GLOBE_AND_GEM_ORBIT_HTML_TNT_v3 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
   data-page="audralia-planet"
-  data-version="G3-SIMPLIFIED-GLOBE-NEAR-GEM-ORBIT-RETURN-SELECTOR-CORRECTED"
-  data-contract="AUDRALIA_PLANET_RETURN_TO_GEM_ORBIT_SELECTOR_CORRECTION_HTML_TNT_v2"
-  data-previous-contract="AUDRALIA_PLANET_SIMPLIFIED_GLOBE_NEAR_GEM_ORBIT_HTML_TNT_v1"
+  data-version="G3-COMPACT-NARRATIVE-GLOBE-GEM-ORBIT"
+  data-contract="AUDRALIA_PLANET_COMPACT_NARRATIVE_GLOBE_AND_GEM_ORBIT_HTML_TNT_v3"
+  data-previous-contract="AUDRALIA_PLANET_RETURN_TO_GEM_ORBIT_SELECTOR_CORRECTION_HTML_TNT_v2"
   data-baseline-contract="AUDRALIA_PLANET_HTML_RENDERPLEX_SHELL_CLEANUP_TNT_v1"
   data-canvas-contract="AUDRALIA_PLANET_FILE_5C_RENDERPLEX_CHILD_CHAIN_LOADER_TNT_v1"
   data-renderplex-active="true"
@@ -23,7 +23,7 @@
   data-blueprint-expected-implementation-contract="MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_POSITION_RENEWAL_TNT_v1"
   data-blueprint-mobile-safe-hud-requested="true"
   data-blueprint-test-route-install="true"
-  data-blueprint-cache-catch="AUDRALIA_PLANET_RETURN_TO_GEM_ORBIT_SELECTOR_CORRECTION_HTML_TNT_v2"
+  data-blueprint-cache-catch="AUDRALIA_PLANET_COMPACT_NARRATIVE_GLOBE_AND_GEM_ORBIT_HTML_TNT_v3"
   data-role="mirrorland-audralia-future-body-screen"
   data-future-path="Audralia_Untouched_Living_Path"
   data-mirrorland-narrative-active="true"
@@ -32,6 +32,9 @@
   data-gems-role="nearby-category-orbit"
   data-dropdown-removed="true"
   data-route-directory-removed="true"
+  data-page-compressed="true"
+  data-context-moved-to-details="true"
+  data-visible-diagnostic-reporting-reduced="true"
   data-return-to-orbit-target="#audralia-gem-orbit"
   data-return-to-orbit-points-to-globe="false"
   data-return-orbit-old-ui-selector-bypassed="true"
@@ -53,7 +56,7 @@
   <title>Audralia Planet · Future-Body Screen</title>
   <meta
     name="description"
-    content="Audralia is Mirrorland’s constructive future-body screen. The globe is the central object, the gem orbit is the category instrument, and Return to Orbit returns to the gems."
+    content="Audralia is Mirrorland’s constructive future-body screen. The globe is the object. The gems are the category orbit. Movement belongs to the Map Portal blip."
   >
 
   <style>
@@ -67,15 +70,13 @@
       --gold2:#ffe8a3;
       --blue:#8dd8ff;
       --green:#8ff0c3;
-      --violet:#8f65ff;
       --panel:rgba(8,13,27,.86);
       --line:rgba(184,205,255,.18);
-      --line2:rgba(243,200,111,.30);
       --shadow:0 34px 115px rgba(0,0,0,.52);
       --max:1220px;
       --gem-path:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
-      --orbit-size:38rem;
-      --orbit-radius:16rem;
+      --orbit-size:35rem;
+      --orbit-radius:14.75rem;
     }
 
     *{box-sizing:border-box}
@@ -97,10 +98,9 @@
       line-height:1.5;
       overflow-x:hidden;
       background:
-        radial-gradient(circle at 50% -12%,rgba(243,200,111,.22),transparent 32rem),
-        radial-gradient(circle at 14% 18%,rgba(36,120,255,.20),transparent 34rem),
-        radial-gradient(circle at 86% 30%,rgba(141,216,255,.13),transparent 32rem),
-        radial-gradient(circle at 50% 74%,rgba(143,240,195,.08),transparent 36rem),
+        radial-gradient(circle at 50% -12%,rgba(243,200,111,.20),transparent 30rem),
+        radial-gradient(circle at 14% 18%,rgba(36,120,255,.18),transparent 34rem),
+        radial-gradient(circle at 86% 30%,rgba(141,216,255,.11),transparent 32rem),
         linear-gradient(180deg,#070b16 0%,#030713 56%,#010207 100%);
       -webkit-font-smoothing:antialiased;
       text-rendering:geometricPrecision;
@@ -112,13 +112,13 @@
       inset:0;
       z-index:0;
       pointer-events:none;
-      opacity:.22;
+      opacity:.20;
       background-image:
-        radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
-        linear-gradient(rgba(141,216,255,.044) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(141,216,255,.044) 1px,transparent 1px);
+        radial-gradient(circle,rgba(255,255,255,.16) 0 1px,transparent 1.5px),
+        linear-gradient(rgba(141,216,255,.04) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.04) 1px,transparent 1px);
       background-size:230px 260px,56px 56px,56px 56px;
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.55) 66%,rgba(0,0,0,.20));
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 66%,rgba(0,0,0,.18));
     }
 
     a{color:inherit;text-decoration:none}
@@ -189,7 +189,7 @@
         conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.28),rgba(36,120,255,.22),rgba(1,15,60,.62),rgba(243,200,111,.20),rgba(255,255,255,.28)),
         radial-gradient(circle at 48% 22%,rgba(255,255,255,.32),transparent 42%),
         linear-gradient(145deg,rgba(9,44,112,.95),rgba(5,8,20,.98));
-      box-shadow:0 0 2rem rgba(36,120,255,.28),0 1.2rem 2.8rem rgba(0,0,0,.46),inset 0 1px 0 rgba(255,255,255,.16);
+      box-shadow:0 0 2rem rgba(36,120,255,.26),0 1.2rem 2.8rem rgba(0,0,0,.44),inset 0 1px 0 rgba(255,255,255,.16);
     }
 
     .brand-mark span{
@@ -219,9 +219,9 @@
     }
 
     .header-note{
-      max-width:24rem;
+      max-width:22rem;
       color:rgba(230,238,255,.62);
-      font-size:.78rem;
+      font-size:.76rem;
       font-weight:850;
       line-height:1.35;
       text-align:right;
@@ -229,11 +229,11 @@
 
     .panel{
       border:1px solid var(--line);
-      border-radius:clamp(1.35rem,5vw,2.35rem);
+      border-radius:clamp(1.15rem,4vw,2rem);
       background:
-        radial-gradient(circle at 14% 0%,rgba(141,216,255,.10),transparent 28rem),
-        radial-gradient(circle at 86% 18%,rgba(36,120,255,.14),transparent 28rem),
-        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
+        radial-gradient(circle at 14% 0%,rgba(141,216,255,.09),transparent 26rem),
+        radial-gradient(circle at 86% 18%,rgba(36,120,255,.12),transparent 28rem),
+        linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.020)),
         var(--panel);
       box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
       overflow:hidden;
@@ -242,10 +242,10 @@
     .hero{
       position:relative;
       display:grid;
-      gap:.9rem;
-      padding:clamp(1.2rem,4vw,2.4rem);
+      gap:.75rem;
+      padding:clamp(1rem,3vw,2rem);
       margin-top:.55rem;
-      min-height:clamp(18rem,34vw,26rem);
+      min-height:clamp(15rem,28vw,22rem);
       align-content:center;
       isolation:isolate;
     }
@@ -256,32 +256,32 @@
       right:clamp(1rem,6vw,5.6rem);
       top:50%;
       z-index:0;
-      width:clamp(9rem,25vw,17rem);
-      height:clamp(9rem,25vw,17rem);
-      border:1px solid rgba(243,200,111,.18);
-      border-radius:3rem;
+      width:clamp(8rem,22vw,15rem);
+      height:clamp(8rem,22vw,15rem);
+      border:1px solid rgba(243,200,111,.16);
+      border-radius:2.7rem;
       transform:translateY(-50%) rotate(45deg);
       background:
-        radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
-        radial-gradient(circle at 50% 72%,rgba(36,120,255,.18),transparent 62%),
+        radial-gradient(circle at 50% 42%,rgba(255,232,163,.11),transparent 48%),
+        radial-gradient(circle at 50% 72%,rgba(36,120,255,.16),transparent 62%),
         linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
       pointer-events:none;
-      opacity:.46;
+      opacity:.42;
     }
 
     .kicker{
       width:fit-content;
       display:inline-flex;
       align-items:center;
-      gap:.58rem;
-      padding:.56rem .92rem;
+      gap:.55rem;
+      padding:.52rem .85rem;
       border:1px solid rgba(255,255,255,.14);
       border-radius:999px;
       color:rgba(230,238,255,.86);
       background:rgba(255,255,255,.04);
-      font-size:.70rem;
+      font-size:.66rem;
       font-weight:950;
-      letter-spacing:.14em;
+      letter-spacing:.13em;
       text-transform:uppercase;
       position:relative;
       z-index:2;
@@ -289,19 +289,19 @@
 
     .kicker::before{
       content:"";
-      width:.68rem;
-      height:.68rem;
-      border-radius:.18rem;
+      width:.64rem;
+      height:.64rem;
+      border-radius:.17rem;
       transform:rotate(45deg);
       background:linear-gradient(135deg,var(--gold2),var(--gold));
-      box-shadow:0 0 1.1rem rgba(243,200,111,.46);
+      box-shadow:0 0 1rem rgba(243,200,111,.42);
     }
 
     h1{
       margin:0;
-      max-width:980px;
-      font-size:clamp(3rem,9vw,6.8rem);
-      line-height:.86;
+      max-width:940px;
+      font-size:clamp(2.7rem,8vw,5.8rem);
+      line-height:.88;
       letter-spacing:-.105em;
       text-wrap:balance;
       position:relative;
@@ -311,16 +311,16 @@
     h2{
       margin:0;
       color:var(--gold);
-      font-size:clamp(1.45rem,4.2vw,2.55rem);
+      font-size:clamp(1.35rem,3.8vw,2.35rem);
       line-height:.98;
-      letter-spacing:-.07em;
+      letter-spacing:-.065em;
       text-wrap:balance;
     }
 
     h3{
       margin:0;
       color:rgba(255,244,216,.98);
-      font-size:clamp(1.05rem,3vw,1.45rem);
+      font-size:clamp(1.02rem,2.6vw,1.32rem);
       line-height:1.08;
       letter-spacing:-.035em;
     }
@@ -328,48 +328,48 @@
     p{
       margin:0;
       color:var(--muted);
-      font-size:clamp(.96rem,2.5vw,1.12rem);
-      line-height:1.55;
+      font-size:clamp(.94rem,2.4vw,1.08rem);
+      line-height:1.5;
     }
 
     .lead{
-      max-width:900px;
+      max-width:860px;
       position:relative;
       z-index:2;
     }
 
     .quote{
-      max-width:900px;
-      padding:.9rem 1rem;
-      border:1px solid rgba(243,200,111,.24);
-      border-radius:1.1rem;
+      max-width:860px;
+      padding:.78rem .92rem;
+      border:1px solid rgba(243,200,111,.22);
+      border-radius:1rem;
       color:rgba(255,244,216,.94);
-      background:rgba(243,200,111,.070);
-      font-size:clamp(1rem,2.6vw,1.16rem);
+      background:rgba(243,200,111,.064);
+      font-size:clamp(.98rem,2.4vw,1.1rem);
       font-weight:900;
       position:relative;
       z-index:2;
     }
 
     .section{
-      margin-top:1.1rem;
-      padding:clamp(1rem,3vw,1.35rem);
+      margin-top:.95rem;
+      padding:clamp(.85rem,2.5vw,1.15rem);
       display:grid;
-      gap:1rem;
+      gap:.85rem;
     }
 
     .object-layout{
       display:grid;
-      grid-template-columns:minmax(0,1.08fr) minmax(18rem,.58fr);
-      gap:1rem;
+      grid-template-columns:minmax(0,1.12fr) minmax(17rem,.50fr);
+      gap:.85rem;
       align-items:stretch;
     }
 
     .planet-stage-card{
       position:relative;
-      min-height:clamp(34rem,62vw,48rem);
+      min-height:clamp(32rem,58vw,45rem);
       border:1px solid rgba(184,205,255,.15);
-      border-radius:clamp(1.2rem,4vw,2rem);
+      border-radius:clamp(1rem,3.5vw,1.7rem);
       overflow:hidden;
       background:
         radial-gradient(circle at 50% 40%,rgba(141,216,255,.12),transparent 18rem),
@@ -394,14 +394,14 @@
     .planet-stage-card::before{
       width:min(82%,42rem);
       height:min(54%,25rem);
-      border:1px solid rgba(243,200,111,.14);
-      box-shadow:0 0 3rem rgba(36,120,255,.12),inset 0 0 30px rgba(141,216,255,.045);
+      border:1px solid rgba(243,200,111,.13);
+      box-shadow:0 0 3rem rgba(36,120,255,.12),inset 0 0 30px rgba(141,216,255,.04);
     }
 
     .planet-stage-card::after{
       width:min(60%,28rem);
       height:min(38%,17rem);
-      border:1px solid rgba(141,216,255,.13);
+      border:1px solid rgba(141,216,255,.12);
       box-shadow:0 0 3rem rgba(141,216,255,.08);
     }
 
@@ -414,74 +414,74 @@
 
     .stage-label{
       position:absolute;
-      left:1rem;
-      top:1rem;
+      left:.85rem;
+      top:.85rem;
       z-index:5;
       display:grid;
-      gap:.25rem;
-      max-width:min(27rem,calc(100% - 2rem));
-      padding:.8rem .9rem;
+      gap:.2rem;
+      max-width:min(25rem,calc(100% - 1.7rem));
+      padding:.72rem .8rem;
       border:1px solid rgba(255,255,255,.12);
-      border-radius:1rem;
-      background:rgba(2,6,18,.72);
+      border-radius:.92rem;
+      background:rgba(2,6,18,.70);
       backdrop-filter:blur(8px);
     }
 
     .stage-label b{
       color:var(--gold);
-      font-size:.66rem;
+      font-size:.62rem;
       letter-spacing:.13em;
       text-transform:uppercase;
     }
 
     .stage-label span{
       color:rgba(230,238,255,.80);
-      font-size:.82rem;
+      font-size:.78rem;
       font-weight:760;
     }
 
     .stage-status{
       position:absolute;
-      left:1rem;
-      right:1rem;
-      bottom:1rem;
+      left:.85rem;
+      right:.85rem;
+      bottom:.85rem;
       z-index:5;
       display:flex;
       flex-wrap:wrap;
-      gap:.5rem;
+      gap:.45rem;
       align-items:center;
       justify-content:space-between;
-      padding:.75rem .85rem;
+      padding:.68rem .75rem;
       border:1px solid rgba(255,255,255,.12);
-      border-radius:1rem;
+      border-radius:.92rem;
       background:rgba(2,6,18,.74);
       backdrop-filter:blur(8px);
     }
 
     .stage-status span{
       color:rgba(230,238,255,.80);
-      font-size:.78rem;
+      font-size:.74rem;
       font-weight:850;
     }
 
     .actions{
       display:flex;
       flex-wrap:wrap;
-      gap:.5rem;
+      gap:.45rem;
     }
 
     .button,
     button.button{
-      min-height:2.45rem;
+      min-height:2.28rem;
       display:inline-flex;
       align-items:center;
       justify-content:center;
       border:1px solid rgba(255,255,255,.15);
       border-radius:999px;
-      padding:.58rem .86rem;
+      padding:.52rem .78rem;
       background:rgba(255,255,255,.045);
       color:rgba(241,246,255,.88);
-      font-size:.68rem;
+      font-size:.63rem;
       font-weight:950;
       letter-spacing:.055em;
       text-transform:uppercase;
@@ -505,78 +505,127 @@
       box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
     }
 
-    .button.green{
-      border-color:rgba(143,240,195,.42);
-      color:var(--green);
-      background:rgba(143,240,195,.07);
-    }
-
     .object-panel{
       display:grid;
-      gap:.85rem;
+      gap:.65rem;
       align-content:start;
-      padding:1rem;
-      border:1px solid rgba(243,200,111,.22);
-      border-radius:1.35rem;
+      padding:.85rem;
+      border:1px solid rgba(243,200,111,.20);
+      border-radius:1.15rem;
       background:
-        radial-gradient(circle at 16% 0%,rgba(243,200,111,.12),transparent 18rem),
-        radial-gradient(circle at 100% 24%,rgba(141,216,255,.10),transparent 18rem),
-        rgba(255,255,255,.035);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+        radial-gradient(circle at 16% 0%,rgba(243,200,111,.10),transparent 16rem),
+        radial-gradient(circle at 100% 24%,rgba(141,216,255,.09),transparent 16rem),
+        rgba(255,255,255,.030);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
     }
 
     .read-card{
       display:grid;
-      gap:.42rem;
-      padding:.78rem;
-      border:1px solid rgba(255,255,255,.11);
-      border-radius:1rem;
-      background:rgba(255,255,255,.035);
+      gap:.35rem;
+      padding:.68rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:.92rem;
+      background:rgba(255,255,255,.032);
     }
 
     .read-card b{
       color:var(--gold);
-      font-size:.62rem;
+      font-size:.58rem;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
 
     .read-card strong{
       color:rgba(255,244,216,.96);
-      font-size:1rem;
-      line-height:1.15;
+      font-size:.94rem;
+      line-height:1.13;
     }
 
     .read-card span{
       color:rgba(230,238,255,.80);
-      font-size:.86rem;
-      font-weight:750;
-      line-height:1.36;
+      font-size:.80rem;
+      font-weight:740;
+      line-height:1.34;
+    }
+
+    details.compact-context{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:.92rem;
+      background:rgba(255,255,255,.030);
+      overflow:hidden;
+    }
+
+    details.compact-context[open]{
+      border-color:rgba(243,200,111,.25);
+      background:
+        radial-gradient(circle at 14% 0%,rgba(243,200,111,.08),transparent 14rem),
+        rgba(255,255,255,.034);
+    }
+
+    details.compact-context summary{
+      list-style:none;
+      cursor:pointer;
+      display:flex;
+      justify-content:space-between;
+      gap:.65rem;
+      align-items:center;
+      min-height:2.5rem;
+      padding:.68rem .75rem;
+      color:var(--gold);
+      font-size:.60rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    details.compact-context summary::-webkit-details-marker{display:none}
+
+    details.compact-context summary::after{
+      content:"+";
+      color:rgba(230,238,255,.72);
+      font-size:1rem;
+      line-height:1;
+    }
+
+    details.compact-context[open] summary::after{
+      content:"–";
+      color:var(--gold2);
+    }
+
+    .compact-body{
+      display:grid;
+      gap:.5rem;
+      padding:0 .75rem .75rem;
+    }
+
+    .compact-body p{
+      font-size:.82rem;
+      line-height:1.4;
     }
 
     .mode-panel{
       display:grid;
-      gap:.8rem;
-      padding:.88rem;
-      border:1px solid rgba(184,205,255,.14);
-      border-radius:1.1rem;
-      background:rgba(255,255,255,.032);
+      gap:.68rem;
+      padding:.76rem;
+      border:1px solid rgba(184,205,255,.13);
+      border-radius:1rem;
+      background:rgba(255,255,255,.030);
     }
 
     .mode-buttons{
       display:flex;
       flex-wrap:wrap;
-      gap:.45rem;
+      gap:.38rem;
     }
 
     .mode-buttons button{
-      min-height:2.12rem;
-      border:1px solid rgba(184,205,255,.16);
+      min-height:2rem;
+      border:1px solid rgba(184,205,255,.15);
       border-radius:999px;
-      padding:.48rem .65rem;
+      padding:.44rem .60rem;
       color:rgba(230,238,255,.84);
       background:rgba(255,255,255,.04);
-      font-size:.58rem;
+      font-size:.54rem;
       font-weight:950;
       letter-spacing:.08em;
       text-transform:uppercase;
@@ -593,17 +642,17 @@
 
     .mode-copy{
       display:grid;
-      gap:.5rem;
+      gap:.45rem;
     }
 
     .mode-copy .status{
       width:fit-content;
-      padding:.34rem .56rem;
+      padding:.30rem .50rem;
       border:1px solid rgba(143,240,195,.30);
       border-radius:999px;
       color:var(--green);
       background:rgba(143,240,195,.07);
-      font-size:.60rem;
+      font-size:.56rem;
       font-weight:950;
       letter-spacing:.1em;
       text-transform:uppercase;
@@ -611,28 +660,28 @@
 
     .lens-copy-grid{
       display:grid;
-      gap:.5rem;
+      gap:.45rem;
     }
 
     .lens-copy-grid div{
-      padding:.7rem;
+      padding:.64rem;
       border:1px solid rgba(255,255,255,.10);
-      border-radius:.9rem;
-      background:rgba(255,255,255,.030);
+      border-radius:.82rem;
+      background:rgba(255,255,255,.028);
     }
 
     .lens-copy-grid b{
       display:block;
-      margin-bottom:.25rem;
+      margin-bottom:.2rem;
       color:var(--gold);
-      font-size:.58rem;
+      font-size:.55rem;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
 
     .lens-copy-grid p{
-      font-size:.84rem;
-      line-height:1.4;
+      font-size:.78rem;
+      line-height:1.36;
     }
 
     .gem-orbit-section{
@@ -641,14 +690,14 @@
 
     .gem-orbit-field{
       position:relative;
-      min-height:calc(var(--orbit-size) + 3rem);
+      min-height:calc(var(--orbit-size) + 2rem);
       display:grid;
       place-items:center;
       border:1px solid rgba(184,205,255,.15);
-      border-radius:clamp(1.2rem,4vw,2rem);
+      border-radius:clamp(1rem,3.5vw,1.7rem);
       overflow:hidden;
       background:
-        radial-gradient(circle at 50% 50%,rgba(243,200,111,.12),transparent 10rem),
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.11),transparent 10rem),
         radial-gradient(circle at 50% 50%,rgba(36,120,255,.12),transparent 20rem),
         linear-gradient(180deg,rgba(1,5,16,.72),rgba(2,6,16,.95));
       isolation:isolate;
@@ -668,49 +717,49 @@
     .gem-orbit-field::before{
       width:var(--orbit-size);
       height:var(--orbit-size);
-      border:1px solid rgba(243,200,111,.16);
+      border:1px solid rgba(243,200,111,.15);
       box-shadow:0 0 3.2rem rgba(36,120,255,.12),inset 0 0 2rem rgba(141,216,255,.04);
     }
 
     .gem-orbit-field::after{
       width:calc(var(--orbit-size) * .58);
       height:calc(var(--orbit-size) * .58);
-      border:1px solid rgba(141,216,255,.13);
+      border:1px solid rgba(141,216,255,.12);
     }
 
     .orbit-center{
       position:relative;
       z-index:4;
-      width:min(16rem,52vw);
+      width:min(15rem,52vw);
       display:grid;
-      gap:.45rem;
+      gap:.4rem;
       place-items:center;
       text-align:center;
-      padding:1rem;
-      border:1px solid rgba(243,200,111,.24);
-      border-radius:1.25rem;
+      padding:.9rem;
+      border:1px solid rgba(243,200,111,.22);
+      border-radius:1.12rem;
       background:rgba(2,6,18,.70);
       box-shadow:0 1rem 2rem rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.08);
     }
 
     .orbit-center b{
       color:var(--gold);
-      font-size:.62rem;
+      font-size:.58rem;
       letter-spacing:.14em;
       text-transform:uppercase;
     }
 
     .orbit-center strong{
       color:rgba(255,244,216,.98);
-      font-size:1.2rem;
+      font-size:1.1rem;
       line-height:1.05;
     }
 
     .orbit-center span{
       color:rgba(230,238,255,.74);
-      font-size:.82rem;
+      font-size:.78rem;
       font-weight:800;
-      line-height:1.32;
+      line-height:1.3;
     }
 
     .gem-anchor{
@@ -720,13 +769,13 @@
       left:50%;
       top:50%;
       z-index:5;
-      width:9.2rem;
-      height:6.75rem;
+      width:8.6rem;
+      height:6.28rem;
       display:grid;
       place-items:center;
-      padding:.45rem;
+      padding:.4rem;
       border:1px solid rgba(184,205,255,.13);
-      border-radius:1.05rem;
+      border-radius:.95rem;
       background:
         radial-gradient(circle at 50% 0%,rgba(141,216,255,.10),transparent 74%),
         linear-gradient(180deg,rgba(255,255,255,.046),rgba(255,255,255,.020));
@@ -749,7 +798,7 @@
 
     .gem-core{
       position:absolute;
-      inset:.28rem;
+      inset:.25rem;
       display:grid;
       place-items:center;
       pointer-events:none;
@@ -759,7 +808,7 @@
 
     @keyframes gemBreathe{
       0%,100%{transform:translateY(0) rotate(var(--tilt-a,-1.6deg)) scale(1);filter:brightness(1)}
-      50%{transform:translateY(-.20rem) rotate(var(--tilt-b,2deg)) scale(1.025);filter:brightness(1.12)}
+      50%{transform:translateY(-.18rem) rotate(var(--tilt-b,2deg)) scale(1.025);filter:brightness(1.12)}
     }
 
     .gem-svg{
@@ -770,9 +819,9 @@
       overflow:visible;
       pointer-events:none;
       filter:
-        drop-shadow(0 1rem 1.25rem rgba(0,0,0,.36))
-        drop-shadow(0 0 1.1rem rgba(36,120,255,.18))
-        drop-shadow(0 0 .55rem rgba(243,200,111,.10));
+        drop-shadow(0 .9rem 1.1rem rgba(0,0,0,.34))
+        drop-shadow(0 0 1rem rgba(36,120,255,.16))
+        drop-shadow(0 0 .5rem rgba(243,200,111,.10));
     }
 
     .gem-glint{
@@ -787,7 +836,7 @@
 
     @keyframes gemGlint{
       0%,100%{opacity:.07;transform:translateX(-36px)}
-      48%,55%{opacity:.56;transform:translateX(34px)}
+      48%,55%{opacity:.54;transform:translateX(34px)}
     }
 
     @keyframes gemFacetTurn{
@@ -800,7 +849,7 @@
       width:86%;
       display:grid;
       place-items:center;
-      gap:.12rem;
+      gap:.10rem;
       text-align:center;
       pointer-events:none;
       text-shadow:0 2px 12px rgba(0,0,0,.95),0 0 10px rgba(0,28,90,.80),0 0 2px rgba(255,255,255,.42);
@@ -809,7 +858,7 @@
     .gem-label b{
       display:block;
       color:rgba(255,244,216,.98);
-      font-size:clamp(.58rem,1.2vw,.78rem);
+      font-size:clamp(.55rem,1.1vw,.74rem);
       font-weight:950;
       letter-spacing:.08em;
       line-height:1.02;
@@ -818,7 +867,7 @@
 
     .gem-label span{
       color:rgba(230,238,255,.78);
-      font-size:clamp(.40rem,.9vw,.54rem);
+      font-size:clamp(.38rem,.84vw,.50rem);
       font-weight:900;
       letter-spacing:.08em;
       text-transform:uppercase;
@@ -826,7 +875,7 @@
 
     .gem-label small{
       color:var(--gold);
-      font-size:.48rem;
+      font-size:.45rem;
       font-weight:950;
       letter-spacing:.12em;
       text-transform:uppercase;
@@ -834,30 +883,30 @@
 
     .chamber-grid{
       display:grid;
-      gap:.75rem;
+      gap:.55rem;
     }
 
     details.chamber{
       border:1px solid rgba(184,205,255,.14);
-      border-radius:1.1rem;
-      background:rgba(255,255,255,.032);
+      border-radius:1rem;
+      background:rgba(255,255,255,.030);
       overflow:hidden;
     }
 
     details.chamber[data-active-chamber],
     details.chamber[open]{
-      border-color:rgba(243,200,111,.36);
+      border-color:rgba(243,200,111,.32);
       background:
-        radial-gradient(circle at 12% 0%,rgba(243,200,111,.10),transparent 18rem),
-        rgba(255,255,255,.038);
+        radial-gradient(circle at 12% 0%,rgba(243,200,111,.08),transparent 16rem),
+        rgba(255,255,255,.034);
     }
 
     details.chamber summary{
       cursor:pointer;
       list-style:none;
       display:grid;
-      gap:.4rem;
-      padding:.9rem;
+      gap:.28rem;
+      padding:.76rem .82rem;
     }
 
     details.chamber summary::-webkit-details-marker{display:none}
@@ -865,14 +914,14 @@
     .chamber-top{
       display:flex;
       justify-content:space-between;
-      gap:.75rem;
+      gap:.7rem;
       flex-wrap:wrap;
       align-items:center;
     }
 
     .chamber-top b{
       color:var(--gold);
-      font-size:.62rem;
+      font-size:.58rem;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
@@ -880,48 +929,48 @@
     .meta-row{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:.45rem;
-      padding:0 .9rem .75rem;
+      gap:.4rem;
+      padding:0 .82rem .65rem;
     }
 
     .meta{
       display:grid;
-      gap:.12rem;
-      padding:.55rem;
+      gap:.10rem;
+      padding:.48rem;
       border:1px solid rgba(255,255,255,.10);
-      border-radius:.8rem;
-      background:rgba(255,255,255,.028);
+      border-radius:.74rem;
+      background:rgba(255,255,255,.026);
     }
 
     .meta b{
       color:rgba(243,200,111,.92);
-      font-size:.52rem;
+      font-size:.49rem;
       letter-spacing:.11em;
       text-transform:uppercase;
     }
 
     .meta span{
       color:rgba(230,238,255,.78);
-      font-size:.72rem;
+      font-size:.68rem;
       font-weight:800;
-      line-height:1.26;
+      line-height:1.24;
     }
 
     .lens-tabs{
       display:flex;
-      gap:.45rem;
+      gap:.4rem;
       flex-wrap:wrap;
-      padding:0 .9rem .7rem;
+      padding:0 .82rem .62rem;
     }
 
     .lens-tabs button{
-      min-height:2rem;
+      min-height:1.9rem;
       border:1px solid rgba(184,205,255,.15);
       border-radius:999px;
-      padding:.42rem .68rem;
+      padding:.38rem .62rem;
       color:rgba(230,238,255,.82);
       background:rgba(255,255,255,.04);
-      font-size:.58rem;
+      font-size:.54rem;
       font-weight:950;
       letter-spacing:.09em;
       text-transform:uppercase;
@@ -937,30 +986,30 @@
     }
 
     .lens-pane{
-      padding:0 .9rem .9rem;
+      padding:0 .82rem .82rem;
     }
 
     .lens-pane[hidden]{display:none}
 
     .pane-card{
       display:grid;
-      gap:.45rem;
-      padding:.78rem;
+      gap:.38rem;
+      padding:.68rem;
       border:1px solid rgba(255,255,255,.10);
-      border-radius:.9rem;
-      background:rgba(255,255,255,.030);
+      border-radius:.82rem;
+      background:rgba(255,255,255,.028);
     }
 
     .pane-card b{
       color:var(--gold);
-      font-size:.60rem;
+      font-size:.56rem;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
 
     .pane-card p{
-      font-size:.88rem;
-      line-height:1.42;
+      font-size:.82rem;
+      line-height:1.38;
     }
 
     .receipt{
@@ -982,22 +1031,21 @@
     }
 
     footer{
-      padding:1.25rem 0 .5rem;
+      padding:1.15rem 0 .5rem;
       color:var(--faint);
       text-align:center;
-      font-size:.74rem;
+      font-size:.72rem;
     }
 
     @media (max-width:1050px){
       .object-layout{grid-template-columns:1fr}
       .meta-row{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .object-panel{grid-template-columns:1fr}
     }
 
     @media (max-width:820px){
       :root{
-        --orbit-size:30rem;
-        --orbit-radius:12.6rem;
+        --orbit-size:29rem;
+        --orbit-radius:12.2rem;
       }
 
       .topbar{
@@ -1011,8 +1059,8 @@
       }
 
       .gem-anchor{
-        width:7.1rem;
-        height:5.25rem;
+        width:6.9rem;
+        height:5.1rem;
       }
 
       .gem-label span{
@@ -1022,9 +1070,9 @@
 
     @media (max-width:760px){
       .shell{width:min(100% - 22px,var(--max))}
-      h1{font-size:clamp(3rem,15vw,5.4rem)}
-      .hero{min-height:24rem;padding:1rem}
-      .planet-stage-card{min-height:34rem}
+      h1{font-size:clamp(2.75rem,14vw,5rem)}
+      .hero{min-height:20rem;padding:1rem}
+      .planet-stage-card{min-height:32rem}
       .stage-status{align-items:stretch}
       .stage-status .actions{width:100%}
       .actions{display:grid}
@@ -1038,8 +1086,8 @@
         min-height:auto;
         display:grid;
         grid-template-columns:1fr 1fr;
-        gap:.65rem;
-        padding:1rem;
+        gap:.6rem;
+        padding:.85rem;
       }
 
       .gem-orbit-field::before,
@@ -1057,7 +1105,7 @@
         left:auto;
         top:auto;
         width:100%;
-        min-height:6rem;
+        min-height:5.65rem;
         height:auto;
         transform:none!important;
       }
@@ -1188,7 +1236,7 @@
       </a>
 
       <div class="header-note">
-        Movement belongs to the Map / Portal blip. Return to Orbit returns to the gem categories.
+        The Map / Portal blip owns movement. This page stays on Audralia.
       </div>
     </header>
 
@@ -1199,23 +1247,23 @@
         <h1 id="page-title">Audralia gives possibility a body.</h1>
 
         <p class="lead">
-          Audralia is Mirrorland’s constructive future-body screen. The globe gives the central read. The gem orbit gives the category read. Nothing here claims final water, final surface, or final visual completion.
+          Audralia is the Mirrorland world where possibility can still take form. The globe is the object. The gems are the category orbit.
         </p>
 
         <div class="quote">
-          ZIONTS warns. H-Earth survives. Audralia remembers what could still be shaped.
+          A mirror can shatter. A shadow cannot. Audralia is the constructive path inside that shadow.
         </div>
       </section>
 
       <section id="planet-orbit" class="panel section" aria-labelledby="object-title">
         <div class="kicker">Central object</div>
-        <h2 id="object-title">The globe is the room’s main object.</h2>
+        <h2 id="object-title">The globe is the main read.</h2>
 
         <div class="object-layout">
           <div class="planet-stage-card">
             <div class="stage-label">
               <b>Audralia · Untouched Living Path</b>
-              <span>The HTML shell owns the mount. Canvas/renderplex owns the future-body feed.</span>
+              <span>Canvas/renderplex owns the future-body feed.</span>
             </div>
 
             <div
@@ -1229,7 +1277,7 @@
             ></div>
 
             <div class="stage-status">
-              <span data-audralia-renderer-status>Renderplex preparing · mobile-safe Blueprint bootstrap cache key active</span>
+              <span data-audralia-renderer-status>Renderplex preparing · mobile-safe Blueprint bootstrap active</span>
               <div class="actions">
                 <button class="button" type="button" data-audralia-inspect-planet>Inspect</button>
                 <button class="button" type="button" data-reset-canvas-view>Reset View</button>
@@ -1237,77 +1285,89 @@
             </div>
           </div>
 
-          <aside class="object-panel" aria-label="Audralia object read">
+          <aside class="object-panel" aria-label="Audralia compact read">
             <div class="read-card">
               <b>Read</b>
               <strong>This is a future-body screen.</strong>
-              <span>The page is no longer a route directory. The planet itself is the orientation point.</span>
+              <span>The planet is visible, not final.</span>
             </div>
 
-            <div class="read-card">
-              <b>Meaning</b>
-              <strong>Audralia is the constructive path.</strong>
-              <span>Inside Mirrorland, Audralia carries the possibility that a world can still be shaped, inhabited, studied, and grown.</span>
-            </div>
-
-            <div class="read-card">
-              <b>Boundary</b>
-              <strong>The planet is visible, not final.</strong>
-              <span>Water, hydration, surface child, datum child, and final visual pass remain false.</span>
-            </div>
-
-            <div class="mode-panel">
-              <div class="kicker">Canvas Modes</div>
-
-              <div class="mode-buttons" aria-label="Audralia canvas modes">
-                <button type="button" data-audralia-mode="body" aria-pressed="true">Body</button>
-                <button type="button" data-audralia-mode="surface" aria-pressed="false">Surface</button>
-                <button type="button" data-audralia-mode="terrain" aria-pressed="false">Terrain</button>
-                <button type="button" data-audralia-mode="lattice" aria-pressed="false">Lattice</button>
-                <button type="button" data-audralia-mode="receipt" aria-pressed="false">Receipt</button>
+            <details class="compact-context" open>
+              <summary>Meaning</summary>
+              <div class="compact-body">
+                <p>Audralia is the constructive path inside Mirrorland’s possible-future field.</p>
               </div>
+            </details>
 
-              <div class="mode-copy">
-                <h3 data-audralia-mode-title>Body</h3>
-                <span class="status" data-audralia-mode-status>CLAY GLOBE · BASELINE FEED</span>
+            <details class="compact-context">
+              <summary>Held boundary</summary>
+              <div class="compact-body">
+                <p>Water, hydration, surface child, datum child, and final visual pass remain false.</p>
+              </div>
+            </details>
 
-                <div class="lens-copy-grid">
-                  <div>
-                    <b>Platform</b>
-                    <p data-audralia-mode-platform>
-                      Audralia begins as a moldable future-body: a world object on screen before landform, sea level, and surface truth are finalized.
-                    </p>
+            <details class="compact-context">
+              <summary>Engineering boundary</summary>
+              <div class="compact-body">
+                <p>HTML holds the shell. Canvas/renderplex owns the feed. The Map / Portal blip owns movement.</p>
+              </div>
+            </details>
+
+            <details class="compact-context">
+              <summary>Canvas modes</summary>
+              <div class="compact-body">
+                <div class="mode-panel">
+                  <div class="mode-buttons" aria-label="Audralia canvas modes">
+                    <button type="button" data-audralia-mode="body" aria-pressed="true">Body</button>
+                    <button type="button" data-audralia-mode="surface" aria-pressed="false">Surface</button>
+                    <button type="button" data-audralia-mode="terrain" aria-pressed="false">Terrain</button>
+                    <button type="button" data-audralia-mode="lattice" aria-pressed="false">Lattice</button>
+                    <button type="button" data-audralia-mode="receipt" aria-pressed="false">Receipt</button>
                   </div>
-                  <div>
-                    <b>Engineering</b>
-                    <p data-audralia-mode-engineering>
-                      UI requests Body mode from the canvas API. Canvas displays the baseline feed while HTML preserves the shell and category instruments.
-                    </p>
+
+                  <div class="mode-copy">
+                    <h3 data-audralia-mode-title>Body</h3>
+                    <span class="status" data-audralia-mode-status>CLAY GLOBE · BASELINE FEED</span>
+
+                    <div class="lens-copy-grid">
+                      <div>
+                        <b>Platform</b>
+                        <p data-audralia-mode-platform>
+                          Audralia begins as a moldable future-body before final surface truth is claimed.
+                        </p>
+                      </div>
+                      <div>
+                        <b>Engineering</b>
+                        <p data-audralia-mode-engineering>
+                          UI requests Body mode from the canvas API. HTML preserves shell and category instruments.
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </details>
           </aside>
         </div>
       </section>
 
       <section id="audralia-gem-orbit" class="panel section gem-orbit-section" aria-labelledby="gem-title">
         <div class="kicker">Gem orbit · Category home base</div>
-        <h2 id="gem-title">Return to Orbit means return to the gems.</h2>
+        <h2 id="gem-title">Return to Orbit returns here.</h2>
         <p>
-          These gems are the inspection categories around the object. They return the visitor to the category field, not back to the globe mount.
+          The gems are the category orbit around the future-body screen.
         </p>
 
         <div class="gem-orbit-field" aria-label="Audralia Mirrorland gem category orbit">
           <div class="orbit-center">
             <b>Gem Orbit</b>
             <strong>Category Field</strong>
-            <span>Choose a read, then return here.</span>
+            <span>Choose a read. Return here.</span>
           </div>
 
           <a class="gem-anchor" data-gem-anchor href="#body-glass" style="--angle:0deg;--delay:-.1s;--tilt-a:-1.4deg;--tilt-b:1.8deg;">
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaPlanetGem"></use></svg></span>
-            <span class="gem-label"><small>N</small><b>Body Glass</b><span>Future Body</span></span>
+            <span class="gem-label"><small>N</small><b>Body</b><span>Future Body</span></span>
           </a>
 
           <a class="gem-anchor" data-gem-anchor href="#surface-console" style="--angle:45deg;--delay:-.6s;--tilt-a:1.6deg;--tilt-b:-2.2deg;">
@@ -1317,7 +1377,7 @@
 
           <a class="gem-anchor" data-gem-anchor href="#terrain-deck" style="--angle:90deg;--delay:-1.1s;--tilt-a:-1.8deg;--tilt-b:2.4deg;">
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaPlanetGem"></use></svg></span>
-            <span class="gem-label"><small>E</small><b>Terrain</b><span>Land Pressure</span></span>
+            <span class="gem-label"><small>E</small><b>Terrain</b><span>Pressure</span></span>
           </a>
 
           <a class="gem-anchor" data-gem-anchor href="#lattice-scope" style="--angle:135deg;--delay:-1.6s;--tilt-a:1.2deg;--tilt-b:-2deg;">
@@ -1327,12 +1387,12 @@
 
           <a class="gem-anchor" data-gem-anchor href="#water-hold" style="--angle:180deg;--delay:-2.1s;--tilt-a:-2.1deg;--tilt-b:1.7deg;">
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaPlanetGem"></use></svg></span>
-            <span class="gem-label"><small>S</small><b>Water Hold</b><span>Held</span></span>
+            <span class="gem-label"><small>S</small><b>Water</b><span>Held</span></span>
           </a>
 
           <a class="gem-anchor" data-gem-anchor href="#canvas-screen" style="--angle:225deg;--delay:-2.6s;--tilt-a:1.7deg;--tilt-b:-1.9deg;">
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaPlanetGem"></use></svg></span>
-            <span class="gem-label"><small>SW</small><b>Canvas</b><span>Transmission</span></span>
+            <span class="gem-label"><small>SW</small><b>Canvas</b><span>Feed</span></span>
           </a>
 
           <a class="gem-anchor" data-gem-anchor href="#receipt-dock" style="--angle:270deg;--delay:-3.1s;--tilt-a:-1.5deg;--tilt-b:2.2deg;">
@@ -1342,19 +1402,19 @@
 
           <a class="gem-anchor" data-gem-anchor href="#contract-seal" style="--angle:315deg;--delay:-3.6s;--tilt-a:1.4deg;--tilt-b:-2.1deg;">
             <span class="gem-core"><svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#audraliaPlanetGem"></use></svg></span>
-            <span class="gem-label"><small>NW</small><b>Contract</b><span>Boundary</span></span>
+            <span class="gem-label"><small>NW</small><b>Seal</b><span>Boundary</span></span>
           </a>
         </div>
       </section>
 
       <section class="panel section" aria-labelledby="chambers-title">
-        <div class="kicker">Compact inspection</div>
-        <h2 id="chambers-title">Each category explains one part of the future-body read.</h2>
+        <div class="kicker">Compact category reads</div>
+        <h2 id="chambers-title">Context stays available without taking over the page.</h2>
 
         <div class="chamber-grid">
-          <details id="body-glass" class="chamber" data-audralia-chamber open>
+          <details id="body-glass" class="chamber" data-audralia-chamber>
             <summary>
-              <div class="chamber-top"><b>Body Glass · N</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div>
+              <div class="chamber-top"><b>Body · N</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div>
               <h3>First visible body of the Untouched Living Path.</h3>
             </summary>
             <div class="meta-row">
@@ -1369,7 +1429,7 @@
           </details>
 
           <details id="surface-console" class="chamber" data-audralia-chamber>
-            <summary><div class="chamber-top"><b>Surface Console · NE</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div><h3>First readable skin without claiming final surface truth.</h3></summary>
+            <summary><div class="chamber-top"><b>Surface · NE</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div><h3>First readable skin without final surface claim.</h3></summary>
             <div class="meta-row"><div class="meta"><b>Coordinate</b><span data-meta-coordinate>NE</span></div><div class="meta"><b>Version</b><span data-meta-version>Dry surface preview</span></div><div class="meta"><b>Duty</b><span data-meta-duty>Material readability</span></div><div class="meta"><b>Handoff</b><span data-meta-handoff>Future surface feed</span></div></div>
             <div class="lens-tabs"><button type="button" data-lens-tab="platform" aria-selected="true">Platform</button><button type="button" data-lens-tab="engineering" aria-selected="false">Engineering</button></div>
             <div class="lens-pane" data-lens-pane="platform"><div class="pane-card"><b>Platform</b><p>Surface Console frames the first skin of Audralia while keeping final surface completion held.</p></div></div>
@@ -1377,7 +1437,7 @@
           </details>
 
           <details id="terrain-deck" class="chamber" data-audralia-chamber>
-            <summary><div class="chamber-top"><b>Terrain Deck · E</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div><h3>Landform pressure before civilization and stewardship.</h3></summary>
+            <summary><div class="chamber-top"><b>Terrain · E</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div><h3>Landform pressure before settlement.</h3></summary>
             <div class="meta-row"><div class="meta"><b>Coordinate</b><span data-meta-coordinate>E</span></div><div class="meta"><b>Version</b><span data-meta-version>Terrain pressure preview</span></div><div class="meta"><b>Duty</b><span data-meta-duty>Relief direction</span></div><div class="meta"><b>Handoff</b><span data-meta-handoff>Future terrain feed</span></div></div>
             <div class="lens-tabs"><button type="button" data-lens-tab="platform" aria-selected="true">Platform</button><button type="button" data-lens-tab="engineering" aria-selected="false">Engineering</button></div>
             <div class="lens-pane" data-lens-pane="platform"><div class="pane-card"><b>Platform</b><p>Terrain Deck keeps landform as pressure and possibility before settlement, civilization, and stewardship.</p></div></div>
@@ -1385,7 +1445,7 @@
           </details>
 
           <details id="lattice-scope" class="chamber" data-audralia-chamber>
-            <summary><div class="chamber-top"><b>Lattice Scope · SE</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div><h3>The future-body is structured, not random.</h3></summary>
+            <summary><div class="chamber-top"><b>Lattice · SE</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div><h3>The future-body is structured, not random.</h3></summary>
             <div class="meta-row"><div class="meta"><b>Coordinate</b><span data-meta-coordinate>SE</span></div><div class="meta"><b>Version</b><span data-meta-version>16 × 16 inspection</span></div><div class="meta"><b>Duty</b><span data-meta-duty>Coordinate proof</span></div><div class="meta"><b>Handoff</b><span data-meta-handoff>Receipt / lattice feed</span></div></div>
             <div class="lens-tabs"><button type="button" data-lens-tab="platform" aria-selected="true">Platform</button><button type="button" data-lens-tab="engineering" aria-selected="false">Engineering</button></div>
             <div class="lens-pane" data-lens-pane="platform"><div class="pane-card"><b>Platform</b><p>Lattice Scope proves the future-body is inspectable and structured.</p></div></div>
@@ -1393,7 +1453,7 @@
           </details>
 
           <details id="water-hold" class="chamber" data-audralia-chamber>
-            <summary><div class="chamber-top"><b>Water Hold · S</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div><h3>Water is held until lawful feed arrives.</h3></summary>
+            <summary><div class="chamber-top"><b>Water · S</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div><h3>Water is held until lawful feed arrives.</h3></summary>
             <div class="meta-row"><div class="meta"><b>Coordinate</b><span data-meta-coordinate>S</span></div><div class="meta"><b>Version</b><span data-meta-version>Water inactive</span></div><div class="meta"><b>Duty</b><span data-meta-duty>Block false hydration</span></div><div class="meta"><b>Handoff</b><span data-meta-handoff>Future sea-level feed</span></div></div>
             <div class="lens-tabs"><button type="button" data-lens-tab="platform" aria-selected="true">Platform</button><button type="button" data-lens-tab="engineering" aria-selected="false">Engineering</button></div>
             <div class="lens-pane" data-lens-pane="platform"><div class="pane-card"><b>Platform</b><p>Water Hold treats water as too important to fake. It stays held until its lawful feed arrives.</p></div></div>
@@ -1401,7 +1461,7 @@
           </details>
 
           <details id="canvas-screen" class="chamber" data-audralia-chamber>
-            <summary><div class="chamber-top"><b>Canvas Screen · SW</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div><h3>The screen transmits Audralia’s possible future body.</h3></summary>
+            <summary><div class="chamber-top"><b>Canvas · SW</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div><h3>The screen transmits Audralia’s possible future body.</h3></summary>
             <div class="meta-row"><div class="meta"><b>Coordinate</b><span data-meta-coordinate>SW</span></div><div class="meta"><b>Version</b><span data-meta-version>Renderplex canvas</span></div><div class="meta"><b>Duty</b><span data-meta-duty>Transmit lawful feed</span></div><div class="meta"><b>Handoff</b><span data-meta-handoff>Downstream feed packets</span></div></div>
             <div class="lens-tabs"><button type="button" data-lens-tab="platform" aria-selected="true">Platform</button><button type="button" data-lens-tab="engineering" aria-selected="false">Engineering</button></div>
             <div class="lens-pane" data-lens-pane="platform"><div class="pane-card"><b>Platform</b><p>Canvas Screen transmits what it is fed. It does not own final planet truth.</p></div></div>
@@ -1409,7 +1469,7 @@
           </details>
 
           <details id="receipt-dock" class="chamber" data-audralia-chamber>
-            <summary><div class="chamber-top"><b>Receipt Dock · W</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div><h3>No false completion claim.</h3></summary>
+            <summary><div class="chamber-top"><b>Receipt · W</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div><h3>No false completion claim.</h3></summary>
             <div class="meta-row"><div class="meta"><b>Coordinate</b><span data-meta-coordinate>W</span></div><div class="meta"><b>Version</b><span data-meta-version>Handoff proof</span></div><div class="meta"><b>Duty</b><span data-meta-duty>Receipt state</span></div><div class="meta"><b>Handoff</b><span data-meta-handoff>Audit / next protocol</span></div></div>
             <div class="lens-tabs"><button type="button" data-lens-tab="platform" aria-selected="true">Platform</button><button type="button" data-lens-tab="engineering" aria-selected="false">Engineering</button></div>
             <div class="lens-pane" data-lens-pane="platform"><div class="pane-card"><b>Platform</b><p>Receipt Dock keeps the page honest. The route can be beautiful without claiming completion.</p></div></div>
@@ -1417,7 +1477,7 @@
           </details>
 
           <details id="contract-seal" class="chamber" data-audralia-chamber>
-            <summary><div class="chamber-top"><b>Contract Seal · NW</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div><h3>Seal against false beauty, false finality, and collapse.</h3></summary>
+            <summary><div class="chamber-top"><b>Seal · NW</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div><h3>Boundary against false beauty and false finality.</h3></summary>
             <div class="meta-row"><div class="meta"><b>Coordinate</b><span data-meta-coordinate>NW</span></div><div class="meta"><b>Version</b><span data-meta-version>Renderplex shell authority</span></div><div class="meta"><b>Duty</b><span data-meta-duty>Boundary lock</span></div><div class="meta"><b>Handoff</b><span data-meta-handoff>Execution review</span></div></div>
             <div class="lens-tabs"><button type="button" data-lens-tab="platform" aria-selected="true">Platform</button><button type="button" data-lens-tab="engineering" aria-selected="false">Engineering</button></div>
             <div class="lens-pane" data-lens-pane="platform"><div class="pane-card"><b>Platform</b><p>Contract Seal protects the story from becoming only technology and protects the technology from becoming only story.</p></div></div>
@@ -1427,18 +1487,21 @@
       </section>
 
       <template id="route-receipt" class="receipt" data-route-receipt>
-AUDRALIA_PLANET_RETURN_TO_GEM_ORBIT_SELECTOR_CORRECTION_HTML_TNT_v2
-previous=AUDRALIA_PLANET_SIMPLIFIED_GLOBE_NEAR_GEM_ORBIT_HTML_TNT_v1
+AUDRALIA_PLANET_COMPACT_NARRATIVE_GLOBE_AND_GEM_ORBIT_HTML_TNT_v3
+previous=AUDRALIA_PLANET_RETURN_TO_GEM_ORBIT_SELECTOR_CORRECTION_HTML_TNT_v2
 baseline=AUDRALIA_PLANET_HTML_RENDERPLEX_SHELL_CLEANUP_TNT_v1
 route=/showroom/globe/audralia/planet/
 html=/showroom/globe/audralia/planet/index.html
 html_shell_role=mount_and_visible_route_shell
-page_simplified=true
-dropdown_removed=true
+page_compressed=true
+context_moved_to_details=true
+visible_diagnostic_reporting_reduced=true
+dropdown_menu_removed=true
 route_directory_removed=true
 broad_jump_options_removed=true
 map_portal_blip_owns_navigation=true
 central_focus=Audralia_future_body_screen
+narrative_focus=Audralia_is_the_Mirrorland_world_where_possibility_can_still_take_form
 globe_role=central_object
 gem_orbit_role=category_home_base
 return_to_orbit_target=#audralia-gem-orbit
@@ -1459,7 +1522,7 @@ blueprint_expected_implementation_contract=MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_PO
 blueprint_mobile_safe_hud_requested=true
 blueprint_bootstrap_installed=true
 blueprint_test_route_install=true
-blueprint_cache_catch=AUDRALIA_PLANET_RETURN_TO_GEM_ORBIT_SELECTOR_CORRECTION_HTML_TNT_v2
+blueprint_cache_catch=AUDRALIA_PLANET_COMPACT_NARRATIVE_GLOBE_AND_GEM_ORBIT_HTML_TNT_v3
 html_loads_child_chain=false
 renderplex_owns_child_chain=true
 child_chain_loaded_by_canvas=true
@@ -1471,12 +1534,13 @@ globe_selector=#planet-orbit
 ui_selectors_preserved=true
 mode_selectors_preserved=true
 gem_selectors_preserved=true
+chamber_selectors_preserved=true
+lens_selectors_preserved=true
 data_return_orbit_preserved=false
-data_return_orbit_href=removed
 data_return_category_orbit_href=#audralia-gem-orbit
 visible_copy_simplified=true
-css_preserved_from_prior_simplification=true
-stage_markup_preserved=true
+default_chambers_collapsed=true
+context_details=Meaning,Held_boundary,Engineering_boundary,Canvas_modes
 activeWater=false
 hydrationActive=false
 surfaceChildActive=false
@@ -1485,12 +1549,12 @@ generatedImage=false
 graphicBox=false
 externalImageAsset=false
 finalVisualPass=false
-deploy_marker=AUDRALIA_PLANET_RETURN_TO_GEM_ORBIT_SELECTOR_CORRECTION_DEPLOY_MARKER_v2
+deploy_marker=AUDRALIA_PLANET_COMPACT_NARRATIVE_GLOBE_AND_GEM_ORBIT_DEPLOY_MARKER_v3
       </template>
     </main>
 
     <footer>
-      AUDRALIA_PLANET_RETURN_TO_GEM_ORBIT_SELECTOR_CORRECTION_HTML_TNT_v2 · Audralia · Return to Orbit returns to gem categories · No dropdown · No final visual pass.
+      AUDRALIA_PLANET_COMPACT_NARRATIVE_GLOBE_AND_GEM_ORBIT_HTML_TNT_v3 · Audralia · Compact narrative globe and gem orbit · No final visual pass.
     </footer>
   </div>
 

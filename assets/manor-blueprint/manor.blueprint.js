@@ -1,54 +1,53 @@
 // TARGET FILE: /assets/manor-blueprint/manor.blueprint.js
 // TNT FULL-FILE REPLACEMENT
-// MANOR_BLUEPRINT_MIRRORLAND_PORTAL_DUAL_MENU_JS_TNT_v1
+// MANOR_BLUEPRINT_MIRRORLAND_PORTAL_FRONTIER_SCROLL_FORCE_JS_TNT_v1
 //
 // Purpose:
-// Renew the Manor Blueprint map bubble into the Mirrorland portal.
-// The bubble opens a dual-menu overlay: Mirrorland Menu first, Main Menu /
-// Website Options second, Instructions third. The Compass remains separated
-// as the main-site orientation layer.
+// Renew the Mirrorland Portal runtime so Frontier is Mirrorland-aligned and
+// joystick scrolling has a visibly stronger physical force profile.
 //
 // Compatibility API contract preserved:
 // MANOR_BLUEPRINT_FIXED_DRAGGABLE_BUBBLE_FULLSCREEN_MAP_INSTRUCTIONS_TOGGLE_JS_TNT_v1
 //
 // Previous runtime contract:
-// MANOR_BLUEPRINT_JOYSTICK_SCROLL_FORCE_40_PERCENT_INCREASE_JS_TNT_v1
+// MANOR_BLUEPRINT_MIRRORLAND_PORTAL_DUAL_MENU_JS_TNT_v1
 //
 // Prior runtime contract:
-// MANOR_BLUEPRINT_GLOBAL_JOYSTICK_SCROLL_SITEWIDE_JS_TNT_v1
+// MANOR_BLUEPRINT_JOYSTICK_SCROLL_FORCE_40_PERCENT_INCREASE_JS_TNT_v1
 //
 // Legacy behavior contract:
 // MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_POSITION_RENEWAL_TNT_v1
 //
 // Owns:
 // - Mirrorland portal map bubble
-// - full-screen overlay
 // - Mirrorland Menu / Main Menu / Instructions lenses
-// - registry consumption for main-site supplemental routes
+// - Frontier as Mirrorland-aligned route
 // - full-viewport drag
-// - joystick scroll while dragging
-// - joystick scroll force multiplier
+// - stronger joystick scroll while dragging
 // - position persistence and repair
 // - status / receipt globals
 //
 // Does not own:
+// - Showroom page expression
 // - page content
-// - page-specific installs
-// - Audralia runtime
-// - planet routes
+// - Diamond renderer
+// - Showroom UI controller
 // - CSS source truth
 // - registry source truth
-// - Compass page authority
+// - site bootstrap
+// - Audralia runtime
+// - planet route files
+// - Gauges logic
 
 (() => {
   "use strict";
 
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CONTRACT = "MANOR_BLUEPRINT_MIRRORLAND_PORTAL_DUAL_MENU_JS_TNT_v1";
+  const CONTRACT = "MANOR_BLUEPRINT_MIRRORLAND_PORTAL_FRONTIER_SCROLL_FORCE_JS_TNT_v1";
   const API_CONTRACT = "MANOR_BLUEPRINT_FIXED_DRAGGABLE_BUBBLE_FULLSCREEN_MAP_INSTRUCTIONS_TOGGLE_JS_TNT_v1";
-  const PREVIOUS_CONTRACT = "MANOR_BLUEPRINT_JOYSTICK_SCROLL_FORCE_40_PERCENT_INCREASE_JS_TNT_v1";
-  const PRIOR_CONTRACT = "MANOR_BLUEPRINT_GLOBAL_JOYSTICK_SCROLL_SITEWIDE_JS_TNT_v1";
+  const PREVIOUS_CONTRACT = "MANOR_BLUEPRINT_MIRRORLAND_PORTAL_DUAL_MENU_JS_TNT_v1";
+  const PRIOR_CONTRACT = "MANOR_BLUEPRINT_JOYSTICK_SCROLL_FORCE_40_PERCENT_INCREASE_JS_TNT_v1";
   const LEGACY_CONTRACT = "MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_POSITION_RENEWAL_TNT_v1";
 
   const STATUS_GLOBAL = "DGB_MANOR_BLUEPRINT_STATUS";
@@ -61,10 +60,13 @@
   const OVERLAY_SELECTOR = "[data-dgb-blueprint-overlay]";
 
   const TAP_MOVE_THRESHOLD = 6;
-  const MIN_SCROLL_SPEED = 4;
-  const MAX_SCROLL_SPEED = 32;
+
+  const MIN_SCROLL_SPEED = 8;
+  const MAX_SCROLL_SPEED = 56;
   const JOYSTICK_SCROLL_FORCE_MULTIPLIER = 1.4;
   const JOYSTICK_SCROLL_FORCE_INCREASE_PERCENT = 40;
+  const JOYSTICK_SCROLL_FORCE_PROFILE = "strong-visible";
+
   const MOBILE_BREAKPOINT = 760;
 
   const MIRRORLAND_PRIMARY_PATHS = Object.freeze([
@@ -74,7 +76,8 @@
     "/showroom/globe/audralia/planet/",
     "/showroom/globe/audralia/disposition/",
     "/showroom/globe/h-earth/",
-    "/characters/"
+    "/characters/",
+    "/frontier/"
   ]);
 
   const MIRRORLAND_SUPPORT_PATHS = Object.freeze([
@@ -248,9 +251,13 @@
         priorContract: PRIOR_CONTRACT,
         legacyContract: LEGACY_CONTRACT,
         mirrorlandPortalActive: true,
+        frontierMirrorlandAligned: true,
         dualMenuActive: true,
         fullViewportDrag: true,
         joystickScrollActive: true,
+        joystickScrollForceProfile: JOYSTICK_SCROLL_FORCE_PROFILE,
+        joystickMinScrollSpeed: MIN_SCROLL_SPEED,
+        joystickMaxScrollSpeed: MAX_SCROLL_SPEED,
         joystickScrollForceMultiplier: JOYSTICK_SCROLL_FORCE_MULTIPLIER,
         joystickScrollForceIncreasePercent: JOYSTICK_SCROLL_FORCE_INCREASE_PERCENT,
         time: nowIso()
@@ -350,7 +357,7 @@
         "Portal",
         "Cross from the Door into the Mirrorland route field.",
         50,
-        12,
+        10,
         "primary-entry"
       ),
       route(
@@ -360,7 +367,7 @@
         "Threshold",
         "Return to the Diamond Door where Mirrorland entry begins.",
         35,
-        26,
+        24,
         "threshold"
       ),
       route(
@@ -369,8 +376,8 @@
         "/showroom/globe/audralia/",
         "Planetary Path",
         "Open the first living planetary doorway.",
-        62,
-        34,
+        63,
+        31,
         "planetary-path"
       ),
       route(
@@ -379,8 +386,8 @@
         "/showroom/globe/audralia/planet/",
         "Planetary Path",
         "Inspect Audralia as the future-body planetary template.",
-        72,
-        48,
+        74,
+        44,
         "planet"
       ),
       route(
@@ -389,8 +396,8 @@
         "/showroom/globe/audralia/disposition/",
         "Instruments",
         "Open the cockpit and disposition instruments.",
-        66,
-        63,
+        68,
+        58,
         "instrument"
       ),
       route(
@@ -399,8 +406,8 @@
         "/characters/",
         "People",
         "Meet the first faces waiting beyond the Door.",
-        41,
-        68,
+        42,
+        70,
         "characters"
       ),
       route(
@@ -409,9 +416,19 @@
         "/showroom/globe/h-earth/",
         "World Path",
         "Open the H-Earth world path.",
-        27,
+        25,
         52,
         "world"
+      ),
+      route(
+        "frontier",
+        "Frontier",
+        "/frontier/",
+        "Frontier",
+        "Open the Mirrorland-aligned frontier path.",
+        23,
+        68,
+        "mirrorland-frontier"
       ),
       route(
         "gauges-proof",
@@ -420,7 +437,7 @@
         "Proof",
         "Measure what is present, routed, and holding shape.",
         50,
-        84,
+        86,
         "support"
       )
     ];
@@ -435,7 +452,7 @@
       route("products", "Products", "/products/", "Website", "Open product routes.", 50, 82, "main"),
       route("laws", "Laws", "/laws/", "Website", "Open the law and proof layer.", 20, 54, "main"),
       route("gauges-main", "Gauges", "/gauges/", "Website", "Open route proof and measurement.", 36, 76, "main"),
-      route("frontier", "Frontier", "/frontier/", "Website", "Open frontier routes.", 24, 68, "main")
+      route("frontier-crosslink", "Frontier", "/frontier/", "Mirrorland-Aligned", "Frontier is Mirrorland-aligned and cross-listed here for fallback access.", 24, 68, "mirrorland-aligned-crosslink")
     ];
   }
 
@@ -471,10 +488,11 @@
 
   function mainMenuRoutes() {
     const base = baseMainRoutes();
+
     const registrySupplement = registryRoutes().filter((item) => {
       const path = normalizePath(item.path);
       const baseDuplicate = base.some((routeItem) => normalizePath(routeItem.path) === path);
-      const mirrorlandOnly = isMirrorlandPrimaryPath(path) && path !== "/showroom/";
+      const mirrorlandOnly = isMirrorlandPrimaryPath(path) && path !== "/showroom/" && path !== "/frontier/";
       return !baseDuplicate && !mirrorlandOnly;
     });
 
@@ -494,11 +512,11 @@
       },
       {
         title: "Mirrorland Menu",
-        body: "Use Mirrorland Menu to enter or navigate inside Mirrorland."
+        body: "Use Mirrorland Menu to enter or navigate inside Mirrorland. Frontier is part of this field."
       },
       {
         title: "Main Menu / Website Options",
-        body: "Use Main Menu for ordinary website routes. Compass remains separated from the Mirrorland portal."
+        body: "Use Main Menu for ordinary website fallback routes. Compass remains separated from the Mirrorland portal."
       },
       {
         title: "Drag",
@@ -506,7 +524,7 @@
       },
       {
         title: "Joystick Scroll",
-        body: "While dragging, pull near the bottom edge to scroll down or near the top edge to scroll up. Scroll force remains increased by 40%."
+        body: "While dragging, pull near the bottom edge to scroll down or near the top edge to scroll up. This pass uses a stronger visible scroll-force profile."
       }
     ];
 
@@ -546,6 +564,10 @@
     return isMirrorlandSupportPath(window.location.pathname || "/");
   }
 
+  function frontierActive() {
+    return pathStartsWith(window.location.pathname || "/", "/frontier/");
+  }
+
   function currentRoute(routeList) {
     const path = normalizePath(window.location.pathname || "/");
 
@@ -575,6 +597,10 @@
 
     if (state.activeLens === "instructions") {
       return "Operate the portal, drag the bubble, and use joystick-scroll when moving through long pages.";
+    }
+
+    if (frontierActive()) {
+      return "Frontier is Mirrorland-aligned. Use this portal to move through the Mirrorland route field.";
     }
 
     return mirrorlandEntered()
@@ -608,7 +634,9 @@
     bubble.setAttribute("data-api-contract", API_CONTRACT);
     bubble.setAttribute("data-full-viewport-drag", "true");
     bubble.setAttribute("data-joystick-scroll", "true");
+    bubble.setAttribute("data-joystick-scroll-force-profile", JOYSTICK_SCROLL_FORCE_PROFILE);
     bubble.setAttribute("data-mirrorland-portal", "true");
+    bubble.setAttribute("data-frontier-mirrorland-aligned", "true");
     bubble.setAttribute("data-dual-menu", "true");
     bubble.setAttribute("data-joystick-scroll-force-multiplier", String(JOYSTICK_SCROLL_FORCE_MULTIPLIER));
     bubble.innerHTML = `
@@ -646,6 +674,7 @@
     overlay.setAttribute("data-open", "false");
     overlay.setAttribute("data-manor-blueprint-contract", CONTRACT);
     overlay.setAttribute("data-mirrorland-portal", "true");
+    overlay.setAttribute("data-frontier-mirrorland-aligned", "true");
     overlay.setAttribute("aria-label", "Mirrorland Portal map and menus");
 
     document.body.appendChild(overlay);
@@ -723,23 +752,26 @@
     const current = currentRoute(routeList);
     const entered = mirrorlandEntered();
     const support = mirrorlandSupportActive();
+    const frontier = frontierActive();
 
     return `
       <div class="dgb-bp-map-grid">
         <aside class="dgb-bp-panel">
           <div class="dgb-bp-panel-head">
             <b>Mirrorland Portal</b>
-            <h3>${entered ? "Inside Mirrorland" : support ? "Proof Route Active" : "Entry Available"}</h3>
-            <p>${entered
-              ? "The map is now your Mirrorland navigation system."
-              : support
-                ? "You are on a proof/support route connected to Mirrorland."
-                : "Use Enter Mirrorland to cross directly into the Mirrorland route field."}</p>
+            <h3>${frontier ? "Frontier Active" : entered ? "Inside Mirrorland" : support ? "Proof Route Active" : "Entry Available"}</h3>
+            <p>${frontier
+              ? "Frontier is part of Mirrorland. The portal recognizes it as a Mirrorland-aligned path."
+              : entered
+                ? "The map is now your Mirrorland navigation system."
+                : support
+                  ? "You are on a proof/support route connected to Mirrorland."
+                  : "Use Enter Mirrorland to cross directly into the Mirrorland route field."}</p>
           </div>
 
           <div class="dgb-bp-you-are-here">
             <div class="dgb-bp-location-card">
-              <b>${entered ? "Current Mirrorland Route" : "Portal Status"}</b>
+              <b>${entered || frontier ? "Current Mirrorland Route" : "Portal Status"}</b>
               <strong>${escapeHtml(current?.title || "Enter Mirrorland")}</strong>
               <code>${escapeHtml(normalizePath(window.location.pathname || "/"))}</code>
             </div>
@@ -749,11 +781,11 @@
               <span class="dgb-bp-chain-separator">→</span>
               <a href="/showroom/globe/">Mirrorland</a>
               <span class="dgb-bp-chain-separator">→</span>
-              <a href="/showroom/globe/audralia/">Audralia</a>
+              <a href="/frontier/">Frontier</a>
             </div>
 
             <a class="dgb-bp-guide-link" href="/showroom/globe/">
-              ${entered ? "Return to Mirrorland Gate" : "Enter Mirrorland"}
+              ${entered || frontier ? "Return to Mirrorland Gate" : "Enter Mirrorland"}
             </a>
           </div>
         </aside>
@@ -762,7 +794,7 @@
           <div class="dgb-bp-panel-head">
             <b>Mirrorland Menu</b>
             <h3>Portal routes</h3>
-            <p>These routes belong to the Mirrorland entry and world-path field.</p>
+            <p>These routes belong to the Mirrorland entry, world-path, character, proof, and frontier field.</p>
           </div>
           <div class="dgb-bp-route-tools">
             ${renderRouteSections(routeList, current, "Portal")}
@@ -808,7 +840,7 @@
           <div class="dgb-bp-panel-head">
             <b>Website Options</b>
             <h3>Main routes</h3>
-            <p>Use this lens for ordinary website navigation outside the Mirrorland portal layer.</p>
+            <p>Use this lens for ordinary website fallback navigation. Frontier remains Mirrorland-aligned even when cross-listed.</p>
           </div>
           <div class="dgb-bp-route-tools">
             ${renderRouteSections(routeList, current, "Open")}
@@ -847,6 +879,7 @@
 
     const entered = mirrorlandEntered();
     const support = mirrorlandSupportActive();
+    const frontier = frontierActive();
 
     overlay.innerHTML = `
       <div class="dgb-bp-topbar">
@@ -867,7 +900,7 @@
             <button class="dgb-bp-tab" type="button" data-dgb-lens="main" aria-selected="${state.activeLens === "main"}" data-active="${state.activeLens === "main"}">Main Menu</button>
             <button class="dgb-bp-tab" type="button" data-dgb-lens="instructions" aria-selected="${state.activeLens === "instructions"}" data-active="${state.activeLens === "instructions"}">Instructions</button>
           </div>
-          <div class="dgb-bp-current-pill">${entered ? "Inside Mirrorland" : support ? "Mirrorland Proof Route" : "Mirrorland Entry Available"}</div>
+          <div class="dgb-bp-current-pill">${frontier ? "Frontier · Mirrorland" : entered ? "Inside Mirrorland" : support ? "Mirrorland Proof Route" : "Mirrorland Entry Available"}</div>
         </div>
 
         <div class="dgb-bp-content">
@@ -1106,6 +1139,7 @@
     const rect = bubble ? bubble.getBoundingClientRect() : null;
     const entered = mirrorlandEntered();
     const support = mirrorlandSupportActive();
+    const frontier = frontierActive();
     const mirrorlandList = mirrorlandRoutes();
     const mainList = mainMenuRoutes();
     const currentAny = currentRoute(allKnownRoutes());
@@ -1121,6 +1155,8 @@
       mirrorlandPortalActive: true,
       mirrorlandEntered: entered,
       mirrorlandSupportActive: support,
+      frontierMirrorlandAligned: true,
+      frontierActive: frontier,
       mirrorlandMenuDefault: true,
       mirrorlandMenuAvailable: true,
       mainMenuAvailable: true,
@@ -1139,6 +1175,8 @@
       joystickScrolling: state.joystickActive,
       joystickDirection: state.joystickDirection,
       joystickSpeed: round2(state.joystickSpeed),
+      joystickScrollForceProfile: JOYSTICK_SCROLL_FORCE_PROFILE,
+      joystickScrollForceProfilePrevious: "nominal-multiplier-only",
       joystickScrollForceMultiplier: JOYSTICK_SCROLL_FORCE_MULTIPLIER,
       joystickScrollForceIncreasePercent: JOYSTICK_SCROLL_FORCE_INCREASE_PERCENT,
       joystickMinScrollSpeed: MIN_SCROLL_SPEED,
@@ -1213,6 +1251,8 @@
       document.documentElement.dataset.manorBlueprintMirrorlandPortalActive = "true";
       document.documentElement.dataset.manorBlueprintMirrorlandEntered = String(entered);
       document.documentElement.dataset.manorBlueprintMirrorlandSupportActive = String(support);
+      document.documentElement.dataset.manorBlueprintFrontierMirrorlandAligned = "true";
+      document.documentElement.dataset.manorBlueprintFrontierActive = String(frontier);
       document.documentElement.dataset.manorBlueprintMirrorlandMenuDefault = "true";
       document.documentElement.dataset.manorBlueprintMirrorlandMenuAvailable = "true";
       document.documentElement.dataset.manorBlueprintMainMenuAvailable = "true";
@@ -1221,6 +1261,9 @@
 
       document.documentElement.dataset.manorBlueprintFullViewportDrag = "true";
       document.documentElement.dataset.manorBlueprintJoystickScroll = "true";
+      document.documentElement.dataset.manorBlueprintJoystickScrollForceProfile = JOYSTICK_SCROLL_FORCE_PROFILE;
+      document.documentElement.dataset.manorBlueprintJoystickMinScrollSpeed = String(MIN_SCROLL_SPEED);
+      document.documentElement.dataset.manorBlueprintJoystickMaxScrollSpeed = String(MAX_SCROLL_SPEED);
       document.documentElement.dataset.manorBlueprintJoystickScrollForceMultiplier = String(JOYSTICK_SCROLL_FORCE_MULTIPLIER);
       document.documentElement.dataset.manorBlueprintJoystickScrollForceIncreasePercent = String(JOYSTICK_SCROLL_FORCE_INCREASE_PERCENT);
 
@@ -1272,8 +1315,12 @@
       priorContract: PRIOR_CONTRACT,
       legacyContract: LEGACY_CONTRACT,
       mirrorlandPortalActive: true,
+      frontierMirrorlandAligned: true,
       dualMenuActive: true,
       compassSeparated: true,
+      joystickScrollForceProfile: JOYSTICK_SCROLL_FORCE_PROFILE,
+      joystickMinScrollSpeed: MIN_SCROLL_SPEED,
+      joystickMaxScrollSpeed: MAX_SCROLL_SPEED,
       joystickScrollForceMultiplier: JOYSTICK_SCROLL_FORCE_MULTIPLIER,
       joystickScrollForceIncreasePercent: JOYSTICK_SCROLL_FORCE_INCREASE_PERCENT,
       refresh,

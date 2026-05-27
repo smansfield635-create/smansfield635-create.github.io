@@ -1,55 +1,23 @@
 // TARGET FILE: /assets/site-guide/site-guide.js
 // TNT FULL-FILE REPLACEMENT
-// SITE_GUIDE_BLUEPRINT_SCAN_MODE_CONTROLLER_TNT_v1
+// SITE_GUIDE_BLUEPRINT_HARD_JUMP_PAD_CONTROLLER_TNT_v1
 //
 // Purpose:
-// Renew Guide Desk from locked-selector behavior into a readable,
-// scan-first blueprint jump pad with explicit Return to Blueprint,
-// lens-anchor interception, and preserved Route Choice Board behavior.
+// Renew Guide Desk blueprint behavior into a hard-programmed room-to-preview
+// jump pad. Every blueprint room must resolve to one exact preview section
+// before the controller may highlight, lock, mute, or scroll.
 //
 // Previous contract:
-// SITE_GUIDE_ROUTE_CHOICE_BOARD_CONTROLLER_TNT_v1
-//
-// Owns:
-// - GUIDE_FOCUS_CONTROLLER
-// - page lens switching
-// - hidden-lens anchor interception
-// - feature activation
-// - Open Blueprint controller action
-// - blueprint scan mode
-// - Return to Blueprint controller action
-// - Return to Orbit reset
-// - blueprint jump-pad controller
-// - local scratch-surface activation
-// - Route Choice Board controller
-// - Visitor Position card selection
-// - Destination Goal card selection
-// - Recommended Path rail rendering
-// - scroll-aware activation without dead-page dimming
-// - blueprint room selection
-// - category selection
-// - 4x4 matrix selection
-// - 16x16 diagnostic spectrum generation / selection
-// - status globals
-//
-// Does not own:
-// - HTML page content
-// - CSS visual system
-// - Map / Portal runtime
-// - manor blueprint files
-// - canvas
-// - WebGL
-// - GraphicBox
-// - generated images
+// SITE_GUIDE_BLUEPRINT_SCAN_MODE_CONTROLLER_TNT_v1
 
 (() => {
   "use strict";
 
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CONTRACT = "SITE_GUIDE_BLUEPRINT_SCAN_MODE_CONTROLLER_TNT_v1";
-  const PREVIOUS_CONTRACT = "SITE_GUIDE_ROUTE_CHOICE_BOARD_CONTROLLER_TNT_v1";
-  const HTML_CONTRACT = "SITE_GUIDE_ROUTE_CHOICE_BOARD_ZONE_ALIGNMENT_CACHE_BUST_HTML_TNT_v1";
+  const CONTRACT = "SITE_GUIDE_BLUEPRINT_HARD_JUMP_PAD_CONTROLLER_TNT_v1";
+  const PREVIOUS_CONTRACT = "SITE_GUIDE_BLUEPRINT_SCAN_MODE_CONTROLLER_TNT_v1";
+  const HTML_CONTRACT = "SITE_GUIDE_BLUEPRINT_SCAN_TUTORIAL_COPY_HTML_TNT_v1";
   const STATUS_GLOBAL = "DGB_SITE_GUIDE_STATUS";
   const CONTROLLER_GLOBAL = "DGB_GUIDE_FOCUS_CONTROLLER";
 
@@ -79,6 +47,22 @@
     openBlueprint: "[data-open-blueprint]",
     returnToBlueprint: "[data-return-to-blueprint]",
     returnToOrbit: "[data-return-to-orbit]"
+  });
+
+  const ROOM_TO_SECTION = Object.freeze({
+    compass: "#jump-compass",
+    guide: "#jump-guide",
+    main: "#jump-main",
+    atrium: "#jump-atrium",
+    atlas: "#jump-atlas",
+    zionts: "#jump-zionts",
+    audralia: "#jump-audralia",
+    worldroom: "#jump-worldroom",
+    cockpit: "#jump-cockpit",
+    frontier: "#jump-frontier",
+    product: "#jump-product",
+    lab: "#jump-lab",
+    law: "#jump-law"
   });
 
   const FEATURE_TARGETS = Object.freeze({
@@ -116,92 +100,92 @@
   const blueprintData = Object.freeze({
     compass: {
       title: "Compass Desk",
-      copy: "Compass Desk is the front orientation position for the regular website.",
-      list: ["Location: Front Orientation Desk", "Connects: Door, Main Hall, Law Library, The Lab", "Action: Open Compass"],
+      copy: "Compass Desk is the place to re-center when the estate feels large or when you need a clean next move.",
+      list: ["Purpose: find direction", "Connects to: Main Hall, Law Library, The Lab, Atrium", "Next move: open Compass or preview another room"],
       href: "/",
       action: "Open Compass"
     },
     guide: {
       title: "Guide Desk",
-      copy: "Guide Desk is the flex exhibit page for the estate’s design systems and construction narrative.",
-      list: ["Location: Orientation Desk", "Connects: Compass Desk, The Lab, Law Library", "Action: Open Guide Desk"],
+      copy: "Guide Desk is the teaching room. It shows the estate’s buttons, maps, rooms, and movement patterns by letting you use them directly.",
+      list: ["Purpose: explain the estate", "Connects to: Compass Desk, The Lab, Law Library, Atrium", "Next move: keep using the guide or preview another room"],
       href: "/site-guide/",
       action: "Open Guide Desk"
     },
     main: {
       title: "Main Hall",
-      copy: "Main Hall stabilizes the public website before branching to products, laws, proof, or Mirrorland.",
-      list: ["Location: Central House", "Connects: Compass Desk, Product Gallery, Law Library", "Action: Open Main Hall"],
+      copy: "Main Hall is the ordinary public website center before the visitor branches into products, laws, proof, or Mirrorland.",
+      list: ["Purpose: regular website center", "Connects to: Compass Desk, Product Gallery, Law Library", "Next move: open Main Hall or preview another room"],
       href: "/home/",
       action: "Open Main Hall"
     },
     atrium: {
       title: "Atrium",
-      copy: "The Atrium is the Mirrorland entrance room. It frames the immersive estate threshold before the visitor moves deeper into Atlas Study, world rooms, or Frontier.",
-      list: ["Location: Mirrorland Entrance Atrium", "Connects: Atlas Study, Frontier Workshop Yard, Compass Desk", "Action: Enter Atrium"],
+      copy: "Atrium is the entrance into the Mirrorland side of the estate. It is the first step from the regular website into the immersive experience.",
+      list: ["Purpose: enter the Mirrorland side of the estate", "Connects to: Atlas Study, Frontier Workshop Yard, Compass Desk", "Next move: enter Atrium or preview another room"],
       href: "/showroom/",
       action: "Enter Atrium"
     },
     atlas: {
       title: "Atlas Study",
-      copy: "Atlas Study is the world-study chamber for planetary rooms, world context, and living environments.",
-      list: ["Location: East / World Study", "Connects: ZIONTS Room, Audralia Conservatory, Hearth, H-Earth", "Action: Open Atlas Study"],
+      copy: "Atlas Study gathers the world-facing routes. It is where planets, reference bodies, and world paths become easier to choose.",
+      list: ["Purpose: choose a world path", "Connects to: ZIONTS, Audralia, Hearth, H-Earth", "Next move: open Atlas Study or preview another room"],
       href: "/showroom/globe/",
       action: "Open Atlas Study"
     },
     zionts: {
       title: "ZIONTS Room",
-      copy: "ZIONTS Room, pronounced Zience, is the visitor-facing identity for the route currently served under the Earth path.",
-      list: ["Location: Atlas Study", "Connects: Audralia Conservatory", "Action: Enter ZIONTS"],
+      copy: "ZIONTS, pronounced Zience, is the room identity for the path currently served under Earth.",
+      list: ["Purpose: reference-world identity", "Connects to: Atlas Study and Audralia", "Next move: enter ZIONTS or preview another room"],
       href: "/showroom/globe/earth/",
       action: "Enter ZIONTS"
     },
     audralia: {
       title: "Audralia Conservatory",
-      copy: "Audralia Conservatory introduces the constructive living-world path inside Mirrorland.",
-      list: ["Location: Atlas Study", "Connects: Audralia Worldroom, Control Cockpit, Frontier Workshop Yard", "Action: Enter Conservatory"],
+      copy: "Audralia Conservatory introduces the forming constructive world before its deeper rooms, controls, terrain, and future systems are inspected.",
+      list: ["Purpose: constructive living-world path", "Connects to: Worldroom, Control Cockpit, Frontier Workshop Yard", "Next move: enter Audralia or preview another room"],
       href: "/showroom/globe/audralia/",
       action: "Enter Conservatory"
     },
     worldroom: {
       title: "Audralia Worldroom",
-      copy: "Audralia Worldroom gives a focused planet-body read without claiming the world is final.",
-      list: ["Location: Audralia Conservatory", "Connects: Control Cockpit", "Action: Inspect Worldroom"],
+      copy: "Audralia Worldroom gives a focused look at the visible world-body without pretending the whole world is finished.",
+      list: ["Purpose: inspect the visible world body", "Connects to: Audralia Conservatory and Control Cockpit", "Next move: inspect the worldroom or preview another room"],
       href: "/showroom/globe/audralia/planet/",
       action: "Inspect Worldroom"
     },
     cockpit: {
       title: "Control Cockpit",
-      copy: "Control Cockpit is the instrument room for operating and inspecting Audralia’s disposition layer.",
-      list: ["Location: Audralia Conservatory", "Connects: Audralia Worldroom, The Lab, Frontier", "Action: Open Cockpit"],
+      copy: "Control Cockpit is where Audralia’s readouts, controls, and instrument-facing views can be inspected.",
+      list: ["Purpose: inspect control and instrument behavior", "Connects to: Audralia Worldroom, The Lab, Frontier", "Next move: open Cockpit or preview another room"],
       href: "/showroom/globe/audralia/disposition/",
       action: "Open Cockpit"
     },
     frontier: {
       title: "Frontier Workshop Yard",
-      copy: "Frontier Workshop Yard is the outdoor applied-systems yard where future systems are pressure-tested.",
-      list: ["Location: West Grounds", "Connects: Audralia Conservatory, Law Library, The Lab", "Action: Enter Workshop Yard"],
+      copy: "Frontier Workshop Yard is the applied systems area where energy, water, infrastructure, manuals, and future ideas move toward practical shape.",
+      list: ["Purpose: applied future systems", "Connects to: Audralia, Law Library, The Lab, Product Gallery", "Next move: enter Frontier or preview another room"],
       href: "/explore/frontier/",
       action: "Enter Workshop Yard"
     },
     product: {
       title: "Product Gallery",
-      copy: "Product Gallery turns ideas into usable public value, offers, tools, and practical objects.",
-      list: ["Location: Product Gallery", "Connects: Main Hall, Host Portrait, Frontier", "Action: Open Product Gallery"],
+      copy: "Product Gallery shows how ideas, systems, tools, story-world objects, and practical offerings can become public-facing value.",
+      list: ["Purpose: usable public value", "Connects to: Main Hall, Frontier, Atrium", "Next move: open Product Gallery or preview another room"],
       href: "/products/",
       action: "Open Product Gallery"
     },
     lab: {
       title: "The Lab",
-      copy: "The Lab is the estate’s measurement room for status, readiness, route truth, and proof.",
-      list: ["Location: Measurement Lab", "Connects: Law Library, Frontier Workshop Yard, H-Earth Bench", "Action: Open The Lab"],
+      copy: "The Lab is the measurement room. It helps separate what is working, what is held, and what still needs proof.",
+      list: ["Purpose: status and readiness", "Connects to: Law Library, Frontier, Compass Desk", "Next move: open The Lab or preview another room"],
       href: "/gauges/",
       action: "Open The Lab"
     },
     law: {
       title: "Law Library",
-      copy: "Law Library holds the rules, boundaries, and coherence constraints that prevent expansion without discipline.",
-      list: ["Location: Law Library", "Connects: Council Room, The Lab, Frontier", "Action: Open Law Library"],
+      copy: "Law Library holds the rules, categories, and constraints that keep the site from expanding without discipline.",
+      list: ["Purpose: boundary and coherence", "Connects to: The Lab, Frontier, Compass Desk", "Next move: open Law Library or preview another room"],
       href: "/laws/",
       action: "Open Law Library"
     }
@@ -215,7 +199,7 @@
     },
     "new:worlds": {
       title: "Guide Desk → Atrium → Atlas Study",
-      copy: "Read the construction narrative, enter the Atrium, then open Atlas Study for worlds, ZIONTS, Audralia, Hearth, and H-Earth.",
+      copy: "Read the guide, enter the Atrium, then open Atlas Study for the world-facing rooms.",
       path: [["Guide Desk", "/site-guide/"], ["Atrium", "/showroom/"], ["Atlas Study", "/showroom/globe/"]]
     },
     "new:proof": {
@@ -239,24 +223,24 @@
       path: [["Map / Portal", "#guide-orbit"], ["Main Menu", "/"], ["Compass Desk", "/"]]
     },
     "mirrorland:worlds": {
-      title: "Map / Portal → Mirrorland Doors → Atlas Study",
-      copy: "Stay inside Mirrorland. Use Mirrorland Doors to move to Atlas Study and choose the world room you need.",
-      path: [["Map / Portal", "#navigation-layer"], ["Mirrorland Doors", "/showroom/"], ["Atlas Study", "/showroom/globe/"]]
+      title: "Mirrorland Doors → Atlas Study",
+      copy: "Stay inside Mirrorland and use Atlas Study to choose the world room you need.",
+      path: [["Mirrorland Doors", "/showroom/"], ["Atlas Study", "/showroom/globe/"]]
     },
     "mirrorland:proof": {
       title: "Map / Portal → Main Menu → The Lab",
-      copy: "Proof and readiness are regular website support surfaces. Use Main Menu to exit Mirrorland and open The Lab.",
-      path: [["Map / Portal", "#navigation-layer"], ["Main Menu", "/gauges/"], ["The Lab", "/gauges/"]]
+      copy: "Proof and readiness are regular website support surfaces. Use Main Menu to open The Lab.",
+      path: [["Map / Portal", "#navigation-layer"], ["The Lab", "/gauges/"]]
     },
     "mirrorland:frontier": {
       title: "Mirrorland Doors → Frontier Workshop Yard",
       copy: "Frontier is Mirrorland-aligned. Use Mirrorland Doors to open the Workshop Yard.",
-      path: [["Mirrorland Doors", "#guide-orbit"], ["Frontier Workshop Yard", "/explore/frontier/"]]
+      path: [["Mirrorland Doors", "/showroom/"], ["Frontier Workshop Yard", "/explore/frontier/"]]
     },
     "mirrorland:products": {
       title: "Map / Portal → Main Menu → Product Gallery",
       copy: "Products are regular website rooms. Use Main Menu to exit Mirrorland and open Product Gallery.",
-      path: [["Map / Portal", "#guide-orbit"], ["Main Menu", "/products/"], ["Product Gallery", "/products/"]]
+      path: [["Map / Portal", "#guide-orbit"], ["Product Gallery", "/products/"]]
     },
     "proof:orientation": {
       title: "The Lab → Guide Desk → Compass Desk",
@@ -300,8 +284,8 @@
     },
     "frontier:frontier": {
       title: "Frontier Workshop Yard → System Bench",
-      copy: "Choose a bench: Fusion, Closed Water Systems, Wastewater Systems, Infrastructure, Lattice, Manual, Shimmer, Trajectory, Vision, or Urban.",
-      path: [["Frontier Workshop Yard", "/explore/frontier/"], ["Fusion Bench", "/explore/frontier/energy/"], ["Closed Water Systems", "/explore/frontier/water/"]]
+      copy: "Choose a bench: Energy, Water, Wastewater, Infrastructure, Lattice, Manual, Shimmer, Trajectory, Vision, or Urban.",
+      path: [["Frontier Workshop Yard", "/explore/frontier/"], ["Energy Bench", "/explore/frontier/energy/"], ["Water Bench", "/explore/frontier/water/"]]
     },
     "frontier:products": {
       title: "Frontier Workshop Yard → Product Gallery",
@@ -322,9 +306,19 @@
     activeRouteGoal: DEFAULT_ROUTE_GOAL,
     blueprintScanMode: true,
     lastBlueprintRoom: BLUEPRINT_DEFAULT_ROOM,
+    lastBlueprintClickValid: true,
+    lastBlueprintJumpTarget: ROOM_TO_SECTION[BLUEPRINT_DEFAULT_ROOM],
+    lastBlueprintJumpSection: BLUEPRINT_DEFAULT_ROOM,
     focusLocked: false,
     scrollFocusEnabled: true,
     lastAction: "boot",
+    blueprintAudit: {
+      complete: false,
+      passed: false,
+      missingTargets: [],
+      invalidRooms: [],
+      targetMismatches: []
+    },
     observer: null,
     abortController: null
   };
@@ -338,10 +332,7 @@
   }
 
   function cssEscape(value) {
-    if (window.CSS && typeof window.CSS.escape === "function") {
-      return window.CSS.escape(String(value));
-    }
-
+    if (window.CSS && typeof window.CSS.escape === "function") return window.CSS.escape(String(value));
     return String(value).replace(/[^a-zA-Z0-9_-]/g, "\\$&");
   }
 
@@ -365,19 +356,29 @@
   function scrollToTarget(target, block = "start") {
     const node = typeof target === "string" ? one(target) : target;
     if (!node) return false;
-
     node.scrollIntoView({
       behavior: prefersReducedMotion() ? "auto" : "smooth",
       block,
       inline: "nearest"
     });
-
     return true;
+  }
+
+  function escapeHtml(value) {
+    return String(value == null ? "" : value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
+  }
+
+  function escapeAttribute(value) {
+    return escapeHtml(value).replaceAll("`", "&#96;");
   }
 
   function setExclusive(nodes, activeNode, options = {}) {
     const { muteSiblings = true } = options;
-
     nodes.forEach((node) => {
       const active = node === activeNode;
       setActive(node, active);
@@ -391,6 +392,136 @@
       setMuted(node, false);
       setBool(node, "data-scroll-active", false);
     });
+  }
+
+  function expectedSectionForRoom(roomKey) {
+    return ROOM_TO_SECTION[String(roomKey || "").trim()] || "";
+  }
+
+  function sectionKeyFromTarget(target) {
+    return String(target || "").replace(/^#jump-/, "");
+  }
+
+  function findRoomButton(roomKey) {
+    return one(`${SELECTORS.blueprintRoom}[data-room="${cssEscape(roomKey)}"]`);
+  }
+
+  function validateBlueprintRoute(roomKey) {
+    const key = String(roomKey || "").trim();
+    const room = key ? findRoomButton(key) : null;
+    const target = expectedSectionForRoom(key);
+    const section = target ? one(target) : null;
+    const jumpSection = section ? section.getAttribute("data-jump-section") || "" : "";
+    const htmlTarget = room ? room.getAttribute("data-jump-target") || "" : "";
+
+    const problems = [];
+
+    if (!key) problems.push("missing_room_key");
+    if (!room) problems.push("missing_room_button");
+    if (!target) problems.push("missing_registry_target");
+    if (!section) problems.push("missing_target_section");
+    if (section && jumpSection !== key) problems.push("jump_section_mismatch");
+    if (room && htmlTarget && htmlTarget !== target) problems.push("html_target_mismatch");
+
+    return {
+      ok: problems.length === 0,
+      roomKey: key,
+      room,
+      target,
+      section,
+      jumpSection,
+      htmlTarget,
+      problems
+    };
+  }
+
+  function auditBlueprintRegistry() {
+    const missingTargets = [];
+    const invalidRooms = [];
+    const targetMismatches = [];
+    const seenRooms = new Set();
+
+    all(SELECTORS.blueprintRoom).forEach((roomNode, index) => {
+      const roomKey = roomNode.getAttribute("data-room") || "";
+      const htmlTarget = roomNode.getAttribute("data-jump-target") || "";
+
+      if (!roomKey) {
+        invalidRooms.push({ index, reason: "missing_data_room" });
+        return;
+      }
+
+      seenRooms.add(roomKey);
+
+      const expectedTarget = expectedSectionForRoom(roomKey);
+      if (!expectedTarget) {
+        invalidRooms.push({ room: roomKey, reason: "not_in_hard_registry" });
+        return;
+      }
+
+      if (htmlTarget !== expectedTarget) {
+        targetMismatches.push({
+          room: roomKey,
+          htmlTarget,
+          expectedTarget
+        });
+      }
+
+      const section = one(expectedTarget);
+      if (!section) {
+        missingTargets.push({
+          room: roomKey,
+          target: expectedTarget,
+          reason: "target_not_found"
+        });
+        return;
+      }
+
+      const sectionKey = section.getAttribute("data-jump-section") || "";
+      if (sectionKey !== roomKey) {
+        missingTargets.push({
+          room: roomKey,
+          target: expectedTarget,
+          foundJumpSection: sectionKey,
+          reason: "jump_section_mismatch"
+        });
+      }
+    });
+
+    Object.keys(ROOM_TO_SECTION).forEach((roomKey) => {
+      if (!seenRooms.has(roomKey)) {
+        invalidRooms.push({
+          room: roomKey,
+          reason: "registered_room_missing_button"
+        });
+      }
+    });
+
+    state.blueprintAudit = {
+      complete: true,
+      passed: missingTargets.length === 0 && invalidRooms.length === 0 && targetMismatches.length === 0,
+      missingTargets,
+      invalidRooms,
+      targetMismatches
+    };
+
+    return state.blueprintAudit;
+  }
+
+  function safeBlueprintFailure(validation) {
+    state.lastBlueprintClickValid = false;
+    state.lastBlueprintJumpTarget = validation.target || "";
+    state.lastBlueprintJumpSection = validation.roomKey || "";
+    state.lastAction = `blueprint-safe-failure:${validation.roomKey || "unknown"}`;
+
+    state.focusLocked = false;
+    state.scrollFocusEnabled = false;
+
+    setBlueprintScanMode(true, { preserveRoom: true, restoreReadable: true });
+    clearJumpSections();
+    restoreBlueprintScanReadability(true);
+
+    publishStatus();
+    return false;
   }
 
   function setBlueprintScanMode(active, options = {}) {
@@ -421,10 +552,16 @@
     updateBlueprintDetail(selected);
   }
 
+  function clearJumpSections() {
+    all(`${SELECTORS.jumpSection}, ${SELECTORS.jumpSurface}`).forEach((node) => {
+      setActive(node, false);
+      setMuted(node, false);
+      setBool(node, "data-scroll-active", false);
+    });
+  }
+
   function switchLens(lens, options = {}) {
-    const clean = lens === "navigation" || lens === "diagnostics" || lens === "ledger"
-      ? lens
-      : "presentation";
+    const clean = lens === "navigation" || lens === "diagnostics" || lens === "ledger" ? lens : "presentation";
 
     state.activeLens = clean;
     state.lastAction = `switch-lens:${clean}`;
@@ -475,7 +612,6 @@
     state.lastAction = `activate-feature:${clean}`;
 
     switchLens(lens);
-
     setExclusive(all(SELECTORS.featureGem), gem);
 
     all(SELECTORS.featureDetail).forEach((detail) => {
@@ -486,12 +622,8 @@
 
     if (clean === "blueprint" && options.activateBlueprint !== false) {
       setBlueprintScanMode(true);
-      activateBlueprintRoom(state.activeBlueprintRoom || state.lastBlueprintRoom || BLUEPRINT_DEFAULT_ROOM, {
-        mute: false,
-        scroll: false,
-        lock: false,
-        activateJump: false
-      });
+      restoreBlueprintScanReadability(true);
+      clearJumpSections();
     }
 
     if (options.scroll !== false) {
@@ -514,24 +646,8 @@
       const active = section.getAttribute("data-focus-section") === clean;
       setActive(section, active);
       setBool(section, "data-scroll-active", active);
-
-      if (options.softMute === true) {
-        setMuted(section, !active);
-      } else {
-        setMuted(section, false);
-      }
+      setMuted(section, options.softMute === true && !active);
     });
-
-    const feature = clean === "blueprint" ? "blueprint" : clean;
-    const gem = one(`${SELECTORS.featureGem}[data-feature="${cssEscape(feature)}"]`);
-
-    if (gem) {
-      all(SELECTORS.featureGem).forEach((node) => {
-        const active = node === gem;
-        setActive(node, active);
-        setMuted(node, !active);
-      });
-    }
 
     publishStatus();
   }
@@ -543,8 +659,8 @@
     state.lastAction = "open-blueprint";
 
     switchLens("presentation");
-    setBlueprintScanMode(true, { preserveRoom: true, restoreReadable: true });
     clearJumpSections();
+    setBlueprintScanMode(true, { preserveRoom: true, restoreReadable: true });
 
     activateFeature("blueprint", {
       force: true,
@@ -553,17 +669,23 @@
       activateBlueprint: false
     });
 
-    activateBlueprintRoom(options.room || state.lastBlueprintRoom || state.activeBlueprintRoom || BLUEPRINT_DEFAULT_ROOM, {
-      mute: false,
-      scroll: false,
-      lock: false,
-      activateJump: false
-    });
+    const room = options.room || state.lastBlueprintRoom || state.activeBlueprintRoom || BLUEPRINT_DEFAULT_ROOM;
+    const validation = validateBlueprintRoute(room);
 
-    window.setTimeout(() => {
-      scrollToTarget(SELECTORS.blueprintRoot, "center");
-    }, 60);
+    if (validation.ok) {
+      state.activeBlueprintRoom = validation.roomKey;
+      state.lastBlueprintRoom = validation.roomKey;
+      updateBlueprintDetail(validation.roomKey);
+      all(SELECTORS.blueprintRoom).forEach((node) => {
+        const active = node.getAttribute("data-room") === validation.roomKey;
+        setActive(node, active);
+        setMuted(node, false);
+      });
+    } else {
+      restoreBlueprintScanReadability(true);
+    }
 
+    window.setTimeout(() => scrollToTarget(SELECTORS.blueprintRoot, "center"), 60);
     publishStatus();
   }
 
@@ -575,8 +697,8 @@
     state.lastAction = "return-to-blueprint";
 
     switchLens("presentation");
-    setBlueprintScanMode(true, { preserveRoom: true, restoreReadable: true });
     clearJumpSections();
+    setBlueprintScanMode(true, { preserveRoom: true, restoreReadable: true });
 
     activateFeature("blueprint", {
       force: true,
@@ -585,108 +707,78 @@
       activateBlueprint: false
     });
 
-    activateBlueprintRoom(state.lastBlueprintRoom || state.activeBlueprintRoom || BLUEPRINT_DEFAULT_ROOM, {
-      mute: false,
-      scroll: false,
-      lock: false,
-      activateJump: false
-    });
+    restoreBlueprintScanReadability(true);
 
-    window.setTimeout(() => {
-      scrollToTarget(SELECTORS.blueprintRoot, "center");
-    }, 50);
-
+    window.setTimeout(() => scrollToTarget(SELECTORS.blueprintRoot, "center"), 50);
     publishStatus();
   }
 
   function activateBlueprintRoom(roomKey, options = {}) {
-    const clean = blueprintData[roomKey] ? roomKey : BLUEPRINT_DEFAULT_ROOM;
-    const room = one(`${SELECTORS.blueprintRoom}[data-room="${cssEscape(clean)}"]`);
+    const validation = validateBlueprintRoute(roomKey);
 
-    if (!room) return;
-
-    state.activeBlueprintRoom = clean;
-    state.lastBlueprintRoom = clean;
-    state.activeFeature = "blueprint";
-    state.lastAction = `blueprint-room:${clean}`;
-
-    if (options.lock === true) {
-      state.focusLocked = true;
-      state.scrollFocusEnabled = false;
+    if (!validation.ok) {
+      return safeBlueprintFailure(validation);
     }
+
+    state.lastBlueprintClickValid = true;
+    state.lastBlueprintJumpTarget = validation.target;
+    state.lastBlueprintJumpSection = validation.jumpSection;
+    state.activeBlueprintRoom = validation.roomKey;
+    state.lastBlueprintRoom = validation.roomKey;
+    state.activeFeature = "blueprint";
+    state.lastAction = `blueprint-hard-jump:${validation.roomKey}`;
+
+    state.focusLocked = options.lock !== false;
+    state.scrollFocusEnabled = false;
 
     setBlueprintScanMode(true, { preserveRoom: false, restoreReadable: false });
 
     all(SELECTORS.blueprintRoom).forEach((node) => {
-      const active = node === room;
+      const active = node === validation.room;
       setActive(node, active);
-      setMuted(node, options.mute === true && !active);
+      setMuted(node, false);
     });
 
-    updateBlueprintDetail(clean);
-
-    const jumpTarget = room.getAttribute("data-jump-target") || jumpTargetForRoom(clean);
-
-    if (options.activateJump !== false) {
-      activateJumpSection(clean, jumpTarget, {
-        scroll: options.scroll !== false,
-        mute: true,
-        lock: options.lock !== false
-      });
-    }
-
+    updateBlueprintDetail(validation.roomKey);
+    activateHardJumpSection(validation, { scroll: options.scroll !== false });
     publishStatus();
+
+    return true;
   }
 
-  function jumpTargetForRoom(roomKey) {
-    return `#jump-${String(roomKey || BLUEPRINT_DEFAULT_ROOM).trim()}`;
-  }
+  function activateHardJumpSection(validation, options = {}) {
+    if (!validation || !validation.ok || !validation.section) return false;
 
-  function activateJumpSection(roomKey, target, options = {}) {
-    const clean = blueprintData[roomKey] ? roomKey : String(roomKey || BLUEPRINT_DEFAULT_ROOM).trim();
-    const targetSelector = target || jumpTargetForRoom(clean);
+    const section = validation.section;
+    const roomKey = validation.roomKey;
 
-    let section = one(`${SELECTORS.jumpSection}[data-jump-section="${cssEscape(clean)}"]`);
-
-    if (!section && targetSelector) {
-      section = one(targetSelector);
-    }
-
-    if (!section) return;
-
-    state.activeJumpSection = clean;
-    state.activeSection = clean;
-    state.activeBlueprintRoom = clean;
-    state.lastBlueprintRoom = clean;
-    state.lastAction = `jump-section:${clean}`;
-
-    if (options.lock !== false) {
-      state.focusLocked = true;
-      state.scrollFocusEnabled = false;
-    }
+    state.activeJumpSection = roomKey;
+    state.activeSection = roomKey;
+    state.activeBlueprintRoom = roomKey;
+    state.lastBlueprintRoom = roomKey;
+    state.lastBlueprintJumpTarget = validation.target;
+    state.lastBlueprintJumpSection = roomKey;
 
     const jumpSections = Array.from(new Set(all(`${SELECTORS.jumpSection}, ${SELECTORS.jumpSurface}`)));
 
     jumpSections.forEach((node) => {
       const active = node === section;
       setActive(node, active);
-      setMuted(node, options.mute !== false && !active);
+      setMuted(node, false);
       setBool(node, "data-scroll-active", active);
     });
 
     all("[data-focus-section]").forEach((node) => {
       if (node.matches(SELECTORS.jumpSection) || node.classList.contains("jump-surface")) return;
-      setBool(node, "data-scroll-active", node.getAttribute("data-focus-section") === clean);
+      setBool(node, "data-scroll-active", node.getAttribute("data-focus-section") === roomKey);
       setMuted(node, false);
     });
 
-    if (options.scroll !== false) {
-      window.setTimeout(() => {
-        scrollToTarget(section, "center");
-      }, 45);
+    if (options.scroll) {
+      window.setTimeout(() => scrollToTarget(section, "center"), 45);
     }
 
-    publishStatus();
+    return true;
   }
 
   function updateBlueprintDetail(roomKey) {
@@ -730,6 +822,15 @@
     publishStatus();
   }
 
+  function isControllerOwnedCard(node) {
+    return Boolean(
+      node.matches(SELECTORS.routeStart) ||
+      node.matches(SELECTORS.routeGoal) ||
+      node.matches(SELECTORS.jumpSection) ||
+      node.classList.contains("jump-surface")
+    );
+  }
+
   function activateCardWithinGroup(card) {
     const group = card.closest("[data-select-group]");
     const cards = group
@@ -742,27 +843,15 @@
     publishStatus();
   }
 
-  function isControllerOwnedCard(node) {
-    return Boolean(
-      node.matches(SELECTORS.routeStart) ||
-      node.matches(SELECTORS.routeGoal) ||
-      node.matches(SELECTORS.jumpSection) ||
-      node.classList.contains("jump-surface")
-    );
-  }
-
   function activateMatrixCell(cell) {
     setExclusive(all(SELECTORS.matrixCell), cell);
-
     state.activeDiagnosticCell = cell.textContent.trim();
     state.lastAction = `matrix:${state.activeDiagnosticCell}`;
-
     publishStatus();
   }
 
   function activateSpectrumCell(cell) {
-    const cells = all(SELECTORS.spectrumCell);
-    setExclusive(cells, cell);
+    setExclusive(all(SELECTORS.spectrumCell), cell);
 
     const index = cell.getAttribute("data-spectrum-cell") || "";
     state.activeDiagnosticCell = `spectrum-${index}`;
@@ -810,10 +899,7 @@
     state.activeRouteStart = clean;
     state.lastAction = `route-start:${clean}`;
 
-    if (card) {
-      setExclusive(all(SELECTORS.routeStart), card, { muteSiblings: options.mute !== false });
-    }
-
+    if (card) setExclusive(all(SELECTORS.routeStart), card, { muteSiblings: options.mute !== false });
     if (options.render !== false) renderPlan();
     if (options.publish !== false) publishStatus();
   }
@@ -826,119 +912,16 @@
     state.activeRouteGoal = clean;
     state.lastAction = `route-goal:${clean}`;
 
-    if (card) {
-      setExclusive(all(SELECTORS.routeGoal), card, { muteSiblings: options.mute !== false });
-    }
-
+    if (card) setExclusive(all(SELECTORS.routeGoal), card, { muteSiblings: options.mute !== false });
     if (options.render !== false) renderPlan();
     if (options.publish !== false) publishStatus();
   }
 
-  function clearJumpSections() {
-    all(`${SELECTORS.jumpSection}, ${SELECTORS.jumpSurface}`).forEach((node) => {
-      setActive(node, false);
-      setMuted(node, false);
-      setBool(node, "data-scroll-active", false);
-    });
-  }
-
   function resetRouteChoiceBoard(options = {}) {
-    activateRouteStart(DEFAULT_ROUTE_START, {
-      mute: true,
-      render: false,
-      publish: false
-    });
-
-    activateRouteGoal(DEFAULT_ROUTE_GOAL, {
-      mute: true,
-      render: false,
-      publish: false
-    });
-
+    activateRouteStart(DEFAULT_ROUTE_START, { mute: true, render: false, publish: false });
+    activateRouteGoal(DEFAULT_ROUTE_GOAL, { mute: true, render: false, publish: false });
     renderPlan();
-
     if (options.publish !== false) publishStatus();
-  }
-
-  function returnToOrbit() {
-    state.activeFeature = "";
-    state.activeSection = "";
-    state.activeJumpSection = "";
-    state.activeDiagnosticCell = "";
-    state.blueprintScanMode = false;
-    state.focusLocked = false;
-    state.scrollFocusEnabled = true;
-    state.lastAction = "return-to-orbit";
-
-    clearCollection(SELECTORS.featureGem);
-    clearCollection(SELECTORS.demoCard);
-    clearCollection(SELECTORS.matrixCell);
-    clearCollection(SELECTORS.spectrumCell);
-    clearCollection("[data-focus-section]");
-    clearJumpSections();
-
-    all(SELECTORS.featureDetail).forEach((detail) => {
-      setActive(detail, false);
-      setMuted(detail, false);
-      detail.hidden = true;
-    });
-
-    all(SELECTORS.blueprintRoom).forEach((room) => {
-      setActive(room, false);
-      setMuted(room, false);
-    });
-
-    all(SELECTORS.lensButton).forEach((button) => {
-      setMuted(button, false);
-    });
-
-    all(SELECTORS.blueprintRoot).forEach((blueprint) => {
-      setBool(blueprint, "data-scan-mode", false);
-    });
-
-    try {
-      document.documentElement.dataset.siteGuideBlueprintScanMode = "false";
-    } catch (_error) {}
-
-    activateCategory("presentation");
-    switchLens("presentation");
-
-    state.activeBlueprintRoom = BLUEPRINT_DEFAULT_ROOM;
-    state.lastBlueprintRoom = BLUEPRINT_DEFAULT_ROOM;
-    updateBlueprintDetail(BLUEPRINT_DEFAULT_ROOM);
-
-    resetRouteChoiceBoard({ publish: false });
-
-    window.setTimeout(() => scrollToTarget(SELECTORS.guideOrbit, "start"), 40);
-    publishStatus();
-  }
-
-  function pulseGuideOrbit() {
-    const orbit = one(SELECTORS.guideOrbit);
-    if (!orbit) return;
-
-    orbit.setAttribute("data-focus-blocked", "true");
-
-    window.setTimeout(() => {
-      orbit.removeAttribute("data-focus-blocked");
-    }, 650);
-  }
-
-  function buildSpectrum() {
-    const spectrum = one(SELECTORS.spectrumRoot);
-    if (!spectrum) return;
-
-    spectrum.innerHTML = "";
-
-    for (let index = 1; index <= 256; index += 1) {
-      const cell = document.createElement("button");
-      cell.type = "button";
-      cell.className = "spectrum-cell";
-      cell.setAttribute("aria-label", `Diagnostic state ${index}`);
-      cell.setAttribute("data-spectrum-cell", String(index));
-      cell.style.setProperty("--i", String(index));
-      spectrum.appendChild(cell);
-    }
   }
 
   function renderPlan() {
@@ -968,6 +951,83 @@
     publishStatus();
   }
 
+  function returnToOrbit() {
+    state.activeFeature = "";
+    state.activeSection = "";
+    state.activeJumpSection = "";
+    state.activeDiagnosticCell = "";
+    state.blueprintScanMode = false;
+    state.focusLocked = false;
+    state.scrollFocusEnabled = true;
+    state.lastBlueprintClickValid = true;
+    state.lastAction = "return-to-orbit";
+
+    clearCollection(SELECTORS.featureGem);
+    clearCollection(SELECTORS.demoCard);
+    clearCollection(SELECTORS.matrixCell);
+    clearCollection(SELECTORS.spectrumCell);
+    clearCollection("[data-focus-section]");
+    clearJumpSections();
+
+    all(SELECTORS.featureDetail).forEach((detail) => {
+      setActive(detail, false);
+      setMuted(detail, false);
+      detail.hidden = true;
+    });
+
+    all(SELECTORS.blueprintRoom).forEach((room) => {
+      setActive(room, false);
+      setMuted(room, false);
+    });
+
+    all(SELECTORS.blueprintRoot).forEach((blueprint) => {
+      setBool(blueprint, "data-scan-mode", false);
+    });
+
+    try {
+      document.documentElement.dataset.siteGuideBlueprintScanMode = "false";
+    } catch (_error) {}
+
+    activateCategory("presentation");
+    switchLens("presentation");
+
+    state.activeBlueprintRoom = BLUEPRINT_DEFAULT_ROOM;
+    state.lastBlueprintRoom = BLUEPRINT_DEFAULT_ROOM;
+    state.lastBlueprintJumpTarget = ROOM_TO_SECTION[BLUEPRINT_DEFAULT_ROOM];
+    state.lastBlueprintJumpSection = BLUEPRINT_DEFAULT_ROOM;
+
+    updateBlueprintDetail(BLUEPRINT_DEFAULT_ROOM);
+    resetRouteChoiceBoard({ publish: false });
+
+    window.setTimeout(() => scrollToTarget(SELECTORS.guideOrbit, "start"), 40);
+    publishStatus();
+  }
+
+  function pulseGuideOrbit() {
+    const orbit = one(SELECTORS.guideOrbit);
+    if (!orbit) return;
+
+    orbit.setAttribute("data-focus-blocked", "true");
+    window.setTimeout(() => orbit.removeAttribute("data-focus-blocked"), 650);
+  }
+
+  function buildSpectrum() {
+    const spectrum = one(SELECTORS.spectrumRoot);
+    if (!spectrum) return;
+
+    spectrum.innerHTML = "";
+
+    for (let index = 1; index <= 256; index += 1) {
+      const cell = document.createElement("button");
+      cell.type = "button";
+      cell.className = "spectrum-cell";
+      cell.setAttribute("aria-label", `Diagnostic state ${index}`);
+      cell.setAttribute("data-spectrum-cell", String(index));
+      cell.style.setProperty("--i", String(index));
+      spectrum.appendChild(cell);
+    }
+  }
+
   function setupScrollObserver() {
     if (!("IntersectionObserver" in window)) return;
 
@@ -977,7 +1037,6 @@
     }
 
     const sections = all("[data-focus-section]");
-
     if (!sections.length) return;
 
     state.observer = new IntersectionObserver((entries) => {
@@ -1025,12 +1084,7 @@
 
     all(SELECTORS.blueprintRoom).forEach((room) => {
       room.addEventListener("click", () => {
-        activateBlueprintRoom(room.getAttribute("data-room") || BLUEPRINT_DEFAULT_ROOM, {
-          mute: false,
-          scroll: true,
-          lock: true,
-          activateJump: true
-        });
+        activateBlueprintRoom(room.getAttribute("data-room") || "", { scroll: true, lock: true });
       }, { signal });
     });
 
@@ -1076,12 +1130,11 @@
         return;
       }
 
-      const openBlueprintTrigger = event.target.closest(`${SELECTORS.openBlueprint}, a[href="#presentation-layer"]`);
-      if (openBlueprintTrigger && isOpenBlueprintTrigger(openBlueprintTrigger)) {
+      const openBlueprintTrigger = event.target.closest(SELECTORS.openBlueprint);
+      if (openBlueprintTrigger) {
         event.preventDefault();
 
         const text = String(openBlueprintTrigger.textContent || "").trim().toLowerCase();
-
         if (text.includes("return to blueprint")) {
           returnToBlueprint();
         } else {
@@ -1106,25 +1159,19 @@
             })();
 
         const lens = lensFromHash(hash);
-
         if (lens) {
           event.preventDefault();
           state.focusLocked = false;
           state.scrollFocusEnabled = true;
           switchLens(lens, { scroll: false });
 
-          window.setTimeout(() => {
-            scrollToTarget(hash, "start");
-          }, 55);
-
+          window.setTimeout(() => scrollToTarget(hash, "start"), 55);
           return;
         }
       }
 
       const spectrumCell = event.target.closest(SELECTORS.spectrumCell);
-      if (spectrumCell) {
-        activateSpectrumCell(spectrumCell);
-      }
+      if (spectrumCell) activateSpectrumCell(spectrumCell);
     }, { signal });
 
     const start = one(SELECTORS.startSelect);
@@ -1143,31 +1190,6 @@
         renderPlan();
       }, { signal });
     }
-  }
-
-  function isOpenBlueprintTrigger(node) {
-    if (!node) return false;
-    if (node.matches(SELECTORS.openBlueprint)) return true;
-
-    const text = String(node.textContent || "").trim().toLowerCase();
-    if (text.includes("open blueprint")) return true;
-    if (text.includes("return to blueprint")) return true;
-    if (text.includes("blueprint") && node.getAttribute("href") === "#presentation-layer") return true;
-
-    return false;
-  }
-
-  function escapeHtml(value) {
-    return String(value == null ? "" : value)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#39;");
-  }
-
-  function escapeAttribute(value) {
-    return escapeHtml(value).replaceAll("`", "&#96;");
   }
 
   function publishStatus() {
@@ -1191,8 +1213,20 @@
       activeRouteGoal: state.activeRouteGoal,
       blueprintScanMode: state.blueprintScanMode,
       lastBlueprintRoom: state.lastBlueprintRoom,
+      lastBlueprintClickValid: state.lastBlueprintClickValid,
+      lastBlueprintJumpTarget: state.lastBlueprintJumpTarget,
+      lastBlueprintJumpSection: state.lastBlueprintJumpSection,
       focusLocked: state.focusLocked,
       scrollFocusEnabled: state.scrollFocusEnabled,
+
+      hardJumpPadController: true,
+      blueprintHardRegistry: true,
+      blueprintBootAuditComplete: state.blueprintAudit.complete,
+      blueprintBootAuditPassed: state.blueprintAudit.passed,
+      blueprintMissingTargets: state.blueprintAudit.missingTargets,
+      blueprintInvalidRooms: state.blueprintAudit.invalidRooms,
+      blueprintTargetMismatches: state.blueprintAudit.targetMismatches,
+      safeFailureNoMute: true,
 
       blueprintScanModeController: true,
       blueprintScanFirstJumpPad: true,
@@ -1228,22 +1262,15 @@
       openBlueprintController: true,
       returnToOrbitReset: true,
       scrollActivation: Boolean(state.observer),
-      featureClickScrollsToTarget: true,
-      universalSelectedFocusBehavior: true,
       tabbedExhibit: true,
       presentationLayer: true,
       navigationLayer: true,
       underHoodDiagnosticsLayer: true,
       constructionLedger: true,
-      estateBlueprintDemo: true,
-      featureOrbitDemo: true,
-      returnToOrbitDemo: true,
       quadrupedicQuadrilateralTraversal: "structural_core_only",
       matrix4x4: true,
       spectrum16x16: true,
       diagnosticScope256: true,
-      mobileFirstNativeBuild: true,
-      projectBeganLateJanuary2026: true,
       generatedImage: false,
       graphicBox: false,
       canvas: false,
@@ -1267,22 +1294,15 @@
       document.documentElement.dataset.siteGuideActiveRouteGoal = state.activeRouteGoal;
       document.documentElement.dataset.siteGuideBlueprintScanMode = String(state.blueprintScanMode);
       document.documentElement.dataset.siteGuideFocusLocked = String(state.focusLocked);
-      document.documentElement.dataset.siteGuideReturnToOrbitReset = "true";
-      document.documentElement.dataset.siteGuideScrollActivation = String(Boolean(state.observer));
-      document.documentElement.dataset.siteGuideOpenBlueprintController = "true";
-      document.documentElement.dataset.siteGuideBlueprintJumpPadController = "true";
-      document.documentElement.dataset.siteGuideBlueprintScanModeController = "true";
-      document.documentElement.dataset.siteGuideBlueprintRoomsReadableInScanMode = "true";
-      document.documentElement.dataset.siteGuideBlueprintRoomReadsJumpTarget = "true";
+      document.documentElement.dataset.siteGuideHardJumpPadController = "true";
+      document.documentElement.dataset.siteGuideBlueprintBootAuditPassed = String(state.blueprintAudit.passed);
+      document.documentElement.dataset.siteGuideLastBlueprintClickValid = String(state.lastBlueprintClickValid);
+      document.documentElement.dataset.siteGuideLastBlueprintJumpTarget = state.lastBlueprintJumpTarget;
+      document.documentElement.dataset.siteGuideLastBlueprintJumpSection = state.lastBlueprintJumpSection;
+      document.documentElement.dataset.siteGuideSafeFailureNoMute = "true";
       document.documentElement.dataset.siteGuideReturnToBlueprintController = "true";
-      document.documentElement.dataset.siteGuideReturnToOrbitClearsJumpSections = "true";
       document.documentElement.dataset.siteGuideRouteChoiceBoardController = "true";
-      document.documentElement.dataset.siteGuideNativeSelectPlanner = "false";
-      document.documentElement.dataset.siteGuideRouteChoiceBoardUpdatesPath = "true";
       document.documentElement.dataset.siteGuideHighlightZoneAlignment = "true";
-      document.documentElement.dataset.siteGuideGenericDemoCardExclusionActive = "true";
-      document.documentElement.dataset.siteGuideHeroLensAnchorInterception = "true";
-      document.documentElement.dataset.siteGuideDiagnosticScope256 = "true";
     } catch (_error) {}
 
     return payload;
@@ -1308,7 +1328,10 @@
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       htmlContract: HTML_CONTRACT,
+      roomToSection: ROOM_TO_SECTION,
       state,
+      auditBlueprintRegistry,
+      validateBlueprintRoute,
       switchLens,
       activateFeature,
       activateSection,
@@ -1318,7 +1341,6 @@
       setBlueprintScanMode,
       restoreBlueprintScanReadability,
       activateBlueprintRoom,
-      activateJumpSection,
       activateCategory,
       selectedRouteStart,
       selectedRouteGoal,
@@ -1356,25 +1378,39 @@
     state.activeRouteGoal = selectedRouteGoal() || DEFAULT_ROUTE_GOAL;
     state.blueprintScanMode = true;
     state.lastBlueprintRoom = BLUEPRINT_DEFAULT_ROOM;
+    state.lastBlueprintClickValid = true;
+    state.lastBlueprintJumpTarget = ROOM_TO_SECTION[BLUEPRINT_DEFAULT_ROOM];
+    state.lastBlueprintJumpSection = BLUEPRINT_DEFAULT_ROOM;
     state.focusLocked = false;
     state.scrollFocusEnabled = true;
     state.lastAction = "mounted";
 
     buildSpectrum();
     exposeApi();
+
+    auditBlueprintRegistry();
+
     attachEvents();
 
     switchLens("presentation");
     activateCategory("presentation");
     setBlueprintScanMode(true, { preserveRoom: true, restoreReadable: true });
 
-    activateBlueprintRoom(BLUEPRINT_DEFAULT_ROOM, {
-      mute: false,
-      scroll: false,
-      lock: false,
-      activateJump: false
-    });
+    const initialValidation = validateBlueprintRoute(BLUEPRINT_DEFAULT_ROOM);
+    if (initialValidation.ok) {
+      state.activeBlueprintRoom = BLUEPRINT_DEFAULT_ROOM;
+      state.lastBlueprintRoom = BLUEPRINT_DEFAULT_ROOM;
+      updateBlueprintDetail(BLUEPRINT_DEFAULT_ROOM);
+      all(SELECTORS.blueprintRoom).forEach((room) => {
+        const active = room.getAttribute("data-room") === BLUEPRINT_DEFAULT_ROOM;
+        setActive(room, active);
+        setMuted(room, false);
+      });
+    } else {
+      restoreBlueprintScanReadability(false);
+    }
 
+    clearJumpSections();
     resetRouteChoiceBoard({ publish: false });
     setupScrollObserver();
 

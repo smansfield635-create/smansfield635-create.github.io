@@ -1,17 +1,24 @@
 /* TARGET FILE: /assets/site-guide/site-guide.css */
 /* TNT FULL-FILE REPLACEMENT */
-/* SITE_GUIDE_THREE_FILE_FOCUS_ANIMATION_CSS_TNT_v1 */
+/* SITE_GUIDE_ROUTE_CHOICE_BOARD_ZONE_ALIGNMENT_CSS_TNT_v1 */
 /*
   Owns:
   - Guide Desk visual system
   - orbit layout
   - lens layout
-  - active / muted / focused states
+  - independent active / muted / focused zones
+  - Route Choice Board visual system
+  - Visitor Position card zone
+  - Destination Goal card zone
+  - Recommended Path rail
   - estate blueprint floorplan
+  - scratch-surface jump deck visuals
   - diagnostic matrix / spectrum visuals
-  - route planner styling
   - controlled animation
   - reduced-motion safety
+
+  Previous contract:
+  SITE_GUIDE_THREE_FILE_FOCUS_ANIMATION_CSS_TNT_v1
 
   Does not own:
   - HTML content structure
@@ -239,8 +246,8 @@ select{
 .button.amber{border-color:rgba(255,180,95,.40);background:rgba(255,180,95,.07)}
 
 [data-muted="true"]{
-  opacity:.28;
-  filter:saturate(.48) grayscale(.35);
+  opacity:.34;
+  filter:saturate(.56) grayscale(.28);
 }
 
 [data-focus-section]{
@@ -717,7 +724,7 @@ p{
     rgba(255,255,255,.03);
   text-align:left;
   cursor:pointer;
-  transition:opacity .18s ease,filter .18s ease,border-color .18s ease,transform .18s ease,box-shadow .18s ease;
+  transition:opacity .18s ease,filter .18s ease,border-color .18s ease,transform .18s ease,box-shadow .18s ease,background .18s ease;
 }
 
 .demo-card:hover{
@@ -939,14 +946,34 @@ p{
   transform:translateY(-2px);
 }
 
-.room-shape[data-active="true"]{
+.room-shape[data-active="true"],
+[data-blueprint-room][data-active="true"]{
   z-index:8;
   opacity:1;
   filter:none;
   transform:scale(1.03);
   border-color:var(--room);
+  background:
+    linear-gradient(135deg,color-mix(in srgb,var(--room),transparent 80%),transparent 58%),
+    rgba(2,9,22,.88);
   box-shadow:0 0 1.3rem color-mix(in srgb,var(--room),transparent 78%),0 1rem 1.7rem rgba(0,0,0,.26);
   animation:sgRoomBeacon 3s ease-in-out infinite;
+}
+
+.room-shape[data-muted="true"],
+[data-blueprint-room][data-muted="true"]{
+  opacity:.54;
+  filter:saturate(.70) grayscale(.18);
+  background:
+    linear-gradient(135deg,color-mix(in srgb,var(--room),transparent 93%),transparent 60%),
+    rgba(2,7,18,.56);
+  border-color:color-mix(in srgb,var(--room),transparent 70%);
+}
+
+.room-shape[data-muted="true"]:hover,
+[data-blueprint-room][data-muted="true"]:hover{
+  opacity:.74;
+  filter:saturate(.82) grayscale(.08);
 }
 
 @keyframes sgRoomBeacon{
@@ -996,6 +1023,270 @@ p{
 
 .blueprint-detail li{
   margin:.26rem 0;
+}
+
+.jump-surface,
+[data-jump-section]{
+  position:relative;
+  min-height:11rem;
+  scroll-margin-top:1rem;
+}
+
+.jump-surface::after,
+[data-jump-section]::after{
+  content:"Scratch Surface";
+  position:absolute;
+  right:.78rem;
+  top:.72rem;
+  border:1px solid color-mix(in srgb,var(--demo),transparent 72%);
+  border-radius:999px;
+  padding:.24rem .46rem;
+  color:color-mix(in srgb,var(--demo),white 12%);
+  background:rgba(2,7,18,.62);
+  font-size:.50rem;
+  font-weight:950;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+  pointer-events:none;
+}
+
+.jump-surface[data-active="true"],
+[data-jump-section][data-active="true"]{
+  z-index:5;
+  opacity:1;
+  filter:none;
+  transform:translateY(-2px);
+  border-color:var(--demo);
+  background:
+    radial-gradient(circle at 12% 0%,color-mix(in srgb,var(--demo),transparent 80%),transparent 14rem),
+    linear-gradient(180deg,rgba(255,255,255,.060),rgba(255,255,255,.025)),
+    rgba(4,10,24,.86);
+  box-shadow:0 0 1.65rem color-mix(in srgb,var(--demo),transparent 78%),0 1rem 2rem rgba(0,0,0,.24);
+}
+
+.jump-surface[data-active="true"]::after,
+[data-jump-section][data-active="true"]::after{
+  content:"Selected Surface";
+  border-color:color-mix(in srgb,var(--demo),transparent 35%);
+  background:color-mix(in srgb,var(--demo),rgba(2,7,18,.72) 78%);
+}
+
+.jump-surface[data-muted="true"],
+[data-jump-section][data-muted="true"]{
+  opacity:.58;
+  filter:saturate(.68) grayscale(.18);
+  border-color:color-mix(in srgb,var(--demo),transparent 82%);
+  background:
+    radial-gradient(circle at 12% 0%,color-mix(in srgb,var(--demo),transparent 94%),transparent 12rem),
+    rgba(255,255,255,.022);
+}
+
+.jump-surface[data-muted="true"]:hover,
+[data-jump-section][data-muted="true"]:hover{
+  opacity:.78;
+  filter:saturate(.82) grayscale(.08);
+}
+
+.route-choice-board{
+  display:grid;
+  grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr) minmax(18rem,.78fr);
+  gap:1rem;
+  align-items:start;
+  border:1px solid rgba(184,205,255,.16);
+  border-radius:1.35rem;
+  padding:1rem;
+  background:
+    radial-gradient(circle at 13% 0%,rgba(243,200,111,.10),transparent 18rem),
+    radial-gradient(circle at 52% 8%,rgba(141,216,255,.08),transparent 20rem),
+    radial-gradient(circle at 88% 18%,rgba(168,140,255,.08),transparent 20rem),
+    linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.018)),
+    rgba(1,5,16,.50);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 1rem 2.4rem rgba(0,0,0,.20);
+}
+
+.route-choice-board .planner-output{
+  min-height:100%;
+  border:1px solid rgba(243,200,111,.22);
+  border-radius:1.15rem;
+  padding:1rem;
+  background:
+    radial-gradient(circle at 16% 0%,rgba(243,200,111,.10),transparent 16rem),
+    rgba(255,255,255,.030);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
+}
+
+.route-choice-column{
+  position:relative;
+  display:grid;
+  gap:.62rem;
+  align-content:start;
+  min-width:0;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:1.15rem;
+  padding:1rem;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.048),rgba(255,255,255,.020)),
+    rgba(255,255,255,.028);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
+}
+
+.route-choice-column::before{
+  content:"";
+  position:absolute;
+  inset:.62rem;
+  border:1px solid rgba(255,255,255,.055);
+  border-radius:.9rem;
+  pointer-events:none;
+}
+
+.route-choice-column[data-select-group="route-start"]{
+  border-color:rgba(243,200,111,.20);
+  background:
+    radial-gradient(circle at 10% 0%,rgba(243,200,111,.09),transparent 14rem),
+    rgba(255,255,255,.028);
+}
+
+.route-choice-column[data-select-group="route-goal"]{
+  border-color:rgba(141,216,255,.20);
+  background:
+    radial-gradient(circle at 10% 0%,rgba(141,216,255,.09),transparent 14rem),
+    rgba(255,255,255,.028);
+}
+
+.route-choice-column .section-head{
+  position:relative;
+  z-index:2;
+  gap:.28rem;
+  padding-bottom:.2rem;
+}
+
+.route-choice-column .section-head h3{
+  font-size:clamp(1.02rem,2.5vw,1.28rem);
+}
+
+.route-choice-column .section-head p{
+  font-size:.86rem;
+}
+
+.route-choice-card{
+  position:relative;
+  z-index:2;
+  width:100%;
+  min-height:8.5rem;
+  border-width:1px;
+  border-radius:1rem;
+  padding:.85rem;
+  background:
+    radial-gradient(circle at 12% 0%,color-mix(in srgb,var(--demo),transparent 90%),transparent 10rem),
+    linear-gradient(180deg,rgba(255,255,255,.044),rgba(255,255,255,.016)),
+    rgba(2,7,18,.68);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+.route-choice-card::before{
+  content:"";
+  width:.78rem;
+  height:.78rem;
+  border-radius:.18rem;
+  background:color-mix(in srgb,var(--demo),transparent 12%);
+  box-shadow:0 0 .9rem color-mix(in srgb,var(--demo),transparent 72%);
+  transform:rotate(45deg);
+}
+
+.route-choice-card b{
+  margin-top:.05rem;
+}
+
+.route-choice-card strong{
+  font-size:.96rem;
+}
+
+.route-choice-card p{
+  color:rgba(230,238,255,.70);
+}
+
+.route-choice-card[data-active="true"],
+[data-route-start][data-active="true"],
+[data-route-goal][data-active="true"]{
+  opacity:1;
+  filter:none;
+  transform:translateY(-2px);
+  border-color:var(--demo);
+  background:
+    radial-gradient(circle at 12% 0%,color-mix(in srgb,var(--demo),transparent 79%),transparent 12rem),
+    linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.026)),
+    rgba(3,10,25,.88);
+  box-shadow:
+    0 0 1.35rem color-mix(in srgb,var(--demo),transparent 76%),
+    0 .9rem 1.8rem rgba(0,0,0,.24),
+    inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.route-choice-card[data-active="true"]::after,
+[data-route-start][data-active="true"]::after,
+[data-route-goal][data-active="true"]::after{
+  content:"Selected";
+  position:absolute;
+  right:.72rem;
+  top:.66rem;
+  border:1px solid color-mix(in srgb,var(--demo),transparent 40%);
+  border-radius:999px;
+  padding:.22rem .44rem;
+  color:color-mix(in srgb,var(--demo),white 16%);
+  background:rgba(2,7,18,.72);
+  font-size:.50rem;
+  font-weight:950;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+}
+
+.route-choice-card[data-muted="true"],
+[data-route-start][data-muted="true"],
+[data-route-goal][data-muted="true"]{
+  opacity:.64;
+  filter:saturate(.72) grayscale(.14);
+  border-color:color-mix(in srgb,var(--demo),transparent 82%);
+  background:
+    radial-gradient(circle at 12% 0%,color-mix(in srgb,var(--demo),transparent 95%),transparent 10rem),
+    rgba(255,255,255,.022);
+}
+
+.route-choice-card[data-muted="true"] strong,
+[data-route-start][data-muted="true"] strong,
+[data-route-goal][data-muted="true"] strong{
+  color:rgba(255,244,216,.78);
+}
+
+.route-choice-card[data-muted="true"] p,
+[data-route-start][data-muted="true"] p,
+[data-route-goal][data-muted="true"] p{
+  color:rgba(230,238,255,.58);
+}
+
+.route-choice-card[data-muted="true"]:hover,
+[data-route-start][data-muted="true"]:hover,
+[data-route-goal][data-muted="true"]:hover{
+  opacity:.82;
+  filter:saturate(.88) grayscale(.04);
+}
+
+.route-choice-board .note-card{
+  background:
+    radial-gradient(circle at 16% 0%,rgba(243,200,111,.11),transparent 13rem),
+    rgba(2,7,18,.55);
+}
+
+.route-choice-board .path-rail{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:1rem;
+  padding:.7rem;
+  background:rgba(0,0,0,.16);
+}
+
+.route-choice-board .path-step{
+  background:
+    radial-gradient(circle at 15% 0%,rgba(243,200,111,.12),transparent 8rem),
+    rgba(243,200,111,.065);
 }
 
 .route-planner{
@@ -1199,6 +1490,7 @@ footer{
 
   .blueprint-wrap,
   .route-planner,
+  .route-choice-board,
   .diagnostic-layout,
   .category-demo{
     grid-template-columns:1fr;
@@ -1207,6 +1499,14 @@ footer{
   .blueprint-detail{
     position:relative;
     top:auto;
+  }
+
+  .route-choice-board{
+    padding:.85rem;
+  }
+
+  .route-choice-board .planner-output{
+    min-height:auto;
   }
 }
 
@@ -1264,6 +1564,36 @@ footer{
   .room-shape[data-room="product"]{--x:52;--y:54;--w:42;--h:10}
   .room-shape[data-room="lab"]{--x:6;--y:72;--w:42;--h:10}
   .room-shape[data-room="law"]{--x:52;--y:72;--w:42;--h:10}
+  .route-choice-board{
+    gap:.75rem;
+    padding:.7rem;
+    border-radius:1rem;
+  }
+  .route-choice-column,
+  .route-choice-board .planner-output{
+    padding:.75rem;
+    border-radius:1rem;
+  }
+  .route-choice-card{
+    min-height:7.6rem;
+  }
+  .route-choice-card[data-active="true"]::after,
+  [data-route-start][data-active="true"]::after,
+  [data-route-goal][data-active="true"]::after{
+    position:relative;
+    right:auto;
+    top:auto;
+    width:fit-content;
+    margin-top:.15rem;
+  }
+  .jump-surface::after,
+  [data-jump-section]::after{
+    position:relative;
+    right:auto;
+    top:auto;
+    width:fit-content;
+    margin-top:.1rem;
+  }
   .matrix-4x4{
     grid-template-columns:1fr;
   }

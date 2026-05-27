@@ -1,6 +1,6 @@
 /* TARGET FILE: /assets/site-guide/site-guide.css */
 /* TNT FULL-FILE REPLACEMENT */
-/* SITE_GUIDE_BLUEPRINT_SCAN_MODE_ZONE_CSS_TNT_v1 */
+/* SITE_GUIDE_UNDER_HOOD_CLARITY_CSS_TNT_v1 */
 /*
   Owns:
   - Guide Desk visual system
@@ -16,12 +16,14 @@
   - readable room scan state
   - scratch-surface jump deck visuals
   - return-to-blueprint visual support
-  - diagnostic matrix / spectrum visuals
+  - Under-the-Hood diagnostic clarity
+  - readable 4x4 matrix on mobile
+  - contained 16x16 diagnostic spectrum
   - controlled animation
   - reduced-motion safety
 
   Previous contract:
-  SITE_GUIDE_ROUTE_CHOICE_BOARD_ZONE_ALIGNMENT_CSS_TNT_v1
+  SITE_GUIDE_BLUEPRINT_SCAN_MODE_ZONE_CSS_TNT_v1
 
   Does not own:
   - HTML content structure
@@ -1514,11 +1516,35 @@ p{
   font-size:.72rem;
 }
 
+/* UNDER-THE-HOOD CLARITY */
+
+[data-lens-panel="diagnostics"] .panel-inner{
+  gap:1.15rem;
+}
+
+[data-lens-panel="diagnostics"] .section-head{
+  max-width:980px;
+}
+
+[data-lens-panel="diagnostics"] .section-head p{
+  max-width:940px;
+}
+
 .diagnostic-layout{
   display:grid;
-  grid-template-columns:minmax(0,.55fr) minmax(0,1fr);
+  grid-template-columns:minmax(0,.58fr) minmax(0,1fr);
   gap:1rem;
   align-items:start;
+}
+
+[data-lens-panel="diagnostics"] .diagnostic-layout{
+  border:1px solid rgba(184,205,255,.12);
+  border-radius:1.2rem;
+  padding:.9rem;
+  background:
+    radial-gradient(circle at 14% 0%,rgba(141,216,255,.075),transparent 15rem),
+    radial-gradient(circle at 86% 24%,rgba(243,200,111,.065),transparent 17rem),
+    rgba(255,255,255,.024);
 }
 
 .matrix-4x4{
@@ -1528,7 +1554,12 @@ p{
   border:1px solid rgba(255,255,255,.13);
   border-radius:1rem;
   padding:.75rem;
-  background:rgba(255,255,255,.03);
+  background:
+    radial-gradient(circle at 16% 0%,rgba(243,200,111,.07),transparent 14rem),
+    radial-gradient(circle at 90% 30%,rgba(141,216,255,.07),transparent 14rem),
+    rgba(255,255,255,.03);
+  min-width:0;
+  overflow:hidden;
 }
 
 .matrix-cell{
@@ -1546,13 +1577,17 @@ p{
   text-align:center;
   text-transform:uppercase;
   cursor:pointer;
-  transition:opacity .18s ease,filter .18s ease,background .18s ease,border-color .18s ease;
+  transition:opacity .18s ease,filter .18s ease,background .18s ease,border-color .18s ease,box-shadow .18s ease,color .18s ease;
 }
 
 .matrix-cell.header{
   color:var(--sg-gold);
-  background:rgba(243,200,111,.06);
+  background:
+    radial-gradient(circle at 50% 0%,rgba(243,200,111,.12),transparent 3.4rem),
+    rgba(243,200,111,.06);
   cursor:default;
+  border-color:rgba(243,200,111,.22);
+  text-shadow:0 1px 8px rgba(0,0,0,.65);
 }
 
 .matrix-cell[data-active="true"]{
@@ -1561,18 +1596,25 @@ p{
   background:linear-gradient(135deg,var(--sg-gold-2),var(--sg-gold));
   opacity:1;
   filter:none;
+  box-shadow:0 0 1rem rgba(243,200,111,.26);
 }
 
 .spectrum-16x16{
   display:grid;
-  grid-template-columns:repeat(16,1fr);
+  grid-template-columns:repeat(16,minmax(0,1fr));
   gap:.16rem;
   border:1px solid rgba(255,255,255,.13);
   border-radius:1rem;
   padding:.75rem;
   background:
     radial-gradient(circle at 50% 50%,rgba(143,240,195,.08),transparent 16rem),
+    radial-gradient(circle at 15% 5%,rgba(243,200,111,.07),transparent 15rem),
+    linear-gradient(180deg,rgba(255,255,255,.034),rgba(255,255,255,.014)),
     rgba(255,255,255,.03);
+  min-width:0;
+  max-width:100%;
+  overflow:hidden;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
 }
 
 .spectrum-cell{
@@ -1582,7 +1624,7 @@ p{
   border-radius:.22rem;
   background:rgba(141,216,255,.08);
   cursor:pointer;
-  transition:opacity .18s ease,filter .18s ease,background .18s ease,border-color .18s ease,box-shadow .18s ease;
+  transition:opacity .18s ease,filter .18s ease,background .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease;
 }
 
 [data-lens-panel="diagnostics"][data-active="true"] .spectrum-cell{
@@ -1594,12 +1636,24 @@ p{
 .spectrum-cell:nth-child(5n){background:rgba(143,240,195,.10)}
 .spectrum-cell:nth-child(7n){background:rgba(168,140,255,.10)}
 
+.spectrum-cell:hover{
+  transform:scale(1.08);
+  border-color:rgba(243,200,111,.36);
+  box-shadow:0 0 .65rem rgba(243,200,111,.18);
+}
+
 .spectrum-cell[data-active="true"]{
   background:var(--sg-gold);
   border-color:var(--sg-gold-2);
   box-shadow:0 0 .75rem rgba(243,200,111,.40);
   opacity:1;
   filter:none;
+}
+
+[data-lens-panel="diagnostics"] .note-card{
+  background:
+    radial-gradient(circle at 14% 0%,rgba(243,200,111,.08),transparent 12rem),
+    rgba(255,255,255,.032);
 }
 
 @keyframes sgDiagnosticGlow{
@@ -1664,6 +1718,10 @@ footer{
   .route-choice-board .planner-output{
     min-height:auto;
   }
+
+  [data-lens-panel="diagnostics"] .diagnostic-layout{
+    gap:.85rem;
+  }
 }
 
 @media (max-width:720px){
@@ -1699,6 +1757,7 @@ footer{
   .feature-gem[data-feature="portal"]{--x:24;--y:70}
   .feature-gem[data-feature="blueprint"]{--x:24;--y:28}
   .orbit-core{width:7rem}
+
   .estate-blueprint{
     min-height:51rem;
   }
@@ -1733,6 +1792,7 @@ footer{
   .room-shape[data-room="product"]{--x:52;--y:54;--w:42;--h:10}
   .room-shape[data-room="lab"]{--x:6;--y:72;--w:42;--h:10}
   .room-shape[data-room="law"]{--x:52;--y:72;--w:42;--h:10}
+
   .route-choice-board{
     gap:.75rem;
     padding:.7rem;
@@ -1763,17 +1823,84 @@ footer{
     width:fit-content;
     margin-top:.1rem;
   }
+
+  [data-lens-panel="diagnostics"] .panel-inner{
+    gap:.85rem;
+  }
+
+  [data-lens-panel="diagnostics"] .diagnostic-layout{
+    padding:.58rem;
+    border-radius:1rem;
+    gap:.7rem;
+  }
+
   .matrix-4x4{
-    grid-template-columns:1fr;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:.22rem;
+    padding:.55rem;
+    border-radius:.9rem;
   }
+
   .matrix-cell{
-    min-height:2.8rem;
+    min-height:2.25rem;
+    font-size:.48rem;
+    padding:.2rem;
+    border-radius:.48rem;
+    letter-spacing:.035em;
   }
+
   .matrix-cell.header{
-    display:none;
+    display:grid;
+    font-size:.42rem;
+    line-height:1.05;
   }
+
   .spectrum-16x16{
-    gap:.12rem;
+    grid-template-columns:repeat(16,minmax(0,1fr));
+    gap:.10rem;
+    padding:.52rem;
+    border-radius:.9rem;
+    max-width:100%;
+    overflow:hidden;
+  }
+
+  .spectrum-cell{
+    border-radius:.16rem;
+    border-width:1px;
+  }
+
+  [data-lens-panel="diagnostics"] .note-card p{
+    font-size:.88rem;
+  }
+}
+
+@media (max-width:420px){
+  .matrix-4x4{
+    gap:.16rem;
+    padding:.42rem;
+  }
+
+  .matrix-cell{
+    min-height:1.95rem;
+    font-size:.42rem;
+    border-radius:.38rem;
+    padding:.12rem;
+  }
+
+  .matrix-cell.header{
+    font-size:.34rem;
+    letter-spacing:.02em;
+    word-break:break-word;
+    hyphens:auto;
+  }
+
+  .spectrum-16x16{
+    gap:.075rem;
+    padding:.42rem;
+  }
+
+  .spectrum-cell{
+    border-radius:.12rem;
   }
 }
 

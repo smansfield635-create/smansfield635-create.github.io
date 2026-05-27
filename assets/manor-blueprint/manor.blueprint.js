@@ -1,33 +1,35 @@
 // TARGET FILE: /assets/manor-blueprint/manor.blueprint.js
 // TNT FULL-FILE REPLACEMENT
-// MANOR_BLUEPRINT_ESTATE_ORIENTATION_RUNTIME_TNT_v1
+// MANOR_BLUEPRINT_MAIN_MENU_INSTRUCTIONS_RUNTIME_TNT_v1
 //
 // Purpose:
-// Replace the stale route-directory / cardinal-room renderer with a true
-// estate-orientation renderer that gives visitors direction, placement,
-// hierarchy, nearby rooms, deeper rooms, connected rooms, and return paths.
+// Preserve the accepted Mirrorland estate-orientation model while correcting
+// Main Menu into a regular-website exit board and expanding Instructions into
+// a true operating guide for Map / Portal, Return to Orbit, estate-room
+// identity, mobile-first construction, and quadrupedic traversal.
 //
 // Previous runtime contract:
-// MANOR_BLUEPRINT_VALUE_CATEGORY_ESTATE_LANGUAGE_RUNTIME_TNT_v2
+// MANOR_BLUEPRINT_ESTATE_ORIENTATION_RUNTIME_TNT_v1
 //
 // Binding:
-// MANOR_BLUEPRINT_ESTATE_ORIENTATION_NOT_DIRECTORY_BINDING_v1
+// MANOR_BLUEPRINT_MAIN_MENU_INSTRUCTIONS_SITE_GUIDE_CCR_v1
 //
 // Owns:
 // - Map / Portal blip
-// - Mirrorland Doors / Main Menu / Instructions lenses
+// - Mirrorland Doors lens
+// - Main Menu lens separation
+// - Instructions lens expansion
 // - estate-orientation overlay rendering
-// - You Are Here placement model
-// - Inside / Nearby / Deeper / Connected / Return compartments
-// - visitor-facing room identity
-// - stale cardinal-room renderer suppression
+// - You Are Here placement model for Mirrorland
+// - regular website exit board for Main Menu
 // - full-viewport drag
 // - strong-visible joystick scroll
 // - status / receipt globals
 //
 // Does not own:
-// - registry source truth
 // - CSS source truth
+// - registry source truth
+// - /site-guide/index.html page body
 // - page body content
 // - planet renderers
 // - Frontier node animation
@@ -40,9 +42,9 @@
 
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CONTRACT = "MANOR_BLUEPRINT_ESTATE_ORIENTATION_RUNTIME_TNT_v1";
-  const PREVIOUS_CONTRACT = "MANOR_BLUEPRINT_VALUE_CATEGORY_ESTATE_LANGUAGE_RUNTIME_TNT_v2";
-  const BINDING = "MANOR_BLUEPRINT_ESTATE_ORIENTATION_NOT_DIRECTORY_BINDING_v1";
+  const CONTRACT = "MANOR_BLUEPRINT_MAIN_MENU_INSTRUCTIONS_RUNTIME_TNT_v1";
+  const PREVIOUS_CONTRACT = "MANOR_BLUEPRINT_ESTATE_ORIENTATION_RUNTIME_TNT_v1";
+  const BINDING = "MANOR_BLUEPRINT_MAIN_MENU_INSTRUCTIONS_SITE_GUIDE_CCR_v1";
   const API_CONTRACT = "MANOR_BLUEPRINT_FIXED_DRAGGABLE_BUBBLE_FULLSCREEN_MAP_INSTRUCTIONS_TOGGLE_JS_TNT_v1";
 
   const STATUS_GLOBAL = "DGB_MANOR_BLUEPRINT_STATUS";
@@ -130,9 +132,9 @@
       name: "Guide Desk",
       zone: "Orientation Desk",
       category: "arrival",
-      purpose: "Read how the site, rooms, gems, routes, and return paths work.",
-      action: "Open Guide",
-      context: "Guide Desk explains navigation without turning Mirrorland into a file directory.",
+      purpose: "Read how the website, estate model, Map / Portal, Return to Orbit, and quadrupedic traversal connect.",
+      action: "Open Guide Desk",
+      context: "Guide Desk explains the website construction narrative without turning Mirrorland into a file directory.",
       inside: "/",
       nearby: ["/", "/gauges/", "/laws/"],
       deeper: [],
@@ -879,6 +881,8 @@
     bubble.setAttribute("aria-label", "Open Mirrorland Map Portal");
     bubble.setAttribute("data-dgb-blueprint-bubble", "true");
     bubble.setAttribute("data-manor-blueprint-contract", CONTRACT);
+    bubble.setAttribute("data-main-menu-separated", "true");
+    bubble.setAttribute("data-instructions-expanded", "true");
     bubble.setAttribute("data-estate-orientation-runtime", "true");
     bubble.setAttribute("data-not-directory", "true");
     bubble.setAttribute("data-builder-path-hidden", "true");
@@ -922,6 +926,8 @@
     overlay.setAttribute("data-dgb-blueprint-overlay", "true");
     overlay.setAttribute("data-open", "false");
     overlay.setAttribute("data-manor-blueprint-contract", CONTRACT);
+    overlay.setAttribute("data-main-menu-separated", "true");
+    overlay.setAttribute("data-instructions-expanded", "true");
     overlay.setAttribute("data-estate-orientation-runtime", "true");
     overlay.setAttribute("data-not-directory", "true");
     overlay.setAttribute("data-builder-path-hidden", "true");
@@ -939,11 +945,11 @@
 
   function lensSubtitle() {
     if (state.activeLens === "main") {
-      return "Regular website rooms. These support the estate without becoming Mirrorland doors.";
+      return "Exit Mirrorland and return to regular Diamond Gate Bridge website rooms.";
     }
 
     if (state.activeLens === "instructions") {
-      return "This map uses estate-room identity. Builder paths stay hidden from visitor cards.";
+      return "How the Map / Portal, Main Menu, Mirrorland Doors, Return to Orbit, and Guide Desk work.";
     }
 
     return "Find your placement first, then choose nearby, deeper, connected, or return rooms.";
@@ -1019,6 +1025,46 @@
     `;
   }
 
+  function renderWebsiteExitPanel() {
+    const current = currentRoom();
+    const currentCategory = CATEGORY_BY_KEY[current.category] || CATEGORY_BY_KEY.arrival;
+    const insideMirrorland = current.menu === "mirrorland";
+
+    return `
+      <section
+        class="dgb-bp-orientation-panel dgb-bp-website-exit-panel"
+        data-main-menu-exit-board="true"
+        data-current-room="${escapeHtml(current.id)}"
+      >
+        <div class="dgb-bp-you-are-here">
+          <span class="dgb-bp-chip">${insideMirrorland ? "Currently Inside Mirrorland" : "Current Website Room"}</span>
+          <h3>${escapeHtml(current.name)}</h3>
+          <p>
+            ${
+              insideMirrorland
+                ? "Main Menu is the exit board back to the regular Diamond Gate Bridge website. The options shown here are website rooms only."
+                : "Main Menu shows regular Diamond Gate Bridge website rooms."
+            }
+          </p>
+          <div class="dgb-bp-location-strip">
+            <span>${escapeHtml(current.zone)}</span>
+            <span>${escapeHtml(currentCategory.label)}</span>
+            <span>Main Menu Options Only</span>
+          </div>
+        </div>
+
+        <div class="dgb-bp-placement-compartment" data-placement-compartment="return">
+          <header>
+            <b>Website Exit Board</b>
+          </header>
+          <div class="dgb-bp-placement-empty">
+            This tab intentionally separates regular website navigation from Mirrorland room movement.
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
   function renderCategorySection(category, items) {
     if (!items.length) return "";
 
@@ -1065,7 +1111,7 @@
             <b>Where it sits</b>
             <p>${escapeHtml(item.zone)} · ${escapeHtml(category.label)}</p>
             <b>Movement</b>
-            <p>${movementSummary(item)}</p>
+            <p>${escapeHtml(movementSummary(item))}</p>
           </div>
         </details>
 
@@ -1079,22 +1125,22 @@
 
     if (item.inside) {
       const parent = room(item.inside);
-      if (parent) parts.push(`Inside ${escapeHtml(parent.name)}.`);
+      if (parent) parts.push(`Inside ${parent.name}.`);
     }
 
     if (item.nearby?.length) parts.push(`${item.nearby.length} nearby room${item.nearby.length === 1 ? "" : "s"}.`);
     if (item.deeper?.length) parts.push(`${item.deeper.length} deeper room${item.deeper.length === 1 ? "" : "s"}.`);
     if (item.connected?.length) parts.push(`${item.connected.length} connected path${item.connected.length === 1 ? "" : "s"}.`);
 
-    return parts.length ? parts.join(" ") : "This room opens directly from the estate map.";
+    return parts.length ? parts.join(" ") : "This room opens directly from the active map lens.";
   }
 
-  function renderEstateMap(mode) {
-    const rooms = roomsForLens(mode);
+  function renderMirrorlandEstateMap() {
+    const rooms = roomsForLens("mirrorland");
     const grouped = groupedByCategory(rooms);
 
     return `
-      <div class="dgb-bp-estate-orientation-layout">
+      <div class="dgb-bp-estate-orientation-layout" data-lens-layout="mirrorland-orientation">
         ${renderOrientationPanel()}
 
         <div class="dgb-bp-estate-map" data-estate-map="orientation-placement">
@@ -1104,33 +1150,78 @@
     `;
   }
 
+  function renderMainMenuExitBoard() {
+    const rooms = roomsForLens("main");
+    const grouped = groupedByCategory(rooms);
+
+    return `
+      <div class="dgb-bp-estate-orientation-layout" data-lens-layout="main-menu-exit-board" data-main-menu-separated="true">
+        ${renderWebsiteExitPanel()}
+
+        <div class="dgb-bp-estate-map" data-estate-map="regular-website-options">
+          ${VALUE_CATEGORIES.map((category) => renderCategorySection(category, grouped.get(category.key) || [])).join("")}
+        </div>
+      </div>
+    `;
+  }
+
   function renderInstructionsLens() {
-    const instructions = [
+    const instructionSections = [
       {
-        title: "Placement Before Access",
-        body: "The map first tells you where you are, what area you are inside, what rooms are nearby, what rooms are deeper, and how to return."
+        label: "Map / Portal",
+        title: "Global Mirrorland Estate Navigation",
+        body: "The floating Map / Portal is the estate navigation layer for Mirrorland. It is not a simple dropdown, route list, or sitemap. It tells the visitor where they are, what contains them, what is nearby, what goes deeper, what connects outward, and how to return."
       },
       {
-        title: "File Name Is Not Room Identity",
-        body: "Builder paths stay hidden. Example: /showroom/globe/earth/ displays as ZIONTS Room, pronounced Zience."
+        label: "Main Menu",
+        title: "Exit Board to the Regular Website",
+        body: "Main Menu is separate from Mirrorland Doors. From anywhere inside Mirrorland, Main Menu lets the visitor leave the immersive estate layer and jump back to regular website rooms such as Compass Desk, Front Door, Main Hall, Law Library, The Lab, Product Gallery, Host Portrait, and Guide Desk."
       },
       {
-        title: "Estate Language",
-        body: "Showroom becomes Atrium. Globe becomes Atlas Study. Gauges becomes The Lab. Frontier becomes Frontier Workshop Yard."
+        label: "Mirrorland Doors",
+        title: "Immersive Estate-Room Navigation",
+        body: "Mirrorland Doors uses visitor-facing estate room identity. The map shows Atrium, Atlas Study, ZIONTS Room, Audralia Conservatory, Frontier Workshop Yard, Control Cockpit, and other rooms according to what they mean inside the estate."
       },
       {
-        title: "Workshop Stations",
-        body: "Frontier child pages become specific stations: Fusion Bench, Closed Water Systems Bench, Wastewater Systems Bench, Infrastructure Bay, Lattice Table, and related work tables."
+        label: "Return to Orbit",
+        title: "Local Page Navigation",
+        body: "Return to Orbit is different from the Map / Portal. Return to Orbit belongs to a specific page and returns the reader to that page’s own category orbit, gem orbit, node field, or section field. Map / Portal is global estate navigation; Return to Orbit is local page movement."
+      },
+      {
+        label: "Estate Room Identity",
+        title: "Room Names Are Not Builder Paths",
+        body: "Visitor-facing room names explain context. Builder paths may differ. For example, the route /showroom/globe/earth/ displays as ZIONTS Room, pronounced Zience, because the map shows what the room means rather than what the file address is named."
+      },
+      {
+        label: "Mobile-First Native Build",
+        title: "Designed from a Mobile Device",
+        body: "This system was designed and assembled from a mobile device using native code. The project began in late January 2026 and reached this integrated estate/navigation structure within roughly four months."
+      },
+      {
+        label: "Why It Is Different",
+        title: "Not a Sitemap, Dropdown, or Directory",
+        body: "The navigation separates context, movement, destination, proof, worldbuilding, and return logic. It lets the visitor understand place before action instead of forcing them to decode a technical route tree."
+      },
+      {
+        label: "Quadrupedic Traversal",
+        title: "Four-Leg Design Logic",
+        body: "The website moves through four coordinated legs: North for orientation, structure, and law; East for story, worlds, and visible expression; South for proof, gauges, and measurement; West for products, application, deployment, and Frontier systems."
+      },
+      {
+        label: "Guide Desk",
+        title: "Full Construction Narrative",
+        body: "Guide Desk is the regular website page for the full explanation of how Diamond Gate Bridge connects: the estate model, Main Menu, Mirrorland Doors, Map / Portal, Return to Orbit, Frontier, Products, Laws, Gauges, Audralia, and quadrupedic traversal."
       }
     ];
 
     return `
-      <div class="dgb-bp-instructions-grid">
-        ${instructions.map((item, index) => `
-          <article class="dgb-bp-instruction-card">
-            <b>Instruction ${index + 1}</b>
+      <div class="dgb-bp-instructions-grid" data-instructions-expanded="true">
+        ${instructionSections.map((item, index) => `
+          <article class="dgb-bp-instruction-card" data-instruction-category="${escapeHtml(item.label)}">
+            <b>${escapeHtml(item.label)}</b>
             <h3>${escapeHtml(item.title)}</h3>
             <p>${escapeHtml(item.body)}</p>
+            ${item.label === "Guide Desk" ? `<a class="dgb-bp-room-action" href="/site-guide/">Open Guide Desk</a>` : ""}
           </article>
         `).join("")}
       </div>
@@ -1138,9 +1229,9 @@
   }
 
   function renderActiveLens() {
-    if (state.activeLens === "main") return renderEstateMap("main");
+    if (state.activeLens === "main") return renderMainMenuExitBoard();
     if (state.activeLens === "instructions") return renderInstructionsLens();
-    return renderEstateMap("mirrorland");
+    return renderMirrorlandEstateMap();
   }
 
   function renderOverlay() {
@@ -1149,7 +1240,13 @@
     overlay.innerHTML = `
       <div class="dgb-bp-topbar">
         <div class="dgb-bp-titleblock">
-          <div class="dgb-bp-kicker">Estate Orientation Map</div>
+          <div class="dgb-bp-kicker">${
+            state.activeLens === "main"
+              ? "Regular Website Exit Board"
+              : state.activeLens === "instructions"
+                ? "Navigation Operating Guide"
+                : "Estate Orientation Map"
+          }</div>
           <h2 class="dgb-bp-title">${escapeHtml(lensTitle())}</h2>
           <p class="dgb-bp-subtitle">${escapeHtml(lensSubtitle())}</p>
         </div>
@@ -1163,10 +1260,21 @@
             <button class="dgb-bp-tab" type="button" data-dgb-lens="main" aria-selected="${state.activeLens === "main"}" data-active="${state.activeLens === "main"}">Main Menu</button>
             <button class="dgb-bp-tab" type="button" data-dgb-lens="instructions" aria-selected="${state.activeLens === "instructions"}" data-active="${state.activeLens === "instructions"}">Instructions</button>
           </div>
-          <div class="dgb-bp-current-pill">${state.activeLens === "main" ? "Website Rooms" : state.activeLens === "instructions" ? "How To Read" : "Estate Rooms"}</div>
+          <div class="dgb-bp-current-pill">${
+            state.activeLens === "main"
+              ? "Website Rooms Only"
+              : state.activeLens === "instructions"
+                ? "How To Read"
+                : "Estate Rooms"
+          }</div>
         </div>
 
-        <div class="dgb-bp-content" data-estate-orientation-runtime="true">
+        <div
+          class="dgb-bp-content"
+          data-estate-orientation-runtime="true"
+          data-main-menu-separated="${state.activeLens === "main" ? "true" : "false"}"
+          data-instructions-expanded="${state.activeLens === "instructions" ? "true" : "false"}"
+        >
           <section class="dgb-bp-lens" data-lens-panel="${escapeHtml(state.activeLens)}">
             ${renderActiveLens()}
           </section>
@@ -1196,7 +1304,7 @@
       }
     });
 
-    if (overlay && state.overlayOpen && !overlay.querySelector(".dgb-bp-estate-room-card")) {
+    if (overlay && state.overlayOpen && !overlay.querySelector(".dgb-bp-estate-room-card") && state.activeLens !== "instructions") {
       try {
         renderOverlay();
       } catch (_error) {}
@@ -1383,8 +1491,8 @@
   }
 
   function attachDrag() {
-    if (!bubble || bubble.__dgbEstateOrientationDragAttached) return;
-    bubble.__dgbEstateOrientationDragAttached = true;
+    if (!bubble || bubble.__dgbMainMenuInstructionsDragAttached) return;
+    bubble.__dgbMainMenuInstructionsDragAttached = true;
 
     bubble.addEventListener("pointerdown", (event) => {
       if (state.overlayOpen) return;
@@ -1476,10 +1584,23 @@
 
       active: true,
       estateOrientationRuntime: true,
+      mirrorlandLensHeld: true,
+      mainMenuSeparated: true,
+      mainMenuShowsWebsiteRoomsOnly: true,
+      mainMenuSuppressesMirrorlandMovementBoard: true,
+      instructionsExpanded: true,
+      guideDeskLinked: true,
+
       mapIsDirectory: false,
       placementBeforeAccess: true,
       staleCardinalRendererSuppressed: true,
       staleRendererSuppressedCount: state.staleRendererSuppressedCount,
+
+      mapPortalGlobalEstateNavigation: true,
+      returnToOrbitLocalPageNavigation: true,
+      mainMenuExitBoard: true,
+      mirrorlandDoorsImmersiveNavigation: true,
+      guideDeskFullConstructionNarrative: true,
 
       builderPathHiddenFromVisitorCards: true,
       fileNameIsNotRoomIdentity: true,
@@ -1495,6 +1616,12 @@
       showroomDisplayedAsAtrium: true,
       globeDisplayedAsAtlasStudy: true,
       frontierDisplayedAsWorkshopYard: true,
+      siteGuideDisplayedAsGuideDesk: true,
+
+      mobileFirstNativeBuildStatement: true,
+      projectBeganLateJanuary2026: true,
+      fourMonthIntegratedNavigationStructureStatement: true,
+      quadrupedicTraversalExplained: true,
 
       mapBlipSingleEntryway: true,
       mirrorlandEntryway: "map_portal_blip",
@@ -1515,6 +1642,7 @@
       hasEstateRoomCards: Boolean(overlay?.querySelector(".dgb-bp-estate-room-card")),
       oldCardinalRoomCount: overlay ? overlay.querySelectorAll(".dgb-bp-room").length : 0,
       estateRoomCardCount: overlay ? overlay.querySelectorAll(".dgb-bp-estate-room-card").length : 0,
+      instructionCardCount: overlay ? overlay.querySelectorAll(".dgb-bp-instruction-card").length : 0,
 
       mirrorlandRoomCount: roomsForLens("mirrorland").length,
       mainMenuRoomCount: roomsForLens("main").length,
@@ -1559,6 +1687,10 @@
       document.documentElement.dataset.manorBlueprintPreviousContract = PREVIOUS_CONTRACT;
       document.documentElement.dataset.manorBlueprintBinding = BINDING;
       document.documentElement.dataset.manorBlueprintEstateOrientationRuntime = "true";
+      document.documentElement.dataset.manorBlueprintMainMenuSeparated = "true";
+      document.documentElement.dataset.manorBlueprintMainMenuShowsWebsiteRoomsOnly = "true";
+      document.documentElement.dataset.manorBlueprintInstructionsExpanded = "true";
+      document.documentElement.dataset.manorBlueprintGuideDeskLinked = "true";
       document.documentElement.dataset.manorBlueprintMapIsDirectory = "false";
       document.documentElement.dataset.manorBlueprintPlacementBeforeAccess = "true";
       document.documentElement.dataset.manorBlueprintStaleCardinalRendererSuppressed = "true";
@@ -1611,9 +1743,22 @@
       binding: BINDING,
 
       estateOrientationRuntime: true,
+      mirrorlandLensHeld: true,
+      mainMenuSeparated: true,
+      mainMenuShowsWebsiteRoomsOnly: true,
+      mainMenuSuppressesMirrorlandMovementBoard: true,
+      instructionsExpanded: true,
+      guideDeskLinked: true,
+
       mapIsDirectory: false,
       placementBeforeAccess: true,
       staleCardinalRendererSuppressed: true,
+
+      mapPortalGlobalEstateNavigation: true,
+      returnToOrbitLocalPageNavigation: true,
+      mainMenuExitBoard: true,
+      mirrorlandDoorsImmersiveNavigation: true,
+      guideDeskFullConstructionNarrative: true,
 
       builderPathHiddenFromVisitorCards: true,
       fileNameIsNotRoomIdentity: true,
@@ -1622,6 +1767,7 @@
       showroomDisplayedAsAtrium: true,
       globeDisplayedAsAtlasStudy: true,
       frontierDisplayedAsWorkshopYard: true,
+      siteGuideDisplayedAsGuideDesk: true,
 
       mapBlipSingleEntryway: true,
       mirrorlandEntryway: "map_portal_blip",

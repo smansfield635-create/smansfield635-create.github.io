@@ -1,34 +1,35 @@
 <!-- TARGET FILE: /showroom/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- SHOWROOM_MIRRORLAND_ENTRY_BLUEPRINT_PORTAL_DUAL_MENU_SHELL_HTML_TNT_v1 -->
+<!-- SHOWROOM_MIRRORLAND_SINGLE_DOOR_DIAMOND_LATTICE_PORTAL_HTML_TNT_v1 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/"
   data-page="showroom"
-  data-version="G2-NOW-ENTERING-MIRRORLAND-DOOR-BLUEPRINT-PORTAL-DUAL-MENU-SHELL"
-  data-contract="SHOWROOM_MIRRORLAND_ENTRY_BLUEPRINT_PORTAL_DUAL_MENU_SHELL_HTML_TNT_v1"
-  data-previous-contract="SHOWROOM_MIRRORLAND_ENTRY_BLUEPRINT_MARKER_HTML_TNT_v1"
-  data-baseline-contract="SHOWROOM_DIAMOND_G2_NOW_ENTERING_MIRRORLAND_DOOR_COPY_HTML_TNT_v11"
+  data-version="G2-SINGLE-DOOR-DIAMOND-LATTICE-PORTAL"
+  data-contract="SHOWROOM_MIRRORLAND_SINGLE_DOOR_DIAMOND_LATTICE_PORTAL_HTML_TNT_v1"
+  data-previous-contract="SHOWROOM_MIRRORLAND_ENTRY_BLUEPRINT_PORTAL_DUAL_MENU_SHELL_HTML_TNT_v1"
+  data-baseline-contract="SHOWROOM_MIRRORLAND_ENTRY_BLUEPRINT_PORTAL_DUAL_MENU_SHELL_HTML_TNT_v1"
   data-contract-family="SHOWROOM_DIAMOND_G2_FULL_CONTRACT_RENEWAL_THREE_FILE_FAMILY_v1"
-  data-role="now-entering-mirrorland-door"
+  data-role="single-door-to-mirrorland"
   data-public-work="SHADOWS_NEVER_SHATTER_IN_MIRRORLAND"
   data-primary-subject="mirrorland"
-  data-door-object="showroom-diamond"
+  data-door-object="showroom-diamond-lattice"
   data-primary-action="enter-mirrorland"
   data-primary-route="/showroom/globe/"
-  data-secondary-action="proceed-into-the-planetary-path"
-  data-secondary-route="/showroom/globe/audralia/"
-  data-tertiary-action="touch-the-door"
-  data-tertiary-route="#diamond-object"
-  data-audralia-role="inherent-first-planetary-doorway"
-  data-three-file-authority="true"
-  data-context-renewal="mirrorland-entry-blueprint-portal-dual-menu-shell-alignment"
-  data-mirrorland-blueprint-marker="true"
-  data-mirrorland-blueprint-marker-role="entered-mirrorland-threshold-indicator"
-  data-mirrorland-blueprint-marker-scope="showroom-entry-door-only"
+  data-secondary-action="inspect-diamond-lattice"
+  data-secondary-route="#diamond-object"
+  data-tertiary-action="use-mirrorland-portal-blip"
+  data-tertiary-route="#portal-blip"
+  data-context-renewal="single-door-diamond-lattice-portal-page"
+  data-single-door-page="true"
+  data-diamond-lattice-showcase="true"
+  data-mirrorland-portal-blip-active="true"
+  data-route-burden-moved-to-portal="true"
+  data-top-dropdown-reduced="true"
+  data-frontier-mirrorland-aligned="true"
   data-mirrorland-portal-active="true"
-  data-mirrorland-portal-contract="MANOR_BLUEPRINT_MIRRORLAND_PORTAL_DUAL_MENU_JS_TNT_v1"
+  data-mirrorland-portal-contract="MANOR_BLUEPRINT_MIRRORLAND_PORTAL_FRONTIER_SCROLL_FORCE_JS_TNT_v1"
   data-blueprint-dual-menu-active="true"
   data-blueprint-default-lens="mirrorland"
   data-blueprint-main-menu-available="true"
@@ -39,7 +40,7 @@
   data-blueprint-js="/assets/manor-blueprint/manor.blueprint.js"
   data-blueprint-registry-contract="MANOR_BLUEPRINT_ROUTE_REGISTRY_TNT_v1"
   data-blueprint-css-contract="MANOR_BLUEPRINT_FIXED_BUBBLE_FULLSCREEN_OVERLAY_CSS_TNT_v1"
-  data-blueprint-js-cache-key="MANOR_BLUEPRINT_MIRRORLAND_PORTAL_DUAL_MENU_JS_TNT_v1"
+  data-blueprint-js-cache-key="MANOR_BLUEPRINT_MIRRORLAND_PORTAL_FRONTIER_SCROLL_FORCE_JS_TNT_v1"
   data-blueprint-sitewide="false"
   data-blueprint-page-scoped="true"
   data-diamond-renderer="/showroom/index.diamond.js"
@@ -79,10 +80,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>You Are Now Entering Mirrorland · Shadows Never Shatter</title>
+  <title>The Door to Mirrorland · Diamond Lattice</title>
   <meta
     name="description"
-    content="You are now entering Mirrorland. This is the door. Touch the Diamond before you cross."
+    content="The Showroom is the Door to Mirrorland. Inspect the Diamond Lattice, then use the Portal map to enter the Mirrorland route field."
   >
 
   <link
@@ -250,7 +251,7 @@
 
     .route-menu{
       position:relative;
-      min-width:min(18rem,100%);
+      min-width:min(14rem,100%);
     }
 
     .route-menu summary{
@@ -295,8 +296,8 @@
       right:0;
       top:calc(100% + .55rem);
       z-index:40;
-      width:min(38rem,calc(100vw - 2rem));
-      padding:.82rem;
+      width:min(22rem,calc(100vw - 2rem));
+      padding:.72rem;
       border:1px solid rgba(243,200,111,.30);
       border-radius:1.1rem;
       background:
@@ -308,8 +309,8 @@
 
     .menu-grid{
       display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:.5rem;
+      grid-template-columns:1fr;
+      gap:.45rem;
     }
 
     .menu-grid a{
@@ -582,7 +583,8 @@
 
     .diamond-control-deck,
     .diamond-status-deck,
-    .diamond-proof-panel{
+    .diamond-proof-panel,
+    .portal-panel{
       border:1px solid rgba(243,200,111,.22);
       border-radius:1.35rem;
       background:
@@ -604,7 +606,8 @@
     }
 
     .control-group b,
-    .proof-card b{
+    .proof-card b,
+    .portal-card b{
       color:var(--gold);
       font-size:.62rem;
       letter-spacing:.12em;
@@ -703,15 +706,15 @@
       line-height:1.36;
     }
 
-    .jump-grid{
+    .portal-grid{
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
       gap:.85rem;
     }
 
-    .jump-pad{
+    .portal-card{
       position:relative;
-      min-height:10.6rem;
+      min-height:10.5rem;
       display:grid;
       align-content:end;
       gap:.48rem;
@@ -726,15 +729,15 @@
       transition:transform .18s ease,border-color .18s ease,filter .18s ease;
     }
 
-    .jump-pad:hover,
-    .jump-pad:focus-visible{
+    .portal-card:hover,
+    .portal-card:focus-visible{
       transform:translateY(-3px);
       border-color:rgba(243,200,111,.52);
       filter:brightness(1.08);
       outline:none;
     }
 
-    .jump-pad::after{
+    .portal-card::after{
       content:"";
       position:absolute;
       right:.85rem;
@@ -751,16 +754,7 @@
       pointer-events:none;
     }
 
-    .jump-pad b{
-      color:var(--gold);
-      font-size:.66rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      position:relative;
-      z-index:2;
-    }
-
-    .jump-pad strong{
+    .portal-card strong{
       color:rgba(255,244,216,.98);
       font-size:1.25rem;
       line-height:1.04;
@@ -768,7 +762,7 @@
       z-index:2;
     }
 
-    .jump-pad span{
+    .portal-card span{
       color:rgba(230,238,255,.78);
       font-size:.9rem;
       line-height:1.38;
@@ -776,29 +770,27 @@
       z-index:2;
     }
 
-    .meaning-grid{
+    .portal-copy{
       display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:.8rem;
+      gap:.7rem;
+      max-width:920px;
     }
 
-    .meaning-card{
+    .portal-note{
       display:grid;
-      gap:.55rem;
+      gap:.5rem;
       padding:1rem;
-      border:1px solid rgba(255,255,255,.12);
+      border:1px solid rgba(143,240,195,.22);
       border-radius:1.2rem;
-      background:rgba(255,255,255,.032);
+      background:rgba(143,240,195,.055);
     }
 
-    .meaning-card b{
-      color:var(--gold);
-      font-size:.66rem;
+    .portal-note b{
+      color:var(--green);
+      font-size:.68rem;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
-
-    .meaning-card p{font-size:.92rem}
 
     .receipt{
       display:none!important;
@@ -828,8 +820,7 @@
     @media (max-width:1050px){
       .diamond-layout{grid-template-columns:1fr}
       .diamond-proof-panel{position:relative;top:auto}
-      .jump-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .meaning-grid{grid-template-columns:1fr}
+      .portal-grid{grid-template-columns:1fr}
     }
 
     @media (max-width:760px){
@@ -838,7 +829,6 @@
       .nav{justify-content:flex-start}
       .route-menu{width:100%}
       .route-menu-panel{position:static;margin-top:.45rem;width:100%}
-      .menu-grid{grid-template-columns:1fr}
       h1{font-size:clamp(3.1rem,15vw,5.7rem)}
       .hero{min-height:30rem;padding:1rem}
       .actions{display:grid}
@@ -846,7 +836,6 @@
       .diamond-viewport-card{min-height:34rem}
       .diamond-status-deck{display:grid}
       .diamond-status-deck .actions{width:100%}
-      .jump-grid{grid-template-columns:1fr}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -871,20 +860,17 @@
         <span class="brand-mark" aria-hidden="true"><span>DG</span></span>
         <span class="brand-copy">
           <span>Shadows Never Shatter</span>
-          <strong>Mirrorland</strong>
+          <strong>Mirrorland Door</strong>
         </span>
       </a>
 
-      <nav class="nav" aria-label="Mirrorland route navigation">
+      <nav class="nav" aria-label="Reduced fallback navigation">
         <details class="route-menu">
-          <summary>Route Map</summary>
+          <summary>Fallback Menu</summary>
           <div class="route-menu-panel">
             <div class="menu-grid">
               <a href="/">Compass</a>
-              <a href="/showroom/">Door</a>
               <a href="/showroom/globe/">Mirrorland</a>
-              <a href="/showroom/globe/audralia/">Planetary Path</a>
-              <a href="/laws/">Laws</a>
               <a href="/gauges/">Gauges</a>
             </div>
           </div>
@@ -894,12 +880,13 @@
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Welcome to Mirrorland</div>
+        <div class="kicker">The Door to Mirrorland</div>
 
         <h1 id="page-title">You are now entering Mirrorland.</h1>
 
         <p class="lead">
-          This is the door. Touch the Diamond, turn it, and watch the object answer before you cross.
+          This page is the threshold. The Diamond Lattice is the object at the Door.
+          The floating Map is the Portal.
         </p>
 
         <div class="quote">
@@ -908,17 +895,17 @@
 
         <div class="actions">
           <a class="button gold" href="/showroom/globe/">Enter Mirrorland</a>
-          <a class="button green" href="/showroom/globe/audralia/">Proceed into the Planetary Path</a>
-          <a class="button" href="#diamond-object">Touch the Door</a>
+          <a class="button green" href="#diamond-object">Inspect the Diamond Lattice</a>
+          <a class="button" href="#portal-blip">Find the Portal Map</a>
         </div>
       </section>
 
       <section id="diamond-object" class="panel section" aria-labelledby="diamond-title">
-        <div class="kicker">This Is the Door</div>
-        <h2 id="diamond-title">Touch the Diamond before you cross.</h2>
+        <div class="kicker">Diamond Lattice Showcase</div>
+        <h2 id="diamond-title">Touch the object before you cross.</h2>
 
         <p>
-          Crystal Form shows the body. Lattice Structure opens the pattern. When the threshold holds, the worlds begin.
+          Crystal Form shows the body. Lattice Structure opens the pattern. The Door does not need to carry every route now; the Portal carries the world path.
         </p>
 
         <div class="diamond-layout">
@@ -936,16 +923,16 @@
                 data-object-only-lattice="false"
                 data-core-origin-fibonacci-spiral="true"
                 data-sunflower-phyllotaxis="held-after-v5-crash"
-                aria-label="Showroom G2 Diamond proof object"
+                aria-label="Showroom G2 Diamond Lattice proof object"
               >
                 <canvas
                   data-showroom-diamond-canvas
-                  aria-label="Interactive G2 Diamond proof object canvas"
+                  aria-label="Interactive G2 Diamond Lattice proof object canvas"
                 ></canvas>
               </div>
             </div>
 
-            <div class="diamond-control-deck" aria-label="Diamond view controls">
+            <div class="diamond-control-deck" aria-label="Diamond Lattice view controls">
               <div class="control-group">
                 <b>Lens</b>
                 <div class="lens-buttons">
@@ -985,24 +972,24 @@
               <span data-diamond-lens-copy>Crystal Form shows the body. Lattice Structure opens the pattern inside it.</span>
             </div>
 
-            <div class="kicker">Before the Door Opens</div>
+            <div class="kicker">At the Door</div>
 
-            <h3 id="inside-door-title">The Diamond answers before Mirrorland begins.</h3>
+            <h3 id="inside-door-title">The Diamond Lattice answers before Mirrorland expands.</h3>
 
             <div class="proof-grid">
               <div class="proof-card">
-                <b>Look First</b>
-                <span>Do not listen first. Look first.</span>
+                <b>Object</b>
+                <span>The Diamond Lattice is the product object at the threshold.</span>
               </div>
 
               <div class="proof-card">
-                <b>The Mirror</b>
-                <span>A mirror can break when the image cannot survive pressure.</span>
+                <b>Pattern</b>
+                <span>The lattice is the hidden order behind the visible crystal.</span>
               </div>
 
               <div class="proof-card">
-                <b>The Shadow</b>
-                <span>A shadow does not shatter. It follows what made it.</span>
+                <b>Portal</b>
+                <span>The floating Map carries the Mirrorland routes instead of forcing the page to list them all.</span>
               </div>
 
               <div class="proof-card">
@@ -1014,104 +1001,68 @@
         </div>
       </section>
 
-      <section id="jump-pads" class="panel section" aria-labelledby="jump-title">
-        <div class="kicker">Enter Here</div>
-        <h2 id="jump-title">The door is open. Choose your first step.</h2>
+      <section id="portal-blip" class="panel section" aria-labelledby="portal-title">
+        <div class="kicker">Portal Blip</div>
+        <h2 id="portal-title">The floating Map is the Mirrorland Portal.</h2>
 
-        <div class="jump-grid">
-          <a class="jump-pad" href="/showroom/globe/" style="--pad-color:rgba(243,200,111,.42);--pad-glow:rgba(243,200,111,.18)">
-            <b>Primary Door</b>
-            <strong>Enter Mirrorland</strong>
-            <span>Step through the door and enter the world path.</span>
-          </a>
+        <div class="portal-copy">
+          <p>
+            The top dropdown is now only a reduced fallback. The full route system lives in the portal map. Open the floating Map blip to use the Mirrorland Menu, Main Menu / Website Options, and Instructions.
+          </p>
 
-          <a class="jump-pad" href="/showroom/globe/audralia/" style="--pad-color:rgba(141,216,255,.42);--pad-glow:rgba(141,216,255,.18)">
-            <b>Planetary Path</b>
-            <strong>Proceed into Audralia</strong>
-            <span>Move toward the first living planetary doorway.</span>
-          </a>
-
-          <a class="jump-pad" href="#diamond-object" style="--pad-color:rgba(255,232,163,.42);--pad-glow:rgba(255,232,163,.16)">
-            <b>Threshold Object</b>
-            <strong>Touch the Door</strong>
-            <span>Return to the Diamond before crossing the threshold.</span>
-          </a>
-
-          <a class="jump-pad" href="/characters/" style="--pad-color:rgba(159,124,255,.42);--pad-glow:rgba(159,124,255,.18)">
-            <b>Story Faces</b>
-            <strong>Meet the Characters</strong>
-            <span>Meet the first faces waiting beyond the door.</span>
-          </a>
-
-          <a class="jump-pad" href="/laws/" style="--pad-color:rgba(255,143,143,.42);--pad-glow:rgba(255,143,143,.18)">
-            <b>Truth Layer</b>
-            <strong>Read the Laws</strong>
-            <span>Carry the truth layer before the path expands.</span>
-          </a>
-
-          <a class="jump-pad" href="/gauges/" style="--pad-color:rgba(143,240,195,.42);--pad-glow:rgba(143,240,195,.18)">
-            <b>Measurement</b>
-            <strong>Run the Gauges</strong>
-            <span>Measure what is present, routed, and holding shape.</span>
-          </a>
+          <div class="portal-note">
+            <b>Frontier Alignment</b>
+            <p>
+              Frontier belongs to Mirrorland. The Portal treats Frontier as part of the Mirrorland field while the Compass remains separate as the main-site orientation layer.
+            </p>
+          </div>
         </div>
-      </section>
 
-      <section id="proof-meaning" class="panel section" aria-labelledby="meaning-title">
-        <div class="kicker">Now Entering</div>
-        <h2 id="meaning-title">Welcome to Shadows Never Shatter in Mirrorland.</h2>
+        <div class="portal-grid">
+          <a class="portal-card" href="/showroom/globe/" style="--pad-color:rgba(243,200,111,.42);--pad-glow:rgba(243,200,111,.18)">
+            <b>Primary Entry</b>
+            <strong>Enter Mirrorland</strong>
+            <span>Cross from the Door into the Mirrorland route field.</span>
+          </a>
 
-        <div class="meaning-grid">
-          <div class="meaning-card">
-            <b>Touch</b>
-            <p>The threshold begins with expression.</p>
-          </div>
+          <a class="portal-card" href="#diamond-object" style="--pad-color:rgba(141,216,255,.42);--pad-glow:rgba(141,216,255,.18)">
+            <b>Product Object</b>
+            <strong>Inspect the Diamond Lattice</strong>
+            <span>Return to the object at the Door before the route field expands.</span>
+          </a>
 
-          <div class="meaning-card">
-            <b>Cross</b>
-            <p>The object answers before the worlds begin.</p>
-          </div>
-
-          <div class="meaning-card">
-            <b>Enter</b>
-            <p>Mirrorland starts when the door is no longer just seen, but crossed.</p>
-          </div>
+          <a class="portal-card" href="#main" style="--pad-color:rgba(143,240,195,.42);--pad-glow:rgba(143,240,195,.18)">
+            <b>Portal Map</b>
+            <strong>Use the Map Blip</strong>
+            <span>Tap the floating Map / Portal icon to open the Mirrorland navigation layer.</span>
+          </a>
         </div>
       </section>
 
       <template id="route-receipt" class="receipt" data-route-receipt>
-SHOWROOM_MIRRORLAND_ENTRY_BLUEPRINT_PORTAL_DUAL_MENU_SHELL_HTML_TNT_v1
-previous=SHOWROOM_MIRRORLAND_ENTRY_BLUEPRINT_MARKER_HTML_TNT_v1
-baseline=SHOWROOM_DIAMOND_G2_NOW_ENTERING_MIRRORLAND_DOOR_COPY_HTML_TNT_v11
+SHOWROOM_MIRRORLAND_SINGLE_DOOR_DIAMOND_LATTICE_PORTAL_HTML_TNT_v1
+previous=SHOWROOM_MIRRORLAND_ENTRY_BLUEPRINT_PORTAL_DUAL_MENU_SHELL_HTML_TNT_v1
+baseline=SHOWROOM_MIRRORLAND_ENTRY_BLUEPRINT_PORTAL_DUAL_MENU_SHELL_HTML_TNT_v1
 route=/showroom/
 html=/showroom/index.html
-page_role=now_entering_mirrorland_door
+page_role=single_door_to_mirrorland
 public_work=Shadows_Never_Shatter_in_Mirrorland
 primary_subject=Mirrorland
-door_object=Showroom_Diamond
-copy_law=entry_not_belief
-public_thesis=you_are_now_entering_mirrorland
-hero_kicker=Welcome_to_Mirrorland
-hero_line=You_are_now_entering_Mirrorland
-door_line=This_is_the_door
-threshold_line=Touch_the_Diamond_turn_it_and_watch_the_object_answer_before_you_cross
-mirrorland_thesis=A_mirror_can_shatter_A_shadow_cannot
+door_object=Diamond_Lattice
+single_door_page=true
+diamond_lattice_showcase=true
+mirrorland_portal_blip_active=true
+route_burden_moved_to_portal=true
+top_dropdown_reduced=true
+frontier_mirrorland_aligned=true
+compass_separated=true
 primary_cta=Enter_Mirrorland
 primary_route=/showroom/globe/
-secondary_cta=Proceed_into_the_Planetary_Path
-secondary_route=/showroom/globe/audralia/
-tertiary_cta=Touch_the_Door
-tertiary_route=#diamond-object
-mirrorland_blueprint_marker=true
-mirrorland_blueprint_marker_role=entered_mirrorland_threshold_indicator
-mirrorland_blueprint_marker_scope=showroom_entry_door_only
-mirrorland_portal_active=true
-mirrorland_portal_contract=MANOR_BLUEPRINT_MIRRORLAND_PORTAL_DUAL_MENU_JS_TNT_v1
-blueprint_dual_menu_active=true
-blueprint_default_lens=mirrorland
-blueprint_main_menu_available=true
-blueprint_mirrorland_menu_available=true
-blueprint_compass_separated=true
+secondary_cta=Inspect_the_Diamond_Lattice
+secondary_route=#diamond-object
+tertiary_cta=Find_the_Portal_Map
+tertiary_route=#portal-blip
+mirrorland_thesis=A_mirror_can_shatter_A_shadow_cannot
 blueprint_sitewide=false
 blueprint_page_scoped=true
 blueprint_registry=/assets/manor-blueprint/manor.blueprint.registry.js
@@ -1119,15 +1070,11 @@ blueprint_registry_contract=MANOR_BLUEPRINT_ROUTE_REGISTRY_TNT_v1
 blueprint_css=/assets/manor-blueprint/manor.blueprint.css
 blueprint_css_contract=MANOR_BLUEPRINT_FIXED_BUBBLE_FULLSCREEN_OVERLAY_CSS_TNT_v1
 blueprint_js=/assets/manor-blueprint/manor.blueprint.js
-blueprint_js_cache_key=MANOR_BLUEPRINT_MIRRORLAND_PORTAL_DUAL_MENU_JS_TNT_v1
-audralia_role=inherent_first_planetary_doorway
-planet_template_language=under_hood_only
-showroom_beginning=true
-three_d_interaction_beginning=true
-narrative_beginning=true
-most_enticing_page=true
+blueprint_js_cache_key=MANOR_BLUEPRINT_MIRRORLAND_PORTAL_FRONTIER_SCROLL_FORCE_JS_TNT_v1
 diamond_renderer=/showroom/index.diamond.js
+diamond_renderer_touched=false
 ui=/showroom/index.ui.js
+ui_controller_touched=false
 restored_renderer=SHOWROOM_DIAMOND_G2_PHYSICAL_GEM_RESTRAINED_LATTICE_CORE_SPIRAL_RENDERER_TNT_v4
 diamond_js_cache_key=SHOWROOM_DIAMOND_G2_PHYSICAL_GEM_RESTRAINED_LATTICE_CORE_SPIRAL_RENDERER_TNT_v4
 ui_js_cache_key=SHOWROOM_DIAMOND_G2_FULL_CONTRACT_RENEWAL_UI_TNT_v1_CHILD_CAPTURE
@@ -1145,12 +1092,8 @@ overlay_obstruction=false
 controls_under_diamond=true
 dimensional_options=object,memory,behind,through,full
 preserved_hooks=true
-renderer_touched=false
-ui_js_touched=false
 mirrorland_narrative_active=true
 shadows_never_shatter_aligned=true
-diamond_role=threshold_object
-object_thesis=this_is_the_door
 globe_inspired=true
 gem_governed=true
 radial_nodes=16
@@ -1166,12 +1109,12 @@ site_bootstrap_touched=false
 non_mirrorland_pages_touched=false
 audralia_runtime_touched=false
 planet_runtime_touched=false
-deploy_marker=SHOWROOM_MIRRORLAND_ENTRY_BLUEPRINT_PORTAL_DUAL_MENU_SHELL_DEPLOY_MARKER_v1
+deploy_marker=SHOWROOM_MIRRORLAND_SINGLE_DOOR_DIAMOND_LATTICE_PORTAL_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer>
-      You are now entering Mirrorland · This is the door.
+      The Door to Mirrorland · Diamond Lattice · Portal Map.
     </footer>
   </div>
 
@@ -1184,7 +1127,7 @@ deploy_marker=SHOWROOM_MIRRORLAND_ENTRY_BLUEPRINT_PORTAL_DUAL_MENU_SHELL_DEPLOY_
     data-blueprint-page-scoped="true"
   ></script>
   <script
-    src="/assets/manor-blueprint/manor.blueprint.js?v=MANOR_BLUEPRINT_MIRRORLAND_PORTAL_DUAL_MENU_JS_TNT_v1"
+    src="/assets/manor-blueprint/manor.blueprint.js?v=MANOR_BLUEPRINT_MIRRORLAND_PORTAL_FRONTIER_SCROLL_FORCE_JS_TNT_v1"
     defer
     data-mirrorland-blueprint-marker="true"
     data-blueprint-page-scoped="true"

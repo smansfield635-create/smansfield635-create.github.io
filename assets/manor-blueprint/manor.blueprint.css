@@ -1,35 +1,16 @@
 /* TARGET FILE: /assets/manor-blueprint/manor.blueprint.css */
 /* TNT FULL-FILE REPLACEMENT */
-/* MANOR_BLUEPRINT_CARDINAL_ROOM_MAP_VISUAL_CSS_TNT_v1 */
+/* MIRRORLAND_BLUEPRINT_ESTATE_ROOM_LANGUAGE_REGISTRY_RUNTIME_CSS_TNT_v1 */
 /*
   Manor Blueprint HUD CSS.
 
   Purpose:
-  Renew the portal overlay from scattered floating route cards into a
-  cardinal house-blueprint room map where each route/file is represented
-  as a clickable room.
+  Render Map Portal as an immersive estate-room map.
+  Public cards show room name, estate context, short purpose, and enter action.
+  Route paths, file names, wings, and technical roles are hidden from visitor-facing cards.
 
   Previous contract:
-  MANOR_BLUEPRINT_FIXED_BUBBLE_FULLSCREEN_OVERLAY_CSS_TNT_v1
-
-  Owns:
-  - fixed Map / Portal bubble styling
-  - full-screen overlay styling
-  - Mirrorland / Main / Instructions tabs
-  - cardinal room map floorplan visuals
-  - room walls, room doorway, room labels, current-room highlight
-  - mobile room stacking
-  - reduced-motion safety
-
-  Does not own:
-  - route truth
-  - runtime behavior
-  - page content
-  - canvas rendering
-  - image generation
-  - GraphicBox
-  - WebGL
-  - heavy runtime
+  MANOR_BLUEPRINT_CARDINAL_ROOM_MAP_VISUAL_CSS_TNT_v1
 */
 
 :root{
@@ -391,15 +372,12 @@
   border-radius:999px;
 }
 
-.dgb-bp-map-grid{
+.dgb-bp-map-grid,
+.dgb-bp-room-grid{
   display:grid;
-  grid-template-columns:minmax(18rem,.42fr) minmax(0,1fr);
+  grid-template-columns:minmax(18rem,.34fr) minmax(0,1fr);
   gap:1rem;
   align-items:start;
-}
-
-.dgb-bp-room-grid{
-  grid-template-columns:minmax(18rem,.34fr) minmax(0,1fr);
 }
 
 .dgb-bp-panel{
@@ -453,7 +431,7 @@
 
 .dgb-bp-location-card{
   display:grid;
-  gap:.55rem;
+  gap:.4rem;
   border:1px solid rgba(143,240,195,.28);
   border-radius:1rem;
   padding:.9rem;
@@ -475,18 +453,15 @@
   line-height:1.05;
 }
 
+.dgb-bp-location-card span{
+  color:rgba(230,238,255,.74);
+  font-size:.86rem;
+  font-weight:800;
+  line-height:1.3;
+}
+
 .dgb-bp-location-card code{
-  width:fit-content;
-  max-width:100%;
-  display:block;
-  overflow:auto;
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:.6rem;
-  padding:.42rem .55rem;
-  color:rgba(230,238,255,.86);
-  background:rgba(0,0,0,.25);
-  font-size:.74rem;
-  white-space:nowrap;
+  display:none!important;
 }
 
 .dgb-bp-chain{
@@ -513,14 +488,6 @@
   text-decoration:none;
 }
 
-.dgb-bp-chain a:hover,
-.dgb-bp-chain a:focus-visible{
-  color:#06100b;
-  border-color:rgba(243,200,111,.88);
-  background:linear-gradient(135deg,var(--dgb-bp-gold-2),var(--dgb-bp-gold));
-  outline:none;
-}
-
 .dgb-bp-chain-separator{
   color:rgba(243,200,111,.78);
   font-weight:950;
@@ -542,11 +509,6 @@
   letter-spacing:.08em;
   text-transform:uppercase;
   text-decoration:none;
-}
-
-.dgb-bp-guide-link:focus-visible{
-  outline:2px solid var(--dgb-bp-gold-2);
-  outline-offset:3px;
 }
 
 .dgb-bp-route-tools{
@@ -714,8 +676,8 @@
 
 .dgb-bp-room-stack{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(8.8rem,1fr));
-  gap:.5rem;
+  grid-template-columns:repeat(auto-fit,minmax(9.6rem,1fr));
+  gap:.55rem;
   align-content:start;
 }
 
@@ -726,14 +688,14 @@
 
 .dgb-bp-room{
   position:relative;
-  min-height:7.2rem;
+  min-height:8.15rem;
   display:grid;
   grid-template-columns:auto 1fr;
-  gap:.52rem;
+  gap:.58rem;
   align-items:stretch;
   border:2px solid rgba(184,205,255,.18);
-  border-radius:.32rem;
-  padding:.58rem .58rem .58rem .46rem;
+  border-radius:.38rem;
+  padding:.68rem .68rem .78rem .50rem;
   color:var(--dgb-bp-ink);
   background:
     linear-gradient(90deg,rgba(243,200,111,.09),transparent 1.2rem),
@@ -744,6 +706,7 @@
     inset 0 0 0 1px rgba(255,255,255,.045),
     0 .7rem 1.55rem rgba(0,0,0,.20);
   overflow:hidden;
+  transition:transform .18s ease,border-color .18s ease,background .18s ease;
 }
 
 .dgb-bp-room::before{
@@ -763,9 +726,9 @@
 .dgb-bp-room::after{
   content:"Enter";
   position:absolute;
-  right:.44rem;
-  bottom:.38rem;
-  color:rgba(243,200,111,.72);
+  right:.54rem;
+  bottom:.42rem;
+  color:rgba(243,200,111,.78);
   font-size:.52rem;
   font-weight:950;
   letter-spacing:.11em;
@@ -787,13 +750,13 @@
 .dgb-bp-room-meta{
   min-width:0;
   display:grid;
-  gap:.16rem;
+  gap:.22rem;
   align-content:start;
 }
 
-.dgb-bp-room-wing{
+.dgb-bp-room-estate{
   color:var(--dgb-bp-gold);
-  font-size:.54rem;
+  font-size:.56rem;
   font-weight:950;
   letter-spacing:.12em;
   text-transform:uppercase;
@@ -801,28 +764,41 @@
 
 .dgb-bp-room-title{
   color:var(--dgb-bp-ink);
-  font-size:.94rem;
-  line-height:1.05;
+  font-size:1.02rem;
+  line-height:1.04;
   letter-spacing:-.025em;
 }
 
-.dgb-bp-room-role{
-  color:rgba(230,238,255,.70);
-  font-size:.66rem;
-  font-weight:850;
-  line-height:1.14;
-  text-transform:capitalize;
+.dgb-bp-room-summary{
+  color:rgba(230,238,255,.72);
+  font-size:.70rem;
+  font-weight:750;
+  line-height:1.25;
+  padding-right:.25rem;
 }
 
-.dgb-bp-room-path{
-  width:100%;
-  display:block;
-  margin-top:.08rem;
-  color:rgba(230,238,255,.46);
-  font-size:.58rem;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
+.dgb-bp-room-enter{
+  width:fit-content;
+  margin-top:.2rem;
+  display:inline-flex;
+  align-items:center;
+  min-height:1.65rem;
+  border:1px solid rgba(243,200,111,.22);
+  border-radius:999px;
+  padding:.25rem .48rem;
+  color:rgba(255,244,216,.88);
+  background:rgba(243,200,111,.055);
+  font-size:.54rem;
+  font-weight:950;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+}
+
+.dgb-bp-room-wing,
+.dgb-bp-room-role,
+.dgb-bp-room-path,
+.dgb-bp-room code{
+  display:none!important;
 }
 
 .dgb-bp-room:hover,
@@ -890,9 +866,18 @@
     0 .7rem 1.55rem rgba(0,0,0,.20);
 }
 
-.dgb-bp-room[data-role*="deployment"],
-.dgb-bp-room[data-wing*="Frontier"]{
+.dgb-bp-room[data-estate-room*="Frontier"],
+.dgb-bp-room[data-estate-section*="Frontier"]{
   border-color:rgba(143,240,195,.35);
+}
+
+.dgb-bp-room[data-estate-room*="ZIONTS"],
+.dgb-bp-room[data-estate-room*="Atlas"]{
+  border-color:rgba(141,216,255,.32);
+}
+
+.dgb-bp-room[data-estate-room*="Lab"]{
+  border-color:rgba(255,143,143,.30);
 }
 
 .dgb-bp-room-empty{
@@ -948,184 +933,16 @@
   min-width:0;
 }
 
-.dgb-bp-route-section{
-  display:grid;
-  gap:.7rem;
-}
-
-.dgb-bp-section-title{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:.7rem;
-  color:var(--dgb-bp-gold);
-  font-size:.68rem;
-  font-weight:950;
-  letter-spacing:.13em;
-  text-transform:uppercase;
-}
-
-.dgb-bp-route-list{
-  display:grid;
-  gap:.55rem;
-}
-
-.dgb-bp-route-card{
-  display:grid;
-  grid-template-columns:auto 1fr auto;
-  gap:.65rem;
-  align-items:center;
-  border:1px solid rgba(184,205,255,.13);
-  border-radius:.95rem;
-  padding:.68rem;
-  color:inherit;
-  background:rgba(255,255,255,.035);
-  text-decoration:none;
-}
-
-.dgb-bp-route-card:hover,
-.dgb-bp-route-card:focus-visible{
-  border-color:rgba(243,200,111,.60);
-  background:rgba(243,200,111,.075);
-  outline:none;
-}
-
-.dgb-bp-route-card[data-current="true"]{
-  border-color:rgba(143,240,195,.48);
-  background:
-    radial-gradient(circle at 0% 0%,rgba(143,240,195,.12),transparent 16rem),
-    rgba(143,240,195,.045);
-}
-
-.dgb-bp-route-marker{
-  width:2.45rem;
-  height:2.45rem;
-  display:grid;
-  place-items:center;
-  clip-path:var(--dgb-bp-gem-path);
-  color:#06100b;
-  background:linear-gradient(135deg,var(--dgb-bp-gold-2),var(--dgb-bp-gold));
-  font-size:.66rem;
-  font-weight:950;
-  letter-spacing:.04em;
-}
-
-.dgb-bp-route-copy{
-  display:grid;
-  gap:.12rem;
-  min-width:0;
-}
-
-.dgb-bp-route-copy strong{
-  color:var(--dgb-bp-ink);
-  font-size:.93rem;
-  line-height:1.08;
-}
-
-.dgb-bp-route-copy span{
-  color:var(--dgb-bp-muted);
-  font-size:.78rem;
-  line-height:1.25;
-}
-
-.dgb-bp-route-copy code{
-  color:rgba(230,238,255,.54);
-  font-size:.68rem;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
+.dgb-bp-route-section,
+.dgb-bp-route-list,
+.dgb-bp-route-card,
+.dgb-bp-blueprint-field,
+.dgb-bp-map-node,
+.dgb-bp-section-title,
+.dgb-bp-route-marker,
+.dgb-bp-route-copy,
 .dgb-bp-route-badge{
-  justify-self:end;
-  display:inline-flex;
-  align-items:center;
-  min-height:1.65rem;
-  border:1px solid rgba(184,205,255,.14);
-  border-radius:999px;
-  padding:.25rem .45rem;
-  color:rgba(230,238,255,.72);
-  background:rgba(255,255,255,.04);
-  font-size:.56rem;
-  font-weight:950;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-}
-
-.dgb-bp-blueprint-field{
-  position:relative;
-  min-height:32rem;
-  border:1px solid rgba(184,205,255,.14);
-  border-radius:1.15rem;
-  background:
-    radial-gradient(circle at 50% 50%,rgba(141,216,255,.11),transparent 22rem),
-    linear-gradient(rgba(141,216,255,.055) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(141,216,255,.055) 1px,transparent 1px),
-    rgba(1,5,16,.50);
-  background-size:auto,42px 42px,42px 42px,auto;
-  overflow:hidden;
-}
-
-.dgb-bp-blueprint-field::before{
-  content:"";
-  position:absolute;
-  inset:1rem;
-  border:1px solid rgba(243,200,111,.16);
-  border-radius:1rem;
-  pointer-events:none;
-}
-
-.dgb-bp-map-node{
-  position:absolute;
-  left:calc(var(--bp-x, 50) * 1%);
-  top:calc(var(--bp-y, 50) * 1%);
-  transform:translate(-50%,-50%);
-  min-width:7.2rem;
-  max-width:11rem;
-  display:grid;
-  gap:.18rem;
-  border:1px solid rgba(184,205,255,.18);
-  border-radius:.85rem;
-  padding:.55rem .62rem;
-  color:var(--dgb-bp-ink);
-  background:rgba(2,7,18,.82);
-  text-decoration:none;
-  box-shadow:0 .8rem 1.8rem rgba(0,0,0,.28);
-}
-
-.dgb-bp-map-node:hover,
-.dgb-bp-map-node:focus-visible{
-  z-index:3;
-  border-color:rgba(243,200,111,.70);
-  background:rgba(28,24,42,.92);
-  outline:none;
-}
-
-.dgb-bp-map-node[data-current="true"]{
-  z-index:4;
-  border-color:rgba(143,240,195,.72);
-  background:
-    radial-gradient(circle at 20% 0%,rgba(143,240,195,.22),transparent 9rem),
-    rgba(2,7,18,.92);
-  box-shadow:0 0 1.4rem rgba(143,240,195,.22),0 .8rem 1.8rem rgba(0,0,0,.30);
-}
-
-.dgb-bp-map-node b{
-  color:var(--dgb-bp-gold);
-  font-size:.52rem;
-  letter-spacing:.10em;
-  text-transform:uppercase;
-}
-
-.dgb-bp-map-node strong{
-  font-size:.78rem;
-  line-height:1.05;
-}
-
-.dgb-bp-map-node span{
-  color:rgba(230,238,255,.66);
-  font-size:.62rem;
-  line-height:1.15;
+  display:none!important;
 }
 
 .dgb-bp-empty{
@@ -1170,11 +987,7 @@
 
   .dgb-bp-cardinal-zone[data-cardinal="west"] .dgb-bp-room-stack,
   .dgb-bp-cardinal-zone[data-cardinal="east"] .dgb-bp-room-stack{
-    grid-template-columns:repeat(auto-fit,minmax(8.8rem,1fr));
-  }
-
-  .dgb-bp-blueprint-field{
-    min-height:38rem;
+    grid-template-columns:repeat(auto-fit,minmax(9.6rem,1fr));
   }
 }
 
@@ -1272,42 +1085,19 @@
   }
 
   .dgb-bp-room{
-    min-height:6.4rem;
+    min-height:7rem;
   }
 
   .dgb-bp-room-title{
-    font-size:.88rem;
+    font-size:.94rem;
   }
 
-  .dgb-bp-route-card{
-    grid-template-columns:auto 1fr;
-  }
-
-  .dgb-bp-route-badge{
-    grid-column:1 / -1;
-    justify-self:start;
+  .dgb-bp-room-summary{
+    font-size:.66rem;
   }
 
   .dgb-bp-instructions-grid{
     grid-template-columns:1fr;
-  }
-
-  .dgb-bp-blueprint-field{
-    min-height:42rem;
-  }
-
-  .dgb-bp-map-node{
-    min-width:6.4rem;
-    max-width:8.4rem;
-    padding:.48rem;
-  }
-
-  .dgb-bp-map-node strong{
-    font-size:.70rem;
-  }
-
-  .dgb-bp-map-node span{
-    display:none;
   }
 }
 
@@ -1316,8 +1106,6 @@
   .dgb-blueprint-overlay,
   .dgb-bp-tab,
   .dgb-bp-close,
-  .dgb-bp-route-card,
-  .dgb-bp-map-node,
   .dgb-bp-room{
     transition:none!important;
     animation:none!important;

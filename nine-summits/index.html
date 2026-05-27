@@ -1,17 +1,40 @@
+<!-- TARGET FILE: /nine-summits/index.html -->
+<!-- TNT FULL-FILE REPLACEMENT -->
+<!-- NINE_SUMMITS_SIMPLIFIED_UNIVERSE_CONCEPT_MAP_BLIP_HTML_TNT_v1 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/nine-summits/"
   data-page="nine-summits-public-gate"
-  data-contract="NINE_SUMMITS_PUBLIC_GATE_LANE_ALIGNMENT_RENEWAL_TNT_v7"
-  data-previous-contract="NINE_SUMMITS_CLEAN_RECEIPT_RETIREMENT_TOKEN_TNT_v6"
-  data-role="public-system-gate"
+  data-contract="NINE_SUMMITS_SIMPLIFIED_UNIVERSE_CONCEPT_MAP_BLIP_HTML_TNT_v1"
+  data-previous-contract="NINE_SUMMITS_PUBLIC_GATE_LANE_ALIGNMENT_RENEWAL_TNT_v7"
+  data-role="public-system-gate-simplified"
   data-core-message="the-climb-becomes-a-world"
   data-primary-lanes="book-universe-audralia-voice"
   data-book-lane="/nine-summits-of-love/"
   data-universe-lane="/nine-summits/universe/"
   data-audralia-lane="/showroom/globe/audralia/"
   data-voice-lane="about-this-underdog-meet-sean-mansfield"
+  data-page-simplified="true"
+  data-page-subject-content-only="true"
+  data-page-body-navigation-reduced="true"
+  data-top-nav-removed="true"
+  data-dropdown-menu-minimized="true"
+  data-route-directory-removed="true"
+  data-jump-options-removed="true"
+  data-system-routes-section-removed="true"
+  data-lane-grid-removed="true"
+  data-voice-grid-removed="true"
+  data-final-action-cluster-removed="true"
+  data-map-blip-added="true"
+  data-floating-map-portal-active="true"
+  data-map-blip-owns-navigation="true"
+  data-local-map-section="false"
+  data-second-mirrorland-entrance="false"
+  data-blueprint-page-scoped="true"
+  data-blueprint-registry="/assets/manor-blueprint/manor.blueprint.registry.js"
+  data-blueprint-css="/assets/manor-blueprint/manor.blueprint.css"
+  data-blueprint-js="/assets/manor-blueprint/manor.blueprint.js"
   data-animation-method="css-only"
   data-orbit-animation="active"
   data-label-gravity-lock="true"
@@ -26,10 +49,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Nine Summits · Diamond Gate Bridge</title>
+  <title>Nine Summits · The Climb Becomes a World</title>
   <meta
     name="description"
-    content="Nine Summits is the public system gate where the book, universe, Audralia, and voice lanes stay connected without competing."
+    content="Nine Summits is the public system gate where the book, universe, Audralia, and voice lanes orbit one concept: the climb becomes a world. Navigation belongs to the floating Map Portal blip."
+  >
+
+  <link
+    rel="stylesheet"
+    href="/assets/manor-blueprint/manor.blueprint.css?v=MANOR_BLUEPRINT_CARDINAL_ROOM_MAP_VISUAL_CSS_TNT_v1"
+    data-mirrorland-blueprint-marker="true"
+    data-blueprint-page-scoped="true"
   >
 
   <style>
@@ -128,6 +158,7 @@
 
     a:focus-visible,
     button:focus-visible,
+    summary:focus-visible,
     [tabindex]:focus-visible {
       outline:2px solid var(--gold);
       outline-offset:4px;
@@ -225,34 +256,14 @@
       text-transform:uppercase;
     }
 
-    .nav {
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      gap:.48rem;
-    }
-
-    .nav a {
-      min-height:2.25rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:999px;
-      padding:.5rem .74rem;
-      color:rgba(241,246,255,.84);
-      background:rgba(255,255,255,.035);
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.055em;
-      text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-    }
-
-    .nav a[aria-current="page"] {
-      border-color:rgba(243,200,111,.88);
-      color:#060811;
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    .header-note {
+      justify-self:end;
+      max-width:23rem;
+      color:rgba(230,238,255,.66);
+      font-size:.78rem;
+      font-weight:850;
+      line-height:1.35;
+      text-align:right;
     }
 
     .panel {
@@ -269,11 +280,11 @@
 
     .hero {
       position:relative;
-      min-height:clamp(23rem,42vw,34rem);
+      min-height:clamp(22rem,40vw,31rem);
       display:grid;
       align-content:center;
       gap:1rem;
-      padding:clamp(1.45rem,5vw,3.4rem);
+      padding:clamp(1.25rem,4vw,3rem);
       margin-top:.6rem;
       isolation:isolate;
     }
@@ -399,57 +410,28 @@
       z-index:2;
     }
 
-    .actions {
+    .subject-pills {
       display:flex;
       flex-wrap:wrap;
-      gap:.62rem;
-      margin-top:.2rem;
+      gap:.55rem;
       position:relative;
       z-index:2;
     }
 
-    .button {
-      min-height:2.65rem;
+    .subject-pills span {
       display:inline-flex;
+      min-height:2.2rem;
       align-items:center;
       justify-content:center;
-      border:1px solid rgba(255,255,255,.15);
+      border:1px solid rgba(184,205,255,.14);
       border-radius:999px;
-      padding:.65rem 1rem;
-      background:rgba(255,255,255,.045);
-      color:rgba(241,246,255,.88);
-      font-size:.76rem;
+      padding:.48rem .75rem;
+      color:rgba(230,238,255,.78);
+      background:rgba(255,255,255,.035);
+      font-size:.68rem;
       font-weight:950;
-      letter-spacing:.055em;
+      letter-spacing:.10em;
       text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
-    }
-
-    .button:hover,
-    .button:focus-visible {
-      transform:translateY(-2px);
-      border-color:rgba(243,200,111,.62);
-      outline:none;
-    }
-
-    .button.gold {
-      border-color:rgba(243,200,111,.9);
-      color:#060811;
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
-      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
-    }
-
-    .button.violet {
-      border-color:rgba(190,170,255,.46);
-      color:var(--violet);
-      background:rgba(143,101,255,.08);
-    }
-
-    .button.green {
-      border-color:rgba(143,240,195,.42);
-      color:var(--green);
-      background:rgba(143,240,195,.07);
     }
 
     .section {
@@ -727,82 +709,71 @@
       to { transform:rotate(360deg); }
     }
 
-    .lane-grid,
-    .voice-grid,
-    .route-card-grid {
+    .concept-grid {
       display:grid;
-      gap:.85rem;
-    }
-
-    .lane-grid {
       grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.7rem;
     }
 
-    .voice-grid {
-      grid-template-columns:repeat(2,minmax(0,1fr));
-    }
-
-    .route-card-grid {
-      grid-template-columns:repeat(4,minmax(0,1fr));
-    }
-
-    .card,
-    .route-card {
-      display:grid;
-      gap:.6rem;
-      min-height:100%;
-      padding:1rem;
+    .concept-card {
       border:1px solid rgba(255,255,255,.12);
-      border-radius:1.2rem;
+      border-radius:1.1rem;
       background:
         radial-gradient(circle at 20% 0%,rgba(143,101,255,.10),transparent 60%),
         rgba(255,255,255,.035);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+      overflow:hidden;
     }
 
-    .card:hover,
-    .card:focus-within,
-    .route-card:hover,
-    .route-card:focus-visible {
-      transform:translateY(-3px);
-      border-color:rgba(243,200,111,.46);
-      outline:none;
-    }
-
-    .card b,
-    .route-card b {
+    .concept-card summary {
+      list-style:none;
+      cursor:pointer;
+      min-height:3rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:.75rem;
+      padding:.85rem .95rem;
       color:var(--gold);
       font-size:.68rem;
+      font-weight:950;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .card strong,
-    .route-card strong {
-      color:rgba(255,244,216,.98);
-      font-size:1.15rem;
+    .concept-card summary::-webkit-details-marker {
+      display:none;
+    }
+
+    .concept-card summary::after {
+      content:"+";
+      color:rgba(230,238,255,.70);
+      font-size:1.05rem;
+      font-weight:950;
+    }
+
+    .concept-card[open] summary::after {
+      content:"–";
+      color:var(--gold2);
+    }
+
+    .concept-body {
+      display:grid;
+      gap:.55rem;
+      padding:0 .95rem .95rem;
+    }
+
+    .concept-body strong {
+      color:rgba(255,244,216,.96);
+      font-size:1.05rem;
       line-height:1.1;
     }
 
-    .card span,
-    .route-card span {
-      color:var(--muted);
-      font-size:.94rem;
+    .concept-body p {
+      font-size:.9rem;
       line-height:1.42;
     }
 
-    .voice-card {
-      border-color:rgba(190,170,255,.18);
-      background:
-        radial-gradient(circle at 20% 0%,rgba(190,170,255,.10),transparent 60%),
-        rgba(143,101,255,.040);
-    }
-
-    .voice-card b {
-      color:var(--violet);
-    }
-
-    .final-direction {
+    .closing-note {
       padding:1.1rem;
       border:1px solid rgba(243,200,111,.22);
       border-radius:1.2rem;
@@ -813,20 +784,11 @@
       gap:.65rem;
     }
 
-    .final-direction strong {
+    .closing-note strong {
       color:rgba(255,244,216,.98);
       font-size:clamp(1.2rem,3.6vw,2rem);
       line-height:1.05;
       letter-spacing:-.04em;
-    }
-
-    .open-path {
-      margin-top:auto;
-      color:rgba(230,238,255,.88);
-      font-size:.76rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
     }
 
     .route-receipt,
@@ -860,8 +822,7 @@
     }
 
     @media (max-width:1080px) {
-      .lane-grid,
-      .route-card-grid {
+      .concept-grid {
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
     }
@@ -872,8 +833,9 @@
         align-items:start;
       }
 
-      .nav {
-        justify-content:flex-start;
+      .header-note {
+        justify-self:start;
+        text-align:left;
       }
     }
 
@@ -883,12 +845,17 @@
       h1 { font-size:clamp(3rem,17vw,5rem); }
 
       .hero {
-        min-height:28rem;
+        min-height:27rem;
         padding:1rem;
       }
 
-      .actions { display:grid; }
-      .button { width:100%; }
+      .subject-pills {
+        display:grid;
+      }
+
+      .subject-pills span {
+        width:100%;
+      }
 
       .gate-stage { min-height:29rem; }
 
@@ -916,9 +883,7 @@
       .center-gem .gem-label b { font-size:.50rem; }
       .center-gem .gem-label strong { font-size:.82rem; }
 
-      .lane-grid,
-      .voice-grid,
-      .route-card-grid {
+      .concept-grid {
         grid-template-columns:1fr;
       }
     }
@@ -1079,7 +1044,7 @@
 
   <div class="shell">
     <header class="topbar" aria-label="Nine Summits header">
-      <a class="brand" href="/">
+      <a class="brand" href="/nine-summits/">
         <span class="brand-mark" aria-hidden="true"><span>NS</span></span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge</span>
@@ -1087,21 +1052,9 @@
         </span>
       </a>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/explore/">Explore</a>
-        <a href="/nine-summits/" aria-current="page">Nine Summits</a>
-        <a href="/nine-summits-of-love/">Book</a>
-        <a href="/nine-summits/universe/">Universe</a>
-        <a href="/products/">Products</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/frontier/">Frontier</a>
-        <a href="/about-this-underdog/">Underdog</a>
-        <a href="/meet-sean-mansfield/">Meet Sean</a>
-        <a href="/gauges/">Gauges</a>
-      </nav>
+      <div class="header-note">
+        Use the floating Map / Portal blip for movement. This page stays focused on the animation and universe concept.
+      </div>
     </header>
 
     <main id="nine-summits-main">
@@ -1112,27 +1065,27 @@
         <p class="subline">Book. Universe. Audralia. Voice.</p>
 
         <p class="lead">
-          Nine Summits keeps the public system clean. The book carries the human climb. The Universe gives that climb a world. Audralia shows the untouched living path as a living canvas. The Voice lane keeps the universal underdog message and Sean Mansfield’s personal profile connected but separate.
+          Nine Summits is the public gate where the human climb becomes a larger world. The book carries the climb, the Universe gives it setting, Audralia shows possibility as a living canvas, and the Voice lane keeps the universal underdog message connected to the person behind it.
         </p>
 
         <div class="principle">
-          Four doors. One public gate. No lane has to compete with the others.
+          Four lanes orbit one public gate. No lane has to compete with the others.
         </div>
 
         <div class="quote">
-          See the climb. Enter the world. Watch possibility develop. Then hear the voice behind the signal.
+          Navigation belongs to the Map / Portal blip. This page explains the system and preserves the animation.
         </div>
 
-        <div class="actions">
-          <a class="button gold" href="/nine-summits-of-love/">Open the Book</a>
-          <a class="button violet" href="/nine-summits/universe/">Enter the Universe</a>
-          <a class="button green" href="/showroom/globe/audralia/">Inspect Audralia</a>
-          <a class="button" href="/meet-sean-mansfield/">Meet Sean</a>
+        <div class="subject-pills" aria-label="Nine Summits subject markers">
+          <span>Book · Human Climb</span>
+          <span>Universe · World Setting</span>
+          <span>Audralia · Living Canvas</span>
+          <span>Voice · Underdog Signal</span>
         </div>
       </section>
 
       <section class="panel section" aria-labelledby="gate-title">
-        <div class="kicker">Four primary doors</div>
+        <div class="kicker">Four-lane universe concept</div>
         <h2 id="gate-title">The four lanes orbit one public gate.</h2>
 
         <div class="gate-stage" aria-label="Book Universe Audralia Voice public gate">
@@ -1149,7 +1102,7 @@
           </div>
 
           <div class="lane-orbit" aria-label="Animated Nine Summits lane orbit">
-            <a class="lane-point" style="--angle:0deg;--lane-delay:-.2s" href="/nine-summits-of-love/">
+            <a class="lane-point" style="--angle:0deg;--lane-delay:-.2s" href="/nine-summits-of-love/" aria-label="Book lane">
               <span class="lane-upright">
                 <span class="lane-gem-core">
                   <svg class="gate-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#gateDigitalGem"></use></svg>
@@ -1158,7 +1111,7 @@
               </span>
             </a>
 
-            <a class="lane-point" style="--angle:90deg;--lane-delay:-1.8s" href="/nine-summits/universe/">
+            <a class="lane-point" style="--angle:90deg;--lane-delay:-1.8s" href="/nine-summits/universe/" aria-label="Universe lane">
               <span class="lane-upright">
                 <span class="lane-gem-core">
                   <svg class="gate-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#gateDigitalGem"></use></svg>
@@ -1167,7 +1120,7 @@
               </span>
             </a>
 
-            <a class="lane-point" style="--angle:180deg;--lane-delay:-3.4s" href="/showroom/globe/audralia/">
+            <a class="lane-point" style="--angle:180deg;--lane-delay:-3.4s" href="/showroom/globe/audralia/" aria-label="Audralia lane">
               <span class="lane-upright">
                 <span class="lane-gem-core">
                   <svg class="gate-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#gateDigitalGem"></use></svg>
@@ -1176,7 +1129,7 @@
               </span>
             </a>
 
-            <a class="lane-point" style="--angle:270deg;--lane-delay:-5s" href="#voice-lane">
+            <a class="lane-point" style="--angle:270deg;--lane-delay:-5s" href="#voice-concept" aria-label="Voice lane">
               <span class="lane-upright">
                 <span class="lane-gem-core">
                   <svg class="gate-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#gateDigitalGem"></use></svg>
@@ -1188,150 +1141,85 @@
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="legend-title">
-        <div class="kicker">Legend</div>
-        <h2 id="legend-title">Each primary door has one job.</h2>
+      <section class="panel section" aria-labelledby="concept-title">
+        <div class="kicker">Compact concept</div>
+        <h2 id="concept-title">Each lane has one job.</h2>
 
-        <div class="lane-grid">
-          <a class="card" href="/nine-summits-of-love/">
-            <b>Book Lane</b>
-            <strong>The human climb.</strong>
-            <span>Character, structure, balance, stability, peace, joy, dignity, free will, and love.</span>
-            <span class="open-path">Open Book</span>
-          </a>
+        <div class="concept-grid">
+          <details class="concept-card" open>
+            <summary>Book</summary>
+            <div class="concept-body">
+              <strong>The human climb.</strong>
+              <p>The book lane carries character, structure, balance, stability, peace, joy, dignity, free will, and love.</p>
+            </div>
+          </details>
 
-          <a class="card" href="/nine-summits/universe/">
-            <b>Universe Lane</b>
-            <strong>The world around the climb.</strong>
-            <span>Terrain, gates, coherence, events, stories, public experiences, and future media.</span>
-            <span class="open-path">Enter Universe</span>
-          </a>
+          <details class="concept-card">
+            <summary>Universe</summary>
+            <div class="concept-body">
+              <strong>The world around the climb.</strong>
+              <p>The Universe lane gives the climb terrain, setting, events, story pressure, gates, coherence, and future media space.</p>
+            </div>
+          </details>
 
-          <a class="card" href="/showroom/globe/audralia/">
-            <b>Audralia</b>
-            <strong>The untouched living path.</strong>
-            <span>A living canvas where visitors can watch possibility develop before their eyes.</span>
-            <span class="open-path">Inspect Audralia</span>
-          </a>
+          <details class="concept-card">
+            <summary>Audralia</summary>
+            <div class="concept-body">
+              <strong>The untouched living path.</strong>
+              <p>Audralia is the living canvas where possibility develops visibly without this page becoming the Audralia renderer.</p>
+            </div>
+          </details>
 
-          <a class="card" href="#voice-lane">
-            <b>Voice Lane</b>
-            <strong>The human signal.</strong>
-            <span>The universal underdog message and Sean Mansfield’s personal profile stay connected but separate.</span>
-            <span class="open-path">Open Voice Lane</span>
-          </a>
-        </div>
-      </section>
-
-      <section class="panel section" id="voice-lane" aria-labelledby="voice-title">
-        <div class="kicker">Voice lane split</div>
-        <h2 id="voice-title">Universal message and personal profile stay separate.</h2>
-
-        <div class="voice-grid">
-          <a class="card voice-card" href="/about-this-underdog/">
-            <b>Universal voice</b>
-            <strong>About This Underdog</strong>
-            <span>The underdog concept for everybody: pressure, survival, accountability, language, redirection, and the climb back into range.</span>
-            <span class="open-path">Open Underdog</span>
-          </a>
-
-          <a class="card voice-card" href="/meet-sean-mansfield/">
-            <b>Personal profile</b>
-            <strong>Meet Sean Mansfield</strong>
-            <span>The person behind the voice, story, comedy, public speaking, seminar path, and public-facing explanation.</span>
-            <span class="open-path">Meet Sean</span>
-          </a>
-        </div>
-      </section>
-
-      <section class="panel section" aria-labelledby="routes-title">
-        <div class="kicker">System routes</div>
-        <h2 id="routes-title">The climb remains attached to the estate.</h2>
-
-        <div class="route-card-grid">
-          <a class="route-card" href="/">
-            <b>Compass</b>
-            <strong>Return to the root.</strong>
-            <span>The estate control surface keeps orientation clean.</span>
-            <span class="open-path">Open Compass</span>
-          </a>
-
-          <a class="route-card" href="/explore/">
-            <b>Explore</b>
-            <strong>Return through the map.</strong>
-            <span>Explore keeps discovery and traversal attached to the larger estate.</span>
-            <span class="open-path">Open Explore</span>
-          </a>
-
-          <a class="route-card" href="/products/">
-            <b>Products</b>
-            <strong>Move into usable chambers.</strong>
-            <span>The message becomes tools, games, supports, and product lanes.</span>
-            <span class="open-path">Open Products</span>
-          </a>
-
-          <a class="route-card" href="/showroom/">
-            <b>Showroom</b>
-            <strong>Inspect public expression.</strong>
-            <span>The visible build can be checked without collapsing into explanation.</span>
-            <span class="open-path">Open Showroom</span>
-          </a>
-
-          <a class="route-card" href="/frontier/">
-            <b>Frontier</b>
-            <strong>Carry expansion.</strong>
-            <span>Expansion stays connected to the parent map.</span>
-            <span class="open-path">Open Frontier</span>
-          </a>
-
-          <a class="route-card" href="/gauges/">
-            <b>Gauges</b>
-            <strong>Measure route truth.</strong>
-            <span>Gauges confirm what the served page actually contains.</span>
-            <span class="open-path">Read Gauges</span>
-          </a>
-
-          <a class="route-card" href="/door/">
-            <b>Door</b>
-            <strong>Cross the threshold.</strong>
-            <span>The visitor enters the estate without every room doing the same job.</span>
-            <span class="open-path">Open Door</span>
-          </a>
-
-          <a class="route-card" href="/home/">
-            <b>Home</b>
-            <strong>Stabilize the journey.</strong>
-            <span>Home receives the visitor and keeps movement coherent.</span>
-            <span class="open-path">Open Home</span>
-          </a>
+          <details id="voice-concept" class="concept-card">
+            <summary>Voice</summary>
+            <div class="concept-body">
+              <strong>The human signal.</strong>
+              <p>The Voice lane keeps the universal underdog message and Sean Mansfield’s personal profile connected but separate.</p>
+            </div>
+          </details>
         </div>
       </section>
 
       <section class="panel section" aria-labelledby="final-title">
-        <div class="final-direction">
+        <div class="closing-note">
           <strong id="final-title">The hub keeps the lanes from competing.</strong>
           <p>
-            The book stays human-first. The Universe becomes the world around it. Audralia shows the untouched living path as a living canvas. The Voice lane lets the message speak through both the universal underdog concept and Sean Mansfield’s personal profile.
+            The page is now focused on the animation and the universe concept. Movement, route discovery, Main Menu, and Mirrorland Menu belong to the floating Map / Portal blip.
           </p>
-
-          <div class="actions">
-            <a class="button gold" href="/nine-summits-of-love/">Open the Book</a>
-            <a class="button violet" href="/nine-summits/universe/">Enter the Universe</a>
-            <a class="button green" href="/about-this-underdog/">About This Underdog</a>
-            <a class="button" href="/meet-sean-mansfield/">Meet Sean</a>
-            <a class="button" href="/gauges/">Read Gauges</a>
-          </div>
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-NINE_SUMMITS_PUBLIC_GATE_LANE_ALIGNMENT_RENEWAL_TNT_v7
-previous=NINE_SUMMITS_CLEAN_RECEIPT_RETIREMENT_TOKEN_TNT_v6
+NINE_SUMMITS_SIMPLIFIED_UNIVERSE_CONCEPT_MAP_BLIP_HTML_TNT_v1
+previous=NINE_SUMMITS_PUBLIC_GATE_LANE_ALIGNMENT_RENEWAL_TNT_v7
 route=/nine-summits/
 page=nine_summits
-role=public_system_gate
+role=public_system_gate_simplified
 message=The climb becomes a world.
 visual_system=code_rendered_four_lane_digital_gem_public_gate
+page_simplified=true
+page_subject_content_only=true
+page_body_navigation_reduced=true
+top_nav_removed=true
+dropdown_menu_minimized=true
+route_directory_removed=true
+jump_options_removed=true
+system_routes_section_removed=true
+lane_grid_removed=true
+voice_grid_removed=true
+final_action_cluster_removed=true
+map_blip_added=true
+floating_map_portal_active=true
+map_blip_owns_navigation=true
+local_map_section=false
+second_mirrorland_entrance=false
+blueprint_page_scoped=true
+blueprint_css=/assets/manor-blueprint/manor.blueprint.css
+blueprint_css_contract=MANOR_BLUEPRINT_CARDINAL_ROOM_MAP_VISUAL_CSS_TNT_v1
+blueprint_registry=/assets/manor-blueprint/manor.blueprint.registry.js
+blueprint_registry_contract=MANOR_BLUEPRINT_VISITOR_ORIENTATION_REGISTRY_TNT_v1
+blueprint_runtime=/assets/manor-blueprint/manor.blueprint.js
+blueprint_runtime_contract=MANOR_BLUEPRINT_VISITOR_ORIENTATION_RUNTIME_TNT_v1
 primary_lanes=book,universe,audralia,voice
 book_lane=/nine-summits-of-love/
 book_role=human_climb
@@ -1344,15 +1232,11 @@ about_this_underdog=/about-this-underdog/
 about_this_underdog_role=universal_underdog_message
 meet_sean_mansfield=/meet-sean-mansfield/
 meet_sean_mansfield_role=personal_profile_behind_the_voice
-public_copy=book_carries_human_climb_universe_gives_that_climb_a_world_audralia_shows_untouched_living_path_as_living_canvas_voice_keeps_universal_and_personal_connected_but_separate
 formation=book_north,universe_east,audralia_south,voice_west
 motion=css_only_clockwise_four_lane_orbit
 label_motion=counter_rotation_for_readability
 orbit_center=gate_field_center
 orbit_radius=contained_inside_panel
-system_routes=compass,door,home,explore,products,showroom,frontier,gauges
-visible_label_corrections=Explore_not_Manor,Audralia_direct_child_route
-audralia_legacy_home_world_reference_retired=true
 receipt_visibility=hidden_template_only
 z_index_law=background_field,axis_field,nine_summits_anchor_background,rotating_lane_gems,lane_labels,hover_focus
 non_overlap_law=no_clickable_diamond_hidden_by_center
@@ -1360,10 +1244,10 @@ animation_method=css_only
 js_required=false
 animated=lane_orbit_turn,lane_label_gravity_lock,gate_field_turn,gate_inner_field_breathe,lane_gem_float,center_pulse,gate_glint,gate_facet_turn,aurora_background
 mobile_law=compact_centered_rotating_gate_no_hidden_nodes_no_right_crop
-preserved=public_system_gate,four_primary_lanes,voice_lane_split,system_routes,book_universe_voice_relationship
-renewed=audralia_public_meaning,visible_route_labels,hidden_receipt,digital_gem_gate_standard,current_public_language
-route_owns=public_gate,four_primary_lanes,code_rendered_lane_gem_gate,route_links,voice_lane_split,hidden_receipt
-route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic,personal_profile_page,universal_underdog_page,products_root,showroom_runtime
+preserved=public_system_gate,four_primary_lanes,book_universe_audralia_voice_relationship,css_only_animation,hidden_receipt
+removed=top_nav,broad_action_cluster,lane_grid,voice_grid,system_routes,route_card_grid,final_navigation_buttons
+route_owns=public_gate,four_primary_lanes,code_rendered_lane_gem_gate,compact_concept_explanation,hidden_receipt
+route_does_not_own=map_portal_blip_runtime,body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic,personal_profile_page,universal_underdog_page,products_root,showroom_runtime,universe_motion_js
 heavy_runtime_loaded=false
 render_files_touched=false
 instrument_touched=false
@@ -1376,8 +1260,22 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      NINE_SUMMITS_PUBLIC_GATE_LANE_ALIGNMENT_RENEWAL_TNT_v7 · Nine Summits · Public System Gate · Lane Alignment.
+      NINE_SUMMITS_SIMPLIFIED_UNIVERSE_CONCEPT_MAP_BLIP_HTML_TNT_v1 · Nine Summits · Animation and universe concept.
     </footer>
   </div>
+
+  <script
+    src="/assets/manor-blueprint/manor.blueprint.registry.js?v=MANOR_BLUEPRINT_VISITOR_ORIENTATION_REGISTRY_TNT_v1"
+    defer
+    data-mirrorland-blueprint-marker="true"
+    data-blueprint-page-scoped="true"
+  ></script>
+
+  <script
+    src="/assets/manor-blueprint/manor.blueprint.js?v=MANOR_BLUEPRINT_VISITOR_ORIENTATION_RUNTIME_TNT_v1"
+    defer
+    data-mirrorland-blueprint-marker="true"
+    data-blueprint-page-scoped="true"
+  ></script>
 </body>
 </html>

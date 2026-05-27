@@ -1,14 +1,14 @@
 // TARGET FILE: /assets/manor-blueprint/manor.blueprint.js
 // TNT FULL-FILE REPLACEMENT
-// MANOR_BLUEPRINT_MIRRORLAND_DOORS_SINGLE_ENTRYWAY_RUNTIME_TNT_v1
+// MANOR_BLUEPRINT_MENU_CATEGORY_OWNERSHIP_RUNTIME_TNT_v1
 //
 // Purpose:
-// Renew the Manor Blueprint Portal runtime so the floating Map / Portal blip
-// is the single public entryway into Mirrorland, while the opened map presents
-// Mirrorland routes as Mirrorland Doors.
+// Correct the Manor Blueprint Portal runtime so Main Menu / Website Options
+// contains only regular website routes, while Mirrorland Doors contains only
+// Showroom, planetary, cockpit, Frontier, and narrative/story routes.
 //
 // Previous runtime contract:
-// MANOR_BLUEPRINT_CARDINAL_ROOM_MAP_RUNTIME_JS_TNT_v1
+// MANOR_BLUEPRINT_MIRRORLAND_DOORS_SINGLE_ENTRYWAY_RUNTIME_TNT_v1
 //
 // Compatibility API contract preserved:
 // MANOR_BLUEPRINT_FIXED_DRAGGABLE_BUBBLE_FULLSCREEN_MAP_INSTRUCTIONS_TOGGLE_JS_TNT_v1
@@ -17,16 +17,18 @@
 // - Map / Portal blip
 // - Mirrorland Doors / Main Menu / Instructions lenses
 // - route-to-room classification
+// - category ownership separation
 // - cardinal room grouping
 // - clickable room rendering
 // - current-room detection
 // - Frontier as Mirrorland-aligned and West-disposed
+// - narrative/story as Mirrorland
 // - full-viewport drag
 // - strong-visible joystick scroll
 // - status / receipt globals
 //
 // Does not own:
-// - /showroom/index.html
+// - /showroom/index.html layout
 // - /assets/manor-blueprint/manor.blueprint.css
 // - /assets/manor-blueprint/manor.blueprint.registry.js
 // - /assets/site.bootstrap.js
@@ -41,9 +43,9 @@
 
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CONTRACT = "MANOR_BLUEPRINT_MIRRORLAND_DOORS_SINGLE_ENTRYWAY_RUNTIME_TNT_v1";
-  const PREVIOUS_CONTRACT = "MANOR_BLUEPRINT_CARDINAL_ROOM_MAP_RUNTIME_JS_TNT_v1";
-  const PRIOR_CONTRACT = "MANOR_BLUEPRINT_MIRRORLAND_PORTAL_FRONTIER_SCROLL_FORCE_JS_TNT_v1";
+  const CONTRACT = "MANOR_BLUEPRINT_MENU_CATEGORY_OWNERSHIP_RUNTIME_TNT_v1";
+  const PREVIOUS_CONTRACT = "MANOR_BLUEPRINT_MIRRORLAND_DOORS_SINGLE_ENTRYWAY_RUNTIME_TNT_v1";
+  const PRIOR_CONTRACT = "MANOR_BLUEPRINT_CARDINAL_ROOM_MAP_RUNTIME_JS_TNT_v1";
   const LEGACY_CONTRACT = "MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_POSITION_RENEWAL_TNT_v1";
   const API_CONTRACT = "MANOR_BLUEPRINT_FIXED_DRAGGABLE_BUBBLE_FULLSCREEN_MAP_INSTRUCTIONS_TOGGLE_JS_TNT_v1";
 
@@ -73,25 +75,22 @@
     south: { title: "South", meaning: "Scientific Backing · Proof · Measurement" }
   });
 
-  const MIRRORLAND_PRIMARY_PATHS = Object.freeze([
+  const MIRRORLAND_PREFIXES = Object.freeze([
     "/showroom/",
-    "/showroom/globe/",
-    "/showroom/globe/audralia/",
-    "/showroom/globe/audralia/planet/",
-    "/showroom/globe/audralia/disposition/",
-    "/showroom/globe/hearth/",
-    "/showroom/globe/h-earth/",
     "/characters/",
     "/nine-summits/universe/",
-    "/explore/frontier/",
-    "/explore/frontier/water/",
-    "/explore/frontier/waste/",
-    "/explore/frontier/energy/"
+    "/explore/frontier/"
   ]);
 
-  const MIRRORLAND_SUPPORT_PATHS = Object.freeze([
+  const REGULAR_WEBSITE_PREFIXES = Object.freeze([
+    "/door/",
+    "/home/",
+    "/products/",
+    "/laws/",
+    "/governance/",
     "/gauges/",
-    "/laws/"
+    "/about-this-underdog/",
+    "/site-guide/"
   ]);
 
   let bubble = null;
@@ -173,7 +172,6 @@
 
   function bubbleSize() {
     if (!bubble) return { width: 68, height: 68 };
-
     const rect = bubble.getBoundingClientRect();
 
     return {
@@ -266,12 +264,13 @@
         legacyContract: LEGACY_CONTRACT,
         mapBlipSingleEntryway: true,
         mirrorlandEntryway: "map-portal-blip",
-        mirrorlandDoorsInsideMap: true,
-        mainMenuSeparated: true,
-        compassSeparated: true,
+        mainMenuWebsiteOptionsOnly: true,
+        mirrorlandDoorsCategoryOnly: true,
+        supportDoesNotEqualOwnership: true,
+        gaugesMirrorlandAligned: false,
         frontierMirrorlandAligned: true,
-        frontierBelongsToMirrorland: true,
-        frontierCardinalDisposition: "west",
+        narrativePagesMirrorland: true,
+        compassSeparated: true,
         fullViewportDrag: true,
         joystickScrollActive: true,
         joystickScrollForceProfile: JOYSTICK_SCROLL_FORCE_PROFILE,
@@ -362,28 +361,24 @@
     return cleanPath === cleanPrefix || cleanPath.startsWith(cleanPrefix);
   }
 
-  function isMirrorlandPrimaryPath(path) {
+  function isRegularWebsitePath(path) {
     const clean = normalizePath(path);
-
-    return MIRRORLAND_PRIMARY_PATHS.some((prefix) => pathStartsWith(clean, prefix));
+    if (clean === "/") return true;
+    return REGULAR_WEBSITE_PREFIXES.some((prefix) => pathStartsWith(clean, prefix));
   }
 
-  function isMirrorlandSupportPath(path) {
+  function isMirrorlandCategoryPath(path) {
     const clean = normalizePath(path);
-    return MIRRORLAND_SUPPORT_PATHS.some((prefix) => pathStartsWith(clean, prefix));
+    if (isRegularWebsitePath(clean)) return false;
+    return MIRRORLAND_PREFIXES.some((prefix) => pathStartsWith(clean, prefix));
   }
 
   function mirrorlandEntered() {
-    return isMirrorlandPrimaryPath(window.location.pathname || "/");
-  }
-
-  function mirrorlandSupportActive() {
-    return isMirrorlandSupportPath(window.location.pathname || "/");
+    return isMirrorlandCategoryPath(window.location.pathname || "/");
   }
 
   function frontierActive() {
-    const path = window.location.pathname || "/";
-    return pathStartsWith(path, "/explore/frontier/");
+    return pathStartsWith(window.location.pathname || "/", "/explore/frontier/");
   }
 
   function classifyCardinalFromPathAndTitle(path, title, group) {
@@ -464,9 +459,11 @@
     if (p.startsWith("/explore/frontier/") || t.includes("frontier") || g.includes("frontier")) return "Frontier Deployment";
     if (p.startsWith("/showroom/globe/audralia/") || t.includes("audralia")) return "Audralia World Wing";
     if (p.startsWith("/showroom/globe/h-earth/") || t.includes("h-earth")) return "H-Earth World Wing";
-    if (p.startsWith("/showroom/globe/") || t.includes("mirrorland")) return "Mirrorland Field";
+    if (p.startsWith("/showroom/globe/hearth/") || t.includes("hearth")) return "Hearth World Wing";
+    if (p.startsWith("/showroom/globe/") || t.includes("mirrorland")) return "Planetary Wing";
     if (p.startsWith("/characters/") || t.includes("character")) return "Character Wing";
     if (p.startsWith("/nine-summits/") || t.includes("nine summits")) return "Narrative Wing";
+    if (p.startsWith("/showroom/") || t.includes("showroom")) return "Showroom Door";
     if (p.startsWith("/laws/") || t.includes("law")) return "Law Wing";
     if (p.startsWith("/gauges/") || t.includes("gauge") || t.includes("audit")) return "Audit Wing";
     if (p.startsWith("/products/") || t.includes("product")) return "Product Wing";
@@ -486,11 +483,10 @@
     if (p === "/" || t.includes("compass")) return "orientation";
     if (p.startsWith("/door/") || t === "door") return "threshold";
     if (p.startsWith("/home/") || t === "home") return "stabilizer";
+    if (p.startsWith("/showroom/globe/audralia/disposition/")) return "cockpit-room";
+    if (p.startsWith("/showroom/globe/") || t.includes("planet") || t.includes("earth") || t.includes("hearth")) return "planetary-room";
     if (p.startsWith("/showroom/") || t.includes("showroom")) return "door-object";
-    if (p.startsWith("/showroom/globe/") || t.includes("mirrorland")) return "mirrorland-door";
-    if (p.includes("/audralia/")) return "planetary-room";
-    if (p.includes("/h-earth/")) return "world-room";
-    if (p.startsWith("/characters/")) return "character-room";
+    if (p.startsWith("/characters/") || p.startsWith("/nine-summits/")) return "narrative-room";
     if (p.startsWith("/explore/frontier/") || t.includes("frontier")) return "deployment-room";
     if (p.startsWith("/laws/") || t.includes("law")) return "law-room";
     if (p.startsWith("/gauges/") || t.includes("gauge")) return "measurement-room";
@@ -501,24 +497,27 @@
 
   function inferMirrorlandAligned(path, title, group) {
     const p = normalizePath(path);
+    if (isRegularWebsitePath(p)) return false;
+    if (isMirrorlandCategoryPath(p)) return true;
+
     const t = String(title || "").toLowerCase();
     const g = String(group || "").toLowerCase();
 
-    return Boolean(
-      isMirrorlandPrimaryPath(p) ||
-      p.startsWith("/explore/frontier/") ||
-      p.startsWith("/characters/") ||
-      p.startsWith("/nine-summits/") ||
-      p.includes("/audralia/") ||
-      p.includes("/h-earth/") ||
+    if (
+      t.includes("showroom") ||
+      t.includes("planet") ||
+      t.includes("cockpit") ||
       t.includes("frontier") ||
-      t.includes("mirrorland") ||
-      t.includes("audralia") ||
-      t.includes("h-earth") ||
+      t.includes("character") ||
+      t.includes("story") ||
+      t.includes("narrative") ||
       t.includes("nine summits") ||
-      g.includes("frontier") ||
       g.includes("mirrorland")
-    );
+    ) {
+      return true;
+    }
+
+    return false;
   }
 
   function room(input) {
@@ -568,10 +567,22 @@
         title: "Globe / Mirrorland Field",
         path: "/showroom/globe/",
         cardinal: "east",
-        wing: "Mirrorland Field",
-        role: "field-door",
+        wing: "Planetary Wing",
+        role: "planetary-field-door",
         menu: "mirrorland",
-        body: "Open the Mirrorland field from inside the map.",
+        body: "Open the planetary Mirrorland field from inside the map.",
+        mirrorlandAligned: true,
+        source: "core"
+      }),
+      room({
+        id: "earth-reference",
+        title: "Earth Reference",
+        path: "/showroom/globe/earth/",
+        cardinal: "east",
+        wing: "Reference Bodies",
+        role: "planetary-reference-room",
+        menu: "mirrorland",
+        body: "Open the Earth reference body.",
         mirrorlandAligned: true,
         source: "core"
       }),
@@ -605,21 +616,21 @@
         path: "/showroom/globe/audralia/disposition/",
         cardinal: "east",
         wing: "Audralia Instruments",
-        role: "instrument-room",
+        role: "cockpit-room",
         menu: "mirrorland",
         body: "Open the cockpit and disposition instruments.",
         mirrorlandAligned: true,
         source: "core"
       }),
       room({
-        id: "characters",
-        title: "Characters / Story Faces",
-        path: "/characters/",
+        id: "hearth",
+        title: "Hearth",
+        path: "/showroom/globe/hearth/",
         cardinal: "east",
-        wing: "Character Wing",
-        role: "character-room",
+        wing: "Hearth World Wing",
+        role: "planetary-room",
         menu: "mirrorland",
-        body: "Meet the faces waiting beyond the Door.",
+        body: "Open the Hearth planetary room.",
         mirrorlandAligned: true,
         source: "core"
       }),
@@ -629,9 +640,33 @@
         path: "/showroom/globe/h-earth/",
         cardinal: "east",
         wing: "H-Earth World Wing",
-        role: "world-room",
+        role: "planetary-room",
         menu: "mirrorland",
         body: "Open the H-Earth world path.",
+        mirrorlandAligned: true,
+        source: "core"
+      }),
+      room({
+        id: "characters",
+        title: "Characters / Story Faces",
+        path: "/characters/",
+        cardinal: "east",
+        wing: "Character Wing",
+        role: "narrative-room",
+        menu: "mirrorland",
+        body: "Meet the faces waiting beyond the Door.",
+        mirrorlandAligned: true,
+        source: "core"
+      }),
+      room({
+        id: "nine-summits",
+        title: "Nine Summits Universe",
+        path: "/nine-summits/universe/",
+        cardinal: "east",
+        wing: "Narrative Wing",
+        role: "narrative-room",
+        menu: "mirrorland",
+        body: "Open the Nine Summits story-world room.",
         mirrorlandAligned: true,
         source: "core"
       }),
@@ -653,7 +688,7 @@
         path: "/explore/frontier/water/",
         cardinal: "west",
         wing: "Water Chamber",
-        role: "water-room",
+        role: "frontier-room",
         menu: "mirrorland",
         body: "Open the water frontier room.",
         mirrorlandAligned: true,
@@ -665,7 +700,7 @@
         path: "/explore/frontier/waste/",
         cardinal: "west",
         wing: "Waste Chamber",
-        role: "waste-room",
+        role: "frontier-room",
         menu: "mirrorland",
         body: "Open the waste frontier room.",
         mirrorlandAligned: true,
@@ -677,23 +712,10 @@
         path: "/explore/frontier/energy/",
         cardinal: "west",
         wing: "Energy Chamber",
-        role: "energy-room",
+        role: "frontier-room",
         menu: "mirrorland",
         body: "Open the energy frontier room.",
         mirrorlandAligned: true,
-        source: "core"
-      }),
-      room({
-        id: "gauges-proof",
-        title: "Gauges / Proof",
-        path: "/gauges/",
-        cardinal: "south",
-        wing: "Audit Wing",
-        role: "measurement-room",
-        menu: "mirrorland",
-        body: "Measure what is present, routed, and holding shape.",
-        mirrorlandAligned: true,
-        support: true,
         source: "core"
       })
     ];
@@ -762,6 +784,18 @@
         source: "core"
       }),
       room({
+        id: "governance",
+        title: "Governance",
+        path: "/governance/",
+        cardinal: "south",
+        wing: "Governance Hall",
+        role: "governance-room",
+        menu: "main",
+        body: "Open governance.",
+        mirrorlandAligned: false,
+        source: "core"
+      }),
+      room({
         id: "gauges-main",
         title: "Gauges",
         path: "/gauges/",
@@ -770,6 +804,18 @@
         role: "measurement-room",
         menu: "main",
         body: "Open route proof and measurement.",
+        mirrorlandAligned: false,
+        source: "core"
+      }),
+      room({
+        id: "gauges-h-earth",
+        title: "H-Earth Gauges",
+        path: "/gauges/h-earth/",
+        cardinal: "south",
+        wing: "Audit Wing",
+        role: "measurement-room",
+        menu: "main",
+        body: "Open H-Earth audit and readiness.",
         mirrorlandAligned: false,
         source: "core"
       }),
@@ -841,7 +887,7 @@
     const output = [];
 
     rooms.forEach((item) => {
-      const key = item.menu + "::" + normalizePath(item.path) + "::" + item.cardinal + "::" + item.title;
+      const key = item.menu + "::" + normalizePath(item.path);
       if (seen.has(key)) return;
       seen.add(key);
       output.push(item);
@@ -851,24 +897,22 @@
   }
 
   function mirrorlandRooms() {
-    const registryMirrorland = registryRooms().filter((item) => {
-      if (!item.mirrorlandAligned) return false;
-      if (item.path === "/") return false;
-      return true;
-    }).map((item) => room({ ...item, menu: "mirrorland" }));
+    const registryMirrorland = registryRooms()
+      .filter((item) => item.mirrorlandAligned && !isRegularWebsitePath(item.path))
+      .map((item) => room({ ...item, menu: "mirrorland" }));
 
     return dedupeRooms(mirrorlandCoreRooms().concat(registryMirrorland));
   }
 
   function mainMenuRooms() {
     const core = mainCoreRooms();
-    const registryMain = registryRooms().filter((item) => {
-      const path = normalizePath(item.path);
-      const isDuplicateCore = core.some((coreRoom) => normalizePath(coreRoom.path) === path && coreRoom.title === item.title);
-      if (isDuplicateCore) return false;
-      if (item.mirrorlandAligned) return false;
-      return true;
-    }).map((item) => room({ ...item, menu: "main", mirrorlandAligned: false }));
+    const registryMain = registryRooms()
+      .filter((item) => {
+        if (item.mirrorlandAligned) return false;
+        if (isMirrorlandCategoryPath(item.path)) return false;
+        return true;
+      })
+      .map((item) => room({ ...item, menu: "main", mirrorlandAligned: false }));
 
     return dedupeRooms(core.concat(registryMain));
   }
@@ -931,20 +975,20 @@
           ? window.DGB_MANOR_BLUEPRINT_INSTRUCTIONS
           : [
             {
-              title: "Single Entryway",
-              body: "The floating Map / Portal blip is the single public entryway into Mirrorland."
+              title: "Main Menu / Website Options",
+              body: "Main Menu contains regular website routes only."
             },
             {
               title: "Mirrorland Doors",
-              body: "Inside the map, Mirrorland routes are represented as doors. Choose a door after opening the blip."
+              body: "Mirrorland Doors contains only Showroom, planetary, cockpit, Frontier, and narrative/story routes."
             },
             {
-              title: "Main Menu",
-              body: "Main Menu / Website Options remain separate from the Mirrorland Doors."
+              title: "Support Does Not Equal Ownership",
+              body: "Gauges, Laws, and proof pages may support Mirrorland, but they remain regular website routes."
             },
             {
-              title: "Compass",
-              body: "Compass remains the main-site orientation layer. It is not the Mirrorland Portal."
+              title: "Single Entryway",
+              body: "The floating Map / Portal blip is the single public entryway into Mirrorland."
             },
             {
               title: "Frontier",
@@ -976,18 +1020,18 @@
 
   function lensSubtitle() {
     if (state.activeLens === "main") {
-      return "Ordinary website options remain separate from Mirrorland. Compass is the main-site orientation layer, not the Mirrorland Portal.";
+      return "Regular website routes only. Compass, Door, Home, Products, Laws, Governance, Gauges, Meet Sean, and Site Guide stay here.";
     }
 
     if (state.activeLens === "instructions") {
-      return "Use the Map / Portal blip as the single entryway, then choose a door inside the Mirrorland room blueprint.";
+      return "Use the Map / Portal blip as the single entryway, then choose a Mirrorland room from the house blueprint.";
     }
 
     if (frontierActive()) {
-      return "Frontier is a Mirrorland door in the West deployment wing.";
+      return "Frontier is a Mirrorland room in the West deployment wing.";
     }
 
-    return "You opened the Map / Portal blip. Choose a door into Mirrorland from the cardinal room blueprint.";
+    return "Showroom, planetary pages, cockpit, Frontier, and narrative/story pages are Mirrorland rooms.";
   }
 
   function enforceSingleElement(selector) {
@@ -1019,6 +1063,9 @@
     bubble.setAttribute("data-joystick-scroll-force-profile", JOYSTICK_SCROLL_FORCE_PROFILE);
     bubble.setAttribute("data-map-blip-single-entryway", "true");
     bubble.setAttribute("data-mirrorland-entryway", "map-portal-blip");
+    bubble.setAttribute("data-main-menu-website-options-only", "true");
+    bubble.setAttribute("data-mirrorland-doors-category-only", "true");
+    bubble.setAttribute("data-support-does-not-equal-ownership", "true");
     bubble.setAttribute("data-mirrorland-portal", "true");
     bubble.setAttribute("data-cardinal-room-map", "true");
     bubble.setAttribute("data-frontier-mirrorland-aligned", "true");
@@ -1059,10 +1106,13 @@
     overlay.setAttribute("data-manor-blueprint-contract", CONTRACT);
     overlay.setAttribute("data-map-blip-single-entryway", "true");
     overlay.setAttribute("data-mirrorland-entryway", "map-portal-blip");
+    overlay.setAttribute("data-main-menu-website-options-only", "true");
+    overlay.setAttribute("data-mirrorland-doors-category-only", "true");
+    overlay.setAttribute("data-support-does-not-equal-ownership", "true");
     overlay.setAttribute("data-mirrorland-portal", "true");
     overlay.setAttribute("data-cardinal-room-map", "true");
     overlay.setAttribute("data-frontier-mirrorland-aligned", "true");
-    overlay.setAttribute("aria-label", "Mirrorland Doors cardinal room blueprint");
+    overlay.setAttribute("aria-label", "Mirrorland Doors and Main Menu category blueprint");
 
     document.body.appendChild(overlay);
     return overlay;
@@ -1148,21 +1198,20 @@
   function renderCurrentPanel(rooms, mode) {
     const current = currentRoom(rooms);
     const entered = mirrorlandEntered();
-    const support = mirrorlandSupportActive();
     const frontier = frontierActive();
 
     return `
       <aside class="dgb-bp-panel">
         <div class="dgb-bp-panel-head">
-          <b>${mode === "main" ? "Current Website Room" : "Map / Portal Entryway"}</b>
-          <h3>${escapeHtml(current?.title || "Mirrorland Doors")}</h3>
-          <p>${escapeHtml(mode === "main" ? (current?.body || "Choose a website option.") : "The blip is the entryway. Choose a Mirrorland door inside the map.")}</p>
+          <b>${mode === "main" ? "Current Website Room" : "Mirrorland House Blueprint"}</b>
+          <h3>${escapeHtml(current?.title || (mode === "main" ? "Website Options" : "Mirrorland Doors"))}</h3>
+          <p>${escapeHtml(mode === "main" ? (current?.body || "Choose a regular website option.") : "Choose a Mirrorland room from the house blueprint.")}</p>
         </div>
 
         <div class="dgb-bp-you-are-here">
           <div class="dgb-bp-location-card">
-            <b>${frontier ? "Frontier · West Wing" : entered ? "Inside Mirrorland" : support ? "Proof / Support Route" : mode === "main" ? "Website Options" : "Entryway Opened"}</b>
-            <strong>${escapeHtml(current?.wing || "Mirrorland Doors")}</strong>
+            <b>${mode === "main" ? "Regular Website" : frontier ? "Frontier · West Wing" : entered ? "Inside Mirrorland" : "Entryway Opened"}</b>
+            <strong>${escapeHtml(current?.wing || (mode === "main" ? "Website Options" : "Mirrorland Doors"))}</strong>
             <code>${escapeHtml(normalizePath(window.location.pathname || "/"))}</code>
           </div>
 
@@ -1176,12 +1225,12 @@
               <span class="dgb-bp-chain-separator">→</span>
               <span>Mirrorland Doors</span>
               <span class="dgb-bp-chain-separator">→</span>
-              <span>${escapeHtml(current?.title || "Choose Door")}</span>
+              <span>${escapeHtml(current?.title || "Choose Room")}</span>
             `}
           </div>
 
-          <div class="dgb-bp-guide-link" aria-label="${mode === "main" ? "Main menu context" : "Mirrorland door context"}">
-            ${mode === "main" ? "Compass remains separate." : "Choose a door below."}
+          <div class="dgb-bp-guide-link" aria-label="${mode === "main" ? "Main menu context" : "Mirrorland room context"}">
+            ${mode === "main" ? "Regular website only." : "House-room structure active."}
           </div>
         </div>
       </aside>
@@ -1198,8 +1247,8 @@
         <section class="dgb-bp-panel dgb-bp-room-map-panel">
           <div class="dgb-bp-panel-head">
             <b>Mirrorland Doors</b>
-            <h3>Choose a door into Mirrorland</h3>
-            <p>The Map / Portal blip is the entryway. These rooms are doors inside the Mirrorland field. Frontier belongs to Mirrorland and sits in the West deployment wing.</p>
+            <h3>Choose a room inside Mirrorland</h3>
+            <p>Only Showroom, planetary pages, cockpit pages, Frontier pages, and narrative / story pages belong here.</p>
           </div>
           <div class="dgb-bp-route-tools dgb-bp-room-tools">
             ${renderRoomMap(rooms)}
@@ -1219,8 +1268,8 @@
         <section class="dgb-bp-panel dgb-bp-room-map-panel">
           <div class="dgb-bp-panel-head">
             <b>Main Menu / Website Options</b>
-            <h3>Website options</h3>
-            <p>Compass remains the main-site orientation room. It is not the Mirrorland Portal.</p>
+            <h3>Regular website routes</h3>
+            <p>Compass, Door, Home, Products, Laws, Governance, Gauges, Meet Sean, and Site Guide stay here. Support does not equal Mirrorland ownership.</p>
           </div>
           <div class="dgb-bp-route-tools dgb-bp-room-tools">
             ${renderRoomMap(rooms)}
@@ -1252,13 +1301,12 @@
     if (!overlay) return;
 
     const entered = mirrorlandEntered();
-    const support = mirrorlandSupportActive();
     const frontier = frontierActive();
 
     overlay.innerHTML = `
       <div class="dgb-bp-topbar">
         <div class="dgb-bp-titleblock">
-          <div class="dgb-bp-kicker">${state.activeLens === "main" ? "Website Options" : state.activeLens === "instructions" ? "Portal Instructions" : "Map / Portal Entryway"}</div>
+          <div class="dgb-bp-kicker">${state.activeLens === "main" ? "Website Options" : state.activeLens === "instructions" ? "Portal Instructions" : "Mirrorland House Blueprint"}</div>
           <h2 class="dgb-bp-title">${escapeHtml(lensTitle())}</h2>
           <p class="dgb-bp-subtitle">${escapeHtml(lensSubtitle())}</p>
         </div>
@@ -1272,7 +1320,7 @@
             <button class="dgb-bp-tab" type="button" data-dgb-lens="main" aria-selected="${state.activeLens === "main"}" data-active="${state.activeLens === "main"}">Main Menu</button>
             <button class="dgb-bp-tab" type="button" data-dgb-lens="instructions" aria-selected="${state.activeLens === "instructions"}" data-active="${state.activeLens === "instructions"}">Instructions</button>
           </div>
-          <div class="dgb-bp-current-pill">${frontier ? "Frontier · West Wing" : entered ? "Inside Mirrorland" : support ? "Support Route" : "Entryway Opened"}</div>
+          <div class="dgb-bp-current-pill">${state.activeLens === "main" ? "Regular Website" : frontier ? "Frontier · West Wing" : entered ? "Inside Mirrorland" : "Entryway Opened"}</div>
         </div>
 
         <div class="dgb-bp-content" data-cardinal-room-map="true" data-map-blip-single-entryway="true">
@@ -1520,8 +1568,29 @@
       active: true,
       mapBlipSingleEntryway: true,
       mirrorlandEntryway: "map_portal_blip",
-      mirrorlandDoorsInsideMap: true,
+      mirrorlandClassificationNarrowed: true,
+      mainMenuWebsiteOptionsOnly: true,
+      mirrorlandDoorsCategoryOnly: true,
+      supportDoesNotEqualOwnership: true,
+      gaugesMirrorlandAligned: false,
+      lawsMirrorlandAligned: false,
+      governanceMirrorlandAligned: false,
+      productsMirrorlandAligned: false,
+      compassSeparated: true,
       pageBodyDirectory: false,
+
+      showroomMirrorland: true,
+      planetaryPagesMirrorland: true,
+      cockpitPagesMirrorland: true,
+      frontierMirrorlandAligned: true,
+      frontierBelongsToMirrorland: true,
+      frontierCardinalDisposition: "west",
+      frontierWing: "Frontier Deployment",
+      frontierActive: frontierActive(),
+      narrativePagesMirrorland: true,
+      charactersMirrorland: true,
+      nineSummitsMirrorland: true,
+
       mirrorlandPortalActive: true,
       roomMapActive: true,
       cardinalRoomMap: true,
@@ -1530,20 +1599,12 @@
       cardinalDispositionActive: true,
 
       mirrorlandEntered: mirrorlandEntered(),
-      mirrorlandSupportActive: mirrorlandSupportActive(),
-      frontierMirrorlandAligned: true,
-      frontierBelongsToMirrorland: true,
-      frontierCardinalDisposition: "west",
-      frontierWing: "Frontier Deployment",
-      frontierActive: frontierActive(),
-
       mirrorlandMenuDefault: true,
       mirrorlandMenuAvailable: true,
       mirrorlandMenuLabel: "Mirrorland Doors",
       mainMenuAvailable: true,
       websiteOptionsSeparated: true,
       instructionsAvailable: true,
-      compassSeparated: true,
       dualMenuActive: true,
 
       bubbleMounted: Boolean(bubble && document.body.contains(bubble)),
@@ -1637,10 +1698,14 @@
 
       document.documentElement.dataset.manorBlueprintMapBlipSingleEntryway = "true";
       document.documentElement.dataset.manorBlueprintMirrorlandEntryway = "map-portal-blip";
-      document.documentElement.dataset.manorBlueprintMirrorlandDoorsInsideMap = "true";
+      document.documentElement.dataset.manorBlueprintMainMenuWebsiteOptionsOnly = "true";
+      document.documentElement.dataset.manorBlueprintMirrorlandDoorsCategoryOnly = "true";
+      document.documentElement.dataset.manorBlueprintSupportDoesNotEqualOwnership = "true";
+      document.documentElement.dataset.manorBlueprintGaugesMirrorlandAligned = "false";
+      document.documentElement.dataset.manorBlueprintFrontierMirrorlandAligned = "true";
+      document.documentElement.dataset.manorBlueprintNarrativePagesMirrorland = "true";
+      document.documentElement.dataset.manorBlueprintCompassSeparated = "true";
       document.documentElement.dataset.manorBlueprintPageBodyDirectory = "false";
-      document.documentElement.dataset.manorBlueprintMirrorlandMenuLabel = "Mirrorland Doors";
-      document.documentElement.dataset.manorBlueprintWebsiteOptionsSeparated = "true";
 
       document.documentElement.dataset.manorBlueprintMirrorlandPortalActive = "true";
       document.documentElement.dataset.manorBlueprintRoomMapActive = "true";
@@ -1649,10 +1714,8 @@
       document.documentElement.dataset.manorBlueprintRoomsClickable = "true";
       document.documentElement.dataset.manorBlueprintCardinalDispositionActive = "true";
 
-      document.documentElement.dataset.manorBlueprintFrontierMirrorlandAligned = "true";
-      document.documentElement.dataset.manorBlueprintFrontierBelongsToMirrorland = "true";
-      document.documentElement.dataset.manorBlueprintFrontierCardinalDisposition = "west";
-      document.documentElement.dataset.manorBlueprintCompassSeparated = "true";
+      document.documentElement.dataset.manorBlueprintMirrorlandMenuLabel = "Mirrorland Doors";
+      document.documentElement.dataset.manorBlueprintWebsiteOptionsSeparated = "true";
       document.documentElement.dataset.manorBlueprintDualMenuActive = "true";
 
       document.documentElement.dataset.manorBlueprintJoystickScrollForceProfile = JOYSTICK_SCROLL_FORCE_PROFILE;
@@ -1717,21 +1780,20 @@
 
       mapBlipSingleEntryway: true,
       mirrorlandEntryway: "map_portal_blip",
-      mirrorlandDoorsInsideMap: true,
-      pageBodyDirectory: false,
+      mainMenuWebsiteOptionsOnly: true,
+      mirrorlandDoorsCategoryOnly: true,
+      supportDoesNotEqualOwnership: true,
+      gaugesMirrorlandAligned: false,
+      frontierMirrorlandAligned: true,
+      narrativePagesMirrorland: true,
+      compassSeparated: true,
+
       mirrorlandPortalActive: true,
       roomMapActive: true,
       cardinalRoomMap: true,
       floatingNodesReplaced: true,
       blueprintRoomsClickable: true,
       cardinalDispositionActive: true,
-
-      frontierMirrorlandAligned: true,
-      frontierBelongsToMirrorland: true,
-      frontierCardinalDisposition: "west",
-      frontierWing: "Frontier Deployment",
-      compassSeparated: true,
-      dualMenuActive: true,
 
       joystickScrollForceProfile: JOYSTICK_SCROLL_FORCE_PROFILE,
       joystickMinScrollSpeed: MIN_SCROLL_SPEED,

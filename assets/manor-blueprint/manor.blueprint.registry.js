@@ -1,20 +1,23 @@
 // TARGET FILE: /assets/manor-blueprint/manor.blueprint.registry.js
 // TNT FULL-FILE REPLACEMENT
-// MANOR_BLUEPRINT_MIRRORLAND_DOORS_SINGLE_ENTRYWAY_REGISTRY_TNT_v1
+// MANOR_BLUEPRINT_MENU_CATEGORY_OWNERSHIP_REGISTRY_TNT_v1
 //
-// Manor Blueprint route registry.
-// Renews route truth so the floating Map / Portal blip is the single public
-// Mirrorland entryway, while the map interior owns Mirrorland Doors.
+// Purpose:
+// Correct the Manor Blueprint route registry so Main Menu / Website Options
+// contains only regular website routes, while Mirrorland Doors contains only
+// Showroom, planetary, cockpit, Frontier, and narrative/story routes.
 //
 // Previous contract:
-// MANOR_BLUEPRINT_ROUTE_REGISTRY_TNT_v1
+// MANOR_BLUEPRINT_MIRRORLAND_DOORS_SINGLE_ENTRYWAY_REGISTRY_TNT_v1
 //
 // Owns:
 // - route truth
-// - Mirrorland Doors framing
-// - Main Menu / Website Options separation
+// - Main Menu / Website Options category ownership
+// - Mirrorland Doors category ownership
+// - support-does-not-equal-ownership rule
 // - Compass separation
 // - Frontier as Mirrorland-aligned West deployment wing
+// - narrative/story routes as Mirrorland
 // - parent/child/nearby route metadata
 // - instruction glossary metadata
 //
@@ -35,8 +38,8 @@
 
   if (typeof window === "undefined") return;
 
-  const CONTRACT = "MANOR_BLUEPRINT_MIRRORLAND_DOORS_SINGLE_ENTRYWAY_REGISTRY_TNT_v1";
-  const PREVIOUS_CONTRACT = "MANOR_BLUEPRINT_ROUTE_REGISTRY_TNT_v1";
+  const CONTRACT = "MANOR_BLUEPRINT_MENU_CATEGORY_OWNERSHIP_REGISTRY_TNT_v1";
+  const PREVIOUS_CONTRACT = "MANOR_BLUEPRINT_MIRRORLAND_DOORS_SINGLE_ENTRYWAY_REGISTRY_TNT_v1";
   const REGISTRY_ID = "DGB_MANOR_BLUEPRINT_ROUTE_REGISTRY";
   const STATUS_GLOBAL = "DGB_MANOR_BLUEPRINT_REGISTRY_STATUS";
   const API_GLOBAL = "DGB_MANOR_BLUEPRINT_REGISTRY";
@@ -79,6 +82,9 @@
 
   function route(config) {
     const path = normalizePath(config.path);
+    const mirrorlandDoor = Boolean(config.mirrorlandDoor);
+    const mirrorlandAligned = Boolean(config.mirrorlandAligned);
+    const websiteOption = Boolean(config.websiteOption);
 
     return freeze({
       routeId: String(config.routeId || config.id || "route"),
@@ -87,9 +93,9 @@
       path,
       title: String(config.title || "Route"),
       shortTitle: String(config.shortTitle || config.title || "Route"),
-      group: String(config.group || "Main Menu / Website Options"),
-      menu: String(config.menu || "main"),
-      wing: String(config.wing || "Website Options"),
+      group: String(config.group || (mirrorlandDoor ? "Mirrorland Doors" : "Main Menu / Website Options")),
+      menu: String(config.menu || (mirrorlandDoor ? "mirrorland" : "main")),
+      wing: String(config.wing || (mirrorlandDoor ? "Mirrorland House" : "Website Options")),
       type: String(config.type || "route"),
       cardinal: String(config.cardinal || "center"),
       role: String(config.role || config.type || "room"),
@@ -106,11 +112,12 @@
       status: String(config.status || "active"),
       priority: Number.isFinite(Number(config.priority)) ? Number(config.priority) : 50,
       showInBlueprint: config.showInBlueprint !== false,
-      mirrorlandAligned: Boolean(config.mirrorlandAligned),
-      mirrorlandDoor: Boolean(config.mirrorlandDoor),
-      websiteOption: Boolean(config.websiteOption),
+      mirrorlandAligned,
+      mirrorlandDoor,
+      websiteOption,
+      supportDoesNotEqualOwnership: true,
       singleEntryway: true,
-      entryway: config.mirrorlandDoor ? "map-portal-blip" : "website-option"
+      entryway: mirrorlandDoor ? "map-portal-blip" : "website-option"
     });
   }
 
@@ -193,7 +200,7 @@
       cardinal: "north",
       parent: "/",
       nearby: ["/", "/gauges/", "/laws/"],
-      description: "Full navigation guide for the Manor, route language, gems, chambers, lenses, and Gauges.",
+      description: "Full navigation guide for the regular website, route language, gems, chambers, lenses, and Gauges.",
       keywords: ["guide", "instructions", "navigation", "return to orbit", "gems"],
       mapX: 50,
       mapY: 90,
@@ -215,7 +222,7 @@
       cardinal: "west",
       parent: "/",
       nearby: ["/", "/home/", "/products/"],
-      description: "Public-facing identity and mission route.",
+      description: "Public-facing identity and mission route. Regular website route.",
       keywords: ["sean", "this underdog", "identity", "about"],
       mapX: 28,
       mapY: 32,
@@ -236,8 +243,8 @@
       cardinal: "west",
       parent: "/",
       nearby: ["/", "/home/", "/gauges/"],
-      description: "Product chamber and offering route.",
-      keywords: ["products", "showroom", "offers", "store"],
+      description: "Product chamber and offering route. Regular website route.",
+      keywords: ["products", "offers", "store", "website options"],
       mapX: 78,
       mapY: 36,
       priority: 72,
@@ -257,7 +264,7 @@
       cardinal: "south",
       parent: "/",
       nearby: ["/", "/governance/", "/gauges/"],
-      description: "Law and rule structure route. It may support Mirrorland, but it is not the entrance.",
+      description: "Law and rule structure route. It may support Mirrorland, but support does not equal ownership.",
       keywords: ["laws", "rules", "categories", "engineering", "truth layer"],
       mapX: 30,
       mapY: 46,
@@ -278,7 +285,7 @@
       cardinal: "south",
       parent: "/",
       nearby: ["/laws/", "/gauges/", "/"],
-      description: "Governance route for policy, compliance, public risk, and decisions.",
+      description: "Governance route for policy, compliance, public risk, and decisions. Regular website route.",
       keywords: ["governance", "policy", "compliance", "risk", "decision"],
       mapX: 24,
       mapY: 54,
@@ -300,7 +307,7 @@
       parent: "/",
       children: ["/gauges/h-earth/"],
       nearby: ["/", "/laws/"],
-      description: "Audit and proof surface for route status and readiness signals.",
+      description: "Audit and proof surface for route status and readiness signals. Regular website route; support does not equal Mirrorland ownership.",
       keywords: ["gauges", "triple g", "audit", "proof", "status"],
       mapX: 48,
       mapY: 78,
@@ -321,7 +328,7 @@
       cardinal: "south",
       parent: "/gauges/",
       nearby: ["/gauges/", "/showroom/globe/h-earth/"],
-      description: "H-Earth audit and readiness route.",
+      description: "H-Earth audit and readiness route. Regular website route unless explicitly converted later.",
       keywords: ["gauges", "h-earth", "audit", "readiness"],
       mapX: 56,
       mapY: 82,
@@ -333,7 +340,7 @@
       routeId: "showroom-door",
       path: "/showroom/",
       title: "Door / Showroom",
-      shortTitle: "Door",
+      shortTitle: "Showroom",
       group: "Mirrorland Doors",
       menu: "mirrorland",
       wing: "Portal Foyer",
@@ -343,7 +350,7 @@
       parent: "",
       children: ["/showroom/globe/"],
       nearby: ["/showroom/globe/", "/showroom/globe/audralia/"],
-      description: "The Door context and Diamond Lattice object page. The blip is the entryway; this is the threshold room.",
+      description: "The Door context and Diamond Lattice object page. Mirrorland category: Showroom.",
       keywords: ["showroom", "door", "diamond lattice", "mirrorland", "entryway"],
       mapX: 50,
       mapY: 50,
@@ -361,7 +368,7 @@
       menu: "mirrorland",
       wing: "Mirrorland Gate",
       type: "globe-hub",
-      role: "field-door",
+      role: "planetary-field-door",
       cardinal: "east",
       parent: "/showroom/",
       children: [
@@ -370,8 +377,8 @@
         "/showroom/globe/hearth/",
         "/showroom/globe/h-earth/"
       ],
-      nearby: ["/showroom/", "/showroom/globe/audralia/", "/gauges/"],
-      description: "The Mirrorland field door inside the map. Select it after entering through the blip.",
+      nearby: ["/showroom/", "/showroom/globe/audralia/"],
+      description: "The Mirrorland field door inside the map. Mirrorland category: planetary field.",
       keywords: ["globe", "planet", "showcase", "gateway", "mirrorland doors"],
       mapX: 70,
       mapY: 44,
@@ -389,11 +396,11 @@
       menu: "mirrorland",
       wing: "Reference Bodies",
       type: "planet-reference",
-      role: "reference-room",
+      role: "planetary-reference-room",
       cardinal: "east",
       parent: "/showroom/globe/",
       nearby: ["/showroom/globe/", "/showroom/globe/audralia/", "/showroom/globe/hearth/"],
-      description: "Reference body route for Earth inside the world inspection shelf.",
+      description: "Reference body route for Earth inside the planetary inspection shelf.",
       keywords: ["earth", "reference", "blue marble", "planet"],
       mapX: 56,
       mapY: 52,
@@ -415,7 +422,7 @@
       cardinal: "east",
       parent: "/showroom/globe/",
       children: ["/showroom/globe/audralia/planet/", "/showroom/globe/audralia/disposition/"],
-      nearby: ["/showroom/globe/", "/showroom/globe/audralia/planet/", "/showroom/globe/audralia/disposition/", "/gauges/"],
+      nearby: ["/showroom/globe/", "/showroom/globe/audralia/planet/", "/showroom/globe/audralia/disposition/"],
       description: "Audralia planet hub and first living planetary door inside Mirrorland.",
       keywords: ["audralia", "mirrorland", "planet", "world", "planetary path"],
       mapX: 70,
@@ -437,7 +444,7 @@
       role: "planet-room",
       cardinal: "east",
       parent: "/showroom/globe/audralia/",
-      nearby: ["/showroom/globe/audralia/", "/showroom/globe/audralia/disposition/", "/showroom/globe/", "/gauges/"],
+      nearby: ["/showroom/globe/audralia/", "/showroom/globe/audralia/disposition/", "/showroom/globe/"],
       description: "Audralia future-body screen and planet inspection room.",
       keywords: ["audralia", "planet", "future body", "renderplex", "mirrorland"],
       mapX: 78,
@@ -456,11 +463,11 @@
       menu: "mirrorland",
       wing: "Audralia Instruments",
       type: "cockpit",
-      role: "instrument-room",
+      role: "cockpit-room",
       cardinal: "east",
       parent: "/showroom/globe/audralia/",
-      nearby: ["/showroom/globe/audralia/", "/showroom/globe/audralia/planet/", "/showroom/globe/", "/gauges/"],
-      description: "Audralia cockpit route for lattice and disposition inspection.",
+      nearby: ["/showroom/globe/audralia/", "/showroom/globe/audralia/planet/", "/showroom/globe/"],
+      description: "Audralia cockpit route for lattice and disposition inspection. Mirrorland category: cockpit.",
       keywords: ["audralia", "cockpit", "lattice", "disposition"],
       mapX: 82,
       mapY: 50,
@@ -478,11 +485,11 @@
       menu: "mirrorland",
       wing: "Planet Hall",
       type: "planet-route",
-      role: "world-room",
+      role: "planetary-room",
       cardinal: "east",
       parent: "/showroom/globe/",
       nearby: ["/showroom/globe/", "/showroom/globe/audralia/", "/showroom/globe/h-earth/"],
-      description: "Hearth planet room inside the world inspection shelf.",
+      description: "Hearth planet room inside the planetary inspection shelf.",
       keywords: ["hearth", "planet", "terrain", "world"],
       mapX: 64,
       mapY: 64,
@@ -500,11 +507,11 @@
       menu: "mirrorland",
       wing: "H-Earth World Wing",
       type: "planet-route",
-      role: "world-room",
+      role: "planetary-room",
       cardinal: "east",
       parent: "/showroom/globe/",
       nearby: ["/showroom/globe/", "/showroom/globe/hearth/", "/gauges/h-earth/"],
-      description: "H-Earth experimental world path inside Mirrorland.",
+      description: "H-Earth experimental world path inside the planetary route class.",
       keywords: ["h-earth", "hybrid earth", "planet", "surface"],
       mapX: 58,
       mapY: 64,
@@ -522,11 +529,11 @@
       menu: "mirrorland",
       wing: "Character Wing",
       type: "narrative-hub",
-      role: "character-room",
+      role: "narrative-room",
       cardinal: "east",
       parent: "/showroom/",
       nearby: ["/showroom/", "/nine-summits/universe/", "/showroom/globe/audralia/"],
-      description: "Character and narrative room inside the Mirrorland field.",
+      description: "Character and narrative room inside the Mirrorland story layer.",
       keywords: ["characters", "story", "narrative", "mirrorland"],
       mapX: 82,
       mapY: 70,
@@ -544,11 +551,11 @@
       menu: "mirrorland",
       wing: "Universe Hall",
       type: "universe-route",
-      role: "universe-room",
+      role: "narrative-room",
       cardinal: "east",
       parent: "/showroom/",
       nearby: ["/characters/", "/showroom/globe/audralia/", "/showroom/globe/"],
-      description: "Universe room for Nine Summits and Mirrorland context.",
+      description: "Universe room for Nine Summits and Mirrorland story context.",
       keywords: ["nine summits", "universe", "mirrorland", "story"],
       mapX: 72,
       mapY: 78,
@@ -570,7 +577,7 @@
       cardinal: "west",
       parent: "/showroom/",
       children: ["/explore/frontier/water/", "/explore/frontier/waste/", "/explore/frontier/energy/"],
-      nearby: ["/explore/frontier/water/", "/explore/frontier/waste/", "/gauges/"],
+      nearby: ["/explore/frontier/water/", "/explore/frontier/waste/"],
       description: "Frontier belongs to Mirrorland and sits in the West deployment wing.",
       keywords: ["frontier", "mirrorland", "water", "waste", "energy", "closed loop", "west"],
       mapX: 22,
@@ -589,11 +596,11 @@
       menu: "mirrorland",
       wing: "Water Chamber",
       type: "frontier-route",
-      role: "water-room",
+      role: "frontier-room",
       cardinal: "west",
       parent: "/explore/frontier/",
       nearby: ["/explore/frontier/", "/explore/frontier/waste/", "/explore/frontier/energy/"],
-      description: "Water frontier room for closed-loop water thinking and system pressure.",
+      description: "Water frontier room inside the West deployment wing.",
       keywords: ["water", "frontier", "closed loop", "lattice"],
       mapX: 18,
       mapY: 78,
@@ -611,11 +618,11 @@
       menu: "mirrorland",
       wing: "Waste Chamber",
       type: "frontier-route",
-      role: "waste-room",
+      role: "frontier-room",
       cardinal: "west",
       parent: "/explore/frontier/",
       nearby: ["/explore/frontier/", "/explore/frontier/water/", "/explore/frontier/energy/"],
-      description: "Waste frontier room for hazardous mass accountability and closure.",
+      description: "Waste frontier room inside the West deployment wing.",
       keywords: ["waste", "frontier", "closed loop", "capture", "destruction"],
       mapX: 26,
       mapY: 78,
@@ -633,7 +640,7 @@
       menu: "mirrorland",
       wing: "Energy Chamber",
       type: "frontier-route",
-      role: "energy-room",
+      role: "frontier-room",
       cardinal: "west",
       parent: "/explore/frontier/",
       nearby: ["/explore/frontier/", "/explore/frontier/water/", "/explore/frontier/waste/"],
@@ -649,28 +656,36 @@
 
   const INSTRUCTIONS = freeze([
     {
+      termId: "main-menu-website-options",
+      title: "Main Menu / Website Options",
+      shortTitle: "Main Menu",
+      body: "Main Menu contains regular website routes only: Compass, Door, Home, Products, Laws, Governance, Gauges, Meet Sean, and Site Guide.",
+      description: "Main Menu contains regular website routes only.",
+      keywords: ["main menu", "website options", "regular website"]
+    },
+    {
+      termId: "mirrorland-doors",
+      title: "Mirrorland Doors",
+      shortTitle: "Doors",
+      body: "Mirrorland Doors contains only Showroom, planetary, cockpit, Frontier, and narrative/story routes.",
+      description: "Mirrorland Doors contains only Mirrorland-specific routes.",
+      keywords: ["doors", "mirrorland", "routes", "rooms"]
+    },
+    {
+      termId: "support-does-not-equal-ownership",
+      title: "Support Does Not Equal Ownership",
+      shortTitle: "Support",
+      body: "Gauges, Laws, and proof routes may support Mirrorland, but they remain regular website routes unless explicitly reclassified.",
+      description: "Support does not equal Mirrorland ownership.",
+      keywords: ["support", "ownership", "gauges", "laws"]
+    },
+    {
       termId: "single-entryway",
       title: "Single Entryway",
       shortTitle: "Entryway",
       body: "The floating Map / Portal blip is the single public entryway into Mirrorland.",
       description: "The floating Map / Portal blip is the single public entryway into Mirrorland.",
       keywords: ["entryway", "map", "portal", "mirrorland"]
-    },
-    {
-      termId: "mirrorland-doors",
-      title: "Mirrorland Doors",
-      shortTitle: "Doors",
-      body: "Inside the map, Mirrorland routes are presented as doors. Choose a door after opening the blip.",
-      description: "Inside the map, Mirrorland routes are presented as doors. Choose a door after opening the blip.",
-      keywords: ["doors", "mirrorland", "routes", "rooms"]
-    },
-    {
-      termId: "main-menu-separation",
-      title: "Main Menu Separation",
-      shortTitle: "Main Menu",
-      body: "Main Menu / Website Options remain separate from the Mirrorland Doors.",
-      description: "Main Menu / Website Options remain separate from the Mirrorland Doors.",
-      keywords: ["main menu", "website options", "separate"]
     },
     {
       termId: "compass-separated",
@@ -689,14 +704,6 @@
       keywords: ["frontier", "west", "deployment", "mirrorland"]
     },
     {
-      termId: "rooms",
-      title: "Rooms",
-      shortTitle: "Rooms",
-      body: "Every route is represented as a room. Tap a room to enter that route.",
-      description: "Every route is represented as a room. Tap a room to enter that route.",
-      keywords: ["rooms", "routes", "map"]
-    },
-    {
       termId: "joystick-scroll",
       title: "Joystick Scroll",
       shortTitle: "Scroll",
@@ -707,8 +714,8 @@
   ]);
 
   const GROUP_ORDER = freeze([
-    "Mirrorland Doors",
-    "Main Menu / Website Options"
+    "Main Menu / Website Options",
+    "Mirrorland Doors"
   ]);
 
   const ROUTE_BY_PATH = new Map();
@@ -886,8 +893,31 @@
       currentPath: normalizePath(window.location && window.location.pathname ? window.location.pathname : "/"),
       currentRouteId: current ? current.routeId : "",
       currentRouteTitle: current ? current.title : "",
+
       mapBlipSingleEntryway: true,
       mirrorlandEntryway: "map_portal_blip",
+      mainMenuRegularWebsiteOnly: true,
+      mirrorlandMenuSpecificRoutesOnly: true,
+      supportDoesNotEqualOwnership: true,
+
+      gaugesMovedToMainMenu: true,
+      lawsMainMenu: true,
+      governanceMainMenu: true,
+      productsMainMenu: true,
+      compassMainMenu: true,
+      doorMainMenu: true,
+      homeMainMenu: true,
+      meetSeanMainMenu: true,
+      siteGuideMainMenu: true,
+
+      showroomMirrorland: true,
+      planetaryPagesMirrorland: true,
+      cockpitPagesMirrorland: true,
+      frontierPagesMirrorland: true,
+      narrativePagesMirrorland: true,
+      charactersMirrorland: true,
+      nineSummitsMirrorland: true,
+
       mirrorlandMenuLabel: "Mirrorland Doors",
       mirrorlandDoorsInsideMap: true,
       mainMenuSeparated: true,
@@ -895,6 +925,7 @@
       compassSeparated: true,
       frontierMirrorlandAligned: true,
       pageBodyDirectory: false,
+
       hasAudraliaPlanet: Boolean(getRouteByPath("/showroom/globe/audralia/planet/")),
       supportsYouAreHere: true,
       supportsParentChain: true,
@@ -916,8 +947,12 @@
     groupOrder: GROUP_ORDER,
     instructions: INSTRUCTIONS,
     navigationTerms: INSTRUCTIONS,
+
     mapBlipSingleEntryway: true,
     mirrorlandEntryway: "map_portal_blip",
+    mainMenuRegularWebsiteOnly: true,
+    mirrorlandMenuSpecificRoutesOnly: true,
+    supportDoesNotEqualOwnership: true,
     mirrorlandMenuLabel: "Mirrorland Doors",
     mirrorlandDoorsInsideMap: true,
     mainMenuSeparated: true,
@@ -925,6 +960,7 @@
     compassSeparated: true,
     frontierMirrorlandAligned: true,
     pageBodyDirectory: false,
+
     normalizePath,
     getRouteByPath,
     getRouteById,

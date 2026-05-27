@@ -1,14 +1,14 @@
 <!-- TARGET FILE: /showroom/globe/audralia/planet/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- AUDRALIA_PLANET_PUBLIC_NARRATIVE_COMPACT_VISIBLE_COPY_HTML_TNT_v4 -->
+<!-- AUDRALIA_PLANET_GLOBE_DIRECT_VIEW_OPTIONS_HTML_TNT_v5 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
   data-page="audralia-planet"
-  data-version="G4-PUBLIC-NARRATIVE-COMPACT-VISIBLE-COPY"
-  data-contract="AUDRALIA_PLANET_PUBLIC_NARRATIVE_COMPACT_VISIBLE_COPY_HTML_TNT_v4"
-  data-previous-contract="AUDRALIA_PLANET_COMPACT_NARRATIVE_GLOBE_AND_GEM_ORBIT_HTML_TNT_v3"
+  data-version="G5-GLOBE-DIRECT-VIEW-OPTIONS"
+  data-contract="AUDRALIA_PLANET_GLOBE_DIRECT_VIEW_OPTIONS_HTML_TNT_v5"
+  data-previous-contract="AUDRALIA_PLANET_PUBLIC_NARRATIVE_COMPACT_VISIBLE_COPY_HTML_TNT_v4"
   data-baseline-contract="AUDRALIA_PLANET_HTML_RENDERPLEX_SHELL_CLEANUP_TNT_v1"
   data-canvas-contract="AUDRALIA_PLANET_FILE_5C_RENDERPLEX_CHILD_CHAIN_LOADER_TNT_v1"
   data-renderplex-active="true"
@@ -23,7 +23,7 @@
   data-blueprint-expected-implementation-contract="MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_POSITION_RENEWAL_TNT_v1"
   data-blueprint-mobile-safe-hud-requested="true"
   data-blueprint-test-route-install="true"
-  data-blueprint-cache-catch="AUDRALIA_PLANET_PUBLIC_NARRATIVE_COMPACT_VISIBLE_COPY_HTML_TNT_v4"
+  data-blueprint-cache-catch="AUDRALIA_PLANET_GLOBE_DIRECT_VIEW_OPTIONS_HTML_TNT_v5"
   data-role="mirrorland-audralia-future-body-screen"
   data-future-path="Audralia_Untouched_Living_Path"
   data-mirrorland-narrative-active="true"
@@ -37,6 +37,9 @@
   data-context-moved-to-details="true"
   data-platform-engineering-contained="true"
   data-visible-diagnostic-reporting-reduced="true"
+  data-view-options-directly-under-globe="true"
+  data-inspect-button-removed="true"
+  data-reset-button-removed="true"
   data-return-to-orbit-target="#audralia-gem-orbit"
   data-return-to-orbit-points-to-globe="false"
   data-return-orbit-old-ui-selector-bypassed="true"
@@ -58,7 +61,7 @@
   <title>Audralia Planet · Mirrorland Possibility</title>
   <meta
     name="description"
-    content="Audralia is Mirrorland’s constructive possibility world. The globe is the object. The gems are the category orbit. The Map Portal handles movement."
+    content="Audralia is Mirrorland’s constructive possibility world. The globe is the object. The view options sit directly under the globe. The gems are the category orbit."
   >
 
   <style>
@@ -409,7 +412,7 @@
 
     .planet-stage{
       position:absolute;
-      inset:0;
+      inset:0 0 8rem;
       z-index:2;
       touch-action:none;
     }
@@ -448,15 +451,12 @@
       right:.85rem;
       bottom:.85rem;
       z-index:5;
-      display:flex;
-      flex-wrap:wrap;
-      gap:.45rem;
-      align-items:center;
-      justify-content:space-between;
+      display:grid;
+      gap:.58rem;
       padding:.68rem .75rem;
       border:1px solid rgba(255,255,255,.12);
       border-radius:.92rem;
-      background:rgba(2,6,18,.74);
+      background:rgba(2,6,18,.78);
       backdrop-filter:blur(8px);
     }
 
@@ -466,45 +466,120 @@
       font-weight:850;
     }
 
-    .actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.45rem;
+    .under-globe-options{
+      display:grid;
+      gap:.55rem;
     }
 
-    .button,
-    button.button{
-      min-height:2.22rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(255,255,255,.15);
+    .under-globe-options .mode-buttons{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.38rem;
+    }
+
+    .under-globe-options .mode-buttons button{
+      min-height:2.05rem;
+      border:1px solid rgba(184,205,255,.15);
       border-radius:999px;
-      padding:.50rem .76rem;
-      background:rgba(255,255,255,.045);
-      color:rgba(241,246,255,.88);
-      font-size:.62rem;
+      padding:.43rem .64rem;
+      color:rgba(230,238,255,.84);
+      background:rgba(255,255,255,.04);
+      font-size:.55rem;
       font-weight:950;
-      letter-spacing:.055em;
+      letter-spacing:.08em;
       text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
       cursor:pointer;
       font-family:inherit;
     }
 
-    .button:hover,
-    .button:focus-visible{
-      transform:translateY(-2px);
-      border-color:rgba(243,200,111,.62);
-      outline:none;
+    .under-globe-options .mode-buttons button[data-active],
+    .under-globe-options .mode-buttons button[aria-pressed="true"]{
+      color:#06100b;
+      border-color:rgba(243,200,111,.88);
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
     }
 
-    .button.gold{
-      border-color:rgba(243,200,111,.9);
-      color:#060811;
+    .under-globe-copy{
+      display:grid;
+      gap:.34rem;
+      padding:.58rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:.75rem;
+      background:rgba(255,255,255,.028);
+    }
+
+    .under-globe-copy h3{
+      font-size:.92rem;
+    }
+
+    .under-globe-copy .status{
+      width:fit-content;
+      padding:.25rem .44rem;
+      border:1px solid rgba(143,240,195,.30);
+      border-radius:999px;
+      color:var(--green);
+      background:rgba(143,240,195,.07);
+      font-size:.50rem;
+      font-weight:950;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+    }
+
+    .mode-read-tabs{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.32rem;
+    }
+
+    .mode-read-tabs button{
+      min-height:1.76rem;
+      border:1px solid rgba(184,205,255,.15);
+      border-radius:999px;
+      padding:.34rem .52rem;
+      color:rgba(230,238,255,.82);
+      background:rgba(255,255,255,.04);
+      font-size:.50rem;
+      font-weight:950;
+      letter-spacing:.09em;
+      text-transform:uppercase;
+      cursor:pointer;
+      font-family:inherit;
+    }
+
+    .mode-read-tabs button[aria-selected="true"]{
+      color:#06100b;
+      border-color:rgba(243,200,111,.88);
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
-      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
+    }
+
+    .lens-copy-grid{
+      display:grid;
+      gap:.35rem;
+    }
+
+    .lens-copy-grid div[hidden]{
+      display:none;
+    }
+
+    .lens-copy-grid div{
+      padding:.50rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:.68rem;
+      background:rgba(255,255,255,.026);
+    }
+
+    .lens-copy-grid b{
+      display:block;
+      margin-bottom:.16rem;
+      color:var(--gold);
+      font-size:.50rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .lens-copy-grid p{
+      font-size:.72rem;
+      line-height:1.32;
     }
 
     .object-panel{
@@ -603,118 +678,6 @@
     .compact-body p{
       font-size:.80rem;
       line-height:1.38;
-    }
-
-    .mode-panel{
-      display:grid;
-      gap:.62rem;
-      padding:.70rem;
-      border:1px solid rgba(184,205,255,.13);
-      border-radius:.92rem;
-      background:rgba(255,255,255,.030);
-    }
-
-    .mode-buttons{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.34rem;
-    }
-
-    .mode-buttons button{
-      min-height:1.92rem;
-      border:1px solid rgba(184,205,255,.15);
-      border-radius:999px;
-      padding:.42rem .58rem;
-      color:rgba(230,238,255,.84);
-      background:rgba(255,255,255,.04);
-      font-size:.52rem;
-      font-weight:950;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      cursor:pointer;
-      font-family:inherit;
-    }
-
-    .mode-buttons button[data-active],
-    .mode-buttons button[aria-pressed="true"]{
-      color:#06100b;
-      border-color:rgba(243,200,111,.88);
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
-    }
-
-    .mode-copy{
-      display:grid;
-      gap:.42rem;
-    }
-
-    .mode-copy .status{
-      width:fit-content;
-      padding:.28rem .48rem;
-      border:1px solid rgba(143,240,195,.30);
-      border-radius:999px;
-      color:var(--green);
-      background:rgba(143,240,195,.07);
-      font-size:.54rem;
-      font-weight:950;
-      letter-spacing:.1em;
-      text-transform:uppercase;
-    }
-
-    .lens-copy-grid{
-      display:grid;
-      gap:.42rem;
-    }
-
-    .mode-read-tabs{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.35rem;
-    }
-
-    .mode-read-tabs button{
-      min-height:1.85rem;
-      border:1px solid rgba(184,205,255,.15);
-      border-radius:999px;
-      padding:.38rem .56rem;
-      color:rgba(230,238,255,.82);
-      background:rgba(255,255,255,.04);
-      font-size:.52rem;
-      font-weight:950;
-      letter-spacing:.09em;
-      text-transform:uppercase;
-      cursor:pointer;
-      font-family:inherit;
-    }
-
-    .mode-read-tabs button[aria-selected="true"]{
-      color:#06100b;
-      border-color:rgba(243,200,111,.88);
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
-    }
-
-    .lens-copy-grid div[hidden]{
-      display:none;
-    }
-
-    .lens-copy-grid div{
-      padding:.60rem;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:.78rem;
-      background:rgba(255,255,255,.028);
-    }
-
-    .lens-copy-grid b{
-      display:block;
-      margin-bottom:.18rem;
-      color:var(--gold);
-      font-size:.54rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .lens-copy-grid p{
-      font-size:.76rem;
-      line-height:1.35;
     }
 
     .gem-orbit-section{
@@ -959,10 +922,6 @@
       text-transform:uppercase;
     }
 
-    .meta-row{
-      display:none;
-    }
-
     .lens-tabs{
       display:flex;
       gap:.4rem;
@@ -1078,12 +1037,8 @@
       .shell{width:min(100% - 22px,var(--max))}
       h1{font-size:clamp(2.65rem,13.5vw,4.85rem)}
       .hero{min-height:18rem;padding:1rem}
-      .planet-stage-card{min-height:31rem}
-      .stage-status{align-items:stretch}
-      .stage-status .actions{width:100%}
-      .actions{display:grid}
-      .button{width:100%}
-      .lens-copy-grid{grid-template-columns:1fr}
+      .planet-stage-card{min-height:37rem}
+      .planet-stage{inset:0 0 13rem}
     }
 
     @media (max-width:560px){
@@ -1281,11 +1236,42 @@
               aria-label="Audralia future-body screen"
             ></div>
 
-            <div class="stage-status">
+            <div class="stage-status" aria-label="Audralia view options directly under globe">
               <span data-audralia-renderer-status>Audralia active · drag to inspect</span>
-              <div class="actions">
-                <button class="button" type="button" data-audralia-inspect-planet>Inspect</button>
-                <button class="button" type="button" data-reset-canvas-view>Reset View</button>
+
+              <div class="under-globe-options">
+                <div class="mode-buttons" aria-label="Audralia view options">
+                  <button type="button" data-audralia-mode="body" aria-pressed="true">Body</button>
+                  <button type="button" data-audralia-mode="surface" aria-pressed="false">Surface</button>
+                  <button type="button" data-audralia-mode="terrain" aria-pressed="false">Terrain</button>
+                  <button type="button" data-audralia-mode="lattice" aria-pressed="false">Lattice</button>
+                  <button type="button" data-audralia-mode="receipt" aria-pressed="false">Receipt</button>
+                </div>
+
+                <div class="under-globe-copy">
+                  <h3 data-audralia-mode-title>Body</h3>
+                  <span class="status" data-audralia-mode-status>WORLD BODY · FIRST READ</span>
+
+                  <div class="mode-read-tabs" aria-label="Platform and Engineering read tabs">
+                    <button type="button" data-local-read-tab="platform" aria-selected="true">Platform</button>
+                    <button type="button" data-local-read-tab="engineering" aria-selected="false">Engineering</button>
+                  </div>
+
+                  <div class="lens-copy-grid">
+                    <div data-local-read-pane="platform">
+                      <b>Platform</b>
+                      <p data-audralia-mode-platform>
+                        Body view shows Audralia as the main world-body before the deeper details are finalized.
+                      </p>
+                    </div>
+                    <div data-local-read-pane="engineering" hidden>
+                      <b>Engineering</b>
+                      <p data-audralia-mode-engineering>
+                        Body view keeps the public object stable while deeper layers remain separate and unfinished.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1308,46 +1294,6 @@
               <summary>Boundary</summary>
               <div class="compact-body">
                 <p>The planet is visible, not final. The page does not claim finished oceans, finished terrain, or final surface truth.</p>
-              </div>
-            </details>
-
-            <details class="compact-context">
-              <summary>View options</summary>
-              <div class="compact-body">
-                <div class="mode-panel">
-                  <div class="mode-buttons" aria-label="Audralia view options">
-                    <button type="button" data-audralia-mode="body" aria-pressed="true">Body</button>
-                    <button type="button" data-audralia-mode="surface" aria-pressed="false">Surface</button>
-                    <button type="button" data-audralia-mode="terrain" aria-pressed="false">Terrain</button>
-                    <button type="button" data-audralia-mode="lattice" aria-pressed="false">Lattice</button>
-                    <button type="button" data-audralia-mode="receipt" aria-pressed="false">Receipt</button>
-                  </div>
-
-                  <div class="mode-copy">
-                    <h3 data-audralia-mode-title>Body</h3>
-                    <span class="status" data-audralia-mode-status>WORLD BODY · FIRST READ</span>
-
-                    <div class="mode-read-tabs" aria-label="Platform and Engineering read tabs">
-                      <button type="button" data-local-read-tab="platform" aria-selected="true">Platform</button>
-                      <button type="button" data-local-read-tab="engineering" aria-selected="false">Engineering</button>
-                    </div>
-
-                    <div class="lens-copy-grid">
-                      <div data-local-read-pane="platform">
-                        <b>Platform</b>
-                        <p data-audralia-mode-platform>
-                          Body view shows Audralia as the main world-body before the deeper details are finalized.
-                        </p>
-                      </div>
-                      <div data-local-read-pane="engineering" hidden>
-                        <b>Engineering</b>
-                        <p data-audralia-mode-engineering>
-                          Body view keeps the public object stable while deeper layers remain separate and unfinished.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </details>
           </aside>
@@ -1477,11 +1423,14 @@
       </section>
 
       <template id="route-receipt" class="receipt" data-route-receipt>
-AUDRALIA_PLANET_PUBLIC_NARRATIVE_COMPACT_VISIBLE_COPY_HTML_TNT_v4
-previous=AUDRALIA_PLANET_COMPACT_NARRATIVE_GLOBE_AND_GEM_ORBIT_HTML_TNT_v3
+AUDRALIA_PLANET_GLOBE_DIRECT_VIEW_OPTIONS_HTML_TNT_v5
+previous=AUDRALIA_PLANET_PUBLIC_NARRATIVE_COMPACT_VISIBLE_COPY_HTML_TNT_v4
 baseline=AUDRALIA_PLANET_HTML_RENDERPLEX_SHELL_CLEANUP_TNT_v1
 route=/showroom/globe/audralia/planet/
 html=/showroom/globe/audralia/planet/index.html
+view_options_directly_under_globe=true
+inspect_button_removed=true
+reset_button_removed=true
 visible_underhood_language_removed=true
 visible_renderplex_language_sanitized=true
 visible_html_shell_language_sanitized=true
@@ -1492,7 +1441,6 @@ platform_engineering_contained=true
 platform_engineering_tabs_active=true
 context_moved_to_dropdowns=true
 route_directory_removed=true
-dropdown_route_menu_removed=true
 central_focus=Audralia_world_body
 public_message=Audralia_gives_possibility_a_body
 globe_role=main_object
@@ -1508,14 +1456,8 @@ ui=/showroom/globe/audralia/planet/index.ui.js
 ui_contract=AUDRALIA_G2_PLANET_OPERATION_C_UI_JS_OPTIMIZATION_ONLY_TNT_v1
 site_bootstrap=/assets/site.bootstrap.js
 site_bootstrap_contract=MANOR_BLUEPRINT_BOOTSTRAP_MOBILE_SAFE_HUD_CACHE_KEY_RENEWAL_TNT_v1
-site_bootstrap_previous_contract=MANOR_BLUEPRINT_GLOBAL_BOOTSTRAP_TNT_v1
-site_bootstrap_cache_key=MANOR_BLUEPRINT_BOOTSTRAP_MOBILE_SAFE_HUD_CACHE_KEY_RENEWAL_TNT_v1
 blueprint_hud_cache_key=MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_POSITION_RENEWAL_TNT_v1
-blueprint_expected_implementation_contract=MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_POSITION_RENEWAL_TNT_v1
 blueprint_mobile_safe_hud_requested=true
-blueprint_bootstrap_installed=true
-blueprint_test_route_install=true
-blueprint_cache_catch=AUDRALIA_PLANET_PUBLIC_NARRATIVE_COMPACT_VISIBLE_COPY_HTML_TNT_v4
 html_loads_child_chain=false
 renderplex_owns_child_chain=true
 child_chain_loaded_by_canvas=true
@@ -1528,10 +1470,6 @@ mode_selectors_preserved=true
 gem_selectors_preserved=true
 chamber_selectors_preserved=true
 lens_selectors_preserved=true
-data_return_orbit_preserved=false
-data_return_category_orbit_href=#audralia-gem-orbit
-visible_copy_simplified=true
-default_chambers_collapsed=true
 activeWater=false
 hydrationActive=false
 surfaceChildActive=false
@@ -1540,12 +1478,12 @@ generatedImage=false
 graphicBox=false
 externalImageAsset=false
 finalVisualPass=false
-deploy_marker=AUDRALIA_PLANET_PUBLIC_NARRATIVE_COMPACT_VISIBLE_COPY_DEPLOY_MARKER_v4
+deploy_marker=AUDRALIA_PLANET_GLOBE_DIRECT_VIEW_OPTIONS_DEPLOY_MARKER_v5
       </template>
     </main>
 
     <footer>
-      AUDRALIA_PLANET_PUBLIC_NARRATIVE_COMPACT_VISIBLE_COPY_HTML_TNT_v4 · Audralia · Public narrative compact page · No final visual pass.
+      AUDRALIA_PLANET_GLOBE_DIRECT_VIEW_OPTIONS_HTML_TNT_v5 · Audralia · View options directly under globe · No inspect/reset controls · No final visual pass.
     </footer>
   </div>
 
@@ -1557,7 +1495,7 @@ deploy_marker=AUDRALIA_PLANET_PUBLIC_NARRATIVE_COMPACT_VISIBLE_COPY_DEPLOY_MARKE
     (() => {
       "use strict";
 
-      const PUBLIC_COPY_CONTRACT = "AUDRALIA_PLANET_PUBLIC_VISIBLE_COPY_SANITIZER_TNT_v4";
+      const PUBLIC_COPY_CONTRACT = "AUDRALIA_PLANET_GLOBE_DIRECT_VIEW_OPTIONS_SANITIZER_TNT_v5";
 
       const modeCopy = {
         body: {
@@ -1608,7 +1546,10 @@ deploy_marker=AUDRALIA_PLANET_PUBLIC_NARRATIVE_COMPACT_VISIBLE_COPY_DEPLOY_MARKE
         "predestined latitude",
         "longitude disposition",
         "primitives",
-        "STRUCTURAL_SPIRAL_NODE_MAP_ONLY"
+        "STRUCTURAL_SPIRAL_NODE_MAP_ONLY",
+        "feed clay globe",
+        "mode surface",
+        "Canvas screen active"
       ];
 
       function setText(selector, text) {
@@ -1680,6 +1621,12 @@ deploy_marker=AUDRALIA_PLANET_PUBLIC_NARRATIVE_COMPACT_VISIBLE_COPY_DEPLOY_MARKE
         );
       }
 
+      function removeOldButtons() {
+        document.querySelectorAll("[data-audralia-inspect-planet], [data-reset-canvas-view]").forEach((node) => {
+          node.remove();
+        });
+      }
+
       function observeVisibleCopy() {
         const targets = [
           document.querySelector("[data-audralia-renderer-status]"),
@@ -1691,6 +1638,7 @@ deploy_marker=AUDRALIA_PLANET_PUBLIC_NARRATIVE_COMPACT_VISIBLE_COPY_DEPLOY_MARKE
 
         const observer = new MutationObserver(() => {
           window.requestAnimationFrame(() => {
+            removeOldButtons();
             applyModeCopy(currentMode());
             sanitizeStatus();
           });
@@ -1705,11 +1653,15 @@ deploy_marker=AUDRALIA_PLANET_PUBLIC_NARRATIVE_COMPACT_VISIBLE_COPY_DEPLOY_MARKE
         document.documentElement.dataset.publicVisibleCopyContract = PUBLIC_COPY_CONTRACT;
         document.documentElement.dataset.visibleUnderhoodLanguageRemoved = "true";
         document.documentElement.dataset.platformEngineeringContained = "true";
+        document.documentElement.dataset.viewOptionsDirectlyUnderGlobe = "true";
+        document.documentElement.dataset.inspectButtonRemoved = "true";
+        document.documentElement.dataset.resetButtonRemoved = "true";
 
         bindReadTabs();
         bindModeButtons();
 
         window.setTimeout(() => {
+          removeOldButtons();
           applyModeCopy(currentMode());
           sanitizeStatus();
           observeVisibleCopy();

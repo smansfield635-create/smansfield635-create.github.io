@@ -3,11 +3,11 @@
   lang="en"
   data-route="/site-guide/"
   data-page="site-guide"
-  data-version="SITE-GUIDE-G3-ROUTE-CHOICE-BOARD-ZONE-ALIGNMENT-CACHE-BUST"
-  data-contract="SITE_GUIDE_ROUTE_CHOICE_BOARD_ZONE_ALIGNMENT_CACHE_BUST_HTML_TNT_v1"
-  data-previous-contract="SITE_GUIDE_ROUTE_CHOICE_BOARD_CACHE_BUST_HTML_TNT_v1"
-  data-controller-contract="SITE_GUIDE_ROUTE_CHOICE_BOARD_CONTROLLER_TNT_v1"
-  data-css-contract="SITE_GUIDE_ROUTE_CHOICE_BOARD_ZONE_ALIGNMENT_CSS_TNT_v1"
+  data-version="SITE-GUIDE-G3-BLUEPRINT-SCAN-TUTORIAL-COPY"
+  data-contract="SITE_GUIDE_BLUEPRINT_SCAN_TUTORIAL_COPY_HTML_TNT_v1"
+  data-previous-contract="SITE_GUIDE_ROUTE_CHOICE_BOARD_ZONE_ALIGNMENT_CACHE_BUST_HTML_TNT_v1"
+  data-controller-contract="SITE_GUIDE_BLUEPRINT_SCAN_MODE_CONTROLLER_TNT_v1"
+  data-css-contract="SITE_GUIDE_BLUEPRINT_SCAN_MODE_ZONE_CSS_TNT_v1"
   data-cache-bust="true"
   data-main-menu-route="true"
   data-mirrorland-door="false"
@@ -18,10 +18,13 @@
   data-return-to-orbit-local="true"
   data-scroll-activation="true"
   data-open-blueprint-controller="true"
+  data-blueprint-scan-mode="true"
   data-blueprint-jump-pad="true"
   data-local-scratch-surface-deck="true"
   data-route-choice-board="true"
   data-native-select-planner="false"
+  data-tutorial-expression="true"
+  data-technical-layer-separated="true"
   data-highlight-zone-alignment="true"
   data-route-start-zone-independent="true"
   data-route-goal-zone-independent="true"
@@ -41,19 +44,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Guide Desk · Flex Exhibit · Diamond Gate Bridge</title>
+  <title>Guide Desk · Guided Map · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Guide Desk is the Diamond Gate Bridge flex exhibit page for presentation systems, navigation systems, Return to Orbit, Map / Portal, estate blueprint, jump-pad scratch surfaces, route choice board, and under-the-hood 4x4 / 16x16 / 256-state diagnostics."
+    content="Guide Desk is a guided map for Diamond Gate Bridge. Use the orbit, scan the blueprint, tap a room, preview what it does, open the full page, or return to the map."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/site-guide/">
   <meta name="theme-color" content="#02040b">
 
   <link rel="stylesheet" href="/assets/manor-blueprint/manor.blueprint.css?v=SITE_GUIDE_BLUEPRINT_JUMP_PAD_HTML_TNT_v1">
-  <link rel="stylesheet" href="/assets/site-guide/site-guide.css?v=SITE_GUIDE_ROUTE_CHOICE_BOARD_ZONE_ALIGNMENT_CSS_TNT_v1">
+  <link rel="stylesheet" href="/assets/site-guide/site-guide.css?v=SITE_GUIDE_BLUEPRINT_SCAN_MODE_ZONE_CSS_TNT_v1">
 
   <script src="/assets/manor-blueprint/manor.blueprint.js?v=SITE_GUIDE_BLUEPRINT_JUMP_PAD_HTML_TNT_v1" defer></script>
-  <script src="/assets/site-guide/site-guide.js?v=SITE_GUIDE_ROUTE_CHOICE_BOARD_CONTROLLER_TNT_v1" defer></script>
+  <script src="/assets/site-guide/site-guide.js?v=SITE_GUIDE_BLUEPRINT_SCAN_MODE_CONTROLLER_TNT_v1" defer></script>
 </head>
 
 <body>
@@ -64,7 +67,7 @@
       <a class="brand" href="/site-guide/" aria-label="Guide Desk">
         <span class="brand-mark" aria-hidden="true"><span>GD</span></span>
         <span class="brand-copy">
-          <span>Diamond Gate Bridge · Flex Exhibit</span>
+          <span>Diamond Gate Bridge · Guided Map</span>
           <strong>Guide Desk</strong>
         </span>
       </a>
@@ -80,17 +83,17 @@
 
     <main id="guide-main">
       <section class="hero" aria-labelledby="page-title">
-        <div class="kicker">Guide Desk · Flex Exhibit Page</div>
-        <h1 id="page-title">The website explains itself by using itself.</h1>
-        <h2>A live exhibit for Diamond Gate Bridge design systems.</h2>
+        <div class="kicker">Guide Desk · Guided Map</div>
+        <h1 id="page-title">The website teaches you how to move through it.</h1>
+        <h2>A simple map for a large estate.</h2>
         <p class="lead">
-          Guide Desk is the sub-contextual flex page for the estate’s native patterns: orbits, gems, categories, Return to Orbit, Map / Portal, room blueprints, jump-pad scratch surfaces, route choice board, presentation layers, navigation layers, diagnostics, and construction receipts.
+          Use this page like a guided tour. Start with the orbit, open the blueprint, scan the rooms, tap one to preview it, and open the full page when you are ready.
         </p>
 
         <div class="return-primer" id="return-to-orbit-primer">
-          <b>Return to Orbit is local page movement</b>
+          <b>Return to Orbit</b>
           <p>
-            This page is long by design, so Return to Orbit appears throughout the page. It returns you to the Guide Orbit on this page and clears active focus. It is different from the global Map / Portal, which opens estate navigation.
+            Return to Orbit brings you back to this page’s main hub and clears the current focus. Return to Blueprint is different: it brings you back to the estate map so you can keep scanning rooms.
           </p>
           <div class="actions">
             <a class="button gold return-to-orbit" href="#guide-orbit" data-return-to-orbit>Return to Guide Orbit</a>
@@ -107,20 +110,20 @@
 
         <div class="hero-proof" aria-label="Guide Desk proof points">
           <div class="proof-card">
-            <b>Pattern</b>
-            <strong>Selected items highlight; non-selected items mute.</strong>
+            <b>Start</b>
+            <strong>Use the orbit to choose what you want to understand.</strong>
           </div>
           <div class="proof-card">
-            <b>Jump Pad</b>
-            <strong>Blueprint rooms point to local scratch surfaces.</strong>
+            <b>Scan</b>
+            <strong>Use the blueprint to see the rooms at a glance.</strong>
           </div>
           <div class="proof-card">
-            <b>Route Board</b>
-            <strong>Visitor positions and goals replace dropdowns.</strong>
+            <b>Preview</b>
+            <strong>Tap a room to read a short explanation.</strong>
           </div>
           <div class="proof-card">
-            <b>Build</b>
-            <strong>Native mobile-first construction is documented.</strong>
+            <b>Enter</b>
+            <strong>Open the full page when the preview makes sense.</strong>
           </div>
         </div>
       </section>
@@ -129,9 +132,9 @@
         <div class="panel-inner">
           <div class="section-head">
             <div class="kicker">Guide Orbit</div>
-            <h2 id="orbit-title">Select a feature. The rest of the orbit mutes.</h2>
+            <h2 id="orbit-title">Choose a feature to explore.</h2>
             <p>
-              This is the universal interaction concept used throughout the estate: one selected item receives focus while non-selected items gray out. Return to Orbit clears the local focus and returns to this hub.
+              The orbit is the quick tour. Select one item, read the preview, then return here when you want to choose another part of the page.
             </p>
           </div>
 
@@ -150,12 +153,12 @@
 
             <button class="feature-gem" type="button" data-feature-gem data-feature="categories" data-symbol="◈" data-active="false">
               <b>Categories</b>
-              <strong>One category at a time</strong>
+              <strong>One topic at a time</strong>
             </button>
 
             <button class="feature-gem" type="button" data-feature-gem data-feature="return" data-symbol="↩" data-active="false">
               <b>Return</b>
-              <strong>Local orbit reset</strong>
+              <strong>Reset this page</strong>
             </button>
 
             <button class="feature-gem" type="button" data-feature-gem data-feature="portal" data-symbol="◎" data-active="false">
@@ -165,37 +168,37 @@
 
             <button class="feature-gem" type="button" data-feature-gem data-feature="blueprint" data-symbol="▣" data-active="false">
               <b>Blueprint</b>
-              <strong>Room-shaped jump pad</strong>
+              <strong>Scan the rooms</strong>
             </button>
           </div>
 
           <section class="feature-detail" data-feature-detail="estate" data-focus-section="estate" hidden>
             <b>Estate Model</b>
-            <h3>The visitor experiences rooms, not file paths.</h3>
+            <h3>The site is organized like rooms in a house.</h3>
             <p>
-              Compass Desk, Atrium, Atlas Study, The Lab, Product Gallery, and Frontier Workshop Yard are visitor-facing estate positions. They explain meaning before technical route structure.
+              Each room has a purpose. Compass helps you orient, Atrium opens the story layer, Atlas Study holds the worlds, The Lab checks proof, and Product Gallery points toward usable value.
             </p>
             <a class="button gold return-to-orbit" href="#guide-orbit" data-return-to-orbit>Return to Orbit</a>
           </section>
 
           <section class="feature-detail" data-feature-detail="gems" data-focus-section="gems" hidden>
             <b>Gem Demonstration</b>
-            <h3>Gems are selectable interface objects.</h3>
+            <h3>Gems are touch points.</h3>
             <div class="demo-grid" data-select-group="gem-demo">
               <button class="demo-card" type="button" data-demo-card style="--demo:var(--sg-gold)">
                 <b>Gold Gem</b>
-                <strong>Primary route</strong>
-                <p>Used for a main action or selected feature.</p>
+                <strong>Main action</strong>
+                <p>Used when the page wants to point you toward the primary move.</p>
               </button>
               <button class="demo-card" type="button" data-demo-card style="--demo:var(--sg-blue)">
                 <b>Blue Gem</b>
-                <strong>World route</strong>
-                <p>Used for world-study, map, or Atlas concepts.</p>
+                <strong>World action</strong>
+                <p>Used for world-study, maps, and Atlas-style movement.</p>
               </button>
               <button class="demo-card" type="button" data-demo-card style="--demo:var(--sg-green)">
                 <b>Green Gem</b>
-                <strong>Proof route</strong>
-                <p>Used for The Lab, readiness, and confirmation surfaces.</p>
+                <strong>Proof action</strong>
+                <p>Used when the site is pointing toward readiness, checking, or confirmation.</p>
               </button>
             </div>
             <a class="button gold return-to-orbit" href="#guide-orbit" data-return-to-orbit>Return to Orbit</a>
@@ -203,7 +206,7 @@
 
           <section class="feature-detail" data-feature-detail="categories" data-focus-section="categories" hidden>
             <b>Category Demonstration</b>
-            <h3>One category becomes active while the others mute.</h3>
+            <h3>One idea comes forward while the others step back.</h3>
             <div class="category-demo">
               <div class="category-list" data-select-group="category-demo">
                 <button class="category-button" type="button" data-category-button data-category="presentation" data-active="true">
@@ -212,34 +215,34 @@
                 </button>
                 <button class="category-button" type="button" data-category-button data-category="structure">
                   <b>Structure</b>
-                  <span>What organizes the experience.</span>
+                  <span>How the experience is organized.</span>
                 </button>
                 <button class="category-button" type="button" data-category-button data-category="proof">
                   <b>Proof</b>
-                  <span>What checks readiness and coherence.</span>
+                  <span>How the system checks itself.</span>
                 </button>
                 <button class="category-button" type="button" data-category-button data-category="application">
                   <b>Application</b>
-                  <span>What becomes useful.</span>
+                  <span>How an idea becomes useful.</span>
                 </button>
               </div>
 
               <div>
                 <section class="category-panel" data-category-panel="presentation" data-active="true">
                   <h3>Presentation Layer</h3>
-                  <p>Estate model, gems, categories, page orbit, Map / Portal miniature, and blueprint demonstrations live here.</p>
+                  <p>This is the plain visitor experience: choose, scan, preview, enter, return.</p>
                 </section>
                 <section class="category-panel" data-category-panel="structure" hidden>
                   <h3>Structure Layer</h3>
-                  <p>Structure explains the under-hood order without becoming the public-facing experience.</p>
+                  <p>This is the hidden order that keeps the tour from becoming confusing.</p>
                 </section>
                 <section class="category-panel" data-category-panel="proof" hidden>
                   <h3>Proof Layer</h3>
-                  <p>The Lab, route readiness, status, and diagnostic coherence belong to proof.</p>
+                  <p>This is where route readiness, checks, and measurement live.</p>
                 </section>
                 <section class="category-panel" data-category-panel="application" hidden>
                   <h3>Application Layer</h3>
-                  <p>Products and Frontier Workshop Yard show how concepts move toward usable value.</p>
+                  <p>This is where the site points toward tools, products, and usable public value.</p>
                 </section>
               </div>
             </div>
@@ -248,16 +251,16 @@
 
           <section class="feature-detail" data-feature-detail="return" data-focus-section="return" hidden>
             <b>Return to Orbit Demo</b>
-            <h3>This button returns to the local Guide Orbit.</h3>
+            <h3>Return to Orbit resets the local page.</h3>
             <p>
-              Return to Orbit does not open the global Map / Portal. It clears local focus, restores all muted items, and re-centers this page at its own orbit.
+              Use Return to Orbit when you want to clear the current focus and start again from the Guide Orbit.
             </p>
             <a class="button gold return-to-orbit" href="#guide-orbit" data-return-to-orbit>Return to Orbit</a>
           </section>
 
           <section class="feature-detail" data-feature-detail="portal" data-focus-section="portal" hidden>
             <b>Map / Portal Miniature</b>
-            <h3>The portal is global estate navigation.</h3>
+            <h3>The portal is the larger estate map.</h3>
             <div class="mini-map">
               <div class="mini-node" style="--x:50;--y:15"><b>Main Menu</b><span>Regular website rooms</span></div>
               <div class="mini-node" style="--x:50;--y:50"><b>Map / Portal</b><span>Global estate navigation</span></div>
@@ -270,9 +273,9 @@
 
           <section class="feature-detail" data-feature-detail="blueprint" data-focus-section="blueprint" hidden>
             <b>Blueprint Jump Pad</b>
-            <h3>The blueprint uses room-shaped compartments with local jump targets.</h3>
+            <h3>The blueprint lets you scan the estate.</h3>
             <p>
-              Open Blueprint switches to the Presentation Layer, scrolls to the estate floorplan, selects the default room, and prepares the local scratch-surface jump deck.
+              Open the blueprint, tap a room, read the short preview, then either open the full page or return to the blueprint to keep exploring.
             </p>
             <button class="button gold" type="button" data-open-blueprint>Open Blueprint</button>
           </section>
@@ -291,9 +294,9 @@
           <div class="panel-inner">
             <div class="section-head">
               <div class="kicker">Presentation Layer</div>
-              <h2 id="presentation-title">Visitor-facing features live here.</h2>
+              <h2 id="presentation-title">Use this section like a guided map.</h2>
               <p>
-                This layer demonstrates the systems visitors see: orbits, gems, categories, Return to Orbit, Map / Portal miniature, estate blueprint rooms, and local scratch-surface jump stations.
+                Scan the rooms, tap one, preview what it does, then open the full page when you are ready. Return to Blueprint brings you back to the map. Return to Orbit resets the page.
               </p>
             </div>
 
@@ -344,16 +347,16 @@
                 <b data-blueprint-kicker>Selected Room</b>
                 <h3 data-blueprint-title>Atrium</h3>
                 <p data-blueprint-copy>
-                  The Atrium is the Mirrorland entrance room. It frames the immersive estate threshold before the visitor moves deeper into Atlas Study, world rooms, or Frontier.
+                  Atrium is the entrance into the Mirrorland side of the estate. It is the first step from the regular website into the more immersive world-facing experience.
                 </p>
                 <ul data-blueprint-list>
-                  <li>Location: Mirrorland Entrance Atrium</li>
-                  <li>Connects: Atlas Study, Frontier Workshop Yard, Compass Desk</li>
-                  <li>Action: Enter Atrium</li>
+                  <li>Purpose: enter the Mirrorland side of the estate</li>
+                  <li>Connects to: Atlas Study, Frontier Workshop Yard, Compass Desk</li>
+                  <li>Next move: enter Atrium or preview another room</li>
                 </ul>
                 <div class="actions">
                   <a class="button gold" href="/showroom/" data-blueprint-action>Enter Atrium</a>
-                  <button class="button blue" type="button" data-open-blueprint>Return to Blueprint</button>
+                  <button class="button blue" type="button" data-return-to-blueprint>Return to Blueprint</button>
                   <a class="button return-to-orbit" href="#guide-orbit" data-return-to-orbit>Return to Orbit</a>
                 </div>
               </aside>
@@ -362,166 +365,166 @@
             <section class="panel" id="scratch-surface-jump-deck" aria-labelledby="jump-deck-title" data-blueprint-jump-deck="true">
               <div class="panel-inner">
                 <div class="section-head">
-                  <div class="kicker">Scratch Surface Jump Deck</div>
-                  <h2 id="jump-deck-title">The map points here before it sends the visitor out.</h2>
+                  <div class="kicker">Room Previews</div>
+                  <h2 id="jump-deck-title">Tap a room above, then land on its preview here.</h2>
                   <p>
-                    The blueprint is the map. These scratch-surface stations explain the room locally. The full-page button then opens the actual route.
+                    Each preview gives you the plain purpose of the room, what it connects to, and where to go next.
                   </p>
                 </div>
 
                 <div class="demo-grid" aria-label="Blueprint local jump sections">
                   <section class="demo-card jump-surface" id="jump-compass" data-jump-section="compass" data-focus-section="compass" style="--demo:var(--sg-blue)">
                     <b>Compass Desk</b>
-                    <strong>Front Orientation Desk</strong>
-                    <p>Scratch the surface: Compass Desk is the public orientation point. It helps visitors regain direction before choosing a deeper room, route, or estate layer.</p>
-                    <p>Purpose: start, re-center, and choose a lawful next move.</p>
-                    <p>Connections: Door, Main Hall, Law Library, The Lab, Atrium.</p>
+                    <strong>Find your direction first.</strong>
+                    <p>Compass Desk is the place to re-center. Start here when the estate feels large or when you need a clean next move.</p>
+                    <p>Use it for orientation before moving into rooms, products, proof, or story layers.</p>
                     <div class="actions">
                       <a class="button blue" href="/">Open Compass</a>
+                      <button class="button blue" type="button" data-return-to-blueprint>Return to Blueprint</button>
                       <a class="button return-to-orbit" href="#guide-orbit" data-return-to-orbit>Return to Orbit</a>
                     </div>
                   </section>
 
                   <section class="demo-card jump-surface" id="jump-guide" data-jump-section="guide" data-focus-section="guide" style="--demo:var(--sg-gold)">
                     <b>Guide Desk</b>
-                    <strong>Flex Exhibit / Orientation Room</strong>
-                    <p>Scratch the surface: Guide Desk is the page that demonstrates Diamond Gate Bridge’s interface language in live form.</p>
-                    <p>Purpose: explain the estate by using the same systems the estate uses.</p>
-                    <p>Connections: Compass Desk, The Lab, Law Library, Atrium, Blueprint, Diagnostics.</p>
+                    <strong>This is the page that explains the page.</strong>
+                    <p>Guide Desk is the teaching room. It shows the estate’s buttons, maps, rooms, and movement patterns by letting you use them directly.</p>
+                    <p>Use it when you want the whole site to become easier to understand.</p>
                     <div class="actions">
                       <a class="button gold" href="/site-guide/">Open Guide Desk</a>
+                      <button class="button blue" type="button" data-return-to-blueprint>Return to Blueprint</button>
                       <a class="button return-to-orbit" href="#guide-orbit" data-return-to-orbit>Return to Orbit</a>
                     </div>
                   </section>
 
                   <section class="demo-card jump-surface" id="jump-main" data-jump-section="main" data-focus-section="main" style="--demo:var(--sg-gold)">
                     <b>Main Hall</b>
-                    <strong>Central Public Website Room</strong>
-                    <p>Scratch the surface: Main Hall stabilizes the public website before visitors branch into products, laws, proof, or Mirrorland.</p>
-                    <p>Purpose: provide the central public room for ordinary site movement.</p>
-                    <p>Connections: Compass Desk, Product Gallery, Law Library, Atrium.</p>
+                    <strong>The regular public center.</strong>
+                    <p>Main Hall is the ordinary website center. It keeps the public-facing side clear before you branch into products, laws, proof, or Mirrorland.</p>
+                    <p>Use it when you want the normal site path instead of the immersive estate path.</p>
                     <div class="actions">
                       <a class="button gold" href="/home/">Open Main Hall</a>
+                      <button class="button blue" type="button" data-return-to-blueprint>Return to Blueprint</button>
                       <a class="button return-to-orbit" href="#guide-orbit" data-return-to-orbit>Return to Orbit</a>
                     </div>
                   </section>
 
                   <section class="demo-card jump-surface" id="jump-atrium" data-jump-section="atrium" data-focus-section="atrium" style="--demo:var(--sg-gold)">
                     <b>Atrium</b>
-                    <strong>Mirrorland Entrance Atrium</strong>
-                    <p>Scratch the surface: Atrium is the immersive estate threshold where the visitor crosses from regular website context into Mirrorland-facing presentation.</p>
-                    <p>Purpose: introduce the Diamond Lattice object and prepare the visitor for rooms beyond the Door.</p>
-                    <p>Connections: Atlas Study, Portrait Hall, Universe Gallery, Frontier Workshop Yard.</p>
+                    <strong>The entrance into Mirrorland.</strong>
+                    <p>Atrium is the threshold. It moves the visitor from regular website context into the immersive estate experience.</p>
+                    <p>Use it when you are ready to step into the showpiece side of the site.</p>
                     <div class="actions">
                       <a class="button gold" href="/showroom/">Enter Atrium</a>
+                      <button class="button blue" type="button" data-return-to-blueprint>Return to Blueprint</button>
                       <a class="button return-to-orbit" href="#guide-orbit" data-return-to-orbit>Return to Orbit</a>
                     </div>
                   </section>
 
                   <section class="demo-card jump-surface" id="jump-atlas" data-jump-section="atlas" data-focus-section="atlas" style="--demo:var(--sg-blue)">
                     <b>Atlas Study</b>
-                    <strong>World-Study Chamber</strong>
-                    <p>Scratch the surface: Atlas Study is the estate’s world-study room. It gathers planetary doors, reference bodies, living environments, and world context.</p>
-                    <p>Purpose: choose a world to inspect or enter.</p>
-                    <p>Connections: ZIONTS Room, Audralia Conservatory, Hearth Room, H-Earth Annex.</p>
+                    <strong>The room for worlds.</strong>
+                    <p>Atlas Study gathers the world-facing routes. It is where planets, reference bodies, and world paths become easier to choose.</p>
+                    <p>Use it when you want to move from the estate into a specific world.</p>
                     <div class="actions">
                       <a class="button blue" href="/showroom/globe/">Open Atlas Study</a>
+                      <button class="button blue" type="button" data-return-to-blueprint>Return to Blueprint</button>
                       <a class="button return-to-orbit" href="#guide-orbit" data-return-to-orbit>Return to Orbit</a>
                     </div>
                   </section>
 
                   <section class="demo-card jump-surface" id="jump-zionts" data-jump-section="zionts" data-focus-section="zionts" style="--demo:var(--sg-blue)">
                     <b>ZIONTS Room</b>
-                    <strong>Pronounced Zience</strong>
-                    <p>Scratch the surface: ZIONTS is the visitor-facing identity for the room currently served under the Earth route. The map shows what the room means, not merely what the file path says.</p>
-                    <p>Purpose: resolve the Earth-path context into the intended ZIONTS / Zience room identity.</p>
-                    <p>Connections: Atlas Study, Audralia Conservatory, world-reference context.</p>
+                    <strong>Pronounced Zience.</strong>
+                    <p>ZIONTS is the room identity for the path currently served under Earth. The map shows the meaning of the room, not only the route name.</p>
+                    <p>Use it when you want the reference-world side of the Atlas Study.</p>
                     <div class="actions">
                       <a class="button blue" href="/showroom/globe/earth/">Enter ZIONTS</a>
+                      <button class="button blue" type="button" data-return-to-blueprint>Return to Blueprint</button>
                       <a class="button return-to-orbit" href="#guide-orbit" data-return-to-orbit>Return to Orbit</a>
                     </div>
                   </section>
 
                   <section class="demo-card jump-surface" id="jump-audralia" data-jump-section="audralia" data-focus-section="audralia" style="--demo:var(--sg-violet)">
                     <b>Audralia Conservatory</b>
-                    <strong>Constructive Living-World Path</strong>
-                    <p>Scratch the surface: Audralia Conservatory introduces the constructive world before its visible body, cockpit, terrain logic, and future systems are inspected elsewhere.</p>
-                    <p>Purpose: enter Audralia as a forming living-world path inside Mirrorland.</p>
-                    <p>Connections: Audralia Worldroom, Control Cockpit, Frontier Workshop Yard, Atlas Study.</p>
+                    <strong>The constructive living-world path.</strong>
+                    <p>Audralia Conservatory introduces the forming world before its deeper rooms, controls, terrain, and future systems are inspected.</p>
+                    <p>Use it when you want the possibility path rather than the warning path.</p>
                     <div class="actions">
                       <a class="button violet" href="/showroom/globe/audralia/">Enter Conservatory</a>
+                      <button class="button blue" type="button" data-return-to-blueprint>Return to Blueprint</button>
                       <a class="button return-to-orbit" href="#guide-orbit" data-return-to-orbit>Return to Orbit</a>
                     </div>
                   </section>
 
                   <section class="demo-card jump-surface" id="jump-worldroom" data-jump-section="worldroom" data-focus-section="worldroom" style="--demo:var(--sg-violet)">
                     <b>Audralia Worldroom</b>
-                    <strong>Visible World-Body Room</strong>
-                    <p>Scratch the surface: Audralia Worldroom gives a focused planet-body read while keeping final terrain, hydration, and completion claims held until earned.</p>
-                    <p>Purpose: inspect Audralia as a visible world-body.</p>
-                    <p>Connections: Audralia Conservatory, Control Cockpit, Frontier Workshop Yard.</p>
+                    <strong>See the world body.</strong>
+                    <p>Audralia Worldroom gives a focused look at the visible world-body without pretending the whole world is finished.</p>
+                    <p>Use it when you want to inspect the planet surface path directly.</p>
                     <div class="actions">
                       <a class="button violet" href="/showroom/globe/audralia/planet/">Inspect Worldroom</a>
+                      <button class="button blue" type="button" data-return-to-blueprint>Return to Blueprint</button>
                       <a class="button return-to-orbit" href="#guide-orbit" data-return-to-orbit>Return to Orbit</a>
                     </div>
                   </section>
 
                   <section class="demo-card jump-surface" id="jump-cockpit" data-jump-section="cockpit" data-focus-section="cockpit" style="--demo:var(--sg-cyan)">
                     <b>Control Cockpit</b>
-                    <strong>Audralia Instrument Chamber</strong>
-                    <p>Scratch the surface: Control Cockpit is where Audralia’s disposition, lattice, instrument, and control-facing readouts can be inspected.</p>
-                    <p>Purpose: operate and inspect Audralia’s instrument layer.</p>
-                    <p>Connections: Audralia Conservatory, Audralia Worldroom, The Lab, Frontier Workshop Yard.</p>
+                    <strong>Inspect the instrument room.</strong>
+                    <p>Control Cockpit is where Audralia’s readouts, controls, and instrument-facing views can be inspected.</p>
+                    <p>Use it when you want the control-room side of the world.</p>
                     <div class="actions">
                       <a class="button blue" href="/showroom/globe/audralia/disposition/">Open Cockpit</a>
+                      <button class="button blue" type="button" data-return-to-blueprint>Return to Blueprint</button>
                       <a class="button return-to-orbit" href="#guide-orbit" data-return-to-orbit>Return to Orbit</a>
                     </div>
                   </section>
 
                   <section class="demo-card jump-surface" id="jump-frontier" data-jump-section="frontier" data-focus-section="frontier" style="--demo:var(--sg-amber)">
                     <b>Frontier Workshop Yard</b>
-                    <strong>Applied Systems Yard</strong>
-                    <p>Scratch the surface: Frontier Workshop Yard is where future systems are pressure-tested before they are allowed to become part of Audralia’s constructive future.</p>
-                    <p>Purpose: study energy, water, waste, infrastructure, lattice, manuals, trajectory, shimmer, vision, and urban systems.</p>
-                    <p>Connections: Audralia Conservatory, Law Library, The Lab, Product Gallery.</p>
+                    <strong>Where future systems are tested.</strong>
+                    <p>Frontier Workshop Yard is the applied systems area. It is where energy, water, infrastructure, manuals, and future ideas move toward practical shape.</p>
+                    <p>Use it when you want the workshop side of the estate.</p>
                     <div class="actions">
                       <a class="button amber" href="/explore/frontier/">Enter Workshop Yard</a>
+                      <button class="button blue" type="button" data-return-to-blueprint>Return to Blueprint</button>
                       <a class="button return-to-orbit" href="#guide-orbit" data-return-to-orbit>Return to Orbit</a>
                     </div>
                   </section>
 
                   <section class="demo-card jump-surface" id="jump-product" data-jump-section="product" data-focus-section="product" style="--demo:var(--sg-gold)">
                     <b>Product Gallery</b>
-                    <strong>Public Product Value</strong>
-                    <p>Scratch the surface: Product Gallery shows how Diamond Gate Bridge turns concepts, systems, story-world objects, and practical tools into usable public value.</p>
-                    <p>Purpose: move from idea, exhibit, or system into an actual offering, object, tool, or product path.</p>
-                    <p>Connections: Main Hall, Host Portrait, Frontier Workshop Yard, Atrium.</p>
+                    <strong>Where value becomes usable.</strong>
+                    <p>Product Gallery shows how ideas, systems, tools, story-world objects, and practical offerings can become public-facing value.</p>
+                    <p>Use it when you want to move from concept to something usable.</p>
                     <div class="actions">
                       <a class="button gold" href="/products/">Open Product Gallery</a>
+                      <button class="button blue" type="button" data-return-to-blueprint>Return to Blueprint</button>
                       <a class="button return-to-orbit" href="#guide-orbit" data-return-to-orbit>Return to Orbit</a>
                     </div>
                   </section>
 
                   <section class="demo-card jump-surface" id="jump-lab" data-jump-section="lab" data-focus-section="lab" style="--demo:var(--sg-green)">
                     <b>The Lab</b>
-                    <strong>Measurement / Proof Room</strong>
-                    <p>Scratch the surface: The Lab measures route status, readiness signals, proof surfaces, receipts, and the relationship between ambition and verified function.</p>
-                    <p>Purpose: confirm whether a route, system, or page is coherent enough to trust.</p>
-                    <p>Connections: Law Library, Frontier Workshop Yard, H-Earth Lab Bench, Compass Desk.</p>
+                    <strong>Where the site checks itself.</strong>
+                    <p>The Lab is the measurement room. It helps separate what is working, what is held, and what still needs proof.</p>
+                    <p>Use it when you want status, readiness, or confirmation.</p>
                     <div class="actions">
                       <a class="button green" href="/gauges/">Open The Lab</a>
+                      <button class="button blue" type="button" data-return-to-blueprint>Return to Blueprint</button>
                       <a class="button return-to-orbit" href="#guide-orbit" data-return-to-orbit>Return to Orbit</a>
                     </div>
                   </section>
 
                   <section class="demo-card jump-surface" id="jump-law" data-jump-section="law" data-focus-section="law" style="--demo:var(--sg-ruby)">
                     <b>Law Library</b>
-                    <strong>Boundary / Coherence Room</strong>
-                    <p>Scratch the surface: Law Library holds the boundaries, rules, categories, and constraint logic that keep the estate from expanding without discipline.</p>
-                    <p>Purpose: preserve coherence, accountability, and consequence before the system scales.</p>
-                    <p>Connections: Council Room, The Lab, Frontier Workshop Yard, Compass Desk.</p>
+                    <strong>Where boundaries keep the estate coherent.</strong>
+                    <p>Law Library holds the rules, categories, and constraints that keep the site from expanding without discipline.</p>
+                    <p>Use it when you want the boundary layer before moving deeper.</p>
                     <div class="actions">
                       <a class="button" href="/laws/">Open Law Library</a>
+                      <button class="button blue" type="button" data-return-to-blueprint>Return to Blueprint</button>
                       <a class="button return-to-orbit" href="#guide-orbit" data-return-to-orbit>Return to Orbit</a>
                     </div>
                   </section>
@@ -537,9 +540,9 @@
           <div class="panel-inner">
             <div class="section-head">
               <div class="kicker">Navigation Layer</div>
-              <h2 id="navigation-title">Movement systems stay separated.</h2>
+              <h2 id="navigation-title">Choose the kind of movement you need.</h2>
               <p>
-                Main Menu exits to regular website rooms. Mirrorland Doors move through immersive estate rooms. Map / Portal is global estate navigation. Return to Orbit is local page movement.
+                Main Menu brings you back to regular website rooms. Mirrorland Doors keep you inside the immersive estate. Return to Blueprint brings you back to the map. Return to Orbit resets this page.
               </p>
             </div>
 
@@ -547,31 +550,31 @@
               <button class="demo-card" type="button" data-demo-card data-active="true" style="--demo:var(--sg-gold)">
                 <b>Main Menu</b>
                 <strong>Regular website rooms</strong>
-                <p>Compass Desk, Front Door, Main Hall, Law Library, Council Room, The Lab, Product Gallery, Host Portrait, and Guide Desk.</p>
+                <p>Use this when you want Compass, Main Hall, Laws, Governance, Gauges, Products, or the ordinary public site.</p>
               </button>
               <button class="demo-card" type="button" data-demo-card style="--demo:var(--sg-blue)">
                 <b>Mirrorland Doors</b>
                 <strong>Immersive estate rooms</strong>
-                <p>Atrium, Atlas Study, ZIONTS Room, Audralia Conservatory, Control Cockpit, and Frontier Workshop Yard.</p>
+                <p>Use this when you want Atrium, Atlas Study, ZIONTS, Audralia, Control Cockpit, or Frontier Workshop Yard.</p>
               </button>
               <button class="demo-card" type="button" data-demo-card style="--demo:var(--sg-green)">
                 <b>Map / Portal</b>
-                <strong>Global estate map</strong>
-                <p>The floating Map / Portal opens estate navigation and separates Mirrorland from regular website movement.</p>
+                <strong>The larger estate map</strong>
+                <p>The floating Map / Portal helps the visitor move between Mirrorland and the regular website.</p>
               </button>
               <button class="demo-card" type="button" data-demo-card style="--demo:var(--sg-amber)">
                 <b>Return to Orbit</b>
-                <strong>Local page reset</strong>
-                <p>Return to Orbit brings the visitor back to the current page’s own orbit, not the global Map / Portal.</p>
+                <strong>Reset this page</strong>
+                <p>Use this when you want to clear focus and return to the Guide Orbit.</p>
               </button>
               <button class="demo-card" type="button" data-demo-card style="--demo:var(--sg-violet)">
-                <b>Guide Desk</b>
-                <strong>Construction narrative</strong>
-                <p>Guide Desk demonstrates the interface language and explains the page systems.</p>
+                <b>Return to Blueprint</b>
+                <strong>Go back to the room map</strong>
+                <p>Use this when you are previewing a room and want to keep scanning the estate.</p>
               </button>
               <button class="demo-card" type="button" data-demo-card style="--demo:var(--sg-cyan)">
                 <b>Start Points</b>
-                <strong>Correct door for the job</strong>
+                <strong>Choose the right first door</strong>
                 <p>Compass for orientation, Atrium for Mirrorland, Atlas Study for worlds, The Lab for proof, Frontier for systems.</p>
               </button>
             </div>
@@ -581,25 +584,25 @@
                 <div class="section-head">
                   <div class="kicker">Visitor Position</div>
                   <h3>Where are you starting?</h3>
-                  <p>Choose the visitor posture that matches the moment.</p>
+                  <p>Choose the card that best matches your moment.</p>
                 </div>
 
                 <button class="demo-card route-choice-card" type="button" data-route-start="new" data-active="true" style="--demo:var(--sg-gold)">
                   <b>New Visitor</b>
                   <strong>I am new to the site.</strong>
-                  <p>Start with orientation, then move toward the right estate room.</p>
+                  <p>Start with orientation, then move toward the right room.</p>
                 </button>
 
                 <button class="demo-card route-choice-card" type="button" data-route-start="mirrorland" style="--demo:var(--sg-blue)">
                   <b>Inside Mirrorland</b>
                   <strong>I am already in the immersive estate.</strong>
-                  <p>Use Mirrorland Doors or exit to Main Menu when proof or products are needed.</p>
+                  <p>Stay inside Mirrorland, or exit to Main Menu when you need ordinary site rooms.</p>
                 </button>
 
                 <button class="demo-card route-choice-card" type="button" data-route-start="proof" style="--demo:var(--sg-green)">
                   <b>Need Proof / Readiness</b>
                   <strong>I need verification or measurement.</strong>
-                  <p>Move toward Law Library, The Lab, and route-readiness surfaces.</p>
+                  <p>Move toward Laws, The Lab, or readiness surfaces.</p>
                 </button>
 
                 <button class="demo-card route-choice-card" type="button" data-route-start="frontier" style="--demo:var(--sg-amber)">
@@ -618,32 +621,32 @@
 
                 <button class="demo-card route-choice-card" type="button" data-route-goal="orientation" data-active="true" style="--demo:var(--sg-gold)">
                   <b>Orientation</b>
-                  <strong>Understand the Website</strong>
-                  <p>Learn the rooms, menus, layers, and movement logic.</p>
+                  <strong>Understand the website.</strong>
+                  <p>Learn the rooms, movement options, and page layers.</p>
                 </button>
 
                 <button class="demo-card route-choice-card" type="button" data-route-goal="worlds" style="--demo:var(--sg-blue)">
                   <b>World / Story</b>
-                  <strong>Enter World / Story Layer</strong>
-                  <p>Move toward Atrium, Atlas Study, and world-facing rooms.</p>
+                  <strong>Enter the world layer.</strong>
+                  <p>Move toward Atrium, Atlas Study, and the world-facing rooms.</p>
                 </button>
 
                 <button class="demo-card route-choice-card" type="button" data-route-goal="proof" style="--demo:var(--sg-green)">
                   <b>Proof</b>
-                  <strong>Check Proof and Measurement</strong>
-                  <p>Use Law Library and The Lab for readiness, constraints, and verification.</p>
+                  <strong>Check measurement.</strong>
+                  <p>Use Law Library and The Lab for readiness and verification.</p>
                 </button>
 
                 <button class="demo-card route-choice-card" type="button" data-route-goal="frontier" style="--demo:var(--sg-amber)">
                   <b>Frontier</b>
-                  <strong>Study Frontier Systems</strong>
+                  <strong>Study future systems.</strong>
                   <p>Open the Workshop Yard and inspect applied systems.</p>
                 </button>
 
                 <button class="demo-card route-choice-card" type="button" data-route-goal="products" style="--demo:var(--sg-violet)">
                   <b>Products</b>
-                  <strong>Find Usable Public Value</strong>
-                  <p>Move toward Product Gallery and practical public-facing value.</p>
+                  <strong>Find usable public value.</strong>
+                  <p>Move toward Product Gallery and practical offerings.</p>
                 </button>
               </div>
 
@@ -676,9 +679,9 @@
           <div class="panel-inner">
             <div class="section-head">
               <div class="kicker">Under-the-Hood Diagnostics</div>
-              <h2 id="diagnostics-title">The structural core sits under the estate experience.</h2>
+              <h2 id="diagnostics-title">This is the machinery underneath the tour.</h2>
               <p>
-                Quadrupedic Quadrilateral Traversal is structural core logic only. The visitor experiences an estate. Under the estate, the structure uses a 4 × 4 field and a 16 × 16 diagnostic spectrum.
+                The visitor sees rooms, maps, and previews. Under the surface, the page is organized by highlight zones, lens switching, blueprint scan mode, a route-choice board, and a 4 × 4 / 16 × 16 / 256-state diagnostic structure.
               </p>
             </div>
 
@@ -716,13 +719,13 @@
               </div>
 
               <div class="note-card">
-                <b>4 × 4 Structural Field</b>
-                <h3>Sixteen coordinated positions.</h3>
+                <b>4 × 4 Field</b>
+                <h3>Sixteen structural positions.</h3>
                 <p>
-                  The 4 × 4 field crosses four directional legs with four functional lines. This creates sixteen structural positions for reading placement, function, and movement.
+                  The 4 × 4 field is the page’s compact structural map. It helps separate orientation, expression, proof, and application across directional positions.
                 </p>
                 <p>
-                  This is under-the-hood structure. It supports the public estate experience without replacing it.
+                  This is not the public story. It is the under-page organization that keeps the public story readable.
                 </p>
               </div>
             </div>
@@ -731,13 +734,21 @@
               <div class="spectrum-16x16" data-select-group="spectrum" aria-label="16 by 16 diagnostic spectrum"></div>
 
               <div class="note-card">
-                <b>16 × 16 Diagnostic Spectrum</b>
-                <h3>256-state global diagnostic scope.</h3>
+                <b>16 × 16 Spectrum</b>
+                <h3>256-state diagnostic scope.</h3>
                 <p>
-                  Each of the sixteen positions can be checked against the full sixteen-position field. That produces a 256-state diagnostic scope for coherence, readiness, movement, proof, and application.
+                  The 16 × 16 spectrum expands the structure into 256 possible diagnostic states. This helps the page track coherence without making the visitor read the machinery first.
                 </p>
                 <p data-spectrum-readout>Selected state: none.</p>
               </div>
+            </div>
+
+            <div class="note-card">
+              <b>Highlight Zone Logic</b>
+              <h3>Different zones stay independent.</h3>
+              <p>
+                Guide Orbit, Page Lenses, Blueprint Rooms, Room Previews, Visitor Position cards, Destination Goal cards, Category demos, Matrix cells, and Spectrum cells each have their own local selection behavior. Return to Orbit is the whole-page reset.
+              </p>
             </div>
 
             <div class="actions">
@@ -752,9 +763,9 @@
           <div class="panel-inner">
             <div class="section-head">
               <div class="kicker">Construction Ledger</div>
-              <h2 id="ledger-title">The build method is part of the story.</h2>
+              <h2 id="ledger-title">The build story stays here.</h2>
               <p>
-                This page records the construction posture without forcing receipts into the visitor-facing presentation layer.
+                This tab keeps construction facts, implementation receipts, and proof language separate from the visitor tutorial.
               </p>
             </div>
 
@@ -778,21 +789,21 @@
               </article>
 
               <article class="ledger-card">
-                <b>Contract</b>
-                <strong>SITE_GUIDE_ROUTE_CHOICE_BOARD_ZONE_ALIGNMENT_CACHE_BUST_HTML_TNT_v1</strong>
-                <p>HTML cache-bust renewal for loading the Route Choice Board zone-alignment CSS while preserving the active controller lane.</p>
+                <b>Active HTML Contract</b>
+                <strong>SITE_GUIDE_BLUEPRINT_SCAN_TUTORIAL_COPY_HTML_TNT_v1</strong>
+                <p>HTML renewal for scan-first blueprint behavior, tutorial expression, cache alignment, and explicit Return to Blueprint hooks.</p>
+              </article>
+
+              <article class="ledger-card">
+                <b>Support Contracts</b>
+                <strong>Blueprint scan controller + scan-mode CSS.</strong>
+                <p>JS: SITE_GUIDE_BLUEPRINT_SCAN_MODE_CONTROLLER_TNT_v1. CSS: SITE_GUIDE_BLUEPRINT_SCAN_MODE_ZONE_CSS_TNT_v1.</p>
               </article>
 
               <article class="ledger-card">
                 <b>Boundaries</b>
                 <strong>No generated image, no GraphicBox, no canvas, no WebGL.</strong>
                 <p>The page uses native source code only.</p>
-              </article>
-
-              <article class="ledger-card">
-                <b>Purpose</b>
-                <strong>Explain by demonstration.</strong>
-                <p>The page demonstrates the same interaction patterns it explains.</p>
               </article>
             </div>
 
@@ -804,9 +815,9 @@
       </section>
 
       <section class="final-band">
-        <h2>Guide Desk is the flex page and jump pad.</h2>
+        <h2>Use the map, preview the room, then enter when ready.</h2>
         <p>
-          Presentation, navigation, diagnostics, and construction are separated. The blueprint has local scratch-surface destinations. The route choice board gives visitors a native estate interface for choosing where they are and where they need to go.
+          Guide Desk now separates the visitor tour from the technical machinery. The public layer stays simple. The under-the-hood layer keeps the structure. The ledger keeps the build receipts.
         </p>
         <div class="actions">
           <a class="button gold return-to-orbit" href="#guide-orbit" data-return-to-orbit>Return to Orbit</a>
@@ -816,7 +827,7 @@
       </section>
 
       <template class="receipt" id="site-guide-receipt" data-route-receipt>
-SITE_GUIDE_ROUTE_CHOICE_BOARD_ZONE_ALIGNMENT_CACHE_BUST_HTML_TNT_v1
+SITE_GUIDE_BLUEPRINT_SCAN_TUTORIAL_COPY_HTML_TNT_v1
 route=/site-guide/
 classification=main_menu_website_room
 mirrorland_door=false
@@ -825,8 +836,16 @@ flex_exhibit=true
 three_file_architecture=true
 css=/assets/site-guide/site-guide.css
 js=/assets/site-guide/site-guide.js
+controller_contract=SITE_GUIDE_BLUEPRINT_SCAN_MODE_CONTROLLER_TNT_v1
+css_contract=SITE_GUIDE_BLUEPRINT_SCAN_MODE_ZONE_CSS_TNT_v1
+previous_html_contract=SITE_GUIDE_ROUTE_CHOICE_BOARD_ZONE_ALIGNMENT_CACHE_BUST_HTML_TNT_v1
+cache_bust=true
+tutorial_expression=true
+technical_layer_separated=true
+blueprint_scan_mode=true
 focus_controller=true
 open_blueprint_controller=true
+return_to_blueprint_controller=true
 return_to_orbit_reset=true
 scroll_activation=true
 blueprint_jump_pad=true
@@ -837,9 +856,6 @@ native_select_planner=false
 visitor_position_cards=true
 destination_goal_cards=true
 recommended_path_rail=true
-controller_contract=SITE_GUIDE_ROUTE_CHOICE_BOARD_CONTROLLER_TNT_v1
-css_contract=SITE_GUIDE_ROUTE_CHOICE_BOARD_ZONE_ALIGNMENT_CSS_TNT_v1
-cache_bust=true
 highlight_zone_alignment=true
 route_start_zone_independent=true
 route_goal_zone_independent=true
@@ -872,7 +888,7 @@ webgl=false
     </main>
 
     <footer>
-      SITE_GUIDE_ROUTE_CHOICE_BOARD_ZONE_ALIGNMENT_CACHE_BUST_HTML_TNT_v1 · /site-guide/ · Guide Desk · Route Choice Board zone-alignment cache-bust · Native HTML/CSS/JS.
+      SITE_GUIDE_BLUEPRINT_SCAN_TUTORIAL_COPY_HTML_TNT_v1 · /site-guide/ · Guide Desk · Blueprint scan tutorial copy · Native HTML/CSS/JS.
     </footer>
   </div>
 </body>

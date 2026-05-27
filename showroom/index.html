@@ -1,26 +1,28 @@
 <!-- TARGET FILE: /showroom/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- SHOWROOM_MIRRORLAND_DOOR_OBJECT_DROPDOWN_CONTROL_REALIGNMENT_HTML_TNT_v1 -->
+<!-- SHOWROOM_MIRRORLAND_TOP_PORTAL_TWO_VIEW_OBJECT_CONTROL_HTML_TNT_v1 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/"
   data-page="showroom"
-  data-version="G2-DOOR-OBJECT-DROPDOWN-CONTROL-REALIGNMENT"
-  data-contract="SHOWROOM_MIRRORLAND_DOOR_OBJECT_DROPDOWN_CONTROL_REALIGNMENT_HTML_TNT_v1"
-  data-previous-contract="SHOWROOM_MIRRORLAND_DOOR_OBJECT_CONTEXT_CACHE_ALIGNMENT_HTML_TNT_v1"
-  data-baseline-contract="SHOWROOM_MIRRORLAND_DOOR_OBJECT_CONTEXT_CACHE_ALIGNMENT_HTML_TNT_v1"
+  data-version="G2-TOP-PORTAL-TWO-VIEW-OBJECT-CONTROL"
+  data-contract="SHOWROOM_MIRRORLAND_TOP_PORTAL_TWO_VIEW_OBJECT_CONTROL_HTML_TNT_v1"
+  data-previous-contract="SHOWROOM_MIRRORLAND_DOOR_OBJECT_DROPDOWN_CONTROL_REALIGNMENT_HTML_TNT_v1"
+  data-baseline-contract="SHOWROOM_MIRRORLAND_DOOR_OBJECT_DROPDOWN_CONTROL_REALIGNMENT_HTML_TNT_v1"
   data-contract-family="SHOWROOM_DIAMOND_G2_FULL_CONTRACT_RENEWAL_THREE_FILE_FAMILY_v1"
-  data-role="door-object-dropdown-control-realignment"
+  data-role="top-portal-two-view-object-control"
   data-public-work="SHADOWS_NEVER_SHATTER_IN_MIRRORLAND"
   data-primary-subject="mirrorland"
   data-door-object="diamond-lattice"
-  data-context-renewal="door-object-dropdown-control-realignment"
+  data-context-renewal="top-portal-context-and-two-view-object-control"
   data-page-is-door-context="true"
   data-this-is-door-to-mirrorland="true"
-  data-top-context-above-object="true"
-  data-context-dropdowns-active="true"
-  data-object-controls-condensed="true"
+  data-top-portal-context-active="true"
+  data-floating-map-context-at-top="true"
+  data-object-controls-two-view="true"
+  data-public-object-control-options="object-view,lattice-view"
+  data-technical-control-options-hidden="true"
   data-object-controls-immediately-below-object="true"
   data-object-meaning-dropdown="true"
   data-route-jump-cards-removed="true"
@@ -54,8 +56,8 @@
   data-copy-law="entry-not-belief"
   data-public-thesis="this-is-the-door-to-mirrorland"
   data-object-thesis="the-diamond-lattice-is-the-object-at-the-door"
-  data-dimensional-options="object,memory,behind,through,full"
-  data-visual-variants="physical-gem-core-spiral-v4-restored"
+  data-dimensional-options="object,lattice"
+  data-visual-variants="object-view,lattice-view"
   data-object-only-physical-gem="true"
   data-object-only-dots="false"
   data-object-only-lattice="false"
@@ -82,7 +84,7 @@
   <title>This Is the Door to Mirrorland · Diamond Lattice</title>
   <meta
     name="description"
-    content="This is the Door to Mirrorland. The Diamond Lattice is the object at the threshold, and the floating Map Portal owns movement through the cardinal room blueprint."
+    content="This is the Door to Mirrorland. The floating Map Portal is the movement layer, and the Diamond Lattice is the object at the Door."
   >
 
   <link
@@ -458,7 +460,7 @@
       position:relative;
       z-index:2;
       display:grid;
-      grid-template-columns:repeat(5,minmax(0,1fr));
+      grid-template-columns:repeat(4,minmax(0,1fr));
       gap:.62rem;
       align-items:start;
     }
@@ -469,8 +471,7 @@
 
     .context-detail,
     .object-meaning-detail,
-    .object-control-tray,
-    .portal-context-compact{
+    .object-control-tray{
       border:1px solid rgba(243,200,111,.22);
       border-radius:1.05rem;
       background:
@@ -483,8 +484,7 @@
 
     .context-detail summary,
     .object-meaning-detail summary,
-    .object-control-tray summary,
-    .portal-context-compact summary{
+    .object-control-tray summary{
       list-style:none;
       min-height:2.75rem;
       display:flex;
@@ -502,15 +502,13 @@
 
     .context-detail summary::-webkit-details-marker,
     .object-meaning-detail summary::-webkit-details-marker,
-    .object-control-tray summary::-webkit-details-marker,
-    .portal-context-compact summary::-webkit-details-marker{
+    .object-control-tray summary::-webkit-details-marker{
       display:none;
     }
 
     .context-detail summary::after,
     .object-meaning-detail summary::after,
-    .object-control-tray summary::after,
-    .portal-context-compact summary::after{
+    .object-control-tray summary::after{
       content:"+";
       color:rgba(230,238,255,.70);
       font-size:1rem;
@@ -519,8 +517,7 @@
 
     .context-detail[open] summary::after,
     .object-meaning-detail[open] summary::after,
-    .object-control-tray[open] summary::after,
-    .portal-context-compact[open] summary::after{
+    .object-control-tray[open] summary::after{
       content:"–";
       color:var(--gold2);
     }
@@ -622,75 +619,63 @@
       padding:0 1rem 1rem;
     }
 
-    .control-grid{
+    .two-view-buttons{
       display:grid;
-      grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);
-      gap:.75rem;
-      align-items:start;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.7rem;
+      align-items:stretch;
     }
 
-    .control-group{
-      display:grid;
-      gap:.5rem;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:1rem;
-      padding:.75rem;
-      background:rgba(255,255,255,.028);
-    }
-
-    .control-group b,
-    .status-strip b{
-      color:var(--gold);
-      font-size:.62rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .lens-buttons,
-    .dimension-buttons{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.5rem;
-    }
-
-    .lens-buttons button,
-    .dimension-buttons button{
-      min-height:2.35rem;
+    .two-view-buttons button{
+      min-height:3.1rem;
       border:1px solid rgba(184,205,255,.16);
-      border-radius:999px;
-      padding:.55rem .75rem;
-      color:rgba(230,238,255,.84);
-      background:rgba(255,255,255,.04);
-      font-size:.64rem;
+      border-radius:1rem;
+      padding:.8rem .9rem;
+      color:rgba(230,238,255,.88);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(243,200,111,.09),transparent 75%),
+        rgba(255,255,255,.04);
+      font-size:.78rem;
       font-weight:950;
-      letter-spacing:.08em;
+      letter-spacing:.09em;
       text-transform:uppercase;
       cursor:pointer;
       font-family:inherit;
     }
 
-    .lens-buttons button[data-active],
-    .lens-buttons button[aria-pressed="true"],
-    .dimension-buttons button[data-active],
-    .dimension-buttons button[aria-pressed="true"]{
+    .two-view-buttons button[data-active],
+    .two-view-buttons button[aria-pressed="true"]{
       color:#06100b;
       border-color:rgba(243,200,111,.88);
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
     }
 
-    .dimension-readout{
-      display:grid;
-      gap:.15rem;
-      padding:.72rem;
-      border:1px solid rgba(255,255,255,.11);
-      border-radius:1rem;
-      background:rgba(255,255,255,.035);
+    .two-view-note{
+      color:rgba(230,238,255,.72);
+      font-size:.86rem;
+      line-height:1.38;
     }
 
-    .dimension-readout span{
-      color:rgba(230,238,255,.85);
-      font-size:.95rem;
-      font-weight:850;
+    .technical-control-bridge{
+      position:absolute!important;
+      width:1px!important;
+      height:1px!important;
+      overflow:hidden!important;
+      clip:rect(0,0,0,0)!important;
+      clip-path:inset(50%)!important;
+      white-space:nowrap!important;
+      pointer-events:none!important;
+      opacity:0!important;
+    }
+
+    .technical-control-bridge button{
+      position:absolute!important;
+      width:1px!important;
+      height:1px!important;
+      padding:0!important;
+      margin:0!important;
+      border:0!important;
+      overflow:hidden!important;
     }
 
     .status-strip{
@@ -742,43 +727,23 @@
     }
 
     .button:hover,
-    .button:focus-visible{
+    .button:focus-visible,
+    .two-view-buttons button:hover,
+    .two-view-buttons button:focus-visible{
       transform:translateY(-2px);
       border-color:rgba(243,200,111,.62);
       outline:none;
     }
 
-    .portal-context-compact{
-      display:block;
-    }
-
-    .portal-compact-grid{
-      display:grid;
-      grid-template-columns:repeat(5,minmax(0,1fr));
-      gap:.6rem;
-      padding:0 .9rem .9rem;
-    }
-
-    .portal-compact-grid div{
-      display:grid;
-      gap:.24rem;
-      border:1px solid rgba(255,255,255,.11);
-      border-radius:.95rem;
-      padding:.7rem;
-      background:rgba(255,255,255,.032);
-    }
-
-    .portal-compact-grid strong{
-      color:var(--gold);
-      font-size:.62rem;
-      letter-spacing:.11em;
-      text-transform:uppercase;
-    }
-
-    .portal-compact-grid span{
-      color:rgba(230,238,255,.80);
-      font-size:.82rem;
-      line-height:1.32;
+    .movement-reminder{
+      margin-top:.2rem;
+      border:1px solid rgba(143,240,195,.22);
+      border-radius:1rem;
+      padding:.85rem 1rem;
+      color:rgba(230,238,255,.78);
+      background:rgba(143,240,195,.045);
+      font-size:.9rem;
+      line-height:1.4;
     }
 
     .receipt{
@@ -809,8 +774,6 @@
     @media (max-width:1050px){
       .context-accordion{grid-template-columns:repeat(2,minmax(0,1fr))}
       .object-meaning-accordion{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .control-grid{grid-template-columns:1fr}
-      .portal-compact-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
     @media (max-width:760px){
@@ -823,7 +786,7 @@
       .threshold{padding:1rem}
       .context-accordion,
       .object-meaning-accordion,
-      .portal-compact-grid{grid-template-columns:1fr}
+      .two-view-buttons{grid-template-columns:1fr}
       .diamond-viewport-card{min-height:34rem}
       .status-strip{display:grid}
       .status-strip .actions{width:100%}
@@ -872,13 +835,13 @@
 
     <main id="main">
       <section class="panel threshold" aria-labelledby="page-title">
-        <div class="kicker">Threshold Context</div>
+        <div class="kicker">Map / Portal · Door Context</div>
 
         <h1 id="page-title">This is the Door to Mirrorland.</h1>
 
         <p class="lead">
-          The Showroom is the threshold. The Diamond Lattice is the object at the Door.
-          The floating Map / Portal carries movement through the cardinal room blueprint after the threshold is understood.
+          The floating Map / Portal is the movement layer. The Diamond Lattice is the object at the Door.
+          The Showroom explains the threshold; the portal carries movement through the cardinal room blueprint.
         </p>
 
         <div class="quote">
@@ -893,6 +856,13 @@
             </div>
           </details>
 
+          <details class="context-detail" open>
+            <summary>Map / Portal</summary>
+            <div class="detail-copy">
+              <p>The floating Map / Portal carries movement through the cardinal room blueprint. Navigation belongs to the portal.</p>
+            </div>
+          </details>
+
           <details class="context-detail">
             <summary>Object</summary>
             <div class="detail-copy">
@@ -901,23 +871,9 @@
           </details>
 
           <details class="context-detail">
-            <summary>Mirror</summary>
+            <summary>Mirror / Shadow</summary>
             <div class="detail-copy">
-              <p>A mirror can shatter when the image cannot survive pressure.</p>
-            </div>
-          </details>
-
-          <details class="context-detail">
-            <summary>Shadow</summary>
-            <div class="detail-copy">
-              <p>A shadow cannot shatter because it remains bound to what casts it.</p>
-            </div>
-          </details>
-
-          <details class="context-detail">
-            <summary>Portal</summary>
-            <div class="detail-copy">
-              <p>The floating Map / Portal carries movement through the cardinal room blueprint. This page explains the Door; the portal owns navigation.</p>
+              <p>A mirror can shatter when the image cannot survive pressure. A shadow cannot shatter because it remains bound to what casts it.</p>
             </div>
           </details>
         </div>
@@ -928,7 +884,7 @@
         <h2 id="diamond-title">The object answers before movement begins.</h2>
 
         <p>
-          Crystal Form shows the visible body. Lattice Structure opens the hidden pattern. The Diamond Lattice is inspected locally at the Door.
+          Object View shows the visible body. Lattice View opens the hidden pattern.
         </p>
 
         <div class="diamond-layout">
@@ -959,32 +915,35 @@
               <summary>Object Controls</summary>
 
               <div class="object-control-body">
-                <div class="control-grid">
-                  <div class="control-group">
-                    <b>Lens</b>
-                    <div class="lens-buttons">
-                      <button type="button" data-diamond-lens="crystal" aria-pressed="true" data-active>Crystal Form</button>
-                      <button type="button" data-diamond-lens="lattice" aria-pressed="false">Lattice Structure</button>
-                    </div>
-                  </div>
+                <div class="two-view-buttons" aria-label="Diamond Lattice two-view controls">
+                  <button
+                    type="button"
+                    data-diamond-lens="crystal"
+                    data-diamond-dimension="object"
+                    aria-pressed="true"
+                    data-active
+                  >Object View</button>
 
-                  <div class="control-group">
-                    <b>Visual Variant</b>
-                    <div class="dimension-readout">
-                      <span data-diamond-dimension-label>Object Only</span>
-                    </div>
-                    <div class="dimension-buttons">
-                      <button type="button" data-diamond-dimension="object" aria-pressed="true" data-active>Object Only</button>
-                      <button type="button" data-diamond-dimension="memory" aria-pressed="false">World Memory</button>
-                      <button type="button" data-diamond-dimension="behind" aria-pressed="false">Lattice Behind</button>
-                      <button type="button" data-diamond-dimension="through" aria-pressed="false">Lattice Through</button>
-                      <button type="button" data-diamond-dimension="full" aria-pressed="false">Full Proof</button>
-                    </div>
-                  </div>
+                  <button
+                    type="button"
+                    data-diamond-lens="lattice"
+                    aria-pressed="false"
+                  >Lattice View</button>
+                </div>
+
+                <p class="two-view-note">
+                  Public controls are reduced to two views. Object View shows the body. Lattice View opens the pattern.
+                </p>
+
+                <div class="technical-control-bridge" aria-hidden="true" data-technical-control-options-hidden="true">
+                  <button type="button" data-diamond-dimension="memory" aria-pressed="false" tabindex="-1">World Memory</button>
+                  <button type="button" data-diamond-dimension="behind" aria-pressed="false" tabindex="-1">Lattice Behind</button>
+                  <button type="button" data-diamond-dimension="through" aria-pressed="false" tabindex="-1">Lattice Through</button>
+                  <button type="button" data-diamond-dimension="full" aria-pressed="false" tabindex="-1">Full Proof</button>
                 </div>
 
                 <div class="status-strip">
-                  <span data-showroom-diamond-status>Object Only active · physical faceted gem · no lattice</span>
+                  <span data-showroom-diamond-status>Object View active · physical faceted gem</span>
                   <div class="actions">
                     <button class="button" type="button" data-showroom-diamond-inspect>Inspect</button>
                     <button class="button" type="button" data-showroom-diamond-reset>Reset</button>
@@ -997,14 +956,14 @@
               <details class="object-meaning-detail">
                 <summary>Body</summary>
                 <div class="detail-copy">
-                  <p>Crystal Form holds the visible body of the object.</p>
+                  <p>Object View holds the visible body of the Diamond Lattice.</p>
                 </div>
               </details>
 
               <details class="object-meaning-detail">
                 <summary>Pattern</summary>
                 <div class="detail-copy">
-                  <p>Lattice Structure opens the hidden order behind the visible body.</p>
+                  <p>Lattice View opens the hidden order behind the visible body.</p>
                 </div>
               </details>
 
@@ -1018,67 +977,31 @@
               <details class="object-meaning-detail">
                 <summary>Boundary</summary>
                 <div class="detail-copy">
-                  <p>The object is not the route directory. The portal carries movement.</p>
+                  <p>The object is not the route directory. The floating Map / Portal carries movement.</p>
                 </div>
               </details>
+            </div>
+
+            <div class="movement-reminder">
+              Movement lives in the floating Map / Portal.
             </div>
           </div>
         </div>
       </section>
 
-      <section id="portal-context" class="panel section" aria-labelledby="portal-context-title">
-        <div class="kicker">Operational Context</div>
-        <h2 id="portal-context-title">The floating Map / Portal owns movement.</h2>
-
-        <details class="portal-context-compact" open>
-          <summary>Portal Operating Layer</summary>
-
-          <div class="detail-copy">
-            <p>
-              The page explains the Door and the object. The floating Map / Portal opens the cardinal house blueprint for movement.
-            </p>
-          </div>
-
-          <div class="portal-compact-grid">
-            <div>
-              <strong>Mirrorland Menu</strong>
-              <span>Mirrorland movement lives inside the portal room map.</span>
-            </div>
-
-            <div>
-              <strong>Main Menu</strong>
-              <span>Main-site options remain separated from the Mirrorland field.</span>
-            </div>
-
-            <div>
-              <strong>Compass</strong>
-              <span>The Compass is the main-site orientation layer, not the Mirrorland Portal.</span>
-            </div>
-
-            <div>
-              <strong>Frontier</strong>
-              <span>Frontier belongs to Mirrorland and sits in the West deployment wing inside the portal.</span>
-            </div>
-
-            <div>
-              <strong>Movement</strong>
-              <span>Movement belongs to the portal, not to page-level route cards.</span>
-            </div>
-          </div>
-        </details>
-      </section>
-
       <template id="route-receipt" class="receipt" data-route-receipt>
-SHOWROOM_MIRRORLAND_DOOR_OBJECT_DROPDOWN_CONTROL_REALIGNMENT_HTML_TNT_v1
-previous=SHOWROOM_MIRRORLAND_DOOR_OBJECT_CONTEXT_CACHE_ALIGNMENT_HTML_TNT_v1
-baseline=SHOWROOM_MIRRORLAND_DOOR_OBJECT_CONTEXT_CACHE_ALIGNMENT_HTML_TNT_v1
+SHOWROOM_MIRRORLAND_TOP_PORTAL_TWO_VIEW_OBJECT_CONTROL_HTML_TNT_v1
+previous=SHOWROOM_MIRRORLAND_DOOR_OBJECT_DROPDOWN_CONTROL_REALIGNMENT_HTML_TNT_v1
+baseline=SHOWROOM_MIRRORLAND_DOOR_OBJECT_DROPDOWN_CONTROL_REALIGNMENT_HTML_TNT_v1
 route=/showroom/
 html=/showroom/index.html
-page_role=door_object_dropdown_control_realignment
+page_role=top_portal_two_view_object_control
 this_is_door_to_mirrorland=true
-top_context_above_object=true
-context_dropdowns_active=true
-object_controls_condensed=true
+top_portal_context_active=true
+floating_map_context_at_top=true
+object_controls_two_view=true
+public_object_control_options=object-view,lattice-view
+technical_control_options_hidden=true
 object_controls_immediately_below_object=true
 object_meaning_dropdown=true
 route_jump_cards_removed=true
@@ -1106,7 +1029,7 @@ restored_renderer=SHOWROOM_DIAMOND_G2_PHYSICAL_GEM_RESTRAINED_LATTICE_CORE_SPIRA
 diamond_js_cache_key=SHOWROOM_DIAMOND_G2_PHYSICAL_GEM_RESTRAINED_LATTICE_CORE_SPIRAL_RENDERER_TNT_v4
 ui_js_cache_key=SHOWROOM_DIAMOND_G2_FULL_CONTRACT_RENEWAL_UI_TNT_v1_CHILD_CAPTURE
 three_file_authority=true
-visual_variants=physical_gem_core_spiral_v4_restored
+visual_variants=object-view,lattice-view
 object_only_physical_gem=true
 object_only_dots=false
 object_only_lattice=false
@@ -1117,7 +1040,7 @@ fibonacci_sequence_visible=1,1,2,3,5,8,13
 clean_diamond_viewport=true
 overlay_obstruction=false
 controls_under_diamond=true
-dimensional_options=object,memory,behind,through,full
+dimensional_options=object,lattice
 preserved_hooks=true
 mirrorland_narrative_active=true
 shadows_never_shatter_aligned=true
@@ -1139,12 +1062,12 @@ site_bootstrap_touched=false
 non_mirrorland_pages_touched=false
 audralia_runtime_touched=false
 planet_runtime_touched=false
-deploy_marker=SHOWROOM_MIRRORLAND_DOOR_OBJECT_DROPDOWN_CONTROL_REALIGNMENT_DEPLOY_MARKER_v1
+deploy_marker=SHOWROOM_MIRRORLAND_TOP_PORTAL_TWO_VIEW_OBJECT_CONTROL_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer>
-      This is the Door to Mirrorland · Diamond Lattice Object · Portal-owned movement.
+      This is the Door to Mirrorland · Object View / Lattice View · Portal-owned movement.
     </footer>
   </div>
 

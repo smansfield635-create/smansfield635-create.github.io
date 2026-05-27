@@ -1,47 +1,38 @@
-<!-- TARGET FILE: /nine-summits/index.html -->
+<!-- TARGET FILE: /nine-summits/universe/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- NINE_SUMMITS_SIMPLIFIED_UNIVERSE_CONCEPT_MAP_BLIP_HTML_TNT_v1 -->
+<!-- NINE_SUMMITS_UNIVERSE_SIMPLIFIED_NARRATIVE_MAP_BLIP_HTML_TNT_v1 -->
 <!doctype html>
 <html
   lang="en"
-  data-route="/nine-summits/"
-  data-page="nine-summits-public-gate"
-  data-contract="NINE_SUMMITS_SIMPLIFIED_UNIVERSE_CONCEPT_MAP_BLIP_HTML_TNT_v1"
-  data-previous-contract="NINE_SUMMITS_PUBLIC_GATE_LANE_ALIGNMENT_RENEWAL_TNT_v7"
-  data-role="public-system-gate-simplified"
+  data-route="/nine-summits/universe/"
+  data-page="nine-summits-universe"
+  data-contract="NINE_SUMMITS_UNIVERSE_SIMPLIFIED_NARRATIVE_MAP_BLIP_HTML_TNT_v1"
+  data-previous-contract="NINE_SUMMITS_UNIVERSE_WORLD_SETTING_MOTION_RENEWAL_TNT_v6"
+  data-role="mirrorworld-universe-narrative-field"
   data-core-message="the-climb-becomes-a-world"
-  data-primary-lanes="book-universe-audralia-voice"
-  data-book-lane="/nine-summits-of-love/"
-  data-universe-lane="/nine-summits/universe/"
-  data-audralia-lane="/showroom/globe/audralia/"
-  data-voice-lane="about-this-underdog-meet-sean-mansfield"
   data-page-simplified="true"
   data-page-subject-content-only="true"
   data-page-body-navigation-reduced="true"
-  data-top-nav-removed="true"
-  data-dropdown-menu-minimized="true"
+  data-dropdown-menu-removed="true"
+  data-accordion-menu-removed="true"
   data-route-directory-removed="true"
   data-jump-options-removed="true"
-  data-system-routes-section-removed="true"
-  data-lane-grid-removed="true"
-  data-voice-grid-removed="true"
-  data-final-action-cluster-removed="true"
   data-map-blip-added="true"
   data-floating-map-portal-active="true"
   data-map-blip-owns-navigation="true"
+  data-mirrorworld-page-blip-required="true"
   data-local-map-section="false"
   data-second-mirrorland-entrance="false"
-  data-blueprint-page-scoped="true"
-  data-blueprint-registry="/assets/manor-blueprint/manor.blueprint.registry.js"
+  data-animation-stage-preserved="true"
+  data-universe-motion-compatible="true"
+  data-motion-js="/nine-summits/universe/universe.motion.js"
   data-blueprint-css="/assets/manor-blueprint/manor.blueprint.css"
+  data-blueprint-registry="/assets/manor-blueprint/manor.blueprint.registry.js"
   data-blueprint-js="/assets/manor-blueprint/manor.blueprint.js"
-  data-animation-method="css-only"
-  data-orbit-animation="active"
-  data-label-gravity-lock="true"
-  data-js-required="false"
   data-generated-image="false"
   data-graphic-box="false"
   data-heavy-runtime-loaded="false"
+  data-canvas-runtime="false"
   data-streaming="false"
   data-visual-pass-claimed="false"
 >
@@ -49,10 +40,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Nine Summits · The Climb Becomes a World</title>
+  <title>Nine Summits Universe · The Climb Becomes a World</title>
   <meta
     name="description"
-    content="Nine Summits is the public system gate where the book, universe, Audralia, and voice lanes orbit one concept: the climb becomes a world. Navigation belongs to the floating Map Portal blip."
+    content="Nine Summits Universe is the world-setting field around the climb. The page preserves narrative, animation, and MirrorWorld context while movement belongs to the floating Map Portal blip."
   >
 
   <link
@@ -64,8 +55,8 @@
 
   <style>
     :root {
-      color-scheme: dark;
-      --bg:#02040b;
+      color-scheme:dark;
+      --bg:#02030a;
       --ink:#fff4d8;
       --muted:rgba(230,238,255,.78);
       --faint:rgba(230,238,255,.52);
@@ -75,14 +66,19 @@
       --green:#8ff0c3;
       --violet:#beaaff;
       --purple:#8f65ff;
-      --panel:rgba(9,15,31,.88);
+      --deep:#09051b;
+      --panel:rgba(8,11,28,.88);
       --line:rgba(184,205,255,.18);
-      --shadow:0 32px 110px rgba(0,0,0,.48);
+      --shadow:0 32px 110px rgba(0,0,0,.52);
       --max:1180px;
-      --field-turn-duration:52s;
-      --orbit-duration:36s;
-      --gem-float-duration:7s;
-      --center-pulse-duration:7.4s;
+      --phase:0deg;
+      --violet-phase:0deg;
+      --tilt:-12deg;
+      --glow-live:.36;
+      --violet-glow-live:.42;
+      --orbit-duration:44s;
+      --counter-duration:44s;
+      --core-duration:8s;
       --gem-cut:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
     }
 
@@ -105,11 +101,11 @@
       line-height:1.5;
       overflow-x:hidden;
       background:
-        radial-gradient(circle at 50% -8%,rgba(243,200,111,.22),transparent 28rem),
-        radial-gradient(circle at 12% 18%,rgba(143,101,255,.20),transparent 28rem),
-        radial-gradient(circle at 88% 30%,rgba(141,216,255,.16),transparent 28rem),
+        radial-gradient(circle at 50% -8%,rgba(243,200,111,.20),transparent 28rem),
+        radial-gradient(circle at 12% 18%,rgba(143,101,255,.24),transparent 28rem),
+        radial-gradient(circle at 88% 30%,rgba(141,216,255,.15),transparent 28rem),
         radial-gradient(circle at 50% 78%,rgba(143,240,195,.10),transparent 34rem),
-        linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
+        linear-gradient(180deg,#080713 0%,#030513 58%,#010207 100%);
       -webkit-font-smoothing:antialiased;
       text-rendering:geometricPrecision;
     }
@@ -136,20 +132,20 @@
       z-index:0;
       pointer-events:none;
       background:
-        conic-gradient(from 90deg at 50% 50%,
+        conic-gradient(from var(--violet-phase) at 50% 50%,
           transparent 0deg,
-          rgba(143,101,255,.08) 52deg,
+          rgba(143,101,255,.10) 52deg,
           transparent 108deg,
-          rgba(243,200,111,.06) 172deg,
+          rgba(243,200,111,.07) 172deg,
           transparent 224deg,
-          rgba(141,216,255,.07) 292deg,
+          rgba(141,216,255,.08) 292deg,
           transparent 360deg);
       filter:blur(42px);
-      opacity:.48;
-      animation:nineSummitsAuroraDrift 34s linear infinite;
+      opacity:.52;
+      animation:universeAuroraDrift 34s linear infinite;
     }
 
-    @keyframes nineSummitsAuroraDrift {
+    @keyframes universeAuroraDrift {
       from { transform:rotate(0deg) scale(1); }
       to { transform:rotate(360deg) scale(1); }
     }
@@ -158,18 +154,9 @@
 
     a:focus-visible,
     button:focus-visible,
-    summary:focus-visible,
     [tabindex]:focus-visible {
       outline:2px solid var(--gold);
       outline-offset:4px;
-    }
-
-    .svg-defs {
-      position:absolute;
-      width:0;
-      height:0;
-      overflow:hidden;
-      pointer-events:none;
     }
 
     .skip {
@@ -242,12 +229,6 @@
       gap:.18rem;
     }
 
-    .brand-copy strong {
-      font-size:clamp(1.08rem,3vw,1.7rem);
-      line-height:1;
-      letter-spacing:-.045em;
-    }
-
     .brand-copy span {
       color:var(--muted);
       font-size:.74rem;
@@ -256,9 +237,15 @@
       text-transform:uppercase;
     }
 
+    .brand-copy strong {
+      font-size:clamp(1.08rem,3vw,1.7rem);
+      line-height:1;
+      letter-spacing:-.045em;
+    }
+
     .header-note {
       justify-self:end;
-      max-width:23rem;
+      max-width:25rem;
       color:rgba(230,238,255,.66);
       font-size:.78rem;
       font-weight:850;
@@ -280,11 +267,11 @@
 
     .hero {
       position:relative;
-      min-height:clamp(22rem,40vw,31rem);
+      min-height:clamp(23rem,42vw,34rem);
       display:grid;
       align-content:center;
       gap:1rem;
-      padding:clamp(1.25rem,4vw,3rem);
+      padding:clamp(1.25rem,4.4vw,3.2rem);
       margin-top:.6rem;
       isolation:isolate;
     }
@@ -345,9 +332,9 @@
     h1 {
       margin:0;
       max-width:1000px;
-      font-size:clamp(3rem,9vw,6.8rem);
-      line-height:.86;
-      letter-spacing:-.102em;
+      font-size:clamp(3.05rem,9.4vw,7rem);
+      line-height:.84;
+      letter-spacing:-.108em;
       text-wrap:balance;
       position:relative;
       z-index:2;
@@ -356,7 +343,7 @@
     h2 {
       margin:0;
       color:var(--gold);
-      font-size:clamp(1.45rem,4.7vw,2.65rem);
+      font-size:clamp(1.45rem,4.7vw,2.75rem);
       line-height:.98;
       letter-spacing:-.07em;
       text-wrap:balance;
@@ -372,7 +359,7 @@
     }
 
     .lead {
-      max-width:930px;
+      max-width:950px;
       position:relative;
       z-index:2;
     }
@@ -398,42 +385,6 @@
       z-index:2;
     }
 
-    .quote {
-      max-width:980px;
-      padding:1rem 1.1rem;
-      border:1px solid rgba(190,170,255,.22);
-      border-radius:1.2rem;
-      color:rgba(236,229,255,.92);
-      background:rgba(143,101,255,.090);
-      font-weight:850;
-      position:relative;
-      z-index:2;
-    }
-
-    .subject-pills {
-      display:flex;
-      flex-wrap:wrap;
-      gap:.55rem;
-      position:relative;
-      z-index:2;
-    }
-
-    .subject-pills span {
-      display:inline-flex;
-      min-height:2.2rem;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(184,205,255,.14);
-      border-radius:999px;
-      padding:.48rem .75rem;
-      color:rgba(230,238,255,.78);
-      background:rgba(255,255,255,.035);
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-    }
-
     .section {
       margin-top:1.15rem;
       padding:clamp(1rem,3vw,1.45rem);
@@ -441,9 +392,9 @@
       gap:1.05rem;
     }
 
-    .gate-stage {
+    .motion-field {
       position:relative;
-      min-height:clamp(32rem,62vw,45rem);
+      min-height:clamp(35rem,66vw,50rem);
       display:grid;
       place-items:center;
       overflow:hidden;
@@ -451,15 +402,16 @@
       border:1px solid rgba(184,205,255,.13);
       border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
-        radial-gradient(circle at 50% 42%,rgba(243,200,111,.13),transparent 20rem),
-        radial-gradient(circle at 50% 52%,rgba(143,101,255,.14),transparent 25rem),
+        radial-gradient(circle at 50% 42%,rgba(243,200,111,calc(var(--glow-live) * .28)),transparent 20rem),
+        radial-gradient(circle at 50% 52%,rgba(143,101,255,calc(var(--violet-glow-live) * .35)),transparent 25rem),
         radial-gradient(circle at 50% 70%,rgba(141,216,255,.08),transparent 30rem),
-        linear-gradient(180deg,rgba(1,5,16,.68),rgba(2,6,16,.92));
+        linear-gradient(180deg,rgba(1,5,16,.68),rgba(2,6,16,.94));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      scroll-margin-top:7rem;
     }
 
-    .gate-stage::before,
-    .gate-stage::after {
+    .motion-field::before,
+    .motion-field::after {
       content:"";
       position:absolute;
       left:50%;
@@ -469,13 +421,13 @@
       pointer-events:none;
     }
 
-    .gate-stage::before {
-      width:min(80%,34rem);
-      height:min(80%,34rem);
+    .motion-field::before {
+      width:min(82%,38rem);
+      height:min(82%,38rem);
       border:1px solid rgba(243,200,111,.11);
       background:
         conic-gradient(
-          from 0deg,
+          from var(--phase),
           transparent 0deg,
           rgba(243,200,111,.13) 32deg,
           transparent 68deg,
@@ -487,162 +439,74 @@
           transparent 360deg
         );
       box-shadow:0 0 3rem rgba(143,101,255,.12);
-      opacity:.84;
-      animation:gateFieldTurn var(--field-turn-duration) linear infinite;
+      opacity:.86;
+      animation:fieldTurn 56s linear infinite;
     }
 
-    .gate-stage::after {
-      width:min(52%,22rem);
-      height:min(52%,22rem);
+    .motion-field::after {
+      width:min(56%,25rem);
+      height:min(56%,25rem);
       border:1px solid rgba(36,120,255,.15);
       box-shadow:
         inset 0 0 3rem rgba(36,120,255,.035),
         0 0 2.4rem rgba(190,170,255,.08);
-      animation:gateInnerFieldBreathe 8s ease-in-out infinite;
+      animation:innerBreathe 8s ease-in-out infinite;
     }
 
-    @keyframes gateFieldTurn {
+    @keyframes fieldTurn {
       to { transform:translate(-50%,-50%) rotate(360deg); }
     }
 
-    @keyframes gateInnerFieldBreathe {
+    @keyframes innerBreathe {
       0%,100% { opacity:.54; filter:brightness(.94); }
       50% { opacity:.86; filter:brightness(1.12); }
     }
 
-    .center-gem {
+    .world-core {
       position:absolute;
       left:50%;
       top:50%;
       z-index:5;
-      width:clamp(10.5rem,24vw,15rem);
-      height:clamp(7.7rem,17vw,10.9rem);
-      transform:translate(-50%,-50%);
+      width:clamp(12rem,25vw,17rem);
+      min-height:clamp(8.5rem,17vw,12rem);
+      transform:translate(-50%,-50%) rotate(var(--tilt));
       display:grid;
       place-items:center;
       text-align:center;
       pointer-events:none;
     }
 
-    .lane-orbit {
-      position:absolute;
-      left:50%;
-      top:50%;
-      z-index:4;
-      width:min(80%,34rem);
-      height:min(80%,34rem);
-      border-radius:999px;
-      transform:translate(-50%,-50%);
-      pointer-events:none;
-      animation:laneOrbitTurn var(--orbit-duration) linear infinite;
-      transform-origin:50% 50%;
-      will-change:transform;
-    }
-
-    @keyframes laneOrbitTurn {
-      from { transform:translate(-50%,-50%) rotate(0deg); }
-      to { transform:translate(-50%,-50%) rotate(360deg); }
-    }
-
-    .center-gem-core,
-    .lane-gem-core,
-    .lane-upright {
+    .world-core-shell,
+    .diamond-shell {
       position:absolute;
       inset:0;
       display:grid;
       place-items:center;
-      text-align:center;
-      transform-origin:50% 50%;
+      clip-path:var(--gem-cut);
+      border:1px solid rgba(255,244,216,.36);
+      background:
+        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.22) 21% 23%,transparent 24%),
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.30),rgba(243,200,111,.24),rgba(143,101,255,.30),rgba(36,120,255,.18),rgba(143,240,195,.12),rgba(255,255,255,.26)),
+        radial-gradient(circle at 50% 24%,rgba(255,255,255,.28),transparent 44%),
+        linear-gradient(145deg,rgba(70,45,116,.95),rgba(5,8,20,.98));
+      box-shadow:
+        0 1.4rem 3.5rem rgba(0,0,0,.46),
+        0 0 1.35rem rgba(143,101,255,.28),
+        0 0 2.5rem rgba(243,200,111,.12),
+        inset 0 1px 0 rgba(255,255,255,.14);
+      transition:border-color .18s ease,box-shadow .18s ease,filter .18s ease;
     }
 
-    .center-gem-core {
-      animation:centerPulse var(--center-pulse-duration) ease-in-out infinite;
+    .world-core-shell {
+      animation:corePulse var(--core-duration) ease-in-out infinite;
     }
 
-    @keyframes centerPulse {
+    @keyframes corePulse {
       0%,100% { transform:scale(1); filter:brightness(1); }
       50% { transform:scale(1.035); filter:brightness(1.13); }
     }
 
-    .lane-point {
-      --angle:0deg;
-      --radius:-15rem;
-      --lane-delay:0s;
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:clamp(8rem,17vw,10.2rem);
-      height:clamp(5.8rem,12.6vw,7.55rem);
-      margin-left:calc(clamp(8rem,17vw,10.2rem) / -2);
-      margin-top:calc(clamp(5.8rem,12.6vw,7.55rem) / -2);
-      display:grid;
-      place-items:center;
-      text-align:center;
-      pointer-events:auto;
-      background:transparent;
-      border:0;
-      transform:
-        rotate(var(--angle))
-        translateY(var(--radius))
-        rotate(calc(-1 * var(--angle)));
-      transition:filter .18s ease,scale .18s ease;
-    }
-
-    .lane-point .lane-upright {
-      animation:laneLabelGravityLock var(--orbit-duration) linear infinite reverse;
-      will-change:transform;
-    }
-
-    @keyframes laneLabelGravityLock {
-      from { transform:rotate(0deg); }
-      to { transform:rotate(360deg); }
-    }
-
-    .lane-point .lane-gem-core {
-      animation:laneGemFloat var(--gem-float-duration) ease-in-out infinite;
-      animation-delay:var(--lane-delay);
-    }
-
-    @keyframes laneGemFloat {
-      0%,100% { transform:translateY(0) scale(1); filter:brightness(1); }
-      50% { transform:translateY(-8px) scale(1.025); filter:brightness(1.12); }
-    }
-
-    .lane-point:hover,
-    .lane-point:focus-visible {
-      filter:brightness(1.12) saturate(1.08);
-      scale:1.045;
-      outline:none;
-    }
-
-    .lane-point:hover .lane-gem-core,
-    .lane-point:focus-visible .lane-gem-core {
-      animation-play-state:paused;
-      transform:translateY(-10px) scale(1.045);
-      filter:brightness(1.18);
-    }
-
-    .gate-gem-svg {
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-      overflow:visible;
-      pointer-events:none;
-      filter:
-        drop-shadow(0 1.15rem 1.35rem rgba(0,0,0,.36))
-        drop-shadow(0 0 1.15rem rgba(143,101,255,.20))
-        drop-shadow(0 0 .55rem rgba(243,200,111,.12));
-    }
-
-    .center-gem .gate-gem-svg {
-      filter:
-        drop-shadow(0 1.55rem 1.85rem rgba(0,0,0,.42))
-        drop-shadow(0 0 1.65rem rgba(243,200,111,.24))
-        drop-shadow(0 0 .85rem rgba(141,216,255,.12));
-    }
-
-    .gem-label {
+    .diamond-content {
       position:relative;
       z-index:3;
       width:72%;
@@ -657,119 +521,226 @@
         0 0 2px rgba(255,255,255,.42);
     }
 
-    .gem-label b {
+    .diamond-content strong {
       display:block;
       color:rgba(255,244,216,.98);
-      font-size:clamp(.56rem,1.45vw,.80rem);
+      font-size:clamp(.68rem,1.55vw,.92rem);
       font-weight:950;
       letter-spacing:.075em;
       line-height:1.02;
       text-transform:uppercase;
     }
 
-    .gem-label span {
+    .diamond-content span {
       color:rgba(230,238,255,.78);
-      font-size:clamp(.40rem,.95vw,.54rem);
+      font-size:clamp(.42rem,.95vw,.56rem);
       font-weight:900;
       letter-spacing:.08em;
       text-transform:uppercase;
     }
 
-    .center-gem .gem-label b {
+    .world-core .diamond-content strong {
       color:var(--gold);
-      font-size:clamp(.72rem,1.65vw,.95rem);
+      font-size:clamp(.85rem,1.85vw,1.08rem);
       letter-spacing:.16em;
     }
 
-    .center-gem .gem-label strong {
+    .world-core .diamond-content b {
       display:block;
       color:rgba(255,244,216,.98);
-      font-size:clamp(1rem,2.2vw,1.38rem);
+      font-size:clamp(1rem,2.3vw,1.45rem);
       line-height:1.05;
       letter-spacing:-.035em;
       text-transform:none;
     }
 
-    .gate-glint {
-      animation:gateGlint 8.5s ease-in-out infinite;
-      transform-origin:110px 80px;
+    .orbit-layer {
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:4;
+      width:min(82%,38rem);
+      height:min(82%,38rem);
+      border-radius:999px;
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+      animation:orbitTurn var(--orbit-duration) linear infinite;
+      transform-origin:50% 50%;
+      will-change:transform;
     }
 
-    .gate-star {
-      animation:gateFacetTurn 28s linear infinite;
-      transform-origin:110px 80px;
+    @keyframes orbitTurn {
+      from { transform:translate(-50%,-50%) rotate(0deg); }
+      to { transform:translate(-50%,-50%) rotate(360deg); }
     }
 
-    @keyframes gateGlint {
-      0%,100% { opacity:.08; transform:translateX(-34px); }
-      48%,55% { opacity:.56; transform:translateX(34px); }
+    .diamond-node {
+      --angle:0deg;
+      --radius:-17rem;
+      --delay:0s;
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:clamp(8.2rem,17vw,10.4rem);
+      height:clamp(6rem,12.6vw,7.65rem);
+      margin-left:calc(clamp(8.2rem,17vw,10.4rem) / -2);
+      margin-top:calc(clamp(6rem,12.6vw,7.65rem) / -2);
+      display:grid;
+      place-items:center;
+      text-align:center;
+      pointer-events:auto;
+      background:transparent;
+      border:0;
+      color:inherit;
+      cursor:pointer;
+      transform:
+        rotate(var(--angle))
+        translateY(var(--radius))
+        rotate(calc(-1 * var(--angle)));
+      transition:filter .18s ease,scale .18s ease;
     }
 
-    @keyframes gateFacetTurn {
+    .diamond-node:hover,
+    .diamond-node:focus-visible {
+      filter:brightness(1.12) saturate(1.08);
+      scale:1.045;
+      outline:none;
+    }
+
+    .diamond-node-inner {
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      animation:counterTurn var(--counter-duration) linear infinite reverse;
+      transform-origin:50% 50%;
+      will-change:transform;
+    }
+
+    .diamond-node-float {
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      animation:gemFloat 7s ease-in-out infinite;
+      animation-delay:var(--delay);
+    }
+
+    @keyframes counterTurn {
+      from { transform:rotate(0deg); }
       to { transform:rotate(360deg); }
     }
 
-    .concept-grid {
+    @keyframes gemFloat {
+      0%,100% { transform:translateY(0) scale(1); filter:brightness(1); }
+      50% { transform:translateY(-8px) scale(1.025); filter:brightness(1.12); }
+    }
+
+    .diamond-node:hover .diamond-node-float,
+    .diamond-node:focus-visible .diamond-node-float {
+      animation-play-state:paused;
+      transform:translateY(-10px) scale(1.045);
+      filter:brightness(1.18);
+    }
+
+    .instrument-panel {
+      position:absolute;
+      left:1rem;
+      right:1rem;
+      bottom:1rem;
+      z-index:8;
       display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:.7rem;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:.5rem;
+      pointer-events:auto;
     }
 
-    .concept-card {
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.1rem;
-      background:
-        radial-gradient(circle at 20% 0%,rgba(143,101,255,.10),transparent 60%),
-        rgba(255,255,255,.035);
-      overflow:hidden;
+    .instrument {
+      min-height:3.4rem;
+      display:grid;
+      align-content:center;
+      gap:.14rem;
+      padding:.58rem .68rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:.9rem;
+      background:rgba(2,5,16,.72);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      backdrop-filter:blur(8px);
     }
 
-    .concept-card summary {
-      list-style:none;
-      cursor:pointer;
-      min-height:3rem;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:.75rem;
-      padding:.85rem .95rem;
-      color:var(--gold);
-      font-size:.68rem;
+    .instrument b {
+      color:rgba(230,238,255,.58);
+      font-size:.58rem;
       font-weight:950;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .concept-card summary::-webkit-details-marker {
-      display:none;
-    }
-
-    .concept-card summary::after {
-      content:"+";
-      color:rgba(230,238,255,.70);
-      font-size:1.05rem;
-      font-weight:950;
-    }
-
-    .concept-card[open] summary::after {
-      content:"–";
-      color:var(--gold2);
-    }
-
-    .concept-body {
-      display:grid;
-      gap:.55rem;
-      padding:0 .95rem .95rem;
-    }
-
-    .concept-body strong {
+    .instrument strong,
+    .instrument span {
       color:rgba(255,244,216,.96);
-      font-size:1.05rem;
+      font-size:.88rem;
+      font-weight:950;
       line-height:1.1;
     }
 
-    .concept-body p {
-      font-size:.9rem;
+    .status-panel {
+      position:relative;
+      display:grid;
+      gap:.65rem;
+      padding:1rem;
+      border:1px solid rgba(190,170,255,.18);
+      border-radius:1.2rem;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(190,170,255,.10),transparent 60%),
+        rgba(143,101,255,.040);
+    }
+
+    .status-panel b {
+      color:var(--violet);
+      font-size:.68rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .status-panel p {
+      color:rgba(236,229,255,.88);
+    }
+
+    .concept-grid {
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.75rem;
+    }
+
+    .concept-card {
+      min-height:100%;
+      display:grid;
+      align-content:start;
+      gap:.65rem;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.15rem;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(143,101,255,.10),transparent 60%),
+        rgba(255,255,255,.035);
+    }
+
+    .concept-card b {
+      color:var(--gold);
+      font-size:.68rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .concept-card strong {
+      color:rgba(255,244,216,.98);
+      font-size:1.08rem;
+      line-height:1.1;
+    }
+
+    .concept-card p {
+      font-size:.94rem;
       line-height:1.42;
     }
 
@@ -825,6 +796,10 @@
       .concept-grid {
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
+
+      .instrument-panel {
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
     }
 
     @media (max-width:980px) {
@@ -849,39 +824,42 @@
         padding:1rem;
       }
 
-      .subject-pills {
-        display:grid;
+      .motion-field {
+        min-height:34rem;
       }
 
-      .subject-pills span {
-        width:100%;
+      .orbit-layer {
+        width:20.5rem;
+        height:20.5rem;
       }
 
-      .gate-stage { min-height:29rem; }
-
-      .lane-orbit {
-        width:20rem;
-        height:20rem;
+      .diamond-node {
+        --radius:-9.55rem;
+        width:5.8rem;
+        height:4.25rem;
+        margin-left:-2.9rem;
+        margin-top:-2.125rem;
       }
 
-      .lane-point {
-        --radius:-9.35rem;
-        width:5.6rem;
-        height:4.12rem;
-        margin-left:-2.8rem;
-        margin-top:-2.06rem;
+      .diamond-content strong { font-size:.38rem; }
+      .diamond-content span { display:none; }
+
+      .world-core {
+        width:7.8rem;
+        min-height:5.7rem;
       }
 
-      .gem-label b { font-size:.36rem; }
-      .gem-label span { display:none; }
+      .world-core .diamond-content strong { font-size:.50rem; }
+      .world-core .diamond-content b { font-size:.82rem; }
 
-      .center-gem {
-        width:7.4rem;
-        height:5.4rem;
+      .instrument-panel {
+        position:relative;
+        left:auto;
+        right:auto;
+        bottom:auto;
+        grid-template-columns:1fr;
+        margin-top:1rem;
       }
-
-      .center-gem .gem-label b { font-size:.50rem; }
-      .center-gem .gem-label strong { font-size:.82rem; }
 
       .concept-grid {
         grid-template-columns:1fr;
@@ -889,26 +867,26 @@
     }
 
     @media (max-width:460px) {
-      .gate-stage { min-height:27rem; }
+      .motion-field { min-height:31rem; }
 
-      .lane-orbit {
-        width:17.3rem;
-        height:17.3rem;
+      .orbit-layer {
+        width:17.5rem;
+        height:17.5rem;
       }
 
-      .lane-point {
-        --radius:-8rem;
+      .diamond-node {
+        --radius:-8.05rem;
         width:5rem;
         height:3.7rem;
         margin-left:-2.5rem;
         margin-top:-1.85rem;
       }
 
-      .gem-label b { font-size:.31rem; }
+      .diamond-content strong { font-size:.31rem; }
 
-      .center-gem {
-        width:6.75rem;
-        height:4.9rem;
+      .world-core {
+        width:6.9rem;
+        min-height:5rem;
       }
     }
 
@@ -923,14 +901,12 @@
       }
 
       body::after,
-      .gate-stage::before,
-      .gate-stage::after,
-      .lane-orbit,
-      .lane-point .lane-upright,
-      .center-gem-core,
-      .lane-point .lane-gem-core,
-      .gate-glint,
-      .gate-star {
+      .motion-field::before,
+      .motion-field::after,
+      .orbit-layer,
+      .diamond-node-inner,
+      .diamond-node-float,
+      .world-core-shell {
         animation:none!important;
       }
     }
@@ -938,331 +914,232 @@
 </head>
 
 <body>
-  <svg class="svg-defs" aria-hidden="true" focusable="false">
-    <defs>
-      <linearGradient id="gateGemBody" x1="18" y1="8" x2="202" y2="152" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#ffffff" stop-opacity=".94"/>
-        <stop offset=".16" stop-color="#ffe8a3" stop-opacity=".78"/>
-        <stop offset=".32" stop-color="#beaaff" stop-opacity=".62"/>
-        <stop offset=".50" stop-color="#2478ff" stop-opacity=".44"/>
-        <stop offset=".70" stop-color="#8ff0c3" stop-opacity=".30"/>
-        <stop offset="1" stop-color="#020816" stop-opacity=".92"/>
-      </linearGradient>
-
-      <linearGradient id="gateGemAir" x1="48" y1="10" x2="168" y2="80" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#ffffff" stop-opacity=".90"/>
-        <stop offset=".34" stop-color="#fff4c6" stop-opacity=".46"/>
-        <stop offset=".68" stop-color="#d7c2ff" stop-opacity=".20"/>
-        <stop offset="1" stop-color="#8dd8ff" stop-opacity=".10"/>
-      </linearGradient>
-
-      <linearGradient id="gateGemDepth" x1="110" y1="36" x2="110" y2="156" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#ffffff" stop-opacity=".18"/>
-        <stop offset=".30" stop-color="#f3c86f" stop-opacity=".22"/>
-        <stop offset=".62" stop-color="#8f65ff" stop-opacity=".16"/>
-        <stop offset="1" stop-color="#020716" stop-opacity=".62"/>
-      </linearGradient>
-
-      <radialGradient id="gateGemTableGlow" cx="50%" cy="38%" r="64%">
-        <stop offset="0" stop-color="#ffffff" stop-opacity=".58"/>
-        <stop offset=".28" stop-color="#ffe8a3" stop-opacity=".30"/>
-        <stop offset=".58" stop-color="#beaaff" stop-opacity=".14"/>
-        <stop offset="1" stop-color="#020611" stop-opacity="0"/>
-      </radialGradient>
-
-      <linearGradient id="gateGemGlint" x1="28" y1="130" x2="184" y2="24" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
-        <stop offset=".45" stop-color="#ffffff" stop-opacity=".86"/>
-        <stop offset=".52" stop-color="#fff0a3" stop-opacity=".30"/>
-        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
-      </linearGradient>
-
-      <filter id="gateGemGlow" x="-42%" y="-50%" width="184%" height="200%">
-        <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="blur"/>
-        <feColorMatrix
-          in="blur"
-          type="matrix"
-          values="
-            0.95 0 0 0 0.20
-            0 .74 0 0 0.16
-            0 0 .96 0 0.30
-            0 0 0 0.52 0"
-          result="glow"
-        />
-        <feMerge>
-          <feMergeNode in="glow"/>
-          <feMergeNode in="SourceGraphic"/>
-        </feMerge>
-      </filter>
-
-      <symbol id="gateDigitalGem" viewBox="0 0 220 160">
-        <g filter="url(#gateGemGlow)">
-          <path
-            d="M110 5 L145 13 L182 38 L210 75 L190 106 L150 137 L110 155 L70 137 L30 106 L10 75 L38 38 L75 13 Z"
-            fill="url(#gateGemBody)"
-            stroke="rgba(255,244,216,.62)"
-            stroke-width="1.35"
-          />
-          <path d="M110 5 L145 13 L132 37 L110 29 L88 37 L75 13 Z" fill="url(#gateGemAir)" opacity=".84"/>
-          <path d="M75 13 L88 37 L62 58 L38 38 Z" fill="rgba(255,255,255,.25)"/>
-          <path d="M145 13 L132 37 L158 58 L182 38 Z" fill="rgba(255,255,255,.17)"/>
-          <path d="M38 38 L62 58 L55 82 L10 75 Z" fill="rgba(243,200,111,.13)"/>
-          <path d="M182 38 L158 58 L165 82 L210 75 Z" fill="rgba(190,170,255,.13)"/>
-          <path
-            d="M88 37 L110 29 L132 37 L158 58 L148 82 L110 101 L72 82 L62 58 Z"
-            fill="url(#gateGemTableGlow)"
-            stroke="rgba(255,255,255,.30)"
-            stroke-width=".9"
-          />
-          <path d="M10 75 L55 82 L70 137 L30 106 Z" fill="rgba(143,101,255,.16)"/>
-          <path d="M210 75 L165 82 L150 137 L190 106 Z" fill="rgba(36,120,255,.12)"/>
-          <path d="M55 82 L72 82 L110 155 L70 137 Z" fill="rgba(2,8,24,.38)"/>
-          <path d="M165 82 L148 82 L110 155 L150 137 Z" fill="rgba(143,240,195,.10)"/>
-          <path d="M72 82 L110 101 L110 155 Z" fill="url(#gateGemDepth)" opacity=".76"/>
-          <path d="M148 82 L110 101 L110 155 Z" fill="rgba(4,10,22,.36)"/>
-          <path d="M110 5 L110 155" stroke="rgba(255,255,255,.34)" stroke-width="1.15"/>
-          <path d="M10 75 L210 75" stroke="rgba(255,255,255,.28)" stroke-width="1.05"/>
-          <path d="M38 38 L190 106" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
-          <path d="M182 38 L30 106" stroke="rgba(255,255,255,.16)" stroke-width=".9"/>
-          <path d="M75 13 L110 101 L145 13" stroke="rgba(255,255,255,.18)" stroke-width=".9" fill="none"/>
-          <path d="M38 38 L110 101 L182 38" stroke="rgba(255,255,255,.16)" stroke-width=".9" fill="none"/>
-          <path d="M30 106 L110 101 L190 106" stroke="rgba(243,200,111,.14)" stroke-width=".9" fill="none"/>
-          <g class="gate-star" opacity=".82">
-            <path d="M110 26 L116 70 L110 106 L104 70 Z" fill="rgba(255,255,255,.28)"/>
-            <path d="M62 58 L105 72 L158 58 L116 78 Z" fill="rgba(255,255,255,.17)"/>
-            <path d="M72 82 L105 75 L148 82 L114 91 Z" fill="rgba(243,200,111,.14)"/>
-            <path d="M110 101 L126 81 L148 82 L129 96 Z" fill="rgba(255,255,255,.14)"/>
-            <path d="M110 101 L94 81 L72 82 L91 96 Z" fill="rgba(190,170,255,.08)"/>
-          </g>
-          <path class="gate-glint" d="M34 117 L176 22 L188 38 L48 130 Z" fill="url(#gateGemGlint)"/>
-        </g>
-      </symbol>
-    </defs>
-  </svg>
-
-  <a class="skip" href="#nine-summits-main">Skip to Nine Summits</a>
+  <a class="skip" href="#universe-main">Skip to Nine Summits Universe</a>
 
   <div class="shell">
-    <header class="topbar" aria-label="Nine Summits header">
-      <a class="brand" href="/nine-summits/">
+    <header class="topbar" aria-label="Nine Summits Universe header">
+      <a class="brand" href="/nine-summits/universe/" aria-label="Nine Summits Universe">
         <span class="brand-mark" aria-hidden="true"><span>NS</span></span>
         <span class="brand-copy">
-          <span>Diamond Gate Bridge</span>
-          <strong>Nine Summits</strong>
+          <span>MirrorWorld Narrative Field</span>
+          <strong>Nine Summits Universe</strong>
         </span>
       </a>
 
       <div class="header-note">
-        Use the floating Map / Portal blip for movement. This page stays focused on the animation and universe concept.
+        Movement belongs to the floating Map / Portal blip. This page stays focused on the Universe narrative field and its animation stage.
       </div>
     </header>
 
-    <main id="nine-summits-main">
+    <main id="universe-main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Nine Summits · Public System Gate</div>
+        <div class="kicker">Nine Summits Universe · World Setting</div>
+
         <h1 id="page-title">The climb becomes a world.</h1>
 
-        <p class="subline">Book. Universe. Audralia. Voice.</p>
+        <p class="subline">The Universe is not the menu. It is the world around the climb.</p>
 
         <p class="lead">
-          Nine Summits is the public gate where the human climb becomes a larger world. The book carries the climb, the Universe gives it setting, Audralia shows possibility as a living canvas, and the Voice lane keeps the universal underdog message connected to the person behind it.
+          Nine Summits begins as a human climb, then expands into a living narrative field. MirrorWorld carries the story pressure. Audralia holds the possibility path. The book remains the human spine while the Universe gives the climb terrain, consequence, and motion.
         </p>
 
         <div class="principle">
-          Four lanes orbit one public gate. No lane has to compete with the others.
-        </div>
-
-        <div class="quote">
-          Navigation belongs to the Map / Portal blip. This page explains the system and preserves the animation.
-        </div>
-
-        <div class="subject-pills" aria-label="Nine Summits subject markers">
-          <span>Book · Human Climb</span>
-          <span>Universe · World Setting</span>
-          <span>Audralia · Living Canvas</span>
-          <span>Voice · Underdog Signal</span>
+          This page is the world-setting layer. It does not own navigation, route directories, planet rendering, or Gauges. The Map / Portal blip owns movement.
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="gate-title">
-        <div class="kicker">Four-lane universe concept</div>
-        <h2 id="gate-title">The four lanes orbit one public gate.</h2>
+      <section class="panel section" aria-labelledby="animation-title">
+        <div class="kicker">Animation allotment</div>
+        <h2 id="animation-title">The Universe motion field shows relationship, pressure, and direction.</h2>
 
-        <div class="gate-stage" aria-label="Book Universe Audralia Voice public gate">
-          <div class="center-gem" aria-hidden="true">
-            <span class="center-gem-core">
-              <svg class="gate-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
-                <use href="#gateDigitalGem"></use>
-              </svg>
-              <span class="gem-label">
-                <b>Nine Summits</b>
-                <strong>Public Gate</strong>
-              </span>
+        <div
+          class="motion-field universe-stage diamond-compass"
+          data-universe-animation-stage="true"
+          data-motion-field="true"
+          aria-label="Nine Summits Universe motion field"
+        >
+          <div class="world-core" aria-hidden="true">
+            <span class="world-core-shell"></span>
+            <span class="diamond-content">
+              <strong>Universe</strong>
+              <b>World Field</b>
+              <span>Narrative setting</span>
             </span>
           </div>
 
-          <div class="lane-orbit" aria-label="Animated Nine Summits lane orbit">
-            <a class="lane-point" style="--angle:0deg;--lane-delay:-.2s" href="/nine-summits-of-love/" aria-label="Book lane">
-              <span class="lane-upright">
-                <span class="lane-gem-core">
-                  <svg class="gate-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#gateDigitalGem"></use></svg>
-                  <span class="gem-label"><b>Book</b><span>Human climb</span></span>
+          <div class="orbit-layer" aria-label="Universe motion options">
+            <button class="diamond-node" type="button" data-world-option="Audralia" aria-label="Audralia living canvas cue" style="--angle:0deg;--delay:-.2s">
+              <span class="diamond-node-inner">
+                <span class="diamond-node-float">
+                  <span class="diamond-shell"></span>
+                  <span class="diamond-content"><strong>Audralia</strong><span>Living canvas</span></span>
                 </span>
               </span>
-            </a>
+            </button>
 
-            <a class="lane-point" style="--angle:90deg;--lane-delay:-1.8s" href="/nine-summits/universe/" aria-label="Universe lane">
-              <span class="lane-upright">
-                <span class="lane-gem-core">
-                  <svg class="gate-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#gateDigitalGem"></use></svg>
-                  <span class="gem-label"><b>Universe</b><span>World setting</span></span>
+            <button class="diamond-node" type="button" data-world-option="Book" aria-label="Book human climb cue" style="--angle:90deg;--delay:-1.8s">
+              <span class="diamond-node-inner">
+                <span class="diamond-node-float">
+                  <span class="diamond-shell"></span>
+                  <span class="diamond-content"><strong>Book</strong><span>Human climb</span></span>
                 </span>
               </span>
-            </a>
+            </button>
 
-            <a class="lane-point" style="--angle:180deg;--lane-delay:-3.4s" href="/showroom/globe/audralia/" aria-label="Audralia lane">
-              <span class="lane-upright">
-                <span class="lane-gem-core">
-                  <svg class="gate-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#gateDigitalGem"></use></svg>
-                  <span class="gem-label"><b>Audralia</b><span>Living canvas</span></span>
+            <button class="diamond-node" type="button" data-world-option="Showroom" aria-label="Showroom proof atrium cue" style="--angle:180deg;--delay:-3.4s">
+              <span class="diamond-node-inner">
+                <span class="diamond-node-float">
+                  <span class="diamond-shell"></span>
+                  <span class="diamond-content"><strong>Showroom</strong><span>Proof atrium</span></span>
                 </span>
               </span>
-            </a>
+            </button>
 
-            <a class="lane-point" style="--angle:270deg;--lane-delay:-5s" href="#voice-concept" aria-label="Voice lane">
-              <span class="lane-upright">
-                <span class="lane-gem-core">
-                  <svg class="gate-gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#gateDigitalGem"></use></svg>
-                  <span class="gem-label"><b>Voice</b><span>Underdog · Sean</span></span>
+            <button class="diamond-node" type="button" data-world-option="Frontier" aria-label="Frontier expansion edge cue" style="--angle:270deg;--delay:-5s">
+              <span class="diamond-node-inner">
+                <span class="diamond-node-float">
+                  <span class="diamond-shell"></span>
+                  <span class="diamond-content"><strong>Frontier</strong><span>Expansion edge</span></span>
                 </span>
               </span>
-            </a>
+            </button>
           </div>
+
+          <aside class="instrument-panel" aria-label="Universe motion instruments">
+            <div class="instrument">
+              <b>Ratio</b>
+              <strong data-instrument-ratio>1.618</strong>
+            </div>
+            <div class="instrument">
+              <b>Axis</b>
+              <strong data-instrument-axis>Canvas</strong>
+            </div>
+            <div class="instrument">
+              <b>Phase</b>
+              <strong data-instrument-phase>0°</strong>
+            </div>
+            <div class="instrument">
+              <b>Lattice</b>
+              <strong data-instrument-lattice>256</strong>
+            </div>
+            <div class="instrument">
+              <b>Cadence</b>
+              <strong data-instrument-cadence>1/4</strong>
+            </div>
+          </aside>
+        </div>
+
+        <div class="status-panel" aria-live="polite">
+          <b>Current universe cue</b>
+          <p data-cognitive-status>
+            Audralia opens the untouched living path: a living canvas where visitors can watch possibility develop before their eyes.
+          </p>
         </div>
       </section>
 
       <section class="panel section" aria-labelledby="concept-title">
-        <div class="kicker">Compact concept</div>
-        <h2 id="concept-title">Each lane has one job.</h2>
+        <div class="kicker">Narrative field</div>
+        <h2 id="concept-title">The Universe gives the climb a place to happen.</h2>
 
         <div class="concept-grid">
-          <details class="concept-card" open>
-            <summary>Book</summary>
-            <div class="concept-body">
-              <strong>The human climb.</strong>
-              <p>The book lane carries character, structure, balance, stability, peace, joy, dignity, free will, and love.</p>
-            </div>
-          </details>
+          <article class="concept-card">
+            <b>World Around the Climb</b>
+            <strong>The book becomes terrain.</strong>
+            <p>The human climb remains the spine, but the Universe gives that climb locations, pressure, events, motion, consequence, and living context.</p>
+          </article>
 
-          <details class="concept-card">
-            <summary>Universe</summary>
-            <div class="concept-body">
-              <strong>The world around the climb.</strong>
-              <p>The Universe lane gives the climb terrain, setting, events, story pressure, gates, coherence, and future media space.</p>
-            </div>
-          </details>
+          <article class="concept-card">
+            <b>MirrorWorld Field</b>
+            <strong>The story is carried by reflection and consequence.</strong>
+            <p>MirrorWorld is the narrative field where possible futures become visible before they harden. The page introduces that field without becoming the full route map.</p>
+          </article>
 
-          <details class="concept-card">
-            <summary>Audralia</summary>
-            <div class="concept-body">
-              <strong>The untouched living path.</strong>
-              <p>Audralia is the living canvas where possibility develops visibly without this page becoming the Audralia renderer.</p>
-            </div>
-          </details>
+          <article class="concept-card">
+            <b>Audralia</b>
+            <strong>Possibility remains alive.</strong>
+            <p>Audralia is preserved as the living possibility path. This page points to its meaning without taking over the planet renderer.</p>
+          </article>
 
-          <details id="voice-concept" class="concept-card">
-            <summary>Voice</summary>
-            <div class="concept-body">
-              <strong>The human signal.</strong>
-              <p>The Voice lane keeps the universal underdog message and Sean Mansfield’s personal profile connected but separate.</p>
-            </div>
-          </details>
+          <article class="concept-card">
+            <b>Motion Standard</b>
+            <strong>Animation shows relationship, not navigation burden.</strong>
+            <p>The motion field shows orbit, phase, cue, and pressure. Navigation is deliberately moved to the floating Map / Portal blip.</p>
+          </article>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="final-title">
+      <section class="panel section" aria-labelledby="closure-title">
         <div class="closing-note">
-          <strong id="final-title">The hub keeps the lanes from competing.</strong>
+          <strong id="closure-title">The Universe is now subject-first.</strong>
           <p>
-            The page is now focused on the animation and the universe concept. Movement, route discovery, Main Menu, and Mirrorland Menu belong to the floating Map / Portal blip.
+            The old accordion route menu is removed. The page is dedicated to narrative, animation, and world-setting context. Movement, Main Menu, Mirrorland Menu, and room discovery belong to the floating Map / Portal blip.
           </p>
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-NINE_SUMMITS_SIMPLIFIED_UNIVERSE_CONCEPT_MAP_BLIP_HTML_TNT_v1
-previous=NINE_SUMMITS_PUBLIC_GATE_LANE_ALIGNMENT_RENEWAL_TNT_v7
-route=/nine-summits/
-page=nine_summits
-role=public_system_gate_simplified
-message=The climb becomes a world.
-visual_system=code_rendered_four_lane_digital_gem_public_gate
+NINE_SUMMITS_UNIVERSE_SIMPLIFIED_NARRATIVE_MAP_BLIP_HTML_TNT_v1
+target=/nine-summits/universe/index.html
+route=/nine-summits/universe/
+page=nine_summits_universe
+role=mirrorworld_universe_narrative_field
+previous=NINE_SUMMITS_UNIVERSE_WORLD_SETTING_MOTION_RENEWAL_TNT_v6
+message=the_climb_becomes_a_world
 page_simplified=true
 page_subject_content_only=true
 page_body_navigation_reduced=true
-top_nav_removed=true
-dropdown_menu_minimized=true
+dropdown_menu_removed=true
+accordion_menu_removed=true
 route_directory_removed=true
 jump_options_removed=true
-system_routes_section_removed=true
-lane_grid_removed=true
-voice_grid_removed=true
-final_action_cluster_removed=true
 map_blip_added=true
 floating_map_portal_active=true
 map_blip_owns_navigation=true
+mirrorworld_page_blip_required=true
 local_map_section=false
 second_mirrorland_entrance=false
-blueprint_page_scoped=true
+animation_stage_preserved=true
+universe_motion_compatible=true
+motion_js=/nine-summits/universe/universe.motion.js
+motion_js_contract=NINE_SUMMITS_UNIVERSE_WORLD_SETTING_MOTION_RENEWAL_TNT_v6
+motion_selectors_preserved=data_cognitive_status,data_world_option,motion_field,data_instrument_ratio,data_instrument_axis,data_instrument_phase,data_instrument_lattice,data_instrument_cadence,diamond_compass,instrument_panel,diamond_shell,diamond_content
 blueprint_css=/assets/manor-blueprint/manor.blueprint.css
 blueprint_css_contract=MANOR_BLUEPRINT_CARDINAL_ROOM_MAP_VISUAL_CSS_TNT_v1
 blueprint_registry=/assets/manor-blueprint/manor.blueprint.registry.js
 blueprint_registry_contract=MANOR_BLUEPRINT_VISITOR_ORIENTATION_REGISTRY_TNT_v1
 blueprint_runtime=/assets/manor-blueprint/manor.blueprint.js
 blueprint_runtime_contract=MANOR_BLUEPRINT_VISITOR_ORIENTATION_RUNTIME_TNT_v1
-primary_lanes=book,universe,audralia,voice
-book_lane=/nine-summits-of-love/
-book_role=human_climb
-universe_lane=/nine-summits/universe/
-universe_role=world_around_the_climb
-audralia_lane=/showroom/globe/audralia/
-audralia_role=untouched_living_path_living_canvas
-voice_lane=about_this_underdog,meet_sean_mansfield
-about_this_underdog=/about-this-underdog/
-about_this_underdog_role=universal_underdog_message
-meet_sean_mansfield=/meet-sean-mansfield/
-meet_sean_mansfield_role=personal_profile_behind_the_voice
-formation=book_north,universe_east,audralia_south,voice_west
-motion=css_only_clockwise_four_lane_orbit
-label_motion=counter_rotation_for_readability
-orbit_center=gate_field_center
-orbit_radius=contained_inside_panel
-receipt_visibility=hidden_template_only
-z_index_law=background_field,axis_field,nine_summits_anchor_background,rotating_lane_gems,lane_labels,hover_focus
-non_overlap_law=no_clickable_diamond_hidden_by_center
-animation_method=css_only
-js_required=false
-animated=lane_orbit_turn,lane_label_gravity_lock,gate_field_turn,gate_inner_field_breathe,lane_gem_float,center_pulse,gate_glint,gate_facet_turn,aurora_background
-mobile_law=compact_centered_rotating_gate_no_hidden_nodes_no_right_crop
-preserved=public_system_gate,four_primary_lanes,book_universe_audralia_voice_relationship,css_only_animation,hidden_receipt
-removed=top_nav,broad_action_cluster,lane_grid,voice_grid,system_routes,route_card_grid,final_navigation_buttons
-route_owns=public_gate,four_primary_lanes,code_rendered_lane_gem_gate,compact_concept_explanation,hidden_receipt
-route_does_not_own=map_portal_blip_runtime,body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic,personal_profile_page,universal_underdog_page,products_root,showroom_runtime,universe_motion_js
-heavy_runtime_loaded=false
-render_files_touched=false
-instrument_touched=false
-gauges_logic_touched=false
+universe_subject=world_setting_field_around_the_climb
+narrative_law=the_universe_is_not_the_menu_it_is_the_world_around_the_climb
+mirrorworld_context=true
+audralia_role=living_possibility_path
+book_role=human_climb_spine
+motion_role=relationship_pressure_direction
+removed=center_north_east_south_west_summit_community_accordion_menu
+removed_route_directory=true
+removed_broad_navigation_cards=true
+route_owns=narrative_universe_context,animation_stage,compact_concept_blocks,hidden_receipt
+route_does_not_own=map_portal_blip_runtime,planet_renderer,audralia_renderer,gauges_logic,canvas,graphic_box,generated_image,heavy_runtime
 generated_image=false
 graphic_box=false
+canvas_runtime=false
+heavy_runtime_loaded=false
 streaming=false
 visual_pass_claimed=false
       </template>
     </main>
 
     <footer>
-      NINE_SUMMITS_SIMPLIFIED_UNIVERSE_CONCEPT_MAP_BLIP_HTML_TNT_v1 · Nine Summits · Animation and universe concept.
+      NINE_SUMMITS_UNIVERSE_SIMPLIFIED_NARRATIVE_MAP_BLIP_HTML_TNT_v1 · Nine Summits Universe · Narrative field and animation allotment.
     </footer>
   </div>
+
+  <script
+    src="/nine-summits/universe/universe.motion.js?v=NINE_SUMMITS_UNIVERSE_WORLD_SETTING_MOTION_RENEWAL_TNT_v6"
+    defer
+    data-contract="NINE_SUMMITS_UNIVERSE_WORLD_SETTING_MOTION_RENEWAL_TNT_v6"
+    data-universe-motion-compatible="true"
+  ></script>
 
   <script
     src="/assets/manor-blueprint/manor.blueprint.registry.js?v=MANOR_BLUEPRINT_VISITOR_ORIENTATION_REGISTRY_TNT_v1"

@@ -1,26 +1,30 @@
 // TARGET FILE: /assets/manor-blueprint/manor.blueprint.js
 // TNT FULL-FILE REPLACEMENT
-// MANOR_BLUEPRINT_JOYSTICK_SCROLL_FORCE_40_PERCENT_INCREASE_JS_TNT_v1
+// MANOR_BLUEPRINT_MIRRORLAND_PORTAL_DUAL_MENU_JS_TNT_v1
 //
 // Purpose:
-// Preserve the Manor Blueprint HUD while increasing joystick-scroll force by
-// approximately 40% when the map bubble is held near the top or bottom screen
-// zones.
+// Renew the Manor Blueprint map bubble into the Mirrorland portal.
+// The bubble opens a dual-menu overlay: Mirrorland Menu first, Main Menu /
+// Website Options second, Instructions third. The Compass remains separated
+// as the main-site orientation layer.
 //
 // Compatibility API contract preserved:
 // MANOR_BLUEPRINT_FIXED_DRAGGABLE_BUBBLE_FULLSCREEN_MAP_INSTRUCTIONS_TOGGLE_JS_TNT_v1
 //
 // Previous runtime contract:
+// MANOR_BLUEPRINT_JOYSTICK_SCROLL_FORCE_40_PERCENT_INCREASE_JS_TNT_v1
+//
+// Prior runtime contract:
 // MANOR_BLUEPRINT_GLOBAL_JOYSTICK_SCROLL_SITEWIDE_JS_TNT_v1
 //
 // Legacy behavior contract:
 // MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_POSITION_RENEWAL_TNT_v1
 //
 // Owns:
-// - map bubble
+// - Mirrorland portal map bubble
 // - full-screen overlay
-// - map/instructions lens
-// - registry consumption
+// - Mirrorland Menu / Main Menu / Instructions lenses
+// - registry consumption for main-site supplemental routes
 // - full-viewport drag
 // - joystick scroll while dragging
 // - joystick scroll force multiplier
@@ -34,15 +38,17 @@
 // - planet routes
 // - CSS source truth
 // - registry source truth
+// - Compass page authority
 
 (() => {
   "use strict";
 
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CONTRACT = "MANOR_BLUEPRINT_JOYSTICK_SCROLL_FORCE_40_PERCENT_INCREASE_JS_TNT_v1";
+  const CONTRACT = "MANOR_BLUEPRINT_MIRRORLAND_PORTAL_DUAL_MENU_JS_TNT_v1";
   const API_CONTRACT = "MANOR_BLUEPRINT_FIXED_DRAGGABLE_BUBBLE_FULLSCREEN_MAP_INSTRUCTIONS_TOGGLE_JS_TNT_v1";
-  const PREVIOUS_CONTRACT = "MANOR_BLUEPRINT_GLOBAL_JOYSTICK_SCROLL_SITEWIDE_JS_TNT_v1";
+  const PREVIOUS_CONTRACT = "MANOR_BLUEPRINT_JOYSTICK_SCROLL_FORCE_40_PERCENT_INCREASE_JS_TNT_v1";
+  const PRIOR_CONTRACT = "MANOR_BLUEPRINT_GLOBAL_JOYSTICK_SCROLL_SITEWIDE_JS_TNT_v1";
   const LEGACY_CONTRACT = "MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_POSITION_RENEWAL_TNT_v1";
 
   const STATUS_GLOBAL = "DGB_MANOR_BLUEPRINT_STATUS";
@@ -61,12 +67,26 @@
   const JOYSTICK_SCROLL_FORCE_INCREASE_PERCENT = 40;
   const MOBILE_BREAKPOINT = 760;
 
+  const MIRRORLAND_PRIMARY_PATHS = Object.freeze([
+    "/showroom/",
+    "/showroom/globe/",
+    "/showroom/globe/audralia/",
+    "/showroom/globe/audralia/planet/",
+    "/showroom/globe/audralia/disposition/",
+    "/showroom/globe/h-earth/",
+    "/characters/"
+  ]);
+
+  const MIRRORLAND_SUPPORT_PATHS = Object.freeze([
+    "/gauges/"
+  ]);
+
   let bubble = null;
   let overlay = null;
   let joystickRaf = 0;
 
   const state = {
-    activeLens: "map",
+    activeLens: "mirrorland",
     overlayOpen: false,
     dragging: false,
     dragMoved: false,
@@ -209,6 +229,7 @@
     const acceptedContract =
       stored.contract === CONTRACT ||
       stored.contract === PREVIOUS_CONTRACT ||
+      stored.contract === PRIOR_CONTRACT ||
       stored.contract === LEGACY_CONTRACT;
 
     if (!acceptedContract) return false;
@@ -224,7 +245,10 @@
         y: Math.round(pos.y),
         contract: CONTRACT,
         previousContract: PREVIOUS_CONTRACT,
+        priorContract: PRIOR_CONTRACT,
         legacyContract: LEGACY_CONTRACT,
+        mirrorlandPortalActive: true,
+        dualMenuActive: true,
         fullViewportDrag: true,
         joystickScrollActive: true,
         joystickScrollForceMultiplier: JOYSTICK_SCROLL_FORCE_MULTIPLIER,
@@ -304,44 +328,186 @@
       null;
   }
 
-  function fallbackRoutes() {
+  function route(id, title, path, group, body, x, y, role) {
+    return Object.freeze({
+      id,
+      title,
+      path: normalizePath(path),
+      group,
+      body,
+      x,
+      y,
+      role: role || "route"
+    });
+  }
+
+  function mirrorlandRoutes() {
     return [
-      { id: "compass", title: "Compass", path: "/", group: "North", body: "Return to the origin compass.", x: 50, y: 10 },
-      { id: "door", title: "Door", path: "/door/", group: "North", body: "Cross the threshold.", x: 50, y: 24 },
-      { id: "home", title: "Home", path: "/home/", group: "North", body: "Return home.", x: 50, y: 38 },
-      { id: "showroom", title: "Showroom", path: "/showroom/", group: "East", body: "Enter the showroom.", x: 78, y: 42 },
-      { id: "globe", title: "Globe Showcase", path: "/showroom/globe/", group: "East", body: "Open the globe route.", x: 84, y: 56 },
-      { id: "audralia", title: "Audralia", path: "/showroom/globe/audralia/", group: "East", body: "Open Mirrorland and Audralia.", x: 76, y: 70 },
-      { id: "products", title: "Products", path: "/products/", group: "South", body: "Open product routes.", x: 50, y: 82 },
-      { id: "gauges", title: "Gauges", path: "/gauges/", group: "South", body: "Open audit gauges.", x: 36, y: 76 },
-      { id: "laws", title: "Laws", path: "/laws/", group: "West", body: "Open law routes.", x: 20, y: 54 },
-      { id: "frontier", title: "Frontier", path: "/frontier/", group: "West", body: "Open frontier routes.", x: 24, y: 68 }
+      route(
+        "enter-mirrorland",
+        "Enter Mirrorland",
+        "/showroom/globe/",
+        "Portal",
+        "Cross from the Door into the Mirrorland route field.",
+        50,
+        12,
+        "primary-entry"
+      ),
+      route(
+        "mirrorland-door",
+        "Door / Threshold",
+        "/showroom/",
+        "Threshold",
+        "Return to the Diamond Door where Mirrorland entry begins.",
+        35,
+        26,
+        "threshold"
+      ),
+      route(
+        "audralia",
+        "Audralia",
+        "/showroom/globe/audralia/",
+        "Planetary Path",
+        "Open the first living planetary doorway.",
+        62,
+        34,
+        "planetary-path"
+      ),
+      route(
+        "audralia-planet",
+        "Audralia Planet",
+        "/showroom/globe/audralia/planet/",
+        "Planetary Path",
+        "Inspect Audralia as the future-body planetary template.",
+        72,
+        48,
+        "planet"
+      ),
+      route(
+        "audralia-cockpit",
+        "Audralia Cockpit",
+        "/showroom/globe/audralia/disposition/",
+        "Instruments",
+        "Open the cockpit and disposition instruments.",
+        66,
+        63,
+        "instrument"
+      ),
+      route(
+        "characters",
+        "Characters",
+        "/characters/",
+        "People",
+        "Meet the first faces waiting beyond the Door.",
+        41,
+        68,
+        "characters"
+      ),
+      route(
+        "h-earth",
+        "H-Earth",
+        "/showroom/globe/h-earth/",
+        "World Path",
+        "Open the H-Earth world path.",
+        27,
+        52,
+        "world"
+      ),
+      route(
+        "gauges-proof",
+        "Gauges / Proof",
+        "/gauges/",
+        "Proof",
+        "Measure what is present, routed, and holding shape.",
+        50,
+        84,
+        "support"
+      )
     ];
   }
 
-  function routes() {
-    const reg = registry();
-    const source = Array.isArray(reg?.routes) ? reg.routes : fallbackRoutes();
+  function baseMainRoutes() {
+    return [
+      route("compass", "Compass", "/", "Main Menu", "Return to the main website compass.", 50, 10, "main"),
+      route("door", "Door", "/door/", "Main Menu", "Cross the ordinary site threshold.", 50, 24, "main"),
+      route("home", "Home", "/home/", "Main Menu", "Return home.", 50, 38, "main"),
+      route("showroom-main", "Showroom", "/showroom/", "Website", "Open the Showroom Door page.", 76, 42, "main"),
+      route("products", "Products", "/products/", "Website", "Open product routes.", 50, 82, "main"),
+      route("laws", "Laws", "/laws/", "Website", "Open the law and proof layer.", 20, 54, "main"),
+      route("gauges-main", "Gauges", "/gauges/", "Website", "Open route proof and measurement.", 36, 76, "main"),
+      route("frontier", "Frontier", "/frontier/", "Website", "Open frontier routes.", 24, 68, "main")
+    ];
+  }
 
-    return source.map((item, index) => ({
-      id: String(item.id || item.key || `route-${index}`),
-      title: String(item.title || item.label || item.name || "Route"),
-      path: normalizePath(item.path || item.href || "/"),
-      group: String(item.group || item.family || "Route"),
-      body: String(item.body || item.description || "Open this route."),
-      x: Number.isFinite(Number(item.x)) ? Number(item.x) : 12 + ((index * 17) % 76),
-      y: Number.isFinite(Number(item.y)) ? Number(item.y) : 12 + ((index * 23) % 76)
-    }));
+  function registryRoutes() {
+    const reg = registry();
+    const source = Array.isArray(reg?.routes) ? reg.routes : [];
+
+    return source.map((item, index) => route(
+      String(item.id || item.key || `registry-route-${index}`),
+      String(item.title || item.label || item.name || "Route"),
+      String(item.path || item.href || "/"),
+      String(item.group || item.family || "Website"),
+      String(item.body || item.description || "Open this route."),
+      Number.isFinite(Number(item.x)) ? Number(item.x) : 12 + ((index * 17) % 76),
+      Number.isFinite(Number(item.y)) ? Number(item.y) : 12 + ((index * 23) % 76),
+      "registry"
+    ));
+  }
+
+  function mergeRoutes(primary, supplemental) {
+    const seen = new Set();
+    const merged = [];
+
+    primary.concat(supplemental || []).forEach((item) => {
+      const key = normalizePath(item.path);
+      if (seen.has(key)) return;
+      seen.add(key);
+      merged.push(item);
+    });
+
+    return merged;
+  }
+
+  function mainMenuRoutes() {
+    const base = baseMainRoutes();
+    const registrySupplement = registryRoutes().filter((item) => {
+      const path = normalizePath(item.path);
+      const baseDuplicate = base.some((routeItem) => normalizePath(routeItem.path) === path);
+      const mirrorlandOnly = isMirrorlandPrimaryPath(path) && path !== "/showroom/";
+      return !baseDuplicate && !mirrorlandOnly;
+    });
+
+    return mergeRoutes(base, registrySupplement);
+  }
+
+  function allKnownRoutes() {
+    return mergeRoutes(mirrorlandRoutes(), mainMenuRoutes());
   }
 
   function instructions() {
     const reg = registry();
     const source = Array.isArray(reg?.instructions) ? reg.instructions : [
-      { title: "Tap", body: "Tap the bubble to open or close the Manor Blueprint route map." },
-      { title: "Drag", body: "Drag the bubble anywhere inside the visible screen." },
-      { title: "Joystick Scroll", body: "While dragging, pull near the bottom edge to scroll down or near the top edge to scroll up. This pass increases scroll force by 40%." },
-      { title: "Reset", body: "Use Reset Bubble to restore the upper-right safe anchor." },
-      { title: "HUD", body: "The bubble loads wherever the Manor Blueprint runtime is installed." }
+      {
+        title: "Portal",
+        body: "Tap the map bubble to open the Mirrorland Portal."
+      },
+      {
+        title: "Mirrorland Menu",
+        body: "Use Mirrorland Menu to enter or navigate inside Mirrorland."
+      },
+      {
+        title: "Main Menu / Website Options",
+        body: "Use Main Menu for ordinary website routes. Compass remains separated from the Mirrorland portal."
+      },
+      {
+        title: "Drag",
+        body: "Drag the bubble anywhere inside the visible screen."
+      },
+      {
+        title: "Joystick Scroll",
+        body: "While dragging, pull near the bottom edge to scroll down or near the top edge to scroll up. Scroll force remains increased by 40%."
+      }
     ];
 
     return source.map((item, index) => ({
@@ -350,12 +516,70 @@
     }));
   }
 
+  function pathStartsWith(path, prefix) {
+    const cleanPath = normalizePath(path);
+    const cleanPrefix = normalizePath(prefix);
+
+    if (cleanPrefix === "/") return cleanPath === "/";
+    return cleanPath === cleanPrefix || cleanPath.startsWith(cleanPrefix);
+  }
+
+  function isMirrorlandPrimaryPath(path) {
+    const clean = normalizePath(path);
+
+    return MIRRORLAND_PRIMARY_PATHS.some((prefix) => {
+      if (prefix === "/showroom/") return clean === "/showroom/";
+      return pathStartsWith(clean, prefix);
+    });
+  }
+
+  function isMirrorlandSupportPath(path) {
+    const clean = normalizePath(path);
+    return MIRRORLAND_SUPPORT_PATHS.some((prefix) => pathStartsWith(clean, prefix));
+  }
+
+  function mirrorlandEntered() {
+    return isMirrorlandPrimaryPath(window.location.pathname || "/");
+  }
+
+  function mirrorlandSupportActive() {
+    return isMirrorlandSupportPath(window.location.pathname || "/");
+  }
+
   function currentRoute(routeList) {
     const path = normalizePath(window.location.pathname || "/");
-    return routeList.find((route) => route.path === path) ||
-      routeList.find((route) => path.startsWith(route.path) && route.path !== "/") ||
+
+    return routeList.find((routeItem) => normalizePath(routeItem.path) === path) ||
+      routeList.find((routeItem) => normalizePath(routeItem.path) !== "/" && pathStartsWith(path, routeItem.path)) ||
       routeList[0] ||
       null;
+  }
+
+  function normalizeLens(lens) {
+    if (lens === "main" || lens === "website" || lens === "site") return "main";
+    if (lens === "instructions") return "instructions";
+    if (lens === "map") return "mirrorland";
+    return "mirrorland";
+  }
+
+  function lensTitle() {
+    if (state.activeLens === "main") return "Main Menu / Website Options";
+    if (state.activeLens === "instructions") return "Instructions";
+    return "Mirrorland Portal";
+  }
+
+  function lensSubtitle() {
+    if (state.activeLens === "main") {
+      return "Ordinary website options remain separate from the Mirrorland portal. Compass remains the main-site orientation layer.";
+    }
+
+    if (state.activeLens === "instructions") {
+      return "Operate the portal, drag the bubble, and use joystick-scroll when moving through long pages.";
+    }
+
+    return mirrorlandEntered()
+      ? "You are inside Mirrorland. Use this portal to move through the Mirrorland route field."
+      : "Entry available. Use this portal to enter Mirrorland directly.";
   }
 
   function enforceSingleElement(selector) {
@@ -378,17 +602,19 @@
     bubble = document.createElement("button");
     bubble.type = "button";
     bubble.className = "dgb-blueprint-bubble";
-    bubble.setAttribute("aria-label", "Open Manor Blueprint map and instructions");
+    bubble.setAttribute("aria-label", "Open Mirrorland Portal map and menu");
     bubble.setAttribute("data-dgb-blueprint-bubble", "true");
     bubble.setAttribute("data-manor-blueprint-contract", CONTRACT);
     bubble.setAttribute("data-api-contract", API_CONTRACT);
     bubble.setAttribute("data-full-viewport-drag", "true");
     bubble.setAttribute("data-joystick-scroll", "true");
+    bubble.setAttribute("data-mirrorland-portal", "true");
+    bubble.setAttribute("data-dual-menu", "true");
     bubble.setAttribute("data-joystick-scroll-force-multiplier", String(JOYSTICK_SCROLL_FORCE_MULTIPLIER));
     bubble.innerHTML = `
       <span class="dgb-blueprint-bubble-label dgb-blueprint-bubble__label">
         <strong>Map</strong>
-        <span>Site</span>
+        <span>Portal</span>
       </span>
     `;
     bubble.style.cssText = [
@@ -419,94 +645,178 @@
     overlay.setAttribute("data-dgb-blueprint-overlay", "true");
     overlay.setAttribute("data-open", "false");
     overlay.setAttribute("data-manor-blueprint-contract", CONTRACT);
-    overlay.setAttribute("aria-label", "Manor Blueprint map and instructions");
+    overlay.setAttribute("data-mirrorland-portal", "true");
+    overlay.setAttribute("aria-label", "Mirrorland Portal map and menus");
 
     document.body.appendChild(overlay);
     return overlay;
   }
 
-  function renderMapLens(routeList, current) {
-    const groups = routeList.reduce((acc, route) => {
-      const key = route.group || "Route";
+  function groupRoutes(routeList) {
+    return routeList.reduce((acc, item) => {
+      const key = item.group || "Route";
       if (!acc[key]) acc[key] = [];
-      acc[key].push(route);
+      acc[key].push(item);
       return acc;
     }, {});
+  }
 
-    const groupMarkup = Object.keys(groups).map((group) => `
+  function renderRouteSections(routeList, current, badgeMode) {
+    const groups = groupRoutes(routeList);
+
+    return Object.keys(groups).map((group) => `
       <section class="dgb-bp-route-section">
         <div class="dgb-bp-section-title">
           <span>${escapeHtml(group)}</span>
           <span>${groups[group].length}</span>
         </div>
         <div class="dgb-bp-route-list">
-          ${groups[group].map((route) => `
-            <a class="dgb-bp-route-card" href="${escapeHtml(route.path)}" data-current="${current && current.id === route.id ? "true" : "false"}">
-              <span class="dgb-bp-route-marker">${escapeHtml(route.title.slice(0, 2).toUpperCase())}</span>
-              <span class="dgb-bp-route-copy">
-                <strong>${escapeHtml(route.title)}</strong>
-                <span>${escapeHtml(route.body)}</span>
-                <code>${escapeHtml(route.path)}</code>
-              </span>
-              <span class="dgb-bp-route-badge">${current && current.id === route.id ? "Here" : "Open"}</span>
-            </a>
-          `).join("")}
+          ${groups[group].map((item) => {
+            const isCurrent = Boolean(current && normalizePath(current.path) === normalizePath(item.path));
+            const badge = isCurrent ? "Here" : badgeMode || "Open";
+
+            return `
+              <a class="dgb-bp-route-card" href="${escapeHtml(item.path)}" data-current="${isCurrent ? "true" : "false"}" data-route-role="${escapeHtml(item.role || "route")}">
+                <span class="dgb-bp-route-marker">${escapeHtml(item.title.slice(0, 2).toUpperCase())}</span>
+                <span class="dgb-bp-route-copy">
+                  <strong>${escapeHtml(item.title)}</strong>
+                  <span>${escapeHtml(item.body)}</span>
+                  <code>${escapeHtml(item.path)}</code>
+                </span>
+                <span class="dgb-bp-route-badge">${escapeHtml(badge)}</span>
+              </a>
+            `;
+          }).join("")}
         </div>
       </section>
     `).join("");
+  }
 
-    const nodes = routeList.map((route) => `
-      <a
-        class="dgb-bp-map-node"
-        href="${escapeHtml(route.path)}"
-        data-current="${current && current.id === route.id ? "true" : "false"}"
-        style="--bp-x:${Math.max(5, Math.min(95, route.x))};--bp-y:${Math.max(5, Math.min(95, route.y))};"
-      >
-        <b>${escapeHtml(route.group)}</b>
-        <strong>${escapeHtml(route.title)}</strong>
-        <span>${escapeHtml(route.path)}</span>
-      </a>
-    `).join("");
+  function renderRouteField(routeList, current) {
+    const nodes = routeList.map((item) => {
+      const isCurrent = Boolean(current && normalizePath(current.path) === normalizePath(item.path));
+
+      return `
+        <a
+          class="dgb-bp-map-node"
+          href="${escapeHtml(item.path)}"
+          data-current="${isCurrent ? "true" : "false"}"
+          data-route-role="${escapeHtml(item.role || "route")}"
+          style="--bp-x:${Math.max(5, Math.min(95, item.x))};--bp-y:${Math.max(5, Math.min(95, item.y))};"
+        >
+          <b>${escapeHtml(item.group)}</b>
+          <strong>${escapeHtml(item.title)}</strong>
+          <span>${escapeHtml(item.path)}</span>
+        </a>
+      `;
+    }).join("");
+
+    return `
+      <div class="dgb-bp-blueprint-field" aria-label="Portal field map">
+        ${nodes}
+      </div>
+    `;
+  }
+
+  function renderMirrorlandLens() {
+    const routeList = mirrorlandRoutes();
+    const current = currentRoute(routeList);
+    const entered = mirrorlandEntered();
+    const support = mirrorlandSupportActive();
 
     return `
       <div class="dgb-bp-map-grid">
         <aside class="dgb-bp-panel">
           <div class="dgb-bp-panel-head">
-            <b>You Are Here</b>
-            <h3>${escapeHtml(current?.title || "Current Route")}</h3>
-            <p>${escapeHtml(current?.body || "Current page detected from the site path.")}</p>
+            <b>Mirrorland Portal</b>
+            <h3>${entered ? "Inside Mirrorland" : support ? "Proof Route Active" : "Entry Available"}</h3>
+            <p>${entered
+              ? "The map is now your Mirrorland navigation system."
+              : support
+                ? "You are on a proof/support route connected to Mirrorland."
+                : "Use Enter Mirrorland to cross directly into the Mirrorland route field."}</p>
           </div>
+
           <div class="dgb-bp-you-are-here">
             <div class="dgb-bp-location-card">
-              <b>Current Path</b>
-              <strong>${escapeHtml(current?.title || "Unknown")}</strong>
+              <b>${entered ? "Current Mirrorland Route" : "Portal Status"}</b>
+              <strong>${escapeHtml(current?.title || "Enter Mirrorland")}</strong>
               <code>${escapeHtml(normalizePath(window.location.pathname || "/"))}</code>
             </div>
+
+            <div class="dgb-bp-chain">
+              <a href="/showroom/">Door</a>
+              <span class="dgb-bp-chain-separator">→</span>
+              <a href="/showroom/globe/">Mirrorland</a>
+              <span class="dgb-bp-chain-separator">→</span>
+              <a href="/showroom/globe/audralia/">Audralia</a>
+            </div>
+
+            <a class="dgb-bp-guide-link" href="/showroom/globe/">
+              ${entered ? "Return to Mirrorland Gate" : "Enter Mirrorland"}
+            </a>
+          </div>
+        </aside>
+
+        <section class="dgb-bp-panel">
+          <div class="dgb-bp-panel-head">
+            <b>Mirrorland Menu</b>
+            <h3>Portal routes</h3>
+            <p>These routes belong to the Mirrorland entry and world-path field.</p>
+          </div>
+          <div class="dgb-bp-route-tools">
+            ${renderRouteSections(routeList, current, "Portal")}
+          </div>
+        </section>
+      </div>
+
+      ${renderRouteField(routeList, current)}
+    `;
+  }
+
+  function renderMainLens() {
+    const routeList = mainMenuRoutes();
+    const current = currentRoute(routeList);
+
+    return `
+      <div class="dgb-bp-map-grid">
+        <aside class="dgb-bp-panel">
+          <div class="dgb-bp-panel-head">
+            <b>Main Menu / Website Options</b>
+            <h3>Compass separated</h3>
+            <p>The Compass remains the main website orientation system. It is not the Mirrorland portal.</p>
+          </div>
+
+          <div class="dgb-bp-you-are-here">
+            <div class="dgb-bp-location-card">
+              <b>Current Website Path</b>
+              <strong>${escapeHtml(current?.title || "Current Route")}</strong>
+              <code>${escapeHtml(normalizePath(window.location.pathname || "/"))}</code>
+            </div>
+
             <div class="dgb-bp-chain">
               <a href="/">Compass</a>
               <span class="dgb-bp-chain-separator">→</span>
               <a href="/door/">Door</a>
               <span class="dgb-bp-chain-separator">→</span>
-              <span>${escapeHtml(current?.title || "Here")}</span>
+              <a href="/showroom/">Showroom</a>
             </div>
           </div>
         </aside>
 
         <section class="dgb-bp-panel">
           <div class="dgb-bp-panel-head">
-            <b>Route List</b>
-            <h3>Site routes</h3>
-            <p>Open a route or use the field map.</p>
+            <b>Website Options</b>
+            <h3>Main routes</h3>
+            <p>Use this lens for ordinary website navigation outside the Mirrorland portal layer.</p>
           </div>
           <div class="dgb-bp-route-tools">
-            ${groupMarkup || `<div class="dgb-bp-empty">No routes were found in the registry.</div>`}
+            ${renderRouteSections(routeList, current, "Open")}
           </div>
         </section>
       </div>
 
-      <div class="dgb-bp-blueprint-field" aria-label="Blueprint field map">
-        ${nodes}
-      </div>
+      ${renderRouteField(routeList, current)}
     `;
   }
 
@@ -526,39 +836,43 @@
     `;
   }
 
+  function renderActiveLens() {
+    if (state.activeLens === "main") return renderMainLens();
+    if (state.activeLens === "instructions") return renderInstructionsLens();
+    return renderMirrorlandLens();
+  }
+
   function renderOverlay() {
     if (!overlay) return;
 
-    const routeList = routes();
-    const current = currentRoute(routeList);
+    const entered = mirrorlandEntered();
+    const support = mirrorlandSupportActive();
 
     overlay.innerHTML = `
       <div class="dgb-bp-topbar">
         <div class="dgb-bp-titleblock">
-          <div class="dgb-bp-kicker">Manor Blueprint · Route HUD</div>
-          <h2 class="dgb-bp-title">${state.activeLens === "map" ? "Route Map" : "Instructions"}</h2>
+          <div class="dgb-bp-kicker">${state.activeLens === "main" ? "Website Options" : state.activeLens === "instructions" ? "Portal Instructions" : "Mirrorland Portal"}</div>
+          <h2 class="dgb-bp-title">${escapeHtml(lensTitle())}</h2>
           <p class="dgb-bp-subtitle">
-            The map bubble is a full-viewport drag control with joystick-scroll behavior. Current scroll force is increased by 40%.
+            ${escapeHtml(lensSubtitle())}
           </p>
         </div>
-        <button class="dgb-bp-close" type="button" data-dgb-close aria-label="Close Manor Blueprint">×</button>
+        <button class="dgb-bp-close" type="button" data-dgb-close aria-label="Close Mirrorland Portal">×</button>
       </div>
 
       <div class="dgb-bp-main">
         <div class="dgb-bp-tabs">
-          <div class="dgb-bp-tablist" role="tablist" aria-label="Manor Blueprint lenses">
-            <button class="dgb-bp-tab" type="button" data-dgb-lens="map" aria-selected="${state.activeLens === "map"}" data-active="${state.activeLens === "map"}">Map</button>
+          <div class="dgb-bp-tablist" role="tablist" aria-label="Mirrorland Portal lenses">
+            <button class="dgb-bp-tab" type="button" data-dgb-lens="mirrorland" aria-selected="${state.activeLens === "mirrorland"}" data-active="${state.activeLens === "mirrorland"}">Mirrorland Menu</button>
+            <button class="dgb-bp-tab" type="button" data-dgb-lens="main" aria-selected="${state.activeLens === "main"}" data-active="${state.activeLens === "main"}">Main Menu</button>
             <button class="dgb-bp-tab" type="button" data-dgb-lens="instructions" aria-selected="${state.activeLens === "instructions"}" data-active="${state.activeLens === "instructions"}">Instructions</button>
           </div>
-          <div class="dgb-bp-current-pill">${escapeHtml(current?.title || "Current Route")}</div>
+          <div class="dgb-bp-current-pill">${entered ? "Inside Mirrorland" : support ? "Mirrorland Proof Route" : "Mirrorland Entry Available"}</div>
         </div>
 
         <div class="dgb-bp-content">
-          <section class="dgb-bp-lens" data-lens-panel="map" ${state.activeLens === "map" ? "" : "hidden"}>
-            ${renderMapLens(routeList, current)}
-          </section>
-          <section class="dgb-bp-lens" data-lens-panel="instructions" ${state.activeLens === "instructions" ? "" : "hidden"}>
-            ${renderInstructionsLens()}
+          <section class="dgb-bp-lens" data-lens-panel="${escapeHtml(state.activeLens)}">
+            ${renderActiveLens()}
           </section>
         </div>
       </div>
@@ -567,7 +881,7 @@
     overlay.querySelector("[data-dgb-close]")?.addEventListener("click", close);
 
     overlay.querySelectorAll("[data-dgb-lens]").forEach((button) => {
-      button.addEventListener("click", () => setLens(button.getAttribute("data-dgb-lens") || "map"));
+      button.addEventListener("click", () => setLens(button.getAttribute("data-dgb-lens") || "mirrorland"));
     });
   }
 
@@ -578,11 +892,13 @@
 
     state.overlayOpen = true;
     state.lastAction = "open";
+    state.activeLens = "mirrorland";
 
     renderOverlay();
 
     overlay.hidden = false;
     overlay.setAttribute("data-open", "true");
+    overlay.setAttribute("data-active-lens", state.activeLens);
 
     document.documentElement.classList.add("dgb-blueprint-body-lock");
     document.body?.classList.add("dgb-blueprint-body-lock");
@@ -610,8 +926,11 @@
   }
 
   function setLens(lens) {
-    state.activeLens = lens === "instructions" ? "instructions" : "map";
+    state.activeLens = normalizeLens(lens);
     state.lastAction = "set-lens:" + state.activeLens;
+
+    if (overlay) overlay.setAttribute("data-active-lens", state.activeLens);
+
     renderOverlay();
     publishStatus();
   }
@@ -785,17 +1104,30 @@
     const v = viewport();
     const m = safeMargins();
     const rect = bubble ? bubble.getBoundingClientRect() : null;
-    const routeList = routes();
-    const current = currentRoute(routeList);
+    const entered = mirrorlandEntered();
+    const support = mirrorlandSupportActive();
+    const mirrorlandList = mirrorlandRoutes();
+    const mainList = mainMenuRoutes();
+    const currentAny = currentRoute(allKnownRoutes());
 
     const payload = {
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
+      priorContract: PRIOR_CONTRACT,
       legacyContract: LEGACY_CONTRACT,
       apiContract: API_CONTRACT,
 
       active: true,
-      siteWideBootstrap: true,
+      mirrorlandPortalActive: true,
+      mirrorlandEntered: entered,
+      mirrorlandSupportActive: support,
+      mirrorlandMenuDefault: true,
+      mirrorlandMenuAvailable: true,
+      mainMenuAvailable: true,
+      compassSeparated: true,
+      dualMenuActive: true,
+
+      siteWideBootstrap: false,
       perPageCustomCode: false,
 
       bubbleMounted: Boolean(bubble && document.body.contains(bubble)),
@@ -816,11 +1148,13 @@
 
       activeLens: state.activeLens,
       currentPath: normalizePath(window.location.pathname || "/"),
-      currentRouteId: current?.id || "",
-      currentRouteTitle: current?.title || "",
+      currentRouteId: currentAny?.id || "",
+      currentRouteTitle: currentAny?.title || "",
 
       registryAvailable: Boolean(registry()),
-      routeCount: routeList.length,
+      mirrorlandRouteCount: mirrorlandList.length,
+      mainMenuRouteCount: mainList.length,
+      routeCount: mirrorlandList.length + mainList.length,
 
       fixedBubble: true,
       fullScreenOverlay: true,
@@ -873,13 +1207,26 @@
       document.documentElement.dataset.manorBlueprintActive = "true";
       document.documentElement.dataset.manorBlueprintContract = CONTRACT;
       document.documentElement.dataset.manorBlueprintPreviousContract = PREVIOUS_CONTRACT;
+      document.documentElement.dataset.manorBlueprintPriorContract = PRIOR_CONTRACT;
       document.documentElement.dataset.manorBlueprintLegacyContract = LEGACY_CONTRACT;
+
+      document.documentElement.dataset.manorBlueprintMirrorlandPortalActive = "true";
+      document.documentElement.dataset.manorBlueprintMirrorlandEntered = String(entered);
+      document.documentElement.dataset.manorBlueprintMirrorlandSupportActive = String(support);
+      document.documentElement.dataset.manorBlueprintMirrorlandMenuDefault = "true";
+      document.documentElement.dataset.manorBlueprintMirrorlandMenuAvailable = "true";
+      document.documentElement.dataset.manorBlueprintMainMenuAvailable = "true";
+      document.documentElement.dataset.manorBlueprintCompassSeparated = "true";
+      document.documentElement.dataset.manorBlueprintDualMenuActive = "true";
+
       document.documentElement.dataset.manorBlueprintFullViewportDrag = "true";
       document.documentElement.dataset.manorBlueprintJoystickScroll = "true";
       document.documentElement.dataset.manorBlueprintJoystickScrollForceMultiplier = String(JOYSTICK_SCROLL_FORCE_MULTIPLIER);
       document.documentElement.dataset.manorBlueprintJoystickScrollForceIncreasePercent = String(JOYSTICK_SCROLL_FORCE_INCREASE_PERCENT);
+
       document.documentElement.dataset.manorBlueprintCurrentRoute = payload.currentRouteId;
       document.documentElement.dataset.manorBlueprintLens = state.activeLens;
+      document.documentElement.dataset.manorBlueprintActiveLens = state.activeLens;
       document.documentElement.dataset.manorBlueprintPositionSource = state.positionSource;
       document.documentElement.dataset.manorBlueprintPositionWasClamped = String(state.positionWasClamped);
     } catch (_error) {}
@@ -922,7 +1269,11 @@
       contract: API_CONTRACT,
       implementationContract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
+      priorContract: PRIOR_CONTRACT,
       legacyContract: LEGACY_CONTRACT,
+      mirrorlandPortalActive: true,
+      dualMenuActive: true,
+      compassSeparated: true,
       joystickScrollForceMultiplier: JOYSTICK_SCROLL_FORCE_MULTIPLIER,
       joystickScrollForceIncreasePercent: JOYSTICK_SCROLL_FORCE_INCREASE_PERCENT,
       refresh,

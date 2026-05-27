@@ -1,18 +1,32 @@
+<!-- TARGET FILE: /showroom/globe/index.html -->
+<!-- TNT FULL-FILE REPLACEMENT -->
+<!-- SHOWROOM_GLOBE_MIRRORLAND_FIRST_ROOM_MAP_HTML_TNT_v1 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/globe/"
   data-page="showroom-globe"
-  data-version="2026-05-24.showroom-globe-mirrorland-first-room-context-v5"
-  data-contract="SHOWROOM_GLOBE_MIRRORLAND_FIRST_ROOM_CONTEXT_HTML_TNT_v5"
+  data-version="2026-05-26.showroom-globe-first-room-map-v1"
+  data-contract="SHOWROOM_GLOBE_MIRRORLAND_FIRST_ROOM_MAP_HTML_TNT_v1"
+  data-previous-contract="SHOWROOM_GLOBE_MIRRORLAND_FIRST_ROOM_CONTEXT_HTML_TNT_v5"
   data-size-renewal="SHOWROOM_GLOBE_MIRRORLAND_ORBIT_GEM_GATEWAY_HTML_SIZE_TNT_v4_1"
-  data-previous-contract="SHOWROOM_GLOBE_MIRRORLAND_ORBIT_GEM_GATEWAY_DONOR_ADAPTATION_HTML_TNT_v4"
   data-authority="great-grandparent-mirrorland-orbit-gem-gateway-expression-only"
-  data-role="mirrorland-first-room-orbit-gateway"
+  data-role="mirrorland-first-room-orbit-gateway-with-local-map"
   data-season="Shadows Never Shatter in Mirrorland"
   data-grandparent-status="legacy-anchor"
   data-first-room-inside-mirrorland="true"
   data-post-door-entry-context="true"
+  data-map-added="true"
+  data-map-type="first-room-orientation-map"
+  data-map-scope="page-local"
+  data-map-owner="/showroom/globe/index.html"
+  data-map-placement="between-hero-and-orbit"
+  data-map-second-mirrorland-entrance="false"
+  data-map-portal-blip-preserved="true"
+  data-map-purpose="orient-the-user-after-entering-mirrorland"
+  data-map-route-directory="false"
+  data-map-debug-metadata-visible="false"
+  data-map-category-ownership-preserved="true"
   data-top-redundancy-reduced="true"
   data-dropdown-preserved="true"
   data-orbit-construct-preserved="true"
@@ -40,10 +54,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Welcome Inside Mirrorland · Shadows Never Shatter</title>
+  <title>Welcome Inside Mirrorland · First Room Map</title>
   <meta
     name="description"
-    content="Welcome inside Mirrorland. The Globe separates the future paths: ZIONTS as consequence, H-Earth as survival, and Audralia as possibility."
+    content="Welcome inside Mirrorland. The Globe is the first room after the Door, with a local map that orients ZIONTS as consequence, H-Earth as survival, Audralia as possibility, and Frontier as deployment."
   >
 
   <style>
@@ -551,6 +565,180 @@
       gap:1.05rem;
     }
 
+    .first-room-map{
+      position:relative;
+      display:grid;
+      grid-template-columns:1fr minmax(15rem,1.18fr) 1fr;
+      grid-template-areas:
+        "door center story"
+        "paths center frontier"
+        "support center return";
+      gap:.85rem;
+      padding:clamp(.85rem,2.5vw,1.1rem);
+      border:1px solid rgba(184,205,255,.13);
+      border-radius:clamp(1.15rem,4vw,1.8rem);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.09),transparent 16rem),
+        radial-gradient(circle at 18% 20%,rgba(141,216,255,.10),transparent 18rem),
+        radial-gradient(circle at 84% 28%,rgba(143,240,195,.06),transparent 18rem),
+        linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018));
+      overflow:hidden;
+      isolation:isolate;
+    }
+
+    .first-room-map::before,
+    .first-room-map::after{
+      content:"";
+      position:absolute;
+      inset:1rem;
+      pointer-events:none;
+      border:1px solid rgba(243,200,111,.08);
+      border-radius:1.4rem;
+      z-index:0;
+    }
+
+    .first-room-map::after{
+      inset:50% auto auto 50%;
+      width:20rem;
+      height:20rem;
+      border-radius:4rem;
+      transform:translate(-50%,-50%) rotate(45deg);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(36,120,255,.10),transparent 65%),
+        linear-gradient(135deg,rgba(255,255,255,.035),rgba(255,255,255,.006));
+      opacity:.72;
+    }
+
+    .map-node{
+      position:relative;
+      z-index:2;
+      min-height:8.35rem;
+      display:grid;
+      gap:.35rem;
+      align-content:start;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.15rem;
+      padding:1rem;
+      background:
+        radial-gradient(circle at 18% 0%,rgba(141,216,255,.10),transparent 12rem),
+        rgba(255,255,255,.035);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+    }
+
+    .map-node::before{
+      content:"";
+      width:1.05rem;
+      height:1.05rem;
+      border-radius:.28rem;
+      transform:rotate(45deg);
+      margin-bottom:.15rem;
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+      box-shadow:0 0 1rem rgba(243,200,111,.28);
+    }
+
+    .map-node b{
+      color:var(--gold);
+      font-size:.66rem;
+      font-weight:950;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .map-node strong{
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.08rem,2.6vw,1.42rem);
+      line-height:1.05;
+      letter-spacing:-.035em;
+    }
+
+    .map-node span{
+      color:rgba(230,238,255,.75);
+      font-size:.9rem;
+      line-height:1.38;
+    }
+
+    .map-node a,
+    .map-node .map-action{
+      width:fit-content;
+      margin-top:.35rem;
+      color:rgba(255,244,216,.92);
+      border-bottom:1px solid rgba(243,200,111,.38);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .map-node.center{
+      grid-area:center;
+      min-height:100%;
+      align-content:center;
+      text-align:center;
+      place-items:center;
+      border-color:rgba(243,200,111,.32);
+      background:
+        radial-gradient(circle at 50% 18%,rgba(243,200,111,.16),transparent 15rem),
+        radial-gradient(circle at 50% 70%,rgba(36,120,255,.12),transparent 18rem),
+        rgba(255,255,255,.040);
+    }
+
+    .map-node.center::before{
+      width:3.2rem;
+      height:3.2rem;
+      border-radius:.7rem;
+      box-shadow:
+        0 0 1.8rem rgba(243,200,111,.26),
+        0 0 3.2rem rgba(36,120,255,.18);
+    }
+
+    .map-node.door{grid-area:door}
+    .map-node.paths{grid-area:paths}
+    .map-node.story{grid-area:story}
+    .map-node.frontier{grid-area:frontier}
+    .map-node.support{grid-area:support}
+    .map-node.return{grid-area:return}
+
+    .map-node.support::before{
+      background:linear-gradient(135deg,rgba(230,238,255,.95),rgba(141,216,255,.78));
+    }
+
+    .map-node.frontier::before{
+      background:linear-gradient(135deg,rgba(143,240,195,.95),rgba(243,200,111,.76));
+    }
+
+    .map-legend{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.55rem;
+      align-items:center;
+      color:rgba(230,238,255,.66);
+      font-size:.78rem;
+      font-weight:800;
+    }
+
+    .map-legend span{
+      display:inline-flex;
+      align-items:center;
+      gap:.35rem;
+      padding:.38rem .58rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:999px;
+      background:rgba(255,255,255,.035);
+    }
+
+    .map-legend span::before{
+      content:"";
+      width:.52rem;
+      height:.52rem;
+      border-radius:.12rem;
+      transform:rotate(45deg);
+      background:var(--gold);
+      box-shadow:0 0 .65rem rgba(243,200,111,.24);
+    }
+
+    .map-legend span:nth-child(2)::before{background:var(--blue)}
+    .map-legend span:nth-child(3)::before{background:var(--green)}
+
     .mirror-stage{
       position:relative;
       min-height:clamp(48rem,86vw,66rem);
@@ -1019,6 +1207,14 @@
 
     @media (max-width:1080px){
       .path-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .first-room-map{
+        grid-template-columns:1fr 1fr;
+        grid-template-areas:
+          "center center"
+          "door paths"
+          "story frontier"
+          "support return";
+      }
     }
 
     @media (max-width:980px){
@@ -1061,6 +1257,22 @@
 
       .route-menu-grid{
         grid-template-columns:1fr;
+      }
+
+      .first-room-map{
+        grid-template-columns:1fr;
+        grid-template-areas:
+          "center"
+          "door"
+          "paths"
+          "story"
+          "frontier"
+          "support"
+          "return";
+      }
+
+      .map-node{
+        min-height:auto;
       }
 
       .mirror-stage{
@@ -1377,7 +1589,7 @@
                 <div class="cardinal-heading">Support <span>Measurement and development</span></div>
                 <div class="route-menu-grid">
                   <a class="route-menu-link" href="/gauges/">Gauges</a>
-                  <a class="route-menu-link" href="/frontier/">Frontier</a>
+                  <a class="route-menu-link" href="/explore/frontier/">Frontier</a>
                   <a class="route-menu-link" href="/products/">Products</a>
                 </div>
               </div>
@@ -1402,11 +1614,85 @@
         </div>
 
         <div class="actions">
-          <a class="button gold" href="#mirrorland-orbit">Open the Globe</a>
+          <a class="button gold" href="#mirrorland-map">Read the Map</a>
+          <a class="button" href="#mirrorland-orbit">Open the Globe</a>
           <a class="button green" href="/showroom/globe/audralia/">Audralia · Possibility</a>
           <a class="button" href="/showroom/globe/earth/">ZIONTS · Consequence</a>
           <a class="button" href="/showroom/globe/h-earth/">H-Earth · Survival</a>
           <a class="button" href="/characters/">Meet Characters</a>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="room-map-title" data-first-room-map="true">
+        <div class="kicker">First room map · Local orientation</div>
+        <h2 id="room-map-title">You are standing at the Globe Window.</h2>
+        <p>
+          This map orients the first room after the Door. It is not a second portal. The Door brought you here; the Globe separates the future paths.
+        </p>
+
+        <div
+          id="mirrorland-map"
+          class="first-room-map"
+          aria-label="Mirrorland first room orientation map"
+          data-map-added="true"
+          data-map-type="first-room-orientation-map"
+          data-map-scope="page-local"
+          data-map-second-mirrorland-entrance="false"
+        >
+          <article class="map-node door">
+            <b>Before this room</b>
+            <strong>The Door</strong>
+            <span>The Diamond Lattice threshold sits before this Globe room.</span>
+            <a href="/showroom/">Return to Door</a>
+          </article>
+
+          <article class="map-node center">
+            <b>You are here</b>
+            <strong>Globe Window</strong>
+            <span>The first room inside Mirrorland. It shows the future paths without becoming the portal itself.</span>
+            <a href="#mirrorland-orbit">Open Globe</a>
+          </article>
+
+          <article class="map-node paths">
+            <b>Future paths</b>
+            <strong>Consequence · Survival · Possibility</strong>
+            <span>ZIONTS warns, H-Earth survives, and Audralia opens possibility.</span>
+            <a href="#paths-title">Choose Path</a>
+          </article>
+
+          <article class="map-node story">
+            <b>Story rooms</b>
+            <strong>People and rules</strong>
+            <span>The Characters and Mirror Law explain who enters, why they cross, and what changes.</span>
+            <a href="/characters/">Meet Characters</a>
+          </article>
+
+          <article class="map-node frontier">
+            <b>West wing</b>
+            <strong>Frontier Deployment</strong>
+            <span>Frontier carries applied systems after the future paths are understood.</span>
+            <a href="/explore/frontier/">Open Frontier</a>
+          </article>
+
+          <article class="map-node support">
+            <b>Website support</b>
+            <strong>Gauges and Products</strong>
+            <span>Support routes measure and explain the site. They support Mirrorland but do not become Mirrorland doors.</span>
+            <a href="/gauges/">Check Gauges</a>
+          </article>
+
+          <article class="map-node return">
+            <b>Return axis</b>
+            <strong>Orbit and window</strong>
+            <span>Return to the orbit when a path branch needs to be re-read.</span>
+            <a href="#mirrorland-orbit">Return to Orbit</a>
+          </article>
+        </div>
+
+        <div class="map-legend" aria-label="Map legend">
+          <span>Current room</span>
+          <span>Future path</span>
+          <span>Deployment/support</span>
         </div>
       </section>
 
@@ -1594,11 +1880,11 @@
             <span class="open-path">Meet Characters</span>
           </a>
 
-          <a class="path-card" href="/showroom/">
-            <b>Showroom · Proof surface</b>
-            <strong>Inspect visible software objects.</strong>
-            <span>The Showroom keeps public objects visible while the Globe carries the narrative gateway.</span>
-            <span class="open-path">Open Showroom</span>
+          <a class="path-card" href="/explore/frontier/">
+            <b>Frontier · West deployment</b>
+            <strong>Open applied systems.</strong>
+            <span>Frontier carries water, waste, energy, and closed-loop development after the future paths are understood.</span>
+            <span class="open-path">Open Frontier</span>
           </a>
 
           <a class="path-card" href="/gauges/">
@@ -1611,17 +1897,29 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-SHOWROOM_GLOBE_MIRRORLAND_FIRST_ROOM_CONTEXT_HTML_TNT_v5
+SHOWROOM_GLOBE_MIRRORLAND_FIRST_ROOM_MAP_HTML_TNT_v1
+previous=SHOWROOM_GLOBE_MIRRORLAND_FIRST_ROOM_CONTEXT_HTML_TNT_v5
 size_renewal=SHOWROOM_GLOBE_MIRRORLAND_ORBIT_GEM_GATEWAY_HTML_SIZE_TNT_v4_1
-previous=SHOWROOM_GLOBE_MIRRORLAND_ORBIT_GEM_GATEWAY_DONOR_ADAPTATION_HTML_TNT_v4
 route=/showroom/globe/
 page=showroom_globe
-role=mirrorland_first_room_orbit_gateway
+role=mirrorland_first_room_orbit_gateway_with_local_map
 status=great_grandparent_legacy_anchor
 public_subject=Shadows_Never_Shatter_in_Mirrorland
 public_line=Welcome_inside_Mirrorland_choose_the_future_path
 post_door_entry_context=true
 first_room_inside_mirrorland=true
+map_added=true
+map_type=first_room_orientation_map
+map_scope=page_local
+map_owner=/showroom/globe/index.html
+map_placement=between_hero_and_orbit
+map_purpose=orient_the_user_after_entering_mirrorland
+map_second_mirrorland_entrance=false
+map_portal_blip_preserved=true
+map_route_directory=false
+map_debug_metadata_visible=false
+map_category_ownership_preserved=true
+map_nodes=Door,Globe_Window,Future_Paths,Story_Rooms,Frontier_Deployment,Website_Support,Return_Axis
 top_redundancy_reduced=true
 dropdown_preserved=true
 orbit_construct_preserved=true
@@ -1647,8 +1945,8 @@ object_motion_only=true
 gem_wrapper_counter_motion=true
 animation_targets=orbit_rings,diamond_object_wrapper,svg_facets,glint,center_anchor
 forbidden_text_animation=shimmer,pulse,blur,bounce,flicker,independent_rotation,vibration
-route_owns=mirrorland_gateway,public_narrative_expression,gem_orbit_layout,anchor_sections,dropdown_markup
-route_does_not_own=audralia_clean_canvas,planet_runtime,canvas_rendering,three_d_graphics_engine,character_roster_depth,gauges_logic,planet_template_phrase
+route_owns=mirrorland_gateway,public_narrative_expression,gem_orbit_layout,anchor_sections,dropdown_markup,first_room_orientation_map
+route_does_not_own=audralia_clean_canvas,planet_runtime,canvas_rendering,three_d_graphics_engine,character_roster_depth,gauges_logic,planet_template_phrase,mirrorland_portal_blip_runtime
 external_motion_js=false
 canvas_runtime=false
 requestAnimationFrame=false
@@ -1660,7 +1958,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      SHOWROOM_GLOBE_MIRRORLAND_FIRST_ROOM_CONTEXT_HTML_TNT_v5 · Welcome inside Mirrorland · The Globe separates the future paths.
+      SHOWROOM_GLOBE_MIRRORLAND_FIRST_ROOM_MAP_HTML_TNT_v1 · Welcome inside Mirrorland · The Globe separates the future paths.
     </footer>
   </div>
 

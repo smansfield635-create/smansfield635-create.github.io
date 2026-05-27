@@ -1,14 +1,14 @@
 <!-- TARGET FILE: /showroom/globe/audralia/planet/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- AUDRALIA_PLANET_GLOBE_DIRECT_VIEW_OPTIONS_HTML_TNT_v5 -->
+<!-- AUDRALIA_PLANET_FULL_GLOBE_VISIBLE_BOX_RESIZE_HTML_TNT_v6 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
   data-page="audralia-planet"
-  data-version="G5-GLOBE-DIRECT-VIEW-OPTIONS"
-  data-contract="AUDRALIA_PLANET_GLOBE_DIRECT_VIEW_OPTIONS_HTML_TNT_v5"
-  data-previous-contract="AUDRALIA_PLANET_PUBLIC_NARRATIVE_COMPACT_VISIBLE_COPY_HTML_TNT_v4"
+  data-version="G6-FULL-GLOBE-VISIBLE-BOX-RESIZE"
+  data-contract="AUDRALIA_PLANET_FULL_GLOBE_VISIBLE_BOX_RESIZE_HTML_TNT_v6"
+  data-previous-contract="AUDRALIA_PLANET_GLOBE_DIRECT_VIEW_OPTIONS_HTML_TNT_v5"
   data-baseline-contract="AUDRALIA_PLANET_HTML_RENDERPLEX_SHELL_CLEANUP_TNT_v1"
   data-canvas-contract="AUDRALIA_PLANET_FILE_5C_RENDERPLEX_CHILD_CHAIN_LOADER_TNT_v1"
   data-renderplex-active="true"
@@ -16,14 +16,6 @@
   data-renderplex-owns-child-chain="true"
   data-html-loads-child-chain="false"
   data-display-protocol="AUDRALIA_CANVAS_DISPLAY_PRIMITIVES_v1"
-  data-blueprint-bootstrap-installed="true"
-  data-blueprint-bootstrap-contract="MANOR_BLUEPRINT_BOOTSTRAP_MOBILE_SAFE_HUD_CACHE_KEY_RENEWAL_TNT_v1"
-  data-blueprint-bootstrap-previous-contract="MANOR_BLUEPRINT_GLOBAL_BOOTSTRAP_TNT_v1"
-  data-blueprint-bootstrap-cache-key="MANOR_BLUEPRINT_BOOTSTRAP_MOBILE_SAFE_HUD_CACHE_KEY_RENEWAL_TNT_v1"
-  data-blueprint-expected-implementation-contract="MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_POSITION_RENEWAL_TNT_v1"
-  data-blueprint-mobile-safe-hud-requested="true"
-  data-blueprint-test-route-install="true"
-  data-blueprint-cache-catch="AUDRALIA_PLANET_GLOBE_DIRECT_VIEW_OPTIONS_HTML_TNT_v5"
   data-role="mirrorland-audralia-future-body-screen"
   data-future-path="Audralia_Untouched_Living_Path"
   data-mirrorland-narrative-active="true"
@@ -38,11 +30,13 @@
   data-platform-engineering-contained="true"
   data-visible-diagnostic-reporting-reduced="true"
   data-view-options-directly-under-globe="true"
+  data-full-globe-visible="true"
+  data-globe-box-resized="true"
+  data-globe-stage-inset-reserved="true"
   data-inspect-button-removed="true"
   data-reset-button-removed="true"
   data-return-to-orbit-target="#audralia-gem-orbit"
   data-return-to-orbit-points-to-globe="false"
-  data-return-orbit-old-ui-selector-bypassed="true"
   data-return-category-orbit-selector="true"
   data-active-water="false"
   data-hydration-active="false"
@@ -61,7 +55,7 @@
   <title>Audralia Planet · Mirrorland Possibility</title>
   <meta
     name="description"
-    content="Audralia is Mirrorland’s constructive possibility world. The globe is the object. The view options sit directly under the globe. The gems are the category orbit."
+    content="Audralia is Mirrorland’s constructive possibility world. The globe is the object, fully visible in its stage, with view options directly beneath it and categories held in the gem orbit."
   >
 
   <style>
@@ -82,6 +76,8 @@
       --gem-path:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
       --orbit-size:34rem;
       --orbit-radius:14.2rem;
+      --globe-reserve-top:7.25rem;
+      --globe-reserve-bottom:17.75rem;
     }
 
     *{box-sizing:border-box}
@@ -372,7 +368,7 @@
 
     .planet-stage-card{
       position:relative;
-      min-height:clamp(31rem,56vw,44rem);
+      min-height:clamp(43rem,72vw,58rem);
       border:1px solid rgba(184,205,255,.15);
       border-radius:clamp(1rem,3.5vw,1.7rem);
       overflow:hidden;
@@ -390,7 +386,7 @@
       content:"";
       position:absolute;
       left:50%;
-      top:48%;
+      top:47%;
       border-radius:50%;
       transform:translate(-50%,-50%);
       pointer-events:none;
@@ -412,7 +408,7 @@
 
     .planet-stage{
       position:absolute;
-      inset:0 0 8rem;
+      inset:var(--globe-reserve-top) .9rem var(--globe-reserve-bottom) .9rem;
       z-index:2;
       touch-action:none;
     }
@@ -922,6 +918,23 @@
       text-transform:uppercase;
     }
 
+    .button{
+      min-height:2rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:999px;
+      padding:.45rem .65rem;
+      background:rgba(255,255,255,.045);
+      color:rgba(241,246,255,.88);
+      font-size:.56rem;
+      font-weight:950;
+      letter-spacing:.075em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+    }
+
     .lens-tabs{
       display:flex;
       gap:.4rem;
@@ -1011,6 +1024,8 @@
       :root{
         --orbit-size:28.5rem;
         --orbit-radius:11.9rem;
+        --globe-reserve-top:7.9rem;
+        --globe-reserve-bottom:18.9rem;
       }
 
       .topbar{
@@ -1037,11 +1052,17 @@
       .shell{width:min(100% - 22px,var(--max))}
       h1{font-size:clamp(2.65rem,13.5vw,4.85rem)}
       .hero{min-height:18rem;padding:1rem}
-      .planet-stage-card{min-height:37rem}
-      .planet-stage{inset:0 0 13rem}
+      .planet-stage-card{min-height:48rem}
     }
 
     @media (max-width:560px){
+      :root{
+        --globe-reserve-top:8.15rem;
+        --globe-reserve-bottom:19.45rem;
+      }
+
+      .planet-stage-card{min-height:50rem}
+
       .gem-orbit-field{
         min-height:auto;
         display:grid;
@@ -1223,7 +1244,7 @@
           <div class="planet-stage-card">
             <div class="stage-label">
               <b>Audralia · Living possibility</b>
-              <span>Inspect the world-body. Then choose a category below.</span>
+              <span>Inspect the full world-body. Then choose a category below.</span>
             </div>
 
             <div
@@ -1423,53 +1444,33 @@
       </section>
 
       <template id="route-receipt" class="receipt" data-route-receipt>
-AUDRALIA_PLANET_GLOBE_DIRECT_VIEW_OPTIONS_HTML_TNT_v5
-previous=AUDRALIA_PLANET_PUBLIC_NARRATIVE_COMPACT_VISIBLE_COPY_HTML_TNT_v4
-baseline=AUDRALIA_PLANET_HTML_RENDERPLEX_SHELL_CLEANUP_TNT_v1
+AUDRALIA_PLANET_FULL_GLOBE_VISIBLE_BOX_RESIZE_HTML_TNT_v6
+previous=AUDRALIA_PLANET_GLOBE_DIRECT_VIEW_OPTIONS_HTML_TNT_v5
 route=/showroom/globe/audralia/planet/
 html=/showroom/globe/audralia/planet/index.html
+full_globe_visible=true
+globe_box_resized=true
+planet_stage_card_min_height_desktop=clamp(43rem,72vw,58rem)
+planet_stage_card_min_height_mobile=48rem_to_50rem
+planet_stage_inset_reserved=true
+planet_stage_top_reserved=var(--globe-reserve-top)
+planet_stage_bottom_reserved=var(--globe-reserve-bottom)
 view_options_directly_under_globe=true
 inspect_button_removed=true
 reset_button_removed=true
 visible_underhood_language_removed=true
-visible_renderplex_language_sanitized=true
-visible_html_shell_language_sanitized=true
-visible_canvas_api_language_sanitized=true
-visible_contract_language_removed=true
-visible_child_chain_language_removed=true
 platform_engineering_contained=true
-platform_engineering_tabs_active=true
-context_moved_to_dropdowns=true
-route_directory_removed=true
-central_focus=Audralia_world_body
-public_message=Audralia_gives_possibility_a_body
-globe_role=main_object
-gem_orbit_role=category_home_base
 return_to_orbit_target=#audralia-gem-orbit
 return_to_orbit_points_to_globe=false
-data_return_orbit_removed=true
-data_return_category_orbit=true
-old_ui_return_orbit_handler_bypassed=true
 canvas_renderplex=/showroom/globe/audralia/planet/index.canvas.js
 canvas_renderplex_contract=AUDRALIA_PLANET_FILE_5C_RENDERPLEX_CHILD_CHAIN_LOADER_TNT_v1
 ui=/showroom/globe/audralia/planet/index.ui.js
 ui_contract=AUDRALIA_G2_PLANET_OPERATION_C_UI_JS_OPTIMIZATION_ONLY_TNT_v1
 site_bootstrap=/assets/site.bootstrap.js
 site_bootstrap_contract=MANOR_BLUEPRINT_BOOTSTRAP_MOBILE_SAFE_HUD_CACHE_KEY_RENEWAL_TNT_v1
-blueprint_hud_cache_key=MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_POSITION_RENEWAL_TNT_v1
-blueprint_mobile_safe_hud_requested=true
-html_loads_child_chain=false
-renderplex_owns_child_chain=true
-child_chain_loaded_by_canvas=true
-display_protocol=AUDRALIA_CANVAS_DISPLAY_PRIMITIVES_v1
 canvas_selector=[data-audralia-planet-stage]
 orbit_selector=#audralia-gem-orbit
 globe_selector=#planet-orbit
-ui_selectors_preserved=true
-mode_selectors_preserved=true
-gem_selectors_preserved=true
-chamber_selectors_preserved=true
-lens_selectors_preserved=true
 activeWater=false
 hydrationActive=false
 surfaceChildActive=false
@@ -1478,12 +1479,12 @@ generatedImage=false
 graphicBox=false
 externalImageAsset=false
 finalVisualPass=false
-deploy_marker=AUDRALIA_PLANET_GLOBE_DIRECT_VIEW_OPTIONS_DEPLOY_MARKER_v5
+deploy_marker=AUDRALIA_PLANET_FULL_GLOBE_VISIBLE_BOX_RESIZE_DEPLOY_MARKER_v6
       </template>
     </main>
 
     <footer>
-      AUDRALIA_PLANET_GLOBE_DIRECT_VIEW_OPTIONS_HTML_TNT_v5 · Audralia · View options directly under globe · No inspect/reset controls · No final visual pass.
+      AUDRALIA_PLANET_FULL_GLOBE_VISIBLE_BOX_RESIZE_HTML_TNT_v6 · Audralia · Full globe visible · View options beneath globe · No final visual pass.
     </footer>
   </div>
 
@@ -1495,7 +1496,7 @@ deploy_marker=AUDRALIA_PLANET_GLOBE_DIRECT_VIEW_OPTIONS_DEPLOY_MARKER_v5
     (() => {
       "use strict";
 
-      const PUBLIC_COPY_CONTRACT = "AUDRALIA_PLANET_GLOBE_DIRECT_VIEW_OPTIONS_SANITIZER_TNT_v5";
+      const PUBLIC_COPY_CONTRACT = "AUDRALIA_PLANET_FULL_GLOBE_VISIBLE_SANITIZER_TNT_v6";
 
       const modeCopy = {
         body: {
@@ -1654,6 +1655,8 @@ deploy_marker=AUDRALIA_PLANET_GLOBE_DIRECT_VIEW_OPTIONS_DEPLOY_MARKER_v5
         document.documentElement.dataset.visibleUnderhoodLanguageRemoved = "true";
         document.documentElement.dataset.platformEngineeringContained = "true";
         document.documentElement.dataset.viewOptionsDirectlyUnderGlobe = "true";
+        document.documentElement.dataset.fullGlobeVisible = "true";
+        document.documentElement.dataset.globeBoxResized = "true";
         document.documentElement.dataset.inspectButtonRemoved = "true";
         document.documentElement.dataset.resetButtonRemoved = "true";
 

@@ -1,51 +1,24 @@
 // TARGET FILE: /assets/manor-blueprint/manor.blueprint.js
 // TNT FULL-FILE REPLACEMENT
-// MANOR_BLUEPRINT_MENU_CATEGORY_OWNERSHIP_RUNTIME_TNT_v1
+// MIRRORLAND_BLUEPRINT_ESTATE_ROOM_LANGUAGE_REGISTRY_RUNTIME_CSS_TNT_v1
 //
+// Runtime portion.
 // Purpose:
-// Correct the Manor Blueprint Portal runtime so Main Menu / Website Options
-// contains only regular website routes, while Mirrorland Doors contains only
-// Showroom, planetary, cockpit, Frontier, and narrative/story routes.
+// - Render visitor-facing estate-room language.
+// - Hide route/file/wing/role metadata from public cards.
+// - Preserve Map / Portal blip, overlay, drag, joystick scroll, and menu split.
 //
 // Previous runtime contract:
-// MANOR_BLUEPRINT_MIRRORLAND_DOORS_SINGLE_ENTRYWAY_RUNTIME_TNT_v1
-//
-// Compatibility API contract preserved:
-// MANOR_BLUEPRINT_FIXED_DRAGGABLE_BUBBLE_FULLSCREEN_MAP_INSTRUCTIONS_TOGGLE_JS_TNT_v1
-//
-// Owns:
-// - Map / Portal blip
-// - Mirrorland Doors / Main Menu / Instructions lenses
-// - route-to-room classification
-// - category ownership separation
-// - cardinal room grouping
-// - clickable room rendering
-// - current-room detection
-// - Frontier as Mirrorland-aligned and West-disposed
-// - narrative/story as Mirrorland
-// - full-viewport drag
-// - strong-visible joystick scroll
-// - status / receipt globals
-//
-// Does not own:
-// - /showroom/index.html layout
-// - /assets/manor-blueprint/manor.blueprint.css
-// - /assets/manor-blueprint/manor.blueprint.registry.js
-// - /assets/site.bootstrap.js
-// - /showroom/index.diamond.js
-// - /showroom/index.ui.js
-// - Audralia runtime
-// - planet route files
-// - Gauges logic
+// MANOR_BLUEPRINT_MENU_CATEGORY_OWNERSHIP_RUNTIME_TNT_v1
 
 (() => {
   "use strict";
 
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CONTRACT = "MANOR_BLUEPRINT_MENU_CATEGORY_OWNERSHIP_RUNTIME_TNT_v1";
-  const PREVIOUS_CONTRACT = "MANOR_BLUEPRINT_MIRRORLAND_DOORS_SINGLE_ENTRYWAY_RUNTIME_TNT_v1";
-  const PRIOR_CONTRACT = "MANOR_BLUEPRINT_CARDINAL_ROOM_MAP_RUNTIME_JS_TNT_v1";
+  const CONTRACT = "MIRRORLAND_BLUEPRINT_ESTATE_ROOM_LANGUAGE_REGISTRY_RUNTIME_CSS_TNT_v1";
+  const PREVIOUS_CONTRACT = "MANOR_BLUEPRINT_MENU_CATEGORY_OWNERSHIP_RUNTIME_TNT_v1";
+  const PRIOR_CONTRACT = "MANOR_BLUEPRINT_MIRRORLAND_DOORS_SINGLE_ENTRYWAY_RUNTIME_TNT_v1";
   const LEGACY_CONTRACT = "MANOR_BLUEPRINT_MOBILE_SAFE_BUBBLE_POSITION_RENEWAL_TNT_v1";
   const API_CONTRACT = "MANOR_BLUEPRINT_FIXED_DRAGGABLE_BUBBLE_FULLSCREEN_MAP_INSTRUCTIONS_TOGGLE_JS_TNT_v1";
 
@@ -65,14 +38,15 @@
   const JOYSTICK_SCROLL_FORCE_INCREASE_PERCENT = 40;
   const JOYSTICK_SCROLL_FORCE_PROFILE = "strong-visible";
   const MOBILE_BREAKPOINT = 760;
+
   const CARDINAL_ORDER = Object.freeze(["north", "east", "center", "west", "south"]);
 
   const CARDINAL_LABELS = Object.freeze({
-    north: { title: "North", meaning: "Interface · Engineering · Known System" },
-    east: { title: "East", meaning: "Narrative · Game · Mirrorland Expression" },
-    center: { title: "Center", meaning: "Foyer · Current Position · Portal Threshold" },
-    west: { title: "West", meaning: "Community · Products · Frontier Deployment" },
-    south: { title: "South", meaning: "Scientific Backing · Proof · Measurement" }
+    north: { title: "North Hall", meaning: "Front doors, orientation, and return rooms" },
+    east: { title: "East Gallery", meaning: "Story rooms, worlds, studies, and living doors" },
+    center: { title: "Center Foyer", meaning: "Arrival, threshold, and current position" },
+    west: { title: "West Grounds", meaning: "Workshop yard, public rooms, and applied systems" },
+    south: { title: "South Library", meaning: "Law, testing, proof, and measurement rooms" }
   });
 
   const MIRRORLAND_PREFIXES = Object.freeze([
@@ -264,13 +238,12 @@
         legacyContract: LEGACY_CONTRACT,
         mapBlipSingleEntryway: true,
         mirrorlandEntryway: "map-portal-blip",
+        estateRoomLanguageActive: true,
+        publicLabelsBound: true,
+        routePathHiddenFromPublicCards: true,
         mainMenuWebsiteOptionsOnly: true,
         mirrorlandDoorsCategoryOnly: true,
         supportDoesNotEqualOwnership: true,
-        gaugesMirrorlandAligned: false,
-        frontierMirrorlandAligned: true,
-        narrativePagesMirrorland: true,
-        compassSeparated: true,
         fullViewportDrag: true,
         joystickScrollActive: true,
         joystickScrollForceProfile: JOYSTICK_SCROLL_FORCE_PROFILE,
@@ -392,9 +365,9 @@
       p.startsWith("/home/") ||
       p.startsWith("/site-guide/") ||
       t.includes("compass") ||
-      t === "door" ||
-      t === "home" ||
-      t.includes("site guide") ||
+      t.includes("door") ||
+      t.includes("home") ||
+      t.includes("guide") ||
       g.includes("main menu") ||
       g.includes("website options")
     ) {
@@ -406,11 +379,10 @@
       p.startsWith("/products/") ||
       p.startsWith("/about-this-underdog/") ||
       t.includes("frontier") ||
-      t.includes("products") ||
+      t.includes("product") ||
       t.includes("sean") ||
-      g.includes("frontier") ||
-      g.includes("products") ||
-      g.includes("community")
+      t.includes("workshop") ||
+      t.includes("gallery")
     ) {
       return "west";
     }
@@ -420,13 +392,10 @@
       p.startsWith("/gauges/") ||
       p.startsWith("/governance/") ||
       t.includes("law") ||
+      t.includes("lab") ||
+      t.includes("council") ||
       t.includes("gauge") ||
-      t.includes("audit") ||
-      t.includes("proof") ||
-      t.includes("governance") ||
-      g.includes("audit") ||
-      g.includes("law") ||
-      g.includes("proof")
+      t.includes("governance")
     ) {
       return "south";
     }
@@ -437,12 +406,13 @@
       p.startsWith("/nine-summits/") ||
       p.includes("/audralia/") ||
       p.includes("/h-earth/") ||
-      t.includes("mirrorland") ||
-      t.includes("showroom") ||
-      t.includes("character") ||
+      t.includes("atrium") ||
+      t.includes("atlas") ||
+      t.includes("zionts") ||
       t.includes("audralia") ||
-      t.includes("h-earth") ||
-      t.includes("nine summits") ||
+      t.includes("world") ||
+      t.includes("portrait") ||
+      t.includes("universe") ||
       g.includes("mirrorland")
     ) {
       return "east";
@@ -451,48 +421,66 @@
     return "center";
   }
 
-  function inferWing(path, title, group, cardinal) {
+  function defaultEstateFromPath(path, title) {
     const p = normalizePath(path);
     const t = String(title || "").toLowerCase();
-    const g = String(group || "").toLowerCase();
 
-    if (p.startsWith("/explore/frontier/") || t.includes("frontier") || g.includes("frontier")) return "Frontier Deployment";
-    if (p.startsWith("/showroom/globe/audralia/") || t.includes("audralia")) return "Audralia World Wing";
-    if (p.startsWith("/showroom/globe/h-earth/") || t.includes("h-earth")) return "H-Earth World Wing";
-    if (p.startsWith("/showroom/globe/hearth/") || t.includes("hearth")) return "Hearth World Wing";
-    if (p.startsWith("/showroom/globe/") || t.includes("mirrorland")) return "Planetary Wing";
-    if (p.startsWith("/characters/") || t.includes("character")) return "Character Wing";
-    if (p.startsWith("/nine-summits/") || t.includes("nine summits")) return "Narrative Wing";
-    if (p.startsWith("/showroom/") || t.includes("showroom")) return "Showroom Door";
-    if (p.startsWith("/laws/") || t.includes("law")) return "Law Wing";
-    if (p.startsWith("/gauges/") || t.includes("gauge") || t.includes("audit")) return "Audit Wing";
-    if (p.startsWith("/products/") || t.includes("product")) return "Product Wing";
-    if (t.includes("sean")) return "Identity Wing";
-    if (p === "/" || t.includes("compass")) return "Interface Origin";
-    if (p.startsWith("/door/") || t === "door") return "Website Threshold";
-    if (p.startsWith("/home/") || t === "home") return "Home Wing";
-    if (t.includes("guide")) return "Guide Wing";
+    if (p === "/" || t.includes("compass")) return "The Compass Desk";
+    if (p.startsWith("/door/")) return "The Front Door";
+    if (p.startsWith("/home/")) return "The Hearth";
+    if (p.startsWith("/site-guide/")) return "The Guide Desk";
+    if (p.startsWith("/products/")) return "The Product Gallery";
+    if (p.startsWith("/laws/")) return "The Law Library";
+    if (p.startsWith("/governance/")) return "The Council Room";
+    if (p.startsWith("/gauges/")) return "The Lab";
+    if (p.startsWith("/about-this-underdog/")) return "The Host Portrait";
+    if (p.startsWith("/showroom/globe/earth/")) return "ZIONTS";
+    if (p.startsWith("/showroom/globe/audralia/planet/")) return "Audralia Worldroom";
+    if (p.startsWith("/showroom/globe/audralia/disposition/")) return "The Control Room";
+    if (p.startsWith("/showroom/globe/audralia/")) return "Audralia Conservatory";
+    if (p.startsWith("/showroom/globe/")) return "The Atlas Study";
+    if (p.startsWith("/showroom/")) return "The Atrium";
+    if (p.startsWith("/characters/")) return "The Portrait Hall";
+    if (p.startsWith("/nine-summits/universe/")) return "The Universe Gallery";
+    if (p.startsWith("/explore/frontier/")) return "Frontier Workshop Yard";
 
-    return CARDINAL_LABELS[cardinal]?.meaning || "Blueprint Wing";
+    return title || "Estate Room";
   }
 
-  function inferRole(path, title, cardinal) {
+  function defaultEstateSection(path, mirrorlandAligned) {
     const p = normalizePath(path);
-    const t = String(title || "").toLowerCase();
 
-    if (p === "/" || t.includes("compass")) return "orientation";
-    if (p.startsWith("/door/") || t === "door") return "threshold";
-    if (p.startsWith("/home/") || t === "home") return "stabilizer";
-    if (p.startsWith("/showroom/globe/audralia/disposition/")) return "cockpit-room";
-    if (p.startsWith("/showroom/globe/") || t.includes("planet") || t.includes("earth") || t.includes("hearth")) return "planetary-room";
-    if (p.startsWith("/showroom/") || t.includes("showroom")) return "door-object";
-    if (p.startsWith("/characters/") || p.startsWith("/nine-summits/")) return "narrative-room";
-    if (p.startsWith("/explore/frontier/") || t.includes("frontier")) return "deployment-room";
-    if (p.startsWith("/laws/") || t.includes("law")) return "law-room";
-    if (p.startsWith("/gauges/") || t.includes("gauge")) return "measurement-room";
-    if (p.startsWith("/products/") || t.includes("product")) return "product-room";
+    if (p.startsWith("/explore/frontier/")) return "Mirrorland Grounds";
+    if (p.startsWith("/showroom/globe/audralia/")) return "Audralia Conservatory";
+    if (p.startsWith("/showroom/globe/")) return "The Atlas Study";
+    if (p.startsWith("/showroom/") || p.startsWith("/characters/") || p.startsWith("/nine-summits/")) return "Mirrorland Estate";
 
-    return cardinal + "-room";
+    return mirrorlandAligned ? "Mirrorland Estate" : "Main House";
+  }
+
+  function defaultSummary(path, label) {
+    const p = normalizePath(path);
+
+    if (p === "/") return "Start here when you need ordinary site orientation.";
+    if (p.startsWith("/door/")) return "Cross the ordinary entrance threshold.";
+    if (p.startsWith("/home/")) return "Return to the stable center of the main estate.";
+    if (p.startsWith("/site-guide/")) return "Learn how the estate, rooms, lenses, and returns work.";
+    if (p.startsWith("/products/")) return "View usable objects, offers, and public-facing extensions.";
+    if (p.startsWith("/laws/")) return "Study the rules, boundaries, proof, and governing constraints.";
+    if (p.startsWith("/governance/")) return "Enter the decision room for policy, risk, and responsibility.";
+    if (p.startsWith("/gauges/")) return "Check route truth, readiness, and audit signals.";
+    if (p.startsWith("/about-this-underdog/")) return "Meet the human origin, mission, and public voice behind the estate.";
+    if (p.startsWith("/showroom/globe/earth/")) return "ZIONTS, pronounced Zience, is the first world-door in the Atlas Study.";
+    if (p.startsWith("/showroom/globe/audralia/planet/")) return "Inspect Audralia’s future body and world-formation path.";
+    if (p.startsWith("/showroom/globe/audralia/disposition/")) return "Open the instrument room for Audralia’s controls and operating signals.";
+    if (p.startsWith("/showroom/globe/audralia/")) return "Enter a living-world room where Audralia opens as a constructive future.";
+    if (p.startsWith("/showroom/globe/")) return "Open the study of worlds: globes, maps, planetary doors, and living-world entries.";
+    if (p.startsWith("/showroom/")) return "Enter the first interior arrival room and display floor.";
+    if (p.startsWith("/characters/")) return "Meet the living characters and story faces of Mirrorland.";
+    if (p.startsWith("/nine-summits/universe/")) return "Open the story-world gallery for the larger universe setting.";
+    if (p.startsWith("/explore/frontier/")) return "Enter the outdoor testing yard where Audralia’s future systems are tried.";
+
+    return `Enter ${label}.`;
   }
 
   function inferMirrorlandAligned(path, title, group) {
@@ -522,25 +510,36 @@
 
   function room(input) {
     const path = normalizePath(input.path || "/");
-    const title = String(input.title || "Room");
+    const rawTitle = String(input.title || input.publicLabel || "Room");
     const group = String(input.group || "");
-    const cardinal = input.cardinal || classifyCardinalFromPathAndTitle(path, title, group);
-    const wing = input.wing || inferWing(path, title, group, cardinal);
-    const role = input.role || inferRole(path, title, cardinal);
+    const cardinal = input.cardinal || classifyCardinalFromPathAndTitle(path, rawTitle, group);
     const mirrorlandAligned = input.mirrorlandAligned != null
       ? Boolean(input.mirrorlandAligned)
-      : inferMirrorlandAligned(path, title, group);
+      : inferMirrorlandAligned(path, rawTitle, group);
+
+    const publicLabel = String(input.publicLabel || input.publicShortLabel || defaultEstateFromPath(path, rawTitle));
+    const estateRoom = String(input.estateRoom || publicLabel);
+    const estateSection = String(input.estateSection || defaultEstateSection(path, mirrorlandAligned));
+    const publicSummary = String(input.publicSummary || input.body || defaultSummary(path, publicLabel));
+    const enterLabel = String(input.enterLabel || "Enter");
 
     return Object.freeze({
-      id: String(input.id || slug(title + "-" + path)),
-      title,
+      id: String(input.id || slug(publicLabel + "-" + path)),
+      title: rawTitle,
+      publicLabel,
+      publicShortLabel: String(input.publicShortLabel || publicLabel),
+      estateRoom,
+      estateSection,
+      publicSummary,
+      enterLabel,
       path,
       file: String(input.file || path.replace(/\/$/, "/index.html")),
-      cardinal,
-      wing,
-      role,
+      builderPathNote: String(input.builderPathNote || ""),
+      cardinal: CARDINAL_LABELS[cardinal] ? cardinal : classifyCardinalFromPathAndTitle(path, publicLabel, group),
+      wing: String(input.wing || estateSection),
+      role: String(input.role || "estate-room"),
       menu: String(input.menu || (mirrorlandAligned ? "mirrorland" : "main")),
-      body: String(input.body || "Enter this room."),
+      body: publicSummary,
       current: Boolean(input.current),
       mirrorlandAligned,
       support: Boolean(input.support),
@@ -553,168 +552,153 @@
       room({
         id: "showroom-door",
         title: "Door / Showroom",
+        publicLabel: "The Atrium",
+        publicShortLabel: "Atrium",
+        estateRoom: "The Atrium",
+        estateSection: "Mirrorland Estate",
+        publicSummary: "The first interior arrival room: display floor, orientation space, and Mirrorland entry presence.",
         path: "/showroom/",
         cardinal: "center",
-        wing: "Portal Foyer",
-        role: "door-context",
         menu: "mirrorland",
-        body: "Return to the Door context and Diamond Lattice object.",
         mirrorlandAligned: true,
         source: "core"
       }),
       room({
         id: "mirrorland-field",
         title: "Globe / Mirrorland Field",
+        publicLabel: "The Atlas Study",
+        publicShortLabel: "Atlas Study",
+        estateRoom: "The Atlas Study",
+        estateSection: "Mirrorland Estate",
+        publicSummary: "The study of worlds: globes, maps, planetary doors, and living-world entries.",
         path: "/showroom/globe/",
         cardinal: "east",
-        wing: "Planetary Wing",
-        role: "planetary-field-door",
         menu: "mirrorland",
-        body: "Open the planetary Mirrorland field from inside the map.",
         mirrorlandAligned: true,
         source: "core"
       }),
       room({
         id: "earth-reference",
         title: "Earth Reference",
+        publicLabel: "ZIONTS",
+        publicShortLabel: "ZIONTS",
+        estateRoom: "The ZIONTS Room",
+        estateSection: "The Atlas Study",
+        publicSummary: "ZIONTS, pronounced Zience, is the first world-door in the Atlas Study.",
+        builderPathNote: "Served under /showroom/globe/earth/ while public context resolves as ZIONTS.",
         path: "/showroom/globe/earth/",
         cardinal: "east",
-        wing: "Reference Bodies",
-        role: "planetary-reference-room",
         menu: "mirrorland",
-        body: "Open the Earth reference body.",
         mirrorlandAligned: true,
         source: "core"
       }),
       room({
         id: "audralia",
         title: "Audralia / Planetary Path",
+        publicLabel: "Audralia Conservatory",
+        publicShortLabel: "Audralia",
+        estateRoom: "Audralia Conservatory",
+        estateSection: "The Atlas Study",
+        publicSummary: "A living-world room where Audralia opens as a constructive future under formation.",
         path: "/showroom/globe/audralia/",
         cardinal: "east",
-        wing: "Audralia World Wing",
-        role: "planetary-door",
         menu: "mirrorland",
-        body: "Enter Audralia, the first living planetary doorway.",
         mirrorlandAligned: true,
         source: "core"
       }),
       room({
         id: "audralia-planet",
         title: "Audralia Planet",
+        publicLabel: "Audralia Worldroom",
+        publicShortLabel: "Worldroom",
+        estateRoom: "Audralia Worldroom",
+        estateSection: "Audralia Conservatory",
+        publicSummary: "The room for inspecting Audralia’s future body, surface direction, and world-formation path.",
         path: "/showroom/globe/audralia/planet/",
         cardinal: "east",
-        wing: "Audralia World Wing",
-        role: "planet-room",
         menu: "mirrorland",
-        body: "Inspect the Audralia future-body planetary template.",
         mirrorlandAligned: true,
         source: "core"
       }),
       room({
         id: "audralia-cockpit",
         title: "Audralia Cockpit",
+        publicLabel: "The Control Room",
+        publicShortLabel: "Control Room",
+        estateRoom: "The Control Room",
+        estateSection: "Audralia Conservatory",
+        publicSummary: "The instrument room for reading Audralia’s disposition, controls, and operating signals.",
         path: "/showroom/globe/audralia/disposition/",
         cardinal: "east",
-        wing: "Audralia Instruments",
-        role: "cockpit-room",
         menu: "mirrorland",
-        body: "Open the cockpit and disposition instruments.",
         mirrorlandAligned: true,
         source: "core"
       }),
       room({
         id: "hearth",
         title: "Hearth",
+        publicLabel: "Hearth Room",
+        estateRoom: "Hearth Room",
+        estateSection: "The Atlas Study",
+        publicSummary: "A world-room for Hearth’s planet path and terrain development.",
         path: "/showroom/globe/hearth/",
         cardinal: "east",
-        wing: "Hearth World Wing",
-        role: "planetary-room",
         menu: "mirrorland",
-        body: "Open the Hearth planetary room.",
         mirrorlandAligned: true,
         source: "core"
       }),
       room({
         id: "h-earth",
         title: "H-Earth",
+        publicLabel: "H-Earth Room",
+        estateRoom: "H-Earth Room",
+        estateSection: "The Atlas Study",
+        publicSummary: "A hybrid-world study room for surface, terrain, and parent-chain experiments.",
         path: "/showroom/globe/h-earth/",
         cardinal: "east",
-        wing: "H-Earth World Wing",
-        role: "planetary-room",
         menu: "mirrorland",
-        body: "Open the H-Earth world path.",
         mirrorlandAligned: true,
         source: "core"
       }),
       room({
         id: "characters",
         title: "Characters / Story Faces",
+        publicLabel: "The Portrait Hall",
+        publicShortLabel: "Portrait Hall",
+        estateRoom: "The Portrait Hall",
+        estateSection: "Mirrorland Estate",
+        publicSummary: "The hall where the living characters and story faces of Mirrorland are introduced.",
         path: "/characters/",
         cardinal: "east",
-        wing: "Character Wing",
-        role: "narrative-room",
         menu: "mirrorland",
-        body: "Meet the faces waiting beyond the Door.",
         mirrorlandAligned: true,
         source: "core"
       }),
       room({
         id: "nine-summits",
         title: "Nine Summits Universe",
+        publicLabel: "The Universe Gallery",
+        publicShortLabel: "Universe Gallery",
+        estateRoom: "The Universe Gallery",
+        estateSection: "Mirrorland Estate",
+        publicSummary: "A story-world gallery for Nine Summits, outer context, and the larger universe setting.",
         path: "/nine-summits/universe/",
         cardinal: "east",
-        wing: "Narrative Wing",
-        role: "narrative-room",
         menu: "mirrorland",
-        body: "Open the Nine Summits story-world room.",
         mirrorlandAligned: true,
         source: "core"
       }),
       room({
         id: "frontier",
         title: "Frontier / West Deployment Wing",
+        publicLabel: "Frontier Workshop Yard",
+        publicShortLabel: "Workshop Yard",
+        estateRoom: "Frontier Workshop Yard",
+        estateSection: "Mirrorland Grounds",
+        publicSummary: "The outdoor testing yard where Audralia’s future systems are tried before they become living-world infrastructure.",
         path: "/explore/frontier/",
         cardinal: "west",
-        wing: "Frontier Deployment",
-        role: "west-deployment-door",
         menu: "mirrorland",
-        body: "Frontier belongs to Mirrorland and sits in the West deployment wing.",
-        mirrorlandAligned: true,
-        source: "core"
-      }),
-      room({
-        id: "frontier-water",
-        title: "Frontier Water",
-        path: "/explore/frontier/water/",
-        cardinal: "west",
-        wing: "Water Chamber",
-        role: "frontier-room",
-        menu: "mirrorland",
-        body: "Open the water frontier room.",
-        mirrorlandAligned: true,
-        source: "core"
-      }),
-      room({
-        id: "frontier-waste",
-        title: "Frontier Waste",
-        path: "/explore/frontier/waste/",
-        cardinal: "west",
-        wing: "Waste Chamber",
-        role: "frontier-room",
-        menu: "mirrorland",
-        body: "Open the waste frontier room.",
-        mirrorlandAligned: true,
-        source: "core"
-      }),
-      room({
-        id: "frontier-energy",
-        title: "Frontier Energy",
-        path: "/explore/frontier/energy/",
-        cardinal: "west",
-        wing: "Energy Chamber",
-        role: "frontier-room",
-        menu: "mirrorland",
-        body: "Open the energy frontier room.",
         mirrorlandAligned: true,
         source: "core"
       })
@@ -726,120 +710,130 @@
       room({
         id: "compass",
         title: "Compass",
+        publicLabel: "Compass",
+        estateRoom: "The Compass Desk",
+        estateSection: "Main House",
+        publicSummary: "Start here when you need ordinary site orientation.",
         path: "/",
         cardinal: "north",
-        wing: "Interface Origin",
-        role: "orientation",
         menu: "main",
-        body: "Return to the main website compass.",
         mirrorlandAligned: false,
         source: "core"
       }),
       room({
         id: "door",
         title: "Door",
+        publicLabel: "The Front Door",
+        estateRoom: "The Front Door",
+        estateSection: "Main House",
+        publicSummary: "Cross the ordinary entrance threshold.",
         path: "/door/",
         cardinal: "north",
-        wing: "Website Threshold",
-        role: "threshold",
         menu: "main",
-        body: "Open the ordinary site threshold.",
         mirrorlandAligned: false,
         source: "core"
       }),
       room({
         id: "home",
         title: "Home",
+        publicLabel: "The Hearth",
+        estateRoom: "The Hearth",
+        estateSection: "Main House",
+        publicSummary: "Return to the stable center of the main estate.",
         path: "/home/",
         cardinal: "north",
-        wing: "Home Wing",
-        role: "stabilizer",
         menu: "main",
-        body: "Return home.",
         mirrorlandAligned: false,
         source: "core"
       }),
       room({
         id: "site-guide",
         title: "Site Guide",
+        publicLabel: "The Guide Desk",
+        estateRoom: "The Guide Desk",
+        estateSection: "Main House",
+        publicSummary: "Learn how the estate, rooms, lenses, and returns work.",
         path: "/site-guide/",
         cardinal: "north",
-        wing: "Guide Wing",
-        role: "guide-room",
         menu: "main",
-        body: "Use the site guide.",
         mirrorlandAligned: false,
         source: "core"
       }),
       room({
         id: "laws",
         title: "Laws",
+        publicLabel: "The Law Library",
+        estateRoom: "The Law Library",
+        estateSection: "Main House",
+        publicSummary: "Study the rules, boundaries, proof, and governing constraints.",
         path: "/laws/",
         cardinal: "south",
-        wing: "Law Wing",
-        role: "law-room",
         menu: "main",
-        body: "Open the law and proof layer.",
         mirrorlandAligned: false,
         source: "core"
       }),
       room({
         id: "governance",
         title: "Governance",
+        publicLabel: "The Council Room",
+        estateRoom: "The Council Room",
+        estateSection: "Main House",
+        publicSummary: "Enter the decision room for policy, risk, and responsibility.",
         path: "/governance/",
         cardinal: "south",
-        wing: "Governance Hall",
-        role: "governance-room",
         menu: "main",
-        body: "Open governance.",
         mirrorlandAligned: false,
         source: "core"
       }),
       room({
         id: "gauges-main",
         title: "Gauges",
+        publicLabel: "The Lab",
+        estateRoom: "The Lab",
+        estateSection: "Main House",
+        publicSummary: "Check route truth, readiness, and audit signals.",
         path: "/gauges/",
         cardinal: "south",
-        wing: "Audit Wing",
-        role: "measurement-room",
         menu: "main",
-        body: "Open route proof and measurement.",
         mirrorlandAligned: false,
         source: "core"
       }),
       room({
         id: "gauges-h-earth",
         title: "H-Earth Gauges",
+        publicLabel: "H-Earth Lab Bench",
+        estateRoom: "The Lab",
+        estateSection: "Main House",
+        publicSummary: "Open the dedicated H-Earth test bench.",
         path: "/gauges/h-earth/",
         cardinal: "south",
-        wing: "Audit Wing",
-        role: "measurement-room",
         menu: "main",
-        body: "Open H-Earth audit and readiness.",
         mirrorlandAligned: false,
         source: "core"
       }),
       room({
         id: "products",
         title: "Products",
+        publicLabel: "The Product Gallery",
+        estateRoom: "The Product Gallery",
+        estateSection: "Main House",
+        publicSummary: "View usable objects, offers, and public-facing extensions.",
         path: "/products/",
         cardinal: "west",
-        wing: "Product Wing",
-        role: "product-room",
         menu: "main",
-        body: "Open product rooms.",
         mirrorlandAligned: false,
         source: "core"
       }),
       room({
         id: "meet-sean",
         title: "Meet Sean Mansfield",
+        publicLabel: "Meet Sean",
+        estateRoom: "The Host Portrait",
+        estateSection: "Main House",
+        publicSummary: "Meet the human origin, mission, and public voice behind the estate.",
         path: "/about-this-underdog/",
         cardinal: "west",
-        wing: "Identity Wing",
-        role: "public-facing-room",
         menu: "main",
-        body: "Open the public-facing human room.",
         mirrorlandAligned: false,
         source: "core"
       })
@@ -856,26 +850,34 @@
 
     return source.map((item, index) => {
       const title = String(item.title || item.label || item.name || "Room");
+      const publicLabel = String(item.publicLabel || item.publicShortLabel || defaultEstateFromPath(item.path || item.href || "/", title));
       const path = normalizePath(item.path || item.href || "/");
       const group = String(item.group || item.family || "");
       const cardinal = item.cardinal
         ? String(item.cardinal).toLowerCase()
-        : classifyCardinalFromPathAndTitle(path, title, group);
+        : classifyCardinalFromPathAndTitle(path, publicLabel, group);
       const mirrorlandAligned = item.mirrorlandAligned != null
         ? Boolean(item.mirrorlandAligned)
         : inferMirrorlandAligned(path, title, group);
       const menu = item.menu || (item.mirrorlandDoor || mirrorlandAligned ? "mirrorland" : "main");
 
       return room({
-        id: String(item.id || item.routeId || item.key || `registry-${slug(title)}-${index}`),
+        id: String(item.id || item.routeId || item.key || `registry-${slug(publicLabel)}-${index}`),
         title,
+        publicLabel,
+        publicShortLabel: String(item.publicShortLabel || publicLabel),
+        estateRoom: String(item.estateRoom || publicLabel),
+        estateSection: String(item.estateSection || defaultEstateSection(path, mirrorlandAligned)),
+        publicSummary: String(item.publicSummary || item.body || item.description || defaultSummary(path, publicLabel)),
+        enterLabel: String(item.enterLabel || "Enter"),
+        builderPathNote: String(item.builderPathNote || ""),
         path,
         file: String(item.file || item.target || path.replace(/\/$/, "/index.html")),
-        cardinal: CARDINAL_LABELS[cardinal] ? cardinal : classifyCardinalFromPathAndTitle(path, title, group),
-        wing: item.wing || inferWing(path, title, group, cardinal),
-        role: item.role || inferRole(path, title, cardinal),
+        cardinal: CARDINAL_LABELS[cardinal] ? cardinal : classifyCardinalFromPathAndTitle(path, publicLabel, group),
+        wing: String(item.wing || item.estateSection || defaultEstateSection(path, mirrorlandAligned)),
+        role: String(item.role || "estate-room"),
         menu,
-        body: String(item.body || item.description || "Enter this room."),
+        body: String(item.publicSummary || item.body || item.description || defaultSummary(path, publicLabel)),
         mirrorlandAligned,
         source: "registry"
       });
@@ -901,11 +903,10 @@
       .filter((item) => item.mirrorlandAligned && !isRegularWebsitePath(item.path))
       .map((item) => room({ ...item, menu: "mirrorland" }));
 
-    return dedupeRooms(mirrorlandCoreRooms().concat(registryMirrorland));
+    return dedupeRooms(registryMirrorland.concat(mirrorlandCoreRooms()));
   }
 
   function mainMenuRooms() {
-    const core = mainCoreRooms();
     const registryMain = registryRooms()
       .filter((item) => {
         if (item.mirrorlandAligned) return false;
@@ -914,7 +915,7 @@
       })
       .map((item) => room({ ...item, menu: "main", mirrorlandAligned: false }));
 
-    return dedupeRooms(core.concat(registryMain));
+    return dedupeRooms(registryMain.concat(mainCoreRooms()));
   }
 
   function allKnownRooms() {
@@ -975,28 +976,16 @@
           ? window.DGB_MANOR_BLUEPRINT_INSTRUCTIONS
           : [
             {
-              title: "Main Menu / Website Options",
-              body: "Main Menu contains regular website routes only."
+              title: "Estate Room Language",
+              body: "The public map uses room names and real-world estate context. Route paths and file names stay in builder receipts."
             },
             {
-              title: "Mirrorland Doors",
-              body: "Mirrorland Doors contains only Showroom, planetary, cockpit, Frontier, and narrative/story routes."
+              title: "Path Is Not Identity",
+              body: "A route address is only where a page is served. It is not automatically the room’s public identity."
             },
             {
-              title: "Support Does Not Equal Ownership",
-              body: "Gauges, Laws, and proof pages may support Mirrorland, but they remain regular website routes."
-            },
-            {
-              title: "Single Entryway",
-              body: "The floating Map / Portal blip is the single public entryway into Mirrorland."
-            },
-            {
-              title: "Frontier",
-              body: "Frontier belongs to Mirrorland and is placed in the West deployment wing."
-            },
-            {
-              title: "Joystick Scroll",
-              body: "Drag the Map / Portal blip near the top or bottom edge to scroll with the stronger visible force profile."
+              title: "ZIONTS",
+              body: "ZIONTS is pronounced Zience. It may be served through the Earth route, but the map presents the public world-door identity."
             }
           ];
 
@@ -1013,25 +1002,25 @@
   }
 
   function lensTitle() {
-    if (state.activeLens === "main") return "Main Menu / Website Options";
+    if (state.activeLens === "main") return "Main Menu";
     if (state.activeLens === "instructions") return "Instructions";
     return "Mirrorland Doors";
   }
 
   function lensSubtitle() {
     if (state.activeLens === "main") {
-      return "Regular website routes only. Compass, Door, Home, Products, Laws, Governance, Gauges, Meet Sean, and Site Guide stay here.";
+      return "Ordinary estate rooms: Compass, Front Door, Hearth, Product Gallery, Law Library, Council Room, Lab, Guide Desk, and Meet Sean.";
     }
 
     if (state.activeLens === "instructions") {
-      return "Use the Map / Portal blip as the single entryway, then choose a Mirrorland room from the house blueprint.";
+      return "This map uses estate-room names for visitors. Route paths and file names stay hidden for builders.";
     }
 
     if (frontierActive()) {
-      return "Frontier is a Mirrorland room in the West deployment wing.";
+      return "You are near Frontier Workshop Yard, the outdoor testing grounds for Audralia’s future systems.";
     }
 
-    return "Showroom, planetary pages, cockpit, Frontier, and narrative/story pages are Mirrorland rooms.";
+    return "Choose an immersive room: The Atrium, The Atlas Study, ZIONTS, Audralia, The Control Room, Frontier Workshop Yard, or story rooms.";
   }
 
   function enforceSingleElement(selector) {
@@ -1063,6 +1052,7 @@
     bubble.setAttribute("data-joystick-scroll-force-profile", JOYSTICK_SCROLL_FORCE_PROFILE);
     bubble.setAttribute("data-map-blip-single-entryway", "true");
     bubble.setAttribute("data-mirrorland-entryway", "map-portal-blip");
+    bubble.setAttribute("data-estate-room-language-active", "true");
     bubble.setAttribute("data-main-menu-website-options-only", "true");
     bubble.setAttribute("data-mirrorland-doors-category-only", "true");
     bubble.setAttribute("data-support-does-not-equal-ownership", "true");
@@ -1106,13 +1096,14 @@
     overlay.setAttribute("data-manor-blueprint-contract", CONTRACT);
     overlay.setAttribute("data-map-blip-single-entryway", "true");
     overlay.setAttribute("data-mirrorland-entryway", "map-portal-blip");
+    overlay.setAttribute("data-estate-room-language-active", "true");
     overlay.setAttribute("data-main-menu-website-options-only", "true");
     overlay.setAttribute("data-mirrorland-doors-category-only", "true");
     overlay.setAttribute("data-support-does-not-equal-ownership", "true");
     overlay.setAttribute("data-mirrorland-portal", "true");
     overlay.setAttribute("data-cardinal-room-map", "true");
     overlay.setAttribute("data-frontier-mirrorland-aligned", "true");
-    overlay.setAttribute("aria-label", "Mirrorland Doors and Main Menu category blueprint");
+    overlay.setAttribute("aria-label", "Mirrorland estate room map");
 
     document.body.appendChild(overlay);
     return overlay;
@@ -1125,19 +1116,21 @@
         href="${escapeHtml(item.path)}"
         data-room-id="${escapeHtml(item.id)}"
         data-cardinal="${escapeHtml(item.cardinal)}"
-        data-wing="${escapeHtml(item.wing)}"
-        data-role="${escapeHtml(item.role)}"
+        data-estate-room="${escapeHtml(item.estateRoom)}"
+        data-estate-section="${escapeHtml(item.estateSection)}"
         data-menu="${escapeHtml(item.menu)}"
         data-current="${item.current ? "true" : "false"}"
         data-mirrorland-aligned="${item.mirrorlandAligned ? "true" : "false"}"
+        data-path="${escapeHtml(item.path)}"
         data-file="${escapeHtml(item.file)}"
+        data-builder-path-note="${escapeHtml(item.builderPathNote)}"
       >
         <span class="dgb-bp-room-door" aria-hidden="true"></span>
         <span class="dgb-bp-room-meta">
-          <span class="dgb-bp-room-wing">${escapeHtml(item.wing)}</span>
-          <strong class="dgb-bp-room-title">${escapeHtml(item.title)}</strong>
-          <span class="dgb-bp-room-role">${escapeHtml(item.role.replaceAll("-", " "))}</span>
-          <code class="dgb-bp-room-path">${escapeHtml(item.path)}</code>
+          <span class="dgb-bp-room-estate">${escapeHtml(item.estateSection)}</span>
+          <strong class="dgb-bp-room-title">${escapeHtml(item.publicLabel)}</strong>
+          <span class="dgb-bp-room-summary">${escapeHtml(item.publicSummary)}</span>
+          <span class="dgb-bp-room-enter">${escapeHtml(item.enterLabel)}</span>
         </span>
       </a>
     `;
@@ -1157,9 +1150,9 @@
             <div class="dgb-bp-room dgb-bp-room-empty" data-cardinal="${escapeHtml(cardinal)}">
               <span class="dgb-bp-room-door" aria-hidden="true"></span>
               <span class="dgb-bp-room-meta">
-                <span class="dgb-bp-room-wing">${escapeHtml(label.title)}</span>
+                <span class="dgb-bp-room-estate">${escapeHtml(label.title)}</span>
                 <strong class="dgb-bp-room-title">Room Held</strong>
-                <span class="dgb-bp-room-role">No room assigned</span>
+                <span class="dgb-bp-room-summary">No room is assigned here yet.</span>
               </span>
             </div>
           `}
@@ -1183,7 +1176,9 @@
         data-floating-nodes-replaced="true"
         data-blueprint-rooms-clickable="true"
         data-map-blip-single-entryway="true"
+        data-estate-room-language-active="true"
         data-current-room-id="${escapeHtml(summary.currentRoom?.id || "")}"
+        data-current-room-label="${escapeHtml(summary.currentRoom?.publicLabel || "")}"
         data-current-cardinal="${escapeHtml(summary.currentRoom?.cardinal || "")}"
       >
         <div class="dgb-bp-room-map-axis dgb-bp-room-map-axis-north" aria-hidden="true">North</div>
@@ -1200,37 +1195,45 @@
     const entered = mirrorlandEntered();
     const frontier = frontierActive();
 
+    const locationLabel = mode === "main"
+      ? "Main House"
+      : frontier
+        ? "Mirrorland Grounds"
+        : entered
+          ? "Inside Mirrorland"
+          : "Estate Map Open";
+
     return `
       <aside class="dgb-bp-panel">
         <div class="dgb-bp-panel-head">
-          <b>${mode === "main" ? "Current Website Room" : "Mirrorland House Blueprint"}</b>
-          <h3>${escapeHtml(current?.title || (mode === "main" ? "Website Options" : "Mirrorland Doors"))}</h3>
-          <p>${escapeHtml(mode === "main" ? (current?.body || "Choose a regular website option.") : "Choose a Mirrorland room from the house blueprint.")}</p>
+          <b>${mode === "main" ? "Current Room" : "Mirrorland Map"}</b>
+          <h3>${escapeHtml(current?.publicLabel || (mode === "main" ? "Main Menu" : "Mirrorland Doors"))}</h3>
+          <p>${escapeHtml(current?.publicSummary || (mode === "main" ? "Choose a regular estate room." : "Choose a room inside Mirrorland."))}</p>
         </div>
 
         <div class="dgb-bp-you-are-here">
           <div class="dgb-bp-location-card">
-            <b>${mode === "main" ? "Regular Website" : frontier ? "Frontier · West Wing" : entered ? "Inside Mirrorland" : "Entryway Opened"}</b>
-            <strong>${escapeHtml(current?.wing || (mode === "main" ? "Website Options" : "Mirrorland Doors"))}</strong>
-            <code>${escapeHtml(normalizePath(window.location.pathname || "/"))}</code>
+            <b>${escapeHtml(locationLabel)}</b>
+            <strong>${escapeHtml(current?.estateRoom || current?.publicLabel || "Choose a room")}</strong>
+            <span>${escapeHtml(current?.estateSection || (mode === "main" ? "Main House" : "Mirrorland Estate"))}</span>
           </div>
 
           <div class="dgb-bp-chain">
             ${mode === "main" ? `
-              <span>Compass</span>
+              <span>Main House</span>
               <span class="dgb-bp-chain-separator">→</span>
-              <span>Website Options</span>
+              <span>${escapeHtml(current?.publicLabel || "Choose Room")}</span>
             ` : `
-              <span>Map Blip</span>
+              <span>Map Portal</span>
               <span class="dgb-bp-chain-separator">→</span>
               <span>Mirrorland Doors</span>
               <span class="dgb-bp-chain-separator">→</span>
-              <span>${escapeHtml(current?.title || "Choose Room")}</span>
+              <span>${escapeHtml(current?.publicLabel || "Choose Room")}</span>
             `}
           </div>
 
           <div class="dgb-bp-guide-link" aria-label="${mode === "main" ? "Main menu context" : "Mirrorland room context"}">
-            ${mode === "main" ? "Regular website only." : "House-room structure active."}
+            ${mode === "main" ? "Website rooms" : "Estate rooms"}
           </div>
         </div>
       </aside>
@@ -1247,8 +1250,8 @@
         <section class="dgb-bp-panel dgb-bp-room-map-panel">
           <div class="dgb-bp-panel-head">
             <b>Mirrorland Doors</b>
-            <h3>Choose a room inside Mirrorland</h3>
-            <p>Only Showroom, planetary pages, cockpit pages, Frontier pages, and narrative / story pages belong here.</p>
+            <h3>Choose a room inside the estate</h3>
+            <p>The public map uses room names. File paths stay hidden underneath for builders.</p>
           </div>
           <div class="dgb-bp-route-tools dgb-bp-room-tools">
             ${renderRoomMap(rooms)}
@@ -1267,9 +1270,9 @@
 
         <section class="dgb-bp-panel dgb-bp-room-map-panel">
           <div class="dgb-bp-panel-head">
-            <b>Main Menu / Website Options</b>
-            <h3>Regular website routes</h3>
-            <p>Compass, Door, Home, Products, Laws, Governance, Gauges, Meet Sean, and Site Guide stay here. Support does not equal Mirrorland ownership.</p>
+            <b>Main Menu</b>
+            <h3>Regular estate rooms</h3>
+            <p>Compass, Front Door, Hearth, Product Gallery, Law Library, Council Room, Lab, Guide Desk, and Meet Sean stay here.</p>
           </div>
           <div class="dgb-bp-route-tools dgb-bp-room-tools">
             ${renderRoomMap(rooms)}
@@ -1306,7 +1309,7 @@
     overlay.innerHTML = `
       <div class="dgb-bp-topbar">
         <div class="dgb-bp-titleblock">
-          <div class="dgb-bp-kicker">${state.activeLens === "main" ? "Website Options" : state.activeLens === "instructions" ? "Portal Instructions" : "Mirrorland House Blueprint"}</div>
+          <div class="dgb-bp-kicker">${state.activeLens === "main" ? "Main House" : state.activeLens === "instructions" ? "Portal Instructions" : "Mirrorland Estate"}</div>
           <h2 class="dgb-bp-title">${escapeHtml(lensTitle())}</h2>
           <p class="dgb-bp-subtitle">${escapeHtml(lensSubtitle())}</p>
         </div>
@@ -1320,10 +1323,10 @@
             <button class="dgb-bp-tab" type="button" data-dgb-lens="main" aria-selected="${state.activeLens === "main"}" data-active="${state.activeLens === "main"}">Main Menu</button>
             <button class="dgb-bp-tab" type="button" data-dgb-lens="instructions" aria-selected="${state.activeLens === "instructions"}" data-active="${state.activeLens === "instructions"}">Instructions</button>
           </div>
-          <div class="dgb-bp-current-pill">${state.activeLens === "main" ? "Regular Website" : frontier ? "Frontier · West Wing" : entered ? "Inside Mirrorland" : "Entryway Opened"}</div>
+          <div class="dgb-bp-current-pill">${state.activeLens === "main" ? "Main House" : frontier ? "Frontier Workshop Yard" : entered ? "Inside Mirrorland" : "Estate Map"}</div>
         </div>
 
-        <div class="dgb-bp-content" data-cardinal-room-map="true" data-map-blip-single-entryway="true">
+        <div class="dgb-bp-content" data-cardinal-room-map="true" data-map-blip-single-entryway="true" data-estate-room-language-active="true">
           <section class="dgb-bp-lens" data-lens-panel="${escapeHtml(state.activeLens)}">
             ${renderActiveLens()}
           </section>
@@ -1566,6 +1569,16 @@
       apiContract: API_CONTRACT,
 
       active: true,
+      estateRoomLanguageActive: true,
+      publicLabelsBound: true,
+      routePathHiddenFromPublicCards: true,
+      builderMetadataHidden: true,
+      ziontsPublicIdentityBound: true,
+      ziontsPronunciation: "Zience",
+      ziontsServedAtEarthRoute: true,
+      labPublicLabelBound: true,
+      frontierWorkshopYardBound: true,
+
       mapBlipSingleEntryway: true,
       mirrorlandEntryway: "map_portal_blip",
       mirrorlandClassificationNarrowed: true,
@@ -1585,8 +1598,7 @@
       frontierMirrorlandAligned: true,
       frontierBelongsToMirrorland: true,
       frontierCardinalDisposition: "west",
-      frontierWing: "Frontier Deployment",
-      frontierActive: frontierActive(),
+      frontierRoom: "Frontier Workshop Yard",
       narrativePagesMirrorland: true,
       charactersMirrorland: true,
       nineSummitsMirrorland: true,
@@ -1628,6 +1640,9 @@
       currentPath: normalizePath(window.location.pathname || "/"),
       currentRoomId: current?.id || "",
       currentRoomTitle: current?.title || "",
+      currentPublicLabel: current?.publicLabel || "",
+      currentEstateRoom: current?.estateRoom || "",
+      currentEstateSection: current?.estateSection || "",
       currentRoomCardinal: current?.cardinal || "",
       currentRoomWing: current?.wing || "",
 
@@ -1696,6 +1711,15 @@
       document.documentElement.dataset.manorBlueprintPriorContract = PRIOR_CONTRACT;
       document.documentElement.dataset.manorBlueprintLegacyContract = LEGACY_CONTRACT;
 
+      document.documentElement.dataset.manorBlueprintEstateRoomLanguageActive = "true";
+      document.documentElement.dataset.manorBlueprintPublicLabelsBound = "true";
+      document.documentElement.dataset.manorBlueprintRoutePathHiddenFromPublicCards = "true";
+      document.documentElement.dataset.manorBlueprintBuilderMetadataHidden = "true";
+      document.documentElement.dataset.manorBlueprintZiontsPublicIdentityBound = "true";
+      document.documentElement.dataset.manorBlueprintZiontsPronunciation = "Zience";
+      document.documentElement.dataset.manorBlueprintLabPublicLabelBound = "true";
+      document.documentElement.dataset.manorBlueprintFrontierWorkshopYardBound = "true";
+
       document.documentElement.dataset.manorBlueprintMapBlipSingleEntryway = "true";
       document.documentElement.dataset.manorBlueprintMirrorlandEntryway = "map-portal-blip";
       document.documentElement.dataset.manorBlueprintMainMenuWebsiteOptionsOnly = "true";
@@ -1725,8 +1749,10 @@
 
       document.documentElement.dataset.manorBlueprintActiveLens = state.activeLens;
       document.documentElement.dataset.manorBlueprintCurrentRoom = payload.currentRoomId;
+      document.documentElement.dataset.manorBlueprintCurrentPublicLabel = payload.currentPublicLabel;
+      document.documentElement.dataset.manorBlueprintCurrentEstateRoom = payload.currentEstateRoom;
+      document.documentElement.dataset.manorBlueprintCurrentEstateSection = payload.currentEstateSection;
       document.documentElement.dataset.manorBlueprintCurrentRoomCardinal = payload.currentRoomCardinal;
-      document.documentElement.dataset.manorBlueprintCurrentRoomWing = payload.currentRoomWing;
       document.documentElement.dataset.manorBlueprintNorthRoomCount = String(payload.northRoomCount);
       document.documentElement.dataset.manorBlueprintEastRoomCount = String(payload.eastRoomCount);
       document.documentElement.dataset.manorBlueprintCenterRoomCount = String(payload.centerRoomCount);
@@ -1777,6 +1803,15 @@
       previousContract: PREVIOUS_CONTRACT,
       priorContract: PRIOR_CONTRACT,
       legacyContract: LEGACY_CONTRACT,
+
+      estateRoomLanguageActive: true,
+      publicLabelsBound: true,
+      routePathHiddenFromPublicCards: true,
+      builderMetadataHidden: true,
+      ziontsPublicIdentityBound: true,
+      ziontsPronunciation: "Zience",
+      labPublicLabelBound: true,
+      frontierWorkshopYardBound: true,
 
       mapBlipSingleEntryway: true,
       mirrorlandEntryway: "map_portal_blip",

@@ -4,19 +4,28 @@
   lang="en"
   data-route="/"
   data-page="coherence-gateway-before-compass"
-  data-version="G2-V9"
-  data-contract="COMPASS_ROOT_COHERENCE_GATEWAY_BEFORE_COMPASS_HTML_TNT_v1"
-  data-previous-contract="COMPASS_ROOT_GATE_FOUR_BRIDGES_MIRRORLAND_DESTINATION_HTML_TNT_v3"
+  data-version="G2-V10-THREE-OPTION-SPLIT-NAV"
+  data-contract="COMPASS_ROOT_THREE_OPTION_GUIDE_GATEWAY_SPLIT_NAV_HTML_TNT_v1"
+  data-previous-contract="COMPASS_ROOT_COHERENCE_GATEWAY_BEFORE_COMPASS_HTML_TNT_v1"
   data-role="root-coherence-gateway"
   data-root-gateway="true"
-  data-root-gateway-model="two-path-entry-before-compass"
+  data-root-gateway-model="three-option-entry-before-compass"
   data-root-is-compass="downstream-preserved"
-  data-root-context="coherence-diagnostic-first-or-enter-website-then-compass"
+  data-root-context="coherence-diagnostic-enter-website-or-open-site-guide"
   data-one-gate="Coherence Gateway"
   data-downstream-gate="Compass"
-  data-two-entry-paths="Take Coherence Diagnostic,Enter Website"
+  data-three-entry-options="Take Coherence Diagnostic,Enter Website,Enter Website Guide"
   data-coherence-diagnostic-route="/coherence-diagnostic/"
   data-enter-website-target="#compass-entry"
+  data-website-guide-route="/site-guide/"
+  data-website-guide-highlight="true"
+  data-site-guide-route="/site-guide/"
+  data-site-guide-role="guided-map-instructions"
+  data-site-guide-promoted="true"
+  data-split-navigation="Website,Mirrorland,Website Guide"
+  data-website-dropdown="true"
+  data-mirrorland-dropdown="true"
+  data-website-guide-direct-link="true"
   data-four-bridges="North,East,South,West"
   data-world-beyond="Mirrorland"
   data-center-role="coherence-first-entry-and-compass-return"
@@ -32,10 +41,10 @@
   data-interactive-narrative-visible-nav="true"
   data-showroom-visible-nav="true"
   data-frontier-visible-dropdown="true"
-  data-cardinal-dropdown="active"
-  data-cardinal-bridges-context="active"
+  data-cardinal-dropdown="split-navigation-superseded"
+  data-cardinal-bridges-context="downstream-bridge-cards-preserved"
   data-active-bubble-registry="active"
-  data-active-bubbles="Coherence Diagnostic,Compass,Door,Home,Products,Laws,Interactive Narrative,Showroom,Gauges,Meet Sean,Frontier,Intergalactic Cockpit"
+  data-active-bubbles="Coherence Diagnostic,Website Guide,Compass,Door,Home,Products,Laws,Interactive Narrative,Showroom,Gauges,Meet Sean,Frontier,Intergalactic Cockpit"
   data-cardinal-north="laws"
   data-diamond-symmetry="seven-gem-field-preserved"
   data-cockpit-access-hatch="active"
@@ -58,7 +67,7 @@
   <title>Diamond Gate Bridge · Coherence Gateway · Compass</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge begins with a choice: take the Coherence Diagnostic first, or enter the website through the Compass. The Compass opens four cardinal bridges, and one universe waits beyond them: Mirrorland."
+    content="Diamond Gate Bridge begins with three choices: take the Coherence Diagnostic, enter the website through the Compass, or open the Website Guide for instructions first."
   >
 
   <style>
@@ -236,10 +245,11 @@
 
     .route-menu{
       position:relative;
-      min-width:min(17rem,100%);
+      min-width:min(13.5rem,100%);
     }
 
-    .route-menu summary{
+    .route-menu summary,
+    .guide-direct-link{
       list-style:none;
       cursor:pointer;
       min-height:2.6rem;
@@ -260,6 +270,23 @@
       text-transform:uppercase;
       box-shadow:0 0 1.15rem rgba(243,200,111,.08),inset 0 1px 0 rgba(255,255,255,.08);
       backdrop-filter:blur(7px);
+    }
+
+    .guide-direct-link{
+      min-width:min(13.5rem,100%);
+      justify-content:center;
+      border-color:rgba(141,216,255,.34);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(141,216,255,.16),transparent 70%),
+        rgba(255,255,255,.045);
+    }
+
+    .guide-direct-link:hover,
+    .guide-direct-link:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.62);
+      color:rgba(255,244,216,.98);
+      outline:none;
     }
 
     .route-menu[open] summary{
@@ -293,7 +320,7 @@
       right:0;
       top:calc(100% + .55rem);
       z-index:40;
-      width:min(38rem,calc(100vw - 2rem));
+      width:min(25rem,calc(100vw - 2rem));
       padding:.82rem;
       border:1px solid rgba(243,200,111,.30);
       border-radius:1.1rem;
@@ -302,6 +329,10 @@
         radial-gradient(circle at 96% 25%,rgba(141,216,255,.12),transparent 15rem),
         linear-gradient(180deg,rgba(11,13,38,.97),rgba(3,7,18,.98));
       box-shadow:0 0 2.8rem rgba(243,200,111,.14),0 1.4rem 3.4rem rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.09);
+    }
+
+    .route-menu-panel.wide{
+      width:min(31rem,calc(100vw - 2rem));
     }
 
     .cardinal-map{
@@ -340,7 +371,7 @@
 
     .route-menu-grid{
       display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
+      grid-template-columns:repeat(2,minmax(0,1fr));
       gap:.48rem;
     }
 
@@ -518,9 +549,9 @@
       position:relative;
       z-index:2;
       display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
+      grid-template-columns:repeat(3,minmax(0,1fr));
       gap:.9rem;
-      max-width:960px;
+      max-width:1120px;
       margin-top:.2rem;
     }
 
@@ -562,14 +593,14 @@
 
     .gateway-choice strong{
       color:rgba(255,244,216,.98);
-      font-size:clamp(1.25rem,3vw,1.8rem);
+      font-size:clamp(1.18rem,2.5vw,1.62rem);
       line-height:1.04;
       letter-spacing:-.045em;
     }
 
     .gateway-choice span{
       color:var(--muted);
-      font-size:.98rem;
+      font-size:.96rem;
       line-height:1.45;
     }
 
@@ -585,6 +616,17 @@
         rgba(255,255,255,.040);
       box-shadow:
         0 0 1.8rem rgba(243,200,111,.08),
+        inset 0 1px 0 rgba(255,255,255,.09);
+    }
+
+    .gateway-choice.guide{
+      border-color:rgba(141,216,255,.32);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(141,216,255,.16),transparent 14rem),
+        radial-gradient(circle at 92% 20%,rgba(243,200,111,.10),transparent 13rem),
+        rgba(255,255,255,.040);
+      box-shadow:
+        0 0 1.8rem rgba(141,216,255,.08),
         inset 0 1px 0 rgba(255,255,255,.09);
     }
 
@@ -1110,6 +1152,7 @@
 
     @media (max-width:1080px){
       .path-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .gateway-choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
     @media (max-width:980px){
@@ -1165,7 +1208,8 @@
         width:100%;
       }
 
-      .route-menu{
+      .route-menu,
+      .guide-direct-link{
         width:100%;
       }
 
@@ -1377,61 +1421,20 @@
         </span>
       </a>
 
-      <nav class="nav" aria-label="Cardinal bridge dropdown navigation">
+      <nav class="nav" aria-label="Primary split navigation">
         <details class="route-menu">
-          <summary>Bridge Map</summary>
+          <summary>Website</summary>
           <div class="route-menu-panel">
             <div class="cardinal-map">
               <div class="cardinal-group">
-                <div class="cardinal-heading">Root Gateway <span>First choice before the Compass</span></div>
-                <div class="route-menu-grid">
-                  <a class="route-menu-link" href="/coherence-diagnostic/">Coherence Diagnostic</a>
-                  <a class="route-menu-link" href="#compass-entry" aria-current="page">Enter Website</a>
-                </div>
-              </div>
-
-              <div class="cardinal-group">
-                <div class="cardinal-heading">Gate Center <span>Core entry and return</span></div>
+                <div class="cardinal-heading">Website <span>Public rooms</span></div>
                 <div class="route-menu-grid">
                   <a class="route-menu-link" href="/" aria-current="page">Compass</a>
                   <a class="route-menu-link" href="/door/">Door</a>
                   <a class="route-menu-link" href="/home/">Home</a>
-                </div>
-              </div>
-
-              <div class="cardinal-group">
-                <div class="cardinal-heading">Systems Hatch <span>Operations access outside the bridges</span></div>
-                <div class="route-menu-grid">
-                  <a class="route-menu-link" href="/showroom/globe/audralia/disposition/">Intergalactic Cockpit</a>
-                </div>
-              </div>
-
-              <div class="cardinal-group">
-                <div class="cardinal-heading">North Bridge <span>Proof, law, and measurement</span></div>
-                <div class="route-menu-grid">
+                  <a class="route-menu-link" href="/coherence-diagnostic/">Coherence Diagnostic</a>
                   <a class="route-menu-link" href="/laws/">Laws</a>
-                  <a class="route-menu-link" href="/gauges/">Gauges</a>
-                </div>
-              </div>
-
-              <div class="cardinal-group">
-                <div class="cardinal-heading">East Bridge <span>Story-world and visible expression</span></div>
-                <div class="route-menu-grid">
-                  <a class="route-menu-link" href="/showroom/globe/">Interactive Narrative</a>
-                  <a class="route-menu-link" href="/showroom/">Showroom</a>
-                </div>
-              </div>
-
-              <div class="cardinal-group">
-                <div class="cardinal-heading">South Bridge <span>Frontier and support field</span></div>
-                <div class="route-menu-grid">
-                  <a class="route-menu-link" href="/explore/frontier/">Frontier</a>
-                </div>
-              </div>
-
-              <div class="cardinal-group">
-                <div class="cardinal-heading">West Bridge <span>Community and public application</span></div>
-                <div class="route-menu-grid">
+                  <a class="route-menu-link" href="/gauges/">The Lab</a>
                   <a class="route-menu-link" href="/products/">Products</a>
                   <a class="route-menu-link" href="/meet-sean-mansfield/">Meet Sean</a>
                 </div>
@@ -1439,6 +1442,28 @@
             </div>
           </div>
         </details>
+
+        <details class="route-menu">
+          <summary>Mirrorland</summary>
+          <div class="route-menu-panel wide">
+            <div class="cardinal-map">
+              <div class="cardinal-group">
+                <div class="cardinal-heading">Mirrorland <span>Estate and world rooms</span></div>
+                <div class="route-menu-grid">
+                  <a class="route-menu-link" href="/showroom/">Atrium</a>
+                  <a class="route-menu-link" href="/showroom/globe/">Atlas Study</a>
+                  <a class="route-menu-link" href="/showroom/globe/earth/">ZIONTS</a>
+                  <a class="route-menu-link" href="/showroom/globe/audralia/">Audralia Conservatory</a>
+                  <a class="route-menu-link" href="/showroom/globe/audralia/planet/">Audralia Worldroom</a>
+                  <a class="route-menu-link" href="/showroom/globe/audralia/disposition/">Control Cockpit</a>
+                  <a class="route-menu-link" href="/explore/frontier/">Frontier Workshop Yard</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <a class="guide-direct-link" href="/site-guide/">Website Guide</a>
       </nav>
     </header>
 
@@ -1450,36 +1475,44 @@
         data-root-gateway-section="true"
         data-coherence-diagnostic-route="/coherence-diagnostic/"
         data-enter-website-target="#compass-entry"
+        data-website-guide-route="/site-guide/"
       >
         <div class="gateway-copy">
-          <div class="gateway-kicker">Root Gateway · Coherence First</div>
+          <div class="gateway-kicker">Root Gateway · Three Options</div>
 
-          <h1 id="gateway-title">Start with coherence, or enter the website.</h1>
+          <h1 id="gateway-title">Start with the diagnostic, enter the website, or open the guide first.</h1>
 
-          <h2>The diagnostic is the center. The Compass is the doorway into the full bridge system.</h2>
+          <h2>The diagnostic is the self-check. The Compass is the entry. The Website Guide is the instruction map.</h2>
 
           <p class="lead">
-            Diamond Gate Bridge now begins with a simple choice. You can take the Coherence Diagnostic first and receive a local pattern read, or enter the website directly and move into the Compass.
+            Diamond Gate Bridge begins with three clear choices. Take the Coherence Diagnostic first, enter the website directly through the Compass, or open the Website Guide for instructions before moving.
           </p>
 
           <div class="gateway-note">
-            The Coherence Diagnostic does not replace the Compass. It sits before the Compass as the first public self-check: how coherent do you believe you are, what archetype do you claim, and what pattern do your choices reveal?
+            Use the Website Guide when you want the guided map, blueprint, room previews, Return to Blueprint, Return to Orbit, navigation layers, and under-the-hood explanation before entering the rest of the site.
           </div>
         </div>
 
         <div class="gateway-choice-grid" aria-label="Root entry choices">
           <a class="gateway-choice primary" href="/coherence-diagnostic/">
-            <b>Path One · Assessment</b>
-            <strong>Take the Coherence Diagnostic first.</strong>
-            <span>Start with the 12-question minimum assessment. Q1 measures self-rated coherence, Q2 captures claimed archetype, and the remaining scenarios reveal your primary and secondary pattern.</span>
+            <b>Option A · Diagnostic</b>
+            <strong>Take the Coherence Diagnostic.</strong>
+            <span>Use this when you want the self-check first: coherence rating, claimed archetype, and pattern read.</span>
             <span class="open-path">Begin Diagnostic</span>
           </a>
 
           <a class="gateway-choice" href="#compass-entry">
-            <b>Path Two · Website</b>
-            <strong>Enter the website through the Compass.</strong>
-            <span>Skip the assessment and move directly into the existing Compass page, where the four bridges organize proof, story, frontier, and public application.</span>
+            <b>Option B · Website</b>
+            <strong>Enter the Website.</strong>
+            <span>Use this when you already know where you want to go and want the Compass bridge system directly.</span>
             <span class="open-path">Enter Website</span>
+          </a>
+
+          <a class="gateway-choice guide" href="/site-guide/">
+            <b>Option C · Guide</b>
+            <strong>Enter the Website Guide + Instructions.</strong>
+            <span>Use this when you want the guided map, blueprint, room previews, and movement instructions first.</span>
+            <span class="open-path">Open Website Guide</span>
           </a>
         </div>
       </section>
@@ -1625,20 +1658,33 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-COMPASS_ROOT_COHERENCE_GATEWAY_BEFORE_COMPASS_HTML_TNT_v1
-previous=COMPASS_ROOT_GATE_FOUR_BRIDGES_MIRRORLAND_DESTINATION_HTML_TNT_v3
+COMPASS_ROOT_THREE_OPTION_GUIDE_GATEWAY_SPLIT_NAV_HTML_TNT_v1
+previous=COMPASS_ROOT_COHERENCE_GATEWAY_BEFORE_COMPASS_HTML_TNT_v1
 route=/
 page=coherence_gateway_before_compass
 html=/index.html
 role=root_coherence_gateway
 root_gateway=true
-root_gateway_model=two_path_entry_before_compass
+root_gateway_model=three_option_entry_before_compass
 root_is_compass=downstream_preserved
-root_context=coherence_diagnostic_first_or_enter_website_then_compass
-two_entry_paths=Take_Coherence_Diagnostic,Enter_Website
+root_context=coherence_diagnostic_enter_website_or_open_site_guide
+three_entry_options=Take_Coherence_Diagnostic,Enter_Website,Enter_Website_Guide
 coherence_diagnostic_route=/coherence-diagnostic/
 enter_website_target=#compass-entry
-coherence_diagnostic_position=top_highlight_center_of_everything
+website_guide_route=/site-guide/
+website_guide_role=guided_map_instructions
+website_guide_promoted=true
+site_guide_route=/site-guide/
+site_guide_role=guided_map_instructions
+site_guide_promoted=true
+split_navigation=true
+website_dropdown=true
+mirrorland_dropdown=true
+website_guide_direct_link=true
+website_dropdown_routes=Compass,Door,Home,Coherence_Diagnostic,Laws,The_Lab,Products,Meet_Sean
+mirrorland_dropdown_routes=Atrium,Atlas_Study,ZIONTS,Audralia_Conservatory,Audralia_Worldroom,Control_Cockpit,Frontier_Workshop_Yard
+coherence_diagnostic_position=option_a_first_entry
+website_guide_position=option_c_top_gateway_and_direct_header_link
 compass_position=downstream_preserved
 compass_anchor=#compass-entry
 one_gate=Coherence_Gateway
@@ -1654,11 +1700,13 @@ hero_equal_route_buttons_removed=true
 gate_center=Compass,Door,Home
 systems_hatch=Intergalactic_Cockpit
 systems_hatch_role=operations_access_outside_public_bridges
-cardinal_dropdown=active
-cardinal_bridges_context=active
-root_gateway_dropdown=active
-legacy_top_bubble_stack_replaced=true
-active_bubble_registry=Coherence_Diagnostic,Compass,Door,Home,Products,Laws,Interactive_Narrative,Showroom,Gauges,Meet_Sean,Frontier,Intergalactic_Cockpit
+single_bridge_map_dropdown_removed=true
+public_website_routes_separated=true
+mirrorland_routes_separated=true
+legacy_cardinal_dropdown_superseded=true
+cardinal_bridges_context=downstream_bridge_cards_preserved
+root_gateway_context_added=true
+active_bubble_registry=Coherence_Diagnostic,Website_Guide,Compass,Door,Home,Products,Laws,Interactive_Narrative,Showroom,Gauges,Meet_Sean,Frontier,Intergalactic_Cockpit
 cardinal_north_anchor=Laws
 cardinal_center=Compass,Door,Home
 cardinal_systems_hatch=Intergalactic_Cockpit
@@ -1667,8 +1715,8 @@ cardinal_east_bridge=Interactive_Narrative,Showroom
 cardinal_south_bridge=Frontier
 cardinal_west_bridge=Products,Meet_Sean
 frontier_dropdown_route=/explore/frontier/
-frontier_included_in_dropdown=true
-headline=Start_with_coherence_or_enter_the_website
+frontier_included_in_mirrorland_dropdown=true
+headline=Start_with_the_diagnostic_enter_the_website_or_open_the_guide_first
 downstream_compass_headline=One_gate_Four_bridges_One_Universe_waiting_beyond_them
 proof_path=/laws/
 proof_path_label=Laws
@@ -1687,10 +1735,10 @@ cockpit_role=audralia_downstream_stream_deck
 dexter_gauge_mount_route=true
 runtime_strength_held=true
 access_type=systems_hatch
-public_paths=Coherence_Diagnostic,Laws,Meet_Sean,Interactive_Narrative,Showroom,Products,Gauges,Frontier
+public_paths=Coherence_Diagnostic,Website_Guide,Laws,Meet_Sean,Interactive_Narrative,Showroom,Products,Gauges,Frontier
 systems_hatch_paths=Intergalactic_Cockpit
 dropdown_access_preserved=true
-bridge_context_added_to_dropdown=true
+bridge_context_preserved_downstream=true
 root_gateway_context_added=true
 hero_context_preserved_downstream=true
 systems_hatch_section_preserved=true
@@ -1704,18 +1752,18 @@ outer_gems=Laws,Interactive_Narrative,Showroom,Gauges,Products,Meet_Sean
 meet_sean_position=upper_left_symmetric
 gauges_position=bottom_center_symmetric
 path_cards_preserved=true
-route_owns=root_coherence_gateway,compass_root,top_navigation,primary_entry_language,compass_gem_field,root_path_cards,cockpit_access_hatch
-route_does_not_own=coherence_diagnostic_assessment_logic,door_page,showroom_page,products_page,laws_page,gauges_logic,cockpit_logic,audralia_parent_route,datum,disposition_child,terrain_child,dexter_lab,runtime_strength,multi_stream_render,sitewide_rebuild,heavy_runtime
+route_owns=root_coherence_gateway,compass_root,split_top_navigation,primary_entry_language,compass_gem_field,root_path_cards,cockpit_access_hatch
+route_does_not_own=coherence_diagnostic_assessment_logic,site_guide_page,door_page,showroom_page,products_page,laws_page,gauges_logic,cockpit_logic,audralia_parent_route,datum,disposition_child,terrain_child,dexter_lab,runtime_strength,multi_stream_render,sitewide_rebuild,heavy_runtime
 generated_image=false
 graphic_box=false
 streaming=false
 visual_pass_claimed=false
-deploy_marker=COMPASS_ROOT_COHERENCE_GATEWAY_BEFORE_COMPASS_DEPLOY_MARKER_v1
+deploy_marker=COMPASS_ROOT_THREE_OPTION_GUIDE_GATEWAY_SPLIT_NAV_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer>
-      COMPASS_ROOT_COHERENCE_GATEWAY_BEFORE_COMPASS_HTML_TNT_v1 · Coherence Gateway · Compass preserved downstream · One Gate · Four Bridges · One World Beyond · Systems Hatch preserved.
+      COMPASS_ROOT_THREE_OPTION_GUIDE_GATEWAY_SPLIT_NAV_HTML_TNT_v1 · Coherence Gateway · Website Guide promoted · Split navigation · Compass preserved downstream · Four Bridges · Systems Hatch preserved.
     </footer>
   </div>
 </body>

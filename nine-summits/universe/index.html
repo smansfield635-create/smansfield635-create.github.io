@@ -1,15 +1,19 @@
 <!-- TARGET FILE: /nine-summits/universe/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- NINE_SUMMITS_UNIVERSE_SIMPLIFIED_NARRATIVE_MAP_BLIP_HTML_TNT_v1 -->
+<!-- NINE_SUMMITS_UNIVERSE_WORLD_FIELD_MAP_BLIP_HTML_TNT_v2 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/nine-summits/universe/"
   data-page="nine-summits-universe"
-  data-contract="NINE_SUMMITS_UNIVERSE_SIMPLIFIED_NARRATIVE_MAP_BLIP_HTML_TNT_v1"
-  data-previous-contract="NINE_SUMMITS_UNIVERSE_WORLD_SETTING_MOTION_RENEWAL_TNT_v6"
-  data-role="mirrorworld-universe-narrative-field"
+  data-contract="NINE_SUMMITS_UNIVERSE_WORLD_FIELD_MAP_BLIP_HTML_TNT_v2"
+  data-previous-contract="NINE_SUMMITS_UNIVERSE_SIMPLIFIED_NARRATIVE_MAP_BLIP_HTML_TNT_v1"
+  data-motion-contract="NINE_SUMMITS_UNIVERSE_WORLD_SETTING_MOTION_RENEWAL_TNT_v6"
+  data-role="mirrorworld-universe-primary-field"
   data-core-message="the-climb-becomes-a-world"
+  data-universe-primary="true"
+  data-universe-field-primary="true"
+  data-motion-field-primary="true"
   data-page-simplified="true"
   data-page-subject-content-only="true"
   data-page-body-navigation-reduced="true"
@@ -23,9 +27,8 @@
   data-mirrorworld-page-blip-required="true"
   data-local-map-section="false"
   data-second-mirrorland-entrance="false"
-  data-animation-stage-preserved="true"
-  data-universe-motion-compatible="true"
-  data-motion-js="/nine-summits/universe/universe.motion.js"
+  data-universe-motion-js-preserved="true"
+  data-selector-contract-preserved="true"
   data-blueprint-css="/assets/manor-blueprint/manor.blueprint.css"
   data-blueprint-registry="/assets/manor-blueprint/manor.blueprint.registry.js"
   data-blueprint-js="/assets/manor-blueprint/manor.blueprint.js"
@@ -40,10 +43,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Nine Summits Universe · The Climb Becomes a World</title>
+  <title>Nine Summits Universe · The World Around the Climb</title>
   <meta
     name="description"
-    content="Nine Summits Universe is the world-setting field around the climb. The page preserves narrative, animation, and MirrorWorld context while movement belongs to the floating Map Portal blip."
+    content="Nine Summits Universe is the living world-setting field around the climb. The Universe carries narrative pressure, motion, Audralia possibility, book continuity, Showroom proof, and Frontier expansion while movement belongs to the floating Map Portal blip."
   >
 
   <link
@@ -54,12 +57,13 @@
   >
 
   <style>
-    :root {
+    :root{
       color-scheme:dark;
       --bg:#02030a;
       --ink:#fff4d8;
       --muted:rgba(230,238,255,.78);
-      --faint:rgba(230,238,255,.52);
+      --soft:rgba(230,238,255,.64);
+      --faint:rgba(230,238,255,.48);
       --gold:#f3c86f;
       --gold2:#ffe8a3;
       --blue:#8dd8ff;
@@ -82,9 +86,9 @@
       --gem-cut:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
     }
 
-    * { box-sizing:border-box; }
+    *{box-sizing:border-box}
 
-    html {
+    html{
       min-width:320px;
       min-height:100%;
       background:var(--bg);
@@ -92,7 +96,7 @@
       overflow-x:hidden;
     }
 
-    body {
+    body{
       margin:0;
       min-width:320px;
       min-height:100vh;
@@ -110,7 +114,7 @@
       text-rendering:geometricPrecision;
     }
 
-    body::before {
+    body::before{
       content:"";
       position:fixed;
       inset:0;
@@ -125,7 +129,7 @@
       mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
     }
 
-    body::after {
+    body::after{
       content:"";
       position:fixed;
       inset:-20%;
@@ -145,21 +149,21 @@
       animation:universeAuroraDrift 34s linear infinite;
     }
 
-    @keyframes universeAuroraDrift {
-      from { transform:rotate(0deg) scale(1); }
-      to { transform:rotate(360deg) scale(1); }
+    @keyframes universeAuroraDrift{
+      from{transform:rotate(0deg) scale(1)}
+      to{transform:rotate(360deg) scale(1)}
     }
 
-    a { color:inherit; text-decoration:none; }
+    a{color:inherit;text-decoration:none}
 
     a:focus-visible,
     button:focus-visible,
-    [tabindex]:focus-visible {
+    [tabindex]:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
     }
 
-    .skip {
+    .skip{
       position:absolute;
       left:-999px;
       top:8px;
@@ -171,9 +175,9 @@
       font-weight:950;
     }
 
-    .skip:focus { left:8px; }
+    .skip:focus{left:8px}
 
-    .shell {
+    .shell{
       position:relative;
       z-index:2;
       width:min(var(--max),calc(100% - 28px));
@@ -181,7 +185,7 @@
       padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
     }
 
-    .topbar {
+    .topbar{
       display:grid;
       grid-template-columns:auto 1fr;
       align-items:center;
@@ -189,7 +193,7 @@
       padding:12px 0 18px;
     }
 
-    .brand {
+    .brand{
       display:grid;
       grid-template-columns:auto 1fr;
       align-items:center;
@@ -197,7 +201,7 @@
       min-width:260px;
     }
 
-    .brand-mark {
+    .brand-mark{
       width:4.2rem;
       height:4.2rem;
       display:grid;
@@ -216,7 +220,7 @@
         inset 0 1px 0 rgba(255,255,255,.16);
     }
 
-    .brand-mark span {
+    .brand-mark span{
       transform:rotate(-45deg);
       font-weight:950;
       letter-spacing:.04em;
@@ -224,12 +228,12 @@
       text-shadow:0 2px 10px rgba(0,0,0,.85);
     }
 
-    .brand-copy {
+    .brand-copy{
       display:grid;
       gap:.18rem;
     }
 
-    .brand-copy span {
+    .brand-copy span{
       color:var(--muted);
       font-size:.74rem;
       font-weight:950;
@@ -237,13 +241,13 @@
       text-transform:uppercase;
     }
 
-    .brand-copy strong {
+    .brand-copy strong{
       font-size:clamp(1.08rem,3vw,1.7rem);
       line-height:1;
       letter-spacing:-.045em;
     }
 
-    .header-note {
+    .header-note{
       justify-self:end;
       max-width:25rem;
       color:rgba(230,238,255,.66);
@@ -253,7 +257,7 @@
       text-align:right;
     }
 
-    .panel {
+    .panel{
       border:1px solid var(--line);
       border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
@@ -265,9 +269,9 @@
       overflow:hidden;
     }
 
-    .hero {
+    .hero{
       position:relative;
-      min-height:clamp(23rem,42vw,34rem);
+      min-height:clamp(22rem,38vw,30rem);
       display:grid;
       align-content:center;
       gap:1rem;
@@ -276,7 +280,7 @@
       isolation:isolate;
     }
 
-    .hero::before {
+    .hero::before{
       content:"";
       position:absolute;
       right:clamp(1rem,6vw,5.5rem);
@@ -296,12 +300,12 @@
       opacity:.54;
     }
 
-    @keyframes anchorPulse {
-      0%,100% { opacity:.42; filter:brightness(.95); }
-      50% { opacity:.60; filter:brightness(1.1); }
+    @keyframes anchorPulse{
+      0%,100%{opacity:.42;filter:brightness(.95)}
+      50%{opacity:.60;filter:brightness(1.1)}
     }
 
-    .kicker {
+    .kicker{
       width:fit-content;
       display:inline-flex;
       align-items:center;
@@ -319,7 +323,7 @@
       z-index:2;
     }
 
-    .kicker::before {
+    .kicker::before{
       content:"";
       width:.72rem;
       height:.72rem;
@@ -329,9 +333,9 @@
       box-shadow:0 0 1.1rem rgba(243,200,111,.46);
     }
 
-    h1 {
+    h1{
       margin:0;
-      max-width:1000px;
+      max-width:1020px;
       font-size:clamp(3.05rem,9.4vw,7rem);
       line-height:.84;
       letter-spacing:-.108em;
@@ -340,7 +344,7 @@
       z-index:2;
     }
 
-    h2 {
+    h2{
       margin:0;
       color:var(--gold);
       font-size:clamp(1.45rem,4.7vw,2.75rem);
@@ -351,20 +355,20 @@
       z-index:2;
     }
 
-    p {
+    p{
       margin:0;
       color:var(--muted);
       font-size:clamp(.98rem,2.7vw,1.16rem);
       line-height:1.55;
     }
 
-    .lead {
-      max-width:950px;
+    .lead{
+      max-width:970px;
       position:relative;
       z-index:2;
     }
 
-    .subline {
+    .subline{
       max-width:920px;
       color:rgba(255,244,216,.90);
       font-size:clamp(1.08rem,2.8vw,1.34rem);
@@ -373,8 +377,8 @@
       z-index:2;
     }
 
-    .principle {
-      max-width:980px;
+    .principle{
+      max-width:1000px;
       padding:1rem 1.1rem;
       border:1px solid rgba(243,200,111,.24);
       border-radius:1.2rem;
@@ -385,16 +389,22 @@
       z-index:2;
     }
 
-    .section {
+    .section{
       margin-top:1.15rem;
       padding:clamp(1rem,3vw,1.45rem);
       display:grid;
       gap:1.05rem;
     }
 
-    .motion-field {
+    .universe-field-wrap{
+      display:grid;
+      grid-template-columns:minmax(0,1fr);
+      gap:1rem;
+    }
+
+    .motion-field{
       position:relative;
-      min-height:clamp(35rem,66vw,50rem);
+      min-height:clamp(37rem,68vw,52rem);
       display:grid;
       place-items:center;
       overflow:hidden;
@@ -402,16 +412,18 @@
       border:1px solid rgba(184,205,255,.13);
       border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
-        radial-gradient(circle at 50% 42%,rgba(243,200,111,calc(var(--glow-live) * .28)),transparent 20rem),
-        radial-gradient(circle at 50% 52%,rgba(143,101,255,calc(var(--violet-glow-live) * .35)),transparent 25rem),
-        radial-gradient(circle at 50% 70%,rgba(141,216,255,.08),transparent 30rem),
-        linear-gradient(180deg,rgba(1,5,16,.68),rgba(2,6,16,.94));
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+        radial-gradient(circle at 50% 42%,rgba(243,200,111,calc(var(--glow-live) * .32)),transparent 20rem),
+        radial-gradient(circle at 50% 52%,rgba(143,101,255,calc(var(--violet-glow-live) * .42)),transparent 25rem),
+        radial-gradient(circle at 50% 70%,rgba(141,216,255,.09),transparent 30rem),
+        linear-gradient(180deg,rgba(1,5,16,.70),rgba(2,6,16,.96));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.06),
+        0 0 3.5rem rgba(143,101,255,.10);
       scroll-margin-top:7rem;
     }
 
     .motion-field::before,
-    .motion-field::after {
+    .motion-field::after{
       content:"";
       position:absolute;
       left:50%;
@@ -421,54 +433,54 @@
       pointer-events:none;
     }
 
-    .motion-field::before {
-      width:min(82%,38rem);
-      height:min(82%,38rem);
+    .motion-field::before{
+      width:min(84%,40rem);
+      height:min(84%,40rem);
       border:1px solid rgba(243,200,111,.11);
       background:
         conic-gradient(
           from var(--phase),
           transparent 0deg,
-          rgba(243,200,111,.13) 32deg,
+          rgba(243,200,111,.15) 32deg,
           transparent 68deg,
-          rgba(141,216,255,.10) 122deg,
+          rgba(141,216,255,.11) 122deg,
           transparent 174deg,
           rgba(143,240,195,.10) 220deg,
           transparent 272deg,
-          rgba(190,170,255,.12) 322deg,
+          rgba(190,170,255,.14) 322deg,
           transparent 360deg
         );
-      box-shadow:0 0 3rem rgba(143,101,255,.12);
-      opacity:.86;
+      box-shadow:0 0 3rem rgba(143,101,255,.13);
+      opacity:.88;
       animation:fieldTurn 56s linear infinite;
     }
 
-    .motion-field::after {
-      width:min(56%,25rem);
-      height:min(56%,25rem);
-      border:1px solid rgba(36,120,255,.15);
+    .motion-field::after{
+      width:min(58%,26rem);
+      height:min(58%,26rem);
+      border:1px solid rgba(36,120,255,.16);
       box-shadow:
-        inset 0 0 3rem rgba(36,120,255,.035),
-        0 0 2.4rem rgba(190,170,255,.08);
+        inset 0 0 3rem rgba(36,120,255,.04),
+        0 0 2.4rem rgba(190,170,255,.09);
       animation:innerBreathe 8s ease-in-out infinite;
     }
 
-    @keyframes fieldTurn {
-      to { transform:translate(-50%,-50%) rotate(360deg); }
+    @keyframes fieldTurn{
+      to{transform:translate(-50%,-50%) rotate(360deg)}
     }
 
-    @keyframes innerBreathe {
-      0%,100% { opacity:.54; filter:brightness(.94); }
-      50% { opacity:.86; filter:brightness(1.12); }
+    @keyframes innerBreathe{
+      0%,100%{opacity:.54;filter:brightness(.94)}
+      50%{opacity:.86;filter:brightness(1.12)}
     }
 
-    .world-core {
+    .world-core{
       position:absolute;
       left:50%;
       top:50%;
       z-index:5;
-      width:clamp(12rem,25vw,17rem);
-      min-height:clamp(8.5rem,17vw,12rem);
+      width:clamp(13rem,26vw,18.5rem);
+      min-height:clamp(9.2rem,18vw,13rem);
       transform:translate(-50%,-50%) rotate(var(--tilt));
       display:grid;
       place-items:center;
@@ -477,7 +489,7 @@
     }
 
     .world-core-shell,
-    .diamond-shell {
+    .diamond-shell{
       position:absolute;
       inset:0;
       display:grid;
@@ -497,16 +509,16 @@
       transition:border-color .18s ease,box-shadow .18s ease,filter .18s ease;
     }
 
-    .world-core-shell {
+    .world-core-shell{
       animation:corePulse var(--core-duration) ease-in-out infinite;
     }
 
-    @keyframes corePulse {
-      0%,100% { transform:scale(1); filter:brightness(1); }
-      50% { transform:scale(1.035); filter:brightness(1.13); }
+    @keyframes corePulse{
+      0%,100%{transform:scale(1);filter:brightness(1)}
+      50%{transform:scale(1.035);filter:brightness(1.13)}
     }
 
-    .diamond-content {
+    .diamond-content{
       position:relative;
       z-index:3;
       width:72%;
@@ -521,7 +533,7 @@
         0 0 2px rgba(255,255,255,.42);
     }
 
-    .diamond-content strong {
+    .diamond-content strong{
       display:block;
       color:rgba(255,244,216,.98);
       font-size:clamp(.68rem,1.55vw,.92rem);
@@ -531,7 +543,7 @@
       text-transform:uppercase;
     }
 
-    .diamond-content span {
+    .diamond-content span{
       color:rgba(230,238,255,.78);
       font-size:clamp(.42rem,.95vw,.56rem);
       font-weight:900;
@@ -539,28 +551,28 @@
       text-transform:uppercase;
     }
 
-    .world-core .diamond-content strong {
+    .world-core .diamond-content strong{
       color:var(--gold);
-      font-size:clamp(.85rem,1.85vw,1.08rem);
+      font-size:clamp(.9rem,1.9vw,1.16rem);
       letter-spacing:.16em;
     }
 
-    .world-core .diamond-content b {
+    .world-core .diamond-content b{
       display:block;
       color:rgba(255,244,216,.98);
-      font-size:clamp(1rem,2.3vw,1.45rem);
+      font-size:clamp(1.08rem,2.45vw,1.56rem);
       line-height:1.05;
       letter-spacing:-.035em;
       text-transform:none;
     }
 
-    .orbit-layer {
+    .orbit-layer{
       position:absolute;
       left:50%;
       top:50%;
       z-index:4;
-      width:min(82%,38rem);
-      height:min(82%,38rem);
+      width:min(84%,40rem);
+      height:min(84%,40rem);
       border-radius:999px;
       transform:translate(-50%,-50%);
       pointer-events:none;
@@ -569,22 +581,22 @@
       will-change:transform;
     }
 
-    @keyframes orbitTurn {
-      from { transform:translate(-50%,-50%) rotate(0deg); }
-      to { transform:translate(-50%,-50%) rotate(360deg); }
+    @keyframes orbitTurn{
+      from{transform:translate(-50%,-50%) rotate(0deg)}
+      to{transform:translate(-50%,-50%) rotate(360deg)}
     }
 
-    .diamond-node {
+    .diamond-node{
       --angle:0deg;
-      --radius:-17rem;
+      --radius:-18rem;
       --delay:0s;
       position:absolute;
       left:50%;
       top:50%;
-      width:clamp(8.2rem,17vw,10.4rem);
-      height:clamp(6rem,12.6vw,7.65rem);
-      margin-left:calc(clamp(8.2rem,17vw,10.4rem) / -2);
-      margin-top:calc(clamp(6rem,12.6vw,7.65rem) / -2);
+      width:clamp(8.6rem,17.5vw,10.8rem);
+      height:clamp(6.25rem,13vw,7.9rem);
+      margin-left:calc(clamp(8.6rem,17.5vw,10.8rem) / -2);
+      margin-top:calc(clamp(6.25rem,13vw,7.9rem) / -2);
       display:grid;
       place-items:center;
       text-align:center;
@@ -601,13 +613,13 @@
     }
 
     .diamond-node:hover,
-    .diamond-node:focus-visible {
+    .diamond-node:focus-visible{
       filter:brightness(1.12) saturate(1.08);
       scale:1.045;
       outline:none;
     }
 
-    .diamond-node-inner {
+    .diamond-node-inner{
       position:absolute;
       inset:0;
       display:grid;
@@ -617,7 +629,7 @@
       will-change:transform;
     }
 
-    .diamond-node-float {
+    .diamond-node-float{
       position:absolute;
       inset:0;
       display:grid;
@@ -626,24 +638,24 @@
       animation-delay:var(--delay);
     }
 
-    @keyframes counterTurn {
-      from { transform:rotate(0deg); }
-      to { transform:rotate(360deg); }
+    @keyframes counterTurn{
+      from{transform:rotate(0deg)}
+      to{transform:rotate(360deg)}
     }
 
-    @keyframes gemFloat {
-      0%,100% { transform:translateY(0) scale(1); filter:brightness(1); }
-      50% { transform:translateY(-8px) scale(1.025); filter:brightness(1.12); }
+    @keyframes gemFloat{
+      0%,100%{transform:translateY(0) scale(1);filter:brightness(1)}
+      50%{transform:translateY(-8px) scale(1.025);filter:brightness(1.12)}
     }
 
     .diamond-node:hover .diamond-node-float,
-    .diamond-node:focus-visible .diamond-node-float {
+    .diamond-node:focus-visible .diamond-node-float{
       animation-play-state:paused;
       transform:translateY(-10px) scale(1.045);
       filter:brightness(1.18);
     }
 
-    .instrument-panel {
+    .instrument-panel{
       position:absolute;
       left:1rem;
       right:1rem;
@@ -655,7 +667,7 @@
       pointer-events:auto;
     }
 
-    .instrument {
+    .instrument{
       min-height:3.4rem;
       display:grid;
       align-content:center;
@@ -668,7 +680,7 @@
       backdrop-filter:blur(8px);
     }
 
-    .instrument b {
+    .instrument b{
       color:rgba(230,238,255,.58);
       font-size:.58rem;
       font-weight:950;
@@ -676,15 +688,14 @@
       text-transform:uppercase;
     }
 
-    .instrument strong,
-    .instrument span {
+    .instrument strong{
       color:rgba(255,244,216,.96);
       font-size:.88rem;
       font-weight:950;
       line-height:1.1;
     }
 
-    .status-panel {
+    .status-panel{
       position:relative;
       display:grid;
       gap:.65rem;
@@ -696,24 +707,24 @@
         rgba(143,101,255,.040);
     }
 
-    .status-panel b {
+    .status-panel b{
       color:var(--violet);
       font-size:.68rem;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .status-panel p {
+    .status-panel p{
       color:rgba(236,229,255,.88);
     }
 
-    .concept-grid {
+    .concept-grid{
       display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
+      grid-template-columns:repeat(5,minmax(0,1fr));
       gap:.75rem;
     }
 
-    .concept-card {
+    .concept-card{
       min-height:100%;
       display:grid;
       align-content:start;
@@ -726,25 +737,25 @@
         rgba(255,255,255,.035);
     }
 
-    .concept-card b {
+    .concept-card b{
       color:var(--gold);
       font-size:.68rem;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .concept-card strong {
+    .concept-card strong{
       color:rgba(255,244,216,.98);
       font-size:1.08rem;
       line-height:1.1;
     }
 
-    .concept-card p {
+    .concept-card p{
       font-size:.94rem;
       line-height:1.42;
     }
 
-    .closing-note {
+    .closing-note{
       padding:1.1rem;
       border:1px solid rgba(243,200,111,.22);
       border-radius:1.2rem;
@@ -755,7 +766,7 @@
       gap:.65rem;
     }
 
-    .closing-note strong {
+    .closing-note strong{
       color:rgba(255,244,216,.98);
       font-size:clamp(1.2rem,3.6vw,2rem);
       line-height:1.05;
@@ -766,7 +777,7 @@
     [data-route-receipt],
     [data-contract-receipt],
     [data-debug-receipt],
-    .receipt {
+    .receipt{
       display:none!important;
       visibility:hidden!important;
       overflow:hidden!important;
@@ -785,74 +796,73 @@
       white-space:nowrap!important;
     }
 
-    footer {
+    footer{
       padding:1.35rem 0 .5rem;
       color:var(--faint);
       text-align:center;
       font-size:.76rem;
     }
 
-    @media (max-width:1080px) {
-      .concept-grid {
+    @media (max-width:1120px){
+      .concept-grid{
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
 
-      .instrument-panel {
+      .instrument-panel{
         grid-template-columns:repeat(3,minmax(0,1fr));
       }
     }
 
-    @media (max-width:980px) {
-      .topbar {
+    @media (max-width:980px){
+      .topbar{
         grid-template-columns:1fr;
         align-items:start;
       }
 
-      .header-note {
+      .header-note{
         justify-self:start;
         text-align:left;
       }
     }
 
-    @media (max-width:720px) {
-      .shell { width:min(100% - 22px,var(--max)); }
+    @media (max-width:720px){
+      .shell{width:min(100% - 22px,var(--max))}
+      h1{font-size:clamp(3rem,17vw,5rem)}
 
-      h1 { font-size:clamp(3rem,17vw,5rem); }
-
-      .hero {
+      .hero{
         min-height:27rem;
         padding:1rem;
       }
 
-      .motion-field {
-        min-height:34rem;
+      .motion-field{
+        min-height:35rem;
       }
 
-      .orbit-layer {
-        width:20.5rem;
-        height:20.5rem;
+      .orbit-layer{
+        width:21rem;
+        height:21rem;
       }
 
-      .diamond-node {
-        --radius:-9.55rem;
-        width:5.8rem;
-        height:4.25rem;
-        margin-left:-2.9rem;
-        margin-top:-2.125rem;
+      .diamond-node{
+        --radius:-9.75rem;
+        width:5.95rem;
+        height:4.35rem;
+        margin-left:-2.975rem;
+        margin-top:-2.175rem;
       }
 
-      .diamond-content strong { font-size:.38rem; }
-      .diamond-content span { display:none; }
+      .diamond-content strong{font-size:.38rem}
+      .diamond-content span{display:none}
 
-      .world-core {
-        width:7.8rem;
-        min-height:5.7rem;
+      .world-core{
+        width:8.1rem;
+        min-height:5.9rem;
       }
 
-      .world-core .diamond-content strong { font-size:.50rem; }
-      .world-core .diamond-content b { font-size:.82rem; }
+      .world-core .diamond-content strong{font-size:.50rem}
+      .world-core .diamond-content b{font-size:.82rem}
 
-      .instrument-panel {
+      .instrument-panel{
         position:relative;
         left:auto;
         right:auto;
@@ -861,39 +871,39 @@
         margin-top:1rem;
       }
 
-      .concept-grid {
+      .concept-grid{
         grid-template-columns:1fr;
       }
     }
 
-    @media (max-width:460px) {
-      .motion-field { min-height:31rem; }
+    @media (max-width:460px){
+      .motion-field{min-height:32rem}
 
-      .orbit-layer {
-        width:17.5rem;
-        height:17.5rem;
+      .orbit-layer{
+        width:17.6rem;
+        height:17.6rem;
       }
 
-      .diamond-node {
-        --radius:-8.05rem;
+      .diamond-node{
+        --radius:-8.08rem;
         width:5rem;
         height:3.7rem;
         margin-left:-2.5rem;
         margin-top:-1.85rem;
       }
 
-      .diamond-content strong { font-size:.31rem; }
+      .diamond-content strong{font-size:.31rem}
 
-      .world-core {
-        width:6.9rem;
+      .world-core{
+        width:6.95rem;
         min-height:5rem;
       }
     }
 
-    @media (prefers-reduced-motion:reduce) {
+    @media (prefers-reduced-motion:reduce){
       *,
       *::before,
-      *::after {
+      *::after{
         scroll-behavior:auto!important;
         animation-duration:.01ms!important;
         animation-iteration-count:1!important;
@@ -906,7 +916,7 @@
       .orbit-layer,
       .diamond-node-inner,
       .diamond-node-float,
-      .world-core-shell {
+      .world-core-shell{
         animation:none!important;
       }
     }
@@ -927,164 +937,213 @@
       </a>
 
       <div class="header-note">
-        Movement belongs to the floating Map / Portal blip. This page stays focused on the Universe narrative field and its animation stage.
+        Movement belongs to the floating Map / Portal blip. This page is the Universe field: narrative pressure, world-setting motion, and the climb becoming a world.
       </div>
     </header>
 
     <main id="universe-main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Nine Summits Universe · World Setting</div>
+        <div class="kicker">Nine Summits Universe · Living World Field</div>
 
-        <h1 id="page-title">The climb becomes a world.</h1>
+        <h1 id="page-title">The Universe is the world around the climb.</h1>
 
-        <p class="subline">The Universe is not the menu. It is the world around the climb.</p>
+        <p class="subline">The climb becomes a world. The world begins to move.</p>
 
         <p class="lead">
-          Nine Summits begins as a human climb, then expands into a living narrative field. MirrorWorld carries the story pressure. Audralia holds the possibility path. The book remains the human spine while the Universe gives the climb terrain, consequence, and motion.
+          Nine Summits begins as a human climb, but the Universe gives that climb terrain, consequence, motion, and story pressure. The Book remains the human spine. Audralia remains the living possibility path. Showroom gives visible proof. Frontier keeps the expansion edge open.
         </p>
 
         <div class="principle">
-          This page is the world-setting layer. It does not own navigation, route directories, planet rendering, or Gauges. The Map / Portal blip owns movement.
+          This is not a route directory. This is the Nine Summits Universe field. Navigation belongs to the Map / Portal blip; the page body belongs to the world.
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="animation-title">
-        <div class="kicker">Animation allotment</div>
-        <h2 id="animation-title">The Universe motion field shows relationship, pressure, and direction.</h2>
+      <section class="panel section" aria-labelledby="field-title">
+        <div class="kicker">Primary Universe field</div>
+        <h2 id="field-title">The living field shows how the world-setting lanes hold together.</h2>
 
-        <div
-          class="motion-field universe-stage diamond-compass"
-          data-universe-animation-stage="true"
-          data-motion-field="true"
-          aria-label="Nine Summits Universe motion field"
-        >
-          <div class="world-core" aria-hidden="true">
-            <span class="world-core-shell"></span>
-            <span class="diamond-content">
-              <strong>Universe</strong>
-              <b>World Field</b>
-              <span>Narrative setting</span>
-            </span>
+        <div class="universe-field-wrap">
+          <div
+            class="motion-field universe-stage diamond-compass"
+            data-universe-animation-stage="true"
+            data-motion-field="true"
+            data-universe-field-primary="true"
+            aria-label="Nine Summits Universe world-setting motion field"
+          >
+            <div class="world-core" aria-hidden="true">
+              <span class="world-core-shell"></span>
+              <span class="diamond-content">
+                <strong>Universe</strong>
+                <b>World Field</b>
+                <span>Climb made visible</span>
+              </span>
+            </div>
+
+            <div class="orbit-layer" aria-label="Universe world-setting cues">
+              <button
+                class="diamond-node"
+                type="button"
+                data-world-option="Audralia"
+                aria-label="Audralia living canvas cue"
+                style="--angle:0deg;--delay:-.2s"
+              >
+                <span class="diamond-node-inner">
+                  <span class="diamond-node-float">
+                    <span class="diamond-shell"></span>
+                    <span class="diamond-content">
+                      <strong>Audralia</strong>
+                      <span>Living canvas</span>
+                    </span>
+                  </span>
+                </span>
+              </button>
+
+              <button
+                class="diamond-node"
+                type="button"
+                data-world-option="Book"
+                aria-label="Book human climb cue"
+                style="--angle:90deg;--delay:-1.8s"
+              >
+                <span class="diamond-node-inner">
+                  <span class="diamond-node-float">
+                    <span class="diamond-shell"></span>
+                    <span class="diamond-content">
+                      <strong>Book</strong>
+                      <span>Human climb</span>
+                    </span>
+                  </span>
+                </span>
+              </button>
+
+              <button
+                class="diamond-node"
+                type="button"
+                data-world-option="Showroom"
+                aria-label="Showroom proof atrium cue"
+                style="--angle:180deg;--delay:-3.4s"
+              >
+                <span class="diamond-node-inner">
+                  <span class="diamond-node-float">
+                    <span class="diamond-shell"></span>
+                    <span class="diamond-content">
+                      <strong>Showroom</strong>
+                      <span>Proof atrium</span>
+                    </span>
+                  </span>
+                </span>
+              </button>
+
+              <button
+                class="diamond-node"
+                type="button"
+                data-world-option="Frontier"
+                aria-label="Frontier expansion edge cue"
+                style="--angle:270deg;--delay:-5s"
+              >
+                <span class="diamond-node-inner">
+                  <span class="diamond-node-float">
+                    <span class="diamond-shell"></span>
+                    <span class="diamond-content">
+                      <strong>Frontier</strong>
+                      <span>Expansion edge</span>
+                    </span>
+                  </span>
+                </span>
+              </button>
+            </div>
+
+            <aside class="instrument-panel" aria-label="Universe field instruments">
+              <div class="instrument">
+                <b>Ratio</b>
+                <strong data-instrument-ratio>1.618</strong>
+              </div>
+              <div class="instrument">
+                <b>Axis</b>
+                <strong data-instrument-axis>Canvas</strong>
+              </div>
+              <div class="instrument">
+                <b>Phase</b>
+                <strong data-instrument-phase>0°</strong>
+              </div>
+              <div class="instrument">
+                <b>Lattice</b>
+                <strong data-instrument-lattice>256</strong>
+              </div>
+              <div class="instrument">
+                <b>Cadence</b>
+                <strong data-instrument-cadence>1/4</strong>
+              </div>
+            </aside>
           </div>
 
-          <div class="orbit-layer" aria-label="Universe motion options">
-            <button class="diamond-node" type="button" data-world-option="Audralia" aria-label="Audralia living canvas cue" style="--angle:0deg;--delay:-.2s">
-              <span class="diamond-node-inner">
-                <span class="diamond-node-float">
-                  <span class="diamond-shell"></span>
-                  <span class="diamond-content"><strong>Audralia</strong><span>Living canvas</span></span>
-                </span>
-              </span>
-            </button>
-
-            <button class="diamond-node" type="button" data-world-option="Book" aria-label="Book human climb cue" style="--angle:90deg;--delay:-1.8s">
-              <span class="diamond-node-inner">
-                <span class="diamond-node-float">
-                  <span class="diamond-shell"></span>
-                  <span class="diamond-content"><strong>Book</strong><span>Human climb</span></span>
-                </span>
-              </span>
-            </button>
-
-            <button class="diamond-node" type="button" data-world-option="Showroom" aria-label="Showroom proof atrium cue" style="--angle:180deg;--delay:-3.4s">
-              <span class="diamond-node-inner">
-                <span class="diamond-node-float">
-                  <span class="diamond-shell"></span>
-                  <span class="diamond-content"><strong>Showroom</strong><span>Proof atrium</span></span>
-                </span>
-              </span>
-            </button>
-
-            <button class="diamond-node" type="button" data-world-option="Frontier" aria-label="Frontier expansion edge cue" style="--angle:270deg;--delay:-5s">
-              <span class="diamond-node-inner">
-                <span class="diamond-node-float">
-                  <span class="diamond-shell"></span>
-                  <span class="diamond-content"><strong>Frontier</strong><span>Expansion edge</span></span>
-                </span>
-              </span>
-            </button>
-          </div>
-
-          <aside class="instrument-panel" aria-label="Universe motion instruments">
-            <div class="instrument">
-              <b>Ratio</b>
-              <strong data-instrument-ratio>1.618</strong>
-            </div>
-            <div class="instrument">
-              <b>Axis</b>
-              <strong data-instrument-axis>Canvas</strong>
-            </div>
-            <div class="instrument">
-              <b>Phase</b>
-              <strong data-instrument-phase>0°</strong>
-            </div>
-            <div class="instrument">
-              <b>Lattice</b>
-              <strong data-instrument-lattice>256</strong>
-            </div>
-            <div class="instrument">
-              <b>Cadence</b>
-              <strong data-instrument-cadence>1/4</strong>
-            </div>
+          <aside class="status-panel" aria-live="polite">
+            <b>Live Universe Cue</b>
+            <p data-cognitive-status>
+              Audralia opens the untouched living path: a living canvas where visitors can watch possibility develop before their eyes.
+            </p>
           </aside>
         </div>
-
-        <div class="status-panel" aria-live="polite">
-          <b>Current universe cue</b>
-          <p data-cognitive-status>
-            Audralia opens the untouched living path: a living canvas where visitors can watch possibility develop before their eyes.
-          </p>
-        </div>
       </section>
 
-      <section class="panel section" aria-labelledby="concept-title">
-        <div class="kicker">Narrative field</div>
-        <h2 id="concept-title">The Universe gives the climb a place to happen.</h2>
+      <section class="panel section" aria-labelledby="meaning-title">
+        <div class="kicker">Universe meaning</div>
+        <h2 id="meaning-title">The Universe gives the climb a place to happen.</h2>
 
         <div class="concept-grid">
           <article class="concept-card">
-            <b>World Around the Climb</b>
-            <strong>The book becomes terrain.</strong>
-            <p>The human climb remains the spine, but the Universe gives that climb locations, pressure, events, motion, consequence, and living context.</p>
+            <b>Universe Field</b>
+            <strong>The world around the climb.</strong>
+            <p>The human climb does not stay abstract. It gains terrain, rooms, pressure, consequence, and visible movement inside the Universe field.</p>
           </article>
 
           <article class="concept-card">
-            <b>MirrorWorld Field</b>
-            <strong>The story is carried by reflection and consequence.</strong>
-            <p>MirrorWorld is the narrative field where possible futures become visible before they harden. The page introduces that field without becoming the full route map.</p>
+            <b>Book Spine</b>
+            <strong>The climb remains human.</strong>
+            <p>The Book carries the inner ascent: meaning, pressure, free will, balance, dignity, and love. The Universe gives that ascent an outer world.</p>
           </article>
 
           <article class="concept-card">
             <b>Audralia</b>
             <strong>Possibility remains alive.</strong>
-            <p>Audralia is preserved as the living possibility path. This page points to its meaning without taking over the planet renderer.</p>
+            <p>Audralia is the living possibility path. This page expresses its place in the Universe without becoming the Audralia renderer.</p>
           </article>
 
           <article class="concept-card">
-            <b>Motion Standard</b>
-            <strong>Animation shows relationship, not navigation burden.</strong>
-            <p>The motion field shows orbit, phase, cue, and pressure. Navigation is deliberately moved to the floating Map / Portal blip.</p>
+            <b>Showroom</b>
+            <strong>Visible proof remains separate.</strong>
+            <p>Showroom gives the public proof atrium: expression, inspection, demonstration, and visible clarity without overtaking the story field.</p>
+          </article>
+
+          <article class="concept-card">
+            <b>Frontier</b>
+            <strong>The edge stays open.</strong>
+            <p>Frontier carries future stories, media paths, experiences, and unfinished territory without pretending the Universe is complete.</p>
           </article>
         </div>
       </section>
 
       <section class="panel section" aria-labelledby="closure-title">
         <div class="closing-note">
-          <strong id="closure-title">The Universe is now subject-first.</strong>
+          <strong id="closure-title">The Universe is now the primary object.</strong>
           <p>
-            The old accordion route menu is removed. The page is dedicated to narrative, animation, and world-setting context. Movement, Main Menu, Mirrorland Menu, and room discovery belong to the floating Map / Portal blip.
+            The old accordion route menu is removed. The page no longer competes with the Map / Portal blip. The body is dedicated to the living world-setting field: the climb, the Book, Audralia, Showroom, Frontier, and the motion that holds them together.
           </p>
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-NINE_SUMMITS_UNIVERSE_SIMPLIFIED_NARRATIVE_MAP_BLIP_HTML_TNT_v1
+NINE_SUMMITS_UNIVERSE_WORLD_FIELD_MAP_BLIP_HTML_TNT_v2
 target=/nine-summits/universe/index.html
 route=/nine-summits/universe/
 page=nine_summits_universe
-role=mirrorworld_universe_narrative_field
-previous=NINE_SUMMITS_UNIVERSE_WORLD_SETTING_MOTION_RENEWAL_TNT_v6
+role=mirrorworld_universe_primary_field
+previous=NINE_SUMMITS_UNIVERSE_SIMPLIFIED_NARRATIVE_MAP_BLIP_HTML_TNT_v1
+motion_contract=NINE_SUMMITS_UNIVERSE_WORLD_SETTING_MOTION_RENEWAL_TNT_v6
 message=the_climb_becomes_a_world
+universe_primary=true
+universe_field_primary=true
+motion_field_primary=true
 page_simplified=true
 page_subject_content_only=true
 page_body_navigation_reduced=true
@@ -1098,27 +1157,29 @@ map_blip_owns_navigation=true
 mirrorworld_page_blip_required=true
 local_map_section=false
 second_mirrorland_entrance=false
-animation_stage_preserved=true
-universe_motion_compatible=true
+universe_motion_js_preserved=true
+selector_contract_preserved=true
 motion_js=/nine-summits/universe/universe.motion.js
 motion_js_contract=NINE_SUMMITS_UNIVERSE_WORLD_SETTING_MOTION_RENEWAL_TNT_v6
-motion_selectors_preserved=data_cognitive_status,data_world_option,motion_field,data_instrument_ratio,data_instrument_axis,data_instrument_phase,data_instrument_lattice,data_instrument_cadence,diamond_compass,instrument_panel,diamond_shell,diamond_content
+motion_selectors_preserved=.motion-field,.diamond-compass,[data-world-option=Audralia],[data-world-option=Book],[data-world-option=Showroom],[data-world-option=Frontier],[data-cognitive-status],[data-instrument-ratio],[data-instrument-axis],[data-instrument-phase],[data-instrument-lattice],[data-instrument-cadence],.instrument-panel,.diamond-shell,.diamond-content
 blueprint_css=/assets/manor-blueprint/manor.blueprint.css
 blueprint_css_contract=MANOR_BLUEPRINT_CARDINAL_ROOM_MAP_VISUAL_CSS_TNT_v1
 blueprint_registry=/assets/manor-blueprint/manor.blueprint.registry.js
 blueprint_registry_contract=MANOR_BLUEPRINT_VISITOR_ORIENTATION_REGISTRY_TNT_v1
 blueprint_runtime=/assets/manor-blueprint/manor.blueprint.js
 blueprint_runtime_contract=MANOR_BLUEPRINT_VISITOR_ORIENTATION_RUNTIME_TNT_v1
-universe_subject=world_setting_field_around_the_climb
+universe_subject=living_world_setting_field_around_the_climb
 narrative_law=the_universe_is_not_the_menu_it_is_the_world_around_the_climb
-mirrorworld_context=true
-audralia_role=living_possibility_path
 book_role=human_climb_spine
+audralia_role=living_possibility_path
+showroom_role=proof_atrium
+frontier_role=expansion_edge
 motion_role=relationship_pressure_direction
 removed=center_north_east_south_west_summit_community_accordion_menu
 removed_route_directory=true
 removed_broad_navigation_cards=true
-route_owns=narrative_universe_context,animation_stage,compact_concept_blocks,hidden_receipt
+removed_generic_animation_placeholder_language=true
+route_owns=narrative_universe_context,primary_universe_field,live_motion_field_markup,compact_meaning_cards,hidden_receipt
 route_does_not_own=map_portal_blip_runtime,planet_renderer,audralia_renderer,gauges_logic,canvas,graphic_box,generated_image,heavy_runtime
 generated_image=false
 graphic_box=false
@@ -1130,7 +1191,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      NINE_SUMMITS_UNIVERSE_SIMPLIFIED_NARRATIVE_MAP_BLIP_HTML_TNT_v1 · Nine Summits Universe · Narrative field and animation allotment.
+      NINE_SUMMITS_UNIVERSE_WORLD_FIELD_MAP_BLIP_HTML_TNT_v2 · Nine Summits Universe · Living world-setting field.
     </footer>
   </div>
 

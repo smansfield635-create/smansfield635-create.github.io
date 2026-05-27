@@ -1,51 +1,29 @@
 <!-- TARGET FILE: /showroom/globe/audralia/planet/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- AUDRALIA_PLANET_FULL_GLOBE_VISIBLE_BOX_RESIZE_HTML_TNT_v6 -->
+<!-- AUDRALIA_PLANET_CATEGORY_FOCUS_EXPANSION_HTML_TNT_v7 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/globe/audralia/planet/"
   data-page="audralia-planet"
-  data-version="G6-FULL-GLOBE-VISIBLE-BOX-RESIZE"
-  data-contract="AUDRALIA_PLANET_FULL_GLOBE_VISIBLE_BOX_RESIZE_HTML_TNT_v6"
-  data-previous-contract="AUDRALIA_PLANET_GLOBE_DIRECT_VIEW_OPTIONS_HTML_TNT_v5"
-  data-baseline-contract="AUDRALIA_PLANET_HTML_RENDERPLEX_SHELL_CLEANUP_TNT_v1"
+  data-version="G7-CATEGORY-FOCUS-EXPANSION"
+  data-contract="AUDRALIA_PLANET_CATEGORY_FOCUS_EXPANSION_HTML_TNT_v7"
+  data-previous-contract="AUDRALIA_PLANET_FULL_GLOBE_VISIBLE_BOX_RESIZE_HTML_TNT_v6"
   data-canvas-contract="AUDRALIA_PLANET_FILE_5C_RENDERPLEX_CHILD_CHAIN_LOADER_TNT_v1"
   data-renderplex-active="true"
-  data-renderplex-contract="AUDRALIA_PLANET_RENDERPLEX_CHILD_CHAIN_MANIFEST_v1"
-  data-renderplex-owns-child-chain="true"
-  data-html-loads-child-chain="false"
-  data-display-protocol="AUDRALIA_CANVAS_DISPLAY_PRIMITIVES_v1"
   data-role="mirrorland-audralia-future-body-screen"
   data-future-path="Audralia_Untouched_Living_Path"
   data-mirrorland-narrative-active="true"
-  data-shadows-never-shatter-active="true"
-  data-globe-role="central-future-body-object"
-  data-gems-role="nearby-category-orbit"
-  data-dropdown-removed="true"
-  data-route-directory-removed="true"
-  data-page-compressed="true"
-  data-visible-underhood-language-removed="true"
-  data-context-moved-to-details="true"
-  data-platform-engineering-contained="true"
-  data-visible-diagnostic-reporting-reduced="true"
-  data-view-options-directly-under-globe="true"
-  data-full-globe-visible="true"
-  data-globe-box-resized="true"
-  data-globe-stage-inset-reserved="true"
-  data-inspect-button-removed="true"
-  data-reset-button-removed="true"
+  data-category-focus-active="true"
+  data-category-focus-behavior="selected-category-highlighted-other-categories-muted"
   data-return-to-orbit-target="#audralia-gem-orbit"
   data-return-to-orbit-points-to-globe="false"
-  data-return-category-orbit-selector="true"
+  data-platform-engineering-contained="true"
+  data-visible-underhood-language-removed="true"
   data-active-water="false"
   data-hydration-active="false"
-  data-terrain-child-active="renderplex-managed"
-  data-surface-child-active="false"
-  data-datum-child-active="false"
   data-generated-image="false"
   data-graphic-box="false"
-  data-external-image-asset="false"
   data-final-visual-pass="false"
 >
 <head>
@@ -55,7 +33,7 @@
   <title>Audralia Planet · Mirrorland Possibility</title>
   <meta
     name="description"
-    content="Audralia is Mirrorland’s constructive possibility world. The globe is the object, fully visible in its stage, with view options directly beneath it and categories held in the gem orbit."
+    content="Audralia is Mirrorland’s constructive possibility world. The globe is the central object, the gem orbit is the category home base, and each selected category can be read through Platform or Engineering tabs."
   >
 
   <style>
@@ -473,6 +451,13 @@
       gap:.38rem;
     }
 
+    .under-globe-options .mode-buttons button,
+    .mode-read-tabs button,
+    .lens-tabs button{
+      cursor:pointer;
+      font-family:inherit;
+    }
+
     .under-globe-options .mode-buttons button{
       min-height:2.05rem;
       border:1px solid rgba(184,205,255,.15);
@@ -484,12 +469,13 @@
       font-weight:950;
       letter-spacing:.08em;
       text-transform:uppercase;
-      cursor:pointer;
-      font-family:inherit;
     }
 
     .under-globe-options .mode-buttons button[data-active],
-    .under-globe-options .mode-buttons button[aria-pressed="true"]{
+    .under-globe-options .mode-buttons button[aria-pressed="true"],
+    .mode-read-tabs button[aria-selected="true"],
+    .lens-tabs button[data-active],
+    .lens-tabs button[aria-selected="true"]{
       color:#06100b;
       border-color:rgba(243,200,111,.88);
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
@@ -538,14 +524,6 @@
       font-weight:950;
       letter-spacing:.09em;
       text-transform:uppercase;
-      cursor:pointer;
-      font-family:inherit;
-    }
-
-    .mode-read-tabs button[aria-selected="true"]{
-      color:#06100b;
-      border-color:rgba(243,200,111,.88);
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
     }
 
     .lens-copy-grid{
@@ -553,9 +531,7 @@
       gap:.35rem;
     }
 
-    .lens-copy-grid div[hidden]{
-      display:none;
-    }
+    .lens-copy-grid div[hidden]{display:none}
 
     .lens-copy-grid div{
       padding:.50rem;
@@ -777,7 +753,7 @@
         translateY(calc(var(--orbit-radius) * -1))
         rotate(calc(var(--angle) * -1))
         translate(-50%,-50%);
-      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
+      transition:transform .18s ease,border-color .18s ease,filter .18s ease,opacity .18s ease;
     }
 
     .gem-anchor:hover,
@@ -875,30 +851,63 @@
 
     .chamber-grid{
       display:grid;
-      gap:.55rem;
+      gap:.7rem;
+      transition:opacity .2s ease;
     }
 
     details.chamber{
       border:1px solid rgba(184,205,255,.14);
-      border-radius:.95rem;
+      border-radius:1rem;
       background:rgba(255,255,255,.030);
       overflow:hidden;
+      transition:
+        opacity .22s ease,
+        filter .22s ease,
+        transform .22s ease,
+        border-color .22s ease,
+        background .22s ease,
+        box-shadow .22s ease;
     }
 
-    details.chamber[data-active-chamber],
     details.chamber[open]{
-      border-color:rgba(243,200,111,.32);
+      border-color:rgba(243,200,111,.34);
       background:
         radial-gradient(circle at 12% 0%,rgba(243,200,111,.08),transparent 16rem),
         rgba(255,255,255,.034);
+    }
+
+    .chamber-grid[data-focus-active="true"] details.chamber{
+      opacity:.34;
+      filter:grayscale(.66) saturate(.45) brightness(.80);
+      transform:scale(.992);
+    }
+
+    .chamber-grid[data-focus-active="true"] details.chamber:not([data-active-category]) .lens-tabs,
+    .chamber-grid[data-focus-active="true"] details.chamber:not([data-active-category]) .lens-pane{
+      display:none;
+    }
+
+    .chamber-grid[data-focus-active="true"] details.chamber[data-active-category]{
+      opacity:1;
+      filter:none;
+      transform:none;
+      border-color:rgba(243,200,111,.78);
+      background:
+        radial-gradient(circle at 10% 0%,rgba(243,200,111,.13),transparent 18rem),
+        radial-gradient(circle at 100% 20%,rgba(141,216,255,.08),transparent 18rem),
+        rgba(255,255,255,.042);
+      box-shadow:
+        0 0 0 1px rgba(243,200,111,.12),
+        0 0 2rem rgba(243,200,111,.10),
+        inset 0 1px 0 rgba(255,255,255,.08);
     }
 
     details.chamber summary{
       cursor:pointer;
       list-style:none;
       display:grid;
-      gap:.25rem;
-      padding:.72rem .78rem;
+      gap:.35rem;
+      padding:.82rem .86rem;
     }
 
     details.chamber summary::-webkit-details-marker{display:none}
@@ -913,8 +922,8 @@
 
     .chamber-top b{
       color:var(--gold);
-      font-size:.56rem;
-      letter-spacing:.12em;
+      font-size:.58rem;
+      letter-spacing:.13em;
       text-transform:uppercase;
     }
 
@@ -935,15 +944,23 @@
       box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
     }
 
+    .chamber-summary-copy{
+      max-width:58rem;
+      color:rgba(230,238,255,.76);
+      font-size:.88rem;
+      font-weight:760;
+      line-height:1.42;
+    }
+
     .lens-tabs{
       display:flex;
       gap:.4rem;
       flex-wrap:wrap;
-      padding:0 .78rem .58rem;
+      padding:0 .86rem .62rem;
     }
 
     .lens-tabs button{
-      min-height:1.85rem;
+      min-height:1.88rem;
       border:1px solid rgba(184,205,255,.15);
       border-radius:999px;
       padding:.36rem .58rem;
@@ -953,42 +970,33 @@
       font-weight:950;
       letter-spacing:.09em;
       text-transform:uppercase;
-      cursor:pointer;
-      font-family:inherit;
-    }
-
-    .lens-tabs button[data-active],
-    .lens-tabs button[aria-selected="true"]{
-      color:#06100b;
-      border-color:rgba(243,200,111,.88);
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
     }
 
     .lens-pane{
-      padding:0 .78rem .78rem;
+      padding:0 .86rem .86rem;
     }
 
     .lens-pane[hidden]{display:none}
 
     .pane-card{
       display:grid;
-      gap:.34rem;
-      padding:.64rem;
+      gap:.5rem;
+      padding:.78rem;
       border:1px solid rgba(255,255,255,.10);
-      border-radius:.78rem;
+      border-radius:.82rem;
       background:rgba(255,255,255,.028);
     }
 
     .pane-card b{
       color:var(--gold);
-      font-size:.54rem;
+      font-size:.56rem;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
 
     .pane-card p{
-      font-size:.80rem;
-      line-height:1.36;
+      font-size:.88rem;
+      line-height:1.45;
     }
 
     .receipt{
@@ -1034,18 +1042,14 @@
         align-items:start;
       }
 
-      .header-note{
-        text-align:left;
-      }
+      .header-note{text-align:left}
 
       .gem-anchor{
         width:6.75rem;
         height:5rem;
       }
 
-      .gem-label span{
-        display:none;
-      }
+      .gem-label span{display:none}
     }
 
     @media (max-width:760px){
@@ -1072,9 +1076,7 @@
       }
 
       .gem-orbit-field::before,
-      .gem-orbit-field::after{
-        display:none;
-      }
+      .gem-orbit-field::after{display:none}
 
       .orbit-center{
         grid-column:1 / -1;
@@ -1323,16 +1325,16 @@
 
       <section id="audralia-gem-orbit" class="panel section gem-orbit-section" aria-labelledby="gem-title">
         <div class="kicker">Gem orbit · Category home base</div>
-        <h2 id="gem-title">Return to Orbit returns here.</h2>
+        <h2 id="gem-title">Choose one category at a time.</h2>
         <p>
-          The gems organize the ways to read Audralia without turning the page into a route directory.
+          Selecting a category opens its reading box, highlights it, and mutes the rest until you return to the orbit.
         </p>
 
         <div class="gem-orbit-field" aria-label="Audralia Mirrorland gem category orbit">
           <div class="orbit-center">
             <b>Gem Orbit</b>
             <strong>Category Field</strong>
-            <span>Choose a read. Return here.</span>
+            <span>Choose one read. Return here.</span>
           </div>
 
           <a class="gem-anchor" data-gem-anchor href="#body-glass" style="--angle:0deg;--delay:-.1s;--tilt-a:-1.4deg;--tilt-b:1.8deg;">
@@ -1379,112 +1381,128 @@
 
       <section class="panel section" aria-labelledby="chambers-title">
         <div class="kicker">Category details</div>
-        <h2 id="chambers-title">Open only the read you need.</h2>
+        <h2 id="chambers-title">Read one category, switch Platform / Engineering, or return to Orbit.</h2>
 
-        <div class="chamber-grid">
+        <div class="chamber-grid" data-category-grid>
           <details id="body-glass" class="chamber" data-audralia-chamber>
             <summary>
               <div class="chamber-top"><b>Body</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div>
               <h3>The first visible body of Audralia.</h3>
+              <p class="chamber-summary-copy">Body is the first promise of place. It lets the visitor meet Audralia as a whole world before narrowing into surface, terrain, water, or proof.</p>
             </summary>
             <div class="lens-tabs"><button type="button" data-lens-tab="platform" aria-selected="true">Platform</button><button type="button" data-lens-tab="engineering" aria-selected="false">Engineering</button></div>
-            <div class="lens-pane" data-lens-pane="platform"><div class="pane-card"><b>Platform</b><p>Body view lets the visitor meet Audralia as a world before asking how everything works.</p></div></div>
-            <div class="lens-pane" data-lens-pane="engineering" hidden><div class="pane-card"><b>Engineering</b><p>Body view keeps the visible object stable while deeper construction remains separate.</p></div></div>
+            <div class="lens-pane" data-lens-pane="platform"><div class="pane-card"><b>Platform</b><p>Body view gives the visitor a single readable world-object. The planet is not introduced as a menu, a report, or a technical scaffold; it is introduced as the constructive path inside Mirrorland. The purpose is orientation through presence: Audralia appears first as a body that can be inspected, then understood through categories.</p></div></div>
+            <div class="lens-pane" data-lens-pane="engineering" hidden><div class="pane-card"><b>Engineering</b><p>Body view protects the page from over-fragmenting. It keeps the visible object stable while the deeper construction layers remain separated behind view modes and category reads. The page should preserve the globe as the central object and avoid exposing internal terminology unless the visitor intentionally opens the Engineering lens.</p></div></div>
           </details>
 
           <details id="surface-console" class="chamber" data-audralia-chamber>
-            <summary><div class="chamber-top"><b>Surface</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div><h3>The first readable skin of the world.</h3></summary>
+            <summary>
+              <div class="chamber-top"><b>Surface</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div>
+              <h3>The first readable skin of the world.</h3>
+              <p class="chamber-summary-copy">Surface is the first skin of Audralia. It gives the world material presence without pretending that every continent, coast, basin, or atmospheric detail is final.</p>
+            </summary>
             <div class="lens-tabs"><button type="button" data-lens-tab="platform" aria-selected="true">Platform</button><button type="button" data-lens-tab="engineering" aria-selected="false">Engineering</button></div>
-            <div class="lens-pane" data-lens-pane="platform"><div class="pane-card"><b>Platform</b><p>Surface view shows the first impression of Audralia without claiming the planet is finished.</p></div></div>
-            <div class="lens-pane" data-lens-pane="engineering" hidden><div class="pane-card"><b>Engineering</b><p>Surface view is a contained read. Final surface truth remains separate.</p></div></div>
+            <div class="lens-pane" data-lens-pane="platform"><div class="pane-card"><b>Platform</b><p>Surface view lets the visitor read Audralia as a real place beginning to take shape. It should feel like the world is gaining skin, tone, and material identity. The page should not overwhelm the visitor with construction vocabulary here; the public read is that a living possibility planet is becoming visible.</p></div></div>
+            <div class="lens-pane" data-lens-pane="engineering" hidden><div class="pane-card"><b>Engineering</b><p>Surface view remains a contained reading mode. It may support surface emphasis, material contrast, and first-skin readability, but it does not claim final surface truth. The engineering boundary is simple: this view helps the visitor see the surface direction without declaring the finished world map.</p></div></div>
           </details>
 
           <details id="terrain-deck" class="chamber" data-audralia-chamber>
-            <summary><div class="chamber-top"><b>Terrain</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div><h3>The pressure and shape of future land.</h3></summary>
+            <summary>
+              <div class="chamber-top"><b>Terrain</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div>
+              <h3>The pressure and shape of future land.</h3>
+              <p class="chamber-summary-copy">Terrain is where Audralia begins to feel habitable. It points toward elevation, pressure, travel, settlement, distance, and the future work of stewardship.</p>
+            </summary>
             <div class="lens-tabs"><button type="button" data-lens-tab="platform" aria-selected="true">Platform</button><button type="button" data-lens-tab="engineering" aria-selected="false">Engineering</button></div>
-            <div class="lens-pane" data-lens-pane="platform"><div class="pane-card"><b>Platform</b><p>Terrain view frames Audralia as a place that can be walked, studied, and shaped.</p></div></div>
-            <div class="lens-pane" data-lens-pane="engineering" hidden><div class="pane-card"><b>Engineering</b><p>Terrain view stays bounded to landform reading and does not claim final terrain completion.</p></div></div>
+            <div class="lens-pane" data-lens-pane="platform"><div class="pane-card"><b>Platform</b><p>Terrain view frames Audralia as a place that can be walked, studied, protected, and cultivated. It is not just a globe on a screen; it is a world with future ground. The visitor should feel that landform is emerging as a responsibility, not merely a decoration.</p></div></div>
+            <div class="lens-pane" data-lens-pane="engineering" hidden><div class="pane-card"><b>Engineering</b><p>Terrain view stays bounded to landform reading. It can show direction, pressure, relief, and formation cues while avoiding a final terrain claim. The technical purpose is to support terrain orientation without collapsing terrain into surface, water, climate, or finished geography.</p></div></div>
           </details>
 
           <details id="lattice-scope" class="chamber" data-audralia-chamber>
-            <summary><div class="chamber-top"><b>Lattice</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div><h3>The world is ordered, not random.</h3></summary>
+            <summary>
+              <div class="chamber-top"><b>Lattice</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div>
+              <h3>The world is ordered, not random.</h3>
+              <p class="chamber-summary-copy">Lattice shows that Audralia is not accidental decoration. The world carries an underlying order that can guide later structure, inspection, and expansion.</p>
+            </summary>
             <div class="lens-tabs"><button type="button" data-lens-tab="platform" aria-selected="true">Platform</button><button type="button" data-lens-tab="engineering" aria-selected="false">Engineering</button></div>
-            <div class="lens-pane" data-lens-pane="platform"><div class="pane-card"><b>Platform</b><p>Lattice view shows that Audralia carries order beneath the visible world.</p></div></div>
-            <div class="lens-pane" data-lens-pane="engineering" hidden><div class="pane-card"><b>Engineering</b><p>Lattice view keeps order visible without turning the page into a technical report.</p></div></div>
+            <div class="lens-pane" data-lens-pane="platform"><div class="pane-card"><b>Platform</b><p>Lattice view makes Audralia feel structured beneath the visible world. It tells the visitor that this is not a random fantasy planet; it has an inspection grammar. The public meaning is order, coherence, and the possibility of future construction without chaos.</p></div></div>
+            <div class="lens-pane" data-lens-pane="engineering" hidden><div class="pane-card"><b>Engineering</b><p>Lattice view keeps the order visible without turning the page into a technical report. It may expose coordinate behavior, category alignment, or structured inspection cues, but it must remain subordinate to the planet’s public identity. The visitor should see proof of order, not get buried under machinery.</p></div></div>
           </details>
 
           <details id="water-hold" class="chamber" data-audralia-chamber>
-            <summary><div class="chamber-top"><b>Water</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div><h3>Water remains held until the world can receive it honestly.</h3></summary>
+            <summary>
+              <div class="chamber-top"><b>Water</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div>
+              <h3>Water remains held until the world can receive it honestly.</h3>
+              <p class="chamber-summary-copy">Water is not a decoration layer. On Audralia, water has to arrive with meaning, placement, and consequence, so this category holds the boundary until the planet is ready.</p>
+            </summary>
             <div class="lens-tabs"><button type="button" data-lens-tab="platform" aria-selected="true">Platform</button><button type="button" data-lens-tab="engineering" aria-selected="false">Engineering</button></div>
-            <div class="lens-pane" data-lens-pane="platform"><div class="pane-card"><b>Platform</b><p>Water is too important to fake. It stays held until the planet is ready for a lawful water read.</p></div></div>
-            <div class="lens-pane" data-lens-pane="engineering" hidden><div class="pane-card"><b>Engineering</b><p>Water remains inactive on this page. The visible world does not claim finished oceans.</p></div></div>
+            <div class="lens-pane" data-lens-pane="platform"><div class="pane-card"><b>Platform</b><p>Water is too important to fake. The category tells the visitor that Audralia is a possibility world, but not a careless one. Oceans, rivers, rainfall, storage, and life support should enter only when the world can carry them honestly.</p></div></div>
+            <div class="lens-pane" data-lens-pane="engineering" hidden><div class="pane-card"><b>Engineering</b><p>Water remains inactive on this page. The visible world should not imply completed oceans, finished hydrology, or validated water placement. This category protects the route from false completion while preserving water as a future authority.</p></div></div>
           </details>
 
           <details id="canvas-screen" class="chamber" data-audralia-chamber>
-            <summary><div class="chamber-top"><b>Screen</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div><h3>The viewing surface for Audralia.</h3></summary>
+            <summary>
+              <div class="chamber-top"><b>Screen</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div>
+              <h3>The viewing surface for Audralia.</h3>
+              <p class="chamber-summary-copy">Screen is the visitor-facing surface. It keeps the world visible, touchable, and inspectable without forcing the page to explain every internal mechanism.</p>
+            </summary>
             <div class="lens-tabs"><button type="button" data-lens-tab="platform" aria-selected="true">Platform</button><button type="button" data-lens-tab="engineering" aria-selected="false">Engineering</button></div>
-            <div class="lens-pane" data-lens-pane="platform"><div class="pane-card"><b>Platform</b><p>The screen lets the visitor inspect Audralia as a visible world-object.</p></div></div>
-            <div class="lens-pane" data-lens-pane="engineering" hidden><div class="pane-card"><b>Engineering</b><p>The viewing surface displays the world while deeper authority remains separated.</p></div></div>
+            <div class="lens-pane" data-lens-pane="platform"><div class="pane-card"><b>Platform</b><p>The screen lets the visitor inspect Audralia as a visible world-object. Its job is not to become the story, the map, or the technical report. Its job is to make the planet present enough that the categories can be understood without cluttering the main read.</p></div></div>
+            <div class="lens-pane" data-lens-pane="engineering" hidden><div class="pane-card"><b>Engineering</b><p>The viewing surface should keep the globe stable, responsive, and readable. Engineering details belong inside this tab, not in the main narrative. The page should expose only the controls and readings needed for the visitor’s current action.</p></div></div>
           </details>
 
           <details id="receipt-dock" class="chamber" data-audralia-chamber>
-            <summary><div class="chamber-top"><b>Receipt</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div><h3>The page stays honest about what is not final.</h3></summary>
+            <summary>
+              <div class="chamber-top"><b>Receipt</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div>
+              <h3>The page stays honest about what is not final.</h3>
+              <p class="chamber-summary-copy">Receipt keeps beauty from becoming overclaim. Audralia can look compelling while still admitting what remains unfinished, held, or future-bound.</p>
+            </summary>
             <div class="lens-tabs"><button type="button" data-lens-tab="platform" aria-selected="true">Platform</button><button type="button" data-lens-tab="engineering" aria-selected="false">Engineering</button></div>
-            <div class="lens-pane" data-lens-pane="platform"><div class="pane-card"><b>Platform</b><p>Receipt view keeps beauty from becoming a false completion claim.</p></div></div>
-            <div class="lens-pane" data-lens-pane="engineering" hidden><div class="pane-card"><b>Engineering</b><p>Receipt view confirms that unfinished systems remain unclaimed.</p></div></div>
+            <div class="lens-pane" data-lens-pane="platform"><div class="pane-card"><b>Platform</b><p>Receipt view keeps Audralia honest. The visitor can trust the page because the page does not pretend to be finished. Beauty is allowed, but false finality is not. The route should communicate progress, not overstatement.</p></div></div>
+            <div class="lens-pane" data-lens-pane="engineering" hidden><div class="pane-card"><b>Engineering</b><p>Receipt view confirms that unfinished systems remain unclaimed. It protects the page from declaring completed water, finished terrain, final surface truth, or full visual completion. The engineering read is a boundary marker, not a public billboard.</p></div></div>
           </details>
 
           <details id="contract-seal" class="chamber" data-audralia-chamber>
-            <summary><div class="chamber-top"><b>Seal</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div><h3>The boundary between story and claim.</h3></summary>
+            <summary>
+              <div class="chamber-top"><b>Seal</b><a class="button" href="#audralia-gem-orbit" data-return-category-orbit="true">Return to Orbit</a></div>
+              <h3>The boundary between story and claim.</h3>
+              <p class="chamber-summary-copy">Seal protects Audralia from becoming only technology or only story. It keeps the narrative alive while preventing the page from claiming more than it has earned.</p>
+            </summary>
             <div class="lens-tabs"><button type="button" data-lens-tab="platform" aria-selected="true">Platform</button><button type="button" data-lens-tab="engineering" aria-selected="false">Engineering</button></div>
-            <div class="lens-pane" data-lens-pane="platform"><div class="pane-card"><b>Platform</b><p>Seal view protects Audralia from false beauty, false finality, and route clutter.</p></div></div>
-            <div class="lens-pane" data-lens-pane="engineering" hidden><div class="pane-card"><b>Engineering</b><p>Seal view keeps each responsibility bounded so the page remains stable.</p></div></div>
+            <div class="lens-pane" data-lens-pane="platform"><div class="pane-card"><b>Platform</b><p>Seal view protects the page’s meaning. Audralia is a constructive possibility world, not a loose collection of effects. The seal keeps the visitor’s attention on the role of the page: one planet, one narrative place, one category read at a time.</p></div></div>
+            <div class="lens-pane" data-lens-pane="engineering" hidden><div class="pane-card"><b>Engineering</b><p>Seal view keeps responsibilities bounded. The globe stays central, categories stay organized, tabs contain the deeper read, and route movement stays with the Map / Portal. The page should remain stable, readable, and non-redundant.</p></div></div>
           </details>
         </div>
       </section>
 
       <template id="route-receipt" class="receipt" data-route-receipt>
-AUDRALIA_PLANET_FULL_GLOBE_VISIBLE_BOX_RESIZE_HTML_TNT_v6
-previous=AUDRALIA_PLANET_GLOBE_DIRECT_VIEW_OPTIONS_HTML_TNT_v5
+AUDRALIA_PLANET_CATEGORY_FOCUS_EXPANSION_HTML_TNT_v7
+previous=AUDRALIA_PLANET_FULL_GLOBE_VISIBLE_BOX_RESIZE_HTML_TNT_v6
 route=/showroom/globe/audralia/planet/
-html=/showroom/globe/audralia/planet/index.html
-full_globe_visible=true
-globe_box_resized=true
-planet_stage_card_min_height_desktop=clamp(43rem,72vw,58rem)
-planet_stage_card_min_height_mobile=48rem_to_50rem
-planet_stage_inset_reserved=true
-planet_stage_top_reserved=var(--globe-reserve-top)
-planet_stage_bottom_reserved=var(--globe-reserve-bottom)
-view_options_directly_under_globe=true
-inspect_button_removed=true
-reset_button_removed=true
-visible_underhood_language_removed=true
-platform_engineering_contained=true
+category_text_expanded=true
+category_focus_active=true
+active_category_highlighted=true
+inactive_categories_gray_out=true
+inactive_category_lens_hidden=true
+single_category_reading_mode=true
 return_to_orbit_target=#audralia-gem-orbit
 return_to_orbit_points_to_globe=false
-canvas_renderplex=/showroom/globe/audralia/planet/index.canvas.js
-canvas_renderplex_contract=AUDRALIA_PLANET_FILE_5C_RENDERPLEX_CHILD_CHAIN_LOADER_TNT_v1
-ui=/showroom/globe/audralia/planet/index.ui.js
-ui_contract=AUDRALIA_G2_PLANET_OPERATION_C_UI_JS_OPTIMIZATION_ONLY_TNT_v1
-site_bootstrap=/assets/site.bootstrap.js
-site_bootstrap_contract=MANOR_BLUEPRINT_BOOTSTRAP_MOBILE_SAFE_HUD_CACHE_KEY_RENEWAL_TNT_v1
+platform_engineering_tabs_preserved=true
+public_underhood_language_removed=true
+inspect_button_removed=true
+reset_button_removed=true
+full_globe_visible=true
 canvas_selector=[data-audralia-planet-stage]
-orbit_selector=#audralia-gem-orbit
-globe_selector=#planet-orbit
 activeWater=false
 hydrationActive=false
-surfaceChildActive=false
-datumChildActive=false
 generatedImage=false
 graphicBox=false
-externalImageAsset=false
 finalVisualPass=false
-deploy_marker=AUDRALIA_PLANET_FULL_GLOBE_VISIBLE_BOX_RESIZE_DEPLOY_MARKER_v6
+deploy_marker=AUDRALIA_PLANET_CATEGORY_FOCUS_EXPANSION_DEPLOY_MARKER_v7
       </template>
     </main>
 
     <footer>
-      AUDRALIA_PLANET_FULL_GLOBE_VISIBLE_BOX_RESIZE_HTML_TNT_v6 · Audralia · Full globe visible · View options beneath globe · No final visual pass.
+      AUDRALIA_PLANET_CATEGORY_FOCUS_EXPANSION_HTML_TNT_v7 · Audralia · Category focus active · Return to Orbit targets gem orbit · No final visual pass.
     </footer>
   </div>
 
@@ -1496,7 +1514,7 @@ deploy_marker=AUDRALIA_PLANET_FULL_GLOBE_VISIBLE_BOX_RESIZE_DEPLOY_MARKER_v6
     (() => {
       "use strict";
 
-      const PUBLIC_COPY_CONTRACT = "AUDRALIA_PLANET_FULL_GLOBE_VISIBLE_SANITIZER_TNT_v6";
+      const CONTRACT = "AUDRALIA_PLANET_CATEGORY_FOCUS_EXPANSION_INTERACTION_TNT_v7";
 
       const modeCopy = {
         body: {
@@ -1622,6 +1640,129 @@ deploy_marker=AUDRALIA_PLANET_FULL_GLOBE_VISIBLE_BOX_RESIZE_DEPLOY_MARKER_v6
         );
       }
 
+      function resetChamberTabs(chamber) {
+        const tabs = Array.from(chamber.querySelectorAll("[data-lens-tab]"));
+        const panes = Array.from(chamber.querySelectorAll("[data-lens-pane]"));
+
+        tabs.forEach((tab) => {
+          const active = tab.dataset.lensTab === "platform";
+          tab.setAttribute("aria-selected", active ? "true" : "false");
+          if (active) tab.dataset.active = "true";
+          else delete tab.dataset.active;
+        });
+
+        panes.forEach((pane) => {
+          pane.hidden = pane.dataset.lensPane !== "platform";
+        });
+      }
+
+      function focusCategory(targetId, shouldScroll = true) {
+        const grid = document.querySelector("[data-category-grid]");
+        const chambers = Array.from(document.querySelectorAll("[data-audralia-chamber]"));
+        const gems = Array.from(document.querySelectorAll("[data-gem-anchor]"));
+        const active = document.getElementById(targetId);
+
+        if (!grid || !active) return;
+
+        grid.dataset.focusActive = "true";
+        document.documentElement.dataset.activeAudraliaCategory = targetId;
+
+        chambers.forEach((chamber) => {
+          const isActive = chamber === active;
+          chamber.toggleAttribute("open", isActive);
+          if (isActive) {
+            chamber.dataset.activeCategory = "true";
+            resetChamberTabs(chamber);
+          } else {
+            delete chamber.dataset.activeCategory;
+          }
+        });
+
+        gems.forEach((gem) => {
+          const href = gem.getAttribute("href") || "";
+          if (href === `#${targetId}`) {
+            gem.dataset.activeGem = "true";
+          } else {
+            delete gem.dataset.activeGem;
+          }
+        });
+
+        if (shouldScroll) {
+          active.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }
+
+      function clearCategoryFocus(shouldScroll = true) {
+        const grid = document.querySelector("[data-category-grid]");
+        const orbit = document.querySelector("#audralia-gem-orbit");
+
+        if (grid) delete grid.dataset.focusActive;
+        delete document.documentElement.dataset.activeAudraliaCategory;
+
+        document.querySelectorAll("[data-audralia-chamber]").forEach((chamber) => {
+          delete chamber.dataset.activeCategory;
+          chamber.removeAttribute("open");
+        });
+
+        document.querySelectorAll("[data-gem-anchor]").forEach((gem) => {
+          delete gem.dataset.activeGem;
+        });
+
+        if (shouldScroll && orbit) {
+          orbit.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+
+      function bindCategoryFocus() {
+        document.querySelectorAll("[data-gem-anchor]").forEach((gem) => {
+          gem.addEventListener("click", (event) => {
+            const targetId = (gem.getAttribute("href") || "").replace("#", "");
+            if (!targetId) return;
+            event.preventDefault();
+            focusCategory(targetId, true);
+          });
+        });
+
+        document.querySelectorAll("[data-audralia-chamber] > summary").forEach((summary) => {
+          summary.addEventListener("click", (event) => {
+            const chamber = summary.closest("[data-audralia-chamber]");
+            if (!chamber) return;
+
+            event.preventDefault();
+            focusCategory(chamber.id, false);
+          });
+        });
+
+        document.querySelectorAll("[data-return-category-orbit]").forEach((link) => {
+          link.addEventListener("click", (event) => {
+            event.preventDefault();
+            clearCategoryFocus(true);
+          });
+        });
+      }
+
+      function bindLensTabs() {
+        document.addEventListener("click", (event) => {
+          const tab = event.target.closest("[data-lens-tab]");
+          if (!tab) return;
+
+          const chamber = tab.closest("[data-audralia-chamber]");
+          if (!chamber) return;
+
+          const key = tab.dataset.lensTab;
+          chamber.querySelectorAll("[data-lens-tab]").forEach((item) => {
+            const active = item === tab;
+            item.setAttribute("aria-selected", active ? "true" : "false");
+            if (active) item.dataset.active = "true";
+            else delete item.dataset.active;
+          });
+
+          chamber.querySelectorAll("[data-lens-pane]").forEach((pane) => {
+            pane.hidden = pane.dataset.lensPane !== key;
+          });
+        });
+      }
+
       function removeOldButtons() {
         document.querySelectorAll("[data-audralia-inspect-planet], [data-reset-canvas-view]").forEach((node) => {
           node.remove();
@@ -1651,17 +1792,16 @@ deploy_marker=AUDRALIA_PLANET_FULL_GLOBE_VISIBLE_BOX_RESIZE_DEPLOY_MARKER_v6
       }
 
       function init() {
-        document.documentElement.dataset.publicVisibleCopyContract = PUBLIC_COPY_CONTRACT;
-        document.documentElement.dataset.visibleUnderhoodLanguageRemoved = "true";
-        document.documentElement.dataset.platformEngineeringContained = "true";
-        document.documentElement.dataset.viewOptionsDirectlyUnderGlobe = "true";
-        document.documentElement.dataset.fullGlobeVisible = "true";
-        document.documentElement.dataset.globeBoxResized = "true";
-        document.documentElement.dataset.inspectButtonRemoved = "true";
-        document.documentElement.dataset.resetButtonRemoved = "true";
+        document.documentElement.dataset.categoryFocusInteractionContract = CONTRACT;
+        document.documentElement.dataset.categoryTextExpanded = "true";
+        document.documentElement.dataset.inactiveCategoriesGrayOut = "true";
+        document.documentElement.dataset.singleCategoryReadingMode = "true";
+        document.documentElement.dataset.returnToOrbitTarget = "#audralia-gem-orbit";
 
         bindReadTabs();
         bindModeButtons();
+        bindCategoryFocus();
+        bindLensTabs();
 
         window.setTimeout(() => {
           removeOldButtons();

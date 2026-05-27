@@ -1,36 +1,47 @@
 <!-- TARGET FILE: /showroom/globe/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- SHOWROOM_GLOBE_MIRRORLAND_FIRST_ROOM_MAP_HTML_TNT_v1 -->
+<!-- SHOWROOM_GLOBE_SIMPLIFIED_MAP_BLIP_HTML_TNT_v1 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/globe/"
   data-page="showroom-globe"
-  data-version="2026-05-26.showroom-globe-first-room-map-v1"
-  data-contract="SHOWROOM_GLOBE_MIRRORLAND_FIRST_ROOM_MAP_HTML_TNT_v1"
-  data-previous-contract="SHOWROOM_GLOBE_MIRRORLAND_FIRST_ROOM_CONTEXT_HTML_TNT_v5"
+  data-version="2026-05-26.showroom-globe-simplified-map-blip-v1"
+  data-contract="SHOWROOM_GLOBE_SIMPLIFIED_MAP_BLIP_HTML_TNT_v1"
+  data-previous-contract="SHOWROOM_GLOBE_MIRRORLAND_FIRST_ROOM_MAP_HTML_TNT_v1"
+  data-baseline-contract="SHOWROOM_GLOBE_MIRRORLAND_FIRST_ROOM_CONTEXT_HTML_TNT_v5"
   data-size-renewal="SHOWROOM_GLOBE_MIRRORLAND_ORBIT_GEM_GATEWAY_HTML_SIZE_TNT_v4_1"
   data-authority="great-grandparent-mirrorland-orbit-gem-gateway-expression-only"
-  data-role="mirrorland-first-room-orbit-gateway-with-local-map"
+  data-role="mirrorland-first-room-orbit-gateway-simplified-map-blip"
   data-season="Shadows Never Shatter in Mirrorland"
   data-grandparent-status="legacy-anchor"
   data-first-room-inside-mirrorland="true"
   data-post-door-entry-context="true"
-  data-map-added="true"
-  data-map-type="first-room-orientation-map"
-  data-map-scope="page-local"
-  data-map-owner="/showroom/globe/index.html"
-  data-map-placement="between-hero-and-orbit"
-  data-map-second-mirrorland-entrance="false"
-  data-map-portal-blip-preserved="true"
-  data-map-purpose="orient-the-user-after-entering-mirrorland"
-  data-map-route-directory="false"
-  data-map-debug-metadata-visible="false"
-  data-map-category-ownership-preserved="true"
+  data-page-simplified="true"
+  data-map-blip-added="true"
+  data-floating-map-portal-active="true"
+  data-map-blip-owns-navigation="true"
+  data-page-body-navigation-reduced="true"
+  data-page-subject-content-only="true"
+  data-local-map-section="false"
+  data-embedded-local-map-removed="true"
+  data-route-directory-removed="true"
+  data-jump-options-removed="true"
+  data-second-mirrorland-entrance="false"
+  data-blueprint-page-scoped="true"
+  data-blueprint-registry="/assets/manor-blueprint/manor.blueprint.registry.js"
+  data-blueprint-css="/assets/manor-blueprint/manor.blueprint.css"
+  data-blueprint-js="/assets/manor-blueprint/manor.blueprint.js"
+  data-blueprint-registry-contract="MANOR_BLUEPRINT_VISITOR_ORIENTATION_REGISTRY_TNT_v1"
+  data-blueprint-js-contract="MANOR_BLUEPRINT_VISITOR_ORIENTATION_RUNTIME_TNT_v1"
+  data-blueprint-css-contract="MANOR_BLUEPRINT_CARDINAL_ROOM_MAP_VISUAL_CSS_TNT_v1"
   data-top-redundancy-reduced="true"
-  data-dropdown-preserved="true"
+  data-dropdown-reduced="true"
   data-orbit-construct-preserved="true"
-  data-bottom-construct-format-adopted="true"
+  data-compact-explanations-active="true"
+  data-path-grid-removed="true"
+  data-bottom-route-cards-removed="true"
+  data-repeated-return-buttons-removed="true"
   data-audralia-planetary-path-emphasized="true"
   data-template-phrase-not-owned-by-this-html="true"
   data-donor-compass-organic-gems="true"
@@ -54,10 +65,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Welcome Inside Mirrorland · First Room Map</title>
+  <title>Welcome Inside Mirrorland · Globe Window</title>
   <meta
     name="description"
-    content="Welcome inside Mirrorland. The Globe is the first room after the Door, with a local map that orients ZIONTS as consequence, H-Earth as survival, Audralia as possibility, and Frontier as deployment."
+    content="Welcome inside Mirrorland. The Globe is the first room after the Door: ZIONTS as consequence, H-Earth as survival, and Audralia as possibility. Movement belongs to the Map Portal blip."
+  >
+
+  <link
+    rel="stylesheet"
+    href="/assets/manor-blueprint/manor.blueprint.css?v=MANOR_BLUEPRINT_CARDINAL_ROOM_MAP_VISUAL_CSS_TNT_v1"
+    data-mirrorland-blueprint-marker="true"
+    data-blueprint-page-scoped="true"
   >
 
   <style>
@@ -72,7 +90,6 @@
       --blue:#8dd8ff;
       --green:#8ff0c3;
       --violet:#8f65ff;
-      --ruby:#ff8f9f;
       --panel:rgba(9,15,31,.88);
       --line:rgba(184,205,255,.18);
       --shadow:0 32px 110px rgba(0,0,0,.48);
@@ -80,7 +97,6 @@
       --brand-gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
       --inner-orbit-duration:54s;
       --outer-orbit-duration:82s;
-      --gem-breathe-duration:8.8s;
     }
 
     *{box-sizing:border-box}
@@ -130,8 +146,7 @@
 
     a:focus-visible,
     button:focus-visible,
-    summary:focus-visible,
-    [tabindex]:focus-visible{
+    summary:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
     }
@@ -169,7 +184,7 @@
     .topbar{
       display:grid;
       grid-template-columns:auto 1fr;
-      align-items:start;
+      align-items:center;
       gap:18px;
       padding:12px 0 18px;
     }
@@ -228,163 +243,14 @@
       letter-spacing:-.045em;
     }
 
-    .nav{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      gap:.6rem;
-    }
-
-    .route-menu{
-      position:relative;
-      min-width:min(17rem,100%);
-    }
-
-    .route-menu summary{
-      list-style:none;
-      cursor:pointer;
-      min-height:2.6rem;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:.75rem;
-      border:1px solid rgba(243,200,111,.28);
-      border-radius:999px;
-      padding:.62rem .85rem;
-      color:rgba(241,246,255,.90);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(243,200,111,.14),transparent 70%),
-        rgba(255,255,255,.045);
-      font-size:.72rem;
-      font-weight:950;
-      letter-spacing:.075em;
-      text-transform:uppercase;
-      box-shadow:0 0 1.15rem rgba(243,200,111,.08),inset 0 1px 0 rgba(255,255,255,.08);
-      backdrop-filter:blur(7px);
-    }
-
-    .route-menu[open] summary{
-      border-color:rgba(243,200,111,.70);
-      color:rgba(255,244,216,.98);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(243,200,111,.25),transparent 72%),
-        radial-gradient(circle at 86% 50%,rgba(36,120,255,.18),transparent 70%),
-        linear-gradient(180deg,rgba(20,18,45,.84),rgba(4,9,20,.88));
-      box-shadow:0 0 1.8rem rgba(243,200,111,.20),0 0 3.2rem rgba(36,120,255,.14),inset 0 1px 0 rgba(255,255,255,.12);
-    }
-
-    .route-menu summary::-webkit-details-marker{display:none}
-
-    .route-menu summary::after{
-      content:"";
-      width:.55rem;
-      height:.55rem;
-      border-right:2px solid rgba(230,238,255,.82);
-      border-bottom:2px solid rgba(230,238,255,.82);
-      transform:rotate(45deg) translateY(-.12rem);
-    }
-
-    .route-menu[open] summary::after{
-      transform:rotate(225deg) translateY(-.08rem);
-      border-color:rgba(243,200,111,.95);
-    }
-
-    .route-menu-panel{
-      position:absolute;
-      right:0;
-      top:calc(100% + .55rem);
-      z-index:40;
-      width:min(38rem,calc(100vw - 2rem));
-      padding:.82rem;
-      border:1px solid rgba(243,200,111,.30);
-      border-radius:1.1rem;
-      background:
-        radial-gradient(circle at 12% 0%,rgba(243,200,111,.20),transparent 15rem),
-        radial-gradient(circle at 96% 25%,rgba(141,216,255,.12),transparent 15rem),
-        linear-gradient(180deg,rgba(11,13,38,.97),rgba(3,7,18,.98));
-      box-shadow:0 0 2.8rem rgba(243,200,111,.14),0 1.4rem 3.4rem rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.09);
-    }
-
-    .cardinal-map{
-      display:grid;
-      gap:.72rem;
-    }
-
-    .cardinal-group{
-      display:grid;
-      gap:.46rem;
-      padding:.62rem;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:.95rem;
-      background:
-        radial-gradient(circle at 0% 0%,rgba(141,216,255,.07),transparent 12rem),
-        rgba(255,255,255,.025);
-    }
-
-    .cardinal-heading{
-      display:flex;
-      flex-wrap:wrap;
-      align-items:baseline;
-      gap:.35rem;
-      color:var(--gold);
-      font-size:.66rem;
-      font-weight:950;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-    }
-
-    .cardinal-heading span{
-      color:rgba(230,238,255,.58);
-      font-size:.58rem;
-      letter-spacing:.09em;
-    }
-
-    .route-menu-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:.48rem;
-    }
-
-    .route-menu-link{
-      min-height:2.35rem;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(184,205,255,.18);
-      border-radius:.86rem;
-      padding:.5rem .62rem;
-      color:rgba(236,242,255,.88);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(141,216,255,.10),transparent 72%),
-        linear-gradient(180deg,rgba(255,255,255,.048),rgba(255,255,255,.020));
-      font-size:.64rem;
-      font-weight:950;
-      letter-spacing:.06em;
-      text-align:center;
-      text-transform:uppercase;
-      box-shadow:0 0 .85rem rgba(36,120,255,.08),inset 0 1px 0 rgba(255,255,255,.07);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
-    }
-
-    .route-menu-link:hover,
-    .route-menu-link:focus-visible{
-      transform:translateY(-2px);
-      border-color:rgba(243,200,111,.56);
-      color:rgba(255,244,216,.98);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(243,200,111,.16),transparent 72%),
-        linear-gradient(180deg,rgba(36,120,255,.085),rgba(255,255,255,.028));
-      box-shadow:0 0 1.35rem rgba(243,200,111,.18),0 0 1.35rem rgba(36,120,255,.13),inset 0 1px 0 rgba(255,255,255,.10);
-      outline:none;
-    }
-
-    .route-menu-link[aria-current="page"]{
-      color:#041009;
-      border-color:rgba(243,200,111,.86);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(141,216,255,.24),transparent 70%),
-        linear-gradient(135deg,#fff2a8,#f3c86f);
-      box-shadow:0 0 1.6rem rgba(36,120,255,.18),0 0 1rem rgba(243,200,111,.22);
+    .header-note{
+      justify-self:end;
+      max-width:23rem;
+      color:rgba(230,238,255,.66);
+      font-size:.78rem;
+      font-weight:850;
+      line-height:1.35;
+      text-align:right;
     }
 
     .panel{
@@ -401,11 +267,11 @@
 
     .hero{
       position:relative;
-      min-height:clamp(28rem,50vw,38rem);
+      min-height:clamp(24rem,44vw,34rem);
       display:grid;
       align-content:center;
       gap:1rem;
-      padding:clamp(1.45rem,5vw,3.4rem);
+      padding:clamp(1.25rem,4.2vw,3rem);
       margin-top:.6rem;
       isolation:isolate;
     }
@@ -466,7 +332,7 @@
     h1{
       margin:0;
       max-width:1000px;
-      font-size:clamp(3.45rem,10.5vw,7.3rem);
+      font-size:clamp(3.25rem,9.7vw,6.85rem);
       line-height:.84;
       letter-spacing:-.108em;
       text-wrap:balance;
@@ -511,51 +377,28 @@
       z-index:2;
     }
 
-    .actions{
+    .subject-pills{
       display:flex;
       flex-wrap:wrap;
-      gap:.62rem;
-      margin-top:.2rem;
+      gap:.55rem;
       position:relative;
       z-index:2;
     }
 
-    .button{
-      min-height:2.65rem;
+    .subject-pills span{
       display:inline-flex;
+      min-height:2.2rem;
       align-items:center;
       justify-content:center;
-      border:1px solid rgba(255,255,255,.15);
+      border:1px solid rgba(184,205,255,.14);
       border-radius:999px;
-      padding:.65rem 1rem;
-      background:rgba(255,255,255,.045);
-      color:rgba(241,246,255,.88);
-      font-size:.76rem;
+      padding:.48rem .75rem;
+      color:rgba(230,238,255,.78);
+      background:rgba(255,255,255,.035);
+      font-size:.68rem;
       font-weight:950;
-      letter-spacing:.055em;
+      letter-spacing:.10em;
       text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
-    }
-
-    .button:hover,
-    .button:focus-visible{
-      transform:translateY(-2px);
-      border-color:rgba(243,200,111,.62);
-      outline:none;
-    }
-
-    .button.gold{
-      border-color:rgba(243,200,111,.9);
-      color:#060811;
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
-      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
-    }
-
-    .button.green{
-      border-color:rgba(143,240,195,.42);
-      color:var(--green);
-      background:rgba(143,240,195,.07);
     }
 
     .section{
@@ -565,183 +408,9 @@
       gap:1.05rem;
     }
 
-    .first-room-map{
-      position:relative;
-      display:grid;
-      grid-template-columns:1fr minmax(15rem,1.18fr) 1fr;
-      grid-template-areas:
-        "door center story"
-        "paths center frontier"
-        "support center return";
-      gap:.85rem;
-      padding:clamp(.85rem,2.5vw,1.1rem);
-      border:1px solid rgba(184,205,255,.13);
-      border-radius:clamp(1.15rem,4vw,1.8rem);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(243,200,111,.09),transparent 16rem),
-        radial-gradient(circle at 18% 20%,rgba(141,216,255,.10),transparent 18rem),
-        radial-gradient(circle at 84% 28%,rgba(143,240,195,.06),transparent 18rem),
-        linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018));
-      overflow:hidden;
-      isolation:isolate;
-    }
-
-    .first-room-map::before,
-    .first-room-map::after{
-      content:"";
-      position:absolute;
-      inset:1rem;
-      pointer-events:none;
-      border:1px solid rgba(243,200,111,.08);
-      border-radius:1.4rem;
-      z-index:0;
-    }
-
-    .first-room-map::after{
-      inset:50% auto auto 50%;
-      width:20rem;
-      height:20rem;
-      border-radius:4rem;
-      transform:translate(-50%,-50%) rotate(45deg);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(36,120,255,.10),transparent 65%),
-        linear-gradient(135deg,rgba(255,255,255,.035),rgba(255,255,255,.006));
-      opacity:.72;
-    }
-
-    .map-node{
-      position:relative;
-      z-index:2;
-      min-height:8.35rem;
-      display:grid;
-      gap:.35rem;
-      align-content:start;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.15rem;
-      padding:1rem;
-      background:
-        radial-gradient(circle at 18% 0%,rgba(141,216,255,.10),transparent 12rem),
-        rgba(255,255,255,.035);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
-    }
-
-    .map-node::before{
-      content:"";
-      width:1.05rem;
-      height:1.05rem;
-      border-radius:.28rem;
-      transform:rotate(45deg);
-      margin-bottom:.15rem;
-      background:linear-gradient(135deg,var(--gold2),var(--gold));
-      box-shadow:0 0 1rem rgba(243,200,111,.28);
-    }
-
-    .map-node b{
-      color:var(--gold);
-      font-size:.66rem;
-      font-weight:950;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-    }
-
-    .map-node strong{
-      color:rgba(255,244,216,.98);
-      font-size:clamp(1.08rem,2.6vw,1.42rem);
-      line-height:1.05;
-      letter-spacing:-.035em;
-    }
-
-    .map-node span{
-      color:rgba(230,238,255,.75);
-      font-size:.9rem;
-      line-height:1.38;
-    }
-
-    .map-node a,
-    .map-node .map-action{
-      width:fit-content;
-      margin-top:.35rem;
-      color:rgba(255,244,216,.92);
-      border-bottom:1px solid rgba(243,200,111,.38);
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .map-node.center{
-      grid-area:center;
-      min-height:100%;
-      align-content:center;
-      text-align:center;
-      place-items:center;
-      border-color:rgba(243,200,111,.32);
-      background:
-        radial-gradient(circle at 50% 18%,rgba(243,200,111,.16),transparent 15rem),
-        radial-gradient(circle at 50% 70%,rgba(36,120,255,.12),transparent 18rem),
-        rgba(255,255,255,.040);
-    }
-
-    .map-node.center::before{
-      width:3.2rem;
-      height:3.2rem;
-      border-radius:.7rem;
-      box-shadow:
-        0 0 1.8rem rgba(243,200,111,.26),
-        0 0 3.2rem rgba(36,120,255,.18);
-    }
-
-    .map-node.door{grid-area:door}
-    .map-node.paths{grid-area:paths}
-    .map-node.story{grid-area:story}
-    .map-node.frontier{grid-area:frontier}
-    .map-node.support{grid-area:support}
-    .map-node.return{grid-area:return}
-
-    .map-node.support::before{
-      background:linear-gradient(135deg,rgba(230,238,255,.95),rgba(141,216,255,.78));
-    }
-
-    .map-node.frontier::before{
-      background:linear-gradient(135deg,rgba(143,240,195,.95),rgba(243,200,111,.76));
-    }
-
-    .map-legend{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.55rem;
-      align-items:center;
-      color:rgba(230,238,255,.66);
-      font-size:.78rem;
-      font-weight:800;
-    }
-
-    .map-legend span{
-      display:inline-flex;
-      align-items:center;
-      gap:.35rem;
-      padding:.38rem .58rem;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:999px;
-      background:rgba(255,255,255,.035);
-    }
-
-    .map-legend span::before{
-      content:"";
-      width:.52rem;
-      height:.52rem;
-      border-radius:.12rem;
-      transform:rotate(45deg);
-      background:var(--gold);
-      box-shadow:0 0 .65rem rgba(243,200,111,.24);
-    }
-
-    .map-legend span:nth-child(2)::before{background:var(--blue)}
-    .map-legend span:nth-child(3)::before{background:var(--green)}
-
     .mirror-stage{
       position:relative;
-      min-height:clamp(48rem,86vw,66rem);
+      min-height:clamp(42rem,78vw,60rem);
       display:grid;
       place-items:center;
       overflow:hidden;
@@ -1049,130 +718,66 @@
       backdrop-filter:blur(8px);
     }
 
-    .path-grid{
+    .explain-grid{
       display:grid;
-      gap:.85rem;
-      grid-template-columns:repeat(3,minmax(0,1fr));
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.7rem;
     }
 
-    .path-card{
-      position:relative;
-      display:grid;
-      gap:.8rem;
-      min-height:15rem;
-      padding:1.15rem;
+    .explain-card{
       border:1px solid rgba(255,255,255,.12);
-      border-radius:1.35rem;
+      border-radius:1.1rem;
       background:
         radial-gradient(circle at 20% 0%,rgba(36,120,255,.10),transparent 60%),
         rgba(255,255,255,.035);
       overflow:hidden;
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
-    .path-card::after{
-      content:"";
-      position:absolute;
-      right:1rem;
-      top:1rem;
-      width:4.5rem;
-      height:3.3rem;
-      clip-path:var(--brand-gem);
-      opacity:.44;
-      background:
-        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.26) 21% 23%,transparent 24%),
-        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.24),rgba(36,120,255,.38),rgba(20,10,62,.70),rgba(243,200,111,.16),rgba(255,255,255,.22)),
-        radial-gradient(circle at 50% 26%,rgba(255,255,255,.30),transparent 44%);
-      filter:drop-shadow(0 .8rem 1rem rgba(0,0,0,.28)) drop-shadow(0 0 .8rem rgba(36,120,255,.18));
-      pointer-events:none;
-    }
-
-    .path-card:hover,
-    .path-card:focus-visible{
-      transform:translateY(-3px);
-      border-color:rgba(243,200,111,.46);
-      outline:none;
-    }
-
-    .path-card b{
+    .explain-card summary{
+      list-style:none;
+      cursor:pointer;
+      min-height:3rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:.75rem;
+      padding:.85rem .95rem;
       color:var(--gold);
       font-size:.68rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      position:relative;
-      z-index:2;
-    }
-
-    .path-card strong{
-      color:rgba(255,244,216,.98);
-      font-size:1.35rem;
-      line-height:1.05;
-      position:relative;
-      z-index:2;
-    }
-
-    .path-card span{
-      color:var(--muted);
-      font-size:.96rem;
-      line-height:1.44;
-      position:relative;
-      z-index:2;
-    }
-
-    .open-path{
-      margin-top:auto;
-      color:rgba(230,238,255,.88);
-      font-size:.76rem;
       font-weight:950;
       letter-spacing:.12em;
       text-transform:uppercase;
-      position:relative;
-      z-index:2;
     }
 
-    .info-grid{
+    .explain-card summary::-webkit-details-marker{display:none}
+
+    .explain-card summary::after{
+      content:"+";
+      color:rgba(230,238,255,.70);
+      font-size:1.05rem;
+      font-weight:950;
+    }
+
+    .explain-card[open] summary::after{
+      content:"–";
+      color:var(--gold2);
+    }
+
+    .explain-body{
       display:grid;
-      gap:.85rem;
-      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.55rem;
+      padding:0 .95rem .95rem;
     }
 
-    .info-card{
-      scroll-margin-top:6rem;
-      min-height:16rem;
-      display:grid;
-      gap:.82rem;
-      align-content:start;
-      padding:1.15rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.35rem;
-      background:
-        radial-gradient(circle at 20% 0%,rgba(36,120,255,.10),transparent 60%),
-        rgba(255,255,255,.035);
+    .explain-body strong{
+      color:rgba(255,244,216,.96);
+      font-size:1.05rem;
+      line-height:1.1;
     }
 
-    .info-card b{
-      color:var(--gold);
-      font-size:.68rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .info-card strong{
-      color:rgba(255,244,216,.98);
-      font-size:clamp(1.2rem,3vw,1.65rem);
-      line-height:1.05;
-      letter-spacing:-.04em;
-    }
-
-    .info-card p{
-      font-size:.96rem;
-    }
-
-    .return-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.62rem;
-      margin-top:auto;
+    .explain-body p{
+      font-size:.9rem;
+      line-height:1.42;
     }
 
     .route-receipt,
@@ -1206,15 +811,7 @@
     }
 
     @media (max-width:1080px){
-      .path-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .first-room-map{
-        grid-template-columns:1fr 1fr;
-        grid-template-areas:
-          "center center"
-          "door paths"
-          "story frontier"
-          "support return";
-      }
+      .explain-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
     @media (max-width:980px){
@@ -1223,60 +820,31 @@
         align-items:start;
       }
 
-      .nav{justify-content:flex-start}
-      .route-menu-panel{left:0;right:auto}
-      .info-grid{grid-template-columns:1fr}
+      .header-note{
+        justify-self:start;
+        text-align:left;
+      }
     }
 
     @media (max-width:760px){
       .shell{width:min(100% - 22px,var(--max))}
-      h1{font-size:clamp(3.15rem,16vw,5.65rem)}
+      h1{font-size:clamp(3.05rem,15vw,5.45rem)}
 
       .hero{
-        min-height:31rem;
+        min-height:28rem;
         padding:1rem;
       }
 
-      .actions{
+      .subject-pills{
         display:grid;
       }
 
-      .button{
+      .subject-pills span{
         width:100%;
-      }
-
-      .route-menu{
-        width:100%;
-      }
-
-      .route-menu-panel{
-        position:static;
-        margin-top:.45rem;
-        width:100%;
-      }
-
-      .route-menu-grid{
-        grid-template-columns:1fr;
-      }
-
-      .first-room-map{
-        grid-template-columns:1fr;
-        grid-template-areas:
-          "center"
-          "door"
-          "paths"
-          "story"
-          "frontier"
-          "support"
-          "return";
-      }
-
-      .map-node{
-        min-height:auto;
       }
 
       .mirror-stage{
-        min-height:48rem;
+        min-height:44rem;
       }
 
       .mirror-center-anchor{
@@ -1332,14 +900,14 @@
         font-size:.88rem;
       }
 
-      .path-grid{
+      .explain-grid{
         grid-template-columns:1fr;
       }
     }
 
     @media (max-width:460px){
       .mirror-stage{
-        min-height:44rem;
+        min-height:41rem;
       }
 
       .mirror-center-anchor{
@@ -1541,10 +1109,10 @@
     </defs>
   </svg>
 
-  <a class="skip" href="#main">Skip to Globe</a>
+  <a class="skip" href="#main">Skip to Globe Window</a>
 
   <div class="shell">
-    <header class="topbar" aria-label="Mirrorland header">
+    <header class="topbar" aria-label="Mirrorland Globe header">
       <a class="brand" href="/showroom/globe/" aria-label="Diamond Gate Bridge Mirrorland Globe">
         <span class="brand-mark" aria-hidden="true"><span>ML</span></span>
         <span class="brand-copy">
@@ -1553,146 +1121,30 @@
         </span>
       </a>
 
-      <nav class="nav" aria-label="Mirrorland dropdown navigation">
-        <details class="route-menu" data-native-menu>
-          <summary>Mirrorland Map</summary>
-          <div class="route-menu-panel">
-            <div class="cardinal-map">
-              <div class="cardinal-group">
-                <div class="cardinal-heading">Center <span>Gateway and return</span></div>
-                <div class="route-menu-grid">
-                  <a class="route-menu-link" href="/showroom/globe/" aria-current="page">Globe</a>
-                  <a class="route-menu-link" href="/">Compass</a>
-                  <a class="route-menu-link" href="/showroom/">Showroom</a>
-                </div>
-              </div>
-
-              <div class="cardinal-group">
-                <div class="cardinal-heading">Future Paths <span>Consequence, survival, possibility</span></div>
-                <div class="route-menu-grid">
-                  <a class="route-menu-link" href="/showroom/globe/earth/">ZIONTS</a>
-                  <a class="route-menu-link" href="/showroom/globe/h-earth/">H-Earth</a>
-                  <a class="route-menu-link" href="/showroom/globe/audralia/">Audralia</a>
-                </div>
-              </div>
-
-              <div class="cardinal-group">
-                <div class="cardinal-heading">Story <span>People and world rules</span></div>
-                <div class="route-menu-grid">
-                  <a class="route-menu-link" href="/characters/">Characters</a>
-                  <a class="route-menu-link" href="#portal-premise">Portal Premise</a>
-                  <a class="route-menu-link" href="#mirror-law">Mirror Law</a>
-                </div>
-              </div>
-
-              <div class="cardinal-group">
-                <div class="cardinal-heading">Support <span>Measurement and development</span></div>
-                <div class="route-menu-grid">
-                  <a class="route-menu-link" href="/gauges/">Gauges</a>
-                  <a class="route-menu-link" href="/explore/frontier/">Frontier</a>
-                  <a class="route-menu-link" href="/products/">Products</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </details>
-      </nav>
+      <div class="header-note">
+        Use the floating Map / Portal blip for movement. This page stays focused on the Globe Window.
+      </div>
     </header>
 
     <main id="main">
       <section class="panel hero" aria-labelledby="page-title">
         <div class="kicker">Shadows Never Shatter in Mirrorland</div>
 
-        <h1 id="page-title">Welcome inside Mirrorland. Choose the future path.</h1>
+        <h1 id="page-title">Welcome inside Mirrorland. This is the Globe Window.</h1>
 
         <p class="lead">
-          You crossed the door. Now the worlds separate: ZIONTS as consequence, H-Earth as survival, and Audralia as possibility. The website is not the portal. It is the window.
+          The Door brought you here. The Globe is the first room inside Mirrorland: a window where the future paths split into consequence, survival, and possibility.
         </p>
 
         <div class="quote">
-          The first team crosses. The return path fails. The 300-year clock is already running. Preparation is the variable.
+          The website is not the portal. It is the window.
         </div>
 
-        <div class="actions">
-          <a class="button gold" href="#mirrorland-map">Read the Map</a>
-          <a class="button" href="#mirrorland-orbit">Open the Globe</a>
-          <a class="button green" href="/showroom/globe/audralia/">Audralia · Possibility</a>
-          <a class="button" href="/showroom/globe/earth/">ZIONTS · Consequence</a>
-          <a class="button" href="/showroom/globe/h-earth/">H-Earth · Survival</a>
-          <a class="button" href="/characters/">Meet Characters</a>
-        </div>
-      </section>
-
-      <section class="panel section" aria-labelledby="room-map-title" data-first-room-map="true">
-        <div class="kicker">First room map · Local orientation</div>
-        <h2 id="room-map-title">You are standing at the Globe Window.</h2>
-        <p>
-          This map orients the first room after the Door. It is not a second portal. The Door brought you here; the Globe separates the future paths.
-        </p>
-
-        <div
-          id="mirrorland-map"
-          class="first-room-map"
-          aria-label="Mirrorland first room orientation map"
-          data-map-added="true"
-          data-map-type="first-room-orientation-map"
-          data-map-scope="page-local"
-          data-map-second-mirrorland-entrance="false"
-        >
-          <article class="map-node door">
-            <b>Before this room</b>
-            <strong>The Door</strong>
-            <span>The Diamond Lattice threshold sits before this Globe room.</span>
-            <a href="/showroom/">Return to Door</a>
-          </article>
-
-          <article class="map-node center">
-            <b>You are here</b>
-            <strong>Globe Window</strong>
-            <span>The first room inside Mirrorland. It shows the future paths without becoming the portal itself.</span>
-            <a href="#mirrorland-orbit">Open Globe</a>
-          </article>
-
-          <article class="map-node paths">
-            <b>Future paths</b>
-            <strong>Consequence · Survival · Possibility</strong>
-            <span>ZIONTS warns, H-Earth survives, and Audralia opens possibility.</span>
-            <a href="#paths-title">Choose Path</a>
-          </article>
-
-          <article class="map-node story">
-            <b>Story rooms</b>
-            <strong>People and rules</strong>
-            <span>The Characters and Mirror Law explain who enters, why they cross, and what changes.</span>
-            <a href="/characters/">Meet Characters</a>
-          </article>
-
-          <article class="map-node frontier">
-            <b>West wing</b>
-            <strong>Frontier Deployment</strong>
-            <span>Frontier carries applied systems after the future paths are understood.</span>
-            <a href="/explore/frontier/">Open Frontier</a>
-          </article>
-
-          <article class="map-node support">
-            <b>Website support</b>
-            <strong>Gauges and Products</strong>
-            <span>Support routes measure and explain the site. They support Mirrorland but do not become Mirrorland doors.</span>
-            <a href="/gauges/">Check Gauges</a>
-          </article>
-
-          <article class="map-node return">
-            <b>Return axis</b>
-            <strong>Orbit and window</strong>
-            <span>Return to the orbit when a path branch needs to be re-read.</span>
-            <a href="#mirrorland-orbit">Return to Orbit</a>
-          </article>
-        </div>
-
-        <div class="map-legend" aria-label="Map legend">
-          <span>Current room</span>
-          <span>Future path</span>
-          <span>Deployment/support</span>
+        <div class="subject-pills" aria-label="Globe Window subject markers">
+          <span>ZIONTS · Consequence</span>
+          <span>H-Earth · Survival</span>
+          <span>Audralia · Possibility</span>
+          <span>Movement · Map Blip</span>
         </div>
       </section>
 
@@ -1740,7 +1192,7 @@
             </a>
           </div>
 
-          <div class="orbit-ring outer" aria-label="Mirrorland secondary route ring" data-secondary-ring="true">
+          <div class="orbit-ring outer" aria-label="Mirrorland secondary context ring" data-secondary-ring="true">
             <a class="diamond-node" data-secondary-gem="portal-premise" style="--angle:0deg;--gem-delay:.4s;--gem-hue:-10deg;--gem-sat:.99;--gem-bright:.99;" href="#portal-premise" aria-label="Portal Premise">
               <span class="diamond-object">
                 <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#mirrorOrganicGem"></use></svg>
@@ -1776,7 +1228,7 @@
               </span>
             </a>
 
-            <a class="diamond-node" data-secondary-gem="showroom" style="--angle:225deg;--gem-delay:3.9s;--gem-hue:-13deg;--gem-sat:1.04;--gem-bright:1;" href="/showroom/" aria-label="Showroom">
+            <a class="diamond-node" data-secondary-gem="showroom" style="--angle:225deg;--gem-delay:3.9s;--gem-hue:-13deg;--gem-sat:1.04;--gem-bright:1;" href="/showroom/" aria-label="Showroom Door">
               <span class="diamond-object">
                 <svg class="gem-svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false"><use href="#mirrorOrganicGem"></use></svg>
                 <span class="diamond-content"><strong>Showroom</strong></span>
@@ -1804,126 +1256,83 @@
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="premise-title">
-        <div class="kicker">Narrative construct</div>
-        <h2 id="premise-title">Mirrorland is the future shadow made reachable.</h2>
+      <section class="panel section" aria-labelledby="context-title">
+        <div class="kicker">Compact context</div>
+        <h2 id="context-title">Read the room without turning the page into a directory.</h2>
 
-        <div class="info-grid">
-          <article id="portal-premise" class="info-card" data-info-section="portal-premise">
-            <b>Portal Premise</b>
-            <strong>The crossing begins with an anomaly.</strong>
-            <p>Dextrion detects the Bermuda-area anomaly from Earth. The first team crosses into Mirrorland. The return path fails. Discovery becomes a one-way mission.</p>
-            <div class="return-row">
-              <a class="button" data-return-to-orbit href="#mirrorland-orbit">Return to Orbit</a>
+        <div class="explain-grid">
+          <details id="portal-premise" class="explain-card">
+            <summary>Portal Premise</summary>
+            <div class="explain-body">
+              <strong>The crossing begins with an anomaly.</strong>
+              <p>Dextrion detects the Bermuda-area anomaly from Earth. The first team crosses into Mirrorland. The return path fails. Discovery becomes a one-way mission.</p>
             </div>
-          </article>
+          </details>
 
-          <article id="mirror-law" class="info-card" data-info-section="mirror-law">
-            <b>Mirror Law</b>
-            <strong>The cover is true, but incomplete.</strong>
-            <p>A mirror can shatter. A shadow cannot. Mirrorland makes the first read visible, then forces the visitor to face what the first read did not finish.</p>
-            <div class="return-row">
-              <a class="button" data-return-to-orbit href="#mirrorland-orbit">Return to Orbit</a>
+          <details id="mirror-law" class="explain-card">
+            <summary>Mirror Law</summary>
+            <div class="explain-body">
+              <strong>The cover is true, but incomplete.</strong>
+              <p>A mirror can shatter. A shadow cannot. Mirrorland makes the first read visible, then forces the visitor to face what the first read did not finish.</p>
             </div>
-          </article>
+          </details>
 
-          <article id="no-return-rule" class="info-card" data-info-section="no-return-rule">
-            <b>No Return Rule</b>
-            <strong>The first crossing changes the mission.</strong>
-            <p>The team can enter Mirrorland, but they cannot come back. Builders, engineers, protectors, field operators, and survival crews cross knowing the clock is already running.</p>
-            <div class="return-row">
-              <a class="button" data-return-to-orbit href="#mirrorland-orbit">Return to Orbit</a>
+          <details id="no-return-rule" class="explain-card">
+            <summary>No Return Rule</summary>
+            <div class="explain-body">
+              <strong>The first crossing changes the mission.</strong>
+              <p>The team can enter Mirrorland, but they cannot come back. Builders, engineers, protectors, field operators, and survival crews cross knowing the clock is already running.</p>
             </div>
-          </article>
+          </details>
 
-          <article id="window-rule" class="info-card" data-info-section="window-rule">
-            <b>Window Rule</b>
-            <strong>The website is not the portal. It is the window.</strong>
-            <p>The public page lets the outside world look into the future-path decision point. The Characters page carries the roster; this Globe page opens the narrative threshold.</p>
-            <div class="return-row">
-              <a class="button" data-return-to-orbit href="#mirrorland-orbit">Return to Orbit</a>
+          <details id="window-rule" class="explain-card" open>
+            <summary>Window Rule</summary>
+            <div class="explain-body">
+              <strong>The website is not the portal. It is the window.</strong>
+              <p>The public page lets the outside world look into the future-path decision point. Movement belongs to the floating Map / Portal blip.</p>
             </div>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel section" aria-labelledby="paths-title">
-        <div class="kicker">Future paths</div>
-        <h2 id="paths-title">Choose the path that shows what the future becomes.</h2>
-
-        <div class="path-grid">
-          <a class="path-card" href="/showroom/globe/earth/">
-            <b>ZIONTS · Consequence</b>
-            <strong>The warning path.</strong>
-            <span>ZIONTS is the future where a living planet can no longer carry life. It is the consequence route.</span>
-            <span class="open-path">Face Consequence</span>
-          </a>
-
-          <a class="path-card" href="/showroom/globe/h-earth/">
-            <b>H-Earth · Survival</b>
-            <strong>The condition path.</strong>
-            <span>H-Earth holds earth, water, air, shelter, bodies, cities, and systems under pressure.</span>
-            <span class="open-path">Open Survival</span>
-          </a>
-
-          <a class="path-card" href="/showroom/globe/audralia/">
-            <b>Audralia · Possibility</b>
-            <strong>The first living planetary doorway.</strong>
-            <span>Audralia is the first living planetary doorway inside Mirrorland, where the Mirror Manor stands and possibility begins to take form.</span>
-            <span class="open-path">Enter Possibility</span>
-          </a>
-
-          <a class="path-card" href="/characters/">
-            <b>Characters · People inside the story</b>
-            <strong>Meet the first playable angles.</strong>
-            <span>Character dossiers, mirrored NPCs, survival systems, manor paths, and planetary stakes expand together.</span>
-            <span class="open-path">Meet Characters</span>
-          </a>
-
-          <a class="path-card" href="/explore/frontier/">
-            <b>Frontier · West deployment</b>
-            <strong>Open applied systems.</strong>
-            <span>Frontier carries water, waste, energy, and closed-loop development after the future paths are understood.</span>
-            <span class="open-path">Open Frontier</span>
-          </a>
-
-          <a class="path-card" href="/gauges/">
-            <b>Gauges · Measurement</b>
-            <strong>Check what is routed and measurable.</strong>
-            <span>Gauges verifies page presence, route truth, and measurable posture without becoming the public story.</span>
-            <span class="open-path">Check Gauges</span>
-          </a>
+          </details>
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-SHOWROOM_GLOBE_MIRRORLAND_FIRST_ROOM_MAP_HTML_TNT_v1
-previous=SHOWROOM_GLOBE_MIRRORLAND_FIRST_ROOM_CONTEXT_HTML_TNT_v5
+SHOWROOM_GLOBE_SIMPLIFIED_MAP_BLIP_HTML_TNT_v1
+previous=SHOWROOM_GLOBE_MIRRORLAND_FIRST_ROOM_MAP_HTML_TNT_v1
+baseline=SHOWROOM_GLOBE_MIRRORLAND_FIRST_ROOM_CONTEXT_HTML_TNT_v5
 size_renewal=SHOWROOM_GLOBE_MIRRORLAND_ORBIT_GEM_GATEWAY_HTML_SIZE_TNT_v4_1
 route=/showroom/globe/
 page=showroom_globe
-role=mirrorland_first_room_orbit_gateway_with_local_map
+role=mirrorland_first_room_orbit_gateway_simplified_map_blip
 status=great_grandparent_legacy_anchor
 public_subject=Shadows_Never_Shatter_in_Mirrorland
-public_line=Welcome_inside_Mirrorland_choose_the_future_path
+public_line=Welcome_inside_Mirrorland_this_is_the_Globe_Window
 post_door_entry_context=true
 first_room_inside_mirrorland=true
-map_added=true
-map_type=first_room_orientation_map
-map_scope=page_local
-map_owner=/showroom/globe/index.html
-map_placement=between_hero_and_orbit
-map_purpose=orient_the_user_after_entering_mirrorland
-map_second_mirrorland_entrance=false
-map_portal_blip_preserved=true
-map_route_directory=false
-map_debug_metadata_visible=false
-map_category_ownership_preserved=true
-map_nodes=Door,Globe_Window,Future_Paths,Story_Rooms,Frontier_Deployment,Website_Support,Return_Axis
+page_simplified=true
+map_blip_added=true
+floating_map_portal_active=true
+map_blip_owns_navigation=true
+page_body_navigation_reduced=true
+page_subject_content_only=true
+local_map_section=false
+embedded_local_map_removed=true
+route_directory_removed=true
+jump_options_removed=true
+path_grid_removed=true
+bottom_route_cards_removed=true
+repeated_return_buttons_removed=true
+second_mirrorland_entrance=false
+blueprint_page_scoped=true
+blueprint_css=/assets/manor-blueprint/manor.blueprint.css
+blueprint_css_contract=MANOR_BLUEPRINT_CARDINAL_ROOM_MAP_VISUAL_CSS_TNT_v1
+blueprint_registry=/assets/manor-blueprint/manor.blueprint.registry.js
+blueprint_registry_contract=MANOR_BLUEPRINT_VISITOR_ORIENTATION_REGISTRY_TNT_v1
+blueprint_runtime=/assets/manor-blueprint/manor.blueprint.js
+blueprint_runtime_contract=MANOR_BLUEPRINT_VISITOR_ORIENTATION_RUNTIME_TNT_v1
 top_redundancy_reduced=true
-dropdown_preserved=true
+dropdown_reduced=true
 orbit_construct_preserved=true
-bottom_construct_format_adopted=true
+compact_explanations_active=true
 audralia_planetary_path_emphasized=true
 template_phrase_not_owned_by_this_html=true
 js_attachment_preserved=true
@@ -1933,8 +1342,6 @@ triad=ZIONTS_consequence,H_Earth_survival,Audralia_possibility
 center_gem=Globe_Window
 inner_ring=ZIONTS,Audralia,H_Earth
 outer_ring=Portal_Premise,Mirror_Law,No_Return_Rule,Window_Rule,Characters,Showroom,Gauges,Return_to_Orbit
-size_adjustment=diamond_objects_plus_50_percent
-text_adjustment=label_text_plus_100_percent_after_diamond_resize
 donor_compass_organic_gems=true
 donor_explore_rotating_orbits=true
 native_details_menu=true
@@ -1945,8 +1352,8 @@ object_motion_only=true
 gem_wrapper_counter_motion=true
 animation_targets=orbit_rings,diamond_object_wrapper,svg_facets,glint,center_anchor
 forbidden_text_animation=shimmer,pulse,blur,bounce,flicker,independent_rotation,vibration
-route_owns=mirrorland_gateway,public_narrative_expression,gem_orbit_layout,anchor_sections,dropdown_markup,first_room_orientation_map
-route_does_not_own=audralia_clean_canvas,planet_runtime,canvas_rendering,three_d_graphics_engine,character_roster_depth,gauges_logic,planet_template_phrase,mirrorland_portal_blip_runtime
+route_owns=mirrorland_gateway,public_narrative_expression,gem_orbit_layout,compact_anchor_explanations
+route_does_not_own=audralia_clean_canvas,planet_runtime,canvas_rendering,three_d_graphics_engine,character_roster_depth,gauges_logic,planet_template_phrase,map_portal_blip_runtime
 external_motion_js=false
 canvas_runtime=false
 requestAnimationFrame=false
@@ -1958,7 +1365,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      SHOWROOM_GLOBE_MIRRORLAND_FIRST_ROOM_MAP_HTML_TNT_v1 · Welcome inside Mirrorland · The Globe separates the future paths.
+      SHOWROOM_GLOBE_SIMPLIFIED_MAP_BLIP_HTML_TNT_v1 · Globe Window · Movement belongs to the Map / Portal blip.
     </footer>
   </div>
 
@@ -1966,6 +1373,20 @@ visual_pass_claimed=false
     src="/showroom/globe/index.js?v=2026-05-20-showroom-globe-mirrorland-donor-adaptation-v4"
     data-contract="SHOWROOM_GLOBE_MIRRORLAND_ORBIT_GEM_GATEWAY_DONOR_ADAPTATION_JS_TNT_v4"
     data-mirrorland-orbit-gateway-verifier="true"
+  ></script>
+
+  <script
+    src="/assets/manor-blueprint/manor.blueprint.registry.js?v=MANOR_BLUEPRINT_VISITOR_ORIENTATION_REGISTRY_TNT_v1"
+    defer
+    data-mirrorland-blueprint-marker="true"
+    data-blueprint-page-scoped="true"
+  ></script>
+
+  <script
+    src="/assets/manor-blueprint/manor.blueprint.js?v=MANOR_BLUEPRINT_VISITOR_ORIENTATION_RUNTIME_TNT_v1"
+    defer
+    data-mirrorland-blueprint-marker="true"
+    data-blueprint-page-scoped="true"
   ></script>
 </body>
 </html>

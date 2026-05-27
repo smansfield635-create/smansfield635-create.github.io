@@ -3,9 +3,11 @@
   lang="en"
   data-route="/site-guide/"
   data-page="site-guide"
-  data-version="SITE-GUIDE-G3-JUMP-PAD-HTML"
-  data-contract="SITE_GUIDE_BLUEPRINT_JUMP_PAD_HTML_TNT_v1"
-  data-previous-contract="SITE_GUIDE_THREE_FILE_FOCUS_ANIMATION_TNT_v1"
+  data-version="SITE-GUIDE-G3-ROUTE-CHOICE-BOARD-HTML"
+  data-contract="SITE_GUIDE_ROUTE_CHOICE_BOARD_HTML_TNT_v1"
+  data-previous-contract="SITE_GUIDE_BLUEPRINT_JUMP_PAD_CACHE_BUST_HTML_TNT_v1"
+  data-controller-contract="SITE_GUIDE_BLUEPRINT_JUMP_PAD_CONTROLLER_TNT_v1"
+  data-cache-bust="true"
   data-main-menu-route="true"
   data-mirrorland-door="false"
   data-guide-desk="true"
@@ -17,6 +19,8 @@
   data-open-blueprint-controller="true"
   data-blueprint-jump-pad="true"
   data-local-scratch-surface-deck="true"
+  data-route-choice-board="true"
+  data-native-select-planner="false"
   data-quadrupedic-quadrilateral-traversal="structural-core-only"
   data-matrix-4x4="true"
   data-spectrum-16x16="true"
@@ -32,16 +36,16 @@
   <title>Guide Desk · Flex Exhibit · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Guide Desk is the Diamond Gate Bridge flex exhibit page for presentation systems, navigation systems, Return to Orbit, Map / Portal, estate blueprint, jump-pad scratch surfaces, and under-the-hood 4x4 / 16x16 / 256-state diagnostics."
+    content="Guide Desk is the Diamond Gate Bridge flex exhibit page for presentation systems, navigation systems, Return to Orbit, Map / Portal, estate blueprint, jump-pad scratch surfaces, route choice board, and under-the-hood 4x4 / 16x16 / 256-state diagnostics."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/site-guide/">
   <meta name="theme-color" content="#02040b">
 
   <link rel="stylesheet" href="/assets/manor-blueprint/manor.blueprint.css?v=SITE_GUIDE_BLUEPRINT_JUMP_PAD_HTML_TNT_v1">
-  <link rel="stylesheet" href="/assets/site-guide/site-guide.css?v=SITE_GUIDE_BLUEPRINT_JUMP_PAD_HTML_TNT_v1">
+  <link rel="stylesheet" href="/assets/site-guide/site-guide.css?v=SITE_GUIDE_BLUEPRINT_JUMP_PAD_CONTROLLER_TNT_v1">
 
   <script src="/assets/manor-blueprint/manor.blueprint.js?v=SITE_GUIDE_BLUEPRINT_JUMP_PAD_HTML_TNT_v1" defer></script>
-  <script src="/assets/site-guide/site-guide.js?v=SITE_GUIDE_BLUEPRINT_JUMP_PAD_HTML_TNT_v1" defer></script>
+  <script src="/assets/site-guide/site-guide.js?v=SITE_GUIDE_BLUEPRINT_JUMP_PAD_CONTROLLER_TNT_v1" defer></script>
 </head>
 
 <body>
@@ -72,7 +76,7 @@
         <h1 id="page-title">The website explains itself by using itself.</h1>
         <h2>A live exhibit for Diamond Gate Bridge design systems.</h2>
         <p class="lead">
-          Guide Desk is the sub-contextual flex page for the estate’s native patterns: orbits, gems, categories, Return to Orbit, Map / Portal, room blueprints, jump-pad scratch surfaces, presentation layers, navigation layers, diagnostics, and construction receipts.
+          Guide Desk is the sub-contextual flex page for the estate’s native patterns: orbits, gems, categories, Return to Orbit, Map / Portal, room blueprints, jump-pad scratch surfaces, route choice board, presentation layers, navigation layers, diagnostics, and construction receipts.
         </p>
 
         <div class="return-primer" id="return-to-orbit-primer">
@@ -100,11 +104,11 @@
           </div>
           <div class="proof-card">
             <b>Jump Pad</b>
-            <strong>Blueprint rooms now point to local scratch surfaces.</strong>
+            <strong>Blueprint rooms point to local scratch surfaces.</strong>
           </div>
           <div class="proof-card">
-            <b>Blueprint</b>
-            <strong>Estate rooms render as a floorplan.</strong>
+            <b>Route Board</b>
+            <strong>Visitor positions and goals replace dropdowns.</strong>
           </div>
           <div class="proof-card">
             <b>Build</b>
@@ -564,33 +568,80 @@
               </button>
             </div>
 
-            <div class="route-planner">
-              <form class="planner-controls" aria-label="Guide route planner">
-                <div class="field">
-                  <label for="start-select">Starting posture</label>
-                  <select id="start-select" data-start-select>
-                    <option value="new">I am new to the site</option>
-                    <option value="mirrorland">I am inside Mirrorland</option>
-                    <option value="proof">I need proof or readiness</option>
-                    <option value="frontier">I want applied future systems</option>
-                  </select>
+            <section class="route-choice-board" aria-label="Guide route choice board" data-route-choice-board="true">
+              <div class="planner-controls route-choice-column" data-select-group="route-start">
+                <div class="section-head">
+                  <div class="kicker">Visitor Position</div>
+                  <h3>Where are you starting?</h3>
+                  <p>Choose the visitor posture that matches the moment.</p>
                 </div>
 
-                <div class="field">
-                  <label for="goal-select">Goal</label>
-                  <select id="goal-select" data-goal-select>
-                    <option value="orientation">Understand the whole website</option>
-                    <option value="worlds">Enter the world / story layer</option>
-                    <option value="proof">Check proof and measurement</option>
-                    <option value="frontier">Study Frontier systems</option>
-                    <option value="products">Find usable public value</option>
-                  </select>
+                <button class="demo-card route-choice-card" type="button" data-route-start="new" data-active="true" style="--demo:var(--sg-gold)">
+                  <b>New Visitor</b>
+                  <strong>I am new to the site.</strong>
+                  <p>Start with orientation, then move toward the right estate room.</p>
+                </button>
+
+                <button class="demo-card route-choice-card" type="button" data-route-start="mirrorland" style="--demo:var(--sg-blue)">
+                  <b>Inside Mirrorland</b>
+                  <strong>I am already in the immersive estate.</strong>
+                  <p>Use Mirrorland Doors or exit to Main Menu when proof or products are needed.</p>
+                </button>
+
+                <button class="demo-card route-choice-card" type="button" data-route-start="proof" style="--demo:var(--sg-green)">
+                  <b>Need Proof / Readiness</b>
+                  <strong>I need verification or measurement.</strong>
+                  <p>Move toward Law Library, The Lab, and route-readiness surfaces.</p>
+                </button>
+
+                <button class="demo-card route-choice-card" type="button" data-route-start="frontier" style="--demo:var(--sg-amber)">
+                  <b>Applied Future Systems</b>
+                  <strong>I want Frontier systems.</strong>
+                  <p>Go toward the Workshop Yard and its system benches.</p>
+                </button>
+              </div>
+
+              <div class="planner-controls route-choice-column" data-select-group="route-goal">
+                <div class="section-head">
+                  <div class="kicker">Destination Goal</div>
+                  <h3>What are you trying to do?</h3>
+                  <p>Choose the outcome, then follow the recommended path.</p>
                 </div>
-              </form>
+
+                <button class="demo-card route-choice-card" type="button" data-route-goal="orientation" data-active="true" style="--demo:var(--sg-gold)">
+                  <b>Orientation</b>
+                  <strong>Understand the Website</strong>
+                  <p>Learn the rooms, menus, layers, and movement logic.</p>
+                </button>
+
+                <button class="demo-card route-choice-card" type="button" data-route-goal="worlds" style="--demo:var(--sg-blue)">
+                  <b>World / Story</b>
+                  <strong>Enter World / Story Layer</strong>
+                  <p>Move toward Atrium, Atlas Study, and world-facing rooms.</p>
+                </button>
+
+                <button class="demo-card route-choice-card" type="button" data-route-goal="proof" style="--demo:var(--sg-green)">
+                  <b>Proof</b>
+                  <strong>Check Proof and Measurement</strong>
+                  <p>Use Law Library and The Lab for readiness, constraints, and verification.</p>
+                </button>
+
+                <button class="demo-card route-choice-card" type="button" data-route-goal="frontier" style="--demo:var(--sg-amber)">
+                  <b>Frontier</b>
+                  <strong>Study Frontier Systems</strong>
+                  <p>Open the Workshop Yard and inspect applied systems.</p>
+                </button>
+
+                <button class="demo-card route-choice-card" type="button" data-route-goal="products" style="--demo:var(--sg-violet)">
+                  <b>Products</b>
+                  <strong>Find Usable Public Value</strong>
+                  <p>Move toward Product Gallery and practical public-facing value.</p>
+                </button>
+              </div>
 
               <div class="planner-output" aria-live="polite">
                 <div class="note-card">
-                  <b data-plan-kicker>Recommended path</b>
+                  <b data-plan-kicker>Recommended Path</b>
                   <h3 data-plan-title>Guide Desk → Compass Desk → Atrium</h3>
                   <p data-plan-copy>
                     Start with Guide Desk, use Compass Desk for orientation, then enter Atrium when you are ready to cross into Mirrorland.
@@ -603,7 +654,7 @@
                   <a class="path-step" href="/showroom/">Atrium</a>
                 </div>
               </div>
-            </div>
+            </section>
 
             <div class="actions">
               <a class="button gold return-to-orbit" href="#guide-orbit" data-return-to-orbit>Return to Orbit</a>
@@ -720,8 +771,8 @@
 
               <article class="ledger-card">
                 <b>Contract</b>
-                <strong>SITE_GUIDE_BLUEPRINT_JUMP_PAD_HTML_TNT_v1</strong>
-                <p>HTML renewal for the Guide Desk blueprint jump-pad scratch-surface deck.</p>
+                <strong>SITE_GUIDE_ROUTE_CHOICE_BOARD_HTML_TNT_v1</strong>
+                <p>HTML renewal for the Guide Desk route planner, replacing native dropdowns with an estate-native Route Choice Board.</p>
               </article>
 
               <article class="ledger-card">
@@ -747,7 +798,7 @@
       <section class="final-band">
         <h2>Guide Desk is the flex page and jump pad.</h2>
         <p>
-          Presentation, navigation, diagnostics, and construction are separated. The blueprint now has local scratch-surface destinations. The visitor can read the room, understand its purpose, and then open the actual live route.
+          Presentation, navigation, diagnostics, and construction are separated. The blueprint has local scratch-surface destinations. The route choice board now gives visitors a native estate interface for choosing where they are and where they need to go.
         </p>
         <div class="actions">
           <a class="button gold return-to-orbit" href="#guide-orbit" data-return-to-orbit>Return to Orbit</a>
@@ -757,7 +808,7 @@
       </section>
 
       <template class="receipt" id="site-guide-receipt" data-route-receipt>
-SITE_GUIDE_BLUEPRINT_JUMP_PAD_HTML_TNT_v1
+SITE_GUIDE_ROUTE_CHOICE_BOARD_HTML_TNT_v1
 route=/site-guide/
 classification=main_menu_website_room
 mirrorland_door=false
@@ -773,6 +824,11 @@ scroll_activation=true
 blueprint_jump_pad=true
 local_scratch_surface_deck=true
 room_jump_targets=true
+route_choice_board=true
+native_select_planner=false
+visitor_position_cards=true
+destination_goal_cards=true
+recommended_path_rail=true
 jump_compass=#jump-compass
 jump_guide=#jump-guide
 jump_main=#jump-main
@@ -798,7 +854,7 @@ webgl=false
     </main>
 
     <footer>
-      SITE_GUIDE_BLUEPRINT_JUMP_PAD_HTML_TNT_v1 · /site-guide/ · Guide Desk · Blueprint jump-pad scratch-surface deck · Native HTML/CSS/JS.
+      SITE_GUIDE_ROUTE_CHOICE_BOARD_HTML_TNT_v1 · /site-guide/ · Guide Desk · Route Choice Board HTML · Native HTML/CSS/JS.
     </footer>
   </div>
 </body>

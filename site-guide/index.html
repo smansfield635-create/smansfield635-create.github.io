@@ -3,10 +3,10 @@
   lang="en"
   data-route="/site-guide/"
   data-page="site-guide"
-  data-version="SITE-GUIDE-G3-ROUTE-CHOICE-BOARD-HTML"
-  data-contract="SITE_GUIDE_ROUTE_CHOICE_BOARD_HTML_TNT_v1"
-  data-previous-contract="SITE_GUIDE_BLUEPRINT_JUMP_PAD_CACHE_BUST_HTML_TNT_v1"
-  data-controller-contract="SITE_GUIDE_BLUEPRINT_JUMP_PAD_CONTROLLER_TNT_v1"
+  data-version="SITE-GUIDE-G3-ROUTE-CHOICE-BOARD-CACHE-BUST"
+  data-contract="SITE_GUIDE_ROUTE_CHOICE_BOARD_CACHE_BUST_HTML_TNT_v1"
+  data-previous-contract="SITE_GUIDE_ROUTE_CHOICE_BOARD_HTML_TNT_v1"
+  data-controller-contract="SITE_GUIDE_ROUTE_CHOICE_BOARD_CONTROLLER_TNT_v1"
   data-cache-bust="true"
   data-main-menu-route="true"
   data-mirrorland-door="false"
@@ -21,6 +21,13 @@
   data-local-scratch-surface-deck="true"
   data-route-choice-board="true"
   data-native-select-planner="false"
+  data-highlight-zone-alignment="true"
+  data-route-start-zone-independent="true"
+  data-route-goal-zone-independent="true"
+  data-blueprint-zone-independent="true"
+  data-jump-surface-zone-independent="true"
+  data-generic-demo-card-exclusion-active="true"
+  data-return-to-orbit-clears-all-mute-states="true"
   data-quadrupedic-quadrilateral-traversal="structural-core-only"
   data-matrix-4x4="true"
   data-spectrum-16x16="true"
@@ -45,7 +52,7 @@
   <link rel="stylesheet" href="/assets/site-guide/site-guide.css?v=SITE_GUIDE_BLUEPRINT_JUMP_PAD_CONTROLLER_TNT_v1">
 
   <script src="/assets/manor-blueprint/manor.blueprint.js?v=SITE_GUIDE_BLUEPRINT_JUMP_PAD_HTML_TNT_v1" defer></script>
-  <script src="/assets/site-guide/site-guide.js?v=SITE_GUIDE_BLUEPRINT_JUMP_PAD_CONTROLLER_TNT_v1" defer></script>
+  <script src="/assets/site-guide/site-guide.js?v=SITE_GUIDE_ROUTE_CHOICE_BOARD_CONTROLLER_TNT_v1" defer></script>
 </head>
 
 <body>
@@ -771,8 +778,8 @@
 
               <article class="ledger-card">
                 <b>Contract</b>
-                <strong>SITE_GUIDE_ROUTE_CHOICE_BOARD_HTML_TNT_v1</strong>
-                <p>HTML renewal for the Guide Desk route planner, replacing native dropdowns with an estate-native Route Choice Board.</p>
+                <strong>SITE_GUIDE_ROUTE_CHOICE_BOARD_CACHE_BUST_HTML_TNT_v1</strong>
+                <p>HTML cache-bust renewal for loading the Route Choice Board controller and preserving highlight-zone alignment.</p>
               </article>
 
               <article class="ledger-card">
@@ -798,7 +805,7 @@
       <section class="final-band">
         <h2>Guide Desk is the flex page and jump pad.</h2>
         <p>
-          Presentation, navigation, diagnostics, and construction are separated. The blueprint has local scratch-surface destinations. The route choice board now gives visitors a native estate interface for choosing where they are and where they need to go.
+          Presentation, navigation, diagnostics, and construction are separated. The blueprint has local scratch-surface destinations. The route choice board gives visitors a native estate interface for choosing where they are and where they need to go.
         </p>
         <div class="actions">
           <a class="button gold return-to-orbit" href="#guide-orbit" data-return-to-orbit>Return to Orbit</a>
@@ -808,7 +815,7 @@
       </section>
 
       <template class="receipt" id="site-guide-receipt" data-route-receipt>
-SITE_GUIDE_ROUTE_CHOICE_BOARD_HTML_TNT_v1
+SITE_GUIDE_ROUTE_CHOICE_BOARD_CACHE_BUST_HTML_TNT_v1
 route=/site-guide/
 classification=main_menu_website_room
 mirrorland_door=false
@@ -829,6 +836,15 @@ native_select_planner=false
 visitor_position_cards=true
 destination_goal_cards=true
 recommended_path_rail=true
+controller_contract=SITE_GUIDE_ROUTE_CHOICE_BOARD_CONTROLLER_TNT_v1
+cache_bust=true
+highlight_zone_alignment=true
+route_start_zone_independent=true
+route_goal_zone_independent=true
+blueprint_zone_independent=true
+jump_surface_zone_independent=true
+generic_demo_card_exclusion_active=true
+return_to_orbit_clears_all_mute_states=true
 jump_compass=#jump-compass
 jump_guide=#jump-guide
 jump_main=#jump-main
@@ -854,7 +870,7 @@ webgl=false
     </main>
 
     <footer>
-      SITE_GUIDE_ROUTE_CHOICE_BOARD_HTML_TNT_v1 · /site-guide/ · Guide Desk · Route Choice Board HTML · Native HTML/CSS/JS.
+      SITE_GUIDE_ROUTE_CHOICE_BOARD_CACHE_BUST_HTML_TNT_v1 · /site-guide/ · Guide Desk · Route Choice Board cache-bust · Native HTML/CSS/JS.
     </footer>
   </div>
 </body>

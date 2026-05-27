@@ -1,0 +1,1825 @@
+<!doctype html>
+<html
+  lang="en"
+  data-route="/site-guide/"
+  data-page="site-guide"
+  data-version="SITE-GUIDE-G1"
+  data-contract="SITE_GUIDE_DYNAMIC_CONSTRUCTION_NARRATIVE_TNT_v1"
+  data-source-binding="MANOR_BLUEPRINT_MAIN_MENU_INSTRUCTIONS_SITE_GUIDE_CCR_v1"
+  data-main-menu-route="true"
+  data-mirrorland-door="false"
+  data-public-label="Guide Desk"
+  data-map-portal-supported="true"
+  data-return-to-orbit-local="true"
+  data-quadrupedic-traversal="active"
+  data-mobile-first-native-build="true"
+  data-project-start="late-january-2026"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-canvas="false"
+  data-webgl="false"
+>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+  <title>Guide Desk · Site Guide & Construction Narrative · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Guide Desk explains how Diamond Gate Bridge works as an estate, how Main Menu, Mirrorland Doors, Map / Portal, Return to Orbit, Frontier, Laws, Gauges, Products, and quadrupedic traversal connect."
+  >
+  <link rel="canonical" href="https://diamondgatebridge.com/site-guide/">
+  <meta name="theme-color" content="#02040b">
+
+  <link rel="stylesheet" href="/assets/manor-blueprint/manor.blueprint.css?v=SITE_GUIDE_DYNAMIC_CONSTRUCTION_NARRATIVE_TNT_v1">
+  <script src="/assets/manor-blueprint/manor.blueprint.js?v=SITE_GUIDE_DYNAMIC_CONSTRUCTION_NARRATIVE_TNT_v1" defer></script>
+
+  <style>
+    :root{
+      color-scheme:dark;
+      --bg:#02040b;
+      --panel:rgba(8,13,27,.88);
+      --panel2:rgba(13,20,40,.82);
+      --ink:#fff4d8;
+      --muted:rgba(230,238,255,.78);
+      --faint:rgba(230,238,255,.54);
+      --line:rgba(184,205,255,.18);
+      --gold:#f3c86f;
+      --gold2:#ffe8a3;
+      --blue:#8dd8ff;
+      --green:#8ff0c3;
+      --cyan:#8ff0e2;
+      --amber:#ffb45f;
+      --ruby:#ff8f9a;
+      --violet:#a88cff;
+      --max:1180px;
+      --shadow:0 34px 115px rgba(0,0,0,.48);
+      --gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
+    }
+
+    *{box-sizing:border-box}
+
+    html{
+      min-width:320px;
+      min-height:100%;
+      scroll-behavior:smooth;
+      scroll-padding-top:1rem;
+      background:var(--bg);
+      overflow-x:hidden;
+    }
+
+    body{
+      margin:0;
+      min-width:320px;
+      min-height:100vh;
+      color:var(--ink);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.5;
+      background:
+        radial-gradient(circle at 50% -10%,rgba(243,200,111,.20),transparent 32rem),
+        radial-gradient(circle at 12% 18%,rgba(36,120,255,.22),transparent 34rem),
+        radial-gradient(circle at 88% 28%,rgba(168,140,255,.14),transparent 30rem),
+        radial-gradient(circle at 50% 80%,rgba(143,240,195,.10),transparent 38rem),
+        linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:geometricPrecision;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      opacity:.25;
+      background-image:
+        linear-gradient(rgba(141,216,255,.050) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.050) 1px,transparent 1px),
+        radial-gradient(circle at 18% 20%,rgba(255,255,255,.20) 0 1px,transparent 1.55px),
+        radial-gradient(circle at 80% 24%,rgba(243,200,111,.18) 0 1px,transparent 1.55px),
+        radial-gradient(circle at 42% 78%,rgba(168,140,255,.16) 0 1px,transparent 1.55px);
+      background-size:54px 54px,54px 54px,260px 300px,330px 290px,290px 340px;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.96),rgba(0,0,0,.62) 72%,rgba(0,0,0,.28));
+    }
+
+    a{color:inherit;text-decoration:none}
+    a:focus-visible,
+    button:focus-visible,
+    select:focus-visible,
+    summary:focus-visible{
+      outline:2px solid var(--gold2);
+      outline-offset:4px;
+    }
+
+    .skip{
+      position:absolute;
+      left:-999px;
+      top:8px;
+      z-index:50;
+      border-radius:999px;
+      padding:.72rem 1rem;
+      color:#060811;
+      background:var(--gold2);
+      font-weight:950;
+    }
+
+    .skip:focus{left:8px}
+
+    .shell{
+      position:relative;
+      z-index:2;
+      width:min(var(--max),calc(100% - 28px));
+      margin:0 auto;
+      padding:max(20px,env(safe-area-inset-top)) 0 max(44px,env(safe-area-inset-bottom));
+    }
+
+    .topbar{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:1rem;
+      padding:.65rem 0 1rem;
+    }
+
+    .brand{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:.85rem;
+      min-width:0;
+    }
+
+    .brand-mark{
+      width:4rem;
+      height:4rem;
+      display:grid;
+      place-items:center;
+      clip-path:var(--gem);
+      transform:rotate(45deg);
+      border:1px solid rgba(243,200,111,.44);
+      background:
+        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.26) 21% 23%,transparent 24%),
+        conic-gradient(from 45deg,rgba(255,255,255,.28),rgba(36,120,255,.24),rgba(1,15,60,.62),rgba(143,101,255,.22),rgba(255,255,255,.28)),
+        linear-gradient(145deg,rgba(9,44,112,.95),rgba(5,8,20,.98));
+      box-shadow:0 0 2rem rgba(36,120,255,.28),0 1.2rem 2.8rem rgba(0,0,0,.46),inset 0 1px 0 rgba(255,255,255,.16);
+    }
+
+    .brand-mark span{
+      transform:rotate(-45deg);
+      font-weight:950;
+      letter-spacing:.04em;
+      color:rgba(255,244,216,.98);
+      text-shadow:0 2px 10px rgba(0,0,0,.85);
+    }
+
+    .brand-copy{
+      display:grid;
+      gap:.1rem;
+      min-width:0;
+    }
+
+    .brand-copy span{
+      color:var(--muted);
+      font-size:.70rem;
+      font-weight:950;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .brand-copy strong{
+      font-size:clamp(1.05rem,3vw,1.55rem);
+      line-height:1;
+      letter-spacing:-.04em;
+    }
+
+    .quick-nav{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:.45rem;
+    }
+
+    .quick-nav a,
+    .button,
+    .orbit-chip{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:2.35rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      padding:.52rem .78rem;
+      color:rgba(241,246,255,.88);
+      background:rgba(255,255,255,.045);
+      font-size:.66rem;
+      font-weight:950;
+      letter-spacing:.075em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .quick-nav a:hover,
+    .button:hover,
+    .orbit-chip:hover{
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.58);
+      background:rgba(243,200,111,.075);
+    }
+
+    .button.gold{
+      border-color:rgba(243,200,111,.86);
+      color:#060811;
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+      box-shadow:0 .85rem 1.8rem rgba(243,200,111,.13);
+    }
+
+    .button.blue{border-color:rgba(141,216,255,.38);background:rgba(141,216,255,.07)}
+    .button.green{border-color:rgba(143,240,195,.38);background:rgba(143,240,195,.07)}
+    .button.violet{border-color:rgba(168,140,255,.38);background:rgba(168,140,255,.07)}
+
+    .hero{
+      position:relative;
+      min-height:clamp(34rem,60vw,44rem);
+      display:grid;
+      align-content:center;
+      gap:1rem;
+      border:1px solid var(--line);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
+      padding:clamp(1.2rem,5vw,3.2rem);
+      background:
+        radial-gradient(circle at 16% 4%,rgba(243,200,111,.14),transparent 22rem),
+        radial-gradient(circle at 86% 20%,rgba(141,216,255,.12),transparent 28rem),
+        radial-gradient(circle at 50% 85%,rgba(168,140,255,.12),transparent 30rem),
+        linear-gradient(180deg,rgba(255,255,255,.070),rgba(255,255,255,.024)),
+        var(--panel);
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
+      isolation:isolate;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      right:clamp(-4rem,2vw,2rem);
+      top:50%;
+      z-index:0;
+      width:clamp(14rem,34vw,25rem);
+      height:clamp(14rem,34vw,25rem);
+      transform:translateY(-50%) rotate(45deg);
+      border:1px solid rgba(243,200,111,.18);
+      border-radius:2.8rem;
+      background:
+        linear-gradient(90deg,rgba(141,216,255,.11) 1px,transparent 1px),
+        linear-gradient(rgba(141,216,255,.11) 1px,transparent 1px),
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.14),transparent 58%),
+        rgba(255,255,255,.020);
+      background-size:28px 28px,28px 28px,auto,auto;
+      opacity:.54;
+      pointer-events:none;
+    }
+
+    .kicker{
+      position:relative;
+      z-index:2;
+      width:fit-content;
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      padding:.55rem .86rem;
+      color:rgba(230,238,255,.88);
+      background:rgba(255,255,255,.04);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .kicker::before{
+      content:"";
+      width:.68rem;
+      height:.68rem;
+      border-radius:999px;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,.98) 0 .12rem,transparent .14rem),
+        radial-gradient(circle at 50% 50%,var(--blue),transparent 70%);
+      box-shadow:0 0 .65rem rgba(255,255,255,.30),0 0 1.1rem rgba(141,216,255,.46);
+    }
+
+    h1{
+      position:relative;
+      z-index:2;
+      max-width:980px;
+      margin:0;
+      font-size:clamp(3.1rem,10.8vw,7.25rem);
+      line-height:.84;
+      letter-spacing:-.105em;
+      text-wrap:balance;
+    }
+
+    h2{
+      margin:0;
+      color:var(--gold);
+      font-size:clamp(1.35rem,4.4vw,2.45rem);
+      line-height:1;
+      letter-spacing:-.055em;
+      text-wrap:balance;
+    }
+
+    h3{
+      margin:0;
+      color:var(--ink);
+      font-size:clamp(1.2rem,3vw,1.55rem);
+      line-height:1.05;
+      letter-spacing:-.04em;
+    }
+
+    p{
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(.96rem,2.5vw,1.10rem);
+      line-height:1.55;
+    }
+
+    .lead{
+      position:relative;
+      z-index:2;
+      max-width:900px;
+    }
+
+    .hero-actions,
+    .actions{
+      position:relative;
+      z-index:2;
+      display:flex;
+      flex-wrap:wrap;
+      gap:.55rem;
+      margin-top:.15rem;
+    }
+
+    .hero-proof{
+      position:relative;
+      z-index:2;
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.7rem;
+      margin-top:1rem;
+    }
+
+    .proof-card{
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:1rem;
+      padding:.85rem;
+      background:
+        radial-gradient(circle at 16% 0%,rgba(141,216,255,.09),transparent 10rem),
+        rgba(255,255,255,.032);
+    }
+
+    .proof-card b{
+      display:block;
+      color:var(--gold);
+      font-size:.62rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .proof-card strong{
+      display:block;
+      margin-top:.22rem;
+      color:var(--ink);
+      font-size:1rem;
+      line-height:1.05;
+    }
+
+    .panel{
+      margin-top:1rem;
+      border:1px solid var(--line);
+      border-radius:clamp(1.15rem,4vw,1.85rem);
+      background:
+        radial-gradient(circle at 12% 0%,rgba(141,216,255,.095),transparent 24rem),
+        radial-gradient(circle at 92% 22%,rgba(168,140,255,.095),transparent 26rem),
+        linear-gradient(180deg,rgba(255,255,255,.060),rgba(255,255,255,.022)),
+        var(--panel);
+      box-shadow:0 1.5rem 4rem rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.075);
+      overflow:hidden;
+    }
+
+    .panel-inner{
+      display:grid;
+      gap:1rem;
+      padding:clamp(1rem,3vw,1.35rem);
+    }
+
+    .section-head{
+      display:grid;
+      gap:.42rem;
+      max-width:900px;
+    }
+
+    .guide-orbit{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:.75rem;
+    }
+
+    .orbit-card{
+      position:relative;
+      min-height:9.25rem;
+      display:grid;
+      align-content:start;
+      gap:.5rem;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:1.15rem;
+      padding:.95rem;
+      background:
+        radial-gradient(circle at 16% 0%,var(--orbit-bg,rgba(243,200,111,.08)),transparent 11rem),
+        rgba(255,255,255,.032);
+      overflow:hidden;
+    }
+
+    .orbit-card::before{
+      content:attr(data-symbol);
+      width:2.35rem;
+      height:2.35rem;
+      display:grid;
+      place-items:center;
+      border:1px solid color-mix(in srgb,var(--orbit-accent,var(--gold)),transparent 45%);
+      border-radius:999px;
+      color:var(--orbit-accent,var(--gold));
+      background:color-mix(in srgb,var(--orbit-accent,var(--gold)),transparent 90%);
+      font-weight:950;
+      box-shadow:0 0 1rem color-mix(in srgb,var(--orbit-accent,var(--gold)),transparent 82%);
+    }
+
+    .orbit-card[data-kind="map"]{--orbit-accent:var(--green);--orbit-bg:rgba(143,240,195,.10)}
+    .orbit-card[data-kind="main"]{--orbit-accent:var(--gold);--orbit-bg:rgba(243,200,111,.10)}
+    .orbit-card[data-kind="mirror"]{--orbit-accent:var(--blue);--orbit-bg:rgba(141,216,255,.10)}
+    .orbit-card[data-kind="orbit"]{--orbit-accent:var(--amber);--orbit-bg:rgba(255,180,95,.10)}
+    .orbit-card[data-kind="guide"]{--orbit-accent:var(--violet);--orbit-bg:rgba(168,140,255,.10)}
+
+    .orbit-card b{
+      color:var(--orbit-accent,var(--gold));
+      font-size:.64rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .orbit-card strong{
+      color:var(--ink);
+      font-size:1.02rem;
+      line-height:1.08;
+    }
+
+    .orbit-card p{
+      font-size:.86rem;
+      line-height:1.42;
+    }
+
+    .schematic-board{
+      display:grid;
+      grid-template-columns:minmax(0,.95fr) minmax(18rem,.55fr);
+      gap:1rem;
+      align-items:stretch;
+    }
+
+    .estate-schematic{
+      position:relative;
+      min-height:31rem;
+      border:1px solid rgba(184,205,255,.16);
+      border-radius:1.25rem;
+      padding:1rem;
+      background:
+        linear-gradient(rgba(141,216,255,.055) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.055) 1px,transparent 1px),
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.10),transparent 22rem),
+        rgba(1,5,16,.58);
+      background-size:42px 42px,42px 42px,auto,auto;
+      overflow:hidden;
+    }
+
+    .estate-ring{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:min(72%,26rem);
+      aspect-ratio:1;
+      transform:translate(-50%,-50%);
+      border:1px solid rgba(243,200,111,.18);
+      border-radius:999px;
+      box-shadow:inset 0 0 3rem rgba(141,216,255,.05),0 0 3rem rgba(36,120,255,.08);
+    }
+
+    .estate-core{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:9rem;
+      aspect-ratio:1;
+      display:grid;
+      place-items:center;
+      transform:translate(-50%,-50%) rotate(45deg);
+      clip-path:var(--gem);
+      border:1px solid rgba(243,200,111,.42);
+      background:
+        radial-gradient(circle at 50% 30%,rgba(255,255,255,.22),transparent 44%),
+        linear-gradient(145deg,rgba(243,200,111,.30),rgba(4,9,28,.92));
+      box-shadow:0 0 2.2rem rgba(243,200,111,.16);
+    }
+
+    .estate-core span{
+      transform:rotate(-45deg);
+      display:grid;
+      gap:.12rem;
+      text-align:center;
+    }
+
+    .estate-core b{
+      color:var(--gold2);
+      font-size:.70rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .estate-core strong{
+      color:var(--ink);
+      font-size:1.05rem;
+      line-height:1;
+    }
+
+    .schematic-node{
+      position:absolute;
+      left:calc(var(--x) * 1%);
+      top:calc(var(--y) * 1%);
+      width:clamp(7.8rem,16vw,10.2rem);
+      min-height:5.2rem;
+      transform:translate(-50%,-50%);
+      display:grid;
+      gap:.18rem;
+      border:1px solid color-mix(in srgb,var(--node,var(--gold)),transparent 56%);
+      border-radius:1rem;
+      padding:.62rem;
+      background:
+        radial-gradient(circle at 20% 0%,color-mix(in srgb,var(--node,var(--gold)),transparent 86%),transparent 8rem),
+        rgba(2,7,18,.82);
+      box-shadow:0 .9rem 1.8rem rgba(0,0,0,.28),0 0 1rem color-mix(in srgb,var(--node,var(--gold)),transparent 90%);
+    }
+
+    .schematic-node::before{
+      content:attr(data-symbol);
+      color:var(--node,var(--gold));
+      font-size:1.05rem;
+      line-height:1;
+    }
+
+    .schematic-node b{
+      color:var(--node,var(--gold));
+      font-size:.52rem;
+      letter-spacing:.11em;
+      text-transform:uppercase;
+    }
+
+    .schematic-node strong{
+      color:var(--ink);
+      font-size:.82rem;
+      line-height:1.02;
+    }
+
+    .schematic-node span{
+      color:rgba(230,238,255,.65);
+      font-size:.62rem;
+      line-height:1.12;
+    }
+
+    .schematic-node.north{--node:var(--blue);--x:50;--y:9}
+    .schematic-node.east{--node:var(--violet);--x:86;--y:50}
+    .schematic-node.south{--node:var(--green);--x:50;--y:91}
+    .schematic-node.west{--node:var(--amber);--x:14;--y:50}
+    .schematic-node.center{--node:var(--gold);--x:50;--y:50}
+
+    .schematic-notes{
+      display:grid;
+      gap:.75rem;
+    }
+
+    .note-card{
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:1rem;
+      padding:.9rem;
+      background:rgba(255,255,255,.035);
+    }
+
+    .note-card b{
+      color:var(--gold);
+      font-size:.64rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .note-card p{
+      margin-top:.3rem;
+      font-size:.9rem;
+    }
+
+    .lens-tabs{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.5rem;
+      padding:.35rem;
+      border:1px solid rgba(184,205,255,.15);
+      border-radius:1.25rem;
+      background:rgba(255,255,255,.035);
+    }
+
+    .lens-button{
+      min-height:2.45rem;
+      border:1px solid transparent;
+      border-radius:999px;
+      padding:.55rem .82rem;
+      color:rgba(230,238,255,.84);
+      background:transparent;
+      font:inherit;
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      cursor:pointer;
+    }
+
+    .lens-button[data-active="true"]{
+      color:#06100b;
+      border-color:rgba(243,200,111,.88);
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+    }
+
+    .lens-panel{display:none}
+    .lens-panel[data-active="true"]{display:grid}
+
+    .traversal-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.8rem;
+    }
+
+    .traversal-card{
+      --leg:var(--gold);
+      min-height:14rem;
+      display:grid;
+      gap:.55rem;
+      align-content:start;
+      border:1px solid color-mix(in srgb,var(--leg),transparent 70%);
+      border-radius:1.15rem;
+      padding:1rem;
+      background:
+        radial-gradient(circle at 20% 0%,color-mix(in srgb,var(--leg),transparent 88%),transparent 12rem),
+        rgba(255,255,255,.032);
+    }
+
+    .traversal-card[data-leg="north"]{--leg:var(--blue)}
+    .traversal-card[data-leg="east"]{--leg:var(--violet)}
+    .traversal-card[data-leg="south"]{--leg:var(--green)}
+    .traversal-card[data-leg="west"]{--leg:var(--amber)}
+
+    .traversal-card span{
+      width:2.55rem;
+      height:2.55rem;
+      display:grid;
+      place-items:center;
+      border:1px solid color-mix(in srgb,var(--leg),transparent 52%);
+      border-radius:999px;
+      color:var(--leg);
+      background:color-mix(in srgb,var(--leg),transparent 91%);
+      font-size:1.2rem;
+      font-weight:950;
+    }
+
+    .traversal-card b{
+      color:var(--leg);
+      font-size:.64rem;
+      font-weight:950;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .traversal-card strong{
+      color:var(--ink);
+      font-size:1.05rem;
+      line-height:1.06;
+    }
+
+    .traversal-card p{
+      font-size:.88rem;
+      line-height:1.42;
+    }
+
+    .compare-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.8rem;
+    }
+
+    .compare-card{
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:1.15rem;
+      padding:1rem;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(141,216,255,.09),transparent 14rem),
+        rgba(255,255,255,.035);
+    }
+
+    .compare-card[data-type="global"]{border-color:rgba(143,240,195,.28)}
+    .compare-card[data-type="local"]{border-color:rgba(255,180,95,.28)}
+
+    .compare-card b{
+      color:var(--gold);
+      font-size:.66rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .compare-card ul{
+      margin:.65rem 0 0;
+      padding-left:1.1rem;
+      color:var(--muted);
+    }
+
+    .compare-card li{margin:.35rem 0}
+
+    .systems-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.8rem;
+    }
+
+    .system-card{
+      --sys:var(--gold);
+      position:relative;
+      min-height:11rem;
+      display:grid;
+      gap:.55rem;
+      align-content:start;
+      border:1px solid color-mix(in srgb,var(--sys),transparent 72%);
+      border-radius:1.15rem;
+      padding:1rem;
+      background:
+        radial-gradient(circle at 12% 0%,color-mix(in srgb,var(--sys),transparent 89%),transparent 12rem),
+        rgba(255,255,255,.032);
+      overflow:hidden;
+    }
+
+    .system-card::before{
+      content:attr(data-symbol);
+      color:var(--sys);
+      font-size:1.15rem;
+      line-height:1;
+    }
+
+    .system-card b{
+      color:var(--sys);
+      font-size:.64rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .system-card strong{
+      color:var(--ink);
+      font-size:1.04rem;
+      line-height:1.06;
+    }
+
+    .system-card p{
+      font-size:.88rem;
+      line-height:1.42;
+    }
+
+    .system-card.laws{--sys:var(--ruby)}
+    .system-card.gauges{--sys:var(--green)}
+    .system-card.products{--sys:var(--gold2)}
+    .system-card.frontier{--sys:var(--amber)}
+    .system-card.mirrorland{--sys:var(--blue)}
+    .system-card.audralia{--sys:var(--violet)}
+
+    .route-planner{
+      display:grid;
+      grid-template-columns:minmax(0,.55fr) minmax(0,1fr);
+      gap:1rem;
+      align-items:start;
+    }
+
+    .planner-controls{
+      display:grid;
+      gap:.75rem;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:1.15rem;
+      padding:1rem;
+      background:rgba(255,255,255,.032);
+    }
+
+    .field{
+      display:grid;
+      gap:.35rem;
+    }
+
+    .field label{
+      color:var(--gold);
+      font-size:.62rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .field select{
+      width:100%;
+      min-height:2.65rem;
+      border:1px solid rgba(184,205,255,.18);
+      border-radius:.9rem;
+      padding:.55rem .7rem;
+      color:var(--ink);
+      background:#070d1d;
+      font:inherit;
+    }
+
+    .planner-output{
+      display:grid;
+      gap:.75rem;
+    }
+
+    .path-rail{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.45rem;
+    }
+
+    .path-step{
+      display:inline-flex;
+      align-items:center;
+      gap:.4rem;
+      border:1px solid rgba(243,200,111,.28);
+      border-radius:999px;
+      padding:.48rem .7rem;
+      color:rgba(255,244,216,.92);
+      background:rgba(243,200,111,.06);
+      font-size:.72rem;
+      font-weight:900;
+    }
+
+    .path-step::before{
+      content:"◆";
+      color:var(--gold);
+      font-size:.72rem;
+    }
+
+    .timeline{
+      display:grid;
+      gap:.8rem;
+    }
+
+    .timeline-item{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:.8rem;
+      align-items:start;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:1rem;
+      padding:.9rem;
+      background:rgba(255,255,255,.032);
+    }
+
+    .timeline-item time{
+      width:5.2rem;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(243,200,111,.34);
+      border-radius:999px;
+      padding:.45rem;
+      color:var(--gold);
+      background:rgba(243,200,111,.07);
+      font-size:.62rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .timeline-item strong{
+      display:block;
+      color:var(--ink);
+      line-height:1.08;
+    }
+
+    .timeline-item p{
+      margin-top:.25rem;
+      font-size:.88rem;
+    }
+
+    .start-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.75rem;
+    }
+
+    .start-card{
+      display:grid;
+      gap:.5rem;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:1rem;
+      padding:.95rem;
+      background:rgba(255,255,255,.032);
+    }
+
+    .start-card b{
+      color:var(--gold);
+      font-size:.62rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .start-card strong{
+      color:var(--ink);
+      font-size:1.02rem;
+      line-height:1.06;
+    }
+
+    .start-card p{
+      font-size:.86rem;
+      line-height:1.42;
+    }
+
+    .final-band{
+      margin-top:1rem;
+      display:grid;
+      gap:.85rem;
+      border:1px solid rgba(143,240,195,.28);
+      border-radius:1.4rem;
+      padding:1rem;
+      background:
+        radial-gradient(circle at 14% 0%,rgba(143,240,195,.11),transparent 18rem),
+        radial-gradient(circle at 86% 22%,rgba(243,200,111,.10),transparent 20rem),
+        rgba(255,255,255,.032);
+    }
+
+    .receipt{
+      display:none!important;
+    }
+
+    footer{
+      padding:1.35rem 0 .4rem;
+      color:var(--faint);
+      text-align:center;
+      font-size:.72rem;
+    }
+
+    @media (max-width:1040px){
+      .hero-proof,
+      .guide-orbit,
+      .traversal-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .schematic-board,
+      .route-planner{
+        grid-template-columns:1fr;
+      }
+
+      .systems-grid,
+      .start-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+    }
+
+    @media (max-width:720px){
+      .shell{width:min(100% - 22px,var(--max))}
+      .topbar{grid-template-columns:1fr}
+      .quick-nav{justify-content:flex-start}
+      .hero{min-height:32rem;padding:1rem}
+      h1{font-size:clamp(3rem,17vw,5rem)}
+      .hero-actions,
+      .actions{display:grid}
+      .button{width:100%}
+      .hero-proof,
+      .guide-orbit,
+      .traversal-grid,
+      .compare-grid,
+      .systems-grid,
+      .start-grid{
+        grid-template-columns:1fr;
+      }
+      .estate-schematic{min-height:38rem}
+      .estate-core{width:7.6rem}
+      .schematic-node{
+        width:min(9rem,38vw);
+      }
+      .schematic-node.north{--x:50;--y:9}
+      .schematic-node.east{--x:74;--y:38}
+      .schematic-node.west{--x:26;--y:38}
+      .schematic-node.south{--x:50;--y:89}
+      .schematic-node.center{--x:50;--y:57}
+      .lens-tabs{display:grid}
+      .lens-button{width:100%}
+      .timeline-item{grid-template-columns:1fr}
+      .timeline-item time{width:fit-content}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *,
+      *::before,
+      *::after{
+        scroll-behavior:auto!important;
+        transition-duration:.01ms!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip" href="#guide-main">Skip to Guide Desk</a>
+
+  <div class="shell">
+    <header class="topbar" aria-label="Guide Desk header">
+      <a class="brand" href="/site-guide/" aria-label="Guide Desk">
+        <span class="brand-mark" aria-hidden="true"><span>GD</span></span>
+        <span class="brand-copy">
+          <span>Diamond Gate Bridge · Website Construction Narrative</span>
+          <strong>Guide Desk</strong>
+        </span>
+      </a>
+
+      <nav class="quick-nav" aria-label="Primary guide routes">
+        <a href="/">Compass</a>
+        <a href="/showroom/">Atrium</a>
+        <a href="/showroom/globe/">Atlas Study</a>
+        <a href="/explore/frontier/">Frontier Yard</a>
+        <a href="/gauges/">The Lab</a>
+      </nav>
+    </header>
+
+    <main id="guide-main">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="kicker">Guide Desk · Site Guide & Construction Narrative</div>
+        <h1 id="page-title">How to read Diamond Gate Bridge.</h1>
+        <h2>This website is built like an estate, not a flat directory.</h2>
+        <p class="lead">
+          Guide Desk explains how the public website, Mirrorland, Map / Portal, Return to Orbit, Frontier, Products, Laws, Gauges, Audralia, and quadrupedic traversal connect. The goal is simple: visitors should understand where they are, what contains them, where they can go next, and why each path exists.
+        </p>
+
+        <div class="hero-actions">
+          <a class="button gold" href="#guide-orbit">Open Guide Orbit</a>
+          <a class="button blue" href="#estate-model">View Estate Model</a>
+          <a class="button green" href="#quadrupedic-traversal">Study Quadrupedic Traversal</a>
+          <a class="button violet" href="#route-planner">Use Route Planner</a>
+        </div>
+
+        <div class="hero-proof" aria-label="Guide Desk proof points">
+          <div class="proof-card">
+            <b>Navigation</b>
+            <strong>Main Menu and Mirrorland Doors are separated.</strong>
+          </div>
+          <div class="proof-card">
+            <b>Movement</b>
+            <strong>Return to Orbit is local page movement.</strong>
+          </div>
+          <div class="proof-card">
+            <b>Build</b>
+            <strong>Mobile-first, native-code construction.</strong>
+          </div>
+          <div class="proof-card">
+            <b>Design</b>
+            <strong>Four-leg traversal organizes the site.</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="guide-orbit" aria-labelledby="guide-orbit-title">
+        <div class="panel-inner">
+          <div class="section-head">
+            <div class="kicker">Guide Orbit</div>
+            <h2 id="guide-orbit-title">Five navigation ideas control the whole experience.</h2>
+            <p>
+              These are not interchangeable. Each one has a different job. Confusing them creates a sitemap. Separating them creates an estate.
+            </p>
+          </div>
+
+          <div class="guide-orbit" aria-label="Five guide concepts">
+            <article class="orbit-card" data-kind="map" data-symbol="◆">
+              <b>Map / Portal</b>
+              <strong>Global estate navigation.</strong>
+              <p>The floating Map / Portal opens the Mirrorland estate map from inside the experience.</p>
+            </article>
+
+            <article class="orbit-card" data-kind="main" data-symbol="⌂">
+              <b>Main Menu</b>
+              <strong>Exit to the regular website.</strong>
+              <p>Main Menu offers regular website rooms only, even when opened from inside Mirrorland.</p>
+            </article>
+
+            <article class="orbit-card" data-kind="mirror" data-symbol="◎">
+              <b>Mirrorland Doors</b>
+              <strong>Immersive room navigation.</strong>
+              <p>Mirrorland Doors use estate-room identity: Atrium, Atlas Study, ZIONTS Room, and more.</p>
+            </article>
+
+            <article class="orbit-card" data-kind="orbit" data-symbol="↩">
+              <b>Return to Orbit</b>
+              <strong>Local page movement.</strong>
+              <p>Return to Orbit goes back to the current page’s own category orbit, gem orbit, or node field.</p>
+            </article>
+
+            <article class="orbit-card" data-kind="guide" data-symbol="✦">
+              <b>Guide Desk</b>
+              <strong>The construction narrative.</strong>
+              <p>This page explains how everything connects without exposing unnecessary builder clutter.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="estate-model" aria-labelledby="estate-title">
+        <div class="panel-inner">
+          <div class="section-head">
+            <div class="kicker">Estate Model</div>
+            <h2 id="estate-title">The site is organized by place, function, and movement.</h2>
+            <p>
+              A normal website asks, “What page do you want?” Diamond Gate Bridge asks, “Where are you, what area are you inside, what kind of value are you looking for, and what movement makes sense next?”
+            </p>
+          </div>
+
+          <div class="schematic-board">
+            <div class="estate-schematic" aria-label="Diamond Gate Bridge estate schematic">
+              <div class="estate-ring" aria-hidden="true"></div>
+
+              <div class="schematic-node north" data-symbol="N">
+                <b>North</b>
+                <strong>Structure</strong>
+                <span>Compass, laws, orientation, known-system clarity.</span>
+              </div>
+
+              <div class="schematic-node east" data-symbol="E">
+                <b>East</b>
+                <strong>Expression</strong>
+                <span>Mirrorland, worlds, story, visible imagination.</span>
+              </div>
+
+              <div class="schematic-node south" data-symbol="S">
+                <b>South</b>
+                <strong>Proof</strong>
+                <span>The Lab, gauges, measurement, readiness checks.</span>
+              </div>
+
+              <div class="schematic-node west" data-symbol="W">
+                <b>West</b>
+                <strong>Application</strong>
+                <span>Products, Frontier, community, deployment.</span>
+              </div>
+
+              <div class="estate-core">
+                <span>
+                  <b>Core</b>
+                  <strong>Estate</strong>
+                </span>
+              </div>
+            </div>
+
+            <div class="schematic-notes">
+              <article class="note-card">
+                <b>Regular website</b>
+                <p>Compass, Door, Home, Laws, Governance, The Lab, Products, Host Portrait, and Guide Desk are ordinary public website rooms.</p>
+              </article>
+
+              <article class="note-card">
+                <b>Mirrorland</b>
+                <p>Atrium, Atlas Study, ZIONTS Room, Audralia Conservatory, Control Cockpit, Frontier Workshop Yard, and story/world rooms belong to the immersive estate layer.</p>
+              </article>
+
+              <article class="note-card">
+                <b>Key rule</b>
+                <p>File path is not room identity. Room identity is not estate location. Estate location is not value category. Value category is not navigation action.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="navigation-systems" aria-labelledby="nav-title">
+        <div class="panel-inner">
+          <div class="section-head">
+            <div class="kicker">Navigation Systems</div>
+            <h2 id="nav-title">Main Menu, Mirrorland Doors, and Return to Orbit do different jobs.</h2>
+            <p>
+              This separation is what makes the experience understandable on mobile. The visitor can always leave Mirrorland, move inside Mirrorland, or return to the active page’s local orbit without confusing those actions.
+            </p>
+          </div>
+
+          <div class="compare-grid">
+            <article class="compare-card" data-type="global">
+              <b>Map / Portal</b>
+              <h3>Global Mirrorland navigation</h3>
+              <ul>
+                <li>Opens the estate-room map.</li>
+                <li>Shows where the visitor is inside Mirrorland.</li>
+                <li>Separates Inside, Nearby, Deeper, Connected, and Return.</li>
+                <li>Uses visitor-facing room names instead of builder paths.</li>
+              </ul>
+            </article>
+
+            <article class="compare-card" data-type="local">
+              <b>Return to Orbit</b>
+              <h3>Local page navigation</h3>
+              <ul>
+                <li>Returns to the current page’s orbit, category field, gem field, node field, or section system.</li>
+                <li>Does not open the global estate map.</li>
+                <li>Helps the visitor re-center within the page they are already reading.</li>
+                <li>Works like a page-level orientation reset.</li>
+              </ul>
+            </article>
+          </div>
+
+          <div class="lens-tabs" role="tablist" aria-label="Navigation explanation tabs">
+            <button class="lens-button" type="button" data-lens-button="main" data-active="true">Main Menu</button>
+            <button class="lens-button" type="button" data-lens-button="mirrorland">Mirrorland Doors</button>
+            <button class="lens-button" type="button" data-lens-button="orbit">Return to Orbit</button>
+            <button class="lens-button" type="button" data-lens-button="identity">Room Identity</button>
+          </div>
+
+          <section class="lens-panel" data-lens-panel="main" data-active="true">
+            <div class="note-card">
+              <b>Main Menu</b>
+              <h3>Exit board to the regular website.</h3>
+              <p>Main Menu shows regular website rooms only: Compass Desk, Front Door, Main Hall, Law Library, Council Room, The Lab, Product Gallery, Host Portrait, and Guide Desk. It can acknowledge that the visitor is currently inside Mirrorland, but its selectable options are regular website routes.</p>
+            </div>
+          </section>
+
+          <section class="lens-panel" data-lens-panel="mirrorland">
+            <div class="note-card">
+              <b>Mirrorland Doors</b>
+              <h3>Immersive estate-room navigation.</h3>
+              <p>Mirrorland Doors show the estate as rooms and places: Atrium, Atlas Study, ZIONTS Room, Audralia Conservatory, Audralia Worldroom, Control Cockpit, Frontier Workshop Yard, and story rooms. This is not a file tree.</p>
+            </div>
+          </section>
+
+          <section class="lens-panel" data-lens-panel="orbit">
+            <div class="note-card">
+              <b>Return to Orbit</b>
+              <h3>Local page re-centering.</h3>
+              <p>Return to Orbit belongs to the page you are already on. If a page has a gem orbit, category orbit, node field, or section field, Return to Orbit sends the reader back there. It is intentionally different from the global Map / Portal.</p>
+            </div>
+          </section>
+
+          <section class="lens-panel" data-lens-panel="identity">
+            <div class="note-card">
+              <b>Estate Room Identity</b>
+              <h3>Room labels explain meaning.</h3>
+              <p>The route `/showroom/globe/earth/` displays as ZIONTS Room, pronounced Zience. The route path is a builder address. The room name is the visitor-facing identity.</p>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="panel" id="quadrupedic-traversal" aria-labelledby="quad-title">
+        <div class="panel-inner">
+          <div class="section-head">
+            <div class="kicker">Quadrupedic Traversal</div>
+            <h2 id="quad-title">The design moves on four coordinated legs.</h2>
+            <p>
+              Quadrupedic traversal is the design logic that keeps the estate from becoming a pile of unrelated pages. Each leg answers a different visitor question.
+            </p>
+          </div>
+
+          <div class="traversal-grid">
+            <article class="traversal-card" data-leg="north">
+              <span>N</span>
+              <b>North</b>
+              <strong>Orientation / structure / law</strong>
+              <p>North answers: “What is this? What governs it? How do I stay oriented?” It carries Compass, Laws, and structure.</p>
+            </article>
+
+            <article class="traversal-card" data-leg="east">
+              <span>E</span>
+              <b>East</b>
+              <strong>Story / worlds / visible expression</strong>
+              <p>East answers: “What does this become when it is experienced?” It carries Mirrorland, Atlas Study, ZIONTS, Audralia, and story-world expression.</p>
+            </article>
+
+            <article class="traversal-card" data-leg="south">
+              <span>S</span>
+              <b>South</b>
+              <strong>Proof / gauges / measurement</strong>
+              <p>South answers: “How do we know what is working?” It carries The Lab, readiness, status, proof, and measurement.</p>
+            </article>
+
+            <article class="traversal-card" data-leg="west">
+              <span>W</span>
+              <b>West</b>
+              <strong>Products / application / deployment</strong>
+              <p>West answers: “How does this become useful?” It carries Products, Frontier Workshop Yard, community application, and practical deployment.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="systems-connect" aria-labelledby="systems-title">
+        <div class="panel-inner">
+          <div class="section-head">
+            <div class="kicker">How Systems Connect</div>
+            <h2 id="systems-title">Each major area has a job in the estate.</h2>
+            <p>
+              The site becomes clearer when every area is read by its function, not by its file path.
+            </p>
+          </div>
+
+          <div class="systems-grid">
+            <article class="system-card laws" data-symbol="§">
+              <b>Laws</b>
+              <strong>Boundary and coherence.</strong>
+              <p>Laws keep the estate from expanding without discipline, consequence, or claim boundaries.</p>
+            </article>
+
+            <article class="system-card gauges" data-symbol="⚙">
+              <b>The Lab</b>
+              <strong>Measurement and readiness.</strong>
+              <p>The Lab checks status, proof, route health, readiness, and whether visible claims have support.</p>
+            </article>
+
+            <article class="system-card products" data-symbol="◈">
+              <b>Products</b>
+              <strong>Usable public value.</strong>
+              <p>Products turn ideas into tools, games, offers, supports, and practical objects.</p>
+            </article>
+
+            <article class="system-card frontier" data-symbol="⚒">
+              <b>Frontier</b>
+              <strong>Applied future systems.</strong>
+              <p>Frontier Workshop Yard pressure-tests energy, water, waste, infrastructure, lattice, and applied science ideas.</p>
+            </article>
+
+            <article class="system-card mirrorland" data-symbol="◎">
+              <b>Mirrorland</b>
+              <strong>Immersive context.</strong>
+              <p>Mirrorland lets the visitor enter the estate as a living navigation experience rather than a flat menu.</p>
+            </article>
+
+            <article class="system-card audralia" data-symbol="✦">
+              <b>Audralia</b>
+              <strong>Constructive world development.</strong>
+              <p>Audralia provides a living future-world context for frontier systems, worldbuilding, and inspection.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="route-planner" aria-labelledby="planner-title">
+        <div class="panel-inner">
+          <div class="section-head">
+            <div class="kicker">Dynamic Route Planner</div>
+            <h2 id="planner-title">Choose a goal and see the clean path.</h2>
+            <p>
+              This planner shows how the estate reduces confusion: every destination has a placement logic.
+            </p>
+          </div>
+
+          <div class="route-planner">
+            <form class="planner-controls" aria-label="Guide route planner">
+              <div class="field">
+                <label for="start-select">Starting posture</label>
+                <select id="start-select" data-start-select>
+                  <option value="new">I am new to the site</option>
+                  <option value="mirrorland">I am inside Mirrorland</option>
+                  <option value="proof">I need proof or readiness</option>
+                  <option value="frontier">I want applied future systems</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="goal-select">Goal</label>
+                <select id="goal-select" data-goal-select>
+                  <option value="orientation">Understand the whole website</option>
+                  <option value="worlds">Enter the world / story layer</option>
+                  <option value="proof">Check proof and measurement</option>
+                  <option value="frontier">Study Frontier systems</option>
+                  <option value="products">Find usable public value</option>
+                </select>
+              </div>
+            </form>
+
+            <div class="planner-output" aria-live="polite">
+              <div class="note-card">
+                <b data-plan-kicker>Recommended path</b>
+                <h3 data-plan-title>Guide Desk → Compass Desk → Atrium</h3>
+                <p data-plan-copy>Start with Guide Desk, use Compass Desk for orientation, then enter Atrium when you are ready to cross into Mirrorland.</p>
+              </div>
+
+              <div class="path-rail" data-path-rail>
+                <a class="path-step" href="/site-guide/">Guide Desk</a>
+                <a class="path-step" href="/">Compass Desk</a>
+                <a class="path-step" href="/showroom/">Atrium</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="mobile-build" aria-labelledby="mobile-title">
+        <div class="panel-inner">
+          <div class="section-head">
+            <div class="kicker">Mobile-First Native Build</div>
+            <h2 id="mobile-title">The estate was designed and assembled from a mobile device.</h2>
+            <p>
+              The project began in late January 2026. Within roughly four months, the site developed into an integrated navigation estate with regular website rooms, Mirrorland Doors, Map / Portal, Return to Orbit, Frontier systems, page orbits, and live route-specific interfaces.
+            </p>
+          </div>
+
+          <div class="timeline">
+            <article class="timeline-item">
+              <time>Late Jan</time>
+              <div>
+                <strong>Project construction begins.</strong>
+                <p>The work starts as a mobile-first native-code build, forcing the design to respect small-screen clarity from the beginning.</p>
+              </div>
+            </article>
+
+            <article class="timeline-item">
+              <time>Phase 1</time>
+              <div>
+                <strong>Public rooms and route identity emerge.</strong>
+                <p>Compass, Door, Home, Products, Laws, Gauges, Showroom, and related public routes begin to separate by function.</p>
+              </div>
+            </article>
+
+            <article class="timeline-item">
+              <time>Phase 2</time>
+              <div>
+                <strong>Mirrorland becomes an estate layer.</strong>
+                <p>Atrium, Atlas Study, ZIONTS Room, Audralia Conservatory, Control Cockpit, and Frontier Workshop Yard become visitor-facing rooms.</p>
+              </div>
+            </article>
+
+            <article class="timeline-item">
+              <time>Phase 3</time>
+              <div>
+                <strong>Navigation systems separate.</strong>
+                <p>Main Menu, Mirrorland Doors, Map / Portal, Return to Orbit, and Guide Desk each receive distinct jobs.</p>
+              </div>
+            </article>
+
+            <article class="timeline-item">
+              <time>Now</time>
+              <div>
+                <strong>The site becomes explainable as a constructed estate.</strong>
+                <p>Guide Desk provides the public construction narrative so the visitor can understand the whole system without reading builder receipts.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="start-points" aria-labelledby="start-title">
+        <div class="panel-inner">
+          <div class="section-head">
+            <div class="kicker">Start Points</div>
+            <h2 id="start-title">Use the right door for the job.</h2>
+          </div>
+
+          <div class="start-grid">
+            <a class="start-card" href="/">
+              <b>Orientation</b>
+              <strong>Compass Desk</strong>
+              <p>Use this when you need to re-center on the main website.</p>
+            </a>
+
+            <a class="start-card" href="/showroom/">
+              <b>Mirrorland Entry</b>
+              <strong>Atrium</strong>
+              <p>Use this when you want to enter the immersive estate layer.</p>
+            </a>
+
+            <a class="start-card" href="/showroom/globe/">
+              <b>World Study</b>
+              <strong>Atlas Study</strong>
+              <p>Use this when you want planetary rooms, ZIONTS, Audralia, and related worlds.</p>
+            </a>
+
+            <a class="start-card" href="/explore/frontier/">
+              <b>Applied Systems</b>
+              <strong>Frontier Workshop Yard</strong>
+              <p>Use this when you want energy, water, waste, infrastructure, and future systems.</p>
+            </a>
+
+            <a class="start-card" href="/gauges/">
+              <b>Proof</b>
+              <strong>The Lab</strong>
+              <p>Use this when you want route health, readiness, measurement, and proof.</p>
+            </a>
+
+            <a class="start-card" href="/site-guide/">
+              <b>Explanation</b>
+              <strong>Guide Desk</strong>
+              <p>Use this when you want the whole construction narrative.</p>
+            </a>
+          </div>
+
+          <div class="final-band">
+            <h2>Guide Desk keeps the estate readable.</h2>
+            <p>
+              The website works when direction, placement, organization, and movement are clear. Main Menu exits Mirrorland. Mirrorland Doors move through estate rooms. Map / Portal gives global estate navigation. Return to Orbit re-centers the local page. Guide Desk explains how the system is built.
+            </p>
+            <div class="actions">
+              <a class="button gold" href="#guide-orbit">Return to Orbit</a>
+              <a class="button blue" href="/showroom/">Enter Atrium</a>
+              <a class="button green" href="/explore/frontier/">Open Frontier Workshop Yard</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <template class="receipt" id="site-guide-receipt" data-route-receipt>
+SITE_GUIDE_DYNAMIC_CONSTRUCTION_NARRATIVE_TNT_v1
+route=/site-guide/
+classification=main_menu_website_room
+mirrorland_door=false
+guide_desk=true
+map_portal_supported=true
+return_to_orbit_local=true
+quadrupedic_traversal=active
+mobile_first_native_build=true
+project_began=late_january_2026
+generated_image=false
+graphic_box=false
+canvas=false
+webgl=false
+      </template>
+    </main>
+
+    <footer>
+      SITE_GUIDE_DYNAMIC_CONSTRUCTION_NARRATIVE_TNT_v1 · /site-guide/ · Guide Desk · Main Menu route · Mirrorland explanation held as visitor-facing construction narrative.
+    </footer>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const CONTRACT = "SITE_GUIDE_DYNAMIC_CONSTRUCTION_NARRATIVE_TNT_v1";
+
+      const plans = {
+        "new:orientation": {
+          title: "Guide Desk → Compass Desk → Atrium",
+          copy: "Start with Guide Desk, use Compass Desk for orientation, then enter Atrium when you are ready to cross into Mirrorland.",
+          path: [
+            ["Guide Desk", "/site-guide/"],
+            ["Compass Desk", "/"],
+            ["Atrium", "/showroom/"]
+          ]
+        },
+        "new:worlds": {
+          title: "Guide Desk → Atrium → Atlas Study",
+          copy: "Read the construction narrative, enter the Atrium, then open Atlas Study for worlds, ZIONTS, Audralia, Hearth, and H-Earth.",
+          path: [
+            ["Guide Desk", "/site-guide/"],
+            ["Atrium", "/showroom/"],
+            ["Atlas Study", "/showroom/globe/"]
+          ]
+        },
+        "new:proof": {
+          title: "Guide Desk → Law Library → The Lab",
+          copy: "Use Guide Desk for context, Law Library for boundaries, then The Lab for measurement and readiness.",
+          path: [
+            ["Guide Desk", "/site-guide/"],
+            ["Law Library", "/laws/"],
+            ["The Lab", "/gauges/"]
+          ]
+        },
+        "new:frontier": {
+          title: "Guide Desk → Atrium → Frontier Workshop Yard",
+          copy: "Start with the guide, enter the estate through Atrium, then go to Frontier Workshop Yard for applied future systems.",
+          path: [
+            ["Guide Desk", "/site-guide/"],
+            ["Atrium", "/showroom/"],
+            ["Frontier Workshop Yard", "/explore/frontier/"]
+          ]
+        },
+        "new:products": {
+          title: "Guide Desk → Main Hall → Product Gallery",
+          copy: "Use Guide Desk for the map of meaning, then move through the regular website toward usable public value.",
+          path: [
+            ["Guide Desk", "/site-guide/"],
+            ["Main Hall", "/home/"],
+            ["Product Gallery", "/products/"]
+          ]
+        },
+        "mirrorland:orientation": {
+          title: "Map / Portal → Main Menu → Compass Desk",
+          copy: "When you are inside Mirrorland and need ordinary-site orientation, open Main Menu and exit to Compass Desk.",
+          path: [
+            ["Map / Portal", "#guide-orbit"],
+            ["Main Menu", "/"],
+            ["Compass Desk", "/"]
+          ]
+        },
+        "mirrorland:worlds": {
+          title: "Map / Portal → Mirrorland Doors → Atlas Study",
+          copy: "Stay inside Mirrorland. Use Mirrorland Doors to move to Atlas Study and choose the world room you need.",
+          path: [
+            ["Map / Portal", "#navigation-systems"],
+            ["Mirrorland Doors", "/showroom/"],
+            ["Atlas Study", "/showroom/globe/"]
+          ]
+        },
+        "mirrorland:proof": {
+          title: "Map / Portal → Main Menu → The Lab",
+          copy: "Proof and readiness are regular website support surfaces. Use Main Menu to exit Mirrorland and open The Lab.",
+          path: [
+            ["Map / Portal", "#navigation-systems"],
+            ["Main Menu", "/gauges/"],
+            ["The Lab", "/gauges/"]
+          ]
+        },
+        "mirrorland:frontier": {
+          title: "Mirrorland Doors → Frontier Workshop Yard",
+          copy: "Frontier is Mirrorland-aligned. Use Mirrorland Doors to open the Workshop Yard.",
+          path: [
+            ["Mirrorland Doors", "#guide-orbit"],
+            ["Frontier Workshop Yard", "/explore/frontier/"]
+          ]
+        },
+        "mirrorland:products": {
+          title: "Map / Portal → Main Menu → Product Gallery",
+          copy: "Products are regular website rooms. Use Main Menu to exit Mirrorland and open Product Gallery.",
+          path: [
+            ["Map / Portal", "#guide-orbit"],
+            ["Main Menu", "/products/"],
+            ["Product Gallery", "/products/"]
+          ]
+        },
+        "proof:orientation": {
+          title: "The Lab → Guide Desk → Compass Desk",
+          copy: "When proof creates too much detail, use Guide Desk for the construction narrative and Compass Desk for orientation.",
+          path: [
+            ["The Lab", "/gauges/"],
+            ["Guide Desk", "/site-guide/"],
+            ["Compass Desk", "/"]
+          ]
+        },
+        "proof:worlds": {
+          title: "The Lab → Atlas Study → Audralia",
+          copy: "Use The Lab for measurement, then return to Atlas Study to read the world context.",
+          path: [
+            ["The Lab", "/gauges/"],
+            ["Atlas Study", "/showroom/globe/"],
+            ["Audralia Conservatory", "/showroom/globe/audralia/"]
+          ]
+        },
+        "proof:proof": {
+          title: "Law Library → The Lab",
+          copy: "Law defines boundaries. The Lab measures readiness.",
+          path: [
+            ["Law Library", "/laws/"],
+            ["The Lab", "/gauges/"]
+          ]
+        },
+        "proof:frontier": {
+          title: "Law Library → Frontier Workshop Yard → The Lab",
+          copy: "Frontier ideas should remain bounded by Law and checked by The Lab.",
+          path: [
+            ["Law Library", "/laws/"],
+            ["Frontier Workshop Yard", "/explore/frontier/"],
+            ["The Lab", "/gauges/"]
+          ]
+        },
+        "proof:products": {
+          title: "The Lab → Product Gallery",
+          copy: "Use proof to support usable public value, then move to Product Gallery.",
+          path: [
+            ["The Lab", "/gauges/"],
+            ["Product Gallery", "/products/"]
+          ]
+        },
+        "frontier:orientation": {
+          title: "Frontier Workshop Yard → Guide Desk",
+          copy: "When Frontier feels large, return to Guide Desk to understand how applied systems fit the estate.",
+          path: [
+            ["Frontier Workshop Yard", "/explore/frontier/"],
+            ["Guide Desk", "/site-guide/"]
+          ]
+        },
+        "frontier:worlds": {
+          title: "Frontier Workshop Yard → Audralia Conservatory",
+          copy: "Frontier systems connect back to Audralia as the constructive future-world context.",
+          path: [
+            ["Frontier Workshop Yard", "/explore/frontier/"],
+            ["Audralia Conservatory", "/showroom/globe/audralia/"]
+          ]
+        },
+        "frontier:proof": {
+          title: "Frontier Workshop Yard → Law Library → The Lab",
+          copy: "Applied systems should pass through boundary and proof.",
+          path: [
+            ["Frontier Workshop Yard", "/explore/frontier/"],
+            ["Law Library", "/laws/"],
+            ["The Lab", "/gauges/"]
+          ]
+        },
+        "frontier:frontier": {
+          title: "Frontier Workshop Yard → System Bench",
+          copy: "Choose a bench: Fusion, Closed Water Systems, Wastewater Systems, Infrastructure, Lattice, Manual, Shimmer, Trajectory, Vision, or Urban.",
+          path: [
+            ["Frontier Workshop Yard", "/explore/frontier/"],
+            ["Fusion Bench", "/explore/frontier/energy/"],
+            ["Closed Water Systems", "/explore/frontier/water/"]
+          ]
+        },
+        "frontier:products": {
+          title: "Frontier Workshop Yard → Product Gallery",
+          copy: "When an applied system becomes usable, it can move toward product value.",
+          path: [
+            ["Frontier Workshop Yard", "/explore/frontier/"],
+            ["Product Gallery", "/products/"]
+          ]
+        }
+      };
+
+      function setupTabs() {
+        const buttons = Array.from(document.querySelectorAll("[data-lens-button]"));
+        const panels = Array.from(document.querySelectorAll("[data-lens-panel]"));
+
+        buttons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const key = button.getAttribute("data-lens-button");
+
+            buttons.forEach((item) => item.setAttribute("data-active", String(item === button)));
+            panels.forEach((panel) => {
+              panel.setAttribute("data-active", String(panel.getAttribute("data-lens-panel") === key));
+            });
+          });
+        });
+      }
+
+      function setupPlanner() {
+        const start = document.querySelector("[data-start-select]");
+        const goal = document.querySelector("[data-goal-select]");
+        const title = document.querySelector("[data-plan-title]");
+        const copy = document.querySelector("[data-plan-copy]");
+        const rail = document.querySelector("[data-path-rail]");
+
+        if (!start || !goal || !title || !copy || !rail) return;
+
+        function renderPlan() {
+          const key = `${start.value}:${goal.value}`;
+          const plan = plans[key] || plans["new:orientation"];
+
+          title.textContent = plan.title;
+          copy.textContent = plan.copy;
+
+          rail.innerHTML = plan.path
+            .map(([label, href]) => `<a class="path-step" href="${href}">${label}</a>`)
+            .join("");
+        }
+
+        start.addEventListener("change", renderPlan);
+        goal.addEventListener("change", renderPlan);
+        renderPlan();
+      }
+
+      function publishStatus() {
+        window.DGB_SITE_GUIDE_STATUS = {
+          contract: CONTRACT,
+          route: "/site-guide/",
+          guideDesk: true,
+          mainMenuRoute: true,
+          mirrorlandDoor: false,
+          mapPortalExplained: true,
+          returnToOrbitExplained: true,
+          quadrupedicTraversalExplained: true,
+          mobileFirstNativeBuildExplained: true,
+          projectBeganLateJanuary2026: true,
+          dynamicPlannerActive: Boolean(document.querySelector("[data-path-rail]")),
+          generatedImage: false,
+          graphicBox: false,
+          canvas: false,
+          webgl: false,
+          updatedAt: new Date().toISOString()
+        };
+
+        document.documentElement.dataset.siteGuideContract = CONTRACT;
+        document.documentElement.dataset.siteGuideDynamicPlanner = "true";
+        document.documentElement.dataset.siteGuideMainMenuRoute = "true";
+      }
+
+      function mount() {
+        setupTabs();
+        setupPlanner();
+        publishStatus();
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", mount, { once: true });
+      } else {
+        mount();
+      }
+    })();
+  </script>
+</body>
+</html>

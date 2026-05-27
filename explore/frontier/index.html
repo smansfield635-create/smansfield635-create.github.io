@@ -1,32 +1,35 @@
 <!-- TARGET FILE: /explore/frontier/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- FRONTIER_EXPLORE_CONTEXTUAL_RENEWAL_MAP_BLIP_CATEGORY_ORBIT_TNT_v1 -->
+<!-- FRONTIER_EXPLORE_NODE_FIELD_RESTORATION_CONTEXTUAL_MAP_BLIP_HTML_TNT_v1 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/explore/frontier/"
   data-page="explore-frontier"
-  data-version="FRONTIER-CONTEXTUAL-RENEWAL-G1"
-  data-contract="FRONTIER_EXPLORE_CONTEXTUAL_RENEWAL_MAP_BLIP_CATEGORY_ORBIT_TNT_v1"
+  data-version="FRONTIER-NODE-FIELD-RESTORATION-CONTEXTUAL-G1"
+  data-contract="FRONTIER_EXPLORE_NODE_FIELD_RESTORATION_CONTEXTUAL_MAP_BLIP_HTML_TNT_v1"
   data-previous-contract="FRONTIER_EXPLORE_THREE_FILE_SPLIT_AUDRALIA_PLAYGROUND_COMPASS_DROPDOWN_TNT_v1"
   data-role="mirrorland-frontier-applied-science-playground"
   data-public-facing-name="Frontier"
-  data-mirrorland-contextual-renewal="true"
   data-frontier-conjugation="Mirrorland-reveals-Audralia-carries-Frontier-tests"
   data-audralia-role="constructive-future-world"
   data-frontier-role="applied-science-playground"
+  data-node-field-restored="true"
+  data-figure-eight-animation-preserved="true"
+  data-original-node-skeleton-preserved="true"
   data-map-blip-added="true"
   data-floating-map-portal-active="true"
   data-map-blip-owns-navigation="true"
   data-dropdown-navigation-removed="true"
   data-route-directory-removed="true"
-  data-hero-action-cluster-removed="true"
-  data-return-card-grid-removed="true"
+  data-support-route-strip-removed="true"
+  data-lane-card-directory-removed="true"
+  data-return-card-directory-removed="true"
   data-final-action-band-removed="true"
-  data-category-orbit-active="true"
-  data-category-focus-behavior="selected-category-highlighted-other-categories-muted"
-  data-return-to-orbit-target="#frontier-category-orbit"
+  data-category-read-panel-active="true"
   data-platform-engineering-contained="true"
+  data-css-externalized="true"
+  data-js-externalized="true"
   data-animation-ownership="css"
   data-js-owns-animation="false"
   data-canvas="false"
@@ -41,7 +44,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Frontier · Audralia Applied Science Playground</title>
+  <title>Frontier · Audralia Applied Science Playground · Diamond Gate Bridge</title>
   <meta
     name="description"
     content="Frontier is Audralia’s applied science playground inside Mirrorland, where future systems are tested before they become living-world infrastructure."
@@ -49,716 +52,14 @@
   <link rel="canonical" href="https://diamondgatebridge.com/explore/frontier/">
   <meta name="theme-color" content="#02040b">
 
+  <link rel="stylesheet" href="/explore/frontier/frontier.css?v=FRONTIER_EXPLORE_NODE_FIELD_RESTORATION_CONTEXTUAL_MAP_BLIP_HTML_TNT_v1">
+
   <link
     rel="stylesheet"
     href="/assets/manor-blueprint/manor.blueprint.css?v=MANOR_BLUEPRINT_CARDINAL_ROOM_MAP_VISUAL_CSS_TNT_v1"
     data-mirrorland-blueprint-marker="true"
     data-blueprint-page-scoped="true"
   >
-
-  <style>
-    :root{
-      color-scheme:dark;
-      --bg:#02040b;
-      --ink:#fff4d8;
-      --muted:rgba(230,238,255,.78);
-      --faint:rgba(230,238,255,.52);
-      --gold:#f3c86f;
-      --gold2:#ffe8a3;
-      --blue:#8dd8ff;
-      --violet:#beaaff;
-      --green:#8ff0c3;
-      --panel:rgba(8,13,27,.86);
-      --line:rgba(184,205,255,.18);
-      --shadow:0 34px 115px rgba(0,0,0,.52);
-      --max:1220px;
-      --gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
-      --field-h:clamp(36rem,68vw,52rem);
-    }
-
-    *{box-sizing:border-box}
-
-    html{
-      min-width:320px;
-      min-height:100%;
-      background:var(--bg);
-      scroll-behavior:smooth;
-      overflow-x:hidden;
-    }
-
-    body{
-      margin:0;
-      min-width:320px;
-      min-height:100vh;
-      color:var(--ink);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      line-height:1.5;
-      overflow-x:hidden;
-      background:
-        radial-gradient(circle at 50% -10%,rgba(243,200,111,.20),transparent 30rem),
-        radial-gradient(circle at 14% 18%,rgba(143,101,255,.18),transparent 34rem),
-        radial-gradient(circle at 86% 30%,rgba(141,216,255,.13),transparent 32rem),
-        radial-gradient(circle at 50% 76%,rgba(143,240,195,.07),transparent 36rem),
-        linear-gradient(180deg,#070b16 0%,#030713 56%,#010207 100%);
-      -webkit-font-smoothing:antialiased;
-      text-rendering:geometricPrecision;
-    }
-
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      opacity:.20;
-      background-image:
-        radial-gradient(circle,rgba(255,255,255,.16) 0 1px,transparent 1.5px),
-        linear-gradient(rgba(141,216,255,.04) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(190,170,255,.04) 1px,transparent 1px);
-      background-size:230px 260px,56px 56px,56px 56px;
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 66%,rgba(0,0,0,.18));
-    }
-
-    a{color:inherit;text-decoration:none}
-
-    a:focus-visible,
-    button:focus-visible{
-      outline:2px solid var(--gold);
-      outline-offset:4px;
-    }
-
-    .skip{
-      position:absolute;
-      left:-999px;
-      top:8px;
-      z-index:50;
-      padding:.72rem 1rem;
-      border-radius:999px;
-      color:#05070d;
-      background:var(--gold);
-      font-weight:950;
-    }
-
-    .skip:focus{left:8px}
-
-    .shell{
-      position:relative;
-      z-index:2;
-      width:min(var(--max),calc(100% - 28px));
-      margin:0 auto;
-      padding:max(20px,env(safe-area-inset-top)) 0 max(48px,env(safe-area-inset-bottom));
-    }
-
-    .topbar{
-      display:flex;
-      justify-content:space-between;
-      gap:1rem;
-      align-items:center;
-      padding:12px 0 18px;
-    }
-
-    .brand{
-      display:grid;
-      grid-template-columns:auto 1fr;
-      align-items:center;
-      gap:.9rem;
-      min-width:260px;
-    }
-
-    .brand-mark{
-      width:4.05rem;
-      height:4.05rem;
-      display:grid;
-      place-items:center;
-      clip-path:var(--gem);
-      transform:rotate(45deg);
-      border:1px solid rgba(243,200,111,.45);
-      background:
-        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.28) 21% 23%,transparent 24%),
-        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.28),rgba(143,101,255,.26),rgba(1,15,60,.62),rgba(243,200,111,.20),rgba(255,255,255,.28)),
-        radial-gradient(circle at 48% 22%,rgba(255,255,255,.32),transparent 42%),
-        linear-gradient(145deg,rgba(62,38,118,.95),rgba(5,8,20,.98));
-      box-shadow:0 0 2rem rgba(143,101,255,.28),0 1.2rem 2.8rem rgba(0,0,0,.44),inset 0 1px 0 rgba(255,255,255,.16);
-    }
-
-    .brand-mark span{
-      transform:rotate(-45deg);
-      font-weight:950;
-      color:rgba(255,244,216,.98);
-      text-shadow:0 2px 10px rgba(0,0,0,.86);
-    }
-
-    .brand-copy{
-      display:grid;
-      gap:.15rem;
-    }
-
-    .brand-copy span{
-      color:var(--muted);
-      font-size:.72rem;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-    }
-
-    .brand-copy strong{
-      font-size:clamp(1.08rem,3vw,1.65rem);
-      line-height:1;
-      letter-spacing:-.045em;
-    }
-
-    .header-note{
-      max-width:23rem;
-      color:rgba(230,238,255,.62);
-      font-size:.76rem;
-      font-weight:850;
-      line-height:1.35;
-      text-align:right;
-    }
-
-    .panel{
-      border:1px solid var(--line);
-      border-radius:clamp(1.15rem,4vw,2rem);
-      background:
-        radial-gradient(circle at 14% 0%,rgba(141,216,255,.09),transparent 26rem),
-        radial-gradient(circle at 86% 18%,rgba(143,101,255,.12),transparent 28rem),
-        linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.020)),
-        var(--panel);
-      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
-      overflow:hidden;
-    }
-
-    .hero{
-      position:relative;
-      display:grid;
-      gap:.78rem;
-      padding:clamp(1rem,3vw,2.2rem);
-      margin-top:.55rem;
-      min-height:clamp(15rem,28vw,22rem);
-      align-content:center;
-      isolation:isolate;
-    }
-
-    .hero::before{
-      content:"";
-      position:absolute;
-      right:clamp(1rem,6vw,5.6rem);
-      top:50%;
-      z-index:0;
-      width:clamp(8rem,22vw,15rem);
-      height:clamp(8rem,22vw,15rem);
-      border:1px solid rgba(243,200,111,.16);
-      border-radius:2.7rem;
-      transform:translateY(-50%) rotate(45deg);
-      background:
-        radial-gradient(circle at 50% 42%,rgba(255,232,163,.10),transparent 48%),
-        radial-gradient(circle at 50% 72%,rgba(143,101,255,.16),transparent 62%),
-        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
-      pointer-events:none;
-      opacity:.42;
-    }
-
-    .kicker{
-      width:fit-content;
-      display:inline-flex;
-      align-items:center;
-      gap:.55rem;
-      padding:.52rem .85rem;
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:999px;
-      color:rgba(230,238,255,.86);
-      background:rgba(255,255,255,.04);
-      font-size:.66rem;
-      font-weight:950;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-      position:relative;
-      z-index:2;
-    }
-
-    .kicker::before{
-      content:"";
-      width:.64rem;
-      height:.64rem;
-      border-radius:.17rem;
-      transform:rotate(45deg);
-      background:linear-gradient(135deg,var(--gold2),var(--gold));
-      box-shadow:0 0 1rem rgba(243,200,111,.42);
-    }
-
-    h1{
-      margin:0;
-      max-width:980px;
-      font-size:clamp(2.65rem,8.2vw,5.9rem);
-      line-height:.88;
-      letter-spacing:-.105em;
-      text-wrap:balance;
-      position:relative;
-      z-index:2;
-    }
-
-    h2{
-      margin:0;
-      color:var(--gold);
-      font-size:clamp(1.28rem,3.6vw,2.2rem);
-      line-height:.98;
-      letter-spacing:-.06em;
-      text-wrap:balance;
-    }
-
-    h3{
-      margin:0;
-      color:rgba(255,244,216,.98);
-      font-size:clamp(1.08rem,2.7vw,1.5rem);
-      line-height:1.08;
-      letter-spacing:-.04em;
-    }
-
-    p{
-      margin:0;
-      color:var(--muted);
-      font-size:clamp(.94rem,2.4vw,1.08rem);
-      line-height:1.5;
-    }
-
-    .lead{
-      max-width:890px;
-      position:relative;
-      z-index:2;
-    }
-
-    .quote{
-      max-width:860px;
-      padding:.78rem .92rem;
-      border:1px solid rgba(243,200,111,.22);
-      border-radius:1rem;
-      color:rgba(255,244,216,.94);
-      background:rgba(243,200,111,.064);
-      font-size:clamp(.98rem,2.4vw,1.1rem);
-      font-weight:900;
-      position:relative;
-      z-index:2;
-    }
-
-    .section{
-      margin-top:.95rem;
-      padding:clamp(.85rem,2.5vw,1.15rem);
-      display:grid;
-      gap:.85rem;
-    }
-
-    .frontier-field{
-      position:relative;
-      min-height:var(--field-h);
-      border:1px solid rgba(184,205,255,.15);
-      border-radius:clamp(1rem,3.5vw,1.7rem);
-      overflow:hidden;
-      background:
-        radial-gradient(circle at 50% 48%,rgba(255,232,163,.16),transparent 8rem),
-        radial-gradient(circle at 50% 50%,rgba(143,101,255,.14),transparent 21rem),
-        radial-gradient(circle at 50% 50%,rgba(141,216,255,.08),transparent 30rem),
-        linear-gradient(180deg,rgba(1,5,16,.72),rgba(2,6,16,.95));
-      isolation:isolate;
-      scroll-margin-top:1rem;
-    }
-
-    .frontier-field::before,
-    .frontier-field::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:min(40rem,84%);
-      height:min(22rem,48%);
-      border:1px solid rgba(243,200,111,.14);
-      border-radius:50%;
-      pointer-events:none;
-      z-index:1;
-    }
-
-    .frontier-field::before{
-      transform:translate(-70%,-50%) rotate(-18deg);
-      box-shadow:0 0 3rem rgba(143,101,255,.14),inset 0 0 2rem rgba(255,232,163,.04);
-    }
-
-    .frontier-field::after{
-      transform:translate(-30%,-50%) rotate(18deg);
-      box-shadow:0 0 3rem rgba(141,216,255,.12),inset 0 0 2rem rgba(141,216,255,.035);
-    }
-
-    .radiant-field{
-      position:absolute;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      background:
-        conic-gradient(from 0deg at 50% 50%,transparent 0deg,rgba(243,200,111,.07) 32deg,transparent 74deg,rgba(143,101,255,.08) 136deg,transparent 205deg,rgba(141,216,255,.06) 270deg,transparent 360deg);
-      animation:frontierFieldTurn 58s linear infinite;
-      opacity:.72;
-    }
-
-    @keyframes frontierFieldTurn{
-      to{transform:rotate(360deg)}
-    }
-
-    .frontier-anchor{
-      position:absolute;
-      left:50%;
-      top:50%;
-      z-index:3;
-      width:min(15rem,48vw);
-      min-height:7.8rem;
-      transform:translate(-50%,-50%);
-      display:grid;
-      place-items:center;
-      text-align:center;
-      padding:.9rem;
-      border:1px solid rgba(243,200,111,.24);
-      border-radius:1.1rem;
-      background:rgba(2,6,18,.66);
-      box-shadow:0 1rem 2rem rgba(0,0,0,.34),0 0 2.5rem rgba(243,200,111,.12),inset 0 1px 0 rgba(255,255,255,.08);
-      pointer-events:none;
-    }
-
-    .frontier-anchor::before{
-      content:"";
-      position:absolute;
-      inset:-2.5rem;
-      border-radius:999px;
-      background:
-        radial-gradient(circle,rgba(255,232,163,.22),transparent 42%),
-        radial-gradient(circle,rgba(143,101,255,.18),transparent 62%);
-      filter:blur(10px);
-      opacity:.74;
-      animation:frontierCorona 8.5s ease-in-out infinite;
-      z-index:-1;
-    }
-
-    @keyframes frontierCorona{
-      0%,100%{opacity:.48;transform:scale(.96)}
-      50%{opacity:.82;transform:scale(1.05)}
-    }
-
-    .frontier-anchor b{
-      color:var(--gold);
-      font-size:.58rem;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-    }
-
-    .frontier-anchor strong{
-      color:rgba(255,244,216,.98);
-      font-size:1.08rem;
-      line-height:1.05;
-    }
-
-    .frontier-anchor span{
-      color:rgba(230,238,255,.74);
-      font-size:.75rem;
-      font-weight:800;
-      line-height:1.3;
-    }
-
-    .frontier-node{
-      --x:50%;
-      --y:50%;
-      --delay:0s;
-      position:absolute;
-      left:var(--x);
-      top:var(--y);
-      z-index:5;
-      width:8.6rem;
-      min-height:5.6rem;
-      transform:translate(-50%,-50%);
-      display:grid;
-      place-items:center;
-      text-align:center;
-      padding:.45rem;
-      border:1px solid rgba(184,205,255,.13);
-      border-radius:1rem;
-      background:
-        radial-gradient(circle at 50% 0%,rgba(141,216,255,.10),transparent 74%),
-        linear-gradient(180deg,rgba(255,255,255,.050),rgba(255,255,255,.020));
-      overflow:hidden;
-      transition:transform .18s ease,border-color .18s ease,filter .18s ease,opacity .18s ease;
-    }
-
-    .frontier-node::before{
-      content:"";
-      position:absolute;
-      inset:.35rem;
-      clip-path:var(--gem);
-      background:
-        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.20) 21% 23%,transparent 24%),
-        conic-gradient(from 45deg,rgba(255,255,255,.24),rgba(143,101,255,.28),rgba(2,10,36,.76),rgba(243,200,111,.16),rgba(255,255,255,.22)),
-        radial-gradient(circle at 50% 25%,rgba(255,255,255,.26),transparent 46%);
-      filter:drop-shadow(0 .9rem 1.1rem rgba(0,0,0,.32)) drop-shadow(0 0 1rem rgba(143,101,255,.18));
-      animation:frontierNodePulse 7.8s ease-in-out infinite;
-      animation-delay:var(--delay);
-      pointer-events:none;
-    }
-
-    @keyframes frontierNodePulse{
-      0%,100%{opacity:.72;transform:scale(.985);filter:brightness(.96)}
-      50%{opacity:.95;transform:scale(1.03);filter:brightness(1.14)}
-    }
-
-    .frontier-node:hover,
-    .frontier-node:focus-visible,
-    .frontier-node[data-active-category]{
-      transform:translate(-50%,-50%) translateY(-3px) scale(1.035);
-      border-color:rgba(243,200,111,.58);
-      filter:brightness(1.08);
-      outline:none;
-    }
-
-    .frontier-field[data-focus-active="true"] .frontier-node:not([data-active-category]){
-      opacity:.34;
-      filter:grayscale(.72) saturate(.42) brightness(.78);
-    }
-
-    .frontier-label{
-      position:relative;
-      z-index:3;
-      display:grid;
-      gap:.1rem;
-      place-items:center;
-      width:86%;
-      text-shadow:0 2px 12px rgba(0,0,0,.95),0 0 10px rgba(20,0,80,.80),0 0 2px rgba(255,255,255,.42);
-      pointer-events:none;
-    }
-
-    .frontier-label b{
-      color:rgba(255,244,216,.98);
-      font-size:.66rem;
-      font-weight:950;
-      letter-spacing:.08em;
-      line-height:1.02;
-      text-transform:uppercase;
-    }
-
-    .frontier-label span{
-      color:rgba(230,238,255,.80);
-      font-size:.48rem;
-      font-weight:900;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    .read-panel{
-      display:grid;
-      gap:.75rem;
-      border:1px solid rgba(243,200,111,.34);
-      border-radius:1.15rem;
-      background:
-        radial-gradient(circle at 10% 0%,rgba(243,200,111,.12),transparent 18rem),
-        radial-gradient(circle at 100% 20%,rgba(143,101,255,.10),transparent 18rem),
-        rgba(255,255,255,.040);
-      box-shadow:0 0 2rem rgba(243,200,111,.08),inset 0 1px 0 rgba(255,255,255,.08);
-      padding:clamp(.85rem,2.4vw,1.15rem);
-      scroll-margin-top:1rem;
-    }
-
-    .read-panel[hidden]{display:none}
-
-    .read-head{
-      display:flex;
-      justify-content:space-between;
-      gap:.75rem;
-      align-items:start;
-      flex-wrap:wrap;
-    }
-
-    .read-title{
-      display:grid;
-      gap:.3rem;
-    }
-
-    .read-title b{
-      color:var(--gold);
-      font-size:.62rem;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-    }
-
-    .read-status{
-      width:fit-content;
-      padding:.28rem .52rem;
-      border:1px solid rgba(143,240,195,.30);
-      border-radius:999px;
-      color:var(--green);
-      background:rgba(143,240,195,.07);
-      font-size:.54rem;
-      font-weight:950;
-      letter-spacing:.1em;
-      text-transform:uppercase;
-    }
-
-    .button{
-      min-height:2.05rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(255,255,255,.15);
-      border-radius:999px;
-      padding:.45rem .68rem;
-      background:rgba(255,255,255,.045);
-      color:rgba(241,246,255,.88);
-      font-family:inherit;
-      font-size:.56rem;
-      font-weight:950;
-      letter-spacing:.075em;
-      text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
-      cursor:pointer;
-    }
-
-    .tabs{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.4rem;
-    }
-
-    .tabs button{
-      min-height:1.9rem;
-      border:1px solid rgba(184,205,255,.15);
-      border-radius:999px;
-      padding:.36rem .58rem;
-      color:rgba(230,238,255,.82);
-      background:rgba(255,255,255,.04);
-      font-family:inherit;
-      font-size:.52rem;
-      font-weight:950;
-      letter-spacing:.09em;
-      text-transform:uppercase;
-      cursor:pointer;
-    }
-
-    .tabs button[aria-selected="true"]{
-      color:#06100b;
-      border-color:rgba(243,200,111,.88);
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
-    }
-
-    .read-body{
-      display:grid;
-      gap:.55rem;
-      padding:.85rem;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:.95rem;
-      background:rgba(255,255,255,.028);
-    }
-
-    .read-body b{
-      color:var(--gold);
-      font-size:.58rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .read-body p{
-      font-size:.94rem;
-      line-height:1.48;
-    }
-
-    .receipt{
-      display:none!important;
-      visibility:hidden!important;
-      overflow:hidden!important;
-      width:0!important;
-      height:0!important;
-      max-width:0!important;
-      max-height:0!important;
-      margin:0!important;
-      padding:0!important;
-      border:0!important;
-      opacity:0!important;
-      pointer-events:none!important;
-      position:absolute!important;
-      clip-path:inset(50%)!important;
-      white-space:nowrap!important;
-    }
-
-    footer{
-      padding:1.15rem 0 .5rem;
-      color:var(--faint);
-      text-align:center;
-      font-size:.72rem;
-    }
-
-    @media (max-width:900px){
-      .topbar{
-        display:grid;
-        grid-template-columns:1fr;
-        align-items:start;
-      }
-
-      .header-note{text-align:left}
-    }
-
-    @media (max-width:760px){
-      .shell{width:min(100% - 22px,var(--max))}
-      h1{font-size:clamp(2.65rem,13.5vw,4.85rem)}
-      .hero{padding:1rem}
-
-      .frontier-field{
-        min-height:auto;
-        display:grid;
-        grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:.62rem;
-        padding:.85rem;
-      }
-
-      .frontier-field::before,
-      .frontier-field::after,
-      .radiant-field{display:none}
-
-      .frontier-anchor{
-        position:relative;
-        left:auto;
-        top:auto;
-        transform:none;
-        width:100%;
-        grid-column:1 / -1;
-      }
-
-      .frontier-node{
-        position:relative;
-        left:auto;
-        top:auto;
-        width:100%;
-        min-height:5.6rem;
-        transform:none!important;
-      }
-
-      .frontier-node:hover,
-      .frontier-node:focus-visible,
-      .frontier-node[data-active-category]{
-        transform:translateY(-2px) scale(1.015)!important;
-      }
-
-      .read-head{
-        display:grid;
-      }
-    }
-
-    @media (max-width:480px){
-      .frontier-field{
-        grid-template-columns:1fr;
-      }
-    }
-
-    @media (prefers-reduced-motion:reduce){
-      *,
-      *::before,
-      *::after{
-        scroll-behavior:auto!important;
-        animation-duration:.01ms!important;
-        animation-iteration-count:1!important;
-        transition-duration:.01ms!important;
-      }
-    }
-  </style>
 </head>
 
 <body>
@@ -766,16 +67,16 @@
 
   <div class="shell">
     <header class="topbar" aria-label="Frontier header">
-      <a class="brand" href="/explore/frontier/">
+      <a class="brand" href="/explore/frontier/" aria-label="Frontier">
         <span class="brand-mark" aria-hidden="true"><span>FR</span></span>
         <span class="brand-copy">
-          <span>Mirrorland · Audralia</span>
+          <span>Mirrorland · Audralia Playground</span>
           <strong>Frontier</strong>
         </span>
       </a>
 
       <div class="header-note">
-        Use the Map / Portal for movement. This page stays on Frontier.
+        Navigation belongs to the Map / Portal. This page stays on Frontier.
       </div>
     </header>
 
@@ -785,100 +86,207 @@
 
         <h1 id="page-title">Frontier tests what the future needs.</h1>
 
+        <h2>Mirrorland reveals. Audralia carries. Frontier tests.</h2>
+
         <p class="lead">
-          Mirrorland reveals possible futures. Audralia carries the constructive future. Frontier is where that future becomes testable before it becomes livable.
+          Frontier is the testing ground inside Audralia’s constructive future. Energy, Water, Waste, Closed Loop, Infrastructure, Lattice, Manual, Shimmer, Trajectory, Vision, and Urban are pressure systems inside one live playground.
         </p>
 
-        <div class="quote">
-          Frontier is not eleven links. It is one playground with eleven pressure systems.
+        <div class="principle">
+          Frontier is not a route directory. It is where possible systems are examined before they become living-world infrastructure.
         </div>
       </section>
 
-      <section id="frontier-category-orbit" class="panel section" aria-labelledby="orbit-title">
-        <div class="kicker">Frontier simulation field · Category home base</div>
-        <h2 id="orbit-title">Choose one system at a time.</h2>
+      <section class="panel section" aria-labelledby="orbit-title" id="frontier-field">
+        <div class="kicker">Frontier simulation field</div>
+        <h2 id="orbit-title">Eleven systems orbit one applied-science playground.</h2>
         <p>
-          Select a system to read its role inside Audralia’s future-building playground. The active system highlights, the others mute, and the reading stays contained.
+          Select a node to read one system at a time. The node field remains the subject; the Map / Portal handles movement beyond this page.
         </p>
 
-        <div class="frontier-field" data-frontier-field aria-label="Frontier applied science category orbit">
-          <div class="radiant-field" aria-hidden="true"></div>
-
-          <div class="frontier-anchor" aria-hidden="true">
-            <b>Frontier</b>
-            <strong>Applied Science Playground</strong>
-            <span>Audralia tests the systems a living future would need.</span>
+        <div
+          id="frontier-category-orbit"
+          class="frontier-orbit-stage"
+          data-frontier-orbit-stage
+          aria-label="Frontier live simulation field with eleven animated system nodes"
+        >
+          <div class="radiant-field" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
           </div>
 
-          <a class="frontier-node" data-frontier-category="energy" href="#frontier-read-panel" style="--x:18%;--y:34%;--delay:-.3s">
-            <span class="frontier-label"><b>Energy</b><span>Power</span></span>
-          </a>
+          <div class="frontier-top-stack" aria-hidden="true">
+            <div class="frontier-anchor" aria-label="Frontier live field">
+              <span class="frontier-anchor-body" aria-hidden="true"></span>
+              <span class="frontier-label">
+                <b>Frontier</b>
+                <span>Playground</span>
+              </span>
+            </div>
+          </div>
 
-          <a class="frontier-node" data-frontier-category="water" href="#frontier-read-panel" style="--x:82%;--y:34%;--delay:-.8s">
-            <span class="frontier-label"><b>Water</b><span>Flow</span></span>
-          </a>
+          <div class="frontier-figure-eight-zone" data-frontier-figure-eight-zone>
+            <span class="frontier-loop left" aria-hidden="true"></span>
+            <span class="frontier-loop right" aria-hidden="true"></span>
+            <span class="frontier-gravity left" aria-hidden="true"></span>
+            <span class="frontier-gravity right" aria-hidden="true"></span>
 
-          <a class="frontier-node" data-frontier-category="waste" href="#frontier-read-panel" style="--x:18%;--y:66%;--delay:-1.3s">
-            <span class="frontier-label"><b>Waste</b><span>Return</span></span>
-          </a>
+            <a
+              class="frontier-node closed-loop"
+              data-frontier-category="closedLoop"
+              style="--delay:-.2s"
+              href="#frontier-read-panel"
+              aria-label="Closed Loop accountable flow system"
+            >
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Closed Loop</b><span>Flow</span></span>
+            </a>
 
-          <a class="frontier-node" data-frontier-category="closedLoop" href="#frontier-read-panel" style="--x:82%;--y:66%;--delay:-1.8s">
-            <span class="frontier-label"><b>Closed Loop</b><span>Answer</span></span>
-          </a>
+            <a
+              class="frontier-node energy"
+              data-frontier-category="energy"
+              style="--delay:-.7s"
+              href="#frontier-read-panel"
+              aria-label="Energy power and readiness system"
+            >
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Energy</b><span>Power</span></span>
+            </a>
 
-          <a class="frontier-node" data-frontier-category="infrastructure" href="#frontier-read-panel" style="--x:50%;--y:18%;--delay:-2.3s">
-            <span class="frontier-label"><b>Infrastructure</b><span>Support</span></span>
-          </a>
+            <a
+              class="frontier-node infrastructure"
+              data-frontier-category="infrastructure"
+              style="--delay:-1.2s"
+              href="#frontier-read-panel"
+              aria-label="Infrastructure support-load system"
+            >
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Infrastructure</b><span>Support</span></span>
+            </a>
 
-          <a class="frontier-node" data-frontier-category="lattice" href="#frontier-read-panel" style="--x:50%;--y:82%;--delay:-2.8s">
-            <span class="frontier-label"><b>Lattice</b><span>Order</span></span>
-          </a>
+            <a
+              class="frontier-node lattice"
+              data-frontier-category="lattice"
+              style="--delay:-1.7s"
+              href="#frontier-read-panel"
+              aria-label="Lattice pattern and structure system"
+            >
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Lattice</b><span>Grid</span></span>
+            </a>
 
-          <a class="frontier-node" data-frontier-category="urban" href="#frontier-read-panel" style="--x:8%;--y:50%;--delay:-3.3s">
-            <span class="frontier-label"><b>Urban</b><span>City</span></span>
-          </a>
+            <a
+              class="frontier-node manual"
+              data-frontier-category="manual"
+              style="--delay:-2.2s"
+              href="#frontier-read-panel"
+              aria-label="Manual operating guide system"
+            >
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Manual</b><span>Guide</span></span>
+            </a>
 
-          <a class="frontier-node" data-frontier-category="manual" href="#frontier-read-panel" style="--x:92%;--y:50%;--delay:-3.8s">
-            <span class="frontier-label"><b>Manual</b><span>Guide</span></span>
-          </a>
+            <a
+              class="frontier-node trajectory"
+              data-frontier-category="trajectory"
+              style="--delay:-2.7s"
+              href="#frontier-read-panel"
+              aria-label="Trajectory direction and motion system"
+            >
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Trajectory</b><span>Motion</span></span>
+            </a>
 
-          <a class="frontier-node" data-frontier-category="shimmer" href="#frontier-read-panel" style="--x:34%;--y:50%;--delay:-4.3s">
-            <span class="frontier-label"><b>Shimmer</b><span>Signal</span></span>
-          </a>
+            <a
+              class="frontier-node shimmer"
+              data-frontier-category="shimmer"
+              style="--delay:-3.2s"
+              href="#frontier-read-panel"
+              aria-label="Shimmer signal and perception system"
+            >
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Shimmer</b><span>Signal</span></span>
+            </a>
 
-          <a class="frontier-node" data-frontier-category="trajectory" href="#frontier-read-panel" style="--x:66%;--y:50%;--delay:-4.8s">
-            <span class="frontier-label"><b>Trajectory</b><span>Motion</span></span>
-          </a>
+            <a
+              class="frontier-node primary-row waste"
+              data-frontier-category="waste"
+              style="--delay:-3.7s"
+              href="#frontier-read-panel"
+              aria-label="Waste return-material system"
+            >
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Waste</b><span>Reuse</span></span>
+            </a>
 
-          <a class="frontier-node" data-frontier-category="vision" href="#frontier-read-panel" style="--x:50%;--y:50%;--delay:-5.3s">
-            <span class="frontier-label"><b>Vision</b><span>Horizon</span></span>
-          </a>
+            <a
+              class="frontier-node primary-row water"
+              data-frontier-category="water"
+              style="--delay:-4.2s"
+              href="#frontier-read-panel"
+              aria-label="Water flow and continuity system"
+            >
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Water</b><span>Flow</span></span>
+            </a>
+
+            <a
+              class="frontier-node primary-row vision"
+              data-frontier-category="vision"
+              style="--delay:-4.7s"
+              href="#frontier-read-panel"
+              aria-label="Vision horizon and possibility system"
+            >
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Vision</b><span>Future</span></span>
+            </a>
+
+            <a
+              class="frontier-node primary-row urban"
+              data-frontier-category="urban"
+              style="--delay:-5.2s"
+              href="#frontier-read-panel"
+              aria-label="Urban civic pressure system"
+            >
+              <span class="frontier-star-body" aria-hidden="true"></span>
+              <span class="frontier-label"><b>Urban</b><span>City</span></span>
+            </a>
+          </div>
         </div>
       </section>
 
       <section
         id="frontier-read-panel"
-        class="read-panel"
+        class="panel section frontier-read-panel"
         data-frontier-read-panel
         aria-live="polite"
         hidden
       >
-        <div class="read-head">
-          <div class="read-title">
-            <b data-frontier-read-kicker>Frontier System</b>
-            <h3 data-frontier-read-title>Energy</h3>
-            <span class="read-status" data-frontier-read-status>Power readiness</span>
+        <div class="kicker" data-frontier-read-kicker>Frontier System</div>
+
+        <div class="frontier-read-head">
+          <div class="frontier-read-title">
+            <h2 data-frontier-read-title>Energy</h2>
+            <span class="frontier-read-status" data-frontier-read-status>Power readiness</span>
           </div>
 
-          <a class="button" href="#frontier-category-orbit" data-return-to-category-orbit>Return to Orbit</a>
+          <a class="button" href="#frontier-category-orbit" data-return-to-category-orbit>
+            Return to Orbit
+          </a>
         </div>
 
-        <div class="tabs" role="tablist" aria-label="Frontier read lens">
-          <button type="button" data-frontier-tab="platform" aria-selected="true">Platform</button>
-          <button type="button" data-frontier-tab="engineering" aria-selected="false">Engineering</button>
+        <div class="frontier-tabs" role="tablist" aria-label="Frontier read lens">
+          <button type="button" data-frontier-tab="platform" aria-selected="true">
+            Platform
+          </button>
+          <button type="button" data-frontier-tab="engineering" aria-selected="false">
+            Engineering
+          </button>
         </div>
 
-        <div class="read-body">
+        <div class="frontier-read-body">
           <b data-frontier-read-lens-label>Platform</b>
           <p data-frontier-read-copy>
             Energy asks whether Audralia can power a living future without repeating extraction logic.
@@ -886,30 +294,53 @@
         </div>
       </section>
 
-      <template id="route-receipt" class="receipt" data-route-receipt>
-FRONTIER_EXPLORE_CONTEXTUAL_RENEWAL_MAP_BLIP_CATEGORY_ORBIT_TNT_v1
+      <section class="panel section frontier-context" aria-labelledby="context-title">
+        <div class="kicker">Context</div>
+        <h2 id="context-title">Frontier is where the future is pressure-tested.</h2>
+
+        <details class="frontier-context-card" open>
+          <summary>Why Frontier exists</summary>
+          <div>
+            <p>
+              Mirrorland makes possible futures visible. Audralia carries the constructive future. Frontier tests the systems that constructive future would need before they are allowed to become part of the living world.
+            </p>
+          </div>
+        </details>
+
+        <details class="frontier-context-card">
+          <summary>How to read the field</summary>
+          <div>
+            <p>
+              Each node is a pressure system. Energy asks how the world is powered. Water asks how continuity is preserved. Waste asks whether discarded value can return. Closed Loop asks whether the system can answer back. The remaining nodes test support, structure, civic pressure, operating language, visible signal, direction, and horizon.
+            </p>
+          </div>
+        </details>
+      </section>
+
+      <template id="route-receipt" data-route-receipt>
+FRONTIER_EXPLORE_NODE_FIELD_RESTORATION_CONTEXTUAL_MAP_BLIP_HTML_TNT_v1
 previous=FRONTIER_EXPLORE_THREE_FILE_SPLIT_AUDRALIA_PLAYGROUND_COMPASS_DROPDOWN_TNT_v1
 route=/explore/frontier/
-page=explore_frontier
+target=/explore/frontier/index.html
+css=/explore/frontier/frontier.css
+js=/explore/frontier/frontier.js
 role=mirrorland_frontier_applied_science_playground
 conjugation=Mirrorland_reveals_possible_futures_Audralia_carries_constructive_future_Frontier_tests_systems_that_future_would_need
+node_field_restored=true
+original_node_skeleton_preserved=true
+required_chain=frontier-orbit-stage,radiant-field,frontier-top-stack,frontier-anchor,frontier-figure-eight-zone,frontier-loop,frontier-gravity,frontier-node,frontier-star-body,frontier-label
+systems=energy,water,waste,closed_loop,infrastructure,lattice,urban,manual,shimmer,trajectory,vision
 map_blip_added=true
 map_blip_owns_navigation=true
 dropdown_navigation_removed=true
 route_directory_removed=true
-hero_action_cluster_removed=true
 support_route_strip_removed=true
 lane_card_directory_removed=true
 return_card_directory_removed=true
 final_action_band_removed=true
-category_orbit_active=true
-selected_category_highlighted=true
-inactive_categories_muted=true
+category_read_panel_active=true
 platform_engineering_tabs_contained=true
 return_to_orbit_target=#frontier-category-orbit
-return_to_orbit_not_page_top=true
-return_to_orbit_not_route_root=true
-frontier_systems=energy,water,waste,closed_loop,infrastructure,lattice,urban,manual,shimmer,trajectory,vision
 animation_ownership=css
 js_owns_animation=false
 canvas=false
@@ -919,14 +350,16 @@ graphic_box=false
 heavy_runtime_loaded=false
 javascript_particle_engine=false
 visual_pass_claimed=false
-deploy_marker=FRONTIER_EXPLORE_CONTEXTUAL_RENEWAL_MAP_BLIP_CATEGORY_ORBIT_DEPLOY_MARKER_v1
+deploy_marker=FRONTIER_EXPLORE_NODE_FIELD_RESTORATION_CONTEXTUAL_MAP_BLIP_HTML_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer>
-      Frontier · Audralia’s applied science playground · Map / Portal owns movement.
+      FRONTIER_EXPLORE_NODE_FIELD_RESTORATION_CONTEXTUAL_MAP_BLIP_HTML_TNT_v1 · Frontier · Audralia’s applied science playground · Node field restored.
     </footer>
   </div>
+
+  <script src="/explore/frontier/frontier.js?v=FRONTIER_EXPLORE_NODE_FIELD_RESTORATION_CONTEXTUAL_MAP_BLIP_HTML_TNT_v1" defer></script>
 
   <script
     src="/assets/manor-blueprint/manor.blueprint.registry.js?v=MANOR_BLUEPRINT_VISITOR_ORIENTATION_REGISTRY_TNT_v1"
@@ -946,7 +379,7 @@ deploy_marker=FRONTIER_EXPLORE_CONTEXTUAL_RENEWAL_MAP_BLIP_CATEGORY_ORBIT_DEPLOY
     (() => {
       "use strict";
 
-      const CONTRACT = "FRONTIER_EXPLORE_CONTEXTUAL_CATEGORY_FOCUS_INTERACTION_TNT_v1";
+      const CONTRACT = "FRONTIER_EXPLORE_CONTEXTUAL_CATEGORY_READ_HTML_INLINE_TNT_v1";
 
       const reads = {
         energy: {
@@ -963,7 +396,7 @@ deploy_marker=FRONTIER_EXPLORE_CONTEXTUAL_RENEWAL_MAP_BLIP_CATEGORY_ORBIT_DEPLOY
           platform:
             "Water asks how continuity is preserved. On Audralia, water is not just a resource; it is the carrier of life, movement, settlement, climate, and responsibility. Frontier tests whether flow can support the world without becoming wasteful or extractive.",
           engineering:
-            "Water is treated as a system lane, not a decorative page effect. Parent Frontier presents the category read only. Water-specific routing, storage, quality, hydrology, and continuity claims belong downstream and must not be implied by this index page."
+            "Water is treated as a child system lane, not a decorative page effect. Parent Frontier presents the category read only. Water-specific routing, storage, quality, hydrology, and continuity claims belong downstream and must not be implied by this index page."
         },
         waste: {
           title: "Waste",
@@ -1039,7 +472,8 @@ deploy_marker=FRONTIER_EXPLORE_CONTEXTUAL_RENEWAL_MAP_BLIP_CATEGORY_ORBIT_DEPLOY
         }
       };
 
-      const field = document.querySelector("[data-frontier-field]");
+      const orbit = document.querySelector("[data-frontier-orbit-stage]");
+      const zone = document.querySelector("[data-frontier-figure-eight-zone]");
       const panel = document.querySelector("[data-frontier-read-panel]");
       const nodes = Array.from(document.querySelectorAll("[data-frontier-category]"));
       const tabs = Array.from(document.querySelectorAll("[data-frontier-tab]"));
@@ -1056,43 +490,46 @@ deploy_marker=FRONTIER_EXPLORE_CONTEXTUAL_RENEWAL_MAP_BLIP_CATEGORY_ORBIT_DEPLOY
         activeLens = lens === "engineering" ? "engineering" : "platform";
 
         tabs.forEach((tab) => {
-          tab.setAttribute(
-            "aria-selected",
-            tab.dataset.frontierTab === activeLens ? "true" : "false"
-          );
+          tab.setAttribute("aria-selected", tab.dataset.frontierTab === activeLens ? "true" : "false");
         });
 
         if (lensLabel) {
           lensLabel.textContent = activeLens === "engineering" ? "Engineering" : "Platform";
         }
 
-        if (activeKey && copy) {
+        if (activeKey && copy && reads[activeKey]) {
           copy.textContent = reads[activeKey][activeLens];
         }
       }
 
-      function setCategory(key, shouldScroll = true) {
+      function setCategory(key, shouldScroll) {
         const read = reads[key];
-        if (!read || !panel || !field) return;
+        if (!read || !panel) return;
 
         activeKey = key;
         activeLens = "platform";
 
-        field.dataset.focusActive = "true";
+        if (orbit) orbit.dataset.focusActive = "true";
+        if (zone) zone.dataset.focusActive = "true";
+
         document.documentElement.dataset.activeFrontierCategory = key;
 
         nodes.forEach((node) => {
           if (node.dataset.frontierCategory === key) {
             node.dataset.activeCategory = "true";
+            node.setAttribute("aria-current", "true");
           } else {
             delete node.dataset.activeCategory;
+            node.removeAttribute("aria-current");
           }
         });
 
         panel.hidden = false;
-        title.textContent = read.title;
-        status.textContent = read.status;
-        copy.textContent = read.platform;
+
+        if (title) title.textContent = read.title;
+        if (status) status.textContent = read.status;
+        if (copy) copy.textContent = read.platform;
+
         setActiveTab("platform");
 
         if (shouldScroll) {
@@ -1102,18 +539,22 @@ deploy_marker=FRONTIER_EXPLORE_CONTEXTUAL_RENEWAL_MAP_BLIP_CATEGORY_ORBIT_DEPLOY
 
       function clearCategoryFocus() {
         activeKey = null;
-        if (field) delete field.dataset.focusActive;
+
+        if (orbit) delete orbit.dataset.focusActive;
+        if (zone) delete zone.dataset.focusActive;
+
         delete document.documentElement.dataset.activeFrontierCategory;
 
         nodes.forEach((node) => {
           delete node.dataset.activeCategory;
+          node.removeAttribute("aria-current");
         });
 
         if (panel) panel.hidden = true;
 
-        const orbit = document.querySelector("#frontier-category-orbit");
-        if (orbit) {
-          orbit.scrollIntoView({ behavior: "smooth", block: "start" });
+        const target = document.querySelector("#frontier-category-orbit");
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
         }
       }
 
@@ -1144,8 +585,8 @@ deploy_marker=FRONTIER_EXPLORE_CONTEXTUAL_RENEWAL_MAP_BLIP_CATEGORY_ORBIT_DEPLOY
       }
 
       function init() {
-        document.documentElement.dataset.frontierInteractionContract = CONTRACT;
-        document.documentElement.dataset.categoryFocusActive = "true";
+        document.documentElement.dataset.frontierInlineInteractionContract = CONTRACT;
+        document.documentElement.dataset.frontierCategoryReadActive = "true";
         document.documentElement.dataset.returnToOrbitTarget = "#frontier-category-orbit";
 
         bindNodes();

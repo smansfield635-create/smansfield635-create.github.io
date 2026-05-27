@@ -1,23 +1,31 @@
 <!-- TARGET FILE: /showroom/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- SHOWROOM_MIRRORLAND_DIAMOND_VIEWPORT_COMPRESSION_HTML_TNT_v1 -->
+<!-- SHOWROOM_MIRRORLAND_MAP_BLIP_SINGLE_ENTRYWAY_HTML_TNT_v1 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/"
   data-page="showroom"
-  data-version="G2-DIAMOND-VIEWPORT-COMPRESSION"
-  data-contract="SHOWROOM_MIRRORLAND_DIAMOND_VIEWPORT_COMPRESSION_HTML_TNT_v1"
-  data-previous-contract="SHOWROOM_MIRRORLAND_TOP_PORTAL_TWO_VIEW_OBJECT_CONTROL_HTML_TNT_v1"
-  data-baseline-contract="SHOWROOM_MIRRORLAND_TOP_PORTAL_TWO_VIEW_OBJECT_CONTROL_HTML_TNT_v1"
-  data-contract-family="SHOWROOM_DIAMOND_G2_FULL_CONTRACT_RENEWAL_THREE_FILE_FAMILY_v1"
-  data-role="diamond-viewport-compression"
+  data-version="G2-MAP-BLIP-SINGLE-MIRRORLAND-ENTRYWAY"
+  data-contract="SHOWROOM_MIRRORLAND_MAP_BLIP_SINGLE_ENTRYWAY_HTML_TNT_v1"
+  data-previous-contract="SHOWROOM_MIRRORLAND_DIAMOND_VIEWPORT_COMPRESSION_HTML_TNT_v1"
+  data-baseline-contract="SHOWROOM_MIRRORLAND_DIAMOND_VIEWPORT_COMPRESSION_HTML_TNT_v1"
+  data-contract-family="SHOWROOM_MIRRORLAND_MAP_BLIP_SINGLE_ENTRYWAY_SPLIT_TNT_v1"
+  data-role="map-blip-single-mirrorland-entryway"
   data-public-work="SHADOWS_NEVER_SHATTER_IN_MIRRORLAND"
   data-primary-subject="mirrorland"
   data-door-object="diamond-lattice"
-  data-context-renewal="diamond-viewport-compression-only"
+  data-context-renewal="map-blip-single-entryway"
   data-page-is-door-context="true"
   data-this-is-door-to-mirrorland="true"
+  data-map-blip-single-entryway="true"
+  data-mirrorland-entryway="map-portal-blip"
+  data-map-portal-blip-is-entryway="true"
+  data-single-public-mirrorland-entrance="true"
+  data-direct-mirrorland-link-removed="true"
+  data-fallback-menu-mirrorland-removed="true"
+  data-map-interior-owns-mirrorland-doors="true"
+  data-page-body-mirrorland-directory="false"
   data-top-portal-context-active="true"
   data-floating-map-context-at-top="true"
   data-object-controls-two-view="true"
@@ -42,9 +50,9 @@
   data-blueprint-registry="/assets/manor-blueprint/manor.blueprint.registry.js"
   data-blueprint-css="/assets/manor-blueprint/manor.blueprint.css"
   data-blueprint-js="/assets/manor-blueprint/manor.blueprint.js"
-  data-blueprint-registry-contract="MANOR_BLUEPRINT_ROUTE_REGISTRY_TNT_v1"
+  data-blueprint-registry-contract="MANOR_BLUEPRINT_MIRRORLAND_DOORS_SINGLE_ENTRYWAY_REGISTRY_TNT_v1"
   data-blueprint-css-contract="MANOR_BLUEPRINT_CARDINAL_ROOM_MAP_VISUAL_CSS_TNT_v1"
-  data-blueprint-js-cache-key="MANOR_BLUEPRINT_CARDINAL_ROOM_MAP_RUNTIME_JS_TNT_v1"
+  data-blueprint-js-cache-key="MANOR_BLUEPRINT_MIRRORLAND_DOORS_SINGLE_ENTRYWAY_RUNTIME_TNT_v1"
   data-blueprint-sitewide="false"
   data-blueprint-page-scoped="true"
   data-diamond-renderer="/showroom/index.diamond.js"
@@ -84,10 +92,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>This Is the Door to Mirrorland · Diamond Lattice</title>
+  <title>This Is the Door to Mirrorland · Enter Through the Map Blip</title>
   <meta
     name="description"
-    content="This is the Door to Mirrorland. The floating Map Portal is the movement layer, and the Diamond Lattice is the object at the Door."
+    content="This is the Door to Mirrorland. The floating Map Portal blip is the entryway into Mirrorland, and the Diamond Lattice is the object at the Door."
   >
 
   <link
@@ -300,7 +308,7 @@
       right:0;
       top:calc(100% + .55rem);
       z-index:40;
-      width:min(22rem,calc(100vw - 2rem));
+      width:min(18rem,calc(100vw - 2rem));
       padding:.72rem;
       border:1px solid rgba(243,200,111,.30);
       border-radius:1.1rem;
@@ -424,14 +432,6 @@
       text-wrap:balance;
     }
 
-    h3{
-      margin:0;
-      color:rgba(255,244,216,.98);
-      font-size:clamp(1.05rem,3vw,1.45rem);
-      line-height:1.08;
-      letter-spacing:-.035em;
-    }
-
     p{
       margin:0;
       color:var(--muted);
@@ -466,10 +466,6 @@
       grid-template-columns:repeat(4,minmax(0,1fr));
       gap:.62rem;
       align-items:start;
-    }
-
-    .object-meaning-accordion{
-      grid-template-columns:repeat(4,minmax(0,1fr));
     }
 
     .context-detail,
@@ -545,11 +541,7 @@
       gap:1.05rem;
     }
 
-    .diamond-layout{
-      display:grid;
-      gap:.82rem;
-    }
-
+    .diamond-layout,
     .diamond-view-column{
       display:grid;
       gap:.72rem;
@@ -610,10 +602,6 @@
       height:100%;
       display:block;
       background:transparent;
-    }
-
-    .object-control-tray{
-      display:block;
     }
 
     .object-control-body{
@@ -822,13 +810,12 @@
         </span>
       </a>
 
-      <nav class="nav" aria-label="Reduced fallback navigation">
+      <nav class="nav" aria-label="Reduced website fallback navigation">
         <details class="route-menu">
           <summary>Fallback Menu</summary>
           <div class="route-menu-panel">
             <div class="menu-grid">
               <a href="/">Compass</a>
-              <a href="/showroom/globe/">Mirrorland</a>
               <a href="/gauges/">Gauges</a>
             </div>
           </div>
@@ -838,13 +825,13 @@
 
     <main id="main">
       <section class="panel threshold" aria-labelledby="page-title">
-        <div class="kicker">Map / Portal · Door Context</div>
+        <div class="kicker">Map / Portal Blip · Single Entryway</div>
 
         <h1 id="page-title">This is the Door to Mirrorland.</h1>
 
         <p class="lead">
-          The floating Map / Portal is the movement layer. The Diamond Lattice is the object at the Door.
-          The Showroom explains the threshold; the portal carries movement through the cardinal room blueprint.
+          The floating Map / Portal blip is the entryway into Mirrorland. The Diamond Lattice is the object at the Door.
+          To enter Mirrorland, open the map. Inside the map, choose a door into Mirrorland.
         </p>
 
         <div class="quote">
@@ -855,14 +842,14 @@
           <details class="context-detail" open>
             <summary>Door</summary>
             <div class="detail-copy">
-              <p>The Showroom is the threshold. It is the Door to Mirrorland, not the whole world.</p>
+              <p>The Showroom explains the threshold. It is the Door context, not a second Mirrorland entrance.</p>
             </div>
           </details>
 
           <details class="context-detail" open>
-            <summary>Map / Portal</summary>
+            <summary>Map Blip</summary>
             <div class="detail-copy">
-              <p>The floating Map / Portal carries movement through the cardinal room blueprint. Navigation belongs to the portal.</p>
+              <p>The floating Map / Portal blip is the entryway. Open the map to enter the Mirrorland room blueprint.</p>
             </div>
           </details>
 
@@ -980,29 +967,35 @@
               <details class="object-meaning-detail">
                 <summary>Boundary</summary>
                 <div class="detail-copy">
-                  <p>The object is not the route directory. The floating Map / Portal carries movement.</p>
+                  <p>The object is not the route directory. The floating Map / Portal blip carries entry and movement.</p>
                 </div>
               </details>
             </div>
 
             <div class="movement-reminder">
-              Movement lives in the floating Map / Portal.
+              Movement and Mirrorland entry live in the floating Map / Portal blip.
             </div>
           </div>
         </div>
       </section>
 
       <template id="route-receipt" class="receipt" data-route-receipt>
-SHOWROOM_MIRRORLAND_DIAMOND_VIEWPORT_COMPRESSION_HTML_TNT_v1
-previous=SHOWROOM_MIRRORLAND_TOP_PORTAL_TWO_VIEW_OBJECT_CONTROL_HTML_TNT_v1
-baseline=SHOWROOM_MIRRORLAND_TOP_PORTAL_TWO_VIEW_OBJECT_CONTROL_HTML_TNT_v1
+SHOWROOM_MIRRORLAND_MAP_BLIP_SINGLE_ENTRYWAY_HTML_TNT_v1
+previous=SHOWROOM_MIRRORLAND_DIAMOND_VIEWPORT_COMPRESSION_HTML_TNT_v1
+baseline=SHOWROOM_MIRRORLAND_DIAMOND_VIEWPORT_COMPRESSION_HTML_TNT_v1
+parent_contract=SHOWROOM_MIRRORLAND_MAP_BLIP_SINGLE_ENTRYWAY_SPLIT_TNT_v1
 route=/showroom/
 html=/showroom/index.html
-page_role=diamond_viewport_compression
-diamond_viewport_compressed=true
-diamond_viewport_min_height=clamp(23rem,52vw,34rem)
-diamond_viewport_mobile_min_height=26rem
+page_role=map_blip_single_mirrorland_entryway
 this_is_door_to_mirrorland=true
+map_blip_single_entryway=true
+mirrorland_entryway=map_portal_blip
+map_portal_blip_is_entryway=true
+single_public_mirrorland_entrance=true
+direct_mirrorland_link_removed=true
+fallback_menu_mirrorland_removed=true
+map_interior_owns_mirrorland_doors=true
+page_body_mirrorland_directory=false
 top_portal_context_active=true
 floating_map_context_at_top=true
 object_controls_two_view=true
@@ -1010,18 +1003,19 @@ public_object_control_options=object-view,lattice-view
 technical_control_options_hidden=true
 object_controls_immediately_below_object=true
 object_meaning_dropdown=true
+diamond_viewport_compressed=true
+diamond_viewport_min_height=clamp(23rem,52vw,34rem)
+diamond_viewport_mobile_min_height=26rem
 route_jump_cards_removed=true
 route_burden_owned_by_portal=true
 portal_menu_owns_navigation=true
 cardinal_room_map_cache_aligned=true
 blueprint_css=/assets/manor-blueprint/manor.blueprint.css
 blueprint_css_cache_key=MANOR_BLUEPRINT_CARDINAL_ROOM_MAP_VISUAL_CSS_TNT_v1
-blueprint_css_contract=MANOR_BLUEPRINT_CARDINAL_ROOM_MAP_VISUAL_CSS_TNT_v1
 blueprint_js=/assets/manor-blueprint/manor.blueprint.js
-blueprint_js_cache_key=MANOR_BLUEPRINT_CARDINAL_ROOM_MAP_RUNTIME_JS_TNT_v1
-blueprint_js_contract=MANOR_BLUEPRINT_CARDINAL_ROOM_MAP_RUNTIME_JS_TNT_v1
+blueprint_js_cache_key=MANOR_BLUEPRINT_MIRRORLAND_DOORS_SINGLE_ENTRYWAY_RUNTIME_TNT_v1
 blueprint_registry=/assets/manor-blueprint/manor.blueprint.registry.js
-blueprint_registry_contract=MANOR_BLUEPRINT_ROUTE_REGISTRY_TNT_v1
+blueprint_registry_contract=MANOR_BLUEPRINT_MIRRORLAND_DOORS_SINGLE_ENTRYWAY_REGISTRY_TNT_v1
 frontier_mirrorland_aligned=true
 frontier_page_jump_exposed=false
 compass_separated=true
@@ -1031,35 +1025,13 @@ diamond_renderer=/showroom/index.diamond.js
 diamond_renderer_touched=false
 ui=/showroom/index.ui.js
 ui_controller_touched=false
-restored_renderer=SHOWROOM_DIAMOND_G2_PHYSICAL_GEM_RESTRAINED_LATTICE_CORE_SPIRAL_RENDERER_TNT_v4
 diamond_js_cache_key=SHOWROOM_DIAMOND_G2_PHYSICAL_GEM_RESTRAINED_LATTICE_CORE_SPIRAL_RENDERER_TNT_v4
 ui_js_cache_key=SHOWROOM_DIAMOND_G2_FULL_CONTRACT_RENEWAL_UI_TNT_v1_CHILD_CAPTURE
-three_file_authority=true
 visual_variants=object-view,lattice-view
-object_only_physical_gem=true
-object_only_dots=false
-object_only_lattice=false
-restrained_lattice=true
-core_origin_fibonacci_spiral=true
-sunflower_phyllotaxis=held_after_v5_crash
-fibonacci_sequence_visible=1,1,2,3,5,8,13
-clean_diamond_viewport=true
-overlay_obstruction=false
-controls_under_diamond=true
-dimensional_options=object,lattice
 preserved_hooks=true
-mirrorland_narrative_active=true
-shadows_never_shatter_aligned=true
-globe_inspired=true
-gem_governed=true
-radial_nodes=16
-fibonacci_bands=16
-lattice_seats=256
 generated_image=false
 graphic_box=false
 external_image_asset=false
-audralia_inheritance=false
-planet_template_inheritance=false
 visual_pass_claimed=false
 blueprint_runtime_touched=false
 blueprint_css_touched=false
@@ -1068,25 +1040,25 @@ site_bootstrap_touched=false
 non_mirrorland_pages_touched=false
 audralia_runtime_touched=false
 planet_runtime_touched=false
-deploy_marker=SHOWROOM_MIRRORLAND_DIAMOND_VIEWPORT_COMPRESSION_DEPLOY_MARKER_v1
+deploy_marker=SHOWROOM_MIRRORLAND_MAP_BLIP_SINGLE_ENTRYWAY_DEPLOY_MARKER_v1
       </template>
     </main>
 
     <footer>
-      This is the Door to Mirrorland · Object View / Lattice View · Portal-owned movement.
+      This is the Door to Mirrorland · Enter through the Map / Portal blip.
     </footer>
   </div>
 
   <script src="/showroom/index.diamond.js?v=SHOWROOM_DIAMOND_G2_PHYSICAL_GEM_RESTRAINED_LATTICE_CORE_SPIRAL_RENDERER_TNT_v4" defer></script>
   <script src="/showroom/index.ui.js?v=SHOWROOM_DIAMOND_G2_FULL_CONTRACT_RENEWAL_UI_TNT_v1_CHILD_CAPTURE" defer></script>
   <script
-    src="/assets/manor-blueprint/manor.blueprint.registry.js?v=MANOR_BLUEPRINT_ROUTE_REGISTRY_TNT_v1"
+    src="/assets/manor-blueprint/manor.blueprint.registry.js?v=MANOR_BLUEPRINT_MIRRORLAND_DOORS_SINGLE_ENTRYWAY_REGISTRY_TNT_v1"
     defer
     data-mirrorland-blueprint-marker="true"
     data-blueprint-page-scoped="true"
   ></script>
   <script
-    src="/assets/manor-blueprint/manor.blueprint.js?v=MANOR_BLUEPRINT_CARDINAL_ROOM_MAP_RUNTIME_JS_TNT_v1"
+    src="/assets/manor-blueprint/manor.blueprint.js?v=MANOR_BLUEPRINT_MIRRORLAND_DOORS_SINGLE_ENTRYWAY_RUNTIME_TNT_v1"
     defer
     data-mirrorland-blueprint-marker="true"
     data-blueprint-page-scoped="true"

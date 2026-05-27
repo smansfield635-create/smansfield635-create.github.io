@@ -3,17 +3,21 @@
   lang="en"
   data-route="/site-guide/"
   data-page="site-guide"
-  data-version="SITE-GUIDE-G1"
-  data-contract="SITE_GUIDE_DYNAMIC_CONSTRUCTION_NARRATIVE_TNT_v1"
-  data-source-binding="MANOR_BLUEPRINT_MAIN_MENU_INSTRUCTIONS_SITE_GUIDE_CCR_v1"
+  data-version="SITE-GUIDE-G2"
+  data-contract="SITE_GUIDE_TABBED_FLEX_EXHIBIT_PRESENTATION_DIAGNOSTICS_TNT_v2"
   data-main-menu-route="true"
   data-mirrorland-door="false"
-  data-public-label="Guide Desk"
-  data-map-portal-supported="true"
+  data-guide-desk="true"
+  data-flex-exhibit="true"
+  data-presentation-layer="true"
+  data-navigation-layer="true"
+  data-under-hood-diagnostics="true"
+  data-construction-ledger="true"
   data-return-to-orbit-local="true"
-  data-quadrupedic-traversal="active"
-  data-mobile-first-native-build="true"
-  data-project-start="late-january-2026"
+  data-quadrupedic-quadrilateral-traversal="structural-core-only"
+  data-matrix-4x4="true"
+  data-spectrum-16x16="true"
+  data-diagnostic-scope-256="true"
   data-generated-image="false"
   data-graphic-box="false"
   data-canvas="false"
@@ -22,27 +26,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-
-  <title>Guide Desk · Site Guide & Construction Narrative · Diamond Gate Bridge</title>
+  <title>Guide Desk · Flex Exhibit · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Guide Desk explains how Diamond Gate Bridge works as an estate, how Main Menu, Mirrorland Doors, Map / Portal, Return to Orbit, Frontier, Laws, Gauges, Products, and quadrupedic traversal connect."
+    content="Guide Desk is the Diamond Gate Bridge flex exhibit page for presentation systems, navigation systems, under-the-hood diagnostics, construction ledger, Return to Orbit, Map / Portal, estate blueprint, and the 4x4 / 16x16 / 256-state diagnostic structure."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/site-guide/">
   <meta name="theme-color" content="#02040b">
 
-  <link rel="stylesheet" href="/assets/manor-blueprint/manor.blueprint.css?v=SITE_GUIDE_DYNAMIC_CONSTRUCTION_NARRATIVE_TNT_v1">
-  <script src="/assets/manor-blueprint/manor.blueprint.js?v=SITE_GUIDE_DYNAMIC_CONSTRUCTION_NARRATIVE_TNT_v1" defer></script>
+  <link rel="stylesheet" href="/assets/manor-blueprint/manor.blueprint.css?v=SITE_GUIDE_TABBED_FLEX_EXHIBIT_PRESENTATION_DIAGNOSTICS_TNT_v2">
+  <script src="/assets/manor-blueprint/manor.blueprint.js?v=SITE_GUIDE_TABBED_FLEX_EXHIBIT_PRESENTATION_DIAGNOSTICS_TNT_v2" defer></script>
 
   <style>
     :root{
       color-scheme:dark;
       --bg:#02040b;
-      --panel:rgba(8,13,27,.88);
-      --panel2:rgba(13,20,40,.82);
+      --panel:rgba(8,13,27,.90);
+      --panel2:rgba(13,20,40,.84);
       --ink:#fff4d8;
       --muted:rgba(230,238,255,.78);
-      --faint:rgba(230,238,255,.54);
+      --faint:rgba(230,238,255,.52);
       --line:rgba(184,205,255,.18);
       --gold:#f3c86f;
       --gold2:#ffe8a3;
@@ -78,8 +81,8 @@
       background:
         radial-gradient(circle at 50% -10%,rgba(243,200,111,.20),transparent 32rem),
         radial-gradient(circle at 12% 18%,rgba(36,120,255,.22),transparent 34rem),
-        radial-gradient(circle at 88% 28%,rgba(168,140,255,.14),transparent 30rem),
-        radial-gradient(circle at 50% 80%,rgba(143,240,195,.10),transparent 38rem),
+        radial-gradient(circle at 88% 28%,rgba(168,140,255,.15),transparent 30rem),
+        radial-gradient(circle at 50% 80%,rgba(143,240,195,.11),transparent 38rem),
         linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
       overflow-x:hidden;
       -webkit-font-smoothing:antialiased;
@@ -92,7 +95,7 @@
       inset:0;
       z-index:0;
       pointer-events:none;
-      opacity:.25;
+      opacity:.24;
       background-image:
         linear-gradient(rgba(141,216,255,.050) 1px,transparent 1px),
         linear-gradient(90deg,rgba(141,216,255,.050) 1px,transparent 1px),
@@ -104,12 +107,18 @@
     }
 
     a{color:inherit;text-decoration:none}
+
     a:focus-visible,
     button:focus-visible,
     select:focus-visible,
     summary:focus-visible{
       outline:2px solid var(--gold2);
       outline-offset:4px;
+    }
+
+    button,
+    select{
+      font:inherit;
     }
 
     .skip{
@@ -202,7 +211,7 @@
 
     .quick-nav a,
     .button,
-    .orbit-chip{
+    .chip-button{
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -217,18 +226,20 @@
       letter-spacing:.075em;
       text-transform:uppercase;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease,opacity .18s ease,filter .18s ease;
+      cursor:pointer;
     }
 
     .quick-nav a:hover,
     .button:hover,
-    .orbit-chip:hover{
+    .chip-button:hover{
       transform:translateY(-2px);
       border-color:rgba(243,200,111,.58);
       background:rgba(243,200,111,.075);
     }
 
-    .button.gold{
+    .button.gold,
+    .chip-button[data-active="true"]{
       border-color:rgba(243,200,111,.86);
       color:#060811;
       background:linear-gradient(135deg,var(--gold2),var(--gold));
@@ -238,6 +249,12 @@
     .button.blue{border-color:rgba(141,216,255,.38);background:rgba(141,216,255,.07)}
     .button.green{border-color:rgba(143,240,195,.38);background:rgba(143,240,195,.07)}
     .button.violet{border-color:rgba(168,140,255,.38);background:rgba(168,140,255,.07)}
+
+    .muted,
+    [data-muted="true"]{
+      opacity:.32;
+      filter:saturate(.55) grayscale(.28);
+    }
 
     .hero{
       position:relative;
@@ -360,6 +377,27 @@
       margin-top:.15rem;
     }
 
+    .return-primer{
+      position:relative;
+      z-index:2;
+      display:grid;
+      gap:.65rem;
+      max-width:920px;
+      border:1px solid rgba(255,180,95,.32);
+      border-radius:1.15rem;
+      padding:1rem;
+      background:
+        radial-gradient(circle at 10% 0%,rgba(255,180,95,.13),transparent 14rem),
+        rgba(255,255,255,.035);
+    }
+
+    .return-primer b{
+      color:var(--amber);
+      font-size:.68rem;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
     .hero-proof{
       position:relative;
       z-index:2;
@@ -420,228 +458,30 @@
       max-width:900px;
     }
 
-    .guide-orbit{
-      display:grid;
-      grid-template-columns:repeat(5,minmax(0,1fr));
-      gap:.75rem;
-    }
-
-    .orbit-card{
-      position:relative;
-      min-height:9.25rem;
-      display:grid;
-      align-content:start;
-      gap:.5rem;
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:1.15rem;
-      padding:.95rem;
-      background:
-        radial-gradient(circle at 16% 0%,var(--orbit-bg,rgba(243,200,111,.08)),transparent 11rem),
-        rgba(255,255,255,.032);
-      overflow:hidden;
-    }
-
-    .orbit-card::before{
-      content:attr(data-symbol);
-      width:2.35rem;
-      height:2.35rem;
-      display:grid;
-      place-items:center;
-      border:1px solid color-mix(in srgb,var(--orbit-accent,var(--gold)),transparent 45%);
-      border-radius:999px;
-      color:var(--orbit-accent,var(--gold));
-      background:color-mix(in srgb,var(--orbit-accent,var(--gold)),transparent 90%);
-      font-weight:950;
-      box-shadow:0 0 1rem color-mix(in srgb,var(--orbit-accent,var(--gold)),transparent 82%);
-    }
-
-    .orbit-card[data-kind="map"]{--orbit-accent:var(--green);--orbit-bg:rgba(143,240,195,.10)}
-    .orbit-card[data-kind="main"]{--orbit-accent:var(--gold);--orbit-bg:rgba(243,200,111,.10)}
-    .orbit-card[data-kind="mirror"]{--orbit-accent:var(--blue);--orbit-bg:rgba(141,216,255,.10)}
-    .orbit-card[data-kind="orbit"]{--orbit-accent:var(--amber);--orbit-bg:rgba(255,180,95,.10)}
-    .orbit-card[data-kind="guide"]{--orbit-accent:var(--violet);--orbit-bg:rgba(168,140,255,.10)}
-
-    .orbit-card b{
-      color:var(--orbit-accent,var(--gold));
-      font-size:.64rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .orbit-card strong{
-      color:var(--ink);
-      font-size:1.02rem;
-      line-height:1.08;
-    }
-
-    .orbit-card p{
-      font-size:.86rem;
-      line-height:1.42;
-    }
-
-    .schematic-board{
-      display:grid;
-      grid-template-columns:minmax(0,.95fr) minmax(18rem,.55fr);
-      gap:1rem;
-      align-items:stretch;
-    }
-
-    .estate-schematic{
-      position:relative;
-      min-height:31rem;
-      border:1px solid rgba(184,205,255,.16);
-      border-radius:1.25rem;
-      padding:1rem;
-      background:
-        linear-gradient(rgba(141,216,255,.055) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(141,216,255,.055) 1px,transparent 1px),
-        radial-gradient(circle at 50% 50%,rgba(243,200,111,.10),transparent 22rem),
-        rgba(1,5,16,.58);
-      background-size:42px 42px,42px 42px,auto,auto;
-      overflow:hidden;
-    }
-
-    .estate-ring{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:min(72%,26rem);
-      aspect-ratio:1;
-      transform:translate(-50%,-50%);
-      border:1px solid rgba(243,200,111,.18);
-      border-radius:999px;
-      box-shadow:inset 0 0 3rem rgba(141,216,255,.05),0 0 3rem rgba(36,120,255,.08);
-    }
-
-    .estate-core{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:9rem;
-      aspect-ratio:1;
-      display:grid;
-      place-items:center;
-      transform:translate(-50%,-50%) rotate(45deg);
-      clip-path:var(--gem);
-      border:1px solid rgba(243,200,111,.42);
-      background:
-        radial-gradient(circle at 50% 30%,rgba(255,255,255,.22),transparent 44%),
-        linear-gradient(145deg,rgba(243,200,111,.30),rgba(4,9,28,.92));
-      box-shadow:0 0 2.2rem rgba(243,200,111,.16);
-    }
-
-    .estate-core span{
-      transform:rotate(-45deg);
-      display:grid;
-      gap:.12rem;
-      text-align:center;
-    }
-
-    .estate-core b{
-      color:var(--gold2);
-      font-size:.70rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .estate-core strong{
-      color:var(--ink);
-      font-size:1.05rem;
-      line-height:1;
-    }
-
-    .schematic-node{
-      position:absolute;
-      left:calc(var(--x) * 1%);
-      top:calc(var(--y) * 1%);
-      width:clamp(7.8rem,16vw,10.2rem);
-      min-height:5.2rem;
-      transform:translate(-50%,-50%);
-      display:grid;
-      gap:.18rem;
-      border:1px solid color-mix(in srgb,var(--node,var(--gold)),transparent 56%);
-      border-radius:1rem;
-      padding:.62rem;
-      background:
-        radial-gradient(circle at 20% 0%,color-mix(in srgb,var(--node,var(--gold)),transparent 86%),transparent 8rem),
-        rgba(2,7,18,.82);
-      box-shadow:0 .9rem 1.8rem rgba(0,0,0,.28),0 0 1rem color-mix(in srgb,var(--node,var(--gold)),transparent 90%);
-    }
-
-    .schematic-node::before{
-      content:attr(data-symbol);
-      color:var(--node,var(--gold));
-      font-size:1.05rem;
-      line-height:1;
-    }
-
-    .schematic-node b{
-      color:var(--node,var(--gold));
-      font-size:.52rem;
-      letter-spacing:.11em;
-      text-transform:uppercase;
-    }
-
-    .schematic-node strong{
-      color:var(--ink);
-      font-size:.82rem;
-      line-height:1.02;
-    }
-
-    .schematic-node span{
-      color:rgba(230,238,255,.65);
-      font-size:.62rem;
-      line-height:1.12;
-    }
-
-    .schematic-node.north{--node:var(--blue);--x:50;--y:9}
-    .schematic-node.east{--node:var(--violet);--x:86;--y:50}
-    .schematic-node.south{--node:var(--green);--x:50;--y:91}
-    .schematic-node.west{--node:var(--amber);--x:14;--y:50}
-    .schematic-node.center{--node:var(--gold);--x:50;--y:50}
-
-    .schematic-notes{
-      display:grid;
-      gap:.75rem;
-    }
-
-    .note-card{
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:1rem;
-      padding:.9rem;
-      background:rgba(255,255,255,.035);
-    }
-
-    .note-card b{
-      color:var(--gold);
-      font-size:.64rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .note-card p{
-      margin-top:.3rem;
-      font-size:.9rem;
-    }
-
-    .lens-tabs{
+    .lens-rail{
+      position:sticky;
+      top:.5rem;
+      z-index:12;
       display:flex;
       flex-wrap:wrap;
       gap:.5rem;
-      padding:.35rem;
-      border:1px solid rgba(184,205,255,.15);
+      margin-top:1rem;
+      padding:.5rem;
+      border:1px solid rgba(184,205,255,.16);
       border-radius:1.25rem;
-      background:rgba(255,255,255,.035);
+      background:rgba(2,5,14,.82);
+      backdrop-filter:blur(12px);
+      box-shadow:0 1rem 2rem rgba(0,0,0,.22);
     }
 
     .lens-button{
-      min-height:2.45rem;
-      border:1px solid transparent;
+      flex:1 1 12rem;
+      min-height:2.65rem;
+      border:1px solid rgba(255,255,255,.12);
       border-radius:999px;
-      padding:.55rem .82rem;
-      color:rgba(230,238,255,.84);
-      background:transparent;
+      padding:.58rem .82rem;
+      color:rgba(230,238,255,.82);
+      background:rgba(255,255,255,.035);
       font:inherit;
       font-size:.68rem;
       font-weight:950;
@@ -651,157 +491,447 @@
     }
 
     .lens-button[data-active="true"]{
+      border-color:rgba(243,200,111,.82);
       color:#06100b;
-      border-color:rgba(243,200,111,.88);
       background:linear-gradient(135deg,var(--gold2),var(--gold));
     }
 
-    .lens-panel{display:none}
-    .lens-panel[data-active="true"]{display:grid}
-
-    .traversal-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:.8rem;
+    .lens-panel{
+      display:none;
+      gap:1rem;
     }
 
-    .traversal-card{
-      --leg:var(--gold);
-      min-height:14rem;
+    .lens-panel[data-active="true"]{
       display:grid;
-      gap:.55rem;
-      align-content:start;
-      border:1px solid color-mix(in srgb,var(--leg),transparent 70%);
-      border-radius:1.15rem;
-      padding:1rem;
-      background:
-        radial-gradient(circle at 20% 0%,color-mix(in srgb,var(--leg),transparent 88%),transparent 12rem),
-        rgba(255,255,255,.032);
     }
 
-    .traversal-card[data-leg="north"]{--leg:var(--blue)}
-    .traversal-card[data-leg="east"]{--leg:var(--violet)}
-    .traversal-card[data-leg="south"]{--leg:var(--green)}
-    .traversal-card[data-leg="west"]{--leg:var(--amber)}
-
-    .traversal-card span{
-      width:2.55rem;
-      height:2.55rem;
+    .guide-orbit{
+      position:relative;
+      min-height:34rem;
       display:grid;
       place-items:center;
-      border:1px solid color-mix(in srgb,var(--leg),transparent 52%);
-      border-radius:999px;
-      color:var(--leg);
-      background:color-mix(in srgb,var(--leg),transparent 91%);
-      font-size:1.2rem;
-      font-weight:950;
+      border:1px solid rgba(184,205,255,.15);
+      border-radius:1.35rem;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.10),transparent 20rem),
+        radial-gradient(circle at 20% 25%,rgba(141,216,255,.11),transparent 18rem),
+        rgba(1,5,16,.55);
+      overflow:hidden;
     }
 
-    .traversal-card b{
-      color:var(--leg);
-      font-size:.64rem;
+    .guide-orbit::before,
+    .guide-orbit::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      border:1px solid rgba(243,200,111,.15);
+      border-radius:50%;
+      pointer-events:none;
+    }
+
+    .guide-orbit::before{
+      width:min(78%,35rem);
+      aspect-ratio:1;
+    }
+
+    .guide-orbit::after{
+      width:min(54%,24rem);
+      aspect-ratio:1;
+      border-color:rgba(141,216,255,.13);
+    }
+
+    .orbit-core{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:3;
+      width:8.8rem;
+      aspect-ratio:1;
+      transform:translate(-50%,-50%) rotate(45deg);
+      clip-path:var(--gem);
+      border:1px solid rgba(243,200,111,.44);
+      background:
+        radial-gradient(circle at 50% 26%,rgba(255,255,255,.22),transparent 45%),
+        linear-gradient(145deg,rgba(243,200,111,.30),rgba(4,9,28,.94));
+      box-shadow:0 0 2rem rgba(243,200,111,.18);
+    }
+
+    .orbit-core span{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      transform:rotate(-45deg);
+      text-align:center;
+      color:var(--gold2);
       font-weight:950;
-      letter-spacing:.13em;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      font-size:.72rem;
+    }
+
+    .feature-gem{
+      --accent:var(--gold);
+      position:absolute;
+      left:calc(var(--x) * 1%);
+      top:calc(var(--y) * 1%);
+      z-index:4;
+      width:clamp(7.3rem,16vw,10.5rem);
+      min-height:5.7rem;
+      transform:translate(-50%,-50%);
+      display:grid;
+      gap:.22rem;
+      border:1px solid color-mix(in srgb,var(--accent),transparent 55%);
+      border-radius:1.05rem;
+      padding:.75rem;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 18% 0%,color-mix(in srgb,var(--accent),transparent 86%),transparent 9rem),
+        rgba(2,7,18,.86);
+      box-shadow:0 1rem 1.9rem rgba(0,0,0,.28),0 0 1rem color-mix(in srgb,var(--accent),transparent 88%);
+      text-align:left;
+      cursor:pointer;
+      transition:transform .18s ease,opacity .18s ease,filter .18s ease,border-color .18s ease;
+    }
+
+    .feature-gem::before{
+      content:attr(data-symbol);
+      color:var(--accent);
+      font-size:1.05rem;
+      line-height:1;
+    }
+
+    .feature-gem b{
+      color:var(--accent);
+      font-size:.54rem;
+      letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .traversal-card strong{
+    .feature-gem strong{
       color:var(--ink);
-      font-size:1.05rem;
-      line-height:1.06;
+      font-size:.86rem;
+      line-height:1.05;
     }
 
-    .traversal-card p{
-      font-size:.88rem;
-      line-height:1.42;
+    .feature-gem[data-active="true"]{
+      border-color:var(--accent);
+      transform:translate(-50%,-50%) scale(1.05);
+      opacity:1;
+      filter:none;
+      box-shadow:0 0 1.7rem color-mix(in srgb,var(--accent),transparent 76%),0 1rem 1.9rem rgba(0,0,0,.28);
     }
 
-    .compare-grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:.8rem;
-    }
+    .feature-gem[data-feature="estate"]{--accent:var(--gold);--x:50;--y:12}
+    .feature-gem[data-feature="gems"]{--accent:var(--blue);--x:82;--y:29}
+    .feature-gem[data-feature="categories"]{--accent:var(--green);--x:82;--y:72}
+    .feature-gem[data-feature="return"]{--accent:var(--amber);--x:50;--y:88}
+    .feature-gem[data-feature="portal"]{--accent:var(--violet);--x:18;--y:72}
+    .feature-gem[data-feature="blueprint"]{--accent:var(--cyan);--x:18;--y:29}
 
-    .compare-card{
-      border:1px solid rgba(255,255,255,.13);
+    .feature-detail{
+      display:none;
+      border:1px solid rgba(255,255,255,.14);
       border-radius:1.15rem;
       padding:1rem;
       background:
-        radial-gradient(circle at 12% 0%,rgba(141,216,255,.09),transparent 14rem),
+        radial-gradient(circle at 12% 0%,rgba(243,200,111,.08),transparent 14rem),
         rgba(255,255,255,.035);
     }
 
-    .compare-card[data-type="global"]{border-color:rgba(143,240,195,.28)}
-    .compare-card[data-type="local"]{border-color:rgba(255,180,95,.28)}
+    .feature-detail[data-active="true"]{
+      display:grid;
+      gap:.65rem;
+    }
 
-    .compare-card b{
+    .feature-detail b{
       color:var(--gold);
       font-size:.66rem;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .compare-card ul{
-      margin:.65rem 0 0;
-      padding-left:1.1rem;
-      color:var(--muted);
-    }
-
-    .compare-card li{margin:.35rem 0}
-
-    .systems-grid{
+    .demo-grid{
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:.8rem;
+      gap:.75rem;
     }
 
-    .system-card{
-      --sys:var(--gold);
-      position:relative;
-      min-height:11rem;
+    .demo-card{
+      --demo:var(--gold);
+      min-height:10rem;
       display:grid;
-      gap:.55rem;
+      gap:.45rem;
       align-content:start;
-      border:1px solid color-mix(in srgb,var(--sys),transparent 72%);
-      border-radius:1.15rem;
-      padding:1rem;
+      border:1px solid color-mix(in srgb,var(--demo),transparent 70%);
+      border-radius:1.05rem;
+      padding:.9rem;
       background:
-        radial-gradient(circle at 12% 0%,color-mix(in srgb,var(--sys),transparent 89%),transparent 12rem),
-        rgba(255,255,255,.032);
-      overflow:hidden;
+        radial-gradient(circle at 14% 0%,color-mix(in srgb,var(--demo),transparent 88%),transparent 11rem),
+        rgba(255,255,255,.03);
+      transition:opacity .18s ease,filter .18s ease,border-color .18s ease;
     }
 
-    .system-card::before{
-      content:attr(data-symbol);
-      color:var(--sys);
-      font-size:1.15rem;
-      line-height:1;
+    .demo-card[data-active="true"]{
+      border-color:var(--demo);
+      opacity:1;
+      filter:none;
     }
 
-    .system-card b{
-      color:var(--sys);
-      font-size:.64rem;
+    .demo-card b{
+      color:var(--demo);
+      font-size:.62rem;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .system-card strong{
+    .demo-card strong{
       color:var(--ink);
-      font-size:1.04rem;
       line-height:1.06;
     }
 
-    .system-card p{
-      font-size:.88rem;
+    .demo-card p{
+      font-size:.86rem;
       line-height:1.42;
     }
 
-    .system-card.laws{--sys:var(--ruby)}
-    .system-card.gauges{--sys:var(--green)}
-    .system-card.products{--sys:var(--gold2)}
-    .system-card.frontier{--sys:var(--amber)}
-    .system-card.mirrorland{--sys:var(--blue)}
-    .system-card.audralia{--sys:var(--violet)}
+    .category-demo{
+      display:grid;
+      grid-template-columns:minmax(12rem,.36fr) minmax(0,1fr);
+      gap:1rem;
+    }
+
+    .category-list{
+      display:grid;
+      gap:.5rem;
+    }
+
+    .category-button{
+      --cat:var(--gold);
+      min-height:3.3rem;
+      border:1px solid color-mix(in srgb,var(--cat),transparent 70%);
+      border-radius:.95rem;
+      padding:.65rem;
+      color:var(--ink);
+      background:rgba(255,255,255,.032);
+      text-align:left;
+      cursor:pointer;
+    }
+
+    .category-button[data-active="true"]{
+      border-color:var(--cat);
+      background:
+        radial-gradient(circle at 10% 0%,color-mix(in srgb,var(--cat),transparent 88%),transparent 10rem),
+        rgba(255,255,255,.045);
+    }
+
+    .category-button b{
+      color:var(--cat);
+      font-size:.62rem;
+      letter-spacing:.11em;
+      text-transform:uppercase;
+    }
+
+    .category-button span{
+      display:block;
+      color:var(--muted);
+      font-size:.82rem;
+      margin-top:.12rem;
+    }
+
+    .category-button[data-category="presentation"]{--cat:var(--gold)}
+    .category-button[data-category="structure"]{--cat:var(--blue)}
+    .category-button[data-category="proof"]{--cat:var(--green)}
+    .category-button[data-category="application"]{--cat:var(--amber)}
+
+    .category-panel{
+      display:none;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:1rem;
+      padding:1rem;
+      background:rgba(255,255,255,.032);
+    }
+
+    .category-panel[data-active="true"]{
+      display:grid;
+      gap:.55rem;
+    }
+
+    .mini-map{
+      position:relative;
+      min-height:25rem;
+      border:1px solid rgba(184,205,255,.15);
+      border-radius:1.2rem;
+      background:
+        linear-gradient(rgba(141,216,255,.050) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.050) 1px,transparent 1px),
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.09),transparent 17rem),
+        rgba(1,5,16,.55);
+      background-size:36px 36px,36px 36px,auto,auto;
+      overflow:hidden;
+    }
+
+    .mini-node{
+      position:absolute;
+      left:calc(var(--x) * 1%);
+      top:calc(var(--y) * 1%);
+      transform:translate(-50%,-50%);
+      width:8.2rem;
+      min-height:4.8rem;
+      display:grid;
+      gap:.12rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:.9rem;
+      padding:.62rem;
+      background:rgba(2,7,18,.82);
+      text-align:left;
+    }
+
+    .mini-node b{
+      color:var(--gold);
+      font-size:.56rem;
+      letter-spacing:.11em;
+      text-transform:uppercase;
+    }
+
+    .mini-node span{
+      color:var(--muted);
+      font-size:.72rem;
+      line-height:1.15;
+    }
+
+    .blueprint-wrap{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(18rem,.42fr);
+      gap:1rem;
+      align-items:start;
+    }
+
+    .estate-blueprint{
+      position:relative;
+      min-height:43rem;
+      border:1px solid rgba(184,205,255,.18);
+      border-radius:1.2rem;
+      padding:1rem;
+      background:
+        linear-gradient(rgba(141,216,255,.055) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.055) 1px,transparent 1px),
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.09),transparent 23rem),
+        rgba(1,5,16,.62);
+      background-size:34px 34px,34px 34px,auto,auto;
+      overflow:hidden;
+    }
+
+    .room-shape{
+      --room:var(--gold);
+      position:absolute;
+      left:calc(var(--x) * 1%);
+      top:calc(var(--y) * 1%);
+      width:calc(var(--w) * 1%);
+      height:calc(var(--h) * 1%);
+      display:grid;
+      align-content:start;
+      gap:.25rem;
+      border:2px solid color-mix(in srgb,var(--room),transparent 45%);
+      border-radius:.42rem;
+      padding:.5rem;
+      color:var(--ink);
+      background:
+        linear-gradient(135deg,color-mix(in srgb,var(--room),transparent 88%),transparent 58%),
+        rgba(2,7,18,.74);
+      text-align:left;
+      cursor:pointer;
+      overflow:hidden;
+      transition:opacity .18s ease,filter .18s ease,transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .room-shape::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:-2px;
+      width:1.4rem;
+      height:.42rem;
+      transform:translateX(-50%);
+      border-left:2px solid color-mix(in srgb,var(--room),transparent 25%);
+      border-right:2px solid color-mix(in srgb,var(--room),transparent 25%);
+      border-bottom:2px solid rgba(2,7,18,.90);
+      background:rgba(2,7,18,.90);
+    }
+
+    .room-shape b{
+      color:var(--room);
+      font-size:.54rem;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+
+    .room-shape strong{
+      color:var(--ink);
+      font-size:.78rem;
+      line-height:1.02;
+    }
+
+    .room-shape span{
+      color:rgba(230,238,255,.66);
+      font-size:.60rem;
+      line-height:1.1;
+    }
+
+    .room-shape[data-active="true"]{
+      z-index:8;
+      opacity:1;
+      filter:none;
+      transform:scale(1.03);
+      border-color:var(--room);
+      box-shadow:0 0 1.3rem color-mix(in srgb,var(--room),transparent 78%),0 1rem 1.7rem rgba(0,0,0,.26);
+    }
+
+    .room-shape[data-room="compass"]{--room:var(--blue);--x:37;--y:4;--w:26;--h:10}
+    .room-shape[data-room="guide"]{--room:var(--gold);--x:65;--y:4;--w:25;--h:10}
+    .room-shape[data-room="main"]{--room:var(--gold2);--x:34;--y:17;--w:26;--h:13}
+    .room-shape[data-room="atrium"]{--room:var(--gold);--x:42;--y:34;--w:22;--h:15}
+    .room-shape[data-room="atlas"]{--room:var(--blue);--x:68;--y:26;--w:25;--h:19}
+    .room-shape[data-room="zionts"]{--room:var(--blue);--x:69;--y:49;--w:12;--h:10}
+    .room-shape[data-room="audralia"]{--room:var(--violet);--x:83;--y:49;--w:13;--h:10}
+    .room-shape[data-room="worldroom"]{--room:var(--violet);--x:73;--y:62;--w:12;--h:10}
+    .room-shape[data-room="cockpit"]{--room:var(--cyan);--x:87;--y:62;--w:10;--h:10}
+    .room-shape[data-room="frontier"]{--room:var(--amber);--x:5;--y:43;--w:31;--h:24}
+    .room-shape[data-room="product"]{--room:var(--gold2);--x:11;--y:71;--w:24;--h:13}
+    .room-shape[data-room="lab"]{--room:var(--green);--x:41;--y:72;--w:22;--h:13}
+    .room-shape[data-room="law"]{--room:var(--ruby);--x:65;--y:74;--w:25;--h:12}
+
+    .blueprint-detail{
+      display:grid;
+      gap:.75rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:1.1rem;
+      padding:1rem;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(143,240,195,.09),transparent 14rem),
+        rgba(255,255,255,.035);
+      position:sticky;
+      top:5rem;
+    }
+
+    .blueprint-detail b{
+      color:var(--gold);
+      font-size:.65rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .blueprint-detail ul{
+      margin:.1rem 0 0;
+      padding-left:1.1rem;
+      color:var(--muted);
+    }
+
+    .blueprint-detail li{
+      margin:.26rem 0;
+    }
 
     .route-planner{
       display:grid;
@@ -840,7 +970,6 @@
       padding:.55rem .7rem;
       color:var(--ink);
       background:#070d1d;
-      font:inherit;
     }
 
     .planner-output{
@@ -873,77 +1002,136 @@
       font-size:.72rem;
     }
 
-    .timeline{
+    .diagnostic-layout{
       display:grid;
-      gap:.8rem;
+      grid-template-columns:minmax(0,.55fr) minmax(0,1fr);
+      gap:1rem;
+      align-items:start;
     }
 
-    .timeline-item{
+    .matrix-4x4{
       display:grid;
-      grid-template-columns:auto 1fr;
-      gap:.8rem;
-      align-items:start;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:.3rem;
       border:1px solid rgba(255,255,255,.13);
       border-radius:1rem;
-      padding:.9rem;
-      background:rgba(255,255,255,.032);
+      padding:.75rem;
+      background:rgba(255,255,255,.03);
     }
 
-    .timeline-item time{
-      width:5.2rem;
+    .matrix-cell{
+      min-height:3.4rem;
       display:grid;
       place-items:center;
-      border:1px solid rgba(243,200,111,.34);
-      border-radius:999px;
-      padding:.45rem;
-      color:var(--gold);
-      background:rgba(243,200,111,.07);
-      font-size:.62rem;
-      font-weight:950;
-      letter-spacing:.08em;
+      border:1px solid rgba(184,205,255,.14);
+      border-radius:.65rem;
+      padding:.3rem;
+      color:var(--muted);
+      background:rgba(255,255,255,.025);
+      font-size:.58rem;
+      font-weight:900;
+      letter-spacing:.06em;
+      text-align:center;
       text-transform:uppercase;
+      cursor:pointer;
     }
 
-    .timeline-item strong{
-      display:block;
-      color:var(--ink);
-      line-height:1.08;
+    .matrix-cell.header{
+      color:var(--gold);
+      background:rgba(243,200,111,.06);
+      cursor:default;
     }
 
-    .timeline-item p{
-      margin-top:.25rem;
-      font-size:.88rem;
+    .matrix-cell[data-active="true"]{
+      color:#06100b;
+      border-color:var(--gold);
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+      opacity:1;
+      filter:none;
     }
 
-    .start-grid{
+    .spectrum-16x16{
       display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:.75rem;
+      grid-template-columns:repeat(16,1fr);
+      gap:.16rem;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:1rem;
+      padding:.75rem;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(143,240,195,.08),transparent 16rem),
+        rgba(255,255,255,.03);
     }
 
-    .start-card{
-      display:grid;
-      gap:.5rem;
+    .spectrum-cell{
+      aspect-ratio:1;
+      min-width:0;
+      border:1px solid rgba(184,205,255,.11);
+      border-radius:.22rem;
+      background:rgba(141,216,255,.08);
+      cursor:pointer;
+      transition:opacity .18s ease,filter .18s ease,background .18s ease;
+    }
+
+    .spectrum-cell:nth-child(4n){background:rgba(243,200,111,.10)}
+    .spectrum-cell:nth-child(5n){background:rgba(143,240,195,.10)}
+    .spectrum-cell:nth-child(7n){background:rgba(168,140,255,.10)}
+
+    .spectrum-cell[data-active="true"]{
+      background:var(--gold);
+      border-color:var(--gold2);
+      box-shadow:0 0 .75rem rgba(243,200,111,.40);
+      opacity:1;
+      filter:none;
+    }
+
+    .note-card{
       border:1px solid rgba(255,255,255,.13);
       border-radius:1rem;
       padding:.95rem;
       background:rgba(255,255,255,.032);
     }
 
-    .start-card b{
+    .note-card b{
+      color:var(--gold);
+      font-size:.64rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .note-card p,
+    .note-card li{
+      font-size:.9rem;
+    }
+
+    .ledger-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.75rem;
+    }
+
+    .ledger-card{
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:1rem;
+      padding:.95rem;
+      background:rgba(255,255,255,.032);
+    }
+
+    .ledger-card b{
       color:var(--gold);
       font-size:.62rem;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .start-card strong{
+    .ledger-card strong{
+      display:block;
+      margin-top:.28rem;
       color:var(--ink);
-      font-size:1.02rem;
       line-height:1.06;
     }
 
-    .start-card p{
+    .ledger-card p{
+      margin-top:.3rem;
       font-size:.86rem;
       line-height:1.42;
     }
@@ -974,19 +1162,21 @@
 
     @media (max-width:1040px){
       .hero-proof,
-      .guide-orbit,
-      .traversal-grid{
+      .demo-grid,
+      .ledger-grid{
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
 
-      .schematic-board,
-      .route-planner{
+      .blueprint-wrap,
+      .route-planner,
+      .diagnostic-layout,
+      .category-demo{
         grid-template-columns:1fr;
       }
 
-      .systems-grid,
-      .start-grid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
+      .blueprint-detail{
+        position:relative;
+        top:auto;
       }
     }
 
@@ -994,33 +1184,68 @@
       .shell{width:min(100% - 22px,var(--max))}
       .topbar{grid-template-columns:1fr}
       .quick-nav{justify-content:flex-start}
-      .hero{min-height:32rem;padding:1rem}
+      .hero{min-height:34rem;padding:1rem}
       h1{font-size:clamp(3rem,17vw,5rem)}
       .hero-actions,
       .actions{display:grid}
       .button{width:100%}
       .hero-proof,
-      .guide-orbit,
-      .traversal-grid,
-      .compare-grid,
-      .systems-grid,
-      .start-grid{
+      .demo-grid,
+      .ledger-grid{
         grid-template-columns:1fr;
       }
-      .estate-schematic{min-height:38rem}
-      .estate-core{width:7.6rem}
-      .schematic-node{
-        width:min(9rem,38vw);
+      .lens-rail{
+        position:relative;
+        top:auto;
+        display:grid;
       }
-      .schematic-node.north{--x:50;--y:9}
-      .schematic-node.east{--x:74;--y:38}
-      .schematic-node.west{--x:26;--y:38}
-      .schematic-node.south{--x:50;--y:89}
-      .schematic-node.center{--x:50;--y:57}
-      .lens-tabs{display:grid}
       .lens-button{width:100%}
-      .timeline-item{grid-template-columns:1fr}
-      .timeline-item time{width:fit-content}
+      .guide-orbit{
+        min-height:42rem;
+      }
+      .feature-gem{
+        width:min(8.2rem,38vw);
+      }
+      .feature-gem[data-feature="estate"]{--x:50;--y:10}
+      .feature-gem[data-feature="gems"]{--x:76;--y:28}
+      .feature-gem[data-feature="categories"]{--x:76;--y:70}
+      .feature-gem[data-feature="return"]{--x:50;--y:90}
+      .feature-gem[data-feature="portal"]{--x:24;--y:70}
+      .feature-gem[data-feature="blueprint"]{--x:24;--y:28}
+      .orbit-core{width:7rem}
+      .estate-blueprint{
+        min-height:51rem;
+      }
+      .room-shape{
+        padding:.38rem;
+      }
+      .room-shape strong{font-size:.62rem}
+      .room-shape span{display:none}
+      .room-shape[data-room="compass"]{--x:6;--y:4;--w:42;--h:8}
+      .room-shape[data-room="guide"]{--x:52;--y:4;--w:42;--h:8}
+      .room-shape[data-room="main"]{--x:6;--y:15;--w:42;--h:10}
+      .room-shape[data-room="atrium"]{--x:52;--y:15;--w:42;--h:10}
+      .room-shape[data-room="atlas"]{--x:6;--y:28;--w:42;--h:12}
+      .room-shape[data-room="zionts"]{--x:52;--y:28;--w:20;--h:9}
+      .room-shape[data-room="audralia"]{--x:74;--y:28;--w:20;--h:9}
+      .room-shape[data-room="worldroom"]{--x:52;--y:40;--w:20;--h:9}
+      .room-shape[data-room="cockpit"]{--x:74;--y:40;--w:20;--h:9}
+      .room-shape[data-room="frontier"]{--x:6;--y:54;--w:42;--h:13}
+      .room-shape[data-room="product"]{--x:52;--y:54;--w:42;--h:10}
+      .room-shape[data-room="lab"]{--x:6;--y:72;--w:42;--h:10}
+      .room-shape[data-room="law"]{--x:52;--y:72;--w:42;--h:10}
+      .matrix-4x4{
+        grid-template-columns:1fr;
+      }
+      .matrix-cell{
+        min-height:2.8rem;
+      }
+      .matrix-cell.header{
+        display:none;
+      }
+      .spectrum-16x16{
+        gap:.12rem;
+      }
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -1044,7 +1269,7 @@
       <a class="brand" href="/site-guide/" aria-label="Guide Desk">
         <span class="brand-mark" aria-hidden="true"><span>GD</span></span>
         <span class="brand-copy">
-          <span>Diamond Gate Bridge · Website Construction Narrative</span>
+          <span>Diamond Gate Bridge · Flex Exhibit</span>
           <strong>Guide Desk</strong>
         </span>
       </a>
@@ -1060,492 +1285,532 @@
 
     <main id="guide-main">
       <section class="hero" aria-labelledby="page-title">
-        <div class="kicker">Guide Desk · Site Guide & Construction Narrative</div>
-        <h1 id="page-title">How to read Diamond Gate Bridge.</h1>
-        <h2>This website is built like an estate, not a flat directory.</h2>
+        <div class="kicker">Guide Desk · Flex Exhibit Page</div>
+        <h1 id="page-title">The website explains itself by using itself.</h1>
+        <h2>A live exhibit for Diamond Gate Bridge design systems.</h2>
         <p class="lead">
-          Guide Desk explains how the public website, Mirrorland, Map / Portal, Return to Orbit, Frontier, Products, Laws, Gauges, Audralia, and quadrupedic traversal connect. The goal is simple: visitors should understand where they are, what contains them, where they can go next, and why each path exists.
+          Guide Desk is the sub-contextual flex page for the estate’s native patterns: orbits, gems, categories, Return to Orbit, Map / Portal, room blueprints, presentation layers, navigation layers, diagnostics, and construction receipts.
         </p>
+
+        <div class="return-primer" id="return-to-orbit-primer">
+          <b>Return to Orbit is local page movement</b>
+          <p>
+            This page is long by design, so Return to Orbit appears throughout the page. It returns you to the Guide Orbit on this page. It is different from the global Map / Portal, which opens the estate navigation system.
+          </p>
+          <div class="actions">
+            <a class="button gold" href="#guide-orbit">Return to Guide Orbit</a>
+            <a class="button blue" href="#guide-lenses">Open Page Lenses</a>
+          </div>
+        </div>
 
         <div class="hero-actions">
           <a class="button gold" href="#guide-orbit">Open Guide Orbit</a>
-          <a class="button blue" href="#estate-model">View Estate Model</a>
-          <a class="button green" href="#quadrupedic-traversal">Study Quadrupedic Traversal</a>
-          <a class="button violet" href="#route-planner">Use Route Planner</a>
+          <a class="button blue" href="#presentation-layer">Presentation Layer</a>
+          <a class="button green" href="#navigation-layer">Navigation Layer</a>
+          <a class="button violet" href="#diagnostics-layer">Under-the-Hood</a>
         </div>
 
         <div class="hero-proof" aria-label="Guide Desk proof points">
           <div class="proof-card">
-            <b>Navigation</b>
-            <strong>Main Menu and Mirrorland Doors are separated.</strong>
+            <b>Pattern</b>
+            <strong>Selected items highlight; non-selected items mute.</strong>
           </div>
           <div class="proof-card">
-            <b>Movement</b>
-            <strong>Return to Orbit is local page movement.</strong>
+            <b>Layer</b>
+            <strong>Presentation is separated from diagnostics.</strong>
+          </div>
+          <div class="proof-card">
+            <b>Blueprint</b>
+            <strong>Estate rooms render as a floorplan.</strong>
           </div>
           <div class="proof-card">
             <b>Build</b>
-            <strong>Mobile-first, native-code construction.</strong>
-          </div>
-          <div class="proof-card">
-            <b>Design</b>
-            <strong>Four-leg traversal organizes the site.</strong>
+            <strong>Native mobile-first construction is documented.</strong>
           </div>
         </div>
       </section>
 
-      <section class="panel" id="guide-orbit" aria-labelledby="guide-orbit-title">
+      <section class="panel" id="guide-orbit" aria-labelledby="orbit-title">
         <div class="panel-inner">
           <div class="section-head">
             <div class="kicker">Guide Orbit</div>
-            <h2 id="guide-orbit-title">Five navigation ideas control the whole experience.</h2>
+            <h2 id="orbit-title">Select a feature. The rest of the orbit mutes.</h2>
             <p>
-              These are not interchangeable. Each one has a different job. Confusing them creates a sitemap. Separating them creates an estate.
+              This is the universal interaction concept used throughout the estate: one selected item receives focus while non-selected items gray out. Return to Orbit clears the local focus and returns to this hub.
             </p>
           </div>
 
-          <div class="guide-orbit" aria-label="Five guide concepts">
-            <article class="orbit-card" data-kind="map" data-symbol="◆">
-              <b>Map / Portal</b>
-              <strong>Global estate navigation.</strong>
-              <p>The floating Map / Portal opens the Mirrorland estate map from inside the experience.</p>
-            </article>
+          <div class="guide-orbit" data-select-group="feature-orbit">
+            <div class="orbit-core"><span>Guide<br>Orbit</span></div>
 
-            <article class="orbit-card" data-kind="main" data-symbol="⌂">
-              <b>Main Menu</b>
-              <strong>Exit to the regular website.</strong>
-              <p>Main Menu offers regular website rooms only, even when opened from inside Mirrorland.</p>
-            </article>
+            <button class="feature-gem" type="button" data-feature-gem data-feature="estate" data-symbol="⌂" data-active="false">
+              <b>Estate</b>
+              <strong>How rooms connect</strong>
+            </button>
 
-            <article class="orbit-card" data-kind="mirror" data-symbol="◎">
-              <b>Mirrorland Doors</b>
-              <strong>Immersive room navigation.</strong>
-              <p>Mirrorland Doors use estate-room identity: Atrium, Atlas Study, ZIONTS Room, and more.</p>
-            </article>
+            <button class="feature-gem" type="button" data-feature-gem data-feature="gems" data-symbol="◆" data-active="false">
+              <b>Gems</b>
+              <strong>Selectable controls</strong>
+            </button>
 
-            <article class="orbit-card" data-kind="orbit" data-symbol="↩">
-              <b>Return to Orbit</b>
-              <strong>Local page movement.</strong>
-              <p>Return to Orbit goes back to the current page’s own category orbit, gem orbit, or node field.</p>
-            </article>
+            <button class="feature-gem" type="button" data-feature-gem data-feature="categories" data-symbol="◈" data-active="false">
+              <b>Categories</b>
+              <strong>One category at a time</strong>
+            </button>
 
-            <article class="orbit-card" data-kind="guide" data-symbol="✦">
-              <b>Guide Desk</b>
-              <strong>The construction narrative.</strong>
-              <p>This page explains how everything connects without exposing unnecessary builder clutter.</p>
-            </article>
-          </div>
-        </div>
-      </section>
+            <button class="feature-gem" type="button" data-feature-gem data-feature="return" data-symbol="↩" data-active="false">
+              <b>Return</b>
+              <strong>Local orbit reset</strong>
+            </button>
 
-      <section class="panel" id="estate-model" aria-labelledby="estate-title">
-        <div class="panel-inner">
-          <div class="section-head">
-            <div class="kicker">Estate Model</div>
-            <h2 id="estate-title">The site is organized by place, function, and movement.</h2>
-            <p>
-              A normal website asks, “What page do you want?” Diamond Gate Bridge asks, “Where are you, what area are you inside, what kind of value are you looking for, and what movement makes sense next?”
-            </p>
+            <button class="feature-gem" type="button" data-feature-gem data-feature="portal" data-symbol="◎" data-active="false">
+              <b>Portal</b>
+              <strong>Global estate map</strong>
+            </button>
+
+            <button class="feature-gem" type="button" data-feature-gem data-feature="blueprint" data-symbol="▣" data-active="false">
+              <b>Blueprint</b>
+              <strong>Room-shaped layout</strong>
+            </button>
           </div>
 
-          <div class="schematic-board">
-            <div class="estate-schematic" aria-label="Diamond Gate Bridge estate schematic">
-              <div class="estate-ring" aria-hidden="true"></div>
-
-              <div class="schematic-node north" data-symbol="N">
-                <b>North</b>
-                <strong>Structure</strong>
-                <span>Compass, laws, orientation, known-system clarity.</span>
-              </div>
-
-              <div class="schematic-node east" data-symbol="E">
-                <b>East</b>
-                <strong>Expression</strong>
-                <span>Mirrorland, worlds, story, visible imagination.</span>
-              </div>
-
-              <div class="schematic-node south" data-symbol="S">
-                <b>South</b>
-                <strong>Proof</strong>
-                <span>The Lab, gauges, measurement, readiness checks.</span>
-              </div>
-
-              <div class="schematic-node west" data-symbol="W">
-                <b>West</b>
-                <strong>Application</strong>
-                <span>Products, Frontier, community, deployment.</span>
-              </div>
-
-              <div class="estate-core">
-                <span>
-                  <b>Core</b>
-                  <strong>Estate</strong>
-                </span>
-              </div>
-            </div>
-
-            <div class="schematic-notes">
-              <article class="note-card">
-                <b>Regular website</b>
-                <p>Compass, Door, Home, Laws, Governance, The Lab, Products, Host Portrait, and Guide Desk are ordinary public website rooms.</p>
-              </article>
-
-              <article class="note-card">
-                <b>Mirrorland</b>
-                <p>Atrium, Atlas Study, ZIONTS Room, Audralia Conservatory, Control Cockpit, Frontier Workshop Yard, and story/world rooms belong to the immersive estate layer.</p>
-              </article>
-
-              <article class="note-card">
-                <b>Key rule</b>
-                <p>File path is not room identity. Room identity is not estate location. Estate location is not value category. Value category is not navigation action.</p>
-              </article>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel" id="navigation-systems" aria-labelledby="nav-title">
-        <div class="panel-inner">
-          <div class="section-head">
-            <div class="kicker">Navigation Systems</div>
-            <h2 id="nav-title">Main Menu, Mirrorland Doors, and Return to Orbit do different jobs.</h2>
-            <p>
-              This separation is what makes the experience understandable on mobile. The visitor can always leave Mirrorland, move inside Mirrorland, or return to the active page’s local orbit without confusing those actions.
-            </p>
-          </div>
-
-          <div class="compare-grid">
-            <article class="compare-card" data-type="global">
-              <b>Map / Portal</b>
-              <h3>Global Mirrorland navigation</h3>
-              <ul>
-                <li>Opens the estate-room map.</li>
-                <li>Shows where the visitor is inside Mirrorland.</li>
-                <li>Separates Inside, Nearby, Deeper, Connected, and Return.</li>
-                <li>Uses visitor-facing room names instead of builder paths.</li>
-              </ul>
-            </article>
-
-            <article class="compare-card" data-type="local">
-              <b>Return to Orbit</b>
-              <h3>Local page navigation</h3>
-              <ul>
-                <li>Returns to the current page’s orbit, category field, gem field, node field, or section system.</li>
-                <li>Does not open the global estate map.</li>
-                <li>Helps the visitor re-center within the page they are already reading.</li>
-                <li>Works like a page-level orientation reset.</li>
-              </ul>
-            </article>
-          </div>
-
-          <div class="lens-tabs" role="tablist" aria-label="Navigation explanation tabs">
-            <button class="lens-button" type="button" data-lens-button="main" data-active="true">Main Menu</button>
-            <button class="lens-button" type="button" data-lens-button="mirrorland">Mirrorland Doors</button>
-            <button class="lens-button" type="button" data-lens-button="orbit">Return to Orbit</button>
-            <button class="lens-button" type="button" data-lens-button="identity">Room Identity</button>
-          </div>
-
-          <section class="lens-panel" data-lens-panel="main" data-active="true">
-            <div class="note-card">
-              <b>Main Menu</b>
-              <h3>Exit board to the regular website.</h3>
-              <p>Main Menu shows regular website rooms only: Compass Desk, Front Door, Main Hall, Law Library, Council Room, The Lab, Product Gallery, Host Portrait, and Guide Desk. It can acknowledge that the visitor is currently inside Mirrorland, but its selectable options are regular website routes.</p>
-            </div>
+          <section class="feature-detail" data-feature-detail="estate">
+            <b>Estate Model</b>
+            <h3>The visitor experiences rooms, not file paths.</h3>
+            <p>Compass Desk, Atrium, Atlas Study, The Lab, Product Gallery, and Frontier Workshop Yard are visitor-facing estate positions. They explain meaning before technical route structure.</p>
+            <a class="button gold" href="#guide-orbit">Return to Orbit</a>
           </section>
 
-          <section class="lens-panel" data-lens-panel="mirrorland">
-            <div class="note-card">
-              <b>Mirrorland Doors</b>
-              <h3>Immersive estate-room navigation.</h3>
-              <p>Mirrorland Doors show the estate as rooms and places: Atrium, Atlas Study, ZIONTS Room, Audralia Conservatory, Audralia Worldroom, Control Cockpit, Frontier Workshop Yard, and story rooms. This is not a file tree.</p>
+          <section class="feature-detail" data-feature-detail="gems">
+            <b>Gem Demonstration</b>
+            <h3>Gems are selectable interface objects.</h3>
+            <div class="demo-grid" data-select-group="gem-demo">
+              <button class="demo-card" type="button" data-demo-card style="--demo:var(--gold)">
+                <b>Gold Gem</b>
+                <strong>Primary route</strong>
+                <p>Used for a main action or selected feature.</p>
+              </button>
+              <button class="demo-card" type="button" data-demo-card style="--demo:var(--blue)">
+                <b>Blue Gem</b>
+                <strong>World route</strong>
+                <p>Used for world-study, map, or Atlas concepts.</p>
+              </button>
+              <button class="demo-card" type="button" data-demo-card style="--demo:var(--green)">
+                <b>Green Gem</b>
+                <strong>Proof route</strong>
+                <p>Used for The Lab, readiness, and confirmation surfaces.</p>
+              </button>
             </div>
+            <a class="button gold" href="#guide-orbit" data-reset-group="gem-demo">Return to Orbit</a>
           </section>
 
-          <section class="lens-panel" data-lens-panel="orbit">
-            <div class="note-card">
-              <b>Return to Orbit</b>
-              <h3>Local page re-centering.</h3>
-              <p>Return to Orbit belongs to the page you are already on. If a page has a gem orbit, category orbit, node field, or section field, Return to Orbit sends the reader back there. It is intentionally different from the global Map / Portal.</p>
+          <section class="feature-detail" data-feature-detail="categories">
+            <b>Category Demonstration</b>
+            <h3>One category becomes active while the others mute.</h3>
+            <div class="category-demo">
+              <div class="category-list" data-select-group="category-demo">
+                <button class="category-button" type="button" data-category-button data-category="presentation" data-active="true">
+                  <b>Presentation</b>
+                  <span>What visitors see and use.</span>
+                </button>
+                <button class="category-button" type="button" data-category-button data-category="structure">
+                  <b>Structure</b>
+                  <span>What organizes the experience.</span>
+                </button>
+                <button class="category-button" type="button" data-category-button data-category="proof">
+                  <b>Proof</b>
+                  <span>What checks readiness and coherence.</span>
+                </button>
+                <button class="category-button" type="button" data-category-button data-category="application">
+                  <b>Application</b>
+                  <span>What becomes useful.</span>
+                </button>
+              </div>
+
+              <div>
+                <section class="category-panel" data-category-panel="presentation" data-active="true">
+                  <h3>Presentation Layer</h3>
+                  <p>Estate model, gems, categories, page orbit, Map / Portal miniature, and blueprint demonstrations live here.</p>
+                </section>
+                <section class="category-panel" data-category-panel="structure">
+                  <h3>Structure Layer</h3>
+                  <p>Structure explains the under-hood order without becoming the public-facing experience.</p>
+                </section>
+                <section class="category-panel" data-category-panel="proof">
+                  <h3>Proof Layer</h3>
+                  <p>The Lab, route readiness, status, and diagnostic coherence belong to proof.</p>
+                </section>
+                <section class="category-panel" data-category-panel="application">
+                  <h3>Application Layer</h3>
+                  <p>Products and Frontier Workshop Yard show how concepts move toward usable value.</p>
+                </section>
+              </div>
             </div>
+            <a class="button gold" href="#guide-orbit" data-reset-group="category-demo">Return to Orbit</a>
           </section>
 
-          <section class="lens-panel" data-lens-panel="identity">
-            <div class="note-card">
-              <b>Estate Room Identity</b>
-              <h3>Room labels explain meaning.</h3>
-              <p>The route `/showroom/globe/earth/` displays as ZIONTS Room, pronounced Zience. The route path is a builder address. The room name is the visitor-facing identity.</p>
+          <section class="feature-detail" data-feature-detail="return">
+            <b>Return to Orbit Demo</b>
+            <h3>This button returns to the local Guide Orbit.</h3>
+            <p>Return to Orbit does not open the global Map / Portal. It re-centers this page at its own orbit.</p>
+            <a class="button gold" href="#guide-orbit">Return to Orbit</a>
+          </section>
+
+          <section class="feature-detail" data-feature-detail="portal">
+            <b>Map / Portal Miniature</b>
+            <h3>The portal is global estate navigation.</h3>
+            <div class="mini-map">
+              <div class="mini-node" style="--x:50;--y:15"><b>Main Menu</b><span>Regular website rooms</span></div>
+              <div class="mini-node" style="--x:50;--y:50"><b>Map / Portal</b><span>Global estate navigation</span></div>
+              <div class="mini-node" style="--x:82;--y:50"><b>Mirrorland</b><span>Immersive estate rooms</span></div>
+              <div class="mini-node" style="--x:18;--y:50"><b>Frontier</b><span>Workshop Yard</span></div>
+              <div class="mini-node" style="--x:50;--y:84"><b>The Lab</b><span>Proof and readiness</span></div>
             </div>
+            <a class="button gold" href="#guide-orbit">Return to Orbit</a>
+          </section>
+
+          <section class="feature-detail" data-feature-detail="blueprint">
+            <b>Blueprint Demonstration</b>
+            <h3>The blueprint uses room-shaped compartments.</h3>
+            <p>Select the Presentation Layer tab to use the full estate blueprint demonstration.</p>
+            <a class="button gold" href="#presentation-layer">Open Blueprint</a>
           </section>
         </div>
       </section>
 
-      <section class="panel" id="quadrupedic-traversal" aria-labelledby="quad-title">
-        <div class="panel-inner">
-          <div class="section-head">
-            <div class="kicker">Quadrupedic Traversal</div>
-            <h2 id="quad-title">The design moves on four coordinated legs.</h2>
-            <p>
-              Quadrupedic traversal is the design logic that keeps the estate from becoming a pile of unrelated pages. Each leg answers a different visitor question.
-            </p>
-          </div>
+      <nav class="lens-rail" id="guide-lenses" aria-label="Guide Desk lenses">
+        <button class="lens-button" type="button" data-lens-button="presentation" data-active="true">Presentation Layer</button>
+        <button class="lens-button" type="button" data-lens-button="navigation">Navigation Layer</button>
+        <button class="lens-button" type="button" data-lens-button="diagnostics">Under-the-Hood Diagnostics</button>
+        <button class="lens-button" type="button" data-lens-button="ledger">Construction Ledger</button>
+      </nav>
 
-          <div class="traversal-grid">
-            <article class="traversal-card" data-leg="north">
-              <span>N</span>
-              <b>North</b>
-              <strong>Orientation / structure / law</strong>
-              <p>North answers: “What is this? What governs it? How do I stay oriented?” It carries Compass, Laws, and structure.</p>
-            </article>
+      <section class="lens-panel" id="presentation-layer" data-lens-panel="presentation" data-active="true">
+        <section class="panel" aria-labelledby="presentation-title">
+          <div class="panel-inner">
+            <div class="section-head">
+              <div class="kicker">Presentation Layer</div>
+              <h2 id="presentation-title">Visitor-facing features live here.</h2>
+              <p>
+                This layer demonstrates the systems visitors see: orbits, gems, categories, Return to Orbit, Map / Portal miniature, and estate blueprint rooms.
+              </p>
+            </div>
 
-            <article class="traversal-card" data-leg="east">
-              <span>E</span>
-              <b>East</b>
-              <strong>Story / worlds / visible expression</strong>
-              <p>East answers: “What does this become when it is experienced?” It carries Mirrorland, Atlas Study, ZIONTS, Audralia, and story-world expression.</p>
-            </article>
-
-            <article class="traversal-card" data-leg="south">
-              <span>S</span>
-              <b>South</b>
-              <strong>Proof / gauges / measurement</strong>
-              <p>South answers: “How do we know what is working?” It carries The Lab, readiness, status, proof, and measurement.</p>
-            </article>
-
-            <article class="traversal-card" data-leg="west">
-              <span>W</span>
-              <b>West</b>
-              <strong>Products / application / deployment</strong>
-              <p>West answers: “How does this become useful?” It carries Products, Frontier Workshop Yard, community application, and practical deployment.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel" id="systems-connect" aria-labelledby="systems-title">
-        <div class="panel-inner">
-          <div class="section-head">
-            <div class="kicker">How Systems Connect</div>
-            <h2 id="systems-title">Each major area has a job in the estate.</h2>
-            <p>
-              The site becomes clearer when every area is read by its function, not by its file path.
-            </p>
-          </div>
-
-          <div class="systems-grid">
-            <article class="system-card laws" data-symbol="§">
-              <b>Laws</b>
-              <strong>Boundary and coherence.</strong>
-              <p>Laws keep the estate from expanding without discipline, consequence, or claim boundaries.</p>
-            </article>
-
-            <article class="system-card gauges" data-symbol="⚙">
-              <b>The Lab</b>
-              <strong>Measurement and readiness.</strong>
-              <p>The Lab checks status, proof, route health, readiness, and whether visible claims have support.</p>
-            </article>
-
-            <article class="system-card products" data-symbol="◈">
-              <b>Products</b>
-              <strong>Usable public value.</strong>
-              <p>Products turn ideas into tools, games, offers, supports, and practical objects.</p>
-            </article>
-
-            <article class="system-card frontier" data-symbol="⚒">
-              <b>Frontier</b>
-              <strong>Applied future systems.</strong>
-              <p>Frontier Workshop Yard pressure-tests energy, water, waste, infrastructure, lattice, and applied science ideas.</p>
-            </article>
-
-            <article class="system-card mirrorland" data-symbol="◎">
-              <b>Mirrorland</b>
-              <strong>Immersive context.</strong>
-              <p>Mirrorland lets the visitor enter the estate as a living navigation experience rather than a flat menu.</p>
-            </article>
-
-            <article class="system-card audralia" data-symbol="✦">
-              <b>Audralia</b>
-              <strong>Constructive world development.</strong>
-              <p>Audralia provides a living future-world context for frontier systems, worldbuilding, and inspection.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel" id="route-planner" aria-labelledby="planner-title">
-        <div class="panel-inner">
-          <div class="section-head">
-            <div class="kicker">Dynamic Route Planner</div>
-            <h2 id="planner-title">Choose a goal and see the clean path.</h2>
-            <p>
-              This planner shows how the estate reduces confusion: every destination has a placement logic.
-            </p>
-          </div>
-
-          <div class="route-planner">
-            <form class="planner-controls" aria-label="Guide route planner">
-              <div class="field">
-                <label for="start-select">Starting posture</label>
-                <select id="start-select" data-start-select>
-                  <option value="new">I am new to the site</option>
-                  <option value="mirrorland">I am inside Mirrorland</option>
-                  <option value="proof">I need proof or readiness</option>
-                  <option value="frontier">I want applied future systems</option>
-                </select>
+            <div class="blueprint-wrap">
+              <div class="estate-blueprint" data-select-group="blueprint">
+                <button class="room-shape" type="button" data-blueprint-room data-room="compass" data-active="false">
+                  <b>Orientation</b><strong>Compass Desk</strong><span>Front orientation</span>
+                </button>
+                <button class="room-shape" type="button" data-blueprint-room data-room="guide" data-active="false">
+                  <b>Guide</b><strong>Guide Desk</strong><span>Flex exhibit</span>
+                </button>
+                <button class="room-shape" type="button" data-blueprint-room data-room="main" data-active="false">
+                  <b>Main</b><strong>Main Hall</strong><span>Public center</span>
+                </button>
+                <button class="room-shape" type="button" data-blueprint-room data-room="atrium" data-active="true">
+                  <b>Entry</b><strong>Atrium</strong><span>Mirrorland entrance</span>
+                </button>
+                <button class="room-shape" type="button" data-blueprint-room data-room="atlas" data-active="false">
+                  <b>Worlds</b><strong>Atlas Study</strong><span>World-study chamber</span>
+                </button>
+                <button class="room-shape" type="button" data-blueprint-room data-room="zionts" data-active="false">
+                  <b>ZIONTS</b><strong>ZIONTS Room</strong><span>Pronounced Zience</span>
+                </button>
+                <button class="room-shape" type="button" data-blueprint-room data-room="audralia" data-active="false">
+                  <b>World</b><strong>Audralia Conservatory</strong><span>Constructive world</span>
+                </button>
+                <button class="room-shape" type="button" data-blueprint-room data-room="worldroom" data-active="false">
+                  <b>Body</b><strong>Audralia Worldroom</strong><span>Visible world-body</span>
+                </button>
+                <button class="room-shape" type="button" data-blueprint-room data-room="cockpit" data-active="false">
+                  <b>Control</b><strong>Control Cockpit</strong><span>Instrument chamber</span>
+                </button>
+                <button class="room-shape" type="button" data-blueprint-room data-room="frontier" data-active="false">
+                  <b>Workshop</b><strong>Frontier Workshop Yard</strong><span>Applied systems</span>
+                </button>
+                <button class="room-shape" type="button" data-blueprint-room data-room="product" data-active="false">
+                  <b>Products</b><strong>Product Gallery</strong><span>Usable value</span>
+                </button>
+                <button class="room-shape" type="button" data-blueprint-room data-room="lab" data-active="false">
+                  <b>Proof</b><strong>The Lab</strong><span>Measurement</span>
+                </button>
+                <button class="room-shape" type="button" data-blueprint-room data-room="law" data-active="false">
+                  <b>Boundary</b><strong>Law Library</strong><span>Rules and coherence</span>
+                </button>
               </div>
 
-              <div class="field">
-                <label for="goal-select">Goal</label>
-                <select id="goal-select" data-goal-select>
-                  <option value="orientation">Understand the whole website</option>
-                  <option value="worlds">Enter the world / story layer</option>
-                  <option value="proof">Check proof and measurement</option>
-                  <option value="frontier">Study Frontier systems</option>
-                  <option value="products">Find usable public value</option>
-                </select>
-              </div>
-            </form>
-
-            <div class="planner-output" aria-live="polite">
-              <div class="note-card">
-                <b data-plan-kicker>Recommended path</b>
-                <h3 data-plan-title>Guide Desk → Compass Desk → Atrium</h3>
-                <p data-plan-copy>Start with Guide Desk, use Compass Desk for orientation, then enter Atrium when you are ready to cross into Mirrorland.</p>
-              </div>
-
-              <div class="path-rail" data-path-rail>
-                <a class="path-step" href="/site-guide/">Guide Desk</a>
-                <a class="path-step" href="/">Compass Desk</a>
-                <a class="path-step" href="/showroom/">Atrium</a>
-              </div>
+              <aside class="blueprint-detail" aria-live="polite">
+                <b data-blueprint-kicker>Selected Room</b>
+                <h3 data-blueprint-title>Atrium</h3>
+                <p data-blueprint-copy>The Atrium is the Mirrorland entrance room. It frames the immersive estate threshold before the visitor moves deeper into Atlas Study, world rooms, or Frontier.</p>
+                <ul data-blueprint-list>
+                  <li>Location: Mirrorland Entrance Atrium</li>
+                  <li>Connects: Atlas Study, Frontier Workshop Yard, Compass Desk</li>
+                  <li>Action: Enter Atrium</li>
+                </ul>
+                <div class="actions">
+                  <a class="button gold" href="/showroom/" data-blueprint-action>Enter Atrium</a>
+                  <a class="button" href="#presentation-layer" data-reset-group="blueprint">Return to Blueprint</a>
+                  <a class="button blue" href="#guide-orbit">Return to Orbit</a>
+                </div>
+              </aside>
             </div>
           </div>
-        </div>
+        </section>
       </section>
 
-      <section class="panel" id="mobile-build" aria-labelledby="mobile-title">
-        <div class="panel-inner">
-          <div class="section-head">
-            <div class="kicker">Mobile-First Native Build</div>
-            <h2 id="mobile-title">The estate was designed and assembled from a mobile device.</h2>
-            <p>
-              The project began in late January 2026. Within roughly four months, the site developed into an integrated navigation estate with regular website rooms, Mirrorland Doors, Map / Portal, Return to Orbit, Frontier systems, page orbits, and live route-specific interfaces.
-            </p>
-          </div>
+      <section class="lens-panel" id="navigation-layer" data-lens-panel="navigation">
+        <section class="panel" aria-labelledby="navigation-title">
+          <div class="panel-inner">
+            <div class="section-head">
+              <div class="kicker">Navigation Layer</div>
+              <h2 id="navigation-title">Movement systems stay separated.</h2>
+              <p>
+                Main Menu exits to regular website rooms. Mirrorland Doors move through immersive estate rooms. Map / Portal is global estate navigation. Return to Orbit is local page movement.
+              </p>
+            </div>
 
-          <div class="timeline">
-            <article class="timeline-item">
-              <time>Late Jan</time>
-              <div>
-                <strong>Project construction begins.</strong>
-                <p>The work starts as a mobile-first native-code build, forcing the design to respect small-screen clarity from the beginning.</p>
+            <div class="demo-grid" data-select-group="navigation-concepts">
+              <button class="demo-card" type="button" data-demo-card data-active="true" style="--demo:var(--gold)">
+                <b>Main Menu</b>
+                <strong>Regular website rooms</strong>
+                <p>Compass Desk, Front Door, Main Hall, Law Library, Council Room, The Lab, Product Gallery, Host Portrait, and Guide Desk.</p>
+              </button>
+              <button class="demo-card" type="button" data-demo-card style="--demo:var(--blue)">
+                <b>Mirrorland Doors</b>
+                <strong>Immersive estate rooms</strong>
+                <p>Atrium, Atlas Study, ZIONTS Room, Audralia Conservatory, Control Cockpit, and Frontier Workshop Yard.</p>
+              </button>
+              <button class="demo-card" type="button" data-demo-card style="--demo:var(--green)">
+                <b>Map / Portal</b>
+                <strong>Global estate map</strong>
+                <p>The floating Map / Portal opens estate navigation and separates Mirrorland from regular website movement.</p>
+              </button>
+              <button class="demo-card" type="button" data-demo-card style="--demo:var(--amber)">
+                <b>Return to Orbit</b>
+                <strong>Local page reset</strong>
+                <p>Return to Orbit brings the visitor back to the current page’s own orbit, not the global Map / Portal.</p>
+              </button>
+              <button class="demo-card" type="button" data-demo-card style="--demo:var(--violet)">
+                <b>Guide Desk</b>
+                <strong>Construction narrative</strong>
+                <p>Guide Desk demonstrates the interface language and explains the page systems.</p>
+              </button>
+              <button class="demo-card" type="button" data-demo-card style="--demo:var(--cyan)">
+                <b>Start Points</b>
+                <strong>Correct door for the job</strong>
+                <p>Compass for orientation, Atrium for Mirrorland, Atlas Study for worlds, The Lab for proof, Frontier for systems.</p>
+              </button>
+            </div>
+
+            <div class="route-planner">
+              <form class="planner-controls" aria-label="Guide route planner">
+                <div class="field">
+                  <label for="start-select">Starting posture</label>
+                  <select id="start-select" data-start-select>
+                    <option value="new">I am new to the site</option>
+                    <option value="mirrorland">I am inside Mirrorland</option>
+                    <option value="proof">I need proof or readiness</option>
+                    <option value="frontier">I want applied future systems</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="goal-select">Goal</label>
+                  <select id="goal-select" data-goal-select>
+                    <option value="orientation">Understand the whole website</option>
+                    <option value="worlds">Enter the world / story layer</option>
+                    <option value="proof">Check proof and measurement</option>
+                    <option value="frontier">Study Frontier systems</option>
+                    <option value="products">Find usable public value</option>
+                  </select>
+                </div>
+              </form>
+
+              <div class="planner-output" aria-live="polite">
+                <div class="note-card">
+                  <b data-plan-kicker>Recommended path</b>
+                  <h3 data-plan-title>Guide Desk → Compass Desk → Atrium</h3>
+                  <p data-plan-copy>Start with Guide Desk, use Compass Desk for orientation, then enter Atrium when you are ready to cross into Mirrorland.</p>
+                </div>
+
+                <div class="path-rail" data-path-rail>
+                  <a class="path-step" href="/site-guide/">Guide Desk</a>
+                  <a class="path-step" href="/">Compass Desk</a>
+                  <a class="path-step" href="/showroom/">Atrium</a>
+                </div>
               </div>
-            </article>
+            </div>
 
-            <article class="timeline-item">
-              <time>Phase 1</time>
-              <div>
-                <strong>Public rooms and route identity emerge.</strong>
-                <p>Compass, Door, Home, Products, Laws, Gauges, Showroom, and related public routes begin to separate by function.</p>
-              </div>
-            </article>
-
-            <article class="timeline-item">
-              <time>Phase 2</time>
-              <div>
-                <strong>Mirrorland becomes an estate layer.</strong>
-                <p>Atrium, Atlas Study, ZIONTS Room, Audralia Conservatory, Control Cockpit, and Frontier Workshop Yard become visitor-facing rooms.</p>
-              </div>
-            </article>
-
-            <article class="timeline-item">
-              <time>Phase 3</time>
-              <div>
-                <strong>Navigation systems separate.</strong>
-                <p>Main Menu, Mirrorland Doors, Map / Portal, Return to Orbit, and Guide Desk each receive distinct jobs.</p>
-              </div>
-            </article>
-
-            <article class="timeline-item">
-              <time>Now</time>
-              <div>
-                <strong>The site becomes explainable as a constructed estate.</strong>
-                <p>Guide Desk provides the public construction narrative so the visitor can understand the whole system without reading builder receipts.</p>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel" id="start-points" aria-labelledby="start-title">
-        <div class="panel-inner">
-          <div class="section-head">
-            <div class="kicker">Start Points</div>
-            <h2 id="start-title">Use the right door for the job.</h2>
-          </div>
-
-          <div class="start-grid">
-            <a class="start-card" href="/">
-              <b>Orientation</b>
-              <strong>Compass Desk</strong>
-              <p>Use this when you need to re-center on the main website.</p>
-            </a>
-
-            <a class="start-card" href="/showroom/">
-              <b>Mirrorland Entry</b>
-              <strong>Atrium</strong>
-              <p>Use this when you want to enter the immersive estate layer.</p>
-            </a>
-
-            <a class="start-card" href="/showroom/globe/">
-              <b>World Study</b>
-              <strong>Atlas Study</strong>
-              <p>Use this when you want planetary rooms, ZIONTS, Audralia, and related worlds.</p>
-            </a>
-
-            <a class="start-card" href="/explore/frontier/">
-              <b>Applied Systems</b>
-              <strong>Frontier Workshop Yard</strong>
-              <p>Use this when you want energy, water, waste, infrastructure, and future systems.</p>
-            </a>
-
-            <a class="start-card" href="/gauges/">
-              <b>Proof</b>
-              <strong>The Lab</strong>
-              <p>Use this when you want route health, readiness, measurement, and proof.</p>
-            </a>
-
-            <a class="start-card" href="/site-guide/">
-              <b>Explanation</b>
-              <strong>Guide Desk</strong>
-              <p>Use this when you want the whole construction narrative.</p>
-            </a>
-          </div>
-
-          <div class="final-band">
-            <h2>Guide Desk keeps the estate readable.</h2>
-            <p>
-              The website works when direction, placement, organization, and movement are clear. Main Menu exits Mirrorland. Mirrorland Doors move through estate rooms. Map / Portal gives global estate navigation. Return to Orbit re-centers the local page. Guide Desk explains how the system is built.
-            </p>
             <div class="actions">
               <a class="button gold" href="#guide-orbit">Return to Orbit</a>
-              <a class="button blue" href="/showroom/">Enter Atrium</a>
-              <a class="button green" href="/explore/frontier/">Open Frontier Workshop Yard</a>
             </div>
           </div>
+        </section>
+      </section>
+
+      <section class="lens-panel" id="diagnostics-layer" data-lens-panel="diagnostics">
+        <section class="panel" aria-labelledby="diagnostics-title">
+          <div class="panel-inner">
+            <div class="section-head">
+              <div class="kicker">Under-the-Hood Diagnostics</div>
+              <h2 id="diagnostics-title">The structural core sits under the estate experience.</h2>
+              <p>
+                Quadrupedic Quadrilateral Traversal is structural core logic only. The visitor experiences an estate. Under the estate, the structure uses a 4 × 4 field and a 16 × 16 diagnostic spectrum.
+              </p>
+            </div>
+
+            <div class="diagnostic-layout">
+              <div class="matrix-4x4" data-select-group="matrix">
+                <div class="matrix-cell header"></div>
+                <div class="matrix-cell header">Orientation</div>
+                <div class="matrix-cell header">Expression</div>
+                <div class="matrix-cell header">Proof</div>
+                <div class="matrix-cell header">Application</div>
+
+                <div class="matrix-cell header">North</div>
+                <button class="matrix-cell" type="button" data-matrix-cell data-active="true">N/O</button>
+                <button class="matrix-cell" type="button" data-matrix-cell>N/E</button>
+                <button class="matrix-cell" type="button" data-matrix-cell>N/P</button>
+                <button class="matrix-cell" type="button" data-matrix-cell>N/A</button>
+
+                <div class="matrix-cell header">East</div>
+                <button class="matrix-cell" type="button" data-matrix-cell>E/O</button>
+                <button class="matrix-cell" type="button" data-matrix-cell>E/E</button>
+                <button class="matrix-cell" type="button" data-matrix-cell>E/P</button>
+                <button class="matrix-cell" type="button" data-matrix-cell>E/A</button>
+
+                <div class="matrix-cell header">South</div>
+                <button class="matrix-cell" type="button" data-matrix-cell>S/O</button>
+                <button class="matrix-cell" type="button" data-matrix-cell>S/E</button>
+                <button class="matrix-cell" type="button" data-matrix-cell>S/P</button>
+                <button class="matrix-cell" type="button" data-matrix-cell>S/A</button>
+
+                <div class="matrix-cell header">West</div>
+                <button class="matrix-cell" type="button" data-matrix-cell>W/O</button>
+                <button class="matrix-cell" type="button" data-matrix-cell>W/E</button>
+                <button class="matrix-cell" type="button" data-matrix-cell>W/P</button>
+                <button class="matrix-cell" type="button" data-matrix-cell>W/A</button>
+              </div>
+
+              <div class="note-card">
+                <b>4 × 4 Structural Field</b>
+                <h3>Sixteen coordinated positions.</h3>
+                <p>
+                  The 4 × 4 field crosses four directional legs with four functional lines. This creates sixteen structural positions for reading placement, function, and movement.
+                </p>
+                <p>
+                  This is under-the-hood structure. It supports the public estate experience without replacing it.
+                </p>
+              </div>
+            </div>
+
+            <div class="diagnostic-layout">
+              <div class="spectrum-16x16" data-select-group="spectrum" aria-label="16 by 16 diagnostic spectrum">
+                <!-- 256 native cells -->
+              </div>
+
+              <div class="note-card">
+                <b>16 × 16 Diagnostic Spectrum</b>
+                <h3>256-state global diagnostic scope.</h3>
+                <p>
+                  Each of the sixteen positions can be checked against the full sixteen-position field. That produces a 256-state diagnostic scope for coherence, readiness, movement, proof, and application.
+                </p>
+                <p data-spectrum-readout>Selected state: none.</p>
+              </div>
+            </div>
+
+            <div class="actions">
+              <a class="button gold" href="#guide-orbit">Return to Orbit</a>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="lens-panel" id="construction-ledger" data-lens-panel="ledger">
+        <section class="panel" aria-labelledby="ledger-title">
+          <div class="panel-inner">
+            <div class="section-head">
+              <div class="kicker">Construction Ledger</div>
+              <h2 id="ledger-title">The build method is part of the story.</h2>
+              <p>
+                This page records the construction posture without forcing receipts into the visitor-facing presentation layer.
+              </p>
+            </div>
+
+            <div class="ledger-grid">
+              <article class="ledger-card">
+                <b>Build Context</b>
+                <strong>Mobile-first native construction.</strong>
+                <p>Designed and assembled from a mobile device using native HTML, CSS, and JavaScript.</p>
+              </article>
+
+              <article class="ledger-card">
+                <b>Timeline</b>
+                <strong>Project began late January 2026.</strong>
+                <p>The integrated estate/navigation structure reached this stage within roughly four months.</p>
+              </article>
+
+              <article class="ledger-card">
+                <b>Route</b>
+                <strong>/site-guide/ · Guide Desk</strong>
+                <p>This route is a regular Main Menu website room, not a Mirrorland Door.</p>
+              </article>
+
+              <article class="ledger-card">
+                <b>Contract</b>
+                <strong>SITE_GUIDE_TABBED_FLEX_EXHIBIT_PRESENTATION_DIAGNOSTICS_TNT_v2</strong>
+                <p>Full-file replacement for the Guide Desk flex exhibit.</p>
+              </article>
+
+              <article class="ledger-card">
+                <b>Boundaries</b>
+                <strong>No generated image, no GraphicBox, no canvas, no WebGL.</strong>
+                <p>The page uses native source code only.</p>
+              </article>
+
+              <article class="ledger-card">
+                <b>Purpose</b>
+                <strong>Explain by demonstration.</strong>
+                <p>The page demonstrates the same interaction patterns it explains.</p>
+              </article>
+            </div>
+
+            <div class="actions">
+              <a class="button gold" href="#guide-orbit">Return to Orbit</a>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="final-band">
+        <h2>Guide Desk is the flex page.</h2>
+        <p>
+          Presentation, navigation, diagnostics, and construction are now separated. The visitor sees the estate first. The structural diagnostic core remains available under the hood. Every selected feature highlights itself, mutes non-selected items, and offers a local Return to Orbit.
+        </p>
+        <div class="actions">
+          <a class="button gold" href="#guide-orbit">Return to Orbit</a>
+          <a class="button blue" href="/showroom/">Enter Atrium</a>
+          <a class="button green" href="/explore/frontier/">Open Frontier Workshop Yard</a>
         </div>
       </section>
 
       <template class="receipt" id="site-guide-receipt" data-route-receipt>
-SITE_GUIDE_DYNAMIC_CONSTRUCTION_NARRATIVE_TNT_v1
+SITE_GUIDE_TABBED_FLEX_EXHIBIT_PRESENTATION_DIAGNOSTICS_TNT_v2
 route=/site-guide/
 classification=main_menu_website_room
 mirrorland_door=false
 guide_desk=true
-map_portal_supported=true
+flex_exhibit=true
+presentation_layer=true
+navigation_layer=true
+under_hood_diagnostics=true
+construction_ledger=true
 return_to_orbit_local=true
-quadrupedic_traversal=active
-mobile_first_native_build=true
-project_began=late_january_2026
+quadrupedic_quadrilateral_traversal=structural_core_only
+matrix_4x4=true
+spectrum_16x16=true
+diagnostic_scope_256=true
 generated_image=false
 graphic_box=false
 canvas=false
@@ -1554,7 +1819,7 @@ webgl=false
     </main>
 
     <footer>
-      SITE_GUIDE_DYNAMIC_CONSTRUCTION_NARRATIVE_TNT_v1 · /site-guide/ · Guide Desk · Main Menu route · Mirrorland explanation held as visitor-facing construction narrative.
+      SITE_GUIDE_TABBED_FLEX_EXHIBIT_PRESENTATION_DIAGNOSTICS_TNT_v2 · /site-guide/ · Guide Desk · Flex exhibit · Native HTML/CSS/JS.
     </footer>
   </div>
 
@@ -1562,198 +1827,324 @@ webgl=false
     (() => {
       "use strict";
 
-      const CONTRACT = "SITE_GUIDE_DYNAMIC_CONSTRUCTION_NARRATIVE_TNT_v1";
+      const CONTRACT = "SITE_GUIDE_TABBED_FLEX_EXHIBIT_PRESENTATION_DIAGNOSTICS_TNT_v2";
+
+      const blueprintData = {
+        compass: {
+          title: "Compass Desk",
+          copy: "Compass Desk is the front orientation position for the regular website.",
+          list: ["Location: Front Orientation Desk", "Connects: Door, Main Hall, Law Library, The Lab", "Action: Open Compass"],
+          href: "/",
+          action: "Open Compass"
+        },
+        guide: {
+          title: "Guide Desk",
+          copy: "Guide Desk is the flex exhibit page for the estate’s design systems and construction narrative.",
+          list: ["Location: Orientation Desk", "Connects: Compass Desk, The Lab, Law Library", "Action: Open Guide Desk"],
+          href: "/site-guide/",
+          action: "Open Guide Desk"
+        },
+        main: {
+          title: "Main Hall",
+          copy: "Main Hall stabilizes the public website before branching to products, laws, proof, or Mirrorland.",
+          list: ["Location: Central House", "Connects: Compass Desk, Product Gallery, Law Library", "Action: Open Main Hall"],
+          href: "/home/",
+          action: "Open Main Hall"
+        },
+        atrium: {
+          title: "Atrium",
+          copy: "The Atrium is the Mirrorland entrance room. It frames the immersive estate threshold before the visitor moves deeper into Atlas Study, world rooms, or Frontier.",
+          list: ["Location: Mirrorland Entrance Atrium", "Connects: Atlas Study, Frontier Workshop Yard, Compass Desk", "Action: Enter Atrium"],
+          href: "/showroom/",
+          action: "Enter Atrium"
+        },
+        atlas: {
+          title: "Atlas Study",
+          copy: "Atlas Study is the world-study chamber for planetary rooms, world context, and living environments.",
+          list: ["Location: East / World Study", "Connects: ZIONTS Room, Audralia Conservatory, Hearth, H-Earth", "Action: Open Atlas Study"],
+          href: "/showroom/globe/",
+          action: "Open Atlas Study"
+        },
+        zionts: {
+          title: "ZIONTS Room",
+          copy: "ZIONTS Room, pronounced Zience, is the visitor-facing identity for the route currently served under the Earth path.",
+          list: ["Location: Atlas Study", "Connects: Audralia Conservatory", "Action: Enter ZIONTS"],
+          href: "/showroom/globe/earth/",
+          action: "Enter ZIONTS"
+        },
+        audralia: {
+          title: "Audralia Conservatory",
+          copy: "Audralia Conservatory introduces the constructive living-world path inside Mirrorland.",
+          list: ["Location: Atlas Study", "Connects: Audralia Worldroom, Control Cockpit, Frontier Workshop Yard", "Action: Enter Conservatory"],
+          href: "/showroom/globe/audralia/",
+          action: "Enter Conservatory"
+        },
+        worldroom: {
+          title: "Audralia Worldroom",
+          copy: "Audralia Worldroom gives a focused planet-body read without claiming the world is final.",
+          list: ["Location: Audralia Conservatory", "Connects: Control Cockpit", "Action: Inspect Worldroom"],
+          href: "/showroom/globe/audralia/planet/",
+          action: "Inspect Worldroom"
+        },
+        cockpit: {
+          title: "Control Cockpit",
+          copy: "Control Cockpit is the instrument room for operating and inspecting Audralia’s disposition layer.",
+          list: ["Location: Audralia Conservatory", "Connects: Audralia Worldroom, The Lab, Frontier", "Action: Open Cockpit"],
+          href: "/showroom/globe/audralia/disposition/",
+          action: "Open Cockpit"
+        },
+        frontier: {
+          title: "Frontier Workshop Yard",
+          copy: "Frontier Workshop Yard is the outdoor applied-systems yard where future systems are pressure-tested.",
+          list: ["Location: West Grounds", "Connects: Audralia Conservatory, Law Library, The Lab", "Action: Enter Workshop Yard"],
+          href: "/explore/frontier/",
+          action: "Enter Workshop Yard"
+        },
+        product: {
+          title: "Product Gallery",
+          copy: "Product Gallery turns ideas into usable public value, offers, tools, and practical objects.",
+          list: ["Location: Product Gallery", "Connects: Main Hall, Host Portrait, Frontier", "Action: Open Product Gallery"],
+          href: "/products/",
+          action: "Open Product Gallery"
+        },
+        lab: {
+          title: "The Lab",
+          copy: "The Lab is the estate’s measurement room for status, readiness, route truth, and proof.",
+          list: ["Location: Measurement Lab", "Connects: Law Library, Frontier Workshop Yard, H-Earth Bench", "Action: Open The Lab"],
+          href: "/gauges/",
+          action: "Open The Lab"
+        },
+        law: {
+          title: "Law Library",
+          copy: "Law Library holds the rules, boundaries, and coherence constraints that prevent expansion without discipline.",
+          list: ["Location: Law Library", "Connects: Council Room, The Lab, Frontier", "Action: Open Law Library"],
+          href: "/laws/",
+          action: "Open Law Library"
+        }
+      };
 
       const plans = {
         "new:orientation": {
           title: "Guide Desk → Compass Desk → Atrium",
           copy: "Start with Guide Desk, use Compass Desk for orientation, then enter Atrium when you are ready to cross into Mirrorland.",
-          path: [
-            ["Guide Desk", "/site-guide/"],
-            ["Compass Desk", "/"],
-            ["Atrium", "/showroom/"]
-          ]
+          path: [["Guide Desk","/site-guide/"],["Compass Desk","/"],["Atrium","/showroom/"]]
         },
         "new:worlds": {
           title: "Guide Desk → Atrium → Atlas Study",
           copy: "Read the construction narrative, enter the Atrium, then open Atlas Study for worlds, ZIONTS, Audralia, Hearth, and H-Earth.",
-          path: [
-            ["Guide Desk", "/site-guide/"],
-            ["Atrium", "/showroom/"],
-            ["Atlas Study", "/showroom/globe/"]
-          ]
+          path: [["Guide Desk","/site-guide/"],["Atrium","/showroom/"],["Atlas Study","/showroom/globe/"]]
         },
         "new:proof": {
           title: "Guide Desk → Law Library → The Lab",
           copy: "Use Guide Desk for context, Law Library for boundaries, then The Lab for measurement and readiness.",
-          path: [
-            ["Guide Desk", "/site-guide/"],
-            ["Law Library", "/laws/"],
-            ["The Lab", "/gauges/"]
-          ]
+          path: [["Guide Desk","/site-guide/"],["Law Library","/laws/"],["The Lab","/gauges/"]]
         },
         "new:frontier": {
           title: "Guide Desk → Atrium → Frontier Workshop Yard",
           copy: "Start with the guide, enter the estate through Atrium, then go to Frontier Workshop Yard for applied future systems.",
-          path: [
-            ["Guide Desk", "/site-guide/"],
-            ["Atrium", "/showroom/"],
-            ["Frontier Workshop Yard", "/explore/frontier/"]
-          ]
+          path: [["Guide Desk","/site-guide/"],["Atrium","/showroom/"],["Frontier Workshop Yard","/explore/frontier/"]]
         },
         "new:products": {
           title: "Guide Desk → Main Hall → Product Gallery",
           copy: "Use Guide Desk for the map of meaning, then move through the regular website toward usable public value.",
-          path: [
-            ["Guide Desk", "/site-guide/"],
-            ["Main Hall", "/home/"],
-            ["Product Gallery", "/products/"]
-          ]
+          path: [["Guide Desk","/site-guide/"],["Main Hall","/home/"],["Product Gallery","/products/"]]
         },
         "mirrorland:orientation": {
           title: "Map / Portal → Main Menu → Compass Desk",
           copy: "When you are inside Mirrorland and need ordinary-site orientation, open Main Menu and exit to Compass Desk.",
-          path: [
-            ["Map / Portal", "#guide-orbit"],
-            ["Main Menu", "/"],
-            ["Compass Desk", "/"]
-          ]
+          path: [["Map / Portal","#guide-orbit"],["Main Menu","/"],["Compass Desk","/"]]
         },
         "mirrorland:worlds": {
           title: "Map / Portal → Mirrorland Doors → Atlas Study",
           copy: "Stay inside Mirrorland. Use Mirrorland Doors to move to Atlas Study and choose the world room you need.",
-          path: [
-            ["Map / Portal", "#navigation-systems"],
-            ["Mirrorland Doors", "/showroom/"],
-            ["Atlas Study", "/showroom/globe/"]
-          ]
+          path: [["Map / Portal","#navigation-layer"],["Mirrorland Doors","/showroom/"],["Atlas Study","/showroom/globe/"]]
         },
         "mirrorland:proof": {
           title: "Map / Portal → Main Menu → The Lab",
           copy: "Proof and readiness are regular website support surfaces. Use Main Menu to exit Mirrorland and open The Lab.",
-          path: [
-            ["Map / Portal", "#navigation-systems"],
-            ["Main Menu", "/gauges/"],
-            ["The Lab", "/gauges/"]
-          ]
+          path: [["Map / Portal","#navigation-layer"],["Main Menu","/gauges/"],["The Lab","/gauges/"]]
         },
         "mirrorland:frontier": {
           title: "Mirrorland Doors → Frontier Workshop Yard",
           copy: "Frontier is Mirrorland-aligned. Use Mirrorland Doors to open the Workshop Yard.",
-          path: [
-            ["Mirrorland Doors", "#guide-orbit"],
-            ["Frontier Workshop Yard", "/explore/frontier/"]
-          ]
+          path: [["Mirrorland Doors","#guide-orbit"],["Frontier Workshop Yard","/explore/frontier/"]]
         },
         "mirrorland:products": {
           title: "Map / Portal → Main Menu → Product Gallery",
           copy: "Products are regular website rooms. Use Main Menu to exit Mirrorland and open Product Gallery.",
-          path: [
-            ["Map / Portal", "#guide-orbit"],
-            ["Main Menu", "/products/"],
-            ["Product Gallery", "/products/"]
-          ]
+          path: [["Map / Portal","#guide-orbit"],["Main Menu","/products/"],["Product Gallery","/products/"]]
         },
         "proof:orientation": {
           title: "The Lab → Guide Desk → Compass Desk",
           copy: "When proof creates too much detail, use Guide Desk for the construction narrative and Compass Desk for orientation.",
-          path: [
-            ["The Lab", "/gauges/"],
-            ["Guide Desk", "/site-guide/"],
-            ["Compass Desk", "/"]
-          ]
+          path: [["The Lab","/gauges/"],["Guide Desk","/site-guide/"],["Compass Desk","/"]]
         },
         "proof:worlds": {
           title: "The Lab → Atlas Study → Audralia",
           copy: "Use The Lab for measurement, then return to Atlas Study to read the world context.",
-          path: [
-            ["The Lab", "/gauges/"],
-            ["Atlas Study", "/showroom/globe/"],
-            ["Audralia Conservatory", "/showroom/globe/audralia/"]
-          ]
+          path: [["The Lab","/gauges/"],["Atlas Study","/showroom/globe/"],["Audralia Conservatory","/showroom/globe/audralia/"]]
         },
         "proof:proof": {
           title: "Law Library → The Lab",
           copy: "Law defines boundaries. The Lab measures readiness.",
-          path: [
-            ["Law Library", "/laws/"],
-            ["The Lab", "/gauges/"]
-          ]
+          path: [["Law Library","/laws/"],["The Lab","/gauges/"]]
         },
         "proof:frontier": {
           title: "Law Library → Frontier Workshop Yard → The Lab",
           copy: "Frontier ideas should remain bounded by Law and checked by The Lab.",
-          path: [
-            ["Law Library", "/laws/"],
-            ["Frontier Workshop Yard", "/explore/frontier/"],
-            ["The Lab", "/gauges/"]
-          ]
+          path: [["Law Library","/laws/"],["Frontier Workshop Yard","/explore/frontier/"],["The Lab","/gauges/"]]
         },
         "proof:products": {
           title: "The Lab → Product Gallery",
           copy: "Use proof to support usable public value, then move to Product Gallery.",
-          path: [
-            ["The Lab", "/gauges/"],
-            ["Product Gallery", "/products/"]
-          ]
+          path: [["The Lab","/gauges/"],["Product Gallery","/products/"]]
         },
         "frontier:orientation": {
           title: "Frontier Workshop Yard → Guide Desk",
           copy: "When Frontier feels large, return to Guide Desk to understand how applied systems fit the estate.",
-          path: [
-            ["Frontier Workshop Yard", "/explore/frontier/"],
-            ["Guide Desk", "/site-guide/"]
-          ]
+          path: [["Frontier Workshop Yard","/explore/frontier/"],["Guide Desk","/site-guide/"]]
         },
         "frontier:worlds": {
           title: "Frontier Workshop Yard → Audralia Conservatory",
           copy: "Frontier systems connect back to Audralia as the constructive future-world context.",
-          path: [
-            ["Frontier Workshop Yard", "/explore/frontier/"],
-            ["Audralia Conservatory", "/showroom/globe/audralia/"]
-          ]
+          path: [["Frontier Workshop Yard","/explore/frontier/"],["Audralia Conservatory","/showroom/globe/audralia/"]]
         },
         "frontier:proof": {
           title: "Frontier Workshop Yard → Law Library → The Lab",
           copy: "Applied systems should pass through boundary and proof.",
-          path: [
-            ["Frontier Workshop Yard", "/explore/frontier/"],
-            ["Law Library", "/laws/"],
-            ["The Lab", "/gauges/"]
-          ]
+          path: [["Frontier Workshop Yard","/explore/frontier/"],["Law Library","/laws/"],["The Lab","/gauges/"]]
         },
         "frontier:frontier": {
           title: "Frontier Workshop Yard → System Bench",
           copy: "Choose a bench: Fusion, Closed Water Systems, Wastewater Systems, Infrastructure, Lattice, Manual, Shimmer, Trajectory, Vision, or Urban.",
-          path: [
-            ["Frontier Workshop Yard", "/explore/frontier/"],
-            ["Fusion Bench", "/explore/frontier/energy/"],
-            ["Closed Water Systems", "/explore/frontier/water/"]
-          ]
+          path: [["Frontier Workshop Yard","/explore/frontier/"],["Fusion Bench","/explore/frontier/energy/"],["Closed Water Systems","/explore/frontier/water/"]]
         },
         "frontier:products": {
           title: "Frontier Workshop Yard → Product Gallery",
           copy: "When an applied system becomes usable, it can move toward product value.",
-          path: [
-            ["Frontier Workshop Yard", "/explore/frontier/"],
-            ["Product Gallery", "/products/"]
-          ]
+          path: [["Frontier Workshop Yard","/explore/frontier/"],["Product Gallery","/products/"]]
         }
       };
 
-      function setupTabs() {
+      function setExclusive(nodes, activeNode) {
+        nodes.forEach((node) => {
+          const active = node === activeNode;
+          node.setAttribute("data-active", String(active));
+          node.setAttribute("data-muted", String(!active));
+        });
+      }
+
+      function resetGroup(selector) {
+        document.querySelectorAll(selector).forEach((node) => {
+          node.setAttribute("data-active", "false");
+          node.setAttribute("data-muted", "false");
+        });
+      }
+
+      function setupPageLenses() {
         const buttons = Array.from(document.querySelectorAll("[data-lens-button]"));
         const panels = Array.from(document.querySelectorAll("[data-lens-panel]"));
 
         buttons.forEach((button) => {
           button.addEventListener("click", () => {
             const key = button.getAttribute("data-lens-button");
+            setExclusive(buttons, button);
 
-            buttons.forEach((item) => item.setAttribute("data-active", String(item === button)));
             panels.forEach((panel) => {
-              panel.setAttribute("data-active", String(panel.getAttribute("data-lens-panel") === key));
+              const active = panel.getAttribute("data-lens-panel") === key;
+              panel.setAttribute("data-active", String(active));
+            });
+
+            const target = document.querySelector(`#${key === "presentation" ? "presentation-layer" : key === "navigation" ? "navigation-layer" : key === "diagnostics" ? "diagnostics-layer" : "construction-ledger"}`);
+            if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+        });
+      }
+
+      function setupFeatureOrbit() {
+        const gems = Array.from(document.querySelectorAll("[data-feature-gem]"));
+        const details = Array.from(document.querySelectorAll("[data-feature-detail]"));
+
+        gems.forEach((gem) => {
+          gem.addEventListener("click", () => {
+            const key = gem.getAttribute("data-feature");
+            setExclusive(gems, gem);
+
+            details.forEach((detail) => {
+              detail.setAttribute("data-active", String(detail.getAttribute("data-feature-detail") === key));
             });
           });
+        });
+      }
+
+      function setupGenericSelectGroups() {
+        document.querySelectorAll("[data-select-group='gem-demo'], [data-select-group='navigation-concepts']").forEach((group) => {
+          const cards = Array.from(group.querySelectorAll("[data-demo-card]"));
+
+          cards.forEach((card) => {
+            card.addEventListener("click", () => setExclusive(cards, card));
+          });
+        });
+
+        document.querySelectorAll("[data-reset-group]").forEach((reset) => {
+          reset.addEventListener("click", () => {
+            const group = reset.getAttribute("data-reset-group");
+
+            if (group === "gem-demo") resetGroup("[data-select-group='gem-demo'] [data-demo-card]");
+            if (group === "category-demo") {
+              const buttons = Array.from(document.querySelectorAll("[data-category-button]"));
+              const first = buttons[0];
+              if (first) setCategory(first);
+            }
+            if (group === "blueprint") {
+              const atrium = document.querySelector("[data-blueprint-room][data-room='atrium']");
+              if (atrium) setBlueprintRoom(atrium);
+            }
+          });
+        });
+      }
+
+      function setCategory(button) {
+        const buttons = Array.from(document.querySelectorAll("[data-category-button]"));
+        const panels = Array.from(document.querySelectorAll("[data-category-panel]"));
+        const key = button.getAttribute("data-category");
+
+        setExclusive(buttons, button);
+        panels.forEach((panel) => {
+          panel.setAttribute("data-active", String(panel.getAttribute("data-category-panel") === key));
+        });
+      }
+
+      function setupCategories() {
+        document.querySelectorAll("[data-category-button]").forEach((button) => {
+          button.addEventListener("click", () => setCategory(button));
+        });
+      }
+
+      function setBlueprintRoom(button) {
+        const rooms = Array.from(document.querySelectorAll("[data-blueprint-room]"));
+        const key = button.getAttribute("data-room");
+        const data = blueprintData[key] || blueprintData.atrium;
+
+        setExclusive(rooms, button);
+
+        const title = document.querySelector("[data-blueprint-title]");
+        const copy = document.querySelector("[data-blueprint-copy]");
+        const list = document.querySelector("[data-blueprint-list]");
+        const action = document.querySelector("[data-blueprint-action]");
+
+        if (title) title.textContent = data.title;
+        if (copy) copy.textContent = data.copy;
+        if (list) list.innerHTML = data.list.map((item) => `<li>${item}</li>`).join("");
+        if (action) {
+          action.textContent = data.action;
+          action.setAttribute("href", data.href);
+        }
+      }
+
+      function setupBlueprint() {
+        document.querySelectorAll("[data-blueprint-room]").forEach((button) => {
+          button.addEventListener("click", () => setBlueprintRoom(button));
         });
       }
 
@@ -1783,19 +2174,58 @@ webgl=false
         renderPlan();
       }
 
+      function setupMatrix() {
+        const cells = Array.from(document.querySelectorAll("[data-matrix-cell]"));
+        cells.forEach((cell) => {
+          cell.addEventListener("click", () => setExclusive(cells, cell));
+        });
+      }
+
+      function buildSpectrum() {
+        const spectrum = document.querySelector(".spectrum-16x16");
+        const readout = document.querySelector("[data-spectrum-readout]");
+        if (!spectrum) return;
+
+        spectrum.innerHTML = "";
+
+        for (let index = 1; index <= 256; index += 1) {
+          const cell = document.createElement("button");
+          cell.type = "button";
+          cell.className = "spectrum-cell";
+          cell.setAttribute("aria-label", `Diagnostic state ${index}`);
+          cell.dataset.spectrumCell = String(index);
+
+          cell.addEventListener("click", () => {
+            const cells = Array.from(spectrum.querySelectorAll("[data-spectrum-cell]"));
+            setExclusive(cells, cell);
+            if (readout) readout.textContent = `Selected state: ${index} of 256.`;
+          });
+
+          spectrum.appendChild(cell);
+        }
+      }
+
       function publishStatus() {
         window.DGB_SITE_GUIDE_STATUS = {
           contract: CONTRACT,
           route: "/site-guide/",
           guideDesk: true,
-          mainMenuRoute: true,
-          mirrorlandDoor: false,
-          mapPortalExplained: true,
-          returnToOrbitExplained: true,
-          quadrupedicTraversalExplained: true,
-          mobileFirstNativeBuildExplained: true,
+          tabbedExhibit: true,
+          flexExhibit: true,
+          presentationLayer: true,
+          navigationLayer: true,
+          underHoodDiagnosticsLayer: true,
+          constructionLedger: true,
+          estateBlueprintDemo: true,
+          featureOrbitDemo: true,
+          returnToOrbitDemo: true,
+          universalSelectedFocusBehavior: true,
+          quadrupedicQuadrilateralTraversal: "structural_core_only",
+          matrix4x4: true,
+          spectrum16x16: true,
+          diagnosticScope256: true,
+          mobileFirstNativeBuild: true,
           projectBeganLateJanuary2026: true,
-          dynamicPlannerActive: Boolean(document.querySelector("[data-path-rail]")),
           generatedImage: false,
           graphicBox: false,
           canvas: false,
@@ -1804,13 +2234,21 @@ webgl=false
         };
 
         document.documentElement.dataset.siteGuideContract = CONTRACT;
-        document.documentElement.dataset.siteGuideDynamicPlanner = "true";
-        document.documentElement.dataset.siteGuideMainMenuRoute = "true";
+        document.documentElement.dataset.siteGuideTabbedExhibit = "true";
+        document.documentElement.dataset.siteGuideFlexExhibit = "true";
+        document.documentElement.dataset.siteGuideReturnToOrbitLocal = "true";
+        document.documentElement.dataset.siteGuideDiagnosticScope256 = "true";
       }
 
       function mount() {
-        setupTabs();
+        setupPageLenses();
+        setupFeatureOrbit();
+        setupGenericSelectGroups();
+        setupCategories();
+        setupBlueprint();
         setupPlanner();
+        setupMatrix();
+        buildSpectrum();
         publishStatus();
       }
 

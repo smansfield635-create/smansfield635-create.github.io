@@ -1,12 +1,22 @@
 // TARGET FILE: /assets/site-guide/site-guide.js
 // TNT FULL-FILE REPLACEMENT
+// SITE_GUIDE_BLUEPRINT_SCAN_MODE_CONTROLLER_TNT_v1
+//
+// Purpose:
+// Renew Guide Desk from locked-selector behavior into a readable,
+// scan-first blueprint jump pad with explicit Return to Blueprint,
+// lens-anchor interception, and preserved Route Choice Board behavior.
+//
+// Previous contract:
 // SITE_GUIDE_ROUTE_CHOICE_BOARD_CONTROLLER_TNT_v1
 //
 // Owns:
 // - GUIDE_FOCUS_CONTROLLER
 // - page lens switching
+// - hidden-lens anchor interception
 // - feature activation
 // - Open Blueprint controller action
+// - blueprint scan mode
 // - Return to Blueprint controller action
 // - Return to Orbit reset
 // - blueprint jump-pad controller
@@ -15,8 +25,7 @@
 // - Visitor Position card selection
 // - Destination Goal card selection
 // - Recommended Path rail rendering
-// - focus lock
-// - scroll-aware activation
+// - scroll-aware activation without dead-page dimming
 // - blueprint room selection
 // - category selection
 // - 4x4 matrix selection
@@ -38,9 +47,9 @@
 
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CONTRACT = "SITE_GUIDE_ROUTE_CHOICE_BOARD_CONTROLLER_TNT_v1";
-  const PREVIOUS_CONTRACT = "SITE_GUIDE_BLUEPRINT_JUMP_PAD_CONTROLLER_TNT_v1";
-  const HTML_CONTRACT = "SITE_GUIDE_ROUTE_CHOICE_BOARD_HTML_TNT_v1";
+  const CONTRACT = "SITE_GUIDE_BLUEPRINT_SCAN_MODE_CONTROLLER_TNT_v1";
+  const PREVIOUS_CONTRACT = "SITE_GUIDE_ROUTE_CHOICE_BOARD_CONTROLLER_TNT_v1";
+  const HTML_CONTRACT = "SITE_GUIDE_ROUTE_CHOICE_BOARD_ZONE_ALIGNMENT_CACHE_BUST_HTML_TNT_v1";
   const STATUS_GLOBAL = "DGB_SITE_GUIDE_STATUS";
   const CONTROLLER_GLOBAL = "DGB_GUIDE_FOCUS_CONTROLLER";
 
@@ -50,6 +59,7 @@
     lensPanel: "[data-lens-panel]",
     featureGem: "[data-feature-gem]",
     featureDetail: "[data-feature-detail]",
+    blueprintRoot: ".estate-blueprint",
     blueprintRoom: "[data-blueprint-room]",
     jumpSection: "[data-jump-section]",
     jumpSurface: ".jump-surface",
@@ -90,6 +100,13 @@
     navigation: "navigation",
     diagnostics: "diagnostics",
     ledger: "ledger"
+  });
+
+  const LENS_HASHES = Object.freeze({
+    "#presentation-layer": "presentation",
+    "#navigation-layer": "navigation",
+    "#diagnostics-layer": "diagnostics",
+    "#construction-ledger": "ledger"
   });
 
   const BLUEPRINT_DEFAULT_ROOM = "atrium";
@@ -216,7 +233,6 @@
       copy: "Use Guide Desk for the map of meaning, then move through the regular website toward usable public value.",
       path: [["Guide Desk", "/site-guide/"], ["Main Hall", "/home/"], ["Product Gallery", "/products/"]]
     },
-
     "mirrorland:orientation": {
       title: "Map / Portal → Main Menu → Compass Desk",
       copy: "When you are inside Mirrorland and need ordinary-site orientation, open Main Menu and exit to Compass Desk.",
@@ -242,7 +258,6 @@
       copy: "Products are regular website rooms. Use Main Menu to exit Mirrorland and open Product Gallery.",
       path: [["Map / Portal", "#guide-orbit"], ["Main Menu", "/products/"], ["Product Gallery", "/products/"]]
     },
-
     "proof:orientation": {
       title: "The Lab → Guide Desk → Compass Desk",
       copy: "When proof creates too much detail, use Guide Desk for the construction narrative and Compass Desk for orientation.",
@@ -268,7 +283,6 @@
       copy: "Use proof to support usable public value, then move to Product Gallery.",
       path: [["The Lab", "/gauges/"], ["Product Gallery", "/products/"]]
     },
-
     "frontier:orientation": {
       title: "Frontier Workshop Yard → Guide Desk",
       copy: "When Frontier feels large, return to Guide Desk to understand how applied systems fit the estate.",
@@ -306,6 +320,8 @@
     activeDiagnosticCell: "",
     activeRouteStart: DEFAULT_ROUTE_START,
     activeRouteGoal: DEFAULT_ROUTE_GOAL,
+    blueprintScanMode: true,
+    lastBlueprintRoom: BLUEPRINT_DEFAULT_ROOM,
     focusLocked: false,
     scrollFocusEnabled: true,
     lastAction: "boot",
@@ -377,6 +393,34 @@
     });
   }
 
+  function setBlueprintScanMode(active, options = {}) {
+    state.blueprintScanMode = Boolean(active);
+
+    all(SELECTORS.blueprintRoot).forEach((blueprint) => {
+      setBool(blueprint, "data-scan-mode", state.blueprintScanMode);
+    });
+
+    try {
+      document.documentElement.dataset.siteGuideBlueprintScanMode = String(state.blueprintScanMode);
+    } catch (_error) {}
+
+    if (state.blueprintScanMode && options.restoreReadable !== false) {
+      restoreBlueprintScanReadability(options.preserveRoom !== false);
+    }
+  }
+
+  function restoreBlueprintScanReadability(preserveSelected = true) {
+    const selected = state.lastBlueprintRoom || state.activeBlueprintRoom || BLUEPRINT_DEFAULT_ROOM;
+
+    all(SELECTORS.blueprintRoom).forEach((room) => {
+      const key = room.getAttribute("data-room") || "";
+      setMuted(room, false);
+      setActive(room, preserveSelected && key === selected);
+    });
+
+    updateBlueprintDetail(selected);
+  }
+
   function switchLens(lens, options = {}) {
     const clean = lens === "navigation" || lens === "diagnostics" || lens === "ledger"
       ? lens
@@ -406,7 +450,7 @@
             ? "#diagnostics-layer"
             : "#construction-ledger";
 
-      scrollToTarget(target);
+      window.setTimeout(() => scrollToTarget(target, options.block || "start"), 30);
     }
 
     publishStatus();
@@ -441,16 +485,17 @@
     });
 
     if (clean === "blueprint" && options.activateBlueprint !== false) {
-      activateBlueprintRoom(state.activeBlueprintRoom || BLUEPRINT_DEFAULT_ROOM, {
-        mute: true,
+      setBlueprintScanMode(true);
+      activateBlueprintRoom(state.activeBlueprintRoom || state.lastBlueprintRoom || BLUEPRINT_DEFAULT_ROOM, {
+        mute: false,
         scroll: false,
-        lock: options.lock !== false,
+        lock: false,
         activateJump: false
       });
     }
 
     if (options.scroll !== false) {
-      window.setTimeout(() => scrollToTarget(target), 40);
+      window.setTimeout(() => scrollToTarget(target, "center"), 40);
     }
 
     publishStatus();
@@ -468,8 +513,13 @@
     all("[data-focus-section]").forEach((section) => {
       const active = section.getAttribute("data-focus-section") === clean;
       setActive(section, active);
-      setMuted(section, !active);
       setBool(section, "data-scroll-active", active);
+
+      if (options.softMute === true) {
+        setMuted(section, !active);
+      } else {
+        setMuted(section, false);
+      }
     });
 
     const feature = clean === "blueprint" ? "blueprint" : clean;
@@ -487,68 +537,64 @@
   }
 
   function openBlueprint(options = {}) {
-    state.focusLocked = options.lock !== false;
+    state.focusLocked = false;
     state.scrollFocusEnabled = false;
     state.activeFeature = "blueprint";
     state.lastAction = "open-blueprint";
 
     switchLens("presentation");
+    setBlueprintScanMode(true, { preserveRoom: true, restoreReadable: true });
+    clearJumpSections();
+
     activateFeature("blueprint", {
       force: true,
       scroll: false,
-      lock: options.lock !== false,
+      lock: false,
       activateBlueprint: false
     });
 
-    activateBlueprintRoom(options.room || state.activeBlueprintRoom || BLUEPRINT_DEFAULT_ROOM, {
-      mute: true,
+    activateBlueprintRoom(options.room || state.lastBlueprintRoom || state.activeBlueprintRoom || BLUEPRINT_DEFAULT_ROOM, {
+      mute: false,
       scroll: false,
-      lock: options.lock !== false,
+      lock: false,
       activateJump: false
     });
 
     window.setTimeout(() => {
-      scrollToTarget(".estate-blueprint", "center");
+      scrollToTarget(SELECTORS.blueprintRoot, "center");
     }, 60);
 
     publishStatus();
   }
 
   function returnToBlueprint() {
-    state.focusLocked = true;
+    state.focusLocked = false;
     state.scrollFocusEnabled = false;
     state.activeFeature = "blueprint";
+    state.activeJumpSection = "";
     state.lastAction = "return-to-blueprint";
 
     switchLens("presentation");
-
-    const roomKey = state.activeBlueprintRoom || BLUEPRINT_DEFAULT_ROOM;
+    setBlueprintScanMode(true, { preserveRoom: true, restoreReadable: true });
+    clearJumpSections();
 
     activateFeature("blueprint", {
       force: true,
       scroll: false,
-      lock: true,
+      lock: false,
       activateBlueprint: false
     });
 
-    activateBlueprintRoom(roomKey, {
-      mute: true,
+    activateBlueprintRoom(state.lastBlueprintRoom || state.activeBlueprintRoom || BLUEPRINT_DEFAULT_ROOM, {
+      mute: false,
       scroll: false,
-      lock: true,
+      lock: false,
       activateJump: false
     });
 
-    if (state.activeJumpSection) {
-      activateJumpSection(state.activeJumpSection, jumpTargetForRoom(roomKey), {
-        scroll: false,
-        mute: true,
-        lock: true
-      });
-    }
-
     window.setTimeout(() => {
-      scrollToTarget(".estate-blueprint", "center");
-    }, 40);
+      scrollToTarget(SELECTORS.blueprintRoot, "center");
+    }, 50);
 
     publishStatus();
   }
@@ -560,15 +606,23 @@
     if (!room) return;
 
     state.activeBlueprintRoom = clean;
+    state.lastBlueprintRoom = clean;
     state.activeFeature = "blueprint";
     state.lastAction = `blueprint-room:${clean}`;
 
-    if (options.lock !== false) {
+    if (options.lock === true) {
       state.focusLocked = true;
       state.scrollFocusEnabled = false;
     }
 
-    setExclusive(all(SELECTORS.blueprintRoom), room, { muteSiblings: options.mute !== false });
+    setBlueprintScanMode(true, { preserveRoom: false, restoreReadable: false });
+
+    all(SELECTORS.blueprintRoom).forEach((node) => {
+      const active = node === room;
+      setActive(node, active);
+      setMuted(node, options.mute === true && !active);
+    });
+
     updateBlueprintDetail(clean);
 
     const jumpTarget = room.getAttribute("data-jump-target") || jumpTargetForRoom(clean);
@@ -603,6 +657,7 @@
     state.activeJumpSection = clean;
     state.activeSection = clean;
     state.activeBlueprintRoom = clean;
+    state.lastBlueprintRoom = clean;
     state.lastAction = `jump-section:${clean}`;
 
     if (options.lock !== false) {
@@ -610,10 +665,9 @@
       state.scrollFocusEnabled = false;
     }
 
-    const jumpSections = all(`${SELECTORS.jumpSection}, ${SELECTORS.jumpSurface}`);
-    const uniqueSections = Array.from(new Set(jumpSections));
+    const jumpSections = Array.from(new Set(all(`${SELECTORS.jumpSection}, ${SELECTORS.jumpSurface}`)));
 
-    uniqueSections.forEach((node) => {
+    jumpSections.forEach((node) => {
       const active = node === section;
       setActive(node, active);
       setMuted(node, options.mute !== false && !active);
@@ -622,8 +676,8 @@
 
     all("[data-focus-section]").forEach((node) => {
       if (node.matches(SELECTORS.jumpSection) || node.classList.contains("jump-surface")) return;
-      const active = node.getAttribute("data-focus-section") === clean;
-      if (active) setBool(node, "data-scroll-active", true);
+      setBool(node, "data-scroll-active", node.getAttribute("data-focus-section") === clean);
+      setMuted(node, false);
     });
 
     if (options.scroll !== false) {
@@ -678,7 +732,9 @@
 
   function activateCardWithinGroup(card) {
     const group = card.closest("[data-select-group]");
-    const cards = group ? all(SELECTORS.demoCard, group).filter((node) => !isControllerOwnedCard(node)) : all(SELECTORS.demoCard).filter((node) => !isControllerOwnedCard(node));
+    const cards = group
+      ? all(SELECTORS.demoCard, group).filter((node) => !isControllerOwnedCard(node))
+      : all(SELECTORS.demoCard).filter((node) => !isControllerOwnedCard(node));
 
     setExclusive(cards, card);
 
@@ -738,11 +794,17 @@
     return state.activeRouteGoal || DEFAULT_ROUTE_GOAL;
   }
 
-  function activateRouteStart(value, options = {}) {
-    const clean = plans[`${value}:${state.activeRouteGoal || DEFAULT_ROUTE_GOAL}`] || all(SELECTORS.routeStart).some((node) => node.getAttribute("data-route-start") === value)
-      ? String(value || DEFAULT_ROUTE_START)
-      : DEFAULT_ROUTE_START;
+  function routeStartExists(value) {
+    return all(SELECTORS.routeStart).some((node) => node.getAttribute("data-route-start") === value);
+  }
 
+  function routeGoalExists(value) {
+    return all(SELECTORS.routeGoal).some((node) => node.getAttribute("data-route-goal") === value);
+  }
+
+  function activateRouteStart(value, options = {}) {
+    const requested = String(value || DEFAULT_ROUTE_START);
+    const clean = routeStartExists(requested) ? requested : DEFAULT_ROUTE_START;
     const card = one(`${SELECTORS.routeStart}[data-route-start="${cssEscape(clean)}"]`);
 
     state.activeRouteStart = clean;
@@ -757,10 +819,8 @@
   }
 
   function activateRouteGoal(value, options = {}) {
-    const clean = plans[`${state.activeRouteStart || DEFAULT_ROUTE_START}:${value}`] || all(SELECTORS.routeGoal).some((node) => node.getAttribute("data-route-goal") === value)
-      ? String(value || DEFAULT_ROUTE_GOAL)
-      : DEFAULT_ROUTE_GOAL;
-
+    const requested = String(value || DEFAULT_ROUTE_GOAL);
+    const clean = routeGoalExists(requested) ? requested : DEFAULT_ROUTE_GOAL;
     const card = one(`${SELECTORS.routeGoal}[data-route-goal="${cssEscape(clean)}"]`);
 
     state.activeRouteGoal = clean;
@@ -805,6 +865,7 @@
     state.activeSection = "";
     state.activeJumpSection = "";
     state.activeDiagnosticCell = "";
+    state.blueprintScanMode = false;
     state.focusLocked = false;
     state.scrollFocusEnabled = true;
     state.lastAction = "return-to-orbit";
@@ -831,20 +892,20 @@
       setMuted(button, false);
     });
 
+    all(SELECTORS.blueprintRoot).forEach((blueprint) => {
+      setBool(blueprint, "data-scan-mode", false);
+    });
+
+    try {
+      document.documentElement.dataset.siteGuideBlueprintScanMode = "false";
+    } catch (_error) {}
+
     activateCategory("presentation");
     switchLens("presentation");
 
-    activateBlueprintRoom(BLUEPRINT_DEFAULT_ROOM, {
-      mute: false,
-      scroll: false,
-      lock: false,
-      activateJump: false
-    });
-
     state.activeBlueprintRoom = BLUEPRINT_DEFAULT_ROOM;
-    state.activeJumpSection = "";
-    state.focusLocked = false;
-    state.scrollFocusEnabled = true;
+    state.lastBlueprintRoom = BLUEPRINT_DEFAULT_ROOM;
+    updateBlueprintDetail(BLUEPRINT_DEFAULT_ROOM);
 
     resetRouteChoiceBoard({ publish: false });
 
@@ -939,6 +1000,10 @@
     sections.forEach((section) => state.observer.observe(section));
   }
 
+  function lensFromHash(hash) {
+    return LENS_HASHES[String(hash || "").trim()] || "";
+  }
+
   function attachEvents() {
     const signal = state.abortController.signal;
 
@@ -961,7 +1026,7 @@
     all(SELECTORS.blueprintRoom).forEach((room) => {
       room.addEventListener("click", () => {
         activateBlueprintRoom(room.getAttribute("data-room") || BLUEPRINT_DEFAULT_ROOM, {
-          mute: true,
+          mute: false,
           scroll: true,
           lock: true,
           activateJump: true
@@ -1024,6 +1089,36 @@
         }
 
         return;
+      }
+
+      const anchor = event.target.closest("a[href]");
+      if (anchor) {
+        const rawHref = anchor.getAttribute("href") || "";
+        const hash = rawHref.startsWith("#")
+          ? rawHref
+          : (() => {
+              try {
+                const url = new URL(rawHref, window.location.href);
+                return url.pathname === window.location.pathname ? url.hash : "";
+              } catch (_error) {
+                return "";
+              }
+            })();
+
+        const lens = lensFromHash(hash);
+
+        if (lens) {
+          event.preventDefault();
+          state.focusLocked = false;
+          state.scrollFocusEnabled = true;
+          switchLens(lens, { scroll: false });
+
+          window.setTimeout(() => {
+            scrollToTarget(hash, "start");
+          }, 55);
+
+          return;
+        }
       }
 
       const spectrumCell = event.target.closest(SELECTORS.spectrumCell);
@@ -1094,8 +1189,19 @@
       activeDiagnosticCell: state.activeDiagnosticCell,
       activeRouteStart: state.activeRouteStart,
       activeRouteGoal: state.activeRouteGoal,
+      blueprintScanMode: state.blueprintScanMode,
+      lastBlueprintRoom: state.lastBlueprintRoom,
       focusLocked: state.focusLocked,
       scrollFocusEnabled: state.scrollFocusEnabled,
+
+      blueprintScanModeController: true,
+      blueprintScanFirstJumpPad: true,
+      blueprintRoomsReadableInScanMode: true,
+      returnToBlueprintController: true,
+      explicitReturnToBlueprintHook: true,
+      heroLensAnchorInterception: true,
+      navigationLayerAnchorActivatesLens: true,
+      diagnosticsLayerAnchorActivatesLens: true,
 
       routeChoiceBoardController: true,
       nativeSelectPlanner: false,
@@ -1105,9 +1211,16 @@
       destinationGoalCards: true,
       recommendedPathRail: true,
 
+      highlightZoneAlignment: true,
+      routeStartZoneIndependent: true,
+      routeGoalZoneIndependent: true,
+      blueprintZoneIndependent: true,
+      jumpSurfaceZoneIndependent: true,
+      genericDemoCardExclusionActive: true,
+      returnToOrbitClearsAllMuteStates: true,
+
       blueprintJumpPadController: true,
       blueprintRoomReadsJumpTarget: true,
-      returnToBlueprintController: true,
       returnToOrbitClearsJumpSections: true,
       blueprintRoomClickActivatesJumpSection: true,
       blueprintRoomClickScrollsToJumpSection: true,
@@ -1152,17 +1265,23 @@
       document.documentElement.dataset.siteGuideActiveJumpSection = state.activeJumpSection;
       document.documentElement.dataset.siteGuideActiveRouteStart = state.activeRouteStart;
       document.documentElement.dataset.siteGuideActiveRouteGoal = state.activeRouteGoal;
+      document.documentElement.dataset.siteGuideBlueprintScanMode = String(state.blueprintScanMode);
       document.documentElement.dataset.siteGuideFocusLocked = String(state.focusLocked);
       document.documentElement.dataset.siteGuideReturnToOrbitReset = "true";
       document.documentElement.dataset.siteGuideScrollActivation = String(Boolean(state.observer));
       document.documentElement.dataset.siteGuideOpenBlueprintController = "true";
       document.documentElement.dataset.siteGuideBlueprintJumpPadController = "true";
+      document.documentElement.dataset.siteGuideBlueprintScanModeController = "true";
+      document.documentElement.dataset.siteGuideBlueprintRoomsReadableInScanMode = "true";
       document.documentElement.dataset.siteGuideBlueprintRoomReadsJumpTarget = "true";
       document.documentElement.dataset.siteGuideReturnToBlueprintController = "true";
       document.documentElement.dataset.siteGuideReturnToOrbitClearsJumpSections = "true";
       document.documentElement.dataset.siteGuideRouteChoiceBoardController = "true";
       document.documentElement.dataset.siteGuideNativeSelectPlanner = "false";
       document.documentElement.dataset.siteGuideRouteChoiceBoardUpdatesPath = "true";
+      document.documentElement.dataset.siteGuideHighlightZoneAlignment = "true";
+      document.documentElement.dataset.siteGuideGenericDemoCardExclusionActive = "true";
+      document.documentElement.dataset.siteGuideHeroLensAnchorInterception = "true";
       document.documentElement.dataset.siteGuideDiagnosticScope256 = "true";
     } catch (_error) {}
 
@@ -1196,6 +1315,8 @@
       openBlueprint,
       returnToBlueprint,
       returnToOrbit,
+      setBlueprintScanMode,
+      restoreBlueprintScanReadability,
       activateBlueprintRoom,
       activateJumpSection,
       activateCategory,
@@ -1233,6 +1354,8 @@
     state.activeDiagnosticCell = "";
     state.activeRouteStart = selectedRouteStart() || DEFAULT_ROUTE_START;
     state.activeRouteGoal = selectedRouteGoal() || DEFAULT_ROUTE_GOAL;
+    state.blueprintScanMode = true;
+    state.lastBlueprintRoom = BLUEPRINT_DEFAULT_ROOM;
     state.focusLocked = false;
     state.scrollFocusEnabled = true;
     state.lastAction = "mounted";
@@ -1243,6 +1366,7 @@
 
     switchLens("presentation");
     activateCategory("presentation");
+    setBlueprintScanMode(true, { preserveRoom: true, restoreReadable: true });
 
     activateBlueprintRoom(BLUEPRINT_DEFAULT_ROOM, {
       mute: false,

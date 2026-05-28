@@ -1,24 +1,26 @@
 // /showroom/globe/audralia/disposition/index.js
-// AUDRALIA_G1_INTERGALACTIC_COCKPIT_FILE_2_DATASET_SELECTOR_COLLISION_HOTFIX_TNT_v1
+// AUDRALIA_G1_INTERGALACTIC_COCKPIT_FILE_2_MAP_PORTAL_OPEN_DRAG_JS_TNT_v1
 // Full-file replacement.
-// Purpose: preserve the three-file cockpit split while preventing dataset selector collisions from mutating <html>, <head>, or <body>.
-// Owns: route JS behavior, cockpit receipt publication, chamber behavior, Run Cockpit behavior, lattice registry, passive proof loading, generated instruments, current-time status, public status objects, safe visible text updates.
-// Does not own: CSS, HTML structure, child renewal, Runtime / Strength activation, canvas, WebGL, generated image, GraphicBox, or visual-render pass.
+// Purpose: preserve the three-file cockpit split and dataset selector collision guard while adding the missing floating Map Portal controller.
+// Owns: route JS behavior, cockpit receipt publication, chamber behavior, Run Cockpit behavior, lattice registry, passive proof loading, generated instruments, current-time status, public status objects, safe visible text updates, floating Map Portal tap-to-open, floating Map Portal drag-to-move, Map Portal panel open/close, and session-position restore.
+// Does not own: CSS, HTML structure, registry route truth, child renewal, Runtime / Strength activation, canvas, WebGL, generated image, GraphicBox, or visual-render pass.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_FILE_2_DATASET_SELECTOR_COLLISION_HOTFIX_TNT_v1";
-  const PREVIOUS_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_THREE_FILE_SPLIT_CURRENT_TIME_INSTRUMENTS_TNT_v1";
-  const SPEC_OPS_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_FILE_2_DATASET_SELECTOR_COLLISION_HOTFIX_SPEC_OPS_v1";
-  const NEWS_PROTOCOL = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_FILE_2_DATASET_SELECTOR_COLLISION_HOTFIX_NEWS_v1";
-  const CCR_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_FILE_2_DATASET_SELECTOR_COLLISION_HOTFIX_CCR_v1";
-  const PREVIOUS_JS_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_360_LATTICE_GEM_ROUTE_JS_TNT_v1";
-  const PREVIOUS_HTML_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_ENGINEERING_LENS_TECHNICAL_EXPRESSION_TNT_v1";
+  const CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_FILE_2_MAP_PORTAL_OPEN_DRAG_JS_TNT_v1";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_FILE_2_DATASET_SELECTOR_COLLISION_HOTFIX_TNT_v1";
+  const SPEC_OPS_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_FLOATING_MAP_PORTAL_OPEN_DRAG_THREE_FILE_SPEC_OPS_v1";
+  const NEWS_PROTOCOL = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_FLOATING_MAP_PORTAL_OPEN_DRAG_THREE_FILE_NEWS_v1";
+  const CCR_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_FLOATING_MAP_PORTAL_OPEN_DRAG_THREE_FILE_CCR_v1";
+  const PREVIOUS_JS_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_FILE_2_DATASET_SELECTOR_COLLISION_HOTFIX_TNT_v1";
+  const PREVIOUS_HTML_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_FILE_3_CSS_CACHE_CATCH_HTML_TNT_v1";
   const PARENT_MATCHING_CONTRACT = "AUDRALIA_G1_INTERGALACTIC_COCKPIT_PARENT_MATCHING_CONTRACT_TNT_v1";
   const ROUTE = "/showroom/globe/audralia/disposition/";
   const ORBIT_ID = "cockpit-orbit";
   const HEARTBEAT_MS = 60000;
+  const MAP_PORTAL_STORAGE_KEY = "audralia-cockpit-map-portal-position";
+  const MAP_PORTAL_DRAG_THRESHOLD = 6;
 
   const UNSAFE_TEXT_TAGS = new Set([
     "HTML",
@@ -53,7 +55,13 @@
     visibleCircumferenceOrder: "North -> East -> South -> West",
     gemModel: "360-degree circumferential lattice gems",
     circumferenceLaw: "360 circumference delegated by inconsistent cut-gem edges",
-    hotfix: "dataset selector collision guard",
+    hotfix: "dataset selector collision guard preserved",
+    mapPortalController: true,
+    mapPortalOpenDrag: true,
+    mapPortalPanel: true,
+    mapPortalDefaultNavigation: false,
+    mapPortalLinkDoor: false,
+    mapPortalStorageKey: MAP_PORTAL_STORAGE_KEY,
     safeTextWriter: true,
     htmlFunction: "wisdom",
     jsFunction: "courage",
@@ -253,6 +261,16 @@
       west: "booting",
       south: "held"
     },
+    mapPortal: {
+      active: false,
+      triggerFound: false,
+      panelFound: false,
+      panelState: "closed",
+      dragState: "idle",
+      positionRestored: false,
+      registryStatus: "pending",
+      lastAction: "none"
+    },
     generatedAt: new Date().toISOString(),
     booted: false,
     eventsBound: false,
@@ -416,6 +434,11 @@
     document.documentElement.dataset.localGaugeScope = "16x16-256-per-gauge";
     document.documentElement.dataset.selectorCollisionGuard = "active";
     document.documentElement.dataset.safeTextWriter = "true";
+    document.documentElement.dataset.mapPortalController = "active";
+    document.documentElement.dataset.mapPortalOpenDrag = "active";
+    document.documentElement.dataset.mapPortalDefaultNavigation = "false";
+    document.documentElement.dataset.mapPortalLinkDoor = "false";
+    document.documentElement.dataset.mapPortalStorageKey = MAP_PORTAL_STORAGE_KEY;
     document.documentElement.dataset.runtimeStrengthHeld = "true";
     document.documentElement.dataset.noChildRenewal = "true";
     document.documentElement.dataset.noCanvasCreation = "true";
@@ -426,6 +449,7 @@
     window.AUDRALIA_INTERGALACTIC_COCKPIT_ENGINEERING_LENS_RECEIPT = RECEIPT;
     window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_THREE_FILE_SPLIT_RECEIPT = RECEIPT;
     window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_FILE_2_HOTFIX_RECEIPT = RECEIPT;
+    window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_FILE_2_MAP_PORTAL_RECEIPT = RECEIPT;
   }
 
   function createCircumferenceMap(gemId) {
@@ -1083,7 +1107,7 @@
       cockpitFrame: "Intergalactic Cockpit",
       gemModel: "360 lattice-designated cut gems",
       circumferenceLaw: "full 360-degree circumference delegated by inconsistent cut-gem edges",
-      hotfix: "dataset selector collision guard",
+      hotfix: "dataset selector collision guard preserved",
       safeTextWriter: true,
       threeFileSplit: true,
       inlineCss: false,
@@ -1094,6 +1118,19 @@
       bridgeCount: 4,
       gaugeCount: 8,
       localGaugeScope: "16x16 / 256 per gauge",
+      mapPortal: {
+        active: state.mapPortal.active,
+        triggerFound: state.mapPortal.triggerFound,
+        panelFound: state.mapPortal.panelFound,
+        panelState: state.mapPortal.panelState,
+        dragState: state.mapPortal.dragState,
+        positionRestored: state.mapPortal.positionRestored,
+        registryStatus: state.mapPortal.registryStatus,
+        defaultNavigation: false,
+        linkDoor: false,
+        storageKey: MAP_PORTAL_STORAGE_KEY,
+        lastAction: state.mapPortal.lastAction
+      },
       bridgeStatus: { ...state.bridgeStatus },
       bridges: BRIDGES,
       cockpitLocalTime: current.local,
@@ -1137,6 +1174,7 @@
     window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_THREE_FILE_SPLIT_STATUS = publicStatus;
     window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_NEWS_ALIGNMENT_STATUS = publicStatus;
     window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_FILE_2_HOTFIX_STATUS = publicStatus;
+    window.AUDRALIA_G1_INTERGALACTIC_COCKPIT_MAP_PORTAL_STATUS = publicStatus.mapPortal;
 
     return publicStatus;
   }
@@ -1266,6 +1304,423 @@
     if (menu) menu.open = false;
   }
 
+  function normalizeRoutePath(path) {
+    let next = String(path || "/").trim();
+
+    if (!next) next = "/";
+    if (/^https?:\/\//i.test(next)) {
+      try {
+        next = new URL(next).pathname || "/";
+      } catch (_error) {
+        next = "/";
+      }
+    }
+
+    next = next.split("#")[0].split("?")[0];
+    if (!next.startsWith("/")) next = "/" + next;
+    next = next.replace(/\/{2,}/g, "/");
+    if (next !== "/" && !next.endsWith("/")) next += "/";
+
+    return next;
+  }
+
+  function clampNumber(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
+  function safeSessionGet(key) {
+    try {
+      return window.sessionStorage.getItem(key);
+    } catch (_error) {
+      return null;
+    }
+  }
+
+  function safeSessionSet(key, value) {
+    try {
+      window.sessionStorage.setItem(key, value);
+    } catch (_error) {
+      /* sessionStorage unavailable */
+    }
+  }
+
+  function getBlueprintRegistry() {
+    return window.DGB_MANOR_BLUEPRINT_REGISTRY || null;
+  }
+
+  function fallbackMirrorlandRoutes() {
+    return [
+      { path: "/showroom/", publicRoomName: "Atrium", visitorAction: "Enter Atrium" },
+      { path: "/showroom/globe/", publicRoomName: "Atlas Study", visitorAction: "Open Atlas Study" },
+      { path: "/showroom/globe/audralia/", publicRoomName: "Audralia Conservatory", visitorAction: "Enter Audralia" },
+      { path: "/showroom/globe/audralia/planet/", publicRoomName: "Audralia Worldroom", visitorAction: "Inspect Worldroom" },
+      { path: "/showroom/globe/audralia/disposition/", publicRoomName: "Control Cockpit", visitorAction: "Stay in Cockpit" },
+      { path: "/explore/frontier/", publicRoomName: "Frontier Workshop Yard", visitorAction: "Enter Workshop Yard" },
+      { path: "/characters/", publicRoomName: "Portrait Hall", visitorAction: "Enter Portrait Hall" },
+      { path: "/nine-summits/universe/", publicRoomName: "Universe Gallery", visitorAction: "Open Universe Gallery" }
+    ];
+  }
+
+  function fallbackWebsiteRoutes() {
+    return [
+      { path: "/", publicRoomName: "Compass Desk", visitorAction: "Open Compass" },
+      { path: "/site-guide/", publicRoomName: "Guide Desk", visitorAction: "Open Guide Desk" },
+      { path: "/home/", publicRoomName: "Main Hall", visitorAction: "Open Home" },
+      { path: "/laws/", publicRoomName: "Law Library", visitorAction: "Open Laws" },
+      { path: "/governance/", publicRoomName: "Council Room", visitorAction: "Open Governance" },
+      { path: "/gauges/", publicRoomName: "The Lab", visitorAction: "Open The Lab" },
+      { path: "/products/", publicRoomName: "Product Gallery", visitorAction: "Open Products" },
+      { path: "/about-this-underdog/", publicRoomName: "Host Portrait", visitorAction: "Meet Sean" }
+    ];
+  }
+
+  function routeName(route) {
+    return String(route.publicRoomName || route.shortTitle || route.title || route.path || "Route");
+  }
+
+  function routeHref(route) {
+    return String(route.href || route.path || "/");
+  }
+
+  function routeAction(route) {
+    return String(route.visitorAction || "Open");
+  }
+
+  function buildMapPortalRouteGroup(title, routes, currentPath) {
+    const group = createNode("section", "map-portal-route-group", {
+      "data-map-portal-route-group": title.toLowerCase().replace(/[^a-z0-9]+/g, "-")
+    });
+
+    group.appendChild(createNode("p", "kicker", { text: title }));
+
+    const grid = createNode("div", "map-portal-grid");
+
+    routes.forEach((route) => {
+      const href = routeHref(route);
+      const link = createNode("a", "", {
+        href,
+        title: routeAction(route),
+        "data-map-portal-route": href,
+        text: routeName(route)
+      });
+
+      if (normalizeRoutePath(href) === currentPath) {
+        link.setAttribute("aria-current", "page");
+      }
+
+      grid.appendChild(link);
+    });
+
+    group.appendChild(grid);
+    return group;
+  }
+
+  function hydrateMapPortalPanel(panel) {
+    if (!panel) return;
+
+    const card = qs(".map-portal-card", panel);
+    if (!card) return;
+
+    qsa(".map-portal-grid", card).forEach((grid) => grid.remove());
+    qsa(".map-portal-route-group", card).forEach((group) => group.remove());
+
+    const currentPath = normalizeRoutePath(window.location.pathname);
+    const registry = getBlueprintRegistry();
+
+    let mirrorlandRoutes = fallbackMirrorlandRoutes();
+    let websiteRoutes = fallbackWebsiteRoutes();
+
+    if (registry && typeof registry.routesByMenu === "function") {
+      try {
+        const mirrorland = registry.routesByMenu("mirrorland");
+        const main = registry.routesByMenu("main");
+
+        if (mirrorland && mirrorland.length) mirrorlandRoutes = mirrorland;
+        if (main && main.length) websiteRoutes = main;
+
+        state.mapPortal.registryStatus = "active";
+      } catch (_error) {
+        state.mapPortal.registryStatus = "fallback";
+      }
+    } else {
+      state.mapPortal.registryStatus = "fallback";
+    }
+
+    card.appendChild(buildMapPortalRouteGroup("Mirrorland Rooms", mirrorlandRoutes, currentPath));
+    card.appendChild(buildMapPortalRouteGroup("Website Options", websiteRoutes, currentPath));
+  }
+
+  function openMapPortal(panel, trigger) {
+    if (!panel) return;
+
+    hydrateMapPortalPanel(panel);
+
+    panel.hidden = false;
+    panel.dataset.open = "true";
+    panel.setAttribute("aria-hidden", "false");
+
+    if (trigger) trigger.setAttribute("aria-expanded", "true");
+
+    state.mapPortal.panelState = "open";
+    state.mapPortal.lastAction = "opened";
+
+    document.documentElement.dataset.mapPortalPanelState = "open";
+    document.documentElement.dataset.mapPortalLastAction = "opened";
+
+    const closeButton = qs("[data-map-portal-close]", panel);
+    if (closeButton) {
+      window.requestAnimationFrame(() => {
+        try {
+          closeButton.focus({ preventScroll: true });
+        } catch (_error) {
+          closeButton.focus();
+        }
+      });
+    }
+
+    publishLatticeGemStatus();
+  }
+
+  function closeMapPortal(panel, trigger) {
+    if (!panel) return;
+
+    panel.dataset.open = "false";
+    panel.setAttribute("aria-hidden", "true");
+
+    if (trigger) trigger.setAttribute("aria-expanded", "false");
+
+    state.mapPortal.panelState = "closed";
+    state.mapPortal.lastAction = "closed";
+
+    document.documentElement.dataset.mapPortalPanelState = "closed";
+    document.documentElement.dataset.mapPortalLastAction = "closed";
+
+    window.setTimeout(() => {
+      if (panel.dataset.open !== "true") panel.hidden = true;
+    }, 180);
+
+    publishLatticeGemStatus();
+  }
+
+  function setupFloatingMapPortal() {
+    const trigger =
+      qs("[data-floating-map-portal]") ||
+      qs("[data-map-portal-trigger]") ||
+      qs(".floating-map-portal");
+
+    const panel =
+      qs("[data-map-portal-panel]") ||
+      qs(".map-portal-panel");
+
+    state.mapPortal.triggerFound = Boolean(trigger);
+    state.mapPortal.panelFound = Boolean(panel);
+
+    document.documentElement.dataset.mapPortalTriggerFound = String(Boolean(trigger));
+    document.documentElement.dataset.mapPortalPanelFound = String(Boolean(panel));
+
+    if (!trigger || !panel) {
+      state.mapPortal.active = false;
+      state.mapPortal.lastAction = "missing-hooks";
+      document.documentElement.dataset.mapPortalOpenDrag = "missing-hooks";
+      return;
+    }
+
+    const storageKey = trigger.getAttribute("data-map-portal-position-storage-key") || MAP_PORTAL_STORAGE_KEY;
+
+    trigger.setAttribute("type", "button");
+    trigger.setAttribute("aria-controls", panel.id || "cockpit-map-portal-panel");
+    trigger.setAttribute("aria-expanded", "false");
+    trigger.dataset.mapPortalController = "active";
+    trigger.dataset.mapPortalDefaultNavigation = "false";
+
+    panel.dataset.mapPortalController = "active";
+    panel.dataset.open = "false";
+    panel.setAttribute("aria-hidden", "true");
+    panel.hidden = true;
+
+    hydrateMapPortalPanel(panel);
+
+    let pointerId = null;
+    let startX = 0;
+    let startY = 0;
+    let startLeft = 0;
+    let startTop = 0;
+    let didDrag = false;
+    let suppressClick = false;
+
+    function applyPortalPosition(left, top) {
+      const rect = trigger.getBoundingClientRect();
+      const maxLeft = Math.max(8, window.innerWidth - rect.width - 8);
+      const maxTop = Math.max(8, window.innerHeight - rect.height - 8);
+
+      const nextLeft = clampNumber(left, 8, maxLeft);
+      const nextTop = clampNumber(top, 8, maxTop);
+
+      trigger.style.left = `${nextLeft}px`;
+      trigger.style.top = `${nextTop}px`;
+      trigger.style.right = "auto";
+      trigger.style.bottom = "auto";
+
+      return { left: nextLeft, top: nextTop };
+    }
+
+    function restorePortalPosition() {
+      const raw = safeSessionGet(storageKey);
+      if (!raw) return;
+
+      try {
+        const saved = JSON.parse(raw);
+        if (Number.isFinite(saved.left) && Number.isFinite(saved.top)) {
+          applyPortalPosition(saved.left, saved.top);
+          state.mapPortal.positionRestored = true;
+          document.documentElement.dataset.mapPortalPositionRestored = "true";
+        }
+      } catch (_error) {
+        state.mapPortal.positionRestored = false;
+      }
+    }
+
+    restorePortalPosition();
+
+    trigger.addEventListener("pointerdown", (event) => {
+      if (event.button !== undefined && event.button !== 0) return;
+
+      pointerId = event.pointerId;
+      startX = event.clientX;
+      startY = event.clientY;
+
+      const rect = trigger.getBoundingClientRect();
+      startLeft = rect.left;
+      startTop = rect.top;
+
+      didDrag = false;
+      suppressClick = false;
+
+      trigger.dataset.dragging = "true";
+      state.mapPortal.dragState = "pressed";
+      document.documentElement.dataset.mapPortalDragState = "pressed";
+
+      try {
+        trigger.setPointerCapture(pointerId);
+      } catch (_error) {
+        /* pointer capture unavailable */
+      }
+    });
+
+    trigger.addEventListener("pointermove", (event) => {
+      if (pointerId !== event.pointerId) return;
+
+      const dx = event.clientX - startX;
+      const dy = event.clientY - startY;
+
+      if (!didDrag && Math.hypot(dx, dy) >= MAP_PORTAL_DRAG_THRESHOLD) {
+        didDrag = true;
+        suppressClick = true;
+        state.mapPortal.dragState = "dragging";
+        document.documentElement.dataset.mapPortalDragState = "dragging";
+      }
+
+      if (!didDrag) return;
+
+      event.preventDefault();
+
+      const position = applyPortalPosition(startLeft + dx, startTop + dy);
+      safeSessionSet(storageKey, JSON.stringify(position));
+
+      document.documentElement.dataset.mapPortalPosition = `${Math.round(position.left)},${Math.round(position.top)}`;
+    }, { passive: false });
+
+    function endPortalPointer(event) {
+      if (pointerId !== event.pointerId) return;
+
+      try {
+        trigger.releasePointerCapture(pointerId);
+      } catch (_error) {
+        /* release unavailable */
+      }
+
+      pointerId = null;
+      trigger.dataset.dragging = "false";
+
+      state.mapPortal.dragState = didDrag ? "moved" : "idle";
+      state.mapPortal.lastAction = didDrag ? "dragged" : state.mapPortal.lastAction;
+
+      document.documentElement.dataset.mapPortalDragState = state.mapPortal.dragState;
+
+      if (didDrag) {
+        window.setTimeout(() => {
+          suppressClick = false;
+        }, 180);
+      }
+
+      publishLatticeGemStatus();
+    }
+
+    trigger.addEventListener("pointerup", endPortalPointer);
+    trigger.addEventListener("pointercancel", endPortalPointer);
+
+    trigger.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (suppressClick) return;
+
+      if (panel.dataset.open === "true") {
+        closeMapPortal(panel, trigger);
+      } else {
+        openMapPortal(panel, trigger);
+      }
+    });
+
+    const closeButton = qs("[data-map-portal-close]", panel);
+    if (closeButton) {
+      closeButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        closeMapPortal(panel, trigger);
+
+        try {
+          trigger.focus({ preventScroll: true });
+        } catch (_error) {
+          trigger.focus();
+        }
+      });
+    }
+
+    panel.addEventListener("click", (event) => {
+      if (event.target === panel) closeMapPortal(panel, trigger);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") return;
+      if (panel.dataset.open === "true") {
+        closeMapPortal(panel, trigger);
+        try {
+          trigger.focus({ preventScroll: true });
+        } catch (_error) {
+          trigger.focus();
+        }
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      const rect = trigger.getBoundingClientRect();
+      const position = applyPortalPosition(rect.left, rect.top);
+      safeSessionSet(storageKey, JSON.stringify(position));
+    });
+
+    state.mapPortal.active = true;
+    state.mapPortal.panelState = "closed";
+    state.mapPortal.dragState = "ready";
+    state.mapPortal.lastAction = "controller-ready";
+
+    document.documentElement.dataset.mapPortalOpenDrag = "active";
+    document.documentElement.dataset.mapPortalController = "active";
+    document.documentElement.dataset.mapPortalPanelState = "closed";
+    document.documentElement.dataset.mapPortalDragState = "ready";
+    document.documentElement.dataset.mapPortalDefaultNavigation = "false";
+    document.documentElement.dataset.mapPortalStorageKey = storageKey;
+  }
+
   function handleReturnToOrbit() {
     clearActiveInstruments();
     document.documentElement.dataset.cockpitReturn = "orbit";
@@ -1349,6 +1804,7 @@
     state.latticeGems = createLatticeGemRegistry();
 
     renderAllLatticeSystems();
+    setupFloatingMapPortal();
 
     setText("[data-cockpit-phase]", "booting");
     setText("[data-cockpit-failure]", "none");

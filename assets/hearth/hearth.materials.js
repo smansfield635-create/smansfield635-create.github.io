@@ -1,27 +1,19 @@
 // /assets/hearth/hearth.materials.js
-// HEARTH_MATERIAL_AUTHORITY_COMPATIBILITY_RESCUE_TNT_v1
+// HEARTH_MATERIAL_TEXTURE_CANVAS_COMPATIBILITY_RESCUE_TNT_v2
 // Full-file replacement.
-// Materials authority compatibility rescue.
+// Materials authority + texture-canvas compatibility rescue.
 // Purpose:
-// - Restore active v21 carrier material authority compatibility.
-// - Never throw into the route carrier.
-// - Preserve surface-mass anchoring fields from the previous materials direction.
-// - Support legacy and current callable names.
-// - Return broad safe color/material fields for multiple carrier expectations.
-// Does not own:
-// - elevation generation
-// - terrain classification
-// - canvas drawing
-// - runtime motion
-// - controls
-// - route UI
-// - final visual pass claim
+// - Preserve broad material sampler compatibility.
+// - Add createTextureCanvas(...) for the Hearth v22/v21 canvas carrier.
+// - Keep surface-mass anchoring fields available.
+// - Never throw into route/canvas.
+// Does not own: elevation generation, terrain classification, canvas drawing, runtime motion, controls, route UI, final visual pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_MATERIAL_AUTHORITY_COMPATIBILITY_RESCUE_TNT_v1";
-  const RECEIPT = "HEARTH_MATERIALS_COMPATIBILITY_RESCUE_ACTIVE_v1";
+  const CONTRACT = "HEARTH_MATERIAL_TEXTURE_CANVAS_COMPATIBILITY_RESCUE_TNT_v2";
+  const RECEIPT = "HEARTH_MATERIAL_TEXTURE_CANVAS_COMPATIBILITY_RESCUE_RECEIPT_v2";
   const AUTHORITY = "materials";
   const SEA_LEVEL = 0.0;
   const DEG = Math.PI / 180;
@@ -35,7 +27,6 @@
   };
 
   const clamp01 = (value) => clamp(value, 0, 1);
-
   const mix = (a, b, t) => a + (b - a) * clamp01(t);
 
   const smoothstep = (edge0, edge1, x) => {
@@ -145,13 +136,10 @@
         const a = Number(args[0]);
         const b = Number(args[1]);
 
-        if (a >= 0 && a <= 1 && b >= 0 && b <= 1) {
-          return uvToVector(a, b);
-        }
-
+        if (a >= 0 && a <= 1 && b >= 0 && b <= 1) return uvToVector(a, b);
         return lonLatToVector(a, b);
       }
-    } catch (err) {
+    } catch (_error) {
       return { x: 0, y: 0, z: 1 };
     }
 
@@ -169,16 +157,13 @@
     valleyLand: [82, 94, 63],
     mountainMass: [157, 150, 108],
     islandMass: [129, 126, 78],
-
     shallowWater: [17, 58, 76],
     saddleWater: [20, 64, 78],
     shelfWater: [16, 54, 73],
     submergedBridge: [17, 50, 64],
     deepWater: [4, 14, 29],
     basinWater: [5, 20, 32],
-
     shadow: [2, 7, 12],
-    atmosphere: [120, 147, 137],
     fallbackLand: [126, 121, 74],
     fallbackWater: [5, 19, 35]
   };
@@ -201,16 +186,12 @@
     deep_water: "deep_ocean_body"
   };
 
-  const TERRAIN_CLASSES = Object.keys(MATERIAL_CLASS_BY_TERRAIN);
-
   const getCompositionAuthority = () => {
     try {
       if (root.HEARTH && root.HEARTH.composition) return root.HEARTH.composition;
       if (root.HEARTH_COMPOSITION) return root.HEARTH_COMPOSITION;
       if (root.HearthComposition) return root.HearthComposition;
-    } catch (err) {
-      return null;
-    }
+    } catch (_error) {}
     return null;
   };
 
@@ -266,21 +247,17 @@
       contract: "HEARTH_MATERIALS_INTERNAL_SAFE_FALLBACK_COMPOSITION",
       receipt: "SAFE_FALLBACK_COMPOSITION_USED",
       authority: "composition-fallback",
-
       x: p.x,
       y: p.y,
       z: p.z,
-
       terrainClass,
       terrainClassHint: terrainClass,
       elevation,
       seaLevel: SEA_LEVEL,
-
       isLand,
       isWater: !isLand,
       isShallowWater,
       isDeepWater,
-
       landPotential: clamp01(smoothstep(-0.08, 0.26, elevation)),
       shelfPotential,
       bridgePotential: bridge,
@@ -292,7 +269,6 @@
       waterDepthPotential: elevation < 0 ? clamp01(-elevation / 0.74) : 0,
       corePotential: landSeed,
       shieldPotential: landSeed * 0.72,
-
       massAnchor,
       shorelineContact,
       reliefStrength,
@@ -304,7 +280,6 @@
       curvatureLock: 0.86,
       contactOcclusion,
       surfaceAttachment,
-
       mountainCandidate: elevation > 0.48 ? 1 : 0,
       cliffCandidate: slopePressure > 0.62 ? 1 : 0,
       valleyCandidate: 0,
@@ -315,9 +290,8 @@
 
   const normalizeComposition = (raw, p) => {
     const source = raw && typeof raw === "object" ? raw : {};
-    const elevation = clamp(source.elevation, -1, 1);
     const hasElevation = Number.isFinite(Number(source.elevation));
-    const e = hasElevation ? elevation : -0.42;
+    const e = hasElevation ? clamp(source.elevation, -1, 1) : -0.42;
 
     const terrainClass =
       typeof source.terrainClass === "string" && source.terrainClass
@@ -355,21 +329,17 @@
     return {
       contract: source.contract || "UNKNOWN_OR_NORMALIZED_COMPOSITION",
       receipt: source.receipt || "NORMALIZED_COMPOSITION_SAMPLE",
-
       x: Number.isFinite(Number(source.x)) ? Number(source.x) : p.x,
       y: Number.isFinite(Number(source.y)) ? Number(source.y) : p.y,
       z: Number.isFinite(Number(source.z)) ? Number(source.z) : p.z,
-
       terrainClass,
       terrainClassHint: source.terrainClassHint || source.hint || terrainClass,
       elevation: e,
       seaLevel: Number.isFinite(Number(source.seaLevel)) ? Number(source.seaLevel) : SEA_LEVEL,
-
       isLand,
       isWater,
       isShallowWater,
       isDeepWater,
-
       landPotential: clamp01(source.landPotential ?? (isLand ? 0.8 : 0.05)),
       shelfPotential: clamp01(source.shelfPotential),
       bridgePotential: clamp01(source.bridgePotential),
@@ -381,7 +351,6 @@
       waterDepthPotential: clamp01(source.waterDepthPotential),
       corePotential: clamp01(source.corePotential),
       shieldPotential: clamp01(source.shieldPotential),
-
       massAnchor: clamp01(source.massAnchor ?? (isLand ? 0.68 : 0.04)),
       shorelineContact: clamp01(source.shorelineContact ?? source.coastPotential),
       reliefStrength: clamp01(source.reliefStrength),
@@ -393,7 +362,6 @@
       curvatureLock: clamp01(source.curvatureLock ?? 0.82),
       contactOcclusion: clamp01(source.contactOcclusion),
       surfaceAttachment: clamp01(source.surfaceAttachment ?? (isLand ? 0.78 : 0.46)),
-
       mountainCandidate: clamp01(source.mountainCandidate),
       cliffCandidate: clamp01(source.cliffCandidate),
       valleyCandidate: clamp01(source.valleyCandidate),
@@ -417,24 +385,21 @@
       authority.compose,
       authority.read,
       authority.get,
+      authority.sampleComposition,
+      authority.readComposition,
       authority.resolve,
-      authority.classify && ((...inner) => {
-        const terrainClass = authority.classify(...inner);
-        return { terrainClass };
-      })
+      authority.classify && ((...inner) => ({ terrainClass: authority.classify(...inner) }))
     ].filter((fn) => typeof fn === "function");
 
     for (const fn of candidates) {
       try {
         const result = fn.apply(authority, args);
         if (result && typeof result === "object") return normalizeComposition(result, p);
-      } catch (err) {
+      } catch (_error) {
         try {
           const result = fn.call(authority, p);
           if (result && typeof result === "object") return normalizeComposition(result, p);
-        } catch (err2) {
-          // Continue to the next candidate.
-        }
+        } catch (_error2) {}
       }
     }
 
@@ -444,7 +409,7 @@
   const readComposition = (...args) => {
     try {
       return readCompositionUnsafe(...args);
-    } catch (err) {
+    } catch (_error) {
       return fallbackCompositionFromPoint(parsePoint(...args));
     }
   };
@@ -817,7 +782,7 @@
   const safeMaterial = (...args) => {
     try {
       return buildMaterial(...args);
-    } catch (err) {
+    } catch (_error) {
       const p = parsePoint(...args);
       const comp = fallbackCompositionFromPoint(p);
       const materialClass = materialClassFor(comp.terrainClass);
@@ -837,25 +802,20 @@
         protected: true,
         fallbackProtected: true,
         finalVisualPassClaim: false,
-
         x: p.x,
         y: p.y,
         z: p.z,
-
         terrainClass: comp.terrainClass,
         materialClass,
         className: materialClass,
         type: materialClass,
-
         elevation: comp.elevation,
         isLand: comp.isLand,
         isWater: comp.isWater,
         isShallowWater: comp.isShallowWater,
         isDeepWater: comp.isDeepWater,
-
         land: comp.isLand,
         water: comp.isWater,
-
         color: rgb,
         rgb,
         rgba: [rgb[0], rgb[1], rgb[2], alpha],
@@ -863,22 +823,18 @@
         g: rgb[1],
         b: rgb[2],
         a: alpha,
-
         alpha,
         surfaceAlpha: alpha,
         solidSurfaceAlpha: alpha,
         opacity: alpha,
-
         cssColor,
         colorCss: cssColor,
         css: cssColor,
         fillStyle: cssColor,
         style: cssColor,
         hex: colorToHex(rgb),
-
         baseColor,
         finalColorHint: rgb,
-
         landDensity: fields.landDensity,
         shorelineGrounding: fields.shorelineGrounding,
         contactShadow: fields.contactShadow,
@@ -887,7 +843,6 @@
         terrainRelief: fields.terrainRelief,
         rimDarkening: fields.rimDarkening,
         atmosphereSeparation: fields.atmosphereSeparation,
-
         compositionReceipt: comp.receipt,
         compositionContract: comp.contract
       };
@@ -916,6 +871,125 @@
   const getCssColor = (...args) => safeMaterial(...args).cssColor;
   const getFillStyle = (...args) => safeMaterial(...args).fillStyle;
 
+  function resolveTextureOptions(...args) {
+    let options = {};
+
+    if (args.length === 1 && args[0] && typeof args[0] === "object" && !Number.isFinite(Number(args[0].x))) {
+      options = args[0];
+    } else if (args.length >= 2 && Number.isFinite(Number(args[0])) && Number.isFinite(Number(args[1]))) {
+      options = {
+        width: Number(args[0]),
+        height: Number(args[1]),
+        ...(args[2] && typeof args[2] === "object" ? args[2] : {})
+      };
+    }
+
+    return {
+      width: clamp(Math.round(options.width || options.w || 512), 16, 2048),
+      height: clamp(Math.round(options.height || options.h || 256), 8, 1024),
+      alpha: options.alpha !== false,
+      source: options.source || "hearth-material-sampler",
+      contract: CONTRACT,
+      receipt: RECEIPT
+    };
+  }
+
+  function createTextureCanvas(...args) {
+    try {
+      const options = resolveTextureOptions(...args);
+
+      if (typeof document === "undefined" || !document.createElement) {
+        return {
+          contract: CONTRACT,
+          receipt: RECEIPT,
+          width: options.width,
+          height: options.height,
+          canvas: null,
+          texture: null,
+          status: "document-unavailable",
+          createTextureCanvasAvailable: true
+        };
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = options.width;
+      canvas.height = options.height;
+      canvas.dataset.hearthTextureCanvas = "true";
+      canvas.dataset.hearthMaterialsContract = CONTRACT;
+      canvas.dataset.hearthMaterialsReceipt = RECEIPT;
+      canvas.dataset.generatedImage = "false";
+      canvas.dataset.graphicBox = "false";
+      canvas.dataset.visualPassClaimed = "false";
+
+      const ctx = canvas.getContext("2d", { alpha: options.alpha, willReadFrequently: false });
+      if (!ctx) return canvas;
+
+      const image = ctx.createImageData(options.width, options.height);
+      const data = image.data;
+
+      for (let y = 0; y < options.height; y += 1) {
+        const v = options.height <= 1 ? 0 : y / (options.height - 1);
+
+        for (let x = 0; x < options.width; x += 1) {
+          const u = options.width <= 1 ? 0 : x / (options.width - 1);
+          const material = safeMaterial({ u, v });
+          const i = (y * options.width + x) * 4;
+          const rgb = material.rgb || material.color || [0, 0, 0];
+          const alpha = clamp01(material.alpha ?? material.surfaceAlpha ?? material.opacity ?? 1);
+
+          data[i] = clamp(Math.round(rgb[0]), 0, 255);
+          data[i + 1] = clamp(Math.round(rgb[1]), 0, 255);
+          data[i + 2] = clamp(Math.round(rgb[2]), 0, 255);
+          data[i + 3] = clamp(Math.round(alpha * 255), 0, 255);
+        }
+      }
+
+      ctx.putImageData(image, 0, 0);
+
+      canvas.hearthMaterialTexture = {
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        width: options.width,
+        height: options.height,
+        source: options.source,
+        generatedImage: false,
+        graphicBox: false,
+        visualPassClaimed: false
+      };
+
+      return canvas;
+    } catch (_error) {
+      if (typeof document !== "undefined" && document.createElement) {
+        const canvas = document.createElement("canvas");
+        canvas.width = 16;
+        canvas.height = 8;
+        canvas.dataset.hearthTextureCanvas = "true";
+        canvas.dataset.hearthMaterialsContract = CONTRACT;
+        canvas.dataset.hearthFallbackTextureCanvas = "true";
+
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.fillStyle = colorToCss(PALETTE.fallbackWater, 1);
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        return canvas;
+      }
+
+      return {
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        status: "safe-texture-fallback",
+        createTextureCanvasAvailable: true
+      };
+    }
+  }
+
+  const createMaterialTexture = (...args) => createTextureCanvas(...args);
+  const createTexture = (...args) => createTextureCanvas(...args);
+  const getTextureCanvas = (...args) => createTextureCanvas(...args);
+  const textureCanvas = (...args) => createTextureCanvas(...args);
+
   const getReceipt = () => ({
     contract: CONTRACT,
     receipt: RECEIPT,
@@ -924,7 +998,7 @@
     ready: true,
     valid: true,
     protected: true,
-    purpose: "material-authority-compatibility-rescue",
+    purpose: "material-texture-canvas-compatibility-rescue",
     sourceAuthority: "hearth.composition.js when available; internal safe fallback when unavailable",
     requiredUpstream: [],
     optionalUpstream: [
@@ -934,7 +1008,7 @@
     preparedDownstream: [
       "hearth.canvas.js",
       "hearth.climate.route.js",
-      "v21 parent-chain carrier"
+      "v22 elevation parent-chain carrier"
     ],
     aliases: [
       "sample",
@@ -956,7 +1030,12 @@
       "getRGB",
       "getRGBA",
       "getCssColor",
-      "getFillStyle"
+      "getFillStyle",
+      "createTextureCanvas",
+      "createMaterialTexture",
+      "createTexture",
+      "getTextureCanvas",
+      "textureCanvas"
     ],
     exposedFields: [
       "terrainClass",
@@ -983,8 +1062,7 @@
       "rimDarkening",
       "atmosphereSeparation"
     ],
-    materialClasses: Object.values(MATERIAL_CLASS_BY_TERRAIN),
-    terrainClasses: TERRAIN_CLASSES,
+    createTextureCanvas: true,
     finalVisualPassClaim: false,
     forbiddenOwnership: [
       "elevation-generation",
@@ -1002,7 +1080,6 @@
     RECEIPT,
     AUTHORITY,
     SEA_LEVEL,
-
     status: "active",
     ready: true,
     valid: true,
@@ -1030,13 +1107,18 @@
     getCssColor,
     getFillStyle,
 
+    createTextureCanvas,
+    createMaterialTexture,
+    createTexture,
+    getTextureCanvas,
+    textureCanvas,
+
     getReceipt,
 
     materialClassFor,
     materialClassMap: { ...MATERIAL_CLASS_BY_TERRAIN },
-    terrainClasses: TERRAIN_CLASSES.slice(),
+    terrainClasses: Object.keys(MATERIAL_CLASS_BY_TERRAIN),
     materialClasses: Object.values(MATERIAL_CLASS_BY_TERRAIN),
-
     palette: { ...PALETTE },
 
     finalVisualPassClaim: false
@@ -1044,7 +1126,6 @@
 
   root.HEARTH = root.HEARTH || {};
   root.HEARTH.materials = api;
-
   root.HEARTH_MATERIALS = api;
   root.HearthMaterials = api;
   root.HEARTH_MATERIAL_AUTHORITY = api;

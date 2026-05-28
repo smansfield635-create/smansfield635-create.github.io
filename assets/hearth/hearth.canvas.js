@@ -1,13 +1,14 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_CANVAS_EVENT_DRIVEN_RENDER_GOVERNOR_TNT_v6
+// HEARTH_CANVAS_TOUCH_ROTATION_GOVERNOR_REPAIR_TNT_v7
 // Full-file replacement.
 // Canvas authority only.
 // Purpose:
-// - Preserve cached atlas rendering from v5.
-// - Stop continuous full-frame CPU raster.
-// - Render only when dirty, dragging, resizing, moving, visible, or intentionally scheduled.
-// - Add mobile-safe caps, frame-cost degradation, visibility pause, and governed idle rotation.
-// - Preserve mount/getStatus compatibility, drag, yaw/tilt, inertia, canvas-only rendering.
+// - Preserve v6 runtime/load-time governor.
+// - Restore touch drag, pointer rotation, inertia, and governed idle rotation.
+// - Keep cached atlas rendering.
+// - Keep event-driven rendering.
+// - Keep continuous full-frame raster forbidden.
+// - Keep direct material sampling per visible pixel per frame forbidden.
 // Does not own:
 // - elevation generation
 // - terrain classification
@@ -15,16 +16,17 @@
 // - route orchestration
 // - runtime ownership
 // - controls ownership
+// - teleports
 // - final visual pass claim
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_EVENT_DRIVEN_RENDER_GOVERNOR_TNT_v6";
-  const RECEIPT = "HEARTH_CANVAS_EVENT_DRIVEN_RENDER_GOVERNOR_RECEIPT_v6";
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_CACHED_SURFACE_ATLAS_PERFORMANCE_RECOVERY_TNT_v5";
+  const CONTRACT = "HEARTH_CANVAS_TOUCH_ROTATION_GOVERNOR_REPAIR_TNT_v7";
+  const RECEIPT = "HEARTH_CANVAS_TOUCH_ROTATION_GOVERNOR_REPAIR_RECEIPT_v7";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_EVENT_DRIVEN_RENDER_GOVERNOR_TNT_v6";
   const BASELINE_CONTRACT = "HEARTH_4K_NATURAL_ORGANIC_CANVAS_CONSUMER_TNT_v3";
-  const VERSION = "2026-05-28.hearth-canvas-event-driven-render-governor-v6";
+  const VERSION = "2026-05-28.hearth-canvas-touch-rotation-governor-repair-v7";
 
   const TAU = Math.PI * 2;
   const DEG = Math.PI / 180;
@@ -241,6 +243,10 @@
       throw new Error("Hearth canvas 2D context unavailable.");
     }
 
+    mount.style.touchAction = "none";
+    mount.style.userSelect = "none";
+    mount.style.webkitUserSelect = "none";
+
     canvas.dataset.hearthCanvasContract = CONTRACT;
     canvas.dataset.hearthCanvasReceipt = RECEIPT;
     canvas.dataset.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
@@ -254,6 +260,9 @@
     canvas.dataset.hearthDirectPerFrameSampling = "false";
     canvas.dataset.hearthBilinearAtlasSampling = "true";
     canvas.dataset.hearthSphereSurfaceConsumption = "true";
+    canvas.dataset.hearthCanvasTouchRotationRepair = "true";
+    canvas.dataset.hearthCanvasPointerDragEnabled = "true";
+    canvas.dataset.hearthCanvasAutoRotationEnabled = "true";
     canvas.dataset.generatedImage = "false";
     canvas.dataset.graphicBox = "false";
     canvas.dataset.webgl = "false";
@@ -267,6 +276,8 @@
     canvas.style.touchAction = "none";
     canvas.style.userSelect = "none";
     canvas.style.webkitUserSelect = "none";
+    canvas.style.pointerEvents = "auto";
+    canvas.tabIndex = 0;
 
     mount.appendChild(canvas);
 
@@ -304,17 +315,22 @@
     const materialFn = resolveMaterialFunction(materials);
 
     if (!materialFn) {
-      throw new Error("Hearth material sampler unavailable for governed atlas construction.");
+      throw new Error("Hearth material sampler unavailable for touch-governed atlas construction.");
     }
 
     let disposed = false;
     let dragging = false;
+    let interacting = false;
+    let interactionOverride = false;
+    let inertiaActive = false;
     let visible = !document.hidden;
     let mountVisible = true;
     let dirty = true;
     let renderPending = false;
     let idlePaused = false;
     let frameBudgetExceeded = false;
+    let idleRotationArmed = false;
+
     let lastX = 0;
     let lastY = 0;
     let yaw = Number.isFinite(options.yaw) ? options.yaw : -0.28;
@@ -342,25 +358,29 @@
         drag: mobileMode ? 340 : 420,
         settled: mobileMode ? 420 : 520,
         dpr: mobileMode ? 1.0 : 1.25,
-        idleCadence: 360
+        idleCadence: mobileMode ? 720 : 420,
+        idleStep: mobileMode ? 0.0018 : 0.0024
       },
       1: {
         drag: mobileMode ? 390 : 500,
         settled: mobileMode ? 540 : 620,
         dpr: mobileMode ? 1.15 : 1.45,
-        idleCadence: 280
+        idleCadence: mobileMode ? 620 : 320,
+        idleStep: mobileMode ? 0.0021 : 0.0030
       },
       2: {
         drag: mobileMode ? 420 : 540,
         settled: mobileMode ? 580 : 720,
         dpr: mobileMode ? 1.25 : 1.65,
-        idleCadence: 180
+        idleCadence: mobileMode ? 520 : 240,
+        idleStep: mobileMode ? 0.0024 : 0.0038
       },
       3: {
         drag: mobileMode ? 460 : 580,
         settled: mobileMode ? 620 : 780,
         dpr: mobileMode ? 1.35 : 1.75,
-        idleCadence: 120
+        idleCadence: mobileMode ? 460 : 180,
+        idleStep: mobileMode ? 0.0028 : 0.0044
       }
     };
 
@@ -407,9 +427,13 @@
     let intersectionObserver = null;
     let idleTimer = null;
 
-    function publishStatus(value) {
+    function currentRenderCap() {
       const caps = currentCaps();
-      const renderCap = dragging ? caps.drag : caps.settled;
+      return dragging ? caps.drag : caps.settled;
+    }
+
+    function publishStatus(value) {
+      const renderCap = currentRenderCap();
 
       document.documentElement.dataset.hearthCanvasAuthorityLoaded = "true";
       document.documentElement.dataset.hearthCanvasContract = CONTRACT;
@@ -433,10 +457,24 @@
       document.documentElement.dataset.hearthCanvasLastFrameCost = lastFrameCost.toFixed(2);
       document.documentElement.dataset.hearthCanvasFrameBudgetExceeded = String(frameBudgetExceeded);
       document.documentElement.dataset.hearthCanvasIdlePaused = String(idlePaused);
-      document.documentElement.dataset.hearthCanvasVisible = String(visible && mountVisible);
+      document.documentElement.dataset.hearthCanvasVisible = String(visible);
+      document.documentElement.dataset.hearthCanvasMountVisible = String(mountVisible);
       document.documentElement.dataset.hearthCanvasRefinedAtlasAllowed = String(refinedAtlasAllowed);
       document.documentElement.dataset.hearthCanvasDirectPerFrameSampling = "false";
       document.documentElement.dataset.hearthTextureFallbackUsed = "false";
+
+      document.documentElement.dataset.hearthCanvasTouchRotationRepair = "true";
+      document.documentElement.dataset.hearthCanvasPointerDragEnabled = "true";
+      document.documentElement.dataset.hearthCanvasAutoRotationEnabled = "true";
+      document.documentElement.dataset.hearthCanvasInteractionOverride = String(interactionOverride);
+      document.documentElement.dataset.hearthCanvasDragging = String(dragging);
+      document.documentElement.dataset.hearthCanvasInteracting = String(interacting);
+      document.documentElement.dataset.hearthCanvasInertiaActive = String(inertiaActive);
+      document.documentElement.dataset.hearthCanvasYaw = yaw.toFixed(6);
+      document.documentElement.dataset.hearthCanvasTilt = tilt.toFixed(6);
+      document.documentElement.dataset.hearthCanvasYawVelocity = yawVelocity.toFixed(8);
+      document.documentElement.dataset.hearthCanvasTiltVelocity = tiltVelocity.toFixed(8);
+      document.documentElement.dataset.hearthCanvasIdleRotationArmed = String(idleRotationArmed);
 
       document.documentElement.dataset.hearthVisibleGlobeMounted = "true";
       document.documentElement.dataset.generatedImage = "false";
@@ -471,8 +509,21 @@
           lastFrameCost,
           frameBudgetExceeded,
           idlePaused,
-          visible: visible && mountVisible,
+          visible,
+          mountVisible,
           refinedAtlasAllowed,
+          touchRotationRepair: true,
+          pointerDragEnabled: true,
+          autoRotationEnabled: true,
+          interactionOverride,
+          dragging,
+          interacting,
+          inertiaActive,
+          yaw,
+          tilt,
+          yawVelocity,
+          tiltVelocity,
+          idleRotationArmed,
           directPerFrameSampling: false,
           textureFallbackUsed: false,
           generatedImage: false,
@@ -596,11 +647,13 @@
         refinedAtlasAllowed &&
         !mobileMode &&
         !dragging &&
+        !interacting &&
+        !inertiaActive &&
         visible &&
         mountVisible &&
         !frameBudgetExceeded &&
         qualityTier >= 2 &&
-        performance.now() - idleSince > 1800
+        performance.now() - idleSince > 2200
       );
     }
 
@@ -660,7 +713,7 @@
           atlasBuilds += 1;
           refinedAtlasComplete = true;
           atlasStatus = "refined-atlas-ready";
-          markDirty("atlas-refined");
+          markDirty("atlas-refined", false);
           publishStatus("atlas-refined");
         };
 
@@ -668,9 +721,9 @@
       };
 
       if (typeof requestIdleCallback === "function") {
-        requestIdleCallback(build, { timeout: 1000 });
+        requestIdleCallback(build, { timeout: 1200 });
       } else {
-        setTimeout(build, 1800);
+        setTimeout(build, 2200);
       }
     }
 
@@ -697,11 +750,6 @@
       atlas.complete = true;
       atlasStatus = "safe-ocean-atlas-ready";
       atlasBuilds += 1;
-    }
-
-    function currentRenderCap() {
-      const caps = currentCaps();
-      return dragging ? caps.drag : caps.settled;
     }
 
     function resize() {
@@ -927,8 +975,14 @@
       ];
     }
 
-    function render(reason = "dirty") {
-      if (disposed || !visible || !mountVisible) {
+    function canRender(force) {
+      if (disposed) return false;
+      if (force) return true;
+      return visible && mountVisible && !idlePaused;
+    }
+
+    function render(reason = "dirty", force = false) {
+      if (!canRender(force)) {
         renderPending = false;
         idlePaused = true;
         publishStatus("render-paused");
@@ -999,7 +1053,7 @@
       lastRenderAt = performance.now();
       lastFrameCost = lastRenderAt - start;
 
-      const budget = dragging ? dragBudget : settledBudget;
+      const budget = dragging || interacting || inertiaActive ? dragBudget : settledBudget;
       frameBudgetExceeded = lastFrameCost > budget;
 
       if (frameBudgetExceeded && qualityTier > 0) {
@@ -1008,14 +1062,16 @@
         buffer = null;
       }
 
-      publishStatus(`rendered-${reason}`);
-
       const hasInertia =
         !dragging &&
         (
-          Math.abs(yawVelocity) > 0.00045 ||
-          Math.abs(tiltVelocity) > 0.00035
+          Math.abs(yawVelocity) > 0.00042 ||
+          Math.abs(tiltVelocity) > 0.00032
         );
+
+      inertiaActive = Boolean(hasInertia);
+
+      publishStatus(`rendered-${reason}`);
 
       if (hasInertia) {
         yaw += yawVelocity;
@@ -1033,50 +1089,93 @@
           tiltVelocity *= -0.16;
         }
 
-        markDirty("inertia");
+        markDirty("inertia", true);
         return;
       }
 
+      inertiaActive = false;
+
       if (!dragging) {
+        interacting = false;
+        interactionOverride = false;
         idleSince = performance.now();
         scheduleIdleAutoTick();
         scheduleRefinedAtlas();
       }
     }
 
-    function requestRender(reason = "dirty") {
-      if (disposed || renderPending || !visible || !mountVisible) return;
+    function requestRender(reason = "dirty", force = false) {
+      if (disposed) return;
+
+      if (force) {
+        interactionOverride = true;
+        idlePaused = false;
+
+        if (!document.hidden) {
+          visible = true;
+        }
+
+        mountVisible = true;
+      }
+
+      if (renderPending) return;
+      if (!canRender(force)) return;
 
       renderPending = true;
-      requestAnimationFrame(() => render(reason));
+
+      requestAnimationFrame(() => {
+        render(reason, force);
+      });
     }
 
-    function markDirty(reason = "dirty") {
+    function markDirty(reason = "dirty", force = false) {
       dirty = true;
-      requestRender(reason);
+      requestRender(reason, force);
     }
 
     function scheduleIdleAutoTick() {
-      if (disposed || dragging || !visible || !mountVisible) return;
+      if (disposed || dragging || interacting || inertiaActive) return;
+      if (!visible || !mountVisible) return;
 
       if (idleTimer) clearTimeout(idleTimer);
 
-      const cadence = currentCaps().idleCadence;
+      const caps = currentCaps();
+      idleRotationArmed = true;
 
       idleTimer = setTimeout(() => {
-        if (disposed || dragging || !visible || !mountVisible) return;
+        idleTimer = null;
 
-        const rotationStep = mobileMode ? 0.0024 : 0.0038;
-        yaw += rotationStep;
-        markDirty("governed-idle-rotation");
-      }, cadence);
+        if (disposed || dragging || interacting || inertiaActive) {
+          idleRotationArmed = false;
+          return;
+        }
+
+        if (!visible || !mountVisible) {
+          idlePaused = true;
+          idleRotationArmed = false;
+          publishStatus("idle-rotation-paused");
+          return;
+        }
+
+        yaw += caps.idleStep;
+        idleRotationArmed = false;
+        markDirty("governed-idle-rotation", false);
+      }, caps.idleCadence);
+
+      publishStatus("idle-rotation-armed");
     }
 
     function pointerDown(event) {
       dragging = true;
+      interacting = true;
+      interactionOverride = true;
+      inertiaActive = false;
       idlePaused = false;
-      lastX = event.clientX;
-      lastY = event.clientY;
+      visible = !document.hidden;
+      mountVisible = true;
+
+      lastX = Number.isFinite(event.clientX) ? event.clientX : 0;
+      lastY = Number.isFinite(event.clientY) ? event.clientY : 0;
       yawVelocity = 0;
       tiltVelocity = 0;
 
@@ -1085,8 +1184,13 @@
         idleTimer = null;
       }
 
-      canvas.setPointerCapture?.(event.pointerId);
-      markDirty("drag-start");
+      idleRotationArmed = false;
+
+      try {
+        canvas.setPointerCapture?.(event.pointerId);
+      } catch (_error) {}
+
+      markDirty("drag-start", true);
       publishStatus("drag-start");
       event.preventDefault();
     }
@@ -1094,10 +1198,18 @@
     function pointerMove(event) {
       if (!dragging) return;
 
-      const dx = event.clientX - lastX;
-      const dy = event.clientY - lastY;
-      lastX = event.clientX;
-      lastY = event.clientY;
+      interacting = true;
+      interactionOverride = true;
+      idlePaused = false;
+      mountVisible = true;
+
+      const x = Number.isFinite(event.clientX) ? event.clientX : lastX;
+      const y = Number.isFinite(event.clientY) ? event.clientY : lastY;
+      const dx = x - lastX;
+      const dy = y - lastY;
+
+      lastX = x;
+      lastY = y;
 
       yaw += dx * 0.009;
       tilt += dy * 0.0075;
@@ -1106,14 +1218,26 @@
       yawVelocity = dx * 0.00072;
       tiltVelocity = dy * 0.00046;
 
-      markDirty("drag-move");
+      markDirty("drag-move", true);
       event.preventDefault();
     }
 
     function pointerUp(event) {
       dragging = false;
-      canvas.releasePointerCapture?.(event.pointerId);
-      markDirty("drag-end");
+      interacting = true;
+      interactionOverride = true;
+      idlePaused = false;
+      mountVisible = true;
+
+      try {
+        canvas.releasePointerCapture?.(event.pointerId);
+      } catch (_error) {}
+
+      inertiaActive =
+        Math.abs(yawVelocity) > 0.00042 ||
+        Math.abs(tiltVelocity) > 0.00032;
+
+      markDirty("drag-end", true);
       publishStatus("drag-end");
       event.preventDefault();
     }
@@ -1122,26 +1246,35 @@
       visible = !document.hidden;
 
       if (visible) {
-        markDirty("visibility-return");
+        idlePaused = false;
+        markDirty("visibility-return", false);
       } else {
         idlePaused = true;
+        interactionOverride = false;
+        interacting = false;
+        dragging = false;
+        inertiaActive = false;
+
         if (idleTimer) {
           clearTimeout(idleTimer);
           idleTimer = null;
         }
+
+        idleRotationArmed = false;
         publishStatus("visibility-hidden");
       }
     }
 
     function onResize() {
       buffer = null;
-      markDirty("resize");
+      markDirty("resize", false);
     }
 
     canvas.addEventListener("pointerdown", pointerDown, { passive: false });
     canvas.addEventListener("pointermove", pointerMove, { passive: false });
     canvas.addEventListener("pointerup", pointerUp, { passive: false });
     canvas.addEventListener("pointercancel", pointerUp, { passive: false });
+
     document.addEventListener("visibilitychange", onVisibilityChange);
 
     if (typeof ResizeObserver === "function") {
@@ -1154,17 +1287,27 @@
     if (typeof IntersectionObserver === "function") {
       intersectionObserver = new IntersectionObserver((entries) => {
         const entry = entries[0];
+
+        if (dragging || interacting || interactionOverride) {
+          mountVisible = true;
+          return;
+        }
+
         mountVisible = Boolean(entry && entry.isIntersecting);
 
         if (mountVisible) {
-          markDirty("intersection-visible");
+          idlePaused = false;
+          markDirty("intersection-visible", false);
         } else {
           idlePaused = true;
+          idleRotationArmed = false;
           publishStatus("intersection-hidden");
         }
-      }, { threshold: 0.05 });
+      }, { threshold: 0.01 });
 
       intersectionObserver.observe(mount);
+    } else {
+      mountVisible = true;
     }
 
     const api = {
@@ -1182,6 +1325,9 @@
       continuousRaster: false,
       atlasMode: true,
       directPerFrameSampling: false,
+      touchRotationRepair: true,
+      pointerDragEnabled: true,
+      autoRotationEnabled: true,
       dispose() {
         disposed = true;
 
@@ -1227,8 +1373,21 @@
           lastFrameCost,
           frameBudgetExceeded,
           idlePaused,
-          visible: visible && mountVisible,
+          visible,
+          mountVisible,
           refinedAtlasAllowed,
+          touchRotationRepair: true,
+          pointerDragEnabled: true,
+          autoRotationEnabled: true,
+          interactionOverride,
+          dragging,
+          interacting,
+          inertiaActive,
+          yaw,
+          tilt,
+          yawVelocity,
+          tiltVelocity,
+          idleRotationArmed,
           directPerFrameSampling: false,
           textureFallbackUsed: false,
           generatedImage: false,
@@ -1242,7 +1401,8 @@
     root.__HEARTH_CANVAS_DISPOSE__ = api.dispose;
 
     publishStatus("mounted");
-    markDirty("initial-mount");
+    markDirty("initial-mount", true);
+    scheduleIdleAutoTick();
 
     return api;
   }
@@ -1254,7 +1414,7 @@
       previousContract: PREVIOUS_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
-      authority: "hearth-canvas-event-driven-render-governor",
+      authority: "hearth-canvas-touch-rotation-governor-repair",
       consumesMaterials: true,
       cachedAtlas: true,
       atlasMode: true,
@@ -1263,6 +1423,9 @@
       continuousRaster: false,
       directPerFrameSampling: false,
       bilinearAtlasSampling: true,
+      touchRotationRepair: true,
+      pointerDragEnabled: true,
+      autoRotationEnabled: true,
       visibleGlobeFirst: true,
       dragEnabled: true,
       poleSwivel: true,
@@ -1302,6 +1465,9 @@
   document.documentElement.dataset.hearthCanvasCachedAtlas = "true";
   document.documentElement.dataset.hearthCanvasDirectPerFrameSampling = "false";
   document.documentElement.dataset.hearthBilinearAtlasSampling = "true";
+  document.documentElement.dataset.hearthCanvasTouchRotationRepair = "true";
+  document.documentElement.dataset.hearthCanvasPointerDragEnabled = "true";
+  document.documentElement.dataset.hearthCanvasAutoRotationEnabled = "true";
   document.documentElement.dataset.generatedImage = "false";
   document.documentElement.dataset.graphicBox = "false";
   document.documentElement.dataset.webgl = "false";

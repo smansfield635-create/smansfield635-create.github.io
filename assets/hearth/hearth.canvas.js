@@ -1,21 +1,23 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_OCEAN_CANVAS_CONSUMER_SPHERE_CONTAINMENT_TNT_v1
+// HEARTH_INTERACTIVE_ATLAS_PROJECTION_CANVAS_TNT_v2
 // Full-file replacement.
-// Canvas / composition authority only.
+// Canvas / projection / interaction authority only.
 // Purpose:
 // - Preserve Hearth hydrology + terrain materials + separate ocean authority composition.
-// - Restore spherical containment after rectangular texture spill.
-// - Keep ocean visible only inside the planet body.
-// - Preserve route/runtime/controls separation.
+// - Replace static expensive sphere mount with cached atlas projection.
+// - Restore thumb / pointer drag on mobile and desktop.
+// - Redraw visible sphere from cached atlas pixels instead of resampling the full child chain on drag.
+// - Preserve sphere containment, transparent outside pixels, and current public API.
 // Does not own:
+// - tectonic cause
+// - elevation generation
+// - composition classification
 // - hydrology classification
 // - ocean authority generation
 // - terrain material generation
-// - elevation generation
-// - tectonics
 // - route orchestration
 // - runtime motion
-// - controls
+// - external controls authority
 // - beaches/cliffs/islands generation
 // - clickable ports
 // - final visual pass claim
@@ -23,14 +25,15 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_OCEAN_CANVAS_CONSUMER_SPHERE_CONTAINMENT_TNT_v1";
-  const RECEIPT = "HEARTH_OCEAN_CANVAS_CONSUMER_SPHERE_CONTAINMENT_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_RICH_BLUE_OCEAN_BODY_CANVAS_CONSUMER_TNT_v1";
+  const CONTRACT = "HEARTH_INTERACTIVE_ATLAS_PROJECTION_CANVAS_TNT_v2";
+  const RECEIPT = "HEARTH_INTERACTIVE_ATLAS_PROJECTION_CANVAS_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "HEARTH_OCEAN_CANVAS_CONSUMER_SPHERE_CONTAINMENT_TNT_v1";
   const OCEAN_CONTRACT = "HEARTH_RICH_BLUE_OCEAN_BODY_AUTHORITY_TNT_v1";
-  const VERSION = "2026-05-28.hearth-ocean-canvas-consumer-sphere-containment-v1";
+  const VERSION = "2026-05-28.hearth-interactive-atlas-projection-canvas-v2";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const DEG = Math.PI / 180;
+  const TWO_PI = Math.PI * 2;
 
   const FALLBACK = Object.freeze({
     land: [82, 84, 58],
@@ -42,6 +45,7 @@
     basin: [4, 15, 28],
     scar: [30, 39, 36],
     shadow: [2, 7, 15],
+    atmosphere: [20, 32, 48],
     transparent: [0, 0, 0]
   });
 
@@ -52,6 +56,12 @@
   };
 
   const clamp01 = (value) => clamp(value, 0, 1);
+
+  const wrap01 = (value) => {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return 0;
+    return ((n % 1) + 1) % 1;
+  };
 
   const mixNumber = (a, b, t) => {
     const k = clamp01(t);
@@ -107,6 +117,44 @@
     });
   };
 
+  const vectorToLonLat = (p) => {
+    const n = normalize3(p);
+    return {
+      lon: Math.atan2(n.x, n.z) / DEG,
+      lat: Math.asin(clamp(n.y, -1, 1)) / DEG
+    };
+  };
+
+  const lonToU = (lon) => wrap01((Number(lon) + 180) / 360);
+  const latToV = (lat) => clamp((90 - Number(lat)) / 180, 0, 1);
+  const uToLon = (u) => wrap01(u) * 360 - 180;
+  const vToLat = (v) => 90 - clamp(Number(v), 0, 1) * 180;
+
+  const rotateY = (p, angle) => {
+    const c = Math.cos(angle);
+    const s = Math.sin(angle);
+    return {
+      x: p.x * c + p.z * s,
+      y: p.y,
+      z: -p.x * s + p.z * c
+    };
+  };
+
+  const rotateX = (p, angle) => {
+    const c = Math.cos(angle);
+    const s = Math.sin(angle);
+    return {
+      x: p.x,
+      y: p.y * c - p.z * s,
+      z: p.y * s + p.z * c
+    };
+  };
+
+  const rotateForView = (p, rotationLon, rotationLat) => {
+    const tilted = rotateX(p, rotationLat);
+    return normalize3(rotateY(tilted, rotationLon));
+  };
+
   const spherePixelToVector = (x, y, width, height) => {
     const size = Math.min(width, height);
     const cx = (width - 1) / 2;
@@ -127,12 +175,13 @@
     }
 
     const z = Math.sqrt(Math.max(0, 1 - rr));
-    const edgeAlpha = clamp01((1 - Math.sqrt(rr)) / 0.025);
+    const radial = Math.sqrt(rr);
+    const edgeAlpha = clamp01((1 - radial) / 0.025);
 
     return {
       inside: true,
       edgeAlpha,
-      radial: Math.sqrt(rr),
+      radial,
       vector: normalize3({
         x: dx,
         y: -dy,
@@ -145,12 +194,8 @@
     if (args.length === 1 && args[0] && typeof args[0] === "object") {
       const p = args[0];
 
-      if (
-        Number.isFinite(Number(p.x)) &&
-        Number.isFinite(Number(p.y)) &&
-        Number.isFinite(Number(p.z))
-      ) {
-        return normalize3(p);
+      if (Number.isFinite(Number(p.u)) && Number.isFinite(Number(p.v))) {
+        return lonLatToVector(uToLon(p.u), vToLat(p.v));
       }
 
       if (Number.isFinite(Number(p.lon)) && Number.isFinite(Number(p.lat))) {
@@ -161,8 +206,12 @@
         return lonLatToVector(Number(p.longitude), Number(p.latitude));
       }
 
-      if (Number.isFinite(Number(p.u)) && Number.isFinite(Number(p.v))) {
-        return lonLatToVector(Number(p.u) * 360 - 180, 90 - Number(p.v) * 180);
+      if (
+        Number.isFinite(Number(p.x)) &&
+        Number.isFinite(Number(p.y)) &&
+        Number.isFinite(Number(p.z))
+      ) {
+        return normalize3(p);
       }
     }
 
@@ -246,10 +295,13 @@
   };
 
   const fallbackMaterial = (p) => {
-    const isWater = p.z < 0.22;
-    const isCoast = Math.abs(p.z - 0.22) < 0.16;
+    const ll = vectorToLonLat(p);
+    const v = latToV(ll.lat);
+    const equator = 1 - Math.abs(v - 0.5) * 2;
+    const isWater = p.z < 0.20;
+    const isCoast = Math.abs(p.z - 0.20) < 0.16;
 
-    let rgb = isWater ? FALLBACK.water : FALLBACK.land;
+    let rgb = isWater ? FALLBACK.water : mixColor(FALLBACK.land, FALLBACK.raised, equator * 0.16);
     if (p.y > 0.55) rgb = mixColor(rgb, FALLBACK.stone, 0.22);
     if (isCoast) rgb = mixColor(rgb, FALLBACK.stone, 0.18);
 
@@ -492,49 +544,49 @@
 
     const openOceanWeight = clamp01(
       ocean.oceanPresence * 0.22 +
-      ocean.richBlueOceanFeed * 0.22 +
-      ocean.openOceanBlueFeed * 0.24 +
-      hydrology.oceanContinuity * 0.14 +
-      hydrology.waterFillStrength * 0.10
+        ocean.richBlueOceanFeed * 0.22 +
+        ocean.openOceanBlueFeed * 0.24 +
+        hydrology.oceanContinuity * 0.14 +
+        hydrology.waterFillStrength * 0.10
     );
 
     const deepOceanWeight = clamp01(
       ocean.deepOceanBlueFeed * 0.28 +
-      ocean.oceanDepthShade * 0.22 +
-      hydrology.waterDepth * 0.18 +
-      hydrology.oceanDepth * 0.14 +
-      (hydrology.waterDepthClass === "deep" ? 0.12 : 0)
+        ocean.oceanDepthShade * 0.22 +
+        hydrology.waterDepth * 0.18 +
+        hydrology.oceanDepth * 0.14 +
+        (hydrology.waterDepthClass === "deep" ? 0.12 : 0)
     );
 
     const shallowShelfWeight = clamp01(
       ocean.shallowShelfBlueFeed * 0.26 +
-      hydrology.shallowShelfStrength * 0.22 +
-      hydrology.shelfGradient * 0.14 +
-      ocean.oceanBoundarySoftness * 0.10
+        hydrology.shallowShelfStrength * 0.22 +
+        hydrology.shelfGradient * 0.14 +
+        ocean.oceanBoundarySoftness * 0.10
     );
 
     const waterlineWeight = clamp01(
       ocean.waterlineBlueContrastFeed * 0.20 +
-      ocean.oceanTerrainSeparationFeed * 0.16 +
-      hydrology.waterlineBoundaryStrength * 0.18 +
-      hydrology.nearSeaLevelStrength * 0.10
+        ocean.oceanTerrainSeparationFeed * 0.16 +
+        hydrology.waterlineBoundaryStrength * 0.18 +
+        hydrology.nearSeaLevelStrength * 0.10
     );
 
     const submergedWeight = clamp01(
       ocean.submergedBasinBlueFeed * 0.20 +
-      ocean.submergedPortBasinBlueFeed * 0.22 +
-      ocean.submergedBlockWaterDepthFeed * 0.14 +
-      ocean.submergedScarWaterMuteFeed * 0.12 +
-      material.submergedShadowBand * 0.08 +
-      material.harborScarBasin * 0.08
+        ocean.submergedPortBasinBlueFeed * 0.22 +
+        ocean.submergedBlockWaterDepthFeed * 0.14 +
+        ocean.submergedScarWaterMuteFeed * 0.12 +
+        material.submergedShadowBand * 0.08 +
+        material.harborScarBasin * 0.08
     );
 
     let weight = clamp01(
       openOceanWeight +
-      deepOceanWeight +
-      shallowShelfWeight +
-      waterlineWeight +
-      submergedWeight
+        deepOceanWeight +
+        shallowShelfWeight +
+        waterlineWeight +
+        submergedWeight
     );
 
     if (ocean.isDeepOcean || hydrology.waterDepthClass === "deep") {
@@ -573,23 +625,23 @@
 
     const scar = clamp01(
       hydrology.submergedScarStrength * 0.22 +
-      ocean.submergedScarWaterMuteFeed * 0.28 +
-      material.coastalScarContinuity * 0.10 +
-      material.boundaryMorphologyFeed * 0.08
+        ocean.submergedScarWaterMuteFeed * 0.28 +
+        material.coastalScarContinuity * 0.10 +
+        material.boundaryMorphologyFeed * 0.08
     );
 
     const block = clamp01(
       hydrology.submergedBlockStrength * 0.22 +
-      ocean.submergedBlockWaterDepthFeed * 0.26 +
-      material.submergedWorksFeed * 0.10 +
-      material.submergedShadowBand * 0.10
+        ocean.submergedBlockWaterDepthFeed * 0.26 +
+        material.submergedWorksFeed * 0.10 +
+        material.submergedShadowBand * 0.10
     );
 
     const port = clamp01(
       ocean.submergedPortBasinBlueFeed * 0.34 +
-      material.harborScarBasin * 0.16 +
-      hydrology.bayPotential * 0.08 +
-      hydrology.inletPotential * 0.08
+        material.harborScarBasin * 0.16 +
+        hydrology.bayPotential * 0.08 +
+        hydrology.inletPotential * 0.08
     );
 
     if (scar > 0.10) {
@@ -620,16 +672,16 @@
 
     const terrainShade = clamp01(
       0.74 +
-      illumination * 0.24 -
-      material.rimDarkening * 0.10 -
-      material.underlandOcclusion * 0.06
+        illumination * 0.24 -
+        material.rimDarkening * 0.10 -
+        material.underlandOcclusion * 0.06
     );
 
     const oceanShade = clamp01(
       0.82 +
-      illumination * 0.18 -
-      ocean.oceanDepthShade * 0.05 -
-      ocean.submergedPortBasinBlueFeed * 0.06
+        illumination * 0.18 -
+        ocean.oceanDepthShade * 0.05 -
+        ocean.submergedPortBasinBlueFeed * 0.06
     );
 
     const shade = mixNumber(terrainShade, oceanShade, oceanWeight);
@@ -640,7 +692,7 @@
     }
 
     const atmosphere = clamp01(material.atmosphereSeparation * 0.05 + oceanWeight * 0.03);
-    color = mixColor(color, [20, 32, 48], limb * atmosphere);
+    color = mixColor(color, FALLBACK.atmosphere, limb * atmosphere);
 
     return color;
   };
@@ -650,7 +702,6 @@
     const material = readMaterials(...args);
     const hydrology = readHydrology(material, ...args);
     const ocean = readOcean(...args);
-
     const oceanWeight = computeOceanWeight(material, hydrology, ocean);
 
     let rgb = material.rgb.slice();
@@ -660,11 +711,19 @@
       rgb = mixColor(rgb, oceanRgb, oceanWeight);
 
       if (ocean.isShallowShelf || hydrology.shallowShelf) {
-        rgb = mixColor(rgb, FALLBACK.shelf, clamp01(ocean.shallowShelfBlueFeed * 0.12 + hydrology.shallowShelfStrength * 0.08));
+        rgb = mixColor(
+          rgb,
+          FALLBACK.shelf,
+          clamp01(ocean.shallowShelfBlueFeed * 0.12 + hydrology.shallowShelfStrength * 0.08)
+        );
       }
 
       if (ocean.isSubmergedBasin || ocean.isSubmergedPortBasinCandidate) {
-        rgb = mixColor(rgb, FALLBACK.basin, clamp01(ocean.submergedBasinBlueFeed * 0.16 + ocean.submergedPortBasinBlueFeed * 0.24));
+        rgb = mixColor(
+          rgb,
+          FALLBACK.basin,
+          clamp01(ocean.submergedBasinBlueFeed * 0.16 + ocean.submergedPortBasinBlueFeed * 0.24)
+        );
       }
 
       rgb = preserveSubmergedStructure(rgb, material, hydrology, ocean, oceanWeight);
@@ -748,78 +807,16 @@
   const getPixel = (...args) => composeSample(...args);
   const getColor = (...args) => composeSample(...args).rgb;
 
-  const createSphereTextureCanvas = (options = {}) => {
-    if (!root.document || typeof root.document.createElement !== "function") {
-      throw new Error("Hearth canvas texture creation requires document.createElement.");
-    }
-
-    const requestedWidth = Number.isFinite(Number(options.width)) ? Math.round(Number(options.width)) : 768;
-    const requestedHeight = Number.isFinite(Number(options.height)) ? Math.round(Number(options.height)) : 768;
-
-    const width = clamp(requestedWidth, 32, options.allowLargeTexture === true ? 1536 : 1024);
-    const height = clamp(requestedHeight, 32, options.allowLargeTexture === true ? 1536 : 1024);
-
-    const canvas = root.document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-
-    canvas.dataset.hearthCanvasTexture = "true";
-    canvas.dataset.hearthCanvasContract = CONTRACT;
-    canvas.dataset.hearthCanvasReceipt = RECEIPT;
-    canvas.dataset.hearthCanvasConsumesOcean = "true";
-    canvas.dataset.hearthCanvasOceanContract = OCEAN_CONTRACT;
-    canvas.dataset.hearthCanvasOceanConsumerContract = CONTRACT;
-    canvas.dataset.hearthCanvasOceanFailSoft = "true";
-    canvas.dataset.hearthCanvasOceanComposedWithMaterials = "true";
-    canvas.dataset.hearthCanvasOceanComposedWithHydrology = "true";
-    canvas.dataset.hearthCanvasSphereContainment = "true";
-    canvas.dataset.hearthCanvasNoRectangularTextureSpill = "true";
-    canvas.dataset.hearthCanvasProjectionCompatible = "true";
-    canvas.dataset.hearthCanvasOutsideSphereTransparent = "true";
-    canvas.dataset.visualPassClaimed = "false";
-
-    const ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: false });
-    const image = ctx.createImageData(width, height);
-    const data = image.data;
-
-    for (let y = 0; y < height; y += 1) {
-      for (let x = 0; x < width; x += 1) {
-        const sphere = spherePixelToVector(x, y, width, height);
-        const i = (y * width + x) * 4;
-
-        if (!sphere.inside) {
-          data[i] = 0;
-          data[i + 1] = 0;
-          data[i + 2] = 0;
-          data[i + 3] = 0;
-          continue;
-        }
-
-        const px = composeSample(sphere.vector);
-        const edgeShade = clamp01(1 - sphere.radial * 0.16);
-        const rgb = scaleColor(px.rgb, edgeShade);
-
-        data[i] = rgb[0];
-        data[i + 1] = rgb[1];
-        data[i + 2] = rgb[2];
-        data[i + 3] = Math.round(clamp01(px.alpha) * 255 * sphere.edgeAlpha);
-      }
-    }
-
-    ctx.putImageData(image, 0, 0);
-    return canvas;
-  };
-
   const createAtlasTextureCanvas = (options = {}) => {
     if (!root.document || typeof root.document.createElement !== "function") {
       throw new Error("Hearth canvas atlas creation requires document.createElement.");
     }
 
-    const requestedWidth = Number.isFinite(Number(options.width)) ? Math.round(Number(options.width)) : 768;
-    const requestedHeight = Number.isFinite(Number(options.height)) ? Math.round(Number(options.height)) : 384;
+    const requestedWidth = Number.isFinite(Number(options.width)) ? Math.round(Number(options.width)) : 512;
+    const requestedHeight = Number.isFinite(Number(options.height)) ? Math.round(Number(options.height)) : 256;
 
-    const width = clamp(requestedWidth, 32, options.allowLargeTexture === true ? 1536 : 1024);
-    const height = clamp(requestedHeight, 16, options.allowLargeTexture === true ? 768 : 512);
+    const width = clamp(requestedWidth, 32, options.allowLargeTexture === true ? 1536 : 768);
+    const height = clamp(requestedHeight, 16, options.allowLargeTexture === true ? 768 : 384);
 
     const canvas = root.document.createElement("canvas");
     canvas.width = width;
@@ -830,6 +827,7 @@
     canvas.dataset.hearthCanvasReceipt = RECEIPT;
     canvas.dataset.hearthCanvasProjectionCompatible = "source-only";
     canvas.dataset.hearthCanvasRawAtlasDisplayForbidden = "true";
+    canvas.dataset.hearthCanvasCachedAtlas = "true";
     canvas.dataset.visualPassClaimed = "false";
 
     const ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: false });
@@ -855,6 +853,334 @@
     return canvas;
   };
 
+  const getAtlasData = (atlasCanvas) => {
+    const ctx = atlasCanvas.getContext("2d", { alpha: true, willReadFrequently: true });
+    const image = ctx.getImageData(0, 0, atlasCanvas.width, atlasCanvas.height);
+
+    return {
+      canvas: atlasCanvas,
+      width: atlasCanvas.width,
+      height: atlasCanvas.height,
+      data: image.data
+    };
+  };
+
+  const sampleAtlasNearest = (atlas, u, v) => {
+    const x = clamp(Math.round(wrap01(u) * (atlas.width - 1)), 0, atlas.width - 1);
+    const y = clamp(Math.round(clamp(v, 0, 1) * (atlas.height - 1)), 0, atlas.height - 1);
+    const i = (y * atlas.width + x) * 4;
+
+    return [
+      atlas.data[i],
+      atlas.data[i + 1],
+      atlas.data[i + 2],
+      atlas.data[i + 3]
+    ];
+  };
+
+  const renderSphereFromAtlas = (targetCanvas, atlas, state = {}, options = {}) => {
+    const ctx = targetCanvas.getContext("2d", { alpha: true, willReadFrequently: false });
+    const width = targetCanvas.width;
+    const height = targetCanvas.height;
+    const image = ctx.createImageData(width, height);
+    const data = image.data;
+
+    const rotationLon = Number.isFinite(Number(state.rotationLon)) ? Number(state.rotationLon) : 0;
+    const rotationLat = Number.isFinite(Number(state.rotationLat)) ? Number(state.rotationLat) : 0;
+    const light = normalize3({ x: -0.34, y: 0.42, z: 0.83 });
+    const useSoftLighting = options.softProjectionLighting !== false;
+
+    for (let y = 0; y < height; y += 1) {
+      for (let x = 0; x < width; x += 1) {
+        const sphere = spherePixelToVector(x, y, width, height);
+        const i = (y * width + x) * 4;
+
+        if (!sphere.inside) {
+          data[i] = 0;
+          data[i + 1] = 0;
+          data[i + 2] = 0;
+          data[i + 3] = 0;
+          continue;
+        }
+
+        const world = rotateForView(sphere.vector, rotationLon, rotationLat);
+        const ll = vectorToLonLat(world);
+        const u = lonToU(ll.lon);
+        const v = latToV(ll.lat);
+        const color = sampleAtlasNearest(atlas, u, v);
+
+        let r = color[0];
+        let g = color[1];
+        let b = color[2];
+
+        if (useSoftLighting) {
+          const illumination = clamp01(0.64 + dot3(sphere.vector, light) * 0.30);
+          const edgeShade = clamp01(1 - sphere.radial * 0.13);
+          const shade = clamp01(illumination * edgeShade);
+          r = clamp(Math.round(r * shade), 0, 255);
+          g = clamp(Math.round(g * shade), 0, 255);
+          b = clamp(Math.round(b * shade), 0, 255);
+
+          const limbAtmosphere = clamp01(sphere.radial * 0.05);
+          const mixed = mixColor([r, g, b], FALLBACK.atmosphere, limbAtmosphere);
+          r = mixed[0];
+          g = mixed[1];
+          b = mixed[2];
+        }
+
+        data[i] = r;
+        data[i + 1] = g;
+        data[i + 2] = b;
+        data[i + 3] = Math.round(clamp01(color[3] / 255) * 255 * sphere.edgeAlpha);
+      }
+    }
+
+    ctx.putImageData(image, 0, 0);
+    targetCanvas.dataset.hearthCanvasRenderedFromCachedAtlas = "true";
+    targetCanvas.dataset.hearthCanvasInteractiveProjection = "true";
+    targetCanvas.dataset.hearthCanvasControlsBound = "true";
+    targetCanvas.dataset.hearthCanvasFrames = String(Number(targetCanvas.dataset.hearthCanvasFrames || 0) + 1);
+
+    return targetCanvas;
+  };
+
+  const createInteractiveProjectionCanvas = (options = {}) => {
+    if (!root.document || typeof root.document.createElement !== "function") {
+      throw new Error("Hearth interactive projection requires document.createElement.");
+    }
+
+    const requestedSize = Number.isFinite(Number(options.size))
+      ? Math.round(Number(options.size))
+      : Number.isFinite(Number(options.width))
+        ? Math.round(Number(options.width))
+        : 640;
+
+    const size = clamp(requestedSize, 280, options.allowLargeTexture === true ? 960 : 720);
+
+    const atlasCanvas = createAtlasTextureCanvas({
+      width: options.atlasWidth || 512,
+      height: options.atlasHeight || 256,
+      allowLargeTexture: options.allowLargeTexture === true
+    });
+
+    const atlas = getAtlasData(atlasCanvas);
+    const canvas = root.document.createElement("canvas");
+
+    canvas.width = size;
+    canvas.height = size;
+    canvas.className = options.className || "hearth-canvas-texture hearth-canvas-contained-sphere hearth-canvas-interactive-projection";
+    canvas.style.maxWidth = "100%";
+    canvas.style.height = "auto";
+    canvas.style.display = "block";
+    canvas.style.background = "transparent";
+    canvas.style.touchAction = "none";
+    canvas.style.userSelect = "none";
+    canvas.style.webkitUserSelect = "none";
+    canvas.style.cursor = "grab";
+
+    canvas.dataset.hearthCanvasTexture = "true";
+    canvas.dataset.hearthCanvasContract = CONTRACT;
+    canvas.dataset.hearthCanvasReceipt = RECEIPT;
+    canvas.dataset.hearthCanvasConsumesOcean = "true";
+    canvas.dataset.hearthCanvasOceanContract = OCEAN_CONTRACT;
+    canvas.dataset.hearthCanvasOceanConsumerContract = CONTRACT;
+    canvas.dataset.hearthCanvasOceanFailSoft = "true";
+    canvas.dataset.hearthCanvasOceanComposedWithMaterials = "true";
+    canvas.dataset.hearthCanvasOceanComposedWithHydrology = "true";
+    canvas.dataset.hearthCanvasSphereContainment = "true";
+    canvas.dataset.hearthCanvasNoRectangularTextureSpill = "true";
+    canvas.dataset.hearthCanvasProjectionCompatible = "true";
+    canvas.dataset.hearthCanvasOutsideSphereTransparent = "true";
+    canvas.dataset.hearthCanvasCachedAtlasProjection = "true";
+    canvas.dataset.hearthCanvasInteractiveProjection = "true";
+    canvas.dataset.hearthCanvasControlsBound = "false";
+    canvas.dataset.hearthCanvasAtlasWidth = String(atlas.width);
+    canvas.dataset.hearthCanvasAtlasHeight = String(atlas.height);
+    canvas.dataset.visualPassClaimed = "false";
+
+    const state = {
+      rotationLon: Number.isFinite(Number(options.rotationLon)) ? Number(options.rotationLon) : 0,
+      rotationLat: Number.isFinite(Number(options.rotationLat)) ? Number(options.rotationLat) : 0,
+      dragging: false,
+      pointerId: null,
+      lastPointerX: 0,
+      lastPointerY: 0,
+      frames: 0,
+      destroyed: false,
+      redrawPending: false
+    };
+
+    const redrawNow = () => {
+      if (state.destroyed) return canvas;
+      state.redrawPending = false;
+      renderSphereFromAtlas(canvas, atlas, state, options);
+      state.frames += 1;
+      return canvas;
+    };
+
+    const requestRedraw = () => {
+      if (state.destroyed || state.redrawPending) return;
+      state.redrawPending = true;
+
+      if (root.requestAnimationFrame) {
+        root.requestAnimationFrame(redrawNow);
+      } else {
+        setTimeout(redrawNow, 16);
+      }
+    };
+
+    const handlePointerDown = (event) => {
+      if (state.destroyed) return;
+      state.dragging = true;
+      state.pointerId = event.pointerId;
+      state.lastPointerX = event.clientX;
+      state.lastPointerY = event.clientY;
+      canvas.style.cursor = "grabbing";
+      canvas.dataset.hearthCanvasDragging = "true";
+
+      if (canvas.setPointerCapture && event.pointerId !== undefined) {
+        try {
+          canvas.setPointerCapture(event.pointerId);
+        } catch (_error) {}
+      }
+
+      if (event.cancelable) event.preventDefault();
+    };
+
+    const handlePointerMove = (event) => {
+      if (state.destroyed || !state.dragging) return;
+      if (state.pointerId !== null && event.pointerId !== state.pointerId) return;
+
+      const dx = event.clientX - state.lastPointerX;
+      const dy = event.clientY - state.lastPointerY;
+
+      state.lastPointerX = event.clientX;
+      state.lastPointerY = event.clientY;
+
+      state.rotationLon -= dx * 0.010;
+      state.rotationLat += dy * 0.008;
+      state.rotationLat = clamp(state.rotationLat, -Math.PI * 0.42, Math.PI * 0.42);
+
+      canvas.dataset.hearthCanvasRotationLon = String(state.rotationLon);
+      canvas.dataset.hearthCanvasRotationLat = String(state.rotationLat);
+
+      requestRedraw();
+      if (event.cancelable) event.preventDefault();
+    };
+
+    const endDrag = (event) => {
+      if (state.destroyed) return;
+      if (state.pointerId !== null && event && event.pointerId !== state.pointerId) return;
+
+      state.dragging = false;
+      canvas.style.cursor = "grab";
+      canvas.dataset.hearthCanvasDragging = "false";
+
+      if (event && canvas.releasePointerCapture && event.pointerId !== undefined) {
+        try {
+          canvas.releasePointerCapture(event.pointerId);
+        } catch (_error) {}
+      }
+
+      state.pointerId = null;
+      if (event && event.cancelable) event.preventDefault();
+    };
+
+    canvas.addEventListener("pointerdown", handlePointerDown, { passive: false });
+    canvas.addEventListener("pointermove", handlePointerMove, { passive: false });
+    canvas.addEventListener("pointerup", endDrag, { passive: false });
+    canvas.addEventListener("pointercancel", endDrag, { passive: false });
+    canvas.addEventListener("lostpointercapture", endDrag, { passive: false });
+
+    const destroy = () => {
+      state.destroyed = true;
+      canvas.removeEventListener("pointerdown", handlePointerDown);
+      canvas.removeEventListener("pointermove", handlePointerMove);
+      canvas.removeEventListener("pointerup", endDrag);
+      canvas.removeEventListener("pointercancel", endDrag);
+      canvas.removeEventListener("lostpointercapture", endDrag);
+      if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
+    };
+
+    const api = {
+      canvas,
+      atlasCanvas,
+      atlas,
+      node: canvas,
+      state,
+      mounted: true,
+      canvasFound: true,
+      controlsBound: true,
+      interactiveProjection: true,
+      cachedAtlasProjection: true,
+      redraw: redrawNow,
+      requestRedraw,
+      destroy,
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
+    };
+
+    redrawNow();
+    canvas.dataset.hearthCanvasControlsBound = "true";
+
+    return api;
+  };
+
+  const createSphereTextureCanvas = (options = {}) => {
+    if (!root.document || typeof root.document.createElement !== "function") {
+      throw new Error("Hearth canvas texture creation requires document.createElement.");
+    }
+
+    if (options && options.interactiveProjection === true) {
+      return createInteractiveProjectionCanvas(options).canvas;
+    }
+
+    const atlasCanvas = createAtlasTextureCanvas({
+      width: options.atlasWidth || 512,
+      height: options.atlasHeight || 256,
+      allowLargeTexture: options.allowLargeTexture === true
+    });
+
+    const atlas = getAtlasData(atlasCanvas);
+
+    const requestedWidth = Number.isFinite(Number(options.width)) ? Math.round(Number(options.width)) : 640;
+    const requestedHeight = Number.isFinite(Number(options.height)) ? Math.round(Number(options.height)) : requestedWidth;
+
+    const width = clamp(requestedWidth, 32, options.allowLargeTexture === true ? 1024 : 720);
+    const height = clamp(requestedHeight, 32, options.allowLargeTexture === true ? 1024 : 720);
+
+    const canvas = root.document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+
+    canvas.dataset.hearthCanvasTexture = "true";
+    canvas.dataset.hearthCanvasContract = CONTRACT;
+    canvas.dataset.hearthCanvasReceipt = RECEIPT;
+    canvas.dataset.hearthCanvasConsumesOcean = "true";
+    canvas.dataset.hearthCanvasOceanContract = OCEAN_CONTRACT;
+    canvas.dataset.hearthCanvasOceanConsumerContract = CONTRACT;
+    canvas.dataset.hearthCanvasOceanFailSoft = "true";
+    canvas.dataset.hearthCanvasOceanComposedWithMaterials = "true";
+    canvas.dataset.hearthCanvasOceanComposedWithHydrology = "true";
+    canvas.dataset.hearthCanvasSphereContainment = "true";
+    canvas.dataset.hearthCanvasNoRectangularTextureSpill = "true";
+    canvas.dataset.hearthCanvasProjectionCompatible = "true";
+    canvas.dataset.hearthCanvasOutsideSphereTransparent = "true";
+    canvas.dataset.hearthCanvasCachedAtlasProjection = "true";
+    canvas.dataset.visualPassClaimed = "false";
+
+    renderSphereFromAtlas(canvas, atlas, {
+      rotationLon: Number.isFinite(Number(options.rotationLon)) ? Number(options.rotationLon) : 0,
+      rotationLat: Number.isFinite(Number(options.rotationLat)) ? Number(options.rotationLat) : 0
+    }, options);
+
+    return canvas;
+  };
+
   const createTextureCanvas = (options = {}) => {
     if (options && options.atlas === true) {
       return createAtlasTextureCanvas(options);
@@ -875,8 +1201,10 @@
     }
 
     const texture = createSphereTextureCanvas({
-      width: options.width || targetCanvas.width || 768,
-      height: options.height || targetCanvas.height || targetCanvas.width || 768,
+      width: options.width || targetCanvas.width || 640,
+      height: options.height || targetCanvas.height || targetCanvas.width || 640,
+      atlasWidth: options.atlasWidth || 512,
+      atlasHeight: options.atlasHeight || 256,
       allowLargeTexture: options.allowLargeTexture === true
     });
 
@@ -890,6 +1218,7 @@
     targetCanvas.dataset.hearthCanvasSphereContainment = "true";
     targetCanvas.dataset.hearthCanvasNoRectangularTextureSpill = "true";
     targetCanvas.dataset.hearthCanvasOutsideSphereTransparent = "true";
+    targetCanvas.dataset.hearthCanvasCachedAtlasProjection = "true";
     targetCanvas.dataset.visualPassClaimed = "false";
 
     return targetCanvas;
@@ -912,15 +1241,44 @@
 
     if (!element) return null;
 
-    const canvas = createSphereTextureCanvas(options);
-    canvas.className = options.className || "hearth-canvas-texture hearth-canvas-contained-sphere";
-    canvas.style.maxWidth = "100%";
-    canvas.style.height = "auto";
-    canvas.style.display = "block";
-    canvas.style.background = "transparent";
-    element.appendChild(canvas);
+    element.querySelectorAll("[data-hearth-canvas-texture], canvas.hearth-canvas-texture").forEach((node) => {
+      node.remove();
+    });
 
-    return canvas;
+    const api = createInteractiveProjectionCanvas({
+      ...options,
+      size: options.size || options.width || 640,
+      atlasWidth: options.atlasWidth || 512,
+      atlasHeight: options.atlasHeight || 256,
+      allowLargeTexture: options.allowLargeTexture === true
+    });
+
+    api.canvas.dataset.hearthCanvasTexture = "true";
+    api.canvas.dataset.hearthCanvasMountContract = CONTRACT;
+    api.canvas.dataset.hearthCanvasMountReceipt = RECEIPT;
+    api.canvas.dataset.hearthCanvasInteractiveProjection = "true";
+    api.canvas.dataset.hearthCanvasCachedAtlasProjection = "true";
+    api.canvas.dataset.hearthCanvasControlsBound = "true";
+
+    element.appendChild(api.canvas);
+
+    api.node = element;
+    api.mounted = true;
+    api.canvasFound = true;
+    api.controlsBound = true;
+
+    if (typeof options.onStatus === "function") {
+      options.onStatus("mounted-interactive-atlas-projection", {
+        mounted: true,
+        canvasFound: true,
+        controlsBound: true,
+        frames: api.state.frames,
+        contract: CONTRACT,
+        receipt: RECEIPT
+      });
+    }
+
+    return api;
   };
 
   const getReceipt = () => ({
@@ -928,7 +1286,7 @@
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     version: VERSION,
-    authority: "canvas-composer",
+    authority: "interactive-atlas-projection-canvas",
     status: "active",
     primaryTarget: "/assets/hearth/hearth.canvas.js",
     consumesOcean: true,
@@ -942,8 +1300,19 @@
     projectionCompatible: true,
     outsideSphereTransparent: true,
     rawAtlasDisplayForbidden: true,
+    cachedAtlasProjection: true,
+    interactiveProjection: true,
+    touchDragBound: true,
+    pointerDragBound: true,
+    mountReturnsApiObject: true,
+    redrawFromCachedAtlas: true,
     owns: [
       "final-pixel-composition",
+      "cached-atlas-creation",
+      "atlas-to-sphere-projection",
+      "pointer-touch-drag-binding",
+      "rotation-state",
+      "redraw-from-cached-atlas",
       "ocean-weighting",
       "terrain-ocean-blend",
       "waterline-layering",
@@ -952,13 +1321,15 @@
       "spherical-alpha-containment-for-visible-canvas-output"
     ],
     doesNotOwn: [
+      "tectonic-cause",
+      "elevation-generation",
+      "composition-classification",
       "hydrology-classification",
       "ocean-authority-generation",
       "terrain-material-generation",
-      "elevation-generation",
       "route-orchestration",
       "runtime-motion",
-      "controls",
+      "external-controls-authority",
       "beach-generation",
       "cliff-generation",
       "island-generation",
@@ -983,6 +1354,10 @@
     supportsSphereContainment: true,
     supportsOutsideSphereTransparency: true,
     supportsProjectionCompatibility: true,
+    supportsCachedAtlasProjection: true,
+    supportsInteractiveProjection: true,
+    supportsTouchDrag: true,
+    supportsPointerDrag: true,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
@@ -1016,6 +1391,9 @@
     buildTexture,
     getTextureCanvas,
 
+    createInteractiveProjectionCanvas,
+    renderSphereFromAtlas,
+
     paintToCanvas,
     renderToCanvas,
     drawToCanvas,
@@ -1033,6 +1411,10 @@
     supportsSphereContainment: true,
     supportsOutsideSphereTransparency: true,
     supportsProjectionCompatibility: true,
+    supportsCachedAtlasProjection: true,
+    supportsInteractiveProjection: true,
+    supportsTouchDrag: true,
+    supportsPointerDrag: true,
 
     consumesOcean: true,
     oceanContract: OCEAN_CONTRACT,
@@ -1044,6 +1426,8 @@
     noRectangularTextureSpill: true,
     outsideSphereTransparent: true,
     projectionCompatible: true,
+    cachedAtlasProjection: true,
+    interactiveProjection: true,
 
     generatedImage: false,
     graphicBox: false,
@@ -1072,6 +1456,10 @@
   root.HEARTH_CANVAS_NO_RECTANGULAR_TEXTURE_SPILL = true;
   root.HEARTH_CANVAS_PROJECTION_COMPATIBLE = true;
   root.HEARTH_CANVAS_OUTSIDE_SPHERE_TRANSPARENT = true;
+  root.HEARTH_CANVAS_CACHED_ATLAS_PROJECTION = true;
+  root.HEARTH_CANVAS_INTERACTIVE_PROJECTION = true;
+  root.HEARTH_CANVAS_SUPPORTS_TOUCH_DRAG = true;
+  root.HEARTH_CANVAS_SUPPORTS_POINTER_DRAG = true;
 
   if (root.document && root.document.documentElement) {
     root.document.documentElement.dataset.hearthCanvasAuthorityLoaded = "true";
@@ -1088,6 +1476,11 @@
     root.document.documentElement.dataset.hearthCanvasNoRectangularTextureSpill = "true";
     root.document.documentElement.dataset.hearthCanvasProjectionCompatible = "true";
     root.document.documentElement.dataset.hearthCanvasOutsideSphereTransparent = "true";
+    root.document.documentElement.dataset.hearthCanvasCachedAtlasProjection = "true";
+    root.document.documentElement.dataset.hearthCanvasInteractiveProjection = "true";
+    root.document.documentElement.dataset.hearthCanvasSupportsTouchDrag = "true";
+    root.document.documentElement.dataset.hearthCanvasSupportsPointerDrag = "true";
+    root.document.documentElement.dataset.hearthCanvasMountReturnsApiObject = "true";
     root.document.documentElement.dataset.generatedImage = "false";
     root.document.documentElement.dataset.graphicBox = "false";
     root.document.documentElement.dataset.webgl = "false";

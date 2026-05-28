@@ -2,10 +2,10 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="hearth-active-planet-narrative-map-portal"
+  data-page="hearth-active-planet-parent-chain-sync"
   data-route="/showroom/globe/hearth/"
-  data-contract="HEARTH_ACTIVE_PLANET_NARRATIVE_MAP_PORTAL_HTML_TNT_v1"
-  data-previous-contract="HEARTH_TECTONIC_PARENT_CHAIN_HTML_TNT_v21"
+  data-contract="HEARTH_ACTIVE_PLANET_PARENT_CHAIN_HTML_SYNC_TNT_v2"
+  data-previous-contract="HEARTH_ACTIVE_PLANET_NARRATIVE_MAP_PORTAL_HTML_TNT_v1"
   data-body="hearth"
   data-mirrorland-door="true"
   data-map-portal-required="true"
@@ -14,9 +14,10 @@
   data-map-blip-single-entryway="true"
   data-main-menu-route="false"
   data-active-route-file="/showroom/globe/hearth/hearth.climate.route.js"
-  data-active-route-contract="HEARTH_SOURCE_ALIGNED_VISIBLE_GLOBE_ROUTE_TNT_v17"
+  data-active-route-contract="HEARTH_TECTONIC_PARENT_CHAIN_ROUTE_TNT_v21"
   data-active-visible-planet-carrier="true"
   data-parent-chain-aligned="true"
+  data-parent-chain-order="composition-tectonics-hydrology-materials-canvas"
   data-tectonics-authority="/assets/hearth/hearth.tectonics.js"
   data-composition-authority="/assets/hearth/hearth.composition.js"
   data-hydrology-authority="/assets/hearth/hearth.hydrology.js"
@@ -52,9 +53,9 @@
   <link rel="canonical" href="https://diamondgatebridge.com/showroom/globe/hearth/">
   <meta name="theme-color" content="#030914">
 
-  <link rel="stylesheet" href="/assets/manor-blueprint/manor.blueprint.css?v=HEARTH_ACTIVE_PLANET_NARRATIVE_MAP_PORTAL_HTML_TNT_v1">
-  <script src="/assets/manor-blueprint/manor.blueprint.registry.js?v=HEARTH_ACTIVE_PLANET_NARRATIVE_MAP_PORTAL_HTML_TNT_v1" defer></script>
-  <script src="/assets/manor-blueprint/manor.blueprint.js?v=HEARTH_ACTIVE_PLANET_NARRATIVE_MAP_PORTAL_HTML_TNT_v1" defer></script>
+  <link rel="stylesheet" href="/assets/manor-blueprint/manor.blueprint.css?v=HEARTH_ACTIVE_PLANET_PARENT_CHAIN_HTML_SYNC_TNT_v2">
+  <script src="/assets/manor-blueprint/manor.blueprint.registry.js?v=HEARTH_ACTIVE_PLANET_PARENT_CHAIN_HTML_SYNC_TNT_v2" defer></script>
+  <script src="/assets/manor-blueprint/manor.blueprint.js?v=HEARTH_ACTIVE_PLANET_PARENT_CHAIN_HTML_SYNC_TNT_v2" defer></script>
 
   <style>
     :root{
@@ -751,7 +752,7 @@
             data-hearth-parent-chain-aligned="true"
             data-hearth-active-visible-planet-carrier="true"
             data-hearth-route-file="/showroom/globe/hearth/hearth.climate.route.js"
-            data-hearth-route-contract="HEARTH_SOURCE_ALIGNED_VISIBLE_GLOBE_ROUTE_TNT_v17"
+            data-hearth-route-contract="HEARTH_TECTONIC_PARENT_CHAIN_ROUTE_TNT_v21"
             aria-label="Hearth active planet canvas mount"
           >
             <span class="mount-fallback" data-hearth-mount-fallback="true">
@@ -762,7 +763,7 @@
           <div class="planet-caption">
             <b>Active Planet Carrier</b>
             <span>
-              The visible planet is loaded by <code>./hearth.climate.route.js</code>. Drag inspection remains active through the route carrier. This HTML pass does not renew the planet JS.
+              The visible planet is loaded by <code>./hearth.climate.route.js</code> through the v21 parent-chain carrier. Drag inspection remains active through the route carrier. This HTML pass synchronizes the page to the current route contract without renewing the planet JS.
             </span>
           </div>
         </aside>
@@ -885,16 +886,17 @@
         </div>
       </section>
 
-      <pre id="hearth-route-status" data-hearth-route-status="true">Hearth active planet narrative route preparing.</pre>
+      <pre id="hearth-route-status" data-hearth-route-status="true">Hearth active planet parent-chain route preparing.</pre>
 
       <template id="hearth-route-receipt" data-route-receipt>
-HEARTH_ACTIVE_PLANET_NARRATIVE_MAP_PORTAL_HTML_TNT_v1
+HEARTH_ACTIVE_PLANET_PARENT_CHAIN_HTML_SYNC_TNT_v2
 route=/showroom/globe/hearth/
-previous=HEARTH_TECTONIC_PARENT_CHAIN_HTML_TNT_v21
+previous=HEARTH_ACTIVE_PLANET_NARRATIVE_MAP_PORTAL_HTML_TNT_v1
 active_route_file=/showroom/globe/hearth/hearth.climate.route.js
-active_route_contract=HEARTH_SOURCE_ALIGNED_VISIBLE_GLOBE_ROUTE_TNT_v17
+active_route_contract=HEARTH_TECTONIC_PARENT_CHAIN_ROUTE_TNT_v21
 visible_planet_carrier_active=true
-visible_globe_v17_retired=false
+html_route_contract_sync=true
+parent_chain_order=composition→tectonics→hydrology→materials→canvas
 narrative_identity=Hearth · Survival Becomes Shelter
 world_lane=survival_pressure_becomes_home
 zionts_role=consequence
@@ -927,7 +929,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      HEARTH_ACTIVE_PLANET_NARRATIVE_MAP_PORTAL_HTML_TNT_v1 · /showroom/globe/hearth/ · Hearth · Survival Becomes Shelter.
+      HEARTH_ACTIVE_PLANET_PARENT_CHAIN_HTML_SYNC_TNT_v2 · /showroom/globe/hearth/ · Hearth · Survival Becomes Shelter.
     </footer>
   </div>
 
@@ -935,10 +937,11 @@ visual_pass_claimed=false
     (() => {
       "use strict";
 
-      const CONTRACT = "HEARTH_ACTIVE_PLANET_NARRATIVE_MAP_PORTAL_HTML_TNT_v1";
-      const ACTIVE_ROUTE_CONTRACT = "HEARTH_SOURCE_ALIGNED_VISIBLE_GLOBE_ROUTE_TNT_v17";
+      const CONTRACT = "HEARTH_ACTIVE_PLANET_PARENT_CHAIN_HTML_SYNC_TNT_v2";
+      const PREVIOUS_CONTRACT = "HEARTH_ACTIVE_PLANET_NARRATIVE_MAP_PORTAL_HTML_TNT_v1";
+      const ACTIVE_ROUTE_CONTRACT = "HEARTH_TECTONIC_PARENT_CHAIN_ROUTE_TNT_v21";
       const ACTIVE_ROUTE_FILE = "/showroom/globe/hearth/hearth.climate.route.js";
-      const key = `hearth-active-planet-narrative-map-portal-${Date.now()}`;
+      const key = `hearth-active-planet-parent-chain-html-sync-v2-${Date.now()}`;
 
       [
         "__HEARTH_G4_ROUTE_DISPOSE__",
@@ -990,9 +993,11 @@ visual_pass_claimed=false
         const status = document.getElementById("hearth-route-status");
 
         document.documentElement.dataset.hearthHtmlContract = CONTRACT;
+        document.documentElement.dataset.hearthHtmlPreviousContract = PREVIOUS_CONTRACT;
         document.documentElement.dataset.hearthActiveRouteFile = ACTIVE_ROUTE_FILE;
         document.documentElement.dataset.hearthActiveRouteContract = ACTIVE_ROUTE_CONTRACT;
         document.documentElement.dataset.hearthActiveVisiblePlanetCarrier = "true";
+        document.documentElement.dataset.hearthParentChainOrder = "composition-tectonics-hydrology-materials-canvas";
         document.documentElement.dataset.hearthNarrativeIdentity = "Hearth · Survival Becomes Shelter";
         document.documentElement.dataset.hearthMapPortalRequired = "true";
         document.documentElement.dataset.generatedImage = "false";
@@ -1000,13 +1005,14 @@ visual_pass_claimed=false
         document.documentElement.dataset.webgl = "false";
         document.documentElement.dataset.visualPassClaimed = "false";
 
-        window.HEARTH_ACTIVE_PLANET_NARRATIVE_MAP_PORTAL_HTML_STATUS = {
+        window.HEARTH_ACTIVE_PLANET_PARENT_CHAIN_HTML_SYNC_STATUS = {
           contract: CONTRACT,
-          previousContract: "HEARTH_TECTONIC_PARENT_CHAIN_HTML_TNT_v21",
+          previousContract: PREVIOUS_CONTRACT,
           route: "/showroom/globe/hearth/",
           activeRouteFile: ACTIVE_ROUTE_FILE,
           activeRouteContract: ACTIVE_ROUTE_CONTRACT,
           activeVisiblePlanetCarrier: true,
+          parentChainOrder: "composition → tectonics → hydrology → materials → canvas",
           narrativeIdentity: "Hearth · Survival Becomes Shelter",
           mapPortalRequired: true,
           mapPortalSource: "/assets/manor-blueprint/manor.blueprint.js",
@@ -1022,10 +1028,12 @@ visual_pass_claimed=false
 
         if (status) {
           status.textContent = [
-            "Hearth active planet narrative HTML loaded.",
+            "Hearth active planet parent-chain HTML loaded.",
             `HTML contract ${CONTRACT}`,
+            `Previous HTML contract ${PREVIOUS_CONTRACT}`,
             `Active route file ${ACTIVE_ROUTE_FILE}`,
             `Active route contract ${ACTIVE_ROUTE_CONTRACT}`,
+            "Parent order composition → tectonics → hydrology → materials → canvas",
             "Narrative identity Hearth · Survival Becomes Shelter",
             "Visible planet carrier active true",
             "Map / Portal imports active true",
@@ -1046,7 +1054,7 @@ visual_pass_claimed=false
       script.src = `./hearth.climate.route.js?v=${encodeURIComponent(key)}`;
       script.defer = true;
       script.dataset.hearthFile = "true";
-      script.dataset.hearthFileRole = "active-planet-narrative-carrier";
+      script.dataset.hearthFileRole = "active-planet-parent-chain-carrier";
       script.dataset.hearthHtmlContract = CONTRACT;
       script.dataset.hearthExpectedRouteContract = ACTIVE_ROUTE_CONTRACT;
       script.dataset.generatedImage = "false";

@@ -1,13 +1,13 @@
 // /assets/hearth/hearth.hydrology.js
-// HEARTH_COASTAL_BOUNDARY_NATURAL_HYDROLOGY_TNT_v1
+// HEARTH_SEA_LEVEL_WATERLINE_BEACH_BOUNDARY_HYDROLOGY_TNT_v1
 // Full-file replacement.
 // Hydrology authority only.
 // Purpose:
-// - Consume HEARTH_SEVEN_CONTINENT_REAL_PLANET_COMPOSITION_TNT_v1.
-// - Consume HEARTH_REAL_PLANET_TECTONIC_BODY_AUTHORITY_TNT_v1.
-// - Convert visible coastal/shelf/divide traces into natural water-land boundary fields.
-// - Prepare materials to render softened shelves, grounded coasts, river mouths, deltas, wetlands, bays, inlets, straits, archipelago channels, canyon outflows, waterfall edges, and deep ocean drops.
-// - Preserve route compatibility through HEARTH_HYDROLOGY.sampleHydrology.
+// - Consume Hearth composition + tectonics.
+// - Preserve existing hydrology API and downstream material feeds.
+// - Add explicit sea-level, waterline, beach, submerged-block, submerged-scar, wet-stone, sand-shelf, and cliff-water-edge classification.
+// - Treat visible coastal blocks/scars as low or near-sea-level terrain evidence.
+// - Prepare materials to render water fill, beaches, shallow shelves, wet stone, hard coasts, cliff-water contacts, submerged blocks, and submerged scars.
 // Does not own:
 // - elevation generation
 // - composition classification
@@ -23,13 +23,14 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_COASTAL_BOUNDARY_NATURAL_HYDROLOGY_TNT_v1";
-  const RECEIPT = "HEARTH_COASTAL_BOUNDARY_NATURAL_HYDROLOGY_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_NATURAL_HYDROLOGY_FIELD_TNT_v1";
-  const VERSION = "2026-05-28.hearth-coastal-boundary-natural-hydrology-v1";
+  const CONTRACT = "HEARTH_SEA_LEVEL_WATERLINE_BEACH_BOUNDARY_HYDROLOGY_TNT_v1";
+  const RECEIPT = "HEARTH_SEA_LEVEL_WATERLINE_BEACH_BOUNDARY_HYDROLOGY_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_COASTAL_BOUNDARY_NATURAL_HYDROLOGY_TNT_v1";
+  const VERSION = "2026-05-28.hearth-sea-level-waterline-beach-boundary-hydrology-v1";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const DEG = Math.PI / 180;
+  const SEA_LEVEL = 0;
 
   const HYDROLOGY_CLASSES = [
     "deep_ocean_body",
@@ -54,6 +55,12 @@
     "continent_divide_strait",
     "wetland_lowland",
     "floodplain_basin",
+    "sea_level_waterline",
+    "submerged_block_field",
+    "submerged_coastal_scar",
+    "wet_stone_boundary",
+    "sand_shelf_transition",
+    "hard_cliff_water_edge",
     "none"
   ];
 
@@ -67,6 +74,9 @@
     "reef_shelf_boundary",
     "deep_ocean_drop",
     "continent_divide_strait",
+    "sea_level_waterline",
+    "submerged_block_field",
+    "submerged_coastal_scar",
     "none"
   ];
 
@@ -84,6 +94,10 @@
     "dry_rocky_coast",
     "wetland_lowland",
     "floodplain_basin",
+    "wet_stone_boundary",
+    "sand_shelf_transition",
+    "hard_cliff_water_edge",
+    "sea_level_waterline",
     "none"
   ];
 
@@ -239,7 +253,7 @@
   };
 
   const hashNoise = (x, y, z, salt = 0) => {
-    const n = Math.sin(x * 127.1 + y * 311.7 + z * 74.7 + salt * 47.13) * 43758.5453123;
+    const n = Math.sin(x * 127.1 + y * 311.7 + z * 74.7 + salt * 53.19) * 43758.5453123;
     return n - Math.floor(n);
   };
 
@@ -290,7 +304,7 @@
     const isLand = landSignal > 0.46;
 
     return {
-      contract: "HEARTH_HYDROLOGY_FALLBACK_COMPOSITION",
+      contract: "HEARTH_SEA_LEVEL_HYDROLOGY_FALLBACK_COMPOSITION",
       receipt: "FALLBACK_COMPOSITION_USED",
       worldTerrainClass: isLand ? "continent_mass" : "ocean_basin",
       expandedTerrainClass: isLand ? "continent_mass" : "ocean_basin",
@@ -300,6 +314,7 @@
       continentId: isLand ? "western_shield" : "open_ocean",
       continentName: isLand ? "Western Shield Continent" : "Open Ocean",
       continentClass: isLand ? "western_shield_mass" : "open_ocean",
+      continentIndex: isLand ? 0 : -1,
       climateClass: isLand ? "temperate_highland" : "open_ocean",
       summitClass: "none",
       summitRegionHint: "none",
@@ -360,6 +375,7 @@
       worldTerrainClass: terrainClass,
       continentId,
       continentName: stringField(source, "continentName", continentId === "open_ocean" ? "Open Ocean" : continentId.replace(/_/g, " ")),
+      continentIndex: Number.isFinite(Number(source.continentIndex)) ? Number(source.continentIndex) : -1,
       continentClass: stringField(source, "continentClass", continentId === "open_ocean" ? "open_ocean" : `${continentId}_mass`),
       climateClass: stringField(source, "climateClass", stringField(source, "climateHint", "open_ocean")),
       summitClass: stringField(source, "summitClass", "none"),
@@ -465,8 +481,18 @@
           return normalizeComposition(
             {
               ...raw,
-              worldTerrainClass: raw && raw.terrainClassHint ? raw.terrainClassHint : raw && raw.isLand ? "continent_mass" : "ocean_basin",
-              terrainClass: raw && raw.terrainClassHint ? raw.terrainClassHint : raw && raw.isLand ? "continent_mass" : "ocean_basin"
+              worldTerrainClass:
+                raw && raw.terrainClassHint
+                  ? raw.terrainClassHint
+                  : raw && raw.isLand
+                    ? "continent_mass"
+                    : "ocean_basin",
+              terrainClass:
+                raw && raw.terrainClassHint
+                  ? raw.terrainClassHint
+                  : raw && raw.isLand
+                    ? "continent_mass"
+                    : "ocean_basin"
             },
             p
           );
@@ -478,7 +504,7 @@
   };
 
   const fallbackTectonics = (composition) => ({
-    contract: "HEARTH_HYDROLOGY_FALLBACK_TECTONICS",
+    contract: "HEARTH_SEA_LEVEL_HYDROLOGY_FALLBACK_TECTONICS",
     receipt: "FALLBACK_TECTONICS_USED",
     tectonicClass: composition.isWater ? "open_ocean_basin" : "stable_continental_craton",
     plateClass: composition.isWater ? "oceanic_basin_plate" : "continental_plate",
@@ -489,6 +515,8 @@
     canyonCutPressure: composition.canyonPotential * 0.52,
     faultCutPressure: composition.scarPotential * 0.48,
     faultLinePressure: composition.scarPotential * 0.38,
+    fractureDensity: composition.scarPotential * 0.18 + composition.archipelagoPotential * 0.22,
+    scarPressure: composition.scarPotential * 0.38,
     cliffPressure: composition.escarpmentPotential * 0.52,
     escarpmentPressure: composition.escarpmentPotential * 0.58,
     shelfDropPressure: Math.max(composition.shelfDrop, composition.shelfPotential) * 0.48,
@@ -589,12 +617,22 @@
 
   const biasFor = (continentId) => CONTINENT_HYDROLOGY_BIAS[continentId] || CONTINENT_HYDROLOGY_BIAS.open_ocean;
 
-  const computeHydrologyFields = (composition, tectonics, p) => {
+  const computeBaseHydrologyFields = (composition, tectonics, p) => {
     const bias = biasFor(composition.continentId);
     const n = waterNoise(p, (composition.continentIndex || 0) + 23);
 
     const isWater = composition.isWater ? 1 : 0;
     const isLand = composition.isLand ? 1 : 0;
+    const isRainforest = composition.climateClass === "rainforest_wet_basin" ? 1 : 0;
+    const isMonsoon = composition.climateClass === "monsoon_floodplain" ? 1 : 0;
+    const isTemperateStorm = composition.climateClass === "temperate_coastal_storm" ? 1 : 0;
+    const isPolar = composition.climateClass === "polar_icefield" ? 1 : 0;
+    const isTundra = composition.climateClass === "tundra_subpolar" ? 1 : 0;
+    const isArid = composition.climateClass === "arid_dry_plateau" ? 1 : 0;
+    const isBrokenArchipelago = composition.continentId === "broken_archipelago" ? 1 : 0;
+    const isNorthernCold = composition.continentId === "northern_cold" ? 1 : 0;
+    const deepOceanStable = tectonics.tectonicClass === "deep_ocean_stable" ? 1 : 0;
+
     const isCoastal = clamp01(
       composition.coastPotential * 0.36 +
       composition.shorelineContact * 0.28 +
@@ -608,7 +646,7 @@
       composition.waterDepthPotential * 0.46 +
       composition.oceanBasinPotential * 0.36 +
       (composition.isDeepWater ? 0.18 : 0) +
-      tectonics.tectonicClass === "deep_ocean_stable" ? 0.10 : 0
+      deepOceanStable * 0.10
     );
 
     const oceanContinuity = clamp01(
@@ -667,8 +705,8 @@
       composition.basinPotential * 0.24 +
       tectonics.basinSubsidence * 0.20 +
       tectonics.lowlandStress * 0.16 +
-      composition.climateClass === "rainforest_wet_basin" ? 0.20 : 0 +
-      composition.climateClass === "monsoon_floodplain" ? 0.18 : 0
+      isRainforest * 0.20 +
+      isMonsoon * 0.18
     );
 
     const riverPotential = clamp01(
@@ -677,8 +715,8 @@
       composition.canyonPotential * 0.14 +
       tectonics.canyonCutPressure * 0.14 +
       (bias.river || 0) +
-      (composition.climateClass === "rainforest_wet_basin" ? 0.14 : 0) +
-      (composition.climateClass === "monsoon_floodplain" ? 0.12 : 0)
+      isRainforest * 0.14 +
+      isMonsoon * 0.12
     );
 
     const drainagePotential = clamp01(
@@ -718,7 +756,7 @@
       wetlandPotential * 0.36 +
       deltaPotential * 0.24 +
       isCoastal * 0.10 +
-      composition.climateClass === "rainforest_wet_basin" ? 0.12 : 0
+      isRainforest * 0.12
     );
 
     const floodplainPotential = clamp01(
@@ -743,9 +781,9 @@
     );
 
     const fjordCutPotential = clamp01(
-      (composition.continentId === "northern_cold" ? 0.24 : 0) +
-      (composition.climateClass === "polar_icefield" ? 0.22 : 0) +
-      (composition.climateClass === "tundra_subpolar" ? 0.16 : 0) +
+      isNorthernCold * 0.24 +
+      isPolar * 0.22 +
+      isTundra * 0.16 +
       tectonics.cliffPressure * 0.12 +
       isCoastal * 0.12 +
       (bias.fjord || 0)
@@ -753,7 +791,7 @@
 
     const stormSurgePotential = clamp01(
       tectonics.coastalCompression * 0.22 +
-      (composition.climateClass === "temperate_coastal_storm" ? 0.28 : 0) +
+      isTemperateStorm * 0.28 +
       isCoastal * 0.14 +
       (bias.storm || 0)
     );
@@ -762,7 +800,7 @@
       shelfGradient * 0.20 +
       composition.archipelagoPotential * 0.22 +
       composition.islandPotential * 0.18 +
-      (composition.continentId === "broken_archipelago" ? 0.18 : 0) +
+      isBrokenArchipelago * 0.18 +
       (bias.reef || 0)
     );
 
@@ -770,7 +808,7 @@
       tectonics.archipelagoFracture * 0.28 +
       tectonics.islandArcPressure * 0.22 +
       composition.archipelagoPotential * 0.22 +
-      composition.continentId === "broken_archipelago" ? 0.16 : 0 +
+      isBrokenArchipelago * 0.16 +
       (bias.channel || 0)
     );
 
@@ -832,48 +870,9 @@
       waterfallFlowPotential * 0.06
     );
 
-    const materialWaterFeed = clamp01(
-      oceanContinuity * 0.22 +
-      oceanDepth * 0.22 +
-      surfaceWaterPotential * 0.18 +
-      shelfGradient * 0.12 +
-      straitPotential * 0.08
-    );
-
-    const materialShelfFeed = clamp01(
-      shelfGradient * 0.34 +
-      coastalBlendWidth * 0.18 +
-      reefShelfPotential * 0.12 +
-      islandWaterGap * 0.10 +
-      deepOceanDrop * 0.08
-    );
-
-    const materialShoreFeed = clamp01(
-      isCoastal * 0.24 +
-      coastNaturalizationFeed * 0.26 +
-      shorelineSoftness * 0.16 +
-      shorelineRoughness * 0.10 +
-      bayPotential * 0.08 +
-      inletPotential * 0.08
-    );
-
-    const materialWetlandFeed = clamp01(
-      wetlandPotential * 0.30 +
-      marshPotential * 0.22 +
-      floodplainPotential * 0.20 +
-      deltaPotential * 0.14
-    );
-
-    const materialRiverFeed = clamp01(
-      riverPotential * 0.32 +
-      drainagePotential * 0.22 +
-      estuaryPotential * 0.14 +
-      canyonOutflowPotential * 0.12 +
-      waterfallFlowPotential * 0.10
-    );
-
     return {
       isCoastal,
+      isArid,
       oceanDepth,
       oceanContinuity,
       shelfGradient,
@@ -901,46 +900,382 @@
       inletPotential,
       peninsulaEdgePotential,
       deepOceanDrop,
-      coastNaturalizationFeed,
+      coastNaturalizationFeed
+    };
+  };
+
+  const computeSeaLevelFields = (composition, tectonics, h) => {
+    const seaLevel = SEA_LEVEL;
+    const elevation = numberField(composition, "elevation", composition.isWater ? -0.28 : 0.18);
+    const relativeSeaElevation = elevation - seaLevel;
+
+    const belowSeaLevelStrength = clamp01(
+      (-relativeSeaElevation + 0.045) / 0.36 +
+      (composition.isWater ? 0.34 : 0) +
+      composition.waterDepthPotential * 0.22 +
+      composition.oceanBasinPotential * 0.16 +
+      h.shelfGradient * 0.08
+    );
+
+    const nearSeaLevelStrength = clamp01(
+      (1 - clamp(Math.abs(relativeSeaElevation) / 0.22, 0, 1)) * 0.48 +
+      composition.coastPotential * 0.18 +
+      composition.shorelineContact * 0.14 +
+      composition.shelfPotential * 0.12 +
+      h.isCoastal * 0.16
+    );
+
+    const aboveSeaLevelStrength = clamp01(
+      (relativeSeaElevation + 0.04) / 0.34 +
+      (composition.isLand ? 0.16 : 0) +
+      composition.landPotential * 0.18
+    );
+
+    const waterFillStrength = clamp01(
+      belowSeaLevelStrength * 0.48 +
+      (composition.isWater ? 0.30 : 0) +
+      h.surfaceWaterPotential * 0.14 +
+      h.shelfGradient * 0.08 +
+      h.straitPotential * 0.05
+    );
+
+    const waterDepth = clamp01(
+      Math.max(0, seaLevel - elevation) * 1.75 +
+      composition.waterDepthPotential * 0.32 +
+      composition.oceanBasinPotential * 0.18 +
+      h.oceanDepth * 0.20 +
+      h.deepOceanDrop * 0.10
+    );
+
+    const shallowShelfStrength = clamp01(
+      waterFillStrength * 0.18 +
+      h.shelfGradient * 0.30 +
+      composition.shelfPotential * 0.20 +
+      composition.continentShelfPotential * 0.16 +
+      nearSeaLevelStrength * 0.12 -
+      h.oceanDepth * 0.08
+    );
+
+    const waterlineBoundaryStrength = clamp01(
+      nearSeaLevelStrength * 0.30 +
+      h.isCoastal * 0.24 +
+      h.coastalBlendWidth * 0.16 +
+      h.shelfGradient * 0.12 +
+      composition.shorelineContact * 0.10 +
+      tectonics.coastalCompression * 0.08
+    );
+
+    const hardCoastStrength = clamp01(
+      waterlineBoundaryStrength * 0.26 +
+      h.shorelineRoughness * 0.22 +
+      tectonics.cliffPressure * 0.18 +
+      tectonics.escarpmentPressure * 0.16 +
+      tectonics.shelfDropPressure * 0.12 +
+      h.deepOceanDrop * 0.06
+    );
+
+    const cliffWaterEdgeStrength = clamp01(
+      waterlineBoundaryStrength * 0.22 +
+      tectonics.cliffPressure * 0.22 +
+      tectonics.escarpmentPressure * 0.20 +
+      tectonics.shelfDropPressure * 0.18 +
+      h.deepOceanDrop * 0.10 +
+      h.shorelineRoughness * 0.08
+    );
+
+    const beachStrength = clamp01(
+      waterlineBoundaryStrength * 0.24 +
+      shallowShelfStrength * 0.25 +
+      h.shorelineSoftness * 0.22 +
+      h.coastalBlendWidth * 0.14 +
+      h.bayPotential * 0.08 +
+      h.deltaPotential * 0.04 -
+      hardCoastStrength * 0.16
+    );
+
+    const sandShelfStrength = clamp01(
+      beachStrength * 0.34 +
+      shallowShelfStrength * 0.28 +
+      h.shorelineSoftness * 0.14 +
+      h.reefShelfPotential * 0.08 +
+      h.coastalBlendWidth * 0.08
+    );
+
+    const submergedBlockStrength = clamp01(
+      waterFillStrength * 0.20 +
+      shallowShelfStrength * 0.16 +
+      composition.scarPotential * 0.14 +
+      composition.shelfPotential * 0.12 +
+      tectonics.faultCutPressure * 0.10 +
+      tectonics.fractureDensity * 0.10 +
+      h.archipelagoChannelPotential * 0.08 +
+      h.straitPotential * 0.06 +
+      h.canyonOutflowPotential * 0.04
+    );
+
+    const submergedScarStrength = clamp01(
+      waterFillStrength * 0.16 +
+      composition.scarPotential * 0.16 +
+      composition.canyonPotential * 0.12 +
+      composition.continentSeparation * 0.10 +
+      tectonics.canyonCutPressure * 0.12 +
+      tectonics.faultCutPressure * 0.10 +
+      h.straitPotential * 0.10 +
+      h.archipelagoChannelPotential * 0.08 +
+      h.drainagePotential * 0.06
+    );
+
+    const wetStoneStrength = clamp01(
+      waterlineBoundaryStrength * 0.22 +
+      hardCoastStrength * 0.18 +
+      cliffWaterEdgeStrength * 0.16 +
+      h.shorelineRoughness * 0.12 +
+      h.inletPotential * 0.08 +
+      h.estuaryPotential * 0.06 +
+      h.waterfallFlowPotential * 0.08 +
+      submergedScarStrength * 0.10
+    );
+
+    const oldCoastalTechSubmergedStrength = clamp01(
+      submergedScarStrength * 0.24 +
+      submergedBlockStrength * 0.22 +
+      composition.scarPotential * 0.14 +
+      tectonics.faultCutPressure * 0.10 +
+      tectonics.fractureDensity * 0.10 +
+      h.straitPotential * 0.08 +
+      h.archipelagoChannelPotential * 0.08 +
+      h.canyonOutflowPotential * 0.04
+    );
+
+    const waterDepthClass =
+      waterDepth > 0.68
+        ? "deep"
+        : waterDepth > 0.36
+          ? "mid"
+          : waterFillStrength > 0.34
+            ? "shallow"
+            : "dry";
+
+    return {
+      seaLevel,
+      relativeSeaElevation,
+
+      belowSeaLevel: belowSeaLevelStrength > 0.38,
+      nearSeaLevel: nearSeaLevelStrength > 0.34,
+      aboveSeaLevel: aboveSeaLevelStrength > 0.38,
+
+      belowSeaLevelStrength,
+      nearSeaLevelStrength,
+      aboveSeaLevelStrength,
+
+      waterFill: waterFillStrength > 0.40,
+      waterFillStrength,
+      waterDepth,
+      waterDepthClass,
+
+      waterlineBoundary: waterlineBoundaryStrength > 0.34,
+      waterlineBoundaryStrength,
+
+      shallowShelf: shallowShelfStrength > 0.34,
+      shallowShelfStrength,
+
+      beachCandidate: beachStrength > 0.34,
+      beachStrength,
+
+      sandShelf: sandShelfStrength > 0.34,
+      sandShelfStrength,
+
+      hardCoastCandidate: hardCoastStrength > 0.38,
+      hardCoastStrength,
+
+      cliffWaterEdge: cliffWaterEdgeStrength > 0.40,
+      cliffWaterEdgeStrength,
+
+      submergedBlock: submergedBlockStrength > 0.36,
+      submergedBlockStrength,
+
+      submergedScar: submergedScarStrength > 0.34,
+      submergedScarStrength,
+
+      wetStoneEdge: wetStoneStrength > 0.36,
+      wetStoneStrength,
+
+      oldCoastalTechSubmerged: oldCoastalTechSubmergedStrength > 0.36,
+      oldCoastalTechSubmergedStrength
+    };
+  };
+
+  const computeMaterialFeeds = (composition, tectonics, h, sea) => {
+    const materialWaterFeed = clamp01(
+      h.oceanContinuity * 0.20 +
+      h.oceanDepth * 0.20 +
+      h.surfaceWaterPotential * 0.14 +
+      h.shelfGradient * 0.10 +
+      h.straitPotential * 0.06 +
+      sea.waterFillStrength * 0.20 +
+      sea.waterDepth * 0.10
+    );
+
+    const materialShelfFeed = clamp01(
+      h.shelfGradient * 0.28 +
+      h.coastalBlendWidth * 0.15 +
+      h.reefShelfPotential * 0.10 +
+      h.islandWaterGap * 0.08 +
+      h.deepOceanDrop * 0.06 +
+      sea.shallowShelfStrength * 0.22 +
+      sea.sandShelfStrength * 0.11
+    );
+
+    const materialShoreFeed = clamp01(
+      h.isCoastal * 0.20 +
+      h.coastNaturalizationFeed * 0.20 +
+      h.shorelineSoftness * 0.12 +
+      h.shorelineRoughness * 0.08 +
+      h.bayPotential * 0.06 +
+      h.inletPotential * 0.06 +
+      sea.waterlineBoundaryStrength * 0.18 +
+      sea.wetStoneStrength * 0.10
+    );
+
+    const materialWetlandFeed = clamp01(
+      h.wetlandPotential * 0.30 +
+      h.marshPotential * 0.22 +
+      h.floodplainPotential * 0.20 +
+      h.deltaPotential * 0.14 +
+      sea.nearSeaLevelStrength * 0.08
+    );
+
+    const materialRiverFeed = clamp01(
+      h.riverPotential * 0.30 +
+      h.drainagePotential * 0.20 +
+      h.estuaryPotential * 0.13 +
+      h.canyonOutflowPotential * 0.11 +
+      h.waterfallFlowPotential * 0.09 +
+      sea.submergedScarStrength * 0.07
+    );
+
+    const materialBeachFeed = clamp01(
+      sea.beachStrength * 0.50 +
+      sea.sandShelfStrength * 0.24 +
+      h.shorelineSoftness * 0.12 +
+      h.bayPotential * 0.06
+    );
+
+    const materialSandShelfFeed = clamp01(
+      sea.sandShelfStrength * 0.52 +
+      sea.shallowShelfStrength * 0.22 +
+      h.reefShelfPotential * 0.08 +
+      h.coastalBlendWidth * 0.08
+    );
+
+    const materialWetStoneFeed = clamp01(
+      sea.wetStoneStrength * 0.46 +
+      sea.hardCoastStrength * 0.18 +
+      sea.cliffWaterEdgeStrength * 0.16 +
+      h.shorelineRoughness * 0.10
+    );
+
+    const materialSubmergedBlockFeed = clamp01(
+      sea.submergedBlockStrength * 0.52 +
+      sea.waterFillStrength * 0.16 +
+      sea.shallowShelfStrength * 0.10 +
+      h.archipelagoChannelPotential * 0.08
+    );
+
+    const materialSubmergedScarFeed = clamp01(
+      sea.submergedScarStrength * 0.50 +
+      sea.oldCoastalTechSubmergedStrength * 0.18 +
+      h.straitPotential * 0.08 +
+      h.canyonOutflowPotential * 0.08
+    );
+
+    const materialCliffWaterEdgeFeed = clamp01(
+      sea.cliffWaterEdgeStrength * 0.52 +
+      sea.hardCoastStrength * 0.20 +
+      tectonics.cliffPressure * 0.12 +
+      tectonics.shelfDropPressure * 0.08
+    );
+
+    const materialWaterlineFeed = clamp01(
+      sea.waterlineBoundaryStrength * 0.52 +
+      sea.nearSeaLevelStrength * 0.18 +
+      h.isCoastal * 0.12 +
+      h.coastalBlendWidth * 0.08
+    );
+
+    return {
       materialWaterFeed,
       materialShelfFeed,
       materialShoreFeed,
       materialWetlandFeed,
-      materialRiverFeed
+      materialRiverFeed,
+      materialBeachFeed,
+      materialSandShelfFeed,
+      materialWetStoneFeed,
+      materialSubmergedBlockFeed,
+      materialSubmergedScarFeed,
+      materialCliffWaterEdgeFeed,
+      materialWaterlineFeed
+    };
+  };
+
+  const computeHydrologyFields = (composition, tectonics, p) => {
+    const h = computeBaseHydrologyFields(composition, tectonics, p);
+    const sea = computeSeaLevelFields(composition, tectonics, h);
+    const feeds = computeMaterialFeeds(composition, tectonics, h, sea);
+
+    return {
+      ...h,
+      ...sea,
+      ...feeds
     };
   };
 
   const classifyWaterBoundary = (composition, tectonics, h) => {
+    if (h.submergedScarStrength > 0.62 && h.waterFillStrength > 0.42) return "submerged_coastal_scar";
+    if (h.submergedBlockStrength > 0.62 && h.waterFillStrength > 0.42) return "submerged_block_field";
+    if (h.waterlineBoundaryStrength > 0.62 && h.waterFillStrength > 0.36) return "sea_level_waterline";
     if (h.straitPotential > 0.56) return "continent_divide_strait";
     if (h.deepOceanDrop > 0.58 && composition.isWater) return "deep_ocean_drop";
     if (h.archipelagoChannelPotential > 0.54) return "archipelago_channel";
     if (h.islandWaterGap > 0.52) return "island_shelf_boundary";
     if (h.reefShelfPotential > 0.52) return "reef_shelf_boundary";
-    if (h.shelfGradient > 0.54) return "continental_shelf_gradient";
-    if (composition.isShallowWater || h.shelfGradient > 0.36) return "shallow_shelf_water";
+    if (h.shelfGradient > 0.54 || h.shallowShelfStrength > 0.56) return "continental_shelf_gradient";
+    if (composition.isShallowWater || h.shelfGradient > 0.36 || h.shallowShelfStrength > 0.40) return "shallow_shelf_water";
     if (composition.isDeepWater && h.oceanDepth > 0.64) return "deep_ocean_body";
-    if (composition.isWater) return "open_ocean_basin";
+    if (composition.isWater || h.waterFillStrength > 0.48) return "open_ocean_basin";
     return "none";
   };
 
   const classifyCoastBoundary = (composition, tectonics, h) => {
+    if (h.cliffWaterEdgeStrength > 0.62) return "hard_cliff_water_edge";
+    if (h.wetStoneStrength > 0.60) return "wet_stone_boundary";
+    if (h.sandShelfStrength > 0.60) return "sand_shelf_transition";
+    if (h.waterlineBoundaryStrength > 0.62 && h.beachStrength < 0.32) return "sea_level_waterline";
     if (h.waterfallFlowPotential > 0.54) return "waterfall_drainage_edge";
     if (h.canyonOutflowPotential > 0.54) return "canyon_outflow_boundary";
     if (h.fjordCutPotential > 0.52) return "fjord_glacial_cut";
     if (h.stormSurgePotential > 0.54) return "storm_coast_boundary";
-    if (tectonics.cliffPressure > 0.50 || tectonics.escarpmentPressure > 0.52) return "cliff_coast_boundary";
+    if (tectonics.cliffPressure > 0.50 || tectonics.escarpmentPressure > 0.52 || h.hardCoastStrength > 0.56) return "cliff_coast_boundary";
     if (h.marshPotential > 0.52 || h.deltaPotential > 0.54) return "marsh_delta_boundary";
     if (h.estuaryPotential > 0.52) return "estuary_cut_boundary";
     if (h.riverPotential > 0.52) return "river_mouth_boundary";
     if (h.wetlandPotential > 0.50) return "wetland_lowland";
     if (h.floodplainPotential > 0.50) return "floodplain_basin";
     if (composition.climateClass === "arid_dry_plateau" && h.isCoastal > 0.28) return "dry_rocky_coast";
-    if (h.isCoastal > 0.32 && h.shorelineSoftness > h.shorelineRoughness) return "beach_shelf_boundary";
-    if (h.isCoastal > 0.22) return "coastal_transition_zone";
+    if (h.beachStrength > 0.42 || (h.isCoastal > 0.32 && h.shorelineSoftness > h.shorelineRoughness)) return "beach_shelf_boundary";
+    if (h.isCoastal > 0.22 || h.waterlineBoundaryStrength > 0.34) return "coastal_transition_zone";
     return "none";
   };
 
   const classifyHydrology = (composition, tectonics, h) => {
+    if (h.submergedScarStrength > 0.66) return "submerged_coastal_scar";
+    if (h.submergedBlockStrength > 0.66) return "submerged_block_field";
+    if (h.cliffWaterEdgeStrength > 0.64) return "hard_cliff_water_edge";
+    if (h.wetStoneStrength > 0.62) return "wet_stone_boundary";
+    if (h.sandShelfStrength > 0.62) return "sand_shelf_transition";
+    if (h.waterlineBoundaryStrength > 0.64) return "sea_level_waterline";
+
     const waterBoundary = classifyWaterBoundary(composition, tectonics, h);
     const coastBoundary = classifyCoastBoundary(composition, tectonics, h);
 
@@ -952,6 +1287,10 @@
   };
 
   const shorelineTypeFor = (composition, tectonics, h, coastBoundaryClass) => {
+    if (coastBoundaryClass === "hard_cliff_water_edge") return "hard_cliff_water_edge";
+    if (coastBoundaryClass === "wet_stone_boundary") return "wet_stone_boundary";
+    if (coastBoundaryClass === "sand_shelf_transition") return "sand_shelf_transition";
+    if (coastBoundaryClass === "sea_level_waterline") return "sea_level_waterline";
     if (coastBoundaryClass === "fjord_glacial_cut") return "fjord_glacial_cut";
     if (coastBoundaryClass === "storm_coast_boundary") return "storm_coast_boundary";
     if (coastBoundaryClass === "dry_rocky_coast") return "dry_rocky_coast";
@@ -961,12 +1300,17 @@
     if (coastBoundaryClass === "river_mouth_boundary") return "river_mouth";
     if (coastBoundaryClass === "waterfall_drainage_edge") return "waterfall_drainage_edge";
     if (coastBoundaryClass === "canyon_outflow_boundary") return "canyon_outflow";
+    if (h.beachCandidate) return "beach_waterline";
     if (h.shorelineSoftness > h.shorelineRoughness) return "soft_shelf_shoreline";
     if (h.shorelineRoughness > 0.48) return "rough_rocky_shoreline";
     return "coastal_transition";
   };
 
   const shelfTypeFor = (composition, h, waterBoundaryClass) => {
+    if (h.sandShelf) return "sand_shelf_transition";
+    if (h.shallowShelf) return "shallow_shelf";
+    if (waterBoundaryClass === "submerged_coastal_scar") return "submerged_scar_shelf";
+    if (waterBoundaryClass === "submerged_block_field") return "submerged_block_shelf";
     if (waterBoundaryClass === "archipelago_channel") return "broken_archipelago_shelf";
     if (waterBoundaryClass === "island_shelf_boundary") return "island_shelf";
     if (waterBoundaryClass === "reef_shelf_boundary") return "reef_shelf";
@@ -978,7 +1322,7 @@
   };
 
   const basinTypeFor = (composition, h) => {
-    if (h.oceanDepth > 0.64) return "deep_ocean_basin";
+    if (h.waterDepthClass === "deep") return "deep_ocean_basin";
     if (h.oceanContinuity > 0.46) return "open_ocean_basin";
     if (h.bayPotential > 0.44) return "coastal_bay_basin";
     if (h.wetlandPotential > 0.44) return "wetland_lowland_basin";
@@ -991,6 +1335,7 @@
     if (coastBoundaryClass === "canyon_outflow_boundary") return "canyon_outflow_boundary";
     if (coastBoundaryClass === "estuary_cut_boundary") return "estuary_cut_boundary";
     if (coastBoundaryClass === "river_mouth_boundary") return "river_mouth_boundary";
+    if (h.submergedScar) return "submerged_scar_drainage";
     if (h.deltaPotential > 0.50) return "delta_drainage";
     if (h.wetlandPotential > 0.48) return "wetland_drainage";
     if (h.drainagePotential > 0.44) return "general_drainage";
@@ -1032,11 +1377,12 @@
       drainageType,
 
       waterPresence: clamp01(
-        (composition.isWater ? 0.42 : 0) +
-        h.surfaceWaterPotential * 0.30 +
-        h.subsurfaceWaterPotential * 0.16 +
-        h.riverPotential * 0.06 +
-        h.wetlandPotential * 0.06
+        (composition.isWater ? 0.34 : 0) +
+        h.waterFillStrength * 0.28 +
+        h.surfaceWaterPotential * 0.20 +
+        h.subsurfaceWaterPotential * 0.10 +
+        h.riverPotential * 0.04 +
+        h.wetlandPotential * 0.04
       ),
 
       surfaceWaterPotential: h.surfaceWaterPotential,
@@ -1069,12 +1415,66 @@
       inletPotential: h.inletPotential,
       peninsulaEdgePotential: h.peninsulaEdgePotential,
 
+      seaLevel: h.seaLevel,
+      relativeSeaElevation: h.relativeSeaElevation,
+
+      belowSeaLevel: h.belowSeaLevel,
+      nearSeaLevel: h.nearSeaLevel,
+      aboveSeaLevel: h.aboveSeaLevel,
+
+      belowSeaLevelStrength: h.belowSeaLevelStrength,
+      nearSeaLevelStrength: h.nearSeaLevelStrength,
+      aboveSeaLevelStrength: h.aboveSeaLevelStrength,
+
+      waterFill: h.waterFill,
+      waterFillStrength: h.waterFillStrength,
+      waterDepth: h.waterDepth,
+      waterDepthClass: h.waterDepthClass,
+
+      waterlineBoundary: h.waterlineBoundary,
+      waterlineBoundaryStrength: h.waterlineBoundaryStrength,
+
+      shallowShelf: h.shallowShelf,
+      shallowShelfStrength: h.shallowShelfStrength,
+
+      beachCandidate: h.beachCandidate,
+      beachStrength: h.beachStrength,
+
+      sandShelf: h.sandShelf,
+      sandShelfStrength: h.sandShelfStrength,
+
+      hardCoastCandidate: h.hardCoastCandidate,
+      hardCoastStrength: h.hardCoastStrength,
+
+      cliffWaterEdge: h.cliffWaterEdge,
+      cliffWaterEdgeStrength: h.cliffWaterEdgeStrength,
+
+      submergedBlock: h.submergedBlock,
+      submergedBlockStrength: h.submergedBlockStrength,
+
+      submergedScar: h.submergedScar,
+      submergedScarStrength: h.submergedScarStrength,
+
+      wetStoneEdge: h.wetStoneEdge,
+      wetStoneStrength: h.wetStoneStrength,
+
+      oldCoastalTechSubmerged: h.oldCoastalTechSubmerged,
+      oldCoastalTechSubmergedStrength: h.oldCoastalTechSubmergedStrength,
+
       coastNaturalizationFeed: h.coastNaturalizationFeed,
       materialWaterFeed: h.materialWaterFeed,
       materialShelfFeed: h.materialShelfFeed,
       materialShoreFeed: h.materialShoreFeed,
       materialWetlandFeed: h.materialWetlandFeed,
       materialRiverFeed: h.materialRiverFeed,
+
+      materialBeachFeed: h.materialBeachFeed,
+      materialSandShelfFeed: h.materialSandShelfFeed,
+      materialWetStoneFeed: h.materialWetStoneFeed,
+      materialSubmergedBlockFeed: h.materialSubmergedBlockFeed,
+      materialSubmergedScarFeed: h.materialSubmergedScarFeed,
+      materialCliffWaterEdgeFeed: h.materialCliffWaterEdgeFeed,
+      materialWaterlineFeed: h.materialWaterlineFeed,
 
       compositionContract: composition.contract || "UNKNOWN_COMPOSITION_CONTRACT",
       compositionReceipt: composition.receipt || "UNKNOWN_COMPOSITION_RECEIPT",
@@ -1117,7 +1517,7 @@
     authority: "hydrology",
     status: "active",
     sourceAuthority: "hearth.composition.js + hearth.tectonics.js",
-    purpose: "coastal-boundary-naturalization-and-water-flow-field",
+    purpose: "sea-level-waterline-beach-boundary-and-submerged-structure-classification",
     requiredUpstream: [
       "hearth.composition.js",
       "hearth.tectonics.js"
@@ -1129,6 +1529,7 @@
     hydrologyClasses: HYDROLOGY_CLASSES.slice(),
     waterBoundaryClasses: WATER_BOUNDARY_CLASSES.slice(),
     coastBoundaryClasses: COAST_BOUNDARY_CLASSES.slice(),
+    seaLevel: SEA_LEVEL,
     exposedFields: [
       "hydrologyClass",
       "waterBoundaryClass",
@@ -1164,23 +1565,73 @@
       "bayPotential",
       "inletPotential",
       "peninsulaEdgePotential",
+      "seaLevel",
+      "relativeSeaElevation",
+      "belowSeaLevel",
+      "nearSeaLevel",
+      "aboveSeaLevel",
+      "belowSeaLevelStrength",
+      "nearSeaLevelStrength",
+      "aboveSeaLevelStrength",
+      "waterFill",
+      "waterFillStrength",
+      "waterDepth",
+      "waterDepthClass",
+      "waterlineBoundary",
+      "waterlineBoundaryStrength",
+      "shallowShelf",
+      "shallowShelfStrength",
+      "beachCandidate",
+      "beachStrength",
+      "sandShelf",
+      "sandShelfStrength",
+      "hardCoastCandidate",
+      "hardCoastStrength",
+      "cliffWaterEdge",
+      "cliffWaterEdgeStrength",
+      "submergedBlock",
+      "submergedBlockStrength",
+      "submergedScar",
+      "submergedScarStrength",
+      "wetStoneEdge",
+      "wetStoneStrength",
+      "oldCoastalTechSubmerged",
+      "oldCoastalTechSubmergedStrength",
       "coastNaturalizationFeed",
       "materialWaterFeed",
       "materialShelfFeed",
       "materialShoreFeed",
       "materialWetlandFeed",
-      "materialRiverFeed"
+      "materialRiverFeed",
+      "materialBeachFeed",
+      "materialSandShelfFeed",
+      "materialWetStoneFeed",
+      "materialSubmergedBlockFeed",
+      "materialSubmergedScarFeed",
+      "materialCliffWaterEdgeFeed",
+      "materialWaterlineFeed"
     ],
     designRules: [
-      "coastal lines become boundary seeds",
-      "coastline is transition zone, not drawn line",
-      "composition consumed first",
-      "tectonics consumed second",
-      "materials prepared but not rendered here",
+      "hydrology classifies sea-level truth",
+      "water defines the true coast",
+      "coastal blocks may be below sea level",
+      "visible scars may be submerged evidence",
+      "beaches derive from waterline plus shallow shelf plus shoreline softness",
+      "cliff water edges derive from waterline plus tectonic hardness",
+      "materials render later",
       "canvas held",
       "route held",
       "no final visual pass claim"
     ],
+    supportsCoastalBoundaryNaturalization: true,
+    supportsMaterialWaterFeed: true,
+    supportsMaterialShelfFeed: true,
+    supportsMaterialShoreFeed: true,
+    supportsHydrologyBoundaryClasses: true,
+    supportsSeaLevelWaterlineBoundary: true,
+    supportsBeachBoundaryClassification: true,
+    supportsSubmergedBlockClassification: true,
+    supportsSubmergedScarClassification: true,
     forbiddenOwnership: [
       "elevation-generation",
       "composition-classification",
@@ -1224,6 +1675,10 @@
     supportsMaterialShelfFeed: true,
     supportsMaterialShoreFeed: true,
     supportsHydrologyBoundaryClasses: true,
+    supportsSeaLevelWaterlineBoundary: true,
+    supportsBeachBoundaryClassification: true,
+    supportsSubmergedBlockClassification: true,
+    supportsSubmergedScarClassification: true,
 
     generatedImage: false,
     graphicBox: false,
@@ -1239,6 +1694,10 @@
   root.HEARTH_HYDROLOGY_RECEIPT = getReceipt();
   root.HEARTH_HYDROLOGY_CONTRACT = CONTRACT;
   root.HEARTH_HYDROLOGY_SUPPORTS_COASTAL_BOUNDARY_NATURALIZATION = true;
+  root.HEARTH_HYDROLOGY_SUPPORTS_SEA_LEVEL_WATERLINE_BOUNDARY = true;
+  root.HEARTH_HYDROLOGY_SUPPORTS_BEACH_BOUNDARY_CLASSIFICATION = true;
+  root.HEARTH_HYDROLOGY_SUPPORTS_SUBMERGED_BLOCK_CLASSIFICATION = true;
+  root.HEARTH_HYDROLOGY_SUPPORTS_SUBMERGED_SCAR_CLASSIFICATION = true;
 
   if (root.document && root.document.documentElement) {
     root.document.documentElement.dataset.hearthHydrologyAuthorityLoaded = "true";
@@ -1246,9 +1705,20 @@
     root.document.documentElement.dataset.hearthHydrologyReceipt = RECEIPT;
     root.document.documentElement.dataset.hearthHydrologyPreviousContract = PREVIOUS_CONTRACT;
     root.document.documentElement.dataset.hearthHydrologyCoastalBoundaryNaturalization = "true";
+    root.document.documentElement.dataset.hearthHydrologySeaLevelWaterlineBoundary = "true";
+    root.document.documentElement.dataset.hearthHydrologyBeachBoundaryClassification = "true";
+    root.document.documentElement.dataset.hearthHydrologySubmergedBlockClassification = "true";
+    root.document.documentElement.dataset.hearthHydrologySubmergedScarClassification = "true";
     root.document.documentElement.dataset.hearthHydrologyMaterialWaterFeed = "true";
     root.document.documentElement.dataset.hearthHydrologyMaterialShelfFeed = "true";
     root.document.documentElement.dataset.hearthHydrologyMaterialShoreFeed = "true";
+    root.document.documentElement.dataset.hearthHydrologyMaterialBeachFeed = "true";
+    root.document.documentElement.dataset.hearthHydrologyMaterialSandShelfFeed = "true";
+    root.document.documentElement.dataset.hearthHydrologyMaterialWetStoneFeed = "true";
+    root.document.documentElement.dataset.hearthHydrologyMaterialSubmergedBlockFeed = "true";
+    root.document.documentElement.dataset.hearthHydrologyMaterialSubmergedScarFeed = "true";
+    root.document.documentElement.dataset.hearthHydrologyMaterialCliffWaterEdgeFeed = "true";
+    root.document.documentElement.dataset.hearthHydrologyMaterialWaterlineFeed = "true";
     root.document.documentElement.dataset.generatedImage = "false";
     root.document.documentElement.dataset.graphicBox = "false";
     root.document.documentElement.dataset.webgl = "false";

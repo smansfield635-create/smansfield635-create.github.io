@@ -1,12 +1,12 @@
 // /assets/hearth/hearth.materials.js
-// HEARTH_AGED_TECH_COASTAL_BOUNDARY_MATERIALS_REFINEMENT_TNT_v2
+// HEARTH_AGED_TECH_COASTAL_SCAR_MORPHOLOGY_TNT_v3
 // Full-file replacement.
 // Materials authority only.
 // Purpose:
 // - Consume composition + tectonics + hydrology.
 // - Preserve canvas v7 compatibility.
-// - Refine aged-tech coastal boundaries so green dotted tracework becomes weathered carved coastal material.
-// - Preserve coastal evidence while reducing bead/glow/circuit behavior.
+// - Convert aged-tech coastal bead chains into broken carved coastal scar bodies.
+// - Preserve coastal evidence while reducing point-cell, bead-chain, glow, and circuit behavior.
 // Does not own:
 // - elevation generation
 // - composition classification
@@ -17,16 +17,17 @@
 // - controls
 // - route orchestration
 // - teleports
+// - clickable coastal objects
 // - final visual pass claim
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_AGED_TECH_COASTAL_BOUNDARY_MATERIALS_REFINEMENT_TNT_v2";
-  const RECEIPT = "HEARTH_AGED_TECH_COASTAL_BOUNDARY_MATERIALS_REFINEMENT_RECEIPT_v2";
-  const PREVIOUS_CONTRACT = "HEARTH_AGED_TECH_COASTAL_BOUNDARY_MATERIALS_TNT_v1";
-  const BASELINE_CONTRACT = "HEARTH_SEVEN_CONTINENT_REAL_PLANET_MATERIALS_TNT_v1";
-  const VERSION = "2026-05-28.hearth-aged-tech-coastal-boundary-materials-refinement-v2";
+  const CONTRACT = "HEARTH_AGED_TECH_COASTAL_SCAR_MORPHOLOGY_TNT_v3";
+  const RECEIPT = "HEARTH_AGED_TECH_COASTAL_SCAR_MORPHOLOGY_RECEIPT_v3";
+  const PREVIOUS_CONTRACT = "HEARTH_AGED_TECH_COASTAL_BOUNDARY_MATERIALS_REFINEMENT_TNT_v2";
+  const BASELINE_CONTRACT = "HEARTH_AGED_TECH_COASTAL_BOUNDARY_MATERIALS_TNT_v1";
+  const VERSION = "2026-05-28.hearth-aged-tech-coastal-scar-morphology-v3";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const DEG = Math.PI / 180;
@@ -63,11 +64,11 @@
   const MATERIAL_CLASS_MAP = Object.freeze({
     deep_ocean: "water.deep.ocean.body",
     ocean_basin: "water.ocean.basin.readable",
-    continental_shelf: "water.shelf.submerged.weathered",
-    archipelago_shelf: "water.shelf.archipelago.submerged-works",
-    continent_divide: "water.divide.ancient-carved-strait",
+    continental_shelf: "water.shelf.submerged.scar-shadow",
+    archipelago_shelf: "water.shelf.archipelago.broken-submerged-works",
+    continent_divide: "water.divide.ancient-carved-strait-scar",
     shallow_water: "water.shallow.weathered-coastal-transition",
-    coast_edge: "coast.refined-aged-carved-boundary",
+    coast_edge: "coast.carved-scar-morphology",
     continent_mass: "land.continent.embodied.mass",
     raised_land: "land.raised.general",
     plateau_interior: "land.plateau.dense.interior",
@@ -77,15 +78,15 @@
     canyon_corridor: "land.canyon.corridor.cut",
     cliff_escarpment: "land.cliff.escarpment.shadow",
     waterfall_escarpment: "land.waterfall.weathered-drainage-outlet",
-    island_arc: "land.island.arc.weathered-shelf",
+    island_arc: "land.island.arc.broken-shelf-scar",
     polar_icefield: "climate.polar.icefield",
     tundra_subpolar: "climate.tundra.subpolar",
     temperate_highland: "climate.temperate.highland",
-    temperate_coastal_storm: "coast.storm-weathered-works",
+    temperate_coastal_storm: "coast.storm-weathered-scar-works",
     rainforest_wet_basin: "climate.rainforest.wet.basin",
     monsoon_floodplain: "climate.monsoon.floodplain",
     arid_dry_plateau: "climate.arid.dry.plateau",
-    maritime_archipelago: "coast.maritime.old-submerged-channels",
+    maritime_archipelago: "coast.maritime.broken-submerged-channels",
     summit_region: "terrain.summit.region.overlay",
 
     continental_core: "compat.land.continental.core",
@@ -103,71 +104,71 @@
   });
 
   const TERRAIN_PALETTE = Object.freeze({
-    deep_ocean: [4, 13, 25],
-    ocean_basin: [7, 21, 36],
-    continental_shelf: [27, 54, 53],
-    archipelago_shelf: [29, 61, 54],
-    continent_divide: [7, 24, 33],
-    shallow_water: [29, 62, 61],
+    deep_ocean: [4, 12, 24],
+    ocean_basin: [7, 20, 35],
+    continental_shelf: [25, 49, 49],
+    archipelago_shelf: [27, 55, 50],
+    continent_divide: [7, 22, 31],
+    shallow_water: [27, 58, 57],
 
-    coast_edge: [73, 77, 57],
-    continent_mass: [108, 102, 66],
-    raised_land: [101, 100, 64],
-    plateau_interior: [123, 101, 63],
-    basin_floor: [66, 87, 54],
-    mountain_arc: [98, 95, 83],
-    alpine_ridge: [127, 135, 122],
-    canyon_corridor: [78, 53, 41],
-    cliff_escarpment: [63, 60, 55],
-    waterfall_escarpment: [87, 103, 94],
-    island_arc: [69, 104, 72],
+    coast_edge: [68, 72, 55],
+    continent_mass: [106, 101, 66],
+    raised_land: [98, 98, 63],
+    plateau_interior: [121, 99, 63],
+    basin_floor: [64, 84, 53],
+    mountain_arc: [96, 93, 82],
+    alpine_ridge: [124, 132, 120],
+    canyon_corridor: [75, 51, 40],
+    cliff_escarpment: [60, 58, 54],
+    waterfall_escarpment: [83, 98, 91],
+    island_arc: [67, 99, 70],
 
-    polar_icefield: [143, 160, 160],
-    tundra_subpolar: [98, 113, 94],
-    temperate_highland: [75, 107, 64],
-    temperate_coastal_storm: [49, 73, 69],
-    rainforest_wet_basin: [35, 86, 47],
-    monsoon_floodplain: [62, 96, 56],
-    arid_dry_plateau: [128, 101, 62],
-    maritime_archipelago: [50, 96, 77],
-    summit_region: [122, 116, 87],
+    polar_icefield: [140, 157, 158],
+    tundra_subpolar: [96, 111, 93],
+    temperate_highland: [73, 104, 63],
+    temperate_coastal_storm: [47, 69, 66],
+    rainforest_wet_basin: [34, 83, 46],
+    monsoon_floodplain: [60, 93, 55],
+    arid_dry_plateau: [125, 99, 62],
+    maritime_archipelago: [48, 92, 74],
+    summit_region: [119, 113, 86],
 
-    continental_core: [106, 101, 64],
-    raised_shield: [98, 99, 63],
-    coastal_shelf: [27, 58, 61],
-    exposed_bridge: [105, 97, 63],
-    submerged_bridge: [19, 49, 57],
-    ridge_corridor: [91, 86, 69],
-    shallow_saddle: [27, 58, 63],
-    cliff_candidate: [63, 60, 55],
-    valley_candidate: [60, 79, 53],
-    mountain_candidate: [98, 95, 81],
-    island_seed: [72, 101, 70],
-    deep_water: [4, 13, 25]
+    continental_core: [104, 99, 64],
+    raised_shield: [96, 97, 62],
+    coastal_shelf: [25, 53, 57],
+    exposed_bridge: [102, 95, 62],
+    submerged_bridge: [18, 45, 53],
+    ridge_corridor: [89, 84, 68],
+    shallow_saddle: [26, 55, 60],
+    cliff_candidate: [60, 58, 54],
+    valley_candidate: [58, 76, 52],
+    mountain_candidate: [96, 93, 80],
+    island_seed: [70, 96, 68],
+    deep_water: [4, 12, 24]
   });
 
   const CONTINENT_BASE = Object.freeze({
-    western_shield: [114, 109, 72],
-    eastern_basin: [89, 104, 65],
-    northern_cold: [108, 120, 112],
-    southern_harsh: [131, 104, 65],
-    equatorial_wet: [53, 103, 55],
-    mountain_arc: [108, 106, 92],
-    broken_archipelago: [70, 107, 77],
-    open_ocean: [7, 21, 36]
+    western_shield: [112, 107, 71],
+    eastern_basin: [87, 101, 64],
+    northern_cold: [106, 118, 111],
+    southern_harsh: [128, 102, 64],
+    equatorial_wet: [52, 99, 54],
+    mountain_arc: [105, 104, 91],
+    broken_archipelago: [68, 102, 75],
+    open_ocean: [7, 20, 35]
   });
 
   const CLIMATE_BIAS = Object.freeze({
-    polar_icefield: [25, 34, 35],
-    tundra_subpolar: [9, 14, 9],
-    temperate_highland: [-7, 16, -7],
-    temperate_coastal_storm: [-15, 3, 8],
-    rainforest_wet_basin: [-25, 29, -15],
-    monsoon_floodplain: [-13, 20, -7],
-    arid_dry_plateau: [22, 9, -15],
-    alpine_mountain_arc: [14, 14, 14],
-    maritime_archipelago: [-11, 18, 8],
-    open_ocean: [-3, 0, 5]
+    polar_icefield: [23, 31, 32],
+    tundra_subpolar: [8, 13, 8],
+    temperate_highland: [-7, 15, -7],
+    temperate_coastal_storm: [-14, 3, 7],
+    rainforest_wet_basin: [-23, 27, -14],
+    monsoon_floodplain: [-12, 18, -7],
+    arid_dry_plateau: [20, 8, -14],
+    alpine_mountain_arc: [13, 13, 13],
+    maritime_archipelago: [-10, 16, 7],
+    open_ocean: [-2, 0, 5]
   });
 
   const WATER_CLASSES = new Set([
@@ -247,6 +248,7 @@
 
   const scaleColor = (base, scalar) => {
     const s = Number.isFinite(Number(scalar)) ? Number(scalar) : 1;
+
     return [
       clamp(Math.round(base[0] * s), 0, 255),
       clamp(Math.round(base[1] * s), 0, 255),
@@ -321,15 +323,15 @@
   };
 
   const hashNoise = (x, y, z, salt = 0) => {
-    const n = Math.sin(x * 127.1 + y * 311.7 + z * 74.7 + salt * 59.19) * 43758.5453123;
+    const n = Math.sin(x * 127.1 + y * 311.7 + z * 74.7 + salt * 61.37) * 43758.5453123;
     return n - Math.floor(n);
   };
 
   const textureNoise = (p, salt = 0) => {
     const n1 = hashNoise(p.x, p.y, p.z, salt);
-    const n2 = hashNoise(p.y + n1, p.z - n1, p.x + n1, salt + 11);
-    const n3 = hashNoise(p.z - n2, p.x + n2, p.y - n2, salt + 29);
-    return clamp01(n1 * 0.46 + n2 * 0.34 + n3 * 0.20);
+    const n2 = hashNoise(p.y + n1, p.z - n1, p.x + n1, salt + 13);
+    const n3 = hashNoise(p.z - n2, p.x + n2, p.y - n2, salt + 31);
+    return clamp01(n1 * 0.44 + n2 * 0.34 + n3 * 0.22);
   };
 
   const numberField = (source, key, fallback = 0) => {
@@ -372,7 +374,7 @@
     const isLand = landSignal > 0.48;
 
     return {
-      contract: "HEARTH_MATERIALS_REFINEMENT_FALLBACK_COMPOSITION",
+      contract: "HEARTH_MATERIALS_MORPHOLOGY_FALLBACK_COMPOSITION",
       receipt: "FALLBACK_COMPOSITION_USED",
       worldTerrainClass: isLand ? "continent_mass" : "ocean_basin",
       expandedTerrainClass: isLand ? "continent_mass" : "ocean_basin",
@@ -424,6 +426,7 @@
 
   const normalizeComposition = (raw, p) => {
     const source = raw && typeof raw === "object" ? raw : fallbackComposition(p);
+
     const terrainClass =
       stringField(source, "worldTerrainClass") ||
       stringField(source, "expandedTerrainClass") ||
@@ -533,7 +536,7 @@
   };
 
   const fallbackTectonics = (composition) => ({
-    contract: "HEARTH_MATERIALS_REFINEMENT_FALLBACK_TECTONICS",
+    contract: "HEARTH_MATERIALS_MORPHOLOGY_FALLBACK_TECTONICS",
     receipt: "FALLBACK_TECTONICS_USED",
     tectonicClass: composition.isWater ? "open_ocean_basin" : "stable_continental_craton",
     plateClass: composition.isWater ? "oceanic_basin_plate" : "continental_plate",
@@ -548,13 +551,19 @@
     ridgeUplift: composition.ridgePotential * 0.55,
     canyonCutPressure: composition.canyonPotential * 0.56,
     faultCutPressure: composition.scarPotential * 0.50,
+    faultLinePressure: composition.scarPotential * 0.42,
+    fractureDensity: composition.archipelagoPotential * 0.36 + composition.scarPotential * 0.26,
+    scarPressure: composition.scarPotential * 0.48,
     cliffPressure: composition.escarpmentPotential * 0.56,
     escarpmentPressure: composition.escarpmentPotential * 0.60,
     shelfDropPressure: Math.max(composition.shelfDrop, composition.shelfPotential) * 0.52,
     coastalCompression: composition.coastPotential * 0.46,
+    basinCompression: composition.basinPotential * 0.42,
     basinSubsidence: composition.basinPotential * 0.52,
+    lowlandStress: composition.basinPotential * 0.40,
     archipelagoFracture: composition.archipelagoPotential * 0.60,
     islandArcPressure: composition.islandPotential * 0.54,
+    brokenShelfStress: composition.archipelagoPotential * 0.42,
     waterfallDropPressure: composition.waterfallCandidate * 0.58,
     drainageCutPotential: Math.max(composition.canyonPotential, composition.basinPotential) * 0.46,
     materialBodyFeed: composition.massAnchor * 0.48,
@@ -637,7 +646,7 @@
   };
 
   const fallbackHydrology = (composition, tectonics) => ({
-    contract: "HEARTH_MATERIALS_REFINEMENT_FALLBACK_HYDROLOGY",
+    contract: "HEARTH_MATERIALS_MORPHOLOGY_FALLBACK_HYDROLOGY",
     receipt: "FALLBACK_HYDROLOGY_USED",
     hydrologyClass: composition.isWater ? "open_ocean_basin" : "coastal_transition_zone",
     waterBoundaryClass: composition.isWater ? "open_ocean_basin" : "none",
@@ -664,11 +673,15 @@
     floodplainPotential: tectonics.basinSubsidence * 0.38,
     waterfallFlowPotential: tectonics.waterfallDropPressure * 0.58,
     canyonOutflowPotential: tectonics.canyonCutPressure * 0.52,
+    fjordCutPotential: 0,
+    stormSurgePotential: tectonics.coastalCompression * 0.36,
+    reefShelfPotential: composition.archipelagoPotential * 0.34,
     archipelagoChannelPotential: tectonics.archipelagoFracture * 0.58,
     islandWaterGap: tectonics.islandArcPressure * 0.46,
     straitPotential: tectonics.continentDivideStress * 0.52,
     bayPotential: composition.coastPotential * 0.28,
     inletPotential: tectonics.drainageCutPotential * 0.28,
+    peninsulaEdgePotential: composition.coastPotential * 0.22,
     coastNaturalizationFeed: Math.max(composition.coastPotential, composition.shelfPotential) * 0.48,
     materialWaterFeed: composition.waterDepthPotential * 0.48,
     materialShelfFeed: Math.max(composition.continentShelfPotential, composition.shelfPotential) * 0.52,
@@ -799,8 +812,8 @@
       const continentBase = CONTINENT_BASE[continentId] || TERRAIN_PALETTE.continent_mass;
       const climateBase = TERRAIN_PALETTE[climateClass] || TERRAIN_PALETTE.temperate_highland;
 
-      color = mixColor(color, continentBase, clamp01(composition.continentPotential * 0.36));
-      color = mixColor(color, climateBase, clamp01(numberField(composition, "climatePotential", 0.26) * 0.26));
+      color = mixColor(color, continentBase, clamp01(composition.continentPotential * 0.34));
+      color = mixColor(color, climateBase, clamp01(numberField(composition, "climatePotential", 0.24) * 0.24));
     }
 
     if (isWater) {
@@ -808,24 +821,24 @@
       const shelf = clamp01(Math.max(composition.continentShelfPotential, composition.shelfPotential));
 
       if (terrainClass === "deep_ocean") {
-        color = mixColor(color, [4, 12, 24], clamp01(depth * 0.48));
+        color = mixColor(color, [4, 11, 23], clamp01(depth * 0.50));
       } else if (terrainClass === "ocean_basin") {
-        color = mixColor(color, [7, 22, 38], 0.58);
+        color = mixColor(color, [7, 21, 37], 0.56);
       } else if (terrainClass === "continental_shelf" || terrainClass === "coastal_shelf") {
-        color = mixColor(color, [31, 58, 56], clamp01(0.30 + shelf * 0.18));
+        color = mixColor(color, [29, 53, 52], clamp01(0.28 + shelf * 0.16));
       } else if (terrainClass === "archipelago_shelf") {
-        color = mixColor(color, [31, 63, 56], clamp01(0.30 + shelf * 0.18));
+        color = mixColor(color, [30, 58, 52], clamp01(0.28 + shelf * 0.16));
       } else if (terrainClass === "continent_divide") {
-        color = mixColor(color, [7, 24, 34], 0.70);
+        color = mixColor(color, [7, 22, 31], 0.70);
       } else if (terrainClass === "shallow_water") {
-        color = mixColor(color, [31, 65, 64], 0.40);
+        color = mixColor(color, [29, 59, 58], 0.38);
       }
     }
 
     return color;
   };
 
-  const computeRefinedAgedTechFeeds = (composition, tectonics, hydrology, isLand, isWater) => {
+  const computeAgedFeeds = (composition, tectonics, hydrology, isLand, isWater) => {
     const coast = clamp01(Math.max(composition.coastPotential, composition.shorelineContact, hydrology.materialShoreFeed));
     const shelf = clamp01(Math.max(composition.continentShelfPotential, composition.shelfPotential, hydrology.shelfGradient, hydrology.materialShelfFeed));
     const divide = clamp01(Math.max(composition.continentSeparation, tectonics.continentDivideStress, hydrology.straitPotential));
@@ -840,117 +853,118 @@
     const depth = clamp01(Math.max(composition.waterDepthPotential, hydrology.oceanDepth, hydrology.materialWaterFeed));
 
     const boundaryBase = clamp01(
-      coast * 0.24 +
-      shelf * 0.16 +
+      coast * 0.22 +
+      shelf * 0.15 +
       divide * 0.13 +
       arch * 0.13 +
       drainage * 0.10 +
       cliff * 0.09 +
-      naturalization * 0.09 +
-      roughness * 0.06
+      naturalization * 0.10 +
+      roughness * 0.08
     );
 
     const agedCoastalTechFeed = clamp01(
-      boundaryBase * 0.62 +
-      roughness * 0.10 +
+      boundaryBase * 0.60 +
+      roughness * 0.11 +
       tectonics.materialShadowFeed * 0.10 +
-      hydrology.materialShoreFeed * 0.10 +
-      naturalization * 0.08
+      hydrology.materialShoreFeed * 0.09 +
+      naturalization * 0.10
     );
 
     const carvedCoastFeed = clamp01(
-      coast * 0.22 +
+      coast * 0.20 +
       cliff * 0.18 +
       canyon * 0.15 +
       divide * 0.13 +
       hydrology.inletPotential * 0.10 +
       hydrology.bayPotential * 0.07 +
-      roughness * 0.10
+      roughness * 0.11 +
+      tectonics.shelfDropPressure * 0.06
     );
 
     const weatheredInfrastructureFeed = clamp01(
-      agedCoastalTechFeed * 0.24 +
+      agedCoastalTechFeed * 0.22 +
       naturalization * 0.24 +
-      roughness * 0.16 +
+      roughness * 0.17 +
       wetland * 0.11 +
       tectonics.materialShadowFeed * 0.13 +
-      tectonics.materialDensityFeed * 0.12
+      tectonics.materialDensityFeed * 0.13
     );
 
     const ancientChannelFeed = clamp01(
       divide * 0.18 +
-      arch * 0.16 +
-      drainage * 0.18 +
-      canyon * 0.14 +
-      hydrology.straitPotential * 0.13 +
+      arch * 0.15 +
+      drainage * 0.17 +
+      canyon * 0.13 +
+      hydrology.straitPotential * 0.14 +
       hydrology.inletPotential * 0.10 +
-      hydrology.archipelagoChannelPotential * 0.11
+      hydrology.archipelagoChannelPotential * 0.13
     );
 
     const erodedHarborFeed = clamp01(
       hydrology.bayPotential * 0.22 +
       hydrology.inletPotential * 0.18 +
       hydrology.estuaryPotential * 0.14 +
-      coast * 0.13 +
+      coast * 0.12 +
       shelf * 0.11 +
-      naturalization * 0.12 +
+      naturalization * 0.13 +
       wetland * 0.10
     );
 
     const mineralizedCutFeed = clamp01(
       cliff * 0.16 +
       canyon * 0.14 +
-      shelf * 0.14 +
-      coast * 0.13 +
+      shelf * 0.13 +
+      coast * 0.12 +
       tectonics.shelfDropPressure * 0.12 +
       tectonics.continentEdgeCompression * 0.10 +
-      roughness * 0.11 +
-      agedCoastalTechFeed * 0.10
+      roughness * 0.12 +
+      agedCoastalTechFeed * 0.11
     );
 
     const reclaimedStructureFeed = clamp01(
-      weatheredInfrastructureFeed * 0.26 +
+      weatheredInfrastructureFeed * 0.25 +
       wetland * 0.18 +
       naturalization * 0.22 +
-      hydrology.materialWetlandFeed * 0.14 +
+      hydrology.materialWetlandFeed * 0.13 +
       hydrology.materialRiverFeed * 0.10 +
-      isLand * composition.landPotential * 0.10
+      isLand * composition.landPotential * 0.12
     );
 
     const oldDrainageGateFeed = clamp01(
       drainage * 0.22 +
-      hydrology.riverPotential * 0.17 +
-      hydrology.estuaryPotential * 0.15 +
+      hydrology.riverPotential * 0.16 +
+      hydrology.estuaryPotential * 0.14 +
       hydrology.deltaPotential * 0.13 +
       waterfall * 0.11 +
       canyon * 0.10 +
-      coast * 0.12
+      coast * 0.14
     );
 
     const submergedWorksFeed = clamp01(
       isWater * (
-        shelf * 0.26 +
+        shelf * 0.25 +
         arch * 0.16 +
         divide * 0.13 +
         hydrology.materialWaterFeed * 0.14 +
-        depth * 0.13 +
+        depth * 0.14 +
         weatheredInfrastructureFeed * 0.18
       )
     );
 
     const artificialNaturalBlend = clamp01(
-      agedCoastalTechFeed * 0.28 +
-      naturalization * 0.25 +
+      agedCoastalTechFeed * 0.26 +
+      naturalization * 0.26 +
       reclaimedStructureFeed * 0.18 +
       mineralizedCutFeed * 0.11 +
-      submergedWorksFeed * 0.10 +
+      submergedWorksFeed * 0.11 +
       oldDrainageGateFeed * 0.08
     );
 
     const submergedShadowBand = clamp01(
       submergedWorksFeed * 0.30 +
-      shelf * 0.20 +
-      depth * 0.16 +
+      shelf * 0.19 +
+      depth * 0.17 +
       divide * 0.10 +
       arch * 0.08 +
       weatheredInfrastructureFeed * 0.10 +
@@ -978,9 +992,9 @@
 
     const beadSuppression = clamp01(
       artificialNaturalBlend * 0.28 +
-      weatheredInfrastructureFeed * 0.24 +
+      weatheredInfrastructureFeed * 0.23 +
       reclaimedSurfaceBand * 0.18 +
-      submergedShadowBand * 0.14 +
+      submergedShadowBand * 0.15 +
       naturalization * 0.10 +
       roughness * 0.06
     );
@@ -988,10 +1002,126 @@
     const greenGlowSuppression = clamp01(
       weatheredInfrastructureFeed * 0.28 +
       artificialNaturalBlend * 0.22 +
-      submergedShadowBand * 0.16 +
+      submergedShadowBand * 0.17 +
       mineralizedCutFeed * 0.12 +
-      reclaimedSurfaceBand * 0.12 +
+      reclaimedSurfaceBand * 0.11 +
       depth * 0.10
+    );
+
+    const scarClusterStrength = clamp01(
+      agedCoastalTechFeed * 0.20 +
+      ancientChannelFeed * 0.18 +
+      erodedHarborFeed * 0.15 +
+      hydrology.archipelagoChannelPotential * 0.12 +
+      hydrology.straitPotential * 0.12 +
+      coast * 0.10 +
+      shelf * 0.08 +
+      roughness * 0.05
+    );
+
+    const isolatedBeadSuppression = clamp01(
+      beadSuppression * 0.34 +
+      greenGlowSuppression * 0.22 +
+      artificialNaturalBlend * 0.18 +
+      (1 - scarClusterStrength) * 0.16 +
+      submergedShadowBand * 0.10
+    );
+
+    const coastalScarContinuity = clamp01(
+      coast * 0.20 +
+      hydrology.materialShoreFeed * 0.16 +
+      carvedCoastFeed * 0.16 +
+      mineralizedCutFeed * 0.12 +
+      tectonics.continentEdgeCompression * 0.10 +
+      tectonics.shelfDropPressure * 0.10 +
+      scarClusterStrength * 0.10 +
+      ancientChannelFeed * 0.06
+    );
+
+    const scarBandWidth = clamp01(
+      hydrology.shelfGradient * 0.18 +
+      hydrology.coastalBlendWidth * 0.16 +
+      hydrology.shorelineSoftness * 0.12 +
+      submergedWorksFeed * 0.14 +
+      mineralizedCutFeed * 0.12 +
+      weatheredCutBand * 0.12 +
+      reclaimedSurfaceBand * 0.10 +
+      coastalScarContinuity * 0.06
+    );
+
+    const submergedShadowWake = clamp01(
+      submergedWorksFeed * 0.22 +
+      hydrology.materialWaterFeed * 0.16 +
+      hydrology.materialShelfFeed * 0.14 +
+      hydrology.oceanDepth * 0.14 +
+      submergedShadowBand * 0.18 +
+      hydrology.straitPotential * 0.08 +
+      hydrology.archipelagoChannelPotential * 0.08
+    );
+
+    const mineralizedEdgeBody = clamp01(
+      mineralizedCutFeed * 0.24 +
+      carvedCoastFeed * 0.18 +
+      tectonics.cliffPressure * 0.12 +
+      tectonics.shelfDropPressure * 0.12 +
+      weatheredCutBand * 0.18 +
+      coastalScarContinuity * 0.10 +
+      scarClusterStrength * 0.06
+    );
+
+    const reclaimedEdgeBlend = clamp01(
+      reclaimedStructureFeed * 0.22 +
+      artificialNaturalBlend * 0.20 +
+      hydrology.coastNaturalizationFeed * 0.16 +
+      hydrology.shorelineSoftness * 0.12 +
+      hydrology.wetlandPotential * 0.10 +
+      hydrology.materialWetlandFeed * 0.10 +
+      hydrology.materialRiverFeed * 0.06 +
+      hydrology.deltaPotential * 0.04
+    );
+
+    const harborScarBasin = clamp01(
+      hydrology.bayPotential * 0.20 +
+      hydrology.inletPotential * 0.18 +
+      erodedHarborFeed * 0.18 +
+      hydrology.estuaryPotential * 0.14 +
+      hydrology.deltaPotential * 0.10 +
+      reclaimedEdgeBlend * 0.10 +
+      scarBandWidth * 0.10
+    );
+
+    const channelScarContinuity = clamp01(
+      ancientChannelFeed * 0.22 +
+      hydrology.straitPotential * 0.18 +
+      hydrology.drainagePotential * 0.14 +
+      hydrology.canyonOutflowPotential * 0.12 +
+      tectonics.continentDivideStress * 0.12 +
+      oldDrainageGateFeed * 0.10 +
+      submergedShadowWake * 0.08 +
+      scarClusterStrength * 0.04
+    );
+
+    const archipelagoScarBreakup = clamp01(
+      hydrology.archipelagoChannelPotential * 0.22 +
+      hydrology.islandWaterGap * 0.18 +
+      tectonics.archipelagoFracture * 0.18 +
+      tectonics.islandArcPressure * 0.12 +
+      tectonics.brokenShelfStress * 0.10 +
+      submergedWorksFeed * 0.10 +
+      scarBandWidth * 0.06 +
+      roughness * 0.04
+    );
+
+    const boundaryMorphologyFeed = clamp01(
+      coastalScarContinuity * 0.16 +
+      scarBandWidth * 0.14 +
+      submergedShadowWake * 0.14 +
+      mineralizedEdgeBody * 0.12 +
+      reclaimedEdgeBlend * 0.12 +
+      scarClusterStrength * 0.10 +
+      harborScarBasin * 0.08 +
+      channelScarContinuity * 0.08 +
+      archipelagoScarBreakup * 0.06
     );
 
     return {
@@ -1009,7 +1139,18 @@
       weatheredCutBand,
       reclaimedSurfaceBand,
       beadSuppression,
-      greenGlowSuppression
+      greenGlowSuppression,
+      coastalScarContinuity,
+      scarBandWidth,
+      submergedShadowWake,
+      mineralizedEdgeBody,
+      reclaimedEdgeBlend,
+      isolatedBeadSuppression,
+      scarClusterStrength,
+      harborScarBasin,
+      channelScarContinuity,
+      archipelagoScarBreakup,
+      boundaryMorphologyFeed
     };
   };
 
@@ -1019,44 +1160,52 @@
     const shelf = clamp01(Math.max(composition.continentShelfPotential, composition.shelfPotential, hydrology.shelfGradient));
     let c = rgb.slice();
 
-    c = scaleColor(c, 1.025 + noise * 0.025);
+    c = scaleColor(c, 1.018 + noise * 0.020);
 
     if (terrainClass === "deep_ocean") {
-      c = mixColor(c, [4, 11, 23], clamp01(depth * 0.52));
+      c = mixColor(c, [4, 10, 22], clamp01(depth * 0.54));
     }
 
     if (terrainClass === "ocean_basin") {
-      c = mixColor(c, [7, 22, 38], 0.50);
-      c = addColor(c, [1, 3, 5], noise * 0.18);
+      c = mixColor(c, [6, 20, 36], 0.52);
+      c = addColor(c, [1, 2, 4], noise * 0.14);
     }
 
     if (terrainClass === "continent_divide") {
-      c = mixColor(c, [7, 23, 31], clamp01(0.56 + feeds.ancientChannelFeed * 0.16));
-      c = mixColor(c, [20, 31, 28], clamp01(feeds.submergedShadowBand * 0.10));
-      c = addColor(c, [4, 3, -2], feeds.mineralizedCutFeed * 0.07);
+      c = mixColor(c, [7, 21, 29], clamp01(0.58 + feeds.channelScarContinuity * 0.18));
+      c = mixColor(c, [18, 29, 28], clamp01(feeds.submergedShadowWake * 0.14));
+      c = mixColor(c, [35, 37, 29], clamp01(feeds.mineralizedEdgeBody * 0.06));
     }
 
     if (terrainClass === "continental_shelf" || terrainClass === "coastal_shelf") {
-      c = mixColor(c, [30, 56, 54], clamp01(0.32 + shelf * 0.18));
-      c = mixColor(c, [33, 45, 39], clamp01(feeds.submergedShadowBand * 0.16));
-      c = mixColor(c, [45, 50, 39], clamp01(feeds.weatheredCutBand * 0.08));
-      c = addColor(c, [5, 3, -3], feeds.mineralizedCutFeed * 0.08);
+      c = mixColor(c, [28, 51, 50], clamp01(0.30 + shelf * 0.16));
+      c = mixColor(c, [25, 36, 35], clamp01(feeds.submergedShadowWake * 0.18));
+      c = mixColor(c, [44, 45, 36], clamp01(feeds.mineralizedEdgeBody * 0.07));
+      c = mixColor(c, [32, 43, 38], clamp01(feeds.reclaimedEdgeBlend * 0.08));
     }
 
     if (terrainClass === "archipelago_shelf" || hydrology.waterBoundaryClass === "archipelago_channel") {
-      c = mixColor(c, [30, 62, 54], clamp01(0.28 + shelf * 0.16 + hydrology.archipelagoChannelPotential * 0.12));
-      c = mixColor(c, [37, 48, 39], clamp01(feeds.submergedWorksFeed * 0.14));
-      c = mixColor(c, [24, 39, 38], clamp01(feeds.beadSuppression * 0.08));
+      c = mixColor(c, [28, 56, 51], clamp01(0.26 + shelf * 0.14 + hydrology.archipelagoChannelPotential * 0.10));
+      c = mixColor(c, [28, 39, 36], clamp01(feeds.archipelagoScarBreakup * 0.18));
+      c = mixColor(c, [23, 35, 35], clamp01(feeds.submergedShadowWake * 0.12));
     }
 
     if (terrainClass === "shallow_water") {
-      c = mixColor(c, [30, 61, 59], clamp01(0.26 + shelf * 0.14));
-      c = mixColor(c, [35, 47, 41], clamp01(feeds.weatheredInfrastructureFeed * 0.10));
+      c = mixColor(c, [28, 56, 55], clamp01(0.24 + shelf * 0.12));
+      c = mixColor(c, [31, 42, 38], clamp01(feeds.reclaimedEdgeBlend * 0.10));
+      c = mixColor(c, [22, 34, 34], clamp01(feeds.submergedShadowWake * 0.10));
     }
 
-    c = mixColor(c, [3, 9, 20], clamp01(depth * 0.13 + feeds.submergedShadowBand * 0.10));
-    c = mixColor(c, [21, 34, 33], clamp01(feeds.greenGlowSuppression * 0.08));
-    c = addColor(c, [4, 3, -3], clamp01(feeds.weatheredCutBand * 0.05));
+    if (feeds.harborScarBasin > 0.18) {
+      c = mixColor(c, [21, 31, 30], clamp01(feeds.harborScarBasin * 0.10));
+    }
+
+    if (feeds.isolatedBeadSuppression > 0.18) {
+      c = mixColor(c, [15, 27, 28], clamp01(feeds.isolatedBeadSuppression * 0.08));
+    }
+
+    c = mixColor(c, [3, 9, 19], clamp01(depth * 0.12 + feeds.submergedShadowWake * 0.12));
+    c = addColor(c, [3, 2, -2], clamp01(feeds.mineralizedEdgeBody * 0.04));
 
     return c;
   };
@@ -1076,104 +1225,107 @@
 
     let c = rgb.slice();
 
-    c = mixColor(c, CONTINENT_BASE[continentId] || TERRAIN_PALETTE.continent_mass, clamp01(composition.continentPotential * 0.34));
-    c = addColor(c, climateBias, clamp01(0.12 + numberField(composition, "climatePotential", 0.18) * 0.18));
+    c = mixColor(c, CONTINENT_BASE[continentId] || TERRAIN_PALETTE.continent_mass, clamp01(composition.continentPotential * 0.32));
+    c = addColor(c, climateBias, clamp01(0.11 + numberField(composition, "climatePotential", 0.16) * 0.16));
     c = addColor(c, [
-      Math.round((noise - 0.50) * 12),
-      Math.round((noise - 0.50) * 12),
-      Math.round((noise - 0.50) * 9)
-    ], 0.64);
+      Math.round((noise - 0.50) * 10),
+      Math.round((noise - 0.50) * 10),
+      Math.round((noise - 0.50) * 8)
+    ], 0.58);
 
     if (terrainClass === "continent_mass" || terrainClass === "raised_land") {
-      c = addColor(c, [7, 7, 2], clamp01(mass * 0.25 + density * 0.16));
+      c = addColor(c, [6, 6, 2], clamp01(mass * 0.22 + density * 0.14));
     }
 
     if (terrainClass === "coast_edge" || shore > 0.34) {
-      c = mixColor(c, [66, 70, 54], clamp01(0.20 + shore * 0.20));
-      c = mixColor(c, [45, 52, 47], clamp01(feeds.submergedShadowBand * 0.16));
-      c = mixColor(c, [73, 70, 52], clamp01(feeds.weatheredCutBand * 0.10));
-      c = mixColor(c, [53, 61, 51], clamp01(feeds.reclaimedSurfaceBand * 0.12));
-      c = addColor(c, [8, 5, -4], clamp01(feeds.mineralizedCutFeed * 0.08));
+      c = mixColor(c, [62, 67, 53], clamp01(0.18 + shore * 0.18));
+      c = mixColor(c, [37, 46, 43], clamp01(feeds.submergedShadowWake * 0.16));
+      c = mixColor(c, [68, 64, 50], clamp01(feeds.mineralizedEdgeBody * 0.10));
+      c = mixColor(c, [49, 58, 50], clamp01(feeds.reclaimedEdgeBlend * 0.12));
+      c = mixColor(c, [47, 48, 42], clamp01(feeds.coastalScarContinuity * 0.08));
     }
 
     if (terrainClass === "plateau_interior" || climateClass === "arid_dry_plateau") {
-      c = mixColor(c, [126, 101, 63], clamp01(0.20 + composition.plateauPotential * 0.24));
+      c = mixColor(c, [123, 99, 62], clamp01(0.18 + composition.plateauPotential * 0.22));
     }
 
     if (terrainClass === "basin_floor" || climateClass === "rainforest_wet_basin" || climateClass === "monsoon_floodplain") {
-      c = mixColor(c, [55, 86, 52], clamp01(0.18 + composition.basinPotential * 0.26 + wetland * 0.14));
-      c = mixColor(c, [47, 68, 48], clamp01(wetland * 0.12 + feeds.reclaimedSurfaceBand * 0.08));
+      c = mixColor(c, [53, 82, 51], clamp01(0.17 + composition.basinPotential * 0.24 + wetland * 0.12));
+      c = mixColor(c, [44, 64, 47], clamp01(wetland * 0.12 + feeds.reclaimedEdgeBlend * 0.08));
     }
 
     if (terrainClass === "mountain_arc" || terrainClass === "alpine_ridge" || climateClass === "alpine_mountain_arc") {
-      c = mixColor(c, [109, 108, 98], clamp01(0.18 + tectonics.ridgeUplift * 0.24 + relief * 0.14));
-      c = mixColor(c, [58, 58, 55], clamp01(tectonics.materialShadowFeed * 0.08));
+      c = mixColor(c, [106, 105, 96], clamp01(0.17 + tectonics.ridgeUplift * 0.22 + relief * 0.13));
+      c = mixColor(c, [55, 56, 54], clamp01(tectonics.materialShadowFeed * 0.08));
     }
 
     if (terrainClass === "canyon_corridor") {
-      c = mixColor(c, [75, 51, 40], clamp01(0.30 + tectonics.canyonCutPressure * 0.22));
-      c = mixColor(c, [44, 35, 30], clamp01(tectonics.materialShadowFeed * 0.10 + feeds.carvedCoastFeed * 0.08));
+      c = mixColor(c, [72, 50, 39], clamp01(0.28 + tectonics.canyonCutPressure * 0.20));
+      c = mixColor(c, [40, 33, 29], clamp01(tectonics.materialShadowFeed * 0.10 + feeds.channelScarContinuity * 0.10));
     }
 
     if (terrainClass === "cliff_escarpment") {
-      c = mixColor(c, [61, 58, 54], clamp01(0.30 + tectonics.cliffPressure * 0.22));
-      c = mixColor(c, [42, 44, 40], clamp01(feeds.carvedCoastFeed * 0.13 + feeds.submergedShadowBand * 0.09));
+      c = mixColor(c, [58, 56, 52], clamp01(0.28 + tectonics.cliffPressure * 0.20));
+      c = mixColor(c, [38, 41, 39], clamp01(feeds.coastalScarContinuity * 0.12 + feeds.submergedShadowWake * 0.10));
     }
 
     if (terrainClass === "waterfall_escarpment" || hydrology.coastBoundaryClass === "waterfall_drainage_edge") {
-      c = mixColor(c, [84, 98, 91], clamp01(0.24 + hydrology.waterfallFlowPotential * 0.20));
-      c = mixColor(c, [52, 62, 56], clamp01(feeds.oldDrainageGateFeed * 0.14));
-      c = addColor(c, [5, 6, 3], clamp01(feeds.mineralizedCutFeed * 0.06));
+      c = mixColor(c, [80, 94, 88], clamp01(0.22 + hydrology.waterfallFlowPotential * 0.18));
+      c = mixColor(c, [46, 56, 52], clamp01(feeds.oldDrainageGateFeed * 0.13 + feeds.channelScarContinuity * 0.08));
+      c = addColor(c, [4, 5, 2], clamp01(feeds.mineralizedEdgeBody * 0.05));
     }
 
     if (terrainClass === "island_arc" || climateClass === "maritime_archipelago") {
-      c = mixColor(c, [68, 104, 75], clamp01(0.16 + composition.archipelagoPotential * 0.20 + hydrology.archipelagoChannelPotential * 0.14));
-      c = mixColor(c, [48, 60, 50], clamp01(feeds.submergedWorksFeed * 0.12));
-      c = addColor(c, [5, 4, -4], clamp01(feeds.weatheredCutBand * 0.07));
+      c = mixColor(c, [65, 99, 73], clamp01(0.15 + composition.archipelagoPotential * 0.18 + hydrology.archipelagoChannelPotential * 0.12));
+      c = mixColor(c, [42, 55, 48], clamp01(feeds.archipelagoScarBreakup * 0.14));
+      c = mixColor(c, [31, 43, 42], clamp01(feeds.submergedShadowWake * 0.10));
     }
 
     if (terrainClass === "polar_icefield") {
-      c = mixColor(c, [143, 160, 160], 0.56);
+      c = mixColor(c, [140, 157, 158], 0.54);
     }
 
     if (terrainClass === "tundra_subpolar") {
-      c = mixColor(c, [97, 112, 94], 0.42);
+      c = mixColor(c, [95, 110, 93], 0.40);
     }
 
     if (terrainClass === "temperate_coastal_storm" || hydrology.coastBoundaryClass === "storm_coast_boundary") {
-      c = mixColor(c, [48, 70, 67], 0.38);
-      c = mixColor(c, [42, 48, 43], clamp01(feeds.weatheredInfrastructureFeed * 0.14));
+      c = mixColor(c, [45, 66, 63], 0.36);
+      c = mixColor(c, [38, 45, 42], clamp01(feeds.weatheredInfrastructureFeed * 0.13 + feeds.submergedShadowWake * 0.08));
     }
 
     if (river > 0.18) {
-      c = mixColor(c, [45, 75, 62], clamp01(river * 0.10));
-      c = mixColor(c, [39, 52, 47], clamp01(feeds.oldDrainageGateFeed * 0.08));
+      c = mixColor(c, [42, 70, 59], clamp01(river * 0.09));
+      c = mixColor(c, [36, 49, 45], clamp01(feeds.oldDrainageGateFeed * 0.08));
     }
 
-    if (feeds.agedCoastalTechFeed > 0.18) {
-      c = mixColor(c, [58, 64, 52], clamp01(feeds.weatheredInfrastructureFeed * 0.12));
-      c = mixColor(c, [70, 67, 51], clamp01(feeds.weatheredCutBand * 0.10));
-      c = mixColor(c, [42, 50, 45], clamp01(feeds.submergedShadowBand * 0.12));
-      c = addColor(c, [7, 5, -4], clamp01(feeds.mineralizedCutFeed * 0.07));
+    if (feeds.harborScarBasin > 0.20) {
+      c = mixColor(c, [45, 55, 47], clamp01(feeds.harborScarBasin * 0.08));
     }
 
-    if (feeds.beadSuppression > 0.20) {
-      c = mixColor(c, [49, 56, 49], clamp01(feeds.beadSuppression * 0.08));
+    if (feeds.boundaryMorphologyFeed > 0.18) {
+      c = mixColor(c, [46, 53, 47], clamp01(feeds.boundaryMorphologyFeed * 0.08));
+      c = mixColor(c, [64, 61, 48], clamp01(feeds.mineralizedEdgeBody * 0.07));
+      c = mixColor(c, [35, 44, 42], clamp01(feeds.submergedShadowWake * 0.10));
+    }
+
+    if (feeds.isolatedBeadSuppression > 0.20) {
+      c = mixColor(c, [44, 51, 46], clamp01(feeds.isolatedBeadSuppression * 0.08));
     }
 
     if (composition.summitClass && composition.summitClass !== "none" && composition.summitPotential > 0.52) {
-      c = mixColor(c, [121, 115, 86], clamp01((composition.summitPotential - 0.48) * 0.20));
+      c = mixColor(c, [118, 112, 85], clamp01((composition.summitPotential - 0.48) * 0.18));
     }
 
     const bodyLift = clamp(
-      1.035 +
-        mass * 0.09 +
-        density * 0.06 +
-        relief * 0.03 -
-        shore * 0.018 -
-        feeds.greenGlowSuppression * 0.015,
-      0.93,
-      1.18
+      1.028 +
+        mass * 0.085 +
+        density * 0.055 +
+        relief * 0.028 -
+        shore * 0.016 -
+        feeds.isolatedBeadSuppression * 0.014,
+      0.92,
+      1.16
     );
 
     return scaleColor(c, bodyLift);
@@ -1191,63 +1343,68 @@
     const shadow = clamp01(Math.max(composition.underlandShadow, tectonics.materialShadowFeed));
 
     const terrainRelief = clamp01(
-      relief * 0.40 +
-      ridge * 0.18 +
-      tectonics.canyonCutPressure * 0.14 +
-      tectonics.cliffPressure * 0.12 +
-      tectonics.waterfallDropPressure * 0.08 +
-      feeds.weatheredCutBand * 0.08
+      relief * 0.38 +
+      ridge * 0.17 +
+      tectonics.canyonCutPressure * 0.13 +
+      tectonics.cliffPressure * 0.11 +
+      tectonics.waterfallDropPressure * 0.07 +
+      feeds.mineralizedEdgeBody * 0.08 +
+      feeds.boundaryMorphologyFeed * 0.06
     );
 
     const ridgeRelief = clamp01(
-      ridge * 0.40 +
-      relief * 0.16 +
-      tectonics.ridgeUplift * 0.18 +
+      ridge * 0.39 +
+      relief * 0.15 +
+      tectonics.ridgeUplift * 0.17 +
       composition.summitPotential * 0.08
     );
 
     const basinShade = clamp01(
-      basin * 0.32 +
-      depth * 0.18 +
-      hydrology.materialWetlandFeed * 0.14 +
-      feeds.submergedShadowBand * 0.10 +
-      (terrainClass === "basin_floor" ? 0.20 : 0)
+      basin * 0.30 +
+      depth * 0.17 +
+      hydrology.materialWetlandFeed * 0.13 +
+      feeds.submergedShadowWake * 0.12 +
+      feeds.harborScarBasin * 0.06 +
+      (terrainClass === "basin_floor" ? 0.18 : 0)
     );
 
     const shorelineGrounding = clamp01(
-      coast * 0.26 +
-      shelf * 0.16 +
-      hydrology.coastNaturalizationFeed * 0.20 +
-      feeds.carvedCoastFeed * 0.12 +
-      feeds.reclaimedStructureFeed * 0.12 +
-      feeds.submergedShadowBand * 0.08
+      coast * 0.23 +
+      shelf * 0.14 +
+      hydrology.coastNaturalizationFeed * 0.18 +
+      feeds.coastalScarContinuity * 0.15 +
+      feeds.reclaimedEdgeBlend * 0.12 +
+      feeds.submergedShadowWake * 0.10 +
+      feeds.scarBandWidth * 0.08
     );
 
     const shelfTransition = clamp01(
-      shelf * 0.30 +
-      hydrology.coastalBlendWidth * 0.16 +
-      hydrology.shorelineSoftness * 0.12 +
-      feeds.submergedWorksFeed * 0.12 +
+      shelf * 0.27 +
+      hydrology.coastalBlendWidth * 0.14 +
+      hydrology.shorelineSoftness * 0.10 +
+      feeds.submergedWorksFeed * 0.11 +
       feeds.ancientChannelFeed * 0.08 +
-      feeds.submergedShadowBand * 0.10
+      feeds.submergedShadowWake * 0.14 +
+      feeds.scarBandWidth * 0.08
     );
 
     const contactShadow = clamp01(
-      shadow * 0.26 +
-      tectonics.cliffPressure * 0.13 +
-      tectonics.canyonCutPressure * 0.11 +
-      shorelineGrounding * 0.12 +
-      feeds.weatheredInfrastructureFeed * 0.12 +
-      feeds.mineralizedCutFeed * 0.08 +
-      feeds.submergedShadowBand * 0.10
+      shadow * 0.24 +
+      tectonics.cliffPressure * 0.12 +
+      tectonics.canyonCutPressure * 0.10 +
+      shorelineGrounding * 0.11 +
+      feeds.weatheredInfrastructureFeed * 0.10 +
+      feeds.mineralizedEdgeBody * 0.09 +
+      feeds.submergedShadowWake * 0.14 +
+      feeds.boundaryMorphologyFeed * 0.10
     );
 
     const landDensity = isLand
-      ? clamp01(0.51 + mass * 0.17 + density * 0.13 + terrainRelief * 0.08 + feeds.weatheredCutBand * 0.03)
+      ? clamp01(0.50 + mass * 0.16 + density * 0.12 + terrainRelief * 0.08 + feeds.boundaryMorphologyFeed * 0.03)
       : 0;
 
     const waterDepthShade = isWater
-      ? clamp01(depth * 0.54 + basinShade * 0.18 + hydrology.materialWaterFeed * 0.10 + feeds.submergedShadowBand * 0.10)
+      ? clamp01(depth * 0.52 + basinShade * 0.18 + hydrology.materialWaterFeed * 0.10 + feeds.submergedShadowWake * 0.12)
       : 0;
 
     return {
@@ -1258,20 +1415,20 @@
       landDensity,
       shorelineGrounding,
       contactShadow,
-      underlandOcclusion: clamp01(shadow * 0.34 + shorelineGrounding * 0.22 + shelf * 0.10 + feeds.reclaimedStructureFeed * 0.08 + feeds.submergedShadowBand * 0.08),
+      underlandOcclusion: clamp01(shadow * 0.32 + shorelineGrounding * 0.21 + shelf * 0.09 + feeds.reclaimedEdgeBlend * 0.09 + feeds.submergedShadowWake * 0.10),
       shelfTransition,
       terrainRelief,
       ridgeRelief,
       basinShade,
-      rimDarkening: clamp01(composition.rimCompression * 0.26 + terrainRelief * 0.10 + depth * 0.08),
-      rimCompression: clamp01(composition.rimCompression * 0.48 + mass * 0.12 + relief * 0.08),
+      rimDarkening: clamp01(composition.rimCompression * 0.25 + terrainRelief * 0.09 + depth * 0.08),
+      rimCompression: clamp01(composition.rimCompression * 0.46 + mass * 0.12 + relief * 0.08),
       atmosphereSeparation: isLand
-        ? clamp01(0.43 + mass * 0.17 + terrainRelief * 0.08)
+        ? clamp01(0.42 + mass * 0.16 + terrainRelief * 0.08)
         : clamp01(0.12 + depth * 0.10),
-      surfaceAttachment: clamp01(composition.surfaceAttachment * 0.60 + mass * 0.16 + shorelineGrounding * 0.08),
+      surfaceAttachment: clamp01(composition.surfaceAttachment * 0.58 + mass * 0.16 + shorelineGrounding * 0.08),
       curvatureLock: clamp01(composition.curvatureLock),
       waterDepthShade,
-      bridgePotential: clamp01(numberField(composition, "bridgePotential", 0) * 0.28 + composition.scarPotential * 0.14 + feeds.ancientChannelFeed * 0.09)
+      bridgePotential: clamp01(numberField(composition, "bridgePotential", 0) * 0.24 + composition.scarPotential * 0.12 + feeds.channelScarContinuity * 0.10)
     };
   };
 
@@ -1289,11 +1446,11 @@
     const isWater = isWaterTerrain(terrainClass, composition);
     const isLand = !isWater && isLandTerrain(terrainClass, composition);
 
-    const noiseA = textureNoise(p, terrainClass.length + (numberField(composition, "continentIndex", 0) + 23));
-    const noiseB = textureNoise({ x: p.y, y: p.z, z: p.x }, 67);
-    const materialNoise = clamp01(noiseA * 0.58 + noiseB * 0.42);
+    const noiseA = textureNoise(p, terrainClass.length + (numberField(composition, "continentIndex", 0) + 31));
+    const noiseB = textureNoise({ x: p.y, y: p.z, z: p.x }, 73);
+    const materialNoise = clamp01(noiseA * 0.56 + noiseB * 0.44);
 
-    const feeds = computeRefinedAgedTechFeeds(composition, tectonics, hydrology, isLand ? 1 : 0, isWater ? 1 : 0);
+    const feeds = computeAgedFeeds(composition, tectonics, hydrology, isLand ? 1 : 0, isWater ? 1 : 0);
 
     let rgb = resolveBaseColor(terrainClass, composition, isLand, isWater);
 
@@ -1409,6 +1566,18 @@
       beadSuppression: feeds.beadSuppression,
       greenGlowSuppression: feeds.greenGlowSuppression,
 
+      coastalScarContinuity: feeds.coastalScarContinuity,
+      scarBandWidth: feeds.scarBandWidth,
+      submergedShadowWake: feeds.submergedShadowWake,
+      mineralizedEdgeBody: feeds.mineralizedEdgeBody,
+      reclaimedEdgeBlend: feeds.reclaimedEdgeBlend,
+      isolatedBeadSuppression: feeds.isolatedBeadSuppression,
+      scarClusterStrength: feeds.scarClusterStrength,
+      harborScarBasin: feeds.harborScarBasin,
+      channelScarContinuity: feeds.channelScarContinuity,
+      archipelagoScarBreakup: feeds.archipelagoScarBreakup,
+      boundaryMorphologyFeed: feeds.boundaryMorphologyFeed,
+
       materialNoise,
 
       compositionContract: composition.contract || "UNKNOWN_COMPOSITION_CONTRACT",
@@ -1449,6 +1618,7 @@
     canvas.dataset.hearthMaterialsReceipt = RECEIPT;
     canvas.dataset.hearthMaterialsAgedCoastalTech = "true";
     canvas.dataset.hearthMaterialsAgedCoastalTechRefinement = "true";
+    canvas.dataset.hearthMaterialsCoastalScarMorphology = "true";
     canvas.dataset.generatedImage = "false";
     canvas.dataset.graphicBox = "false";
     canvas.dataset.webgl = "false";
@@ -1487,7 +1657,7 @@
     authority: "materials",
     status: "active",
     sourceAuthority: "hearth.composition.js + hearth.tectonics.js + hearth.hydrology.js",
-    purpose: "aged-tech-coastal-boundary-material-refinement",
+    purpose: "aged-tech-coastal-scar-morphology-material-expression",
     supportsExpandedHearthTerrain: true,
     supportsSevenContinentNineClimateTerrain: true,
     supportsSevenClimateTerrainClasses: true,
@@ -1495,6 +1665,7 @@
     supportsAgedTechCoastalBoundaryMaterials: true,
     supportsHydrologyBoundaryConsumer: true,
     supportsAgedTechCoastalBoundaryRefinement: true,
+    supportsAgedTechCoastalScarMorphology: true,
     consumesComposition: true,
     consumesTectonics: true,
     consumesHydrology: true,
@@ -1535,14 +1706,28 @@
       "weatheredCutBand",
       "reclaimedSurfaceBand",
       "beadSuppression",
-      "greenGlowSuppression"
+      "greenGlowSuppression",
+      "coastalScarContinuity",
+      "scarBandWidth",
+      "submergedShadowWake",
+      "mineralizedEdgeBody",
+      "reclaimedEdgeBlend",
+      "isolatedBeadSuppression",
+      "scarClusterStrength",
+      "harborScarBasin",
+      "channelScarContinuity",
+      "archipelagoScarBreakup",
+      "boundaryMorphologyFeed"
     ],
     designRules: [
       "coastal evidence remains visible",
-      "green bead behavior is reduced",
-      "coastal traces become mineralized and weathered",
-      "old channels become carved and submerged",
-      "technology reads through age and material, not glow",
+      "bead chains become broken carved scar bodies",
+      "strong coastal clusters read as scar bodies",
+      "isolated point glow is reduced",
+      "submerged sides gain dark shadow wake",
+      "harbor pockets become rounded eroded basins",
+      "archipelago regions become broken submerged works",
+      "technology reads through scar morphology, age, material, and erosion",
       "canvas held",
       "route held",
       "no final visual pass claim"
@@ -1594,6 +1779,7 @@
     supportsAgedTechCoastalBoundaryMaterials: true,
     supportsHydrologyBoundaryConsumer: true,
     supportsAgedTechCoastalBoundaryRefinement: true,
+    supportsAgedTechCoastalScarMorphology: true,
     consumesComposition: true,
     consumesTectonics: true,
     consumesHydrology: true,
@@ -1618,6 +1804,7 @@
   root.HEARTH_MATERIALS_SUPPORTS_AGED_TECH_COASTAL_BOUNDARY = true;
   root.HEARTH_MATERIALS_SUPPORTS_HYDROLOGY_BOUNDARY_CONSUMER = true;
   root.HEARTH_MATERIALS_SUPPORTS_AGED_TECH_COASTAL_BOUNDARY_REFINEMENT = true;
+  root.HEARTH_MATERIALS_SUPPORTS_AGED_TECH_COASTAL_SCAR_MORPHOLOGY = true;
 
   if (root.document && root.document.documentElement) {
     root.document.documentElement.dataset.hearthMaterialsAuthorityLoaded = "true";
@@ -1631,6 +1818,7 @@
     root.document.documentElement.dataset.hearthMaterialsSupportsAgedTechCoastalBoundary = "true";
     root.document.documentElement.dataset.hearthMaterialsSupportsHydrologyBoundaryConsumer = "true";
     root.document.documentElement.dataset.hearthMaterialsSupportsAgedTechCoastalBoundaryRefinement = "true";
+    root.document.documentElement.dataset.hearthMaterialsSupportsAgedTechCoastalScarMorphology = "true";
     root.document.documentElement.dataset.hearthMaterialsConsumesComposition = "true";
     root.document.documentElement.dataset.hearthMaterialsConsumesTectonics = "true";
     root.document.documentElement.dataset.hearthMaterialsConsumesHydrology = "true";

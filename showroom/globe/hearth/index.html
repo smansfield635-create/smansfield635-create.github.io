@@ -2,11 +2,20 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="hearth-tectonic-parent-chain"
+  data-page="hearth-active-planet-narrative-map-portal"
   data-route="/showroom/globe/hearth/"
-  data-contract="HEARTH_TECTONIC_PARENT_CHAIN_HTML_TNT_v21"
+  data-contract="HEARTH_ACTIVE_PLANET_NARRATIVE_MAP_PORTAL_HTML_TNT_v1"
+  data-previous-contract="HEARTH_TECTONIC_PARENT_CHAIN_HTML_TNT_v21"
   data-body="hearth"
+  data-mirrorland-door="true"
+  data-map-portal-required="true"
+  data-map-portal-source="/assets/manor-blueprint/manor.blueprint.js"
+  data-map-portal-registry="/assets/manor-blueprint/manor.blueprint.registry.js"
+  data-map-blip-single-entryway="true"
+  data-main-menu-route="false"
   data-active-route-file="/showroom/globe/hearth/hearth.climate.route.js"
+  data-active-route-contract="HEARTH_SOURCE_ALIGNED_VISIBLE_GLOBE_ROUTE_TNT_v17"
+  data-active-visible-planet-carrier="true"
   data-parent-chain-aligned="true"
   data-tectonics-authority="/assets/hearth/hearth.tectonics.js"
   data-composition-authority="/assets/hearth/hearth.composition.js"
@@ -17,9 +26,15 @@
   data-earth-reference-land-ratio="0.29"
   data-rocky-means-jagged-not-gray="true"
   data-plate-tectonics-active="true"
-  data-visible-globe-v17-retired="true"
+  data-narrative-identity="Hearth · Survival Becomes Shelter"
+  data-world-lane="survival-pressure-becomes-home"
+  data-zionts-role="consequence"
+  data-h-earth-role="survival-condition-pressure"
+  data-audralia-role="untouched-living-possibility"
+  data-hearth-role="survival-pressure-becomes-shelter"
   data-generated-image="false"
   data-graphic-box="false"
+  data-webgl="false"
   data-visual-pass-claimed="false"
 >
 <head>
@@ -28,190 +43,395 @@
   <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>Diamond Gate Bridge · Hearth Tectonic Parent Chain</title>
+
+  <title>Hearth · Survival Becomes Shelter · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Hearth is the Mirrorland world where survival pressure becomes shelter: active planet, tectonic scars, hydrology, materials, and body-level endurance becoming home."
+  >
+  <link rel="canonical" href="https://diamondgatebridge.com/showroom/globe/hearth/">
+  <meta name="theme-color" content="#030914">
+
+  <link rel="stylesheet" href="/assets/manor-blueprint/manor.blueprint.css?v=HEARTH_ACTIVE_PLANET_NARRATIVE_MAP_PORTAL_HTML_TNT_v1">
+  <script src="/assets/manor-blueprint/manor.blueprint.registry.js?v=HEARTH_ACTIVE_PLANET_NARRATIVE_MAP_PORTAL_HTML_TNT_v1" defer></script>
+  <script src="/assets/manor-blueprint/manor.blueprint.js?v=HEARTH_ACTIVE_PLANET_NARRATIVE_MAP_PORTAL_HTML_TNT_v1" defer></script>
 
   <style>
-    :root {
+    :root{
+      color-scheme:dark;
       --bg:#030914;
-      --line:rgba(231,188,105,.34);
+      --deep:#01040a;
+      --panel:rgba(9,22,41,.86);
+      --panel2:rgba(4,10,20,.78);
+      --line:rgba(231,188,105,.30);
+      --line2:rgba(141,216,255,.18);
       --gold:#e7bc69;
+      --gold2:#ffe8a3;
+      --blue:#8dd8ff;
+      --green:#8bd7a3;
+      --amber:#ffb45f;
+      --violet:#b89cff;
       --text:#eef6ff;
       --muted:rgba(238,246,255,.72);
-      --green:#8bd7a3;
+      --faint:rgba(238,246,255,.50);
+      --shadow:0 28px 86px rgba(0,0,0,.42);
+      --max:1180px;
     }
 
-    * { box-sizing:border-box; }
+    *{box-sizing:border-box}
 
-    html {
+    html{
+      min-width:320px;
       min-height:100%;
+      scroll-behavior:smooth;
       background:
-        radial-gradient(circle at 50% 20%,rgba(39,117,155,.22),transparent 38%),
-        radial-gradient(circle at 18% 12%,rgba(231,188,105,.13),transparent 30%),
-        linear-gradient(180deg,#06101e,var(--bg) 72%);
+        radial-gradient(circle at 50% -8%,rgba(231,188,105,.18),transparent 30rem),
+        radial-gradient(circle at 16% 16%,rgba(39,117,155,.22),transparent 32rem),
+        radial-gradient(circle at 86% 24%,rgba(139,215,163,.12),transparent 32rem),
+        linear-gradient(180deg,#06101e,var(--bg) 70%,#01040a);
       color:var(--text);
-      font-family:Inter,system-ui,sans-serif;
+      overflow-x:hidden;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     }
 
-    body {
+    body{
       margin:0;
+      min-width:320px;
       min-height:100vh;
+      overflow-x:hidden;
+      background:
+        radial-gradient(circle at 50% 18%,rgba(39,117,155,.18),transparent 32%),
+        radial-gradient(circle at 18% 12%,rgba(231,188,105,.10),transparent 30%),
+        linear-gradient(180deg,rgba(6,16,30,.78),rgba(1,4,10,.94));
+      -webkit-font-smoothing:antialiased;
+      text-rendering:geometricPrecision;
     }
 
-    a {
-      color:inherit;
-      text-decoration:none;
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      background-image:
+        radial-gradient(circle,rgba(255,255,255,.15) 0 1px,transparent 1.5px),
+        linear-gradient(rgba(141,216,255,.035) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.035) 1px,transparent 1px);
+      background-size:220px 260px,58px 58px,58px 58px;
+      opacity:.20;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.94),rgba(0,0,0,.52) 68%,rgba(0,0,0,.22));
     }
 
-    .shell {
-      width:min(1120px,calc(100% - 28px));
+    a{color:inherit;text-decoration:none}
+
+    a:focus-visible,
+    button:focus-visible{
+      outline:2px solid var(--gold2);
+      outline-offset:4px;
+    }
+
+    .skip{
+      position:absolute;
+      left:12px;
+      top:12px;
+      z-index:50;
+      transform:translateY(-160%);
+      padding:.75rem 1rem;
+      border-radius:999px;
+      color:#06101e;
+      background:var(--gold);
+      font-weight:950;
+    }
+
+    .skip:focus{transform:translateY(0)}
+
+    .shell{
+      position:relative;
+      z-index:2;
+      width:min(var(--max),calc(100% - 28px));
       margin:0 auto;
-      padding:22px 0 42px;
+      padding:max(20px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
     }
 
-    .topbar,
-    .nav,
-    .card,
-    #hearthCanvasMount,
-    .receipt {
+    .topbar{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:16px;
       border:1px solid var(--line);
-      background:linear-gradient(180deg,rgba(9,22,41,.88),rgba(4,10,20,.78));
-      box-shadow:0 22px 70px rgba(0,0,0,.38);
+      border-radius:24px;
+      padding:12px 14px;
+      background:
+        radial-gradient(circle at 0% 0%,rgba(231,188,105,.10),transparent 18rem),
+        linear-gradient(180deg,rgba(9,22,41,.88),rgba(4,10,20,.76));
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.06);
       backdrop-filter:blur(10px);
     }
 
-    .topbar {
-      display:flex;
-      justify-content:space-between;
-      gap:14px;
-      border-radius:24px;
-      padding:12px 14px;
-    }
-
-    .brand {
-      display:inline-flex;
+    .brand{
+      display:inline-grid;
+      grid-template-columns:auto minmax(0,1fr);
       align-items:center;
       gap:10px;
-      font-weight:900;
+      min-width:0;
+      font-weight:950;
     }
 
-    .mark {
+    .mark{
       display:grid;
       place-items:center;
-      width:36px;
-      height:36px;
-      border-radius:12px;
+      width:42px;
+      height:42px;
       border:1px solid rgba(231,188,105,.46);
+      border-radius:14px;
       color:var(--gold);
+      background:
+        radial-gradient(circle at 50% 30%,rgba(255,255,255,.16),transparent 48%),
+        rgba(231,188,105,.055);
+      box-shadow:0 0 24px rgba(231,188,105,.12);
     }
 
-    .nav {
+    .brand-copy{
+      display:grid;
+      gap:2px;
+      min-width:0;
+    }
+
+    .brand-copy span{
+      color:var(--muted);
+      font-size:.72rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .brand-copy strong{
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1rem,2.4vw,1.36rem);
+      line-height:1;
+      letter-spacing:-.035em;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .nav{
       display:flex;
       flex-wrap:wrap;
+      justify-content:flex-end;
       gap:8px;
-      border-radius:20px;
-      padding:8px;
     }
 
-    .nav a {
+    .nav a{
+      min-height:34px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
       border:1px solid rgba(231,188,105,.24);
       border-radius:999px;
       padding:8px 11px;
       color:var(--muted);
-      font-size:.86rem;
+      background:rgba(255,255,255,.032);
+      font-size:.78rem;
+      font-weight:850;
+      letter-spacing:.035em;
     }
 
-    .nav a[aria-current="page"] {
+    .nav a[aria-current="page"]{
       color:#06101e;
       background:var(--gold);
-      font-weight:900;
+      border-color:rgba(231,188,105,.88);
+      font-weight:950;
     }
 
-    .hero {
+    .nav a:hover{
+      color:rgba(255,244,216,.98);
+      border-color:rgba(231,188,105,.48);
+      background:rgba(231,188,105,.08);
+    }
+
+    .panel{
+      border:1px solid var(--line);
+      border-radius:clamp(22px,4vw,34px);
+      background:
+        radial-gradient(circle at 14% 0%,rgba(141,216,255,.09),transparent 28rem),
+        radial-gradient(circle at 86% 18%,rgba(231,188,105,.10),transparent 28rem),
+        linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018)),
+        var(--panel);
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.07);
+      overflow:hidden;
+    }
+
+    .hero{
       display:grid;
       grid-template-columns:minmax(0,1fr) minmax(320px,520px);
       gap:22px;
       align-items:center;
       margin-top:22px;
+      padding:clamp(18px,3.5vw,32px);
     }
 
-    .eyebrow {
+    .hero-copy{
+      display:grid;
+      gap:14px;
+      align-content:center;
+    }
+
+    .eyebrow,
+    .section-kicker{
+      width:fit-content;
       color:var(--gold);
-      font-size:.78rem;
-      font-weight:900;
+      font-size:.74rem;
+      font-weight:950;
       letter-spacing:.16em;
       text-transform:uppercase;
     }
 
-    h1 {
-      margin:10px 0 12px;
-      font-size:clamp(2.2rem,7vw,5.8rem);
-      line-height:.9;
-      letter-spacing:-.08em;
+    h1{
+      margin:0;
+      max-width:760px;
+      font-size:clamp(2.6rem,8.2vw,6.7rem);
+      line-height:.84;
+      letter-spacing:-.09em;
+      text-wrap:balance;
     }
 
-    .lede {
-      max-width:68ch;
+    h2{
+      margin:0;
+      color:rgba(255,244,216,.97);
+      font-size:clamp(1.45rem,4vw,2.7rem);
+      line-height:1;
+      letter-spacing:-.06em;
+      text-wrap:balance;
+    }
+
+    h3{
+      margin:0;
+      color:rgba(255,244,216,.96);
+      font-size:clamp(1.08rem,2.3vw,1.45rem);
+      line-height:1.08;
+      letter-spacing:-.035em;
+    }
+
+    p{
       margin:0;
       color:var(--muted);
-      font-size:clamp(1rem,2.4vw,1.18rem);
-      line-height:1.6;
+      font-size:clamp(.98rem,2.1vw,1.12rem);
+      line-height:1.58;
     }
 
-    .badge {
+    .lede{
+      max-width:70ch;
+      color:rgba(238,246,255,.78);
+    }
+
+    .world-law{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:2px;
+    }
+
+    .badge{
       display:inline-flex;
-      margin-top:12px;
+      align-items:center;
+      min-height:31px;
       padding:7px 11px;
-      border:1px solid rgba(139,215,163,.34);
+      border:1px solid rgba(139,215,163,.32);
       border-radius:999px;
       color:var(--green);
       background:rgba(139,215,163,.08);
-      font-weight:900;
-      font-size:.78rem;
+      font-weight:950;
+      font-size:.70rem;
       letter-spacing:.08em;
       text-transform:uppercase;
     }
 
-    .actions {
+    .badge.gold{
+      border-color:rgba(231,188,105,.32);
+      color:var(--gold);
+      background:rgba(231,188,105,.08);
+    }
+
+    .badge.blue{
+      border-color:rgba(141,216,255,.30);
+      color:var(--blue);
+      background:rgba(141,216,255,.07);
+    }
+
+    .actions{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
-      margin-top:20px;
+      margin-top:6px;
     }
 
-    .button {
+    .button{
       display:inline-flex;
       align-items:center;
       justify-content:center;
       min-height:42px;
       padding:10px 14px;
       border-radius:999px;
-      border:1px solid rgba(231,188,105,.38);
-      background:rgba(231,188,105,.14);
-      color:var(--text);
-      font-weight:800;
+      border:1px solid rgba(231,188,105,.34);
+      background:rgba(231,188,105,.10);
+      color:rgba(238,246,255,.90);
+      font-weight:900;
+      font-size:.82rem;
+      letter-spacing:.045em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .button.primary {
+    .button.primary{
       color:#05101d;
-      background:var(--gold);
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+      border-color:rgba(231,188,105,.86);
     }
 
-    #hearthCanvasMount {
+    .button:hover{
+      transform:translateY(-1px);
+      border-color:rgba(231,188,105,.58);
+    }
+
+    .planet-card{
+      display:grid;
+      gap:12px;
+    }
+
+    #hearthCanvasMount{
       position:relative;
       width:100%;
       min-height:320px;
       aspect-ratio:1/1;
       overflow:hidden;
       isolation:isolate;
+      border:1px solid rgba(141,216,255,.22);
       border-radius:32px;
-      background:radial-gradient(circle at 50% 50%,rgba(39,117,155,.30),rgba(3,9,20,.96) 70%),#02070e;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(39,117,155,.30),rgba(3,9,20,.96) 70%),
+        #02070e;
+      box-shadow:
+        0 22px 70px rgba(0,0,0,.38),
+        inset 0 1px 0 rgba(255,255,255,.07),
+        inset 0 0 80px rgba(141,216,255,.05);
       touch-action:none;
       user-select:none;
       -webkit-user-select:none;
       -webkit-touch-callout:none;
     }
 
-    #hearthCanvasMount canvas {
+    #hearthCanvasMount::before{
+      content:"";
+      position:absolute;
+      inset:8%;
+      z-index:2;
+      pointer-events:none;
+      border:1px solid rgba(231,188,105,.13);
+      border-radius:50%;
+      box-shadow:0 0 38px rgba(231,188,105,.08);
+    }
+
+    #hearthCanvasMount canvas{
       position:absolute;
       inset:0;
       display:block;
@@ -224,134 +444,473 @@
       -webkit-touch-callout:none;
     }
 
-    .grid {
+    .mount-fallback{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      color:rgba(238,246,255,.68);
+      font-weight:850;
+      text-align:center;
+      padding:20px;
+    }
+
+    .planet-caption{
+      display:grid;
+      gap:6px;
+      border:1px solid rgba(231,188,105,.20);
+      border-radius:20px;
+      padding:12px;
+      background:
+        radial-gradient(circle at 0% 0%,rgba(231,188,105,.08),transparent 12rem),
+        rgba(4,10,20,.62);
+    }
+
+    .planet-caption b{
+      color:var(--gold);
+      font-size:.70rem;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .planet-caption span{
+      color:var(--muted);
+      font-size:.90rem;
+      line-height:1.38;
+    }
+
+    .section{
+      display:grid;
+      gap:16px;
+      margin-top:18px;
+      padding:clamp(16px,3vw,24px);
+    }
+
+    .section-head{
+      display:grid;
+      gap:8px;
+      max-width:880px;
+    }
+
+    .world-grid,
+    .proof-grid,
+    .route-grid{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
       gap:12px;
-      margin-top:22px;
     }
 
-    .card {
+    .world-card,
+    .proof-card,
+    .route-card{
+      position:relative;
+      display:grid;
+      align-content:start;
+      gap:8px;
+      min-height:150px;
+      border:1px solid rgba(255,255,255,.10);
       border-radius:22px;
       padding:14px;
-      min-height:132px;
+      background:
+        radial-gradient(circle at 18% 0%,rgba(231,188,105,.08),transparent 12rem),
+        linear-gradient(180deg,rgba(255,255,255,.040),rgba(255,255,255,.016)),
+        rgba(4,10,20,.70);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
+      overflow:hidden;
     }
 
-    .card h2 {
-      margin:0 0 8px;
-      color:var(--gold);
+    .world-card::before,
+    .proof-card::before,
+    .route-card::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:14px;
+      bottom:14px;
+      width:4px;
+      border-radius:999px;
+      background:var(--accent,var(--gold));
+      box-shadow:0 0 18px color-mix(in srgb,var(--accent,var(--gold)),transparent 45%);
+    }
+
+    .world-card b,
+    .proof-card b,
+    .route-card b{
+      color:var(--accent,var(--gold));
+      font-size:.68rem;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .world-card strong,
+    .proof-card strong,
+    .route-card strong{
+      color:rgba(255,244,216,.96);
+      font-size:1.04rem;
+      line-height:1.12;
+    }
+
+    .world-card p,
+    .proof-card p,
+    .route-card p{
       font-size:.92rem;
+      line-height:1.44;
     }
 
-    .card p {
-      margin:0;
-      color:var(--muted);
-      font-size:.9rem;
-      line-height:1.45;
+    .narrative-band{
+      display:grid;
+      gap:12px;
+      border:1px solid rgba(139,215,163,.22);
+      border-radius:24px;
+      padding:18px;
+      background:
+        radial-gradient(circle at 10% 0%,rgba(139,215,163,.10),transparent 18rem),
+        radial-gradient(circle at 92% 20%,rgba(231,188,105,.08),transparent 18rem),
+        rgba(4,10,20,.72);
     }
 
-    .receipt {
-      margin:16px 0 0;
-      padding:14px;
-      overflow:auto;
-      border-radius:18px;
-      color:rgba(238,246,255,.72);
-      font-size:.78rem;
-      white-space:pre-wrap;
+    .narrative-band strong{
+      color:rgba(255,244,216,.96);
     }
 
-    @media (max-width:980px) {
-      .hero,
-      .grid {
+    .receipt,
+    [data-route-receipt],
+    [data-contract-receipt]{
+      display:none!important;
+      visibility:hidden!important;
+      overflow:hidden!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      position:absolute!important;
+      clip-path:inset(50%)!important;
+      white-space:nowrap!important;
+    }
+
+    #hearth-route-status{
+      display:block!important;
+      visibility:visible!important;
+      width:auto!important;
+      height:auto!important;
+      max-width:none!important;
+      max-height:none!important;
+      margin:16px 0 0!important;
+      padding:14px!important;
+      border:1px solid rgba(231,188,105,.24)!important;
+      border-radius:18px!important;
+      opacity:1!important;
+      pointer-events:auto!important;
+      position:relative!important;
+      clip-path:none!important;
+      white-space:pre-wrap!important;
+      overflow:auto!important;
+      color:rgba(238,246,255,.62);
+      background:
+        linear-gradient(180deg,rgba(9,22,41,.70),rgba(4,10,20,.62));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
+      font:700 .72rem/1.45 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+    }
+
+    footer{
+      padding:18px 0 4px;
+      color:var(--faint);
+      text-align:center;
+      font-size:.76rem;
+    }
+
+    @media (max-width:1080px){
+      .hero{
         grid-template-columns:1fr;
       }
 
-      .topbar {
-        flex-direction:column;
+      .world-grid,
+      .proof-grid,
+      .route-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+    }
+
+    @media (max-width:760px){
+      .shell{
+        width:min(100% - 20px,var(--max));
+      }
+
+      .topbar{
+        grid-template-columns:1fr;
+      }
+
+      .nav{
+        justify-content:flex-start;
+      }
+
+      .hero{
+        padding:14px;
+      }
+
+      h1{
+        font-size:clamp(2.65rem,15vw,4.8rem);
+      }
+
+      .actions{
+        display:grid;
+      }
+
+      .button{
+        width:100%;
+      }
+
+      .world-grid,
+      .proof-grid,
+      .route-grid{
+        grid-template-columns:1fr;
+      }
+
+      #hearthCanvasMount{
+        min-height:300px;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *,
+      *::before,
+      *::after{
+        scroll-behavior:auto!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
       }
     }
   </style>
 </head>
 
 <body>
+  <a class="skip" href="#hearth-main">Skip to Hearth</a>
+
   <div class="shell">
-    <header class="topbar">
-      <a class="brand" href="/"><span class="mark">H</span><span>Diamond Gate Bridge · Hearth</span></a>
+    <header class="topbar" aria-label="Hearth route header">
+      <a class="brand" href="/showroom/globe/hearth/" aria-label="Hearth">
+        <span class="mark" aria-hidden="true">H</span>
+        <span class="brand-copy">
+          <span>Diamond Gate Bridge · Mirrorland World Room</span>
+          <strong>Hearth · Survival Becomes Shelter</strong>
+        </span>
+      </a>
+
       <nav class="nav" aria-label="Hearth route navigation">
         <a href="/">Compass</a>
-        <a href="/showroom/globe/">Globe Split</a>
-        <a href="/showroom/globe/earth/">Earth</a>
+        <a href="/showroom/globe/">Atlas Study</a>
+        <a href="/showroom/globe/earth/">ZIONTS</a>
+        <a href="/showroom/globe/h-earth/">H-Earth</a>
         <a href="/showroom/globe/hearth/" aria-current="page">Hearth</a>
         <a href="/showroom/globe/audralia/">Audralia</a>
-        <a href="/gauges/">Gauges</a>
+        <a href="/explore/frontier/">Frontier</a>
+        <a href="/gauges/">The Lab</a>
       </nav>
     </header>
 
     <main id="hearth-main">
-      <section class="hero" aria-labelledby="hearth-title">
-        <div>
-          <div class="eyebrow">Hearth · Tectonic Parent Chain</div>
-          <h1 id="hearth-title">Hearth</h1>
+      <section class="panel hero" aria-labelledby="hearth-title">
+        <div class="hero-copy">
+          <div class="eyebrow">Hearth · Active Planet · Mirrorland Survival Room</div>
+
+          <h1 id="hearth-title">Survival becomes shelter.</h1>
+
           <p class="lede">
-            Hearth now routes through a tectonic parent chain. Rocky means jagged, not gray: plate stress, uplift ridges, fractured coastlines, collapsed basins, hydrology, mineral substrate, and surface materials stay separated while the planet remains visible.
+            Hearth is the world where pressure does not end at endurance. Exposed terrain, fractured coastlines, hydrology, materials, plate stress, and body-level survival begin turning into shelter, continuity, and home.
           </p>
 
-          <span class="badge">Parent Chain · v21 Tectonics</span>
-          <span class="badge" style="margin-left:8px;">Parent Chain · v20 Force Alignment</span>
+          <p class="lede">
+            This room keeps the active planet visible while the engineering parent chain stays underneath as proof. Hearth is not just a tectonic file; it is the narrative chamber where survival pressure becomes a habitable promise.
+          </p>
+
+          <div class="world-law" aria-label="World lane roles">
+            <span class="badge gold">ZIONTS · Consequence</span>
+            <span class="badge blue">H-Earth · Survival Conditions</span>
+            <span class="badge">Hearth · Shelter From Pressure</span>
+            <span class="badge gold">Audralia · Living Possibility</span>
+          </div>
 
           <div class="actions">
-            <a class="button primary" href="/showroom/globe/">Return to Globe Split</a>
-            <a class="button" href="/showroom/globe/audralia/">Inspect Audralia</a>
-            <a class="button" href="/gauges/">Run Gauges</a>
+            <a class="button primary" href="#active-planet">Inspect Hearth</a>
+            <a class="button" href="#narrative">Read Narrative Role</a>
+            <a class="button" href="/showroom/globe/">Return to Atlas Study</a>
+            <a class="button" href="/explore/frontier/">Open Frontier</a>
           </div>
         </div>
 
-        <section
-          id="hearthCanvasMount"
-          data-hearth-canvas-mount="true"
-          data-hearth-parent-chain-aligned="true"
-          data-hearth-route-file="/showroom/globe/hearth/hearth.climate.route.js"
-          aria-label="Hearth tectonic parent-chain globe canvas mount"
-        >
-          <span data-hearth-mount-fallback="true" style="position:absolute;inset:0;display:grid;place-items:center;color:rgba(238,246,255,.68);font-weight:800;text-align:center;padding:20px;">
-            Hearth tectonic parent-chain route loading.
-          </span>
-        </section>
+        <aside class="planet-card" id="active-planet" aria-label="Active Hearth planet">
+          <section
+            id="hearthCanvasMount"
+            data-hearth-canvas-mount="true"
+            data-hearth-parent-chain-aligned="true"
+            data-hearth-active-visible-planet-carrier="true"
+            data-hearth-route-file="/showroom/globe/hearth/hearth.climate.route.js"
+            data-hearth-route-contract="HEARTH_SOURCE_ALIGNED_VISIBLE_GLOBE_ROUTE_TNT_v17"
+            aria-label="Hearth active planet canvas mount"
+          >
+            <span class="mount-fallback" data-hearth-mount-fallback="true">
+              Hearth active planet route loading.
+            </span>
+          </section>
+
+          <div class="planet-caption">
+            <b>Active Planet Carrier</b>
+            <span>
+              The visible planet is loaded by <code>./hearth.climate.route.js</code>. Drag inspection remains active through the route carrier. This HTML pass does not renew the planet JS.
+            </span>
+          </div>
+        </aside>
       </section>
 
-      <section class="grid" aria-label="Hearth parent chain">
-        <article class="card">
-          <h2>Tectonics</h2>
-          <p>Plate stress, uplift ridges, fault pressure, cliff cuts, island breaks, and jagged coast behavior define the exposed land.</p>
-        </article>
+      <section class="panel section" id="narrative" aria-labelledby="narrative-title">
+        <div class="section-head">
+          <div class="section-kicker">Narrative Construct</div>
+          <h2 id="narrative-title">Hearth sits between survival pressure and future home.</h2>
+          <p>
+            Hearth gives Mirrorland a world lane that is more intimate than planetary possibility and more constructive than raw survival diagnostics. It asks whether survival can become shelter before pressure becomes collapse.
+          </p>
+        </div>
 
-        <article class="card">
-          <h2>Composition</h2>
-          <p>Diamond, opal, marble, slate, granite, gold, platinum, and silver remain substrate authority.</p>
-        </article>
+        <div class="narrative-band">
+          <p>
+            <strong>ZIONTS</strong> shows consequence after living conditions fail. <strong>H-Earth</strong> studies the pressure conditions that survival must face. <strong>Audralia</strong> shows the untouched living possibility. <strong>Hearth</strong> is the conversion room: survival pressure becoming a place where people can actually stay.
+          </p>
+          <p>
+            The active globe remains visible because Hearth must feel like a world, not only a report. The parent chain remains present because Hearth must prove that shelter has a material basis: tectonics, composition, hydrology, materials, and canvas authority.
+          </p>
+        </div>
 
-        <article class="card">
-          <h2>Hydrology</h2>
-          <p>Inland lakes, rivers, streams, brooks, marshes, swamps, shelves, and wet basins follow tectonic scars.</p>
-        </article>
+        <div class="world-grid" aria-label="World lane distinction">
+          <article class="world-card" style="--accent:var(--amber)">
+            <b>ZIONTS</b>
+            <strong>Consequence path</strong>
+            <p>The warning world. It shows what remains when damage outruns responsibility.</p>
+          </article>
 
-        <article class="card">
-          <h2>Materials</h2>
-          <p>Grass, dirt, mud, rock, mountain stone, cliffs, snow, ice, and water render as terrain surface only.</p>
-        </article>
+          <article class="world-card" style="--accent:var(--blue)">
+            <b>H-Earth</b>
+            <strong>Survival conditions</strong>
+            <p>The pressure lane. Earth, water, air, shelter, bodies, cities, and systems under stress.</p>
+          </article>
+
+          <article class="world-card" style="--accent:var(--green)">
+            <b>Hearth</b>
+            <strong>Shelter from pressure</strong>
+            <p>The conversion lane. Survival pressure becomes continuity, shelter, and a place to remain.</p>
+          </article>
+
+          <article class="world-card" style="--accent:var(--gold)">
+            <b>Audralia</b>
+            <strong>Living possibility</strong>
+            <p>The constructive untouched path. A living world supported instead of extracted.</p>
+          </article>
+        </div>
       </section>
 
-      <pre id="hearth-route-status" class="receipt" data-hearth-route-status="true">Hearth tectonic parent-chain route preparing.</pre>
+      <section class="panel section" id="proof-layer" aria-labelledby="proof-title">
+        <div class="section-head">
+          <div class="section-kicker">Proof Layer · Parent Chain Preserved</div>
+          <h2 id="proof-title">The engineering layer now supports the story instead of replacing it.</h2>
+          <p>
+            The v21 tectonic parent-chain structure remains valid as the proof layer. Rocky means jagged, not gray. The exposed planet must preserve plate stress, uplift, collapsed basins, hydrology, mineral substrate, and material surface separation.
+          </p>
+        </div>
 
-      <pre class="receipt">HEARTH_TECTONIC_PARENT_CHAIN_HTML_TNT_v21
+        <div class="proof-grid" aria-label="Hearth parent chain support">
+          <article class="proof-card" style="--accent:var(--amber)">
+            <b>Tectonics</b>
+            <strong>Jagged land authority</strong>
+            <p>Plate stress, uplift ridges, fault pressure, cliff cuts, island breaks, and fractured coast behavior.</p>
+          </article>
+
+          <article class="proof-card" style="--accent:var(--gold)">
+            <b>Composition</b>
+            <strong>Substrate authority</strong>
+            <p>Diamond, opal, marble, slate, granite, gold, platinum, and silver remain material truth below the surface.</p>
+          </article>
+
+          <article class="proof-card" style="--accent:var(--blue)">
+            <b>Hydrology</b>
+            <strong>Water follows scars</strong>
+            <p>Inland lakes, rivers, streams, brooks, marshes, swamps, shelves, and wet basins follow tectonic cuts.</p>
+          </article>
+
+          <article class="proof-card" style="--accent:var(--green)">
+            <b>Materials</b>
+            <strong>Surface expression</strong>
+            <p>Grass, dirt, mud, rock, mountain stone, cliffs, snow, ice, and water render as terrain surface only.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel section" id="map-portal-note" aria-labelledby="portal-title">
+        <div class="section-head">
+          <div class="section-kicker">Map / Portal</div>
+          <h2 id="portal-title">Use the floating Map / Portal blip for global estate navigation.</h2>
+          <p>
+            The top navigation remains available for direct exits, but the Map / Portal is the floating blip. It opens the global Mirrorland estate map, remains draggable, and is not a simple doorway link.
+          </p>
+        </div>
+
+        <div class="route-grid" aria-label="Hearth visitor movement">
+          <a class="route-card" style="--accent:var(--blue)" href="/showroom/globe/">
+            <b>Atlas Study</b>
+            <strong>Return to world selection</strong>
+            <p>Compare ZIONTS, H-Earth, Hearth, and Audralia from the world-study room.</p>
+          </a>
+
+          <a class="route-card" style="--accent:var(--green)" href="/showroom/globe/audralia/">
+            <b>Audralia</b>
+            <strong>Move toward possibility</strong>
+            <p>Open the constructive living-world path after Hearth’s survival-shelter lane.</p>
+          </a>
+
+          <a class="route-card" style="--accent:var(--amber)" href="/explore/frontier/">
+            <b>Frontier</b>
+            <strong>Pressure-test systems</strong>
+            <p>Move from world narrative into applied systems, benches, and future infrastructure testing.</p>
+          </a>
+
+          <a class="route-card" style="--accent:var(--gold)" href="/gauges/">
+            <b>The Lab</b>
+            <strong>Check readiness</strong>
+            <p>Use measurement and route-status surfaces without confusing proof with the world room.</p>
+          </a>
+        </div>
+      </section>
+
+      <pre id="hearth-route-status" data-hearth-route-status="true">Hearth active planet narrative route preparing.</pre>
+
+      <template id="hearth-route-receipt" data-route-receipt>
+HEARTH_ACTIVE_PLANET_NARRATIVE_MAP_PORTAL_HTML_TNT_v1
 route=/showroom/globe/hearth/
+previous=HEARTH_TECTONIC_PARENT_CHAIN_HTML_TNT_v21
 active_route_file=/showroom/globe/hearth/hearth.climate.route.js
+active_route_contract=HEARTH_SOURCE_ALIGNED_VISIBLE_GLOBE_ROUTE_TNT_v17
+visible_planet_carrier_active=true
+visible_globe_v17_retired=false
+narrative_identity=Hearth · Survival Becomes Shelter
+world_lane=survival_pressure_becomes_home
+zionts_role=consequence
+h_earth_role=survival_condition_pressure
+hearth_role=survival_pressure_becomes_shelter
+audralia_role=untouched_living_possibility
+map_portal_required=true
+map_portal_source=/assets/manor-blueprint/manor.blueprint.js
+map_portal_registry=/assets/manor-blueprint/manor.blueprint.registry.js
+map_blip_single_entryway=true
+top_navigation_is_not_map_portal=true
 tectonics=/assets/hearth/hearth.tectonics.js
 composition=/assets/hearth/hearth.composition.js
 hydrology=/assets/hearth/hearth.hydrology.js
 materials=/assets/hearth/hearth.materials.js
 canvas=/assets/hearth/hearth.canvas.js
-compatibility_marker=HEARTH_PARENT_CHAIN_FORCE_ALIGNED_HTML_TNT_v20
 target_land_ratio=0.30
 earth_reference_land_ratio=0.29
 rocky_means_jagged_not_gray=true
@@ -362,15 +921,24 @@ bushes=false
 forest_canopy=false
 generated_image=false
 graphic_box=false
-visual_pass_claimed=false</pre>
+webgl=false
+visual_pass_claimed=false
+      </template>
     </main>
+
+    <footer>
+      HEARTH_ACTIVE_PLANET_NARRATIVE_MAP_PORTAL_HTML_TNT_v1 · /showroom/globe/hearth/ · Hearth · Survival Becomes Shelter.
+    </footer>
   </div>
 
   <script>
     (() => {
       "use strict";
 
-      const key = `hearth-tectonic-parent-chain-v21-${Date.now()}`;
+      const CONTRACT = "HEARTH_ACTIVE_PLANET_NARRATIVE_MAP_PORTAL_HTML_TNT_v1";
+      const ACTIVE_ROUTE_CONTRACT = "HEARTH_SOURCE_ALIGNED_VISIBLE_GLOBE_ROUTE_TNT_v17";
+      const ACTIVE_ROUTE_FILE = "/showroom/globe/hearth/hearth.climate.route.js";
+      const key = `hearth-active-planet-narrative-map-portal-${Date.now()}`;
 
       [
         "__HEARTH_G4_ROUTE_DISPOSE__",
@@ -381,12 +949,12 @@ visual_pass_claimed=false</pre>
       ].forEach((name) => {
         try {
           if (typeof window[name] === "function") window[name]();
-        } catch (_) {}
+        } catch (_error) {}
 
         try {
           window[name] = undefined;
           delete window[name];
-        } catch (_) {}
+        } catch (_error) {}
       });
 
       [
@@ -407,7 +975,7 @@ visual_pass_claimed=false</pre>
         try {
           window[name] = undefined;
           delete window[name];
-        } catch (_) {}
+        } catch (_error) {}
       });
 
       document.querySelectorAll([
@@ -418,35 +986,80 @@ visual_pass_claimed=false</pre>
         'script[data-hearth-file="true"]'
       ].join(",")).forEach((script) => script.remove());
 
-      const status = document.getElementById("hearth-route-status");
-      if (status) {
-        status.textContent = [
-          "Hearth tectonic parent-chain HTML loaded.",
-          "Rocky means jagged, not gray.",
-          "Loading active route file.",
-          "Route /showroom/globe/hearth/hearth.climate.route.js",
-          "Generated image false",
-          "GraphicBox false",
-          "Visual pass claimed false"
-        ].join("\n");
-      }
+      function publishHtmlStatus(value) {
+        const status = document.getElementById("hearth-route-status");
 
-      const script = document.createElement("script");
-      script.src = `./hearth.climate.route.js?v=${key}`;
-      script.defer = true;
-      script.dataset.hearthFile = "true";
-      script.dataset.hearthFileRole = "tectonic-parent-chain-route-v21";
+        document.documentElement.dataset.hearthHtmlContract = CONTRACT;
+        document.documentElement.dataset.hearthActiveRouteFile = ACTIVE_ROUTE_FILE;
+        document.documentElement.dataset.hearthActiveRouteContract = ACTIVE_ROUTE_CONTRACT;
+        document.documentElement.dataset.hearthActiveVisiblePlanetCarrier = "true";
+        document.documentElement.dataset.hearthNarrativeIdentity = "Hearth · Survival Becomes Shelter";
+        document.documentElement.dataset.hearthMapPortalRequired = "true";
+        document.documentElement.dataset.generatedImage = "false";
+        document.documentElement.dataset.graphicBox = "false";
+        document.documentElement.dataset.webgl = "false";
+        document.documentElement.dataset.visualPassClaimed = "false";
 
-      script.onerror = () => {
+        window.HEARTH_ACTIVE_PLANET_NARRATIVE_MAP_PORTAL_HTML_STATUS = {
+          contract: CONTRACT,
+          previousContract: "HEARTH_TECTONIC_PARENT_CHAIN_HTML_TNT_v21",
+          route: "/showroom/globe/hearth/",
+          activeRouteFile: ACTIVE_ROUTE_FILE,
+          activeRouteContract: ACTIVE_ROUTE_CONTRACT,
+          activeVisiblePlanetCarrier: true,
+          narrativeIdentity: "Hearth · Survival Becomes Shelter",
+          mapPortalRequired: true,
+          mapPortalSource: "/assets/manor-blueprint/manor.blueprint.js",
+          mapPortalRegistry: "/assets/manor-blueprint/manor.blueprint.registry.js",
+          mapBlipSingleEntryway: true,
+          generatedImage: false,
+          graphicBox: false,
+          webGL: false,
+          visualPassClaimed: false,
+          status: value,
+          updatedAt: new Date().toISOString()
+        };
+
         if (status) {
           status.textContent = [
-            "Hearth tectonic parent-chain route failed to load.",
-            `Route ${script.src}`,
+            "Hearth active planet narrative HTML loaded.",
+            `HTML contract ${CONTRACT}`,
+            `Active route file ${ACTIVE_ROUTE_FILE}`,
+            `Active route contract ${ACTIVE_ROUTE_CONTRACT}`,
+            "Narrative identity Hearth · Survival Becomes Shelter",
+            "Visible planet carrier active true",
+            "Map / Portal imports active true",
+            "Map blip owns global estate navigation true",
+            "Top navigation is not the Map / Portal true",
             "Generated image false",
             "GraphicBox false",
-            "Visual pass claimed false"
+            "WebGL false",
+            "Visual pass claimed false",
+            `Status ${value}`
           ].join("\n");
         }
+      }
+
+      publishHtmlStatus("loading-active-route-file");
+
+      const script = document.createElement("script");
+      script.src = `./hearth.climate.route.js?v=${encodeURIComponent(key)}`;
+      script.defer = true;
+      script.dataset.hearthFile = "true";
+      script.dataset.hearthFileRole = "active-planet-narrative-carrier";
+      script.dataset.hearthHtmlContract = CONTRACT;
+      script.dataset.hearthExpectedRouteContract = ACTIVE_ROUTE_CONTRACT;
+      script.dataset.generatedImage = "false";
+      script.dataset.graphicBox = "false";
+      script.dataset.webgl = "false";
+      script.dataset.visualPassClaimed = "false";
+
+      script.onload = () => {
+        publishHtmlStatus("active-route-file-loaded");
+      };
+
+      script.onerror = () => {
+        publishHtmlStatus("active-route-file-failed-to-load");
       };
 
       document.head.appendChild(script);

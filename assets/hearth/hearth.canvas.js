@@ -1,12 +1,12 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_RICH_BLUE_OCEAN_BODY_CANVAS_CONSUMER_TNT_v1
+// HEARTH_OCEAN_CANVAS_CONSUMER_SPHERE_CONTAINMENT_TNT_v1
 // Full-file replacement.
 // Canvas / composition authority only.
 // Purpose:
-// - Compose Hearth hydrology + terrain materials + separate ocean authority.
-// - Make HEARTH.ocean visibly active without collapsing ocean into terrain materials.
-// - Increase rich-blue ocean visibility in water-classified regions.
-// - Preserve dry land, submerged scars/blocks, basin darkness, route stability, and runtime/controls separation.
+// - Preserve Hearth hydrology + terrain materials + separate ocean authority composition.
+// - Restore spherical containment after rectangular texture spill.
+// - Keep ocean visible only inside the planet body.
+// - Preserve route/runtime/controls separation.
 // Does not own:
 // - hydrology classification
 // - ocean authority generation
@@ -23,10 +23,11 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_RICH_BLUE_OCEAN_BODY_CANVAS_CONSUMER_TNT_v1";
-  const RECEIPT = "HEARTH_RICH_BLUE_OCEAN_BODY_CANVAS_CONSUMER_RECEIPT_v1";
+  const CONTRACT = "HEARTH_OCEAN_CANVAS_CONSUMER_SPHERE_CONTAINMENT_TNT_v1";
+  const RECEIPT = "HEARTH_OCEAN_CANVAS_CONSUMER_SPHERE_CONTAINMENT_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_RICH_BLUE_OCEAN_BODY_CANVAS_CONSUMER_TNT_v1";
   const OCEAN_CONTRACT = "HEARTH_RICH_BLUE_OCEAN_BODY_AUTHORITY_TNT_v1";
-  const VERSION = "2026-05-28.hearth-rich-blue-ocean-body-canvas-consumer-v1";
+  const VERSION = "2026-05-28.hearth-ocean-canvas-consumer-sphere-containment-v1";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const DEG = Math.PI / 180;
@@ -40,7 +41,8 @@
     shelf: [22, 69, 91],
     basin: [4, 15, 28],
     scar: [30, 39, 36],
-    shadow: [2, 7, 15]
+    shadow: [2, 7, 15],
+    transparent: [0, 0, 0]
   });
 
   const clamp = (value, min, max) => {
@@ -97,11 +99,46 @@
     const lon = Number(lonDeg || 0) * DEG;
     const lat = Number(latDeg || 0) * DEG;
     const c = Math.cos(lat);
+
     return normalize3({
       x: Math.sin(lon) * c,
       y: Math.sin(lat),
       z: Math.cos(lon) * c
     });
+  };
+
+  const spherePixelToVector = (x, y, width, height) => {
+    const size = Math.min(width, height);
+    const cx = (width - 1) / 2;
+    const cy = (height - 1) / 2;
+    const radius = size * 0.5 * 0.985;
+
+    const dx = (x - cx) / radius;
+    const dy = (y - cy) / radius;
+    const rr = dx * dx + dy * dy;
+
+    if (rr > 1) {
+      return {
+        inside: false,
+        edgeAlpha: 0,
+        vector: { x: 0, y: 0, z: 1 },
+        radial: Math.sqrt(rr)
+      };
+    }
+
+    const z = Math.sqrt(Math.max(0, 1 - rr));
+    const edgeAlpha = clamp01((1 - Math.sqrt(rr)) / 0.025);
+
+    return {
+      inside: true,
+      edgeAlpha,
+      radial: Math.sqrt(rr),
+      vector: normalize3({
+        x: dx,
+        y: -dy,
+        z
+      })
+    };
   };
 
   const parseInput = (...args) => {
@@ -373,7 +410,7 @@
 
     const oceanRgb = colorField(raw, ["oceanRgb", "oceanColor", "color"], FALLBACK.water);
 
-    const ocean = {
+    return {
       ...raw,
       available: true,
       oceanRgb,
@@ -416,8 +453,6 @@
       ),
       oceanConsumerReady: boolField(raw, "oceanConsumerReady", true)
     };
-
-    return ocean;
   };
 
   const readMaterials = (...args) => {
@@ -640,6 +675,7 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       authority: "canvas-composer",
 
@@ -689,6 +725,11 @@
       hydrologyContract: hydrology.contract || "UNKNOWN_HYDROLOGY_CONTRACT",
       oceanContract: ocean.contract || "OCEAN_UNAVAILABLE",
 
+      sphereContained: true,
+      outsideSphereTransparent: true,
+      noRectangularTextureSpill: true,
+      projectionCompatible: true,
+
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -702,20 +743,21 @@
   const sample = (...args) => composeSample(...args);
   const read = (...args) => composeSample(...args);
   const compose = (...args) => composeSample(...args);
+  const composeSampleAlias = (...args) => composeSample(...args);
   const composePixel = (...args) => composeSample(...args);
   const getPixel = (...args) => composeSample(...args);
   const getColor = (...args) => composeSample(...args).rgb;
 
-  const createTextureCanvas = (options = {}) => {
+  const createSphereTextureCanvas = (options = {}) => {
     if (!root.document || typeof root.document.createElement !== "function") {
       throw new Error("Hearth canvas texture creation requires document.createElement.");
     }
 
     const requestedWidth = Number.isFinite(Number(options.width)) ? Math.round(Number(options.width)) : 768;
-    const requestedHeight = Number.isFinite(Number(options.height)) ? Math.round(Number(options.height)) : 384;
+    const requestedHeight = Number.isFinite(Number(options.height)) ? Math.round(Number(options.height)) : 768;
 
     const width = clamp(requestedWidth, 32, options.allowLargeTexture === true ? 1536 : 1024);
-    const height = clamp(requestedHeight, 16, options.allowLargeTexture === true ? 768 : 512);
+    const height = clamp(requestedHeight, 32, options.allowLargeTexture === true ? 1536 : 1024);
 
     const canvas = root.document.createElement("canvas");
     canvas.width = width;
@@ -730,6 +772,64 @@
     canvas.dataset.hearthCanvasOceanFailSoft = "true";
     canvas.dataset.hearthCanvasOceanComposedWithMaterials = "true";
     canvas.dataset.hearthCanvasOceanComposedWithHydrology = "true";
+    canvas.dataset.hearthCanvasSphereContainment = "true";
+    canvas.dataset.hearthCanvasNoRectangularTextureSpill = "true";
+    canvas.dataset.hearthCanvasProjectionCompatible = "true";
+    canvas.dataset.hearthCanvasOutsideSphereTransparent = "true";
+    canvas.dataset.visualPassClaimed = "false";
+
+    const ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: false });
+    const image = ctx.createImageData(width, height);
+    const data = image.data;
+
+    for (let y = 0; y < height; y += 1) {
+      for (let x = 0; x < width; x += 1) {
+        const sphere = spherePixelToVector(x, y, width, height);
+        const i = (y * width + x) * 4;
+
+        if (!sphere.inside) {
+          data[i] = 0;
+          data[i + 1] = 0;
+          data[i + 2] = 0;
+          data[i + 3] = 0;
+          continue;
+        }
+
+        const px = composeSample(sphere.vector);
+        const edgeShade = clamp01(1 - sphere.radial * 0.16);
+        const rgb = scaleColor(px.rgb, edgeShade);
+
+        data[i] = rgb[0];
+        data[i + 1] = rgb[1];
+        data[i + 2] = rgb[2];
+        data[i + 3] = Math.round(clamp01(px.alpha) * 255 * sphere.edgeAlpha);
+      }
+    }
+
+    ctx.putImageData(image, 0, 0);
+    return canvas;
+  };
+
+  const createAtlasTextureCanvas = (options = {}) => {
+    if (!root.document || typeof root.document.createElement !== "function") {
+      throw new Error("Hearth canvas atlas creation requires document.createElement.");
+    }
+
+    const requestedWidth = Number.isFinite(Number(options.width)) ? Math.round(Number(options.width)) : 768;
+    const requestedHeight = Number.isFinite(Number(options.height)) ? Math.round(Number(options.height)) : 384;
+
+    const width = clamp(requestedWidth, 32, options.allowLargeTexture === true ? 1536 : 1024);
+    const height = clamp(requestedHeight, 16, options.allowLargeTexture === true ? 768 : 512);
+
+    const canvas = root.document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+
+    canvas.dataset.hearthCanvasAtlasTexture = "true";
+    canvas.dataset.hearthCanvasContract = CONTRACT;
+    canvas.dataset.hearthCanvasReceipt = RECEIPT;
+    canvas.dataset.hearthCanvasProjectionCompatible = "source-only";
+    canvas.dataset.hearthCanvasRawAtlasDisplayForbidden = "true";
     canvas.dataset.visualPassClaimed = "false";
 
     const ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: false });
@@ -755,6 +855,14 @@
     return canvas;
   };
 
+  const createTextureCanvas = (options = {}) => {
+    if (options && options.atlas === true) {
+      return createAtlasTextureCanvas(options);
+    }
+
+    return createSphereTextureCanvas(options);
+  };
+
   const createCanvas = (options = {}) => createTextureCanvas(options);
   const createPlanetTexture = (options = {}) => createTextureCanvas(options);
   const createTexture = (options = {}) => createTextureCanvas(options);
@@ -766,9 +874,9 @@
       return null;
     }
 
-    const texture = createTextureCanvas({
+    const texture = createSphereTextureCanvas({
       width: options.width || targetCanvas.width || 768,
-      height: options.height || targetCanvas.height || 384,
+      height: options.height || targetCanvas.height || targetCanvas.width || 768,
       allowLargeTexture: options.allowLargeTexture === true
     });
 
@@ -779,6 +887,9 @@
     targetCanvas.dataset.hearthCanvasPainted = "true";
     targetCanvas.dataset.hearthCanvasContract = CONTRACT;
     targetCanvas.dataset.hearthCanvasConsumesOcean = "true";
+    targetCanvas.dataset.hearthCanvasSphereContainment = "true";
+    targetCanvas.dataset.hearthCanvasNoRectangularTextureSpill = "true";
+    targetCanvas.dataset.hearthCanvasOutsideSphereTransparent = "true";
     targetCanvas.dataset.visualPassClaimed = "false";
 
     return targetCanvas;
@@ -801,8 +912,12 @@
 
     if (!element) return null;
 
-    const canvas = createTextureCanvas(options);
-    canvas.className = options.className || "hearth-canvas-texture";
+    const canvas = createSphereTextureCanvas(options);
+    canvas.className = options.className || "hearth-canvas-texture hearth-canvas-contained-sphere";
+    canvas.style.maxWidth = "100%";
+    canvas.style.height = "auto";
+    canvas.style.display = "block";
+    canvas.style.background = "transparent";
     element.appendChild(canvas);
 
     return canvas;
@@ -811,6 +926,7 @@
   const getReceipt = () => ({
     contract: CONTRACT,
     receipt: RECEIPT,
+    previousContract: PREVIOUS_CONTRACT,
     version: VERSION,
     authority: "canvas-composer",
     status: "active",
@@ -821,13 +937,19 @@
     oceanFailSoft: true,
     oceanComposedWithMaterials: true,
     oceanComposedWithHydrology: true,
+    sphereContainment: true,
+    noRectangularTextureSpill: true,
+    projectionCompatible: true,
+    outsideSphereTransparent: true,
+    rawAtlasDisplayForbidden: true,
     owns: [
       "final-pixel-composition",
       "ocean-weighting",
       "terrain-ocean-blend",
       "waterline-layering",
       "submerged-basin-layering",
-      "final-light-shadow-application"
+      "final-light-shadow-application",
+      "spherical-alpha-containment-for-visible-canvas-output"
     ],
     doesNotOwn: [
       "hydrology-classification",
@@ -847,15 +969,20 @@
       "if-ocean-missing-use-material-render",
       "if-ocean-sample-throws-ignore-ocean-for-sample",
       "if-ocean-output-malformed-ignore-ocean-for-sample",
+      "if-visible-canvas-generated-outside-sphere-alpha-zero",
       "no-blank-planet",
       "no-route-failure",
-      "no-broken-drag"
+      "no-broken-drag",
+      "no-raw-rectangle-fallback"
     ],
     supportsRichBlueOceanCanvasConsumer: true,
     supportsOceanTerrainComposition: true,
     supportsOceanFailSoft: true,
     supportsSubmergedBasinComposition: true,
     supportsPortBasinImpliedComposition: true,
+    supportsSphereContainment: true,
+    supportsOutsideSphereTransparency: true,
+    supportsProjectionCompatibility: true,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
@@ -868,17 +995,21 @@
   const api = {
     contract: CONTRACT,
     receipt: RECEIPT,
+    previousContract: PREVIOUS_CONTRACT,
     version: VERSION,
 
     sample,
     read,
     compose,
     composeSample,
+    composeSampleAlias,
     composePixel,
     getPixel,
     getColor,
 
     createTextureCanvas,
+    createSphereTextureCanvas,
+    createAtlasTextureCanvas,
     createCanvas,
     createPlanetTexture,
     createTexture,
@@ -899,6 +1030,9 @@
     supportsOceanFailSoft: true,
     supportsSubmergedBasinComposition: true,
     supportsPortBasinImpliedComposition: true,
+    supportsSphereContainment: true,
+    supportsOutsideSphereTransparency: true,
+    supportsProjectionCompatibility: true,
 
     consumesOcean: true,
     oceanContract: OCEAN_CONTRACT,
@@ -906,6 +1040,10 @@
     oceanFailSoft: true,
     oceanComposedWithMaterials: true,
     oceanComposedWithHydrology: true,
+    sphereContainment: true,
+    noRectangularTextureSpill: true,
+    outsideSphereTransparent: true,
+    projectionCompatible: true,
 
     generatedImage: false,
     graphicBox: false,
@@ -930,17 +1068,26 @@
   root.HEARTH_CANVAS_OCEAN_FAIL_SOFT = true;
   root.HEARTH_CANVAS_OCEAN_COMPOSED_WITH_MATERIALS = true;
   root.HEARTH_CANVAS_OCEAN_COMPOSED_WITH_HYDROLOGY = true;
+  root.HEARTH_CANVAS_SPHERE_CONTAINMENT = true;
+  root.HEARTH_CANVAS_NO_RECTANGULAR_TEXTURE_SPILL = true;
+  root.HEARTH_CANVAS_PROJECTION_COMPATIBLE = true;
+  root.HEARTH_CANVAS_OUTSIDE_SPHERE_TRANSPARENT = true;
 
   if (root.document && root.document.documentElement) {
     root.document.documentElement.dataset.hearthCanvasAuthorityLoaded = "true";
     root.document.documentElement.dataset.hearthCanvasContract = CONTRACT;
     root.document.documentElement.dataset.hearthCanvasReceipt = RECEIPT;
+    root.document.documentElement.dataset.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
     root.document.documentElement.dataset.hearthCanvasConsumesOcean = "true";
     root.document.documentElement.dataset.hearthCanvasOceanContract = OCEAN_CONTRACT;
     root.document.documentElement.dataset.hearthCanvasOceanConsumerContract = CONTRACT;
     root.document.documentElement.dataset.hearthCanvasOceanFailSoft = "true";
     root.document.documentElement.dataset.hearthCanvasOceanComposedWithMaterials = "true";
     root.document.documentElement.dataset.hearthCanvasOceanComposedWithHydrology = "true";
+    root.document.documentElement.dataset.hearthCanvasSphereContainment = "true";
+    root.document.documentElement.dataset.hearthCanvasNoRectangularTextureSpill = "true";
+    root.document.documentElement.dataset.hearthCanvasProjectionCompatible = "true";
+    root.document.documentElement.dataset.hearthCanvasOutsideSphereTransparent = "true";
     root.document.documentElement.dataset.generatedImage = "false";
     root.document.documentElement.dataset.graphicBox = "false";
     root.document.documentElement.dataset.webgl = "false";

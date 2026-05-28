@@ -3,8 +3,19 @@
   lang="en"
   data-route="/characters/"
   data-page="characters"
-  data-contract="SHADOWS_NEVER_SHATTER_GEM_NAV_STORY_ORGANIZATION_TNT_v1"
-  data-previous-contract="SHADOWS_NEVER_SHATTER_MIRROR_MANOR_PLACEMENT_AND_FRONTIER_PRESENTATION_TNT_v1"
+  data-contract="CHARACTERS_MAP_PORTAL_IMPORT_HTML_TNT_v1"
+  data-previous-contract="SHADOWS_NEVER_SHATTER_GEM_NAV_STORY_ORGANIZATION_TNT_v1"
+  data-map-portal-contract="MANOR_BLUEPRINT_MAIN_MENU_INSTRUCTIONS_RUNTIME_TNT_v1"
+  data-map-portal-css-contract="MANOR_BLUEPRINT_ESTATE_ORIENTATION_VISUAL_CSS_TNT_v1"
+  data-map-portal-import="true"
+  data-map-portal-blip="true"
+  data-map-portal-draggable="true"
+  data-map-portal-overlay="true"
+  data-map-portal-route-known="true"
+  data-map-portal-current-room="Portrait Hall"
+  data-main-menu-separated="true"
+  data-mirrorland-doors-separated="true"
+  data-instructions-expanded="true"
   data-role="show-game-character-dossier"
   data-narrative-anchor="Shadows Never Shatter in Mirrorland"
   data-series-model="perspective-series-nine-episodes-nine-seasons"
@@ -31,6 +42,21 @@
   >
   <link rel="canonical" href="https://diamondgatebridge.com/characters/">
   <meta name="theme-color" content="#02040b">
+
+  <link
+    rel="stylesheet"
+    href="/assets/manor-blueprint/manor.blueprint.css?v=MANOR_BLUEPRINT_ESTATE_ORIENTATION_VISUAL_CSS_TNT_v1"
+    data-map-portal-css
+    data-contract="MANOR_BLUEPRINT_ESTATE_ORIENTATION_VISUAL_CSS_TNT_v1"
+  >
+
+  <script
+    src="/assets/manor-blueprint/manor.blueprint.js?v=MANOR_BLUEPRINT_MAIN_MENU_INSTRUCTIONS_RUNTIME_TNT_v1"
+    defer
+    data-map-portal-js
+    data-contract="MANOR_BLUEPRINT_MAIN_MENU_INSTRUCTIONS_RUNTIME_TNT_v1"
+    data-html-contract="CHARACTERS_MAP_PORTAL_IMPORT_HTML_TNT_v1"
+  ></script>
 
   <style>
     :root{
@@ -2285,11 +2311,36 @@
         </div>
 
         <template id="route-receipt" data-route-receipt>
-SHADOWS_NEVER_SHATTER_GEM_NAV_STORY_ORGANIZATION_TNT_v1
-previous=SHADOWS_NEVER_SHATTER_MIRROR_MANOR_PLACEMENT_AND_FRONTIER_PRESENTATION_TNT_v1
+CHARACTERS_MAP_PORTAL_IMPORT_HTML_TNT_v1
+previous=SHADOWS_NEVER_SHATTER_GEM_NAV_STORY_ORGANIZATION_TNT_v1
 route=/characters/
 page=characters
 role=show_game_character_dossier
+renewal_scope=html_import_cache_catch_only
+preserve_long_page=true
+preserve_page_body=true
+preserve_inline_css=true
+preserve_character_roster=true
+preserve_story_copy=true
+preserve_nav_links=true
+map_portal_import=true
+map_portal_css=/assets/manor-blueprint/manor.blueprint.css
+map_portal_css_contract=MANOR_BLUEPRINT_ESTATE_ORIENTATION_VISUAL_CSS_TNT_v1
+map_portal_js=/assets/manor-blueprint/manor.blueprint.js
+map_portal_js_contract=MANOR_BLUEPRINT_MAIN_MENU_INSTRUCTIONS_RUNTIME_TNT_v1
+map_portal_blip=true
+map_portal_draggable=true
+map_portal_overlay=true
+map_portal_lenses=Mirrorland_Doors,Main_Menu,Instructions
+current_room=Portrait_Hall
+map_registry_route_known=true
+mirrorland_door=true
+main_menu_regular_website_separated=true
+instructions_expanded=true
+global_map_portal=true
+not_dropdown=true
+not_static_link=true
+not_door_only=true
 story_anchor=Shadows_Never_Shatter_in_Mirrorland
 title_mechanism=a_mirror_can_shatter_a_shadow_cannot
 shadow_law=shadows_do_not_shatter_anywhere
@@ -2329,7 +2380,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      SHADOWS_NEVER_SHATTER_GEM_NAV_STORY_ORGANIZATION_TNT_v1 · Shadows Never Shatter in Mirrorland · Show/Game Character Dossier.
+      CHARACTERS_MAP_PORTAL_IMPORT_HTML_TNT_v1 · /characters/ · Portrait Hall · Map / Portal import renewal · Shadows Never Shatter in Mirrorland.
     </footer>
   </div>
 </body>

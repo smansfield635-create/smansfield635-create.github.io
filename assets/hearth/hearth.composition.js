@@ -1,14 +1,17 @@
 // /assets/hearth/hearth.composition.js
-// HEARTH_SEVEN_CONTINENT_REAL_PLANET_COMPOSITION_TNT_v1
+// HEARTH_TECTONICS_SEATED_COMPOSITION_COORDINATION_TNT_v2
 // Full-file replacement.
-// Composition authority only.
+// Composition coordination authority only.
 // Purpose:
-// - Consume HEARTH_SEVEN_CONTINENT_REAL_PLANET_ELEVATION_TNT_v1.
-// - Convert renewed real-planet elevation fields into material-ready terrain classes.
-// - Preserve seven continent identity, open ocean identity, nine climate classes, nonlinear summit overlays, shelves, basins, canyons, cliffs, waterfalls, archipelagos, and mass anchoring.
-// - Preserve current materials/canvas compatibility.
+// - Consume HEARTH_TECTONICS_SEATED_ELEVATION_RESOLVER_TNT_v2.
+// - Align composition coordinates to the same u/v law used by tectonics and elevation.
+// - Convert resolved elevation packets into material-ready terrain classes.
+// - Preserve downstream materials/canvas compatibility fields.
+// - Relay tectonics-seated proof fields downstream.
 // Does not own:
+// - tectonic cause
 // - elevation generation
+// - hydrology decisions
 // - material palette
 // - canvas drawing
 // - runtime motion
@@ -20,11 +23,12 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_SEVEN_CONTINENT_REAL_PLANET_COMPOSITION_TNT_v1";
-  const RECEIPT = "HEARTH_SEVEN_CONTINENT_REAL_PLANET_COMPOSITION_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_SEVEN_CONTINENT_NINE_CLIMATE_COMPOSITION_TNT_v2";
+  const CONTRACT = "HEARTH_TECTONICS_SEATED_COMPOSITION_COORDINATION_TNT_v2";
+  const RECEIPT = "HEARTH_TECTONICS_SEATED_COMPOSITION_COORDINATION_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "HEARTH_SEVEN_CONTINENT_REAL_PLANET_COMPOSITION_TNT_v1";
   const BASELINE_CONTRACT = "HEARTH_SURFACE_MASS_ANCHORING_COMPOSITION_TNT_v1";
-  const VERSION = "2026-05-28.hearth-seven-continent-real-planet-composition-v1";
+  const REQUIRED_ELEVATION_CONTRACT = "HEARTH_TECTONICS_SEATED_ELEVATION_RESOLVER_TNT_v2";
+  const VERSION = "2026-05-28.hearth-tectonics-seated-composition-coordination-v2";
   const SEA_LEVEL = 0.0;
   const DEG = Math.PI / 180;
 
@@ -85,7 +89,8 @@
     equatorial_wet: "equatorial_wet_mass",
     mountain_arc: "mountain_arc_mass",
     broken_archipelago: "broken_archipelago_mass",
-    open_ocean: "open_ocean"
+    open_ocean: "open_ocean",
+    unresolved_crustal_province: "unresolved_crustal_province"
   });
 
   const CONTINENT_ROLE_HINTS = Object.freeze({
@@ -96,6 +101,7 @@
     equatorial_wet: "wet equatorial continent with rainforest basin, monsoon floodplain, waterfalls, and saturated lowland pressure",
     mountain_arc: "tectonic challenge continent with alpine ridges, canyon corridors, cliffs, high passes, and mountain arcs",
     broken_archipelago: "fragmented continent with drowned shelves, maritime island arcs, broken coastlines, and archipelago thresholds",
+    unresolved_crustal_province: "resolved tectonic province without legacy continent alias",
     open_ocean: "open ocean basin between continent systems"
   });
 
@@ -128,6 +134,8 @@
     none: "none"
   });
 
+  let materialSupportMemo = null;
+
   const clamp = (value, min, max) => {
     const n = Number(value);
     if (!Number.isFinite(n)) return min;
@@ -135,7 +143,6 @@
   };
 
   const clamp01 = (value) => clamp(value, 0, 1);
-  const mix = (a, b, t) => a + (b - a) * clamp01(t);
 
   const smoothstep = (edge0, edge1, x) => {
     const d = edge1 - edge0 || 1;
@@ -146,6 +153,12 @@
   const softBand = (value, center, width) => {
     const t = 1 - clamp(Math.abs(value - center) / Math.max(0.000001, width), 0, 1);
     return t * t * (3 - 2 * t);
+  };
+
+  const wrap01 = (value) => {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return 0;
+    return ((n % 1) + 1) % 1;
   };
 
   const normalize3 = (p) => {
@@ -161,6 +174,14 @@
     };
   };
 
+  const vectorToLonLat = (p) => {
+    const n = normalize3(p);
+    return {
+      lon: Math.atan2(n.x, n.z) / DEG,
+      lat: Math.asin(clamp(n.y, -1, 1)) / DEG
+    };
+  };
+
   const lonLatToVector = (lonDeg, latDeg) => {
     const lon = Number(lonDeg || 0) * DEG;
     const lat = Number(latDeg || 0) * DEG;
@@ -173,40 +194,76 @@
     });
   };
 
+  const lonToU = (lon) => wrap01((Number(lon) + 180) / 360);
+  const latToV = (lat) => clamp((90 - Number(lat)) / 180, 0, 1);
+  const uToLon = (u) => wrap01(u) * 360 - 180;
+  const vToLat = (v) => 90 - clamp(Number(v), 0, 1) * 180;
+
+  const withCoordinateFields = (vector, lon, lat, u, v) => ({
+    ...vector,
+    lon,
+    lat,
+    u,
+    v
+  });
+
   const parseInput = (...args) => {
     if (args.length === 1 && args[0] && typeof args[0] === "object") {
       const p = args[0];
+
+      if (
+        Number.isFinite(Number(p.u)) &&
+        Number.isFinite(Number(p.v))
+      ) {
+        const u = wrap01(p.u);
+        const v = clamp(Number(p.v), 0, 1);
+        const lon = uToLon(u);
+        const lat = vToLat(v);
+        return withCoordinateFields(lonLatToVector(lon, lat), lon, lat, u, v);
+      }
+
+      if (
+        Number.isFinite(Number(p.lon)) &&
+        Number.isFinite(Number(p.lat))
+      ) {
+        const lon = Number(p.lon);
+        const lat = Number(p.lat);
+        return withCoordinateFields(lonLatToVector(lon, lat), lon, lat, lonToU(lon), latToV(lat));
+      }
+
+      if (
+        Number.isFinite(Number(p.longitude)) &&
+        Number.isFinite(Number(p.latitude))
+      ) {
+        const lon = Number(p.longitude);
+        const lat = Number(p.latitude);
+        return withCoordinateFields(lonLatToVector(lon, lat), lon, lat, lonToU(lon), latToV(lat));
+      }
 
       if (
         Number.isFinite(Number(p.x)) &&
         Number.isFinite(Number(p.y)) &&
         Number.isFinite(Number(p.z))
       ) {
-        return normalize3(p);
-      }
-
-      if (Number.isFinite(Number(p.lon)) && Number.isFinite(Number(p.lat))) {
-        return lonLatToVector(Number(p.lon), Number(p.lat));
-      }
-
-      if (Number.isFinite(Number(p.longitude)) && Number.isFinite(Number(p.latitude))) {
-        return lonLatToVector(Number(p.longitude), Number(p.latitude));
-      }
-
-      if (Number.isFinite(Number(p.u)) && Number.isFinite(Number(p.v))) {
-        return lonLatToVector(mix(-180, 180, Number(p.u)), mix(-90, 90, Number(p.v)));
+        const vector = normalize3(p);
+        const ll = vectorToLonLat(vector);
+        return withCoordinateFields(vector, ll.lon, ll.lat, lonToU(ll.lon), latToV(ll.lat));
       }
     }
 
     if (args.length >= 3) {
-      return normalize3({ x: args[0], y: args[1], z: args[2] });
+      const vector = normalize3({ x: args[0], y: args[1], z: args[2] });
+      const ll = vectorToLonLat(vector);
+      return withCoordinateFields(vector, ll.lon, ll.lat, lonToU(ll.lon), latToV(ll.lat));
     }
 
     if (args.length >= 2) {
-      return lonLatToVector(Number(args[0]), Number(args[1]));
+      const lon = Number(args[0]);
+      const lat = Number(args[1]);
+      return withCoordinateFields(lonLatToVector(lon, lat), lon, lat, lonToU(lon), latToV(lat));
     }
 
-    return lonLatToVector(0, 0);
+    return withCoordinateFields(lonLatToVector(0, 0), 0, 0, 0.5, 0.5);
   };
 
   const getElevationAuthority = () => {
@@ -269,12 +326,15 @@
     return {
       contract: source.contract || "UNKNOWN_OR_FALLBACK_ELEVATION",
       receipt: source.receipt || "FALLBACK_ELEVATION_SAMPLE",
+      requiredTectonicsContract: source.requiredTectonicsContract || "",
 
       x: Number.isFinite(Number(source.x)) ? Number(source.x) : p.x,
       y: Number.isFinite(Number(source.y)) ? Number(source.y) : p.y,
       z: Number.isFinite(Number(source.z)) ? Number(source.z) : p.z,
-      lon: Number.isFinite(Number(source.lon)) ? Number(source.lon) : 0,
-      lat: Number.isFinite(Number(source.lat)) ? Number(source.lat) : 0,
+      lon: Number.isFinite(Number(source.lon)) ? Number(source.lon) : p.lon,
+      lat: Number.isFinite(Number(source.lat)) ? Number(source.lat) : p.lat,
+      u: Number.isFinite(Number(source.u)) ? wrap01(source.u) : p.u,
+      v: Number.isFinite(Number(source.v)) ? clamp(Number(source.v), 0, 1) : p.v,
 
       elevation: clamp(e, -1, 1),
       seaLevel: Number.isFinite(Number(source.seaLevel)) ? Number(source.seaLevel) : SEA_LEVEL,
@@ -360,7 +420,45 @@
             ? "continent_mass"
             : "ocean_basin",
 
-      dominantCoreId: source.dominantCoreId || continentId
+      dominantCoreId: source.dominantCoreId || continentId,
+
+      tectonicsAvailable: source.tectonicsAvailable === true,
+      tectonicsConsumed: source.tectonicsConsumed === true,
+      tectonicsContract: typeof source.tectonicsContract === "string" ? source.tectonicsContract : "",
+      tectonicsReceipt: typeof source.tectonicsReceipt === "string" ? source.tectonicsReceipt : "",
+      tectonicsStructuralClass: typeof source.tectonicsStructuralClass === "string" ? source.tectonicsStructuralClass : "",
+      tectonicsDominantStructuralCause: typeof source.tectonicsDominantStructuralCause === "string" ? source.tectonicsDominantStructuralCause : "",
+      elevationResolvedFromTectonics: source.elevationResolvedFromTectonics === true,
+
+      tectonicElevationInfluence: clamp01(source.tectonicElevationInfluence),
+      tectonicDepth: clamp01(source.tectonicDepth),
+      tectonicSubsurfacePressure: clamp01(source.tectonicSubsurfacePressure),
+      tectonicPlateStress: clamp01(source.tectonicPlateStress),
+      tectonicCrustalCompression: clamp01(source.tectonicCrustalCompression),
+      tectonicRidgePressure: clamp01(source.tectonicRidgePressure),
+      tectonicBasinPressure: clamp01(source.tectonicBasinPressure),
+      tectonicScarPressure: clamp01(source.tectonicScarPressure),
+      tectonicAncientChannelCut: clamp01(source.tectonicAncientChannelCut),
+      tectonicShelfCutPressure: clamp01(source.tectonicShelfCutPressure),
+      tectonicBuriedStructure: clamp01(source.tectonicBuriedStructure),
+
+      crustalProvincePressure: clamp01(source.crustalProvincePressure),
+      crustalProvinceId: source.crustalProvinceId || "",
+      crustalProvinceLabel: source.crustalProvinceLabel || "",
+      continentalMassPressure: clamp01(source.continentalMassPressure),
+      oceanBasinPressure: clamp01(source.oceanBasinPressure),
+      oceanBasinId: source.oceanBasinId || "",
+      oceanBasinLabel: source.oceanBasinLabel || "",
+      coastBoundaryMemory: clamp01(source.coastBoundaryMemory),
+      ridgeCollisionPressure: clamp01(source.ridgeCollisionPressure),
+      ridgeCollisionId: source.ridgeCollisionId || "",
+      ridgeCollisionLabel: source.ridgeCollisionLabel || "",
+      plateauUpliftPressure: clamp01(source.plateauUpliftPressure),
+      basinSinkPressure: clamp01(source.basinSinkPressure),
+      fractureCutPressure: clamp01(source.fractureCutPressure),
+      tectonicSummitPressure: clamp01(source.tectonicSummitPressure),
+      tectonicSummitPressureId: source.tectonicSummitPressureId || "none",
+      tectonicSummitPressureLabel: source.tectonicSummitPressureLabel || "None"
     };
   };
 
@@ -383,11 +481,15 @@
 
     return normalizeElevationSample(
       {
-        contract: "HEARTH_COMPOSITION_REAL_PLANET_FALLBACK_ELEVATION",
+        contract: "HEARTH_COMPOSITION_COORDINATION_FALLBACK_ELEVATION",
         receipt: "FALLBACK_ELEVATION_AUTHORITY_NOT_FOUND",
         x: p.x,
         y: p.y,
         z: p.z,
+        lon: p.lon,
+        lat: p.lat,
+        u: p.u,
+        v: p.v,
         elevation,
         isLand,
         isWater: !isLand,
@@ -430,7 +532,12 @@
     const p = parseInput(...args);
     const authority = getElevationAuthority();
 
-    if (args.length === 1 && args[0] && typeof args[0] === "object" && Number.isFinite(Number(args[0].elevation))) {
+    if (
+      args.length === 1 &&
+      args[0] &&
+      typeof args[0] === "object" &&
+      Number.isFinite(Number(args[0].elevation))
+    ) {
       return normalizeElevationSample(args[0], p);
     }
 
@@ -451,7 +558,7 @@
           return normalizeElevationSample(fn.apply(authority, args), p);
         } catch (_error) {
           try {
-            return normalizeElevationSample(fn.call(authority, p), p);
+            return normalizeElevationSample(fn.call(authority, { u: p.u, v: p.v, lon: p.lon, lat: p.lat, x: p.x, y: p.y, z: p.z }), p);
           } catch (_error2) {
             return fallbackElevationSample(p);
           }
@@ -463,32 +570,61 @@
   };
 
   const materialSupportsExpandedTerrain = () => {
-    const materials = root.HEARTH_MATERIALS || root.HearthMaterials || (root.HEARTH && root.HEARTH.materials) || null;
+    if (materialSupportMemo !== null) return materialSupportMemo;
 
-    if (root.HEARTH_MATERIALS_SUPPORTS_SEVEN_CLIMATE_TERRAIN_CLASSES === true) return true;
-    if (root.HEARTH_MATERIALS_SUPPORTS_SEVEN_CONTINENT_NINE_CLIMATE_TERRAIN === true) return true;
-    if (materials && materials.supportsExpandedHearthTerrain === true) return true;
-    if (materials && materials.supportsSevenContinentNineClimateTerrain === true) return true;
-    if (materials && materials.supportsSevenClimateTerrainClasses === true) return true;
+    const materials =
+      root.HEARTH_MATERIALS ||
+      root.HearthMaterials ||
+      (root.HEARTH && root.HEARTH.materials) ||
+      null;
+
+    if (root.HEARTH_MATERIALS_SUPPORTS_SEVEN_CLIMATE_TERRAIN_CLASSES === true) {
+      materialSupportMemo = true;
+      return materialSupportMemo;
+    }
+
+    if (root.HEARTH_MATERIALS_SUPPORTS_SEVEN_CONTINENT_NINE_CLIMATE_TERRAIN === true) {
+      materialSupportMemo = true;
+      return materialSupportMemo;
+    }
+
+    if (materials && materials.supportsExpandedHearthTerrain === true) {
+      materialSupportMemo = true;
+      return materialSupportMemo;
+    }
+
+    if (materials && materials.supportsSevenContinentNineClimateTerrain === true) {
+      materialSupportMemo = true;
+      return materialSupportMemo;
+    }
+
+    if (materials && materials.supportsSevenClimateTerrainClasses === true) {
+      materialSupportMemo = true;
+      return materialSupportMemo;
+    }
 
     if (materials && Array.isArray(materials.terrainClasses)) {
-      return EXPANDED_TERRAIN_CLASSES.some((name) => materials.terrainClasses.includes(name));
+      materialSupportMemo = EXPANDED_TERRAIN_CLASSES.some((name) => materials.terrainClasses.includes(name));
+      return materialSupportMemo;
     }
 
     if (materials && materials.materialClassMap && typeof materials.materialClassMap === "object") {
-      return EXPANDED_TERRAIN_CLASSES.some((name) => Object.prototype.hasOwnProperty.call(materials.materialClassMap, name));
+      materialSupportMemo = EXPANDED_TERRAIN_CLASSES.some((name) =>
+        Object.prototype.hasOwnProperty.call(materials.materialClassMap, name)
+      );
+      return materialSupportMemo;
     }
 
-    return false;
+    materialSupportMemo = false;
+    return materialSupportMemo;
   };
 
-  const climateClassFor = (hint) => {
-    return CLIMATE_CLASS_MAP[hint] || "open_ocean";
+  const resetMaterialSupportMemo = () => {
+    materialSupportMemo = null;
   };
 
-  const continentClassFor = (id) => {
-    return CONTINENT_CLASSES[id] || "open_ocean";
-  };
+  const climateClassFor = (hint) => CLIMATE_CLASS_MAP[hint] || "open_ocean";
+  const continentClassFor = (id) => CONTINENT_CLASSES[id] || "open_ocean";
 
   const summitClassFor = (hint, potential) => {
     if (potential <= 0.52) return "none";
@@ -519,55 +655,55 @@
 
     const shorelineContact = clamp01(
       coastStrength * 0.58 +
-      shelfStrength * smoothstep(-0.22, 0.08, e) * 0.32 +
-      archipelagoStrength * 0.18 +
-      divideStrength * shallowBand * 0.20
+        shelfStrength * smoothstep(-0.22, 0.08, e) * 0.32 +
+        archipelagoStrength * 0.18 +
+        divideStrength * shallowBand * 0.20
     );
 
     const shelfDrop = clamp01(
       shelfStrength * 0.42 +
-      coastStrength * smoothstep(-0.08, 0.18, e) * 0.30 +
-      oceanStrength * shelfStrength * 0.22 +
-      divideStrength * shallowBand * 0.12
+        coastStrength * smoothstep(-0.08, 0.18, e) * 0.30 +
+        oceanStrength * shelfStrength * 0.22 +
+        divideStrength * shallowBand * 0.12
     );
 
     const slopePressure = clamp01(
       mountainStrength * 0.30 +
-      escarpmentStrength * 0.34 +
-      canyonStrength * 0.24 +
-      waterfallStrength * 0.26 +
-      shelfDrop * 0.18 +
-      divideStrength * 0.10
+        escarpmentStrength * 0.34 +
+        canyonStrength * 0.24 +
+        waterfallStrength * 0.26 +
+        shelfDrop * 0.18 +
+        divideStrength * 0.10
     );
 
     const reliefStrength = clamp01(
       smoothstep(-0.02, 0.52, e) * 0.22 +
-      mountainStrength * 0.28 +
-      plateauStrength * 0.18 +
-      canyonStrength * 0.12 +
-      escarpmentStrength * 0.16 +
-      slopePressure * 0.18 +
-      summitStrength * 0.10
+        mountainStrength * 0.28 +
+        plateauStrength * 0.18 +
+        canyonStrength * 0.12 +
+        escarpmentStrength * 0.16 +
+        slopePressure * 0.18 +
+        summitStrength * 0.10
     );
 
     const materialDensity = clamp01(
       exposedLand * 0.36 +
-      positiveLand * 0.24 +
-      continentStrength * 0.14 +
-      plateauStrength * 0.14 +
-      mountainStrength * 0.10 +
-      summitStrength * 0.07 -
-      oceanStrength * 0.20 -
-      deepBand * 0.10
+        positiveLand * 0.24 +
+        continentStrength * 0.14 +
+        plateauStrength * 0.14 +
+        mountainStrength * 0.10 +
+        summitStrength * 0.07 -
+        oceanStrength * 0.20 -
+        deepBand * 0.10
     );
 
     const massAnchor = clamp01(
       positiveLand * 0.32 +
-      materialDensity * 0.34 +
-      reliefStrength * 0.16 +
-      shorelineContact * 0.12 +
-      continentStrength * 0.10 +
-      plateauStrength * 0.08
+        materialDensity * 0.34 +
+        reliefStrength * 0.16 +
+        shorelineContact * 0.12 +
+        continentStrength * 0.10 +
+        plateauStrength * 0.08
     );
 
     const suppliedFacing =
@@ -592,35 +728,35 @@
 
     const curvatureLock = clamp01(
       0.68 +
-      massAnchor * 0.18 +
-      materialDensity * 0.08 +
-      shorelineContact * 0.04 +
-      continentStrength * 0.04
+        massAnchor * 0.18 +
+        materialDensity * 0.08 +
+        shorelineContact * 0.04 +
+        continentStrength * 0.04
     );
 
     const contactOcclusion = clamp01(
       shorelineContact * 0.34 +
-      shelfDrop * 0.24 +
-      massAnchor * rimCompression * 0.18 +
-      reliefStrength * slopePressure * 0.20 +
-      escarpmentStrength * 0.14 +
-      waterfallStrength * 0.10
+        shelfDrop * 0.24 +
+        massAnchor * rimCompression * 0.18 +
+        reliefStrength * slopePressure * 0.20 +
+        escarpmentStrength * 0.14 +
+        waterfallStrength * 0.10
     );
 
     const underlandShadow = clamp01(
       contactOcclusion * 0.66 +
-      shelfDrop * 0.16 +
-      shorelineContact * 0.14 +
-      divideStrength * shallowBand * 0.10 +
-      oceanStrength * shelfStrength * 0.08
+        shelfDrop * 0.16 +
+        shorelineContact * 0.14 +
+        divideStrength * shallowBand * 0.10 +
+        oceanStrength * shelfStrength * 0.08
     );
 
     const surfaceAttachment = clamp01(
       curvatureLock * 0.30 +
-      massAnchor * 0.34 +
-      materialDensity * 0.20 +
-      contactOcclusion * 0.12 +
-      plateauStrength * exposedLand * 0.05
+        massAnchor * 0.34 +
+        materialDensity * 0.20 +
+        contactOcclusion * 0.12 +
+        plateauStrength * exposedLand * 0.05
     );
 
     return {
@@ -648,30 +784,30 @@
 
     const mountainCandidate = clamp01(
       smoothstep(0.24, 0.66, e) * 0.28 +
-      elev.mountainArcPotential * 0.46 +
-      elev.ridgePotential * 0.20 +
-      elev.summitPotential * 0.14
+        elev.mountainArcPotential * 0.46 +
+        elev.ridgePotential * 0.20 +
+        elev.summitPotential * 0.14
     );
 
     const cliffCandidate = clamp01(
       base.slopePressure * 0.30 +
-      base.shelfDrop * 0.18 +
-      elev.escarpmentPotential * 0.46 +
-      elev.waterfallCandidate * 0.26 +
-      elev.coastPotential * 0.08
+        base.shelfDrop * 0.18 +
+        elev.escarpmentPotential * 0.46 +
+        elev.waterfallCandidate * 0.26 +
+        elev.coastPotential * 0.08
     );
 
     const valleyCandidate = clamp01(
       elev.basinPotential * 0.36 +
-      elev.canyonPotential * 0.46 +
-      elev.saddlePotential * 0.18 +
-      elev.scarPotential * 0.14
+        elev.canyonPotential * 0.46 +
+        elev.saddlePotential * 0.18 +
+        elev.scarPotential * 0.14
     );
 
     const coastCandidate = clamp01(
       elev.coastPotential * 0.64 +
-      base.shorelineContact * 0.34 +
-      elev.continentShelfPotential * 0.14
+        base.shorelineContact * 0.34 +
+        elev.continentShelfPotential * 0.14
     );
 
     return {
@@ -700,11 +836,9 @@
     if (e <= -0.22 && elev.continentShelfPotential < 0.26 && elev.archipelagoPotential < 0.26) return "deep_ocean";
 
     if (flags.continent_divide) return "continent_divide";
-
     if (flags.archipelago_shelf) return "archipelago_shelf";
     if (flags.continental_shelf) return "continental_shelf";
     if (flags.shallow_water) return "shallow_water";
-
     if (flags.coast_edge) return "coast_edge";
 
     if (elev.polarInfluence > 0.48 && e > SEA_LEVEL) return "polar_icefield";
@@ -716,10 +850,8 @@
 
     if (elev.mountainArcPotential > 0.56 && e > 0.12) return "mountain_arc";
     if (elev.alpineInfluence > 0.50 && e > 0.10) return "alpine_ridge";
-
     if (elev.plateauPotential > 0.52 && e > 0.10) return "plateau_interior";
     if (elev.basinPotential > 0.44 && e > SEA_LEVEL && e < 0.24) return "basin_floor";
-
     if (elev.archipelagoPotential > 0.42 && e > -0.04 && e < 0.28) return "island_arc";
 
     if (
@@ -735,7 +867,6 @@
     }
 
     if (summitClass !== "none" && elev.summitPotential > 0.68 && e > SEA_LEVEL) return "summit_region";
-
     if (elev.continentPotential > 0.32 && e > SEA_LEVEL) return "continent_mass";
     if (e > SEA_LEVEL) return "raised_land";
 
@@ -825,13 +956,21 @@
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
+      requiredElevationContract: REQUIRED_ELEVATION_CONTRACT,
       version: VERSION,
-      authority: "composition",
+      authority: "composition-coordination",
       sourceAuthority: "hearth.elevation.js",
+      sourceContract: elev.contract,
+      sourceReceipt: elev.receipt,
+      compositionAlignedToTectonicsSeatedElevation: elev.contract === REQUIRED_ELEVATION_CONTRACT,
 
       x: p.x,
       y: p.y,
       z: p.z,
+      lon: p.lon,
+      lat: p.lat,
+      u: p.u,
+      v: p.v,
 
       elevation: elev.elevation,
       seaLevel: elev.seaLevel,
@@ -929,6 +1068,51 @@
       elevationReceipt: elev.receipt,
       elevationContract: elev.contract,
 
+      elevationResolvedFromTectonics: elev.elevationResolvedFromTectonics,
+      tectonicsAvailable: elev.tectonicsAvailable,
+      tectonicsConsumed: elev.tectonicsConsumed,
+      tectonicsContract: elev.tectonicsContract,
+      tectonicsReceipt: elev.tectonicsReceipt,
+      tectonicsStructuralClass: elev.tectonicsStructuralClass,
+      tectonicsDominantStructuralCause: elev.tectonicsDominantStructuralCause,
+
+      tectonicElevationInfluence: elev.tectonicElevationInfluence,
+      tectonicDepth: elev.tectonicDepth,
+      tectonicSubsurfacePressure: elev.tectonicSubsurfacePressure,
+      tectonicPlateStress: elev.tectonicPlateStress,
+      tectonicCrustalCompression: elev.tectonicCrustalCompression,
+      tectonicRidgePressure: elev.tectonicRidgePressure,
+      tectonicBasinPressure: elev.tectonicBasinPressure,
+      tectonicScarPressure: elev.tectonicScarPressure,
+      tectonicAncientChannelCut: elev.tectonicAncientChannelCut,
+      tectonicShelfCutPressure: elev.tectonicShelfCutPressure,
+      tectonicBuriedStructure: elev.tectonicBuriedStructure,
+
+      crustalProvincePressure: elev.crustalProvincePressure,
+      crustalProvinceId: elev.crustalProvinceId,
+      crustalProvinceLabel: elev.crustalProvinceLabel,
+      continentalMassPressure: elev.continentalMassPressure,
+      oceanBasinPressure: elev.oceanBasinPressure,
+      oceanBasinId: elev.oceanBasinId,
+      oceanBasinLabel: elev.oceanBasinLabel,
+      coastBoundaryMemory: elev.coastBoundaryMemory,
+      ridgeCollisionPressure: elev.ridgeCollisionPressure,
+      ridgeCollisionId: elev.ridgeCollisionId,
+      ridgeCollisionLabel: elev.ridgeCollisionLabel,
+      plateauUpliftPressure: elev.plateauUpliftPressure,
+      basinSinkPressure: elev.basinSinkPressure,
+      fractureCutPressure: elev.fractureCutPressure,
+      tectonicSummitPressure: elev.tectonicSummitPressure,
+      tectonicSummitPressureId: elev.tectonicSummitPressureId,
+      tectonicSummitPressureLabel: elev.tectonicSummitPressureLabel,
+
+      ownsTectonicCause: false,
+      ownsElevationGeneration: false,
+      ownsHydrology: false,
+      ownsMaterialPalette: false,
+      ownsCanvas: false,
+      ownsRuntime: false,
+      ownsControls: false,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -952,15 +1136,24 @@
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     baselineContract: BASELINE_CONTRACT,
+    requiredElevationContract: REQUIRED_ELEVATION_CONTRACT,
     version: VERSION,
-    authority: "composition",
+    authority: "composition-coordination",
     status: "active",
+    destinationFile: "/assets/hearth/hearth.composition.js",
     sourceAuthority: "hearth.elevation.js",
-    purpose: "seven-continent-real-planet-composition-and-material-ready-classification",
+    sourceContract: REQUIRED_ELEVATION_CONTRACT,
+    compositionAlignedToTectonicsSeatedElevation: true,
+    coordinatesAlignedToElevation: true,
+    uVLaw: "lon = u * 360 - 180; lat = 90 - v * 180",
+    materialSupportCheckMemoized: true,
+    purpose: "tectonics-seated-composition-coordinate-and-classification-coordination",
     requiredUpstream: [
+      "hearth.tectonics.js",
       "hearth.elevation.js"
     ],
     preparedDownstream: [
+      "hearth.hydrology.js",
       "hearth.materials.js",
       "hearth.canvas.js"
     ],
@@ -1025,21 +1218,30 @@
       "rimCompression",
       "curvatureLock",
       "contactOcclusion",
-      "surfaceAttachment"
+      "surfaceAttachment",
+      "elevationResolvedFromTectonics",
+      "tectonicsConsumed",
+      "tectonicsContract",
+      "tectonicsStructuralClass",
+      "tectonicsDominantStructuralCause"
     ],
     designRules: [
-      "consume renewed real-planet elevation",
-      "carry seven continent ids forward",
-      "carry open ocean forward",
-      "emit ocean basin, shelf, coast, mountain, plateau, canyon, cliff, waterfall, archipelago, climate, and summit classes",
-      "summit classes are nonlinear overlays",
+      "consume tectonics-seated elevation",
+      "do not generate tectonic cause",
+      "do not generate elevation",
+      "classify resolved elevation only",
+      "carry tectonics-seated proof downstream",
+      "use shared u/v coordinate law",
+      "memoize material support detection",
       "compatibility classes remain aliases only",
       "canvas held",
       "route held",
       "no final visual pass claim"
     ],
     forbiddenOwnership: [
+      "tectonic-cause",
       "elevation-generation",
+      "hydrology-decisions",
       "material-palette",
       "canvas-drawing",
       "runtime-motion",
@@ -1059,6 +1261,7 @@
     RECEIPT,
     PREVIOUS_CONTRACT,
     BASELINE_CONTRACT,
+    REQUIRED_ELEVATION_CONTRACT,
     VERSION,
     SEA_LEVEL,
 
@@ -1074,6 +1277,7 @@
     sampleComposition,
     readComposition,
     getReceipt,
+    resetMaterialSupportMemo,
 
     terrainClasses: EXPANDED_TERRAIN_CLASSES.slice(),
     compatibilityTerrainClasses: COMPATIBILITY_TERRAIN_CLASSES.slice(),
@@ -1081,9 +1285,20 @@
     climateClasses: { ...CLIMATE_CLASS_MAP },
     summitClasses: { ...SUMMIT_CLASS_MAP },
 
+    supportsTectonicsSeatedCompositionCoordination: true,
+    supportsSharedUVCoordinateLaw: true,
+    supportsMaterialSupportMemoization: true,
     supportsSevenContinentRealPlanetComposition: true,
     supportsExpandedHearthTerrain: true,
     supportsNonlinearSummitRegions: true,
+
+    ownsTectonicCause: false,
+    ownsElevationGeneration: false,
+    ownsHydrology: false,
+    ownsMaterialPalette: false,
+    ownsCanvas: false,
+    ownsRuntime: false,
+    ownsControls: false,
 
     generatedImage: false,
     graphicBox: false,
@@ -1098,6 +1313,9 @@
   root.HearthComposition = api;
   root.HEARTH_COMPOSITION_RECEIPT = getReceipt();
   root.HEARTH_COMPOSITION_CONTRACT = CONTRACT;
+  root.HEARTH_COMPOSITION_REQUIRED_ELEVATION_CONTRACT = REQUIRED_ELEVATION_CONTRACT;
+  root.HEARTH_COMPOSITION_SUPPORTS_TECTONICS_SEATED_COORDINATION = true;
+  root.HEARTH_COMPOSITION_SUPPORTS_SHARED_UV_COORDINATE_LAW = true;
   root.HEARTH_COMPOSITION_SUPPORTS_SEVEN_CONTINENT_REAL_PLANET = true;
 
   if (root.document && root.document.documentElement) {
@@ -1105,9 +1323,15 @@
     root.document.documentElement.dataset.hearthCompositionContract = CONTRACT;
     root.document.documentElement.dataset.hearthCompositionReceipt = RECEIPT;
     root.document.documentElement.dataset.hearthCompositionPreviousContract = PREVIOUS_CONTRACT;
+    root.document.documentElement.dataset.hearthCompositionRequiredElevationContract = REQUIRED_ELEVATION_CONTRACT;
+    root.document.documentElement.dataset.hearthCompositionSourceContract = REQUIRED_ELEVATION_CONTRACT;
+    root.document.documentElement.dataset.hearthCompositionAlignedToTectonicsSeatedElevation = "true";
+    root.document.documentElement.dataset.hearthCompositionCoordinatesAlignedToElevation = "true";
+    root.document.documentElement.dataset.hearthCompositionSharedUvLaw = "true";
+    root.document.documentElement.dataset.hearthCompositionMaterialSupportMemoized = "true";
     root.document.documentElement.dataset.hearthCompositionSevenContinents = "true";
     root.document.documentElement.dataset.hearthCompositionOpenOcean = "true";
-    root.document.documentElement.dataset.hearthCompositionNineClimates = "true";
+    root.document.documentElement.dataset.hearthCompositionNineClimates = "compatibility-labels-only";
     root.document.documentElement.dataset.hearthCompositionNonlinearSummits = "true";
     root.document.documentElement.dataset.hearthCompositionRealPlanetField = "true";
     root.document.documentElement.dataset.hearthCompositionExpandedTerrainClasses = "true";

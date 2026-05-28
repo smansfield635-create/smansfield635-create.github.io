@@ -1,18 +1,19 @@
 // /assets/hearth/hearth.materials.js
-// HEARTH_AGED_TECH_COASTAL_SCAR_MORPHOLOGY_TNT_v3
+// HEARTH_COASTAL_SCAR_ATLAS_CONTINUITY_TNT_v4
 // Full-file replacement.
 // Materials authority only.
 // Purpose:
 // - Consume composition + tectonics + hydrology.
 // - Preserve canvas v7 compatibility.
-// - Convert aged-tech coastal bead chains into broken carved coastal scar bodies.
-// - Preserve coastal evidence while reducing point-cell, bead-chain, glow, and circuit behavior.
+// - Preserve public sample/material API.
+// - Shift coastal scar correction from pointwise sampling into atlas-level neighbor morphology inside createTextureCanvas.
+// - Convert aged-tech coastal bead chains into broken carved coastal scar continuity.
 // Does not own:
 // - elevation generation
 // - composition classification
 // - tectonic pressure generation
 // - hydrology behavior generation
-// - canvas drawing
+// - canvas drawing authority
 // - runtime motion
 // - controls
 // - route orchestration
@@ -23,11 +24,11 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_AGED_TECH_COASTAL_SCAR_MORPHOLOGY_TNT_v3";
-  const RECEIPT = "HEARTH_AGED_TECH_COASTAL_SCAR_MORPHOLOGY_RECEIPT_v3";
-  const PREVIOUS_CONTRACT = "HEARTH_AGED_TECH_COASTAL_BOUNDARY_MATERIALS_REFINEMENT_TNT_v2";
-  const BASELINE_CONTRACT = "HEARTH_AGED_TECH_COASTAL_BOUNDARY_MATERIALS_TNT_v1";
-  const VERSION = "2026-05-28.hearth-aged-tech-coastal-scar-morphology-v3";
+  const CONTRACT = "HEARTH_COASTAL_SCAR_ATLAS_CONTINUITY_TNT_v4";
+  const RECEIPT = "HEARTH_COASTAL_SCAR_ATLAS_CONTINUITY_RECEIPT_v4";
+  const PREVIOUS_CONTRACT = "HEARTH_AGED_TECH_COASTAL_SCAR_MORPHOLOGY_TNT_v3";
+  const BASELINE_CONTRACT = "HEARTH_AGED_TECH_COASTAL_BOUNDARY_MATERIALS_REFINEMENT_TNT_v2";
+  const VERSION = "2026-05-28.hearth-coastal-scar-atlas-continuity-v4";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const DEG = Math.PI / 180;
@@ -64,11 +65,11 @@
   const MATERIAL_CLASS_MAP = Object.freeze({
     deep_ocean: "water.deep.ocean.body",
     ocean_basin: "water.ocean.basin.readable",
-    continental_shelf: "water.shelf.submerged.scar-shadow",
-    archipelago_shelf: "water.shelf.archipelago.broken-submerged-works",
-    continent_divide: "water.divide.ancient-carved-strait-scar",
-    shallow_water: "water.shallow.weathered-coastal-transition",
-    coast_edge: "coast.carved-scar-morphology",
+    continental_shelf: "water.shelf.atlas-shadowed-scar",
+    archipelago_shelf: "water.shelf.archipelago.atlas-broken-submerged-works",
+    continent_divide: "water.divide.atlas-carved-strait-scar",
+    shallow_water: "water.shallow.atlas-weathered-transition",
+    coast_edge: "coast.atlas-carved-scar-continuity",
     continent_mass: "land.continent.embodied.mass",
     raised_land: "land.raised.general",
     plateau_interior: "land.plateau.dense.interior",
@@ -78,7 +79,7 @@
     canyon_corridor: "land.canyon.corridor.cut",
     cliff_escarpment: "land.cliff.escarpment.shadow",
     waterfall_escarpment: "land.waterfall.weathered-drainage-outlet",
-    island_arc: "land.island.arc.broken-shelf-scar",
+    island_arc: "land.island.arc.atlas-broken-shelf-scar",
     polar_icefield: "climate.polar.icefield",
     tundra_subpolar: "climate.tundra.subpolar",
     temperate_highland: "climate.temperate.highland",
@@ -86,7 +87,7 @@
     rainforest_wet_basin: "climate.rainforest.wet.basin",
     monsoon_floodplain: "climate.monsoon.floodplain",
     arid_dry_plateau: "climate.arid.dry.plateau",
-    maritime_archipelago: "coast.maritime.broken-submerged-channels",
+    maritime_archipelago: "coast.maritime.atlas-broken-submerged-channels",
     summit_region: "terrain.summit.region.overlay",
 
     continental_core: "compat.land.continental.core",
@@ -323,7 +324,7 @@
   };
 
   const hashNoise = (x, y, z, salt = 0) => {
-    const n = Math.sin(x * 127.1 + y * 311.7 + z * 74.7 + salt * 61.37) * 43758.5453123;
+    const n = Math.sin(x * 127.1 + y * 311.7 + z * 74.7 + salt * 67.71) * 43758.5453123;
     return n - Math.floor(n);
   };
 
@@ -374,7 +375,7 @@
     const isLand = landSignal > 0.48;
 
     return {
-      contract: "HEARTH_MATERIALS_MORPHOLOGY_FALLBACK_COMPOSITION",
+      contract: "HEARTH_MATERIALS_ATLAS_CONTINUITY_FALLBACK_COMPOSITION",
       receipt: "FALLBACK_COMPOSITION_USED",
       worldTerrainClass: isLand ? "continent_mass" : "ocean_basin",
       expandedTerrainClass: isLand ? "continent_mass" : "ocean_basin",
@@ -536,7 +537,7 @@
   };
 
   const fallbackTectonics = (composition) => ({
-    contract: "HEARTH_MATERIALS_MORPHOLOGY_FALLBACK_TECTONICS",
+    contract: "HEARTH_MATERIALS_ATLAS_CONTINUITY_FALLBACK_TECTONICS",
     receipt: "FALLBACK_TECTONICS_USED",
     tectonicClass: composition.isWater ? "open_ocean_basin" : "stable_continental_craton",
     plateClass: composition.isWater ? "oceanic_basin_plate" : "continental_plate",
@@ -646,7 +647,7 @@
   };
 
   const fallbackHydrology = (composition, tectonics) => ({
-    contract: "HEARTH_MATERIALS_MORPHOLOGY_FALLBACK_HYDROLOGY",
+    contract: "HEARTH_MATERIALS_ATLAS_CONTINUITY_FALLBACK_HYDROLOGY",
     receipt: "FALLBACK_HYDROLOGY_USED",
     hydrologyClass: composition.isWater ? "open_ocean_basin" : "coastal_transition_zone",
     waterBoundaryClass: composition.isWater ? "open_ocean_basin" : "none",
@@ -812,8 +813,8 @@
       const continentBase = CONTINENT_BASE[continentId] || TERRAIN_PALETTE.continent_mass;
       const climateBase = TERRAIN_PALETTE[climateClass] || TERRAIN_PALETTE.temperate_highland;
 
-      color = mixColor(color, continentBase, clamp01(composition.continentPotential * 0.34));
-      color = mixColor(color, climateBase, clamp01(numberField(composition, "climatePotential", 0.24) * 0.24));
+      color = mixColor(color, continentBase, clamp01(composition.continentPotential * 0.32));
+      color = mixColor(color, climateBase, clamp01(numberField(composition, "climatePotential", 0.22) * 0.22));
     }
 
     if (isWater) {
@@ -821,17 +822,17 @@
       const shelf = clamp01(Math.max(composition.continentShelfPotential, composition.shelfPotential));
 
       if (terrainClass === "deep_ocean") {
-        color = mixColor(color, [4, 11, 23], clamp01(depth * 0.50));
+        color = mixColor(color, [4, 10, 22], clamp01(depth * 0.50));
       } else if (terrainClass === "ocean_basin") {
-        color = mixColor(color, [7, 21, 37], 0.56);
+        color = mixColor(color, [6, 20, 36], 0.56);
       } else if (terrainClass === "continental_shelf" || terrainClass === "coastal_shelf") {
-        color = mixColor(color, [29, 53, 52], clamp01(0.28 + shelf * 0.16));
+        color = mixColor(color, [28, 51, 50], clamp01(0.28 + shelf * 0.16));
       } else if (terrainClass === "archipelago_shelf") {
-        color = mixColor(color, [30, 58, 52], clamp01(0.28 + shelf * 0.16));
+        color = mixColor(color, [29, 56, 51], clamp01(0.28 + shelf * 0.16));
       } else if (terrainClass === "continent_divide") {
         color = mixColor(color, [7, 22, 31], 0.70);
       } else if (terrainClass === "shallow_water") {
-        color = mixColor(color, [29, 59, 58], 0.38);
+        color = mixColor(color, [28, 58, 57], 0.38);
       }
     }
 
@@ -1599,12 +1600,27 @@
   const resolve = (...args) => sample(...args);
   const resolveMaterial = (...args) => sample(...args);
 
+  const blendPixel = (data, index, target, amount) => {
+    const k = clamp01(amount);
+    data[index] = Math.round(mixNumber(data[index], target[0], k));
+    data[index + 1] = Math.round(mixNumber(data[index + 1], target[1], k));
+    data[index + 2] = Math.round(mixNumber(data[index + 2], target[2], k));
+  };
+
+  const addPixel = (data, index, delta, amount) => {
+    const k = clamp01(amount);
+    data[index] = clamp(Math.round(data[index] + delta[0] * k), 0, 255);
+    data[index + 1] = clamp(Math.round(data[index + 1] + delta[1] * k), 0, 255);
+    data[index + 2] = clamp(Math.round(data[index + 2] + delta[2] * k), 0, 255);
+  };
+
   const createTextureCanvas = (options = {}) => {
     const requestedWidth = Number.isFinite(Number(options.width)) ? Math.round(Number(options.width)) : 768;
     const requestedHeight = Number.isFinite(Number(options.height)) ? Math.round(Number(options.height)) : 384;
 
     const width = clamp(requestedWidth, 32, options.allowLargeTexture === true ? 1536 : 1024);
     const height = clamp(requestedHeight, 16, options.allowLargeTexture === true ? 768 : 512);
+    const size = width * height;
 
     if (!root.document || typeof root.document.createElement !== "function") {
       throw new Error("Hearth materials texture canvas requires document.createElement.");
@@ -1619,6 +1635,7 @@
     canvas.dataset.hearthMaterialsAgedCoastalTech = "true";
     canvas.dataset.hearthMaterialsAgedCoastalTechRefinement = "true";
     canvas.dataset.hearthMaterialsCoastalScarMorphology = "true";
+    canvas.dataset.hearthMaterialsCoastalScarAtlasContinuity = "true";
     canvas.dataset.generatedImage = "false";
     canvas.dataset.graphicBox = "false";
     canvas.dataset.webgl = "false";
@@ -1628,18 +1645,179 @@
     const image = ctx.createImageData(width, height);
     const data = image.data;
 
+    const scarMask = new Uint8Array(size);
+    const scarStrength = new Float32Array(size);
+    const scarWidth = new Float32Array(size);
+    const shadowWake = new Float32Array(size);
+    const mineralEdge = new Float32Array(size);
+    const reclaimedBlend = new Float32Array(size);
+    const isolatedSuppression = new Float32Array(size);
+    const clusterStrength = new Float32Array(size);
+    const channelMask = new Float32Array(size);
+    const harborMask = new Float32Array(size);
+    const archipelagoMask = new Float32Array(size);
+    const isWaterMask = new Uint8Array(size);
+
     for (let y = 0; y < height; y += 1) {
       const v = height <= 1 ? 0 : y / (height - 1);
 
       for (let x = 0; x < width; x += 1) {
         const u = width <= 1 ? 0 : x / (width - 1);
         const material = sample({ u, v });
-        const index = (y * width + x) * 4;
+        const p = y * width + x;
+        const index = p * 4;
 
         data[index] = material.rgb[0];
         data[index + 1] = material.rgb[1];
         data[index + 2] = material.rgb[2];
         data[index + 3] = Math.round(clamp01(material.alpha) * 255);
+
+        const scarScore = clamp01(
+          material.coastalScarContinuity * 0.18 +
+          material.scarClusterStrength * 0.15 +
+          material.boundaryMorphologyFeed * 0.14 +
+          material.channelScarContinuity * 0.13 +
+          material.archipelagoScarBreakup * 0.11 +
+          material.harborScarBasin * 0.10 +
+          material.submergedShadowWake * 0.07 +
+          material.scarBandWidth * 0.06 +
+          material.agedCoastalTechFeed * 0.03 +
+          material.mineralizedCutFeed * 0.03
+        );
+
+        const suppressScore = clamp01(
+          material.isolatedBeadSuppression * 0.42 +
+          material.greenGlowSuppression * 0.30 +
+          (1 - material.scarClusterStrength) * 0.16 +
+          (1 - material.boundaryMorphologyFeed) * 0.12
+        );
+
+        const authorizedScar = scarScore > 0.145 && suppressScore < 0.82;
+
+        scarMask[p] = authorizedScar ? 1 : 0;
+        scarStrength[p] = scarScore;
+        scarWidth[p] = clamp01(material.scarBandWidth);
+        shadowWake[p] = clamp01(material.submergedShadowWake);
+        mineralEdge[p] = clamp01(material.mineralizedEdgeBody);
+        reclaimedBlend[p] = clamp01(material.reclaimedEdgeBlend);
+        isolatedSuppression[p] = suppressScore;
+        clusterStrength[p] = clamp01(material.scarClusterStrength);
+        channelMask[p] = clamp01(material.channelScarContinuity);
+        harborMask[p] = clamp01(material.harborScarBasin);
+        archipelagoMask[p] = clamp01(material.archipelagoScarBreakup);
+        isWaterMask[p] = material.isWater ? 1 : 0;
+      }
+    }
+
+    const original = new Uint8ClampedArray(data);
+
+    for (let y = 0; y < height; y += 1) {
+      for (let x = 0; x < width; x += 1) {
+        const p = y * width + x;
+        const index = p * 4;
+
+        let neighborCount = 0;
+        let neighborStrength = 0;
+        let neighborWidth = 0;
+        let neighborShadow = 0;
+        let neighborMineral = 0;
+        let neighborReclaimed = 0;
+        let neighborChannel = 0;
+        let neighborHarbor = 0;
+        let neighborArchipelago = 0;
+
+        for (let oy = -1; oy <= 1; oy += 1) {
+          const yy = y + oy;
+          if (yy < 0 || yy >= height) continue;
+
+          for (let ox = -1; ox <= 1; ox += 1) {
+            const xx = x + ox;
+            if (xx < 0 || xx >= width) continue;
+
+            const q = yy * width + xx;
+            if (!scarMask[q]) continue;
+
+            const w = ox === 0 && oy === 0 ? 1.0 : ox === 0 || oy === 0 ? 0.72 : 0.52;
+
+            neighborCount += w;
+            neighborStrength += scarStrength[q] * w;
+            neighborWidth += scarWidth[q] * w;
+            neighborShadow += shadowWake[q] * w;
+            neighborMineral += mineralEdge[q] * w;
+            neighborReclaimed += reclaimedBlend[q] * w;
+            neighborChannel += channelMask[q] * w;
+            neighborHarbor += harborMask[q] * w;
+            neighborArchipelago += archipelagoMask[q] * w;
+          }
+        }
+
+        const nDenom = Math.max(0.000001, neighborCount);
+        const support = clamp01(neighborCount / 4.2);
+        const avgStrength = clamp01(neighborStrength / nDenom);
+        const avgWidth = clamp01(neighborWidth / nDenom);
+        const avgShadow = clamp01(neighborShadow / nDenom);
+        const avgMineral = clamp01(neighborMineral / nDenom);
+        const avgReclaimed = clamp01(neighborReclaimed / nDenom);
+        const avgChannel = clamp01(neighborChannel / nDenom);
+        const avgHarbor = clamp01(neighborHarbor / nDenom);
+        const avgArchipelago = clamp01(neighborArchipelago / nDenom);
+
+        const ownScar = scarMask[p] ? scarStrength[p] : 0;
+        const isolated = ownScar > 0.12 && support < 0.24;
+        const cluster = support >= 0.24 && avgStrength > 0.12;
+        const strongCluster = support >= 0.40 && avgStrength > 0.18;
+
+        data[index] = original[index];
+        data[index + 1] = original[index + 1];
+        data[index + 2] = original[index + 2];
+        data[index + 3] = original[index + 3];
+
+        if (isolated) {
+          const suppression = clamp01(isolatedSuppression[p] * 0.14 + ownScar * 0.08);
+          blendPixel(data, index, isWaterMask[p] ? [12, 24, 27] : [44, 50, 45], suppression);
+          data[index + 1] = clamp(Math.round(data[index + 1] * (1 - suppression * 0.10)), 0, 255);
+        }
+
+        if (cluster) {
+          const scarBody = clamp01(avgStrength * 0.16 + avgWidth * 0.11 + support * 0.09);
+          const mineralBody = clamp01(avgMineral * 0.15 + avgChannel * 0.07 + avgHarbor * 0.05);
+          const reclaimedBody = clamp01(avgReclaimed * 0.11 + avgHarbor * 0.06 + support * 0.04);
+
+          blendPixel(data, index, [49, 57, 49], reclaimedBody);
+          blendPixel(data, index, [64, 61, 48], mineralBody);
+          blendPixel(data, index, [42, 49, 45], scarBody);
+        }
+
+        if (strongCluster) {
+          const brokenBand = clamp01(avgStrength * 0.12 + avgWidth * 0.12 + support * 0.08);
+          blendPixel(data, index, [52, 57, 47], brokenBand);
+          addPixel(data, index, [4, 2, -3], clamp01(avgMineral * 0.05));
+        }
+
+        if (avgShadow > 0.10 && (isWaterMask[p] || avgWidth > 0.18)) {
+          const wake = clamp01(avgShadow * 0.18 + support * 0.04);
+          blendPixel(data, index, [10, 22, 25], wake);
+        }
+
+        if (avgChannel > 0.16) {
+          const channel = clamp01(avgChannel * 0.14 + support * 0.04);
+          blendPixel(data, index, [20, 31, 30], channel);
+        }
+
+        if (avgHarbor > 0.16) {
+          const harbor = clamp01(avgHarbor * 0.12 + avgReclaimed * 0.05);
+          blendPixel(data, index, [42, 52, 46], harbor);
+        }
+
+        if (avgArchipelago > 0.16) {
+          const archipelago = clamp01(avgArchipelago * 0.14 + avgShadow * 0.04);
+          blendPixel(data, index, [26, 40, 39], archipelago);
+        }
+
+        if (support > 0.28 && avgStrength > 0.14) {
+          const greenReduction = clamp01((support * 0.05 + avgStrength * 0.06 + isolatedSuppression[p] * 0.03));
+          data[index + 1] = clamp(Math.round(data[index + 1] * (1 - greenReduction)), 0, 255);
+        }
       }
     }
 
@@ -1657,7 +1835,7 @@
     authority: "materials",
     status: "active",
     sourceAuthority: "hearth.composition.js + hearth.tectonics.js + hearth.hydrology.js",
-    purpose: "aged-tech-coastal-scar-morphology-material-expression",
+    purpose: "coastal-scar-atlas-continuity-material-expression",
     supportsExpandedHearthTerrain: true,
     supportsSevenContinentNineClimateTerrain: true,
     supportsSevenClimateTerrainClasses: true,
@@ -1666,10 +1844,20 @@
     supportsHydrologyBoundaryConsumer: true,
     supportsAgedTechCoastalBoundaryRefinement: true,
     supportsAgedTechCoastalScarMorphology: true,
+    supportsCoastalScarAtlasContinuity: true,
     consumesComposition: true,
     consumesTectonics: true,
     consumesHydrology: true,
     prefersWorldTerrainClass: true,
+    atlasContinuity: {
+      stage: "createTextureCanvas-local-neighbor-pass",
+      neighborhood: "3x3",
+      floodFill: false,
+      recursion: false,
+      graphTraversal: false,
+      runtimeFrameCost: false,
+      typedArrays: true
+    },
     terrainClasses: EXPANDED_TERRAIN_CLASSES.slice(),
     materialClassMap: { ...MATERIAL_CLASS_MAP },
     outputFields: [
@@ -1721,13 +1909,13 @@
     ],
     designRules: [
       "coastal evidence remains visible",
-      "bead chains become broken carved scar bodies",
-      "strong coastal clusters read as scar bodies",
-      "isolated point glow is reduced",
-      "submerged sides gain dark shadow wake",
-      "harbor pockets become rounded eroded basins",
-      "archipelago regions become broken submerged works",
-      "technology reads through scar morphology, age, material, and erosion",
+      "scar correction moves into atlas neighbor pass",
+      "isolated bead glow is reduced",
+      "nearby scar candidates merge into short broken scar bands",
+      "submerged sides gain shadow wake",
+      "harbor pockets become eroded basin scars",
+      "archipelago zones become broken submerged works",
+      "technology reads through scar continuity, age, material, and erosion",
       "canvas held",
       "route held",
       "no final visual pass claim"
@@ -1737,7 +1925,7 @@
       "composition-classification",
       "tectonic-pressure-generation",
       "hydrology-behavior-generation",
-      "canvas-drawing",
+      "canvas-drawing-authority",
       "runtime-motion",
       "controls",
       "route-orchestration",
@@ -1780,6 +1968,7 @@
     supportsHydrologyBoundaryConsumer: true,
     supportsAgedTechCoastalBoundaryRefinement: true,
     supportsAgedTechCoastalScarMorphology: true,
+    supportsCoastalScarAtlasContinuity: true,
     consumesComposition: true,
     consumesTectonics: true,
     consumesHydrology: true,
@@ -1805,6 +1994,7 @@
   root.HEARTH_MATERIALS_SUPPORTS_HYDROLOGY_BOUNDARY_CONSUMER = true;
   root.HEARTH_MATERIALS_SUPPORTS_AGED_TECH_COASTAL_BOUNDARY_REFINEMENT = true;
   root.HEARTH_MATERIALS_SUPPORTS_AGED_TECH_COASTAL_SCAR_MORPHOLOGY = true;
+  root.HEARTH_MATERIALS_SUPPORTS_COASTAL_SCAR_ATLAS_CONTINUITY = true;
 
   if (root.document && root.document.documentElement) {
     root.document.documentElement.dataset.hearthMaterialsAuthorityLoaded = "true";
@@ -1819,6 +2009,7 @@
     root.document.documentElement.dataset.hearthMaterialsSupportsHydrologyBoundaryConsumer = "true";
     root.document.documentElement.dataset.hearthMaterialsSupportsAgedTechCoastalBoundaryRefinement = "true";
     root.document.documentElement.dataset.hearthMaterialsSupportsAgedTechCoastalScarMorphology = "true";
+    root.document.documentElement.dataset.hearthMaterialsSupportsCoastalScarAtlasContinuity = "true";
     root.document.documentElement.dataset.hearthMaterialsConsumesComposition = "true";
     root.document.documentElement.dataset.hearthMaterialsConsumesTectonics = "true";
     root.document.documentElement.dataset.hearthMaterialsConsumesHydrology = "true";

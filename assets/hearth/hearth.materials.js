@@ -1,24 +1,43 @@
 // /assets/hearth/hearth.materials.js
-// HEARTH_MATERIAL_TEXTURE_CANVAS_COMPATIBILITY_RESCUE_TNT_v2
+// HEARTH_MATERIAL_TEXTURE_CANVAS_LIVE_PATH_PROOF_TNT_v3
 // Full-file replacement.
-// Materials authority + texture-canvas compatibility rescue.
+// Materials authority + live-path proof + texture-canvas compatibility.
 // Purpose:
+// - Prove the live route is loading this exact materials file.
+// - Expose createTextureCanvas(...) for Hearth route validation.
 // - Preserve broad material sampler compatibility.
-// - Add createTextureCanvas(...) for the Hearth v22/v21 canvas carrier.
-// - Keep surface-mass anchoring fields available.
+// - Preserve surface-mass anchoring fields.
 // - Never throw into route/canvas.
-// Does not own: elevation generation, terrain classification, canvas drawing, runtime motion, controls, route UI, final visual pass claim.
+// Does not own:
+// - elevation generation
+// - terrain classification
+// - canvas mounting
+// - runtime motion
+// - controls
+// - route UI
+// - final visual pass claim.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_MATERIAL_TEXTURE_CANVAS_COMPATIBILITY_RESCUE_TNT_v2";
-  const RECEIPT = "HEARTH_MATERIAL_TEXTURE_CANVAS_COMPATIBILITY_RESCUE_RECEIPT_v2";
+  const CONTRACT = "HEARTH_MATERIAL_TEXTURE_CANVAS_LIVE_PATH_PROOF_TNT_v3";
+  const RECEIPT = "HEARTH_MATERIAL_TEXTURE_CANVAS_LIVE_PATH_PROOF_RECEIPT_v3";
   const AUTHORITY = "materials";
   const SEA_LEVEL = 0.0;
   const DEG = Math.PI / 180;
 
   const root = typeof window !== "undefined" ? window : globalThis;
+
+  /*
+    Live-path proof markers.
+    If these do not appear in DevTools after reload, this file is not the live
+    file being executed at /assets/hearth/hearth.materials.js.
+  */
+  root.HEARTH_MATERIALS_CONTRACT = CONTRACT;
+  root.HEARTH_MATERIALS_STATUS = "loading";
+  root.__HEARTH_MATERIALS_LIVE_PATH_PROOF__ = true;
+  root.__HEARTH_MATERIALS_CREATE_TEXTURE_CANVAS_PROOF__ = true;
+  root.__HEARTH_MATERIALS_LIVE_PATH_PROOF_CONTRACT__ = CONTRACT;
 
   const clamp = (value, min, max) => {
     const n = Number(value);
@@ -27,6 +46,7 @@
   };
 
   const clamp01 = (value) => clamp(value, 0, 1);
+
   const mix = (a, b, t) => a + (b - a) * clamp01(t);
 
   const smoothstep = (edge0, edge1, x) => {
@@ -53,7 +73,7 @@
   };
 
   const colorToHex = (rgb) => {
-    const part = (v) => clamp(Math.round(v), 0, 255).toString(16).padStart(2, "0");
+    const part = (value) => clamp(Math.round(value), 0, 255).toString(16).padStart(2, "0");
     return `#${part(rgb && rgb[0])}${part(rgb && rgb[1])}${part(rgb && rgb[2])}`;
   };
 
@@ -68,13 +88,19 @@
     const y = Number.isFinite(Number(p && p.y)) ? Number(p.y) : 0;
     const z = Number.isFinite(Number(p && p.z)) ? Number(p.z) : 1;
     const m = Math.hypot(x, y, z) || 1;
-    return { x: x / m, y: y / m, z: z / m };
+
+    return {
+      x: x / m,
+      y: y / m,
+      z: z / m
+    };
   };
 
   const lonLatToVector = (lonDeg, latDeg) => {
     const lon = Number(lonDeg || 0) * DEG;
     const lat = Number(latDeg || 0) * DEG;
     const c = Math.cos(lat);
+
     return normalize3({
       x: Math.sin(lon) * c,
       y: Math.sin(lat),
@@ -125,7 +151,11 @@
         Number.isFinite(Number(args[1])) &&
         Number.isFinite(Number(args[2]))
       ) {
-        return normalize3({ x: Number(args[0]), y: Number(args[1]), z: Number(args[2]) });
+        return normalize3({
+          x: Number(args[0]),
+          y: Number(args[1]),
+          z: Number(args[2])
+        });
       }
 
       if (
@@ -136,7 +166,10 @@
         const a = Number(args[0]);
         const b = Number(args[1]);
 
-        if (a >= 0 && a <= 1 && b >= 0 && b <= 1) return uvToVector(a, b);
+        if (a >= 0 && a <= 1 && b >= 0 && b <= 1) {
+          return uvToVector(a, b);
+        }
+
         return lonLatToVector(a, b);
       }
     } catch (_error) {
@@ -157,12 +190,14 @@
     valleyLand: [82, 94, 63],
     mountainMass: [157, 150, 108],
     islandMass: [129, 126, 78],
+
     shallowWater: [17, 58, 76],
     saddleWater: [20, 64, 78],
     shelfWater: [16, 54, 73],
     submergedBridge: [17, 50, 64],
     deepWater: [4, 14, 29],
     basinWater: [5, 20, 32],
+
     shadow: [2, 7, 12],
     fallbackLand: [126, 121, 74],
     fallbackWater: [5, 19, 35]
@@ -191,7 +226,10 @@
       if (root.HEARTH && root.HEARTH.composition) return root.HEARTH.composition;
       if (root.HEARTH_COMPOSITION) return root.HEARTH_COMPOSITION;
       if (root.HearthComposition) return root.HearthComposition;
-    } catch (_error) {}
+    } catch (_error) {
+      return null;
+    }
+
     return null;
   };
 
@@ -223,7 +261,11 @@
     const isDeepWater = elevation <= -0.18;
 
     const coastPotential = clamp01(1 - Math.abs(elevation) / 0.16);
-    const shelfPotential = clamp01(smoothstep(-0.24, 0.10, elevation) * (1 - smoothstep(0.18, 0.55, elevation)));
+    const shelfPotential = clamp01(
+      smoothstep(-0.24, 0.10, elevation) *
+      (1 - smoothstep(0.18, 0.55, elevation))
+    );
+
     const massAnchor = clamp01(smoothstep(-0.02, 0.28, elevation) * 0.72 + landSeed * 0.22);
     const shorelineContact = clamp01(coastPotential * 0.72 + shelfPotential * 0.22);
     const reliefStrength = clamp01(smoothstep(0.02, 0.55, elevation) * 0.48 + landSeed * 0.18);
@@ -236,28 +278,40 @@
     const surfaceAttachment = clamp01(0.56 + massAnchor * 0.34 + shorelineContact * 0.08);
 
     let terrainClass = "deep_water";
-    if (isLand && landSeed > 0.72 && elevation > 0.22) terrainClass = "continental_core";
-    else if (isLand && bridge > 0.44) terrainClass = "exposed_bridge";
-    else if (isLand && coastPotential > 0.52) terrainClass = "coast_edge";
-    else if (isLand) terrainClass = "raised_shield";
-    else if (isShallowWater && bridge > 0.4) terrainClass = "submerged_bridge";
-    else if (isShallowWater) terrainClass = "shallow_water";
+
+    if (isLand && landSeed > 0.72 && elevation > 0.22) {
+      terrainClass = "continental_core";
+    } else if (isLand && bridge > 0.44) {
+      terrainClass = "exposed_bridge";
+    } else if (isLand && coastPotential > 0.52) {
+      terrainClass = "coast_edge";
+    } else if (isLand) {
+      terrainClass = "raised_shield";
+    } else if (isShallowWater && bridge > 0.4) {
+      terrainClass = "submerged_bridge";
+    } else if (isShallowWater) {
+      terrainClass = "shallow_water";
+    }
 
     return {
       contract: "HEARTH_MATERIALS_INTERNAL_SAFE_FALLBACK_COMPOSITION",
       receipt: "SAFE_FALLBACK_COMPOSITION_USED",
       authority: "composition-fallback",
+
       x: p.x,
       y: p.y,
       z: p.z,
+
       terrainClass,
       terrainClassHint: terrainClass,
       elevation,
       seaLevel: SEA_LEVEL,
+
       isLand,
       isWater: !isLand,
       isShallowWater,
       isDeepWater,
+
       landPotential: clamp01(smoothstep(-0.08, 0.26, elevation)),
       shelfPotential,
       bridgePotential: bridge,
@@ -269,6 +323,7 @@
       waterDepthPotential: elevation < 0 ? clamp01(-elevation / 0.74) : 0,
       corePotential: landSeed,
       shieldPotential: landSeed * 0.72,
+
       massAnchor,
       shorelineContact,
       reliefStrength,
@@ -280,6 +335,7 @@
       curvatureLock: 0.86,
       contactOcclusion,
       surfaceAttachment,
+
       mountainCandidate: elevation > 0.48 ? 1 : 0,
       cliffCandidate: slopePressure > 0.62 ? 1 : 0,
       valleyCandidate: 0,
@@ -329,17 +385,21 @@
     return {
       contract: source.contract || "UNKNOWN_OR_NORMALIZED_COMPOSITION",
       receipt: source.receipt || "NORMALIZED_COMPOSITION_SAMPLE",
+
       x: Number.isFinite(Number(source.x)) ? Number(source.x) : p.x,
       y: Number.isFinite(Number(source.y)) ? Number(source.y) : p.y,
       z: Number.isFinite(Number(source.z)) ? Number(source.z) : p.z,
+
       terrainClass,
       terrainClassHint: source.terrainClassHint || source.hint || terrainClass,
       elevation: e,
       seaLevel: Number.isFinite(Number(source.seaLevel)) ? Number(source.seaLevel) : SEA_LEVEL,
+
       isLand,
       isWater,
       isShallowWater,
       isDeepWater,
+
       landPotential: clamp01(source.landPotential ?? (isLand ? 0.8 : 0.05)),
       shelfPotential: clamp01(source.shelfPotential),
       bridgePotential: clamp01(source.bridgePotential),
@@ -351,6 +411,7 @@
       waterDepthPotential: clamp01(source.waterDepthPotential),
       corePotential: clamp01(source.corePotential),
       shieldPotential: clamp01(source.shieldPotential),
+
       massAnchor: clamp01(source.massAnchor ?? (isLand ? 0.68 : 0.04)),
       shorelineContact: clamp01(source.shorelineContact ?? source.coastPotential),
       reliefStrength: clamp01(source.reliefStrength),
@@ -362,6 +423,7 @@
       curvatureLock: clamp01(source.curvatureLock ?? 0.82),
       contactOcclusion: clamp01(source.contactOcclusion),
       surfaceAttachment: clamp01(source.surfaceAttachment ?? (isLand ? 0.78 : 0.46)),
+
       mountainCandidate: clamp01(source.mountainCandidate),
       cliffCandidate: clamp01(source.cliffCandidate),
       valleyCandidate: clamp01(source.valleyCandidate),
@@ -378,7 +440,10 @@
     }
 
     const authority = getCompositionAuthority();
-    if (!authority) return fallbackCompositionFromPoint(p);
+
+    if (!authority) {
+      return fallbackCompositionFromPoint(p);
+    }
 
     const candidates = [
       authority.sample,
@@ -399,7 +464,9 @@
         try {
           const result = fn.call(authority, p);
           if (result && typeof result === "object") return normalizeComposition(result, p);
-        } catch (_error2) {}
+        } catch (_error2) {
+          // Continue to next candidate.
+        }
       }
     }
 
@@ -423,32 +490,46 @@
     switch (materialClass) {
       case "dense_crust":
         return mixColor(PALETTE.denseCrust, PALETTE.mountainMass, comp.reliefStrength * 0.16);
+
       case "exposed_shield_land":
         return PALETTE.exposedShield;
+
       case "grounded_coastal_shelf":
         return mixColor(PALETTE.shelfLand, PALETTE.coastLand, comp.shorelineContact * 0.34);
+
       case "raised_landbridge":
         return mixColor(PALETTE.bridgeLand, PALETTE.ridgeLand, comp.ridgePotential * 0.24);
+
       case "submerged_shelf_bridge":
         return mixColor(PALETTE.submergedBridge, PALETTE.shallowWater, comp.saddlePotential * 0.3);
+
       case "pressure_ridge_land":
         return mixColor(PALETTE.ridgeLand, PALETTE.mountainMass, comp.reliefStrength * 0.2);
+
       case "shallow_saddle_water":
         return PALETTE.saddleWater;
+
       case "basin_shadow_floor":
         return mixColor(PALETTE.basinWater, PALETTE.valleyLand, comp.isLand ? 0.26 : 0);
+
       case "grounded_coastline":
         return mixColor(PALETTE.coastLand, PALETTE.shelfLand, 0.18);
+
       case "cliff_edge_mass":
         return mixColor(PALETTE.cliffMass, PALETTE.denseCrust, comp.reliefStrength * 0.2);
+
       case "valley_shadow_land":
         return mixColor(PALETTE.valleyLand, PALETTE.shadow, comp.basinPotential * 0.16);
+
       case "raised_relief_mass":
         return mixColor(PALETTE.mountainMass, PALETTE.denseCrust, 0.24);
+
       case "anchored_island_mass":
         return mixColor(PALETTE.islandMass, PALETTE.coastLand, comp.shorelineContact * 0.18);
+
       case "shallow_shelf_water":
         return PALETTE.shelfWater;
+
       case "deep_ocean_body":
       default:
         return PALETTE.deepWater;
@@ -657,7 +738,7 @@
       }
     }
 
-    return color.map((v) => clamp(Math.round(v), 0, 255));
+    return color.map((value) => clamp(Math.round(value), 0, 255));
   };
 
   const buildMaterial = (...args) => {
@@ -682,6 +763,8 @@
       ready: true,
       valid: true,
       protected: true,
+      livePathProof: true,
+      createTextureCanvasProof: true,
       finalVisualPassClaim: false,
 
       x: p.x,
@@ -801,14 +884,19 @@
         valid: true,
         protected: true,
         fallbackProtected: true,
+        livePathProof: true,
+        createTextureCanvasProof: true,
         finalVisualPassClaim: false,
+
         x: p.x,
         y: p.y,
         z: p.z,
+
         terrainClass: comp.terrainClass,
         materialClass,
         className: materialClass,
         type: materialClass,
+
         elevation: comp.elevation,
         isLand: comp.isLand,
         isWater: comp.isWater,
@@ -816,6 +904,7 @@
         isDeepWater: comp.isDeepWater,
         land: comp.isLand,
         water: comp.isWater,
+
         color: rgb,
         rgb,
         rgba: [rgb[0], rgb[1], rgb[2], alpha],
@@ -823,18 +912,23 @@
         g: rgb[1],
         b: rgb[2],
         a: alpha,
+
         alpha,
         surfaceAlpha: alpha,
         solidSurfaceAlpha: alpha,
         opacity: alpha,
+
         cssColor,
         colorCss: cssColor,
         css: cssColor,
         fillStyle: cssColor,
+        strokeStyle: cssColor,
         style: cssColor,
         hex: colorToHex(rgb),
+
         baseColor,
         finalColorHint: rgb,
+
         landDensity: fields.landDensity,
         shorelineGrounding: fields.shorelineGrounding,
         contactShadow: fields.contactShadow,
@@ -843,6 +937,7 @@
         terrainRelief: fields.terrainRelief,
         rimDarkening: fields.rimDarkening,
         atmosphereSeparation: fields.atmosphereSeparation,
+
         compositionReceipt: comp.receipt,
         compositionContract: comp.contract
       };
@@ -871,12 +966,23 @@
   const getCssColor = (...args) => safeMaterial(...args).cssColor;
   const getFillStyle = (...args) => safeMaterial(...args).fillStyle;
 
-  function resolveTextureOptions(...args) {
+  const resolveTextureOptions = (...args) => {
     let options = {};
 
-    if (args.length === 1 && args[0] && typeof args[0] === "object" && !Number.isFinite(Number(args[0].x))) {
+    if (
+      args.length === 1 &&
+      args[0] &&
+      typeof args[0] === "object" &&
+      !Number.isFinite(Number(args[0].x)) &&
+      !Number.isFinite(Number(args[0].lon)) &&
+      !Number.isFinite(Number(args[0].u))
+    ) {
       options = args[0];
-    } else if (args.length >= 2 && Number.isFinite(Number(args[0])) && Number.isFinite(Number(args[1]))) {
+    } else if (
+      args.length >= 2 &&
+      Number.isFinite(Number(args[0])) &&
+      Number.isFinite(Number(args[1]))
+    ) {
       options = {
         width: Number(args[0]),
         height: Number(args[1]),
@@ -892,7 +998,7 @@
       contract: CONTRACT,
       receipt: RECEIPT
     };
-  }
+  };
 
   function createTextureCanvas(...args) {
     try {
@@ -907,21 +1013,29 @@
           canvas: null,
           texture: null,
           status: "document-unavailable",
-          createTextureCanvasAvailable: true
+          createTextureCanvasAvailable: true,
+          livePathProof: true
         };
       }
 
       const canvas = document.createElement("canvas");
       canvas.width = options.width;
       canvas.height = options.height;
+
       canvas.dataset.hearthTextureCanvas = "true";
       canvas.dataset.hearthMaterialsContract = CONTRACT;
       canvas.dataset.hearthMaterialsReceipt = RECEIPT;
+      canvas.dataset.hearthMaterialsLivePathProof = "true";
+      canvas.dataset.hearthMaterialsCreateTextureCanvasProof = "true";
       canvas.dataset.generatedImage = "false";
       canvas.dataset.graphicBox = "false";
       canvas.dataset.visualPassClaimed = "false";
 
-      const ctx = canvas.getContext("2d", { alpha: options.alpha, willReadFrequently: false });
+      const ctx = canvas.getContext("2d", {
+        alpha: options.alpha,
+        willReadFrequently: false
+      });
+
       if (!ctx) return canvas;
 
       const image = ctx.createImageData(options.width, options.height);
@@ -952,6 +1066,8 @@
         width: options.width,
         height: options.height,
         source: options.source,
+        createTextureCanvasAvailable: true,
+        livePathProof: true,
         generatedImage: false,
         graphicBox: false,
         visualPassClaimed: false
@@ -963,15 +1079,31 @@
         const canvas = document.createElement("canvas");
         canvas.width = 16;
         canvas.height = 8;
+
         canvas.dataset.hearthTextureCanvas = "true";
         canvas.dataset.hearthMaterialsContract = CONTRACT;
         canvas.dataset.hearthFallbackTextureCanvas = "true";
+        canvas.dataset.hearthMaterialsLivePathProof = "true";
 
         const ctx = canvas.getContext("2d");
+
         if (ctx) {
           ctx.fillStyle = colorToCss(PALETTE.fallbackWater, 1);
           ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
+
+        canvas.hearthMaterialTexture = {
+          contract: CONTRACT,
+          receipt: RECEIPT,
+          width: 16,
+          height: 8,
+          source: "safe-fallback",
+          createTextureCanvasAvailable: true,
+          livePathProof: true,
+          generatedImage: false,
+          graphicBox: false,
+          visualPassClaimed: false
+        };
 
         return canvas;
       }
@@ -980,7 +1112,8 @@
         contract: CONTRACT,
         receipt: RECEIPT,
         status: "safe-texture-fallback",
-        createTextureCanvasAvailable: true
+        createTextureCanvasAvailable: true,
+        livePathProof: true
       };
     }
   }
@@ -998,7 +1131,9 @@
     ready: true,
     valid: true,
     protected: true,
-    purpose: "material-texture-canvas-compatibility-rescue",
+    livePathProof: true,
+    createTextureCanvasProof: true,
+    purpose: "material-texture-canvas-live-path-proof",
     sourceAuthority: "hearth.composition.js when available; internal safe fallback when unavailable",
     requiredUpstream: [],
     optionalUpstream: [
@@ -1067,7 +1202,7 @@
     forbiddenOwnership: [
       "elevation-generation",
       "terrain-classification",
-      "canvas-drawing",
+      "canvas-mounting",
       "runtime-motion",
       "controls",
       "route-ui",
@@ -1080,10 +1215,13 @@
     RECEIPT,
     AUTHORITY,
     SEA_LEVEL,
+
     status: "active",
     ready: true,
     valid: true,
     protected: true,
+    livePathProof: true,
+    createTextureCanvasProof: true,
 
     sample,
     read,
@@ -1126,6 +1264,7 @@
 
   root.HEARTH = root.HEARTH || {};
   root.HEARTH.materials = api;
+
   root.HEARTH_MATERIALS = api;
   root.HearthMaterials = api;
   root.HEARTH_MATERIAL_AUTHORITY = api;
@@ -1135,6 +1274,11 @@
   root.HEARTH_MATERIAL_AUTHORITY_RECEIPT = getReceipt();
   root.HEARTH_MATERIALS_CONTRACT = CONTRACT;
   root.HEARTH_MATERIALS_STATUS = "active";
+
+  root.__HEARTH_MATERIALS_LIVE_PATH_PROOF__ = true;
+  root.__HEARTH_MATERIALS_CREATE_TEXTURE_CANVAS_PROOF__ = true;
+  root.__HEARTH_MATERIALS_LIVE_PATH_PROOF_CONTRACT__ = CONTRACT;
+  root.__HEARTH_MATERIALS_API_READY__ = true;
 
   if (typeof module !== "undefined" && module.exports) {
     module.exports = api;

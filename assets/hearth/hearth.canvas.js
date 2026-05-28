@@ -1,1477 +1,954 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_CANVAS_TOUCH_ROTATION_GOVERNOR_REPAIR_TNT_v7
+// HEARTH_RICH_BLUE_OCEAN_BODY_CANVAS_CONSUMER_TNT_v1
 // Full-file replacement.
-// Canvas authority only.
+// Canvas / composition authority only.
 // Purpose:
-// - Preserve v6 runtime/load-time governor.
-// - Restore touch drag, pointer rotation, inertia, and governed idle rotation.
-// - Keep cached atlas rendering.
-// - Keep event-driven rendering.
-// - Keep continuous full-frame raster forbidden.
-// - Keep direct material sampling per visible pixel per frame forbidden.
+// - Compose Hearth hydrology + terrain materials + separate ocean authority.
+// - Make HEARTH.ocean visibly active without collapsing ocean into terrain materials.
+// - Increase rich-blue ocean visibility in water-classified regions.
+// - Preserve dry land, submerged scars/blocks, basin darkness, route stability, and runtime/controls separation.
 // Does not own:
+// - hydrology classification
+// - ocean authority generation
+// - terrain material generation
 // - elevation generation
-// - terrain classification
-// - material authority
+// - tectonics
 // - route orchestration
-// - runtime ownership
-// - controls ownership
-// - teleports
+// - runtime motion
+// - controls
+// - beaches/cliffs/islands generation
+// - clickable ports
 // - final visual pass claim
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_TOUCH_ROTATION_GOVERNOR_REPAIR_TNT_v7";
-  const RECEIPT = "HEARTH_CANVAS_TOUCH_ROTATION_GOVERNOR_REPAIR_RECEIPT_v7";
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_EVENT_DRIVEN_RENDER_GOVERNOR_TNT_v6";
-  const BASELINE_CONTRACT = "HEARTH_4K_NATURAL_ORGANIC_CANVAS_CONSUMER_TNT_v3";
-  const VERSION = "2026-05-28.hearth-canvas-touch-rotation-governor-repair-v7";
+  const CONTRACT = "HEARTH_RICH_BLUE_OCEAN_BODY_CANVAS_CONSUMER_TNT_v1";
+  const RECEIPT = "HEARTH_RICH_BLUE_OCEAN_BODY_CANVAS_CONSUMER_RECEIPT_v1";
+  const OCEAN_CONTRACT = "HEARTH_RICH_BLUE_OCEAN_BODY_AUTHORITY_TNT_v1";
+  const VERSION = "2026-05-28.hearth-rich-blue-ocean-body-canvas-consumer-v1";
 
-  const TAU = Math.PI * 2;
-  const DEG = Math.PI / 180;
   const root = typeof window !== "undefined" ? window : globalThis;
+  const DEG = Math.PI / 180;
 
-  function clamp(value, min, max) {
+  const FALLBACK = Object.freeze({
+    land: [82, 84, 58],
+    raised: [100, 96, 67],
+    stone: [58, 62, 55],
+    water: [8, 31, 76],
+    deepWater: [3, 12, 34],
+    shelf: [22, 69, 91],
+    basin: [4, 15, 28],
+    scar: [30, 39, 36],
+    shadow: [2, 7, 15]
+  });
+
+  const clamp = (value, min, max) => {
     const n = Number(value);
     if (!Number.isFinite(n)) return min;
     return Math.max(min, Math.min(max, n));
-  }
+  };
 
-  function clamp01(value) {
-    return clamp(value, 0, 1);
-  }
+  const clamp01 = (value) => clamp(value, 0, 1);
 
-  function smoothstep(edge0, edge1, x) {
-    const t = clamp((x - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
-    return t * t * (3 - 2 * t);
-  }
+  const mixNumber = (a, b, t) => {
+    const k = clamp01(t);
+    return a + (b - a) * k;
+  };
 
-  function lerp(a, b, t) {
-    return a + (b - a) * clamp01(t);
-  }
-
-  function mix(a, b, t) {
+  const mixColor = (a, b, t) => {
     const k = clamp01(t);
     return [
-      Math.round(lerp(a[0], b[0], k)),
-      Math.round(lerp(a[1], b[1], k)),
-      Math.round(lerp(a[2], b[2], k))
+      clamp(Math.round(mixNumber(a[0], b[0], k)), 0, 255),
+      clamp(Math.round(mixNumber(a[1], b[1], k)), 0, 255),
+      clamp(Math.round(mixNumber(a[2], b[2], k)), 0, 255)
     ];
-  }
+  };
 
-  function scaleColor(c, scalar) {
+  const scaleColor = (rgb, scalar) => {
+    const s = Number.isFinite(Number(scalar)) ? Number(scalar) : 1;
     return [
-      clamp(Math.round(c[0] * scalar), 0, 255),
-      clamp(Math.round(c[1] * scalar), 0, 255),
-      clamp(Math.round(c[2] * scalar), 0, 255)
+      clamp(Math.round(rgb[0] * s), 0, 255),
+      clamp(Math.round(rgb[1] * s), 0, 255),
+      clamp(Math.round(rgb[2] * s), 0, 255)
     ];
-  }
+  };
 
-  function addColor(c, amount) {
-    const a = Number.isFinite(Number(amount)) ? Number(amount) : 0;
+  const liftOceanBlue = (rgb, strength) => {
+    const k = clamp01(strength);
     return [
-      clamp(Math.round(c[0] + a), 0, 255),
-      clamp(Math.round(c[1] + a), 0, 255),
-      clamp(Math.round(c[2] + a), 0, 255)
+      clamp(Math.round(rgb[0] * (1 - k * 0.10)), 0, 255),
+      clamp(Math.round(rgb[1] * (1 + k * 0.10)), 0, 255),
+      clamp(Math.round(rgb[2] * (1 + k * 0.24)), 0, 255)
     ];
-  }
+  };
 
-  function normalize3(p) {
+  const normalize3 = (p) => {
     const x = Number.isFinite(Number(p && p.x)) ? Number(p.x) : 0;
     const y = Number.isFinite(Number(p && p.y)) ? Number(p.y) : 0;
     const z = Number.isFinite(Number(p && p.z)) ? Number(p.z) : 1;
     const m = Math.hypot(x, y, z) || 1;
+    return { x: x / m, y: y / m, z: z / m };
+  };
 
-    return {
-      x: x / m,
-      y: y / m,
-      z: z / m
-    };
-  }
+  const dot3 = (a, b) => a.x * b.x + a.y * b.y + a.z * b.z;
 
-  function lonLatToVector(lonDeg, latDeg) {
+  const lonLatToVector = (lonDeg, latDeg) => {
     const lon = Number(lonDeg || 0) * DEG;
     const lat = Number(latDeg || 0) * DEG;
     const c = Math.cos(lat);
-
     return normalize3({
       x: Math.sin(lon) * c,
       y: Math.sin(lat),
       z: Math.cos(lon) * c
     });
-  }
+  };
 
-  function rgbFromMaterial(material, fallback = [4, 14, 29]) {
-    if (Array.isArray(material)) {
-      return [
-        clamp(Math.round(material[0]), 0, 255),
-        clamp(Math.round(material[1]), 0, 255),
-        clamp(Math.round(material[2]), 0, 255)
-      ];
+  const parseInput = (...args) => {
+    if (args.length === 1 && args[0] && typeof args[0] === "object") {
+      const p = args[0];
+
+      if (
+        Number.isFinite(Number(p.x)) &&
+        Number.isFinite(Number(p.y)) &&
+        Number.isFinite(Number(p.z))
+      ) {
+        return normalize3(p);
+      }
+
+      if (Number.isFinite(Number(p.lon)) && Number.isFinite(Number(p.lat))) {
+        return lonLatToVector(Number(p.lon), Number(p.lat));
+      }
+
+      if (Number.isFinite(Number(p.longitude)) && Number.isFinite(Number(p.latitude))) {
+        return lonLatToVector(Number(p.longitude), Number(p.latitude));
+      }
+
+      if (Number.isFinite(Number(p.u)) && Number.isFinite(Number(p.v))) {
+        return lonLatToVector(Number(p.u) * 360 - 180, 90 - Number(p.v) * 180);
+      }
     }
 
-    if (!material || typeof material !== "object") return fallback.slice();
+    if (args.length >= 3) return normalize3({ x: args[0], y: args[1], z: args[2] });
+    if (args.length >= 2) return lonLatToVector(Number(args[0]), Number(args[1]));
+    return lonLatToVector(0, 0);
+  };
 
-    const source =
-      Array.isArray(material.rgb)
-        ? material.rgb
-        : Array.isArray(material.color)
-          ? material.color
-          : Array.isArray(material.finalColorHint)
-            ? material.finalColorHint
-            : Array.isArray(material.baseColor)
-              ? material.baseColor
-              : Array.isArray(material.rgba)
-                ? material.rgba
-                : null;
+  const numberField = (source, key, fallback = 0) => {
+    const n = Number(source && source[key]);
+    return Number.isFinite(n) ? n : fallback;
+  };
 
-    if (!source) return fallback.slice();
+  const boolField = (source, key, fallback = false) => {
+    return typeof (source && source[key]) === "boolean" ? source[key] : fallback;
+  };
 
-    return [
-      clamp(Math.round(source[0]), 0, 255),
-      clamp(Math.round(source[1]), 0, 255),
-      clamp(Math.round(source[2]), 0, 255)
-    ];
-  }
+  const stringField = (source, key, fallback = "") => {
+    return typeof (source && source[key]) === "string" && source[key] ? source[key] : fallback;
+  };
 
-  function numericField(material, key, fallback = 0) {
-    if (!material || typeof material !== "object") return fallback;
-    return clamp01(material[key]);
-  }
-
-  function booleanField(material, key, fallback = false) {
-    if (!material || typeof material !== "object") return fallback;
-    if (typeof material[key] === "boolean") return material[key];
-    return fallback;
-  }
-
-  function resolveAuthority(options, key, globalNames) {
-    if (options && options[key]) return options[key];
-
-    for (const name of globalNames) {
-      if (root[name]) return root[name];
+  const colorField = (source, keys, fallback) => {
+    for (const key of keys) {
+      const value = source && source[key];
+      if (
+        Array.isArray(value) &&
+        value.length >= 3 &&
+        value.every((v) => Number.isFinite(Number(v)))
+      ) {
+        return [
+          clamp(Math.round(Number(value[0])), 0, 255),
+          clamp(Math.round(Number(value[1])), 0, 255),
+          clamp(Math.round(Number(value[2])), 0, 255)
+        ];
+      }
     }
 
-    if (root.HEARTH && root.HEARTH[key]) return root.HEARTH[key];
+    return fallback.slice();
+  };
+
+  const getHydrologyAuthority = () => {
+    if (root.HEARTH && root.HEARTH.hydrology) return root.HEARTH.hydrology;
+    if (root.HEARTH_HYDROLOGY) return root.HEARTH_HYDROLOGY;
+    if (root.HearthHydrology) return root.HearthHydrology;
+    return null;
+  };
+
+  const getMaterialsAuthority = () => {
+    if (root.HEARTH && root.HEARTH.materials) return root.HEARTH.materials;
+    if (root.HEARTH_MATERIALS) return root.HEARTH_MATERIALS;
+    if (root.HearthMaterials) return root.HearthMaterials;
+    return null;
+  };
+
+  const getOceanAuthority = () => {
+    if (root.HEARTH && root.HEARTH.ocean) return root.HEARTH.ocean;
+    if (root.HEARTH_OCEAN) return root.HEARTH_OCEAN;
+    if (root.HearthOcean) return root.HearthOcean;
+    return null;
+  };
+
+  const callAuthority = (authority, methods, args) => {
+    if (!authority) return null;
+
+    for (const method of methods) {
+      if (typeof authority[method] !== "function") continue;
+
+      try {
+        const result = authority[method].apply(authority, args);
+        if (result && typeof result === "object") return result;
+      } catch (_error) {
+        try {
+          const p = parseInput(...args);
+          const result = authority[method].call(authority, p);
+          if (result && typeof result === "object") return result;
+        } catch (_error2) {}
+      }
+    }
 
     return null;
-  }
+  };
 
-  function resolveMaterialFunction(materials) {
-    if (!materials || typeof materials !== "object") return null;
+  const fallbackMaterial = (p) => {
+    const isWater = p.z < 0.22;
+    const isCoast = Math.abs(p.z - 0.22) < 0.16;
 
-    const candidates = [
-      materials.sample,
-      materials.read,
-      materials.getMaterial,
-      materials.materialAt,
-      materials.getMaterialAt,
-      materials.getSurfaceMaterial,
-      materials.get,
-      materials.resolve,
-      materials.resolveMaterial
-    ];
-
-    return candidates.find((fn) => typeof fn === "function") || null;
-  }
-
-  function createEmptyAtlas(width, height) {
-    const count = width * height;
+    let rgb = isWater ? FALLBACK.water : FALLBACK.land;
+    if (p.y > 0.55) rgb = mixColor(rgb, FALLBACK.stone, 0.22);
+    if (isCoast) rgb = mixColor(rgb, FALLBACK.stone, 0.18);
 
     return {
-      width,
-      height,
-      ready: false,
-      complete: false,
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      pixels: new Uint8ClampedArray(count * 4),
-      landDensity: new Uint8Array(count),
-      shorelineGrounding: new Uint8Array(count),
-      contactShadow: new Uint8Array(count),
-      underlandOcclusion: new Uint8Array(count),
-      shelfTransition: new Uint8Array(count),
-      terrainRelief: new Uint8Array(count),
-      ridgeRelief: new Uint8Array(count),
-      basinShade: new Uint8Array(count),
-      rimDarkening: new Uint8Array(count),
-      rimCompression: new Uint8Array(count),
-      atmosphereSeparation: new Uint8Array(count),
-      surfaceAttachment: new Uint8Array(count),
-      curvatureLock: new Uint8Array(count),
-      waterDepthShade: new Uint8Array(count),
-      bridgePotential: new Uint8Array(count),
-      landMask: new Uint8Array(count)
+      contract: "HEARTH_CANVAS_FALLBACK_MATERIAL",
+      receipt: "FALLBACK_MATERIAL_USED",
+      rgb,
+      color: rgb,
+      alpha: 1,
+      isLand: !isWater,
+      isWater,
+      landDensity: isWater ? 0 : 0.62,
+      shorelineGrounding: isCoast ? 0.38 : 0,
+      contactShadow: isCoast ? 0.26 : 0,
+      underlandOcclusion: isWater ? 0.16 : 0.22,
+      shelfTransition: isCoast ? 0.32 : 0,
+      terrainRelief: isWater ? 0.04 : 0.34,
+      ridgeRelief: p.y > 0.45 ? 0.26 : 0.08,
+      basinShade: isWater ? 0.34 : 0.10,
+      rimDarkening: 0.18,
+      atmosphereSeparation: isWater ? 0.18 : 0.36,
+      surfaceAttachment: 0.68,
+      curvatureLock: 0.72,
+      waterDepthShade: isWater ? 0.40 : 0,
+      submergedWorksFeed: 0,
+      submergedShadowBand: isWater ? 0.20 : 0,
+      greenGlowSuppression: 0,
+      coastalScarContinuity: isCoast ? 0.20 : 0,
+      harborScarBasin: 0,
+      boundaryMorphologyFeed: isCoast ? 0.20 : 0
     };
-  }
+  };
 
-  function detectMobile(mount) {
-    const width = Math.max(
-      document.documentElement.clientWidth || 0,
-      window.innerWidth || 0,
-      mount ? mount.clientWidth || 0 : 0
-    );
+  const normalizeMaterial = (raw, p) => {
+    const fallback = fallbackMaterial(p);
+    const source = raw && typeof raw === "object" ? raw : fallback;
+    const rgb = colorField(source, ["rgb", "color", "baseColor", "finalColorHint"], fallback.rgb);
 
-    const coarse =
-      typeof matchMedia === "function" &&
-      (
-        matchMedia("(pointer: coarse)").matches ||
-        matchMedia("(hover: none)").matches
-      );
+    return {
+      ...fallback,
+      ...source,
+      rgb,
+      color: rgb,
+      alpha: clamp01(numberField(source, "alpha", fallback.alpha)),
+      isLand: boolField(source, "isLand", fallback.isLand),
+      isWater: boolField(source, "isWater", fallback.isWater),
+      landDensity: clamp01(numberField(source, "landDensity", fallback.landDensity)),
+      shorelineGrounding: clamp01(numberField(source, "shorelineGrounding", fallback.shorelineGrounding)),
+      contactShadow: clamp01(numberField(source, "contactShadow", fallback.contactShadow)),
+      underlandOcclusion: clamp01(numberField(source, "underlandOcclusion", fallback.underlandOcclusion)),
+      shelfTransition: clamp01(numberField(source, "shelfTransition", fallback.shelfTransition)),
+      terrainRelief: clamp01(numberField(source, "terrainRelief", fallback.terrainRelief)),
+      ridgeRelief: clamp01(numberField(source, "ridgeRelief", fallback.ridgeRelief)),
+      basinShade: clamp01(numberField(source, "basinShade", fallback.basinShade)),
+      rimDarkening: clamp01(numberField(source, "rimDarkening", fallback.rimDarkening)),
+      atmosphereSeparation: clamp01(numberField(source, "atmosphereSeparation", fallback.atmosphereSeparation)),
+      surfaceAttachment: clamp01(numberField(source, "surfaceAttachment", fallback.surfaceAttachment)),
+      curvatureLock: clamp01(numberField(source, "curvatureLock", fallback.curvatureLock)),
+      waterDepthShade: clamp01(numberField(source, "waterDepthShade", fallback.waterDepthShade)),
+      submergedWorksFeed: clamp01(numberField(source, "submergedWorksFeed", fallback.submergedWorksFeed)),
+      submergedShadowBand: clamp01(numberField(source, "submergedShadowBand", fallback.submergedShadowBand)),
+      greenGlowSuppression: clamp01(numberField(source, "greenGlowSuppression", fallback.greenGlowSuppression)),
+      coastalScarContinuity: clamp01(numberField(source, "coastalScarContinuity", fallback.coastalScarContinuity)),
+      harborScarBasin: clamp01(numberField(source, "harborScarBasin", fallback.harborScarBasin)),
+      boundaryMorphologyFeed: clamp01(numberField(source, "boundaryMorphologyFeed", fallback.boundaryMorphologyFeed))
+    };
+  };
 
-    return width <= 760 || coarse || (window.devicePixelRatio || 1) > 1.75;
-  }
+  const fallbackHydrology = (p, material) => {
+    const waterFillStrength = material.isWater ? 0.54 : 0;
+    const waterlineBoundaryStrength = material.shorelineGrounding || 0;
+    const shallowShelfStrength = material.shelfTransition || 0;
 
-  function mount(mountNode, options = {}) {
-    const mount =
-      mountNode ||
-      document.getElementById("hearthCanvasMount") ||
-      document.querySelector("[data-hearth-canvas-mount]");
+    return {
+      contract: "HEARTH_CANVAS_FALLBACK_HYDROLOGY",
+      receipt: "FALLBACK_HYDROLOGY_USED",
+      waterFill: waterFillStrength > 0.40,
+      waterFillStrength,
+      waterDepth: material.isWater ? clamp01(0.36 + material.waterDepthShade * 0.42) : 0,
+      waterDepthClass: material.waterDepthShade > 0.54 ? "deep" : material.isWater ? "mid" : "dry",
+      waterlineBoundary: waterlineBoundaryStrength > 0.28,
+      waterlineBoundaryStrength,
+      shallowShelf: shallowShelfStrength > 0.22,
+      shallowShelfStrength,
+      belowSeaLevel: material.isWater,
+      belowSeaLevelStrength: material.isWater ? 0.50 : 0,
+      nearSeaLevel: waterlineBoundaryStrength > 0.22,
+      nearSeaLevelStrength: waterlineBoundaryStrength,
+      oceanDepth: material.waterDepthShade,
+      oceanContinuity: material.isWater ? 0.48 : 0,
+      shelfGradient: shallowShelfStrength,
+      submergedBlock: false,
+      submergedBlockStrength: 0,
+      submergedScar: false,
+      submergedScarStrength: 0,
+      oldCoastalTechSubmerged: false,
+      oldCoastalTechSubmergedStrength: 0,
+      bayPotential: 0,
+      inletPotential: 0,
+      straitPotential: 0,
+      archipelagoChannelPotential: 0
+    };
+  };
 
-    if (!mount) {
-      throw new Error("Hearth canvas mount not found.");
-    }
+  const normalizeHydrology = (raw, p, material) => {
+    const fallback = fallbackHydrology(p, material);
+    const source = raw && typeof raw === "object" ? raw : fallback;
+    const merged = { ...fallback, ...source };
 
-    mount.querySelectorAll("canvas").forEach((node) => node.remove());
-    mount.querySelectorAll("[data-hearth-route-fallback]").forEach((node) => node.remove());
-
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d", { alpha: true });
-
-    if (!ctx) {
-      throw new Error("Hearth canvas 2D context unavailable.");
-    }
-
-    mount.style.touchAction = "none";
-    mount.style.userSelect = "none";
-    mount.style.webkitUserSelect = "none";
-
-    canvas.dataset.hearthCanvasContract = CONTRACT;
-    canvas.dataset.hearthCanvasReceipt = RECEIPT;
-    canvas.dataset.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
-    canvas.dataset.hearthCanvasBaselineContract = BASELINE_CONTRACT;
-    canvas.dataset.hearthMaterialsConsumer = "true";
-    canvas.dataset.hearthCanvasGovernorMode = "true";
-    canvas.dataset.hearthCanvasEventDriven = "true";
-    canvas.dataset.hearthCanvasContinuousRaster = "false";
-    canvas.dataset.hearthCanvasAtlasMode = "true";
-    canvas.dataset.hearthCachedAtlas = "true";
-    canvas.dataset.hearthDirectPerFrameSampling = "false";
-    canvas.dataset.hearthBilinearAtlasSampling = "true";
-    canvas.dataset.hearthSphereSurfaceConsumption = "true";
-    canvas.dataset.hearthCanvasTouchRotationRepair = "true";
-    canvas.dataset.hearthCanvasPointerDragEnabled = "true";
-    canvas.dataset.hearthCanvasAutoRotationEnabled = "true";
-    canvas.dataset.generatedImage = "false";
-    canvas.dataset.graphicBox = "false";
-    canvas.dataset.webgl = "false";
-    canvas.dataset.visualPassClaimed = "false";
-
-    canvas.style.position = "absolute";
-    canvas.style.inset = "0";
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
-    canvas.style.display = "block";
-    canvas.style.touchAction = "none";
-    canvas.style.userSelect = "none";
-    canvas.style.webkitUserSelect = "none";
-    canvas.style.pointerEvents = "auto";
-    canvas.tabIndex = 0;
-
-    mount.appendChild(canvas);
-
-    mount.querySelectorAll("[data-hearth-mount-fallback]").forEach((fallback) => {
-      fallback.hidden = true;
-      fallback.style.display = "none";
+    [
+      "waterFillStrength",
+      "waterDepth",
+      "waterlineBoundaryStrength",
+      "shallowShelfStrength",
+      "belowSeaLevelStrength",
+      "nearSeaLevelStrength",
+      "oceanDepth",
+      "oceanContinuity",
+      "shelfGradient",
+      "submergedBlockStrength",
+      "submergedScarStrength",
+      "oldCoastalTechSubmergedStrength",
+      "bayPotential",
+      "inletPotential",
+      "straitPotential",
+      "archipelagoChannelPotential"
+    ].forEach((key) => {
+      merged[key] = clamp01(numberField(merged, key, fallback[key] || 0));
     });
 
-    const materials = resolveAuthority(options, "materials", [
-      "HEARTH_MATERIALS",
-      "HearthMaterials",
-      "HEARTH_MATERIAL_AUTHORITY"
-    ]);
+    merged.waterDepthClass = stringField(merged, "waterDepthClass", fallback.waterDepthClass);
+    merged.waterFill = boolField(merged, "waterFill", merged.waterFillStrength > 0.40);
+    merged.waterlineBoundary = boolField(merged, "waterlineBoundary", merged.waterlineBoundaryStrength > 0.34);
+    merged.shallowShelf = boolField(merged, "shallowShelf", merged.shallowShelfStrength > 0.34);
+    merged.belowSeaLevel = boolField(merged, "belowSeaLevel", merged.belowSeaLevelStrength > 0.38);
+    merged.nearSeaLevel = boolField(merged, "nearSeaLevel", merged.nearSeaLevelStrength > 0.34);
+    merged.submergedBlock = boolField(merged, "submergedBlock", merged.submergedBlockStrength > 0.36);
+    merged.submergedScar = boolField(merged, "submergedScar", merged.submergedScarStrength > 0.34);
+    merged.oldCoastalTechSubmerged = boolField(
+      merged,
+      "oldCoastalTechSubmerged",
+      merged.oldCoastalTechSubmergedStrength > 0.36
+    );
 
-    const elevation = resolveAuthority(options, "elevation", [
-      "HEARTH_ELEVATION",
-      "HearthElevation"
-    ]);
+    return merged;
+  };
 
-    const composition = resolveAuthority(options, "composition", [
-      "HEARTH_COMPOSITION",
-      "HearthComposition"
-    ]);
-
-    const tectonics = resolveAuthority(options, "tectonics", [
-      "HEARTH_TECTONICS",
-      "HearthTectonics"
-    ]);
-
-    const hydrology = resolveAuthority(options, "hydrology", [
-      "HEARTH_HYDROLOGY",
-      "HearthHydrology"
-    ]);
-
-    const materialFn = resolveMaterialFunction(materials);
-
-    if (!materialFn) {
-      throw new Error("Hearth material sampler unavailable for touch-governed atlas construction.");
+  const normalizeOcean = (raw) => {
+    if (!raw || typeof raw !== "object") {
+      return {
+        available: false,
+        oceanRgb: FALLBACK.water.slice(),
+        oceanAlpha: 0,
+        oceanPresence: 0,
+        oceanConsumerReady: false
+      };
     }
 
-    let disposed = false;
-    let dragging = false;
-    let interacting = false;
-    let interactionOverride = false;
-    let inertiaActive = false;
-    let visible = !document.hidden;
-    let mountVisible = true;
-    let dirty = true;
-    let renderPending = false;
-    let idlePaused = false;
-    let frameBudgetExceeded = false;
-    let idleRotationArmed = false;
+    const oceanRgb = colorField(raw, ["oceanRgb", "oceanColor", "color"], FALLBACK.water);
 
-    let lastX = 0;
-    let lastY = 0;
-    let yaw = Number.isFinite(options.yaw) ? options.yaw : -0.28;
-    let tilt = Number.isFinite(options.tilt) ? options.tilt : -0.18;
-    let yawVelocity = Number.isFinite(options.yawVelocity) ? options.yawVelocity : 0.0018;
-    let tiltVelocity = 0;
-    let frames = 0;
-    let renderCount = 0;
-    let lastRenderAt = 0;
-    let lastFrameCost = 0;
-    let idleSince = performance.now();
-
-    const mobileMode = Boolean(options.mobileMode ?? detectMobile(mount));
-    let qualityTier = Number.isFinite(options.qualityTier)
-      ? clamp(Math.round(options.qualityTier), 0, 3)
-      : mobileMode
-        ? 1
-        : 2;
-
-    const dragBudget = mobileMode ? 22 : 24;
-    const settledBudget = mobileMode ? 32 : 36;
-
-    const capTable = {
-      0: {
-        drag: mobileMode ? 340 : 420,
-        settled: mobileMode ? 420 : 520,
-        dpr: mobileMode ? 1.0 : 1.25,
-        idleCadence: mobileMode ? 720 : 420,
-        idleStep: mobileMode ? 0.0018 : 0.0024
-      },
-      1: {
-        drag: mobileMode ? 390 : 500,
-        settled: mobileMode ? 540 : 620,
-        dpr: mobileMode ? 1.15 : 1.45,
-        idleCadence: mobileMode ? 620 : 320,
-        idleStep: mobileMode ? 0.0021 : 0.0030
-      },
-      2: {
-        drag: mobileMode ? 420 : 540,
-        settled: mobileMode ? 580 : 720,
-        dpr: mobileMode ? 1.25 : 1.65,
-        idleCadence: mobileMode ? 520 : 240,
-        idleStep: mobileMode ? 0.0024 : 0.0038
-      },
-      3: {
-        drag: mobileMode ? 460 : 580,
-        settled: mobileMode ? 620 : 780,
-        dpr: mobileMode ? 1.35 : 1.75,
-        idleCadence: mobileMode ? 460 : 180,
-        idleStep: mobileMode ? 0.0028 : 0.0044
-      }
+    const ocean = {
+      ...raw,
+      available: true,
+      oceanRgb,
+      oceanAlpha: clamp01(numberField(raw, "oceanAlpha", numberField(raw, "oceanPresence", 0))),
+      oceanPresence: clamp01(numberField(raw, "oceanPresence", numberField(raw, "oceanAlpha", 0))),
+      deepOceanBlueFeed: clamp01(numberField(raw, "deepOceanBlueFeed", 0)),
+      openOceanBlueFeed: clamp01(numberField(raw, "openOceanBlueFeed", 0)),
+      richBlueOceanFeed: clamp01(numberField(raw, "richBlueOceanFeed", 0)),
+      shallowShelfBlueFeed: clamp01(numberField(raw, "shallowShelfBlueFeed", 0)),
+      waterFillBlueFeed: clamp01(numberField(raw, "waterFillBlueFeed", 0)),
+      waterlineBlueContrastFeed: clamp01(numberField(raw, "waterlineBlueContrastFeed", 0)),
+      submergedBasinBlueFeed: clamp01(numberField(raw, "submergedBasinBlueFeed", 0)),
+      submergedPortBasinBlueFeed: clamp01(numberField(raw, "submergedPortBasinBlueFeed", 0)),
+      submergedScarWaterMuteFeed: clamp01(numberField(raw, "submergedScarWaterMuteFeed", 0)),
+      submergedBlockWaterDepthFeed: clamp01(numberField(raw, "submergedBlockWaterDepthFeed", 0)),
+      oceanTerrainSeparationFeed: clamp01(numberField(raw, "oceanTerrainSeparationFeed", 0)),
+      oceanDepthShade: clamp01(numberField(raw, "oceanDepthShade", 0)),
+      oceanBoundarySoftness: clamp01(numberField(raw, "oceanBoundarySoftness", 0)),
+      oceanBoundaryHardness: clamp01(numberField(raw, "oceanBoundaryHardness", 0)),
+      isOcean: boolField(raw, "isOcean", numberField(raw, "oceanPresence", 0) > 0.18),
+      isDeepOcean: boolField(raw, "isDeepOcean", numberField(raw, "deepOceanBlueFeed", 0) > 0.46),
+      isOpenOcean: boolField(raw, "isOpenOcean", numberField(raw, "openOceanBlueFeed", 0) > 0.38),
+      isShallowShelf: boolField(raw, "isShallowShelf", numberField(raw, "shallowShelfBlueFeed", 0) > 0.30),
+      isWaterline: boolField(raw, "isWaterline", numberField(raw, "waterlineBlueContrastFeed", 0) > 0.28),
+      isSubmergedBasin: boolField(raw, "isSubmergedBasin", numberField(raw, "submergedBasinBlueFeed", 0) > 0.32),
+      isSubmergedPortBasinCandidate: boolField(
+        raw,
+        "isSubmergedPortBasinCandidate",
+        numberField(raw, "submergedPortBasinBlueFeed", 0) > 0.34
+      ),
+      isSubmergedScarWater: boolField(
+        raw,
+        "isSubmergedScarWater",
+        numberField(raw, "submergedScarWaterMuteFeed", 0) > 0.30
+      ),
+      isSubmergedBlockWater: boolField(
+        raw,
+        "isSubmergedBlockWater",
+        numberField(raw, "submergedBlockWaterDepthFeed", 0) > 0.30
+      ),
+      oceanConsumerReady: boolField(raw, "oceanConsumerReady", true)
     };
 
-    function currentCaps() {
-      return capTable[qualityTier] || capTable[1];
-    }
+    return ocean;
+  };
 
-    const initialAtlasWidth = clamp(
-      Math.round(options.initialAtlasWidth || (mobileMode ? 256 : 384)),
-      128,
-      mobileMode ? 384 : 512
+  const readMaterials = (...args) => {
+    const p = parseInput(...args);
+    const raw = callAuthority(
+      getMaterialsAuthority(),
+      ["sample", "read", "getMaterial", "materialAt", "getMaterialAt", "getSurfaceMaterial", "resolve", "resolveMaterial"],
+      args
     );
 
-    const initialAtlasHeight = clamp(
-      Math.round(options.initialAtlasHeight || (mobileMode ? 128 : 192)),
-      64,
-      mobileMode ? 192 : 256
+    return normalizeMaterial(raw, p);
+  };
+
+  const readHydrology = (material, ...args) => {
+    const p = parseInput(...args);
+    const raw = callAuthority(
+      getHydrologyAuthority(),
+      ["sample", "read", "sampleHydrology", "readHydrology", "getHydrology"],
+      args
     );
 
-    const refinedAtlasAllowedByDefault = !mobileMode && options.refinedAtlasAllowed !== false;
+    return normalizeHydrology(raw, p, material);
+  };
 
-    const refinedAtlasWidth = clamp(
-      Math.round(options.refinedAtlasWidth || 768),
-      initialAtlasWidth,
-      1024
+  const readOcean = (...args) => {
+    const raw = callAuthority(
+      getOceanAuthority(),
+      ["sample", "read", "sampleOcean", "readOcean", "getOcean", "oceanAt", "getOceanAt", "resolveOcean"],
+      args
     );
 
-    const refinedAtlasHeight = clamp(
-      Math.round(options.refinedAtlasHeight || 384),
-      initialAtlasHeight,
-      512
+    return normalizeOcean(raw);
+  };
+
+  const computeOceanWeight = (material, hydrology, ocean) => {
+    if (!ocean.available || !ocean.oceanConsumerReady) return 0;
+
+    const openOceanWeight = clamp01(
+      ocean.oceanPresence * 0.22 +
+      ocean.richBlueOceanFeed * 0.22 +
+      ocean.openOceanBlueFeed * 0.24 +
+      hydrology.oceanContinuity * 0.14 +
+      hydrology.waterFillStrength * 0.10
     );
 
-    let atlas = null;
-    let atlasStatus = "building-initial-atlas";
-    let atlasBuilds = 0;
-    let refinedAtlasQueued = false;
-    let refinedAtlasComplete = false;
-    let refinedAtlasAllowed = refinedAtlasAllowedByDefault;
-    let buffer = null;
-    let bufferWidth = 0;
-    let bufferHeight = 0;
-    let resizeObserver = null;
-    let intersectionObserver = null;
-    let idleTimer = null;
+    const deepOceanWeight = clamp01(
+      ocean.deepOceanBlueFeed * 0.28 +
+      ocean.oceanDepthShade * 0.22 +
+      hydrology.waterDepth * 0.18 +
+      hydrology.oceanDepth * 0.14 +
+      (hydrology.waterDepthClass === "deep" ? 0.12 : 0)
+    );
 
-    function currentRenderCap() {
-      const caps = currentCaps();
-      return dragging ? caps.drag : caps.settled;
+    const shallowShelfWeight = clamp01(
+      ocean.shallowShelfBlueFeed * 0.26 +
+      hydrology.shallowShelfStrength * 0.22 +
+      hydrology.shelfGradient * 0.14 +
+      ocean.oceanBoundarySoftness * 0.10
+    );
+
+    const waterlineWeight = clamp01(
+      ocean.waterlineBlueContrastFeed * 0.20 +
+      ocean.oceanTerrainSeparationFeed * 0.16 +
+      hydrology.waterlineBoundaryStrength * 0.18 +
+      hydrology.nearSeaLevelStrength * 0.10
+    );
+
+    const submergedWeight = clamp01(
+      ocean.submergedBasinBlueFeed * 0.20 +
+      ocean.submergedPortBasinBlueFeed * 0.22 +
+      ocean.submergedBlockWaterDepthFeed * 0.14 +
+      ocean.submergedScarWaterMuteFeed * 0.12 +
+      material.submergedShadowBand * 0.08 +
+      material.harborScarBasin * 0.08
+    );
+
+    let weight = clamp01(
+      openOceanWeight +
+      deepOceanWeight +
+      shallowShelfWeight +
+      waterlineWeight +
+      submergedWeight
+    );
+
+    if (ocean.isDeepOcean || hydrology.waterDepthClass === "deep") {
+      weight = Math.max(weight, 0.68);
+    } else if (ocean.isOpenOcean || hydrology.oceanContinuity > 0.46) {
+      weight = Math.max(weight, 0.58);
+    } else if (ocean.isShallowShelf || hydrology.shallowShelf) {
+      weight = Math.max(weight, 0.34);
+    } else if (ocean.isWaterline || hydrology.waterlineBoundary) {
+      weight = Math.max(weight, 0.24);
     }
 
-    function publishStatus(value) {
-      const renderCap = currentRenderCap();
-
-      document.documentElement.dataset.hearthCanvasAuthorityLoaded = "true";
-      document.documentElement.dataset.hearthCanvasContract = CONTRACT;
-      document.documentElement.dataset.hearthCanvasReceipt = RECEIPT;
-      document.documentElement.dataset.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
-      document.documentElement.dataset.hearthCanvasFrames = String(frames);
-      document.documentElement.dataset.hearthCanvasRenderCount = String(renderCount);
-
-      document.documentElement.dataset.hearthCanvasGovernorMode = "true";
-      document.documentElement.dataset.hearthCanvasEventDriven = "true";
-      document.documentElement.dataset.hearthCanvasContinuousRaster = "false";
-      document.documentElement.dataset.hearthCanvasAtlasMode = "true";
-      document.documentElement.dataset.hearthCanvasCachedAtlas = String(Boolean(atlas && atlas.ready));
-      document.documentElement.dataset.hearthCanvasAtlasStatus = atlasStatus;
-      document.documentElement.dataset.hearthCanvasAtlasWidth = String(atlas ? atlas.width : 0);
-      document.documentElement.dataset.hearthCanvasAtlasHeight = String(atlas ? atlas.height : 0);
-      document.documentElement.dataset.hearthCanvasAtlasBuilds = String(atlasBuilds);
-      document.documentElement.dataset.hearthCanvasQualityTier = String(qualityTier);
-      document.documentElement.dataset.hearthCanvasMobileMode = String(mobileMode);
-      document.documentElement.dataset.hearthCanvasRenderCap = String(renderCap);
-      document.documentElement.dataset.hearthCanvasLastFrameCost = lastFrameCost.toFixed(2);
-      document.documentElement.dataset.hearthCanvasFrameBudgetExceeded = String(frameBudgetExceeded);
-      document.documentElement.dataset.hearthCanvasIdlePaused = String(idlePaused);
-      document.documentElement.dataset.hearthCanvasVisible = String(visible);
-      document.documentElement.dataset.hearthCanvasMountVisible = String(mountVisible);
-      document.documentElement.dataset.hearthCanvasRefinedAtlasAllowed = String(refinedAtlasAllowed);
-      document.documentElement.dataset.hearthCanvasDirectPerFrameSampling = "false";
-      document.documentElement.dataset.hearthTextureFallbackUsed = "false";
-
-      document.documentElement.dataset.hearthCanvasTouchRotationRepair = "true";
-      document.documentElement.dataset.hearthCanvasPointerDragEnabled = "true";
-      document.documentElement.dataset.hearthCanvasAutoRotationEnabled = "true";
-      document.documentElement.dataset.hearthCanvasInteractionOverride = String(interactionOverride);
-      document.documentElement.dataset.hearthCanvasDragging = String(dragging);
-      document.documentElement.dataset.hearthCanvasInteracting = String(interacting);
-      document.documentElement.dataset.hearthCanvasInertiaActive = String(inertiaActive);
-      document.documentElement.dataset.hearthCanvasYaw = yaw.toFixed(6);
-      document.documentElement.dataset.hearthCanvasTilt = tilt.toFixed(6);
-      document.documentElement.dataset.hearthCanvasYawVelocity = yawVelocity.toFixed(8);
-      document.documentElement.dataset.hearthCanvasTiltVelocity = tiltVelocity.toFixed(8);
-      document.documentElement.dataset.hearthCanvasIdleRotationArmed = String(idleRotationArmed);
-
-      document.documentElement.dataset.hearthVisibleGlobeMounted = "true";
-      document.documentElement.dataset.generatedImage = "false";
-      document.documentElement.dataset.graphicBox = "false";
-      document.documentElement.dataset.webgl = "false";
-      document.documentElement.dataset.visualPassClaimed = "false";
-
-      if (typeof options.onStatus === "function") {
-        options.onStatus(value, {
-          contract: CONTRACT,
-          receipt: RECEIPT,
-          previousContract: PREVIOUS_CONTRACT,
-          baselineContract: BASELINE_CONTRACT,
-          version: VERSION,
-          frames,
-          renderCount,
-          mounted: true,
-          canvasFound: true,
-          controlsBound: true,
-          governorMode: true,
-          eventDriven: true,
-          continuousRaster: false,
-          atlasMode: true,
-          cachedAtlas: Boolean(atlas && atlas.ready),
-          atlasStatus,
-          atlasWidth: atlas ? atlas.width : 0,
-          atlasHeight: atlas ? atlas.height : 0,
-          atlasBuilds,
-          qualityTier,
-          mobileMode,
-          renderCap,
-          lastFrameCost,
-          frameBudgetExceeded,
-          idlePaused,
-          visible,
-          mountVisible,
-          refinedAtlasAllowed,
-          touchRotationRepair: true,
-          pointerDragEnabled: true,
-          autoRotationEnabled: true,
-          interactionOverride,
-          dragging,
-          interacting,
-          inertiaActive,
-          yaw,
-          tilt,
-          yawVelocity,
-          tiltVelocity,
-          idleRotationArmed,
-          directPerFrameSampling: false,
-          textureFallbackUsed: false,
-          generatedImage: false,
-          graphicBox: false,
-          webGL: false,
-          visualPassClaimed: false
-        });
-      }
+    if (ocean.isSubmergedPortBasinCandidate) {
+      weight = Math.max(weight, 0.48);
     }
 
-    function safeMaterial(input) {
-      try {
-        const material = materialFn.call(materials, input);
-        if (material && typeof material === "object") return material;
-      } catch (_error) {}
-
-      try {
-        const material = materialFn.call(materials, input.x, input.y, input.z);
-        if (material && typeof material === "object") return material;
-      } catch (_error) {}
-
-      return {
-        rgb: [4, 14, 29],
-        alpha: 1,
-        isLand: false,
-        isWater: true,
-        landDensity: 0,
-        shorelineGrounding: 0,
-        contactShadow: 0,
-        underlandOcclusion: 0,
-        shelfTransition: 0,
-        terrainRelief: 0,
-        ridgeRelief: 0,
-        basinShade: 0,
-        rimDarkening: 0,
-        rimCompression: 0,
-        atmosphereSeparation: 0,
-        surfaceAttachment: 0.5,
-        curvatureLock: 0.7,
-        waterDepthShade: 0.45,
-        bridgePotential: 0
-      };
+    if (material.isLand && !hydrology.waterFill && hydrology.belowSeaLevelStrength < 0.24) {
+      weight *= 0.18;
     }
 
-    function writeMaterialToAtlas(target, x, y, material) {
-      const pixelIndex = y * target.width + x;
-      const index = pixelIndex * 4;
-      const rgb = rgbFromMaterial(material, [4, 14, 29]);
-      const alpha = clamp01(material && (material.alpha ?? material.surfaceAlpha ?? material.opacity ?? 1));
-      const isLand = booleanField(material, "isLand", Boolean(material && material.land));
-
-      target.pixels[index] = rgb[0];
-      target.pixels[index + 1] = rgb[1];
-      target.pixels[index + 2] = rgb[2];
-      target.pixels[index + 3] = clamp(Math.round(alpha * 255), 0, 255);
-
-      target.landMask[pixelIndex] = isLand ? 255 : 0;
-      target.landDensity[pixelIndex] = clamp(Math.round(numericField(material, "landDensity", isLand ? 0.68 : 0) * 255), 0, 255);
-      target.shorelineGrounding[pixelIndex] = clamp(Math.round(numericField(material, "shorelineGrounding", 0) * 255), 0, 255);
-      target.contactShadow[pixelIndex] = clamp(Math.round(numericField(material, "contactShadow", 0) * 255), 0, 255);
-      target.underlandOcclusion[pixelIndex] = clamp(Math.round(numericField(material, "underlandOcclusion", 0) * 255), 0, 255);
-      target.shelfTransition[pixelIndex] = clamp(Math.round(numericField(material, "shelfTransition", 0) * 255), 0, 255);
-      target.terrainRelief[pixelIndex] = clamp(Math.round(numericField(material, "terrainRelief", 0) * 255), 0, 255);
-      target.ridgeRelief[pixelIndex] = clamp(Math.round(numericField(material, "ridgeRelief", 0) * 255), 0, 255);
-      target.basinShade[pixelIndex] = clamp(Math.round(numericField(material, "basinShade", 0) * 255), 0, 255);
-      target.rimDarkening[pixelIndex] = clamp(Math.round(numericField(material, "rimDarkening", 0) * 255), 0, 255);
-      target.rimCompression[pixelIndex] = clamp(Math.round(numericField(material, "rimCompression", 0) * 255), 0, 255);
-      target.atmosphereSeparation[pixelIndex] = clamp(Math.round(numericField(material, "atmosphereSeparation", isLand ? 0.6 : 0.1) * 255), 0, 255);
-      target.surfaceAttachment[pixelIndex] = clamp(Math.round(numericField(material, "surfaceAttachment", isLand ? 0.75 : 0.5) * 255), 0, 255);
-      target.curvatureLock[pixelIndex] = clamp(Math.round(numericField(material, "curvatureLock", 0.72) * 255), 0, 255);
-      target.waterDepthShade[pixelIndex] = clamp(Math.round(numericField(material, "waterDepthShade", isLand ? 0 : 0.45) * 255), 0, 255);
-      target.bridgePotential[pixelIndex] = clamp(Math.round(numericField(material, "bridgePotential", 0) * 255), 0, 255);
+    if (material.isLand && hydrology.waterlineBoundary) {
+      weight = Math.max(weight, clamp01(hydrology.waterlineBoundaryStrength * 0.30));
+      weight = Math.min(weight, 0.46);
     }
 
-    function sampleMaterialForAtlas(u, v) {
-      const lon = u * 360 - 180;
-      const lat = 90 - v * 180;
-      const world = lonLatToVector(lon, lat);
-
-      return safeMaterial({
-        x: world.x,
-        y: world.y,
-        z: world.z,
-        u,
-        v,
-        lon,
-        lat,
-        viewDot: 1,
-        normalDot: 1,
-        radiusPosition: 0,
-        routeContract: options.routeContract || null,
-        routeReceipt: options.routeReceipt || null,
-        canvasContract: CONTRACT,
-        elevation,
-        composition,
-        tectonics,
-        hydrology
-      });
+    if (material.isLand && hydrology.shallowShelfStrength > 0.32) {
+      weight = Math.max(weight, clamp01(hydrology.shallowShelfStrength * 0.34));
+      weight = Math.min(weight, 0.52);
     }
 
-    function buildAtlasSync(width, height) {
-      const target = createEmptyAtlas(width, height);
+    return clamp01(weight);
+  };
 
-      for (let y = 0; y < height; y += 1) {
-        const v = height <= 1 ? 0 : y / (height - 1);
+  const preserveSubmergedStructure = (rgb, material, hydrology, ocean, weight) => {
+    let color = rgb.slice();
 
-        for (let x = 0; x < width; x += 1) {
-          const u = width <= 1 ? 0 : x / (width - 1);
-          writeMaterialToAtlas(target, x, y, sampleMaterialForAtlas(u, v));
-        }
+    const scar = clamp01(
+      hydrology.submergedScarStrength * 0.22 +
+      ocean.submergedScarWaterMuteFeed * 0.28 +
+      material.coastalScarContinuity * 0.10 +
+      material.boundaryMorphologyFeed * 0.08
+    );
+
+    const block = clamp01(
+      hydrology.submergedBlockStrength * 0.22 +
+      ocean.submergedBlockWaterDepthFeed * 0.26 +
+      material.submergedWorksFeed * 0.10 +
+      material.submergedShadowBand * 0.10
+    );
+
+    const port = clamp01(
+      ocean.submergedPortBasinBlueFeed * 0.34 +
+      material.harborScarBasin * 0.16 +
+      hydrology.bayPotential * 0.08 +
+      hydrology.inletPotential * 0.08
+    );
+
+    if (scar > 0.10) {
+      color = mixColor(color, FALLBACK.scar, scar * 0.18);
+      color[1] = clamp(Math.round(color[1] * (1 - scar * 0.10)), 0, 255);
+    }
+
+    if (block > 0.10) {
+      color = mixColor(color, FALLBACK.shadow, block * 0.14);
+    }
+
+    if (port > 0.16) {
+      color = mixColor(color, FALLBACK.basin, port * 0.28);
+      color = liftOceanBlue(color, port * 0.10);
+    }
+
+    if (weight > 0.36 && material.greenGlowSuppression > 0.12) {
+      color[1] = clamp(Math.round(color[1] * (1 - material.greenGlowSuppression * 0.06)), 0, 255);
+    }
+
+    return color;
+  };
+
+  const applyFinalLighting = (rgb, p, material, hydrology, ocean, oceanWeight) => {
+    const light = normalize3({ x: -0.36, y: 0.42, z: 0.82 });
+    const illumination = clamp01(0.55 + dot3(p, light) * 0.45);
+    const limb = clamp01(1 - Math.abs(p.z) * 0.55);
+
+    const terrainShade = clamp01(
+      0.74 +
+      illumination * 0.24 -
+      material.rimDarkening * 0.10 -
+      material.underlandOcclusion * 0.06
+    );
+
+    const oceanShade = clamp01(
+      0.82 +
+      illumination * 0.18 -
+      ocean.oceanDepthShade * 0.05 -
+      ocean.submergedPortBasinBlueFeed * 0.06
+    );
+
+    const shade = mixNumber(terrainShade, oceanShade, oceanWeight);
+    let color = scaleColor(rgb, shade);
+
+    if (oceanWeight > 0.16) {
+      color = liftOceanBlue(color, clamp01(oceanWeight * 0.22 + ocean.richBlueOceanFeed * 0.12));
+    }
+
+    const atmosphere = clamp01(material.atmosphereSeparation * 0.05 + oceanWeight * 0.03);
+    color = mixColor(color, [20, 32, 48], limb * atmosphere);
+
+    return color;
+  };
+
+  const composeSample = (...args) => {
+    const p = parseInput(...args);
+    const material = readMaterials(...args);
+    const hydrology = readHydrology(material, ...args);
+    const ocean = readOcean(...args);
+
+    const oceanWeight = computeOceanWeight(material, hydrology, ocean);
+
+    let rgb = material.rgb.slice();
+
+    if (oceanWeight > 0) {
+      const oceanRgb = ocean.oceanRgb || FALLBACK.water;
+      rgb = mixColor(rgb, oceanRgb, oceanWeight);
+
+      if (ocean.isShallowShelf || hydrology.shallowShelf) {
+        rgb = mixColor(rgb, FALLBACK.shelf, clamp01(ocean.shallowShelfBlueFeed * 0.12 + hydrology.shallowShelfStrength * 0.08));
       }
 
-      target.ready = true;
-      target.complete = true;
-      atlasBuilds += 1;
-      return target;
-    }
-
-    function canRefineAtlas() {
-      return Boolean(
-        refinedAtlasAllowed &&
-        !mobileMode &&
-        !dragging &&
-        !interacting &&
-        !inertiaActive &&
-        visible &&
-        mountVisible &&
-        !frameBudgetExceeded &&
-        qualityTier >= 2 &&
-        performance.now() - idleSince > 2200
-      );
-    }
-
-    function scheduleRefinedAtlas() {
-      if (refinedAtlasQueued || refinedAtlasComplete || disposed) return;
-      if (refinedAtlasWidth <= initialAtlasWidth && refinedAtlasHeight <= initialAtlasHeight) return;
-      if (!canRefineAtlas()) return;
-
-      refinedAtlasQueued = true;
-
-      const build = () => {
-        if (disposed || !canRefineAtlas()) {
-          refinedAtlasQueued = false;
-          return;
-        }
-
-        const target = createEmptyAtlas(refinedAtlasWidth, refinedAtlasHeight);
-        let y = 0;
-        const rowsPerChunk = 4;
-
-        atlasStatus = "building-refined-atlas";
-        publishStatus("atlas-refine-started");
-
-        const step = () => {
-          if (disposed) return;
-
-          if (!canRefineAtlas()) {
-            refinedAtlasQueued = false;
-            atlasStatus = atlas && atlas.ready ? "initial-atlas-ready" : "refine-paused";
-            publishStatus("atlas-refine-paused");
-            return;
-          }
-
-          const yEnd = Math.min(target.height, y + rowsPerChunk);
-
-          for (; y < yEnd; y += 1) {
-            const v = target.height <= 1 ? 0 : y / (target.height - 1);
-
-            for (let x = 0; x < target.width; x += 1) {
-              const u = target.width <= 1 ? 0 : x / (target.width - 1);
-              writeMaterialToAtlas(target, x, y, sampleMaterialForAtlas(u, v));
-            }
-          }
-
-          if (y < target.height) {
-            if (typeof requestIdleCallback === "function") {
-              requestIdleCallback(step, { timeout: 180 });
-            } else {
-              setTimeout(step, 16);
-            }
-            return;
-          }
-
-          target.ready = true;
-          target.complete = true;
-          atlas = target;
-          atlasBuilds += 1;
-          refinedAtlasComplete = true;
-          atlasStatus = "refined-atlas-ready";
-          markDirty("atlas-refined", false);
-          publishStatus("atlas-refined");
-        };
-
-        step();
-      };
-
-      if (typeof requestIdleCallback === "function") {
-        requestIdleCallback(build, { timeout: 1200 });
-      } else {
-        setTimeout(build, 2200);
-      }
-    }
-
-    try {
-      atlasStatus = "building-initial-atlas";
-      atlas = buildAtlasSync(initialAtlasWidth, initialAtlasHeight);
-      atlasStatus = "initial-atlas-ready";
-    } catch (_error) {
-      atlas = createEmptyAtlas(32, 16);
-
-      for (let y = 0; y < atlas.height; y += 1) {
-        for (let x = 0; x < atlas.width; x += 1) {
-          writeMaterialToAtlas(atlas, x, y, {
-            rgb: [4, 14, 29],
-            alpha: 1,
-            isLand: false,
-            isWater: true,
-            waterDepthShade: 0.55
-          });
-        }
+      if (ocean.isSubmergedBasin || ocean.isSubmergedPortBasinCandidate) {
+        rgb = mixColor(rgb, FALLBACK.basin, clamp01(ocean.submergedBasinBlueFeed * 0.16 + ocean.submergedPortBasinBlueFeed * 0.24));
       }
 
-      atlas.ready = true;
-      atlas.complete = true;
-      atlasStatus = "safe-ocean-atlas-ready";
-      atlasBuilds += 1;
+      rgb = preserveSubmergedStructure(rgb, material, hydrology, ocean, oceanWeight);
     }
 
-    function resize() {
-      const box = mount.getBoundingClientRect();
-      const cssSize = Math.max(
-        260,
-        Math.floor(Math.min(box.width || 420, box.height || box.width || 420))
-      );
+    rgb = applyFinalLighting(rgb, p, material, hydrology, ocean, oceanWeight);
 
-      const caps = currentCaps();
-      const dpr = caps.dpr;
-      const maxSize = currentRenderCap();
-      const size = Math.min(maxSize, Math.max(320, Math.floor(cssSize * dpr)));
-
-      if (canvas.width !== size || canvas.height !== size) {
-        canvas.width = size;
-        canvas.height = size;
-        buffer = null;
-        bufferWidth = 0;
-        bufferHeight = 0;
-        return true;
-      }
-
-      return false;
-    }
-
-    function readAtlasPixel(source, x, y) {
-      const xx = ((x % source.width) + source.width) % source.width;
-      const yy = clamp(y, 0, source.height - 1);
-      const pixelIndex = yy * source.width + xx;
-      const index = pixelIndex * 4;
-
-      return {
-        r: source.pixels[index],
-        g: source.pixels[index + 1],
-        b: source.pixels[index + 2],
-        a: source.pixels[index + 3] / 255,
-        isLand: source.landMask[pixelIndex] >= 128,
-        landDensity: source.landDensity[pixelIndex] / 255,
-        shorelineGrounding: source.shorelineGrounding[pixelIndex] / 255,
-        contactShadow: source.contactShadow[pixelIndex] / 255,
-        underlandOcclusion: source.underlandOcclusion[pixelIndex] / 255,
-        shelfTransition: source.shelfTransition[pixelIndex] / 255,
-        terrainRelief: source.terrainRelief[pixelIndex] / 255,
-        ridgeRelief: source.ridgeRelief[pixelIndex] / 255,
-        basinShade: source.basinShade[pixelIndex] / 255,
-        rimDarkening: source.rimDarkening[pixelIndex] / 255,
-        rimCompression: source.rimCompression[pixelIndex] / 255,
-        atmosphereSeparation: source.atmosphereSeparation[pixelIndex] / 255,
-        surfaceAttachment: source.surfaceAttachment[pixelIndex] / 255,
-        curvatureLock: source.curvatureLock[pixelIndex] / 255,
-        waterDepthShade: source.waterDepthShade[pixelIndex] / 255,
-        bridgePotential: source.bridgePotential[pixelIndex] / 255
-      };
-    }
-
-    function blendAtlasSample(a, b, t) {
-      const k = clamp01(t);
-
-      return {
-        r: lerp(a.r, b.r, k),
-        g: lerp(a.g, b.g, k),
-        b: lerp(a.b, b.b, k),
-        a: lerp(a.a, b.a, k),
-        isLand: lerp(a.isLand ? 1 : 0, b.isLand ? 1 : 0, k) >= 0.5,
-        landDensity: lerp(a.landDensity, b.landDensity, k),
-        shorelineGrounding: lerp(a.shorelineGrounding, b.shorelineGrounding, k),
-        contactShadow: lerp(a.contactShadow, b.contactShadow, k),
-        underlandOcclusion: lerp(a.underlandOcclusion, b.underlandOcclusion, k),
-        shelfTransition: lerp(a.shelfTransition, b.shelfTransition, k),
-        terrainRelief: lerp(a.terrainRelief, b.terrainRelief, k),
-        ridgeRelief: lerp(a.ridgeRelief, b.ridgeRelief, k),
-        basinShade: lerp(a.basinShade, b.basinShade, k),
-        rimDarkening: lerp(a.rimDarkening, b.rimDarkening, k),
-        rimCompression: lerp(a.rimCompression, b.rimCompression, k),
-        atmosphereSeparation: lerp(a.atmosphereSeparation, b.atmosphereSeparation, k),
-        surfaceAttachment: lerp(a.surfaceAttachment, b.surfaceAttachment, k),
-        curvatureLock: lerp(a.curvatureLock, b.curvatureLock, k),
-        waterDepthShade: lerp(a.waterDepthShade, b.waterDepthShade, k),
-        bridgePotential: lerp(a.bridgePotential, b.bridgePotential, k)
-      };
-    }
-
-    function sampleAtlasBilinear(u, v) {
-      const source = atlas;
-
-      if (!source || !source.ready) {
-        return {
-          r: 4,
-          g: 14,
-          b: 29,
-          a: 1,
-          isLand: false,
-          landDensity: 0,
-          shorelineGrounding: 0,
-          contactShadow: 0,
-          underlandOcclusion: 0,
-          shelfTransition: 0,
-          terrainRelief: 0,
-          ridgeRelief: 0,
-          basinShade: 0,
-          rimDarkening: 0,
-          rimCompression: 0,
-          atmosphereSeparation: 0,
-          surfaceAttachment: 0.5,
-          curvatureLock: 0.7,
-          waterDepthShade: 0.45,
-          bridgePotential: 0
-        };
-      }
-
-      const fu = (((u % 1) + 1) % 1) * (source.width - 1);
-      const fv = clamp(v, 0, 0.999999) * (source.height - 1);
-
-      const x0 = Math.floor(fu);
-      const y0 = Math.floor(fv);
-      const x1 = (x0 + 1) % source.width;
-      const y1 = clamp(y0 + 1, 0, source.height - 1);
-
-      const tx = fu - x0;
-      const ty = fv - y0;
-
-      const c00 = readAtlasPixel(source, x0, y0);
-      const c10 = readAtlasPixel(source, x1, y0);
-      const c01 = readAtlasPixel(source, x0, y1);
-      const c11 = readAtlasPixel(source, x1, y1);
-
-      const top = blendAtlasSample(c00, c10, tx);
-      const bottom = blendAtlasSample(c01, c11, tx);
-
-      return blendAtlasSample(top, bottom, ty);
-    }
-
-    function applyAtlasShading(sample, sphere) {
-      const z = sphere.z;
-      const rr = sphere.rr;
-      const sx = sphere.sx;
-      const sy = sphere.sy;
-
-      const isLand = Boolean(sample.isLand);
-      const landDensity = clamp01(sample.landDensity);
-      const shorelineGrounding = clamp01(sample.shorelineGrounding);
-      const contactShadow = clamp01(sample.contactShadow);
-      const underlandOcclusion = clamp01(sample.underlandOcclusion);
-      const shelfTransition = clamp01(sample.shelfTransition);
-      const terrainRelief = clamp01(sample.terrainRelief);
-      const ridgeRelief = clamp01(sample.ridgeRelief);
-      const basinShade = clamp01(sample.basinShade);
-      const rimDarkening = clamp01(sample.rimDarkening);
-      const rimCompression = clamp01(sample.rimCompression);
-      const atmosphereSeparation = clamp01(sample.atmosphereSeparation);
-      const surfaceAttachment = clamp01(sample.surfaceAttachment);
-      const curvatureLock = clamp01(sample.curvatureLock);
-      const waterDepthShade = clamp01(sample.waterDepthShade);
-      const bridgePotential = clamp01(sample.bridgePotential);
-
-      const lightVector = clamp(
-        0.46 +
-          z * 0.62 -
-          sx * 0.085 -
-          sy * 0.07 +
-          terrainRelief * 0.045 +
-          ridgeRelief * 0.035,
-        0.15,
-        1.16
-      );
-
-      const atmosphere = smoothstep(0.70, 1.0, rr);
-      const limb = clamp(0.30 + z * 0.84, 0.14, 1.04);
-      const glow = smoothstep(0.84, 1.0, rr);
-      const sidePressure = clamp01(1 - z);
-
-      let c = [
-        clamp(Math.round(sample.r), 0, 255),
-        clamp(Math.round(sample.g), 0, 255),
-        clamp(Math.round(sample.b), 0, 255)
-      ];
-
-      if (isLand) {
-        const reliefLift = terrainRelief * 8 + ridgeRelief * 5;
-        const shadowWeight =
-          contactShadow * 0.18 +
-          underlandOcclusion * 0.14 +
-          shorelineGrounding * 0.08 +
-          rimCompression * sidePressure * 0.16 +
-          rimDarkening * 0.16;
-
-        c = addColor(c, reliefLift);
-        c = mix(c, [3, 8, 14], clamp01(shadowWeight));
-        c = mix(c, [82, 82, 62], clamp01(shorelineGrounding * 0.12));
-        c = mix(c, [5, 13, 24], clamp01(sidePressure * rimCompression * 0.14));
-
-        if (bridgePotential > 0.28) {
-          c = mix(c, [112, 105, 67], clamp01(bridgePotential * 0.08));
-        }
-
-        const solidity = clamp(0.92 + landDensity * 0.10 + surfaceAttachment * 0.06, 0.86, 1.12);
-        c = scaleColor(c, lightVector * limb * solidity);
-      } else {
-        const waterDarken = clamp01(waterDepthShade * 0.22 + basinShade * 0.12);
-        c = mix(c, [3, 10, 22], waterDarken);
-        c = mix(c, [18, 58, 76], shelfTransition * 0.10);
-        c = scaleColor(c, lightVector * limb);
-      }
-
-      const atmosphereWeight = isLand
-        ? atmosphere * clamp(0.22 - atmosphereSeparation * 0.12, 0.06, 0.20)
-        : atmosphere * 0.38;
-
-      c = mix(c, [5, 16, 31], atmosphereWeight);
-      c = mix(c, [22, 78, 104], glow * (isLand ? 0.045 : 0.085));
-
-      const curvatureAttachment = clamp01(surfaceAttachment * curvatureLock);
-
-      if (isLand && sidePressure > 0.42) {
-        c = mix(c, [4, 10, 18], sidePressure * (1 - curvatureAttachment) * 0.22);
-      }
-
-      return [
-        clamp(c[0], 0, 255),
-        clamp(c[1], 0, 255),
-        clamp(c[2], 0, 255)
-      ];
-    }
-
-    function canRender(force) {
-      if (disposed) return false;
-      if (force) return true;
-      return visible && mountVisible && !idlePaused;
-    }
-
-    function render(reason = "dirty", force = false) {
-      if (!canRender(force)) {
-        renderPending = false;
-        idlePaused = true;
-        publishStatus("render-paused");
-        return;
-      }
-
-      renderPending = false;
-      dirty = false;
-      idlePaused = false;
-
-      const start = performance.now();
-      const resized = resize();
-
-      const width = canvas.width;
-      const height = canvas.height;
-
-      if (!buffer || bufferWidth !== width || bufferHeight !== height || resized) {
-        buffer = ctx.createImageData(width, height);
-        bufferWidth = width;
-        bufferHeight = height;
-      }
-
-      const image = buffer;
-      const data = image.data;
-      const cx = width / 2;
-      const cy = height / 2;
-      const radius = Math.min(width, height) * 0.445;
-      const cosT = Math.cos(tilt);
-      const sinT = Math.sin(tilt);
-
-      for (let y = 0; y < height; y += 1) {
-        const sy = (y - cy) / radius;
-
-        for (let x = 0; x < width; x += 1) {
-          const sx = (x - cx) / radius;
-          const rr = sx * sx + sy * sy;
-          const index = (y * width + x) * 4;
-
-          if (rr > 1) {
-            data[index] = 0;
-            data[index + 1] = 0;
-            data[index + 2] = 0;
-            data[index + 3] = 0;
-            continue;
-          }
-
-          const z = Math.sqrt(1 - rr);
-          const yy = sy * cosT + z * sinT;
-          const zz = z * cosT - sy * sinT;
-          const lonRad = Math.atan2(sx, zz) + yaw;
-          const latRad = Math.asin(clamp(yy, -1, 1));
-          const u = lonRad / TAU + 0.5;
-          const v = 0.5 - latRad / Math.PI;
-          const sample = sampleAtlasBilinear(u, v);
-          const c = applyAtlasShading(sample, { z, rr, sx, sy });
-
-          data[index] = c[0];
-          data[index + 1] = c[1];
-          data[index + 2] = c[2];
-          data[index + 3] = 255;
-        }
-      }
-
-      ctx.putImageData(image, 0, 0);
-
-      frames += 1;
-      renderCount += 1;
-      lastRenderAt = performance.now();
-      lastFrameCost = lastRenderAt - start;
-
-      const budget = dragging || interacting || inertiaActive ? dragBudget : settledBudget;
-      frameBudgetExceeded = lastFrameCost > budget;
-
-      if (frameBudgetExceeded && qualityTier > 0) {
-        qualityTier -= 1;
-        refinedAtlasAllowed = false;
-        buffer = null;
-      }
-
-      const hasInertia =
-        !dragging &&
-        (
-          Math.abs(yawVelocity) > 0.00042 ||
-          Math.abs(tiltVelocity) > 0.00032
-        );
-
-      inertiaActive = Boolean(hasInertia);
-
-      publishStatus(`rendered-${reason}`);
-
-      if (hasInertia) {
-        yaw += yawVelocity;
-        tilt += tiltVelocity;
-        yawVelocity *= 0.955;
-        tiltVelocity *= 0.90;
-
-        if (tilt > 1.3) {
-          tilt = 1.3;
-          tiltVelocity *= -0.16;
-        }
-
-        if (tilt < -1.3) {
-          tilt = -1.3;
-          tiltVelocity *= -0.16;
-        }
-
-        markDirty("inertia", true);
-        return;
-      }
-
-      inertiaActive = false;
-
-      if (!dragging) {
-        interacting = false;
-        interactionOverride = false;
-        idleSince = performance.now();
-        scheduleIdleAutoTick();
-        scheduleRefinedAtlas();
-      }
-    }
-
-    function requestRender(reason = "dirty", force = false) {
-      if (disposed) return;
-
-      if (force) {
-        interactionOverride = true;
-        idlePaused = false;
-
-        if (!document.hidden) {
-          visible = true;
-        }
-
-        mountVisible = true;
-      }
-
-      if (renderPending) return;
-      if (!canRender(force)) return;
-
-      renderPending = true;
-
-      requestAnimationFrame(() => {
-        render(reason, force);
-      });
-    }
-
-    function markDirty(reason = "dirty", force = false) {
-      dirty = true;
-      requestRender(reason, force);
-    }
-
-    function scheduleIdleAutoTick() {
-      if (disposed || dragging || interacting || inertiaActive) return;
-      if (!visible || !mountVisible) return;
-
-      if (idleTimer) clearTimeout(idleTimer);
-
-      const caps = currentCaps();
-      idleRotationArmed = true;
-
-      idleTimer = setTimeout(() => {
-        idleTimer = null;
-
-        if (disposed || dragging || interacting || inertiaActive) {
-          idleRotationArmed = false;
-          return;
-        }
-
-        if (!visible || !mountVisible) {
-          idlePaused = true;
-          idleRotationArmed = false;
-          publishStatus("idle-rotation-paused");
-          return;
-        }
-
-        yaw += caps.idleStep;
-        idleRotationArmed = false;
-        markDirty("governed-idle-rotation", false);
-      }, caps.idleCadence);
-
-      publishStatus("idle-rotation-armed");
-    }
-
-    function pointerDown(event) {
-      dragging = true;
-      interacting = true;
-      interactionOverride = true;
-      inertiaActive = false;
-      idlePaused = false;
-      visible = !document.hidden;
-      mountVisible = true;
-
-      lastX = Number.isFinite(event.clientX) ? event.clientX : 0;
-      lastY = Number.isFinite(event.clientY) ? event.clientY : 0;
-      yawVelocity = 0;
-      tiltVelocity = 0;
-
-      if (idleTimer) {
-        clearTimeout(idleTimer);
-        idleTimer = null;
-      }
-
-      idleRotationArmed = false;
-
-      try {
-        canvas.setPointerCapture?.(event.pointerId);
-      } catch (_error) {}
-
-      markDirty("drag-start", true);
-      publishStatus("drag-start");
-      event.preventDefault();
-    }
-
-    function pointerMove(event) {
-      if (!dragging) return;
-
-      interacting = true;
-      interactionOverride = true;
-      idlePaused = false;
-      mountVisible = true;
-
-      const x = Number.isFinite(event.clientX) ? event.clientX : lastX;
-      const y = Number.isFinite(event.clientY) ? event.clientY : lastY;
-      const dx = x - lastX;
-      const dy = y - lastY;
-
-      lastX = x;
-      lastY = y;
-
-      yaw += dx * 0.009;
-      tilt += dy * 0.0075;
-      tilt = clamp(tilt, -1.36, 1.36);
-
-      yawVelocity = dx * 0.00072;
-      tiltVelocity = dy * 0.00046;
-
-      markDirty("drag-move", true);
-      event.preventDefault();
-    }
-
-    function pointerUp(event) {
-      dragging = false;
-      interacting = true;
-      interactionOverride = true;
-      idlePaused = false;
-      mountVisible = true;
-
-      try {
-        canvas.releasePointerCapture?.(event.pointerId);
-      } catch (_error) {}
-
-      inertiaActive =
-        Math.abs(yawVelocity) > 0.00042 ||
-        Math.abs(tiltVelocity) > 0.00032;
-
-      markDirty("drag-end", true);
-      publishStatus("drag-end");
-      event.preventDefault();
-    }
-
-    function onVisibilityChange() {
-      visible = !document.hidden;
-
-      if (visible) {
-        idlePaused = false;
-        markDirty("visibility-return", false);
-      } else {
-        idlePaused = true;
-        interactionOverride = false;
-        interacting = false;
-        dragging = false;
-        inertiaActive = false;
-
-        if (idleTimer) {
-          clearTimeout(idleTimer);
-          idleTimer = null;
-        }
-
-        idleRotationArmed = false;
-        publishStatus("visibility-hidden");
-      }
-    }
-
-    function onResize() {
-      buffer = null;
-      markDirty("resize", false);
-    }
-
-    canvas.addEventListener("pointerdown", pointerDown, { passive: false });
-    canvas.addEventListener("pointermove", pointerMove, { passive: false });
-    canvas.addEventListener("pointerup", pointerUp, { passive: false });
-    canvas.addEventListener("pointercancel", pointerUp, { passive: false });
-
-    document.addEventListener("visibilitychange", onVisibilityChange);
-
-    if (typeof ResizeObserver === "function") {
-      resizeObserver = new ResizeObserver(onResize);
-      resizeObserver.observe(mount);
-    } else {
-      window.addEventListener("resize", onResize, { passive: true });
-    }
-
-    if (typeof IntersectionObserver === "function") {
-      intersectionObserver = new IntersectionObserver((entries) => {
-        const entry = entries[0];
-
-        if (dragging || interacting || interactionOverride) {
-          mountVisible = true;
-          return;
-        }
-
-        mountVisible = Boolean(entry && entry.isIntersecting);
-
-        if (mountVisible) {
-          idlePaused = false;
-          markDirty("intersection-visible", false);
-        } else {
-          idlePaused = true;
-          idleRotationArmed = false;
-          publishStatus("intersection-hidden");
-        }
-      }, { threshold: 0.01 });
-
-      intersectionObserver.observe(mount);
-    } else {
-      mountVisible = true;
-    }
-
-    const api = {
-      canvas,
-      node: canvas,
-      mounted: true,
-      canvasFound: true,
-      controlsBound: true,
+    return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      baselineContract: BASELINE_CONTRACT,
-      governorMode: true,
-      eventDriven: true,
-      continuousRaster: false,
-      atlasMode: true,
-      directPerFrameSampling: false,
-      touchRotationRepair: true,
-      pointerDragEnabled: true,
-      autoRotationEnabled: true,
-      dispose() {
-        disposed = true;
-
-        if (idleTimer) clearTimeout(idleTimer);
-
-        canvas.removeEventListener("pointerdown", pointerDown);
-        canvas.removeEventListener("pointermove", pointerMove);
-        canvas.removeEventListener("pointerup", pointerUp);
-        canvas.removeEventListener("pointercancel", pointerUp);
-        document.removeEventListener("visibilitychange", onVisibilityChange);
-
-        if (resizeObserver) resizeObserver.disconnect();
-        else window.removeEventListener("resize", onResize);
-
-        if (intersectionObserver) intersectionObserver.disconnect();
-
-        canvas.remove();
-      },
-      getStatus() {
-        return {
-          contract: CONTRACT,
-          receipt: RECEIPT,
-          previousContract: PREVIOUS_CONTRACT,
-          baselineContract: BASELINE_CONTRACT,
-          version: VERSION,
-          frames,
-          renderCount,
-          mounted: true,
-          canvasFound: true,
-          controlsBound: true,
-          governorMode: true,
-          eventDriven: true,
-          continuousRaster: false,
-          atlasMode: true,
-          cachedAtlas: Boolean(atlas && atlas.ready),
-          atlasStatus,
-          atlasWidth: atlas ? atlas.width : 0,
-          atlasHeight: atlas ? atlas.height : 0,
-          atlasBuilds,
-          qualityTier,
-          mobileMode,
-          renderCap: currentRenderCap(),
-          lastFrameCost,
-          frameBudgetExceeded,
-          idlePaused,
-          visible,
-          mountVisible,
-          refinedAtlasAllowed,
-          touchRotationRepair: true,
-          pointerDragEnabled: true,
-          autoRotationEnabled: true,
-          interactionOverride,
-          dragging,
-          interacting,
-          inertiaActive,
-          yaw,
-          tilt,
-          yawVelocity,
-          tiltVelocity,
-          idleRotationArmed,
-          directPerFrameSampling: false,
-          textureFallbackUsed: false,
-          generatedImage: false,
-          graphicBox: false,
-          webGL: false,
-          visualPassClaimed: false
-        };
-      }
-    };
-
-    root.__HEARTH_CANVAS_DISPOSE__ = api.dispose;
-
-    publishStatus("mounted");
-    markDirty("initial-mount", true);
-    scheduleIdleAutoTick();
-
-    return api;
-  }
-
-  function getStatus() {
-    return Object.freeze({
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      baselineContract: BASELINE_CONTRACT,
       version: VERSION,
-      authority: "hearth-canvas-touch-rotation-governor-repair",
-      consumesMaterials: true,
-      cachedAtlas: true,
-      atlasMode: true,
-      governorMode: true,
-      eventDriven: true,
-      continuousRaster: false,
-      directPerFrameSampling: false,
-      bilinearAtlasSampling: true,
-      touchRotationRepair: true,
-      pointerDragEnabled: true,
-      autoRotationEnabled: true,
-      visibleGlobeFirst: true,
-      dragEnabled: true,
-      poleSwivel: true,
-      canvasOnly: true,
+      authority: "canvas-composer",
+
+      x: p.x,
+      y: p.y,
+      z: p.z,
+
+      rgb,
+      color: rgb,
+      alpha: material.alpha,
+      oceanWeight,
+      oceanComposed: ocean.available && oceanWeight > 0,
+      oceanAvailable: ocean.available,
+
+      materialRgb: material.rgb,
+      oceanRgb: ocean.oceanRgb || null,
+
+      isLand: material.isLand && oceanWeight < 0.52,
+      isWater: material.isWater || hydrology.waterFill || oceanWeight > 0.46,
+
+      waterFill: hydrology.waterFill,
+      waterFillStrength: hydrology.waterFillStrength,
+      waterDepth: hydrology.waterDepth,
+      waterDepthClass: hydrology.waterDepthClass,
+      waterlineBoundary: hydrology.waterlineBoundary,
+      waterlineBoundaryStrength: hydrology.waterlineBoundaryStrength,
+      shallowShelf: hydrology.shallowShelf,
+      shallowShelfStrength: hydrology.shallowShelfStrength,
+      belowSeaLevel: hydrology.belowSeaLevel,
+      belowSeaLevelStrength: hydrology.belowSeaLevelStrength,
+      submergedBlock: hydrology.submergedBlock,
+      submergedBlockStrength: hydrology.submergedBlockStrength,
+      submergedScar: hydrology.submergedScar,
+      submergedScarStrength: hydrology.submergedScarStrength,
+
+      oceanPresence: ocean.oceanPresence || 0,
+      richBlueOceanFeed: ocean.richBlueOceanFeed || 0,
+      deepOceanBlueFeed: ocean.deepOceanBlueFeed || 0,
+      openOceanBlueFeed: ocean.openOceanBlueFeed || 0,
+      shallowShelfBlueFeed: ocean.shallowShelfBlueFeed || 0,
+      waterlineBlueContrastFeed: ocean.waterlineBlueContrastFeed || 0,
+      submergedBasinBlueFeed: ocean.submergedBasinBlueFeed || 0,
+      submergedPortBasinBlueFeed: ocean.submergedPortBasinBlueFeed || 0,
+      oceanTerrainSeparationFeed: ocean.oceanTerrainSeparationFeed || 0,
+
+      materialContract: material.contract || "UNKNOWN_MATERIAL_CONTRACT",
+      hydrologyContract: hydrology.contract || "UNKNOWN_HYDROLOGY_CONTRACT",
+      oceanContract: ocean.contract || "OCEAN_UNAVAILABLE",
+
       generatedImage: false,
       graphicBox: false,
       webGL: false,
+      routeMutation: false,
+      runtimeMutation: false,
+      controlsMutation: false,
       visualPassClaimed: false
+    };
+  };
+
+  const sample = (...args) => composeSample(...args);
+  const read = (...args) => composeSample(...args);
+  const compose = (...args) => composeSample(...args);
+  const composePixel = (...args) => composeSample(...args);
+  const getPixel = (...args) => composeSample(...args);
+  const getColor = (...args) => composeSample(...args).rgb;
+
+  const createTextureCanvas = (options = {}) => {
+    if (!root.document || typeof root.document.createElement !== "function") {
+      throw new Error("Hearth canvas texture creation requires document.createElement.");
+    }
+
+    const requestedWidth = Number.isFinite(Number(options.width)) ? Math.round(Number(options.width)) : 768;
+    const requestedHeight = Number.isFinite(Number(options.height)) ? Math.round(Number(options.height)) : 384;
+
+    const width = clamp(requestedWidth, 32, options.allowLargeTexture === true ? 1536 : 1024);
+    const height = clamp(requestedHeight, 16, options.allowLargeTexture === true ? 768 : 512);
+
+    const canvas = root.document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+
+    canvas.dataset.hearthCanvasTexture = "true";
+    canvas.dataset.hearthCanvasContract = CONTRACT;
+    canvas.dataset.hearthCanvasReceipt = RECEIPT;
+    canvas.dataset.hearthCanvasConsumesOcean = "true";
+    canvas.dataset.hearthCanvasOceanContract = OCEAN_CONTRACT;
+    canvas.dataset.hearthCanvasOceanConsumerContract = CONTRACT;
+    canvas.dataset.hearthCanvasOceanFailSoft = "true";
+    canvas.dataset.hearthCanvasOceanComposedWithMaterials = "true";
+    canvas.dataset.hearthCanvasOceanComposedWithHydrology = "true";
+    canvas.dataset.visualPassClaimed = "false";
+
+    const ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: false });
+    const image = ctx.createImageData(width, height);
+    const data = image.data;
+
+    for (let y = 0; y < height; y += 1) {
+      const v = height <= 1 ? 0 : y / (height - 1);
+
+      for (let x = 0; x < width; x += 1) {
+        const u = width <= 1 ? 0 : x / (width - 1);
+        const px = composeSample({ u, v });
+        const i = (y * width + x) * 4;
+
+        data[i] = px.rgb[0];
+        data[i + 1] = px.rgb[1];
+        data[i + 2] = px.rgb[2];
+        data[i + 3] = Math.round(clamp01(px.alpha) * 255);
+      }
+    }
+
+    ctx.putImageData(image, 0, 0);
+    return canvas;
+  };
+
+  const createCanvas = (options = {}) => createTextureCanvas(options);
+  const createPlanetTexture = (options = {}) => createTextureCanvas(options);
+  const createTexture = (options = {}) => createTextureCanvas(options);
+  const buildTexture = (options = {}) => createTextureCanvas(options);
+  const getTextureCanvas = (options = {}) => createTextureCanvas(options);
+
+  const paintToCanvas = (targetCanvas, options = {}) => {
+    if (!targetCanvas || typeof targetCanvas.getContext !== "function") {
+      return null;
+    }
+
+    const texture = createTextureCanvas({
+      width: options.width || targetCanvas.width || 768,
+      height: options.height || targetCanvas.height || 384,
+      allowLargeTexture: options.allowLargeTexture === true
     });
-  }
+
+    const ctx = targetCanvas.getContext("2d");
+    ctx.clearRect(0, 0, targetCanvas.width, targetCanvas.height);
+    ctx.drawImage(texture, 0, 0, targetCanvas.width, targetCanvas.height);
+
+    targetCanvas.dataset.hearthCanvasPainted = "true";
+    targetCanvas.dataset.hearthCanvasContract = CONTRACT;
+    targetCanvas.dataset.hearthCanvasConsumesOcean = "true";
+    targetCanvas.dataset.visualPassClaimed = "false";
+
+    return targetCanvas;
+  };
+
+  const renderToCanvas = (targetCanvas, options = {}) => paintToCanvas(targetCanvas, options);
+  const drawToCanvas = (targetCanvas, options = {}) => paintToCanvas(targetCanvas, options);
+  const render = (targetCanvas, options = {}) => paintToCanvas(targetCanvas, options);
+  const paint = (targetCanvas, options = {}) => paintToCanvas(targetCanvas, options);
+
+  const mount = (target, options = {}) => {
+    if (!root.document) return null;
+
+    const element =
+      typeof target === "string"
+        ? root.document.querySelector(target)
+        : target && target.nodeType === 1
+          ? target
+          : null;
+
+    if (!element) return null;
+
+    const canvas = createTextureCanvas(options);
+    canvas.className = options.className || "hearth-canvas-texture";
+    element.appendChild(canvas);
+
+    return canvas;
+  };
+
+  const getReceipt = () => ({
+    contract: CONTRACT,
+    receipt: RECEIPT,
+    version: VERSION,
+    authority: "canvas-composer",
+    status: "active",
+    primaryTarget: "/assets/hearth/hearth.canvas.js",
+    consumesOcean: true,
+    oceanContract: OCEAN_CONTRACT,
+    oceanConsumerContract: CONTRACT,
+    oceanFailSoft: true,
+    oceanComposedWithMaterials: true,
+    oceanComposedWithHydrology: true,
+    owns: [
+      "final-pixel-composition",
+      "ocean-weighting",
+      "terrain-ocean-blend",
+      "waterline-layering",
+      "submerged-basin-layering",
+      "final-light-shadow-application"
+    ],
+    doesNotOwn: [
+      "hydrology-classification",
+      "ocean-authority-generation",
+      "terrain-material-generation",
+      "elevation-generation",
+      "route-orchestration",
+      "runtime-motion",
+      "controls",
+      "beach-generation",
+      "cliff-generation",
+      "island-generation",
+      "clickable-port",
+      "final-visual-pass-claim"
+    ],
+    failSoftRules: [
+      "if-ocean-missing-use-material-render",
+      "if-ocean-sample-throws-ignore-ocean-for-sample",
+      "if-ocean-output-malformed-ignore-ocean-for-sample",
+      "no-blank-planet",
+      "no-route-failure",
+      "no-broken-drag"
+    ],
+    supportsRichBlueOceanCanvasConsumer: true,
+    supportsOceanTerrainComposition: true,
+    supportsOceanFailSoft: true,
+    supportsSubmergedBasinComposition: true,
+    supportsPortBasinImpliedComposition: true,
+    generatedImage: false,
+    graphicBox: false,
+    webGL: false,
+    routeMutation: false,
+    runtimeMutation: false,
+    controlsMutation: false,
+    visualPassClaimed: false
+  });
 
   const api = {
     contract: CONTRACT,
     receipt: RECEIPT,
-    previousContract: PREVIOUS_CONTRACT,
-    baselineContract: BASELINE_CONTRACT,
     version: VERSION,
+
+    sample,
+    read,
+    compose,
+    composeSample,
+    composePixel,
+    getPixel,
+    getColor,
+
+    createTextureCanvas,
+    createCanvas,
+    createPlanetTexture,
+    createTexture,
+    buildTexture,
+    getTextureCanvas,
+
+    paintToCanvas,
+    renderToCanvas,
+    drawToCanvas,
+    render,
+    paint,
     mount,
-    getStatus
+
+    getReceipt,
+
+    supportsRichBlueOceanCanvasConsumer: true,
+    supportsOceanTerrainComposition: true,
+    supportsOceanFailSoft: true,
+    supportsSubmergedBasinComposition: true,
+    supportsPortBasinImpliedComposition: true,
+
+    consumesOcean: true,
+    oceanContract: OCEAN_CONTRACT,
+    oceanConsumerContract: CONTRACT,
+    oceanFailSoft: true,
+    oceanComposedWithMaterials: true,
+    oceanComposedWithHydrology: true,
+
+    generatedImage: false,
+    graphicBox: false,
+    webGL: false,
+    routeMutation: false,
+    runtimeMutation: false,
+    controlsMutation: false,
+    visualPassClaimed: false
   };
 
   root.HEARTH = root.HEARTH || {};
   root.HEARTH.canvas = api;
-  root.HEARTH_CANVAS = Object.freeze(api);
-  root.HearthCanvas = root.HEARTH_CANVAS;
-  root.HEARTH_CANVAS_RECEIPT = getStatus();
 
-  document.documentElement.dataset.hearthCanvasAuthorityLoaded = "true";
-  document.documentElement.dataset.hearthCanvasContract = CONTRACT;
-  document.documentElement.dataset.hearthCanvasReceipt = RECEIPT;
-  document.documentElement.dataset.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
-  document.documentElement.dataset.hearthCanvasConsumesMaterials = "true";
-  document.documentElement.dataset.hearthCanvasGovernorMode = "true";
-  document.documentElement.dataset.hearthCanvasEventDriven = "true";
-  document.documentElement.dataset.hearthCanvasContinuousRaster = "false";
-  document.documentElement.dataset.hearthCanvasAtlasMode = "true";
-  document.documentElement.dataset.hearthCanvasCachedAtlas = "true";
-  document.documentElement.dataset.hearthCanvasDirectPerFrameSampling = "false";
-  document.documentElement.dataset.hearthBilinearAtlasSampling = "true";
-  document.documentElement.dataset.hearthCanvasTouchRotationRepair = "true";
-  document.documentElement.dataset.hearthCanvasPointerDragEnabled = "true";
-  document.documentElement.dataset.hearthCanvasAutoRotationEnabled = "true";
-  document.documentElement.dataset.generatedImage = "false";
-  document.documentElement.dataset.graphicBox = "false";
-  document.documentElement.dataset.webgl = "false";
-  document.documentElement.dataset.visualPassClaimed = "false";
+  root.HEARTH_CANVAS = api;
+  root.HearthCanvas = api;
+  root.HEARTH_CANVAS_RECEIPT = getReceipt();
+  root.HEARTH_CANVAS_CONTRACT = CONTRACT;
+
+  root.HEARTH_CANVAS_CONSUMES_OCEAN = true;
+  root.HEARTH_CANVAS_OCEAN_CONTRACT = OCEAN_CONTRACT;
+  root.HEARTH_CANVAS_OCEAN_CONSUMER_CONTRACT = CONTRACT;
+  root.HEARTH_CANVAS_OCEAN_FAIL_SOFT = true;
+  root.HEARTH_CANVAS_OCEAN_COMPOSED_WITH_MATERIALS = true;
+  root.HEARTH_CANVAS_OCEAN_COMPOSED_WITH_HYDROLOGY = true;
+
+  if (root.document && root.document.documentElement) {
+    root.document.documentElement.dataset.hearthCanvasAuthorityLoaded = "true";
+    root.document.documentElement.dataset.hearthCanvasContract = CONTRACT;
+    root.document.documentElement.dataset.hearthCanvasReceipt = RECEIPT;
+    root.document.documentElement.dataset.hearthCanvasConsumesOcean = "true";
+    root.document.documentElement.dataset.hearthCanvasOceanContract = OCEAN_CONTRACT;
+    root.document.documentElement.dataset.hearthCanvasOceanConsumerContract = CONTRACT;
+    root.document.documentElement.dataset.hearthCanvasOceanFailSoft = "true";
+    root.document.documentElement.dataset.hearthCanvasOceanComposedWithMaterials = "true";
+    root.document.documentElement.dataset.hearthCanvasOceanComposedWithHydrology = "true";
+    root.document.documentElement.dataset.generatedImage = "false";
+    root.document.documentElement.dataset.graphicBox = "false";
+    root.document.documentElement.dataset.webgl = "false";
+    root.document.documentElement.dataset.routeMutation = "false";
+    root.document.documentElement.dataset.runtimeMutation = "false";
+    root.document.documentElement.dataset.controlsMutation = "false";
+    root.document.documentElement.dataset.visualPassClaimed = "false";
+  }
 
   if (typeof module !== "undefined" && module.exports) {
     module.exports = api;
